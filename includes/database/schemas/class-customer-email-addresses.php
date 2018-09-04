@@ -34,23 +34,23 @@ class Customer_Email_Addresses extends Schema {
 
 		// id
 		array(
-			'name'       => 'id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'extra'      => 'auto_increment',
-			'primary'    => true,
-			'sortable'   => true
+			'name'     => 'id',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'extra'    => 'auto_increment',
+			'primary'  => true,
+			'sortable' => true,
 		),
 
 		// customer_id
 		array(
-			'name'       => 'customer_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0',
-			'cache_key'  => true
+			'name'      => 'customer_id',
+			'type'      => 'bigint',
+			'length'    => '20',
+			'unsigned'  => true,
+			'default'   => '0',
+			'cache_key' => true,
 		),
 
 		// type
@@ -61,7 +61,7 @@ class Customer_Email_Addresses extends Schema {
 			'default'    => 'secondary',
 			'searchable' => false,
 			'sortable'   => true,
-			'transition' => true
+			'transition' => true,
 		),
 
 		// status
@@ -72,7 +72,7 @@ class Customer_Email_Addresses extends Schema {
 			'default'    => 'active',
 			'searchable' => false,
 			'sortable'   => true,
-			'transition' => true
+			'transition' => true,
 		),
 
 		// email
@@ -83,7 +83,7 @@ class Customer_Email_Addresses extends Schema {
 			'default'    => '',
 			'cache_key'  => true,
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// date_created
@@ -93,7 +93,7 @@ class Customer_Email_Addresses extends Schema {
 			'default'    => '0000-00-00 00:00:00',
 			'created'    => true,
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// date_modified
@@ -103,12 +103,12 @@ class Customer_Email_Addresses extends Schema {
 			'default'    => '0000-00-00 00:00:00',
 			'modified'   => true,
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// uuid
 		array(
-			'uuid'       => true,
-		)
+			'uuid' => true,
+		),
 	);
 }

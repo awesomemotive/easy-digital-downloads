@@ -64,20 +64,20 @@ class Invalid_Argument extends \InvalidArgumentException implements \EDD_Excepti
 	 *
 	 * @since 3.0
 	 *
-	 * @param string     $argument_name Argument or parameter resulting in the exception.
-	 * @param string     $method        Function or method name the argument or parameter was passed to.
-	 * @param string     $context       Further context under which to build the exception message. To be
-	 *                                  used by sub-classes when overriding build_message(). Default null.
+	 * @param string $argument_name Argument or parameter resulting in the exception.
+	 * @param string $method        Function or method name the argument or parameter was passed to.
+	 * @param string $context       Further context under which to build the exception message. To be
+	 *                              used by sub-classes when overriding build_message(). Default null.
 	 * @return string Informed Invalid_Argument message.
 	 */
 	public static function build_message( $argument_name, $method, $context = null ) {
 		if ( ! isset( static::$error_message ) ) {
-
 			if ( ! isset( self::$type ) ) {
 				self::$type = 'argument';
 			}
 
-			self::$error_message = sprintf( 'The \'%1$s\' %2$s is missing or invalid for \'%3$s\'.',
+			self::$error_message = sprintf(
+				'The \'%1$s\' %2$s is missing or invalid for \'%3$s\'.',
 				$argument_name,
 				static::$type,
 				$method

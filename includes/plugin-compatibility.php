@@ -65,14 +65,15 @@ function edd_is_caching_plugin_active() {
  * @return array $settings Updated Misc Settings
  */
 function edd_append_no_cache_param( $settings ) {
-	if ( ! edd_is_caching_plugin_active() )
+	if ( ! edd_is_caching_plugin_active() ) {
 		return $settings;
+	}
 
 	$settings[] = array(
-		'id' => 'no_cache_checkout',
-		'name' => __('No Caching on Checkout?','easy-digital-downloads' ),
-		'desc' => __('Check this box in order to append a ?nocache parameter to the checkout URL to prevent caching plugins from caching the page.','easy-digital-downloads' ),
-		'type' => 'checkbox'
+		'id'   => 'no_cache_checkout',
+		'name' => __( 'No Caching on Checkout?', 'easy-digital-downloads' ),
+		'desc' => __( 'Check this box in order to append a ?nocache parameter to the checkout URL to prevent caching plugins from caching the page.', 'easy-digital-downloads' ),
+		'type' => 'checkbox',
 	);
 
 	return $settings;
@@ -87,8 +88,9 @@ add_filter( 'edd_settings_misc', 'edd_append_no_cache_param', -1 );
  * @return string $content Download content
  */
 function edd_qtranslate_content( $content ) {
-	if( defined( 'QT_LANGUAGE' ) )
+	if ( defined( 'QT_LANGUAGE' ) ) {
 		$content = qtrans_useCurrentLanguageIfNotFoundShowAvailable( $content );
+	}
 	return $content;
 }
 add_filter( 'edd_downloads_content', 'edd_qtranslate_content' );
@@ -98,12 +100,11 @@ add_filter( 'edd_downloads_excerpt', 'edd_qtranslate_content' );
  * Prevents qTranslate from redirecting to language-specific URL when downloading purchased files
  *
  * @since 2.5
- * @param string       $target Target URL
+ * @param string $target Target URL
  * @return string|bool $target Target URL. False if redirect is disabled
  */
 function edd_qtranslate_prevent_redirect( $target ) {
-
-	if( strpos( $target, 'eddfile' ) ) {
+	if ( strpos( $target, 'eddfile' ) ) {
 		$target = false;
 		global $q_config;
 		$q_config['url_mode'] = '';
@@ -121,7 +122,7 @@ add_filter( 'qtranslate_language_detect_redirect', 'edd_qtranslate_prevent_redir
  * @return void
  */
 function edd_disable_woo_ssl_on_checkout() {
-	if( edd_is_checkout() && edd_is_ssl_enforced() ) {
+	if ( edd_is_checkout() && edd_is_ssl_enforced() ) {
 		remove_action( 'template_redirect', array( 'WC_HTTPS', 'unforce_https_template_redirect' ) );
 	}
 }
@@ -136,7 +137,7 @@ add_action( 'template_redirect', 'edd_disable_woo_ssl_on_checkout', 9 );
 function edd_disable_mandrill_nl2br() {
 	add_filter( 'mandrill_nl2br', '__return_false' );
 }
-add_action( 'edd_email_send_before', 'edd_disable_mandrill_nl2br');
+add_action( 'edd_email_send_before', 'edd_disable_mandrill_nl2br' );
 
 /**
  * Prevents the Purchase Confirmation screen from being detected as a 404 error in the 404 Redirected plugin
@@ -145,12 +146,11 @@ add_action( 'edd_email_send_before', 'edd_disable_mandrill_nl2br');
  * @return void
  */
 function edd_disable_404_redirected_redirect() {
-
-	if( ! defined( 'WBZ404_VERSION' ) ) {
+	if ( ! defined( 'WBZ404_VERSION' ) ) {
 		return;
 	}
 
-	if( edd_is_success_page() ) {
+	if ( edd_is_success_page() ) {
 		remove_action( 'template_redirect', 'wbz404_process404', 10 );
 	}
 }

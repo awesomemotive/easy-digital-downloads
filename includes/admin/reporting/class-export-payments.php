@@ -22,6 +22,7 @@ defined( 'ABSPATH' ) || exit;
 class EDD_Payments_Export extends EDD_Export {
 	/**
 	 * Our export type. Used for export-type specific filters/actions
+	 *
 	 * @var string
 	 * @since 1.4.4
 	 */
@@ -37,7 +38,7 @@ class EDD_Payments_Export extends EDD_Export {
 		edd_set_time_limit();
 
 		$month = isset( $_POST['month'] ) ? absint( $_POST['month'] ) : date( 'n' );
-		$year  = isset( $_POST['year']  ) ? absint( $_POST['year']  ) : date( 'Y' );
+		$year  = isset( $_POST['year'] ) ? absint( $_POST['year'] ) : date( 'Y' );
 
 		nocache_headers();
 		header( 'Content-Type: text/csv; charset=utf-8' );
@@ -53,8 +54,8 @@ class EDD_Payments_Export extends EDD_Export {
 	 */
 	public function csv_cols() {
 		$cols = array(
-			'id'       => __( 'ID',   'easy-digital-downloads' ), // unaltered payment ID (use for querying)
-			'seq_id'   => __( 'Payment Number',   'easy-digital-downloads' ), // sequential payment ID
+			'id'       => __( 'ID', 'easy-digital-downloads' ), // unaltered payment ID (use for querying)
+			'seq_id'   => __( 'Payment Number', 'easy-digital-downloads' ), // sequential payment ID
 			'email'    => __( 'Email', 'easy-digital-downloads' ),
 			'first'    => __( 'First Name', 'easy-digital-downloads' ),
 			'last'     => __( 'Last Name', 'easy-digital-downloads' ),
@@ -74,10 +75,10 @@ class EDD_Payments_Export extends EDD_Export {
 			'key'      => __( 'Purchase Key', 'easy-digital-downloads' ),
 			'date'     => __( 'Date', 'easy-digital-downloads' ),
 			'user'     => __( 'User', 'easy-digital-downloads' ),
-			'status'   => __( 'Status', 'easy-digital-downloads' )
+			'status'   => __( 'Status', 'easy-digital-downloads' ),
 		);
 
-		if( ! edd_use_skus() ){
+		if ( ! edd_use_skus() ) {
 			unset( $cols['skus'] );
 		}
 		if ( ! edd_get_option( 'enable_sequential' ) ) {
@@ -100,23 +101,25 @@ class EDD_Payments_Export extends EDD_Export {
 
 		$data = array();
 
-		$payments = edd_get_payments( array(
-			'offset' => 0,
-			'number' => -1,
-			'mode'   => edd_is_test_mode() ? 'test' : 'live',
-			'status' => isset( $_POST['edd_export_payment_status'] ) ? $_POST['edd_export_payment_status'] : 'any',
-			'month'  => isset( $_POST['month'] ) ? absint( $_POST['month'] ) : date( 'n' ),
-			'year'   => isset( $_POST['year'] ) ? absint( $_POST['year'] ) : date( 'Y' )
-		) );
+		$payments = edd_get_payments(
+			array(
+				'offset' => 0,
+				'number' => -1,
+				'mode'   => edd_is_test_mode() ? 'test' : 'live',
+				'status' => isset( $_POST['edd_export_payment_status'] ) ? $_POST['edd_export_payment_status'] : 'any',
+				'month'  => isset( $_POST['month'] ) ? absint( $_POST['month'] ) : date( 'n' ),
+				'year'   => isset( $_POST['year'] ) ? absint( $_POST['year'] ) : date( 'Y' ),
+			)
+		);
 
 		foreach ( $payments as $payment ) {
-			$payment_meta   = edd_get_payment_meta( $payment->ID );
-			$user_info      = edd_get_payment_meta_user_info( $payment->ID );
-			$downloads      = edd_get_payment_meta_cart_details( $payment->ID );
-			$total          = edd_get_payment_amount( $payment->ID );
-			$user_id        = isset( $user_info['id'] ) && $user_info['id'] != -1 ? $user_info['id'] : $user_info['email'];
-			$products       = '';
-			$skus           = '';
+			$payment_meta = edd_get_payment_meta( $payment->ID );
+			$user_info    = edd_get_payment_meta_user_info( $payment->ID );
+			$downloads    = edd_get_payment_meta_cart_details( $payment->ID );
+			$total        = edd_get_payment_amount( $payment->ID );
+			$user_id      = isset( $user_info['id'] ) && $user_info['id'] != -1 ? $user_info['id'] : $user_info['email'];
+			$products     = '';
+			$skus         = '';
 
 			if ( $downloads ) {
 				foreach ( $downloads as $key => $download ) {
@@ -134,8 +137,9 @@ class EDD_Payments_Export extends EDD_Export {
 					if ( edd_use_skus() ) {
 						$sku = edd_get_download_sku( $id );
 
-						if ( ! empty( $sku ) )
+						if ( ! empty( $sku ) ) {
 							$skus .= $sku;
+						}
 					}
 
 					if ( isset( $downloads[ $key ]['item_number'] ) && isset( $downloads[ $key ]['item_number']['options'] ) ) {
@@ -147,11 +151,12 @@ class EDD_Payments_Export extends EDD_Export {
 					}
 					$products .= html_entity_decode( edd_currency_filter( $price ) );
 
-					if ( $key != ( count( $downloads ) -1 ) ) {
+					if ( $key != ( count( $downloads ) - 1 ) ) {
 						$products .= ' / ';
 
-						if( edd_use_skus() )
+						if ( edd_use_skus() ) {
 							$skus .= ' / ';
+						}
 					}
 				}
 			}
@@ -168,12 +173,12 @@ class EDD_Payments_Export extends EDD_Export {
 				'email'    => $payment_meta['email'],
 				'first'    => $user_info['first_name'],
 				'last'     => $user_info['last_name'],
-				'address1' => isset( $user_info['address']['line1'] )   ? $user_info['address']['line1']   : '',
-				'address2' => isset( $user_info['address']['line2'] )   ? $user_info['address']['line2']   : '',
-				'city'     => isset( $user_info['address']['city'] )    ? $user_info['address']['city']    : '',
-				'state'    => isset( $user_info['address']['state'] )   ? $user_info['address']['state']   : '',
+				'address1' => isset( $user_info['address']['line1'] ) ? $user_info['address']['line1'] : '',
+				'address2' => isset( $user_info['address']['line2'] ) ? $user_info['address']['line2'] : '',
+				'city'     => isset( $user_info['address']['city'] ) ? $user_info['address']['city'] : '',
+				'state'    => isset( $user_info['address']['state'] ) ? $user_info['address']['state'] : '',
 				'country'  => isset( $user_info['address']['country'] ) ? $user_info['address']['country'] : '',
-				'zip'      => isset( $user_info['address']['zip'] )     ? $user_info['address']['zip']     : '',
+				'zip'      => isset( $user_info['address']['zip'] ) ? $user_info['address']['zip'] : '',
 				'products' => $products,
 				'skus'     => $skus,
 				'amount'   => html_entity_decode( edd_format_amount( $total ) ),
@@ -184,9 +189,8 @@ class EDD_Payments_Export extends EDD_Export {
 				'key'      => $payment_meta['key'],
 				'date'     => $payment->post_date,
 				'user'     => $user ? $user->display_name : __( 'guest', 'easy-digital-downloads' ),
-				'status'   => edd_get_payment_status( $payment, true )
+				'status'   => edd_get_payment_status( $payment, true ),
 			);
-
 		}
 
 		$data = apply_filters( 'edd_export_get_data', $data );

@@ -22,27 +22,29 @@ use EDD\Database\Rows\Order as Order;
 function edd_add_order_page_content() {
 
 	// Create empty order object to pass to callback functions.
-	$order = new Order( array(
-		'id'              => 0,
-		'parent'          => 0,
-		'order_number'    => 0,
-		'status'          => 'publish',
-		'date_created'    => '0000-00-00 00:00:00',
-		'date_modified'   => '0000-00-00 00:00:00',
-		'date_refundable' => '0000-00-00 00:00:00',
-		'user_id'         => 0,
-		'customer_id'     => 0,
-		'email'           => '',
-		'ip'              => edd_get_ip(),
-		'gateway'         => '',
-		'mode'            => '',
-		'currency'        => edd_get_currency(),
-		'payment_key'     => '',
-		'subtotal'        => 0,
-		'discount'        => 0,
-		'tax'             => 0,
-		'total'           => 0,
-	) );
+	$order = new Order(
+		array(
+			'id'              => 0,
+			'parent'          => 0,
+			'order_number'    => 0,
+			'status'          => 'publish',
+			'date_created'    => '0000-00-00 00:00:00',
+			'date_modified'   => '0000-00-00 00:00:00',
+			'date_refundable' => '0000-00-00 00:00:00',
+			'user_id'         => 0,
+			'customer_id'     => 0,
+			'email'           => '',
+			'ip'              => edd_get_ip(),
+			'gateway'         => '',
+			'mode'            => '',
+			'currency'        => edd_get_currency(),
+			'payment_key'     => '',
+			'subtotal'        => 0,
+			'discount'        => 0,
+			'tax'             => 0,
+			'total'           => 0,
+		)
+	);
 
 	?>
 
@@ -130,5 +132,5 @@ function edd_add_order_page_content() {
 
 	</div>
 
-<?php
+	<?php
 }

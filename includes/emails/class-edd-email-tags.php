@@ -103,7 +103,7 @@ class EDD_Email_Template_Tags {
 	 * Search content for email tags and filter email tags through their hooks
 	 *
 	 * @param string $content Content to search for email tags
-	 * @param int $payment_id The payment id
+	 * @param int    $payment_id The payment id
 	 *
 	 * @since 1.9
 	 *

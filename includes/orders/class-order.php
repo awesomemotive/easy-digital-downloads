@@ -249,19 +249,23 @@ class Order extends Rows\Order {
 	 */
 	public function __get( $key = '' ) {
 		if ( 'adjustments' === $key && null === $this->adjustments ) {
-			$this->adjustments = edd_get_order_adjustments( array(
-				'object_id'     => $this->id,
-				'object_type'   => 'order',
-				'no_found_rows' => true,
-				'order'         => 'ASC',
-			) );
+			$this->adjustments = edd_get_order_adjustments(
+				array(
+					'object_id'     => $this->id,
+					'object_type'   => 'order',
+					'no_found_rows' => true,
+					'order'         => 'ASC',
+				)
+			);
 		} elseif ( 'items' === $key && null === $this->items ) {
-			$this->items = edd_get_order_items( array(
-				'order_id'      => $this->id,
-				'orderby'       => 'cart_index',
-				'order'         => 'ASC',
-				'no_found_rows' => true,
-			) );
+			$this->items = edd_get_order_items(
+				array(
+					'order_id'      => $this->id,
+					'orderby'       => 'cart_index',
+					'order'         => 'ASC',
+					'no_found_rows' => true,
+				)
+			);
 		}
 
 		return parent::__get( $key );
@@ -292,12 +296,14 @@ class Order extends Rows\Order {
 	 */
 	public function get_items() {
 		if ( null === $this->items ) {
-			$this->items = edd_get_order_items( array(
-				'order_id'      => $this->id,
-				'orderby'       => 'cart_index',
-				'order'         => 'ASC',
-				'no_found_rows' => true,
-			) );
+			$this->items = edd_get_order_items(
+				array(
+					'order_id'      => $this->id,
+					'orderby'       => 'cart_index',
+					'order'         => 'ASC',
+					'no_found_rows' => true,
+				)
+			);
 		}
 
 		return $this->items;
@@ -312,12 +318,14 @@ class Order extends Rows\Order {
 	 */
 	public function get_adjustments() {
 		if ( null === $this->adjustments ) {
-			$this->adjustments = edd_get_order_adjustments( array(
-				'object_id'     => $this->id,
-				'object_type'   => 'order',
-				'no_found_rows' => true,
-				'order'         => 'ASC',
-			) );
+			$this->adjustments = edd_get_order_adjustments(
+				array(
+					'object_id'     => $this->id,
+					'object_type'   => 'order',
+					'no_found_rows' => true,
+					'order'         => 'ASC',
+				)
+			);
 		}
 
 		return $this->adjustments;
@@ -387,22 +395,26 @@ class Order extends Rows\Order {
 
 		// Ensure adjustments exist.
 		if ( null === $this->adjustments ) {
-			$this->adjustments = edd_get_order_adjustments( array(
-				'object_id'     => $this->id,
-				'object_type'   => 'order',
-				'no_found_rows' => true,
-				'order'         => 'ASC',
-			) );
+			$this->adjustments = edd_get_order_adjustments(
+				array(
+					'object_id'     => $this->id,
+					'object_type'   => 'order',
+					'no_found_rows' => true,
+					'order'         => 'ASC',
+				)
+			);
 		}
 
 		// Ensure items exist.
 		if ( null === $this->items ) {
-			$this->items = edd_get_order_items( array(
-				'order_id'      => $this->id,
-				'orderby'       => 'cart_index',
-				'order'         => 'ASC',
-				'no_found_rows' => true,
-			) );
+			$this->items = edd_get_order_items(
+				array(
+					'order_id'      => $this->id,
+					'orderby'       => 'cart_index',
+					'order'         => 'ASC',
+					'no_found_rows' => true,
+				)
+			);
 		}
 
 		// Bail if no adjustments.
@@ -450,28 +462,34 @@ class Order extends Rows\Order {
 
 		// Retrieve first transaction ID only.
 		if ( 'primary' === $type ) {
-			$transactions = array_values( edd_get_order_transactions( array(
-				'object_id'   => $this->id,
-				'object_type' => 'order',
-				'orderby'     => 'date_created',
-				'order'       => 'ASC',
-				'fields'      => 'transaction_id',
-				'number'      => 1,
-			) ) );
+			$transactions = array_values(
+				edd_get_order_transactions(
+					array(
+						'object_id'   => $this->id,
+						'object_type' => 'order',
+						'orderby'     => 'date_created',
+						'order'       => 'ASC',
+						'fields'      => 'transaction_id',
+						'number'      => 1,
+					)
+				)
+			);
 
 			if ( $transactions ) {
 				$retval = esc_attr( $transactions[0] );
 			}
 
-		// Retrieve all transaction IDs.
+			// Retrieve all transaction IDs.
 		} else {
-			$retval = edd_get_order_transactions( array(
-				'object_id'   => $this->id,
-				'object_type' => 'order',
-				'orderby'     => 'date_created',
-				'order'       => 'ASC',
-				'fields'      => 'transaction_id',
-			) );
+			$retval = edd_get_order_transactions(
+				array(
+					'object_id'   => $this->id,
+					'object_type' => 'order',
+					'orderby'     => 'date_created',
+					'order'       => 'ASC',
+					'fields'      => 'transaction_id',
+				)
+			);
 		}
 
 		return $retval;
@@ -552,11 +570,13 @@ class Order extends Rows\Order {
 	 * @return array Notes associated with this order.
 	 */
 	public function get_notes() {
-		return edd_get_notes( array(
-			'object_id'   => $this->id,
-			'object_type' => 'order',
-			'order'       => 'ASC',
-		) );
+		return edd_get_notes(
+			array(
+				'object_id'   => $this->id,
+				'object_type' => 'order',
+				'order'       => 'ASC',
+			)
+		);
 	}
 
 	/**

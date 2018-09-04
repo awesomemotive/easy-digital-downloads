@@ -46,90 +46,89 @@ function edd_get_shop_state() {
  * @return array A list of states for the selected country
  */
 function edd_get_shop_states( $country = null ) {
-	if( empty( $country ) )
+	if ( empty( $country ) ) {
 		$country = edd_get_shop_country();
+	}
 
-	switch( $country ) :
-
-		case 'US' :
+	switch ( $country ) :
+		case 'US':
 			$states = edd_get_states_list();
 			break;
-		case 'AO' :
+		case 'AO':
 			$states = edd_get_angola_provinces_list();
 			break;
-		case 'CA' :
+		case 'CA':
 			$states = edd_get_provinces_list();
 			break;
-		case 'AU' :
+		case 'AU':
 			$states = edd_get_australian_states_list();
 			break;
-		case 'BD' :
+		case 'BD':
 			$states = edd_get_bangladeshi_states_list();
 			break;
-		case 'BG' :
+		case 'BG':
 			$states = edd_get_bulgarian_states_list();
 			break;
-		case 'BR' :
+		case 'BR':
 			$states = edd_get_brazil_states_list();
 			break;
-		case 'CN' :
+		case 'CN':
 			$states = edd_get_chinese_states_list();
 			break;
-		case 'GB' :
+		case 'GB':
 			$states = edd_get_united_kingdom_states_list();
 			break;
-		case 'HK' :
+		case 'HK':
 			$states = edd_get_hong_kong_states_list();
 			break;
-		case 'HU' :
+		case 'HU':
 			$states = edd_get_hungary_states_list();
 			break;
-		case 'ID' :
+		case 'ID':
 			$states = edd_get_indonesian_states_list();
 			break;
-		case 'IN' :
+		case 'IN':
 			$states = edd_get_indian_states_list();
 			break;
-		case 'IR' :
+		case 'IR':
 			$states = edd_get_iranian_states_list();
 			break;
-		case 'IT' :
+		case 'IT':
 			$states = edd_get_italian_states_list();
 			break;
-		case 'JP' :
+		case 'JP':
 			$states = edd_get_japanese_states_list();
 			break;
-		case 'MX' :
+		case 'MX':
 			$states = edd_get_mexican_states_list();
 			break;
-		case 'MY' :
+		case 'MY':
 			$states = edd_get_malaysian_states_list();
 			break;
-		case 'NP' :
+		case 'NP':
 			$states = edd_get_nepalese_states_list();
 			break;
-		case 'NZ' :
+		case 'NZ':
 			$states = edd_get_new_zealand_states_list();
 			break;
-		case 'PE' :
+		case 'PE':
 			$states = edd_get_peruvian_states_list();
 			break;
-		case 'TH' :
+		case 'TH':
 			$states = edd_get_thailand_states_list();
 			break;
-		case 'TR' :
+		case 'TR':
 			$states = edd_get_turkey_states_list();
 			break;
-		case 'ZA' :
+		case 'ZA':
 			$states = edd_get_south_african_states_list();
 			break;
-		case 'ES' :
+		case 'ES':
 			$states = edd_get_spain_states_list();
 			break;
-		default :
+		default:
 			$states = array();
 			break;
-
 	endswitch;
 
 	return apply_filters( 'edd_shop_states', $states, $country );
@@ -396,7 +395,7 @@ function edd_get_country_list() {
 		'WS' => 'Western Samoa',
 		'YE' => 'Yemen',
 		'ZM' => 'Zambia',
-		'ZW' => 'Zimbabwe'
+		'ZW' => 'Zimbabwe',
 	);
 
 	return apply_filters( 'edd_countries', $countries );
@@ -476,7 +475,7 @@ function edd_get_states_list() {
 		'VI' => 'Virgin Islands',
 		'AA' => 'Armed Forces - Americas',
 		'AE' => 'Armed Forces - Europe, Canada, Middle East, Africa',
-		'AP' => 'Armed Forces - Pacific'
+		'AP' => 'Armed Forces - Pacific',
 	);
 
 	return apply_filters( 'edd_us_states', $states );
@@ -508,7 +507,7 @@ function edd_get_angola_provinces_list() {
 		'MOX' => 'Moxico',
 		'NAM' => 'Namibe',
 		'UIG' => 'Uíge',
-		'ZAI' => 'Zaire'
+		'ZAI' => 'Zaire',
 	);
 
 	return apply_filters( 'edd_angola_provinces', $provinces );
@@ -535,7 +534,7 @@ function edd_get_provinces_list() {
 		'PE' => 'Prince Edward Island',
 		'QC' => 'Quebec',
 		'SK' => 'Saskatchewan',
-		'YT' => 'Yukon'
+		'YT' => 'Yukon',
 	);
 
 	return apply_filters( 'edd_canada_provinces', $provinces );
@@ -557,7 +556,7 @@ function edd_get_australian_states_list() {
 		'SA'  => 'South Australia',
 		'TAS' => 'Tasmania',
 		'VIC' => 'Victoria',
-		'WA'  => 'Western Australia'
+		'WA'  => 'Western Australia',
 	);
 
 	return apply_filters( 'edd_australian_states', $states );
@@ -571,71 +570,71 @@ function edd_get_australian_states_list() {
  */
 function edd_get_bangladeshi_states_list() {
 	$states = array(
-		''    => '',
-		'BAG' => 'Bagerhat',
-		'BAN' => 'Bandarban',
-		'BAR' => 'Barguna',
-		'BARI'=> 'Barisal',
-		'BHO' => 'Bhola',
-		'BOG' => 'Bogra',
-		'BRA' => 'Brahmanbaria',
-		'CHA' => 'Chandpur',
-		'CHI' => 'Chittagong',
-		'CHU' => 'Chuadanga',
-		'COM' => 'Comilla',
-		'COX' => 'Cox\'s Bazar',
-		'DHA' => 'Dhaka',
-		'DIN' => 'Dinajpur',
-		'FAR' => 'Faridpur',
-		'FEN' => 'Feni',
-		'GAI' => 'Gaibandha',
-		'GAZI'=> 'Gazipur',
-		'GOP' => 'Gopalganj',
-		'HAB' => 'Habiganj',
-		'JAM' => 'Jamalpur',
-		'JES' => 'Jessore',
-		'JHA' => 'Jhalokati',
-		'JHE' => 'Jhenaidah',
-		'JOY' => 'Joypurhat',
-		'KHA' => 'Khagrachhari',
-		'KHU' => 'Khulna',
-		'KIS' => 'Kishoreganj',
-		'KUR' => 'Kurigram',
-		'KUS' => 'Kushtia',
-		'LAK' => 'Lakshmipur',
-		'LAL' => 'Lalmonirhat',
-		'MAD' => 'Madaripur',
-		'MAG' => 'Magura',
-		'MAN' => 'Manikganj',
-		'MEH' => 'Meherpur',
-		'MOU' => 'Moulvibazar',
-		'MUN' => 'Munshiganj',
-		'MYM' => 'Mymensingh',
-		'NAO' => 'Naogaon',
-		'NAR' => 'Narail',
-		'NARG'=> 'Narayanganj',
-		'NARD'=> 'Narsingdi',
-		'NAT' => 'Natore',
-		'NAW' => 'Nawabganj',
-		'NET' => 'Netrakona',
-		'NIL' => 'Nilphamari',
-		'NOA' => 'Noakhali',
-		'PAB' => 'Pabna',
-		'PAN' => 'Panchagarh',
-		'PAT' => 'Patuakhali',
-		'PIR' => 'Pirojpur',
-		'RAJB'=> 'Rajbari',
-		'RAJ' => 'Rajshahi',
-		'RAN' => 'Rangamati',
-		'RANP'=> 'Rangpur',
-		'SAT' => 'Satkhira',
-		'SHA' => 'Shariatpur',
-		'SHE' => 'Sherpur',
-		'SIR' => 'Sirajganj',
-		'SUN' => 'Sunamganj',
-		'SYL' => 'Sylhet',
-		'TAN' => 'Tangail',
-		'THA' => 'Thakurgaon'
+		''     => '',
+		'BAG'  => 'Bagerhat',
+		'BAN'  => 'Bandarban',
+		'BAR'  => 'Barguna',
+		'BARI' => 'Barisal',
+		'BHO'  => 'Bhola',
+		'BOG'  => 'Bogra',
+		'BRA'  => 'Brahmanbaria',
+		'CHA'  => 'Chandpur',
+		'CHI'  => 'Chittagong',
+		'CHU'  => 'Chuadanga',
+		'COM'  => 'Comilla',
+		'COX'  => 'Cox\'s Bazar',
+		'DHA'  => 'Dhaka',
+		'DIN'  => 'Dinajpur',
+		'FAR'  => 'Faridpur',
+		'FEN'  => 'Feni',
+		'GAI'  => 'Gaibandha',
+		'GAZI' => 'Gazipur',
+		'GOP'  => 'Gopalganj',
+		'HAB'  => 'Habiganj',
+		'JAM'  => 'Jamalpur',
+		'JES'  => 'Jessore',
+		'JHA'  => 'Jhalokati',
+		'JHE'  => 'Jhenaidah',
+		'JOY'  => 'Joypurhat',
+		'KHA'  => 'Khagrachhari',
+		'KHU'  => 'Khulna',
+		'KIS'  => 'Kishoreganj',
+		'KUR'  => 'Kurigram',
+		'KUS'  => 'Kushtia',
+		'LAK'  => 'Lakshmipur',
+		'LAL'  => 'Lalmonirhat',
+		'MAD'  => 'Madaripur',
+		'MAG'  => 'Magura',
+		'MAN'  => 'Manikganj',
+		'MEH'  => 'Meherpur',
+		'MOU'  => 'Moulvibazar',
+		'MUN'  => 'Munshiganj',
+		'MYM'  => 'Mymensingh',
+		'NAO'  => 'Naogaon',
+		'NAR'  => 'Narail',
+		'NARG' => 'Narayanganj',
+		'NARD' => 'Narsingdi',
+		'NAT'  => 'Natore',
+		'NAW'  => 'Nawabganj',
+		'NET'  => 'Netrakona',
+		'NIL'  => 'Nilphamari',
+		'NOA'  => 'Noakhali',
+		'PAB'  => 'Pabna',
+		'PAN'  => 'Panchagarh',
+		'PAT'  => 'Patuakhali',
+		'PIR'  => 'Pirojpur',
+		'RAJB' => 'Rajbari',
+		'RAJ'  => 'Rajshahi',
+		'RAN'  => 'Rangamati',
+		'RANP' => 'Rangpur',
+		'SAT'  => 'Satkhira',
+		'SHA'  => 'Shariatpur',
+		'SHE'  => 'Sherpur',
+		'SIR'  => 'Sirajganj',
+		'SUN'  => 'Sunamganj',
+		'SYL'  => 'Sylhet',
+		'TAN'  => 'Tangail',
+		'THA'  => 'Thakurgaon',
 	);
 
 	return apply_filters( 'edd_bangladeshi_states', $states );
@@ -676,7 +675,7 @@ function edd_get_brazil_states_list() {
 		'SC' => 'Santa Catarina',
 		'SP' => 'S&atilde;o Paulo',
 		'SE' => 'Sergipe',
-		'TO' => 'Tocantins'
+		'TO' => 'Tocantins',
 	);
 
 	return apply_filters( 'edd_brazil_states', $states );
@@ -718,7 +717,7 @@ function edd_get_bulgarian_states_list() {
 		'BG-04' => 'Veliko Tarnovo',
 		'BG-05' => 'Vidin',
 		'BG-06' => 'Vratsa',
-		'BG-28' => 'Yambol'
+		'BG-28' => 'Yambol',
 	);
 
 	return apply_filters( 'edd_bulgarian_states', $states );
@@ -735,7 +734,7 @@ function edd_get_hong_kong_states_list() {
 		''                => '',
 		'HONG KONG'       => 'Hong Kong Island',
 		'KOWLOON'         => 'Kowloon',
-		'NEW TERRITORIES' => 'New Territories'
+		'NEW TERRITORIES' => 'New Territories',
 	);
 
 	return apply_filters( 'edd_hong_kong_states', $states );
@@ -769,7 +768,7 @@ function edd_get_hungary_states_list() {
 		'TO' => 'Tolna',
 		'VA' => 'Vas',
 		'VE' => 'Veszprém',
-		'ZA' => 'Zala'
+		'ZA' => 'Zala',
 	);
 
 	return apply_filters( 'edd_hungary_states', $states );
@@ -830,7 +829,7 @@ function edd_get_japanese_states_list() {
 		'JP44' => 'Oita',
 		'JP45' => 'Miyazaki',
 		'JP46' => 'Kagoshima',
-		'JP47' => 'Okinawa'
+		'JP47' => 'Okinawa',
 	);
 
 	return apply_filters( 'edd_japanese_states', $states );
@@ -845,38 +844,38 @@ function edd_get_japanese_states_list() {
 function edd_get_chinese_states_list() {
 	$states = array(
 		''     => '',
-	    'CN1'  => 'Yunnan / &#20113;&#21335;',
-	    'CN2'  => 'Beijing / &#21271;&#20140;',
-	    'CN3'  => 'Tianjin / &#22825;&#27941;',
-	    'CN4'  => 'Hebei / &#27827;&#21271;',
-	    'CN5'  => 'Shanxi / &#23665;&#35199;',
-	    'CN6'  => 'Inner Mongolia / &#20839;&#33945;&#21476;',
-	    'CN7'  => 'Liaoning / &#36797;&#23425;',
-	    'CN8'  => 'Jilin / &#21513;&#26519;',
-	    'CN9'  => 'Heilongjiang / &#40657;&#40857;&#27743;',
-	    'CN10' => 'Shanghai / &#19978;&#28023;',
-	    'CN11' => 'Jiangsu / &#27743;&#33487;',
-	    'CN12' => 'Zhejiang / &#27993;&#27743;',
-	    'CN13' => 'Anhui / &#23433;&#24509;',
-	    'CN14' => 'Fujian / &#31119;&#24314;',
-	    'CN15' => 'Jiangxi / &#27743;&#35199;',
-	    'CN16' => 'Shandong / &#23665;&#19996;',
-	    'CN17' => 'Henan / &#27827;&#21335;',
-	    'CN18' => 'Hubei / &#28246;&#21271;',
-	    'CN19' => 'Hunan / &#28246;&#21335;',
-	    'CN20' => 'Guangdong / &#24191;&#19996;',
-	    'CN21' => 'Guangxi Zhuang / &#24191;&#35199;&#22766;&#26063;',
-	    'CN22' => 'Hainan / &#28023;&#21335;',
-	    'CN23' => 'Chongqing / &#37325;&#24198;',
-	    'CN24' => 'Sichuan / &#22235;&#24029;',
-	    'CN25' => 'Guizhou / &#36149;&#24030;',
-	    'CN26' => 'Shaanxi / &#38485;&#35199;',
-	    'CN27' => 'Gansu / &#29976;&#32899;',
-	    'CN28' => 'Qinghai / &#38738;&#28023;',
-	    'CN29' => 'Ningxia Hui / &#23425;&#22799;',
-	    'CN30' => 'Macau / &#28595;&#38376;',
-	    'CN31' => 'Tibet / &#35199;&#34255;',
-	    'CN32' => 'Xinjiang / &#26032;&#30086;'
+		'CN1'  => 'Yunnan / &#20113;&#21335;',
+		'CN2'  => 'Beijing / &#21271;&#20140;',
+		'CN3'  => 'Tianjin / &#22825;&#27941;',
+		'CN4'  => 'Hebei / &#27827;&#21271;',
+		'CN5'  => 'Shanxi / &#23665;&#35199;',
+		'CN6'  => 'Inner Mongolia / &#20839;&#33945;&#21476;',
+		'CN7'  => 'Liaoning / &#36797;&#23425;',
+		'CN8'  => 'Jilin / &#21513;&#26519;',
+		'CN9'  => 'Heilongjiang / &#40657;&#40857;&#27743;',
+		'CN10' => 'Shanghai / &#19978;&#28023;',
+		'CN11' => 'Jiangsu / &#27743;&#33487;',
+		'CN12' => 'Zhejiang / &#27993;&#27743;',
+		'CN13' => 'Anhui / &#23433;&#24509;',
+		'CN14' => 'Fujian / &#31119;&#24314;',
+		'CN15' => 'Jiangxi / &#27743;&#35199;',
+		'CN16' => 'Shandong / &#23665;&#19996;',
+		'CN17' => 'Henan / &#27827;&#21335;',
+		'CN18' => 'Hubei / &#28246;&#21271;',
+		'CN19' => 'Hunan / &#28246;&#21335;',
+		'CN20' => 'Guangdong / &#24191;&#19996;',
+		'CN21' => 'Guangxi Zhuang / &#24191;&#35199;&#22766;&#26063;',
+		'CN22' => 'Hainan / &#28023;&#21335;',
+		'CN23' => 'Chongqing / &#37325;&#24198;',
+		'CN24' => 'Sichuan / &#22235;&#24029;',
+		'CN25' => 'Guizhou / &#36149;&#24030;',
+		'CN26' => 'Shaanxi / &#38485;&#35199;',
+		'CN27' => 'Gansu / &#29976;&#32899;',
+		'CN28' => 'Qinghai / &#38738;&#28023;',
+		'CN29' => 'Ningxia Hui / &#23425;&#22799;',
+		'CN30' => 'Macau / &#28595;&#38376;',
+		'CN31' => 'Tibet / &#35199;&#34255;',
+		'CN32' => 'Xinjiang / &#26032;&#30086;',
 	);
 
 	return apply_filters( 'edd_chinese_states', $states );
@@ -890,224 +889,224 @@ function edd_get_chinese_states_list() {
  */
 function edd_get_united_kingdom_states_list() {
 	$states = array(
-	    ''	    	 => '',
-	    'GB-ABE' => 'Aberdeen City',
-	    'GB-ABD' => 'Aberdeenshire',
-	    'GB-ANS' => 'Angus',
-	    'GB-ANN' => 'Antrim and Newtownabbey',
-	    'GB-AND' => 'Ards and North Down',
-	    'GB-AGB' => 'Argyll and Bute',
-	    'GB-ABC' => 'Armagh, Banbridge and Craigavon',
-	    'GB-BDG' => 'Barking and Dagenham',
-	    'GB-BNE' => 'Barnet',
-	    'GB-BNS' => 'Barnsley',
-	    'GB-BAS' => 'Bath and North East Somerset',
-	    'GB-BDF' => 'Bedford',
-	    'GB-BFS' => 'Belfast',
-	    'GB-BEX' => 'Bexley',
-	    'GB-BIR' => 'Birmingham',
-	    'GB-BBD' => 'Blackburn with Darwen',
-	    'GB-BPL' => 'Blackpool',
-	    'GB-BGW' => 'Blaenau Gwent',
-	    'GB-BOL' => 'Bolton',
-	    'GB-BMH' => 'Bournemouth',
-	    'GB-BRC' => 'Bracknell Forest',
-	    'GB-BRD' => 'Bradford',
-	    'GB-BEN' => 'Brent',
-	    'GB-BGE' => 'Bridgend',
-	    'GB-BNH' => 'Brighton and Hove',
-	    'GB-BST' => 'Bristol, City of',
-	    'GB-BRY' => 'Bromley',
-	    'GB-BKM' => 'Buckinghamshire',
-	    'GB-BUR' => 'Bury',
-	    'GB-CAY' => 'Caerphilly',
-	    'GB-CLD' => 'Calderdale',
-	    'GB-CAM' => 'Cambridgeshire',
-	    'GB-CMD' => 'Camden',
-	    'GB-CRF' => 'Cardiff',
-	    'GB-CMN' => 'Carmarthenshire',
-	    'GB-CCG' => 'Causeway Coast and Glens',
-	    'GB-CBF' => 'Central Bedfordshire',
-	    'GB-CGN' => 'Ceredigion',
-	    'GB-CHE' => 'Cheshire East',
-	    'GB-CHW' => 'Cheshire West and Chester',
-	    'GB-CLK' => 'Clackmannanshire',
-	    'GB-CWY' => 'Conwy',
-	    'GB-CON' => 'Cornwall',
-	    'GB-COV' => 'Coventry',
-	    'GB-CRY' => 'Croydon',
-	    'GB-CMA' => 'Cumbria',
-	    'GB-DAL' => 'Darlington',
-	    'GB-DEN' => 'Denbighshire',
-	    'GB-DER' => 'Derby',
-	    'GB-DBY' => 'Derbyshire',
-	    'GB-DRS' => 'Derry and Strabane',
-	    'GB-DEV' => 'Devon',
-	    'GB-DNC' => 'Doncaster',
-	    'GB-DOR' => 'Dorset',
-	    'GB-DUD' => 'Dudley',
-	    'GB-DGY' => 'Dumfries and Galloway',
-	    'GB-DND' => 'Dundee City',
-	    'GB-DUR' => 'Durham, County',
-	    'GB-EAL' => 'Ealing',
-	    'GB-EAY' => 'East Ayrshire',
-	    'GB-EDU' => 'East Dunbartonshire',
-	    'GB-ELN' => 'East Lothian',
-	    'GB-ERW' => 'East Renfrewshire',
-	    'GB-ERY' => 'East Riding of Yorkshire',
-	    'GB-ESX' => 'East Sussex',
-	    'GB-EDH' => 'Edinburgh, City of',
-	    'GB-ELS' => 'Eilean Siar',
-	    'GB-ENF' => 'Enfield',
-	    'GB-ESS' => 'Essex',
-	    'GB-FAL' => 'Falkirk',
-	    'GB-FMO' => 'Fermanagh and Omagh',
-	    'GB-FIF' => 'Fife',
-	    'GB-FLN' => 'Flintshire',
-	    'GB-GAT' => 'Gateshead',
-	    'GB-GLG' => 'Glasgow City',
-	    'GB-GLS' => 'Gloucestershire',
-	    'GB-GRE' => 'Greenwich',
-	    'GB-GWN' => 'Gwynedd',
-	    'GB-HCK' => 'Hackney',
-	    'GB-HAL' => 'Halton',
-	    'GB-HMF' => 'Hammersmith and Fulham',
-	    'GB-HAM' => 'Hampshire',
-	    'GB-HRY' => 'Haringey',
-	    'GB-HRW' => 'Harrow',
-	    'GB-HPL' => 'Hartlepool',
-	    'GB-HAV' => 'Havering',
-	    'GB-HEF' => 'Herefordshire',
-	    'GB-HRT' => 'Hertfordshire',
-	    'GB-HLD' => 'Highland',
-	    'GB-HIL' => 'Hillingdon',
-	    'GB-HNS' => 'Hounslow',
-	    'GB-IVC' => 'Inverclyde',
-	    'GB-AGY' => 'Isle of Anglesey',
-	    'GB-IOW' => 'Isle of Wight',
-	    'GB-IOS' => 'Isles of Scilly',
-	    'GB-ISL' => 'Islington',
-	    'GB-KEC' => 'Kensington and Chelsea',
-	    'GB-KEN' => 'Kent',
-	    'GB-KHL' => 'Kingston upon Hull',
-	    'GB-KTT' => 'Kingston upon Thames',
-	    'GB-KIR' => 'Kirklees',
-	    'GB-KWL' => 'Knowsley',
-	    'GB-LBH' => 'Lambeth',
-	    'GB-LAN' => 'Lancashire',
-	    'GB-LDS' => 'Leeds',
-	    'GB-LCE' => 'Leicester',
-	    'GB-LEC' => 'Leicestershire',
-	    'GB-LEW' => 'Lewisham',
-	    'GB-LIN' => 'Lincolnshire',
-	    'GB-LBC' => 'Lisburn and Castlereagh',
-	    'GB-LIV' => 'Liverpool',
-	    'GB-LND' => 'London, City of',
-	    'GB-LUT' => 'Luton',
-	    'GB-MAN' => 'Manchester',
-	    'GB-MDW' => 'Medway',
-	    'GB-MTY' => 'Merthyr Tydfil',
-	    'GB-MRT' => 'Merton',
-	    'GB-MEA' => 'Mid and East Antrim',
-	    'GB-MUL' => 'Mid Ulster',
-	    'GB-MDB' => 'Middlesbrough',
-	    'GB-MLN' => 'Midlothian',
-	    'GB-MIK' => 'Milton Keynes',
-	    'GB-MON' => 'Monmouthshire',
-	    'GB-MRY' => 'Moray',
-	    'GB-NTL' => 'Neath Port Talbot',
-	    'GB-NET' => 'Newcastle upon Tyne',
-	    'GB-NWM' => 'Newham',
-	    'GB-NWP' => 'Newport',
-	    'GB-NMD' => 'Newry, Mourne and Down',
-	    'GB-NFK' => 'Norfolk',
-	    'GB-NAY' => 'North Ayrshire',
-	    'GB-NEL' => 'North East Lincolnshire',
-	    'GB-NLK' => 'North Lanarkshire',
-	    'GB-NLN' => 'North Lincolnshire',
-	    'GB-NSM' => 'North Somerset',
-	    'GB-NTY' => 'North Tyneside',
-	    'GB-NYK' => 'North Yorkshire',
-	    'GB-NTH' => 'Northamptonshire',
-	    'GB-NBL' => 'Northumberland',
-	    'GB-NGM' => 'Nottingham',
-	    'GB-NTT' => 'Nottinghamshire',
-	    'GB-OLD' => 'Oldham',
-	    'GB-ORK' => 'Orkney Islands',
-	    'GB-OXF' => 'Oxfordshire',
-	    'GB-PEM' => 'Pembrokeshire',
-	    'GB-PKN' => 'Perth and Kinross',
-	    'GB-PTE' => 'Peterborough',
-	    'GB-PLY' => 'Plymouth',
-	    'GB-POL' => 'Poole',
-	    'GB-POR' => 'Portsmouth',
-	    'GB-POW' => 'Powys',
-	    'GB-RDG' => 'Reading',
-	    'GB-RDB' => 'Redbridge',
-	    'GB-RCC' => 'Redcar and Cleveland',
-	    'GB-RFW' => 'Renfrewshire',
-	    'GB-RCT' => 'Rhondda, Cynon, Taff',
-	    'GB-RIC' => 'Richmond upon Thames',
-	    'GB-RCH' => 'Rochdale',
-	    'GB-ROT' => 'Rotherham',
-	    'GB-RUT' => 'Rutland',
-	    'GB-SLF' => 'Salford',
-	    'GB-SAW' => 'Sandwell',
-	    'GB-SCB' => 'Scottish Borders, The',
-	    'GB-SFT' => 'Sefton',
-	    'GB-SHF' => 'Sheffield',
-	    'GB-ZET' => 'Shetland Islands',
-	    'GB-SHR' => 'Shropshire',
-	    'GB-SLG' => 'Slough',
-	    'GB-SOL' => 'Solihull',
-	    'GB-SOM' => 'Somerset',
-	    'GB-SAY' => 'South Ayrshire',
-	    'GB-SGC' => 'South Gloucestershire',
-	    'GB-SLK' => 'South Lanarkshire',
-	    'GB-STY' => 'South Tyneside',
-	    'GB-STH' => 'Southampton',
-	    'GB-SOS' => 'Southend-on-Sea',
-	    'GB-SWK' => 'Southwark',
-	    'GB-SHN' => 'St. Helens',
-	    'GB-STS' => 'Staffordshire',
-	    'GB-STG' => 'Stirling',
-	    'GB-SKP' => 'Stockport',
-	    'GB-STT' => 'Stockton-on-Tees',
-	    'GB-STE' => 'Stoke-on-Trent',
-	    'GB-SFK' => 'Suffolk',
-	    'GB-SND' => 'Sunderland',
-	    'GB-SRY' => 'Surrey',
-	    'GB-STN' => 'Sutton',
-	    'GB-SWA' => 'Swansea',
-	    'GB-SWD' => 'Swindon',
-	    'GB-TAM' => 'Tameside',
-	    'GB-TFW' => 'Telford and Wrekin',
-	    'GB-THR' => 'Thurrock',
-	    'GB-TOB' => 'Torbay',
-	    'GB-TOF' => 'Torfaen',
-	    'GB-TWH' => 'Tower Hamlets',
-	    'GB-TRF' => 'Trafford',
-	    'GB-VGL' => 'Vale of Glamorgan, The',
-	    'GB-WKF' => 'Wakefield',
-	    'GB-WLL' => 'Walsall',
-	    'GB-WFT' => 'Waltham Forest',
-	    'GB-WND' => 'Wandsworth',
-	    'GB-WRT' => 'Warrington',
-	    'GB-WAR' => 'Warwickshire',
-	    'GB-WBK' => 'West Berkshire',
-	    'GB-WDU' => 'West Dunbartonshire',
-	    'GB-WLN' => 'West Lothian',
-	    'GB-WSX' => 'West Sussex',
-	    'GB-WSM' => 'Westminster',
-	    'GB-WGN' => 'Wigan',
-	    'GB-WIL' => 'Wiltshire',
-	    'GB-WNM' => 'Windsor and Maidenhead',
-	    'GB-WRL' => 'Wirral',
-	    'GB-WOK' => 'Wokingham',
-	    'GB-WLV' => 'Wolverhampton',
-	    'GB-WOR' => 'Worcestershire',
-	    'GB-WRX' => 'Wrexham',
-	    'GB-YOR' => 'York',
+		''       => '',
+		'GB-ABE' => 'Aberdeen City',
+		'GB-ABD' => 'Aberdeenshire',
+		'GB-ANS' => 'Angus',
+		'GB-ANN' => 'Antrim and Newtownabbey',
+		'GB-AND' => 'Ards and North Down',
+		'GB-AGB' => 'Argyll and Bute',
+		'GB-ABC' => 'Armagh, Banbridge and Craigavon',
+		'GB-BDG' => 'Barking and Dagenham',
+		'GB-BNE' => 'Barnet',
+		'GB-BNS' => 'Barnsley',
+		'GB-BAS' => 'Bath and North East Somerset',
+		'GB-BDF' => 'Bedford',
+		'GB-BFS' => 'Belfast',
+		'GB-BEX' => 'Bexley',
+		'GB-BIR' => 'Birmingham',
+		'GB-BBD' => 'Blackburn with Darwen',
+		'GB-BPL' => 'Blackpool',
+		'GB-BGW' => 'Blaenau Gwent',
+		'GB-BOL' => 'Bolton',
+		'GB-BMH' => 'Bournemouth',
+		'GB-BRC' => 'Bracknell Forest',
+		'GB-BRD' => 'Bradford',
+		'GB-BEN' => 'Brent',
+		'GB-BGE' => 'Bridgend',
+		'GB-BNH' => 'Brighton and Hove',
+		'GB-BST' => 'Bristol, City of',
+		'GB-BRY' => 'Bromley',
+		'GB-BKM' => 'Buckinghamshire',
+		'GB-BUR' => 'Bury',
+		'GB-CAY' => 'Caerphilly',
+		'GB-CLD' => 'Calderdale',
+		'GB-CAM' => 'Cambridgeshire',
+		'GB-CMD' => 'Camden',
+		'GB-CRF' => 'Cardiff',
+		'GB-CMN' => 'Carmarthenshire',
+		'GB-CCG' => 'Causeway Coast and Glens',
+		'GB-CBF' => 'Central Bedfordshire',
+		'GB-CGN' => 'Ceredigion',
+		'GB-CHE' => 'Cheshire East',
+		'GB-CHW' => 'Cheshire West and Chester',
+		'GB-CLK' => 'Clackmannanshire',
+		'GB-CWY' => 'Conwy',
+		'GB-CON' => 'Cornwall',
+		'GB-COV' => 'Coventry',
+		'GB-CRY' => 'Croydon',
+		'GB-CMA' => 'Cumbria',
+		'GB-DAL' => 'Darlington',
+		'GB-DEN' => 'Denbighshire',
+		'GB-DER' => 'Derby',
+		'GB-DBY' => 'Derbyshire',
+		'GB-DRS' => 'Derry and Strabane',
+		'GB-DEV' => 'Devon',
+		'GB-DNC' => 'Doncaster',
+		'GB-DOR' => 'Dorset',
+		'GB-DUD' => 'Dudley',
+		'GB-DGY' => 'Dumfries and Galloway',
+		'GB-DND' => 'Dundee City',
+		'GB-DUR' => 'Durham, County',
+		'GB-EAL' => 'Ealing',
+		'GB-EAY' => 'East Ayrshire',
+		'GB-EDU' => 'East Dunbartonshire',
+		'GB-ELN' => 'East Lothian',
+		'GB-ERW' => 'East Renfrewshire',
+		'GB-ERY' => 'East Riding of Yorkshire',
+		'GB-ESX' => 'East Sussex',
+		'GB-EDH' => 'Edinburgh, City of',
+		'GB-ELS' => 'Eilean Siar',
+		'GB-ENF' => 'Enfield',
+		'GB-ESS' => 'Essex',
+		'GB-FAL' => 'Falkirk',
+		'GB-FMO' => 'Fermanagh and Omagh',
+		'GB-FIF' => 'Fife',
+		'GB-FLN' => 'Flintshire',
+		'GB-GAT' => 'Gateshead',
+		'GB-GLG' => 'Glasgow City',
+		'GB-GLS' => 'Gloucestershire',
+		'GB-GRE' => 'Greenwich',
+		'GB-GWN' => 'Gwynedd',
+		'GB-HCK' => 'Hackney',
+		'GB-HAL' => 'Halton',
+		'GB-HMF' => 'Hammersmith and Fulham',
+		'GB-HAM' => 'Hampshire',
+		'GB-HRY' => 'Haringey',
+		'GB-HRW' => 'Harrow',
+		'GB-HPL' => 'Hartlepool',
+		'GB-HAV' => 'Havering',
+		'GB-HEF' => 'Herefordshire',
+		'GB-HRT' => 'Hertfordshire',
+		'GB-HLD' => 'Highland',
+		'GB-HIL' => 'Hillingdon',
+		'GB-HNS' => 'Hounslow',
+		'GB-IVC' => 'Inverclyde',
+		'GB-AGY' => 'Isle of Anglesey',
+		'GB-IOW' => 'Isle of Wight',
+		'GB-IOS' => 'Isles of Scilly',
+		'GB-ISL' => 'Islington',
+		'GB-KEC' => 'Kensington and Chelsea',
+		'GB-KEN' => 'Kent',
+		'GB-KHL' => 'Kingston upon Hull',
+		'GB-KTT' => 'Kingston upon Thames',
+		'GB-KIR' => 'Kirklees',
+		'GB-KWL' => 'Knowsley',
+		'GB-LBH' => 'Lambeth',
+		'GB-LAN' => 'Lancashire',
+		'GB-LDS' => 'Leeds',
+		'GB-LCE' => 'Leicester',
+		'GB-LEC' => 'Leicestershire',
+		'GB-LEW' => 'Lewisham',
+		'GB-LIN' => 'Lincolnshire',
+		'GB-LBC' => 'Lisburn and Castlereagh',
+		'GB-LIV' => 'Liverpool',
+		'GB-LND' => 'London, City of',
+		'GB-LUT' => 'Luton',
+		'GB-MAN' => 'Manchester',
+		'GB-MDW' => 'Medway',
+		'GB-MTY' => 'Merthyr Tydfil',
+		'GB-MRT' => 'Merton',
+		'GB-MEA' => 'Mid and East Antrim',
+		'GB-MUL' => 'Mid Ulster',
+		'GB-MDB' => 'Middlesbrough',
+		'GB-MLN' => 'Midlothian',
+		'GB-MIK' => 'Milton Keynes',
+		'GB-MON' => 'Monmouthshire',
+		'GB-MRY' => 'Moray',
+		'GB-NTL' => 'Neath Port Talbot',
+		'GB-NET' => 'Newcastle upon Tyne',
+		'GB-NWM' => 'Newham',
+		'GB-NWP' => 'Newport',
+		'GB-NMD' => 'Newry, Mourne and Down',
+		'GB-NFK' => 'Norfolk',
+		'GB-NAY' => 'North Ayrshire',
+		'GB-NEL' => 'North East Lincolnshire',
+		'GB-NLK' => 'North Lanarkshire',
+		'GB-NLN' => 'North Lincolnshire',
+		'GB-NSM' => 'North Somerset',
+		'GB-NTY' => 'North Tyneside',
+		'GB-NYK' => 'North Yorkshire',
+		'GB-NTH' => 'Northamptonshire',
+		'GB-NBL' => 'Northumberland',
+		'GB-NGM' => 'Nottingham',
+		'GB-NTT' => 'Nottinghamshire',
+		'GB-OLD' => 'Oldham',
+		'GB-ORK' => 'Orkney Islands',
+		'GB-OXF' => 'Oxfordshire',
+		'GB-PEM' => 'Pembrokeshire',
+		'GB-PKN' => 'Perth and Kinross',
+		'GB-PTE' => 'Peterborough',
+		'GB-PLY' => 'Plymouth',
+		'GB-POL' => 'Poole',
+		'GB-POR' => 'Portsmouth',
+		'GB-POW' => 'Powys',
+		'GB-RDG' => 'Reading',
+		'GB-RDB' => 'Redbridge',
+		'GB-RCC' => 'Redcar and Cleveland',
+		'GB-RFW' => 'Renfrewshire',
+		'GB-RCT' => 'Rhondda, Cynon, Taff',
+		'GB-RIC' => 'Richmond upon Thames',
+		'GB-RCH' => 'Rochdale',
+		'GB-ROT' => 'Rotherham',
+		'GB-RUT' => 'Rutland',
+		'GB-SLF' => 'Salford',
+		'GB-SAW' => 'Sandwell',
+		'GB-SCB' => 'Scottish Borders, The',
+		'GB-SFT' => 'Sefton',
+		'GB-SHF' => 'Sheffield',
+		'GB-ZET' => 'Shetland Islands',
+		'GB-SHR' => 'Shropshire',
+		'GB-SLG' => 'Slough',
+		'GB-SOL' => 'Solihull',
+		'GB-SOM' => 'Somerset',
+		'GB-SAY' => 'South Ayrshire',
+		'GB-SGC' => 'South Gloucestershire',
+		'GB-SLK' => 'South Lanarkshire',
+		'GB-STY' => 'South Tyneside',
+		'GB-STH' => 'Southampton',
+		'GB-SOS' => 'Southend-on-Sea',
+		'GB-SWK' => 'Southwark',
+		'GB-SHN' => 'St. Helens',
+		'GB-STS' => 'Staffordshire',
+		'GB-STG' => 'Stirling',
+		'GB-SKP' => 'Stockport',
+		'GB-STT' => 'Stockton-on-Tees',
+		'GB-STE' => 'Stoke-on-Trent',
+		'GB-SFK' => 'Suffolk',
+		'GB-SND' => 'Sunderland',
+		'GB-SRY' => 'Surrey',
+		'GB-STN' => 'Sutton',
+		'GB-SWA' => 'Swansea',
+		'GB-SWD' => 'Swindon',
+		'GB-TAM' => 'Tameside',
+		'GB-TFW' => 'Telford and Wrekin',
+		'GB-THR' => 'Thurrock',
+		'GB-TOB' => 'Torbay',
+		'GB-TOF' => 'Torfaen',
+		'GB-TWH' => 'Tower Hamlets',
+		'GB-TRF' => 'Trafford',
+		'GB-VGL' => 'Vale of Glamorgan, The',
+		'GB-WKF' => 'Wakefield',
+		'GB-WLL' => 'Walsall',
+		'GB-WFT' => 'Waltham Forest',
+		'GB-WND' => 'Wandsworth',
+		'GB-WRT' => 'Warrington',
+		'GB-WAR' => 'Warwickshire',
+		'GB-WBK' => 'West Berkshire',
+		'GB-WDU' => 'West Dunbartonshire',
+		'GB-WLN' => 'West Lothian',
+		'GB-WSX' => 'West Sussex',
+		'GB-WSM' => 'Westminster',
+		'GB-WGN' => 'Wigan',
+		'GB-WIL' => 'Wiltshire',
+		'GB-WNM' => 'Windsor and Maidenhead',
+		'GB-WRL' => 'Wirral',
+		'GB-WOK' => 'Wokingham',
+		'GB-WLV' => 'Wolverhampton',
+		'GB-WOR' => 'Worcestershire',
+		'GB-WRX' => 'Wrexham',
+		'GB-YOR' => 'York',
 	);
 
 	return apply_filters( 'edd_united_kingdom_states', $states );
@@ -1137,7 +1136,7 @@ function edd_get_new_zealand_states_list() {
 		'WA' => 'Waikato',
 		'WR' => 'Wairarapa',
 		'WE' => 'Wellington',
-		'WC' => 'West Coast'
+		'WC' => 'West Coast',
 	);
 
 	return apply_filters( 'edd_new_zealand_states', $states );
@@ -1177,7 +1176,7 @@ function edd_get_peruvian_states_list() {
 		'SAM' => 'San Mart&iacute;n',
 		'TAC' => 'Tacna',
 		'TUM' => 'Tumbes',
-		'UCA' => 'Ucayali'
+		'UCA' => 'Ucayali',
 	);
 
 	return apply_filters( 'edd_peruvian_states', $states );
@@ -1190,42 +1189,42 @@ function edd_get_peruvian_states_list() {
  * @return array $states A list of states
  */
 function edd_get_indonesian_states_list() {
-	$states  = array(
+	$states = array(
 		''   => '',
 		'AC' => 'Daerah Istimewa Aceh',
-	    'SU' => 'Sumatera Utara',
-	    'SB' => 'Sumatera Barat',
-	    'RI' => 'Riau',
-	    'KR' => 'Kepulauan Riau',
-	    'JA' => 'Jambi',
-	    'SS' => 'Sumatera Selatan',
-	    'BB' => 'Bangka Belitung',
-	    'BE' => 'Bengkulu',
-	    'LA' => 'Lampung',
-	    'JK' => 'DKI Jakarta',
-	    'JB' => 'Jawa Barat',
-	    'BT' => 'Banten',
-	    'JT' => 'Jawa Tengah',
-	    'JI' => 'Jawa Timur',
-	    'YO' => 'Daerah Istimewa Yogyakarta',
-	    'BA' => 'Bali',
-	    'NB' => 'Nusa Tenggara Barat',
-	    'NT' => 'Nusa Tenggara Timur',
-	    'KB' => 'Kalimantan Barat',
-	    'KT' => 'Kalimantan Tengah',
-	    'KI' => 'Kalimantan Timur',
-	    'KS' => 'Kalimantan Selatan',
-	    'KU' => 'Kalimantan Utara',
-	    'SA' => 'Sulawesi Utara',
-	    'ST' => 'Sulawesi Tengah',
-	    'SG' => 'Sulawesi Tenggara',
-	    'SR' => 'Sulawesi Barat',
-	    'SN' => 'Sulawesi Selatan',
-	    'GO' => 'Gorontalo',
-	    'MA' => 'Maluku',
-	    'MU' => 'Maluku Utara',
-	    'PA' => 'Papua',
-	    'PB' => 'Papua Barat'
+		'SU' => 'Sumatera Utara',
+		'SB' => 'Sumatera Barat',
+		'RI' => 'Riau',
+		'KR' => 'Kepulauan Riau',
+		'JA' => 'Jambi',
+		'SS' => 'Sumatera Selatan',
+		'BB' => 'Bangka Belitung',
+		'BE' => 'Bengkulu',
+		'LA' => 'Lampung',
+		'JK' => 'DKI Jakarta',
+		'JB' => 'Jawa Barat',
+		'BT' => 'Banten',
+		'JT' => 'Jawa Tengah',
+		'JI' => 'Jawa Timur',
+		'YO' => 'Daerah Istimewa Yogyakarta',
+		'BA' => 'Bali',
+		'NB' => 'Nusa Tenggara Barat',
+		'NT' => 'Nusa Tenggara Timur',
+		'KB' => 'Kalimantan Barat',
+		'KT' => 'Kalimantan Tengah',
+		'KI' => 'Kalimantan Timur',
+		'KS' => 'Kalimantan Selatan',
+		'KU' => 'Kalimantan Utara',
+		'SA' => 'Sulawesi Utara',
+		'ST' => 'Sulawesi Tengah',
+		'SG' => 'Sulawesi Tenggara',
+		'SR' => 'Sulawesi Barat',
+		'SN' => 'Sulawesi Selatan',
+		'GO' => 'Gorontalo',
+		'MA' => 'Maluku',
+		'MU' => 'Maluku Utara',
+		'PA' => 'Papua',
+		'PB' => 'Papua Barat',
 	);
 
 	return apply_filters( 'edd_indonesia_states', $states );
@@ -1275,7 +1274,7 @@ function edd_get_indian_states_list() {
 		'DD' => 'Daman and Diu',
 		'DL' => 'Delhi',
 		'LD' => 'Lakshadweep',
-		'PY' => 'Pondicherry (Puducherry)'
+		'PY' => 'Pondicherry (Puducherry)',
 	);
 
 	return apply_filters( 'edd_indian_states', $states );
@@ -1320,7 +1319,7 @@ function edd_get_iranian_states_list() {
 		'MZN' => 'Mazandaran',
 		'MKZ' => 'Markazi',
 		'HRZ' => 'Hormozgan',
-		'SBN' => 'Sistan and Baluchestan'
+		'SBN' => 'Sistan and Baluchestan',
 	);
 
 	return apply_filters( 'edd_iranian_states', $states );
@@ -1444,7 +1443,7 @@ function edd_get_italian_states_list() {
 		'VR' => 'Verona',
 		'VV' => 'Vibo Valentia',
 		'VI' => 'Vicenza',
-		'VT' => 'Viterbo'
+		'VT' => 'Viterbo',
 	);
 
 	return apply_filters( 'edd_italian_states', $states );
@@ -1474,7 +1473,7 @@ function edd_get_malaysian_states_list() {
 		'TRG' => 'Terengganu',
 		'KUL' => 'W.P. Kuala Lumpur',
 		'LBN' => 'W.P. Labuan',
-		'PJY' => 'W.P. Putrajaya'
+		'PJY' => 'W.P. Putrajaya',
 	);
 
 	return apply_filters( 'edd_malaysian_states', $states );
@@ -1520,7 +1519,7 @@ function edd_get_mexican_states_list() {
 		'TLA' => 'Tlaxcala',
 		'VER' => 'Veracruz',
 		'YUC' => 'Yucat&aacute;n',
-		'ZAC' => 'Zacatecas'
+		'ZAC' => 'Zacatecas',
 	);
 
 	return apply_filters( 'edd_mexican_states', $states );
@@ -1609,7 +1608,7 @@ function edd_get_nepalese_states_list() {
 		'BAI' => 'Baitadi',
 		'DAD' => 'Dadeldhura',
 		'DAR' => 'Darchula',
-		'KAN' => 'Kanchanpur'
+		'KAN' => 'Kanchanpur',
 	);
 
 	return apply_filters( 'edd_nepalese_states', $states );
@@ -1632,7 +1631,7 @@ function edd_get_south_african_states_list() {
 		'MP'  => 'Mpumalanga',
 		'NC'  => 'Northern Cape',
 		'NW'  => 'North West',
-		'WC'  => 'Western Cape'
+		'WC'  => 'Western Cape',
 	);
 
 	return apply_filters( 'edd_south_african_states', $states );
@@ -1723,7 +1722,7 @@ function edd_get_thailand_states_list() {
 		'TH-61' => 'Uthai Thani (&#3629;&#3640;&#3607;&#3633;&#3618;&#3608;&#3634;&#3609;&#3637;)',
 		'TH-53' => 'Uttaradit (&#3629;&#3640;&#3605;&#3619;&#3604;&#3636;&#3605;&#3606;&#3660;)',
 		'TH-95' => 'Yala (&#3618;&#3632;&#3621;&#3634;)',
-		'TH-35' => 'Yasothon (&#3618;&#3650;&#3626;&#3608;&#3619;)'
+		'TH-35' => 'Yasothon (&#3618;&#3650;&#3626;&#3608;&#3619;)',
 	);
 
 	return apply_filters( 'edd_thailand_states', $states );
@@ -1818,7 +1817,7 @@ function edd_get_turkey_states_list() {
 		'TR78' => 'Karab&#252;k',
 		'TR79' => 'Kilis',
 		'TR80' => 'Osmaniye',
-		'TR81' => 'D&#252;zce'
+		'TR81' => 'D&#252;zce',
 	);
 
 	return apply_filters( 'edd_turkey_states', $states );
@@ -1833,58 +1832,58 @@ function edd_get_turkey_states_list() {
 function edd_get_spain_states_list() {
 	$states = array(
 		''   => '',
-	    'C'  => __( 'A Coru&ntilde;a', 'easy-digital-downloads' ),
-	    'VI' => __( 'Araba', 'easy-digital-downloads' ),
-	    'AB' => __( 'Albacete', 'easy-digital-downloads' ),
-	    'A'  => __( 'Alicante', 'easy-digital-downloads' ),
-	    'AL' => __( 'Almer&iacute;a', 'easy-digital-downloads' ),
-	    'O'  => __( 'Asturias', 'easy-digital-downloads' ),
-	    'AV' => __( '&Aacute;vila', 'easy-digital-downloads' ),
-	    'BA' => __( 'Badajoz', 'easy-digital-downloads' ),
-	    'PM' => __( 'Baleares', 'easy-digital-downloads' ),
-	    'B'  => __( 'Barcelona', 'easy-digital-downloads' ),
-	    'BU' => __( 'Burgos', 'easy-digital-downloads' ),
-	    'CC' => __( 'C&aacute;ceres', 'easy-digital-downloads' ),
-	    'CA' => __( 'C&aacute;diz', 'easy-digital-downloads' ),
-	    'S'  => __( 'Cantabria', 'easy-digital-downloads' ),
-	    'CS' => __( 'Castell&oacute;n', 'easy-digital-downloads' ),
-	    'CE' => __( 'Ceuta', 'easy-digital-downloads' ),
-	    'CR' => __( 'Ciudad Real', 'easy-digital-downloads' ),
-	    'CO' => __( 'C&oacute;rdoba', 'easy-digital-downloads' ),
-	    'CU' => __( 'Cuenca', 'easy-digital-downloads' ),
-	    'GI' => __( 'Girona', 'easy-digital-downloads' ),
-	    'GR' => __( 'Granada', 'easy-digital-downloads' ),
-	    'GU' => __( 'Guadalajara', 'easy-digital-downloads' ),
-	    'SS' => __( 'Gipuzkoa', 'easy-digital-downloads' ),
-	    'H'  => __( 'Huelva', 'easy-digital-downloads' ),
-	    'HU' => __( 'Huesca', 'easy-digital-downloads' ),
-	    'J'  => __( 'Ja&eacute;n', 'easy-digital-downloads' ),
-	    'LO' => __( 'La Rioja', 'easy-digital-downloads' ),
-	    'GC' => __( 'Las Palmas', 'easy-digital-downloads' ),
-	    'LE' => __( 'Le&oacute;n', 'easy-digital-downloads' ),
-	    'L'  => __( 'Lleida', 'easy-digital-downloads' ),
-	    'LU' => __( 'Lugo', 'easy-digital-downloads' ),
-	    'M'  => __( 'Madrid', 'easy-digital-downloads' ),
-	    'MA' => __( 'M&aacute;laga', 'easy-digital-downloads' ),
-	    'ML' => __( 'Melilla', 'easy-digital-downloads' ),
-	    'MU' => __( 'Murcia', 'easy-digital-downloads' ),
-	    'NA' => __( 'Navarra', 'easy-digital-downloads' ),
-	    'OR' => __( 'Ourense', 'easy-digital-downloads' ),
-	    'P'  => __( 'Palencia', 'easy-digital-downloads' ),
-	    'PO' => __( 'Pontevedra', 'easy-digital-downloads' ),
-	    'SA' => __( 'Salamanca', 'easy-digital-downloads' ),
-	    'TF' => __( 'Santa Cruz de Tenerife', 'easy-digital-downloads' ),
-	    'SG' => __( 'Segovia', 'easy-digital-downloads' ),
-	    'SE' => __( 'Sevilla', 'easy-digital-downloads' ),
-	    'SO' => __( 'Soria', 'easy-digital-downloads' ),
-	    'T'  => __( 'Tarragona', 'easy-digital-downloads' ),
-	    'TE' => __( 'Teruel', 'easy-digital-downloads' ),
-	    'TO' => __( 'Toledo', 'easy-digital-downloads' ),
-	    'V'  => __( 'Valencia', 'easy-digital-downloads' ),
-	    'VA' => __( 'Valladolid', 'easy-digital-downloads' ),
-	    'BI' => __( 'Bizkaia', 'easy-digital-downloads' ),
-	    'ZA' => __( 'Zamora', 'easy-digital-downloads' ),
-	    'Z'  => __( 'Zaragoza', 'easy-digital-downloads' )
+		'C'  => __( 'A Coru&ntilde;a', 'easy-digital-downloads' ),
+		'VI' => __( 'Araba', 'easy-digital-downloads' ),
+		'AB' => __( 'Albacete', 'easy-digital-downloads' ),
+		'A'  => __( 'Alicante', 'easy-digital-downloads' ),
+		'AL' => __( 'Almer&iacute;a', 'easy-digital-downloads' ),
+		'O'  => __( 'Asturias', 'easy-digital-downloads' ),
+		'AV' => __( '&Aacute;vila', 'easy-digital-downloads' ),
+		'BA' => __( 'Badajoz', 'easy-digital-downloads' ),
+		'PM' => __( 'Baleares', 'easy-digital-downloads' ),
+		'B'  => __( 'Barcelona', 'easy-digital-downloads' ),
+		'BU' => __( 'Burgos', 'easy-digital-downloads' ),
+		'CC' => __( 'C&aacute;ceres', 'easy-digital-downloads' ),
+		'CA' => __( 'C&aacute;diz', 'easy-digital-downloads' ),
+		'S'  => __( 'Cantabria', 'easy-digital-downloads' ),
+		'CS' => __( 'Castell&oacute;n', 'easy-digital-downloads' ),
+		'CE' => __( 'Ceuta', 'easy-digital-downloads' ),
+		'CR' => __( 'Ciudad Real', 'easy-digital-downloads' ),
+		'CO' => __( 'C&oacute;rdoba', 'easy-digital-downloads' ),
+		'CU' => __( 'Cuenca', 'easy-digital-downloads' ),
+		'GI' => __( 'Girona', 'easy-digital-downloads' ),
+		'GR' => __( 'Granada', 'easy-digital-downloads' ),
+		'GU' => __( 'Guadalajara', 'easy-digital-downloads' ),
+		'SS' => __( 'Gipuzkoa', 'easy-digital-downloads' ),
+		'H'  => __( 'Huelva', 'easy-digital-downloads' ),
+		'HU' => __( 'Huesca', 'easy-digital-downloads' ),
+		'J'  => __( 'Ja&eacute;n', 'easy-digital-downloads' ),
+		'LO' => __( 'La Rioja', 'easy-digital-downloads' ),
+		'GC' => __( 'Las Palmas', 'easy-digital-downloads' ),
+		'LE' => __( 'Le&oacute;n', 'easy-digital-downloads' ),
+		'L'  => __( 'Lleida', 'easy-digital-downloads' ),
+		'LU' => __( 'Lugo', 'easy-digital-downloads' ),
+		'M'  => __( 'Madrid', 'easy-digital-downloads' ),
+		'MA' => __( 'M&aacute;laga', 'easy-digital-downloads' ),
+		'ML' => __( 'Melilla', 'easy-digital-downloads' ),
+		'MU' => __( 'Murcia', 'easy-digital-downloads' ),
+		'NA' => __( 'Navarra', 'easy-digital-downloads' ),
+		'OR' => __( 'Ourense', 'easy-digital-downloads' ),
+		'P'  => __( 'Palencia', 'easy-digital-downloads' ),
+		'PO' => __( 'Pontevedra', 'easy-digital-downloads' ),
+		'SA' => __( 'Salamanca', 'easy-digital-downloads' ),
+		'TF' => __( 'Santa Cruz de Tenerife', 'easy-digital-downloads' ),
+		'SG' => __( 'Segovia', 'easy-digital-downloads' ),
+		'SE' => __( 'Sevilla', 'easy-digital-downloads' ),
+		'SO' => __( 'Soria', 'easy-digital-downloads' ),
+		'T'  => __( 'Tarragona', 'easy-digital-downloads' ),
+		'TE' => __( 'Teruel', 'easy-digital-downloads' ),
+		'TO' => __( 'Toledo', 'easy-digital-downloads' ),
+		'V'  => __( 'Valencia', 'easy-digital-downloads' ),
+		'VA' => __( 'Valladolid', 'easy-digital-downloads' ),
+		'BI' => __( 'Bizkaia', 'easy-digital-downloads' ),
+		'ZA' => __( 'Zamora', 'easy-digital-downloads' ),
+		'Z'  => __( 'Zaragoza', 'easy-digital-downloads' ),
 	);
 
 	return apply_filters( 'edd_spain_states', $states );

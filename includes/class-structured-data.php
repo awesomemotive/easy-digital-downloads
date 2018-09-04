@@ -104,7 +104,7 @@ class Structured_Data {
 	 * @since 3.0
 	 *
 	 * @param mixed string|false $context Default empty as the class figures out what the context is automatically.
-	 * @param mixed $args Arguments that can be passed to the generators.
+	 * @param mixed              $args Arguments that can be passed to the generators.
 	 *
 	 * @return string
 	 */

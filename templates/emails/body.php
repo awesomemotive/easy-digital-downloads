@@ -2,8 +2,8 @@
 /**
  * Email Body
  *
- * @author 		Easy Digital Downloads
- * @package 	Easy Digital Downloads/Templates/Emails
+ * @author      Easy Digital Downloads
+ * @package     Easy Digital Downloads/Templates/Emails
  * @version     2.1
  */
 
@@ -11,6 +11,5 @@
 defined( 'ABSPATH' ) || exit;
 
 // {email} is replaced by the content entered in Downloads > Settings > Emails
-
 ?>
 {email}

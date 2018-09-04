@@ -109,9 +109,11 @@ final class Orders extends Table {
 
 		// Maybe add column
 		if ( ! $this->is_success( $result ) ) {
-			$result = $this->get_db()->query( "
+			$result = $this->get_db()->query(
+				"
 				ALTER TABLE {$this->table_name} ADD COLUMN `date_refundable` datetime DEFAULT '0000-00-00 00:00:00' AFTER `date_completed`;
-			" );
+			"
+			);
 		}
 
 		// Return success/fail
@@ -133,9 +135,11 @@ final class Orders extends Table {
 
 		// Maybe add column
 		if ( false === $result ) {
-			$result = $this->get_db()->query( "
+			$result = $this->get_db()->query(
+				"
 				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_refundable`;
-			" );
+			"
+			);
 		}
 
 		// Return success/fail.
@@ -157,9 +161,11 @@ final class Orders extends Table {
 
 		// Maybe add column
 		if ( false === $result ) {
-			$result = $this->get_db()->query( "
+			$result = $this->get_db()->query(
+				"
 				ALTER TABLE {$this->table_name} ADD COLUMN `type` varchar(20) NOT NULL default 'sale' AFTER status;
-			" );
+			"
+			);
 		}
 
 		// Return success/fail.
@@ -177,13 +183,17 @@ final class Orders extends Table {
 	protected function __201808150001() {
 
 		// Alter the database
-		$this->get_db()->query( "
+		$this->get_db()->query(
+			"
 			ALTER TABLE {$this->table_name} MODIFY COLUMN `type` varchar(20) NOT NULL default 'sale';
-		" );
+		"
+		);
 
-		$this->get_db()->query( "
+		$this->get_db()->query(
+			"
 			UPDATE {$this->table_name} SET `type` = 'sale';
-		" );
+		"
+		);
 
 		// Return success/fail.
 		return $this->is_success( true );

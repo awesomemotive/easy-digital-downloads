@@ -131,7 +131,7 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 			if ( $i == ( count( $cols ) - 1 ) ) {
 				$col_data .= "\r\n";
 			} else {
-				$col_data .= ",,";
+				$col_data .= ',,';
 			}
 		}
 
@@ -181,7 +181,7 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 				$start_date = date( 'Y-m-d', strtotime( 'first day of +' . ( $this->step - 1 ) . ' month', strtotime( $start_date ) ) );
 
 				if ( date( 'Y-m', strtotime( $start_date ) ) == date( 'Y-m', strtotime( $this->end ) ) ) {
-					$end_date = date( 'Y-m-d', strtotime( $this->end ) );
+					$end_date  = date( 'Y-m-d', strtotime( $this->end ) );
 					$row_data .= $end_date . ',';
 				} else {
 					$row_data .= $start_date . ',';
@@ -268,23 +268,28 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 		}
 
 		$statuses = $this->get_supported_statuses();
-		$totals   = $wpdb->get_results( $wpdb->prepare(
-			"SELECT SUM(total) AS total, COUNT(DISTINCT id) AS count, status
+		$totals   = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT SUM(total) AS total, COUNT(DISTINCT id) AS count, status
 			 FROM {$wpdb->edd_orders}
 			 WHERE date_created >= %s AND date_created < %s
 			 GROUP BY YEAR(date_created), MONTH(date_created), status
-			 ORDER by date_created ASC", $start_date, $end_date ), ARRAY_A );
+			 ORDER by date_created ASC",
+				$start_date,
+				$end_date
+			),
+			ARRAY_A
+		);
 
 		$total_data = array();
 		foreach ( $totals as $row ) {
 			$total_data[ $row['status'] ] = array(
 				'count'  => $row['count'],
-				'amount' => edd_format_amount( $row['total'] )
+				'amount' => edd_format_amount( $row['total'] ),
 			);
 		}
 
 		foreach ( $statuses as $status ) {
-
 			if ( ! isset( $total_data[ $status ] ) ) {
 				$data[ $status ] = array(
 					'count'  => 0,
@@ -296,7 +301,6 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 					'amount' => $total_data[ $status ]['amount'],
 				);
 			}
-
 		}
 
 		$data = apply_filters( 'edd_export_get_data', $data );
@@ -330,7 +334,7 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 		$total = $this->count();
 
 		if ( $total > 0 ) {
-			$percentage =  ( $this->step / $total ) * 100;
+			$percentage = ( $this->step / $total ) * 100;
 		}
 
 		if ( $percentage > 100 ) {

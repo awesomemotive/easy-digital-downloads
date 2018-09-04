@@ -139,7 +139,7 @@ class EDD_Batch_Sales_And_Earnings_Export extends EDD_Batch_Export {
 	            LIMIT {$args['offset']}, {$args['number']}
 			";
 
-		// Join orders and order items table.
+			// Join orders and order items table.
 		} else {
 			$sql = "
 				SELECT SUM({$wpdb->edd_order_items}.quantity) AS sales, SUM({$wpdb->edd_order_items}.total) AS earnings, {$wpdb->edd_orders}.date_created
@@ -198,12 +198,12 @@ class EDD_Batch_Sales_And_Earnings_Export extends EDD_Batch_Export {
 				array(
 					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
 					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
-					'inclusive' => true
-				)
+					'inclusive' => true,
+				),
 			);
 		}
 
-		$total = edd_count_orders( $args );
+		$total      = edd_count_orders( $args );
 		$percentage = 100;
 
 		if ( $total > 0 ) {

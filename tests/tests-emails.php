@@ -23,30 +23,36 @@ class Tests_Emails extends EDD_UnitTestCase {
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
-		$post_id = self::factory()->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
+		$post_id = self::factory()->post->create(
+			array(
+				'post_title'  => 'Test Download',
+				'post_type'   => 'download',
+				'post_status' => 'publish',
+			)
+		);
 
 		$_variable_pricing = array(
 			array(
-				'name' => 'Simple',
-				'amount' => 20
+				'name'   => 'Simple',
+				'amount' => 20,
 			),
 			array(
-				'name' => 'Advanced',
-				'amount' => 100
-			)
+				'name'   => 'Advanced',
+				'amount' => 100,
+			),
 		);
 
 		$_download_files = array(
 			array(
 				'name'      => 'File 1',
 				'file'      => 'http://localhost/file1.jpg',
-				'condition' => 0
+				'condition' => 0,
 			),
 			array(
 				'name'      => 'File 2',
 				'file'      => 'http://localhost/file2.jpg',
-				'condition' => 'all'
-			)
+				'condition' => 'all',
+			),
 		);
 
 		$meta = array(
@@ -61,39 +67,39 @@ class Tests_Emails extends EDD_UnitTestCase {
 			'_edd_product_type'              => 'default',
 			'_edd_download_earnings'         => 129.43,
 			'_edd_download_sales'            => 59,
-			'_edd_download_limit_override_1' => 1
+			'_edd_download_limit_override_1' => 1,
 		);
-		foreach( $meta as $key => $value ) {
+		foreach ( $meta as $key => $value ) {
 			update_post_meta( $post_id, $key, $value );
 		}
 
 		self::$post = get_post( $post_id );
 
 		/** Generate some sales */
-		$user = get_userdata(1);
+		$user = get_userdata( 1 );
 
 		$user_info = array(
 			'id'         => $user->ID,
 			'email'      => $user->user_email,
 			'first_name' => 'Network',
 			'last_name'  => 'Administrator',
-			'discount'   => 'none'
+			'discount'   => 'none',
 		);
 
 		$download_details = array(
 			array(
-				'id' => self::$post->ID,
+				'id'      => self::$post->ID,
 				'options' => array(
-					'price_id' => 1
-				)
-			)
+					'price_id' => 1,
+				),
+			),
 		);
 
 		$price = '100.00';
 
 		$total = 0;
 
-		$prices = get_post_meta( $download_details[0]['id'], 'edd_variable_prices', true );
+		$prices     = get_post_meta( $download_details[0]['id'], 'edd_variable_prices', true );
 		$item_price = $prices[1]['amount'];
 
 		$total += $item_price;
@@ -105,16 +111,16 @@ class Tests_Emails extends EDD_UnitTestCase {
 				'item_number' => array(
 					'id'      => self::$post->ID,
 					'options' => array(
-						'price_id' => 1
-					)
+						'price_id' => 1,
+					),
 				),
-				'discount'   => 0,
-				'subtotal'   => 100,
-				'price'      => 100,
-				'item_price' => 100,
-				'tax'        => 0,
-				'quantity'   => 1
-			)
+				'discount'    => 0,
+				'subtotal'    => 100,
+				'price'       => 100,
+				'item_price'  => 100,
+				'tax'         => 0,
+				'quantity'    => 1,
+			),
 		);
 
 		$purchase_data = array(
@@ -140,15 +146,15 @@ class Tests_Emails extends EDD_UnitTestCase {
 	}
 
 	/**
-     * Test that each of the actions are added and each hooked in with the right priority
-     */
+	 * Test that each of the actions are added and each hooked in with the right priority
+	 */
 	public function test_email_actions() {
 		global $wp_filter;
 
-		$this->assertarrayHasKey( 'edd_admin_email_notice',       $wp_filter['edd_admin_sale_notice'][10]  );
+		$this->assertarrayHasKey( 'edd_admin_email_notice', $wp_filter['edd_admin_sale_notice'][10] );
 		$this->assertarrayHasKey( 'edd_trigger_purchase_receipt', $wp_filter['edd_complete_purchase'][999] );
-		$this->assertarrayHasKey( 'edd_resend_purchase_receipt',  $wp_filter['edd_email_links'][10]        );
-		$this->assertarrayHasKey( 'edd_send_test_email',          $wp_filter['edd_send_test_email'][10]    );
+		$this->assertarrayHasKey( 'edd_resend_purchase_receipt', $wp_filter['edd_email_links'][10] );
+		$this->assertarrayHasKey( 'edd_send_test_email', $wp_filter['edd_send_test_email'][10] );
 	}
 
 	public function test_admin_notice_emails() {
@@ -164,7 +170,7 @@ class Tests_Emails extends EDD_UnitTestCase {
 	public function test_email_templates() {
 		$expected = array(
 			'default' => 'Default Template',
-			'none' => 'No template, plain text only'
+			'none'    => 'No template, plain text only',
 		);
 
 		$this->assertEquals( $expected, edd_get_email_templates() );
@@ -307,11 +313,10 @@ class Tests_Emails extends EDD_UnitTestCase {
 		EDD()->emails->content_type = 'text/plain';
 
 		$this->assertEquals( 'text/plain', EDD()->emails->get_content_type() );
-
 	}
 
 	public function test_get_headers() {
-		$from_name = EDD()->emails->get_from_name();
+		$from_name    = EDD()->emails->get_from_name();
 		$from_address = EDD()->emails->get_from_address();
 
 		$this->assertContains( "From: {$from_name} <{$from_address}>", EDD()->emails->get_headers() );
@@ -327,10 +332,10 @@ class Tests_Emails extends EDD_UnitTestCase {
 		$message  = "Hello, this is plain text that I am going to convert to HTML\r\n";
 		$message .= "Line breaks should become BR tags.\r\n";
 
-		$expected  = wpautop( $message );
+		$expected = wpautop( $message );
 
 		EDD()->emails->content_type = 'text/html';
-		$message = EDD()->emails->text_to_html( $message, EDD()->emails );
+		$message                    = EDD()->emails->text_to_html( $message, EDD()->emails );
 
 		$this->assertEquals( $expected, $message );
 	}

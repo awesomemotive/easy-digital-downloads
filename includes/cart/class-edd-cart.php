@@ -146,7 +146,7 @@ class EDD_Cart {
 	 * @return void
 	 */
 	public function get_contents_from_session() {
-		$cart = EDD()->session->get( 'edd_cart' );
+		$cart           = EDD()->session->get( 'edd_cart' );
 		$this->contents = $cart;
 
 		do_action( 'edd_cart_contents_loaded_from_session', $this );
@@ -159,7 +159,7 @@ class EDD_Cart {
 	 * @return void
 	 */
 	public function get_discounts_from_session() {
-		$discounts = EDD()->session->get( 'cart_discounts' );
+		$discounts       = EDD()->session->get( 'cart_discounts' );
 		$this->discounts = $discounts;
 
 		do_action( 'edd_cart_discounts_loaded_from_session', $this );
@@ -176,7 +176,7 @@ class EDD_Cart {
 			$this->get_contents_from_session();
 		}
 
-		$cart = is_array( $this->contents ) && ! empty( $this->contents ) ? array_values( $this->contents ) : array();
+		$cart       = is_array( $this->contents ) && ! empty( $this->contents ) ? array_values( $this->contents ) : array();
 		$cart_count = count( $cart );
 
 		foreach ( $cart as $key => $item ) {
@@ -218,7 +218,7 @@ class EDD_Cart {
 		$length  = count( $this->contents ) - 1;
 
 		foreach ( $this->contents as $key => $item ) {
-			if( $key >= $length ) {
+			if ( $key >= $length ) {
 				$edd_is_last_cart_item = true;
 			}
 
@@ -240,11 +240,10 @@ class EDD_Cart {
 			$subtotal_for_tax = $subtotal;
 
 			foreach ( $fees as $fee ) {
-
 				$fee_amount = (float) $fee['amount'];
 				$subtotal  += $fee_amount;
 
-				if( $fee_amount > 0 ) {
+				if ( $fee_amount > 0 ) {
 					continue;
 				}
 
@@ -263,7 +262,7 @@ class EDD_Cart {
 				$total = 0;
 			}
 
-			$details[ $key ]  = array(
+			$details[ $key ] = array(
 				'name'        => get_the_title( $item['id'] ),
 				'id'          => $item['id'],
 				'item_number' => $item,
@@ -273,7 +272,7 @@ class EDD_Cart {
 				'subtotal'    => round( $subtotal, edd_currency_decimal_filter() ),
 				'tax'         => round( $tax, edd_currency_decimal_filter() ),
 				'fees'        => $fees,
-				'price'       => round( $total, edd_currency_decimal_filter() )
+				'price'       => round( $total, edd_currency_decimal_filter() ),
 			);
 
 			if ( $edd_is_last_cart_item ) {
@@ -386,7 +385,7 @@ class EDD_Cart {
 
 		$quantities_enabled = edd_item_quantities_enabled() && ! edd_download_quantities_disabled( $download_id );
 
-		if ( $download->has_variable_prices()  && ! isset( $options['price_id'] ) ) {
+		if ( $download->has_variable_prices() && ! isset( $options['price_id'] ) ) {
 			// Forces to the default price ID if none is specified and download has variable prices
 			$options['price_id'] = get_post_meta( $download->ID, '_edd_default_price_id', true );
 		}
@@ -417,16 +416,16 @@ class EDD_Cart {
 			// Process multiple price options at once
 			foreach ( $options['price_id'] as $key => $price ) {
 				$items[] = array(
-					'id'           => $download_id,
-					'options'      => array(
-						'price_id' => preg_replace( '/[^0-9\.-]/', '', $price )
+					'id'       => $download_id,
+					'options'  => array(
+						'price_id' => preg_replace( '/[^0-9\.-]/', '', $price ),
 					),
-					'quantity'     => $quantity[ $key ],
+					'quantity' => $quantity[ $key ],
 				);
 			}
 		} else {
 			// Sanitize price IDs
-			foreach( $options as $key => $option ) {
+			foreach ( $options as $key => $option ) {
 				if ( 'price_id' == $key ) {
 					$options[ $key ] = preg_replace( '/[^0-9\.-]/', '', $option );
 				}
@@ -436,12 +435,12 @@ class EDD_Cart {
 			$items[] = array(
 				'id'       => $download_id,
 				'options'  => $options,
-				'quantity' => $quantity
+				'quantity' => $quantity,
 			);
 		}
 
 		foreach ( $items as &$item ) {
-			$item = apply_filters( 'edd_add_to_cart_item', $item );
+			$item   = apply_filters( 'edd_add_to_cart_item', $item );
 			$to_add = $item;
 
 			if ( ! is_array( $to_add ) ) {
@@ -483,7 +482,7 @@ class EDD_Cart {
 	 * @since 2.7
 	 *
 	 * @param int $key Cart key to remove. This key is the numerical index of the item contained within the cart array.
- 	 * @return array Updated cart contents
+	 * @return array Updated cart contents
 	 */
 	public function remove( $key ) {
 		$cart = $this->get_contents();
@@ -513,18 +512,22 @@ class EDD_Cart {
 	 * @since 2.7
 	 *
 	 * @param int $cart_key Cart item key
- 	 * @return string $remove_url URL to remove the cart item
+	 * @return string $remove_url URL to remove the cart item
 	 */
 	public function remove_item_url( $cart_key ) {
-
 		$current_page = edd_doing_ajax()
 			? edd_get_checkout_uri()
 			: edd_get_current_page_url();
 
-		$remove_url = edd_add_cache_busting( add_query_arg( array(
-			'cart_item'  => $cart_key,
-			'edd_action' => 'remove'
-		), $current_page ) );
+		$remove_url = edd_add_cache_busting(
+			add_query_arg(
+				array(
+					'cart_item'  => $cart_key,
+					'edd_action' => 'remove',
+				),
+				$current_page
+			)
+		);
 
 		return apply_filters( 'edd_remove_item_url', $remove_url );
 	}
@@ -538,16 +541,18 @@ class EDD_Cart {
 	 * @return string $remove_url URL to remove the cart item
 	 */
 	public function remove_fee_url( $fee_id = '' ) {
-
 		$current_page = edd_doing_ajax()
 			? edd_get_checkout_uri()
 			: edd_get_current_page_url();
 
-		$remove_url = add_query_arg( array(
-			'fee'        => $fee_id,
-			'edd_action' => 'remove_fee',
-			'nocache'    => 'true'
-		), $current_page );
+		$remove_url = add_query_arg(
+			array(
+				'fee'        => $fee_id,
+				'edd_action' => 'remove_fee',
+				'nocache'    => 'true',
+			),
+			$current_page
+		);
 
 		return apply_filters( 'edd_remove_fee_url', $remove_url );
 	}
@@ -561,13 +566,13 @@ class EDD_Cart {
 	public function empty_cart() {
 
 		// Remove cart contents.
-		EDD()->session->set( 'edd_cart', NULL );
+		EDD()->session->set( 'edd_cart', null );
 
 		// Remove all cart fees.
-		EDD()->session->set( 'edd_cart_fees', NULL );
+		EDD()->session->set( 'edd_cart_fees', null );
 
 		// Remove any resuming payments.
-		EDD()->session->set( 'edd_resume_payment', NULL );
+		EDD()->session->set( 'edd_resume_payment', null );
 
 		// Remove any active discounts
 		$this->remove_all_discounts();
@@ -654,7 +659,7 @@ class EDD_Cart {
 				$code_id = edd_get_discount_id_by_code( $discount );
 
 				// Check discount exists
-				if( ! $code_id ) {
+				if ( ! $code_id ) {
 					continue;
 				}
 
@@ -671,15 +676,16 @@ class EDD_Cart {
 					}
 				} else {
 					// This is a global cart discount
-					if( ! in_array( $item['id'], $excluded_products ) ) {
-						if( 'flat' === edd_get_discount_type( $code_id ) ) {
-							/* *
+					if ( ! in_array( $item['id'], $excluded_products ) ) {
+						if ( 'flat' === edd_get_discount_type( $code_id ) ) {
+							/*
+							 *
 							 * In order to correctly record individual item amounts, global flat rate discounts
 							 * are distributed across all cart items. The discount amount is divided by the number
 							 * of items in the cart and then a portion is evenly applied to each cart item
 							 */
-							$items_subtotal    = 0.00;
-							$cart_items        = $this->get_contents();
+							$items_subtotal = 0.00;
+							$cart_items     = $this->get_contents();
 							foreach ( $cart_items as $cart_item ) {
 								if ( ! in_array( $cart_item['id'], $excluded_products ) ) {
 									$item_price      = $this->get_item_price( $cart_item['id'], $cart_item['options'] );
@@ -695,7 +701,7 @@ class EDD_Cart {
 							$edd_flat_discount_total += round( $discounted_amount, edd_currency_decimal_filter() );
 
 							if ( $edd_is_last_cart_item && $edd_flat_discount_total < $code_amount ) {
-								$adjustment = $code_amount - $edd_flat_discount_total;
+								$adjustment        = $code_amount - $edd_flat_discount_total;
 								$discounted_price -= $adjustment;
 							}
 						} else {
@@ -734,8 +740,8 @@ class EDD_Cart {
 			return false;
 		}
 
-		$discount_id  = edd_get_discount_id_by_code( $discounts[0] );
-		$amount       = edd_format_discount_rate( edd_get_discount_type( $discount_id ), edd_get_discount_amount( $discount_id ) );
+		$discount_id = edd_get_discount_id_by_code( $discounts[0] );
+		$amount      = edd_format_discount_rate( edd_get_discount_type( $discount_id ), edd_get_discount_amount( $discount_id ) );
 
 		if ( $echo ) {
 			echo $amount;
@@ -750,7 +756,7 @@ class EDD_Cart {
 	 * @since 2.7
 	 *
 	 * @param int   $download_id Download ID of the item to check.
- 	 * @param array $options
+	 * @param array $options
 	 * @return bool
 	 */
 	public function is_item_in_cart( $download_id = 0, $options = array() ) {
@@ -783,7 +789,7 @@ class EDD_Cart {
 	 * @since 2.7
 	 *
 	 * @param int   $download_id Download ID of the item to check.
- 	 * @param array $options
+	 * @param array $options
 	 * @return mixed int|false
 	 */
 	public function get_item_position( $download_id = 0, $options = array() ) {
@@ -814,7 +820,7 @@ class EDD_Cart {
 	 * @since 2.7
 	 *
 	 * @param int   $download_id Download ID of the item
- 	 * @param array $options
+	 * @param array $options
 	 * @return int Numerical index of the position of the item in the cart
 	 */
 	public function get_item_quantity( $download_id = 0, $options = array() ) {
@@ -836,11 +842,11 @@ class EDD_Cart {
 	 *
 	 * @param int   $download_id Download ID of the item
 	 * @param int   $quantity    Updated quantity of the item
- 	 * @param array $options
+	 * @param array $options
 	 * @return array $contents Updated cart object.
 	 */
 	public function set_item_quantity( $download_id = 0, $quantity = 1, $options = array() ) {
-		$key  = $this->get_item_position( $download_id, $options );
+		$key = $this->get_item_position( $download_id, $options );
 
 		if ( false === $key ) {
 			return $this->contents;
@@ -864,8 +870,8 @@ class EDD_Cart {
 	 * @since 2.7
 	 *
 	 * @param int   $item_id Download (cart item) ID number
- 	 * @param array $options Optional parameters, used for defining variable prices
- 	 * @return string Fully formatted price
+	 * @param array $options Optional parameters, used for defining variable prices
+	 * @return string Fully formatted price
 	 */
 	public function item_price( $item_id = 0, $options = array() ) {
 		$price = $this->get_item_price( $item_id, $options );
@@ -902,19 +908,19 @@ class EDD_Cart {
 
 	/**
 	 * Gets the price of the cart item. Always exclusive of taxes.
- 	 *
- 	 * Do not use this for getting the final price (with taxes and discounts) of an item.
- 	 * Use edd_get_cart_item_final_price()
+	 *
+	 * Do not use this for getting the final price (with taxes and discounts) of an item.
+	 * Use edd_get_cart_item_final_price()
 	 *
 	 * @since 2.7
 	 *
-	 * @param  int        $download_id               Download ID for the cart item
-	 * @param  array      $options                   Optional parameters, used for defining variable prices
- 	 * @param  bool       $remove_tax_from_inclusive Remove the tax amount from tax inclusive priced products.
- 	 * @return float|bool Price for this item
+	 * @param  int   $download_id               Download ID for the cart item
+	 * @param  array $options                   Optional parameters, used for defining variable prices
+	 * @param  bool  $remove_tax_from_inclusive Remove the tax amount from tax inclusive priced products.
+	 * @return float|bool Price for this item
 	 */
 	public function get_item_price( $download_id = 0, $options = array(), $remove_tax_from_inclusive = false ) {
-		$price = 0;
+		$price           = 0;
 		$variable_prices = edd_has_variable_prices( $download_id );
 
 		if ( $variable_prices ) {
@@ -947,7 +953,7 @@ class EDD_Cart {
 	 * @since 2.7
 	 *
 	 * @param int $item_key Cart item key
- 	 * @return float Final price for the item
+	 * @return float Final price for the item
 	 */
 	public function get_item_final_price( $item_key = 0 ) {
 		$final_price = $this->details[ $item_key ]['price'];
@@ -970,7 +976,7 @@ class EDD_Cart {
 
 		if ( ! edd_download_is_tax_exclusive( $download_id ) ) {
 			$country = ! empty( $_POST['billing_country'] ) ? $_POST['billing_country'] : false;
-			$state   = ! empty( $_POST['card_state'] )      ? $_POST['card_state']      : false;
+			$state   = ! empty( $_POST['card_state'] ) ? $_POST['card_state'] : false;
 
 			$tax = edd_calculate_tax( $subtotal, $country, $state );
 		}
@@ -1007,7 +1013,7 @@ class EDD_Cart {
 	 * @since 2.7
 	 *
 	 * @param array $items Cart items array
- 	 * @return float items subtotal
+	 * @return float items subtotal
 	 */
 	public function get_items_subtotal( $items ) {
 		$subtotal = 0.00;
@@ -1044,9 +1050,9 @@ class EDD_Cart {
 		$excluded_products = edd_get_discount_excluded_products( $code_id );
 
 		if ( $cart_items ) {
-			foreach( $cart_items as $item ) {
+			foreach ( $cart_items as $item ) {
 				if ( ! in_array( $item['id'], $excluded_products ) ) {
-					$items[] =  $item;
+					$items[] = $item;
 				}
 			}
 		}
@@ -1234,11 +1240,10 @@ class EDD_Cart {
 	 * @return float Total tax amount
 	 */
 	public function get_tax() {
-		$cart_tax     = 0;
-		$items        = $this->get_contents_details();
+		$cart_tax = 0;
+		$items    = $this->get_contents_details();
 
 		if ( $items ) {
-
 			$taxes = wp_list_pluck( $items, 'tax' );
 
 			if ( is_array( $taxes ) ) {
@@ -1372,12 +1377,12 @@ class EDD_Cart {
 
 		if ( is_user_logged_in() ) {
 			$user_id = get_current_user_id();
-			update_user_meta( $user_id, 'edd_saved_cart', $cart,  false );
+			update_user_meta( $user_id, 'edd_saved_cart', $cart, false );
 			update_user_meta( $user_id, 'edd_cart_token', $token, false );
 		} else {
 			$cart    = json_encode( $cart );
 			$expires = time() + WEEK_IN_SECONDS;
-			@setcookie( 'edd_saved_cart', $cart,  $expires, COOKIEPATH, COOKIE_DOMAIN );
+			@setcookie( 'edd_saved_cart', $cart, $expires, COOKIEPATH, COOKIE_DOMAIN );
 			@setcookie( 'edd_cart_token', $token, $expires, COOKIEPATH, COOKIE_DOMAIN );
 		}
 
@@ -1393,7 +1398,7 @@ class EDD_Cart {
 		$messages['edd_cart_save_successful'] = sprintf(
 			'<strong>%1$s</strong>: %2$s',
 			__( 'Success', 'easy-digital-downloads' ),
-			__( 'Cart saved successfully. You can restore your cart using this URL:', 'easy-digital-downloads' ) . ' ' . '<a href="' .  edd_get_checkout_uri() . '?edd_action=restore_cart&edd_cart_token=' . $token . '">' .  edd_get_checkout_uri() . '?edd_action=restore_cart&edd_cart_token=' . $token . '</a>'
+			__( 'Cart saved successfully. You can restore your cart using this URL:', 'easy-digital-downloads' ) . ' ' . '<a href="' . edd_get_checkout_uri() . '?edd_action=restore_cart&edd_cart_token=' . $token . '">' . edd_get_checkout_uri() . '?edd_action=restore_cart&edd_cart_token=' . $token . '</a>'
 		);
 
 		// Set these messages in the session
@@ -1448,8 +1453,8 @@ class EDD_Cart {
 
 			$saved_cart = json_decode( stripslashes( $saved_cart ), true );
 
-			setcookie( 'edd_saved_cart', '', time()-3600, COOKIEPATH, COOKIE_DOMAIN );
-			setcookie( 'edd_cart_token', '', time()-3600, COOKIEPATH, COOKIE_DOMAIN );
+			setcookie( 'edd_saved_cart', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN );
+			setcookie( 'edd_cart_token', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN );
 		}
 
 		$messages['edd_cart_restoration_successful'] = sprintf( '<strong>%1$s</strong>: %2$s', __( 'Success', 'easy-digital-downloads' ), __( 'Cart restored successfully.', 'easy-digital-downloads' ) );

@@ -18,7 +18,6 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 
 		// Delete the payment
 		edd_delete_purchase( $payment_id );
-
 	}
 
 	/**
@@ -27,11 +26,10 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 	 * @since 2.3
 	 */
 	public static function create_simple_payment( $args = array() ) {
-
 		global $edd_options;
 
 		$defaults = array(
-			'discount' => 'none'
+			'discount' => 'none',
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -43,78 +41,78 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		$variable_download = EDD_Helper_Download::create_variable_download();
 
 		/** Generate some sales */
-		$user      = get_userdata(1);
+		$user      = get_userdata( 1 );
 		$user_info = array(
-			'id'            => $user->ID,
-			'email'         => $user->user_email,
-			'first_name'    => $user->first_name,
-			'last_name'     => $user->last_name,
-			'discount'      => $args['discount'],
+			'id'         => $user->ID,
+			'email'      => $user->user_email,
+			'first_name' => $user->first_name,
+			'last_name'  => $user->last_name,
+			'discount'   => $args['discount'],
 		);
 
 		$download_details = array(
 			array(
-				'id' => $simple_download->ID,
+				'id'      => $simple_download->ID,
 				'options' => array(
-					'price_id' => 0
-				)
+					'price_id' => 0,
+				),
 			),
 			array(
-				'id' => $variable_download->ID,
+				'id'      => $variable_download->ID,
 				'options' => array(
-					'price_id' => 1
-				)
+					'price_id' => 1,
+				),
 			),
 		);
 
-		$total                  = 0;
-		$simple_price           = get_post_meta( $simple_download->ID, 'edd_price', true );
-		$variable_prices        = get_post_meta( $variable_download->ID, 'edd_variable_prices', true );
-		$variable_item_price    = $variable_prices[1]['amount']; // == $100
+		$total               = 0;
+		$simple_price        = get_post_meta( $simple_download->ID, 'edd_price', true );
+		$variable_prices     = get_post_meta( $variable_download->ID, 'edd_variable_prices', true );
+		$variable_item_price = $variable_prices[1]['amount']; // == $100
 
 		$total += $variable_item_price + $simple_price;
 
 		$cart_details = array(
 			array(
-				'name'          => 'Test Download',
-				'id'            => $simple_download->ID,
-				'item_number'   => array(
-					'id'        => $simple_download->ID,
-					'options'   => array(
-						'price_id' => 1
-					)
+				'name'        => 'Test Download',
+				'id'          => $simple_download->ID,
+				'item_number' => array(
+					'id'      => $simple_download->ID,
+					'options' => array(
+						'price_id' => 1,
+					),
 				),
-				'price'         => $simple_price,
-				'item_price'    => $simple_price,
-				'tax'           => 0,
-				'quantity'      => 1
+				'price'       => $simple_price,
+				'item_price'  => $simple_price,
+				'tax'         => 0,
+				'quantity'    => 1,
 			),
 			array(
-				'name'          => 'Variable Test Download',
-				'id'            => $variable_download->ID,
-				'item_number'   => array(
-					'id'        => $variable_download->ID,
-					'options'   => array(
-						'price_id' => 1
-					)
+				'name'        => 'Variable Test Download',
+				'id'          => $variable_download->ID,
+				'item_number' => array(
+					'id'      => $variable_download->ID,
+					'options' => array(
+						'price_id' => 1,
+					),
 				),
-				'price'         => $variable_item_price,
-				'item_price'    => $variable_item_price,
-				'tax'           => 0,
-				'quantity'      => 1
+				'price'       => $variable_item_price,
+				'item_price'  => $variable_item_price,
+				'tax'         => 0,
+				'quantity'    => 1,
 			),
 		);
 
 		$purchase_data = array(
-			'price'         => number_format( (float) $total, 2 ),
-			'date'          => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
-			'purchase_key'  => strtolower( md5( uniqid() ) ),
-			'user_email'    => $user_info['email'],
-			'user_info'     => $user_info,
-			'currency'      => 'USD',
-			'downloads'     => $download_details,
-			'cart_details'  => $cart_details,
-			'status'        => 'pending'
+			'price'        => number_format( (float) $total, 2 ),
+			'date'         => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
+			'purchase_key' => strtolower( md5( uniqid() ) ),
+			'user_email'   => $user_info['email'],
+			'user_info'    => $user_info,
+			'currency'     => 'USD',
+			'downloads'    => $download_details,
+			'cart_details' => $cart_details,
+			'status'       => 'pending',
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
@@ -123,15 +121,14 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		$payment_id = edd_insert_payment( $purchase_data );
 		$key        = $purchase_data['purchase_key'];
 
-		$transaction_id = 'EDD_ORDER';
-		$payment = new EDD_Payment( $payment_id );
+		$transaction_id          = 'EDD_ORDER';
+		$payment                 = new EDD_Payment( $payment_id );
 		$payment->transaction_id = $transaction_id;
 		$payment->save();
 
 		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'easy-digital-downloads' ), $transaction_id ) );
 
 		return $payment_id;
-
 	}
 
 	/**
@@ -140,7 +137,6 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 	 * @since 2.3
 	 */
 	public static function create_simple_guest_payment() {
-
 		global $edd_options;
 
 		// Enable a few options
@@ -151,76 +147,76 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 
 		/** Generate some sales */
 		$user_info = array(
-			'id'            => 0,
-			'email'         => 'guest@example.org',
-			'first_name'    => 'Guest',
-			'last_name'     => 'User',
-			'discount'      => 'none'
+			'id'         => 0,
+			'email'      => 'guest@example.org',
+			'first_name' => 'Guest',
+			'last_name'  => 'User',
+			'discount'   => 'none',
 		);
 
 		$download_details = array(
 			array(
-				'id' => $simple_download->ID,
+				'id'      => $simple_download->ID,
 				'options' => array(
-					'price_id' => 0
-				)
+					'price_id' => 0,
+				),
 			),
 			array(
-				'id' => $variable_download->ID,
+				'id'      => $variable_download->ID,
 				'options' => array(
-					'price_id' => 1
-				)
+					'price_id' => 1,
+				),
 			),
 		);
 
-		$total                  = 0;
-		$simple_price           = get_post_meta( $simple_download->ID, 'edd_price', true );
-		$variable_prices        = get_post_meta( $variable_download->ID, 'edd_variable_prices', true );
-		$variable_item_price    = $variable_prices[1]['amount']; // == $100
+		$total               = 0;
+		$simple_price        = get_post_meta( $simple_download->ID, 'edd_price', true );
+		$variable_prices     = get_post_meta( $variable_download->ID, 'edd_variable_prices', true );
+		$variable_item_price = $variable_prices[1]['amount']; // == $100
 
 		$total += $variable_item_price + $simple_price;
 
 		$cart_details = array(
 			array(
-				'name'          => 'Test Download',
-				'id'            => $simple_download->ID,
-				'item_number'   => array(
-					'id'        => $simple_download->ID,
-					'options'   => array(
-						'price_id' => 1
-					)
+				'name'        => 'Test Download',
+				'id'          => $simple_download->ID,
+				'item_number' => array(
+					'id'      => $simple_download->ID,
+					'options' => array(
+						'price_id' => 1,
+					),
 				),
-				'price'         => $simple_price,
-				'item_price'    => $simple_price,
-				'tax'           => 0,
-				'quantity'      => 1
+				'price'       => $simple_price,
+				'item_price'  => $simple_price,
+				'tax'         => 0,
+				'quantity'    => 1,
 			),
 			array(
-				'name'          => 'Variable Test Download',
-				'id'            => $variable_download->ID,
-				'item_number'   => array(
-					'id'        => $variable_download->ID,
-					'options'   => array(
-						'price_id' => 1
-					)
+				'name'        => 'Variable Test Download',
+				'id'          => $variable_download->ID,
+				'item_number' => array(
+					'id'      => $variable_download->ID,
+					'options' => array(
+						'price_id' => 1,
+					),
 				),
-				'price'         => $variable_item_price,
-				'item_price'    => $variable_item_price,
-				'tax'           => 0,
-				'quantity'      => 1
+				'price'       => $variable_item_price,
+				'item_price'  => $variable_item_price,
+				'tax'         => 0,
+				'quantity'    => 1,
 			),
 		);
 
 		$purchase_data = array(
-			'price'         => number_format( (float) $total, 2 ),
-			'date'          => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
-			'purchase_key'  => strtolower( md5( uniqid() ) ),
-			'user_email'    => $user_info['email'],
-			'user_info'     => $user_info,
-			'currency'      => 'USD',
-			'downloads'     => $download_details,
-			'cart_details'  => $cart_details,
-			'status'        => 'pending'
+			'price'        => number_format( (float) $total, 2 ),
+			'date'         => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
+			'purchase_key' => strtolower( md5( uniqid() ) ),
+			'user_email'   => $user_info['email'],
+			'user_info'    => $user_info,
+			'currency'     => 'USD',
+			'downloads'    => $download_details,
+			'cart_details' => $cart_details,
+			'status'       => 'pending',
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
@@ -234,7 +230,6 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'easy-digital-downloads' ), $transaction_id ) );
 
 		return $payment_id;
-
 	}
 
 	/**
@@ -243,7 +238,6 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 	 * @since 2.3
 	 */
 	public static function create_simple_payment_with_tax() {
-
 		global $edd_options;
 
 		// Enable a few options
@@ -253,79 +247,79 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		$variable_download = EDD_Helper_Download::create_variable_download();
 
 		/** Generate some sales */
-		$user      = get_userdata(1);
+		$user      = get_userdata( 1 );
 		$user_info = array(
-			'id'            => $user->ID,
-			'email'         => $user->user_email,
-			'first_name'    => $user->first_name,
-			'last_name'     => $user->last_name,
-			'discount'      => 'none'
+			'id'         => $user->ID,
+			'email'      => $user->user_email,
+			'first_name' => $user->first_name,
+			'last_name'  => $user->last_name,
+			'discount'   => 'none',
 		);
 
 		$download_details = array(
 			array(
-				'id' => $simple_download->ID,
+				'id'      => $simple_download->ID,
 				'options' => array(
-					'price_id' => 0
-				)
+					'price_id' => 0,
+				),
 			),
 			array(
-				'id' => $variable_download->ID,
+				'id'      => $variable_download->ID,
 				'options' => array(
-					'price_id' => 1
-				)
+					'price_id' => 1,
+				),
 			),
 		);
 
-		$total                  = 0;
-		$simple_price           = get_post_meta( $simple_download->ID, 'edd_price', true );
-		$variable_prices        = get_post_meta( $variable_download->ID, 'edd_variable_prices', true );
-		$variable_item_price    = $variable_prices[1]['amount']; // == $100
+		$total               = 0;
+		$simple_price        = get_post_meta( $simple_download->ID, 'edd_price', true );
+		$variable_prices     = get_post_meta( $variable_download->ID, 'edd_variable_prices', true );
+		$variable_item_price = $variable_prices[1]['amount']; // == $100
 
 		$total += $variable_item_price + $simple_price + 10 + 1; // Add our tax into the payment total
 
 		$cart_details = array(
 			array(
-				'name'          => 'Test Download',
-				'id'            => $simple_download->ID,
-				'item_number'   => array(
-					'id'        => $simple_download->ID,
-					'options'   => array(
-						'price_id' => 1
-					)
+				'name'        => 'Test Download',
+				'id'          => $simple_download->ID,
+				'item_number' => array(
+					'id'      => $simple_download->ID,
+					'options' => array(
+						'price_id' => 1,
+					),
 				),
-				'price'         => $simple_price,
-				'item_price'    => $simple_price,
-				'tax'           => 1,
-				'quantity'      => 1
+				'price'       => $simple_price,
+				'item_price'  => $simple_price,
+				'tax'         => 1,
+				'quantity'    => 1,
 			),
 			array(
-				'name'          => 'Variable Test Download',
-				'id'            => $variable_download->ID,
-				'item_number'   => array(
-					'id'        => $variable_download->ID,
-					'options'   => array(
-						'price_id' => 1
-					)
+				'name'        => 'Variable Test Download',
+				'id'          => $variable_download->ID,
+				'item_number' => array(
+					'id'      => $variable_download->ID,
+					'options' => array(
+						'price_id' => 1,
+					),
 				),
-				'price'         => $variable_item_price,
-				'item_price'    => $variable_item_price,
-				'tax'           => 10,
-				'quantity'      => 1
+				'price'       => $variable_item_price,
+				'item_price'  => $variable_item_price,
+				'tax'         => 10,
+				'quantity'    => 1,
 			),
 		);
 
 		$purchase_data = array(
-			'price'         => number_format( (float) $total, 2 ),
-			'date'          => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
-			'purchase_key'  => strtolower( md5( uniqid() ) ),
-			'user_email'    => $user_info['email'],
-			'user_info'     => $user_info,
-			'currency'      => 'USD',
-			'downloads'     => $download_details,
-			'cart_details'  => $cart_details,
-			'status'        => 'pending',
-			'tax'           => 11,
+			'price'        => number_format( (float) $total, 2 ),
+			'date'         => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
+			'purchase_key' => strtolower( md5( uniqid() ) ),
+			'user_email'   => $user_info['email'],
+			'user_info'    => $user_info,
+			'currency'     => 'USD',
+			'downloads'    => $download_details,
+			'cart_details' => $cart_details,
+			'status'       => 'pending',
+			'tax'          => 11,
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
@@ -334,15 +328,14 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		$payment_id = edd_insert_payment( $purchase_data );
 		$key        = $purchase_data['purchase_key'];
 
-		$transaction_id = 'EDD_ORDER_TAX';
-		$payment = new EDD_Payment( $payment_id );
+		$transaction_id          = 'EDD_ORDER_TAX';
+		$payment                 = new EDD_Payment( $payment_id );
 		$payment->transaction_id = $transaction_id;
 		$payment->save();
 
 		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'easy-digital-downloads' ), $transaction_id ) );
 
 		return $payment_id;
-
 	}
 
 	/**
@@ -351,7 +344,6 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 	 * @since 2.3
 	 */
 	public static function create_simple_payment_with_quantity_tax() {
-
 		global $edd_options;
 
 		// Enable a few options
@@ -361,81 +353,81 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		$variable_download = EDD_Helper_Download::create_variable_download();
 
 		/** Generate some sales */
-		$user      = get_userdata(1);
+		$user      = get_userdata( 1 );
 		$user_info = array(
-			'id'            => $user->ID,
-			'email'         => $user->user_email,
-			'first_name'    => $user->first_name,
-			'last_name'     => $user->last_name,
-			'discount'      => 'none'
+			'id'         => $user->ID,
+			'email'      => $user->user_email,
+			'first_name' => $user->first_name,
+			'last_name'  => $user->last_name,
+			'discount'   => 'none',
 		);
 
 		$download_details = array(
 			array(
-				'id' => $simple_download->ID,
-				'options' => array(
-					'price_id' => 0
+				'id'       => $simple_download->ID,
+				'options'  => array(
+					'price_id' => 0,
 				),
 				'quantity' => 2,
 			),
 			array(
-				'id' => $variable_download->ID,
-				'options' => array(
-					'price_id' => 1
+				'id'       => $variable_download->ID,
+				'options'  => array(
+					'price_id' => 1,
 				),
 				'quantity' => 2,
 			),
 		);
 
-		$total                  = 0;
-		$simple_price           = get_post_meta( $simple_download->ID, 'edd_price', true );
-		$variable_prices        = get_post_meta( $variable_download->ID, 'edd_variable_prices', true );
-		$variable_item_price    = $variable_prices[1]['amount']; // == $100
+		$total               = 0;
+		$simple_price        = get_post_meta( $simple_download->ID, 'edd_price', true );
+		$variable_prices     = get_post_meta( $variable_download->ID, 'edd_variable_prices', true );
+		$variable_item_price = $variable_prices[1]['amount']; // == $100
 
 		$total += $variable_item_price + $simple_price + 20 + 2; // Add our tax into the payment total
 
 		$cart_details = array(
 			array(
-				'name'          => 'Test Download',
-				'id'            => $simple_download->ID,
-				'item_number'   => array(
-					'id'        => $simple_download->ID,
-					'options'   => array(
-						'price_id' => 1
-					)
+				'name'        => 'Test Download',
+				'id'          => $simple_download->ID,
+				'item_number' => array(
+					'id'      => $simple_download->ID,
+					'options' => array(
+						'price_id' => 1,
+					),
 				),
-				'price'         => $simple_price * 2,
-				'item_price'    => $simple_price,
-				'tax'           => 2,
-				'quantity'      => 2
+				'price'       => $simple_price * 2,
+				'item_price'  => $simple_price,
+				'tax'         => 2,
+				'quantity'    => 2,
 			),
 			array(
-				'name'          => 'Variable Test Download',
-				'id'            => $variable_download->ID,
-				'item_number'   => array(
-					'id'        => $variable_download->ID,
-					'options'   => array(
-						'price_id' => 1
-					)
+				'name'        => 'Variable Test Download',
+				'id'          => $variable_download->ID,
+				'item_number' => array(
+					'id'      => $variable_download->ID,
+					'options' => array(
+						'price_id' => 1,
+					),
 				),
-				'price'         => $variable_item_price * 2,
-				'item_price'    => $variable_item_price,
-				'tax'           => 20,
-				'quantity'      => 2
+				'price'       => $variable_item_price * 2,
+				'item_price'  => $variable_item_price,
+				'tax'         => 20,
+				'quantity'    => 2,
 			),
 		);
 
 		$purchase_data = array(
-			'price'         => number_format( (float) $total, 2 ),
-			'date'          => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
-			'purchase_key'  => strtolower( md5( uniqid() ) ),
-			'user_email'    => $user_info['email'],
-			'user_info'     => $user_info,
-			'currency'      => 'USD',
-			'downloads'     => $download_details,
-			'cart_details'  => $cart_details,
-			'status'        => 'pending',
-			'tax'           => 22,
+			'price'        => number_format( (float) $total, 2 ),
+			'date'         => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
+			'purchase_key' => strtolower( md5( uniqid() ) ),
+			'user_email'   => $user_info['email'],
+			'user_info'    => $user_info,
+			'currency'     => 'USD',
+			'downloads'    => $download_details,
+			'cart_details' => $cart_details,
+			'status'       => 'pending',
+			'tax'          => 22,
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
@@ -444,89 +436,93 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		$payment_id = edd_insert_payment( $purchase_data );
 		$key        = $purchase_data['purchase_key'];
 
-		$transaction_id = 'EDD_ORDER_QUANTITY_TAX';
-		$payment = new EDD_Payment( $payment_id );
+		$transaction_id          = 'EDD_ORDER_QUANTITY_TAX';
+		$payment                 = new EDD_Payment( $payment_id );
 		$payment->transaction_id = $transaction_id;
 		$payment->save();
 
 		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'easy-digital-downloads' ), $transaction_id ) );
 
 		return $payment_id;
-
 	}
 
 	public static function create_simple_payment_with_fee() {
-
 		global $edd_options;
 
 		// Enable a few options
 		$edd_options['sequential_prefix'] = 'EDD-';
 
-		$simple_download   = EDD_Helper_Download::create_simple_download();
+		$simple_download = EDD_Helper_Download::create_simple_download();
 
-		add_filter( 'edd_cart_contents', function( $cart ) use ( $simple_download ) {
-			return array( 0 => array(
-				'id' => $simple_download->ID,
-				'options' => array(),
-				'quantity' => 1
-			) );
-		}, 10 );
+		add_filter(
+			'edd_cart_contents',
+			function( $cart ) use ( $simple_download ) {
+				return array(
+					0 => array(
+						'id'       => $simple_download->ID,
+						'options'  => array(),
+						'quantity' => 1,
+					),
+				);
+			},
+			10
+		);
 
 		add_filter( 'edd_item_quantities_enabled', '__return_true' );
 
 		/** Generate some sales */
-		$user      = get_userdata(1);
+		$user      = get_userdata( 1 );
 		$user_info = array(
-			'id'            => $user->ID,
-			'email'         => $user->user_email,
-			'first_name'    => $user->first_name,
-			'last_name'     => $user->last_name,
-			'discount'      => 'none'
+			'id'         => $user->ID,
+			'email'      => $user->user_email,
+			'first_name' => $user->first_name,
+			'last_name'  => $user->last_name,
+			'discount'   => 'none',
 		);
 
 		$download_details = array(
 			array(
-				'id' => $simple_download->ID,
-				'options' => array(
-					'price_id' => 0
+				'id'       => $simple_download->ID,
+				'options'  => array(
+					'price_id' => 0,
 				),
 				'quantity' => 2,
 			),
 		);
 
-		$total                  = 0;
-		$simple_price           = get_post_meta( $simple_download->ID, 'edd_price', true );
+		$total        = 0;
+		$simple_price = get_post_meta( $simple_download->ID, 'edd_price', true );
 
 		$total += $simple_price + 2; // Add our tax into the payment total
 
 		$cart_details = array(
 			array(
-				'name'          => 'Test Download',
-				'id'            => $simple_download->ID,
-				'item_number'   => array(
-					'id'        => $simple_download->ID,
-					'options'   => array(
-						'price_id' => 1
+				'name'        => 'Test Download',
+				'id'          => $simple_download->ID,
+				'item_number' => array(
+					'id'      => $simple_download->ID,
+					'options' => array(
+						'price_id' => 1,
 					),
 				),
-				'price'         => $simple_price * 2,
-				'item_price'    => $simple_price,
-				'tax'           => 2,
-				'quantity'      => 2
+				'price'       => $simple_price * 2,
+				'item_price'  => $simple_price,
+				'tax'         => 2,
+				'quantity'    => 2,
 			),
 		);
 
 		$purchase_data = array(
-			'price'         => number_format( (float) $total, 2 ),
-			'date'          => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
-			'purchase_key'  => strtolower( md5( uniqid() ) ),
-			'user_email'    => $user_info['email'],
-			'user_info'     => $user_info,
-			'currency'      => 'USD',
-			'downloads'     => $download_details,
-			'cart_details'  => $cart_details,
-			'status'        => 'pending',
-			'tax'           => 2,
+			'price'        => number_format( (float) $total, 2 ),
+			'date'         => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
+			'purchase_key' => strtolower( md5( uniqid() ) ),
+			'user_email'   => $user_info['email'],
+			'user_info'    => $user_info,
+			'currency'     => 'USD',
+			'downloads'    => $download_details,
+			'cart_details' => $cart_details,
+			'status'       => 'pending',
+			'tax'          => 2,
 		);
 
 		$fee_args = array(
@@ -543,8 +539,8 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		$payment_id = edd_insert_payment( $purchase_data );
 		$key        = $purchase_data['purchase_key'];
 
-		$transaction_id = 'EDD_ORDER_FEE';
-		$payment = new EDD_Payment( $payment_id );
+		$transaction_id          = 'EDD_ORDER_FEE';
+		$payment                 = new EDD_Payment( $payment_id );
 		$payment->transaction_id = $transaction_id;
 		$payment->save();
 
@@ -554,7 +550,6 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		remove_filter( 'edd_item_quantities_enabled', '__return_true' );
 
 		return $payment_id;
-
 	}
 
 	/**
@@ -563,7 +558,6 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 	 * @since 2.3
 	 */
 	public static function create_simple_payment_with_date( $date ) {
-
 		global $edd_options;
 
 		// Enable a few options
@@ -573,78 +567,78 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		$variable_download = EDD_Helper_Download::create_variable_download();
 
 		/** Generate some sales */
-		$user      = get_userdata(1);
+		$user      = get_userdata( 1 );
 		$user_info = array(
-			'id'            => $user->ID,
-			'email'         => $user->user_email,
-			'first_name'    => $user->first_name,
-			'last_name'     => $user->last_name,
-			'discount'      => 'none',
+			'id'         => $user->ID,
+			'email'      => $user->user_email,
+			'first_name' => $user->first_name,
+			'last_name'  => $user->last_name,
+			'discount'   => 'none',
 		);
 
 		$download_details = array(
 			array(
-				'id' => $simple_download->ID,
+				'id'      => $simple_download->ID,
 				'options' => array(
-					'price_id' => 0
-				)
+					'price_id' => 0,
+				),
 			),
 			array(
-				'id' => $variable_download->ID,
+				'id'      => $variable_download->ID,
 				'options' => array(
-					'price_id' => 1
-				)
+					'price_id' => 1,
+				),
 			),
 		);
 
-		$total                  = 0;
-		$simple_price           = get_post_meta( $simple_download->ID, 'edd_price', true );
-		$variable_prices        = get_post_meta( $variable_download->ID, 'edd_variable_prices', true );
-		$variable_item_price    = $variable_prices[1]['amount']; // == $100
+		$total               = 0;
+		$simple_price        = get_post_meta( $simple_download->ID, 'edd_price', true );
+		$variable_prices     = get_post_meta( $variable_download->ID, 'edd_variable_prices', true );
+		$variable_item_price = $variable_prices[1]['amount']; // == $100
 
 		$total += $variable_item_price + $simple_price;
 
 		$cart_details = array(
 			array(
-				'name'          => 'Test Download',
-				'id'            => $simple_download->ID,
-				'item_number'   => array(
-					'id'        => $simple_download->ID,
-					'options'   => array(
-						'price_id' => 1
-					)
+				'name'        => 'Test Download',
+				'id'          => $simple_download->ID,
+				'item_number' => array(
+					'id'      => $simple_download->ID,
+					'options' => array(
+						'price_id' => 1,
+					),
 				),
-				'price'         => $simple_price,
-				'item_price'    => $simple_price,
-				'tax'           => 0,
-				'quantity'      => 1
+				'price'       => $simple_price,
+				'item_price'  => $simple_price,
+				'tax'         => 0,
+				'quantity'    => 1,
 			),
 			array(
-				'name'          => 'Variable Test Download',
-				'id'            => $variable_download->ID,
-				'item_number'   => array(
-					'id'        => $variable_download->ID,
-					'options'   => array(
-						'price_id' => 1
-					)
+				'name'        => 'Variable Test Download',
+				'id'          => $variable_download->ID,
+				'item_number' => array(
+					'id'      => $variable_download->ID,
+					'options' => array(
+						'price_id' => 1,
+					),
 				),
-				'price'         => $variable_item_price,
-				'item_price'    => $variable_item_price,
-				'tax'           => 0,
-				'quantity'      => 1
+				'price'       => $variable_item_price,
+				'item_price'  => $variable_item_price,
+				'tax'         => 0,
+				'quantity'    => 1,
 			),
 		);
 
 		$purchase_data = array(
-			'price'         => number_format( (float) $total, 2 ),
-			'date'          => $date,
-			'purchase_key'  => strtolower( md5( uniqid() ) ),
-			'user_email'    => $user_info['email'],
-			'user_info'     => $user_info,
-			'currency'      => 'USD',
-			'downloads'     => $download_details,
-			'cart_details'  => $cart_details,
-			'status'        => 'pending'
+			'price'        => number_format( (float) $total, 2 ),
+			'date'         => $date,
+			'purchase_key' => strtolower( md5( uniqid() ) ),
+			'user_email'   => $user_info['email'],
+			'user_info'    => $user_info,
+			'currency'     => 'USD',
+			'downloads'    => $download_details,
+			'cart_details' => $cart_details,
+			'status'       => 'pending',
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
@@ -653,16 +647,15 @@ class EDD_Helper_Payment extends WP_UnitTestCase {
 		$payment_id = edd_insert_payment( $purchase_data );
 		$key        = $purchase_data['purchase_key'];
 
-		$transaction_id = 'EDD_ORDER_DATE';
-		$payment = new EDD_Payment( $payment_id );
+		$transaction_id          = 'EDD_ORDER_DATE';
+		$payment                 = new EDD_Payment( $payment_id );
 		$payment->transaction_id = $transaction_id;
-		$payment->date = $date;
+		$payment->date           = $date;
 		$payment->save();
 
 		edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'easy-digital-downloads' ), $transaction_id ) );
 
 		return $payment_id;
-
 	}
 
 	public function fake_cart_contents_check() {

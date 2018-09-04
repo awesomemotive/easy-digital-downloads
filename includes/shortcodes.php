@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * Retrieves a download and displays the purchase form.
  *
  * @since 1.0
- * @param array $atts Shortcode attributes
+ * @param array  $atts Shortcode attributes
  * @param string $content
  * @return string Fully formatted purchase link
  */
@@ -27,23 +27,26 @@ function edd_download_shortcode( $atts, $content = null ) {
 
 	$post_id = is_object( $post ) ? $post->ID : 0;
 
-	$atts = shortcode_atts( array(
-		'id' 	        => $post_id,
-		'price_id'      => isset( $atts['price_id'] ) ? $atts['price_id'] : false,
-		'sku'			=> '',
-		'price'         => '1',
-		'direct'        => '0',
-		'text'          => '',
-		'style'         => edd_get_option( 'button_style', 'button' ),
-		'color'         => edd_get_option( 'checkout_color', 'blue' ),
-		'class'         => 'edd-submit',
-		'form_id'       => ''
-	),
-	$atts, 'purchase_link' );
+	$atts = shortcode_atts(
+		array(
+			'id'       => $post_id,
+			'price_id' => isset( $atts['price_id'] ) ? $atts['price_id'] : false,
+			'sku'      => '',
+			'price'    => '1',
+			'direct'   => '0',
+			'text'     => '',
+			'style'    => edd_get_option( 'button_style', 'button' ),
+			'color'    => edd_get_option( 'checkout_color', 'blue' ),
+			'class'    => 'edd-submit',
+			'form_id'  => '',
+		),
+		$atts,
+		'purchase_link'
+	);
 
 	// Override text only if not provided / empty
 	if ( ! $atts['text'] ) {
-		if( $atts['direct'] == '1' || $atts['direct'] == 'true' ) {
+		if ( $atts['direct'] == '1' || $atts['direct'] == 'true' ) {
 			$atts['text'] = edd_get_option( 'buy_now_text', __( 'Buy Now', 'easy-digital-downloads' ) );
 		} else {
 			$atts['text'] = edd_get_option( 'add_to_cart_text', __( 'Purchase', 'easy-digital-downloads' ) );
@@ -51,25 +54,22 @@ function edd_download_shortcode( $atts, $content = null ) {
 	}
 
 	// Override color if color == inherit
-	if( isset( $atts['color'] )	) {
+	if ( isset( $atts['color'] ) ) {
 		$atts['color'] = ( $atts['color'] == 'inherit' ) ? '' : $atts['color'];
 	}
 
-	if( ! empty( $atts['sku'] ) ) {
-
+	if ( ! empty( $atts['sku'] ) ) {
 		$download = edd_get_download_by( 'sku', $atts['sku'] );
 
 		if ( $download ) {
 			$atts['download_id'] = $download->ID;
 		}
-
-	} elseif( isset( $atts['id'] ) ) {
+	} elseif ( isset( $atts['id'] ) ) {
 
 		// Edd_get_purchase_link() expects the ID to be download_id since v1.3
 		$atts['download_id'] = $atts['id'];
 
 		$download = edd_get_download( $atts['download_id'] );
-
 	}
 
 	if ( $download ) {
@@ -90,14 +90,10 @@ function edd_download_history() {
 	if ( is_user_logged_in() ) {
 		ob_start();
 
-		if( ! edd_user_pending_verification() ) {
-
+		if ( ! edd_user_pending_verification() ) {
 			edd_get_template_part( 'history', 'downloads' );
-
 		} else {
-
 			edd_get_template_part( 'account', 'pending' );
-
 		}
 
 		return ob_get_clean();
@@ -116,14 +112,10 @@ add_shortcode( 'download_history', 'edd_download_history' );
 function edd_purchase_history() {
 	ob_start();
 
-	if( ! edd_user_pending_verification() ) {
-
+	if ( ! edd_user_pending_verification() ) {
 		edd_get_template_part( 'history', 'purchases' );
-
 	} else {
-
 		edd_get_template_part( 'account', 'pending' );
-
 	}
 
 	return ob_get_clean();
@@ -136,7 +128,7 @@ add_shortcode( 'purchase_history', 'edd_purchase_history' );
  * Show the checkout form.
  *
  * @since 1.0
- * @param array $atts Shortcode attributes
+ * @param array  $atts Shortcode attributes
  * @param string $content
  * @return string
  */
@@ -151,7 +143,7 @@ add_shortcode( 'download_checkout', 'edd_checkout_form_shortcode' );
  * Show the shopping cart.
  *
  * @since 1.0
- * @param array $atts Shortcode attributes
+ * @param array  $atts Shortcode attributes
  * @param string $content
  * @return string
  */
@@ -167,7 +159,7 @@ add_shortcode( 'download_cart', 'edd_cart_shortcode' );
  * calls the edd_login_form function to display the login form.
  *
  * @since 1.0
- * @param array $atts Shortcode attributes
+ * @param array  $atts Shortcode attributes
  * @param string $content
  * @uses edd_login_form()
  * @return string
@@ -175,9 +167,15 @@ add_shortcode( 'download_cart', 'edd_cart_shortcode' );
 function edd_login_form_shortcode( $atts, $content = null ) {
 	$redirect = '';
 
-	extract( shortcode_atts( array(
-		'redirect' => $redirect
-	), $atts, 'edd_login' ) );
+	extract(
+		shortcode_atts(
+			array(
+				'redirect' => $redirect,
+			),
+			$atts,
+			'edd_login'
+		)
+	);
 
 	if ( empty( $redirect ) ) {
 		$login_redirect_page = edd_get_option( 'login_redirect_page', '' );
@@ -209,7 +207,7 @@ add_shortcode( 'edd_login', 'edd_login_form_shortcode' );
  * Shows a registration form allowing users to users to register for the site
  *
  * @since 2.0
- * @param array $atts Shortcode attributes
+ * @param array  $atts Shortcode attributes
  * @param string $content
  * @uses edd_register_form()
  * @return string
@@ -222,9 +220,15 @@ function edd_register_form_shortcode( $atts, $content = null ) {
 		$redirect = get_permalink( $purchase_history );
 	}
 
-	extract( shortcode_atts( array(
-		'redirect' => $redirect
-	), $atts, 'edd_register' ) );
+	extract(
+		shortcode_atts(
+			array(
+				'redirect' => $redirect,
+			),
+			$atts,
+			'edd_register'
+		)
+	);
 
 	return edd_register_form( $redirect );
 }
@@ -237,7 +241,7 @@ add_shortcode( 'edd_register', 'edd_register_form_shortcode' );
  * from the Discount Codes admin screen.
  *
  * @since 1.0.8.2
- * @param array $atts Shortcode attributes
+ * @param array  $atts Shortcode attributes
  * @param string $content
  * @uses edd_get_discounts()
  * @return string $discounts_lists List of all the active discount codes
@@ -248,18 +252,15 @@ function edd_discounts_shortcode( $atts, $content = null ) {
 	$discounts_list = '<ul id="edd_discounts_list">';
 
 	if ( ! empty( $discounts ) && edd_has_active_discounts() ) {
-
 		foreach ( $discounts as $discount ) {
-
 			if ( edd_is_discount_active( $discount->id ) ) {
-				$discounts_list .= '<li class="edd_discount">';
+				$discounts_list     .= '<li class="edd_discount">';
 					$discounts_list .= '<span class="edd_discount_name">' . edd_get_discount_code( $discount->id ) . '</span>';
 					$discounts_list .= '<span class="edd_discount_separator"> - </span>';
 					$discounts_list .= '<span class="edd_discount_amount">' . edd_format_discount_rate( edd_get_discount_type( $discount->id ), edd_get_discount_amount( $discount->id ) ) . '</span>';
-				$discounts_list .= '</li>';
+				$discounts_list     .= '</li>';
 			}
 		}
-
 	} else {
 		$discounts_list .= '<li class="edd_discount">' . __( 'No discounts found', 'easy-digital-downloads' ) . '</li>';
 	}
@@ -277,23 +278,37 @@ add_shortcode( 'download_discounts', 'edd_discounts_shortcode' );
  * to the cart.
  *
  * @since 1.0.6
- * @param array $atts Shortcode attributes
+ * @param array  $atts Shortcode attributes
  * @param string $content
  * @return string
  */
 function edd_purchase_collection_shortcode( $atts, $content = null ) {
-	extract( shortcode_atts( array(
-		'taxonomy'	=> '',
-		'terms'		=> '',
-		'text'		=> __('Purchase All Items','easy-digital-downloads' ),
-		'style'     => edd_get_option( 'button_style', 'button' ),
-		'color'     => edd_get_option( 'checkout_color', 'blue' ),
-		'class'		=> 'edd-submit'
-	), $atts, 'purchase_collection' ) );
+	extract(
+		shortcode_atts(
+			array(
+				'taxonomy' => '',
+				'terms'    => '',
+				'text'     => __( 'Purchase All Items', 'easy-digital-downloads' ),
+				'style'    => edd_get_option( 'button_style', 'button' ),
+				'color'    => edd_get_option( 'checkout_color', 'blue' ),
+				'class'    => 'edd-submit',
+			),
+			$atts,
+			'purchase_collection'
+		)
+	);
 
 	$button_display = implode( ' ', array( $style, $color, $class ) );
 
-	return '<a href="' . esc_url( add_query_arg( array( 'edd_action' => 'purchase_collection', 'taxonomy' => $taxonomy, 'terms' => $terms ) ) ) . '" class="' . $button_display . '">' . $text . '</a>';
+	return '<a href="' . esc_url(
+		add_query_arg(
+			array(
+				'edd_action' => 'purchase_collection',
+				'taxonomy'   => $taxonomy,
+				'terms'      => $terms,
+			)
+		)
+	) . '" class="' . $button_display . '">' . $text . '</a>';
 }
 add_shortcode( 'purchase_collection', 'edd_purchase_collection_shortcode' );
 
@@ -307,40 +322,43 @@ add_shortcode( 'purchase_collection', 'edd_purchase_collection_shortcode' );
  *
  * @since 1.0.6
  * @internal Incomplete shortcode
- * @param array $atts Shortcode attributes
+ * @param array  $atts Shortcode attributes
  * @param string $content
  * @return string $display Output generated from the downloads queried
  */
 function edd_downloads_query( $atts, $content = null ) {
-	$atts = shortcode_atts( array(
-		'category'         => '',
-		'exclude_category' => '',
-		'tags'             => '',
-		'exclude_tags'     => '',
-		'author'           => false,
-		'relation'         => 'OR',
-		'number'           => 9,
-		'price'            => 'no',
-		'excerpt'          => 'yes',
-		'full_content'     => 'no',
-		'buy_button'       => 'yes',
-		'columns'          => 3,
-		'thumbnails'       => 'true',
-		'orderby'          => 'post_date',
-		'order'            => 'DESC',
-		'ids'              => '',
-		'class'            => '',
-		'pagination'       => 'true',
-	), $atts, 'downloads' );
+	$atts = shortcode_atts(
+		array(
+			'category'         => '',
+			'exclude_category' => '',
+			'tags'             => '',
+			'exclude_tags'     => '',
+			'author'           => false,
+			'relation'         => 'OR',
+			'number'           => 9,
+			'price'            => 'no',
+			'excerpt'          => 'yes',
+			'full_content'     => 'no',
+			'buy_button'       => 'yes',
+			'columns'          => 3,
+			'thumbnails'       => 'true',
+			'orderby'          => 'post_date',
+			'order'            => 'DESC',
+			'ids'              => '',
+			'class'            => '',
+			'pagination'       => 'true',
+		),
+		$atts,
+		'downloads'
+	);
 
 	$query = array(
 		'post_type' => 'download',
 		'orderby'   => $atts['orderby'],
-		'order'     => $atts['order']
+		'order'     => $atts['order'],
 	);
 
-	if ( filter_var( $atts['pagination'], FILTER_VALIDATE_BOOLEAN ) || ( ! filter_var( $atts['pagination'], FILTER_VALIDATE_BOOLEAN ) && $atts[ 'number' ] ) ) {
-
+	if ( filter_var( $atts['pagination'], FILTER_VALIDATE_BOOLEAN ) || ( ! filter_var( $atts['pagination'], FILTER_VALIDATE_BOOLEAN ) && $atts['number'] ) ) {
 		$query['posts_per_page'] = (int) $atts['number'];
 
 		if ( $query['posts_per_page'] < 0 ) {
@@ -350,7 +368,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		$query['nopaging'] = true;
 	}
 
-	if( 'random' == $atts['orderby'] ) {
+	if ( 'random' == $atts['orderby'] ) {
 		$atts['pagination'] = false;
 	}
 
@@ -359,65 +377,59 @@ function edd_downloads_query( $atts, $content = null ) {
 			$atts['orderby']   = 'meta_value';
 			$query['meta_key'] = 'edd_price';
 			$query['orderby']  = 'meta_value_num';
-		break;
+			break;
 
 		case 'sales':
 			$atts['orderby']   = 'meta_value';
 			$query['meta_key'] = '_edd_download_sales';
 			$query['orderby']  = 'meta_value_num';
-		break;
+			break;
 
 		case 'earnings':
 			$atts['orderby']   = 'meta_value';
 			$query['meta_key'] = '_edd_download_earnings';
 			$query['orderby']  = 'meta_value_num';
-		break;
+			break;
 
 		case 'title':
 			$query['orderby'] = 'title';
-		break;
+			break;
 
 		case 'id':
 			$query['orderby'] = 'ID';
-		break;
+			break;
 
 		case 'random':
 			$query['orderby'] = 'rand';
-		break;
+			break;
 
 		case 'post__in':
 			$query['orderby'] = 'post__in';
-		break;
+			break;
 
 		default:
 			$query['orderby'] = 'post_date';
-		break;
+			break;
 	}
 
 	if ( $atts['tags'] || $atts['category'] || $atts['exclude_category'] || $atts['exclude_tags'] ) {
-
 		$query['tax_query'] = array(
-			'relation' => $atts['relation']
+			'relation' => $atts['relation'],
 		);
 
 		if ( $atts['tags'] ) {
-
 			$tag_list = explode( ',', $atts['tags'] );
 
-			foreach( $tag_list as $tag ) {
-
+			foreach ( $tag_list as $tag ) {
 				$t_id  = (int) $tag;
 				$is_id = is_int( $t_id ) && ! empty( $t_id );
 
-				if( $is_id ) {
-
+				if ( $is_id ) {
 					$term_id = $tag;
-
 				} else {
-
 					$term = get_term_by( 'slug', $tag, 'download_tag' );
 
-					if( ! $term ) {
+					if ( ! $term ) {
 						continue;
 					}
 
@@ -427,35 +439,28 @@ function edd_downloads_query( $atts, $content = null ) {
 				$query['tax_query'][] = array(
 					'taxonomy' => 'download_tag',
 					'field'    => 'term_id',
-					'terms'    => $term_id
+					'terms'    => $term_id,
 				);
 			}
-
 		}
 
 		if ( $atts['category'] ) {
-
 			$categories = explode( ',', $atts['category'] );
 
-			foreach( $categories as $category ) {
-
+			foreach ( $categories as $category ) {
 				$t_id  = (int) $category;
 				$is_id = is_int( $t_id ) && ! empty( $t_id );
 
-				if( $is_id ) {
-
+				if ( $is_id ) {
 					$term_id = $category;
-
 				} else {
-
 					$term = get_term_by( 'slug', $category, 'download_category' );
 
-					if( ! $term ) {
+					if ( ! $term ) {
 						continue;
 					}
 
 					$term_id = $term->term_id;
-
 				}
 
 				$query['tax_query'][] = array(
@@ -463,29 +468,22 @@ function edd_downloads_query( $atts, $content = null ) {
 					'field'    => 'term_id',
 					'terms'    => $term_id,
 				);
-
 			}
-
 		}
 
 		if ( $atts['exclude_category'] ) {
-
 			$categories = explode( ',', $atts['exclude_category'] );
 
-			foreach( $categories as $category ) {
-
+			foreach ( $categories as $category ) {
 				$t_id  = (int) $category;
 				$is_id = is_int( $t_id ) && ! empty( $t_id );
 
-				if( $is_id ) {
-
+				if ( $is_id ) {
 					$term_id = $category;
-
 				} else {
-
 					$term = get_term_by( 'slug', $category, 'download_category' );
 
-					if( ! $term ) {
+					if ( ! $term ) {
 						continue;
 					}
 
@@ -496,30 +494,24 @@ function edd_downloads_query( $atts, $content = null ) {
 					'taxonomy' => 'download_category',
 					'field'    => 'term_id',
 					'terms'    => $term_id,
-					'operator' => 'NOT IN'
+					'operator' => 'NOT IN',
 				);
 			}
-
 		}
 
 		if ( $atts['exclude_tags'] ) {
-
 			$tag_list = explode( ',', $atts['exclude_tags'] );
 
-			foreach( $tag_list as $tag ) {
-
+			foreach ( $tag_list as $tag ) {
 				$t_id  = (int) $tag;
 				$is_id = is_int( $t_id ) && ! empty( $t_id );
 
-				if( $is_id ) {
-
+				if ( $is_id ) {
 					$term_id = $tag;
-
 				} else {
-
 					$term = get_term_by( 'slug', $tag, 'download_tag' );
 
-					if( ! $term ) {
+					if ( ! $term ) {
 						continue;
 					}
 
@@ -530,11 +522,9 @@ function edd_downloads_query( $atts, $content = null ) {
 					'taxonomy' => 'download_tag',
 					'field'    => 'term_id',
 					'terms'    => $term_id,
-					'operator' => 'NOT IN'
+					'operator' => 'NOT IN',
 				);
-
 			}
-
 		}
 	}
 
@@ -545,7 +535,7 @@ function edd_downloads_query( $atts, $content = null ) {
 	if ( $atts['author'] ) {
 		$authors = explode( ',', $atts['author'] );
 		if ( ! empty( $authors ) ) {
-			$author_ids = array();
+			$author_ids   = array();
 			$author_names = array();
 
 			foreach ( $authors as $author ) {
@@ -566,13 +556,13 @@ function edd_downloads_query( $atts, $content = null ) {
 		}
 	}
 
-	if( ! empty( $atts['ids'] ) ) {
+	if ( ! empty( $atts['ids'] ) ) {
 		$query['post__in'] = explode( ',', $atts['ids'] );
 	}
 
 	if ( get_query_var( 'paged' ) ) {
-		$query['paged'] = get_query_var('paged');
-	} else if ( get_query_var( 'page' ) ) {
+		$query['paged'] = get_query_var( 'paged' );
+	} elseif ( get_query_var( 'page' ) ) {
 		$query['paged'] = get_query_var( 'page' );
 	} else {
 		$query['paged'] = 1;
@@ -586,7 +576,7 @@ function edd_downloads_query( $atts, $content = null ) {
 	do_action( 'edd_downloads_list_before', $atts );
 
 	if ( $downloads->have_posts() ) :
-		$i = 1;
+		$i               = 1;
 		$columns_class   = array( 'edd_download_columns_' . $atts['columns'] );
 		$custom_classes  = array_filter( explode( ',', $atts['class'] ) );
 		$wrapper_classes = array_unique( array_merge( $columns_class, $custom_classes ) );
@@ -597,9 +587,15 @@ function edd_downloads_query( $atts, $content = null ) {
 
 			<?php do_action( 'edd_downloads_list_top', $atts, $downloads ); ?>
 
-			<?php while ( $downloads->have_posts() ) : $downloads->the_post(); ?>
+			<?php
+			while ( $downloads->have_posts() ) :
+				$downloads->the_post();
+				?>
 				<?php do_action( 'edd_download_shortcode_item', $atts, $i ); ?>
-			<?php $i++; endwhile; ?>
+				<?php
+				$i++;
+endwhile;
+			?>
 
 			<?php wp_reset_postdata(); ?>
 
@@ -607,32 +603,48 @@ function edd_downloads_query( $atts, $content = null ) {
 
 			<?php if ( filter_var( $atts['pagination'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
 
-			<?php
+				<?php
 				$pagination = false;
 
 				if ( is_single() ) {
-					$pagination = paginate_links( apply_filters( 'edd_download_pagination_args', array(
-						'base'    => get_permalink() . '%#%',
-						'format'  => '?paged=%#%',
-						'current' => max( 1, $query['paged'] ),
-						'total'   => $downloads->max_num_pages
-					), $atts, $downloads, $query ) );
+					$pagination = paginate_links(
+						apply_filters(
+							'edd_download_pagination_args',
+							array(
+								'base'    => get_permalink() . '%#%',
+								'format'  => '?paged=%#%',
+								'current' => max( 1, $query['paged'] ),
+								'total'   => $downloads->max_num_pages,
+							),
+							$atts,
+							$downloads,
+							$query
+						)
+					);
 				} else {
-					$big = 999999;
+					$big          = 999999;
 					$search_for   = array( $big, '#038;' );
 					$replace_with = array( '%#%', '&' );
-					$pagination = paginate_links( apply_filters( 'edd_download_pagination_args', array(
-						'base'    => str_replace( $search_for, $replace_with, get_pagenum_link( $big ) ),
-						'format'  => '?paged=%#%',
-						'current' => max( 1, $query['paged'] ),
-						'total'   => $downloads->max_num_pages
-					), $atts, $downloads, $query ) );
+					$pagination   = paginate_links(
+						apply_filters(
+							'edd_download_pagination_args',
+							array(
+								'base'    => str_replace( $search_for, $replace_with, get_pagenum_link( $big ) ),
+								'format'  => '?paged=%#%',
+								'current' => max( 1, $query['paged'] ),
+								'total'   => $downloads->max_num_pages,
+							),
+							$atts,
+							$downloads,
+							$query
+						)
+					);
 				}
-			?>
+				?>
 
-			<?php if ( ! empty( $pagination ) ) : ?>
+				<?php if ( ! empty( $pagination ) ) : ?>
 			<div id="edd_download_pagination" class="navigation">
-				<?php echo $pagination; ?>
+					<?php echo $pagination; ?>
 			</div>
 			<?php endif; ?>
 
@@ -641,7 +653,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		</div>
 		<?php
 		$display = ob_get_clean();
-	else:
+	else :
 		$display = sprintf( _x( 'No %s found', 'download post type name', 'easy-digital-downloads' ), edd_get_label_plural() );
 	endif;
 
@@ -658,15 +670,21 @@ add_shortcode( 'edd_downloads', 'edd_downloads_query' );
  * Shows the price of a download.
  *
  * @since 1.1.3.3
- * @param array $atts Shortcode attributes
+ * @param array  $atts Shortcode attributes
  * @param string $content
  * @return string
  */
 function edd_download_price_shortcode( $atts, $content = null ) {
-	extract( shortcode_atts( array(
-		'id'       => null,
-		'price_id' => false,
-	), $atts, 'edd_price' ) );
+	extract(
+		shortcode_atts(
+			array(
+				'id'       => null,
+				'price_id' => false,
+			),
+			$atts,
+			'edd_price'
+		)
+	);
 
 	if ( is_null( $id ) ) {
 		$id = get_the_ID();
@@ -682,30 +700,34 @@ add_shortcode( 'edd_price', 'edd_download_price_shortcode' );
  * Shows an order receipt.
  *
  * @since 1.4
- * @param array $atts Shortcode attributes
+ * @param array  $atts Shortcode attributes
  * @param string $content
  * @return string
  */
 function edd_receipt_shortcode( $atts, $content = null ) {
 	global $edd_receipt_args;
 
-	$edd_receipt_args = shortcode_atts( array(
-		'error'           => __( 'Sorry, trouble retrieving payment receipt.', 'easy-digital-downloads' ),
-		'price'           => true,
-		'discount'        => true,
-		'products'        => true,
-		'date'            => true,
-		'notes'           => true,
-		'payment_key'     => false,
-		'payment_method'  => true,
-		'payment_id'      => true
-	), $atts, 'edd_receipt' );
+	$edd_receipt_args = shortcode_atts(
+		array(
+			'error'          => __( 'Sorry, trouble retrieving payment receipt.', 'easy-digital-downloads' ),
+			'price'          => true,
+			'discount'       => true,
+			'products'       => true,
+			'date'           => true,
+			'notes'          => true,
+			'payment_key'    => false,
+			'payment_method' => true,
+			'payment_id'     => true,
+		),
+		$atts,
+		'edd_receipt'
+	);
 
 	$session = edd_get_purchase_session();
 
 	if ( isset( $_GET['payment_key'] ) ) {
 		$payment_key = urldecode( $_GET['payment_key'] );
-	} else if ( $session ) {
+	} elseif ( $session ) {
 		$payment_key = $session['purchase_key'];
 	} elseif ( $edd_receipt_args['payment_key'] ) {
 		$payment_key = $edd_receipt_args['payment_key'];
@@ -822,15 +844,15 @@ function edd_process_profile_editor_updates( $data ) {
 	// Fetch customer record.
 	$customer = edd_get_customer_by( 'user_id', $user_id );
 
-	$display_name = isset( $data['edd_display_name'] )    ? sanitize_text_field( $data['edd_display_name'] )    : $old_user_data->display_name;
-	$first_name   = isset( $data['edd_first_name'] )      ? sanitize_text_field( $data['edd_first_name'] )      : $old_user_data->first_name;
-	$last_name    = isset( $data['edd_last_name'] )       ? sanitize_text_field( $data['edd_last_name'] )       : $old_user_data->last_name;
-	$email        = isset( $data['edd_email'] )           ? sanitize_email( $data['edd_email'] )                : $old_user_data->user_email;
-	$line1        = isset( $data['edd_address_line1'] )   ? sanitize_text_field( $data['edd_address_line1'] )   : '';
-	$line2        = isset( $data['edd_address_line2'] )   ? sanitize_text_field( $data['edd_address_line2'] )   : '';
-	$city         = isset( $data['edd_address_city'] )    ? sanitize_text_field( $data['edd_address_city'] )    : '';
-	$state        = isset( $data['edd_address_state'] )   ? sanitize_text_field( $data['edd_address_state'] )   : '';
-	$zip          = isset( $data['edd_address_zip'] )     ? sanitize_text_field( $data['edd_address_zip'] )     : '';
+	$display_name = isset( $data['edd_display_name'] ) ? sanitize_text_field( $data['edd_display_name'] ) : $old_user_data->display_name;
+	$first_name   = isset( $data['edd_first_name'] ) ? sanitize_text_field( $data['edd_first_name'] ) : $old_user_data->first_name;
+	$last_name    = isset( $data['edd_last_name'] ) ? sanitize_text_field( $data['edd_last_name'] ) : $old_user_data->last_name;
+	$email        = isset( $data['edd_email'] ) ? sanitize_email( $data['edd_email'] ) : $old_user_data->user_email;
+	$line1        = isset( $data['edd_address_line1'] ) ? sanitize_text_field( $data['edd_address_line1'] ) : '';
+	$line2        = isset( $data['edd_address_line2'] ) ? sanitize_text_field( $data['edd_address_line2'] ) : '';
+	$city         = isset( $data['edd_address_city'] ) ? sanitize_text_field( $data['edd_address_city'] ) : '';
+	$state        = isset( $data['edd_address_state'] ) ? sanitize_text_field( $data['edd_address_state'] ) : '';
+	$zip          = isset( $data['edd_address_zip'] ) ? sanitize_text_field( $data['edd_address_zip'] ) : '';
 	$country      = isset( $data['edd_address_country'] ) ? sanitize_text_field( $data['edd_address_country'] ) : '';
 
 	$userdata = array(
@@ -838,16 +860,16 @@ function edd_process_profile_editor_updates( $data ) {
 		'first_name'   => $first_name,
 		'last_name'    => $last_name,
 		'display_name' => $display_name,
-		'user_email'   => $email
+		'user_email'   => $email,
 	);
 
 	$address = array(
-		'line1'    => $line1,
-		'line2'    => $line2,
-		'city'     => $city,
-		'state'    => $state,
-		'zip'      => $zip,
-		'country'  => $country
+		'line1'   => $line1,
+		'line2'   => $line2,
+		'city'    => $city,
+		'state'   => $state,
+		'zip'     => $zip,
+		'country' => $country,
 	);
 
 	do_action( 'edd_pre_update_user_profile', $user_id, $userdata );
@@ -890,35 +912,42 @@ function edd_process_profile_editor_updates( $data ) {
 	if ( $customer ) {
 
 		// Update the primary address.
-		$customer_address_id = edd_get_customer_addresses( array(
-			'customer_id' => $customer->id,
-			'type'        => 'primary',
-			'number'      => 1,
-			'fields'      => 'ids'
-		) );
+		$customer_address_id = edd_get_customer_addresses(
+			array(
+				'customer_id' => $customer->id,
+				'type'        => 'primary',
+				'number'      => 1,
+				'fields'      => 'ids',
+			)
+		);
 
 		// Try updating the address if it exists.
 		if ( ! empty( $customer_address_id ) ) {
 			$customer_address_id = $customer_address_id[0];
 
-			edd_update_customer_address( $customer_address_id, array(
-				'address'     => $address['line1'],
-				'address2'    => $address['line2'],
-				'city'        => $address['city'],
-				'region'      => $address['state'],
-				'postal_code' => $address['zip'],
-			) );
+			edd_update_customer_address(
+				$customer_address_id,
+				array(
+					'address'     => $address['line1'],
+					'address2'    => $address['line2'],
+					'city'        => $address['city'],
+					'region'      => $address['state'],
+					'postal_code' => $address['zip'],
+				)
+			);
 
-		// Add a customer address.
+			// Add a customer address.
 		} else {
-			edd_add_customer_address( array(
-				'type'        => 'primary',
-				'address'     => $address['line1'],
-				'address2'    => $address['line2'],
-				'city'        => $address['city'],
-				'region'      => $address['state'],
-				'postal_code' => $address['zip'],
-			) );
+			edd_add_customer_address(
+				array(
+					'type'        => 'primary',
+					'address'     => $address['line1'],
+					'address2'    => $address['line2'],
+					'city'        => $address['city'],
+					'region'      => $address['state'],
+					'postal_code' => $address['zip'],
+				)
+			);
 		}
 
 		if ( $customer->email === $email || ( is_array( $customer->emails ) && in_array( $email, $customer->emails ) ) ) {
@@ -967,14 +996,12 @@ function edd_process_profile_editor_remove_email() {
 
 	$customer = new EDD_Customer( get_current_user_id(), true );
 	if ( $customer->remove_email( $_GET['email'] ) ) {
-
 		$url = add_query_arg( 'updated', true, $_GET['redirect'] );
 
 		$user          = wp_get_current_user();
 		$user_login    = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
-		$customer_note = sprintf( __( 'Email address %s removed by %s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
+		$customer_note = sprintf( __( 'Email address %1$s removed by %2$s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
 		$customer->add_note( $customer_note );
-
 	} else {
 		edd_set_error( 'profile-remove-email-failure', __( 'Error removing email address from profile. Please try again later.', 'easy-digital-downloads' ) );
 		$url = $_GET['redirect'];

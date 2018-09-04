@@ -68,7 +68,7 @@ abstract class Base_Object {
 		if ( method_exists( $this, $method ) ) {
 			return true;
 
-		// Return get method results if exists
+			// Return get method results if exists
 		} elseif ( property_exists( $this, $key ) ) {
 			return true;
 		}
@@ -99,7 +99,7 @@ abstract class Base_Object {
 		if ( method_exists( $this, $method ) ) {
 			return call_user_func( array( $this, $method ) );
 
-		// Return get method results if exists
+			// Return get method results if exists
 		} elseif ( property_exists( $this, $key ) ) {
 			return $this->{$key};
 		}

@@ -28,7 +28,6 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 	 * @return void
 	 */
 	public function init() {
-
 		$this->per_step = 5;
 
 		// Set up default field map values
@@ -69,7 +68,6 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 	 * @return bool
 	 */
 	public function process_step() {
-
 		$more = false;
 
 		if ( ! $this->can_import() ) {
@@ -83,7 +81,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 		$i      = 1;
 		$offset = $this->step > 1 ? ( $this->per_step * ( $this->step - 1 ) ) : 0;
 
-		if( $offset > $this->total ) {
+		if ( $offset > $this->total ) {
 			$this->done = true;
 
 			// Clean up the temporary records in the payment import process
@@ -92,19 +90,18 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 			$wpdb->query( $sql );
 		}
 
-		if( ! $this->done && $this->csv->data ) {
-
+		if ( ! $this->done && $this->csv->data ) {
 			$more = true;
 
-			foreach( $this->csv->data as $key => $row ) {
+			foreach ( $this->csv->data as $key => $row ) {
 
 				// Skip all rows until we pass our offset
-				if( $key + 1 <= $offset ) {
+				if ( $key + 1 <= $offset ) {
 					continue;
 				}
 
 				// Done with this batch
-				if( $i > $this->per_step ) {
+				if ( $i > $this->per_step ) {
 					break;
 				}
 
@@ -113,7 +110,6 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 				$i++;
 			}
-
 		}
 
 		return $more;
@@ -126,179 +122,126 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 	 * @return void
 	 */
 	public function create_payment( $row = array() ) {
-
-		$payment = new EDD_Payment;
+		$payment         = new EDD_Payment();
 		$payment->status = 'pending';
 
-		if( ! empty( $this->field_mapping['number'] ) && ! empty( $row[ $this->field_mapping['number'] ] ) ) {
-
+		if ( ! empty( $this->field_mapping['number'] ) && ! empty( $row[ $this->field_mapping['number'] ] ) ) {
 			$payment->number = sanitize_text_field( $row[ $this->field_mapping['number'] ] );
-
 		}
 
-		if( ! empty( $this->field_mapping['mode'] ) && ! empty( $row[ $this->field_mapping['mode'] ] ) ) {
-
+		if ( ! empty( $this->field_mapping['mode'] ) && ! empty( $row[ $this->field_mapping['mode'] ] ) ) {
 			$mode = strtolower( sanitize_text_field( $row[ $this->field_mapping['mode'] ] ) );
 			$mode = 'test' != $mode && 'live' != $mode ? false : $mode;
-			if( ! $mode ) {
+			if ( ! $mode ) {
 				$mode = edd_is_test_mode() ? 'test' : 'live';
 			}
 
 			$payment->mode = $mode;
-
 		}
 
-		if( ! empty( $this->field_mapping['date'] ) && ! empty( $row[ $this->field_mapping['date'] ] ) ) {
-
+		if ( ! empty( $this->field_mapping['date'] ) && ! empty( $row[ $this->field_mapping['date'] ] ) ) {
 			$date = sanitize_text_field( $row[ $this->field_mapping['date'] ] );
 
-			if( ! strtotime( $date ) ) {
-
+			if ( ! strtotime( $date ) ) {
 				$date = date( 'Y-m-d H:i:s', current_time( 'timestamp' ) );
-
 			} else {
-
 				$date = date( 'Y-m-d H:i:s', strtotime( $date ) );
-
 			}
 
 			$payment->date = $date;
-
 		}
 
 		$payment->customer_id = $this->set_customer( $row );
 
-		if( ! empty( $this->field_mapping['email'] ) && ! empty( $row[ $this->field_mapping['email'] ] ) ) {
-
+		if ( ! empty( $this->field_mapping['email'] ) && ! empty( $row[ $this->field_mapping['email'] ] ) ) {
 			$payment->email = sanitize_text_field( $row[ $this->field_mapping['email'] ] );
-
 		}
 
-		if( ! empty( $this->field_mapping['first_name'] ) && ! empty( $row[ $this->field_mapping['first_name'] ] ) ) {
-
+		if ( ! empty( $this->field_mapping['first_name'] ) && ! empty( $row[ $this->field_mapping['first_name'] ] ) ) {
 			$payment->first_name = sanitize_text_field( $row[ $this->field_mapping['first_name'] ] );
-
 		}
 
-		if( ! empty( $this->field_mapping['last_name'] ) && ! empty( $row[ $this->field_mapping['last_name'] ] ) ) {
-
+		if ( ! empty( $this->field_mapping['last_name'] ) && ! empty( $row[ $this->field_mapping['last_name'] ] ) ) {
 			$payment->last_name = sanitize_text_field( $row[ $this->field_mapping['last_name'] ] );
-
 		}
 
-		if( ! empty( $this->field_mapping['user_id'] ) && ! empty( $row[ $this->field_mapping['user_id'] ] ) ) {
-
+		if ( ! empty( $this->field_mapping['user_id'] ) && ! empty( $row[ $this->field_mapping['user_id'] ] ) ) {
 			$user_id = sanitize_text_field( $row[ $this->field_mapping['user_id'] ] );
 
-			if( is_numeric( $user_id ) ) {
-
+			if ( is_numeric( $user_id ) ) {
 				$user_id = absint( $row[ $this->field_mapping['user_id'] ] );
 				$user    = get_userdata( $user_id );
-
-			} elseif( is_email( $user_id ) ) {
-
+			} elseif ( is_email( $user_id ) ) {
 				$user = get_user_by( 'email', $user_id );
-
 			} else {
-
 				$user = get_user_by( 'login', $user_id );
-
 			}
 
-			if( $user ) {
-
+			if ( $user ) {
 				$payment->user_id = $user->ID;
 
 				$customer = new EDD_Customer( $payment->customer_id );
 
-				if( empty( $customer->user_id ) ) {
+				if ( empty( $customer->user_id ) ) {
 					$customer->update( array( 'user_id' => $user->ID ) );
 				}
-
 			}
-
 		}
 
-		if( ! empty( $this->field_mapping['discounts'] ) && ! empty( $row[ $this->field_mapping['discounts'] ] ) ) {
-
+		if ( ! empty( $this->field_mapping['discounts'] ) && ! empty( $row[ $this->field_mapping['discounts'] ] ) ) {
 			$payment->discounts = sanitize_text_field( $row[ $this->field_mapping['discounts'] ] );
-
 		}
 
-		if( ! empty( $this->field_mapping['transaction_id'] ) && ! empty( $row[ $this->field_mapping['transaction_id'] ] ) ) {
-
+		if ( ! empty( $this->field_mapping['transaction_id'] ) && ! empty( $row[ $this->field_mapping['transaction_id'] ] ) ) {
 			$payment->transaction_id = sanitize_text_field( $row[ $this->field_mapping['transaction_id'] ] );
-
 		}
 
-		if( ! empty( $this->field_mapping['ip'] ) && ! empty( $row[ $this->field_mapping['ip'] ] ) ) {
-
+		if ( ! empty( $this->field_mapping['ip'] ) && ! empty( $row[ $this->field_mapping['ip'] ] ) ) {
 			$payment->ip = sanitize_text_field( $row[ $this->field_mapping['ip'] ] );
-
 		}
 
-		if( ! empty( $this->field_mapping['gateway'] ) && ! empty( $row[ $this->field_mapping['gateway'] ] ) ) {
-
+		if ( ! empty( $this->field_mapping['gateway'] ) && ! empty( $row[ $this->field_mapping['gateway'] ] ) ) {
 			$gateways = edd_get_payment_gateways();
 			$gateway  = strtolower( sanitize_text_field( $row[ $this->field_mapping['gateway'] ] ) );
 
-			if( ! array_key_exists( $gateway, $gateways ) ) {
-
-				foreach( $gateways as $key => $enabled_gateway ) {
-
-					if( $enabled_gateway['checkout_label'] == $gateway ) {
-
+			if ( ! array_key_exists( $gateway, $gateways ) ) {
+				foreach ( $gateways as $key => $enabled_gateway ) {
+					if ( $enabled_gateway['checkout_label'] == $gateway ) {
 						$gateway = $key;
 						break;
-
 					}
-
 				}
-
 			}
 
 			$payment->gateway = $gateway;
-
 		}
 
-		if( ! empty( $this->field_mapping['currency'] ) && ! empty( $row[ $this->field_mapping['currency'] ] ) ) {
-
+		if ( ! empty( $this->field_mapping['currency'] ) && ! empty( $row[ $this->field_mapping['currency'] ] ) ) {
 			$payment->currency = strtoupper( sanitize_text_field( $row[ $this->field_mapping['currency'] ] ) );
-
 		}
 
-		if( ! empty( $this->field_mapping['key'] ) && ! empty( $row[ $this->field_mapping['key'] ] ) ) {
-
+		if ( ! empty( $this->field_mapping['key'] ) && ! empty( $row[ $this->field_mapping['key'] ] ) ) {
 			$payment->key = sanitize_text_field( $row[ $this->field_mapping['key'] ] );
-
 		}
 
-		if( ! empty( $this->field_mapping['parent_payment_id'] ) && ! empty( $row[ $this->field_mapping['parent_payment_id'] ] ) ) {
-
+		if ( ! empty( $this->field_mapping['parent_payment_id'] ) && ! empty( $row[ $this->field_mapping['parent_payment_id'] ] ) ) {
 			$payment->parent_payment_id = absint( $row[ $this->field_mapping['parent_payment_id'] ] );
-
 		}
 
-		if( ! empty( $this->field_mapping['downloads'] ) && ! empty( $row[ $this->field_mapping['downloads'] ] ) ) {
-
-			if( __( 'Products (Raw)', 'easy-digital-downloads' ) == $this->field_mapping['downloads'] ) {
+		if ( ! empty( $this->field_mapping['downloads'] ) && ! empty( $row[ $this->field_mapping['downloads'] ] ) ) {
+			if ( __( 'Products (Raw)', 'easy-digital-downloads' ) == $this->field_mapping['downloads'] ) {
 
 				// This is an EDD export so we can extract prices
 				$downloads = $this->get_downloads_from_edd( $row[ $this->field_mapping['downloads'] ] );
-
 			} else {
-
 				$downloads = $this->str_to_array( $row[ $this->field_mapping['downloads'] ] );
-
 			}
 
-			if( is_array( $downloads ) ) {
-
+			if ( is_array( $downloads ) ) {
 				$download_count = count( $downloads );
 
-				foreach( $downloads as $download ) {
-
-					if( is_array( $download ) ) {
+				foreach ( $downloads as $download ) {
+					if ( is_array( $download ) ) {
 						$download_name = $download['download'];
 						$price         = $download['price'];
 						$tax           = $download['tax'];
@@ -309,7 +252,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 					$download_id = $this->maybe_create_download( $download_name );
 
-					if( ! $download_id ) {
+					if ( ! $download_id ) {
 						continue;
 					}
 
@@ -324,170 +267,131 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 					);
 
 					$payment->add_download( $download_id, $args );
-
 				}
-
 			}
-
 		}
 
-		if( ! empty( $this->field_mapping['total'] ) && ! empty( $row[ $this->field_mapping['total'] ] ) ) {
-
+		if ( ! empty( $this->field_mapping['total'] ) && ! empty( $row[ $this->field_mapping['total'] ] ) ) {
 			$payment->total = edd_sanitize_amount( $row[ $this->field_mapping['total'] ] );
-
 		}
 
-		if( ! empty( $this->field_mapping['tax'] ) && ! empty( $row[ $this->field_mapping['tax'] ] ) ) {
-
+		if ( ! empty( $this->field_mapping['tax'] ) && ! empty( $row[ $this->field_mapping['tax'] ] ) ) {
 			$payment->tax = edd_sanitize_amount( $row[ $this->field_mapping['tax'] ] );
-
 		}
 
-		if( ! empty( $this->field_mapping['subtotal'] ) && ! empty( $row[ $this->field_mapping['subtotal'] ] ) ) {
-
+		if ( ! empty( $this->field_mapping['subtotal'] ) && ! empty( $row[ $this->field_mapping['subtotal'] ] ) ) {
 			$payment->subtotal = edd_sanitize_amount( $row[ $this->field_mapping['subtotal'] ] );
-
 		} else {
-
 			$payment->subtotal = $payment->total - $payment->tax;
-
 		}
 
-		$address = array( 'line1' => '', 'line2' => '', 'city' => '', 'state' => '', 'zip' => '', 'country' => '' );
+		$address = array(
+			'line1'   => '',
+			'line2'   => '',
+			'city'    => '',
+			'state'   => '',
+			'zip'     => '',
+			'country' => '',
+		);
 
-		foreach( $address as $key => $address_field ) {
-
-			if( ! empty( $this->field_mapping[ $key ] ) && ! empty( $row[ $this->field_mapping[ $key ] ] ) ) {
-
+		foreach ( $address as $key => $address_field ) {
+			if ( ! empty( $this->field_mapping[ $key ] ) && ! empty( $row[ $this->field_mapping[ $key ] ] ) ) {
 				$address[ $key ] = sanitize_text_field( $row[ $this->field_mapping[ $key ] ] );
-
 			}
-
 		}
 
 		$payment->address = $address;
 
 		$payment->save();
 
-
 		// The status has to be set after payment is created to ensure status update properly
-		if( ! empty( $this->field_mapping['status'] ) && ! empty( $row[ $this->field_mapping['status'] ] ) ) {
-
+		if ( ! empty( $this->field_mapping['status'] ) && ! empty( $row[ $this->field_mapping['status'] ] ) ) {
 			$payment->status = strtolower( sanitize_text_field( $row[ $this->field_mapping['status'] ] ) );
-
 		} else {
-
 			$payment->status = 'complete';
-
 		}
 
 		// Save a second time to update stats
 		$payment->save();
-
 	}
 
 	private function set_customer( $row ) {
-
 		global $wpdb;
 
-		if( ! empty( $this->field_mapping['email'] ) && ! empty( $row[ $this->field_mapping['email'] ] ) ) {
-
+		if ( ! empty( $this->field_mapping['email'] ) && ! empty( $row[ $this->field_mapping['email'] ] ) ) {
 			$email = sanitize_text_field( $row[ $this->field_mapping['email'] ] );
-
 		}
 
 		// Look for a customer from the canonical source, if any
-		if( ! empty( $this->field_mapping['customer_id'] ) && ! empty( $row[ $this->field_mapping['customer_id'] ] ) ) {
-
+		if ( ! empty( $this->field_mapping['customer_id'] ) && ! empty( $row[ $this->field_mapping['customer_id'] ] ) ) {
 			$canonical_id = absint( $row[ $this->field_mapping['customer_id'] ] );
 			$mapped_id    = $wpdb->get_var( $wpdb->prepare( "SELECT customer_id FROM $wpdb->customermeta WHERE meta_key = '_canonical_import_id' AND meta_value = %d LIMIT 1", $canonical_id ) );
-
 		}
 
-		if( ! empty( $mapped_id ) ) {
-
+		if ( ! empty( $mapped_id ) ) {
 			$customer = new EDD_Customer( $mapped_id );
-
 		}
 
-		if( empty( $mapped_id ) || ! $customer->id > 0 ) {
+		if ( empty( $mapped_id ) || ! $customer->id > 0 ) {
 
 			// Look for a customer based on provided ID, if any
-
-			if( ! empty( $this->field_mapping['customer_id'] ) && ! empty( $row[ $this->field_mapping['customer_id'] ] ) ) {
-
+			if ( ! empty( $this->field_mapping['customer_id'] ) && ! empty( $row[ $this->field_mapping['customer_id'] ] ) ) {
 				$customer_id = absint( $row[ $this->field_mapping['customer_id'] ] );
 
 				$customer_by_id = new EDD_Customer( $customer_id );
-
 			}
 
 			// Now look for a customer based on provided email
-
-			if( ! empty( $email ) ) {
-
+			if ( ! empty( $email ) ) {
 				$customer_by_email = new EDD_Customer( $email );
-
 			}
 
 			// Now compare customer records. If they don't match, customer_id will be stored in meta and we will use the customer that matches the email
-
-			if( ( empty( $customer_by_id ) || $customer_by_id->id !== $customer_by_email->id ) && ! empty( $customer_by_email ) )  {
-
+			if ( ( empty( $customer_by_id ) || $customer_by_id->id !== $customer_by_email->id ) && ! empty( $customer_by_email ) ) {
 				$customer = $customer_by_email;
-
-			} else if ( ! empty( $customer_by_id ) ) {
-
+			} elseif ( ! empty( $customer_by_id ) ) {
 				$customer = $customer_by_id;
 
-				if( ! empty( $email ) ) {
+				if ( ! empty( $email ) ) {
 					$customer->add_email( $email );
 				}
-
 			}
 
 			// Make sure we found a customer. Create one if not.
-			if( empty( $customer->id ) ) {
-
+			if ( empty( $customer->id ) ) {
 				if ( ! $customer instanceof EDD_Customer ) {
-					$customer = new EDD_Customer;
+					$customer = new EDD_Customer();
 				}
 
 				$first_name = '';
 				$last_name  = '';
 
-				if( ! empty( $this->field_mapping['first_name'] ) && ! empty( $row[ $this->field_mapping['first_name'] ] ) ) {
-
+				if ( ! empty( $this->field_mapping['first_name'] ) && ! empty( $row[ $this->field_mapping['first_name'] ] ) ) {
 					$first_name = sanitize_text_field( $row[ $this->field_mapping['first_name'] ] );
-
 				}
 
-				if( ! empty( $this->field_mapping['last_name'] ) && ! empty( $row[ $this->field_mapping['last_name'] ] ) ) {
-
+				if ( ! empty( $this->field_mapping['last_name'] ) && ! empty( $row[ $this->field_mapping['last_name'] ] ) ) {
 					$last_name = sanitize_text_field( $row[ $this->field_mapping['last_name'] ] );
-
 				}
 
-				$customer->create( array(
-					'name'  => $first_name . ' ' . $last_name,
-					'email' => $email
-				) );
+				$customer->create(
+					array(
+						'name'  => $first_name . ' ' . $last_name,
+						'email' => $email,
+					)
+				);
 
-				if( ! empty( $canonical_id ) && (int) $canonical_id !== (int) $customer->id ) {
+				if ( ! empty( $canonical_id ) && (int) $canonical_id !== (int) $customer->id ) {
 					$customer->update_meta( '_canonical_import_id', $canonical_id );
 				}
-
 			}
-
-
 		}
 
-		if( $email && $email != $customer->email ) {
+		if ( $email && $email != $customer->email ) {
 			$customer->add_email( $email );
 		}
 
 		return $customer->id;
-
 	}
 
 	/**
@@ -497,27 +401,22 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 	 * @return int Download ID
 	 */
 	private function maybe_create_download( $title = '' ) {
-
-		if( ! is_string( $title ) ) {
+		if ( ! is_string( $title ) ) {
 			return false;
 		}
 
 		$download = get_page_by_title( $title, OBJECT, 'download' );
 
-		if( $download ) {
-
+		if ( $download ) {
 			$download_id = $download->ID;
-
 		} else {
-
 			$args = array(
 				'post_type'   => 'download',
 				'post_title'  => $title,
-				'post_author' => get_current_user_id()
+				'post_author' => get_current_user_id(),
 			);
 
 			$download_id = wp_insert_post( $args );
-
 		}
 
 		return $download_id;
@@ -532,18 +431,15 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 	public function get_downloads_from_edd( $data_str ) {
 
 		// Break string into separate products
-
 		$d_array   = array();
 		$downloads = (array) explode( '/', $data_str );
 
-		if( $downloads ) {
-
-			foreach( $downloads as $key => $download ) {
-
-				$d   = (array) explode( '|', $download );
+		if ( $downloads ) {
+			foreach ( $downloads as $key => $download ) {
+				$d = (array) explode( '|', $download );
 				preg_match_all( '/\{(\d|(\d+(\.\d+|\d+)))\}/', $d[1], $matches );
-				$price = trim( substr( $d[1], 0, strpos( $d[1], '{' ) ) );
-				$tax   = isset( $matches[1][0] ) ? trim( $matches[1][0] ) : 0;
+				$price    = trim( substr( $d[1], 0, strpos( $d[1], '{' ) ) );
+				$tax      = isset( $matches[1][0] ) ? trim( $matches[1][0] ) : 0;
 				$price_id = isset( $matches[1][1] ) ? trim( $matches[1][1] ) : false;
 
 				$d_array[] = array(
@@ -552,13 +448,10 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 					'tax'      => $tax,
 					'price_id' => $price_id,
 				);
-
 			}
-
 		}
 
 		return $d_array;
-
 	}
 
 	/**
@@ -568,14 +461,13 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 	 * @return int
 	 */
 	public function get_percentage_complete() {
-
 		$total = count( $this->csv->data );
 
-		if( $total > 0 ) {
+		if ( $total > 0 ) {
 			$percentage = ( $this->step * $this->per_step / $total ) * 100;
 		}
 
-		if( $percentage > 100 ) {
+		if ( $percentage > 100 ) {
 			$percentage = 100;
 		}
 

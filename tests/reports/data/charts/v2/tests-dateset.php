@@ -4,7 +4,7 @@ namespace EDD\Reports\Data\Charts\v2;
 use EDD\Reports\Data\Chart_Endpoint;
 
 if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
+	require_once EDD_PLUGIN_DIR . 'includes/reports/class-init.php';
 }
 
 new \EDD\Reports\Init();
@@ -70,8 +70,13 @@ class Dataset_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_get_global_fields_should_return_the_global_fields() {
 		$expected = array(
-			'label', 'xAxisID', 'yAxisID', 'data',
-			'backgroundColor', 'borderColor', 'borderWidth',
+			'label',
+			'xAxisID',
+			'yAxisID',
+			'data',
+			'backgroundColor',
+			'borderColor',
+			'borderWidth',
 		);
 
 		$this->assertEqualSets( $expected, $this->mock_Dataset->get_global_fields() );
@@ -83,8 +88,13 @@ class Dataset_Tests extends \EDD_UnitTestCase {
 	public function test_get_all_fields_should_return_fields_and_global_fields_combined() {
 		// Abstract fields are empty, so just expect the global fields.
 		$expected = array(
-			'label', 'xAxisID', 'yAxisID', 'data',
-			'backgroundColor', 'borderColor', 'borderWidth',
+			'label',
+			'xAxisID',
+			'yAxisID',
+			'data',
+			'backgroundColor',
+			'borderColor',
+			'borderWidth',
 		);
 
 		$this->assertEqualSets( $expected, $this->mock_Dataset->get_all_fields() );
@@ -103,16 +113,19 @@ class Dataset_Tests extends \EDD_UnitTestCase {
 	 * @covers ::validate()
 	 */
 	public function test_validate_should_have_errors_if_no_data() {
-		$dataset = $this->get_Dataset_mock( 'test', array(
-			'views' => array(
-				'chart' => array(
-					'data_callback' => function() {
-						return;
-					},
-					'options' => array(),
+		$dataset = $this->get_Dataset_mock(
+			'test',
+			array(
+				'views' => array(
+					'chart' => array(
+						'data_callback' => function() {
+							return;
+						},
+						'options'       => array(),
+					),
 				),
-			),
-		) );
+			)
+		);
 
 		$this->assertTrue( $dataset->has_errors() );
 	}
@@ -121,16 +134,19 @@ class Dataset_Tests extends \EDD_UnitTestCase {
 	 * @covers ::validate()
 	 */
 	public function test_validate_should_log_missing_chart_data_error_if_no_data() {
-		$dataset = $this->get_Dataset_mock( 'test', array(
-			'views' => array(
-				'chart' => array(
-					'data_callback' => function() {
-						return;
-					},
-					'options' => array(),
+		$dataset = $this->get_Dataset_mock(
+			'test',
+			array(
+				'views' => array(
+					'chart' => array(
+						'data_callback' => function() {
+							return;
+						},
+						'options'       => array(),
+					),
 				),
-			),
-		) );
+			)
+		);
 
 		$this->assertContains( 'missing_chart_data', $dataset->get_errors()->get_error_codes() );
 	}
@@ -183,7 +199,7 @@ class Dataset_Tests extends \EDD_UnitTestCase {
 			array( 40, 1 ),
 			array( 20, 2 ),
 			array( 30, 3 ),
-			array( 10, 4 )
+			array( 10, 4 ),
 		);
 
 		$this->assertEqualSetsWithIndex( $expected, $this->mock_Dataset->parse_data_for_output( $data ) );
@@ -205,8 +221,8 @@ class Dataset_Tests extends \EDD_UnitTestCase {
 							$dataset_id => array( 40, 20, 30, 10 ),
 						);
 					},
-					'type'    => 'pie',
-					'options' => array(
+					'type'          => 'pie',
+					'options'       => array(
 						'cutoutPercentage' => 50,
 						'datasets'         => array(
 							$dataset_id => array(
@@ -219,10 +235,10 @@ class Dataset_Tests extends \EDD_UnitTestCase {
 								),
 							),
 						),
-						'labels' => array( 'First', 'Second', 'Third', 'Fourth' ),
+						'labels'           => array( 'First', 'Second', 'Third', 'Fourth' ),
 					),
 				),
-			)
+			),
 		);
 
 		$endpoint_args = array_merge( $defaults, $endpoint_args );

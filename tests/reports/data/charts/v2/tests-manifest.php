@@ -4,7 +4,7 @@ namespace EDD\Reports\Data\Charts\v2;
 use EDD\Reports\Data\Chart_Endpoint;
 
 if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
+	require_once EDD_PLUGIN_DIR . 'includes/reports/class-init.php';
 }
 
 new \EDD\Reports\Init();
@@ -88,24 +88,27 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 	 * @covers ::has_datasets()
 	 */
 	public function test_has_datasets_should_return_false_if_no_datasets() {
-		$manifest = $this->get_Manifest_mock( 'test', array(
-			'id'    => 'test_endpoint',
-			'label' => __( 'Foo Dataset', 'easy-digital-downloads' ),
-			'views' => array(
-				'chart' => array(
-					'data_callback' => function() {
-						return array(
-							'test' => array( 40, 20, 30, 10 ),
-						);
-					},
-					'type'    => 'pie',
-					'options' => array(
-						'cutoutPercentage' => 50,
-						'labels'           => array( 'First', 'Second', 'Third', 'Fourth' ),
+		$manifest = $this->get_Manifest_mock(
+			'test',
+			array(
+				'id'    => 'test_endpoint',
+				'label' => __( 'Foo Dataset', 'easy-digital-downloads' ),
+				'views' => array(
+					'chart' => array(
+						'data_callback' => function() {
+							return array(
+								'test' => array( 40, 20, 30, 10 ),
+							);
+						},
+						'type'          => 'pie',
+						'options'       => array(
+							'cutoutPercentage' => 50,
+							'labels'           => array( 'First', 'Second', 'Third', 'Fourth' ),
+						),
 					),
 				),
 			)
-		) );
+		);
 
 		$this->assertFalse( $manifest->has_datasets() );
 	}
@@ -132,23 +135,26 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 	 * @covers ::set_labels()
 	 */
 	public function test_get_labels_should_retrieve_an_empty_array_if_not_set() {
-		$manifest = $this->get_Manifest_mock( 'test', array(
-			'id'    => 'test_endpoint',
-			'label' => __( 'Foo Dataset', 'easy-digital-downloads' ),
-			'views' => array(
-				'chart' => array(
-					'data_callback' => function() {
-						return array(
-							'test' => array( 40, 20, 30, 10 ),
-						);
-					},
-					'type'    => 'pie',
-					'options' => array(
-						'cutoutPercentage' => 50,
+		$manifest = $this->get_Manifest_mock(
+			'test',
+			array(
+				'id'    => 'test_endpoint',
+				'label' => __( 'Foo Dataset', 'easy-digital-downloads' ),
+				'views' => array(
+					'chart' => array(
+						'data_callback' => function() {
+							return array(
+								'test' => array( 40, 20, 30, 10 ),
+							);
+						},
+						'type'          => 'pie',
+						'options'       => array(
+							'cutoutPercentage' => 50,
+						),
 					),
 				),
 			)
-		) );
+		);
 
 		$this->assertEqualSets( array(), $manifest->get_labels() );
 	}
@@ -164,23 +170,26 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 	 * @covers ::has_labels()
 	 */
 	public function test_has_labels_should_return_false_if_no_labels() {
-		$manifest = $this->get_Manifest_mock( 'test', array(
-			'id'    => 'test_endpoint',
-			'label' => __( 'Foo Dataset', 'easy-digital-downloads' ),
-			'views' => array(
-				'chart' => array(
-					'data_callback' => function() {
-						return array(
-							'test' => array( 40, 20, 30, 10 ),
-						);
-					},
-					'type'    => 'pie',
-					'options' => array(
-						'cutoutPercentage' => 50,
+		$manifest = $this->get_Manifest_mock(
+			'test',
+			array(
+				'id'    => 'test_endpoint',
+				'label' => __( 'Foo Dataset', 'easy-digital-downloads' ),
+				'views' => array(
+					'chart' => array(
+						'data_callback' => function() {
+							return array(
+								'test' => array( 40, 20, 30, 10 ),
+							);
+						},
+						'type'          => 'pie',
+						'options'       => array(
+							'cutoutPercentage' => 50,
+						),
 					),
 				),
 			)
-		) );
+		);
 
 		$this->assertFalse( $manifest->has_labels() );
 	}
@@ -189,20 +198,23 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 	 * @covers ::add_dataset()
 	 */
 	public function test_add_dataset_should_return_false_on_failure() {
-		$manifest = $this->get_Manifest_mock( 'test', array(
-			'id'    => 'test_endpoint',
-			'label' => __( 'Foo Dataset', 'easy-digital-downloads' ),
-			'views' => array(
-				'chart' => array(
-					'data_callback' => function() {
-						return array(
-							'test' => array( 40, 20, 30, 10 ),
-						);
-					},
-					'type' => 'fake',
+		$manifest = $this->get_Manifest_mock(
+			'test',
+			array(
+				'id'    => 'test_endpoint',
+				'label' => __( 'Foo Dataset', 'easy-digital-downloads' ),
+				'views' => array(
+					'chart' => array(
+						'data_callback' => function() {
+							return array(
+								'test' => array( 40, 20, 30, 10 ),
+							);
+						},
+						'type'          => 'fake',
+					),
 				),
-			),
-		) );
+			)
+		);
 
 		$this->assertFalse( $manifest->add_dataset( 'test', array() ) );
 	}
@@ -211,20 +223,23 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_dataset_handler()
 	 */
 	public function test_get_dataset_handler_should_return_an_empty_handler_string_for_an_invalid_type() {
-		$manifest = $this->get_Manifest_mock( 'test', array(
-			'id'    => 'test_endpoint',
-			'label' => __( 'Foo Dataset', 'easy-digital-downloads' ),
-			'views' => array(
-				'chart' => array(
-					'data_callback' => function() {
-						return array(
-							'test' => array( 40, 20, 30, 10 ),
-						);
-					},
-					'type' => 'fake',
+		$manifest = $this->get_Manifest_mock(
+			'test',
+			array(
+				'id'    => 'test_endpoint',
+				'label' => __( 'Foo Dataset', 'easy-digital-downloads' ),
+				'views' => array(
+					'chart' => array(
+						'data_callback' => function() {
+							return array(
+								'test' => array( 40, 20, 30, 10 ),
+							);
+						},
+						'type'          => 'fake',
+					),
 				),
-			),
-		) );
+			)
+		);
 
 		$this->assertSame( '', $manifest->get_dataset_handler() );
 	}
@@ -247,35 +262,38 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_chart_data()
 	 */
 	public function test_get_chart_data_with_a_mismatched_dataset_will_skip_including_it() {
-		$manifest = $this->get_Manifest_mock( 'foo', array(
-			'id'    => 'test_endpoint',
-			'label' => __( 'Foo Dataset', 'easy-digital-downloads' ),
-			'views' => array(
-				'chart' => array(
-					'data_callback' => function() {
-						return array(
-							'test' => array( 40, 20, 30, 10 ),
-						);
-					},
-					'type'    => 'pie',
-					'options' => array(
-						'cutoutPercentage' => 50,
-						'datasets'         => array(
-							'bar' => array(
-								'label'           => __( 'Sales', 'easy-digital-downloads' ),
-								'backgroundColor' => array(
-									'rgb(234,16,109)',
-									'rgb(98,133,193)',
-									'rgb(151,99,143)',
-									'rgb(244,10,43)',
+		$manifest = $this->get_Manifest_mock(
+			'foo',
+			array(
+				'id'    => 'test_endpoint',
+				'label' => __( 'Foo Dataset', 'easy-digital-downloads' ),
+				'views' => array(
+					'chart' => array(
+						'data_callback' => function() {
+							return array(
+								'test' => array( 40, 20, 30, 10 ),
+							);
+						},
+						'type'          => 'pie',
+						'options'       => array(
+							'cutoutPercentage' => 50,
+							'datasets'         => array(
+								'bar' => array(
+									'label'           => __( 'Sales', 'easy-digital-downloads' ),
+									'backgroundColor' => array(
+										'rgb(234,16,109)',
+										'rgb(98,133,193)',
+										'rgb(151,99,143)',
+										'rgb(244,10,43)',
+									),
 								),
 							),
+							'labels'           => array( 'First', 'Second', 'Third', 'Fourth' ),
 						),
-						'labels' => array( 'First', 'Second', 'Third', 'Fourth' ),
 					),
 				),
 			)
-		) );
+		);
 
 		$this->assertArrayNotHasKey( 'datasets', $manifest->get_chart_data() );
 	}
@@ -285,8 +303,8 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_get_chart_options_default_pie_options_should_match() {
 		$expected = array(
-			'responsive' => true,
-			'legend'     => array(
+			'responsive'       => true,
+			'legend'           => array(
 				'position' => 'left',
 			),
 			'cutoutPercentage' => 50,
@@ -299,34 +317,37 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 	 * @covers ::get_chart_options()
 	 */
 	public function test_get_chart_options_default_non_pie_options_should_match_and_include_the_endpoint_label() {
-		$manifest = $this->get_Manifest_mock( 'foo', array(
-			'id'    => 'test_endpoint',
-			'label' => __( 'Foo Dataset', 'easy-digital-downloads' ),
-			'views' => array(
-				'chart' => array(
-					'data_callback' => function() {
-						return array(
-							'test' => array( 40, 20, 30, 10 ),
-						);
-					},
-					'type'    => 'line',
-					'options' => array(
-						'datasets' => array(
-							'foo' => array(
-								'label'           => __( 'Sales', 'easy-digital-downloads' ),
-								'backgroundColor' => array(
-									'rgb(234,16,109)',
-									'rgb(98,133,193)',
-									'rgb(151,99,143)',
-									'rgb(244,10,43)',
+		$manifest = $this->get_Manifest_mock(
+			'foo',
+			array(
+				'id'    => 'test_endpoint',
+				'label' => __( 'Foo Dataset', 'easy-digital-downloads' ),
+				'views' => array(
+					'chart' => array(
+						'data_callback' => function() {
+							return array(
+								'test' => array( 40, 20, 30, 10 ),
+							);
+						},
+						'type'          => 'line',
+						'options'       => array(
+							'datasets' => array(
+								'foo' => array(
+									'label'           => __( 'Sales', 'easy-digital-downloads' ),
+									'backgroundColor' => array(
+										'rgb(234,16,109)',
+										'rgb(98,133,193)',
+										'rgb(151,99,143)',
+										'rgb(244,10,43)',
+									),
 								),
 							),
+							'labels'   => array( 'First', 'Second', 'Third', 'Fourth' ),
 						),
-						'labels'   => array( 'First', 'Second', 'Third', 'Fourth' ),
 					),
 				),
 			)
-		) );
+		);
 
 		$expected = array(
 			'responsive' => true,
@@ -334,19 +355,19 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 			'stacked'    => false,
 			'title'      => array(
 				'display' => false,
-				'text'    => 'Foo Dataset'
+				'text'    => 'Foo Dataset',
 			),
 			'scales'     => array(
 				'xAxes' => array(
 					array(
-						'type'     => "time",
+						'type'     => 'time',
 						'display'  => true,
 						'ticks'    => array(
 							'source' => 'auto',
 						),
 						'position' => 'bottom',
 						'time'     => array(
-							'unit' => 'day',
+							'unit'          => 'day',
 							'tooltipFormat' => 'LL',
 						),
 					),
@@ -359,7 +380,7 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 					),
 				),
 			),
-			'labels'   => array( 'First', 'Second', 'Third', 'Fourth' ),
+			'labels'     => array( 'First', 'Second', 'Third', 'Fourth' ),
 		);
 
 		$this->assertEqualSetsWithIndex( $expected, $manifest->get_chart_options() );
@@ -376,35 +397,38 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 	 * @covers ::is_pie_manifest()
 	 */
 	public function test_is_pie_manifest_should_return_true_if_type_is_doughnut() {
-		$manifest = $this->get_Manifest_mock( 'foo', array(
-			'id'    => 'test_endpoint',
-			'label' => __( 'Foo Dataset', 'easy-digital-downloads' ),
-			'views' => array(
-				'chart' => array(
-					'data_callback' => function() {
-						return array(
-							'test' => array( 40, 20, 30, 10 ),
-						);
-					},
-					'type'    => 'doughnut',
-					'options' => array(
-						'cutoutPercentage' => 50,
-						'datasets'         => array(
-							'bar' => array(
-								'label'           => __( 'Sales', 'easy-digital-downloads' ),
-								'backgroundColor' => array(
-									'rgb(234,16,109)',
-									'rgb(98,133,193)',
-									'rgb(151,99,143)',
-									'rgb(244,10,43)',
+		$manifest = $this->get_Manifest_mock(
+			'foo',
+			array(
+				'id'    => 'test_endpoint',
+				'label' => __( 'Foo Dataset', 'easy-digital-downloads' ),
+				'views' => array(
+					'chart' => array(
+						'data_callback' => function() {
+							return array(
+								'test' => array( 40, 20, 30, 10 ),
+							);
+						},
+						'type'          => 'doughnut',
+						'options'       => array(
+							'cutoutPercentage' => 50,
+							'datasets'         => array(
+								'bar' => array(
+									'label'           => __( 'Sales', 'easy-digital-downloads' ),
+									'backgroundColor' => array(
+										'rgb(234,16,109)',
+										'rgb(98,133,193)',
+										'rgb(151,99,143)',
+										'rgb(244,10,43)',
+									),
 								),
 							),
+							'labels'           => array( 'First', 'Second', 'Third', 'Fourth' ),
 						),
-						'labels' => array( 'First', 'Second', 'Third', 'Fourth' ),
 					),
 				),
 			)
-		) );
+		);
 
 		$this->assertTrue( $manifest->is_pie_manifest() );
 	}
@@ -413,35 +437,38 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 	 * @covers ::is_pie_manifest()
 	 */
 	public function test_is_pie_manifest_should_return_false_if_type_is_not_pie_or_doughnut() {
-		$manifest = $this->get_Manifest_mock( 'foo', array(
-			'id'    => 'test_endpoint',
-			'label' => __( 'Foo Dataset', 'easy-digital-downloads' ),
-			'views' => array(
-				'chart' => array(
-					'data_callback' => function() {
-						return array(
-							'test' => array( 40, 20, 30, 10 ),
-						);
-					},
-					'type'    => 'line',
-					'options' => array(
-						'cutoutPercentage' => 50,
-						'datasets'         => array(
-							'bar' => array(
-								'label'           => __( 'Sales', 'easy-digital-downloads' ),
-								'backgroundColor' => array(
-									'rgb(234,16,109)',
-									'rgb(98,133,193)',
-									'rgb(151,99,143)',
-									'rgb(244,10,43)',
+		$manifest = $this->get_Manifest_mock(
+			'foo',
+			array(
+				'id'    => 'test_endpoint',
+				'label' => __( 'Foo Dataset', 'easy-digital-downloads' ),
+				'views' => array(
+					'chart' => array(
+						'data_callback' => function() {
+							return array(
+								'test' => array( 40, 20, 30, 10 ),
+							);
+						},
+						'type'          => 'line',
+						'options'       => array(
+							'cutoutPercentage' => 50,
+							'datasets'         => array(
+								'bar' => array(
+									'label'           => __( 'Sales', 'easy-digital-downloads' ),
+									'backgroundColor' => array(
+										'rgb(234,16,109)',
+										'rgb(98,133,193)',
+										'rgb(151,99,143)',
+										'rgb(244,10,43)',
+									),
 								),
 							),
+							'labels'           => array( 'First', 'Second', 'Third', 'Fourth' ),
 						),
-						'labels' => array( 'First', 'Second', 'Third', 'Fourth' ),
 					),
 				),
 			)
-		) );
+		);
 
 		$this->assertFalse( $manifest->is_pie_manifest() );
 	}
@@ -462,8 +489,8 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 							$dataset_id => array( 40, 20, 30, 10 ),
 						);
 					},
-					'type'    => 'pie',
-					'options' => array(
+					'type'          => 'pie',
+					'options'       => array(
 						'cutoutPercentage' => 50,
 						'datasets'         => array(
 							$dataset_id => array(
@@ -476,10 +503,10 @@ class Manfiest_Tests extends \EDD_UnitTestCase {
 								),
 							),
 						),
-						'labels' => array( 'First', 'Second', 'Third', 'Fourth' ),
+						'labels'           => array( 'First', 'Second', 'Third', 'Fourth' ),
 					),
 				),
-			)
+			),
 		);
 
 		$endpoint_args = array_merge( $defaults, $endpoint_args );

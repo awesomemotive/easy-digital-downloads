@@ -460,52 +460,55 @@ class Column extends Base {
 	private function parse_args( $args = array() ) {
 
 		// Parse arguments
-		$r = wp_parse_args( $args, array(
+		$r = wp_parse_args(
+			$args,
+			array(
 
-			// Table
-			'name'       => '',
-			'type'       => '',
-			'length'     => '',
-			'unsigned'   => false,
-			'zerofill'   => false,
-			'binary'     => false,
-			'allow_null' => false,
-			'default'    => '',
-			'extra'      => '',
-			'encoding'   => $GLOBALS['wpdb']->charset,
-			'collation'  => $GLOBALS['wpdb']->collate,
-			'comment'    => '',
+				// Table
+				'name'          => '',
+				'type'          => '',
+				'length'        => '',
+				'unsigned'      => false,
+				'zerofill'      => false,
+				'binary'        => false,
+				'allow_null'    => false,
+				'default'       => '',
+				'extra'         => '',
+				'encoding'      => $GLOBALS['wpdb']->charset,
+				'collation'     => $GLOBALS['wpdb']->collate,
+				'comment'       => '',
 
-			// Query
-			'pattern'    => false,
-			'searchable' => false,
-			'sortable'   => false,
-			'date_query' => false,
-			'transition' => false,
-			'in'         => true,
-			'not_in'     => true,
+				// Query
+				'pattern'       => false,
+				'searchable'    => false,
+				'sortable'      => false,
+				'date_query'    => false,
+				'transition'    => false,
+				'in'            => true,
+				'not_in'        => true,
 
-			// Special
-			'primary'    => false,
-			'created'    => false,
-			'modified'   => false,
-			'uuid'       => false,
+				// Special
+				'primary'       => false,
+				'created'       => false,
+				'modified'      => false,
+				'uuid'          => false,
 
-			// Cache
-			'cache_key'  => false,
+				// Cache
+				'cache_key'     => false,
 
-			// Validation
-			'validate'   => '',
+				// Validation
+				'validate'      => '',
 
-			// Capabilities
-			'caps'          => array(),
+				// Capabilities
+				'caps'          => array(),
 
-			// Backwards Compatibility
-			'aliases'       => array(),
+				// Backwards Compatibility
+				'aliases'       => array(),
 
-			// Column Relationships
-			'relationships' => array()
-		) );
+				// Column Relationships
+				'relationships' => array(),
+			)
+		);
 
 		// Force some arguments for special column types
 		$r = $this->special_args( $r );
@@ -555,11 +558,11 @@ class Column extends Base {
 			'not_in'        => 'wp_validate_boolean',
 			'cache_key'     => 'wp_validate_boolean',
 
-			'pattern'       => array( $this, 'sanitize_pattern'       ),
-			'validate'      => array( $this, 'sanitize_validation'    ),
-			'caps'          => array( $this, 'sanitize_capabilities'  ),
-			'aliases'       => array( $this, 'sanitize_aliases'       ),
-			'relationships' => array( $this, 'sanitize_relationships' )
+			'pattern'       => array( $this, 'sanitize_pattern' ),
+			'validate'      => array( $this, 'sanitize_validation' ),
+			'caps'          => array( $this, 'sanitize_capabilities' ),
+			'aliases'       => array( $this, 'sanitize_aliases' ),
+			'relationships' => array( $this, 'sanitize_relationships' ),
 		);
 
 		// Default args array
@@ -572,7 +575,7 @@ class Column extends Base {
 			if ( isset( $callbacks[ $key ] ) && is_callable( $callbacks[ $key ] ) ) {
 				$r[ $key ] = call_user_func( $callbacks[ $key ], $value );
 
-			// Callback is malformed so just let it through to avoid breakage
+				// Callback is malformed so just let it through to avoid breakage
 			} else {
 				$r[ $key ] = $value;
 			}
@@ -596,7 +599,7 @@ class Column extends Base {
 		if ( ! empty( $args['primary'] ) ) {
 			$args['cache_key'] = true;
 
-		// All UUID columns need to follow a very specific pattern
+			// All UUID columns need to follow a very specific pattern
 		} elseif ( ! empty( $args['uuid'] ) ) {
 			$args['name']       = 'uuid';
 			$args['type']       = 'varchar';
@@ -621,12 +624,14 @@ class Column extends Base {
 	 * @return boolean
 	 */
 	public function is_numeric() {
-		return $this->is_type( array(
-			'tinyint',
-			'int',
-			'mediumint',
-			'bigint'
-		) );
+		return $this->is_type(
+			array(
+				'tinyint',
+				'int',
+				'mediumint',
+				'bigint',
+			)
+		);
 	}
 
 	/** Private Helpers *******************************************************/
@@ -662,12 +667,15 @@ class Column extends Base {
 	 * @return array
 	 */
 	private function sanitize_capabilities( $caps = array() ) {
-		return wp_parse_args( $caps, array(
-			'select' => 'exist',
-			'insert' => 'exist',
-			'update' => 'exist',
-			'delete' => 'exist'
-		) );
+		return wp_parse_args(
+			$caps,
+			array(
+				'select' => 'exist',
+				'insert' => 'exist',
+				'update' => 'exist',
+				'delete' => 'exist',
+			)
+		);
 	}
 
 	/**
@@ -733,11 +741,11 @@ class Column extends Base {
 		if ( true === $this->uuid ) {
 			$callback = array( $this, 'validate_uuid' );
 
-		// Intval fallback
+			// Intval fallback
 		} elseif ( $this->is_type( array( 'tinyint', 'int' ) ) ) {
 			$callback = 'intval';
 
-		// Datetime fallback
+			// Datetime fallback
 		} elseif ( $this->is_type( 'datetime' ) ) {
 			$callback = array( $this, 'validate_datetime' );
 		}
@@ -763,11 +771,11 @@ class Column extends Base {
 				? $this->default
 				: '0000-00-00 00:00:00';
 
-		// Fallback if WordPress function exists
+			// Fallback if WordPress function exists
 		} elseif ( function_exists( 'date_i18n' ) ) {
 			$value = date_i18n( 'Y-m-d H:i:s', strtotime( $value ), true );
 
-		// Fallback if only PHP date function exists
+			// Fallback if only PHP date function exists
 		} elseif ( function_exists( 'date' ) ) {
 			$value = date( 'Y-m-d H:i:s', strtotime( $value ) );
 		}
@@ -800,25 +808,24 @@ class Column extends Base {
 		$prefix = 'urn:uuid:';
 
 		// Put the pieces together
-		$uuid = sprintf( "{$prefix}%04x%04x-%04x-%04x-%04x-%04x%04x%04x",
-
+		$uuid = sprintf(
+			"{$prefix}%04x%04x-%04x-%04x-%04x-%04x%04x%04x",
 			// 32 bits for "time_low"
-			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
-
+			mt_rand( 0, 0xffff ),
+			mt_rand( 0, 0xffff ),
 			// 16 bits for "time_mid"
 			mt_rand( 0, 0xffff ),
-
 			// 16 bits for "time_hi_and_version",
 			// four most significant bits holds version number 4
 			mt_rand( 0, 0x0fff ) | 0x4000,
-
 			// 16 bits, 8 bits for "clk_seq_hi_res",
 			// 8 bits for "clk_seq_low",
 			// two most significant bits holds zero and one for variant DCE1.1
 			mt_rand( 0, 0x3fff ) | 0x8000,
-
 			// 48 bits for "node"
-			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
+			mt_rand( 0, 0xffff ),
+			mt_rand( 0, 0xffff ),
+			mt_rand( 0, 0xffff )
 		);
 
 		// Return the new UUID

@@ -23,6 +23,7 @@ class EDD_Export {
 
 	/**
 	 * Our export type. Used for export-type specific filters/actions
+	 *
 	 * @var string
 	 * @since 1.4.4
 	 */
@@ -71,7 +72,7 @@ class EDD_Export {
 	 */
 	public function csv_cols() {
 		$cols = array(
-			'id'   => __( 'ID',   'easy-digital-downloads' ),
+			'id'   => __( 'ID', 'easy-digital-downloads' ),
 			'date' => __( 'Date', 'easy-digital-downloads' ),
 		);
 		return $cols;
@@ -174,7 +175,6 @@ class EDD_Export {
 	 * Perform the export.
 	 *
 	 * @since 1.4.4
-	 *
 	 *
 	 * @uses EDD_Export::can_export()
 	 * @uses EDD_Export::headers()

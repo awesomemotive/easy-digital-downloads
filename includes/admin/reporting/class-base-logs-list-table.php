@@ -29,11 +29,13 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		parent::__construct( array(
-			'singular' => 'log',
-			'plural'   => 'logs',
-			'ajax'     => false
-		) );
+		parent::__construct(
+			array(
+				'singular' => 'log',
+				'plural'   => 'logs',
+				'ajax'     => false,
+			)
+		);
 
 		$this->filter_bar_hooks();
 	}
@@ -47,19 +49,22 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * @param string $which
 	 */
 	protected function display_tablenav( $which ) {
-	?>
+		?>
 		<div class="tablenav <?php echo esc_attr( $which ); ?>">
 			<?php if ( $this->has_items() ) : ?>
 				<div class="alignleft actions bulkactions">
 					<?php $this->bulk_actions( $which ); ?>
 				</div>
-			<?php endif;
+				<?php
+			endif;
 
 			$this->extra_tablenav( $which );
-			$this->pagination( $which ); ?>
+			$this->pagination( $which );
+?>
 
 			<br class="clear" />
-		</div><?php
+		</div>
+		<?php
 	}
 
 	/**
@@ -68,7 +73,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * @since 3.0
 	 */
 	private function filter_bar_hooks() {
-		add_action( 'edd_admin_filter_bar_logs',       array( $this, 'filter_bar_items'     ) );
+		add_action( 'edd_admin_filter_bar_logs', array( $this, 'filter_bar_items' ) );
 		add_action( 'edd_after_admin_filter_bar_logs', array( $this, 'filter_bar_searchbox' ) );
 	}
 
@@ -129,7 +134,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * Return the start-date of the filter
 	 *
 	 * @since 3.0
-     *
+	 *
 	 * @return string Start date to filter by
 	 */
 	public function get_filtered_start_date() {
@@ -140,7 +145,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * Return the end-date of the filter
 	 *
 	 * @since 3.0
-     *
+	 *
 	 * @return string Start date to filter by
 	 */
 	public function get_filtered_end_date() {
@@ -151,7 +156,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * Return the ID of the download we're filtering logs by
 	 *
 	 * @since 3.0
-     *
+	 *
 	 * @return int Download ID.
 	 */
 	public function get_filtered_download() {
@@ -162,7 +167,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * Return the ID of the payment we're filtering logs by
 	 *
 	 * @since 3.0
-     *
+	 *
 	 * @return int Payment ID.
 	 */
 	public function get_filtered_payment() {
@@ -175,7 +180,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * This is used to return log entries that match our search query, user query, or download query.
 	 *
 	 * @since 3.0
-     *
+	 *
 	 * @return array $meta_query
 	 */
 	public function get_meta_query() {
@@ -203,7 +208,8 @@ class EDD_Base_Log_List_Table extends List_Table {
 			: '';
 
 		$views        = edd_log_default_views();
-		$current_view = $this->get_filtered_view(); ?>
+		$current_view = $this->get_filtered_view();
+		?>
 
 		<select id="edd-logs-view" name="view" class="edd-select-chosen <?php echo esc_attr( $rtl_class ); ?>">
 			<?php foreach ( $views as $view_id => $label ) : ?>
@@ -237,23 +243,25 @@ class EDD_Base_Log_List_Table extends List_Table {
 			? ' chosen-rtl'
 			: '';
 
-		$downloads = get_posts( array(
-			'post_type'              => 'download',
-			'post_status'            => 'any',
-			'posts_per_page'         => -1,
-			'orderby'                => 'title',
-			'order'                  => 'ASC',
-			'fields'                 => 'ids',
-			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false,
-		) );
+		$downloads = get_posts(
+			array(
+				'post_type'              => 'download',
+				'post_status'            => 'any',
+				'posts_per_page'         => -1,
+				'orderby'                => 'title',
+				'order'                  => 'ASC',
+				'fields'                 => 'ids',
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+			)
+		);
 
 		if ( $downloads ) {
 			echo '<select name="download" id="edd-log-download-filter" class="edd-select-chosen ' . esc_attr( $rtl_class ) . '">';
 				echo '<option value="0">' . __( 'All Downloads', 'easy-digital-downloads' ) . '</option>';
-				foreach ( $downloads as $download ) {
-					echo '<option value="' . $download . '"' . selected( $download, $this->get_filtered_download() ) . '>' . esc_html( get_the_title( $download ) ) . '</option>';
-				}
+			foreach ( $downloads as $download ) {
+				echo '<option value="' . $download . '"' . selected( $download, $this->get_filtered_download() ) . '>' . esc_html( get_the_title( $download ) ) . '</option>';
+			}
 			echo '</select>';
 		}
 	}
@@ -262,7 +270,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * Gets the log entries for the current view
 	 *
 	 * @since 3.0
-     *
+	 *
 	 * @return array $logs_data Array of all the logs.
 	 */
 	function get_logs( $log_query = array() ) {
@@ -297,22 +305,23 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * @since 3.0
 	 */
 	public function prepare_items() {
-
 		$this->_column_headers = array(
 			$this->get_columns(),
 			array(),
-			$this->get_sortable_columns()
+			$this->get_sortable_columns(),
 		);
 
 		$log_query   = $this->get_query_args();
 		$this->items = $this->get_logs( $log_query );
 		$total_items = $this->get_total( $log_query );
 
-		$this->set_pagination_args( array(
-			'total_items' => $total_items,
-			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $total_items / $this->per_page )
-		) );
+		$this->set_pagination_args(
+			array(
+				'total_items' => $total_items,
+				'per_page'    => $this->per_page,
+				'total_pages' => ceil( $total_items / $this->per_page ),
+			)
+		);
 	}
 
 	/**
@@ -337,7 +346,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 			'payment_id'  => $this->get_filtered_payment(),
 			'meta_query'  => $this->get_meta_query(),
 			'offset'      => $offset,
-			'number'      => $this->per_page
+			'number'      => $this->per_page,
 		);
 
 		// Search
@@ -412,10 +421,13 @@ class EDD_Base_Log_List_Table extends List_Table {
 		$start_date = $this->get_filtered_start_date();
 		$end_date   = $this->get_filtered_end_date();
 		$download   = $this->get_filtered_download();
-		$clear_url  = edd_get_admin_url( array(
-			'page' => 'edd-tools',
-			'tab'  => 'logs'
-		) ); ?>
+		$clear_url  = edd_get_admin_url(
+			array(
+				'page' => 'edd-tools',
+				'tab'  => 'logs',
+			)
+		);
+		?>
 
 		<span id="edd-type-filter">
 			<?php $this->log_views(); ?>
@@ -424,21 +436,26 @@ class EDD_Base_Log_List_Table extends List_Table {
 		<span id="edd-date-filters" class="edd-from-to-wrapper">
 			<?php
 
-			echo EDD()->html->date_field( array(
-				'id'          => 'start-date',
-				'name'        => 'start-date',
-				'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
-				'value'       => $start_date
-			) );
+			echo EDD()->html->date_field(
+				array(
+					'id'          => 'start-date',
+					'name'        => 'start-date',
+					'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
+					'value'       => $start_date,
+				)
+			);
 
-			echo EDD()->html->date_field( array(
-				'id'          => 'end-date',
-				'name'        => 'end-date',
-				'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
-				'value'       => $end_date
-			) );
+			echo EDD()->html->date_field(
+				array(
+					'id'          => 'end-date',
+					'name'        => 'end-date',
+					'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
+					'value'       => $end_date,
+				)
+			);
 
-		?></span>
+			?>
+		</span>
 
 		<span id="edd-download-filter">
 			<?php $this->downloads_filter(); ?>

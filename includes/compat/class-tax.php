@@ -92,14 +92,16 @@ class Tax extends Base {
 			if ( isset( $tax_rate['edd_adjustment_id'] ) ) {
 				edd_update_adjustment( $tax_rate['edd_adjustment_id'], $adjustment_data );
 
-			// Check if the tax rate exists.
+				// Check if the tax rate exists.
 			} else {
-				$rate = edd_get_adjustments( array(
-					'fields'      => 'ids',
-					'name'        => $tax_rate['country'],
-					'description' => $region,
-					'scope'       => $scope,
-				) );
+				$rate = edd_get_adjustments(
+					array(
+						'fields'      => 'ids',
+						'name'        => $tax_rate['country'],
+						'description' => $region,
+						'scope'       => $scope,
+					)
+				);
 
 				// Tax rate exists.
 				if ( 1 === count( $rate ) ) {
@@ -107,7 +109,7 @@ class Tax extends Base {
 
 					edd_update_adjustment( $adjustment_id, $adjustment_data );
 
-				// Add the tax rate to the database.
+					// Add the tax rate to the database.
 				} else {
 					edd_add_adjustment( $adjustment_data );
 				}

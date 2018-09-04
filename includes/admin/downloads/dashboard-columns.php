@@ -24,18 +24,21 @@ defined( 'ABSPATH' ) || exit;
  */
 function edd_download_columns( $download_columns ) {
 	$category_labels = edd_get_taxonomy_labels( 'download_category' );
-	$tag_labels      = edd_get_taxonomy_labels( 'download_tag'      );
+	$tag_labels      = edd_get_taxonomy_labels( 'download_tag' );
 
-	return apply_filters( 'edd_download_columns', array(
-		'cb'                => '<input type="checkbox"/>',
-		'title'             => __( 'Name',     'easy-digital-downloads' ),
-		'download_category' => $category_labels['menu_name'],
-		'download_tag'      => $tag_labels['menu_name'],
-		'price'             => __( 'Price',    'easy-digital-downloads' ),
-		'sales'             => __( 'Sales',    'easy-digital-downloads' ),
-		'earnings'          => __( 'Earnings', 'easy-digital-downloads' ),
-		'date'              => __( 'Date',     'easy-digital-downloads' )
-	) );
+	return apply_filters(
+		'edd_download_columns',
+		array(
+			'cb'                => '<input type="checkbox"/>',
+			'title'             => __( 'Name', 'easy-digital-downloads' ),
+			'download_category' => $category_labels['menu_name'],
+			'download_tag'      => $tag_labels['menu_name'],
+			'price'             => __( 'Price', 'easy-digital-downloads' ),
+			'sales'             => __( 'Sales', 'easy-digital-downloads' ),
+			'earnings'          => __( 'Earnings', 'easy-digital-downloads' ),
+			'date'              => __( 'Date', 'easy-digital-downloads' ),
+		)
+	);
 }
 add_filter( 'manage_edit-download_columns', 'edd_download_columns' );
 
@@ -44,7 +47,7 @@ add_filter( 'manage_edit-download_columns', 'edd_download_columns' );
  *
  * @since 1.0
  * @param string $column_name Column name
- * @param int $post_id Download (Post) ID
+ * @param int    $post_id Download (Post) ID
  * @return void
  */
 function edd_render_download_columns( $column_name, $post_id ) {
@@ -56,13 +59,13 @@ function edd_render_download_columns( $column_name, $post_id ) {
 
 	switch ( $column_name ) {
 		case 'download_category':
-			$terms = get_the_term_list( $post_id, 'download_category', '', ', ', '');
+			$terms = get_the_term_list( $post_id, 'download_category', '', ', ', '' );
 			echo ! empty( $terms )
 				? $terms
 				: '&mdash;';
 			break;
 		case 'download_tag':
-			$terms = get_the_term_list( $post_id, 'download_tag', '', ', ', '');
+			$terms = get_the_term_list( $post_id, 'download_tag', '', ', ', '' );
 			echo ! empty( $terms )
 				? $terms
 				: '&mdash;';
@@ -129,7 +132,7 @@ function edd_sort_downloads( $vars ) {
 				$vars,
 				array(
 					'meta_key' => '_edd_download_sales',
-					'orderby'  => 'meta_value_num'
+					'orderby'  => 'meta_value_num',
 				)
 			);
 		}
@@ -140,7 +143,7 @@ function edd_sort_downloads( $vars ) {
 				$vars,
 				array(
 					'meta_key' => '_edd_download_earnings',
-					'orderby'  => 'meta_value_num'
+					'orderby'  => 'meta_value_num',
 				)
 			);
 		}
@@ -151,7 +154,7 @@ function edd_sort_downloads( $vars ) {
 				$vars,
 				array(
 					'meta_key' => 'edd_price',
-					'orderby'  => 'meta_value_num'
+					'orderby'  => 'meta_value_num',
 				)
 			);
 		}
@@ -172,7 +175,6 @@ function edd_filter_downloads( $vars ) {
 
 		// If an author ID was passed, use it
 		if ( isset( $_REQUEST['author'] ) && ! current_user_can( 'view_shop_reports' ) ) {
-
 			$author_id = $_REQUEST['author'];
 			if ( (int) $author_id !== get_current_user_id() ) {
 				// Tried to view the products of another person, sorry
@@ -181,7 +183,7 @@ function edd_filter_downloads( $vars ) {
 			$vars = array_merge(
 				$vars,
 				array(
-					'author' => get_current_user_id()
+					'author' => get_current_user_id(),
 				)
 			);
 		}
@@ -199,7 +201,7 @@ function edd_filter_downloads( $vars ) {
  * @return void
  */
 function edd_download_load() {
-	add_filter( 'request', 'edd_sort_downloads'   );
+	add_filter( 'request', 'edd_sort_downloads' );
 	add_filter( 'request', 'edd_filter_downloads' );
 }
 add_action( 'load-edit.php', 'edd_download_load', 9999 );
@@ -216,7 +218,7 @@ function edd_add_download_filters() {
 	global $typenow;
 
 	// Checks if the current post type is 'download'
-	if ( $typenow !== 'download') {
+	if ( $typenow !== 'download' ) {
 		return;
 	}
 
@@ -224,29 +226,29 @@ function edd_add_download_filters() {
 	if ( count( $terms ) > 0 ) {
 		echo "<select name='download_category' id='download_category' class='postform'>";
 			$category_labels = edd_get_taxonomy_labels( 'download_category' );
-			echo "<option value=''>" . sprintf( __( 'All %s', 'easy-digital-downloads' ), strtolower( $category_labels['name'] ) ) . "</option>";
-			foreach ( $terms as $term ) {
-				$selected = isset( $_GET['download_category'] ) && $_GET['download_category'] === $term->slug ? ' selected="selected"' : '';
-				echo '<option value="' . esc_attr( $term->slug ) . '"' . $selected . '>' . esc_html( $term->name ) .' (' . $term->count .')</option>';
-			}
-		echo "</select>";
+			echo "<option value=''>" . sprintf( __( 'All %s', 'easy-digital-downloads' ), strtolower( $category_labels['name'] ) ) . '</option>';
+		foreach ( $terms as $term ) {
+			$selected = isset( $_GET['download_category'] ) && $_GET['download_category'] === $term->slug ? ' selected="selected"' : '';
+			echo '<option value="' . esc_attr( $term->slug ) . '"' . $selected . '>' . esc_html( $term->name ) . ' (' . $term->count . ')</option>';
+		}
+		echo '</select>';
 	}
 
 	$terms = get_terms( 'download_tag' );
 	if ( count( $terms ) > 0 ) {
 		echo "<select name='download_tag' id='download_tag' class='postform'>";
 			$tag_labels = edd_get_taxonomy_labels( 'download_tag' );
-			echo "<option value=''>" . sprintf( __( 'All %s', 'easy-digital-downloads' ), strtolower( $tag_labels['name'] ) ) . "</option>";
-			foreach ( $terms as $term ) {
-				$selected = isset( $_GET['download_tag']) && $_GET['download_tag'] === $term->slug ? ' selected="selected"' : '';
-				echo '<option value="' . esc_attr( $term->slug ) . '"' . $selected . '>' . esc_html( $term->name ) .' (' . $term->count .')</option>';
-			}
-		echo "</select>";
+			echo "<option value=''>" . sprintf( __( 'All %s', 'easy-digital-downloads' ), strtolower( $tag_labels['name'] ) ) . '</option>';
+		foreach ( $terms as $term ) {
+			$selected = isset( $_GET['download_tag'] ) && $_GET['download_tag'] === $term->slug ? ' selected="selected"' : '';
+			echo '<option value="' . esc_attr( $term->slug ) . '"' . $selected . '>' . esc_html( $term->name ) . ' (' . $term->count . ')</option>';
+		}
+		echo '</select>';
 	}
 
 	if ( isset( $_REQUEST['all_posts'] ) && '1' === $_REQUEST['all_posts'] ) {
 		echo '<input type="hidden" name="all_posts" value="1" />';
-	} else if ( ! current_user_can( 'view_shop_reports' ) ) {
+	} elseif ( ! current_user_can( 'view_shop_reports' ) ) {
 		$author_id = get_current_user_id();
 		echo '<input type="hidden" name="author" value="' . esc_attr( $author_id ) . '" />';
 	}
@@ -306,7 +308,7 @@ function edd_price_field_quick_edit( $column_name, $post_type ) {
 	<?php
 }
 add_action( 'quick_edit_custom_box', 'edd_price_field_quick_edit', 10, 2 );
-add_action( 'bulk_edit_custom_box',  'edd_price_field_quick_edit', 10, 2 );
+add_action( 'bulk_edit_custom_box', 'edd_price_field_quick_edit', 10, 2 );
 
 /**
  * Updates price when saving post
@@ -316,7 +318,7 @@ add_action( 'bulk_edit_custom_box',  'edd_price_field_quick_edit', 10, 2 );
  * @return void
  */
 function edd_price_save_quick_edit( $post_id ) {
-	if ( ! isset( $_POST['post_type']) || 'download' !== $_POST['post_type'] ) {
+	if ( ! isset( $_POST['post_type'] ) || 'download' !== $_POST['post_type'] ) {
 		return;
 	}
 
@@ -341,7 +343,6 @@ add_action( 'save_post', 'edd_price_save_quick_edit' );
  * @return void
  */
 function edd_save_bulk_edit() {
-
 	$post_ids = ! empty( $_POST['post_ids'] )
 		? wp_parse_id_list( $_POST['post_ids'] )
 		: array();

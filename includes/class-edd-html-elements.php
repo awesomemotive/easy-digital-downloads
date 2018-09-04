@@ -60,12 +60,15 @@ class EDD_HTML_Elements {
 		if ( ! current_user_can( 'edit_products' ) ) {
 			$product_args['post_status'] = apply_filters( 'edd_product_dropdown_status_nopriv', array( 'publish' ) );
 		} else {
-			$product_args['post_status'] = apply_filters( 'edd_product_dropdown_status', array(
-				'publish',
-				'draft',
-				'private',
-				'future',
-			) );
+			$product_args['post_status'] = apply_filters(
+				'edd_product_dropdown_status',
+				array(
+					'publish',
+					'draft',
+					'private',
+					'future',
+				)
+			);
 		}
 
 		if ( is_array( $product_args['post_status'] ) ) {
@@ -96,7 +99,6 @@ class EDD_HTML_Elements {
 		$products     = get_posts( $product_args );
 		$existing_ids = wp_list_pluck( $products, 'ID' );
 		if ( ! empty( $args['selected'] ) ) {
-
 			$selected_items = $args['selected'];
 			if ( ! is_array( $selected_items ) ) {
 				$selected_items = array( $selected_items );
@@ -140,7 +142,6 @@ class EDD_HTML_Elements {
 		if ( is_array( $args['selected'] ) ) {
 			foreach ( $args['selected'] as $item ) {
 				if ( ! array_key_exists( $item, $options ) ) {
-
 					$parsed_item = edd_parse_product_dropdown_value( $item );
 
 					if ( $parsed_item['price_id'] !== false ) {
@@ -190,19 +191,21 @@ class EDD_HTML_Elements {
 			unset( $options['all'] );
 		}
 
-		$output = $this->select( array(
-			'name'             => $args['name'],
-			'selected'         => $args['selected'],
-			'id'               => $args['id'],
-			'class'            => $args['class'],
-			'options'          => $options,
-			'chosen'           => $args['chosen'],
-			'multiple'         => $args['multiple'],
-			'placeholder'      => $args['placeholder'],
-			'show_option_all'  => isset( $args['show_option_all'] ) ? $args['show_option_all'] : false,
-			'show_option_none' => false,
-			'data'             => $args['data'],
-		) );
+		$output = $this->select(
+			array(
+				'name'             => $args['name'],
+				'selected'         => $args['selected'],
+				'id'               => $args['id'],
+				'class'            => $args['class'],
+				'options'          => $options,
+				'chosen'           => $args['chosen'],
+				'multiple'         => $args['multiple'],
+				'placeholder'      => $args['placeholder'],
+				'show_option_all'  => isset( $args['show_option_all'] ) ? $args['show_option_all'] : false,
+				'show_option_none' => false,
+				'data'             => $args['data'],
+			)
+		);
 
 		return $output;
 	}
@@ -235,9 +238,11 @@ class EDD_HTML_Elements {
 
 		$args = wp_parse_args( $args, $defaults );
 
-		$customers = edd_get_customers( array(
-			'number' => $args['number'],
-		) );
+		$customers = edd_get_customers(
+			array(
+				'number' => $args['number'],
+			)
+		);
 
 		$options = array();
 
@@ -262,19 +267,21 @@ class EDD_HTML_Elements {
 			}
 		}
 
-		$output = $this->select( array(
-			'name'             => $args['name'],
-			'selected'         => $args['selected'],
-			'id'               => $args['id'],
-			'class'            => $args['class'] . ' edd-customer-select',
-			'options'          => $options,
-			'multiple'         => $args['multiple'],
-			'placeholder'      => $args['placeholder'],
-			'chosen'           => $args['chosen'],
-			'show_option_all'  => false,
-			'show_option_none' => false,
-			'data'             => $args['data'],
-		) );
+		$output = $this->select(
+			array(
+				'name'             => $args['name'],
+				'selected'         => $args['selected'],
+				'id'               => $args['id'],
+				'class'            => $args['class'] . ' edd-customer-select',
+				'options'          => $options,
+				'multiple'         => $args['multiple'],
+				'placeholder'      => $args['placeholder'],
+				'chosen'           => $args['chosen'],
+				'show_option_all'  => false,
+				'show_option_none' => false,
+				'data'             => $args['data'],
+			)
+		);
 
 		return $output;
 	}
@@ -331,19 +338,21 @@ class EDD_HTML_Elements {
 			}
 		}
 
-		$output = $this->select( array(
-			'name'             => $args['name'],
-			'selected'         => $args['selected'],
-			'id'               => $args['id'],
-			'class'            => $args['class'] . ' edd-user-select',
-			'options'          => $options,
-			'multiple'         => $args['multiple'],
-			'placeholder'      => $args['placeholder'],
-			'chosen'           => $args['chosen'],
-			'show_option_all'  => false,
-			'show_option_none' => false,
-			'data'             => $args['data'],
-		) );
+		$output = $this->select(
+			array(
+				'name'             => $args['name'],
+				'selected'         => $args['selected'],
+				'id'               => $args['id'],
+				'class'            => $args['class'] . ' edd-user-select',
+				'options'          => $options,
+				'multiple'         => $args['multiple'],
+				'placeholder'      => $args['placeholder'],
+				'chosen'           => $args['chosen'],
+				'show_option_all'  => false,
+				'show_option_none' => false,
+				'data'             => $args['data'],
+			)
+		);
 
 		return $output;
 	}
@@ -382,11 +391,14 @@ class EDD_HTML_Elements {
 		if ( 1 === func_num_args() && is_array( $args[0] ) ) {
 			$args = wp_parse_args( $args[0], $defaults );
 		} else {
-			$args = wp_parse_args( array(
-				'name'     => $name,
-				'selected' => $selected,
-				'nopaging' => true,
-			), $defaults );
+			$args = wp_parse_args(
+				array(
+					'name'     => $name,
+					'selected' => $selected,
+					'nopaging' => true,
+				),
+				$defaults
+			);
 		}
 
 		$discount_args = array(
@@ -408,18 +420,20 @@ class EDD_HTML_Elements {
 			$options[0] = __( 'No discounts found', 'easy-digital-downloads' );
 		}
 
-		$output = $this->select( array(
-			'name'             => $args['name'],
-			'selected'         => $args['selected'],
-			'id'               => $args['id'],
-			'class'            => $args['class'] . ' edd-user-select',
-			'options'          => $options,
-			'multiple'         => $args['multiple'],
-			'placeholder'      => $args['placeholder'],
-			'chosen'           => $args['chosen'],
-			'show_option_all'  => $args['show_option_all'],
-			'show_option_none' => false,
-		) );
+		$output = $this->select(
+			array(
+				'name'             => $args['name'],
+				'selected'         => $args['selected'],
+				'id'               => $args['id'],
+				'class'            => $args['class'] . ' edd-user-select',
+				'options'          => $options,
+				'multiple'         => $args['multiple'],
+				'placeholder'      => $args['placeholder'],
+				'chosen'           => $args['chosen'],
+				'show_option_all'  => $args['show_option_all'],
+				'show_option_none' => false,
+			)
+		);
 
 		return $output;
 	}
@@ -443,13 +457,15 @@ class EDD_HTML_Elements {
 		}
 
 		$category_labels = edd_get_taxonomy_labels( 'download_category' );
-		$output          = $this->select( array(
-			'name'             => $name,
-			'selected'         => $selected,
-			'options'          => $options,
-			'show_option_all'  => sprintf( _x( 'All %s', 'plural: Example: "All Categories"', 'easy-digital-downloads' ), $category_labels['name'] ),
-			'show_option_none' => false,
-		) );
+		$output          = $this->select(
+			array(
+				'name'             => $name,
+				'selected'         => $selected,
+				'options'          => $options,
+				'show_option_all'  => sprintf( _x( 'All %s', 'plural: Example: "All Categories"', 'easy-digital-downloads' ), $category_labels['name'] ),
+				'show_option_none' => false,
+			)
+		);
 
 		return $output;
 	}
@@ -478,13 +494,15 @@ class EDD_HTML_Elements {
 			$start_year ++;
 		}
 
-		$output = $this->select( array(
-			'name'             => $name,
-			'selected'         => $selected,
-			'options'          => $options,
-			'show_option_all'  => false,
-			'show_option_none' => false,
-		) );
+		$output = $this->select(
+			array(
+				'name'             => $name,
+				'selected'         => $selected,
+				'options'          => $options,
+				'show_option_all'  => false,
+				'show_option_none' => false,
+			)
+		);
 
 		return $output;
 	}
@@ -509,13 +527,15 @@ class EDD_HTML_Elements {
 			$month ++;
 		}
 
-		$output = $this->select( array(
-			'name'             => $name,
-			'selected'         => $selected,
-			'options'          => $options,
-			'show_option_all'  => false,
-			'show_option_none' => false,
-		) );
+		$output = $this->select(
+			array(
+				'name'             => $name,
+				'selected'         => $selected,
+				'options'          => $options,
+				'show_option_all'  => false,
+				'show_option_none' => false,
+			)
+		);
 
 		return $output;
 	}
@@ -530,22 +550,24 @@ class EDD_HTML_Elements {
 	 * @return string
 	 */
 	public function select( $args = array() ) {
-
-		$args = wp_parse_args( $args, array(
-			'options'          => array(),
-			'name'             => null,
-			'class'            => '',
-			'id'               => '',
-			'selected'         => 0,
-			'chosen'           => false,
-			'placeholder'      => null,
-			'multiple'         => false,
-			'show_option_all'  => _x( 'All', 'all dropdown items', 'easy-digital-downloads' ),
-			'show_option_none' => _x( 'None', 'no dropdown items', 'easy-digital-downloads' ),
-			'data'             => array(),
-			'readonly'         => false,
-			'disabled'         => false,
-		) );
+		$args = wp_parse_args(
+			$args,
+			array(
+				'options'          => array(),
+				'name'             => null,
+				'class'            => '',
+				'id'               => '',
+				'selected'         => 0,
+				'chosen'           => false,
+				'placeholder'      => null,
+				'multiple'         => false,
+				'show_option_all'  => _x( 'All', 'all dropdown items', 'easy-digital-downloads' ),
+				'show_option_none' => _x( 'None', 'no dropdown items', 'easy-digital-downloads' ),
+				'data'             => array(),
+				'readonly'         => false,
+				'disabled'         => false,
+			)
+		);
 
 		$data_elements = '';
 		foreach ( $args['data'] as $key => $value ) {
@@ -587,7 +609,7 @@ class EDD_HTML_Elements {
 		$output = '<select' . $disabled . $readonly . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( edd_sanitize_key( str_replace( '-', '_', $args['id'] ) ) ) . '" class="edd-select ' . $class . '"' . $multiple . ' data-placeholder="' . $placeholder . '"' . $data_elements . '>';
 
 		if ( ! isset( $args['selected'] ) || ( is_array( $args['selected'] ) && empty( $args['selected'] ) ) || ! $args['selected'] ) {
-			$selected = "";
+			$selected = '';
 		}
 
 		if ( ! empty( $args['show_option_all'] ) ) {
@@ -740,13 +762,11 @@ class EDD_HTML_Elements {
 	 * @return string Datepicker field
 	 */
 	public function date_field( $args = array() ) {
-
 		if ( empty( $args['class'] ) ) {
 			$args['class']          = 'edd_datepicker';
 			$args['data']['format'] = edd_get_date_picker_format();
-
 		} elseif ( ! strpos( $args['class'], 'edd_datepicker' ) ) {
-			$args['class']          .= ' edd_datepicker';
+			$args['class']         .= ' edd_datepicker';
 			$args['data']['format'] = edd_get_date_picker_format();
 		}
 
@@ -807,7 +827,6 @@ class EDD_HTML_Elements {
 	 * @return string text field with ajax search
 	 */
 	public function ajax_user_search( $args = array() ) {
-
 		$defaults = array(
 			'name'         => 'user_id',
 			'value'        => null,
@@ -824,7 +843,7 @@ class EDD_HTML_Elements {
 
 		$args['class'] = 'edd-ajax-user-search ' . $args['class'];
 
-		$output = '<span class="edd_user_search_wrap">';
+		$output  = '<span class="edd_user_search_wrap">';
 		$output .= $this->text( $args );
 		$output .= '<span class="edd_user_search_results hidden"><span></span></span>';
 		$output .= '<span class="spinner"></span>';

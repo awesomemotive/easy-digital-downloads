@@ -189,7 +189,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 		$_REQUEST['range'] = 'this_month';
 
 		$current_time = current_time( 'timestamp' );
-		$dates = edd_get_report_dates( 'UTC' );
+		$dates        = edd_get_report_dates( 'UTC' );
 
 		$this->assertEquals( $dates['day'], 1 );
 		$this->assertEquals( $dates['m_start'], date( 'n', $current_time ) );

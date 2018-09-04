@@ -2,7 +2,7 @@
 namespace EDD\Reports\Data\Charts\v2;
 
 if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
+	require_once EDD_PLUGIN_DIR . 'includes/reports/class-init.php';
 }
 
 new \EDD\Reports\Init();
@@ -22,11 +22,25 @@ class Line_Dataset_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_default_fields() {
 		$expected = array(
-			'borderDash', 'borderDashOffset', 'borderCapStyle', 'borderJoinStyle',
-			'cubicInterpolationMode', 'fill', 'lineTension', 'pointBackgroundColor',
-			'pointBorderColor', 'pointBorderWidth', 'pointRadius', 'pointStyle',
-			'pointHitRadius', 'pointHoverBackgroundColor', 'pointHoverBorderColor',
-			'pointHoverBorderWidth', 'pointHoverRadius', 'showLine', 'spanGaps',
+			'borderDash',
+			'borderDashOffset',
+			'borderCapStyle',
+			'borderJoinStyle',
+			'cubicInterpolationMode',
+			'fill',
+			'lineTension',
+			'pointBackgroundColor',
+			'pointBorderColor',
+			'pointBorderWidth',
+			'pointRadius',
+			'pointStyle',
+			'pointHitRadius',
+			'pointHoverBackgroundColor',
+			'pointHoverBorderColor',
+			'pointHoverBorderWidth',
+			'pointHoverRadius',
+			'showLine',
+			'spanGaps',
 			'steppedLine',
 		);
 

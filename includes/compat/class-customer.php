@@ -54,7 +54,7 @@ class Customer extends Base {
 					return false;
 				}
 
-				$column = is_email( $arguments[0] ) ? 'email' : 'id';
+				$column   = is_email( $arguments[0] ) ? 'email' : 'id';
 				$customer = edd_get_customer_by( $column, $arguments[0] );
 				edd_delete_customer( $customer->id );
 				break;
@@ -133,13 +133,13 @@ class Customer extends Base {
 	 */
 	protected function hooks() {
 
-		/** Filters **********************************************************/
+		/** Filters */
 
-		add_filter( 'get_user_metadata',    array( $this, 'get_user_meta'    ), 99, 4 );
+		add_filter( 'get_user_metadata', array( $this, 'get_user_meta' ), 99, 4 );
 		add_filter( 'update_user_metadata', array( $this, 'update_user_meta' ), 99, 5 );
-		add_filter( 'add_user_metadata',    array( $this, 'update_user_meta' ), 99, 5 );
+		add_filter( 'add_user_metadata', array( $this, 'update_user_meta' ), 99, 5 );
 
-		/** Actions **********************************************************/
+		/** Actions */
 		add_action( 'profile_update', array( $this, 'update_customer_email_on_user_update' ), 10 );
 	}
 
@@ -148,7 +148,7 @@ class Customer extends Base {
 	 *
 	 * @since 2.4.0
 	 *
-	 * @param int   $user_id User ID.
+	 * @param int $user_id User ID.
 	 *
 	 * @return bool False if customer does not exist for given user ID.
 	 */
@@ -172,9 +172,12 @@ class Customer extends Base {
 		}
 
 		// Try to update the customer
-		$success = edd_update_customer( $customer->id, array(
-			'email' => $user->user_email
-		) );
+		$success = edd_update_customer(
+			$customer->id,
+			array(
+				'email' => $user->user_email,
+			)
+		);
 
 		// Bail on failure
 		if ( empty( $success ) ) {
@@ -253,11 +256,13 @@ class Customer extends Base {
 		}
 
 		// Fetch saved primary address.
-		$addresses = edd_get_customer_addresses( array(
-			'number'      => 1,
-			'type'        => 'primary',
-			'customer_id' => $object_id,
-		) );
+		$addresses = edd_get_customer_addresses(
+			array(
+				'number'      => 1,
+				'type'        => 'primary',
+				'customer_id' => $object_id,
+			)
+		);
 
 		// Defaults.
 		$defaults = array(
@@ -274,28 +279,33 @@ class Customer extends Base {
 		if ( is_array( $addresses ) && ! empty( $addresses ) ) {
 			$customer_address = $addresses[0];
 
-			edd_update_customer_address( $customer_address->id, array(
-				'address'     => $address['line1'],
-				'address2'    => $address['line2'],
-				'city'        => $address['city'],
-				'region'      => $address['state'],
-				'postal_code' => $address['zip'],
-				'country'     => $address['country'],
-			) );
-		} else {
-			$customer = edd_get_customer_by( 'user_id', absint( $object_id ) );
-
-			if ( $customer ) {
-				edd_add_customer_address( array(
-					'customer_id' => $customer->id,
-					'type'        => 'primary',
+			edd_update_customer_address(
+				$customer_address->id,
+				array(
 					'address'     => $address['line1'],
 					'address2'    => $address['line2'],
 					'city'        => $address['city'],
 					'region'      => $address['state'],
 					'postal_code' => $address['zip'],
 					'country'     => $address['country'],
-				) );
+				)
+			);
+		} else {
+			$customer = edd_get_customer_by( 'user_id', absint( $object_id ) );
+
+			if ( $customer ) {
+				edd_add_customer_address(
+					array(
+						'customer_id' => $customer->id,
+						'type'        => 'primary',
+						'address'     => $address['line1'],
+						'address2'    => $address['line2'],
+						'city'        => $address['city'],
+						'region'      => $address['state'],
+						'postal_code' => $address['zip'],
+						'country'     => $address['country'],
+					)
+				);
 			}
 		}
 

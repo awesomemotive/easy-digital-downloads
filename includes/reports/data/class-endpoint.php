@@ -89,11 +89,14 @@ abstract class Endpoint extends Base_Object {
 		$callback = $this->get_display_callback();
 
 		if ( is_callable( $callback ) ) {
-			call_user_func_array( $callback, array(
-				'endpoint' => $this,
-				'data'     => $this->get_data(),
-				'args'     => $this->get_display_args(),
-			) );
+			call_user_func_array(
+				$callback,
+				array(
+					'endpoint' => $this,
+					'data'     => $this->get_data(),
+					'args'     => $this->get_display_args(),
+				)
+			);
 		}
 	}
 
@@ -184,11 +187,9 @@ abstract class Endpoint extends Base_Object {
 	 * @param array $endpoint Endpoint record from the registry.
 	 */
 	protected function set_display_props( $endpoint ) {
-
 		$view_type = $this->get_view();
 
 		if ( ! empty( $endpoint['views'][ $view_type ] ) ) {
-
 			$view_atts = $endpoint['views'][ $view_type ];
 
 			// display_args is optional.
@@ -209,19 +210,21 @@ abstract class Endpoint extends Base_Object {
 			} else {
 				$this->flag_missing_view_arg( 'data_callback' );
 			}
-
 		} else {
-
-			$message = sprintf( 'The \'%1$s\' view type is not defined for the \'%2$s\' endpoint.',
+			$message = sprintf(
+				'The \'%1$s\' view type is not defined for the \'%2$s\' endpoint.',
 				$view_type,
 				$this->get_id()
 			);
 
-			$this->errors->add( 'view_not_defined', $message, array(
-				'view_type'   => $view_type,
-				'endpoint_id' => $this->get_id(),
-			) );
-
+			$this->errors->add(
+				'view_not_defined',
+				$message,
+				array(
+					'view_type'   => $view_type,
+					'endpoint_id' => $this->get_id(),
+				)
+			);
 		}
 	}
 
@@ -276,13 +279,9 @@ abstract class Endpoint extends Base_Object {
 	 */
 	protected function set_display_args( $display_args ) {
 		if ( is_array( $display_args ) ) {
-
 			$this->display_args = $display_args;
-
 		} else {
-
 			$this->flag_invalid_view_arg_type( 'display_args', 'array' );
-
 		}
 	}
 
@@ -315,21 +314,15 @@ abstract class Endpoint extends Base_Object {
 	 */
 	private function set_display_callback( $display_callback ) {
 		if ( is_callable( $display_callback ) ) {
-
 			$this->display_callback = $display_callback;
-
 		} elseif ( is_string( $display_callback ) && '::' === substr( $display_callback, 0, 2 ) ) {
-
 			$method = str_replace( '::', '', $display_callback );
 
 			$display_callback = array( $this, $display_callback );
 
 			$this->set_display_callback( $display_callback );
-
 		} else {
-
 			$this->flag_invalid_view_arg_type( 'display_callback', 'callable' );
-
 		}
 	}
 
@@ -362,21 +355,15 @@ abstract class Endpoint extends Base_Object {
 	 */
 	private function set_data_callback( $data_callback ) {
 		if ( is_callable( $data_callback ) ) {
-
 			$this->data_callback = $data_callback;
-
 		} elseif ( is_string( $data_callback ) && '::' === substr( $data_callback, 0, 2 ) ) {
-
 			$method = str_replace( '::', '', $data_callback );
 
 			$data_callback = array( $this, $data_callback );
 
 			$this->set_data_callback( $data_callback );
-
 		} else {
-
 			$this->flag_invalid_view_arg_type( 'data_callback', 'callable' );
-
 		}
 	}
 
@@ -389,17 +376,22 @@ abstract class Endpoint extends Base_Object {
 	 * @return void
 	 */
 	protected function flag_invalid_view_arg_type( $argument, $expected_type ) {
-		$message = sprintf( 'The \'%1$s\' argument must be of type %2$s for the \'%3$s\' endpoint \'%4$s\' view.',
+		$message = sprintf(
+			'The \'%1$s\' argument must be of type %2$s for the \'%3$s\' endpoint \'%4$s\' view.',
 			$argument,
 			$expected_type,
 			$this->get_view(),
 			$this->get_id()
 		);
 
-		$this->errors->add( 'invalid_view_arg_type', $message, array(
-			'view_type'   => $this->get_view(),
-			'endpoint_id' => $this->get_id(),
-		) );
+		$this->errors->add(
+			'invalid_view_arg_type',
+			$message,
+			array(
+				'view_type'   => $this->get_view(),
+				'endpoint_id' => $this->get_id(),
+			)
+		);
 	}
 
 	/**
@@ -411,16 +403,21 @@ abstract class Endpoint extends Base_Object {
 	 * @return void
 	 */
 	protected function flag_missing_view_arg( $argument ) {
-		$message = sprintf( 'The \'%1$s\' argument must be set for the \'%2$s\' endpoint \'%3$s\' view.',
+		$message = sprintf(
+			'The \'%1$s\' argument must be set for the \'%2$s\' endpoint \'%3$s\' view.',
 			$argument,
 			$this->get_id(),
 			$this->get_view()
 		);
 
-		$this->errors->add( "missing_{$argument}", $message, array(
-			'view_type'   => $this->get_view(),
-			'endpoint_id' => $this->get_id(),
-		) );
+		$this->errors->add(
+			"missing_{$argument}",
+			$message,
+			array(
+				'view_type'   => $this->get_view(),
+				'endpoint_id' => $this->get_id(),
+			)
+		);
 	}
 
 	/**

@@ -68,18 +68,18 @@ final class EDD_Requirements_Check {
 			'exists'  => true,
 			'current' => false,
 			'checked' => false,
-			'met'     => false
+			'met'     => false,
 		),
 
 		// WordPress
-		'wp' => array(
+		'wp'  => array(
 			'minimum' => '4.4.0',
 			'name'    => 'WordPress',
 			'exists'  => true,
 			'current' => false,
 			'checked' => false,
-			'met'     => false
-		)
+			'met'     => false,
+		),
 	);
 
 	/**
@@ -108,9 +108,9 @@ final class EDD_Requirements_Check {
 	 * @since 3.0
 	 */
 	private function quit() {
-		add_action( 'admin_head',                        array( $this, 'admin_head'        ) );
-		add_filter( "plugin_action_links_{$this->base}", array( $this, 'plugin_row_links'  ) );
-		add_action( "after_plugin_row_{$this->base}",    array( $this, 'plugin_row_notice' ) );
+		add_action( 'admin_head', array( $this, 'admin_head' ) );
+		add_filter( "plugin_action_links_{$this->base}", array( $this, 'plugin_row_links' ) );
+		add_action( "after_plugin_row_{$this->base}", array( $this, 'plugin_row_notice' ) );
 	}
 
 	/** Specific Methods ******************************************************/
@@ -194,7 +194,7 @@ final class EDD_Requirements_Check {
 	 * @return string
 	 */
 	private function unmet_requirements_description_text() {
-		return esc_html__( 'Requires %s (%s), but (%s) is installed.', 'easy-digital-downloads' );
+		return esc_html__( 'Requires %1$s (%2$s), but (%3$s) is installed.', 'easy-digital-downloads' );
 	}
 
 	/**
@@ -204,7 +204,7 @@ final class EDD_Requirements_Check {
 	 * @return string
 	 */
 	private function unmet_requirements_missing_text() {
-		return esc_html__( 'Requires %s (%s), but it appears to be missing.', 'easy-digital-downloads' );
+		return esc_html__( 'Requires %1$s (%2$s), but it appears to be missing.', 'easy-digital-downloads' );
 	}
 
 	/**
@@ -255,7 +255,8 @@ final class EDD_Requirements_Check {
 		<td class="column-description">
 			<?php $this->unmet_requirements_description(); ?>
 		</td>
-		</tr><?php
+		</tr>
+		<?php
 	}
 
 	/**
@@ -283,7 +284,7 @@ final class EDD_Requirements_Check {
 		if ( ! empty( $requirement['exists'] ) ) {
 			$text = sprintf(
 				$this->unmet_requirements_description_text(),
-				'<strong>' . esc_html( $requirement['name']    ) . '</strong>',
+				'<strong>' . esc_html( $requirement['name'] ) . '</strong>',
 				'<strong>' . esc_html( $requirement['minimum'] ) . '</strong>',
 				'<strong>' . esc_html( $requirement['current'] ) . '</strong>'
 			);
@@ -292,7 +293,7 @@ final class EDD_Requirements_Check {
 		} else {
 			$text = sprintf(
 				$this->unmet_requirements_missing_text(),
-				'<strong>' . esc_html( $requirement['name']    ) . '</strong>',
+				'<strong>' . esc_html( $requirement['name'] ) . '</strong>',
 				'<strong>' . esc_html( $requirement['minimum'] ) . '</strong>'
 			);
 		}
@@ -309,7 +310,8 @@ final class EDD_Requirements_Check {
 	public function admin_head() {
 
 		// Get the requirements row name
-		$name = $this->unmet_requirements_name(); ?>
+		$name = $this->unmet_requirements_name();
+		?>
 
 		<style id="<?php echo esc_attr( $name ); ?>">
 			.plugins tr[data-plugin="<?php echo esc_html( $this->base ); ?>"] th,
@@ -375,28 +377,31 @@ final class EDD_Requirements_Check {
 			switch ( $dependency ) {
 
 				// PHP
-				case 'php' :
+				case 'php':
 					$version = phpversion();
 					break;
 
 				// WP
-				case 'wp' :
+				case 'wp':
 					$version = get_bloginfo( 'version' );
 					break;
 
 				// Unknown
-				default :
+				default:
 					$version = false;
 					break;
 			}
 
 			// Merge to original array
 			if ( ! empty( $version ) ) {
-				$this->requirements[ $dependency ] = array_merge( $this->requirements[ $dependency ], array(
-					'current' => $version,
-					'checked' => true,
-					'met'     => version_compare( $version, $properties['minimum'], '>=' )
-				) );
+				$this->requirements[ $dependency ] = array_merge(
+					$this->requirements[ $dependency ],
+					array(
+						'current' => $version,
+						'checked' => true,
+						'met'     => version_compare( $version, $properties['minimum'], '>=' ),
+					)
+				);
 			}
 		}
 	}

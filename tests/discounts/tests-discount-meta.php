@@ -25,19 +25,21 @@ class Tests_Meta extends \EDD_UnitTestCase {
 	 * @access public
 	 */
 	public static function wpSetUpBeforeClass() {
-		self::$discount_id = self::edd()->discount->create_object( array(
-			'name'              => '20 Percent Off',
-			'code'              => '20OFF',
-			'status'            => 'active',
-			'type'              => 'percent',
-			'amount'            => '20',
-			'use_count'         => 54,
-			'max_uses'          => 10,
-			'min_cart_price'    => 128,
-			'product_condition' => 'all',
-			'start_date'        => '2010-12-12 00:00:00',
-			'end_date'          => '2050-12-31 23:59:59'
-		) );
+		self::$discount_id = self::edd()->discount->create_object(
+			array(
+				'name'              => '20 Percent Off',
+				'code'              => '20OFF',
+				'status'            => 'active',
+				'type'              => 'percent',
+				'amount'            => '20',
+				'use_count'         => 54,
+				'max_uses'          => 10,
+				'min_cart_price'    => 128,
+				'product_condition' => 'all',
+				'start_date'        => '2010-12-12 00:00:00',
+				'end_date'          => '2050-12-31 23:59:59',
+			)
+		);
 	}
 
 	/**
@@ -127,6 +129,6 @@ class Tests_Meta extends \EDD_UnitTestCase {
 	 * @covers EDD_Discount::delete_meta()
 	 */
 	public function test_delete_metadata_with_invalid_key_should_return_false() {
-		$this->assertFalse( edd_delete_adjustment_meta( self::$discount_id,  'key_that_does_not_exist' ) );
+		$this->assertFalse( edd_delete_adjustment_meta( self::$discount_id, 'key_that_does_not_exist' ) );
 	}
 }

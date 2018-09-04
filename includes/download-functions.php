@@ -41,12 +41,14 @@ function edd_get_download_by( $field = '', $value = '' ) {
 
 		case 'slug':
 		case 'name':
-			$download = get_posts( array(
-				'post_type'      => 'download',
-				'name'           => $value,
-				'posts_per_page' => 1,
-				'post_status'    => 'any',
-			) );
+			$download = get_posts(
+				array(
+					'post_type'      => 'download',
+					'name'           => $value,
+					'posts_per_page' => 1,
+					'post_status'    => 'any',
+				)
+			);
 
 			if ( $download ) {
 				$download = $download[0];
@@ -55,13 +57,15 @@ function edd_get_download_by( $field = '', $value = '' ) {
 			break;
 
 		case 'sku':
-			$download = get_posts( array(
-				'post_type'      => 'download',
-				'meta_key'       => 'edd_sku',
-				'meta_value'     => $value,
-				'posts_per_page' => 1,
-				'post_status'    => 'any',
-			) );
+			$download = get_posts(
+				array(
+					'post_type'      => 'download',
+					'meta_key'       => 'edd_sku',
+					'meta_value'     => $value,
+					'posts_per_page' => 1,
+					'post_status'    => 'any',
+				)
+			);
 
 			if ( $download ) {
 				$download = $download[0];
@@ -95,7 +99,7 @@ function edd_get_download( $download_id = 0 ) {
 			$download = $found_download;
 		}
 
-	// Fetch download by name.
+		// Fetch download by name.
 	} else {
 		$args = array(
 			'post_type'     => 'download',
@@ -167,7 +171,7 @@ function edd_get_download_price( $download_id = 0 ) {
  *
  * @param int  $download_id Download ID.
  * @param bool $echo        Optional. Whether to echo or return the result. Default true.
- * @param int $price_id     Optional. Price ID.
+ * @param int  $price_id     Optional. Price ID.
  *
  * @return string Download price if $echo set to false.
  */
@@ -212,8 +216,8 @@ add_filter( 'edd_download_price', 'edd_currency_filter', 20 );
  * This price includes any necessary discounts that were applied
  *
  * @since 1.0
- * @param int $download_id ID of the download
- * @param array $user_purchase_info - an array of all information for the payment
+ * @param int    $download_id ID of the download
+ * @param array  $user_purchase_info - an array of all information for the payment
  * @param string $amount_override a custom amount that over rides the 'edd_price' meta, used for variable prices
  * @return string - the price of the download
  */
@@ -728,15 +732,17 @@ function edd_record_download_in_log( $download_id = 0, $file_id = 0, $user_info 
 
 	$user_agent = $browser->getBrowser() . ' ' . $browser->getVersion() . '/' . $browser->getPlatform();
 
-	edd_add_file_download_log( array(
-		'product_id'  => absint( $download_id ),
-		'file_id'     => absint( $file_id ),
-		'order_id'    => absint( $order_id ),
-		'price_id'    => absint( $price_id ),
-		'customer_id' => $order->customer_id,
-		'ip'          => sanitize_text_field( $ip ),
-		'user_agent'  => $user_agent,
-	) );
+	edd_add_file_download_log(
+		array(
+			'product_id'  => absint( $download_id ),
+			'file_id'     => absint( $file_id ),
+			'order_id'    => absint( $order_id ),
+			'price_id'    => absint( $price_id ),
+			'customer_id' => $order->customer_id,
+			'ip'          => sanitize_text_field( $ip ),
+			'user_agent'  => $user_agent,
+		)
+	);
 }
 
 /**
@@ -767,15 +773,23 @@ function edd_remove_download_logs_on_delete( $download_id = 0 ) {
 	}
 
 	// Delete file download logs.
-	$wpdb->delete( $wpdb->edd_logs_file_downloads, array(
-		'product_id' => $download_id,
-	), array( '%d' ) );
+	$wpdb->delete(
+		$wpdb->edd_logs_file_downloads,
+		array(
+			'product_id' => $download_id,
+		),
+		array( '%d' )
+	);
 
 	// Delete logs.
-	$wpdb->delete( $wpdb->edd_logs, array(
-		'object_id'   => $download_id,
-		'object_type' => 'download',
-	), array( '%d', '%s' ) );
+	$wpdb->delete(
+		$wpdb->edd_logs,
+		array(
+			'object_id'   => $download_id,
+			'object_type' => 'download',
+		),
+		array( '%d', '%s' )
+	);
 }
 add_action( 'delete_post', 'edd_remove_download_logs_on_delete' );
 
@@ -1020,11 +1034,13 @@ function edd_get_file_downloaded_count( $download_id = 0, $file_id = 0, $order_i
 	$file_id     = absint( $file_id );
 	$order_id    = absint( $order_id );
 
-	return edd_count_file_download_logs( array(
-		'product_id' => $download_id,
-		'order_id'   => $order_id,
-		'file_id'    => $file_id,
-	) );
+	return edd_count_file_download_logs(
+		array(
+			'product_id' => $download_id,
+			'order_id'   => $order_id,
+			'file_id'    => $file_id,
+		)
+	);
 }
 
 
@@ -1109,7 +1125,7 @@ function edd_get_download_refundability( $download_id = 0 ) {
  * @param int $order_id    Order ID.
  *
  * @return int|false New file download limit, false if invalid download ID passed.
-*/
+ */
 function edd_get_file_download_limit_override( $download_id = 0, $order_id = 0 ) {
 
 	// Bail if no download ID was passed.
@@ -1193,12 +1209,14 @@ function edd_is_file_at_download_limit( $download_id = 0, $order_id = 0, $file_i
 	$ret = false;
 
 	// Retrieve the file download count.
-	$download_count = edd_count_file_download_logs( array(
-		'product_id' => $download_id,
-		'file_id'    => $file_id,
-		'order_id'   => $order_id,
-		'price_id'   => $price_id,
-	) );
+	$download_count = edd_count_file_download_logs(
+		array(
+			'product_id' => $download_id,
+			'file_id'    => $file_id,
+			'order_id'   => $order_id,
+			'price_id'   => $price_id,
+		)
+	);
 
 	$download_limit     = edd_get_file_download_limit( $download_id );
 	$unlimited_purchase = edd_payment_has_unlimited_downloads( $order_id );
@@ -1250,11 +1268,11 @@ function edd_get_file_price_condition( $download_id = 0, $file_key = '' ) {
  * @since 1.0
  * @since 3.0  Updated to use new query methods.
  *
- * @param string    $key         Payment key. Use edd_get_payment_key() to get key.
- * @param string    $email       Customer email address. Use edd_get_payment_user_email() to get user email.
- * @param int       $filekey     Index of array of files returned by edd_get_download_files() that this download link is for.
- * @param int       $download_id Optional. ID of download this download link is for. Default is 0.
- * @param bool|int  $price_id    Optional. Price ID when using variable prices. Default is false.
+ * @param string   $key         Payment key. Use edd_get_payment_key() to get key.
+ * @param string   $email       Customer email address. Use edd_get_payment_user_email() to get user email.
+ * @param int      $filekey     Index of array of files returned by edd_get_download_files() that this download link is for.
+ * @param int      $download_id Optional. ID of download this download link is for. Default is 0.
+ * @param bool|int $price_id    Optional. Price ID when using variable prices. Default is false.
  *
  * @return string Secure download URL.
  */
@@ -1322,7 +1340,7 @@ function edd_get_product_notes( $download_id = 0 ) {
 	if ( empty( $download_id ) ) {
 		return false;
 	}
-	
+
 	$download = edd_get_download( $download_id );
 
 	return $download
@@ -1540,12 +1558,15 @@ function edd_validate_url_token( $url = '' ) {
 		wp_parse_str( $parts['query'], $query_args );
 
 		// These are the only URL parameters that are allowed to affect the token validation
-		$allowed = apply_filters( 'edd_url_token_allowed_params', array(
-			'eddfile',
-			'file',
-			'ttl',
-			'token',
-		) );
+		$allowed = apply_filters(
+			'edd_url_token_allowed_params',
+			array(
+				'eddfile',
+				'file',
+				'ttl',
+				'token',
+			)
+		);
 
 		// Parameters that will be removed from the URL before testing the token
 		$remove = array();

@@ -91,9 +91,11 @@ final class Customer_Email_Addresses extends Table {
 
 		// Maybe add column
 		if ( false === $result ) {
-			$result = $this->get_db()->query( "
+			$result = $this->get_db()->query(
+				"
 				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;
-			" );
+			"
+			);
 		}
 
 		// Return success/fail
@@ -109,7 +111,6 @@ final class Customer_Email_Addresses extends Table {
 	 * @return boolean
 	 */
 	protected function __201808170001() {
-
 		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY COLUMN `email` varchar(100) NOT NULL default ''" );
 		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX email (email)" );
 

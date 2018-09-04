@@ -7,7 +7,7 @@
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.6
-*/
+ */
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -27,8 +27,8 @@ class EDD_Cron {
 	 * @see EDD_Cron::weekly_events()
 	 */
 	public function __construct() {
-		add_filter( 'cron_schedules', array( $this, 'add_schedules'   ) );
-		add_action( 'wp',             array( $this, 'schedule_events' ) );
+		add_filter( 'cron_schedules', array( $this, 'add_schedules' ) );
+		add_action( 'wp', array( $this, 'schedule_events' ) );
 	}
 
 	/**
@@ -43,7 +43,7 @@ class EDD_Cron {
 		// Adds once weekly to the existing schedules.
 		$schedules['weekly'] = array(
 			'interval' => 604800,
-			'display'  => __( 'Once Weekly', 'easy-digital-downloads' )
+			'display'  => __( 'Once Weekly', 'easy-digital-downloads' ),
 		);
 
 		return $schedules;
@@ -87,4 +87,4 @@ class EDD_Cron {
 	}
 
 }
-$edd_cron = new EDD_Cron;
+$edd_cron = new EDD_Cron();

@@ -20,18 +20,18 @@ global $edd_download_shortcode_item_atts, $edd_download_shortcode_item_i;
 		<?php
 			do_action( 'edd_download_before' );
 
-			if ( 'false' !== $edd_download_shortcode_item_atts['thumbnails'] ) :
-				edd_get_template_part( 'shortcode', 'content-image' );
-				do_action( 'edd_download_after_thumbnail' );
+		if ( 'false' !== $edd_download_shortcode_item_atts['thumbnails'] ) :
+			edd_get_template_part( 'shortcode', 'content-image' );
+			do_action( 'edd_download_after_thumbnail' );
 			endif;
 
 			edd_get_template_part( 'shortcode', 'content-title' );
 
 			do_action( 'edd_download_after_title' );
 
-			if ( 'yes' === $edd_download_shortcode_item_atts['excerpt'] && 'yes' !== $edd_download_shortcode_item_atts['full_content'] ) :
-				edd_get_template_part( 'shortcode', 'content-excerpt' );
-				do_action( 'edd_download_after_content' );
+		if ( 'yes' === $edd_download_shortcode_item_atts['excerpt'] && 'yes' !== $edd_download_shortcode_item_atts['full_content'] ) :
+			edd_get_template_part( 'shortcode', 'content-excerpt' );
+			do_action( 'edd_download_after_content' );
 			elseif ( 'yes' === $edd_download_shortcode_item_atts['full_content'] ) :
 				edd_get_template_part( 'shortcode', 'content-full' );
 				do_action( 'edd_download_after_content' );
@@ -47,7 +47,7 @@ global $edd_download_shortcode_item_atts, $edd_download_shortcode_item_i;
 			endif;
 
 			do_action( 'edd_download_after' );
-		?>
+			?>
 
 	</div>
 

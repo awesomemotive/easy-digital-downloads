@@ -104,9 +104,12 @@ function edd_get_log_by( $field = '', $value = '' ) {
 function edd_get_logs( $args = array() ) {
 
 	// Parse args
-	$r = wp_parse_args( $args, array(
-		'number' => 30
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'number' => 30,
+		)
+	);
 
 	// Instantiate a query object
 	$logs = new EDD\Database\Queries\Log();
@@ -126,9 +129,12 @@ function edd_get_logs( $args = array() ) {
 function edd_count_logs( $args = array() ) {
 
 	// Parse args
-	$r = wp_parse_args( $args, array(
-		'count' => true
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'count' => true,
+		)
+	);
 
 	// Query for count(s)
 	$logs = new EDD\Database\Queries\Log( $r );
@@ -231,9 +237,12 @@ function edd_get_file_download_log_by( $field = '', $value = '' ) {
 function edd_get_file_download_logs( $args = array() ) {
 
 	// Parse args
-	$r = wp_parse_args( $args, array(
-		'number' => 30
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'number' => 30,
+		)
+	);
 
 	// Instantiate a query object
 	$logs = new EDD\Database\Queries\Log_File_Download();
@@ -253,9 +262,12 @@ function edd_get_file_download_logs( $args = array() ) {
 function edd_count_file_download_logs( $args = array() ) {
 
 	// Parse args
-	$r = wp_parse_args( $args, array(
-		'count' => true
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'count' => true,
+		)
+	);
 
 	// Query for count(s)
 	$logs = new EDD\Database\Queries\Log_File_Download( $r );
@@ -356,9 +368,12 @@ function edd_get_api_request_log_by( $field = '', $value = '' ) {
 function edd_get_api_request_logs( $args = array() ) {
 
 	// Parse args
-	$r = wp_parse_args( $args, array(
-		'number' => 30
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'number' => 30,
+		)
+	);
 
 	// Instantiate a query object
 	$logs = new EDD\Database\Queries\Log_Api_Request();
@@ -378,9 +393,12 @@ function edd_get_api_request_logs( $args = array() ) {
 function edd_count_api_request_logs( $args = array() ) {
 
 	// Parse args
-	$r = wp_parse_args( $args, array(
-		'count' => true
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'count' => true,
+		)
+	);
 
 	// Query for count(s)
 	$logs = new EDD\Database\Queries\Log_Api_Request( $r );

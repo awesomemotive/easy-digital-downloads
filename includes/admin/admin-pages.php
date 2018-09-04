@@ -47,18 +47,21 @@ function edd_get_admin_pages() {
 			$edd_reports_page;
 
 	// Filter & return
-	return (array) apply_filters( 'edd_admin_pages', array(
-		$edd_discounts_page,
-		$edd_payments_page,
-		$edd_settings_page,
-		$edd_reports_page,
-		$edd_system_info_page,
-		$edd_add_ons_page,
-		$edd_settings_export,
-		$edd_upgrades_screen,
-		$edd_customers_page,
-		$edd_reports_page
-	) );
+	return (array) apply_filters(
+		'edd_admin_pages',
+		array(
+			$edd_discounts_page,
+			$edd_payments_page,
+			$edd_settings_page,
+			$edd_reports_page,
+			$edd_system_info_page,
+			$edd_add_ons_page,
+			$edd_settings_export,
+			$edd_upgrades_screen,
+			$edd_customers_page,
+			$edd_reports_page,
+		)
+	);
 }
 
 /**
@@ -80,15 +83,15 @@ function edd_add_options_link() {
 	global $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_upgrades_screen, $edd_tools_page, $edd_customers_page;
 
 	// Filter the "View Customers" role
-	$customer_view_role  = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
+	$customer_view_role = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
 
 	// Setup pages
-	$edd_payments_page   = add_submenu_page( 'edit.php?post_type=download', __( 'Orders',       'easy-digital-downloads' ), __( 'Orders',    'easy-digital-downloads' ), 'edit_shop_payments',    'edd-payment-history', 'edd_payment_history_page' );
-	$edd_customers_page  = add_submenu_page( 'edit.php?post_type=download', __( 'Customers',    'easy-digital-downloads' ), __( 'Customers', 'easy-digital-downloads' ), $customer_view_role,     'edd-customers',       'edd_customers_page'       );
-	$edd_discounts_page  = add_submenu_page( 'edit.php?post_type=download', __( 'Discounts',    'easy-digital-downloads' ), __( 'Discounts', 'easy-digital-downloads' ), 'manage_shop_discounts', 'edd-discounts',       'edd_discounts_page'       );
-	$edd_reports_page    = add_submenu_page( 'edit.php?post_type=download', __( 'Reports',      'easy-digital-downloads' ), __( 'Reports',   'easy-digital-downloads' ), 'view_shop_reports',     'edd-reports',         'edd_reports_page'         );
-	$edd_settings_page   = add_submenu_page( 'edit.php?post_type=download', __( 'EDD Settings', 'easy-digital-downloads' ), __( 'Settings',  'easy-digital-downloads' ), 'manage_shop_settings',  'edd-settings',        'edd_options_page'         );
-	$edd_tools_page      = add_submenu_page( 'edit.php?post_type=download', __( 'EDD Tools',    'easy-digital-downloads' ), __( 'Tools',     'easy-digital-downloads' ), 'manage_shop_settings',  'edd-tools',           'edd_tools_page'           );
+	$edd_payments_page  = add_submenu_page( 'edit.php?post_type=download', __( 'Orders', 'easy-digital-downloads' ), __( 'Orders', 'easy-digital-downloads' ), 'edit_shop_payments', 'edd-payment-history', 'edd_payment_history_page' );
+	$edd_customers_page = add_submenu_page( 'edit.php?post_type=download', __( 'Customers', 'easy-digital-downloads' ), __( 'Customers', 'easy-digital-downloads' ), $customer_view_role, 'edd-customers', 'edd_customers_page' );
+	$edd_discounts_page = add_submenu_page( 'edit.php?post_type=download', __( 'Discounts', 'easy-digital-downloads' ), __( 'Discounts', 'easy-digital-downloads' ), 'manage_shop_discounts', 'edd-discounts', 'edd_discounts_page' );
+	$edd_reports_page   = add_submenu_page( 'edit.php?post_type=download', __( 'Reports', 'easy-digital-downloads' ), __( 'Reports', 'easy-digital-downloads' ), 'view_shop_reports', 'edd-reports', 'edd_reports_page' );
+	$edd_settings_page  = add_submenu_page( 'edit.php?post_type=download', __( 'EDD Settings', 'easy-digital-downloads' ), __( 'Settings', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-settings', 'edd_options_page' );
+	$edd_tools_page     = add_submenu_page( 'edit.php?post_type=download', __( 'EDD Tools', 'easy-digital-downloads' ), __( 'Tools', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-tools', 'edd_tools_page' );
 
 	// Setup hidden upgrades page
 	$edd_upgrades_screen = add_submenu_page( null, __( 'EDD Upgrades', 'easy-digital-downloads' ), __( 'EDD Upgrades', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-upgrades', 'edd_upgrades_screen' );
@@ -126,7 +129,7 @@ function edd_is_insertable_admin_page() {
 		'post.php',
 		'page.php',
 		'post-new.php',
-		'post-edit.php'
+		'post-edit.php',
 	);
 
 	// Allowed post types
@@ -154,13 +157,13 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 	global $pagenow, $typenow;
 
 	$found      = false;
-	$post_type  = isset( $_GET['post_type'] )  ? strtolower( $_GET['post_type'] )  : false;
-	$action     = isset( $_GET['action'] )     ? strtolower( $_GET['action'] )     : false;
-	$taxonomy   = isset( $_GET['taxonomy'] )   ? strtolower( $_GET['taxonomy'] )   : false;
-	$page       = isset( $_GET['page'] )       ? strtolower( $_GET['page'] )       : false;
-	$view       = isset( $_GET['view'] )       ? strtolower( $_GET['view'] )       : false;
+	$post_type  = isset( $_GET['post_type'] ) ? strtolower( $_GET['post_type'] ) : false;
+	$action     = isset( $_GET['action'] ) ? strtolower( $_GET['action'] ) : false;
+	$taxonomy   = isset( $_GET['taxonomy'] ) ? strtolower( $_GET['taxonomy'] ) : false;
+	$page       = isset( $_GET['page'] ) ? strtolower( $_GET['page'] ) : false;
+	$view       = isset( $_GET['view'] ) ? strtolower( $_GET['view'] ) : false;
 	$edd_action = isset( $_GET['edd-action'] ) ? strtolower( $_GET['edd-action'] ) : false;
-	$tab        = isset( $_GET['tab'] )        ? strtolower( $_GET['tab'] )        : false;
+	$tab        = isset( $_GET['tab'] ) ? strtolower( $_GET['tab'] ) : false;
 
 	switch ( $passed_page ) {
 		case 'download':
@@ -230,7 +233,7 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 		case 'payments':
 			switch ( $passed_view ) {
 				case 'list-table':
-					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-payment-history' === $page && false === $view  ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-payment-history' === $page && false === $view ) {
 						$found = true;
 					}
 					break;
@@ -427,7 +430,7 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 				$found = true;
 			}
 			break;
-		case 'index.php' :
+		case 'index.php':
 			if ( 'index.php' === $pagenow ) {
 				$found = true;
 			}
@@ -440,11 +443,11 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 			if ( ( 'download' === $typenow ) || ( 'index.php' === $pagenow ) ) {
 				$found = true;
 
-			// Registered global pages
+				// Registered global pages
 			} elseif ( in_array( $pagenow, $admin_pages, true ) ) {
 				$found = true;
 
-			// Supported post types
+				// Supported post types
 			} elseif ( edd_is_insertable_admin_page() ) {
 				$found = true;
 			}

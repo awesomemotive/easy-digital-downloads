@@ -4,7 +4,7 @@ namespace EDD\Reports\Data;
 require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php';
 
 if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
+	require_once EDD_PLUGIN_DIR . 'includes/reports/class-init.php';
 }
 
 new \EDD\Reports\Init();
@@ -91,12 +91,12 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 					'data_callback'    => '__return_false',
 					'display_callback' => '\\EDD\\Reports\\default_display_tile',
 					'display_args'     => array(
-						'type'             => '' ,
+						'type'             => '',
 						'context'          => 'primary',
 						'comparison_label' => __( 'All time', 'easy-digital-downloads' ),
-					)
+					),
 				),
-			)
+			),
 		);
 
 		// Add a test endpoint.
@@ -111,15 +111,18 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_unregister_endpoint_with_invalid_endpoint_id_should_affect_no_change() {
 		// Add a test endpoint.
-		$this->registry->register_endpoint( 'foo', array(
-			'label'    => 'Foo',
-			'priority' => 10,
-			'views'    => array(
-				'tile' => array(
-					'data_callback' => '__return_empty_array'
+		$this->registry->register_endpoint(
+			'foo',
+			array(
+				'label'    => 'Foo',
+				'priority' => 10,
+				'views'    => array(
+					'tile' => array(
+						'data_callback' => '__return_empty_array',
+					),
 				),
-			),
-		) );
+			)
+		);
 
 		$this->registry->unregister_endpoint( 'bar' );
 
@@ -132,14 +135,17 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_unregister_endpoint_with_valid_endpoint_id_should_unregister_that_endpoint() {
 		// Add a test endpoint.
-		$this->registry->register_endpoint( 'foo', array(
-			'label' => 'Foo',
-			'views' => array(
-				'tile' => array(
-					'data_callback' => '__return_empty_array'
+		$this->registry->register_endpoint(
+			'foo',
+			array(
+				'label' => 'Foo',
+				'views' => array(
+					'tile' => array(
+						'data_callback' => '__return_empty_array',
+					),
 				),
 			)
-		) );
+		);
 
 		$this->registry->unregister_endpoint( 'foo' );
 
@@ -151,7 +157,6 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_endpoints_with_no_sort_should_return_endpoints_in_order_of_registration() {
-
 		$this->add_test_endpoints();
 
 		$endpoint_ids = array_keys( $this->registry->get_endpoints() );
@@ -164,7 +169,6 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_endpoints_with_invalid_sort_should_return_endpoints_in_order_of_registration() {
-
 		$this->add_test_endpoints();
 
 		$endpoint_ids = array_keys( $this->registry->get_endpoints( 'fake_sort' ) );
@@ -177,7 +181,6 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_endpoints_with_ID_sort_should_return_endpoints_in_alphabetical_order_by_ID() {
-
 		$this->add_test_endpoints();
 
 		$endpoint_ids = array_keys( $this->registry->get_endpoints( 'ID' ) );
@@ -190,7 +193,6 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_endpoints_with_priority_sort_should_return_endpoints_in_order_of_priority() {
-
 		$this->add_test_endpoints();
 
 		$endpoint_ids = array_keys( $this->registry->get_endpoints( 'priority' ) );
@@ -217,9 +219,12 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			"The 'label' parameter for the 'foo' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'."
 		);
 
-		$this->registry->register_endpoint( 'foo', array(
-			'label' => ''
-		) );
+		$this->registry->register_endpoint(
+			'foo',
+			array(
+				'label' => '',
+			)
+		);
 	}
 
 	/**
@@ -233,9 +238,12 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			"The 'views' parameter for the 'foo' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'."
 		);
 
-		$added = $this->registry->register_endpoint( 'foo', array(
-			'label' => 'Foo',
-		) );
+		$added = $this->registry->register_endpoint(
+			'foo',
+			array(
+				'label' => 'Foo',
+			)
+		);
 	}
 
 	/**
@@ -243,14 +251,17 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_register_endpoint_with_no_priority_should_set_priority_10() {
-		$this->registry->register_endpoint( 'foo', array(
-			'label' => 'Foo',
-			'views' => array(
-				'tile' => array(
-					'data_callback' => '__return_empty_array'
-				)
-			),
-		) );
+		$this->registry->register_endpoint(
+			'foo',
+			array(
+				'label' => 'Foo',
+				'views' => array(
+					'tile' => array(
+						'data_callback' => '__return_empty_array',
+					),
+				),
+			)
+		);
 
 		$report = $this->registry->get_endpoint( 'foo' );
 
@@ -262,15 +273,18 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_register_endpoint_with_priority_should_set_that_priority() {
-		$this->registry->register_endpoint( 'foo', array(
-			'label'     => 'Foo',
-			'priority'  => 15,
-			'views'     => array(
-				'tile' => array(
-					'data_callback' => '__return_empty_array'
-				)
-			),
-		) );
+		$this->registry->register_endpoint(
+			'foo',
+			array(
+				'label'    => 'Foo',
+				'priority' => 15,
+				'views'    => array(
+					'tile' => array(
+						'data_callback' => '__return_empty_array',
+					),
+				),
+			)
+		);
 
 		$report = $this->registry->get_endpoint( 'foo' );
 
@@ -281,14 +295,17 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @covers ::register_endpoint()
 	 */
 	public function test_register_endpoint_if_successful_should_return_true() {
-		$result = $this->registry->register_endpoint( 'foo', array(
-			'label' => 'Foo',
-			'views' => array(
-				'tile' => array(
-					'data_callback' => '__return_empty_array',
+		$result = $this->registry->register_endpoint(
+			'foo',
+			array(
+				'label' => 'Foo',
+				'views' => array(
+					'tile' => array(
+						'data_callback' => '__return_empty_array',
+					),
 				),
-			),
-		) );
+			)
+		);
 
 		$this->assertTrue( $result );
 	}
@@ -297,10 +314,12 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @covers ::build_endpoint()
 	 */
 	public function test_build_endpoint_with_Endpoint_object_should_return_that_object_unchanged() {
-		$endpoint = $this->mock_Endpoint( array(
-			'view' => 'tile',
-			'atts' => array()
-		) );
+		$endpoint = $this->mock_Endpoint(
+			array(
+				'view' => 'tile',
+				'atts' => array(),
+			)
+		);
 
 		$this->assertInstanceOf( '\EDD\Reports\Data\Endpoint', $endpoint );
 	}
@@ -321,16 +340,19 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_build_endpoint_with_valid_endpoint_id_valid_type_should_return_an_Endpoint_object() {
-		$this->registry->register_endpoint( 'foo', array(
-			'label' => 'Foo',
-			'views' => array(
-				'tile' => array(
-					'display_args'     => array( 'some_value' ),
-					'display_callback' => '__return_false',
-					'data_callback'    => '__return_false',
+		$this->registry->register_endpoint(
+			'foo',
+			array(
+				'label' => 'Foo',
+				'views' => array(
+					'tile' => array(
+						'display_args'     => array( 'some_value' ),
+						'display_callback' => '__return_false',
+						'data_callback'    => '__return_false',
+					),
 				),
-			),
-		) );
+			)
+		);
 
 		$result = $this->registry->build_endpoint( 'foo', 'tile' );
 
@@ -360,15 +382,18 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 			"The 'fake' view for the 'foo' item is missing or invalid in 'EDD\Reports\Data\Endpoint_Registry::validate_views'"
 		);
 
-		$this->registry->register_endpoint( 'foo', array(
-			'label'    => 'Foo',
-			'views'    => array(
-				'fake' => array(
-					'display_callback' => '__return_false',
-					'data_callback'    => '__return_false',
+		$this->registry->register_endpoint(
+			'foo',
+			array(
+				'label' => 'Foo',
+				'views' => array(
+					'fake' => array(
+						'display_callback' => '__return_false',
+						'data_callback'    => '__return_false',
+					),
 				),
 			)
-		) );
+		);
 	}
 
 
@@ -378,25 +403,31 @@ class Endpoint_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	protected function add_test_endpoints() {
-		$this->registry->register_endpoint( 'foo', array(
-			'label'    => 'Foo',
-			'priority' => 10,
-			'views'    => array(
-				'tile' => array(
-					'data_callback' => '__return_empty_array'
+		$this->registry->register_endpoint(
+			'foo',
+			array(
+				'label'    => 'Foo',
+				'priority' => 10,
+				'views'    => array(
+					'tile' => array(
+						'data_callback' => '__return_empty_array',
+					),
 				),
 			)
-		) );
+		);
 
-		$this->registry->register_endpoint( 'bar', array(
-			'label'    => 'Bar',
-			'priority' => 5,
-			'views'    => array(
-				'tile' => array(
-					'data_callback' => '__return_empty_array'
+		$this->registry->register_endpoint(
+			'bar',
+			array(
+				'label'    => 'Bar',
+				'priority' => 5,
+				'views'    => array(
+					'tile' => array(
+						'data_callback' => '__return_empty_array',
+					),
 				),
 			)
-		) );
+		);
 	}
 
 	/**

@@ -67,7 +67,7 @@ class Registry extends Utils\Registry {
 	 */
 	public function get_items_sorted( $sort = '' ) {
 		// If sorting, handle it before retrieval from the ArrayObject.
-		switch( $sort ) {
+		switch ( $sort ) {
 			case 'ID':
 				parent::ksort();
 				break;
@@ -76,7 +76,8 @@ class Registry extends Utils\Registry {
 				parent::uasort( array( $this, 'priority_sort' ) );
 				break;
 
-			default: break;
+			default:
+				break;
 		}
 
 		return parent::get_items();

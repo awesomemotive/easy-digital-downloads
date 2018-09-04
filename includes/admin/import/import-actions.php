@@ -9,7 +9,8 @@
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
-if ( ! defined( 'ABSPATH' ) ) { exit; }
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; }
 
 /**
  * Add a hook allowing extensions to register a hook on the batch export process
@@ -42,11 +43,9 @@ add_action( 'edd_register_batch_importer', 'edd_register_payments_batch_import',
  * @return void
  */
 function edd_include_payments_batch_import_processer( $class ) {
-
 	if ( 'EDD_Batch_Payments_Import' === $class ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/import/class-batch-import-payments.php';
 	}
-
 }
 
 /**
@@ -67,9 +66,7 @@ add_action( 'edd_register_batch_importer', 'edd_register_downloads_batch_import'
  * @return void
  */
 function edd_include_downloads_batch_import_processer( $class ) {
-
 	if ( 'EDD_Batch_Downloads_Import' === $class ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/import/class-batch-import-downloads.php';
 	}
-
 }

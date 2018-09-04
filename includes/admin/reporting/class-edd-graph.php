@@ -22,7 +22,6 @@ defined( 'ABSPATH' ) || exit;
 class EDD_Graph {
 
 	/*
-
 	Simple example:
 
 	data format for each point: array( location on x, location on y )
@@ -77,11 +76,10 @@ class EDD_Graph {
 	 * @since 1.9
 	 */
 	public function __construct( $_data ) {
-
 		$this->data = $_data;
 
 		// Generate unique ID
-		$this->id   = 'a' . md5( rand() );
+		$this->id = 'a' . md5( rand() );
 
 		// Setup default options;
 		$this->options = array(
@@ -103,7 +101,6 @@ class EDD_Graph {
 			'points'             => true,
 			'additional_options' => '',
 		);
-
 	}
 
 	/**
@@ -162,23 +159,27 @@ class EDD_Graph {
 	 * @return string
 	 */
 	public function build_graph() {
-
 		$yaxis_count = 1;
 
 		$this->load_scripts();
 		ob_start();
-?>
+		?>
 		<script type="text/javascript">
 			jQuery( document ).ready( function($) {
 				$.plot(
 					$("#edd-graph-<?php echo $this->id; ?>"),
 					[
-						<?php foreach( $this->get_data() as $label => $data ) : ?>
+						<?php foreach ( $this->get_data() as $label => $data ) : ?>
 						{
 							label: "<?php echo esc_attr( $label ); ?>",
 							id: "<?php echo sanitize_key( $label ); ?>",
 							// data format is: [ point on x, value on y ]
-							data: [<?php foreach( $data as $point ) { echo '[' . implode( ',', $point ) . '],'; } ?>],
+							data: [
+							<?php
+							foreach ( $data as $point ) {
+								echo '[' . implode( ',', $point ) . '],'; }
+							?>
+							],
 							points: {
 								show: <?php echo $this->options['points'] ? 'true' : 'false'; ?>,
 							},
@@ -190,11 +191,14 @@ class EDD_Graph {
 							lines: {
 								show: <?php echo $this->options['lines'] ? 'true' : 'false'; ?>
 							},
-							<?php if( $this->options['multiple_y_axes'] ) : ?>
+							<?php if ( $this->options['multiple_y_axes'] ) : ?>
 							yaxis: <?php echo $yaxis_count; ?>
 							<?php endif; ?>
 						},
-						<?php $yaxis_count++; endforeach; ?>
+							<?php
+							$yaxis_count++;
+endforeach;
+?>
 					],
 					{
 						// Options
@@ -212,7 +216,7 @@ class EDD_Graph {
 							mode: "<?php echo $this->options['x_mode']; ?>",
 							timeFormat: "<?php echo $this->options['x_mode'] == 'time' ? $this->options['time_format'] : ''; ?>",
 							tickSize: "<?php echo $this->options['x_mode'] == 'time' ? '' : $this->options['ticksize_num']; ?>",
-							<?php if( $this->options['x_mode'] != 'time' ) : ?>
+							<?php if ( $this->options['x_mode'] != 'time' ) : ?>
 							tickDecimals: <?php echo $this->options['x_decimals']; ?>
 							<?php endif; ?>
 						},
@@ -221,7 +225,7 @@ class EDD_Graph {
 							min: 0,
 							mode: "<?php echo $this->options['y_mode']; ?>",
 							timeFormat: "<?php echo $this->options['y_mode'] == 'time' ? $this->options['time_format'] : ''; ?>",
-							<?php if( $this->options['y_mode'] != 'time' ) : ?>
+							<?php if ( $this->options['y_mode'] != 'time' ) : ?>
 							tickDecimals: <?php echo $this->options['y_decimals']; ?>
 							<?php endif; ?>
 						},
@@ -273,7 +277,7 @@ class EDD_Graph {
 
 		</script>
 		<div id="edd-graph-<?php echo $this->id; ?>" class="edd-graph" style="height: 300px;"></div>
-<?php
+		<?php
 		return ob_get_clean();
 	}
 

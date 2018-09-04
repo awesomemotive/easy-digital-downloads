@@ -30,9 +30,12 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_update_order
 	 */
 	public function test_update_should_return_true() {
-		$success = edd_update_order( self::$orders[0], array(
-			'gateway' => 'Stripe',
-		) );
+		$success = edd_update_order(
+			self::$orders[0],
+			array(
+				'gateway' => 'Stripe',
+			)
+		);
 
 		$this->assertSame( 1, $success );
 	}
@@ -41,9 +44,12 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_update_order
 	 */
 	public function test_order_object_after_update_should_return_true() {
-		edd_update_order( self::$orders[0], array(
-			'gateway' => 'Stripe',
-		) );
+		edd_update_order(
+			self::$orders[0],
+			array(
+				'gateway' => 'Stripe',
+			)
+		);
 
 		$order = edd_get_order( self::$orders[0] );
 
@@ -54,9 +60,12 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_update_order
 	 */
 	public function test_update_without_id_should_fail() {
-		$success = edd_update_order( null, array(
-			'gateway' => 'Stripe',
-		) );
+		$success = edd_update_order(
+			null,
+			array(
+				'gateway' => 'Stripe',
+			)
+		);
 
 		$this->assertFalse( $success );
 	}
@@ -83,9 +92,11 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_number_should_return_true() {
-		$orders = edd_get_orders( array(
-			'number' => 10,
-		) );
+		$orders = edd_get_orders(
+			array(
+				'number' => 10,
+			)
+		);
 
 		$this->assertCount( 5, $orders );
 	}
@@ -94,10 +105,12 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_offset_should_return_true() {
-		$orders = edd_get_orders( array(
-			'number' => 10,
-			'offset' => 4,
-		) );
+		$orders = edd_get_orders(
+			array(
+				'number' => 10,
+				'offset' => 4,
+			)
+		);
 
 		$this->assertCount( 1, $orders );
 	}
@@ -106,10 +119,12 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_orderby_id_and_order_asc_should_return_true() {
-		$orders = edd_get_orders( array(
-			'orderby' => 'id',
-			'order'   => 'asc',
-		) );
+		$orders = edd_get_orders(
+			array(
+				'orderby' => 'id',
+				'order'   => 'asc',
+			)
+		);
 
 		$this->assertTrue( $orders[0]->id < $orders[1]->id );
 	}
@@ -118,10 +133,12 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_orderby_id_and_order_desc_should_return_true() {
-		$orders = edd_get_orders( array(
-			'orderby' => 'id',
-			'order'   => 'desc',
-		) );
+		$orders = edd_get_orders(
+			array(
+				'orderby' => 'id',
+				'order'   => 'desc',
+			)
+		);
 
 		$this->assertTrue( $orders[0]->id > $orders[1]->id );
 	}
@@ -130,10 +147,12 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_orderby_user_id_and_order_asc_should_return_true() {
-		$orders = edd_get_orders( array(
-			'orderby' => 'user_id',
-			'order'   => 'asc',
-		) );
+		$orders = edd_get_orders(
+			array(
+				'orderby' => 'user_id',
+				'order'   => 'asc',
+			)
+		);
 
 		$this->assertTrue( $orders[0]->user_id < $orders[1]->user_id );
 	}
@@ -142,9 +161,11 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_user_id_should_return_1() {
-		$orders = edd_get_orders( array(
-			'user_id' => \WP_UnitTest_Generator_Sequence::$incr,
-		) );
+		$orders = edd_get_orders(
+			array(
+				'user_id' => \WP_UnitTest_Generator_Sequence::$incr,
+			)
+		);
 
 		$this->assertCount( 1, $orders );
 	}
@@ -153,11 +174,13 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_user_id__in_should_return_1() {
-		$orders = edd_get_orders( array(
-			'user_id__in' => array(
-				\WP_UnitTest_Generator_Sequence::$incr,
-			),
-		) );
+		$orders = edd_get_orders(
+			array(
+				'user_id__in' => array(
+					\WP_UnitTest_Generator_Sequence::$incr,
+				),
+			)
+		);
 
 		$this->assertCount( 1, $orders );
 	}
@@ -166,11 +189,13 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_user_id__not_in_should_return_5() {
-		$orders = edd_get_orders( array(
-			'user_id__not_in' => array(
-				999,
-			),
-		) );
+		$orders = edd_get_orders(
+			array(
+				'user_id__not_in' => array(
+					999,
+				),
+			)
+		);
 
 		$this->assertCount( 5, $orders );
 	}
@@ -179,10 +204,12 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_orderby_user_id_and_order_desc_should_return_true() {
-		$orders = edd_get_orders( array(
-			'orderby' => 'user_id',
-			'order'   => 'desc',
-		) );
+		$orders = edd_get_orders(
+			array(
+				'orderby' => 'user_id',
+				'order'   => 'desc',
+			)
+		);
 
 		$this->assertTrue( $orders[0]->user_id > $orders[1]->user_id );
 	}
@@ -191,10 +218,12 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_orderby_customer_id_and_order_asc_should_return_true() {
-		$orders = edd_get_orders( array(
-			'orderby' => 'customer_id',
-			'order'   => 'asc',
-		) );
+		$orders = edd_get_orders(
+			array(
+				'orderby' => 'customer_id',
+				'order'   => 'asc',
+			)
+		);
 
 		$this->assertTrue( $orders[0]->customer_id < $orders[1]->customer_id );
 	}
@@ -203,10 +232,12 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_orderby_customer_id_and_order_desc_should_return_true() {
-		$orders = edd_get_orders( array(
-			'orderby' => 'customer_id',
-			'order'   => 'desc',
-		) );
+		$orders = edd_get_orders(
+			array(
+				'orderby' => 'customer_id',
+				'order'   => 'desc',
+			)
+		);
 
 		$this->assertTrue( $orders[0]->customer_id > $orders[1]->customer_id );
 	}
@@ -215,11 +246,13 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_customer_id__in_should_return_1() {
-		$orders = edd_get_orders( array(
-			'customer_id__in' => array(
-				\WP_UnitTest_Generator_Sequence::$incr,
-			),
-		) );
+		$orders = edd_get_orders(
+			array(
+				'customer_id__in' => array(
+					\WP_UnitTest_Generator_Sequence::$incr,
+				),
+			)
+		);
 
 		$this->assertCount( 1, $orders );
 	}
@@ -228,11 +261,13 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_customer_id__not_in_should_return_5() {
-		$orders = edd_get_orders( array(
-			'customer_id__not_in' => array(
-				999,
-			),
-		) );
+		$orders = edd_get_orders(
+			array(
+				'customer_id__not_in' => array(
+					999,
+				),
+			)
+		);
 
 		$this->assertCount( 5, $orders );
 	}
@@ -241,10 +276,12 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_orderby_email_and_order_asc_should_return_true() {
-		$orders = edd_get_orders( array(
-			'orderby' => 'email',
-			'order'   => 'asc',
-		) );
+		$orders = edd_get_orders(
+			array(
+				'orderby' => 'email',
+				'order'   => 'asc',
+			)
+		);
 
 		$this->assertTrue( $orders[0]->email < $orders[1]->email );
 	}
@@ -253,10 +290,12 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_orderby_email_and_order_desc_should_return_true() {
-		$orders = edd_get_orders( array(
-			'orderby' => 'email',
-			'order'   => 'desc',
-		) );
+		$orders = edd_get_orders(
+			array(
+				'orderby' => 'email',
+				'order'   => 'desc',
+			)
+		);
 
 		$this->assertTrue( $orders[0]->email > $orders[1]->email );
 	}
@@ -265,11 +304,13 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_email__in_should_return_1() {
-		$orders = edd_get_orders( array(
-			'email__in' => array(
-				'user' . \WP_UnitTest_Generator_Sequence::$incr . '@edd.test',
-			),
-		) );
+		$orders = edd_get_orders(
+			array(
+				'email__in' => array(
+					'user' . \WP_UnitTest_Generator_Sequence::$incr . '@edd.test',
+				),
+			)
+		);
 
 		$this->assertCount( 1, $orders );
 	}
@@ -278,11 +319,13 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_email__not_in_should_return_5() {
-		$orders = edd_get_orders( array(
-			'email__not_in' => array(
-				'user999@edd.test',
-			),
-		) );
+		$orders = edd_get_orders(
+			array(
+				'email__not_in' => array(
+					'user999@edd.test',
+				),
+			)
+		);
 
 		$this->assertCount( 5, $orders );
 	}
@@ -291,9 +334,11 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_invalid_id_should_return_0() {
-		$orders = edd_get_orders( array(
-			'id' => 999,
-		) );
+		$orders = edd_get_orders(
+			array(
+				'id' => 999,
+			)
+		);
 
 		$this->assertCount( 0, $orders );
 	}
@@ -302,9 +347,11 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_invalid_parent_should_return_0() {
-		$orders = edd_get_orders( array(
-			'parent' => 999,
-		) );
+		$orders = edd_get_orders(
+			array(
+				'parent' => 999,
+			)
+		);
 
 		$this->assertCount( 0, $orders );
 	}
@@ -313,9 +360,11 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_invalid_status_should_return_0() {
-		$orders = edd_get_orders( array(
-			'status' => 'invalid_status',
-		) );
+		$orders = edd_get_orders(
+			array(
+				'status' => 'invalid_status',
+			)
+		);
 
 		$this->assertCount( 0, $orders );
 	}
@@ -324,9 +373,11 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_invalid_date_created_should_return_0() {
-		$orders = edd_get_orders( array(
-			'date_created' => '2250-01-01 23:59:59',
-		) );
+		$orders = edd_get_orders(
+			array(
+				'date_created' => '2250-01-01 23:59:59',
+			)
+		);
 
 		$this->assertCount( 0, $orders );
 	}
@@ -335,9 +386,11 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_invalid_date_modified_should_return_0() {
-		$orders = edd_get_orders( array(
-			'date_modified' => '2250-01-01 23:59:59',
-		) );
+		$orders = edd_get_orders(
+			array(
+				'date_modified' => '2250-01-01 23:59:59',
+			)
+		);
 
 		$this->assertCount( 0, $orders );
 	}
@@ -346,9 +399,11 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_invalid_date_completed_should_return_0() {
-		$orders = edd_get_orders( array(
-			'date_completed' => '2250-01-01 23:59:59',
-		) );
+		$orders = edd_get_orders(
+			array(
+				'date_completed' => '2250-01-01 23:59:59',
+			)
+		);
 
 		$this->assertCount( 0, $orders );
 	}
@@ -357,9 +412,11 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_invalid_date_refundable_should_return_0() {
-		$orders = edd_get_orders( array(
-			'date_refundable' => '2250-01-01 23:59:59',
-		) );
+		$orders = edd_get_orders(
+			array(
+				'date_refundable' => '2250-01-01 23:59:59',
+			)
+		);
 
 		$this->assertCount( 0, $orders );
 	}
@@ -368,9 +425,11 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_invalid_user_id_should_return_0() {
-		$orders = edd_get_orders( array(
-			'user_id' => 999,
-		) );
+		$orders = edd_get_orders(
+			array(
+				'user_id' => 999,
+			)
+		);
 
 		$this->assertCount( 0, $orders );
 	}
@@ -379,9 +438,11 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_invalid_customer_id_should_return_0() {
-		$orders = edd_get_orders( array(
-			'customer_id' => 999,
-		) );
+		$orders = edd_get_orders(
+			array(
+				'customer_id' => 999,
+			)
+		);
 
 		$this->assertCount( 0, $orders );
 	}
@@ -390,9 +451,11 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_invalid_email_should_return_0() {
-		$orders = edd_get_orders( array(
-			'email' => 'invalid_email@domain.test',
-		) );
+		$orders = edd_get_orders(
+			array(
+				'email' => 'invalid_email@domain.test',
+			)
+		);
 
 		$this->assertCount( 0, $orders );
 	}
@@ -401,9 +464,11 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_invalid_ip_should_return_0() {
-		$orders = edd_get_orders( array(
-			'ip' => '255.255.255.255',
-		) );
+		$orders = edd_get_orders(
+			array(
+				'ip' => '255.255.255.255',
+			)
+		);
 
 		$this->assertCount( 0, $orders );
 	}
@@ -412,9 +477,11 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_invalid_gateway_should_return_0() {
-		$orders = edd_get_orders( array(
-			'gateway' => 'invalid',
-		) );
+		$orders = edd_get_orders(
+			array(
+				'gateway' => 'invalid',
+			)
+		);
 
 		$this->assertCount( 0, $orders );
 	}
@@ -423,9 +490,11 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_invalid_mode_should_return_0() {
-		$orders = edd_get_orders( array(
-			'mode' => 'invalid',
-		) );
+		$orders = edd_get_orders(
+			array(
+				'mode' => 'invalid',
+			)
+		);
 
 		$this->assertCount( 0, $orders );
 	}
@@ -434,9 +503,11 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_invalid_currency_should_return_0() {
-		$orders = edd_get_orders( array(
-			'currency' => 'ABC',
-		) );
+		$orders = edd_get_orders(
+			array(
+				'currency' => 'ABC',
+			)
+		);
 
 		$this->assertCount( 0, $orders );
 	}
@@ -445,9 +516,11 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_invalid_payment_key_should_return_0() {
-		$orders = edd_get_orders( array(
-			'payment_key' => 'INVALID',
-		) );
+		$orders = edd_get_orders(
+			array(
+				'payment_key' => 'INVALID',
+			)
+		);
 
 		$this->assertCount( 0, $orders );
 	}
@@ -456,9 +529,11 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_invalid_subtotal_should_return_0() {
-		$orders = edd_get_orders( array(
-			'subtotal' => -999,
-		) );
+		$orders = edd_get_orders(
+			array(
+				'subtotal' => -999,
+			)
+		);
 
 		$this->assertCount( 0, $orders );
 	}
@@ -467,9 +542,11 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_invalid_tax_should_return_0() {
-		$orders = edd_get_orders( array(
-			'tax' => -999,
-		) );
+		$orders = edd_get_orders(
+			array(
+				'tax' => -999,
+			)
+		);
 
 		$this->assertCount( 0, $orders );
 	}
@@ -478,9 +555,11 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_invalid_discount_should_return_0() {
-		$orders = edd_get_orders( array(
-			'discount' => -999,
-		) );
+		$orders = edd_get_orders(
+			array(
+				'discount' => -999,
+			)
+		);
 
 		$this->assertCount( 0, $orders );
 	}
@@ -489,9 +568,11 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_invalid_total_should_return_0() {
-		$orders = edd_get_orders( array(
-			'total' => -999,
-		) );
+		$orders = edd_get_orders(
+			array(
+				'total' => -999,
+			)
+		);
 
 		$this->assertCount( 0, $orders );
 	}

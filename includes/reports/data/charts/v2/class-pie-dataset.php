@@ -27,8 +27,9 @@ class Pie_Dataset extends Dataset {
 	 * @var   array
 	 */
 	protected $fields = array(
-		'hoverBackgroundColor', 'hoverBorderColor',
-		'hoverBorderWidth'
+		'hoverBackgroundColor',
+		'hoverBorderColor',
+		'hoverBorderWidth',
 	);
 
 }

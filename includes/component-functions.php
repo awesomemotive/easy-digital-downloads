@@ -24,7 +24,7 @@
  * @package     EDD
  * @subpackage  Functions/Components
  * @since       3.0
-*/
+ */
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -48,14 +48,17 @@ function edd_register_component( $name = '', $args = array() ) {
 	}
 
 	// Parse arguments
-	$r = wp_parse_args( $args, array(
-		'name'   => $name,
-		'schema' => '\\EDD\\Database\\Schema',
-		'table'  => '\\EDD\\Database\\Table',
-		'query'  => '\\EDD\\Database\\Query',
-		'object' => '\\EDD\\Database\\Row',
-		'meta'   => false
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'name'   => $name,
+			'schema' => '\\EDD\\Database\\Schema',
+			'table'  => '\\EDD\\Database\\Table',
+			'query'  => '\\EDD\\Database\\Query',
+			'object' => '\\EDD\\Database\\Row',
+			'meta'   => false,
+		)
+	);
 
 	// Setup the component
 	EDD()->components[ $name ] = new EDD\Component( $r );
@@ -115,121 +118,160 @@ function edd_setup_components() {
 	}
 
 	// Register customer.
-	edd_register_component( 'customer', array(
-		'schema' => '\\EDD\\Database\\Schema\\Customers',
-		'table'  => '\\EDD\\Database\\Tables\\Customers',
-		'meta'   => '\\EDD\\Database\\Tables\\Customer_Meta',
-		'query'  => '\\EDD\\Database\\Queries\\Customer',
-		'object' => 'EDD_Customer'
-	) );
+	edd_register_component(
+		'customer',
+		array(
+			'schema' => '\\EDD\\Database\\Schema\\Customers',
+			'table'  => '\\EDD\\Database\\Tables\\Customers',
+			'meta'   => '\\EDD\\Database\\Tables\\Customer_Meta',
+			'query'  => '\\EDD\\Database\\Queries\\Customer',
+			'object' => 'EDD_Customer',
+		)
+	);
 
 	// Register customer address.
-	edd_register_component( 'customer_address', array(
-		'schema' => '\\EDD\\Database\\Schema\\Customer_Addresses',
-		'table'  => '\\EDD\\Database\\Tables\\Customer_Addresses',
-		'query'  => '\\EDD\\Database\\Queries\\Customer_Address',
-		'object' => '\\EDD\\Customers\\Customer_Address',
-		'meta'   => false
-	) );
+	edd_register_component(
+		'customer_address',
+		array(
+			'schema' => '\\EDD\\Database\\Schema\\Customer_Addresses',
+			'table'  => '\\EDD\\Database\\Tables\\Customer_Addresses',
+			'query'  => '\\EDD\\Database\\Queries\\Customer_Address',
+			'object' => '\\EDD\\Customers\\Customer_Address',
+			'meta'   => false,
+		)
+	);
 
 	// Register customer email address.
-	edd_register_component( 'customer_email_address', array(
-		'schema' => '\\EDD\\Database\\Schema\\Customer_Email_Addresses',
-		'table'  => '\\EDD\\Database\\Tables\\Customer_Email_Addresses',
-		'query'  => '\\EDD\\Database\\Queries\\Customer_Email_Address',
-		'object' => '\\EDD\\Customers\\Customer_Email_Address',
-		'meta'   => false
-	) );
+	edd_register_component(
+		'customer_email_address',
+		array(
+			'schema' => '\\EDD\\Database\\Schema\\Customer_Email_Addresses',
+			'table'  => '\\EDD\\Database\\Tables\\Customer_Email_Addresses',
+			'query'  => '\\EDD\\Database\\Queries\\Customer_Email_Address',
+			'object' => '\\EDD\\Customers\\Customer_Email_Address',
+			'meta'   => false,
+		)
+	);
 
 	// Register adjustment.
-	edd_register_component( 'adjustment', array(
-		'schema' => '\\EDD\\Database\\Schema\\Adjustments',
-		'table'  => '\\EDD\\Database\\Tables\\Adjustments',
-		'meta'   => '\\EDD\\Database\\Tables\\Adjustment_Meta',
-		'query'  => '\\EDD\\Database\\Queries\\Adjustment',
-		'object' => '\\EDD\\Adjustments\\Adjustment'
-	) );
+	edd_register_component(
+		'adjustment',
+		array(
+			'schema' => '\\EDD\\Database\\Schema\\Adjustments',
+			'table'  => '\\EDD\\Database\\Tables\\Adjustments',
+			'meta'   => '\\EDD\\Database\\Tables\\Adjustment_Meta',
+			'query'  => '\\EDD\\Database\\Queries\\Adjustment',
+			'object' => '\\EDD\\Adjustments\\Adjustment',
+		)
+	);
 
 	// Register note.
-	edd_register_component( 'note', array(
-		'schema' => '\\EDD\\Database\\Schema\\Notes',
-		'table'  => '\\EDD\\Database\\Tables\\Notes',
-		'meta'   => '\\EDD\\Database\\Tables\\Note_Meta',
-		'query'  => '\\EDD\\Database\\Queries\\Note',
-		'object' => '\\EDD\\Notes\\Note'
-	) );
+	edd_register_component(
+		'note',
+		array(
+			'schema' => '\\EDD\\Database\\Schema\\Notes',
+			'table'  => '\\EDD\\Database\\Tables\\Notes',
+			'meta'   => '\\EDD\\Database\\Tables\\Note_Meta',
+			'query'  => '\\EDD\\Database\\Queries\\Note',
+			'object' => '\\EDD\\Notes\\Note',
+		)
+	);
 
 	// Register order.
-	edd_register_component( 'order', array(
-		'schema' => '\\EDD\\Database\\Schema\\Orders',
-		'table'  => '\\EDD\\Database\\Tables\\Orders',
-		'meta'   => '\\EDD\\Database\\Tables\\Order_Meta',
-		'query'  => '\\EDD\\Database\\Queries\\Order',
-		'object' => '\\EDD\\Orders\\Order'
-	) );
+	edd_register_component(
+		'order',
+		array(
+			'schema' => '\\EDD\\Database\\Schema\\Orders',
+			'table'  => '\\EDD\\Database\\Tables\\Orders',
+			'meta'   => '\\EDD\\Database\\Tables\\Order_Meta',
+			'query'  => '\\EDD\\Database\\Queries\\Order',
+			'object' => '\\EDD\\Orders\\Order',
+		)
+	);
 
 	// Register order item.
-	edd_register_component( 'order_item', array(
-		'schema' => '\\EDD\\Database\\Schema\\Order_Items',
-		'table'  => '\\EDD\\Database\\Tables\\Order_Items',
-		'meta'   => '\\EDD\\Database\\Tables\\Order_Item_Meta',
-		'query'  => '\\EDD\\Database\\Queries\\Order_Item',
-		'object' => '\\EDD\\Orders\\Order_Item'
-	) );
+	edd_register_component(
+		'order_item',
+		array(
+			'schema' => '\\EDD\\Database\\Schema\\Order_Items',
+			'table'  => '\\EDD\\Database\\Tables\\Order_Items',
+			'meta'   => '\\EDD\\Database\\Tables\\Order_Item_Meta',
+			'query'  => '\\EDD\\Database\\Queries\\Order_Item',
+			'object' => '\\EDD\\Orders\\Order_Item',
+		)
+	);
 
 	// Register order adjustment.
-	edd_register_component( 'order_adjustment', array(
-		'schema' => '\\EDD\\Database\\Schema\\Order_Adjustments',
-		'table'  => '\\EDD\\Database\\Tables\\Order_Adjustments',
-		'meta'   => '\\EDD\\Database\\Tables\\Order_Adjustment_Meta',
-		'query'  => '\\EDD\\Database\\Queries\\Order_Adjustment',
-		'object' => '\\EDD\\Orders\\Order_Adjustment',
-	) );
+	edd_register_component(
+		'order_adjustment',
+		array(
+			'schema' => '\\EDD\\Database\\Schema\\Order_Adjustments',
+			'table'  => '\\EDD\\Database\\Tables\\Order_Adjustments',
+			'meta'   => '\\EDD\\Database\\Tables\\Order_Adjustment_Meta',
+			'query'  => '\\EDD\\Database\\Queries\\Order_Adjustment',
+			'object' => '\\EDD\\Orders\\Order_Adjustment',
+		)
+	);
 
 	// Register order address.
-	edd_register_component( 'order_address', array(
-		'schema' => '\\EDD\\Database\\Schema\\Order_Addresses',
-		'table'  => '\\EDD\\Database\\Tables\\Order_Addresses',
-		'query'  => '\\EDD\\Database\\Queries\\Order_Address',
-		'object' => '\\EDD\\Orders\\Order_Address',
-		'meta'   => false
-	) );
+	edd_register_component(
+		'order_address',
+		array(
+			'schema' => '\\EDD\\Database\\Schema\\Order_Addresses',
+			'table'  => '\\EDD\\Database\\Tables\\Order_Addresses',
+			'query'  => '\\EDD\\Database\\Queries\\Order_Address',
+			'object' => '\\EDD\\Orders\\Order_Address',
+			'meta'   => false,
+		)
+	);
 
 	// Register order transaction.
-	edd_register_component( 'order_transaction', array(
-		'schema' => '\\EDD\\Database\\Schema\\Order_Transactions',
-		'table'  => '\\EDD\\Database\\Tables\\Order_Transactions',
-		'query'  => '\\EDD\\Database\\Queries\\Order_Transaction',
-		'object' => '\\EDD\\Orders\\Order_Transaction',
-		'meta'   => false
-	) );
+	edd_register_component(
+		'order_transaction',
+		array(
+			'schema' => '\\EDD\\Database\\Schema\\Order_Transactions',
+			'table'  => '\\EDD\\Database\\Tables\\Order_Transactions',
+			'query'  => '\\EDD\\Database\\Queries\\Order_Transaction',
+			'object' => '\\EDD\\Orders\\Order_Transaction',
+			'meta'   => false,
+		)
+	);
 
 	// Register log.
-	edd_register_component( 'log', array(
-		'schema' => '\\EDD\\Database\\Schema\\Logs',
-		'table'  => '\\EDD\\Database\\Tables\\Logs',
-		'meta'   => '\\EDD\\Database\\Tables\\Log_Meta',
-		'query'  => '\\EDD\\Database\\Queries\\Log',
-		'object' => '\\EDD\\Logs\\Log'
-	) );
+	edd_register_component(
+		'log',
+		array(
+			'schema' => '\\EDD\\Database\\Schema\\Logs',
+			'table'  => '\\EDD\\Database\\Tables\\Logs',
+			'meta'   => '\\EDD\\Database\\Tables\\Log_Meta',
+			'query'  => '\\EDD\\Database\\Queries\\Log',
+			'object' => '\\EDD\\Logs\\Log',
+		)
+	);
 
 	// Register log API request.
-	edd_register_component( 'log_api_request', array(
-		'schema' => '\\EDD\\Database\\Schema\\Logs_Api_Requests',
-		'table'  => '\\EDD\\Database\\Tables\\Logs_Api_Requests',
-		'query'  => '\\EDD\\Database\\Queries\\Log_Api_Request',
-		'object' => '\\EDD\\Logs\\Api_Request_Log',
-		'meta'   => false
-	) );
+	edd_register_component(
+		'log_api_request',
+		array(
+			'schema' => '\\EDD\\Database\\Schema\\Logs_Api_Requests',
+			'table'  => '\\EDD\\Database\\Tables\\Logs_Api_Requests',
+			'query'  => '\\EDD\\Database\\Queries\\Log_Api_Request',
+			'object' => '\\EDD\\Logs\\Api_Request_Log',
+			'meta'   => false,
+		)
+	);
 
 	// Register log file download.
-	edd_register_component( 'log_file_download', array(
-		'schema' => '\\EDD\\Database\\Schema\\Logs_File_Downloads',
-		'table'  => '\\EDD\\Database\\Tables\\Logs_File_Downloads',
-		'query'  => '\\EDD\\Database\\Queries\\Log_File_Download',
-		'object' => '\\EDD\\Logs\\File_Download_Log',
-		'meta'   => false
-	) );
+	edd_register_component(
+		'log_file_download',
+		array(
+			'schema' => '\\EDD\\Database\\Schema\\Logs_File_Downloads',
+			'table'  => '\\EDD\\Database\\Tables\\Logs_File_Downloads',
+			'query'  => '\\EDD\\Database\\Queries\\Log_File_Download',
+			'object' => '\\EDD\\Logs\\File_Download_Log',
+			'meta'   => false,
+		)
+	);
 
 	// Set the locally static setup var.
 	$setup = true;

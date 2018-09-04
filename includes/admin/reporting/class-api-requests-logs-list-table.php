@@ -38,12 +38,12 @@ class EDD_API_Request_Log_Table extends EDD_Base_Log_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'ID'      => __( 'Log ID',          'easy-digital-downloads' ),
+			'ID'      => __( 'Log ID', 'easy-digital-downloads' ),
 			'details' => __( 'Request Details', 'easy-digital-downloads' ),
-			'version' => __( 'API Version',     'easy-digital-downloads' ),
-			'ip'      => __( 'Request IP',      'easy-digital-downloads' ),
-			'speed'   => __( 'Request Speed',   'easy-digital-downloads' ),
-			'date'    => __( 'Date',            'easy-digital-downloads' )
+			'version' => __( 'API Version', 'easy-digital-downloads' ),
+			'ip'      => __( 'Request IP', 'easy-digital-downloads' ),
+			'speed'   => __( 'Request Speed', 'easy-digital-downloads' ),
+			'date'    => __( 'Date', 'easy-digital-downloads' ),
 		);
 	}
 
@@ -64,7 +64,7 @@ class EDD_API_Request_Log_Table extends EDD_Base_Log_List_Table {
 	 *
 	 * @since 1.5
 	 *
-	 * @param array $item Contains all the data of the api request
+	 * @param array  $item Contains all the data of the api request
 	 * @param string $column_name The name of the column
 	 *
 	 * @return string Column Name
@@ -81,7 +81,7 @@ class EDD_API_Request_Log_Table extends EDD_Base_Log_List_Table {
 	 * @return void
 	 */
 	public function column_details( $item ) {
-	?>
+		?>
 		<a href="#TB_inline?width=640&amp;inlineId=log-details-<?php echo $item['ID']; ?>" class="thickbox"><?php _e( 'View Request', 'easy-digital-downloads' ); ?></a>
 		<div id="log-details-<?php echo $item['ID']; ?>" style="display:none;">
 			<?php
@@ -102,7 +102,7 @@ class EDD_API_Request_Log_Table extends EDD_Base_Log_List_Table {
 			echo '<div>' . $item['date'] . '</div>';
 			?>
 		</div>
-	<?php
+		<?php
 	}
 
 	/**
@@ -122,27 +122,27 @@ class EDD_API_Request_Log_Table extends EDD_Base_Log_List_Table {
 			if ( filter_var( $search, FILTER_VALIDATE_IP ) ) {
 				// This is an IP address search
 				$key = '_edd_log_request_ip';
-			} else if ( is_email( $search ) ) {
+			} elseif ( is_email( $search ) ) {
 				// This is an email search
 				$userdata = get_user_by( 'email', $search );
 
-				if( $userdata ) {
+				if ( $userdata ) {
 					$search = $userdata->ID;
 				}
 
 				$key = '_edd_log_user';
-			} elseif( strlen( $search ) == 32 ) {
+			} elseif ( strlen( $search ) == 32 ) {
 				// Look for an API key
 				$key = '_edd_log_key';
-			} elseif( stristr( $search, 'token:' ) ) {
+			} elseif ( stristr( $search, 'token:' ) ) {
 				// Look for an API token
 				$search = str_ireplace( 'token:', '', $search );
-				$key = '_edd_log_token';
+				$key    = '_edd_log_token';
 			} else {
 				// This is (probably) a user ID search
 				$userdata = get_userdata( $search );
 
-				if( $userdata ) {
+				if ( $userdata ) {
 					$search = $userdata->ID;
 				}
 

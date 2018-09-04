@@ -178,11 +178,11 @@ final class Init {
 			if ( has_action( "edd_reports_tab_{$report_id}" ) ) {
 				$hook = "edd_reports_tab_{$report_id}";
 
-			// Legacy "_view_" action
+				// Legacy "_view_" action
 			} elseif ( has_action( "edd_reports_view_{$report_id}" ) ) {
 				$hook = "edd_reports_view_{$report_id}";
 
-			// Skip
+				// Skip
 			} else {
 				continue;
 			}
@@ -209,13 +209,16 @@ final class Init {
 			$legacy_label = $label . '<span class="edd-legacy-label edd-chip">' . __( 'Legacy', 'easy-digital-downloads' ) . '</span>';
 
 			// Add report
-			$reports->add_report( $report_id, array(
-				'label'            => $legacy_label,
-				'group'            => 'core',
-				'icon'             => 'chart-area',
-				'priority'         => $priority,
-				'display_callback' => $callback
-			) );
+			$reports->add_report(
+				$report_id,
+				array(
+					'label'            => $legacy_label,
+					'group'            => 'core',
+					'icon'             => 'chart-area',
+					'priority'         => $priority,
+					'display_callback' => $callback,
+				)
+			);
 
 			// Bump the priority
 			++$priority;

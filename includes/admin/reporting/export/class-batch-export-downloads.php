@@ -107,12 +107,12 @@ class EDD_Batch_Downloads_Export extends EDD_Batch_Export {
 
 					if ( in_array( $key, $meta ) ) {
 						switch ( $key ) {
-							case '_thumbnail_id' :
+							case '_thumbnail_id':
 								$image_id    = get_post_thumbnail_id( $download->ID );
 								$row[ $key ] = wp_get_attachment_url( $image_id );
 								break;
 
-							case 'edd_price' :
+							case 'edd_price':
 								if ( edd_has_variable_prices( $download->ID ) ) {
 									$prices = array();
 									foreach ( edd_get_variable_prices( $download->ID ) as $price ) {
@@ -125,7 +125,7 @@ class EDD_Batch_Downloads_Export extends EDD_Batch_Export {
 								}
 								break;
 
-							case '_edd_files' :
+							case '_edd_files':
 								$files = array();
 
 								foreach ( edd_get_download_files( $download->ID ) as $file ) {
@@ -133,7 +133,7 @@ class EDD_Batch_Downloads_Export extends EDD_Batch_Export {
 
 									if ( edd_has_variable_prices( $download->ID ) ) {
 										$condition = isset( $file['condition'] ) ? $file['condition'] : 'all';
-										$f         .= ';' . $condition;
+										$f        .= ';' . $condition;
 									}
 
 									$files[] = $f;
@@ -144,7 +144,7 @@ class EDD_Batch_Downloads_Export extends EDD_Batch_Export {
 								$row[ $key ] = implode( ' | ', $files );
 								break;
 
-							default :
+							default:
 								$row[ $key ] = get_post_meta( $download->ID, $key, true );
 								break;
 						}

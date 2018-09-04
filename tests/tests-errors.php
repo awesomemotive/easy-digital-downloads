@@ -34,13 +34,13 @@ class Tests_Errors extends EDD_UnitTestCase {
 	}
 
 	public function test_unset_error() {
-		$error = edd_unset_error( 'invalid_email' );
+		$error  = edd_unset_error( 'invalid_email' );
 		$errors = EDD()->session->get( 'edd_errors' );
 
 		$expected = array(
-			'invalid_user' => 'The user information is invalid.',
+			'invalid_user'       => 'The user information is invalid.',
 			'username_incorrect' => 'The username you entered does not exist',
-			'password_incorrect' => 'The password you entered is incorrect'
+			'password_incorrect' => 'The password you entered is incorrect',
 		);
 
 		$this->assertEquals( $expected, $errors );

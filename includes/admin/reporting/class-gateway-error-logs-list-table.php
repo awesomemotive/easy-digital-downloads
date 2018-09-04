@@ -46,14 +46,14 @@ class EDD_Gateway_Error_Log_Table extends EDD_Base_Log_List_Table {
 	 *
 	 * @since 1.4
 	 *
-	 * @param array $item Contains all the data of the log item
+	 * @param array  $item Contains all the data of the log item
 	 * @param string $column_name The name of the column
 	 *
 	 * @return string Column Name
 	 */
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
-			case 'error' :
+			case 'error':
 				return get_the_title( $item['ID'] ) ? get_the_title( $item['ID'] ) : __( 'Payment Error', 'easy-digital-downloads' );
 			default:
 				return $item[ $column_name ];
@@ -68,7 +68,7 @@ class EDD_Gateway_Error_Log_Table extends EDD_Base_Log_List_Table {
 	 * @return void
 	 */
 	public function column_message( $item ) {
-	?>
+		?>
 		<a href="#TB_inline?width=640&amp;inlineId=log-message-<?php echo $item['ID']; ?>" class="thickbox"><?php _e( 'View Log Message', 'easy-digital-downloads' ); ?></a>
 		<div id="log-message-<?php echo $item['ID']; ?>" style="display:none;">
 			<?php
@@ -91,7 +91,7 @@ class EDD_Gateway_Error_Log_Table extends EDD_Base_Log_List_Table {
 			}
 			?>
 		</div>
-	<?php
+		<?php
 	}
 
 	/**
@@ -102,12 +102,12 @@ class EDD_Gateway_Error_Log_Table extends EDD_Base_Log_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'ID'         => __( 'Log ID',        'easy-digital-downloads' ),
-			'payment_id' => __( 'Order Number',  'easy-digital-downloads' ),
-			'error'      => __( 'Error',         'easy-digital-downloads' ),
+			'ID'         => __( 'Log ID', 'easy-digital-downloads' ),
+			'payment_id' => __( 'Order Number', 'easy-digital-downloads' ),
+			'error'      => __( 'Error', 'easy-digital-downloads' ),
 			'message'    => __( 'Error Message', 'easy-digital-downloads' ),
-			'gateway'    => __( 'Gateway',       'easy-digital-downloads' ),
-			'date'       => __( 'Date',          'easy-digital-downloads' )
+			'gateway'    => __( 'Gateway', 'easy-digital-downloads' ),
+			'date'       => __( 'Date', 'easy-digital-downloads' ),
 		);
 	}
 
@@ -115,7 +115,7 @@ class EDD_Gateway_Error_Log_Table extends EDD_Base_Log_List_Table {
 	 * Gets the log entries for the current view
 	 *
 	 * @since 1.4
-	 * @param  array  $log_query Query arguments
+	 * @param  array $log_query Query arguments
 	 * @global object $edd_logs EDD Logs Object
 	 * @return array $logs_data Array of all the Log entries
 	 */

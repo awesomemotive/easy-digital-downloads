@@ -11,11 +11,11 @@ class Tests_Scripts extends EDD_UnitTestCase {
 	 * @since 2.3.6
 	 */
 	public function test_file_hooks() {
-		$this->assertNotFalse( has_action( 'wp_enqueue_scripts',  'edd_load_scripts'         ) );
-		$this->assertNotFalse( has_action( 'wp_enqueue_scripts',  'edd_register_styles'      ) );
-		$this->assertNotFalse( has_action( 'admin_print_scripts', 'edd_print_admin_scripts'  ) );
-		$this->assertNotFalse( has_action( 'admin_print_styles',  'edd_print_admin_styles'   ) );
-		$this->assertNotFalse( has_action( 'admin_head',          'edd_admin_downloads_icon' ) );
+		$this->assertNotFalse( has_action( 'wp_enqueue_scripts', 'edd_load_scripts' ) );
+		$this->assertNotFalse( has_action( 'wp_enqueue_scripts', 'edd_register_styles' ) );
+		$this->assertNotFalse( has_action( 'admin_print_scripts', 'edd_print_admin_scripts' ) );
+		$this->assertNotFalse( has_action( 'admin_print_styles', 'edd_print_admin_styles' ) );
+		$this->assertNotFalse( has_action( 'admin_head', 'edd_admin_downloads_icon' ) );
 	}
 
 	/**
@@ -62,7 +62,6 @@ class Tests_Scripts extends EDD_UnitTestCase {
 	 * @since 2.3.6
 	 */
 	public function test_register_styles() {
-
 		edd_update_option( 'disable_styles', false );
 		edd_register_styles();
 
@@ -97,7 +96,7 @@ class Tests_Scripts extends EDD_UnitTestCase {
 		// Prepare test
 		global $pagenow;
 		$origin_pagenow = $pagenow;
-		$pagenow = 'dashboard';
+		$pagenow        = 'dashboard';
 
 		if ( ! function_exists( 'edd_is_admin_page' ) ) {
 			include EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php';
@@ -128,13 +127,13 @@ class Tests_Scripts extends EDD_UnitTestCase {
 	 */
 	public function _admin_scripts_dp() {
 		return array(
-			array( 'jquery-chosen',        'enqueued' ),
-			array( 'edd-admin-scripts',    'enqueued' ),
-			array( 'colorbox',             'enqueued' ),
+			array( 'jquery-chosen', 'enqueued' ),
+			array( 'edd-admin-scripts', 'enqueued' ),
+			array( 'colorbox', 'enqueued' ),
 			array( 'jquery-ui-datepicker', 'enqueued' ),
-			array( 'jquery-ui-dialog',     'enqueued' ),
-			array( 'media-upload',         'enqueued' ),
-			array( 'thickbox',             'enqueued' ),
+			array( 'jquery-ui-dialog', 'enqueued' ),
+			array( 'media-upload', 'enqueued' ),
+			array( 'thickbox', 'enqueued' ),
 		);
 	}
 
@@ -156,11 +155,11 @@ class Tests_Scripts extends EDD_UnitTestCase {
 	 */
 	public function _admin_styles_dp() {
 		return array(
-			array( 'jquery-chosen',   'enqueued' ),
+			array( 'jquery-chosen', 'enqueued' ),
 			array( 'wp-color-picker', 'enqueued' ),
-			array( 'colorbox',        'enqueued' ),
-			array( 'thickbox',        'enqueued' ),
-			array( 'edd-admin',       'enqueued' ),
+			array( 'colorbox', 'enqueued' ),
+			array( 'thickbox', 'enqueued' ),
+			array( 'edd-admin', 'enqueued' ),
 		);
 	}
 

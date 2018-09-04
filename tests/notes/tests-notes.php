@@ -46,26 +46,30 @@ class Tests_Notes extends Ajax_UnitTestCase {
 	public static function wpSetUpBeforeClass() {
 		wp_set_current_user( 1 );
 
-		self::$discount = self::edd()->discount->create_and_get( array(
-			'name'              => '20 Percent Off',
-			'code'              => '20OFF',
-			'status'            => 'active',
-			'type'              => 'percent',
-			'amount'            => '20',
-			'use_count'         => 54,
-			'max_uses'          => 10,
-			'min_cart_price'    => 128,
-			'product_condition' => 'all',
-			'start_date'        => '2010-12-12 00:00:00',
-			'end_date'          => '2050-12-31 23:59:59'
-		) );
+		self::$discount = self::edd()->discount->create_and_get(
+			array(
+				'name'              => '20 Percent Off',
+				'code'              => '20OFF',
+				'status'            => 'active',
+				'type'              => 'percent',
+				'amount'            => '20',
+				'use_count'         => 54,
+				'max_uses'          => 10,
+				'min_cart_price'    => 128,
+				'product_condition' => 'all',
+				'start_date'        => '2010-12-12 00:00:00',
+				'end_date'          => '2050-12-31 23:59:59',
+			)
+		);
 
-		self::$note = self::edd()->note->create_and_get( array(
-			'object_id'   => self::$discount->id,
-			'object_type' => 'discount',
-			'content'     => 'Test note content.',
-			'user_id'     => get_current_user_id()
-		) );
+		self::$note = self::edd()->note->create_and_get(
+			array(
+				'object_id'   => self::$discount->id,
+				'object_type' => 'discount',
+				'content'     => 'Test note content.',
+				'user_id'     => get_current_user_id(),
+			)
+		);
 	}
 
 	/**
@@ -73,10 +77,11 @@ class Tests_Notes extends Ajax_UnitTestCase {
 	 */
 	public function test_add_discount_note_with_no_args_should_die() {
 		$_POST['nonce'] = wp_create_nonce( 'edd_note' );
-		$e = false;
+		$e              = false;
 		try {
 			$this->_handleAjax( 'edd_add_note' );
-		} catch ( \WPAjaxDieStopException $e ) { }
+		} catch ( \WPAjaxDieStopException $e ) {
+		}
 
 		$this->assertSame( '-1', $e->getMessage() );
 	}
@@ -94,7 +99,8 @@ class Tests_Notes extends Ajax_UnitTestCase {
 
 		try {
 			$this->_handleAjax( 'edd_add_note' );
-		} catch ( \WPAjaxDieStopException $e ) { }
+		} catch ( \WPAjaxDieStopException $e ) {
+		}
 
 		$this->assertSame( '-1', $e->getMessage() );
 	}
@@ -111,7 +117,8 @@ class Tests_Notes extends Ajax_UnitTestCase {
 
 		try {
 			$this->_handleAjax( 'edd_add_note' );
-		} catch ( \WPAjaxDieStopException $e ) { }
+		} catch ( \WPAjaxDieStopException $e ) {
+		}
 
 		$this->assertSame( '-1', $e->getMessage() );
 	}
@@ -144,7 +151,8 @@ class Tests_Notes extends Ajax_UnitTestCase {
 
 		try {
 			$this->_handleAjax( 'edd_delete_note' );
-		} catch ( \WPAjaxDieStopException $e ) { }
+		} catch ( \WPAjaxDieStopException $e ) {
+		}
 
 		$this->assertSame( '-1', $e->getMessage() );
 	}
@@ -160,8 +168,9 @@ class Tests_Notes extends Ajax_UnitTestCase {
 
 		try {
 			$this->_handleAjax( 'edd_delete_note' );
-		} catch ( \WPAjaxDieStopException $e ) { }
-		
+		} catch ( \WPAjaxDieStopException $e ) {
+		}
+
 		$this->assertSame( '-1', $e->getMessage() );
 	}
 
@@ -176,7 +185,8 @@ class Tests_Notes extends Ajax_UnitTestCase {
 
 		try {
 			$this->_handleAjax( 'edd_delete_note' );
-		} catch ( \WPAjaxDieStopException $e ) { }
+		} catch ( \WPAjaxDieStopException $e ) {
+		}
 
 		$this->assertSame( '0', $e->getMessage() );
 	}
@@ -192,7 +202,8 @@ class Tests_Notes extends Ajax_UnitTestCase {
 
 		try {
 			$this->_handleAjax( 'edd_delete_note' );
-		} catch ( \WPAjaxDieStopException $e ) {}
+		} catch ( \WPAjaxDieStopException $e ) {
+		}
 
 		$this->assertSame( '1', $e->getMessage() );
 	}

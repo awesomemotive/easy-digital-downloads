@@ -2,7 +2,7 @@
 namespace EDD\Reports\Data\Charts\v2;
 
 if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
+	require_once EDD_PLUGIN_DIR . 'includes/reports/class-init.php';
 }
 
 new \EDD\Reports\Init();
@@ -22,8 +22,9 @@ class Pie_Dataset_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_default_fields() {
 		$expected = array(
-			'hoverBackgroundColor', 'hoverBorderColor',
-			'hoverBorderWidth'
+			'hoverBackgroundColor',
+			'hoverBorderColor',
+			'hoverBorderWidth',
 		);
 
 		$pie_dataset = $this->getMockBuilder( 'EDD\\Reports\\Data\\Charts\\v2\\Pie_Dataset' )

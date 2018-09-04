@@ -357,7 +357,7 @@ class Utilities {
 		if ( ! empty( $timezone ) ) {
 			$retval = $timezone;
 
-		// Use GMT offset to calculate from list
+			// Use GMT offset to calculate from list
 		} elseif ( ! empty( $gmt_offset ) ) {
 
 			// Attempt to guess the timezone string from the GMT offset & DST

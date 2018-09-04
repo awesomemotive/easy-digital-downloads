@@ -100,7 +100,6 @@ add_action( 'pre_get_posts', 'edd_unset_discount_query_arg', 999999 );
  * @return string
  */
 function edd_prevent_canonical_redirect( $redirect_url, $requested_url ) {
-
 	if ( ! is_front_page() ) {
 		return $redirect_url;
 	}

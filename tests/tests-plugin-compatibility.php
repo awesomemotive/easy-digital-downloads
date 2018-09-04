@@ -11,7 +11,6 @@ class Tests_Plugin_Compatibility extends EDD_UnitTestCase {
 	 * @since 2.3
 	 */
 	public function test_file_hooks() {
-
 		$this->assertNotFalse( has_action( 'load-edit.php', 'edd_remove_post_types_order' ) );
 		$this->assertNotFalse( has_action( 'template_redirect', 'edd_disable_jetpack_og_on_checkout' ) );
 		$this->assertNotFalse( has_filter( 'edd_settings_misc', 'edd_append_no_cache_param' ) );
@@ -20,7 +19,6 @@ class Tests_Plugin_Compatibility extends EDD_UnitTestCase {
 		$this->assertNotFalse( has_action( 'template_redirect', 'edd_disable_woo_ssl_on_checkout' ) );
 		$this->assertNotFalse( has_action( 'edd_email_send_before', 'edd_disable_mandrill_nl2br' ) );
 		$this->assertNotFalse( has_action( 'template_redirect', 'edd_disable_404_redirected_redirect' ) );
-
 	}
 
 	/**
@@ -29,10 +27,8 @@ class Tests_Plugin_Compatibility extends EDD_UnitTestCase {
 	 * @since 2.3
 	 */
 	public function test_remove_post_types_order() {
-
 		edd_remove_post_types_order();
 		$this->assertFalse( has_filter( 'posts_orderby', 'CPTOrderPosts' ) );
-
 	}
 
 	/**
@@ -41,11 +37,9 @@ class Tests_Plugin_Compatibility extends EDD_UnitTestCase {
 	 * @since 2.3
 	 */
 	public function test_disable_jetpack_og_on_checkout() {
-
 		$this->go_to( get_permalink( edd_get_option( 'purchase_page' ) ) );
 		edd_disable_jetpack_og_on_checkout();
 		$this->assertFalse( has_action( 'wp_head', 'jetpack_og_tags' ) );
-
 	}
 
 	/**
@@ -54,9 +48,7 @@ class Tests_Plugin_Compatibility extends EDD_UnitTestCase {
 	 * @since 2.3
 	 */
 	public function test_is_caching_plugin_active_false() {
-
 		$this->assertFalse( edd_is_caching_plugin_active() );
-
 	}
 
 	/**
@@ -65,10 +57,8 @@ class Tests_Plugin_Compatibility extends EDD_UnitTestCase {
 	 * @since 2.3
 	 */
 	public function test_is_caching_plugin_active_true() {
-
 		define( 'W3TC', true );
 		$this->assertTrue( edd_is_caching_plugin_active() );
-
 	}
 
 	/**
@@ -77,16 +67,19 @@ class Tests_Plugin_Compatibility extends EDD_UnitTestCase {
 	 * @since 2.3
 	 */
 	public function test_append_no_cache_param() {
-
 		$settings = edd_append_no_cache_param( $settings = array() );
 
-		$this->assertEquals( $settings, array( array(
-			'id'   => 'no_cache_checkout',
-			'name' => __('No Caching on Checkout?','easy-digital-downloads' ),
-			'desc' => __('Check this box in order to append a ?nocache parameter to the checkout URL to prevent caching plugins from caching the page.','easy-digital-downloads' ),
-			'type' => 'checkbox'
-		) ) );
-
+		$this->assertEquals(
+			$settings,
+			array(
+				array(
+					'id'   => 'no_cache_checkout',
+					'name' => __( 'No Caching on Checkout?', 'easy-digital-downloads' ),
+					'desc' => __( 'Check this box in order to append a ?nocache parameter to the checkout URL to prevent caching plugins from caching the page.', 'easy-digital-downloads' ),
+					'type' => 'checkbox',
+				),
+			)
+		);
 	}
 
 	/**
@@ -95,11 +88,9 @@ class Tests_Plugin_Compatibility extends EDD_UnitTestCase {
 	 * @since 2.3
 	 */
 	public function test_qtranslate_content() {
-
 		define( 'QT_LANGUAGE', true );
 		$content = edd_qtranslate_content( $content = 'This is some test content' );
 		$this->assertEquals( $content, 'This is some test content' );
-
 	}
 
 	/**
@@ -108,13 +99,11 @@ class Tests_Plugin_Compatibility extends EDD_UnitTestCase {
 	 * @since 2.3
 	 */
 	public function test_disable_woo_ssl_on_checkout() {
-
 		$this->go_to( get_permalink( edd_get_option( 'purchase_page' ) ) );
 		add_filter( 'edd_is_ssl_enforced', '__return_true' );
 
 		edd_disable_woo_ssl_on_checkout();
 		$this->assertFalse( has_action( 'template_redirect', array( 'WC_HTTPS', 'unforce_https_template_redirect' ) ) );
-
 	}
 
 	/**
@@ -123,10 +112,8 @@ class Tests_Plugin_Compatibility extends EDD_UnitTestCase {
 	 * @since 2.3
 	 */
 	public function test_disable_mandrill_nl2br() {
-
 		edd_disable_mandrill_nl2br();
 		$this->assertNotFalse( has_action( 'mandrill_nl2br', '__return_false' ) );
-
 	}
 
 	/**
@@ -135,9 +122,7 @@ class Tests_Plugin_Compatibility extends EDD_UnitTestCase {
 	 * @since 2.3
 	 */
 	public function test_disable_404_redirected_redirect_return() {
-
 		$this->assertNull( edd_disable_404_redirected_redirect() );
-
 	}
 
 	/**
@@ -146,24 +131,20 @@ class Tests_Plugin_Compatibility extends EDD_UnitTestCase {
 	 * @since 2.3
 	 */
 	public function test_disable_404_redirected_redirect() {
-
 		$this->go_to( get_permalink( edd_get_option( 'success_page' ) ) );
 		define( 'WBZ404_VERSION', '1.3.2' );
 		edd_disable_404_redirected_redirect();
 
 		$this->assertFalse( has_action( 'template_redirect', 'wbz404_process404' ) );
-
 	}
 
 	public function test_say_what_aliases() {
-
 		global $wp_filter;
 		$this->assertarrayHasKey( 'edd_say_what_domain_aliases', $wp_filter['say_what_domain_aliases'][10] );
 
 		$say_what_aliases = apply_filters( 'say_what_domain_aliases', array() );
 		$this->assertarrayHasKey( 'easy-digital-downloads', $say_what_aliases );
 		$this->assertTrue( in_array( 'edd', $say_what_aliases['easy-digital-downloads'] ) );
-
 	}
 
 

@@ -40,7 +40,7 @@ class Customer_Addresses extends Schema {
 			'unsigned' => true,
 			'extra'    => 'auto_increment',
 			'primary'  => true,
-			'sortable' => true
+			'sortable' => true,
 		),
 
 		// customer_id
@@ -49,7 +49,7 @@ class Customer_Addresses extends Schema {
 			'type'     => 'bigint',
 			'length'   => '20',
 			'unsigned' => true,
-			'default'  => '0'
+			'default'  => '0',
 		),
 
 		// type
@@ -60,7 +60,7 @@ class Customer_Addresses extends Schema {
 			'default'    => 'billing',
 			'searchable' => false,
 			'sortable'   => true,
-			'transition' => true
+			'transition' => true,
 		),
 
 		// status
@@ -71,7 +71,7 @@ class Customer_Addresses extends Schema {
 			'default'    => 'active',
 			'searchable' => false,
 			'sortable'   => true,
-			'transition' => true
+			'transition' => true,
 		),
 
 		// address
@@ -79,7 +79,7 @@ class Customer_Addresses extends Schema {
 			'name'       => 'address',
 			'type'       => 'mediumtext',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// address2
@@ -87,7 +87,7 @@ class Customer_Addresses extends Schema {
 			'name'       => 'address2',
 			'type'       => 'mediumtext',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// city
@@ -95,7 +95,7 @@ class Customer_Addresses extends Schema {
 			'name'       => 'city',
 			'type'       => 'mediumtext',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// region
@@ -103,7 +103,7 @@ class Customer_Addresses extends Schema {
 			'name'       => 'region',
 			'type'       => 'mediumtext',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// postal_code
@@ -113,7 +113,7 @@ class Customer_Addresses extends Schema {
 			'length'     => '32',
 			'default'    => '',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// country
@@ -121,7 +121,7 @@ class Customer_Addresses extends Schema {
 			'name'       => 'country',
 			'type'       => 'mediumtext',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// date_created
@@ -131,7 +131,7 @@ class Customer_Addresses extends Schema {
 			'default'    => '0000-00-00 00:00:00',
 			'created'    => true,
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// date_modified
@@ -141,12 +141,12 @@ class Customer_Addresses extends Schema {
 			'default'    => '0000-00-00 00:00:00',
 			'modified'   => true,
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// uuid
 		array(
-			'uuid'       => true,
-		)
+			'uuid' => true,
+		),
 	);
 }

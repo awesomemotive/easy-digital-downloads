@@ -148,7 +148,6 @@ final class Customers extends Table {
 	 * @return bool
 	 */
 	protected function __201807130001() {
-
 		if ( ! $this->column_exists( 'date_modified' ) ) {
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN date_modified datetime NOT NULL default '0000-00-00 00:00:00' AFTER `date_created`" );
 		}
@@ -189,9 +188,11 @@ final class Customers extends Table {
 
 		// Maybe add column
 		if ( false === $result ) {
-			$result = $this->get_db()->query( "
+			$result = $this->get_db()->query(
+				"
 				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;
-			" );
+			"
+			);
 		}
 
 		// Return success/fail

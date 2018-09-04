@@ -27,8 +27,10 @@ class Bar_Dataset extends Dataset {
 	 * @var   array
 	 */
 	protected $fields = array(
-		'borderSkipped', 'hoverBackgroundColor',
-		'hoverBorderColor', 'hoverBorderWidth'
+		'borderSkipped',
+		'hoverBackgroundColor',
+		'hoverBorderColor',
+		'hoverBorderWidth',
 	);
 
 }

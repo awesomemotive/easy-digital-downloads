@@ -69,9 +69,12 @@ function edd_taxonomies_tabs() {
 	}
 
 	// Output the tabs
-	?><div class="wrap edd-tab-wrap"><?php
+	?><div class="wrap edd-tab-wrap">
+	<?php
 	edd_display_product_tabs();
-	?></div><?php
+	?>
+	</div>
+	<?php
 }
 add_action( 'admin_notices', 'edd_taxonomies_tabs', 10, 1 );
 
@@ -176,7 +179,7 @@ function edd_display_product_tabs() {
 		'products' => array(
 			'name' => edd_get_label_plural(),
 			'url'  => admin_url( 'edit.php?post_type=download' ),
-		)
+		),
 	);
 
 	// Get taxonomies
@@ -184,10 +187,13 @@ function edd_display_product_tabs() {
 	foreach ( $taxonomies as $tax => $details ) {
 		$tabs[ $tax ] = array(
 			'name' => $details->labels->menu_name,
-			'url'  => add_query_arg( array(
-				'taxonomy'  => $tax,
-				'post_type' => 'download'
-			), admin_url( 'edit-tags.php' ) )
+			'url'  => add_query_arg(
+				array(
+					'taxonomy'  => $tax,
+					'post_type' => 'download',
+				),
+				admin_url( 'edit-tags.php' )
+			),
 		);
 	}
 
@@ -198,13 +204,14 @@ function edd_display_product_tabs() {
 	if ( isset( $_GET['taxonomy'] ) && in_array( $_GET['taxonomy'], array_keys( $taxonomies ), true ) ) {
 		$active_tab = $_GET['taxonomy'];
 
-	// Default to Products
+		// Default to Products
 	} else {
 		$active_tab = 'products';
 	}
 
 	// Start a buffer
-	ob_start() ?>
+	ob_start()
+	?>
 
 	<div class="clear"></div>
 	<h2 class="nav-tab-wrapper edd-nav-tab-wrapper edd-tab-clear">
@@ -218,7 +225,8 @@ function edd_display_product_tabs() {
 			echo '<a href="' . esc_url( $tab['url'] ) . '" class="nav-tab' . esc_attr( $active ) . '">';
 			echo esc_html( $tab['name'] );
 			echo '</a>';
-		} ?>
+		}
+		?>
 
 		<a href="<?php echo admin_url( 'post-new.php?post_type=download' ); ?>" class="page-title-action">
 			<?php _e( 'Add New', 'easy-digital-downloads' ); ?>
@@ -240,10 +248,13 @@ function edd_display_product_tabs() {
  * @return array
  */
 function edd_admin_removable_query_args() {
-	return apply_filters( 'edd_admin_removable_query_args', array(
-		'edd-action',
-		'edd-notice',
-		'edd-message',
-		'edd-redirect'
-	) );
+	return apply_filters(
+		'edd_admin_removable_query_args',
+		array(
+			'edd-action',
+			'edd-notice',
+			'edd-message',
+			'edd-redirect',
+		)
+	);
 }

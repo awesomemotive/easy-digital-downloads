@@ -7,7 +7,7 @@
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4.4
-*/
+ */
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -40,56 +40,72 @@ class EDD_Roles {
 	 * @since 1.4.4
 	 */
 	public function add_roles() {
-		add_role( 'shop_manager', __( 'Shop Manager', 'easy-digital-downloads' ), array(
-			'read'                   => true,
-			'edit_posts'             => true,
-			'delete_posts'           => true,
-			'unfiltered_html'        => true,
-			'upload_files'           => true,
-			'export'                 => true,
-			'import'                 => true,
-			'delete_others_pages'    => true,
-			'delete_others_posts'    => true,
-			'delete_pages'           => true,
-			'delete_private_pages'   => true,
-			'delete_private_posts'   => true,
-			'delete_published_pages' => true,
-			'delete_published_posts' => true,
-			'edit_others_pages'      => true,
-			'edit_others_posts'      => true,
-			'edit_pages'             => true,
-			'edit_private_pages'     => true,
-			'edit_private_posts'     => true,
-			'edit_published_pages'   => true,
-			'edit_published_posts'   => true,
-			'manage_categories'      => true,
-			'manage_links'           => true,
-			'moderate_comments'      => true,
-			'publish_pages'          => true,
-			'publish_posts'          => true,
-			'read_private_pages'     => true,
-			'read_private_posts'     => true,
-		) );
+		add_role(
+			'shop_manager',
+			__( 'Shop Manager', 'easy-digital-downloads' ),
+			array(
+				'read'                   => true,
+				'edit_posts'             => true,
+				'delete_posts'           => true,
+				'unfiltered_html'        => true,
+				'upload_files'           => true,
+				'export'                 => true,
+				'import'                 => true,
+				'delete_others_pages'    => true,
+				'delete_others_posts'    => true,
+				'delete_pages'           => true,
+				'delete_private_pages'   => true,
+				'delete_private_posts'   => true,
+				'delete_published_pages' => true,
+				'delete_published_posts' => true,
+				'edit_others_pages'      => true,
+				'edit_others_posts'      => true,
+				'edit_pages'             => true,
+				'edit_private_pages'     => true,
+				'edit_private_posts'     => true,
+				'edit_published_pages'   => true,
+				'edit_published_posts'   => true,
+				'manage_categories'      => true,
+				'manage_links'           => true,
+				'moderate_comments'      => true,
+				'publish_pages'          => true,
+				'publish_posts'          => true,
+				'read_private_pages'     => true,
+				'read_private_posts'     => true,
+			)
+		);
 
-		add_role( 'shop_accountant', __( 'Shop Accountant', 'easy-digital-downloads' ), array(
-			'read'         => true,
-			'edit_posts'   => false,
-			'delete_posts' => false,
-		) );
+		add_role(
+			'shop_accountant',
+			__( 'Shop Accountant', 'easy-digital-downloads' ),
+			array(
+				'read'         => true,
+				'edit_posts'   => false,
+				'delete_posts' => false,
+			)
+		);
 
-		add_role( 'shop_worker', __( 'Shop Worker', 'easy-digital-downloads' ), array(
-			'read'         => true,
-			'edit_posts'   => false,
-			'upload_files' => true,
-			'delete_posts' => false,
-		) );
+		add_role(
+			'shop_worker',
+			__( 'Shop Worker', 'easy-digital-downloads' ),
+			array(
+				'read'         => true,
+				'edit_posts'   => false,
+				'upload_files' => true,
+				'delete_posts' => false,
+			)
+		);
 
-		add_role( 'shop_vendor', __( 'Shop Vendor', 'easy-digital-downloads' ), array(
-			'read'         => true,
-			'edit_posts'   => false,
-			'upload_files' => true,
-			'delete_posts' => false,
-		) );
+		add_role(
+			'shop_vendor',
+			__( 'Shop Vendor', 'easy-digital-downloads' ),
+			array(
+				'read'         => true,
+				'edit_posts'   => false,
+				'upload_files' => true,
+				'delete_posts' => false,
+			)
+		);
 	}
 
 	/**
@@ -234,7 +250,6 @@ class EDD_Roles {
 		}
 
 		return $caps;
-
 	}
 
 	/**

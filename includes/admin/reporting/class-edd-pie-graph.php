@@ -22,7 +22,6 @@ defined( 'ABSPATH' ) || exit;
 class EDD_Pie_Graph extends EDD_Graph {
 
 	/*
-
 	Simple example:
 
 	data format for each point: array( location on x, location on y )
@@ -67,7 +66,6 @@ class EDD_Pie_Graph extends EDD_Graph {
 	 * @since 2.4
 	 */
 	public function __construct( $_data, $options = array() ) {
-
 		$this->data = $_data;
 		// Set this so filters recieving $this can quickly know if it's a graph they want to modify
 		$this->type = 'pie';
@@ -77,26 +75,25 @@ class EDD_Pie_Graph extends EDD_Graph {
 
 		// Setup default options;
 		$defaults = array(
-			'radius'            => 1,
-			'legend'            => true,
-			'legend_formatter'  => false,
-			'legend_columns'    => 3,
-			'legend_position'   => 's',
-			'show_labels'       => false,
-			'label_threshold'   => 0.01,
-			'label_formatter'   => 'eddLabelFormatter',
-			'label_bg_opacity'  => 0.75,
-			'label_radius'      => 1,
-			'height'            => '300',
-			'hoverable'         => true,
-			'clickable'         => false,
-			'threshold'         => false,
+			'radius'           => 1,
+			'legend'           => true,
+			'legend_formatter' => false,
+			'legend_columns'   => 3,
+			'legend_position'  => 's',
+			'show_labels'      => false,
+			'label_threshold'  => 0.01,
+			'label_formatter'  => 'eddLabelFormatter',
+			'label_bg_opacity' => 0.75,
+			'label_radius'     => 1,
+			'height'           => '300',
+			'hoverable'        => true,
+			'clickable'        => false,
+			'threshold'        => false,
 		);
 
 		$this->options = wp_parse_args( $options, $defaults );
 
 		add_action( 'edd_graph_load_scripts', array( $this, 'load_additional_scripts' ) );
-
 	}
 
 	/**
@@ -118,7 +115,6 @@ class EDD_Pie_Graph extends EDD_Graph {
 	 * @return string
 	 */
 	public function build_graph() {
-
 		if ( count( $this->data ) ) {
 			$this->load_scripts();
 
@@ -197,7 +193,6 @@ class EDD_Pie_Graph extends EDD_Graph {
 			<?php
 		}
 		return apply_filters( 'edd_pie_graph_output', ob_get_clean(), $this->id, $this->data, $this->options );
-
 	}
 
 }

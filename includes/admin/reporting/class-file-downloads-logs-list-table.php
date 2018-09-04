@@ -52,7 +52,7 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 	 *
 	 * @since 1.4
 	 *
-	 * @param array $item Contains all the data of the log item
+	 * @param array  $item Contains all the data of the log item
 	 * @param string $column_name The name of the column
 	 *
 	 * @return string Column Name
@@ -60,27 +60,27 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 	public function column_default( $item, $column_name ) {
 		$base_url = remove_query_arg( 'paged' );
 		switch ( $column_name ) {
-			case 'download' :
-				$download      = new EDD_Download( $item[ $column_name ] );
-				$column_value  = $download->get_name();
+			case 'download':
+				$download     = new EDD_Download( $item[ $column_name ] );
+				$column_value = $download->get_name();
 
 				if ( ! empty( $item['price_id'] ) ) {
 					$column_value .= ' &mdash; ' . edd_get_price_option_name( $download->ID, $item['price_id'] );
 				}
 
 				return '<a href="' . add_query_arg( 'download', $download->ID, $base_url ) . '" >' . $column_value . '</a>';
-			case 'customer' :
-				return ! empty( $item[ 'customer' ]->id )
-					? '<a href="' . add_query_arg( 'customer', $item[ 'customer' ]->id, $base_url ) . '">' . $item['customer']->name . '</a>'
+			case 'customer':
+				return ! empty( $item['customer']->id )
+					? '<a href="' . add_query_arg( 'customer', $item['customer']->id, $base_url ) . '">' . $item['customer']->name . '</a>'
 					: '&mdash;';
 
-			case 'payment_id' :
+			case 'payment_id':
 				$number = edd_get_payment_number( $item['payment_id'] );
 				return ! empty( $number )
 					? '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item['payment_id'] ) . '">' . esc_html( $number ) . '</a>'
 					: '&mdash;';
-			case 'ip' :
-				return '<a href="https://ipinfo.io/' . $item['ip']  . '" target="_blank" rel="noopener noreferrer">' . $item['ip']  . '</a>';
+			case 'ip':
+				return '<a href="https://ipinfo.io/' . $item['ip'] . '" target="_blank" rel="noopener noreferrer">' . $item['ip'] . '</a>';
 			default:
 				return $item[ $column_name ];
 		}
@@ -90,19 +90,19 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 	 * Set the table columns.
 	 *
 	 * @since 1.4
-     *
+	 *
 	 * @return array $columns Array of all the list table columns
 	 */
 	public function get_columns() {
 		return array(
-			'ID'         => __( 'Log ID',       'easy-digital-downloads' ),
+			'ID'         => __( 'Log ID', 'easy-digital-downloads' ),
 			'download'   => edd_get_label_singular(),
-			'customer'   => __( 'Customer',     'easy-digital-downloads' ),
+			'customer'   => __( 'Customer', 'easy-digital-downloads' ),
 			'payment_id' => __( 'Order Number', 'easy-digital-downloads' ),
-			'file'       => __( 'File',         'easy-digital-downloads' ),
-			'ip'         => __( 'IP Address',   'easy-digital-downloads' ),
-			'user_agent' => __( 'User Agent',   'easy-digital-downloads' ),
-			'date'       => __( 'Date',         'easy-digital-downloads' )
+			'file'       => __( 'File', 'easy-digital-downloads' ),
+			'ip'         => __( 'IP Address', 'easy-digital-downloads' ),
+			'user_agent' => __( 'User Agent', 'easy-digital-downloads' ),
+			'date'       => __( 'Date', 'easy-digital-downloads' ),
 		);
 	}
 
@@ -110,7 +110,7 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 	 * Gets the log entries for the current view
 	 *
 	 * @since 1.4
-     *
+	 *
 	 * @return array $logs_data Array of all the logs.
 	 */
 	function get_logs( $log_query = array() ) {
@@ -128,7 +128,7 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 					: edd_get_payment_customer_id( $log->order_id );
 
 				if ( ! array_key_exists( $log->download_id, $this->queried_files ) ) {
-					$files = get_post_meta( $log->download_id, 'edd_download_files', true );
+					$files                                    = get_post_meta( $log->download_id, 'edd_download_files', true );
 					$this->queried_files[ $log->download_id ] = $files;
 				} else {
 					$files = $this->queried_files[ $log->download_id ];

@@ -79,7 +79,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 
 	public function test_instantiating_EDD_Payment_with_no_args_should_be_null() {
 		$payment = new \EDD_Payment();
-		$this->assertEquals( NULL, $payment->ID );
+		$this->assertEquals( null, $payment->ID );
 	}
 
 	public function test_edd_get_payment_with_no_args_should_be_false() {
@@ -97,7 +97,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	public function test_instantiating_EDD_Payment_with_invalid_transaction_id_should_be_null() {
 		$payment = new \EDD_Payment( 'false-txn', true );
 
-		$this->assertEquals( NULL, $payment->ID );
+		$this->assertEquals( null, $payment->ID );
 	}
 
 	public function test_edd_get_payment_with_invalid_transaction_id_should_be_false() {
@@ -237,10 +237,12 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_payment_add_fee() {
-		$this->payment->add_fee( array(
-			'amount' => 5,
-			'label'  => 'Test Fee 1',
-		) );
+		$this->payment->add_fee(
+			array(
+				'amount' => 5,
+				'label'  => 'Test Fee 1',
+			)
+		);
 
 		$this->assertEquals( 1, count( $this->payment->fees ) );
 		$this->assertEquals( 125, $this->payment->total );
@@ -268,10 +270,12 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	public function test_for_serialized_user_info() {
 
 		// Issue #4248
-		$this->payment->user_info = serialize( array(
-			'first_name' => 'John',
-			'last_name' => 'Doe',
-		) );
+		$this->payment->user_info = serialize(
+			array(
+				'first_name' => 'John',
+				'last_name'  => 'Doe',
+			)
+		);
 
 		$this->payment->save();
 
@@ -295,11 +299,13 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 
 	public function test_payment_remove_fee() {
 		for ( $i = 0; $i <= 2; $i++ ) {
-			$this->payment->add_fee( array(
-				'amount' => 5,
-				'label'  => 'Test Fee ' . $i,
-				'type'   => 'fee',
-			) );
+			$this->payment->add_fee(
+				array(
+					'amount' => 5,
+					'label'  => 'Test Fee ' . $i,
+					'type'   => 'fee',
+				)
+			);
 		}
 
 		$this->payment->save();
@@ -328,11 +334,13 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 
 	public function test_payment_remove_fee_by_index() {
 		for ( $i = 0; $i <= 2; $i++ ) {
-			$this->payment->add_fee( array(
-				'amount' => 5,
-				'label'  => 'Test Fee ' . $i,
-				'type'   => 'fee',
-			) );
+			$this->payment->add_fee(
+				array(
+					'amount' => 5,
+					'label'  => 'Test Fee ' . $i,
+					'type'   => 'fee',
+				)
+			);
 		}
 
 		$this->payment->save();
@@ -360,11 +368,13 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_payment_remove_fee_by_label_should_be_empty() {
-		$this->payment->add_fee( array(
-			'amount' => 5,
-			'label'  => 'Test Fee',
-			'type'   => 'fee',
-		) );
+		$this->payment->add_fee(
+			array(
+				'amount' => 5,
+				'label'  => 'Test Fee',
+				'type'   => 'fee',
+			)
+		);
 
 		$this->assertEquals( 1, count( $this->payment->fees ) );
 		$this->assertEquals( 'Test Fee', $this->payment->fees[0]['label'] );
@@ -384,17 +394,21 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_payment_remove_fee_by_label_w_multi_no_global() {
-		$this->payment->add_fee( array(
-			'amount' => 5,
-			'label'  => 'Test Fee',
-			'type'   => 'fee',
-		) );
+		$this->payment->add_fee(
+			array(
+				'amount' => 5,
+				'label'  => 'Test Fee',
+				'type'   => 'fee',
+			)
+		);
 
-		$this->payment->add_fee( array(
-			'amount' => 5,
-			'label'  => 'Test Fee',
-			'type'   => 'fee',
-		) );
+		$this->payment->add_fee(
+			array(
+				'amount' => 5,
+				'label'  => 'Test Fee',
+				'type'   => 'fee',
+			)
+		);
 
 		$this->assertEquals( 2, count( $this->payment->fees ) );
 		$this->assertEquals( 'Test Fee', $this->payment->fees[0]['label'] );
@@ -413,17 +427,21 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_payment_remove_fee_by_label_w_multi_w_global() {
-		$this->payment->add_fee( array(
-			'amount' => 5,
-			'label'  => 'Test Fee',
-			'type'   => 'fee',
-		) );
+		$this->payment->add_fee(
+			array(
+				'amount' => 5,
+				'label'  => 'Test Fee',
+				'type'   => 'fee',
+			)
+		);
 
-		$this->payment->add_fee( array(
-			'amount' => 5,
-			'label'  => 'Test Fee',
-			'type'   => 'fee',
-		) );
+		$this->payment->add_fee(
+			array(
+				'amount' => 5,
+				'label'  => 'Test Fee',
+				'type'   => 'fee',
+			)
+		);
 
 		$this->assertEquals( 2, count( $this->payment->fees ) );
 		$this->assertEquals( 'Test Fee', $this->payment->fees[0]['label'] );
@@ -451,7 +469,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	public function test_update_date_future() {
 		$current_date = $this->payment->date;
 
-		$new_date = strtotime( $this->payment->date ) + DAY_IN_SECONDS;
+		$new_date            = strtotime( $this->payment->date ) + DAY_IN_SECONDS;
 		$this->payment->date = date( 'Y-m-d H:i:s', $new_date );
 		$this->payment->save();
 
@@ -550,10 +568,13 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->payment->status = 'publish';
 		$this->payment->save();
 
-		$this->payment->modify_cart_item( 0, array(
-			'quantity'   => 3,
-			'item_price' => 1,
-		) );
+		$this->payment->modify_cart_item(
+			0,
+			array(
+				'quantity'   => 3,
+				'item_price' => 1,
+			)
+		);
 		$this->payment->save();
 
 		$this->assertEquals( 3, $this->payment->cart_details[0]['quantity'] );
@@ -591,10 +612,13 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->payment->status = 'publish';
 		$this->payment->save();
 
-		$change_permitted = $this->payment->modify_cart_item( 0, array(
-			'quantity'   => $this->payment->cart_details[0]['quantity'],
-			'item_price' => $this->payment->cart_details[0]['price'],
-		) );
+		$change_permitted = $this->payment->modify_cart_item(
+			0,
+			array(
+				'quantity'   => $this->payment->cart_details[0]['quantity'],
+				'item_price' => $this->payment->cart_details[0]['price'],
+			)
+		);
 
 		$this->assertFalse( $change_permitted );
 	}
@@ -869,20 +893,29 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$download = \EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
 		$payment  = new \EDD_Payment();
 
-		$payment->add_download( $download->ID, array(
-			'price_id'   => 0,
-			'item_price' => 10,
-		) );
+		$payment->add_download(
+			$download->ID,
+			array(
+				'price_id'   => 0,
+				'item_price' => 10,
+			)
+		);
 
-		$payment->add_download( $download->ID, array(
-			'price_id'   => 0,
-			'item_price' => 20,
-		) );
+		$payment->add_download(
+			$download->ID,
+			array(
+				'price_id'   => 0,
+				'item_price' => 20,
+			)
+		);
 
-		$payment->add_download( $download->ID, array(
-			'price_id'   => 0,
-			'item_price' => 30,
-		) );
+		$payment->add_download(
+			$download->ID,
+			array(
+				'price_id'   => 0,
+				'item_price' => 30,
+			)
+		);
 
 		$this->assertEquals( 3, count( $payment->downloads ) );
 		$this->assertEquals( 60, $payment->total );
@@ -890,10 +923,13 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$payment->status = 'complete';
 		$payment->save();
 
-		$payment->remove_download( $download->ID, array(
-			'price_id'   => 0,
-			'item_price' => 20,
-		) );
+		$payment->remove_download(
+			$download->ID,
+			array(
+				'price_id'   => 0,
+				'item_price' => 20,
+			)
+		);
 
 		$payment->save();
 
@@ -912,20 +948,29 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$download = \EDD_Helper_Download::create_variable_download_with_multi_price_purchase();
 		$payment  = new \EDD_Payment();
 
-		$payment->add_download( $download->ID, array(
-			'price_id'   => 0,
-			'item_price' => 10,
-		) );
+		$payment->add_download(
+			$download->ID,
+			array(
+				'price_id'   => 0,
+				'item_price' => 10,
+			)
+		);
 
-		$payment->add_download( $download->ID, array(
-			'price_id'   => 0,
-			'item_price' => 10,
-		) );
+		$payment->add_download(
+			$download->ID,
+			array(
+				'price_id'   => 0,
+				'item_price' => 10,
+			)
+		);
 
-		$payment->add_download( $download->ID, array(
-			'price_id'   => 0,
-			'item_price' => 10,
-		) );
+		$payment->add_download(
+			$download->ID,
+			array(
+				'price_id'   => 0,
+				'item_price' => 10,
+			)
+		);
 
 		$this->assertEquals( 3, count( $payment->downloads ) );
 		$this->assertEquals( 30, $payment->total );
@@ -933,10 +978,13 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$payment->status = 'complete';
 		$payment->save();
 
-		$payment->remove_download( $download->ID, array(
-			'price_id'   => 0,
-			'item_price' => 10,
-		) );
+		$payment->remove_download(
+			$download->ID,
+			array(
+				'price_id'   => 0,
+				'item_price' => 10,
+			)
+		);
 
 		$payment->save();
 
@@ -949,7 +997,6 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 0, $payment->downloads[1]['options']['price_id'] );
 		$this->assertEquals( 0, $payment->cart_details[2]['item_number']['options']['price_id'] );
 		$this->assertEquals( 10, $payment->cart_details[2]['item_price'] );
-
 	}
 
 	/* Helpers ***************************************************************/

@@ -27,9 +27,15 @@ class EDD_UnitTestCase extends WP_UnitTestCase {
 
 		global $current_user;
 
-		$current_user = new WP_User(1);
-		$current_user->set_role('administrator');
-		wp_update_user( array( 'ID' => 1, 'first_name' => 'Admin', 'last_name' => 'User' ) );
+		$current_user = new WP_User( 1 );
+		$current_user->set_role( 'administrator' );
+		wp_update_user(
+			array(
+				'ID'         => 1,
+				'first_name' => 'Admin',
+				'last_name'  => 'User',
+			)
+		);
 		add_filter( 'edd_log_email_errors', '__return_false' );
 	}
 
@@ -104,10 +110,19 @@ class EDD_UnitTestCase extends WP_UnitTestCase {
 	 */
 	public function assertContainsOnlyType( $type, $actual ) {
 		$standard_types = array(
-			'numeric', 'integer', 'int', 'float', 'string', 'boolean', 'bool',
-			'null', 'array', 'object', 'resource', 'scalar'
+			'numeric',
+			'integer',
+			'int',
+			'float',
+			'string',
+			'boolean',
+			'bool',
+			'null',
+			'array',
+			'object',
+			'resource',
+			'scalar',
 		);
-
 
 		if ( in_array( $type, $standard_types, true ) ) {
 			if ( class_exists( 'PHPUnit\Framework\Constraint\isType' ) ) {

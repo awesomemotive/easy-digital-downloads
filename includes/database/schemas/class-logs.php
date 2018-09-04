@@ -33,54 +33,54 @@ class Logs extends Schema {
 
 		// id
 		array(
-			'name'       => 'id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'extra'      => 'auto_increment',
-			'primary'    => true,
-			'sortable'   => true
+			'name'     => 'id',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'extra'    => 'auto_increment',
+			'primary'  => true,
+			'sortable' => true,
 		),
 
 		// object_id
 		array(
-			'name'       => 'object_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0',
-			'sortable'   => true,
-			'cache_key'  => true,
+			'name'      => 'object_id',
+			'type'      => 'bigint',
+			'length'    => '20',
+			'unsigned'  => true,
+			'default'   => '0',
+			'sortable'  => true,
+			'cache_key' => true,
 		),
 
 		// object_type
 		array(
-			'name'       => 'object_type',
-			'type'       => 'varchar',
-			'length'     => '20',
-			'default'    => '',
-			'sortable'   => true,
-			'cache_key'  => true,
+			'name'      => 'object_type',
+			'type'      => 'varchar',
+			'length'    => '20',
+			'default'   => '',
+			'sortable'  => true,
+			'cache_key' => true,
 		),
 
 		// user_id
 		array(
-			'name'       => 'user_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0',
-			'sortable'   => true,
-			'cache_key'  => true,
+			'name'      => 'user_id',
+			'type'      => 'bigint',
+			'length'    => '20',
+			'unsigned'  => true,
+			'default'   => '0',
+			'sortable'  => true,
+			'cache_key' => true,
 		),
 
 		// type
 		array(
-			'name'       => 'type',
-			'type'       => 'varchar',
-			'length'     => '20',
-			'default'    => '',
-			'sortable'   => true
+			'name'     => 'type',
+			'type'     => 'varchar',
+			'length'   => '20',
+			'default'  => '',
+			'sortable' => true,
 		),
 
 		// title
@@ -92,7 +92,7 @@ class Logs extends Schema {
 			'searchable' => true,
 			'sortable'   => true,
 			'in'         => false,
-			'not_in'     => false
+			'not_in'     => false,
 		),
 
 		// content
@@ -102,7 +102,7 @@ class Logs extends Schema {
 			'default'    => '',
 			'searchable' => true,
 			'in'         => false,
-			'not_in'     => false
+			'not_in'     => false,
 		),
 
 		// date_created
@@ -112,7 +112,7 @@ class Logs extends Schema {
 			'default'    => '0000-00-00 00:00:00',
 			'created'    => true,
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// date_modified
@@ -122,12 +122,12 @@ class Logs extends Schema {
 			'default'    => '0000-00-00 00:00:00',
 			'modified'   => true,
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// uuid
 		array(
-			'uuid'       => true,
-		)
+			'uuid' => true,
+		),
 	);
 }

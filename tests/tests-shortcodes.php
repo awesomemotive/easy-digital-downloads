@@ -17,108 +17,114 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 		self::$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( self::$user_id );
 
-		$post_id = self::factory()->post->create( array( 'post_title' => 'Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
+		$post_id = self::factory()->post->create(
+			array(
+				'post_title'  => 'Test Download',
+				'post_type'   => 'download',
+				'post_status' => 'publish',
+			)
+		);
 
 		$_variable_pricing = array(
 			array(
-				'name' => 'Simple',
-				'amount' => 20
+				'name'   => 'Simple',
+				'amount' => 20,
 			),
 			array(
-				'name' => 'Advanced',
-				'amount' => 100
-			)
+				'name'   => 'Advanced',
+				'amount' => 100,
+			),
 		);
 
 		$_download_files = array(
 			array(
-				'name' => 'File 1',
-				'file' => 'http://localhost/file1.jpg',
-				'condition' => 0
+				'name'      => 'File 1',
+				'file'      => 'http://localhost/file1.jpg',
+				'condition' => 0,
 			),
 			array(
-				'name' => 'File 2',
-				'file' => 'http://localhost/file2.jpg',
-				'condition' => 'all'
-			)
+				'name'      => 'File 2',
+				'file'      => 'http://localhost/file2.jpg',
+				'condition' => 'all',
+			),
 		);
 
 		$meta = array(
-			'edd_price' => '0.00',
-			'_variable_pricing' => 1,
-			'_edd_price_options_mode' => 'on',
-			'edd_variable_prices' => array_values( $_variable_pricing ),
-			'edd_download_files' => array_values( $_download_files ),
-			'_edd_download_limit' => 20,
-			'_edd_hide_purchase_link' => 1,
-			'edd_product_notes' => 'Purchase Notes',
-			'_edd_product_type' => 'default',
-			'_edd_download_earnings' => 129.43,
-			'_edd_download_sales' => 59,
-			'_edd_download_limit_override_1' => 1
+			'edd_price'                      => '0.00',
+			'_variable_pricing'              => 1,
+			'_edd_price_options_mode'        => 'on',
+			'edd_variable_prices'            => array_values( $_variable_pricing ),
+			'edd_download_files'             => array_values( $_download_files ),
+			'_edd_download_limit'            => 20,
+			'_edd_hide_purchase_link'        => 1,
+			'edd_product_notes'              => 'Purchase Notes',
+			'_edd_product_type'              => 'default',
+			'_edd_download_earnings'         => 129.43,
+			'_edd_download_sales'            => 59,
+			'_edd_download_limit_override_1' => 1,
 		);
-		foreach( $meta as $key => $value ) {
+		foreach ( $meta as $key => $value ) {
 			update_post_meta( $post_id, $key, $value );
 		}
 
 		$post = get_post( $post_id );
 
 		/** Generate some sales */
-		$user = get_userdata(1);
+		$user = get_userdata( 1 );
 
 		$user_info = array(
-			'id' => $user->ID,
-			'email' => $user->user_email,
+			'id'         => $user->ID,
+			'email'      => $user->user_email,
 			'first_name' => $user->first_name,
-			'last_name' => $user->last_name,
-			'discount' => 'none'
+			'last_name'  => $user->last_name,
+			'discount'   => 'none',
 		);
 
 		$download_details = array(
 			array(
-				'id' => $post->ID,
+				'id'      => $post->ID,
 				'options' => array(
-					'price_id' => 1
-				)
-			)
+					'price_id' => 1,
+				),
+			),
 		);
 
 		$price = '100.00';
 
 		$total = 0;
 
-		$prices = get_post_meta($download_details[0]['id'], 'edd_variable_prices', true);
+		$prices     = get_post_meta( $download_details[0]['id'], 'edd_variable_prices', true );
 		$item_price = $prices[1]['amount'];
 
 		$total += $item_price;
 
 		$cart_details = array(
 			array(
-				'name' => 'Test Download',
-				'id' => $post->ID,
+				'name'        => 'Test Download',
+				'id'          => $post->ID,
 				'item_number' => array(
-					'id' => $post->ID,
+					'id'      => $post->ID,
 					'options' => array(
-						'price_id' => 1
-					)
+						'price_id' => 1,
+					),
 				),
-				'price' =>  100,
-				'item_price' => 100,
-				'tax' => 0,
-				'quantity' => 1
-			)
+				'price'       => 100,
+				'item_price'  => 100,
+				'tax'         => 0,
+				'quantity'    => 1,
+			),
 		);
 
 		$purchase_data = array(
-			'price' => number_format( (float) $total, 2 ),
-			'date' => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
+			'price'        => number_format( (float) $total, 2 ),
+			'date'         => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
 			'purchase_key' => strtolower( md5( uniqid() ) ),
-			'user_email' => $user_info['email'],
-			'user_info' => $user_info,
-			'currency' => 'USD',
-			'downloads' => $download_details,
+			'user_email'   => $user_info['email'],
+			'user_info'    => $user_info,
+			'currency'     => 'USD',
+			'downloads'    => $download_details,
 			'cart_details' => $cart_details,
-			'status' => 'complete'
+			'status'       => 'complete',
 		);
 
 		$_SERVER['REMOTE_ADDR'] = '10.0.0.0';
@@ -130,9 +136,12 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 
 		add_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999, 3 );
 
-		edd_update_order( $payment_id, array(
-			'user_id' => $user->ID
-		) );
+		edd_update_order(
+			$payment_id,
+			array(
+				'user_id' => $user->ID,
+			)
+		);
 
 		self::$payment_key = $purchase_data['purchase_key'];
 
@@ -260,7 +269,7 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 		$actual = edd_download_price_shortcode( array( 'id' => $post_id ) );
 
 		$this->assertInternalType( 'string', $actual );
-		$this->assertEquals( '<span class="edd_price" id="edd_price_'. $post_id .'">&#36;54.43</span>', $actual );
+		$this->assertEquals( '<span class="edd_price" id="edd_price_' . $post_id . '">&#36;54.43</span>', $actual );
 	}
 
 	public function __test_receipt_shortcode() {
@@ -268,10 +277,10 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 		 * @internal This test fails on Travis but passes when running locally.
 		 */
 
-//		$actual = edd_receipt_shortcode( array( 'payment_key' => self::$payment_key ) );
-//
-//		$this->assertInternalType( 'string', $actual );
-//		$this->assertContains( '<table id="edd_purchase_receipt" class="edd-table">', $actual  );
+		// $actual = edd_receipt_shortcode( array( 'payment_key' => self::$payment_key ) );
+		//
+		// $this->assertInternalType( 'string', $actual );
+		// $this->assertContains( '<table id="edd_purchase_receipt" class="edd-table">', $actual  );
 	}
 
 	public function test_profile_shortcode() {
@@ -301,7 +310,13 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 		$this->assertNotContains( 'id="edd_download_pagination"', $output );
 
 		// Create a second post so we can see pagination
-		self::factory()->post->create( array( 'post_title' => 'Test Download #2', 'post_type' => 'download', 'post_status' => 'publish' ) );
+		self::factory()->post->create(
+			array(
+				'post_title'  => 'Test Download #2',
+				'post_type'   => 'download',
+				'post_status' => 'publish',
+			)
+		);
 
 		$output2 = edd_downloads_query( array( 'number' => 1 ) );
 		$this->assertContains( 'id="edd_download_pagination"', $output2 );
@@ -313,11 +328,34 @@ class Tests_Shortcode extends EDD_UnitTestCase {
 
 	public function test_downloads_shortcode_nopaging() {
 		// Create a posts so we can see pagination
-		self::factory()->post->create( array( 'post_title' => 'Test Download #2', 'post_type' => 'download', 'post_status' => 'publish' ) );
-		self::factory()->post->create( array( 'post_title' => 'Test Download #3', 'post_type' => 'download', 'post_status' => 'publish' ) );
-		self::factory()->post->create( array( 'post_title' => 'Test Download #4', 'post_type' => 'download', 'post_status' => 'publish' ) );
+		self::factory()->post->create(
+			array(
+				'post_title'  => 'Test Download #2',
+				'post_type'   => 'download',
+				'post_status' => 'publish',
+			)
+		);
+		self::factory()->post->create(
+			array(
+				'post_title'  => 'Test Download #3',
+				'post_type'   => 'download',
+				'post_status' => 'publish',
+			)
+		);
+		self::factory()->post->create(
+			array(
+				'post_title'  => 'Test Download #4',
+				'post_type'   => 'download',
+				'post_status' => 'publish',
+			)
+		);
 
-		$output2 = edd_downloads_query( array( 'number' => 1, 'pagination' => 'false' ) );
+		$output2 = edd_downloads_query(
+			array(
+				'number'     => 1,
+				'pagination' => 'false',
+			)
+		);
 		$this->assertNotContains( 'id="edd_download_pagination"', $output2 );
 	}
 }

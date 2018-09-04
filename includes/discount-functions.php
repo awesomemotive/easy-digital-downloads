@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
 function edd_add_discount( $data = array() ) {
 
 	// Juggle requirements and products.
-	$product_requirements = isset( $data['product_reqs']      ) ? wp_parse_id_list( $data['product_reqs']      ) : null;
+	$product_requirements = isset( $data['product_reqs'] ) ? wp_parse_id_list( $data['product_reqs'] ) : null;
 	$excluded_products    = isset( $data['excluded_products'] ) ? wp_parse_id_list( $data['excluded_products'] ) : null;
 	unset( $data['product_reqs'], $data['excluded_products'] );
 
@@ -149,7 +149,7 @@ function edd_get_discount_by( $field = '', $value = '' ) {
  * @since 2.7 Updated to use EDD_Discount object
  * @since 3.0 Updated to call edd_get_discount()
  *
- * @param int $discount_id Discount ID.
+ * @param int    $discount_id Discount ID.
  * @param string $field The field to retrieve the discount with.
  * @return mixed object|bool EDD_Discount object or false if not found.
  */
@@ -166,7 +166,7 @@ function edd_get_discount_field( $discount_id, $field = '' ) {
  * Update a discount
  *
  * @since 3.0
- * @param int $discount_id Discount ID.
+ * @param int   $discount_id Discount ID.
  * @param array $data
  * @return int
  */
@@ -231,9 +231,12 @@ function edd_update_discount( $discount_id = 0, $data = array() ) {
 function edd_get_discounts( $args = array() ) {
 
 	// Parse arguments.
-	$r = wp_parse_args( $args, array(
-		'number' => 30
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'number' => 30,
+		)
+	);
 
 	// Back compat for old query arg.
 	if ( isset( $r['posts_per_page'] ) ) {
@@ -258,9 +261,12 @@ function edd_get_discounts( $args = array() ) {
 function edd_get_discount_count( $args = array() ) {
 
 	// Parse args.
-	$r = wp_parse_args( $args, 	array(
-		'count' => true
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'count' => true,
+		)
+	);
 
 	// Query for count(s).
 	$discounts = new EDD\Compat\Discount_Query( $r );
@@ -279,10 +285,13 @@ function edd_get_discount_count( $args = array() ) {
 function edd_get_discount_counts( $args = array() ) {
 
 	// Parse arguments
-	$r = wp_parse_args( $args, array(
-		'count'   => true,
-		'groupby' => 'status'
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'count'   => true,
+			'groupby' => 'status',
+		)
+	);
 
 	// Query for count.
 	$counts = new EDD\Compat\Discount_Query( $r );
@@ -300,11 +309,13 @@ function edd_get_discount_counts( $args = array() ) {
  * @return array Retrieved notes.
  */
 function edd_get_discount_notes( $discount_id = 0 ) {
-	return edd_get_notes( array(
-		'object_id'   => $discount_id,
-		'object_type' => 'discount',
-		'order'       => 'asc'
-	) );
+	return edd_get_notes(
+		array(
+			'object_id'   => $discount_id,
+			'object_type' => 'discount',
+			'order'       => 'asc',
+		)
+	);
 }
 
 /**
@@ -318,10 +329,12 @@ function edd_get_discount_notes( $discount_id = 0 ) {
 function edd_has_active_discounts() {
 
 	// Query for active discounts.
-	$discounts = edd_get_discounts( array(
-		'number' => 1,
-		'status' => 'active'
-	) );
+	$discounts = edd_get_discounts(
+		array(
+			'number' => 1,
+			'status' => 'active',
+		)
+	);
 
 	// Bail if none.
 	if ( empty( $discounts ) ) {
@@ -465,9 +478,12 @@ function edd_update_discount_status( $discount_id = 0, $new_status = 'active' ) 
 
 	// Try to update status.
 	if ( ! empty( $discount->id ) ) {
-		$updated = edd_update_discount( $discount->id, array(
-			'status' => $new_status
-		) );
+		$updated = edd_update_discount(
+			$discount->id,
+			array(
+				'status' => $new_status,
+			)
+		);
 	}
 
 	// Return.
@@ -943,7 +959,7 @@ function edd_decrease_discount_usage( $code = '' ) {
  * Format Discount Rate
  *
  * @since 1.0
- * @param string $type Discount code type
+ * @param string     $type Discount code type
  * @param string|int $amount Discount code amount
  * @return string $amount Formatted amount
  */
@@ -968,7 +984,7 @@ function edd_set_cart_discount( $code = '' ) {
 	if ( edd_multiple_discounts_allowed() ) {
 		$discounts = edd_get_cart_discounts();
 
-	// Only one discount allowed per purchase, so override any existing
+		// Only one discount allowed per purchase, so override any existing
 	} else {
 		$discounts = false;
 	}
@@ -982,7 +998,7 @@ function edd_set_cart_discount( $code = '' ) {
 		}
 		$discounts[] = $code;
 	} else {
-		$discounts = array();
+		$discounts   = array();
 		$discounts[] = $code;
 	}
 
@@ -1070,7 +1086,7 @@ function edd_get_cart_discounted_amount( $discounts = false ) {
  * Get the discounted amount on a price
  *
  * @since 1.9
- * @param array $item Cart item array
+ * @param array       $item Cart item array
  * @param bool|string $discount False to use the cart discounts or a string to check with a discount code
  * @return float The discounted amount
  */
@@ -1112,20 +1128,20 @@ function edd_get_cart_discounts_html( $discounts = false ) {
 		$discount_id = edd_get_discount_id_by_code( $discount );
 		$rate        = edd_format_discount_rate( edd_get_discount_type( $discount_id ), edd_get_discount_amount( $discount_id ) );
 
-		$remove_url  = add_query_arg(
+		$remove_url = add_query_arg(
 			array(
 				'edd_action'    => 'remove_cart_discount',
 				'discount_id'   => $discount_id,
-				'discount_code' => $discount
+				'discount_code' => $discount,
 			),
 			edd_get_checkout_uri()
 		);
 
-		$discount_html = '';
-		$discount_html .= "<span class=\"edd_discount\">\n";
+		$discount_html      = '';
+		$discount_html     .= "<span class=\"edd_discount\">\n";
 			$discount_html .= "<span class=\"edd_discount_rate\">$discount&nbsp;&ndash;&nbsp;$rate</span>\n";
 			$discount_html .= "<a href=\"$remove_url\" data-code=\"$discount\" class=\"edd_discount_remove\"></a>\n";
-		$discount_html .= "</span>\n";
+		$discount_html     .= "</span>\n";
 
 		$html .= apply_filters( 'edd_get_cart_discount_html', $discount_html, $discount, $rate, $remove_url );
 	}
@@ -1199,7 +1215,6 @@ add_action( 'edd_remove_cart_discount', 'edd_remove_cart_discount' );
  * @param int $cart_key
  */
 function edd_maybe_remove_cart_discount( $cart_key = 0 ) {
-
 	$discounts = edd_get_cart_discounts();
 
 	if ( empty( $discounts ) ) {
@@ -1243,7 +1258,7 @@ function edd_listen_for_cart_discount() {
 		return;
 	}
 
-	$code = preg_replace('/[^a-zA-Z0-9-_]+/', '', $_REQUEST['discount'] );
+	$code = preg_replace( '/[^a-zA-Z0-9-_]+/', '', $_REQUEST['discount'] );
 
 	EDD()->session->set( 'preset_discount', $code );
 }

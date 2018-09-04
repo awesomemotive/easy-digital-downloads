@@ -31,12 +31,14 @@ class Tests_Logging extends EDD_UnitTestCase {
 	public static function wpSetUpBeforeClass() {
 		self::$object = new EDD_Logging();
 
-		self::$log_id = self::$object->insert_log( array(
-			'log_type'     => 'gateway_error',
-			'post_parent'  => 1,
-			'post_title'   => 'Test Log',
-			'post_content' => 'This is a test log inserted from PHPUnit',
-		) );
+		self::$log_id = self::$object->insert_log(
+			array(
+				'log_type'     => 'gateway_error',
+				'post_parent'  => 1,
+				'post_title'   => 'Test Log',
+				'post_content' => 'This is a test log inserted from PHPUnit',
+			)
+		);
 	}
 
 	/**
@@ -73,10 +75,12 @@ class Tests_Logging extends EDD_UnitTestCase {
 	 * @covers ::get_connected_logs()
 	 */
 	public function test_get_connected_logs() {
-		$logs = (array) self::$object->get_connected_logs( array(
-			'post_parent' => 1,
-			'log_type'    => 'gateway_error'
-		) );
+		$logs = (array) self::$object->get_connected_logs(
+			array(
+				'post_parent' => 1,
+				'log_type'    => 'gateway_error',
+			)
+		);
 
 		$this->assertCount( 1, $logs );
 	}

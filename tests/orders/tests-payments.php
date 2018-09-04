@@ -130,16 +130,14 @@ class Payment_Tests extends \EDD_UnitTestCase {
 
 	public function test_get_payment_status() {
 		$this->assertEquals( 'pending', edd_get_payment_status( self::$payment->ID ) );
-//		$this->assertEquals( 'pending', edd_get_payment_status( get_post( self::self::$payment->ID ) ) );
-
+		// $this->assertEquals( 'pending', edd_get_payment_status( get_post( self::self::$payment->ID ) ) );
 		$this->assertEquals( 'pending', edd_get_payment_status( self::$payment ) );
 		$this->assertFalse( edd_get_payment_status( 1212121212121 ) );
 	}
 
 	public function test_get_payment_status_label() {
 		$this->assertEquals( 'Pending', edd_get_payment_status( self::$payment->ID, true ) );
-//		$this->assertEquals( 'Pending', edd_get_payment_status( get_post( self::self::$payment->ID ), true ) );
-
+		// $this->assertEquals( 'Pending', edd_get_payment_status( get_post( self::self::$payment->ID ), true ) );
 		$this->assertEquals( 'Pending', edd_get_payment_status( self::$payment, true ) );
 	}
 
@@ -364,11 +362,13 @@ class Payment_Tests extends \EDD_UnitTestCase {
 		\EDD_Helper_Payment::create_simple_payment_with_date( date( 'Y-m-d H:i:s', strtotime( '-5 days' ) ) );
 		\EDD_Helper_Payment::create_simple_payment_with_date( date( 'Y-m-d H:i:s', strtotime( '-1 month' ) ) );
 
-		$payments_query = new \EDD_Payments_Query( array(
-			'start_date' => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
-			'end_date'   => date( 'Y-m-d H:i:s' ),
-			'output'     => 'orders',
-		) );
+		$payments_query = new \EDD_Payments_Query(
+			array(
+				'start_date' => date( 'Y-m-d H:i:s', strtotime( '-1 day' ) ),
+				'end_date'   => date( 'Y-m-d H:i:s' ),
+				'output'     => 'orders',
+			)
+		);
 
 		$payments = $payments_query->get_payments();
 

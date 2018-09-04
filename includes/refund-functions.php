@@ -22,10 +22,13 @@ defined( 'ABSPATH' ) || exit;
  * @return array
  */
 function edd_get_refundability_types() {
-	return (array) apply_filters( 'edd_get_refund_types', array(
-		'refundable'    => __( 'Refundable',     'easy-digital-downloads' ),
-		'nonrefundable' => __( 'Non-Refundable', 'easy-digital-downloads' )
-	) );
+	return (array) apply_filters(
+		'edd_get_refund_types',
+		array(
+			'refundable'    => __( 'Refundable', 'easy-digital-downloads' ),
+			'nonrefundable' => __( 'Non-Refundable', 'easy-digital-downloads' ),
+		)
+	);
 }
 
 /**

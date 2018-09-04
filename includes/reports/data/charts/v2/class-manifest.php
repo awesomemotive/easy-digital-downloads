@@ -147,17 +147,13 @@ class Manifest implements Error_Logger {
 	 */
 	private function set_options( $options ) {
 		if ( ! empty( $options['datasets'] ) && is_array( $options['datasets'] ) ) {
-
 			foreach ( $options['datasets'] as $id => $data ) {
 				$this->add_dataset( $id, $data );
 			}
-
 		} else {
-
 			$message = sprintf( 'The %s endpoint has no datasets.', $this->get_endpoint()->get_id() );
 
 			$this->errors->add( 'missing_chart_datasets', $message, $this->get_endpoint() );
-
 		}
 
 		unset( $options['datasets'] );
@@ -250,18 +246,12 @@ class Manifest implements Error_Logger {
 			$dataset = new $handler( $dataset_id, $this->get_endpoint(), $options );
 
 			if ( ! $dataset->has_errors() ) {
-
 				$this->datasets[ $dataset_id ] = $dataset;
 
-
 				return true;
-
 			} else {
-
 				$this->errors->add( 'dataset_errors_passthrough', 'Errors have been passed through from dataset parsing.', $dataset->get_errors() );
-
 			}
-
 		}
 
 		return false;
@@ -277,8 +267,7 @@ class Manifest implements Error_Logger {
 	public function get_dataset_handler() {
 		$handler = '';
 
-		switch( $this->get_type() ) {
-
+		switch ( $this->get_type() ) {
 			case 'doughnut':
 			case 'pie':
 				$handler = 'EDD\Reports\Data\Charts\v2\Pie_Dataset';
@@ -291,8 +280,6 @@ class Manifest implements Error_Logger {
 			case 'line':
 				$handler = 'EDD\Reports\Data\Charts\v2\Line_Dataset';
 				break;
-
-
 		}
 
 		return $handler;
@@ -339,9 +326,9 @@ class Manifest implements Error_Logger {
 				<?php echo esc_js( $target_el ); ?>.data.datasets.forEach( function( dataset ) {
 					dataset.data.forEach( function( pair, index ) {
 						<?php if ( false === $hour_by_hour ) : ?>
-                        pair.x = moment( pair.x ).utcOffset( 0 ).format( 'LLL' );
+						pair.x = moment( pair.x ).utcOffset( 0 ).format( 'LLL' );
 						<?php else : ?>
-                        pair.x = moment( pair.x ).utcOffset( <?php echo esc_js( EDD()->utils->get_gmt_offset() / HOUR_IN_SECONDS ); ?> ).format( 'LLL' );
+						pair.x = moment( pair.x ).utcOffset( <?php echo esc_js( EDD()->utils->get_gmt_offset() / HOUR_IN_SECONDS ); ?> ).format( 'LLL' );
 						<?php endif; ?>
 					} );
 				} );

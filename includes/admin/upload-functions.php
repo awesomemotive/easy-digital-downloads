@@ -51,7 +51,6 @@ add_action( 'admin_init', 'edd_change_downloads_upload_dir', 999 );
  */
 function edd_create_protection_files( $force = false, $method = false ) {
 	if ( false === get_transient( 'edd_check_protection_files' ) || $force ) {
-
 		$upload_path = edd_get_upload_dir();
 
 		// Top level .htaccess file
@@ -123,7 +122,7 @@ function edd_scan_folders( $path = '', $return = array() ) {
 		$dir = $path . DIRECTORY_SEPARATOR . $f;
 
 		// Skip if not a directory
-		if ( ! is_dir( $dir ) || ( $f === "." ) || ( $f === ".." ) ) {
+		if ( ! is_dir( $dir ) || ( $f === '.' ) || ( $f === '..' ) ) {
 			continue;
 		}
 
@@ -148,28 +147,26 @@ function edd_scan_folders( $path = '', $return = array() ) {
  * @return mixed|void The htaccess rules
  */
 function edd_get_htaccess_rules( $method = false ) {
-
 	if ( empty( $method ) ) {
 		$method = edd_get_file_download_method();
 	}
 
 	switch ( $method ) {
-
-		case 'redirect' :
+		case 'redirect':
 			// Prevent directory browsing
-			$rules = "Options -Indexes";
+			$rules = 'Options -Indexes';
 			break;
 
-		case 'direct' :
-		default :
+		case 'direct':
+		default:
 			// Prevent directory browsing and direct access to all files, except images (they must be allowed for featured images / thumbnails)
 			$allowed_filetypes = apply_filters( 'edd_protected_directory_allowed_filetypes', array( 'jpg', 'jpeg', 'png', 'gif', 'mp3', 'ogg' ) );
-			$rules = "Options -Indexes\n";
-			$rules .= "deny from all\n";
-			$rules .= "<FilesMatch '\.(" . implode( '|', $allowed_filetypes ) . ")$'>\n";
-			    $rules .= "Order Allow,Deny\n";
-			    $rules .= "Allow from all\n";
-			$rules .= "</FilesMatch>\n";
+			$rules             = "Options -Indexes\n";
+			$rules            .= "deny from all\n";
+			$rules            .= "<FilesMatch '\.(" . implode( '|', $allowed_filetypes ) . ")$'>\n";
+				$rules        .= "Order Allow,Deny\n";
+				$rules        .= "Allow from all\n";
+			$rules            .= "</FilesMatch>\n";
 			break;
 	}
 

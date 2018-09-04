@@ -19,11 +19,9 @@ class Tests_Downloads extends EDD_UnitTestCase {
 	}
 
 	public function tearDown() {
-
 		parent::tearDown();
 
 		EDD_Helper_Download::delete_download( $this->_post->ID );
-
 	}
 
 	public function test_get_download() {
@@ -59,7 +57,6 @@ class Tests_Downloads extends EDD_UnitTestCase {
 	}
 
 	public function test_edd_get_download_by() {
-
 		$download = edd_get_download_by( 'id', $this->_post->ID );
 		$this->assertSame( $this->_post->ID, $download->ID );
 
@@ -71,20 +68,19 @@ class Tests_Downloads extends EDD_UnitTestCase {
 
 		$downoad = edd_get_download_by( 'name', 'Variable Test Download Product' );
 		$this->assertSame( $this->_post->ID, $download->ID );
-
 	}
 
 	public function test_edd_download() {
 
 		// Verify passing nothing gives us an empty download
-		$download = new EDD_Download;
+		$download = new EDD_Download();
 		$this->assertEquals( 0, $download->ID );
 
 		// Create a Download
-		$args = array(
-			'post_title'  => 'Test Create Download'
+		$args      = array(
+			'post_title' => 'Test Create Download',
 		);
-		$download2 = new EDD_Download;
+		$download2 = new EDD_Download();
 		$this->assertEquals( 0, $download2->ID );
 
 		$download2->create( $args );
@@ -98,27 +94,27 @@ class Tests_Downloads extends EDD_UnitTestCase {
 		$this->assertEmpty( $download2->prices );
 
 		// Retrieve a previously created download
-		$prices = array(
+		$prices    = array(
 			array(
-				'name' => 'Simple',
-				'amount' => 20
+				'name'   => 'Simple',
+				'amount' => 20,
 			),
 			array(
-				'name' => 'Advanced',
-				'amount' => 100
-			)
+				'name'   => 'Advanced',
+				'amount' => 100,
+			),
 		);
-		$files = array(
+		$files     = array(
 			array(
-				'name' => 'File 1',
-				'file' => 'http://localhost/file1.jpg',
-				'condition' => 0
+				'name'      => 'File 1',
+				'file'      => 'http://localhost/file1.jpg',
+				'condition' => 0,
 			),
 			array(
-				'name' => 'File 2',
-				'file' => 'http://localhost/file2.jpg',
-				'condition' => 'all'
-			)
+				'name'      => 'File 2',
+				'file'      => 'http://localhost/file2.jpg',
+				'condition' => 'all',
+			),
 		);
 		$download3 = new EDD_Download( $this->_post->ID );
 		$download3->increase_earnings( '0.50' );
@@ -158,8 +154,7 @@ class Tests_Downloads extends EDD_UnitTestCase {
 
 		// Test the magic __get function
 		$this->assertEquals( 20, $download3->file_download_limit );
-		$this->assertTrue( is_wp_error( $download3->__get( 'asdf') ) );
-
+		$this->assertTrue( is_wp_error( $download3->__get( 'asdf' ) ) );
 	}
 
 	public function test_can_purchase() {
@@ -202,8 +197,8 @@ class Tests_Downloads extends EDD_UnitTestCase {
 	}
 
 	public function test_variable_pricing_edd_price() {
-		$out = edd_get_variable_prices( $this->_post->ID );
-		$price_text = edd_price( $this->_post->ID, false, 0);
+		$out        = edd_get_variable_prices( $this->_post->ID );
+		$price_text = edd_price( $this->_post->ID, false, 0 );
 		$this->assertContains( '&#36;20.00', $price_text, 'Variable Price edd_price incorrect' );
 	}
 
@@ -232,7 +227,7 @@ class Tests_Downloads extends EDD_UnitTestCase {
 	}
 
 	public function test_price_range() {
-		$range = edd_price_range( $this->_post->ID );
+		$range    = edd_price_range( $this->_post->ID );
 		$expected = '<span class="edd_price edd_price_range_low" id="edd_price_low_' . $this->_post->ID . '">&#36;20.00</span><span class="edd_price_range_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price edd_price_range_high" id="edd_price_high_' . $this->_post->ID . '">&#36;100.00</span>';
 		$this->assertInternalType( 'string', $range );
 		$this->assertEquals( $expected, $range );
@@ -270,7 +265,6 @@ class Tests_Downloads extends EDD_UnitTestCase {
 
 		// Now test our EDD_Downlaod class method with a quantity
 		$this->assertEquals( 12, $download->increase_sales( 2 ) );
-
 	}
 
 	public function test_decrease_purchase_count() {
@@ -287,7 +281,6 @@ class Tests_Downloads extends EDD_UnitTestCase {
 
 		// Now test our EDD_Download class method with a quantity
 		$this->assertEquals( 0, $download->decrease_sales( 2 ) );
-
 	}
 
 	public function test_earnings_increase() {
@@ -298,7 +291,6 @@ class Tests_Downloads extends EDD_UnitTestCase {
 		// Now test our EDD_Download class method
 		$download = new EDD_Download( $this->_post->ID );
 		$this->assertEquals( 160, $download->increase_earnings( 20 ) );
-
 	}
 
 	public function test_decrease_earnings() {
@@ -365,7 +357,6 @@ class Tests_Downloads extends EDD_UnitTestCase {
 	}
 
 	public function test_item_quantities_disabled() {
-
 		update_post_meta( $this->_post->ID, '_edd_quantities_disabled', 1 );
 
 		$this->assertTrue( edd_download_quantities_disabled( $this->_post->ID ) );

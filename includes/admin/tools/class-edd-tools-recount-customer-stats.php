@@ -22,6 +22,7 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 
 	/**
 	 * Our export type. Used for export-type specific filters/actions
+	 *
 	 * @var string
 	 * @since 2.5
 	 */
@@ -29,6 +30,7 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 
 	/**
 	 * Allows for a non-download batch processing to be run.
+	 *
 	 * @since  2.5
 	 * @var boolean
 	 */
@@ -36,6 +38,7 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 
 	/**
 	 * Sets the number of items to pull on each step
+	 *
 	 * @since  2.5
 	 * @var integer
 	 */
@@ -50,7 +53,6 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 	 * @return array $data The data for the CSV file
 	 */
 	public function get_data() {
-
 		$args = array(
 			'limit'   => $this->per_step,
 			'offset'  => $this->per_step * ( $this->step - 1 ),
@@ -61,11 +63,9 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 		$customers = edd_get_customers( $args );
 
 		if ( $customers ) {
-
 			$allowed_payment_status = apply_filters( 'edd_recount_customer_payment_statuses', edd_get_payment_status_keys() );
 
 			foreach ( $customers as $customer ) {
-
 				$attached_payment_ids = explode( ',', $customer->payment_ids );
 
 				$attached_args = array(
@@ -85,7 +85,7 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 							'key'     => '_edd_payment_user_email',
 							'value'   => $customer->email,
 							'compare' => '=',
-						)
+						),
 					),
 				);
 
@@ -97,15 +97,12 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 				$purchase_count = 0;
 				$payment_ids    = array();
 
-				if( $payments ) {
-
+				if ( $payments ) {
 					foreach ( $payments as $payment ) {
-
 						$should_process_payment = 'publish' == $payment->post_status || 'revoked' == $payment->post_status ? true : false;
 						$should_process_payment = apply_filters( 'edd_customer_recount_should_process_payment', $should_process_payment, $payment );
 
-						if( true === $should_process_payment ) {
-
+						if ( true === $should_process_payment ) {
 							if ( apply_filters( 'edd_customer_recount_sholud_increase_value', true, $payment ) ) {
 								$purchase_value += edd_get_payment_amount( $payment->ID );
 							}
@@ -113,12 +110,10 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 							if ( apply_filters( 'edd_customer_recount_sholud_increase_count', true, $payment ) ) {
 								$purchase_count++;
 							}
-
 						}
 
 						$payment_ids[] = $payment->ID;
 					}
-
 				}
 
 				$payment_ids = implode( ',', $payment_ids );
@@ -131,14 +126,12 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 
 				$customer_instance = new EDD_Customer( $customer->id );
 				$customer_instance->update( $customer_update_data );
-
 			}
 
 			return true;
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -148,11 +141,10 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 	 * @return int
 	 */
 	public function get_percentage_complete() {
-
 		$args = array(
-			'number'       => -1,
-			'orderby'      => 'id',
-			'order'        => 'DESC',
+			'number'  => -1,
+			'orderby' => 'id',
+			'order'   => 'DESC',
 		);
 
 		$customers = edd_get_customers( $args );
@@ -160,11 +152,11 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 
 		$percentage = 100;
 
-		if( $total > 0 ) {
+		if ( $total > 0 ) {
 			$percentage = ( ( $this->per_step * $this->step ) / $total ) * 100;
 		}
 
-		if( $percentage > 100 ) {
+		if ( $percentage > 100 ) {
 			$percentage = 100;
 		}
 
@@ -186,14 +178,13 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 	 * @return bool
 	 */
 	public function process_step() {
-
 		if ( ! $this->can_export() ) {
 			wp_die( __( 'You do not have permission to export data.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		}
 
 		$had_data = $this->get_data();
 
-		if( $had_data ) {
+		if ( $had_data ) {
 			$this->done = false;
 			return true;
 		} else {

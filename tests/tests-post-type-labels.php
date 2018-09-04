@@ -34,7 +34,6 @@ class Tests_Post_Type_Labels extends EDD_UnitTestCase {
 	}
 
 	public function test_taxonomy_labels() {
-
 		$category_labels = edd_get_taxonomy_labels();
 		$this->assertInternalType( 'array', $category_labels );
 		$this->assertArrayHasKey( 'name', $category_labels );
@@ -60,6 +59,5 @@ class Tests_Post_Type_Labels extends EDD_UnitTestCase {
 		$this->assertTrue( in_array( 'Download Tags', $tag_labels ) );
 		// Negative test for our change to exclude singular post type label in #3212
 		$this->assertTrue( in_array( 'Tags', $tag_labels ) );
-
 	}
 }

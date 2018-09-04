@@ -53,12 +53,14 @@ function edd_admin_ajax_add_note() {
 	}
 
 	// Add the note
-	$note_id = edd_add_note( array(
-		'object_id'   => $object_id,
-		'object_type' => $object_type,
-		'content'     => $note,
-		'user_id'     => get_current_user_id()
-	) );
+	$note_id = edd_add_note(
+		array(
+			'object_id'   => $object_id,
+			'object_type' => $object_type,
+			'content'     => $note,
+			'user_id'     => get_current_user_id(),
+		)
+	);
 
 	$x = new WP_Ajax_Response();
 	$x->add(

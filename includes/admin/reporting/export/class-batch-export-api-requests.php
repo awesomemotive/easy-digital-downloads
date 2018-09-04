@@ -36,14 +36,14 @@ class EDD_Batch_API_Requests_Export extends EDD_Batch_Export {
 	 */
 	public function csv_cols() {
 		$cols = array(
-			'ID'      => __( 'Log ID',   'easy-digital-downloads' ),
+			'ID'      => __( 'Log ID', 'easy-digital-downloads' ),
 			'request' => __( 'API Request', 'easy-digital-downloads' ),
 			'ip'      => __( 'IP Address', 'easy-digital-downloads' ),
 			'user'    => __( 'API User', 'easy-digital-downloads' ),
 			'key'     => __( 'API Key', 'easy-digital-downloads' ),
 			'version' => __( 'API Version', 'easy-digital-downloads' ),
 			'speed'   => __( 'Request Speed', 'easy-digital-downloads' ),
-			'date'    => __( 'Date', 'easy-digital-downloads' )
+			'date'    => __( 'Date', 'easy-digital-downloads' ),
 		);
 
 		return $cols;
@@ -62,7 +62,7 @@ class EDD_Batch_API_Requests_Export extends EDD_Batch_Export {
 
 		$args = array(
 			'number' => 30,
-			'offset' => ( $this->step * 30 ) - 30
+			'offset' => ( $this->step * 30 ) - 30,
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
@@ -70,8 +70,8 @@ class EDD_Batch_API_Requests_Export extends EDD_Batch_Export {
 				array(
 					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
 					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
-					'inclusive' => true
-				)
+					'inclusive' => true,
+				),
 			);
 		}
 
@@ -88,7 +88,7 @@ class EDD_Batch_API_Requests_Export extends EDD_Batch_Export {
 				'key'     => $log->api_key,
 				'version' => $log->version,
 				'speed'   => $log->time,
-				'date'    => $log->date_created
+				'date'    => $log->date_created,
 			);
 		}
 
@@ -118,12 +118,12 @@ class EDD_Batch_API_Requests_Export extends EDD_Batch_Export {
 				array(
 					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
 					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
-					'inclusive' => true
-				)
+					'inclusive' => true,
+				),
 			);
 		}
 
-		$total = edd_count_api_request_logs( $args );
+		$total      = edd_count_api_request_logs( $args );
 		$percentage = 100;
 
 		if ( $total > 0 ) {
@@ -139,6 +139,6 @@ class EDD_Batch_API_Requests_Export extends EDD_Batch_Export {
 
 	public function set_properties( $request ) {
 		$this->start = isset( $request['start'] ) ? sanitize_text_field( $request['start'] ) : '';
-		$this->end   = isset( $request['end'] )   ? sanitize_text_field( $request['end'] )   : '';
+		$this->end   = isset( $request['end'] ) ? sanitize_text_field( $request['end'] ) : '';
 	}
 }

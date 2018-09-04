@@ -23,11 +23,14 @@ defined( 'ABSPATH' ) || exit;
 function edd_add_ons_page() {
 
 	// Filter the add-ons tabs
-	$add_ons_tabs = apply_filters( 'edd_add_ons_tabs', array(
-		'popular' => __( 'Popular', 'easy-digital-downloads' ),
-		'new'     => __( 'New',     'easy-digital-downloads' ),
-		'all'     => __( 'All',     'easy-digital-downloads' )
-	) );
+	$add_ons_tabs = apply_filters(
+		'edd_add_ons_tabs',
+		array(
+			'popular' => __( 'Popular', 'easy-digital-downloads' ),
+			'new'     => __( 'New', 'easy-digital-downloads' ),
+			'all'     => __( 'All', 'easy-digital-downloads' ),
+		)
+	);
 
 	// Active tab
 	$active_tab = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $add_ons_tabs )
@@ -43,18 +46,20 @@ function edd_add_ons_page() {
 	$tabs = array();
 
 	// Loop through add-ons and make array of tabs
-	foreach( $add_ons_tabs as $tab_id => $tab_name ) {
+	foreach ( $add_ons_tabs as $tab_id => $tab_name ) {
 
 		// "All"
 		if ( 'all' === $tab_id ) {
 			$tab_url = 'https://easydigitaldownloads.com/downloads/?utm_source=plugin-addons-page&utm_medium=plugin&utm_campaign=' . $campaign . '&utm_content=All%20Extensions';
 
-		// All other tabs besides "All"
+			// All other tabs besides "All"
 		} else {
-			$tab_url = add_query_arg( array(
-				'settings-updated' => false,
-				'tab'              => $tab_id
-			) );
+			$tab_url = add_query_arg(
+				array(
+					'settings-updated' => false,
+					'tab'              => $tab_id,
+				)
+			);
 		}
 
 		// Active?
@@ -148,7 +153,7 @@ function edd_add_ons_get_feed( $tab = 'popular' ) {
 		if ( empty( $feed ) || is_wp_error( $feed ) ) {
 			$cache = '<div class="error"><p>' . __( 'These extensions could not be retrieved from the server. Please try again later.', 'easy-digital-downloads' ) . '</div>';
 
-		// Cache the results
+			// Cache the results
 		} elseif ( isset( $feed['body'] ) && strlen( $feed['body'] ) > 0 ) {
 			$cache = wp_remote_retrieve_body( $feed );
 			set_transient( $trans_key, $cache, HOUR_IN_SECONDS );

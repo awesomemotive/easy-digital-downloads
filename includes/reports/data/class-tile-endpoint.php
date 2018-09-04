@@ -76,7 +76,7 @@ final class Tile_Endpoint extends Endpoint {
 			array(
 				'endpoint'     => $this,
 				'data'         => $this->get_data(),
-				'display_args' => $this->get_display_args()
+				'display_args' => $this->get_display_args(),
 			)
 		);
 	}

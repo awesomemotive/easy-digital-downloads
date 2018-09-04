@@ -34,12 +34,13 @@ class Attribute_Not_Found extends \OutOfBoundsException implements \EDD_Exceptio
 	 * @return \EDD\Utils\Exceptions\Attribute_Not_Found Exception instance.
 	 */
 	public static function from_attr( $attribute_name, $collection, $code = null, $previous = null ) {
-		$message = sprintf( 'The \'%1$s\' attribute does not exist for \'%2$s\'.',
+		$message = sprintf(
+			'The \'%1$s\' attribute does not exist for \'%2$s\'.',
 			$attribute_name,
 			$collection
 		);
 
-		return new static( $message, $code, $previous);
+		return new static( $message, $code, $previous );
 	}
 
 }

@@ -53,7 +53,6 @@ function register_endpoint( $endpoint_id, $attributes ) {
 
 	try {
 		$added = $registry->register_endpoint( $endpoint_id, $attributes );
-
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
 
@@ -115,7 +114,6 @@ function add_report( $report_id, $attributes ) {
 
 	try {
 		$added = $registry->add_report( $report_id, $attributes );
-
 	} catch ( \EDD_Exception $exception ) {
 		edd_debug_log_exception( $exception );
 
@@ -302,7 +300,7 @@ function validate_endpoint_view( $view ) {
  *
  * @see get_endpoint_views()
  *
- * @param array  $views View slugs and attributes as dictated by get_endpoint_views().
+ * @param array $views View slugs and attributes as dictated by get_endpoint_views().
  *
  * @return array (Maybe) adjusted views slugs and attributes array.
  */
@@ -347,32 +345,32 @@ function get_filters() {
 	$filters = array(
 		'dates'     => array(
 			'label'            => __( 'Date', 'easy-digital-downloads' ),
-			'display_callback' => __NAMESPACE__ . '\\display_dates_filter'
+			'display_callback' => __NAMESPACE__ . '\\display_dates_filter',
 		),
 		'products'  => array(
 			'label'            => __( 'Products', 'easy-digital-downloads' ),
-			'display_callback' => __NAMESPACE__ . '\\display_products_filter'
+			'display_callback' => __NAMESPACE__ . '\\display_products_filter',
 		),
 		'taxes'     => array(
 			'label'            => __( 'Exclude Taxes', 'easy-digital-downloads' ),
-			'display_callback' => __NAMESPACE__ . '\\display_taxes_filter'
+			'display_callback' => __NAMESPACE__ . '\\display_taxes_filter',
 		),
 		'gateways'  => array(
 			'label'            => __( 'Gateways', 'easy-digital-downloads' ),
-			'display_callback' => __NAMESPACE__ . '\\display_gateways_filter'
+			'display_callback' => __NAMESPACE__ . '\\display_gateways_filter',
 		),
 		'discounts' => array(
 			'label'            => __( 'Discounts', 'easy-digital-downloads' ),
-			'display_callback' => __NAMESPACE__ . '\\display_discounts_filter'
+			'display_callback' => __NAMESPACE__ . '\\display_discounts_filter',
 		),
 		'regions'   => array(
 			'label'            => __( 'Regions', 'easy-digital-downloads' ),
-			'display_callback' => __NAMESPACE__ . '\\display_region_filter'
+			'display_callback' => __NAMESPACE__ . '\\display_region_filter',
 		),
 		'countries' => array(
 			'label'            => __( 'Countries', 'easy-digital-downloads' ),
-			'display_callback' => __NAMESPACE__ . '\\display_country_filter'
-		)
+			'display_callback' => __NAMESPACE__ . '\\display_country_filter',
+		),
 	);
 
 	return $filters;
@@ -414,7 +412,7 @@ function get_filter_value( $filter ) {
 	if ( false !== $filter_value ) {
 		$value = $filter_value;
 
-	// Maybe use dates defaults
+		// Maybe use dates defaults
 	} elseif ( 'dates' === $filter ) {
 
 		// Default to last 30 days for filter value.
@@ -424,7 +422,7 @@ function get_filter_value( $filter ) {
 		$value   = array(
 			'from'  => $dates['start']->format( 'Y-m-d' ),
 			'to'    => $dates['end']->format( 'Y-m-d' ),
-			'range' => $default
+			'range' => $default,
 		);
 	}
 
@@ -488,18 +486,18 @@ function get_dates_filter_options() {
 
 	if ( is_null( $options ) ) {
 		$options = array(
-			'other'        => __( 'Custom',       'easy-digital-downloads' ),
-			'today'        => __( 'Today',        'easy-digital-downloads' ),
-			'yesterday'    => __( 'Yesterday',    'easy-digital-downloads' ),
-			'this_week'    => __( 'This Week',    'easy-digital-downloads' ),
-			'last_week'    => __( 'Last Week',    'easy-digital-downloads' ),
+			'other'        => __( 'Custom', 'easy-digital-downloads' ),
+			'today'        => __( 'Today', 'easy-digital-downloads' ),
+			'yesterday'    => __( 'Yesterday', 'easy-digital-downloads' ),
+			'this_week'    => __( 'This Week', 'easy-digital-downloads' ),
+			'last_week'    => __( 'Last Week', 'easy-digital-downloads' ),
 			'last_30_days' => __( 'Last 30 Days', 'easy-digital-downloads' ),
-			'this_month'   => __( 'This Month',   'easy-digital-downloads' ),
-			'last_month'   => __( 'Last Month',   'easy-digital-downloads' ),
+			'this_month'   => __( 'This Month', 'easy-digital-downloads' ),
+			'last_month'   => __( 'Last Month', 'easy-digital-downloads' ),
 			'this_quarter' => __( 'This Quarter', 'easy-digital-downloads' ),
 			'last_quarter' => __( 'Last Quarter', 'easy-digital-downloads' ),
-			'this_year'    => __( 'This Year',    'easy-digital-downloads' ),
-			'last_year'    => __( 'Last Year',    'easy-digital-downloads' )
+			'this_year'    => __( 'This Year', 'easy-digital-downloads' ),
+			'last_year'    => __( 'Last Year', 'easy-digital-downloads' ),
 		);
 	}
 
@@ -574,13 +572,11 @@ function get_dates_filter( $values = 'strings', $timezone = null ) {
  * @return \EDD\Utils\Date[] Array of start and end date objects.
  */
 function parse_dates_for_range( $date, $range = null ) {
-
 	if ( null === $range || ! array_key_exists( $range, get_dates_filter_options() ) ) {
 		$range = get_dates_filter_range();
 	}
 
 	switch ( $range ) {
-
 		case 'this_month':
 			$dates = array(
 				'start' => $date->copy()->startOfMonth(),
@@ -689,12 +685,10 @@ function parse_dates_for_range( $date, $range = null ) {
  * @return string Date filter range.
  */
 function get_dates_filter_range() {
-
 	$dates = get_filter_value( 'dates' );
 
 	if ( isset( $dates['range'] ) ) {
 		$range = sanitize_key( $dates['range'] );
-
 	} else {
 
 		/**
@@ -803,7 +797,7 @@ function default_display_report( $report ) {
 	}
 
 	// Try to output: tiles, tables, and charts
-	$report->display_endpoint_group( 'tiles'  );
+	$report->display_endpoint_group( 'tiles' );
 	$report->display_endpoint_group( 'tables' );
 	$report->display_endpoint_group( 'charts' );
 }
@@ -841,14 +835,16 @@ function default_display_tile( $report = null, $tile = array() ) {
 				break;
 
 			case 'split-number':
-				printf( '<span class="tile-amount tile-value">%1$d / %2$d</span>',
+				printf(
+					'<span class="tile-amount tile-value">%1$d / %2$d</span>',
 					edd_format_amount( $tile['args']['data']['first_value'] ),
 					edd_format_amount( $tile['args']['data']['second_value'] )
 				);
 				break;
 
 			case 'split-amount':
-				printf( '<span class="tile-amount tile-value">%1$d / %2$d</span>',
+				printf(
+					'<span class="tile-amount tile-value">%1$d / %2$d</span>',
 					edd_currency_filter( edd_format_amount( $tile['args']['data']['first_value'] ) ),
 					edd_currency_filter( edd_format_amount( $tile['args']['data']['second_value'] ) )
 				);
@@ -925,22 +921,30 @@ function default_display_tables_group( $report ) {
 		return;
 	}
 
-	$tables = $report->get_endpoints( 'tables' ); ?>
+	$tables = $report->get_endpoints( 'tables' );
+	?>
 
-	<div id="edd-reports-tables-wrap" class="edd-report-wrap"><?php
+	<div id="edd-reports-tables-wrap" class="edd-report-wrap">
+	<?php
 
-		foreach ( $tables as $endpoint_id => $table ) :
+	foreach ( $tables as $endpoint_id => $table ) :
 
-			?><div class="edd-reports-table" id="edd-reports-table-<?php echo esc_attr( $endpoint_id ); ?>">
-				<h3><?php echo esc_html( $table->get_label() ); ?></h3><?php
+		?>
+			<div class="edd-reports-table" id="edd-reports-table-<?php echo esc_attr( $endpoint_id ); ?>">
+				<h3><?php echo esc_html( $table->get_label() ); ?></h3>
+							   <?php
 
-				$table->display();
+								$table->display();
 
-			?></div><?php
+								?>
+			</div>
+			<?php
 
 		endforeach;
 
-	?><div class="clear"></div></div><?php
+	?>
+	<div class="clear"></div></div>
+	<?php
 }
 
 /**
@@ -955,22 +959,30 @@ function default_display_charts_group( $report ) {
 		return;
 	}
 
-	$charts = $report->get_endpoints( 'charts' ); ?>
+	$charts = $report->get_endpoints( 'charts' );
+	?>
 
-	<div id="edd-reports-charts-wrap" class="edd-report-wrap"><?php
+	<div id="edd-reports-charts-wrap" class="edd-report-wrap">
+	<?php
 
-		foreach ( $charts as $endpoint_id => $chart ) :
+	foreach ( $charts as $endpoint_id => $chart ) :
 
-			?><div class="edd-reports-chart edd-reports-chart-<?php echo esc_attr( $chart->get_type() ); ?>" id="edd-reports-table-<?php echo esc_attr( $endpoint_id ); ?>">
-				<h3><?php echo esc_html( $chart->get_label() ); ?></h3><?php
+		?>
+			<div class="edd-reports-chart edd-reports-chart-<?php echo esc_attr( $chart->get_type() ); ?>" id="edd-reports-table-<?php echo esc_attr( $endpoint_id ); ?>">
+				<h3><?php echo esc_html( $chart->get_label() ); ?></h3>
+							   <?php
 
-				$chart->display();
+								$chart->display();
 
-			?></div><?php
+								?>
+			</div>
+			<?php
 
 		endforeach;
 
-	?><div class="clear"></div></div><?php
+	?>
+	<div class="clear"></div></div>
+	<?php
 }
 
 /**
@@ -989,41 +1001,51 @@ function display_dates_filter() {
 		? ' screen-reader-text'
 		: '';
 
-	$range = EDD()->html->select( array(
-		'name'             => 'range',
-		'class'            => 'edd-graphs-date-options',
-		'options'          => $options,
-		'chosen'           => true,
-		'variations'       => false,
-		'show_option_all'  => false,
-		'show_option_none' => false,
-		'selected'         => $range
-	) );
+	$range = EDD()->html->select(
+		array(
+			'name'             => 'range',
+			'class'            => 'edd-graphs-date-options',
+			'options'          => $options,
+			'chosen'           => true,
+			'variations'       => false,
+			'show_option_all'  => false,
+			'show_option_none' => false,
+			'selected'         => $range,
+		)
+	);
 
 	// From.
-	$from = EDD()->html->date_field( array(
-		'id'          => 'filter_from',
-		'name'        => 'filter_from',
-		'value'       => ( empty( $dates['from'] ) || ( 'other' !== $dates['range'] ) ) ? '' : $dates['from'],
-		'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
-	) );
+	$from = EDD()->html->date_field(
+		array(
+			'id'          => 'filter_from',
+			'name'        => 'filter_from',
+			'value'       => ( empty( $dates['from'] ) || ( 'other' !== $dates['range'] ) ) ? '' : $dates['from'],
+			'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
+		)
+	);
 
 	// To.
-	$to = EDD()->html->date_field( array(
-		'id'          => 'filter_to',
-		'name'        => 'filter_to',
-		'value'       => ( empty( $dates['to'] ) || ( 'other' !== $dates['range'] ) ) ? '' : $dates['to'],
-		'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
-	) );
+	$to = EDD()->html->date_field(
+		array(
+			'id'          => 'filter_to',
+			'name'        => 'filter_to',
+			'value'       => ( empty( $dates['to'] ) || ( 'other' !== $dates['range'] ) ) ? '' : $dates['to'],
+			'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
+		)
+	);
 
 	// Output fields
-	?><span class="edd-date-range-picker graph-option-section"><?php
+	?>
+	<span class="edd-date-range-picker graph-option-section">
+	<?php
 		echo $range;
-	?></span>
+	?>
+	</span>
 
 	<span class="edd-date-range-options graph-option-section edd-from-to-wrapper<?php echo esc_attr( $class ); ?>">
 		<?php echo $from . $to; ?>
-	</span><?php
+	</span>
+	<?php
 }
 
 /**
@@ -1034,17 +1056,23 @@ function display_dates_filter() {
 function display_products_filter() {
 	$products = get_filter_value( 'products' );
 
-	$select   = EDD()->html->product_dropdown( array(
-		'chosen'           => true,
-		'variations'       => true,
-		'selected'         => empty( $products ) ? 0 : $products,
-		'show_option_none' => false,
-		'show_option_all'  => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
-	) ); ?>
+	$select = EDD()->html->product_dropdown(
+		array(
+			'chosen'           => true,
+			'variations'       => true,
+			'selected'         => empty( $products ) ? 0 : $products,
+			'show_option_none' => false,
+			'show_option_all'  => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
+		)
+	);
+	?>
 
-	<span class="edd-graph-filter-options graph-option-section"><?php
+	<span class="edd-graph-filter-options graph-option-section">
+	<?php
 		echo $select;
-	?></span><?php
+	?>
+	</span>
+	<?php
 }
 
 /**
@@ -1053,12 +1081,14 @@ function display_products_filter() {
  * @since 3.0
  */
 function display_taxes_filter() {
-	$taxes = get_filter_value( 'taxes' ); ?>
+	$taxes = get_filter_value( 'taxes' );
+	?>
 
-    <span class="edd-graph-filter-options graph-option-section">
-        <input type="checkbox" id="exclude_taxes" <?php checked( true, $taxes, true ); ?> value="1" name="exclude_taxes"/>
-        <label for="exclude_taxes"><?php esc_html_e( 'Exclude Taxes', 'easy-digital-downloads' ); ?></label>
-    </span><?php
+	<span class="edd-graph-filter-options graph-option-section">
+		<input type="checkbox" id="exclude_taxes" <?php checked( true, $taxes, true ); ?> value="1" name="exclude_taxes"/>
+		<label for="exclude_taxes"><?php esc_html_e( 'Exclude Taxes', 'easy-digital-downloads' ); ?></label>
+	</span>
+	<?php
 }
 
 /**
@@ -1069,10 +1099,12 @@ function display_taxes_filter() {
 function display_discounts_filter() {
 	$discount = get_filter_value( 'discounts' );
 
-	$d = edd_get_discounts( array(
-		'fields' => array( 'code', 'name' ),
-		'number' => 100,
-	) );
+	$d = edd_get_discounts(
+		array(
+			'fields' => array( 'code', 'name' ),
+			'number' => 100,
+		)
+	);
 
 	$discounts = array();
 
@@ -1081,15 +1113,21 @@ function display_discounts_filter() {
 	}
 
 	// Get the select
-	$select = EDD()->html->discount_dropdown( array(
-		'name'     => 'discounts',
-		'chosen'   => true,
-		'selected' => empty( $discount ) ? 0 : $discount,
-	) ); ?>
+	$select = EDD()->html->discount_dropdown(
+		array(
+			'name'     => 'discounts',
+			'chosen'   => true,
+			'selected' => empty( $discount ) ? 0 : $discount,
+		)
+	);
+	?>
 
-    <span class="edd-graph-filter-options graph-option-section"><?php
+	<span class="edd-graph-filter-options graph-option-section">
+	<?php
 		echo $select;
-	?></span><?php
+	?>
+	</span>
+	<?php
 }
 
 /**
@@ -1109,17 +1147,23 @@ function display_gateways_filter() {
 	}
 
 	// Get the select
-	$select = EDD()->html->select( array(
-		'name'             => 'gateways',
-		'options'          => $gateways,
-		'chosen'           => true,
-		'selected'         => empty( $gateway ) ? 0 : $gateway,
-		'show_option_none' => false,
-	) ); ?>
+	$select = EDD()->html->select(
+		array(
+			'name'             => 'gateways',
+			'options'          => $gateways,
+			'chosen'           => true,
+			'selected'         => empty( $gateway ) ? 0 : $gateway,
+			'show_option_none' => false,
+		)
+	);
+	?>
 
-    <span class="edd-graph-filter-options graph-option-section"><?php
+	<span class="edd-graph-filter-options graph-option-section">
+	<?php
 		echo $select;
-	?></span><?php
+	?>
+	</span>
+	<?php
 }
 
 /**
@@ -1137,20 +1181,26 @@ function display_region_filter() {
 	$regions = array_filter( $regions );
 
 	// Get the select
-	$select = EDD()->html->select( array(
-		'name'             => 'regions',
-		'id'               => 'edd_reports_filter_regions',
-		'class'            => 'edd_regions_filter',
-		'options'          => $regions,
-		'chosen'           => true,
-		'selected'         => empty( $region ) ? 0 : $region,
-		'show_option_none' => false,
-		'show_option_all'  => __( 'All Regions', 'easy-digital-downloads' ),
-	) ); ?>
+	$select = EDD()->html->select(
+		array(
+			'name'             => 'regions',
+			'id'               => 'edd_reports_filter_regions',
+			'class'            => 'edd_regions_filter',
+			'options'          => $regions,
+			'chosen'           => true,
+			'selected'         => empty( $region ) ? 0 : $region,
+			'show_option_none' => false,
+			'show_option_all'  => __( 'All Regions', 'easy-digital-downloads' ),
+		)
+	);
+	?>
 
-	<span class="edd-graph-filter-options graph-option-section"><?php
+	<span class="edd-graph-filter-options graph-option-section">
+	<?php
 	echo $select;
-	?></span><?php
+	?>
+	</span>
+	<?php
 }
 
 /**
@@ -1167,20 +1217,26 @@ function display_country_filter() {
 	$countries = array_filter( $countries );
 
 	// Get the select
-	$select = EDD()->html->select( array(
-		'name'             => 'countries',
-		'id'               => 'edd_reports_filter_countries',
-		'class'            => 'edd_countries_filter',
-		'options'          => $countries,
-		'chosen'           => true,
-		'selected'         => empty( $country ) ? 0 : $country,
-		'show_option_none' => false,
-		'show_option_all'  => __( 'All Countries', 'easy-digital-downloads' ),
-	) ); ?>
+	$select = EDD()->html->select(
+		array(
+			'name'             => 'countries',
+			'id'               => 'edd_reports_filter_countries',
+			'class'            => 'edd_countries_filter',
+			'options'          => $countries,
+			'chosen'           => true,
+			'selected'         => empty( $country ) ? 0 : $country,
+			'show_option_none' => false,
+			'show_option_all'  => __( 'All Countries', 'easy-digital-downloads' ),
+		)
+	);
+	?>
 
-	<span class="edd-graph-filter-options graph-option-section"><?php
+	<span class="edd-graph-filter-options graph-option-section">
+	<?php
 	echo $select;
-	?></span><?php
+	?>
+	</span>
+	<?php
 }
 
 /**
@@ -1193,9 +1249,13 @@ function display_country_filter() {
 function display_filters( $report ) {
 
 	// Output the filter bar
-	?><form method="get"><?php
+	?>
+	<form method="get">
+	<?php
 		edd_admin_filter_bar( 'reports', $report );
-	?></form><?php
+	?>
+	</form>
+	<?php
 
 }
 
@@ -1217,14 +1277,18 @@ function filter_items( $report = false ) {
 	}
 
 	// Get form actions
-	$action = admin_url( add_query_arg( array(
-		'post_type' => 'download',
-		'page'      => 'edd-reports',
-		'view'      => get_current_report(),
-	), 'edit.php' ) );
+	$action = admin_url(
+		add_query_arg(
+			array(
+				'post_type' => 'download',
+				'page'      => 'edd-reports',
+				'view'      => get_current_report(),
+			), 'edit.php'
+		)
+	);
 
 	// Bail if no filters
-	$filters  = $report->get_filters();
+	$filters = $report->get_filters();
 	if ( empty( $filters ) ) {
 		return;
 	}
@@ -1267,7 +1331,8 @@ function filter_items( $report = false ) {
 	// Call the callables in the buffer
 	foreach ( $callables as $to_call ) {
 		call_user_func( $to_call, $report );
-	} ?>
+	}
+	?>
 
 	<span class="edd-graph-filter-submit graph-option-section">
 		<input type="submit" class="button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>

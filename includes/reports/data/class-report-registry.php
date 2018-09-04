@@ -109,11 +109,11 @@ class Report_Registry extends Reports\Registry implements Utils\Static_Registry 
 			'priority'   => 10,
 			'group'      => 'core',
 			'capability' => 'view_shop_reports',
-			'filters'    => array( 'dates' )
+			'filters'    => array( 'dates' ),
 		);
 
 		$attributes['id'] = $report_id;
-		$attributes = array_merge( $defaults, $attributes );
+		$attributes       = array_merge( $defaults, $attributes );
 
 		try {
 			$this->validate_attributes( $attributes, $report_id );
@@ -149,7 +149,6 @@ class Report_Registry extends Reports\Registry implements Utils\Static_Registry 
 
 		if ( true === $error ) {
 			return false;
-
 		} else {
 			return parent::add_item( $report_id, $attributes );
 		}
@@ -242,9 +241,7 @@ class Report_Registry extends Reports\Registry implements Utils\Static_Registry 
 
 		try {
 			$_report = $this->get_report( $report );
-
-		} catch( \EDD_Exception $exception ) {
-
+		} catch ( \EDD_Exception $exception ) {
 			edd_debug_log_exception( $exception );
 
 			return new \WP_Error( 'invalid_report', $exception->getMessage(), $report );

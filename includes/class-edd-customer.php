@@ -245,7 +245,7 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 *
 	 * @since 2.3
 	 *
-	 * @param  array  $data Array of attributes for a customer
+	 * @param  array $data Array of attributes for a customer
 	 * @return mixed        False if not a valid creation, Customer ID if user is found or valid creation
 	 */
 	public function create( $data = array() ) {
@@ -280,20 +280,25 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 		if ( ! empty( $customer_id ) ) {
 
 			// Add the primary email address for this customer
-			edd_add_customer_email_address( array(
-				'customer_id' => $customer_id,
-				'email'       => $args['email'],
-				'type'        => 'primary'
-			) );
+			edd_add_customer_email_address(
+				array(
+					'customer_id' => $customer_id,
+					'email'       => $args['email'],
+					'type'        => 'primary',
+				)
+			);
 
 			// Maybe add payments
 			if ( ! empty( $args['payment_ids'] ) && is_array( $args['payment_ids'] ) ) {
 				$payment_ids = array_unique( array_values( $args['payment_ids'] ) );
 
 				foreach ( $payment_ids as $payment_id ) {
-					edd_update_order( $payment_id, array(
-						'customer_id' => $customer_id
-					) );
+					edd_update_order(
+						$payment_id,
+						array(
+							'customer_id' => $customer_id,
+						)
+					);
 				}
 			}
 
@@ -376,11 +381,13 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 			: 'secondary';
 
 		// Update is used to ensure duplicate emails are not added.
-		$ret = (bool) edd_add_customer_email_address( array(
-			'customer_id' => $this->id,
-			'email'       => $email,
-			'type'        => $type
-		) );
+		$ret = (bool) edd_add_customer_email_address(
+			array(
+				'customer_id' => $this->id,
+				'email'       => $email,
+				'type'        => $type,
+			)
+		);
 
 		do_action( 'edd_customer_post_add_email', $email, $this->id, $this );
 
@@ -443,7 +450,7 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 		}
 
 		// Query email addresses table for this address
-		$exists = edd_get_customer_email_address_by( 'email' , $email );
+		$exists = edd_get_customer_email_address_by( 'email', $email );
 
 		// Return true if found in email addresses table
 		if ( ! empty( $exists ) ) {
@@ -481,9 +488,11 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 		}
 
 		// Get customer emails
-		$emails = edd_get_customer_email_addresses( array(
-			'customer_id' => $this->id
-		) );
+		$emails = edd_get_customer_email_addresses(
+			array(
+				'customer_id' => $this->id,
+			)
+		);
 
 		// Pluck addresses, to help with in_array() calls
 		$plucked = wp_list_pluck( $emails, 'email' );
@@ -492,19 +501,23 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 		if ( ! in_array( $this->email, $plucked, true ) ) {
 
 			// Attempt to add the current primary if it's missing
-			$added = edd_add_customer_email_address( array(
-				'customer_id' => $this->id,
-				'email'       => $this->email,
-				'type'        => 'primary'
-			) );
+			$added = edd_add_customer_email_address(
+				array(
+					'customer_id' => $this->id,
+					'email'       => $this->email,
+					'type'        => 'primary',
+				)
+			);
 
 			// Maybe re-get all customer emails and re-pluck them
 			if ( ! empty( $added ) ) {
 
 				// Get customer emails
-				$emails = edd_get_customer_email_addresses( array(
-					'customer_id' => $this->id
-				) );
+				$emails = edd_get_customer_email_addresses(
+					array(
+						'customer_id' => $this->id,
+					)
+				);
 
 				// Pluck addresses, and look for the new one
 				$plucked = wp_list_pluck( $emails, 'email' );
@@ -521,16 +534,22 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 
 			// Make old primary a secondary
 			if ( ( 'primary' === $email->type ) && ( $new_primary_email !== $email->email ) ) {
-				edd_update_customer_email_address( $email->id, array(
-					'type' => 'secondary'
-				) );
+				edd_update_customer_email_address(
+					$email->id,
+					array(
+						'type' => 'secondary',
+					)
+				);
 			}
 
 			// Make new address primary
 			if ( ( 'secondary' === $email->type ) && ( $new_primary_email === $email->email ) ) {
-				edd_update_customer_email_address( $email->id, array(
-					'type' => 'primary'
-				) );
+				edd_update_customer_email_address(
+					$email->id,
+					array(
+						'type' => 'primary',
+					)
+				);
 			}
 		}
 
@@ -592,17 +611,21 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 		}
 
 		// Get total orders
-		$count = edd_count_orders( array(
-			'customer_id' => $this->id
-		) );
+		$count = edd_count_orders(
+			array(
+				'customer_id' => $this->id,
+			)
+		);
 
 		// Get order IDs
-		$ids = edd_get_orders( array(
-			'customer_id'   => $this->id,
-			'number'        => $count,
-			'fields'        => 'ids',
-			'no_found_rows' => true
-		) );
+		$ids = edd_get_orders(
+			array(
+				'customer_id'   => $this->id,
+				'number'        => $count,
+				'fields'        => 'ids',
+				'no_found_rows' => true,
+			)
+		);
 
 		// Cast IDs to ints
 		return array_map( 'absint', $ids );
@@ -613,7 +636,7 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 *
 	 * @since 2.6
 	 *
-	 * @param  array|string  $status A single status as a string or an array of statuses.
+	 * @param  array|string $status A single status as a string or an array of statuses.
 	 * @return array An array of EDD_Payment objects or an empty array.
 	 */
 	public function get_payments( $status = array() ) {
@@ -672,10 +695,13 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 		do_action( 'edd_customer_pre_attach_payment', $order->id, $this->id, $this );
 
 		// Update the order
-		$success = (bool) edd_update_order( $payment_id, array(
-			'customer_id' => $this->id,
-			'email'       => $this->email
-		) );
+		$success = (bool) edd_update_order(
+			$payment_id,
+			array(
+				'customer_id' => $this->id,
+				'email'       => $this->email,
+			)
+		);
 
 		// Maybe update stats
 		if ( ! empty( $success ) && ! empty( $update_stats ) ) {
@@ -728,10 +754,13 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 		do_action( 'edd_customer_pre_remove_payment', $payment->ID, $this->id, $this );
 
 		// Update the order
-		$success = (bool) edd_update_order( $payment_id, array(
-			'customer_id' => 0,
-			'email'       => ''
-		) );
+		$success = (bool) edd_update_order(
+			$payment_id,
+			array(
+				'customer_id' => 0,
+				'email'       => '',
+			)
+		);
 
 		// Maybe update stats
 		if ( ! empty( $success ) && ! empty( $update_stats ) ) {
@@ -753,28 +782,34 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	public function recalculate_stats() {
 
 		// Get total orders
-		$this->purchase_count = edd_count_orders( array(
-			'customer_id' => $this->id,
-			'status'      => 'publish'
-		) );
+		$this->purchase_count = edd_count_orders(
+			array(
+				'customer_id' => $this->id,
+				'status'      => 'publish',
+			)
+		);
 
 		// Get order IDs
-		$totals = edd_get_orders( array(
-			'customer_id'   => $this->id,
-			'number'        => $this->purchase_count,
-			'status'        => 'publish',
-			'fields'        => 'total',
-			'no_found_rows' => true
-		) );
+		$totals = edd_get_orders(
+			array(
+				'customer_id'   => $this->id,
+				'number'        => $this->purchase_count,
+				'status'        => 'publish',
+				'fields'        => 'total',
+				'no_found_rows' => true,
+			)
+		);
 
 		// Sum the totals together to get the lifetime value
 		$this->purchase_value = array_sum( $totals );
 
 		// Update the customer purchase count & value
-		return $this->update( array(
-			'purchase_count' => $this->purchase_count,
-			'purchase_value' => $this->purchase_value,
-		) );
+		return $this->update(
+			array(
+				'purchase_count' => $this->purchase_count,
+				'purchase_value' => $this->purchase_value,
+			)
+		);
 	}
 
 	/** Notes *****************************************************************/
@@ -803,13 +838,15 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 			: 0;
 
 		// Return the paginated notes for back-compat
-		return edd_get_notes( array(
-			'object_id'   => $this->id,
-			'object_type' => 'customer',
-			'number'      => $length,
-			'offset'      => $offset,
-			'order'       => 'desc',
-		) );
+		return edd_get_notes(
+			array(
+				'object_id'   => $this->id,
+				'object_type' => 'customer',
+				'number'      => $length,
+				'offset'      => $offset,
+				'order'       => 'desc',
+			)
+		);
 	}
 
 	/**
@@ -821,10 +858,12 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 * @return int The number of notes for the customer.
 	 */
 	public function get_notes_count() {
-		return edd_count_notes( array(
-			'object_id'   => $this->id,
-			'object_type' => 'customer',
-		) );
+		return edd_count_notes(
+			array(
+				'object_id'   => $this->id,
+				'object_type' => 'customer',
+			)
+		);
 	}
 
 	/**
@@ -863,12 +902,14 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 		do_action( 'edd_customer_pre_add_note', $note, $this->id, $this );
 
 		// Try to add the note
-		edd_add_note( array(
-			'user_id'     => 0, // Authored by System/Bot
-			'object_id'   => $this->id,
-			'object_type' => 'customer',
-			'content'     => wp_kses( stripslashes( $note ), array() ),
-		) );
+		edd_add_note(
+			array(
+				'user_id'     => 0, // Authored by System/Bot
+				'object_id'   => $this->id,
+				'object_type' => 'customer',
+				'content'     => wp_kses( stripslashes( $note ), array() ),
+			)
+		);
 
 		/**
 		 * Allow actions after a note is added
@@ -888,9 +929,9 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 *
 	 * @since 2.6
 	 *
-	 * @param string  $key    Optional. The meta key to retrieve. By default, returns data for all keys. Default empty.
-	 * @param bool    $single Optional, default is false. If true, return only the first value of the specified meta_key.
-	 *                        This parameter has no effect if meta_key is not specified.
+	 * @param string $key    Optional. The meta key to retrieve. By default, returns data for all keys. Default empty.
+	 * @param bool   $single Optional, default is false. If true, return only the first value of the specified meta_key.
+	 *                       This parameter has no effect if meta_key is not specified.
 	 *
 	 * @return mixed Will be an array if $single is false. Will be value of meta data field if $single is true.
 	 */
@@ -1017,11 +1058,13 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 * @return array Array of objects containing IP address.
 	 */
 	public function get_ips() {
-		return edd_get_orders( array(
-			'customer_id' => $this->id,
-			'fields'      => 'ip',
-			'groupby'     => 'ip',
-		) );
+		return edd_get_orders(
+			array(
+				'customer_id' => $this->id,
+				'fields'      => 'ip',
+				'groupby'     => 'ip',
+			)
+		);
 	}
 
 	/**
@@ -1037,9 +1080,11 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 		$retval = array( $this->email );
 
 		// Fetch email addresses from the database.
-		$emails = edd_get_customer_email_addresses( array(
-			'customer_id' => $this->id
-		) );
+		$emails = edd_get_customer_email_addresses(
+			array(
+				'customer_id' => $this->id,
+			)
+		);
 
 		// Pluck addresses and merg them
 		if ( ! empty( $emails ) ) {
@@ -1066,11 +1111,13 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 */
 	public function get_address( $type = 'primary' ) {
 		if ( 'primary' === $type ) {
-			$address = edd_get_customer_addresses( array(
-				'number'      => 1,
-				'type'        => 'primary',
-				'customer_id' => $this->id,
-			) );
+			$address = edd_get_customer_addresses(
+				array(
+					'number'      => 1,
+					'type'        => 'primary',
+					'customer_id' => $this->id,
+				)
+			);
 
 			if ( is_array( $address ) && ! empty( $address ) ) {
 				return $address[0];
@@ -1078,10 +1125,12 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 				return null;
 			}
 		} else {
-			return edd_get_customer_addresses( array(
-				'customer_id' => $this->id,
-				'type'        => $type,
-			) );
+			return edd_get_customer_addresses(
+				array(
+					'customer_id' => $this->id,
+					'type'        => $type,
+				)
+			);
 		}
 	}
 
@@ -1095,9 +1144,11 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 * @return \EDD\Customers\Customer_Address[] Array of addresses.
 	 */
 	public function get_addresses( $type = '' ) {
-		$addresses = edd_get_customer_addresses( array(
-			'customer_id' => $this->id,
-		) );
+		$addresses = edd_get_customer_addresses(
+			array(
+				'customer_id' => $this->id,
+			)
+		);
 
 		if ( ! empty( $type ) ) {
 			$addresses = wp_filter_object_list( $addresses, array( 'type' => $type ) );

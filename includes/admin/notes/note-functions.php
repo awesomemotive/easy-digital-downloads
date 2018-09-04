@@ -80,10 +80,15 @@ function edd_admin_get_note_html( $note_id = 0 ) {
 		: edd_get_bot_name();
 
 	// URL to delete note
-	$delete_note_url = wp_nonce_url( add_query_arg( array(
-		'edd-action' => 'delete_note',
-		'note_id'    => $note->id,
-	) ), 'edd_delete_note_' . $note->id );
+	$delete_note_url = wp_nonce_url(
+		add_query_arg(
+			array(
+				'edd-action' => 'delete_note',
+				'note_id'    => $note->id,
+			)
+		),
+		'edd_delete_note_' . $note->id
+	);
 
 	// Start a buffer
 	ob_start();
@@ -122,7 +127,8 @@ function edd_admin_get_note_html( $note_id = 0 ) {
 function edd_admin_get_new_note_form( $object_id = 0, $object_type = '' ) {
 
 	// Start a buffer
-	ob_start();?>
+	ob_start();
+	?>
 
 	<div class="edd-add-note">
 		<textarea name="edd-note" id="edd-note"></textarea>
@@ -172,15 +178,18 @@ function edd_get_note_delete_redirect_url() {
 function edd_admin_get_notes_pagination( $args = array() ) {
 
 	// Parse args
-	$r = wp_parse_args( $args, array(
-		'total'        => 0,
-		'pag_arg'      => 'paged',
-		'base'         => '%_%',
-		'show_all'     => true,
-		'prev_text'    => is_rtl() ? '&rarr;' : '&larr;',
-		'next_text'    => is_rtl() ? '&larr;' : '&rarr;',
-		'add_fragment' => ''
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'total'        => 0,
+			'pag_arg'      => 'paged',
+			'base'         => '%_%',
+			'show_all'     => true,
+			'prev_text'    => is_rtl() ? '&rarr;' : '&larr;',
+			'next_text'    => is_rtl() ? '&larr;' : '&rarr;',
+			'add_fragment' => '',
+		)
+	);
 
 	// Maximum notes per page
 	$per_page    = apply_filters( 'edd_notes_per_page', 20 );
@@ -193,7 +202,8 @@ function edd_admin_get_notes_pagination( $args = array() ) {
 		: 1;
 
 	// Start a buffer
-	ob_start(); ?>
+	ob_start();
+	?>
 
 	<div class="edd-note-pagination">
 		<?php echo paginate_links( $r ); ?>

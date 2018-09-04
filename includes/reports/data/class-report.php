@@ -117,11 +117,9 @@ final class Report extends Base_Object {
 		if ( ! empty( $this->raw_endpoints ) && current_user_can( $this->get_capability() ) ) {
 			try {
 				$this->parse_endpoints( $this->raw_endpoints );
-
 			} catch ( \EDD_Exception $exception ) {
 				edd_debug_log_exception( $exception );
 			}
-
 		} else {
 			$this->errors->add( 'missing_endpoints', 'No endpoints are defined for the report.' );
 		}
@@ -151,15 +149,16 @@ final class Report extends Base_Object {
 
 			// Skip any invalid views based on view group.
 			if ( ! array_key_exists( $group, $view_groups ) ) {
-				throw new Utils\Exception( sprintf(
-					'The \'%1$s\' view group does not correspond to a known endpoint view type.',
-					$group
-				) );
+				throw new Utils\Exception(
+					sprintf(
+						'The \'%1$s\' view group does not correspond to a known endpoint view type.',
+						$group
+					)
+				);
 			}
 
 			// Loop through all endpoints for each view group and build endpoint objects.
 			foreach ( $endpoints as $endpoint ) {
-
 				$endpoint = $registry->build_endpoint( $endpoint, $view_groups[ $group ], $this->get_id() );
 
 				$this->validate_endpoint( $group, $endpoint );
@@ -207,13 +206,12 @@ final class Report extends Base_Object {
 				$endpoint->get_error_message(),
 				$endpoint->get_error_data()
 			);
-
 		} elseif ( ! is_wp_error( $endpoint ) && $endpoint->has_errors() ) {
 			$message = sprintf( 'The \'%1$s\' endpoint is invalid.', $endpoint->get_id() );
 
 			$this->errors->add( 'invalid_endpoint', $message, $endpoint->get_errors() );
 
-		// Valid.
+			// Valid.
 		} else {
 			$this->endpoints[ $view_group ][ $endpoint->get_id() ] = $endpoint;
 		}
@@ -269,9 +267,9 @@ final class Report extends Base_Object {
 
 		if ( isset( $endpoints[ $endpoint_id ] ) ) {
 			$endpoint = $endpoints[ $endpoint_id ];
-
 		} else {
-			$message = sprintf( 'The \'%1$s\' endpoint does not exist for the \'%2$s\' view group in the \'%3$s\' report.',
+			$message = sprintf(
+				'The \'%1$s\' endpoint does not exist for the \'%2$s\' view group in the \'%3$s\' report.',
 				$endpoint_id,
 				$view_group,
 				$this->get_id()
@@ -341,7 +339,6 @@ final class Report extends Base_Object {
 	private function set_display_callback( $callback ) {
 		if ( is_callable( $callback ) ) {
 			$this->display_callback = $callback;
-
 		} else {
 			$this->flag_invalid_report_arg_type( 'display_callback', 'callable' );
 		}
@@ -366,13 +363,12 @@ final class Report extends Base_Object {
 	 * @param array $filters Filters to set for this report.
 	 */
 	private function set_filters( $filters ) {
-
 		foreach ( $filters as $filter ) {
 			if ( Reports\validate_filter( $filter ) ) {
 				$this->filters[] = $filter;
-
 			} else {
-				$message = sprintf( 'The \'%1$s\' filter for the \'%2$s\' report is invalid.',
+				$message = sprintf(
+					'The \'%1$s\' filter for the \'%2$s\' report is invalid.',
 					$filter,
 					$this->get_id()
 				);
@@ -434,14 +430,19 @@ final class Report extends Base_Object {
 	 * @param string $argument Argument name.
 	 */
 	protected function flag_invalid_report_arg_type( $argument, $expected_type ) {
-		$message = sprintf( 'The \'%1$s\' argument must be of type %2$s for the \'%3$s\' report.',
+		$message = sprintf(
+			'The \'%1$s\' argument must be of type %2$s for the \'%3$s\' report.',
 			$argument,
 			$expected_type,
 			$this->get_id()
 		);
 
-		$this->errors->add( 'invalid_report_arg_type', $message, array(
-			'report_id' => $this->get_id(),
-		) );
+		$this->errors->add(
+			'invalid_report_arg_type',
+			$message,
+			array(
+				'report_id' => $this->get_id(),
+			)
+		);
 	}
 }

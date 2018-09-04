@@ -74,11 +74,9 @@ final class Table_Endpoint extends Endpoint {
 	 * @param array $endpoint Endpoint record from the registry.
 	 */
 	private function parse_display_props( $endpoint ) {
-
 		$view_type = $this->get_view();
 
 		if ( ! empty( $endpoint['views'][ $view_type ] ) ) {
-
 			$view_atts = $endpoint['views'][ $view_type ];
 
 			$list_table = $this->get_list_table();
@@ -101,44 +99,33 @@ final class Table_Endpoint extends Endpoint {
 	 * @param array $endpoint Table endpoint arguments.
 	 */
 	private function setup_list_table( $endpoint ) {
-
 		if ( ! empty( $endpoint['views'][ $this->view ]['display_args'] ) ) {
-
 			$display_args = $endpoint['views'][ $this->view ]['display_args'];
 
 			if ( ! empty( $display_args['class_name'] ) ) {
-
 				if ( ! empty( $display_args['class_file'] ) ) {
-
 					$this->set_class_file( $display_args['class_file'] );
 
 					$this->set_list_table( $display_args['class_name'] );
-
 				} else {
-
 					$this->errors->add(
 						'missing_table_class_file',
 						sprintf( 'The list table class file for the \'%1$s\' endpoint is missing.', $this->get_id() )
 					);
-
 				}
-
 			} else {
-
 				$this->errors->add(
 					'missing_table_class_name',
-					sprintf( 'The list table class name for the \'%1$s\' endpoint is missing.',
+					sprintf(
+						'The list table class name for the \'%1$s\' endpoint is missing.',
 						$this->get_id()
 					)
 				);
-
 			}
 
 			// Dump the display args as they're no longer needed.
 			$endpoint['views'][ $this->view ]['display_args'] = array();
-
 		}
-
 	}
 
 	/**
@@ -193,7 +180,7 @@ final class Table_Endpoint extends Endpoint {
 				require_once $path_to_file;
 			}
 		}
-		$this->list_table = new $class;
+		$this->list_table = new $class();
 	}
 
 	/**
@@ -211,11 +198,14 @@ final class Table_Endpoint extends Endpoint {
 				// Prep the table data for display (prepare_items).
 				$this->get_data();
 
-				call_user_func_array( $callback, array(
-					'endpoint' => $this,
-					'table'    => $table,
-					'args'     => $this->get_display_args(),
-				) );
+				call_user_func_array(
+					$callback,
+					array(
+						'endpoint' => $this,
+						'table'    => $table,
+						'args'     => $this->get_display_args(),
+					)
+				);
 			}
 		}
 	}

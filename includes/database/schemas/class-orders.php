@@ -39,7 +39,7 @@ class Orders extends Schema {
 			'extra'      => 'auto_increment',
 			'primary'    => true,
 			'sortable'   => true,
-			'searchable' => true
+			'searchable' => true,
 		),
 
 		// parent
@@ -50,7 +50,7 @@ class Orders extends Schema {
 			'unsigned'   => true,
 			'default'    => '0',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// order_number
@@ -59,7 +59,7 @@ class Orders extends Schema {
 			'type'       => 'varchar',
 			'length'     => '255',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// status
@@ -70,7 +70,7 @@ class Orders extends Schema {
 			'default'    => 'pending',
 			'searchable' => true,
 			'sortable'   => true,
-			'transition' => true
+			'transition' => true,
 		),
 
 		// type
@@ -80,27 +80,27 @@ class Orders extends Schema {
 			'length'     => '20',
 			'default'    => 'sale',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// user_id
 		array(
-			'name'       => 'user_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0',
-			'sortable'   => true
+			'name'     => 'user_id',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'default'  => '0',
+			'sortable' => true,
 		),
 
 		// customer_id
 		array(
-			'name'       => 'customer_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0',
-			'sortable'   => true
+			'name'     => 'customer_id',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'default'  => '0',
+			'sortable' => true,
 		),
 
 		// email
@@ -109,74 +109,74 @@ class Orders extends Schema {
 			'type'       => 'varchar',
 			'length'     => '100',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// ip
 		array(
-			'name'       => 'ip',
-			'type'       => 'varchar',
-			'length'     => '60',
-			'sortable'   => true
+			'name'     => 'ip',
+			'type'     => 'varchar',
+			'length'   => '60',
+			'sortable' => true,
 		),
 
 		// gateway
 		array(
-			'name'       => 'gateway',
-			'type'       => 'varchar',
-			'length'     => '20',
-			'sortable'   => true,
+			'name'     => 'gateway',
+			'type'     => 'varchar',
+			'length'   => '20',
+			'sortable' => true,
 		),
 
 		// mode
 		array(
-			'name'       => 'mode',
-			'type'       => 'varchar',
-			'length'     => '20'
+			'name'   => 'mode',
+			'type'   => 'varchar',
+			'length' => '20',
 		),
 
 		// currency
 		array(
-			'name'       => 'currency',
-			'type'       => 'varchar',
-			'length'     => '20'
+			'name'   => 'currency',
+			'type'   => 'varchar',
+			'length' => '20',
 		),
 
 		// payment_key
 		array(
-			'name'       => 'payment_key',
-			'type'       => 'varchar',
-			'length'     => '64'
+			'name'   => 'payment_key',
+			'type'   => 'varchar',
+			'length' => '64',
 		),
 
 		// subtotal
 		array(
-			'name'       => 'subtotal',
-			'type'       => 'decimal',
-			'length'     => '18,9',
-			'default'    => '0',
-			'sortable'   => true,
-			'validate'   => 'edd_sanitize_amount'
+			'name'     => 'subtotal',
+			'type'     => 'decimal',
+			'length'   => '18,9',
+			'default'  => '0',
+			'sortable' => true,
+			'validate' => 'edd_sanitize_amount',
 		),
 
 		// discount
 		array(
-			'name'       => 'discount',
-			'type'       => 'decimal',
-			'length'     => '18,9',
-			'default'    => '0',
-			'sortable'   => true,
-			'validate'   => 'edd_sanitize_amount'
+			'name'     => 'discount',
+			'type'     => 'decimal',
+			'length'   => '18,9',
+			'default'  => '0',
+			'sortable' => true,
+			'validate' => 'edd_sanitize_amount',
 		),
 
 		// tax
 		array(
-			'name'       => 'tax',
-			'type'       => 'decimal',
-			'length'     => '18,9',
-			'default'    => '0',
-			'sortable'   => true,
-			'validate'   => 'edd_sanitize_amount'
+			'name'     => 'tax',
+			'type'     => 'decimal',
+			'length'   => '18,9',
+			'default'  => '0',
+			'sortable' => true,
+			'validate' => 'edd_sanitize_amount',
 		),
 
 		// total
@@ -187,7 +187,7 @@ class Orders extends Schema {
 			'default'    => '0',
 			'searchable' => true,
 			'sortable'   => true,
-			'validate'   => 'edd_sanitize_amount'
+			'validate'   => 'edd_sanitize_amount',
 		),
 
 		// date_created
@@ -197,7 +197,7 @@ class Orders extends Schema {
 			'default'    => '0000-00-00 00:00:00',
 			'created'    => true,
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// date_modified
@@ -207,7 +207,7 @@ class Orders extends Schema {
 			'default'    => '0000-00-00 00:00:00',
 			'modified'   => true,
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// date_completed
@@ -216,7 +216,7 @@ class Orders extends Schema {
 			'type'       => 'datetime',
 			'default'    => '0000-00-00 00:00:00',
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// date_refundable
@@ -225,12 +225,12 @@ class Orders extends Schema {
 			'type'       => 'datetime',
 			'default'    => '0000-00-00 00:00:00',
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// uuid
 		array(
-			'uuid'       => true,
-		)
+			'uuid' => true,
+		),
 	);
 }

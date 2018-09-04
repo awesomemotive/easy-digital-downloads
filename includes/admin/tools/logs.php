@@ -7,7 +7,7 @@
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
-*/
+ */
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -28,7 +28,7 @@ function edd_logs_view_setup( $type = '' ) {
 	}
 
 	// Includes
-	require_once ABSPATH        . 'wp-admin/includes/class-wp-list-table.php';
+	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-base-logs-list-table.php';
 	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-' . sanitize_key( $type ) . '-logs-list-table.php';
 
@@ -55,7 +55,8 @@ function edd_logs_view_page( $logs_table, $tag = '' ) {
 		 *
 		 * @since 3.0
 		 */
-		do_action( "edd_logs_{$tag}_top" ); ?>
+		do_action( "edd_logs_{$tag}_top" );
+		?>
 
 		<form id="edd-logs-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=' . $tag ); ?>">
 			<input type="hidden" name="post_type" value="download" />
@@ -75,10 +76,11 @@ function edd_logs_view_page( $logs_table, $tag = '' ) {
 		 *
 		 * @since 3.0
 		 */
-		do_action( "edd_logs_{$tag}_bottom" ); ?>
+		do_action( "edd_logs_{$tag}_bottom" );
+		?>
 
 	</div>
-<?php
+	<?php
 }
 
 /** Views *********************************************************************/
@@ -186,12 +188,15 @@ function edd_log_default_views() {
 	 * @param array $views Logs views. Each key/value pair represents the view slug
 	 *                     and label, respectively.
 	 */
-	return apply_filters( 'edd_log_views', array(
-		'file_downloads'  => __( 'File Downloads', 'easy-digital-downloads' ),
-		'sales' 		  => __( 'Sales',          'easy-digital-downloads' ),
-		'gateway_errors'  => __( 'Payment Errors', 'easy-digital-downloads' ),
-		'api_requests'    => __( 'API Requests',   'easy-digital-downloads' )
-	) );
+	return apply_filters(
+		'edd_log_views',
+		array(
+			'file_downloads' => __( 'File Downloads', 'easy-digital-downloads' ),
+			'sales'          => __( 'Sales', 'easy-digital-downloads' ),
+			'gateway_errors' => __( 'Payment Errors', 'easy-digital-downloads' ),
+			'api_requests'   => __( 'API Requests', 'easy-digital-downloads' ),
+		)
+	);
 }
 
 /**
@@ -201,7 +206,7 @@ function edd_log_default_views() {
  * @since 3.0 Deprecated, and modified to look like the 3.0 approach
  *
  * @return void
-*/
+ */
 function edd_log_views() {
 	static $once = false;
 
@@ -211,7 +216,8 @@ function edd_log_views() {
 	}
 
 	// Only once
-	$once = true; ?>
+	$once = true;
+	?>
 
 	<!-- EDD 3.0 Hack -->
 	</div></div>
@@ -221,7 +227,7 @@ function edd_log_views() {
 	<div class="tablenav top"><div>
 	<!-- EDD 3.0 Hack -->
 
-<?php
+	<?php
 }
 
 /**
@@ -237,7 +243,8 @@ function edd_old_logs_filter_bar_items() {
 	$views        = edd_log_default_views();
 	$current_view = isset( $_GET['view'] ) && array_key_exists( $_GET['view'], edd_log_default_views() )
 		? sanitize_text_field( $_GET['view'] )
-		: 'file_downloads'; ?>
+		: 'file_downloads';
+	?>
 
 	<span id="edd-type-filter">
 		<select id="edd-logs-view" name="view" class="edd-select-chosen <?php echo esc_attr( $rtl_class ); ?>">
@@ -253,12 +260,14 @@ function edd_old_logs_filter_bar_items() {
 	 *
 	 * @since 1.3
 	 */
-	do_action( 'edd_log_view_actions' ); ?>
+	do_action( 'edd_log_view_actions' );
+	?>
 
 	<button type="submit "class="button button-secondary"><?php _e( 'Filter', 'easy-digital-downloads' ); ?></button>
 
 	<input type="hidden" name="post_type" value="download" />
 	<input type="hidden" name="page" value="edd-tools" />
-	<input type="hidden" name="tab" value="logs" /><?php
+	<input type="hidden" name="tab" value="logs" />
+	<?php
 }
 add_action( 'edd_admin_filter_bar_old_logs', 'edd_old_logs_filter_bar_items' );

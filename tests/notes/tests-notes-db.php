@@ -35,38 +35,51 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 	 * @covers ::insert()
 	 */
 	public function test_insert_should_return_false_if_no_object_id_supplied() {
-		$this->assertFalse( edd_add_note( array(
-			'object_type' => 'payment',
-			'content'     => 'Payment status changed',
-		) ) );
+		$this->assertFalse(
+			edd_add_note(
+				array(
+					'object_type' => 'payment',
+					'content'     => 'Payment status changed',
+				)
+			)
+		);
 	}
 
 	/**
 	 * @covers ::insert()
 	 */
 	public function test_insert_should_return_false_if_no_object_type_supplied() {
-		$this->assertFalse( edd_add_note( array(
-			'object_id' => 6278,
-			'content'   => 'Payment status changed',
-		) ) );
+		$this->assertFalse(
+			edd_add_note(
+				array(
+					'object_id' => 6278,
+					'content'   => 'Payment status changed',
+				)
+			)
+		);
 	}
 
 	/**
 	 * @covers ::insert()
 	 */
 	public function test_insert_with_valid_data() {
-		$this->assertGreaterThan( 0, edd_add_note( array(
-			'object_type' => 'payment',
-			'object_id'   => 6278,
-			'content'     => 'Payment status changed',
-		) ) );
+		$this->assertGreaterThan(
+			0,
+			edd_add_note(
+				array(
+					'object_type' => 'payment',
+					'object_id'   => 6278,
+					'content'     => 'Payment status changed',
+				)
+			)
+		);
 	}
 
 	/**
 	 * @covers ::insert()
 	 */
 	public function test_insert_with_invalid_data_should_return_false() {
-		$this->assertFalse( edd_add_note( array( ) ) );
+		$this->assertFalse( edd_add_note( array() ) );
 	}
 
 	/**
@@ -80,9 +93,15 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 	 * @covers ::update()
 	 */
 	public function test_note_object_after_update_should_return_true() {
-		$this->assertSame( 1, edd_update_note( self::$notes[0], array(
-			'content' => 'Note with updated body',
-		) ) );
+		$this->assertSame(
+			1,
+			edd_update_note(
+				self::$notes[0],
+				array(
+					'content' => 'Note with updated body',
+				)
+			)
+		);
 
 		$note = edd_get_note( self::$notes[0] );
 
@@ -111,9 +130,11 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 	 * @covers ::get_notes()
 	 */
 	public function test_get_notes_with_number_should_return_true() {
-		$notes = edd_get_notes( array(
-			'number' => 10,
-		) );
+		$notes = edd_get_notes(
+			array(
+				'number' => 10,
+			)
+		);
 
 		$this->assertCount( 5, $notes );
 	}
@@ -122,10 +143,12 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 	 * @covers ::get_notes()
 	 */
 	public function test_get_notes_with_offset_should_return_true() {
-		$notes = edd_get_notes( array(
-			'number' => 10,
-			'offset' => 4,
-		) );
+		$notes = edd_get_notes(
+			array(
+				'number' => 10,
+				'offset' => 4,
+			)
+		);
 
 		$this->assertCount( 1, $notes );
 	}
@@ -134,9 +157,11 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 	 * @covers ::get_notes()
 	 */
 	public function test_get_notes_with_search_should_return_true() {
-		$notes = edd_get_notes( array(
-			'search' => 'Payment status changed for object with ID',
-		) );
+		$notes = edd_get_notes(
+			array(
+				'search' => 'Payment status changed for object with ID',
+			)
+		);
 
 		$this->assertCount( 5, $notes );
 	}
@@ -145,10 +170,12 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 	 * @covers ::get_notes()
 	 */
 	public function test_get_notes_with_orderby_object_id_and_order_asc_should_return_true() {
-		$notes = edd_get_notes( array(
-			'orderby' => 'object_id',
-			'order'   => 'asc'
-		) );
+		$notes = edd_get_notes(
+			array(
+				'orderby' => 'object_id',
+				'order'   => 'asc',
+			)
+		);
 
 		$this->assertTrue( $notes[0]->object_id < $notes[1]->object_id );
 	}
@@ -156,10 +183,12 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 	 * @covers ::get_notes()
 	 */
 	public function test_get_notes_with_orderby_object_id_and_order_desc_should_return_true() {
-		$notes = edd_get_notes( array(
-			'orderby' => 'object_id',
-			'order'   => 'desc'
-		) );
+		$notes = edd_get_notes(
+			array(
+				'orderby' => 'object_id',
+				'order'   => 'desc',
+			)
+		);
 
 		$this->assertTrue( $notes[0]->object_id > $notes[1]->object_id );
 	}
@@ -168,10 +197,12 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 	 * @covers ::get_notes()
 	 */
 	public function test_get_notes_with_orderby_content_and_order_asc_should_return_true() {
-		$notes = edd_get_notes( array(
-			'orderby' => 'content',
-			'order'   => 'asc'
-		) );
+		$notes = edd_get_notes(
+			array(
+				'orderby' => 'content',
+				'order'   => 'asc',
+			)
+		);
 
 		$this->assertTrue( $notes[0]->content < $notes[1]->content );
 	}
@@ -179,10 +210,12 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 	 * @covers ::get_notes()
 	 */
 	public function test_get_notes_with_orderby_content_and_order_desc_should_return_true() {
-		$notes = edd_get_notes( array(
-			'orderby' => 'content',
-			'order'   => 'desc'
-		) );
+		$notes = edd_get_notes(
+			array(
+				'orderby' => 'content',
+				'order'   => 'desc',
+			)
+		);
 		$this->assertTrue( $notes[0]->content > $notes[1]->content );
 	}
 
@@ -190,10 +223,12 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 	 * @covers ::get_notes()
 	 */
 	public function test_get_notes_with_orderby_user_id_and_order_asc_should_return_true() {
-		$notes = edd_get_notes( array(
-			'orderby' => 'user_id',
-			'order'   => 'asc'
-		) );
+		$notes = edd_get_notes(
+			array(
+				'orderby' => 'user_id',
+				'order'   => 'asc',
+			)
+		);
 
 		$this->assertTrue( $notes[0]->user_id < $notes[1]->user_id );
 	}
@@ -201,10 +236,12 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 	 * @covers ::get_notes()
 	 */
 	public function test_get_notes_with_orderby_user_id_and_order_desc_should_return_true() {
-		$notes = edd_get_notes( array(
-			'orderby' => 'user_id',
-			'order'   => 'desc'
-		) );
+		$notes = edd_get_notes(
+			array(
+				'orderby' => 'user_id',
+				'order'   => 'desc',
+			)
+		);
 
 		$this->assertTrue( $notes[0]->user_id > $notes[1]->user_id );
 	}
@@ -213,9 +250,11 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 	 * @covers ::get_notes()
 	 */
 	public function test_get_notes_with_order_asc_should_return_true() {
-		$notes = edd_get_notes( array(
-			'order' => 'asc',
-		) );
+		$notes = edd_get_notes(
+			array(
+				'order' => 'asc',
+			)
+		);
 
 		$this->assertTrue( $notes[0]->id < $notes[1]->id );
 	}
@@ -223,9 +262,11 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 	 * @covers ::get_notes()
 	 */
 	public function test_get_notes_with_order_desc_should_return_true() {
-		$notes = edd_get_notes( array(
-			'order' => 'desc',
-		) );
+		$notes = edd_get_notes(
+			array(
+				'order' => 'desc',
+			)
+		);
 		$this->assertTrue( $notes[0]->id > $notes[1]->id );
 	}
 
@@ -233,9 +274,11 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 	 * @covers ::get_notes()
 	 */
 	public function test_get_notes_by_object_id_should_be_1() {
-		$notes = edd_get_notes( array(
-			'object_id' => \WP_UnitTest_Generator_Sequence::$incr
-		) );
+		$notes = edd_get_notes(
+			array(
+				'object_id' => \WP_UnitTest_Generator_Sequence::$incr,
+			)
+		);
 
 		$this->assertCount( 1, $notes );
 	}
@@ -244,9 +287,11 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 	 * @covers ::get_notes()
 	 */
 	public function test_get_notes_by_invalid_object_id_should_be_0() {
-		$notes = edd_get_notes( array(
-			'object_id' => 99999,
-		) );
+		$notes = edd_get_notes(
+			array(
+				'object_id' => 99999,
+			)
+		);
 
 		$this->assertCount( 0, $notes );
 	}
@@ -255,9 +300,11 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 	 * @covers ::get_notes()
 	 */
 	public function test_get_notes_by_object_type_should_be_5() {
-		$notes = edd_get_notes( array(
-			'object_type' => 'payment',
-		) );
+		$notes = edd_get_notes(
+			array(
+				'object_type' => 'payment',
+			)
+		);
 
 		$this->assertCount( 5, $notes );
 	}
@@ -266,9 +313,11 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 	 * @covers ::get_notes()
 	 */
 	public function test_get_notes_by_content_should_be_1() {
-		$notes = edd_get_notes( array(
-			'content' => 'Payment status changed for object with ID: ' . \WP_UnitTest_Generator_Sequence::$incr,
-		) );
+		$notes = edd_get_notes(
+			array(
+				'content' => 'Payment status changed for object with ID: ' . \WP_UnitTest_Generator_Sequence::$incr,
+			)
+		);
 
 		$this->assertCount( 1, $notes );
 	}
@@ -277,9 +326,11 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 	 * @covers ::get_notes()
 	 */
 	public function test_get_notes_with_invalid_content_should_be_0() {
-		$notes = edd_get_notes( array(
-			'content' => 'Payment status changed for object with ID: 99999',
-		) );
+		$notes = edd_get_notes(
+			array(
+				'content' => 'Payment status changed for object with ID: 99999',
+			)
+		);
 
 		$this->assertCount( 0, $notes );
 	}
@@ -295,26 +346,41 @@ class Tests_Notes_DB extends \EDD_UnitTestCase {
 	 * @covers ::get_notes()
 	 */
 	public function test_count_with_valid_object_type_should_be_0() {
-		$this->assertSame( 5, edd_count_notes( array(
-			'object_type' => 'payment'
-		) ) );
+		$this->assertSame(
+			5,
+			edd_count_notes(
+				array(
+					'object_type' => 'payment',
+				)
+			)
+		);
 	}
 
 	/**
 	 * @covers ::get_notes()
 	 */
 	public function test_count_with_invalid_object_type_should_be_0() {
-		$this->assertSame( 0, edd_count_notes( array(
-			'object_type' => 'foo'
-		) ) );
+		$this->assertSame(
+			0,
+			edd_count_notes(
+				array(
+					'object_type' => 'foo',
+				)
+			)
+		);
 	}
 
 	/**
 	 * @covers ::get_notes()
 	 */
 	public function test_count_with_user_id_should_be_1() {
-		$this->assertSame( 1, edd_count_notes( array(
-			'user_id' => \WP_UnitTest_Generator_Sequence::$incr
-		) ) );
+		$this->assertSame(
+			1,
+			edd_count_notes(
+				array(
+					'user_id' => \WP_UnitTest_Generator_Sequence::$incr,
+				)
+			)
+		);
 	}
 }

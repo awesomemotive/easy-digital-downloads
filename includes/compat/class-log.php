@@ -41,13 +41,13 @@ class Log extends Base {
 
 		/* Filters ************************************************************/
 
-		add_filter( 'get_post_metadata',    array( $this, 'api_request_log_get_post_meta'    ), 99, 4 );
+		add_filter( 'get_post_metadata', array( $this, 'api_request_log_get_post_meta' ), 99, 4 );
 		add_filter( 'update_post_metadata', array( $this, 'api_request_log_update_post_meta' ), 99, 5 );
-		add_filter( 'add_post_metadata',    array( $this, 'api_request_log_update_post_meta' ), 99, 5 );
+		add_filter( 'add_post_metadata', array( $this, 'api_request_log_update_post_meta' ), 99, 5 );
 
-		add_filter( 'get_post_metadata',    array( $this, 'file_download_log_get_post_meta'    ), 99, 4 );
+		add_filter( 'get_post_metadata', array( $this, 'file_download_log_get_post_meta' ), 99, 4 );
 		add_filter( 'update_post_metadata', array( $this, 'file_download_log_update_post_meta' ), 99, 5 );
-		add_filter( 'add_post_metadata',    array( $this, 'file_download_log_update_post_meta' ), 99, 5 );
+		add_filter( 'add_post_metadata', array( $this, 'file_download_log_update_post_meta' ), 99, 5 );
 	}
 
 	/**
@@ -180,9 +180,12 @@ class Log extends Base {
 						break;
 				}
 
-				$check = edd_update_api_request_log( $object_id, array(
-					$key => $meta_value,
-				) );
+				$check = edd_update_api_request_log(
+					$object_id,
+					array(
+						$key => $meta_value,
+					)
+				);
 				break;
 		}
 
@@ -315,20 +318,25 @@ class Log extends Base {
 			case '_edd_log_price_id':
 				$key = str_replace( '_edd_log_', '', $meta_key );
 
-				$check = edd_update_file_download_log( $object_id, array(
-					$key => $meta_value,
-				) );
+				$check = edd_update_file_download_log(
+					$object_id,
+					array(
+						$key => $meta_value,
+					)
+				);
 				break;
 			case '_edd_log_user_info':
-
 				$user_id = isset( $meta_value['id'] )
 					? absint( $meta_value['id'] )
 					: 0;
 
 				if ( $user_id ) {
-					edd_update_file_download_log( $object_id, array(
-						'user_id' => $user_id
-					) );
+					edd_update_file_download_log(
+						$object_id,
+						array(
+							'user_id' => $user_id,
+						)
+					);
 				}
 				break;
 		}

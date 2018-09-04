@@ -105,7 +105,7 @@ function edd_install( $network_wide = false ) {
 	if ( is_multisite() && ! empty( $network_wide ) ) {
 		edd_run_multisite_install();
 
-	// Single site install
+		// Single site install
 	} else {
 		edd_run_install();
 	}
@@ -155,7 +155,7 @@ function edd_run_multisite_install() {
 		// Bump the step
 		++$step;
 
-	// Bail when steps are greater than or equal to total steps
+		// Bail when steps are greater than or equal to total steps
 	} while ( $total_steps > $step );
 }
 
@@ -211,12 +211,12 @@ function edd_run_install( $site_id = false ) {
 	}
 
 	// Create EDD shop roles
-	$roles = new EDD_Roles;
+	$roles = new EDD_Roles();
 	$roles->add_roles();
 	$roles->add_caps();
 
 	// API version
-	$api = new EDD_API;
+	$api = new EDD_API();
 	update_option( 'edd_default_api_version', 'v' . $api->get_version() );
 
 	// Check for PHP Session support, and enable if available
@@ -236,6 +236,7 @@ function edd_run_install( $site_id = false ) {
 
 /**
  * Maybe set upgrades as complete during a fresh
+ *
  * @since 3.0
  */
 function edd_set_all_upgrades_complete() {
@@ -276,28 +277,32 @@ function edd_install_pages() {
 	$current_options = get_option( 'edd_settings', array() );
 
 	// Required store pages
-	$pages = array_flip( array(
-		'purchase_page',
-		'success_page',
-		'failure_page',
-		'purchase_history_page'
-	) );
+	$pages = array_flip(
+		array(
+			'purchase_page',
+			'success_page',
+			'failure_page',
+			'purchase_history_page',
+		)
+	);
 
 	// Look for missing pages
 	$missing_pages  = array_diff_key( $pages, $current_options );
 	$pages_to_check = array_intersect_key( $current_options, $pages );
 
 	// Query for any existing pages
-	$posts = new WP_Query( array(
-		'include'   => array_values( $pages_to_check ),
-		'post_type' => 'page'
-	) );
+	$posts = new WP_Query(
+		array(
+			'include'   => array_values( $pages_to_check ),
+			'post_type' => 'page',
+		)
+	);
 
 	// Default value for checkout page
 	$checkout = 0;
 
 	// We'll only update settings on change
-	$changed  = false;
+	$changed = false;
 
 	// Loop through all pages, fix or create any missing ones
 	foreach ( array_flip( $pages ) as $page ) {
@@ -326,7 +331,7 @@ function edd_install_pages() {
 		switch ( $page ) {
 
 			// Checkout
-			case 'purchase_page' :
+			case 'purchase_page':
 				$page_attributes = array(
 					'post_title'     => __( 'Checkout', 'easy-digital-downloads' ),
 					'post_content'   => '[download_checkout]',
@@ -334,12 +339,12 @@ function edd_install_pages() {
 					'post_author'    => 1,
 					'post_parent'    => 0,
 					'post_type'      => 'page',
-					'comment_status' => 'closed'
+					'comment_status' => 'closed',
 				);
 				break;
 
 			// Success
-			case 'success_page' :
+			case 'success_page':
 				$page_attributes = array(
 					'post_title'     => __( 'Purchase Confirmation', 'easy-digital-downloads' ),
 					'post_content'   => __( 'Thank you for your purchase! [edd_receipt]', 'easy-digital-downloads' ),
@@ -347,12 +352,12 @@ function edd_install_pages() {
 					'post_author'    => 1,
 					'post_parent'    => $checkout,
 					'post_type'      => 'page',
-					'comment_status' => 'closed'
+					'comment_status' => 'closed',
 				);
 				break;
 
 			// Failure
-			case 'failure_page' :
+			case 'failure_page':
 				$page_attributes = array(
 					'post_title'     => __( 'Transaction Failed', 'easy-digital-downloads' ),
 					'post_content'   => __( 'Your transaction failed, please try again or contact site support.', 'easy-digital-downloads' ),
@@ -360,12 +365,12 @@ function edd_install_pages() {
 					'post_author'    => 1,
 					'post_type'      => 'page',
 					'post_parent'    => $checkout,
-					'comment_status' => 'closed'
+					'comment_status' => 'closed',
 				);
 				break;
 
 			// Purchase History
-			case 'purchase_history_page' :
+			case 'purchase_history_page':
 				$page_attributes = array(
 					'post_title'     => __( 'Purchase History', 'easy-digital-downloads' ),
 					'post_content'   => '[purchase_history]',
@@ -373,7 +378,7 @@ function edd_install_pages() {
 					'post_author'    => 1,
 					'post_type'      => 'page',
 					'post_parent'    => $checkout,
-					'comment_status' => 'closed'
+					'comment_status' => 'closed',
 				);
 				break;
 		}
@@ -417,7 +422,7 @@ function edd_install_settings() {
 
 	if ( ! empty( $all_settings ) ) {
 		foreach ( $all_settings as $tab => $sections ) {
-			foreach ( $sections as $section => $settings) {
+			foreach ( $sections as $section => $settings ) {
 
 				// Check for backwards compatibility
 				$tab_sections = edd_get_settings_tab_sections( $tab );
@@ -478,7 +483,6 @@ add_action( 'wpmu_new_blog', 'edd_new_blog_created', 10 );
  * @return void
  */
 function edd_after_install() {
-
 	if ( ! is_admin() ) {
 		return;
 	}
@@ -503,22 +507,18 @@ add_action( 'admin_init', 'edd_after_install' );
  * @return void
  */
 function edd_install_roles_on_network() {
-
 	global $wp_roles;
 
-	if( ! is_object( $wp_roles ) ) {
+	if ( ! is_object( $wp_roles ) ) {
 		return;
 	}
 
-
-	if( empty( $wp_roles->roles ) || ! array_key_exists( 'shop_manager', $wp_roles->roles ) ) {
+	if ( empty( $wp_roles->roles ) || ! array_key_exists( 'shop_manager', $wp_roles->roles ) ) {
 
 		// Create EDD shop roles
-		$roles = new EDD_Roles;
+		$roles = new EDD_Roles();
 		$roles->add_roles();
 		$roles->add_caps();
-
 	}
-
 }
 add_action( 'admin_init', 'edd_install_roles_on_network' );

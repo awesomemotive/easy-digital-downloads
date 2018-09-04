@@ -42,26 +42,31 @@ class Data_Migrator {
 
 		$customer = edd_get_customer_by( 'user_id', $user_id );
 
-		$address = wp_parse_args( $address, array(
-			'line1'   => '',
-			'line2'   => '',
-			'city'    => '',
-			'state'   => '',
-			'zip'     => '',
-			'country' => '',
-		) );
+		$address = wp_parse_args(
+			$address,
+			array(
+				'line1'   => '',
+				'line2'   => '',
+				'city'    => '',
+				'state'   => '',
+				'zip'     => '',
+				'country' => '',
+			)
+		);
 
 		if ( $customer ) {
-			edd_add_customer_address( array(
-				'customer_id' => $customer->id,
-				'type'        => 'primary',
-				'address'     => $address['line1'],
-				'address2'    => $address['line2'],
-				'city'        => $address['city'],
-				'region'      => $address['state'],
-				'postal_code' => $address['zip'],
-				'country'     => $address['country'],
-			) );
+			edd_add_customer_address(
+				array(
+					'customer_id' => $customer->id,
+					'type'        => 'primary',
+					'address'     => $address['line1'],
+					'address2'    => $address['line2'],
+					'city'        => $address['city'],
+					'region'      => $address['state'],
+					'postal_code' => $address['zip'],
+					'country'     => $address['country'],
+				)
+			);
 		}
 	}
 
@@ -81,10 +86,12 @@ class Data_Migrator {
 
 		$customer_id = absint( $data->edd_customer_id );
 
-		edd_add_customer_email_address( array(
-			'customer_id' => $customer_id,
-			'email'       => $data->meta_value,
-		) );
+		edd_add_customer_email_address(
+			array(
+				'customer_id' => $customer_id,
+				'email'       => $data->meta_value,
+			)
+		);
 	}
 
 	/**
@@ -106,9 +113,12 @@ class Data_Migrator {
 		if ( property_exists( $data, 'notes' ) && ! empty( $data->notes ) ) {
 			$notes = array_reverse( array_filter( explode( "\n\n", $data->notes ) ) );
 
-			$notes = array_map( function( $val ) {
-				return explode( ' - ', $val );
-			}, $notes );
+			$notes = array_map(
+				function( $val ) {
+						return explode( ' - ', $val );
+				},
+				$notes
+			);
 
 			if ( ! empty( $notes ) ) {
 				foreach ( $notes as $note ) {
@@ -120,14 +130,16 @@ class Data_Migrator {
 						? $note[1]
 						: '';
 
-					edd_add_note( array(
-						'user_id'       => 0,
-						'object_id'     => $customer_id,
-						'object_type'   => 'customer',
-						'content'       => $note_content,
-						'date_created'  => $date,
-						'date_modified' => $date,
-					) );
+					edd_add_note(
+						array(
+							'user_id'       => 0,
+							'object_id'     => $customer_id,
+							'object_type'   => 'customer',
+							'content'       => $note_content,
+							'date_created'  => $date,
+							'date_modified' => $date,
+						)
+					);
 				}
 			}
 		}
@@ -232,14 +244,17 @@ class Data_Migrator {
 				$post_meta[ $meta_item->meta_key ] = maybe_unserialize( $meta_item->meta_value );
 			}
 
-			$post_meta = wp_parse_args( $post_meta, array(
-				'_edd_log_request_ip' => '',
-				'_edd_log_user'       => 0,
-				'_edd_log_key'        => 'public',
-				'_edd_log_token'      => 'public',
-				'_edd_log_version'    => '',
-				'_edd_log_time'       => '',
-			) );
+			$post_meta = wp_parse_args(
+				$post_meta,
+				array(
+					'_edd_log_request_ip' => '',
+					'_edd_log_user'       => 0,
+					'_edd_log_key'        => 'public',
+					'_edd_log_token'      => 'public',
+					'_edd_log_version'    => '',
+					'_edd_log_time'       => '',
+				)
+			);
 
 			$log_data = array(
 				'ip'            => $post_meta['_edd_log_request_ip'],
@@ -325,7 +340,7 @@ class Data_Migrator {
 			return;
 		}
 
-		/** Create a new order ***************************************/
+		/** Create a new order */
 
 		$meta = get_post_custom( $data->ID );
 
@@ -351,21 +366,33 @@ class Data_Migrator {
 			: $user_id;
 
 		// Calculate totals.
-		$subtotal = (float) array_reduce( wp_list_pluck( $payment_meta['cart_details'], 'subtotal' ), function( $carry, $item ) {
-			return $carry += $item;
-		} );
+		$subtotal = (float) array_reduce(
+			wp_list_pluck( $payment_meta['cart_details'], 'subtotal' ),
+			function( $carry, $item ) {
+				return $carry += $item;
+			}
+		);
 
-		$tax = (float) array_reduce( wp_list_pluck( $payment_meta['cart_details'], 'tax' ), function( $carry, $item ) {
-			return $carry += $item;
-		} );
+		$tax = (float) array_reduce(
+			wp_list_pluck( $payment_meta['cart_details'], 'tax' ),
+			function( $carry, $item ) {
+				return $carry += $item;
+			}
+		);
 
-		$discount = (float) array_reduce( wp_list_pluck( $payment_meta['cart_details'], 'discount' ), function( $carry, $item ) {
-			return $carry += $item;
-		} );
+		$discount = (float) array_reduce(
+			wp_list_pluck( $payment_meta['cart_details'], 'discount' ),
+			function( $carry, $item ) {
+				return $carry += $item;
+			}
+		);
 
-		$total = (float) array_reduce( wp_list_pluck( $payment_meta['cart_details'], 'price' ), function( $carry, $item ) {
-			return $carry += $item;
-		} );
+		$total = (float) array_reduce(
+			wp_list_pluck( $payment_meta['cart_details'], 'price' ),
+			function( $carry, $item ) {
+				return $carry += $item;
+			}
+		);
 
 		$type = 'refunded' === $data->post_status
 			? 'refund'
@@ -408,14 +435,17 @@ class Data_Migrator {
 			? $user_info['address']
 			: array();
 
-		$user_info['address'] = wp_parse_args( $user_info['address'], array(
-			'line1'   => '',
-			'line2'   => '',
-			'city'    => '',
-			'zip'     => '',
-			'country' => '',
-			'state'   => '',
-		) );
+		$user_info['address'] = wp_parse_args(
+			$user_info['address'],
+			array(
+				'line1'   => '',
+				'line2'   => '',
+				'city'    => '',
+				'zip'     => '',
+				'country' => '',
+				'state'   => '',
+			)
+		);
 
 		$order_address_data = array(
 			'order_id'    => $order_id,
@@ -453,23 +483,25 @@ class Data_Migrator {
 			$customer->add_email( $payment_meta['email'], $primary );
 		}
 
-		/** Migrate meta *********************************************/
+		/** Migrate meta */
 
 		if ( isset( $meta['_edd_payment_unlimited_downloads'] ) && ! empty( $meta['_edd_payment_unlimited_downloads'][0] ) ) {
 			edd_add_order_meta( $order_id, 'unlimited_downloads', $meta['_edd_payment_unlimited_downloads'][0] );
 		}
 
 		if ( isset( $meta['_edd_payment_transaction_id'] ) && ! empty( $meta['_edd_payment_transaction_id'][0] ) ) {
-			edd_add_order_transaction( array(
-				'object_id'      => $order_id,
-				'object_type'    => 'order',
-				'transaction_id' => $meta['_edd_payment_transaction_id'][0],
-				'gateway'        => $gateway,
-				'status'         => 'complete',
-				'total'          => $total,
-				'date_created'   => $date_completed,
-				'date_modified'  => $date_completed,
-			) );
+			edd_add_order_transaction(
+				array(
+					'object_id'      => $order_id,
+					'object_type'    => 'order',
+					'transaction_id' => $meta['_edd_payment_transaction_id'][0],
+					'gateway'        => $gateway,
+					'status'         => 'complete',
+					'total'          => $total,
+					'date_created'   => $date_completed,
+					'date_modified'  => $date_completed,
+				)
+			);
 		}
 
 		// By default, this is what is stored in payment meta.
@@ -494,7 +526,7 @@ class Data_Migrator {
 			edd_add_order_meta( $order_id, 'payment_meta', $remaining_payment_meta );
 		}
 
-		/** Create order items ***************************************/
+		/** Create order items */
 
 		// The cart_items array key did not exist in earlier versions of EDD.
 		$cart_items = isset( $payment_meta['cart_details'] )
@@ -560,7 +592,6 @@ class Data_Migrator {
 				// Store order item fees as adjustments.
 				if ( isset( $cart_item['fees'] ) && ! empty( $cart_item['fees'] ) ) {
 					foreach ( $cart_item['fees'] as $fee_id => $fee ) {
-
 						$tax_rate = isset( $meta['_edd_payment_tax_rate'][0] )
 							? (float) $meta['_edd_payment_tax_rate'][0]
 							: 0.00;
@@ -570,15 +601,17 @@ class Data_Migrator {
 							: 0.00;
 
 						// Add the adjustment.
-						$adjustment_id = edd_add_order_adjustment( array(
-							'object_id'   => $order_item_id,
-							'object_type' => 'order_item',
-							'type'        => 'fee',
-							'description' => $fee['label'],
-							'subtotal'    => floatval( $fee['amount'] ),
-							'tax'         => $tax,
-							'total'       => floatval( $fee['amount'] ) + $tax,
-						) );
+						$adjustment_id = edd_add_order_adjustment(
+							array(
+								'object_id'   => $order_item_id,
+								'object_type' => 'order_item',
+								'type'        => 'fee',
+								'description' => $fee['label'],
+								'subtotal'    => floatval( $fee['amount'] ),
+								'tax'         => $tax,
+								'total'       => floatval( $fee['amount'] ) + $tax,
+							)
+						);
 
 						// Fee ID.
 						edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
@@ -623,20 +656,22 @@ class Data_Migrator {
 			}
 		}
 
-		/** Create order adjustments *********************************/
+		/** Create order adjustments */
 
 		$tax_rate = isset( $meta['_edd_payment_tax_rate'][0] )
 			? (float) $meta['_edd_payment_tax_rate'][0]
 			: 0.00;
 
 		// Tax rate is no longer stored in meta.
-		edd_add_order_adjustment( array(
-			'object_id'   => $order_id,
-			'object_type' => 'order',
-			'type_id'     => 0,
-			'type'        => 'tax_rate',
-			'total'       => $tax_rate,
-		) );
+		edd_add_order_adjustment(
+			array(
+				'object_id'   => $order_id,
+				'object_type' => 'order',
+				'type_id'     => 0,
+				'type'        => 'tax_rate',
+				'total'       => $tax_rate,
+			)
+		);
 
 		if ( isset( $payment_meta['fees'] ) && ! empty( $payment_meta['fees'] ) ) {
 			foreach ( $payment_meta['fees'] as $fee_id => $fee ) {
@@ -647,15 +682,17 @@ class Data_Migrator {
 					: 0.00;
 
 				// Add the adjustment.
-				$adjustment_id = edd_add_order_adjustment( array(
-					'object_id'   => $order_id,
-					'object_type' => 'order',
-					'type'        => 'fee',
-					'description' => $fee['label'],
-					'subtotal'    => floatval( $fee['amount'] ),
-					'tax'         => $tax,
-					'total'       => floatval( $fee['amount'] ) + $tax,
-				) );
+				$adjustment_id = edd_add_order_adjustment(
+					array(
+						'object_id'   => $order_id,
+						'object_type' => 'order',
+						'type'        => 'fee',
+						'description' => $fee['label'],
+						'subtotal'    => floatval( $fee['amount'] ),
+						'tax'         => $tax,
+						'total'       => floatval( $fee['amount'] ) + $tax,
+					)
+				);
 
 				// Fee ID.
 				edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
@@ -691,19 +728,21 @@ class Data_Migrator {
 					continue;
 				}
 
-				edd_add_order_adjustment( array(
-					'object_id'   => $order_id,
-					'object_type' => 'order',
-					'type_id'     => $discount->id,
-					'type'        => 'discount',
-					'description' => $discount,
-					'subtotal'    => $subtotal - $discount->get_discounted_amount( $subtotal ),
-					'total'       => $subtotal - $discount->get_discounted_amount( $subtotal ),
-				) );
+				edd_add_order_adjustment(
+					array(
+						'object_id'   => $order_id,
+						'object_type' => 'order',
+						'type_id'     => $discount->id,
+						'type'        => 'discount',
+						'description' => $discount,
+						'subtotal'    => $subtotal - $discount->get_discounted_amount( $subtotal ),
+						'total'       => $subtotal - $discount->get_discounted_amount( $subtotal ),
+					)
+				);
 			}
 		}
 
-		/** Create order meta ****************************************/
+		/** Create order meta */
 
 		$core_meta_keys = array(
 			'_edd_payment_user_email',

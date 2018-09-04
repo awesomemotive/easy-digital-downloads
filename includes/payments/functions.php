@@ -211,9 +211,11 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
 
 	// Delete file download logs.
 	if ( $delete_download_logs ) {
-		$logs = edd_get_file_download_logs( array(
-			'order_id' => $payment_id,
-		) );
+		$logs = edd_get_file_download_logs(
+			array(
+				'order_id' => $payment_id,
+			)
+		);
 
 		if ( $logs ) {
 			foreach ( $logs as $log ) {
@@ -340,15 +342,18 @@ function edd_undo_purchase( $download_id = 0, $order_id = 0 ) {
 function edd_count_payments( $args = array() ) {
 	global $wpdb;
 
-	$args = wp_parse_args( $args, array(
-		'user'       => null,
-		'customer'   => null,
-		's'          => null,
-		'start-date' => null,
-		'end-date'   => null,
-		'download'   => null,
-		'gateway'    => null,
-	) );
+	$args = wp_parse_args(
+		$args,
+		array(
+			'user'       => null,
+			'customer'   => null,
+			's'          => null,
+			'start-date' => null,
+			'end-date'   => null,
+			'download'   => null,
+			'gateway'    => null,
+		)
+	);
 
 	$select  = 'SELECT edd_o.status, COUNT(*) AS count';
 	$from    = "FROM {$wpdb->edd_orders} edd_o";
@@ -601,15 +606,18 @@ function edd_get_payment_status_label( $status = '' ) {
  * @return array $payment_status All the available payment statuses.
  */
 function edd_get_payment_statuses() {
-	return apply_filters( 'edd_payment_statuses', array(
-		'pending'    => __( 'Pending',    'easy-digital-downloads' ),
-		'processing' => __( 'Processing', 'easy-digital-downloads' ),
-		'publish'    => __( 'Completed',  'easy-digital-downloads' ),
-		'refunded'   => __( 'Refunded',   'easy-digital-downloads' ),
-		'revoked'    => __( 'Revoked',    'easy-digital-downloads' ),
-		'failed'     => __( 'Failed',     'easy-digital-downloads' ),
-		'abandoned'  => __( 'Abandoned',  'easy-digital-downloads' )
-	) );
+	return apply_filters(
+		'edd_payment_statuses',
+		array(
+			'pending'    => __( 'Pending', 'easy-digital-downloads' ),
+			'processing' => __( 'Processing', 'easy-digital-downloads' ),
+			'publish'    => __( 'Completed', 'easy-digital-downloads' ),
+			'refunded'   => __( 'Refunded', 'easy-digital-downloads' ),
+			'revoked'    => __( 'Revoked', 'easy-digital-downloads' ),
+			'failed'     => __( 'Failed', 'easy-digital-downloads' ),
+			'abandoned'  => __( 'Abandoned', 'easy-digital-downloads' ),
+		)
+	);
 }
 
 /**
@@ -685,11 +693,13 @@ function edd_get_total_earnings( $include_taxes = true ) {
 				? ' - SUM(tax)'
 				: '';
 
-			$total = $wpdb->get_var( "
+			$total = $wpdb->get_var(
+				"
 				SELECT SUM(total) {$exclude_taxes_sql} AS total
 				FROM {$wpdb->edd_orders}
 				WHERE status IN ('publish', 'revoked')
-			" );
+			"
+			);
 
 			$total = (float) edd_number_not_negative( (float) $total );
 
@@ -755,10 +765,10 @@ function edd_decrease_total_earnings( $amount = 0 ) {
  * @internal This needs to continue making a call to EDD_Payment::get_meta() as it handles the backwards compatibility for
  *           _edd_payment_meta if requested.
  *
- * @param int     $payment_id Payment ID.
- * @param string  $key        Optional. The meta key to retrieve. By default, returns data for all keys. Default '_edd_payment_meta'.
- * @param bool    $single     Optional, default is false. If true, return only the first value of the specified meta_key.
- *                            This parameter has no effect if meta_key is not specified.
+ * @param int    $payment_id Payment ID.
+ * @param string $key        Optional. The meta key to retrieve. By default, returns data for all keys. Default '_edd_payment_meta'.
+ * @param bool   $single     Optional, default is false. If true, return only the first value of the specified meta_key.
+ *                           This parameter has no effect if meta_key is not specified.
  *
  * @return mixed Will be an array if $single is false. Will be value of meta data field if $single is true.
  */
@@ -783,10 +793,10 @@ function edd_get_payment_meta( $payment_id = 0, $key = '_edd_payment_meta', $sin
  * @internal This needs to continue making a call to EDD_Payment::update_meta() as it handles the backwards compatibility for
  *           _edd_payment_meta.
  *
- * @param int     $payment_id Payment ID.
- * @param string  $meta_key   Meta data key.
- * @param mixed   $meta_value Meta data value. Must be serializable if non-scalar.
- * @param mixed   $prev_value Optional. Previous value to check before removing. Default empty.
+ * @param int    $payment_id Payment ID.
+ * @param string $meta_key   Meta data key.
+ * @param mixed  $meta_value Meta data value. Must be serializable if non-scalar.
+ * @param mixed  $prev_value Optional. Previous value to check before removing. Default empty.
  *
  * @return int|bool Meta ID if the key didn't exist, true on successful update, false on failure.
  */
@@ -1223,15 +1233,17 @@ function edd_get_next_payment_number() {
 
 	if ( false !== $number ) {
 		if ( empty( $number ) ) {
-			$number = $start;
+			$number           = $start;
 			$increment_number = false;
 		}
 	} else {
-		$last_order = edd_get_orders( array(
-			'number'  => 1,
-			'orderby' => 'id',
-			'order'   => 'desc',
-		) );
+		$last_order = edd_get_orders(
+			array(
+				'number'  => 1,
+				'orderby' => 'id',
+				'order'   => 'desc',
+			)
+		);
 
 		if ( ! empty( $last_order ) && $last_order[0] instanceof EDD\Orders\Order ) {
 			$number = (int) $last_order[0]->get_number();
@@ -1240,7 +1252,7 @@ function edd_get_next_payment_number() {
 		if ( ! empty( $number ) && $number !== (int) $last_order[0]->id ) {
 			$number = edd_remove_payment_prefix_postfix( $number );
 		} else {
-			$number = $start;
+			$number           = $start;
 			$increment_number = false;
 		}
 	}
@@ -1436,12 +1448,14 @@ function edd_get_payment_item_tax( $order_id = 0, $cart_index = 0 ) {
 		return 0.00;
 	}
 
-	$order_item_tax = edd_get_order_items( array(
-		'number'     => 1,
-		'order_id'   => $order_id,
-		'cart_index' => $cart_index,
-		'fields'     => 'tax',
-	) );
+	$order_item_tax = edd_get_order_items(
+		array(
+			'number'     => 1,
+			'order_id'   => $order_id,
+			'cart_index' => $cart_index,
+			'fields'     => 'tax',
+		)
+	);
 
 	$order_item_tax = ( $order_item_tax && ! empty( $order_item_tax ) )
 		? $order_item_tax[0]
@@ -1535,32 +1549,41 @@ function edd_set_payment_transaction_id( $order_id = 0, $transaction_id = '', $a
 			? $order->total
 			: floatval( $amount );
 
-		$transaction_ids = array_values( edd_get_order_transactions( array(
-			'fields'      => 'ids',
-			'number'      => 1,
-			'object_id'   => $order_id,
-			'object_type' => 'order',
-			'orderby'     => 'date_created',
-			'order'       => 'ASC',
-		) ) );
+		$transaction_ids = array_values(
+			edd_get_order_transactions(
+				array(
+					'fields'      => 'ids',
+					'number'      => 1,
+					'object_id'   => $order_id,
+					'object_type' => 'order',
+					'orderby'     => 'date_created',
+					'order'       => 'ASC',
+				)
+			)
+		);
 
 		if ( $transaction_ids ) {
 			$transaction_id = $transaction_ids[0];
 
-			return edd_update_order_transaction( $transaction_id, array(
-				'transaction_id' => $transaction_id,
-				'gateway'        => $order->gateway,
-				'total'          => $amount,
-			) );
+			return edd_update_order_transaction(
+				$transaction_id,
+				array(
+					'transaction_id' => $transaction_id,
+					'gateway'        => $order->gateway,
+					'total'          => $amount,
+				)
+			);
 		} else {
-			return edd_add_order_transaction( array(
-				'object_id'      => $order_id,
-				'object_type'    => 'order',
-				'transaction_id' => $transaction_id,
-				'gateway'        => $order->gateway,
-				'status'         => 'complete',
-				'total'          => $amount,
-			) );
+			return edd_add_order_transaction(
+				array(
+					'object_id'      => $order_id,
+					'object_type'    => 'order',
+					'transaction_id' => $transaction_id,
+					'gateway'        => $order->gateway,
+					'status'         => 'complete',
+					'total'          => $amount,
+				)
+			);
 		}
 	}
 
@@ -1667,28 +1690,32 @@ function edd_insert_payment_note( $order_id = 0, $note = '' ) {
 	 * wp_filter_comment in the event that the note data is filtered using the
 	 * WordPress Core filters prior to be inserted into the database.
 	 */
-	$filtered_data = wp_filter_comment( array(
-		'comment_post_ID'      => $order_id,
-		'comment_content'      => $note,
-		'user_id'              => is_admin() ? get_current_user_id() : 0,
-		'comment_date'         => current_time( 'mysql' ),
-		'comment_date_gmt'     => current_time( 'mysql', 1 ),
-		'comment_approved'     => 1,
-		'comment_parent'       => 0,
-		'comment_author'       => '',
-		'comment_author_IP'    => '',
-		'comment_author_url'   => '',
-		'comment_author_email' => '',
-		'comment_type'         => 'edd_payment_note'
-	) );
+	$filtered_data = wp_filter_comment(
+		array(
+			'comment_post_ID'      => $order_id,
+			'comment_content'      => $note,
+			'user_id'              => is_admin() ? get_current_user_id() : 0,
+			'comment_date'         => current_time( 'mysql' ),
+			'comment_date_gmt'     => current_time( 'mysql', 1 ),
+			'comment_approved'     => 1,
+			'comment_parent'       => 0,
+			'comment_author'       => '',
+			'comment_author_IP'    => '',
+			'comment_author_url'   => '',
+			'comment_author_email' => '',
+			'comment_type'         => 'edd_payment_note',
+		)
+	);
 
 	// Add the note
-	$note_id = edd_add_note( array(
-		'object_id'   => $filtered_data['comment_post_ID'],
-		'content'     => $filtered_data['comment_content'],
-		'user_id'     => $filtered_data['user_id'],
-		'object_type' => 'order',
-	) );
+	$note_id = edd_add_note(
+		array(
+			'object_id'   => $filtered_data['comment_post_ID'],
+			'content'     => $filtered_data['comment_content'],
+			'user_id'     => $filtered_data['user_id'],
+			'object_type' => 'order',
+		)
+	);
 
 	do_action( 'edd_insert_payment_note', $note_id, $order_id, $note );
 
@@ -1766,7 +1793,7 @@ add_action( 'pre_get_comments', 'edd_hide_payment_notes', 10 );
  *
  * @since 2.2
  *
- * @param array $clauses           Comment clauses for comment query.
+ * @param array  $clauses           Comment clauses for comment query.
  * @param object $wp_comment_query WordPress Comment Query Object.
  *
  * @return array $clauses Updated comment clauses.
@@ -1810,7 +1837,7 @@ add_filter( 'comment_feed_where', 'edd_hide_payment_notes_from_feeds', 10, 2 );
  * @param int   $post_id Post ID.
  *
  * @return object Comment counts.
-*/
+ */
 function edd_remove_payment_notes_in_comment_counts( $stats, $post_id ) {
 	global $wpdb, $pagenow;
 
@@ -1834,7 +1861,7 @@ function edd_remove_payment_notes_in_comment_counts( $stats, $post_id ) {
 	$where = 'WHERE comment_type != "edd_payment_note"';
 
 	if ( $post_id > 0 ) {
-		$where .= $wpdb->prepare( " AND comment_post_ID = %d", $post_id );
+		$where .= $wpdb->prepare( ' AND comment_post_ID = %d', $post_id );
 	}
 
 	$count = $wpdb->get_results( "SELECT comment_approved, COUNT( * ) AS num_comments FROM {$wpdb->comments} {$where} GROUP BY comment_approved", ARRAY_A );
@@ -1858,7 +1885,6 @@ function edd_remove_payment_notes_in_comment_counts( $stats, $post_id ) {
 
 		if ( isset( $approved[ $row['comment_approved'] ] ) ) {
 			$stats[ $approved[ $row['comment_approved'] ] ] = $row['num_comments'];
-
 		}
 	}
 
@@ -1883,7 +1909,7 @@ add_filter( 'wp_count_comments', 'edd_remove_payment_notes_in_comment_counts', 1
  *
  * @param string $where Where clause.
  * @return string $where Modified where clause.
-*/
+ */
 function edd_filter_where_older_than_week( $where = '' ) {
 
 	// Payments older than one week.

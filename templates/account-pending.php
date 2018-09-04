@@ -1,4 +1,4 @@
-<?php if( ! empty( $_GET['edd-verify-request'] ) ) : ?>
+<?php if ( ! empty( $_GET['edd-verify-request'] ) ) : ?>
 <p class="edd-account-pending edd_success">
 	<?php _e( 'An email with an activation link has been sent.', 'easy-digital-downloads' ); ?>
 </p>

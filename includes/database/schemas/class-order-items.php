@@ -33,33 +33,33 @@ class Order_Items extends Schema {
 
 		// id
 		array(
-			'name'       => 'id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'extra'      => 'auto_increment',
-			'primary'    => true,
-			'sortable'   => true
+			'name'     => 'id',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'extra'    => 'auto_increment',
+			'primary'  => true,
+			'sortable' => true,
 		),
 
 		// order_id
 		array(
-			'name'       => 'order_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0',
-			'sortable'   => true
+			'name'     => 'order_id',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'default'  => '0',
+			'sortable' => true,
 		),
 
 		// product_id
 		array(
-			'name'       => 'product_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0',
-			'sortable'   => true
+			'name'     => 'product_id',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'default'  => '0',
+			'sortable' => true,
 		),
 
 		// product_name
@@ -69,26 +69,26 @@ class Order_Items extends Schema {
 			'default'    => '',
 			'searchable' => true,
 			'in'         => false,
-			'not_in'     => false
+			'not_in'     => false,
 		),
 
 		// price_id
 		array(
-			'name'       => 'price_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0',
-			'sortable'   => true
+			'name'     => 'price_id',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'default'  => '0',
+			'sortable' => true,
 		),
 
 		// cart_index
 		array(
-			'name'       => 'cart_index',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0'
+			'name'     => 'cart_index',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'default'  => '0',
 		),
 
 		// type
@@ -98,7 +98,7 @@ class Order_Items extends Schema {
 			'length'     => '20',
 			'default'    => 'download',
 			'sortable'   => true,
-			'transition' => true
+			'transition' => true,
 		),
 
 		// status
@@ -108,61 +108,61 @@ class Order_Items extends Schema {
 			'length'     => '20',
 			'default'    => 'inherit',
 			'sortable'   => true,
-			'transition' => true
+			'transition' => true,
 		),
 
 		// quantity
 		array(
-			'name'       => 'quantity',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0'
+			'name'     => 'quantity',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'default'  => '0',
 		),
 
 		// amount
 		array(
-			'name'       => 'amount',
-			'type'       => 'decimal',
-			'length'     => '18,9',
-			'default'    => '0',
-			'validate'   => 'edd_sanitize_amount'
+			'name'     => 'amount',
+			'type'     => 'decimal',
+			'length'   => '18,9',
+			'default'  => '0',
+			'validate' => 'edd_sanitize_amount',
 		),
 
 		// subtotal
 		array(
-			'name'       => 'subtotal',
-			'type'       => 'decimal',
-			'length'     => '18,9',
-			'default'    => '0',
-			'validate'   => 'edd_sanitize_amount'
+			'name'     => 'subtotal',
+			'type'     => 'decimal',
+			'length'   => '18,9',
+			'default'  => '0',
+			'validate' => 'edd_sanitize_amount',
 		),
 
 		// discount
 		array(
-			'name'       => 'discount',
-			'type'       => 'decimal',
-			'length'     => '18,9',
-			'default'    => '0',
-			'validate'   => 'edd_sanitize_amount'
+			'name'     => 'discount',
+			'type'     => 'decimal',
+			'length'   => '18,9',
+			'default'  => '0',
+			'validate' => 'edd_sanitize_amount',
 		),
 
 		// tax
 		array(
-			'name'       => 'tax',
-			'type'       => 'decimal',
-			'length'     => '18,9',
-			'default'    => '0',
-			'validate'   => 'edd_sanitize_amount'
+			'name'     => 'tax',
+			'type'     => 'decimal',
+			'length'   => '18,9',
+			'default'  => '0',
+			'validate' => 'edd_sanitize_amount',
 		),
 
 		// total
 		array(
-			'name'       => 'total',
-			'type'       => 'decimal',
-			'length'     => '18,9',
-			'default'    => '0',
-			'validate'   => 'edd_sanitize_amount'
+			'name'     => 'total',
+			'type'     => 'decimal',
+			'length'   => '18,9',
+			'default'  => '0',
+			'validate' => 'edd_sanitize_amount',
 		),
 
 		// date_created
@@ -172,7 +172,7 @@ class Order_Items extends Schema {
 			'default'    => '0000-00-00 00:00:00',
 			'created'    => true,
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// date_modified
@@ -182,12 +182,12 @@ class Order_Items extends Schema {
 			'default'    => '0000-00-00 00:00:00',
 			'modified'   => true,
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// uuid
 		array(
-			'uuid'       => true,
-		)
+			'uuid' => true,
+		),
 	);
 }

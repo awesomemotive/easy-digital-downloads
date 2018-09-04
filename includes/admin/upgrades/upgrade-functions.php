@@ -19,7 +19,6 @@ defined( 'ABSPATH' ) || exit;
  * @return void
  */
 function edd_do_automatic_upgrades() {
-
 	$did_upgrade = false;
 	$edd_version = edd_get_db_version();
 
@@ -33,7 +32,7 @@ function edd_do_automatic_upgrades() {
 		edd_update_db_version();
 
 		// Send a check in. Note: this only sends if data tracking has been enabled
-		$tracking = new EDD_Tracking;
+		$tracking = new EDD_Tracking();
 		$tracking->send_checkin( false, true );
 	}
 
@@ -63,7 +62,7 @@ function edd_show_upgrade_notices() {
 
 	$edd_version = edd_get_db_version();
 
-	if ( ! get_option( 'edd_payment_totals_upgraded' ) && !edd_get_db_version() ) {
+	if ( ! get_option( 'edd_payment_totals_upgraded' ) && ! edd_get_db_version() ) {
 		if ( wp_count_posts( 'edd_payment' )->publish < 1 ) {
 			return; // No payment exist yet
 		}
@@ -72,16 +71,18 @@ function edd_show_upgrade_notices() {
 		$url            = add_query_arg( 'edd-action', 'upgrade_payments' );
 		$upgrade_notice = sprintf( __( 'The Payment History needs to be updated. %s', 'easy-digital-downloads' ), '<a href="' . wp_nonce_url( $url, 'edd_upgrade_payments_nonce' ) . '">' . __( 'Click to Upgrade', 'easy-digital-downloads' ) . '</a>' );
 
-		EDD()->notices->add_notice( array(
-			'id'      => 'edd-payments-upgrade',
-			'class'   => 'error',
-			'message' => $upgrade_notice
-		) );
+		EDD()->notices->add_notice(
+			array(
+				'id'      => 'edd-payments-upgrade',
+				'class'   => 'error',
+				'message' => $upgrade_notice,
+			)
+		);
 	}
 
 	if ( version_compare( $edd_version, '1.3.2', '<' ) && ! get_option( 'edd_logs_upgraded' ) ) {
 		printf(
-			'<div class="notice notice-warning"><p>' . esc_html__( 'The Purchase and File Download History in Easy Digital Downloads needs to be upgraded, click %shere%s to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+			'<div class="notice notice-warning"><p>' . esc_html__( 'The Purchase and File Download History in Easy Digital Downloads needs to be upgraded, click %1$shere%2$s to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
 			'<a href="' . esc_url( admin_url( 'options.php?page=edd-upgrades' ) ) . '">',
 			'</a>'
 		);
@@ -89,7 +90,7 @@ function edd_show_upgrade_notices() {
 
 	if ( version_compare( $edd_version, '1.3.0', '<' ) || version_compare( $edd_version, '1.4', '<' ) ) {
 		printf(
-			'<div class="notice notice-warning"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the plugin pages, click %shere%s to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+			'<div class="notice notice-warning"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the plugin pages, click %1$shere%2$s to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
 			'<a href="' . esc_url( admin_url( 'options.php?page=edd-upgrades' ) ) . '">',
 			'</a>'
 		);
@@ -97,7 +98,7 @@ function edd_show_upgrade_notices() {
 
 	if ( version_compare( $edd_version, '1.5', '<' ) ) {
 		printf(
-			'<div class="notice notice-warning"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the database, click %shere%s to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+			'<div class="notice notice-warning"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the database, click %1$shere%2$s to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
 			'<a href="' . esc_url( admin_url( 'options.php?page=edd-upgrades' ) ) . '">',
 			'</a>'
 		);
@@ -105,7 +106,7 @@ function edd_show_upgrade_notices() {
 
 	if ( version_compare( $edd_version, '2.0', '<' ) ) {
 		printf(
-			'<div class="notice notice-warning"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the database, click %shere%s to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+			'<div class="notice notice-warning"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the database, click %1$shere%2$s to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
 			'<a href="' . esc_url( admin_url( 'options.php?page=edd-upgrades' ) ) . '">',
 			'</a>'
 		);
@@ -114,18 +115,15 @@ function edd_show_upgrade_notices() {
 	// Sequential Orders was the first stepped upgrade, so check if we have a stalled upgrade
 	$resume_upgrade = edd_maybe_resume_upgrade();
 	if ( ! empty( $resume_upgrade ) ) {
-
 		$resume_url = add_query_arg( $resume_upgrade, admin_url( 'index.php' ) );
 		printf(
 			'<div class="error"><p>' . __( 'Easy Digital Downloads needs to complete a database upgrade that was previously started, click <a href="%s">here</a> to resume the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
 			esc_url( $resume_url )
 		);
-
 	} else {
 
 		// Include all 'Stepped' upgrade process notices in this else statement,
 		// to avoid having a pending, and new upgrade suggested at the same time
-
 		if ( EDD()->session->get( 'upgrade_sequential' ) && edd_get_payments() ) {
 			printf(
 				'<div class="notice notice-warning"><p>' . __( 'Easy Digital Downloads needs to upgrade past order numbers to make them sequential, click <a href="%s">here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
@@ -135,7 +133,7 @@ function edd_show_upgrade_notices() {
 
 		if ( version_compare( $edd_version, '2.1', '<' ) ) {
 			printf(
-				'<div class="notice notice-warning"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the customer database, click %shere%s to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+				'<div class="notice notice-warning"><p>' . esc_html__( 'Easy Digital Downloads needs to upgrade the customer database, click %1$shere%2$s to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
 				'<a href="' . esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_customers_db' ) ) . '">',
 				'</a>'
 			);
@@ -193,19 +191,22 @@ function edd_show_upgrade_notices() {
 			}
 		}
 
-		/** 3.0 Upgrades ******************************************************/
+		/** 3.0 Upgrades */
 
 		// Possible upgrades
-		$upgrades = array_map( 'edd_has_upgrade_completed', array(
-			'migrate_orders'                   => 'migrate_orders',
-			'migrate_customer_addresses'       => 'migrate_customer_addresses',
-			'migrate_customer_email_addresses' => 'migrate_customer_email_addresses',
-			'migrate_customer_notes'           => 'migrate_customer_notes',
-			'migrate_logs'                     => 'migrate_logs',
-			'migrate_tax_rates'                => 'migrate_tax_rates',
-			'migrate_discounts'                => 'migrate_discounts',
-			'migrate_order_notes'              => 'migrate_order_notes',
-		) );
+		$upgrades = array_map(
+			'edd_has_upgrade_completed',
+			array(
+				'migrate_orders'                   => 'migrate_orders',
+				'migrate_customer_addresses'       => 'migrate_customer_addresses',
+				'migrate_customer_email_addresses' => 'migrate_customer_email_addresses',
+				'migrate_customer_notes'           => 'migrate_customer_notes',
+				'migrate_logs'                     => 'migrate_logs',
+				'migrate_tax_rates'                => 'migrate_tax_rates',
+				'migrate_discounts'                => 'migrate_discounts',
+				'migrate_order_notes'              => 'migrate_order_notes',
+			)
+		);
 
 		// Check if we need to do any upgrades.
 		if ( count( $upgrades ) !== count( array_filter( $upgrades ) ) ) {
@@ -308,11 +309,11 @@ add_action( 'wp_ajax_edd_trigger_upgrades', 'edd_trigger_upgrades' );
 
 /**
  * For use when doing 'stepped' upgrade routines, to see if we need to start somewhere in the middle
+ *
  * @since 2.2.6
  * @return mixed   When nothing to resume returns false, otherwise starts the upgrade where it left off
  */
 function edd_maybe_resume_upgrade() {
-
 	$doing_upgrade = get_option( 'edd_doing_upgrade', false );
 
 	if ( empty( $doing_upgrade ) ) {
@@ -330,7 +331,6 @@ function edd_maybe_resume_upgrade() {
  * @return bool                   If the function was successfully added
  */
 function edd_set_upgrade_complete( $upgrade_action = '' ) {
-
 	if ( empty( $upgrade_action ) ) {
 		return false;
 	}
@@ -365,11 +365,13 @@ function edd_v131_upgrades() {
 
 	edd_set_time_limit();
 
-	$query = new WP_Query( array(
-		'post_type' 		=> 'download',
-		'posts_per_page' 	=> -1,
-		'post_status' 		=> 'publish'
-	) );
+	$query     = new WP_Query(
+		array(
+			'post_type'      => 'download',
+			'posts_per_page' => -1,
+			'post_status'    => 'publish',
+		)
+	);
 	$downloads = $query->get_posts();
 
 	if ( $downloads ) {
@@ -381,13 +383,13 @@ function edd_v131_upgrades() {
 			if ( $sale_logs ) {
 				foreach ( $sale_logs['sales'] as $sale ) {
 					$log_data = array(
-						'post_parent'	=> $download->ID,
-						'post_date'		=> $sale['date'],
-						'log_type'		=> 'sale'
+						'post_parent' => $download->ID,
+						'post_date'   => $sale['date'],
+						'log_type'    => 'sale',
 					);
 
 					$log_meta = array(
-						'payment_id'=> $sale['payment_id']
+						'payment_id' => $sale['payment_id'],
 					);
 
 					$log = $edd_log->insert_log( $log_data, $log_meta );
@@ -400,16 +402,16 @@ function edd_v131_upgrades() {
 			if ( $file_logs ) {
 				foreach ( $file_logs['downloads'] as $log ) {
 					$log_data = array(
-						'post_parent'	=> $download->ID,
-						'post_date'		=> $log['date'],
-						'log_type'		=> 'file_download'
+						'post_parent' => $download->ID,
+						'post_date'   => $log['date'],
+						'log_type'    => 'file_download',
 
 					);
 
 					$log_meta = array(
-						'user_info'	=> $log['user_info'],
-						'file_id'	=> $log['file_id'],
-						'ip'		=> $log['ip']
+						'user_info' => $log['user_info'],
+						'file_id'   => $log['file_id'],
+						'ip'        => $log['ip'],
 					);
 
 					$log = $edd_log->insert_log( $log_data, $log_meta );
@@ -443,7 +445,7 @@ function edd_v134_upgrades() {
 			'post_author'    => 1,
 			'post_type'      => 'page',
 			'post_parent'    => $general_options['purchase_page'],
-			'comment_status' => 'closed'
+			'comment_status' => 'closed',
 		)
 	);
 
@@ -461,36 +463,42 @@ function edd_v134_upgrades() {
  */
 function edd_v14_upgrades() {
 
-	/** Add [edd_receipt] to success page **/
+	/** Add [edd_receipt] to success page */
 	$success_page = get_post( edd_get_option( 'success_page' ) );
 
 	// Check for the [edd_receipt] shortcode and add it if not present
 	if ( strpos( $success_page->post_content, '[edd_receipt' ) === false ) {
 		$page_content = $success_page->post_content .= "\n[edd_receipt]";
-		wp_update_post( array( 'ID' => edd_get_option( 'success_page' ), 'post_content' => $page_content ) );
+		wp_update_post(
+			array(
+				'ID'           => edd_get_option( 'success_page' ),
+				'post_content' => $page_content,
+			)
+		);
 	}
 
-	/** Convert Discounts to new Custom Post Type **/
+	/** Convert Discounts to new Custom Post Type */
 	$discounts = get_option( 'edd_discounts' );
 
 	if ( $discounts ) {
 		foreach ( $discounts as $discount ) {
-
-			$discount_id = wp_insert_post( array(
-				'post_type'   => 'edd_discount',
-				'post_title'  => isset( $discount['name'] ) ? $discount['name'] : '',
-				'post_status' => 'active'
-			) );
+			$discount_id = wp_insert_post(
+				array(
+					'post_type'   => 'edd_discount',
+					'post_title'  => isset( $discount['name'] ) ? $discount['name'] : '',
+					'post_status' => 'active',
+				)
+			);
 
 			$meta = array(
-				'code'        => isset( $discount['code'] ) ? $discount['code'] : '',
-				'uses'        => isset( $discount['uses'] ) ? $discount['uses'] : '',
-				'max_uses'    => isset( $discount['max'] ) ? $discount['max'] : '',
-				'amount'      => isset( $discount['amount'] ) ? $discount['amount'] : '',
-				'start'       => isset( $discount['start'] ) ? $discount['start'] : '',
-				'expiration'  => isset( $discount['expiration'] ) ? $discount['expiration'] : '',
-				'type'        => isset( $discount['type'] ) ? $discount['type'] : '',
-				'min_price'   => isset( $discount['min_price'] ) ? $discount['min_price'] : ''
+				'code'       => isset( $discount['code'] ) ? $discount['code'] : '',
+				'uses'       => isset( $discount['uses'] ) ? $discount['uses'] : '',
+				'max_uses'   => isset( $discount['max'] ) ? $discount['max'] : '',
+				'amount'     => isset( $discount['amount'] ) ? $discount['amount'] : '',
+				'start'      => isset( $discount['start'] ) ? $discount['start'] : '',
+				'expiration' => isset( $discount['expiration'] ) ? $discount['expiration'] : '',
+				'type'       => isset( $discount['type'] ) ? $discount['type'] : '',
+				'min_price'  => isset( $discount['min_price'] ) ? $discount['min_price'] : '',
 			);
 
 			foreach ( $meta as $meta_key => $value ) {
@@ -573,15 +581,14 @@ function edd_v20_upgrades() {
  * @return void
  */
 function edd_v20_upgrade_sequential_payment_numbers() {
-
 	if ( ! current_user_can( 'manage_shop_settings' ) ) {
 		wp_die( __( 'You do not have permission to do shop upgrades', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	edd_set_time_limit();
 
-	$step   = isset( $_GET['step'] )  ? absint( $_GET['step'] )  : 1;
-	$total  = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
+	$step  = isset( $_GET['step'] ) ? absint( $_GET['step'] ) : 1;
+	$total = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
 
 	if ( empty( $total ) || $total <= 1 ) {
 		$payments = edd_count_payments();
@@ -590,11 +597,13 @@ function edd_v20_upgrade_sequential_payment_numbers() {
 		}
 	}
 
-	$orders = edd_get_orders( array(
-		'number' => 100,
-		'offset' => $step == 1 ? 0 : ( $step - 1 ) * 100,
-		'order'  => 'asc',
-	) );
+	$orders = edd_get_orders(
+		array(
+			'number' => 100,
+			'offset' => $step == 1 ? 0 : ( $step - 1 ) * 100,
+			'order'  => 'asc',
+		)
+	);
 
 	if ( $orders ) {
 		$prefix  = edd_get_option( 'sequential_prefix' );
@@ -606,9 +615,12 @@ function edd_v20_upgrade_sequential_payment_numbers() {
 			// Re-add the prefix and postfix
 			$payment_number = $prefix . $number . $postfix;
 
-			edd_update_order( $order->id, array(
-				'order_number' => $payment_number
-            ) );
+			edd_update_order(
+				$order->id,
+				array(
+					'order_number' => $payment_number,
+				)
+			);
 
 			// Increment the payment number
 			$number++;
@@ -616,17 +628,20 @@ function edd_v20_upgrade_sequential_payment_numbers() {
 
 		// Payments found so upgrade them
 		$step++;
-		$redirect = add_query_arg( array(
-			'page'        => 'edd-upgrades',
-			'edd-upgrade' => 'upgrade_sequential_payment_numbers',
-			'step'        => $step,
-			'custom'      => $number,
-			'total'       => $total
-		), admin_url( 'index.php' ) );
+		$redirect = add_query_arg(
+			array(
+				'page'        => 'edd-upgrades',
+				'edd-upgrade' => 'upgrade_sequential_payment_numbers',
+				'step'        => $step,
+				'custom'      => $number,
+				'total'       => $total,
+			),
+			admin_url( 'index.php' )
+		);
 
 		edd_redirect( $redirect );
 
-	// No more payments found, finish up
+		// No more payments found, finish up
 	} else {
 		EDD()->session->set( 'upgrade_sequential', null );
 		delete_option( 'edd_doing_upgrade' );
@@ -662,30 +677,28 @@ function edd_v21_upgrade_customers_db() {
 	$emails = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT meta_value FROM {$wpdb->postmeta} WHERE meta_key = '_edd_payment_user_email' LIMIT %d,%d;", $offset, $number ) );
 
 	if ( $emails ) {
-
 		foreach ( $emails as $email ) {
-
 			if ( EDD()->customers->exists( $email ) ) {
 				continue; // Allow the upgrade routine to be safely re-run in the case of failure
 			}
 
-			$payments = new EDD_Payments_Query( array(
-				'user'    => $email,
-				'order'   => 'ASC',
-				'orderby' => 'ID',
-				'number'  => -1,
-				'page'    => $step
-			) );
+			$payments = new EDD_Payments_Query(
+				array(
+					'user'    => $email,
+					'order'   => 'ASC',
+					'orderby' => 'ID',
+					'number'  => -1,
+					'page'    => $step,
+				)
+			);
 
 			$payments = $payments->get_payments();
 
 			if ( $payments ) {
-
 				$total_value = 0.00;
 				$total_count = 0;
 
 				foreach ( $payments as $payment ) {
-
 					$status = get_post_status( $payment->ID );
 					if ( 'revoked' == $status || 'publish' == $status ) {
 						$total_value += $payment->total;
@@ -693,7 +706,7 @@ function edd_v21_upgrade_customers_db() {
 					}
 				}
 
-				$ids  = wp_list_pluck( $payments, 'ID' );
+				$ids = wp_list_pluck( $payments, 'ID' );
 
 				$user = get_user_by( 'email', $email );
 
@@ -704,7 +717,7 @@ function edd_v21_upgrade_customers_db() {
 					'purchase_count' => $total_count,
 					'purchase_value' => round( $total_value, 2 ),
 					'payment_ids'    => implode( ',', array_map( 'absint', $ids ) ),
-					'date_created'   => $payments[0]->date
+					'date_created'   => $payments[0]->date,
 				);
 
 				$customer_id = EDD()->customers->add( $args );
@@ -717,15 +730,18 @@ function edd_v21_upgrade_customers_db() {
 
 		// Customers found so upgrade them
 		$step++;
-		$redirect = add_query_arg( array(
-			'page'        => 'edd-upgrades',
-			'edd-upgrade' => 'upgrade_customers_db',
-			'step'        => $step
-		), admin_url( 'index.php' ) );
+		$redirect = add_query_arg(
+			array(
+				'page'        => 'edd-upgrades',
+				'edd-upgrade' => 'upgrade_customers_db',
+				'step'        => $step,
+			),
+			admin_url( 'index.php' )
+		);
 
 		edd_redirect( $redirect );
 
-	// No more customers found, finish up
+		// No more customers found, finish up
 	} else {
 		edd_update_db_version();
 		delete_option( 'edd_doing_upgrade' );
@@ -760,7 +776,7 @@ function edd_v226_upgrade_payments_price_logs_db() {
 
 	if ( 1 === $step ) {
 		// Check if we have any variable price products on the first step
-		$sql = "SELECT ID FROM {$wpdb->posts} p LEFT JOIN {$wpdb->postmeta} m ON p.ID = m.post_id WHERE m.meta_key = '_variable_pricing' AND m.meta_value = 1 LIMIT 1";
+		$sql          = "SELECT ID FROM {$wpdb->posts} p LEFT JOIN {$wpdb->postmeta} m ON p.ID = m.post_id WHERE m.meta_key = '_variable_pricing' AND m.meta_value = 1 LIMIT 1";
 		$has_variable = $wpdb->get_col( $sql );
 		if ( empty( $has_variable ) ) {
 			// We had no variable priced products, so go ahead and just complete
@@ -786,7 +802,10 @@ function edd_v226_upgrade_payments_price_logs_db() {
 				if ( ! isset( $download['options']['price_id'] ) ) {
 					continue;
 				}
-				$variable_downloads[] = array( 'id' => $download['id'], 'price_id' => $download['options']['price_id'] );
+				$variable_downloads[] = array(
+					'id'       => $download['id'],
+					'price_id' => $download['options']['price_id'],
+				);
 			}
 			$variable_download_ids = array_unique( wp_list_pluck( $variable_downloads, 'id' ) );
 			$unique_download_ids   = implode( ',', $variable_download_ids );
@@ -797,7 +816,7 @@ function edd_v226_upgrade_payments_price_logs_db() {
 			}
 
 			// Get all Log Ids where the post parent is in the set of download IDs we found in the cart meta
-			$logs = $wpdb->get_results( "SELECT m.post_id AS log_id, p.post_parent AS download_id FROM {$wpdb->postmeta} m LEFT JOIN {$wpdb->posts} p ON m.post_id = p.ID WHERE meta_key = '_edd_log_payment_id' AND meta_value = $payment_id AND p.post_parent IN ($unique_download_ids)", ARRAY_A );
+			$logs        = $wpdb->get_results( "SELECT m.post_id AS log_id, p.post_parent AS download_id FROM {$wpdb->postmeta} m LEFT JOIN {$wpdb->posts} p ON m.post_id = p.ID WHERE meta_key = '_edd_log_payment_id' AND meta_value = $payment_id AND p.post_parent IN ($unique_download_ids)", ARRAY_A );
 			$mapped_logs = array();
 
 			// Go through each cart item
@@ -806,9 +825,9 @@ function edd_v226_upgrade_payments_price_logs_db() {
 				foreach ( $logs as $key => $log ) {
 					// If this Log ID is associated with this download ID give it the price_id
 					if ( (int) $log['download_id'] === (int) $cart_item['id'] ) {
-						$mapped_logs[$log['log_id']] = $cart_item['price_id'];
+						$mapped_logs[ $log['log_id'] ] = $cart_item['price_id'];
 						// Remove this Download/Log ID from the list, for multipurchase compatibility
-						unset( $logs[$key] );
+						unset( $logs[ $key ] );
 						// These aren't the logs we're looking for. Move Along, Move Along.
 						break;
 					}
@@ -816,12 +835,12 @@ function edd_v226_upgrade_payments_price_logs_db() {
 			}
 
 			if ( ! empty( $mapped_logs ) ) {
-				$update  = "UPDATE {$wpdb->postmeta} SET meta_value = ";
-				$case    = "CASE post_id ";
+				$update = "UPDATE {$wpdb->postmeta} SET meta_value = ";
+				$case   = 'CASE post_id ';
 				foreach ( $mapped_logs as $post_id => $value ) {
 					$case .= "WHEN {$post_id} THEN {$value} ";
 				}
-				$case   .= "END ";
+				$case   .= 'END ';
 				$log_ids = implode( ',', array_keys( $mapped_logs ) );
 				$where   = "WHERE post_id IN ({$log_ids}) AND meta_key = '_edd_log_price_id'";
 				$sql     = $update . $case . $where;
@@ -833,11 +852,14 @@ function edd_v226_upgrade_payments_price_logs_db() {
 
 		// More Payments found so upgrade them
 		$step++;
-		$redirect = add_query_arg( array(
-			'page'        => 'edd-upgrades',
-			'edd-upgrade' => 'upgrade_payments_price_logs_db',
-			'step'        => $step
-		), admin_url( 'index.php' ) );
+		$redirect = add_query_arg(
+			array(
+				'page'        => 'edd-upgrades',
+				'edd-upgrade' => 'upgrade_payments_price_logs_db',
+				'step'        => $step,
+			),
+			admin_url( 'index.php' )
+		);
 
 		edd_redirect( $redirect );
 	} else {
@@ -873,7 +895,7 @@ function edd_v23_upgrade_payment_taxes() {
 
 	if ( $step < 2 ) {
 		// Check if we have any payments before moving on
-		$sql = "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_payment' LIMIT 1";
+		$sql          = "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_payment' LIMIT 1";
 		$has_payments = $wpdb->get_col( $sql );
 
 		if ( empty( $has_payments ) ) {
@@ -890,7 +912,7 @@ function edd_v23_upgrade_payment_taxes() {
 		$total_sql = "SELECT COUNT(ID) as total_payments FROM {$wpdb->posts} WHERE post_type = 'edd_payment'";
 		$results   = $wpdb->get_row( $total_sql, 0 );
 
-		$total     = $results->total_payments;
+		$total = $results->total_payments;
 	}
 
 	$payment_ids = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_payment' ORDER BY post_date DESC LIMIT %d,%d;", $offset, $number ) );
@@ -905,17 +927,20 @@ function edd_v23_upgrade_payment_taxes() {
 
 		// Payments found so upgrade them
 		$step++;
-		$redirect = add_query_arg( array(
-			'page'        => 'edd-upgrades',
-			'edd-upgrade' => 'upgrade_payment_taxes',
-			'step'        => $step,
-			'number'      => $number,
-			'total'       => $total
-		), admin_url( 'index.php' ) );
+		$redirect = add_query_arg(
+			array(
+				'page'        => 'edd-upgrades',
+				'edd-upgrade' => 'upgrade_payment_taxes',
+				'step'        => $step,
+				'number'      => $number,
+				'total'       => $total,
+			),
+			admin_url( 'index.php' )
+		);
 
 		edd_redirect( $redirect );
 
-	// No more payments found, finish up
+		// No more payments found, finish up
 	} else {
 		edd_update_db_version();
 		edd_set_upgrade_complete( 'upgrade_payment_taxes' );
@@ -950,7 +975,7 @@ function edd_v23_upgrade_customer_purchases() {
 
 	if ( $step < 2 ) {
 		// Check if we have any payments before moving on
-		$sql = "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_payment' LIMIT 1";
+		$sql          = "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_payment' LIMIT 1";
 		$has_payments = $wpdb->get_col( $sql );
 
 		if ( empty( $has_payments ) ) {
@@ -968,10 +993,14 @@ function edd_v23_upgrade_customer_purchases() {
 		$total = EDD()->customers->count();
 	}
 
-	$customers = edd_get_customers( array( 'number' => $number, 'offset' => $offset ) );
+	$customers = edd_get_customers(
+		array(
+			'number' => $number,
+			'offset' => $offset,
+		)
+	);
 
 	if ( ! empty( $customers ) ) {
-
 		foreach ( $customers as $customer ) {
 
 			// Get payments by email and user ID
@@ -988,12 +1017,11 @@ function edd_v23_upgrade_customer_purchases() {
 			$sql            = $select . $join . $where;
 			$found_payments = $wpdb->get_col( $sql );
 
-			$unique_payment_ids  = array_unique( array_filter( $found_payments ) );
+			$unique_payment_ids = array_unique( array_filter( $found_payments ) );
 
 			if ( ! empty( $unique_payment_ids ) ) {
-
-				$unique_ids_string  = implode( ',', $unique_payment_ids );
-				$customer_data      = array( 'payment_ids' => $unique_ids_string );
+				$unique_ids_string = implode( ',', $unique_payment_ids );
+				$customer_data     = array( 'payment_ids' => $unique_ids_string );
 
 				$purchase_value_sql = "SELECT SUM( m.meta_value ) FROM {$wpdb->postmeta} m LEFT JOIN {$wpdb->posts} p ON m.post_id = p.ID WHERE m.post_id IN ( {$unique_ids_string} ) AND p.post_status IN ( 'publish', 'revoked' ) AND m.meta_key = '_edd_payment_total'";
 				$purchase_value     = $wpdb->get_col( $purchase_value_sql );
@@ -1002,14 +1030,12 @@ function edd_v23_upgrade_customer_purchases() {
 				$purchase_count     = $wpdb->get_col( $purchase_count_sql );
 
 				if ( ! empty( $purchase_value ) && ! empty( $purchase_count ) ) {
-
 					$purchase_value = $purchase_value[0];
 					$purchase_count = $purchase_count[0];
 
 					$customer_data['purchase_count'] = $purchase_count;
 					$customer_data['purchase_value'] = $purchase_value;
 				}
-
 			} else {
 				$customer_data['purchase_count'] = 0;
 				$customer_data['purchase_value'] = 0;
@@ -1024,17 +1050,20 @@ function edd_v23_upgrade_customer_purchases() {
 
 		// More Payments found so upgrade them
 		$step++;
-		$redirect = add_query_arg( array(
-			'page'        => 'edd-upgrades',
-			'edd-upgrade' => 'upgrade_customer_payments_association',
-			'step'        => $step,
-			'number'      => $number,
-			'total'       => $total
-		), admin_url( 'index.php' ) );
+		$redirect = add_query_arg(
+			array(
+				'page'        => 'edd-upgrades',
+				'edd-upgrade' => 'upgrade_customer_payments_association',
+				'step'        => $step,
+				'number'      => $number,
+				'total'       => $total,
+			),
+			admin_url( 'index.php' )
+		);
 
 		edd_redirect( $redirect );
 
-	// No more customers found, finish up
+		// No more customers found, finish up
 	} else {
 		edd_update_db_version();
 		edd_set_upgrade_complete( 'upgrade_customer_payments_association' );
@@ -1108,17 +1137,20 @@ function edd_upgrade_user_api_keys() {
 
 		// More Payments found so upgrade them
 		$step++;
-		$redirect = add_query_arg( array(
-			'page'        => 'edd-upgrades',
-			'edd-upgrade' => 'upgrade_user_api_keys',
-			'step'        => $step,
-			'number'      => $number,
-			'total'       => $total
-		), admin_url( 'index.php' ) );
+		$redirect = add_query_arg(
+			array(
+				'page'        => 'edd-upgrades',
+				'edd-upgrade' => 'upgrade_user_api_keys',
+				'step'        => $step,
+				'number'      => $number,
+				'total'       => $total,
+			),
+			admin_url( 'index.php' )
+		);
 
 		edd_redirect( $redirect );
 
-	// No more customers found, finish up
+		// No more customers found, finish up
 	} else {
 		edd_update_db_version();
 		edd_set_upgrade_complete( 'upgrade_user_api_keys' );
@@ -1143,14 +1175,16 @@ function edd_remove_refunded_sale_logs() {
 
 	edd_set_time_limit();
 
-	$step    = isset( $_GET['step']  ) ? absint( $_GET['step']  ) : 1;
-	$total   = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : edd_count_payments()->refunded;
+	$step  = isset( $_GET['step'] ) ? absint( $_GET['step'] ) : 1;
+	$total = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : edd_count_payments()->refunded;
 
-	$refunds = edd_get_payments( array(
-		'status' => 'refunded',
-		'number' => 20,
-		'page'   => $step
-	) );
+	$refunds = edd_get_payments(
+		array(
+			'status' => 'refunded',
+			'number' => 20,
+			'page'   => $step,
+		)
+	);
 
 	if ( ! empty( $refunds ) ) {
 
@@ -1164,23 +1198,26 @@ function edd_remove_refunded_sale_logs() {
 				array(
 					array(
 						'key'   => '_edd_log_payment_id',
-						'value' => $refund->ID
-					)
+						'value' => $refund->ID,
+					),
 				)
 			);
 		}
 
 		$step++;
-		$redirect = add_query_arg( array(
-			'page'        => 'edd-upgrades',
-			'edd-upgrade' => 'remove_refunded_sale_logs',
-			'step'        => $step,
-			'total'       => $total
-		), admin_url( 'index.php' ) );
+		$redirect = add_query_arg(
+			array(
+				'page'        => 'edd-upgrades',
+				'edd-upgrade' => 'remove_refunded_sale_logs',
+				'step'        => $step,
+				'total'       => $total,
+			),
+			admin_url( 'index.php' )
+		);
 
 		edd_redirect( $redirect );
 
-	// No more refunded payments found, finish up
+		// No more refunded payments found, finish up
 	} else {
 		edd_update_db_version();
 		edd_set_upgrade_complete( 'remove_refunded_sale_logs' );
@@ -1210,7 +1247,8 @@ function edd_upgrade_render_update_file_download_log_data() {
 
 		delete_option( 'edd_doing_upgrade' );
 		return;
-	endif; ?>
+	endif;
+	?>
 
 	<div id="edd-migration-ready" class="notice notice-success" style="display: none;">
 		<p><?php _e( '<strong>Upgrades Complete:</strong> You may now safely navigate away from this page.', 'easy-digital-downloads' ); ?></p>
@@ -1281,7 +1319,7 @@ function edd_upgrade_render_update_file_download_log_data() {
 							<span class="edd-migration allowed">
 								<input type="submit" id="migrate-logs-submit" value="<?php _e( 'Update File Download Logs', 'easy-digital-downloads' ); ?>" class="button-primary"/>
 							</span>
-						<?php else: ?>
+						<?php else : ?>
 							<input type="submit" disabled="disabled" id="migrate-logs-submit" value="<?php _e( 'Update File Download Logs', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 							&mdash; <?php _e( 'File download logs have already been updated.', 'easy-digital-downloads' ); ?>
 						<?php endif; ?>
@@ -1333,7 +1371,7 @@ function edd_upgrade_render_v30_migration() {
 
 	$migration_complete = edd_has_upgrade_completed( 'v30_data_migration' );
 
-	/** Orders Migration *****************************************************/
+	/** Orders Migration */
 	$orders          = $wpdb->get_var( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_payment' LIMIT 1" );
 	$orders_complete = edd_has_upgrade_completed( 'migrate_orders' );
 
@@ -1344,8 +1382,8 @@ function edd_upgrade_render_v30_migration() {
 
 	$order_removal_complete = edd_has_upgrade_completed( 'remove_legacy_orders' );
 
-	/** Customer Data Migration **********************************************/
-	$addresses = $wpdb->get_results( "SELECT umeta_id FROM {$wpdb->usermeta} WHERE meta_key = '_edd_user_address' LIMIT 1" );
+	/** Customer Data Migration */
+	$addresses                   = $wpdb->get_results( "SELECT umeta_id FROM {$wpdb->usermeta} WHERE meta_key = '_edd_user_address' LIMIT 1" );
 	$customer_addresses_complete = edd_has_upgrade_completed( 'migrate_customer_addresses' );
 
 	if ( empty( $addresses ) ) {
@@ -1353,7 +1391,7 @@ function edd_upgrade_render_v30_migration() {
 		$customer_addresses_complete = true;
 	}
 
-	$email_addresses = $wpdb->get_results( "SELECT meta_key FROM {$wpdb->edd_customermeta} WHERE meta_key = 'additional_email' LIMIT 1" );
+	$email_addresses                   = $wpdb->get_results( "SELECT meta_key FROM {$wpdb->edd_customermeta} WHERE meta_key = 'additional_email' LIMIT 1" );
 	$customer_email_addresses_complete = edd_has_upgrade_completed( 'migrate_customer_addresses' );
 
 	if ( empty( $email_addresses ) ) {
@@ -1361,15 +1399,17 @@ function edd_upgrade_render_v30_migration() {
 		$customer_email_addresses_complete = true;
 	}
 
-	/** Logs Migration *******************************************************/
-	$logs = $wpdb->get_results( "SELECT t.slug
+	/** Logs Migration */
+	$logs          = $wpdb->get_results(
+		"SELECT t.slug
 								 FROM {$wpdb->posts} AS p
 								 LEFT JOIN {$wpdb->term_relationships} AS tr ON (p.ID = tr.object_id)
 								 LEFT JOIN {$wpdb->term_taxonomy} AS tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id)
 								 LEFT JOIN {$wpdb->terms} AS t ON (tt.term_id = t.term_id)
 								 WHERE p.post_type = 'edd_log' AND t.slug != 'sale'
 								 GROUP BY p.ID
-								 LIMIT 1" );
+								 LIMIT 1"
+	);
 	$logs_complete = edd_has_upgrade_completed( 'migrate_logs' );
 
 	if ( empty( $logs ) ) {
@@ -1377,8 +1417,8 @@ function edd_upgrade_render_v30_migration() {
 		$logs_complete = true;
 	}
 
-	/** Tax Rates Migration **************************************************/
-	$tax_rates = get_option( 'edd_tax_rates', array() );
+	/** Tax Rates Migration */
+	$tax_rates          = get_option( 'edd_tax_rates', array() );
 	$tax_rates_complete = edd_has_upgrade_completed( 'migrate_tax_rates' );
 
 	if ( empty( $tax_rates ) ) {
@@ -1386,7 +1426,7 @@ function edd_upgrade_render_v30_migration() {
 		$tax_rates_complete = true;
 	}
 
-	/** Discounts Migration **************************************************/
+	/** Discounts Migration */
 	$discounts          = $wpdb->get_var( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_discount' LIMIT 1" );
 	$discounts_complete = edd_has_upgrade_completed( 'migrate_discounts' );
 
@@ -1395,7 +1435,7 @@ function edd_upgrade_render_v30_migration() {
 		$discounts_complete = true;
 	}
 
-	/** Order Notes Migration ************************************************/
+	/** Order Notes Migration */
 	$order_notes                  = $wpdb->get_var( "SELECT * FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note' LIMIT 1" );
 	$order_notes_complete         = edd_has_upgrade_completed( 'migrate_order_notes' );
 	$order_notes_removal_complete = edd_has_upgrade_completed( 'remove_legacy_order_notes' );
@@ -1405,7 +1445,7 @@ function edd_upgrade_render_v30_migration() {
 		$order_notes_complete = true;
 	}
 
-	/** Customer Notes Migration *********************************************/
+	/** Customer Notes Migration */
 	$customer_notes                  = $wpdb->get_var( "SHOW COLUMNS FROM {$wpdb->edd_customers} LIKE 'notes'" );
 	$customer_notes_complete         = edd_has_upgrade_completed( 'migrate_customer_notes' );
 	$customer_notes_removal_complete = edd_has_upgrade_completed( 'remove_legacy_customer_notes' );
@@ -1416,7 +1456,8 @@ function edd_upgrade_render_v30_migration() {
 	}
 
 	// Initialise to first step.
-	$step = 1; ?>
+	$step = 1;
+	?>
 
 	<div id="edd-migration-ready" class="notice notice-success" style="display: none;">
 		<p>
@@ -1473,11 +1514,11 @@ function edd_upgrade_render_v30_migration() {
 				});
 
 				$('#remove-legacy-data-confirm').on( 'change', function() {
-				    if ( this.checked === true ) {
-					    $('#remove-legacy-data-submit').removeClass('button-secondary').addClass('button-primary').prop( 'disabled', false );
-				    } else {
-                        $('#remove-legacy-data-submit').addClass('button-secondary').removeClass('button-primary').prop( 'disabled', 'disabled' );
-				    }
+					if ( this.checked === true ) {
+						$('#remove-legacy-data-submit').removeClass('button-secondary').addClass('button-primary').prop( 'disabled', false );
+					} else {
+						$('#remove-legacy-data-submit').addClass('button-secondary').removeClass('button-primary').prop( 'disabled', 'disabled' );
+					}
 				} );
 			});
 		});
@@ -1507,7 +1548,7 @@ function edd_upgrade_render_v30_migration() {
 								<input type="submit" disabled="disabled" id="migrate-orders-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
 							</span>
-						<?php else: ?>
+						<?php else : ?>
 							<input type="submit" disabled="disabled" id="migrate-orders-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 							&mdash; <?php _e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
 						<?php endif; ?>
@@ -1549,7 +1590,7 @@ function edd_upgrade_render_v30_migration() {
 								<input type="submit" disabled="disabled" id="migrate-customer-addresses-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
 							</span>
-						<?php else: ?>
+						<?php else : ?>
 							<input type="submit" disabled="disabled" id="migrate-customer-addresses-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 							&mdash; <?php _e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
 						<?php endif; ?>
@@ -1561,9 +1602,10 @@ function edd_upgrade_render_v30_migration() {
 			</div><!-- .inside -->
 		</div><!-- .postbox -->
 	</div>
-	<?php $step++;
+		<?php
+		$step++;
 	endif;
-	?>
+?>
 
 	<?php if ( ! empty( $email_addresses ) ) : ?>
 		<div class="metabox-holder">
@@ -1589,7 +1631,7 @@ function edd_upgrade_render_v30_migration() {
 								<input type="submit" disabled="disabled" id="migrate-customer-email-addresses-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
 							</span>
-						<?php else: ?>
+						<?php else : ?>
 							<input type="submit" disabled="disabled" id="migrate-customer-email-addresses-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 							&mdash; <?php _e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
 						<?php endif; ?>
@@ -1601,9 +1643,10 @@ function edd_upgrade_render_v30_migration() {
 				</div><!-- .inside -->
 			</div><!-- .postbox -->
 		</div>
-		<?php $step++;
+		<?php
+		$step++;
 	endif;
-	?>
+?>
 
 	<?php if ( ! empty( $logs ) ) : ?>
 		<div class="metabox-holder">
@@ -1629,7 +1672,7 @@ function edd_upgrade_render_v30_migration() {
 								<input type="submit" disabled="disabled" id="migrate-logs-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
 							</span>
-						<?php else: ?>
+						<?php else : ?>
 							<input type="submit" disabled="disabled" id="migrate-logs-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 							&mdash; <?php _e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
 						<?php endif; ?>
@@ -1641,9 +1684,10 @@ function edd_upgrade_render_v30_migration() {
 				</div><!-- .inside -->
 			</div><!-- .postbox -->
 		</div>
-		<?php $step++;
+		<?php
+		$step++;
 	endif;
-	?>
+?>
 
 	<?php if ( ! empty( $tax_rates ) ) : ?>
 		<div class="metabox-holder">
@@ -1669,7 +1713,7 @@ function edd_upgrade_render_v30_migration() {
 								<input type="submit" disabled="disabled" id="migrate-tax-rates-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
 							</span>
-						<?php else: ?>
+						<?php else : ?>
 							<input type="submit" disabled="disabled" id="migrate-tax-rates-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 							&mdash; <?php _e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
 						<?php endif; ?>
@@ -1681,9 +1725,10 @@ function edd_upgrade_render_v30_migration() {
 				</div><!-- .inside -->
 			</div><!-- .postbox -->
 		</div>
-		<?php $step++;
+		<?php
+		$step++;
 	endif;
-	?>
+?>
 
 	<?php if ( ! empty( $discounts ) ) : ?>
 		<div class="metabox-holder">
@@ -1709,7 +1754,7 @@ function edd_upgrade_render_v30_migration() {
 								<input type="submit" disabled="disabled" id="migrate-discounts-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
 							</span>
-						<?php else: ?>
+						<?php else : ?>
 							<input type="submit" disabled="disabled" id="migrate-discounts-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 							&mdash; <?php _e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
 						<?php endif; ?>
@@ -1721,9 +1766,10 @@ function edd_upgrade_render_v30_migration() {
 				</div><!-- .inside -->
 			</div><!-- .postbox -->
 		</div>
-		<?php $step++;
+		<?php
+		$step++;
 	endif;
-	?>
+?>
 
 	<?php if ( ! empty( $order_notes ) ) : ?>
 		<div class="metabox-holder">
@@ -1749,7 +1795,7 @@ function edd_upgrade_render_v30_migration() {
 								<input type="submit" disabled="disabled" id="migrate-order-notes-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
 							</span>
-						<?php else: ?>
+						<?php else : ?>
 							<input type="submit" disabled="disabled" id="migrate-order-notes-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 							&mdash; <?php _e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
 						<?php endif; ?>
@@ -1761,9 +1807,10 @@ function edd_upgrade_render_v30_migration() {
 				</div><!-- .inside -->
 			</div><!-- .postbox -->
 		</div>
-		<?php $step++;
+		<?php
+		$step++;
 	endif;
-	?>
+?>
 
 	<?php if ( ! empty( $customer_notes ) ) : ?>
 		<div class="metabox-holder">
@@ -1789,7 +1836,7 @@ function edd_upgrade_render_v30_migration() {
 								<input type="submit" disabled="disabled" id="migrate-customer-notes-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
 							</span>
-						<?php else: ?>
+						<?php else : ?>
 							<input type="submit" disabled="disabled" id="migrate-customer-notes-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 							&mdash; <?php _e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
 						<?php endif; ?>
@@ -1801,9 +1848,10 @@ function edd_upgrade_render_v30_migration() {
 				</div><!-- .inside -->
 			</div><!-- .postbox -->
 		</div>
-		<?php $step++;
+		<?php
+		$step++;
 	endif;
-	?>
+?>
 
 	<?php if ( ! $migration_complete ) : ?>
 		<div class="metabox-holder">
@@ -1832,7 +1880,7 @@ function edd_upgrade_render_v30_migration() {
 								<input type="submit" disabled="disabled" id="remove-legacy-data-submit" value="<?php _e( 'Remove Legacy Data', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
 							</span>
-						<?php else: ?>
+						<?php else : ?>
 							<input type="submit" disabled="disabled" id="remove-legacy-data-submit" value="<?php _e( 'Remove Legacy Data', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 							&mdash; <?php _e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
 						<?php endif; ?>
@@ -1867,49 +1915,49 @@ add_action( 'edd_register_batch_exporter', 'edd_register_batch_processors_for_v3
 function edd_load_batch_processors_for_v30_upgrade( $class ) {
 	switch ( $class ) {
 		case 'EDD\Admin\Upgrades\v3\Orders':
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-orders.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-orders.php';
 			break;
 		case 'EDD\Admin\Upgrades\v3\Customer_Addresses':
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-customer-addresses.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-customer-addresses.php';
 			break;
 		case 'EDD\Admin\Upgrades\v3\Customer_Email_Addresses':
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-customer-email-addresses.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-customer-email-addresses.php';
 			break;
 		case 'EDD\Admin\Upgrades\v3\Logs':
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-logs.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-logs.php';
 			break;
 		case 'EDD\Admin\Upgrades\v3\Tax_Rates':
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-tax-rates.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-tax-rates.php';
 			break;
 		case 'EDD\Admin\Upgrades\v3\Discounts':
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-discounts.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-discounts.php';
 			break;
 		case 'EDD\Admin\Upgrades\v3\Order_Notes':
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-order-notes.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-order-notes.php';
 			break;
 		case 'EDD\Admin\Upgrades\v3\Customer_Notes':
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-customer-notes.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-customer-notes.php';
 			break;
 		case 'EDD\Admin\Upgrades\v3\Remove_Legacy_Data':
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
-			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-remove-legacy-data.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-remove-legacy-data.php';
 			break;
 	}
 }

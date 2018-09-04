@@ -42,14 +42,14 @@ class Test_Gateways extends EDD_UnitTestCase {
 
 		// Test when default is set to paypal
 		$edd_options['default_gateway'] = 'paypal';
-		$enabled_gateway_list = edd_get_enabled_payment_gateways( true );
-		$first_gateway_id     = current( array_keys( $enabled_gateway_list ) );
+		$enabled_gateway_list           = edd_get_enabled_payment_gateways( true );
+		$first_gateway_id               = current( array_keys( $enabled_gateway_list ) );
 		$this->assertEquals( 'paypal', $first_gateway_id );
 
 		// Test default is set to manual and we ask for it sorted
 		$edd_options['default_gateway'] = 'manual';
-		$enabled_gateway_list = edd_get_enabled_payment_gateways( true );
-		$first_gateway_id     = current( array_keys( $enabled_gateway_list ) );
+		$enabled_gateway_list           = edd_get_enabled_payment_gateways( true );
+		$first_gateway_id               = current( array_keys( $enabled_gateway_list ) );
 		$this->assertEquals( 'manual', $first_gateway_id );
 
 		// Test the call does not return it sorted when manual is default
@@ -66,19 +66,18 @@ class Test_Gateways extends EDD_UnitTestCase {
 	}
 
 	public function test_default_gateway() {
-
 		global $edd_options;
 
 		$this->assertFalse( edd_get_default_gateway() );
 
-		$edd_options['gateways'] = array();
+		$edd_options['gateways']           = array();
 		$edd_options['gateways']['paypal'] = '1';
 		$edd_options['gateways']['manual'] = '1';
 
 		$this->assertEquals( 'paypal', edd_get_default_gateway() );
 
-		$edd_options['default_gateway'] = 'paypal';
-		$edd_options['gateways'] = array();
+		$edd_options['default_gateway']    = 'paypal';
+		$edd_options['gateways']           = array();
 		$edd_options['gateways']['manual'] = '1';
 		$edd_options['gateways']['stripe'] = '1';
 
@@ -88,7 +87,7 @@ class Test_Gateways extends EDD_UnitTestCase {
 	public function test_get_gateway_admin_label() {
 		global $edd_options;
 
-		$edd_options['gateways'] = array();
+		$edd_options['gateways']           = array();
 		$edd_options['gateways']['paypal'] = '1';
 		$edd_options['gateways']['manual'] = '1';
 
@@ -99,7 +98,7 @@ class Test_Gateways extends EDD_UnitTestCase {
 	public function test_get_gateway_checkout_label() {
 		global $edd_options;
 
-		$edd_options['gateways'] = array();
+		$edd_options['gateways']           = array();
 		$edd_options['gateways']['paypal'] = '1';
 		$edd_options['gateways']['manual'] = '1';
 
@@ -110,8 +109,8 @@ class Test_Gateways extends EDD_UnitTestCase {
 	public function test_buy_now_supported_single_gateway() {
 		global $edd_options;
 
-		$edd_options['default_gateway'] = 'paypal';
-		$edd_options['gateways'] = array();
+		$edd_options['default_gateway']    = 'paypal';
+		$edd_options['gateways']           = array();
 		$edd_options['gateways']['paypal'] = '1';
 
 		$this->assertTrue( edd_shop_supports_buy_now() );
@@ -120,8 +119,8 @@ class Test_Gateways extends EDD_UnitTestCase {
 	public function test_buy_now_supported_multiple_gateways() {
 		global $edd_options;
 
-		$edd_options['default_gateway'] = 'paypal';
-		$edd_options['gateways'] = array();
+		$edd_options['default_gateway']    = 'paypal';
+		$edd_options['gateways']           = array();
 		$edd_options['gateways']['paypal'] = '1';
 		$edd_options['gateways']['manual'] = '1';
 
@@ -138,7 +137,6 @@ class Test_Gateways extends EDD_UnitTestCase {
 	}
 
 	public function test_no_gateway_error() {
-
 		global $edd_options;
 
 		$download = EDD_Helper_Download::create_simple_download();

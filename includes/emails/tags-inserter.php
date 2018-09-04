@@ -83,9 +83,8 @@ function edd_email_tags_inserter_media_button_output() {
  * @since 3.0
  */
 function edd_email_tags_inserter_enqueue_scripts() {
-
 	wp_enqueue_style( 'edd-admin-email-tags' );
-	wp_enqueue_script( 'edd-admin-email-tags' ) ;
+	wp_enqueue_script( 'edd-admin-email-tags' );
 
 	// Send information about tags to script.
 	$items = array();

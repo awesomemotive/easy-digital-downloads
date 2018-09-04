@@ -48,7 +48,7 @@ final class Customer_Meta extends Table {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201807110001' => 201807110001
+		'201807110001' => 201807110001,
 	);
 
 	/**

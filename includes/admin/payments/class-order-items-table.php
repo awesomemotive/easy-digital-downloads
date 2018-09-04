@@ -29,11 +29,13 @@ class Order_Items_Table extends List_Table {
 	 * @see   WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		parent::__construct( array(
-			'singular' => __( 'Order Item',  'easy-digital-downloads' ),
-			'plural'   => __( 'Order Items', 'easy-digital-downloads' ),
-			'ajax'     => false,
-		) );
+		parent::__construct(
+			array(
+				'singular' => __( 'Order Item', 'easy-digital-downloads' ),
+				'plural'   => __( 'Order Items', 'easy-digital-downloads' ),
+				'ajax'     => false,
+			)
+		);
 
 		$this->process_bulk_action();
 		$this->get_counts();
@@ -56,11 +58,14 @@ class Order_Items_Table extends List_Table {
 			: 0;
 
 		// Add base query args
-		return add_query_arg( array(
-			'page' => 'edd-payment-history',
-			'view' => 'view-order-details',
-			'id'   => $id,
-		), $base );
+		return add_query_arg(
+			array(
+				'page' => 'edd-payment-history',
+				'view' => 'view-order-details',
+				'id'   => $id,
+			),
+			$base
+		);
 	}
 
 	/**
@@ -83,9 +88,9 @@ class Order_Items_Table extends List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'cb'       => '<input type="checkbox" />',
-			'name'     => __( 'Product', 'easy-digital-downloads' ),
-			'amount'   => __( 'Amount', 'easy-digital-downloads' ),
+			'cb'     => '<input type="checkbox" />',
+			'name'   => __( 'Product', 'easy-digital-downloads' ),
+			'amount' => __( 'Amount', 'easy-digital-downloads' ),
 		);
 
 		// Maybe add quantity column.
@@ -214,49 +219,82 @@ class Order_Items_Table extends List_Table {
 		$row_actions = array();
 
 		// Edit
-		$row_actions['edit'] = '<a href="' . add_query_arg( array(
+		$row_actions['edit'] = '<a href="' . add_query_arg(
+			array(
 				'edd-action' => 'edit_order_item',
 				'order_item' => $order_item->id,
-			), $base ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
+			),
+			$base
+		) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
 
 		// No state
 		$state = '';
 
 		// Active, so add "deactivate" action
 		if ( empty( $status ) ) {
-			$row_actions['complete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-					'edd-action' => 'handle_order_item_change',
-					'status'     => 'inherit',
-					'order_item' => $order_item->id,
-				), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Complete', 'easy-digital-downloads' ) . '</a>';
-
+			$row_actions['complete'] = '<a href="' . esc_url(
+				wp_nonce_url(
+					add_query_arg(
+						array(
+							'edd-action' => 'handle_order_item_change',
+							'status'     => 'inherit',
+							'order_item' => $order_item->id,
+						),
+						$base
+					),
+					'edd_order_item_nonce'
+				)
+			) . '">' . __( 'Complete', 'easy-digital-downloads' ) . '</a>';
 		} elseif ( in_array( $status, array( 'inherit', 'publish' ), true ) ) {
-
 			if ( edd_get_download_files( $order_item->id, $order_item->price_id ) ) {
 				$row_actions['copy'] = '<span class="edd-copy-download-link-wrapper"><a href="" class="edd-copy-download-link" data-download-id="' . esc_attr( $order_item->id ) . '" data-price-id="' . esc_attr( $order_item->id ) . '">' . __( 'Link', 'easy-digital-downloads' ) . '</a>';
 			}
 
-			$row_actions['refund'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-					'edd-action' => 'handle_order_item_change',
-					'status'     => 'refunded',
-					'order_item' => $order_item->id,
-				), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Refund', 'easy-digital-downloads' ) . '</a>';
+			$row_actions['refund'] = '<a href="' . esc_url(
+				wp_nonce_url(
+					add_query_arg(
+						array(
+							'edd-action' => 'handle_order_item_change',
+							'status'     => 'refunded',
+							'order_item' => $order_item->id,
+						),
+						$base
+					),
+					'edd_order_item_nonce'
+				)
+			) . '">' . __( 'Refund', 'easy-digital-downloads' ) . '</a>';
 
 			// Inactive, so add "activate" action
 		} elseif ( 'refunded' === $status ) {
 			$state                   = __( 'Refunded', 'easy-digital-downloads' );
-			$row_actions['activate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-					'edd-action' => 'handle_order_item_change',
-					'status'     => 'inherit',
-					'order_item' => $order_item->id,
-				), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Reverse', 'easy-digital-downloads' ) . '</a>';
+			$row_actions['activate'] = '<a href="' . esc_url(
+				wp_nonce_url(
+					add_query_arg(
+						array(
+							'edd-action' => 'handle_order_item_change',
+							'status'     => 'inherit',
+							'order_item' => $order_item->id,
+						),
+						$base
+					),
+					'edd_order_item_nonce'
+				)
+			) . '">' . __( 'Reverse', 'easy-digital-downloads' ) . '</a>';
 		}
 
 		// Delete
-		$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-				'edd-action' => 'delete_order_item',
-				'order_item' => $order_item->id,
-			), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
+		$row_actions['delete'] = '<a href="' . esc_url(
+			wp_nonce_url(
+				add_query_arg(
+					array(
+						'edd-action' => 'delete_order_item',
+						'order_item' => $order_item->id,
+					),
+					$base
+				),
+				'edd_order_item_nonce'
+			)
+		) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 
 		// Filter all order_item row actions
 		$row_actions = apply_filters( 'edd_order_item_row_actions', $row_actions, $order_item );
@@ -267,10 +305,13 @@ class Order_Items_Table extends List_Table {
 		}
 
 		// Wrap order_item title in strong anchor
-		$order_item_title = '<strong><a class="row-title" href="' . add_query_arg( array(
+		$order_item_title = '<strong><a class="row-title" href="' . add_query_arg(
+			array(
 				'edd-action' => 'edit_order_item',
 				'order_item' => $order_item->id,
-			), $base ) . '">' . stripslashes( $order_item->product_name ) . '</a>' . $state . '</strong>';
+			),
+			$base
+		) . '">' . stripslashes( $order_item->product_name ) . '</a>' . $state . '</strong>';
 
 		// Return order_item title & row actions
 		return $order_item_title . $this->row_actions( $row_actions );
@@ -362,14 +403,20 @@ class Order_Items_Table extends List_Table {
 					edd_delete_order_item( $id );
 					break;
 				case 'refund':
-					edd_update_order_item( $id, array(
-						'status' => 'refunded',
-					) );
+					edd_update_order_item(
+						$id,
+						array(
+							'status' => 'refunded',
+						)
+					);
 					break;
 				case 'complete':
-					edd_update_order_item( $id, array(
-						'status' => 'publish',
-					) );
+					edd_update_order_item(
+						$id,
+						array(
+							'status' => 'publish',
+						)
+					);
 					break;
 			}
 		}
@@ -391,9 +438,11 @@ class Order_Items_Table extends List_Table {
 				: 0;
 
 			// Get counts
-			$this->counts = edd_get_order_item_counts( array(
-				'order_id' => $order_id
-			) );
+			$this->counts = edd_get_order_item_counts(
+				array(
+					'order_id' => $order_id,
+				)
+			);
 		}
 	}
 
@@ -419,15 +468,17 @@ class Order_Items_Table extends List_Table {
 		$id      = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
 
 		// Get order items.
-		return edd_get_order_items( array(
-			'order_id' => $id,
-			'number'   => $this->per_page,
-			'paged'    => $paged,
-			'orderby'  => $orderby,
-			'order'    => $order,
-			'status'   => $status,
-			'search'   => $search,
-		) );
+		return edd_get_order_items(
+			array(
+				'order_id' => $id,
+				'number'   => $this->per_page,
+				'paged'    => $paged,
+				'orderby'  => $orderby,
+				'order'    => $order,
+				'status'   => $status,
+				'search'   => $search,
+			)
+		);
 	}
 
 	/**
@@ -448,11 +499,13 @@ class Order_Items_Table extends List_Table {
 
 		// Maybe setup pagination.
 		if ( ! edd_is_add_order_page() ) {
-			$this->set_pagination_args( array(
-				'total_items' => $this->counts[ $status ],
-				'per_page'    => $this->per_page,
-				'total_pages' => ceil( $this->counts[ $status ] / $this->per_page ),
-			) );
+			$this->set_pagination_args(
+				array(
+					'total_items' => $this->counts[ $status ],
+					'per_page'    => $this->per_page,
+					'total_pages' => ceil( $this->counts[ $status ] / $this->per_page ),
+				)
+			);
 		}
 	}
 
@@ -466,10 +519,13 @@ class Order_Items_Table extends List_Table {
 	public function single_row( $item ) {
 
 		// Status.
-		$classes = array_map( 'sanitize_html_class', array(
-			'order-' . $item->order_id,
-			$item->status,
-		) );
+		$classes = array_map(
+			'sanitize_html_class',
+			array(
+				'order-' . $item->order_id,
+				$item->status,
+			)
+		);
 
 		// Turn into a string.
 		$class = implode( ' ', $classes );

@@ -9,7 +9,7 @@
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
+ */
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -31,7 +31,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0
  * @return void
-*/
+ */
 class edd_cart_widget extends WP_Widget {
 	/** Constructor */
 	function __construct() {
@@ -41,7 +41,6 @@ class edd_cart_widget extends WP_Widget {
 
 	/** @see WP_Widget::widget */
 	function widget( $args, $instance ) {
-
 		if ( ! empty( $instance['hide_on_checkout'] ) && edd_is_checkout() ) {
 			return;
 		}
@@ -79,7 +78,6 @@ class edd_cart_widget extends WP_Widget {
 
 	/** @see WP_Widget::form */
 	function form( $instance ) {
-
 		$defaults = array(
 			'title'            => '',
 			'hide_on_checkout' => false,
@@ -141,7 +139,7 @@ class edd_cart_widget extends WP_Widget {
  *
  * @since 1.0
  * @return void
-*/
+ */
 class edd_categories_tags_widget extends WP_Widget {
 	/** Constructor */
 	function __construct() {
@@ -191,13 +189,14 @@ class edd_categories_tags_widget extends WP_Widget {
 	function form( $instance ) {
 		// Set up some default widget settings.
 		$defaults = array(
-			'title'         => '',
-			'taxonomy'      => 'download_category',
-			'count'         => 'off',
-			'hide_empty'    => 'off',
+			'title'      => '',
+			'taxonomy'   => 'download_category',
+			'count'      => 'off',
+			'hide_empty' => 'off',
 		);
 
-		$instance = wp_parse_args( (array) $instance, $defaults ); ?>
+		$instance = wp_parse_args( (array) $instance, $defaults );
+		?>
 		<p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php _e( 'Title:', 'easy-digital-downloads' ); ?></label>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo $instance['title']; ?>"/>
@@ -221,7 +220,7 @@ class edd_categories_tags_widget extends WP_Widget {
 			<label for="<?php echo $this->get_field_id( 'hide_empty' ); ?>"><?php _e( 'Hide Empty Categories:', 'easy-digital-downloads' ); ?></label>
 			<input <?php checked( $instance['hide_empty'], 'on' ); ?> id="<?php echo $this->get_field_id( 'hide_empty' ); ?>" name="<?php echo $this->get_field_name( 'hide_empty' ); ?>" type="checkbox" />
 		</p>
-	<?php
+		<?php
 	}
 }
 
@@ -292,12 +291,12 @@ class EDD_Product_Details_Widget extends WP_Widget {
 			echo $args['before_title'] . $title . $args['after_title'];
 		}
 
-		do_action( 'edd_product_details_widget_before_title' , $instance , $download_id );
+		do_action( 'edd_product_details_widget_before_title', $instance, $download_id );
 
 		// Download title.
 		echo $download_title;
 
-		do_action( 'edd_product_details_widget_before_purchase_button' , $instance , $download_id );
+		do_action( 'edd_product_details_widget_before_purchase_button', $instance, $download_id );
 
 		// Purchase button.
 		echo $purchase_button;
@@ -309,10 +308,10 @@ class EDD_Product_Details_Widget extends WP_Widget {
 			$category_terms = (array) get_the_terms( $download_id, 'download_category' );
 
 			if ( $category_terms && ! is_wp_error( $category_terms ) ) {
-				$category_list     = get_the_term_list( $download_id, 'download_category', '', ', ' );
-				$category_count    = count( $category_terms );
-				$category_labels   = edd_get_taxonomy_labels( 'download_category' );
-				$category_label    = $category_count > 1 ? $category_labels['name'] : $category_labels['singular_name'];
+				$category_list   = get_the_term_list( $download_id, 'download_category', '', ', ' );
+				$category_count  = count( $category_terms );
+				$category_labels = edd_get_taxonomy_labels( 'download_category' );
+				$category_label  = $category_count > 1 ? $category_labels['name'] : $category_labels['singular_name'];
 			}
 		}
 
@@ -370,7 +369,8 @@ class EDD_Product_Details_Widget extends WP_Widget {
 			'tags'            => 'on',
 		);
 
-		$instance = wp_parse_args( (array) $instance, $defaults ); ?>
+		$instance = wp_parse_args( (array) $instance, $defaults );
+		?>
 
 		<?php
 		if ( 'current' === ( $instance['download_id'] ) ) {
@@ -384,7 +384,7 @@ class EDD_Product_Details_Widget extends WP_Widget {
 
 		<!-- Title -->
 		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php _e( 'Title:', 'easy-digital-downloads' ) ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php _e( 'Title:', 'easy-digital-downloads' ); ?></label>
 			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo $instance['title']; ?>" />
 		</p>
 
@@ -401,7 +401,7 @@ class EDD_Product_Details_Widget extends WP_Widget {
 		<?php $download_count = wp_count_posts( 'download' ); ?>
 		<?php if ( $download_count->publish < 1000 ) : ?>
 			<?php
-			$args = array(
+			$args      = array(
 				'post_type'      => 'download',
 				'posts_per_page' => -1,
 				'post_status'    => 'publish',
@@ -413,7 +413,7 @@ class EDD_Product_Details_Widget extends WP_Widget {
 				<option <?php selected( absint( $instance['download_id'] ), $download->ID ); ?> value="<?php echo esc_attr( $download->ID ); ?>"><?php echo $download->post_title; ?></option>
 			<?php } ?>
 			</select>
-		<?php else: ?>
+		<?php else : ?>
 			<br />
 			<input type="text" value="<?php echo esc_attr( $instance['download_id'] ); ?>" placeholder="<?php printf( __( '%s ID', 'easy-digital-downloads' ), edd_get_label_singular() ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'download_id' ) ); ?>" id="<?php echo esc_attr( $this->get_field_id( 'download_id' ) ); ?>">
 		<?php endif; ?>
@@ -445,8 +445,9 @@ class EDD_Product_Details_Widget extends WP_Widget {
 			<label for="<?php echo esc_attr( $this->get_field_id( 'tags' ) ); ?>"><?php printf( __( 'Show %s', 'easy-digital-downloads' ), $tag_labels['name'] ); ?></label>
 		</p>
 
-		<?php do_action( 'edd_product_details_widget_form' , $instance ); ?>
-	<?php }
+		<?php do_action( 'edd_product_details_widget_form', $instance ); ?>
+		<?php
+	}
 
 	/** @see WP_Widget::update */
 	public function update( $new_instance, $old_instance ) {
@@ -454,11 +455,11 @@ class EDD_Product_Details_Widget extends WP_Widget {
 
 		$instance['title']           = strip_tags( $new_instance['title'] );
 		$instance['download_id']     = strip_tags( $new_instance['download_id'] );
-		$instance['display_type']    = isset( $new_instance['display_type'] )    ? strip_tags( $new_instance['display_type'] ) : '';
-		$instance['download_title']  = isset( $new_instance['download_title'] )  ? $new_instance['download_title']  : '';
+		$instance['display_type']    = isset( $new_instance['display_type'] ) ? strip_tags( $new_instance['display_type'] ) : '';
+		$instance['download_title']  = isset( $new_instance['download_title'] ) ? $new_instance['download_title'] : '';
 		$instance['purchase_button'] = isset( $new_instance['purchase_button'] ) ? $new_instance['purchase_button'] : '';
-		$instance['categories']      = isset( $new_instance['categories'] )      ? $new_instance['categories']      : '';
-		$instance['tags']            = isset( $new_instance['tags'] )            ? $new_instance['tags']            : '';
+		$instance['categories']      = isset( $new_instance['categories'] ) ? $new_instance['categories'] : '';
+		$instance['tags']            = isset( $new_instance['tags'] ) ? $new_instance['tags'] : '';
 
 		do_action( 'edd_product_details_widget_update', $instance );
 

@@ -2,7 +2,7 @@
 namespace EDD\Reports;
 
 if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
+	require_once EDD_PLUGIN_DIR . 'includes/reports/class-init.php';
 }
 
 new \EDD\Reports\Init();
@@ -127,13 +127,16 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 	public function test_add_report_with_empty_label_should_throw_exception() {
 		$this->setExpectedException( '\EDD_Exception', "The 'label' parameter for the 'foo' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'." );
 
-		$this->registry->add_report( 'foo', array(
-			'label'     => '',
-			'endpoints' => array(
-				'tiles' => array(),
-			),
-			'filters'   => array( 'dates' ),
-		) );
+		$this->registry->add_report(
+			'foo',
+			array(
+				'label'     => '',
+				'endpoints' => array(
+					'tiles' => array(),
+				),
+				'filters'   => array( 'dates' ),
+			)
+		);
 	}
 
 	/**
@@ -143,11 +146,14 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 	public function test_add_report_with_empty_endpoints_should_throw_exception() {
 		$this->setExpectedException( '\EDD_Exception', "The 'endpoints' parameter for the 'foo' item is missing or invalid in 'EDD\Reports\Registry::validate_attributes'." );
 
-		$added = $this->registry->add_report( 'foo', array(
-			'label'     => 'Foo',
-			'endpoints' => array(),
-			'filters'   => array( 'dates' ),
-		) );
+		$added = $this->registry->add_report(
+			'foo',
+			array(
+				'label'     => 'Foo',
+				'endpoints' => array(),
+				'filters'   => array( 'dates' ),
+			)
+		);
 	}
 
 	/**
@@ -157,13 +163,16 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 	public function test_add_report_with_invalid_filter_should_throw_exception() {
 		$this->setExpectedException( '\EDD_Exception', "The 'foo' report contains one or more invalid filters." );
 
-		$this->registry->add_report( 'foo', array(
-			'label'     => 'Foo',
-			'endpoints' => array(
-				'tiles' => array(),
-			),
-			'filters'   => array( 'bar' ),
-		) );
+		$this->registry->add_report(
+			'foo',
+			array(
+				'label'     => 'Foo',
+				'endpoints' => array(
+					'tiles' => array(),
+				),
+				'filters'   => array( 'bar' ),
+			)
+		);
 	}
 
 	/**
@@ -173,13 +182,16 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 	public function test_add_report_with_non_string_filter_should_throw_exception() {
 		$this->setExpectedException( '\EDD_Exception', "The 'foo' report contains one or more invalid filters." );
 
-		$this->registry->add_report( 'foo', array(
-			'label'     => 'Foo',
-			'endpoints' => array(
-				'tiles' => array()
-			),
-			'filters'   => array( 123 ),
-		) );
+		$this->registry->add_report(
+			'foo',
+			array(
+				'label'     => 'Foo',
+				'endpoints' => array(
+					'tiles' => array(),
+				),
+				'filters'   => array( 123 ),
+			)
+		);
 	}
 
 	/**
@@ -187,12 +199,15 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_add_report_with_valid_filter_should_return_true() {
-		$added = $this->registry->add_report( 'foo', array(
-			'label'     => 'Foo',
-			'endpoints' => array(
-				'tiles' => array(),
-			),
-		) );
+		$added = $this->registry->add_report(
+			'foo',
+			array(
+				'label'     => 'Foo',
+				'endpoints' => array(
+					'tiles' => array(),
+				),
+			)
+		);
 
 		$this->assertTrue( $added );
 	}
@@ -202,12 +217,15 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_add_report_without_filters_should_default_to_date_filter() {
-		$this->registry->add_report( 'foo', array(
-			'label'     => 'Foo',
-			'endpoints' => array(
-				'tiles' => array(),
-			),
-		) );
+		$this->registry->add_report(
+			'foo',
+			array(
+				'label'     => 'Foo',
+				'endpoints' => array(
+					'tiles' => array(),
+				),
+			)
+		);
 
 		$report = $this->registry->get_report( 'foo' );
 
@@ -219,12 +237,15 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_add_report_with_no_priority_should_set_priority_10() {
-		$this->registry->add_report( 'foo', array(
-			'label'     => 'Foo',
-			'endpoints' => array(
-				'tiles' => array(),
-			),
-		) );
+		$this->registry->add_report(
+			'foo',
+			array(
+				'label'     => 'Foo',
+				'endpoints' => array(
+					'tiles' => array(),
+				),
+			)
+		);
 
 		$report = $this->registry->get_report( 'foo' );
 
@@ -236,14 +257,17 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_add_report_with_priority_should_set_that_priority() {
-		$this->registry->add_report( 'foo', array(
-			'label'     => 'Foo',
-			'priority'  => 15,
-			'endpoints' => array(
-				'tiles' => array()
-			),
-			'filters'   => array( 'dates' ),
-		) );
+		$this->registry->add_report(
+			'foo',
+			array(
+				'label'     => 'Foo',
+				'priority'  => 15,
+				'endpoints' => array(
+					'tiles' => array(),
+				),
+				'filters'   => array( 'dates' ),
+			)
+		);
 
 		$report = $this->registry->get_report( 'foo' );
 
@@ -255,7 +279,6 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_reports_with_no_sort_should_return_reports_in_order_of_registration() {
-
 		$this->add_test_reports_for_sort();
 
 		$result = array_keys( $this->registry->get_reports() );
@@ -268,7 +291,6 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_reports_with_invalid_sort_should_return_reports_in_order_of_registration() {
-
 		$this->add_test_reports_for_sort();
 
 		$result = array_keys( $this->registry->get_reports( 'fake_sort' ) );
@@ -281,7 +303,6 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_reports_with_ID_sort_should_return_reports_in_alphabetical_order_by_ID() {
-
 		$this->add_test_reports_for_sort();
 
 		$result = array_keys( $this->registry->get_reports( 'ID' ) );
@@ -294,7 +315,6 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_reports_with_priority_sort_should_return_reports_in_order_of_priority() {
-
 		$this->add_test_reports_for_sort();
 
 		$result = array_keys( $this->registry->get_reports( 'priority' ) );
@@ -307,14 +327,18 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 	 */
 	protected function add_test_report() {
 		try {
-			$this->registry->add_report( 'foo', array(
-				'label' => 'Foo',
-				'endpoints' => array(
-					'tiles' => array()
-				),
-				'filters'   => array( 'dates' ),
-			) );
-		} catch ( \EDD_Exception $exception ) {}
+			$this->registry->add_report(
+				'foo',
+				array(
+					'label'     => 'Foo',
+					'endpoints' => array(
+						'tiles' => array(),
+					),
+					'filters'   => array( 'dates' ),
+				)
+			);
+		} catch ( \EDD_Exception $exception ) {
+		}
 	}
 
 	/**
@@ -329,7 +353,7 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 			$as = 'entry';
 		}
 
-		switch( $as ) {
+		switch ( $as ) {
 			case 'entry':
 				$expected = array(
 					'id'         => 'foo',
@@ -338,7 +362,7 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 					'group'      => 'core',
 					'capability' => 'view_shop_reports',
 					'endpoints'  => array(
-						'tiles' => array()
+						'tiles' => array(),
 					),
 					'filters'    => array( 'dates' ),
 				);
@@ -353,10 +377,10 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 						'group'      => 'core',
 						'capability' => 'view_shop_reports',
 						'endpoints'  => array(
-							'tiles' => array()
+							'tiles' => array(),
 						),
 						'filters'    => array( 'dates' ),
-					)
+					),
 				);
 				break;
 
@@ -374,22 +398,28 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	protected function add_test_reports_for_sort() {
-		$this->registry->add_report( 'foo', array(
-			'label'     => 'Foo',
-			'priority'  => 10,
-			'endpoints' => array(
-				'tiles' => array()
-			),
-			'filters'   => array( 'dates' ),
-		) );
+		$this->registry->add_report(
+			'foo',
+			array(
+				'label'     => 'Foo',
+				'priority'  => 10,
+				'endpoints' => array(
+					'tiles' => array(),
+				),
+				'filters'   => array( 'dates' ),
+			)
+		);
 
-		$this->registry->add_report( 'bar', array(
-			'label'     => 'Bar',
-			'priority'  => 5,
-			'endpoints' => array(
-				'tiles' => array()
-			),
-			'filters'   => array( 'dates' ),
-		) );
+		$this->registry->add_report(
+			'bar',
+			array(
+				'label'     => 'Bar',
+				'priority'  => 5,
+				'endpoints' => array(
+					'tiles' => array(),
+				),
+				'filters'   => array( 'dates' ),
+			)
+		);
 	}
 }

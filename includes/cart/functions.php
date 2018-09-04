@@ -51,7 +51,7 @@ function edd_get_cart_quantity() {
  *
  * @since 1.0
  *
- * @param int $download_id Download IDs to be added to the cart
+ * @param int   $download_id Download IDs to be added to the cart
  * @param array $options Array of options, such as variable price
  *
  * @return string Cart key of the new item
@@ -126,7 +126,7 @@ function edd_set_cart_item_quantity( $download_id = 0, $quantity = 1, $options =
  * Get Cart Item Quantity
  *
  * @since 1.0
- * @param int $download_id Download (cart item) ID number
+ * @param int   $download_id Download (cart item) ID number
  * @param array $options Download options, such as price ID
  * @return int $quantity Cart item quantity
  */
@@ -171,7 +171,7 @@ function edd_get_cart_item_price( $download_id = 0, $options = array(), $remove_
  * Gets the amount after taxes and discounts
  *
  * @since 1.9
- * @param int    $item_key Cart item key
+ * @param int $item_key Cart item key
  * @return float Final price for the item
  */
 function edd_get_cart_item_final_price( $item_key = 0 ) {
@@ -200,7 +200,7 @@ function edd_get_cart_item_tax( $download_id = 0, $options = array(), $subtotal 
  * @since 1.0
  *
  * @param       $download_id Download ID number
- * @param array $options Optional parameters, used for defining variable prices
+ * @param array                          $options Optional parameters, used for defining variable prices
  * @return mixed|void Name of the price option
  */
 function edd_get_price_name( $download_id = 0, $options = array() ) {
@@ -291,6 +291,7 @@ function edd_get_cart_discountable_subtotal( $code_id ) {
 
 /**
  * Get cart items subtotal
+ *
  * @param array $items Cart items array
  *
  * @return float items subtotal
@@ -352,11 +353,11 @@ function edd_cart_has_fees( $type = 'all' ) {
  *
  * @since 1.5
  * @param string $type
- * @param int $download_id
+ * @param int    $download_id
  * @uses EDD()->fees->get_fees()
  * @return array All the cart fees that have been applied
  */
-function edd_get_cart_fees( $type = 'all', $download_id = 0, $price_id = NULL ) {
+function edd_get_cart_fees( $type = 'all', $download_id = 0, $price_id = null ) {
 	return EDD()->cart->get_fees( $type, $download_id, $price_id );
 }
 
@@ -392,7 +393,7 @@ function edd_get_cart_fee_tax() {
  * @since       1.0
  *
  * @param      $purchase_data
- * @param bool $email
+ * @param bool          $email
  * @return string
  */
 function edd_get_purchase_summary( $purchase_data, $email = true ) {
@@ -461,7 +462,7 @@ function edd_cart_tax( $echo = false ) {
  *
  * @since 1.0.6
  * @param string $taxonomy Name of the taxonomy
- * @param mixed $terms Slug or ID of the term from which to add | An array of terms
+ * @param mixed  $terms Slug or ID of the term from which to add | An array of terms
  * @return array Array of IDs for each item added to the cart
  */
 function edd_add_collection_to_cart( $taxonomy, $terms ) {
@@ -478,11 +479,13 @@ function edd_add_collection_to_cart( $taxonomy, $terms ) {
 
 	$cart_item_ids = array();
 
-	$items = get_posts( array(
-		'post_type'      => 'download',
-		'posts_per_page' => -1,
-		$taxonomy        => $terms
-	) );
+	$items = get_posts(
+		array(
+			'post_type'      => 'download',
+			'posts_per_page' => -1,
+			$taxonomy        => $terms,
+		)
+	);
 
 	if ( ! empty( $items ) ) {
 		foreach ( $items as $item ) {
@@ -514,7 +517,7 @@ function edd_remove_item_url( $cart_key ) {
  * @param string $fee_id Fee ID
  * @return string $remove_url URL to remove the cart item
  */
-function edd_remove_cart_fee_url( $fee_id = '') {
+function edd_remove_cart_fee_url( $fee_id = '' ) {
 	return EDD()->cart->remove_fee_url( $fee_id );
 }
 
@@ -632,7 +635,8 @@ function edd_delete_saved_carts() {
 		SELECT user_id, meta_key, FROM_UNIXTIME(meta_value, '%Y-%m-%d') AS date
 		FROM {$wpdb->usermeta}
 		WHERE meta_key = 'edd_cart_token'
-		", ARRAY_A
+		",
+		ARRAY_A
 	);
 
 	if ( $carts ) {
@@ -645,7 +649,7 @@ function edd_delete_saved_carts() {
 					$wpdb->usermeta,
 					array(
 						'user_id'  => $user_id,
-						'meta_key' => 'edd_cart_token'
+						'meta_key' => 'edd_cart_token',
 					)
 				);
 
@@ -653,7 +657,7 @@ function edd_delete_saved_carts() {
 					$wpdb->usermeta,
 					array(
 						'user_id'  => $user_id,
-						'meta_key' => 'edd_saved_cart'
+						'meta_key' => 'edd_saved_cart',
 					)
 				);
 			}

@@ -46,10 +46,12 @@ function edd_do_ajax_export() {
 	}
 
 	if ( ! $export->is_writable ) {
-		echo wp_json_encode( array(
-			'error'   => true,
-			'message' => __( 'Export location or file not writable', 'easy-digital-downloads' ),
-		));
+		echo wp_json_encode(
+			array(
+				'error'   => true,
+				'message' => __( 'Export location or file not writable', 'easy-digital-downloads' ),
+			)
+		);
 
 		exit;
 	}
@@ -66,17 +68,21 @@ function edd_do_ajax_export() {
 	if ( $ret ) {
 		$step++;
 
-		echo wp_json_encode( array(
-			'step'       => $step,
-			'percentage' => $percentage,
-		) );
+		echo wp_json_encode(
+			array(
+				'step'       => $step,
+				'percentage' => $percentage,
+			)
+		);
 
 		exit;
 	} elseif ( true === $export->is_empty ) {
-		echo wp_json_encode( array(
-			'error'   => true,
-			'message' => __( 'No data found for export parameters', 'easy-digital-downloads' ),
-		) );
+		echo wp_json_encode(
+			array(
+				'error'   => true,
+				'message' => __( 'No data found for export parameters', 'easy-digital-downloads' ),
+			)
+		);
 
 		exit;
 	} elseif ( true === $export->done && true === $export->is_void ) {
@@ -84,26 +90,33 @@ function edd_do_ajax_export() {
 			? $export->message
 			: __( 'Batch Processing Complete', 'easy-digital-downloads' );
 
-		echo wp_json_encode( array(
-			'success' => true,
-			'message' => $message,
-		) );
+		echo wp_json_encode(
+			array(
+				'success' => true,
+				'message' => $message,
+			)
+		);
 
 		exit;
 	} else {
-		$args = array_merge( $_REQUEST, array(
-			'step'       => $step,
-			'class'      => $class,
-			'nonce'      => wp_create_nonce( 'edd-batch-export' ),
-			'edd_action' => 'download_batch_export',
-		) );
+		$args = array_merge(
+			$_REQUEST,
+			array(
+				'step'       => $step,
+				'class'      => $class,
+				'nonce'      => wp_create_nonce( 'edd-batch-export' ),
+				'edd_action' => 'download_batch_export',
+			)
+		);
 
 		$download_url = add_query_arg( $args, admin_url() );
 
-		echo wp_json_encode( array(
-			'step' => 'done',
-			'url'  => $download_url,
-		) );
+		echo wp_json_encode(
+			array(
+				'step' => 'done',
+				'url'  => $download_url,
+			)
+		);
 
 		exit;
 	}

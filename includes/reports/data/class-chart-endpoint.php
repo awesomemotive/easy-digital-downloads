@@ -81,7 +81,6 @@ class Chart_Endpoint extends Endpoint {
 
 		// Chart props.
 		$this->setup_chart( $args );
-
 	}
 
 	/**
@@ -95,7 +94,6 @@ class Chart_Endpoint extends Endpoint {
 		$view_type = $this->get_view();
 
 		if ( ! empty( $atts['views'][ $view_type ] ) ) {
-
 			$view_atts = $atts['views'][ $view_type ];
 
 			if ( ! empty( $view_atts['type'] ) ) {
@@ -119,7 +117,6 @@ class Chart_Endpoint extends Endpoint {
 			if ( isset( $view_atts['render_js'] ) && is_callable( $view_atts['render_js'] ) ) {
 				$this->js_callback = $atts['render_js'];
 			}
-
 		}
 
 		if ( null === $this->js_callback ) {
@@ -130,7 +127,6 @@ class Chart_Endpoint extends Endpoint {
 
 			$this->build_manifest();
 		}
-
 	}
 
 	/**
@@ -141,13 +137,10 @@ class Chart_Endpoint extends Endpoint {
 	 * @param array $atts Endpoint attributes.
 	 */
 	private function parse_display_props( $atts ) {
-
 		$view_type = $this->get_view();
 
 		if ( ! empty( $atts['views'][ $view_type ] ) ) {
-
 			$atts['views'][ $view_type ] = $this->maybe_convert_callbacks_to_methods( $atts['views'][ $view_type ] );
-
 		}
 
 		return $atts;

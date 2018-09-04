@@ -72,12 +72,11 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	 * @return mixed Results of the method call (if any).
 	 */
 	public function __call( $name, $arguments ) {
-
 		$endpoint_id_or_sort = isset( $arguments[0] )
 			? $arguments[0]
 			: '';
 
-		switch( $name ) {
+		switch ( $name ) {
 			case 'get_endpoint':
 				return parent::get_item( $endpoint_id_or_sort );
 
@@ -122,7 +121,6 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 	 * @return bool True if the endpoint was successfully registered, otherwise false.
 	 */
 	public function register_endpoint( $endpoint_id, $attributes ) {
-
 		$defaults = array(
 			'label'    => '',
 			'priority' => 10,
@@ -143,14 +141,12 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 		try {
 			$valid = $this->validate_endpoint( $endpoint_id, $attributes );
-
 		} catch ( \EDD_Exception $exception ) {
 			throw $exception;
 		}
 
 		if ( false === $valid ) {
 			return false;
-
 		} else {
 			return parent::add_item( $endpoint_id, $attributes );
 		}
@@ -172,21 +168,18 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 		$is_valid = true;
 
 		try {
-
 			$this->validate_attributes( $attributes, $endpoint_id );
 
 			try {
 				$this->validate_views( $attributes['views'], $endpoint_id );
-
-			} catch( \EDD_Exception $exception ) {
+			} catch ( \EDD_Exception $exception ) {
 				edd_debug_log_exception( $exception );
 
 				$is_valid = false;
 
 				throw $exception;
 			}
-
-		} catch( \EDD_Exception $exception ) {
+		} catch ( \EDD_Exception $exception ) {
 			edd_debug_log_exception( $exception );
 
 			$is_valid = false;
@@ -216,15 +209,13 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 		try {
 			$_endpoint = $this->get_endpoint( $endpoint );
-
-		} catch( \EDD_Exception $exception ) {
+		} catch ( \EDD_Exception $exception ) {
 			edd_debug_log_exception( $exception );
 
 			return new \WP_Error( 'invalid_endpoint', $exception->getMessage(), $endpoint );
 		}
 
 		if ( ! empty( $_endpoint ) ) {
-
 			if ( Reports\validate_endpoint_view( $view_type ) ) {
 				$_endpoint['report'] = $report;
 
@@ -232,7 +223,6 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 
 				if ( ! empty( $handler ) && class_exists( $handler ) ) {
 					$_endpoint = new $handler( $_endpoint );
-
 				} else {
 					$_endpoint = new \WP_Error(
 						'invalid_handler',
@@ -240,7 +230,6 @@ class Endpoint_Registry extends Reports\Registry implements Utils\Static_Registr
 						$handler
 					);
 				}
-
 			} else {
 				$_endpoint = new \WP_Error(
 					'invalid_view',

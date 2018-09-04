@@ -102,9 +102,12 @@ function edd_get_note_by( $field = '', $value = '' ) {
 function edd_get_notes( $args = array() ) {
 
 	// Parse args
-	$r = wp_parse_args( $args, array(
-		'number' => 30
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'number' => 30,
+		)
+	);
 
 	// Instantiate a query object
 	$notes = new EDD\Database\Queries\Note();
@@ -124,9 +127,12 @@ function edd_get_notes( $args = array() ) {
 function edd_count_notes( $args = array() ) {
 
 	// Parse args
-	$r = wp_parse_args( $args, array(
-		'count' => true
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'count' => true,
+		)
+	);
 
 	// Query for count(s)
 	$notes = new EDD\Database\Queries\Note( $r );

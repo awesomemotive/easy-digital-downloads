@@ -245,15 +245,15 @@ class EDD_Discount extends Adjustment {
 		if ( is_object( $_id_or_code_or_name ) ) {
 			$discount = $_id_or_code_or_name;
 
-		// Code
+			// Code
 		} elseif ( $by_code ) {
 			$discount = $this->find_by_code( $_id_or_code_or_name );
 
-		// Name
+			// Name
 		} elseif ( $by_name ) {
 			$discount = $this->find_by_name( $_id_or_code_or_name );
 
-		// Default to ID
+			// Default to ID
 		} else {
 			$discount = edd_get_discount( absint( $_id_or_code_or_name ) );
 		}
@@ -281,15 +281,15 @@ class EDD_Discount extends Adjustment {
 		if ( 'discount_id' === $key || 'ID' === $key ) {
 			return (int) $this->id;
 
-		// Method
+			// Method
 		} elseif ( method_exists( $this, "get_{$key}" ) ) {
 			return call_user_func( array( $this, "get_{$key}" ) );
 
-		// Property
+			// Property
 		} elseif ( property_exists( $this, $key ) ) {
 			return $this->{$key};
 
-		// Other...
+			// Other...
 		} else {
 
 			// Account for old property keys from pre 3.0
@@ -423,7 +423,7 @@ class EDD_Discount extends Adjustment {
 	 * Handle method dispatch dynamically.
 	 *
 	 * @param string $method Method name.
-	 * @param array $args Arguments to be passed to method.
+	 * @param array  $args Arguments to be passed to method.
 	 *
 	 * @return mixed
 	 */
@@ -550,7 +550,7 @@ class EDD_Discount extends Adjustment {
 		 * Some object vars need to be setup manually as the values need to be
 		 * pulled in from the `edd_adjustmentmeta` table.
 		 */
-		$this->excluded_products = (array) edd_get_adjustment_meta( $this->id, 'excluded_product',    false );
+		$this->excluded_products = (array) edd_get_adjustment_meta( $this->id, 'excluded_product', false );
 		$this->product_reqs      = (array) edd_get_adjustment_meta( $this->id, 'product_requirement', false );
 
 		/**
@@ -626,19 +626,19 @@ class EDD_Discount extends Adjustment {
 		// Specific labels
 		switch ( $this->status ) {
 			case '':
-				$label = __( 'None',     'easy-digital-downloads' );
+				$label = __( 'None', 'easy-digital-downloads' );
 				break;
 			case 'draft':
-				$label = __( 'Draft',    'easy-digital-downloads' );
+				$label = __( 'Draft', 'easy-digital-downloads' );
 				break;
 			case 'expired':
-				$label = __( 'Expired',  'easy-digital-downloads' );
+				$label = __( 'Expired', 'easy-digital-downloads' );
 				break;
 			case 'inactive':
 				$label = __( 'Inactive', 'easy-digital-downloads' );
 				break;
 			case 'active':
-				$label = __( 'Active',   'easy-digital-downloads' );
+				$label = __( 'Active', 'easy-digital-downloads' );
 				break;
 			case 'inherit':
 				if ( ! empty( $this->parent ) ) {
@@ -948,7 +948,6 @@ class EDD_Discount extends Adjustment {
 
 		if ( ! empty( $this->id ) && $this->exists() ) {
 			return $this->update( $args );
-
 		} else {
 			$args = self::convert_legacy_args( $args );
 
@@ -1103,7 +1102,7 @@ class EDD_Discount extends Adjustment {
 
 		if ( ! empty( $args['start_date'] ) && ! empty( $args['end_date'] ) ) {
 			$start_timestamp = strtotime( $args['start_date'], $current_time );
-			$end_timestamp   = strtotime( $args['end_date'],   $current_time );
+			$end_timestamp   = strtotime( $args['end_date'], $current_time );
 
 			// Set the expiration date to the start date if start is later than expiration
 			if ( $start_timestamp > $end_timestamp ) {
@@ -1404,7 +1403,6 @@ class EDD_Discount extends Adjustment {
 		asort( $product_reqs );
 		$product_reqs = array_filter( array_values( $product_reqs ) );
 
-
 		$excluded_ps = array_map( 'absint', $excluded_ps );
 		asort( $excluded_ps );
 		$excluded_ps = array_filter( array_values( $excluded_ps ) );
@@ -1487,7 +1485,7 @@ class EDD_Discount extends Adjustment {
 	 * @since 3.0 Refactored to use new query methods.
 	 *
 	 * @param string $user User info.
-	 * @param bool $set_error Whether an error message be set in session.
+	 * @param bool   $set_error Whether an error message be set in session.
 	 *
 	 * @return bool Whether the discount has been used or not.
 	 */
@@ -1634,7 +1632,6 @@ class EDD_Discount extends Adjustment {
 		$return = false;
 
 		if ( $this->exists() ) {
-
 			if ( $this->is_expired( $update ) ) {
 				if ( edd_doing_ajax() && $set_error ) {
 					edd_set_error( 'edd-discount-error', __( 'This discount is expired.', 'easy-digital-downloads' ) );
@@ -1775,10 +1772,15 @@ class EDD_Discount extends Adjustment {
 	 * @return string Link to the `Edit Discount` page.
 	 */
 	public function edit_url() {
-		return esc_url( add_query_arg( array(
-			'edd-action' => 'edit_discount',
-			'discount'   => $this->id,
-		), admin_url( 'edit.php?post_type=download&page=edd-discounts' ) ) );
+		return esc_url(
+			add_query_arg(
+				array(
+					'edd-action' => 'edit_discount',
+					'discount'   => $this->id,
+				),
+				admin_url( 'edit.php?post_type=download&page=edd-discounts' )
+			)
+		);
 	}
 
 	/**
@@ -1799,7 +1801,6 @@ class EDD_Discount extends Adjustment {
 			}
 
 			switch ( $type ) {
-
 				case '%s':
 					if ( 'email' === $key ) {
 						$data[ $key ] = sanitize_email( $data[ $key ] );

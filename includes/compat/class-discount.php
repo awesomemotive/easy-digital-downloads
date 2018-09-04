@@ -39,17 +39,17 @@ class Discount extends Base {
 	 */
 	protected function hooks() {
 
-		/** Actions **********************************************************/
-		add_action( 'pre_get_posts',        array( $this, 'pre_get_posts'        ), 99, 1 );
+		/** Actions */
+		add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ), 99, 1 );
 
-		/** Filters **********************************************************/
-		add_filter( 'query',                array( $this, 'wp_count_posts'       ), 10, 1 );
-		add_filter( 'query',                array( $this, 'get_post'             ), 10, 1 );
-		add_filter( 'get_post_metadata',    array( $this, 'get_post_metadata'    ), 99, 4 );
+		/** Filters */
+		add_filter( 'query', array( $this, 'wp_count_posts' ), 10, 1 );
+		add_filter( 'query', array( $this, 'get_post' ), 10, 1 );
+		add_filter( 'get_post_metadata', array( $this, 'get_post_metadata' ), 99, 4 );
 		add_filter( 'update_post_metadata', array( $this, 'update_post_metadata' ), 99, 5 );
-		add_filter( 'add_post_metadata',    array( $this, 'update_post_metadata' ), 99, 5 );
-		add_filter( 'posts_results',        array( $this, 'posts_results'        ), 10, 2 );
-		add_filter( 'posts_request',        array( $this, 'posts_request'        ), 10, 2 );
+		add_filter( 'add_post_metadata', array( $this, 'update_post_metadata' ), 99, 5 );
+		add_filter( 'posts_results', array( $this, 'posts_results' ), 10, 2 );
+		add_filter( 'posts_request', array( $this, 'posts_request' ), 10, 2 );
 	}
 
 	/**
@@ -124,7 +124,6 @@ class Discount extends Base {
 		$expected = "/^SELECT \* FROM {$wpdb->posts} WHERE ID = (\d*) LIMIT 1$/";
 
 		if ( preg_match( $expected, $query, $matches, PREG_OFFSET_CAPTURE ) ) {
-
 			$object_id = 0;
 
 			if ( isset( $matches[1] ) ) {
@@ -135,13 +134,17 @@ class Discount extends Base {
 			$table_name = edd_get_component_interface( 'adjustment', 'meta' )->table_name;
 
 			if ( isset( $wpdb->$table_name ) ) {
-				$object_id = $wpdb->get_var( $wpdb->prepare(
-					"
+				$object_id = $wpdb->get_var(
+					$wpdb->prepare(
+						"
 					SELECT edd_adjustment_id
 					FROM {$table_name}
 					WHERE meta_key = %s AND meta_value = %d
-					", 'legacy_discount_id', $object_id
-				) );
+					",
+						'legacy_discount_id',
+						$object_id
+					)
+				);
 
 				if ( ! empty( $object_id ) ) {
 					$query = str_replace( $matches[1][0], $object_id, $query );
@@ -281,7 +284,7 @@ class Discount extends Base {
 			$clauses   = array();
 			$sql_where = 'WHERE 1=1';
 
-			$meta_key   = $query->get( 'meta_key',   false );
+			$meta_key   = $query->get( 'meta_key', false );
 			$meta_value = $query->get( 'meta_value', false );
 			$columns    = wp_list_pluck( edd_get_component_interface( 'adjustment', 'schema' )->columns, 'name' );
 
@@ -326,7 +329,7 @@ class Discount extends Base {
 									case 'IN':
 									case 'NOT IN':
 										$meta_compare_string = '(' . substr( str_repeat( ',%s', count( $meta_value ) ), 1 ) . ')';
-										$where = $wpdb->prepare( $meta_compare_string, $meta_value );
+										$where               = $wpdb->prepare( $meta_compare_string, $meta_value );
 										break;
 
 									case 'BETWEEN':
@@ -390,20 +393,23 @@ class Discount extends Base {
 	public function get_post_metadata( $value, $object_id, $meta_key, $single ) {
 		global $wpdb;
 
-		$meta_keys = apply_filters( 'edd_post_meta_discount_backwards_compat_keys', array(
-			'_edd_discount_status',
-			'_edd_discount_amount',
-			'_edd_discount_uses',
-			'_edd_discount_name',
-			'_edd_discount_code',
-			'_edd_discount_expiration',
-			'_edd_discount_start',
-			'_edd_discount_is_single_use',
-			'_edd_discount_is_not_global',
-			'_edd_discount_product_condition',
-			'_edd_discount_min_price',
-			'_edd_discount_max_uses'
-		) );
+		$meta_keys = apply_filters(
+			'edd_post_meta_discount_backwards_compat_keys',
+			array(
+				'_edd_discount_status',
+				'_edd_discount_amount',
+				'_edd_discount_uses',
+				'_edd_discount_name',
+				'_edd_discount_code',
+				'_edd_discount_expiration',
+				'_edd_discount_start',
+				'_edd_discount_is_single_use',
+				'_edd_discount_is_not_global',
+				'_edd_discount_product_condition',
+				'_edd_discount_min_price',
+				'_edd_discount_max_uses',
+			)
+		);
 
 		if ( ! in_array( $meta_key, $meta_keys, true ) ) {
 			return $value;
@@ -510,20 +516,23 @@ class Discount extends Base {
 	public function update_post_metadata( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
 		global $wpdb;
 
-		$meta_keys = apply_filters( 'edd_update_post_meta_discount_backwards_compat_keys', array(
-			'_edd_discount_status',
-			'_edd_discount_amount',
-			'_edd_discount_uses',
-			'_edd_discount_name',
-			'_edd_discount_code',
-			'_edd_discount_expiration',
-			'_edd_discount_start',
-			'_edd_discount_is_single_use',
-			'_edd_discount_is_not_global',
-			'_edd_discount_product_condition',
-			'_edd_discount_min_price',
-			'_edd_discount_max_uses'
-		) );
+		$meta_keys = apply_filters(
+			'edd_update_post_meta_discount_backwards_compat_keys',
+			array(
+				'_edd_discount_status',
+				'_edd_discount_amount',
+				'_edd_discount_uses',
+				'_edd_discount_name',
+				'_edd_discount_code',
+				'_edd_discount_expiration',
+				'_edd_discount_start',
+				'_edd_discount_is_single_use',
+				'_edd_discount_is_not_global',
+				'_edd_discount_product_condition',
+				'_edd_discount_min_price',
+				'_edd_discount_max_uses',
+			)
+		);
 
 		if ( ! in_array( $meta_key, $meta_keys, true ) ) {
 			return $check;
@@ -536,12 +545,16 @@ class Discount extends Base {
 			// We didn't find a discount record with this ID... so let's check and see if it was a migrated one
 			$table_name = edd_get_component_interface( 'adjustment', 'meta' )->table_name;
 
-			$object_id = $wpdb->get_var( $wpdb->prepare( "
+			$object_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"
 				SELECT edd_adjustment_id
 				FROM {$table_name}
 				WHERE meta_key = %s AND meta_value = %d",
-				'legacy_discount_id', $object_id
-			) );
+					'legacy_discount_id',
+					$object_id
+				)
+			);
 
 			if ( ! empty( $object_id ) ) {
 				$discount = edd_get_discount( $object_id );
@@ -619,6 +632,5 @@ class Discount extends Base {
 		}
 
 		return $check;
-
 	}
 }

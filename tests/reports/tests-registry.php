@@ -2,7 +2,7 @@
 namespace EDD\Reports;
 
 if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
+	require_once EDD_PLUGIN_DIR . 'includes/reports/class-init.php';
 }
 
 new \EDD\Reports\Init();
@@ -65,7 +65,7 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	public function test_validate_attributes_should_not_throw_exception_if_attribute_is_empty_and_filtered() {
 		$attributes = array(
 			'foo' => 'bar',
-			'baz' => ''
+			'baz' => '',
 		);
 
 		$filter = array( 'foo' );

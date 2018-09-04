@@ -10,7 +10,9 @@
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Complete a purchase
@@ -24,7 +26,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * @param int    $order_id   Order ID.
  * @param string $new_status New order status.
  * @param string $old_status Old order status.
-*/
+ */
 function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 
 	// Make sure that payments are only completed once.
@@ -157,10 +159,13 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 			: $date_refundable;
 
 		// Save the completed date
-		edd_update_order( $order_id, array(
-			'date_completed'  => $date,
-			'date_refundable' => $date_refundable,
-		) );
+		edd_update_order(
+			$order_id,
+			array(
+				'date_completed'  => $date,
+				'date_refundable' => $date_refundable,
+			)
+		);
 
 		// Required for backwards compatibility.
 		$payment = edd_get_payment( $order_id );
@@ -247,7 +252,7 @@ add_action( 'edd_after_payment_scheduled_actions', 'edd_process_after_payment_ac
  * Record payment status change
  *
  * @since 1.4.3
- * @param int $payment_id the ID number of the payment
+ * @param int    $payment_id the ID number of the payment
  * @param string $new_status the status of the payment, probably "publish"
  * @param string $old_status the status of the payment prior to being marked as "complete", probably "pending"
  * @return void
@@ -259,7 +264,7 @@ function edd_record_status_change( $payment_id, $new_status, $old_status ) {
 	$old_status = isset( $stati[ $old_status ] ) ? $stati[ $old_status ] : $old_status;
 	$new_status = isset( $stati[ $new_status ] ) ? $stati[ $new_status ] : $new_status;
 
-	$status_change = sprintf( __( 'Status changed from %s to %s', 'easy-digital-downloads' ), $old_status, $new_status );
+	$status_change = sprintf( __( 'Status changed from %1$s to %2$s', 'easy-digital-downloads' ), $old_status, $new_status );
 
 	edd_insert_payment_note( $payment_id, $status_change );
 }
@@ -271,14 +276,14 @@ add_action( 'edd_update_payment_status', 'edd_record_status_change', 100, 3 );
  *
  * @since 1.2.2
  *
- * @param int $payment_id the ID number of the payment
+ * @param int    $payment_id the ID number of the payment
  * @param string $new_status the status of the payment, probably "publish"
  * @param string $old_status the status of the payment prior to being marked as "complete", probably "pending"
  */
 function edd_clear_user_history_cache( $payment_id, $new_status, $old_status ) {
 	$payment = new EDD_Payment( $payment_id );
 
-	if( ! empty( $payment->user_id ) ) {
+	if ( ! empty( $payment->user_id ) ) {
 		delete_transient( 'edd_user_' . $payment->user_id . '_purchases' );
 	}
 }
@@ -293,7 +298,7 @@ add_action( 'edd_update_payment_status', 'edd_clear_user_history_cache', 10, 3 )
  * @since 1.2
  * @param array $data Arguments passed
  * @return void
-*/
+ */
 function edd_update_old_payments_with_totals( $data ) {
 	if ( ! wp_verify_nonce( $data['_wpnonce'], 'edd_upgrade_payments_nonce' ) ) {
 		return;
@@ -303,15 +308,16 @@ function edd_update_old_payments_with_totals( $data ) {
 		return;
 	}
 
-	$payments = edd_get_payments( array(
-		'offset' => 0,
-		'number' => -1,
-		'mode'   => 'all',
-	) );
+	$payments = edd_get_payments(
+		array(
+			'offset' => 0,
+			'number' => -1,
+			'mode'   => 'all',
+		)
+	);
 
 	if ( $payments ) {
 		foreach ( $payments as $payment ) {
-
 			$payment = new EDD_Payment( $payment->ID );
 			$meta    = $payment->get_meta();
 
@@ -331,7 +337,7 @@ add_action( 'edd_upgrade_payments', 'edd_update_old_payments_with_totals' );
  *
  * @since 1.6
  * @return void
-*/
+ */
 function edd_mark_abandoned_orders() {
 
 	// Bail if not in WordPress cron
@@ -351,9 +357,9 @@ function edd_mark_abandoned_orders() {
 
 	remove_filter( 'posts_where', 'edd_filter_where_older_than_week' );
 
-	if( $payments ) {
-		foreach( $payments as $payment ) {
-			if( 'pending' === $payment->post_status ) {
+	if ( $payments ) {
+		foreach ( $payments as $payment ) {
+			if ( 'pending' === $payment->post_status ) {
 				$payment->status = 'abandoned';
 				$payment->save();
 			}
@@ -366,14 +372,13 @@ add_action( 'edd_weekly_scheduled_events', 'edd_mark_abandoned_orders' );
  * Listens to the updated_postmeta hook for our backwards compatible payment_meta updates, and runs through them
  *
  * @since  2.3
- * @param  int $meta_id    The Meta ID that was updated
- * @param  int $object_id  The Object ID that was updated (post ID)
- * @param  string $meta_key   The Meta key that was updated
+ * @param  int              $meta_id    The Meta ID that was updated
+ * @param  int              $object_id  The Object ID that was updated (post ID)
+ * @param  string           $meta_key   The Meta key that was updated
  * @param  string|int|float $meta_value The Value being updated
  * @return bool|int             If successful the number of rows updated, if it fails, false
  */
 function edd_update_payment_backwards_compat( $meta_id, $object_id, $meta_key, $meta_value ) {
-
 	$meta_keys = array( '_edd_payment_meta', '_edd_payment_tax' );
 
 	if ( ! in_array( $meta_key, $meta_keys ) ) {
@@ -381,19 +386,21 @@ function edd_update_payment_backwards_compat( $meta_id, $object_id, $meta_key, $
 	}
 
 	global $wpdb;
-	switch( $meta_key ) {
-
+	switch ( $meta_key ) {
 		case '_edd_payment_meta':
-			$meta_value   = maybe_unserialize( $meta_value );
+			$meta_value = maybe_unserialize( $meta_value );
 
-			if( ! isset( $meta_value['tax'] ) ){
+			if ( ! isset( $meta_value['tax'] ) ) {
 				return;
 			}
 
-			$tax_value    = $meta_value['tax'];
+			$tax_value = $meta_value['tax'];
 
 			$data         = array( 'meta_value' => $tax_value );
-			$where        = array( 'post_id'  => $object_id, 'meta_key' => '_edd_payment_tax' );
+			$where        = array(
+				'post_id'  => $object_id,
+				'meta_key' => '_edd_payment_tax',
+			);
 			$data_format  = array( '%f' );
 			$where_format = array( '%d', '%s' );
 			break;
@@ -406,12 +413,14 @@ function edd_update_payment_backwards_compat( $meta_id, $object_id, $meta_key, $
 			$new_meta            = maybe_serialize( $current_meta );
 
 			$data         = array( 'meta_value' => $new_meta );
-			$where        = array( 'post_id' => $object_id, 'meta_key' => '_edd_payment_meta' );
+			$where        = array(
+				'post_id'  => $object_id,
+				'meta_key' => '_edd_payment_meta',
+			);
 			$data_format  = array( '%s' );
 			$where_format = array( '%d', '%s' );
 
 			break;
-
 	}
 
 	$updated = $wpdb->update( $wpdb->postmeta, $data, $where, $data_format, $where_format );
@@ -422,8 +431,6 @@ function edd_update_payment_backwards_compat( $meta_id, $object_id, $meta_key, $
 	}
 
 	return $updated;
-
-
 }
 add_action( 'updated_postmeta', 'edd_update_payment_backwards_compat', 10, 4 );
 
@@ -432,7 +439,7 @@ add_action( 'updated_postmeta', 'edd_update_payment_backwards_compat', 10, 4 );
  *
  * @since 2.6.7
  * @return void
-*/
+ */
 function edd_cleanup_stats_transients() {
 	global $wpdb;
 
@@ -448,24 +455,17 @@ function edd_cleanup_stats_transients() {
 	$transients = $wpdb->get_results( "SELECT option_name, option_value FROM $wpdb->options WHERE option_name LIKE '%\_transient_timeout\_edd\_stats\_%' AND option_value+0 < $now LIMIT 0, 200;" );
 	$to_delete  = array();
 
-	if( ! empty( $transients ) ) {
-
-		foreach( $transients as $transient ) {
-
+	if ( ! empty( $transients ) ) {
+		foreach ( $transients as $transient ) {
 			$to_delete[] = $transient->option_name;
 			$to_delete[] = str_replace( '_timeout', '', $transient->option_name );
-
 		}
-
 	}
 
 	if ( ! empty( $to_delete ) ) {
-
 		$option_names = implode( "','", $to_delete );
-		$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name IN ('$option_names')"  );
-
+		$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name IN ('$option_names')" );
 	}
-
 }
 add_action( 'edd_daily_scheduled_events', 'edd_cleanup_stats_transients' );
 
@@ -527,7 +527,7 @@ function edd_recover_payment() {
 	}
 
 	// Recover any discounts.
-	if ( 'none' !== $payment->discounts && ! empty( $payment->discounts ) ){
+	if ( 'none' !== $payment->discounts && ! empty( $payment->discounts ) ) {
 		$discounts = ! is_array( $payment->discounts ) ? explode( ',', $payment->discounts ) : $payment->discounts;
 
 		foreach ( $discounts as $discount ) {

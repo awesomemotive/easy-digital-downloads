@@ -48,13 +48,10 @@ abstract class Registry extends \ArrayObject {
 		$result = false;
 
 		if ( ! empty( $attributes ) ) {
-
 			$this->offsetSet( $item_id, $attributes );
 
 			$result = true;
-
 		} else {
-
 			$message = sprintf(
 				'The attributes were missing when attempting to add the \'%1$s\' %2$s.',
 				$item_id,
@@ -92,15 +89,11 @@ abstract class Registry extends \ArrayObject {
 	 *               otherwise an empty array.
 	 */
 	public function get_item( $item_id ) {
-
 		$item = array();
 
 		if ( $this->offsetExists( $item_id ) ) {
-
 			$item = $this->offsetGet( $item_id );
-
 		} else {
-
 			$message = sprintf(
 				'The \'%1$s\' %2$s does not exist.',
 				$item_id,

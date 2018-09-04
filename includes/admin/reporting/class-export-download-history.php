@@ -39,7 +39,7 @@ class EDD_Download_History_Export extends EDD_Export {
 		edd_set_time_limit();
 
 		$month = isset( $_POST['month'] ) ? absint( $_POST['month'] ) : date( 'n' );
-		$year  = isset( $_POST['year']  ) ? absint( $_POST['year']  ) : date( 'Y' );
+		$year  = isset( $_POST['year'] ) ? absint( $_POST['year'] ) : date( 'Y' );
 
 		nocache_headers();
 		header( 'Content-Type: text/csv; charset=utf-8' );
@@ -56,11 +56,11 @@ class EDD_Download_History_Export extends EDD_Export {
 	 */
 	public function csv_cols() {
 		$cols = array(
-			'date'     => __( 'Date',   'easy-digital-downloads' ),
+			'date'     => __( 'Date', 'easy-digital-downloads' ),
 			'user'     => __( 'Downloaded by', 'easy-digital-downloads' ),
 			'ip'       => __( 'IP Address', 'easy-digital-downloads' ),
 			'download' => __( 'Product', 'easy-digital-downloads' ),
-			'file'     => __( 'File', 'easy-digital-downloads' )
+			'file'     => __( 'File', 'easy-digital-downloads' ),
 		);
 		return $cols;
 	}
@@ -69,7 +69,7 @@ class EDD_Download_History_Export extends EDD_Export {
 	 * Get the Export Data
 	 *
 	 * @since 1.4.4
- 	 * @global object $edd_logs EDD Logs Object
+	 * @global object $edd_logs EDD Logs Object
 	 * @return array $data The data for the CSV file
 	 */
 	public function get_data() {
@@ -81,7 +81,7 @@ class EDD_Download_History_Export extends EDD_Export {
 			'nopaging' => true,
 			'log_type' => 'file_download',
 			'monthnum' => isset( $_POST['month'] ) ? absint( $_POST['month'] ) : date( 'n' ),
-			'year'     => isset( $_POST['year'] ) ? absint( $_POST['year'] ) : date( 'Y' )
+			'year'     => isset( $_POST['year'] ) ? absint( $_POST['year'] ) : date( 'Y' ),
 		);
 
 		$logs = $edd_logs->get_connected_logs( $args );
@@ -95,12 +95,12 @@ class EDD_Download_History_Export extends EDD_Export {
 				$user      = get_userdata( $user_info['id'] );
 				$user      = $user ? $user->user_login : $user_info['email'];
 
-				$data[]    = array(
+				$data[] = array(
 					'date'     => $log->post_date,
 					'user'     => $user,
 					'ip'       => get_post_meta( $log->ID, '_edd_log_ip', true ),
 					'download' => get_the_title( $log->post_parent ),
-					'file'     => $file_name
+					'file'     => $file_name,
 				);
 			}
 		}

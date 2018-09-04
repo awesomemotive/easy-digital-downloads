@@ -174,7 +174,6 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 		$expected .= '</select>';
 
 		$this->assertEquals( $expected, EDD()->html->year_dropdown( 'year', 0, $years_before, $years_after ) );
-
 	}
 
 	/**

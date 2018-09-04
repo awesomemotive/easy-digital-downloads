@@ -12,8 +12,8 @@ if ( ! $order ) : ?>
 		<?php esc_html_e( 'The specified receipt ID appears to be invalid', 'easy-digital-downloads' ); ?>
 	</div>
 
-<?php
-return;
+	<?php
+	return;
 endif;
 
 $payment = edd_get_payment( $order->id );
@@ -154,7 +154,8 @@ $status  = edd_get_payment_status( $order, true );
 
 						<?php
 						$notes = edd_get_product_notes( $item['id'] );
-						if ( $edd_receipt_args['notes'] && ! empty( $notes ) ) : ?>
+						if ( $edd_receipt_args['notes'] && ! empty( $notes ) ) :
+							?>
 							<div class="edd_purchase_receipt_product_notes"><?php echo wp_kses_post( wpautop( $notes ) ); ?></div>
 						<?php endif; ?>
 
@@ -200,7 +201,6 @@ $status  = edd_get_payment_status( $order, true );
 									</li>
 									<?php
 								endforeach;
-
 							else :
 								echo '<li>' . apply_filters( 'edd_receipt_no_files_found_text', __( 'No downloadable files found.', 'easy-digital-downloads' ), $item['id'] ) . '</li>';
 							endif;

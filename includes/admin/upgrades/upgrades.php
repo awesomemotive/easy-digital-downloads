@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.3.1
  * @return void
-*/
+ */
 function edd_upgrades_screen() {
 
 	// Get the upgrade being performed
@@ -29,7 +29,8 @@ function edd_upgrades_screen() {
 	<h1><?php _e( 'Upgrades', 'easy-digital-downloads' ); ?></h1>
 	<hr class="wp-header-end">
 
-	<?php if ( is_callable( 'edd_upgrade_render_' . $action ) ) {
+	<?php
+	if ( is_callable( 'edd_upgrade_render_' . $action ) ) {
 
 		// Until we have fully migrated all upgrade scripts to this new system,
 		// we will selectively enqueue the necessary scripts.
@@ -42,13 +43,12 @@ function edd_upgrades_screen() {
 
 		// Remove the above filter
 		remove_filter( 'edd_load_admin_scripts', '__return_true' );
-
 	} else {
 
 		// This is the legacy upgrade method, which requires a page refresh
 		// at each step.
-		$step   = isset( $_GET['step']   ) ? absint( $_GET['step']   ) : 1;
-		$total  = isset( $_GET['total']  ) ? absint( $_GET['total']  ) : false;
+		$step   = isset( $_GET['step'] ) ? absint( $_GET['step'] ) : 1;
+		$total  = isset( $_GET['total'] ) ? absint( $_GET['total'] ) : false;
 		$custom = isset( $_GET['custom'] ) ? absint( $_GET['custom'] ) : 0;
 		$number = isset( $_GET['number'] ) ? absint( $_GET['number'] ) : 100;
 		$steps  = round( ( $total / $number ), 0 );
@@ -59,14 +59,17 @@ function edd_upgrades_screen() {
 		}
 
 		// Update step option
-		update_option( 'edd_doing_upgrade', array(
-			'page'        => 'edd-upgrades',
-			'edd-upgrade' => $action,
-			'step'        => $step,
-			'total'       => $total,
-			'custom'      => $custom,
-			'steps'       => $steps
-		) );
+		update_option(
+			'edd_doing_upgrade',
+			array(
+				'page'        => 'edd-upgrades',
+				'edd-upgrade' => $action,
+				'step'        => $step,
+				'total'       => $total,
+				'custom'      => $custom,
+				'steps'       => $steps,
+			)
+		);
 
 		// Prevent step estimate from going over
 		if ( $step > $steps ) {
@@ -76,18 +79,22 @@ function edd_upgrades_screen() {
 		if ( ! empty( $action ) ) :
 
 			// Redirect URL
-			$redirect = add_query_arg( array(
-				'edd_action' => $action,
-				'step'       => $step,
-				'total'      => $total,
-				'custom'     => $custom
-			), admin_url( 'index.php' ) ); ?>
+			$redirect = add_query_arg(
+				array(
+					'edd_action' => $action,
+					'step'       => $step,
+					'total'      => $total,
+					'custom'     => $custom,
+				),
+				admin_url( 'index.php' )
+			);
+			?>
 
 			<div id="edd-upgrade-status">
 				<p><?php _e( 'The upgrade process has started, please be patient. This could take several minutes. You will be automatically redirected when the upgrade is finished.', 'easy-digital-downloads' ); ?></p>
 
 				<?php if ( ! empty( $total ) ) : ?>
-					<p><strong><?php printf( __( 'Step %d of approximately %d running', 'easy-digital-downloads' ), $step, $steps ); ?></strong></p>
+					<p><strong><?php printf( __( 'Step %1$d of approximately %2$d running', 'easy-digital-downloads' ), $step, $steps ); ?></strong></p>
 				<?php endif; ?>
 			</div>
 			<script type="text/javascript">
@@ -96,10 +103,12 @@ function edd_upgrades_screen() {
 				}, 250 );
 			</script>
 
-		<?php else :
+			<?php
+		else :
 
 			// Redirect URL
-			$redirect = admin_url( 'index.php' ); ?>
+			$redirect = admin_url( 'index.php' );
+			?>
 
 			<div id="edd-upgrade-status">
 				<p>
@@ -130,8 +139,10 @@ function edd_upgrades_screen() {
 				});
 			</script>
 
-		<?php endif;
-	} ?>
+			<?php
+		endif;
+	}
+	?>
 
 	</div>
 

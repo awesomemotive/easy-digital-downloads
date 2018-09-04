@@ -49,7 +49,7 @@ final class Order_Adjustments extends Table {
 	 */
 	protected $upgrades = array(
 		'201807070001' => 201807070001,
-		'201807270003' => 201807270003
+		'201807270003' => 201807270003,
 	);
 
 	/**
@@ -112,9 +112,11 @@ final class Order_Adjustments extends Table {
 
 		// Maybe add column
 		if ( false === $result ) {
-			$result = $this->get_db()->query( "
+			$result = $this->get_db()->query(
+				"
 				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;
-			" );
+			"
+			);
 		}
 
 		// Return success/fail

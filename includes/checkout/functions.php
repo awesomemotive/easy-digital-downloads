@@ -25,13 +25,13 @@ function edd_is_checkout() {
 	$is_object_id_set = isset( $wp_query->queried_object_id );
 	$is_checkout      = is_page( edd_get_option( 'purchase_page' ) );
 
-	if( ! $is_object_set ) {
+	if ( ! $is_object_set ) {
 		unset( $wp_query->queried_object );
-	} else if ( is_singular() ) {
+	} elseif ( is_singular() ) {
 		$content = $wp_query->queried_object->post_content;
 	}
 
-	if( ! $is_object_id_set ) {
+	if ( ! $is_object_id_set ) {
 		unset( $wp_query->queried_object_id );
 	}
 
@@ -60,7 +60,7 @@ function edd_can_checkout() {
  *
  * @since       1.6
  * @return      string
-*/
+ */
 function edd_get_success_page_uri( $query_string = null ) {
 	$page_id = edd_get_option( 'success_page', 0 );
 	$page_id = absint( $page_id );
@@ -95,7 +95,7 @@ function edd_is_success_page() {
  * @param string $query_string
  * @since       1.0
  * @return      void
-*/
+ */
 function edd_send_to_success_page( $query_string = null ) {
 	$redirect = edd_get_success_page_uri();
 
@@ -105,7 +105,7 @@ function edd_send_to_success_page( $query_string = null ) {
 
 	$gateway = isset( $_REQUEST['edd-gateway'] ) ? $_REQUEST['edd-gateway'] : '';
 
-	edd_redirect( apply_filters('edd_success_page_redirect', $redirect, $gateway, $query_string) );
+	edd_redirect( apply_filters( 'edd_success_page_redirect', $redirect, $gateway, $query_string ) );
 }
 
 /**
@@ -120,13 +120,13 @@ function edd_get_checkout_uri( $args = array() ) {
 
 	if ( edd_is_checkout() ) {
 		global $post;
-		$uri = $post instanceof WP_Post ? get_permalink( $post->ID ) : NULL;
+		$uri = $post instanceof WP_Post ? get_permalink( $post->ID ) : null;
 	}
 
 	// If we are not on a checkout page, determine the URI from the default.
 	if ( empty( $uri ) ) {
 		$uri = edd_get_option( 'purchase_page', false );
-		$uri = isset( $uri ) ? get_permalink( $uri ) : NULL;
+		$uri = isset( $uri ) ? get_permalink( $uri ) : null;
 	}
 
 	if ( ! empty( $args ) ) {
@@ -218,25 +218,19 @@ function edd_is_failed_transaction_page() {
  *
  * @since       1.9.9
  * @return      void
-*/
+ */
 function edd_listen_for_failed_payments() {
-
 	$failed_page = edd_get_option( 'failure_page', 0 );
 
-	if( ! empty( $failed_page ) && is_page( $failed_page ) && ! empty( $_GET['payment-id'] ) ) {
-
+	if ( ! empty( $failed_page ) && is_page( $failed_page ) && ! empty( $_GET['payment-id'] ) ) {
 		$payment_id = absint( $_GET['payment-id'] );
 		$payment    = get_post( $payment_id );
 		$status     = edd_get_payment_status( $payment );
 
-		if( $status && 'pending' === strtolower( $status ) ) {
-
+		if ( $status && 'pending' === strtolower( $status ) ) {
 			edd_update_payment_status( $payment_id, 'failed' );
-
 		}
-
 	}
-
 }
 add_action( 'template_redirect', 'edd_listen_for_failed_payments' );
 
@@ -246,7 +240,7 @@ add_action( 'template_redirect', 'edd_listen_for_failed_payments' );
  * @param string $field
  * @since       1.7
  * @return      bool
-*/
+ */
 function edd_field_is_required( $field = '' ) {
 	$required_fields = edd_purchase_form_required_fields();
 	return array_key_exists( $field, $required_fields );
@@ -277,42 +271,37 @@ function edd_get_banned_emails() {
  * @return bool
  */
 function edd_is_email_banned( $email = '' ) {
-
 	$email = trim( $email );
-	if( empty( $email ) ) {
+	if ( empty( $email ) ) {
 		return false;
 	}
 
 	$email         = strtolower( $email );
 	$banned_emails = edd_get_banned_emails();
 
-	if( ! is_array( $banned_emails ) || empty( $banned_emails ) ) {
+	if ( ! is_array( $banned_emails ) || empty( $banned_emails ) ) {
 		return false;
 	}
 
 	$return = false;
-	foreach( $banned_emails as $banned_email ) {
-
+	foreach ( $banned_emails as $banned_email ) {
 		$banned_email = strtolower( $banned_email );
 
-		if( is_email( $banned_email ) ) {
+		if ( is_email( $banned_email ) ) {
 
 			// Complete email address
 			$return = ( $banned_email == $email ? true : false );
-
 		} elseif ( strpos( $banned_email, '.' ) === 0 ) {
 
 			// TLD block
 			$return = ( substr( $email, ( strlen( $banned_email ) * -1 ) ) == $banned_email ) ? true : false;
-
 		} else {
 
 			// Domain block
 			$return = ( stristr( $email, $banned_email ) ? true : false );
-
 		}
 
-		if( true === $return ) {
+		if ( true === $return ) {
 			break;
 		}
 	}
@@ -338,7 +327,6 @@ function edd_is_ssl_enforced() {
  * @return void
  */
 function edd_enforced_ssl_redirect_handler() {
-
 	if ( ! edd_is_ssl_enforced() || ! edd_is_checkout() || is_admin() || is_ssl() ) {
 		return;
 	}
@@ -375,7 +363,7 @@ function edd_enforced_ssl_asset_handler() {
 		'style_loader_src',
 		'template_directory_uri',
 		'stylesheet_directory_uri',
-		'site_url'
+		'site_url',
 	);
 
 	$filters = apply_filters( 'edd_enforced_ssl_asset_filters', $filters );
@@ -394,10 +382,8 @@ add_action( 'template_redirect', 'edd_enforced_ssl_asset_handler' );
  * @return mixed
  */
 function edd_enforced_ssl_asset_filter( $content ) {
-
 	if ( is_array( $content ) ) {
 		$content = array_map( 'edd_enforced_ssl_asset_filter', $content );
-
 	} else {
 
 		// Detect if URL ends in a common domain suffix. We want to only affect assets
@@ -439,7 +425,6 @@ function edd_enforced_ssl_asset_filter( $content ) {
  * @return bool            If the card number provided matches a specific format of a valid card
  */
 function edd_validate_card_number_format( $number = 0 ) {
-
 	$number = trim( $number );
 	if ( empty( $number ) ) {
 		return false;
@@ -503,7 +488,6 @@ function edd_validate_card_number_format_luhn( $number ) {
 
 	// If the total mod 10 equals 0, the number is valid
 	return ( $total % 10 == 0 ) ? true : false;
-
 }
 
 /**
@@ -511,11 +495,10 @@ function edd_validate_card_number_format_luhn( $number ) {
  * array of data to validate the credit card number
  *
  * @since  2.4
- * @param string  $number
+ * @param string $number
  * @return string|bool
  */
 function edd_detect_cc_type( $number ) {
-
 	$return = false;
 
 	$card_types = array(
@@ -577,10 +560,8 @@ function edd_detect_cc_type( $number ) {
 		return false;
 	}
 
-	foreach ( $card_types as $card_type ){
-
+	foreach ( $card_types as $card_type ) {
 		if ( preg_match( $card_type['pattern'], $number ) ) {
-
 			$number_length = strlen( $number );
 			if ( in_array( $number_length, $card_type['valid_length'] ) ) {
 				$return = $card_type['name'];
@@ -596,12 +577,11 @@ function edd_detect_cc_type( $number ) {
  * Validate credit card expiration date
  *
  * @since  2.4
- * @param string  $exp_month
- * @param string  $exp_year
+ * @param string $exp_month
+ * @param string $exp_year
  * @return bool
  */
 function edd_purchase_form_validate_cc_exp_date( $exp_month, $exp_year ) {
-
 	$month_name = date( 'M', mktime( 0, 0, 0, $exp_month, 10 ) );
 	$expiration = strtotime( date( 't', strtotime( $month_name . ' ' . $exp_year ) ) . ' ' . $month_name . ' ' . $exp_year . ' 11:59:59PM' );
 

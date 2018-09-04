@@ -33,13 +33,13 @@ final class Adjustments extends Schema {
 
 		// id
 		array(
-			'name'       => 'id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'extra'      => 'auto_increment',
-			'primary'    => true,
-			'sortable'   => true
+			'name'     => 'id',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'extra'    => 'auto_increment',
+			'primary'  => true,
+			'sortable' => true,
 		),
 
 		// parent
@@ -51,7 +51,7 @@ final class Adjustments extends Schema {
 			'default'    => '0',
 			'searchable' => true,
 			'sortable'   => true,
-			'transition' => true
+			'transition' => true,
 		),
 
 		// name
@@ -60,7 +60,7 @@ final class Adjustments extends Schema {
 			'type'       => 'varchar',
 			'length'     => '200',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// code
@@ -69,7 +69,7 @@ final class Adjustments extends Schema {
 			'type'       => 'varchar',
 			'length'     => '50',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// status
@@ -80,7 +80,7 @@ final class Adjustments extends Schema {
 			'default'    => 'draft',
 			'searchable' => true,
 			'sortable'   => true,
-			'transition' => true
+			'transition' => true,
 		),
 
 		// type
@@ -90,7 +90,7 @@ final class Adjustments extends Schema {
 			'length'     => '20',
 			'default'    => '',
 			'sortable'   => true,
-			'transition' => true
+			'transition' => true,
 		),
 
 		// scope
@@ -100,7 +100,7 @@ final class Adjustments extends Schema {
 			'length'     => '20',
 			'default'    => '',
 			'sortable'   => true,
-			'transition' => true
+			'transition' => true,
 		),
 
 		// amount_type
@@ -110,7 +110,7 @@ final class Adjustments extends Schema {
 			'length'     => '20',
 			'default'    => '',
 			'sortable'   => true,
-			'transition' => true
+			'transition' => true,
 		),
 
 		// amount
@@ -120,7 +120,7 @@ final class Adjustments extends Schema {
 			'length'     => '18,9',
 			'default'    => '0',
 			'validate'   => 'edd_sanitize_amount',
-			'searchable' => true
+			'searchable' => true,
 		),
 
 		// description
@@ -128,50 +128,50 @@ final class Adjustments extends Schema {
 			'name'       => 'description',
 			'type'       => 'longtext',
 			'default'    => '',
-			'searchable' => true
+			'searchable' => true,
 		),
 
 		// max_uses
 		array(
-			'name'       => 'max_uses',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0'
+			'name'     => 'max_uses',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'default'  => '0',
 		),
 
 		// use_count
 		array(
-			'name'       => 'use_count',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0'
+			'name'     => 'use_count',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'default'  => '0',
 		),
 
 		// once_per_customer
 		array(
-			'name'       => 'once_per_customer',
-			'type'       => 'int',
-			'length'     => '1',
-			'default'    => '0'
+			'name'    => 'once_per_customer',
+			'type'    => 'int',
+			'length'  => '1',
+			'default' => '0',
 		),
 
 		// min_charge_amount
 		array(
-			'name'       => 'min_charge_amount',
-			'type'       => 'decimal',
-			'length'     => '18,9',
-			'default'    => '0',
-			'validate'   => 'edd_sanitize_amount'
+			'name'     => 'min_charge_amount',
+			'type'     => 'decimal',
+			'length'   => '18,9',
+			'default'  => '0',
+			'validate' => 'edd_sanitize_amount',
 		),
 
 		// product_condition
 		array(
-			'name'       => 'product_condition',
-			'type'       => 'varchar',
-			'length'     => '20',
-			'default'    => '',
+			'name'    => 'product_condition',
+			'type'    => 'varchar',
+			'length'  => '20',
+			'default' => '',
 		),
 
 		// start_date
@@ -181,7 +181,7 @@ final class Adjustments extends Schema {
 			'default'    => '0000-00-00 00:00:00',
 			'date_query' => true,
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// end_date
@@ -191,7 +191,7 @@ final class Adjustments extends Schema {
 			'default'    => '0000-00-00 00:00:00',
 			'date_query' => true,
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// date_created
@@ -202,7 +202,7 @@ final class Adjustments extends Schema {
 			'created'    => true,
 			'date_query' => true,
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// date_modified
@@ -213,12 +213,12 @@ final class Adjustments extends Schema {
 			'modified'   => true,
 			'date_query' => true,
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// uuid
 		array(
-			'uuid'       => true,
-		)
+			'uuid' => true,
+		),
 	);
 }

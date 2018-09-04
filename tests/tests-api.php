@@ -30,16 +30,18 @@ class Tests_API extends EDD_UnitTestCase {
 
 		self::$api = new EDD_API();
 
-		self::$user_id = self::factory()->user->create( array(
-			'role' => 'administrator',
-		) );
+		self::$user_id      = self::factory()->user->create(
+			array(
+				'role' => 'administrator',
+			)
+		);
 		EDD()->api->user_id = self::$user_id;
-		$user = new WP_User( self::$user_id );
+		$user               = new WP_User( self::$user_id );
 		$user->add_cap( 'view_shop_reports' );
 		$user->add_cap( 'view_shop_sensitive_data' );
 		$user->add_cap( 'manage_shop_discounts' );
 
-		$roles = new EDD_Roles;
+		$roles = new EDD_Roles();
 		$roles->add_roles();
 		$roles->add_caps();
 
@@ -47,11 +49,13 @@ class Tests_API extends EDD_UnitTestCase {
 
 		self::$api->add_endpoint( $wp_rewrite );
 
-		$post_id = self::factory()->post->create( array(
-			'post_title' => 'Test Download',
-			'post_type' => 'download',
-			'post_status' => 'publish',
-		) );
+		$post_id = self::factory()->post->create(
+			array(
+				'post_title'  => 'Test Download',
+				'post_type'   => 'download',
+				'post_status' => 'publish',
+			)
+		);
 
 		$_variable_pricing = array(
 			array(
@@ -119,7 +123,7 @@ class Tests_API extends EDD_UnitTestCase {
 		$total      = 0;
 		$prices     = get_post_meta( $download_details[0]['id'], 'edd_variable_prices', true );
 		$item_price = $prices[1]['amount'];
-		$total      += $item_price;
+		$total     += $item_price;
 
 		$cart_details = array(
 			array(
@@ -160,8 +164,7 @@ class Tests_API extends EDD_UnitTestCase {
 		self::$api_output       = self::$api->get_products();
 		self::$api_output_sales = self::$api->get_recent_sales();
 
-//		$wp_query->query_vars['format'] = 'override';
-
+		// $wp_query->query_vars['format'] = 'override';
 		$_POST['edd_set_api_key'] = 1;
 		EDD()->api->update_key( self::$user_id );
 	}
@@ -169,17 +172,24 @@ class Tests_API extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		add_filter( 'edd_api_output_format', function() {
-			return 'override';
-		} );
+		add_filter(
+			'edd_api_output_format',
+			function() {
+				return 'override';
+			}
+		);
 
 		// Prevents edd_die() from running.
-		add_action( 'edd_api_output_override', function () {
-			// Prevent edd_die() from stopping tests.
-			if ( ! defined( 'EDD_UNIT_TESTS' ) ) {
-				define( 'EDD_UNIT_TESTS', true );
-			}
-		}, 10 );
+		add_action(
+			'edd_api_output_override',
+			function () {
+				// Prevent edd_die() from stopping tests.
+				if ( ! defined( 'EDD_UNIT_TESTS' ) ) {
+					define( 'EDD_UNIT_TESTS', true );
+				}
+			},
+			10
+		);
 
 		self::$api->flush_api_output();
 	}
@@ -200,11 +210,9 @@ class Tests_API extends EDD_UnitTestCase {
 		global $wp_filter;
 
 		foreach ( $wp_filter['query_vars'][10] as $arr ) :
-
 			if ( 'query_vars' == $arr['function'][1] ) {
 				$this->assertTrue( true );
 			}
-
 		endforeach;
 
 		$out = self::$api->query_vars( array() );
@@ -231,16 +239,13 @@ class Tests_API extends EDD_UnitTestCase {
 	}
 
 	public function test_get_default_version() {
-
 		$this->assertEquals( 'v2', self::$api->get_default_version() );
 
 		define( 'EDD_API_VERSION', 'v1' );
 		$this->assertEquals( 'v1', self::$api->get_default_version() );
-
 	}
 
 	public function test_get_queried_version() {
-
 		global $wp_query;
 
 		$_POST['edd_set_api_key'] = 1;
@@ -258,7 +263,8 @@ class Tests_API extends EDD_UnitTestCase {
 			$wp_query->query_vars['edd-api'] = 'v2/sales';
 			self::$api->process_query();
 			$this->assertEquals( 'v2', self::$api->get_queried_version() );
-		} catch ( WPDieException $e ) {}
+		} catch ( WPDieException $e ) {
+		}
 	}
 
 	public function test_get_products() {
@@ -361,7 +367,6 @@ class Tests_API extends EDD_UnitTestCase {
 	}
 
 	public function test_update_key() {
-
 		$_POST['edd_set_api_key'] = 1;
 
 		EDD()->api->update_key( self::$user_id );
@@ -375,7 +380,6 @@ class Tests_API extends EDD_UnitTestCase {
 		// Backwards compatibilty check for API Keys
 		$this->assertEquals( $user_public, get_user_meta( self::$user_id, 'edd_user_public_key', true ) );
 		$this->assertEquals( $user_secret, get_user_meta( self::$user_id, 'edd_user_secret_key', true ) );
-
 	}
 
 	public function test_get_user() {
@@ -383,7 +387,6 @@ class Tests_API extends EDD_UnitTestCase {
 
 		EDD()->api->update_key( self::$user_id );
 		$this->assertEquals( self::$user_id, self::$api->get_user( self::$api->get_user_public_key( self::$user_id ) ) );
-
 	}
 
 	public function test_get_customers() {
@@ -409,14 +412,15 @@ class Tests_API extends EDD_UnitTestCase {
 			$this->assertEquals( 1, $out['customers'][0]['stats']['total_purchases'] );
 			$this->assertEquals( 100.0, $out['customers'][0]['stats']['total_spent'] );
 			$this->assertEquals( 0, $out['customers'][0]['stats']['total_downloads'] );
-		} catch ( WPDieException $e ) {}
+		} catch ( WPDieException $e ) {
+		}
 	}
 
 	public function test_missing_auth() {
 		global $wp_query;
 
-		$wp_query->query_vars['key']      = '';
-		$wp_query->query_vars['token']    = '';
+		$wp_query->query_vars['key']     = '';
+		$wp_query->query_vars['token']   = '';
 		$wp_query->query_vars['edd-api'] = 'sales';
 
 		try {
@@ -425,7 +429,8 @@ class Tests_API extends EDD_UnitTestCase {
 
 			$this->assertArrayHasKey( 'error', $out );
 			$this->assertEquals( 'You must specify both a token and API key!', $out['error'] );
-		} catch ( WPDieException $e ) {}
+		} catch ( WPDieException $e ) {
+		}
 	}
 
 	public function test_invalid_auth() {
@@ -444,7 +449,8 @@ class Tests_API extends EDD_UnitTestCase {
 
 			$this->assertArrayHasKey( 'error', $out );
 			$this->assertEquals( 'Your request could not be authenticated!', $out['error'] );
-		} catch ( WPDieException $e ) {}
+		} catch ( WPDieException $e ) {
+		}
 	}
 
 	public function test_invalid_key() {
@@ -463,7 +469,8 @@ class Tests_API extends EDD_UnitTestCase {
 
 			$this->assertArrayHasKey( 'error', $out );
 			$this->assertEquals( 'Invalid API key!', $out['error'] );
-		} catch ( WPDieException $e ) {}
+		} catch ( WPDieException $e ) {
+		}
 	}
 
 	public function test_info() {
@@ -481,7 +488,6 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertTrue( $out['info']['permissions']['view_shop_reports'] );
 		$this->assertTrue( $out['info']['permissions']['view_shop_sensitive_data'] );
 		$this->assertTrue( $out['info']['permissions']['manage_shop_discounts'] );
-
 	}
 
 	public function test_process_query() {
@@ -547,7 +553,8 @@ class Tests_API extends EDD_UnitTestCase {
 
 			$this->assertArrayHasKey( 'notes', $out['products'][0] );
 			$this->assertEquals( 'Purchase Notes', $out['products'][0]['notes'] );
-		} catch ( WPDieException $e ) {}
+		} catch ( WPDieException $e ) {
+		}
 	}
 
 }

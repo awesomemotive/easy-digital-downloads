@@ -39,10 +39,12 @@ class Top_Five_Most_Downloaded_List_Table extends List_Table {
 
 		$stats = new Stats();
 
-		return $stats->get_most_downloaded_products( array(
-			'number' => 5,
-			'range'  => $filter['range']
-		) );
+		return $stats->get_most_downloaded_products(
+			array(
+				'number' => 5,
+				'range'  => $filter['range'],
+			)
+		);
 	}
 
 	/**
@@ -54,11 +56,11 @@ class Top_Five_Most_Downloaded_List_Table extends List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'name'           => __( 'Name',           'easy-digital-downloads' ),
+			'name'           => __( 'Name', 'easy-digital-downloads' ),
 			'download_count' => __( 'File Downloads', 'easy-digital-downloads' ),
-			'price'          => __( 'Price',          'easy-digital-downloads' ),
-			'sales'          => __( 'Sales',          'easy-digital-downloads' ),
-			'earnings'       => __( 'Earnings',       'easy-digital-downloads' )
+			'price'          => __( 'Price', 'easy-digital-downloads' ),
+			'sales'          => __( 'Sales', 'easy-digital-downloads' ),
+			'earnings'       => __( 'Earnings', 'easy-digital-downloads' ),
 		);
 	}
 
@@ -83,9 +85,12 @@ class Top_Five_Most_Downloaded_List_Table extends List_Table {
 		if ( ! empty( $prices ) ) {
 
 			// Get prices with matching index
-			$prices = wp_filter_object_list( $prices, array(
-				'index' => absint( $download->price_id ),
-			) );
+			$prices = wp_filter_object_list(
+				$prices,
+				array(
+					'index' => absint( $download->price_id ),
+				)
+			);
 
 			// Only want values
 			$prices = array_values( $prices );
@@ -232,7 +237,6 @@ class Top_Five_Most_Downloaded_List_Table extends List_Table {
 	 * @param string $which
 	 */
 	protected function pagination( $which ) {
-
 	}
 
 	/**
@@ -243,6 +247,5 @@ class Top_Five_Most_Downloaded_List_Table extends List_Table {
 	 * @param string $which
 	 */
 	protected function display_tablenav( $which ) {
-
 	}
 }

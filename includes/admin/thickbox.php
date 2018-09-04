@@ -54,8 +54,8 @@ function edd_admin_footer_for_thickbox() {
 
 	// Styles
 	$styles = array(
-		'text link' => esc_html__( 'Link',   'easy-digital-downloads' ),
-		'button'    => esc_html__( 'Button', 'easy-digital-downloads' )
+		'text link' => esc_html__( 'Link', 'easy-digital-downloads' ),
+		'button'    => esc_html__( 'Button', 'easy-digital-downloads' ),
 	);
 
 	// Colors
@@ -137,9 +137,9 @@ function edd_admin_footer_for_thickbox() {
 							<td>
 								<select id="select-edd-style">
 									<?php
-										foreach ( $styles as $style => $label ) {
-											echo '<option value="' . esc_attr( $style ) . '">' . esc_html( $label ) . '</option>';
-										}
+									foreach ( $styles as $style => $label ) {
+										echo '<option value="' . esc_attr( $style ) . '">' . esc_html( $label ) . '</option>';
+									}
 									?>
 								</select>
 								<p class="description"><?php esc_html_e( 'Choose between a Button or a Link', 'easy-digital-downloads' ); ?></p>
@@ -154,9 +154,9 @@ function edd_admin_footer_for_thickbox() {
 								<td>
 									<select id="select-edd-color">
 										<?php
-											foreach ( $colors as $key => $color ) {
-												echo '<option value="' . str_replace( ' ', '_', $key ) . '">' . $color['label'] . '</option>';
-											}
+										foreach ( $colors as $key => $color ) {
+											echo '<option value="' . str_replace( ' ', '_', $key ) . '">' . $color['label'] . '</option>';
+										}
 										?>
 									</select>
 									<p class="description"><?php esc_html_e( 'Choose the button color', 'easy-digital-downloads' ); ?></p>
@@ -186,6 +186,6 @@ function edd_admin_footer_for_thickbox() {
 		</div>
 	</div>
 
-<?php
+	<?php
 }
 add_action( 'admin_footer', 'edd_admin_footer_for_thickbox' );

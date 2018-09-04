@@ -41,7 +41,7 @@ abstract class List_Table extends \WP_List_Table {
 	 * @var   array
 	 */
 	public $counts = array(
-		'total' => 0
+		'total' => 0,
 	);
 
 	/**
@@ -75,7 +75,7 @@ abstract class List_Table extends \WP_List_Table {
 	 * Retrieve the current page number.
 	 *
 	 * @since 3.0
-     *
+	 *
 	 * @return int Current page number.
 	 */
 	protected function get_paged() {
@@ -86,7 +86,7 @@ abstract class List_Table extends \WP_List_Table {
 	 * Retrieve the current page number.
 	 *
 	 * @since 3.0
-     *
+	 *
 	 * @return int Current page number.
 	 */
 	protected function get_search() {
@@ -130,10 +130,13 @@ abstract class List_Table extends \WP_List_Table {
 		// Loop through statuses.
 		if ( ! empty( $counts ) ) {
 			foreach ( $counts as $status => $count ) {
-				$count_url = add_query_arg( array(
-					'status' => $status,
-					'paged'  => false,
-				), $url );
+				$count_url = add_query_arg(
+					array(
+						'status' => $status,
+						'paged'  => false,
+					),
+					$url
+				);
 
 				$class = ( $current === $status )
 					? ' class="current"'
@@ -165,7 +168,7 @@ abstract class List_Table extends \WP_List_Table {
 		}
 
 		$orderby  = $this->get_request_var( 'orderby' );
-		$order    = $this->get_request_var( 'order'   );
+		$order    = $this->get_request_var( 'order' );
 		$input_id = $input_id . '-search-input';
 
 		if ( ! empty( $orderby ) ) {

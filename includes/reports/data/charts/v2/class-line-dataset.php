@@ -27,11 +27,25 @@ class Line_Dataset extends Dataset {
 	 * @var   array
 	 */
 	protected $fields = array(
-		'borderDash', 'borderDashOffset', 'borderCapStyle', 'borderJoinStyle',
-		'cubicInterpolationMode', 'fill', 'lineTension', 'pointBackgroundColor',
-		'pointBorderColor', 'pointBorderWidth', 'pointRadius', 'pointStyle',
-		'pointHitRadius', 'pointHoverBackgroundColor', 'pointHoverBorderColor',
-		'pointHoverBorderWidth', 'pointHoverRadius', 'showLine', 'spanGaps',
+		'borderDash',
+		'borderDashOffset',
+		'borderCapStyle',
+		'borderJoinStyle',
+		'cubicInterpolationMode',
+		'fill',
+		'lineTension',
+		'pointBackgroundColor',
+		'pointBorderColor',
+		'pointBorderWidth',
+		'pointRadius',
+		'pointStyle',
+		'pointHitRadius',
+		'pointHoverBackgroundColor',
+		'pointHoverBorderColor',
+		'pointHoverBorderWidth',
+		'pointHoverRadius',
+		'showLine',
+		'spanGaps',
 		'steppedLine',
 	);
 

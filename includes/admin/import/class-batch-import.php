@@ -84,19 +84,17 @@ class EDD_Batch_Import {
 	 * @since 2.6
 	 */
 	public function __construct( $_file = '', $_step = 1 ) {
-
-		if( ! class_exists( 'parseCSV' ) ) {
+		if ( ! class_exists( 'parseCSV' ) ) {
 			require_once EDD_PLUGIN_DIR . 'includes/libraries/parsecsv.lib.php';
 		}
 
-		$this->step  = $_step;
-		$this->file  = $_file;
-		$this->done  = false;
-		$this->csv   = new parseCSV();
+		$this->step = $_step;
+		$this->file = $_file;
+		$this->done = false;
+		$this->csv  = new parseCSV();
 		$this->csv->auto( $this->file );
 		$this->total = count( $this->csv->data );
 		$this->init();
-
 	}
 
 	/**
@@ -124,7 +122,6 @@ class EDD_Batch_Import {
 	 * @return array The columns in the CSV
 	 */
 	public function get_columns() {
-
 		return $this->csv->titles;
 	}
 
@@ -137,9 +134,7 @@ class EDD_Batch_Import {
 	 * @return array The first row after the header of the CSV
 	 */
 	public function get_first_row() {
-
 		return array_map( array( $this, 'trim_preview' ), current( $this->csv->data ) );
-
 	}
 
 	/**
@@ -149,7 +144,6 @@ class EDD_Batch_Import {
 	 * @return bool
 	 */
 	public function process_step() {
-
 		$more = false;
 
 		if ( ! $this->can_import() ) {
@@ -178,7 +172,6 @@ class EDD_Batch_Import {
 	public function map_fields( $import_fields = array() ) {
 
 		// Probably add some sanitization here later
-
 		$this->field_mapping = $import_fields;
 	}
 
@@ -206,43 +199,30 @@ class EDD_Batch_Import {
 	 * @return array
 	 */
 	public function str_to_array( $str = '' ) {
-
 		$array = array();
 
-		if( is_array( $str ) ) {
+		if ( is_array( $str ) ) {
 			return array_map( 'trim', $str );
 		}
 
 		// Look for standard delimiters
-		if( false !== strpos( $str, '|' ) ) {
-
+		if ( false !== strpos( $str, '|' ) ) {
 			$delimiter = '|';
-
-		} elseif( false !== strpos( $str, ',' ) ) {
-
+		} elseif ( false !== strpos( $str, ',' ) ) {
 			$delimiter = ',';
-
-		} elseif( false !== strpos( $str, ';' ) ) {
-
+		} elseif ( false !== strpos( $str, ';' ) ) {
 			$delimiter = ';';
-
-		} elseif( false !== strpos( $str, '/' ) && ! filter_var( str_replace( ' ', '%20', $str ), FILTER_VALIDATE_URL ) && '/' !== substr( $str, 0, 1 ) ) {
-
+		} elseif ( false !== strpos( $str, '/' ) && ! filter_var( str_replace( ' ', '%20', $str ), FILTER_VALIDATE_URL ) && '/' !== substr( $str, 0, 1 ) ) {
 			$delimiter = '/';
-
 		}
 
-		if( ! empty( $delimiter ) ) {
-
+		if ( ! empty( $delimiter ) ) {
 			$array = (array) explode( $delimiter, $str );
-
 		} else {
-
 			$array[] = $str;
 		}
 
 		return array_map( 'trim', $array );
-
 	}
 
 	/**
@@ -253,16 +233,12 @@ class EDD_Batch_Import {
 	 * @return string
 	 */
 	public function trim_preview( $str = '' ) {
-
-		if( ! is_numeric( $str ) ) {
-
+		if ( ! is_numeric( $str ) ) {
 			$long = strlen( $str ) >= 30;
 			$str  = substr( $str, 0, 30 );
 			$str  = $long ? $str . '...' : $str;
-
 		}
 
 		return $str;
-
 	}
 }

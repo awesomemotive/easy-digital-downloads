@@ -7,7 +7,7 @@
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.7
-*/
+ */
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -77,17 +77,17 @@ class EDD_Cache_Helper {
 		}
 
 		if ( function_exists( 'wp_suspend_cache_addition' ) ) {
-			add_action( 'edd_pre_update_discount',         array( $this, 'w3tc_suspend_cache_addition_pre' ) );
-			add_action( 'edd_pre_insert_discount',         array( $this, 'w3tc_suspend_cache_addition_pre' ) );
-			add_action( 'edd_pre_delete_discount',         array( $this, 'w3tc_suspend_cache_addition_pre' ) );
-			add_action( 'edd_pre_update_discount_status',  array( $this, 'w3tc_suspend_cache_addition_pre' ) );
-			add_action( 'edd_pre_remove_cart_discount',    array( $this, 'w3tc_suspend_cache_addition_pre' ) );
+			add_action( 'edd_pre_update_discount', array( $this, 'w3tc_suspend_cache_addition_pre' ) );
+			add_action( 'edd_pre_insert_discount', array( $this, 'w3tc_suspend_cache_addition_pre' ) );
+			add_action( 'edd_pre_delete_discount', array( $this, 'w3tc_suspend_cache_addition_pre' ) );
+			add_action( 'edd_pre_update_discount_status', array( $this, 'w3tc_suspend_cache_addition_pre' ) );
+			add_action( 'edd_pre_remove_cart_discount', array( $this, 'w3tc_suspend_cache_addition_pre' ) );
 
-			add_action( 'edd_post_update_discount',        array( $this, 'w3tc_suspend_cache_addition_post' ) );
-			add_action( 'edd_post_insert_discount',        array( $this, 'w3tc_suspend_cache_addition_post' ) );
-			add_action( 'edd_post_delete_discount',        array( $this, 'w3tc_suspend_cache_addition_post' ) );
+			add_action( 'edd_post_update_discount', array( $this, 'w3tc_suspend_cache_addition_post' ) );
+			add_action( 'edd_post_insert_discount', array( $this, 'w3tc_suspend_cache_addition_post' ) );
+			add_action( 'edd_post_delete_discount', array( $this, 'w3tc_suspend_cache_addition_post' ) );
 			add_action( 'edd_post_update_discount_status', array( $this, 'w3tc_suspend_cache_addition_post' ) );
-			add_action( 'edd_post_remove_cart_discount',   array( $this, 'w3tc_suspend_cache_addition_post' ) );
+			add_action( 'edd_post_remove_cart_discount', array( $this, 'w3tc_suspend_cache_addition_post' ) );
 		}
 	}
 
@@ -126,7 +126,6 @@ class EDD_Cache_Helper {
 				<?php
 			}
 		}
-
 	}
 
 	/**

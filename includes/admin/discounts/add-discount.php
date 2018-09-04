@@ -86,14 +86,18 @@ $minutes      = edd_get_minute_values();
 						<label for="edd-products"><?php printf( esc_html__( '%s Requirements', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
 					</th>
 					<td>
-						<?php echo EDD()->html->product_dropdown( array(
-							'name'        => 'products[]',
-							'id'          => 'products',
-							'selected'    => array(),
-							'multiple'    => true,
-							'chosen'      => true,
-							'placeholder' => sprintf( esc_html__( 'Select %s', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) ),
-						) ); // WPCS: XSS ok. ?>
+						<?php
+						echo EDD()->html->product_dropdown(
+							array(
+								'name'        => 'products[]',
+								'id'          => 'products',
+								'selected'    => array(),
+								'multiple'    => true,
+								'chosen'      => true,
+								'placeholder' => sprintf( esc_html__( 'Select %s', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) ),
+							)
+						); // WPCS: XSS ok.
+						?>
 						<div id="edd-discount-product-conditions" style="display:none;">
 							<p>
 								<select id="edd-product-condition" name="product_condition">
@@ -123,14 +127,18 @@ $minutes      = edd_get_minute_values();
 						<label for="edd-excluded-products"><?php printf( esc_html__( 'Excluded %s', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) ); ?></label>
 					</th>
 					<td>
-						<?php echo EDD()->html->product_dropdown( array(
-							'name'        => 'excluded_products[]',
-							'id'          => 'excluded_products',
-							'selected'    => array(),
-							'multiple'    => true,
-							'chosen'      => true,
-							'placeholder' => sprintf( esc_html__( 'Select %s', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) ),
-						) ); // WPCS: XSS ok. ?>
+						<?php
+						echo EDD()->html->product_dropdown(
+							array(
+								'name'        => 'excluded_products[]',
+								'id'          => 'excluded_products',
+								'selected'    => array(),
+								'multiple'    => true,
+								'chosen'      => true,
+								'placeholder' => sprintf( esc_html__( 'Select %s', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) ),
+							)
+						); // WPCS: XSS ok.
+						?>
 						<p class="description"><?php printf( esc_html__( '%s this discount cannot be applied to. Leave blank for none.', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) ); ?></p>
 					</td>
 				</tr>
@@ -144,27 +152,31 @@ $minutes      = edd_get_minute_values();
 					<td>
 						<input name="start_date" id="edd-start" type="text" value="" class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" />
 						<?php
-						echo EDD()->html->select( array(
-							'name'             => 'start_date_hour',
-							'options'          => $hours,
-							'selected'         => $start_hour,
-							'chosen'           => true,
-							'class'            => 'edd-time',
-							'show_option_none' => false,
-							'show_option_all'  => false,
-						) ); // WPCS: XSS ok.
+						echo EDD()->html->select(
+							array(
+								'name'             => 'start_date_hour',
+								'options'          => $hours,
+								'selected'         => $start_hour,
+								'chosen'           => true,
+								'class'            => 'edd-time',
+								'show_option_none' => false,
+								'show_option_all'  => false,
+							)
+						); // WPCS: XSS ok.
 						?>
 						:
 						<?php
-						echo EDD()->html->select( array(
-							'name'             => 'start_date_minute',
-							'options'          => $minutes,
-							'selected'         => $start_minute,
-							'chosen'           => true,
-							'class'            => 'edd-time',
-							'show_option_none' => false,
-							'show_option_all'  => false,
-						) ); // WPCS: XSS ok.
+						echo EDD()->html->select(
+							array(
+								'name'             => 'start_date_minute',
+								'options'          => $minutes,
+								'selected'         => $start_minute,
+								'chosen'           => true,
+								'class'            => 'edd-time',
+								'show_option_none' => false,
+								'show_option_all'  => false,
+							)
+						); // WPCS: XSS ok.
 						?>
 						<p class="description"><?php esc_html_e( 'Pick the date this discount will start on. Leave blank for no start date.', 'easy-digital-downloads' ); ?></p>
 					</td>
@@ -179,27 +191,31 @@ $minutes      = edd_get_minute_values();
 					<td>
 						<input name="end_date" id="edd-expiration" type="text" class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" />
 						<?php
-						echo EDD()->html->select( array(
-							'name'             => 'end_date_hour',
-							'options'          => $hours,
-							'selected'         => $end_hour,
-							'chosen'           => true,
-							'class'            => 'edd-time',
-							'show_option_none' => false,
-							'show_option_all'  => false,
-						) ); // WPCS: XSS ok.
+						echo EDD()->html->select(
+							array(
+								'name'             => 'end_date_hour',
+								'options'          => $hours,
+								'selected'         => $end_hour,
+								'chosen'           => true,
+								'class'            => 'edd-time',
+								'show_option_none' => false,
+								'show_option_all'  => false,
+							)
+						); // WPCS: XSS ok.
 						?>
 						:
 						<?php
-						echo EDD()->html->select( array(
-							'name'             => 'end_date_minute',
-							'options'          => $minutes,
-							'selected'         => $end_minute,
-							'chosen'           => true,
-							'class'            => 'edd-time',
-							'show_option_none' => false,
-							'show_option_all'  => false,
-						) ); // WPCS: XSS ok.
+						echo EDD()->html->select(
+							array(
+								'name'             => 'end_date_minute',
+								'options'          => $minutes,
+								'selected'         => $end_minute,
+								'chosen'           => true,
+								'class'            => 'edd-time',
+								'show_option_none' => false,
+								'show_option_all'  => false,
+							)
+						); // WPCS: XSS ok.
 						?>
 						<p class="description"><?php esc_html_e( 'Pick the date this discount will expire on. Leave blank to never expire.', 'easy-digital-downloads' ); ?></p>
 					</td>

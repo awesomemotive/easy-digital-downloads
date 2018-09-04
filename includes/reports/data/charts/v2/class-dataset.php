@@ -73,8 +73,13 @@ abstract class Dataset implements Error_Logger {
 	 * @var   array
 	 */
 	protected $global_fields = array(
-		'label', 'xAxisID', 'yAxisID', 'data',
-		'backgroundColor', 'borderColor', 'borderWidth',
+		'label',
+		'xAxisID',
+		'yAxisID',
+		'data',
+		'backgroundColor',
+		'borderColor',
+		'borderWidth',
 	);
 
 	/**
@@ -84,7 +89,7 @@ abstract class Dataset implements Error_Logger {
 	 *
 	 * @param string         $dataset_id Dataset ID.
 	 * @param Chart_Endpoint $endpoint Chart endpoint object.
-	 * @param array $options Dataset options.
+	 * @param array          $options Dataset options.
 	 */
 	public function __construct( $dataset_id, $endpoint, $options ) {
 		$this->setup_error_logger();
@@ -226,14 +231,12 @@ abstract class Dataset implements Error_Logger {
 		$processed = array();
 
 		if ( ! empty( $data ) ) {
-
 			$options['data'] = $this->parse_data_for_output( $data );
 
 			$this->options = $options;
-
 		} else {
-
-			$message = sprintf( 'The data for the \'%1$s\' dataset for the \'%2$s\' endpoint in the \'%3$s\' report is missing or invalid.',
+			$message = sprintf(
+				'The data for the \'%1$s\' dataset for the \'%2$s\' endpoint in the \'%3$s\' report is missing or invalid.',
 				$this->get_id(),
 				$this->get_endpoint()->get_id(),
 				$this->get_endpoint()->get_report_id()
@@ -252,13 +255,9 @@ abstract class Dataset implements Error_Logger {
 	 * @return array Processed data.
 	 */
 	public function parse_data_for_output( $data ) {
-
 		if ( $this instanceof Pie_Dataset ) {
-
 			$processed = $data;
-
 		} else {
-
 			foreach ( $data as $key => $values ) {
 				if ( is_array( $values ) && isset( $values[1] ) ) {
 					$processed[ $key ] = array(
@@ -271,7 +270,6 @@ abstract class Dataset implements Error_Logger {
 					);
 				}
 			}
-
 		}
 
 		return $processed;

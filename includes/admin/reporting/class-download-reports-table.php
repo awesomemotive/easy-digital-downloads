@@ -36,11 +36,13 @@ class EDD_Download_Reports_Table extends List_Table {
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		parent::__construct( array(
-			'singular' => 'report-' . edd_get_label_singular(),
-			'plural'   => 'report-' . edd_get_label_plural(),
-			'ajax'     => false
-		) );
+		parent::__construct(
+			array(
+				'singular' => 'report-' . edd_get_label_singular(),
+				'plural'   => 'report-' . edd_get_label_plural(),
+				'ajax'     => false,
+			)
+		);
 
 		add_action( 'edd_report_view_actions', array( $this, 'category_filter' ) );
 
@@ -64,20 +66,20 @@ class EDD_Download_Reports_Table extends List_Table {
 	 *
 	 * @since 1.5
 	 *
-	 * @param array $item Contains all the data of the downloads
+	 * @param array  $item Contains all the data of the downloads
 	 * @param string $column_name The name of the column
 	 *
 	 * @return string Column Name
 	 */
 	public function column_default( $item, $column_name ) {
-		switch( $column_name ){
-			case 'earnings' :
+		switch ( $column_name ) {
+			case 'earnings':
 				return edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );
-			case 'average_sales' :
+			case 'average_sales':
 				return round( $item[ $column_name ] );
-			case 'average_earnings' :
+			case 'average_earnings':
 				return edd_currency_filter( edd_format_amount( $item[ $column_name ] ) );
-			case 'details' :
+			case 'details':
 				return '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-reports&view=downloads&download-id=' . $item['ID'] ) . '">' . __( 'View Detailed Report', 'easy-digital-downloads' ) . '</a>';
 			default:
 				return $item[ $column_name ];
@@ -93,11 +95,11 @@ class EDD_Download_Reports_Table extends List_Table {
 	public function get_columns() {
 		return array(
 			'title'            => edd_get_label_singular(),
-			'sales'            => __( 'Sales',                    'easy-digital-downloads' ),
-			'earnings'         => __( 'Earnings',                 'easy-digital-downloads' ),
-			'average_sales'    => __( 'Monthly Average Sales',    'easy-digital-downloads' ),
+			'sales'            => __( 'Sales', 'easy-digital-downloads' ),
+			'earnings'         => __( 'Earnings', 'easy-digital-downloads' ),
+			'average_sales'    => __( 'Monthly Average Sales', 'easy-digital-downloads' ),
 			'average_earnings' => __( 'Monthly Average Earnings', 'easy-digital-downloads' ),
-			'details'          => __( 'Detailed Report',          'easy-digital-downloads' )
+			'details'          => __( 'Detailed Report', 'easy-digital-downloads' ),
 		);
 	}
 
@@ -109,9 +111,9 @@ class EDD_Download_Reports_Table extends List_Table {
 	 */
 	public function get_sortable_columns() {
 		return array(
-			'title'    => array( 'title',    true  ),
-			'sales'    => array( 'sales',    false ),
-			'earnings' => array( 'earnings', false )
+			'title'    => array( 'title', true ),
+			'sales'    => array( 'sales', false ),
+			'earnings' => array( 'earnings', false ),
 		);
 	}
 
@@ -135,7 +137,7 @@ class EDD_Download_Reports_Table extends List_Table {
 		$total  = 0;
 		$counts = wp_count_posts( 'download', 'readable' );
 
-		foreach( $counts as $count ) {
+		foreach ( $counts as $count ) {
 			$total += $count;
 		}
 
@@ -174,9 +176,8 @@ class EDD_Download_Reports_Table extends List_Table {
 	 * @return void
 	 */
 	public function query() {
-
 		$orderby  = sanitize_text_field( $this->get_request_var( 'orderby', 'title' ) );
-		$order    = sanitize_text_field( $this->get_request_var( 'order',   'DESC'  ) );
+		$order    = sanitize_text_field( $this->get_request_var( 'order', 'DESC' ) );
 		$category = $this->get_category();
 
 		$args = array(
@@ -186,29 +187,29 @@ class EDD_Download_Reports_Table extends List_Table {
 			'fields'           => 'ids',
 			'posts_per_page'   => $this->per_page,
 			'paged'            => $this->get_paged(),
-			'suppress_filters' => true
+			'suppress_filters' => true,
 		);
 
 		if ( ! empty( $category ) ) {
 			$args['tax_query'] = array(
 				array(
 					'taxonomy' => 'download_category',
-					'terms'    => $category
-				)
+					'terms'    => $category,
+				),
 			);
 		}
 
 		switch ( $orderby ) {
-			case 'title' :
+			case 'title':
 				$args['orderby'] = 'title';
 				break;
 
-			case 'sales' :
+			case 'sales':
 				$args['orderby']  = 'meta_value_num';
 				$args['meta_key'] = '_edd_download_sales';
 				break;
 
-			case 'earnings' :
+			case 'earnings':
 				$args['orderby']  = 'meta_value_num';
 				$args['meta_key'] = '_edd_download_earnings';
 				break;
@@ -261,16 +262,18 @@ class EDD_Download_Reports_Table extends List_Table {
 		$this->_column_headers = array(
 			$this->get_columns(),
 			array(),
-			$this->get_sortable_columns()
+			$this->get_sortable_columns(),
 		);
 
 		$total_items = $this->get_total_downloads();
 		$this->items = $this->reports_data();
 
-		$this->set_pagination_args( array(
-			'total_items' => $total_items,
-			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $total_items / $this->per_page )
-		) );
+		$this->set_pagination_args(
+			array(
+				'total_items' => $total_items,
+				'per_page'    => $this->per_page,
+				'total_pages' => ceil( $total_items / $this->per_page ),
+			)
+		);
 	}
 }

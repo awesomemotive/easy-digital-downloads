@@ -164,7 +164,7 @@ class Tests_Filters extends EDD_UnitTestCase {
 		global $wp_filter;
 		// No actions connected to edd_purchase_form_before_cc_form by default
 		$this->assertTrue( true );
-		//$this->assertArrayHasKey( 'edd_discount_field', $wp_filter['edd_purchase_form_before_cc_form'][10] );
+		// $this->assertArrayHasKey( 'edd_discount_field', $wp_filter['edd_purchase_form_before_cc_form'][10] );
 	}
 
 	public function test_edd_purchase_form_after_cc_form() {

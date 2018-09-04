@@ -28,7 +28,7 @@ function edd_process_batch_export_download() {
 
 	do_action( 'edd_batch_export_class_include', $_REQUEST['class'] );
 
-	$export = new $_REQUEST['class'];
+	$export = new $_REQUEST['class']();
 	$export->export();
 }
 add_action( 'edd_download_batch_export', 'edd_process_batch_export_download' );
@@ -81,6 +81,7 @@ add_action( 'plugins_loaded', 'edd_register_batch_exporters', 99 );
 
 /**
  * Register the payments batch exporter
+ *
  * @since  2.4.2
  */
 function edd_register_payments_batch_export() {
@@ -149,6 +150,7 @@ function edd_include_downloads_batch_processor( $class ) {
 
 /**
  * Register the file downloads batch exporter
+ *
  * @since  2.4.2
  */
 function edd_register_file_downloads_batch_export() {

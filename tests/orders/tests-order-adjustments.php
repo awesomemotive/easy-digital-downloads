@@ -31,9 +31,12 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_update_order_adjustment()
 	 */
 	public function test_update_should_return_true() {
-		$success = edd_update_order_adjustment( self::$order_adjustments[0], array(
-			'type' => 'Adjustment Type ' . \WP_UnitTest_Generator_Sequence::$incr,
-		) );
+		$success = edd_update_order_adjustment(
+			self::$order_adjustments[0],
+			array(
+				'type' => 'Adjustment Type ' . \WP_UnitTest_Generator_Sequence::$incr,
+			)
+		);
 
 		$this->assertSame( 1, $success );
 	}
@@ -42,9 +45,12 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_update_order_adjustment()
 	 */
 	public function test_order_object_after_update_should_return_true() {
-		edd_update_order_adjustment( self::$order_adjustments[0], array(
-			'description' => 'Adjustment Description 999',
-		) );
+		edd_update_order_adjustment(
+			self::$order_adjustments[0],
+			array(
+				'description' => 'Adjustment Description 999',
+			)
+		);
 
 		$order_adjustment = edd_get_order_adjustment( self::$order_adjustments[0] );
 
@@ -55,9 +61,12 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_update_order_adjustment
 	 */
 	public function test_update_without_id_should_fail() {
-		$success = edd_update_order_adjustment( null, array(
-			'description' => 'Adjustment Description 999',
-		) );
+		$success = edd_update_order_adjustment(
+			null,
+			array(
+				'description' => 'Adjustment Description 999',
+			)
+		);
 
 		$this->assertFalse( $success );
 	}
@@ -84,9 +93,11 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_number_should_return_true() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'number' => 10,
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'number' => 10,
+			)
+		);
 
 		$this->assertCount( 5, $order_adjustments );
 	}
@@ -95,10 +106,12 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_offset_should_return_true() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'number' => 10,
-			'offset' => 4,
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'number' => 10,
+				'offset' => 4,
+			)
+		);
 
 		$this->assertCount( 1, $order_adjustments );
 	}
@@ -107,10 +120,12 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_orderby_id_and_order_asc_should_return_true() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'orderby' => 'id',
-			'order'   => 'asc',
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'orderby' => 'id',
+				'order'   => 'asc',
+			)
+		);
 
 		$this->assertTrue( $order_adjustments[0]->id < $order_adjustments[1]->id );
 	}
@@ -119,10 +134,12 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_orderby_id_and_order_desc_should_return_true() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'orderby' => 'id',
-			'order'   => 'desc',
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'orderby' => 'id',
+				'order'   => 'desc',
+			)
+		);
 
 		$this->assertTrue( $order_adjustments[0]->id > $order_adjustments[1]->id );
 	}
@@ -131,10 +148,12 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_orderby_object_id_and_order_asc_should_return_true() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'orderby' => 'object_id',
-			'order'   => 'asc',
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'orderby' => 'object_id',
+				'order'   => 'asc',
+			)
+		);
 
 		$this->assertTrue( $order_adjustments[0]->object_id < $order_adjustments[1]->object_id );
 	}
@@ -143,10 +162,12 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_orderby_object_id_and_order_desc_should_return_true() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'orderby' => 'object_id',
-			'order'   => 'desc',
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'orderby' => 'object_id',
+				'order'   => 'desc',
+			)
+		);
 
 		$this->assertTrue( $order_adjustments[0]->object_id > $order_adjustments[1]->object_id );
 	}
@@ -155,9 +176,11 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_object_id_should_return_1() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'object_id' => \WP_UnitTest_Generator_Sequence::$incr,
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'object_id' => \WP_UnitTest_Generator_Sequence::$incr,
+			)
+		);
 
 		$this->assertCount( 1, $order_adjustments );
 	}
@@ -166,11 +189,13 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_object_id__in_should_return_1() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'object_id__in' => array(
-				\WP_UnitTest_Generator_Sequence::$incr,
-			),
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'object_id__in' => array(
+					\WP_UnitTest_Generator_Sequence::$incr,
+				),
+			)
+		);
 
 		$this->assertCount( 1, $order_adjustments );
 	}
@@ -179,11 +204,13 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_object_id__not_in_should_return_5() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'object_id__not_in' => array(
-				999,
-			),
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'object_id__not_in' => array(
+					999,
+				),
+			)
+		);
 
 		$this->assertCount( 5, $order_adjustments );
 	}
@@ -192,9 +219,11 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_object_type_should_return_5() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'object_type' => 'order',
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'object_type' => 'order',
+			)
+		);
 
 		$this->assertCount( 5, $order_adjustments );
 	}
@@ -203,10 +232,12 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_orderby_type_id_and_order_asc_should_return_true() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'orderby' => 'type_id',
-			'order'   => 'asc',
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'orderby' => 'type_id',
+				'order'   => 'asc',
+			)
+		);
 
 		$this->assertTrue( $order_adjustments[0]->type_id < $order_adjustments[1]->type_id );
 	}
@@ -215,10 +246,12 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_orderby_type_id_and_order_desc_should_return_true() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'orderby' => 'type_id',
-			'order'   => 'desc',
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'orderby' => 'type_id',
+				'order'   => 'desc',
+			)
+		);
 
 		$this->assertTrue( $order_adjustments[0]->type_id > $order_adjustments[1]->type_id );
 	}
@@ -227,9 +260,11 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_type_id_should_return_1() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'type_id' => \WP_UnitTest_Generator_Sequence::$incr,
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'type_id' => \WP_UnitTest_Generator_Sequence::$incr,
+			)
+		);
 
 		$this->assertCount( 1, $order_adjustments );
 	}
@@ -238,11 +273,13 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_type_id__in_should_return_1() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'type_id__in' => array(
-				\WP_UnitTest_Generator_Sequence::$incr,
-			),
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'type_id__in' => array(
+					\WP_UnitTest_Generator_Sequence::$incr,
+				),
+			)
+		);
 
 		$this->assertCount( 1, $order_adjustments );
 	}
@@ -251,11 +288,13 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_type_id__not_in_should_return_5() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'type_id__not_in' => array(
-				999,
-			),
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'type_id__not_in' => array(
+					999,
+				),
+			)
+		);
 
 		$this->assertCount( 5, $order_adjustments );
 	}
@@ -264,10 +303,12 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_orderby_type_and_order_asc_should_return_true() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'orderby' => 'type',
-			'order'   => 'asc',
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'orderby' => 'type',
+				'order'   => 'asc',
+			)
+		);
 
 		$this->assertTrue( $order_adjustments[0]->type < $order_adjustments[1]->type );
 	}
@@ -276,10 +317,12 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_orderby_type_and_order_desc_should_return_true() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'orderby' => 'type',
-			'order'   => 'desc',
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'orderby' => 'type',
+				'order'   => 'desc',
+			)
+		);
 
 		$this->assertTrue( $order_adjustments[0]->type > $order_adjustments[1]->type );
 	}
@@ -288,9 +331,11 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_type_should_return_1() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'type' => 'Adjustment Type ' . \WP_UnitTest_Generator_Sequence::$incr,
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'type' => 'Adjustment Type ' . \WP_UnitTest_Generator_Sequence::$incr,
+			)
+		);
 
 		$this->assertCount( 1, $order_adjustments );
 	}
@@ -299,11 +344,13 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_type__in_should_return_1() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'type__in' => array(
-				'Adjustment Type ' . \WP_UnitTest_Generator_Sequence::$incr,
-			),
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'type__in' => array(
+					'Adjustment Type ' . \WP_UnitTest_Generator_Sequence::$incr,
+				),
+			)
+		);
 
 		$this->assertCount( 1, $order_adjustments );
 	}
@@ -312,11 +359,13 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_type__not_in_should_return_5() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'type__not_in' => array(
-				'Adjustment Type ' . 999,
-			),
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'type__not_in' => array(
+					'Adjustment Type ' . 999,
+				),
+			)
+		);
 
 		$this->assertCount( 5, $order_adjustments );
 	}
@@ -325,10 +374,12 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_orderby_description_and_order_asc_should_return_true() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'orderby' => 'description',
-			'order'   => 'asc',
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'orderby' => 'description',
+				'order'   => 'asc',
+			)
+		);
 
 		$this->assertTrue( $order_adjustments[0]->description < $order_adjustments[1]->description );
 	}
@@ -337,10 +388,12 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_orderby_description_and_order_desc_should_return_true() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'orderby' => 'description',
-			'order'   => 'desc',
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'orderby' => 'description',
+				'order'   => 'desc',
+			)
+		);
 
 		$this->assertTrue( $order_adjustments[0]->description > $order_adjustments[1]->description );
 	}
@@ -349,9 +402,11 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_description_should_return_1() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'description' => 'Adjustment Description ' . \WP_UnitTest_Generator_Sequence::$incr,
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'description' => 'Adjustment Description ' . \WP_UnitTest_Generator_Sequence::$incr,
+			)
+		);
 
 		$this->assertCount( 1, $order_adjustments );
 	}
@@ -360,11 +415,13 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_description__in_should_return_1() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'description__in' => array(
-				'Adjustment Description ' . \WP_UnitTest_Generator_Sequence::$incr,
-			),
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'description__in' => array(
+					'Adjustment Description ' . \WP_UnitTest_Generator_Sequence::$incr,
+				),
+			)
+		);
 
 		$this->assertCount( 1, $order_adjustments );
 	}
@@ -373,11 +430,13 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_description__not_in_should_return_5() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'description__not_in' => array(
-				'Adjustment Description ' . 999,
-			),
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'description__not_in' => array(
+					'Adjustment Description ' . 999,
+				),
+			)
+		);
 
 		$this->assertCount( 5, $order_adjustments );
 	}
@@ -386,10 +445,12 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_orderby_subtotal_and_order_asc_should_return_true() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'orderby' => 'subtotal',
-			'order'   => 'asc',
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'orderby' => 'subtotal',
+				'order'   => 'asc',
+			)
+		);
 
 		$this->assertTrue( $order_adjustments[0]->subtotal < $order_adjustments[1]->subtotal );
 	}
@@ -398,10 +459,12 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_orderby_subtotal_and_order_desc_should_return_true() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'orderby' => 'subtotal',
-			'order'   => 'desc',
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'orderby' => 'subtotal',
+				'order'   => 'desc',
+			)
+		);
 
 		$this->assertTrue( $order_adjustments[0]->subtotal > $order_adjustments[1]->subtotal );
 	}
@@ -410,9 +473,11 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_subtotal_should_return_1() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'subtotal' => \WP_UnitTest_Generator_Sequence::$incr,
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'subtotal' => \WP_UnitTest_Generator_Sequence::$incr,
+			)
+		);
 
 		$this->assertCount( 1, $order_adjustments );
 	}
@@ -421,11 +486,13 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_subtotal__in_should_return_1() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'subtotal__in' => array(
-				\WP_UnitTest_Generator_Sequence::$incr,
-			),
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'subtotal__in' => array(
+					\WP_UnitTest_Generator_Sequence::$incr,
+				),
+			)
+		);
 
 		$this->assertCount( 1, $order_adjustments );
 	}
@@ -434,11 +501,13 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_subtotal__not_in_should_return_5() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'subtotal__not_in' => array(
-				-999,
-			),
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'subtotal__not_in' => array(
+					-999,
+				),
+			)
+		);
 
 		$this->assertCount( 5, $order_adjustments );
 	}
@@ -447,10 +516,12 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_orderby_tax_and_order_asc_should_return_true() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'orderby' => 'tax',
-			'order'   => 'asc',
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'orderby' => 'tax',
+				'order'   => 'asc',
+			)
+		);
 
 		$this->assertTrue( $order_adjustments[0]->tax < $order_adjustments[1]->tax );
 	}
@@ -459,10 +530,12 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_orderby_tax_and_order_desc_should_return_true() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'orderby' => 'tax',
-			'order'   => 'desc',
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'orderby' => 'tax',
+				'order'   => 'desc',
+			)
+		);
 
 		$this->assertTrue( $order_adjustments[0]->tax > $order_adjustments[1]->tax );
 	}
@@ -471,9 +544,11 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_tax_should_return_1() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'tax' => \WP_UnitTest_Generator_Sequence::$incr,
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'tax' => \WP_UnitTest_Generator_Sequence::$incr,
+			)
+		);
 
 		$this->assertCount( 1, $order_adjustments );
 	}
@@ -482,11 +557,13 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_tax__in_should_return_1() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'tax__in' => array(
-				\WP_UnitTest_Generator_Sequence::$incr,
-			),
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'tax__in' => array(
+					\WP_UnitTest_Generator_Sequence::$incr,
+				),
+			)
+		);
 
 		$this->assertCount( 1, $order_adjustments );
 	}
@@ -495,11 +572,13 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_tax__not_in_should_return_5() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'tax__not_in' => array(
-				-999,
-			),
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'tax__not_in' => array(
+					-999,
+				),
+			)
+		);
 
 		$this->assertCount( 5, $order_adjustments );
 	}
@@ -508,10 +587,12 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_orderby_total_and_order_asc_should_return_true() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'orderby' => 'total',
-			'order'   => 'asc',
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'orderby' => 'total',
+				'order'   => 'asc',
+			)
+		);
 
 		$this->assertTrue( $order_adjustments[0]->total < $order_adjustments[1]->total );
 	}
@@ -520,10 +601,12 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_orderby_total_and_order_desc_should_return_true() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'orderby' => 'total',
-			'order'   => 'desc',
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'orderby' => 'total',
+				'order'   => 'desc',
+			)
+		);
 
 		$this->assertTrue( $order_adjustments[0]->total > $order_adjustments[1]->total );
 	}
@@ -532,9 +615,11 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_total_should_return_1() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'total' => \WP_UnitTest_Generator_Sequence::$incr,
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'total' => \WP_UnitTest_Generator_Sequence::$incr,
+			)
+		);
 
 		$this->assertCount( 1, $order_adjustments );
 	}
@@ -543,11 +628,13 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_total__in_should_return_1() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'total__in' => array(
-				\WP_UnitTest_Generator_Sequence::$incr,
-			),
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'total__in' => array(
+					\WP_UnitTest_Generator_Sequence::$incr,
+				),
+			)
+		);
 
 		$this->assertCount( 1, $order_adjustments );
 	}
@@ -556,11 +643,13 @@ class Order_Adjustment_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_get_order_adjustments
 	 */
 	public function test_get_order_adjustments_with_total__not_in_should_return_5() {
-		$order_adjustments = edd_get_order_adjustments( array(
-			'total__not_in' => array(
-				-999,
-			),
-		) );
+		$order_adjustments = edd_get_order_adjustments(
+			array(
+				'total__not_in' => array(
+					-999,
+				),
+			)
+		);
 
 		$this->assertCount( 5, $order_adjustments );
 	}

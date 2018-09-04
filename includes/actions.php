@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0
  * @return void
-*/
+ */
 function edd_get_actions() {
 	$key = ! empty( $_GET['edd_action'] ) ? sanitize_key( $_GET['edd_action'] ) : false;
 
@@ -30,7 +30,7 @@ function edd_get_actions() {
 	}
 
 	if ( ! empty( $key ) ) {
-		do_action( "edd_{$key}" , $_GET );
+		do_action( "edd_{$key}", $_GET );
 	}
 }
 add_action( 'init', 'edd_get_actions' );
@@ -42,7 +42,7 @@ add_action( 'init', 'edd_get_actions' );
  *
  * @since 1.0
  * @return void
-*/
+ */
 function edd_post_actions() {
 	$key = ! empty( $_POST['edd_action'] ) ? sanitize_key( $_POST['edd_action'] ) : false;
 
@@ -70,7 +70,7 @@ add_action( 'init', 'edd_post_actions' );
  * @return void
  */
 function edd_delayed_get_actions() {
-	$key = ! empty( $_GET['edd_action'] ) ? sanitize_key( $_GET['edd_action'] ) : false;
+	$key               = ! empty( $_GET['edd_action'] ) ? sanitize_key( $_GET['edd_action'] ) : false;
 	$is_delayed_action = edd_is_delayed_action( $key );
 
 	if ( ! $is_delayed_action ) {
@@ -95,7 +95,7 @@ add_action( 'template_redirect', 'edd_delayed_get_actions' );
  * @return void
  */
 function edd_delayed_post_actions() {
-	$key = ! empty( $_POST['edd_action'] ) ? sanitize_key( $_POST['edd_action'] ) : false;
+	$key               = ! empty( $_POST['edd_action'] ) ? sanitize_key( $_POST['edd_action'] ) : false;
 	$is_delayed_action = edd_is_delayed_action( $key );
 
 	if ( ! $is_delayed_action ) {
@@ -116,9 +116,12 @@ add_action( 'template_redirect', 'edd_delayed_post_actions' );
  * @return array
  */
 function edd_delayed_actions_list() {
-	return (array) apply_filters( 'edd_delayed_actions', array(
-		'add_to_cart'
-	) );
+	return (array) apply_filters(
+		'edd_delayed_actions',
+		array(
+			'add_to_cart',
+		)
+	);
 }
 
 /**

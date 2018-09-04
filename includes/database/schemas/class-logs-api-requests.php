@@ -40,7 +40,7 @@ class Logs_Api_Requests extends Schema {
 			'extra'      => 'auto_increment',
 			'primary'    => true,
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// user_id
@@ -51,7 +51,7 @@ class Logs_Api_Requests extends Schema {
 			'unsigned'   => true,
 			'default'    => '0',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// api_key
@@ -61,7 +61,7 @@ class Logs_Api_Requests extends Schema {
 			'length'     => '32',
 			'default'    => 'public',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// token
@@ -71,7 +71,7 @@ class Logs_Api_Requests extends Schema {
 			'length'     => '32',
 			'default'    => '',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// version
@@ -81,7 +81,7 @@ class Logs_Api_Requests extends Schema {
 			'length'     => '32',
 			'default'    => '',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// request
@@ -91,7 +91,7 @@ class Logs_Api_Requests extends Schema {
 			'default'    => '',
 			'searchable' => true,
 			'in'         => false,
-			'not_in'     => false
+			'not_in'     => false,
 		),
 
 		// error
@@ -101,7 +101,7 @@ class Logs_Api_Requests extends Schema {
 			'default'    => '',
 			'searchable' => true,
 			'in'         => false,
-			'not_in'     => false
+			'not_in'     => false,
 		),
 
 		// ip
@@ -111,7 +111,7 @@ class Logs_Api_Requests extends Schema {
 			'length'     => '60',
 			'default'    => '',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// time
@@ -121,7 +121,7 @@ class Logs_Api_Requests extends Schema {
 			'length'     => '60',
 			'default'    => '',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// date_created
@@ -131,7 +131,7 @@ class Logs_Api_Requests extends Schema {
 			'default'    => '0000-00-00 00:00:00',
 			'created'    => true,
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// date_modified
@@ -141,12 +141,12 @@ class Logs_Api_Requests extends Schema {
 			'default'    => '0000-00-00 00:00:00',
 			'modified'   => true,
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// uuid
 		array(
-			'uuid'       => true,
-		)
+			'uuid' => true,
+		),
 	);
 }

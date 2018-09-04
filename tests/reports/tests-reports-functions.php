@@ -2,7 +2,7 @@
 namespace EDD\Reports;
 
 if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
+	require_once EDD_PLUGIN_DIR . 'includes/reports/class-init.php';
 }
 
 new \EDD\Reports\Init();
@@ -96,16 +96,19 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_endpoint_with_valid_endpoint_id_valid_type_should_return_an_Endpoint_object() {
-		register_endpoint( 'foo', array(
-			'label' => 'Foo',
-			'views' => array(
-				'tile' => array(
-					'display_args'     => array( 'some_value' ),
-					'display_callback' => '__return_false',
-					'data_callback'    => '__return_false',
+		register_endpoint(
+			'foo',
+			array(
+				'label' => 'Foo',
+				'views' => array(
+					'tile' => array(
+						'display_args'     => array( 'some_value' ),
+						'display_callback' => '__return_false',
+						'data_callback'    => '__return_false',
+					),
 				),
-			),
-		) );
+			)
+		);
 
 		$registry = EDD()->utils->get_registry( 'reports:endpoints' );
 
@@ -120,16 +123,19 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_get_endpoint_with_valid_endpoint_id_invalid_type_should_return_WP_Error_including_invalid_view_error_code() {
-		register_endpoint( 'foo', array(
-			'label' => 'Foo',
-			'views' => array(
-				'tile' => array(
-					'display_args'     => array( 'some_value' ),
-					'display_callback' => '__return_false',
-					'data_callback'    => '__return_false',
+		register_endpoint(
+			'foo',
+			array(
+				'label' => 'Foo',
+				'views' => array(
+					'tile' => array(
+						'display_args'     => array( 'some_value' ),
+						'display_callback' => '__return_false',
+						'data_callback'    => '__return_false',
+					),
 				),
-			),
-		) );
+			)
+		);
 
 		$result = get_endpoint( 'foo', 'fake' );
 
@@ -151,7 +157,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	public function test_parse_endpoint_views_with_invalid_view_should_leave_it_intact() {
 		$expected = array(
 			'fake' => array(
-				'display_callback' => '__return_false'
+				'display_callback' => '__return_false',
 			),
 		);
 
@@ -167,7 +173,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 				'data_callback'    => '__return_zero',
 				'display_callback' => __NAMESPACE__ . '\\default_display_tile',
 				'display_args'     => array(
-					'type'             => '' ,
+					'type'             => '',
 					'context'          => 'primary',
 					'comparison_label' => __( 'All time', 'easy-digital-downloads' ),
 				),
@@ -212,8 +218,8 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'tile' => array(
 				'display_args' => array(
 					'type' => 'number',
-				)
-			)
+				),
+			),
 		);
 
 		$result = parse_endpoint_views( $views );
@@ -337,9 +343,9 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'last_quarter' => __( 'Last Quarter', 'easy-digital-downloads' ),
 			'this_year'    => __( 'This Year', 'easy-digital-downloads' ),
 			'last_year'    => __( 'Last Year', 'easy-digital-downloads' ),
-			'other'        => __( 'Custom', 'easy-digital-downloads' )
+			'other'        => __( 'Custom', 'easy-digital-downloads' ),
 		);
-		
+
 		$this->assertEqualSetsWithIndex( $expected, get_dates_filter_options() );
 	}
 
@@ -662,9 +668,12 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	public function test_get_dates_filter_range_with_non_default_range_set_should_return_that_reports_range() {
 		$filter_key = get_filter_key( 'dates' );
 
-		set_filter_value( 'dates', array(
-			'range' => 'last_quarter',
-		) );
+		set_filter_value(
+			'dates',
+			array(
+				'range' => 'last_quarter',
+			)
+		);
 
 		$this->assertSame( 'last_quarter', get_dates_filter_range() );
 	}

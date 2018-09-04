@@ -15,11 +15,13 @@ class Tests_Checkout extends EDD_UnitTestCase {
 		flush_rewrite_rules( false );
 		edd_add_rewrite_endpoints( $wp_rewrite );
 
-		$post_id = static::factory()->post->create( array(
-			'post_title'  => 'Test Download',
-			'post_type'   => 'download',
-			'post_status' => 'publish',
-		) );
+		$post_id = static::factory()->post->create(
+			array(
+				'post_title'  => 'Test Download',
+				'post_type'   => 'download',
+				'post_status' => 'publish',
+			)
+		);
 
 		$meta = array(
 			'edd_price'               => '10.50',
@@ -189,7 +191,6 @@ class Tests_Checkout extends EDD_UnitTestCase {
 	 */
 	public function test_edd_enforced_ssl_asset_filter() {
 		// Test page URLs. These should not get modified
-
 		$content = 'http://local.dev/';
 		$this->assertSame( 'http://local.dev/', edd_enforced_ssl_asset_filter( $content ) );
 
@@ -199,7 +200,6 @@ class Tests_Checkout extends EDD_UnitTestCase {
 		$this->assertSame( $expected, edd_enforced_ssl_asset_filter( $content ) );
 
 		// Test asset URLs.
-
 		$content = 'http://local.dev/assets/file.jpg';
 		$this->assertSame( 'https://local.dev/assets/file.jpg', edd_enforced_ssl_asset_filter( $content ) );
 
@@ -284,12 +284,14 @@ class Tests_Checkout extends EDD_UnitTestCase {
 	}
 
 	public function test_edd_is_checkout_shortcode() {
-		$post_id = $this->factory->post->create( array(
-			'post_title'   => 'Test Page',
-			'post_type'    => 'page',
-			'post_status'  => 'publish',
-			'post_content' => '[download_checkout]',
-		) );
+		$post_id = $this->factory->post->create(
+			array(
+				'post_title'   => 'Test Page',
+				'post_type'    => 'page',
+				'post_status'  => 'publish',
+				'post_content' => '[download_checkout]',
+			)
+		);
 
 		$this->go_to( get_permalink( $post_id ) );
 
@@ -299,12 +301,14 @@ class Tests_Checkout extends EDD_UnitTestCase {
 	}
 
 	public function test_edd_is_checkout_fail() {
-		$post_id = $this->factory->post->create( array(
-			'post_title'   => 'Test Page 2',
-			'post_type'    => 'page',
-			'post_status'  => 'publish',
-			'post_content' => 'Test Page',
-		) );
+		$post_id = $this->factory->post->create(
+			array(
+				'post_title'   => 'Test Page 2',
+				'post_type'    => 'page',
+				'post_status'  => 'publish',
+				'post_content' => 'Test Page',
+			)
+		);
 
 		$this->go_to( get_permalink( $post_id ) );
 

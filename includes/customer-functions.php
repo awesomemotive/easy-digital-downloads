@@ -65,10 +65,12 @@ function edd_delete_customer( $customer_id = 0 ) {
 function edd_destroy_customer( $customer_id = 0 ) {
 
 	// Get email addresses.
-	$email_addresses = edd_get_customer_email_addresses( array(
-		'customer_id'   => $customer_id,
-		'no_found_rows' => true,
-	) );
+	$email_addresses = edd_get_customer_email_addresses(
+		array(
+			'customer_id'   => $customer_id,
+			'no_found_rows' => true,
+		)
+	);
 
 	// Destroy email addresses.
 	if ( ! empty( $email_addresses ) ) {
@@ -78,10 +80,12 @@ function edd_destroy_customer( $customer_id = 0 ) {
 	}
 
 	// Get addresses.
-	$addresses = edd_get_customer_addresses( array(
-		'customer_id'   => $customer_id,
-		'no_found_rows' => true,
-	) );
+	$addresses = edd_get_customer_addresses(
+		array(
+			'customer_id'   => $customer_id,
+			'no_found_rows' => true,
+		)
+	);
 
 	// Destroy addresses.
 	if ( ! empty( $addresses ) ) {
@@ -98,7 +102,7 @@ function edd_destroy_customer( $customer_id = 0 ) {
  * Update a customer.
  *
  * @since 3.0
- * @param int $customer_id Customer ID.
+ * @param int   $customer_id Customer ID.
  * @param array $data
  *
  * @return int
@@ -170,9 +174,12 @@ function edd_get_customer_field( $customer_id = 0, $field = '' ) {
 function edd_get_customers( $args = array() ) {
 
 	// Parse args
-	$r = wp_parse_args( $args, array(
-		'number' => 30
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'number' => 30,
+		)
+	);
 
 	// Instantiate a query object
 	$customers = new EDD\Database\Queries\Customer();
@@ -192,9 +199,12 @@ function edd_get_customers( $args = array() ) {
 function edd_count_customers( $args = array() ) {
 
 	// Parse args
-	$r = wp_parse_args( $args, array(
-		'count' => true
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'count' => true,
+		)
+	);
 
 	// Query for count(s)
 	$customers = new EDD\Database\Queries\Customer( $r );
@@ -213,10 +223,13 @@ function edd_count_customers( $args = array() ) {
 function edd_get_customer_counts( $args = array() ) {
 
 	// Parse arguments
-	$r = wp_parse_args( $args, array(
-		'count'   => true,
-		'groupby' => 'status'
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'count'   => true,
+			'groupby' => 'status',
+		)
+	);
 
 	// Query for count
 	$counts = new EDD\Database\Queries\Customer( $r );
@@ -262,11 +275,11 @@ function edd_get_customer_ip_addresses( $customer_id = 0 ) {
  *
  * @since 3.0
  *
- * @param int     $customer_id  Customer ID.
- * @param string  $meta_key     Meta data name.
- * @param mixed   $meta_value   Meta data value. Must be serializable if non-scalar.
- * @param bool    $unique       Optional. Whether the same key should not be added.
- *                              Default false.
+ * @param int    $customer_id  Customer ID.
+ * @param string $meta_key     Meta data name.
+ * @param mixed  $meta_value   Meta data value. Must be serializable if non-scalar.
+ * @param bool   $unique       Optional. Whether the same key should not be added.
+ *                             Default false.
  *
  * @return int|false Meta ID on success, false on failure.
  */
@@ -283,10 +296,10 @@ function edd_add_customer_meta( $customer_id, $meta_key, $meta_value, $unique = 
  *
  * @since 3.0
  *
- * @param int     $customer_id  Customer ID.
- * @param string  $meta_key     Meta data name.
- * @param mixed   $meta_value   Optional. Meta data value. Must be serializable if
- *                              non-scalar. Default empty.
+ * @param int    $customer_id  Customer ID.
+ * @param string $meta_key     Meta data name.
+ * @param mixed  $meta_value   Optional. Meta data value. Must be serializable if
+ *                             non-scalar. Default empty.
  *
  * @return bool True on success, false on failure.
  */
@@ -299,12 +312,12 @@ function edd_delete_customer_meta( $customer_id, $meta_key, $meta_value = '' ) {
  *
  * @since 3.0
  *
- * @param int     $customer_id  Customer ID.
- * @param string  $key          Optional. The meta key to retrieve. By default, returns
- *                              data for all keys. Default empty.
- * @param bool    $single       Optional, default is false.
- *                              If true, return only the first value of the specified meta_key.
- *                              This parameter has no effect if meta_key is not specified.
+ * @param int    $customer_id  Customer ID.
+ * @param string $key          Optional. The meta key to retrieve. By default, returns
+ *                             data for all keys. Default empty.
+ * @param bool   $single       Optional, default is false.
+ *                             If true, return only the first value of the specified meta_key.
+ *                             This parameter has no effect if meta_key is not specified.
  *
  * @return mixed Will be an array if $single is false. Will be value of meta data
  *               field if $single is true.
@@ -323,11 +336,11 @@ function edd_get_customer_meta( $customer_id, $key = '', $single = false ) {
  *
  * @since 3.0
  *
- * @param int     $customer_id  Customer ID.
- * @param string  $meta_key     Meta data key.
- * @param mixed   $meta_value   Meta data value. Must be serializable if non-scalar.
- * @param mixed   $prev_value   Optional. Previous value to check before removing.
- *                              Default empty.
+ * @param int    $customer_id  Customer ID.
+ * @param string $meta_key     Meta data key.
+ * @param mixed  $meta_value   Meta data value. Must be serializable if non-scalar.
+ * @param mixed  $prev_value   Optional. Previous value to check before removing.
+ *                             Default empty.
  *
  * @return int|bool Meta ID if the key didn't exist, true on successful update,
  *                  false on failure.
@@ -417,7 +430,7 @@ function edd_update_customer_address( $customer_address_id = 0, $data = array() 
 	return $customer_addresses->update_item( $customer_address_id, $data );
 }
 
-///**
+// **
 // * Get a customer address by ID.
 // *
 // * @since 3.0
@@ -425,9 +438,9 @@ function edd_update_customer_address( $customer_address_id = 0, $data = array() 
 // * @param int $customer_address_id Order adjustment ID.
 // * @return object
 // */
-//function edd_get_customer_address( $customer_address_id = 0 ) {
-//	return edd_get_customer_address_by( 'id', $customer_address_id );
-//}
+// function edd_get_customer_address( $customer_address_id = 0 ) {
+// return edd_get_customer_address_by( 'id', $customer_address_id );
+// }
 
 /**
  * Get a customer address by a specific field value.
@@ -457,9 +470,12 @@ function edd_get_customer_address_by( $field = '', $value = '' ) {
 function edd_get_customer_addresses( $args = array() ) {
 
 	// Parse args
-	$r = wp_parse_args( $args, array(
-		'number' => 30
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'number' => 30,
+		)
+	);
 
 	// Instantiate a query object
 	$customer_addresses = new EDD\Database\Queries\Customer_Address();
@@ -479,9 +495,12 @@ function edd_get_customer_addresses( $args = array() ) {
 function edd_count_customer_addresses( $args = array() ) {
 
 	// Parse args
-	$r = wp_parse_args( $args, array(
-		'count' => true
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'count' => true,
+		)
+	);
 
 	// Query for count(s)
 	$customer_addresses = new EDD\Database\Queries\Customer_Address( $r );
@@ -539,12 +558,14 @@ function edd_maybe_update_customer_primary_address( $customer_id = 0, $args = ar
 		return false;
 	}
 
-	$address_ids = edd_get_customer_addresses( array(
-		'fields'      => 'ids',
-		'customer_id' => $customer_id,
-		'type'        => 'primary',
-		'number'      => 1,
-	) );
+	$address_ids = edd_get_customer_addresses(
+		array(
+			'fields'      => 'ids',
+			'customer_id' => $customer_id,
+			'type'        => 'primary',
+			'number'      => 1,
+		)
+	);
 
 	// Primary address exists, so update it.
 	if ( ! empty( $address_ids ) ) {
@@ -552,7 +573,7 @@ function edd_maybe_update_customer_primary_address( $customer_id = 0, $args = ar
 
 		edd_update_customer_address( $address_id, $args );
 
-	// Add primary address.
+		// Add primary address.
 	} else {
 		$args['type'] = 'primary';
 
@@ -573,10 +594,13 @@ function edd_maybe_update_customer_primary_address( $customer_id = 0, $args = ar
 function edd_get_customer_address_counts( $args = array() ) {
 
 	// Parse arguments
-	$r = wp_parse_args( $args, array(
-		'count'   => true,
-		'groupby' => 'status'
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'count'   => true,
+			'groupby' => 'status',
+		)
+	);
 
 	// Query for count
 	$counts = new EDD\Database\Queries\Customer_Address( $r );
@@ -696,9 +720,12 @@ function edd_get_customer_email_address_by( $field = '', $value = '' ) {
 function edd_get_customer_email_addresses( $args = array() ) {
 
 	// Parse args
-	$r = wp_parse_args( $args, array(
-		'number' => 30
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'number' => 30,
+		)
+	);
 
 	// Instantiate a query object
 	$customer_email_addresses = new EDD\Database\Queries\Customer_Email_Address();
@@ -718,9 +745,12 @@ function edd_get_customer_email_addresses( $args = array() ) {
 function edd_count_customer_email_addresses( $args = array() ) {
 
 	// Parse args
-	$r = wp_parse_args( $args, array(
-		'count' => true
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'count' => true,
+		)
+	);
 
 	// Query for count(s)
 	$customer_email_addresses = new EDD\Database\Queries\Customer_Email_Address( $r );
@@ -739,10 +769,13 @@ function edd_count_customer_email_addresses( $args = array() ) {
 function edd_get_customer_email_address_counts( $args = array() ) {
 
 	// Parse arguments
-	$r = wp_parse_args( $args, array(
-		'count'   => true,
-		'groupby' => 'status'
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'count'   => true,
+			'groupby' => 'status',
+		)
+	);
 
 	// Query for count
 	$counts = new EDD\Database\Queries\Customer_Email_Address( $r );

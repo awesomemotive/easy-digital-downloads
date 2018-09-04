@@ -45,9 +45,12 @@ class Tests_Customers extends \EDD_UnitTestCase {
 		self::$user  = 1;
 		self::$order = \EDD_Helper_Payment::create_simple_payment();
 
-		edd_update_customer( self::$customers[0], array(
-			'user_id' => self::$user,
-		) );
+		edd_update_customer(
+			self::$customers[0],
+			array(
+				'user_id' => self::$user,
+			)
+		);
 
 		self::$customers[0]->attach_payment( self::$order );
 		self::$customers[0] = edd_get_customer( $customers[0] );
@@ -236,19 +239,24 @@ class Tests_Customers extends \EDD_UnitTestCase {
 		$userdata = array(
 			'user_login' => 'guest',
 			'user_email' => 'guest@example.org',
-			'user_pass'  => 'guest_pass'
+			'user_pass'  => 'guest_pass',
 		);
-		$user_id = wp_insert_user( $userdata );
+		$user_id  = wp_insert_user( $userdata );
 
-		$orders = edd_get_payments( array( 's' => $userdata['user_email'], 'output' => 'payments' ) );
-		$order = $orders[0];
+		$orders = edd_get_payments(
+			array(
+				's'      => $userdata['user_email'],
+				'output' => 'payments',
+			)
+		);
+		$order  = $orders[0];
 
 		$this->assertSame( $order->ID, $order_id );
 	}
 
 	public function test_user_verification_base_url() {
 		$original_purchase_history_page = edd_get_option( 'purchase_history_page', 0 );
-		$purchase_history_page = get_permalink( $original_purchase_history_page );
+		$purchase_history_page          = get_permalink( $original_purchase_history_page );
 		$this->assertEquals( $purchase_history_page, edd_get_user_verification_page() );
 
 		edd_update_option( 'purchase_history_page', 0 );
@@ -329,10 +337,12 @@ class Tests_Customers extends \EDD_UnitTestCase {
 	}
 
 	public function test_get_payment_ids_with_invalid_customer_should_be_empty() {
-		$customer_id  = edd_add_customer( array(
-			'email' => 'test_user@example.com'
-		) );
-		$customer = new \EDD_Customer( $customer_id );
+		$customer_id = edd_add_customer(
+			array(
+				'email' => 'test_user@example.com',
+			)
+		);
+		$customer    = new \EDD_Customer( $customer_id );
 
 		$this->assertEmpty( $customer->get_payment_ids() );
 	}

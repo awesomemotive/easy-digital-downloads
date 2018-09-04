@@ -64,23 +64,15 @@ abstract class Base_Object implements Error_Logger {
 	 */
 	public function set_props( $attributes ) {
 		if ( ! empty( $attributes['id'] ) ) {
-
 			$this->set_id( $attributes['id'] );
-
 		} else {
-
 			$this->errors->add( 'missing_object_id', 'The object ID is missing.', $attributes );
-
 		}
 
 		if ( ! empty( $attributes['label'] ) ) {
-
 			$this->set_label( $attributes['label'] );
-
 		} else {
-
 			$this->errors->add( 'missing_object_label', 'The object label is missing.', $attributes );
-
 		}
 	}
 

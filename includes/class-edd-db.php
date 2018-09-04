@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.1
-*/
+ */
 abstract class EDD_DB {
 
 	/**
@@ -134,7 +134,7 @@ abstract class EDD_DB {
 		$data = array_intersect_key( $data, $column_formats );
 
 		// Reorder $column_formats to match the order of columns given in $data
-		$data_keys = array_keys( $data );
+		$data_keys      = array_keys( $data );
 		$column_formats = array_merge( array_flip( $data_keys ), $column_formats );
 
 		$wpdb->insert( $this->table_name, $data, $column_formats );
@@ -152,17 +152,16 @@ abstract class EDD_DB {
 	 * @return  bool
 	 */
 	public function update( $row_id, $data = array(), $where = '' ) {
-
 		global $wpdb;
 
 		// Row ID must be positive integer
 		$row_id = absint( $row_id );
 
-		if( empty( $row_id ) ) {
+		if ( empty( $row_id ) ) {
 			return false;
 		}
 
-		if( empty( $where ) ) {
+		if ( empty( $where ) ) {
 			$where = $this->primary_key;
 		}
 
@@ -176,7 +175,7 @@ abstract class EDD_DB {
 		$data = array_intersect_key( $data, $column_formats );
 
 		// Reorder $column_formats to match the order of columns given in $data
-		$data_keys = array_keys( $data );
+		$data_keys      = array_keys( $data );
 		$column_formats = array_merge( array_flip( $data_keys ), $column_formats );
 
 		if ( false === $wpdb->update( $this->table_name, $data, array( $where => $row_id ), $column_formats ) ) {
@@ -193,13 +192,12 @@ abstract class EDD_DB {
 	 * @return  bool
 	 */
 	public function delete( $row_id = 0 ) {
-
 		global $wpdb;
 
 		// Row ID must be positive integer
 		$row_id = absint( $row_id );
 
-		if( empty( $row_id ) ) {
+		if ( empty( $row_id ) ) {
 			return false;
 		}
 

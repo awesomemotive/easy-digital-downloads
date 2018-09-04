@@ -15,7 +15,6 @@ class Tests_Formatting extends EDD_UnitTestCase {
 	}
 
 	public function test_sanitize_amount() {
-
 		$this->assertEquals( '20000.20', edd_sanitize_amount( '20,000.20' ) );
 		$this->assertEquals( '22000.20', edd_sanitize_amount( '22 000.20' ) );
 		$this->assertEquals( '20.20', edd_sanitize_amount( '20.2' ) );
@@ -25,11 +24,9 @@ class Tests_Formatting extends EDD_UnitTestCase {
 		$this->assertEquals( '20.20', edd_sanitize_amount( '₱20.2' ) );
 		$this->assertEquals( '2000.00', edd_sanitize_amount( '¥2000' ) );
 		$this->assertEquals( '20.00', edd_sanitize_amount( 'Ð20' ) );
-
 	}
 
 	public function test_format_amount() {
-
 		$this->assertEquals( '20,000.20', edd_format_amount( '20000.20' ) );
 
 		edd_update_option( 'thousands_separator', '.' );
@@ -54,7 +51,6 @@ class Tests_Formatting extends EDD_UnitTestCase {
 	}
 
 	public function test_separators() {
-
 		$thousands_sep = edd_get_option( 'thousands_separator', ',' );
 		$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
 
@@ -78,7 +74,6 @@ class Tests_Formatting extends EDD_UnitTestCase {
 
 		$this->assertEquals( ',', $thousands_sep );
 		$this->assertEquals( '.', $decimal_sep );
-
 	}
 
 	public function test_decimal_filter() {

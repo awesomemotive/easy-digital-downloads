@@ -181,12 +181,14 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	 */
 	public function __get( $key = '' ) {
 		if ( 'adjustments' === $key && null === $this->adjustments ) {
-			$this->adjustments = edd_get_order_adjustments( array(
-				'object_id'     => $this->id,
-				'object_type'   => 'order_item',
-				'no_found_rows' => true,
-				'order'         => 'ASC',
-			) );
+			$this->adjustments = edd_get_order_adjustments(
+				array(
+					'object_id'     => $this->id,
+					'object_type'   => 'order_item',
+					'no_found_rows' => true,
+					'order'         => 'ASC',
+				)
+			);
 		}
 
 		return parent::__get( $key );
@@ -200,12 +202,14 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	 * @return array $fees Fees applied to this item.
 	 */
 	public function get_fees() {
-		return edd_get_order_adjustments( array(
-			'object_id'   => $this->id,
-			'object_type' => 'order_item',
-			'type'        => 'fee',
-			'order'       => 'ASC',
-		) );
+		return edd_get_order_adjustments(
+			array(
+				'object_id'   => $this->id,
+				'object_type' => 'order_item',
+				'type'        => 'fee',
+				'order'       => 'ASC',
+			)
+		);
 	}
 
 	/**
@@ -216,12 +220,14 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	 * @return float Tax rate.
 	 */
 	public function get_tax_rate() {
-		$rate = edd_get_order_adjustments( array(
-			'number'      => 1,
-			'object_id'   => $this->id,
-			'object_type' => 'order_item',
-			'type'        => 'tax_rate',
-		) );
+		$rate = edd_get_order_adjustments(
+			array(
+				'number'      => 1,
+				'object_id'   => $this->id,
+				'object_type' => 'order_item',
+				'type'        => 'tax_rate',
+			)
+		);
 
 		if ( $rate ) {
 			$rate = $rate[0];

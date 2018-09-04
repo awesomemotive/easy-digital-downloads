@@ -4,22 +4,30 @@
  */
 global $current_user;
 
-if ( is_user_logged_in() ):
+if ( is_user_logged_in() ) :
 	$user_id      = get_current_user_id();
 	$first_name   = get_user_meta( $user_id, 'first_name', true );
 	$last_name    = get_user_meta( $user_id, 'last_name', true );
 	$display_name = $current_user->display_name;
 	$address      = edd_get_customer_address( $user_id );
 	$states       = edd_get_shop_states( $address['country'] );
-	$state 		  = $address['state'];
+	$state        = $address['state'];
 
-	if ( edd_is_cart_saved() ): ?>
-		<?php $restore_url = add_query_arg( array( 'edd_action' => 'restore_cart', 'edd_cart_token' => edd_get_cart_token() ), edd_get_checkout_uri() ); ?>
-		<div class="edd_success edd-alert edd-alert-success"><strong><?php _e( 'Saved cart','easy-digital-downloads' ); ?>:</strong> <?php printf( __( 'You have a saved cart, <a href="%s">click here</a> to restore it.', 'easy-digital-downloads' ), esc_url( $restore_url ) ); ?></div>
+	if ( edd_is_cart_saved() ) : ?>
+		<?php
+		$restore_url = add_query_arg(
+			array(
+				'edd_action'     => 'restore_cart',
+				'edd_cart_token' => edd_get_cart_token(),
+			),
+			edd_get_checkout_uri()
+		);
+		?>
+		<div class="edd_success edd-alert edd-alert-success"><strong><?php _e( 'Saved cart', 'easy-digital-downloads' ); ?>:</strong> <?php printf( __( 'You have a saved cart, <a href="%s">click here</a> to restore it.', 'easy-digital-downloads' ), esc_url( $restore_url ) ); ?></div>
 	<?php endif; ?>
 
-	<?php if ( isset( $_GET['updated'] ) && $_GET['updated'] == true && ! edd_get_errors() ): ?>
-		<div class="edd_success edd-alert edd-alert-success"><strong><?php _e( 'Success','easy-digital-downloads' ); ?>:</strong> <?php _e( 'Your profile has been edited successfully.', 'easy-digital-downloads' ); ?></div>
+	<?php if ( isset( $_GET['updated'] ) && $_GET['updated'] == true && ! edd_get_errors() ) : ?>
+		<div class="edd_success edd-alert edd-alert-success"><strong><?php _e( 'Success', 'easy-digital-downloads' ); ?>:</strong> <?php _e( 'Your profile has been edited successfully.', 'easy-digital-downloads' ); ?></div>
 	<?php endif; ?>
 
 	<?php edd_print_errors(); ?>
@@ -47,14 +55,14 @@ if ( is_user_logged_in() ):
 			<p id="edd_profile_display_name_wrap">
 				<label for="edd_display_name"><?php _e( 'Display Name', 'easy-digital-downloads' ); ?></label>
 				<select name="edd_display_name" id="edd_display_name" class="select edd-select">
-					<?php if ( ! empty( $current_user->first_name ) ): ?>
+					<?php if ( ! empty( $current_user->first_name ) ) : ?>
 					<option <?php selected( $display_name, $current_user->first_name ); ?> value="<?php echo esc_attr( $current_user->first_name ); ?>"><?php echo esc_html( $current_user->first_name ); ?></option>
 					<?php endif; ?>
 					<option <?php selected( $display_name, $current_user->user_nicename ); ?> value="<?php echo esc_attr( $current_user->user_nicename ); ?>"><?php echo esc_html( $current_user->user_nicename ); ?></option>
-					<?php if ( ! empty( $current_user->last_name ) ): ?>
+					<?php if ( ! empty( $current_user->last_name ) ) : ?>
 					<option <?php selected( $display_name, $current_user->last_name ); ?> value="<?php echo esc_attr( $current_user->last_name ); ?>"><?php echo esc_html( $current_user->last_name ); ?></option>
 					<?php endif; ?>
-					<?php if ( ! empty( $current_user->first_name ) && ! empty( $current_user->last_name ) ): ?>
+					<?php if ( ! empty( $current_user->first_name ) && ! empty( $current_user->last_name ) ) : ?>
 					<option <?php selected( $display_name, $current_user->first_name . ' ' . $current_user->last_name ); ?> value="<?php echo esc_attr( $current_user->first_name . ' ' . $current_user->last_name ); ?>"><?php echo esc_html( $current_user->first_name . ' ' . $current_user->last_name ); ?></option>
 					<option <?php selected( $display_name, $current_user->last_name . ' ' . $current_user->first_name ); ?> value="<?php echo esc_attr( $current_user->last_name . ' ' . $current_user->first_name ); ?>"><?php echo esc_html( $current_user->last_name . ' ' . $current_user->first_name ); ?></option>
 					<?php endif; ?>
@@ -71,14 +79,14 @@ if ( is_user_logged_in() ):
 
 					<?php if ( 1 === count( $customer->emails ) ) : ?>
 						<input name="edd_email" id="edd_email" class="text edd-input required" type="email" value="<?php echo esc_attr( $customer->email ); ?>" />
-					<?php else: ?>
+					<?php else : ?>
 						<?php
 							$emails           = array();
 							$customer->emails = array_reverse( $customer->emails, true );
 
-							foreach ( $customer->emails as $email ) {
-								$emails[ $email ] = $email;
-							}
+						foreach ( $customer->emails as $email ) {
+							$emails[ $email ] = $email;
+						}
 
 							$email_select_args = array(
 								'options'          => $emails,
@@ -92,7 +100,7 @@ if ( is_user_logged_in() ):
 							echo EDD()->html->select( $email_select_args );
 						?>
 					<?php endif; ?>
-				<?php else: ?>
+				<?php else : ?>
 					<input name="edd_email" id="edd_email" class="text edd-input required" type="email" value="<?php echo esc_attr( $current_user->user_email ); ?>" />
 				<?php endif; ?>
 
@@ -104,7 +112,10 @@ if ( is_user_logged_in() ):
 					<label for="edd_emails"><?php _e( 'Additional Email Addresses', 'easy-digital-downloads' ); ?></label>
 					<ul class="edd-profile-emails">
 					<?php foreach ( $customer->emails as $email ) : ?>
-						<?php if ( $email === $customer->email ) { continue; } ?>
+						<?php
+						if ( $email === $customer->email ) {
+							continue; }
+						?>
 						<li class="edd-profile-email">
 							<?php echo $email; ?>
 							<span class="actions">
@@ -112,15 +123,15 @@ if ( is_user_logged_in() ):
 									$remove_url = wp_nonce_url(
 										add_query_arg(
 											array(
-												'email'      => rawurlencode( $email ),
+												'email'    => rawurlencode( $email ),
 												'edd_action' => 'profile-remove-email',
-												'redirect'   => esc_url( edd_get_current_page_url() ),
+												'redirect' => esc_url( edd_get_current_page_url() ),
 											)
 										),
 										'edd-remove-customer-email'
 									);
 								?>
-								<a href="<?php echo $remove_url ?>" class="delete"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></a>
+								<a href="<?php echo $remove_url; ?>" class="delete"><?php _e( 'Remove', 'easy-digital-downloads' ); ?></a>
 							</span>
 						</li>
 					<?php endforeach; ?>
@@ -161,7 +172,7 @@ if ( is_user_logged_in() ):
 			<p id="edd_profile_billing_address_country_wrap">
 				<label for="edd_address_country"><?php _e( 'Country', 'easy-digital-downloads' ); ?></label>
 				<select name="edd_address_country" id="edd_address_country" class="select edd-select" data-nonce="<?php echo wp_create_nonce( 'edd-country-field-nonce' ); ?>">
-					<?php foreach( edd_get_country_list() as $key => $country ) : ?>
+					<?php foreach ( edd_get_country_list() as $key => $country ) : ?>
 					<option value="<?php echo $key; ?>"<?php selected( $address['country'], $key ); ?>><?php echo esc_html( $country ); ?></option>
 					<?php endforeach; ?>
 				</select>
@@ -169,12 +180,12 @@ if ( is_user_logged_in() ):
 
 			<p id="edd_profile_billing_address_state_wrap">
 				<label for="edd_address_state"><?php _e( 'State / Province', 'easy-digital-downloads' ); ?></label>
-				<?php if( ! empty( $states ) ) : ?>
+				<?php if ( ! empty( $states ) ) : ?>
 					<select name="edd_address_state" id="edd_address_state" class="select edd-select">
 						<?php
-							foreach( $states as $state_code => $state_name ) {
-								echo '<option value="' . $state_code . '"' . selected( $state_code, $state, false ) . '>' . $state_name . '</option>';
-							}
+						foreach ( $states as $state_code => $state_name ) {
+							echo '<option value="' . $state_code . '"' . selected( $state_code, $state, false ) . '>' . $state_name . '</option>';
+						}
 						?>
 					</select>
 				<?php else : ?>
@@ -229,6 +240,6 @@ if ( is_user_logged_in() ):
 	<?php do_action( 'edd_profile_editor_after' ); ?>
 
 	<?php
-else:
+else :
 	do_action( 'edd_profile_editor_logged_out' );
 endif;

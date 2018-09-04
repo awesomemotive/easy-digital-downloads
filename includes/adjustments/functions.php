@@ -94,9 +94,12 @@ function edd_get_adjustment_by( $field = '', $value = '' ) {
 function edd_get_adjustments( $args = array() ) {
 
 	// Parse args
-	$r = wp_parse_args( $args, array(
-		'number' => 30
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'number' => 30,
+		)
+	);
 
 	// Instantiate a query object
 	$adjustments = new EDD\Database\Queries\Adjustment();
@@ -116,9 +119,12 @@ function edd_get_adjustments( $args = array() ) {
 function edd_count_adjustments( $args = array() ) {
 
 	// Parse args
-	$r = wp_parse_args( $args, array(
-		'count' => true
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'count' => true,
+		)
+	);
 
 	// Query for count(s)
 	$adjustments = new EDD\Database\Queries\Adjustment( $r );

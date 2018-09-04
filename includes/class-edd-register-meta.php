@@ -37,14 +37,12 @@ class EDD_Register_Meta {
 	 * @since  2.5
 	 * @return $instance
 	 */
-	static public function instance() {
-
-		if ( !self::$instance ) {
+	public static function instance() {
+		if ( ! self::$instance ) {
 			self::$instance = new EDD_Register_Meta();
 		}
 
 		return self::$instance;
-
 	}
 
 	/**
@@ -113,7 +111,7 @@ class EDD_Register_Meta {
 			'post',
 			'edd_variable_prices',
 			array(
-				'sanitize_callback' => array( $this, 'sanitize_variable_prices'),
+				'sanitize_callback' => array( $this, 'sanitize_variable_prices' ),
 				'type'              => 'array',
 				'description'       => __( 'An array of variable prices for the product.', 'easy-digital-downloads' ),
 				'show_in_rest'      => true,
@@ -121,7 +119,7 @@ class EDD_Register_Meta {
 		);
 
 		if ( ! has_filter( 'sanitize_post_meta_edd_variable_prices' ) ) {
-			add_filter( 'sanitize_post_meta_edd_variable_prices', array( $this, 'sanitize_variable_prices'), 10, 4 );
+			add_filter( 'sanitize_post_meta_edd_variable_prices', array( $this, 'sanitize_variable_prices' ), 10, 4 );
 		}
 
 		register_meta(
@@ -182,7 +180,6 @@ class EDD_Register_Meta {
 		if ( ! has_filter( 'sanitize_post_meta__edd_default_price_id' ) ) {
 			add_filter( 'sanitize_post_meta__edd_default_price_id', array( $this, 'intval_wrapper' ), 10, 4 );
 		}
-
 	}
 
 	/**
@@ -192,7 +189,6 @@ class EDD_Register_Meta {
 	 * @return void
 	 */
 	public function register_payment_meta() {
-
 		register_meta(
 			'post',
 			'_edd_payment_user_email',
@@ -347,8 +343,6 @@ class EDD_Register_Meta {
 		if ( ! has_filter( 'sanitize_post_meta__edd_completed_date' ) ) {
 			add_filter( 'sanitize_post_meta__edd_completed_date', 'sanitize_text_field', 10, 4 );
 		}
-
-
 	}
 
 	/**
@@ -367,28 +361,23 @@ class EDD_Register_Meta {
 	 * Sanitize values that come in as arrays
 	 *
 	 * @since  2.5
-	 * @param  array  $value The value passed into the meta.
+	 * @param  array $value The value passed into the meta.
 	 * @return array         The sanitized value.
 	 */
 	public function sanitize_array( $value = array() ) {
-
 		if ( ! is_array( $value ) ) {
-
 			if ( is_object( $value ) ) {
 				$value = (array) $value;
 			}
 
 			if ( is_serialized( $value ) ) {
-
 				preg_match( '/[oO]\s*:\s*\d+\s*:\s*"\s*(?!(?i)(stdClass))/', $value, $matches );
 				if ( ! empty( $matches ) ) {
 					return false;
 				}
 
 				$value = (array) maybe_unserialize( $value );
-
 			}
-
 		}
 
 		return $value;
@@ -402,7 +391,6 @@ class EDD_Register_Meta {
 	 * @return float        A sanitized price
 	 */
 	public function sanitize_price( $price ) {
-
 		$allow_negative_prices = apply_filters( 'edd_allow_negative_prices', false );
 
 		if ( ! $allow_negative_prices && $price < 0 ) {
@@ -429,20 +417,14 @@ class EDD_Register_Meta {
 		}
 
 		foreach ( $prices as $id => $price ) {
-
 			if ( empty( $price['amount'] ) && empty( $price['name'] ) ) {
-
 				unset( $prices[ $id ] );
 				continue;
-
 			} elseif ( empty( $price['amount'] ) ) {
-
 				$price['amount'] = 0;
-
 			}
 
 			$prices[ $id ]['amount'] = $this->sanitize_price( $price['amount'] );
-
 		}
 
 		return $prices;
@@ -466,13 +448,12 @@ class EDD_Register_Meta {
 		}
 
 		// Clean up filenames to ensure whitespaces are stripped
-		foreach( $files as $id => $file ) {
-
-			if( ! empty( $files[ $id ]['file'] ) ) {
+		foreach ( $files as $id => $file ) {
+			if ( ! empty( $files[ $id ]['file'] ) ) {
 				$files[ $id ]['file'] = trim( $file['file'] );
 			}
 
-			if( ! empty( $files[ $id ]['name'] ) ) {
+			if ( ! empty( $files[ $id ]['name'] ) ) {
 				$files[ $id ]['name'] = trim( $file['name'] );
 			}
 		}
@@ -493,7 +474,6 @@ class EDD_Register_Meta {
 	 * @return array $new New meta value with empty keys removed
 	 */
 	private function remove_blank_rows( $new ) {
-
 		if ( is_array( $new ) ) {
 			foreach ( $new as $key => $value ) {
 				if ( empty( $value['name'] ) && empty( $value['amount'] ) && empty( $value['file'] ) ) {

@@ -29,11 +29,13 @@ class Tax_Collected_By_Location extends List_Table {
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		parent::__construct( array(
-			'singular' => 'report-tax-collected-by-location',
-			'plural'   => 'report-tax-collected-by-locationss',
-			'ajax'     => false,
-		) );
+		parent::__construct(
+			array(
+				'singular' => 'report-tax-collected-by-location',
+				'plural'   => 'report-tax-collected-by-locationss',
+				'ajax'     => false,
+			)
+		);
 	}
 
 	/**
@@ -53,7 +55,7 @@ class Tax_Collected_By_Location extends List_Table {
 	 *
 	 * @since 1.5
 	 *
-	 * @param array $item Contains all the data of the downloads
+	 * @param array  $item Contains all the data of the downloads
 	 * @param string $column_name The name of the column
 	 *
 	 * @return string Column Name
@@ -77,7 +79,7 @@ class Tax_Collected_By_Location extends List_Table {
 			'to'       => __( 'To', 'easy-digital-downloads' ),
 			'gross'    => __( 'Gross', 'easy-digital-downloads' ),
 			'net'      => __( 'Net', 'easy-digital-downloads' ),
- 		);
+		);
 	}
 
 	/**
@@ -124,18 +126,27 @@ class Tax_Collected_By_Location extends List_Table {
 				$date_query .= $wpdb->prepare( "AND {$wpdb->edd_orders}.date_created <= %s", esc_sql( $tax_rate->end_date ) );
 			}
 
-			$results = $wpdb->get_row( $wpdb->prepare( "
+			$results = $wpdb->get_row(
+				$wpdb->prepare(
+					"
 				SELECT tax, total, country, region
 				FROM {$wpdb->edd_orders}
 				INNER JOIN {$wpdb->edd_order_addresses} ON {$wpdb->edd_order_addresses}.order_id = {$wpdb->edd_orders}.id
 				WHERE {$wpdb->edd_order_addresses}.country = %s {$region} {$date_query}
 				GROUP BY country, region
-			", esc_sql( $tax_rate->name ) ), ARRAY_A );
+			",
+					esc_sql( $tax_rate->name )
+				),
+				ARRAY_A
+			);
 
-			$results = wp_parse_args( $results, array(
-				'subtotal' => 0.00,
-				'total'    => 0.00,
-			) );
+			$results = wp_parse_args(
+				$results,
+				array(
+					'subtotal' => 0.00,
+					'total'    => 0.00,
+				)
+			);
 
 			$data[] = array(
 				'country'  => $location,
@@ -197,7 +208,6 @@ class Tax_Collected_By_Location extends List_Table {
 	 * @param string $which
 	 */
 	protected function pagination( $which ) {
-
 	}
 
 	/**
@@ -208,6 +218,5 @@ class Tax_Collected_By_Location extends List_Table {
 	 * @param string $which
 	 */
 	protected function display_tablenav( $which ) {
-
 	}
 }

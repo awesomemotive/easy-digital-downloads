@@ -37,7 +37,7 @@ class Tests_EDD extends EDD_UnitTestCase {
 
 		// Plugin Root File
 		$path = str_replace( 'tests/', '', plugin_dir_path( __FILE__ ) );
-		$this->assertSame( EDD_PLUGIN_FILE, $path.'easy-digital-downloads.php' );
+		$this->assertSame( EDD_PLUGIN_FILE, $path . 'easy-digital-downloads.php' );
 	}
 
 	/**

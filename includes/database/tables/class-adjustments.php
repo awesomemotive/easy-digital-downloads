@@ -49,7 +49,7 @@ final class Adjustments extends Table {
 	 */
 	protected $upgrades = array(
 		'201806140002' => 201806140002,
-		'201807270003' => 201807270003
+		'201807270003' => 201807270003,
 	);
 
 	/**
@@ -102,7 +102,7 @@ final class Adjustments extends Table {
 		$table_name = $this->get_db()->get_blog_prefix( null ) . 'edd_discounts';
 
 		// Does old table exist?
-		$query    = "SHOW TABLES LIKE %s";
+		$query    = 'SHOW TABLES LIKE %s';
 		$like     = $this->get_db()->esc_like( $table_name );
 		$prepared = $this->get_db()->prepare( $query, $like );
 		$result   = $this->get_db()->get_var( $prepared );
@@ -118,26 +118,29 @@ final class Adjustments extends Table {
 		// Migrate discounts to adjustments
 		if ( ! empty( $discounts ) ) {
 			foreach ( $discounts as $discount ) {
-				$this->get_db()->insert( $this->table_name, array(
-					'parent'            => $discount->parent,
-					'name'              => $discount->name,
-					'code'              => $discount->code,
-					'status'            => $discount->status,
-					'type'              => 'discount',
-					'scope'             => $discount->scope,
-					'amount_type'       => $discount->type,
-					'amount'            => $discount->amount,
-					'description'       => $discount->description,
-					'max_uses'          => $discount->max_uses,
-					'use_count'         => $discount->use_count,
-					'once_per_customer' => $discount->once_per_customer,
-					'min_cart_price'    => $discount->min_cart_price,
-					'product_condition' => $discount->product_condition,
-					'date_created'      => $discount->date_created,
-					'date_modified'     => $discount->date_modified,
-					'start_date'        => $discount->start_date,
-					'end_date'          => $discount->end_date
-				) );
+				$this->get_db()->insert(
+					$this->table_name,
+					array(
+						'parent'            => $discount->parent,
+						'name'              => $discount->name,
+						'code'              => $discount->code,
+						'status'            => $discount->status,
+						'type'              => 'discount',
+						'scope'             => $discount->scope,
+						'amount_type'       => $discount->type,
+						'amount'            => $discount->amount,
+						'description'       => $discount->description,
+						'max_uses'          => $discount->max_uses,
+						'use_count'         => $discount->use_count,
+						'once_per_customer' => $discount->once_per_customer,
+						'min_cart_price'    => $discount->min_cart_price,
+						'product_condition' => $discount->product_condition,
+						'date_created'      => $discount->date_created,
+						'date_modified'     => $discount->date_modified,
+						'start_date'        => $discount->start_date,
+						'end_date'          => $discount->end_date,
+					)
+				);
 			}
 		}
 
@@ -145,9 +148,11 @@ final class Adjustments extends Table {
 		delete_option( 'wpdb_edd_discounts_version' );
 
 		// Attempt to drop the old table
-		$this->get_db()->query( "
+		$this->get_db()->query(
+			"
 			DROP TABLE {$table_name};
-		" );
+		"
+		);
 
 		// Return success/fail
 		return true;
@@ -164,9 +169,11 @@ final class Adjustments extends Table {
 	 * @return bool
 	 */
 	protected function __201807110001() {
-		$retval = $this->get_db()->query( "
+		$retval = $this->get_db()->query(
+			"
 			ALTER TABLE {$this->table_name} CHANGE `min_cart_price` `min_charge_amount` decimal(18,9) NOT NULL default '0';
-		" );
+		"
+		);
 
 		// Return success/fail
 		return $this->is_success( $retval );
@@ -187,9 +194,11 @@ final class Adjustments extends Table {
 
 		// Maybe add column
 		if ( false === $result ) {
-			$result = $this->get_db()->query( "
+			$result = $this->get_db()->query(
+				"
 				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;
-			" );
+			"
+			);
 		}
 
 		// Return success/fail

@@ -38,8 +38,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 	 */
 	public function csv_cols() {
 		$cols = array(
-			'id'           => __( 'Payment ID',   'easy-digital-downloads' ), // unaltered payment ID (use for querying)
-			'seq_id'       => __( 'Payment Number',   'easy-digital-downloads' ), // sequential payment ID
+			'id'           => __( 'Payment ID', 'easy-digital-downloads' ), // unaltered payment ID (use for querying)
+			'seq_id'       => __( 'Payment Number', 'easy-digital-downloads' ), // sequential payment ID
 			'email'        => __( 'Email', 'easy-digital-downloads' ),
 			'customer_id'  => __( 'Customer ID', 'easy-digital-downloads' ),
 			'first'        => __( 'First Name', 'easy-digital-downloads' ),
@@ -69,7 +69,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			'state_name'   => __( 'State Name', 'easy-digital-downloads' ),
 		);
 
-		if ( ! edd_use_skus() ){
+		if ( ! edd_use_skus() ) {
 			unset( $cols['skus'] );
 		}
 
@@ -104,11 +104,10 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 				array(
 					'after'     => date( 'Y-m-d 00:00:00', strtotime( $this->start ) ),
 					'before'    => date( 'Y-m-d 23:59:59', strtotime( $this->end ) ),
-					'inclusive' => true
-				)
+					'inclusive' => true,
+				),
 			);
 		}
-
 
 		if ( 'any' === $args['status'] ) {
 			unset( $args['status'] );
@@ -166,7 +165,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 
 				$products .= html_entity_decode( edd_currency_filter( edd_format_amount( $price ) ) );
 
-				if ( $key != ( count( $items ) -1 ) ) {
+				if ( $key != ( count( $items ) - 1 ) ) {
 					$products .= ' / ';
 
 					if ( edd_use_skus() ) {
@@ -182,7 +181,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 					$products_raw .= '{' . $price_id . '}';
 				}
 
-				if ( $key != ( count( $items ) -1 ) ) {
+				if ( $key != ( count( $items ) - 1 ) ) {
 					$products_raw .= ' / ';
 				}
 			}
@@ -220,7 +219,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 				'mode'         => $order->mode,
 				'status'       => ( 'publish' === $order->status ) ? 'complete' : $order->status,
 				'country_name' => isset( $user_info['address']['country'] ) ? edd_get_country_name( $user_info['address']['country'] ) : '',
-        'state_name'   => isset( $user_info['address']['state'] )   ? edd_get_state_name( $user_info['address']['country'], $user_info['address']['state'] ) : '',
+				'state_name'   => isset( $user_info['address']['state'] ) ? edd_get_state_name( $user_info['address']['country'], $user_info['address']['state'] ) : '',
 			);
 		}
 
@@ -250,8 +249,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 				array(
 					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
 					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
-					'inclusive' => true
-				)
+					'inclusive' => true,
+				),
 			);
 		}
 
@@ -259,7 +258,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			$args['status'] = $this->status;
 		}
 
-		$total = edd_count_orders( $args );
+		$total      = edd_count_orders( $args );
 		$percentage = 100;
 
 		if ( $total > 0 ) {
@@ -281,8 +280,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 	 * @param array $request The Form Data passed into the batch processing
 	 */
 	public function set_properties( $request ) {
-		$this->start  = isset( $request['start'] )  ? sanitize_text_field( $request['start'] )  : '';
-		$this->end    = isset( $request['end']  )   ? sanitize_text_field( $request['end']  )   : '';
+		$this->start  = isset( $request['start'] ) ? sanitize_text_field( $request['start'] ) : '';
+		$this->end    = isset( $request['end'] ) ? sanitize_text_field( $request['end'] ) : '';
 		$this->status = isset( $request['status'] ) ? sanitize_text_field( $request['status'] ) : 'complete';
 	}
 }

@@ -77,7 +77,7 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 		parent::setUp();
 
 		// Create legacy data records for backwards compatibility
-		edd_add_adjustment_meta( self::$discount_id,         'legacy_discount_id', self::$discount_id );
+		edd_add_adjustment_meta( self::$discount_id, 'legacy_discount_id', self::$discount_id );
 		edd_add_adjustment_meta( self::$negativediscount_id, 'legacy_discount_id', self::$negativediscount_id );
 	}
 
@@ -87,7 +87,7 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 * @access public
 	 */
 	public function tearDown() {
-		edd_delete_adjustment_meta( self::$discount_id,         'legacy_id', self::$discount_id );
+		edd_delete_adjustment_meta( self::$discount_id, 'legacy_id', self::$discount_id );
 		edd_delete_adjustment_meta( self::$negativediscount_id, 'legacy_id', self::$negativediscount_id );
 
 		edd_empty_cart();
@@ -306,10 +306,10 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 * @covers ::add()
 	 */
 	public function test_discount_save() {
-		$discount = new \EDD_Discount();
-		$discount->code = '30FLAT';
-		$discount->name = '$30 Off';
-		$discount->type = 'flat';
+		$discount         = new \EDD_Discount();
+		$discount->code   = '30FLAT';
+		$discount->name   = '$30 Off';
+		$discount->type   = 'flat';
 		$discount->amount = '30';
 
 		$discount->save();
@@ -468,7 +468,7 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 			'max'               => 10,
 			'uses'              => 54,
 			'min_price'         => 128,
-			'status'            => 'active'
+			'status'            => 'active',
 		);
 
 		$updated_id = edd_store_discount( $post, self::$discount_id );
@@ -508,7 +508,7 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 
 		edd_update_discount_status( self::$discount_id, 'active' );
 
-		$this->assertTrue( edd_is_discount_active( self::$discount_id, true  ) );
+		$this->assertTrue( edd_is_discount_active( self::$discount_id, true ) );
 		$this->assertTrue( edd_is_discount_active( self::$discount_id, false ) );
 
 		$post = array(
@@ -522,7 +522,7 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 			'max'               => 10,
 			'uses'              => 54,
 			'min_price'         => 128,
-			'status'            => 'active'
+			'status'            => 'active',
 		);
 
 		$expired_discount_id = edd_store_discount( $post );
@@ -703,7 +703,7 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 
 	/**
 	 * @covers \edd_get_discount_id_by_code()
-	 *@covers \edd_get_discount_id_by()
+	 * @covers \edd_get_discount_id_by()
 	 */
 	public function test_discount_id_by_code() {
 		$id       = edd_get_discount_id_by_code( '20OFF' );
@@ -718,9 +718,9 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 * @covers ::get_discounted_amount()
 	 */
 	public function test_get_discounted_amount() {
-		$this->assertEquals( '432', edd_get_discounted_amount( '20OFF',  '540' ) );
-		$this->assertEquals( '150', edd_get_discounted_amount( 'DOUBLE', '75'  ) );
-		$this->assertEquals( '10',  edd_get_discounted_amount( '10FLAT', '20'  ) );
+		$this->assertEquals( '432', edd_get_discounted_amount( '20OFF', '540' ) );
+		$this->assertEquals( '150', edd_get_discounted_amount( 'DOUBLE', '75' ) );
+		$this->assertEquals( '10', edd_get_discounted_amount( '10FLAT', '20' ) );
 
 		// Test that an invalid Code returns the base price
 		$this->assertEquals( '10', edd_get_discounted_amount( 'FAKEDISCOUNT', '10' ) );
@@ -818,10 +818,10 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	public function test_edd_get_discount_by() {
 		$discount = edd_get_discount_by( 'id', self::$discount_id );
 
-		$this->assertEquals( $discount->id,    self::$discount_id );
-		$this->assertEquals( '20 Percent Off', edd_get_discount_by( 'code', '20OFF'          )->post_title );
-		$this->assertEquals( $discount->id,    edd_get_discount_by( 'code', '20OFF'          )->id         );
-		$this->assertEquals( $discount->id,    edd_get_discount_by( 'name', '20 Percent Off' )->id         );
+		$this->assertEquals( $discount->id, self::$discount_id );
+		$this->assertEquals( '20 Percent Off', edd_get_discount_by( 'code', '20OFF' )->post_title );
+		$this->assertEquals( $discount->id, edd_get_discount_by( 'code', '20OFF' )->id );
+		$this->assertEquals( $discount->id, edd_get_discount_by( 'name', '20 Percent Off' )->id );
 	}
 
 	/**
@@ -938,7 +938,7 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 		edd_add_to_cart( $download_2->ID );
 
 		$discount = \EDD_Helper_Discount::create_simple_flat_discount();
-		$post = array(
+		$post     = array(
 			'name'              => 'Excludes',
 			'amount'            => '1',
 			'code'              => 'EXCLUDES',
@@ -1008,9 +1008,11 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 * @covers \edd_get_discounts()
 	 */
 	public function test_edd_get_discounts() {
-		$found_discounts = edd_get_discounts( array(
-			'posts_per_page' => 3,
-		) );
+		$found_discounts = edd_get_discounts(
+			array(
+				'posts_per_page' => 3,
+			)
+		);
 
 		$this->assertTrue( 3 === count( $found_discounts ) );
 	}

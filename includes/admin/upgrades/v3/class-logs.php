@@ -41,8 +41,9 @@ class Logs extends Base {
 	public function get_data() {
 		$offset = ( $this->step - 1 ) * $this->per_step;
 
-		$results = $this->get_db()->get_results( $this->get_db()->prepare(
-			"SELECT p.*, t.slug
+		$results = $this->get_db()->get_results(
+			$this->get_db()->prepare(
+				"SELECT p.*, t.slug
 			 FROM {$this->get_db()->posts} AS p
 			 LEFT JOIN {$this->get_db()->term_relationships} AS tr ON (p.ID = tr.object_id)
 			 LEFT JOIN {$this->get_db()->term_taxonomy} AS tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id)
@@ -50,8 +51,12 @@ class Logs extends Base {
 			 WHERE p.post_type = %s AND t.slug != %s 
 			 GROUP BY p.ID
 			 LIMIT %d, %d",
-			esc_sql( 'edd_log' ), esc_sql( 'sale' ), $offset, $this->per_step
-		) );
+				esc_sql( 'edd_log' ),
+				esc_sql( 'sale' ),
+				$offset,
+				$this->per_step
+			)
+		);
 
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $result ) {

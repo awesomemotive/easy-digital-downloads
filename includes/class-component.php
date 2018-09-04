@@ -83,7 +83,7 @@ class Component {
 		'table'  => false,
 		'query'  => false,
 		'object' => false,
-		'meta'   => false
+		'meta'   => false,
 	);
 
 	/**
@@ -112,7 +112,7 @@ class Component {
 
 		foreach ( $args as $key => $value ) {
 			if ( in_array( $key, $keys, true ) && class_exists( $value ) ) {
-				$this->interfaces[ $key ] = new $value;
+				$this->interfaces[ $key ] = new $value();
 			} else {
 				$this->{$key} = $value;
 			}

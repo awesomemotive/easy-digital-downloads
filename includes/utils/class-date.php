@@ -55,20 +55,18 @@ final class Date extends \Carbon\Carbon {
 	 *                              or a DateTime object if `$type` is 'object'.
 	 */
 	public function format( $format = 'datetime' ) {
-
 		if ( empty( $format ) || true === $format ) {
 			$format = 'datetime';
 		}
 
-		switch( $format ) {
+		switch ( $format ) {
 
 			// jQuery UI Datepicker formats
 			case 'date-attribute':
 			case 'date-js':
 			case 'date-mysql':
 			case 'time-mysql':
-
-			// WordPress Formats
+				// WordPress Formats
 			case 'date':
 			case 'time':
 			case 'datetime':

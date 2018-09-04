@@ -96,7 +96,7 @@ class Stats {
 
 			$this->query_var_originals = $this->query_vars;
 
-		// Set defaults.
+			// Set defaults.
 		} else {
 			$this->query_var_originals = $this->query_vars = array(
 				'start'             => '',
@@ -487,16 +487,19 @@ class Stats {
 		$result = $this->get_db()->get_results( $sql );
 
 		if ( true === $this->query_vars['grouped'] ) {
-			array_walk( $result, function ( &$value ) {
+			array_walk(
+				$result,
+				function ( &$value ) {
 
-				// Format resultant object.
-				$value->product_id = absint( $value->product_id );
-				$value->price_id   = absint( $value->price_id );
-				$value->total      = absint( $value->total );
+					// Format resultant object.
+					$value->product_id = absint( $value->product_id );
+					$value->price_id   = absint( $value->price_id );
+					$value->total      = absint( $value->total );
 
-				// Add instance of EDD_Download to resultant object.
-				$value->object = edd_get_download( $value->product_id );
-			} );
+					// Add instance of EDD_Download to resultant object.
+					$value->object = edd_get_download( $value->product_id );
+				}
+			);
 		} else {
 			$result = null === $result[0]->total
 				? 0.00
@@ -799,16 +802,19 @@ class Stats {
 		$result = $this->get_db()->get_results( $sql );
 
 		if ( true === $this->query_vars['grouped'] ) {
-			array_walk( $result, function ( &$value ) {
+			array_walk(
+				$result,
+				function ( &$value ) {
 
-				// Format resultant object.
-				$value->product_id = absint( $value->product_id );
-				$value->price_id   = absint( $value->price_id );
-				$value->total      = $this->maybe_format( $value->total );
+					// Format resultant object.
+					$value->product_id = absint( $value->product_id );
+					$value->price_id   = absint( $value->price_id );
+					$value->total      = $this->maybe_format( $value->total );
 
-				// Add instance of EDD_Download to resultant object.
-				$value->object = edd_get_download( $value->product_id );
-			} );
+					// Add instance of EDD_Download to resultant object.
+					$value->object = edd_get_download( $value->product_id );
+				}
+			);
 		} else {
 			$result = null === $result[0]->total
 				? 0.00
@@ -912,16 +918,19 @@ class Stats {
 		$result = $this->get_db()->get_results( $sql );
 
 		if ( true === $this->query_vars['grouped'] ) {
-			array_walk( $result, function ( &$value ) {
+			array_walk(
+				$result,
+				function ( &$value ) {
 
-				// Format resultant object.
-				$value->product_id = absint( $value->product_id );
-				$value->price_id   = absint( $value->price_id );
-				$value->total      = absint( $value->total );
+					// Format resultant object.
+					$value->product_id = absint( $value->product_id );
+					$value->price_id   = absint( $value->price_id );
+					$value->total      = absint( $value->total );
 
-				// Add instance of EDD_Download to resultant object.
-				$value->object = edd_get_download( $value->product_id );
-			} );
+					// Add instance of EDD_Download to resultant object.
+					$value->object = edd_get_download( $value->product_id );
+				}
+			);
 		} else {
 			$result = null === $result[0]->total
 				? 0.00
@@ -985,17 +994,20 @@ class Stats {
 
 		$result = $this->get_db()->get_results( $sql );
 
-		array_walk( $result, function ( &$value ) {
+		array_walk(
+			$result,
+			function ( &$value ) {
 
-			// Format resultant object.
-			$value->product_id = absint( $value->product_id );
-			$value->price_id   = absint( $value->price_id );
-			$value->sales      = absint( $value->sales );
-			$value->total      = $this->maybe_format( $value->total );
+				// Format resultant object.
+				$value->product_id = absint( $value->product_id );
+				$value->price_id   = absint( $value->price_id );
+				$value->sales      = absint( $value->sales );
+				$value->total      = $this->maybe_format( $value->total );
 
-			// Add instance of EDD_Download to resultant object.
-			$value->object = edd_get_download( $value->product_id );
-		} );
+				// Add instance of EDD_Download to resultant object.
+				$value->object = edd_get_download( $value->product_id );
+			}
+		);
 
 		// Reset query vars.
 		$this->post_query();
@@ -1113,20 +1125,23 @@ class Stats {
 
 		$result = $this->get_db()->get_results( $sql );
 
-		array_walk( $result, function ( &$value ) {
+		array_walk(
+			$result,
+			function ( &$value ) {
 
-			// Add instance of EDD_Discount to resultant object.
-			$value->object = edd_get_discount_by_code( $value->code );
+				// Add instance of EDD_Discount to resultant object.
+				$value->object = edd_get_discount_by_code( $value->code );
 
-			// Format resultant object.
-			if ( ! empty( $value->object ) ) {
-				$value->discount_id = absint( $value->object->id );
-				$value->count       = absint( $value->count );
-			} else {
-				$value->discount_id = 0;
-				$value->count       = '&mdash;';
+				// Format resultant object.
+				if ( ! empty( $value->object ) ) {
+					$value->discount_id = absint( $value->object->id );
+					$value->count       = absint( $value->count );
+				} else {
+					$value->discount_id = 0;
+					$value->count       = '&mdash;';
+				}
 			}
-		} );
+		);
 
 		// Reset query vars.
 		$this->post_query();
@@ -1399,13 +1414,19 @@ class Stats {
 
 		// Ensure count values are always valid integers if counting sales.
 		if ( 'COUNT' === $this->query_vars['function'] ) {
-			array_walk( $result, function ( &$value ) {
-				$value->total = absint( $value->total );
-			} );
+			array_walk(
+				$result,
+				function ( &$value ) {
+					$value->total = absint( $value->total );
+				}
+			);
 		} elseif ( 'SUM' === $this->query_vars['function'] || 'AVG' === $this->query_vars['function'] ) {
-			array_walk( $result, function ( &$value ) {
-				$value->total = floatval( abs( $value->total ) );
-			} );
+			array_walk(
+				$result,
+				function ( &$value ) {
+					$value->total = floatval( abs( $value->total ) );
+				}
+			);
 		}
 
 		if ( empty( $gateway ) && true === $this->query_vars['grouped'] ) {
@@ -1430,9 +1451,12 @@ class Stats {
 		} elseif ( false === $this->query_vars['grouped'] ) {
 			$total = 0;
 
-			array_walk( $result, function( $value ) use ( &$total ) {
-				$total += $value->total;
-			} );
+			array_walk(
+				$result,
+				function( $value ) use ( &$total ) {
+					$total += $value->total;
+				}
+			);
 
 			$results = 'COUNT' === $this->query_vars['function']
 				? absint( $total )
@@ -1498,11 +1522,14 @@ class Stats {
 
 		// Rename object var.
 		if ( is_array( $result ) ) {
-			array_walk( $result, function ( &$value ) {
-				$value->earnings = $value->total;
-				$value->earnings = $this->maybe_format( $value->earnings );
-				unset( $value->total );
-			} );
+			array_walk(
+				$result,
+				function ( &$value ) {
+					$value->earnings = $value->total;
+					$value->earnings = $this->maybe_format( $value->earnings );
+					unset( $value->total );
+				}
+			);
 		} else {
 			$result = $this->maybe_format( $result );
 		}
@@ -1562,11 +1589,14 @@ class Stats {
 		$result = $this->get_gateway_data( $query );
 
 		// Rename object var.
-		array_walk( $result, function( &$value ) {
-			$value->earnings = $value->count;
-			$value->earnings = $this->maybe_format( $value->earnings );
-			unset( $value->count );
-		} );
+		array_walk(
+			$result,
+			function( &$value ) {
+				$value->earnings = $value->count;
+				$value->earnings = $this->maybe_format( $value->earnings );
+				unset( $value->count );
+			}
+		);
 
 		// Reset query vars.
 		$this->post_query();
@@ -1641,7 +1671,7 @@ class Stats {
 		} elseif ( ! empty( $product_id ) || ! empty( $price_id ) ) {
 
 			// Regenerate SQL clauses due to alias.
-			$table = $this->query_vars['table'];
+			$table                     = $this->query_vars['table'];
 			$this->query_vars['table'] = 'o';
 			$this->pre_query( $query );
 			$this->query_vars['table'] = $table;
@@ -2169,15 +2199,18 @@ class Stats {
 
 		$result = $this->get_db()->get_results( $sql );
 
-		array_walk( $result, function ( &$value ) {
+		array_walk(
+			$result,
+			function ( &$value ) {
 
-			// Format resultant object.
-			$value->customer_id = absint( $value->customer_id );
-			$value->total       = $this->maybe_format( $value->total );
+				// Format resultant object.
+				$value->customer_id = absint( $value->customer_id );
+				$value->total       = $this->maybe_format( $value->total );
 
-			// Add instance of EDD_Download to resultant object.
-			$value->object = edd_get_customer( $value->customer_id );
-		} );
+				// Add instance of EDD_Download to resultant object.
+				$value->object = edd_get_customer( $value->customer_id );
+			}
+		);
 
 		// Reset query vars.
 		$this->post_query();
@@ -2337,16 +2370,19 @@ class Stats {
 
 		$result = $this->get_db()->get_results( $sql );
 
-		array_walk( $result, function ( &$value ) {
+		array_walk(
+			$result,
+			function ( &$value ) {
 
-			// Format resultant object.
-			$value->product_id = absint( $value->product_id );
-			$value->price_id   = absint( $value->price_id );
-			$value->total      = absint( $value->total );
+				// Format resultant object.
+				$value->product_id = absint( $value->product_id );
+				$value->price_id   = absint( $value->price_id );
+				$value->total      = absint( $value->total );
 
-			// Add instance of EDD_Download to resultant object.
-			$value->object = edd_get_download( $value->product_id );
-		} );
+				// Add instance of EDD_Download to resultant object.
+				$value->object = edd_get_download( $value->product_id );
+			}
+		);
 
 		// Reset query vars.
 		$this->post_query();
@@ -2490,7 +2526,7 @@ class Stats {
 			$this->query_vars['column'] = strtolower( $this->query_vars['column'] );
 		}
 
-		/** Parse country ****************************************************/
+		/** Parse country */
 
 		$country_list = array_filter( edd_get_country_list() );
 
@@ -2514,7 +2550,7 @@ class Stats {
 			? ''
 			: $country_list[ $country ];
 
-		/** Parse state ******************************************************/
+		/** Parse state */
 
 		$state = isset( $this->query_vars['region'] )
 			? sanitize_text_field( $this->query_vars['region'] )

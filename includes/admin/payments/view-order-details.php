@@ -31,7 +31,7 @@ if ( empty( $order ) ) {
 } ?>
 
 <div class="wrap edd-wrap">
-    <h1><?php printf( __( 'Edit Order: %s', 'easy-digital-downloads' ), $order->number ); ?></h1>
+	<h1><?php printf( __( 'Edit Order: %s', 'easy-digital-downloads' ), $order->number ); ?></h1>
 
 	<hr class="wp-header-end">
 
@@ -41,7 +41,7 @@ if ( empty( $order ) ) {
 
 	<?php do_action( 'edd_view_order_details_before', $order->id ); ?>
 
-    <form id="edd-edit-order-form" method="post">
+	<form id="edd-edit-order-form" method="post">
 		<?php do_action( 'edd_view_order_details_form_top', $order->id ); ?>
 
 		<div id="poststuff">
@@ -103,7 +103,8 @@ if ( empty( $order ) ) {
 
 		do_action( 'edd_view_order_details_form_bottom', $order->id );
 
-		wp_nonce_field( 'edd_update_payment_details_nonce' ); ?>
+		wp_nonce_field( 'edd_update_payment_details_nonce' );
+		?>
 		<input type="hidden" name="edd_payment_id" value="<?php echo esc_attr( $order->id ); ?>"/>
 		<input type="hidden" name="edd_action" value="update_payment_details"/>
 	</form>

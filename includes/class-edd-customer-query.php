@@ -16,7 +16,9 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'EDD_PLUGIN_DIR' ) ) exit;
+if ( ! defined( 'EDD_PLUGIN_DIR' ) ) {
+	exit;
+}
 
 /**
  * EDD_Customer_Query.

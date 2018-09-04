@@ -79,7 +79,7 @@ function edd_admin_add_discount( $data = array() ) {
 
 	// Start date
 	if ( ! empty( $data['start_date'] ) ) {
-		$start_date_hour = (int) $data['start_date_hour'] >= 0 && (int) $data['start_date_hour'] <= 23
+		$start_date_hour   = (int) $data['start_date_hour'] >= 0 && (int) $data['start_date_hour'] <= 23
 			? sanitize_text_field( $data['start_date_hour'] )
 			: '00';
 		$start_date_minute = (int) $data['start_date_minute'] >= 0 && (int) $data['start_date_minute'] <= 59
@@ -91,7 +91,7 @@ function edd_admin_add_discount( $data = array() ) {
 
 	// End date
 	if ( ! empty( $data['end_date'] ) ) {
-		$end_date_hour = (int) $data['end_date_hour'] >= 0 && (int) $data['end_date_hour'] <= 23
+		$end_date_hour   = (int) $data['end_date_hour'] >= 0 && (int) $data['end_date_hour'] <= 23
 			? sanitize_text_field( $data['end_date_hour'] )
 			: '23';
 		$end_date_minute = (int) $data['end_date_minute'] >= 0 && (int) $data['end_date_minute'] <= 59
@@ -102,7 +102,7 @@ function edd_admin_add_discount( $data = array() ) {
 	}
 
 	// Meta values.
-	$to_add['product_reqs']      = isset( $data['product_reqs']      ) ? wp_parse_id_list( $data['product_reqs']      ) : '';
+	$to_add['product_reqs']      = isset( $data['product_reqs'] ) ? wp_parse_id_list( $data['product_reqs'] ) : '';
 	$to_add['excluded_products'] = isset( $data['excluded_products'] ) ? wp_parse_id_list( $data['excluded_products'] ) : '';
 
 	$to_add = array_filter( $to_add );
@@ -189,7 +189,7 @@ function edd_admin_edit_discount( $data = array() ) {
 				$to_update['id'] = $value;
 				break;
 
-			default :
+			default:
 				$to_update[ $column ] = sanitize_text_field( $value );
 				break;
 		}
@@ -197,7 +197,7 @@ function edd_admin_edit_discount( $data = array() ) {
 
 	// Start date
 	if ( ! empty( $data['start_date'] ) ) {
-		$start_date_hour = (int) $data['start_date_hour'] >= 0 && (int) $data['start_date_hour'] <= 23
+		$start_date_hour   = (int) $data['start_date_hour'] >= 0 && (int) $data['start_date_hour'] <= 23
 			? sanitize_text_field( $data['start_date_hour'] )
 			: '00';
 		$start_date_minute = (int) $data['start_date_minute'] >= 0 && (int) $data['start_date_minute'] <= 59
@@ -211,7 +211,7 @@ function edd_admin_edit_discount( $data = array() ) {
 
 	// End date
 	if ( ! empty( $data['end_date'] ) ) {
-		$end_date_hour = (int) $data['end_date_hour'] >= 0 && (int) $data['end_date_hour'] <= 23
+		$end_date_hour   = (int) $data['end_date_hour'] >= 0 && (int) $data['end_date_hour'] <= 23
 			? sanitize_text_field( $data['end_date_hour'] )
 			: '23';
 		$end_date_minute = (int) $data['end_date_minute'] >= 0 && (int) $data['end_date_minute'] <= 59
@@ -224,7 +224,7 @@ function edd_admin_edit_discount( $data = array() ) {
 	}
 
 	// Known & accepted core discount meta
-	$to_update['product_reqs']      = isset( $data['product_reqs']      ) ? wp_parse_id_list( $data['product_reqs']      ) : '';
+	$to_update['product_reqs']      = isset( $data['product_reqs'] ) ? wp_parse_id_list( $data['product_reqs'] ) : '';
 	$to_update['excluded_products'] = isset( $data['excluded_products'] ) ? wp_parse_id_list( $data['excluded_products'] ) : '';
 
 	// Strip out known non-columns
@@ -243,7 +243,7 @@ function edd_admin_edit_discount( $data = array() ) {
 		'start_date_minute',
 		'start_date_hour',
 		'end_date_minute',
-		'end_date_hour'
+		'end_date_hour',
 	);
 
 	// Loop through fields to update, and unset known bad keys
@@ -320,7 +320,7 @@ function edd_activate_discount( $data = array() ) {
 	}
 
 	// Bail if current user cannot manage shop
-	if( ! current_user_can( 'manage_shop_discounts' ) ) {
+	if ( ! current_user_can( 'manage_shop_discounts' ) ) {
 		wp_die( __( 'You do not have permission to edit discount codes', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
@@ -386,7 +386,7 @@ function edd_ajax_add_discount_note() {
 		: 0;
 
 	// Get note contents (maybe sanitize)
-	$note        = ! empty( $_POST['note'] )
+	$note = ! empty( $_POST['note'] )
 		? wp_kses( stripslashes_deep( $_POST['note'] ), array() )
 		: '';
 
@@ -414,12 +414,14 @@ function edd_ajax_add_discount_note() {
 	}
 
 	// Add the note
-	$note_id = edd_add_note( array(
-		'object_id'   => $discount_id,
-		'object_type' => 'discount',
-		'content'     => $note,
-		'user_id'     => get_current_user_id()
-	) );
+	$note_id = edd_add_note(
+		array(
+			'object_id'   => $discount_id,
+			'object_type' => 'discount',
+			'content'     => $note,
+			'user_id'     => get_current_user_id(),
+		)
+	);
 
 	$x = new WP_Ajax_Response();
 	$x->add(
@@ -468,12 +470,16 @@ function edd_delete_discount_note( $data ) {
 	edd_delete_note( $data['note_id'] );
 
 	// Redirect on delete
-	edd_redirect( edd_get_admin_url( array(
-		'page'        => 'edd-discounts',
-		'edd-action'  => 'edit_discount',
-		'edd-message' => 'discount-note-deleted',
-		'discount'    => absint( $data['discount_id'] )
-	) ) );
+	edd_redirect(
+		edd_get_admin_url(
+			array(
+				'page'        => 'edd-discounts',
+				'edd-action'  => 'edit_discount',
+				'edd-message' => 'discount-note-deleted',
+				'discount'    => absint( $data['discount_id'] ),
+			)
+		)
+	);
 }
 add_action( 'edd_delete_discount_note', 'edd_delete_discount_note' );
 
@@ -493,7 +499,7 @@ function edd_ajax_delete_discount_note() {
 		: 0;
 
 	// Get note ID
-	$note_id     = ! empty( $_POST['note_id'] )
+	$note_id = ! empty( $_POST['note_id'] )
 		? absint( $_POST['note_id'] )
 		: 0;
 

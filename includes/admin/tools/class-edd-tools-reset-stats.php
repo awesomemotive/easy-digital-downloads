@@ -241,11 +241,14 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 			$edd_types_for_reset = array( 'download', 'edd_log', 'edd_payment', 'edd_discount' );
 			$edd_types_for_reset = apply_filters( 'edd_reset_store_post_types', $edd_types_for_reset );
 
-			$args = apply_filters( 'edd_tools_reset_stats_total_args', array(
-				'post_type'      => $edd_types_for_reset,
-				'post_status'    => 'any',
-				'posts_per_page' => -1,
-			) );
+			$args = apply_filters(
+				'edd_tools_reset_stats_total_args',
+				array(
+					'post_type'      => $edd_types_for_reset,
+					'post_status'    => 'any',
+					'posts_per_page' => -1,
+				)
+			);
 
 			$posts = get_posts( $args );
 			foreach ( $posts as $post ) {

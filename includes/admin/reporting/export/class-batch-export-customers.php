@@ -101,10 +101,9 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 				}
 			}
 
-		// Download.
+			// Download.
 		} elseif ( ! empty( $this->download ) ) {
 			// Export customers of a specific product
-
 			$args = array(
 				'product_id' => absint( $this->download ),
 				'number'     => 30,
@@ -133,12 +132,14 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 				}
 			}
 
-		// All customers.
+			// All customers.
 		} else {
-			$customers = edd_get_customers( array(
-				'number' => 30,
-				'offset' => 30 * ( $this->step - 1 ),
-			) );
+			$customers = edd_get_customers(
+				array(
+					'number' => 30,
+					'offset' => 30 * ( $this->step - 1 ),
+				)
+			);
 
 			$i = 0;
 

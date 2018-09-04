@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 use EDD\Database\Row;
 
 /**
-* Order adjustment database row class.
+ * Order adjustment database row class.
  *
  * This class exists solely to encapsulate database schema changes, to help
  * separate the needs of the application layer from the requirements of the

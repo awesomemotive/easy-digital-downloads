@@ -29,5 +29,5 @@ use EDD\Database\Row;
  * @since 3.0
  */
 class Customer extends Row {
-	
+
 }

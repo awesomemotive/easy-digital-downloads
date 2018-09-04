@@ -21,7 +21,6 @@ defined( 'ABSPATH' ) || exit;
  * @param string $active_tab
  */
 function edd_orders_page_primary_nav( $active_tab = '' ) {
-
 	$add_new_url = add_query_arg( array( 'view' => 'add-order' ), edd_get_admin_url( array( 'page' => 'edd-payment-history' ) ) );
 
 	ob_start();?>
@@ -36,10 +35,12 @@ function edd_orders_page_primary_nav( $active_tab = '' ) {
 		foreach ( $tabs as $tab_id => $tab_name ) {
 
 			// Remove
-			$tab_url = add_query_arg( array(
-				'settings-updated' => false,
-				'order_type'       => $tab_id
-			) );
+			$tab_url = add_query_arg(
+				array(
+					'settings-updated' => false,
+					'order_type'       => $tab_id,
+				)
+			);
 
 			// Remove the section from the tabs so we always end up at the main section
 			$tab_url = remove_query_arg( 'section', $tab_url );
@@ -91,19 +92,19 @@ function edd_get_order_pages() {
  * @since 1.0
  * @since 3.0 Nomenclature updated for consistency.
  *            Add a link to manually all orders.
-*/
+ */
 function edd_payment_history_page() {
 
 	// Edit
 	if ( isset( $_GET['view'] ) && 'view-order-details' === $_GET['view'] ) { // WPCS: CSRF ok.
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/view-order-details.php';
 
-	// Add
+		// Add
 	} elseif ( isset( $_GET['view'] ) && 'add-order' === $_GET['view'] ) { // WPCS: CSRF ok.
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/add-order.php';
 		edd_add_order_page_content();
 
-	// List Table
+		// List Table
 	} else {
 		edd_order_list_table_content();
 	}
@@ -121,7 +122,8 @@ function edd_order_list_table_content() {
 	$orders_table->prepare_items();
 
 	$active_tab = sanitize_key( $orders_table->get_request_var( 'order_type', 'sale' ) );
-	$admin_url  = edd_get_admin_url( array( 'page' => 'edd-payment-history' ) ); ?>
+	$admin_url  = edd_get_admin_url( array( 'page' => 'edd-payment-history' ) );
+	?>
 
 	<div class="wrap">
 		<h1 class="wp-heading-inline"><?php esc_html_e( 'Orders', 'easy-digital-downloads' ); ?></h1>
@@ -153,7 +155,7 @@ function edd_order_list_table_content() {
  *
  * @since 1.8.4
  * @since 3.0 Updated filter to display link next to the reports filters.
-*/
+ */
 function edd_payment_history_mobile_link() {
 	?>
 	<span class="edd-mobile-link">

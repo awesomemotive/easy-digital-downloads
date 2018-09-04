@@ -7,7 +7,7 @@
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.8
-*/
+ */
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -65,7 +65,8 @@ class EDD_Stats {
 	 * @since 1.8
 	 * @return void
 	 */
-	public function __construct() { /* nothing here. Call get_sales() and get_earnings() directly */ }
+	public function __construct() {
+		/* nothing here. Call get_sales() and get_earnings() directly */ }
 
 
 	/**
@@ -75,18 +76,21 @@ class EDD_Stats {
 	 * @return array
 	 */
 	public function get_predefined_dates() {
-		return apply_filters( 'edd_stats_predefined_dates', array(
-			'today'        => __( 'Today',        'easy-digital-downloads' ),
-			'yesterday'    => __( 'Yesterday',    'easy-digital-downloads' ),
-			'this_week'    => __( 'This Week',    'easy-digital-downloads' ),
-			'last_week'    => __( 'Last Week',    'easy-digital-downloads' ),
-			'this_month'   => __( 'This Month',   'easy-digital-downloads' ),
-			'last_month'   => __( 'Last Month',   'easy-digital-downloads' ),
-			'this_quarter' => __( 'This Quarter', 'easy-digital-downloads' ),
-			'last_quarter' => __( 'Last Quarter', 'easy-digital-downloads' ),
-			'this_year'    => __( 'This Year',    'easy-digital-downloads' ),
-			'last_year'    => __( 'Last Year',    'easy-digital-downloads' )
-		) );
+		return apply_filters(
+			'edd_stats_predefined_dates',
+			array(
+				'today'        => __( 'Today', 'easy-digital-downloads' ),
+				'yesterday'    => __( 'Yesterday', 'easy-digital-downloads' ),
+				'this_week'    => __( 'This Week', 'easy-digital-downloads' ),
+				'last_week'    => __( 'Last Week', 'easy-digital-downloads' ),
+				'this_month'   => __( 'This Month', 'easy-digital-downloads' ),
+				'last_month'   => __( 'Last Month', 'easy-digital-downloads' ),
+				'this_quarter' => __( 'This Quarter', 'easy-digital-downloads' ),
+				'last_quarter' => __( 'Last Quarter', 'easy-digital-downloads' ),
+				'this_year'    => __( 'This Year', 'easy-digital-downloads' ),
+				'last_year'    => __( 'Last Year', 'easy-digital-downloads' ),
+			)
+		);
 	}
 
 	/**
@@ -98,7 +102,6 @@ class EDD_Stats {
 	 * @return void
 	 */
 	public function setup_dates( $_start_date = 'this_month', $_end_date = false ) {
-
 		if ( empty( $_start_date ) ) {
 			$_start_date = 'this_month';
 		}
@@ -109,7 +112,6 @@ class EDD_Stats {
 
 		$this->start_date = $this->convert_date( $_start_date );
 		$this->end_date   = $this->convert_date( $_end_date, true );
-
 	}
 
 	/**
@@ -119,7 +121,6 @@ class EDD_Stats {
 	 * @return array|WP_Error If the date is invalid, a WP_Error object will be returned
 	 */
 	public function convert_date( $date, $end_date = false ) {
-
 		$this->timestamp = false;
 		$second          = $end_date ? 59 : 0;
 		$minute          = $end_date ? 59 : 0;
@@ -131,32 +132,23 @@ class EDD_Stats {
 		if ( ( is_string( $date ) || is_int( $date ) ) && array_key_exists( $date, $this->get_predefined_dates() ) ) {
 
 			// This is a predefined date rate, such as last_week
-			switch( $date ) {
-
-				case 'this_month' :
-
+			switch ( $date ) {
+				case 'this_month':
 					if ( $end_date ) {
-
 						$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
 						$hour   = 23;
 						$minute = 59;
 						$second = 59;
-
 					}
 
 					break;
 
-				case 'last_month' :
-
+				case 'last_month':
 					if ( $month == 1 ) {
-
 						$month = 12;
 						$year--;
-
 					} else {
-
 						$month--;
-
 					}
 
 					if ( $end_date ) {
@@ -165,8 +157,7 @@ class EDD_Stats {
 
 					break;
 
-				case 'today' :
-
+				case 'today':
 					$day = date( 'd', current_time( 'timestamp' ) );
 
 					if ( $end_date ) {
@@ -177,8 +168,7 @@ class EDD_Stats {
 
 					break;
 
-				case 'yesterday' :
-
+				case 'yesterday':
 					$day = date( 'd', current_time( 'timestamp' ) ) - 1;
 
 					// Check if Today is the first day of the month (meaning subtracting one will get us 0)
@@ -186,134 +176,109 @@ class EDD_Stats {
 
 						// If current month is 1
 						if ( 1 == $month ) {
-
 							$year -= 1; // Today is January 1, so skip back to last day of December
 							$month = 12;
 							$day   = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-
 						} else {
 
 							// Go back one month and get the last day of the month
 							$month -= 1;
 							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
-
 						}
 					}
 
 					break;
 
-				case 'this_week' :
+				case 'this_week':
+					$days_to_week_start = ( date( 'w', current_time( 'timestamp' ) ) - 1 ) * 60 * 60 * 24;
+					$today              = date( 'd', current_time( 'timestamp' ) ) * 60 * 60 * 24;
 
-					$days_to_week_start = ( date( 'w', current_time( 'timestamp' ) ) - 1 ) *60*60*24;
-				 	$today = date( 'd', current_time( 'timestamp' ) ) *60*60*24;
-
-				 	if ( $today < $days_to_week_start ) {
-
-				 		if ( $month > 1 ) {
-					 		$month -= 1;
-					 	} else {
-					 		$month = 12;
-					 	}
-
-				 	}
+					if ( $today < $days_to_week_start ) {
+						if ( $month > 1 ) {
+							$month -= 1;
+						} else {
+							$month = 12;
+						}
+					}
 
 					if ( ! $end_date ) {
 
-					 	// Getting the start day
-
-						$day = date( 'd', current_time( 'timestamp' ) - $days_to_week_start ) - 1;
+						// Getting the start day
+						$day  = date( 'd', current_time( 'timestamp' ) - $days_to_week_start ) - 1;
 						$day += get_option( 'start_of_week' );
-
 					} else {
 
 						// Getting the end day
-
-						$day = date( 'd', current_time( 'timestamp' ) - $days_to_week_start ) - 1;
+						$day  = date( 'd', current_time( 'timestamp' ) - $days_to_week_start ) - 1;
 						$day += get_option( 'start_of_week' ) + 6;
-
 					}
 
 					break;
 
-				case 'last_week' :
+				case 'last_week':
+					$days_to_week_start = ( date( 'w', current_time( 'timestamp' ) ) - 1 ) * 60 * 60 * 24;
+					$today              = date( 'd', current_time( 'timestamp' ) ) * 60 * 60 * 24;
 
-					$days_to_week_start = ( date( 'w', current_time( 'timestamp' ) ) - 1 ) *60*60*24;
-				 	$today = date( 'd', current_time( 'timestamp' ) ) *60*60*24;
-
-				 	if ( $today < $days_to_week_start ) {
-
-				 		if ( $month > 1 ) {
-					 		$month -= 1;
-					 	} else {
-					 		$month = 12;
-					 	}
-
-				 	}
+					if ( $today < $days_to_week_start ) {
+						if ( $month > 1 ) {
+							$month -= 1;
+						} else {
+							$month = 12;
+						}
+					}
 
 					if ( ! $end_date ) {
 
-					 	// Getting the start day
-
-						$day = date( 'd', current_time( 'timestamp' ) - $days_to_week_start ) - 8;
+						// Getting the start day
+						$day  = date( 'd', current_time( 'timestamp' ) - $days_to_week_start ) - 8;
 						$day += get_option( 'start_of_week' );
-
 					} else {
 
 						// Getting the end day
-
-						$day = date( 'd', current_time( 'timestamp' ) - $days_to_week_start ) - 8;
+						$day  = date( 'd', current_time( 'timestamp' ) - $days_to_week_start ) - 8;
 						$day += get_option( 'start_of_week' ) + 6;
-
 					}
 
 					break;
 
-				case 'this_quarter' :
-
+				case 'this_quarter':
 					$month_now = date( 'n', current_time( 'timestamp' ) );
 
 					if ( $month_now <= 3 ) {
-
 						if ( ! $end_date ) {
 							$month = 1;
 						} else {
-							$month = 3;
+							$month  = 3;
 							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
 							$hour   = 23;
 							$minute = 59;
 							$second = 59;
 						}
-
-					} else if ( $month_now <= 6 ) {
-
+					} elseif ( $month_now <= 6 ) {
 						if ( ! $end_date ) {
 							$month = 4;
 						} else {
-							$month = 6;
+							$month  = 6;
 							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
 							$hour   = 23;
 							$minute = 59;
 							$second = 59;
 						}
-
-					} else if ( $month_now <= 9 ) {
-
+					} elseif ( $month_now <= 9 ) {
 						if ( ! $end_date ) {
 							$month = 7;
 						} else {
-							$month = 9;
+							$month  = 9;
 							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
 							$hour   = 23;
 							$minute = 59;
 							$second = 59;
 						}
-
 					} else {
-
 						if ( ! $end_date ) {
 							$month = 10;
 						} else {
-							$month = 12;
+							$month  = 12;
 							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
 							$hour   = 23;
 							$minute = 59;
@@ -323,53 +288,45 @@ class EDD_Stats {
 
 					break;
 
-				case 'last_quarter' :
-
+				case 'last_quarter':
 					$month_now = date( 'n', current_time( 'timestamp' ) );
 
 					if ( $month_now <= 3 ) {
-
 						if ( ! $end_date ) {
 							$month = 10;
 						} else {
-							$year -= 1;
-							$month = 12;
+							$year  -= 1;
+							$month  = 12;
 							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
 							$hour   = 23;
 							$minute = 59;
 							$second = 59;
 						}
-
-					} else if ( $month_now <= 6 ) {
-
+					} elseif ( $month_now <= 6 ) {
 						if ( ! $end_date ) {
 							$month = 1;
 						} else {
-							$month = 3;
+							$month  = 3;
 							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
 							$hour   = 23;
 							$minute = 59;
 							$second = 59;
 						}
-
-					} else if ( $month_now <= 9 ) {
-
+					} elseif ( $month_now <= 9 ) {
 						if ( ! $end_date ) {
 							$month = 4;
 						} else {
-							$month = 6;
+							$month  = 6;
 							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
 							$hour   = 23;
 							$minute = 59;
 							$second = 59;
 						}
-
 					} else {
-
 						if ( ! $end_date ) {
 							$month = 7;
 						} else {
-							$month = 9;
+							$month  = 9;
 							$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
 							$hour   = 23;
 							$minute = 59;
@@ -379,10 +336,9 @@ class EDD_Stats {
 
 					break;
 
-				case 'this_year' :
-
+				case 'this_year':
 					if ( ! $end_date ) {
-						$month  = 1;
+						$month = 1;
 					} else {
 						$month  = 12;
 						$day    = cal_days_in_month( CAL_GREGORIAN, $month, $year );
@@ -393,8 +349,7 @@ class EDD_Stats {
 
 					break;
 
-				case 'last_year' :
-
+				case 'last_year':
 					$year -= 1;
 					if ( ! $end_date ) {
 						$month = 1;
@@ -407,23 +362,17 @@ class EDD_Stats {
 						$second = 59;
 					}
 
-				break;
-
+					break;
 			}
-
-
-		} else if ( is_numeric( $date ) ) {
+		} elseif ( is_numeric( $date ) ) {
 
 			// return $date unchanged since it is a timestamp
 			$this->timestamp = true;
-
-		} else if ( false !== strtotime( $date ) ) {
-
+		} elseif ( false !== strtotime( $date ) ) {
 			$date  = strtotime( $date, current_time( 'timestamp' ) );
 			$year  = date( 'Y', $date );
 			$month = date( 'm', $date );
 			$day   = date( 'd', $date );
-
 		} else {
 			return new WP_Error( 'invalid_date', __( 'Improper date provided.', 'easy-digital-downloads' ) );
 		}
@@ -445,11 +394,9 @@ class EDD_Stats {
 	 * @return string
 	 */
 	public function count_where( $where = '' ) {
-
 		$start_where = $end_where = '';
 
 		if ( $this->start_date ) {
-
 			if ( $this->timestamp ) {
 				$format = 'Y-m-d H:i:s';
 			} else {
@@ -461,14 +408,13 @@ class EDD_Stats {
 		}
 
 		if ( $this->end_date ) {
-
 			if ( $this->timestamp ) {
 				$format = 'Y-m-d H:i:s';
 			} else {
 				$format = 'Y-m-d 23:59:59';
 			}
 
-			$end_date  = date( $format, $this->end_date );
+			$end_date = date( $format, $this->end_date );
 
 			$end_where = " AND date_created <= '{$end_date}'";
 		}
@@ -491,7 +437,6 @@ class EDD_Stats {
 		$end_where   = '';
 
 		if ( ! is_wp_error( $this->start_date ) ) {
-
 			if ( $this->timestamp ) {
 				$format = 'Y-m-d H:i:s';
 			} else {
@@ -503,14 +448,13 @@ class EDD_Stats {
 		}
 
 		if ( ! is_wp_error( $this->end_date ) ) {
-
 			if ( $this->timestamp ) {
 				$format = 'Y-m-d H:i:s';
 			} else {
 				$format = 'Y-m-d 23:59:59';
 			}
 
-			$end_date  = date( $format, $this->end_date );
+			$end_date = date( $format, $this->end_date );
 
 			$end_where = " AND {$wpdb->posts}.post_date <= '{$end_date}'";
 		}

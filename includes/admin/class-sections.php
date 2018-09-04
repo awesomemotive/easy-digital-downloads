@@ -85,7 +85,6 @@ class Sections {
 	 * @since 3.0
 	 */
 	public function __construct() {
-
 	}
 
 	/**
@@ -95,11 +94,13 @@ class Sections {
 	 */
 	public function set_sections( $sections = array() ) {
 		if ( empty( $sections ) ) {
-			$this->add_section( array(
-				'id'       => 'general',
-				'label'    => esc_html__( 'General', 'easy-digital-downloads' ),
-				'callback' => array( $this, 'section_general' )
-			) );
+			$this->add_section(
+				array(
+					'id'       => 'general',
+					'label'    => esc_html__( 'General', 'easy-digital-downloads' ),
+					'callback' => array( $this, 'section_general' ),
+				)
+			);
 		} elseif ( count( $sections ) ) {
 			foreach ( $sections as $section ) {
 				$this->add_section( $section );
@@ -141,9 +142,11 @@ class Sections {
 				</div>
 				<br class="clear" />
 			</div>
-			<?php $this->nonce_field();
+			<?php
+			$this->nonce_field();
 
-			if ( ! empty( $this->item ) ) : ?>
+			if ( ! empty( $this->item ) ) :
+				?>
 
 				<input type="hidden" name="edd-item-id" value="<?php echo esc_attr( $this->item->id ); ?>" />
 
@@ -166,12 +169,15 @@ class Sections {
 	 * @param array $section
 	 */
 	private function add_section( $section = array() ) {
-		$this->sections[] = (object) wp_parse_args( $section, array(
-			'id'       => '',
-			'label'    => '',
-			'icon'     => 'admin-settings',
-			'callback' => ''
-		) );
+		$this->sections[] = (object) wp_parse_args(
+			$section,
+			array(
+				'id'       => '',
+				'label'    => '',
+				'icon'     => 'admin-settings',
+				'callback' => '',
+			)
+		);
 	}
 
 	/**
@@ -212,7 +218,6 @@ class Sections {
 
 		// Loop through sections
 		foreach ( $this->sections as $section ) :
-
 			$url = $this->use_js
 				? '#' . esc_attr( $this->id . $section->id )
 				: add_query_arg( 'view', $section->id, $this->base_url );
@@ -220,7 +225,8 @@ class Sections {
 			// Special selected section
 			$selected = $this->is_current_section( $section->id )
 				? 'aria-selected="true"'
-				: ''; ?>
+				: '';
+			?>
 
 			<li class="section-title" <?php echo $selected; ?>>
 				<a href="<?php echo esc_url( $url ); ?>">
@@ -229,7 +235,8 @@ class Sections {
 				</a>
 			</li>
 
-		<?php endforeach;
+			<?php
+		endforeach;
 
 		// Return current buffer
 		return ob_get_clean();
@@ -261,31 +268,33 @@ class Sections {
 			// Special selected section
 			$selected = ! $this->is_current_section( $section->id )
 				? 'style="display: none;"'
-				: ''; ?>
+				: '';
+			?>
 
-			<div id="<?php echo esc_attr( $this->id . $section->id ); ?>" class="section-content" <?php echo $selected; ?>><?php
+			<div id="<?php echo esc_attr( $this->id . $section->id ); ?>" class="section-content" <?php echo $selected; ?>>
+								<?php
 
-				// Callback or action
-				if ( ! empty( $section->callback ) ) {
-					if ( is_string( $section->callback ) && is_callable( $section->callback ) ) {
-						call_user_func( $section->callback, $this->item );
+								// Callback or action
+								if ( ! empty( $section->callback ) ) {
+									if ( is_string( $section->callback ) && is_callable( $section->callback ) ) {
+										call_user_func( $section->callback, $this->item );
+									} elseif ( is_array( $section->callback ) && is_callable( $section->callback[0] ) ) {
+										isset( $section->callback[1] )
+											? call_user_func_array( $section->callback[0], $section->callback[1] )
+											: call_user_func_array( $section->callback[0], array() );
+									} else {
+										_e( 'Invalid section', 'easy-digital-downloads' );
+									}
+								} else {
+									die;
+									do_action( 'edd_' . $section->id . 'section_contents', $this );
+								}
 
-					} elseif ( is_array( $section->callback ) && is_callable( $section->callback[0] ) ) {
-						isset( $section->callback[1] )
-							? call_user_func_array( $section->callback[0], $section->callback[1] )
-							: call_user_func_array( $section->callback[0], array() );
+								?>
+			</div>
 
-					} else {
-						_e( 'Invalid section', 'easy-digital-downloads' );
-					}
-				} else {
-					die;
-					do_action( 'edd_' . $section->id . 'section_contents', $this );
-				}
-
-			?></div>
-
-		<?php endforeach;
+			<?php
+		endforeach;
 
 		// Return current buffer
 		return ob_get_clean();
@@ -297,7 +306,7 @@ class Sections {
 	 * @since 3.0
 	 *
 	 * @param object $item
-	*/
+	 */
 	protected function section_general() {
 		?>
 

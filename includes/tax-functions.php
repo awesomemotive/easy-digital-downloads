@@ -44,7 +44,6 @@ function edd_use_taxes() {
  * @return array|\EDD\Adjustments\Adjustment[] Tax rates.
  */
 function edd_get_tax_rates( $args = array(), $output = ARRAY_N ) {
-
 	if ( isset( $args['status'] ) && 'active' === $args['status'] ) {
 		add_filter( 'edd_adjustments_query_clauses', 'edd_active_tax_rates_query_clauses' );
 	}
@@ -53,12 +52,15 @@ function edd_get_tax_rates( $args = array(), $output = ARRAY_N ) {
 	$adjustments = new EDD\Database\Queries\Adjustment();
 
 	// Parse args
-	$r = wp_parse_args( $args, array(
-		'number'  => 30,
-		'type'    => 'tax_rate',
-		'orderby' => 'date_created',
-		'order'   => 'ASC',
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'number'  => 30,
+			'type'    => 'tax_rate',
+			'orderby' => 'date_created',
+			'order'   => 'ASC',
+		)
+	);
 
 	if ( isset( $args['status'] ) && 'active' === $args['status'] ) {
 		remove_filter( 'edd_adjustments_query_clauses', 'edd_active_tax_rates_query_clauses' );
@@ -105,11 +107,14 @@ function edd_get_tax_rates( $args = array(), $output = ARRAY_N ) {
 function edd_get_tax_rate_counts( $args = array() ) {
 
 	// Parse arguments
-	$r = wp_parse_args( $args, array(
-		'count'   => true,
-		'groupby' => 'status',
-		'type'    => 'tax_rate'
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'count'   => true,
+			'groupby' => 'status',
+			'type'    => 'tax_rate',
+		)
+	);
 
 	// Query for count.
 	$counts = new EDD\Database\Queries\Adjustment( $r );
@@ -206,10 +211,13 @@ function edd_get_tax_rate( $country = '', $region = '' ) {
 
 		// Fetch all the tax rates from the database.
 		// The region is not passed in deliberately in order to check for country-wide tax rates.
-		$tax_rates = edd_get_tax_rates( array(
-			'name'   => $country,
-			'status' => 'active',
-		), OBJECT );
+		$tax_rates = edd_get_tax_rates(
+			array(
+				'name'   => $country,
+				'status' => 'active',
+			),
+			OBJECT
+		);
 
 		// Save processing if only one tax rate is returned.
 		if ( 1 === count( $tax_rates ) ) {
@@ -227,7 +235,7 @@ function edd_get_tax_rate( $country = '', $region = '' ) {
 				if ( 'country' === $tax_rate->scope ) {
 					$rate = number_format( $tax_rate->amount, 4 );
 
-				// Regional tax rate.
+					// Regional tax rate.
 				} else {
 					if ( empty( $tax_rate->description ) || strtolower( $region ) !== strtolower( $tax_rate->description ) ) {
 						continue;
@@ -296,7 +304,6 @@ function edd_calculate_tax( $amount = 0.00, $country = '', $region = '' ) {
 	$tax  = 0.00;
 
 	if ( edd_use_taxes() && $amount > 0 ) {
-
 		if ( edd_prices_include_tax() ) {
 			$pre_tax = ( $amount / ( 1 + $rate ) );
 			$tax     = $amount - $pre_tax;
@@ -416,7 +423,6 @@ function edd_display_tax_rate() {
  * @return bool
  */
 function edd_cart_needs_tax_address_fields() {
-
 	if ( ! edd_is_cart_taxed() ) {
 		return false;
 	}

@@ -181,7 +181,7 @@ class EDD_Batch_Taxed_Customers_Export extends EDD_Batch_Export {
 	 * @return array
 	 */
 	public function query_clauses( $clauses, $base ) {
-		$clauses['where'] = ! empty( $clauses['where'] )
+		$clauses['where']        = ! empty( $clauses['where'] )
 			? $clauses['where'] .= ' AND tax > 0'
 			: 'tax > 0';
 

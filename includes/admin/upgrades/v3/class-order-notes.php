@@ -41,14 +41,18 @@ class Order_Notes extends Base {
 	public function get_data() {
 		$offset = ( $this->step - 1 ) * $this->per_step;
 
-		$results = $this->get_db()->get_results( $this->get_db()->prepare(
-			"SELECT *
+		$results = $this->get_db()->get_results(
+			$this->get_db()->prepare(
+				"SELECT *
 			 FROM {$this->get_db()->comments}
 			 WHERE comment_type = %s
 			 ORDER BY comment_id ASC
 			 LIMIT %d, %d",
-			esc_sql( 'edd_payment_note' ), $offset, $this->per_step
-		) );
+				esc_sql( 'edd_payment_note' ),
+				$offset,
+				$this->per_step
+			)
+		);
 
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $result ) {

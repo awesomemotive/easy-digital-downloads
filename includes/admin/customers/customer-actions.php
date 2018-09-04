@@ -51,12 +51,15 @@ function edd_edit_customer( $args = array() ) {
 	}
 
 	// Parse customer info with defaults.
-	$customer_info = wp_parse_args( $customer_info, array(
-		'name'         => '',
-		'email'        => '',
-		'date_created' => '',
-		'user_id'      => 0
-	) );
+	$customer_info = wp_parse_args(
+		$customer_info,
+		array(
+			'name'         => '',
+			'email'        => '',
+			'date_created' => '',
+			'user_id'      => 0,
+		)
+	);
 
 	if ( ! is_email( $customer_info['email'] ) ) {
 		edd_set_error( 'edd-invalid-email', __( 'Please enter a valid email address.', 'easy-digital-downloads' ) );
@@ -207,29 +210,25 @@ function edd_add_customer_email( $args = array() ) {
 	$output = array();
 
 	if ( empty( $args ) || empty( $args['email'] ) || empty( $args['customer_id'] ) ) {
-
 		$output['success'] = false;
 
 		if ( empty( $args['email'] ) ) {
 			$output['message'] = __( 'Email address is missing.', 'easy-digital-downloads' );
-		} else if ( empty( $args['customer_id'] ) ) {
+		} elseif ( empty( $args['customer_id'] ) ) {
 			$output['message'] = __( 'Customer ID is required.', 'easy-digital-downloads' );
 		} else {
 			$output['message'] = __( 'An error has occured. Please try again.', 'easy-digital-downloads' );
 		}
-
-	} else if ( ! wp_verify_nonce( $args['_wpnonce'], 'edd-add-customer-email' ) ) {
+	} elseif ( ! wp_verify_nonce( $args['_wpnonce'], 'edd-add-customer-email' ) ) {
 		$output = array(
 			'success' => false,
 			'message' => __( 'Nonce verification failed.', 'easy-digital-downloads' ),
 		);
-
-	} else if ( ! is_email( $args['email'] ) ) {
+	} elseif ( ! is_email( $args['email'] ) ) {
 		$output = array(
 			'success' => false,
 			'message' => __( 'Invalid email address.', 'easy-digital-downloads' ),
 		);
-
 	} else {
 		$email       = sanitize_email( $args['email'] );
 		$customer_id = (int) $args['customer_id'];
@@ -237,23 +236,20 @@ function edd_add_customer_email( $args = array() ) {
 		$customer    = new EDD_Customer( $customer_id );
 
 		if ( false === $customer->add_email( $email, $primary ) ) {
-
 			if ( in_array( $email, $customer->emails, true ) ) {
 				$output = array(
-					'success'  => false,
-					'message'  => __( 'Email already associated with this customer.', 'easy-digital-downloads' ),
+					'success' => false,
+					'message' => __( 'Email already associated with this customer.', 'easy-digital-downloads' ),
 				);
-
 			} else {
 				$output = array(
 					'success' => false,
 					'message' => __( 'Email address is already associated with another customer.', 'easy-digital-downloads' ),
 				);
 			}
-
 		} else {
 			$redirect = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer_id . '&edd-message=email-added' );
-			$output = array(
+			$output   = array(
 				'success'  => true,
 				'message'  => __( 'Email successfully added to customer.', 'easy-digital-downloads' ),
 				'redirect' => $redirect,
@@ -261,11 +257,11 @@ function edd_add_customer_email( $args = array() ) {
 
 			$user          = wp_get_current_user();
 			$user_login    = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
-			$customer_note = sprintf( __( 'Email address %s added by %s', 'easy-digital-downloads' ), $email, $user_login );
+			$customer_note = sprintf( __( 'Email address %1$s added by %2$s', 'easy-digital-downloads' ), $email, $user_login );
 			$customer->add_note( $customer_note );
 
 			if ( $primary ) {
-				$customer_note =  sprintf( __( 'Email address %s set as primary by %s', 'easy-digital-downloads' ), $email, $user_login );
+				$customer_note = sprintf( __( 'Email address %1$s set as primary by %2$s', 'easy-digital-downloads' ), $email, $user_login );
 				$customer->add_note( $customer_note );
 			}
 		}
@@ -311,9 +307,8 @@ function edd_remove_customer_email() {
 		$url           = add_query_arg( 'edd-message', 'email-removed', admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) );
 		$user          = wp_get_current_user();
 		$user_login    = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
-		$customer_note = sprintf( __( 'Email address %s removed by %s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
+		$customer_note = sprintf( __( 'Email address %1$s removed by %2$s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
 		$customer->add_note( $customer_note );
-
 	} else {
 		$url = add_query_arg( 'edd-message', 'email-remove-failed', admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) );
 	}
@@ -352,9 +347,8 @@ function edd_set_customer_primary_email() {
 		$url           = add_query_arg( 'edd-message', 'primary-email-updated', admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) );
 		$user          = wp_get_current_user();
 		$user_login    = ! empty( $user->user_login ) ? $user->user_login : edd_get_bot_name();
-		$customer_note = sprintf( __( 'Email address %s set as primary by %s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
+		$customer_note = sprintf( __( 'Email address %1$s set as primary by %2$s', 'easy-digital-downloads' ), sanitize_email( $_GET['email'] ), $user_login );
 		$customer->add_note( $customer_note );
-
 	} else {
 		$url = add_query_arg( 'edd-message', 'primary-email-failed', admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) );
 	}
@@ -381,10 +375,10 @@ function edd_customer_delete( $args = array() ) {
 		return;
 	}
 
-	$customer_id   = (int)$args['customer_id'];
-	$confirm       = ! empty( $args['edd-customer-delete-confirm'] ) ? true : false;
-	$remove_data   = ! empty( $args['edd-customer-delete-records'] ) ? true : false;
-	$nonce         = $args['_wpnonce'];
+	$customer_id = (int) $args['customer_id'];
+	$confirm     = ! empty( $args['edd-customer-delete-confirm'] ) ? true : false;
+	$remove_data = ! empty( $args['edd-customer-delete-records'] ) ? true : false;
+	$nonce       = $args['_wpnonce'];
 
 	if ( ! wp_verify_nonce( $nonce, 'delete-customer' ) ) {
 		wp_die( __( 'Cheatin\' eh?!', 'easy-digital-downloads' ) );
@@ -405,19 +399,16 @@ function edd_customer_delete( $args = array() ) {
 	$success = false;
 
 	if ( $customer->id > 0 ) {
-
 		$payments_array = explode( ',', $customer->payment_ids );
 		$success        = edd_delete_customer( $customer->id );
 
 		if ( $success ) {
-
 			if ( $remove_data ) {
 
 				// Remove all payments, logs, etc
 				foreach ( $payments_array as $payment_id ) {
 					edd_delete_purchase( $payment_id, false, true );
 				}
-
 			} else {
 
 				// Just set the payments to customer_id of 0
@@ -427,12 +418,10 @@ function edd_customer_delete( $args = array() ) {
 			}
 
 			$redirect = admin_url( 'edit.php?post_type=download&page=edd-customers&edd-message=customer-deleted' );
-
 		} else {
 			edd_set_error( 'edd-customer-delete-failed', __( 'Error deleting customer', 'easy-digital-downloads' ) );
 			$redirect = admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $customer_id );
 		}
-
 	} else {
 		edd_set_error( 'edd-customer-delete-invalid-id', __( 'Invalid Customer ID', 'easy-digital-downloads' ) );
 		$redirect = admin_url( 'edit.php?post_type=download&page=edd-customers' );
@@ -460,8 +449,8 @@ function edd_disconnect_customer_user_id( $args = array() ) {
 		return;
 	}
 
-	$customer_id   = (int)$args['customer_id'];
-	$nonce         = $args['_wpnonce'];
+	$customer_id = (int) $args['customer_id'];
+	$nonce       = $args['_wpnonce'];
 
 	if ( ! wp_verify_nonce( $nonce, 'edit-customer' ) ) {
 		wp_die( __( 'Cheatin\' eh?!', 'easy-digital-downloads' ) );
@@ -484,9 +473,7 @@ function edd_disconnect_customer_user_id( $args = array() ) {
 		}
 
 		$output['success'] = true;
-
 	} else {
-
 		$output['success'] = false;
 		edd_set_error( 'edd-disconnect-user-fail', __( 'Failed to disconnect user from customer', 'easy-digital-downloads' ) );
 	}
@@ -508,7 +495,6 @@ add_action( 'edd_disconnect-userid', 'edd_disconnect_customer_user_id', 10, 1 );
  * @return void
  */
 function edd_process_admin_user_verification() {
-
 	if ( empty( $_GET['id'] ) || ! is_numeric( $_GET['id'] ) ) {
 		return false;
 	}
@@ -533,6 +519,7 @@ add_action( 'edd_verify_user_admin', 'edd_process_admin_user_verification' );
 
 /**
  * Register the reset single customer stats batch processor
+ *
  * @since  2.5
  */
 function edd_register_batch_single_customer_recount_tool() {

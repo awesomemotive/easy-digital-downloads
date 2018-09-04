@@ -178,16 +178,20 @@ class Base extends \EDD_Batch_Export {
 
 		switch ( $type ) {
 			case static::ORDERS:
-				$id = $this->get_db()->get_var( $this->get_db()->prepare(
-					"SELECT edd_order_id FROM {$this->get_db()->edd_ordermeta} WHERE meta_key = 'legacy_order_id' AND meta_value = %d",
-					$legacy_id
-				) );
+				$id = $this->get_db()->get_var(
+					$this->get_db()->prepare(
+						"SELECT edd_order_id FROM {$this->get_db()->edd_ordermeta} WHERE meta_key = 'legacy_order_id' AND meta_value = %d",
+						$legacy_id
+					)
+				);
 				break;
 			case static::DISCOUNTS:
-				$id = $this->get_db()->get_var( $this->get_db()->prepare(
-					"SELECT edd_discount_id FROM {$this->get_db()->edd_discountmeta} WHERE meta_key = 'legacy_discount_id' AND meta_value = %d",
-					$legacy_id
-				) );
+				$id = $this->get_db()->get_var(
+					$this->get_db()->prepare(
+						"SELECT edd_discount_id FROM {$this->get_db()->edd_discountmeta} WHERE meta_key = 'legacy_discount_id' AND meta_value = %d",
+						$legacy_id
+					)
+				);
 				break;
 		}
 

@@ -24,19 +24,21 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 	 * @since 2.3
 	 */
 	public static function create_simple_percent_discount() {
-		return edd_add_discount( array(
-			'name'              => '20 Percent Off',
-			'code'              => '20OFF',
-			'status'            => 'active',
-			'type'              => 'percent',
-			'amount'            => '20',
-			'use_count'         => 54,
-			'max_uses'          => 10,
-			'min_charge_amount' => 128,
-			'product_condition' => 'all',
-			'start_date'        => '2010-12-12 00:00:00',
-			'end_date'          => '2050-12-31 23:59:59'
-		) );
+		return edd_add_discount(
+			array(
+				'name'              => '20 Percent Off',
+				'code'              => '20OFF',
+				'status'            => 'active',
+				'type'              => 'percent',
+				'amount'            => '20',
+				'use_count'         => 54,
+				'max_uses'          => 10,
+				'min_charge_amount' => 128,
+				'product_condition' => 'all',
+				'start_date'        => '2010-12-12 00:00:00',
+				'end_date'          => '2050-12-31 23:59:59',
+			)
+		);
 	}
 
 	/**
@@ -45,19 +47,21 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 	 * @since 2.3
 	 */
 	public static function create_simple_negative_percent_discount() {
-		return edd_add_discount( array(
-			'name'              => 'Double Double',
-			'code'              => 'DOUBLE',
-			'status'            => 'active',
-			'type'              => 'percent',
-			'amount'            => '-100',
-			'use_count'         => 54,
-			'max_uses'          => 10,
-			'min_charge_amount' => 128,
-			'product_condition' => 'all',
-			'start_date'        => '2010-12-12 00:00:00',
-			'end_date'          => '2050-12-31 23:59:59'
-		) );
+		return edd_add_discount(
+			array(
+				'name'              => 'Double Double',
+				'code'              => 'DOUBLE',
+				'status'            => 'active',
+				'type'              => 'percent',
+				'amount'            => '-100',
+				'use_count'         => 54,
+				'max_uses'          => 10,
+				'min_charge_amount' => 128,
+				'product_condition' => 'all',
+				'start_date'        => '2010-12-12 00:00:00',
+				'end_date'          => '2050-12-31 23:59:59',
+			)
+		);
 	}
 
 	/**
@@ -66,19 +70,21 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 	 * @since 2.3
 	 */
 	public static function create_simple_flat_discount() {
-		return edd_add_discount( array(
-			'name'              => '$10 Off',
-			'code'              => '10FLAT',
-			'type'              => 'flat',
-			'status'            => 'active',
-			'amount'            => '10',
-			'max_uses'          => 10,
-			'use_count'         => 0,
-			'min_charge_amount' => 128,
-			'product_condition' => 'all',
-			'start_date'        => '2010-12-12 00:00:00',
-			'end_date'          => '2050-12-31 23:59:59'
-		) );
+		return edd_add_discount(
+			array(
+				'name'              => '$10 Off',
+				'code'              => '10FLAT',
+				'type'              => 'flat',
+				'status'            => 'active',
+				'amount'            => '10',
+				'max_uses'          => 10,
+				'use_count'         => 0,
+				'min_charge_amount' => 128,
+				'product_condition' => 'all',
+				'start_date'        => '2010-12-12 00:00:00',
+				'end_date'          => '2050-12-31 23:59:59',
+			)
+		);
 	}
 
 	/**
@@ -87,19 +93,21 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 	 * @since 3.0
 	 */
 	public static function created_expired_flat_discount() {
-		return edd_add_discount( array(
-			'name'              => '$20 Off',
-			'code'              => '20FLAT',
-			'type'              => 'flat',
-			'status'            => 'expired',
-			'amount'            => '20',
-			'max_uses'          => 20,
-			'use_count'         => 0,
-			'min_charge_amount' => 128,
-			'product_condition' => 'all',
-			'start_date'        => '2010-12-12 00:00:00',
-			'end_date'          => '2050-12-31 23:59:59'
-		) );
+		return edd_add_discount(
+			array(
+				'name'              => '$20 Off',
+				'code'              => '20FLAT',
+				'type'              => 'flat',
+				'status'            => 'expired',
+				'amount'            => '20',
+				'max_uses'          => 20,
+				'use_count'         => 0,
+				'min_charge_amount' => 128,
+				'product_condition' => 'all',
+				'start_date'        => '2010-12-12 00:00:00',
+				'end_date'          => '2050-12-31 23:59:59',
+			)
+		);
 	}
 
 	/**
@@ -108,12 +116,13 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 	 * @since 3.0
 	 */
 	public static function create_legacy_discount() {
-
-		$discount_id = wp_insert_post( array(
-			'post_type'   => 'edd_discount',
-			'post_title'  => 'Legacy Discount',
-			'post_status' => 'active'
-		) );
+		$discount_id = wp_insert_post(
+			array(
+				'post_type'   => 'edd_discount',
+				'post_title'  => 'Legacy Discount',
+				'post_status' => 'active',
+			)
+		);
 
 		$meta = array(
 			'code'              => 'OLD',
@@ -129,12 +138,12 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 			'product_condition' => 'all',
 			'excluded_products' => array( 75 ),
 			'is_not_global'     => true,
-			'is_single_use'     => true
+			'is_single_use'     => true,
 		);
 
 		remove_filter( 'add_post_metadata', array( 'EDD\Compat\Discount', 'update_post_metadata' ), 99 );
 
-		foreach( $meta as $key => $value ) {
+		foreach ( $meta as $key => $value ) {
 			add_post_meta( $discount_id, '_edd_discount_' . $key, $value );
 		}
 

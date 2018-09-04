@@ -22,6 +22,7 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 
 	/**
 	 * Our export type. Used for export-type specific filters/actions
+	 *
 	 * @var string
 	 * @since 2.5
 	 */
@@ -29,6 +30,7 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 
 	/**
 	 * Allows for a non-download batch processing to be run.
+	 *
 	 * @since  2.5
 	 * @var boolean
 	 */
@@ -36,6 +38,7 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 
 	/**
 	 * Sets the number of items to pull on each step
+	 *
 	 * @since  2.5
 	 * @var integer
 	 */
@@ -50,7 +53,6 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 	 * @return array $data The data for the CSV file
 	 */
 	public function get_data() {
-
 		$customer = new EDD_Customer( $this->customer_id );
 		$payments = $this->get_stored_data( 'edd_recount_customer_payments_' . $customer->id, array() );
 
@@ -67,7 +69,6 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 				$payment = get_post( $payment->ID );
 
 				if ( is_null( $payment ) || is_wp_error( $payment ) || 'edd_payment' !== $payment->post_type ) {
-
 					$missing_payments   = $this->get_stored_data( 'edd_stats_missing_payments' . $customer->id, array() );
 					$missing_payments[] = $payment->ID;
 					$this->store_data( 'edd_stats_missing_payments' . $customer->id, $missing_payments );
@@ -78,17 +79,14 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 				$should_process_payment = 'publish' == $payment->post_status || 'revoked' == $payment->post_status ? true : false;
 				$should_process_payment = apply_filters( 'edd_customer_recount_should_process_payment', $should_process_payment, $payment );
 
-				if( true === $should_process_payment ) {
-
+				if ( true === $should_process_payment ) {
 					$found_payment_ids[] = $payment->ID;
 
 					if ( apply_filters( 'edd_customer_recount_sholud_increase_value', true, $payment ) ) {
-						$payment_amount      = edd_get_payment_amount( $payment->ID );
-						$step_total         += $payment_amount;
+						$payment_amount = edd_get_payment_amount( $payment->ID );
+						$step_total    += $payment_amount;
 					}
-
 				}
-
 			}
 
 			$updated_total = $pending_total + $step_total;
@@ -99,7 +97,6 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -109,17 +106,16 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 	 * @return int
 	 */
 	public function get_percentage_complete() {
-
 		$payments = $this->get_stored_data( 'edd_recount_customer_payments_' . $this->customer_id, array() );
-		$total       = count( $payments );
+		$total    = count( $payments );
 
 		$percentage = 100;
 
-		if( $total > 0 ) {
+		if ( $total > 0 ) {
 			$percentage = ( ( $this->per_step * $this->step ) / $total ) * 100;
 		}
 
-		if( $percentage > 100 ) {
+		if ( $percentage > 100 ) {
 			$percentage = 100;
 		}
 
@@ -143,26 +139,25 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 	 * @return bool
 	 */
 	public function process_step() {
-
 		if ( ! $this->can_export() ) {
 			wp_die( __( 'You do not have permission to modify this data.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		}
 
 		$had_data = $this->get_data();
 
-		if( $had_data ) {
+		if ( $had_data ) {
 			$this->done = false;
 			return true;
 		} else {
-			$customer         = new EDD_Customer( $this->customer_id );
-			$payment_ids      = $this->get_stored_data( 'edd_stats_found_payments_' . $customer->id, array() );
+			$customer    = new EDD_Customer( $this->customer_id );
+			$payment_ids = $this->get_stored_data( 'edd_stats_found_payments_' . $customer->id, array() );
 			$this->delete_data( 'edd_stats_found_payments_' . $customer->id );
 
 			$removed_payments = array_unique( $this->get_stored_data( 'edd_stats_missing_payments' . $customer->id, array() ) );
 
 			// Find non-existing payments (deleted) and total up the purchase count
-			$purchase_count   = 0;
-			foreach( $payment_ids as $key => $payment_id ) {
+			$purchase_count = 0;
+			foreach ( $payment_ids as $key => $payment_id ) {
 				if ( in_array( $payment_id, $removed_payments ) ) {
 					unset( $payment_ids[ $key ] );
 					continue;
@@ -181,8 +176,14 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 			$this->delete_data( 'edd_recount_customer_stats_' . $customer->id );
 			$this->delete_data( 'edd_recount_customer_payments_' . $this->customer_id );
 
-			$payment_ids    = implode( ',', $payment_ids );
-			$customer->update( array( 'payment_ids' => $payment_ids, 'purchase_count' => $purchase_count, 'purchase_value' => $pending_total ) );
+			$payment_ids = implode( ',', $payment_ids );
+			$customer->update(
+				array(
+					'payment_ids'    => $payment_ids,
+					'purchase_count' => $purchase_count,
+					'purchase_value' => $pending_total,
+				)
+			);
 
 			$this->done    = true;
 			$this->message = __( 'Customer stats successfully recounted.', 'easy-digital-downloads' );
@@ -220,7 +221,12 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 
 			// Before we start, let's zero out the customer's data
 			$customer = new EDD_Customer( $this->customer_id );
-			$customer->update( array( 'purchase_value' => edd_format_amount( 0 ), 'purchase_count' => 0 ) );
+			$customer->update(
+				array(
+					'purchase_value' => edd_format_amount( 0 ),
+					'purchase_count' => 0,
+				)
+			);
 
 			$attached_payment_ids = explode( ',', $customer->payment_ids );
 
@@ -240,7 +246,7 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 					array(
 						'key'   => '_edd_payment_user_email',
 						'value' => $customer->email,
-					)
+					),
 				),
 			);
 
@@ -295,7 +301,9 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 		);
 
 		$formats = array(
-			'%s', '%s', '%s',
+			'%s',
+			'%s',
+			'%s',
 		);
 
 		$wpdb->replace( $wpdb->options, $data, $formats );

@@ -19,18 +19,18 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.4
  * @since 3.0 Nomenclature updated for consistency.
-*/
+ */
 function edd_discounts_page() {
 
 	// Edit
 	if ( ! empty( $_GET['edd-action'] ) && ( 'edit_discount' === $_GET['edd-action'] ) ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/edit-discount.php';
 
-	// Add
+		// Add
 	} elseif ( ! empty( $_GET['edd-action'] ) && ( 'add_discount' === $_GET['edd-action'] ) ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/add-discount.php';
 
-	// List tables
+		// List tables
 	} else {
 		edd_adjustments_page();
 	}
@@ -61,6 +61,7 @@ function edd_discounts_page_content() {
 		?>
 	</form>
 
-	<?php do_action( 'edd_discounts_page_bottom' );
+	<?php
+	do_action( 'edd_discounts_page_bottom' );
 }
 add_action( 'edd_adjustments_page_discount', 'edd_discounts_page_content' );

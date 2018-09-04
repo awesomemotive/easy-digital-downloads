@@ -83,7 +83,7 @@ class EDD_Logging {
 	 *
 	 * @since 1.3.1
 	 * @since 3.0 Deprecated due to migration to custom tables.
-	*/
+	 */
 	public function register_taxonomy() {
 		_edd_deprecated_function( __FUNCTION__, '3.0.0' );
 	}
@@ -96,12 +96,15 @@ class EDD_Logging {
 	 * @return array $terms Log types.
 	 */
 	public function log_types() {
-		return apply_filters( 'edd_log_types', array(
-			'sale',
-			'file_download',
-			'gateway_error',
-			'api_request'
-		) );
+		return apply_filters(
+			'edd_log_types',
+			array(
+				'sale',
+				'file_download',
+				'gateway_error',
+				'api_request',
+			)
+		);
 	}
 
 	/**
@@ -134,12 +137,14 @@ class EDD_Logging {
 	 * @return int ID of the newly created log item.
 	 */
 	public function add( $title = '', $message = '', $parent = 0, $type = null ) {
-		return $this->insert_log( array(
-			'post_title'   => $title,
-			'post_content' => $message,
-			'post_parent'  => $parent,
-			'log_type'     => $type
-		) );
+		return $this->insert_log(
+			array(
+				'post_title'   => $title,
+				'post_content' => $message,
+				'post_parent'  => $parent,
+				'log_type'     => $type,
+			)
+		);
 	}
 
 	/**
@@ -152,13 +157,15 @@ class EDD_Logging {
 	 * @param int    $paged     Page number (default: null).
 	 *
 	 * @return array Array of the connected logs.
-	*/
+	 */
 	public function get_logs( $object_id = 0, $type = null, $paged = null ) {
-		return $this->get_connected_logs( array(
-			'post_parent' => $object_id,
-			'paged'       => $paged,
-			'log_type'    => $type
-		) );
+		return $this->get_connected_logs(
+			array(
+				'post_parent' => $object_id,
+				'paged'       => $paged,
+				'log_type'    => $type,
+			)
+		);
 	}
 
 	/**
@@ -174,13 +181,16 @@ class EDD_Logging {
 	public function insert_log( $log_data = array(), $log_meta = array() ) {
 
 		// Parse args
-		$args = wp_parse_args( $log_data, array(
-			'post_type'    => 'edd_log',
-			'post_status'  => 'publish',
-			'post_parent'  => 0,
-			'post_content' => '',
-			'log_type'     => false,
-		) );
+		$args = wp_parse_args(
+			$log_data,
+			array(
+				'post_type'    => 'edd_log',
+				'post_status'  => 'publish',
+				'post_parent'  => 0,
+				'post_content' => '',
+				'log_type'     => false,
+			)
+		);
 
 		do_action( 'edd_pre_insert_log', $args, $log_meta );
 
@@ -380,7 +390,6 @@ class EDD_Logging {
 	 * @return mixed array Logs fetched, false otherwise.
 	 */
 	public function get_connected_logs( $args = array() ) {
-
 		$log_type = isset( $args['log_type'] )
 			? $args['log_type']
 			: false;
@@ -521,15 +530,18 @@ class EDD_Logging {
 	private function parse_args( $args = array() ) {
 
 		// Parse args
-		$r = wp_parse_args( $args, array(
-			'log_type'       => false,
-			'post_type'      => 'edd_log',
-			'post_status'    => 'publish',
-			'post_parent'    => 0,
-			'posts_per_page' => 20,
-			'paged'          => get_query_var( 'paged' ),
-			'orderby'        => 'id',
-		) );
+		$r = wp_parse_args(
+			$args,
+			array(
+				'log_type'       => false,
+				'post_type'      => 'edd_log',
+				'post_status'    => 'publish',
+				'post_parent'    => 0,
+				'posts_per_page' => 20,
+				'paged'          => get_query_var( 'paged' ),
+				'orderby'        => 'id',
+			)
+		);
 
 		// Back-compat for ID ordering
 		if ( 'ID' === $r['orderby'] ) {
@@ -626,7 +638,7 @@ class EDD_Logging {
 	 * @since 2.8.7
 	 */
 	protected function write_to_log( $message = '' ) {
-		$file = $this->get_file();
+		$file  = $this->get_file();
 		$file .= $message;
 		@file_put_contents( $this->file, $file );
 	}
@@ -731,24 +743,21 @@ function edd_debug_log( $message = '', $force = false ) {
  * @param \Exception $exception Exception object.
  */
 function edd_debug_log_exception( $exception ) {
-
 	$label = get_class( $exception );
 
 	if ( $exception->getCode() ) {
-
-		$message = sprintf( '%1$s: %2$s - %3$s',
+		$message = sprintf(
+			'%1$s: %2$s - %3$s',
 			$label,
 			$exception->getCode(),
 			$exception->getMessage()
 		);
-
 	} else {
-
-		$message = sprintf( '%1$s: %2$s',
+		$message = sprintf(
+			'%1$s: %2$s',
 			$label,
 			$exception->getMessage()
 		);
-
 	}
 
 	edd_debug_log( $message );

@@ -1,15 +1,16 @@
-<?php if( ! empty( $_GET['edd-verify-success'] ) ) : ?>
+<?php if ( ! empty( $_GET['edd-verify-success'] ) ) : ?>
 <p class="edd-account-verified edd_success">
 	<?php _e( 'Your account has been successfully verified!', 'easy-digital-downloads' ); ?>
 </p>
-<?php
+	<?php
 endif;
 /**
  * This template is used to display the download history of the current user.
  */
 $purchases = edd_get_users_purchases( get_current_user_id(), 20, true, 'any' );
 if ( $purchases ) :
-	do_action( 'edd_before_download_history' ); ?>
+	do_action( 'edd_before_download_history' );
+	?>
 	<table id="edd_user_history" class="edd-table">
 		<thead>
 			<tr class="edd_download_history_row">
@@ -17,21 +18,24 @@ if ( $purchases ) :
 				<th class="edd_download_download_name"><?php _e( 'Download Name', 'easy-digital-downloads' ); ?></th>
 				<?php if ( ! edd_no_redownload() ) : ?>
 					<th class="edd_download_download_files"><?php _e( 'Files', 'easy-digital-downloads' ); ?></th>
-				<?php endif; //End if no redownload?>
+				<?php endif; // End if no redownload ?>
 				<?php do_action( 'edd_download_history_header_end' ); ?>
 			</tr>
 		</thead>
-		<?php foreach ( $purchases as $payment ) :
-			$downloads      = edd_get_payment_meta_cart_details( $payment->ID, true );
-			$purchase_data  = edd_get_payment_meta( $payment->ID );
-			$email          = edd_get_payment_user_email( $payment->ID );
+		<?php
+		foreach ( $purchases as $payment ) :
+			$downloads     = edd_get_payment_meta_cart_details( $payment->ID, true );
+			$purchase_data = edd_get_payment_meta( $payment->ID );
+			$email         = edd_get_payment_user_email( $payment->ID );
 
 			if ( $downloads ) :
 				foreach ( $downloads as $download ) :
 
 					// Skip over Bundles. Products included with a bundle will be displayed individually
-					if ( edd_is_bundled_product( $download['id'] ) )
-						continue; ?>
+					if ( edd_is_bundled_product( $download['id'] ) ) {
+						continue;
+					}
+					?>
 
 					<tr class="edd_download_history_row">
 						<?php
@@ -53,11 +57,8 @@ if ( $purchases ) :
 								<?php
 
 								if ( 'publish' == $payment->post_status ) :
-
 									if ( $download_files ) :
-
 										foreach ( $download_files as $filekey => $file ) :
-
 											$download_url = edd_get_download_file_url( $purchase_data['key'], $email, $filekey, $download['id'], $price_id );
 											?>
 
@@ -67,25 +68,27 @@ if ( $purchases ) :
 												</a>
 											</div>
 
-											<?php do_action( 'edd_download_history_files', $filekey, $file, $download['id'], $payment->ID, $purchase_data );
+											<?php
+											do_action( 'edd_download_history_files', $filekey, $file, $download['id'], $payment->ID, $purchase_data );
 										endforeach;
-
 									else :
 										_e( 'No downloadable files found.', 'easy-digital-downloads' );
 									endif; // End if payment complete
 
-								else : ?>
+								else :
+									?>
 									<span class="edd_download_payment_status">
-										<?php printf( __( 'Payment status is %s', 'easy-digital-downloads' ), edd_get_payment_status( $payment, true) ); ?>
+										<?php printf( __( 'Payment status is %s', 'easy-digital-downloads' ), edd_get_payment_status( $payment, true ) ); ?>
 									</span>
 									<?php
 								endif; // End if $download_files
 								?>
 							</td>
-						<?php endif; // End if ! edd_no_redownload()
+							<?php
+						endif; // End if ! edd_no_redownload()
 
 						do_action( 'edd_download_history_row_end', $payment->ID, $download['id'] );
-						?>
+?>
 					</tr>
 					<?php
 				endforeach; // End foreach $downloads
@@ -96,12 +99,14 @@ if ( $purchases ) :
 	<div id="edd_download_history_pagination" class="edd_pagination navigation">
 		<?php
 		$big = 999999;
-		echo paginate_links( array(
-			'base'    => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-			'format'  => '?paged=%#%',
-			'current' => max( 1, get_query_var( 'paged' ) ),
-			'total'   => ceil( edd_count_purchases_of_customer() / 20 ) // 20 items per page
-		) );
+		echo paginate_links(
+			array(
+				'base'    => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+				'format'  => '?paged=%#%',
+				'current' => max( 1, get_query_var( 'paged' ) ),
+				'total'   => ceil( edd_count_purchases_of_customer() / 20 ), // 20 items per page
+			)
+		);
 		?>
 	</div>
 	<?php do_action( 'edd_after_download_history' ); ?>

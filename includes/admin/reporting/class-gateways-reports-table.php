@@ -30,11 +30,13 @@ class EDD_Gateway_Reports_Table extends List_Table {
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		parent::__construct( array(
-			'singular' => 'report-gateway',
-			'plural'   => 'report-gateways',
-			'ajax'     => false
-		) );
+		parent::__construct(
+			array(
+				'singular' => 'report-gateway',
+				'plural'   => 'report-gateways',
+				'ajax'     => false,
+			)
+		);
 	}
 
 	/**
@@ -54,7 +56,7 @@ class EDD_Gateway_Reports_Table extends List_Table {
 	 *
 	 * @since 1.5
 	 *
-	 * @param array $item Contains all the data of the downloads
+	 * @param array  $item Contains all the data of the downloads
 	 * @param string $column_name The name of the column
 	 *
 	 * @return string Column Name
@@ -71,10 +73,10 @@ class EDD_Gateway_Reports_Table extends List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'label'          => __( 'Gateway',                'easy-digital-downloads' ),
-			'complete_sales' => __( 'Complete Sales',         'easy-digital-downloads' ),
+			'label'          => __( 'Gateway', 'easy-digital-downloads' ),
+			'complete_sales' => __( 'Complete Sales', 'easy-digital-downloads' ),
 			'pending_sales'  => __( 'Pending / Failed Sales', 'easy-digital-downloads' ),
-			'total_sales'    => __( 'Total Sales',            'easy-digital-downloads' )
+			'total_sales'    => __( 'Total Sales', 'easy-digital-downloads' ),
 		);
 	}
 
@@ -97,12 +99,10 @@ class EDD_Gateway_Reports_Table extends List_Table {
 	 * @return array $reports_data All the data for customer reports
 	 */
 	public function reports_data() {
-
 		$reports_data = array();
 		$gateways     = edd_get_payment_gateways();
 
 		foreach ( $gateways as $gateway_id => $gateway ) {
-
 			$complete_count = edd_count_sales_by_gateway( $gateway_id, 'publish' );
 			$pending_count  = edd_count_sales_by_gateway( $gateway_id, array( 'pending', 'failed' ) );
 
@@ -110,7 +110,7 @@ class EDD_Gateway_Reports_Table extends List_Table {
 				'ID'             => $gateway_id,
 				'label'          => $gateway['admin_label'],
 				'complete_sales' => edd_format_amount( $complete_count, false ),
-				'pending_sales'  => edd_format_amount( $pending_count,  false ),
+				'pending_sales'  => edd_format_amount( $pending_count, false ),
 				'total_sales'    => edd_format_amount( $complete_count + $pending_count, false ),
 			);
 		}

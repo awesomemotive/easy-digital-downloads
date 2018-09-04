@@ -12,53 +12,58 @@ class Tests_Templates extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$post_id = $this->factory->post->create( array( 'post_title' => 'A Test Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
+		$post_id = $this->factory->post->create(
+			array(
+				'post_title'  => 'A Test Download',
+				'post_type'   => 'download',
+				'post_status' => 'publish',
+			)
+		);
 
 		$_variable_pricing = array(
 			array(
-				'name' => 'Simple',
-				'amount' => 20
+				'name'   => 'Simple',
+				'amount' => 20,
 			),
 			array(
-				'name' => 'Advanced',
-				'amount' => 100
-			)
+				'name'   => 'Advanced',
+				'amount' => 100,
+			),
 		);
 
 		$_download_files = array(
 			array(
-				'name' => 'File 1',
-				'file' => 'http://localhost/file1.jpg',
-				'condition' => 0
+				'name'      => 'File 1',
+				'file'      => 'http://localhost/file1.jpg',
+				'condition' => 0,
 			),
 			array(
-				'name' => 'File 2',
-				'file' => 'http://localhost/file2.jpg',
-				'condition' => 'all'
-			)
+				'name'      => 'File 2',
+				'file'      => 'http://localhost/file2.jpg',
+				'condition' => 'all',
+			),
 		);
 
 		$meta = array(
-			'edd_price' => '0.00',
-			'_variable_pricing' => 1,
-			'_edd_price_options_mode' => 'on',
-			'edd_variable_prices' => array_values( $_variable_pricing ),
-			'edd_download_files' => array_values( $_download_files ),
-			'_edd_download_limit' => 20,
-			'_edd_hide_purchase_link' => 1,
-			'edd_product_notes' => 'Purchase Notes',
-			'_edd_product_type' => 'default',
-			'_edd_download_earnings' => 129.43,
-			'_edd_download_sales' => 59,
+			'edd_price'                      => '0.00',
+			'_variable_pricing'              => 1,
+			'_edd_price_options_mode'        => 'on',
+			'edd_variable_prices'            => array_values( $_variable_pricing ),
+			'edd_download_files'             => array_values( $_download_files ),
+			'_edd_download_limit'            => 20,
+			'_edd_hide_purchase_link'        => 1,
+			'edd_product_notes'              => 'Purchase Notes',
+			'_edd_product_type'              => 'default',
+			'_edd_download_earnings'         => 129.43,
+			'_edd_download_sales'            => 59,
 			'_edd_download_limit_override_1' => 1,
-			'edd_sku' => 'sku1234567'
+			'edd_sku'                        => 'sku1234567',
 		);
-		foreach( $meta as $key => $value ) {
+		foreach ( $meta as $key => $value ) {
 			update_post_meta( $post_id, $key, $value );
 		}
 
 		$this->_post = get_post( $post_id );
-
 	}
 
 	public function tearDown() {
@@ -83,16 +88,22 @@ class Tests_Templates extends EDD_UnitTestCase {
 		remove_filter( 'edd_item_quantities_enabled', '__return_true' );
 
 		// Test a single price point as well
-		$single_id = $this->factory->post->create( array( 'post_title' => 'A Test Single Price Download', 'post_type' => 'download', 'post_status' => 'publish' ) );
-		$meta = array(
-			'edd_price' => '10.00',
-			'_edd_download_limit' => 20,
-			'_edd_product_type' => 'default',
+		$single_id = $this->factory->post->create(
+			array(
+				'post_title'  => 'A Test Single Price Download',
+				'post_type'   => 'download',
+				'post_status' => 'publish',
+			)
+		);
+		$meta      = array(
+			'edd_price'              => '10.00',
+			'_edd_download_limit'    => 20,
+			'_edd_product_type'      => 'default',
 			'_edd_download_earnings' => 0,
-			'_edd_download_sales' => 0
+			'_edd_download_sales'    => 0,
 		);
 
-		foreach( $meta as $key => $value ) {
+		foreach ( $meta as $key => $value ) {
 			update_post_meta( $single_id, $key, $value );
 		}
 
@@ -101,7 +112,12 @@ class Tests_Templates extends EDD_UnitTestCase {
 		$this->assertContains( '<span class="edd-add-to-cart-label">&#36;10.00&nbsp;&ndash;&nbsp;Purchase</span>', $single_link_default );
 
 		// Verify the purchase link works with price = 0
-		$single_link_no_price = edd_get_purchase_link( array( 'download_id' => $single_id, 'price' => 0 ) );
+		$single_link_no_price = edd_get_purchase_link(
+			array(
+				'download_id' => $single_id,
+				'price'       => 0,
+			)
+		);
 		// Price should NOT show on button
 		$this->assertContains( '<span class="edd-add-to-cart-label">Purchase</span>', $single_link_no_price );
 		// data-price should still contain the price

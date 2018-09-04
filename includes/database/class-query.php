@@ -162,7 +162,7 @@ class Query extends Base {
 		'where'   => array(),
 		'groupby' => '',
 		'orderby' => '',
-		'limits'  => ''
+		'limits'  => '',
 	);
 
 	/**
@@ -177,7 +177,7 @@ class Query extends Base {
 		'where'   => '',
 		'groupby' => '',
 		'orderby' => '',
-		'limits'  => ''
+		'limits'  => '',
 	);
 
 	/**
@@ -373,8 +373,8 @@ class Query extends Base {
 		}
 
 		// Add prefixes to class properties
-		$this->table_name  = $this->apply_prefix( $this->table_name       );
-		$this->table_alias = $this->apply_prefix( $this->table_alias      );
+		$this->table_name  = $this->apply_prefix( $this->table_name );
+		$this->table_alias = $this->apply_prefix( $this->table_alias );
 		$this->cache_group = $this->apply_prefix( $this->cache_group, '-' );
 	}
 
@@ -391,7 +391,7 @@ class Query extends Base {
 		}
 
 		// Invoke a new table schema class
-		$schema = new $this->table_schema;
+		$schema = new $this->table_schema();
 
 		// Maybe get the column objects
 		if ( ! empty( $schema->columns ) ) {
@@ -435,7 +435,7 @@ class Query extends Base {
 
 			// Caching
 			'update_item_cache' => true,
-			'update_meta_cache' => true
+			'update_meta_cache' => true,
 		);
 
 		// Bail if no columns
@@ -452,21 +452,21 @@ class Query extends Base {
 		// Possible ins
 		$possible_ins = $this->get_columns( array( 'in' => true ), 'and', 'name' );
 		foreach ( $possible_ins as $in ) {
-			$key = "{$in}__in";
+			$key                              = "{$in}__in";
 			$this->query_var_defaults[ $key ] = false;
 		}
 
 		// Possible not ins
 		$possible_not_ins = $this->get_columns( array( 'not_in' => true ), 'and', 'name' );
 		foreach ( $possible_not_ins as $in ) {
-			$key = "{$in}__not_in";
+			$key                              = "{$in}__not_in";
 			$this->query_var_defaults[ $key ] = false;
 		}
 
 		// Possible dates
 		$possible_dates = $this->get_columns( array( 'date_query' => true ), 'and', 'name' );
 		foreach ( $possible_dates as $date ) {
-			$key = "{$date}_query";
+			$key                              = "{$date}_query";
 			$this->query_var_defaults[ $key ] = false;
 		}
 	}
@@ -486,32 +486,32 @@ class Query extends Base {
 			: '';
 
 		// Fields
-		$fields    = ! empty( $clauses['fields'] )
+		$fields = ! empty( $clauses['fields'] )
 			? $clauses['fields']
 			: '';
 
 		// Join
-		$join      = ! empty( $clauses['join'] )
+		$join = ! empty( $clauses['join'] )
 			? $clauses['join']
 			: '';
 
 		// Where
-		$where     = ! empty( $clauses['where'] )
+		$where = ! empty( $clauses['where'] )
 			? "WHERE {$clauses['where']}"
 			: '';
 
 		// Group by
-		$groupby   = ! empty( $clauses['groupby'] )
+		$groupby = ! empty( $clauses['groupby'] )
 			? "GROUP BY {$clauses['groupby']}"
 			: '';
 
 		// Order by
-		$orderby   = ! empty( $clauses['orderby'] )
+		$orderby = ! empty( $clauses['orderby'] )
 			? "ORDER BY {$clauses['orderby']}"
 			: '';
 
 		// Limits
-		$limits   = ! empty( $clauses['limits']  )
+		$limits = ! empty( $clauses['limits'] )
 			? $clauses['limits']
 			: '';
 
@@ -589,7 +589,7 @@ class Query extends Base {
 				$this->found_items = intval( $item_ids );
 			}
 
-		// Not a count query
+			// Not a count query
 		} elseif ( is_array( $item_ids ) && ( ! empty( $this->query_vars['number'] ) && empty( $this->query_vars['no_found_rows'] ) ) ) {
 
 			/**
@@ -692,7 +692,7 @@ class Query extends Base {
 	 * @return string
 	 */
 	private function get_current_time() {
-		return gmdate( "Y-m-d\TH:i:s\Z" );
+		return gmdate( 'Y-m-d\TH:i:s\Z' );
 	}
 
 	/**
@@ -862,7 +862,7 @@ class Query extends Base {
 			// Add value to the cache
 			$this->cache_add( $cache_key, $cache_value, $this->cache_group );
 
-		// Value exists in cache
+			// Value exists in cache
 		} else {
 			$item_ids          = $cache_value['item_ids'];
 			$this->found_items = intval( $cache_value['found_items'] );
@@ -902,8 +902,8 @@ class Query extends Base {
 		$orderby = $this->get_order_by( $order );
 
 		// Limit & Offset
-		$limit   = absint( $this->query_vars['number'] );
-		$offset  = absint( $this->query_vars['offset'] );
+		$limit  = absint( $this->query_vars['number'] );
+		$offset = absint( $this->query_vars['offset'] );
 
 		// Limits
 		if ( ! empty( $limit ) ) {
@@ -922,7 +922,7 @@ class Query extends Base {
 		$groupby = $this->parse_groupby( $this->query_vars['groupby'] );
 
 		// Fields
-		$fields  = $this->parse_fields( $this->query_vars['fields'] );
+		$fields = $this->parse_fields( $this->query_vars['fields'] );
 
 		// Setup the query array (compact() is too opaque here)
 		$query = array(
@@ -931,7 +931,7 @@ class Query extends Base {
 			'where'   => $where,
 			'orderby' => $orderby,
 			'limits'  => $limits,
-			'groupby' => $groupby
+			'groupby' => $groupby,
 		);
 
 		/**
@@ -979,7 +979,7 @@ class Query extends Base {
 		if ( ! empty( $this->query_vars['count'] ) || in_array( $this->query_vars['orderby'], array( 'none', array(), false ), true ) ) {
 			$orderby = '';
 
-		// Ordering by something, so figure it out
+			// Ordering by something, so figure it out
 		} elseif ( ! empty( $this->query_vars['orderby'] ) ) {
 
 			// Array of keys, or comma separated
@@ -988,7 +988,7 @@ class Query extends Base {
 				: preg_split( '/[,\s]/', $this->query_vars['orderby'] );
 
 			$orderby_array = array();
-			$possible_ins  = $this->get_columns( array( 'in'       => true ), 'and', 'name' );
+			$possible_ins  = $this->get_columns( array( 'in' => true ), 'and', 'name' );
 			$sortables     = $this->get_columns( array( 'sortable' => true ), 'and', 'name' );
 
 			// Loop through possible order by's
@@ -1004,7 +1004,7 @@ class Query extends Base {
 					$_orderby = $_value;
 					$_item    = $order;
 
-				// Key is string
+					// Key is string
 				} else {
 					$_orderby = $_key;
 					$_item    = $_value;
@@ -1134,7 +1134,7 @@ class Query extends Base {
 					// Add to where array
 					$where[ $column->name ] = $statement;
 
-				// Numeric/String/Float (prepared)
+					// Numeric/String/Float (prepared)
 				} else {
 					$pattern   = $this->get_column_field( array( 'name' => $column->name ), 'pattern', '%s' );
 					$where_id  = $this->query_vars[ $column->name ];
@@ -1159,7 +1159,7 @@ class Query extends Base {
 
 						$where[ $column->name ] = $this->get_db()->prepare( $statement, $column_value );
 
-					// Implode
+						// Implode
 					} else {
 						$where[ $where_id ] = "{$this->table_alias}.{$column->name} IN ( '" . implode( "', '", $this->get_db()->_escape( $this->query_vars[ $where_id ] ) ) . "' )";
 					}
@@ -1180,7 +1180,7 @@ class Query extends Base {
 
 						$where[ $column->name ] = $this->get_db()->prepare( $statement, $column_value );
 
-					// Implode
+						// Implode
 					} else {
 						$where[ $where_id ] = "{$this->table_alias}.{$column->name} NOT IN ( '" . implode( "', '", $this->get_db()->_escape( $this->query_vars[ $where_id ] ) ) . "' )";
 					}
@@ -1199,7 +1199,7 @@ class Query extends Base {
 					$defaults = array(
 						'column'    => "{$this->table_alias}.{$column->name}",
 						'before'    => $column_date,
-						'inclusive' => true
+						'inclusive' => true,
 					);
 
 					// Default date query
@@ -1399,7 +1399,7 @@ class Query extends Base {
 
 			$parsed = "FIELD( {$this->table_alias}.{$column->name}, {$item_in} )";
 
-		// Specific column
+			// Specific column
 		} else {
 
 			// Orderby is a literal, sortable column name
@@ -1421,7 +1421,7 @@ class Query extends Base {
 	 * @param string $order The 'order' query variable.
 	 * @return string The sanitized 'order' query variable.
 	 */
-	private function parse_order( $order  = '' ) {
+	private function parse_order( $order = '' ) {
 
 		// Bail if malformed
 		if ( empty( $order ) || ! is_string( $order ) ) {
@@ -1521,7 +1521,7 @@ class Query extends Base {
 				? wp_list_pluck( $items, $primary )
 				: wp_list_pluck( $items, $field, $primary );
 
-		// Arrays could be anything
+			// Arrays could be anything
 		} elseif ( is_array( $fields ) ) {
 			$new_items = array();
 			$fields    = array_flip( $fields );
@@ -1725,7 +1725,7 @@ class Query extends Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @param int $item_id
+	 * @param int   $item_id
 	 * @param array $data
 	 * @return boolean
 	 */
@@ -1741,7 +1741,7 @@ class Query extends Base {
 		$primary = $this->get_primary_column_name();
 
 		// Get item to update (from database, not cache)
-		$item    = $this->get_item_raw( $primary, $item_id );
+		$item = $this->get_item_raw( $primary, $item_id );
 
 		// Bail if item does not exist to update
 		if ( empty( $item ) ) {
@@ -1839,9 +1839,9 @@ class Query extends Base {
 		}
 
 		// Try to delete
-		$table   = $this->get_table_name();
-		$where   = array( $primary => $item_id );
-		$result  = $this->get_db()->delete( $table, $where );
+		$table  = $this->get_table_name();
+		$where  = array( $primary => $item_id );
+		$result = $this->get_db()->delete( $table, $where );
 
 		// Bail on failure
 		if ( $this->failed( $result ) ) {
@@ -1920,7 +1920,7 @@ class Query extends Base {
 		foreach ( $item as $key => $value ) {
 
 			// Always strip slashes from all values
-			$value    = stripslashes( $value );
+			$value = stripslashes( $value );
 
 			// Get callback for column
 			$callback = $this->get_column_field( array( 'name' => $key ), 'validate' );
@@ -1937,7 +1937,7 @@ class Query extends Base {
 				// Update the value
 				$item[ $key ] = $validated;
 
-			// Include basic stripslashes() call
+				// Include basic stripslashes() call
 			} else {
 				$item[ $key ] = $value;
 			}
@@ -1983,7 +1983,7 @@ class Query extends Base {
 					$item->{$key} = null;
 				}
 
-			// Set if explicitly allowed
+				// Set if explicitly allowed
 			} elseif ( is_array( $item ) ) {
 				$item[ $key ] = $value;
 			} elseif ( is_object( $item ) ) {
@@ -2008,10 +2008,10 @@ class Query extends Base {
 	private function default_item() {
 
 		// Default return value
-		$retval   = array();
+		$retval = array();
 
 		// Get column names and defaults
-		$names    = $this->get_columns( array(), 'and', 'name'    );
+		$names    = $this->get_columns( array(), 'and', 'name' );
 		$defaults = $this->get_columns( array(), 'and', 'default' );
 
 		// Put together an item using default values
@@ -2109,12 +2109,12 @@ class Query extends Base {
 		if ( empty( $result ) ) {
 			$retval = true;
 
-		// Bail if an error occurred
+			// Bail if an error occurred
 		} elseif ( is_wp_error( $result ) ) {
 			$this->last_error = $result;
 			$retval           = true;
 
-		// No errors
+			// No errors
 		} else {
 			$retval = false;
 		}
@@ -2401,7 +2401,7 @@ class Query extends Base {
 		$primary = $this->get_primary_column_name();
 
 		// Default return value
-		$retval  = $this->cache_group;
+		$retval = $this->cache_group;
 
 		// Only allow non-primary groups
 		if ( ! empty( $group ) && ( $group !== $primary ) ) {
@@ -2827,7 +2827,7 @@ class Query extends Base {
 			if ( ! is_array( $compare ) ) {
 				$query .= " AND {$this->table_alias}.{$column} = {$compare} ";
 
-			// More complex WHERE clause.
+				// More complex WHERE clause.
 			} else {
 				$value = isset( $compare['value'] )
 					? $compare['value']
@@ -2854,7 +2854,7 @@ class Query extends Base {
 					if ( 'IN' === $compare_clause || 'NOT IN' === $compare_clause ) {
 						$value = "('" . implode( "','", $this->get_db()->_escape( $compare['value'] ) ) . "')";
 
-					// Parse & escape for BETWEEN.
+						// Parse & escape for BETWEEN.
 					} elseif ( is_array( $value ) && 2 === count( $value ) && 'BETWEEN' === $compare_clause ) {
 						$value = " {$this->get_db()->_escape( $value[0] )} AND {$this->get_db()->_escape( $value[1] )} ";
 					}

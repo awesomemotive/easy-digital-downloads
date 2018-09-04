@@ -13,297 +13,240 @@ defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'EDD_License' ) ) :
 
-/**
- * EDD_License Class
- */
-class EDD_License {
-	private $file;
-	private $license;
-	private $item_name;
-	private $item_id;
-	private $item_shortname;
-	private $version;
-	private $author;
-	private $api_url = 'https://easydigitaldownloads.com/edd-sl-api/';
-
 	/**
-	 * Class constructor
-	 *
-	 * @param string  $_file
-	 * @param string  $_item_name
-	 * @param string  $_version
-	 * @param string  $_author
-	 * @param string  $_optname
-	 * @param string  $_api_url
-	 * @param int     $_item_id
+	 * EDD_License Class
 	 */
-	public function __construct( $_file, $_item_name, $_version, $_author, $_optname = null, $_api_url = null, $_item_id = null ) {
-		$this->file      = $_file;
-		$this->item_name = $_item_name;
-
-		if ( is_numeric( $_item_id ) ) {
-			$this->item_id = absint( $_item_id );
-		}
-
-		$this->item_shortname = 'edd_' . preg_replace( '/[^a-zA-Z0-9_\s]/', '', str_replace( ' ', '_', strtolower( $this->item_name ) ) );
-		$this->version        = $_version;
-		$this->license        = trim( edd_get_option( $this->item_shortname . '_license_key', '' ) );
-		$this->author         = $_author;
-		$this->api_url        = is_null( $_api_url ) ? $this->api_url : $_api_url;
+	class EDD_License {
+		private $file;
+		private $license;
+		private $item_name;
+		private $item_id;
+		private $item_shortname;
+		private $version;
+		private $author;
+		private $api_url = 'https://easydigitaldownloads.com/edd-sl-api/';
 
 		/**
-		 * Allows for backwards compatibility with old license options,
-		 * i.e. if the plugins had license key fields previously, the license
-		 * handler will automatically pick these up and use those in lieu of the
-		 * user having to reactive their license.
+		 * Class constructor
+		 *
+		 * @param string $_file
+		 * @param string $_item_name
+		 * @param string $_version
+		 * @param string $_author
+		 * @param string $_optname
+		 * @param string $_api_url
+		 * @param int    $_item_id
 		 */
-		if ( ! empty( $_optname ) ) {
-			$opt = edd_get_option( $_optname, false );
+		public function __construct( $_file, $_item_name, $_version, $_author, $_optname = null, $_api_url = null, $_item_id = null ) {
+			$this->file      = $_file;
+			$this->item_name = $_item_name;
 
-			if ( isset( $opt ) && empty( $this->license ) ) {
-				$this->license = trim( $opt );
+			if ( is_numeric( $_item_id ) ) {
+				$this->item_id = absint( $_item_id );
+			}
+
+			$this->item_shortname = 'edd_' . preg_replace( '/[^a-zA-Z0-9_\s]/', '', str_replace( ' ', '_', strtolower( $this->item_name ) ) );
+			$this->version        = $_version;
+			$this->license        = trim( edd_get_option( $this->item_shortname . '_license_key', '' ) );
+			$this->author         = $_author;
+			$this->api_url        = is_null( $_api_url ) ? $this->api_url : $_api_url;
+
+			/**
+			 * Allows for backwards compatibility with old license options,
+			 * i.e. if the plugins had license key fields previously, the license
+			 * handler will automatically pick these up and use those in lieu of the
+			 * user having to reactive their license.
+			 */
+			if ( ! empty( $_optname ) ) {
+				$opt = edd_get_option( $_optname, false );
+
+				if ( isset( $opt ) && empty( $this->license ) ) {
+					$this->license = trim( $opt );
+				}
+			}
+
+			// Setup hooks
+			$this->includes();
+			$this->hooks();
+		}
+
+		/**
+		 * Include the updater class
+		 *
+		 * @access  private
+		 * @return  void
+		 */
+		private function includes() {
+			if ( ! class_exists( 'EDD_SL_Plugin_Updater' ) ) {
+				require_once 'EDD_SL_Plugin_Updater.php';
 			}
 		}
 
-		// Setup hooks
-		$this->includes();
-		$this->hooks();
-	}
+		/**
+		 * Setup hooks
+		 *
+		 * @access  private
+		 * @return  void
+		 */
+		private function hooks() {
 
-	/**
-	 * Include the updater class
-	 *
-	 * @access  private
-	 * @return  void
-	 */
-	private function includes() {
-		if ( ! class_exists( 'EDD_SL_Plugin_Updater' ) )  {
-			require_once 'EDD_SL_Plugin_Updater.php';
-		}
-	}
+			// Register settings
+			add_filter( 'edd_settings_licenses', array( $this, 'settings' ), 1 );
 
-	/**
-	 * Setup hooks
-	 *
-	 * @access  private
-	 * @return  void
-	 */
-	private function hooks() {
+			// Display help text at the top of the Licenses tab
+			add_action( 'edd_settings_tab_top', array( $this, 'license_help_text' ) );
 
-		// Register settings
-		add_filter( 'edd_settings_licenses', array( $this, 'settings' ), 1 );
+			// Activate license key on settings save
+			add_action( 'admin_init', array( $this, 'activate_license' ) );
 
-		// Display help text at the top of the Licenses tab
-		add_action( 'edd_settings_tab_top', array( $this, 'license_help_text' ) );
+			// Deactivate license key
+			add_action( 'admin_init', array( $this, 'deactivate_license' ) );
 
-		// Activate license key on settings save
-		add_action( 'admin_init', array( $this, 'activate_license' ) );
+			// Check that license is valid once per week
+			if ( edd_doing_cron() ) {
+				add_action( 'edd_weekly_scheduled_events', array( $this, 'weekly_license_check' ) );
+			}
 
-		// Deactivate license key
-		add_action( 'admin_init', array( $this, 'deactivate_license' ) );
+			// For testing license notices, uncomment this line to force checks on every page load
+			// add_action( 'admin_init', array( $this, 'weekly_license_check' ) );
+			// Updater
+			add_action( 'admin_init', array( $this, 'auto_updater' ), 0 );
 
-		// Check that license is valid once per week
-		if ( edd_doing_cron() ) {
-			add_action( 'edd_weekly_scheduled_events', array( $this, 'weekly_license_check' ) );
+			// Display notices to admins
+			add_action( 'admin_notices', array( $this, 'notices' ) );
+
+			add_action( 'in_plugin_update_message-' . plugin_basename( $this->file ), array( $this, 'plugin_row_license_missing' ), 10, 2 );
+
+			// Register plugins for beta support
+			add_filter( 'edd_beta_enabled_extensions', array( $this, 'register_beta_support' ) );
 		}
 
-		// For testing license notices, uncomment this line to force checks on every page load
-		//add_action( 'admin_init', array( $this, 'weekly_license_check' ) );
+		/**
+		 * Auto updater
+		 *
+		 * @access  private
+		 * @return  void
+		 */
+		public function auto_updater() {
+			edd_get_option( 'enabled_betas', array() );
 
-		// Updater
-		add_action( 'admin_init', array( $this, 'auto_updater' ), 0 );
+			$args = array(
+				'version' => $this->version,
+				'license' => $this->license,
+				'author'  => $this->author,
+				'beta'    => function_exists( 'edd_extension_has_beta_support' ) && edd_extension_has_beta_support( $this->item_shortname ),
+			);
 
-		// Display notices to admins
-		add_action( 'admin_notices', array( $this, 'notices' ) );
+			if ( ! empty( $this->item_id ) ) {
+				$args['item_id'] = $this->item_id;
+			} else {
+				$args['item_name'] = $this->item_name;
+			}
 
-		add_action( 'in_plugin_update_message-' . plugin_basename( $this->file ), array( $this, 'plugin_row_license_missing' ), 10, 2 );
-
-		// Register plugins for beta support
-		add_filter( 'edd_beta_enabled_extensions', array( $this, 'register_beta_support' ) );
-	}
-
-	/**
-	 * Auto updater
-	 *
-	 * @access  private
-	 * @return  void
-	 */
-	public function auto_updater() {
-		edd_get_option( 'enabled_betas', array() );
-
-		$args = array(
-			'version'   => $this->version,
-			'license'   => $this->license,
-			'author'    => $this->author,
-			'beta'      => function_exists( 'edd_extension_has_beta_support' ) && edd_extension_has_beta_support( $this->item_shortname ),
-		);
-
-		if ( ! empty( $this->item_id ) ) {
-			$args['item_id']   = $this->item_id;
-		} else {
-			$args['item_name'] = $this->item_name;
+			// Setup the updater
+			new EDD_SL_Plugin_Updater(
+				$this->api_url,
+				$this->file,
+				$args
+			);
 		}
 
-		// Setup the updater
-		new EDD_SL_Plugin_Updater(
-			$this->api_url,
-			$this->file,
-			$args
-		);
-	}
-
-	/**
-	 * Add license field to settings
-	 *
-	 * @param array   $settings
-	 * @return  array
-	 */
-	public function settings( $settings ) {
-		return array_merge( $settings, array(
-			array(
-				'id'      => $this->item_shortname . '_license_key',
-				'name'    => sprintf( __( '%1$s', 'easy-digital-downloads' ), $this->item_name ),
-				'desc'    => '',
-				'type'    => 'license_key',
-				'options' => array( 'is_valid_license_option' => $this->item_shortname . '_license_active' ),
-				'size'    => 'regular'
-			)
-		) );
-	}
-
-	/**
-	 * Display help text at the top of the Licenses tag
-	 *
-	 * @since   2.5
-	 * @param   string   $active_tab
-	 * @return  void
-	 */
-	public function license_help_text( $active_tab = '' ) {
-		static $has_ran = false;
-
-		if ( 'licenses' !== $active_tab ) {
-			return;
+		/**
+		 * Add license field to settings
+		 *
+		 * @param array $settings
+		 * @return  array
+		 */
+		public function settings( $settings ) {
+			return array_merge(
+				$settings,
+				array(
+					array(
+						'id'      => $this->item_shortname . '_license_key',
+						'name'    => sprintf( __( '%1$s', 'easy-digital-downloads' ), $this->item_name ),
+						'desc'    => '',
+						'type'    => 'license_key',
+						'options' => array( 'is_valid_license_option' => $this->item_shortname . '_license_active' ),
+						'size'    => 'regular',
+					),
+				)
+			);
 		}
 
-		if ( ! empty( $has_ran ) ) {
-			return;
-		}
+		/**
+		 * Display help text at the top of the Licenses tag
+		 *
+		 * @since   2.5
+		 * @param   string $active_tab
+		 * @return  void
+		 */
+		public function license_help_text( $active_tab = '' ) {
+			static $has_ran = false;
 
-		echo '<p>' . sprintf(
-			__( 'Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please <a href="%s" target="_blank">renew your license</a>.', 'easy-digital-downloads' ),
-			'http://docs.easydigitaldownloads.com/article/1000-license-renewal'
-		) . '</p>';
-
-		$has_ran = true;
-	}
-
-	/**
-	 * Activate the license key
-	 *
-	 * @return  void
-	 */
-	public function activate_license() {
-
-		if ( ! isset( $_POST['edd_settings'] ) ) {
-			return;
-		}
-
-		if ( ! isset( $_REQUEST[ $this->item_shortname . '_license_key-nonce'] ) || ! wp_verify_nonce( $_REQUEST[ $this->item_shortname . '_license_key-nonce'], $this->item_shortname . '_license_key-nonce' ) ) {
-			return;
-		}
-
-		if ( ! current_user_can( 'manage_shop_settings' ) ) {
-			return;
-		}
-
-		if ( empty( $_POST['edd_settings'][ $this->item_shortname . '_license_key'] ) ) {
-			delete_option( $this->item_shortname . '_license_active' );
-			return;
-		}
-
-		foreach ( $_POST as $key => $value ) {
-			if ( false !== strpos( $key, 'license_key_deactivate' ) ) {
-				// Don't activate a key when deactivating a different key
+			if ( 'licenses' !== $active_tab ) {
 				return;
 			}
+
+			if ( ! empty( $has_ran ) ) {
+				return;
+			}
+
+			echo '<p>' . sprintf(
+				__( 'Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please <a href="%s" target="_blank">renew your license</a>.', 'easy-digital-downloads' ),
+				'http://docs.easydigitaldownloads.com/article/1000-license-renewal'
+			) . '</p>';
+
+			$has_ran = true;
 		}
 
-		$details = get_option( $this->item_shortname . '_license_active' );
+		/**
+		 * Activate the license key
+		 *
+		 * @return  void
+		 */
+		public function activate_license() {
+			if ( ! isset( $_POST['edd_settings'] ) ) {
+				return;
+			}
 
-		if ( is_object( $details ) && 'valid' === $details->license ) {
-			return;
-		}
+			if ( ! isset( $_REQUEST[ $this->item_shortname . '_license_key-nonce' ] ) || ! wp_verify_nonce( $_REQUEST[ $this->item_shortname . '_license_key-nonce' ], $this->item_shortname . '_license_key-nonce' ) ) {
+				return;
+			}
 
-		$license = sanitize_text_field( $_POST['edd_settings'][ $this->item_shortname . '_license_key'] );
+			if ( ! current_user_can( 'manage_shop_settings' ) ) {
+				return;
+			}
 
-		if ( empty( $license ) ) {
-			return;
-		}
+			if ( empty( $_POST['edd_settings'][ $this->item_shortname . '_license_key' ] ) ) {
+				delete_option( $this->item_shortname . '_license_active' );
+				return;
+			}
 
-		// Data to send to the API
-		$api_params = array(
-			'edd_action' => 'activate_license',
-			'license'    => $license,
-			'item_name'  => urlencode( $this->item_name ),
-			'url'        => home_url()
-		);
+			foreach ( $_POST as $key => $value ) {
+				if ( false !== strpos( $key, 'license_key_deactivate' ) ) {
+					// Don't activate a key when deactivating a different key
+					return;
+				}
+			}
 
-		// Call the API
-		$response = wp_remote_post(
-			$this->api_url,
-			array(
-				'timeout'   => 15,
-				'sslverify' => false,
-				'body'      => $api_params
-			)
-		);
+			$details = get_option( $this->item_shortname . '_license_active' );
 
-		// Make sure there are no errors
-		if ( is_wp_error( $response ) ) {
-			return;
-		}
+			if ( is_object( $details ) && 'valid' === $details->license ) {
+				return;
+			}
 
-		// Tell WordPress to look for updates
-		set_site_transient( 'update_plugins', null );
+			$license = sanitize_text_field( $_POST['edd_settings'][ $this->item_shortname . '_license_key' ] );
 
-		// Decode license data
-		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
-
-		update_option( $this->item_shortname . '_license_active', $license_data );
-	}
-
-	/**
-	 * Deactivate the license key
-	 *
-	 * @return  void
-	 */
-	public function deactivate_license() {
-
-		if ( ! isset( $_POST['edd_settings'] ) ) {
-			return;
-		}
-
-		if ( ! isset( $_POST['edd_settings'][ $this->item_shortname . '_license_key'] ) ) {
-			return;
-		}
-
-		if ( ! wp_verify_nonce( $_REQUEST[ $this->item_shortname . '_license_key-nonce'], $this->item_shortname . '_license_key-nonce' ) ) {
-			wp_die( __( 'Nonce verification failed', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
-		}
-
-		if ( ! current_user_can( 'manage_shop_settings' ) ) {
-			return;
-		}
-
-		// Run on deactivate button press
-		if ( isset( $_POST[ $this->item_shortname . '_license_key_deactivate'] ) ) {
+			if ( empty( $license ) ) {
+				return;
+			}
 
 			// Data to send to the API
 			$api_params = array(
-				'edd_action' => 'deactivate_license',
-				'license'    => $this->license,
+				'edd_action' => 'activate_license',
+				'license'    => $license,
 				'item_name'  => urlencode( $this->item_name ),
-				'url'        => home_url()
+				'url'        => home_url(),
 			);
 
 			// Call the API
@@ -312,7 +255,7 @@ class EDD_License {
 				array(
 					'timeout'   => 15,
 					'sslverify' => false,
-					'body'      => $api_params
+					'body'      => $api_params,
 				)
 			);
 
@@ -321,125 +264,179 @@ class EDD_License {
 				return;
 			}
 
-			delete_option( $this->item_shortname . '_license_active' );
-		}
-	}
+			// Tell WordPress to look for updates
+			set_site_transient( 'update_plugins', null );
 
-	/**
-	 * Check if license key is valid once per week
-	 *
-	 * @since   2.5
-	 * @return  void
-	 */
-	public function weekly_license_check() {
+			// Decode license data
+			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
-		if ( ! empty( $_POST['edd_settings'] ) ) {
-			return; // Don't fire when saving settings
+			update_option( $this->item_shortname . '_license_active', $license_data );
 		}
 
-		if ( empty( $this->license ) ) {
-			return;
-		}
+		/**
+		 * Deactivate the license key
+		 *
+		 * @return  void
+		 */
+		public function deactivate_license() {
+			if ( ! isset( $_POST['edd_settings'] ) ) {
+				return;
+			}
 
-		// data to send in our API request
-		$api_params = array(
-			'edd_action'=> 'check_license',
-			'license' 	=> $this->license,
-			'item_name' => urlencode( $this->item_name ),
-			'url'       => home_url()
-		);
+			if ( ! isset( $_POST['edd_settings'][ $this->item_shortname . '_license_key' ] ) ) {
+				return;
+			}
 
-		// Call the API
-		$response = wp_remote_post(
-			$this->api_url,
-			array(
-				'timeout'   => 15,
-				'sslverify' => false,
-				'body'      => $api_params
-			)
-		);
+			if ( ! wp_verify_nonce( $_REQUEST[ $this->item_shortname . '_license_key-nonce' ], $this->item_shortname . '_license_key-nonce' ) ) {
+				wp_die( __( 'Nonce verification failed', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+			}
 
-		// make sure the response came back okay
-		if ( is_wp_error( $response ) ) {
-			return false;
-		}
+			if ( ! current_user_can( 'manage_shop_settings' ) ) {
+				return;
+			}
 
-		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+			// Run on deactivate button press
+			if ( isset( $_POST[ $this->item_shortname . '_license_key_deactivate' ] ) ) {
 
-		update_option( $this->item_shortname . '_license_active', $license_data );
-	}
-
-	/**
-	 * Admin notices for errors
-	 *
-	 * @return  void
-	 */
-	public function notices() {
-		static $showed_invalid_message = false;
-
-		if ( empty( $this->license ) ) {
-			return;
-		}
-
-		if ( ! current_user_can( 'manage_shop_settings' ) ) {
-			return;
-		}
-
-		$messages = array();
-
-		$license = get_option( $this->item_shortname . '_license_active' );
-
-		if ( is_object( $license ) && 'valid' !== $license->license && empty( $showed_invalid_message ) ) {
-			if ( empty( $_GET['tab'] ) || 'licenses' !== $_GET['tab'] ) {
-
-				$messages[] = sprintf(
-					__( 'You have invalid or expired license keys for Easy Digital Downloads. <a href="%s">Fix this</a>', 'easy-digital-downloads' ),
-					admin_url( 'edit.php?post_type=download&page=edd-settings&tab=licenses' )
+				// Data to send to the API
+				$api_params = array(
+					'edd_action' => 'deactivate_license',
+					'license'    => $this->license,
+					'item_name'  => urlencode( $this->item_name ),
+					'url'        => home_url(),
 				);
 
-				$showed_invalid_message = true;
+				// Call the API
+				$response = wp_remote_post(
+					$this->api_url,
+					array(
+						'timeout'   => 15,
+						'sslverify' => false,
+						'body'      => $api_params,
+					)
+				);
+
+				// Make sure there are no errors
+				if ( is_wp_error( $response ) ) {
+					return;
+				}
+
+				delete_option( $this->item_shortname . '_license_active' );
 			}
 		}
 
-		if ( ! empty( $messages ) ) {
-			foreach( $messages as $message ) {
-				echo '<div class="edd-notice error">';
+		/**
+		 * Check if license key is valid once per week
+		 *
+		 * @since   2.5
+		 * @return  void
+		 */
+		public function weekly_license_check() {
+			if ( ! empty( $_POST['edd_settings'] ) ) {
+				return; // Don't fire when saving settings
+			}
+
+			if ( empty( $this->license ) ) {
+				return;
+			}
+
+			// data to send in our API request
+			$api_params = array(
+				'edd_action' => 'check_license',
+				'license'    => $this->license,
+				'item_name'  => urlencode( $this->item_name ),
+				'url'        => home_url(),
+			);
+
+			// Call the API
+			$response = wp_remote_post(
+				$this->api_url,
+				array(
+					'timeout'   => 15,
+					'sslverify' => false,
+					'body'      => $api_params,
+				)
+			);
+
+			// make sure the response came back okay
+			if ( is_wp_error( $response ) ) {
+				return false;
+			}
+
+			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+			update_option( $this->item_shortname . '_license_active', $license_data );
+		}
+
+		/**
+		 * Admin notices for errors
+		 *
+		 * @return  void
+		 */
+		public function notices() {
+			static $showed_invalid_message = false;
+
+			if ( empty( $this->license ) ) {
+				return;
+			}
+
+			if ( ! current_user_can( 'manage_shop_settings' ) ) {
+				return;
+			}
+
+			$messages = array();
+
+			$license = get_option( $this->item_shortname . '_license_active' );
+
+			if ( is_object( $license ) && 'valid' !== $license->license && empty( $showed_invalid_message ) ) {
+				if ( empty( $_GET['tab'] ) || 'licenses' !== $_GET['tab'] ) {
+					$messages[] = sprintf(
+						__( 'You have invalid or expired license keys for Easy Digital Downloads. <a href="%s">Fix this</a>', 'easy-digital-downloads' ),
+						admin_url( 'edit.php?post_type=download&page=edd-settings&tab=licenses' )
+					);
+
+					$showed_invalid_message = true;
+				}
+			}
+
+			if ( ! empty( $messages ) ) {
+				foreach ( $messages as $message ) {
+					echo '<div class="edd-notice error">';
 					echo '<p>' . $message . '</p>';
-				echo '</div>';
+					echo '</div>';
+				}
 			}
 		}
-	}
 
-	/**
-	 * Displays message inline on plugin row that the license key is missing
-	 *
-	 * @since   2.5
-	 * @return  void
-	 */
-	public function plugin_row_license_missing( $plugin_data, $version_info ) {
-		static $showed_imissing_key_message = array();
+		/**
+		 * Displays message inline on plugin row that the license key is missing
+		 *
+		 * @since   2.5
+		 * @return  void
+		 */
+		public function plugin_row_license_missing( $plugin_data, $version_info ) {
+			static $showed_imissing_key_message = array();
 
-		$license = get_option( $this->item_shortname . '_license_active' );
+			$license = get_option( $this->item_shortname . '_license_active' );
 
-		if ( ( ! is_object( $license ) || 'valid' !== $license->license ) && empty( $showed_imissing_key_message[ $this->item_shortname ] ) ) {
-			echo '&nbsp;<strong><a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=licenses' ) ) . '">' . __( 'Enter valid license key for automatic updates.', 'easy-digital-downloads' ) . '</a></strong>';
-			$showed_imissing_key_message[ $this->item_shortname ] = true;
+			if ( ( ! is_object( $license ) || 'valid' !== $license->license ) && empty( $showed_imissing_key_message[ $this->item_shortname ] ) ) {
+				echo '&nbsp;<strong><a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=licenses' ) ) . '">' . __( 'Enter valid license key for automatic updates.', 'easy-digital-downloads' ) . '</a></strong>';
+				$showed_imissing_key_message[ $this->item_shortname ] = true;
+			}
 		}
 
-	}
+		/**
+		 * Adds this plugin to the beta page
+		 *
+		 * @param   array $products
+		 * @since   2.6.11
+		 * @return  void
+		 */
+		public function register_beta_support( $products ) {
+			$products[ $this->item_shortname ] = $this->item_name;
 
-	/**
-	 * Adds this plugin to the beta page
-	 *
-	 * @param   array $products
-	 * @since   2.6.11
-	 * @return  void
-	 */
-	public function register_beta_support( $products ) {
-		$products[ $this->item_shortname ] = $this->item_name;
-
-		return $products;
+			return $products;
+		}
 	}
-}
 
 endif; // end class_exists check

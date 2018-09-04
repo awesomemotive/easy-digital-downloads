@@ -126,7 +126,6 @@ class Most_Valuable_Customers_List_Table extends \EDD_Customer_Reports_Table {
 	 * @param string $which
 	 */
 	protected function pagination( $which ) {
-
 	}
 
 	/**
@@ -137,6 +136,5 @@ class Most_Valuable_Customers_List_Table extends \EDD_Customer_Reports_Table {
 	 * @param string $which
 	 */
 	protected function display_tablenav( $which ) {
-
 	}
 }

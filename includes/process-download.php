@@ -7,7 +7,7 @@
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-  */
+ */
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -26,17 +26,20 @@ function edd_process_download() {
 		$_GET['download_id'] = $_GET['download'];
 	}
 
-	$args = apply_filters( 'edd_process_download_args', array(
-		'download' => ( isset( $_GET['download_id'] ) )  ? (int) $_GET['download_id']                       : '',
-		'email'    => ( isset( $_GET['email'] ) )        ? rawurldecode( $_GET['email'] )                   : '',
-		'expire'   => ( isset( $_GET['expire'] ) )       ? rawurldecode( $_GET['expire'] )                  : '',
-		'file_key' => ( isset( $_GET['file'] ) )         ? (int) $_GET['file']                              : '',
-		'price_id' => ( isset( $_GET['price_id'] ) )     ? (int) $_GET['price_id']                          : false,
-		'key'      => ( isset( $_GET['download_key'] ) ) ? $_GET['download_key']                            : '',
-		'eddfile'  => ( isset( $_GET['eddfile'] ) )      ? $_GET['eddfile']                                 : '',
-		'ttl'      => ( isset( $_GET['ttl'] ) )          ? $_GET['ttl']                                     : '',
-		'token'    => ( isset( $_GET['token'] ) )        ? $_GET['token']                                   : ''
-	) );
+	$args = apply_filters(
+		'edd_process_download_args',
+		array(
+			'download' => ( isset( $_GET['download_id'] ) ) ? (int) $_GET['download_id'] : '',
+			'email'    => ( isset( $_GET['email'] ) ) ? rawurldecode( $_GET['email'] ) : '',
+			'expire'   => ( isset( $_GET['expire'] ) ) ? rawurldecode( $_GET['expire'] ) : '',
+			'file_key' => ( isset( $_GET['file'] ) ) ? (int) $_GET['file'] : '',
+			'price_id' => ( isset( $_GET['price_id'] ) ) ? (int) $_GET['price_id'] : false,
+			'key'      => ( isset( $_GET['download_key'] ) ) ? $_GET['download_key'] : '',
+			'eddfile'  => ( isset( $_GET['eddfile'] ) ) ? $_GET['eddfile'] : '',
+			'ttl'      => ( isset( $_GET['ttl'] ) ) ? $_GET['ttl'] : '',
+			'token'    => ( isset( $_GET['token'] ) ) ? $_GET['token'] : '',
+		)
+	);
 
 	if ( ! empty( $args['eddfile'] ) && ! empty( $args['ttl'] ) && ! empty( $args['token'] ) ) {
 
@@ -63,7 +66,7 @@ function edd_process_download() {
 		do_action( 'edd_process_verified_download', $args['download'], $args['email'], $args['payment'], $args );
 
 		// Determine the download method set in settings
-		$method  = edd_get_file_download_method();
+		$method = edd_get_file_download_method();
 
 		// Payment has been verified, setup the download
 		$download_files = edd_get_download_files( $args['download'] );
@@ -91,10 +94,10 @@ function edd_process_download() {
 				if ( $thumbnail_size ) {
 					$attachment_data = wp_get_attachment_image_src( $attachment_id, $thumbnail_size, false );
 
-					if ( false !== $attachment_data && ! empty( $attachment_data[0] ) && filter_var( $attachment_data[0], FILTER_VALIDATE_URL) !== false ) {
-						$attached_file  = $attachment_data['0'];
-						$attached_file  = str_replace( site_url(), '', $attached_file );
-						$attached_file  = realpath( ABSPATH . $attached_file );
+					if ( false !== $attachment_data && ! empty( $attachment_data[0] ) && filter_var( $attachment_data[0], FILTER_VALIDATE_URL ) !== false ) {
+						$attached_file = $attachment_data['0'];
+						$attached_file = str_replace( site_url(), '', $attached_file );
+						$attached_file = realpath( ABSPATH . $attached_file );
 					}
 				}
 
@@ -146,7 +149,7 @@ function edd_process_download() {
 		do_action( 'edd_process_download_pre_record_log', $requested_file, $args, $method );
 
 		// Record this file download in the log
-		$user_info = array();
+		$user_info          = array();
 		$user_info['email'] = $args['email'];
 
 		if ( is_user_logged_in() ) {
@@ -188,8 +191,7 @@ function edd_process_download() {
 		}
 
 		switch ( $method ) {
-			case 'redirect' :
-
+			case 'redirect':
 				// Redirect straight to the file
 				edd_deliver_download( $requested_file, true );
 				break;
@@ -203,7 +205,7 @@ function edd_process_download() {
 					/** This is an absolute path */
 					$direct    = true;
 					$file_path = $requested_file;
-				} else if ( defined( 'UPLOADS' ) && strpos( $requested_file, UPLOADS ) !== false ) {
+				} elseif ( defined( 'UPLOADS' ) && strpos( $requested_file, UPLOADS ) !== false ) {
 
 					/**
 					 * This is a local file given by URL so we need to figure out the path
@@ -213,13 +215,13 @@ function edd_process_download() {
 					$file_path = str_replace( site_url(), '', $requested_file );
 					$file_path = realpath( ABSPATH . $file_path );
 					$direct    = true;
-				} else if ( strpos( $requested_file, content_url() ) !== false ) {
+				} elseif ( strpos( $requested_file, content_url() ) !== false ) {
 
 					/** This is a local file given by URL so we need to figure out the path */
 					$file_path = str_replace( content_url(), WP_CONTENT_DIR, $requested_file );
 					$file_path = realpath( $file_path );
 					$direct    = true;
-				} else if ( strpos( $requested_file, set_url_scheme( content_url(), 'https' ) ) !== false ) {
+				} elseif ( strpos( $requested_file, set_url_scheme( content_url(), 'https' ) ) !== false ) {
 
 					/** This is a local file given by an HTTPS URL so we need to figure out the path */
 					$file_path = str_replace( set_url_scheme( content_url(), 'https' ), WP_CONTENT_DIR, $requested_file );
@@ -228,12 +230,11 @@ function edd_process_download() {
 				}
 
 				// Set the file size header
-				header( "Content-Length: " . @filesize( $file_path ) );
+				header( 'Content-Length: ' . @filesize( $file_path ) );
 
 				// Now deliver the file based on the kind of software the server is running / has enabled
 				if ( stristr( getenv( 'SERVER_SOFTWARE' ), 'lighttpd' ) ) {
 					header( "X-LIGHTTPD-send-file: $file_path" );
-
 				} elseif ( $direct && ( stristr( getenv( 'SERVER_SOFTWARE' ), 'nginx' ) || stristr( getenv( 'SERVER_SOFTWARE' ), 'cherokee' ) ) ) {
 					$ignore_x_accel_redirect_header = apply_filters( 'edd_ignore_x_accel_redirect', false );
 
@@ -279,8 +280,8 @@ add_action( 'init', 'edd_process_download', 100 );
  *
  * If enabled, the file is symlinked to better support large file downloads
  *
- * @param    string    $file
- * @param    bool      $redirect True if we should perform a header redirect instead of calling edd_readfile_chunked()
+ * @param    string $file
+ * @param    bool   $redirect True if we should perform a header redirect instead of calling edd_readfile_chunked()
  * @return   void
  */
 function edd_deliver_download( $file = '', $redirect = false ) {
@@ -290,8 +291,7 @@ function edd_deliver_download( $file = '', $redirect = false ) {
 	 * This symlink is used to hide the true location of the file, even when the file URL is revealed
 	 * The symlink is deleted after it is used
 	 */
-	if( edd_symlink_file_downloads() && edd_is_local_file( $file ) ) {
-
+	if ( edd_symlink_file_downloads() && edd_is_local_file( $file ) ) {
 		$file = edd_get_local_path_from_url( $file );
 
 		// Generate a symbolic link
@@ -312,22 +312,20 @@ function edd_deliver_download( $file = '', $redirect = false ) {
 		}
 
 		// Make sure the symlink doesn't already exist before we create it
-		if( ! file_exists( $path ) ) {
+		if ( ! file_exists( $path ) ) {
 			$link = @symlink( realpath( $file ), $path );
 		} else {
 			$link = true;
 		}
 
-		if( $link ) {
+		if ( $link ) {
 			// Send the browser to the file
 			header( 'Location: ' . $url );
 		} else {
 			edd_readfile_chunked( $file );
 		}
-
-	} elseif( $redirect ) {
+	} elseif ( $redirect ) {
 		header( 'Location: ' . $file );
-
 	} else {
 
 		// Read the file and deliver it in chunks
@@ -343,8 +341,8 @@ function edd_deliver_download( $file = '', $redirect = false ) {
  * @return bool                   If the file is hosted locally or not
  */
 function edd_is_local_file( $requested_file ) {
-	$site_url       = preg_replace('#^https?://#', '', site_url() );
-	$requested_file = preg_replace('#^(https?|file)://#', '', $requested_file );
+	$site_url       = preg_replace( '#^https?://#', '', site_url() );
+	$requested_file = preg_replace( '#^(https?|file)://#', '', $requested_file );
 
 	$is_local_url  = strpos( $requested_file, $site_url ) === 0;
 	$is_local_path = strpos( $requested_file, '/' ) === 0;
@@ -362,13 +360,12 @@ function edd_is_local_file( $requested_file ) {
  * @return string      If found to be locally hosted, the path to the file
  */
 function edd_get_local_path_from_url( $url ) {
-
 	$file       = $url;
 	$upload_dir = wp_upload_dir();
 	$edd_dir    = edd_get_uploads_base_dir();
 	$upload_url = $upload_dir['baseurl'] . '/' . $edd_dir;
 
-	if( defined( 'UPLOADS' ) && strpos( $file, UPLOADS ) !== false ) {
+	if ( defined( 'UPLOADS' ) && strpos( $file, UPLOADS ) !== false ) {
 
 		/**
 		 * This is a local file given by URL so we need to figure out the path
@@ -376,25 +373,19 @@ function edd_get_local_path_from_url( $url ) {
 		 * site_url() is the URL to where WordPress is installed
 		 */
 		$file = str_replace( site_url(), '', $file );
-
-	} else if( strpos( $file, $upload_url ) !== false ) {
+	} elseif ( strpos( $file, $upload_url ) !== false ) {
 
 		/** This is a local file given by URL so we need to figure out the path */
 		$file = str_replace( $upload_url, edd_get_upload_dir(), $file );
-
-	} else if( strpos( $file, set_url_scheme( $upload_url, 'https' ) ) !== false ) {
+	} elseif ( strpos( $file, set_url_scheme( $upload_url, 'https' ) ) !== false ) {
 
 		/** This is a local file given by an HTTPS URL so we need to figure out the path */
 		$file = str_replace( set_url_scheme( $upload_url, 'https' ), edd_get_upload_dir(), $file );
-
-	} elseif( strpos( $file, content_url() ) !== false ) {
-
+	} elseif ( strpos( $file, content_url() ) !== false ) {
 		$file = str_replace( content_url(), WP_CONTENT_DIR, $file );
-
 	}
 
 	return $file;
-
 }
 
 /**
@@ -404,301 +395,882 @@ function edd_get_local_path_from_url( $url ) {
  * @return   string
  */
 function edd_get_file_ctype( $extension ) {
-	switch( $extension ):
-		case 'ac'       : $ctype = "application/pkix-attr-cert"; break;
-		case 'adp'      : $ctype = "audio/adpcm"; break;
-		case 'ai'       : $ctype = "application/postscript"; break;
-		case 'aif'      : $ctype = "audio/x-aiff"; break;
-		case 'aifc'     : $ctype = "audio/x-aiff"; break;
-		case 'aiff'     : $ctype = "audio/x-aiff"; break;
-		case 'air'      : $ctype = "application/vnd.adobe.air-application-installer-package+zip"; break;
-		case 'apk'      : $ctype = "application/vnd.android.package-archive"; break;
-		case 'asc'      : $ctype = "application/pgp-signature"; break;
-		case 'atom'     : $ctype = "application/atom+xml"; break;
-		case 'atomcat'  : $ctype = "application/atomcat+xml"; break;
-		case 'atomsvc'  : $ctype = "application/atomsvc+xml"; break;
-		case 'au'       : $ctype = "audio/basic"; break;
-		case 'aw'       : $ctype = "application/applixware"; break;
-		case 'avi'      : $ctype = "video/x-msvideo"; break;
-		case 'bcpio'    : $ctype = "application/x-bcpio"; break;
-		case 'bin'      : $ctype = "application/octet-stream"; break;
-		case 'bmp'      : $ctype = "image/bmp"; break;
-		case 'boz'      : $ctype = "application/x-bzip2"; break;
-		case 'bpk'      : $ctype = "application/octet-stream"; break;
-		case 'bz'       : $ctype = "application/x-bzip"; break;
-		case 'bz2'      : $ctype = "application/x-bzip2"; break;
-		case 'ccxml'    : $ctype = "application/ccxml+xml"; break;
-		case 'cdmia'    : $ctype = "application/cdmi-capability"; break;
-		case 'cdmic'    : $ctype = "application/cdmi-container"; break;
-		case 'cdmid'    : $ctype = "application/cdmi-domain"; break;
-		case 'cdmio'    : $ctype = "application/cdmi-object"; break;
-		case 'cdmiq'    : $ctype = "application/cdmi-queue"; break;
-		case 'cdf'      : $ctype = "application/x-netcdf"; break;
-		case 'cer'      : $ctype = "application/pkix-cert"; break;
-		case 'cgm'      : $ctype = "image/cgm"; break;
-		case 'class'    : $ctype = "application/octet-stream"; break;
-		case 'cpio'     : $ctype = "application/x-cpio"; break;
-		case 'cpt'      : $ctype = "application/mac-compactpro"; break;
-		case 'crl'      : $ctype = "application/pkix-crl"; break;
-		case 'csh'      : $ctype = "application/x-csh"; break;
-		case 'css'      : $ctype = "text/css"; break;
-		case 'cu'       : $ctype = "application/cu-seeme"; break;
-		case 'davmount' : $ctype = "application/davmount+xml"; break;
-		case 'dbk'      : $ctype = "application/docbook+xml"; break;
-		case 'dcr'      : $ctype = "application/x-director"; break;
-		case 'deploy'   : $ctype = "application/octet-stream"; break;
-		case 'dif'      : $ctype = "video/x-dv"; break;
-		case 'dir'      : $ctype = "application/x-director"; break;
-		case 'dist'     : $ctype = "application/octet-stream"; break;
-		case 'distz'    : $ctype = "application/octet-stream"; break;
-		case 'djv'      : $ctype = "image/vnd.djvu"; break;
-		case 'djvu'     : $ctype = "image/vnd.djvu"; break;
-		case 'dll'      : $ctype = "application/octet-stream"; break;
-		case 'dmg'      : $ctype = "application/octet-stream"; break;
-		case 'dms'      : $ctype = "application/octet-stream"; break;
-		case 'doc'      : $ctype = "application/msword"; break;
-		case 'docx'     : $ctype = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"; break;
-		case 'dotx'     : $ctype = "application/vnd.openxmlformats-officedocument.wordprocessingml.template"; break;
-		case 'dssc'     : $ctype = "application/dssc+der"; break;
-		case 'dtd'      : $ctype = "application/xml-dtd"; break;
-		case 'dump'     : $ctype = "application/octet-stream"; break;
-		case 'dv'       : $ctype = "video/x-dv"; break;
-		case 'dvi'      : $ctype = "application/x-dvi"; break;
-		case 'dxr'      : $ctype = "application/x-director"; break;
-		case 'ecma'     : $ctype = "application/ecmascript"; break;
-		case 'elc'      : $ctype = "application/octet-stream"; break;
-		case 'emma'     : $ctype = "application/emma+xml"; break;
-		case 'eps'      : $ctype = "application/postscript"; break;
-		case 'epub'     : $ctype = "application/epub+zip"; break;
-		case 'etx'      : $ctype = "text/x-setext"; break;
-		case 'exe'      : $ctype = "application/octet-stream"; break;
-		case 'exi'      : $ctype = "application/exi"; break;
-		case 'ez'       : $ctype = "application/andrew-inset"; break;
-		case 'f4v'      : $ctype = "video/x-f4v"; break;
-		case 'fli'      : $ctype = "video/x-fli"; break;
-		case 'flv'      : $ctype = "video/x-flv"; break;
-		case 'gif'      : $ctype = "image/gif"; break;
-		case 'gml'      : $ctype = "application/srgs"; break;
-		case 'gpx'      : $ctype = "application/gml+xml"; break;
-		case 'gram'     : $ctype = "application/gpx+xml"; break;
-		case 'grxml'    : $ctype = "application/srgs+xml"; break;
-		case 'gtar'     : $ctype = "application/x-gtar"; break;
-		case 'gxf'      : $ctype = "application/gxf"; break;
-		case 'hdf'      : $ctype = "application/x-hdf"; break;
-		case 'hqx'      : $ctype = "application/mac-binhex40"; break;
-		case 'htm'      : $ctype = "text/html"; break;
-		case 'html'     : $ctype = "text/html"; break;
-		case 'ice'      : $ctype = "x-conference/x-cooltalk"; break;
-		case 'ico'      : $ctype = "image/x-icon"; break;
-		case 'ics'      : $ctype = "text/calendar"; break;
-		case 'ief'      : $ctype = "image/ief"; break;
-		case 'ifb'      : $ctype = "text/calendar"; break;
-		case 'iges'     : $ctype = "model/iges"; break;
-		case 'igs'      : $ctype = "model/iges"; break;
-		case 'ink'      : $ctype = "application/inkml+xml"; break;
-		case 'inkml'    : $ctype = "application/inkml+xml"; break;
-		case 'ipfix'    : $ctype = "application/ipfix"; break;
-		case 'jar'      : $ctype = "application/java-archive"; break;
-		case 'jnlp'     : $ctype = "application/x-java-jnlp-file"; break;
-		case 'jp2'      : $ctype = "image/jp2"; break;
-		case 'jpe'      : $ctype = "image/jpeg"; break;
-		case 'jpeg'     : $ctype = "image/jpeg"; break;
-		case 'jpg'      : $ctype = "image/jpeg"; break;
-		case 'js'       : $ctype = "application/javascript"; break;
-		case 'json'     : $ctype = "application/json"; break;
-		case 'jsonml'   : $ctype = "application/jsonml+json"; break;
-		case 'kar'      : $ctype = "audio/midi"; break;
-		case 'latex'    : $ctype = "application/x-latex"; break;
-		case 'lha'      : $ctype = "application/octet-stream"; break;
-		case 'lrf'      : $ctype = "application/octet-stream"; break;
-		case 'lzh'      : $ctype = "application/octet-stream"; break;
-		case 'lostxml'  : $ctype = "application/lost+xml"; break;
-		case 'm3u'      : $ctype = "audio/x-mpegurl"; break;
-		case 'm4a'      : $ctype = "audio/mp4a-latm"; break;
-		case 'm4b'      : $ctype = "audio/mp4a-latm"; break;
-		case 'm4p'      : $ctype = "audio/mp4a-latm"; break;
-		case 'm4u'      : $ctype = "video/vnd.mpegurl"; break;
-		case 'm4v'      : $ctype = "video/x-m4v"; break;
-		case 'm21'      : $ctype = "application/mp21"; break;
-		case 'ma'       : $ctype = "application/mathematica"; break;
-		case 'mac'      : $ctype = "image/x-macpaint"; break;
-		case 'mads'     : $ctype = "application/mads+xml"; break;
-		case 'man'      : $ctype = "application/x-troff-man"; break;
-		case 'mar'      : $ctype = "application/octet-stream"; break;
-		case 'mathml'   : $ctype = "application/mathml+xml"; break;
-		case 'mbox'     : $ctype = "application/mbox"; break;
-		case 'me'       : $ctype = "application/x-troff-me"; break;
-		case 'mesh'     : $ctype = "model/mesh"; break;
-		case 'metalink' : $ctype = "application/metalink+xml"; break;
-		case 'meta4'    : $ctype = "application/metalink4+xml"; break;
-		case 'mets'     : $ctype = "application/mets+xml"; break;
-		case 'mid'      : $ctype = "audio/midi"; break;
-		case 'midi'     : $ctype = "audio/midi"; break;
-		case 'mif'      : $ctype = "application/vnd.mif"; break;
-		case 'mods'     : $ctype = "application/mods+xml"; break;
-		case 'mov'      : $ctype = "video/quicktime"; break;
-		case 'movie'    : $ctype = "video/x-sgi-movie"; break;
-		case 'm1v'      : $ctype = "video/mpeg"; break;
-		case 'm2v'      : $ctype = "video/mpeg"; break;
-		case 'mp2'      : $ctype = "audio/mpeg"; break;
-		case 'mp2a'     : $ctype = "audio/mpeg"; break;
-		case 'mp21'     : $ctype = "application/mp21"; break;
-		case 'mp3'      : $ctype = "audio/mpeg"; break;
-		case 'mp3a'     : $ctype = "audio/mpeg"; break;
-		case 'mp4'      : $ctype = "video/mp4"; break;
-		case 'mp4s'     : $ctype = "application/mp4"; break;
-		case 'mpe'      : $ctype = "video/mpeg"; break;
-		case 'mpeg'     : $ctype = "video/mpeg"; break;
-		case 'mpg'      : $ctype = "video/mpeg"; break;
-		case 'mpg4'     : $ctype = "video/mpeg"; break;
-		case 'mpga'     : $ctype = "audio/mpeg"; break;
-		case 'mrc'      : $ctype = "application/marc"; break;
-		case 'mrcx'     : $ctype = "application/marcxml+xml"; break;
-		case 'ms'       : $ctype = "application/x-troff-ms"; break;
-		case 'mscml'    : $ctype = "application/mediaservercontrol+xml"; break;
-		case 'msh'      : $ctype = "model/mesh"; break;
-		case 'mxf'      : $ctype = "application/mxf"; break;
-		case 'mxu'      : $ctype = "video/vnd.mpegurl"; break;
-		case 'nc'       : $ctype = "application/x-netcdf"; break;
-		case 'oda'      : $ctype = "application/oda"; break;
-		case 'oga'      : $ctype = "application/ogg"; break;
-		case 'ogg'      : $ctype = "application/ogg"; break;
-		case 'ogx'      : $ctype = "application/ogg"; break;
-		case 'omdoc'    : $ctype = "application/omdoc+xml"; break;
-		case 'onetoc'   : $ctype = "application/onenote"; break;
-		case 'onetoc2'  : $ctype = "application/onenote"; break;
-		case 'onetmp'   : $ctype = "application/onenote"; break;
-		case 'onepkg'   : $ctype = "application/onenote"; break;
-		case 'opf'      : $ctype = "application/oebps-package+xml"; break;
-		case 'oxps'     : $ctype = "application/oxps"; break;
-		case 'p7c'      : $ctype = "application/pkcs7-mime"; break;
-		case 'p7m'      : $ctype = "application/pkcs7-mime"; break;
-		case 'p7s'      : $ctype = "application/pkcs7-signature"; break;
-		case 'p8'       : $ctype = "application/pkcs8"; break;
-		case 'p10'      : $ctype = "application/pkcs10"; break;
-		case 'pbm'      : $ctype = "image/x-portable-bitmap"; break;
-		case 'pct'      : $ctype = "image/pict"; break;
-		case 'pdb'      : $ctype = "chemical/x-pdb"; break;
-		case 'pdf'      : $ctype = "application/pdf"; break;
-		case 'pki'      : $ctype = "application/pkixcmp"; break;
-		case 'pkipath'  : $ctype = "application/pkix-pkipath"; break;
-		case 'pfr'      : $ctype = "application/font-tdpfr"; break;
-		case 'pgm'      : $ctype = "image/x-portable-graymap"; break;
-		case 'pgn'      : $ctype = "application/x-chess-pgn"; break;
-		case 'pgp'      : $ctype = "application/pgp-encrypted"; break;
-		case 'pic'      : $ctype = "image/pict"; break;
-		case 'pict'     : $ctype = "image/pict"; break;
-		case 'pkg'      : $ctype = "application/octet-stream"; break;
-		case 'png'      : $ctype = "image/png"; break;
-		case 'pnm'      : $ctype = "image/x-portable-anymap"; break;
-		case 'pnt'      : $ctype = "image/x-macpaint"; break;
-		case 'pntg'     : $ctype = "image/x-macpaint"; break;
-		case 'pot'      : $ctype = "application/vnd.ms-powerpoint"; break;
-		case 'potx'     : $ctype = "application/vnd.openxmlformats-officedocument.presentationml.template"; break;
-		case 'ppm'      : $ctype = "image/x-portable-pixmap"; break;
-		case 'pps'      : $ctype = "application/vnd.ms-powerpoint"; break;
-		case 'ppsx'     : $ctype = "application/vnd.openxmlformats-officedocument.presentationml.slideshow"; break;
-		case 'ppt'      : $ctype = "application/vnd.ms-powerpoint"; break;
-		case 'pptx'     : $ctype = "application/vnd.openxmlformats-officedocument.presentationml.presentation"; break;
-		case 'prf'      : $ctype = "application/pics-rules"; break;
-		case 'ps'       : $ctype = "application/postscript"; break;
-		case 'psd'      : $ctype = "image/photoshop"; break;
-		case 'qt'       : $ctype = "video/quicktime"; break;
-		case 'qti'      : $ctype = "image/x-quicktime"; break;
-		case 'qtif'     : $ctype = "image/x-quicktime"; break;
-		case 'ra'       : $ctype = "audio/x-pn-realaudio"; break;
-		case 'ram'      : $ctype = "audio/x-pn-realaudio"; break;
-		case 'ras'      : $ctype = "image/x-cmu-raster"; break;
-		case 'rdf'      : $ctype = "application/rdf+xml"; break;
-		case 'rgb'      : $ctype = "image/x-rgb"; break;
-		case 'rm'       : $ctype = "application/vnd.rn-realmedia"; break;
-		case 'rmi'      : $ctype = "audio/midi"; break;
-		case 'roff'     : $ctype = "application/x-troff"; break;
-		case 'rss'      : $ctype = "application/rss+xml"; break;
-		case 'rtf'      : $ctype = "text/rtf"; break;
-		case 'rtx'      : $ctype = "text/richtext"; break;
-		case 'sgm'      : $ctype = "text/sgml"; break;
-		case 'sgml'     : $ctype = "text/sgml"; break;
-		case 'sh'       : $ctype = "application/x-sh"; break;
-		case 'shar'     : $ctype = "application/x-shar"; break;
-		case 'sig'      : $ctype = "application/pgp-signature"; break;
-		case 'silo'     : $ctype = "model/mesh"; break;
-		case 'sit'      : $ctype = "application/x-stuffit"; break;
-		case 'skd'      : $ctype = "application/x-koan"; break;
-		case 'skm'      : $ctype = "application/x-koan"; break;
-		case 'skp'      : $ctype = "application/x-koan"; break;
-		case 'skt'      : $ctype = "application/x-koan"; break;
-		case 'sldx'     : $ctype = "application/vnd.openxmlformats-officedocument.presentationml.slide"; break;
-		case 'smi'      : $ctype = "application/smil"; break;
-		case 'smil'     : $ctype = "application/smil"; break;
-		case 'snd'      : $ctype = "audio/basic"; break;
-		case 'so'       : $ctype = "application/octet-stream"; break;
-		case 'spl'      : $ctype = "application/x-futuresplash"; break;
-		case 'spx'      : $ctype = "audio/ogg"; break;
-		case 'src'      : $ctype = "application/x-wais-source"; break;
-		case 'stk'      : $ctype = "application/hyperstudio"; break;
-		case 'sv4cpio'  : $ctype = "application/x-sv4cpio"; break;
-		case 'sv4crc'   : $ctype = "application/x-sv4crc"; break;
-		case 'svg'      : $ctype = "image/svg+xml"; break;
-		case 'swf'      : $ctype = "application/x-shockwave-flash"; break;
-		case 't'        : $ctype = "application/x-troff"; break;
-		case 'tar'      : $ctype = "application/x-tar"; break;
-		case 'tcl'      : $ctype = "application/x-tcl"; break;
-		case 'tex'      : $ctype = "application/x-tex"; break;
-		case 'texi'     : $ctype = "application/x-texinfo"; break;
-		case 'texinfo'  : $ctype = "application/x-texinfo"; break;
-		case 'tif'      : $ctype = "image/tiff"; break;
-		case 'tiff'     : $ctype = "image/tiff"; break;
-		case 'torrent'  : $ctype = "application/x-bittorrent"; break;
-		case 'tr'       : $ctype = "application/x-troff"; break;
-		case 'tsv'      : $ctype = "text/tab-separated-values"; break;
-		case 'txt'      : $ctype = "text/plain"; break;
-		case 'ustar'    : $ctype = "application/x-ustar"; break;
-		case 'vcd'      : $ctype = "application/x-cdlink"; break;
-		case 'vrml'     : $ctype = "model/vrml"; break;
-		case 'vsd'      : $ctype = "application/vnd.visio"; break;
-		case 'vss'      : $ctype = "application/vnd.visio"; break;
-		case 'vst'      : $ctype = "application/vnd.visio"; break;
-		case 'vsw'      : $ctype = "application/vnd.visio"; break;
-		case 'vxml'     : $ctype = "application/voicexml+xml"; break;
-		case 'wav'      : $ctype = "audio/x-wav"; break;
-		case 'wbmp'     : $ctype = "image/vnd.wap.wbmp"; break;
-		case 'wbmxl'    : $ctype = "application/vnd.wap.wbxml"; break;
-		case 'wm'       : $ctype = "video/x-ms-wm"; break;
-		case 'wml'      : $ctype = "text/vnd.wap.wml"; break;
-		case 'wmlc'     : $ctype = "application/vnd.wap.wmlc"; break;
-		case 'wmls'     : $ctype = "text/vnd.wap.wmlscript"; break;
-		case 'wmlsc'    : $ctype = "application/vnd.wap.wmlscriptc"; break;
-		case 'wmv'      : $ctype = "video/x-ms-wmv"; break;
-		case 'wmx'      : $ctype = "video/x-ms-wmx"; break;
-		case 'wrl'      : $ctype = "model/vrml"; break;
-		case 'xbm'      : $ctype = "image/x-xbitmap"; break;
-		case 'xdssc'    : $ctype = "application/dssc+xml"; break;
-		case 'xer'      : $ctype = "application/patch-ops-error+xml"; break;
-		case 'xht'      : $ctype = "application/xhtml+xml"; break;
-		case 'xhtml'    : $ctype = "application/xhtml+xml"; break;
-		case 'xla'      : $ctype = "application/vnd.ms-excel"; break;
-		case 'xlam'     : $ctype = "application/vnd.ms-excel.addin.macroEnabled.12"; break;
-		case 'xlc'      : $ctype = "application/vnd.ms-excel"; break;
-		case 'xlm'      : $ctype = "application/vnd.ms-excel"; break;
-		case 'xls'      : $ctype = "application/vnd.ms-excel"; break;
-		case 'xlsx'     : $ctype = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"; break;
-		case 'xlsb'     : $ctype = "application/vnd.ms-excel.sheet.binary.macroEnabled.12"; break;
-		case 'xlt'      : $ctype = "application/vnd.ms-excel"; break;
-		case 'xltx'     : $ctype = "application/vnd.openxmlformats-officedocument.spreadsheetml.template"; break;
-		case 'xlw'      : $ctype = "application/vnd.ms-excel"; break;
-		case 'xml'      : $ctype = "application/xml"; break;
-		case 'xpm'      : $ctype = "image/x-xpixmap"; break;
-		case 'xsl'      : $ctype = "application/xml"; break;
-		case 'xslt'     : $ctype = "application/xslt+xml"; break;
-		case 'xul'      : $ctype = "application/vnd.mozilla.xul+xml"; break;
-		case 'xwd'      : $ctype = "image/x-xwindowdump"; break;
-		case 'xyz'      : $ctype = "chemical/x-xyz"; break;
-		case 'zip'      : $ctype = "application/zip"; break;
-		default         : $ctype = "application/force-download";
+	switch ( $extension ) :
+		case 'ac':
+			$ctype = 'application/pkix-attr-cert';
+			break;
+		case 'adp':
+			$ctype = 'audio/adpcm';
+			break;
+		case 'ai':
+			$ctype = 'application/postscript';
+			break;
+		case 'aif':
+			$ctype = 'audio/x-aiff';
+			break;
+		case 'aifc':
+			$ctype = 'audio/x-aiff';
+			break;
+		case 'aiff':
+			$ctype = 'audio/x-aiff';
+			break;
+		case 'air':
+			$ctype = 'application/vnd.adobe.air-application-installer-package+zip';
+			break;
+		case 'apk':
+			$ctype = 'application/vnd.android.package-archive';
+			break;
+		case 'asc':
+			$ctype = 'application/pgp-signature';
+			break;
+		case 'atom':
+			$ctype = 'application/atom+xml';
+			break;
+		case 'atomcat':
+			$ctype = 'application/atomcat+xml';
+			break;
+		case 'atomsvc':
+			$ctype = 'application/atomsvc+xml';
+			break;
+		case 'au':
+			$ctype = 'audio/basic';
+			break;
+		case 'aw':
+			$ctype = 'application/applixware';
+			break;
+		case 'avi':
+			$ctype = 'video/x-msvideo';
+			break;
+		case 'bcpio':
+			$ctype = 'application/x-bcpio';
+			break;
+		case 'bin':
+			$ctype = 'application/octet-stream';
+			break;
+		case 'bmp':
+			$ctype = 'image/bmp';
+			break;
+		case 'boz':
+			$ctype = 'application/x-bzip2';
+			break;
+		case 'bpk':
+			$ctype = 'application/octet-stream';
+			break;
+		case 'bz':
+			$ctype = 'application/x-bzip';
+			break;
+		case 'bz2':
+			$ctype = 'application/x-bzip2';
+			break;
+		case 'ccxml':
+			$ctype = 'application/ccxml+xml';
+			break;
+		case 'cdmia':
+			$ctype = 'application/cdmi-capability';
+			break;
+		case 'cdmic':
+			$ctype = 'application/cdmi-container';
+			break;
+		case 'cdmid':
+			$ctype = 'application/cdmi-domain';
+			break;
+		case 'cdmio':
+			$ctype = 'application/cdmi-object';
+			break;
+		case 'cdmiq':
+			$ctype = 'application/cdmi-queue';
+			break;
+		case 'cdf':
+			$ctype = 'application/x-netcdf';
+			break;
+		case 'cer':
+			$ctype = 'application/pkix-cert';
+			break;
+		case 'cgm':
+			$ctype = 'image/cgm';
+			break;
+		case 'class':
+			$ctype = 'application/octet-stream';
+			break;
+		case 'cpio':
+			$ctype = 'application/x-cpio';
+			break;
+		case 'cpt':
+			$ctype = 'application/mac-compactpro';
+			break;
+		case 'crl':
+			$ctype = 'application/pkix-crl';
+			break;
+		case 'csh':
+			$ctype = 'application/x-csh';
+			break;
+		case 'css':
+			$ctype = 'text/css';
+			break;
+		case 'cu':
+			$ctype = 'application/cu-seeme';
+			break;
+		case 'davmount':
+			$ctype = 'application/davmount+xml';
+			break;
+		case 'dbk':
+			$ctype = 'application/docbook+xml';
+			break;
+		case 'dcr':
+			$ctype = 'application/x-director';
+			break;
+		case 'deploy':
+			$ctype = 'application/octet-stream';
+			break;
+		case 'dif':
+			$ctype = 'video/x-dv';
+			break;
+		case 'dir':
+			$ctype = 'application/x-director';
+			break;
+		case 'dist':
+			$ctype = 'application/octet-stream';
+			break;
+		case 'distz':
+			$ctype = 'application/octet-stream';
+			break;
+		case 'djv':
+			$ctype = 'image/vnd.djvu';
+			break;
+		case 'djvu':
+			$ctype = 'image/vnd.djvu';
+			break;
+		case 'dll':
+			$ctype = 'application/octet-stream';
+			break;
+		case 'dmg':
+			$ctype = 'application/octet-stream';
+			break;
+		case 'dms':
+			$ctype = 'application/octet-stream';
+			break;
+		case 'doc':
+			$ctype = 'application/msword';
+			break;
+		case 'docx':
+			$ctype = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+			break;
+		case 'dotx':
+			$ctype = 'application/vnd.openxmlformats-officedocument.wordprocessingml.template';
+			break;
+		case 'dssc':
+			$ctype = 'application/dssc+der';
+			break;
+		case 'dtd':
+			$ctype = 'application/xml-dtd';
+			break;
+		case 'dump':
+			$ctype = 'application/octet-stream';
+			break;
+		case 'dv':
+			$ctype = 'video/x-dv';
+			break;
+		case 'dvi':
+			$ctype = 'application/x-dvi';
+			break;
+		case 'dxr':
+			$ctype = 'application/x-director';
+			break;
+		case 'ecma':
+			$ctype = 'application/ecmascript';
+			break;
+		case 'elc':
+			$ctype = 'application/octet-stream';
+			break;
+		case 'emma':
+			$ctype = 'application/emma+xml';
+			break;
+		case 'eps':
+			$ctype = 'application/postscript';
+			break;
+		case 'epub':
+			$ctype = 'application/epub+zip';
+			break;
+		case 'etx':
+			$ctype = 'text/x-setext';
+			break;
+		case 'exe':
+			$ctype = 'application/octet-stream';
+			break;
+		case 'exi':
+			$ctype = 'application/exi';
+			break;
+		case 'ez':
+			$ctype = 'application/andrew-inset';
+			break;
+		case 'f4v':
+			$ctype = 'video/x-f4v';
+			break;
+		case 'fli':
+			$ctype = 'video/x-fli';
+			break;
+		case 'flv':
+			$ctype = 'video/x-flv';
+			break;
+		case 'gif':
+			$ctype = 'image/gif';
+			break;
+		case 'gml':
+			$ctype = 'application/srgs';
+			break;
+		case 'gpx':
+			$ctype = 'application/gml+xml';
+			break;
+		case 'gram':
+			$ctype = 'application/gpx+xml';
+			break;
+		case 'grxml':
+			$ctype = 'application/srgs+xml';
+			break;
+		case 'gtar':
+			$ctype = 'application/x-gtar';
+			break;
+		case 'gxf':
+			$ctype = 'application/gxf';
+			break;
+		case 'hdf':
+			$ctype = 'application/x-hdf';
+			break;
+		case 'hqx':
+			$ctype = 'application/mac-binhex40';
+			break;
+		case 'htm':
+			$ctype = 'text/html';
+			break;
+		case 'html':
+			$ctype = 'text/html';
+			break;
+		case 'ice':
+			$ctype = 'x-conference/x-cooltalk';
+			break;
+		case 'ico':
+			$ctype = 'image/x-icon';
+			break;
+		case 'ics':
+			$ctype = 'text/calendar';
+			break;
+		case 'ief':
+			$ctype = 'image/ief';
+			break;
+		case 'ifb':
+			$ctype = 'text/calendar';
+			break;
+		case 'iges':
+			$ctype = 'model/iges';
+			break;
+		case 'igs':
+			$ctype = 'model/iges';
+			break;
+		case 'ink':
+			$ctype = 'application/inkml+xml';
+			break;
+		case 'inkml':
+			$ctype = 'application/inkml+xml';
+			break;
+		case 'ipfix':
+			$ctype = 'application/ipfix';
+			break;
+		case 'jar':
+			$ctype = 'application/java-archive';
+			break;
+		case 'jnlp':
+			$ctype = 'application/x-java-jnlp-file';
+			break;
+		case 'jp2':
+			$ctype = 'image/jp2';
+			break;
+		case 'jpe':
+			$ctype = 'image/jpeg';
+			break;
+		case 'jpeg':
+			$ctype = 'image/jpeg';
+			break;
+		case 'jpg':
+			$ctype = 'image/jpeg';
+			break;
+		case 'js':
+			$ctype = 'application/javascript';
+			break;
+		case 'json':
+			$ctype = 'application/json';
+			break;
+		case 'jsonml':
+			$ctype = 'application/jsonml+json';
+			break;
+		case 'kar':
+			$ctype = 'audio/midi';
+			break;
+		case 'latex':
+			$ctype = 'application/x-latex';
+			break;
+		case 'lha':
+			$ctype = 'application/octet-stream';
+			break;
+		case 'lrf':
+			$ctype = 'application/octet-stream';
+			break;
+		case 'lzh':
+			$ctype = 'application/octet-stream';
+			break;
+		case 'lostxml':
+			$ctype = 'application/lost+xml';
+			break;
+		case 'm3u':
+			$ctype = 'audio/x-mpegurl';
+			break;
+		case 'm4a':
+			$ctype = 'audio/mp4a-latm';
+			break;
+		case 'm4b':
+			$ctype = 'audio/mp4a-latm';
+			break;
+		case 'm4p':
+			$ctype = 'audio/mp4a-latm';
+			break;
+		case 'm4u':
+			$ctype = 'video/vnd.mpegurl';
+			break;
+		case 'm4v':
+			$ctype = 'video/x-m4v';
+			break;
+		case 'm21':
+			$ctype = 'application/mp21';
+			break;
+		case 'ma':
+			$ctype = 'application/mathematica';
+			break;
+		case 'mac':
+			$ctype = 'image/x-macpaint';
+			break;
+		case 'mads':
+			$ctype = 'application/mads+xml';
+			break;
+		case 'man':
+			$ctype = 'application/x-troff-man';
+			break;
+		case 'mar':
+			$ctype = 'application/octet-stream';
+			break;
+		case 'mathml':
+			$ctype = 'application/mathml+xml';
+			break;
+		case 'mbox':
+			$ctype = 'application/mbox';
+			break;
+		case 'me':
+			$ctype = 'application/x-troff-me';
+			break;
+		case 'mesh':
+			$ctype = 'model/mesh';
+			break;
+		case 'metalink':
+			$ctype = 'application/metalink+xml';
+			break;
+		case 'meta4':
+			$ctype = 'application/metalink4+xml';
+			break;
+		case 'mets':
+			$ctype = 'application/mets+xml';
+			break;
+		case 'mid':
+			$ctype = 'audio/midi';
+			break;
+		case 'midi':
+			$ctype = 'audio/midi';
+			break;
+		case 'mif':
+			$ctype = 'application/vnd.mif';
+			break;
+		case 'mods':
+			$ctype = 'application/mods+xml';
+			break;
+		case 'mov':
+			$ctype = 'video/quicktime';
+			break;
+		case 'movie':
+			$ctype = 'video/x-sgi-movie';
+			break;
+		case 'm1v':
+			$ctype = 'video/mpeg';
+			break;
+		case 'm2v':
+			$ctype = 'video/mpeg';
+			break;
+		case 'mp2':
+			$ctype = 'audio/mpeg';
+			break;
+		case 'mp2a':
+			$ctype = 'audio/mpeg';
+			break;
+		case 'mp21':
+			$ctype = 'application/mp21';
+			break;
+		case 'mp3':
+			$ctype = 'audio/mpeg';
+			break;
+		case 'mp3a':
+			$ctype = 'audio/mpeg';
+			break;
+		case 'mp4':
+			$ctype = 'video/mp4';
+			break;
+		case 'mp4s':
+			$ctype = 'application/mp4';
+			break;
+		case 'mpe':
+			$ctype = 'video/mpeg';
+			break;
+		case 'mpeg':
+			$ctype = 'video/mpeg';
+			break;
+		case 'mpg':
+			$ctype = 'video/mpeg';
+			break;
+		case 'mpg4':
+			$ctype = 'video/mpeg';
+			break;
+		case 'mpga':
+			$ctype = 'audio/mpeg';
+			break;
+		case 'mrc':
+			$ctype = 'application/marc';
+			break;
+		case 'mrcx':
+			$ctype = 'application/marcxml+xml';
+			break;
+		case 'ms':
+			$ctype = 'application/x-troff-ms';
+			break;
+		case 'mscml':
+			$ctype = 'application/mediaservercontrol+xml';
+			break;
+		case 'msh':
+			$ctype = 'model/mesh';
+			break;
+		case 'mxf':
+			$ctype = 'application/mxf';
+			break;
+		case 'mxu':
+			$ctype = 'video/vnd.mpegurl';
+			break;
+		case 'nc':
+			$ctype = 'application/x-netcdf';
+			break;
+		case 'oda':
+			$ctype = 'application/oda';
+			break;
+		case 'oga':
+			$ctype = 'application/ogg';
+			break;
+		case 'ogg':
+			$ctype = 'application/ogg';
+			break;
+		case 'ogx':
+			$ctype = 'application/ogg';
+			break;
+		case 'omdoc':
+			$ctype = 'application/omdoc+xml';
+			break;
+		case 'onetoc':
+			$ctype = 'application/onenote';
+			break;
+		case 'onetoc2':
+			$ctype = 'application/onenote';
+			break;
+		case 'onetmp':
+			$ctype = 'application/onenote';
+			break;
+		case 'onepkg':
+			$ctype = 'application/onenote';
+			break;
+		case 'opf':
+			$ctype = 'application/oebps-package+xml';
+			break;
+		case 'oxps':
+			$ctype = 'application/oxps';
+			break;
+		case 'p7c':
+			$ctype = 'application/pkcs7-mime';
+			break;
+		case 'p7m':
+			$ctype = 'application/pkcs7-mime';
+			break;
+		case 'p7s':
+			$ctype = 'application/pkcs7-signature';
+			break;
+		case 'p8':
+			$ctype = 'application/pkcs8';
+			break;
+		case 'p10':
+			$ctype = 'application/pkcs10';
+			break;
+		case 'pbm':
+			$ctype = 'image/x-portable-bitmap';
+			break;
+		case 'pct':
+			$ctype = 'image/pict';
+			break;
+		case 'pdb':
+			$ctype = 'chemical/x-pdb';
+			break;
+		case 'pdf':
+			$ctype = 'application/pdf';
+			break;
+		case 'pki':
+			$ctype = 'application/pkixcmp';
+			break;
+		case 'pkipath':
+			$ctype = 'application/pkix-pkipath';
+			break;
+		case 'pfr':
+			$ctype = 'application/font-tdpfr';
+			break;
+		case 'pgm':
+			$ctype = 'image/x-portable-graymap';
+			break;
+		case 'pgn':
+			$ctype = 'application/x-chess-pgn';
+			break;
+		case 'pgp':
+			$ctype = 'application/pgp-encrypted';
+			break;
+		case 'pic':
+			$ctype = 'image/pict';
+			break;
+		case 'pict':
+			$ctype = 'image/pict';
+			break;
+		case 'pkg':
+			$ctype = 'application/octet-stream';
+			break;
+		case 'png':
+			$ctype = 'image/png';
+			break;
+		case 'pnm':
+			$ctype = 'image/x-portable-anymap';
+			break;
+		case 'pnt':
+			$ctype = 'image/x-macpaint';
+			break;
+		case 'pntg':
+			$ctype = 'image/x-macpaint';
+			break;
+		case 'pot':
+			$ctype = 'application/vnd.ms-powerpoint';
+			break;
+		case 'potx':
+			$ctype = 'application/vnd.openxmlformats-officedocument.presentationml.template';
+			break;
+		case 'ppm':
+			$ctype = 'image/x-portable-pixmap';
+			break;
+		case 'pps':
+			$ctype = 'application/vnd.ms-powerpoint';
+			break;
+		case 'ppsx':
+			$ctype = 'application/vnd.openxmlformats-officedocument.presentationml.slideshow';
+			break;
+		case 'ppt':
+			$ctype = 'application/vnd.ms-powerpoint';
+			break;
+		case 'pptx':
+			$ctype = 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
+			break;
+		case 'prf':
+			$ctype = 'application/pics-rules';
+			break;
+		case 'ps':
+			$ctype = 'application/postscript';
+			break;
+		case 'psd':
+			$ctype = 'image/photoshop';
+			break;
+		case 'qt':
+			$ctype = 'video/quicktime';
+			break;
+		case 'qti':
+			$ctype = 'image/x-quicktime';
+			break;
+		case 'qtif':
+			$ctype = 'image/x-quicktime';
+			break;
+		case 'ra':
+			$ctype = 'audio/x-pn-realaudio';
+			break;
+		case 'ram':
+			$ctype = 'audio/x-pn-realaudio';
+			break;
+		case 'ras':
+			$ctype = 'image/x-cmu-raster';
+			break;
+		case 'rdf':
+			$ctype = 'application/rdf+xml';
+			break;
+		case 'rgb':
+			$ctype = 'image/x-rgb';
+			break;
+		case 'rm':
+			$ctype = 'application/vnd.rn-realmedia';
+			break;
+		case 'rmi':
+			$ctype = 'audio/midi';
+			break;
+		case 'roff':
+			$ctype = 'application/x-troff';
+			break;
+		case 'rss':
+			$ctype = 'application/rss+xml';
+			break;
+		case 'rtf':
+			$ctype = 'text/rtf';
+			break;
+		case 'rtx':
+			$ctype = 'text/richtext';
+			break;
+		case 'sgm':
+			$ctype = 'text/sgml';
+			break;
+		case 'sgml':
+			$ctype = 'text/sgml';
+			break;
+		case 'sh':
+			$ctype = 'application/x-sh';
+			break;
+		case 'shar':
+			$ctype = 'application/x-shar';
+			break;
+		case 'sig':
+			$ctype = 'application/pgp-signature';
+			break;
+		case 'silo':
+			$ctype = 'model/mesh';
+			break;
+		case 'sit':
+			$ctype = 'application/x-stuffit';
+			break;
+		case 'skd':
+			$ctype = 'application/x-koan';
+			break;
+		case 'skm':
+			$ctype = 'application/x-koan';
+			break;
+		case 'skp':
+			$ctype = 'application/x-koan';
+			break;
+		case 'skt':
+			$ctype = 'application/x-koan';
+			break;
+		case 'sldx':
+			$ctype = 'application/vnd.openxmlformats-officedocument.presentationml.slide';
+			break;
+		case 'smi':
+			$ctype = 'application/smil';
+			break;
+		case 'smil':
+			$ctype = 'application/smil';
+			break;
+		case 'snd':
+			$ctype = 'audio/basic';
+			break;
+		case 'so':
+			$ctype = 'application/octet-stream';
+			break;
+		case 'spl':
+			$ctype = 'application/x-futuresplash';
+			break;
+		case 'spx':
+			$ctype = 'audio/ogg';
+			break;
+		case 'src':
+			$ctype = 'application/x-wais-source';
+			break;
+		case 'stk':
+			$ctype = 'application/hyperstudio';
+			break;
+		case 'sv4cpio':
+			$ctype = 'application/x-sv4cpio';
+			break;
+		case 'sv4crc':
+			$ctype = 'application/x-sv4crc';
+			break;
+		case 'svg':
+			$ctype = 'image/svg+xml';
+			break;
+		case 'swf':
+			$ctype = 'application/x-shockwave-flash';
+			break;
+		case 't':
+			$ctype = 'application/x-troff';
+			break;
+		case 'tar':
+			$ctype = 'application/x-tar';
+			break;
+		case 'tcl':
+			$ctype = 'application/x-tcl';
+			break;
+		case 'tex':
+			$ctype = 'application/x-tex';
+			break;
+		case 'texi':
+			$ctype = 'application/x-texinfo';
+			break;
+		case 'texinfo':
+			$ctype = 'application/x-texinfo';
+			break;
+		case 'tif':
+			$ctype = 'image/tiff';
+			break;
+		case 'tiff':
+			$ctype = 'image/tiff';
+			break;
+		case 'torrent':
+			$ctype = 'application/x-bittorrent';
+			break;
+		case 'tr':
+			$ctype = 'application/x-troff';
+			break;
+		case 'tsv':
+			$ctype = 'text/tab-separated-values';
+			break;
+		case 'txt':
+			$ctype = 'text/plain';
+			break;
+		case 'ustar':
+			$ctype = 'application/x-ustar';
+			break;
+		case 'vcd':
+			$ctype = 'application/x-cdlink';
+			break;
+		case 'vrml':
+			$ctype = 'model/vrml';
+			break;
+		case 'vsd':
+			$ctype = 'application/vnd.visio';
+			break;
+		case 'vss':
+			$ctype = 'application/vnd.visio';
+			break;
+		case 'vst':
+			$ctype = 'application/vnd.visio';
+			break;
+		case 'vsw':
+			$ctype = 'application/vnd.visio';
+			break;
+		case 'vxml':
+			$ctype = 'application/voicexml+xml';
+			break;
+		case 'wav':
+			$ctype = 'audio/x-wav';
+			break;
+		case 'wbmp':
+			$ctype = 'image/vnd.wap.wbmp';
+			break;
+		case 'wbmxl':
+			$ctype = 'application/vnd.wap.wbxml';
+			break;
+		case 'wm':
+			$ctype = 'video/x-ms-wm';
+			break;
+		case 'wml':
+			$ctype = 'text/vnd.wap.wml';
+			break;
+		case 'wmlc':
+			$ctype = 'application/vnd.wap.wmlc';
+			break;
+		case 'wmls':
+			$ctype = 'text/vnd.wap.wmlscript';
+			break;
+		case 'wmlsc':
+			$ctype = 'application/vnd.wap.wmlscriptc';
+			break;
+		case 'wmv':
+			$ctype = 'video/x-ms-wmv';
+			break;
+		case 'wmx':
+			$ctype = 'video/x-ms-wmx';
+			break;
+		case 'wrl':
+			$ctype = 'model/vrml';
+			break;
+		case 'xbm':
+			$ctype = 'image/x-xbitmap';
+			break;
+		case 'xdssc':
+			$ctype = 'application/dssc+xml';
+			break;
+		case 'xer':
+			$ctype = 'application/patch-ops-error+xml';
+			break;
+		case 'xht':
+			$ctype = 'application/xhtml+xml';
+			break;
+		case 'xhtml':
+			$ctype = 'application/xhtml+xml';
+			break;
+		case 'xla':
+			$ctype = 'application/vnd.ms-excel';
+			break;
+		case 'xlam':
+			$ctype = 'application/vnd.ms-excel.addin.macroEnabled.12';
+			break;
+		case 'xlc':
+			$ctype = 'application/vnd.ms-excel';
+			break;
+		case 'xlm':
+			$ctype = 'application/vnd.ms-excel';
+			break;
+		case 'xls':
+			$ctype = 'application/vnd.ms-excel';
+			break;
+		case 'xlsx':
+			$ctype = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+			break;
+		case 'xlsb':
+			$ctype = 'application/vnd.ms-excel.sheet.binary.macroEnabled.12';
+			break;
+		case 'xlt':
+			$ctype = 'application/vnd.ms-excel';
+			break;
+		case 'xltx':
+			$ctype = 'application/vnd.openxmlformats-officedocument.spreadsheetml.template';
+			break;
+		case 'xlw':
+			$ctype = 'application/vnd.ms-excel';
+			break;
+		case 'xml':
+			$ctype = 'application/xml';
+			break;
+		case 'xpm':
+			$ctype = 'image/x-xpixmap';
+			break;
+		case 'xsl':
+			$ctype = 'application/xml';
+			break;
+		case 'xslt':
+			$ctype = 'application/xslt+xml';
+			break;
+		case 'xul':
+			$ctype = 'application/vnd.mozilla.xul+xml';
+			break;
+		case 'xwd':
+			$ctype = 'image/x-xwindowdump';
+			break;
+		case 'xyz':
+			$ctype = 'chemical/x-xyz';
+			break;
+		case 'zip':
+			$ctype = 'application/zip';
+			break;
+		default:
+			$ctype = 'application/force-download';
 	endswitch;
 
-	if( wp_is_mobile() ) {
+	if ( wp_is_mobile() ) {
 		$ctype = 'application/octet-stream';
 	}
 
@@ -732,7 +1304,7 @@ function edd_readfile_chunked( $file, $retbytes = true ) {
 	$handle    = @fopen( $file, 'r' );
 
 	if ( $size = @filesize( $file ) ) {
-		header( "Content-Length: " . $size );
+		header( 'Content-Length: ' . $size );
 	}
 
 	if ( false === $handle ) {
@@ -839,7 +1411,6 @@ function edd_process_legacy_download_url( $args ) {
  * @return array       Same arguments, with the status of verification added
  */
 function edd_process_signed_download_url( $args ) {
-
 	$parts = parse_url( add_query_arg( array() ) );
 	wp_parse_str( $parts['query'], $query_args );
 	$url = add_query_arg( $query_args, site_url() );
@@ -862,16 +1433,16 @@ function edd_process_signed_download_url( $args ) {
 		wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'easy-digital-downloads' ) ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	$args['expire']      = $_GET['ttl'];
-	$args['download']    = $order_parts[1];
-	$args['payment']     = $order_parts[0];
-	$args['file_key']    = $order_parts[2];
-	$args['price_id']    = $order_parts[3];
-	$args['email']       = edd_get_payment_meta( $order_parts[0], '_edd_payment_user_email', true );
-	$args['key']         = edd_get_payment_meta( $order_parts[0], '_edd_payment_purchase_key', true );
+	$args['expire']   = $_GET['ttl'];
+	$args['download'] = $order_parts[1];
+	$args['payment']  = $order_parts[0];
+	$args['file_key'] = $order_parts[2];
+	$args['price_id'] = $order_parts[3];
+	$args['email']    = edd_get_payment_meta( $order_parts[0], '_edd_payment_user_email', true );
+	$args['key']      = edd_get_payment_meta( $order_parts[0], '_edd_payment_purchase_key', true );
 
-	$payment = new EDD_Payment( $args['payment'] );
-	$args['has_access']  = 'publish' === $payment->status ? true : false;
+	$payment            = new EDD_Payment( $args['payment'] );
+	$args['has_access'] = 'publish' === $payment->status ? true : false;
 
 	return $args;
 }
@@ -900,17 +1471,14 @@ function edd_set_requested_file_scheme( $requested_file, $download_files, $file_
 
 	// If it's a URL and it's local, let's make sure the scheme matches the requested scheme
 	if ( filter_var( $requested_file, FILTER_VALIDATE_URL ) && edd_is_local_file( $requested_file ) ) {
-
 		if ( false === strpos( $requested_file, 'https://' ) && is_ssl() ) {
 			$requested_file = str_replace( 'http://', 'https://', $requested_file );
 		} elseif ( ! is_ssl() && 0 === strpos( $requested_file, 'https://' ) ) {
 			$requested_file = str_replace( 'https://', 'http://', $requested_file );
 		}
-
 	}
 
 	return $requested_file;
-
 }
 add_filter( 'edd_requested_file', 'edd_set_requested_file_scheme', 10, 3 );
 
@@ -926,36 +1494,27 @@ add_filter( 'edd_requested_file', 'edd_set_requested_file_scheme', 10, 3 );
 function edd_check_file_url_head( $requested_file, $args, $method ) {
 
 	// If this is a file URL (not a path), perform a head request to determine if it's valid
-	if( filter_var( $requested_file, FILTER_VALIDATE_URL ) && ! edd_is_local_file( $requested_file ) ) {
-
+	if ( filter_var( $requested_file, FILTER_VALIDATE_URL ) && ! edd_is_local_file( $requested_file ) ) {
 		$valid   = true;
 		$request = wp_remote_head( $requested_file );
 
-		if( is_wp_error( $request ) ) {
-
+		if ( is_wp_error( $request ) ) {
 			$valid   = false;
 			$message = $request;
 			$title   = __( 'Invalid file', 'easy-digital-downloads' );
-
 		}
 
-		if( 404 === wp_remote_retrieve_response_code( $request ) ) {
-
+		if ( 404 === wp_remote_retrieve_response_code( $request ) ) {
 			$valid   = false;
 			$message = __( 'The requested file could not be found. Error 404.', 'easy-digital-downloads' );
 			$title   = __( 'File not found', 'easy-digital-downloads' );
-
 		}
 
-		if( ! $valid ) {
-
+		if ( ! $valid ) {
 			do_action( 'edd_check_file_url_head_invalid', $requested_file, $args, $method );
 			wp_die( $message, $title, array( 'response' => 403 ) );
-
 		}
-
 	}
-
 }
 /**
  * Filter removed in EDD 2.7

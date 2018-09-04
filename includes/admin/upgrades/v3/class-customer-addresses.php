@@ -41,14 +41,18 @@ class Customer_Addresses extends Base {
 	public function get_data() {
 		$offset = ( $this->step - 1 ) * $this->per_step;
 
-		$results = $this->get_db()->get_results( $this->get_db()->prepare(
-			"SELECT *
+		$results = $this->get_db()->get_results(
+			$this->get_db()->prepare(
+				"SELECT *
 			 FROM {$this->get_db()->usermeta}
 			 WHERE meta_key = %s
 			 ORDER BY umeta_id ASC
 			 LIMIT %d, %d",
-			esc_sql( '_edd_user_address' ), $offset, $this->per_step
-		) );
+				esc_sql( '_edd_user_address' ),
+				$offset,
+				$this->per_step
+			)
+		);
 
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $result ) {

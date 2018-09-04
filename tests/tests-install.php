@@ -33,7 +33,6 @@ class Tests_Activation extends EDD_UnitTestCase {
 	 * @since 2.2.4
 	 */
 	public function test_install() {
-
 		global $edd_options;
 
 		$origin_edd_options   = $edd_options;
@@ -82,7 +81,6 @@ class Tests_Activation extends EDD_UnitTestCase {
 		$edd_options = $origin_edd_options;
 		update_option( 'edd_settings', $edd_options );
 		update_option( 'edd_version', $origin_edd_version );
-
 	}
 
 	/**
@@ -91,13 +89,11 @@ class Tests_Activation extends EDD_UnitTestCase {
 	 * @since 2.2.4
 	 */
 	public function test_install_bail() {
-
 		$_GET['activate-multi'] = 1;
 
 		edd_install();
 
 		$this->assertFalse( get_transient( 'activate-multi' ) );
-
 	}
 
 	/**
@@ -118,7 +114,6 @@ class Tests_Activation extends EDD_UnitTestCase {
 		edd_after_install();
 
 		$this->assertFalse( get_transient( '_edd_installed' ) );
-
 	}
 
 	/**
@@ -134,7 +129,6 @@ class Tests_Activation extends EDD_UnitTestCase {
 
 		edd_after_install();
 		$this->assertNotFalse( get_transient( '_edd_installed' ) );
-
 	}
 
 
@@ -155,7 +149,6 @@ class Tests_Activation extends EDD_UnitTestCase {
 
 		// Reset to origin
 		set_transient( '_edd_installed', $GLOBALS['edd_options'], 30 );
-
 	}
 
 	/**
@@ -165,7 +158,6 @@ class Tests_Activation extends EDD_UnitTestCase {
 	 * @since 2.2.4
 	 */
 	public function test_edd_install_roles_on_network_bail_object() {
-
 		global $wp_roles;
 
 		$origin_roles = $wp_roles;
@@ -176,7 +168,6 @@ class Tests_Activation extends EDD_UnitTestCase {
 
 		// Reset to origin
 		$wp_roles = $origin_roles;
-
 	}
 
 	/**
@@ -185,7 +176,6 @@ class Tests_Activation extends EDD_UnitTestCase {
 	 * @since 2.2.4
 	 */
 	public function test_edd_install_roles_on_network() {
-
 		global $wp_roles;
 
 		$origin_roles = $wp_roles;
@@ -201,10 +191,8 @@ class Tests_Activation extends EDD_UnitTestCase {
 		$this->assertInstanceOf( 'WP_Role', get_role( 'shop_worker' ) );
 		$this->assertInstanceOf( 'WP_Role', get_role( 'shop_vendor' ) );
 
-
 		// Reset to origin
 		$wp_roles = $origin_roles;
-
 	}
 
 	/**
@@ -213,7 +201,6 @@ class Tests_Activation extends EDD_UnitTestCase {
 	 * @since 2.6.3
 	 */
 	public function test_edd_install_roles_on_network_when_roles_false() {
-
 		global $wp_roles;
 
 		$origin_roles = $wp_roles->roles;
@@ -229,10 +216,8 @@ class Tests_Activation extends EDD_UnitTestCase {
 		$this->assertInstanceOf( 'WP_Role', get_role( 'shop_worker' ) );
 		$this->assertInstanceOf( 'WP_Role', get_role( 'shop_vendor' ) );
 
-
 		// Reset to origin
 		$wp_roles->roles = $origin_roles;
-
 	}
 
 }

@@ -8,9 +8,9 @@ $display       = $cart_quantity > 0 ? '' : ' style="display:none;"';
 ?>
 <p class="edd-cart-number-of-items"<?php echo $display; ?>><?php _e( 'Number of items in cart', 'easy-digital-downloads' ); ?>: <span class="edd-cart-quantity"><?php echo $cart_quantity; ?></span></p>
 <ul class="edd-cart">
-<?php if( $cart_items ) : ?>
+<?php if ( $cart_items ) : ?>
 
-	<?php foreach( $cart_items as $key => $item ) : ?>
+	<?php foreach ( $cart_items as $key => $item ) : ?>
 
 		<?php echo edd_get_cart_item_template( $key, $item, false ); ?>
 

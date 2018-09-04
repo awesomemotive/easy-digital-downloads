@@ -7,7 +7,7 @@
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.8
-*/
+ */
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * Hooks into the WP heartbeat API to update various parts of the dashboard as new sales are made
  *
  * Dashboard components that are effect:
- *	- Dashboard Summary Widget
+ *  - Dashboard Summary Widget
  *
  * @since 1.8
  */
@@ -31,7 +31,6 @@ class EDD_Heartbeat {
 	 * @return void
 	 */
 	public static function init() {
-
 		add_filter( 'heartbeat_received', array( 'EDD_Heartbeat', 'heartbeat_received' ), 10, 2 );
 		add_action( 'admin_enqueue_scripts', array( 'EDD_Heartbeat', 'enqueue_scripts' ) );
 	}
@@ -43,16 +42,15 @@ class EDD_Heartbeat {
 	 * @return array
 	 */
 	public static function heartbeat_received( $response, $data ) {
-
-		if( ! current_user_can( 'view_shop_reports' ) ) {
+		if ( ! current_user_can( 'view_shop_reports' ) ) {
 			return $response; // Only modify heartbeat if current user can view show reports
 		}
 
 		// Make sure we only run our query if the edd_heartbeat key is present
-		if( ( isset( $data['edd_heartbeat'] ) ) && ( $data['edd_heartbeat'] == 'dashboard_summary' ) ) {
+		if ( ( isset( $data['edd_heartbeat'] ) ) && ( $data['edd_heartbeat'] == 'dashboard_summary' ) ) {
 
 			// Instantiate the stats class
-			$stats = new EDD_Payment_Stats;
+			$stats = new EDD_Payment_Stats();
 
 			$earnings = edd_get_total_earnings();
 
@@ -63,11 +61,9 @@ class EDD_Heartbeat {
 			$response['edd-earnings-month'] = html_entity_decode( edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'this_month' ) ) ), ENT_COMPAT, 'UTF-8' );
 			$response['edd-payments-today'] = edd_format_amount( $stats->get_sales( 0, 'today', false, array( 'publish', 'revoked' ) ), false );
 			$response['edd-earnings-today'] = html_entity_decode( edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'today' ) ) ), ENT_COMPAT, 'UTF-8' );
-
 		}
 
 		return $response;
-
 	}
 
 	/**
@@ -77,8 +73,7 @@ class EDD_Heartbeat {
 	 * @return array
 	 */
 	public static function enqueue_scripts() {
-
-		if( ! current_user_can( 'view_shop_reports' ) ) {
+		if ( ! current_user_can( 'view_shop_reports' ) ) {
 			return; // Only load heartbeat if current user can view show reports
 		}
 
@@ -97,11 +92,11 @@ class EDD_Heartbeat {
 		global $pagenow;
 
 		// Only proceed if on the dashboard
-		if( 'index.php' != $pagenow ) {
+		if ( 'index.php' != $pagenow ) {
 			return;
 		}
 
-		if( ! current_user_can( 'view_shop_reports' ) ) {
+		if ( ! current_user_can( 'view_shop_reports' ) ) {
 			return; // Only load heartbeat if current user can view show reports
 		}
 

@@ -10,27 +10,28 @@ class Tests_Roles extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->_roles = new EDD_Roles;
+		$this->_roles = new EDD_Roles();
 		$this->_roles->add_roles();
 		$this->_roles->add_caps();
 	}
 
 	public function test_roles() {
-
 		global $wp_roles;
 
-		$this->assertArrayHasKey('shop_manager', (array) $wp_roles->role_names);
-		$this->assertArrayHasKey('shop_accountant', (array) $wp_roles->role_names);
-		$this->assertArrayHasKey('shop_worker', (array) $wp_roles->role_names);
-		$this->assertArrayHasKey('shop_vendor', (array) $wp_roles->role_names);
+		$this->assertArrayHasKey( 'shop_manager', (array) $wp_roles->role_names );
+		$this->assertArrayHasKey( 'shop_accountant', (array) $wp_roles->role_names );
+		$this->assertArrayHasKey( 'shop_worker', (array) $wp_roles->role_names );
+		$this->assertArrayHasKey( 'shop_vendor', (array) $wp_roles->role_names );
 	}
 
 	public function test_shop_manager_caps() {
 		global $wp_roles;
 
-		if ( class_exists( 'WP_Roles' ) )
-			if ( ! isset( $wp_roles ) )
+		if ( class_exists( 'WP_Roles' ) ) {
+			if ( ! isset( $wp_roles ) ) {
 				$wp_roles = new \WP_Roles();
+			}
+		}
 
 		$this->assertArrayHasKey( 'read', (array) $wp_roles->roles['shop_manager']['capabilities'] );
 		$this->assertArrayHasKey( 'edit_posts', (array) $wp_roles->roles['shop_manager']['capabilities'] );
@@ -69,9 +70,11 @@ class Tests_Roles extends EDD_UnitTestCase {
 	public function test_administrator_caps() {
 		global $wp_roles;
 
-		if ( class_exists( 'WP_Roles' ) )
-			if ( ! isset( $wp_roles ) )
+		if ( class_exists( 'WP_Roles' ) ) {
+			if ( ! isset( $wp_roles ) ) {
 				$wp_roles = new \WP_Roles();
+			}
+		}
 
 		$this->assertArrayHasKey( 'view_shop_sensitive_data', (array) $wp_roles->roles['administrator']['capabilities'] );
 		$this->assertArrayHasKey( 'export_shop_reports', (array) $wp_roles->roles['administrator']['capabilities'] );
@@ -82,9 +85,11 @@ class Tests_Roles extends EDD_UnitTestCase {
 	public function test_shop_accountant_caps() {
 		global $wp_roles;
 
-		if ( class_exists( 'WP_Roles' ) )
-			if ( ! isset( $wp_roles ) )
+		if ( class_exists( 'WP_Roles' ) ) {
+			if ( ! isset( $wp_roles ) ) {
 				$wp_roles = new \WP_Roles();
+			}
+		}
 
 		$this->assertArrayHasKey( 'read', (array) $wp_roles->roles['shop_accountant']['capabilities'] );
 		$this->assertArrayHasKey( 'edit_posts', (array) $wp_roles->roles['shop_accountant']['capabilities'] );
@@ -98,9 +103,11 @@ class Tests_Roles extends EDD_UnitTestCase {
 	public function test_shop_vendor_caps() {
 		global $wp_roles;
 
-		if ( class_exists( 'WP_Roles' ) )
-			if ( ! isset( $wp_roles ) )
+		if ( class_exists( 'WP_Roles' ) ) {
+			if ( ! isset( $wp_roles ) ) {
 				$wp_roles = new \WP_Roles();
+			}
+		}
 
 		$this->assertArrayHasKey( 'edit_product', (array) $wp_roles->roles['shop_manager']['capabilities'] );
 		$this->assertArrayHasKey( 'delete_product', (array) $wp_roles->roles['shop_manager']['capabilities'] );

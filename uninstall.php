@@ -3,14 +3,14 @@
  * Uninstall Easy Digital Downloads
  *
  * Deletes all the plugin data i.e.
- * 		1. Custom Post types.
- * 		2. Terms & Taxonomies.
- * 		3. Plugin pages.
- * 		4. Plugin options.
- * 		5. Capabilities.
- * 		6. Roles.
- * 		7. Database tables.
- * 		8. Cron events.
+ *      1. Custom Post types.
+ *      2. Terms & Taxonomies.
+ *      3. Plugin pages.
+ *      4. Plugin options.
+ *      5. Capabilities.
+ *      6. Roles.
+ *      7. Database tables.
+ *      8. Cron events.
  *
  * @package     EDD
  * @subpackage  Uninstall
@@ -20,33 +20,40 @@
  */
 
 // Exit if accessed directly.
-if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit;
+if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
+	exit;
+}
 
 // Load EDD file.
-include_once( 'easy-digital-downloads.php' );
+require_once 'easy-digital-downloads.php';
 
 global $wpdb, $wp_roles;
 
-if( edd_get_option( 'uninstall_on_delete' ) ) {
+if ( edd_get_option( 'uninstall_on_delete' ) ) {
 
 	/** Delete All the Custom Post Types */
-	$edd_taxonomies = array( 'download_category', 'download_tag', 'edd_log_type', );
+	$edd_taxonomies = array( 'download_category', 'download_tag', 'edd_log_type' );
 	$edd_post_types = array( 'download', 'edd_payment', 'edd_discount', 'edd_log' );
 	foreach ( $edd_post_types as $post_type ) {
-
 		$edd_taxonomies = array_merge( $edd_taxonomies, get_object_taxonomies( $post_type ) );
-		$items = get_posts( array( 'post_type' => $post_type, 'post_status' => 'any', 'numberposts' => -1, 'fields' => 'ids' ) );
+		$items          = get_posts(
+			array(
+				'post_type'   => $post_type,
+				'post_status' => 'any',
+				'numberposts' => -1,
+				'fields'      => 'ids',
+			)
+		);
 
 		if ( $items ) {
 			foreach ( $items as $item ) {
-				wp_delete_post( $item, true);
+				wp_delete_post( $item, true );
 			}
 		}
 	}
 
 	/** Delete All the Terms & Taxonomies */
 	foreach ( array_unique( array_filter( $edd_taxonomies ) ) as $taxonomy ) {
-
 		$terms = $wpdb->get_results( $wpdb->prepare( "SELECT t.*, tt.* FROM $wpdb->terms AS t INNER JOIN $wpdb->term_taxonomy AS tt ON t.term_id = tt.term_id WHERE tt.taxonomy IN ('%s') ORDER BY t.name ASC", $taxonomy ) );
 
 		// Delete Terms.
@@ -106,7 +113,7 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 		// Deprecated 3.0.0
 		'wp_edd_customers_db_version',
 		'wp_edd_customermeta_db_version',
-		'_edd_table_check'
+		'_edd_table_check',
 	);
 	foreach ( $edd_options as $option ) {
 		delete_option( $option );

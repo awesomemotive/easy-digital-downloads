@@ -26,25 +26,26 @@ defined( 'ABSPATH' ) || exit;
 function edd_print_errors() {
 	$errors = edd_get_errors();
 	if ( $errors ) {
-
-		$classes = apply_filters( 'edd_error_class', array(
-			'edd_errors', 'edd-alert', 'edd-alert-error'
-		) );
+		$classes = apply_filters(
+			'edd_error_class',
+			array(
+				'edd_errors',
+				'edd-alert',
+				'edd-alert-error',
+			)
+		);
 
 		if ( ! empty( $errors ) ) {
 			echo '<div class="' . implode( ' ', $classes ) . '">';
 				// Loop error codes and display errors
-				foreach ( $errors as $error_id => $error ) {
-
-					echo '<p class="edd_error" id="edd_error_' . $error_id . '"><strong>' . __( 'Error', 'easy-digital-downloads' ) . '</strong>: ' . $error . '</p>';
-
-				}
+			foreach ( $errors as $error_id => $error ) {
+				echo '<p class="edd_error" id="edd_error_' . $error_id . '"><strong>' . __( 'Error', 'easy-digital-downloads' ) . '</strong>: ' . $error . '</p>';
+			}
 
 			echo '</div>';
 		}
 
 		edd_clear_errors();
-
 	}
 }
 add_action( 'edd_purchase_form_before_submit', 'edd_print_errors' );
@@ -74,7 +75,7 @@ function edd_get_errors() {
  *
  * @since 1.0
  * @uses EDD_Session::get()
- * @param int $error_id ID of the error being set
+ * @param int    $error_id ID of the error being set
  * @param string $error_message Message to store with the error
  * @return void
  */
@@ -141,7 +142,7 @@ function _edd_die_handler() {
 function edd_die( $message = '', $title = '', $status = 400 ) {
 	if ( ! defined( 'EDD_UNIT_TESTS' ) ) {
 		add_filter( 'wp_die_ajax_handler', '_edd_die_handler' );
-		add_filter( 'wp_die_handler',      '_edd_die_handler' );
+		add_filter( 'wp_die_handler', '_edd_die_handler' );
 	}
 
 	wp_die( $message, $title, array( 'response' => $status ) );

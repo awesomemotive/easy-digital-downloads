@@ -144,8 +144,8 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 				array(
 					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
 					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
-					'inclusive' => true
-				)
+					'inclusive' => true,
+				),
 			);
 		}
 
@@ -153,7 +153,7 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 			$args['product_id'] = $this->download_id;
 		}
 
-		$total = edd_count_order_items( $args );
+		$total      = edd_count_order_items( $args );
 		$percentage = 100;
 
 		if ( $total > 0 ) {
@@ -169,7 +169,7 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 
 	public function set_properties( $request ) {
 		$this->start       = isset( $request['start'] ) ? sanitize_text_field( $request['start'] ) : '';
-		$this->end         = isset( $request['end'] )   ? sanitize_text_field( $request['end'] ) . ' 23:59:59'  : '';
-		$this->download_id = isset( $request['download_id'] )   ? absint( $request['download_id'] )        : 0;
+		$this->end         = isset( $request['end'] ) ? sanitize_text_field( $request['end'] ) . ' 23:59:59' : '';
+		$this->download_id = isset( $request['download_id'] ) ? absint( $request['download_id'] ) : 0;
 	}
 }

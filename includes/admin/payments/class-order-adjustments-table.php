@@ -29,11 +29,13 @@ class Order_Adjustments_Table extends List_Table {
 	 * @see   WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		parent::__construct( array(
-			'singular' => __( 'Order Adjustment',  'easy-digital-downloads' ),
-			'plural'   => __( 'Order Adjustments', 'easy-digital-downloads' ),
-			'ajax'     => false,
-		) );
+		parent::__construct(
+			array(
+				'singular' => __( 'Order Adjustment', 'easy-digital-downloads' ),
+				'plural'   => __( 'Order Adjustments', 'easy-digital-downloads' ),
+				'ajax'     => false,
+			)
+		);
 
 		$this->process_bulk_action();
 		$this->get_counts();
@@ -56,11 +58,14 @@ class Order_Adjustments_Table extends List_Table {
 			: 0;
 
 		// Add base query args
-		return add_query_arg( array(
-			'page' => 'edd-payment-history',
-			'view' => 'view-order-details',
-			'id'   => $id,
-		), $base );
+		return add_query_arg(
+			array(
+				'page' => 'edd-payment-history',
+				'view' => 'view-order-details',
+				'id'   => $id,
+			),
+			$base
+		);
 	}
 
 	/**
@@ -183,16 +188,27 @@ class Order_Adjustments_Table extends List_Table {
 		$row_actions = array();
 
 		// Edit
-		$row_actions['edit'] = '<a href="' . add_query_arg( array(
-			'edd-action'       => 'edit_order_adjustment',
-			'order_adjustment' => $order_adjustment->id,
-		), $base ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
+		$row_actions['edit'] = '<a href="' . add_query_arg(
+			array(
+				'edd-action'       => 'edit_order_adjustment',
+				'order_adjustment' => $order_adjustment->id,
+			),
+			$base
+		) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
 
 		// Delete
-		$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-			'edd-action'       => 'delete_order_adjustment',
-			'order_adjustment' => $order_adjustment->id,
-		), $base ), 'edd_order_adjustment_nonce' ) ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
+		$row_actions['delete'] = '<a href="' . esc_url(
+			wp_nonce_url(
+				add_query_arg(
+					array(
+						'edd-action'       => 'delete_order_adjustment',
+						'order_adjustment' => $order_adjustment->id,
+					),
+					$base
+				),
+				'edd_order_adjustment_nonce'
+			)
+		) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 
 		// Filter all order_adjustment row actions
 		$row_actions = apply_filters( 'edd_order_adjustment_row_actions', $row_actions, $order_adjustment );
@@ -200,22 +216,22 @@ class Order_Adjustments_Table extends List_Table {
 		// Update name based on type
 		if ( 'discount' === $order_adjustment->type ) {
 			$name = edd_get_discount_field( $order_adjustment->type_id, 'name' );
-
 		} elseif ( 'tax_rate' === $order_adjustment->type ) {
 			$name = __( 'Tax', 'easy-digital-downloads' );
-
 		} elseif ( 'fee' === $order_adjustment->type ) {
 			$name = __( 'Fee', 'easy-digital-downloads' );
-
 		} else {
 			$name = '&mdash;';
 		}
 
 		// Wrap order_adjustment title in strong anchor
-		$order_adjustment_title = '<strong><a class="row-title" href="' . add_query_arg( array(
-			'edd-action'       => 'edit_order_adjustment',
-			'order_adjustment' => $order_adjustment->id,
-		), $base ) . '">' . esc_html( $name ) . '</a></strong>';
+		$order_adjustment_title = '<strong><a class="row-title" href="' . add_query_arg(
+			array(
+				'edd-action'       => 'edit_order_adjustment',
+				'order_adjustment' => $order_adjustment->id,
+			),
+			$base
+		) . '">' . esc_html( $name ) . '</a></strong>';
 
 		// Return order_adjustment title & row actions
 		return $order_adjustment_title . $this->row_actions( $row_actions );
@@ -346,9 +362,11 @@ class Order_Adjustments_Table extends List_Table {
 
 		// Maybe retrieve the counts.
 		if ( ! edd_is_add_order_page() ) {
-			$this->counts = edd_get_order_adjustment_counts( array(
-				'object_id' => $_GET['id'] // WPCS: CSRF ok.
-			) );
+			$this->counts = edd_get_order_adjustment_counts(
+				array(
+					'object_id' => $_GET['id'], // WPCS: CSRF ok.
+				)
+			);
 		}
 	}
 
@@ -375,16 +393,18 @@ class Order_Adjustments_Table extends List_Table {
 		$id      = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
 
 		// Get order_adjustments
-		return edd_get_order_adjustments( array(
-			'object_id'   => $id,
-			'object_type' => 'order',
-			'number'      => $this->per_page,
-			'paged'       => $paged,
-			'orderby'     => $orderby,
-			'order'       => $order,
-			'type'        => $type,
-			'search'      => $search,
-		) );
+		return edd_get_order_adjustments(
+			array(
+				'object_id'   => $id,
+				'object_type' => 'order',
+				'number'      => $this->per_page,
+				'paged'       => $paged,
+				'orderby'     => $orderby,
+				'order'       => $order,
+				'type'        => $type,
+				'search'      => $search,
+			)
+		);
 	}
 
 	/**
@@ -406,11 +426,13 @@ class Order_Adjustments_Table extends List_Table {
 			: 'total';
 
 		// Setup pagination
-		$this->set_pagination_args( array(
-			'total_items' => $this->counts[ $type ],
-			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $this->counts[ $type ] / $this->per_page ),
-		) );
+		$this->set_pagination_args(
+			array(
+				'total_items' => $this->counts[ $type ],
+				'per_page'    => $this->per_page,
+				'total_pages' => ceil( $this->counts[ $type ] / $this->per_page ),
+			)
+		);
 	}
 
 	/**
@@ -423,10 +445,13 @@ class Order_Adjustments_Table extends List_Table {
 	public function single_row( $item ) {
 
 		// Status.
-		$classes = array_map( 'sanitize_html_class', array(
-			'order-' . $item->order_id,
-			$item->type,
-		) );
+		$classes = array_map(
+			'sanitize_html_class',
+			array(
+				'order-' . $item->order_id,
+				$item->type,
+			)
+		);
 
 		// Turn into a string.
 		$class = implode( ' ', $classes ); ?>

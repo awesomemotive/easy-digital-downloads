@@ -43,12 +43,15 @@ class Customer_Notes extends Base {
 	public function get_data() {
 		$offset = ( $this->step - 1 ) * $this->per_step;
 
-		$results = $this->get_db()->get_results( $this->get_db()->prepare(
-			"SELECT *
+		$results = $this->get_db()->get_results(
+			$this->get_db()->prepare(
+				"SELECT *
 			 FROM {$this->get_db()->edd_customers}
 			 LIMIT %d, %d",
-			$offset, $this->per_step
-		) );
+				$offset,
+				$this->per_step
+			)
+		);
 
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $result ) {

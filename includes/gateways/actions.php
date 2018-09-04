@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  * @param $data
  */
 function edd_process_gateway_select( $data ) {
-	if( isset( $_POST['gateway_submit'] ) ) {
+	if ( isset( $_POST['gateway_submit'] ) ) {
 		edd_redirect( add_query_arg( 'payment-mode', $_POST['payment-mode'] ) );
 	}
 }

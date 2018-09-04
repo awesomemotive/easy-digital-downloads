@@ -14,7 +14,7 @@ class Tests_Process_Download extends EDD_UnitTestCase {
 	}
 
 	public function test_set_scheme() {
-		$home_url = get_home_url();
+		$home_url   = get_home_url();
 		$file       = trailingslashit( $home_url ) . 'test-file.jpg';
 		$https_file = str_replace( 'http://', 'https://', $file );
 

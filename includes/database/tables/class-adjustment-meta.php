@@ -31,25 +31,25 @@ final class Adjustment_Meta extends Table {
 	 */
 	protected $name = 'edd_adjustmentmeta';
 
-    /**
-     * Database version
-     *
-     * @access protected
-     * @since 3.0
-     * @var int
-     */
-    protected $version = 201806140002;
+	/**
+	 * Database version
+	 *
+	 * @access protected
+	 * @since 3.0
+	 * @var int
+	 */
+	protected $version = 201806140002;
 
-    /**
-     * Array of upgrade versions and methods
-     *
-     * @since 3.0
-     *
-     * @var array
-     */
-    protected $upgrades = array(
-        '201806140002' => 201806140002
-    );
+	/**
+	 * Array of upgrade versions and methods
+	 *
+	 * @since 3.0
+	 *
+	 * @var array
+	 */
+	protected $upgrades = array(
+		'201806140002' => 201806140002,
+	);
 
 	/**
 	 * Setup the database schema
@@ -69,23 +69,23 @@ final class Adjustment_Meta extends Table {
 			KEY meta_key (meta_key({$max_index_length}))";
 	}
 
-    /**
-     * Upgrade to version 201806140002
-     * - Migrate data from edd_discounts to edd_adjustments
-     *
+	/**
+	 * Upgrade to version 201806140002
+	 * - Migrate data from edd_discounts to edd_adjustments
+	 *
 	 * This is only for 3.0 beta testers, and can be removed in 3.0.1 or above.
 	 *
-     * @since 3.0
-     *
-     * @return boolean
-     */
-    protected function __201806140002() {
+	 * @since 3.0
+	 *
+	 * @return boolean
+	 */
+	protected function __201806140002() {
 
-        // Old discounts table
-        $table_name = $this->get_db()->get_blog_prefix( null ) . 'edd_discountmeta';
+		// Old discounts table
+		$table_name = $this->get_db()->get_blog_prefix( null ) . 'edd_discountmeta';
 
 		// Does old table exist?
-		$query    = "SHOW TABLES LIKE %s";
+		$query    = 'SHOW TABLES LIKE %s';
 		$like     = $this->get_db()->esc_like( $table_name );
 		$prepared = $this->get_db()->prepare( $query, $like );
 		$result   = $this->get_db()->get_var( $prepared );
@@ -95,17 +95,20 @@ final class Adjustment_Meta extends Table {
 			return true;
 		}
 
-        // Get the contents
-        $discounts = $this->get_db()->get_results( "SELECT * FROM {$table_name}" );
+		// Get the contents
+		$discounts = $this->get_db()->get_results( "SELECT * FROM {$table_name}" );
 
 		// Migrate discounts to adjustments
 		if ( ! empty( $discounts ) ) {
 			foreach ( $discounts as $discount ) {
-				$this->get_db()->insert( $this->table_name, array(
-					'edd_adjustment_id' => $discount->edd_discount_id,
-					'meta_key'          => $discount->meta_key,
-					'meta_value'        => $discount->meta_value
-				) );
+				$this->get_db()->insert(
+					$this->table_name,
+					array(
+						'edd_adjustment_id' => $discount->edd_discount_id,
+						'meta_key'          => $discount->meta_key,
+						'meta_value'        => $discount->meta_value,
+					)
+				);
 			}
 		}
 
@@ -113,11 +116,13 @@ final class Adjustment_Meta extends Table {
 		delete_option( 'wpdb_edd_discountmeta_version' );
 
 		// Attempt to drop the old table
-		$this->get_db()->query( "
+		$this->get_db()->query(
+			"
 			DROP TABLE {$table_name};
-		" );
+		"
+		);
 
-        // Return success/fail
-        return true;
-    }
+		// Return success/fail
+		return true;
+	}
 }

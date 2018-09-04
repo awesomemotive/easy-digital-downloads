@@ -38,11 +38,13 @@ class Test_Cart extends EDD_UnitTestCase {
 		$current_user = new WP_User( 1 );
 		$current_user->set_role( 'administrator' );
 
-		$post_id = static::factory()->post->create( array(
-			'post_title'  => 'Test Download',
-			'post_type'   => 'download',
-			'post_status' => 'publish',
-		) );
+		$post_id = static::factory()->post->create(
+			array(
+				'post_title'  => 'Test Download',
+				'post_type'   => 'download',
+				'post_status' => 'publish',
+			)
+		);
 
 		$_variable_pricing = array(
 			array(
@@ -89,19 +91,21 @@ class Test_Cart extends EDD_UnitTestCase {
 
 		self::$download = edd_get_download( $post_id );
 
-		self::$discount = static::edd()->discount->create_and_get( array(
-			'name'              => '20 Percent Off',
-			'code'              => '20OFF',
-			'status'            => 'active',
-			'type'              => 'percent',
-			'amount'            => '20',
-			'use_count'         => 54,
-			'max_uses'          => 10,
-			'min_cart_price'    => 128,
-			'product_condition' => 'all',
-			'start_date'        => '2010-12-12 00:00:00',
-			'end_date'          => '2050-12-31 23:59:59',
-		) );
+		self::$discount = static::edd()->discount->create_and_get(
+			array(
+				'name'              => '20 Percent Off',
+				'code'              => '20OFF',
+				'status'            => 'active',
+				'type'              => 'percent',
+				'amount'            => '20',
+				'use_count'         => 54,
+				'max_uses'          => 10,
+				'min_cart_price'    => 128,
+				'product_condition' => 'all',
+				'start_date'        => '2010-12-12 00:00:00',
+				'end_date'          => '2050-12-31 23:59:59',
+			)
+		);
 	}
 
 	public function setUp() {
@@ -142,9 +146,12 @@ class Test_Cart extends EDD_UnitTestCase {
 	}
 
 	public function test_add_to_cart_multiple_price_ids_array() {
-		edd_add_to_cart( self::$download->ID, array(
-			'price_id' => array( 0, 1 ),
-		) );
+		edd_add_to_cart(
+			self::$download->ID,
+			array(
+				'price_id' => array( 0, 1 ),
+			)
+		);
 
 		$this->assertEquals( 2, count( edd_get_cart_contents() ) );
 	}
@@ -166,17 +173,23 @@ class Test_Cart extends EDD_UnitTestCase {
 	}
 
 	public function test_add_to_cart_multiple_price_ids_string() {
-		edd_add_to_cart( self::$download->ID, array(
-			'price_id' => '0,1',
-		) );
+		edd_add_to_cart(
+			self::$download->ID,
+			array(
+				'price_id' => '0,1',
+			)
+		);
 
 		$this->assertEquals( 2, count( edd_get_cart_contents() ) );
 	}
 
 	public function test_get_cart_contents() {
-		edd_add_to_cart( self::$download->ID, array(
-			'price_id' => 0,
-		) );
+		edd_add_to_cart(
+			self::$download->ID,
+			array(
+				'price_id' => 0,
+			)
+		);
 
 		$expected = array(
 			'0' => array(
@@ -192,9 +205,12 @@ class Test_Cart extends EDD_UnitTestCase {
 	}
 
 	public function test_get_cart_content_details() {
-		edd_add_to_cart( self::$download->ID, array(
-			'price_id' => 0,
-		) );
+		edd_add_to_cart(
+			self::$download->ID,
+			array(
+				'price_id' => 0,
+			)
+		);
 
 		$expected = array(
 			'0' => array(
@@ -247,9 +263,12 @@ class Test_Cart extends EDD_UnitTestCase {
 
 		// Now turn on taxes and do it again
 		add_filter( 'edd_use_taxes', '__return_true' );
-		add_filter( 'edd_tax_rate', function () {
-			return 0.20;
-		} );
+		add_filter(
+			'edd_tax_rate',
+			function () {
+				return 0.20;
+			}
+		);
 
 		$expected = array(
 			'0' => array(
@@ -325,7 +344,10 @@ class Test_Cart extends EDD_UnitTestCase {
 		$this->assertEquals( 0.00, edd_get_cart_item_discount_amount( $cart_item_args ) );
 
 		// Test it without an options array on an item with variable pricing to make sure we get 0
-		$cart_item_args = array( 'id' => self::$download->ID, 'quantity' => 1 );
+		$cart_item_args = array(
+			'id'       => self::$download->ID,
+			'quantity' => 1,
+		);
 		$this->assertEquals( 0.00, edd_get_cart_item_discount_amount( $cart_item_args ) );
 
 		// Now test it with an options array properly set
@@ -371,7 +393,6 @@ class Test_Cart extends EDD_UnitTestCase {
 	}
 
 	public function test_add_to_cart_with_quantities_enabled_on_product() {
-
 		add_filter( 'edd_item_quantities_enabled', '__return_true' );
 
 		$options = array(
@@ -425,7 +446,6 @@ class Test_Cart extends EDD_UnitTestCase {
 	}
 
 	public function test_remove_from_cart() {
-
 		edd_empty_cart();
 
 		edd_add_to_cart( self::$download->ID );
@@ -538,12 +558,14 @@ class Test_Cart extends EDD_UnitTestCase {
 
 		edd_add_to_cart( self::$download->ID, array( 'price_id' => 0 ) );
 
-		EDD()->fees->add_fee( array(
-			'amount'      => 10,
-			'id'          => 'test',
-			'label'       => 'Test',
-			'download_id' => self::$download->ID,
-		) );
+		EDD()->fees->add_fee(
+			array(
+				'amount'      => 10,
+				'id'          => 'test',
+				'label'       => 'Test',
+				'download_id' => self::$download->ID,
+			)
+		);
 
 		$this->assertEquals( 30, edd_get_cart_total() );
 	}
@@ -553,12 +575,14 @@ class Test_Cart extends EDD_UnitTestCase {
 
 		edd_add_to_cart( self::$download->ID, array( 'price_id' => 0 ) );
 
-		EDD()->fees->add_fee( array(
-			'amount'      => 10,
-			'id'          => 'test',
-			'label'       => 'Test',
-			'download_id' => self::$download->ID,
-		) );
+		EDD()->fees->add_fee(
+			array(
+				'amount'      => 10,
+				'id'          => 'test',
+				'label'       => 'Test',
+				'download_id' => self::$download->ID,
+			)
+		);
 
 		// Since it's a fee associated with an item in the cart, it affects it's pricing, not the total cart fees.
 		$this->assertEquals( 0, edd_get_cart_fee_total() );
@@ -569,12 +593,14 @@ class Test_Cart extends EDD_UnitTestCase {
 
 		edd_add_to_cart( self::$download->ID, array( 'price_id' => 0 ) );
 
-		EDD()->fees->add_fee( array(
-			'amount' => 10,
-			'id'     => 'test',
-			'label'  => 'Test',
-			'type'   => 'item',
-		) );
+		EDD()->fees->add_fee(
+			array(
+				'amount' => 10,
+				'id'     => 'test',
+				'label'  => 'Test',
+				'type'   => 'item',
+			)
+		);
 
 		$this->assertEquals( 30, edd_get_cart_total() );
 	}
@@ -584,12 +610,14 @@ class Test_Cart extends EDD_UnitTestCase {
 
 		edd_add_to_cart( self::$download->ID );
 
-		EDD()->fees->add_fee( array(
-			'amount' => 10,
-			'id'     => 'test',
-			'label'  => 'Test',
-			'type'   => 'item',
-		) );
+		EDD()->fees->add_fee(
+			array(
+				'amount' => 10,
+				'id'     => 'test',
+				'label'  => 'Test',
+				'type'   => 'item',
+			)
+		);
 
 		$this->assertEquals( 10, edd_get_cart_fee_total() );
 	}
@@ -602,7 +630,6 @@ class Test_Cart extends EDD_UnitTestCase {
 	public function test_negative_fees_cart_tax() {
 		edd_update_option( 'enable_taxes', true );
 		edd_update_option( 'tax_rate', '10' );
-
 
 		$options = array(
 			'price_id' => 0,
@@ -618,7 +645,7 @@ class Test_Cart extends EDD_UnitTestCase {
 		);
 		EDD()->fees->add_fee( $fee );
 
-		$this->assertEquals( "1", EDD()->cart->get_tax() );
+		$this->assertEquals( '1', EDD()->cart->get_tax() );
 
 		edd_update_option( 'enable_taxes', false );
 	}

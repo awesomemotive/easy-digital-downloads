@@ -25,7 +25,7 @@ function edd_get_admin_base_url() {
 
 	// Default args
 	$args = array(
-		'post_type' => 'download'
+		'post_type' => 'download',
 	);
 
 	// Default URL
@@ -69,7 +69,7 @@ function edd_is_test_mode() {
  */
 function edd_is_debug_mode() {
 	$ret = edd_get_option( 'debug_mode', false );
-	if( defined( 'EDD_DEBUG_MODE' ) && EDD_DEBUG_MODE ) {
+	if ( defined( 'EDD_DEBUG_MODE' ) && EDD_DEBUG_MODE ) {
 		$ret = true;
 	}
 	return (bool) apply_filters( 'edd_is_debug_mode', $ret );
@@ -186,9 +186,9 @@ function edd_is_cc_verify_enabled() {
 
 	if ( count( $gateways ) == 1 && ! isset( $gateways['paypal'] ) && ! isset( $gateways['manual'] ) ) {
 		$ret = true;
-	} else if ( count( $gateways ) == 1 ) {
+	} elseif ( count( $gateways ) == 1 ) {
 		$ret = false;
-	} else if ( count( $gateways ) == 2 && isset( $gateways['paypal'] ) && isset( $gateways['manual'] ) ) {
+	} elseif ( count( $gateways ) == 2 && isset( $gateways['paypal'] ) && isset( $gateways['manual'] ) ) {
 		$ret = false;
 	}
 
@@ -201,7 +201,7 @@ function edd_is_cc_verify_enabled() {
  * Checks whether an integer is odd.
  *
  * @since 1.0
- * @param int     $int The integer to check
+ * @param int $int The integer to check
  * @return bool Is the integer odd?
  */
 function edd_is_odd( $int ) {
@@ -220,7 +220,7 @@ function edd_is_odd( $int ) {
  * @return mixed File extension
  */
 function edd_get_file_extension( $str ) {
-	$parts = explode( '.', $str );
+	$parts          = explode( '.', $str );
 	$file_extension = end( $parts );
 
 	if ( false !== strpos( $file_extension, '?' ) ) {
@@ -234,7 +234,7 @@ function edd_get_file_extension( $str ) {
  * Checks if the string (filename) provided is an image URL
  *
  * @since 1.0
- * @param string  $str Filename
+ * @param string $str Filename
  * @return bool Whether or not the filename is an image
  */
 function edd_string_is_image_url( $str ) {
@@ -267,18 +267,17 @@ function edd_string_is_image_url( $str ) {
  * @return string $ip User's IP address
  */
 function edd_get_ip() {
-
 	$ip = '127.0.0.1';
 
 	if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
-		//check ip from share internet
+		// check ip from share internet
 		$ip = $_SERVER['HTTP_CLIENT_IP'];
 	} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
-		//to check ip is pass from proxy
+		// to check ip is pass from proxy
 		// can include more than 1 ip, first is the public one
-		$ip = explode(',',$_SERVER['HTTP_X_FORWARDED_FOR']);
-		$ip = trim($ip[0]);
-	} elseif( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
+		$ip = explode( ',', $_SERVER['HTTP_X_FORWARDED_FOR'] );
+		$ip = trim( $ip[0] );
+	} elseif ( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
 		$ip = $_SERVER['REMOTE_ADDR'];
 	}
 
@@ -301,27 +300,27 @@ function edd_get_ip() {
 function edd_get_host() {
 	$host = false;
 
-	if( defined( 'WPE_APIKEY' ) ) {
+	if ( defined( 'WPE_APIKEY' ) ) {
 		$host = 'WP Engine';
-	} elseif( defined( 'PAGELYBIN' ) ) {
+	} elseif ( defined( 'PAGELYBIN' ) ) {
 		$host = 'Pagely';
-	} elseif( DB_HOST == 'localhost:/tmp/mysql5.sock' ) {
+	} elseif ( DB_HOST == 'localhost:/tmp/mysql5.sock' ) {
 		$host = 'ICDSoft';
-	} elseif( DB_HOST == 'mysqlv5' ) {
+	} elseif ( DB_HOST == 'mysqlv5' ) {
 		$host = 'NetworkSolutions';
-	} elseif( strpos( DB_HOST, 'ipagemysql.com' ) !== false ) {
+	} elseif ( strpos( DB_HOST, 'ipagemysql.com' ) !== false ) {
 		$host = 'iPage';
-	} elseif( strpos( DB_HOST, 'ipowermysql.com' ) !== false ) {
+	} elseif ( strpos( DB_HOST, 'ipowermysql.com' ) !== false ) {
 		$host = 'IPower';
-	} elseif( strpos( DB_HOST, '.gridserver.com' ) !== false ) {
+	} elseif ( strpos( DB_HOST, '.gridserver.com' ) !== false ) {
 		$host = 'MediaTemple Grid';
-	} elseif( strpos( DB_HOST, '.pair.com' ) !== false ) {
+	} elseif ( strpos( DB_HOST, '.pair.com' ) !== false ) {
 		$host = 'pair Networks';
-	} elseif( strpos( DB_HOST, '.stabletransit.com' ) !== false ) {
+	} elseif ( strpos( DB_HOST, '.stabletransit.com' ) !== false ) {
 		$host = 'Rackspace Cloud';
-	} elseif( strpos( DB_HOST, '.sysfix.eu' ) !== false ) {
+	} elseif ( strpos( DB_HOST, '.sysfix.eu' ) !== false ) {
 		$host = 'SysFix.eu Power Hosting';
-	} elseif( strpos( $_SERVER['SERVER_NAME'], 'Flywheel' ) !== false ) {
+	} elseif ( strpos( $_SERVER['SERVER_NAME'], 'Flywheel' ) !== false ) {
 		$host = 'Flywheel';
 	} else {
 		// Adding a general fallback for data gathering
@@ -340,57 +339,67 @@ function edd_get_host() {
  * @return bool true if host matches, false if not
  */
 function edd_is_host( $host = false ) {
-
 	$return = false;
 
-	if( $host ) {
+	if ( $host ) {
 		$host = str_replace( ' ', '', strtolower( $host ) );
 
-		switch( $host ) {
+		switch ( $host ) {
 			case 'wpengine':
-				if( defined( 'WPE_APIKEY' ) )
+				if ( defined( 'WPE_APIKEY' ) ) {
 					$return = true;
+				}
 				break;
 			case 'pagely':
-				if( defined( 'PAGELYBIN' ) )
+				if ( defined( 'PAGELYBIN' ) ) {
 					$return = true;
+				}
 				break;
 			case 'icdsoft':
-				if( DB_HOST == 'localhost:/tmp/mysql5.sock' )
+				if ( DB_HOST == 'localhost:/tmp/mysql5.sock' ) {
 					$return = true;
+				}
 				break;
 			case 'networksolutions':
-				if( DB_HOST == 'mysqlv5' )
+				if ( DB_HOST == 'mysqlv5' ) {
 					$return = true;
+				}
 				break;
 			case 'ipage':
-				if( strpos( DB_HOST, 'ipagemysql.com' ) !== false )
+				if ( strpos( DB_HOST, 'ipagemysql.com' ) !== false ) {
 					$return = true;
+				}
 				break;
 			case 'ipower':
-				if( strpos( DB_HOST, 'ipowermysql.com' ) !== false )
+				if ( strpos( DB_HOST, 'ipowermysql.com' ) !== false ) {
 					$return = true;
+				}
 				break;
 			case 'mediatemplegrid':
-				if( strpos( DB_HOST, '.gridserver.com' ) !== false )
+				if ( strpos( DB_HOST, '.gridserver.com' ) !== false ) {
 					$return = true;
+				}
 				break;
 			case 'pairnetworks':
-				if( strpos( DB_HOST, '.pair.com' ) !== false )
+				if ( strpos( DB_HOST, '.pair.com' ) !== false ) {
 					$return = true;
+				}
 				break;
 			case 'rackspacecloud':
-				if( strpos( DB_HOST, '.stabletransit.com' ) !== false )
+				if ( strpos( DB_HOST, '.stabletransit.com' ) !== false ) {
 					$return = true;
+				}
 				break;
 			case 'sysfix.eu':
 			case 'sysfix.eupowerhosting':
-				if( strpos( DB_HOST, '.sysfix.eu' ) !== false )
+				if ( strpos( DB_HOST, '.sysfix.eu' ) !== false ) {
 					$return = true;
+				}
 				break;
 			case 'flywheel':
-				if( strpos( $_SERVER['SERVER_NAME'], 'Flywheel' ) !== false )
+				if ( strpos( $_SERVER['SERVER_NAME'], 'Flywheel' ) !== false ) {
 					$return = true;
+				}
 				break;
 			default:
 				$return = false;
@@ -466,31 +475,31 @@ function edd_currency_symbol( $currency = '' ) {
 	}
 
 	switch ( $currency ) :
-		case "GBP" :
+		case 'GBP':
 			$symbol = '&pound;';
 			break;
-		case "BRL" :
+		case 'BRL':
 			$symbol = 'R&#36;';
 			break;
-		case "EUR" :
+		case 'EUR':
 			$symbol = '&euro;';
 			break;
-		case "USD" :
-		case "AUD" :
-		case "NZD" :
-		case "CAD" :
-		case "HKD" :
-		case "MXN" :
-		case "SGD" :
+		case 'USD':
+		case 'AUD':
+		case 'NZD':
+		case 'CAD':
+		case 'HKD':
+		case 'MXN':
+		case 'SGD':
 			$symbol = '&#36;';
 			break;
-		case "JPY" :
+		case 'JPY':
 			$symbol = '&yen;';
 			break;
-		case "AOA" :
+		case 'AOA':
 			$symbol = 'Kz';
 			break;
-		default :
+		default:
 			$symbol = $currency;
 			break;
 	endswitch;
@@ -524,7 +533,7 @@ function edd_get_currency_name( $code = 'USD' ) {
 function edd_month_num_to_name( $n ) {
 	$timestamp = mktime( 0, 0, 0, $n, 1, 2005 );
 
-	return date_i18n( "M", $timestamp );
+	return date_i18n( 'M', $timestamp );
 }
 
 /**
@@ -541,22 +550,17 @@ function edd_get_php_arg_separator_output() {
  * Get the current page URL
  *
  * @since 1.3
- * @param  bool   $nocache  If we should bust cache on the returned URL
+ * @param  bool $nocache  If we should bust cache on the returned URL
  * @return string $page_url Current page URL
  */
 function edd_get_current_page_url( $nocache = false ) {
-
 	global $wp;
 
-	if( get_option( 'permalink_structure' ) ) {
-
+	if ( get_option( 'permalink_structure' ) ) {
 		$base = trailingslashit( home_url( $wp->request ) );
-
 	} else {
-
 		$base = add_query_arg( $wp->query_string, '', trailingslashit( home_url( $wp->request ) ) );
 		$base = remove_query_arg( array( 'post_type', 'name' ), $base );
-
 	}
 
 	$scheme = is_ssl() ? 'https' : 'http';
@@ -585,7 +589,6 @@ function edd_get_current_page_url( $nocache = false ) {
  * @return string      The URL with cache busting added or not
  */
 function edd_add_cache_busting( $url = '' ) {
-
 	$no_cache_checkout = edd_get_option( 'no_cache_checkout', false );
 
 	if ( edd_is_caching_plugin_active() || ( edd_is_checkout() && $no_cache_checkout ) ) {
@@ -611,10 +614,10 @@ function edd_add_cache_busting( $url = '' ) {
  * @uses apply_filters() Calls 'edd_deprecated_function_trigger_error' and expects boolean value of true to do
  *   trigger or false to not trigger error.
  *
- * @param string  $function    The function that was called
- * @param string  $version     The version of Easy Digital Downloads that deprecated the function
- * @param string  $replacement Optional. The function that should have been called
- * @param array   $backtrace   Optional. Contains stack backtrace of deprecated function
+ * @param string $function    The function that was called
+ * @param string $version     The version of Easy Digital Downloads that deprecated the function
+ * @param string $replacement Optional. The function that should have been called
+ * @param array  $backtrace   Optional. Contains stack backtrace of deprecated function
  */
 function _edd_deprecated_function( $function, $version, $replacement = null, $backtrace = null ) {
 	do_action( 'edd_deprecated_function_run', $function, $replacement, $version );
@@ -625,7 +628,7 @@ function _edd_deprecated_function( $function, $version, $replacement = null, $ba
 	if ( WP_DEBUG && apply_filters( 'edd_deprecated_function_trigger_error', $show_errors ) ) {
 		if ( ! is_null( $replacement ) ) {
 			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'easy-digital-downloads' ), $function, $version, $replacement ) );
-			trigger_error(  print_r( $backtrace, 1 ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+			trigger_error( print_r( $backtrace, 1 ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
 			// Alternatively we could dump this to a file.
 		} else {
 			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'easy-digital-downloads' ), $function, $version ) );
@@ -651,11 +654,11 @@ function _edd_deprecated_function( $function, $version, $replacement = null, $ba
  * @uses apply_filters() Calls 'edd_deprecated_argument_trigger_error' and expects boolean value of true to do
  *   trigger or false to not trigger error.
  *
- * @param string  $argument    The arguemnt that is being deprecated
- * @param string  $function    The function that was called
- * @param string  $version     The version of WordPress that deprecated the function
- * @param string  $replacement Optional. The function that should have been called
- * @param array   $backtrace   Optional. Contains stack backtrace of deprecated function
+ * @param string $argument    The arguemnt that is being deprecated
+ * @param string $function    The function that was called
+ * @param string $version     The version of WordPress that deprecated the function
+ * @param string $replacement Optional. The function that should have been called
+ * @param array  $backtrace   Optional. Contains stack backtrace of deprecated function
  */
 function _edd_deprected_argument( $argument, $function, $version, $replacement = null, $backtrace = null ) {
 	do_action( 'edd_deprecated_argument_run', $argument, $function, $replacement, $version );
@@ -666,7 +669,7 @@ function _edd_deprected_argument( $argument, $function, $version, $replacement =
 	if ( WP_DEBUG && apply_filters( 'edd_deprecated_argument_trigger_error', $show_errors ) ) {
 		if ( ! is_null( $replacement ) ) {
 			trigger_error( sprintf( __( 'The %1$s argument of %2$s is <strong>deprecated</strong> since Easy Digital Downloads version %3$s! Please use %4$s instead.', 'easy-digital-downloads' ), $argument, $function, $version, $replacement ) );
-			trigger_error(  print_r( $backtrace, 1 ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+			trigger_error( print_r( $backtrace, 1 ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
 			// Alternatively we could dump this to a file.
 		} else {
 			trigger_error( sprintf( __( 'The %1$s argument of %2$s is <strong>deprecated</strong> since Easy Digital Downloads version %3$s with no alternative available.', 'easy-digital-downloads' ), $argument, $function, $version ) );
@@ -924,7 +927,7 @@ function edd_get_upload_dir() {
 	$wp_upload_dir = wp_upload_dir();
 	$edd_dir       = edd_get_uploads_base_dir();
 	$path          = $wp_upload_dir['basedir'] . '/' . $edd_dir;
-	$retval        =  apply_filters( 'edd_get_upload_dir', $path );
+	$retval        = apply_filters( 'edd_get_upload_dir', $path );
 
 	// Make sure the directory exists
 	wp_mkdir_p( $retval );
@@ -987,13 +990,13 @@ function edd_is_uploads_url_protected() {
 			$args       = array(
 				'sslverify'   => false,
 				'timeout'     => 2,
-				'redirection' => 0
+				'redirection' => 0,
 			);
 
 			// Send the request
-			$response   = wp_remote_get( $url, $args );
-			$code       = wp_remote_retrieve_response_code( $response );
-			$protected  = (int) ( 200 !== (int) $code );
+			$response  = wp_remote_get( $url, $args );
+			$code      = wp_remote_retrieve_response_code( $response );
+			$protected = (int) ( 200 !== (int) $code );
 
 			// Delete the temporary file
 			if ( file_exists( $file_path ) ) {
@@ -1031,7 +1034,7 @@ function edd_cleanup_file_symlinks() {
 	}
 
 	$path = edd_get_symlink_dir();
-	$dir = opendir( $path );
+	$dir  = opendir( $path );
 
 	while ( ( $file = readdir( $dir ) ) !== false ) {
 		if ( $file == '.' || $file == '..' ) {
@@ -1067,7 +1070,6 @@ function edd_use_skus() {
  * @return   array                An array or array of arrays, converted from the provided object(s)
  */
 function edd_object_to_array( $object = array() ) {
-
 	if ( empty( $object ) || ( ! is_object( $object ) && ! is_array( $object ) ) ) {
 		return $object;
 	}
@@ -1080,7 +1082,6 @@ function edd_object_to_array( $object = array() ) {
 			} else {
 				$return[] = edd_object_to_array( $item );
 			}
-
 		}
 	} else {
 		if ( $object instanceof EDD_Payment ) {
@@ -1090,14 +1091,13 @@ function edd_object_to_array( $object = array() ) {
 
 			// Now look at the items that came back and convert any nested objects to arrays
 			foreach ( $return as $key => $value ) {
-				$value = ( is_array( $value ) || is_object( $value ) ) ? edd_object_to_array( $value ) : $value;
+				$value          = ( is_array( $value ) || is_object( $value ) ) ? edd_object_to_array( $value ) : $value;
 				$return[ $key ] = $value;
 			}
 		}
 	}
 
 	return $return;
-
 }
 
 /**
@@ -1114,9 +1114,9 @@ function edd_set_upload_dir( $upload ) {
 	// Override the year / month being based on the post publication date, if year/month organization is enabled
 	if ( get_option( 'uploads_use_yearmonth_folders' ) ) {
 		// Generate the yearly and monthly dirs
-		$time = current_time( 'mysql' );
-		$y = substr( $time, 0, 4 );
-		$m = substr( $time, 5, 2 );
+		$time             = current_time( 'mysql' );
+		$y                = substr( $time, 0, 4 );
+		$m                = substr( $time, 5, 2 );
 		$upload['subdir'] = "/$y/$m";
 	}
 
@@ -1133,7 +1133,6 @@ function edd_set_upload_dir( $upload ) {
  * @return bool Whether the receipt is visible or not.
  */
 function edd_can_view_receipt( $payment_key = '' ) {
-
 	$return = false;
 
 	if ( empty( $payment_key ) ) {
@@ -1180,7 +1179,7 @@ function edd_can_view_receipt( $payment_key = '' ) {
 function edd_payment_get_ip_address_url( $order_id ) {
 	$order = edd_get_order( $order_id );
 
-	$base_url = 'https://ipinfo.io/';
+	$base_url     = 'https://ipinfo.io/';
 	$provider_url = '<a href="' . esc_url( $base_url ) . esc_attr( $order->ip ) . '" target="_blank">' . esc_attr( $order->ip ) . '</a>';
 
 	return apply_filters( 'edd_payment_get_ip_address_url', $provider_url, $order->ip, $order->id );
@@ -1202,7 +1201,7 @@ function edd_doing_cron() {
 	if ( function_exists( 'wp_doing_cron' ) && wp_doing_cron() ) {
 		return true;
 
-	// Bail if not doing WordPress cron (<4.8.0)
+		// Bail if not doing WordPress cron (<4.8.0)
 	} elseif ( defined( 'DOING_CRON' ) && ( true === DOING_CRON ) ) {
 		return true;
 	}
@@ -1227,7 +1226,7 @@ function edd_doing_ajax() {
 	if ( function_exists( 'wp_doing_ajax' ) && wp_doing_ajax() ) {
 		return true;
 
-	// Bail if not doing WordPress AJAX (<4.8.0)
+		// Bail if not doing WordPress AJAX (<4.8.0)
 	} elseif ( defined( 'DOING_AJAX' ) && ( true === DOING_AJAX ) ) {
 		return true;
 	}
@@ -1252,7 +1251,7 @@ function edd_doing_autosave() {
 	if ( function_exists( 'wp_doing_autosave' ) && wp_doing_autosave() ) {
 		return true;
 
-	// Bail if not doing WordPress autosave
+		// Bail if not doing WordPress autosave
 	} elseif ( defined( 'DOING_AUTOSAVE' ) && ( true === DOING_AUTOSAVE ) ) {
 		return true;
 	}
@@ -1315,11 +1314,11 @@ function edd_redirect( $location = '', $status = 302 ) {
  * @since 1.3.5
  * @since 3.0.0 String type-checking the `in_array()` call
  *
- * @param string  $function Name of the function.
+ * @param string $function Name of the function.
  * @return bool Whether or not function is disabled.
  */
 function edd_is_func_disabled( $function ) {
-	$disabled = explode( ',',  @ini_get( 'disable_functions' ) );
+	$disabled = explode( ',', @ini_get( 'disable_functions' ) );
 
 	return in_array( $function, $disabled, true );
 }
@@ -1401,7 +1400,8 @@ add_filter( 'edd_batch_memory_limit', 'edd_set_batch_memory_limit' );
  */
 function edd_admin_filter_bar( $context = '', $item = null ) {
 
-	?><div class="wp-filter" id="edd-filters"><?php
+	?><div class="wp-filter" id="edd-filters">
+	<?php
 
 		/**
 		 * Fires before filtered items, usually unused
@@ -1412,7 +1412,9 @@ function edd_admin_filter_bar( $context = '', $item = null ) {
 		 */
 		do_action( "edd_before_admin_filter_bar_{$context}", $item );
 
-		?><div class="filter-items"><?php
+	?>
+		<div class="filter-items">
+		<?php
 
 			/**
 			 * Output filter bar items, used primarily for selects/inputs/buttons
@@ -1423,7 +1425,9 @@ function edd_admin_filter_bar( $context = '', $item = null ) {
 			 */
 			do_action( "edd_admin_filter_bar_{$context}", $item );
 
-		?></div><?php
+		?>
+		</div>
+		<?php
 
 		/**
 		 * Fires after filtered items, usually used by search boxes
@@ -1434,7 +1438,9 @@ function edd_admin_filter_bar( $context = '', $item = null ) {
 		 */
 		do_action( "edd_after_admin_filter_bar_{$context}", $item );
 
-	?></div><?php
+		?>
+	</div>
+	<?php
 }
 
 /**
@@ -1467,23 +1473,23 @@ function edd_get_status_label( $status = '' ) {
 
 			// Payments
 			'processing' => __( 'Processing', 'easy-digital-downloads' ),
-			'publish'    => __( 'Completed',  'easy-digital-downloads' ),
-			'refunded'   => __( 'Refunded',   'easy-digital-downloads' ),
-			'revoked'    => __( 'Revoked',    'easy-digital-downloads' ),
-			'failed'     => __( 'Failed',     'easy-digital-downloads' ),
-			'abandoned'  => __( 'Abandoned',  'easy-digital-downloads' ),
+			'publish'    => __( 'Completed', 'easy-digital-downloads' ),
+			'refunded'   => __( 'Refunded', 'easy-digital-downloads' ),
+			'revoked'    => __( 'Revoked', 'easy-digital-downloads' ),
+			'failed'     => __( 'Failed', 'easy-digital-downloads' ),
+			'abandoned'  => __( 'Abandoned', 'easy-digital-downloads' ),
 
 			// Discounts
-			'active'     => __( 'Active',     'easy-digital-downloads' ),
-			'inactive'   => __( 'Inactive',   'easy-digital-downloads' ),
-			'expired'    => __( 'Expired',    'easy-digital-downloads' ),
+			'active'     => __( 'Active', 'easy-digital-downloads' ),
+			'inactive'   => __( 'Inactive', 'easy-digital-downloads' ),
+			'expired'    => __( 'Expired', 'easy-digital-downloads' ),
 
 			// Common
-			'pending'    => __( 'Pending',    'easy-digital-downloads' ),
-			'verified'   => __( 'Verified',   'easy-digital-downloads' ),
-			'spam'       => __( 'Spam',       'easy-digital-downloads' ),
-			'deleted'    => __( 'Deleted',    'easy-digital-downloads' ),
-			'cancelled'  => __( 'Cancelled',  'easy-digital-downloads' ),
+			'pending'    => __( 'Pending', 'easy-digital-downloads' ),
+			'verified'   => __( 'Verified', 'easy-digital-downloads' ),
+			'spam'       => __( 'Spam', 'easy-digital-downloads' ),
+			'deleted'    => __( 'Deleted', 'easy-digital-downloads' ),
+			'cancelled'  => __( 'Cancelled', 'easy-digital-downloads' ),
 		);
 	}
 
@@ -1509,7 +1515,7 @@ function edd_format_counts( $counts = array(), $groupby = '' ) {
 
 	// Default array
 	$c = array(
-		'total' => 0
+		'total' => 0,
 	);
 
 	// Loop through counts and shape return value

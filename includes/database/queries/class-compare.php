@@ -56,7 +56,8 @@ class Compare extends \WP_Meta_Query {
 		}
 
 		if ( ! in_array(
-			$clause['compare'], array(
+			$clause['compare'],
+			array(
 				'=',
 				'!=',
 				'>',
@@ -74,7 +75,8 @@ class Compare extends \WP_Meta_Query {
 				'REGEXP',
 				'NOT REGEXP',
 				'RLIKE',
-			), true
+			),
+			true
 		) ) {
 			$clause['compare'] = '=';
 		}
@@ -89,7 +91,6 @@ class Compare extends \WP_Meta_Query {
 		$compare_key = $clause['compare_key'];
 
 		// Build the WHERE clause.
-
 		// Column name and value.
 		if ( array_key_exists( 'key', $clause ) && array_key_exists( 'value', $clause ) ) {
 			$column = sanitize_key( $clause['key'] );
@@ -136,7 +137,6 @@ class Compare extends \WP_Meta_Query {
 				default:
 					$where = $wpdb->prepare( '%s', $value );
 					break;
-
 			}
 
 			if ( $where ) {

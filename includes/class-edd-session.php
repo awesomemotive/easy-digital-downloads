@@ -86,7 +86,7 @@ class EDD_Session {
 			}
 
 			add_filter( 'wp_session_expiration_variant', array( $this, 'set_expiration_variant_time' ), 99999 );
-			add_filter( 'wp_session_expiration',         array( $this, 'set_expiration_time'         ), 99999 );
+			add_filter( 'wp_session_expiration', array( $this, 'set_expiration_time' ), 99999 );
 		}
 
 		$hook = ( empty( $this->session ) && ! $this->use_php_sessions )
@@ -112,7 +112,7 @@ class EDD_Session {
 		}
 
 		$use_cookie = $this->use_cart_cookie();
-		$cart       = $this->get( 'edd_cart'     );
+		$cart       = $this->get( 'edd_cart' );
 		$purchase   = $this->get( 'edd_purchase' );
 
 		if ( $use_cookie ) {
@@ -293,7 +293,7 @@ class EDD_Session {
 		// Enable or disable PHP Sessions based on the EDD_USE_PHP_SESSIONS constant.
 		if ( defined( 'EDD_USE_PHP_SESSIONS' ) && EDD_USE_PHP_SESSIONS ) {
 			$ret = true;
-		} else if ( defined( 'EDD_USE_PHP_SESSIONS' ) && ! EDD_USE_PHP_SESSIONS ) {
+		} elseif ( defined( 'EDD_USE_PHP_SESSIONS' ) && ! EDD_USE_PHP_SESSIONS ) {
 			$ret = false;
 		}
 
@@ -371,14 +371,17 @@ class EDD_Session {
 	 * @return array URI blacklist.
 	 */
 	public function get_blacklist() {
-		$blacklist = apply_filters( 'edd_session_start_uri_blacklist', array(
-			'feed',
-			'feed/rss',
-			'feed/rss2',
-			'feed/rdf',
-			'feed/atom',
-			'comments/feed'
-		) );
+		$blacklist = apply_filters(
+			'edd_session_start_uri_blacklist',
+			array(
+				'feed',
+				'feed/rss',
+				'feed/rss2',
+				'feed/rdf',
+				'feed/atom',
+				'comments/feed',
+			)
+		);
 
 		// Look to see if WordPress is in a sub folder or this is a network site that uses sub folders
 		$folder = str_replace( network_home_url(), '', get_site_url() );
@@ -413,7 +416,7 @@ class EDD_Session {
 		if ( version_compare( PHP_VERSION, '5.4', '<' ) && ! session_id() ) {
 			session_start();
 
-		// Start if modern PHP and session-status is not active.
+			// Start if modern PHP and session-status is not active.
 		} elseif ( defined( 'PHP_SESSION_ACTIVE' ) && ( session_status() !== PHP_SESSION_ACTIVE ) ) {
 			session_start();
 		}

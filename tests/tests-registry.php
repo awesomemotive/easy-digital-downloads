@@ -72,10 +72,13 @@ class Registry_Tests extends \EDD_UnitTestCase {
 	 * @throws \EDD_Exception
 	 */
 	public function test_add_item_should_register_the_item() {
-		$this->mockRegistry->add_item( 'foobar', array(
-			'class' => 'Foo\Bar',
-			'file'  => 'path/to/foobar.php'
-		) );
+		$this->mockRegistry->add_item(
+			'foobar',
+			array(
+				'class' => 'Foo\Bar',
+				'file'  => 'path/to/foobar.php',
+			)
+		);
 
 		$this->assertArrayHasKey( 'foobar', $this->mockRegistry->get_items() );
 	}
@@ -134,7 +137,7 @@ class Registry_Tests extends \EDD_UnitTestCase {
 		$this->mockRegistry->add_item( 'foo', array( 'key' => 'value' ) );
 
 		$expected = array(
-			'key' => 'value'
+			'key' => 'value',
 		);
 
 		$this->assertEqualSetsWithIndex( $expected, $this->mockRegistry->get_item( 'foo' ) );
@@ -155,15 +158,18 @@ class Registry_Tests extends \EDD_UnitTestCase {
 		$item = array(
 			'foobar' => array(
 				'class' => 'Foo\Bar',
-				'file'  => 'path/to/foobar.php'
-			)
+				'file'  => 'path/to/foobar.php',
+			),
 		);
 
 		// Add a item.
-		$this->mockRegistry->add_item( 'foobar', array(
-			'class' => 'Foo\Bar',
-			'file'  => 'path/to/foobar.php'
-		) );
+		$this->mockRegistry->add_item(
+			'foobar',
+			array(
+				'class' => 'Foo\Bar',
+				'file'  => 'path/to/foobar.php',
+			)
+		);
 
 		// Confirm the item is retrieved.
 		$this->assertEqualSets( $item, $this->mockRegistry->get_items() );

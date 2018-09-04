@@ -42,20 +42,19 @@ add_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999, 3 );
  * @return void
  */
 function edd_resend_purchase_receipt( $data ) {
-
 	$purchase_id = absint( $data['purchase_id'] );
 
-	if( empty( $purchase_id ) ) {
+	if ( empty( $purchase_id ) ) {
 		return;
 	}
 
-	if( ! current_user_can( 'edit_shop_payments' ) ) {
+	if ( ! current_user_can( 'edit_shop_payments' ) ) {
 		wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	$email = ! empty( $_GET['email'] ) ? sanitize_email( $_GET['email'] ) : '';
 
-	if( empty( $email ) ) {
+	if ( empty( $email ) ) {
 		$customer = new EDD_Customer( edd_get_payment_customer_id( $purchase_id ) );
 		$email    = $customer->email;
 	}
@@ -75,7 +74,15 @@ function edd_resend_purchase_receipt( $data ) {
 		}
 	}
 
-	edd_redirect( add_query_arg( array( 'edd-message' => 'email_sent', 'edd-action' => false, 'purchase_id' => false ) ) );
+	edd_redirect(
+		add_query_arg(
+			array(
+				'edd-message' => 'email_sent',
+				'edd-action'  => false,
+				'purchase_id' => false,
+			)
+		)
+	);
 }
 add_action( 'edd_email_links', 'edd_resend_purchase_receipt' );
 

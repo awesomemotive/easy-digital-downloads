@@ -29,14 +29,16 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 		self::$orders = parent::edd()->order->create_many( 5 );
 
 		foreach ( self::$orders as $order ) {
-			edd_add_order_adjustment( array(
-				'object_type' => 'order',
-				'object_id'   => $order,
-				'type'        => 'discount',
-				'description' => '5OFF',
-				'subtotal'    => 0,
-				'total'       => 5,
-			) );
+			edd_add_order_adjustment(
+				array(
+					'object_type' => 'order',
+					'object_id'   => $order,
+					'type'        => 'discount',
+					'description' => '5OFF',
+					'subtotal'    => 0,
+					'total'       => 5,
+				)
+			);
 		}
 	}
 
@@ -132,10 +134,13 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_apply_order_credit
 	 */
 	public function test_apply_order_credit() {
-		$refunded_order = edd_apply_order_credit( self::$orders[2], array(
-			'subtotal' => 20,
-			'total'    => 20,
-		) );
+		$refunded_order = edd_apply_order_credit(
+			self::$orders[2],
+			array(
+				'subtotal' => 20,
+				'total'    => 20,
+			)
+		);
 
 		// Fetch refunded order.
 		$o = edd_get_order( $refunded_order );
@@ -178,10 +183,13 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 		$o = edd_get_order( self::$orders[2] );
 		$i = $o->items;
 
-		$refunded_order = edd_apply_order_item_credit( $i[0]->id, array(
-			'subtotal' => 20,
-			'total'    => 20,
-		) );
+		$refunded_order = edd_apply_order_item_credit(
+			$i[0]->id,
+			array(
+				'subtotal' => 20,
+				'total'    => 20,
+			)
+		);
 
 		// Fetch refunded order.
 		$o = edd_get_order( $refunded_order );
@@ -221,14 +229,16 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 	 * @covers ::edd_apply_order_discount
 	 */
 	public function test_apply_order_discount() {
-		$discount_id = self::edd()->discount->create( array(
-			'name'   => '$5 Off',
-			'code'   => '5OFF',
-			'status' => 'active',
-			'type'   => 'flat',
-			'scope'  => 'global',
-			'amount' => 5,
-		) );
+		$discount_id = self::edd()->discount->create(
+			array(
+				'name'   => '$5 Off',
+				'code'   => '5OFF',
+				'status' => 'active',
+				'type'   => 'flat',
+				'scope'  => 'global',
+				'amount' => 5,
+			)
+		);
 
 		$refunded_order = edd_apply_order_discount( self::$orders[3], $discount_id );
 

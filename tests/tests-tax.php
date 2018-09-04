@@ -24,11 +24,13 @@ class Tests_Taxes extends EDD_UnitTestCase {
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
-		$post_id = self::factory()->post->create( array(
-			'post_title'  => 'Test Download',
-			'post_type'   => 'download',
-			'post_status' => 'publish',
-		) );
+		$post_id = self::factory()->post->create(
+			array(
+				'post_title'  => 'Test Download',
+				'post_type'   => 'download',
+				'post_status' => 'publish',
+			)
+		);
 
 		$meta = array(
 			'edd_price' => '10.00',
@@ -44,18 +46,41 @@ class Tests_Taxes extends EDD_UnitTestCase {
 		edd_update_order_status( self::$order->ID, 'publish' );
 
 		// Setup global tax rate
-
 		edd_update_option( 'enable_taxes', true );
 		edd_update_option( 'tax_rate', '3.6' );
 
 		// Setup country / state tax rates
 		$tax_rates   = array();
-		$tax_rates[] = array( 'country' => 'US', 'state' => 'AL', 'rate' => 15 );
-		$tax_rates[] = array( 'country' => 'US', 'state' => 'AZ', 'rate' => .15 );
-		$tax_rates[] = array( 'country' => 'US', 'state' => 'TX', 'rate' => .13 );
-		$tax_rates[] = array( 'country' => 'US', 'state' => 'AR', 'rate' => .09 );
-		$tax_rates[] = array( 'country' => 'US', 'state' => 'HI', 'rate' => .63 );
-		$tax_rates[] = array( 'country' => 'US', 'state' => 'LA', 'rate' => .96 );
+		$tax_rates[] = array(
+			'country' => 'US',
+			'state'   => 'AL',
+			'rate'    => 15,
+		);
+		$tax_rates[] = array(
+			'country' => 'US',
+			'state'   => 'AZ',
+			'rate'    => .15,
+		);
+		$tax_rates[] = array(
+			'country' => 'US',
+			'state'   => 'TX',
+			'rate'    => .13,
+		);
+		$tax_rates[] = array(
+			'country' => 'US',
+			'state'   => 'AR',
+			'rate'    => .09,
+		);
+		$tax_rates[] = array(
+			'country' => 'US',
+			'state'   => 'HI',
+			'rate'    => .63,
+		);
+		$tax_rates[] = array(
+			'country' => 'US',
+			'state'   => 'LA',
+			'rate'    => .96,
+		);
 
 		update_option( 'edd_tax_rates', $tax_rates );
 	}
@@ -121,21 +146,29 @@ class Tests_Taxes extends EDD_UnitTestCase {
 		$current_user = new WP_User( 1 );
 		$user_id      = get_current_user_id();
 
-		update_user_meta( $user_id, '_edd_user_address', array(
-			'line1'   => 'First address',
-			'line2'   => 'Line two',
-			'city'    => 'MyCity',
-			'zip'     => '12345',
-			'country' => 'US',
-			'state'   => 'AL',
-		) );
+		update_user_meta(
+			$user_id,
+			'_edd_user_address',
+			array(
+				'line1'   => 'First address',
+				'line2'   => 'Line two',
+				'city'    => 'MyCity',
+				'zip'     => '12345',
+				'country' => 'US',
+				'state'   => 'AL',
+			)
+		);
 
 		$this->assertEquals( '0.15', edd_get_tax_rate() );
 	}
 
 	public function test_get_tax_rate_global() {
 		$existing_tax_rates = get_option( 'edd_tax_rates' );
-		$tax_rates[]        = array( 'country' => 'NL', 'global' => '1', 'rate' => 21 );
+		$tax_rates[]        = array(
+			'country' => 'NL',
+			'global'  => '1',
+			'rate'    => 21,
+		);
 		update_option( 'edd_tax_rates', $tax_rates );
 
 		// Assert

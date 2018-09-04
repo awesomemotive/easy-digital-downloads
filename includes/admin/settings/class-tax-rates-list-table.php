@@ -37,11 +37,13 @@ class Tax_Rates_List_Table extends List_Table {
 	 * @see   WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		parent::__construct( array(
-			'singular' => __( 'Tax Rate', 'easy-digital-downloads' ),
-			'plural'   => __( 'Tax Rates', 'easy-digital-downloads' ),
-			'ajax'     => false,
-		) );
+		parent::__construct(
+			array(
+				'singular' => __( 'Tax Rate', 'easy-digital-downloads' ),
+				'plural'   => __( 'Tax Rates', 'easy-digital-downloads' ),
+				'ajax'     => false,
+			)
+		);
 
 		// Setup counts.
 		$this->counts = edd_get_tax_rate_counts();
@@ -124,19 +126,21 @@ class Tax_Rates_List_Table extends List_Table {
 	 * @return string Data shown in the Country column.
 	 */
 	public function column_country( $adjustment ) {
-		return EDD()->html->select( array(
-			'options'          => edd_get_country_list(),
-			'name'             => 'tax_rates[' . $adjustment->id . '][country]',
-			'selected'         => $adjustment->name,
-			'show_option_all'  => false,
-			'show_option_none' => false,
-			'class'            => 'edd-tax-country',
-			'chosen'           => true,
-			'placeholder'      => __( 'Choose a country', 'easy-digital-downloads' ),
-			'data'             => array(
-				'nonce' => wp_create_nonce( 'edd-country-field-nonce' ),
-			),
-		) );
+		return EDD()->html->select(
+			array(
+				'options'          => edd_get_country_list(),
+				'name'             => 'tax_rates[' . $adjustment->id . '][country]',
+				'selected'         => $adjustment->name,
+				'show_option_all'  => false,
+				'show_option_none' => false,
+				'class'            => 'edd-tax-country',
+				'chosen'           => true,
+				'placeholder'      => __( 'Choose a country', 'easy-digital-downloads' ),
+				'data'             => array(
+					'nonce' => wp_create_nonce( 'edd-country-field-nonce' ),
+				),
+			)
+		);
 	}
 
 	/**
@@ -151,28 +155,34 @@ class Tax_Rates_List_Table extends List_Table {
 		$states = edd_get_shop_states( $adjustment->name );
 
 		if ( ! empty( $states ) ) {
-			$select = EDD()->html->select( array(
-				'options'          => $states,
-				'name'             => 'tax_rates[' . $adjustment->id . '][state]',
-				'selected'         => $adjustment->description,
-				'disabled'         => 'country' === $adjustment->scope,
-				'show_option_all'  => false,
-				'show_option_none' => false,
-				'chosen'           => true,
-				'placeholder'      => __( 'Choose a state', 'easy-digital-downloads' ),
-			) );
+			$select = EDD()->html->select(
+				array(
+					'options'          => $states,
+					'name'             => 'tax_rates[' . $adjustment->id . '][state]',
+					'selected'         => $adjustment->description,
+					'disabled'         => 'country' === $adjustment->scope,
+					'show_option_all'  => false,
+					'show_option_none' => false,
+					'chosen'           => true,
+					'placeholder'      => __( 'Choose a state', 'easy-digital-downloads' ),
+				)
+			);
 		} else {
-			$select = EDD()->html->text( array(
-				'name'  => 'tax_rates[' . $adjustment->id . '][state]',
-				'value' => $adjustment->description,
-			) );
+			$select = EDD()->html->text(
+				array(
+					'name'  => 'tax_rates[' . $adjustment->id . '][state]',
+					'value' => $adjustment->description,
+				)
+			);
 		}
 
-		$checkbox = '<span class="edd-tax-whole-country">' . EDD()->html->checkbox( array(
-			'name'    => 'tax_rates[' . $adjustment->id . '][global]',
-			'current' => (bool) 'country' === $adjustment->scope,
-			'label'   => __( 'Apply to whole country', 'easy-digital-downloads' ),
-		) ) . '</span>';
+		$checkbox = '<span class="edd-tax-whole-country">' . EDD()->html->checkbox(
+			array(
+				'name'    => 'tax_rates[' . $adjustment->id . '][global]',
+				'current' => (bool) 'country' === $adjustment->scope,
+				'label'   => __( 'Apply to whole country', 'easy-digital-downloads' ),
+			)
+		) . '</span>';
 
 		return $select . $checkbox;
 	}
@@ -198,12 +208,14 @@ class Tax_Rates_List_Table extends List_Table {
 	 * @return string Data shown in the From column.
 	 */
 	public function column_from( $adjustment ) {
-		return EDD()->html->date_field( array(
-			'id'          => 'tax_rates[' . $adjustment->id . '][from]',
-			'name'        => 'tax_rates[' . $adjustment->id . '][from]',
-			'value'       => ( '0000-00-00 00:00:00' === $adjustment->start_date ) ? '' : edd_date_i18n( $adjustment->start_date, 'Y-m-d' ),
-			'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
-		) );
+		return EDD()->html->date_field(
+			array(
+				'id'          => 'tax_rates[' . $adjustment->id . '][from]',
+				'name'        => 'tax_rates[' . $adjustment->id . '][from]',
+				'value'       => ( '0000-00-00 00:00:00' === $adjustment->start_date ) ? '' : edd_date_i18n( $adjustment->start_date, 'Y-m-d' ),
+				'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
+			)
+		);
 	}
 
 	/**
@@ -215,12 +227,14 @@ class Tax_Rates_List_Table extends List_Table {
 	 * @return string Data shown in the To column.
 	 */
 	public function column_to( $adjustment ) {
-		return EDD()->html->date_field( array(
-			'id'          => 'tax_rates[' . $adjustment->id . '][to]',
-			'name'        => 'tax_rates[' . $adjustment->id . '][to]',
-			'value'       => ( '0000-00-00 00:00:00' === $adjustment->end_date ) ? '' : edd_date_i18n( $adjustment->end_date, 'Y-m-d' ),
-			'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
-		) );
+		return EDD()->html->date_field(
+			array(
+				'id'          => 'tax_rates[' . $adjustment->id . '][to]',
+				'name'        => 'tax_rates[' . $adjustment->id . '][to]',
+				'value'       => ( '0000-00-00 00:00:00' === $adjustment->end_date ) ? '' : edd_date_i18n( $adjustment->end_date, 'Y-m-d' ),
+				'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
+			)
+		);
 	}
 
 	/**
@@ -246,10 +260,13 @@ class Tax_Rates_List_Table extends List_Table {
 			: 1;
 
 		// Get tax rates
-		return edd_get_tax_rates( array(
-			'number' => $this->per_page,
-			'offset' => ( $paged - 1 ) * $this->per_page,
-		), OBJECT );
+		return edd_get_tax_rates(
+			array(
+				'number' => $this->per_page,
+				'offset' => ( $paged - 1 ) * $this->per_page,
+			),
+			OBJECT
+		);
 	}
 
 	/**
@@ -275,11 +292,13 @@ class Tax_Rates_List_Table extends List_Table {
 			: 1;
 
 		// Setup pagination
-		$this->set_pagination_args( array(
-			'total_items' => $total,
-			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $total / $this->per_page ),
-		) );
+		$this->set_pagination_args(
+			array(
+				'total_items' => $total,
+				'per_page'    => $this->per_page,
+				'total_pages' => ceil( $total / $this->per_page ),
+			)
+		);
 	}
 
 	/**

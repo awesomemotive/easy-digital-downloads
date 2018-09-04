@@ -48,11 +48,11 @@ class Payment extends Base {
 
 		/* Filters ************************************************************/
 
-		add_filter( 'query',                array( $this, 'wp_count_posts'       ), 10, 1 );
-		add_filter( 'query',                array( $this, 'get_post'             ), 10, 1 );
-		add_filter( 'get_post_metadata',    array( $this, 'get_post_metadata'    ), 99, 4 );
+		add_filter( 'query', array( $this, 'wp_count_posts' ), 10, 1 );
+		add_filter( 'query', array( $this, 'get_post' ), 10, 1 );
+		add_filter( 'get_post_metadata', array( $this, 'get_post_metadata' ), 99, 4 );
 		add_filter( 'update_post_metadata', array( $this, 'update_post_metadata' ), 99, 5 );
-		add_filter( 'add_post_metadata',    array( $this, 'update_post_metadata' ), 99, 5 );
+		add_filter( 'add_post_metadata', array( $this, 'update_post_metadata' ), 99, 5 );
 	}
 
 	/**
@@ -95,7 +95,6 @@ class Payment extends Base {
 		$expected = "/^SELECT \* FROM {$wpdb->posts} WHERE ID = (\d*) LIMIT 1$/";
 
 		if ( preg_match( $expected, $query, $matches, PREG_OFFSET_CAPTURE ) ) {
-
 			$object_id = 0;
 
 			if ( isset( $matches[1] ) ) {
@@ -106,13 +105,17 @@ class Payment extends Base {
 			$table_name = edd_get_component_interface( 'order', 'meta' )->table_name;
 
 			if ( isset( $wpdb->$table_name ) ) {
-				$object_id = $wpdb->get_var( $wpdb->prepare(
-					"
+				$object_id = $wpdb->get_var(
+					$wpdb->prepare(
+						"
 					SELECT edd_order_id
 					FROM {$table_name}
 					WHERE meta_key = %s AND meta_value = %d
-					", 'legacy_payment_id', $object_id
-				) );
+					",
+						'legacy_payment_id',
+						$object_id
+					)
+				);
 
 				if ( ! empty( $object_id ) ) {
 					$query = str_replace( $matches[1][0], $object_id, $query );
@@ -210,13 +213,17 @@ class Payment extends Base {
 			// Check if the ID matches a legacy ID.
 			$table_name = edd_get_component_interface( 'order', 'meta' )->table_name;
 
-			$object_id = $wpdb->get_var( $wpdb->prepare(
-				"
+			$object_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"
 				SELECT edd_order_id
 				FROM {$table_name}
 				WHERE meta_key = %s AND meta_value = %d
-				", 'legacy_payment_id', $object_id
-			) );
+				",
+					'legacy_payment_id',
+					$object_id
+				)
+			);
 
 			$order = edd_get_order( $object_id );
 
@@ -236,7 +243,7 @@ class Payment extends Base {
 				$value = $order->email;
 				break;
 			case '_edd_payment_meta':
-				$p = edd_get_payment( $object_id );
+				$p     = edd_get_payment( $object_id );
 				$value = array( $p->get_meta( '_edd_payment_meta' ) );
 				break;
 			case '_edd_completed_date':
@@ -327,13 +334,17 @@ class Payment extends Base {
 			// Check if the ID matches a legacy ID.
 			$table_name = edd_get_component_interface( 'order', 'meta' )->table_name;
 
-			$object_id = $wpdb->get_var( $wpdb->prepare(
-				"
+			$object_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"
 				SELECT edd_order_id
 				FROM {$table_name}
 				WHERE meta_key = %s AND meta_value = %d
-				", 'legacy_payment_id', $object_id
-			) );
+				",
+					'legacy_payment_id',
+					$object_id
+				)
+			);
 
 			$p = edd_get_payment( $object_id );
 

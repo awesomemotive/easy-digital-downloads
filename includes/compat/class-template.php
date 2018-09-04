@@ -91,15 +91,18 @@ class Template extends Base {
 
 				// Only display a notice if a `get_post()` call exists.
 				if ( ! $updated && $get_post_call_exists ) {
-					add_action( 'admin_notices', function() use ( $template ) {
-						?>
+					add_action(
+						'admin_notices',
+						function() use ( $template ) {
+							?>
 						<div class="notice notice-error">
 							<p><?php esc_html_e( 'Easy Digital Downloads failed to automatically update your purchase receipt template. This update is necessary for the purchase receipt to display correctly.', 'easy-digital-downloads' ); ?></p>
-							<p><?php printf( __( 'This update must be completed manually. Please click %shere%s for more information.', 'easy-digital-downloads' ), '<a href="https://docs.easydigitaldownloads.com/article/2061-template-update-for-3-0">', '</a>' ); ?></p>
+							<p><?php printf( __( 'This update must be completed manually. Please click %1$shere%2$s for more information.', 'easy-digital-downloads' ), '<a href="https://docs.easydigitaldownloads.com/article/2061-template-update-for-3-0">', '</a>' ); ?></p>
 							<p><?php esc_html_e( 'The file that needs to be updated is located at:', 'easy-digital-downloads' ); ?> <code><?php echo esc_html( $template ); ?></code></p>
 						</div>
-						<?php
-					} );
+							<?php
+						}
+					);
 				}
 			}
 		}

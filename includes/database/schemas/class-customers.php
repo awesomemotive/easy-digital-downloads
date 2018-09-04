@@ -33,23 +33,23 @@ class Customers extends Schema {
 
 		// id
 		array(
-			'name'       => 'id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'extra'      => 'auto_increment',
-			'primary'    => true,
-			'sortable'   => true
+			'name'     => 'id',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'extra'    => 'auto_increment',
+			'primary'  => true,
+			'sortable' => true,
 		),
 
 		// user_id
 		array(
-			'name'       => 'user_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0',
-			'cache_key'  => true
+			'name'      => 'user_id',
+			'type'      => 'bigint',
+			'length'    => '20',
+			'unsigned'  => true,
+			'default'   => '0',
+			'cache_key' => true,
 		),
 
 		// email
@@ -59,7 +59,7 @@ class Customers extends Schema {
 			'length'     => '100',
 			'cache_key'  => true,
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// name
@@ -67,7 +67,7 @@ class Customers extends Schema {
 			'name'       => 'name',
 			'type'       => 'mediumtext',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// status
@@ -78,7 +78,7 @@ class Customers extends Schema {
 			'default'    => 'active',
 			'searchable' => true,
 			'sortable'   => true,
-			'transition' => true
+			'transition' => true,
 		),
 
 		// purchase_value
@@ -94,12 +94,12 @@ class Customers extends Schema {
 
 		// purchase_count
 		array(
-			'name'       => 'purchase_count',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0',
-			'sortable'   => true
+			'name'     => 'purchase_count',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'default'  => '0',
+			'sortable' => true,
 		),
 
 		// date_created
@@ -109,7 +109,7 @@ class Customers extends Schema {
 			'default'    => '0000-00-00 00:00:00',
 			'created'    => true,
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// date_modified
@@ -119,12 +119,12 @@ class Customers extends Schema {
 			'default'    => '0000-00-00 00:00:00',
 			'modified'   => true,
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// uuid
 		array(
-			'uuid'       => true,
-		)
+			'uuid' => true,
+		),
 	);
 }

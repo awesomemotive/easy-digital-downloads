@@ -23,6 +23,7 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 
 	/**
 	 * Our export type. Used for export-type specific filters/actions
+	 *
 	 * @var string
 	 * @since 2.9.2
 	 */
@@ -30,6 +31,7 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 
 	/**
 	 * Allows for a non-download batch processing to be run.
+	 *
 	 * @since  2.9.2
 	 * @var boolean
 	 */
@@ -37,6 +39,7 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 
 	/**
 	 * Sets the number of items to pull on each step
+	 *
 	 * @since  2.9.2
 	 * @var integer
 	 */
@@ -101,11 +104,11 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 
 		$percentage = 100;
 
-		if( $total > 0 ) {
+		if ( $total > 0 ) {
 			$percentage = ( ( $this->step * $this->per_step ) / $total ) * 100;
 		}
 
-		if( $percentage > 100 ) {
+		if ( $percentage > 100 ) {
 			$percentage = 100;
 		}
 
@@ -127,17 +130,17 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 	 * @return bool
 	 */
 	public function process_step() {
-
 		if ( ! $this->can_export() ) {
 			wp_die(
 				__( 'You do not have permission to run this upgrade.', 'easy-digital-downloads' ),
 				__( 'Error', 'easy-digital-downloads' ),
-				array( 'response' => 403 ) );
+				array( 'response' => 403 )
+			);
 		}
 
 		$had_data = $this->get_data();
 
-		if( $had_data ) {
+		if ( $had_data ) {
 			$this->done = false;
 			return true;
 		} else {
@@ -189,7 +192,7 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 		if ( ! empty( $term_id ) ) {
 
 			// Query for possible entries...
-			$term_tax_id  = $wpdb->get_var( $wpdb->prepare( "SELECT term_taxonomy_id FROM {$wpdb->term_taxonomy} WHERE term_id = %d AND taxonomy = 'edd_log_type' LIMIT 1", $term_id ) );
+			$term_tax_id = $wpdb->get_var( $wpdb->prepare( "SELECT term_taxonomy_id FROM {$wpdb->term_taxonomy} WHERE term_id = %d AND taxonomy = 'edd_log_type' LIMIT 1", $term_id ) );
 
 			// Entries exist...
 			if ( ! empty( $term_tax_id ) ) {

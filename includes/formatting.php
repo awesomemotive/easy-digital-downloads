@@ -7,7 +7,7 @@
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.2
-*/
+ */
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -24,18 +24,18 @@ defined( 'ABSPATH' ) || exit;
 function edd_sanitize_amount( $amount = '' ) {
 	$is_negative   = false;
 	$thousands_sep = edd_get_option( 'thousands_separator', ',' );
-	$decimal_sep   = edd_get_option( 'decimal_separator',   '.' );
+	$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
 
 	// Sanitize the amount
 	if ( $decimal_sep === ',' && false !== ( $found = strpos( $amount, $decimal_sep ) ) ) {
 		if ( ( $thousands_sep == '.' || $thousands_sep == ' ' ) && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
 			$amount = str_replace( $thousands_sep, '', $amount );
-		} elseif( empty( $thousands_sep ) && false !== ( $found = strpos( $amount, '.' ) ) ) {
+		} elseif ( empty( $thousands_sep ) && false !== ( $found = strpos( $amount, '.' ) ) ) {
 			$amount = str_replace( '.', '', $amount );
 		}
 
 		$amount = str_replace( $decimal_sep, '.', $amount );
-	} elseif( $thousands_sep === ',' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
+	} elseif ( $thousands_sep === ',' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
 		$amount = str_replace( $thousands_sep, '', $amount );
 	}
 
@@ -84,7 +84,7 @@ function edd_sanitize_amount( $amount = '' ) {
  */
 function edd_format_amount( $amount, $decimals = true ) {
 	$thousands_sep = edd_get_option( 'thousands_separator', ',' );
-	$decimal_sep   = edd_get_option( 'decimal_separator',   '.' );
+	$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
 
 	// Format the amount
 	if ( $decimal_sep === ',' && false !== ( $sep_found = strpos( $amount, $decimal_sep ) ) ) {
@@ -138,41 +138,41 @@ function edd_currency_filter( $price = '', $currency = '' ) {
 
 	$symbol = edd_currency_symbol( $currency );
 
-	if ( 'before' === $position ):
-		switch ( $currency ):
-			case 'GBP' :
-			case 'BRL' :
-			case 'EUR' :
-			case 'USD' :
-			case 'AUD' :
-			case 'CAD' :
-			case 'HKD' :
-			case 'MXN' :
-			case 'NZD' :
-			case 'SGD' :
-			case 'JPY' :
+	if ( 'before' === $position ) :
+		switch ( $currency ) :
+			case 'GBP':
+			case 'BRL':
+			case 'EUR':
+			case 'USD':
+			case 'AUD':
+			case 'CAD':
+			case 'HKD':
+			case 'MXN':
+			case 'NZD':
+			case 'SGD':
+			case 'JPY':
 				$formatted = $symbol . $price;
 				break;
-			default :
+			default:
 				$formatted = $currency . ' ' . $price;
 				break;
 		endswitch;
 		$formatted = apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_before', $formatted, $currency, $price );
 	else :
 		switch ( $currency ) :
-			case 'GBP' :
-			case 'BRL' :
-			case 'EUR' :
-			case 'USD' :
-			case 'AUD' :
-			case 'CAD' :
-			case 'HKD' :
-			case 'MXN' :
-			case 'SGD' :
-			case 'JPY' :
+			case 'GBP':
+			case 'BRL':
+			case 'EUR':
+			case 'USD':
+			case 'AUD':
+			case 'CAD':
+			case 'HKD':
+			case 'MXN':
+			case 'SGD':
+			case 'JPY':
 				$formatted = $price . $symbol;
 				break;
-			default :
+			default:
 				$formatted = $price . ' ' . $currency;
 				break;
 		endswitch;
@@ -197,17 +197,17 @@ function edd_currency_filter( $price = '', $currency = '' ) {
  * @param string $currency Currency.
  *
  * @return int $decimals Number of decimal places for currency.
-*/
+ */
 function edd_currency_decimal_filter( $decimals = 2, $currency = '' ) {
 	$currency = empty( $currency )
 		? edd_get_currency()
 		: $currency;
 
 	switch ( $currency ) {
-		case 'RIAL' :
-		case 'JPY' :
-		case 'TWD' :
-		case 'HUF' :
+		case 'RIAL':
+		case 'JPY':
+		case 'TWD':
+		case 'HUF':
 			$decimals = 0;
 			break;
 	}
@@ -215,7 +215,7 @@ function edd_currency_decimal_filter( $decimals = 2, $currency = '' ) {
 	return apply_filters( 'edd_currency_decimal_count', $decimals, $currency );
 }
 add_filter( 'edd_sanitize_amount_decimals', 'edd_currency_decimal_filter' );
-add_filter( 'edd_format_amount_decimals',   'edd_currency_decimal_filter' );
+add_filter( 'edd_format_amount_decimals', 'edd_currency_decimal_filter' );
 
 /**
  * Sanitizes a string key for EDD Settings

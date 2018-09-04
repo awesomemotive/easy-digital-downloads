@@ -328,10 +328,13 @@ class EDD_Payments_Query extends EDD_Stats {
 			$user_key = '_edd_payment_user_email';
 		}
 
-		$this->__set( 'meta_query', array(
-			'key'   => $user_key,
-			'value' => $this->args['user'],
-		) );
+		$this->__set(
+			'meta_query',
+			array(
+				'key'   => $user_key,
+				'value' => $this->args['user'],
+			)
+		);
 	}
 
 	/**
@@ -344,10 +347,13 @@ class EDD_Payments_Query extends EDD_Stats {
 			return;
 		}
 
-		$this->__set( 'meta_query', array(
-			'key'   => '_edd_payment_customer_id',
-			'value' => (int) $this->args['customer'],
-		) );
+		$this->__set(
+			'meta_query',
+			array(
+				'key'   => '_edd_payment_customer_id',
+				'value' => (int) $this->args['customer'],
+			)
+		);
 	}
 
 	/**
@@ -360,10 +366,13 @@ class EDD_Payments_Query extends EDD_Stats {
 			return;
 		}
 
-		$this->__set( 'meta_query', array(
-			'key'   => '_edd_payment_gateway',
-			'value' => $this->args['gateway'],
-		) );
+		$this->__set(
+			'meta_query',
+			array(
+				'key'   => '_edd_payment_gateway',
+				'value' => $this->args['gateway'],
+			)
+		);
 	}
 
 	/**
@@ -397,7 +406,6 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		$is_email = is_email( $search ) || strpos( $search, '@' ) !== false;
 		$is_user  = strpos( $search, strtolower( 'user:' ) ) !== false;
-
 
 		if ( ! empty( $this->args['search_in_notes'] ) ) {
 			$notes = edd_get_payment_notes( 0, $search );
@@ -441,10 +449,12 @@ class EDD_Payments_Query extends EDD_Stats {
 			$search = str_replace( '#:', '', $search );
 			$search = str_replace( '#', '', $search );
 
-			$ids = edd_get_order_items( array(
-				'fields'     => 'order_id',
-				'product_id' => $search,
-			) );
+			$ids = edd_get_order_items(
+				array(
+					'fields'     => 'order_id',
+					'product_id' => $search,
+				)
+			);
 
 			$this->__set( 'post__in', array_values( $ids ) );
 
@@ -452,11 +462,13 @@ class EDD_Payments_Query extends EDD_Stats {
 		} elseif ( 0 === strpos( $search, 'discount:' ) ) {
 			$search = trim( str_replace( 'discount:', '', $search ) );
 
-			$ids = edd_get_order_adjustments( array(
-				'fields'      => 'object_id',
-				'type'        => 'discount',
-				'description' => $search,
-			) );
+			$ids = edd_get_order_adjustments(
+				array(
+					'fields'      => 'object_id',
+					'type'        => 'discount',
+					'description' => $search,
+				)
+			);
 
 			$this->__set( 'post__in', array_values( $ids ) );
 			$this->__unset( 's' );
@@ -477,10 +489,13 @@ class EDD_Payments_Query extends EDD_Stats {
 			return;
 		}
 
-		$this->__set( 'meta_query', array(
-			'key'   => '_edd_payment_mode',
-			'value' => $this->args['mode'],
-		) );
+		$this->__set(
+			'meta_query',
+			array(
+				'key'   => '_edd_payment_mode',
+				'value' => $this->args['mode'],
+			)
+		);
 	}
 
 	/**
@@ -509,18 +524,22 @@ class EDD_Payments_Query extends EDD_Stats {
 		$order_ids = array();
 
 		if ( is_array( $this->args['download'] ) ) {
-			$orders = edd_get_order_items( array(
-				'product_id__in' => (array) $this->args['download'],
-			) );
+			$orders = edd_get_order_items(
+				array(
+					'product_id__in' => (array) $this->args['download'],
+				)
+			);
 
 			foreach ( $orders as $order ) {
 				/** @var $order EDD\Orders\Order_Item */
 				$order_ids[] = $order->order_id;
 			}
 		} else {
-			$orders = edd_get_order_items( array(
-				'product_id' => $this->args['download'],
-			) );
+			$orders = edd_get_order_items(
+				array(
+					'product_id' => $this->args['download'],
+				)
+			);
 
 			foreach ( $orders as $order ) {
 				/** @var $order EDD\Orders\Order_Item */

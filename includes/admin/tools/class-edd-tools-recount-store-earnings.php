@@ -22,6 +22,7 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 
 	/**
 	 * Our export type. Used for export-type specific filters/actions
+	 *
 	 * @var string
 	 * @since 2.5
 	 */
@@ -29,6 +30,7 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 
 	/**
 	 * Allows for a non-download batch processing to be run.
+	 *
 	 * @since  2.5
 	 * @var boolean
 	 */
@@ -36,6 +38,7 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 
 	/**
 	 * Sets the number of items to pull on each step
+	 *
 	 * @since  2.5
 	 * @var integer
 	 */
@@ -50,7 +53,6 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 	 * @return array $data The data for the CSV file
 	 */
 	public function get_data() {
-
 		if ( $this->step == 1 ) {
 			$this->delete_data( 'edd_temp_recount_earnings' );
 		}
@@ -62,23 +64,23 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 			$this->store_data( 'edd_temp_recount_earnings', $total );
 		}
 
-		$accepted_statuses  = apply_filters( 'edd_recount_accepted_statuses', array( 'publish', 'revoked' ) );
+		$accepted_statuses = apply_filters( 'edd_recount_accepted_statuses', array( 'publish', 'revoked' ) );
 
-		$args = apply_filters( 'edd_recount_earnings_args', array(
-			'number' => $this->per_step,
-			'page'   => $this->step,
-			'status' => $accepted_statuses,
-			'fields' => 'ids'
-		) );
+		$args = apply_filters(
+			'edd_recount_earnings_args',
+			array(
+				'number' => $this->per_step,
+				'page'   => $this->step,
+				'status' => $accepted_statuses,
+				'fields' => 'ids',
+			)
+		);
 
 		$payments = edd_get_payments( $args );
 
 		if ( ! empty( $payments ) ) {
-
 			foreach ( $payments as $payment ) {
-
 				$total += edd_get_payment_amount( $payment );
-
 			}
 
 			if ( $total < 0 ) {
@@ -90,14 +92,12 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 			$this->store_data( 'edd_temp_recount_earnings', $total );
 
 			return true;
-
 		}
 
 		update_option( 'edd_earnings_total', $total );
 		set_transient( 'edd_earnings_total', $total, 86400 );
 
 		return false;
-
 	}
 
 	/**
@@ -107,7 +107,6 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 	 * @return int
 	 */
 	public function get_percentage_complete() {
-
 		$total = $this->get_stored_data( 'edd_recount_earnings_total' );
 
 		if ( false === $total ) {
@@ -122,11 +121,11 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 
 		$percentage = 100;
 
-		if( $total > 0 ) {
+		if ( $total > 0 ) {
 			$percentage = ( ( $this->per_step * $this->step ) / $total ) * 100;
 		}
 
-		if( $percentage > 100 ) {
+		if ( $percentage > 100 ) {
 			$percentage = 100;
 		}
 
@@ -148,14 +147,13 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 	 * @return bool
 	 */
 	public function process_step() {
-
 		if ( ! $this->can_export() ) {
 			wp_die( __( 'You do not have permission to export data.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		}
 
 		$had_data = $this->get_data();
 
-		if( $had_data ) {
+		if ( $had_data ) {
 			$this->done = false;
 			return true;
 		} else {
@@ -233,7 +231,9 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 		);
 
 		$formats = array(
-			'%s', '%s', '%s',
+			'%s',
+			'%s',
+			'%s',
 		);
 
 		$wpdb->replace( $wpdb->options, $data, $formats );

@@ -77,13 +77,13 @@ class Test_Misc extends EDD_UnitTestCase {
 	public function test_get_ip_reverse_proxies() {
 		$_SERVER['HTTP_X_FORWARDED_FOR'] = '123.123.123.123, 10.0.0.2';
 		$this->assertEquals( '123.123.123.123', edd_get_ip() );
-		unset($_SERVER['HTTP_X_FORWARDED_FOR']);
+		unset( $_SERVER['HTTP_X_FORWARDED_FOR'] );
 	}
 
 	public function test_get_ip_reverse_proxy() {
 		$_SERVER['HTTP_X_FORWARDED_FOR'] = '123.123.123.123';
 		$this->assertEquals( '123.123.123.123', edd_get_ip() );
-		unset($_SERVER['HTTP_X_FORWARDED_FOR']);
+		unset( $_SERVER['HTTP_X_FORWARDED_FOR'] );
 	}
 
 
@@ -120,7 +120,6 @@ class Test_Misc extends EDD_UnitTestCase {
 		);
 
 		$this->assertEquals( $expected, edd_get_currencies() );
-
 	}
 
 	public function test_get_countries() {
@@ -377,7 +376,7 @@ class Test_Misc extends EDD_UnitTestCase {
 			'WS' => 'Western Samoa',
 			'YE' => 'Yemen',
 			'ZM' => 'Zambia',
-			'ZW' => 'Zimbabwe'
+			'ZW' => 'Zimbabwe',
 		);
 
 		$this->assertEquals( $expected, edd_get_country_list() );
@@ -498,7 +497,7 @@ class Test_Misc extends EDD_UnitTestCase {
 			'MOX' => 'Moxico',
 			'NAM' => 'Namibe',
 			'UIG' => 'Uíge',
-			'ZAI' => 'Zaire'
+			'ZAI' => 'Zaire',
 		);
 
 		$this->assertSame( $expected, edd_get_angola_provinces_list() );
@@ -513,7 +512,7 @@ class Test_Misc extends EDD_UnitTestCase {
 	}
 
 	public function test_let_to_num() {
-		$this->assertEquals( 0, edd_let_to_num( WP_MEMORY_LIMIT ) / ( 1024*1024 ) );
+		$this->assertEquals( 0, edd_let_to_num( WP_MEMORY_LIMIT ) / ( 1024 * 1024 ) );
 	}
 
 	/**
@@ -541,7 +540,7 @@ class Test_Misc extends EDD_UnitTestCase {
 		$this->assertTrue( edd_is_host( 'WPEngine' ) );
 	}
 
-	public function test_edd_update_option(){
+	public function test_edd_update_option() {
 		$key   = 'some-setting';
 		$value = 'some-value';
 		$isset = edd_get_option( $key, false );
@@ -571,12 +570,11 @@ class Test_Misc extends EDD_UnitTestCase {
 
 		// The option retrieve should be false since it doesn't exist
 		$this->assertFalse( edd_get_option( $key, false ) );
-
 	}
 
 	public function test_add_cache_busting() {
 		add_filter( 'edd_is_caching_plugin_active', '__return_true' );
-		$this->assertEquals( 'http://example.org/?nocache=true', edd_add_cache_busting( home_url( '/') ) );
+		$this->assertEquals( 'http://example.org/?nocache=true', edd_add_cache_busting( home_url( '/' ) ) );
 		remove_filter( 'edd_is_caching_plugin_active', '__return_true' );
 		$this->assertEquals( 'http://example.org/', edd_add_cache_busting( home_url( '/' ) ) );
 	}
@@ -685,14 +683,14 @@ class Test_Misc extends EDD_UnitTestCase {
 
 		add_filter( 'edd_is_caching_plugin_active', '__return_true' );
 
-		$expected_url  = 'http://example.org/?cart_item=' . $item_position . '&edd_action=remove&nocache=true';
-		$remove_url    = edd_remove_item_url( $item_position );
+		$expected_url = 'http://example.org/?cart_item=' . $item_position . '&edd_action=remove&nocache=true';
+		$remove_url   = edd_remove_item_url( $item_position );
 
 		$this->assertEquals( $expected_url, $remove_url );
 		remove_filter( 'edd_is_caching_plugin_active', '__return_true' );
 
-		$remove_url    = edd_remove_item_url( $item_position );
-		$expected_url  = 'http://example.org/?cart_item=' . $item_position . '&edd_action=remove';
+		$remove_url   = edd_remove_item_url( $item_position );
+		$expected_url = 'http://example.org/?cart_item=' . $item_position . '&edd_action=remove';
 
 		EDD_Helper_Download::delete_download( $post->ID );
 	}
@@ -727,7 +725,7 @@ class Test_Misc extends EDD_UnitTestCase {
 
 		// Test a single convert
 		$payment_1_array = edd_object_to_array( $payment_1_obj );
-		$this->assertInternalType( 'array',  $payment_1_array );
+		$this->assertInternalType( 'array', $payment_1_array );
 		$this->assertEquals( $payment_1_obj->ID, $payment_1_array['ID'] );
 
 		$payments = array(

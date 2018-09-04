@@ -38,14 +38,13 @@ class Tests_Register_Meta extends EDD_UnitTestCase {
 		$this->assertNotEmpty( $wp_filter['sanitize_post_meta_edd_download_files'][10] );
 		$this->assertNotEmpty( $wp_filter['sanitize_post_meta__edd_bundled_products'][10] );
 		$this->assertNotEmpty( $wp_filter['sanitize_post_meta_edd_price'][10] );
-
 	}
 
 	public function test_purchase_meta() {
 		global $wp_filter;
 
 		// Uses standalone function callbacks
-		$this->assertarrayHasKey( 'sanitize_email',      $wp_filter['sanitize_post_meta__edd_payment_user_email'][10] );
+		$this->assertarrayHasKey( 'sanitize_email', $wp_filter['sanitize_post_meta__edd_payment_user_email'][10] );
 		$this->assertarrayHasKey( 'sanitize_text_field', $wp_filter['sanitize_post_meta__edd_payment_user_ip'][10] );
 		$this->assertarrayHasKey( 'sanitize_text_field', $wp_filter['sanitize_post_meta__edd_payment_purchase_key'][10] );
 		$this->assertarrayHasKey( 'edd_sanitize_amount', $wp_filter['sanitize_post_meta__edd_payment_total'][10] );
@@ -58,7 +57,6 @@ class Tests_Register_Meta extends EDD_UnitTestCase {
 		$this->assertNotEmpty( $wp_filter['sanitize_post_meta__edd_payment_customer_id'][10] );
 		$this->assertNotEmpty( $wp_filter['sanitize_post_meta__edd_payment_user_id'][10] );
 		$this->assertNotEmpty( $wp_filter['sanitize_post_meta__edd_payment_meta'][10] );
-
 	}
 
 	public function test_intval_wrapper() {
@@ -75,16 +73,20 @@ class Tests_Register_Meta extends EDD_UnitTestCase {
 	public function test_sanitize_array() {
 		$this->setExpectedIncorrectUsage( 'add_post_meta()/update_post_meta()' );
 
-		$object = new StdClass;
+		$object      = new StdClass();
 		$object->one = 1;
 		$object->two = 2;
 
 		update_post_meta( $this->payment_id, '_edd_payment_meta', $object );
 		$this->assertInternalType( 'array', edd_get_payment_meta( $this->payment_id, '_edd_payment_meta', true ) );
 
-		$serialized = serialize( array(
-			1, 2, 3,
-		) );
+		$serialized = serialize(
+			array(
+				1,
+				2,
+				3,
+			)
+		);
 
 		update_post_meta( $this->payment_id, '_edd_payment_meta', $serialized );
 		$this->assertInternalType( 'array', edd_get_payment_meta( $this->payment_id, '_edd_payment_meta', true ) );
@@ -118,14 +120,19 @@ class Tests_Register_Meta extends EDD_UnitTestCase {
 		$saved_price = get_post_meta( $this->download_id, 'edd_price', true );
 		$this->assertEquals( -1, $saved_price );
 		remove_filter( 'edd_allow_negative_prices', '__return_true' );
-
 	}
 
 	public function test_sanitize_variable_prices() {
 		$variable_prices = array(
-			array( 'name'   => 'First Option' ),
-			array( 'amount' => 5, 'name' => 'Second Option' ),
-			array( 'foo'    => 'bar', 'bar' => 'baz' ),
+			array( 'name' => 'First Option' ),
+			array(
+				'amount' => 5,
+				'name'   => 'Second Option',
+			),
+			array(
+				'foo' => 'bar',
+				'bar' => 'baz',
+			),
 		);
 
 		update_post_meta( $this->download_id, 'edd_variable_prices', $variable_prices );

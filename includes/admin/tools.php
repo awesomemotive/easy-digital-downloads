@@ -24,21 +24,25 @@ function edd_tools_page() {
 		? sanitize_key( $_GET['tab'] )
 		: 'general'; ?>
 
-    <div class="wrap">
-        <h1><?php _e( 'Tools', 'easy-digital-downloads' ); ?></h1>
-        <h2 class="nav-tab-wrapper edd-nav-tab-wrapper">
+	<div class="wrap">
+		<h1><?php _e( 'Tools', 'easy-digital-downloads' ); ?></h1>
+		<h2 class="nav-tab-wrapper edd-nav-tab-wrapper">
 			<?php
 
 			foreach ( edd_get_tools_tabs() as $tab_id => $tab_name ) {
+				$tab_url = edd_get_admin_url(
+					array(
+						'page' => 'edd-tools',
+						'tab'  => $tab_id,
+					)
+				);
 
-				$tab_url = edd_get_admin_url( array(
-					'page' => 'edd-tools',
-					'tab'  => $tab_id
-				) );
-
-				$tab_url = remove_query_arg( array(
-					'edd-message',
-				), $tab_url );
+				$tab_url = remove_query_arg(
+					array(
+						'edd-message',
+					),
+					$tab_url
+				);
 
 				$active = ( $active_tab === $tab_id )
 					? ' nav-tab-active'
@@ -47,14 +51,14 @@ function edd_tools_page() {
 				echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . $active . '">' . esc_html( $tab_name ) . '</a>';
 			}
 			?>
-        </h2>
+		</h2>
 
-        <div class="metabox-holder">
+		<div class="metabox-holder">
 			<?php
 			do_action( 'edd_tools_tab_' . $active_tab );
 			?>
-        </div><!-- .metabox-holder -->
-    </div><!-- .wrap -->
+		</div><!-- .metabox-holder -->
+	</div><!-- .wrap -->
 
 	<?php
 }
@@ -99,25 +103,25 @@ function edd_tools_banned_emails_display() {
 
 	do_action( 'edd_tools_banned_emails_before' );
 	?>
-    <div class="postbox">
-        <h3><span><?php _e( 'Banned Emails', 'easy-digital-downloads' ); ?></span></h3>
-        <div class="inside">
-            <p><?php _e( 'Emails placed in the box below will not be allowed to make purchases.', 'easy-digital-downloads' ); ?></p>
-            <form method="post"
-                  action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ); ?>">
-                <p>
-                    <textarea name="banned_emails" rows="10"
-                              class="large-text"><?php echo implode( "\n", edd_get_banned_emails() ); ?></textarea>
-                    <span class="description"><?php _e( 'Enter emails and/or domains (starting with "@") and/or TLDs (starting with ".") to disallow, one per line.', 'easy-digital-downloads' ); ?></span>
-                </p>
-                <p>
-                    <input type="hidden" name="edd_action" value="save_banned_emails"/>
+	<div class="postbox">
+		<h3><span><?php _e( 'Banned Emails', 'easy-digital-downloads' ); ?></span></h3>
+		<div class="inside">
+			<p><?php _e( 'Emails placed in the box below will not be allowed to make purchases.', 'easy-digital-downloads' ); ?></p>
+			<form method="post"
+				  action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ); ?>">
+				<p>
+					<textarea name="banned_emails" rows="10"
+							  class="large-text"><?php echo implode( "\n", edd_get_banned_emails() ); ?></textarea>
+					<span class="description"><?php _e( 'Enter emails and/or domains (starting with "@") and/or TLDs (starting with ".") to disallow, one per line.', 'easy-digital-downloads' ); ?></span>
+				</p>
+				<p>
+					<input type="hidden" name="edd_action" value="save_banned_emails"/>
 					<?php wp_nonce_field( 'edd_banned_emails_nonce', 'edd_banned_emails_nonce' ); ?>
 					<?php submit_button( __( 'Save', 'easy-digital-downloads' ), 'secondary', 'submit', false ); ?>
-                </p>
-            </form>
-        </div><!-- .inside -->
-    </div><!-- .postbox -->
+				</p>
+			</form>
+		</div><!-- .inside -->
+	</div><!-- .postbox -->
 	<?php
 	do_action( 'edd_tools_banned_emails_after' );
 	do_action( 'edd_tools_after' );
@@ -213,21 +217,21 @@ function edd_tools_clear_doing_upgrade_display() {
 
 	do_action( 'edd_tools_clear_doing_upgrade_before' );
 	?>
-    <div class="postbox">
-        <h3><span><?php _e( 'Clear Incomplete Upgrade Notice', 'easy-digital-downloads' ); ?></span></h3>
-        <div class="inside">
-            <p><?php _e( 'Sometimes a database upgrade notice may not be cleared after an upgrade is completed due to conflicts with other extensions or other minor issues.', 'easy-digital-downloads' ); ?></p>
-            <p><?php _e( 'If you\'re certain these upgrades have been completed, you can clear these upgrade notices by clicking the button below. If you have any questions about this, please contact the Easy Digital Downloads support team and we\'ll be happy to help.', 'easy-digital-downloads' ); ?></p>
-            <form method="post"
-                  action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ); ?>">
-                <p>
-                    <input type="hidden" name="edd_action" value="clear_doing_upgrade"/>
+	<div class="postbox">
+		<h3><span><?php _e( 'Clear Incomplete Upgrade Notice', 'easy-digital-downloads' ); ?></span></h3>
+		<div class="inside">
+			<p><?php _e( 'Sometimes a database upgrade notice may not be cleared after an upgrade is completed due to conflicts with other extensions or other minor issues.', 'easy-digital-downloads' ); ?></p>
+			<p><?php _e( 'If you\'re certain these upgrades have been completed, you can clear these upgrade notices by clicking the button below. If you have any questions about this, please contact the Easy Digital Downloads support team and we\'ll be happy to help.', 'easy-digital-downloads' ); ?></p>
+			<form method="post"
+				  action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ); ?>">
+				<p>
+					<input type="hidden" name="edd_action" value="clear_doing_upgrade"/>
 					<?php wp_nonce_field( 'edd_clear_upgrades_nonce', 'edd_clear_upgrades_nonce' ); ?>
 					<?php submit_button( __( 'Clear Incomplete Upgrade Notice', 'easy-digital-downloads' ), 'secondary', 'submit', false ); ?>
-                </p>
-            </form>
-        </div><!-- .inside -->
-    </div><!-- .postbox -->
+				</p>
+			</form>
+		</div><!-- .inside -->
+	</div><!-- .postbox -->
 	<?php
 	do_action( 'edd_tools_clear_doing_upgrade_after' );
 }
@@ -252,13 +256,15 @@ function edd_tools_api_keys_display() {
 	$api_keys_table->prepare_items();
 	$api_keys_table->display();
 	?>
-    <p>
-		<?php printf(
-			__( 'These API keys allow you to use the <a href="%s">EDD REST API</a> to retrieve store data in JSON or XML for external applications or devices, such as the <a href="%s">EDD mobile app</a>.', 'easy-digital-downloads' ),
+	<p>
+		<?php
+		printf(
+			__( 'These API keys allow you to use the <a href="%1$s">EDD REST API</a> to retrieve store data in JSON or XML for external applications or devices, such as the <a href="%2$s">EDD mobile app</a>.', 'easy-digital-downloads' ),
 			'http://docs.easydigitaldownloads.com/article/544-edd-api-reference/',
 			'https://easydigitaldownloads.com/downloads/ios-sales-earnings-tracker/?utm_source=plugin-tools-page&utm_medium=api_keys_tab&utm_term=ios-app&utm_campaign=EDDMobileApp'
-		); ?>
-    </p>
+		);
+		?>
+	</p>
 	<?php
 
 	do_action( 'edd_tools_api_keys_after' );
@@ -282,34 +288,34 @@ function edd_tools_betas_display() {
 	do_action( 'edd_tools_betas_before' );
 	?>
 
-    <div class="postbox edd-beta-support">
-        <h3><span><?php _e( 'Enable Beta Versions', 'easy-digital-downloads' ); ?></span></h3>
-        <div class="inside">
-            <p><?php _e( 'Checking any of the below checkboxes will opt you in to receive pre-release update notifications. You can opt-out at any time. Pre-release updates do not install automatically, you will still have the opportunity to ignore update notifications.', 'easy-digital-downloads' ); ?></p>
-            <form method="post"
-                  action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=betas' ); ?>">
-                <table class="form-table edd-beta-support">
-                    <tbody>
+	<div class="postbox edd-beta-support">
+		<h3><span><?php _e( 'Enable Beta Versions', 'easy-digital-downloads' ); ?></span></h3>
+		<div class="inside">
+			<p><?php _e( 'Checking any of the below checkboxes will opt you in to receive pre-release update notifications. You can opt-out at any time. Pre-release updates do not install automatically, you will still have the opportunity to ignore update notifications.', 'easy-digital-downloads' ); ?></p>
+			<form method="post"
+				  action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=betas' ); ?>">
+				<table class="form-table edd-beta-support">
+					<tbody>
 					<?php foreach ( $has_beta as $slug => $product ) : ?>
-                        <tr>
+						<tr>
 							<?php $checked = edd_extension_has_beta_support( $slug ); ?>
-                            <th scope="row"><?php echo esc_html( $product ); ?></th>
-                            <td>
-                                <input type="checkbox" name="enabled_betas[<?php echo esc_attr( $slug ); ?>]"
-                                       id="enabled_betas[<?php echo esc_attr( $slug ); ?>]"<?php echo checked( $checked, true, false ); ?>
-                                       value="1"/>
-                                <label for="enabled_betas[<?php echo esc_attr( $slug ); ?>]"><?php printf( __( 'Get updates for pre-release versions of %s', 'easy-digital-downloads' ), $product ); ?></label>
-                            </td>
-                        </tr>
+							<th scope="row"><?php echo esc_html( $product ); ?></th>
+							<td>
+								<input type="checkbox" name="enabled_betas[<?php echo esc_attr( $slug ); ?>]"
+									   id="enabled_betas[<?php echo esc_attr( $slug ); ?>]"<?php echo checked( $checked, true, false ); ?>
+									   value="1"/>
+								<label for="enabled_betas[<?php echo esc_attr( $slug ); ?>]"><?php printf( __( 'Get updates for pre-release versions of %s', 'easy-digital-downloads' ), $product ); ?></label>
+							</td>
+						</tr>
 					<?php endforeach; ?>
-                    </tbody>
-                </table>
-                <input type="hidden" name="edd_action" value="save_enabled_betas"/>
+					</tbody>
+				</table>
+				<input type="hidden" name="edd_action" value="save_enabled_betas"/>
 				<?php wp_nonce_field( 'edd_save_betas_nonce', 'edd_save_betas_nonce' ); ?>
 				<?php submit_button( __( 'Save', 'easy-digital-downloads' ), 'secondary', 'submit', false ); ?>
-            </form>
-        </div>
-    </div>
+			</form>
+		</div>
+	</div>
 
 	<?php
 	do_action( 'edd_tools_betas_after' );
@@ -451,559 +457,559 @@ function edd_tools_import_export_display() {
 	do_action( 'edd_tools_import_export_before' );
 	?>
 
-    <div class="postbox edd-import-payment-history">
-        <h3><span><?php _e( 'Import Payment History', 'easy-digital-downloads' ); ?></span></h3>
-        <div class="inside">
-            <p><?php _e( 'Import a CSV file of payment records.', 'easy-digital-downloads' ); ?></p>
-            <form id="edd-import-payments" class="edd-import-form edd-import-export-form"
-                  action="<?php echo esc_url( add_query_arg( 'edd_action', 'upload_import_file', admin_url() ) ); ?>"
-                  method="post" enctype="multipart/form-data">
+	<div class="postbox edd-import-payment-history">
+		<h3><span><?php _e( 'Import Payment History', 'easy-digital-downloads' ); ?></span></h3>
+		<div class="inside">
+			<p><?php _e( 'Import a CSV file of payment records.', 'easy-digital-downloads' ); ?></p>
+			<form id="edd-import-payments" class="edd-import-form edd-import-export-form"
+				  action="<?php echo esc_url( add_query_arg( 'edd_action', 'upload_import_file', admin_url() ) ); ?>"
+				  method="post" enctype="multipart/form-data">
 
-                <div class="edd-import-file-wrap">
+				<div class="edd-import-file-wrap">
 					<?php wp_nonce_field( 'edd_ajax_import', 'edd_ajax_import' ); ?>
-                    <input type="hidden" name="edd-import-class" value="EDD_Batch_Payments_Import"/>
-                    <p>
-                        <input name="edd-import-file" id="edd-payments-import-file" type="file"/>
-                    </p>
-                    <span>
+					<input type="hidden" name="edd-import-class" value="EDD_Batch_Payments_Import"/>
+					<p>
+						<input name="edd-import-file" id="edd-payments-import-file" type="file"/>
+					</p>
+					<span>
 						<input type="submit" value="<?php _e( 'Import CSV', 'easy-digital-downloads' ); ?>"
-                               class="button-secondary"/>
+							   class="button-secondary"/>
 						<span class="spinner"></span>
 					</span>
-                </div>
+				</div>
 
-                <div class="edd-import-options" id="edd-import-payments-options" style="display:none;">
+				<div class="edd-import-options" id="edd-import-payments-options" style="display:none;">
 
-                    <p>
+					<p>
 						<?php
 						printf(
 							__( 'Each column loaded from the CSV needs to be mapped to a payment field. Select the column that should be mapped to each field below. Any columns not needed can be ignored. See <a href="%s" target="_blank">this guide</a> for assistance with importing payment records.', 'easy-digital-downloads' ),
 							'http://docs.easydigitaldownloads.com/category/1337-importexport'
 						);
 						?>
-                    </p>
+					</p>
 
-                    <table class="widefat edd_repeatable_table striped" width="100%" cellpadding="0" cellspacing="0">
-                        <thead>
-                        <tr>
-                            <th><strong><?php _e( 'Payment Field', 'easy-digital-downloads' ); ?></strong></th>
-                            <th><strong><?php _e( 'CSV Column', 'easy-digital-downloads' ); ?></strong></th>
-                            <th><strong><?php _e( 'Data Preview', 'easy-digital-downloads' ); ?></strong></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td><?php _e( 'Currency Code', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[currency]" class="edd-import-csv-column"
-                                        data-field="Currency">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Email', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[email]" class="edd-import-csv-column" data-field="Email">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'First Name', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[first_name]" class="edd-import-csv-column"
-                                        data-field="First Name">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Last Name', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[last_name]" class="edd-import-csv-column"
-                                        data-field="Last Name">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Customer ID', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[customer_id]" class="edd-import-csv-column"
-                                        data-field="Customer ID">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Discount Code(s)', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[discounts]" class="edd-import-csv-column"
-                                        data-field="Discount Code">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'IP Address', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[ip]" class="edd-import-csv-column"
-                                        data-field="IP Address">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Mode (Live|Test)', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[mode]" class="edd-import-csv-column"
-                                        data-field="Mode (Live|Test)">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Parent Payment ID', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[parent_payment_id]" class="edd-import-csv-column"
-                                        data-field="">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Payment Method', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[gateway]" class="edd-import-csv-column"
-                                        data-field="Payment Method">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Payment Number', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[number]" class="edd-import-csv-column"
-                                        data-field="Payment Number">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Date', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[date]" class="edd-import-csv-column" data-field="Date">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Purchase Key', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[key]" class="edd-import-csv-column"
-                                        data-field="Purchase Key">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Purchased Product(s)', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[downloads]" class="edd-import-csv-column"
-                                        data-field="Products (Raw)">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Status', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[status]" class="edd-import-csv-column"
-                                        data-field="Status">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Subtotal', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[subtotal]" class="edd-import-csv-column" data-field="">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Tax', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[tax]" class="edd-import-csv-column" data-field="Tax ($)">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Total', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[total]" class="edd-import-csv-column"
-                                        data-field="Amount ($)">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Transaction ID', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[transaction_id]" class="edd-import-csv-column"
-                                        data-field="Transaction ID">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'User', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[user_id]" class="edd-import-csv-column"
-                                        data-field="User">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Address Line 1', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[line1]" class="edd-import-csv-column"
-                                        data-field="Address">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Address Line 2', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[line2]" class="edd-import-csv-column"
-                                        data-field="Address (Line 2)">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'City', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[city]" class="edd-import-csv-column" data-field="City">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'State / Province', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[state]" class="edd-import-csv-column" data-field="State">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Zip / Postal Code', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[zip]" class="edd-import-csv-column"
-                                        data-field="Zip / Postal Code">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Country', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[country]" class="edd-import-csv-column"
-                                        data-field="Country">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <p class="submit">
-                        <button class="edd-import-proceed button-primary"><?php _e( 'Process Import', 'easy-digital-downloads' ); ?></button>
-                    </p>
-                </div>
-            </form>
-        </div><!-- .inside -->
-    </div><!-- .postbox -->
+					<table class="widefat edd_repeatable_table striped" width="100%" cellpadding="0" cellspacing="0">
+						<thead>
+						<tr>
+							<th><strong><?php _e( 'Payment Field', 'easy-digital-downloads' ); ?></strong></th>
+							<th><strong><?php _e( 'CSV Column', 'easy-digital-downloads' ); ?></strong></th>
+							<th><strong><?php _e( 'Data Preview', 'easy-digital-downloads' ); ?></strong></th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td><?php _e( 'Currency Code', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[currency]" class="edd-import-csv-column"
+										data-field="Currency">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Email', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[email]" class="edd-import-csv-column" data-field="Email">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'First Name', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[first_name]" class="edd-import-csv-column"
+										data-field="First Name">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Last Name', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[last_name]" class="edd-import-csv-column"
+										data-field="Last Name">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Customer ID', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[customer_id]" class="edd-import-csv-column"
+										data-field="Customer ID">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Discount Code(s)', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[discounts]" class="edd-import-csv-column"
+										data-field="Discount Code">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'IP Address', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[ip]" class="edd-import-csv-column"
+										data-field="IP Address">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Mode (Live|Test)', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[mode]" class="edd-import-csv-column"
+										data-field="Mode (Live|Test)">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Parent Payment ID', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[parent_payment_id]" class="edd-import-csv-column"
+										data-field="">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Payment Method', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[gateway]" class="edd-import-csv-column"
+										data-field="Payment Method">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Payment Number', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[number]" class="edd-import-csv-column"
+										data-field="Payment Number">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Date', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[date]" class="edd-import-csv-column" data-field="Date">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Purchase Key', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[key]" class="edd-import-csv-column"
+										data-field="Purchase Key">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Purchased Product(s)', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[downloads]" class="edd-import-csv-column"
+										data-field="Products (Raw)">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Status', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[status]" class="edd-import-csv-column"
+										data-field="Status">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Subtotal', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[subtotal]" class="edd-import-csv-column" data-field="">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Tax', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[tax]" class="edd-import-csv-column" data-field="Tax ($)">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Total', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[total]" class="edd-import-csv-column"
+										data-field="Amount ($)">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Transaction ID', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[transaction_id]" class="edd-import-csv-column"
+										data-field="Transaction ID">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'User', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[user_id]" class="edd-import-csv-column"
+										data-field="User">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Address Line 1', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[line1]" class="edd-import-csv-column"
+										data-field="Address">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Address Line 2', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[line2]" class="edd-import-csv-column"
+										data-field="Address (Line 2)">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'City', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[city]" class="edd-import-csv-column" data-field="City">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'State / Province', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[state]" class="edd-import-csv-column" data-field="State">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Zip / Postal Code', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[zip]" class="edd-import-csv-column"
+										data-field="Zip / Postal Code">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Country', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[country]" class="edd-import-csv-column"
+										data-field="Country">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						</tbody>
+					</table>
+					<p class="submit">
+						<button class="edd-import-proceed button-primary"><?php _e( 'Process Import', 'easy-digital-downloads' ); ?></button>
+					</p>
+				</div>
+			</form>
+		</div><!-- .inside -->
+	</div><!-- .postbox -->
 
-    <div class="postbox edd-import-payment-history">
-        <h3><span><?php _e( 'Import Download Products', 'easy-digital-downloads' ); ?></span></h3>
-        <div class="inside">
-            <p><?php _e( 'Import a CSV file of products.', 'easy-digital-downloads' ); ?></p>
-            <form id="edd-import-downloads" class="edd-import-form edd-import-export-form"
-                  action="<?php echo esc_url( add_query_arg( 'edd_action', 'upload_import_file', admin_url() ) ); ?>"
-                  method="post" enctype="multipart/form-data">
+	<div class="postbox edd-import-payment-history">
+		<h3><span><?php _e( 'Import Download Products', 'easy-digital-downloads' ); ?></span></h3>
+		<div class="inside">
+			<p><?php _e( 'Import a CSV file of products.', 'easy-digital-downloads' ); ?></p>
+			<form id="edd-import-downloads" class="edd-import-form edd-import-export-form"
+				  action="<?php echo esc_url( add_query_arg( 'edd_action', 'upload_import_file', admin_url() ) ); ?>"
+				  method="post" enctype="multipart/form-data">
 
-                <div class="edd-import-file-wrap">
+				<div class="edd-import-file-wrap">
 					<?php wp_nonce_field( 'edd_ajax_import', 'edd_ajax_import' ); ?>
-                    <input type="hidden" name="edd-import-class" value="EDD_Batch_Downloads_Import"/>
-                    <p>
-                        <input name="edd-import-file" id="edd-downloads-import-file" type="file"/>
-                    </p>
-                    <span>
+					<input type="hidden" name="edd-import-class" value="EDD_Batch_Downloads_Import"/>
+					<p>
+						<input name="edd-import-file" id="edd-downloads-import-file" type="file"/>
+					</p>
+					<span>
 						<input type="submit" value="<?php _e( 'Import CSV', 'easy-digital-downloads' ); ?>"
-                               class="button-secondary"/>
+							   class="button-secondary"/>
 						<span class="spinner"></span>
 					</span>
-                </div>
+				</div>
 
-                <div class="edd-import-options" id="edd-import-downloads-options" style="display:none;">
+				<div class="edd-import-options" id="edd-import-downloads-options" style="display:none;">
 
-                    <p>
+					<p>
 						<?php
 						printf(
 							__( 'Each column loaded from the CSV needs to be mapped to a Download product field. Select the column that should be mapped to each field below. Any columns not needed can be ignored. See <a href="%s" target="_blank">this guide</a> for assistance with importing Download products.', 'easy-digital-downloads' ),
 							'http://docs.easydigitaldownloads.com/category/1337-importexport'
 						);
 						?>
-                    </p>
+					</p>
 
-                    <table class="widefat edd_repeatable_table striped" width="100%" cellpadding="0" cellspacing="0">
-                        <thead>
-                        <tr>
-                            <th><strong><?php _e( 'Product Field', 'easy-digital-downloads' ); ?></strong></th>
-                            <th><strong><?php _e( 'CSV Column', 'easy-digital-downloads' ); ?></strong></th>
-                            <th><strong><?php _e( 'Data Preview', 'easy-digital-downloads' ); ?></strong></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td><?php _e( 'Product Author', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[post_author]" class="edd-import-csv-column"
-                                        data-field="Author">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Product Categories', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[categories]" class="edd-import-csv-column"
-                                        data-field="Categories">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Product Creation Date', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[post_date]" class="edd-import-csv-column"
-                                        data-field="Date Created">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Product Description', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[post_content]" class="edd-import-csv-column"
-                                        data-field="Description">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Product Excerpt', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[post_excerpt]" class="edd-import-csv-column"
-                                        data-field="Excerpt">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Product Image', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[featured_image]" class="edd-import-csv-column"
-                                        data-field="Featured Image">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Product Notes', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[notes]" class="edd-import-csv-column" data-field="Notes">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Product Price(s)', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[price]" class="edd-import-csv-column" data-field="Price">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Product SKU', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[sku]" class="edd-import-csv-column" data-field="SKU">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Product Slug', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[post_name]" class="edd-import-csv-column"
-                                        data-field="Slug">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Product Status', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[post_status]" class="edd-import-csv-column"
-                                        data-field="Status">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Product Tags', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[tags]" class="edd-import-csv-column" data-field="Tags">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Product Title', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[post_title]" class="edd-import-csv-column"
-                                        data-field="Name">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Download Files', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[files]" class="edd-import-csv-column" data-field="Files">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'File Download Limit', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[download_limit]" class="edd-import-csv-column"
-                                        data-field="File Download Limit">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Sale Count', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[sales]" class="edd-import-csv-column" data-field="Sales">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        <tr>
-                            <td><?php _e( 'Total Earnings', 'easy-digital-downloads' ); ?></td>
-                            <td>
-                                <select name="edd-import-field[earnings]" class="edd-import-csv-column"
-                                        data-field="Earnings">
-                                    <option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
-                                </select>
-                            </td>
-                            <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <p class="submit">
-                        <button class="edd-import-proceed button-primary"><?php _e( 'Process Import', 'easy-digital-downloads' ); ?></button>
-                    </p>
-                </div>
-            </form>
-        </div><!-- .inside -->
-    </div><!-- .postbox -->
+					<table class="widefat edd_repeatable_table striped" width="100%" cellpadding="0" cellspacing="0">
+						<thead>
+						<tr>
+							<th><strong><?php _e( 'Product Field', 'easy-digital-downloads' ); ?></strong></th>
+							<th><strong><?php _e( 'CSV Column', 'easy-digital-downloads' ); ?></strong></th>
+							<th><strong><?php _e( 'Data Preview', 'easy-digital-downloads' ); ?></strong></th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td><?php _e( 'Product Author', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[post_author]" class="edd-import-csv-column"
+										data-field="Author">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Product Categories', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[categories]" class="edd-import-csv-column"
+										data-field="Categories">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Product Creation Date', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[post_date]" class="edd-import-csv-column"
+										data-field="Date Created">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Product Description', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[post_content]" class="edd-import-csv-column"
+										data-field="Description">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Product Excerpt', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[post_excerpt]" class="edd-import-csv-column"
+										data-field="Excerpt">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Product Image', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[featured_image]" class="edd-import-csv-column"
+										data-field="Featured Image">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Product Notes', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[notes]" class="edd-import-csv-column" data-field="Notes">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Product Price(s)', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[price]" class="edd-import-csv-column" data-field="Price">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Product SKU', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[sku]" class="edd-import-csv-column" data-field="SKU">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Product Slug', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[post_name]" class="edd-import-csv-column"
+										data-field="Slug">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Product Status', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[post_status]" class="edd-import-csv-column"
+										data-field="Status">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Product Tags', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[tags]" class="edd-import-csv-column" data-field="Tags">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Product Title', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[post_title]" class="edd-import-csv-column"
+										data-field="Name">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Download Files', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[files]" class="edd-import-csv-column" data-field="Files">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'File Download Limit', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[download_limit]" class="edd-import-csv-column"
+										data-field="File Download Limit">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Sale Count', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[sales]" class="edd-import-csv-column" data-field="Sales">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						<tr>
+							<td><?php _e( 'Total Earnings', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[earnings]" class="edd-import-csv-column"
+										data-field="Earnings">
+									<option value=""><?php _e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
+						</tbody>
+					</table>
+					<p class="submit">
+						<button class="edd-import-proceed button-primary"><?php _e( 'Process Import', 'easy-digital-downloads' ); ?></button>
+					</p>
+				</div>
+			</form>
+		</div><!-- .inside -->
+	</div><!-- .postbox -->
 
-    <div class="postbox">
-        <h3><span><?php _e( 'Export Settings', 'easy-digital-downloads' ); ?></span></h3>
-        <div class="inside">
-            <p><?php _e( 'Export the Easy Digital Downloads settings for this site as a .json file. This allows you to easily import the configuration into another site.', 'easy-digital-downloads' ); ?></p>
-            <p><?php printf( __( 'To export shop data (purchases, customers, etc), visit the <a href="%s">Reports</a> page.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-reports&tab=export' ) ); ?></p>
-            <form method="post"
-                  action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=import_export' ); ?>">
-                <p><input type="hidden" name="edd_action" value="export_settings"/></p>
-                <p>
+	<div class="postbox">
+		<h3><span><?php _e( 'Export Settings', 'easy-digital-downloads' ); ?></span></h3>
+		<div class="inside">
+			<p><?php _e( 'Export the Easy Digital Downloads settings for this site as a .json file. This allows you to easily import the configuration into another site.', 'easy-digital-downloads' ); ?></p>
+			<p><?php printf( __( 'To export shop data (purchases, customers, etc), visit the <a href="%s">Reports</a> page.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-reports&tab=export' ) ); ?></p>
+			<form method="post"
+				  action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=import_export' ); ?>">
+				<p><input type="hidden" name="edd_action" value="export_settings"/></p>
+				<p>
 					<?php wp_nonce_field( 'edd_export_nonce', 'edd_export_nonce' ); ?>
 					<?php submit_button( __( 'Export', 'easy-digital-downloads' ), 'secondary', 'submit', false ); ?>
-                </p>
-            </form>
-        </div><!-- .inside -->
-    </div><!-- .postbox -->
+				</p>
+			</form>
+		</div><!-- .inside -->
+	</div><!-- .postbox -->
 
-    <div class="postbox">
-        <h3><span><?php _e( 'Import Settings', 'easy-digital-downloads' ); ?></span></h3>
-        <div class="inside">
-            <p><?php _e( 'Import the Easy Digital Downloads settings from a .json file. This file can be obtained by exporting the settings on another site using the form above.', 'easy-digital-downloads' ); ?></p>
-            <form method="post" enctype="multipart/form-data"
-                  action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=import_export' ); ?>">
-                <p>
-                    <input type="file" name="import_file"/>
-                </p>
-                <p>
-                    <input type="hidden" name="edd_action" value="import_settings"/>
+	<div class="postbox">
+		<h3><span><?php _e( 'Import Settings', 'easy-digital-downloads' ); ?></span></h3>
+		<div class="inside">
+			<p><?php _e( 'Import the Easy Digital Downloads settings from a .json file. This file can be obtained by exporting the settings on another site using the form above.', 'easy-digital-downloads' ); ?></p>
+			<form method="post" enctype="multipart/form-data"
+				  action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=import_export' ); ?>">
+				<p>
+					<input type="file" name="import_file"/>
+				</p>
+				<p>
+					<input type="hidden" name="edd_action" value="import_settings"/>
 					<?php wp_nonce_field( 'edd_import_nonce', 'edd_import_nonce' ); ?>
 					<?php submit_button( __( 'Import', 'easy-digital-downloads' ), 'secondary', 'submit', false ); ?>
-                </p>
-            </form>
-        </div><!-- .inside -->
-    </div><!-- .postbox -->
+				</p>
+			</form>
+		</div><!-- .inside -->
+	</div><!-- .postbox -->
 	<?php
 	do_action( 'edd_tools_import_export_after' );
 }
@@ -1049,10 +1055,12 @@ function edd_tools_import_export_process_export() {
 	header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
 	header( 'Expires: 0' );
 
-	wp_send_json( array(
-		'edd_settings'  => $edd_settings,
-		'edd_tax_rates' => $edd_tax_rates
-	) );
+	wp_send_json(
+		array(
+			'edd_settings'  => $edd_settings,
+			'edd_tax_rates' => $edd_tax_rates,
+		)
+	);
 }
 add_action( 'edd_export_settings', 'edd_tools_import_export_process_export' );
 
@@ -1063,7 +1071,6 @@ add_action( 'edd_export_settings', 'edd_tools_import_export_process_export' );
  * @return void
  */
 function edd_tools_import_export_process_import() {
-
 	if ( empty( $_POST['edd_import_nonce'] ) ) {
 		return;
 	}
@@ -1093,7 +1100,6 @@ function edd_tools_import_export_process_import() {
 
 		// Process a settings export from a pre 2.8 version of EDD
 		update_option( 'edd_settings', $settings );
-
 	} else {
 
 		// Update the settings from a 2.8+ export file
@@ -1102,13 +1108,16 @@ function edd_tools_import_export_process_import() {
 
 		$edd_tax_rates = $settings['edd_tax_rates'];
 		update_option( 'edd_tax_rates', $edd_tax_rates );
-
 	}
 
-	edd_redirect( edd_get_admin_url( array(
-		'page'        => 'edd-tools',
-		'edd-message' => 'settings-imported'
-	) ) );
+	edd_redirect(
+		edd_get_admin_url(
+			array(
+				'page'        => 'edd-tools',
+				'edd-message' => 'settings-imported',
+			)
+		)
+	);
 }
 add_action( 'edd_import_settings', 'edd_tools_import_export_process_import' );
 
@@ -1125,27 +1134,27 @@ function edd_tools_debug_log_display() {
 	}
 
 	?>
-    <div class="postbox">
-        <h3><span><?php esc_html_e( 'Debug Log', 'easy-digital-downloads' ); ?></span></h3>
-        <div class="inside">
-            <form id="edd-debug-log" method="post">
-                <p><?php _e( 'Use this tool to help debug Easy Digital Downloads functionality. Developers may use the <a href="https://github.com/easydigitaldownloads/easy-digital-downloads/blob/master/includes/class-edd-logging.php">EDD_Logging class</a> to record debug data.', 'easy-digital-downloads' ); ?></p>
-                <textarea readonly="readonly" class="edd-tools-textarea" rows="15"
-                          name="edd-debug-log-contents"><?php echo esc_textarea( $edd_logs->get_file_contents() ); ?></textarea>
-                <p>
-                    <input type="hidden" name="edd_action" value="submit_debug_log"/>
+	<div class="postbox">
+		<h3><span><?php esc_html_e( 'Debug Log', 'easy-digital-downloads' ); ?></span></h3>
+		<div class="inside">
+			<form id="edd-debug-log" method="post">
+				<p><?php _e( 'Use this tool to help debug Easy Digital Downloads functionality. Developers may use the <a href="https://github.com/easydigitaldownloads/easy-digital-downloads/blob/master/includes/class-edd-logging.php">EDD_Logging class</a> to record debug data.', 'easy-digital-downloads' ); ?></p>
+				<textarea readonly="readonly" class="edd-tools-textarea" rows="15"
+						  name="edd-debug-log-contents"><?php echo esc_textarea( $edd_logs->get_file_contents() ); ?></textarea>
+				<p>
+					<input type="hidden" name="edd_action" value="submit_debug_log"/>
 					<?php
 					submit_button( __( 'Download Debug Log File', 'easy-digital-downloads' ), 'primary', 'edd-download-debug-log', false );
-					submit_button( __( 'Copy to Clipboard',       'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-copy-debug-log', false, array( 'onclick' => "this.form['edd-debug-log-contents'].focus();this.form['edd-debug-log-contents'].select();document.execCommand('copy');return false;" ) );
-					submit_button( __( 'Clear Log',               'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-clear-debug-log', false );
+					submit_button( __( 'Copy to Clipboard', 'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-copy-debug-log', false, array( 'onclick' => "this.form['edd-debug-log-contents'].focus();this.form['edd-debug-log-contents'].select();document.execCommand('copy');return false;" ) );
+					submit_button( __( 'Clear Log', 'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-clear-debug-log', false );
 					?>
-                </p>
+				</p>
 				<?php wp_nonce_field( 'edd-debug-log-action' ); ?>
-            </form>
-            <p><?php _e( 'Log file', 'easy-digital-downloads' ); ?>:
-                <code><?php echo $edd_logs->get_log_file_path(); ?></code></p>
-        </div><!-- .inside -->
-    </div><!-- .postbox -->
+			</form>
+			<p><?php _e( 'Log file', 'easy-digital-downloads' ); ?>:
+				<code><?php echo $edd_logs->get_log_file_path(); ?></code></p>
+		</div><!-- .inside -->
+	</div><!-- .postbox -->
 	<?php
 }
 add_action( 'edd_tools_tab_debug_log', 'edd_tools_debug_log_display' );
@@ -1172,16 +1181,19 @@ function edd_handle_submit_debug_log() {
 
 		echo wp_strip_all_tags( $_REQUEST['edd-debug-log-contents'] );
 		exit;
-
 	} elseif ( isset( $_REQUEST['edd-clear-debug-log'] ) ) {
 
 		// Clear the debug log.
 		$edd_logs->clear_log_file();
 
-		edd_redirect( edd_get_admin_url( array(
-			'page' => 'edd-tools',
-			'tab'  => 'debug_log'
-		) ) );
+		edd_redirect(
+			edd_get_admin_url(
+				array(
+					'page' => 'edd-tools',
+					'tab'  => 'debug_log',
+				)
+			)
+		);
 	}
 }
 add_action( 'edd_submit_debug_log', 'edd_handle_submit_debug_log' );
@@ -1213,7 +1225,7 @@ function edd_tools_sysinfo_display() {
 					<input type="hidden" name="edd-action" value="download_sysinfo"/>
 					<?php
 					submit_button( __( 'Download System Info File', 'easy-digital-downloads' ), 'primary', 'edd-download-sysinfo', false );
-					submit_button( __( 'Copy to Clipboard',         'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-copy-system-info', false, array( 'onclick' => "this.form['edd-sysinfo'].focus();this.form['edd-sysinfo'].select();document.execCommand('copy');return false;" ) );
+					submit_button( __( 'Copy to Clipboard', 'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-copy-system-info', false, array( 'onclick' => "this.form['edd-sysinfo'].focus();this.form['edd-sysinfo'].select();document.execCommand('copy');return false;" ) );
 					?>
 				</p>
 			</form>
@@ -1321,7 +1333,7 @@ function edd_tools_sysinfo_get() {
 	$return .= 'Remote Post:              ' . $WP_REMOTE_POST . "\n";
 	$return .= 'Table Prefix:             ' . 'Length: ' . strlen( $wpdb->prefix ) . '   Status: ' . ( strlen( $wpdb->prefix ) > 16 ? 'ERROR: Too long' : 'Acceptable' ) . "\n";
 	// Commented out per https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/3475
-	//$return .= 'Admin AJAX:               ' . ( edd_test_ajax_works() ? 'Accessible' : 'Inaccessible' ) . "\n";
+	// $return .= 'Admin AJAX:               ' . ( edd_test_ajax_works() ? 'Accessible' : 'Inaccessible' ) . "\n";
 	$return .= 'WP_DEBUG:                 ' . ( defined( 'WP_DEBUG' ) ? WP_DEBUG ? 'Enabled' : 'Disabled' : 'Not set' ) . "\n";
 	$return .= 'Memory Limit:             ' . WP_MEMORY_LIMIT . "\n";
 	$return .= 'Registered Post Stati:    ' . implode( ', ', get_post_stati() ) . "\n";
@@ -1426,7 +1438,6 @@ function edd_tools_sysinfo_get() {
 
 	$return = apply_filters( 'edd_sysinfo_after_edd_gateways', $return );
 
-
 	// EDD Taxes
 	$return .= "\n" . '-- EDD Tax Configuration' . "\n\n";
 	$return .= 'Taxes:                    ' . ( edd_use_taxes() ? "Enabled\n" : "Disabled\n" );
@@ -1483,7 +1494,7 @@ function edd_tools_sysinfo_get() {
 			continue;
 		}
 
-		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
+		$update  = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
 		$return .= str_pad( $plugin['Name'] . ': ', 26, ' ' ) . $plugin['Version'] . $update . "\n";
 	}
 
@@ -1497,7 +1508,7 @@ function edd_tools_sysinfo_get() {
 			continue;
 		}
 
-		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
+		$update  = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
 		$return .= str_pad( $plugin['Name'] . ': ', 26, ' ' ) . $plugin['Version'] . $update . "\n";
 	}
 
@@ -1517,8 +1528,8 @@ function edd_tools_sysinfo_get() {
 				continue;
 			}
 
-			$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
-			$plugin = get_plugin_data( $plugin_path );
+			$update  = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
+			$plugin  = get_plugin_data( $plugin_path );
 			$return .= str_pad( $plugin['Name'] . ': ', 26, ' ' ) . $plugin['Version'] . $update . "\n";
 		}
 

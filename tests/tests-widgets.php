@@ -21,14 +21,12 @@ class Tests_Widgets extends EDD_UnitTestCase {
 	 * @since 2.4.3
 	 */
 	public function test_register_widget() {
-
 		edd_register_widgets();
 
 		$widgets = array_keys( $GLOBALS['wp_widget_factory']->widgets );
 		$this->assertContains( 'edd_cart_widget', $widgets );
 		$this->assertContains( 'edd_categories_tags_widget', $widgets );
 		$this->assertContains( 'edd_product_details_widget', $widgets );
-
 	}
 
 	/**
@@ -37,14 +35,12 @@ class Tests_Widgets extends EDD_UnitTestCase {
 	 * @since 2.4.3
 	 */
 	public function test_cart_widget() {
-
-		$widgets = $GLOBALS['wp_widget_factory']->widgets;
+		$widgets     = $GLOBALS['wp_widget_factory']->widgets;
 		$cart_widget = $widgets['edd_cart_widget'];
 
 		$this->assertInstanceOf( 'edd_cart_widget', $cart_widget );
 		$this->assertEquals( 'edd_cart_widget', $cart_widget->id_base );
 		$this->assertEquals( 'Downloads Cart', $cart_widget->name );
-
 	}
 
 	/**
@@ -53,27 +49,28 @@ class Tests_Widgets extends EDD_UnitTestCase {
 	 * @since 2.4.3
 	 */
 	public function test_cart_widget_function_bail_checkout() {
-
-		$widgets = $GLOBALS['wp_widget_factory']->widgets;
+		$widgets     = $GLOBALS['wp_widget_factory']->widgets;
 		$cart_widget = $widgets['edd_cart_widget'];
 
 		$this->go_to( get_permalink( edd_get_option( 'purchase_page' ) ) );
 
 		ob_start();
-			$cart_widget->widget( array(
-				'before_title'  => '',
-				'after_title'   => '',
-				'before_widget' => '',
-				'after_widget'  => '',
-			), array(
-				'title'            => 'Cart',
-				'hide_on_checkout' => true,
-				'hide_on_empty'    => false,
-			) );
+			$cart_widget->widget(
+				array(
+					'before_title'  => '',
+					'after_title'   => '',
+					'before_widget' => '',
+					'after_widget'  => '',
+				),
+				array(
+					'title'            => 'Cart',
+					'hide_on_checkout' => true,
+					'hide_on_empty'    => false,
+				)
+			);
 		$output = ob_get_clean();
 
 		$this->assertEmpty( $output );
-
 	}
 
 	/**
@@ -82,53 +79,55 @@ class Tests_Widgets extends EDD_UnitTestCase {
 	 * @since 2.4.3
 	 */
 	public function test_cart_widget_function() {
-
-		$widgets = $GLOBALS['wp_widget_factory']->widgets;
+		$widgets     = $GLOBALS['wp_widget_factory']->widgets;
 		$cart_widget = $widgets['edd_cart_widget'];
 
 		ob_start();
-			$cart_widget->widget( array(
-				'before_title'  => '',
-				'after_title'   => '',
-				'before_widget' => '',
-				'after_widget'  => '',
-			), array(
-				'title'            => 'Cart',
-				'hide_on_checkout' => true,
-				'hide_on_empty'    => false,
-			) );
+			$cart_widget->widget(
+				array(
+					'before_title'  => '',
+					'after_title'   => '',
+					'before_widget' => '',
+					'after_widget'  => '',
+				),
+				array(
+					'title'            => 'Cart',
+					'hide_on_checkout' => true,
+					'hide_on_empty'    => false,
+				)
+			);
 		$output = ob_get_clean();
 
 		$this->assertContains( 'Number of items in cart:', $output );
 		$this->assertContains( '<li class="cart_item empty">', $output );
 		$this->assertContains( '<li class="cart_item edd-cart-meta edd_total"', $output );
 		$this->assertContains( '<li class="cart_item edd_checkout"', $output );
-
 	}
 
 	public function test_cart_widget_function_hide_on_empty() {
-
-		$widgets = $GLOBALS['wp_widget_factory']->widgets;
+		$widgets     = $GLOBALS['wp_widget_factory']->widgets;
 		$cart_widget = $widgets['edd_cart_widget'];
 
 		ob_start();
-			$cart_widget->widget( array(
-				'before_title'  => '',
-				'after_title'   => '',
-				'before_widget' => '',
-				'after_widget'  => '',
-			), array(
-				'title'            => 'Cart',
-				'hide_on_checkout' => true,
-				'hide_on_empty'    => true,
-			) );
+			$cart_widget->widget(
+				array(
+					'before_title'  => '',
+					'after_title'   => '',
+					'before_widget' => '',
+					'after_widget'  => '',
+				),
+				array(
+					'title'            => 'Cart',
+					'hide_on_checkout' => true,
+					'hide_on_empty'    => true,
+				)
+			);
 		$output = ob_get_clean();
 
 		$this->assertContains( 'Number of items in cart:', $output );
 		$this->assertContains( '<li class="cart_item empty">', $output );
 		$this->assertContains( '<li class="cart_item edd-cart-meta edd_total"', $output );
 		$this->assertContains( '<li class="cart_item edd_checkout"', $output );
-
 	}
 
 	/**
@@ -137,16 +136,29 @@ class Tests_Widgets extends EDD_UnitTestCase {
 	 * @since 2.4.3
 	 */
 	public function test_cart_widget_update() {
-
-		$widgets = $GLOBALS['wp_widget_factory']->widgets;
+		$widgets     = $GLOBALS['wp_widget_factory']->widgets;
 		$cart_widget = $widgets['edd_cart_widget'];
 
-		$new_instance = array( 'title' => 'Your Cart', 'hide_on_checkout' => true, 'hide_on_empty' => true );
-		$old_instance = array( 'title' => 'Cart', 'hide_on_checkout' => false, 'hide_on_empty' => false );
+		$new_instance = array(
+			'title'            => 'Your Cart',
+			'hide_on_checkout' => true,
+			'hide_on_empty'    => true,
+		);
+		$old_instance = array(
+			'title'            => 'Cart',
+			'hide_on_checkout' => false,
+			'hide_on_empty'    => false,
+		);
 		$updated      = $cart_widget->update( $new_instance, $old_instance );
 
-		$this->assertEquals( $updated, array( 'title' => 'Your Cart', 'hide_on_checkout' => true, 'hide_on_empty' => true ) );
-
+		$this->assertEquals(
+			$updated,
+			array(
+				'title'            => 'Your Cart',
+				'hide_on_checkout' => true,
+				'hide_on_empty'    => true,
+			)
+		);
 	}
 
 	/**
@@ -155,8 +167,7 @@ class Tests_Widgets extends EDD_UnitTestCase {
 	 * @since 2.4.3
 	 */
 	public function test_cart_widget_form() {
-
-		$widgets = $GLOBALS['wp_widget_factory']->widgets;
+		$widgets     = $GLOBALS['wp_widget_factory']->widgets;
 		$cart_widget = $widgets['edd_cart_widget'];
 
 		ob_start();
@@ -167,7 +178,6 @@ class Tests_Widgets extends EDD_UnitTestCase {
 		$this->assertRegExp( '/<input class="widefat" id="(.*)" name="(.*)" type="text" value="(.*)"\/>/', $output );
 		$this->assertRegExp( '/<input (.*) id="(.*)" name="(.*)" type="checkbox" \/>/', $output );
 		$this->assertRegExp( '/<label for="(.*)">(.*)<\/label>/', $output );
-
 	}
 
 	/** Categories tags widget */
@@ -178,14 +188,12 @@ class Tests_Widgets extends EDD_UnitTestCase {
 	 * @since 2.4.3
 	 */
 	public function test_categories_tags_widget() {
-
-		$widgets = $GLOBALS['wp_widget_factory']->widgets;
+		$widgets           = $GLOBALS['wp_widget_factory']->widgets;
 		$categories_widget = $widgets['edd_categories_tags_widget'];
 
 		$this->assertInstanceOf( 'edd_categories_tags_widget', $categories_widget );
 		$this->assertEquals( 'edd_categories_tags_widget', $categories_widget->id_base );
 		$this->assertEquals( 'Downloads Categories / Tags', $categories_widget->name );
-
 	}
 
 	/**
@@ -194,27 +202,28 @@ class Tests_Widgets extends EDD_UnitTestCase {
 	 * @since 2.4.3
 	 */
 	public function test_categories_tags_widget_function() {
-
-		$widgets = $GLOBALS['wp_widget_factory']->widgets;
+		$widgets           = $GLOBALS['wp_widget_factory']->widgets;
 		$categories_widget = $widgets['edd_categories_tags_widget'];
-		$download = EDD_Helper_Download::create_simple_download();
-		$terms = wp_set_object_terms( $download->ID, array( 'test1', 'test2' ), 'download_category', false );
+		$download          = EDD_Helper_Download::create_simple_download();
+		$terms             = wp_set_object_terms( $download->ID, array( 'test1', 'test2' ), 'download_category', false );
 
 		$this->go_to( $download->ID );
 
-
 		ob_start();
-			$categories_widget->widget( array(
-				'before_title'  => '',
-				'after_title'   => '',
-				'before_widget' => '',
-				'after_widget'  => '',
-			), array(
-				'title'      => 'Cart',
-				'taxonomy'   => 'download_category',
-				'count'      => true,
-				'hide_empty' => true,
-			) );
+			$categories_widget->widget(
+				array(
+					'before_title'  => '',
+					'after_title'   => '',
+					'before_widget' => '',
+					'after_widget'  => '',
+				),
+				array(
+					'title'      => 'Cart',
+					'taxonomy'   => 'download_category',
+					'count'      => true,
+					'hide_empty' => true,
+				)
+			);
 		$output = ob_get_clean();
 
 		$this->assertContains( '<ul class="edd-taxonomy-widget">', $output );
@@ -222,7 +231,6 @@ class Tests_Widgets extends EDD_UnitTestCase {
 		$this->assertContains( '<li class="cat-item cat-item-' . end( $terms ), $output );
 
 		EDD_Helper_Download::delete_download( $download->ID );
-
 	}
 
 	/**
@@ -231,17 +239,33 @@ class Tests_Widgets extends EDD_UnitTestCase {
 	 * @since 2.4.3
 	 */
 	public function test_categories_tags_widget_update() {
-
-		$widgets = $GLOBALS['wp_widget_factory']->widgets;
+		$widgets           = $GLOBALS['wp_widget_factory']->widgets;
 		$categories_widget = $widgets['edd_categories_tags_widget'];
 
 		$updated = $categories_widget->update(
-			array( 'title' => 'Categories', 'taxonomy' => 'download_category', 'count' => true, 'hide_empty' => true ),
-			array( 'title' => 'Tags', 'taxonomy' => 'download_tag', 'count' => true, 'hide_empty' => true )
+			array(
+				'title'      => 'Categories',
+				'taxonomy'   => 'download_category',
+				'count'      => true,
+				'hide_empty' => true,
+			),
+			array(
+				'title'      => 'Tags',
+				'taxonomy'   => 'download_tag',
+				'count'      => true,
+				'hide_empty' => true,
+			)
 		);
 
-		$this->assertEquals( $updated, array( 'title' => 'Categories', 'taxonomy' => 'download_category', 'count' => true, 'hide_empty' => true ) );
-
+		$this->assertEquals(
+			$updated,
+			array(
+				'title'      => 'Categories',
+				'taxonomy'   => 'download_category',
+				'count'      => true,
+				'hide_empty' => true,
+			)
+		);
 	}
 
 	/**
@@ -250,8 +274,7 @@ class Tests_Widgets extends EDD_UnitTestCase {
 	 * @since 2.4.3
 	 */
 	public function test_categories_tags_widget_form() {
-
-		$widgets = $GLOBALS['wp_widget_factory']->widgets;
+		$widgets           = $GLOBALS['wp_widget_factory']->widgets;
 		$categories_widget = $widgets['edd_categories_tags_widget'];
 
 		ob_start();
@@ -265,7 +288,6 @@ class Tests_Widgets extends EDD_UnitTestCase {
 		$this->assertRegExp( '/<option value="download_tag" (.*)>(.*)<\/option>/', $output );
 		$this->assertRegExp( '/<label for="(.*)">Show Count:<\/label>/', $output );
 		$this->assertRegExp( '/<label for="(.*)">Hide Empty Categories:<\/label>/', $output );
-
 	}
 
 	/** Product details widget */
@@ -276,14 +298,12 @@ class Tests_Widgets extends EDD_UnitTestCase {
 	 * @since 2.4.3
 	 */
 	public function test_edd_product_details_widget() {
-
-		$widgets = $GLOBALS['wp_widget_factory']->widgets;
+		$widgets           = $GLOBALS['wp_widget_factory']->widgets;
 		$categories_widget = $widgets['edd_product_details_widget'];
 
 		$this->assertInstanceOf( 'EDD_Product_Details_Widget', $categories_widget );
 		$this->assertEquals( 'edd_product_details', $categories_widget->id_base );
 		$this->assertEquals( 'Download Details', $categories_widget->name );
-
 	}
 
 	/**
@@ -292,13 +312,11 @@ class Tests_Widgets extends EDD_UnitTestCase {
 	 * @since 2.4.3
 	 */
 	public function test_edd_product_details_widget_function_bail_no_download() {
-
 		$this->go_to( '/' );
-		$widgets = $GLOBALS['wp_widget_factory']->widgets;
+		$widgets        = $GLOBALS['wp_widget_factory']->widgets;
 		$details_widget = $widgets['edd_product_details_widget'];
 
 		$this->assertNull( $details_widget->widget( array(), array( 'download_id' => 'current' ) ) );
-
 	}
 
 	/**
@@ -307,32 +325,33 @@ class Tests_Widgets extends EDD_UnitTestCase {
 	 * @since 2.4.3
 	 */
 	public function test_edd_product_details_widget_function_bail_download() {
-
 		$download = EDD_Helper_Download::create_simple_download();
 		$this->go_to( get_permalink( $download->ID ) );
-		$widgets = $GLOBALS['wp_widget_factory']->widgets;
+		$widgets        = $GLOBALS['wp_widget_factory']->widgets;
 		$details_widget = $widgets['edd_product_details_widget'];
 
 		ob_start();
-			$details_widget->widget( array(
-				'before_title'  => '',
-				'after_title'   => '',
-				'before_widget' => '',
-				'after_widget'  => '',
-			), array(
-				'title'           => 'Cart',
-				'download_id'     => 'current',
-				'download_title'  => 'download_category',
-				'purchase_button' => true,
-				'categories'      => true,
-				'tags'            => true,
-			) );
+			$details_widget->widget(
+				array(
+					'before_title'  => '',
+					'after_title'   => '',
+					'before_widget' => '',
+					'after_widget'  => '',
+				),
+				array(
+					'title'           => 'Cart',
+					'download_id'     => 'current',
+					'download_title'  => 'download_category',
+					'purchase_button' => true,
+					'categories'      => true,
+					'tags'            => true,
+				)
+			);
 		$output = ob_get_clean();
 
 		$this->assertNotEmpty( $output );
 
 		EDD_Helper_Download::delete_download( $download->ID );
-
 	}
 
 	/**
@@ -341,28 +360,30 @@ class Tests_Widgets extends EDD_UnitTestCase {
 	 * @since 2.4.3
 	 */
 	public function test_edd_product_details_widget_function() {
-
-		$widgets = $GLOBALS['wp_widget_factory']->widgets;
+		$widgets        = $GLOBALS['wp_widget_factory']->widgets;
 		$details_widget = $widgets['edd_product_details_widget'];
-		$download = EDD_Helper_Download::create_simple_download();
-		$terms = wp_set_object_terms( $download->ID, array( 'test1' ), 'download_category', false );
+		$download       = EDD_Helper_Download::create_simple_download();
+		$terms          = wp_set_object_terms( $download->ID, array( 'test1' ), 'download_category', false );
 
 		$this->go_to( $download->ID );
 
 		ob_start();
-			$details_widget->widget( array(
-				'before_title'  => '',
-				'after_title'   => '',
-				'before_widget' => '',
-				'after_widget'  => '',
-			), array(
-				'title'           => 'Cart',
-				'download_id'     => $download->ID,
-				'download_title'  => 'download_category',
-				'purchase_button' => true,
-				'categories'      => true,
-				'tags'            => true,
-			) );
+			$details_widget->widget(
+				array(
+					'before_title'  => '',
+					'after_title'   => '',
+					'before_widget' => '',
+					'after_widget'  => '',
+				),
+				array(
+					'title'           => 'Cart',
+					'download_id'     => $download->ID,
+					'download_title'  => 'download_category',
+					'purchase_button' => true,
+					'categories'      => true,
+					'tags'            => true,
+				)
+			);
 		$output = ob_get_clean();
 
 		$this->assertContains( '<h3>' . $download->post_title . '</h3>', $output );
@@ -373,7 +394,6 @@ class Tests_Widgets extends EDD_UnitTestCase {
 		$this->assertContains( '<span class="categories">Download Category: ', $output );
 
 		EDD_Helper_Download::delete_download( $download->ID );
-
 	}
 
 	/**
@@ -382,8 +402,7 @@ class Tests_Widgets extends EDD_UnitTestCase {
 	 * @since 2.4.3
 	 */
 	public function test_edd_product_details_widget_form() {
-
-		$widgets = $GLOBALS['wp_widget_factory']->widgets;
+		$widgets           = $GLOBALS['wp_widget_factory']->widgets;
 		$categories_widget = $widgets['edd_product_details_widget'];
 
 		ob_start();
@@ -403,7 +422,6 @@ class Tests_Widgets extends EDD_UnitTestCase {
 		$this->assertRegExp( '/<label for="widget-edd_product_details--categories">Show Download Categories<\/label>/', $output );
 		$this->assertRegExp( '/<input  checked=\'checked\' id="widget-edd_product_details--tags" name="widget-edd_product_details\[\]\[tags\]" type="checkbox" \/>/', $output );
 		$this->assertRegExp( '/<label for="widget-edd_product_details--tags">Show Download Tags<\/label>/', $output );
-
 	}
 
 	/**
@@ -412,17 +430,42 @@ class Tests_Widgets extends EDD_UnitTestCase {
 	 * @since 2.4.3
 	 */
 	public function test_edd_product_details_widget_update() {
-
-		$widgets = $GLOBALS['wp_widget_factory']->widgets;
+		$widgets        = $GLOBALS['wp_widget_factory']->widgets;
 		$details_widget = $widgets['edd_product_details_widget'];
 
 		$updated = $details_widget->update(
-			array( 'title' => 'Details', 'download_id' => 123, 'display_type' => 'specific', 'download_title' => true, 'purchase_button' => true, 'categories' => true, 'tags' => true ),
-			array( 'title' => 'OLD Details', 'display_type' => 'specific', 'download_id' => 123, 'download_title' => false, 'purchase_button' => false, 'categories' => false, 'tags' => false )
+			array(
+				'title'           => 'Details',
+				'download_id'     => 123,
+				'display_type'    => 'specific',
+				'download_title'  => true,
+				'purchase_button' => true,
+				'categories'      => true,
+				'tags'            => true,
+			),
+			array(
+				'title'           => 'OLD Details',
+				'display_type'    => 'specific',
+				'download_id'     => 123,
+				'download_title'  => false,
+				'purchase_button' => false,
+				'categories'      => false,
+				'tags'            => false,
+			)
 		);
 
-		$this->assertEquals( $updated, array( 'title' => 'Details', 'display_type' => 'specific', 'download_id' => 123, 'download_title' => true, 'purchase_button' => true, 'categories' => true, 'tags' => true ) );
-
+		$this->assertEquals(
+			$updated,
+			array(
+				'title'           => 'Details',
+				'display_type'    => 'specific',
+				'download_id'     => 123,
+				'download_title'  => true,
+				'purchase_button' => true,
+				'categories'      => true,
+				'tags'            => true,
+			)
+		);
 	}
 
 }

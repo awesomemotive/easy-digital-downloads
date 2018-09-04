@@ -107,7 +107,6 @@ class EDD_Batch_Taxed_Orders_Export extends EDD_Batch_Export {
 			);
 		}
 
-
 		if ( 'any' === $args['status'] || 'all' === $args['status'] ) {
 			unset( $args['status'] );
 		}
@@ -300,12 +299,12 @@ class EDD_Batch_Taxed_Orders_Export extends EDD_Batch_Export {
 	public function query_clauses( $clauses, $base ) {
 		global $wpdb;
 
-		$clauses['where'] = ! empty( $clauses['where'] )
+		$clauses['where']        = ! empty( $clauses['where'] )
 			? $clauses['where'] .= ' AND edd_o.tax > 0'
 			: 'edd_o.tax > 0';
 
 		if ( ! empty( $this->country ) ) {
-			$clauses['join'] = " INNER JOIN {$wpdb->edd_order_addresses} edd_oa ON edd_o.id = edd_oa.order_id";
+			$clauses['join']   = " INNER JOIN {$wpdb->edd_order_addresses} edd_oa ON edd_o.id = edd_oa.order_id";
 			$clauses['where'] .= $wpdb->prepare( ' AND edd_oa.country = %s', $this->country );
 		}
 

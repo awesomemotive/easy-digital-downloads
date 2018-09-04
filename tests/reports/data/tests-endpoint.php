@@ -2,7 +2,7 @@
 namespace EDD\Reports\Data;
 
 if ( ! class_exists( 'EDD\\Reports\\Init' ) ) {
-	require_once( EDD_PLUGIN_DIR . 'includes/reports/class-init.php' );
+	require_once EDD_PLUGIN_DIR . 'includes/reports/class-init.php';
 }
 
 new \EDD\Reports\Init();
@@ -73,10 +73,12 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_check_view_with_invalid_view_should_flag_WP_Error_including_code_invalid_view() {
 		// Execute the invisible method via the constructor.
-		$endpoint = $this->mock_Endpoint( array(
-			'id'    => 'foo',
-			'label' => 'Foo',
-		) );
+		$endpoint = $this->mock_Endpoint(
+			array(
+				'id'    => 'foo',
+				'label' => 'Foo',
+			)
+		);
 
 		$errors = $endpoint->get_errors();
 
@@ -99,18 +101,20 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	public function test_get_display_args_when_created_with_display_args_should_return_those_args() {
 		$expected = array( 'something', 'goes', 'here' );
 
-		$endpoint = new Tile_Endpoint( array(
-			'id'    => 'foo',
-			'label' => 'Foo',
-			'views' => array(
-				'tile' => array(
-					'display_callback' => function() {
-						echo 'Hello, world!';
-					},
-					'display_args' => $expected
+		$endpoint = new Tile_Endpoint(
+			array(
+				'id'    => 'foo',
+				'label' => 'Foo',
+				'views' => array(
+					'tile' => array(
+						'display_callback' => function() {
+							echo 'Hello, world!';
+						},
+						'display_args'     => $expected,
+					),
 				),
-			),
-		) );
+			)
+		);
 
 		$this->assertEqualSets( $expected, $endpoint->get_display_args() );
 	}
@@ -129,13 +133,15 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 * @covers ::set_display_callback()
 	 */
 	public function test_get_display_callback_when_created_with_display_callback_should_return_that_callback() {
-		$endpoint = new Tile_Endpoint( array(
-			'views' => array(
-				'tile' => array(
-					'display_callback' => '__return_false'
+		$endpoint = new Tile_Endpoint(
+			array(
+				'views' => array(
+					'tile' => array(
+						'display_callback' => '__return_false',
+					),
 				),
-			),
-		) );
+			)
+		);
 
 		$this->assertSame( '__return_false', $endpoint->get_display_callback() );
 	}
@@ -154,13 +160,15 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 * @covers ::set_data_callback()
 	 */
 	public function test_get_data_callback_when_created_with_data_callback_should_return_that_callback() {
-		$endpoint = new Tile_Endpoint( array(
-			'views' => array(
-				'tile' => array(
-					'data_callback' => '__return_false'
+		$endpoint = new Tile_Endpoint(
+			array(
+				'views' => array(
+					'tile' => array(
+						'data_callback' => '__return_false',
+					),
 				),
-			),
-		) );
+			)
+		);
 
 		$this->assertSame( '__return_false', $endpoint->get_data_callback() );
 	}
@@ -171,17 +179,19 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_set_display_args_with_non_array_display_args_should_flag_WP_Error_including_code_invalid_view_arg_type() {
 		// Execute the invisible method via the constructor.
-		$endpoint = new Tile_Endpoint( array(
-			'id'    => 'foo',
-			'label' => 'Foo',
-			'views' => array(
-				'tile' => array(
-					'display_args'     => 'something',
-					'display_callback' => '__return_false',
-					'data_callback'    => '__return_false',
+		$endpoint = new Tile_Endpoint(
+			array(
+				'id'    => 'foo',
+				'label' => 'Foo',
+				'views' => array(
+					'tile' => array(
+						'display_args'     => 'something',
+						'display_callback' => '__return_false',
+						'data_callback'    => '__return_false',
+					),
 				),
-			),
-		) );
+			)
+		);
 
 		$errors = $endpoint->get_errors();
 
@@ -194,16 +204,18 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_set_display_props_with_empty_view_display_callback_should_flag_WP_Error() {
 		// Execute the invisible method via the constructor.
-		$endpoint = new Tile_Endpoint( array(
-			'id'    => 'foo',
-			'label' => 'Foo',
-			'views' => array(
-				'tile' => array(
-					'display_args'  => array( 'something' ),
-					'data_callback' => '__return_false',
+		$endpoint = new Tile_Endpoint(
+			array(
+				'id'    => 'foo',
+				'label' => 'Foo',
+				'views' => array(
+					'tile' => array(
+						'display_args'  => array( 'something' ),
+						'data_callback' => '__return_false',
+					),
 				),
-			),
-		) );
+			)
+		);
 
 		$this->assertTrue( $endpoint->has_errors() );
 	}
@@ -214,16 +226,18 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_set_display_props_with_empty_view_display_callback_should_flag_WP_Error_including_code_missing_display_callback() {
 		// Execute the invisible method via the constructor.
-		$endpoint = new Tile_Endpoint( array(
-			'id'    => 'foo',
-			'label' => 'Foo',
-			'views' => array(
-				'tile' => array(
-					'display_args'  => array( 'something' ),
-					'data_callback' => '__return_false',
+		$endpoint = new Tile_Endpoint(
+			array(
+				'id'    => 'foo',
+				'label' => 'Foo',
+				'views' => array(
+					'tile' => array(
+						'display_args'  => array( 'something' ),
+						'data_callback' => '__return_false',
+					),
 				),
-			),
-		) );
+			)
+		);
 
 		$errors = $endpoint->get_errors();
 
@@ -236,17 +250,19 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_set_display_callback_with_non_callable_display_callback_should_flag_WP_Error_including_code_invalid_view_arg_type() {
 		// Execute the invisible method via the constructor.
-		$endpoint = new Tile_Endpoint( array(
-			'id'    => 'foo',
-			'label' => 'Foo',
-			'views' => array(
-				'tile' => array(
-					'display_args'     => array( 'something' ),
-					'display_callback' => 'something',
-					'data_callback'    => '__return_false',
+		$endpoint = new Tile_Endpoint(
+			array(
+				'id'    => 'foo',
+				'label' => 'Foo',
+				'views' => array(
+					'tile' => array(
+						'display_args'     => array( 'something' ),
+						'display_callback' => 'something',
+						'data_callback'    => '__return_false',
+					),
 				),
-			),
-		) );
+			)
+		);
 
 		$errors = $endpoint->get_errors();
 
@@ -259,16 +275,18 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_set_display_props_with_empty_view_data_callback_should_flag_WP_Error() {
 		// Execute the invisible method via the constructor.
-		$endpoint = new Tile_Endpoint( array(
-			'id'    => 'foo',
-			'label' => 'Foo',
-			'views' => array(
-				'tile' => array(
-					'display_args'     => array( 'something' ),
-					'display_callback' => '__return_false',
+		$endpoint = new Tile_Endpoint(
+			array(
+				'id'    => 'foo',
+				'label' => 'Foo',
+				'views' => array(
+					'tile' => array(
+						'display_args'     => array( 'something' ),
+						'display_callback' => '__return_false',
+					),
 				),
-			),
-		) );
+			)
+		);
 
 		$this->assertTrue( $endpoint->has_errors() );
 	}
@@ -279,16 +297,18 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_set_display_props_with_empty_view_data_callback_should_flag_WP_Error_including_code_missing_data_callback() {
 		// Execute the invisible method via the constructor.
-		$endpoint = new Tile_Endpoint( array(
-			'id'    => 'foo',
-			'label' => 'Foo',
-			'views' => array(
-				'tile' => array(
-					'display_args'     => array( 'something' ),
-					'display_callback' => '__return_false',
+		$endpoint = new Tile_Endpoint(
+			array(
+				'id'    => 'foo',
+				'label' => 'Foo',
+				'views' => array(
+					'tile' => array(
+						'display_args'     => array( 'something' ),
+						'display_callback' => '__return_false',
+					),
 				),
-			),
-		) );
+			)
+		);
 
 		$errors = $endpoint->get_errors();
 
@@ -301,17 +321,19 @@ class Endpoint_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_set_data_callback_with_non_callable_data_callback_should_flag_WP_Error_including_code_invalid_view_arg_type() {
 		// Execute the invisible method via the constructor.
-		$endpoint = new Tile_Endpoint( array(
-			'id'    => 'foo',
-			'label' => 'Foo',
-			'views' => array(
-				'tile' => array(
-					'display_args'     => array( 'something' ),
-					'display_callback' => '__return_false',
-					'data_callback'    => 'something',
+		$endpoint = new Tile_Endpoint(
+			array(
+				'id'    => 'foo',
+				'label' => 'Foo',
+				'views' => array(
+					'tile' => array(
+						'display_args'     => array( 'something' ),
+						'display_callback' => '__return_false',
+						'data_callback'    => 'something',
+					),
 				),
-			),
-		) );
+			)
+		);
 
 		$errors = $endpoint->get_errors();
 

@@ -20,12 +20,15 @@ defined( 'ABSPATH' ) || exit;
  * @return array        The altered list of views
  */
 function edd_register_default_customer_views( $views ) {
-	return array_merge( $views, array(
-		'overview' => 'edd_customers_view',
-		'delete'   => 'edd_customers_delete_view',
-		'notes'    => 'edd_customer_notes_view',
-		'tools'    => 'edd_customer_tools_view'
-	) );
+	return array_merge(
+		$views,
+		array(
+			'overview' => 'edd_customers_view',
+			'delete'   => 'edd_customers_delete_view',
+			'notes'    => 'edd_customer_notes_view',
+			'tools'    => 'edd_customer_tools_view',
+		)
+	);
 }
 add_filter( 'edd_customer_views', 'edd_register_default_customer_views', 1, 1 );
 
@@ -37,11 +40,23 @@ add_filter( 'edd_customer_views', 'edd_register_default_customer_views', 1, 1 );
  * @return array       The altered list of tabs
  */
 function edd_register_default_customer_tabs( $tabs ) {
-	return array_merge( $tabs, array(
-		'overview' => array( 'dashicon' => 'dashicons-admin-users',    'title' => _x( 'Profile', 'Customer Details tab title', 'easy-digital-downloads' ) ),
-		'notes'    => array( 'dashicon' => 'dashicons-admin-comments', 'title' => _x( 'Notes',   'Customer Notes tab title',   'easy-digital-downloads' ) ),
-		'tools'    => array( 'dashicon' => 'dashicons-admin-tools',    'title' => _x( 'Tools',   'Customer Tools tab title',   'easy-digital-downloads' ) )
-	) );
+	return array_merge(
+		$tabs,
+		array(
+			'overview' => array(
+				'dashicon' => 'dashicons-admin-users',
+				'title'    => _x( 'Profile', 'Customer Details tab title', 'easy-digital-downloads' ),
+			),
+			'notes'    => array(
+				'dashicon' => 'dashicons-admin-comments',
+				'title'    => _x( 'Notes', 'Customer Notes tab title', 'easy-digital-downloads' ),
+			),
+			'tools'    => array(
+				'dashicon' => 'dashicons-admin-tools',
+				'title'    => _x( 'Tools', 'Customer Tools tab title', 'easy-digital-downloads' ),
+			),
+		)
+	);
 }
 add_filter( 'edd_customer_tabs', 'edd_register_default_customer_tabs', 1, 1 );
 
@@ -53,10 +68,9 @@ add_filter( 'edd_customer_tabs', 'edd_register_default_customer_tabs', 1, 1 );
  * @return array       The altered list of tabs, with 'delete' at the bottom
  */
 function edd_register_delete_customer_tab( $tabs ) {
-
 	$tabs['delete'] = array(
 		'dashicon' => 'dashicons-trash',
-		'title'    => _x( 'Delete', 'Delete Customer tab title', 'easy-digital-downloads' )
+		'title'    => _x( 'Delete', 'Delete Customer tab title', 'easy-digital-downloads' ),
 	);
 
 	return $tabs;
@@ -70,7 +84,6 @@ add_filter( 'edd_customer_tabs', 'edd_register_delete_customer_tab', PHP_INT_MAX
  * @return void
  */
 function edd_maybe_remove_adminbar_profile_link() {
-
 	if ( current_user_can( 'manage_shop_settings' ) ) {
 		return;
 	}
@@ -89,7 +102,6 @@ add_action( 'wp_before_admin_bar_render', 'edd_maybe_remove_adminbar_profile_lin
  * @return void
  */
 function edd_maybe_remove_menu_profile_links() {
-
 	if ( edd_doing_ajax() ) {
 		return;
 	}
@@ -99,8 +111,7 @@ function edd_maybe_remove_menu_profile_links() {
 	}
 
 	if ( edd_user_pending_verification() ) {
-
-		if( defined( 'IS_PROFILE_PAGE' ) && true === IS_PROFILE_PAGE ) {
+		if ( defined( 'IS_PROFILE_PAGE' ) && true === IS_PROFILE_PAGE ) {
 			$url     = esc_url( edd_get_user_verification_request_url() );
 			$message = sprintf( __( 'Your account is pending verification. Please click the link in your email to activate your account. No email? <a href="%s">Click here</a> to send a new activation code.', 'easy-digital-downloads' ), $url );
 			$title   = __( 'Account Pending Verification', 'easy-digital-downloads' );
@@ -148,7 +159,7 @@ function edd_render_customer_column( $value, $column_name, $user_id ) {
 
 		if ( $customer->id > 0 ) {
 			$name     = '#' . $customer->id . ' ';
-			$name     .= ! empty( $customer->name ) ? $customer->name : '<em>' . __( 'Unnamed Customer', 'easy-digital-downloads' ) . '</em>';
+			$name    .= ! empty( $customer->name ) ? $customer->name : '<em>' . __( 'Unnamed Customer', 'easy-digital-downloads' ) . '</em>';
 			$view_url = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id );
 
 			return '<a href="' . esc_url( $view_url ) . '">' . $name . '</a>';
@@ -157,4 +168,4 @@ function edd_render_customer_column( $value, $column_name, $user_id ) {
 
 	return $value;
 }
-add_action( 'manage_users_custom_column',  'edd_render_customer_column', 10, 3 );
+add_action( 'manage_users_custom_column', 'edd_render_customer_column', 10, 3 );

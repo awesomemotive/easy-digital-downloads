@@ -28,12 +28,13 @@ class Invalid_Parameter extends Exceptions\Invalid_Parameter implements \EDD_Exc
 	 *
 	 * @since 3.0
 	 *
-	 * @param string     $argument_name Argument or parameter resulting in the exception.
-	 * @param string     $method        Function or method name the argument or parameter was passed to.
+	 * @param string $argument_name Argument or parameter resulting in the exception.
+	 * @param string $method        Function or method name the argument or parameter was passed to.
 	 * @return string Informed Invalid_Argument message.
 	 */
 	public static function build_message( $argument_name, $method, $context = null ) {
-		self::$error_message = sprintf( 'The \'%1$s\' %2$s for the \'%3$s\' item is missing or invalid in \'%4$s\'.',
+		self::$error_message = sprintf(
+			'The \'%1$s\' %2$s for the \'%3$s\' item is missing or invalid in \'%4$s\'.',
 			$argument_name,
 			static::$type,
 			$context,

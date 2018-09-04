@@ -98,11 +98,11 @@ class EDD_Sales_Log_Table extends EDD_Base_Log_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'ID'         => __( 'Order Number', 'easy-digital-downloads' ),
-			'customer'   => __( 'Customer', 'easy-digital-downloads' ),
-			'download'   => edd_get_label_singular(),
-			'amount'     => __( 'Item Amount', 'easy-digital-downloads' ),
-			'date'       => __( 'Date', 'easy-digital-downloads' ),
+			'ID'       => __( 'Order Number', 'easy-digital-downloads' ),
+			'customer' => __( 'Customer', 'easy-digital-downloads' ),
+			'download' => edd_get_label_singular(),
+			'amount'   => __( 'Item Amount', 'easy-digital-downloads' ),
+			'date'     => __( 'Date', 'easy-digital-downloads' ),
 		);
 	}
 
@@ -140,12 +140,14 @@ class EDD_Sales_Log_Table extends EDD_Base_Log_List_Table {
 						$search = $user->ID;
 					} else {
 						// No user found so let's do a real search query
-						$users = new WP_User_Query( array(
-							'search'         => $search,
-							'search_columns' => array( 'user_url', 'user_nicename' ),
-							'number'         => 1,
-							'fields'         => 'ids',
-						) );
+						$users = new WP_User_Query(
+							array(
+								'search'         => $search,
+								'search_columns' => array( 'user_url', 'user_nicename' ),
+								'number'         => 1,
+								'fields'         => 'ids',
+							)
+						);
 
 						$found_user = $users->get_results();
 

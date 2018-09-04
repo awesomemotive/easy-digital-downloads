@@ -38,11 +38,13 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		parent::__construct( array(
-			'singular' => __( 'Email',  'easy-digital-downloads' ),
-			'plural'   => __( 'Emails', 'easy-digital-downloads' ),
-			'ajax'     => false
-		) );
+		parent::__construct(
+			array(
+				'singular' => __( 'Email', 'easy-digital-downloads' ),
+				'plural'   => __( 'Emails', 'easy-digital-downloads' ),
+				'ajax'     => false,
+			)
+		);
 
 		$this->process_bulk_action();
 		$this->get_counts();
@@ -65,29 +67,28 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 	 *
 	 * @since 3.0
 	 *
-	 * @param array $item Contains all the data of the customers
+	 * @param array  $item Contains all the data of the customers
 	 * @param string $column_name The name of the column
 	 *
 	 * @return string Column Name
 	 */
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
-
-			case 'id' :
+			case 'id':
 				$value = $item['id'];
 				break;
 
-			case 'email' :
+			case 'email':
 				$value = '<a href="mailto:' . esc_attr( $item['email'] ) . '">' . esc_html( $item['email'] ) . '</a>';
 				break;
 
-			case 'type' :
+			case 'type':
 				$value = ( 'primary' === $item['type'] )
-					? esc_html_e( 'Primary',   'easy-digital-downloads' )
+					? esc_html_e( 'Primary', 'easy-digital-downloads' )
 					: esc_html_e( 'Secondary', 'easy-digital-downloads' );
 				break;
 
-			case 'date_created' :
+			case 'date_created':
 				$value = '<time datetime="' . esc_attr( $item['date_created'] ) . '">' . edd_date_i18n( $item['date_created'], 'M. d, Y' ) . '<br>' . edd_date_i18n( $item['date_created'], 'H:i' ) . '</time>';
 				break;
 
@@ -111,9 +112,9 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 	 * @return string
 	 */
 	public function column_email( $item ) {
-		$state    = '';
-		$status   = $this->get_status();
-		$email    = ! empty( $item['email']  ) ? $item['email'] : '&mdash;';
+		$state  = '';
+		$status = $this->get_status();
+		$email  = ! empty( $item['email'] ) ? $item['email'] : '&mdash;';
 
 		// Get the item status
 		$item_status = ! empty( $item['status'] )
@@ -126,15 +127,17 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 			: 0;
 
 		// Link to customer
-		$customer_url = edd_get_admin_url( array(
-			'page' => 'edd-customers',
-			'view' => 'overview',
-			'id'   => $customer_id
-		) );
+		$customer_url = edd_get_admin_url(
+			array(
+				'page' => 'edd-customers',
+				'view' => 'overview',
+				'id'   => $customer_id,
+			)
+		);
 
 		// Actions
-		$actions  = array(
-			'view' => '<a href="' . esc_url( $customer_url ) . '">' . __( 'View', 'easy-digital-downloads' ) . '</a>'
+		$actions = array(
+			'view' => '<a href="' . esc_url( $customer_url ) . '">' . __( 'View', 'easy-digital-downloads' ) . '</a>',
 		);
 
 		// Non-primary email actions
@@ -145,12 +148,12 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 		// State
 		if ( ( ! empty( $status ) && ( $status !== $item_status ) ) || ( $item_status !== 'active' ) ) {
 			switch ( $status ) {
-				case 'pending' :
+				case 'pending':
 					$value = __( 'Pending', 'easy-digital-downloads' );
 					break;
-				case 'verified' :
-				case '' :
-				default :
+				case 'verified':
+				case '':
+				default:
 					$value = __( 'Active', 'easy-digital-downloads' );
 					break;
 			}
@@ -191,11 +194,13 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 		}
 
 		// Link to customer
-		$customer_url = edd_get_admin_url( array(
-			'page'      => 'edd-customers',
-			'page_type' => 'emails',
-			's'         => 'c:' . absint( $customer_id )
-		) );
+		$customer_url = edd_get_admin_url(
+			array(
+				'page'      => 'edd-customers',
+				'page_type' => 'emails',
+				's'         => 'c:' . absint( $customer_id ),
+			)
+		);
 
 		// Concatenate and return
 		return '<a href="' . esc_url( $customer_url ) . '">' . esc_html( $customer->name ) . '</a>';
@@ -237,13 +242,16 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 	 * @return array $columns Array of all the list table columns
 	 */
 	public function get_columns() {
-		return apply_filters( 'edd_report_customer_columns', array(
-			'cb'            => '<input type="checkbox" />',
-			'email'         => __( 'Email',    'easy-digital-downloads' ),
-			'customer'      => __( 'Customer', 'easy-digital-downloads' ),
-			'type'          => __( 'Type',     'easy-digital-downloads' ),
-			'date_created'  => __( 'Date',     'easy-digital-downloads' )
-		) );
+		return apply_filters(
+			'edd_report_customer_columns',
+			array(
+				'cb'           => '<input type="checkbox" />',
+				'email'        => __( 'Email', 'easy-digital-downloads' ),
+				'customer'     => __( 'Customer', 'easy-digital-downloads' ),
+				'type'         => __( 'Type', 'easy-digital-downloads' ),
+				'date_created' => __( 'Date', 'easy-digital-downloads' ),
+			)
+		);
 	}
 
 	/**
@@ -254,10 +262,10 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 	 */
 	public function get_sortable_columns() {
 		return array(
-			'date_created'  => array( 'date_created',   true  ),
-			'email'         => array( 'email',          true  ),
-			'customer'      => array( 'customer_id',    false ),
-			'type'          => array( 'type',           false )
+			'date_created' => array( 'date_created', true ),
+			'email'        => array( 'email', true ),
+			'customer'     => array( 'customer_id', false ),
+			'type'         => array( 'type', false ),
 		);
 	}
 
@@ -270,7 +278,7 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 	 */
 	public function get_bulk_actions() {
 		return array(
-			'delete' => __( 'Delete', 'easy-digital-downloads' )
+			'delete' => __( 'Delete', 'easy-digital-downloads' ),
 		);
 	}
 
@@ -299,7 +307,7 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 
 		foreach ( $ids as $id ) {
 			switch ( $this->current_action() ) {
-				case 'delete' :
+				case 'delete':
 					edd_delete_customer_email_address( $id );
 					break;
 			}
@@ -319,7 +327,7 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 		$offset  = $this->per_page * ( $paged - 1 );
 		$search  = $this->get_search();
 		$status  = $this->get_status();
-		$order   = isset( $_GET['order']   ) ? sanitize_text_field( $_GET['order']   ) : 'DESC'; // WPCS: CSRF ok.
+		$order   = isset( $_GET['order'] ) ? sanitize_text_field( $_GET['order'] ) : 'DESC'; // WPCS: CSRF ok.
 		$orderby = isset( $_GET['orderby'] ) ? sanitize_text_field( $_GET['orderby'] ) : 'id'; // WPCS: CSRF ok.
 
 		$args = array(
@@ -334,22 +342,22 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 		if ( is_email( $search ) ) {
 			$args['email'] = $search;
 
-		// Address ID
+			// Address ID
 		} elseif ( is_numeric( $search ) ) {
 			$args['id'] = $search;
 
-		// Customer ID
+			// Customer ID
 		} elseif ( strpos( $search, 'c:' ) !== false ) {
 			$args['customer_id'] = trim( str_replace( 'c:', '', $search ) );
 
-		// Any...
+			// Any...
 		} else {
 			$args['search']         = $search;
 			$args['search_columns'] = array( 'email' );
 		}
 
 		$this->args = $args;
-		$emails  = edd_get_customer_email_addresses( $args );
+		$emails     = edd_get_customer_email_addresses( $args );
 
 		if ( $emails ) {
 			foreach ( $emails as $customer ) {
@@ -377,7 +385,7 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 		$this->_column_headers = array(
 			$this->get_columns(),
 			array(),
-			$this->get_sortable_columns()
+			$this->get_sortable_columns(),
 		);
 
 		$this->items = $this->get_items();
@@ -385,10 +393,12 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 		$status = $this->get_status( 'total' );
 
 		// Setup pagination
-		$this->set_pagination_args( array(
-			'total_pages' => ceil( $this->counts[ $status ] / $this->per_page ),
-			'total_items' => $this->counts[ $status ],
-			'per_page'    => $this->per_page
-		) );
+		$this->set_pagination_args(
+			array(
+				'total_pages' => ceil( $this->counts[ $status ] / $this->per_page ),
+				'total_items' => $this->counts[ $status ],
+				'per_page'    => $this->per_page,
+			)
+		);
 	}
 }

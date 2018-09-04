@@ -27,9 +27,9 @@ add_action( 'edd_manual_cc_form', '__return_false' );
  * @since 1.0
  * @param array $purchase_data Purchase Data
  * @return void
-*/
+ */
 function edd_manual_payment( $purchase_data ) {
-	if( ! wp_verify_nonce( $purchase_data['gateway_nonce'], 'edd-gateway' ) ) {
+	if ( ! wp_verify_nonce( $purchase_data['gateway_nonce'], 'edd-gateway' ) ) {
 		wp_die( __( 'Nonce verification has failed', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
@@ -50,15 +50,15 @@ function edd_manual_payment( $purchase_data ) {
 	*/
 
 	$payment_data = array(
-		'price' 		=> $purchase_data['price'],
-		'date' 			=> $purchase_data['date'],
-		'user_email' 	=> $purchase_data['user_email'],
-		'purchase_key' 	=> $purchase_data['purchase_key'],
-		'currency' 		=> edd_get_currency(),
-		'downloads' 	=> $purchase_data['downloads'],
-		'user_info' 	=> $purchase_data['user_info'],
-		'cart_details' 	=> $purchase_data['cart_details'],
-		'status' 		=> 'pending'
+		'price'        => $purchase_data['price'],
+		'date'         => $purchase_data['date'],
+		'user_email'   => $purchase_data['user_email'],
+		'purchase_key' => $purchase_data['purchase_key'],
+		'currency'     => edd_get_currency(),
+		'downloads'    => $purchase_data['downloads'],
+		'user_info'    => $purchase_data['user_info'],
+		'cart_details' => $purchase_data['cart_details'],
+		'status'       => 'pending',
 	);
 
 	// Record the pending payment

@@ -31,11 +31,13 @@ class EDD_Discount_Codes_Table extends List_Table {
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		parent::__construct( array(
-			'singular' => 'discount',
-			'plural'   => 'discounts',
-			'ajax'     => false,
-		) );
+		parent::__construct(
+			array(
+				'singular' => 'discount',
+				'plural'   => 'discounts',
+				'ajax'     => false,
+			)
+		);
 
 		$this->process_bulk_action();
 		$this->get_counts();
@@ -54,9 +56,12 @@ class EDD_Discount_Codes_Table extends List_Table {
 		$base = remove_query_arg( edd_admin_removable_query_args(), edd_get_admin_base_url() );
 
 		// Add base query args
-		return edd_get_admin_url( array(
-			'page' => 'edd-discounts'
-		), $base );
+		return edd_get_admin_url(
+			array(
+				'page' => 'edd-discounts',
+			),
+			$base
+		);
 	}
 
 	/**
@@ -69,12 +74,12 @@ class EDD_Discount_Codes_Table extends List_Table {
 	public function get_columns() {
 		return array(
 			'cb'         => '<input type="checkbox" />',
-			'name'       => __( 'Name',       'easy-digital-downloads' ),
-			'code'       => __( 'Code',       'easy-digital-downloads' ),
-			'amount'     => __( 'Amount',     'easy-digital-downloads' ),
-			'use_count'  => __( 'Uses',       'easy-digital-downloads' ),
+			'name'       => __( 'Name', 'easy-digital-downloads' ),
+			'code'       => __( 'Code', 'easy-digital-downloads' ),
+			'amount'     => __( 'Amount', 'easy-digital-downloads' ),
+			'use_count'  => __( 'Uses', 'easy-digital-downloads' ),
 			'start_date' => __( 'Start Date', 'easy-digital-downloads' ),
-			'end_date'   => __( 'End Date',   'easy-digital-downloads' )
+			'end_date'   => __( 'End Date', 'easy-digital-downloads' ),
 		);
 	}
 
@@ -87,11 +92,11 @@ class EDD_Discount_Codes_Table extends List_Table {
 	 */
 	public function get_sortable_columns() {
 		return array(
-			'name'       => array( 'name',       false ),
-			'code'       => array( 'code',       false ),
-			'use_count'  => array( 'use_count',  false ),
+			'name'       => array( 'name', false ),
+			'code'       => array( 'code', false ),
+			'use_count'  => array( 'use_count', false ),
 			'start_date' => array( 'start_date', false ),
-			'end_date'   => array( 'end_date',   false )
+			'end_date'   => array( 'end_date', false ),
 		);
 	}
 
@@ -113,7 +118,7 @@ class EDD_Discount_Codes_Table extends List_Table {
 	 * @since 1.4
 	 *
 	 * @param EDD_Discount $discount Discount object.
-	 * @param string $column_name The name of the column
+	 * @param string       $column_name The name of the column
 	 *
 	 * @return string Column Name
 	 */
@@ -198,42 +203,72 @@ class EDD_Discount_Codes_Table extends List_Table {
 		}
 
 		// Edit
-		$row_actions['edit'] = '<a href="' . add_query_arg( array(
-			'edd-action' => 'edit_discount',
-			'discount'   => $discount->id,
-		), $base ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
+		$row_actions['edit'] = '<a href="' . add_query_arg(
+			array(
+				'edd-action' => 'edit_discount',
+				'discount'   => $discount->id,
+			),
+			$base
+		) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
 
 		// Active, so add "deactivate" action
 		if ( 'active' === strtolower( $discount->status ) ) {
-			$row_actions['cancel'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-				'edd-action' => 'deactivate_discount',
-				'discount'   => $discount->id,
-			), $base ), 'edd_discount_nonce' ) ) . '">' . __( 'Cancel', 'easy-digital-downloads' ) . '</a>';
+			$row_actions['cancel'] = '<a href="' . esc_url(
+				wp_nonce_url(
+					add_query_arg(
+						array(
+							'edd-action' => 'deactivate_discount',
+							'discount'   => $discount->id,
+						),
+						$base
+					),
+					'edd_discount_nonce'
+				)
+			) . '">' . __( 'Cancel', 'easy-digital-downloads' ) . '</a>';
 
-		// Inactive, so add "activate" action
+			// Inactive, so add "activate" action
 		} elseif ( 'inactive' === strtolower( $discount->status ) ) {
-			$row_actions['activate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-				'edd-action' => 'activate_discount',
-				'discount'   => $discount->id,
-			), $base ), 'edd_discount_nonce' ) ) . '">' . __( 'Activate', 'easy-digital-downloads' ) . '</a>';
+			$row_actions['activate'] = '<a href="' . esc_url(
+				wp_nonce_url(
+					add_query_arg(
+						array(
+							'edd-action' => 'activate_discount',
+							'discount'   => $discount->id,
+						),
+						$base
+					),
+					'edd_discount_nonce'
+				)
+			) . '">' . __( 'Activate', 'easy-digital-downloads' ) . '</a>';
 		}
 
 		// Delete
 		if ( 0 === (int) $discount->use_count ) {
-			$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-				'edd-action' => 'delete_discount',
-				'discount'   => $discount->id,
-			), $base ), 'edd_discount_nonce' ) ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
+			$row_actions['delete'] = '<a href="' . esc_url(
+				wp_nonce_url(
+					add_query_arg(
+						array(
+							'edd-action' => 'delete_discount',
+							'discount'   => $discount->id,
+						),
+						$base
+					),
+					'edd_discount_nonce'
+				)
+			) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 		}
 
 		// Filter all discount row actions
 		$row_actions = apply_filters( 'edd_discount_row_actions', $row_actions, $discount );
 
 		// Wrap discount title in strong anchor
-		$discount_title = '<strong><a class="row-title" href="' . add_query_arg( array(
-			'edd-action' => 'edit_discount',
-			'discount'   => $discount->id,
-		), $base ) . '">' . stripslashes( $discount->name ) . '</a>' . esc_html( $state ) . '</strong>';
+		$discount_title = '<strong><a class="row-title" href="' . add_query_arg(
+			array(
+				'edd-action' => 'edit_discount',
+				'discount'   => $discount->id,
+			),
+			$base
+		) . '">' . stripslashes( $discount->name ) . '</a>' . esc_html( $state ) . '</strong>';
 
 		// Return discount title & row actions
 		return $discount_title . $this->row_actions( $row_actions );
@@ -287,8 +322,8 @@ class EDD_Discount_Codes_Table extends List_Table {
 	public function get_bulk_actions() {
 		return array(
 			'activate'   => __( 'Activate', 'easy-digital-downloads' ),
-			'deactivate' => __( 'Cancel',   'easy-digital-downloads' ),
-			'delete'     => __( 'Delete',   'easy-digital-downloads' )
+			'deactivate' => __( 'Cancel', 'easy-digital-downloads' ),
+			'delete'     => __( 'Delete', 'easy-digital-downloads' ),
 		);
 	}
 
@@ -353,14 +388,16 @@ class EDD_Discount_Codes_Table extends List_Table {
 	 * @return array Discount codes.
 	 */
 	public function discount_codes_data() {
-		return edd_get_discounts( array(
-			'number'  => $this->per_page,
-			'paged'   => $this->get_paged(),
-			'orderby' => sanitize_text_field( $this->get_request_var( 'orderby', 'id'   ) ),
-			'order'   => sanitize_text_field( $this->get_request_var( 'order',   'DESC' ) ),
-			'status'  => $this->get_status(),
-			'search'  => $this->get_search()
-		) );
+		return edd_get_discounts(
+			array(
+				'number'  => $this->per_page,
+				'paged'   => $this->get_paged(),
+				'orderby' => sanitize_text_field( $this->get_request_var( 'orderby', 'id' ) ),
+				'order'   => sanitize_text_field( $this->get_request_var( 'order', 'DESC' ) ),
+				'status'  => $this->get_status(),
+				'search'  => $this->get_search(),
+			)
+		);
 	}
 
 	/**
@@ -379,10 +416,12 @@ class EDD_Discount_Codes_Table extends List_Table {
 		$status = $this->get_status( 'total' );
 
 		// Setup pagination
-		$this->set_pagination_args( array(
-			'total_items' => $this->counts[ $status ],
-			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $this->counts[ $status ] / $this->per_page )
-		) );
+		$this->set_pagination_args(
+			array(
+				'total_items' => $this->counts[ $status ],
+				'per_page'    => $this->per_page,
+				'total_pages' => ceil( $this->counts[ $status ] / $this->per_page ),
+			)
+		);
 	}
 }

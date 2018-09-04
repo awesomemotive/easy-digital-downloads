@@ -31,51 +31,59 @@ function edd_adjustments_page() {
 		: 'discount';
 
 	// Add new URL
-	$add_new_url = edd_get_admin_url( array(
-		'page'       => 'edd-discounts',
-		'edd-action' => 'add_' . $active_tab
-	) );
+	$add_new_url = edd_get_admin_url(
+		array(
+			'page'       => 'edd-discounts',
+			'edd-action' => 'add_' . $active_tab,
+		)
+	);
 
 	// Start the output buffer
 	ob_start(); ?>
 
-    <div class="wrap">
-        <h1 class="wp-heading-inline"><?php _e( 'Adjustments', 'easy-digital-downloads' ); ?></h1>
+	<div class="wrap">
+		<h1 class="wp-heading-inline"><?php _e( 'Adjustments', 'easy-digital-downloads' ); ?></h1>
 
 		<hr class="wp-header-end">
 
-        <h2 class="nav-tab-wrapper edd-nav-tab-wrapper">
+		<h2 class="nav-tab-wrapper edd-nav-tab-wrapper">
 			<?php
 
 			// Loop through all tabs
 			foreach ( $all_tabs as $tab_id => $tab_name ) :
 
 				// Add the tab ID
-				$tab_url = edd_get_admin_url( array(
-					'page' => 'edd-discounts',
-					'tab'  => $tab_id
-				) );
+				$tab_url = edd_get_admin_url(
+					array(
+						'page' => 'edd-discounts',
+						'tab'  => $tab_id,
+					)
+				);
 
 				// Remove messages
-				$tab_url = remove_query_arg( array(
-					'edd-message',
-				), $tab_url );
+				$tab_url = remove_query_arg(
+					array(
+						'edd-message',
+					),
+					$tab_url
+				);
 
 				// Setup the selected class
 				$active = ( $active_tab === $tab_id )
 					? ' nav-tab-active'
-					: ''; ?>
+					: '';
+				?>
 
 				<a href="<?php echo esc_url( $tab_url ); ?>" class="nav-tab<?php echo $active; ?>"><?php echo esc_html( $tab_name ); ?></a>
 
 			<?php endforeach; ?>
 
 			<a href="<?php echo esc_url( $add_new_url ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'easy-digital-downloads' ); ?></a>
-        </h2>
+		</h2>
 		<br>
 
 		<?php do_action( 'edd_adjustments_page_' . $active_tab ); ?>
-    </div><!-- .wrap -->
+	</div><!-- .wrap -->
 
 	<?php
 
@@ -95,8 +103,8 @@ function edd_get_adjustments_tabs() {
 	// Tabs
 	$tabs = array(
 		'discount' => __( 'Discounts', 'easy-digital-downloads' ),
-		'credit'   => __( 'Credits',   'easy-digital-downloads' ),
-		'fee'      => __( 'Fees',      'easy-digital-downloads' )
+		'credit'   => __( 'Credits', 'easy-digital-downloads' ),
+		'fee'      => __( 'Fees', 'easy-digital-downloads' ),
 	);
 
 	// Filter & return

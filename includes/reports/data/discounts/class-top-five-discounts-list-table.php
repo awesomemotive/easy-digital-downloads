@@ -36,10 +36,12 @@ class Top_Five_Discounts_List_Table extends List_Table {
 
 		$stats = new Stats();
 
-		$d = $stats->get_most_popular_discounts( array(
-			'number' => 5,
-			'range'  => $filter['range'],
-		) );
+		$d = $stats->get_most_popular_discounts(
+			array(
+				'number' => 5,
+				'range'  => $filter['range'],
+			)
+		);
 
 		$data = array();
 
@@ -72,10 +74,10 @@ class Top_Five_Discounts_List_Table extends List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'name'      => __( 'Name',   'easy-digital-downloads' ),
-			'code'      => __( 'Code',   'easy-digital-downloads' ),
-			'use_count' => __( 'Uses',   'easy-digital-downloads' ),
-			'amount'    => __( 'Amount', 'easy-digital-downloads' )
+			'name'      => __( 'Name', 'easy-digital-downloads' ),
+			'code'      => __( 'Code', 'easy-digital-downloads' ),
+			'use_count' => __( 'Uses', 'easy-digital-downloads' ),
+			'amount'    => __( 'Amount', 'easy-digital-downloads' ),
 		);
 	}
 
@@ -85,7 +87,7 @@ class Top_Five_Discounts_List_Table extends List_Table {
 	 * @since 3.0
 	 *
 	 * @param \stdClass $discount Discount object.
-	 * @param string $column_name The name of the column
+	 * @param string    $column_name The name of the column
 	 *
 	 * @return string Column Name
 	 */
@@ -129,10 +131,13 @@ class Top_Five_Discounts_List_Table extends List_Table {
 		}
 
 		// Wrap discount title in strong anchor
-		$discount_title = '<strong><a class="row-title" href="' . add_query_arg( array(
+		$discount_title = '<strong><a class="row-title" href="' . add_query_arg(
+			array(
 				'edd-action' => 'edit_discount',
 				'discount'   => $discount->id,
-			), $base ) . '">' . stripslashes( $discount->name ) . '</a>' . esc_html( $state ) . '</strong>';
+			),
+			$base
+		) . '">' . stripslashes( $discount->name ) . '</a>' . esc_html( $state ) . '</strong>';
 
 		// Return discount title & row actions
 		return $discount_title;
@@ -165,9 +170,12 @@ class Top_Five_Discounts_List_Table extends List_Table {
 		$base = remove_query_arg( edd_admin_removable_query_args(), edd_get_admin_base_url() );
 
 		// Add base query args
-		return add_query_arg( array(
-			'page' => 'edd-discounts',
-		), $base );
+		return add_query_arg(
+			array(
+				'page' => 'edd-discounts',
+			),
+			$base
+		);
 	}
 
 	/**
@@ -221,7 +229,6 @@ class Top_Five_Discounts_List_Table extends List_Table {
 	 * @param string $which
 	 */
 	protected function pagination( $which ) {
-
 	}
 
 	/**
@@ -232,6 +239,5 @@ class Top_Five_Discounts_List_Table extends List_Table {
 	 * @param string $which
 	 */
 	protected function display_tablenav( $which ) {
-
 	}
 }

@@ -19,10 +19,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  *
- * @param int     $order_id   Order ID.
- * @param string  $meta_key   Meta data name.
- * @param mixed   $meta_value Meta data value. Must be serializable if non-scalar.
- * @param bool    $unique     Optional. Whether the same key should not be added. Default false.
+ * @param int    $order_id   Order ID.
+ * @param string $meta_key   Meta data name.
+ * @param mixed  $meta_value Meta data value. Must be serializable if non-scalar.
+ * @param bool   $unique     Optional. Whether the same key should not be added. Default false.
  *
  * @return int|false Meta ID on success, false on failure.
  */
@@ -38,9 +38,9 @@ function edd_add_order_meta( $order_id, $meta_key, $meta_value, $unique = false 
  *
  * @since 3.0
  *
- * @param int     $order_id   Order ID.
- * @param string  $meta_key   Meta data name.
- * @param mixed   $meta_value Optional. Meta data value. Must be serializable if non-scalar. Default empty.
+ * @param int    $order_id   Order ID.
+ * @param string $meta_key   Meta data name.
+ * @param mixed  $meta_value Optional. Meta data value. Must be serializable if non-scalar. Default empty.
  *
  * @return bool True on success, false on failure.
  */
@@ -53,10 +53,10 @@ function edd_delete_order_meta( $order_id, $meta_key, $meta_value = '' ) {
  *
  * @since 3.0
  *
- * @param int     $order_id  Order ID.
- * @param string  $key       Optional. The meta key to retrieve. By default, returns data for all keys. Default empty.
- * @param bool    $single    Optional, default is false. If true, return only the first value of the specified meta_key.
- *                           This parameter has no effect if meta_key is not specified.
+ * @param int    $order_id  Order ID.
+ * @param string $key       Optional. The meta key to retrieve. By default, returns data for all keys. Default empty.
+ * @param bool   $single    Optional, default is false. If true, return only the first value of the specified meta_key.
+ *                          This parameter has no effect if meta_key is not specified.
  *
  * @return mixed Will be an array if $single is false. Will be value of meta data field if $single is true.
  */
@@ -74,10 +74,10 @@ function edd_get_order_meta( $order_id, $key = '', $single = false ) {
  *
  * @since 3.0
  *
- * @param int     $order_id   Order ID.
- * @param string  $meta_key   Meta data key.
- * @param mixed   $meta_value Meta data value. Must be serializable if non-scalar.
- * @param mixed   $prev_value Optional. Previous value to check before removing. Default empty.
+ * @param int    $order_id   Order ID.
+ * @param string $meta_key   Meta data key.
+ * @param mixed  $meta_value Meta data value. Must be serializable if non-scalar.
+ * @param mixed  $prev_value Optional. Previous value to check before removing. Default empty.
  *
  * @return int|bool Meta ID if the key didn't exist, true on successful update, false on failure.
  */
@@ -105,10 +105,10 @@ function edd_delete_order_meta_by_key( $meta_key ) {
  *
  * @since 3.0
  *
- * @param int     $order_item_id  Order ID.
- * @param string  $meta_key       Meta data name.
- * @param mixed   $meta_value     Meta data value. Must be serializable if non-scalar.
- * @param bool    $unique         Optional. Whether the same key should not be added. Default false.
+ * @param int    $order_item_id  Order ID.
+ * @param string $meta_key       Meta data name.
+ * @param mixed  $meta_value     Meta data value. Must be serializable if non-scalar.
+ * @param bool   $unique         Optional. Whether the same key should not be added. Default false.
  *
  * @return int|false Meta ID on success, false on failure.
  */
@@ -124,9 +124,9 @@ function edd_add_order_item_meta( $order_item_id, $meta_key, $meta_value, $uniqu
  *
  * @since 3.0
  *
- * @param int     $order_item_id  Order ID.
- * @param string  $meta_key       Meta data name.
- * @param mixed   $meta_value     Optional. Meta data value. Must be serializable if non-scalar. Default empty.
+ * @param int    $order_item_id  Order ID.
+ * @param string $meta_key       Meta data name.
+ * @param mixed  $meta_value     Optional. Meta data value. Must be serializable if non-scalar. Default empty.
  *
  * @return bool True on success, false on failure.
  */
@@ -139,10 +139,10 @@ function edd_delete_order_item_meta( $order_item_id, $meta_key, $meta_value = ''
  *
  * @since 3.0
  *
- * @param int     $order_item_id  Order ID.
- * @param string  $key            Optional. The meta key to retrieve. By default, returns data for all keys. Default empty.
- * @param bool    $single         Optional, default is false. If true, return only the first value of the specified meta_key.
- *                                This parameter has no effect if meta_key is not specified.
+ * @param int    $order_item_id  Order ID.
+ * @param string $key            Optional. The meta key to retrieve. By default, returns data for all keys. Default empty.
+ * @param bool   $single         Optional, default is false. If true, return only the first value of the specified meta_key.
+ *                               This parameter has no effect if meta_key is not specified.
  *
  * @return mixed Will be an array if $single is false. Will be value of meta data field if $single is true.
  */
@@ -160,10 +160,10 @@ function edd_get_order_item_meta( $order_item_id, $key = '', $single = false ) {
  *
  * @since 3.0
  *
- * @param int     $order_item_id  Order Item ID.
- * @param string  $meta_key       Meta data key.
- * @param mixed   $meta_value     Meta data value. Must be serializable if non-scalar.
- * @param mixed   $prev_value     Optional. Previous value to check before removing. Default empty.
+ * @param int    $order_item_id  Order Item ID.
+ * @param string $meta_key       Meta data key.
+ * @param mixed  $meta_value     Meta data value. Must be serializable if non-scalar.
+ * @param mixed  $prev_value     Optional. Previous value to check before removing. Default empty.
  *
  * @return int|bool Meta ID if the key didn't exist, true on successful update, false on failure.
  */
@@ -191,10 +191,10 @@ function edd_delete_order_item_meta_by_key( $meta_key ) {
  *
  * @since 3.0
  *
- * @param int     $adjustment_id  Order ID.
- * @param string  $meta_key       Meta data name.
- * @param mixed   $meta_value     Meta data value. Must be serializable if non-scalar.
- * @param bool    $unique         Optional. Whether the same key should not be added. Default false.
+ * @param int    $adjustment_id  Order ID.
+ * @param string $meta_key       Meta data name.
+ * @param mixed  $meta_value     Meta data value. Must be serializable if non-scalar.
+ * @param bool   $unique         Optional. Whether the same key should not be added. Default false.
  *
  * @return int|false Meta ID on success, false on failure.
  */
@@ -210,9 +210,9 @@ function edd_add_order_adjustment_meta( $adjustment_id, $meta_key, $meta_value, 
  *
  * @since 3.0
  *
- * @param int     $adjustment_id  Order ID.
- * @param string  $meta_key       Meta data name.
- * @param mixed   $meta_value     Optional. Meta data value. Must be serializable if non-scalar. Default empty.
+ * @param int    $adjustment_id  Order ID.
+ * @param string $meta_key       Meta data name.
+ * @param mixed  $meta_value     Optional. Meta data value. Must be serializable if non-scalar. Default empty.
  *
  * @return bool True on success, false on failure.
  */
@@ -225,10 +225,10 @@ function edd_delete_order_adjustment_meta( $adjustment_id, $meta_key, $meta_valu
  *
  * @since 3.0
  *
- * @param int     $adjustment_id  Order ID.
- * @param string  $key            Optional. The meta key to retrieve. By default, returns data for all keys. Default empty.
- * @param bool    $single         Optional, default is false. If true, return only the first value of the specified meta_key.
- *                                This parameter has no effect if meta_key is not specified.
+ * @param int    $adjustment_id  Order ID.
+ * @param string $key            Optional. The meta key to retrieve. By default, returns data for all keys. Default empty.
+ * @param bool   $single         Optional, default is false. If true, return only the first value of the specified meta_key.
+ *                               This parameter has no effect if meta_key is not specified.
  *
  * @return mixed Will be an array if $single is false. Will be value of meta data field if $single is true.
  */
@@ -246,10 +246,10 @@ function edd_get_order_adjustment_meta( $adjustment_id, $key = '', $single = fal
  *
  * @since 3.0
  *
- * @param int     $adjustment_id  Order Item ID.
- * @param string  $meta_key       Meta data key.
- * @param mixed   $meta_value     Meta data value. Must be serializable if non-scalar.
- * @param mixed   $prev_value     Optional. Previous value to check before removing. Default empty.
+ * @param int    $adjustment_id  Order Item ID.
+ * @param string $meta_key       Meta data key.
+ * @param mixed  $meta_value     Meta data value. Must be serializable if non-scalar.
+ * @param mixed  $prev_value     Optional. Previous value to check before removing. Default empty.
  *
  * @return int|bool Meta ID if the key didn't exist, true on successful update, false on failure.
  */

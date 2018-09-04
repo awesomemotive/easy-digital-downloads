@@ -33,22 +33,22 @@ class Logs_File_Downloads extends Schema {
 
 		// id
 		array(
-			'name'       => 'id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'extra'      => 'auto_increment',
-			'primary'    => true,
-			'sortable'   => true
+			'name'     => 'id',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'extra'    => 'auto_increment',
+			'primary'  => true,
+			'sortable' => true,
 		),
 
 		// product_id
 		array(
-			'name'       => 'product_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0'
+			'name'     => 'product_id',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'default'  => '0',
 		),
 
 		// file_id
@@ -58,25 +58,25 @@ class Logs_File_Downloads extends Schema {
 			'length'     => '20',
 			'unsigned'   => true,
 			'default'    => '0',
-			'searchable' => true
+			'searchable' => true,
 		),
 
 		// order_id
 		array(
-			'name'       => 'order_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0'
+			'name'     => 'order_id',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'default'  => '0',
 		),
 
 		// price_id
 		array(
-			'name'       => 'price_id',
-			'type'       => 'bigint',
-			'length'     => '20',
-			'unsigned'   => true,
-			'default'    => '0'
+			'name'     => 'price_id',
+			'type'     => 'bigint',
+			'length'   => '20',
+			'unsigned' => true,
+			'default'  => '0',
 		),
 
 		// customer_id
@@ -86,7 +86,7 @@ class Logs_File_Downloads extends Schema {
 			'length'     => '20',
 			'unsigned'   => true,
 			'default'    => '0',
-			'searchable' => true
+			'searchable' => true,
 		),
 
 		// ip
@@ -96,7 +96,7 @@ class Logs_File_Downloads extends Schema {
 			'length'     => '60',
 			'default'    => '',
 			'sortable'   => true,
-			'searchable' => true
+			'searchable' => true,
 		),
 
 		// ip
@@ -116,7 +116,7 @@ class Logs_File_Downloads extends Schema {
 			'default'    => '0000-00-00 00:00:00',
 			'created'    => true,
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// date_modified
@@ -126,12 +126,12 @@ class Logs_File_Downloads extends Schema {
 			'default'    => '0000-00-00 00:00:00',
 			'modified'   => true,
 			'date_query' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// uuid
 		array(
-			'uuid'       => true,
-		)
+			'uuid' => true,
+		),
 	);
 }
