@@ -51,6 +51,13 @@
 	margin-left: 2px;
 }
 
+/**
+ * [1] Due to the inability to reset the <tbody> child views the "empty" view
+ * can only be appended to the parent. This means duplicates may be added.
+ *
+ * This can be removed once changes are immediately reflected with Backbone.sync()
+ */
+#edd-admin-tax-rates .edd-tax-rate-row--is-empty + .edd-tax-rate-row--is-empty, /* [1] */
 #edd-admin-tax-rates .edd-tax-rate-row--inactive {
 	display: none;
 }
