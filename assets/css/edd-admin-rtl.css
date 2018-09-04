@@ -2499,6 +2499,75 @@ only screen and ( min-resolution: 1.5dppx ) {
 	max-width: 50px;
 }
 
+/* Toggle Styles
+-------------------------------------------------------------- */
+
+.edd-toggle {
+	position: relative;
+	display: inline-block;
+	overflow: visible;
+}
+
+.edd-toggle input[type="checkbox"] {
+	display: inline-block;
+	vertical-align: middle;
+	position: relative;
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	width: 42px;
+	height: 24px;
+	background-color: #ccc;
+	-webkit-transition: .4s;
+	transition: .4s;
+	border-radius: 34px;
+	box-shadow: none;
+	border: none;
+}
+
+.edd-toggle .label {
+	display: inline-block;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+.edd-toggle input[type="checkbox"]:before {
+	position: absolute;
+	content: "";
+	height: 18px;
+	width: 18px;
+	right: 3px;
+	bottom: 3px;
+	background-color: white;
+	-webkit-transition: .4s;
+	transition: .4s;
+	border-radius: 50%;
+}
+
+.edd-toggle input[type="checkbox"]:checked {
+	background-color: #00a0d2;
+}
+
+.edd-toggle input[type="checkbox"]:active,
+.edd-toggle input[type="checkbox"]:focus {
+	outline: auto 5px -webkit-focus-ring-color;
+}
+
+.edd-toggle input[type="checkbox"]:checked:before {
+	-webkit-transform: translateX(-22px);
+	-ms-transform: translateX(-22px);
+	transform: translateX(-22px);
+}
+
+.edd-toggle input + .label,
+.edd-toggle .label + input {
+	margin-right: 5px;
+}
+
+/* List Table Styles
+-------------------------------------------------------------- */
+
 .download_page_edd-tools .tablenav .actions {
 	overflow: visible;
 }

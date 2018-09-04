@@ -65,7 +65,8 @@
 }
 
 #edd-admin-tax-rates .edd-admin-tax-rates-table-hide {
-	margin-left: 1em;
+	float: right;
+	margin-right: 10px;
 }
 
 #edd-admin-tax-rates .edd-tax-rate-table-add {
