@@ -65,6 +65,9 @@ var TaxRatesTableEmpty = wp.Backbone.View.extend( {
 	// Insert as a <tr>
 	tagName: 'tr',
 
+	// Set class.
+	className: 'edd-tax-rate-row edd-tax-rate-row--is-empty',
+
 	// See https://codex.wordpress.org/Javascript_Reference/wp.template
 	template: wp.template( 'edd-admin-tax-rates-table-row-empty' )
 } );
@@ -181,6 +184,7 @@ var TaxRatesTableRows = wp.Backbone.View.extend( {
 	initialize: function() {
 		this.listenTo( this.collection, 'add', this.render );
 		this.listenTo( this.collection, 'remove', this.render );
+		this.listenTo( this.collection, 'filtered change', this.filtered );
 	},
 
 	/**
@@ -204,6 +208,21 @@ var TaxRatesTableRows = wp.Backbone.View.extend( {
 				model: rate
 			} ) );
 		} );
+	},
+
+	/**
+	 * Show an empty state if all items are deactivated.
+	 */
+	filtered: function() {
+		var disabledRates = this.collection.where( {
+			status: 'inactive'
+		} );
+
+		if ( disabledRates.length === this.collection.models.length && ! this.collection.showAll ) {
+			this.views.add( new TaxRatesTableEmpty() )
+		} else {
+			this.render();
+		}
 	}
 } );
 
@@ -474,6 +493,8 @@ var TaxRatesBulkActions = wp.Backbone.View.extend( {
 
 			model.set( 'status', status.value );
 		} );
+
+		this.collection.trigger( 'filtered' );
 	},
 
 	/**
@@ -486,6 +507,8 @@ var TaxRatesBulkActions = wp.Backbone.View.extend( {
 
 		// @hack -- shouldn't access this table directly.
 		document.getElementById( 'edd_tax_rates' ).classList.toggle( 'has-inactive', this.collection.showAll );
+
+		this.collection.trigger( 'filtered' );
 	}
 } );
 
