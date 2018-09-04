@@ -21,9 +21,12 @@
 		</select>
 
 		<button class="button edd-admin-tax-rates-table-filter"><?php esc_html_e( 'Apply', 'easy-digital-downloads' ); ?></button>
+	</div>
 
-		<label for="hide-deactivated" class="edd-admin-tax-rates-table-hide">
-			<input type="checkbox" id="hide-deactivated" checked />&nbsp;<?php esc_html_e( 'Hide deactivated rates', 'easy-digital-downloads' ); ?>
+	<div class="alignright">
+		<label class="edd-toggle edd-admin-tax-rates-table-hide">
+			<span class="label"><?php esc_html_e( 'Show deactivated rates', 'easy-digital-downloads' ); ?></span>
+			<input type="checkbox" id="hide-deactivated" />
 		</label>
 	</div>
 

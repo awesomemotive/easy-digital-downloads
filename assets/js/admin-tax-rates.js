@@ -482,7 +482,7 @@ var TaxRatesBulkActions = wp.Backbone.View.extend( {
 	 * @param {Object} event Event.
 	 */
 	showHide: function( event ) {
-		this.collection.showAll = ! event.target.checked;
+		this.collection.showAll = event.target.checked;
 
 		// @hack -- shouldn't access this table directly.
 		document.getElementById( 'edd_tax_rates' ).classList.toggle( 'has-inactive', this.collection.showAll );
