@@ -208,19 +208,27 @@ var TaxRatesTableRows = wp.Backbone.View.extend( {
 				model: rate
 			} ) );
 		} );
+
+		// Immediately filter for empty state (without re-rendering)
+		this.filtered( false );
 	},
 
 	/**
 	 * Show an empty state if all items are deactivated.
+	 *
+	 * @param {bool} render Whether to call the render method or not
 	 */
-	filtered: function() {
+	filtered: function( render = true ) {
 		var disabledRates = this.collection.where( {
 			status: 'inactive'
 		} );
 
+		// Check if all rows are invisible, and show the "No Items" row if so
 		if ( disabledRates.length === this.collection.models.length && ! this.collection.showAll ) {
 			this.views.add( new TaxRatesTableEmpty() );
-		} else {
+
+		// Possibly re-render the view
+		} else if ( true === render ) {
 			this.render();
 		}
 	}
