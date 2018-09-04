@@ -219,7 +219,7 @@ var TaxRatesTableRows = wp.Backbone.View.extend( {
 		} );
 
 		if ( disabledRates.length === this.collection.models.length && ! this.collection.showAll ) {
-			this.views.add( new TaxRatesTableEmpty() )
+			this.views.add( new TaxRatesTableEmpty() );
 		} else {
 			this.render();
 		}
