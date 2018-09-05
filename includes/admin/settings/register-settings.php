@@ -852,7 +852,7 @@ function edd_get_registered_settings() {
 						'step'          => '0.0001',
 						'min'           => '0',
 						'max'           => '99',
-						'tooltip_title' => __( 'Fallback Tax Rate', 'easy-digital-downloads' ),
+						'tooltip_title' => __( 'Base Rate', 'easy-digital-downloads' ),
 						'tooltip_desc'  => __( 'If the customer\'s address fails to meet the below tax rules, you can define a default tax rate to be applied to all other customers. Enter a percentage, such as 6.5 for 6.5%.', 'easy-digital-downloads' ),
 					),
 					'tax_rates' => array(
