@@ -208,17 +208,12 @@ var TaxRatesTableRows = wp.Backbone.View.extend( {
 				model: rate
 			} ) );
 		} );
-
-		// Immediately filter for empty state (without re-rendering)
-		this.filtered( true );
 	},
 
 	/**
 	 * Show an empty state if all items are deactivated.
-	 *
-	 * @param {bool} skipRender Whether to skip rendering (to avoid recursion)
 	 */
-	filtered: function( skipRender ) {
+	filtered: function() {
 		var disabledRates = this.collection.where( {
 			status: 'inactive'
 		} );
@@ -228,7 +223,7 @@ var TaxRatesTableRows = wp.Backbone.View.extend( {
 			this.views.add( new TaxRatesTableEmpty() );
 
 		// Possibly re-render the view
-		} else if ( ! skipRender ) {
+		} else {
 			this.render();
 		}
 	}
@@ -463,6 +458,9 @@ var TaxRatesTable = wp.Backbone.View.extend( {
 			tagName: 'tfoot',
 			collection: this.collection
 		} ) );
+
+		// Trigger the `filtered` action to show/hide rows accordingly
+		this.collection.trigger( 'filtered' );
 	}
 } );
 
