@@ -756,39 +756,6 @@ function edd_get_registered_settings() {
 				),
 			) ),
 
-			// Styles Settings
-			'styles' => apply_filters( 'edd_settings_styles', array(
-				'main' => array(
-					'disable_styles' => array(
-						'id'            => 'disable_styles',
-						'name'          => __( 'Disable Styles', 'easy-digital-downloads' ),
-						'check'         => __( 'Check this box to disable all included styling.', 'easy-digital-downloads' ),
-						'desc'          => __( 'This includes buttons, checkout fields, product pages, and all other elements', 'easy-digital-downloads' ),
-						'type'          => 'checkbox_description',
-						'tooltip_title' => __( 'Disabling Styles', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( "If your theme has a complete custom CSS file for Easy Digital Downloads, you may wish to disable our default styles. This is not recommended unless you're sure your theme has a complete custom CSS.", 'easy-digital-downloads' ),
-					)
-				),
-				'buttons' => array(
-					'button_style'   => array(
-						'id'      => 'button_style',
-						'name'    => __( 'Default Button Style', 'easy-digital-downloads' ),
-						'desc'    => __( 'Choose the style you want to use for the buttons.', 'easy-digital-downloads' ),
-						'type'    => 'select',
-						'chosen'  => true,
-						'options' => edd_get_button_styles(),
-					),
-					'checkout_color' => array(
-						'id'      => 'checkout_color',
-						'name'    => __( 'Default Button Color', 'easy-digital-downloads' ),
-						'desc'    => __( 'Choose the color you want to use for the buttons.', 'easy-digital-downloads' ),
-						'type'    => 'color_select',
-						'chosen'  => true,
-						'options' => edd_get_button_colors(),
-					)
-				)
-			) ),
-
 			// Taxes Settings
 			'taxes' => apply_filters( 'edd_settings_taxes', array(
 				'main' => array(
@@ -878,6 +845,15 @@ function edd_get_registered_settings() {
 						'desc'  => __( 'When enabled, debug messages will be logged in: Downloads &rarr; Tools &rarr; Debug Log.', 'easy-digital-downloads' ),
 						'type'  => 'checkbox_description',
 					),
+					'disable_styles' => array(
+						'id'            => 'disable_styles',
+						'name'          => __( 'Disable Styles', 'easy-digital-downloads' ),
+						'check'         => __( 'Check this box to disable all included styling.', 'easy-digital-downloads' ),
+						'desc'          => __( 'This includes buttons, checkout fields, product pages, and all other elements', 'easy-digital-downloads' ),
+						'type'          => 'checkbox_description',
+						'tooltip_title' => __( 'Disabling Styles', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( "If your theme has a complete custom CSS file for Easy Digital Downloads, you may wish to disable our default styles. This is not recommended unless you're sure your theme has a complete custom CSS.", 'easy-digital-downloads' ),
+					),
 					'redirect_on_add' => array(
 						'id'            => 'redirect_on_add',
 						'name'          => __( 'Redirect to Checkout', 'easy-digital-downloads' ),
@@ -945,6 +921,22 @@ function edd_get_registered_settings() {
 					),
 				),
 				'button_text' => array(
+					'button_style'   => array(
+						'id'      => 'button_style',
+						'name'    => __( 'Default Button Style', 'easy-digital-downloads' ),
+						'desc'    => __( 'Choose the style you want to use for the buttons.', 'easy-digital-downloads' ),
+						'type'    => 'select',
+						'chosen'  => true,
+						'options' => edd_get_button_styles(),
+					),
+					'checkout_color' => array(
+						'id'      => 'checkout_color',
+						'name'    => __( 'Default Button Color', 'easy-digital-downloads' ),
+						'desc'    => __( 'Choose the color you want to use for the buttons.', 'easy-digital-downloads' ),
+						'type'    => 'color_select',
+						'chosen'  => true,
+						'options' => edd_get_button_colors(),
+					),
 					'checkout_label' => array(
 						'id'   => 'checkout_label',
 						'name' => __( 'Complete Purchase Text', 'easy-digital-downloads' ),
@@ -1184,6 +1176,19 @@ function edd_get_registered_settings() {
 			$edd_settings['misc']['button_text']['buy_now_text']['disabled']      = true;
 			$edd_settings['misc']['button_text']['buy_now_text']['tooltip_title'] = __( 'Buy Now Disabled', 'easy-digital-downloads' );
 			$edd_settings['misc']['button_text']['buy_now_text']['tooltip_desc']  = __( 'Buy Now buttons are only available for stores that have a single supported gateway active and that do not use taxes.', 'easy-digital-downloads' );
+		}
+
+		// Allow registered settings to surface the deprecated "Styles" tab.
+		if ( has_filter( 'edd_settings_styles' ) ) {
+			$edd_settings['styles'] = edd_apply_filters_deprecated(
+				'edd_settings_styles',
+				array(
+					'main'    => array(),
+					'buttons' => array(),
+				),
+				'3.0',
+				'edd_settings_misc'
+			);
 		}
 	}
 
@@ -1617,7 +1622,6 @@ function edd_get_settings_tabs() {
 		'general'  => __( 'General',          'easy-digital-downloads' ),
 		'gateways' => __( 'Payment Gateways', 'easy-digital-downloads' ),
 		'emails'   => __( 'Emails',           'easy-digital-downloads' ),
-		'styles'   => __( 'Styles',           'easy-digital-downloads' ),
 		'taxes'    => __( 'Taxes',            'easy-digital-downloads' ),
 		'privacy'  => __( 'Privacy',          'easy-digital-downloads' )
 	);
@@ -1630,6 +1634,11 @@ function edd_get_settings_tabs() {
 	// Maybe add Licenses
 	if ( ! empty( $settings['licenses'] ) ) {
 		$tabs['licenses'] = __( 'Licenses', 'easy-digital-downloads' );
+	}
+
+	// Maybe add back styles for backwards compatibility.
+	if ( ! empty( $settings['styles'] ) ) {
+		$tabs['styles'] = __( 'Styles', 'easy-digital-downloads' );
 	}
 
 	$tabs['misc'] = __( 'Misc', 'easy-digital-downloads' );
@@ -1707,7 +1716,7 @@ function edd_get_registered_settings_sections() {
 			'misc'       => apply_filters( 'edd_settings_sections_misc', array(
 				'main'               => __( 'General',            'easy-digital-downloads' ),
 				'checkout'           => __( 'Checkout',           'easy-digital-downloads' ),
-				'button_text'        => __( 'Button Text',        'easy-digital-downloads' ),
+				'button_text'        => __( 'Purchase Buttons',   'easy-digital-downloads' ),
 				'file_downloads'     => __( 'File Downloads',     'easy-digital-downloads' ),
 				'accounting'         => __( 'Accounting',         'easy-digital-downloads' )
 			) )
