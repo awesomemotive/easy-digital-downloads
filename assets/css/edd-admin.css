@@ -2124,51 +2124,6 @@ body.download_page_edd-reports {
 /* Settings page styles
 -------------------------------------------------------------- */
 
-#edd_tax_rates {
-	margin: 1em 0 0;
-}
-#edd_tax_rates .edd_tax_country *,
-#edd_tax_rates .edd_tax_state * {
-	max-width: 100%;
-}
-#edd_tax_rates .edd_tax_country,
-#edd_tax_rates .edd_tax_state,
-#edd_tax_rates .edd_tax_global {
-	width: 20%;
-}
-#edd_tax_rates .edd_tax_actions,
-#edd_tax_rates .edd_tax_rate {
-	width: 8%;
-}
-#edd_tax_rates th {
-	padding: 8px;
-}
-#edd_tax_rates td {
-	vertical-align: top;
-	padding: 10px;
-}
-.edd-tax-whole-country {
-	display: inline-block;
-	margin: 8px 0 3px 5px;
-}
-.edd-tax-whole-country input {
-	margin-top: 1px;
-}
-
-@media screen and ( max-width: 782px ) {
-	#edd_tax_rates thead {
-		display: none;
-	}
-	#edd_tax_rates td {
-		padding: 8px 8px 8px 8px;
-	}
-	#edd_tax_rates td:before {
-		font-weight: 600;
-	}
-	#edd_tax_rates tbody tr:not(:first-child) .edd_tax_country {
-		border-top: 1px solid #e5e5e5;
-	}
-}
 .wrap-licenses .form-table,
 .wrap-licenses thead,
 .wrap-licenses tbody,
@@ -2543,6 +2498,73 @@ only screen and ( min-resolution: 1.5dppx ) {
 	width: 55px;
 	max-width: 50px;
 }
+
+/* Toggle Styles
+-------------------------------------------------------------- */
+
+.edd-toggle {
+	position: relative;
+	display: inline-block;
+	overflow: visible;
+}
+
+.edd-toggle input[type="checkbox"] {
+	display: inline-block;
+	vertical-align: middle;
+	position: relative;
+	margin: 0;
+	padding: 0;
+	width: 42px;
+	height: 24px;
+	background-color: #ccc;
+	-webkit-transition: .4s;
+	transition: .4s;
+	border-radius: 34px;
+	box-shadow: none;
+	border: none;
+}
+
+.edd-toggle .label {
+	display: inline-block;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+.edd-toggle input[type="checkbox"]:before {
+	position: absolute;
+	content: "";
+	height: 18px;
+	width: 18px;
+	left: 3px;
+	bottom: 3px;
+	background-color: white;
+	-webkit-transition: .4s;
+	transition: .4s;
+	border-radius: 50%;
+}
+
+.edd-toggle input[type="checkbox"]:checked {
+	background-color: #00a0d2;
+}
+
+.edd-toggle input[type="checkbox"]:active,
+.edd-toggle input[type="checkbox"]:focus {
+	outline: auto 3px -webkit-focus-ring-color;
+}
+
+.edd-toggle input[type="checkbox"]:checked:before {
+	-webkit-transform: translateX(22px);
+	-ms-transform: translateX(22px);
+	transform: translateX(22px);
+}
+
+.edd-toggle input + .label,
+.edd-toggle .label + input {
+	margin-left: 5px;
+}
+
+/* List Table Styles
+-------------------------------------------------------------- */
 
 .download_page_edd-tools .tablenav .actions {
 	overflow: visible;

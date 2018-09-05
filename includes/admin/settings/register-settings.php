@@ -810,24 +810,24 @@ function edd_get_registered_settings() {
 					),
 				),
 				'rates' => array(
-					'tax_rates' => array(
-						'id'   => 'tax_rates',
-						'name' => '<strong>' . __( 'Regional Rates', 'easy-digital-downloads' ) . '</strong>',
-						'desc' => __( 'Add tax rates for specific regions. Enter <code>6.5</code> for 6.5%.', 'easy-digital-downloads' ),
-						'type' => 'tax_rates',
-					),
 					'tax_rate' => array(
 						'id'            => 'tax_rate',
-						'name'          => __( 'General Rate', 'easy-digital-downloads' ),
-						'desc'          => __( 'Customers not in a region above will be charged this tax rate instead. Enter <code>6.5</code> for 6.5%. ', 'easy-digital-downloads' ),
+						'name'          => __( 'Base Rate', 'easy-digital-downloads' ),
+						'desc'          => __( 'Customers not in a region below will be charged this tax rate instead. Enter <code>6.5</code> for 6.5%. ', 'easy-digital-downloads' ),
 						'type'          => 'number',
 						'size'          => 'small',
 						'step'          => '0.0001',
 						'min'           => '0',
 						'max'           => '99',
-						'tooltip_title' => __( 'Fallback Tax Rate', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'If the customer\'s address fails to meet the above tax rules, you can define a default tax rate to be applied to all other customers. Enter a percentage, such as 6.5 for 6.5%.', 'easy-digital-downloads' ),
-					)
+						'tooltip_title' => __( 'Base Rate', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'If the customer\'s address fails to meet the below tax rules, you can define a default tax rate to be applied to all other customers. Enter a percentage, such as 6.5 for 6.5%.', 'easy-digital-downloads' ),
+					),
+					'tax_rates' => array(
+						'id'   => 'tax_rates',
+						'name' => '<strong>' . __( 'Regional Rates', 'easy-digital-downloads' ) . '</strong>',
+						'desc' => __( 'Add tax rates for specific regions to override the base rate.', 'easy-digital-downloads' ),
+						'type' => 'tax_rates',
+					),
 				)
 			) ),
 
@@ -1426,24 +1426,11 @@ function edd_settings_sanitize_taxes( $input ) {
 		return $input;
 	}
 
-	$new_rates = ! empty( $_POST['tax_rates'] )
-		? array_values( $_POST['tax_rates'] )
+	$tax_rates = ! empty( $_POST['tax_rates'] )
+		? $_POST['tax_rates']
 		: array();
 
-	foreach ( $new_rates as $key => $rate ) {
-		$rate = array_filter( $rate );
-		if ( empty( $rate ) ) {
-			unset( $new_rates[ $key ] );
-		}
-	}
-
-	$new_rates = ! empty( $new_rates )
-		? array_values( $new_rates )
-		: array();
-
-		$active_tax_adjustment_ids = array();
-
-	foreach ( $new_rates as $tax_rate ) {
+	foreach ( $tax_rates as $tax_rate ) {
 
 		$scope = isset( $tax_rate['global'] )
 			? 'country'
@@ -1454,7 +1441,7 @@ function edd_settings_sanitize_taxes( $input ) {
 			: '';
 
 		$adjustment_data = array(
-			'name'        => $tax_rate['country'],
+			'name'        => sanitize_text_field( $tax_rate['country'] ),
 			'type'        => 'tax_rate',
 			'scope'       => $scope,
 			'amount_type' => 'percent',
@@ -1465,39 +1452,16 @@ function edd_settings_sanitize_taxes( $input ) {
 		$existing_adjustment = edd_get_adjustments( $adjustment_data );
 
 		if ( ! empty( $existing_adjustment ) ) {
-			
-			// An adjustment with these arguments already exists.
-			$adjustment = $existing_adjustment[0];
+			$adjustment                = $existing_adjustment[0];
+			$adjustment_data['status'] = sanitize_text_field( $tax_rate['status'] );
 
-			// If the status is 'inactive', just add it as 'active'.
-			if ( 'active' !== $adjustment->status ) {
-				edd_update_adjustment( $adjustment->id, array( 'status' => 'active' ) );
-			}
-
-			$active_tax_adjustment_ids[] = $adjustment->id;
-
+			edd_update_adjustment( $adjustment->id, $adjustment_data );
 		} else {
-			
-			// No adjustment was found for these areguments, add it as a new one.
-			$adjustment_data['status']   = 'active';
-			$active_tax_adjustment_ids[] = edd_add_adjustment( $adjustment_data );
+			$adjustment_data['status'] = 'active';
 
+			edd_add_adjustment( $adjustment_data );
 		}
 
-	}
-
-	// Now that we have set the tax rates we want active, we need to mark the rest as inactive.
-	$old_tax_rates = edd_get_adjustments(
-		array(
-			'type'       => 'tax_rate',
-			'status'     => 'active',
-			'id__not_in' => $active_tax_adjustment_ids,
-			'number'     => 1000,
-		)
-	);
-
-	foreach ( $old_tax_rates as $old_tax_rate ) {
-		edd_update_adjustment( $old_tax_rate->id, array( 'status' => 'inactive' ) );
 	}
 
 	return $input;
@@ -2612,22 +2576,37 @@ function edd_shop_states_callback( $args ) {
  */
 function edd_tax_rates_callback( $args ) {
 	$rates = edd_get_tax_rates( array(), OBJECT );
-	$class = edd_sanitize_html_class( $args['field_class'] );
 
-	ob_start(); ?>
-	<p><?php echo $args['desc']; ?></p>
-	<?php
-	$tax_rates_table = new \EDD\Admin\Settings\Tax_Rates_List_Table();
-	$tax_rates_table->prepare_items();
-	$tax_rates_table->display();
-	?>
-	<p>
-		<span class="button-secondary" id="edd_add_tax_rate">
-			<?php _e( 'Add Tax Rate', 'easy-digital-downloads' ); ?>
-		</span>
-	</p>
-	<?php
-	echo ob_get_clean();
+	wp_enqueue_script( 'edd-admin-tax-rates' );
+	wp_enqueue_style( 'edd-admin-tax-rates' );
+
+	wp_localize_script( 'edd-admin-tax-rates', 'eddTaxRates', array(
+		'rates' => $rates,
+		'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
+	) );
+
+	$templates = array(
+		'meta',
+		'row',
+		'row-empty',
+		'add',
+		'bulk-actions'
+	);
+
+	echo '<p>' . $args['desc'] . '</p>';
+
+	echo '<div id="edd-admin-tax-rates"></div>';
+
+	foreach ( $templates as $tmpl ) {
+?>
+
+<script type="text/html" id="tmpl-edd-admin-tax-rates-table-<?php echo esc_attr( $tmpl ); ?>">
+	<?php require_once EDD_PLUGIN_DIR . 'includes/admin/views/tmpl-tax-rates-table-' . $tmpl . '.php'; ?>
+</script>
+
+<?php
+	}
+
 }
 
 /**
