@@ -2512,8 +2512,6 @@ only screen and ( min-resolution: 1.5dppx ) {
 	display: inline-block;
 	vertical-align: middle;
 	position: relative;
-	height: 100%;
-	width: 100%;
 	margin: 0;
 	padding: 0;
 	width: 42px;
@@ -2551,7 +2549,7 @@ only screen and ( min-resolution: 1.5dppx ) {
 
 .edd-toggle input[type="checkbox"]:active,
 .edd-toggle input[type="checkbox"]:focus {
-	outline: auto 5px -webkit-focus-ring-color;
+	outline: auto 3px -webkit-focus-ring-color;
 }
 
 .edd-toggle input[type="checkbox"]:checked:before {
