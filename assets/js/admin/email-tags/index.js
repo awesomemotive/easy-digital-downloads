@@ -1,50 +1,16 @@
 /* global eddEmailTagsInserter, tb_remove, send_to_editor, _, window, document */
 
 /**
- * Filters an item list given a search term.
- *
- * @param {Array} items        Item list
- * @param {string} searchTerm  Search term.
- *
- * @return {Array}             Filtered item list.
+ * Internal dependencies.
  */
-function searchItems( items, searchTerm ) {
-	var normalizedSearchTerm = normalizeTerm( searchTerm );
-
-	var matchSearch = function( string ) {
-		return normalizeTerm( string ).indexOf( normalizedSearchTerm ) !== -1;
-	};
-
-	return _.filter( items, function( item ) {
-		return matchSearch( item.title ) || _.some( item.keywords, matchSearch )
-	} );
-};
-
-/**
- * Converts the search term into a normalized term.
- *
- * @param {string} term The search term to normalize.
- *
- * @return {string} The normalized search term.
- */
-function normalizeTerm( term ) {
-	// Lowercase.
-	//  Input: "MEDIA"
-	term = term.toLowerCase();
-
-	// Strip leading and trailing whitespace.
-	//  Input: " media "
-	term = term.trim();
-
-	return term;
-};
+import { searchItems } from './utils.js';
 
 /**
  * Make tags clickable and send them to the email content (wp_editor()).
  */
 function setupEmailTags() {
 	// Find all of the buttons.
-	var insertButtons = document.querySelectorAll( '.edd-email-tags-list-button' );
+	const insertButtons = document.querySelectorAll( '.edd-email-tags-list-button' );
 
 	/**
 	 * Listen for clicks on tag buttons.

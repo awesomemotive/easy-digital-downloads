@@ -1,4 +1,10 @@
 /* global edd_vars, ajaxurl, wpAjax, postboxes, pagenow */
+
+/**
+ * Internal dependencies.
+ */
+import { chosenVars } from 'utils/chosen.js';
+
 jQuery(document).ready(function ($) {
 
 	// Variables for setting up the typing timer
@@ -17,22 +23,11 @@ jQuery(document).ready(function ($) {
 	var tooltips = $('.edd-help-tip');
 	edd_attach_tooltips( tooltips );
 
-	// Chosen vars
-	var chosen_vars = {
-		disable_search_threshold:  13,
-		search_contains:           true,
-		inherit_select_classes:    true,
-		single_backstroke_delete:  false,
-		placeholder_text_single:   edd_vars.one_option,
-		placeholder_text_multiple: edd_vars.one_or_more_option,
-		no_results_text:           edd_vars.no_results_text
-	};
-
 	// Create "global" to store intermediate data.
 	var edd_admin_globals = {};
 
 	// Setup Chosen menus
-	$('.edd-select-chosen').chosen( chosen_vars );
+	$('.edd-select-chosen').chosen( chosenVars );
 
 	$('.edd-select-chosen .chosen-search input').each( function() {
 
@@ -212,7 +207,7 @@ jQuery(document).ready(function ($) {
 				clone.insertAfter( row ).find('input, textarea, select').filter(':visible').eq(0).focus();
 
 				// Setup chosen fields again if they exist
-				clone.find( '.edd-select-chosen' ).chosen( chosen_vars );
+				clone.find( '.edd-select-chosen' ).chosen( chosenVars );
 				clone.find( '.edd-select-chosen' ).css( 'width', '100%' );
 				clone.find( '.edd-select-chosen .chosen-search input' ).attr( 'placeholder', edd_vars.search_placeholder );
 			});
@@ -700,7 +695,7 @@ jQuery(document).ready(function ($) {
 						state_wrapper.replaceWith( '<input type="text" name="edd-payment-address[0][region]" value="" class="edd-edit-toggles medium-text"/>' );
 					} else {
 						state_wrapper.replaceWith( response );
-						$( '#edd-order-address-state-wrap select' ).chosen( chosen_vars );
+						$( '#edd-order-address-state-wrap select' ).chosen( chosenVars );
 					}
 				});
 
@@ -1247,7 +1242,7 @@ jQuery(document).ready(function ($) {
 
 					if ( response.html ) {
 						$( '.customer-address-select-wrap' ).html( response.html ).show();
-						$( '.customer-address-select-wrap select' ).chosen( chosen_vars );
+						$( '.customer-address-select-wrap select' ).chosen( chosenVars );
 					} else {
 						$( '.customer-address-select-wrap' ).html( '' ).hide();
 					}
