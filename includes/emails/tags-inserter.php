@@ -63,7 +63,7 @@ function edd_email_tags_inserter_media_button() {
 }
 
 /**
- * Adds an 'Insert Email Tag' button above the TinyMCE Editor on email-related
+ * Adds an 'Insert Marker' button above the TinyMCE Editor on email-related
  * `wp_editor()` instances.
  *
  * @since 3.0
@@ -72,7 +72,7 @@ function edd_email_tags_inserter_media_button_output() {
 	?>
 	<a href="#TB_inline?width=640&inlineId=edd-insert-email-tag" class="edd-email-tags-inserter thickbox button edd-thickbox" style="padding-left: 0.4em;">
 		<span class="wp-media-buttons-icon dashicons dashicons-editor-code"></span>
-		<?php esc_html_e( 'Insert Email Tag', 'easy-digital-downloads' ); ?>
+		<?php esc_html_e( 'Insert Marker', 'easy-digital-downloads' ); ?>
 	</a>
 	<?php
 }
