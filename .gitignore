@@ -27,7 +27,7 @@ build/
 tmp/
 tests/clover.xml
 
-# Grunt
+# Node
 node_modules
 
 # Vendor
@@ -35,3 +35,8 @@ vendor
 
 # Temporary files
 *~
+
+# Built assets
+assets/js/*.js
+assets/js/*.js.map
+assets/js/vendor
