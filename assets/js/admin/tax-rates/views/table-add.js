@@ -5,6 +5,7 @@
  */
 import TaxRate from './../models/tax-rate.js';
 import RegionField from './../views/region-field.js';
+import { chosenVars } from 'utils/chosen.js';
 
 /**
  * Add a new rate "form".
@@ -54,7 +55,7 @@ const TableAdd = wp.Backbone.View.extend( {
 	 */
 	render: function() {
 		this.$el.html( this.template() );
-		this.$el.find( 'select' ).chosen( 'eddTaxRatesChosenVars' );
+		this.$el.find( 'select' ).chosen( chosenVars );
 	},
 
 	/**
