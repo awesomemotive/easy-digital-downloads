@@ -103,7 +103,7 @@ function edd_email_tags_inserter_enqueue_scripts() {
 	}
 
 	wp_localize_script(
-		'edd-tags-media-button',
+		'edd-admin-email-tags',
 		'eddEmailTagsInserter',
 		array(
 			'items' => $items,
@@ -128,7 +128,7 @@ function edd_email_tags_inserter_thickbox_content() {
 			<?php foreach ( $tags as $tag ) : ?>
 			<li id="<?php echo esc_attr( $tag['tag'] ); ?>" data-tag="<?php echo esc_attr( $tag['tag'] ); ?>" class="edd-email-tags-list-item">
 				<button class="edd-email-tags-list-button" data-to_insert="{<?php echo esc_attr( $tag['tag'] ); ?>}">
-					<strong><?php echo esc_html( $tag['label'] ?: '{' . $tag['tag'] . '}' ); ?></strong>
+					<strong><?php echo esc_html( $tag['label'] ); ?></strong><code><?php echo '{' . esc_html( $tag['tag'] ) . '}'; ?></code>
 					<span><?php echo esc_html( $tag['description'] ); ?></span>
 				</button>
 			</li>
