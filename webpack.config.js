@@ -70,7 +70,7 @@ const config = {
 			},
 			{
 				from: './node_modules/moment/moment.js',
-				to: 'assets/js/vendor/moment.js.min.js',
+				to: 'assets/js/vendor/moment.min.js',
 				transform( content, src ) {
 					return Promise.resolve( Buffer.from( UglifyJS.minify( content.toString() ).code ) );
 				}
