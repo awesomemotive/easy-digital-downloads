@@ -2862,7 +2862,7 @@ function edd_add_setting_tooltip( $html = '', $args = array() ) {
 
 		// Insert tooltip at end of label
 		} elseif ( false !== $has_label ) {
-			$html = str_replace( '</label>', $tooltip . '</label>', $html );
+			$html = str_replace( '</label>', '</label>' . $tooltip, $html );
 
 		// Append tooltip to end of HTML
 		} else {
