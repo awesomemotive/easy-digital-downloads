@@ -2,6 +2,8 @@
  * External dependencies
  */
 const webpack = require( 'webpack' );
+const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
+const UglifyJS = require( 'uglify-es' );
 
 // Webpack configuration.
 const config = {
@@ -14,6 +16,7 @@ const config = {
 	},
 	entry: {
 		'edd-admin': './assets/js/admin',
+		'edd-admin-backwards-compatibility': './assets/js/admin/backwards-compatibility.js',
 		'edd-admin-tax-rates': './assets/js/admin/tax-rates',
 		'edd-admin-email-tags': './assets/js/admin/email-tags',
 	},
@@ -36,11 +39,43 @@ const config = {
 		$: 'jQuery',
 	},
 	plugins: [
-		new webpack.ProvidePlugin( {
-			$: 'jquery',
-			jQuery: 'jquery',
-			'window.jQuery': 'jquery',
-		} ),
+		// Copy vendor files to ensure 3rd party plugins relying on a script
+		// handle to exist continue to be enqueued.
+		new CopyWebpackPlugin( [
+			{
+				from: './node_modules/chosen-js/chosen.jquery.min.js',
+				to: 'assets/js/vendor/chosen.jquery.min.js',
+			},
+			{
+				from: './node_modules/chart.js/dist/Chart.min.js',
+				to: 'assets/js/vendor/chartjs.min.js',
+			},
+			{
+				from: './node_modules/flot/jquery.flot.js',
+				to: 'assets/js/vendor/jquery.flot.min.js',
+				transform( content, src ) {
+					return Promise.resolve( Buffer.from( UglifyJS.minify( content.toString() ).code ) );
+				}
+			},
+			{
+				from: './node_modules/flot/jquery.flot.pie.js',
+				to: 'assets/js/vendor/jquery.flot.pie.min.js',
+				transform( content, src ) {
+					return Promise.resolve( Buffer.from( UglifyJS.minify( content.toString() ).code ) );
+				}
+			},
+			{
+				from: './node_modules/jquery-colorbox/jquery.colorbox-min.js',
+				to: 'assets/js/vendor/jquery.colorbox.min.js',
+			},
+			{
+				from: './node_modules/moment/moment.js',
+				to: 'assets/js/vendor/moment.js.min.js',
+				transform( content, src ) {
+					return Promise.resolve( Buffer.from( UglifyJS.minify( content.toString() ).code ) );
+				}
+			},
+		] ),
 	],
 };
 
