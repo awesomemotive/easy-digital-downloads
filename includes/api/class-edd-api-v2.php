@@ -42,10 +42,34 @@ class EDD_API_V2 extends EDD_API_V1 {
 				'posts_per_page'   => $this->per_page(),
 				'suppress_filters' => true,
 				'paged'            => $this->get_paged(),
+				'order'            => $args['order'],
+				'orderby'          => $args['orderby'],
 			);
 
 			if( ! empty( $args['s'] ) ) {
 				$query_args['s'] = sanitize_text_field( $args['s'] );
+			}
+
+			switch ( $query_args['orderby'] ) {
+				case 'price':
+					$query_args['meta_key'] = 'edd_price';
+					$query_args['orderby']  = 'meta_value_num';
+					break;
+
+				case 'sales':
+					if ( user_can( $this->user_id, 'view_shop_sensitive_data' ) || current_user_can( 'view_shop_sensitive_data' ) || $this->override ) {
+						$query_args['meta_key'] = '_edd_download_sales';
+						$query_args['orderby']  = 'meta_value_num';
+					}
+					break;
+
+				case 'earnings':
+					if ( user_can( $this->user_id, 'view_shop_sensitive_data' ) || current_user_can( 'view_shop_sensitive_data' ) || $this->override ) {
+						$query_args['meta_key'] = '_edd_download_earnings';
+						$query_args['orderby']  = 'meta_value_num';
+					}
+					break;
+
 			}
 
 			if( ! empty( $args['category'] ) ) {
