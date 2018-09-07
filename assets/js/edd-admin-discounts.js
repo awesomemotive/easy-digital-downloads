@@ -75,31 +75,64 @@
 /*!********************************************!*\
   !*** ./assets/js/admin/discounts/index.js ***!
   \********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var utils_jquery_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! utils/jquery.js */ "./assets/js/utils/jquery.js");
+/**
+ * Internal dependencies.
+ */
 
 /**
- * Discount add / edit screen JS
+ * DOM ready.
  */
-var EDD_Discount = {
-  init: function init() {
-    this.product_requirements();
-  },
-  product_requirements: function product_requirements() {
-    $('#edd-products').change(function () {
-      var product_conditions = $('#edd-discount-product-conditions');
 
-      if ($(this).val()) {
-        product_conditions.show();
-      } else {
-        product_conditions.hide();
-      }
-    });
+Object(utils_jquery_js__WEBPACK_IMPORTED_MODULE_0__["jQueryReady"])(function () {
+  var products = $('#products');
+
+  if (!products) {
+    return;
   }
-};
-jQuery(document).ready(function ($) {
-  EDD_Discount.init();
+  /**
+   * Show/hide conditions based on input value.
+   */
+
+
+  products.change(function () {
+    $('#edd-discount-product-conditions').toggle(products.val());
+  });
 });
+
+/***/ }),
+
+/***/ "./assets/js/utils/jquery.js":
+/*!***********************************!*\
+  !*** ./assets/js/utils/jquery.js ***!
+  \***********************************/
+/*! exports provided: jQueryReady */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "jQueryReady", function() { return jQueryReady; });
+/* global jQuery */
+
+/**
+ * Safe wrapper for jQuery DOM ready.
+ *
+ * This should be used only when a script requires the use of jQuery.
+ *
+ * @param {Function} callback Function to call when ready.
+ */
+var jQueryReady = function jQueryReady(callback) {
+  (function (window, undefined) {
+    // eslint-disable-line no-unused-vars
+    var $ = window.jQuery;
+    $(callback);
+  })(window);
+};
 
 /***/ })
 

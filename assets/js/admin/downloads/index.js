@@ -30,7 +30,7 @@ var EDD_Download_Configuration = {
 		} );
 		key = highest += 1;
 
-		let clone = row.clone();
+		const clone = row.clone();
 
 		clone.removeClass( 'edd_add_blank' );
 

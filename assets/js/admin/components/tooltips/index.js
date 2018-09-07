@@ -21,7 +21,7 @@ export const edd_attach_tooltips = function( selector ) {
 			duration: 200,
 		},
 	} );
-}
+};
 
 jQuery( document ).ready( function( $ ) {
 	edd_attach_tooltips( $( '.edd-help-tip' ) );
