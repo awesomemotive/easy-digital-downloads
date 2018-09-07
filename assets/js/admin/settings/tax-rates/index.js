@@ -6,7 +6,6 @@
 import TaxRate from './models/tax-rate.js';
 import TaxRates from './collections/tax-rates.js';
 import Manager from './views/manager.js';
-import { chosenVars } from 'utils/chosen.js';
 
 /**
  * DOM ready.
@@ -36,7 +35,4 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 	// Render manager.
 	manager.render();
-
-	// Chosen fields. This should happen globally.
-	$( '.edd-select-chosen' ).chosen( chosenVars );
 } );

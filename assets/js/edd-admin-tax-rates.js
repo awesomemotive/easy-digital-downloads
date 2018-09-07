@@ -121,7 +121,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _models_tax_rate_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./models/tax-rate.js */ "./assets/js/admin/settings/tax-rates/models/tax-rate.js");
 /* harmony import */ var _collections_tax_rates_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./collections/tax-rates.js */ "./assets/js/admin/settings/tax-rates/collections/tax-rates.js");
 /* harmony import */ var _views_manager_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./views/manager.js */ "./assets/js/admin/settings/tax-rates/views/manager.js");
-/* harmony import */ var utils_chosen_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! utils/chosen.js */ "./assets/js/utils/chosen.js");
 
 
 /* global _, eddTaxRates */
@@ -129,7 +128,6 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * Internal dependencies.
  */
-
 
 
 
@@ -160,9 +158,7 @@ document.addEventListener('DOMContentLoaded', function () {
     silent: true
   }); // Render manager.
 
-  manager.render(); // Chosen fields. This should happen globally.
-
-  $('.edd-select-chosen').chosen(utils_chosen_js__WEBPACK_IMPORTED_MODULE_4__["chosenVars"]);
+  manager.render();
 });
 
 /***/ }),
