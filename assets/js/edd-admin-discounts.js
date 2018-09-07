@@ -128,7 +128,6 @@ __webpack_require__.r(__webpack_exports__);
  */
 var jQueryReady = function jQueryReady(callback) {
   (function ($) {
-    // eslint-disable-line no-unused-vars
     $(callback);
   })(jQuery);
 };
