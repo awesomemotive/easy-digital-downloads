@@ -54,6 +54,7 @@
 		"build": "cross-env NODE_ENV=production webpack",
 		"dev": "cross-env NODE_ENV=default webpack --watch",
 		"lint": "./node_modules/.bin/eslint .; exit 0",
-		"lint:fix": "./node_modules/.bin/eslint . --fix; exit 0"
+		"lint:fix": "./node_modules/.bin/eslint . --fix; exit 0",
+		"package-plugin": "npm run build && grunt build"
 	}
 }

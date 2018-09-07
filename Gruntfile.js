@@ -205,22 +205,6 @@ module.exports = function(grunt) {
 			}
 		},
 
-		uglify: {
-			options: {
-				mangle: false
-			},
-			target: {
-				files: [{
-					expand: true,
-					cwd: 'assets/js',
-					src: [ '*.js', '!*.min.js', '!*jquery*.js' ],
-					dest: 'assets/js',
-					ext: '.min.js',
-					extDot: 'last'
-				}]
-			}
-		},
-
 		checktextdomain: {
 			options:{
 				text_domain: 'easy-digital-downloads',
@@ -330,6 +314,6 @@ module.exports = function(grunt) {
 	});
 
 	// Build task(s).
-	grunt.registerTask( 'build', [ 'cssmin:ltr', 'rtlcss', 'cssmin:rtl', 'uglify', 'force:checktextdomain', 'makepot', 'clean', 'copy', 'compress' ] );
+	grunt.registerTask( 'build', [ 'cssmin:ltr', 'rtlcss', 'cssmin:rtl', 'force:checktextdomain', 'makepot', 'clean', 'copy', 'compress' ] );
 
 };
