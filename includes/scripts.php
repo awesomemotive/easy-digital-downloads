@@ -46,10 +46,10 @@ function edd_load_scripts() {
 
 	if ( edd_is_checkout() ) {
 		if ( edd_is_cc_verify_enabled() ) {
-			wp_register_script( 'creditCardValidator', $js_dir . 'jquery.creditCardValidator' . $suffix . '.js', array( 'jquery' ), $version, $in_footer );
+			wp_register_script( 'creditCardValidator', $js_dir . 'vendor/jquery.creditcardvalidator.min.js', array( 'jquery' ), $version, $in_footer );
 
 			// Registered so gateways can enqueue it when they support the space formatting. wp_enqueue_script( 'jQuery.payment' );
-			wp_register_script( 'jQuery.payment', $js_dir . 'jquery.payment.min.js', array( 'jquery' ), $version, $in_footer );
+			wp_register_script( 'jQuery.payment', $js_dir . 'vendor/jquery.payment.min.js', array( 'jquery' ), $version, $in_footer );
 
 			wp_enqueue_script( 'creditCardValidator' );
 		}
@@ -243,7 +243,7 @@ function edd_register_admin_scripts() {
 
 	// Register scripts
 	wp_register_script( 'colorbox', $js_dir . 'vendor/jquery.colorbox.min.js', array( 'jquery' ), $version );
-	wp_register_script( 'jquery-chosen', $js_dir . 'vendor/chosen.jquery.min.js', array( 'jquery' ), $version );
+	wp_register_script( 'jquery-chosen', $js_dir . 'vendor/jquery.chosen.min.js', array( 'jquery' ), $version );
 	wp_register_script( 'jquery-flot', $js_dir . 'vendor/jquery.flot.min.js', array(), $version );
 	wp_register_script( 'edd-moment-js', $js_dir . 'vendor/moment.min.js', array(), $version );
 	wp_register_script( 'edd-chart-js', $js_dir . 'vendor/chartjs.min.js', array( 'edd-moment-js' ), $version );

@@ -127,11 +127,10 @@ __webpack_require__.r(__webpack_exports__);
  * @param {Function} callback Function to call when ready.
  */
 var jQueryReady = function jQueryReady(callback) {
-  (function (window, undefined) {
+  (function ($) {
     // eslint-disable-line no-unused-vars
-    var $ = window.jQuery;
     $(callback);
-  })(window);
+  })(jQuery);
 };
 
 /***/ })
