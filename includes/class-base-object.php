@@ -26,24 +26,10 @@ abstract class Base_Object {
 	 *
 	 * @since 3.0
 	 *
-	 * @param mixed $object Object to populate members for.
+	 * @param mixed $args Object to populate members for.
 	 */
-	public function __construct( $object = null ) {
-
-		// Bail if nothing was passed.
-		if ( empty( $object ) ) {
-			return;
-		}
-
-		// Maybe cast to object.
-		if ( ! is_object( $object ) ) {
-			$object = (object) $object;
-		}
-
-		// Set class vars.
-		foreach ( get_object_vars( $object ) as $key => $value ) {
-			$this->{$key} = $value;
-		}
+	public function __construct( $args = null ) {
+		$this->set_vars( $args );
 	}
 
 	/**
