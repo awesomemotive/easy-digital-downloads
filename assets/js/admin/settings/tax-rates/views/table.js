@@ -26,25 +26,25 @@ const Table = wp.Backbone.View.extend( {
 	render: function() {
 		this.views.add( new TableMeta( {
 			tagName: 'thead',
-			collection: this.collection
+			collection: this.collection,
 		} ) );
 
 		this.views.add( new TableRows( {
-			collection: this.collection
+			collection: this.collection,
 		} ) );
 
 		this.views.add( new TableAdd( {
-			collection: this.collection
+			collection: this.collection,
 		} ) );
 
 		this.views.add( new TableMeta( {
 			tagName: 'tfoot',
-			collection: this.collection
+			collection: this.collection,
 		} ) );
 
 		// Trigger the `filtered` action to show/hide rows accordingly
 		this.collection.trigger( 'filtered' );
-	}
+	},
 } );
 
 export default Table;

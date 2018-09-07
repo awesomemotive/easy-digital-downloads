@@ -10,7 +10,7 @@ const BulkActions = wp.Backbone.View.extend( {
 	// Watch events.
 	events: {
 		'click .edd-admin-tax-rates-table-filter': 'filter',
-		'change .edd-admin-tax-rates-table-hide input': 'showHide'
+		'change .edd-admin-tax-rates-table-hide input': 'showHide',
 	},
 
 	/**
@@ -24,11 +24,11 @@ const BulkActions = wp.Backbone.View.extend( {
 		event.preventDefault();
 
 		// @hack - need to access the DOM directly here because the dropdown is not tied to the button event.
-		var status = document.getElementById( 'edd-admin-tax-rates-table-bulk-actions' );
+		const status = document.getElementById( 'edd-admin-tax-rates-table-bulk-actions' );
 
 		_.each( this.collection.selected, ( cid ) => {
-			var model = this.collection.get( {
-				cid: cid
+			const model = this.collection.get( {
+				cid: cid,
 			} );
 
 			model.set( 'status', status.value );
@@ -49,7 +49,7 @@ const BulkActions = wp.Backbone.View.extend( {
 		document.getElementById( 'edd_tax_rates' ).classList.toggle( 'has-inactive', this.collection.showAll );
 
 		this.collection.trigger( 'filtered' );
-	}
+	},
 } );
 
 export default BulkActions;

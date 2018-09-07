@@ -6,7 +6,6 @@ import { chosenVars } from 'utils/chosen.js';
 jQuery( document ).ready( function( $ ) {
 	// Toggle advanced filters on Orders page.
 	$( '.edd-advanced-filters-button' ).on( 'click', function( e ) {
-
 		// Prevnt submit action
 		e.preventDefault();
 
@@ -14,13 +13,13 @@ jQuery( document ).ready( function( $ ) {
 	} );
 } );
 
-var edd_admin_globals = {};
+const edd_admin_globals = {};
 
 /**
  * Add order
  */
 var EDD_Add_Order = {
-	init : function() {
+	init: function() {
 		this.add_order_item();
 		this.add_adjustment();
 		this.override();
@@ -31,11 +30,11 @@ var EDD_Add_Order = {
 		this.validate();
 	},
 
-	add_order_item : function () {
-		var button = $( '.edd-add-order-item-button' );
+	add_order_item: function() {
+		const button = $( '.edd-add-order-item-button' );
 
 		// Toggle form.
-		$( '#edd-order-items' ).on( 'click', 'h3 .edd-metabox-title-action', function(e) {
+		$( '#edd-order-items' ).on( 'click', 'h3 .edd-metabox-title-action', function( e ) {
 			e.preventDefault();
 			$( '#edd-order-items' ).children( '.edd-add-download-to-purchase' ).slideToggle();
 		} );
@@ -50,7 +49,7 @@ var EDD_Add_Order = {
 		button.on( 'click', function( e ) {
 			e.preventDefault();
 
-			var select = $( '.edd-order-add-download-select' ),
+			let select = $( '.edd-order-add-download-select' ),
 				spinner = $( '.edd-add-download-to-purchase .spinner' ),
 				data = {
 					action: 'edd_add_order_item',
@@ -58,7 +57,7 @@ var EDD_Add_Order = {
 					country: $( '.edd-order-address-country' ).val(),
 					region: $( '.edd-order-address-region' ).val(),
 					download: select.val(),
-					quantity: $( '.edd-add-order-quantity' ).val()
+					quantity: $( '.edd-add-order-quantity' ).val(),
 				};
 
 			spinner.css( 'visibility', 'visible' );
@@ -78,15 +77,15 @@ var EDD_Add_Order = {
 		} );
 	},
 
-	add_adjustment : function () {
+	add_adjustment: function() {
 		// Toggle form.
-		$( '#edd-order-adjustments' ).on( 'click', 'h3 .edd-metabox-title-action', function(e) {
+		$( '#edd-order-adjustments' ).on( 'click', 'h3 .edd-metabox-title-action', function( e ) {
 			e.preventDefault();
 			$( '#edd-order-adjustments' ).children( '.edd-add-adjustment-to-purchase' ).slideToggle();
 		} );
 
 		$( '.edd-order-add-adjustment-select' ).on( 'change', function() {
-			var type = $( this ).val();
+			const type = $( this ).val();
 
 			$( '.edd-add-adjustment-to-purchase li.fee, .edd-add-adjustment-to-purchase li.discount, .edd-add-adjustment-to-purchase li.fee, .edd-add-adjustment-to-purchase li.credit' ).hide();
 
@@ -96,19 +95,19 @@ var EDD_Add_Order = {
 		$( '.edd-add-order-adjustment-button' ).on( 'click', function( e ) {
 			e.preventDefault();
 
-			var data = {
-				action: 'edd_add_adjustment_to_order',
-				nonce: $( '#edd_add_order_nonce' ).val(),
-				type: $( '.edd-order-add-adjustment-select' ).val(),
-				adjustment_data: {
-					fee: $( '.edd-order-add-fee-select' ).val(),
-					discount: $( '.edd-order-add-discount-select' ).val(),
-					credit: {
-						description: $( '.edd-add-order-credit-description' ).val(),
-						amount: $( '.edd-add-order-credit-amount' ).val()
-					}
-				}
-			},
+			let data = {
+					action: 'edd_add_adjustment_to_order',
+					nonce: $( '#edd_add_order_nonce' ).val(),
+					type: $( '.edd-order-add-adjustment-select' ).val(),
+					adjustment_data: {
+						fee: $( '.edd-order-add-fee-select' ).val(),
+						discount: $( '.edd-order-add-discount-select' ).val(),
+						credit: {
+							description: $( '.edd-add-order-credit-description' ).val(),
+							amount: $( '.edd-add-order-credit-amount' ).val(),
+						},
+					},
+				},
 				spinner = $( '.edd-add-adjustment-to-purchase .spinner' );
 
 			spinner.css( 'visibility', 'visible' );
@@ -125,7 +124,7 @@ var EDD_Add_Order = {
 		} );
 	},
 
-	override : function() {
+	override: function() {
 		$( '.edd-override' ).on( 'click', function() {
 			$( this ).prop( 'disabled', 'disabled' );
 
@@ -133,36 +132,36 @@ var EDD_Add_Order = {
 
 			$( document.body ).on( 'click', '.orderitems tr td .value', EDD_Add_Order.switchToInput );
 
-			$( '<input>' ).attr({
+			$( '<input>' ).attr( {
 				type: 'hidden',
 				name: 'edd_add_order_override',
-				value: 'true'
-			}).appendTo( '#edd-add-order-form' );
+				value: 'true',
+			} ).appendTo( '#edd-add-order-form' );
 		} );
 	},
 
-	switchToInput : function() {
-		var input = $( '<input>', {
+	switchToInput: function() {
+		const input = $( '<input>', {
 			val: $( this ).text(),
-			type: 'text'
-		});
+			type: 'text',
+		} );
 
 		$( this ).replaceWith( input );
 		input.on( 'blur', EDD_Add_Order.switchToSpan );
 		input.select();
 	},
 
-	switchToSpan : function() {
-		var span = $( '<span>', {
+	switchToSpan: function() {
+		const span = $( '<span>', {
 			text: parseFloat( $( this ).val() ).toLocaleString( edd_vars.currency, {
-				style:                 'decimal',
-				currency:              edd_vars.currency,
+				style: 'decimal',
+				currency: edd_vars.currency,
 				minimumFractionDigits: edd_vars.currency_decimals,
-				maximumFractionDigits: edd_vars.currency_decimals
-			} )
-		});
+				maximumFractionDigits: edd_vars.currency_decimals,
+			} ),
+		} );
 
-		var type = $( this ).parent().data( 'type' ),
+		let type = $( this ).parent().data( 'type' ),
 			input = $( this ).parents( 'tr' ).find( '.download-' + type );
 
 		if ( 'quantity' === type ) {
@@ -179,11 +178,11 @@ var EDD_Add_Order = {
 		span.on( 'click', EDD_Add_Order.switchToInput );
 	},
 
-	remove : function() {
+	remove: function() {
 		$( document.body ).on( 'click', '.orderitems .remove-item, .orderadjustments .remove-item', function( e ) {
 			e.preventDefault();
 
-			var $this = $( this ),
+			let $this = $( this ),
 				tbody = $this.parents( 'tbody' );
 
 			$this.parents( 'tr' ).remove();
@@ -199,17 +198,16 @@ var EDD_Add_Order = {
 		} );
 	},
 
-	fetch_addresses : function() {
+	fetch_addresses: function() {
 		$( '.edd-payment-change-customer-input' ).on( 'change', function() {
-			var $this = $( this ),
+			let $this = $( this ),
 				data = {
 					action: 'edd_customer_addresses',
 					customer_id: $this.val(),
-					nonce: $( '#edd_add_order_nonce' ).val()
+					nonce: $( '#edd_add_order_nonce' ).val(),
 				};
 
 			$.post( ajaxurl, data, function( response ) {
-
 				// Store response for later use.
 				edd_admin_globals.customer_address_ajax_result = response;
 
@@ -225,10 +223,10 @@ var EDD_Add_Order = {
 		} );
 	},
 
-	select_address : function() {
+	select_address: function() {
 		$( document.body ).on( 'change', '.customer-address-select-wrap .add-order-customer-address-select', function() {
-			var $this = $( this ),
-				val   = $this.val(),
+			let $this = $( this ),
+				val = $this.val(),
 				select = $( '#edd-add-order-form select#edd_order_address_country' ),
 				address = edd_admin_globals.customer_address_ajax_result.addresses[ val ];
 
@@ -238,14 +236,14 @@ var EDD_Add_Order = {
 			select.val( address.country ).trigger( 'chosen:updated' );
 			$( '#edd-add-order-form input[name="edd_order_address[address_id]"]' ).val( val );
 
-			var data = {
-				action:    'edd_get_shop_states',
-				country:    select.val(),
-				nonce:      $( '.add-order-customer-address-select' ).data( 'nonce' ),
-				field_name: 'edd_order_address_region'
+			const data = {
+				action: 'edd_get_shop_states',
+				country: select.val(),
+				nonce: $( '.add-order-customer-address-select' ).data( 'nonce' ),
+				field_name: 'edd_order_address_region',
 			};
 
-			$.post( ajaxurl, data, function ( response ) {
+			$.post( ajaxurl, data, function( response ) {
 				$( 'select#edd_order_address_region' ).find( 'option:gt(0)' ).remove();
 
 				if ( 'nostates' !== response ) {
@@ -254,21 +252,21 @@ var EDD_Add_Order = {
 
 				$( 'select#edd_order_address_region' ).trigger( 'chosen:updated' );
 				$( 'select#edd_order_address_region' ).val( address.region ).trigger( 'chosen:updated' );
-			});
+			} );
 
 			return false;
 		} );
 
 		$( '.edd-order-address-country' ).on( 'change', function() {
-			var select = $( this ),
-				data   = {
-					action:    'edd_get_shop_states',
-					country:    select.val(),
-					nonce:      select.data( 'nonce' ),
-					field_name: 'edd-order-address-country'
+			let select = $( this ),
+				data = {
+					action: 'edd_get_shop_states',
+					country: select.val(),
+					nonce: select.data( 'nonce' ),
+					field_name: 'edd-order-address-country',
 				};
 
-			$.post( ajaxurl, data, function ( response ) {
+			$.post( ajaxurl, data, function( response ) {
 				$( 'select.edd-order-address-region' ).find( 'option:gt(0)' ).remove();
 
 				if ( 'nostates' !== response ) {
@@ -276,7 +274,7 @@ var EDD_Add_Order = {
 				}
 
 				$( 'select.edd-order-address-region' ).trigger( 'chosen:updated' );
-			} ).done(function ( response ) {
+			} ).done( function( response ) {
 				EDD_Add_Order.recalculate_taxes();
 			} );
 
@@ -288,55 +286,55 @@ var EDD_Add_Order = {
 		} );
 	},
 
-	reindex : function () {
-		var key = 0;
+	reindex: function() {
+		let key = 0;
 
 		$( '.orderitems tbody tr:not(.no-items), .orderadjustments tbody tr:not(.no-items)' ).each( function() {
 			$( this ).attr( 'data-key', key );
 
 			$( this ).find( 'input' ).each( function() {
-				var name = $( this ).attr( 'name' );
+				let name = $( this ).attr( 'name' );
 
 				if ( name ) {
-					name = name.replace( /\[(\d+)\]/, '[' + parseInt( key ) + ']');
+					name = name.replace( /\[(\d+)\]/, '[' + parseInt( key ) + ']' );
 					$( this ).attr( 'name', name );
 				}
 			} );
 
 			key++;
-		});
+		} );
 	},
 
-	recalculate_taxes : function() {
+	recalculate_taxes: function() {
 		$( '#publishing-action .spinner' ).css( 'visibility', 'visible' );
 
-		var data = {
+		const data = {
 			action: 'edd_add_order_recalculate_taxes',
 			country: $( '.edd-order-address-country' ).val(),
 			region: $( '.edd-order-address-region' ).val(),
-			nonce: $( '#edd_add_order_nonce' ).val()
+			nonce: $( '#edd_add_order_nonce' ).val(),
 		};
 
-		$.post( ajaxurl, data, function ( response ) {
+		$.post( ajaxurl, data, function( response ) {
 			if ( '' !== response.tax_rate ) {
-				var tax_rate = parseFloat( response.tax_rate );
+				const tax_rate = parseFloat( response.tax_rate );
 
 				$( '.orderitems tbody tr:not(.no-items)' ).each( function() {
-					var amount = parseFloat( $( '.amount .value', this ).text() ),
+					let amount = parseFloat( $( '.amount .value', this ).text() ),
 						quantity = parseFloat( $( '.quantity .value', this ).text() ),
 						calculated = amount * quantity,
 						tax = 0;
 
 					if ( response.prices_include_tax ) {
-						var pre_tax = parseFloat( calculated / ( 1 + tax_rate ) );
+						const pre_tax = parseFloat( calculated / ( 1 + tax_rate ) );
 						tax = parseFloat( calculated - pre_tax );
 					} else {
 						tax = calculated * tax_rate;
 					}
 
-					var storeCurrency = edd_vars.currency,
+					let storeCurrency = edd_vars.currency,
 						decimalPlaces = edd_vars.currency_decimals,
-						total         = calculated + tax;
+						total = calculated + tax;
 
 					$( '.tax .value', this ).text( tax.toLocaleString( storeCurrency, { style: 'decimal', currency: storeCurrency, minimumFractionDigits: decimalPlaces, maximumFractionDigits: decimalPlaces } ) );
 					$( '.total .value', this ).text( total.toLocaleString( storeCurrency, { style: 'decimal', currency: storeCurrency, minimumFractionDigits: decimalPlaces, maximumFractionDigits: decimalPlaces } ) );
@@ -349,20 +347,20 @@ var EDD_Add_Order = {
 		} );
 	},
 
-	recalculate_total : function() {
+	recalculate_total: function() {
 		$( '#edd-add-order' ).on( 'click', '#edd-order-recalc-total', function() {
 			EDD_Add_Order.update_totals();
 		} );
 	},
 
-	update_totals : function() {
-		var subtotal = 0,
+	update_totals: function() {
+		let subtotal = 0,
 			tax = 0,
 			adjustments = 0,
 			total = 0;
 
 		$( '.orderitems tbody tr:not(.no-items)' ).each( function() {
-			var row = $( this ),
+			let row = $( this ),
 				item_amount,
 				item_quantity = 1,
 				item_tax = 0,
@@ -388,10 +386,10 @@ var EDD_Add_Order = {
 			item_total = item_amount * item_quantity;
 
 			total += item_total;
-		});
+		} );
 
 		$( '.orderadjustments tbody tr:not(.no-items)' ).each( function() {
-			var row = $( this ),
+			let row = $( this ),
 				type,
 				amount = 0;
 
@@ -407,8 +405,8 @@ var EDD_Add_Order = {
 					amount = parseFloat( row.find( 'input.discount-amount', row ).val() );
 
 					if ( 'percent' === row.find( 'input.discount-type' ).val() ) {
-						$( '.orderitems tbody tr:not(.no-items)' ).each( function () {
-							var item_amount = $( this ).find( '.amount .value' ).text(),
+						$( '.orderitems tbody tr:not(.no-items)' ).each( function() {
+							let item_amount = $( this ).find( '.amount .value' ).text(),
 								quantity = 1;
 
 							if ( $( this ).find( '.quantity' ).length ) {
@@ -417,10 +415,10 @@ var EDD_Add_Order = {
 
 							item_amount *= quantity;
 
-							var reduction = parseFloat( ( item_amount / 100 ) * amount );
+							const reduction = parseFloat( ( item_amount / 100 ) * amount );
 
 							if ( $( this ).find( '.tax' ).length ) {
-								var item_tax = parseFloat( $( this ).find( '.tax .value' ).text() ),
+								let item_tax = parseFloat( $( this ).find( '.tax .value' ).text() ),
 									item_tax_reduction = parseFloat( item_tax / 100 * amount );
 
 								tax -= item_tax_reduction;
@@ -437,7 +435,7 @@ var EDD_Add_Order = {
 
 					break;
 			}
-		});
+		} );
 
 		if ( isNaN( total ) ) {
 			total = 0;
@@ -455,13 +453,13 @@ var EDD_Add_Order = {
 			adjustments = 0;
 		}
 
-		$(' .edd-order-subtotal .value').html( subtotal.toFixed( edd_vars.currency_decimals ) );
-		$(' .edd-order-taxes .value').html( tax.toFixed( edd_vars.currency_decimals ) );
-		$(' .edd-order-discounts .value').html( adjustments.toFixed( edd_vars.currency_decimals ) );
-		$(' .edd-order-total .value ').html( total.toFixed( edd_vars.currency_decimals ) );
+		$( ' .edd-order-subtotal .value' ).html( subtotal.toFixed( edd_vars.currency_decimals ) );
+		$( ' .edd-order-taxes .value' ).html( tax.toFixed( edd_vars.currency_decimals ) );
+		$( ' .edd-order-discounts .value' ).html( adjustments.toFixed( edd_vars.currency_decimals ) );
+		$( ' .edd-order-total .value ' ).html( total.toFixed( edd_vars.currency_decimals ) );
 	},
 
-	validate : function() {
+	validate: function() {
 		$( '#edd-add-order-form' ).on( 'submit', function() {
 			$( '#publishing-action .spinner' ).css( 'visibility', 'visible' );
 
@@ -482,7 +480,7 @@ var EDD_Add_Order = {
 				return false;
 			}
 		} );
-	}
+	},
 };
 
 export default EDD_Add_Order;

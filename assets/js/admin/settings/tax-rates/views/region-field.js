@@ -29,7 +29,7 @@ const RegionField = wp.Backbone.View.extend( {
 			this.$el.html( this.states );
 			this.$el.find( 'select' ).chosen( chosenVars );
 		}
-	}
+	},
 } );
 
 export default RegionField;

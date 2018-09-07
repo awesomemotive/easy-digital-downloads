@@ -18,7 +18,6 @@ function setupEmailTags() {
 	 * @param {object} node Button node.
 	 */
 	insertButtons.forEach( function( node ) {
-
 		/**
 		 * Listen for clicks on tag buttons.
 		 */
@@ -35,18 +34,18 @@ function setupEmailTags() {
  * Filter tags.
  */
 function filterEmailTags() {
-	var filterInput = document.querySelector( '.edd-email-tags-filter-search' );
-	var tagItems = document.querySelectorAll( '.edd-email-tags-list-item' );
+	const filterInput = document.querySelector( '.edd-email-tags-filter-search' );
+	const tagItems = document.querySelectorAll( '.edd-email-tags-list-item' );
 
 	filterInput.addEventListener( 'keyup', function( event ) {
-		var searchTerm = event.target.value;
-		var foundTags = searchItems( eddEmailTagsInserter.items, searchTerm );
+		const searchTerm = event.target.value;
+		const foundTags = searchItems( eddEmailTagsInserter.items, searchTerm );
 
 		tagItems.forEach( function( node ) {
-			var found = _.findWhere( foundTags, { tag: node.dataset.tag } );
+			const found = _.findWhere( foundTags, { tag: node.dataset.tag } );
 
 			node.style.display = ! found ? 'none' : 'block';
-		} )
+		} );
 	} );
 }
 
@@ -55,7 +54,7 @@ function filterEmailTags() {
  */
 document.addEventListener( 'DOMContentLoaded', function() {
 	// Resize Thickbox when media button is clicked.
-	var mediaButton = document.querySelector( '.edd-email-tags-inserter' );
+	const mediaButton = document.querySelector( '.edd-email-tags-inserter' );
 	mediaButton.addEventListener( 'click', tb_position );
 
 	// Clickable tags.

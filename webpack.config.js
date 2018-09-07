@@ -55,14 +55,14 @@ const config = {
 				to: 'assets/js/vendor/jquery.flot.min.js',
 				transform( content, src ) {
 					return Promise.resolve( Buffer.from( UglifyJS.minify( content.toString() ).code ) );
-				}
+				},
 			},
 			{
 				from: './node_modules/flot/jquery.flot.pie.js',
 				to: 'assets/js/vendor/jquery.flot.pie.min.js',
 				transform( content, src ) {
 					return Promise.resolve( Buffer.from( UglifyJS.minify( content.toString() ).code ) );
-				}
+				},
 			},
 			{
 				from: './node_modules/jquery-colorbox/jquery.colorbox-min.js',
@@ -73,7 +73,7 @@ const config = {
 				to: 'assets/js/vendor/moment.min.js',
 				transform( content, src ) {
 					return Promise.resolve( Buffer.from( UglifyJS.minify( content.toString() ).code ) );
-				}
+				},
 			},
 		] ),
 	],

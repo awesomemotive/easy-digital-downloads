@@ -984,12 +984,17 @@ var EDD_Download_Configuration = {
           } else {
             // Create a new row for all additional attachments
             var row = window.formfield,
-                clone = EDD_Download_Configuration.clone_repeatable(row);
-            clone.find('.edd_repeatable_attachment_id_field').val(attachment.id);
-            clone.find('.edd_repeatable_thumbnail_size_field').val(selectedSize);
-            clone.find('.edd_repeatable_upload_field').val(selectedURL);
-            clone.find('.edd_repeatable_name_field').val(selectedName);
-            clone.insertAfter(row);
+                _clone = EDD_Download_Configuration.clone_repeatable(row);
+
+            _clone.find('.edd_repeatable_attachment_id_field').val(attachment.id);
+
+            _clone.find('.edd_repeatable_thumbnail_size_field').val(selectedSize);
+
+            _clone.find('.edd_repeatable_upload_field').val(selectedURL);
+
+            _clone.find('.edd_repeatable_name_field').val(selectedName);
+
+            _clone.insertAfter(row);
           }
         });
       }); // Finally, open the modal
@@ -1807,7 +1812,6 @@ var EDD_Edit_Payment = {
             quantity = $('input[name="edd-payment-details-downloads[' + key + '][quantity]"]').val(),
             amount = $('input[name="edd-payment-details-downloads[' + key + '][amount]"]').val(),
             order_item_id = $('input[name="edd-payment-details-downloads[' + key + '][order_item_id]"]').val();
-        ;
 
         if ($('input[name="edd-payment-details-downloads[' + key + '][tax]"]')) {
           var fees = $('input[name="edd-payment-details-downloads[' + key + '][tax]"]').val();
@@ -1825,12 +1829,12 @@ var EDD_Edit_Payment = {
         }
 
         var removed_item = [{
-          'order_item_id': order_item_id,
-          'id': download_id,
-          'price_id': price_id,
-          'quantity': quantity,
-          'amount': amount,
-          'cart_index': key
+          order_item_id: order_item_id,
+          id: download_id,
+          price_id: price_id,
+          quantity: quantity,
+          amount: amount,
+          cart_index: key
         }];
         currently_removed[key] = removed_item;
         $('input[name="edd-payment-removed"]').val(JSON.stringify(currently_removed));
@@ -2568,12 +2572,10 @@ var EDD_Import = {
 
         if (!key) {
           $(this).parent().next().html('');
+        } else if (false !== response.data.first_row[key]) {
+          $(this).parent().next().html(response.data.first_row[key]);
         } else {
-          if (false !== response.data.first_row[key]) {
-            $(this).parent().next().html(response.data.first_row[key]);
-          } else {
-            $(this).parent().next().html('');
-          }
+          $(this).parent().next().html('');
         }
       });
       $.each(select, function () {
@@ -2742,9 +2744,9 @@ var EDD_Tools = {
 
         if (is_confirmed) {
           return true;
-        } else {
-          has_errors = true;
         }
+
+        has_errors = true;
       }
 
       export_form.find('.notice-wrap').remove();

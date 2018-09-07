@@ -20,7 +20,7 @@ const TableRow = wp.Backbone.View.extend( {
 		'click .remove': 'removeRow',
 		'click .activate': 'activateRow',
 		'click .deactivate': 'deactivateRow',
-		'change [type="checkbox"]': 'selectRow'
+		'change [type="checkbox"]': 'selectRow',
 	},
 
 	/**
@@ -36,7 +36,7 @@ const TableRow = wp.Backbone.View.extend( {
 	render: function() {
 		this.$el.html( this.template( {
 			...this.model.toJSON(),
-			formattedAmount: this.model.formattedAmount()
+			formattedAmount: this.model.formattedAmount(),
 		} ) );
 
 		// Ensure the wrapper class has the new name.
@@ -84,7 +84,7 @@ const TableRow = wp.Backbone.View.extend( {
 	 * @param {Object} event Event.
 	 */
 	selectRow: function( event ) {
-		var checked = event.target.checked;
+		const checked = event.target.checked;
 
 		if ( ! checked ) {
 			this.collection.selected = _.reject( this.collection.selected, ( cid ) => {
@@ -93,7 +93,7 @@ const TableRow = wp.Backbone.View.extend( {
 		} else {
 			this.collection.selected.push( this.model.cid );
 		}
-	}
+	},
 } );
 
 export default TableRow;

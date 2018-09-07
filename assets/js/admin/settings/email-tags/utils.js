@@ -9,7 +9,7 @@
  * @return {Array}             Filtered item list.
  */
 export const searchItems = function( items, searchTerm ) {
-	var normalizedSearchTerm = normalizeTerm( searchTerm );
+	const normalizedSearchTerm = normalizeTerm( searchTerm );
 
 	const matchSearch = function( string ) {
 		return normalizeTerm( string ).indexOf( normalizedSearchTerm ) !== -1;

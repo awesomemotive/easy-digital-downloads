@@ -18,7 +18,7 @@ const TaxRates = Backbone.Collection.extend( {
 	initialize: function() {
 		this.showAll = false;
 		this.selected = [];
-	}
+	},
 } );
 
 export default TaxRates;

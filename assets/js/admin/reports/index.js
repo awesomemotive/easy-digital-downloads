@@ -13,16 +13,16 @@ if ( typeof postboxes !== 'undefined' && /edd-reports/.test( pagenow ) ) {
 /**
  * Reports / Exports screen JS
  */
-var EDD_Reports = {
+const EDD_Reports = {
 
-	init : function() {
+	init: function() {
 		this.meta_boxes();
 		this.date_options();
 		this.customers_export();
 		this.filters();
 	},
 
-	meta_boxes : function() {
+	meta_boxes: function() {
 		$( '.edd-reports-wrapper .postbox .handlediv' ).remove();
 		$( '.edd-reports-wrapper .postbox' ).removeClass( 'closed' );
 
@@ -32,11 +32,10 @@ var EDD_Reports = {
 		}, 1 );
 	},
 
-	date_options : function() {
-
+	date_options: function() {
 		// Show hide extended date options
 		$( 'select.edd-graphs-date-options' ).on( 'change', function( event ) {
-			var	select             = $( this ),
+			let	select = $( this ),
 				date_range_options = select.parent().siblings( '.edd-date-range-options' );
 
 			if ( 'other' === select.val() ) {
@@ -44,16 +43,14 @@ var EDD_Reports = {
 			} else {
 				date_range_options.addClass( 'screen-reader-text' );
 			}
-		});
+		} );
 	},
 
-	customers_export : function() {
-
+	customers_export: function() {
 		// Show / hide Download option when exporting customers
 		$( '#edd_customer_export_download' ).change( function() {
-
-			var $this = $( this ),
-				download_id = $('option:selected', $this).val(),
+			let $this = $( this ),
+				download_id = $( 'option:selected', $this ).val(),
 				customer_export_option = $( '#edd_customer_export_option' );
 
 			if ( '0' === $this.val() ) {
@@ -64,35 +61,35 @@ var EDD_Reports = {
 
 			// On Download Select, Check if Variable Prices Exist
 			if ( parseInt( download_id ) !== 0 ) {
-				var data = {
-					action : 'edd_check_for_download_price_variations',
+				const data = {
+					action: 'edd_check_for_download_price_variations',
 					download_id: download_id,
-					all_prices: true
+					all_prices: true,
 				};
 
-				var price_options_select = $('.edd_price_options_select');
+				var price_options_select = $( '.edd_price_options_select' );
 
-				$.post(ajaxurl, data, function(response) {
+				$.post( ajaxurl, data, function( response ) {
 					price_options_select.remove();
-					$('#edd_customer_export_download_chosen').after( response );
-				});
+					$( '#edd_customer_export_download_chosen' ).after( response );
+				} );
 			} else {
 				price_options_select.remove();
 			}
-		});
+		} );
 	},
 
-	filters : function() {
-		$('.edd_countries_filter').on( 'change', function() {
-			var select = $( this ),
-				data   = {
-					action:    'edd_get_shop_states',
-					country:    select.val(),
-					nonce:      select.data('nonce'),
-					field_name: 'edd_countries_filter'
+	filters: function() {
+		$( '.edd_countries_filter' ).on( 'change', function() {
+			let select = $( this ),
+				data = {
+					action: 'edd_get_shop_states',
+					country: select.val(),
+					nonce: select.data( 'nonce' ),
+					field_name: 'edd_countries_filter',
 				};
 
-			$.post( ajaxurl, data, function ( response ) {
+			$.post( ajaxurl, data, function( response ) {
 				$( 'select.edd_regions_filter' ).find( 'option:gt(0)' ).remove();
 
 				if ( 'nostates' !== response ) {
@@ -100,11 +97,11 @@ var EDD_Reports = {
 				}
 
 				$( 'select.edd_regions_filter' ).trigger( 'chosen:updated' );
-			});
+			} );
 
 			return false;
 		} );
-	}
+	},
 };
 
 export default EDD_Reports;

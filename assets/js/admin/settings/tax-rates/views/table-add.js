@@ -34,7 +34,7 @@ const TableAdd = wp.Backbone.View.extend( {
 
 		// Can be click increase or keyboard.
 		'keyup #tax_rate_amount': 'setAmount',
-		'change #tax_rate_amount': 'setAmount'
+		'change #tax_rate_amount': 'setAmount',
 	},
 
 	/**
@@ -43,7 +43,7 @@ const TableAdd = wp.Backbone.View.extend( {
 	initialize: function() {
 		this.model = new TaxRate( {
 			global: true,
-			unsaved: true
+			unsaved: true,
 		} );
 
 		this.listenTo( this.model, 'change:country', this.updateRegion );
@@ -62,19 +62,19 @@ const TableAdd = wp.Backbone.View.extend( {
 	 * Show a list of states or an input field.
 	 */
 	updateRegion: function() {
-		var self = this;
+		const self = this;
 
-		var data = {
+		const data = {
 			action: 'edd_get_shop_states',
 			country: this.model.get( 'country' ),
 			nonce: eddTaxRates.nonce,
-			field_name: 'tax_rate_region'
+			field_name: 'tax_rate_region',
 		};
 
 		$.post( ajaxurl, data, function( response ) {
 			self.views.set( '#tax_rate_region_wrapper', new RegionField( {
 				states: response,
-				global: self.model.get( 'global' )
+				global: self.model.get( 'global' ),
 			} ) );
 		} );
 	},
@@ -85,7 +85,7 @@ const TableAdd = wp.Backbone.View.extend( {
 	 * @param {Object} event Event.
 	 */
 	setCountry: function( event ) {
-		this.model.set( 'country', event.target.options[event.target.selectedIndex].value );
+		this.model.set( 'country', event.target.options[ event.target.selectedIndex ].value );
 	},
 
 	/**
@@ -94,12 +94,12 @@ const TableAdd = wp.Backbone.View.extend( {
 	 * @param {Object} event Event.
 	 */
 	setRegion: function( event ) {
-		var value = false;
+		let value = false;
 
 		if ( event.target.value ) {
 			value = event.target.value;
 		} else {
-			value = event.target.options[event.target.selectedIndex].value;
+			value = event.target.options[ event.target.selectedIndex ].value;
 		}
 
 		this.model.set( 'region', value );
@@ -135,13 +135,13 @@ const TableAdd = wp.Backbone.View.extend( {
 		this.collection.add( _.extend(
 			this.model.attributes,
 			{
-				id: this.model.cid
+				id: this.model.cid,
 			}
 		) );
 
 		this.render();
 		this.initialize();
-	}
+	},
 } );
 
 export default TableAdd;

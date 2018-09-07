@@ -9,7 +9,7 @@ const TableMeta = wp.Backbone.View.extend( {
 
 	// Watch events.
 	events: {
-		'change [type="checkbox"]': 'selectAll'
+		'change [type="checkbox"]': 'selectAll',
 	},
 
 	/**
@@ -18,7 +18,7 @@ const TableMeta = wp.Backbone.View.extend( {
 	 * @param {Object} event Event.
 	 */
 	selectAll: function( event ) {
-		var checked = event.target.checked;
+		const checked = event.target.checked;
 
 		_.each( this.collection.models, ( model ) => {
 			// Check individual models.
@@ -27,7 +27,7 @@ const TableMeta = wp.Backbone.View.extend( {
 			// Add to global selection.
 			this.collection.selected.push( model.cid );
 		} );
-	}
+	},
 } );
 
 export default TableMeta;

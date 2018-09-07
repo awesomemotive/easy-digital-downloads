@@ -57,4 +57,4 @@ jQuery( document ).ready( function( $ ) {
 	// Export/Import.
 	EDD_Export.init();
 	EDD_Import.init();
-});
+} );

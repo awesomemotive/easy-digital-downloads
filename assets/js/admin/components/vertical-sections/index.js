@@ -14,13 +14,12 @@ jQuery( document ).ready( function( $ ) {
 	// When a section nav item is clicked.
 	$( '.edd-vertical-sections.use-js .section-nav li a' ).on( 'click',
 		function( j ) {
-
 			// Prevent the default browser action when a link is clicked.
 			j.preventDefault();
 
 			// Get the `href` attribute of the item.
-			var them  = $( this ),
-				href  = them.attr( 'href' ),
+			let them = $( this ),
+				href = them.attr( 'href' ),
 				rents = them.parents( '.edd-vertical-sections' );
 
 			// Hide all section content.
