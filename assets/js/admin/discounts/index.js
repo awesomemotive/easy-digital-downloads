@@ -1,25 +1,22 @@
 /**
- * Discount add / edit screen JS
+ * Internal dependencies.
  */
-const EDD_Discount = {
+import { jQueryReady } from 'utils/jquery.js';
 
-	init: function() {
-		this.product_requirements();
-	},
+/**
+ * DOM ready.
+ */
+jQueryReady( () => {
+	const products = $( '#products' );
 
-	product_requirements: function() {
-		$( '#edd-products' ).change( function() {
-			const product_conditions = $( '#edd-discount-product-conditions' );
+	if ( ! products ) {
+		return;
+	}
 
-			if ( $( this ).val() ) {
-				product_conditions.show();
-			} else {
-				product_conditions.hide();
-			}
-		} );
-	},
-};
-
-jQuery( document ).ready( function( $ ) {
-	EDD_Discount.init();
+	/**
+	 * Show/hide conditions based on input value.
+	 */
+	products.change( function() {
+		$( '#edd-discount-product-conditions' ).toggle( products.val() );
+	} );
 } );
