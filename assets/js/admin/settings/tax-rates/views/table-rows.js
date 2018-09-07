@@ -38,7 +38,7 @@ const TableRows = wp.Backbone.View.extend( {
 		_.each( this.collection.models, ( rate ) => {
 			this.views.add( new TableRow( {
 				collection: this.collection,
-				model: rate
+				model: rate,
 			} ) );
 		} );
 	},
@@ -47,8 +47,8 @@ const TableRows = wp.Backbone.View.extend( {
 	 * Show an empty state if all items are deactivated.
 	 */
 	filtered: function() {
-		var disabledRates = this.collection.where( {
-			status: 'inactive'
+		const disabledRates = this.collection.where( {
+			status: 'inactive',
 		} );
 
 		// Check if all rows are invisible, and show the "No Items" row if so
@@ -59,7 +59,7 @@ const TableRows = wp.Backbone.View.extend( {
 		} else {
 			this.render();
 		}
-	}
+	},
 } );
 
 export default TableRows;

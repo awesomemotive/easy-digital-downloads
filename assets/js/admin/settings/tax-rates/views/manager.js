@@ -28,11 +28,11 @@ const Manager = wp.Backbone.View.extend( {
 	 */
 	render: function() {
 		this.views.add( new BulkActions( {
-			collection: this.collection
+			collection: this.collection,
 		} ) );
 
 		this.views.add( new Table( {
-			collection: this.collection
+			collection: this.collection,
 		} ) );
 	},
 
@@ -59,7 +59,7 @@ const Manager = wp.Backbone.View.extend( {
 		event.preventDefault();
 
 		return '';
-	}
+	},
 } );
 
 export default Manager;

@@ -26,12 +26,12 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		region: rate.description,
 		global: 'country' === rate.scope,
 		amount: rate.amount,
-		status: rate.status
+		status: rate.status,
 	} ) );
 
 	// Add initial rates.
 	manager.collection.set( rates, {
-		silent: true
+		silent: true,
 	} );
 
 	// Render manager.

@@ -21,7 +21,7 @@ const TaxRate = Backbone.Model.extend( {
 	 * @todo This should support dynamic decimal types.
 	 */
 	formattedAmount: function() {
-		var amount = 0;
+		let amount = 0;
 
 		if ( this.get( 'amount' ) ) {
 			amount = parseFloat( this.get( 'amount' ) ).toFixed( 2 );

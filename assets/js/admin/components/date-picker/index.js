@@ -5,7 +5,7 @@
  * third-party plugins.
  */
 jQuery( document ).ready( function( $ ) {
-	var edd_datepicker = $( 'input.edd_datepicker' );
+	const edd_datepicker = $( 'input.edd_datepicker' );
 
 	if ( edd_datepicker.length > 0 ) {
 		edd_datepicker
@@ -20,7 +20,7 @@ jQuery( document ).ready( function( $ ) {
 					$( '#ui-datepicker-div' )
 						.removeClass( 'ui-datepicker' )
 						.addClass( 'edd-datepicker' );
-				}
-			});
+				},
+			} );
 	}
 } );

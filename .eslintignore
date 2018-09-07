@@ -1,6 +1,4 @@
 node_modules
 vendor
 public
-assets/js
-!assets/js/admin
-!assets/js/utils
+assets/js/*.js
