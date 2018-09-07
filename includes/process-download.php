@@ -800,7 +800,10 @@ function edd_readfile_chunked( $file, $retbytes = true ) {
 
 	header( 'Accept-Ranges: bytes' );
 
-	set_time_limit( 0 );
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
+		@set_time_limit(0);
+	}
+
 	fseek( $handle, $seek_start );
 
 	while ( ! @feof( $handle ) ) {
