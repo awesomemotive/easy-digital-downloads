@@ -58,7 +58,7 @@ function edd_settings_contextual_help() {
 		'title'	    => __( 'Emails', 'easy-digital-downloads' ),
 		'content'	=>
 			'<p>' . __( "This screen allows you to customize how emails act throughout your store. You can choose a premade template, set the sender's name, email address, and subject.", 'easy-digital-downloads' ) . '</p>' .
-			'<p>' . __( 'A set of email tags has also been provided to allow the creation of personalized emails. A tag consists of a keyword surrounded by curly braces: <code>{tag}</code>. A description of each of these tags appears below the editor.', 'easy-digital-downloads' ) . '</p>'
+			'<p>' . __( 'A set of email tag markers has also been provided to allow the creation of personalized emails. A tag consists of a keyword surrounded by curly braces: <code>{tag}</code>.', 'easy-digital-downloads' ) . '</p>'
 	) );
 
 	$screen->add_help_tab( array(
