@@ -50,6 +50,14 @@
 .edd-email-tags-list-button strong {
 	color: #444;
 	font-size: 14px;
-	display: block;
 	margin-bottom: 8px;
+}
+
+.edd-email-tags-list-button code {
+	margin-left: 10px;
+}
+
+.edd-email-tags-list-button span {
+	display: block;
+	margin-top: 10px;
 }

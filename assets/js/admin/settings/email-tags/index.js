@@ -1,4 +1,4 @@
-/* global eddEmailTagsInserter, tb_remove, send_to_editor, _, window, document */
+/* global eddEmailTagsInserter, tb_remove, tb_position, send_to_editor, _, window, document */
 
 /**
  * Internal dependencies.
