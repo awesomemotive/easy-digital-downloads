@@ -17,8 +17,8 @@ const config = {
 	entry: {
 		'edd-admin': './assets/js/admin',
 		'edd-admin-backwards-compatibility': './assets/js/admin/backwards-compatibility.js',
-		'edd-admin-tax-rates': './assets/js/admin/tax-rates',
-		'edd-admin-email-tags': './assets/js/admin/email-tags',
+		'edd-admin-tax-rates': './assets/js/admin/settings/tax-rates',
+		'edd-admin-email-tags': './assets/js/admin/settings/email-tags',
 	},
 	output: {
 		filename: 'assets/js/[name].js',
