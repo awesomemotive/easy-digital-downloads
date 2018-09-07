@@ -5,6 +5,21 @@ const webpack = require( 'webpack' );
 const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
 const UglifyJS = require( 'uglify-es' );
 
+const adminPages = [
+	'customers',
+	'dashboard',
+	'discounts',
+	'downloads',
+	'tools/export',
+	'tools/import',
+	'notes',
+	'orders',
+	'reports',
+	'payments',
+	'settings',
+	'tools',
+];
+
 // Webpack configuration.
 const config = {
 	mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
@@ -14,12 +29,19 @@ const config = {
 			'node_modules',
 		],
 	},
-	entry: {
-		'edd-admin': './assets/js/admin',
-		'edd-admin-backwards-compatibility': './assets/js/admin/backwards-compatibility.js',
-		'edd-admin-tax-rates': './assets/js/admin/settings/tax-rates',
-		'edd-admin-email-tags': './assets/js/admin/settings/email-tags',
-	},
+	entry: Object.assign(
+		// Dynamic entry points for individual admin pages.
+		adminPages.reduce( ( memo, path ) => {
+			memo[ `edd-admin-${ path.replace( '/', '-' ) }` ] = `./assets/js/admin/${ path }`;
+			return memo;
+		}, {} ),
+		{
+			'edd-admin': './assets/js/admin',
+			'edd-admin-backwards-compatibility': './assets/js/admin/backwards-compatibility.js',
+			'edd-admin-tax-rates': './assets/js/admin/settings/tax-rates',
+			'edd-admin-email-tags': './assets/js/admin/settings/email-tags',
+		}
+	),
 	output: {
 		filename: 'assets/js/[name].js',
 		path: __dirname,

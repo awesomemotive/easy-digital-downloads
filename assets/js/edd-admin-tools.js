@@ -66,337 +66,15 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/admin/index.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/admin/tools/index.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./assets/js/admin/components/chosen/index.js":
-/*!****************************************************!*\
-  !*** ./assets/js/admin/components/chosen/index.js ***!
-  \****************************************************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var core_js_modules_es6_function_name__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.function.name */ "./node_modules/core-js/modules/es6.function.name.js");
-/* harmony import */ var core_js_modules_es6_function_name__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_function_name__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es6.regexp.replace */ "./node_modules/core-js/modules/es6.regexp.replace.js");
-/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var utils_chosen_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! utils/chosen.js */ "./assets/js/utils/chosen.js");
-
-
-
-/**
- * Internal dependencies.
- */
-
-jQuery(document).ready(function ($) {
-  $('.edd-select-chosen').chosen(utils_chosen_js__WEBPACK_IMPORTED_MODULE_2__["chosenVars"]);
-  $('.edd-select-chosen .chosen-search input').each(function () {
-    // Bail if placeholder already set
-    if ($(this).attr('placeholder')) {
-      return;
-    }
-
-    var selectElem = $(this).parent().parent().parent().prev('select.edd-select-chosen'),
-        placeholder = selectElem.data('search-placeholder');
-
-    if (placeholder) {
-      console.log(placeholder);
-      $(this).attr('placeholder', placeholder);
-    }
-  }); // Add placeholders for Chosen input fields
-
-  $('.chosen-choices').on('click', function () {
-    var placeholder = $(this).parent().prev().data('search-placeholder');
-
-    if (typeof placeholder === "undefined") {
-      placeholder = edd_vars.type_to_search;
-    }
-
-    $(this).children('li').children('input').attr('placeholder', placeholder);
-  }); // This fixes the Chosen box being 0px wide when the thickbox is opened
-
-  $('#post').on('click', '.edd-thickbox', function () {
-    $('.edd-select-chosen', '#choose-download').css('width', '100%');
-  }); // Variables for setting up the typing timer
-  // Time in ms, Slow - 521ms, Moderate - 342ms, Fast - 300ms
-
-  var userInteractionInterval = 342,
-      typingTimerElements = '.edd-select-chosen .chosen-search input, .edd-select-chosen .search-field input',
-      typingTimer; // Replace options with search results
-
-  $(document.body).on('keyup', typingTimerElements, function (e) {
-    var element = $(this),
-        val = element.val(),
-        container = element.closest('.edd-select-chosen'),
-        select = container.prev(),
-        select_type = select.data('search-type'),
-        no_bundles = container.hasClass('no-bundles'),
-        variations = container.hasClass('variations'),
-        lastKey = e.which,
-        search_type = 'edd_download_search'; // String replace the chosen container IDs
-
-    container.attr('id').replace('_chosen', ''); // Detect if we have a defined search type, otherwise default to downloads
-
-    if (typeof select_type !== 'undefined') {
-      // Don't trigger AJAX if this select has all options loaded
-      if ('no_ajax' === select_type) {
-        return;
-      }
-
-      search_type = 'edd_' + select_type + '_search';
-    } else {
-      return;
-    } // Don't fire if short or is a modifier key (shift, ctrl, apple command key, or arrow keys)
-
-
-    if (val.length <= 3 && 'edd_download_search' === search_type || lastKey === 16 || lastKey === 13 || lastKey === 91 || lastKey === 17 || lastKey === 37 || lastKey === 38 || lastKey === 39 || lastKey === 40) {
-      container.children('.spinner').remove();
-      return;
-    } // Maybe append a spinner
-
-
-    if (!container.children('.spinner').length) {
-      container.append('<span class="spinner is-active"></span>');
-    }
-
-    clearTimeout(typingTimer);
-    typingTimer = setTimeout(function () {
-      $.ajax({
-        type: 'GET',
-        dataType: 'json',
-        url: ajaxurl,
-        data: {
-          s: val,
-          action: search_type,
-          no_bundles: no_bundles,
-          variations: variations
-        },
-        beforeSend: function beforeSend() {
-          select.closest('ul.chosen-results').empty();
-        },
-        success: function success(data) {
-          // Remove all options but those that are selected
-          $('option:not(:selected)', select).remove(); // Add any option that doesn't already exist
-
-          $.each(data, function (key, item) {
-            if (!$('option[value="' + item.id + '"]', select).length) {
-              select.prepend('<option value="' + item.id + '">' + item.name + '</option>');
-            }
-          }); // Get the text immediately before triggering an update.
-          // Any sooner will cause the text to jump around.
-
-          var val = element.val(); // Update the options
-
-          select.trigger('chosen:updated');
-          element.val(val);
-        }
-      }).fail(function (response) {
-        if (window.console && window.console.log) {
-          console.log(response);
-        }
-      }).done(function (response) {
-        container.children('.spinner').remove();
-      });
-    }, userInteractionInterval);
-  });
-});
-
-/***/ }),
-
-/***/ "./assets/js/admin/components/date-picker/index.js":
-/*!*********************************************************!*\
-  !*** ./assets/js/admin/components/date-picker/index.js ***!
-  \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * Date picker
- *
- * This juggles a few CSS classes to avoid styling collisions with other
- * third-party plugins.
- */
-jQuery(document).ready(function ($) {
-  var edd_datepicker = $('input.edd_datepicker');
-
-  if (edd_datepicker.length > 0) {
-    edd_datepicker // Disable autocomplete to avoid it covering the calendar
-    .attr('autocomplete', 'off') // Invoke the datepickers
-    .datepicker({
-      dateFormat: edd_vars.date_picker_format,
-      beforeShow: function beforeShow() {
-        $('#ui-datepicker-div').removeClass('ui-datepicker').addClass('edd-datepicker');
-      }
-    });
-  }
-});
-
-/***/ }),
-
-/***/ "./assets/js/admin/components/sortable-list/index.js":
-/*!***********************************************************!*\
-  !*** ./assets/js/admin/components/sortable-list/index.js ***!
-  \***********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * Sortables
- *
- * This makes certain settings sortable, and attempts to stash the results
- * in the nearest .edd-order input value.
- */
-jQuery(document).ready(function ($) {
-  var edd_sortables = $('ul.edd-sortable-list');
-
-  if (edd_sortables.length > 0) {
-    edd_sortables.sortable({
-      axis: 'y',
-      items: 'li',
-      cursor: 'move',
-      tolerance: 'pointer',
-      containment: 'parent',
-      distance: 2,
-      opacity: 0.7,
-      scroll: true,
-
-      /**
-       * When sorting stops, assign the value to the previous input.
-       * This input should be a hidden text field
-       */
-      stop: function stop() {
-        var keys = $.map($(this).children('li'), function (el) {
-          return $(el).data('key');
-        });
-        $(this).prev('input.edd-order').val(keys);
-      }
-    });
-  }
-});
-
-/***/ }),
-
-/***/ "./assets/js/admin/components/tooltips/index.js":
-/*!******************************************************!*\
-  !*** ./assets/js/admin/components/tooltips/index.js ***!
-  \******************************************************/
-/*! exports provided: edd_attach_tooltips */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "edd_attach_tooltips", function() { return edd_attach_tooltips; });
-/**
- * Attach tooltips
- *
- * @param {string} selector
- */
-var edd_attach_tooltips = function edd_attach_tooltips(selector) {
-  selector.tooltip({
-    content: function content() {
-      return $(this).prop('title');
-    },
-    tooltipClass: 'edd-ui-tooltip',
-    position: {
-      my: 'center top',
-      at: 'center bottom+10',
-      collision: 'flipfit'
-    },
-    hide: {
-      duration: 200
-    },
-    show: {
-      duration: 200
-    }
-  });
-};
-jQuery(document).ready(function ($) {
-  edd_attach_tooltips($('.edd-help-tip'));
-});
-
-/***/ }),
-
-/***/ "./assets/js/admin/components/user-search/index.js":
-/*!*********************************************************!*\
-  !*** ./assets/js/admin/components/user-search/index.js ***!
-  \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-jQuery(document).ready(function ($) {
-  // AJAX user search
-  $('.edd-ajax-user-search') // Search
-  .keyup(function () {
-    var user_search = $(this).val(),
-        exclude = '';
-
-    if ($(this).data('exclude')) {
-      exclude = $(this).data('exclude');
-    }
-
-    $('.edd_user_search_wrap').addClass('loading');
-    var data = {
-      action: 'edd_search_users',
-      user_name: user_search,
-      exclude: exclude
-    };
-    $.ajax({
-      type: "POST",
-      data: data,
-      dataType: "json",
-      url: ajaxurl,
-      success: function success(search_response) {
-        $('.edd_user_search_wrap').removeClass('loading');
-        $('.edd_user_search_results').removeClass('hidden');
-        $('.edd_user_search_results span').html('');
-
-        if (search_response.results) {
-          $(search_response.results).appendTo('.edd_user_search_results span');
-        }
-      }
-    });
-  }) // Hide
-  .blur(function () {
-    if (edd_user_search_mouse_down) {
-      edd_user_search_mouse_down = false;
-    } else {
-      $(this).removeClass('loading');
-      $('.edd_user_search_results').addClass('hidden');
-    }
-  }) // Show
-  .focus(function () {
-    $(this).keyup();
-  });
-  $(document.body).on('click.eddSelectUser', '.edd_user_search_results span a', function (e) {
-    e.preventDefault();
-    var login = $(this).data('login');
-    $('.edd-ajax-user-search').val(login);
-    $('.edd_user_search_results').addClass('hidden');
-    $('.edd_user_search_results span').html('');
-  });
-  $(document.body).on('click.eddCancelUserSearch', '.edd_user_search_results a.edd-ajax-user-cancel', function (e) {
-    e.preventDefault();
-    $('.edd-ajax-user-search').val('');
-    $('.edd_user_search_results').addClass('hidden');
-    $('.edd_user_search_results span').html('');
-  }); // Cancel user-search.blur when picking a user
-
-  var edd_user_search_mouse_down = false;
-  $('.edd_user_search_results').mousedown(function () {
-    edd_user_search_mouse_down = true;
-  });
-});
-
-/***/ }),
-
-/***/ "./assets/js/admin/components/vertical-sections/index.js":
-/*!***************************************************************!*\
-  !*** ./assets/js/admin/components/vertical-sections/index.js ***!
-  \***************************************************************/
+/***/ "./assets/js/admin/tools/index.js":
+/*!****************************************!*\
+  !*** ./assets/js/admin/tools/index.js ***!
+  \****************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -405,90 +83,121 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.array.find */ "./node_modules/core-js/modules/es6.array.find.js");
 /* harmony import */ var core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_0__);
 
-jQuery(document).ready(function ($) {
-  // Hides the section content.
-  $('.edd-vertical-sections.use-js .section-content').hide(); // Shows the first section's content.
 
-  $('.edd-vertical-sections.use-js .section-content:first-child').show(); // Makes the 'aria-selected' attribute true for the first section nav item.
-
-  $('.edd-vertical-sections.use-js .section-nav :first-child').attr('aria-selected', 'true'); // Copies the current section item title to the box header.
-
-  $('.which-section').text($('.section-nav :first-child a').text()); // When a section nav item is clicked.
-
-  $('.edd-vertical-sections.use-js .section-nav li a').on('click', function (j) {
-    // Prevent the default browser action when a link is clicked.
-    j.preventDefault(); // Get the `href` attribute of the item.
-
-    var them = $(this),
-        href = them.attr('href'),
-        rents = them.parents('.edd-vertical-sections'); // Hide all section content.
-
-    rents.find('.section-content').hide(); // Find the section content that matches the section nav item and show it.
-
-    rents.find(href).show(); // Set the `aria-selected` attribute to false for all section nav items.
-
-    rents.find('.section-title').attr('aria-selected', 'false'); // Set the `aria-selected` attribute to true for this section nav item.
-
-    them.parent().attr('aria-selected', 'true'); // Maybe re-Chosen
-
-    rents.find('div.chosen-container').css('width', '100%'); // Copy the current section item title to the box header.
-
-    $('.which-section').text(them.text());
-  }); // click()
-});
-
-/***/ }),
-
-/***/ "./assets/js/admin/index.js":
-/*!**********************************!*\
-  !*** ./assets/js/admin/index.js ***!
-  \**********************************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_date_picker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/date-picker */ "./assets/js/admin/components/date-picker/index.js");
-/* harmony import */ var _components_date_picker__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_components_date_picker__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _components_chosen__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/chosen */ "./assets/js/admin/components/chosen/index.js");
-/* harmony import */ var _components_tooltips__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/tooltips */ "./assets/js/admin/components/tooltips/index.js");
-/* harmony import */ var _components_vertical_sections__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/vertical-sections */ "./assets/js/admin/components/vertical-sections/index.js");
-/* harmony import */ var _components_sortable_list__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/sortable-list */ "./assets/js/admin/components/sortable-list/index.js");
-/* harmony import */ var _components_sortable_list__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_components_sortable_list__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _components_user_search__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/user-search */ "./assets/js/admin/components/user-search/index.js");
-/* harmony import */ var _components_user_search__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_components_user_search__WEBPACK_IMPORTED_MODULE_5__);
 /**
- * Internal dependencies.
+ * Tools screen JS
  */
+var EDD_Tools = {
+  init: function init() {
+    this.revoke_api_key();
+    this.regenerate_api_key();
+    this.create_api_key();
+    this.recount_stats();
+  },
+  revoke_api_key: function revoke_api_key() {
+    $(document.body).on('click', '.edd-revoke-api-key', function (e) {
+      return confirm(edd_vars.revoke_api_key);
+    });
+  },
+  regenerate_api_key: function regenerate_api_key() {
+    $(document.body).on('click', '.edd-regenerate-api-key', function (e) {
+      return confirm(edd_vars.regenerate_api_key);
+    });
+  },
+  create_api_key: function create_api_key() {
+    $(document.body).on('submit', '#api-key-generate-form', function (e) {
+      var input = $('input[type="text"][name="user_id"]');
+      input.css('border-color', '#ddd');
+      var user_id = input.val();
 
+      if (user_id.length < 1 || user_id === 0) {
+        input.css('border-color', '#ff0000');
+        return false;
+      }
+    });
+  },
+  recount_stats: function recount_stats() {
+    $(document.body).on('change', '#recount-stats-type', function () {
+      var export_form = $('#edd-tools-recount-form'),
+          selected_type = $('option:selected', this).data('type'),
+          submit_button = $('#recount-stats-submit'),
+          products = $('#tools-product-dropdown'); // Reset the form
 
+      export_form.find('.notice-wrap').remove();
+      submit_button.removeClass('button-disabled').attr('disabled', false);
+      products.hide();
+      $('.edd-recount-stats-descriptions span').hide();
 
+      if ('recount-download' === selected_type) {
+        products.show();
+        products.find('.edd-select-chosen').css('width', 'auto');
+      } else if ('reset-stats' === selected_type) {
+        export_form.append('<div class="notice-wrap"></div>');
+        var notice_wrap = export_form.find('.notice-wrap');
+        notice_wrap.html('<div class="notice notice-warning"><p><input type="checkbox" id="confirm-reset" name="confirm_reset_store" value="1" /> <label for="confirm-reset">' + edd_vars.reset_stats_warn + '</label></p></div>');
+        $('#recount-stats-submit').addClass('button-disabled').attr('disabled', 'disabled');
+      } else {
+        products.hide();
+        products.val(0);
+      }
 
+      $('#' + selected_type).show();
+    });
+    $(document.body).on('change', '#confirm-reset', function () {
+      var checked = $(this).is(':checked');
 
+      if (checked) {
+        $('#recount-stats-submit').removeClass('button-disabled').removeAttr('disabled');
+      } else {
+        $('#recount-stats-submit').addClass('button-disabled').attr('disabled', 'disabled');
+      }
+    });
+    $('#edd-tools-recount-form').submit(function (e) {
+      var selection = $('#recount-stats-type').val(),
+          export_form = $(this),
+          selected_type = $('option:selected', this).data('type');
 
+      if ('reset-stats' === selected_type) {
+        var is_confirmed = $('#confirm-reset').is(':checked');
 
-/***/ }),
+        if (is_confirmed) {
+          return true;
+        }
 
-/***/ "./assets/js/utils/chosen.js":
-/*!***********************************!*\
-  !*** ./assets/js/utils/chosen.js ***!
-  \***********************************/
-/*! exports provided: chosenVars */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+        has_errors = true;
+      }
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "chosenVars", function() { return chosenVars; });
-/* global edd_vars */
-var chosenVars = {
-  disable_search_threshold: 13,
-  search_contains: true,
-  inherit_select_classes: true,
-  single_backstroke_delete: false,
-  placeholder_text_single: edd_vars.one_option,
-  placeholder_text_multiple: edd_vars.one_or_more_option,
-  no_results_text: edd_vars.no_results_text
+      export_form.find('.notice-wrap').remove();
+      export_form.append('<div class="notice-wrap"></div>');
+      var notice_wrap = export_form.find('.notice-wrap'),
+          has_errors = false;
+
+      if (null === selection || 0 === selection) {
+        // Needs to pick a method edd_vars.batch_export_no_class
+        notice_wrap.html('<div class="updated error"><p>' + edd_vars.batch_export_no_class + '</p></div>');
+        has_errors = true;
+      }
+
+      if ('recount-download' === selected_type) {
+        var selected_download = $('select[name="download_id"]').val();
+
+        if (selected_download === 0) {
+          // Needs to pick download edd_vars.batch_export_no_reqs
+          notice_wrap.html('<div class="updated error"><p>' + edd_vars.batch_export_no_reqs + '</p></div>');
+          has_errors = true;
+        }
+      }
+
+      if (has_errors) {
+        export_form.find('.button-disabled').removeClass('button-disabled');
+        return false;
+      }
+    });
+  }
 };
+jQuery(document).ready(function ($) {
+  EDD_Tools.init();
+});
 
 /***/ }),
 
@@ -815,46 +524,6 @@ module.exports = function (exec) {
     return !!exec();
   } catch (e) {
     return true;
-  }
-};
-
-
-/***/ }),
-
-/***/ "./node_modules/core-js/modules/_fix-re-wks.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/core-js/modules/_fix-re-wks.js ***!
-  \*****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var hide = __webpack_require__(/*! ./_hide */ "./node_modules/core-js/modules/_hide.js");
-var redefine = __webpack_require__(/*! ./_redefine */ "./node_modules/core-js/modules/_redefine.js");
-var fails = __webpack_require__(/*! ./_fails */ "./node_modules/core-js/modules/_fails.js");
-var defined = __webpack_require__(/*! ./_defined */ "./node_modules/core-js/modules/_defined.js");
-var wks = __webpack_require__(/*! ./_wks */ "./node_modules/core-js/modules/_wks.js");
-
-module.exports = function (KEY, length, exec) {
-  var SYMBOL = wks(KEY);
-  var fns = exec(defined, SYMBOL, ''[KEY]);
-  var strfn = fns[0];
-  var rxfn = fns[1];
-  if (fails(function () {
-    var O = {};
-    O[SYMBOL] = function () { return 7; };
-    return ''[KEY](O) != 7;
-  })) {
-    redefine(String.prototype, KEY, strfn);
-    hide(RegExp.prototype, SYMBOL, length == 2
-      // 21.2.5.8 RegExp.prototype[@@replace](string, replaceValue)
-      // 21.2.5.11 RegExp.prototype[@@split](string, limit)
-      ? function (string, arg) { return rxfn.call(string, this, arg); }
-      // 21.2.5.6 RegExp.prototype[@@match](string)
-      // 21.2.5.9 RegExp.prototype[@@search](string)
-      : function (string) { return rxfn.call(string, this); }
-    );
   }
 };
 
@@ -1231,57 +900,7 @@ $export($export.P + $export.F * forced, 'Array', {
 __webpack_require__(/*! ./_add-to-unscopables */ "./node_modules/core-js/modules/_add-to-unscopables.js")(KEY);
 
 
-/***/ }),
-
-/***/ "./node_modules/core-js/modules/es6.function.name.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/core-js/modules/es6.function.name.js ***!
-  \***********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var dP = __webpack_require__(/*! ./_object-dp */ "./node_modules/core-js/modules/_object-dp.js").f;
-var FProto = Function.prototype;
-var nameRE = /^\s*function ([^ (]*)/;
-var NAME = 'name';
-
-// 19.2.4.2 name
-NAME in FProto || __webpack_require__(/*! ./_descriptors */ "./node_modules/core-js/modules/_descriptors.js") && dP(FProto, NAME, {
-  configurable: true,
-  get: function () {
-    try {
-      return ('' + this).match(nameRE)[1];
-    } catch (e) {
-      return '';
-    }
-  }
-});
-
-
-/***/ }),
-
-/***/ "./node_modules/core-js/modules/es6.regexp.replace.js":
-/*!************************************************************!*\
-  !*** ./node_modules/core-js/modules/es6.regexp.replace.js ***!
-  \************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-// @@replace logic
-__webpack_require__(/*! ./_fix-re-wks */ "./node_modules/core-js/modules/_fix-re-wks.js")('replace', 2, function (defined, REPLACE, $replace) {
-  // 21.1.3.14 String.prototype.replace(searchValue, replaceValue)
-  return [function replace(searchValue, replaceValue) {
-    'use strict';
-    var O = defined(this);
-    var fn = searchValue == undefined ? undefined : searchValue[REPLACE];
-    return fn !== undefined
-      ? fn.call(searchValue, O, replaceValue)
-      : $replace.call(String(O), searchValue, replaceValue);
-  }, $replace];
-});
-
-
 /***/ })
 
 /******/ });
-//# sourceMappingURL=edd-admin.js.map
+//# sourceMappingURL=edd-admin-tools.js.map

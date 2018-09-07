@@ -237,20 +237,9 @@ function edd_admin_get_script_version() {
  * @since 3.0
  */
 function edd_register_admin_scripts() {
-	global $hook_suffix;
-
 	$js_dir     = EDD_PLUGIN_URL . 'assets/js/';
-	$js_suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.js' : '.min.js';
 	$version    = edd_admin_get_script_version();
-	$moment_js  = 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js';
-	$admin_deps = ! edd_is_admin_page( $hook_suffix, 'edit' ) && ! edd_is_admin_page( $hook_suffix, 'new' )
-		? array( 'jquery', 'jquery-form', 'inline-edit-post' )
-		: array( 'jquery', 'jquery-form' );
-
-	// Add chart-js to dependencies if viewing reports page
-	if ( edd_is_admin_page( $hook_suffix, 'reports' ) ) {
-		$admin_deps[] = 'edd-chart-js';
-	}
+	$admin_deps = array( 'jquery', 'jquery-form' );
 
 	// Register scripts
 	wp_register_script( 'colorbox', $js_dir . 'vendor/jquery.colorbox.min.js', array( 'jquery' ), $version );
@@ -262,6 +251,35 @@ function edd_register_admin_scripts() {
 	wp_register_script( 'edd-admin-tax-rates', $js_dir . 'edd-admin-tax-rates.js', array( 'wp-backbone' ), $version, true );
 	wp_register_script( 'edd-admin-email-tags', $js_dir . 'edd-admin-email-tags.js', array( 'thickbox', 'wp-util' ), $version );
 	wp_register_script( 'edd-admin-scripts-compatibility', $js_dir . 'edd-admin-backwards-compatibility.js', array( 'jquery', 'edd-admin-scripts' ), $version );
+
+	// Individual admin pages.
+	$admin_pages = array(
+		'customers'    => array(),
+		'dashboard'    => array(),
+		'discounts'    => array(),
+		'downloads'    => array(
+			'inline-edit-post',
+		),
+		'tools-export' => array(),
+		'tools-import' => array(),
+		'notes'        => array(),
+		'orders'       => array(),
+		'reports'      => array(
+			'edd-chart-js',
+		),
+		'payments'     => array(),
+		'settings'     => array(),
+		'tools'        => array(),
+	);
+
+	foreach ( $admin_pages as $page => $deps ) {
+		wp_register_script(
+			'edd-admin-' . $page,
+			$js_dir . 'edd-admin-' . $page . '.js',
+			array_merge( $admin_deps, $deps ),
+			$version
+		);
+	}
 }
 add_action( 'admin_enqueue_scripts', 'edd_register_admin_scripts' );
 
@@ -392,6 +410,11 @@ function edd_print_admin_scripts( $hook = '' ) {
 	// Loop through and enqueue the scripts
 	foreach ( $scripts as $script ) {
 		wp_enqueue_script( $script );
+	}
+
+	// Downloads page.
+	if ( edd_is_admin_page( 'download' ) ) {
+		wp_enqueue_script( 'edd-admin-downloads' );
 	}
 }
 add_action( 'admin_print_scripts', 'edd_print_admin_scripts' );

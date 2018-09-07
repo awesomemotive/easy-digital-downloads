@@ -104,4 +104,6 @@ const EDD_Reports = {
 	},
 };
 
-export default EDD_Reports;
+jQuery( document ).ready( function( $ ) {
+	EDD_Reports.init();
+} );

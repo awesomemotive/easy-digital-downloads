@@ -483,4 +483,6 @@ var EDD_Add_Order = {
 	},
 };
 
-export default EDD_Add_Order;
+jQuery( document ).ready( function( $ ) {
+	EDD_Add_Order.init();
+} );

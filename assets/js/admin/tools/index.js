@@ -114,4 +114,6 @@ const EDD_Tools = {
 	},
 };
 
-export default EDD_Tools;
+jQuery( document ).ready( function( $ ) {
+	EDD_Tools.init();
+} );

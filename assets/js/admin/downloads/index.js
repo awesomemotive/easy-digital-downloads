@@ -2,6 +2,7 @@
  * Internal dependencies.
  */
 import { chosenVars } from 'utils/chosen.js';
+import { edd_attach_tooltips } from 'admin/components/tooltips';
 import './bulk-edit.js';
 
 /**
@@ -19,7 +20,8 @@ var EDD_Download_Configuration = {
 	},
 	clone_repeatable: function( row ) {
 		// Retrieve the highest current key
-		let key = highest = 1;
+		let highest = 1;
+		let key = 1;
 		row.parent().find( '.edd_repeatable_row' ).each( function() {
 			const current = $( this ).data( 'key' );
 			if ( parseInt( current ) > highest ) {
@@ -28,7 +30,7 @@ var EDD_Download_Configuration = {
 		} );
 		key = highest += 1;
 
-		clone = row.clone();
+		let clone = row.clone();
 
 		clone.removeClass( 'edd_add_blank' );
 
@@ -354,4 +356,6 @@ $( document.body ).on( 'click', '.toggle-custom-price-option-section', function(
 	first_input.focus();
 } );
 
-export default EDD_Download_Configuration;
+jQuery( document ).ready( function( $ ) {
+	EDD_Download_Configuration.init();
+} );

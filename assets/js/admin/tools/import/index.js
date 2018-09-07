@@ -164,4 +164,6 @@ var EDD_Import = {
 	},
 };
 
-export default EDD_Import;
+jQuery( document ).ready( function( $ ) {
+	EDD_Import.init();
+} );

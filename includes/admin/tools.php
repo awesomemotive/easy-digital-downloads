@@ -22,7 +22,15 @@ defined( 'ABSPATH' ) || exit;
 function edd_tools_page() {
 	$active_tab = isset( $_GET['tab'] )
 		? sanitize_key( $_GET['tab'] )
-		: 'general'; ?>
+		: 'general';
+
+	wp_enqueue_script( 'edd-admin-tools' );
+
+	if ( 'import_export' === $active_tab ) {
+		wp_enqueue_script( 'edd-admin-tools-import' );
+		wp_enqueue_script( 'edd-admin-tools-export' );
+	}
+?>
 
     <div class="wrap">
         <h1><?php _e( 'Tools', 'easy-digital-downloads' ); ?></h1>

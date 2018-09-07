@@ -129,4 +129,6 @@ const EDD_Notes = {
 	},
 };
 
-export default EDD_Notes;
+jQuery( document ).ready( function( $ ) {
+	EDD_Notes.init();
+} );

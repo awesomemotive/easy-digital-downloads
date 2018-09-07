@@ -1,4 +1,3 @@
-
 jQuery( document ).ready( function( $ ) {
 	if ( $( '#edd_dashboard_sales' ).length ) {
 		$.ajax( {

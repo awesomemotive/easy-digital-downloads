@@ -403,4 +403,6 @@ const EDD_Edit_Payment = {
 	},
 };
 
-export default EDD_Edit_Payment;
+jQuery( document ).ready( function( $ ) {
+	EDD_Edit_Payment.init();
+} );
