@@ -276,8 +276,6 @@ window.EDD_Checkout = function ($) {
     return false;
   }
 
-  ;
-
   function remove_discount(event) {
     var $this = $(this),
         postData = {
@@ -371,8 +369,8 @@ window.EDD_Checkout = function ($) {
 
 
   return {
-    'init': init,
-    'recalculate_taxes': recalculate_taxes
+    init: init,
+    recalculate_taxes: recalculate_taxes
   };
 }(window.jQuery); // init on document.ready
 
@@ -422,10 +420,12 @@ function recalculate_taxes(state) {
       if (current_ajax_count === ajax_tax_count) {
         jQuery('#edd_checkout_cart_form').replaceWith(tax_response.html);
         jQuery('.edd_cart_amount').html(tax_response.total);
-        var tax_data = new Object();
-        tax_data.postdata = postData;
-        tax_data.response = tax_response;
-        jQuery('body').trigger('edd_taxes_recalculated', [tax_data]);
+
+        var _tax_data = new Object();
+
+        _tax_data.postdata = postData;
+        _tax_data.response = tax_response;
+        jQuery('body').trigger('edd_taxes_recalculated', [_tax_data]);
       }
 
       jQuery('.edd-recalculate-taxes-loading').remove();

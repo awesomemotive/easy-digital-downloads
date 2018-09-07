@@ -511,10 +511,8 @@ jQuery(document).ready(function ($) {
           recalculate_taxes();
         }
       });
-    } else {
-      if (is_checkout) {
-        recalculate_taxes();
-      }
+    } else if (is_checkout) {
+      recalculate_taxes();
     }
 
     return false;
