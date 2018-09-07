@@ -31,12 +31,7 @@ tests/clover.xml
 node_modules
 
 # Vendor
-vendor
+/vendor
 
 # Temporary files
 *~
-
-# Built assets
-assets/js/*.js
-assets/js/*.js.map
-assets/js/vendor
