@@ -248,7 +248,7 @@ function edd_register_admin_scripts() {
 	wp_register_script( 'edd-moment-js', $js_dir . 'vendor/moment.min.js', array(), $version );
 	wp_register_script( 'edd-chart-js', $js_dir . 'vendor/chartjs.min.js', array( 'edd-moment-js' ), $version );
 	wp_register_script( 'edd-admin-scripts', $js_dir . 'edd-admin.js', $admin_deps, $version );
-	wp_register_script( 'edd-admin-tax-rates', $js_dir . 'edd-admin-tax-rates.js', array( 'wp-backbone' ), $version, true );
+	wp_register_script( 'edd-admin-tax-rates', $js_dir . 'edd-admin-tax-rates.js', array( 'wp-backbone', 'jquery-chosen' ), $version, true );
 	wp_register_script( 'edd-admin-email-tags', $js_dir . 'edd-admin-email-tags.js', array( 'thickbox', 'wp-util' ), $version );
 	wp_register_script( 'edd-admin-scripts-compatibility', $js_dir . 'edd-admin-backwards-compatibility.js', array( 'jquery', 'edd-admin-scripts' ), $version );
 
