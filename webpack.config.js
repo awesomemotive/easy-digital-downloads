@@ -22,7 +22,7 @@ const adminPages = [
 
 const minifyJs = ( content ) => {
 	return Promise.resolve( Buffer.from( UglifyJS.minify( content.toString() ).code ) );
-}
+};
 
 // Webpack configuration.
 const config = {
