@@ -44,6 +44,8 @@ const config = {
 			'edd-admin-backwards-compatibility': './assets/js/admin/backwards-compatibility.js',
 			'edd-admin-tax-rates': './assets/js/admin/settings/tax-rates',
 			'edd-admin-email-tags': './assets/js/admin/settings/email-tags',
+			'edd-ajax': './assets/js/frontend/edd-ajax.js',
+			'edd-checkout-global': './assets/js/frontend/edd-checkout-global.js',
 		}
 	),
 	output: {

@@ -54,7 +54,7 @@ function edd_load_scripts() {
 			wp_enqueue_script( 'creditCardValidator' );
 		}
 
-		wp_register_script( 'edd-checkout-global', $js_dir . 'edd-checkout-global' . $suffix . '.js', array( 'jquery' ), $version, $in_footer );
+		wp_register_script( 'edd-checkout-global', $js_dir . 'edd-checkout-global.js', array( 'jquery' ), $version, $in_footer );
 		wp_enqueue_script( 'edd-checkout-global' );
 
 		wp_localize_script( 'edd-checkout-global', 'edd_global_vars', apply_filters( 'edd_global_checkout_script_vars', array(
@@ -80,7 +80,7 @@ function edd_load_scripts() {
 
 	// Load AJAX scripts, if enabled
 	if ( ! edd_is_ajax_disabled() ) {
-		wp_register_script( 'edd-ajax', $js_dir . 'edd-ajax' . $suffix . '.js', array( 'jquery' ), $version, $in_footer );
+		wp_register_script( 'edd-ajax', $js_dir . 'edd-ajax.js', array( 'jquery' ), $version, $in_footer );
 		wp_enqueue_script( 'edd-ajax' );
 
 		wp_localize_script( 'edd-ajax', 'edd_scripts', apply_filters( 'edd_ajax_script_vars', array(
