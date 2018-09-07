@@ -85,7 +85,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils.js */ "./assets/js/admin/settings/email-tags/utils.js");
 
 
-/* global eddEmailTagsInserter, tb_remove, send_to_editor, _, window, document */
+/* global eddEmailTagsInserter, tb_remove, tb_position, send_to_editor, _, window, document */
 
 /**
  * Internal dependencies.

@@ -20,6 +20,10 @@ const adminPages = [
 	'tools',
 ];
 
+const minifyJs = ( content ) => {
+	return Promise.resolve( Buffer.from( UglifyJS.minify( content.toString() ).code ) );
+}
+
 // Webpack configuration.
 const config = {
 	mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
@@ -66,7 +70,7 @@ const config = {
 		new CopyWebpackPlugin( [
 			{
 				from: './node_modules/chosen-js/chosen.jquery.min.js',
-				to: 'assets/js/vendor/chosen.jquery.min.js',
+				to: 'assets/js/vendor/jquery.chosen.min.js',
 			},
 			{
 				from: './node_modules/chart.js/dist/Chart.min.js',
@@ -75,16 +79,12 @@ const config = {
 			{
 				from: './node_modules/flot/jquery.flot.js',
 				to: 'assets/js/vendor/jquery.flot.min.js',
-				transform( content, src ) {
-					return Promise.resolve( Buffer.from( UglifyJS.minify( content.toString() ).code ) );
-				},
+				transform: ( content ) => minifyJs( content ),
 			},
 			{
 				from: './node_modules/flot/jquery.flot.pie.js',
 				to: 'assets/js/vendor/jquery.flot.pie.min.js',
-				transform( content, src ) {
-					return Promise.resolve( Buffer.from( UglifyJS.minify( content.toString() ).code ) );
-				},
+				transform: ( content ) => minifyJs( content ),
 			},
 			{
 				from: './node_modules/jquery-colorbox/jquery.colorbox-min.js',
@@ -93,9 +93,24 @@ const config = {
 			{
 				from: './node_modules/moment/moment.js',
 				to: 'assets/js/vendor/moment.min.js',
-				transform( content, src ) {
-					return Promise.resolve( Buffer.from( UglifyJS.minify( content.toString() ).code ) );
-				},
+				transform: ( content ) => minifyJs( content ),
+			},
+			{
+				from: './node_modules/jquery-creditcardvalidator/jquery.creditCardValidator.js',
+				to: 'assets/js/vendor/jquery.creditcardvalidator.min.js',
+				transform: ( content ) => minifyJs( content ),
+			},
+			{
+				from: './node_modules/jquery-colorbox/jquery.colorbox-min.js',
+				to: 'assets/js/vendor/jquery.colorbox.min.js',
+			},
+			{
+				from: './node_modules/jquery-validation/dist/jquery.validate.min.js',
+				to: 'assets/js/vendor/jquery.validate.min.js',
+			},
+			{
+				from: './node_modules/jquery.payment/lib/jquery.payment.min.js',
+				to: 'assets/js/vendor/jquery.payment.min.js',
 			},
 		] ),
 	],
