@@ -601,6 +601,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order-adjustment.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order-item.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order-transaction.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/types.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/orders.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/meta.php';
