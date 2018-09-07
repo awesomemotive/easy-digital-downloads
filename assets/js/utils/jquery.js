@@ -8,7 +8,7 @@
  * @param {Function} callback Function to call when ready.
  */
 export const jQueryReady = function( callback ) {
-	( function( $ ) { // eslint-disable-line no-unused-vars
+	( function( $ ) {
 		$( callback );
 	} )( jQuery );
 };
