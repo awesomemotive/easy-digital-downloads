@@ -18,6 +18,15 @@ namespace EDD;
 class Component {
 
 	/**
+	 * Name of this component
+	 *
+	 * @since 3.0
+	 *
+	 * @var string
+	 */
+	public $name = '';
+
+	/**
 	 * Database schema definition
 	 *
 	 * @since 3.0
