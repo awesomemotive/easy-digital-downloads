@@ -106,7 +106,8 @@ const config = {
 			},
 			{
 				from: './node_modules/jquery-validation/dist/jquery.validate.min.js',
-				to: 'assets/js/vendor/jquery.validate.min.js',
+				// This file is not registered in EDD so the URL must remain the same.
+				to: 'assets/js/jquery.validate.min.js',
 			},
 			{
 				from: './node_modules/jquery.payment/lib/jquery.payment.min.js',
