@@ -217,6 +217,10 @@ a.edd-delete:hover {
 	z-index: 9999 !important;
 }
 
+.edd-settings-form p.edd-rich-editor-desc {
+	margin-bottom: 10px;
+}
+
 /* =Tax Settings Style
 -------------------------------------------------------------- */
 .download_page_edd-settings .taxrates th,
@@ -364,8 +368,15 @@ a.edd-delete:hover {
 	border-top: 1px solid #ddd;
 }
 
+/* Media Buttons Styles
+-------------------------------------------------------------- */
+
 .wp-media-buttons .button.edd-thickbox {
 	padding-left: 0;
+}
+
+.wp-media-buttons .button.edd-email-tags-inserter .dashicons {
+	margin-top: -2px;
 }
 
 /* Add/View Order Styles
