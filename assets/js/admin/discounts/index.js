@@ -20,4 +20,6 @@ const EDD_Discount = {
 	},
 };
 
-export default EDD_Discount;
+jQuery( document ).ready( function( $ ) {
+	EDD_Discount.init();
+} );

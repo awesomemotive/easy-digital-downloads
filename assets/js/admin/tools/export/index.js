@@ -76,4 +76,6 @@ const EDD_Export = {
 	},
 };
 
-export default EDD_Export;
+jQuery( document ).ready( function( $ ) {
+	EDD_Export.init();
+} );

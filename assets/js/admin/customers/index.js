@@ -135,4 +135,6 @@ var EDD_Customer = {
 	},
 };
 
-export default EDD_Customer;
+jQuery( document ).ready( function( $ ) {
+	EDD_Customer.init();
+} );

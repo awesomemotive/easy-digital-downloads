@@ -158,6 +158,8 @@ function edd_options_page_form( $active_tab = '', $section = '', $override = fal
  * @return void
  */
 function edd_options_page() {
+	// Enqueue scripts.
+	wp_enqueue_script( 'edd-admin-settings' );
 
 	// Try to figure out where we are
 	$all_settings   = edd_get_registered_settings();

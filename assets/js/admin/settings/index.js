@@ -147,4 +147,6 @@ const EDD_Settings = {
 	},
 };
 
-export default EDD_Settings;
+jQuery( document ).ready( function( $ ) {
+	EDD_Settings.init();
+} );

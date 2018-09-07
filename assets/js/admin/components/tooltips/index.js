@@ -3,7 +3,7 @@
  *
  * @param {string} selector
  */
-function edd_attach_tooltips( selector ) {
+export const edd_attach_tooltips = function( selector ) {
 	selector.tooltip( {
 		content: function() {
 			return $( this ).prop( 'title' );

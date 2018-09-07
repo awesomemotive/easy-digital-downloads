@@ -66,24 +66,24 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/admin/index.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/admin/orders/index.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./assets/js/admin/components/chosen/index.js":
-/*!****************************************************!*\
-  !*** ./assets/js/admin/components/chosen/index.js ***!
-  \****************************************************/
+/***/ "./assets/js/admin/orders/index.js":
+/*!*****************************************!*\
+  !*** ./assets/js/admin/orders/index.js ***!
+  \*****************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var core_js_modules_es6_function_name__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.function.name */ "./node_modules/core-js/modules/es6.function.name.js");
-/* harmony import */ var core_js_modules_es6_function_name__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_function_name__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es6.regexp.replace */ "./node_modules/core-js/modules/es6.regexp.replace.js");
-/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.regexp.replace */ "./node_modules/core-js/modules/es6.regexp.replace.js");
+/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es6.array.find */ "./node_modules/core-js/modules/es6.array.find.js");
+/* harmony import */ var core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var utils_chosen_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! utils/chosen.js */ "./assets/js/utils/chosen.js");
 
 
@@ -93,379 +93,428 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 jQuery(document).ready(function ($) {
-  $('.edd-select-chosen').chosen(utils_chosen_js__WEBPACK_IMPORTED_MODULE_2__["chosenVars"]);
-  $('.edd-select-chosen .chosen-search input').each(function () {
-    // Bail if placeholder already set
-    if ($(this).attr('placeholder')) {
-      return;
+  // Toggle advanced filters on Orders page.
+  $('.edd-advanced-filters-button').on('click', function (e) {
+    // Prevnt submit action
+    e.preventDefault();
+    $('#edd-advanced-filters').toggleClass('open');
+  });
+});
+var edd_admin_globals = {};
+/**
+ * Add order
+ */
+
+var EDD_Add_Order = {
+  init: function init() {
+    this.add_order_item();
+    this.add_adjustment();
+    this.override();
+    this.remove();
+    this.fetch_addresses();
+    this.select_address();
+    this.recalculate_total();
+    this.validate();
+  },
+  add_order_item: function add_order_item() {
+    var button = $('.edd-add-order-item-button'); // Toggle form.
+
+    $('#edd-order-items').on('click', 'h3 .edd-metabox-title-action', function (e) {
+      e.preventDefault();
+      $('#edd-order-items').children('.edd-add-download-to-purchase').slideToggle();
+    });
+    button.prop('disabled', 'disabled');
+    $('.edd-order-add-download-select').on('change', function () {
+      button.removeAttr('disabled');
+    }); // Add item.
+
+    button.on('click', function (e) {
+      e.preventDefault();
+      var select = $('.edd-order-add-download-select'),
+          spinner = $('.edd-add-download-to-purchase .spinner'),
+          data = {
+        action: 'edd_add_order_item',
+        nonce: $('#edd_add_order_nonce').val(),
+        country: $('.edd-order-address-country').val(),
+        region: $('.edd-order-address-region').val(),
+        download: select.val(),
+        quantity: $('.edd-add-order-quantity').val()
+      };
+      spinner.css('visibility', 'visible');
+      $.post(ajaxurl, data, function (response) {
+        $('.orderitems .no-items').hide();
+        $('.orderitems tbody').append(response.html);
+        EDD_Add_Order.update_totals();
+        EDD_Add_Order.reindex();
+        spinner.css('visibility', 'hidden'); // Display `Override` button if it exists.
+
+        $('.edd-override').removeAttr('disabled');
+      }, 'json');
+    });
+  },
+  add_adjustment: function add_adjustment() {
+    // Toggle form.
+    $('#edd-order-adjustments').on('click', 'h3 .edd-metabox-title-action', function (e) {
+      e.preventDefault();
+      $('#edd-order-adjustments').children('.edd-add-adjustment-to-purchase').slideToggle();
+    });
+    $('.edd-order-add-adjustment-select').on('change', function () {
+      var type = $(this).val();
+      $('.edd-add-adjustment-to-purchase li.fee, .edd-add-adjustment-to-purchase li.discount, .edd-add-adjustment-to-purchase li.fee, .edd-add-adjustment-to-purchase li.credit').hide();
+      $('.' + type, '.edd-add-adjustment-to-purchase').show();
+    });
+    $('.edd-add-order-adjustment-button').on('click', function (e) {
+      e.preventDefault();
+      var data = {
+        action: 'edd_add_adjustment_to_order',
+        nonce: $('#edd_add_order_nonce').val(),
+        type: $('.edd-order-add-adjustment-select').val(),
+        adjustment_data: {
+          fee: $('.edd-order-add-fee-select').val(),
+          discount: $('.edd-order-add-discount-select').val(),
+          credit: {
+            description: $('.edd-add-order-credit-description').val(),
+            amount: $('.edd-add-order-credit-amount').val()
+          }
+        }
+      },
+          spinner = $('.edd-add-adjustment-to-purchase .spinner');
+      spinner.css('visibility', 'visible');
+      $.post(ajaxurl, data, function (response) {
+        $('.orderadjustments .no-items').hide();
+        $('.orderadjustments tbody').append(response.html);
+        EDD_Add_Order.update_totals();
+        EDD_Add_Order.reindex();
+        spinner.css('visibility', 'hidden');
+      }, 'json');
+    });
+  },
+  override: function override() {
+    $('.edd-override').on('click', function () {
+      $(this).prop('disabled', 'disabled');
+      $(this).attr('data-override', 'true');
+      $(document.body).on('click', '.orderitems tr td .value', EDD_Add_Order.switchToInput);
+      $('<input>').attr({
+        type: 'hidden',
+        name: 'edd_add_order_override',
+        value: 'true'
+      }).appendTo('#edd-add-order-form');
+    });
+  },
+  switchToInput: function switchToInput() {
+    var input = $('<input>', {
+      val: $(this).text(),
+      type: 'text'
+    });
+    $(this).replaceWith(input);
+    input.on('blur', EDD_Add_Order.switchToSpan);
+    input.select();
+  },
+  switchToSpan: function switchToSpan() {
+    var span = $('<span>', {
+      text: parseFloat($(this).val()).toLocaleString(edd_vars.currency, {
+        style: 'decimal',
+        currency: edd_vars.currency,
+        minimumFractionDigits: edd_vars.currency_decimals,
+        maximumFractionDigits: edd_vars.currency_decimals
+      })
+    });
+    var type = $(this).parent().data('type'),
+        input = $(this).parents('tr').find('.download-' + type);
+
+    if ('quantity' === type) {
+      span.text(parseInt($(this).val()));
     }
 
-    var selectElem = $(this).parent().parent().parent().prev('select.edd-select-chosen'),
-        placeholder = selectElem.data('search-placeholder');
+    input.val(span.text());
+    span.addClass('value');
+    $(this).replaceWith(span);
+    EDD_Add_Order.update_totals();
+    span.on('click', EDD_Add_Order.switchToInput);
+  },
+  remove: function remove() {
+    $(document.body).on('click', '.orderitems .remove-item, .orderadjustments .remove-item', function (e) {
+      e.preventDefault();
+      var $this = $(this),
+          tbody = $this.parents('tbody');
+      $this.parents('tr').remove();
 
-    if (placeholder) {
-      console.log(placeholder);
-      $(this).attr('placeholder', placeholder);
-    }
-  }); // Add placeholders for Chosen input fields
-
-  $('.chosen-choices').on('click', function () {
-    var placeholder = $(this).parent().prev().data('search-placeholder');
-
-    if (typeof placeholder === "undefined") {
-      placeholder = edd_vars.type_to_search;
-    }
-
-    $(this).children('li').children('input').attr('placeholder', placeholder);
-  }); // This fixes the Chosen box being 0px wide when the thickbox is opened
-
-  $('#post').on('click', '.edd-thickbox', function () {
-    $('.edd-select-chosen', '#choose-download').css('width', '100%');
-  }); // Variables for setting up the typing timer
-  // Time in ms, Slow - 521ms, Moderate - 342ms, Fast - 300ms
-
-  var userInteractionInterval = 342,
-      typingTimerElements = '.edd-select-chosen .chosen-search input, .edd-select-chosen .search-field input',
-      typingTimer; // Replace options with search results
-
-  $(document.body).on('keyup', typingTimerElements, function (e) {
-    var element = $(this),
-        val = element.val(),
-        container = element.closest('.edd-select-chosen'),
-        select = container.prev(),
-        select_type = select.data('search-type'),
-        no_bundles = container.hasClass('no-bundles'),
-        variations = container.hasClass('variations'),
-        lastKey = e.which,
-        search_type = 'edd_download_search'; // String replace the chosen container IDs
-
-    container.attr('id').replace('_chosen', ''); // Detect if we have a defined search type, otherwise default to downloads
-
-    if (typeof select_type !== 'undefined') {
-      // Don't trigger AJAX if this select has all options loaded
-      if ('no_ajax' === select_type) {
-        return;
+      if (1 === $('tr', tbody).length) {
+        $('.no-items', tbody).show();
       }
 
-      search_type = 'edd_' + select_type + '_search';
-    } else {
-      return;
-    } // Don't fire if short or is a modifier key (shift, ctrl, apple command key, or arrow keys)
+      EDD_Add_Order.update_totals();
+      EDD_Add_Order.reindex();
+      return false;
+    });
+  },
+  fetch_addresses: function fetch_addresses() {
+    $('.edd-payment-change-customer-input').on('change', function () {
+      var $this = $(this),
+          data = {
+        action: 'edd_customer_addresses',
+        customer_id: $this.val(),
+        nonce: $('#edd_add_order_nonce').val()
+      };
+      $.post(ajaxurl, data, function (response) {
+        // Store response for later use.
+        edd_admin_globals.customer_address_ajax_result = response;
 
-
-    if (val.length <= 3 && 'edd_download_search' === search_type || lastKey === 16 || lastKey === 13 || lastKey === 91 || lastKey === 17 || lastKey === 37 || lastKey === 38 || lastKey === 39 || lastKey === 40) {
-      container.children('.spinner').remove();
-      return;
-    } // Maybe append a spinner
-
-
-    if (!container.children('.spinner').length) {
-      container.append('<span class="spinner is-active"></span>');
-    }
-
-    clearTimeout(typingTimer);
-    typingTimer = setTimeout(function () {
-      $.ajax({
-        type: 'GET',
-        dataType: 'json',
-        url: ajaxurl,
-        data: {
-          s: val,
-          action: search_type,
-          no_bundles: no_bundles,
-          variations: variations
-        },
-        beforeSend: function beforeSend() {
-          select.closest('ul.chosen-results').empty();
-        },
-        success: function success(data) {
-          // Remove all options but those that are selected
-          $('option:not(:selected)', select).remove(); // Add any option that doesn't already exist
-
-          $.each(data, function (key, item) {
-            if (!$('option[value="' + item.id + '"]', select).length) {
-              select.prepend('<option value="' + item.id + '">' + item.name + '</option>');
-            }
-          }); // Get the text immediately before triggering an update.
-          // Any sooner will cause the text to jump around.
-
-          var val = element.val(); // Update the options
-
-          select.trigger('chosen:updated');
-          element.val(val);
+        if (response.html) {
+          $('.customer-address-select-wrap').html(response.html).show();
+          $('.customer-address-select-wrap select').chosen(utils_chosen_js__WEBPACK_IMPORTED_MODULE_2__["chosenVars"]);
+        } else {
+          $('.customer-address-select-wrap').html('').hide();
         }
-      }).fail(function (response) {
-        if (window.console && window.console.log) {
-          console.log(response);
+      }, 'json');
+      return false;
+    });
+  },
+  select_address: function select_address() {
+    $(document.body).on('change', '.customer-address-select-wrap .add-order-customer-address-select', function () {
+      var $this = $(this),
+          val = $this.val(),
+          select = $('#edd-add-order-form select#edd_order_address_country'),
+          address = edd_admin_globals.customer_address_ajax_result.addresses[val];
+      $('#edd-add-order-form input[name="edd_order_address[address]"]').val(address.address);
+      $('#edd-add-order-form input[name="edd_order_address[address2]"]').val(address.address2);
+      $('#edd-add-order-form input[name="edd_order_address[city]"]').val(address.city);
+      select.val(address.country).trigger('chosen:updated');
+      $('#edd-add-order-form input[name="edd_order_address[address_id]"]').val(val);
+      var data = {
+        action: 'edd_get_shop_states',
+        country: select.val(),
+        nonce: $('.add-order-customer-address-select').data('nonce'),
+        field_name: 'edd_order_address_region'
+      };
+      $.post(ajaxurl, data, function (response) {
+        $('select#edd_order_address_region').find('option:gt(0)').remove();
+
+        if ('nostates' !== response) {
+          $(response).find('option:gt(0)').appendTo('select#edd_order_address_region');
         }
-      }).done(function (response) {
-        container.children('.spinner').remove();
+
+        $('select#edd_order_address_region').trigger('chosen:updated');
+        $('select#edd_order_address_region').val(address.region).trigger('chosen:updated');
       });
-    }, userInteractionInterval);
-  });
-});
-
-/***/ }),
-
-/***/ "./assets/js/admin/components/date-picker/index.js":
-/*!*********************************************************!*\
-  !*** ./assets/js/admin/components/date-picker/index.js ***!
-  \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * Date picker
- *
- * This juggles a few CSS classes to avoid styling collisions with other
- * third-party plugins.
- */
-jQuery(document).ready(function ($) {
-  var edd_datepicker = $('input.edd_datepicker');
-
-  if (edd_datepicker.length > 0) {
-    edd_datepicker // Disable autocomplete to avoid it covering the calendar
-    .attr('autocomplete', 'off') // Invoke the datepickers
-    .datepicker({
-      dateFormat: edd_vars.date_picker_format,
-      beforeShow: function beforeShow() {
-        $('#ui-datepicker-div').removeClass('ui-datepicker').addClass('edd-datepicker');
-      }
+      return false;
     });
-  }
-});
+    $('.edd-order-address-country').on('change', function () {
+      var select = $(this),
+          data = {
+        action: 'edd_get_shop_states',
+        country: select.val(),
+        nonce: select.data('nonce'),
+        field_name: 'edd-order-address-country'
+      };
+      $.post(ajaxurl, data, function (response) {
+        $('select.edd-order-address-region').find('option:gt(0)').remove();
 
-/***/ }),
+        if ('nostates' !== response) {
+          $(response).find('option:gt(0)').appendTo('select.edd-order-address-region');
+        }
 
-/***/ "./assets/js/admin/components/sortable-list/index.js":
-/*!***********************************************************!*\
-  !*** ./assets/js/admin/components/sortable-list/index.js ***!
-  \***********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+        $('select.edd-order-address-region').trigger('chosen:updated');
+      }).done(function (response) {
+        EDD_Add_Order.recalculate_taxes();
+      });
+      return false;
+    });
+    $('.edd-order-address-region').on('change', function () {
+      EDD_Add_Order.recalculate_taxes();
+    });
+  },
+  reindex: function reindex() {
+    var key = 0;
+    $('.orderitems tbody tr:not(.no-items), .orderadjustments tbody tr:not(.no-items)').each(function () {
+      $(this).attr('data-key', key);
+      $(this).find('input').each(function () {
+        var name = $(this).attr('name');
 
-/**
- * Sortables
- *
- * This makes certain settings sortable, and attempts to stash the results
- * in the nearest .edd-order input value.
- */
-jQuery(document).ready(function ($) {
-  var edd_sortables = $('ul.edd-sortable-list');
+        if (name) {
+          name = name.replace(/\[(\d+)\]/, '[' + parseInt(key) + ']');
+          $(this).attr('name', name);
+        }
+      });
+      key++;
+    });
+  },
+  recalculate_taxes: function recalculate_taxes() {
+    $('#publishing-action .spinner').css('visibility', 'visible');
+    var data = {
+      action: 'edd_add_order_recalculate_taxes',
+      country: $('.edd-order-address-country').val(),
+      region: $('.edd-order-address-region').val(),
+      nonce: $('#edd_add_order_nonce').val()
+    };
+    $.post(ajaxurl, data, function (response) {
+      if ('' !== response.tax_rate) {
+        var tax_rate = parseFloat(response.tax_rate);
+        $('.orderitems tbody tr:not(.no-items)').each(function () {
+          var amount = parseFloat($('.amount .value', this).text()),
+              quantity = parseFloat($('.quantity .value', this).text()),
+              calculated = amount * quantity,
+              tax = 0;
 
-  if (edd_sortables.length > 0) {
-    edd_sortables.sortable({
-      axis: 'y',
-      items: 'li',
-      cursor: 'move',
-      tolerance: 'pointer',
-      containment: 'parent',
-      distance: 2,
-      opacity: 0.7,
-      scroll: true,
+          if (response.prices_include_tax) {
+            var pre_tax = parseFloat(calculated / (1 + tax_rate));
+            tax = parseFloat(calculated - pre_tax);
+          } else {
+            tax = calculated * tax_rate;
+          }
 
-      /**
-       * When sorting stops, assign the value to the previous input.
-       * This input should be a hidden text field
-       */
-      stop: function stop() {
-        var keys = $.map($(this).children('li'), function (el) {
-          return $(el).data('key');
+          var storeCurrency = edd_vars.currency,
+              decimalPlaces = edd_vars.currency_decimals,
+              total = calculated + tax;
+          $('.tax .value', this).text(tax.toLocaleString(storeCurrency, {
+            style: 'decimal',
+            currency: storeCurrency,
+            minimumFractionDigits: decimalPlaces,
+            maximumFractionDigits: decimalPlaces
+          }));
+          $('.total .value', this).text(total.toLocaleString(storeCurrency, {
+            style: 'decimal',
+            currency: storeCurrency,
+            minimumFractionDigits: decimalPlaces,
+            maximumFractionDigits: decimalPlaces
+          }));
         });
-        $(this).prev('input.edd-order').val(keys);
+      }
+    }, 'json').done(function () {
+      $('#publishing-action .spinner').css('visibility', 'hidden');
+      EDD_Add_Order.update_totals();
+    });
+  },
+  recalculate_total: function recalculate_total() {
+    $('#edd-add-order').on('click', '#edd-order-recalc-total', function () {
+      EDD_Add_Order.update_totals();
+    });
+  },
+  update_totals: function update_totals() {
+    var subtotal = 0,
+        tax = 0,
+        adjustments = 0,
+        total = 0;
+    $('.orderitems tbody tr:not(.no-items)').each(function () {
+      var row = $(this),
+          item_amount,
+          item_quantity = 1,
+          item_tax = 0,
+          item_total;
+      item_amount = parseFloat(row.find('.amount .value').text());
+
+      if (row.find('.quantity').length) {
+        item_quantity = parseFloat(row.find('.quantity .value').text());
+      }
+
+      subtotal += item_amount * item_quantity;
+
+      if (row.find('.tax').length) {
+        item_tax = parseFloat(row.find('.tax .value').text());
+
+        if (!isNaN(item_tax) && !edd_vars.taxes_included) {
+          item_amount += item_tax;
+          tax += item_tax;
+        }
+      }
+
+      item_total = item_amount * item_quantity;
+      total += item_total;
+    });
+    $('.orderadjustments tbody tr:not(.no-items)').each(function () {
+      var row = $(this),
+          type,
+          amount = 0;
+      type = row.data('adjustment');
+
+      switch (type) {
+        case 'credit':
+          amount = parseFloat(row.find('input.credit-amount', row).val());
+          adjustments += amount;
+          total -= amount;
+          break;
+
+        case 'discount':
+          amount = parseFloat(row.find('input.discount-amount', row).val());
+
+          if ('percent' === row.find('input.discount-type').val()) {
+            $('.orderitems tbody tr:not(.no-items)').each(function () {
+              var item_amount = $(this).find('.amount .value').text(),
+                  quantity = 1;
+
+              if ($(this).find('.quantity').length) {
+                quantity = parseFloat($(this).find('.quantity').text());
+              }
+
+              item_amount *= quantity;
+              var reduction = parseFloat(item_amount / 100 * amount);
+
+              if ($(this).find('.tax').length) {
+                var item_tax = parseFloat($(this).find('.tax .value').text()),
+                    item_tax_reduction = parseFloat(item_tax / 100 * amount);
+                tax -= item_tax_reduction;
+                total -= item_tax_reduction;
+              }
+
+              adjustments += reduction;
+              total -= reduction;
+            });
+          } else {
+            adjustments += amount;
+            total -= amount;
+          }
+
+          break;
+      }
+    });
+
+    if (isNaN(total)) {
+      total = 0;
+    }
+
+    if (isNaN(subtotal)) {
+      subtotal = 0;
+    }
+
+    if (isNaN(tax)) {
+      tax = 0;
+    }
+
+    if (isNaN(adjustments)) {
+      adjustments = 0;
+    }
+
+    $(' .edd-order-subtotal .value').html(subtotal.toFixed(edd_vars.currency_decimals));
+    $(' .edd-order-taxes .value').html(tax.toFixed(edd_vars.currency_decimals));
+    $(' .edd-order-discounts .value').html(adjustments.toFixed(edd_vars.currency_decimals));
+    $(' .edd-order-total .value ').html(total.toFixed(edd_vars.currency_decimals));
+  },
+  validate: function validate() {
+    $('#edd-add-order-form').on('submit', function () {
+      $('#publishing-action .spinner').css('visibility', 'visible');
+
+      if ($('.orderitems tr.no-items').is(':visible')) {
+        $('#edd-add-order-no-items-error').slideDown();
+      } else {
+        $('#edd-add-order-no-items-error').slideUp();
+      }
+
+      if ($('.order-customer-info').is(':visible')) {
+        $('#edd-add-order-customer-error').slideDown();
+      } else {
+        $('#edd-add-order-customer-error').slideUp();
+      }
+
+      if ($('.notice').is(':visible')) {
+        $('#publishing-action .spinner').css('visibility', 'hidden');
+        return false;
       }
     });
   }
-});
-
-/***/ }),
-
-/***/ "./assets/js/admin/components/tooltips/index.js":
-/*!******************************************************!*\
-  !*** ./assets/js/admin/components/tooltips/index.js ***!
-  \******************************************************/
-/*! exports provided: edd_attach_tooltips */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "edd_attach_tooltips", function() { return edd_attach_tooltips; });
-/**
- * Attach tooltips
- *
- * @param {string} selector
- */
-var edd_attach_tooltips = function edd_attach_tooltips(selector) {
-  selector.tooltip({
-    content: function content() {
-      return $(this).prop('title');
-    },
-    tooltipClass: 'edd-ui-tooltip',
-    position: {
-      my: 'center top',
-      at: 'center bottom+10',
-      collision: 'flipfit'
-    },
-    hide: {
-      duration: 200
-    },
-    show: {
-      duration: 200
-    }
-  });
 };
 jQuery(document).ready(function ($) {
-  edd_attach_tooltips($('.edd-help-tip'));
+  EDD_Add_Order.init();
 });
-
-/***/ }),
-
-/***/ "./assets/js/admin/components/user-search/index.js":
-/*!*********************************************************!*\
-  !*** ./assets/js/admin/components/user-search/index.js ***!
-  \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-jQuery(document).ready(function ($) {
-  // AJAX user search
-  $('.edd-ajax-user-search') // Search
-  .keyup(function () {
-    var user_search = $(this).val(),
-        exclude = '';
-
-    if ($(this).data('exclude')) {
-      exclude = $(this).data('exclude');
-    }
-
-    $('.edd_user_search_wrap').addClass('loading');
-    var data = {
-      action: 'edd_search_users',
-      user_name: user_search,
-      exclude: exclude
-    };
-    $.ajax({
-      type: "POST",
-      data: data,
-      dataType: "json",
-      url: ajaxurl,
-      success: function success(search_response) {
-        $('.edd_user_search_wrap').removeClass('loading');
-        $('.edd_user_search_results').removeClass('hidden');
-        $('.edd_user_search_results span').html('');
-
-        if (search_response.results) {
-          $(search_response.results).appendTo('.edd_user_search_results span');
-        }
-      }
-    });
-  }) // Hide
-  .blur(function () {
-    if (edd_user_search_mouse_down) {
-      edd_user_search_mouse_down = false;
-    } else {
-      $(this).removeClass('loading');
-      $('.edd_user_search_results').addClass('hidden');
-    }
-  }) // Show
-  .focus(function () {
-    $(this).keyup();
-  });
-  $(document.body).on('click.eddSelectUser', '.edd_user_search_results span a', function (e) {
-    e.preventDefault();
-    var login = $(this).data('login');
-    $('.edd-ajax-user-search').val(login);
-    $('.edd_user_search_results').addClass('hidden');
-    $('.edd_user_search_results span').html('');
-  });
-  $(document.body).on('click.eddCancelUserSearch', '.edd_user_search_results a.edd-ajax-user-cancel', function (e) {
-    e.preventDefault();
-    $('.edd-ajax-user-search').val('');
-    $('.edd_user_search_results').addClass('hidden');
-    $('.edd_user_search_results span').html('');
-  }); // Cancel user-search.blur when picking a user
-
-  var edd_user_search_mouse_down = false;
-  $('.edd_user_search_results').mousedown(function () {
-    edd_user_search_mouse_down = true;
-  });
-});
-
-/***/ }),
-
-/***/ "./assets/js/admin/components/vertical-sections/index.js":
-/*!***************************************************************!*\
-  !*** ./assets/js/admin/components/vertical-sections/index.js ***!
-  \***************************************************************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.array.find */ "./node_modules/core-js/modules/es6.array.find.js");
-/* harmony import */ var core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_0__);
-
-jQuery(document).ready(function ($) {
-  // Hides the section content.
-  $('.edd-vertical-sections.use-js .section-content').hide(); // Shows the first section's content.
-
-  $('.edd-vertical-sections.use-js .section-content:first-child').show(); // Makes the 'aria-selected' attribute true for the first section nav item.
-
-  $('.edd-vertical-sections.use-js .section-nav :first-child').attr('aria-selected', 'true'); // Copies the current section item title to the box header.
-
-  $('.which-section').text($('.section-nav :first-child a').text()); // When a section nav item is clicked.
-
-  $('.edd-vertical-sections.use-js .section-nav li a').on('click', function (j) {
-    // Prevent the default browser action when a link is clicked.
-    j.preventDefault(); // Get the `href` attribute of the item.
-
-    var them = $(this),
-        href = them.attr('href'),
-        rents = them.parents('.edd-vertical-sections'); // Hide all section content.
-
-    rents.find('.section-content').hide(); // Find the section content that matches the section nav item and show it.
-
-    rents.find(href).show(); // Set the `aria-selected` attribute to false for all section nav items.
-
-    rents.find('.section-title').attr('aria-selected', 'false'); // Set the `aria-selected` attribute to true for this section nav item.
-
-    them.parent().attr('aria-selected', 'true'); // Maybe re-Chosen
-
-    rents.find('div.chosen-container').css('width', '100%'); // Copy the current section item title to the box header.
-
-    $('.which-section').text(them.text());
-  }); // click()
-});
-
-/***/ }),
-
-/***/ "./assets/js/admin/index.js":
-/*!**********************************!*\
-  !*** ./assets/js/admin/index.js ***!
-  \**********************************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_date_picker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/date-picker */ "./assets/js/admin/components/date-picker/index.js");
-/* harmony import */ var _components_date_picker__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_components_date_picker__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _components_chosen__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/chosen */ "./assets/js/admin/components/chosen/index.js");
-/* harmony import */ var _components_tooltips__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/tooltips */ "./assets/js/admin/components/tooltips/index.js");
-/* harmony import */ var _components_vertical_sections__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/vertical-sections */ "./assets/js/admin/components/vertical-sections/index.js");
-/* harmony import */ var _components_sortable_list__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/sortable-list */ "./assets/js/admin/components/sortable-list/index.js");
-/* harmony import */ var _components_sortable_list__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_components_sortable_list__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _components_user_search__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/user-search */ "./assets/js/admin/components/user-search/index.js");
-/* harmony import */ var _components_user_search__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_components_user_search__WEBPACK_IMPORTED_MODULE_5__);
-/**
- * Internal dependencies.
- */
-
-
-
-
-
-
 
 /***/ }),
 
@@ -1233,33 +1282,6 @@ __webpack_require__(/*! ./_add-to-unscopables */ "./node_modules/core-js/modules
 
 /***/ }),
 
-/***/ "./node_modules/core-js/modules/es6.function.name.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/core-js/modules/es6.function.name.js ***!
-  \***********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var dP = __webpack_require__(/*! ./_object-dp */ "./node_modules/core-js/modules/_object-dp.js").f;
-var FProto = Function.prototype;
-var nameRE = /^\s*function ([^ (]*)/;
-var NAME = 'name';
-
-// 19.2.4.2 name
-NAME in FProto || __webpack_require__(/*! ./_descriptors */ "./node_modules/core-js/modules/_descriptors.js") && dP(FProto, NAME, {
-  configurable: true,
-  get: function () {
-    try {
-      return ('' + this).match(nameRE)[1];
-    } catch (e) {
-      return '';
-    }
-  }
-});
-
-
-/***/ }),
-
 /***/ "./node_modules/core-js/modules/es6.regexp.replace.js":
 /*!************************************************************!*\
   !*** ./node_modules/core-js/modules/es6.regexp.replace.js ***!
@@ -1284,4 +1306,4 @@ __webpack_require__(/*! ./_fix-re-wks */ "./node_modules/core-js/modules/_fix-re
 /***/ })
 
 /******/ });
-//# sourceMappingURL=edd-admin.js.map
+//# sourceMappingURL=edd-admin-orders.js.map

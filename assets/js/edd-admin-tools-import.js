@@ -66,429 +66,165 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/admin/index.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/admin/tools/import/index.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./assets/js/admin/components/chosen/index.js":
-/*!****************************************************!*\
-  !*** ./assets/js/admin/components/chosen/index.js ***!
-  \****************************************************/
+/***/ "./assets/js/admin/tools/import/index.js":
+/*!***********************************************!*\
+  !*** ./assets/js/admin/tools/import/index.js ***!
+  \***********************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var core_js_modules_es6_function_name__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.function.name */ "./node_modules/core-js/modules/es6.function.name.js");
-/* harmony import */ var core_js_modules_es6_function_name__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_function_name__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es6.regexp.replace */ "./node_modules/core-js/modules/es6.regexp.replace.js");
-/* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var utils_chosen_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! utils/chosen.js */ "./assets/js/utils/chosen.js");
+/* harmony import */ var core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.array.sort */ "./node_modules/core-js/modules/es6.array.sort.js");
+/* harmony import */ var core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_sort__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es6.array.find */ "./node_modules/core-js/modules/es6.array.find.js");
+/* harmony import */ var core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_1__);
 
 
 
 /**
- * Internal dependencies.
+ * Import screen JS
  */
+var EDD_Import = {
+  init: function init() {
+    this.submit();
+  },
+  submit: function submit() {
+    var self = this;
+    $('.edd-import-form').ajaxForm({
+      beforeSubmit: self.before_submit,
+      success: self.success,
+      complete: self.complete,
+      dataType: 'json',
+      error: self.error
+    });
+  },
+  before_submit: function before_submit(arr, form, options) {
+    form.find('.notice-wrap').remove();
+    form.append('<div class="notice-wrap"><span class="spinner is-active"></span><div class="edd-progress"><div></div></div></div>'); //check whether client browser fully supports all File API
 
-jQuery(document).ready(function ($) {
-  $('.edd-select-chosen').chosen(utils_chosen_js__WEBPACK_IMPORTED_MODULE_2__["chosenVars"]);
-  $('.edd-select-chosen .chosen-search input').each(function () {
-    // Bail if placeholder already set
-    if ($(this).attr('placeholder')) {
-      return;
-    }
-
-    var selectElem = $(this).parent().parent().parent().prev('select.edd-select-chosen'),
-        placeholder = selectElem.data('search-placeholder');
-
-    if (placeholder) {
-      console.log(placeholder);
-      $(this).attr('placeholder', placeholder);
-    }
-  }); // Add placeholders for Chosen input fields
-
-  $('.chosen-choices').on('click', function () {
-    var placeholder = $(this).parent().prev().data('search-placeholder');
-
-    if (typeof placeholder === "undefined") {
-      placeholder = edd_vars.type_to_search;
-    }
-
-    $(this).children('li').children('input').attr('placeholder', placeholder);
-  }); // This fixes the Chosen box being 0px wide when the thickbox is opened
-
-  $('#post').on('click', '.edd-thickbox', function () {
-    $('.edd-select-chosen', '#choose-download').css('width', '100%');
-  }); // Variables for setting up the typing timer
-  // Time in ms, Slow - 521ms, Moderate - 342ms, Fast - 300ms
-
-  var userInteractionInterval = 342,
-      typingTimerElements = '.edd-select-chosen .chosen-search input, .edd-select-chosen .search-field input',
-      typingTimer; // Replace options with search results
-
-  $(document.body).on('keyup', typingTimerElements, function (e) {
-    var element = $(this),
-        val = element.val(),
-        container = element.closest('.edd-select-chosen'),
-        select = container.prev(),
-        select_type = select.data('search-type'),
-        no_bundles = container.hasClass('no-bundles'),
-        variations = container.hasClass('variations'),
-        lastKey = e.which,
-        search_type = 'edd_download_search'; // String replace the chosen container IDs
-
-    container.attr('id').replace('_chosen', ''); // Detect if we have a defined search type, otherwise default to downloads
-
-    if (typeof select_type !== 'undefined') {
-      // Don't trigger AJAX if this select has all options loaded
-      if ('no_ajax' === select_type) {
-        return;
-      }
-
-      search_type = 'edd_' + select_type + '_search';
+    if (window.File && window.FileReader && window.FileList && window.Blob) {// HTML5 File API is supported by browser
     } else {
-      return;
-    } // Don't fire if short or is a modifier key (shift, ctrl, apple command key, or arrow keys)
+      var import_form = $('.edd-import-form').find('.edd-progress').parent().parent();
+      var notice_wrap = import_form.find('.notice-wrap');
+      import_form.find('.button-disabled').removeClass('button-disabled'); //Error for older unsupported browsers that doesn't support HTML5 File API
 
-
-    if (val.length <= 3 && 'edd_download_search' === search_type || lastKey === 16 || lastKey === 13 || lastKey === 91 || lastKey === 17 || lastKey === 37 || lastKey === 38 || lastKey === 39 || lastKey === 40) {
-      container.children('.spinner').remove();
-      return;
-    } // Maybe append a spinner
-
-
-    if (!container.children('.spinner').length) {
-      container.append('<span class="spinner is-active"></span>');
+      notice_wrap.html('<div class="update error"><p>' + edd_vars.unsupported_browser + '</p></div>');
+      return false;
     }
+  },
+  success: function success(responseText, statusText, xhr, form) {},
+  complete: function complete(xhr) {
+    var self = $(this),
+        response = jQuery.parseJSON(xhr.responseText);
 
-    clearTimeout(typingTimer);
-    typingTimer = setTimeout(function () {
-      $.ajax({
-        type: 'GET',
-        dataType: 'json',
-        url: ajaxurl,
-        data: {
-          s: val,
-          action: search_type,
-          no_bundles: no_bundles,
-          variations: variations
-        },
-        beforeSend: function beforeSend() {
-          select.closest('ul.chosen-results').empty();
-        },
-        success: function success(data) {
-          // Remove all options but those that are selected
-          $('option:not(:selected)', select).remove(); // Add any option that doesn't already exist
+    if (response.success) {
+      var form = $('.edd-import-form .notice-wrap').parent();
+      form.find('.edd-import-file-wrap,.notice-wrap').remove();
+      form.find('.edd-import-options').slideDown(); // Show column mapping
 
-          $.each(data, function (key, item) {
-            if (!$('option[value="' + item.id + '"]', select).length) {
-              select.prepend('<option value="' + item.id + '">' + item.name + '</option>');
-            }
-          }); // Get the text immediately before triggering an update.
-          // Any sooner will cause the text to jump around.
-
-          var val = element.val(); // Update the options
-
-          select.trigger('chosen:updated');
-          element.val(val);
-        }
-      }).fail(function (response) {
-        if (window.console && window.console.log) {
-          console.log(response);
-        }
-      }).done(function (response) {
-        container.children('.spinner').remove();
+      var select = form.find('select.edd-import-csv-column'),
+          row = select.parents('tr').first(),
+          options = '',
+          columns = response.data.columns.sort(function (a, b) {
+        if (a < b) return -1;
+        if (a > b) return 1;
+        return 0;
       });
-    }, userInteractionInterval);
-  });
-});
+      $.each(columns, function (key, value) {
+        options += '<option value="' + value + '">' + value + '</option>';
+      });
+      select.append(options);
+      select.on('change', function () {
+        var key = $(this).val();
 
-/***/ }),
-
-/***/ "./assets/js/admin/components/date-picker/index.js":
-/*!*********************************************************!*\
-  !*** ./assets/js/admin/components/date-picker/index.js ***!
-  \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * Date picker
- *
- * This juggles a few CSS classes to avoid styling collisions with other
- * third-party plugins.
- */
-jQuery(document).ready(function ($) {
-  var edd_datepicker = $('input.edd_datepicker');
-
-  if (edd_datepicker.length > 0) {
-    edd_datepicker // Disable autocomplete to avoid it covering the calendar
-    .attr('autocomplete', 'off') // Invoke the datepickers
-    .datepicker({
-      dateFormat: edd_vars.date_picker_format,
-      beforeShow: function beforeShow() {
-        $('#ui-datepicker-div').removeClass('ui-datepicker').addClass('edd-datepicker');
-      }
-    });
-  }
-});
-
-/***/ }),
-
-/***/ "./assets/js/admin/components/sortable-list/index.js":
-/*!***********************************************************!*\
-  !*** ./assets/js/admin/components/sortable-list/index.js ***!
-  \***********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * Sortables
- *
- * This makes certain settings sortable, and attempts to stash the results
- * in the nearest .edd-order input value.
- */
-jQuery(document).ready(function ($) {
-  var edd_sortables = $('ul.edd-sortable-list');
-
-  if (edd_sortables.length > 0) {
-    edd_sortables.sortable({
-      axis: 'y',
-      items: 'li',
-      cursor: 'move',
-      tolerance: 'pointer',
-      containment: 'parent',
-      distance: 2,
-      opacity: 0.7,
-      scroll: true,
-
-      /**
-       * When sorting stops, assign the value to the previous input.
-       * This input should be a hidden text field
-       */
-      stop: function stop() {
-        var keys = $.map($(this).children('li'), function (el) {
-          return $(el).data('key');
-        });
-        $(this).prev('input.edd-order').val(keys);
-      }
-    });
-  }
-});
-
-/***/ }),
-
-/***/ "./assets/js/admin/components/tooltips/index.js":
-/*!******************************************************!*\
-  !*** ./assets/js/admin/components/tooltips/index.js ***!
-  \******************************************************/
-/*! exports provided: edd_attach_tooltips */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "edd_attach_tooltips", function() { return edd_attach_tooltips; });
-/**
- * Attach tooltips
- *
- * @param {string} selector
- */
-var edd_attach_tooltips = function edd_attach_tooltips(selector) {
-  selector.tooltip({
-    content: function content() {
-      return $(this).prop('title');
-    },
-    tooltipClass: 'edd-ui-tooltip',
-    position: {
-      my: 'center top',
-      at: 'center bottom+10',
-      collision: 'flipfit'
-    },
-    hide: {
-      duration: 200
-    },
-    show: {
-      duration: 200
+        if (!key) {
+          $(this).parent().next().html('');
+        } else if (false !== response.data.first_row[key]) {
+          $(this).parent().next().html(response.data.first_row[key]);
+        } else {
+          $(this).parent().next().html('');
+        }
+      });
+      $.each(select, function () {
+        $(this).val($(this).attr('data-field')).change();
+      });
+      $(document.body).on('click', '.edd-import-proceed', function (e) {
+        e.preventDefault();
+        form.append('<div class="notice-wrap"><span class="spinner is-active"></span><div class="edd-progress"><div></div></div></div>');
+        response.data.mapping = form.serialize();
+        EDD_Import.process_step(1, response.data, self);
+      });
+    } else {
+      EDD_Import.error(xhr);
     }
-  });
-};
-jQuery(document).ready(function ($) {
-  edd_attach_tooltips($('.edd-help-tip'));
-});
+  },
+  error: function error(xhr) {
+    // Something went wrong. This will display error on form
+    var response = jQuery.parseJSON(xhr.responseText);
+    var import_form = $('.edd-import-form').find('.edd-progress').parent().parent();
+    var notice_wrap = import_form.find('.notice-wrap');
+    import_form.find('.button-disabled').removeClass('button-disabled');
 
-/***/ }),
-
-/***/ "./assets/js/admin/components/user-search/index.js":
-/*!*********************************************************!*\
-  !*** ./assets/js/admin/components/user-search/index.js ***!
-  \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-jQuery(document).ready(function ($) {
-  // AJAX user search
-  $('.edd-ajax-user-search') // Search
-  .keyup(function () {
-    var user_search = $(this).val(),
-        exclude = '';
-
-    if ($(this).data('exclude')) {
-      exclude = $(this).data('exclude');
+    if (response.data.error) {
+      notice_wrap.html('<div class="update error"><p>' + response.data.error + '</p></div>');
+    } else {
+      notice_wrap.remove();
     }
-
-    $('.edd_user_search_wrap').addClass('loading');
-    var data = {
-      action: 'edd_search_users',
-      user_name: user_search,
-      exclude: exclude
-    };
+  },
+  process_step: function process_step(step, import_data, self) {
     $.ajax({
-      type: "POST",
-      data: data,
-      dataType: "json",
+      type: 'POST',
       url: ajaxurl,
-      success: function success(search_response) {
-        $('.edd_user_search_wrap').removeClass('loading');
-        $('.edd_user_search_results').removeClass('hidden');
-        $('.edd_user_search_results span').html('');
+      data: {
+        form: import_data.form,
+        nonce: import_data.nonce,
+        class: import_data.class,
+        upload: import_data.upload,
+        mapping: import_data.mapping,
+        action: 'edd_do_ajax_import',
+        step: step
+      },
+      dataType: "json",
+      success: function success(response) {
+        if ('done' === response.data.step || response.data.error) {
+          // We need to get the actual in progress form, not all forms on the page
+          var import_form = $('.edd-import-form').find('.edd-progress').parent().parent();
+          var notice_wrap = import_form.find('.notice-wrap');
+          import_form.find('.button-disabled').removeClass('button-disabled');
 
-        if (search_response.results) {
-          $(search_response.results).appendTo('.edd_user_search_results span');
+          if (response.data.error) {
+            notice_wrap.html('<div class="update error"><p>' + response.data.error + '</p></div>');
+          } else {
+            import_form.find('.edd-import-options').hide();
+            $('html, body').animate({
+              scrollTop: import_form.parent().offset().top
+            }, 500);
+            notice_wrap.html('<div class="updated"><p>' + response.data.message + '</p></div>');
+          }
+        } else {
+          $('.edd-progress div').animate({
+            width: response.data.percentage + '%'
+          }, 50, function () {// Animation complete.
+          });
+          EDD_Import.process_step(parseInt(response.data.step), import_data, self);
         }
       }
+    }).fail(function (response) {
+      if (window.console && window.console.log) {
+        console.log(response);
+      }
     });
-  }) // Hide
-  .blur(function () {
-    if (edd_user_search_mouse_down) {
-      edd_user_search_mouse_down = false;
-    } else {
-      $(this).removeClass('loading');
-      $('.edd_user_search_results').addClass('hidden');
-    }
-  }) // Show
-  .focus(function () {
-    $(this).keyup();
-  });
-  $(document.body).on('click.eddSelectUser', '.edd_user_search_results span a', function (e) {
-    e.preventDefault();
-    var login = $(this).data('login');
-    $('.edd-ajax-user-search').val(login);
-    $('.edd_user_search_results').addClass('hidden');
-    $('.edd_user_search_results span').html('');
-  });
-  $(document.body).on('click.eddCancelUserSearch', '.edd_user_search_results a.edd-ajax-user-cancel', function (e) {
-    e.preventDefault();
-    $('.edd-ajax-user-search').val('');
-    $('.edd_user_search_results').addClass('hidden');
-    $('.edd_user_search_results span').html('');
-  }); // Cancel user-search.blur when picking a user
-
-  var edd_user_search_mouse_down = false;
-  $('.edd_user_search_results').mousedown(function () {
-    edd_user_search_mouse_down = true;
-  });
-});
-
-/***/ }),
-
-/***/ "./assets/js/admin/components/vertical-sections/index.js":
-/*!***************************************************************!*\
-  !*** ./assets/js/admin/components/vertical-sections/index.js ***!
-  \***************************************************************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.array.find */ "./node_modules/core-js/modules/es6.array.find.js");
-/* harmony import */ var core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_0__);
-
-jQuery(document).ready(function ($) {
-  // Hides the section content.
-  $('.edd-vertical-sections.use-js .section-content').hide(); // Shows the first section's content.
-
-  $('.edd-vertical-sections.use-js .section-content:first-child').show(); // Makes the 'aria-selected' attribute true for the first section nav item.
-
-  $('.edd-vertical-sections.use-js .section-nav :first-child').attr('aria-selected', 'true'); // Copies the current section item title to the box header.
-
-  $('.which-section').text($('.section-nav :first-child a').text()); // When a section nav item is clicked.
-
-  $('.edd-vertical-sections.use-js .section-nav li a').on('click', function (j) {
-    // Prevent the default browser action when a link is clicked.
-    j.preventDefault(); // Get the `href` attribute of the item.
-
-    var them = $(this),
-        href = them.attr('href'),
-        rents = them.parents('.edd-vertical-sections'); // Hide all section content.
-
-    rents.find('.section-content').hide(); // Find the section content that matches the section nav item and show it.
-
-    rents.find(href).show(); // Set the `aria-selected` attribute to false for all section nav items.
-
-    rents.find('.section-title').attr('aria-selected', 'false'); // Set the `aria-selected` attribute to true for this section nav item.
-
-    them.parent().attr('aria-selected', 'true'); // Maybe re-Chosen
-
-    rents.find('div.chosen-container').css('width', '100%'); // Copy the current section item title to the box header.
-
-    $('.which-section').text(them.text());
-  }); // click()
-});
-
-/***/ }),
-
-/***/ "./assets/js/admin/index.js":
-/*!**********************************!*\
-  !*** ./assets/js/admin/index.js ***!
-  \**********************************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_date_picker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/date-picker */ "./assets/js/admin/components/date-picker/index.js");
-/* harmony import */ var _components_date_picker__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_components_date_picker__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _components_chosen__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/chosen */ "./assets/js/admin/components/chosen/index.js");
-/* harmony import */ var _components_tooltips__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/tooltips */ "./assets/js/admin/components/tooltips/index.js");
-/* harmony import */ var _components_vertical_sections__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/vertical-sections */ "./assets/js/admin/components/vertical-sections/index.js");
-/* harmony import */ var _components_sortable_list__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/sortable-list */ "./assets/js/admin/components/sortable-list/index.js");
-/* harmony import */ var _components_sortable_list__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_components_sortable_list__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _components_user_search__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/user-search */ "./assets/js/admin/components/user-search/index.js");
-/* harmony import */ var _components_user_search__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_components_user_search__WEBPACK_IMPORTED_MODULE_5__);
-/**
- * Internal dependencies.
- */
-
-
-
-
-
-
-
-/***/ }),
-
-/***/ "./assets/js/utils/chosen.js":
-/*!***********************************!*\
-  !*** ./assets/js/utils/chosen.js ***!
-  \***********************************/
-/*! exports provided: chosenVars */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "chosenVars", function() { return chosenVars; });
-/* global edd_vars */
-var chosenVars = {
-  disable_search_threshold: 13,
-  search_contains: true,
-  inherit_select_classes: true,
-  single_backstroke_delete: false,
-  placeholder_text_single: edd_vars.one_option,
-  placeholder_text_multiple: edd_vars.one_or_more_option,
-  no_results_text: edd_vars.no_results_text
+  }
 };
+jQuery(document).ready(function ($) {
+  EDD_Import.init();
+});
 
 /***/ }),
 
@@ -821,46 +557,6 @@ module.exports = function (exec) {
 
 /***/ }),
 
-/***/ "./node_modules/core-js/modules/_fix-re-wks.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/core-js/modules/_fix-re-wks.js ***!
-  \*****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var hide = __webpack_require__(/*! ./_hide */ "./node_modules/core-js/modules/_hide.js");
-var redefine = __webpack_require__(/*! ./_redefine */ "./node_modules/core-js/modules/_redefine.js");
-var fails = __webpack_require__(/*! ./_fails */ "./node_modules/core-js/modules/_fails.js");
-var defined = __webpack_require__(/*! ./_defined */ "./node_modules/core-js/modules/_defined.js");
-var wks = __webpack_require__(/*! ./_wks */ "./node_modules/core-js/modules/_wks.js");
-
-module.exports = function (KEY, length, exec) {
-  var SYMBOL = wks(KEY);
-  var fns = exec(defined, SYMBOL, ''[KEY]);
-  var strfn = fns[0];
-  var rxfn = fns[1];
-  if (fails(function () {
-    var O = {};
-    O[SYMBOL] = function () { return 7; };
-    return ''[KEY](O) != 7;
-  })) {
-    redefine(String.prototype, KEY, strfn);
-    hide(RegExp.prototype, SYMBOL, length == 2
-      // 21.2.5.8 RegExp.prototype[@@replace](string, replaceValue)
-      // 21.2.5.11 RegExp.prototype[@@split](string, limit)
-      ? function (string, arg) { return rxfn.call(string, this, arg); }
-      // 21.2.5.6 RegExp.prototype[@@match](string)
-      // 21.2.5.9 RegExp.prototype[@@search](string)
-      : function (string) { return rxfn.call(string, this); }
-    );
-  }
-};
-
-
-/***/ }),
-
 /***/ "./node_modules/core-js/modules/_global.js":
 /*!*************************************************!*\
   !*** ./node_modules/core-js/modules/_global.js ***!
@@ -1096,6 +792,27 @@ var store = global[SHARED] || (global[SHARED] = {});
 
 /***/ }),
 
+/***/ "./node_modules/core-js/modules/_strict-method.js":
+/*!********************************************************!*\
+  !*** ./node_modules/core-js/modules/_strict-method.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var fails = __webpack_require__(/*! ./_fails */ "./node_modules/core-js/modules/_fails.js");
+
+module.exports = function (method, arg) {
+  return !!method && fails(function () {
+    // eslint-disable-next-line no-useless-call
+    arg ? method.call(null, function () { /* empty */ }, 1) : method.call(null);
+  });
+};
+
+
+/***/ }),
+
 /***/ "./node_modules/core-js/modules/_to-integer.js":
 /*!*****************************************************!*\
   !*** ./node_modules/core-js/modules/_to-integer.js ***!
@@ -1233,55 +950,40 @@ __webpack_require__(/*! ./_add-to-unscopables */ "./node_modules/core-js/modules
 
 /***/ }),
 
-/***/ "./node_modules/core-js/modules/es6.function.name.js":
-/*!***********************************************************!*\
-  !*** ./node_modules/core-js/modules/es6.function.name.js ***!
-  \***********************************************************/
+/***/ "./node_modules/core-js/modules/es6.array.sort.js":
+/*!********************************************************!*\
+  !*** ./node_modules/core-js/modules/es6.array.sort.js ***!
+  \********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var dP = __webpack_require__(/*! ./_object-dp */ "./node_modules/core-js/modules/_object-dp.js").f;
-var FProto = Function.prototype;
-var nameRE = /^\s*function ([^ (]*)/;
-var NAME = 'name';
+"use strict";
 
-// 19.2.4.2 name
-NAME in FProto || __webpack_require__(/*! ./_descriptors */ "./node_modules/core-js/modules/_descriptors.js") && dP(FProto, NAME, {
-  configurable: true,
-  get: function () {
-    try {
-      return ('' + this).match(nameRE)[1];
-    } catch (e) {
-      return '';
-    }
+var $export = __webpack_require__(/*! ./_export */ "./node_modules/core-js/modules/_export.js");
+var aFunction = __webpack_require__(/*! ./_a-function */ "./node_modules/core-js/modules/_a-function.js");
+var toObject = __webpack_require__(/*! ./_to-object */ "./node_modules/core-js/modules/_to-object.js");
+var fails = __webpack_require__(/*! ./_fails */ "./node_modules/core-js/modules/_fails.js");
+var $sort = [].sort;
+var test = [1, 2, 3];
+
+$export($export.P + $export.F * (fails(function () {
+  // IE8-
+  test.sort(undefined);
+}) || !fails(function () {
+  // V8 bug
+  test.sort(null);
+  // Old WebKit
+}) || !__webpack_require__(/*! ./_strict-method */ "./node_modules/core-js/modules/_strict-method.js")($sort)), 'Array', {
+  // 22.1.3.25 Array.prototype.sort(comparefn)
+  sort: function sort(comparefn) {
+    return comparefn === undefined
+      ? $sort.call(toObject(this))
+      : $sort.call(toObject(this), aFunction(comparefn));
   }
-});
-
-
-/***/ }),
-
-/***/ "./node_modules/core-js/modules/es6.regexp.replace.js":
-/*!************************************************************!*\
-  !*** ./node_modules/core-js/modules/es6.regexp.replace.js ***!
-  \************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-// @@replace logic
-__webpack_require__(/*! ./_fix-re-wks */ "./node_modules/core-js/modules/_fix-re-wks.js")('replace', 2, function (defined, REPLACE, $replace) {
-  // 21.1.3.14 String.prototype.replace(searchValue, replaceValue)
-  return [function replace(searchValue, replaceValue) {
-    'use strict';
-    var O = defined(this);
-    var fn = searchValue == undefined ? undefined : searchValue[REPLACE];
-    return fn !== undefined
-      ? fn.call(searchValue, O, replaceValue)
-      : $replace.call(String(O), searchValue, replaceValue);
-  }, $replace];
 });
 
 
 /***/ })
 
 /******/ });
-//# sourceMappingURL=edd-admin.js.map
+//# sourceMappingURL=edd-admin-tools-import.js.map
