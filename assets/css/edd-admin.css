@@ -178,6 +178,7 @@ a.edd-delete:hover {
 	font-family: dashicons;
 	font-size: 17px;
 	content: '\f545';
+	cursor: move;
 }
 
 .form-table .edd-sortable-list li label {
@@ -185,7 +186,6 @@ a.edd-delete:hover {
 	height: 28px;
 	padding: 0;
 	margin: 0;
-	cursor: move;
 }
 
 .form-table .edd-sortable-list li label span {
