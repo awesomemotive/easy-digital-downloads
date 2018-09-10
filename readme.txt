@@ -5,8 +5,8 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.4
-Tested up to: 4.9.7
-Stable Tag: 2.9.6
+Tested up to: 4.9.8
+Stable Tag: 2.9.7
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -189,6 +189,19 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+
+= 2.9.7, September 10, 2018 =
+* Fix: The edd_cart_amount data attributes were not updated when quantities were changed at checkout.
+* Fix: Updated the zip/postal code validation for Mongolia.
+* Fix: Updating a download meta to 0 using the EDD_Download class would not save correctly.
+* Fix: Corrected an issue with mobile file downloads sometimes getting corrupted.
+* Fix: Incorrect label "for" attributes were being used on the checkout login form.
+* Fix: Prevent the vertical scrollbar in Firefox when hovering over tooltips.
+* Fix: Corrected some issues with EDD Sessions and WP Admin.
+* Fix: Test Purchase Email Subject ampersands were getting improperly HTML encoded.
+* New: Updated the EDD_SL_Plugin_Updater to support icons and have a health check.
+* New: Added the date generated to system info.
+* New: EDD API now supports "order" and "orderby" parameters for the products endpoint.
 
 = 2.9.6, July 16, 2018 =
 * Fix: "Error: You must login to complete your purchase" shown incorrectly on checkout.
