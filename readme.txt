@@ -193,7 +193,7 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 = 2.9.7, September 10, 2018 =
 * Fix: The edd_cart_amount data attributes were not updated when quantities were changed at checkout.
 * Fix: Updated the zip/postal code validation for Mongolia.
-* Fix: Updating a download meta using the EDD_Download class to `0` would not save correctly.
+* Fix: Updating a download meta to 0 using the EDD_Download class would not save correctly.
 * Fix: Corrected an issue with mobile file downloads sometimes getting corrupted.
 * Fix: Incorrect label "for" attributes were being used on the checkout login form.
 * Fix: Prevent the vertical scrollbar in Firefox when hovering over tooltips.
