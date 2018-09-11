@@ -582,6 +582,8 @@ class EDD_API {
 					'tag'           => isset( $wp_query->query_vars['tag'] )           ? $this->sanitize_request_term( $wp_query->query_vars['tag'] )           : null,
 					'term_relation' => isset( $wp_query->query_vars['term_relation'] ) ? $this->sanitize_request_term( $wp_query->query_vars['term_relation'] ) : null,
 					's'             => isset( $wp_query->query_vars['s'] )             ? sanitize_text_field( $wp_query->query_vars['s'] )                      : null,
+					'order'         => isset( $wp_query->query_vars['order'] )         ? $wp_query->query_vars['order']                                         : 'DESC',
+					'orderby'       => isset( $wp_query->query_vars['orderby'] )       ? $wp_query->query_vars['orderby']                                       : 'date',
 				);
 
 				$data = $this->routes->get_products( $args );
