@@ -1017,7 +1017,8 @@ add_action( 'delete_user', 'edd_detach_deleted_user', 10, 1 );
  */
 function edd_show_user_api_key_field( $user ) {
 
-	if ( get_current_user_id() !== $user->ID ) {
+	// Bail if no user, or user ID is not current user
+	if ( empty( $user ) || ( get_current_user_id() !== $user->ID ) ) {
 		return;
 	}
 
