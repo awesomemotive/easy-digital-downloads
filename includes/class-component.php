@@ -15,7 +15,16 @@ namespace EDD;
  *
  * @since 3.0
  */
-class Component {
+class Component extends Base_Object {
+
+	/**
+	 * Name of this component
+	 *
+	 * @since 3.0
+	 *
+	 * @var string
+	 */
+	public $name = '';
 
 	/**
 	 * Database schema definition
@@ -72,13 +81,13 @@ class Component {
 	private $interfaces = array();
 
 	/**
-	 * Array of class keys
+	 * Array of interface keys
 	 *
 	 * @since 3.0
 	 *
 	 * @var array
 	 */
-	private $class_keys = array(
+	private $interface_keys = array(
 		'schema' => false,
 		'table'  => false,
 		'query'  => false,
@@ -93,30 +102,7 @@ class Component {
 	 * @param array $args
 	 */
 	public function __construct( $args = array() ) {
-
-		// Parse arguments
-		$r = wp_parse_args( $args, $this->class_keys );
-
-		// Setup the component
-		$this->init( $r );
-	}
-
-	/**
-	 * Setup an EDD component based on parsing in constructor
-	 *
-	 * @since 3.0
-	 * @param array $args
-	 */
-	private function init( $args = array() ) {
-		$keys = array_keys( $this->class_keys );
-
-		foreach ( $args as $key => $value ) {
-			if ( in_array( $key, $keys, true ) && class_exists( $value ) ) {
-				$this->interfaces[ $key ] = new $value;
-			} else {
-				$this->{$key} = $value;
-			}
-		}
+		parent::__construct( $args );
 	}
 
 	/**
@@ -131,5 +117,30 @@ class Component {
 		return isset( $this->interfaces[ $name ] )
 			? $this->interfaces[ $name ]
 			: false;
+	}
+
+	/**
+	 * Setup an EDD component based on parsing in constructor
+	 *
+	 * @since 3.0
+	 * @param array $args
+	 */
+	protected function set_vars( $args = array() ) {
+
+		// Get the interface keys
+		$keys = array_keys( $this->interface_keys );
+
+		// Loop through args...
+		foreach ( $args as $key => $value ) {
+
+			// Set arg as a Component Interface
+			if ( in_array( $key, $keys, true ) && class_exists( $value ) ) {
+				$this->interfaces[ $key ] = new $value;
+
+			// Set arg as a Component property
+			} else {
+				$this->{$key} = $value;
+			}
+		}
 	}
 }
