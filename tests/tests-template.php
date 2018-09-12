@@ -34,7 +34,7 @@ class Test_Template extends EDD_UnitTestCase {
 		edd_pagination( $args );
 		$output = ob_get_clean();
 		// Verify it has the current page as 1
-		$this->assertContains( "<span aria-current='page' class='page-numbers current'>1</span>", $output );
+		$this->assertContains( " class='page-numbers current'>1</span>", $output );
 
 		// Verify that it contains page 2
 		$this->assertContains( "<a class='page-numbers' href='http://example.org/?paged=2'>2</a>", $output );
@@ -57,7 +57,7 @@ class Test_Template extends EDD_UnitTestCase {
 		edd_pagination( $args );
 		$output = ob_get_clean();
 		// Verify it has the current page as 2
-		$this->assertContains( "<span aria-current='page' class='page-numbers current'>2</span>", $output );
+		$this->assertContains( " class='page-numbers current'>2</span>", $output );
 
 		// Verify that it contains pages 1 and 3
 		$this->assertContains( "<a class='page-numbers' href='http://example.org/?paged=1'>1</a>", $output );
@@ -79,7 +79,7 @@ class Test_Template extends EDD_UnitTestCase {
 		edd_pagination( $args );
 		$output = ob_get_clean();
 		// Verify it has the current page as 2
-		$this->assertContains( "<span aria-current='page' class='page-numbers current'>3</span>", $output );
+		$this->assertContains( " class='page-numbers current'>3</span>", $output );
 
 		// Verify that it contains pages 1 and 3
 		$this->assertContains( "<a class='page-numbers' href='http://example.org/?paged=1'>1</a>", $output );
@@ -103,7 +103,7 @@ class Test_Template extends EDD_UnitTestCase {
 		edd_pagination( $args );
 		$output = ob_get_clean();
 		// Verify it has the current page as 2
-		$this->assertContains( "<span aria-current='page' class='page-numbers current'>5</span>", $output );
+		$this->assertContains( "class='page-numbers current'>5</span>", $output );
 
 		// Verify that it contains page 1
 		$this->assertContains( "<a class='page-numbers' href='http://example.org/?paged=1'>1</a>", $output );
