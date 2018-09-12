@@ -373,6 +373,8 @@ function edd_get_registered_settings() {
 			'anonymize' => __( 'Anonymize',  'easy-digital-downloads' ),
 			'delete'    => __( 'Delete',     'easy-digital-downloads' )
 		);
+		$debug_log_url    = edd_get_admin_url( array( 'page' => 'edd-tools', 'tab' => 'debug_log' ) );
+		$debug_log_link   = '<a href="' . esc_url( $debug_log_url ) . '">' . __( 'View the Log', 'easy-digital-downloads' ) . '</a>';
 		$payment_statuses = edd_get_payment_statuses();
 		$states           = edd_get_shop_states( edd_get_shop_country() );
 		$pages            = edd_get_pages();
@@ -842,7 +844,7 @@ function edd_get_registered_settings() {
 						'id'    => 'debug_mode',
 						'name'  => __( 'Debug Mode', 'easy-digital-downloads' ),
 						'check' => __( 'Enabled',    'easy-digital-downloads' ),
-						'desc'  => __( 'When enabled, debug messages will be logged in: Downloads &rarr; Tools &rarr; Debug Log.', 'easy-digital-downloads' ),
+						'desc'  => sprintf( __( 'Check this to enable logging of certain behaviors to a file. %s', 'easy-digital-downloads' ), $debug_log_link ),
 						'type'  => 'checkbox_description',
 					),
 					'disable_styles' => array(
