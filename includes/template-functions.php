@@ -1143,7 +1143,7 @@ add_action( 'edd_download_shortcode_item', 'edd_download_shortcode_item', 10, 2 
 /**
  * Load the pagination for the [downloads] shortcode.
  *
- * @since 2.9.x
+ * @since 2.9.8
  *
  * @param array  $atts The [downloads] shortcode attributes.
  * @param object $downloads The WP_Query.
@@ -1177,7 +1177,7 @@ add_action( 'edd_downloads_list_after', 'edd_downloads_pagination', 10, 3 );
 /**
  * Build pagination
  *
- * @since 2.9.x
+ * @since 2.9.8
  * 
  * @param array $args The arguments used to build the pagination.
  */
