@@ -823,7 +823,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 				) ); ?>
 
 				<span class="edd_upload_file">
-					<a href="#" data-uploader-title="<?php _e( 'Choose File', 'easy-digital-downloads' ); ?>" data-uploader-button-text="<?php _e( 'Select', 'easy-digital-downloads' ); ?>" class="edd_upload_file_button" onclick="return false;"><?php _e( 'Media Library', 'easy-digital-downloads' ); ?></a>
+					<a href="#" data-uploader-title="<?php _e( 'Select Files', 'easy-digital-downloads' ); ?>" data-uploader-button-text="<?php _e( 'Select', 'easy-digital-downloads' ); ?>" class="edd_upload_file_button" onclick="return false;"><?php _e( 'Media Library', 'easy-digital-downloads' ); ?></a>
 				</span>
 			</div>
 		</div>
