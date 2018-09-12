@@ -1155,7 +1155,12 @@ function edd_tools_debug_log_display() {
 					<?php
 					submit_button( __( 'Download Debug Log File', 'easy-digital-downloads' ), 'primary',                     'edd-download-debug-log', false );
 					submit_button( __( 'Copy to Clipboard',       'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-copy-debug-log',     false, array( 'onclick' => "this.form['edd-debug-log-contents'].focus();this.form['edd-debug-log-contents'].select();document.execCommand('copy');return false;" ) );
-					submit_button( __( 'Clear Log',               'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-clear-debug-log',    false );
+
+					// Only show the "Clear Log" button if there is a log to clear
+					if ( ! empty( $log ) ) {
+						submit_button( __( 'Clear Log', 'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-clear-debug-log', false );
+					}
+
 					?>
                 </p>
 				<?php wp_nonce_field( 'edd-debug-log-action' ); ?>
