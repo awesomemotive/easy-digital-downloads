@@ -550,7 +550,7 @@ function edd_get_registered_settings() {
 					'refund_window' => array(
 						'id'   => 'refund_window',
 						'name' => __( 'Refund Window', 'easy-digital-downloads' ),
-						'desc' => __( 'Number of days (after a purchase) when refunds can be processed.<br>Set to <code>0</code> for infinity. Default is <code>30</code> days. Overridable on a per-product basis.', 'easy-digital-downloads' ),
+						'desc' => __( 'Number of days (after a sale) when refunds can be processed.<br>Default is <code>30</code> days. Set to <code>0</code> for infinity. Overridden on a per-product basis.', 'easy-digital-downloads' ),
 						'std'  => 30,
 						'type' => 'number',
 						'size' => 'small',
@@ -561,7 +561,7 @@ function edd_get_registered_settings() {
 					'refundability' => array(
 						'id'      => 'refundability',
 						'name'    => __( 'Product Refundability', 'easy-digital-downloads' ),
-						'desc'    => __( 'By default, products without an explicit setting will fallback to this.', 'easy-digital-downloads' ),
+						'desc'    => __( 'By default, products without an explicit setting will default to this.', 'easy-digital-downloads' ),
 						'type'    => 'select',
 						'std'     => 'refundable',
 						'chosen'  => true,
@@ -667,20 +667,20 @@ function edd_get_registered_settings() {
 					'email_logo' => array(
 						'id'      => 'email_logo',
 						'name'    => __( 'Logo', 'easy-digital-downloads' ),
-						'desc'    => __( 'Upload or choose a logo to be displayed at the top of the purchase receipt emails. Displayed on HTML emails only.', 'easy-digital-downloads' ),
+						'desc'    => __( 'Upload or choose a logo to be displayed at the top of sales receipt emails. Displayed on HTML emails only.', 'easy-digital-downloads' ),
 						'type'    => 'upload',
 					),
 					'from_name' => array(
 						'id'      => 'from_name',
 						'name'    => __( 'From Name', 'easy-digital-downloads' ),
-						'desc'    => __( 'The name purchase receipts are said to come from. This should probably be your site or shop name.', 'easy-digital-downloads' ),
+						'desc'    => __( 'This should be your site or shop name.', 'easy-digital-downloads' ),
 						'type'    => 'text',
 						'std'     => get_bloginfo( 'name' ),
 					),
 					'from_email' => array(
 						'id'      => 'from_email',
 						'name'    => __( 'From Email', 'easy-digital-downloads' ),
-						'desc'    => __( 'Email to send purchase receipts from. This will act as the "from" and "reply-to" address.', 'easy-digital-downloads' ),
+						'desc'    => __( 'This will act as the "from" and "reply-to" addresses.', 'easy-digital-downloads' ),
 						'type'    => 'email',
 						'std'     => get_bloginfo( 'admin_email' ),
 					),
@@ -2490,12 +2490,11 @@ function edd_upload_callback( $args ) {
 
 	$size  = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
 	$html  = '<input type="text" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" class="' . $class . '" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="' . esc_attr( stripslashes( $value ) ) . '"/>';
-	$html .= '<span>&nbsp;<input type="button" class="edd_settings_upload_button button-secondary" value="' . __( 'Upload File', 'easy-digital-downloads' ) . '"/></span>';
+	$html .= '<span>&nbsp;<input type="button" data-uploader-title="' . esc_html__( 'Attach File', 'easy-digital-download' ) . '" data-uploader-button-text="' . esc_html__( 'Attach', 'easy-digital-download' ) . '" class="edd_settings_upload_button button-secondary" value="' . __( 'Attach File', 'easy-digital-downloads' ) . '"/></span>';
 	$html .= '<p class="description"> ' . wp_kses_post( $args['desc'] ) . '</p>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
-
 
 /**
  * Color picker Callback
