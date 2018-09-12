@@ -346,12 +346,9 @@ jQuery(document).ready(function ($) {
 
 				// Create the media frame.
 				file_frame = wp.media.frames.file_frame = wp.media( {
-					frame: 'post',
-					state: 'insert',
-					title: button.data( 'uploader-title' ),
-					button: {
-						text: button.data( 'uploader-button-text' )
-					},
+					title:    button.data( 'uploader-title' ),
+					library:  { type: 'image' },
+					button:   { text: button.data( 'uploader-button-text' ) },
 					multiple: $( this ).data( 'multiple' ) === '0' ? false : true  // Set to true to allow multiple files to be selected
 				});
 
@@ -370,7 +367,7 @@ jQuery(document).ready(function ($) {
 				});
 
 				// When an image is selected, run a callback.
-				file_frame.on( 'insert', function() {
+				file_frame.on( 'select', function() {
 
 					var selection = file_frame.state().get('selection');
 					selection.each( function( attachment, index ) {
@@ -1715,12 +1712,9 @@ jQuery(document).ready(function ($) {
 
 					// Create the media frame.
 					file_frame = wp.media.frames.file_frame = wp.media({
-						frame: 'post',
-						state: 'insert',
-						title: button.data( 'uploader_title' ),
-						button: {
-							text: button.data( 'uploader_button_text' )
-						},
+						title:    button.data( 'uploader_title' ),
+						library:  { type: 'image' },
+						button:   { text: button.data( 'uploader_button_text' ) },
 						multiple: false
 					});
 
@@ -1739,7 +1733,7 @@ jQuery(document).ready(function ($) {
 					});
 
 					// When an image is selected, run a callback.
-					file_frame.on( 'insert', function() {
+					file_frame.on( 'select', function() {
 
 						var selection = file_frame.state().get('selection');
 						selection.each( function( attachment, index ) {
