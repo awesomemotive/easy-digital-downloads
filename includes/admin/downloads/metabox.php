@@ -807,7 +807,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 			<?php echo EDD()->html->text( array(
 				'name'        => 'edd_download_files[' . $key . '][name]',
 				'value'       => $args['name'],
-				'placeholder' => __( 'File Name', 'easy-digital-downloads' ),
+				'placeholder' => __( 'My Neat File', 'easy-digital-downloads' ),
 				'class'       => 'edd_repeatable_name_field large-text'
 			) ); ?>
 		</div>
@@ -818,12 +818,12 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 				<?php echo EDD()->html->text( array(
 					'name'        => 'edd_download_files[' . $key . '][file]',
 					'value'       => $args['file'],
-					'placeholder' => __( 'Upload or enter the file URL', 'easy-digital-downloads' ),
+					'placeholder' => __( 'Enter, upload, choose from Media Library', 'easy-digital-downloads' ),
 					'class'       => 'edd_repeatable_upload_field edd_upload_field large-text'
 				) ); ?>
 
 				<span class="edd_upload_file">
-					<a href="#" data-uploader-title="<?php _e( 'Insert File', 'easy-digital-downloads' ); ?>" data-uploader-button-text="<?php _e( 'Insert', 'easy-digital-downloads' ); ?>" class="edd_upload_file_button" onclick="return false;"><?php _e( 'Upload a File', 'easy-digital-downloads' ); ?></a>
+					<a href="#" data-uploader-title="<?php _e( 'Choose File', 'easy-digital-downloads' ); ?>" data-uploader-button-text="<?php _e( 'Select', 'easy-digital-downloads' ); ?>" class="edd_upload_file_button" onclick="return false;"><?php _e( 'Media Library', 'easy-digital-downloads' ); ?></a>
 				</span>
 			</div>
 		</div>
