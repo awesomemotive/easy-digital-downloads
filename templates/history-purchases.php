@@ -45,17 +45,14 @@ if ( is_user_logged_in() ):
 				</tr>
 			<?php endforeach; ?>
 		</table>
-		<div id="edd_purchase_history_pagination" class="edd_pagination navigation">
-			<?php
-			$big = 999999;
-			echo paginate_links( array(
-				'base'    => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-				'format'  => '?paged=%#%',
-				'current' => max( 1, get_query_var( 'paged' ) ),
-				'total'   => ceil( edd_count_purchases_of_customer() / 20 ) // 20 items per page
-			) );
-			?>
-		</div>
+		<?php
+			echo edd_pagination( 
+				array(
+					'type'  => 'purchase_history',
+					'total' => ceil( edd_count_purchases_of_customer() / 20 ) // 20 items per page
+				)
+			);
+		?>
 		<?php do_action( 'edd_after_purchase_history', $payments ); ?>
 		<?php wp_reset_postdata(); ?>
 	<?php else : ?>
