@@ -245,8 +245,6 @@
 	background: none;
 	padding: 0;
 	border: none;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
 	box-shadow: none;
 }
 #edd_checkout_form_wrap #edd-payment-mode-wrap label {
@@ -382,8 +380,6 @@
 	background: url(images/icons/americanexpress.png ) no-repeat;
 }
 #edd_checkout_form_wrap .edd-cart-ajax {
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
 	box-shadow: none;
 }
 .edd-amazon-profile-wrapper {
@@ -806,8 +802,6 @@ input.edd_submit_plain {
 	cursor: pointer;
 	border: 1px solid #cccccc;
 	border-radius: 4px;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
 	box-shadow: none;
 	-webkit-user-select: none;
 	-moz-user-select: none;
@@ -824,7 +818,6 @@ input.edd_submit_plain {
 .edd-submit.button:active {
 	background-image: none;
 	outline: 0;
-	-webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 	box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 }
 .edd-submit.plain {
