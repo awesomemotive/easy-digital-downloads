@@ -203,11 +203,12 @@ jQuery(document).ready(function ($) {
 		},
 
 		add : function() {
-			$( document.body ).on( 'click', '.submit .edd_add_repeatable', function(e) {
+			$( document.body ).on( 'click', '.edd_add_repeatable', function(e) {
 				e.preventDefault();
+
 				var button = $( this ),
-					row    = button.parent().parent().prev( '.edd_repeatable_row' ),
-					clone  = EDD_Download_Configuration.clone_repeatable(row);
+					row    = button.parent().prev().children( '.edd_repeatable_row:last-child' ),
+					clone  = EDD_Download_Configuration.clone_repeatable( row );
 
 				clone.insertAfter( row ).find('input, textarea, select').filter(':visible').eq(0).focus();
 
@@ -221,7 +222,17 @@ jQuery(document).ready(function ($) {
 		move : function() {
 
 			$(".edd_repeatable_table .edd-repeatables-wrap").sortable({
-				handle: '.edd-draghandle-anchor', items: '.edd_repeatable_row', opacity: 0.6, cursor: 'move', axis: 'y', update: function() {
+				axis:        'y',
+				handle:      '.edd-draghandle-anchor',
+				items:       '.edd_repeatable_row',
+				cursor:      'move',
+				tolerance:   'pointer',
+				containment: 'parent',
+				distance:    2,
+				opacity:     0.7,
+				scroll:      true,
+
+				update: function() {
 					var count  = 0;
 					$( this ).find( '.edd_repeatable_row' ).each(function() {
 						$( this ).find( 'input.edd_repeatable_index' ).each(function() {
@@ -229,6 +240,9 @@ jQuery(document).ready(function ($) {
 						});
 						count++;
 					});
+				},
+				start: function(e, ui){
+					ui.placeholder.height(ui.item.height()-2);
 				}
 			});
 		},
@@ -508,6 +522,10 @@ jQuery(document).ready(function ($) {
 			distance:    2,
 			opacity:     0.7,
 			scroll:      true,
+
+			start: function(e, ui){
+				ui.placeholder.height(ui.item.height());
+			},
 
 			/**
 			 * When sorting stops, assign the value to the previous input.
