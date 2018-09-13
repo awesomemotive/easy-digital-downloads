@@ -637,8 +637,6 @@ table#edd_purchase_receipt_products .edd_bundled_product_name {
 
 #edd_register_form .edd-input,
 #edd_login_form .edd-input {
-	-webkit-box-sizing: border-box;
-  	-moz-box-sizing: border-box;
   	box-sizing: border-box;
 }
 
