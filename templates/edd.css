@@ -823,8 +823,6 @@ input.edd_submit_plain {
 .edd-submit.plain {
 	padding: 0;
 	border: none;
-	-webkit-border-radius: 0;
-	-moz-border-radius: 0;
 	border-radius: 0;
 }
 
@@ -1058,8 +1056,6 @@ edd-hide-on-empty.cart-not.empty {
 /* =Error styles
 -------------------------------------------------------------- */
 .edd_errors:not(.edd-alert) {
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
 	border-radius: 2px;
 	border: 1px solid #E6DB55;
 	margin: 0 0 21px;
@@ -1077,8 +1073,6 @@ p.edd_error {
 /* =Success Message styles
 -------------------------------------------------------------- */
 .edd_success:not(.edd-alert) {
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
 	border-radius: 2px;
 	border: 1px solid #b3ce89;
 	margin: 20px 0;
@@ -1096,8 +1090,6 @@ p.edd_error {
 
 /* Alert Styles */
 .edd-alert {
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
 	border-radius: 2px;
 	margin-bottom: 20px;
 	padding: 10px;
