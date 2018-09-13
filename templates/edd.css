@@ -517,10 +517,6 @@ a.edd-add-to-cart.white .edd-loading,
 }
 a.edd-add-to-cart .edd-add-to-cart-label,
 .edd-loading {
-	-webkit-transition: .1s opacity !important;
-	-moz-transition: .1s opacity !important;
-	-ms-transition: .1s opacity !important;
-	-o-transition: .1s opacity !important;
 	transition: .1s opacity !important;
 }
 .edd-add-to-cart[data-edd-loading] .edd-add-to-cart-label {
