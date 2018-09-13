@@ -31,38 +31,7 @@
 	-webkit-animation: edd-icon-spin 2s infinite linear;
 	animation: edd-icon-spin 2s infinite linear;
 }
-@-moz-keyframes edd-icon-spin {
-	0% {
-		-moz-transform: rotate(0deg)
-	}
-	100% {
-		-moz-transform: rotate(359deg)
-	}
-}
-@-webkit-keyframes edd-icon-spin {
-	0% {
-		-webkit-transform: rotate(0deg)
-	}
-	100% {
-		-webkit-transform: rotate(359deg)
-	}
-}
-@-o-keyframes edd-icon-spin {
-	0% {
-		-o-transform: rotate(0deg)
-	}
-	100% {
-		-o-transform: rotate(359deg)
-	}
-}
-@-ms-keyframes edd-icon-spin {
-	0% {
-		-ms-transform: rotate(0deg)
-	}
-	100% {
-		-ms-transform: rotate(359deg)
-	}
-}
+
 @keyframes edd-icon-spin {
 	0% {
 		transform: rotate(0deg)
@@ -460,7 +429,6 @@
 	top: calc(50% - 0.75em);
 	opacity: 0;
 	filter: alpha(opacity=0);
-	-ms-transform: translateZ(0);
 	transform: translateZ(0);
 }
 a.edd-add-to-cart.white .edd-loading,
@@ -495,23 +463,11 @@ a.edd-add-to-cart.white .edd-loading,
 	opacity: 1;
 }
 
-@-webkit-keyframes edd-spinning {
-	0% {
-		-webkit-transform: rotate(0deg);
-		transform: rotate(0deg);
-	}
-	100% {
-		-webkit-transform: rotate(360deg);
-		transform: rotate(360deg);
-	}
-}
 @keyframes edd-spinning {
 	0% {
-		-webkit-transform: rotate(0deg);
 		transform: rotate(0deg);
 	}
 	100% {
-		-webkit-transform: rotate(360deg);
 		transform: rotate(360deg);
 	}
 }
