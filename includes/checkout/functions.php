@@ -621,17 +621,7 @@ function edd_svg_checkout_icons() {
 	}
 
 	// Create array to hold icons.
-	$icons = array();
-
-	// Get payment methods.
-	$payment_methods = edd_get_option( 'accepted_cards', array() );
-
-	if ( ! empty( $payment_methods ) ) {
-		foreach ( $payment_methods as $key => $method ) {
-			// Add each payment method's key to $icons array. I.e "mastercard".
-			$icons[] = $key;
-		}
-	}
+	$icons = array( 'mastercard', 'visa', 'americanexpress', 'discover', 'paypal', 'amazon' );
 
 	if ( is_ssl() ) {
 		$icons[] = 'lock';
