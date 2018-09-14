@@ -988,9 +988,6 @@ input.edd_submit_plain {
 .edd_download .edd_price {
 	margin-bottom: 10px;
 }
-#edd_download_pagination {
-	clear: both;
-}
 
 /* =Misc styles
 -------------------------------------------------------------- */
