@@ -350,26 +350,11 @@
 }
 #edd_checkout_form_wrap span.card-type {
 	position: absolute;
-	top: -2px;
+	top: 0;
 	right: 0;
-	width: 43px;
-	height: 32px;
-	background-size: 43px 32px!important;
 }
 #edd_checkout_form_wrap span.card-type.off {
 	display: none;
-}
-#edd_checkout_form_wrap span.card-type.visa {
-	background: url(images/icons/visa.png ) no-repeat;
-}
-#edd_checkout_form_wrap span.card-type.mastercard {
-	background: url(images/icons/mastercard.png ) no-repeat;
-}
-#edd_checkout_form_wrap span.card-type.discover {
-	background: url(images/icons/discover.png ) no-repeat;
-}
-#edd_checkout_form_wrap span.card-type.amex {
-	background: url(images/icons/americanexpress.png ) no-repeat;
 }
 #edd_checkout_form_wrap .edd-cart-ajax {
 	-webkit-box-shadow: none;
