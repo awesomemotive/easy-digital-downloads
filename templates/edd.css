@@ -749,10 +749,6 @@ input.edd_submit_plain {
 	border: 1px solid #cccccc;
 	border-radius: 4px;
 	box-shadow: none;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	-o-user-select: none;
 	user-select: none;
 }
 .edd-submit.button:focus,
