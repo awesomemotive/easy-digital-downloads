@@ -23,12 +23,6 @@ use EDD\Admin\List_Table;
 class Gateway_Stats extends List_Table {
 
 	/**
-	 * @var int Number of items per page
-	 * @since 1.5
-	 */
-	public $per_page = 30;
-
-	/**
 	 * Get things started
 	 *
 	 * @since 1.5

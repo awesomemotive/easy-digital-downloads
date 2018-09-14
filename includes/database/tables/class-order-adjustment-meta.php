@@ -13,12 +13,14 @@ namespace EDD\Database\Tables;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Database\Table;
+
 /**
  * Setup the global "edd_order_adjustmentmeta" database table
  *
  * @since 3.0
  */
-final class Order_Adjustment_Meta extends Base {
+final class Order_Adjustment_Meta extends Table {
 
 	/**
 	 * Table name

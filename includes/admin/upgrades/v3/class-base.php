@@ -20,6 +20,22 @@ defined( 'ABSPATH' ) || exit;
 class Base extends \EDD_Batch_Export {
 
 	/**
+	 * Orders.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	const ORDERS = 'orders';
+
+	/**
+	 * Discounts.
+	 *
+	 * @since 3.0
+	 * @var   string
+	 */
+	const DISCOUNTS = 'discounts';
+
+	/**
 	 * Our export type. Used for export-type specific filters/actions.
 	 *
 	 * @since 3.0
@@ -149,9 +165,9 @@ class Base extends \EDD_Batch_Export {
 	 * @param int    $legacy_id Legacy ID.
 	 * @param string $type      Type.
 	 *
-	 * @return int New ID if found, otherwise legacy ID.
+	 * @return int|false New ID if found, false otherwise.
 	 */
-	protected function remap_id( $legacy_id = 0, $type = '' ) {
+	protected function find_legacy_id( $legacy_id = 0, $type = '' ) {
 
 		// Bail if nothing passed.
 		if ( empty( $legacy_id ) || empty( $type ) ) {
@@ -161,17 +177,23 @@ class Base extends \EDD_Batch_Export {
 		$legacy_id = absint( $legacy_id );
 
 		switch ( $type ) {
-			case 'orders':
+			case static::ORDERS:
 				$id = $this->get_db()->get_var( $this->get_db()->prepare(
 					"SELECT edd_order_id FROM {$this->get_db()->edd_ordermeta} WHERE meta_key = 'legacy_order_id' AND meta_value = %d",
 					$legacy_id
 				) );
 				break;
+			case static::DISCOUNTS:
+				$id = $this->get_db()->get_var( $this->get_db()->prepare(
+					"SELECT edd_discount_id FROM {$this->get_db()->edd_discountmeta} WHERE meta_key = 'legacy_discount_id' AND meta_value = %d",
+					$legacy_id
+				) );
+				break;
 		}
 
-		return empty( $id )
-			? $legacy_id
-			: absint( $id );
+		return ! empty( $id )
+			? absint( $id )
+			: false;
 	}
 
 	/**

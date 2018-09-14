@@ -24,27 +24,6 @@ use EDD\Admin\List_Table;
 class EDD_Customer_Reports_Table extends List_Table {
 
 	/**
-	 * Number of items per page
-	 *
-	 * @var int
-	 * @since 1.5
-	 */
-	public $per_page = 30;
-
-	/**
-	 * Discount counts, keyed by status
-	 *
-	 * @var array
-	 * @since 3.0
-	 */
-	public $counts = array(
-		'active'   => 0,
-		'inactive' => 0,
-		'expired'  => 0,
-		'total'    => 0
-	);
-
-	/**
 	 * The arguments for the data set
 	 *
 	 * @var array
@@ -67,44 +46,6 @@ class EDD_Customer_Reports_Table extends List_Table {
 
 		$this->process_bulk_action();
 		$this->get_counts();
-	}
-
-	/**
-	 * Show the search field
-	 *
-	 * @since 1.7
-	 *
-	 * @param string $text Label for the search box
-	 * @param string $input_id ID of the search box
-	 *
-	 * @return void
-	 */
-	public function search_box( $text, $input_id ) {
-
-		// Bail if no customers and no search
-		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
-			return;
-		}
-
-		$input_id = $input_id . '-search-input';
-
-		if ( ! empty( $_REQUEST['orderby'] ) ) {
-			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
-		}
-
-		if ( ! empty( $_REQUEST['order'] ) ) {
-			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
-		}
-
-		?>
-
-		<p class="search-box">
-			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>:</label>
-			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>" />
-			<?php submit_button( $text, 'button', false, false, array('ID' => 'search-submit') ); ?>
-		</p>
-
-		<?php
 	}
 
 	/**
@@ -177,7 +118,7 @@ class EDD_Customer_Reports_Table extends List_Table {
 	 */
 	public function column_name( $item ) {
 		$state    = '';
-		$status   = ! empty( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
+		$status   = $this->get_status();
 		$name     = ! empty( $item['name'] ) ? $item['name'] : '&mdash;';
 		$view_url = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $item['id'] );
 		$actions  = array(
@@ -240,29 +181,6 @@ class EDD_Customer_Reports_Table extends List_Table {
 	 */
 	public function get_counts() {
 		$this->counts = edd_get_customer_counts();
-	}
-
-	/**
-	 * Retrieve the view types
-	 *
-	 * @access public
-	 * @since 1.4
-	 *
-	 * @return array $views All the views available
-	 */
-	public function get_views() {
-		$base          = $this->get_base_url();
-		$current       = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
-		$is_all        = empty( $current ) || ( 'all' === $current );
-		$total_count   = '&nbsp;<span class="count">(' . esc_html( $this->counts['total']   ) . ')</span>';
-		$active_count  = '&nbsp;<span class="count">(' . esc_html( $this->counts['active']  ) . ')</span>';
-		$pending_count = '&nbsp;<span class="count">(' . esc_html( $this->counts['pending'] ) . ')</span>';
-
-		return array(
-			'all'     => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base         ) ), $is_all                ? ' class="current"' : '', __( 'All',     'easy-digital-downloads' ) . $total_count   ),
-			'active'  => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'active',  $base ) ), 'active'  === $current ? ' class="current"' : '', __( 'Active',  'easy-digital-downloads' ) . $active_count  ),
-			'pending' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'pending', $base ) ), 'pending' === $current ? ' class="current"' : '', __( 'Pending', 'easy-digital-downloads' ) . $pending_count )
-		);
 	}
 
 	/**
@@ -344,30 +262,6 @@ class EDD_Customer_Reports_Table extends List_Table {
 	}
 
 	/**
-	 * Retrieve the current page number
-	 *
-	 * @since 1.5
-	 * @return int Current page number
-	 */
-	public function get_paged() {
-		return isset( $_GET['paged'] )
-			? absint( $_GET['paged'] )
-			: 1;
-	}
-
-	/**
-	 * Retrieves the search query string
-	 *
-	 * @since 1.7
-	 * @return mixed string If search is present, false otherwise
-	 */
-	public function get_search() {
-		return ! empty( $_GET['s'] )
-			? urldecode( trim( $_GET['s'] ) )
-			: false;
-	}
-
-	/**
 	 * Build all the reports data
 	 *
 	 * @since 1.5
@@ -379,7 +273,7 @@ class EDD_Customer_Reports_Table extends List_Table {
 		$paged   = $this->get_paged();
 		$offset  = $this->per_page * ( $paged - 1 );
 		$search  = $this->get_search();
-		$status  = isset( $_GET['status']  ) ? sanitize_text_field( $_GET['status']  ) : ''; // WPCS: CSRF ok.
+		$status  = $this->get_status();
 		$order   = isset( $_GET['order']   ) ? sanitize_text_field( $_GET['order']   ) : 'DESC'; // WPCS: CSRF ok.
 		$orderby = isset( $_GET['orderby'] ) ? sanitize_text_field( $_GET['orderby'] ) : 'id'; // WPCS: CSRF ok.
 
@@ -448,9 +342,7 @@ class EDD_Customer_Reports_Table extends List_Table {
 
 		$this->items = $this->reports_data();
 
-		$status = isset( $_GET['status'] )
-			? sanitize_key( $_GET['status'] )
-			: 'total';
+		$status = $this->get_status( 'total' );
 
 		// Setup pagination
 		$this->set_pagination_args( array(

@@ -45,7 +45,7 @@ class Ajax_UnitTestCase extends \WP_Ajax_UnitTestCase {
 		foreach ( $components as $component ) {
 			$thing = $component->get_interface( 'table' );
 
-			if ( $thing instanceof \EDD\Database\Tables\Base ) {
+			if ( $thing instanceof \EDD\Database\Table ) {
 				$thing->truncate();
 			}
 		}

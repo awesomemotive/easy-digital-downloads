@@ -13,6 +13,8 @@ namespace EDD\Database\Queries;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Database\Query;
+
 /**
  * Class used for querying items.
  *
@@ -20,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @see \EDD\Database\Queries\Log_Api_Request::__construct() for accepted arguments.
  */
-class Log_Api_Request extends Base {
+class Log_Api_Request extends Query {
 
 	/** Table Properties ******************************************************/
 

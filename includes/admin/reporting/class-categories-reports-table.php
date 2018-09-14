@@ -103,16 +103,6 @@ class EDD_Categories_Reports_Table extends List_Table {
 	}
 
 	/**
-	 * Retrieve the current page number
-	 *
-	 * @since  2.4
-	 * @return int Current page number
-	 */
-	public function get_paged() {
-		return isset( $_GET[ 'paged' ] ) ? absint( $_GET[ 'paged' ] ) : 1;
-	}
-
-	/**
 	 * Build all the reports data
 	 *
 	 * @since  2.4

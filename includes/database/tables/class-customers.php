@@ -13,12 +13,14 @@ namespace EDD\Database\Tables;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Database\Table;
+
 /**
  * Setup the global "edd_customers" database table
  *
  * @since 3.0
  */
-final class Customers extends Base {
+final class Customers extends Table {
 
 	/**
 	 * Table name
@@ -100,14 +102,14 @@ final class Customers extends Base {
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} ALTER COLUMN `date_created` SET DEFAULT '0000-00-00 00:00:00'" );
 
 			if ( ! $this->column_exists( 'status' ) ) {
-				$this->get_db()->query( "
-					ALTER TABLE {$this->table_name} ADD COLUMN `status` varchar(20) NOT NULL default 'active' AFTER `name`;
-				" );
+				$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `status` varchar(20) NOT NULL default 'active' AFTER `name`;" );
+				$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX status (status(20))" );
 			}
 
 			if ( ! $this->column_exists( 'date_modified' ) ) {
 				$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `date_modified` datetime DEFAULT '0000-00-00 00:00:00' AFTER `date_created`" );
-				$this->get_db()->query( "UPDATE {$this->table_name} SET 'date_modified' = 'date_created'" );
+				$this->get_db()->query( "UPDATE {$this->table_name} SET `date_modified` = `date_created`" );
+				$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX date_created (date_created)" );
 			}
 		}
 
@@ -130,6 +132,7 @@ final class Customers extends Base {
 
 		if ( ! $this->column_exists( 'status' ) ) {
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `status` varchar(20) NOT NULL default 'active' AFTER `name`" );
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX status (status(20))" );
 		}
 
 		// Return success/fail

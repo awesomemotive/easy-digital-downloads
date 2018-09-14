@@ -58,7 +58,7 @@ function edd_settings_contextual_help() {
 		'title'	    => __( 'Emails', 'easy-digital-downloads' ),
 		'content'	=>
 			'<p>' . __( "This screen allows you to customize how emails act throughout your store. You can choose a premade template, set the sender's name, email address, and subject.", 'easy-digital-downloads' ) . '</p>' .
-			'<p>' . __( 'A set of email tags has also been provided to allow the creation of personalized emails. A tag consists of a keyword surrounded by curly braces: <code>{tag}</code>. A description of each of these tags appears below the editor.', 'easy-digital-downloads' ) . '</p>'
+			'<p>' . __( 'A set of email tag markers has also been provided to allow the creation of personalized emails. A tag consists of a keyword surrounded by curly braces: <code>{tag}</code>.', 'easy-digital-downloads' ) . '</p>'
 	) );
 
 	$screen->add_help_tab( array(
@@ -75,7 +75,7 @@ function edd_settings_contextual_help() {
 			'<p>' . __( 'If you do not wish to charge any tax on purchase, simply leave the Enable Taxes option unchecked.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( '<strong>Default Tax Rate</strong>: The default tax rate is the tax rate charged to customers located in your base country / state or province.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( '<strong>Base Country</strong>: This determines the country that is loaded by default on the checkout screen for customers that do not have an address stored in their account.', 'easy-digital-downloads' ) . '</p>' .
-			'<p>' . __( '<strong>Base State / Province</strong>: This determines the state / province that is loaded by default on the checkout screen for customers that do not have an address stored in their account.', 'easy-digital-downloads' ) . '</p>' .
+			'<p>' . __( '<strong>Base State / Province</strong>: This determines the region that is loaded by default on the checkout screen for customers that do not have an address stored in their account.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( '<strong>Prices Entered with Tax</strong>: if enabled, this means that the price entered on the product edit screens is the total amount the customer will pay after taxes. For example, if enabled and the price of a product is $20, the customer will pay 20$ at checkout. The exact amount charged in tax will be calculated automatically.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( '<strong>Display Tax Rate on Prices</strong>: when enabled, the amount the customer is expected to pay in tax will be displayed below purchase buttons.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( '<strong>Display During Checkout</strong>: This determines whether prices are shown with taxes or without taxes on checkout. If set to Including Tax, a $10 product with a 10% tax will be shown as $11.', 'easy-digital-downloads' ) . '</p>' .

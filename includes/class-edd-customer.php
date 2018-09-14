@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
  * @property int $user_id
  * @property string $notes
  */
-class EDD_Customer extends \EDD\Database\Objects\Customer {
+class EDD_Customer extends \EDD\Database\Rows\Customer {
 
 	/**
 	 * Customer ID.
@@ -279,6 +279,13 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 		// The DB class 'add' implies an update if the customer being asked to be created already exists
 		if ( ! empty( $customer_id ) ) {
 
+			// Add the primary email address for this customer
+			edd_add_customer_email_address( array(
+				'customer_id' => $customer_id,
+				'email'       => $args['email'],
+				'type'        => 'primary'
+			) );
+
 			// Maybe add payments
 			if ( ! empty( $args['payment_ids'] ) && is_array( $args['payment_ids'] ) ) {
 				$payment_ids = array_unique( array_values( $args['payment_ids'] ) );
@@ -413,7 +420,10 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 
 	/**
 	 * Check if an email address already exists somewhere in the known universe
-	 * of WordPress Users, EDD Customers, or additional customer email addresses.
+	 * of WordPress Users, or EDD customer email addresses.
+	 *
+	 * We intentionally skip the edd_customers table, to avoid race conditions
+	 * when adding new customers and their email addresses at the same time.
 	 *
 	 * @since 3.0
 	 *
@@ -432,19 +442,11 @@ class EDD_Customer extends \EDD\Database\Objects\Customer {
 			return true;
 		}
 
-		// Return true if found in customers table.
-		if ( edd_get_customer_by( 'email', $email ) ) {
-			return true;
-		}
+		// Query email addresses table for this address
+		$exists = edd_get_customer_email_address_by( 'email' , $email );
 
-		// Query all customer email addresses.
-		$count = edd_count_customer_email_addresses( array(
-			'customer_id' => $this->id,
-			'email'       => $email,
-		) );
-
-		// Return true if found in additional email addresses
-		if ( 0 < $count ) {
+		// Return true if found in email addresses table
+		if ( ! empty( $exists ) ) {
 			return true;
 		}
 

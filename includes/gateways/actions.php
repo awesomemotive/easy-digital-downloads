@@ -27,10 +27,10 @@ function edd_process_gateway_select( $data ) {
 add_action( 'edd_gateway_select', 'edd_process_gateway_select' );
 
 /**
- * Loads a payment gateway via AJAX
+ * Loads a payment gateway via AJAX.
  *
  * @since 1.3.4
- * @return void
+ * @since 2.9.4 Added nonce verification prior to loading the purchase form.
  */
 function edd_load_ajax_gateway() {
 	if ( ! isset( $_POST['nonce'] ) ) {

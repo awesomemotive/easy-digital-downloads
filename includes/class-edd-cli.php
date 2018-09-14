@@ -528,22 +528,14 @@ class EDD_CLI extends WP_CLI_Command {
 
 			$generate_users = ( array_key_exists( 'generate_users', $assoc_args ) ) ? (bool) absint( $assoc_args['generate_users'] ) : $generate_users;
 
-			// Status requires a bit more validation
+			// Status requires a bit more validation.
 			if ( array_key_exists( 'status', $assoc_args ) ) {
-				$stati = array(
-					'publish',
-					'complete',
-					'pending',
-					'refunded',
-					'revoked',
-					'failed',
-					'abandoned',
-					'preapproval',
-					'cancelled',
-				);
+				$statuses = array_keys( edd_get_payment_statuses() );
 
-				if ( in_array( $assoc_args['status'], $stati, true ) ) {
-					$status = ( 'complete' === $assoc_args['status'] ) ? 'publish' : $assoc_args['status'];
+				if ( in_array( $assoc_args['status'], $statuses, true ) ) {
+					$status = ( 'complete' === $assoc_args['status'] )
+						? 'publish'
+						: $assoc_args['status'];
 				} else {
 					WP_CLI::warning( sprintf(
 						__( "Invalid status '%s', defaulting to 'complete'", 'easy-digital-downloads' ),
@@ -553,7 +545,7 @@ class EDD_CLI extends WP_CLI_Command {
 			}
 		}
 
-		// Build the user info array
+		// Build the user info array.
 		$user_info = array(
 			'id'         => 0,
 			'email'      => $email,
@@ -562,7 +554,7 @@ class EDD_CLI extends WP_CLI_Command {
 			'discount'   => 'none',
 		);
 
-		$progress = \WP_CLI\Utils\make_progress_bar( 'Creating Payments', $number );
+		$progress = \WP_CLI\Utils\make_progress_bar( 'Creating Orders', $number );
 
 		for ( $i = 0; $i < $number; $i ++ ) {
 			$products = array();
@@ -590,7 +582,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 			$cart_details = array();
 
-			// Create the purchases
+			// Add each download to the order.
 			foreach ( $products as $key => $download ) {
 				if ( ! $download instanceof WP_Post ) {
 					continue;
@@ -599,9 +591,8 @@ class EDD_CLI extends WP_CLI_Command {
 				$options         = array();
 				$final_downloads = array();
 
-				// Deal with variable pricing
+				// Variable price.
 				if ( edd_has_variable_prices( $download->ID ) ) {
-
 					$prices = edd_get_variable_prices( $download->ID );
 
 					if ( false === $price_id || ! array_key_exists( $price_id, (array) $prices ) ) {
@@ -612,6 +603,8 @@ class EDD_CLI extends WP_CLI_Command {
 
 					$item_price          = $prices[ $item_price_id ]['amount'];
 					$options['price_id'] = $item_price_id;
+
+				// Flat price.
 				} else {
 					$item_price = edd_get_download_price( $download->ID );
 				}
@@ -639,6 +632,7 @@ class EDD_CLI extends WP_CLI_Command {
 				$total += $item_price;
 			}
 
+			// Generate random date.
 			if ( 'random' === $date ) {
 				// Randomly grab a date from the current past 30 days
 				$oldest_time = strtotime( '-' . $range . ' days', current_time( 'timestamp' ) );
@@ -657,6 +651,7 @@ class EDD_CLI extends WP_CLI_Command {
 				}
 			}
 
+			// Maybe generate users.
 			if ( $generate_users ) {
 				$fname  = $this->get_fname();
 				$lname  = $this->get_lname();
@@ -674,32 +669,35 @@ class EDD_CLI extends WP_CLI_Command {
 				);
 			}
 
+			// Build purchase data.
 			$purchase_data = array(
-				'price'	        => edd_sanitize_amount( $total ),
-				'tax'           => edd_calculate_tax( $total ),
-				'purchase_key'  => strtolower( md5( uniqid() ) ),
-				'user_email'    => $email,
-				'user_info'     => $user_info,
-				'currency'      => edd_get_currency(),
-				'downloads'     => $final_downloads,
-				'cart_details'  => $cart_details,
-				'status'        => 'pending',
+				'price'        => edd_sanitize_amount( $total ),
+				'tax'          => edd_calculate_tax( $total ),
+				'purchase_key' => strtolower( md5( uniqid() ) ),
+				'user_email'   => $email,
+				'user_info'    => $user_info,
+				'currency'     => edd_get_currency(),
+				'downloads'    => $final_downloads,
+				'cart_details' => $cart_details,
+				'status'       => 'pending',
 			);
 
 			if ( ! empty( $timestring ) ) {
 				$purchase_data['date_created'] = $timestring;
 			}
 
-			$payment_id = edd_build_order( $purchase_data );
+			$order_id = edd_build_order( $purchase_data );
 
+			// Ensure purchase receipts do not get sent.
 			remove_action( 'edd_complete_purchase', 'edd_trigger_purchase_receipt', 999 );
 
-			if ( $status != 'pending' ) {
-				edd_update_payment_status( $payment_id, $status );
+			// Trigger payment status actions.
+			if ( 'pending' !== $status ) {
+				edd_update_order_status( $order_id, $status );
 			}
 
 			if ( ! empty( $timestring ) ) {
-				$payment                 = new EDD_Payment( $payment_id );
+				$payment                 = new EDD_Payment( $order_id );
 				$payment->completed_date = $timestring;
 				$payment->save();
 			}
@@ -709,7 +707,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 		$progress->finish();
 
-		WP_CLI::success( sprintf( __( 'Created %s payments', 'easy-digital-downloads' ), $number ) );
+		WP_CLI::success( sprintf( __( 'Created %s orders', 'easy-digital-downloads' ), $number ) );
 
 		return;
 	}
@@ -826,6 +824,8 @@ class EDD_CLI extends WP_CLI_Command {
 	public function migrate_discounts( $args, $assoc_args ) {
 		global $wpdb;
 
+		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
+
 		$force = isset( $assoc_args['force'] )
 			? true
 			: false;
@@ -854,48 +854,8 @@ class EDD_CLI extends WP_CLI_Command {
 
 			$progress = new \cli\progress\Bar( 'Migrating Discounts', $total );
 
-			foreach ( $results as $old_discount ) {
-				$old_discount = get_post( $old_discount->ID );
-
-				if ( 'edd_discount' !== $old_discount->post_type ) {
-					continue;
-				}
-
-				$args            = array();
-				$meta            = get_post_custom( $old_discount->ID );
-				$meta_to_migrate = array();
-
-				foreach ( $meta as $key => $value ) {
-					if ( false === strpos( $key, '_edd_discount' ) ) {
-						// This is custom meta from another plugin that needs to be migrated to the new meta table
-						$meta_to_migrate[ $key ] = maybe_unserialize( $value[0] );
-						continue;
-					}
-
-					$value = maybe_unserialize( $value[0] );
-					$args[ str_replace( '_edd_discount_', '', $key ) ] = $value;
-				}
-
-				// If the discount name was not stored in post_meta, use value from the WP_Post object
-				if ( ! isset( $args['name'] ) ) {
-					$args['name'] = $old_discount->post_title;
-				}
-
-				$args['date_created']  = $old_discount->post_date_gmt;
-				$args['date_modified'] = $old_discount->post_modified_gmt;
-
-				// Use edd_store_discount() so any legacy data is handled correctly
-				$discount_id = edd_store_discount( $args );
-
-				// Migrate any additional meta.
-				if ( ! empty( $meta_to_migrate ) ) {
-					foreach ( $meta_to_migrate as $key => $value ) {
-						edd_add_adjustment_meta( $discount_id, $key, $value );
-					}
-				}
-
-				// Store legacy discount ID.
-				edd_add_adjustment_meta( $discount_id, 'legacy_discount_id', $old_discount->ID );
+			foreach ( $results as $result ) {
+				\EDD\Admin\Upgrades\v3\Data_Migrator::discounts( $result );
 
 				$progress->tick();
 			}
@@ -949,7 +909,12 @@ class EDD_CLI extends WP_CLI_Command {
 	 */
 	public function migrate_logs( $args, $assoc_args ) {
 		global $wpdb;
-		$force = isset( $assoc_args['force'] ) ? true : false;
+
+		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
+
+		$force = isset( $assoc_args['force'] )
+			? true
+			: false;
 
 		$upgrade_completed = edd_has_upgrade_completed( 'migrate_logs' );
 
@@ -992,91 +957,9 @@ class EDD_CLI extends WP_CLI_Command {
 		if ( ! empty( $total ) ) {
 			$progress = new \cli\progress\Bar( 'Migrating Logs', $total );
 
-			foreach ( $results as $old_log ) {
-				if ( 'file_download' === $old_log->slug ) {
-					$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d", $old_log->ID ) );
+			foreach ( $results as $result ) {
+				\EDD\Admin\Upgrades\v3\Data_Migrator::logs( $result );
 
-					$post_meta = array();
-
-					foreach ( $meta as $meta_item ) {
-						$post_meta[ $meta_item->meta_key ] = maybe_unserialize( $meta_item->meta_value );
-					}
-
-					$log_data = array(
-						'download_id'   => $old_log->post_parent,
-						'file_id'       => $post_meta['_edd_log_file_id'],
-						'order_id'      => $post_meta['_edd_log_payment_id'],
-						'price_id'      => isset( $post_meta['_edd_log_price_id'] ) ? $post_meta['_edd_log_price_id'] : 0,
-						'customer_id'   => isset( $post_meta['_edd_log_customer_id'] ) ? $post_meta['_edd_log_customer_id'] : 0,
-						'ip'            => $post_meta['_edd_log_ip'],
-						'date_created'  => $old_log->post_date_gmt,
-						'date_modified' => $old_log->post_modified_gmt,
-					);
-
-					$new_log_id = edd_add_file_download_log( $log_data );
-				} elseif ( 'api_request' === $old_log->slug ) {
-					$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id = %d", $old_log->ID ) );
-
-					$post_meta = array();
-
-					foreach ( $meta as $meta_item ) {
-						$post_meta[ $meta_item->meta_key ] = maybe_unserialize( $meta_item->meta_value );
-					}
-
-					$post_meta = wp_parse_args( $post_meta, array(
-						'_edd_log_request_ip' => '',
-						'_edd_log_user'       => 0,
-						'_edd_log_key'        => 'public',
-						'_edd_log_token'      => 'public',
-						'_edd_log_version'    => '',
-						'_edd_log_time'       => '',
-					) );
-
-					$log_data = array(
-						'ip'            => $post_meta['_edd_log_request_ip'],
-						'user_id'       => $post_meta['_edd_log_user'],
-						'api_key'       => $post_meta['_edd_log_key'],
-						'token'         => $post_meta['_edd_log_token'],
-						'version'       => $post_meta['_edd_log_version'],
-						'time'          => $post_meta['_edd_log_time'],
-						'request'       => $old_log->post_excerpt,
-						'error'         => $old_log->post_content,
-						'date_created'  => $old_log->post_date_gmt,
-						'date_modified' => $old_log->post_modified_gmt,
-					);
-
-					$new_log_id = edd_add_api_request_log( $log_data );
-				} else {
-					$post = new WP_Post( $old_log->ID );
-
-					$log_data = array(
-						'object_id'     => $post->post_parent,
-						'object_type'   => 'download',
-						'type'          => $old_log->slug,
-						'title'         => $old_log->post_title,
-						'message'       => $old_log->post_content,
-						'date_created'  => $old_log->post_date_gmt,
-						'date_modified' => $old_log->post_modified_gmt,
-					);
-
-					$meta            = get_post_custom( $old_log->ID );
-					$meta_to_migrate = array();
-
-					foreach ( $meta as $key => $value ) {
-						$meta_to_migrate[ $key ] = maybe_unserialize( $value[0] );
-					}
-
-					$new_log_id = edd_add_log( $log_data );
-					$new_log    = new EDD\Logs\Log( $new_log_id );
-
-					if ( ! empty( $meta_to_migrate ) ) {
-						foreach ( $meta_to_migrate as $key => $value ) {
-							$new_log->add_meta( $key, $value );
-						}
-					}
-				}
-
-				edd_debug_log( $old_log->ID . ' successfully migrated to ' . $new_log_id );
 				$progress->tick();
 			}
 
@@ -1113,7 +996,7 @@ class EDD_CLI extends WP_CLI_Command {
 	}
 
 	/**
-	 * Migrate notes to the custom tables.
+	 * Migrate order notes to the custom tables.
 	 *
 	 * ## OPTIONS
 	 *
@@ -1124,11 +1007,16 @@ class EDD_CLI extends WP_CLI_Command {
 	 * wp edd migrate_notes
 	 * wp edd migrate_notes --force
 	 */
-	public function migrate_notes( $args, $assoc_args ) {
+	public function migrate_order_notes( $args, $assoc_args ) {
 		global $wpdb;
-		$force = isset( $assoc_args['force'] ) ? true : false;
 
-		$upgrade_completed = edd_has_upgrade_completed( 'migrate_notes' );
+		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
+
+		$force = isset( $assoc_args['force'] )
+			? true
+			: false;
+
+		$upgrade_completed = edd_has_upgrade_completed( 'migrate_order_notes' );
 
 		if ( ! $force && $upgrade_completed ) {
 			WP_CLI::error( __( 'The notes custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
@@ -1151,26 +1039,14 @@ class EDD_CLI extends WP_CLI_Command {
 		if ( ! empty( $total ) ) {
 			$progress = new \cli\progress\Bar( 'Migrating Notes', $total );
 
-			foreach ( $results as $old_note ) {
-				$note_data = array(
-					'object_id'     => $old_note->comment_post_ID,
-					'object_type'   => 'payment',
-					'date_created'  => $old_note->comment_date_gmt,
-					'date_modified' => $old_note->comment_date_gmt,
-					'content'       => $old_note->comment_content,
-					'user_id'       => $old_note->user_id,
-				);
+			foreach ( $results as $result ) {
+				$result->object_id = $wpdb->get_var( $wpdb->prepare(
+					"SELECT edd_order_id FROM {$wpdb->edd_ordermeta} WHERE meta_key = 'legacy_order_id' AND meta_value = %d",
+					$result->comment_post_ID
+				) );
 
-				$id = edd_add_note( $note_data );
+				\EDD\Admin\Upgrades\v3\Data_Migrator::order_notes( $result );
 
-				$meta = get_comment_meta( $old_note->comment_ID );
-				if ( ! empty( $meta ) ) {
-					foreach ( $meta as $key => $value ) {
-						edd_add_note_meta( $id, $key, $value );
-					}
-				}
-
-				edd_debug_log( $old_note->comment_ID . ' successfully migrated to ' . $id );
 				$progress->tick();
 			}
 
@@ -1183,7 +1059,7 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
 
 			edd_update_db_version();
-			edd_set_upgrade_complete( 'migrate_notes' );
+			edd_set_upgrade_complete( 'migrate_order_notes' );
 
 			WP_CLI::confirm( __( 'Remove legacy notes?', 'easy-digital-downloads' ), array() );
 			WP_CLI::line( __( 'Removing old notes.', 'easy-digital-downloads' ) );
@@ -1201,8 +1077,65 @@ class EDD_CLI extends WP_CLI_Command {
 			edd_set_upgrade_complete( 'remove_legacy_notes' );
 		} else {
 			WP_CLI::line( __( 'No note records found.', 'easy-digital-downloads' ) );
-			edd_set_upgrade_complete( 'migrate_notes' );
+			edd_set_upgrade_complete( 'migrate_order_notes' );
 			edd_set_upgrade_complete( 'remove_legacy_notes' );
+		}
+	}
+
+	/**
+	 * Migrate customer notes to the custom tables.
+	 *
+	 * ## OPTIONS
+	 *
+	 * --force=<boolean>: If the routine should be run even if the upgrade routine has been run already
+	 *
+	 * ## EXAMPLES
+	 *
+	 * wp edd migrate_notes
+	 * wp edd migrate_notes --force
+	 */
+	public function migrate_customer_notes( $args, $assoc_args ) {
+		global $wpdb;
+
+		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
+
+		$force = isset( $assoc_args['force'] )
+			? true
+			: false;
+
+		$upgrade_completed = edd_has_upgrade_completed( 'migrate_customer_notes' );
+
+		if ( ! $force && $upgrade_completed ) {
+			WP_CLI::error( __( 'The notes custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		}
+
+		$customers_db = edd_get_component_interface( 'customer', 'table' );
+		if ( ! $customers_db->exists() ) {
+			@$customers_db->create();
+		}
+
+		$sql     = "SELECT * FROM {$wpdb->edd_customers}";
+		$results = $wpdb->get_results( $sql );
+		$total   = count( $results );
+
+		if ( ! empty( $total ) ) {
+			$progress = new \cli\progress\Bar( 'Migrating Customer Notes', $total );
+
+			foreach ( $results as $result ) {
+				\EDD\Admin\Upgrades\v3\Data_Migrator::customer_notes( $result );
+
+				$progress->tick();
+			}
+
+			$progress->finish();
+
+			WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
+
+			edd_update_db_version();
+			edd_set_upgrade_complete( 'migrate_customer_notes' );
+		} else {
+			WP_CLI::line( __( 'No customer note records found.', 'easy-digital-downloads' ) );
+			edd_set_upgrade_complete( 'migrate_customer_notes' );
 		}
 	}
 
@@ -1221,7 +1154,11 @@ class EDD_CLI extends WP_CLI_Command {
 	public function migrate_customer_data( $args, $assoc_args ) {
 		global $wpdb;
 
-		$force = isset( $assoc_args['force'] ) ? true : false;
+		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
+
+		$force = isset( $assoc_args['force'] )
+			? true
+			: false;
 
 		$upgrade_completed = edd_has_upgrade_completed( 'migrate_customer_data' );
 
@@ -1261,33 +1198,7 @@ class EDD_CLI extends WP_CLI_Command {
 			$progress = new \cli\progress\Bar( 'Migrating User Addresses', $total );
 
 			foreach ( $results as $result ) {
-				$address = maybe_unserialize( $result->meta_value );
-
-				$user_id = absint( $result->user_id );
-
-				$customer = edd_get_customer_by( 'user_id', $user_id );
-
-				$address = wp_parse_args( $address, array(
-					'line1'   => '',
-					'line2'   => '',
-					'city'    => '',
-					'state'   => '',
-					'zip'     => '',
-					'country' => '',
-				) );
-
-				if ( $customer ) {
-					edd_add_customer_address( array(
-						'customer_id' => $customer->id,
-						'type'        => 'primary',
-						'address'     => $address['line1'],
-						'address2'    => $address['line2'],
-						'city'        => $address['city'],
-						'region'      => $address['state'],
-						'postal_code' => $address['zip'],
-						'country'     => $address['country']
-					) );
-				}
+				\EDD\Admin\Upgrades\v3\Data_Migrator::customer_addresses( $result );
 
 				$progress->tick();
 			}
@@ -1308,12 +1219,7 @@ class EDD_CLI extends WP_CLI_Command {
 			$progress = new \cli\progress\Bar( 'Migrating Email Addresses', $total );
 
 			foreach ( $results as $result ) {
-				$customer_id = absint( $result->edd_customer_id );
-
-				edd_add_customer_email_address( array(
-					'customer_id' => $customer_id,
-					'email'       => $result->meta_value,
-				) );
+				\EDD\Admin\Upgrades\v3\Data_Migrator::customer_email_addresses( $result );
 
 				$progress->tick();
 			}
@@ -1342,7 +1248,11 @@ class EDD_CLI extends WP_CLI_Command {
 	public function migrate_tax_rates( $args, $assoc_args ) {
 		global $wpdb;
 
-		$force = isset( $assoc_args['force'] ) ? true : false;
+		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
+
+		$force = isset( $assoc_args['force'] )
+			? true
+			: false;
 
 		$upgrade_completed = edd_has_upgrade_completed( 'migrate_tax_rates' );
 
@@ -1371,26 +1281,8 @@ class EDD_CLI extends WP_CLI_Command {
 		if ( ! empty( $tax_rates ) ) {
 			$progress = new \cli\progress\Bar( 'Migrating Tax Rates', count( $tax_rates ) );
 
-			foreach ( $tax_rates as $tax_rate ) {
-				$scope = isset( $tax_rate['global'] )
-					? 'country'
-					: 'region';
-
-				$region = isset( $tax_rate['state'] )
-					? sanitize_text_field( $tax_rate['state'] )
-					: '';
-
-				$adjustment_data = array(
-					'name'        => $tax_rate['country'],
-					'status'      => 'active',
-					'type'        => 'tax_rate',
-					'scope'       => $scope,
-					'amount_type' => 'percent',
-					'amount'      => floatval( $tax_rate['rate'] ),
-					'description' => $region,
-				);
-
-				edd_add_adjustment( $adjustment_data );
+			foreach ( $tax_rates as $result ) {
+				\EDD\Admin\Upgrades\v3\Data_Migrator::tax_rates( $result );
 
 				$progress->tick();
 			}
@@ -1419,7 +1311,11 @@ class EDD_CLI extends WP_CLI_Command {
 	public function migrate_payments( $args, $assoc_args ) {
 		global $wpdb;
 
-		$force = isset( $assoc_args['force'] ) ? true : false;
+		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
+
+		$force = isset( $assoc_args['force'] )
+			? true
+			: false;
 
 		$upgrade_completed = edd_has_upgrade_completed( 'migrate_payments' );
 
@@ -1465,390 +1361,8 @@ class EDD_CLI extends WP_CLI_Command {
 					continue;
 				}
 
-				/** Create a new order ***************************************/
+				\EDD\Admin\Upgrades\v3\Data_Migrator::orders( $result );
 
-				$meta = get_post_custom( $result->ID );
-
-				$payment_meta = maybe_unserialize( $meta['_edd_payment_meta'][0] );
-				$user_info    = $payment_meta['user_info'];
-
-				$order_number   = isset( $meta['_edd_payment_number'][0] ) ? $meta['_edd_payment_number'][0] : '';
-				$user_id        = isset( $meta['_edd_payment_user_id'][0] ) && ! empty ( $meta['_edd_payment_user_id'][0] ) ? $meta['_edd_payment_user_id'][0] : 0;
-				$ip             = isset( $meta['_edd_payment_user_ip'][0] ) ? $meta['_edd_payment_user_ip'][0] : '';
-				$mode           = isset( $meta['_edd_payment_mode'][0] ) ? $meta['_edd_payment_mode'][0] : 'live';
-				$gateway        = isset( $meta['_edd_payment_gateway'][0] ) && ! empty( $meta['_edd_payment_gateway'][0] ) ? $meta['_edd_payment_gateway'][0] : 'manual';
-				$customer_id    = isset( $meta['_edd_payment_customer_id'][0] ) ? $meta['_edd_payment_customer_id'][0] : 0;
-				$date_completed = isset( $meta['_edd_completed_date'][0] ) ? $meta['_edd_completed_date'][0] : '0000-00-00 00:00:00';
-
-				// Maybe convert the date completed to UTC.
-				if ( '0000-00-00 00:00:00' !== $date_completed ) {
-					$date_completed = EDD()->utils->date( $date_completed, edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString();
-				}
-
-				// Do not use -1 as the user ID.
-				$user_id = ( -1 === $user_id )
-					? 0
-					: $user_id;
-
-				// Calculate totals.
-				$subtotal = (float) array_reduce( wp_list_pluck( $payment_meta['cart_details'], 'subtotal' ), function( $carry, $item ) {
-					return $carry += $item;
-				} );
-
-				$tax = (float) array_reduce( wp_list_pluck( $payment_meta['cart_details'], 'tax' ), function( $carry, $item ) {
-					return $carry += $item;
-				} );
-
-				$discount = (float) array_reduce( wp_list_pluck( $payment_meta['cart_details'], 'discount' ), function( $carry, $item ) {
-					return $carry += $item;
-				} );
-
-				$total = (float) array_reduce( wp_list_pluck( $payment_meta['cart_details'], 'price' ), function( $carry, $item ) {
-					return $carry += $item;
-				} );
-
-				$type = 'refunded' === $result->post_status
-					? 'refund'
-					: 'order';
-
-				$order_data = array(
-					'parent'         => $result->post_parent,
-					'order_number'   => $order_number,
-					'status'         => $result->post_status,
-					'type'           => $type,
-					'date_created'   => $result->post_date_gmt, // GMT is stored in the database as the offset is applied by the new query classes.
-					'date_modified'  => $result->post_modified_gmt, // GMT is stored in the database as the offset is applied by the new query classes.
-					'date_completed' => $date_completed,
-					'user_id'        => $user_id,
-					'customer_id'    => $customer_id,
-					'email'          => $payment_meta['email'],
-					'ip'             => $ip,
-					'gateway'        => $gateway,
-					'mode'           => $mode,
-					'currency'       => $payment_meta['currency'],
-					'payment_key'    => $payment_meta['key'],
-					'subtotal'       => $subtotal,
-					'tax'            => $tax,
-					'discount'       => $discount,
-					'total'          => $total,
-				);
-
-				$order_id = edd_add_order( $order_data );
-
-				// First & last name.
-				$user_info['first_name'] = isset( $user_info['first_name'] )
-					? $user_info['first_name']
-					: '';
-				$user_info['last_name']  = isset( $user_info['last_name'] )
-					? $user_info['last_name']
-					: '';
-
-				// Add order address.
-				$user_info['address'] = isset( $user_info['address'] )
-					? $user_info['address']
-					: array();
-
-				$user_info['address'] = wp_parse_args( $user_info['address'], array(
-					'line1'   => '',
-					'line2'   => '',
-					'city'    => '',
-					'zip'     => '',
-					'country' => '',
-					'state'   => '',
-				) );
-
-				$order_address_data = array(
-					'order_id'    => $order_id,
-					'first_name'  => $user_info['first_name'],
-					'last_name'   => $user_info['last_name'],
-					'address'     => $user_info['address']['line1'],
-					'address2'    => $user_info['address']['line2'],
-					'city'        => $user_info['address']['city'],
-					'region'      => $user_info['address']['state'],
-					'country'     => $user_info['address']['country'],
-					'postal_code' => $user_info['address']['zip'],
-				);
-
-				// Remove empty data.
-				$order_address_data = array_filter( $order_address_data );
-
-				// Add to edd_order_addresses table.
-				edd_add_order_address( $order_address_data );
-
-				// Maybe add the address to the edd_customer_addresses.
-				$customer_address_data = $order_address_data;
-
-				// We don't need to pass this data to edd_maybe_add_customer_address().
-				unset( $customer_address_data['order_id'] );
-				unset( $customer_address_data['first_name'] );
-				unset( $customer_address_data['last_name'] );
-
-				edd_maybe_add_customer_address( $customer_id, $customer_address_data );
-
-				// Maybe add email address to customer record
-				$customer = edd_get_customer( $customer_id );
-				if ( $customer ) {
-					$customer->add_email( $payment_meta['email'] );
-				}
-
-				if ( isset( $meta['_edd_payment_unlimited_downloads'] ) && ! empty( $meta['_edd_payment_unlimited_downloads'][0] ) ) {
-					edd_add_order_meta( $order_id, 'unlimited_downloads', $meta['_edd_payment_unlimited_downloads'][0] );
-				}
-
-				if ( isset( $meta['_edd_payment_transaction_id'] ) && ! empty( $meta['_edd_payment_transaction_id'][0] ) ) {
-					edd_add_order_transaction( array(
-						'object_id'      => $order_id,
-						'object_type'    => 'order',
-						'transaction_id' => $meta['_edd_payment_transaction_id'][0],
-						'gateway'        => $gateway,
-						'status'         => 'complete',
-						'total'          => $total,
-						'date_created'   => $date_completed,
-						'date_modified'  => $date_completed,
-					) );
-				}
-
-				/** Migrate edd_payment_meta *********************************/
-
-				// By default, this is what is stored in payment meta.
-				$payment_meta_core_keys = array(
-					'fees',
-					'key',
-					'email',
-					'date',
-					'user_info',
-					'downloads',
-					'cart_details',
-					'currency',
-				);
-
-				$remaining_payment_meta = array_diff_key( $meta['_edd_payment_meta'], array_flip( $payment_meta_core_keys ) );
-
-				// If we have extra payment meta, it needs to be migrated across.
-				if ( 0 < count( $remaining_payment_meta ) ) {
-					edd_add_order_meta( $order_id, 'payment_meta', $remaining_payment_meta );
-				}
-
-				/** Create order items ***************************************/
-
-				// The cart_items array key did not exist in earlier versions of EDD.
-				$cart_items = isset ( $payment_meta['cart_details'] )
-					? $payment_meta['cart_details']
-					: array();
-
-				if ( ! empty( $cart_items ) ) {
-					foreach ( $cart_items as $key => $cart_item ) {
-						// Get product name.
-						$product_name = isset( $cart_item['name'] )
-							? $cart_item['name']
-							: '';
-
-						// Get price ID.
-						$price_id = isset( $cart_item['item_number']['options']['price_id'] )
-							? absint( $cart_item['item_number']['options']['price_id'] )
-							: 0;
-
-						// Get item price.
-						$cart_item['item_price'] = isset( $cart_item['item_price'] )
-							? (float) $cart_item['item_price']
-							: (float) $cart_item['price'];
-
-						// Get quantity.
-						$cart_item['quantity'] = isset( $cart_item['quantity'] )
-							? $cart_item['quantity']
-							: 1;
-
-						// Get subtotal.
-						$cart_item['subtotal'] = isset( $cart_item['subtotal'] )
-							? (float) $cart_item['subtotal']
-							: (float) $cart_item['quantity'] * $cart_item['item_price'];
-
-						// Get discount.
-						$cart_item['discount'] = isset( $cart_item['discount'] )
-							? (float) $cart_item['discount']
-							: 0.00;
-
-						// Get tax.
-						$cart_item['tax'] = isset( $cart_item['tax'] )
-							? (float) $cart_item['tax']
-							: 0.00;
-
-						$order_item_args = array(
-							'order_id'      => $order_id,
-							'product_id'    => $cart_item['id'],
-							'product_name'  => $product_name,
-							'price_id'      => $price_id,
-							'cart_index'    => $key,
-							'type'          => 'download',
-							'quantity'      => $cart_item['quantity'],
-							'amount'        => (float) $cart_item['item_price'],
-							'subtotal'      => $cart_item['subtotal'],
-							'discount'      => $cart_item['discount'],
-							'tax'           => $cart_item['tax'],
-							'total'         => (float) $cart_item['price'],
-							'date_created'  => $result->post_date_gmt,
-							// Use the same date as the payment to allow for date queries to work correctly.
-							'date_modified' => $result->post_modified_gmt,
-						);
-
-						$order_item_id = edd_add_order_item( $order_item_args );
-
-						// Store order item fees as adjustments.
-						if ( isset( $cart_item['fees'] ) && ! empty( $cart_item['fees'] ) ) {
-							foreach ( $cart_item['fees'] as $fee_id => $fee ) {
-
-								// Add the adjustment.
-								$adjustment_id = edd_add_order_adjustment( array(
-									'object_id'   => $order_item_id,
-									'object_type' => 'order_item',
-									'type_id'     => '',
-									'type'        => 'fee',
-									'description' => $fee['label'],
-									'amount'      => $fee['amount']
-								) );
-
-								edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
-								edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
-
-								if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
-									edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
-								}
-
-								if ( ! is_null( $fee['price_id'] ) ) {
-									edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
-								}
-							}
-						}
-					}
-
-					// Compatibility with older versions of EDD.
-					// Older versions stored a single dimensional array of download IDs.
-				} elseif ( isset( $payment_meta['downloads'] ) && count( $payment_meta['downloads'] ) === count( $payment_meta['downloads'], COUNT_RECURSIVE ) ) {
-					foreach ( $payment_meta['downloads'] as $cart_index => $download_id ) {
-						$download = edd_get_download( $download_id );
-
-						$order_item_args = array(
-							'order_id'      => $order_id,
-							'product_id'    => $download_id,
-							'product_name'  => $download->post_name,
-							'price_id'      => 0,
-							'cart_index'    => $cart_index,
-							'type'          => 'download',
-							'quantity'      => 1,
-							'amount'        => (float) $payment_meta['amount'],
-							'subtotal'      => (float) $payment_meta['amount'],
-							'discount'      => 0.00,
-							'tax'           => 0.00,
-							'total'         => (float) $payment_meta['amount'],
-							'date_created'  => $result->post_date_gmt,
-							// Use the same date as the payment to allow for date queries to work correctly.
-							'date_modified' => $result->post_modified_gmt,
-						);
-
-						edd_add_order_item( $order_item_args );
-					}
-				}
-
-				/** Create order adjustments *********************************/
-
-				$tax_rate = isset( $meta['_edd_payment_tax_rate'][0] )
-					? (float) $meta['_edd_payment_tax_rate'][0]
-					: 0.00;
-
-				// Tax rate is no longer stored in meta.
-				edd_add_order_adjustment( array(
-					'object_id'   => $order_id,
-					'object_type' => 'order',
-					'type_id'     => 0,
-					'type'        => 'tax_rate',
-					'amount'      => $tax_rate
-				) );
-
-				if ( isset( $payment_meta['fees'] ) && ! empty( $payment_meta['fees'] ) ) {
-					foreach ( $payment_meta['fees'] as $fee_id => $fee ) {
-						// Add the adjustment.
-						$adjustment_id = edd_add_order_adjustment( array(
-							'object_id'   => $order_id,
-							'object_type' => 'order',
-							'type_id'     => '',
-							'type'        => 'fee',
-							'description' => $fee['label'],
-							'amount'      => $fee['amount']
-						) );
-
-						edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
-						edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
-
-						if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
-							edd_add_order_adjustment_meta( $adjustment_id, 'no_tax', $fee['no_tax'] );
-						}
-
-						if ( ! is_null( $fee['price_id'] ) ) {
-							edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
-						}
-					}
-				}
-
-				// Insert discounts.
-				$discounts = ! empty( $user_info['discount'] )
-					? $user_info['discount']
-					: array();
-
-				if ( ! is_array( $discounts ) ) {
-					$discounts = explode( ',', $discounts );
-				}
-
-				if ( ! empty( $discounts ) && ( 'none' !== $discounts[0] ) ) {
-					foreach ( $discounts as $discount ) {
-
-						/** @var EDD_Discount $discount */
-						$discount = edd_get_discount_by( 'code', $discount );
-
-						if ( false === $discount ) {
-							continue;
-						}
-
-						edd_add_order_adjustment( array(
-							'object_id'   => $order_id,
-							'object_type' => 'order',
-							'type_id'     => $discount->id,
-							'type'        => 'discount',
-							'description' => $discount,
-							'amount'      => $subtotal - $discount->get_discounted_amount( $subtotal )
-						) );
-					}
-				}
-
-				/** Create order meta ****************************************/
-
-				$core_meta_keys = array(
-					'_edd_payment_user_email',
-					'_edd_payment_customer_id',
-					'_edd_payment_user_id',
-					'_edd_payment_user_ip',
-					'_edd_payment_purchase_key',
-					'_edd_payment_total',
-					'_edd_payment_mode',
-					'_edd_payment_gateway',
-					'_edd_payment_meta',
-					'_edd_payment_tax',
-					'_edd_payment_tax_rate',
-					'_edd_completed_date',
-					'_edd_payment_unlimited_downloads'
-				);
-
-				$remaining_meta = array_diff_key( $meta, array_flip( $core_meta_keys ) );
-
-				// Migrate additional payment meta.
-				foreach ( $remaining_meta as $meta_key => $meta_value ) {
-					$meta_value = $meta_value[0];
-
-					edd_add_order_meta( $order_id, $meta_key, $meta_value );
-				}
-
-				edd_add_order_meta( $order_id, 'legacy_payment_id', $result->ID );
-
-				edd_debug_log( $result->ID . ' successfully migrated to ' . $order_id );
 				$progress->tick();
 			}
 

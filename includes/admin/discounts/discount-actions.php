@@ -112,7 +112,11 @@ function edd_admin_add_discount( $data = array() ) {
 		'discount-id',
 		'edd-redirect',
 		'edd-action',
-		'edd-discount-nonce'
+		'edd-discount-nonce',
+		'start_date_minute',
+		'start_date_hour',
+		'end_date_minute',
+		'end_date_hour',
 	);
 
 	// Loop through fields to update, and unset known bad keys.

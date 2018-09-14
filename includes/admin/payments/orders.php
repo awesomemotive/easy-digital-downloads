@@ -573,17 +573,21 @@ function edd_order_details_sections( $order ) {
  *
  * @param object $order
  */
-function edd_order_details_extras( $order ) {
-	$transaction_id = edd_is_add_order_page()
-		? ''
-		: $order->get_transaction_id();
+function edd_order_details_extras( $order = false ) {
+	$transaction_id = ! empty( $order->id )
+		? $order->get_transaction_id()
+		: '';
 
-	$unlimited = edd_is_add_order_page()
-		? false
-		: $order->has_unlimited_downloads();
+	$unlimited = ! empty( $order->id )
+		? $order->has_unlimited_downloads()
+		: false;
+
+	$readonly = ! empty( $order->id )
+		? 'readonly'
+		: '';
 
 	// Setup gateway list.
-	if ( edd_is_add_order_page() ) {
+	if ( empty( $order->id ) ) {
 		$known_gateways = edd_get_payment_gateways();
 
 		$gateways = array();
@@ -601,10 +605,6 @@ function edd_order_details_extras( $order ) {
 			'show_option_all'  => false,
 		) );
 	}
-
-	$readonly = edd_is_add_order_page()
-		? ''
-		: 'readonly';
 
 	// Filter the transaction ID (here specifically for back-compat)
 	if ( ! empty( $transaction_id ) ) {
@@ -823,6 +823,12 @@ function edd_order_details_attributes( $order ) {
 				</div>
 				<?php endif; ?>
 
+				<?php if ( edd_is_add_order_page() && current_user_can( 'edit_shop_payments' ) ) : ?>
+				<div id="delete-action">
+					<button type="button" class="edd-override button button-secondary" disabled="disabled"><?php esc_html_e( 'Override', 'easy-digital-downloads' ); ?></button>
+				</div>
+				<?php endif; ?>
+
 				<div id="publishing-action">
 					<span class="spinner"></span>
 					<input type="submit" id="edd-order-submit" class="button button-primary right" value="<?php esc_attr_e( 'Save Order', 'easy-digital-downloads' ); ?>"/>
@@ -903,5 +909,5 @@ function edd_order_details_amounts( $order ) {
  * @return boolean True if on the `Add Order` page, false otherwise.
  */
 function edd_is_add_order_page() {
-	return isset( $_GET['view'] ) && 'add-order' === sanitize_text_field( $_GET['view'] ); // WPCS: CSRF ok.
+	return isset( $_GET['view'] ) && 'add-order' === sanitize_key( $_GET['view'] ); // WPCS: CSRF ok.
 }

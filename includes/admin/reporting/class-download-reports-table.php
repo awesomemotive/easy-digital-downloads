@@ -24,12 +24,6 @@ use EDD\Admin\List_Table;
 class EDD_Download_Reports_Table extends List_Table {
 
 	/**
-	 * @var int Number of items per page
-	 * @since 1.5
-	 */
-	public $per_page = 30;
-
-	/**
 	 * @var object Query results
 	 * @since 1.5.2
 	 */
@@ -122,27 +116,13 @@ class EDD_Download_Reports_Table extends List_Table {
 	}
 
 	/**
-	 * Retrieve the current page number
-	 *
-	 * @since 1.5
-	 * @return int Current page number
-	 */
-	public function get_paged() {
-		return isset( $_GET['paged'] )
-			? absint( $_GET['paged'] )
-			: 1;
-	}
-
-	/**
 	 * Retrieve the category being viewed
 	 *
 	 * @since 1.5.2
 	 * @return int Category ID
 	 */
 	public function get_category() {
-		return isset( $_GET['category'] )
-			? absint( $_GET['category'] )
-			: 0;
+		return absint( $this->get_request_var( 'category', 0 ) );
 	}
 
 	/**
@@ -195,8 +175,8 @@ class EDD_Download_Reports_Table extends List_Table {
 	 */
 	public function query() {
 
-		$orderby  = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'title';
-		$order    = isset( $_GET['order']   ) ? $_GET['order']   : 'DESC';
+		$orderby  = sanitize_text_field( $this->get_request_var( 'orderby', 'title' ) );
+		$order    = sanitize_text_field( $this->get_request_var( 'order',   'DESC'  ) );
 		$category = $this->get_category();
 
 		$args = array(
@@ -234,10 +214,9 @@ class EDD_Download_Reports_Table extends List_Table {
 				break;
 		}
 
-		$args = apply_filters( 'edd_download_reports_prepare_items_args', $args, $this );
+		$r = apply_filters( 'edd_download_reports_prepare_items_args', $args, $this );
 
-		$this->products = new WP_Query( $args );
-
+		$this->products = new WP_Query( $r );
 	}
 
 	/**

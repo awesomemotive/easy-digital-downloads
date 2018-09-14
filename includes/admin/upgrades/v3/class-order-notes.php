@@ -51,24 +51,9 @@ class Order_Notes extends Base {
 		) );
 
 		if ( ! empty( $results ) ) {
-			foreach ( $results as $old_note ) {
-				$note_data = array(
-					'object_id'     => $this->remap_id( $old_note->comment_post_ID, 'orders' ),
-					'object_type'   => 'order',
-					'date_created'  => $old_note->comment_date_gmt,
-					'date_modified' => $old_note->comment_date_gmt,
-					'content'       => $old_note->comment_content,
-					'user_id'       => $old_note->user_id,
-				);
-
-				$id = edd_add_note( $note_data );
-
-				$meta = get_comment_meta( $old_note->comment_ID );
-				if ( ! empty( $meta ) ) {
-					foreach ( $meta as $key => $value ) {
-						edd_add_note_meta( $id, $key, $value );
-					}
-				}
+			foreach ( $results as $result ) {
+				$result->object_id = $this->find_legacy_id( $result->comment_post_ID, 'orders' );
+				Data_Migrator::order_notes( $result );
 			}
 
 			return true;

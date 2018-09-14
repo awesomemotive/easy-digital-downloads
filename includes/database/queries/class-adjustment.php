@@ -13,6 +13,8 @@ namespace EDD\Database\Queries;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Database\Query;
+
 /**
  * Class used for querying adjustments.
  *
@@ -20,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @see \EDD\Database\Queries\Adjustment::__construct() for accepted arguments.
  */
-class Adjustment extends Base {
+class Adjustment extends Query {
 
 	/** Table Properties ******************************************************/
 
@@ -78,7 +80,7 @@ class Adjustment extends Base {
 	 * @access protected
 	 * @var mixed
 	 */
-	protected $item_shape = '\\EDD\\Database\\Objects\\Adjustment';
+	protected $item_shape = '\\EDD\\Database\\Rows\\Adjustment';
 
 	/** Cache *****************************************************************/
 

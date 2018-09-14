@@ -13,12 +13,14 @@ namespace EDD\Database\Schemas;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Database\Schema;
+
 /**
  * API Request Logs Schema Class.
  *
  * @since 3.0
  */
-class Logs_Api_Requests extends Base {
+class Logs_Api_Requests extends Schema {
 
 	/**
 	 * Array of database column objects

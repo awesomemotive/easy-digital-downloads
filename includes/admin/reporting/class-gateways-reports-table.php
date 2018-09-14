@@ -24,12 +24,6 @@ use EDD\Admin\List_Table;
 class EDD_Gateway_Reports_Table extends List_Table {
 
 	/**
-	 * @var int Number of items per page
-	 * @since 1.5
-	 */
-	public $per_page = 30;
-
-	/**
 	 * Get things started
 	 *
 	 * @since 1.5
@@ -82,16 +76,6 @@ class EDD_Gateway_Reports_Table extends List_Table {
 			'pending_sales'  => __( 'Pending / Failed Sales', 'easy-digital-downloads' ),
 			'total_sales'    => __( 'Total Sales',            'easy-digital-downloads' )
 		);
-	}
-
-	/**
-	 * Retrieve the current page number
-	 *
-	 * @since 1.5
-	 * @return int Current page number
-	 */
-	public function get_paged() {
-		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
 	}
 
 	/**

@@ -12,18 +12,7 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-/**
- * Return the current script version
- *
- * @since 3.0
- *
- * @return string
- */
-function edd_admin_get_script_version() {
-	return ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG )
-		? current_time( 'timestamp' )
-		: EDD_VERSION;
-}
+/** Front End *****************************************************************/
 
 /**
  * Load Scripts
@@ -123,6 +112,8 @@ add_action( 'wp_enqueue_scripts', 'edd_load_scripts' );
  * @return void
  */
 function edd_register_styles() {
+
+	// Bail if styles are disabled
 	if ( edd_get_option( 'disable_styles', false ) ) {
 		return;
 	}
@@ -163,196 +154,6 @@ function edd_register_styles() {
 	wp_enqueue_style( 'edd-styles' );
 }
 add_action( 'wp_enqueue_scripts', 'edd_register_styles' );
-
-/**
- * Load Admin Scripts
- *
- * Enqueues the required admin scripts.
- *
- * @since 1.0
- * @param string $hook Page hook
- * @return void
- */
-function edd_load_admin_scripts( $hook ) {
-
-	$js_dir  = EDD_PLUGIN_URL . 'assets/js/';
-	$css_dir = EDD_PLUGIN_URL . 'assets/css/';
-
-	// Use minified libraries if SCRIPT_DEBUG is turned off
-	$css_suffix  = is_rtl() ? '-rtl' : '';
-	$css_suffix .= defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-	$js_suffix   = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-	$version     = edd_admin_get_script_version();
-
-	// Always enqueue the main admin menu CSS (using the JS suffix due to not having RTL styling)
-	wp_register_style( 'edd-admin-menu', $css_dir . 'edd-admin-menu' . $js_suffix . '.css', array(), $version );
-	wp_enqueue_style( 'edd-admin-menu' );
-
-	// Bail if not an EDD admin page
-	if ( ! apply_filters( 'edd_load_admin_scripts', edd_is_admin_page(), $hook ) ) {
-		return;
-	}
-
-	// These have to be global (use the JS prefix)
-	wp_register_style( 'jquery-chosen', $css_dir . 'chosen' . $js_suffix . '.css', array(), $version );
-	wp_enqueue_style( 'jquery-chosen' );
-
-	wp_register_script( 'jquery-chosen', $js_dir . 'chosen.jquery' . $js_suffix . '.js', array( 'jquery' ), $version );
-	wp_enqueue_script( 'jquery-chosen' );
-
-	wp_enqueue_script( 'jquery-form' );
-
-	$admin_deps = array();
-
-	if ( ! edd_is_admin_page( $hook, 'edit' ) && ! edd_is_admin_page( $hook, 'new' ) ) {
-		$admin_deps = array( 'jquery', 'jquery-form', 'inline-edit-post' );
-	} else {
-		$admin_deps = array( 'jquery', 'jquery-form' );
-	}
-
-	wp_register_script( 'edd-moment-js', 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js', array(), '2.20.1' );
-	wp_register_script( 'edd-chart-js', $js_dir . 'Chart' . $js_suffix . '.js', array( 'edd-moment-js' ), '2.7.1', false );
-
-	if ( edd_is_admin_page( $hook, 'reports' ) ) {
-		$admin_deps[] = 'edd-chart-js';
-	}
-
-	wp_register_script( 'edd-admin-scripts', $js_dir . 'admin-scripts' . $js_suffix . '.js', $admin_deps, $version, false );
-
-	wp_enqueue_script( 'edd-admin-scripts' );
-
-	wp_localize_script( 'edd-admin-scripts', 'edd_vars', array(
-		'post_id'                     => get_the_ID(),
-		'edd_version'                 => $version,
-		'add_new_download'            => __( 'Add New Download', 'easy-digital-downloads' ),
-		'use_this_file'               => __( 'Use This File', 'easy-digital-downloads' ),
-		'quick_edit_warning'          => __( 'Sorry, not available for variable priced products.', 'easy-digital-downloads' ),
-		'delete_payment'              => __( 'Are you sure you wish to delete this payment?', 'easy-digital-downloads' ),
-		'delete_order_item'           => __( 'Are you sure you wish to delete this item?', 'easy-digital-downloads' ),
-		'delete_order_adjustment'     => __( 'Are you sure you wish to delete this adjustment?', 'easy-digital-downloads' ),
-		'delete_note'                 => __( 'Are you sure you wish to delete this note?', 'easy-digital-downloads' ),
-		'delete_tax_rate'             => __( 'Are you sure you wish to delete this tax rate?', 'easy-digital-downloads' ),
-		'revoke_api_key'              => __( 'Are you sure you wish to revoke this API key?', 'easy-digital-downloads' ),
-		'regenerate_api_key'          => __( 'Are you sure you wish to regenerate this API key?', 'easy-digital-downloads' ),
-		'resend_receipt'              => __( 'Are you sure you wish to resend the purchase receipt?', 'easy-digital-downloads' ),
-		'disconnect_customer'         => __( 'Are you sure you wish to disconnect the WordPress user from this customer record?', 'easy-digital-downloads' ),
-		'copy_download_link_text'     => __( 'Copy these links to your clipboard and give them to your customer', 'easy-digital-downloads' ),
-		'delete_payment_download'     => sprintf( __( 'Are you sure you wish to delete this %s?', 'easy-digital-downloads' ), edd_get_label_singular() ),
-		'one_price_min'               => __( 'You must have at least one price', 'easy-digital-downloads' ),
-		'one_field_min'               => __( 'You must have at least one field', 'easy-digital-downloads' ),
-		'one_download_min'            => __( 'Payments must contain at least one item', 'easy-digital-downloads' ),
-		'one_option'                  => sprintf( __( 'Choose a %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
-		'one_or_more_option'          => sprintf( __( 'Choose one or more %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
-		'no_results_text'             => __( 'No match for:', 'easy-digital-downloads'),
-		'numeric_item_price'          => __( 'Item price must be numeric', 'easy-digital-downloads' ),
-		'numeric_item_tax'            => __( 'Item tax must be numeric', 'easy-digital-downloads' ),
-		'numeric_quantity'            => __( 'Quantity must be numeric', 'easy-digital-downloads' ),
-		'currency'                    => edd_get_currency(),
-		'currency_sign'               => edd_currency_filter( '' ),
-		'currency_pos'                => edd_get_option( 'currency_position', 'before' ),
-		'currency_decimals'           => edd_currency_decimal_filter(),
-		'decimal_separator'           => edd_get_option( 'decimal_separator', '.' ),
-		'thousands_separator'         => edd_get_option( 'thousands_separator', ',' ),
-		'date_picker_format'          => edd_get_date_picker_format( 'js' ),
-		'new_media_ui'                => apply_filters( 'edd_use_35_media_ui', 1 ),
-		'remove_text'                 => __( 'Remove', 'easy-digital-downloads' ),
-		'type_to_search'              => sprintf( __( 'Type to search %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
-		'quantities_enabled'          => edd_item_quantities_enabled(),
-		'batch_export_no_class'       => __( 'You must choose a method.', 'easy-digital-downloads' ),
-		'batch_export_no_reqs'        => __( 'Required fields not completed.', 'easy-digital-downloads' ),
-		'reset_stats_warn'            => __( 'Are you sure you want to reset your store? This process is <strong><em>not reversible</em></strong>. Please be sure you have a recent backup.', 'easy-digital-downloads' ),
-		'unsupported_browser'         => __( 'We are sorry but your browser is not compatible with this kind of file upload. Please upgrade your browser.', 'easy-digital-downloads' ),
-		'show_advanced_settings'      => __( 'Show advanced settings', 'easy-digital-downloads' ),
-		'hide_advanced_settings'      => __( 'Hide advanced settings', 'easy-digital-downloads' ),
-		'taxes_enabled'               => edd_use_taxes(),
-		'taxes_included'              => edd_use_taxes() && edd_prices_include_tax()
-	));
-
-	/*
-	 * This bit of JavaScript is to facilitate #2704, in order to not break backwards compatibility with the old Variable Price Rows
-	 * while we transition to an entire new markup. They should not be relied on for long-term usage.
-	 *
-	 * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/2704
-	 */
-	wp_register_script( 'edd-admin-scripts-compatibility', $js_dir . 'admin-backwards-compatibility' . $js_suffix . '.js', array( 'jquery', 'edd-admin-scripts' ), $version );
-	wp_localize_script( 'edd-admin-scripts-compatibility', 'edd_backcompat_vars', array(
-		'purchase_limit_settings'     => __( 'Purchase Limit Settings', 'easy-digital-downloads' ),
-		'simple_shipping_settings'    => __( 'Simple Shipping Settings', 'easy-digital-downloads' ),
-		'software_licensing_settings' => __( 'Software Licensing Settings', 'easy-digital-downloads' ),
-		'recurring_payments_settings' => __( 'Recurring Payments Settings', 'easy-digital-downloads' ),
-	) );
-
-	wp_enqueue_script( 'wp-ajax-response' );
-
-	wp_enqueue_style( 'wp-color-picker' );
-	wp_enqueue_script( 'wp-color-picker' );
-
-	wp_register_style( 'colorbox', $css_dir . 'colorbox' . $css_suffix . '.css', array(), '1.3.20' );
-	wp_enqueue_style( 'colorbox' );
-
-	wp_register_script( 'colorbox', $js_dir . 'jquery.colorbox-min.js', array( 'jquery' ), '1.3.20' );
-	wp_enqueue_script( 'colorbox' );
-
-	//call for media manager
-	wp_enqueue_media();
-
-	wp_register_script( 'jquery-flot', $js_dir . 'jquery.flot' . $js_suffix . '.js' );
-
-	wp_enqueue_script( 'jquery-ui-datepicker' );
-	wp_enqueue_script( 'jquery-ui-dialog' );
-	wp_enqueue_script( 'jquery-ui-tooltip' );
-
-	wp_enqueue_script( 'media-upload' );
-	wp_enqueue_script( 'thickbox' );
-	wp_enqueue_style( 'thickbox' );
-
-	wp_register_style( 'edd-admin', $css_dir . 'edd-admin' . $css_suffix . '.css', array(), $version );
-	wp_enqueue_style( 'edd-admin' );
-
-	wp_register_style( 'edd-admin-datepicker', $css_dir . 'edd-admin-datepicker' . $css_suffix . '.css', array( 'edd-admin' ), $version );
-	wp_enqueue_style( 'edd-admin-datepicker' );
-}
-add_action( 'admin_enqueue_scripts', 'edd_load_admin_scripts', 100 );
-
-/**
- * Admin Downloads Icon
- *
- * Echoes the CSS for the downloads post type icon.
- *
- * @since 1.0
- * @since 2.6.11 Removed globals and CSS for custom icon
- * @return void
-*/
-function edd_admin_downloads_icon() {
-
-	$images_url      = EDD_PLUGIN_URL . 'assets/images/';
-	$menu_icon       = '\f316';
-	$icon_cpt_url    = $images_url . 'edd-cpt.png';
-	$icon_cpt_2x_url = $images_url . 'edd-cpt-2x.png';
-	?>
-	<style type="text/css" media="screen">
-		#dashboard_right_now .download-count:before {
-			content: '<?php echo $menu_icon; ?>';
-		}
-		#icon-edit.icon32-posts-download {
-			background: url(<?php echo $icon_cpt_url; ?>) -7px -5px no-repeat;
-		}
-		@media
-		only screen and (-webkit-min-device-pixel-ratio: 1.5),
-		only screen and (   min--moz-device-pixel-ratio: 1.5),
-		only screen and (     -o-min-device-pixel-ratio: 3/2),
-		only screen and (        min-device-pixel-ratio: 1.5),
-		only screen and (        		 min-resolution: 1.5dppx) {
-			#icon-edit.icon32-posts-download {
-				background: url(<?php echo $icon_cpt_2x_url; ?>) no-repeat -7px -5px !important;
-				background-size: 55px 45px !important;
-			}
-		}
-	</style>
-	<?php
-}
-add_action( 'admin_head','edd_admin_downloads_icon' );
-
 
 /**
  * Load head styles
@@ -413,4 +214,302 @@ add_action( 'wp_head', 'edd_load_head_styles' );
  */
 function edd_scripts_in_footer() {
 	return apply_filters( 'edd_load_scripts_in_footer', true );
+}
+
+/** Admin Area ****************************************************************/
+
+/**
+ * Return the current script version
+ *
+ * @since 3.0
+ *
+ * @return string
+ */
+function edd_admin_get_script_version() {
+	return ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG )
+		? current_time( 'timestamp' )
+		: EDD_VERSION;
+}
+
+/**
+ * Register all admin area scripts
+ *
+ * @since 3.0
+ */
+function edd_register_admin_scripts() {
+	global $hook_suffix;
+
+	$js_dir     = EDD_PLUGIN_URL . 'assets/js/';
+	$js_suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.js' : '.min.js';
+	$version    = edd_admin_get_script_version();
+	$moment_js  = 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js';
+	$admin_deps = ! edd_is_admin_page( $hook_suffix, 'edit' ) && ! edd_is_admin_page( $hook_suffix, 'new' )
+		? array( 'jquery', 'jquery-form', 'inline-edit-post' )
+		: array( 'jquery', 'jquery-form' );
+
+	// Add chart-js to dependencies if viewing reports page
+	if ( edd_is_admin_page( $hook_suffix, 'reports' ) ) {
+		$admin_deps[] = 'edd-chart-js';
+	}
+
+	// Register scripts
+	wp_register_script( 'colorbox',                        $js_dir . 'jquery.colorbox-min.js',                     array( 'jquery' ),                      $version );
+	wp_register_script( 'jquery-chosen',                   $js_dir . 'jquery.chosen'                 . $js_suffix, array( 'jquery' ),                      $version );
+	wp_register_script( 'jquery-flot',                     $js_dir . 'jquery.flot'                   . $js_suffix, array(),                                $version );
+	wp_register_script( 'edd-moment-js',                   $moment_js,                                             array(),                                $version );
+	wp_register_script( 'edd-chart-js',                    $js_dir . 'Chart'                         . $js_suffix, array( 'edd-moment-js' ),               $version );
+	wp_register_script( 'edd-admin-scripts',               $js_dir . 'admin-scripts'                 . $js_suffix, $admin_deps,                            $version );
+	wp_register_script( 'edd-admin-tax-rates',             $js_dir . 'admin-tax-rates'               . $js_suffix, array( 'wp-backbone' ),                 $version, true );
+	wp_register_script( 'edd-admin-email-tags',            $js_dir . 'admin-email-tags'              . $js_suffix, array( 'thickbox', 'wp-util' ),         $version );
+	wp_register_script( 'edd-admin-scripts-compatibility', $js_dir . 'admin-backwards-compatibility' . $js_suffix, array( 'jquery', 'edd-admin-scripts' ), $version );
+}
+add_action( 'admin_enqueue_scripts', 'edd_register_admin_scripts' );
+
+/**
+ * Register all admin area styles
+ *
+ * @since 3.0
+ */
+function edd_register_admin_styles() {
+	$css_dir     = EDD_PLUGIN_URL . 'assets/css/';
+	$css_suffix  = is_rtl() ? '-rtl' : '';
+	$css_suffix .= defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.css' : '.min.css';
+	$version     = edd_admin_get_script_version();
+
+	// Register styles
+	wp_register_style( 'jquery-chosen',         $css_dir . 'chosen'               . $css_suffix, array(),              $version );
+	wp_register_style( 'colorbox',              $css_dir . 'colorbox'             . $css_suffix, array(),              $version );
+	wp_register_style( 'edd-admin',             $css_dir . 'edd-admin'            . $css_suffix, array(),              $version );
+	wp_register_style( 'edd-admin-menu',        $css_dir . 'edd-admin-menu'       . $css_suffix, array(),              $version );
+	wp_register_style( 'edd-admin-email-tags',  $css_dir . 'edd-admin-email-tags' . $css_suffix, array(),              $version );
+	wp_register_style( 'edd-admin-datepicker',  $css_dir . 'edd-admin-datepicker' . $css_suffix, array( 'edd-admin' ), $version );
+	wp_register_style( 'edd-admin-tax-rates',   $css_dir . 'edd-admin-tax-rates'  . $css_suffix, array( 'edd-admin' ), $version );
+}
+add_action( 'admin_enqueue_scripts', 'edd_register_admin_styles' );
+
+/**
+ * Localize all admin scripts
+ *
+ * @since 3.0
+ */
+function edd_localize_admin_scripts() {
+
+	// Admin scripts
+	wp_localize_script( 'edd-admin-scripts', 'edd_vars', array(
+		'post_id'                     => get_the_ID(),
+		'edd_version'                 => edd_admin_get_script_version(),
+		'currency'                    => edd_get_currency(),
+		'currency_sign'               => edd_currency_filter( '' ),
+		'currency_pos'                => edd_get_option( 'currency_position', 'before' ),
+		'currency_decimals'           => edd_currency_decimal_filter(),
+		'decimal_separator'           => edd_get_option( 'decimal_separator', '.' ),
+		'thousands_separator'         => edd_get_option( 'thousands_separator', ',' ),
+		'date_picker_format'          => edd_get_date_picker_format( 'js' ),
+		'add_new_download'            => __( 'Add New Download', 'easy-digital-downloads' ),
+		'use_this_file'               => __( 'Use This File', 'easy-digital-downloads' ),
+		'quick_edit_warning'          => __( 'Sorry, not available for variable priced products.', 'easy-digital-downloads' ),
+		'delete_payment'              => __( 'Are you sure you want to delete this payment?', 'easy-digital-downloads' ),
+		'delete_order_item'           => __( 'Are you sure you want to delete this item?', 'easy-digital-downloads' ),
+		'delete_order_adjustment'     => __( 'Are you sure you want to delete this adjustment?', 'easy-digital-downloads' ),
+		'delete_note'                 => __( 'Are you sure you want to delete this note?', 'easy-digital-downloads' ),
+		'delete_tax_rate'             => __( 'Are you sure you want to delete this tax rate?', 'easy-digital-downloads' ),
+		'revoke_api_key'              => __( 'Are you sure you want to revoke this API key?', 'easy-digital-downloads' ),
+		'regenerate_api_key'          => __( 'Are you sure you want to regenerate this API key?', 'easy-digital-downloads' ),
+		'resend_receipt'              => __( 'Are you sure you want to resend the purchase receipt?', 'easy-digital-downloads' ),
+		'disconnect_customer'         => __( 'Are you sure you want to disconnect the WordPress user from this customer record?', 'easy-digital-downloads' ),
+		'copy_download_link_text'     => __( 'Copy these links to your clipboard and give them to your customer', 'easy-digital-downloads' ),
+		'delete_payment_download'     => sprintf( __( 'Are you sure you want to delete this %s?', 'easy-digital-downloads' ), edd_get_label_singular() ),
+		'type_to_search'              => sprintf( __( 'Type to search %s',     'easy-digital-downloads' ), edd_get_label_plural() ),
+		'one_option'                  => sprintf( __( 'Choose a %s',           'easy-digital-downloads' ), edd_get_label_singular() ),
+		'one_or_more_option'          => sprintf( __( 'Choose one or more %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
+		'one_price_min'               => __( 'You must have at least one price', 'easy-digital-downloads' ),
+		'one_field_min'               => __( 'You must have at least one field', 'easy-digital-downloads' ),
+		'one_download_min'            => __( 'Payments must contain at least one item', 'easy-digital-downloads' ),
+		'no_results_text'             => __( 'No match for:', 'easy-digital-downloads'),
+		'numeric_item_price'          => __( 'Item price must be numeric', 'easy-digital-downloads' ),
+		'numeric_item_tax'            => __( 'Item tax must be numeric', 'easy-digital-downloads' ),
+		'numeric_quantity'            => __( 'Quantity must be numeric', 'easy-digital-downloads' ),
+		'remove_text'                 => __( 'Remove', 'easy-digital-downloads' ),
+		'batch_export_no_class'       => __( 'You must choose a method.', 'easy-digital-downloads' ),
+		'batch_export_no_reqs'        => __( 'Required fields not completed.', 'easy-digital-downloads' ),
+		'reset_stats_warn'            => __( 'Are you sure you want to reset your store? This process is <strong><em>not reversible</em></strong>. Please be sure you have a recent backup.', 'easy-digital-downloads' ),
+		'unsupported_browser'         => __( 'We are sorry but your browser is not compatible with this kind of file upload. Please upgrade your browser.', 'easy-digital-downloads' ),
+		'show_advanced_settings'      => __( 'Show advanced settings', 'easy-digital-downloads' ),
+		'hide_advanced_settings'      => __( 'Hide advanced settings', 'easy-digital-downloads' ),
+
+		// Features
+		'quantities_enabled'          => edd_item_quantities_enabled(),
+		'taxes_enabled'               => edd_use_taxes(),
+		'taxes_included'              => edd_use_taxes() && edd_prices_include_tax(),
+		'new_media_ui'                => apply_filters( 'edd_use_35_media_ui', 1 )
+	) );
+
+	/*
+	 * This bit of JavaScript is to facilitate #2704, in order to not break backwards compatibility with the old Variable Price Rows
+	 * while we transition to an entire new markup. They should not be relied on for long-term usage.
+	 *
+	 * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/2704
+	 */
+	wp_localize_script( 'edd-admin-scripts-compatibility', 'edd_backcompat_vars', array(
+		'purchase_limit_settings'     => __( 'Purchase Limit Settings',     'easy-digital-downloads' ),
+		'simple_shipping_settings'    => __( 'Simple Shipping Settings',    'easy-digital-downloads' ),
+		'software_licensing_settings' => __( 'Software Licensing Settings', 'easy-digital-downloads' ),
+		'recurring_payments_settings' => __( 'Recurring Payments Settings', 'easy-digital-downloads' ),
+	) );
+}
+add_action( 'admin_enqueue_scripts', 'edd_localize_admin_scripts' );
+
+/**
+ * Print admin area scripts
+ *
+ * @since 3.0
+ */
+function edd_print_admin_scripts( $hook = '' ) {
+
+	// Bail if not an EDD admin page
+	if ( ! edd_should_load_admin_scripts( $hook ) ) {
+		return;
+	}
+
+	// Enqueue media on EDD admin pages
+	wp_enqueue_media();
+
+	// Scripts to enqueue
+	$scripts = array(
+		'jquery-chosen',
+		'jquery-form',
+		'jquery-ui-datepicker',
+		'jquery-ui-dialog',
+		'jquery-ui-tooltip',
+		'wp-ajax-response',
+		'wp-color-picker',
+		'edd-admin-scripts',
+		'media-upload',
+		'colorbox',
+		'thickbox',
+	);
+
+	// Loop through and enqueue the scripts
+	foreach ( $scripts as $script ) {
+		wp_enqueue_script( $script );
+	}
+}
+add_action( 'admin_print_scripts', 'edd_print_admin_scripts' );
+
+/**
+ * Enqueue admin area styling.
+ *
+ * Always enqueue the menu styling. Only enqueue others on EDD pages.
+ *
+ * @since 3.0
+ */
+function edd_print_admin_styles( $hook = '' ) {
+
+	// Always enqueue the admin menu CSS
+	wp_enqueue_style( 'edd-admin-menu' );
+
+	// Bail if not an EDD admin page
+	if ( ! edd_should_load_admin_scripts( $hook ) ) {
+		return;
+	}
+
+	// Styles to enqueue
+	$styles = array(
+		'jquery-chosen',
+		'wp-color-picker',
+		'colorbox',
+		'thickbox',
+		'edd-admin',
+		'edd-admin-datepicker'
+	);
+
+	// Loop through and enqueue the scripts
+	foreach ( $styles as $style ) {
+		wp_enqueue_style( $style );
+	}
+}
+add_action( 'admin_print_styles', 'edd_print_admin_styles' );
+
+/**
+ * Admin Downloads Icon
+ *
+ * Echoes the CSS for the downloads post type icon.
+ *
+ * @since 1.0
+ * @since 2.6.11 Removed globals and CSS for custom icon
+ * @return void
+*/
+function edd_admin_downloads_icon() {
+
+	$images_url      = EDD_PLUGIN_URL . 'assets/images/';
+	$menu_icon       = '\f316';
+	$icon_cpt_url    = $images_url . 'edd-cpt.png';
+	$icon_cpt_2x_url = $images_url . 'edd-cpt-2x.png';
+	?>
+	<style type="text/css" media="screen">
+		#dashboard_right_now .download-count:before {
+			content: '<?php echo $menu_icon; ?>';
+		}
+		#icon-edit.icon32-posts-download {
+			background: url(<?php echo $icon_cpt_url; ?>) -7px -5px no-repeat;
+		}
+		@media
+		only screen and (-webkit-min-device-pixel-ratio: 1.5),
+		only screen and (   min--moz-device-pixel-ratio: 1.5),
+		only screen and (     -o-min-device-pixel-ratio: 3/2),
+		only screen and (        min-device-pixel-ratio: 1.5),
+		only screen and (        		 min-resolution: 1.5dppx) {
+			#icon-edit.icon32-posts-download {
+				background: url(<?php echo $icon_cpt_2x_url; ?>) no-repeat -7px -5px !important;
+				background-size: 55px 45px !important;
+			}
+		}
+	</style>
+	<?php
+}
+add_action( 'admin_head','edd_admin_downloads_icon' );
+
+/**
+ * Should we be loading admin scripts
+ *
+ * @since 3.0
+ *
+ * @param string $hook
+ * @return bool
+ */
+function edd_should_load_admin_scripts( $hook = '' ) {
+
+	// Back compat for hook suffix
+	$hook_suffix = empty( $hook )
+		? $GLOBALS['hook_suffix']
+		: $hook;
+
+	// Filter & return
+	return (bool) apply_filters( 'edd_load_admin_scripts', edd_is_admin_page(), $hook_suffix );
+}
+
+/** Deprecated ****************************************************************/
+
+/**
+ * Enqueue admin area scripts.
+ *
+ * Only enqueue on EDD pages.
+ *
+ * @since 1.0
+ * @deprecated 3.0
+ */
+function edd_load_admin_scripts( $hook ) {
+
+	// Bail if not an EDD admin page
+	if ( ! edd_should_load_admin_scripts( $hook ) ) {
+		return;
+	}
+
+	// Register all scripts and styles
+	edd_register_admin_scripts();
+	edd_register_admin_styles();
+
+	// Load scripts and styles for back-compat
+	edd_print_admin_scripts( $hook );
+	edd_print_admin_styles( $hook );
 }
