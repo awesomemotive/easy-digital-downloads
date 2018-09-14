@@ -274,13 +274,12 @@ add_action( 'wp_ajax_nopriv_edd_get_subtotal', 'edd_ajax_get_subtotal' );
  * @return void
  */
 function edd_ajax_apply_discount() {
-	if ( isset( $_POST['code'] ) ) {
-
+	if ( isset( $_POST['code'] ) ) { // WPCS: CSRF ok.
 		$discount_code = sanitize_text_field( $_POST['code'] );
 
 		$return = array(
 			'msg'  => '',
-			'code' => $discount_code
+			'code' => $discount_code,
 		);
 
 		$user = '';
@@ -288,7 +287,7 @@ function edd_ajax_apply_discount() {
 		if ( is_user_logged_in() ) {
 			$user = get_current_user_id();
 		} else {
-			parse_str( $_POST['form'], $form );
+			parse_str( $_POST['form'], $form ); // WPCS: CSRF ok.
 			if ( ! empty( $form['edd_email'] ) ) {
 				$user = urldecode( $form['edd_email'] );
 			}
@@ -306,19 +305,20 @@ function edd_ajax_apply_discount() {
 				'total_plain' => $total,
 				'total'       => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
 				'code'        => $discount_code,
-				'html'        => edd_get_cart_discounts_html( $discounts )
+				'html'        => edd_get_cart_discounts_html( $discounts ),
 			);
 		} else {
-			$errors = edd_get_errors();
-			$return['msg']  = $errors['edd-discount-error'];
+			$errors        = edd_get_errors();
+			$return['msg'] = $errors['edd-discount-error'];
 			edd_unset_error( 'edd-discount-error' );
 		}
 
 		// Allow for custom discount code handling
 		$return = apply_filters( 'edd_ajax_discount_response', $return );
 
-		echo json_encode($return);
+		echo wp_json_encode( $return );
 	}
+
 	edd_die();
 }
 add_action( 'wp_ajax_edd_apply_discount',        'edd_ajax_apply_discount' );
@@ -507,11 +507,11 @@ add_action( 'wp_ajax_nopriv_edd_recalculate_taxes', 'edd_ajax_recalculate_taxes'
 function edd_ajax_get_states_field() {
 
 	// Check a nonce was sent.
-	if ( ! isset( $_POST['nonce'] ) ) {
+	if ( empty( $_POST['nonce'] ) ) {
 		edd_debug_log( __( 'Missing nonce when retrieving state list. Please read the following for more information: https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4', 'easy-digital-downloads' ), true );
 	}
 
-	$nonce = isset( $_POST['nonce'] )
+	$nonce = ! empty( $_POST['nonce'] )
 		? sanitize_text_field( $_POST['nonce'] )
 		: '';
 
@@ -523,9 +523,9 @@ function edd_ajax_get_states_field() {
 	}
 
 	// Get country.
-	$country = empty( $_POST['country'] )
-		? edd_get_shop_country()
-		: sanitize_text_field( $_POST['country'] ); // Exactly matched
+	$country = ! empty( $_POST['country'] )
+		? sanitize_text_field( $_POST['country'] ) // Exactly matched
+		: edd_get_shop_country();
 
 	// Get states for country.
 	$states = edd_get_shop_states( $country );
@@ -533,14 +533,13 @@ function edd_ajax_get_states_field() {
 	// Maybe setup the new listbox.
 	if ( ! empty( $states ) ) {
 		$field_name = sanitize_text_field( $_POST['field_name'] );
-		$chosen     = false === strstr( $field_name, 'tax_rate' );
 		$response   = EDD()->html->select( array(
 			'name'             => $field_name,
 			'id'               => $field_name,
-			'class'            => $field_name . '  edd-select',
+			'class'            => $field_name . ' edd-select',
 			'options'          => $states,
-			'chosen'           => $chosen,
-			'placeholder'      => __( 'Select a state', 'easy-digital-downloads' ),
+			'chosen'           => true,
+			'placeholder'      => __( 'Select a region', 'easy-digital-downloads' ),
 			'show_option_all'  => false,
 			'show_option_none' => false,
 		) );
@@ -898,6 +897,8 @@ add_action( 'wp_ajax_edd_search_users', 'edd_ajax_search_users' );
 /**
  * Search for download, build, and return HTML.
  *
+ * This is used in the Admin for Adding items to an order.
+ *
  * @since 3.0
  */
 function edd_ajax_add_order_item() {
@@ -906,7 +907,7 @@ function edd_ajax_add_order_item() {
 	if ( ! current_user_can( 'manage_shop_settings' ) ) {
 		edd_die( '-1' );
 	}
-	
+
 	// Set up parameters.
 	$nonce = isset( $_POST['nonce'] )
 		? sanitize_text_field( $_POST['nonce'] )
@@ -944,9 +945,10 @@ function edd_ajax_add_order_item() {
 		if ( false === $download['price_id'] ) {
 			$amount = floatval( $d->get_price() );
 		} else {
-			$prices = wp_filter_object_list( $d->get_prices(), array( 'index' => $download['price_id'] ) );
-			$amount = floatval( implode( wp_list_pluck( $prices, 'amount' ) ) );
-			$name .= ' &mdash; ' . implode( wp_list_pluck( $prices, 'name' ) );
+			$prices = $d->get_prices();
+			$price  = $prices[ $download['price_id'] ];
+			$amount = floatval( $price['amount'] );
+			$name  .= ' &mdash; ' . $price['name'];
 		}
 
 		$quantity = edd_item_quantities_enabled() && isset( $_POST['quantity'] )
@@ -965,22 +967,25 @@ function edd_ajax_add_order_item() {
 		if ( null === $symbol ) {
 			$symbol = edd_currency_symbol( edd_get_currency() );
 		}
-		
+
 		ob_start(); ?>
 
 		<tr data-key="0">
 			<td class="name column-name column-primary"><a class="row-title" href=""><?php echo esc_html( $response['name'] ); ?></a></td>
-			<td class="amount column-amount"><?php echo esc_html( $symbol ); ?><span class="value"><?php echo esc_html( edd_format_amount( $response['amount'] ) ); ?></span></td>
+			<td class="overridable amount column-amount" data-type="amount"><?php echo esc_html( $symbol ); ?><span class="value"><?php echo esc_html( edd_format_amount( $response['amount'] ) ); ?></span></td>
 			<?php if ( edd_item_quantities_enabled() ) : ?>
-				<td class="quantity column-quantity"><?php echo esc_html( $quantity ); ?></td>
+				<td class="overridable quantity column-quantity" data-type="quantity"><span class="value"><?php echo esc_html( $quantity ); ?></span></td>
 			<?php endif; ?>
 			<?php if ( edd_use_taxes() ) : ?>
-				<td class="tax column-tax"><?php echo esc_html( $symbol ); ?><span class="value"><?php echo esc_html( edd_format_amount( $response['tax'] ) ); ?></span></td>
+				<td class="overridable tax column-tax" data-type="tax"><?php echo esc_html( $symbol ); ?><span class="value"><?php echo esc_html( edd_format_amount( $response['tax'] ) ); ?></span></td>
 			<?php endif; ?>
-			<td class="total column-total"><?php echo esc_html( $symbol ); ?><span class="value"><?php echo esc_html( edd_format_amount( $response['total'] ) ); ?></span></td>
+			<td class="overridable total column-total" data-type="total"><?php echo esc_html( $symbol ); ?><span class="value"><?php echo esc_html( edd_format_amount( $response['total'] ) ); ?></span></td>
 			<th scope="row" class="check-column"><a href="#" class="remove-item"><span class="dashicons dashicons-no"></span></a></th>
 			<input type="hidden" class="download-id" name="downloads[0][id]" value="<?php echo esc_attr( $download['download_id'] ); ?>" />
+			<input type="hidden" class="download-amount" name="downloads[0][amount]" value="<?php echo esc_attr( edd_format_amount( $response['amount'] ) ); ?>" />
 			<input type="hidden" class="download-quantity" name="downloads[0][quantity]" value="<?php echo esc_attr( $quantity ); ?>" />
+			<input type="hidden" class="download-tax" name="downloads[0][tax]" value="<?php echo esc_attr( edd_format_amount( $response['tax'] ) ); ?>" />
+			<input type="hidden" class="download-total" name="downloads[0][total]" value="<?php echo esc_attr( edd_format_amount( $response['total'] ) ); ?>" />
 			<input type="hidden" class="download-price-id" name="downloads[0][price_id]" value="<?php echo esc_attr( $download['price_id'] ); // WPCS: XSS ok. ?>" />
 		</tr>
 
@@ -988,20 +993,6 @@ function edd_ajax_add_order_item() {
 		$html = ob_get_contents();
 
 		ob_end_clean();
-
-		$downloads = EDD()->session->get( 'add_order_downloads' );
-
-		$downloads = false === $downloads
-			? array()
-			: $downloads;
-
-		$downloads[] = array(
-			'download_id' => $download['download_id'],
-			'price_id'    => $download['price_id'],
-			'quantity'    => $quantity,
-		);
-
-		EDD()->session->set( 'add_order_downloads', $downloads );
 
 		$response['html'] = $html;
 	}
@@ -1037,7 +1028,7 @@ function edd_ajax_add_adjustment_to_order() {
 	if ( ! wp_verify_nonce( $nonce, 'edd_add_order_nonce' ) ) {
 		edd_die( '-1' );
 	}
-	
+
 	$response = array();
 
 	$valid_types = array( 'fee', 'discount', 'credit' );
@@ -1208,7 +1199,7 @@ function edd_ajax_customer_addresses() {
 					$html .= '<option data-key="' . esc_attr( $key ) . '" value="' . esc_attr( $key ) . '">' . esc_attr( $value ). '</option>';
 				}
 				$html .= '</select>';
-				
+
 				$response['html'] = $html;
 			}
 		}

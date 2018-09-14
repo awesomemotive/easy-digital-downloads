@@ -26,7 +26,8 @@ function edd_upgrades_screen() {
 		: ''; ?>
 
 	<div class="wrap">
-	<h2><?php _e( 'Upgrades', 'easy-digital-downloads' ); ?></h2>
+	<h1><?php _e( 'Upgrades', 'easy-digital-downloads' ); ?></h1>
+	<hr class="wp-header-end">
 
 	<?php if ( is_callable( 'edd_upgrade_render_' . $action ) ) {
 
@@ -91,7 +92,7 @@ function edd_upgrades_screen() {
 			</div>
 			<script type="text/javascript">
 				setTimeout( function() {
-					document.location.href = <?php echo esc_url( $redirect ); ?>;
+					document.location.href = '<?php echo esc_url( $redirect ); ?>';
 				}, 250 );
 			</script>
 
@@ -123,7 +124,7 @@ function edd_upgrades_screen() {
 						jQuery( '#edd-upgrade-loader' ).hide();
 
 						setTimeout( function() {
-							document.location.href = <?php echo esc_url( $redirect ); ?>;
+							document.location.href = '<?php echo esc_url( $redirect ); ?>';
 						}, 250 );
 					});
 				});

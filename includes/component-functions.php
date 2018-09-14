@@ -50,15 +50,18 @@ function edd_register_component( $name = '', $args = array() ) {
 	// Parse arguments
 	$r = wp_parse_args( $args, array(
 		'name'   => $name,
-		'schema' => '\\EDD\\Database\\Schemas\\Base',
-		'table'  => '\\EDD\\Database\\Tables\\Base',
-		'query'  => '\\EDD\\Database\\Queries\\Base',
-		'object' => '\\EDD\\Database\\Objects\\Base',
+		'schema' => '\\EDD\\Database\\Schema',
+		'table'  => '\\EDD\\Database\\Table',
+		'query'  => '\\EDD\\Database\\Query',
+		'object' => '\\EDD\\Database\\Row',
 		'meta'   => false
 	) );
 
 	// Setup the component
 	EDD()->components[ $name ] = new EDD\Component( $r );
+
+	// Component registered
+	do_action( 'edd_registered_component', $name, $r, $args );
 }
 
 /**
@@ -260,16 +263,17 @@ function edd_install_component_database_tables() {
 
 	// Drop all component tables
 	foreach ( $components as $component ) {
-		$thing = $component->get_interface( 'table' );
 
-		if ( $thing instanceof \EDD\Database\Tables\Base && ! $thing->exists() ) {
-			$thing->install();
+		// Objects
+		$object = $component->get_interface( 'table' );
+		if ( $object instanceof \EDD\Database\Table && ! $object->exists() ) {
+			$object->install();
 		}
 
-		$thing = $component->get_interface( 'meta' );
-
-		if ( $thing instanceof \EDD\Database\Tables\Base && ! $thing->exists() ) {
-			$thing->install();
+		// Meta
+		$meta = $component->get_interface( 'meta' );
+		if ( $meta instanceof \EDD\Database\Table && ! $meta->exists() ) {
+			$meta->install();
 		}
 	}
 }
@@ -297,16 +301,17 @@ function edd_uninstall_component_database_tables() {
 
 	// Drop all component tables
 	foreach ( $components as $component ) {
-		$thing = $component->get_interface( 'table' );
 
-		if ( $thing instanceof \EDD\Database\Tables\Base && $thing->exists() ) {
-			$thing->uninstall();
+		// Objects
+		$object = $component->get_interface( 'table' );
+		if ( $object instanceof \EDD\Database\Table && $object->exists() ) {
+			$object->uninstall();
 		}
 
-		$thing = $component->get_interface( 'meta' );
-
-		if ( $thing instanceof \EDD\Database\Tables\Base && $thing->exists() ) {
-			$thing->uninstall();
+		// Meta
+		$meta = $component->get_interface( 'meta' );
+		if ( $meta instanceof \EDD\Database\Table && $meta->exists() ) {
+			$meta->uninstall();
 		}
 	}
 }

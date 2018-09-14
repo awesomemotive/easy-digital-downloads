@@ -26,28 +26,12 @@ use EDD\Admin\List_Table;
 class EDD_Payment_History_Table extends List_Table {
 
 	/**
-	 * Number of orders to show per page.
-	 *
-	 * @var int
-	 * @since 1.4
-	 */
-	public $per_page = 30;
-
-	/**
 	 * URL of this page.
 	 *
 	 * @var string
 	 * @since 1.4.1
 	 */
 	public $base_url;
-
-	/**
-	 * Total number of orders, grouped by status.
-	 *
-	 * @var array
-	 * @since 3.0
-	 */
-	public $counts = array();
 
 	/**
 	 * Constructor.
@@ -104,19 +88,6 @@ class EDD_Payment_History_Table extends List_Table {
 	private function filter_bar_hooks() {
 		add_action( 'edd_admin_filter_bar_orders',       array( $this, 'filter_bar_items'     ) );
 		add_action( 'edd_after_admin_filter_bar_orders', array( $this, 'filter_bar_searchbox' ) );
-	}
-
-	/**
-	 * Retrieve the status.
-	 *
-	 * @since 3.0
-	 *
-	 * @return string Status, if selected.
-	 */
-	public function get_status() {
-		return isset( $_GET['status'] )
-			? sanitize_key( $_GET['status'] )
-			: '';
 	}
 
 	/**
@@ -381,55 +352,6 @@ class EDD_Payment_History_Table extends List_Table {
 	 */
 	public function no_items() {
 		esc_html_e( 'No orders found.', 'easy-digital-downloads' );
-	}
-
-	/**
-	 * Retrieve the view types.
-	 *
-	 * @since 1.4
-	 *
-	 * @return array $views All the views available.
-	 */
-	public function get_views() {
-		$current = isset( $_GET['status'] )
-			? sanitize_key( $_GET['status'] )
-			: '';
-
-		$url = remove_query_arg( array( 'status', 'paged' ) );
-
-		$class = in_array( $current, array( '', 'all' ), true )
-			? ' class="current"'
-			: '';
-
-		$count = '&nbsp;<span class="count">(' . esc_attr( $this->counts['total'] ) . ')</span>';
-
-		$label = __( 'All', 'easy-digital-downloads' ) . $count;
-		$views = array(
-			'all' => sprintf( '<a href="%s"%s>%s</a>', $url, $class, $label ),
-		);
-
-		$counts = $this->counts;
-		unset( $counts['total'] );
-
-		// Loop through known statuses.
-		foreach ( $counts as $status => $count ) {
-			$url = add_query_arg( array(
-				'status' => $status,
-				'paged'  => false,
-			) );
-
-			$class = ( $current === $status )
-				? ' class="current"'
-				: '';
-
-			$count = '&nbsp;<span class="count">(' . $this->counts[ $status ] . ')</span>';
-
-			$label            = edd_get_payment_status_label( $status ) . $count;
-			$views[ $status ] = sprintf( '<a href="%s"%s>%s</a>', $url, $class, $label );
-		}
-
-		// Filter & return
-		return (array) apply_filters( 'edd_payments_table_views', $views );
 	}
 
 	/**
@@ -706,116 +628,16 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @since 1.4
 	 */
 	public function get_payment_counts() {
-		$args = array();
 
-		// User
-		if ( isset( $_GET['user'] ) ) {
-			$args['user'] = urldecode( $_GET['user'] );
+		// Get the type to get counts for
+		$type = ! empty( $_GET['order_type'] )
+			? sanitize_key( $_GET['order_type'] )
+			: 'sale';
 
-		// Customer
-		} elseif ( isset( $_GET['customer'] ) ) {
-			$args['customer'] = absint( $_GET['customer'] );
-
-		// Search
-		} elseif ( isset( $_GET['s'] ) ) {
-			$is_user  = strpos( $_GET['s'], strtolower( 'user:' ) ) !== false;
-
-			if ( true === $is_user ) {
-				$args['user'] = absint( trim( str_replace( 'user:', '', strtolower( $_GET['s'] ) ) ) );
-				unset( $args['s'] );
-			} else {
-				$args['s'] = sanitize_text_field( $_GET['s'] );
-			}
-		}
-
-		// Start
-		if ( ! empty( $_GET['start-date'] ) ) {
-			$args['start-date'] = urldecode( $_GET['start-date'] );
-		}
-
-		// End
-		if ( ! empty( $_GET['end-date'] ) ) {
-			$args['end-date'] = urldecode( $_GET['end-date'] );
-		}
-
-		// Gateway
-		if ( ! empty( $_GET['gateway'] ) && $_GET['gateway'] !== 'all' ) {
-			$args['gateway'] = sanitize_key( $_GET['gateway'] );
-		}
-
-		// Mode
-		if ( ! empty( $_GET['mode'] ) && $_GET['mode'] !== 'all' ) {
-			$args['mode'] = sanitize_key( $_GET['mode'] );
-		}
-
-		// Types
-		$types = array_keys( edd_get_order_types() );
-		if ( ! empty( $_GET['order_type'] ) && in_array( $_GET['order_type'], $types, true ) ) {
-			$args['type'] = sanitize_key( $_GET['order_type'] );
-		} else {
-			$args['type'] = 'sale';
-		}
-
-		// Maybe filter by order amount.
-		if ( isset( $_GET['order-amount-filter-type'] ) && isset( $_GET['order-amount-filter-value'] ) ) {
-			if ( ! empty( $_GET['order-amount-filter-value'] ) && 0 !== strlen( $_GET['order-amount-filter-value'] ) ) {
-				$filter_type   = sanitize_text_field( $_GET['order-amount-filter-type'] );
-				$filter_amount = floatval( sanitize_text_field( $_GET['order-amount-filter-value'] ) );
-
-				$args['compare'] = array(
-					array(
-						'key'     => 'total',
-						'value'   => $filter_amount,
-						'compare' => $filter_type,
-					),
-				);
-			}
-		}
-
-		// Maybe filter by country.
-		if ( isset( $_GET['order-country-filter-value'] ) ) {
-			$country = ! empty( $_GET['order-country-filter-value'] )
-				? sanitize_text_field( $_GET['order-country-filter-value'] )
-				: '';
-
-			$args['country'] = $country;
-		}
-
-		// Maybe filter by region.
-		if ( isset( $_GET['order-region-filter-value'] ) ) {
-			$region = ! empty( $_GET['order-region-filter-value'] )
-				? sanitize_text_field( $_GET['order-region-filter-value'] )
-				: '';
-
-			$args['region'] = $region;
-		}
-
-		// No empties
-		$r = wp_parse_args( array_filter( $args ) );
-
-		// Force EDD\Orders\Order objects to be returned
-		$r['output'] = 'orders';
-		$r['count']   = true;
-		$r['groupby'] = 'status';
-
-		$p      = new EDD_Payments_Query( $r );
-		$counts = $p->get_payments();
-
-		$defaults = array_fill_keys( array_keys( edd_get_payment_statuses() ), 0 );
-
-		$o = array(
-			'total' => 0,
-		);
-
-		if ( ! empty( $counts ) ) {
-			foreach ( $counts as $item ) {
-				$o[ $item['status'] ] = absint( $item['count'] );
-			}
-
-			$o['total'] = array_sum( $o );
-		}
-
-		$this->counts = array_merge( $defaults, $o );
+		// Get order counts by type
+		$this->counts = edd_get_order_counts( array(
+			'type' => $type
+		) );
 	}
 
 	/**
@@ -829,12 +651,12 @@ class EDD_Payment_History_Table extends List_Table {
 		$args = array();
 
 		$per_page   = $this->per_page;
+		$status     = $this->get_status();
 		$paged      = isset( $_GET['paged'] )      ? absint( $_GET['paged'] )                   : null;
 		$user       = isset( $_GET['user'] )       ? absint( $_GET['user'] )                    : null;
 		$customer   = isset( $_GET['customer'] )   ? absint( $_GET['customer'] )                : null;
 		$orderby    = isset( $_GET['orderby'] )    ? sanitize_key( $_GET['orderby'] )           : 'id';
 		$order      = isset( $_GET['order'] )      ? sanitize_key( $_GET['order'] )             : 'DESC';
-		$status     = isset( $_GET['status'] )     ? sanitize_key( $_GET['status'] )            : edd_get_payment_status_keys();
 		$search     = isset( $_GET['s'] )          ? sanitize_text_field( $_GET['s'] )          : null;
 		$start_date = isset( $_GET['start-date'] ) ? sanitize_text_field( $_GET['start-date'] ) : null;
 		$end_date   = isset( $_GET['end-date'] )   ? sanitize_text_field( $_GET['end-date'] )   : $start_date;
@@ -977,10 +799,8 @@ class EDD_Payment_History_Table extends List_Table {
 		$hidden      = array(); // No hidden columns
 		$columns     = $this->get_columns();
 		$sortable    = $this->get_sortable_columns();
+		$status      = $this->get_status( 'total' );
 		$this->items = $this->payments_data();
-		$status      = isset( $_GET['status'] )
-			? sanitize_key( $_GET['status'] )
-			: 'total';
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 

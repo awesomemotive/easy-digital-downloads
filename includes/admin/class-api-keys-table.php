@@ -27,12 +27,6 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 class EDD_API_Keys_Table extends WP_List_Table {
 
 	/**
-	 * @var int Number of items per page
-	 * @since 2.0
-	 */
-	public $per_page = 30;
-
-	/**
 	 * Get things started
 	 *
 	 * @since 1.5
@@ -225,18 +219,6 @@ class EDD_API_Keys_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Retrieve the current page number
-	 *
-	 * @since 2.0
-	 * @return int Current page number
-	 */
-	public function get_paged() {
-		return isset( $_GET['paged'] )
-			? absint( $_GET['paged'] )
-			: 1;
-	}
-
-	/**
 	 * Performs the key query
 	 *
 	 * @since 2.0
@@ -302,7 +284,7 @@ class EDD_API_Keys_Table extends WP_List_Table {
 		$this->set_pagination_args( array(
 			'total_items' => $total_items,
 			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $total_items / $this->per_page )
+			'total_pages' => $total_items > 0 ? ceil( $total_items / $this->per_page ) : 0,
 		) );
 	}
 }

@@ -9,7 +9,7 @@
  * @since       2.7
  */
 
-use EDD\Database\Objects\Adjustment;
+use EDD\Database\Rows\Adjustment;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * EDD_Discount Class
  *
  * @since 2.7
- * @since 3.0 Extends EDD\Database\Objects\Adjustment instead of EDD_DB_Discount
+ * @since 3.0 Extends EDD\Database\Rows\Adjustment instead of EDD_DB_Discount
  *
  * @property int $id
  * @property string $name
@@ -1605,7 +1605,7 @@ class EDD_Discount extends Adjustment {
 				$return = true;
 			}
 		} elseif ( $set_error ) {
-			edd_set_error( 'edd-discount-error', _x( 'This discount is invalid.', 'error for when a discount is invalid based on its configuration' , 'easy-digital-downloads' ) );
+			edd_set_error( 'edd-discount-error', _x( 'This discount is invalid.', 'error for when a discount is invalid based on its configuration', 'easy-digital-downloads' ) );
 		}
 
 		/**

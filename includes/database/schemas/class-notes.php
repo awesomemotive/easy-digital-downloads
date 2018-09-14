@@ -13,12 +13,14 @@ namespace EDD\Database\Schemas;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Database\Schema;
+
 /**
  * Notes Schema Class.
  *
  * @since 3.0
  */
-class Notes extends Base {
+class Notes extends Schema {
 
 	/**
 	 * Array of database column objects

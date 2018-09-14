@@ -13,12 +13,14 @@ namespace EDD\Database\Tables;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Database\Table;
+
 /**
  * Setup the global "edd_customermeta" database table
  *
  * @since 3.0
  */
-final class Customer_Meta extends Base {
+final class Customer_Meta extends Table {
 
 	/**
 	 * Table name
@@ -83,10 +85,10 @@ final class Customer_Meta extends Base {
 		if ( false !== get_option( $this->prefix . 'edd_customermeta_db_version', false ) ) {
 			delete_option( $this->prefix . 'edd_customermeta_db_version' );
 
-			if ( ! $this->column_exists( 'edd_customer_id' ) ) {
-				$this->get_db()->query( "
-					ALTER TABLE {$this->table_name} CHANGE `customer_id` `edd_customer_id` bigint(20) unsigned NOT NULL default '0';
-				" );
+			if ( $this->column_exists( 'customer_id' ) && ! $this->column_exists( 'edd_customer_id' ) ) {
+				$this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE `customer_id` `edd_customer_id` bigint(20) unsigned NOT NULL default '0';" );
+				$this->get_db()->query( "ALTER TABLE {$this->table_name} DROP INDEX customer_id" );
+				$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX edd_customer_id (edd_customer_id)" );
 			}
 		}
 
@@ -105,7 +107,7 @@ final class Customer_Meta extends Base {
 	protected function __201807110001() {
 
 		// Alter the database with separate queries so indexes succeed
-		if ( ! $this->column_exists( 'status' ) ) {
+		if ( $this->column_exists( 'customer_id' ) && ! $this->column_exists( 'edd_customer_id' ) ) {
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE `customer_id` `edd_customer_id` bigint(20) unsigned NOT NULL default '0'" );
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} DROP INDEX customer_id" );
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX edd_customer_id (edd_customer_id)" );

@@ -36,7 +36,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 
 		$component = edd_get_component_interface( 'order', 'meta' );
 
-		if ( $component instanceof \EDD\Database\Tables\Base ) {
+		if ( $component instanceof \EDD\Database\Table ) {
 			$component->truncate();
 		}
 

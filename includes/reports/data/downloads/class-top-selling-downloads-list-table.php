@@ -13,8 +13,8 @@ namespace EDD\Reports\Data\Downloads;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Stats as Stats;
 use EDD\Reports as Reports;
-use EDD\Orders as Orders;
 use EDD\Admin\List_Table;
 
 /**
@@ -34,7 +34,7 @@ class Top_Selling_Downloads_List_Table extends List_Table {
 	public function download_data() {
 		$filter = Reports\get_filter_value( 'dates' );
 
-		$stats = new Orders\Stats();
+		$stats = new Stats();
 
 		return $stats->get_most_valuable_order_items( array(
 			'number' => 10,

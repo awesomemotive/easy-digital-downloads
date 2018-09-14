@@ -25,27 +25,6 @@ use EDD\Admin\List_Table;
 class EDD_Discount_Codes_Table extends List_Table {
 
 	/**
-	 * Number of results to show per page
-	 *
-	 * @var string
-	 * @since 1.4
-	 */
-	public $per_page = 30;
-
-	/**
-	 * Discount counts, keyed by status
-	 *
-	 * @var array
-	 * @since 3.0
-	 */
-	public $counts = array(
-		'active'   => 0,
-		'inactive' => 0,
-		'expired'  => 0,
-		'total'    => 0
-	);
-
-	/**
 	 * Get things started
 	 *
 	 * @since 1.4
@@ -60,41 +39,6 @@ class EDD_Discount_Codes_Table extends List_Table {
 
 		$this->process_bulk_action();
 		$this->get_counts();
-	}
-
-	/**
-	 * Show the search field.
-	 *
-	 * @since 1.4
-	 *
-	 * @param string $text Label for the search box
-	 * @param string $input_id ID of the search box
-	 */
-	public function search_box( $text, $input_id ) {
-
-		// Bail if no customers and no search
-		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) { // WPCS: CSRF ok.
-			return;
-		}
-
-		$input_id = $input_id . '-search-input';
-
-		if ( ! empty( $_REQUEST['orderby'] ) ) { // WPCS: CSRF ok.
-			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
-		}
-
-		if ( ! empty( $_REQUEST['order'] ) ) { // WPCS: CSRF ok.
-			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
-		}
-		?>
-
-		<p class="search-box">
-			<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $text ); ?>:</label>
-			<input type="search" id="<?php echo esc_attr( $input_id ); ?>" name="s" value="<?php _admin_search_query(); ?>"/>
-			<?php submit_button( esc_html( $text ), 'button', false, false, array( 'ID' => 'search-submit' ) ); ?>
-		</p>
-
-		<?php
 	}
 
 	/**
@@ -113,32 +57,6 @@ class EDD_Discount_Codes_Table extends List_Table {
 		return edd_get_admin_url( array(
 			'page' => 'edd-discounts'
 		), $base );
-	}
-
-	/**
-	 * Retrieve the view types
-	 *
-	 * @since 1.4
-	 *
-	 * @return array $views All the views available
-	 */
-	public function get_views() {
-		$base           = $this->get_base_url();
-		$current        = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
-		$total_count    = '&nbsp;<span class="count">(' . esc_html( $this->counts['total']    ) . ')</span>';
-		$active_count   = '&nbsp;<span class="count">(' . esc_html( $this->counts['active']   ) . ')</span>';
-		$inactive_count = '&nbsp;<span class="count">(' . esc_html( $this->counts['inactive'] ) . ')</span>';
-		$expired_count  = '&nbsp;<span class="count">(' . esc_html( $this->counts['expired']  ) . ')</span>';
-
-		$is_all = empty( $current ) || ( 'all' === $current );
-		$views  = array(
-			'all'      => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base          ) ), $is_all                 ? ' class="current"' : '', __( 'All',      'easy-digital-downloads' ) . $total_count    ),
-			'active'   => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'active',   $base ) ), 'active'   === $current ? ' class="current"' : '', __( 'Active',   'easy-digital-downloads' ) . $active_count   ),
-			'inactive' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'inactive', $base ) ), 'inactive' === $current ? ' class="current"' : '', __( 'Inactive', 'easy-digital-downloads' ) . $inactive_count ),
-			'expired'  => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'expired',  $base ) ), 'expired'  === $current ? ' class="current"' : '', __( 'Expired',  'easy-digital-downloads' ) . $expired_count  )
-		);
-
-		return $views;
 	}
 
 	/**
@@ -267,9 +185,7 @@ class EDD_Discount_Codes_Table extends List_Table {
 		$base        = $this->get_base_url();
 		$state       = '';
 		$row_actions = array();
-		$status      = ! empty( $_GET['status'] ) // WPCS: CSRF ok.
-			? sanitize_key( $_GET['status'] )
-			: '';
+		$status      = $this->get_status();
 
 		// Bail if current user cannot manage discounts
 		if ( ! current_user_can( 'manage_shop_discounts' ) ) {
@@ -289,12 +205,12 @@ class EDD_Discount_Codes_Table extends List_Table {
 
 		// Active, so add "deactivate" action
 		if ( 'active' === strtolower( $discount->status ) ) {
-			$row_actions['deactivate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
+			$row_actions['cancel'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
 				'edd-action' => 'deactivate_discount',
 				'discount'   => $discount->id,
-			), $base ), 'edd_discount_nonce' ) ) . '">' . __( 'Deactivate', 'easy-digital-downloads' ) . '</a>';
+			), $base ), 'edd_discount_nonce' ) ) . '">' . __( 'Cancel', 'easy-digital-downloads' ) . '</a>';
 
-			// Inactive, so add "activate" action
+		// Inactive, so add "activate" action
 		} elseif ( 'inactive' === strtolower( $discount->status ) ) {
 			$row_actions['activate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
 				'edd-action' => 'activate_discount',
@@ -370,9 +286,9 @@ class EDD_Discount_Codes_Table extends List_Table {
 	 */
 	public function get_bulk_actions() {
 		return array(
-			'activate'   => __( 'Activate',   'easy-digital-downloads' ),
-			'deactivate' => __( 'Deactivate', 'easy-digital-downloads' ),
-			'delete'     => __( 'Delete',     'easy-digital-downloads' )
+			'activate'   => __( 'Activate', 'easy-digital-downloads' ),
+			'deactivate' => __( 'Cancel',   'easy-digital-downloads' ),
+			'delete'     => __( 'Delete',   'easy-digital-downloads' )
 		);
 	}
 
@@ -392,24 +308,27 @@ class EDD_Discount_Codes_Table extends List_Table {
 			return;
 		}
 
-		$ids = isset( $_GET['discount'] )
-			? $_GET['discount']
-			: false;
+		$ids = wp_parse_id_list( (array) $this->get_request_var( 'discount', false ) );
 
-		if ( ! is_array( $ids ) ) {
-			$ids = array( $ids );
+		// Bail if no IDs
+		if ( empty( $ids ) ) {
+			return;
 		}
-
-		$ids = wp_parse_id_list( $_GET['discount'] );
 
 		foreach ( $ids as $id ) {
 			switch ( $this->current_action() ) {
 				case 'delete':
 					edd_delete_discount( $id );
 					break;
+
+				case 'cancel':
+					edd_update_discount_status( $id, 'cancelled' );
+					break;
+
 				case 'activate':
 					edd_update_discount_status( $id, 'active' );
 					break;
+
 				case 'deactivate':
 					edd_update_discount_status( $id, 'inactive' );
 					break;
@@ -434,22 +353,13 @@ class EDD_Discount_Codes_Table extends List_Table {
 	 * @return array Discount codes.
 	 */
 	public function discount_codes_data() {
-
-		// Query args
-		$orderby = isset( $_GET['orderby'] ) ? sanitize_key( $_GET['orderby']  ) : 'id';
-		$order   = isset( $_GET['order']   ) ? sanitize_key( $_GET['order']    ) : 'DESC';
-		$status  = isset( $_GET['status']  ) ? sanitize_key( $_GET['status']   ) : '';
-		$search  = isset( $_GET['s']       ) ? sanitize_text_field( $_GET['s'] ) : null;
-		$paged   = isset( $_GET['paged']   ) ? absint( $_GET['paged']          ) : 1;
-
-		// Get discounts
 		return edd_get_discounts( array(
 			'number'  => $this->per_page,
-			'paged'   => $paged,
-			'orderby' => $orderby,
-			'order'   => $order,
-			'status'  => $status,
-			'search'  => $search
+			'paged'   => $this->get_paged(),
+			'orderby' => sanitize_text_field( $this->get_request_var( 'orderby', 'id'   ) ),
+			'order'   => sanitize_text_field( $this->get_request_var( 'order',   'DESC' ) ),
+			'status'  => $this->get_status(),
+			'search'  => $this->get_search()
 		) );
 	}
 
@@ -466,9 +376,7 @@ class EDD_Discount_Codes_Table extends List_Table {
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 		$this->items           = $this->discount_codes_data();
 
-		$status = isset( $_GET['status'] ) // WPCS: CSRF ok.
-			? sanitize_key( $_GET['status'] )
-			: 'total';
+		$status = $this->get_status( 'total' );
 
 		// Setup pagination
 		$this->set_pagination_args( array(

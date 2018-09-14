@@ -300,10 +300,12 @@ function edd_render_customer_view( $view, $callbacks ) {
 	} ?>
 
 	<div class='wrap'>
-		<h2>
+		<h1>
 			<?php esc_html_e( 'Customer Details', 'easy-digital-downloads' ); ?>
 			<?php do_action( 'edd_after_customer_details_header', $customer ); ?>
-		</h2>
+		</h1>
+
+		<hr class="wp-header-end">
 
 		<?php if ( edd_get_errors() ) : ?>
 

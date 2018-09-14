@@ -1868,38 +1868,47 @@ function edd_load_batch_processors_for_v30_upgrade( $class ) {
 	switch ( $class ) {
 		case 'EDD\Admin\Upgrades\v3\Orders':
 			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
 			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-orders.php';
 			break;
 		case 'EDD\Admin\Upgrades\v3\Customer_Addresses':
 			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
 			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-customer-addresses.php';
 			break;
 		case 'EDD\Admin\Upgrades\v3\Customer_Email_Addresses':
 			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
 			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-customer-email-addresses.php';
 			break;
 		case 'EDD\Admin\Upgrades\v3\Logs':
 			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
 			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-logs.php';
 			break;
 		case 'EDD\Admin\Upgrades\v3\Tax_Rates':
 			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
 			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-tax-rates.php';
 			break;
 		case 'EDD\Admin\Upgrades\v3\Discounts':
 			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
 			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-discounts.php';
 			break;
 		case 'EDD\Admin\Upgrades\v3\Order_Notes':
 			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
 			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-order-notes.php';
 			break;
 		case 'EDD\Admin\Upgrades\v3\Customer_Notes':
 			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
 			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-customer-notes.php';
 			break;
 		case 'EDD\Admin\Upgrades\v3\Remove_Legacy_Data':
 			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-base.php';
+			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
 			require_once  EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-remove-legacy-data.php';
 			break;
 	}

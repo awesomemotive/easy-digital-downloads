@@ -22,6 +22,20 @@ module.exports = function(grunt) {
 					{
 						expand: true,
 						cwd: 'assets/css',
+						src: ['chosen.css'],
+						dest: 'assets/css',
+						ext: '-rtl.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
+						src: ['colorbox.css'],
+						dest: 'assets/css',
+						ext: '-rtl.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
 						src: ['edd-admin.css'],
 						dest: 'assets/css',
 						ext: '-rtl.css'
@@ -36,7 +50,21 @@ module.exports = function(grunt) {
 					{
 						expand: true,
 						cwd: 'assets/css',
+						src: ['edd-admin-email-tags.css'],
+						dest: 'assets/css',
+						ext: '-rtl.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
 						src: ['edd-admin-datepicker.css'],
+						dest: 'assets/css',
+						ext: '-rtl.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
+						src: ['edd-admin-tax-rates.css'],
 						dest: 'assets/css',
 						ext: '-rtl.css'
 					},
@@ -60,6 +88,20 @@ module.exports = function(grunt) {
 					{
 						expand: true,
 						cwd: 'assets/css',
+						src: ['chosen.css'],
+						dest: 'assets/css',
+						ext: '.min.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
+						src: ['colorbox.css'],
+						dest: 'assets/css',
+						ext: '.min.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
 						src: ['edd-admin.css'],
 						dest: 'assets/css',
 						ext: '.min.css'
@@ -74,7 +116,21 @@ module.exports = function(grunt) {
 					{
 						expand: true,
 						cwd: 'assets/css',
+						src: ['edd-admin-email-tags.css'],
+						dest: 'assets/css',
+						ext: '.min.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
 						src: ['edd-admin-datepicker.css'],
+						dest: 'assets/css',
+						ext: '.min.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
+						src: ['edd-admin-tax-rates.css'],
 						dest: 'assets/css',
 						ext: '.min.css'
 					},
@@ -92,6 +148,20 @@ module.exports = function(grunt) {
 					{
 						expand: true,
 						cwd: 'assets/css',
+						src: ['chosen-rtl.css'],
+						dest: 'assets/css',
+						ext: '.min.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
+						src: ['colorbox-rtl.css'],
+						dest: 'assets/css',
+						ext: '.min.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
 						src: ['edd-admin-rtl.css'],
 						dest: 'assets/css',
 						ext: '.min.css'
@@ -106,7 +176,21 @@ module.exports = function(grunt) {
 					{
 						expand: true,
 						cwd: 'assets/css',
+						src: ['edd-admin-email-tags-rtl.css'],
+						dest: 'assets/css',
+						ext: '.min.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
 						src: ['edd-admin-datepicker-rtl.css'],
+						dest: 'assets/css',
+						ext: '.min.css'
+					},
+					{
+						expand: true,
+						cwd: 'assets/css',
+						src: ['edd-admin-tax-rates-rtl.css'],
 						dest: 'assets/css',
 						ext: '.min.css'
 					},

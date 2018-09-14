@@ -13,12 +13,14 @@ namespace EDD\Database\Tables;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Database\Table;
+
 /**
  * Setup the global "edd_logs_api_requests" database table
  *
  * @since 3.0
  */
-final class Logs_Api_Requests extends Base {
+final class Logs_Api_Requests extends Table {
 
 	/**
 	 * Table name
@@ -46,6 +48,7 @@ final class Logs_Api_Requests extends Base {
 	 * @var array
 	 */
 	protected $upgrades = array(
+		'201807270002' => 201807270002,
 		'201807270003' => 201807270003,
 	);
 
@@ -76,6 +79,30 @@ final class Logs_Api_Requests extends Base {
 
 	/**
 	 * Upgrade to version 201807270003
+	 * - Add the `date_modified` varchar column
+	 *
+	 * @since 3.0
+	 *
+	 * @return boolean
+	 */
+	protected function __201807270002() {
+
+		// Look for column
+		$result = $this->column_exists( 'date_modified' );
+
+		// Maybe add column
+		if ( false === $result ) {
+			$result = $this->get_db()->query( "
+				ALTER TABLE {$this->table_name} ADD COLUMN `date_modified` datetime NOT NULL default '0000-00-00 00:00:00' AFTER `date_created`;
+			" );
+		}
+
+		// Return success/fail
+		return $this->is_success( $result );
+	}
+
+	/**
+	 * Upgrade to version 201807270002
 	 * - Add the `uuid` varchar column
 	 *
 	 * @since 3.0

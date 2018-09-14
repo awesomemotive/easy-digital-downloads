@@ -5,6 +5,7 @@ msgstr ""
 <<<<<<< .merge_file_EGlSxJ
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 "Project-Id-Version: Easy Digital Downloads 3.0.0-beta-1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
 <<<<<<< HEAD
@@ -27,10 +28,17 @@ msgstr ""
 "POT-Creation-Date: 2018-07-12 17:29:20+00:00\n"
 >>>>>>> master
 =======
+<<<<<<< HEAD
 "Project-Id-Version: Easy Digital Downloads 2.9.7\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
 "POT-Creation-Date: 2018-09-10 22:52:27+00:00\n"
 >>>>>>> .merge_file_gt6p2C
+=======
+"Project-Id-Version: Easy Digital Downloads 2.9.6\n"
+"Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
+"POT-Creation-Date: 2018-09-07 21:18:36+00:00\n"
+>>>>>>> master
+>>>>>>> release/3.0
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -84,7 +92,11 @@ msgstr ""
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
+<<<<<<< HEAD
 <<<<<<< .merge_file_EGlSxJ
+=======
+<<<<<<< HEAD
+>>>>>>> release/3.0
 #: includes/EDD_SL_Plugin_Updater.php:399
 #: includes/admin/customers/customer-actions.php:286
 #: includes/admin/customers/customer-actions.php:327
@@ -119,7 +131,11 @@ msgstr ""
 #: includes/admin/discounts/discount-actions.php:222
 #: includes/admin/discounts/edit-discount.php:16
 #: includes/admin/downloads/dashboard-columns.php:171
+<<<<<<< HEAD
 >>>>>>> .merge_file_gt6p2C
+=======
+>>>>>>> master
+>>>>>>> release/3.0
 #: includes/admin/import/class-batch-import-downloads.php:65
 #: includes/admin/import/class-batch-import-payments.php:76
 #: includes/admin/import/class-batch-import.php:156
@@ -775,7 +791,11 @@ msgstr ""
 #: includes/admin/customers/customer-actions.php:502
 #: includes/admin/import/import-functions.php:31
 #: includes/admin/import/import-functions.php:113
+<<<<<<< HEAD
 <<<<<<< .merge_file_EGlSxJ
+=======
+<<<<<<< HEAD
+>>>>>>> release/3.0
 #: includes/admin/reporting/export/export-actions.php:24
 #: includes/api/class-edd-api.php:2002
 #: includes/class-edd-license-handler.php:291
@@ -783,7 +803,11 @@ msgstr ""
 #: includes/admin/reporting/export/export-actions.php:23
 #: includes/api/class-edd-api.php:1969
 #: includes/class-edd-license-handler.php:305
+<<<<<<< HEAD
 >>>>>>> .merge_file_gt6p2C
+=======
+>>>>>>> master
+>>>>>>> release/3.0
 msgid "Nonce verification failed"
 msgstr ""
 
@@ -7241,7 +7265,11 @@ msgstr ""
 msgid "All Prices"
 msgstr ""
 
+<<<<<<< HEAD
 <<<<<<< .merge_file_EGlSxJ
+=======
+<<<<<<< HEAD
+>>>>>>> release/3.0
 #: includes/api/class-edd-api-v2.php:142 includes/api/class-edd-api.php:1127
 #: includes/api/class-edd-api.php:1314 includes/api/class-edd-api.php:1431
 msgid "Product %s not found!"
@@ -7273,7 +7301,11 @@ msgid "Customer %s not found!"
 msgstr ""
 
 #: includes/api/class-edd-api-v2.php:346 includes/api/class-edd-api.php:1062
+<<<<<<< HEAD
 >>>>>>> .merge_file_gt6p2C
+=======
+>>>>>>> master
+>>>>>>> release/3.0
 msgid "No customers found!"
 msgstr ""
 
@@ -7293,7 +7325,11 @@ msgstr ""
 msgid "Invalid API version!"
 msgstr ""
 
+<<<<<<< HEAD
 <<<<<<< .merge_file_EGlSxJ
+=======
+<<<<<<< HEAD
+>>>>>>> release/3.0
 #: includes/api/class-edd-api.php:689
 msgid "Invalid query!"
 msgstr ""
@@ -7368,7 +7404,11 @@ msgid "No download logs found!"
 msgstr ""
 
 #: includes/api/class-edd-api.php:1934 includes/user-functions.php:1072
+<<<<<<< HEAD
 >>>>>>> .merge_file_gt6p2C
+=======
+>>>>>>> master
+>>>>>>> release/3.0
 msgid "Easy Digital Downloads API Keys"
 msgstr ""
 
@@ -7388,7 +7428,11 @@ msgstr ""
 msgid "Token:"
 msgstr ""
 
+<<<<<<< HEAD
 <<<<<<< .merge_file_EGlSxJ
+=======
+<<<<<<< HEAD
+>>>>>>> release/3.0
 #: includes/api/class-edd-api.php:1947 includes/user-functions.php:1083
 >>>>>>> master
 msgid "Revoke API Keys"
@@ -7409,7 +7453,11 @@ msgid "User ID Required"
 msgstr ""
 
 #: includes/api/class-edd-api.php:1986 includes/api/class-edd-api.php:1988
+<<<<<<< HEAD
 >>>>>>> .merge_file_gt6p2C
+=======
+>>>>>>> master
+>>>>>>> release/3.0
 msgid "You do not have permission to %s API keys for this user"
 msgstr ""
 
@@ -8763,11 +8811,19 @@ msgid ""
 "of a purchase. HTML is accepted. Available template tags:"
 msgstr ""
 
+<<<<<<< HEAD
 <<<<<<< .merge_file_EGlSxJ
 #: includes/deprecated-functions.php:488 includes/process-download.php:862
 =======
 #: includes/deprecated-functions.php:517 includes/process-download.php:884
 >>>>>>> .merge_file_gt6p2C
+=======
+<<<<<<< HEAD
+#: includes/deprecated-functions.php:488 includes/process-download.php:862
+=======
+#: includes/deprecated-functions.php:517 includes/process-download.php:884
+>>>>>>> master
+>>>>>>> release/3.0
 msgid "Sorry but you have hit your download limit for this file."
 msgstr ""
 
@@ -9480,12 +9536,20 @@ msgstr ""
 #: includes/process-purchase.php:587 includes/process-purchase.php:727
 =======
 #: includes/login-register.php:163 includes/process-purchase.php:542
+<<<<<<< HEAD
 <<<<<<< .merge_file_EGlSxJ
+=======
+<<<<<<< HEAD
+>>>>>>> release/3.0
 #: includes/process-purchase.php:626 includes/process-purchase.php:766
 >>>>>>> master
 =======
 #: includes/process-purchase.php:618 includes/process-purchase.php:758
+<<<<<<< HEAD
 >>>>>>> .merge_file_gt6p2C
+=======
+>>>>>>> master
+>>>>>>> release/3.0
 msgid "Invalid email"
 msgstr ""
 
@@ -10236,7 +10300,11 @@ msgstr ""
 msgid "Purchase Verification Failed"
 msgstr ""
 
+<<<<<<< HEAD
 <<<<<<< .merge_file_EGlSxJ
+=======
+<<<<<<< HEAD
+>>>>>>> release/3.0
 #: includes/process-download.php:938
 msgid "Invalid file"
 msgstr ""
@@ -10256,7 +10324,11 @@ msgid "The requested file could not be found. Error 404."
 msgstr ""
 
 #: includes/process-download.php:968
+<<<<<<< HEAD
 >>>>>>> .merge_file_gt6p2C
+=======
+>>>>>>> master
+>>>>>>> release/3.0
 msgid "File not found"
 msgstr ""
 

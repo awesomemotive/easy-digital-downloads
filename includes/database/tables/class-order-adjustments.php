@@ -13,12 +13,14 @@ namespace EDD\Database\Tables;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Database\Table;
+
 /**
  * Setup the global "edd_order_adjustments" database table
  *
  * @since 3.0
  */
-final class Order_Adjustments extends Base {
+final class Order_Adjustments extends Table {
 
 	/**
 	 * Table name

@@ -454,7 +454,7 @@ class Tests_Discounts_DB extends \EDD_UnitTestCase {
 	public function test_counts_by_status_inactive_discounts() {
 		$counts = edd_get_discount_counts();
 
-		$this->assertSame( 0, $counts['inactive'] );
+		$this->assertSame( false, isset( $counts['inactive'] ) );
 	}
 
 	/**
@@ -463,6 +463,6 @@ class Tests_Discounts_DB extends \EDD_UnitTestCase {
 	public function test_counts_by_status_expired_discounts() {
 		$counts = edd_get_discount_counts();
 
-		$this->assertSame( 0, $counts['expired'] );
+		$this->assertSame( false, isset( $counts['expired'] ) );
 	}
 }

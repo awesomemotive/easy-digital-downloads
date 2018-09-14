@@ -72,8 +72,8 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 		// Check that a new order ID was returned.
 		$this->assertGreaterThan( 0, $refunded_order );
 
-		// Fetch refunded order.
-		$o = edd_get_order( $refunded_order );
+		// Fetch original order.
+		$o = edd_get_order( self::$orders[0] );
 
 		// Check a valid Order object was returned.
 		$this->assertInstanceOf( 'EDD\Orders\Order', $o );
@@ -82,10 +82,25 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 		$this->assertSame( 'refunded', $o->status );
 
 		// Verify type.
-		$this->assertSame( 'refund', $o->type );
+		$this->assertSame( 'order', $o->type );
 
 		// Verify total.
-		$this->assertSame( -120.0, floatval( $o->total ) );
+		$this->assertSame( 120.0, floatval( $o->total ) );
+
+		// Fetch refunded order.
+		$r = edd_get_order( $refunded_order );
+
+		// Check a valid Order object was returned.
+		$this->assertInstanceOf( 'EDD\Orders\Order', $r );
+
+		// Verify status.
+		$this->assertSame( 'complete', $r->status );
+
+		// Verify type.
+		$this->assertSame( 'refund', $r->type );
+
+		// Verify total.
+		$this->assertSame( -120.0, floatval( $r->total ) );
 	}
 
 	/**

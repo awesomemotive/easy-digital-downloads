@@ -15,42 +15,52 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Renders the Discounts admin page.
  *
+ * Here only for backwards compatibility
+ *
  * @since 1.4
  * @since 3.0 Nomenclature updated for consistency.
 */
 function edd_discounts_page() {
-	if ( isset( $_GET['edd-action'] ) && $_GET['edd-action'] === 'edit_discount' ) {
+
+	// Edit
+	if ( ! empty( $_GET['edd-action'] ) && ( 'edit_discount' === $_GET['edd-action'] ) ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/edit-discount.php';
-	} elseif ( isset( $_GET['edd-action'] ) && $_GET['edd-action'] === 'add_discount' ) {
+
+	// Add
+	} elseif ( ! empty( $_GET['edd-action'] ) && ( 'add_discount' === $_GET['edd-action'] ) ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/add-discount.php';
+
+	// List tables
 	} else {
-		require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/class-discount-codes-table.php';
-		$discount_codes_table = new EDD_Discount_Codes_Table();
-		$discount_codes_table->prepare_items();
-	?>
-
-	<div class="wrap">
-		<h1><?php esc_html_e( 'Discounts', 'easy-digital-downloads' ); ?><a href="<?php echo esc_url( add_query_arg( array( 'edd-action' => 'add_discount' ) ) ); ?>" class="add-new-h2"><?php esc_html_e( 'Add New', 'easy-digital-downloads' ); ?></a></h1>
-
-		<hr class="wp-header-end">
-
-		<?php do_action( 'edd_discounts_page_top' ); ?>
-
-		<form id="edd-discounts-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-discounts' ); ?>">
-			<?php $discount_codes_table->search_box( __( 'Search', 'easy-digital-downloads' ), 'edd-discounts' ); ?>
-
-			<input type="hidden" name="post_type" value="download" />
-			<input type="hidden" name="page" value="edd-discounts" />
-
-			<?php
-			$discount_codes_table->views();
-			$discount_codes_table->display();
-			?>
-		</form>
-
-		<?php do_action( 'edd_discounts_page_bottom' ); ?>
-	</div>
-
-	<?php
+		edd_adjustments_page();
 	}
 }
+
+/**
+ * Output the discounts page content, in the adjustments page action.
+ *
+ * @since 3.0
+ */
+function edd_discounts_page_content() {
+	require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/class-discount-codes-table.php';
+
+	$discount_codes_table = new EDD_Discount_Codes_Table();
+	$discount_codes_table->prepare_items();
+
+	do_action( 'edd_discounts_page_top' ); ?>
+
+	<form id="edd-discounts-filter" method="get" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-discounts' ); ?>">
+		<?php $discount_codes_table->search_box( __( 'Search Discounts', 'easy-digital-downloads' ), 'edd-discounts' ); ?>
+
+		<input type="hidden" name="post_type" value="download" />
+		<input type="hidden" name="page" value="edd-discounts" />
+
+		<?php
+		$discount_codes_table->views();
+		$discount_codes_table->display();
+		?>
+	</form>
+
+	<?php do_action( 'edd_discounts_page_bottom' );
+}
+add_action( 'edd_adjustments_page_discount', 'edd_discounts_page_content' );

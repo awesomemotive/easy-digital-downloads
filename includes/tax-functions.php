@@ -55,7 +55,7 @@ function edd_get_tax_rates( $args = array(), $output = ARRAY_N ) {
 	// Parse args
 	$r = wp_parse_args( $args, array(
 		'number'  => 30,
-		'type'  => 'tax_rate',
+		'type'    => 'tax_rate',
 		'orderby' => 'date_created',
 		'order'   => 'ASC',
 	) );
@@ -82,10 +82,14 @@ function edd_get_tax_rates( $args = array(), $output = ARRAY_N ) {
 
 			if ( isset( $tax_rate->description ) && ! empty( $tax_rate->description ) ) {
 				$rate['state'] = esc_attr( $tax_rate->description );
+			} else {
+				$rate['state'] = '';
 			}
 
 			if ( 'country' === $tax_rate->scope ) {
 				$rate['global'] = '1';
+			} else {
+				$rate['global'] = '0';
 			}
 
 			$rates[] = $rate;
@@ -102,39 +106,20 @@ function edd_get_tax_rates( $args = array(), $output = ARRAY_N ) {
  *
  * @return array
  */
-function edd_get_tax_rate_counts() {
+function edd_get_tax_rate_counts( $args = array() ) {
 
-	// Default statuses.
-	$defaults = array(
-		'active'   => 0,
-		'inactive' => 0,
-	);
-
-	// Query for count.
-	$counts = edd_get_tax_rates( array(
+	// Parse arguments
+	$r = wp_parse_args( $args, array(
 		'count'   => true,
 		'groupby' => 'status',
-	), OBJECT );
+		'type'    => 'tax_rate'
+	) );
 
-	// Default array.
-	$o = array(
-		'total' => 0,
-	);
+	// Query for count.
+	$counts = new EDD\Database\Queries\Adjustment( $r );
 
-	// Loop through counts and shape return value.
-	if ( ! empty( $counts ) ) {
-
-		// Loop through statuses.
-		foreach ( $counts as $item ) {
-			$o[ $item['status'] ] = absint( $item['count'] );
-		}
-
-		// Total.
-		$o['total'] = array_sum( $o );
-	}
-
-	// Return counts.
-	return array_merge( $defaults, $o );
+	// Format & return
+	return edd_format_counts( $counts, $r['groupby'] );
 }
 
 /**
