@@ -231,4 +231,25 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 
 		return 0.00;
 	}
+
+	/**
+	 * Get a product name, including any price ID name appended to the end.
+	 * 
+	 * @since 3.0
+	 *
+	 * @return string The product name including any price ID name.
+	 */
+	public function get_full_prodcut_name() {
+		$name = $this->product_name;
+		$d    = edd_get_download( $this->product_id );
+
+		if ( $d->has_variable_prices() ) {
+			$prices = $d->get_prices();
+			if ( isset( $prices[ $this->price_id ] ) ) {
+				$name .= ' &mdash; ' . $prices[ $this->price_id ]['name'];
+			}
+		}
+
+		return $name;
+	}
 }
