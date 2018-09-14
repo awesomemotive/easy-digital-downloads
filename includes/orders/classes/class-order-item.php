@@ -239,7 +239,7 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	 *
 	 * @return string The product name including any price ID name.
 	 */
-	public function get_full_prodcut_name() {
+	public function get_full_product_name() {
 		$name = $this->product_name;
 		$d    = edd_get_download( $this->product_id );
 
