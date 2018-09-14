@@ -205,6 +205,7 @@ a.edd-delete:hover {
 }
 
 .edd-ui-tooltip {
+	position: absolute;
 	background: #333 !important;
 	border-width: 1px !important;
 	border-radius: 3px !important;

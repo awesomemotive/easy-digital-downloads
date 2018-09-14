@@ -329,7 +329,17 @@ window.EDD_Checkout = (function($) {
 				});
 
 				$('.edd_cart_amount').each(function() {
-					$(this).text(response.total);
+					var total = response.total;
+					var subtotal = response.subtotal;
+
+					$(this).text(total);
+
+					var float_total = parseFloat(total.replace(/[^0-9\.-]+/g,""));
+					var float_subtotal = parseFloat(subtotal.replace(/[^0-9\.-]+/g,""));
+
+					$(this).data('total', float_total);
+					$(this).data('subtotal', float_subtotal);
+
 					$body.trigger('edd_quantity_updated', [ response ]);
 				});
 			}
