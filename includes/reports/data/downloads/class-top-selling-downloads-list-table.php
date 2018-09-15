@@ -74,10 +74,10 @@ class Top_Selling_Downloads_List_Table extends List_Table {
 		$title = $download->object->post_title;
 
 		if ( $download->object->has_variable_prices() ) {
-			$prices = array_values( wp_filter_object_list( $download->object->get_prices(), array( 'index' => absint( $download->price_id ) ) ) );
+			$prices = array_values( $download->object->get_prices() );
 
-			if ( is_array( $prices ) ) {
-				$prices = $prices[0];
+			if ( is_array( $prices ) && isset( $prices[ $download->price_id ] ) ) {
+				$prices = $prices[ $download->price_id ];
 				$title .= ' &mdash; ' . $prices['name'];
 			}
 		}
@@ -99,10 +99,10 @@ class Top_Selling_Downloads_List_Table extends List_Table {
 		}
 
 		if ( $download->object->has_variable_prices() ) {
-			$prices = array_values( wp_filter_object_list( $download->object->get_prices(), array( 'index' => absint( $download->price_id ) ) ) );
+			$prices = array_values( $download->object->get_prices() );
 
-			if ( is_array( $prices ) ) {
-				$prices = $prices[0];
+			if ( is_array( $prices ) && isset( $prices[ $download->price_id ] ) ) {
+				$prices = $prices[ $download->price_id ];
 
 				return edd_currency_filter( edd_format_amount( $prices['amount'] ) );
 			}
