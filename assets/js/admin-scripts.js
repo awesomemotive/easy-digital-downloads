@@ -1641,10 +1641,10 @@ jQuery(document).ready(function ($) {
 					};
 
 				$.post( ajaxurl, data, function ( response ) {
-					$( 'select.edd_regions_filter' ).find( 'option:gt(0)' ).remove();
+					$( 'select.edd_regions_filter' ).find( 'option' ).remove();
 
 					if ( 'nostates' !== response ) {
-						$( response ).find( 'option:gt(0)' ).appendTo( 'select.edd_regions_filter' );
+						$( response ).find( 'option' ).appendTo( 'select.edd_regions_filter' );
 					}
 
 					$( 'select.edd_regions_filter' ).trigger( 'chosen:updated' );
@@ -1667,6 +1667,7 @@ jQuery(document).ready(function ($) {
 			this.general();
 			this.emails();
 			this.misc();
+			this.location();
 		},
 
 		general : function() {
@@ -1805,6 +1806,30 @@ jQuery(document).ready(function ($) {
 					symlink.css( 'opacity', '1' );
 				}
 			});
+		},
+
+		location : function() {
+			$('select.edd_countries_filter').on( 'change', function() {
+				var select = $( this ),
+					data   = {
+						action:    'edd_get_shop_states',
+						country:    select.val(),
+						nonce:      select.data('nonce'),
+						field_name: 'edd_regions_filter'
+					};
+
+				$.post( ajaxurl, data, function ( response ) {
+					$( 'select.edd_regions_filter' ).find( 'option:gt(0)' ).remove();
+
+					if ( 'nostates' !== response ) {
+						$( response ).find( 'option:gt(0)' ).appendTo( 'select.edd_regions_filter' );
+					}
+
+					$( 'select.edd_regions_filter' ).trigger( 'chosen:updated' );
+				});
+
+				return false;
+			} );
 		}
 	};
 
@@ -2374,8 +2399,7 @@ jQuery(document).ready(function ($) {
 		vars: {
 			customer_card_wrap_editable:  $( '#edit-customer-info .editable' ),
 			customer_card_wrap_edit_item: $( '#edit-customer-info .edit-item' ),
-			user_id: $('input[name="customerinfo[user_id]"]'),
-			state_input: $(':input[name="customerinfo[region]"]')
+			user_id: $('input[name="customerinfo[user_id]"]')
 		},
 		init : function() {
 			this.edit_customer();
@@ -2470,17 +2494,21 @@ jQuery(document).ready(function ($) {
 					data = {
 						action:     'edd_get_shop_states',
 						country:    select.val(),
+						chosen:     false,
 						nonce:      select.data('nonce'),
 						field_name: 'customerinfo[region]'
 					};
 
 				$.post(ajaxurl, data, function (response) {
-					console.log( response );
+					var state_element = $( 'input[name="customerinfo[region]"], select[name="customerinfo[region]"]' );
+
 					if ( 'nostates' === response ) {
-						EDD_Customer.vars.state_input.replaceWith( '<input type="text" name="' + data.field_name + '" value="" class="edd-edit-toggles medium-text"/>' );
+						var new_element = '<input type="text" name="' + data.field_name + '" value="" class="edd-edit-toggles medium-text"/>';
 					} else {
-						EDD_Customer.vars.state_input.replaceWith( response );
+						var new_element = response;
 					}
+
+					state_element.replaceWith( new_element );
 				});
 
 				return false;
