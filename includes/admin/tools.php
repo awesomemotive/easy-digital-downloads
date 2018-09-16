@@ -81,14 +81,14 @@ function edd_get_tools_tabs() {
 			'general'       => __( 'General',       'easy-digital-downloads' ),
 			'api_keys'      => __( 'API Keys',      'easy-digital-downloads' ),
 			'betas'         => __( 'Beta Versions', 'easy-digital-downloads' ),
-			'system_info'   => __( 'System Info',   'easy-digital-downloads' ),
 			'logs'          => __( 'Logs',          'easy-digital-downloads' ),
+			'system_info'   => __( 'System Info',   'easy-digital-downloads' ),
 			'debug_log'     => __( 'Debug Log',     'easy-digital-downloads' ),
 			'import_export' => __( 'Import/Export', 'easy-digital-downloads' )
 		);
 
 		// Unset the betas tab if not allowed
-		if ( count( edd_get_beta_enabled_extensions() ) < 0 ) {
+		if ( count( edd_get_beta_enabled_extensions() ) <= 0 ) {
 			unset( $tabs['betas'] );
 		}
 	}
