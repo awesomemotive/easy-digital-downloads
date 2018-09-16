@@ -71,26 +71,25 @@ class Top_Selling_Downloads_List_Table extends List_Table {
 			return '&mdash;';
 		}
 
-		$title = $download->object->get_name();
+		// Default to name
+		$retval = $download->object->get_name();
 
-		if ( $download->object->has_variable_prices() ) {
+		// Check for variable pricing
+		if ( ! empty( $download->price_id ) && $download->object->has_variable_prices() ) {
+			$prices = $download->object->get_prices();
 
-			// Get prices with matching index
-			$prices = wp_filter_object_list( $prices, array(
-				'index' => absint( $download->price_id ),
-			) );
-
-			// Only want values
-			$prices = array_values( $prices );
-
-			// Maybe append the value
+			// Product has prices
 			if ( ! empty( $prices ) ) {
-				$prices = $prices[0];
-				$title .= ' &mdash; ' . $prices['name'];
+				$filter = wp_filter_object_list( $prices, array( 'index' => $download->price_id ) );
+
+				if ( ! empty( $filter ) ) {
+					$price   = reset( $filter );
+					$retval .= ' &mdash; ' . esc_html( $price['name'] );
+				}
 			}
 		}
 
-		return $title;
+		return $retval;
 	}
 
 	/**
@@ -106,17 +105,12 @@ class Top_Selling_Downloads_List_Table extends List_Table {
 			return '&mdash;';
 		}
 
-		if ( $download->object->has_variable_prices() ) {
-			$prices = array_values( wp_filter_object_list( $download->object->get_prices(), array( 'index' => absint( $download->price_id ) ) ) );
+		// Check for variable pricing
+		$retval = ! empty( $download->price_id )
+			? edd_price( $download->object->ID, false, $download->price_id )
+			: edd_price( $download->object->ID, false );
 
-			if ( is_array( $prices ) ) {
-				$prices = $prices[0];
-
-				return edd_currency_filter( edd_format_amount( $prices['amount'] ) );
-			}
-		} else {
-			return edd_price( $download->object->ID, false );
-		}
+		return $retval;
 	}
 
 	public function column_sales( $download ) {
