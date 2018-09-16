@@ -201,24 +201,25 @@ class EDD_Sales_Log_Table extends EDD_Base_Log_List_Table {
 			return $data;
 		}
 
-		// Pluck customer IDs from order items
-		$customer_ids = array_values( array_unique( wp_list_pluck( $orders, 'customer_id' ) ) );
-
-		// Maybe prime customers
-		if ( count( $customer_ids ) > 2 ) {
-			edd_get_customers( array(
-				'id__in'        => $customer_ids,
-				'no_found_rows' => true
-			) );
-		}
-
 		// Maybe prime orders
 		if ( empty( $orders ) ) {
 			$order_ids = array_values( array_unique( wp_list_pluck( $order_items, 'order_id' ) ) );
 
 			if ( count( $order_ids ) > 2 ) {
-				edd_get_orders( array(
+				$orders = edd_get_orders( array(
 					'id__in'        => $order_ids,
+					'no_found_rows' => true
+				) );
+			}
+		}
+
+		// Maybe prime customers
+		if ( ! empty( $orders ) ) {
+			$customer_ids = array_values( array_unique( wp_list_pluck( $orders, 'customer_id' ) ) );
+
+			if ( count( $customer_ids ) > 2 ) {
+				edd_get_customers( array(
+					'id__in'        => $customer_ids,
 					'no_found_rows' => true
 				) );
 			}
