@@ -220,6 +220,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 		do_action( 'edd_log_view_actions' );
 		?>
 
+		<input type="hidden" name="customer" value="<?php echo $this->get_filtered_customer(); ?>" />
 		<input type="hidden" name="post_type" value="download" />
 		<input type="hidden" name="page" value="edd-tools" />
 		<input type="hidden" name="tab" value="logs" />
