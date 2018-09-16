@@ -74,9 +74,17 @@ class Top_Selling_Downloads_List_Table extends List_Table {
 		$title = $download->object->post_title;
 
 		if ( $download->object->has_variable_prices() ) {
-			$prices = array_values( wp_filter_object_list( $download->object->get_prices(), array( 'index' => absint( $download->price_id ) ) ) );
 
-			if ( is_array( $prices ) ) {
+			// Get prices with matching index
+			$prices = wp_filter_object_list( $prices, array(
+				'index' => absint( $download->price_id ),
+			) );
+
+			// Only want values
+			$prices = array_values( $prices );
+
+			// Maybe append the value
+			if ( ! empty( $prices ) ) {
 				$prices = $prices[0];
 				$title .= ' &mdash; ' . $prices['name'];
 			}
