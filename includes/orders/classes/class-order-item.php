@@ -241,29 +241,12 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	 */
 	public function get_order_item_name() {
 
-		// Trust the original product name
-		$retval = $this->product_name;
-
-		// Bail if not a price variation
+		// Return product name if not a variable price
 		if ( empty( $this->price_id ) ) {
-			return $retval;
+			return $this->product_name;
 		}
 
-		// To get the price name, we need to get the Download
-		$d = edd_get_download( $this->product_id );
-
-		// Download found, so look for prices
-		if ( ! empty( $d ) ) {
-
-			// Get download prices
-			$prices = $d->get_prices();
-
-			// Append the price name if it exists
-			if ( isset( $prices[ $this->price_id ] ) ) {
-				$retval .= ' &mdash; ' . esc_html( $prices[ $this->price_id ]['name'] );
-			}
-		}
-
-		return $retval;
+		// Get the download name, maybe with the price name appended
+		return edd_get_download_name( $this->product_id, $this->price_id );
 	}
 }

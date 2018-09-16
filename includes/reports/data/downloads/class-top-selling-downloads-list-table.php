@@ -71,20 +71,10 @@ class Top_Selling_Downloads_List_Table extends List_Table {
 			return '&mdash;';
 		}
 
-		// Default to name
-		$retval = $download->object->get_name();
-
 		// Check for variable pricing
-		if ( ! empty( $download->price_id ) ) {
-
-			// Check for price option name
-			$price_name = edd_get_price_option_name( $download->object->ID, $download->price_id );
-
-			// Product has prices
-			if ( ! empty( $price_name ) ) {
-				$retval .= ' &mdash; ' . esc_html( $price_name );
-			}
-		}
+		$retval = ! empty( $download->price_id )
+			? edd_get_download_name( $download->object->ID, $download->price_id )
+			: edd_get_download_name( $download->object->ID );
 
 		return $retval;
 	}
