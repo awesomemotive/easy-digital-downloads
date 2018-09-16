@@ -1072,8 +1072,12 @@ function edd_show_user_api_key_field( $user ) {
 				</th>
 				<td>
 					<?php if ( empty( $user->edd_user_public_key ) ) { ?>
-						<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0" />
-						<span class="description"><?php _e( 'Generate API Key', 'easy-digital-downloads' ); ?></span>
+						<p class="description">
+							<label>
+								<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0"/>
+								<?php _e( 'Generate API Key', 'easy-digital-downloads' ); ?>
+							</label>
+						</p>
 					<?php } else { ?>
 						<div class="edd-api-keys">
 							<strong><?php _e( 'Public Key:', 'easy-digital-downloads' ); ?></strong>
