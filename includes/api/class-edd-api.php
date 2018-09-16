@@ -1966,7 +1966,7 @@ class EDD_API {
 			<table class="form-table">
 				<tbody>
 				<tr>
-					<th><?php _e( 'Easy Digital Downloads API Keys', 'easy-digital-downloads' ); ?></th>
+					<th><?php _e( 'Downloads API Keys', 'easy-digital-downloads' ); ?></th>
 					<td>
 						<?php
 						$public_key = $this->get_user_public_key( $user->ID );
