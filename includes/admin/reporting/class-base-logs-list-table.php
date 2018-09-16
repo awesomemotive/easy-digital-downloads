@@ -332,7 +332,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 
 		// Defaults
 		$retval = array(
-			'download_id' => $this->get_filtered_download(),
+			'product_id'  => $this->get_filtered_download(),
 			'customer_id' => $this->get_filtered_customer(),
 			'payment_id'  => $this->get_filtered_payment(),
 			'meta_query'  => $this->get_meta_query(),
