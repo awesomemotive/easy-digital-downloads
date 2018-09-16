@@ -76,7 +76,7 @@ class Top_Five_Most_Downloaded_List_Table extends List_Table {
 		}
 
 		// Download title
-		$title = $download->object->post_title;
+		$title = $download->object->get_name();
 
 		// Look for variable pricing
 		$prices = $download->object->get_prices();
