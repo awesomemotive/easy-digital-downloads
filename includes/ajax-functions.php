@@ -942,7 +942,7 @@ function edd_ajax_add_order_item() {
 	if ( $d ) {
 		$name = $d->get_name();
 
-		if ( false === $download['price_id'] ) {
+		if ( empty( $download['price_id'] ) ) {
 			$amount = floatval( $d->get_price() );
 		} else {
 			$prices = $d->get_prices();
@@ -950,7 +950,7 @@ function edd_ajax_add_order_item() {
 			if ( isset( $prices[ $download['price_id'] ] ) ) {
 				$price  = $prices[ $download['price_id'] ];
 				$amount = floatval( $price['amount'] );
-				$name  .= ' &mdash; ' . $price['name'];
+				$name  .= ' &mdash; ' . esc_html( $price['name'] );
 			}
 		}
 

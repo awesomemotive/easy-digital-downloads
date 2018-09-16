@@ -138,6 +138,55 @@ function edd_is_free_download( $download_id = 0, $price_id = false ) {
 		? $download->is_free( $price_id )
 		: false;
 }
+
+/**
+ * Return the name of a download.
+ *
+ * Pass a price ID to append the specific price variation name.
+ *
+ * @since 3.0
+ *
+ * @param int $download_id
+ * @param int $price_id
+ *
+ * @return string
+ */
+function edd_get_download_name( $download_id = 0, $price_id = 0 ) {
+
+	// Bail if no download ID was passed.
+	if ( empty( $download_id ) || ! is_numeric( $download_id ) ) {
+		return false;
+	}
+
+	$download = edd_get_download( $download_id );
+
+	// Get the download title
+	$retval = $download->get_name();
+
+	// Check for variable pricing
+	if ( ! empty( $price_id ) && is_numeric( $price_id ) ) {
+
+		// Check for price option name
+		$price_name = edd_get_price_option_name( $download_id, $price_id );
+
+		// Product has prices
+		if ( ! empty( $price_name ) ) {
+			$retval .= ' &mdash; ' . $price_name;
+		}
+	}
+
+	/**
+	 * Override the download name.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $retval   The download name.
+	 * @param int    $id       The download ID.
+	 * @param int    $price_id The price ID, if any.
+	 */
+	return apply_filters( 'edd_get_download_name', $retval, $download_id, $price_id );
+}
+
 /**
  * Returns the price of a download, but only for non-variable priced downloads.
  *

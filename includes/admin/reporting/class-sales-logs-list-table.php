@@ -50,15 +50,11 @@ class EDD_Sales_Log_Table extends EDD_Base_Log_List_Table {
 			case 'download':
 				$download_id = $item[ $column_name ];
 				$download    = edd_get_download( $download_id );
+				$price_id    = ! empty( $item['price_id'] )
+					? absint( $item['price_id'] )
+					: 0;
 
-				$title = $download->post_title;
-				if ( edd_has_variable_prices( $download->ID ) ) {
-					$price_id = $item['price_id'];
-					if ( ! is_null( $price_id ) && ! empty( $download->prices[ $price_id ] ) ) {
-						$title .= ' &mdash; ' . $download->prices[ $price_id ]['name'];
-					}
-				}
-
+				$title  = $download->get_name( $price_id );
 				$return = '<a href="' . add_query_arg( 'download', $item[ $column_name ] ) . '" >' . $title . '</a>';
 				break;
 
