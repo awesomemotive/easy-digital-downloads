@@ -946,9 +946,12 @@ function edd_ajax_add_order_item() {
 			$amount = floatval( $d->get_price() );
 		} else {
 			$prices = $d->get_prices();
-			$price  = $prices[ $download['price_id'] ];
-			$amount = floatval( $price['amount'] );
-			$name  .= ' &mdash; ' . $price['name'];
+
+			if ( isset( $prices[ $download['price_id'] ] ) ) {
+				$price  = $prices[ $download['price_id'] ];
+				$amount = floatval( $price['amount'] );
+				$name  .= ' &mdash; ' . $price['name'];
+			}
 		}
 
 		$quantity = edd_item_quantities_enabled() && isset( $_POST['quantity'] )
