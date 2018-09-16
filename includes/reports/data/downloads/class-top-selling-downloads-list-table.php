@@ -71,7 +71,7 @@ class Top_Selling_Downloads_List_Table extends List_Table {
 			return '&mdash;';
 		}
 
-		$title = $download->object->post_title;
+		$title = $download->object->get_name();
 
 		if ( $download->object->has_variable_prices() ) {
 
