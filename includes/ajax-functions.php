@@ -530,6 +530,11 @@ function edd_ajax_get_states_field() {
 	// Get states for country.
 	$states = edd_get_shop_states( $country );
 
+	// Chosen
+	$chosen = ! isset( $_POST['chosen'] ) || ( 'true' === $_POST['chosen'] )
+		? true
+		: false;
+
 	// Maybe setup the new listbox.
 	if ( ! empty( $states ) ) {
 		$field_name = sanitize_text_field( $_POST['field_name'] );
@@ -538,7 +543,7 @@ function edd_ajax_get_states_field() {
 			'id'               => $field_name,
 			'class'            => $field_name . ' edd-select',
 			'options'          => $states,
-			'chosen'           => true,
+			'chosen'           => $chosen,
 			'placeholder'      => __( 'Select a region', 'easy-digital-downloads' ),
 			'show_option_all'  => false,
 			'show_option_none' => false,

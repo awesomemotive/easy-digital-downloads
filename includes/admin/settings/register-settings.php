@@ -457,6 +457,7 @@ function edd_get_registered_settings() {
 						'type'        => 'select',
 						'options'     => edd_get_country_list(),
 						'chosen'      => true,
+						'field_class' => 'edd_countries_filter',
 						'placeholder' => __( 'Select a country', 'easy-digital-downloads' ),
 						'data'        => array(
 							'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
@@ -467,8 +468,8 @@ function edd_get_registered_settings() {
 						'name'        => __( 'Base Region', 'easy-digital-downloads' ),
 						'desc'        => __( 'What state/province/territory does your store operate from?', 'easy-digital-downloads' ),
 						'type'        => 'shop_states',
-						'class'       => empty( $states ) ? 'hidden' : '',
 						'chosen'      => true,
+						'field_class' => 'edd_regions_filter',
 						'placeholder' => __( 'Select a region', 'easy-digital-downloads' ),
 					),
 				),
@@ -2546,7 +2547,7 @@ function edd_shop_states_callback( $args ) {
 		: '';
 
 	if ( $args['chosen'] ) {
-		$class .= 'edd-select-chosen';
+		$class .= ' edd-select-chosen';
 		if ( is_rtl() ) {
 			$class .= ' chosen-rtl';
 		}
