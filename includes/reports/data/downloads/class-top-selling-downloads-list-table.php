@@ -75,17 +75,14 @@ class Top_Selling_Downloads_List_Table extends List_Table {
 		$retval = $download->object->get_name();
 
 		// Check for variable pricing
-		if ( ! empty( $download->price_id ) && $download->object->has_variable_prices() ) {
-			$prices = $download->object->get_prices();
+		if ( ! empty( $download->price_id ) ) {
+
+			// Check for price option name
+			$price_name = edd_get_price_option_name( $download->object->ID, $download->price_id );
 
 			// Product has prices
-			if ( ! empty( $prices ) ) {
-				$filter = wp_filter_object_list( $prices, array( 'index' => $download->price_id ) );
-
-				if ( ! empty( $filter ) ) {
-					$price   = reset( $filter );
-					$retval .= ' &mdash; ' . esc_html( $price['name'] );
-				}
+			if ( ! empty( $price_name ) ) {
+				$retval .= ' &mdash; ' . esc_html( $price_name );
 			}
 		}
 
