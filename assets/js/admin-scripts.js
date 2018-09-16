@@ -1124,7 +1124,7 @@ jQuery(document).ready(function ($) {
 				}, 'json' );
 			} );
 		},
-		
+
 		add_adjustment : function () {
 			// Toggle form.
 			$( '#edd-order-adjustments' ).on( 'click', 'h3 .edd-metabox-title-action', function(e) {
@@ -1271,7 +1271,7 @@ jQuery(document).ready(function ($) {
 				return false;
 			} );
 		},
-		
+
 		select_address : function() {
 			$( document.body ).on( 'change', '.customer-address-select-wrap .add-order-customer-address-select', function() {
 				var $this = $( this ),
