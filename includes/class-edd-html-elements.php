@@ -813,23 +813,25 @@ class EDD_HTML_Elements {
 	 */
 	public function ajax_user_search( $args = array() ) {
 
-		$defaults = array(
+		// Parse args
+		$args = wp_parse_args( $args, array(
+			'id'           => 'user_id',
 			'name'         => 'user_id',
 			'value'        => null,
-			'placeholder'  => __( 'Enter username', 'easy-digital-downloads' ),
+			'placeholder'  => __( 'Enter Username', 'easy-digital-downloads' ),
 			'label'        => null,
 			'desc'         => null,
-			'class'        => '',
+			'class'        => 'edd-user-dropdown',
 			'disabled'     => false,
 			'autocomplete' => 'off',
 			'data'         => false,
-		);
+		) );
 
-		$args = wp_parse_args( $args, $defaults );
+		// Setup the AJAX class
+		$args['class'] = 'edd-ajax-user-search ' . sanitize_html_class( $args['class'] );
 
-		$args['class'] = 'edd-ajax-user-search ' . $args['class'];
-
-		$output = '<span class="edd_user_search_wrap">';
+		// Concatenate output
+		$output  = '<span class="edd_user_search_wrap">';
 		$output .= $this->text( $args );
 		$output .= '<span class="edd_user_search_results hidden"><span></span></span>';
 		$output .= '<span class="spinner"></span>';
