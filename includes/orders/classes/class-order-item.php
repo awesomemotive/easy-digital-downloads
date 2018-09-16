@@ -233,23 +233,37 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	}
 
 	/**
-	 * Get a product name, including any price ID name appended to the end.
-	 * 
+	 * Get an order item name, including any price ID name appended to the end.
+	 *
 	 * @since 3.0
 	 *
 	 * @return string The product name including any price ID name.
 	 */
-	public function get_full_product_name() {
-		$name = $this->product_name;
-		$d    = edd_get_download( $this->product_id );
+	public function get_order_item_name() {
 
-		if ( $d->has_variable_prices() ) {
+		// Trust the original product name
+		$retval = $this->product_name;
+
+		// Bail if not a price variation
+		if ( empty( $this->price_id ) ) {
+			return $retval;
+		}
+
+		// To get the price name, we need to get the Download
+		$d = edd_get_download( $this->product_id );
+
+		// Download found, so look for prices
+		if ( ! empty( $d ) ) {
+
+			// Get download prices
 			$prices = $d->get_prices();
+
+			// Append the price name if it exists
 			if ( isset( $prices[ $this->price_id ] ) ) {
-				$name .= ' &mdash; ' . $prices[ $this->price_id ]['name'];
+				$retval .= ' &mdash; ' . esc_html( $prices[ $this->price_id ]['name'] );
 			}
 		}
 
-		return $name;
+		return $retval;
 	}
 }
