@@ -233,7 +233,7 @@ function edd_get_cc_form() {
 		<?php if ( is_ssl() ) : ?>
 			<div id="edd_secure_site_wrapper">
 				<?php
-					echo edd_get_svg(
+					echo edd_get_payment_icon(
 						array(
 							'icon'    => 'lock',
 							'width'   => 16,
@@ -689,12 +689,12 @@ function edd_show_payment_icons() {
 
 	echo '<div class="edd-payment-icons">';
 
-	foreach ( $payment_methods as $key => $card ) {
+	foreach ( $payment_methods as $key => $option ) {
 		if ( edd_string_is_image_url( $key ) ) {
 			echo '<img class="payment-icon" src="' . esc_url( $key ) . '"/>';
 		} else {
 			$type = '';
-			$card = strtolower( str_replace( ' ', '', $card ) );
+			$card = strtolower( str_replace( ' ', '', $option ) );
 
 			if ( has_filter( 'edd_accepted_payment_' . $card . '_image' ) ) {
 				$image = apply_filters( 'edd_accepted_payment_' . $card . '_image', '' );
@@ -707,15 +707,15 @@ function edd_show_payment_icons() {
 				$type = 'svg';
 
 				// Get SVG dimensions.
-				$dimensions = edd_svg_dimensions( $key );
+				$dimensions = edd_get_payment_icon_dimensions( $key );
 
 				// Get SVG markup.
-				$image = edd_get_svg(
+				$image = edd_get_payment_icon(
 					array(
 						'icon'    => $key,
 						'width'   => $dimensions['width'],
 						'height'  => $dimensions['height'],
-						'title'   => $card,
+						'title'   => $option,
 						'classes' => array( 'payment-icon' )
 					)
 				);

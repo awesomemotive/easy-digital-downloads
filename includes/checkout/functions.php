@@ -229,14 +229,10 @@ function edd_listen_for_failed_payments() {
 		$payment    = get_post( $payment_id );
 		$status     = edd_get_payment_status( $payment );
 
-		if( $status && 'pending' === strtolower( $status ) ) {
-
+		if ( $status && 'pending' === strtolower( $status ) ) {
 			edd_update_payment_status( $payment_id, 'failed' );
-
 		}
-
 	}
-
 }
 add_action( 'template_redirect', 'edd_listen_for_failed_payments' );
 
@@ -609,27 +605,27 @@ function edd_purchase_form_validate_cc_exp_date( $exp_month, $exp_year ) {
 }
 
 /**
- * Loads SVG icons into the EDD Checkout footer.
+ * Print the payment icons on the checkout page footer.
  *
  * @since 3.0
  */
-function edd_svg_checkout_icons() {
+function edd_print_payment_icons_on_checkout() {
 
 	// Only load icons at EDD Checkout.
 	if ( ! edd_is_checkout() ) {
 		return;
 	}
 
-	// Create array to hold icons.
-	$icons = array();
-
 	// Get payment methods.
-	$payment_methods = edd_get_option( 'accepted_cards', array() );
+	$methods = (array) edd_get_option( 'accepted_cards', array() );
+	$icons   = array_keys( $methods );
 
-	if ( ! empty( $payment_methods ) ) {
-		$icons = array_keys( $payment_methods );
+	// Bail if no icons
+	if ( empty( $icons ) ) {
+		return;
 	}
 
-	return edd_svg_icons( $icons );
+	// Output icons
+	edd_print_payment_icons( $icons );
 }
-add_action( 'wp_footer', 'edd_svg_checkout_icons', 9999 );
+add_action( 'wp_print_footer_scripts', 'edd_print_payment_icons_on_checkout', 9999 );
