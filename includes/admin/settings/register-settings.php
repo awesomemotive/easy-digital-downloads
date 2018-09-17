@@ -2085,7 +2085,7 @@ function edd_gateways_callback( $args ) {
 		);
 
 		$url   = add_query_arg( $url_args, 'https://easydigitaldownloads.com/downloads/category/extensions/gateways/' );
-		$html .= '<p class="description">' . sprintf( __( 'More <a href="%s">Payment Gateways</a> are available.', 'easy-digital-downloads' ), esc_url( $url ) ) . '</p>';
+		$html .= '<p class="description">' . esc_html__( 'These gateways will be offered at checkout.', 'easy-digital-downloads' ) . '<br>' . sprintf( __( 'More <a href="%s">Payment Gateways</a> are available.', 'easy-digital-downloads' ), esc_url( $url ) ) . '</p>';
 	}
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
