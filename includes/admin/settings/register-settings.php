@@ -625,7 +625,7 @@ function edd_get_registered_settings() {
 					),
 					'gateways' => array(
 						'id'      => 'gateways',
-						'name'    => __( 'Payment Gateways', 'easy-digital-downloads' ),
+						'name'    => __( 'Active Gateways', 'easy-digital-downloads' ),
 						'desc'    => __( 'Choose the payment gateways you want to enable.', 'easy-digital-downloads' ),
 						'type'    => 'gateways',
 						'options' => $gateways,
@@ -2070,7 +2070,7 @@ function edd_gateways_callback( $args ) {
 
 			$html .= '<li class="edd-check-wrapper" data-key="' . edd_sanitize_key( $key ) . '">';
 			$html .= '<label>';
-			$html .= '<input name="edd_settings[' . esc_attr( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="' . $class . '" type="checkbox" value="1" ' . checked( '1', $enabled, false ) . '/>&nbsp;';
+			$html .= '<input name="edd_settings[' . esc_attr( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="' . $class . '" type="checkbox" value="1" data-gateway-key="' . edd_sanitize_key( $key ) . '" ' . checked( '1', $enabled, false ) . '/>&nbsp;';
 			$html .= esc_html( $option['admin_label'] );
 			$html .= '</label>';
 			$html .= '</li>';

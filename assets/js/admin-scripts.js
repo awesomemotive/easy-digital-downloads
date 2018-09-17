@@ -1667,6 +1667,7 @@ jQuery(document).ready(function ($) {
 			this.general();
 			this.emails();
 			this.misc();
+			this.gateways();
 			this.location();
 		},
 
@@ -1806,6 +1807,27 @@ jQuery(document).ready(function ($) {
 					symlink.css( 'opacity', '1' );
 				}
 			});
+		},
+
+		gateways : function() {
+			$( '#edd-payment-gateways input[type="checkbox"]' ).on( 'change', function() {
+				var gateway         = $( this ),
+					gateway_key     = gateway.data( 'gateway-key' ),
+					default_gateway = $( '#edd_settings\\[default_gateway\\]' );
+					option          = default_gateway.find( 'option[value="' + gateway_key + '"]' );
+
+				// Toggle enable/disable based
+				option.prop('disabled', function(i, v) {
+					return !v;
+				} );
+
+				// Maybe deselect
+				if ( option.prop( 'selected' ) ) {
+					option.prop( 'selected', false );
+				}
+
+				default_gateway.trigger( 'chosen:updated' );
+			} );
 		},
 
 		location : function() {
