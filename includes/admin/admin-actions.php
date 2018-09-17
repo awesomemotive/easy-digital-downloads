@@ -249,13 +249,13 @@ function edd_admin_removable_query_args() {
 }
 
 /**
- * Loads SVG icons into the admin footer.
+ * Output payment icons into the admin footer.
  *
  * Specifically on the "General" tab of the "Payment Gateways" admin page.
  *
  * @since 3.0
  */
-function edd_svg_admin_icons() {
+function edd_admin_print_payment_icons() {
 
 	// Bail if not the gateways page
 	if ( ! edd_is_admin_page( 'settings', 'gateways' ) ) {
@@ -263,7 +263,7 @@ function edd_svg_admin_icons() {
 	}
 
 	// Output the SVG icons
-	edd_svg_icons( array(
+	edd_print_payment_icons( array(
 		'mastercard',
 		'visa',
 		'americanexpress',
@@ -272,4 +272,4 @@ function edd_svg_admin_icons() {
 		'amazon'
 	) );
 }
-add_action( 'admin_footer', 'edd_svg_admin_icons', 9999 );
+add_action( 'admin_footer', 'edd_admin_print_payment_icons', 9999 );

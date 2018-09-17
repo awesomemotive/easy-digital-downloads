@@ -1529,13 +1529,16 @@ function edd_format_counts( $counts = array(), $groupby = '' ) {
 }
 
 /**
- * SVG dimensions
+ * Get all payment icon dimensions.
+ *
+ * This is used because as of EDD 3.0, payment icons are SVGs with specific
+ * (and sometimes different) widths and heights.
  *
  * @since 3.0
  *
  * @return array $sizes Sizes array (width and height) of the icon requested.
  */
-function edd_svg_dimensions( $icon = '' ) {
+function edd_get_payment_icon_dimensions( $icon = '' ) {
 
 	// Bail if icon is empty
 	if ( empty( $icon ) ) {
@@ -1543,7 +1546,7 @@ function edd_svg_dimensions( $icon = '' ) {
 	}
 
 	// Filter the SVG dimensions
-	$sizes = apply_filters( 'edd_svg_dimensions', array(
+	$sizes = apply_filters( 'edd_get_payment_icon_dimensions', array(
 		'mastercard' => array(
 			'width'  => 50,
 			'height' => 32
@@ -1576,26 +1579,26 @@ function edd_svg_dimensions( $icon = '' ) {
 }
 
 /**
- * Return SVG markup.
+ * Return a payment icon
  *
  * @since 3.0
  *
  * @return string SVG markup.
  */
-function edd_get_svg( $args = array() ) {
+function edd_get_payment_icon( $args = array() ) {
 
-	// Make sure $args are an array.
+	// Bail if no arguments
 	if ( empty( $args ) ) {
 		return __( 'Please define default parameters in the form of an array.', 'easy-digital-downloads' );
 	}
 
-	// Define an icon.
+	// Bail if no icon
 	if ( false === array_key_exists( 'icon', $args ) ) {
 		return __( 'Please define an SVG icon filename.', 'easy-digital-downloads' );
 	}
 
-	// Set defaults.
-	$defaults = array(
+	// Parse args.
+	$args = wp_parse_args( $args, array(
 		'icon'     => '',
 		'title'    => '',
 		'desc'     => '',
@@ -1603,10 +1606,7 @@ function edd_get_svg( $args = array() ) {
 		'width'    => '',
 		'height'   => '',
 		'classes'  => array()
-	);
-
-	// Parse args.
-	$args = wp_parse_args( $args, $defaults );
+	) );
 
 	$args['classes'][] = 'icon-' . esc_attr( $args['icon'] );
 
@@ -1616,9 +1616,11 @@ function edd_get_svg( $args = array() ) {
 	// Set ARIA.
 	$aria_labelledby = '';
 
+	// Setup the unique ID
+	$unique_id = uniqid();
+
 	if ( $args['title'] ) {
 		$aria_hidden     = '';
-		$unique_id       = uniqid();
 		$aria_labelledby = ' aria-labelledby="title-' . $unique_id . '"';
 
 		if ( $args['desc'] ) {
@@ -1646,7 +1648,8 @@ function edd_get_svg( $args = array() ) {
 	/*
 	 * Display the icon.
 	 *
-	 * The whitespace around `<use>` is intentional - it is a work around to a keyboard navigation bug in Safari 10.
+	 * The whitespace around `<use>` is intentional - it is a workaround to a
+	 * keyboard navigation bug in Safari 10.
 	 *
 	 * See https://core.trac.wordpress.org/ticket/38387.
 	 */
@@ -1659,15 +1662,16 @@ function edd_get_svg( $args = array() ) {
 
 	$svg .= '</svg>';
 
+	// Return the SVG
 	return $svg;
 }
 
 /**
- * EDD SVG icons.
+ * Output payment gateway icons.
  *
  * @since 3.0
  */
-function edd_svg_icons( $icons = array() ) {
+function edd_print_payment_icons( $icons = array() ) {
 
 	// Bail if no icons being requested
 	if ( empty( $icons ) ) {

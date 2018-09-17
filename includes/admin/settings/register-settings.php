@@ -1934,10 +1934,10 @@ function edd_payment_icons_callback( $args = array() ) {
 						$type = 'svg';
 
 						// Get SVG dimensions.
-						$dimensions = edd_svg_dimensions( $key );
+						$dimensions = edd_get_payment_icon_dimensions( $key );
 
 						// Get SVG markup.
-						$image = edd_get_svg( array(
+						$image = edd_get_payment_icon( array(
 							'icon'    => $key,
 							'width'   => $dimensions['width'],
 							'height'  => $dimensions['height'],
