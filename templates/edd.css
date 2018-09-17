@@ -14,14 +14,7 @@
 	display: inline-block;
 	fill: currentColor;
 	position: relative; /* Align more nicely with capital letters */
-	top: -0.0625em;
 	vertical-align: middle;
-	width: 1em;
-	height: 1em;
-}
-
-.edd-icon-lock {
-	top: -0.125rem;
 }
 
 .edd-icon-spin {
@@ -233,21 +226,15 @@
 	display: inline;
 }
 #edd_checkout_form_wrap .edd-payment-icons {
-	height: 32px;
-	display: block;
+	display: -ms-flexbox;
+	display: flex;
 	margin: 0 0 8px;
 }
 #edd_checkout_form_wrap .edd-payment-icons img.payment-icon {
 	max-height: 32px;
-	width: auto;
-	margin: 0 3px 0 0;
-	float: left;
-	background: none;
-	padding: 0;
-	border: none;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
-	box-shadow: none;
+}
+#edd_checkout_form_wrap .edd-payment-icons .payment-icon {
+	margin: 0 10px 0 0;
 }
 #edd_checkout_form_wrap #edd-payment-mode-wrap label {
 	display: inline-block;
@@ -350,6 +337,9 @@
 	padding: 4px 4px 4px 0;
 	font-weight: bold;
 }
+#edd_secure_site_wrapper span { 
+	vertical-align: middle;
+}
 #edd_checkout_form_wrap input.edd-input.card-number.valid {
 	background-image: url(images/tick.png);
 	background-repeat: no-repeat;
@@ -360,26 +350,11 @@
 }
 #edd_checkout_form_wrap span.card-type {
 	position: absolute;
-	top: -2px;
+	top: 0;
 	right: 0;
-	width: 43px;
-	height: 32px;
-	background-size: 43px 32px!important;
 }
 #edd_checkout_form_wrap span.card-type.off {
 	display: none;
-}
-#edd_checkout_form_wrap span.card-type.visa {
-	background: url(images/icons/visa.png ) no-repeat;
-}
-#edd_checkout_form_wrap span.card-type.mastercard {
-	background: url(images/icons/mastercard.png ) no-repeat;
-}
-#edd_checkout_form_wrap span.card-type.discover {
-	background: url(images/icons/discover.png ) no-repeat;
-}
-#edd_checkout_form_wrap span.card-type.amex {
-	background: url(images/icons/americanexpress.png ) no-repeat;
 }
 #edd_checkout_form_wrap .edd-cart-ajax {
 	-webkit-box-shadow: none;
@@ -1012,9 +987,6 @@ input.edd_submit_plain {
 }
 .edd_download .edd_price {
 	margin-bottom: 10px;
-}
-#edd_download_pagination {
-	clear: both;
 }
 
 /* =Misc styles

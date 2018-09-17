@@ -82,10 +82,14 @@ function edd_get_tax_rates( $args = array(), $output = ARRAY_N ) {
 
 			if ( isset( $tax_rate->description ) && ! empty( $tax_rate->description ) ) {
 				$rate['state'] = esc_attr( $tax_rate->description );
+			} else {
+				$rate['state'] = '';
 			}
 
 			if ( 'country' === $tax_rate->scope ) {
 				$rate['global'] = '1';
+			} else {
+				$rate['global'] = '0';
 			}
 
 			$rates[] = $rate;

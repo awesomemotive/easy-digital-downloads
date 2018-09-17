@@ -600,13 +600,23 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/notes/meta.php';
 
 		// Orders
-		require_once EDD_PLUGIN_DIR . 'includes/orders/class-order.php';
-		require_once EDD_PLUGIN_DIR . 'includes/orders/class-order-address.php';
-		require_once EDD_PLUGIN_DIR . 'includes/orders/class-order-adjustment.php';
-		require_once EDD_PLUGIN_DIR . 'includes/orders/class-order-item.php';
-		require_once EDD_PLUGIN_DIR . 'includes/orders/class-order-transaction.php';
-		require_once EDD_PLUGIN_DIR . 'includes/orders/functions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/orders/meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order-address.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order-adjustment.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order-item.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order-transaction.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/types.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/orders.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/actions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/items.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/credits.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/refunds.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/discounts.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/addresses.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/adjustments.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/transactions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/ui.php';
 
 		// Payments
 		require_once EDD_PLUGIN_DIR . 'includes/payments/functions.php';
@@ -716,7 +726,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-pie-graph.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/contextual-help.php';
-		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/class-tax-rates-list-table.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/display-settings.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/tools.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/plugins.php';

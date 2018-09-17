@@ -205,6 +205,7 @@ a.edd-delete:hover {
 }
 
 .edd-ui-tooltip {
+	position: absolute;
 	background: #333 !important;
 	border-width: 1px !important;
 	border-radius: 3px !important;
@@ -216,6 +217,34 @@ a.edd-delete:hover {
 	text-shadow: none !important;
 	z-index: 9999 !important;
 }
+
+/* =Payment Icon Styling
+-------------------------------------------------------------- */
+
+.download_page_edd-settings .edd-settings-payment-icon-wrapper {
+	margin-top: 5px;
+}
+
+.download_page_edd-settings .edd-settings-payment-icon-wrapper input {
+	margin-top: 1px;
+}
+
+.download_page_edd-settings .form-table .edd-settings-payment-icon-wrapper input[type="checkbox"] + label {
+	margin: 0;
+	display: inline-block;
+}
+
+.download_page_edd-settings .edd-settings-payment-icon-wrapper .payment-icon-image {
+	margin-left: 5px;
+	width: 32px;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.download_page_edd-settings .edd-settings-payment-icon-wrapper .payment-option-name {
+	vertical-align: middle;
+}
+
 
 /* =Tax Settings Style
 -------------------------------------------------------------- */
@@ -233,6 +262,7 @@ a.edd-delete:hover {
 .download_page_edd-settings .taxrates .regular-text {
 	width: 100%;
 }
+
 
 /* =Add Ons Styles
 -------------------------------------------------------------- */
@@ -364,8 +394,15 @@ a.edd-delete:hover {
 	border-top: 1px solid #ddd;
 }
 
+/* Media Buttons Styles
+-------------------------------------------------------------- */
+
 .wp-media-buttons .button.edd-thickbox {
 	padding-right: 0;
+}
+
+.wp-media-buttons .button.edd-email-tags-inserter .dashicons {
+	margin-top: -2px;
 }
 
 /* Add/View Order Styles
@@ -627,6 +664,12 @@ textarea[name="edd-note"] {
 .wp-list-table.emails .column-customer,
 .wp-list-table.customers .column-email {
 	width: 20%;
+}
+
+.wp-list-table.apikeys .column-key,
+.wp-list-table.apikeys .column-token,
+.wp-list-table.apikeys .column-secret {
+	width: 25%;
 }
 
 .wp-list-table.orderadjustments .column-desc {
@@ -918,22 +961,54 @@ marquee {
 #postbox-container-1 .edd_files_url_label {
 	width: 80px;
 }
-.edd-add-repeatable-row {
-	margin: 10px 0;
+#edd_product_prices .inside,
+#edd_product_files .inside {
+	margin-bottom: 0;
 }
-.edd-add-repeatable-row .submit {
-	padding: 0 !important;
+.edd_repeatable_row.ui-sortable-placeholder {
+	line-height: 0;
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+	border: 1px dashed #ddd;
+	visibility: visible !important;
+}
+
+.edd-add-repeatable-row {
+	border-top: 1px solid #ddd;
+	background: #fafafa;
+	padding: 12px;
+	margin: 15px -12px -12px -12px;
+	text-align: left;
+}
+.edd_repeatable_row input[type="text"].large-text {
+	width: 100%;
+}
+.edd_repeatable_row input[type="text"] {
+	height: 28px;
+}
+
+.edd-add-repeatable-row button {
+	text-align: right;
 }
 .edd_variable_prices_wrapper:not(:first-child),
 .edd_repeatable_upload_wrapper:not(:first-child) {
 	margin-top: 12px;
 }
+
+.edd_repeatable_row.ui-sortable-helper .edd-repeatable-row-actions .edd-remove-row,
+.edd_repeatable_row:only-child .edd-repeatable-row-actions .edd-remove-row {
+	display: none;
+}
+
 .edd-repeatable-row-actions {
 	color: #777;
 	font-size: 12px;
 }
 .edd-repeatable-row-actions a {
 	text-decoration: none;
+	font-size: 11px;
+	line-height: 11px;
 	width: auto;
 	cursor: pointer;
 	vertical-align: middle;
@@ -952,6 +1027,10 @@ marquee {
 }
 .edd-repeatable-row-header {
 	cursor: move;
+}
+.edd_repeatable_row:hover .edd-repeatable-row-header,
+.edd_repeatable_row:hover .edd-repeatable-row-standard-fields {
+	border-color: #ccc;
 }
 .edd-repeatable-row-header:before,
 .edd-repeatable-row-header:after,
@@ -1027,7 +1106,7 @@ marquee {
 	vertical-align: top;
 }
 .edd-option-name {
-	width: 38%;
+	width: 45%;
 	margin-left: 5%;
 }
 .edd-option-price {
@@ -1038,21 +1117,19 @@ marquee {
 	min-width: 80px;
 }
 .edd-file-name {
-	width: 18%;
+	width: 25%;
 	margin-left: 3%;
 }
 .edd-file-url {
-	width: 65%;
+	position: relative;
+	width: 69%;
 }
 .edd-repeatable-row-standard-fields.has-variable-pricing .edd-file-url {
-	width: 38%;
-	margin-left: 5%;
+	width: 45%;
+	margin-left: 3%;
 }
 .edd-file-assignment {
-	width: 27%;
-}
-.edd-file-assignment .edd-repeatable-row-setting-label {
-	margin-bottom: 0;
+	width: 20%;
 }
 .edd-custom-price-option-sections-wrap {
 	display: none;
@@ -1119,17 +1196,32 @@ label.edd_prices_shipping { /* remove once Simple Shipping markup is improved */
 }
 .edd_repeatable_upload_wrapper .edd_repeatable_upload_field_container {
 	position: relative;
+	width: 100%;
 }
-.edd_upload_file {
-	background: #fff;
+.edd_repeatable_upload_wrapper .edd_repeatable_upload_field_container + span:first-child {
+	width: 100%;
+}
+.edd_repeatable_upload_field {
+	padding-left: 32px;
+}
+.edd_upload_file a span {
+	height: 26px;
+	width: 26px;
+	line-height: 26px;
+	vertical-align: middle;
+	text-align: center;
+}
+.edd_upload_file a {
+	background: #f9f9f9;
+	border-right: 1px solid #e5e5e5;
 	display: block;
-	padding: 2px 8px 2px;
+	padding: 0;
 	position: absolute;
-	top: 3px;
-	left: 7px;
-}
-.edd_upload_field {
-	padding-left: 8em;
+	height: 26px;
+	width: 26px;
+	overflow: hidden;
+	top: 2px;
+	left: 0;
 }
 textarea#edd-payment-note {
 	width: 100%;
@@ -1943,10 +2035,6 @@ body.download_page_edd-reports {
 	height: 110px;
 }
 
-#edd-reports-tiles-wrap #dashboard-widgets .postbox-container .empty-container .sortable-placeholder {
-
-}
-
 #edd-reports-tiles-wrap #dashboard-widgets #primary-sortables {
 	margin-right: 0;
 }
@@ -2124,51 +2212,6 @@ body.download_page_edd-reports {
 /* Settings page styles
 -------------------------------------------------------------- */
 
-#edd_tax_rates {
-	margin: 1em 0 0;
-}
-#edd_tax_rates .edd_tax_country *,
-#edd_tax_rates .edd_tax_state * {
-	max-width: 100%;
-}
-#edd_tax_rates .edd_tax_country,
-#edd_tax_rates .edd_tax_state,
-#edd_tax_rates .edd_tax_global {
-	width: 20%;
-}
-#edd_tax_rates .edd_tax_actions,
-#edd_tax_rates .edd_tax_rate {
-	width: 8%;
-}
-#edd_tax_rates th {
-	padding: 8px;
-}
-#edd_tax_rates td {
-	vertical-align: top;
-	padding: 10px;
-}
-.edd-tax-whole-country {
-	display: inline-block;
-	margin: 8px 5px 3px 0;
-}
-.edd-tax-whole-country input {
-	margin-top: 1px;
-}
-
-@media screen and ( max-width: 782px ) {
-	#edd_tax_rates thead {
-		display: none;
-	}
-	#edd_tax_rates td {
-		padding: 8px 8px 8px 8px;
-	}
-	#edd_tax_rates td:before {
-		font-weight: 600;
-	}
-	#edd_tax_rates tbody tr:not(:first-child) .edd_tax_country {
-		border-top: 1px solid #e5e5e5;
-	}
-}
 .wrap-licenses .form-table,
 .wrap-licenses thead,
 .wrap-licenses tbody,
@@ -2269,8 +2312,14 @@ body.download_page_edd-reports {
 /* API Table Styles
 -------------------------------------------------------------- */
 
-.download_page_edd-tools .apikeys .column-user {
-	width: 192px;
+.wp-list-table.apikeys input.code {
+	width: 100%;
+	font-size: 10px;
+	cursor: text;
+	background: #fff;
+	border: 1px solid #ddd;
+	box-shadow: none;
+	color: #555;
 }
 
 
@@ -2411,7 +2460,7 @@ body.js select.edd-select-chosen {
 	position: relative;
 	overflow-x: hidden;
 	overflow-y: auto;
-	margin: 0 0 4px 4px !important;
+	margin: 0 0 4px 4px;
 	padding: 0 4px 0 0;
 	max-height: 240px;
 }
@@ -2544,6 +2593,73 @@ only screen and ( min-resolution: 1.5dppx ) {
 	max-width: 50px;
 }
 
+/* Toggle Styles
+-------------------------------------------------------------- */
+
+.edd-toggle {
+	position: relative;
+	display: inline-block;
+	overflow: visible;
+}
+
+.edd-toggle input[type="checkbox"] {
+	display: inline-block;
+	vertical-align: middle;
+	position: relative;
+	margin: 0;
+	padding: 0;
+	width: 42px;
+	height: 24px;
+	background-color: #ccc;
+	-webkit-transition: .4s;
+	transition: .4s;
+	border-radius: 34px;
+	box-shadow: none;
+	border: none;
+}
+
+.edd-toggle .label {
+	display: inline-block;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+.edd-toggle input[type="checkbox"]:before {
+	position: absolute;
+	content: "";
+	height: 18px;
+	width: 18px;
+	right: 3px;
+	bottom: 3px;
+	background-color: white;
+	-webkit-transition: .4s;
+	transition: .4s;
+	border-radius: 50%;
+}
+
+.edd-toggle input[type="checkbox"]:checked {
+	background-color: #00a0d2;
+}
+
+.edd-toggle input[type="checkbox"]:active,
+.edd-toggle input[type="checkbox"]:focus {
+	outline: auto 3px -webkit-focus-ring-color;
+}
+
+.edd-toggle input[type="checkbox"]:checked:before {
+	-webkit-transform: translateX(-22px);
+	-ms-transform: translateX(-22px);
+	transform: translateX(-22px);
+}
+
+.edd-toggle input + .label,
+.edd-toggle .label + input {
+	margin-right: 5px;
+}
+
+/* List Table Styles
+-------------------------------------------------------------- */
+
 .download_page_edd-tools .tablenav .actions {
 	overflow: visible;
 }
@@ -2553,16 +2669,19 @@ only screen and ( min-resolution: 1.5dppx ) {
 }
 .edd_user_search_wrap .spinner {
 	position: absolute;
-	left: -9px;
-	top: -6px;
+	margin: 0;
+	padding: 0;
+	left: 4px;
+	top: -2px;
 }
 .edd_user_search_wrap.loading .spinner {
 	visibility: visible;
 }
+
 .edd_user_search_results {
 	position: absolute;
 	right: 0;
-	top: 27px;
+	top: 20px;
 }
 .edd_user_search_results a.edd-ajax-user-cancel {
 	position: absolute;
@@ -2576,7 +2695,7 @@ only screen and ( min-resolution: 1.5dppx ) {
 	padding: 0;
 	margin: 0;
 	height: 150px;
-	width: 300px;
+	width: 185px;
 	box-shadow: 0 3px 5px rgba(0,0,0,0.1);
 }
 .edd_user_search_results li {
@@ -2619,9 +2738,6 @@ only screen and ( min-resolution: 1.5dppx ) {
 	.post-type-download .nav-tab-wrapper a {
 		font-size: 70%;
 		padding: 2px 4px;
-	}
-	.download_page_edd-tools .apikeys .column-user {
-		width: 80px;
 	}
 	.license-lifetime-notice,
 	.license-expiration-date-notice,

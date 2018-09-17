@@ -71,18 +71,12 @@ class Top_Selling_Downloads_List_Table extends List_Table {
 			return '&mdash;';
 		}
 
-		$title = $download->object->post_title;
+		// Check for variable pricing
+		$retval = ! empty( $download->price_id )
+			? edd_get_download_name( $download->object->ID, $download->price_id )
+			: edd_get_download_name( $download->object->ID );
 
-		if ( $download->object->has_variable_prices() ) {
-			$prices = array_values( wp_filter_object_list( $download->object->get_prices(), array( 'index' => absint( $download->price_id ) ) ) );
-
-			if ( is_array( $prices ) ) {
-				$prices = $prices[0];
-				$title .= ' &mdash; ' . $prices['name'];
-			}
-		}
-
-		return $title;
+		return $retval;
 	}
 
 	/**
@@ -98,17 +92,12 @@ class Top_Selling_Downloads_List_Table extends List_Table {
 			return '&mdash;';
 		}
 
-		if ( $download->object->has_variable_prices() ) {
-			$prices = array_values( wp_filter_object_list( $download->object->get_prices(), array( 'index' => absint( $download->price_id ) ) ) );
+		// Check for variable pricing
+		$retval = ! empty( $download->price_id )
+			? edd_price( $download->object->ID, false, $download->price_id )
+			: edd_price( $download->object->ID, false );
 
-			if ( is_array( $prices ) ) {
-				$prices = $prices[0];
-
-				return edd_currency_filter( edd_format_amount( $prices['amount'] ) );
-			}
-		} else {
-			return edd_price( $download->object->ID, false );
-		}
+		return $retval;
 	}
 
 	public function column_sales( $download ) {

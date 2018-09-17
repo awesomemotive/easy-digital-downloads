@@ -63,7 +63,7 @@ function edd_email_tags_inserter_media_button() {
 }
 
 /**
- * Adds an 'Insert Email Tag' button above the TinyMCE Editor on email-related
+ * Adds an 'Insert Marker' button above the TinyMCE Editor on email-related
  * `wp_editor()` instances.
  *
  * @since 3.0
@@ -72,7 +72,7 @@ function edd_email_tags_inserter_media_button_output() {
 	?>
 	<a href="#TB_inline?width=640&inlineId=edd-insert-email-tag" class="edd-email-tags-inserter thickbox button edd-thickbox" style="padding-left: 0.4em;">
 		<span class="wp-media-buttons-icon dashicons dashicons-editor-code"></span>
-		<?php esc_html_e( 'Insert Email Tag', 'easy-digital-downloads' ); ?>
+		<?php esc_html_e( 'Insert Marker', 'easy-digital-downloads' ); ?>
 	</a>
 	<?php
 }
@@ -84,8 +84,8 @@ function edd_email_tags_inserter_media_button_output() {
  */
 function edd_email_tags_inserter_enqueue_scripts() {
 
-	wp_enqueue_style( 'edd-tags-media-button' );
-	wp_enqueue_script( 'edd-tags-media-button') ;
+	wp_enqueue_style( 'edd-admin-email-tags' );
+	wp_enqueue_script( 'edd-admin-email-tags' ) ;
 
 	// Send information about tags to script.
 	$items = array();
@@ -103,7 +103,7 @@ function edd_email_tags_inserter_enqueue_scripts() {
 	}
 
 	wp_localize_script(
-		'edd-tags-media-button',
+		'edd-admin-email-tags',
 		'eddEmailTagsInserter',
 		array(
 			'items' => $items,
@@ -128,7 +128,7 @@ function edd_email_tags_inserter_thickbox_content() {
 			<?php foreach ( $tags as $tag ) : ?>
 			<li id="<?php echo esc_attr( $tag['tag'] ); ?>" data-tag="<?php echo esc_attr( $tag['tag'] ); ?>" class="edd-email-tags-list-item">
 				<button class="edd-email-tags-list-button" data-to_insert="{<?php echo esc_attr( $tag['tag'] ); ?>}">
-					<strong><?php echo esc_html( $tag['label'] ?: '{' . $tag['tag'] . '}' ); ?></strong>
+					<strong><?php echo esc_html( $tag['label'] ); ?></strong><code><?php echo '{' . esc_html( $tag['tag'] ) . '}'; ?></code>
 					<span><?php echo esc_html( $tag['description'] ); ?></span>
 				</button>
 			</li>

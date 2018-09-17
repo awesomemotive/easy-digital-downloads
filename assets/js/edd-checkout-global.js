@@ -93,6 +93,23 @@ window.EDD_Checkout = (function($) {
 
 	}
 
+	function svg(type) {
+		var width;
+
+		switch(type) {
+			case 'amex':
+				type = 'americanexpress';
+				width = '32';
+				break;
+		
+			default:
+				width = '50';
+				break;
+		}
+
+		return '<svg width="' + width + '" height="32" class="payment-icon icon-' + type + '" role="img"><use href="#icon-' + type + '" xlink:href="#icon-' + type + '"></use></svg>';
+	}
+
 	function edd_validate_card(field) {
 		var card_field = field;
 		card_field.validateCreditCard(function(result) {
@@ -104,7 +121,7 @@ window.EDD_Checkout = (function($) {
 				card_field.addClass('error');
 			} else {
 				$card_type.removeClass('off');
-				$card_type.addClass( result.card_type.name );
+				$card_type.html( svg( result.card_type.name ) );
 				if (result.length_valid && result.luhn_valid) {
 					card_field.addClass('valid');
 					card_field.removeClass('error');
@@ -312,7 +329,17 @@ window.EDD_Checkout = (function($) {
 				});
 
 				$('.edd_cart_amount').each(function() {
-					$(this).text(response.total);
+					var total = response.total;
+					var subtotal = response.subtotal;
+
+					$(this).text(total);
+
+					var float_total = parseFloat(total.replace(/[^0-9\.-]+/g,""));
+					var float_subtotal = parseFloat(subtotal.replace(/[^0-9\.-]+/g,""));
+
+					$(this).data('total', float_total);
+					$(this).data('subtotal', float_subtotal);
+
 					$body.trigger('edd_quantity_updated', [ response ]);
 				});
 			}

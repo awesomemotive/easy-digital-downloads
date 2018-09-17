@@ -135,6 +135,7 @@ class Tax_Collected_By_Location extends List_Table {
 			$results = wp_parse_args( $results, array(
 				'subtotal' => 0.00,
 				'total'    => 0.00,
+				'tax'      => 0.00
 			) );
 
 			$data[] = array(

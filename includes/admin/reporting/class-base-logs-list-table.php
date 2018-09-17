@@ -220,6 +220,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 		do_action( 'edd_log_view_actions' );
 		?>
 
+		<input type="hidden" name="customer" value="<?php echo $this->get_filtered_customer(); ?>" />
 		<input type="hidden" name="post_type" value="download" />
 		<input type="hidden" name="page" value="edd-tools" />
 		<input type="hidden" name="tab" value="logs" />
@@ -332,7 +333,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 
 		// Defaults
 		$retval = array(
-			'download_id' => $this->get_filtered_download(),
+			'product_id'  => $this->get_filtered_download(),
 			'customer_id' => $this->get_filtered_customer(),
 			'payment_id'  => $this->get_filtered_payment(),
 			'meta_query'  => $this->get_meta_query(),
@@ -412,9 +413,12 @@ class EDD_Base_Log_List_Table extends List_Table {
 		$start_date = $this->get_filtered_start_date();
 		$end_date   = $this->get_filtered_end_date();
 		$download   = $this->get_filtered_download();
+		$customer   = $this->get_filtered_customer();
+		$view       = $this->get_filtered_view();
 		$clear_url  = edd_get_admin_url( array(
 			'page' => 'edd-tools',
-			'tab'  => 'logs'
+			'tab'  => 'logs',
+			'view' => $view
 		) ); ?>
 
 		<span id="edd-type-filter">
@@ -444,12 +448,20 @@ class EDD_Base_Log_List_Table extends List_Table {
 			<?php $this->downloads_filter(); ?>
 		</span>
 
+		<?php if ( ! empty( $customer ) ) : ?>
+
+			<span id="edd-customer-filter">
+				<?php printf( esc_html__( 'Customer ID: %d', 'easy-digital-downloads' ), $customer ); ?>
+			</span>
+
+		<?php endif; ?>
+
 		<span id="edd-after-core-filters">
 			<?php do_action( 'edd_payment_advanced_filters_after_fields' ); ?>
 
 			<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'easy-digital-downloads' ); ?>"/>
 
-			<?php if ( ! empty( $start_date ) || ! empty( $end_date ) || ! empty( $download ) ) : ?>
+			<?php if ( ! empty( $start_date ) || ! empty( $end_date ) || ! empty( $download ) || ! empty( $customer ) ) : ?>
 				<a href="<?php echo esc_url( $clear_url ); ?>" class="button-secondary">
 					<?php esc_html_e( 'Clear', 'easy-digital-downloads' ); ?>
 				</a>

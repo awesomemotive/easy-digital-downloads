@@ -232,11 +232,17 @@ function edd_get_cc_form() {
 		<legend><?php _e( 'Credit Card Info', 'easy-digital-downloads' ); ?></legend>
 		<?php if ( is_ssl() ) : ?>
 			<div id="edd_secure_site_wrapper">
-				<span class="padlock">
-					<svg class="edd-icon edd-icon-lock" xmlns="http://www.w3.org/2000/svg" width="18" height="28" viewBox="0 0 18 28" aria-hidden="true">
-						<path d="M5 12h8V9c0-2.203-1.797-4-4-4S5 6.797 5 9v3zm13 1.5v9c0 .828-.672 1.5-1.5 1.5h-15C.672 24 0 23.328 0 22.5v-9c0-.828.672-1.5 1.5-1.5H2V9c0-3.844 3.156-7 7-7s7 3.156 7 7v3h.5c.828 0 1.5.672 1.5 1.5z"/>
-					</svg>
-				</span>
+				<?php
+					echo edd_get_payment_icon(
+						array(
+							'icon'    => 'lock',
+							'width'   => 16,
+							'height'  => 16,
+							'title'   => __( 'Secure SSL encrypted payment', 'easy-digital-downloads' ),
+							'classes' => array( 'edd-icon', 'edd-icon-lock' )
+						)
+					);
+				?>
 				<span><?php _e( 'This is a secure SSL encrypted payment.', 'easy-digital-downloads' ); ?></span>
 			</div>
 		<?php endif; ?>
@@ -558,7 +564,7 @@ function edd_get_login_fields() {
 			<?php do_action( 'edd_checkout_login_fields_before' ); ?>
 
 			<p id="edd-user-login-wrap">
-				<label class="edd-label" for="edd-username">
+				<label class="edd-label" for="edd_user_login">
 					<?php _e( 'Username or Email', 'easy-digital-downloads' ); ?>
 					<?php if ( edd_no_guest_checkout() ) : ?>
 					<span class="edd-required-indicator">*</span>
@@ -567,7 +573,7 @@ function edd_get_login_fields() {
 				<input class="<?php if(edd_no_guest_checkout()) { echo sanitize_html_class( 'required ' ); } ?>edd-input" type="text" name="edd_user_login" id="edd_user_login" value="" placeholder="<?php _e( 'Your username or email address', 'easy-digital-downloads' ); ?>"/>
 			</p>
 			<p id="edd-user-pass-wrap" class="edd_login_password">
-				<label class="edd-label" for="edd-password">
+				<label class="edd-label" for="edd_user_pass">
 					<?php _e( 'Password', 'easy-digital-downloads' ); ?>
 					<?php if ( edd_no_guest_checkout() ) : ?>
 					<span class="edd-required-indicator">*</span>
@@ -660,6 +666,7 @@ add_action( 'edd_payment_mode_select', 'edd_payment_mode_select' );
  * @return void
 */
 function edd_show_payment_icons() {
+
 	if ( edd_show_gateways() && did_action( 'edd_payment_mode_top' ) ) {
 		return;
 	}
@@ -682,11 +689,12 @@ function edd_show_payment_icons() {
 
 	echo '<div class="edd-payment-icons">';
 
-	foreach ( $payment_methods as $key => $card ) {
+	foreach ( $payment_methods as $key => $option ) {
 		if ( edd_string_is_image_url( $key ) ) {
 			echo '<img class="payment-icon" src="' . esc_url( $key ) . '"/>';
 		} else {
-			$card = strtolower( str_replace( ' ', '', $card ) );
+			$type = '';
+			$card = strtolower( str_replace( ' ', '', $option ) );
 
 			if ( has_filter( 'edd_accepted_payment_' . $card . '_image' ) ) {
 				$image = apply_filters( 'edd_accepted_payment_' . $card . '_image', '' );
@@ -695,22 +703,33 @@ function edd_show_payment_icons() {
 				$image = apply_filters( 'edd_accepted_payment_' . $key  . '_image', '' );
 
 			} else {
-				$image = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . $card . '.png', false );
+				// Set the type to SVG.
+				$type = 'svg';
 
-				// Replaces backslashes with forward slashes for Windows systems
-				$plugin_dir  = wp_normalize_path( WP_PLUGIN_DIR );
-				$content_dir = wp_normalize_path( WP_CONTENT_DIR );
-				$image       = wp_normalize_path( $image );
+				// Get SVG dimensions.
+				$dimensions = edd_get_payment_icon_dimensions( $key );
 
-				$image = str_replace( $plugin_dir, WP_PLUGIN_URL, $image );
-				$image = str_replace( $content_dir, WP_CONTENT_URL, $image );
+				// Get SVG markup.
+				$image = edd_get_payment_icon(
+					array(
+						'icon'    => $key,
+						'width'   => $dimensions['width'],
+						'height'  => $dimensions['height'],
+						'title'   => $option,
+						'classes' => array( 'payment-icon' )
+					)
+				);
 			}
 
 			if ( edd_is_ssl_enforced() || is_ssl() ) {
 				$image = edd_enforced_ssl_asset_filter( $image );
 			}
 
-			echo '<img class="payment-icon" src="' . esc_url( $image ) . '"/>';
+			if ( 'svg' === $type ) {
+				echo $image;
+			} else {
+				echo '<img class="payment-icon" src="' . esc_url( $image ) . '"/>';
+			}
 		}
 	}
 

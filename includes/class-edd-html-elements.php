@@ -583,8 +583,8 @@ class EDD_HTML_Elements {
 			$disabled = '';
 		}
 
-		$class  = implode( ' ', array_map( 'sanitize_html_class', explode( ' ', $args['class'] ) ) );
-		$output = '<select' . $disabled . $readonly . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( edd_sanitize_key( str_replace( '-', '_', $args['id'] ) ) ) . '" class="edd-select ' . $class . '"' . $multiple . ' data-placeholder="' . $placeholder . '"' . $data_elements . '>';
+		$class  = implode( ' ', array_map( 'esc_attr', explode( ' ', $args['class'] ) ) );
+		$output = '<select' . $disabled . $readonly . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( str_replace( '-', '_', $args['id'] ) ) . '" class="edd-select ' . $class . '"' . $multiple . ' data-placeholder="' . $placeholder . '"' . $data_elements . '>';
 
 		if ( ! isset( $args['selected'] ) || ( is_array( $args['selected'] ) && empty( $args['selected'] ) ) || ! $args['selected'] ) {
 			$selected = "";
@@ -657,7 +657,12 @@ class EDD_HTML_Elements {
 			$options .= ' readonly';
 		}
 
-		$output = '<input type="checkbox"' . $options . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['name'] ) . '" class="' . $class . ' ' . esc_attr( $args['name'] ) . '" ' . checked( 1, $args['current'], false ) . ' />';
+		// Checked could mean 'on' or 1 or true, so sanitize it for checked()
+		$to_check = ! empty( $args['current'] );
+		$checked  = checked( true, $to_check, false );
+
+		// Get the HTML to output
+		$output   = '<input type="checkbox"' . $options . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['name'] ) . '" class="' . $class . ' ' . esc_attr( $args['name'] ) . '" ' . $checked . ' />';
 
 		if ( ! empty( $args['label'] ) ) {
 			$output .= '<label for="' . esc_attr( $args['name'] ) . '">' . wp_kses_post( $args['label'] ) . '</label>';
@@ -808,23 +813,25 @@ class EDD_HTML_Elements {
 	 */
 	public function ajax_user_search( $args = array() ) {
 
-		$defaults = array(
+		// Parse args
+		$args = wp_parse_args( $args, array(
+			'id'           => 'user_id',
 			'name'         => 'user_id',
 			'value'        => null,
-			'placeholder'  => __( 'Enter username', 'easy-digital-downloads' ),
+			'placeholder'  => __( 'Enter Username', 'easy-digital-downloads' ),
 			'label'        => null,
 			'desc'         => null,
-			'class'        => '',
+			'class'        => 'edd-user-dropdown',
 			'disabled'     => false,
 			'autocomplete' => 'off',
 			'data'         => false,
-		);
+		) );
 
-		$args = wp_parse_args( $args, $defaults );
+		// Setup the AJAX class
+		$args['class'] = 'edd-ajax-user-search ' . sanitize_html_class( $args['class'] );
 
-		$args['class'] = 'edd-ajax-user-search ' . $args['class'];
-
-		$output = '<span class="edd_user_search_wrap">';
+		// Concatenate output
+		$output  = '<span class="edd_user_search_wrap">';
 		$output .= $this->text( $args );
 		$output .= '<span class="edd_user_search_results hidden"><span></span></span>';
 		$output .= '<span class="spinner"></span>';

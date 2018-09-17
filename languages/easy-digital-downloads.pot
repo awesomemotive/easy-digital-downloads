@@ -2,6 +2,8 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
+<<<<<<< .merge_file_EGlSxJ
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 "Project-Id-Version: Easy Digital Downloads 3.0.0-beta-1\n"
@@ -25,6 +27,18 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
 "POT-Creation-Date: 2018-07-12 17:29:20+00:00\n"
 >>>>>>> master
+=======
+<<<<<<< HEAD
+"Project-Id-Version: Easy Digital Downloads 2.9.7\n"
+"Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
+"POT-Creation-Date: 2018-09-10 22:52:27+00:00\n"
+>>>>>>> .merge_file_gt6p2C
+=======
+"Project-Id-Version: Easy Digital Downloads 2.9.6\n"
+"Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
+"POT-Creation-Date: 2018-09-07 21:18:36+00:00\n"
+>>>>>>> master
+>>>>>>> release/3.0
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -64,20 +78,25 @@ msgstr ""
 msgid "Easy Digital Download Requirements"
 msgstr ""
 
-#: includes/EDD_SL_Plugin_Updater.php:201
+#: includes/EDD_SL_Plugin_Updater.php:225
 msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s."
 msgstr ""
 
-#: includes/EDD_SL_Plugin_Updater.php:209
+#: includes/EDD_SL_Plugin_Updater.php:233
 msgid ""
 "There is a new version of %1$s available. %2$sView version %3$s details%4$s "
 "or %5$supdate now%6$s."
 msgstr ""
 
-#: includes/EDD_SL_Plugin_Updater.php:399
+#: includes/EDD_SL_Plugin_Updater.php:466
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
+<<<<<<< HEAD
+<<<<<<< .merge_file_EGlSxJ
+=======
+<<<<<<< HEAD
+>>>>>>> release/3.0
 #: includes/EDD_SL_Plugin_Updater.php:399
 #: includes/admin/customers/customer-actions.php:286
 #: includes/admin/customers/customer-actions.php:327
@@ -98,6 +117,25 @@ msgstr ""
 #: includes/admin/discounts/edit-discount.php:17
 #: includes/admin/discounts/edit-discount.php:28
 #: includes/admin/downloads/dashboard-columns.php:179
+=======
+#: includes/EDD_SL_Plugin_Updater.php:466
+#: includes/admin/customers/customer-actions.php:301
+#: includes/admin/customers/customer-actions.php:345
+#: includes/admin/customers/customer-actions.php:603
+#: includes/admin/discounts/discount-actions.php:30
+#: includes/admin/discounts/discount-actions.php:112
+#: includes/admin/discounts/discount-actions.php:172
+#: includes/admin/discounts/discount-actions.php:176
+#: includes/admin/discounts/discount-actions.php:197
+#: includes/admin/discounts/discount-actions.php:201
+#: includes/admin/discounts/discount-actions.php:222
+#: includes/admin/discounts/edit-discount.php:16
+#: includes/admin/downloads/dashboard-columns.php:171
+<<<<<<< HEAD
+>>>>>>> .merge_file_gt6p2C
+=======
+>>>>>>> master
+>>>>>>> release/3.0
 #: includes/admin/import/class-batch-import-downloads.php:65
 #: includes/admin/import/class-batch-import-payments.php:76
 #: includes/admin/import/class-batch-import.php:156
@@ -158,8 +196,8 @@ msgstr ""
 #: includes/admin/upgrades/upgrade-functions.php:901
 #: includes/admin/upgrades/upgrade-functions.php:1029
 #: includes/admin/upgrades/upgrade-functions.php:1114
-#: includes/api/class-edd-api.php:1967 includes/api/class-edd-api.php:1972
-#: includes/api/class-edd-api.php:1984 includes/api/class-edd-api.php:1986
+#: includes/api/class-edd-api.php:1969 includes/api/class-edd-api.php:1974
+#: includes/api/class-edd-api.php:1986 includes/api/class-edd-api.php:1988
 #: includes/cart/class-edd-cart.php:1423 includes/cart/class-edd-cart.php:1437
 >>>>>>> master
 #: includes/class-edd-license-handler.php:305
@@ -185,7 +223,7 @@ msgstr ""
 #: includes/emails/actions.php:53 includes/emails/template.php:243
 #: includes/error-tracking.php:40 includes/gateways/functions.php:221
 #: includes/gateways/manual.php:33 includes/gateways/paypal-standard.php:168
-#: includes/process-download.php:293 includes/process-download.php:881
+#: includes/process-download.php:293 includes/process-download.php:884
 #: includes/query-filters.php:48 includes/user-functions.php:895
 #: includes/user-functions.php:920 includes/user-functions.php:973
 >>>>>>> master
@@ -753,9 +791,23 @@ msgstr ""
 #: includes/admin/customers/customer-actions.php:502
 #: includes/admin/import/import-functions.php:31
 #: includes/admin/import/import-functions.php:113
+<<<<<<< HEAD
+<<<<<<< .merge_file_EGlSxJ
+=======
+<<<<<<< HEAD
+>>>>>>> release/3.0
 #: includes/admin/reporting/export/export-actions.php:24
 #: includes/api/class-edd-api.php:2002
 #: includes/class-edd-license-handler.php:291
+=======
+#: includes/admin/reporting/export/export-actions.php:23
+#: includes/api/class-edd-api.php:1969
+#: includes/class-edd-license-handler.php:305
+<<<<<<< HEAD
+>>>>>>> .merge_file_gt6p2C
+=======
+>>>>>>> master
+>>>>>>> release/3.0
 msgid "Nonce verification failed"
 msgstr ""
 
@@ -7213,6 +7265,11 @@ msgstr ""
 msgid "All Prices"
 msgstr ""
 
+<<<<<<< HEAD
+<<<<<<< .merge_file_EGlSxJ
+=======
+<<<<<<< HEAD
+>>>>>>> release/3.0
 #: includes/api/class-edd-api-v2.php:142 includes/api/class-edd-api.php:1127
 #: includes/api/class-edd-api.php:1314 includes/api/class-edd-api.php:1431
 msgid "Product %s not found!"
@@ -7228,6 +7285,27 @@ msgid "Customer %s not found!"
 msgstr ""
 
 #: includes/api/class-edd-api-v2.php:322 includes/api/class-edd-api.php:1075
+=======
+#: includes/api/class-edd-api-v2.php:166 includes/api/class-edd-api.php:1115
+#: includes/api/class-edd-api.php:1298 includes/api/class-edd-api.php:1415
+msgid "Product %s not found!"
+msgstr ""
+
+#: includes/api/class-edd-api-v2.php:240 includes/api/class-edd-api.php:1220
+#: includes/api/class-edd-api.php:1315
+msgid "The end date must be later than the start date!"
+msgstr ""
+
+#: includes/api/class-edd-api-v2.php:341 includes/api/class-edd-api.php:1057
+msgid "Customer %s not found!"
+msgstr ""
+
+#: includes/api/class-edd-api-v2.php:346 includes/api/class-edd-api.php:1062
+<<<<<<< HEAD
+>>>>>>> .merge_file_gt6p2C
+=======
+>>>>>>> master
+>>>>>>> release/3.0
 msgid "No customers found!"
 msgstr ""
 
@@ -7247,6 +7325,11 @@ msgstr ""
 msgid "Invalid API version!"
 msgstr ""
 
+<<<<<<< HEAD
+<<<<<<< .merge_file_EGlSxJ
+=======
+<<<<<<< HEAD
+>>>>>>> release/3.0
 #: includes/api/class-edd-api.php:689
 msgid "Invalid query!"
 msgstr ""
@@ -7295,25 +7378,61 @@ msgstr ""
 #: includes/api/class-edd-api.php:1982 includes/user-functions.php:1083
 =======
 #: includes/api/class-edd-api.php:1932 includes/user-functions.php:1072
+=======
+#: includes/api/class-edd-api.php:682
+msgid "Invalid query!"
+msgstr ""
+
+#: includes/api/class-edd-api.php:1225 includes/api/class-edd-api.php:1320
+msgid "Invalid or no date range specified!"
+msgstr ""
+
+#: includes/api/class-edd-api.php:1265 includes/api/class-edd-api.php:1384
+msgid "There was an error retrieving earnings."
+msgstr ""
+
+#: includes/api/class-edd-api.php:1559
+msgid "No discounts found!"
+msgstr ""
+
+#: includes/api/class-edd-api.php:1606
+msgid "Discount %s not found!"
+msgstr ""
+
+#: includes/api/class-edd-api.php:1678
+msgid "No download logs found!"
+msgstr ""
+
+#: includes/api/class-edd-api.php:1934 includes/user-functions.php:1072
+<<<<<<< HEAD
+>>>>>>> .merge_file_gt6p2C
+=======
+>>>>>>> master
+>>>>>>> release/3.0
 msgid "Easy Digital Downloads API Keys"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1941 includes/user-functions.php:1077
+#: includes/api/class-edd-api.php:1943 includes/user-functions.php:1077
 msgid "Generate API Key"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1943 includes/user-functions.php:1079
+#: includes/api/class-edd-api.php:1945 includes/user-functions.php:1079
 msgid "Public key:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1944 includes/user-functions.php:1080
+#: includes/api/class-edd-api.php:1946 includes/user-functions.php:1080
 msgid "Secret key:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1945 includes/user-functions.php:1081
+#: includes/api/class-edd-api.php:1947 includes/user-functions.php:1081
 msgid "Token:"
 msgstr ""
 
+<<<<<<< HEAD
+<<<<<<< .merge_file_EGlSxJ
+=======
+<<<<<<< HEAD
+>>>>>>> release/3.0
 #: includes/api/class-edd-api.php:1947 includes/user-functions.php:1083
 >>>>>>> master
 msgid "Revoke API Keys"
@@ -7324,6 +7443,21 @@ msgid "User ID Required"
 msgstr ""
 
 #: includes/api/class-edd-api.php:2018 includes/api/class-edd-api.php:2020
+=======
+#: includes/api/class-edd-api.php:1949 includes/user-functions.php:1083
+msgid "Revoke API Keys"
+msgstr ""
+
+#: includes/api/class-edd-api.php:1974
+msgid "User ID Required"
+msgstr ""
+
+#: includes/api/class-edd-api.php:1986 includes/api/class-edd-api.php:1988
+<<<<<<< HEAD
+>>>>>>> .merge_file_gt6p2C
+=======
+>>>>>>> master
+>>>>>>> release/3.0
 msgid "You do not have permission to %s API keys for this user"
 msgstr ""
 
@@ -8677,7 +8811,19 @@ msgid ""
 "of a purchase. HTML is accepted. Available template tags:"
 msgstr ""
 
+<<<<<<< HEAD
+<<<<<<< .merge_file_EGlSxJ
 #: includes/deprecated-functions.php:488 includes/process-download.php:862
+=======
+#: includes/deprecated-functions.php:517 includes/process-download.php:884
+>>>>>>> .merge_file_gt6p2C
+=======
+<<<<<<< HEAD
+#: includes/deprecated-functions.php:488 includes/process-download.php:862
+=======
+#: includes/deprecated-functions.php:517 includes/process-download.php:884
+>>>>>>> master
+>>>>>>> release/3.0
 msgid "Sorry but you have hit your download limit for this file."
 msgstr ""
 
@@ -9359,7 +9505,7 @@ msgstr ""
 msgid "The password you entered is incorrect"
 msgstr ""
 
-#: includes/login-register.php:93 includes/process-purchase.php:733
+#: includes/login-register.php:93 includes/process-purchase.php:725
 msgid "The username you entered does not exist"
 msgstr ""
 
@@ -9390,8 +9536,20 @@ msgstr ""
 #: includes/process-purchase.php:587 includes/process-purchase.php:727
 =======
 #: includes/login-register.php:163 includes/process-purchase.php:542
+<<<<<<< HEAD
+<<<<<<< .merge_file_EGlSxJ
+=======
+<<<<<<< HEAD
+>>>>>>> release/3.0
 #: includes/process-purchase.php:626 includes/process-purchase.php:766
 >>>>>>> master
+=======
+#: includes/process-purchase.php:618 includes/process-purchase.php:758
+<<<<<<< HEAD
+>>>>>>> .merge_file_gt6p2C
+=======
+>>>>>>> master
+>>>>>>> release/3.0
 msgid "Invalid email"
 msgstr ""
 
@@ -10142,6 +10300,11 @@ msgstr ""
 msgid "Purchase Verification Failed"
 msgstr ""
 
+<<<<<<< HEAD
+<<<<<<< .merge_file_EGlSxJ
+=======
+<<<<<<< HEAD
+>>>>>>> release/3.0
 #: includes/process-download.php:938
 msgid "Invalid file"
 msgstr ""
@@ -10151,6 +10314,21 @@ msgid "The requested file could not be found. Error 404."
 msgstr ""
 
 #: includes/process-download.php:946
+=======
+#: includes/process-download.php:960
+msgid "Invalid file"
+msgstr ""
+
+#: includes/process-download.php:967
+msgid "The requested file could not be found. Error 404."
+msgstr ""
+
+#: includes/process-download.php:968
+<<<<<<< HEAD
+>>>>>>> .merge_file_gt6p2C
+=======
+>>>>>>> master
+>>>>>>> release/3.0
 msgid "File not found"
 msgstr ""
 
@@ -10178,7 +10356,7 @@ msgstr ""
 msgid ""
 "Missing nonce when processing login during checkout. Please read the "
 "following for more information: "
-"https://easydigitaldownloads.com/development/2018/07/05/important-update-to-"
+"https://easydigitaldownloads.com/development/2018/07/09/important-update-to-"
 "ajax-requests-in-easy-digital-downloads-2-9-4"
 msgstr ""
 
@@ -10226,7 +10404,7 @@ msgstr ""
 msgid "Please enter billing state / province"
 msgstr ""
 
-#: includes/process-purchase.php:547 includes/process-purchase.php:885
+#: includes/process-purchase.php:547 includes/process-purchase.php:870
 msgid "The user information is invalid"
 msgstr ""
 
@@ -10234,57 +10412,53 @@ msgstr ""
 msgid "Invalid username. Only lowercase letters (a-z) and numbers are allowed"
 msgstr ""
 
-#: includes/process-purchase.php:609 includes/process-purchase.php:617
+#: includes/process-purchase.php:610
 msgid "You must register or login to complete your purchase"
 msgstr ""
 
-#: includes/process-purchase.php:615 includes/process-purchase.php:775
-msgid "You must login to complete your purchase"
-msgstr ""
-
-#: includes/process-purchase.php:631
+#: includes/process-purchase.php:623
 msgid ""
 "Email already used. Login or use a different email to complete your "
 "purchase."
 msgstr ""
 
-#: includes/process-purchase.php:639 includes/process-purchase.php:781
+#: includes/process-purchase.php:631 includes/process-purchase.php:766
 msgid "Enter an email"
 msgstr ""
 
-#: includes/process-purchase.php:647
+#: includes/process-purchase.php:639
 msgid "Passwords don't match"
 msgstr ""
 
-#: includes/process-purchase.php:656 includes/process-purchase.php:729
+#: includes/process-purchase.php:648 includes/process-purchase.php:721
 msgid "Enter a password"
 msgstr ""
 
-#: includes/process-purchase.php:659
+#: includes/process-purchase.php:651
 msgid "Enter the password confirmation"
 msgstr ""
 
-#: includes/process-purchase.php:683
+#: includes/process-purchase.php:675
 msgid "You must log in or register to complete your purchase"
 msgstr ""
 
-#: includes/process-purchase.php:710
+#: includes/process-purchase.php:702
 msgid "The password you entered is incorrect. %sReset Password%s"
 msgstr ""
 
-#: includes/process-purchase.php:755
+#: includes/process-purchase.php:747
 msgid "You must be logged into an account to purchase"
 msgstr ""
 
-#: includes/process-purchase.php:949
+#: includes/process-purchase.php:934
 msgid "The zip / postal code you entered for your billing address is invalid"
 msgstr ""
 
-#: includes/process-purchase.php:1198
+#: includes/process-purchase.php:1183
 msgid "An internal error has occurred, please try again or contact support."
 msgstr ""
 
-#: includes/process-purchase.php:1234
+#: includes/process-purchase.php:1219
 msgid "There was an error completing your purchase. Please try again."
 msgstr ""
 

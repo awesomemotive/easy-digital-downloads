@@ -254,12 +254,13 @@ function edd_register_admin_scripts() {
 
 	// Register scripts
 	wp_register_script( 'colorbox',                        $js_dir . 'jquery.colorbox-min.js',                     array( 'jquery' ),                      $version );
-	wp_register_script( 'jquery-chosen',                   $js_dir . 'chosen.jquery'                 . $js_suffix, array( 'jquery' ),                      $version );
+	wp_register_script( 'jquery-chosen',                   $js_dir . 'jquery.chosen'                 . $js_suffix, array( 'jquery' ),                      $version );
 	wp_register_script( 'jquery-flot',                     $js_dir . 'jquery.flot'                   . $js_suffix, array(),                                $version );
 	wp_register_script( 'edd-moment-js',                   $moment_js,                                             array(),                                $version );
-	wp_register_script( 'edd-tags-media-button',           $js_dir . 'edd-admin-email-tags'          . $js_suffix, array( 'thickbox', 'wp-util' ),         $version );
 	wp_register_script( 'edd-chart-js',                    $js_dir . 'Chart'                         . $js_suffix, array( 'edd-moment-js' ),               $version );
 	wp_register_script( 'edd-admin-scripts',               $js_dir . 'admin-scripts'                 . $js_suffix, $admin_deps,                            $version );
+	wp_register_script( 'edd-admin-tax-rates',             $js_dir . 'admin-tax-rates'               . $js_suffix, array( 'wp-backbone' ),                 $version, true );
+	wp_register_script( 'edd-admin-email-tags',            $js_dir . 'admin-email-tags'              . $js_suffix, array( 'thickbox', 'wp-util' ),         $version );
 	wp_register_script( 'edd-admin-scripts-compatibility', $js_dir . 'admin-backwards-compatibility' . $js_suffix, array( 'jquery', 'edd-admin-scripts' ), $version );
 }
 add_action( 'admin_enqueue_scripts', 'edd_register_admin_scripts' );
@@ -279,9 +280,10 @@ function edd_register_admin_styles() {
 	wp_register_style( 'jquery-chosen',         $css_dir . 'chosen'               . $css_suffix, array(),              $version );
 	wp_register_style( 'colorbox',              $css_dir . 'colorbox'             . $css_suffix, array(),              $version );
 	wp_register_style( 'edd-admin',             $css_dir . 'edd-admin'            . $css_suffix, array(),              $version );
-	wp_register_style( 'edd-tags-media-button', $css_dir . 'edd-admin-email-tags' . $css_suffix, array(),              $version );
 	wp_register_style( 'edd-admin-menu',        $css_dir . 'edd-admin-menu'       . $css_suffix, array(),              $version );
+	wp_register_style( 'edd-admin-email-tags',  $css_dir . 'edd-admin-email-tags' . $css_suffix, array(),              $version );
 	wp_register_style( 'edd-admin-datepicker',  $css_dir . 'edd-admin-datepicker' . $css_suffix, array( 'edd-admin' ), $version );
+	wp_register_style( 'edd-admin-tax-rates',   $css_dir . 'edd-admin-tax-rates'  . $css_suffix, array( 'edd-admin' ), $version );
 }
 add_action( 'admin_enqueue_scripts', 'edd_register_admin_styles' );
 

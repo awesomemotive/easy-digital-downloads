@@ -138,6 +138,55 @@ function edd_is_free_download( $download_id = 0, $price_id = false ) {
 		? $download->is_free( $price_id )
 		: false;
 }
+
+/**
+ * Return the name of a download.
+ *
+ * Pass a price ID to append the specific price variation name.
+ *
+ * @since 3.0
+ *
+ * @param int $download_id
+ * @param int $price_id
+ *
+ * @return string
+ */
+function edd_get_download_name( $download_id = 0, $price_id = 0 ) {
+
+	// Bail if no download ID was passed.
+	if ( empty( $download_id ) || ! is_numeric( $download_id ) ) {
+		return false;
+	}
+
+	$download = edd_get_download( $download_id );
+
+	// Get the download title
+	$retval = $download->get_name();
+
+	// Check for variable pricing
+	if ( ! empty( $price_id ) && is_numeric( $price_id ) ) {
+
+		// Check for price option name
+		$price_name = edd_get_price_option_name( $download_id, $price_id );
+
+		// Product has prices
+		if ( ! empty( $price_name ) ) {
+			$retval .= ' &mdash; ' . $price_name;
+		}
+	}
+
+	/**
+	 * Override the download name.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $retval   The download name.
+	 * @param int    $id       The download ID.
+	 * @param int    $price_id The price ID, if any.
+	 */
+	return apply_filters( 'edd_get_download_name', $retval, $download_id, $price_id );
+}
+
 /**
  * Returns the price of a download, but only for non-variable priced downloads.
  *
@@ -167,44 +216,56 @@ function edd_get_download_price( $download_id = 0 ) {
  *
  * @param int  $download_id Download ID.
  * @param bool $echo        Optional. Whether to echo or return the result. Default true.
- * @param int $price_id     Optional. Price ID.
+ * @param int  $price_id    Optional. Price ID.
  *
  * @return string Download price if $echo set to false.
  */
 function edd_price( $download_id = 0, $echo = true, $price_id = false ) {
 
 	// Attempt to get the ID of the current item in the WordPress loop.
-	if ( empty( $download_id ) ) {
+	if ( empty( $download_id ) || ! is_numeric( $download_id ) ) {
 		$download_id = get_the_ID();
 	}
 
+	// Variable prices
 	if ( edd_has_variable_prices( $download_id ) ) {
+
+		// Get the price variations
 		$prices = edd_get_variable_prices( $download_id );
 
-		if ( false !== $price_id && isset( $prices[ $price_id ] ) ) {
+		// Use the amount for the price ID
+		if ( is_numeric( $price_id ) && isset( $prices[ $price_id ] ) ) {
 			$price = edd_get_price_option_amount( $download_id, $price_id );
+
+		// Maybe use the default variable price
 		} elseif ( $default = edd_get_default_variable_price( $download_id ) ) {
 			$price = edd_get_price_option_amount( $download_id, $default );
+
+		// Maybe guess the lowest price
 		} else {
 			$price = edd_get_lowest_price_option( $download_id );
 		}
 
-		$price = edd_sanitize_amount( $price );
+	// Single price (not variable)
 	} else {
 		$price = edd_get_download_price( $download_id );
 	}
 
-	$price           = apply_filters( 'edd_download_price', edd_sanitize_amount( $price ), $download_id, $price_id );
-	$formatted_price = '<span class="edd_price" id="edd_price_' . $download_id . '">' . $price . '</span>';
+	// Filter the price (already sanitized)
+	$price           = apply_filters( 'edd_download_price', $price, $download_id, $price_id );
+
+	// Format the price (do not escape $price)
+	$formatted_price = '<span class="edd_price" id="edd_price_' . esc_attr( $download_id ) . '">' . $price . '</span>';
 	$formatted_price = apply_filters( 'edd_download_price_after_html', $formatted_price, $download_id, $price, $price_id );
 
-	if ( $echo ) {
+	// Echo or return
+	if ( ! empty( $echo ) ) {
 		echo $formatted_price; // WPCS: XSS ok.
 	} else {
 		return $formatted_price;
 	}
 }
-add_filter( 'edd_download_price', 'edd_format_amount', 10 );
+add_filter( 'edd_download_price', 'edd_format_amount',   10 );
 add_filter( 'edd_download_price', 'edd_currency_filter', 20 );
 
 /**
@@ -388,7 +449,7 @@ function edd_get_price_option_amount( $download_id = 0, $price_id = 0 ) {
  *
  * @since 1.4.4
  *
- * @param int $download_id Downloa ID.
+ * @param int $download_id Download ID.
  * @return float Amount of the lowest price option.
  */
 function edd_get_lowest_price_option( $download_id = 0 ) {
@@ -1322,7 +1383,7 @@ function edd_get_product_notes( $download_id = 0 ) {
 	if ( empty( $download_id ) ) {
 		return false;
 	}
-	
+
 	$download = edd_get_download( $download_id );
 
 	return $download

@@ -20,16 +20,20 @@ defined( 'ABSPATH' ) || exit;
  * @author Daniel J Griffiths
  */
 function edd_tools_page() {
+
+	// Get tabs and active tab
+	$tabs       = edd_get_tools_tabs();
 	$active_tab = isset( $_GET['tab'] )
 		? sanitize_key( $_GET['tab'] )
 		: 'general'; ?>
 
     <div class="wrap">
         <h1><?php _e( 'Tools', 'easy-digital-downloads' ); ?></h1>
-        <h2 class="nav-tab-wrapper edd-nav-tab-wrapper">
-			<?php
+		<hr class="wp-header-end">
 
-			foreach ( edd_get_tools_tabs() as $tab_id => $tab_name ) {
+        <h2 class="nav-tab-wrapper edd-nav-tab-wrapper"><?php
+
+			foreach ( $tabs as $tab_id => $tab_name ) {
 
 				$tab_url = edd_get_admin_url( array(
 					'page' => 'edd-tools',
@@ -44,10 +48,10 @@ function edd_tools_page() {
 					? ' nav-tab-active'
 					: '';
 
-				echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . $active . '">' . esc_html( $tab_name ) . '</a>';
+				echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . esc_attr( $active ) . '">' . esc_html( $tab_name ) . '</a>';
 			}
-			?>
-        </h2>
+
+		?></h2>
 
         <div class="metabox-holder">
 			<?php
@@ -67,23 +71,29 @@ function edd_tools_page() {
  * @return array Tabs for the 'Tools' page.
  */
 function edd_get_tools_tabs() {
-	$tabs             = array();
-	$tabs['general']  = __( 'General', 'easy-digital-downloads' );
-	$tabs['api_keys'] = __( 'API Keys', 'easy-digital-downloads' );
+	static $tabs = array();
 
-	if ( count( edd_get_beta_enabled_extensions() ) > 0 ) {
-		$tabs['betas'] = __( 'Beta Versions', 'easy-digital-downloads' );
+	// Set tabs if empty
+	if ( empty( $tabs ) ) {
+
+		// Define all tabs
+		$tabs = array(
+			'general'       => __( 'General',       'easy-digital-downloads' ),
+			'api_keys'      => __( 'API Keys',      'easy-digital-downloads' ),
+			'betas'         => __( 'Beta Versions', 'easy-digital-downloads' ),
+			'logs'          => __( 'Logs',          'easy-digital-downloads' ),
+			'system_info'   => __( 'System Info',   'easy-digital-downloads' ),
+			'debug_log'     => __( 'Debug Log',     'easy-digital-downloads' ),
+			'import_export' => __( 'Import/Export', 'easy-digital-downloads' )
+		);
+
+		// Unset the betas tab if not allowed
+		if ( count( edd_get_beta_enabled_extensions() ) <= 0 ) {
+			unset( $tabs['betas'] );
+		}
 	}
 
-	$tabs['system_info'] = __( 'System Info', 'easy-digital-downloads' );
-	$tabs['logs']        = __( 'Logs', 'easy-digital-downloads' );
-
-	if ( edd_is_debug_mode() ) {
-		$tabs['debug_log'] = __( 'Debug Log', 'easy-digital-downloads' );
-	}
-
-	$tabs['import_export'] = __( 'Import/Export', 'easy-digital-downloads' );
-
+	// Filter & return
 	return apply_filters( 'edd_tools_tabs', $tabs );
 }
 
@@ -327,7 +337,7 @@ add_action( 'edd_tools_tab_betas', 'edd_tools_betas_display' );
  * @return array $extensions The array of extensions
  */
 function edd_get_beta_enabled_extensions() {
-	return apply_filters( 'edd_beta_enabled_extensions', array() );
+	return (array) apply_filters( 'edd_beta_enabled_extensions', array() );
 }
 
 /**
@@ -1120,32 +1130,49 @@ add_action( 'edd_import_settings', 'edd_tools_import_export_process_import' );
 function edd_tools_debug_log_display() {
 	global $edd_logs;
 
-	if ( ! current_user_can( 'manage_shop_settings' ) || ! edd_is_debug_mode() ) {
-		return;
-	}
+	// Setup fallback incase no file exists
+	$path        = $edd_logs->get_log_file_path();
+	$log         = $edd_logs->get_file_contents();
+	$path_output = ! empty( $path )
+		? wp_normalize_path( $path )
+		: esc_html__( 'No File', 'easy-digital-downloads' );
+	$log_output  = ! empty( $log )
+		? wp_normalize_path( $log )
+		: esc_html__( 'Log is Empty', 'easy-digital-downloads' ); ?>
 
-	?>
     <div class="postbox">
         <h3><span><?php esc_html_e( 'Debug Log', 'easy-digital-downloads' ); ?></span></h3>
         <div class="inside">
             <form id="edd-debug-log" method="post">
-                <p><?php _e( 'Use this tool to help debug Easy Digital Downloads functionality. Developers may use the <a href="https://github.com/easydigitaldownloads/easy-digital-downloads/blob/master/includes/class-edd-logging.php">EDD_Logging class</a> to record debug data.', 'easy-digital-downloads' ); ?></p>
-                <textarea readonly="readonly" class="edd-tools-textarea" rows="15"
-                          name="edd-debug-log-contents"><?php echo esc_textarea( $edd_logs->get_file_contents() ); ?></textarea>
+                <p><?php _e( 'When debug mode is enabled, specific information will be logged here. (<a href="https://github.com/easydigitaldownloads/easy-digital-downloads/blob/master/includes/class-edd-logging.php">Learn how</a> to use <code>EDD_Logging</code> in your own code.)', 'easy-digital-downloads' ); ?></p>
+                <textarea
+					readonly="readonly"
+					class="edd-tools-textarea"
+					rows="15"
+					name="edd-debug-log-contents"><?php echo esc_textarea( $log_output ); ?></textarea>
                 <p>
                     <input type="hidden" name="edd_action" value="submit_debug_log"/>
 					<?php
-					submit_button( __( 'Download Debug Log File', 'easy-digital-downloads' ), 'primary', 'edd-download-debug-log', false );
-					submit_button( __( 'Copy to Clipboard',       'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-copy-debug-log', false, array( 'onclick' => "this.form['edd-debug-log-contents'].focus();this.form['edd-debug-log-contents'].select();document.execCommand('copy');return false;" ) );
-					submit_button( __( 'Clear Log',               'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-clear-debug-log', false );
+					submit_button( __( 'Download Debug Log File', 'easy-digital-downloads' ), 'primary',                     'edd-download-debug-log', false );
+					submit_button( __( 'Copy to Clipboard',       'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-copy-debug-log',     false, array( 'onclick' => "this.form['edd-debug-log-contents'].focus();this.form['edd-debug-log-contents'].select();document.execCommand('copy');return false;" ) );
+
+					// Only show the "Clear Log" button if there is a log to clear
+					if ( ! empty( $log ) ) {
+						submit_button( __( 'Clear Log', 'easy-digital-downloads' ), 'secondary edd-inline-button', 'edd-clear-debug-log', false );
+					}
+
 					?>
                 </p>
 				<?php wp_nonce_field( 'edd-debug-log-action' ); ?>
             </form>
-            <p><?php _e( 'Log file', 'easy-digital-downloads' ); ?>:
-                <code><?php echo $edd_logs->get_log_file_path(); ?></code></p>
+
+            <p>
+				<?php _e( 'Log file', 'easy-digital-downloads' ); ?>:
+                <code><?php echo esc_html( $path_output ); ?></code>
+			</p>
         </div><!-- .inside -->
     </div><!-- .postbox -->
+
 	<?php
 }
 add_action( 'edd_tools_tab_debug_log', 'edd_tools_debug_log_display' );
@@ -1252,7 +1279,7 @@ function edd_tools_sysinfo_get() {
 	// Try to identify the hosting provider
 	$host = edd_get_host();
 
-	$return = '### Begin System Info ###' . "\n\n";
+	$return  = '### Begin System Info (Generated ' . date( 'Y-m-d H:i:s' ) . ') ###' . "\n\n";
 
 	// Start with the basics...
 	$return .= '-- Site Info' . "\n\n";
