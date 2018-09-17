@@ -610,8 +610,8 @@ function edd_purchase_form_validate_cc_exp_date( $exp_month, $exp_year ) {
 
 /**
  * Loads SVG icons into the EDD Checkout footer.
- * 
- * @since 2.9.x
+ *
+ * @since 3.0
  */
 function edd_svg_checkout_icons() {
 
@@ -621,10 +621,13 @@ function edd_svg_checkout_icons() {
 	}
 
 	// Create array to hold icons.
-	$icons = array( 'mastercard', 'visa', 'americanexpress', 'discover', 'paypal', 'amazon' );
+	$icons = array();
 
-	if ( is_ssl() ) {
-		$icons[] = 'lock';
+	// Get payment methods.
+	$payment_methods = edd_get_option( 'accepted_cards', array() );
+
+	if ( ! empty( $payment_methods ) ) {
+		$icons = array_keys( $payment_methods );
 	}
 
 	return edd_svg_icons( $icons );
