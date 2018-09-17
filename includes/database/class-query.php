@@ -535,7 +535,8 @@ class Query extends Base {
 	 * @since 3.0
 	 */
 	private function set_request() {
-		$clauses       = array_map( 'trim', $this->request_clauses );
+		$filtered      = array_filter( $this->request_clauses );
+		$clauses       = array_map( 'trim', $filtered );
 		$this->request = implode( ' ', $clauses );
 	}
 

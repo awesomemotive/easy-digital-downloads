@@ -1966,15 +1966,19 @@ class EDD_API {
 			<table class="form-table">
 				<tbody>
 				<tr>
-					<th><?php _e( 'Easy Digital Downloads API Keys', 'easy-digital-downloads' ); ?></th>
+					<th><?php _e( 'Downloads API Keys', 'easy-digital-downloads' ); ?></th>
 					<td>
 						<?php
 						$public_key = $this->get_user_public_key( $user->ID );
 						$secret_key = $this->get_user_secret_key( $user->ID );
-						?>
-						<?php if ( empty( $user->edd_user_public_key ) ) { ?>
-							<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0"/>
-							<span class="description"><?php _e( 'Generate API Key', 'easy-digital-downloads' ); ?></span>
+
+						if ( empty( $user->edd_user_public_key ) ) { ?>
+							<p class="description">
+								<label>
+									<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0"/>
+									<?php _e( 'Generate API Key', 'easy-digital-downloads' ); ?>
+								</label>
+							</p>
 						<?php } else { ?>
 							<strong style="display:inline-block; width: 125px;"><?php _e( 'Public key:', 'easy-digital-downloads' ); ?>&nbsp;</strong>
                             <input type="text" disabled="disabled" class="regular-text" id="publickey" value="<?php echo esc_attr( $public_key ); ?>"/>
