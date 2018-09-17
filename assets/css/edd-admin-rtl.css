@@ -666,6 +666,12 @@ textarea[name="edd-note"] {
 	width: 20%;
 }
 
+.wp-list-table.apikeys .column-key,
+.wp-list-table.apikeys .column-token,
+.wp-list-table.apikeys .column-secret {
+	width: 25%;
+}
+
 .wp-list-table.orderadjustments .column-desc {
 	width: 34%;
 }
@@ -2306,8 +2312,14 @@ body.download_page_edd-reports {
 /* API Table Styles
 -------------------------------------------------------------- */
 
-.download_page_edd-tools .apikeys .column-user {
-	width: 192px;
+.wp-list-table.apikeys input.code {
+	width: 100%;
+	font-size: 10px;
+	cursor: text;
+	background: #fff;
+	border: 1px solid #ddd;
+	box-shadow: none;
+	color: #555;
 }
 
 
@@ -2657,16 +2669,19 @@ only screen and ( min-resolution: 1.5dppx ) {
 }
 .edd_user_search_wrap .spinner {
 	position: absolute;
-	left: -9px;
-	top: -6px;
+	margin: 0;
+	padding: 0;
+	left: 4px;
+	top: -2px;
 }
 .edd_user_search_wrap.loading .spinner {
 	visibility: visible;
 }
+
 .edd_user_search_results {
 	position: absolute;
 	right: 0;
-	top: 27px;
+	top: 20px;
 }
 .edd_user_search_results a.edd-ajax-user-cancel {
 	position: absolute;
@@ -2680,7 +2695,7 @@ only screen and ( min-resolution: 1.5dppx ) {
 	padding: 0;
 	margin: 0;
 	height: 150px;
-	width: 300px;
+	width: 185px;
 	box-shadow: 0 3px 5px rgba(0,0,0,0.1);
 }
 .edd_user_search_results li {
@@ -2723,9 +2738,6 @@ only screen and ( min-resolution: 1.5dppx ) {
 	.post-type-download .nav-tab-wrapper a {
 		font-size: 70%;
 		padding: 2px 4px;
-	}
-	.download_page_edd-tools .apikeys .column-user {
-		width: 80px;
 	}
 	.license-lifetime-notice,
 	.license-expiration-date-notice,
