@@ -2,6 +2,7 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
+<<<<<<< HEAD
 <<<<<<< .merge_file_EGlSxJ
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -39,6 +40,11 @@ msgstr ""
 "POT-Creation-Date: 2018-09-07 21:18:36+00:00\n"
 >>>>>>> master
 >>>>>>> release/3.0
+=======
+"Project-Id-Version: Easy Digital Downloads 2.9.7\n"
+"Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
+"POT-Creation-Date: 2018-09-10 22:52:27+00:00\n"
+>>>>>>> master
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"

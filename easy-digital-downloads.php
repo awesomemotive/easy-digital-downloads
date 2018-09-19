@@ -474,7 +474,7 @@ final class EDD_Requirements_Check {
 			: get_locale();
 
 		/**
-		 * Defines the plugin language locale used in AffiliateWP.
+		 * Defines the plugin language locale used in Easy Digital Downloads.
 		 *
 		 * @var $get_locale The locale to use. Uses get_user_locale()` in WordPress 4.7 or greater,
 		 *                  otherwise uses `get_locale()`.
