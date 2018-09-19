@@ -471,4 +471,82 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		global $edd_get_discounts_cache;
 		$this->assertSame( $found_discounts, $edd_get_discounts_cache[ $hash ] );
 	}
+
+	public function test_get_item_discount_amount_valid() {
+		edd_empty_cart();
+		$download = EDD_Helper_Download::create_simple_download();
+		$discount_id = EDD_Helper_Discount::create_simple_flat_discount();
+
+		$discount = edd_get_discount( $discount_id );
+
+		edd_add_to_cart( $download->ID );
+
+		$args = array(
+			'id'       => $download->ID,
+			'options'  => array(),
+			'quantity' => 1,
+		);
+
+		$this->assertEquals( 10, EDD()->cart->get_item_discount_amount( $args, $discount->get_code() ) );
+
+		EDD_Helper_Download::delete_download( $download->ID );
+		EDD_Helper_Discount::delete_discount( $discount_id );
+	}
+
+	public function test_get_item_discount_amount_zero_dollar_item() {
+		edd_empty_cart();
+		$download    = EDD_Helper_Download::create_simple_download();
+		update_post_meta( $download->ID, 'edd_price', 0 );
+
+		$discount_id = EDD_Helper_Discount::create_simple_flat_discount();
+
+		$discount = edd_get_discount( $discount_id );
+
+		edd_add_to_cart( $download->ID );
+
+		$args = array(
+			'id'       => $download->ID,
+			'options'  => array(),
+			'quantity' => 1,
+		);
+
+		$this->assertEquals( 0, EDD()->cart->get_item_discount_amount( $args, $discount->get_code() ) );
+
+		EDD_Helper_Download::delete_download( $download->ID );
+		EDD_Helper_Discount::delete_discount( $discount_id );
+	}
+
+	public function test_get_item_discount_amount_zero_dollar_item_two_items() {
+		edd_empty_cart();
+		$download_1    = EDD_Helper_Download::create_simple_download();
+		update_post_meta( $download_1->ID, 'edd_price', 0 );
+
+		$download_2 = EDD_Helper_Download::create_simple_download();
+
+		$discount_id = EDD_Helper_Discount::create_simple_flat_discount();
+
+		$discount = edd_get_discount( $discount_id );
+
+		edd_add_to_cart( $download_1->ID );
+		edd_add_to_cart( $download_2->ID );
+
+		$args = array(
+			'id'       => $download_1->ID,
+			'options'  => array(),
+			'quantity' => 1,
+		);
+
+		$this->assertEquals( 0, EDD()->cart->get_item_discount_amount( $args, $discount->get_code() ) );
+
+		$args = array(
+			'id'       => $download_2->ID,
+			'options'  => array(),
+			'quantity' => 1,
+		);
+
+		$this->assertEquals( 10, EDD()->cart->get_item_discount_amount( $args, $discount->get_code() ) );
+
+		EDD_Helper_Download::delete_download( $download_1->ID );
+		EDD_Helper_Discount::delete_discount( $discount_id );
+	}
 }
