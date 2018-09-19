@@ -1143,7 +1143,7 @@ add_action( 'edd_download_shortcode_item', 'edd_download_shortcode_item', 10, 2 
 /**
  * Output full content for a download item in the [downloads] shortcode.
  *
- * Strips the [downloads] shortcode to avoid recurssion.
+ * Strips the [downloads] shortcode to avoid recursion.
  *
  * @since 3.0
  *
