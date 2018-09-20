@@ -176,7 +176,7 @@ function edd_user_info_fields() {
 	$customer = array_map( 'sanitize_text_field', $customer );
 	?>
 	<fieldset id="edd_checkout_user_info">
-		<legend><?php echo apply_filters( 'edd_checkout_personal_info_text', esc_html__( 'Personal Info', 'easy-digital-downloads' ) ); ?></legend>
+		<legend><?php echo apply_filters( 'edd_checkout_personal_info_text', esc_html__( 'Personal info', 'easy-digital-downloads' ) ); ?></legend>
 		<?php do_action( 'edd_purchase_form_before_email' ); ?>
 		<p id="edd-email-wrap">
 			<label class="edd-label" for="edd-email">
@@ -229,7 +229,7 @@ function edd_get_cc_form() {
 	<?php do_action( 'edd_before_cc_fields' ); ?>
 
 	<fieldset id="edd_cc_fields" class="edd-do-validate">
-		<legend><?php _e( 'Credit Card Info', 'easy-digital-downloads' ); ?></legend>
+		<legend><?php _e( 'Credit card info', 'easy-digital-downloads' ); ?></legend>
 		<?php if ( is_ssl() ) : ?>
 			<div id="edd_secure_site_wrapper">
 				<?php
@@ -344,7 +344,7 @@ function edd_default_cc_address_fields() {
 
 	ob_start(); ?>
 	<fieldset id="edd_cc_address" class="cc-address">
-		<legend><?php _e( 'Billing Details', 'easy-digital-downloads' ); ?></legend>
+		<legend><?php _e( 'Billing details', 'easy-digital-downloads' ); ?></legend>
 		<?php do_action( 'edd_cc_billing_top' ); ?>
 		<p id="edd-card-address-wrap">
 			<label for="card_address" class="edd-label">
@@ -384,7 +384,7 @@ function edd_default_cc_address_fields() {
 				<?php endif; ?>
 			</label>
 			<span class="edd-description"><?php _e( 'The zip or postal code for your billing address.', 'easy-digital-downloads' ); ?></span>
-			<input type="text" size="4" id="card_zip" name="card_zip" class="card-zip edd-input<?php if ( edd_field_is_required( 'card_zip' ) ) { echo ' required'; } ?>" placeholder="<?php _e( 'Zip / Postal Code', 'easy-digital-downloads' ); ?>" value="<?php echo $customer['address']['zip']; ?>"<?php if ( edd_field_is_required( 'card_zip' ) ) {  echo ' required '; } ?>/>
+			<input type="text" size="4" id="card_zip" name="card_zip" class="card-zip edd-input<?php if ( edd_field_is_required( 'card_zip' ) ) { echo ' required'; } ?>" placeholder="<?php _e( 'Zip/Postal code', 'easy-digital-downloads' ); ?>" value="<?php echo $customer['address']['zip']; ?>"<?php if ( edd_field_is_required( 'card_zip' ) ) {  echo ' required '; } ?>/>
 		</p>
 		<p id="edd-card-country-wrap">
 			<label for="billing_country" class="edd-label">
@@ -617,7 +617,7 @@ function edd_payment_mode_select() {
 		<?php } ?>
 
 			<fieldset id="edd_payment_mode_select">
-				<legend><?php _e( 'Select Payment Method', 'easy-digital-downloads' ); ?></legend>
+				<legend><?php _e( 'Select payment method', 'easy-digital-downloads' ); ?></legend>
 				<?php do_action( 'edd_payment_mode_before_gateways_wrap' ); ?>
 				<div id="edd-payment-mode-wrap">
 					<?php
