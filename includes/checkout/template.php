@@ -477,7 +477,7 @@ function edd_get_register_fields() {
 	<fieldset id="edd_register_fields">
 
 		<?php if ( 'both' === $show_register_form ) { ?>
-			<p id="edd-login-account-wrap"><?php _e( 'Already have an account?', 'easy-digital-downloads' ); ?> <a href="<?php echo esc_url( add_query_arg( 'login', 1 ) ); ?>" class="edd_checkout_register_login" data-action="checkout_login" data-nonce="<?php echo wp_create_nonce( 'edd_checkout_login' ); ?>"><?php _e( 'Login', 'easy-digital-downloads' ); ?></a></p>
+			<p id="edd-login-account-wrap"><?php _e( 'Already have an account?', 'easy-digital-downloads' ); ?> <a href="<?php echo esc_url( add_query_arg( 'login', 1 ) ); ?>" class="edd_checkout_register_login" data-action="checkout_login" data-nonce="<?php echo wp_create_nonce( 'edd_checkout_login' ); ?>"><?php _e( 'Log in', 'easy-digital-downloads' ); ?></a></p>
 		<?php } ?>
 
 		<?php do_action( 'edd_register_fields_before' ); ?>
@@ -585,7 +585,7 @@ function edd_get_login_fields() {
 				<?php endif; ?>
 			</p>
 			<p id="edd-user-login-submit">
-				<input type="submit" class="edd-submit <?php echo sanitize_html_class( $color ); ?> <?php echo sanitize_html_class( $style ); ?>" name="edd_login_submit" value="<?php _e( 'Login', 'easy-digital-downloads' ); ?>"/>
+				<input type="submit" class="edd-submit <?php echo sanitize_html_class( $color ); ?> <?php echo sanitize_html_class( $style ); ?>" name="edd_login_submit" value="<?php _e( 'Log in', 'easy-digital-downloads' ); ?>"/>
 				<?php wp_nonce_field( 'edd-login-form', 'edd_login_nonce', false, true ); ?>
 			</p>
 
