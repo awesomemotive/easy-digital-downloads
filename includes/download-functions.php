@@ -154,7 +154,7 @@ function edd_is_free_download( $download_id = 0, $price_id = false ) {
 function edd_get_download_name( $download_id = 0, $price_id = 0 ) {
 
 	// Bail if no download ID was passed.
-	if ( empty( $download_id ) || ! is_numeric( $download_id ) ) {
+	if ( empty( $download_id ) || ! is_numeric( $download_id ) ) {  
 		return false;
 	}
 
@@ -164,7 +164,7 @@ function edd_get_download_name( $download_id = 0, $price_id = 0 ) {
 	$retval = $download->get_name();
 
 	// Check for variable pricing
-	if ( ! empty( $price_id ) && is_numeric( $price_id ) ) {
+	if ( $download->has_variable_prices() && is_numeric( $price_id ) ) {
 
 		// Check for price option name
 		$price_name = edd_get_price_option_name( $download_id, $price_id );
