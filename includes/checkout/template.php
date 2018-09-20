@@ -768,7 +768,7 @@ function edd_discount_field() {
 				<label class="edd-label" for="edd-discount">
 					<?php _e( 'Discount', 'easy-digital-downloads' ); ?>
 				</label>
-				<span class="edd-description"><?php _e( 'Enter a coupon code if you have one.', 'easy-digital-downloads' ); ?></span>
+				<span class="edd-description"><?php _e( 'Enter a discount code if you have one.', 'easy-digital-downloads' ); ?></span>
 				<span class="edd-discount-code-field-wrap">
 					<input class="edd-input" type="text" id="edd-discount" name="edd-discount" placeholder="<?php _e( 'Enter discount', 'easy-digital-downloads' ); ?>"/>
 					<input type="submit" class="edd-apply-discount edd-submit <?php echo sanitize_html_class( $color ); ?> <?php echo sanitize_html_class( $style ); ?>" value="<?php echo _x( 'Apply', 'Apply discount at checkout', 'easy-digital-downloads' ); ?>"/>
