@@ -64,10 +64,16 @@ function edd_admin_footer_for_thickbox() {
 					return;
 				}
 
-				if( '2' == direct ) {
+				if ( '2' == direct ) {
 					direct = ' direct="true"';
 				} else {
 					direct = '';
+				}
+
+				if ( 'text link' == style ) {
+					style = 'plain';
+				} else {
+					style = 'button';
 				}
 
 				// Send the shortcode to the editor
