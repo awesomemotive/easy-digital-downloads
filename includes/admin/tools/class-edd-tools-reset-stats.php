@@ -305,7 +305,7 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 	 * @param string $key   Option name.
 	 * @param mixed  $value Option value.
 	 */
-	private function store_data( $key = '', $value ) {
+	private function store_data( $key = '', $value = '' ) {
 		global $wpdb;
 
 		// Bail if no key was passed.
