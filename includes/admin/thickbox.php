@@ -72,8 +72,6 @@ function edd_admin_footer_for_thickbox() {
 
 				if ( 'text link' == style ) {
 					style = 'plain';
-				} else {
-					style = 'button';
 				}
 
 				// Send the shortcode to the editor
