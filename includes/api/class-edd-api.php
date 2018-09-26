@@ -557,7 +557,8 @@ class EDD_API {
 		}
 
 		$data         = array();
-		$this->routes = new $this->versions[$this->get_queried_version()];
+		$version      = $this->get_queried_version();
+		$this->routes = new $this->versions[ $version ];
 		$this->routes->validate_request();
 
 		switch ( $this->endpoint ) :
