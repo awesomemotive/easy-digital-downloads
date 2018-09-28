@@ -747,8 +747,8 @@ final class Easy_Digital_Downloads {
 	 */
 	private function backcompat_globals() {
 
-		// The $edd_logging global
-		$GLOBALS['edd_logging'] = self::$instance->debug_log;
+		// The $edd_logs global
+		$GLOBALS['edd_logs'] = self::$instance->debug_log;
 	}
 }
 endif; // End if class_exists check.
