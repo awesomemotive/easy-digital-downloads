@@ -386,20 +386,82 @@ function edd_get_registered_settings() {
 			// General Settings
 			'general' => apply_filters( 'edd_settings_general', array(
 				'main' => array(
-					'store_name' => array(
-						'id'          => 'store_name',
-						'name'        => __( 'Store Name', 'easy-digital-downloads' ),
-						'desc'        => __( 'The official name of your store. Defaults to Site Title if empty.', 'easy-digital-downloads' ),
+					'business_settings' => array(
+						'id'            => 'business_settings',
+						'name'          => '<h3>' . __( 'Business Info', 'easy-digital-downloads' ) . '</h3>',
+						'desc'          => '',
+						'type'          => 'header',
+						'tooltip_title' => __( 'Business Information', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'Easy Digital Downloads uses the following business information for things like pre-populating tax fields, and connecting third-party services with the same information.', 'easy-digital-downloads' ),
+					),
+					'entity_name' => array(
+						'id'          => 'entity_name',
+						'name'        => __( 'Business Name', 'easy-digital-downloads' ),
+						'desc'        => __( 'The official (legal) name of your store. Defaults to Site Title if empty.', 'easy-digital-downloads' ),
 						'type'        => 'text',
 						'std'         => $site_name,
 						'placeholder' => $site_name
 					),
-					'store_address' => array(
-						'id'          => 'store_address',
-						'name'        => __( 'Store Address', 'easy-digital-downloads' ),
-						'desc'        => __( 'Customers will see this in emails.', 'easy-digital-downloads' ),
-						'type'        => 'textarea',
+					'entity_type' => array(
+						'id'          => 'entity_type',
+						'name'        => __( 'Business Type', 'easy-digital-downloads' ),
+						'desc'        => __( 'Choose "Individual" if you do not have an official/legal business ID, or "Company" if a regisitered business entity exists.', 'easy-digital-downloads' ),
+						'type'        => 'select',
+						'std'         => $site_name,
+						'options'     => array(
+							'individual' => esc_html__( 'Individual', 'easy-digital-downloads' ),
+							'company'    => esc_html__( 'Company',    'easy-digital-downloads' )
+						)
+					),
+					'business_address' => array(
+						'id'          => 'business_address',
+						'name'        => __( 'Business Address', 'easy-digital-downloads' ),
+						'desc'        => __( 'Your street address.', 'easy-digital-downloads' ),
+						'type'        => 'text',
 						'placeholder' => ''
+					),
+					'business_address_2' => array(
+						'id'          => 'business_address_2',
+						'name'        => __( 'Business Address (Extra)', 'easy-digital-downloads' ),
+						'desc'        => __( 'Anything that needs an extra line.', 'easy-digital-downloads' ),
+						'type'        => 'text',
+						'placeholder' => ''
+					),
+					'business_city' => array(
+						'id'          => 'business_city',
+						'name'        => __( 'Business City', 'easy-digital-downloads' ),
+						'desc'        => __( 'The physical city your business is in.', 'easy-digital-downloads' ),
+						'type'        => 'text',
+						'placeholder' => ''
+					),
+					'business_postal_code' => array(
+						'id'          => 'business_postal_code',
+						'name'        => __( 'Business Postal Code', 'easy-digital-downloads' ),
+						'desc'        => __( 'The code used to deliver physical mail.', 'easy-digital-downloads' ),
+						'type'        => 'text',
+						'placeholder' => ''
+					),
+					'base_country' => array(
+						'id'          => 'base_country',
+						'name'        => __( 'Business Country', 'easy-digital-downloads' ),
+						'desc'        => __( 'Where does your store operate from?', 'easy-digital-downloads' ),
+						'type'        => 'select',
+						'options'     => edd_get_country_list(),
+						'chosen'      => true,
+						'field_class' => 'edd_countries_filter',
+						'placeholder' => __( 'Select a country', 'easy-digital-downloads' ),
+						'data'        => array(
+							'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
+						)
+					),
+					'base_state' => array(
+						'id'          => 'base_state',
+						'name'        => __( 'Business Region', 'easy-digital-downloads' ),
+						'desc'        => __( 'What state/province/territory does your store operate from?', 'easy-digital-downloads' ),
+						'type'        => 'shop_states',
+						'chosen'      => true,
+						'field_class' => 'edd_regions_filter',
+						'placeholder' => __( 'Select a region', 'easy-digital-downloads' ),
 					),
 				),
 				'pages' => array(
@@ -459,38 +521,6 @@ function edd_get_registered_settings() {
 						'chosen'      => true,
 						'placeholder' => __( 'Select a page', 'easy-digital-downloads' ),
 					)
-				),
-				'location' => array(
-					'locale_settings' => array(
-						'id'            => 'locale_settings',
-						'name'          => '<h3>' . __( 'Store Location', 'easy-digital-downloads' ) . '</h3>',
-						'desc'          => '',
-						'type'          => 'header',
-						'tooltip_title' => __( 'Store Location Settings', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'Easy Digital Downloads will use the following Country and State to pre-fill fields at checkout. This will also pre-calculate any taxes defined if the location below has taxes enabled.', 'easy-digital-downloads' ),
-					),
-					'base_country' => array(
-						'id'          => 'base_country',
-						'name'        => __( 'Country', 'easy-digital-downloads' ),
-						'desc'        => __( 'Where does your store operate from?', 'easy-digital-downloads' ),
-						'type'        => 'select',
-						'options'     => edd_get_country_list(),
-						'chosen'      => true,
-						'field_class' => 'edd_countries_filter',
-						'placeholder' => __( 'Select a country', 'easy-digital-downloads' ),
-						'data'        => array(
-							'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
-						)
-					),
-					'base_state' => array(
-						'id'          => 'base_state',
-						'name'        => __( 'Region', 'easy-digital-downloads' ),
-						'desc'        => __( 'What state/province/territory does your store operate from?', 'easy-digital-downloads' ),
-						'type'        => 'shop_states',
-						'chosen'      => true,
-						'field_class' => 'edd_regions_filter',
-						'placeholder' => __( 'Select a region', 'easy-digital-downloads' ),
-					),
 				),
 				'currency' => array(
 					'currency_settings' => array(
@@ -1704,7 +1734,6 @@ function edd_get_registered_settings_sections() {
 		$sections = array(
 			'general'    => apply_filters( 'edd_settings_sections_general', array(
 				'main'               => __( 'General',    'easy-digital-downloads' ),
-				'location'           => __( 'Location',   'easy-digital-downloads' ),
 				'currency'           => __( 'Currency',   'easy-digital-downloads' ),
 				'pages'              => __( 'Pages',      'easy-digital-downloads' ),
 				'moderation'         => __( 'Moderation', 'easy-digital-downloads' ),
