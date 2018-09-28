@@ -376,14 +376,31 @@ function edd_get_registered_settings() {
 		$debug_log_url    = edd_get_admin_url( array( 'page' => 'edd-tools', 'tab' => 'debug_log' ) );
 		$debug_log_link   = '<a href="' . esc_url( $debug_log_url ) . '">' . __( 'View the Log', 'easy-digital-downloads' ) . '</a>';
 		$payment_statuses = edd_get_payment_statuses();
-		$states           = edd_get_shop_states( edd_get_shop_country() );
 		$pages            = edd_get_pages();
 		$gateways         = edd_get_payment_gateways();
+		$admin_email      = get_bloginfo( 'admin_email' );
+		$site_name        = get_bloginfo( 'name' );
+		$site_hash        = substr( md5( $site_name ), 0, 10 );
 		$edd_settings     = array(
 
 			// General Settings
 			'general' => apply_filters( 'edd_settings_general', array(
 				'main' => array(
+					'store_name' => array(
+						'id'      => 'store_name',
+						'name'    => __( 'Store Name', 'easy-digital-downloads' ),
+						'desc'    => __( 'The name of your store, publicly visible in many areas.', 'easy-digital-downloads' ),
+						'type'    => 'text',
+						'std'     => $site_name,
+					),
+					'store_address' => array(
+						'id'      => 'store_address',
+						'name'    => __( 'Store Address', 'easy-digital-downloads' ),
+						'desc'    => __( 'Customers will see this in emails.', 'easy-digital-downloads' ),
+						'type'    => 'textarea'
+					),
+				),
+				'pages' => array(
 					'page_settings' => array(
 						'id'            => 'page_settings',
 						'name'          => '<h3>' . __( 'Pages', 'easy-digital-downloads' ) . '</h3>',
@@ -604,9 +621,9 @@ function edd_get_registered_settings() {
 						'check' => __( 'Allow',          'easy-digital-downloads' ),
 						'desc'  => sprintf(
 							__( 'Help us make Easy Digital Downloads better by opting into anonymous usage tracking. <a href="%s" target="_blank">Here is what we track</a>.<br>If you opt-in here and to <a href="%s">our newsletter</a>, we will email you a discount code for our <a href="%s" target="_blank">extension shop</a>.', 'easy-digital-downloads' ),
-							'https://easydigitaldownloads.com/tracking/',
-							'https://easydigitaldownloads.com/subscribe/?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking',
-							'https://easydigitaldownloads.com/downloads/?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
+							esc_url( 'https://easydigitaldownloads.com/tracking/' ),
+							esc_url( 'https://easydigitaldownloads.com/subscribe/?utm_source=' . $site_hash . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking' ),
+							esc_url( 'https://easydigitaldownloads.com/downloads/?utm_source=' . $site_hash . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking' )
 						),
 						'type' => 'checkbox_description',
 					)
@@ -672,18 +689,20 @@ function edd_get_registered_settings() {
 						'type'    => 'upload',
 					),
 					'from_name' => array(
-						'id'      => 'from_name',
-						'name'    => __( 'From Name', 'easy-digital-downloads' ),
-						'desc'    => __( 'This should be your site or shop name.', 'easy-digital-downloads' ),
-						'type'    => 'text',
-						'std'     => get_bloginfo( 'name' ),
+						'id'          => 'from_name',
+						'name'        => __( 'From Name', 'easy-digital-downloads' ),
+						'desc'        => __( 'This should be your site or shop name. Defaults to Site Title if empty.', 'easy-digital-downloads' ),
+						'type'        => 'text',
+						'std'         => $site_name,
+						'placeholder' => $site_name
 					),
 					'from_email' => array(
-						'id'      => 'from_email',
-						'name'    => __( 'From Email', 'easy-digital-downloads' ),
-						'desc'    => __( 'This will act as the "from" and "reply-to" addresses.', 'easy-digital-downloads' ),
-						'type'    => 'email',
-						'std'     => get_bloginfo( 'admin_email' ),
+						'id'          => 'from_email',
+						'name'        => __( 'From Email', 'easy-digital-downloads' ),
+						'desc'        => __( 'This will act as the "from" and "reply-to" addresses.', 'easy-digital-downloads' ),
+						'type'        => 'email',
+						'std'         => $admin_email,
+						'placeholder' => $admin_email
 					),
 					'email_settings' => array(
 						'id'      => 'email_settings',
@@ -748,7 +767,7 @@ function edd_get_registered_settings() {
 						'name' => __( 'Sale Notification Emails', 'easy-digital-downloads' ),
 						'desc' => __( 'Enter the email address(es) that should receive a notification anytime a sale is made. One per line.', 'easy-digital-downloads' ),
 						'type' => 'textarea',
-						'std'  => get_bloginfo( 'admin_email' ),
+						'std'  => $admin_email,
 					),
 					'disable_admin_notices' => array(
 						'id'   => 'disable_admin_notices',
@@ -1685,6 +1704,7 @@ function edd_get_registered_settings_sections() {
 				'main'               => __( 'General',    'easy-digital-downloads' ),
 				'location'           => __( 'Location',   'easy-digital-downloads' ),
 				'currency'           => __( 'Currency',   'easy-digital-downloads' ),
+				'pages'              => __( 'Pages',      'easy-digital-downloads' ),
 				'moderation'         => __( 'Moderation', 'easy-digital-downloads' ),
 				'refunds'            => __( 'Refunds',    'easy-digital-downloads' ),
 				'api'                => __( 'API',        'easy-digital-downloads' ),
