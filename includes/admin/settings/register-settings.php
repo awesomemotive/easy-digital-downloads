@@ -471,7 +471,7 @@ function edd_get_registered_settings() {
 					),
 					'base_country' => array(
 						'id'          => 'base_country',
-						'name'        => __( 'Base Country', 'easy-digital-downloads' ),
+						'name'        => __( 'Country', 'easy-digital-downloads' ),
 						'desc'        => __( 'Where does your store operate from?', 'easy-digital-downloads' ),
 						'type'        => 'select',
 						'options'     => edd_get_country_list(),
@@ -484,7 +484,7 @@ function edd_get_registered_settings() {
 					),
 					'base_state' => array(
 						'id'          => 'base_state',
-						'name'        => __( 'Base Region', 'easy-digital-downloads' ),
+						'name'        => __( 'Region', 'easy-digital-downloads' ),
 						'desc'        => __( 'What state/province/territory does your store operate from?', 'easy-digital-downloads' ),
 						'type'        => 'shop_states',
 						'chosen'      => true,
@@ -836,14 +836,14 @@ function edd_get_registered_settings() {
 				'rates' => array(
 					'tax_rate' => array(
 						'id'            => 'tax_rate',
-						'name'          => __( 'Base Rate', 'easy-digital-downloads' ),
+						'name'          => __( 'Default Rate', 'easy-digital-downloads' ),
 						'desc'          => __( 'Customers not in a region below will be charged this tax rate instead. Enter <code>6.5</code> for 6.5%. ', 'easy-digital-downloads' ),
 						'type'          => 'number',
 						'size'          => 'small',
 						'step'          => '0.0001',
 						'min'           => '0',
 						'max'           => '99',
-						'tooltip_title' => __( 'Base Rate', 'easy-digital-downloads' ),
+						'tooltip_title' => __( 'Default Rate', 'easy-digital-downloads' ),
 						'tooltip_desc'  => __( 'If the customer\'s address fails to meet the below tax rules, you can define a default tax rate to be applied to all other customers. Enter a percentage, such as 6.5 for 6.5%.', 'easy-digital-downloads' ),
 					),
 					'tax_rates' => array(
