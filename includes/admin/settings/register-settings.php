@@ -387,17 +387,19 @@ function edd_get_registered_settings() {
 			'general' => apply_filters( 'edd_settings_general', array(
 				'main' => array(
 					'store_name' => array(
-						'id'      => 'store_name',
-						'name'    => __( 'Store Name', 'easy-digital-downloads' ),
-						'desc'    => __( 'The name of your store, publicly visible in many areas.', 'easy-digital-downloads' ),
-						'type'    => 'text',
-						'std'     => $site_name,
+						'id'          => 'store_name',
+						'name'        => __( 'Store Name', 'easy-digital-downloads' ),
+						'desc'        => __( 'The official name of your store. Defaults to Site Title if empty.', 'easy-digital-downloads' ),
+						'type'        => 'text',
+						'std'         => $site_name,
+						'placeholder' => $site_name
 					),
 					'store_address' => array(
-						'id'      => 'store_address',
-						'name'    => __( 'Store Address', 'easy-digital-downloads' ),
-						'desc'    => __( 'Customers will see this in emails.', 'easy-digital-downloads' ),
-						'type'    => 'textarea'
+						'id'          => 'store_address',
+						'name'        => __( 'Store Address', 'easy-digital-downloads' ),
+						'desc'        => __( 'Customers will see this in emails.', 'easy-digital-downloads' ),
+						'type'        => 'textarea',
+						'placeholder' => ''
 					),
 				),
 				'pages' => array(
