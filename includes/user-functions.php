@@ -325,7 +325,7 @@ function edd_purchase_total_of_user( $user = null ) {
  * @return      int - The total number of files the user has downloaded
  */
 function edd_count_file_downloads_of_user( $user ) {
-	global $edd_logs;
+	$edd_logs = EDD()->debug_log;
 
 	// If we got an email, look up the customer ID and call the direct query
 	// for customer download counts.
@@ -352,8 +352,7 @@ function edd_count_file_downloads_of_user( $user ) {
  * @return int The total number of files the customer has downloaded.
  */
 function edd_count_file_downloads_of_customer( $customer_id_or_email = '' ) {
-	global $edd_logs;
-
+	$edd_logs   = EDD()->debug_log;
 	$customer   = new EDD_Customer( $customer_id_or_email );
 	$meta_query = array(
 		array(
@@ -374,7 +373,8 @@ function edd_count_file_downloads_of_customer( $customer_id_or_email = '' ) {
  */
 function edd_validate_username( $username ) {
 	$sanitized = sanitize_user( $username, false );
-	$valid = ( $sanitized == $username );
+	$valid     = ( $sanitized == $username );
+
 	return (bool) apply_filters( 'edd_validate_username', $valid, $username );
 }
 

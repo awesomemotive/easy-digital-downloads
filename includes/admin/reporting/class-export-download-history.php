@@ -73,7 +73,7 @@ class EDD_Download_History_Export extends EDD_Export {
 	 * @return array $data The data for the CSV file
 	 */
 	public function get_data() {
-		global $edd_logs;
+		$edd_logs = EDD()->debug_log;
 
 		$data = array();
 
