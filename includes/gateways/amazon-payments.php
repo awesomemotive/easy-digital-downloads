@@ -1248,7 +1248,14 @@ final class EDD_Amazon_Payments {
 	 * @return string
 	 */
 	private function get_registration_url() {
-		return 'https://payments.amazon.com/register?registration_source=SPPD&spId=A3JST9YM1SX7LB';
+		$base_url = 'https://payments.amazon.com/register';
+
+		$query_args = array(
+			'registration_source' => 'SPPD',
+			'spId'                => 'A3JST9YM1SX7LB',
+		);
+
+		return add_query_arg( $query_args, $base_url );
 	}
 
 }
