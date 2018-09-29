@@ -45,7 +45,6 @@ Payment gateways supported through free or premium extension:
 * SOFORT Banking
 * BitPay
 * Coinbase
-* Payza
 
 See our [gateways category](https://easydigitaldownloads.com/downloads/category/gateways/?utm_source=extensions&utm_medium=description_tab&utm_content=gateways&utm_campaign=readme) in the extensions catalogue for a complete list of supported gateways. There are also a large number of additional gateways developed and supported by [3rd party developers](https://easydigitaldownloads.com/3rd-party-extensions/#gateways).
 
