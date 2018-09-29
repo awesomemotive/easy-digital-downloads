@@ -1,3 +1,6 @@
+
+Looks better aint it?
+
 === Easy Digital Downloads ===
 Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
