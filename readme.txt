@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.4
 Tested up to: 4.9.8
-Stable Tag: 2.9.7
+Stable Tag: 2.9.8
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -188,6 +188,15 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+
+= 2.9.8, October 1, 2018 =
+* Fix: Updated Amazon Payments onboarding URL.
+* Fix: Insert Download media button would not output expected plain text styles.
+* Fix: Adding a discount code on a cart with free products caused a division by zero error.
+* Fix: Removed unnecessary clearfix rule from CSS.
+* New: Repositioned and refactored the pagination in the [downloads] shortcode to allow better customization.
+* Dev: All available contextual arguments were added to the edd_requested_file filter.
+
 
 = 2.9.7, September 10, 2018 =
 * Fix: The edd_cart_amount data attributes were not updated when quantities were changed at checkout.
