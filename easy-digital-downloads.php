@@ -132,7 +132,7 @@ final class EDD_Requirements_Check {
 
 			// Bootstrap to plugins_loaded before priority 10 to make sure
 			// add-ons are loaded after us.
-			add_action( 'plugins_loaded', array( $this, 'bootstrap' ), 8 );
+			add_action( 'plugins_loaded', array( $this, 'bootstrap' ), 4 );
 
 			// Register the activation hook
 			register_activation_hook( $this->file, array( $this, 'install' ) );
