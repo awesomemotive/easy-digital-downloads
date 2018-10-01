@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.9.7\n"
+"Project-Id-Version: Easy Digital Downloads 2.9.8\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2018-09-10 22:52:27+00:00\n"
+"POT-Creation-Date: 2018-10-01 19:42:17+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -90,7 +90,7 @@ msgstr ""
 #: includes/admin/upgrades/upgrade-functions.php:1114
 #: includes/api/class-edd-api.php:1969 includes/api/class-edd-api.php:1974
 #: includes/api/class-edd-api.php:1986 includes/api/class-edd-api.php:1988
-#: includes/cart/class-edd-cart.php:1423 includes/cart/class-edd-cart.php:1437
+#: includes/cart/class-edd-cart.php:1424 includes/cart/class-edd-cart.php:1438
 #: includes/class-edd-license-handler.php:305
 #: includes/deprecated-functions.php:517 includes/deprecated-functions.php:532
 #: includes/deprecated-functions.php:542 includes/download-functions.php:1260
@@ -556,7 +556,7 @@ msgid "Nonce verification failed"
 msgstr ""
 
 #: includes/admin/customers/customer-actions.php:311
-#: includes/shortcodes.php:962
+#: includes/shortcodes.php:934
 msgid "Email address %s removed by %s"
 msgstr ""
 
@@ -685,7 +685,7 @@ msgstr ""
 #: includes/admin/customers/customers.php:695
 #: includes/admin/payments/view-order-details.php:651
 #: includes/admin/payments/view-order-details.php:671
-#: includes/admin/thickbox.php:132 includes/class-edd-html-elements.php:796
+#: includes/admin/thickbox.php:136 includes/class-edd-html-elements.php:796
 msgid "Cancel"
 msgstr ""
 
@@ -1806,7 +1806,7 @@ msgstr ""
 
 #: includes/admin/downloads/metabox.php:1105
 #: includes/admin/settings/register-settings.php:761
-#: includes/admin/thickbox.php:97
+#: includes/admin/thickbox.php:101
 msgid "Add to Cart"
 msgstr ""
 
@@ -4440,7 +4440,7 @@ msgstr ""
 msgid "Deactivate License"
 msgstr ""
 
-#: includes/admin/thickbox.php:29 includes/admin/thickbox.php:131
+#: includes/admin/thickbox.php:29 includes/admin/thickbox.php:135
 msgid "Insert %s"
 msgstr ""
 
@@ -4448,27 +4448,27 @@ msgstr ""
 msgid "You must choose a download"
 msgstr ""
 
-#: includes/admin/thickbox.php:89
+#: includes/admin/thickbox.php:93
 msgid "Use the form below to insert the shortcode for purchasing a %s"
 msgstr ""
 
-#: includes/admin/thickbox.php:96
+#: includes/admin/thickbox.php:100
 msgid "Choose the button behavior"
 msgstr ""
 
-#: includes/admin/thickbox.php:98
+#: includes/admin/thickbox.php:102
 msgid "Direct Purchase Link"
 msgstr ""
 
-#: includes/admin/thickbox.php:104
+#: includes/admin/thickbox.php:108
 msgid "Choose a style"
 msgstr ""
 
-#: includes/admin/thickbox.php:118
+#: includes/admin/thickbox.php:122
 msgid "Choose a button color"
 msgstr ""
 
-#: includes/admin/thickbox.php:128
+#: includes/admin/thickbox.php:132
 msgid "Link text . . ."
 msgstr ""
 
@@ -5196,32 +5196,32 @@ msgstr ""
 msgid "You do not have permission to %s API keys for this user"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:887
+#: includes/cart/class-edd-cart.php:888
 msgid "includes %s tax"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:889
+#: includes/cart/class-edd-cart.php:890
 msgid "excludes %s tax"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1387 includes/cart/class-edd-cart.php:1449
+#: includes/cart/class-edd-cart.php:1388 includes/cart/class-edd-cart.php:1450
 #: templates/shortcode-profile-editor.php:22
 msgid "Success"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1388
+#: includes/cart/class-edd-cart.php:1389
 msgid "Cart saved successfully. You can restore your cart using this URL:"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1423 includes/cart/class-edd-cart.php:1437
+#: includes/cart/class-edd-cart.php:1424 includes/cart/class-edd-cart.php:1438
 msgid "Cart restoration failed. Invalid token."
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1431 includes/cart/class-edd-cart.php:1440
+#: includes/cart/class-edd-cart.php:1432 includes/cart/class-edd-cart.php:1441
 msgid "The cart cannot be restored. Invalid token."
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1449
+#: includes/cart/class-edd-cart.php:1450
 msgid "Cart restored successfully."
 msgstr ""
 
@@ -7899,31 +7899,31 @@ msgstr ""
 msgid "Purchase All Items"
 msgstr ""
 
-#: includes/shortcodes.php:699
+#: includes/shortcodes.php:671
 msgid "Sorry, trouble retrieving payment receipt."
 msgstr ""
 
-#: includes/shortcodes.php:734
+#: includes/shortcodes.php:706
 msgid "You must be logged in to view this payment receipt."
 msgstr ""
 
-#: includes/shortcodes.php:746
+#: includes/shortcodes.php:718
 msgid "Receipt could not be retrieved, your purchase session has expired."
 msgstr ""
 
-#: includes/shortcodes.php:876
+#: includes/shortcodes.php:848
 msgid "The passwords you entered do not match. Please try again."
 msgstr ""
 
-#: includes/shortcodes.php:886
+#: includes/shortcodes.php:858
 msgid "The email you entered is invalid. Please enter a valid email."
 msgstr ""
 
-#: includes/shortcodes.php:891
+#: includes/shortcodes.php:863
 msgid "The email you entered belongs to another user. Please use another."
 msgstr ""
 
-#: includes/shortcodes.php:966
+#: includes/shortcodes.php:938
 msgid "Error removing email address from profile. Please try again later."
 msgstr ""
 
@@ -8183,7 +8183,7 @@ msgstr ""
 msgid "Payment status is %s"
 msgstr ""
 
-#: templates/history-downloads.php:109
+#: templates/history-downloads.php:106
 msgid "You have not purchased any downloads"
 msgstr ""
 
@@ -8195,7 +8195,7 @@ msgstr ""
 msgid "View Details and Downloads"
 msgstr ""
 
-#: templates/history-purchases.php:62
+#: templates/history-purchases.php:59
 msgid "You have not made any purchases"
 msgstr ""
 
@@ -8501,7 +8501,7 @@ msgctxt "download post type name"
 msgid "%2$s"
 msgstr ""
 
-#: includes/shortcodes.php:650
+#: includes/shortcodes.php:620
 msgctxt "download post type name"
 msgid "No %s found"
 msgstr ""
