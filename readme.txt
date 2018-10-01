@@ -197,7 +197,6 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * New: Repositioned and refactored the pagination in the [downloads] shortcode to allow better customization.
 * Dev: All available contextual arguments were added to the edd_requested_file filter.
 
-
 = 2.9.7, September 10, 2018 =
 * Fix: The edd_cart_amount data attributes were not updated when quantities were changed at checkout.
 * Fix: Updated the zip/postal code validation for Mongolia.
