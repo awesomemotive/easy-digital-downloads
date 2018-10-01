@@ -208,7 +208,7 @@ class EDD_Discount_Codes_Table extends List_Table {
 			$row_actions['cancel'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
 				'edd-action' => 'deactivate_discount',
 				'discount'   => $discount->id,
-			), $base ), 'edd_discount_nonce' ) ) . '">' . __( 'Cancel', 'easy-digital-downloads' ) . '</a>';
+			), $base ), 'edd_discount_nonce' ) ) . '">' . __( 'Deactivate', 'easy-digital-downloads' ) . '</a>';
 
 		// Inactive, so add "activate" action
 		} elseif ( 'inactive' === strtolower( $discount->status ) ) {
@@ -286,9 +286,9 @@ class EDD_Discount_Codes_Table extends List_Table {
 	 */
 	public function get_bulk_actions() {
 		return array(
-			'activate'   => __( 'Activate', 'easy-digital-downloads' ),
-			'deactivate' => __( 'Cancel',   'easy-digital-downloads' ),
-			'delete'     => __( 'Delete',   'easy-digital-downloads' )
+			'activate'   => __( 'Activate',   'easy-digital-downloads' ),
+			'deactivate' => __( 'Deactivate', 'easy-digital-downloads' ),
+			'delete'     => __( 'Delete',     'easy-digital-downloads' )
 		);
 	}
 
