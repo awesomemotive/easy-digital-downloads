@@ -417,28 +417,28 @@ function edd_get_registered_settings() {
 					'business_address' => array(
 						'id'          => 'business_address',
 						'name'        => __( 'Business Address', 'easy-digital-downloads' ),
-						'desc'        => __( 'Your company or home address, based on business type above.', 'easy-digital-downloads' ),
+						//'desc'        => __( 'Your company or home address, based on business type above.', 'easy-digital-downloads' ),
 						'type'        => 'text',
 						'placeholder' => ''
 					),
 					'business_address_2' => array(
 						'id'          => 'business_address_2',
 						'name'        => __( 'Business Address (Extra)', 'easy-digital-downloads' ),
-						'desc'        => __( 'Anything requiring an extra line (suite, attention, etc...)', 'easy-digital-downloads' ),
+						//'desc'        => __( 'Anything requiring an extra line (suite, attention, etc...)', 'easy-digital-downloads' ),
 						'type'        => 'text',
 						'placeholder' => ''
 					),
 					'business_city' => array(
 						'id'          => 'business_city',
 						'name'        => __( 'Business City', 'easy-digital-downloads' ),
-						'desc'        => __( 'The physical city your home or business is in.', 'easy-digital-downloads' ),
+						//'desc'        => __( 'The physical city your company or home is in.', 'easy-digital-downloads' ),
 						'type'        => 'text',
 						'placeholder' => ''
 					),
 					'business_postal_code' => array(
 						'id'          => 'business_postal_code',
 						'name'        => __( 'Business Postal Code', 'easy-digital-downloads' ),
-						'desc'        => __( 'The code used to deliver physical mail.', 'easy-digital-downloads' ),
+						//'desc'        => __( 'The zip/postal code for your company or home address.', 'easy-digital-downloads' ),
 						'type'        => 'text',
 						'size'        => 'medium',
 						'placeholder' => ''
@@ -446,7 +446,7 @@ function edd_get_registered_settings() {
 					'base_country' => array(
 						'id'          => 'base_country',
 						'name'        => __( 'Business Country', 'easy-digital-downloads' ),
-						'desc'        => __( 'Where does your store operate from?', 'easy-digital-downloads' ),
+						//'desc'        => __( 'The country your company or home is in.', 'easy-digital-downloads' ),
 						'type'        => 'select',
 						'options'     => edd_get_country_list(),
 						'chosen'      => true,
@@ -459,7 +459,7 @@ function edd_get_registered_settings() {
 					'base_state' => array(
 						'id'          => 'base_state',
 						'name'        => __( 'Business Region', 'easy-digital-downloads' ),
-						'desc'        => __( 'What state/province/territory does your store operate from?', 'easy-digital-downloads' ),
+						//'desc'        => __( 'The state/province/territory your company or home is in.', 'easy-digital-downloads' ),
 						'type'        => 'shop_states',
 						'chosen'      => true,
 						'field_class' => 'edd_regions_filter',
