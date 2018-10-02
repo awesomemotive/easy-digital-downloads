@@ -231,4 +231,22 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 
 		return 0.00;
 	}
+
+	/**
+	 * Get an order item name, including any price ID name appended to the end.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string The product name including any price ID name.
+	 */
+	public function get_order_item_name() {
+
+		// Return product name if not a variable price
+		if ( empty( $this->price_id ) ) {
+			return $this->product_name;
+		}
+
+		// Get the download name, maybe with the price name appended
+		return edd_get_download_name( $this->product_id, $this->price_id );
+	}
 }

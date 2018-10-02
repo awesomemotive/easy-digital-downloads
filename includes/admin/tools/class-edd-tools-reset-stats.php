@@ -286,7 +286,7 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 		$value = $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM {$wpdb->options} WHERE option_name = %s", $key ) );
 
 		if ( empty( $value ) ) {
-			return false;
+			return array();
 		}
 
 		$maybe_json = json_decode( $value );
@@ -294,7 +294,7 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 			$value = json_decode( $value, true );
 		}
 
-		return $value;
+		return (array) $value;
 	}
 
 	/**
@@ -305,7 +305,7 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 	 * @param string $key   Option name.
 	 * @param mixed  $value Option value.
 	 */
-	private function store_data( $key = '', $value ) {
+	private function store_data( $key = '', $value = '' ) {
 		global $wpdb;
 
 		// Bail if no key was passed.

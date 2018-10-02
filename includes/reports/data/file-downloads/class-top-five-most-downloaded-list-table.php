@@ -76,28 +76,7 @@ class Top_Five_Most_Downloaded_List_Table extends List_Table {
 		}
 
 		// Download title
-		$title = $download->object->post_title;
-
-		// Look for variable pricing
-		$prices = $download->object->get_prices();
-		if ( ! empty( $prices ) ) {
-
-			// Get prices with matching index
-			$prices = wp_filter_object_list( $prices, array(
-				'index' => absint( $download->price_id ),
-			) );
-
-			// Only want values
-			$prices = array_values( $prices );
-
-			// Maybe append the value
-			if ( ! empty( $prices ) ) {
-				$prices = $prices[0];
-				$title .= ' &mdash; ' . $prices['name'];
-			}
-		}
-
-		return $title;
+		return $download->object->get_name();
 	}
 
 	/**

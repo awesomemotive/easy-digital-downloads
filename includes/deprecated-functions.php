@@ -1095,7 +1095,7 @@ function edd_override_edit_post_for_payment_link( $url = '', $post_id = 0, $cont
 function edd_record_sale_in_log( $download_id = 0, $payment_id, $price_id = false, $sale_date = null ) {
 	_edd_deprecated_function( __FUNCTION__, '3.0' );
 
-	global $edd_logs;
+	$edd_logs = EDD()->debug_log;
 
 	$log_data = array(
 		'post_parent'   => $download_id,

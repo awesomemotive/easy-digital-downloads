@@ -557,7 +557,8 @@ class EDD_API {
 		}
 
 		$data         = array();
-		$this->routes = new $this->versions[$this->get_queried_version()];
+		$version      = $this->get_queried_version();
+		$this->routes = new $this->versions[ $version ];
 		$this->routes->validate_request();
 
 		switch ( $this->endpoint ) :
@@ -980,8 +981,6 @@ class EDD_API {
 	 *
 	 * @since  1.5
 	 * @author Daniel J Griffiths
-	 * @global object $wpdb     Used to query the database using the WordPress
-	 *                          Database API
 	 *
 	 * @param int     $customer Customer ID
 	 *
@@ -996,8 +995,6 @@ class EDD_API {
 		if ( ! user_can( $this->user_id, 'view_shop_sensitive_data' ) && ! $this->override ) {
 			return $customers;
 		}
-
-		global $wpdb;
 
 		$paged    = $this->get_paged();
 		$per_page = $this->per_page();
@@ -1089,7 +1086,7 @@ class EDD_API {
 	 * @author Daniel J Griffiths
 	 * @since  1.5
 	 *
-	 * @param int $product Product (Download) ID
+	 * @param array $args
 	 *
 	 * @return array $customers Multidimensional array of the products
 	 */
@@ -1200,16 +1197,16 @@ class EDD_API {
 	 * @return array
 	 */
 	public function get_stats( $args = array() ) {
-		$defaults = array(
+
+		// Parse args
+		$args = wp_parse_args( $args, array(
 			'type'        => null,
 			'product'     => null,
 			'date'        => null,
 			'startdate'   => null,
 			'enddate'     => null,
 			'include_tax' => true,
-		);
-
-		$args = wp_parse_args( $args, $defaults );
+		) );
 
 		$dates = $this->get_dates( $args );
 
@@ -1658,10 +1655,9 @@ class EDD_API {
 	 * @return array            Multidimensional array of the download logs
 	 */
 	public function get_download_logs( $customer_id = 0 ) {
-		global $edd_logs;
+		$edd_logs = EDD()->debug_log;
 
 		$downloads        = array();
-		$errors           = array();
 		$invalid_customer = false;
 
 		$paged    = $this->get_paged();
@@ -1716,10 +1712,8 @@ class EDD_API {
 		}
 
 		foreach ( $logs as $log ) {
-			$item = array();
 
 			$log_meta   = get_post_custom( $log->ID );
-			$user_info  = isset( $log_meta['_edd_log_user_info'] ) ? maybe_unserialize( $log_meta['_edd_log_user_info'][0] ) : array();
 			$payment_id = isset( $log_meta['_edd_log_payment_id'] ) ? $log_meta['_edd_log_payment_id'][0] : false;
 
 			$payment_customer_id = edd_get_payment_customer_id( $payment_id );
@@ -1732,7 +1726,7 @@ class EDD_API {
 			$file_id             = $file_id !== false ? $file_id : 0;
 			$file_name           = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
 
-			$item = array(
+			$item = (array) apply_filters( 'edd_api_download_log_item', array(
 				'ID'           => $log->ID,
 				'user_id'      => $user_id,
 				'product_id'   => $log->post_parent,
@@ -1742,9 +1736,7 @@ class EDD_API {
 				'file'         => $file_name,
 				'ip'           => $ip,
 				'date'         => $log->post_date,
-			);
-
-			$item = apply_filters( 'edd_api_download_log_item', $item, $log, $log_meta );
+			), $log, $log_meta );
 
 			$downloads['download_logs'][] = $item;
 
@@ -1966,15 +1958,19 @@ class EDD_API {
 			<table class="form-table">
 				<tbody>
 				<tr>
-					<th><?php _e( 'Easy Digital Downloads API Keys', 'easy-digital-downloads' ); ?></th>
+					<th><?php _e( 'Downloads API Keys', 'easy-digital-downloads' ); ?></th>
 					<td>
 						<?php
 						$public_key = $this->get_user_public_key( $user->ID );
 						$secret_key = $this->get_user_secret_key( $user->ID );
-						?>
-						<?php if ( empty( $user->edd_user_public_key ) ) { ?>
-							<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0"/>
-							<span class="description"><?php _e( 'Generate API Key', 'easy-digital-downloads' ); ?></span>
+
+						if ( empty( $user->edd_user_public_key ) ) { ?>
+							<p class="description">
+								<label>
+									<input name="edd_set_api_key" type="checkbox" id="edd_set_api_key" value="0"/>
+									<?php _e( 'Generate API Key', 'easy-digital-downloads' ); ?>
+								</label>
+							</p>
 						<?php } else { ?>
 							<strong style="display:inline-block; width: 125px;"><?php _e( 'Public key:', 'easy-digital-downloads' ); ?>&nbsp;</strong>
                             <input type="text" disabled="disabled" class="regular-text" id="publickey" value="<?php echo esc_attr( $public_key ); ?>"/>
@@ -2010,7 +2006,7 @@ class EDD_API {
 		}
 
 		if ( empty( $args['user_id'] ) ) {
-			wp_die( sprintf( __( 'User ID Required', 'easy-digital-downloads' ), $process ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 401 ) );
+			wp_die( __( 'User ID Required', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 401 ) );
 		}
 
 		if ( is_numeric( $args['user_id'] ) ) {
@@ -2077,7 +2073,6 @@ class EDD_API {
 		}
 
 		$public_key = $this->get_user_public_key( $user_id );
-		$secret_key = $this->get_user_secret_key( $user_id );
 
 		if ( empty( $public_key ) || $regenerate == true ) {
 			$new_public_key = $this->generate_public_key( $user->user_email );

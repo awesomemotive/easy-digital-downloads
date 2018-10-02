@@ -49,43 +49,7 @@ class EDD_Logging {
 	 * @since 1.3.1
 	 */
 	public function __construct() {
-		add_action( 'plugins_loaded', array( $this, 'setup_log_file' ), 0 );
-	}
-
-	/**
-	 * Sets up the log file if it is writable
-	 *
-	 * @since 2.8.7
-	 * @return void
-	 */
-	public function setup_log_file() {
-		$upload_dir     = wp_upload_dir();
-		$this->filename = wp_hash( home_url( '/' ) ) . '-edd-debug.log';
-		$this->file     = trailingslashit( $upload_dir['basedir'] ) . $this->filename;
-
-		if ( ! is_writeable( $upload_dir['basedir'] ) ) {
-			$this->is_writable = false;
-		}
-	}
-
-	/**
-	 * Registers the edd_log post type.
-	 *
-	 * @since 1.3.1
-	 * @since 3.0 Deprecated due to migration to custom tables.
-	 */
-	public function register_post_type() {
-		_edd_deprecated_function( __FUNCTION__, '3.0.0' );
-	}
-
-	/**
-	 * Register the log type taxonomy.
-	 *
-	 * @since 1.3.1
-	 * @since 3.0 Deprecated due to migration to custom tables.
-	*/
-	public function register_taxonomy() {
-		_edd_deprecated_function( __FUNCTION__, '3.0.0' );
+		add_action( 'plugins_loaded', array( $this, 'setup_log_file' ), 8 );
 	}
 
 	/**
@@ -196,7 +160,8 @@ class EDD_Logging {
 				: 'download',
 		);
 
-		if ( $type = $args['log_type'] ) {
+		$type = $args['log_type'];
+		if ( ! empty( $type ) ) {
 			$data['type'] = $type;
 		}
 
@@ -295,7 +260,8 @@ class EDD_Logging {
 		// Used to dynamically dispatch the method call to insert() to the correct class.
 		$update_method = 'edd_update_log';
 
-		if ( $type = $args['log_type'] ) {
+		$type = $args['log_type'];
+		if ( ! empty( $type ) ) {
 			$data['type'] = $args['log_type'];
 		}
 
@@ -569,16 +535,58 @@ class EDD_Logging {
 		return $r;
 	}
 
+	/** File System ***********************************************************/
+
 	/**
-	 * Retrieve the log data.
+	 * Sets up the log file if it is writable
 	 *
-	 * @access public
 	 * @since 2.8.7
-	 *
-	 * @return string Log data.
+	 * @return void
 	 */
-	public function get_file_contents() {
-		return $this->get_file();
+	public function setup_log_file() {
+		$this->init_fs();
+
+		$upload_dir     = wp_upload_dir();
+		$this->filename = wp_hash( home_url( '/' ) ) . '-edd-debug.log';
+		$this->file     = trailingslashit( $upload_dir['basedir'] ) . $this->filename;
+
+		if ( ! $this->get_fs()->is_writable( $upload_dir['basedir'] ) ) {
+			$this->is_writable = false;
+		}
+	}
+
+	/**
+	 * Initialize the WordPress file system
+	 *
+	 * @since 3.0
+	 *
+	 * @global WP_Filesystem_Base $wp_filesystem
+	 */
+	private function init_fs() {
+		global $wp_filesystem;
+
+		if ( ! empty( $wp_filesystem ) ) {
+			return;
+		}
+
+		// Include the file-system
+		require_once ABSPATH . 'wp-admin/includes/file.php';
+
+		// Initialize the file system
+		WP_Filesystem();
+	}
+
+	/**
+	 * Get the WordPress file-system
+	 *
+	 * @since 3.0
+	 *
+	 * @return WP_Filesystem_Base
+	 */
+	private function get_fs() {
+		return ! empty( $GLOBALS['wp_filesystem'] )
+			? $GLOBALS['wp_filesystem']
+			: false;
 	}
 
 	/**
@@ -595,6 +603,29 @@ class EDD_Logging {
 	}
 
 	/**
+	 * Return the location of the log file that EDD_Logging will use.
+	 *
+	 * @since 2.9.1
+	 *
+	 * @return string
+	 */
+	public function get_log_file_path() {
+		return $this->file;
+	}
+
+	/**
+	 * Retrieve the log data.
+	 *
+	 * @access public
+	 * @since 2.8.7
+	 *
+	 * @return string Log data.
+	 */
+	public function get_file_contents() {
+		return $this->get_file();
+	}
+
+	/**
 	 * Retrieve the file data is written to
 	 *
 	 * @access protected
@@ -605,15 +636,15 @@ class EDD_Logging {
 	protected function get_file() {
 		$file = '';
 
-		if ( @file_exists( $this->file ) ) {
-			if ( ! is_writeable( $this->file ) ) {
+		if ( $this->get_fs()->exists( $this->file ) ) {
+			if ( ! $this->get_fs()->is_writable( $this->file ) ) {
 				$this->is_writable = false;
 			}
 
-			$file = @file_get_contents( $this->file );
+			$file = $this->get_fs()->get_contents( $this->file );
 		} else {
-			@file_put_contents( $this->file, '' );
-			@chmod( $this->file, 0664 );
+			$this->get_fs()->put_contents( $this->file, '' );
+			$this->get_fs()->chmod( $this->file, 0664 );
 		}
 
 		return $file;
@@ -626,9 +657,9 @@ class EDD_Logging {
 	 * @since 2.8.7
 	 */
 	protected function write_to_log( $message = '' ) {
-		$file = $this->get_file();
+		$file  = $this->get_file();
 		$file .= $message;
-		@file_put_contents( $this->file, $file );
+		$this->get_fs()->put_contents( $this->file, $file );
 	}
 
 	/**
@@ -640,23 +671,17 @@ class EDD_Logging {
 	 * @return bool True if the log was cleared, false otherwise.
 	 */
 	public function clear_log_file() {
-		@unlink( $this->file );
+		$this->get_fs()->delete( $this->file );
 
-		if ( file_exists( $this->file ) ) {
+		if ( $this->get_fs()->exists( $this->file ) ) {
 
 			// It's still there, so maybe server doesn't have delete rights
-			chmod( $this->file, 0664 ); // Try to give the server delete rights
-			@unlink( $this->file );
+			$this->get_fs()->chmod( $this->file, 0664 );
+			$this->get_fs()->delete( $this->file );
 
 			// See if it's still there...
-			if ( @file_exists( $this->file ) ) {
-
-				// Remove all contents of the log file if we cannot delete it
-				if ( is_writeable( $this->file ) ) {
-					file_put_contents( $this->file, '' );
-				} else {
-					return false;
-				}
+			if ( $this->get_fs()->exists( $this->file ) ) {
+				$this->get_fs()->put_contents( $this->file, '' );
 			}
 		}
 
@@ -664,22 +689,28 @@ class EDD_Logging {
 		return true;
 	}
 
+	/** Deprecated ************************************************************/
+
 	/**
-	 * Return the location of the log file that EDD_Logging will use.
+	 * Registers the edd_log post type.
 	 *
-	 * Note: Do not use this file to write to the logs, please use the `edd_debug_log` function to do so.
-	 *
-	 * @since 2.9.1
-	 *
-	 * @return string
+	 * @since 1.3.1
+	 * @deprecated 3.0 Due to migration to custom tables.
 	 */
-	public function get_log_file_path() {
-		return $this->file;
+	public function register_post_type() {
+		_edd_deprecated_function( __FUNCTION__, '3.0.0' );
+	}
+
+	/**
+	 * Register the log type taxonomy.
+	 *
+	 * @since 1.3.1
+	 * @deprecated 3.0 Due to migration to custom tables.
+	*/
+	public function register_taxonomy() {
+		_edd_deprecated_function( __FUNCTION__, '3.0.0' );
 	}
 }
-
-// Initiate the logging system
-$GLOBALS['edd_logs'] = new EDD_Logging();
 
 /**
  * Helper method to insert a new log into the database.
@@ -696,14 +727,10 @@ $GLOBALS['edd_logs'] = new EDD_Logging();
  * @return int ID of the new log.
  */
 function edd_record_log( $title = '', $message = '', $parent = 0, $type = null ) {
-	/** @var EDD_Logging $edd_logs */
-	global $edd_logs;
+	$edd_logs = EDD()->debug_log;
 
-	$log = $edd_logs->add( $title, $message, $parent, $type );
-
-	return $log;
+	return $edd_logs->add( $title, $message, $parent, $type );
 }
-
 
 /**
  * Logs a message to the debug log file.
@@ -715,8 +742,7 @@ function edd_record_log( $title = '', $message = '', $parent = 0, $type = null )
  * @param bool   $force   Whether to force a log entry to be added. Default false.
  */
 function edd_debug_log( $message = '', $force = false ) {
-	/** @var EDD_Logging $edd_logs */
-	global $edd_logs;
+	$edd_logs = EDD()->debug_log;
 
 	if ( edd_is_debug_mode() || $force ) {
 		$edd_logs->log_to_file( $message );

@@ -167,7 +167,7 @@ function edd_options_page() {
 	$active_tab     = array_key_exists( $active_tab, $settings_tabs ) ? $active_tab : 'general';
 	$sections       = edd_get_settings_tab_sections( $active_tab );
 	$section        = isset( $_GET['section'] ) ? sanitize_text_field( $_GET['section'] ) : 'main';
-	$section        = array_key_exists( $section, $sections ) ? $section : '';
+	$section        = array_key_exists( $section, $sections ) ? $section : 'main';
 
 	// Default values
 	$has_main_settings = true;
