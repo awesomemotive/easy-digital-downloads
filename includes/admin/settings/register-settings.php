@@ -407,6 +407,7 @@ function edd_get_registered_settings() {
 						'name'        => __( 'Business Type', 'easy-digital-downloads' ),
 						'desc'        => __( 'Choose "Individual" if you do not have an official/legal business ID, or "Company" if a regisitered business entity exists.', 'easy-digital-downloads' ),
 						'type'        => 'select',
+						'chosen'      => true,
 						'std'         => $site_name,
 						'options'     => array(
 							'individual' => esc_html__( 'Individual', 'easy-digital-downloads' ),
@@ -416,21 +417,21 @@ function edd_get_registered_settings() {
 					'business_address' => array(
 						'id'          => 'business_address',
 						'name'        => __( 'Business Address', 'easy-digital-downloads' ),
-						'desc'        => __( 'Your street address.', 'easy-digital-downloads' ),
+						'desc'        => __( 'Your company or home address, based on business type above.', 'easy-digital-downloads' ),
 						'type'        => 'text',
 						'placeholder' => ''
 					),
 					'business_address_2' => array(
 						'id'          => 'business_address_2',
 						'name'        => __( 'Business Address (Extra)', 'easy-digital-downloads' ),
-						'desc'        => __( 'Anything that needs an extra line.', 'easy-digital-downloads' ),
+						'desc'        => __( 'Anything requiring an extra line (suite, attention, etc...)', 'easy-digital-downloads' ),
 						'type'        => 'text',
 						'placeholder' => ''
 					),
 					'business_city' => array(
 						'id'          => 'business_city',
 						'name'        => __( 'Business City', 'easy-digital-downloads' ),
-						'desc'        => __( 'The physical city your business is in.', 'easy-digital-downloads' ),
+						'desc'        => __( 'The physical city your home or business is in.', 'easy-digital-downloads' ),
 						'type'        => 'text',
 						'placeholder' => ''
 					),
@@ -439,6 +440,7 @@ function edd_get_registered_settings() {
 						'name'        => __( 'Business Postal Code', 'easy-digital-downloads' ),
 						'desc'        => __( 'The code used to deliver physical mail.', 'easy-digital-downloads' ),
 						'type'        => 'text',
+						'size'        => 'medium',
 						'placeholder' => ''
 					),
 					'base_country' => array(
