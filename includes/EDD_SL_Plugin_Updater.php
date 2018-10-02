@@ -11,6 +11,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class EDD_SL_Plugin_Updater {
 
+	
+	
+	
 	private $api_url     = '';
 	private $api_data    = array();
 	private $name        = '';
@@ -18,9 +21,48 @@ class EDD_SL_Plugin_Updater {
 	private $version     = '';
 	private $wp_override = false;
 	private $cache_key   = '';
+	
+	
+	
 
 	private $health_check_timeout = 5;
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * Class constructor.
 	 *
