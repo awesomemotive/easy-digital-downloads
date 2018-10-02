@@ -344,11 +344,10 @@ function edd_render_price_field( $post_id ) {
 						</div>
 					<?php endif; ?>
 
-					<div class="edd-add-repeatable-row">
-						<div class="submit" style="float: none; clear:both; background:#fff; padding: 4px 4px 0 0;">
-							<button class="button-secondary edd_add_repeatable"><?php _e( 'Add New Price', 'easy-digital-downloads' ); ?></button>
-						</div>
-					</div>
+				</div>
+
+				<div class="edd-add-repeatable-row">
+					<button class="button-secondary edd_add_repeatable"><?php _e( 'Add New Price', 'easy-digital-downloads' ); ?></button>
 				</div>
 			</div>
 		</div>
@@ -422,10 +421,10 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 		<div class="edd-option-name">
 			<span class="edd-repeatable-row-setting-label"><?php _e( 'Option Name', 'easy-digital-downloads' ); ?></span>
 			<?php echo EDD()->html->text( array(
-				'name'  => 'edd_variable_prices[' . $key . '][name]',
-				'value' => esc_attr( $args['name'] ),
+				'name'        => 'edd_variable_prices[' . $key . '][name]',
+				'value'       => esc_attr( $args['name'] ),
 				'placeholder' => __( 'Option Name', 'easy-digital-downloads' ),
-				'class' => 'edd_variable_prices_name large-text'
+				'class'       => 'edd_variable_prices_name large-text'
 			) ); ?>
 		</div>
 
@@ -433,10 +432,10 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 			<span class="edd-repeatable-row-setting-label"><?php _e( 'Price', 'easy-digital-downloads' ); ?></span>
 			<?php
 			$price_args = array(
-				'name'  => 'edd_variable_prices[' . $key . '][amount]',
-				'value' => $args['amount'],
+				'name'        => 'edd_variable_prices[' . $key . '][amount]',
+				'value'       => $args['amount'],
 				'placeholder' => edd_format_amount( 9.99 ),
-				'class' => 'edd-price-field'
+				'class'       => 'edd-price-field'
 			);
 			?>
 
@@ -680,14 +679,11 @@ function edd_render_products_field( $post_id ) {
 
 					<?php endif; ?>
 
-					<div class="edd-add-repeatable-row">
-						<div class="submit" style="float: none; clear:both; background: #fff;">
-							<button class="button-secondary edd_add_repeatable"><?php _e( 'Add New File', 'easy-digital-downloads' ); ?></button>
-						</div>
-					</div>
-
 				</div>
 
+				<div class="edd-add-repeatable-row">
+					<button class="button-secondary edd_add_repeatable"><?php _e( 'Add New File', 'easy-digital-downloads' ); ?></button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -746,11 +742,10 @@ function edd_render_files_field( $post_id = 0 ) {
 
 					<?php endif; ?>
 
-					<div class="edd-add-repeatable-row">
-						<div class="submit" style="float: none; clear:both; background: #fff;">
-							<button class="button-secondary edd_add_repeatable"><?php _e( 'Add New File', 'easy-digital-downloads' ); ?></button>
-						</div>
-					</div>
+				</div>
+
+				<div class="edd-add-repeatable-row">
+					<button class="button-secondary edd_add_repeatable"><?php _e( 'Add New File', 'easy-digital-downloads' ); ?></button>
 				</div>
 			</div>
 		</div>
@@ -807,7 +802,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 			<?php echo EDD()->html->text( array(
 				'name'        => 'edd_download_files[' . $key . '][name]',
 				'value'       => $args['name'],
-				'placeholder' => __( 'File Name', 'easy-digital-downloads' ),
+				'placeholder' => __( 'My Neat File', 'easy-digital-downloads' ),
 				'class'       => 'edd_repeatable_name_field large-text'
 			) ); ?>
 		</div>
@@ -818,12 +813,14 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 				<?php echo EDD()->html->text( array(
 					'name'        => 'edd_download_files[' . $key . '][file]',
 					'value'       => $args['file'],
-					'placeholder' => __( 'Upload or enter the file URL', 'easy-digital-downloads' ),
+					'placeholder' => __( 'Enter, upload, choose from Media Library', 'easy-digital-downloads' ),
 					'class'       => 'edd_repeatable_upload_field edd_upload_field large-text'
 				) ); ?>
 
 				<span class="edd_upload_file">
-					<a href="#" data-uploader-title="<?php _e( 'Insert File', 'easy-digital-downloads' ); ?>" data-uploader-button-text="<?php _e( 'Insert', 'easy-digital-downloads' ); ?>" class="edd_upload_file_button" onclick="return false;"><?php _e( 'Upload a File', 'easy-digital-downloads' ); ?></a>
+					<a href="#" data-uploader-title="<?php _e( 'Select Files', 'easy-digital-downloads' ); ?>" data-uploader-button-text="<?php _e( 'Select', 'easy-digital-downloads' ); ?>" class="edd_upload_file_button" onclick="return false;">
+						<span class="dashicons dashicons-admin-links"></span>
+					</a>
 				</span>
 			</div>
 		</div>

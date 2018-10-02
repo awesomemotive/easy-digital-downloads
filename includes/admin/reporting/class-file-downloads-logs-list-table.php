@@ -61,12 +61,10 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 		$base_url = remove_query_arg( 'paged' );
 		switch ( $column_name ) {
 			case 'download' :
-				$download      = new EDD_Download( $item[ $column_name ] );
-				$column_value  = $download->get_name();
-
-				if ( ! empty( $item['price_id'] ) ) {
-					$column_value .= ' &mdash; ' . edd_get_price_option_name( $download->ID, $item['price_id'] );
-				}
+				$download     = new EDD_Download( $item[ $column_name ] );
+				$column_value = ! empty( $item['price_id'] )
+					? edd_get_download_name( $download->ID, $item['price_id'] )
+					: edd_get_download_name( $download->ID );
 
 				return '<a href="' . add_query_arg( 'download', $download->ID, $base_url ) . '" >' . $column_value . '</a>';
 			case 'customer' :

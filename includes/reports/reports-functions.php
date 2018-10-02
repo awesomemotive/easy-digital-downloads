@@ -1176,6 +1176,9 @@ function display_country_filter() {
 		'selected'         => empty( $country ) ? 0 : $country,
 		'show_option_none' => false,
 		'show_option_all'  => __( 'All Countries', 'easy-digital-downloads' ),
+		'data'             => array(
+			'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
+		),
 	) ); ?>
 
 	<span class="edd-graph-filter-options graph-option-section"><?php

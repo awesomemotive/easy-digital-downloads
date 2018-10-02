@@ -585,13 +585,15 @@ function edd_downloads_query( $atts, $content = null ) {
 
 	do_action( 'edd_downloads_list_before', $atts );
 
+	ob_start();
+
 	if ( $downloads->have_posts() ) :
 		$i = 1;
 		$columns_class   = array( 'edd_download_columns_' . $atts['columns'] );
 		$custom_classes  = array_filter( explode( ',', $atts['class'] ) );
 		$wrapper_classes = array_unique( array_merge( $columns_class, $custom_classes ) );
 		$wrapper_classes = implode( ' ', $wrapper_classes );
-		ob_start(); ?>
+	?>
 
 		<div class="edd_downloads_list <?php echo apply_filters( 'edd_downloads_list_wrapper_class', $wrapper_classes, $atts ); ?>">
 
@@ -605,47 +607,17 @@ function edd_downloads_query( $atts, $content = null ) {
 
 			<?php do_action( 'edd_downloads_list_bottom', $atts ); ?>
 
-			<?php if ( filter_var( $atts['pagination'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
-
-			<?php
-				$pagination = false;
-
-				if ( is_single() ) {
-					$pagination = paginate_links( apply_filters( 'edd_download_pagination_args', array(
-						'base'    => get_permalink() . '%#%',
-						'format'  => '?paged=%#%',
-						'current' => max( 1, $query['paged'] ),
-						'total'   => $downloads->max_num_pages
-					), $atts, $downloads, $query ) );
-				} else {
-					$big = 999999;
-					$search_for   = array( $big, '#038;' );
-					$replace_with = array( '%#%', '&' );
-					$pagination = paginate_links( apply_filters( 'edd_download_pagination_args', array(
-						'base'    => str_replace( $search_for, $replace_with, get_pagenum_link( $big ) ),
-						'format'  => '?paged=%#%',
-						'current' => max( 1, $query['paged'] ),
-						'total'   => $downloads->max_num_pages
-					), $atts, $downloads, $query ) );
-				}
-			?>
-
-			<?php if ( ! empty( $pagination ) ) : ?>
-			<div id="edd_download_pagination" class="navigation">
-				<?php echo $pagination; ?>
-			</div>
-			<?php endif; ?>
-
-			<?php endif; ?>
-
 		</div>
+
 		<?php
-		$display = ob_get_clean();
+		
 	else:
-		$display = sprintf( _x( 'No %s found', 'download post type name', 'easy-digital-downloads' ), edd_get_label_plural() );
+		printf( _x( 'No %s found', 'download post type name', 'easy-digital-downloads' ), edd_get_label_plural() );
 	endif;
 
-	do_action( 'edd_downloads_list_after', $atts, $downloads );
+	do_action( 'edd_downloads_list_after', $atts, $downloads, $query );
+
+	$display = ob_get_clean();
 
 	return apply_filters( 'downloads_shortcode', $display, $atts, $atts['buy_button'], $atts['columns'], '', $downloads, $atts['excerpt'], $atts['full_content'], $atts['price'], $atts['thumbnails'], $query );
 }

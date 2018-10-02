@@ -203,11 +203,12 @@ jQuery(document).ready(function ($) {
 		},
 
 		add : function() {
-			$( document.body ).on( 'click', '.submit .edd_add_repeatable', function(e) {
+			$( document.body ).on( 'click', '.edd_add_repeatable', function(e) {
 				e.preventDefault();
+
 				var button = $( this ),
-					row    = button.parent().parent().prev( '.edd_repeatable_row' ),
-					clone  = EDD_Download_Configuration.clone_repeatable(row);
+					row    = button.parent().prev().children( '.edd_repeatable_row:last-child' ),
+					clone  = EDD_Download_Configuration.clone_repeatable( row );
 
 				clone.insertAfter( row ).find('input, textarea, select').filter(':visible').eq(0).focus();
 
@@ -221,7 +222,17 @@ jQuery(document).ready(function ($) {
 		move : function() {
 
 			$(".edd_repeatable_table .edd-repeatables-wrap").sortable({
-				handle: '.edd-draghandle-anchor', items: '.edd_repeatable_row', opacity: 0.6, cursor: 'move', axis: 'y', update: function() {
+				axis:        'y',
+				handle:      '.edd-draghandle-anchor',
+				items:       '.edd_repeatable_row',
+				cursor:      'move',
+				tolerance:   'pointer',
+				containment: 'parent',
+				distance:    2,
+				opacity:     0.7,
+				scroll:      true,
+
+				update: function() {
 					var count  = 0;
 					$( this ).find( '.edd_repeatable_row' ).each(function() {
 						$( this ).find( 'input.edd_repeatable_index' ).each(function() {
@@ -229,6 +240,9 @@ jQuery(document).ready(function ($) {
 						});
 						count++;
 					});
+				},
+				start: function(e, ui){
+					ui.placeholder.height(ui.item.height()-2);
 				}
 			});
 		},
@@ -346,12 +360,9 @@ jQuery(document).ready(function ($) {
 
 				// Create the media frame.
 				file_frame = wp.media.frames.file_frame = wp.media( {
-					frame: 'post',
-					state: 'insert',
-					title: button.data( 'uploader-title' ),
-					button: {
-						text: button.data( 'uploader-button-text' )
-					},
+					title:    button.data( 'uploader-title' ),
+					library:  { type: 'image' },
+					button:   { text: button.data( 'uploader-button-text' ) },
 					multiple: $( this ).data( 'multiple' ) === '0' ? false : true  // Set to true to allow multiple files to be selected
 				});
 
@@ -370,7 +381,7 @@ jQuery(document).ready(function ($) {
 				});
 
 				// When an image is selected, run a callback.
-				file_frame.on( 'insert', function() {
+				file_frame.on( 'select', function() {
 
 					var selection = file_frame.state().get('selection');
 					selection.each( function( attachment, index ) {
@@ -511,6 +522,10 @@ jQuery(document).ready(function ($) {
 			distance:    2,
 			opacity:     0.7,
 			scroll:      true,
+
+			start: function(e, ui){
+				ui.placeholder.height(ui.item.height());
+			},
 
 			/**
 			 * When sorting stops, assign the value to the previous input.
@@ -1109,7 +1124,7 @@ jQuery(document).ready(function ($) {
 				}, 'json' );
 			} );
 		},
-		
+
 		add_adjustment : function () {
 			// Toggle form.
 			$( '#edd-order-adjustments' ).on( 'click', 'h3 .edd-metabox-title-action', function(e) {
@@ -1256,7 +1271,7 @@ jQuery(document).ready(function ($) {
 				return false;
 			} );
 		},
-		
+
 		select_address : function() {
 			$( document.body ).on( 'change', '.customer-address-select-wrap .add-order-customer-address-select', function() {
 				var $this = $( this ),
@@ -1622,14 +1637,14 @@ jQuery(document).ready(function ($) {
 						action:    'edd_get_shop_states',
 						country:    select.val(),
 						nonce:      select.data('nonce'),
-						field_name: 'edd_countries_filter'
+						field_name: 'edd_regions_filter'
 					};
 
 				$.post( ajaxurl, data, function ( response ) {
-					$( 'select.edd_regions_filter' ).find( 'option:gt(0)' ).remove();
+					$( 'select.edd_regions_filter' ).find( 'option' ).remove();
 
 					if ( 'nostates' !== response ) {
-						$( response ).find( 'option:gt(0)' ).appendTo( 'select.edd_regions_filter' );
+						$( response ).find( 'option' ).appendTo( 'select.edd_regions_filter' );
 					}
 
 					$( 'select.edd_regions_filter' ).trigger( 'chosen:updated' );
@@ -1652,6 +1667,8 @@ jQuery(document).ready(function ($) {
 			this.general();
 			this.emails();
 			this.misc();
+			this.gateways();
+			this.location();
 		},
 
 		general : function() {
@@ -1715,12 +1732,9 @@ jQuery(document).ready(function ($) {
 
 					// Create the media frame.
 					file_frame = wp.media.frames.file_frame = wp.media({
-						frame: 'post',
-						state: 'insert',
-						title: button.data( 'uploader_title' ),
-						button: {
-							text: button.data( 'uploader_button_text' )
-						},
+						title:    button.data( 'uploader_title' ),
+						library:  { type: 'image' },
+						button:   { text: button.data( 'uploader_button_text' ) },
 						multiple: false
 					});
 
@@ -1739,7 +1753,7 @@ jQuery(document).ready(function ($) {
 					});
 
 					// When an image is selected, run a callback.
-					file_frame.on( 'insert', function() {
+					file_frame.on( 'select', function() {
 
 						var selection = file_frame.state().get('selection');
 						selection.each( function( attachment, index ) {
@@ -1793,6 +1807,51 @@ jQuery(document).ready(function ($) {
 					symlink.css( 'opacity', '1' );
 				}
 			});
+		},
+
+		gateways : function() {
+			$( '#edd-payment-gateways input[type="checkbox"]' ).on( 'change', function() {
+				var gateway         = $( this ),
+					gateway_key     = gateway.data( 'gateway-key' ),
+					default_gateway = $( '#edd_settings\\[default_gateway\\]' );
+					option          = default_gateway.find( 'option[value="' + gateway_key + '"]' );
+
+				// Toggle enable/disable based
+				option.prop('disabled', function(i, v) {
+					return !v;
+				} );
+
+				// Maybe deselect
+				if ( option.prop( 'selected' ) ) {
+					option.prop( 'selected', false );
+				}
+
+				default_gateway.trigger( 'chosen:updated' );
+			} );
+		},
+
+		location : function() {
+			$('select.edd_countries_filter').on( 'change', function() {
+				var select = $( this ),
+					data   = {
+						action:    'edd_get_shop_states',
+						country:    select.val(),
+						nonce:      select.data('nonce'),
+						field_name: 'edd_regions_filter'
+					};
+
+				$.post( ajaxurl, data, function ( response ) {
+					$( 'select.edd_regions_filter' ).find( 'option:gt(0)' ).remove();
+
+					if ( 'nostates' !== response ) {
+						$( response ).find( 'option:gt(0)' ).appendTo( 'select.edd_regions_filter' );
+					}
+
+					$( 'select.edd_regions_filter' ).trigger( 'chosen:updated' );
+				});
+
+				return false;
+			} );
 		}
 	};
 
@@ -2362,8 +2421,7 @@ jQuery(document).ready(function ($) {
 		vars: {
 			customer_card_wrap_editable:  $( '#edit-customer-info .editable' ),
 			customer_card_wrap_edit_item: $( '#edit-customer-info .edit-item' ),
-			user_id: $('input[name="customerinfo[user_id]"]'),
-			state_input: $(':input[name="customerinfo[region]"]')
+			user_id: $('input[name="customerinfo[user_id]"]')
 		},
 		init : function() {
 			this.edit_customer();
@@ -2458,17 +2516,21 @@ jQuery(document).ready(function ($) {
 					data = {
 						action:     'edd_get_shop_states',
 						country:    select.val(),
+						chosen:     false,
 						nonce:      select.data('nonce'),
 						field_name: 'customerinfo[region]'
 					};
 
 				$.post(ajaxurl, data, function (response) {
-					console.log( response );
+					var state_element = $( 'input[name="customerinfo[region]"], select[name="customerinfo[region]"]' );
+
 					if ( 'nostates' === response ) {
-						EDD_Customer.vars.state_input.replaceWith( '<input type="text" name="' + data.field_name + '" value="" class="edd-edit-toggles medium-text"/>' );
+						var new_element = '<input type="text" name="' + data.field_name + '" value="" class="edd-edit-toggles medium-text"/>';
 					} else {
-						EDD_Customer.vars.state_input.replaceWith( response );
+						var new_element = response;
 					}
+
+					state_element.replaceWith( new_element );
 				});
 
 				return false;
