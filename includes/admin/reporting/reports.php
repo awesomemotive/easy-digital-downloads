@@ -155,7 +155,7 @@ function edd_output_report_callback( $report_id = '' ) {
  */
 function edd_reports_page() {
 	// Enqueue scripts.
-	wp_enqueue_scripts( 'edd-admin-reports' );
+	wp_enqueue_script( 'edd-admin-reports' );
 	?>
 
     <div class="wrap">
