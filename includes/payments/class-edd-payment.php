@@ -1148,7 +1148,7 @@ class EDD_Payment {
 		}
 
 		$fees = 0;
-		if ( isset( $args['fees'] ) && ! empty( $args['fees'] ) ) {
+		if ( ! empty( $args['fees'] ) && is_array( $args['fees'] ) ) {
 			foreach ( $args['fees'] as $feekey => $fee ) {
 				$fees += $fee['amount'];
 			}
