@@ -51,10 +51,12 @@ function edd_dashboard_sales_widget( ) {
 function edd_load_dashboard_sales_widget( ) {
 
 	if ( ! current_user_can( apply_filters( 'edd_dashboard_stats_cap', 'view_shop_reports' ) ) ) {
-		die();
+		return wp_send_json_error();
 	}
 
-	$stats = new EDD_Payment_Stats; ?>
+	$stats = new EDD_Payment_Stats;
+	ob_start();
+?>
 	<div class="edd_dashboard_widget">
 		<div class="table table_left table_current_month">
 			<table>
@@ -198,7 +200,9 @@ function edd_load_dashboard_sales_widget( ) {
 		<?php do_action( 'edd_sales_summary_widget_after_purchases', $payments ); ?>
 	</div>
 	<?php
-	die();
+	$markup = ob_get_clean();
+
+	return wp_send_json_success( $markup );
 }
 add_action( 'wp_ajax_edd_load_dashboard_widget', 'edd_load_dashboard_sales_widget' );
 
