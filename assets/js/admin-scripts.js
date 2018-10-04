@@ -1665,7 +1665,6 @@ jQuery(document).ready(function ($) {
 
 		init : function() {
 			this.general();
-			this.emails();
 			this.misc();
 			this.gateways();
 			this.location();
@@ -1769,21 +1768,6 @@ jQuery(document).ready(function ($) {
 				// WP 3.5+ uploader
 				var file_frame;
 				window.formfield = '';
-			}
-		},
-
-		emails : function() {
-
-			// Show the email template previews
-			var email_preview_wrap = $('#email-preview-wrap');
-			if ( email_preview_wrap.length ) {
-				var emailPreview = $('#email-preview');
-				email_preview_wrap.colorbox({
-					inline: true,
-					href: emailPreview,
-					width: '80%',
-					height: 'auto'
-				});
 			}
 		},
 
