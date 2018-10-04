@@ -241,9 +241,8 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	 */
 	public function get_order_item_name() {
 
-		$download = edd_get_download( $this->product_id );
 		// Return product name if not a variable price
-		if ( ! $download->has_variable_prices() ) {
+		if ( edd_has_variable_prices( $this->product_id ) ) {
 			return $this->product_name;
 		}
 
