@@ -1571,44 +1571,7 @@ add_filter( 'edd_settings_gateways_sanitize', 'edd_settings_sanitize_gateways' )
  * @return string $input Sanitized value
  */
 function edd_sanitize_text_field( $input = '' ) {
-	$allowed_tags = apply_filters( 'edd_allowed_html_tags', array(
-		'p'      => array(
-			'class' => array(),
-			'id'    => array(),
-		),
-		'span'   => array(
-			'class' => array(),
-			'id'    => array(),
-		),
-		'a' => array(
-			'href'   => array(),
-			'target' => array(),
-			'title'  => array(),
-			'class'  => array(),
-			'id'     => array(),
-		),
-		'strong' => array(),
-		'em'     => array(),
-		'br'     => array(),
-		'img'    => array(
-			'src'   => array(),
-			'title' => array(),
-			'alt'   => array(),
-			'id'    => array(),
-		),
-		'div'    => array(
-			'class' => array(),
-			'id'    => array(),
-		),
-		'ul'     => array(
-			'class' => array(),
-			'id'    => array(),
-		),
-		'li'     => array(
-			'class' => array(),
-			'id'    => array(),
-		),
-	) );
+	$allowed_tags = edd_get_allowed_tags();
 
 	return trim( wp_kses( $input, $allowed_tags ) );
 }
