@@ -130,7 +130,6 @@ class Tests_Scripts extends EDD_UnitTestCase {
 		return array(
 			array( 'jquery-chosen',        'enqueued' ),
 			array( 'edd-admin-scripts',    'enqueued' ),
-			array( 'colorbox',             'enqueued' ),
 			array( 'jquery-ui-datepicker', 'enqueued' ),
 			array( 'jquery-ui-dialog',     'enqueued' ),
 			array( 'media-upload',         'enqueued' ),
@@ -158,7 +157,6 @@ class Tests_Scripts extends EDD_UnitTestCase {
 		return array(
 			array( 'jquery-chosen',   'enqueued' ),
 			array( 'wp-color-picker', 'enqueued' ),
-			array( 'colorbox',        'enqueued' ),
 			array( 'thickbox',        'enqueued' ),
 			array( 'edd-admin',       'enqueued' ),
 		);
