@@ -253,7 +253,6 @@ function edd_register_admin_scripts() {
 	}
 
 	// Register scripts
-	wp_register_script( 'colorbox',                        $js_dir . 'jquery.colorbox-min.js',                     array( 'jquery' ),                      $version );
 	wp_register_script( 'jquery-chosen',                   $js_dir . 'jquery.chosen'                 . $js_suffix, array( 'jquery' ),                      $version );
 	wp_register_script( 'jquery-flot',                     $js_dir . 'jquery.flot'                   . $js_suffix, array(),                                $version );
 	wp_register_script( 'edd-moment-js',                   $moment_js,                                             array(),                                $version );
@@ -278,7 +277,6 @@ function edd_register_admin_styles() {
 
 	// Register styles
 	wp_register_style( 'jquery-chosen',         $css_dir . 'chosen'               . $css_suffix, array(),              $version );
-	wp_register_style( 'colorbox',              $css_dir . 'colorbox'             . $css_suffix, array(),              $version );
 	wp_register_style( 'edd-admin',             $css_dir . 'edd-admin'            . $css_suffix, array(),              $version );
 	wp_register_style( 'edd-admin-menu',        $css_dir . 'edd-admin-menu'       . $css_suffix, array(),              $version );
 	wp_register_style( 'edd-admin-email-tags',  $css_dir . 'edd-admin-email-tags' . $css_suffix, array(),              $version );
@@ -385,7 +383,6 @@ function edd_print_admin_scripts( $hook = '' ) {
 		'wp-color-picker',
 		'edd-admin-scripts',
 		'media-upload',
-		'colorbox',
 		'thickbox',
 	);
 
@@ -417,7 +414,6 @@ function edd_print_admin_styles( $hook = '' ) {
 	$styles = array(
 		'jquery-chosen',
 		'wp-color-picker',
-		'colorbox',
 		'thickbox',
 		'edd-admin',
 		'edd-admin-datepicker'
