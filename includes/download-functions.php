@@ -154,7 +154,7 @@ function edd_is_free_download( $download_id = 0, $price_id = false ) {
 function edd_get_download_name( $download_id = 0, $price_id = 0 ) {
 
 	// Bail if no download ID was passed.
-	if ( empty( $download_id ) || ! is_numeric( $download_id ) ) {  
+	if ( empty( $download_id ) || ! is_numeric( $download_id ) ) {
 		return false;
 	}
 
