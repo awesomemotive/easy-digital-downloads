@@ -307,6 +307,7 @@ function edd_get_allowed_tags() {
 			'class'  => array(),
 			'id'     => array(),
 		),
+		'code'   => array(),
 		'strong' => array(),
 		'em'     => array(),
 		'br'     => array(),
