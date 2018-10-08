@@ -427,19 +427,20 @@ jQuery(document).ready(function ($) {
 				file_frame.open();
 			});
 
-			$('#edd_download_files')
-				.on('focus', '.edd_repeatable_upload_field', function() {
-					$(this).data('originalFile', $(this).val());
-				})
-				.on('blur', '.edd_repeatable_upload_field', function() {
-					var original_file = $(this).data('originalFile');
+			$( '.edd_repeatable_upload_field' )
+				.on( 'focus', function() {
+					var input = $( this );
 
-					if(original_file !== $(this).val()) {
-						$(this).parent().parent().parent().prev('.edd-file-name').find('.edd_repeatable_attachment_id_field').each(function() {
-							$(this).val(0);
-						});
+					input.data( 'originalFile', input.val() );
+				} )
+				.on( 'change', function() {
+					var input = $( this );
+					var originalFile = input.data( 'originalFile' );
+
+					if( originalFile !== input.val() ) {
+						input.closest( '.edd-repeatable-row-standard-fields' ).find( '.edd_repeatable_attachment_id_field' ).val( 0 );
 					}
-				});
+				} );
 
 			var file_frame;
 			window.formfield = '';
