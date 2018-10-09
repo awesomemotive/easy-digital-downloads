@@ -255,7 +255,9 @@ function edd_register_admin_scripts() {
 	// Individual admin pages.
 	$admin_pages = array(
 		'customers'    => array(),
-		'dashboard'    => array(),
+		'dashboard'    => array(
+			'wp-util',
+		),
 		'discounts'    => array(),
 		'downloads'    => array(
 			'inline-edit-post',
