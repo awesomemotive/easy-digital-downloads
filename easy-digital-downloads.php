@@ -132,7 +132,7 @@ final class EDD_Requirements_Check {
 
 			// Bootstrap to plugins_loaded before priority 10 to make sure
 			// add-ons are loaded after us.
-			add_action( 'plugins_loaded', array( $this, 'bootstrap' ), 8 );
+			add_action( 'plugins_loaded', array( $this, 'bootstrap' ), 4 );
 
 			// Register the activation hook
 			register_activation_hook( $this->file, array( $this, 'install' ) );
@@ -474,7 +474,7 @@ final class EDD_Requirements_Check {
 			: get_locale();
 
 		/**
-		 * Defines the plugin language locale used in AffiliateWP.
+		 * Defines the plugin language locale used in Easy Digital Downloads.
 		 *
 		 * @var $get_locale The locale to use. Uses get_user_locale()` in WordPress 4.7 or greater,
 		 *                  otherwise uses `get_locale()`.

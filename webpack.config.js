@@ -89,10 +89,6 @@ const config = {
 				transform: ( content ) => minifyJs( content ),
 			},
 			{
-				from: './node_modules/jquery-colorbox/jquery.colorbox-min.js',
-				to: 'assets/js/vendor/jquery.colorbox.min.js',
-			},
-			{
 				from: './node_modules/moment/moment.js',
 				to: 'assets/js/vendor/moment.min.js',
 				transform: ( content ) => minifyJs( content ),
@@ -101,10 +97,6 @@ const config = {
 				from: './node_modules/jquery-creditcardvalidator/jquery.creditCardValidator.js',
 				to: 'assets/js/vendor/jquery.creditcardvalidator.min.js',
 				transform: ( content ) => minifyJs( content ),
-			},
-			{
-				from: './node_modules/jquery-colorbox/jquery.colorbox-min.js',
-				to: 'assets/js/vendor/jquery.colorbox.min.js',
 			},
 			{
 				from: './node_modules/jquery-validation/dist/jquery.validate.min.js',

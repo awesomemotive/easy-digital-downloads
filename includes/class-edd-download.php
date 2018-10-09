@@ -837,7 +837,7 @@ class EDD_Download {
 	private function update_meta( $meta_key = '', $meta_value = '' ) {
 		global $wpdb;
 
-		if ( empty( $meta_key ) ) {
+		if ( empty( $meta_key ) || ( ! is_numeric( $meta_value ) && empty( $meta_value ) ) ) {
 			return false;
 		}
 

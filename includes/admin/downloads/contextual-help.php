@@ -68,8 +68,8 @@ function edd_downloads_contextual_help() {
 
 	$screen->add_help_tab( array(
 		'id'	    => 'edd-product-notes',
-		'title'	    => sprintf( __( '%s Notes', 'easy-digital-downloads' ), edd_get_label_singular() ),
-		'content'	=> '<p>' . __( 'Special notes or instructions for the product. These notes will be added to the purchase receipt, and additionally may be used by some extensions or themes on the frontend.', 'easy-digital-downloads' ) . '</p>'
+		'title'	    => sprintf( __( '%s Instructions', 'easy-digital-downloads' ), edd_get_label_singular() ),
+		'content'	=> '<p>' . sprintf( __( 'Special instructions for this %s. These will be added to the sales receipt, and may be used by some extensions or themes.', 'easy-digital-downloads' ), strtolower( edd_get_label_singular() ) ) . '</p>'
 	) );
 
 	$colors = array(

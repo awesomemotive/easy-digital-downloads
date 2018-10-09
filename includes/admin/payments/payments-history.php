@@ -71,11 +71,20 @@ function edd_orders_page_primary_nav( $active_tab = '' ) {
  * @return array
  */
 function edd_get_order_pages() {
+
+	// Get types and setup return value
 	$types  = edd_get_order_types();
 	$retval = array();
 
 	// Loop through and get type IDs and labels
 	foreach ( $types as $type_id => $type ) {
+
+		// Skip if hidden
+		if ( empty( $type['show_ui'] ) ) {
+			continue;
+		}
+
+		// Add to return array
 		$retval[ $type_id ] = ! empty( $type['labels']['plural'] )
 			? $type['labels']['plural']
 			: ucwords( $type_id );
@@ -86,26 +95,47 @@ function edd_get_order_pages() {
 }
 
 /**
- * Render Orders page.
+ * Get the payment view
+ *
+ * @since 3.0
+ *
+ * @return string
+ */
+function edd_get_payment_view() {
+	return ! empty( $_GET['view'] )     // WPCS: CSRF ok.
+		? sanitize_key( $_GET['view'] ) // WPCS: CSRF ok.
+		: 'list';
+}
+
+/**
+ * Render one of the Order pages.
  *
  * @since 1.0
  * @since 3.0 Nomenclature updated for consistency.
- *            Add a link to manually all orders.
-*/
+ *            Add a link to manually add orders.
+ *            Changed to switch statement.
+ */
 function edd_payment_history_page() {
 
-	// Edit
-	if ( isset( $_GET['view'] ) && 'view-order-details' === $_GET['view'] ) { // WPCS: CSRF ok.
-		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/view-order-details.php';
+	// What are we viewing?
+	switch ( edd_get_payment_view() ) {
 
-	// Add
-	} elseif ( isset( $_GET['view'] ) && 'add-order' === $_GET['view'] ) { // WPCS: CSRF ok.
-		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/add-order.php';
-		edd_add_order_page_content();
+		// Edit
+		case 'view-order-details' :
+			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/view-order-details.php';
+			break;
 
-	// List Table
-	} else {
-		edd_order_list_table_content();
+		// Add
+		case 'add-order' :
+			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/add-order.php';
+			edd_add_order_page_content();
+			break;
+
+		// List Table
+		case 'list' :
+		default :
+			edd_order_list_table_content();
+			break;
 	}
 }
 
@@ -183,20 +213,25 @@ function edd_view_order_details_title( $admin_title, $title ) {
 		return $admin_title;
 	}
 
-	if ( ! isset( $_GET['view'] ) ) { // WPCS: CSRF ok.
-		return $admin_title;
-	}
+	// Get the view
+	$view = edd_get_payment_view();
 
-	$action = sanitize_text_field( $_GET['view'] );
+	// Which view?
+	switch ( $view ) {
 
-	switch ( $action ) {
+		// Edit/View
 		case 'view-order-details':
 		case 'edit-payment':
 			$title = __( 'Edit Order', 'easy-digital-downloads' ) . ' &mdash; ' . $admin_title;
 			break;
+
+		// Add
 		case 'add-order':
 			$title = __( 'Add New Order', 'easy-digital-downloads' ) . ' &mdash; ' . $admin_title;
 			break;
+
+		// List
+		case 'list' :
 		default:
 			$title = $admin_title;
 			break;
