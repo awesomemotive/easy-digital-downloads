@@ -107,7 +107,7 @@ class EDD_Pie_Graph extends EDD_Graph {
 	public function load_additional_scripts() {
 		// Use minified libraries if SCRIPT_DEBUG is turned off
 		$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-		wp_enqueue_script( 'jquery-flot-pie', EDD_PLUGIN_URL . 'assets/js/jquery.flot.pie' . $suffix . '.js' );
+		wp_enqueue_script( 'jquery-flot-pie', EDD_PLUGIN_URL . 'assets/js/vendor/jquery.flot.pie.min.js' );
 	}
 
 	/**
