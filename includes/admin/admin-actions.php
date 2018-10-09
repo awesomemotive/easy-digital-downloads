@@ -247,3 +247,29 @@ function edd_admin_removable_query_args() {
 		'edd-redirect'
 	) );
 }
+
+/**
+ * Output payment icons into the admin footer.
+ *
+ * Specifically on the "General" tab of the "Payment Gateways" admin page.
+ *
+ * @since 3.0
+ */
+function edd_admin_print_payment_icons() {
+
+	// Bail if not the gateways page
+	if ( ! edd_is_admin_page( 'settings', 'gateways' ) ) {
+		return;
+	}
+
+	// Output the SVG icons
+	edd_print_payment_icons( array(
+		'mastercard',
+		'visa',
+		'americanexpress',
+		'discover',
+		'paypal',
+		'amazon'
+	) );
+}
+add_action( 'admin_footer', 'edd_admin_print_payment_icons', 9999 );

@@ -44,7 +44,7 @@ function edd_admin_ajax_add_note() {
 
 	// Get note contents (maybe sanitize)
 	$note = ! empty( $_POST['note'] )
-		? wp_kses( stripslashes_deep( $_POST['note'] ), array() )
+		? trim( wp_kses( stripslashes_deep( $_POST['note'] ), edd_get_allowed_tags() ) )
 		: '';
 
 	// Bail if no note

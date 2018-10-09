@@ -50,15 +50,11 @@ class EDD_Sales_Log_Table extends EDD_Base_Log_List_Table {
 			case 'download':
 				$download_id = $item[ $column_name ];
 				$download    = edd_get_download( $download_id );
+				$price_id    = ! empty( $item['price_id'] )
+					? absint( $item['price_id'] )
+					: 0;
 
-				$title = $download->post_title;
-				if ( edd_has_variable_prices( $download->ID ) ) {
-					$price_id = $item['price_id'];
-					if ( ! is_null( $price_id ) && ! empty( $download->prices[ $price_id ] ) ) {
-						$title .= ' &mdash; ' . $download->prices[ $price_id ]['name'];
-					}
-				}
-
+				$title  = $download->get_name( $price_id );
 				$return = '<a href="' . add_query_arg( 'download', $item[ $column_name ] ) . '" >' . $title . '</a>';
 				break;
 
@@ -174,27 +170,77 @@ class EDD_Sales_Log_Table extends EDD_Base_Log_List_Table {
 	 * @return array $data Array of all the sales.
 	 */
 	public function get_logs( $log_query = array() ) {
-		$data = array();
+		$data = $order_args = array();
 
+		// Customer ID
+		if ( ! empty( $log_query['customer_id'] ) ) {
+			$order_args = array(
+				'customer_id'   => $log_query['customer_id'],
+				'no_found_rows' => true
+			);
+
+		// Customer Email
+		} elseif ( ! empty( $log_query['email'] ) ) {
+			$order_args = array(
+				'email'         => $log_query['email'],
+				'no_found_rows' => true
+			);
+		}
+
+		// Maybe query for orders first
+		if ( ! empty( $order_args ) ) {
+			$orders = edd_get_orders( $order_args );
+			$log_query['order_id__in'] = wp_list_pluck( $orders, 'id' );
+		}
+
+		// Query order items
 		$order_items = edd_get_order_items( $log_query );
 
-		if ( ! empty( $order_items ) ) {
-			foreach ( $order_items as $order_item ) {
-				$order = edd_get_order( $order_item->order_id );
+		// Bail if no order items
+		if ( empty( $order_items ) ) {
+			return $data;
+		}
 
-				$data[] = array(
-					'ID'         => $order->get_number(),
-					'order_id'   => $order->id,
-					'customer'   => edd_get_customer( $order->customer_id ),
-					'download'   => $order_item->product_id,
-					'price_id'   => $order_item->price_id,
-					'item_price' => $order_item->amount,
-					'amount'     => $order_item->total,
-					'date'       => EDD()->utils->date( $order_item->date_created, null, true )->toDateTimeString(),
-					'quantity'   => $order_item->quantity,
-					'currency'   => $order->currency,
-				);
+		// Maybe prime orders
+		if ( empty( $orders ) ) {
+			$order_ids = array_values( array_unique( wp_list_pluck( $order_items, 'order_id' ) ) );
+
+			if ( count( $order_ids ) > 2 ) {
+				$orders = edd_get_orders( array(
+					'id__in'        => $order_ids,
+					'no_found_rows' => true
+				) );
 			}
+		}
+
+		// Maybe prime customers
+		if ( ! empty( $orders ) ) {
+			$customer_ids = array_values( array_unique( wp_list_pluck( $orders, 'customer_id' ) ) );
+
+			if ( count( $customer_ids ) > 2 ) {
+				edd_get_customers( array(
+					'id__in'        => $customer_ids,
+					'no_found_rows' => true
+				) );
+			}
+		}
+
+		// Loop through order items
+		foreach ( $order_items as $order_item ) {
+			$order = edd_get_order( $order_item->order_id );
+
+			$data[] = array(
+				'ID'         => $order->get_number(),
+				'order_id'   => $order->id,
+				'customer'   => edd_get_customer( $order->customer_id ),
+				'download'   => $order_item->product_id,
+				'price_id'   => $order_item->price_id,
+				'item_price' => $order_item->amount,
+				'amount'     => $order_item->total,
+				'date'       => EDD()->utils->date( $order_item->date_created, null, true )->toDateTimeString(),
+				'quantity'   => $order_item->quantity,
+				'currency'   => $order->currency,
+			);
 		}
 
 		return $data;

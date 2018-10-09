@@ -14,14 +14,7 @@
 	display: inline-block;
 	fill: currentColor;
 	position: relative; /* Align more nicely with capital letters */
-	top: -0.0625em;
 	vertical-align: middle;
-	width: 1em;
-	height: 1em;
-}
-
-.edd-icon-lock {
-	top: -0.125rem;
 }
 
 .edd-icon-spin {
@@ -165,6 +158,7 @@
 	width: 100%;
 	margin: 0 0 21px;
 	padding: 0;
+	float: right;
 }
 #edd_checkout_form_wrap label {
 	font-weight: bold;
@@ -173,15 +167,6 @@
 	line-height: 100%;
 	font-size: 95%;
 	margin: 0 0 5px;
-}
-#edd_checkout_form_wrap label:after {
-	display: block;
-	visibility: hidden;
-	float: none;
-	clear: both;
-	height: 0;
-	text-indent: -9999px;
-	content: ".";
 }
 #edd_checkout_form_wrap span.edd-description {
 	color: #666;
@@ -233,21 +218,15 @@
 	display: inline;
 }
 #edd_checkout_form_wrap .edd-payment-icons {
-	height: 32px;
-	display: block;
+	display: -ms-flexbox;
+	display: flex;
 	margin: 0 0 8px;
 }
 #edd_checkout_form_wrap .edd-payment-icons img.payment-icon {
 	max-height: 32px;
-	width: auto;
-	margin: 0 0 0 3px;
-	float: right;
-	background: none;
-	padding: 0;
-	border: none;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
-	box-shadow: none;
+}
+#edd_checkout_form_wrap .edd-payment-icons .payment-icon {
+	margin: 0 0 0 10px;
 }
 #edd_checkout_form_wrap #edd-payment-mode-wrap label {
 	display: inline-block;
@@ -350,6 +329,9 @@
 	padding: 4px 0 4px 4px;
 	font-weight: bold;
 }
+#edd_secure_site_wrapper span { 
+	vertical-align: middle;
+}
 #edd_checkout_form_wrap input.edd-input.card-number.valid {
 	background-image: url(images/tick.png);
 	background-repeat: no-repeat;
@@ -360,26 +342,11 @@
 }
 #edd_checkout_form_wrap span.card-type {
 	position: absolute;
-	top: -2px;
+	top: 0;
 	left: 0;
-	width: 43px;
-	height: 32px;
-	background-size: 43px 32px!important;
 }
 #edd_checkout_form_wrap span.card-type.off {
 	display: none;
-}
-#edd_checkout_form_wrap span.card-type.visa {
-	background: url(images/icons/visa.png ) no-repeat;
-}
-#edd_checkout_form_wrap span.card-type.mastercard {
-	background: url(images/icons/mastercard.png ) no-repeat;
-}
-#edd_checkout_form_wrap span.card-type.discover {
-	background: url(images/icons/discover.png ) no-repeat;
-}
-#edd_checkout_form_wrap span.card-type.amex {
-	background: url(images/icons/americanexpress.png ) no-repeat;
 }
 #edd_checkout_form_wrap .edd-cart-ajax {
 	-webkit-box-shadow: none;
@@ -981,6 +948,11 @@ input.edd_submit_plain {
 
 /* =Downloads Shortcode
 -------------------------------------------------------------- */
+.edd_downloads_list {
+	display: grid;
+	grid-column-gap: 20px;
+	grid-row-gap: 40px;
+}
 .edd_downloads_list:after {
 	content: "";
 	display: table;
@@ -1013,8 +985,26 @@ input.edd_submit_plain {
 .edd_download .edd_price {
 	margin-bottom: 10px;
 }
-#edd_download_pagination {
-	clear: both;
+@media (min-width: 768px) {
+	.edd_downloads_list:not(.edd_download_columns_1) {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+@media (min-width: 1200px) {
+	.edd_downloads_list.edd_download_columns_2 { grid-template-columns: repeat(2, 1fr); }
+	.edd_downloads_list.edd_download_columns_3 { grid-template-columns: repeat(3, 1fr); }
+	.edd_downloads_list.edd_download_columns_4 { grid-template-columns: repeat(4, 1fr); }
+	.edd_downloads_list.edd_download_columns_5 { grid-template-columns: repeat(5, 1fr); }
+	.edd_downloads_list.edd_download_columns_6 { grid-template-columns: repeat(6, 1fr); }
+}
+@supports (display: grid) {
+	.edd_downloads_list .edd_download { 
+		width: auto;
+	}
+	.edd_download_inner {
+		padding: 0;
+		margin: 0;
+	}
 }
 
 /* =Misc styles

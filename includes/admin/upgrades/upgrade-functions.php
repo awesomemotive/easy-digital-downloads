@@ -1135,7 +1135,7 @@ add_action( 'edd_upgrade_user_api_keys', 'edd_upgrade_user_api_keys' );
  * @return void
  */
 function edd_remove_refunded_sale_logs() {
-	global $edd_logs;
+	$edd_logs = EDD()->debug_log;
 
 	if ( ! current_user_can( 'manage_shop_settings' ) ) {
 		wp_die( __( 'You do not have permission to do shop upgrades', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );

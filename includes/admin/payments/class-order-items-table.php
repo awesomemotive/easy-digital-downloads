@@ -270,7 +270,7 @@ class Order_Items_Table extends List_Table {
 		$order_item_title = '<strong><a class="row-title" href="' . add_query_arg( array(
 				'edd-action' => 'edit_order_item',
 				'order_item' => $order_item->id,
-			), $base ) . '">' . stripslashes( $order_item->product_name ) . '</a>' . $state . '</strong>';
+			), $base ) . '">' . $order_item->get_order_item_name() . '</a>' . $state . '</strong>';
 
 		// Return order_item title & row actions
 		return $order_item_title . $this->row_actions( $row_actions );

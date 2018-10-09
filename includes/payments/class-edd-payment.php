@@ -1733,11 +1733,11 @@ class EDD_Payment {
 	public function add_note( $note = '' ) {
 
 		// Bail if no note specified.
-		if ( ! $note || empty( $note ) ) {
+		if ( empty( $note ) ) {
 			return false;
 		}
 
-		$note_id = edd_insert_payment_note( $this->ID, esc_html( $note ) );
+		$note_id = edd_insert_payment_note( $this->ID, $note );
 
 		if ( $note_id ) {
 			return true;

@@ -535,7 +535,8 @@ class Query extends Base {
 	 * @since 3.0
 	 */
 	private function set_request() {
-		$clauses       = array_map( 'trim', $this->request_clauses );
+		$filtered      = array_filter( $this->request_clauses );
+		$clauses       = array_map( 'trim', $filtered );
 		$this->request = implode( ' ', $clauses );
 	}
 
@@ -1272,7 +1273,7 @@ class Query extends Base {
 		// Maybe perform a compare.
 		$compare = $this->query_vars['compare'];
 		if ( ! empty( $compare ) && is_array( $compare ) ) {
-			$query   = new Compare( $compare );
+			$query   = new Queries\Compare( $compare );
 			$table   = $this->apply_prefix( $this->item_name );
 			$clauses = $query->get_sql( $table, $this->table_alias, $this->get_primary_column_name(), $this );
 
