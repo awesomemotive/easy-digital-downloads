@@ -2,11 +2,11 @@
  * Settings screen JS
  */
 const EDD_Settings = {
-
 	init: function() {
 		this.general();
-		this.emails();
 		this.misc();
+		this.gateways();
+		this.location();
 	},
 
 	general: function() {
@@ -68,12 +68,9 @@ const EDD_Settings = {
 
 				// Create the media frame.
 				file_frame = wp.media.frames.file_frame = wp.media( {
-					frame: 'post',
-					state: 'insert',
 					title: button.data( 'uploader_title' ),
-					button: {
-						text: button.data( 'uploader_button_text' ),
-					},
+					library: { type: 'image' },
+					button: { text: button.data( 'uploader_button_text' ) },
 					multiple: false,
 				} );
 
@@ -92,7 +89,7 @@ const EDD_Settings = {
 				} );
 
 				// When an image is selected, run a callback.
-				file_frame.on( 'insert', function() {
+				file_frame.on( 'select', function() {
 					const selection = file_frame.state().get( 'selection' );
 					selection.each( function( attachment, index ) {
 						attachment = attachment.toJSON();
@@ -107,20 +104,6 @@ const EDD_Settings = {
 			// WP 3.5+ uploader
 			var file_frame;
 			window.formfield = '';
-		}
-	},
-
-	emails: function() {
-		// Show the email template previews
-		const email_preview_wrap = $( '#email-preview-wrap' );
-		if ( email_preview_wrap.length ) {
-			const emailPreview = $( '#email-preview' );
-			email_preview_wrap.colorbox( {
-				inline: true,
-				href: emailPreview,
-				width: '80%',
-				height: 'auto',
-			} );
 		}
 	},
 
@@ -143,6 +126,51 @@ const EDD_Settings = {
 				symlink.find( 'input' ).prop( 'disabled', false );
 				symlink.css( 'opacity', '1' );
 			}
+		} );
+	},
+
+	gateways: function() {
+		$( '#edd-payment-gateways input[type="checkbox"]' ).on( 'change', function() {
+			let gateway = $( this ),
+				gateway_key = gateway.data( 'gateway-key' ),
+				default_gateway = $( '#edd_settings\\[default_gateway\\]' );
+			option = default_gateway.find( 'option[value="' + gateway_key + '"]' );
+
+			// Toggle enable/disable based
+			option.prop( 'disabled', function( i, v ) {
+				return ! v;
+			} );
+
+			// Maybe deselect
+			if ( option.prop( 'selected' ) ) {
+				option.prop( 'selected', false );
+			}
+
+			default_gateway.trigger( 'chosen:updated' );
+		} );
+	},
+
+	location: function() {
+		$( 'select.edd_countries_filter' ).on( 'change', function() {
+			let select = $( this ),
+				data = {
+					action: 'edd_get_shop_states',
+					country: select.val(),
+					nonce: select.data( 'nonce' ),
+					field_name: 'edd_regions_filter',
+				};
+
+			$.post( ajaxurl, data, function( response ) {
+				$( 'select.edd_regions_filter' ).find( 'option:gt(0)' ).remove();
+
+				if ( 'nostates' !== response ) {
+					$( response ).find( 'option:gt(0)' ).appendTo( 'select.edd_regions_filter' );
+				}
+
+				$( 'select.edd_regions_filter' ).trigger( 'chosen:updated' );
+			} );
+
+			return false;
 		} );
 	},
 };
