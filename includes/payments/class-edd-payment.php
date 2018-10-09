@@ -1147,7 +1147,16 @@ class EDD_Payment {
 			$subtotal -= round( $tax, edd_currency_decimal_filter() );
 		}
 
-		$total      = $subtotal - $discount + $tax;
+		$fees = 0;
+		if ( ! empty( $args['fees'] ) && is_array( $args['fees'] ) ) {
+			foreach ( $args['fees'] as $feekey => $fee ) {
+				$fees += $fee['amount'];
+			}
+
+			$fees = round( $fees, edd_currency_decimal_filter() );
+		}
+
+		$total      = $subtotal - $discount + $tax + $fees;
 
 		// Do not allow totals to go negative
 		if( $total < 0 ) {
