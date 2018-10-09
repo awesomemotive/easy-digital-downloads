@@ -174,13 +174,14 @@ class Tests_EDD extends EDD_UnitTestCase {
 			array( EDD_PLUGIN_DIR . 'templates/images/tick.png' ),
 			array( EDD_PLUGIN_DIR . 'assets/images/xit.gif' ),
 			array( EDD_PLUGIN_DIR . 'templates/images/xit.gif' ),
-			array( EDD_PLUGIN_DIR . 'assets/js/admin-scripts.js' ),
+			array( EDD_PLUGIN_DIR . 'assets/js/edd-admin.js' ),
 			array( EDD_PLUGIN_DIR . 'assets/js/edd-ajax.js' ),
 			array( EDD_PLUGIN_DIR . 'assets/js/edd-checkout-global.js' ),
-			array( EDD_PLUGIN_DIR . 'assets/js/jquery.chosen.js' ),
-			array( EDD_PLUGIN_DIR . 'assets/js/jquery.chosen.min.js' ),
-			array( EDD_PLUGIN_DIR . 'assets/js/jquery.creditCardValidator.js' ),
-			array( EDD_PLUGIN_DIR . 'assets/js/jquery.flot.js' ),
+			array( EDD_PLUGIN_DIR . 'assets/js/vendor/jquery.chosen.min.js' ),
+			array( EDD_PLUGIN_DIR . 'assets/js/vendor/jquery.creditCardValidator.min.js' ),
+			array( EDD_PLUGIN_DIR . 'assets/js/vendor/jquery.flot.min.js' ),
+
+			// Cannot be in /vendor/ for back-compat :(
 			array( EDD_PLUGIN_DIR . 'assets/js/jquery.validate.min.js' ),
 		);
 	}
