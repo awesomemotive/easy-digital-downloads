@@ -20,8 +20,7 @@ var EDD_Download_Configuration = {
 	},
 	clone_repeatable: function( row ) {
 		// Retrieve the highest current key
-		let highest = 1;
-		let key = 1;
+		let key = highest = 1;
 		row.parent().find( '.edd_repeatable_row' ).each( function() {
 			const current = $( this ).data( 'key' );
 			if ( parseInt( current ) > highest ) {
@@ -30,7 +29,7 @@ var EDD_Download_Configuration = {
 		} );
 		key = highest += 1;
 
-		const clone = row.clone();
+		clone = row.clone();
 
 		clone.removeClass( 'edd_add_blank' );
 
@@ -95,16 +94,17 @@ var EDD_Download_Configuration = {
 	},
 
 	add: function() {
-		$( document.body ).on( 'click', '.submit .edd_add_repeatable', function( e ) {
+		$( document.body ).on( 'click', '.edd_add_repeatable', function( e ) {
 			e.preventDefault();
+
 			let button = $( this ),
-				row = button.parent().parent().prev( '.edd_repeatable_row' ),
+				row = button.parent().prev().children( '.edd_repeatable_row:last-child' ),
 				clone = EDD_Download_Configuration.clone_repeatable( row );
 
 			clone.insertAfter( row ).find( 'input, textarea, select' ).filter( ':visible' ).eq( 0 ).focus();
 
 			// Setup chosen fields again if they exist
-			clone.find( '.edd-select-chosen' ).chosen( chosenVars );
+			clone.find( '.edd-select-chosen' ).chosen( chosen_vars );
 			clone.find( '.edd-select-chosen' ).css( 'width', '100%' );
 			clone.find( '.edd-select-chosen .chosen-search input' ).attr( 'placeholder', edd_vars.search_placeholder );
 		} );
@@ -112,7 +112,17 @@ var EDD_Download_Configuration = {
 
 	move: function() {
 		$( ".edd_repeatable_table .edd-repeatables-wrap" ).sortable( {
-			handle: '.edd-draghandle-anchor', items: '.edd_repeatable_row', opacity: 0.6, cursor: 'move', axis: 'y', update: function() {
+			axis: 'y',
+			handle: '.edd-draghandle-anchor',
+			items: '.edd_repeatable_row',
+			cursor: 'move',
+			tolerance: 'pointer',
+			containment: 'parent',
+			distance: 2,
+			opacity: 0.7,
+			scroll: true,
+
+			update: function() {
 				let count = 0;
 				$( this ).find( '.edd_repeatable_row' ).each( function() {
 					$( this ).find( 'input.edd_repeatable_index' ).each( function() {
@@ -120,6 +130,9 @@ var EDD_Download_Configuration = {
 					} );
 					count++;
 				} );
+			},
+			start: function( e, ui ) {
+				ui.placeholder.height( ui.item.height() - 2 );
 			},
 		} );
 	},
@@ -237,12 +250,9 @@ var EDD_Download_Configuration = {
 
 			// Create the media frame.
 			file_frame = wp.media.frames.file_frame = wp.media( {
-				frame: 'post',
-				state: 'insert',
 				title: button.data( 'uploader-title' ),
-				button: {
-					text: button.data( 'uploader-button-text' ),
-				},
+				library: { type: 'image' },
+				button: { text: button.data( 'uploader-button-text' ) },
 				multiple: $( this ).data( 'multiple' ) === '0' ? false : true, // Set to true to allow multiple files to be selected
 			} );
 
@@ -261,7 +271,7 @@ var EDD_Download_Configuration = {
 			} );
 
 			// When an image is selected, run a callback.
-			file_frame.on( 'insert', function() {
+			file_frame.on( 'select', function() {
 				const selection = file_frame.state().get( 'selection' );
 				selection.each( function( attachment, index ) {
 					attachment = attachment.toJSON();

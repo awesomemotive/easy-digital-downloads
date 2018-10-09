@@ -86,7 +86,7 @@ const EDD_Reports = {
 					action: 'edd_get_shop_states',
 					country: select.val(),
 					nonce: select.data( 'nonce' ),
-					field_name: 'edd_countries_filter',
+					field_name: 'edd_regions_filter',
 				};
 
 			$.post( ajaxurl, data, function( response ) {
