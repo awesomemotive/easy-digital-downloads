@@ -207,7 +207,7 @@ function edd_get_price_name( $download_id = 0, $options = array() ) {
 	$return = false;
 	if ( edd_has_variable_prices( $download_id ) && ! empty( $options ) && ! empty( $options['price_id'] ) ) {
 		$prices = edd_get_variable_prices( $download_id );
-		if ( ! empty( $prices[ $options['price_id'] ] ) ) {
+		if ( ! empty( $prices[ $options['price_id'] ]['name'] ) ) {
 			$return = $prices[ $options['price_id'] ]['name'];
 		}
 	}
