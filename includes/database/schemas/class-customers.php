@@ -65,7 +65,8 @@ class Customers extends Schema {
 		// name
 		array(
 			'name'       => 'name',
-			'type'       => 'mediumtext',
+			'type'       => 'varchar',
+			'length'     => '255',
 			'searchable' => true,
 			'sortable'   => true
 		),
