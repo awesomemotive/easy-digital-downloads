@@ -84,6 +84,11 @@ const config = {
 				transform: ( content ) => minifyJs( content ),
 			},
 			{
+				from: './node_modules/flot/jquery.flot.time.js',
+				to: 'assets/js/vendor/jquery.flot.time.min.js',
+				transform: ( content ) => minifyJs( content ),
+			},
+			{
 				from: './node_modules/flot/jquery.flot.pie.js',
 				to: 'assets/js/vendor/jquery.flot.pie.min.js',
 				transform: ( content ) => minifyJs( content ),

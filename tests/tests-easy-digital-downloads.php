@@ -178,7 +178,7 @@ class Tests_EDD extends EDD_UnitTestCase {
 			array( EDD_PLUGIN_DIR . 'assets/js/edd-ajax.js' ),
 			array( EDD_PLUGIN_DIR . 'assets/js/edd-checkout-global.js' ),
 			array( EDD_PLUGIN_DIR . 'assets/js/vendor/jquery.chosen.min.js' ),
-			array( EDD_PLUGIN_DIR . 'assets/js/vendor/jquery.creditCardValidator.min.js' ),
+			array( EDD_PLUGIN_DIR . 'assets/js/vendor/jquery.creditcardvalidator.min.js' ),
 			array( EDD_PLUGIN_DIR . 'assets/js/vendor/jquery.flot.min.js' ),
 
 			// Cannot be in /vendor/ for back-compat :(

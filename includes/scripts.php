@@ -22,16 +22,17 @@ defined( 'ABSPATH' ) || exit;
 function edd_register_scripts() {
 	$js_dir = EDD_PLUGIN_URL . 'assets/js/';
 
-	// Use minified libraries if SCRIPT_DEBUG is turned off
+	// Use minified libraries not debugging scripts
 	$version   = edd_admin_get_script_version();
 	$in_footer = edd_scripts_in_footer();
+	$deps      = array( 'jquery' );
 
-	wp_register_script( 'creditCardValidator', $js_dir . 'vendor/jquery.creditCardValidator.min.js', array( 'jquery' ), $version, $in_footer );
+	wp_register_script( 'creditCardValidator', $js_dir . 'vendor/jquery.creditcardvalidator.min.js', $deps, $version, $in_footer );
 
 	// Registered so gateways can enqueue it when they support the space formatting. wp_enqueue_script( 'jQuery.payment' );
-	wp_register_script( 'jQuery.payment',      $js_dir . 'vendor/jquery.payment.min.js', array( 'jquery' ), $version, $in_footer );
-	wp_register_script( 'edd-checkout-global', $js_dir . 'edd-checkout-global.js',       array( 'jquery' ), $version, $in_footer );
-	wp_register_script( 'edd-ajax',            $js_dir . 'edd-ajax.js',                  array( 'jquery' ), $version, $in_footer );
+	wp_register_script( 'jQuery.payment',      $js_dir . 'vendor/jquery.payment.min.js', $deps, $version, $in_footer );
+	wp_register_script( 'edd-checkout-global', $js_dir . 'edd-checkout-global.js',       $deps, $version, $in_footer );
+	wp_register_script( 'edd-ajax',            $js_dir . 'edd-ajax.js',                  $deps, $version, $in_footer );
 }
 add_action( 'init', 'edd_register_scripts' );
 
@@ -49,8 +50,8 @@ function edd_register_styles() {
 		return;
 	}
 
-	// Use minified libraries if SCRIPT_DEBUG is turned off
-	$suffix  = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+	// Use minified libraries not debugging scripts
+	$suffix  = edd_doing_script_debug() ? '' : '.min';
 	$version = edd_admin_get_script_version();
 
 	$file          = 'edd' . $suffix . '.css';
@@ -221,9 +222,9 @@ function edd_load_head_styles() {
 		return;
 	}
 
-	// Use minified libraries if SCRIPT_DEBUG is turned off
+	// Use minified libraries not debugging scripts
 	$suffix  = is_rtl() ? '-rtl' : '';
-	$suffix .= defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+	$suffix .= edd_doing_script_debug() ? '' : '.min';
 
 	$file          = 'edd' . $suffix . '.css';
 	$templates_dir = edd_get_theme_template_dir_name();
@@ -275,7 +276,7 @@ function edd_scripts_in_footer() {
  * @return string
  */
 function edd_admin_get_script_version() {
-	return ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG )
+	return edd_doing_script_debug()
 		? current_time( 'timestamp' )
 		: EDD_VERSION;
 }
@@ -339,16 +340,18 @@ add_action( 'admin_init', 'edd_register_admin_scripts' );
 function edd_register_admin_styles() {
 	$css_dir     = EDD_PLUGIN_URL . 'assets/css/';
 	$css_suffix  = is_rtl() ? '-rtl' : '';
-	$css_suffix .= defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '.css' : '.min.css';
+	$css_suffix .= edd_doing_script_debug() ? '.css' : '.min.css';
 	$version     = edd_admin_get_script_version();
+	$deps        = array( 'edd-admin' );
 
 	// Register styles
-	wp_register_style( 'jquery-chosen',         $css_dir . 'chosen'               . $css_suffix, array(),              $version );
-	wp_register_style( 'edd-admin',             $css_dir . 'edd-admin'            . $css_suffix, array(),              $version );
-	wp_register_style( 'edd-admin-menu',        $css_dir . 'edd-admin-menu'       . $css_suffix, array(),              $version );
-	wp_register_style( 'edd-admin-email-tags',  $css_dir . 'edd-admin-email-tags' . $css_suffix, array(),              $version );
-	wp_register_style( 'edd-admin-datepicker',  $css_dir . 'edd-admin-datepicker' . $css_suffix, array( 'edd-admin' ), $version );
-	wp_register_style( 'edd-admin-tax-rates',   $css_dir . 'edd-admin-tax-rates'  . $css_suffix, array( 'edd-admin' ), $version );
+	wp_register_style( 'jquery-chosen',         $css_dir . 'chosen'               . $css_suffix, array(), $version );
+	wp_register_style( 'edd-admin',             $css_dir . 'edd-admin'            . $css_suffix, array(), $version );
+	wp_register_style( 'edd-admin-menu',        $css_dir . 'edd-admin-menu'       . $css_suffix, array(), $version );
+	wp_register_style( 'edd-admin-chosen',      $css_dir . 'edd-admin-chosen'     . $css_suffix, $deps,   $version );
+	wp_register_style( 'edd-admin-email-tags',  $css_dir . 'edd-admin-email-tags' . $css_suffix, $deps,   $version );
+	wp_register_style( 'edd-admin-datepicker',  $css_dir . 'edd-admin-datepicker' . $css_suffix, $deps,   $version );
+	wp_register_style( 'edd-admin-tax-rates',   $css_dir . 'edd-admin-tax-rates'  . $css_suffix, $deps,   $version );
 }
 add_action( 'admin_init', 'edd_register_admin_styles' );
 
@@ -410,13 +413,14 @@ function edd_enqueue_admin_styles( $hook = '' ) {
 		return;
 	}
 
-	// Styles to enqueue
+	// Styles to enqueue (in priority order)
 	$styles = array(
-		'edd-admin',
-		'edd-admin-datepicker',
 		'jquery-chosen',
 		'thickbox',
-		'wp-color-picker'
+		'wp-color-picker',
+		'edd-admin',
+		'edd-admin-chosen',
+		'edd-admin-datepicker'
 	);
 
 	// Loop through and enqueue the scripts
@@ -425,7 +429,6 @@ function edd_enqueue_admin_styles( $hook = '' ) {
 	}
 }
 add_action( 'admin_enqueue_scripts', 'edd_enqueue_admin_styles' );
-
 
 /**
  * Localize all admin scripts
