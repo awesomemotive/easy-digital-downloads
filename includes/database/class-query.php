@@ -1761,6 +1761,11 @@ class Query extends Base {
 		$meta    = array_diff_key( $data, $columns );
 		$save    = array_intersect_key( $data, $columns );
 
+		// Maybe save meta keys
+		if ( ! empty( $meta ) ) {
+			$this->save_extra_item_meta( $item_id, $meta );
+		}
+
 		// Bail if no change
 		if ( (array) $save === (array) $item ) {
 			return true;
@@ -1787,11 +1792,6 @@ class Query extends Base {
 		// Bail on failure
 		if ( $this->failed( $result ) ) {
 			return false;
-		}
-
-		// Maybe save meta keys
-		if ( ! empty( $meta ) ) {
-			$this->save_extra_item_meta( $item_id, $meta );
 		}
 
 		// Use get item to prime caches
