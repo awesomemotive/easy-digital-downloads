@@ -4,6 +4,7 @@
 import { chosenVars } from 'utils/chosen.js';
 import { edd_attach_tooltips } from 'admin/components/tooltips';
 import './bulk-edit.js';
+import './prices.js';
 
 /**
  * Download Configuration Metabox
