@@ -2257,13 +2257,23 @@ class Query extends Base {
 	 *
 	 * @since 3.0
 	 *
+	 * @param string $object_subtype The sub-type of meta keys
+	 *
 	 * @return array
 	 */
-	private function get_registered_meta_keys() {
+	private function get_registered_meta_keys( $object_subtype = '' ) {
 		global $wp_meta_keys;
 
 		// Get the object type
 		$object_type = $this->apply_prefix( $this->item_name );
+
+		// Use function if it exists
+		if ( function_exists( 'get_registered_meta_keys' ) ) {
+			return get_registered_meta_keys( $object_type, $object_subtype );
+		}
+
+		// This code is for versions of WordPress older than 4.6.0 and can be
+		// removed at a later date
 
 		// Bail if not set or not an array
 		if ( ! is_array( $wp_meta_keys ) || ! isset( $wp_meta_keys[ $object_type ] ) ) {
