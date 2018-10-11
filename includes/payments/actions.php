@@ -472,14 +472,16 @@ function edd_recover_payment() {
 
 		// Recover any item specific fees.
 		if ( ! empty( $download['fees'] ) ) {
-			foreach ( $download['fees'] as $fee ) {
+			foreach ( $download['fees'] as $key => $fee ) {
+				$fee['id'] = ! empty( $fee['id'] ) ? $fee['id'] : $key;
 				EDD()->fees->add_fee( $fee );
 			}
 		}
 	}
 
 	// Recover any global fees.
-	foreach ( $payment->fees as $fee ) {
+	foreach ( $payment->fees as $key => $fee ) {
+		$fee['id'] = ! empty( $fee['id'] ) ? $fee['id'] : $key;
 		EDD()->fees->add_fee( $fee );
 	}
 
