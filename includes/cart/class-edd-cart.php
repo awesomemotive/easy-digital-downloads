@@ -1294,12 +1294,8 @@ class EDD_Cart {
 					continue;
 				}
 
-				/**
-				 * Fees (at this time) must be exclusive of tax
-				 */
-				add_filter( 'edd_prices_include_tax', '__return_false' );
 				$tax += edd_calculate_tax( $fee['amount'] );
-				remove_filter( 'edd_prices_include_tax', '__return_false' );
+
 			}
 		}
 
