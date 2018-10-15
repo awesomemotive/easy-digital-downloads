@@ -700,39 +700,78 @@ class EDD_HTML_Elements {
 			'placeholder'  => '',
 			'class'        => 'regular-text',
 			'disabled'     => false,
-			'autocomplete' => '',
+			'autocomplete' => false,
 			'data'         => false,
+			'required'     => false,
+			'wrapper_tag'  => 'span',
 		);
 
 		$args = wp_parse_args( $args, $defaults );
 
-		$class    = implode( ' ', array_map( 'sanitize_html_class', explode( ' ', $args['class'] ) ) );
-		$disabled = '';
-		if ( $args['disabled'] ) {
-			$disabled = ' disabled="disabled"';
-		}
+		// Map basic arguments to input attributes.
+		$atts = array(
+			'type'     => 'text',
+			'id'       => $args['id'],
+			'name'     => $args['name'],
+			'class'    => implode( ' ', array_map( 'sanitize_html_class', explode( ' ', $args['class'] ) ) ),
+			'value'    => $args['value'],
+			'required' => $args['required'],
+			'disabled' => $args['disabled'],
+			'autocomplete' => $args['autocomplete'],
+		);
 
-		$data = '';
+		// Add each separate data attribute.
 		if ( ! empty( $args['data'] ) ) {
 			foreach ( $args['data'] as $key => $value ) {
-				$data .= 'data-' . edd_sanitize_key( $key ) . '="' . esc_attr( $value ) . '" ';
+				$atts[ 'data-' . edd_sanitize_key( $key ) ] = esc_attr( $value );
 			}
 		}
 
-		$output = '<span id="edd-' . edd_sanitize_key( $args['name'] ) . '-wrap">';
-		if ( ! empty( $args['label'] ) ) {
-			$output .= '<label class="edd-label" for="' . edd_sanitize_key( $args['id'] ) . '">' . esc_html( $args['label'] ) . '</label>';
-		}
-
+		// Link input to description.
 		if ( ! empty( $args['desc'] ) ) {
-			$output .= '<span class="edd-description">' . esc_html( $args['desc'] ) . '</span>';
+			$atts['aria-describedby'] = $args['id'] . '-description';
 		}
 
-		$output .= '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" autocomplete="' . esc_attr( $args['autocomplete'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="' . $class . '" ' . $data . '' . $disabled . '/>';
+		// Build a string of attributes.
+		$atts = array_filter( $atts, 'strlen' );
+		$atts = array_filter( $atts, 'esc_attr' );
 
-		$output .= '</span>';
+		$field_atts = array();
 
-		return $output;
+		foreach ( $atts as $key => $value ) {
+			$field_atts[] = "{$key}={$value}";
+		}
+
+		// Checkout fields include `edd` prefix and use underscores in the name.
+		$wrapper_compat = str_replace( array( 'edd_', '' ), array( '', '-' ), $args['name'] );
+
+		ob_start();
+?>
+
+	<<?php echo esc_html( $args['wrapper_tag'] ); ?> id="edd-<?php echo edd_sanitize_key( $wrapper_compat ); ?>-wrap">
+
+		<?php if ( ! empty( $args['label'] ) ) : ?>
+			<label class="edd-label" for="<?php echo edd_sanitize_key( $args['id'] ); ?>">
+			<?php echo esc_html( $args['label'] ); ?>
+
+				<?php if ( $args['required'] ) : ?>
+					<span class="edd-required-indicator">*</span>
+				<?php endif; ?>
+			</label>
+		<?php endif; ?>
+
+		<?php if ( ! empty( $args['desc'] ) ) : ?>
+			<span class="edd-description" id="<?php echo esc_attr( $args['id'] ); ?>-description">
+				<?php echo esc_html( $args['desc'] ); ?>
+			</span>
+		<?php endif; ?>
+
+		<input <?php echo implode( ' ', $field_atts ); // phpcs:disable ?> />
+
+		</<?php echo esc_html( $args['wrapper_tag'] ); ?>>
+
+<?php
+		return ob_get_clean();
 	}
 
 	/**

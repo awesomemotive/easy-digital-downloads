@@ -175,43 +175,66 @@ function edd_user_info_fields() {
 
 	$customer = array_map( 'sanitize_text_field', $customer );
 	?>
+
 	<fieldset id="edd_checkout_user_info">
 		<legend><?php echo apply_filters( 'edd_checkout_personal_info_text', esc_html__( 'Personal Info', 'easy-digital-downloads' ) ); ?></legend>
-		<?php do_action( 'edd_purchase_form_before_email' ); ?>
-		<p id="edd-email-wrap">
-			<label class="edd-label" for="edd-email">
-				<?php esc_html_e( 'Email Address', 'easy-digital-downloads' ); ?>
-				<?php if ( edd_field_is_required( 'edd_email' ) ) : ?>
-					<span class="edd-required-indicator">*</span>
-				<?php endif; ?>
-			</label>
-			<span class="edd-description" id="edd-email-description"><?php esc_html_e( 'We will send the purchase receipt to this address.', 'easy-digital-downloads' ); ?></span>
-			<input class="edd-input required" type="email" name="edd_email" placeholder="<?php esc_html_e( 'Email address', 'easy-digital-downloads' ); ?>" id="edd-email" value="<?php echo esc_attr( $customer['email'] ); ?>" aria-describedby="edd-email-description"<?php if( edd_field_is_required( 'edd_email' ) ) {  echo ' required '; } ?>/>
-		</p>
-		<?php do_action( 'edd_purchase_form_after_email' ); ?>
-		<p id="edd-first-name-wrap">
-			<label class="edd-label" for="edd-first">
-				<?php esc_html_e( 'First Name', 'easy-digital-downloads' ); ?>
-				<?php if ( edd_field_is_required( 'edd_first' ) ) : ?>
-					<span class="edd-required-indicator">*</span>
-				<?php endif; ?>
-			</label>
-			<span class="edd-description" id="edd-first-description"><?php esc_html_e( 'We will use this to personalize your account experience.', 'easy-digital-downloads' ); ?></span>
-			<input class="edd-input required" type="text" name="edd_first" placeholder="<?php esc_html_e( 'First Name', 'easy-digital-downloads' ); ?>" id="edd-first" value="<?php echo esc_attr( $customer['first_name'] ); ?>"<?php if( edd_field_is_required( 'edd_first' ) ) {  echo ' required '; } ?> aria-describedby="edd-first-description" />
-		</p>
-		<p id="edd-last-name-wrap">
-			<label class="edd-label" for="edd-last">
-				<?php esc_html_e( 'Last Name', 'easy-digital-downloads' ); ?>
-				<?php if ( edd_field_is_required( 'edd_last' ) ) : ?>
-					<span class="edd-required-indicator">*</span>
-				<?php endif; ?>
-			</label>
-			<span class="edd-description" id="edd-last-description"><?php esc_html_e( 'We will use this as well to personalize your account experience.', 'easy-digital-downloads' ); ?></span>
-			<input class="edd-input<?php if( edd_field_is_required( 'edd_last' ) ) { echo ' required'; } ?>" type="text" name="edd_last" id="edd-last" placeholder="<?php esc_html_e( 'Last Name', 'easy-digital-downloads' ); ?>" value="<?php echo esc_attr( $customer['last_name'] ); ?>"<?php if( edd_field_is_required( 'edd_last' ) ) {  echo ' required '; } ?> aria-describedby="edd-last-description"/>
-		</p>
-		<?php do_action( 'edd_purchase_form_user_info' ); ?>
-		<?php do_action( 'edd_purchase_form_user_info_fields' ); ?>
+
+		<?php
+		/**
+		 * @todo Document this hook.
+		 */
+		do_action( 'edd_purchase_form_before_email' );
+
+		echo EDD()->html->text( array(
+			'id'          => 'edd_email',
+			'name'        => 'edd_email',
+			'label'       => edd_get_purchase_form_field_label( 'edd_email' ),
+			'desc'        => edd_get_purchase_form_field_description( 'edd_email' ),
+			'placeholder' => edd_get_purchase_form_field_placeholder( 'edd_email' ),
+			'value'       => $customer['email'],
+			'required'    => edd_field_is_required( 'edd_email' ),
+			'wrapper_tag' => 'p',
+		) );
+
+		/**
+		 * @todo Document this hook.
+		 */
+		do_action( 'edd_purchase_form_after_email' );
+
+		echo EDD()->html->text( array(
+			'id'          => 'edd_first',
+			'name'        => 'edd_first',
+			'label'       => edd_get_purchase_form_field_label( 'edd_first' ),
+			'desc'        => edd_get_purchase_form_field_description( 'edd_first' ),
+			'placeholder' => edd_get_purchase_form_field_placeholder( 'edd_first' ),
+			'value'       => $customer['first_name'],
+			'required'    => edd_field_is_required( 'edd_first' ),
+			'wrapper_tag' => 'p',
+		) );
+
+		echo EDD()->html->text( array(
+			'id'          => 'edd_last',
+			'name'        => 'edd_last',
+			'label'       => edd_get_purchase_form_field_label( 'edd_last' ),
+			'desc'        => edd_get_purchase_form_field_description( 'edd_last' ),
+			'placeholder' => edd_get_purchase_form_field_placeholder( 'edd_last' ),
+			'value'       => $customer['first_name'],
+			'required'    => edd_field_is_required( 'edd_first' ),
+			'wrapper_tag' => 'p',
+		) );
+
+		/**
+		 * @todo Document this hook.
+		 */
+		do_action( 'edd_purchase_form_user_info' );
+
+		/**
+		 * @todo Document this hook.
+		 */
+		do_action( 'edd_purchase_form_user_info_fields' );
+		?>
 	</fieldset>
+
 	<?php
 }
 add_action( 'edd_purchase_form_after_user_info', 'edd_user_info_fields' );
