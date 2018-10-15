@@ -710,13 +710,13 @@ class EDD_HTML_Elements {
 
 		// Map basic arguments to input attributes.
 		$atts = array(
-			'type'     => 'text',
-			'id'       => $args['id'],
-			'name'     => $args['name'],
-			'class'    => implode( ' ', array_map( 'sanitize_html_class', explode( ' ', $args['class'] ) ) ),
-			'value'    => $args['value'],
-			'required' => $args['required'],
-			'disabled' => $args['disabled'],
+			'type'         => 'text',
+			'id'           => $args['id'],
+			'name'         => $args['name'],
+			'class'        => implode( ' ', array_map( 'sanitize_html_class', explode( ' ', $args['class'] ) ) ),
+			'value'        => $args['value'],
+			'required'     => $args['required'],
+			'disabled'     => $args['disabled'],
 			'autocomplete' => $args['autocomplete'],
 		);
 

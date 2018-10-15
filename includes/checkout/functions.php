@@ -274,9 +274,9 @@ function edd_get_purchase_form_fields() {
 			'placeholder' => __( 'First name', 'easy-digital-downloads' ),
 		),
 		'edd_last' => array(
-			'label'       => __( 'Email Address', 'easy-digital-downloads' ),
+			'label'       => __( 'Last Name', 'easy-digital-downloads' ),
 			'description' => __( 'We will send the purchase receipt to this address.', 'easy-digital-downloads' ),
-			'placeholder' => __( 'Email address', 'easy-digital-downloads' ),
+			'placeholder' => __( 'Last name', 'easy-digital-downloads' ),
 		),
 	);
 
