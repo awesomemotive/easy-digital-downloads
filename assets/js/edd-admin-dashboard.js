@@ -79,11 +79,7 @@
 /***/ (function(module, exports) {
 
 /* global wp */
-
-/**
- * DOM ready.
- */
-document.addEventListener('DOMContentLoaded', function () {
+(function () {
   var widget = document.getElementById('edd_dashboard_sales');
 
   if (!widget) {
@@ -103,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
       widget.querySelector('.inside').innerHTML = response;
     }
   });
-});
+})();
 
 /***/ })
 

@@ -1,9 +1,6 @@
 /* global wp */
 
-/**
- * DOM ready.
- */
-document.addEventListener( 'DOMContentLoaded', () => {
+( () => {
 	const widget = document.getElementById( 'edd_dashboard_sales' );
 
 	if ( ! widget ) {
@@ -22,4 +19,4 @@ document.addEventListener( 'DOMContentLoaded', () => {
 			widget.querySelector( '.inside' ).innerHTML = response;
 		},
 	} );
-} );
+} ) ();

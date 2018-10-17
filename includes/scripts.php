@@ -279,7 +279,8 @@ function edd_register_admin_scripts() {
 			'edd-admin-' . $page,
 			$js_dir . 'edd-admin-' . $page . '.js',
 			array_merge( $admin_deps, $deps ),
-			$version
+			$version,
+			true
 		);
 	}
 }
