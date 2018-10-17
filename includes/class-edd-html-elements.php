@@ -708,6 +708,15 @@ class EDD_HTML_Elements {
 
 		$args = wp_parse_args( $args, $defaults );
 
+		/**
+		 * Filter the arguments used to build the entire field output (including wrapper, description, etc).
+		 *
+		 * @since 3.0
+		 *
+		 * @param array $args Arguments to build the field output.
+		 */
+		$args = apply_filters( 'edd_text_args', $args );
+
 		// Map basic arguments to input attributes.
 		$atts = array(
 			'type'         => 'text',
@@ -732,8 +741,15 @@ class EDD_HTML_Elements {
 			$atts['aria-describedby'] = $args['id'] . '-description';
 		}
 
-		// Build a string of attributes.
-		$atts = array_filter( $atts, 'strlen' );
+		/**
+		 * Filter the attributes used to build input.
+		 *
+		 * @since 3.0
+		 *
+		 * @param array $atts Attributes to built input.
+		 * @param array $args Arguments to build the field.
+		 */
+		$atts = apply_filters( 'edd_text_atts', $atts, $args );
 		$atts = array_filter( $atts, 'esc_attr' );
 
 		$field_atts = array();
@@ -752,11 +768,13 @@ class EDD_HTML_Elements {
 
 		<?php if ( ! empty( $args['label'] ) ) : ?>
 			<label class="edd-label" for="<?php echo edd_sanitize_key( $args['id'] ); ?>">
-			<?php echo esc_html( $args['label'] ); ?>
+				<?php echo esc_html( $args['label'] ); ?>
 
-				<?php if ( $args['required'] ) : ?>
-					<span class="edd-required-indicator">*</span>
-				<?php endif; ?>
+				<?php
+				if ( $args['required'] ) :
+					echo $this->required_indicator( $args ); // phpcs:ignore
+				endif;
+				?>
 			</label>
 		<?php endif; ?>
 
@@ -877,5 +895,29 @@ class EDD_HTML_Elements {
 		$output .= '</span>';
 
 		return $output;
+	}
+
+	/**
+	 * Generate a "required" indidcator (usually used alongside a label).
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $args Arguments used to create the field this most likely lives in. Optional.
+	 * @return string
+	 */
+	public function required_indicator( $args = false ) {
+		$default = '*';
+
+		/**
+		 * Filter the text used to denote a required field.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param string $default Indicator string.
+		 * @param array  $args    Arguments used to create the field this most likely lives in. Optional.
+		 */
+		$indicator = apply_filters( 'edd_required_indicator', $default, $args );
+
+		return '<span class="edd-required-indicator">' . $indicator . '</span>';
 	}
 }
