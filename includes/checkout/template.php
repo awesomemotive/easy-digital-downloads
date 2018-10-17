@@ -332,8 +332,10 @@ function edd_get_cc_form() {
 		do_action( 'edd_before_cc_expiration' );
 
 		echo EDD()->html->card_expiration( array(
-			'label'        => __( 'Expiration (MM/YY)', 'easy-digital-downloads' ),
-			'desc'         => __( 'The date your credit card expires, typically on the front of the card.', 'easy-digital-downloads' ),
+			'id'    => 'card_expiration',
+			'name'  => 'card_expiration',
+			'label' => __( 'Expiration (MM/YY)', 'easy-digital-downloads' ),
+			'desc'  => __( 'The date your credit card expires, typically on the front of the card.', 'easy-digital-downloads' ),
 		) ); // WPCS: XSS okay.
 
 		/**
@@ -402,108 +404,146 @@ function edd_default_cc_address_fields() {
 	 */
 	$customer['address'] = apply_filters( 'edd_checkout_billing_details_address', $customer['address'], $customer );
 
-	ob_start(); ?>
+	// Create a country list.
+	$countries        = edd_get_country_list();
+	$selected_country = edd_get_shop_country();
+
+	if ( ! empty( $customer['address']['country'] ) && '*' !== $customer['address']['country'] ) {
+		$selected_country = $customer['address']['country'];
+	}
+
+	// Create a state list.
+	$states         = edd_get_shop_states( $selected_country );
+	$selected_state = edd_get_shop_state();
+
+	if( ! empty( $customer['address']['state'] ) ) {
+		$selected_state = $customer['address']['state'];
+	}
+
+	// Determine the state field.
+	if ( ! empty( $states ) ) {
+		$state_field = EDD()->html->select( array(
+			'id'               => 'card_state',
+			'name'             => 'card_state',
+			'options'          => $states,
+			'selected'         => $selected_state,
+			'class'            => 'card_state',
+			'show_option_none' => false,
+			'show_option_all'  => false,
+			'required'         => edd_field_is_required( 'card_state' ),
+		) );
+	} else {
+		$state_field = EDD()->html->text( array(
+			'id'          => 'card_state',
+			'name'        => 'card_state',
+			'value'       => ! empty( $customer['address']['state'] ) ? $customer['address']['state'] : '',
+			'required'    => edd_field_is_required( 'card_state' ),
+			'placeholder' => _e( 'State / Province', 'easy-digital-downloads' ),
+			'wrapper'     => false,
+		) );
+	}
+?>
+
 	<fieldset id="edd_cc_address" class="cc-address">
-		<legend><?php _e( 'Billing Details', 'easy-digital-downloads' ); ?></legend>
-		<?php do_action( 'edd_cc_billing_top' ); ?>
-		<p id="edd-card-address-wrap">
-			<label for="card_address" class="edd-label">
-				<?php _e( 'Billing Address', 'easy-digital-downloads' ); ?>
-				<?php if ( edd_field_is_required( 'card_address' ) ) : ?>
-					<span class="edd-required-indicator">*</span>
-				<?php endif; ?>
-			</label>
-			<span class="edd-description"><?php _e( 'The primary billing address for your credit card.', 'easy-digital-downloads' ); ?></span>
-			<input type="text" id="card_address" name="card_address" class="card-address edd-input<?php if ( edd_field_is_required( 'card_address' ) ) { echo ' required'; } ?>" placeholder="<?php _e( 'Address line 1', 'easy-digital-downloads' ); ?>" value="<?php echo $customer['address']['line1']; ?>"<?php if ( edd_field_is_required( 'card_address' ) ) {  echo ' required '; } ?>/>
-		</p>
-		<p id="edd-card-address-2-wrap">
-			<label for="card_address_2" class="edd-label">
-				<?php _e( 'Billing Address Line 2 (optional)', 'easy-digital-downloads' ); ?>
-				<?php if( edd_field_is_required( 'card_address_2' ) ) : ?>
-					<span class="edd-required-indicator">*</span>
-				<?php endif; ?>
-			</label>
-			<span class="edd-description"><?php _e( 'The suite, apt no, PO box, etc, associated with your billing address.', 'easy-digital-downloads' ); ?></span>
-			<input type="text" id="card_address_2" name="card_address_2" class="card-address-2 edd-input<?php if ( edd_field_is_required( 'card_address_2' ) ) { echo ' required'; } ?>" placeholder="<?php _e( 'Address line 2', 'easy-digital-downloads' ); ?>" value="<?php echo $customer['address']['line2']; ?>"<?php if ( edd_field_is_required( 'card_address_2' ) ) {  echo ' required '; } ?>/>
-		</p>
-		<p id="edd-card-city-wrap">
-			<label for="card_city" class="edd-label">
-				<?php _e( 'Billing City', 'easy-digital-downloads' ); ?>
-				<?php if ( edd_field_is_required( 'card_city' ) ) : ?>
-					<span class="edd-required-indicator">*</span>
-				<?php endif; ?>
-			</label>
-			<span class="edd-description"><?php _e( 'The city for your billing address.', 'easy-digital-downloads' ); ?></span>
-			<input type="text" id="card_city" name="card_city" class="card-city edd-input<?php if ( edd_field_is_required( 'card_city' ) ) { echo ' required'; } ?>" placeholder="<?php _e( 'City', 'easy-digital-downloads' ); ?>" value="<?php echo $customer['address']['city']; ?>"<?php if ( edd_field_is_required( 'card_city' ) ) {  echo ' required '; } ?>/>
-		</p>
-		<p id="edd-card-zip-wrap">
-			<label for="card_zip" class="edd-label">
-				<?php _e( 'Billing Zip / Postal Code', 'easy-digital-downloads' ); ?>
-				<?php if ( edd_field_is_required( 'card_zip' ) ) : ?>
-					<span class="edd-required-indicator">*</span>
-				<?php endif; ?>
-			</label>
-			<span class="edd-description"><?php _e( 'The zip or postal code for your billing address.', 'easy-digital-downloads' ); ?></span>
-			<input type="text" size="4" id="card_zip" name="card_zip" class="card-zip edd-input<?php if ( edd_field_is_required( 'card_zip' ) ) { echo ' required'; } ?>" placeholder="<?php _e( 'Zip / Postal Code', 'easy-digital-downloads' ); ?>" value="<?php echo $customer['address']['zip']; ?>"<?php if ( edd_field_is_required( 'card_zip' ) ) {  echo ' required '; } ?>/>
-		</p>
-		<p id="edd-card-country-wrap">
-			<label for="billing_country" class="edd-label">
-				<?php _e( 'Billing Country', 'easy-digital-downloads' ); ?>
-				<?php if ( edd_field_is_required( 'billing_country' ) ) : ?>
-					<span class="edd-required-indicator">*</span>
-				<?php endif; ?>
-			</label>
-			<span class="edd-description"><?php _e( 'The country for your billing address.', 'easy-digital-downloads' ); ?></span>
-			<select name="billing_country" id="billing_country" data-nonce="<?php echo wp_create_nonce( 'edd-country-field-nonce' ); ?>" class="billing_country edd-select<?php if ( edd_field_is_required( 'billing_country' ) ) { echo ' required'; } ?>"<?php if ( edd_field_is_required( 'billing_country' ) ) {  echo ' required '; } ?>>
-				<?php
-				$selected_country = edd_get_shop_country();
+		<legend><?php esc_html_e( 'Billing Details', 'easy-digital-downloads' ); ?></legend>
 
-				if ( ! empty( $customer['address']['country'] ) && '*' !== $customer['address']['country'] ) {
-					$selected_country = $customer['address']['country'];
-				}
+		<?php
+		/**
+		 * Allow output at the top of the credit card billing address form.
+		 *
+		 * @since 1.0
+		 */
+		do_action( 'edd_cc_billing_top' );
 
-				$countries = edd_get_country_list();
-				foreach ( $countries as $country_code => $country ) {
-				  echo '<option value="' . esc_attr( $country_code ) . '"' . selected( $country_code, $selected_country, false ) . '>' . $country . '</option>';
-				}
-				?>
-			</select>
-		</p>
-		<p id="edd-card-state-wrap">
-			<label for="card_state" class="edd-label">
-				<?php _e( 'Billing State / Province', 'easy-digital-downloads' ); ?>
-				<?php if ( edd_field_is_required( 'card_state' ) ) { ?>
-					<span class="edd-required-indicator">*</span>
-				<?php } ?>
-			</label>
-			<span class="edd-description"><?php _e( 'The state or province for your billing address.', 'easy-digital-downloads' ); ?></span>
-			<?php
-			$selected_state = edd_get_shop_state();
-			$states         = edd_get_shop_states( $selected_country );
+		echo EDD()->html->text( array(
+			'id'          => 'card_address',
+			'name'        => 'card_address',
+			'label'       => __( 'Billing Address', 'easy-digital-downloads' ),
+			'desc'        => __( 'The primary billing address for your credit card.', 'easy-digital-downloads' ),
+			'placeholder' => __( 'Address line 1', 'easy-digital-downloads' ),
+			'value'       => $customer['address']['line1'],
+			'required'    => edd_field_is_required( 'card_address' ),
+			'wrapper_tag' => 'p',
+		) ); // WPCS: XSS okay.
 
-			if( ! empty( $customer['address']['state'] ) ) {
-				$selected_state = $customer['address']['state'];
-			}
+		echo EDD()->html->text( array(
+			'id'          => 'card_address_2',
+			'name'        => 'card_address_2',
+			'label'       => __( 'Billing Address Line 2 (optional)', 'easy-digital-downloads' ),
+			'desc'        => __( 'The suite, apt no, PO box, etc, associated with your billing address.', 'easy-digital-downloads' ),
+			'placeholder' => __( 'Address line 2', 'easy-digital-downloads' ),
+			'value'       => $customer['address']['line2'],
+			'required'    => edd_field_is_required( 'card_address_2' ),
+			'wrapper_tag' => 'p',
+		) ); // WPCS: XSS okay.
 
-			if( ! empty( $states ) ) : ?>
-			<select name="card_state" id="card_state" class="card_state edd-select<?php if ( edd_field_is_required( 'card_state' ) ) { echo ' required'; } ?>">
-				<?php
-					foreach( $states as $state_code => $state ) {
-						echo '<option value="' . $state_code . '"' . selected( $state_code, $selected_state, false ) . '>' . $state . '</option>';
-					}
-				?>
-			</select>
-			<?php
-			else :
-				$customer_state = ! empty( $customer['address']['state'] ) ? $customer['address']['state'] : ''; ?>
-			<input type="text" size="6" name="card_state" id="card_state" class="card_state edd-input" value="<?php echo esc_attr( $customer_state ); ?>" placeholder="<?php _e( 'State / Province', 'easy-digital-downloads' ); ?>"/>
-			<?php endif; ?>
-		</p>
-		<?php do_action( 'edd_cc_billing_bottom' ); ?>
-		<?php wp_nonce_field( 'edd-checkout-address-fields', 'edd-checkout-address-fields-nonce', false, true ); ?>
+		echo EDD()->html->text( array(
+			'id'          => 'card_city',
+			'name'        => 'card_city',
+			'label'       => __( 'Billing City', 'easy-digital-downloads' ),
+			'desc'        => __( 'The city for your billing address.', 'easy-digital-downloads' ),
+			'placeholder' => __( 'City', 'easy-digital-downloads' ),
+			'value'       => $customer['address']['city'],
+			'required'    => edd_field_is_required( 'card_city' ),
+			'wrapper_tag' => 'p',
+		) ); // WPCS: XSS okay.
+
+		echo EDD()->html->text( array(
+			'id'          => 'card_zip',
+			'name'        => 'card_zip',
+			'label'       => __( 'Billing Zip / Postal Code', 'easy-digital-downloads' ),
+			'desc'        => __( 'The zip or postal code for your billing address.', 'easy-digital-downloads' ),
+			'placeholder' => __( 'Zip / Postal Code', 'easy-digital-downloads' ),
+			'value'       => $customer['address']['zip'],
+			'required'    => edd_field_is_required( 'card_zip' ),
+			'wrapper_tag' => 'p',
+		) ); // WPCS: XSS okay.
+
+		echo EDD()->html->labeled_field(
+			array(
+				'id'       => 'billing_country',
+				'name'     => 'billing_country',
+				'label'    => __( 'Billing Country', 'easy-digital-downloads' ),
+				'desc'     => __( 'The country for your billing address.', 'easy-digital-downloads' ),
+				'required' => edd_field_is_required( 'billing_country' ),
+			),
+			EDD()->html->select( array(
+				'id'               => 'billing_country',
+				'name'             => 'billing_country',
+				'options'          => $countries,
+				'selected'         => $selected_country,
+				'class'            => 'billing_country',
+				'show_option_none' => false,
+				'show_option_all'  => false,
+				'required'         => edd_field_is_required( 'billing_country' ),
+				'data'             => array(
+					'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
+				),
+			) )
+		);
+
+		echo EDD()->html->labeled_field(
+			array(
+				'id'       => 'card_state',
+				'name'     => 'card_state',
+				'label'    => __( 'Billing State / Province', 'easy-digital-downloads' ),
+				'desc'     => __( 'The state or province for your billing address.', 'easy-digital-downloads' ),
+				'required' => edd_field_is_required( 'card_state' )
+			),
+			$state_field
+		);
+
+		/**
+		 * Allow output at the bottom of the credit card billing address form.
+		 *
+		 * @since 1.0
+		 */
+		do_action( 'edd_cc_billing_bottom' );
+
+		wp_nonce_field( 'edd-checkout-address-fields', 'edd-checkout-address-fields-nonce', false, true );
+		?>
 	</fieldset>
 	<?php
-	echo ob_get_clean();
 }
 add_action( 'edd_after_cc_fields', 'edd_default_cc_address_fields' );
 

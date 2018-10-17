@@ -22,6 +22,59 @@ defined( 'ABSPATH' ) || exit;
 class EDD_HTML_Elements {
 
 	/**
+	 * Wrap an HTML element and provide a label and description.
+	 *
+	 * This method aims to make it easier for standalone element methods in this
+	 * class to easily match other methods that already support the full markup.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array  $args  Original field arguments.
+	 * @param string $field Field to wrap.
+	 */
+	public function labeled_field( $args, $field ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'wrapper_tag' => 'p',
+			)
+		);
+
+		// Checkout fields include `edd` prefix and use underscores in the name.
+		$wrapper_compat = str_replace( array( 'edd_', '_' ), array( '', '-' ), $args['name'] );
+
+		ob_start();
+?>
+
+	<<?php echo esc_html( $args['wrapper_tag'] ); ?> id="edd-<?php echo edd_sanitize_key( $wrapper_compat ); ?>-wrap">
+
+		<?php if ( ! empty( $args['label'] ) ) : ?>
+			<label class="edd-label" for="<?php echo edd_sanitize_key( $args['id'] ); ?>">
+				<?php echo esc_html( $args['label'] ); ?>
+
+				<?php
+				if ( $args['required'] ) :
+					echo $this->required_indicator( $args ); // phpcs:ignore
+				endif;
+				?>
+			</label>
+		<?php endif; ?>
+
+		<?php if ( ! empty( $args['desc'] ) ) : ?>
+			<span class="edd-description" id="<?php echo esc_attr( $args['id'] ); ?>-description">
+				<?php echo esc_html( $args['desc'] ); ?>
+			</span>
+		<?php endif; ?>
+
+		<?php echo $field; // WPCS: XSS okay. ?>
+
+	</<?php echo esc_html( $args['wrapper_tag'] ); ?>>
+
+<?php
+		return ob_get_clean();
+	}
+
+	/**
 	 * Renders an HTML Dropdown of all the Products (Downloads)
 	 *
 	 * @since 1.5
@@ -704,6 +757,7 @@ class EDD_HTML_Elements {
 			'autocomplete' => false,
 			'data'         => false,
 			'required'     => false,
+			'wrapper'      => true,
 			'wrapper_tag'  => 'span',
 		);
 
@@ -770,38 +824,15 @@ class EDD_HTML_Elements {
 			$field_atts[] = "{$key}='{$value}'";
 		}
 
-		// Checkout fields include `edd` prefix and use underscores in the name.
-		$wrapper_compat = str_replace( array( 'edd_', '' ), array( '', '-' ), $args['name'] );
+		$field = '<input ' . implode( ' ', $field_atts ) . ' />';
 
-		ob_start();
-?>
+		// Allow just a field to be returned.
+		if ( ! $args['wrapper'] ) {
+			return $field;
+		}
 
-	<<?php echo esc_html( $args['wrapper_tag'] ); ?> id="edd-<?php echo edd_sanitize_key( $wrapper_compat ); ?>-wrap">
-
-		<?php if ( ! empty( $args['label'] ) ) : ?>
-			<label class="edd-label" for="<?php echo edd_sanitize_key( $args['id'] ); ?>">
-				<?php echo esc_html( $args['label'] ); ?>
-
-				<?php
-				if ( $args['required'] ) :
-					echo $this->required_indicator( $args ); // phpcs:ignore
-				endif;
-				?>
-			</label>
-		<?php endif; ?>
-
-		<?php if ( ! empty( $args['desc'] ) ) : ?>
-			<span class="edd-description" id="<?php echo esc_attr( $args['id'] ); ?>-description">
-				<?php echo esc_html( $args['desc'] ); ?>
-			</span>
-		<?php endif; ?>
-
-		<input <?php echo implode( ' ', $field_atts ); // phpcs:disable ?> />
-
-		</<?php echo esc_html( $args['wrapper_tag'] ); ?>>
-
-<?php
-		return ob_get_clean();
+		// Allow just the field to be returned.
+		return $this->labeled_field( $args, $field );
 	}
 
 	/**
@@ -909,26 +940,7 @@ class EDD_HTML_Elements {
 			$years[ $i ] = substr( $i, 2 );
 		}
 
-		ob_start();
-?>
-
-	<p class="card-expiration" id="edd-card-expiration-wrap">
-
-		<?php if ( ! empty( $args['label'] ) ) : ?>
-			<label class="edd-label" for="card_exp_month">
-				<?php echo esc_html( $args['label'] ); ?>
-				<?php echo $this->required_indicator( $args ); // phpcs:ignore ?>
-			</label>
-		<?php endif; ?>
-
-		<?php if ( ! empty( $args['desc'] ) ) : ?>
-			<span class="edd-description">
-				<?php echo esc_html( $args['desc'] ); ?>
-			</span>
-		<?php endif; ?>
-
-		<?php
-		echo $this->select( array(
+		$field = $this->select( array(
 			'id'               => 'card_exp_month',
 			'name'             => 'card_exp_month',
 			'options'          => $months,
@@ -936,12 +948,10 @@ class EDD_HTML_Elements {
 			'show_option_none' => false,
 			'show_option_all'  => false,
 		) );
-		?>
 
-		<span class="exp-divider"> / </span>
+		$field .= '<span class="exp-divider"> / </span>';
 
-		<?php
-		echo $this->select( array(
+		$field .= $this->select( array(
 			'id'               => 'card_exp_year',
 			'name'             => 'card_exp_year',
 			'options'          => $years,
@@ -949,11 +959,8 @@ class EDD_HTML_Elements {
 			'show_option_none' => false,
 			'show_option_all'  => false,
 		) );
-		?>
-	</p>
 
-<?php
-		return ob_get_clean();
+		return $this->labeled_field( $args, $field );
 	}
 
 	/**
