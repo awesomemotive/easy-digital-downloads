@@ -1,4 +1,10 @@
 /* global edd_scripts, edd_global_vars */
+
+/**
+ * Internal dependencies.
+ */
+import { recalculate_taxes } from './edd-checkout-global.js';
+
 jQuery( document ).ready( function( $ ) {
 	// Hide unneeded elements. These are things that are required in case JS breaks or isn't present
 	$( '.edd-no-js' ).hide();
@@ -466,6 +472,9 @@ jQuery( document ).ready( function( $ ) {
 		return false;
 	}
 
+	// Backwards compatibility. Assign function to global namespace.
+	window.update_state_field = update_state_field;
+
 	// If is_checkout, recalculate sales tax on postalCode change.
 	$( document.body ).on( 'change', '#edd_cc_address input[name=card_zip]', function() {
 		if ( typeof edd_global_vars !== 'undefined' ) {
@@ -499,3 +508,6 @@ function edd_load_gateway( payment_mode ) {
 		}
 	);
 }
+
+// Backwards compatibility. Assign function to global namespace.
+window.edd_load_gateway = edd_load_gateway;
