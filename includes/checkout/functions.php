@@ -633,3 +633,41 @@ function edd_print_payment_icons_on_checkout() {
 	edd_print_payment_icons( $icons );
 }
 add_action( 'wp_print_footer_scripts', 'edd_print_payment_icons_on_checkout', 9999 );
+
+/**
+ * Add a card number-specific attributes to the input.
+ *
+ * @since 3.0.0
+ *
+ * @param array $atts Attributes to built input.
+ * @param array $args Arguments to build the field.
+ */
+function edd_purchase_form_card_number_atts( $atts, $args ) {
+	if ( 'card_number' !== $args['id'] ) {
+		return $atts;
+	}
+
+	$atts['pattern'] = '^[0-9!@#$%^&* ]*$';
+
+	return $atts;
+}
+
+/**
+ * Add a card cvc-specific attributes to the input.
+ *
+ * @since 3.0.0
+ *
+ * @param array $atts Attributes to built input.
+ * @param array $args Arguments to build the field.
+ */
+function edd_purchase_form_card_cvc_atts( $atts, $args ) {
+	if ( 'card_cvc' !== $args['id'] ) {
+		return $atts;
+	}
+
+	$atts['pattern']   = '[0-9]{3,4}';
+	$atts['maxlength'] = '4';
+	$atts['size']      = '4';
+
+	return $atts;
+}

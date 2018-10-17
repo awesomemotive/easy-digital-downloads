@@ -181,9 +181,13 @@ function edd_user_info_fields() {
 
 		<?php
 		/**
-		 * @todo Document this hook.
+		 * Allow output before the email field.
+		 *
+		 * @since 1.3.3
+		 *
+		 * @param array $customer Customer data.
 		 */
-		do_action( 'edd_purchase_form_before_email' );
+		do_action( 'edd_purchase_form_before_email', $customer );
 
 		echo EDD()->html->text( array(
 			'id'          => 'edd_email',
@@ -194,12 +198,16 @@ function edd_user_info_fields() {
 			'value'       => $customer['email'],
 			'required'    => edd_field_is_required( 'edd_email' ),
 			'wrapper_tag' => 'p',
-		) );
+		) ); // WPCS: XSS okay.
 
 		/**
-		 * @todo Document this hook.
+		 * Allow output after the email field.
+		 *
+		 * @since 1.3.3
+		 *
+		 * @param array $customer Customer data.
 		 */
-		do_action( 'edd_purchase_form_after_email' );
+		do_action( 'edd_purchase_form_after_email', $customer );
 
 		echo EDD()->html->text( array(
 			'id'          => 'edd_first',
@@ -210,7 +218,7 @@ function edd_user_info_fields() {
 			'value'       => $customer['first_name'],
 			'required'    => edd_field_is_required( 'edd_first' ),
 			'wrapper_tag' => 'p',
-		) );
+		) ); // WPCS: XSS okay.
 
 		echo EDD()->html->text( array(
 			'id'          => 'edd_last',
@@ -221,17 +229,27 @@ function edd_user_info_fields() {
 			'value'       => $customer['first_name'],
 			'required'    => edd_field_is_required( 'edd_first' ),
 			'wrapper_tag' => 'p',
-		) );
+		) ); // WPCS: XSS okay.
 
 		/**
-		 * @todo Document this hook.
+		 * Allow output after the user info field s.
+		 *
+		 * @since 1.3.3
+		 *
+		 * @param array $customer Customer data.
 		 */
-		do_action( 'edd_purchase_form_user_info' );
+		do_action( 'edd_purchase_form_user_info', $customer );
 
 		/**
-		 * @todo Document this hook.
+		 * Allow output of additional user info fields.
+		 *
+		 * @todo Deprecate this? Seems unneeded.
+		 *
+		 * @since 1.3.3
+		 *
+		 * @param array $customer Customer data.
 		 */
-		do_action( 'edd_purchase_form_user_info_fields' );
+		do_action( 'edd_purchase_form_user_info_fields', $customer );
 		?>
 	</fieldset>
 
@@ -247,12 +265,17 @@ add_action( 'edd_register_fields_before', 'edd_user_info_fields' );
  * @return void
  */
 function edd_get_cc_form() {
-	ob_start(); ?>
-
-	<?php do_action( 'edd_before_cc_fields' ); ?>
+	/**
+	 * Allow output before credit card fields.
+	 *
+	 * @since 1.0
+	 */
+	do_action( 'edd_before_cc_fields' );
+?>
 
 	<fieldset id="edd_cc_fields" class="edd-do-validate">
-		<legend><?php _e( 'Credit Card Info', 'easy-digital-downloads' ); ?></legend>
+		<legend><?php esc_html_e( 'Credit Card Info', 'easy-digital-downloads' ); ?></legend>
+
 		<?php if ( is_ssl() ) : ?>
 			<div id="edd_secure_site_wrapper">
 				<?php
@@ -266,56 +289,70 @@ function edd_get_cc_form() {
 						)
 					);
 				?>
-				<span><?php _e( 'This is a secure SSL encrypted payment.', 'easy-digital-downloads' ); ?></span>
+
+				<span><?php esc_html_e( 'This is a secure SSL encrypted payment.', 'easy-digital-downloads' ); ?></span>
 			</div>
 		<?php endif; ?>
-		<p id="edd-card-number-wrap">
-			<label for="card_number" class="edd-label">
-				<?php _e( 'Card Number', 'easy-digital-downloads' ); ?>
-				<span class="edd-required-indicator">*</span>
-				<span class="card-type"></span>
-			</label>
-			<span class="edd-description"><?php _e( 'The (typically) 16 digits on the front of your credit card.', 'easy-digital-downloads' ); ?></span>
-			<input type="tel" pattern="^[0-9!@#$%^&* ]*$" autocomplete="off" name="card_number" id="card_number" class="card-number edd-input required" placeholder="<?php _e( 'Card number', 'easy-digital-downloads' ); ?>" />
-		</p>
-		<p id="edd-card-cvc-wrap">
-			<label for="card_cvc" class="edd-label">
-				<?php _e( 'CVC', 'easy-digital-downloads' ); ?>
-				<span class="edd-required-indicator">*</span>
-			</label>
-			<span class="edd-description"><?php _e( 'The 3 digit (back) or 4 digit (front) value on your card.', 'easy-digital-downloads' ); ?></span>
-			<input type="tel" pattern="[0-9]{3,4}" size="4" maxlength="4" autocomplete="off" name="card_cvc" id="card_cvc" class="card-cvc edd-input required" placeholder="<?php _e( 'Security code', 'easy-digital-downloads' ); ?>" />
-		</p>
-		<p id="edd-card-name-wrap">
-			<label for="card_name" class="edd-label">
-				<?php _e( 'Name on the Card', 'easy-digital-downloads' ); ?>
-				<span class="edd-required-indicator">*</span>
-			</label>
-			<span class="edd-description"><?php _e( 'The name printed on the front of your credit card.', 'easy-digital-downloads' ); ?></span>
-			<input type="text" autocomplete="off" name="card_name" id="card_name" class="card-name edd-input required" placeholder="<?php _e( 'Card name', 'easy-digital-downloads' ); ?>" />
-		</p>
-		<?php do_action( 'edd_before_cc_expiration' ); ?>
-		<p class="card-expiration">
-			<label for="card_exp_month" class="edd-label">
-				<?php _e( 'Expiration (MM/YY)', 'easy-digital-downloads' ); ?>
-				<span class="edd-required-indicator">*</span>
-			</label>
-			<span class="edd-description"><?php _e( 'The date your credit card expires, typically on the front of the card.', 'easy-digital-downloads' ); ?></span>
-			<select id="card_exp_month" name="card_exp_month" class="card-expiry-month edd-select edd-select-small required">
-				<?php for( $i = 1; $i <= 12; $i++ ) { echo '<option value="' . $i . '">' . sprintf ('%02d', $i ) . '</option>'; } ?>
-			</select>
-			<span class="exp-divider"> / </span>
-			<select id="card_exp_year" name="card_exp_year" class="card-expiry-year edd-select edd-select-small required">
-				<?php for( $i = date('Y'); $i <= date('Y') + 30; $i++ ) { echo '<option value="' . $i . '">' . substr( $i, 2 ) . '</option>'; } ?>
-			</select>
-		</p>
-		<?php do_action( 'edd_after_cc_expiration' ); ?>
+
+		<?php
+		echo EDD()->html->card_number( array(
+			'id'           => 'card_number',
+			'name'         => 'card_number',
+			'label'        => __( 'Card Number', 'easy-digital-downloads' ),
+			'desc'         => __( 'The (typically) 16 digits on the front of your credit card.', 'easy-digital-downloads' ),
+			'placeholder'  => __( 'Card number', 'easy-digital-downloads' ),
+			'wrapper_tag'  => 'p',
+		) ); // WPCS: XSS okay.
+
+		echo EDD()->html->card_cvc( array(
+			'id'           => 'card_cvc',
+			'name'         => 'card_cvc',
+			'label'        => __( 'CVC', 'easy-digital-downloads' ),
+			'desc'         => __( 'The 3 digit (back) or 4 digit (front) value on your card.', 'easy-digital-downloads' ),
+			'placeholder'  => __( 'Security code', 'easy-digital-downloads' ),
+			'wrapper_tag'  => 'p',
+		) ); // WPCS: XSS okay.
+
+		echo EDD()->html->text( array(
+			'id'           => 'card_name',
+			'name'         => 'card_name',
+			'label'        => __( 'Name on the Card', 'easy-digital-downloads' ),
+			'desc'         => __( 'The name printed on the front of your credit card.', 'easy-digital-downloads' ),
+			'placeholder'  => __( 'Card name', 'easy-digital-downloads' ),
+			'required'     => true,
+			'autocomplete' => 'off',
+			'wrapper_tag'  => 'p',
+		) ); // WPCS: XSS okay.
+
+		/**
+		 * Allow output before the card expiration fields.
+		 *
+		 * @since 1.0
+		 */
+		do_action( 'edd_before_cc_expiration' );
+
+		echo EDD()->html->card_expiration( array(
+			'label'        => __( 'Expiration (MM/YY)', 'easy-digital-downloads' ),
+			'desc'         => __( 'The date your credit card expires, typically on the front of the card.', 'easy-digital-downloads' ),
+		) ); // WPCS: XSS okay.
+
+		/**
+		 * Allow output after the card expiration fields.
+		 *
+		 * @since 1.0
+		 */
+		do_action( 'edd_after_cc_expiration' );
+		?>
 
 	</fieldset>
-	<?php
-	do_action( 'edd_after_cc_fields' );
 
-	echo ob_get_clean();
+	<?php
+	/**
+	 * Allow output after the credit card fields.
+	 *
+	 * @since 1.0
+	 */
+	do_action( 'edd_after_cc_fields' );
 }
 add_action( 'edd_cc_form', 'edd_get_cc_form' );
 

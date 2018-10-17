@@ -672,7 +672,7 @@ class EDD_HTML_Elements {
 	}
 
 	/**
-	 * Renders an HTML Text field
+	 * Generates an HTML Text field
 	 *
 	 * @since 1.5.2
 	 *
@@ -692,13 +692,14 @@ class EDD_HTML_Elements {
 		}
 
 		$defaults = array(
+			'type'         => 'text',
 			'id'           => '',
 			'name'         => isset( $name ) ? $name : 'text',
 			'value'        => isset( $value ) ? $value : null,
 			'label'        => isset( $label ) ? $label : null,
 			'desc'         => isset( $desc ) ? $desc : null,
 			'placeholder'  => '',
-			'class'        => 'regular-text',
+			'class'        => '',
 			'disabled'     => false,
 			'autocomplete' => false,
 			'data'         => false,
@@ -717,16 +718,27 @@ class EDD_HTML_Elements {
 		 */
 		$args = apply_filters( 'edd_text_args', $args );
 
+		// Add default classes.
+		$classes = explode( ' ', $args['class'] );
+		$classes[] = 'regular-text';
+		$classes[] = 'edd-input';
+		$classes[] = str_replace( '_', '-', $args['id'] );
+
+		if ( $args['required'] ) {
+			$classes[] = 'required';
+		}
+
 		// Map basic arguments to input attributes.
 		$atts = array(
-			'type'         => 'text',
+			'type'         => $args['type'],
 			'id'           => $args['id'],
 			'name'         => $args['name'],
-			'class'        => implode( ' ', array_map( 'sanitize_html_class', explode( ' ', $args['class'] ) ) ),
+			'class'        => implode( ' ', array_map( 'sanitize_html_class', $classes ) ),
 			'value'        => $args['value'],
 			'required'     => $args['required'],
 			'disabled'     => $args['disabled'],
 			'autocomplete' => $args['autocomplete'],
+			'placeholder'  => $args['placeholder'],
 		);
 
 		// Add each separate data attribute.
@@ -755,7 +767,7 @@ class EDD_HTML_Elements {
 		$field_atts = array();
 
 		foreach ( $atts as $key => $value ) {
-			$field_atts[] = "{$key}={$value}";
+			$field_atts[] = "{$key}='{$value}'";
 		}
 
 		// Checkout fields include `edd` prefix and use underscores in the name.
@@ -813,6 +825,135 @@ class EDD_HTML_Elements {
 		}
 
 		return $this->text( $args );
+	}
+
+	/**
+	 * Generates a credit card number field.
+	 *
+	 * @todo Need a way to output <span class="card-type"></span> in the label.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $args Arguments for the credit card field.
+	 * @return string Credit card field.
+	 */
+	public function card_number( $args = array() ) {
+		$args['type' ]        = 'tel';
+		$args['autocomplete'] = 'off';
+		$args['required' ]    = true;
+
+		add_filter( 'edd_text_atts', 'edd_purchase_form_card_number_atts', 10, 2 );
+
+		$field = $this->text( $args );
+
+		remove_filter( 'edd_text_atts', 'edd_purchase_form_card_number_atts', 10, 2 );
+
+		return $field;
+	}
+
+	/**
+	 * Generates a credit card CVC field.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $args Arguments for the credit card field.
+	 * @return string Credit card CVC field.
+	 */
+	public function card_cvc( $args = array() ) {
+		$args['type' ]        = 'tel';
+		$args['autocomplete'] = 'off';
+		$args['required' ]    = true;
+
+		add_filter( 'edd_text_atts', 'edd_purchase_form_card_cvc_atts', 10, 2 );
+
+		$field = $this->text( $args );
+
+		remove_filter( 'edd_text_atts', 'edd_purchase_form_card_cvc_atts', 10, 2 );
+
+		return $field;
+	}
+
+	/**
+	 * Generates a credit card expiration field.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $args Arguments for the credit card field.
+	 * @return string Credit card expiration field.
+	 */
+	public function card_expiration( $args = array() ) {
+		$defaults = array(
+			'label' => isset( $label ) ? $label : null,
+			'desc'  => isset( $desc ) ? $desc : null,
+		);
+
+		$args = wp_parse_args( $args, $defaults );
+
+		/**
+		 * Filter the arguments used to build the entire field output (including wrapper, description, etc).
+		 *
+		 * @since 3.0
+		 *
+		 * @param array $args Arguments to build the field output.
+		 */
+		$args = apply_filters( 'edd_card_expiration_args', $args );
+
+		$months = array();
+		$years  = array();
+
+		for ( $i = 1; $i <= 12; $i++ ) {
+			$months[ $i ] = sprintf ('%02d', $i );
+		}
+
+		for ( $i = date('Y'); $i <= date( 'Y' ) + 30; $i++ ) {
+			$years[ $i ] = substr( $i, 2 );
+		}
+
+		ob_start();
+?>
+
+	<p class="card-expiration" id="edd-card-expiration-wrap">
+
+		<?php if ( ! empty( $args['label'] ) ) : ?>
+			<label class="edd-label" for="card_exp_month">
+				<?php echo esc_html( $args['label'] ); ?>
+				<?php echo $this->required_indicator( $args ); // phpcs:ignore ?>
+			</label>
+		<?php endif; ?>
+
+		<?php if ( ! empty( $args['desc'] ) ) : ?>
+			<span class="edd-description">
+				<?php echo esc_html( $args['desc'] ); ?>
+			</span>
+		<?php endif; ?>
+
+		<?php
+		echo $this->select( array(
+			'id'               => 'card_exp_month',
+			'name'             => 'card_exp_month',
+			'options'          => $months,
+			'class'            => 'card-expiry-month edd-select edd-select-small required',
+			'show_option_none' => false,
+			'show_option_all'  => false,
+		) );
+		?>
+
+		<span class="exp-divider"> / </span>
+
+		<?php
+		echo $this->select( array(
+			'id'               => 'card_exp_year',
+			'name'             => 'card_exp_year',
+			'options'          => $years,
+			'class'            => 'card-expiry-year edd-select edd-select-small required',
+			'show_option_none' => false,
+			'show_option_all'  => false,
+		) );
+		?>
+	</p>
+
+<?php
+		return ob_get_clean();
 	}
 
 	/**
