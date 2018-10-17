@@ -438,7 +438,7 @@ function edd_default_cc_address_fields() {
 			'name'        => 'card_state',
 			'value'       => ! empty( $customer['address']['state'] ) ? $customer['address']['state'] : '',
 			'required'    => edd_field_is_required( 'card_state' ),
-			'placeholder' => _e( 'State / Province', 'easy-digital-downloads' ),
+			'placeholder' => __( 'State / Province', 'easy-digital-downloads' ),
 			'wrapper'     => false,
 		) );
 	}
