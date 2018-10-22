@@ -1262,6 +1262,17 @@ function edd_doing_autosave() {
 }
 
 /**
+ * Abstraction for WordPress Script-Debug checking to avoid code duplication.
+ *
+ * @since 3.0
+ *
+ * @return boolean
+ */
+function edd_doing_script_debug() {
+	return defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
+}
+
+/**
  * Get the bot name. Usually "Store Bot" unless filtered.
  *
  * @since 3.0

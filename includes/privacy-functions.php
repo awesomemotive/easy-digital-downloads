@@ -1262,10 +1262,7 @@ function edd_privacy_payment_eraser( $email_address, $page = 1 ) {
  * @return array
  */
 function edd_privacy_file_download_logs_eraser( $email_address, $page = 1 ) {
-	global $edd_logs;
-
-	$customer = _edd_privacy_get_customer_id_for_email( $email_address );
-
+	$customer  = _edd_privacy_get_customer_id_for_email( $email_address );
 	$log_query = array(
 		'customer_id' => $customer->id,
 		'number'      => 30,
@@ -1320,7 +1317,6 @@ function edd_privacy_file_download_logs_eraser( $email_address, $page = 1 ) {
  * @return array
  */
 function edd_privacy_api_access_logs_eraser( $email_address, $page = 1 ) {
-	global $edd_logs;
 
 	$user = get_user_by( 'email', $email_address );
 

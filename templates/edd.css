@@ -158,6 +158,7 @@
 	width: 100%;
 	margin: 0 0 21px;
 	padding: 0;
+	float: left;
 }
 #edd_checkout_form_wrap label {
 	font-weight: bold;
