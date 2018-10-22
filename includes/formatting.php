@@ -280,3 +280,54 @@ function edd_number_not_negative( $number = 0 ) {
 	// Filter & return
 	return (int) apply_filters( 'edd_number_not_negative', $not_less_than_zero, $casted_number, $number );
 }
+
+/**
+ * Return array of allowed HTML tags.
+ *
+ * Used with wp_kses() to filter unsafe HTML out of settings and notes.
+ *
+ * @since 3.0
+ *
+ * @return array
+ */
+function edd_get_allowed_tags() {
+	return (array) apply_filters( 'edd_allowed_html_tags', array(
+		'p'      => array(
+			'class' => array(),
+			'id'    => array(),
+		),
+		'span'   => array(
+			'class' => array(),
+			'id'    => array(),
+		),
+		'a' => array(
+			'href'   => array(),
+			'target' => array(),
+			'title'  => array(),
+			'class'  => array(),
+			'id'     => array(),
+		),
+		'code'   => array(),
+		'strong' => array(),
+		'em'     => array(),
+		'br'     => array(),
+		'img'    => array(
+			'src'   => array(),
+			'title' => array(),
+			'alt'   => array(),
+			'id'    => array(),
+		),
+		'div'    => array(
+			'class' => array(),
+			'id'    => array(),
+		),
+		'ul'     => array(
+			'class' => array(),
+			'id'    => array(),
+		),
+		'li'     => array(
+			'class' => array(),
+			'id'    => array(),
+		),
+	) );
+}

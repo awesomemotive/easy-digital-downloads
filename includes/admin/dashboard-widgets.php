@@ -38,6 +38,7 @@ add_action('wp_dashboard_setup', 'edd_register_dashboard_widgets', 10 );
  * @return void
  */
 function edd_dashboard_sales_widget( ) {
+	wp_enqueue_script( 'edd-admin-dashboard' );
 	echo '<p><img src=" ' . esc_attr( set_url_scheme( EDD_PLUGIN_URL . 'assets/images/loading.gif', 'relative' ) ) . '"/></p>';
 }
 

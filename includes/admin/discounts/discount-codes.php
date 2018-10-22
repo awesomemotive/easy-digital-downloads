@@ -21,6 +21,8 @@ defined( 'ABSPATH' ) || exit;
  * @since 3.0 Nomenclature updated for consistency.
 */
 function edd_discounts_page() {
+	// Enqueue scripts.
+	wp_enqueue_script( 'edd-admin-discounts' );
 
 	// Edit
 	if ( ! empty( $_GET['edd-action'] ) && ( 'edit_discount' === $_GET['edd-action'] ) ) {

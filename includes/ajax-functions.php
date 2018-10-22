@@ -947,7 +947,7 @@ function edd_ajax_add_order_item() {
 	if ( $d ) {
 		$name = $d->get_name();
 
-		if ( empty( $download['price_id'] ) ) {
+		if ( ! $d->has_variable_prices() ) {
 			$amount = floatval( $d->get_price() );
 		} else {
 			$prices = $d->get_prices();

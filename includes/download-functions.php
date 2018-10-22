@@ -164,7 +164,7 @@ function edd_get_download_name( $download_id = 0, $price_id = 0 ) {
 	$retval = $download->get_name();
 
 	// Check for variable pricing
-	if ( ! empty( $price_id ) && is_numeric( $price_id ) ) {
+	if ( $download->has_variable_prices() && is_numeric( $price_id ) ) {
 
 		// Check for price option name
 		$price_name = edd_get_price_option_name( $download_id, $price_id );

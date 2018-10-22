@@ -862,12 +862,15 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 		 */
 		do_action( 'edd_customer_pre_add_note', $note, $this->id, $this );
 
+		// Sanitize note
+		$note = trim( wp_kses( stripslashes( $note ), edd_get_allowed_tags() ) );
+
 		// Try to add the note
 		edd_add_note( array(
 			'user_id'     => 0, // Authored by System/Bot
 			'object_id'   => $this->id,
 			'object_type' => 'customer',
-			'content'     => wp_kses( stripslashes( $note ), array() ),
+			'content'     => $note,
 		) );
 
 		/**
