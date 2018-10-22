@@ -579,13 +579,14 @@ function edd_render_products_field( $post_id ) {
 										<span class="edd-repeatable-row-setting-label"><?php printf( __( 'Select %s:', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></span>
 										<?php
 										echo EDD()->html->product_dropdown( array(
-											'name'       => '_edd_bundled_products[]',
-											'id'         => 'edd_bundled_products_' . $index,
-											'selected'   => $product,
-											'multiple'   => false,
-											'chosen'     => true,
-											'bundles'    => false,
-											'variations' => true,
+											'name'                 => '_edd_bundled_products[]',
+											'id'                   => 'edd_bundled_products_' . $index,
+											'selected'             => $product,
+											'multiple'             => false,
+											'chosen'               => true,
+											'bundles'              => false,
+											'variations'           => true,
+											'show_variations_only' => true,
 										) );
 										?>
 									</div>
@@ -639,12 +640,13 @@ function edd_render_products_field( $post_id ) {
 									<span class="edd-repeatable-row-setting-label"><?php printf( __( 'Select %s:', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></span>
 									<?php
 									echo EDD()->html->product_dropdown( array(
-										'name'       => '_edd_bundled_products[]',
-										'id'         => 'edd_bundled_products_1',
-										'multiple'   => false,
-										'chosen'     => true,
-										'bundles'    => false,
-										'variations' => true,
+										'name'                 => '_edd_bundled_products[]',
+										'id'                   => 'edd_bundled_products_1',
+										'multiple'             => false,
+										'chosen'               => true,
+										'bundles'              => false,
+										'variations'           => true,
+										'show_variations_only' => true,
 									) );
 									?>
 								</div>
