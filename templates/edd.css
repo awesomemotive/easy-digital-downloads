@@ -304,11 +304,6 @@
 #edd_checkout_form_wrap fieldset#edd_register_account_fields p.edd_login_password {
 	margin: 0;
 }
-#edd_checkout_form_wrap fieldset#edd_cc_fields {
-	border: 1px solid #f0f0f0;
-	background: #f9f9f9;
-	position: relative;
-}
 #edd_checkout_form_wrap fieldset#edd_cc_fields legend {
 	border: none;
 	padding: 0;
