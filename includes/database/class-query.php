@@ -613,19 +613,6 @@ class Query extends Base {
 	/** Private Getters *******************************************************/
 
 	/**
-	 * Return the global database interface
-	 *
-	 * @since 3.0
-	 *
-	 * @return wpdb|object
-	 */
-	private static function get_db() {
-		return isset( $GLOBALS['wpdb'] )
-			? $GLOBALS['wpdb']
-			: new stdClass();
-	}
-
-	/**
 	 * Pass-through method to return a new WP_Meta_Query object
 	 *
 	 * @since 3.0
