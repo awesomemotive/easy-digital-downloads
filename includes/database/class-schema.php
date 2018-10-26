@@ -68,5 +68,32 @@ class Schema extends Base {
 			}
 		}
 	}
+
+	/**
+	 * Return the schema in string form
+	 *
+	 * @since 3.0
+	 * @access protected
+	 */
+	protected function to_string() {
+
+		// Default return value
+		$retval = '';
+
+		// Bail if no columns to convert
+		if ( empty( $this->columns ) ) {
+			return $retval;
+		}
+
+		// Loop through columns...
+		foreach ( $this->columns as $column_info ) {
+			if ( method_exists( $column_info, 'get_create_string' ) ) {
+				$retval .= '\n' . $column_info->get_create_string() . ', ';
+			}
+		}
+
+		// Return the string
+		return $retval;
+	}
 }
 endif;
