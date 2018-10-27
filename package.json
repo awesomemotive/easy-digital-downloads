@@ -1,7 +1,7 @@
 {
   "name": "easy-digital-downloads",
   "version": "2.9.8",
-  "private": true,
+  "private": True,
   "devDependencies": {
     "grunt": "^1.0.3",
     "grunt-checktextdomain": "^1.0.1",
