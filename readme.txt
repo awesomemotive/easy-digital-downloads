@@ -8,9 +8,7 @@ Requires at least: 4.4
 Tested up to: 4.9.8
 Stable Tag: 2.9.8
 License: GNU Version 2 or Any Later Version
-
 The easiest way to sell digital products with WordPress.
-
 == Description ==
 
 Easy Digital Downloads is a complete eCommerce solution for selling digital products on WordPress. Learn more at [Easy Digital Downloads.com](https://easydigitaldownloads.com/?utm_source=home&utm_medium=description_tab&utm_content=home&utm_campaign=readme).
@@ -2187,6 +2185,7 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * Fix: Rounding issue with taxes when item quantities are greater than 1
 * Fix: Customer's State / Province field not showing on checkout, even when stored
 * Fix: File Download Limit and Download Link Expiration settings not able to be changed
+
 * Fix: Buy Now buttons set price to 0.00 at PayPal
 
 * Tweak: Updated all language files for EDD 1.9+
