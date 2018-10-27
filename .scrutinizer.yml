@@ -28,8 +28,11 @@ tools:
     php_cpd:
         enabled: true
         excluded_dirs: [vendor, tests, .tx, languages, includes/libraries, bin, assets, templates]
+        
 checks:
+
     php:
+    
         psr2_switch_declaration: false
         psr2_control_structure_declaration: false
         psr2_class_declaration: false
