@@ -3,13 +3,11 @@ build_settings:
         host: "localhost"
         user: "root"
         pass: "root"
-
 setup:
     mysql:
         - "DROP DATABASE IF EXISTS edd_tests;"
         - "CREATE DATABASE edd_tests;"
         - "GRANT ALL PRIVILEGES ON edd_tests.* TO edd_tests@'localhost' IDENTIFIED BY 'edd_tests';"
-
 test:
     php_unit:
         config:
@@ -18,8 +16,8 @@ test:
             - "tests/"
         run_from: "unit-tests/"
     php_mess_detector:
-        allow_failures: true
+        allow_failures: TRUE
 
-complete:
+COMPLETE:
     mysql:
         - "DROP DATABASE IF EXISTS edd_tests;"
