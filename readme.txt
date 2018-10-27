@@ -174,7 +174,6 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * [PayTrace](https://easydigitaldownloads.com/downloads/paytrace/?utm_source=gateway&utm_medium=faq_tab&utm_content=paytrace&utm_campaign=readme)
 * [iPay88](https://easydigitaldownloads.com/downloads/ipay88-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=ipay88-gateway&utm_campaign=readme)
 
-
 == Screenshots ==
 
 1. Download products overview
