@@ -8,7 +8,7 @@ Selling digital downloads is something that not a single one of the large WordPr
 
 More information can be found at [easydigitaldownloads.com](https://easydigitaldownloads.com/).
 
-## Installation ##
+## INSTALLATION ##
 
 For detailed setup instructions, visit the official [Documentation](https://easydigitaldownloads.com/documentation/) page.
 
