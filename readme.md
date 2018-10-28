@@ -18,6 +18,7 @@ For detailed setup instructions, visit the official [Documentation](https://easy
 This will download the latest developer copy of Easy Digital Downloads.
 
 ## Bugs ##
+
 If you find an issue, let us know [here](https://github.com/easydigitaldownloads/easy-digital-downloads/issues?state=open)!
 
 ## Support ##
