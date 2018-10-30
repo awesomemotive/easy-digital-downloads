@@ -3202,8 +3202,8 @@ _REQUIRES WordPress 3.7 or later_
 
 = 1.1.5.2: August 22, 2012 =
 
-* Fix: Call-by-reference error
-* Fix: Problem with zero-byte downloads
+* Fix: Call-by-reference error.
+* Fix: Problem with zero-byte downloads.
 
 = 1.1.5.1: August 20, 2012 =
 
@@ -3227,7 +3227,6 @@ _REQUIRES WordPress 3.7 or later_
 * Tweak: Updated the edd_remove_item_url() to use the current page URL instead of the home URL
 * Tweak: Made the edd_payment post type not public
 * Tweak: Updated French language files
-
 = 1.1.4.1: August 07, 2012 =
 
 * New: Added "order" and "orderby" parameters to the [downloads] shortcode
