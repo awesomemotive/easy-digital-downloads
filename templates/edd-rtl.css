@@ -19,43 +19,9 @@
 
 .edd-icon-spin {
 	display: inline-block;
-	-moz-animation: edd-icon-spin 2s infinite linear;
-	-o-animation: edd-icon-spin 2s infinite linear;
-	-webkit-animation: edd-icon-spin 2s infinite linear;
 	animation: edd-icon-spin 2s infinite linear;
 }
-@-moz-keyframes edd-icon-spin {
-	0% {
-		-moz-transform: rotate(0deg)
-	}
-	100% {
-		-moz-transform: rotate(-359deg)
-	}
-}
-@-webkit-keyframes edd-icon-spin {
-	0% {
-		-webkit-transform: rotate(0deg)
-	}
-	100% {
-		-webkit-transform: rotate(-359deg)
-	}
-}
-@-o-keyframes edd-icon-spin {
-	0% {
-		-o-transform: rotate(0deg)
-	}
-	100% {
-		-o-transform: rotate(-359deg)
-	}
-}
-@-ms-keyframes edd-icon-spin {
-	0% {
-		-ms-transform: rotate(0deg)
-	}
-	100% {
-		-ms-transform: rotate(-359deg)
-	}
-}
+
 @keyframes edd-icon-spin {
 	0% {
 		transform: rotate(0deg)
@@ -64,7 +30,6 @@
 		transform: rotate(-359deg)
 	}
 }
-
 
 /* =Checkout Form
 -------------------------------------------------------------- */
@@ -349,8 +314,6 @@
 	display: none;
 }
 #edd_checkout_form_wrap .edd-cart-ajax {
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
 	box-shadow: none;
 }
 .edd-amazon-profile-wrapper {
@@ -419,7 +382,6 @@
 	height: 1.5em;
 }
 .edd-loading {
-	-webkit-animation: edd-spinning 1.1s infinite linear;
 	animation: edd-spinning 1.1s infinite linear;
 	border-top: 0.2em solid rgba(255, 255, 255, 0.2);
 	border-left: 0.2em solid rgba(255, 255, 255, 0.2);
@@ -431,7 +393,6 @@
 	top: calc(50% - 0.75em);
 	opacity: 0;
 	filter: alpha(opacity=0);
-	-ms-transform: translateZ(0);
 	transform: translateZ(0);
 }
 a.edd-add-to-cart.white .edd-loading,
@@ -466,32 +427,16 @@ a.edd-add-to-cart.white .edd-loading,
 	opacity: 1;
 }
 
-@-webkit-keyframes edd-spinning {
-	0% {
-		-webkit-transform: rotate(0deg);
-		transform: rotate(0deg);
-	}
-	100% {
-		-webkit-transform: rotate(-360deg);
-		transform: rotate(-360deg);
-	}
-}
 @keyframes edd-spinning {
 	0% {
-		-webkit-transform: rotate(0deg);
 		transform: rotate(0deg);
 	}
 	100% {
-		-webkit-transform: rotate(-360deg);
 		transform: rotate(-360deg);
 	}
 }
 a.edd-add-to-cart .edd-add-to-cart-label,
 .edd-loading {
-	-webkit-transition: .1s opacity !important;
-	-moz-transition: .1s opacity !important;
-	-ms-transition: .1s opacity !important;
-	-o-transition: .1s opacity !important;
 	transition: .1s opacity !important;
 }
 .edd-add-to-cart[data-edd-loading] .edd-add-to-cart-label {
@@ -660,8 +605,6 @@ table#edd_purchase_receipt_products .edd_bundled_product_name {
 
 #edd_register_form .edd-input,
 #edd_login_form .edd-input {
-	-webkit-box-sizing: border-box;
-  	-moz-box-sizing: border-box;
   	box-sizing: border-box;
 }
 
@@ -773,13 +716,7 @@ input.edd_submit_plain {
 	cursor: pointer;
 	border: 1px solid #cccccc;
 	border-radius: 4px;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
 	box-shadow: none;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	-o-user-select: none;
 	user-select: none;
 }
 .edd-submit.button:focus,
@@ -791,14 +728,11 @@ input.edd_submit_plain {
 .edd-submit.button:active {
 	background-image: none;
 	outline: 0;
-	-webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 	box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 }
 .edd-submit.plain {
 	padding: 0;
 	border: none;
-	-webkit-border-radius: 0;
-	-moz-border-radius: 0;
 	border-radius: 0;
 }
 
@@ -1058,8 +992,6 @@ edd-hide-on-empty.cart-not.empty {
 /* =Error styles
 -------------------------------------------------------------- */
 .edd_errors:not(.edd-alert) {
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
 	border-radius: 2px;
 	border: 1px solid #E6DB55;
 	margin: 0 0 21px;
@@ -1077,8 +1009,6 @@ p.edd_error {
 /* =Success Message styles
 -------------------------------------------------------------- */
 .edd_success:not(.edd-alert) {
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
 	border-radius: 2px;
 	border: 1px solid #b3ce89;
 	margin: 20px 0;
@@ -1096,8 +1026,6 @@ p.edd_error {
 
 /* Alert Styles */
 .edd-alert {
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
 	border-radius: 2px;
 	margin-bottom: 20px;
 	padding: 10px;
