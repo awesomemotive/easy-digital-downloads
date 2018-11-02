@@ -13,7 +13,6 @@ namespace EDD\Database;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( '\\EDD\\Database\\Schema' ) ) :
 /**
  * A base WordPress database table class, which facilitates the creation of
  * and schema changes to individual database tables.
@@ -96,4 +95,3 @@ class Schema extends Base {
 		return $retval;
 	}
 }
-endif;

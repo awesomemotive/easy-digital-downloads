@@ -24,6 +24,14 @@ defined( 'ABSPATH' ) || exit;
  */
 class Base {
 
+	/**
+	 * The last database error, if any.
+	 *
+	 * @since 3.0
+	 * @var   mixed
+	 */
+	protected $last_error = false;
+
 	/** Public ****************************************************************/
 
 	/**
@@ -161,5 +169,33 @@ class Base {
 
 		// Return the database interface
 		return $retval;
+	}
+
+	/**
+	 * Check if an operation succeeded
+	 *
+	 * @since 3.0
+	 *
+	 * @param mixed $result
+	 * @return boolean
+	 */
+	protected function is_success( $result = false ) {
+
+		// Bail if no row exists
+		if ( empty( $result ) ) {
+			$retval = false;
+
+		// Bail if an error occurred
+		} elseif ( is_wp_error( $result ) ) {
+			$this->last_error = $result;
+			$retval           = false;
+
+		// No errors
+		} else {
+			$retval = true;
+		}
+
+		// Return the result
+		return (bool) $retval;
 	}
 }

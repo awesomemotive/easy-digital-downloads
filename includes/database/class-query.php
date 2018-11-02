@@ -41,7 +41,6 @@ defined( 'ABSPATH' ) || exit;
  * @property int $max_num_pages
  * @property string $request
  * @property int $last_changed
- * @property mixed $last_error
  * @property string $date_query_sql
  */
 class Query extends Base {
@@ -261,14 +260,6 @@ class Query extends Base {
 	 * @var   int
 	 */
 	protected $last_changed = 0;
-
-	/**
-	 * The last error, if any.
-	 *
-	 * @since 3.0
-	 * @var   mixed
-	 */
-	protected $last_error = false;
 
 	/**
 	 * This private variable only exists to temporarily hold onto the SQL used
@@ -796,7 +787,7 @@ class Query extends Base {
 		$result  = $this->get_db()->get_row( $select );
 
 		// Bail on failure
-		if ( $this->failed( $result ) ) {
+		if ( ! $this->is_success( $result ) ) {
 			return false;
 		}
 
@@ -1617,7 +1608,7 @@ class Query extends Base {
 			$retval = $this->get_item_raw( $column_name, $column_value );
 
 			// Bail on failure
-			if ( $this->failed( $retval ) ) {
+			if ( ! $this->is_success( $retval ) ) {
 				return false;
 			}
 
@@ -1686,7 +1677,7 @@ class Query extends Base {
 			: false;
 
 		// Bail on failure
-		if ( $this->failed( $result ) ) {
+		if ( ! $this->is_success( $result ) ) {
 			return false;
 		}
 
@@ -1777,7 +1768,7 @@ class Query extends Base {
 			: false;
 
 		// Bail on failure
-		if ( $this->failed( $result ) ) {
+		if ( ! $this->is_success( $result ) ) {
 			return false;
 		}
 
@@ -1832,7 +1823,7 @@ class Query extends Base {
 		$result  = $this->get_db()->delete( $table, $where );
 
 		// Bail on failure
-		if ( $this->failed( $result ) ) {
+		if ( ! $this->is_success( $result ) ) {
 			return false;
 		}
 
@@ -2081,34 +2072,6 @@ class Query extends Base {
 			 */
 			do_action( $key_action, $old_value, $new_value, $item_id );
 		}
-	}
-
-	/**
-	 * Check if the query failed
-	 *
-	 * @since 3.0
-	 *
-	 * @param mixed $result
-	 * @return boolean
-	 */
-	private function failed( $result = false ) {
-
-		// Bail if no row exists
-		if ( empty( $result ) ) {
-			$retval = true;
-
-		// Bail if an error occurred
-		} elseif ( is_wp_error( $result ) ) {
-			$this->last_error = $result;
-			$retval           = true;
-
-		// No errors
-		} else {
-			$retval = false;
-		}
-
-		// Return the result
-		return $retval;
 	}
 
 	/** Meta ******************************************************************/
@@ -2425,15 +2388,18 @@ class Query extends Base {
 		// Get cache groups
 		$groups = $this->get_columns( array( 'cache_key' => true ), 'and', 'name' );
 
-		// Get the primary column
-		$primary = $this->get_primary_column_name();
+		if ( ! empty( $groups ) ) {
 
-		// Setup return values
-		foreach ( $groups as $name ) {
-			if ( $primary !== $name ) {
-				$cache_groups[ $name ] = "{$this->cache_group}-by-{$name}";
-			} else {
-				$cache_groups[ $name ] = $this->cache_group;
+			// Get the primary column
+			$primary = $this->get_primary_column_name();
+
+			// Setup return values
+			foreach ( $groups as $name ) {
+				if ( $primary !== $name ) {
+					$cache_groups[ $name ] = "{$this->cache_group}-by-{$name}";
+				} else {
+					$cache_groups[ $name ] = $this->cache_group;
+				}
 			}
 		}
 
@@ -2534,7 +2500,14 @@ class Query extends Base {
 
 		// Loop through all items and cache them
 		foreach ( $items as $item ) {
-			if ( is_object( $item ) ) {
+
+			// Skip if item is not an object
+			if ( ! is_object( $item ) ) {
+				continue;
+			}
+
+			// Loop through groups and set cache
+			if ( ! empty( $groups ) ) {
 				foreach ( $groups as $key => $group ) {
 					$this->cache_set( $item->{$key}, $item, $group );
 				}
@@ -2562,18 +2535,25 @@ class Query extends Base {
 	 */
 	private function clean_item_cache( $items = array() ) {
 
-		// Bail if no items to cache
+		// Bail if no items to clean
 		if ( empty( $items ) ) {
 			return false;
 		}
 
-		// Make sure items is an array
+		// Make sure items are an array
 		$items  = (array) $items;
 		$groups = $this->get_cache_groups();
 
-		// Loop through all items and cache them
+		// Loop through all items and clean them
 		foreach ( $items as $item ) {
-			if ( is_object( $item ) ) {
+
+			// Skip if item is not an object
+			if ( ! is_object( $item ) ) {
+				continue;
+			}
+
+			// Loop through groups and delete cache
+			if ( ! empty( $groups ) ) {
 				foreach ( $groups as $key => $group ) {
 					$this->cache_delete( $item->{$key}, $group );
 				}
@@ -2638,6 +2618,11 @@ class Query extends Base {
 	 */
 	private function get_non_cached_ids( $item_ids = array(), $group = '' ) {
 		$retval = array();
+
+		// Bail if no item IDs
+		if ( empty( $item_ids ) ) {
+			return $retval;
+		}
 
 		// Loop through item IDs
 		foreach ( $item_ids as $id ) {
@@ -2836,15 +2821,16 @@ class Query extends Base {
 					continue;
 				}
 
+				// Default compare clause to equals.
 				$compare_clause = isset( $compare['compare'] )
-					? strtoupper( $compare['compare'] )
+					? trim( strtoupper( $compare['compare'] ) )
 					: '=';
 
 				// Array (unprepared)
 				if ( is_array( $compare['value'] ) ) {
 
 					// Default to IN if clause not specified.
-					if ( 'IN' !== $compare_clause && 'NOT IN' !== $compare_clause && 'BETWEEN' !== $compare_clause ) {
+					if ( ! in_array( $compare_clause, array( 'IN', 'NOT IN', 'BETWEEN' ), true ) ) {
 						$compare_clause = 'IN';
 					}
 
@@ -2854,7 +2840,9 @@ class Query extends Base {
 
 					// Parse & escape for BETWEEN.
 					} elseif ( is_array( $value ) && 2 === count( $value ) && 'BETWEEN' === $compare_clause ) {
-						$value = " {$this->get_db()->_escape( $value[0] )} AND {$this->get_db()->_escape( $value[1] )} ";
+						$_this = $this->get_db()->_escape( $value[0] );
+						$_that = $this->get_db()->_escape( $value[1] );
+						$value = " {$_this} AND {$_that} ";
 					}
 				}
 
