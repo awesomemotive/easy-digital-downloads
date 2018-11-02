@@ -133,8 +133,8 @@ const EDD_Settings = {
 		$( '#edd-payment-gateways input[type="checkbox"]' ).on( 'change', function() {
 			let gateway = $( this ),
 				gateway_key = gateway.data( 'gateway-key' ),
-				default_gateway = $( '#edd_settings\\[default_gateway\\]' );
-			option = default_gateway.find( 'option[value="' + gateway_key + '"]' );
+				default_gateway = $( '#edd_settings\\[default_gateway\\]' ),
+				option = default_gateway.find( 'option[value="' + gateway_key + '"]' );
 
 			// Toggle enable/disable based
 			option.prop( 'disabled', function( i, v ) {
