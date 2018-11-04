@@ -1,6 +1,6 @@
 <?php
 /**
- * Order Functions
+ * Order Functions.
  *
  * @package     EDD
  * @subpackage  Orders
@@ -17,7 +17,39 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  *
- * @param array $data
+ * @param array $data {
+ *     Array of order data. Default empty.
+ *
+ *     The `date_created` and `date_modified` parameters do not need to be passed.
+ *     They will be automatically populated if empty.
+ *
+ *     @type int    $parent          ID of the parent order. Default 0.
+ *     @type string $order_number    Order number, if enabled. Default empty.
+ *     @type string $status          Order status. Default `pending`.
+ *     @type string $type            Order type. Default `sale`.
+ *     @type int    $user_id         WordPress user ID linked to the customer of
+ *                                   the order. Default 0.
+ *     @type int    $customer_id     ID of the customer of the order. Default 0.
+ *     @type string $email           Email address used for the order. Default empty.
+ *     @type string $ip              IP address of the client at checkout. Default empty.
+ *     @type string $gateway         Gateway used to process the order. Default empty.
+ *     @type string $mode            Store mode when order was placed. Default empty.
+ *     @type string $currency        Currency used for the order. Default empty.
+ *     @type string $payment_key     Payment key generated for the order. Default empty.
+ *     @type float  $subtotal        Order subtotal. Default 0.
+ *     @type float  $discount        Discount applied to the order. Default 0.
+ *     @type float  $tax             Tax applied to the order. Default 0.
+ *     @type float  $total           Order total. Default 0.
+ *     @type string $date_created    The date & time the order was inserted.
+ *                                   Format: YYYY-MM-DD HH:MM:SS. Default empty.
+ *     @type string $date_modified   The date & time the order was last modified.
+ *                                   Format: YYYY-MM-DD HH:MM:SS. Default empty.
+ *     @type string $date_completed  The date & time the order's status was
+ *                                   changed to `complete`. Format: YYYY-MM-DD HH:MM:SS.
+ *                                   Default empty.
+ *     @type string $date_refundable The date & time an order can be refunded until.
+ *                                   Format: YYYY-MM-DD HH:MM:SS.
+ * }
  * @return int|false ID of newly created order, false on error.
  */
 function edd_add_order( $data = array() ) {
@@ -32,7 +64,7 @@ function edd_add_order( $data = array() ) {
  * @since 3.0
  *
  * @param int $order_id Order ID.
- * @return int
+ * @return int|false `1` if the order was deleted successfully, false on error.
  */
 function edd_delete_order( $order_id = 0 ) {
 	$orders = new EDD\Database\Queries\Order();
@@ -50,7 +82,7 @@ function edd_delete_order( $order_id = 0 ) {
  * @since 3.0
  *
  * @param int $order_id Order ID.
- * @return int
+ * @return int|false `1` if the order was deleted successfully, false on error.
  */
 function edd_destroy_order( $order_id = 0 ) {
 
@@ -99,7 +131,37 @@ function edd_destroy_order( $order_id = 0 ) {
  * @since 3.0
  *
  * @param int   $order_id Order ID.
- * @param array $data   Updated order data.
+ * @param array $data {
+ *     Array of order data. Default empty.
+ *
+ *     @type int    $parent          ID of the parent order. Default 0.
+ *     @type string $order_number    Order number, if enabled. Default empty.
+ *     @type string $status          Order status. Default `pending`.
+ *     @type string $type            Order type. Default `sale`.
+ *     @type int    $user_id         WordPress user ID linked to the customer of
+ *                                   the order. Default 0.
+ *     @type int    $customer_id     ID of the customer of the order. Default 0.
+ *     @type string $email           Email address used for the order. Default empty.
+ *     @type string $ip              IP address of the client at checkout. Default empty.
+ *     @type string $gateway         Gateway used to process the order. Default empty.
+ *     @type string $mode            Store mode when order was placed. Default empty.
+ *     @type string $currency        Currency used for the order. Default empty.
+ *     @type string $payment_key     Payment key generated for the order. Default empty.
+ *     @type float  $subtotal        Order subtotal. Default 0.
+ *     @type float  $discount        Discount applied to the order. Default 0.
+ *     @type float  $tax             Tax applied to the order. Default 0.
+ *     @type float  $total           Order total. Default 0.
+ *     @type string $date_created    The date & time the order was inserted.
+ *                                   Format: YYYY-MM-DD HH:MM:SS. Default empty.
+ *     @type string $date_modified   The date & time the order was last modified.
+ *                                   Format: YYYY-MM-DD HH:MM:SS. Default empty.
+ *     @type string $date_completed  The date & time the order's status was
+ *                                   changed to `complete`. Format: YYYY-MM-DD HH:MM:SS.
+ *                                   Default empty.
+ *     @type string $date_refundable The date & time an order can be refunded until.
+ *                                   Format: YYYY-MM-DD HH:MM:SS.
+ * }
+ *
  * @return bool Whether or not the order was updated.
  */
 function edd_update_order( $order_id = 0, $data = array() ) {
@@ -114,7 +176,7 @@ function edd_update_order( $order_id = 0, $data = array() ) {
  * @since 3.0
  *
  * @param int $order_id Order ID.
- * @return EDD\Orders\Order Order object.
+ * @return EDD\Orders\Order|false Order object if successful, false otherwise.
  */
 function edd_get_order( $order_id = 0 ) {
 	return edd_get_order_by( 'id', $order_id );
@@ -128,24 +190,25 @@ function edd_get_order( $order_id = 0 ) {
  * @param string $field Database table field.
  * @param string $value Value of the row.
  *
- * @return \EDD\Orders\Order Order object.
+ * @return EDD\Orders\Order|false Order object if successful, false otherwise.
  */
 function edd_get_order_by( $field = '', $value = '' ) {
-
-	// Instantiate a query object
 	$orders = new EDD\Database\Queries\Order();
 
-	// Get an item
+	// Return order
 	return $orders->get_item_by( $field, $value );
 }
 
 /**
  * Query for orders.
  *
+ * @see \EDD\Database\Queries\Order::__construct()
+ *
  * @since 3.0
  *
- * @param array $args
- * @return EDD\Orders\Order[]
+ * @param array $args Arguments. See `EDD\Database\Queries\Order` for
+ *                    accepted arguments.
+ * @return EDD\Orders\Order[] Array of `Order` objects.
  */
 function edd_get_orders( $args = array() ) {
 
@@ -157,17 +220,20 @@ function edd_get_orders( $args = array() ) {
 	// Instantiate a query object
 	$orders = new EDD\Database\Queries\Order();
 
-	// Return items
+	// Return orders
 	return $orders->query( $r );
 }
 
 /**
  * Count orders.
  *
+ * @see \EDD\Database\Queries\Order::__construct()
+ *
  * @since 3.0
  *
- * @param array $args
- * @return int
+ * @param array $args Arguments. See `EDD\Database\Queries\Order` for
+ *                    accepted arguments.
+ * @return int Number of orders returned based on query arguments passed.
  */
 function edd_count_orders( $args = array() ) {
 
@@ -186,13 +252,17 @@ function edd_count_orders( $args = array() ) {
 /**
  * Query for and return array of order counts, keyed by status.
  *
+ * @see \EDD\Database\Queries\Order::__construct()
+ *
  * @since 3.0
  *
- * @return array
+ * @param array $args Arguments. See `EDD\Database\Queries\Order` for
+ *                    accepted arguments.
+ * @return array Order counts keyed by status.
  */
 function edd_get_order_counts( $args = array() ) {
 
-	// Parse arguments
+	// Parse args
 	$r = wp_parse_args( $args, array(
 		'count'   => true,
 		'groupby' => 'status',
@@ -214,7 +284,7 @@ function edd_get_order_counts( $args = array() ) {
  * @since 3.0
  *
  * @param int $order_id Order ID.
- * @return bool Whether or not the order can be recovered.
+ * @return bool True if the order can be recovered, false otherwise.
  */
 function edd_is_order_recoverable( $order_id = 0 ) {
 	$order = edd_get_order( $order_id );
@@ -305,8 +375,7 @@ function edd_update_order_status( $order_id = 0, $new_status = '' ) {
  * @since 3.0
  *
  * @param array $order_data Order data.
- *
- * @return int|bool Integer of order ID if successful, false otherwise.
+ * @return int|bool Order ID if successful, false otherwise.
  */
 function edd_build_order( $order_data = array() ) {
 
@@ -829,10 +898,10 @@ function edd_build_order( $order_data = array() ) {
  * @param int     $order_id            Order ID.
  * @param boolean $clone_relationships True to clone order items and adjustments,
  *                                     false otherwise.
- * @param array $args                  Arguments that are used in place of cloned
+ * @param array   $args                Arguments that are used in place of cloned
  *                                     order attributes.
  *
- * @return int|boolean New order ID on success, false on failure.
+ * @return int|false New order ID on success, false on failure.
  */
 function edd_clone_order( $order_id = 0, $clone_relationships = false, $args = array() ) {
 
