@@ -66,7 +66,7 @@ function edd_add_order_item( $data = array() ) {
  * @since 3.0
  *
  * @param int $order_item_id Order item ID.
- * @return int|false `1` if the adjustment was deleted successfully, false on error.
+ * @return int|false `1` if the item was deleted successfully, false on error.
  */
 function edd_delete_order_item( $order_item_id = 0 ) {
 	$order_items = new EDD\Database\Queries\Order_Item();
