@@ -1,6 +1,6 @@
 <?php
 /**
- * Note Functions
+ * Note Functions.
  *
  * @package     EDD
  * @subpackage  Notes
