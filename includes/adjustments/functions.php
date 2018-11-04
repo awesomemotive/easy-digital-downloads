@@ -71,7 +71,7 @@ function edd_add_adjustment( $data = array() ) {
  * @since 3.0
  *
  * @param int $adjustment_id Adjustment ID.
- * @return int|false The number of rows deleted, or false on error.
+ * @return int|false `1` if the adjustment was deleted successfully, false on error.
  */
 function edd_delete_adjustment( $adjustment_id = 0 ) {
 	$adjustments = new EDD\Database\Queries\Adjustment();
@@ -87,9 +87,6 @@ function edd_delete_adjustment( $adjustment_id = 0 ) {
  * @param int   $adjustment_id Adjustment ID.
  * @param array $data {
  *     Array of adjustment data. Default empty.
- *
- *     The `date_created` and `date_modified` parameters do not need to be passed.
- *     They will be automatically populated if empty.
  *
  *     @type int    $parent            Parent adjustment ID. Default empty.
  *     @type string $name              Name of the adjustment. Default empty.
