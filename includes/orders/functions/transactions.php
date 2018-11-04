@@ -63,7 +63,7 @@ function edd_add_order_transaction( $data ) {
  * @since 3.0
  *
  * @param int $order_transaction_id Order transaction ID.
- * @return int|false `1` if the adjustment was deleted successfully, false on error.
+ * @return int|false `1` if the transaction was deleted successfully, false on error.
  */
 function edd_delete_order_transaction( $order_transaction_id = 0 ) {
 	$order_transactions = new EDD\Database\Queries\Order_Transaction();
