@@ -437,6 +437,7 @@ function edd_fetch_customer_address( $customer_address_id = 0 ) {
  *     @type string $status        Address status, if used or not. Default `active`.
  *     @type string $address       First line of address. Default empty.
  *     @type string $address2      Second line of address. Default empty.
+ *     @type string $city          City. Default empty.
  *     @type string $region        Region. See `edd_get_shop_states()` for
  *                                 accepted values. Default empty.
  *     @type string $postal_code   Postal code. Default empty.
@@ -489,6 +490,7 @@ function edd_delete_customer_address( $customer_address_id = 0 ) {
  *     @type string $status        Address status, if used or not. Default `active`.
  *     @type string $address       First line of address. Default empty.
  *     @type string $address2      Second line of address. Default empty.
+ *     @type string $city          City. Default empty.
  *     @type string $region        Region. See `edd_get_shop_states()` for
  *                                 accepted values. Default empty.
  *     @type string $postal_code   Postal code. Default empty.
@@ -590,6 +592,7 @@ function edd_count_customer_addresses( $args = array() ) {
  *     @type string $status        Address status, if used or not. Default `active`.
  *     @type string $address       First line of address. Default empty.
  *     @type string $address2      Second line of address. Default empty.
+ *     @type string $city          City. Default empty.
  *     @type string $region        Region. See `edd_get_shop_states()` for
  *                                 accepted values. Default empty.
  *     @type string $postal_code   Postal code. Default empty.
@@ -637,6 +640,7 @@ function edd_maybe_add_customer_address( $customer_id = 0, $data = array() ) {
  *     @type string $status        Address status, if used or not. Default `active`.
  *     @type string $address       First line of address. Default empty.
  *     @type string $address2      Second line of address. Default empty.
+ *     @type string $city          City. Default empty.
  *     @type string $region        Region. See `edd_get_shop_states()` for
  *                                 accepted values. Default empty.
  *     @type string $postal_code   Postal code. Default empty.
