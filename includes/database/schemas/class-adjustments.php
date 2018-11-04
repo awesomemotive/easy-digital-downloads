@@ -23,10 +23,9 @@ use EDD\Database\Schema;
 final class Adjustments extends Schema {
 
 	/**
-	 * Array of database column objects
+	 * Array of database column objects.
 	 *
 	 * @since 3.0
-	 * @access public
 	 * @var array
 	 */
 	public $columns = array(
