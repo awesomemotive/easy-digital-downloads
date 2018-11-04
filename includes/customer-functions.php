@@ -696,7 +696,7 @@ function edd_maybe_update_customer_primary_address( $customer_id = 0, $data = ar
  */
 function edd_get_customer_address_counts( $args = array() ) {
 
-	// Parse arguments
+	// Parse args
 	$r = wp_parse_args( $args, array(
 		'count'   => true,
 		'groupby' => 'status'

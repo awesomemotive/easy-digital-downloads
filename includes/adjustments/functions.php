@@ -138,7 +138,7 @@ function edd_update_adjustment( $adjustment_id = 0, $data = array() ) {
  *
  * @param int $adjustment_id Adjustment ID.
  * @return EDD\Adjustments\Adjustment|false Adjustment object if successful,
- *                                          false otherwise
+ *                                          false otherwise.
  */
 function edd_get_adjustment( $adjustment_id = 0 ) {
 	return edd_get_adjustment_by( 'id', $adjustment_id );
@@ -153,7 +153,7 @@ function edd_get_adjustment( $adjustment_id = 0 ) {
  * @param string $value Value of the row.
  *
  * @return EDD\Adjustments\Adjustment|false Adjustment object if successful,
- *                                          false otherwise
+ *                                          false otherwise.
  */
 function edd_get_adjustment_by( $field = '', $value = '' ) {
 	$adjustments = new EDD\Database\Queries\Adjustment();

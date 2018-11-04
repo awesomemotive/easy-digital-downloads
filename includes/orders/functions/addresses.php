@@ -1,6 +1,6 @@
 <?php
 /**
- * Order Address Functions
+ * Order Address Functions.
  *
  * @package     EDD
  * @subpackage  Orders
