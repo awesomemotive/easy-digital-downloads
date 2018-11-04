@@ -16,14 +16,14 @@ defined( 'ABSPATH' ) || exit;
 use EDD\Database\Table;
 
 /**
- * Setup the global "edd_adjustmentmeta" database table
+ * Setup the global "edd_adjustmentmeta" database table.
  *
  * @since 3.0
  */
 final class Adjustment_Meta extends Table {
 
 	/**
-	 * Table name
+	 * Table name.
 	 *
 	 * @access protected
 	 * @since 3.0
@@ -32,7 +32,7 @@ final class Adjustment_Meta extends Table {
 	protected $name = 'edd_adjustmentmeta';
 
     /**
-     * Database version
+     * Database version.
      *
      * @access protected
      * @since 3.0
@@ -41,10 +41,10 @@ final class Adjustment_Meta extends Table {
     protected $version = 201806140002;
 
     /**
-     * Array of upgrade versions and methods
+     * Array of upgrade versions and methods.
      *
+     * @access protected
      * @since 3.0
-     *
      * @var array
      */
     protected $upgrades = array(
@@ -52,11 +52,10 @@ final class Adjustment_Meta extends Table {
     );
 
 	/**
-	 * Setup the database schema
+	 * Setup the database schema.
 	 *
 	 * @access protected
 	 * @since 3.0
-	 * @return void
 	 */
 	protected function set_schema() {
 		$max_index_length = 191;
@@ -71,13 +70,13 @@ final class Adjustment_Meta extends Table {
 
     /**
      * Upgrade to version 201806140002
-     * - Migrate data from edd_discounts to edd_adjustments
+     * - Migrate data from `edd_discounts` to `edd_adjustments`.
      *
 	 * This is only for 3.0 beta testers, and can be removed in 3.0.1 or above.
 	 *
      * @since 3.0
      *
-     * @return boolean
+     * @return boolean True if upgrade was successful, false otherwise.
      */
     protected function __201806140002() {
 
