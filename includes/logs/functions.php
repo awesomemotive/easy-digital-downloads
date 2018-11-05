@@ -35,9 +35,11 @@ defined( 'ABSPATH' ) || exit;
  *     @type string $type          Log type. Default empty.
  *     @type string $title         Log title. Default empty.
  *     @type string $content       Log content. Default empty.
- *     @type string $date_created  The date & time the adjustment was inserted.
+ *     @type string $date_created  Optional. Automatically calculated on add/edit.
+ *                                 The date & time the log was inserted.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified The date & time the adjustment was last modified.
+ *     @type string $date_modified Optional. Automatically calculated on add/edit.
+ *                                 The date & time the log was last modified.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  * @return int|false ID of newly created log, false on error.
@@ -91,9 +93,11 @@ function edd_delete_log( $log_id = 0 ) {
  *     @type string $type          Log type. Default empty.
  *     @type string $title         Log title. Default empty.
  *     @type string $content       Log content. Default empty.
- *     @type string $date_created  The date & time the adjustment was inserted.
+ *     @type string $date_created  Optional. Automatically calculated on add/edit.
+ *                                 The date & time the log was inserted.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified The date & time the adjustment was last modified.
+ *     @type string $date_modified Optional. Automatically calculated on add/edit.
+ *                                 The date & time the log was last modified.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  *
@@ -210,8 +214,11 @@ function edd_count_logs( $args = array() ) {
  *                                 Default empty.
  *     @type string $user_agent    User agent of the client downloading the file.
  *                                 Default empty.
- *     @type string $date_created  The date & time the file download log was inserted.
- *     @type string $date_modified The date & time the file download log was last modified.
+ *     @type string $date_created  Optional. Automatically calculated on add/edit.
+ *                                 The date & time the file download log was inserted.
+ *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
+ *     @type string $date_modified Optional. Automatically calculated on add/edit.
+ *                                 The date & time the file download log was last modified.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  * @return int|false ID of newly created log, false on error.
@@ -265,9 +272,11 @@ function edd_delete_file_download_log( $file_download_log_id = 0 ) {
  *                                 Default empty.
  *     @type string $user_agent    User agent of the client downloading the file.
  *                                 Default empty.
- *     @type string $date_created  The date & time the file download log was inserted.
+ *     @type string $date_created  Optional. Automatically calculated on add/edit.
+ *                                 The date & time the file download log was inserted.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified The date & time the file download log was last modified.
+ *     @type string $date_modified Optional. Automatically calculated on add/edit.
+ *                                 The date & time the file download log was last modified.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  *
@@ -382,9 +391,11 @@ function edd_count_file_download_logs( $args = array() ) {
  *     @type string $ip            IP address of the client making the API
  *                                 request. Default empty.
  *     @type string $time          Time it took for API request to complete. Default empty.
- *     @type string $date_created  The date & time the API request log was inserted.
+ *     @type string $date_created  Optional. Automatically calculated on add/edit.
+ *                                 The date & time the API request log was inserted.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified The date & time the API request log was last
+ *     @type string $date_modified Optional. Automatically calculated on add/edit.
+ *                                 The date & time the API request log was last
  *                                 modified. Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  * @return int|false ID of inserted API request log, false on error.
@@ -437,9 +448,11 @@ function edd_delete_api_request_log( $api_request_log_id = 0 ) {
  *     @type string $ip            IP address of the client making the API
  *                                 request. Default empty.
  *     @type string $time          Time it took for API request to complete. Default empty.
- *     @type string $date_created  The date & time the API request log was inserted.
+ *     @type string $date_created  Optional. Automatically calculated on add/edit.
+ *                                 The date & time the API request log was inserted.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified The date & time the API request log was last
+ *     @type string $date_modified Optional. Automatically calculated on add/edit.
+ *                                 The date & time the API request log was last
  *                                 modified. Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  *

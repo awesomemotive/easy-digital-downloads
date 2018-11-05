@@ -40,9 +40,11 @@ defined( 'ABSPATH' ) || exit;
  *     @type float  $discount        Discount applied to the order. Default 0.
  *     @type float  $tax             Tax applied to the order. Default 0.
  *     @type float  $total           Order total. Default 0.
- *     @type string $date_created    The date & time the order was inserted.
+ *     @type string $date_created    Optional. Automatically calculated on add/edit.
+ *                                   The date & time the order was inserted.
  *                                   Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified   The date & time the order was last modified.
+ *     @type string $date_modified   Optional. Automatically calculated on add/edit.
+ *                                   The date & time the order was last modified.
  *                                   Format: YYYY-MM-DD HH:MM:SS. Default empty.
  *     @type string $date_completed  The date & time the order's status was
  *                                   changed to `complete`. Format: YYYY-MM-DD HH:MM:SS.
@@ -151,9 +153,11 @@ function edd_destroy_order( $order_id = 0 ) {
  *     @type float  $discount        Discount applied to the order. Default 0.
  *     @type float  $tax             Tax applied to the order. Default 0.
  *     @type float  $total           Order total. Default 0.
- *     @type string $date_created    The date & time the order was inserted.
+ *     @type string $date_created    Optional. Automatically calculated on add/edit.
+ *                                   The date & time the order was inserted.
  *                                   Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified   The date & time the order was last modified.
+ *     @type string $date_modified   Optional. Automatically calculated on add/edit.
+ *                                   The date & time the order was last modified.
  *                                   Format: YYYY-MM-DD HH:MM:SS. Default empty.
  *     @type string $date_completed  The date & time the order's status was
  *                                   changed to `complete`. Format: YYYY-MM-DD HH:MM:SS.

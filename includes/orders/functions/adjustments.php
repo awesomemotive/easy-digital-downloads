@@ -40,9 +40,11 @@ defined( 'ABSPATH' ) || exit;
  *     @type float  $subtotal      Subtotal. Default 0.
  *     @type float  $tax           Tax applicable. Default 0.
  *     @type float  $total         Adjustment total. Default 0.
- *     @type string $date_created  The date & time the adjustment was inserted.
+ *     @type string $date_created  Optional. Automatically calculated on add/edit.
+ *                                 The date & time the adjustment was inserted.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified The date & time the adjustment was last modified.
+ *     @type string $date_modified Optional. Automatically calculated on add/edit.
+ *                                 The date & time the adjustment was last modified.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  * @return int|false ID of newly created order adjustment, false on error.
@@ -101,9 +103,11 @@ function edd_delete_order_adjustment( $order_adjustment_id = 0 ) {
  *     @type float  $subtotal      Subtotal. Default 0.
  *     @type float  $tax           Tax applicable. Default 0.
  *     @type float  $total         Adjustment total. Default 0.
- *     @type string $date_created  The date & time the adjustment was inserted.
+ *     @type string $date_created  Optional. Automatically calculated on add/edit.
+ *                                 The date & time the adjustment was inserted.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified The date & time the adjustment was last modified.
+ *     @type string $date_modified Optional. Automatically calculated on add/edit.
+ *                                 The date & time the adjustment was last modified.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  *

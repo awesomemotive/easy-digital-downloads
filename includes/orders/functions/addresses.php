@@ -34,9 +34,11 @@ defined( 'ABSPATH' ) || exit;
  *     @type string $postal_code   Postal code. Default empty.
  *     @type string $country       Country. See `edd_get_country_list()` for
  *                                 accepted values. Default empty.
- *     @type string $date_created  The date & time the adjustment was inserted.
+ *     @type string $date_created  Optional. Automatically calculated on add/edit.
+ *                                 The date & time the address was inserted.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified The date & time the adjustment was last modified.
+ *     @type string $date_modified Optional. Automatically calculated on add/edit.
+ *                                 The date & time the address was last modified.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  * @return int|false ID of newly created order address, false on error.
@@ -60,7 +62,7 @@ function edd_add_order_address( $data ) {
  * @since 3.0
  *
  * @param int $order_address_id Order address ID.
- * @return int|false `1` if the adjustment was deleted successfully, false on error.
+ * @return int|false `1` if the address was deleted successfully, false on error.
  */
 function edd_delete_order_address( $order_address_id = 0 ) {
 	$order_addresses = new EDD\Database\Queries\Order_Address();
@@ -88,9 +90,11 @@ function edd_delete_order_address( $order_address_id = 0 ) {
  *     @type string $postal_code   Postal code. Default empty.
  *     @type string $country       Country. See `edd_get_country_list()` for
  *                                 accepted values. Default empty.
- *     @type string $date_created  The date & time the adjustment was inserted.
+ *     @type string $date_created  Optional. Automatically calculated on add/edit.
+ *                                 The date & time the address was inserted.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified The date & time the adjustment was last modified.
+ *     @type string $date_modified Optional. Automatically calculated on add/edit.
+ *                                 The date & time the address was last modified.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  *

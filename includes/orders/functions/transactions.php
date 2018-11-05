@@ -37,9 +37,11 @@ defined( 'ABSPATH' ) || exit;
  *     @type string $status         Status of the transaction. Default `pending`.
  *     @type float  $total          Total amount processed in the transaction.
  *                                  Default 0.
- *     @type string $date_created   The date & time the transaction was inserted.
+ *     @type string $date_created   Optional. Automatically calculated on add/edit.
+ *                                  The date & time the transaction was inserted.
  *                                  Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified  The date & time the transaction was last modified.
+ *     @type string $date_modified  Optional. Automatically calculated on add/edit.
+ *                                  The date & time the transaction was last modified.
  *                                  Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  * @return int|false ID of newly created order transaction, false on error.
@@ -94,9 +96,11 @@ function edd_delete_order_transaction( $order_transaction_id = 0 ) {
  *     @type string $status         Status of the transaction. Default `pending`.
  *     @type float  $total          Total amount processed in the transaction.
  *                                  Default 0.
- *     @type string $date_created   The date & time the transaction was inserted.
+ *     @type string $date_created   Optional. Automatically calculated on add/edit.
+ *                                  The date & time the transaction was inserted.
  *                                  Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified  The date & time the transaction was last modified.
+ *     @type string $date_modified  Optional. Automatically calculated on add/edit.
+ *                                  The date & time the transaction was last modified.
  *                                  Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  *
