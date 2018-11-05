@@ -33,9 +33,11 @@ defined( 'ABSPATH' ) || exit;
  *     @type int    $user_id       ID of the current WordPress user logged in.
  *                                 Default 0.
  *     @type string $content       Note content. Default empty.
- *     @type string $date_created  The date & time the adjustment was inserted.
+ *     @type string $date_created  Optional. Automatically calculated on add/edit.
+ *                                 The date & time the note was inserted.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified The date & time the adjustment was last modified.
+ *     @type string $date_modified Optional. Automatically calculated on add/edit.
+ *                                 The date & time the note was last modified.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  * @return int|false ID of newly created note, false on error.
@@ -87,9 +89,11 @@ function edd_delete_note( $note_id = 0 ) {
  *     @type int    $user_id       ID of the current WordPress user logged in.
  *                                 Default 0.
  *     @type string $content       Note content. Default empty.
- *     @type string $date_created  The date & time the adjustment was inserted.
+ *     @type string $date_created  Optional. Automatically calculated on add/edit.
+ *                                 The date & time the note was inserted.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified The date & time the adjustment was last modified.
+ *     @type string $date_modified Optional. Automatically calculated on add/edit.
+ *                                 The date & time the note was last modified.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  *

@@ -52,9 +52,11 @@ defined( 'ABSPATH' ) || exit;
  *                                     Format: YYYY-MM-DD HH:MM:SS. Default empty.
  *     @type string $end_date          The date & time the adjustment is valid to.
  *                                     Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_created      The date & time the adjustment was inserted.
+ *     @type string $date_created      Optional. Automatically calculated on add/edit.
+ *                                     The date & time the adjustment was inserted.
  *                                     Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified     The date & time the adjustment was last modified.
+ *     @type string $date_modified     Optional. Automatically calculated on add/edit.
+ *                                     The date & time the adjustment was last modified.
  *                                     Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  * @return int ID of the inserted adjustment.
@@ -117,9 +119,11 @@ function edd_delete_adjustment( $adjustment_id = 0 ) {
  *                                     Format: YYYY-MM-DD HH:MM:SS. Default empty.
  *     @type string $end_date          The date & time the adjustment is valid to.
  *                                     Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_created      The date & time the adjustment was inserted.
+ *     @type string $date_created      Optional. Automatically calculated on add/edit.
+ *                                     The date & time the adjustment was inserted.
  *                                     Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified     The date & time the adjustment was last modified.
+ *     @type string $date_modified     Optional. Automatically calculated on add/edit.
+ *                                     The date & time the adjustment was last modified.
  *                                     Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  *

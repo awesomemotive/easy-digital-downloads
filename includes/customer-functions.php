@@ -35,9 +35,11 @@ defined( 'ABSPATH' ) || exit;
  *                                  Default 0.
  *     @type int    $purchase_count Aggregated purchase count of the customer.
  *                                  Default 0.
- *     @type string $date_created   The date & time the customer was created.
+ *     @type string $date_created   Optional. Automatically calculated on add/edit.
+ *                                  The date & time the customer was created.
  *                                  Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified  The date & time the customer was last modified.
+ *     @type string $date_modified  Optional. Automatically calculated on add/edit.
+ *                                  The date & time the customer was last modified.
  *                                  Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  * @return int|false ID of the inserted customer, false on failure.
@@ -133,9 +135,11 @@ function edd_destroy_customer( $customer_id = 0 ) {
  *                                  Default 0.
  *     @type int    $purchase_count Aggregated purchase count of the customer.
  *                                  Default 0.
- *     @type string $date_created   The date & time the customer was created.
+ *     @type string $date_created   Optional. Automatically calculated on add/edit.
+ *                                  The date & time the customer was created.
  *                                  Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified  The date & time the customer was last modified.
+ *     @type string $date_modified  Optional. Automatically calculated on add/edit.
+ *                                  The date & time the customer was last modified.
  *                                  Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  *
@@ -443,9 +447,11 @@ function edd_fetch_customer_address( $customer_address_id = 0 ) {
  *     @type string $postal_code   Postal code. Default empty.
  *     @type string $country       Country. See `edd_get_country_list()` for
  *                                 accepted values. Default empty.
- *     @type string $date_created  The date & time the adjustment was inserted.
+ *     @type string $date_created  Optional. Automatically calculated on add/edit.
+ *                                 The date & time the address was inserted.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified The date & time the adjustment was last modified.
+ *     @type string $date_modified Optional. Automatically calculated on add/edit.
+ *                                 The date & time the address was last modified.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  * @return int|false ID of newly created customer address, false on error.
@@ -496,9 +502,11 @@ function edd_delete_customer_address( $customer_address_id = 0 ) {
  *     @type string $postal_code   Postal code. Default empty.
  *     @type string $country       Country. See `edd_get_country_list()` for
  *                                 accepted values. Default empty.
- *     @type string $date_created  The date & time the adjustment was inserted.
+ *     @type string $date_created  Optional. Automatically calculated on add/edit.
+ *                                 The date & time the adjustment was inserted.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified The date & time the adjustment was last modified.
+ *     @type string $date_modified Optional. Automatically calculated on add/edit.
+ *                                 The date & time the adjustment was last modified.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  *
@@ -598,9 +606,11 @@ function edd_count_customer_addresses( $args = array() ) {
  *     @type string $postal_code   Postal code. Default empty.
  *     @type string $country       Country. See `edd_get_country_list()` for
  *                                 accepted values. Default empty.
- *     @type string $date_created  The date & time the adjustment was inserted.
+ *     @type string $date_created  Optional. Automatically calculated on add/edit.
+ *                                 The date & time the address was inserted.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified The date & time the adjustment was last modified.
+ *     @type string $date_modified Optional. Automatically calculated on add/edit.
+ *                                 The date & time the address was last modified.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  *
@@ -646,9 +656,11 @@ function edd_maybe_add_customer_address( $customer_id = 0, $data = array() ) {
  *     @type string $postal_code   Postal code. Default empty.
  *     @type string $country       Country. See `edd_get_country_list()` for
  *                                 accepted values. Default empty.
- *     @type string $date_created  The date & time the adjustment was inserted.
+ *     @type string $date_created  Optional. Automatically calculated on add/edit.
+ *                                 The date & time the address was inserted.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified The date & time the adjustment was last modified.
+ *     @type string $date_modified Optional. Automatically calculated on add/edit.
+ *                                 The date & time the address was last modified.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  *
@@ -726,9 +738,11 @@ function edd_get_customer_address_counts( $args = array() ) {
  *     @type string $type          Email address type. Default `secondary`.
  *     @type string $status        Email address type. Default `active`.
  *     @type string $email         Email address. Default empty.
- *     @type string $date_created  The date & time the email address was inserted.
+ *     @type string $date_created  Optional. Automatically calculated on add/edit.
+ *                                 The date & time the email address was inserted.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified The date & time the email address was last
+ *     @type string $date_modified Optional. Automatically calculated on add/edit.
+ *                                 The date & time the email address was last
  *                                 modified. Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  * @return int|false ID of newly created customer email address, false on error.
@@ -780,9 +794,11 @@ function edd_delete_customer_email_address( $customer_email_address_id = 0 ) {
  *     @type string $type          Email address type. Default `secondary`.
  *     @type string $status        Email address type. Default `active`.
  *     @type string $email         Email address. Default empty.
- *     @type string $date_created  The date & time the email address was inserted.
+ *     @type string $date_created  Optional. Automatically calculated on add/edit.
+ *                                 The date & time the email address was inserted.
  *                                 Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified The date & time the email address was last
+ *     @type string $date_modified Optional. Automatically calculated on add/edit.
+ *                                 The date & time the email address was last
  *                                 modified. Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  *

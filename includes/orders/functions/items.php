@@ -39,9 +39,11 @@ defined( 'ABSPATH' ) || exit;
  *     @type float  $discount       Discount applied to the order item. Default 0.
  *     @type float  $tax            Tax applied to the order item. Default 0.
  *     @type float  $total          Item total. Default 0.
- *     @type string $date_created   The date & time the order item was inserted.
+ *     @type string $date_created   Optional. Automatically calculated on add/edit.
+ *                                  The date & time the order item was inserted.
  *                                  Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified  The date & time the order item was last modified.
+ *     @type string $date_modified  Optional. Automatically calculated on add/edit.
+ *                                  The date & time the order item was last modified.
  *                                  Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  * @return int|false ID of newly created order, false on error.
@@ -99,9 +101,11 @@ function edd_delete_order_item( $order_item_id = 0 ) {
  *     @type float  $discount       Discount applied to the order item. Default 0.
  *     @type float  $tax            Tax applied to the order item. Default 0.
  *     @type float  $total          Item total. Default 0.
- *     @type string $date_created   The date & time the order item was inserted.
+ *     @type string $date_created   Optional. Automatically calculated on add/edit.
+ *                                  The date & time the order item was inserted.
  *                                  Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified  The date & time the order item was last modified.
+ *     @type string $date_modified  Optional. Automatically calculated on add/edit.
+ *                                  The date & time the order item was last modified.
  *                                  Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  *
