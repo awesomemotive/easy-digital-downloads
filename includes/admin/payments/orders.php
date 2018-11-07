@@ -898,7 +898,7 @@ function edd_order_details_amounts( $order ) {
 		<?php if ( edd_is_add_order_page() && current_user_can( 'edit_shop_payments' ) ) : ?>
 		<div id="major-publishing-actions">
 			<div id="publishing-action">
-				<button type="button" class="edd-override button button-secondary" disabled><?php esc_html_e( 'Update', 'easy-digital-downloads' ); ?></button>
+				<button type="button" class="edd-override button button-secondary" disabled><?php esc_html_e( 'Override', 'easy-digital-downloads' ); ?></button>
 			</div>
 			<div class="clear"></div>
 		</div>

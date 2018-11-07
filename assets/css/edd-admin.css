@@ -423,6 +423,13 @@ a.edd-delete:hover {
 	width: 80%;
 }
 
+.edd-add-order-item input[readonly] {
+	color: #555;
+	background: none;
+	border: 1px solid transparent;
+	box-shadow: none;
+}
+
 /* Note Styles
 -------------------------------------------------------------- */
 

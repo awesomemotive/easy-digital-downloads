@@ -26,5 +26,5 @@ toggle.addEventListener( 'click', function() {
 	document.querySelector( 'input[name="edd-order-download-is-overrideable"]' ).value = 1;
 
 	// Get a fresh set of inputs. Mark current inputs as editable.
-	document.querySelectorAll( '.overridable input' ).forEach( ( el ) => el.disabled = false );
+	document.querySelectorAll( '.overridable input' ).forEach( ( el ) => el.readOnly = false );
 } );
