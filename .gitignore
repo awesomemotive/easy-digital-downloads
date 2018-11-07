@@ -27,11 +27,11 @@ build/
 tmp/
 tests/clover.xml
 
-# Grunt
+# Node
 node_modules
 
 # Vendor
-vendor
+/vendor
 
 # Temporary files
 *~

@@ -151,6 +151,9 @@ function edd_customers_sections( $customer ) {
  * @return void
  */
 function edd_customers_page() {
+	// Enqueue scripts.
+	wp_enqueue_script( 'edd-admin-customers' );
+	wp_enqueue_script( 'edd-admin-notes' );
 
 	// Views
 	$default_views  = edd_customer_views();

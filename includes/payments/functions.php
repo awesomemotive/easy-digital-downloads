@@ -1655,6 +1655,11 @@ function edd_get_payment_notes( $order_id = 0, $search = '' ) {
  */
 function edd_insert_payment_note( $order_id = 0, $note = '' ) {
 
+	// Sanitize note contents
+	if ( ! empty( $note ) ) {
+		$note = trim( wp_kses( $note, edd_get_allowed_tags() ) );
+	}
+
 	// Bail if no order ID or note.
 	if ( empty( $order_id ) || empty( $note ) ) {
 		return false;

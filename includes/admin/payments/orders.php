@@ -22,6 +22,9 @@ defined( 'ABSPATH' ) || exit;
  * @param mixed $item
  */
 function edd_order_sections( $item = false ) {
+	// Enqueue scripts.
+	wp_enqueue_script( 'edd-admin-payments' );
+	wp_enqueue_script( 'edd-admin-orders' );
 
 	// Instantiate the Sections class and sections array
 	$sections = new EDD\Admin\Order_Sections();

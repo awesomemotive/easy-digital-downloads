@@ -25,7 +25,15 @@ function edd_tools_page() {
 	$tabs       = edd_get_tools_tabs();
 	$active_tab = isset( $_GET['tab'] )
 		? sanitize_key( $_GET['tab'] )
-		: 'general'; ?>
+		: 'general';
+
+	wp_enqueue_script( 'edd-admin-tools' );
+
+	if ( 'import_export' === $active_tab ) {
+		wp_enqueue_script( 'edd-admin-tools-import' );
+		wp_enqueue_script( 'edd-admin-tools-export' );
+	}
+?>
 
     <div class="wrap">
         <h1><?php _e( 'Tools', 'easy-digital-downloads' ); ?></h1>
@@ -1128,7 +1136,7 @@ add_action( 'edd_import_settings', 'edd_tools_import_export_process_import' );
  * @since       2.8.7
  */
 function edd_tools_debug_log_display() {
-	global $edd_logs;
+	$edd_logs = EDD()->debug_log;
 
 	// Setup fallback incase no file exists
 	$path        = $edd_logs->get_log_file_path();
@@ -1183,7 +1191,7 @@ add_action( 'edd_tools_tab_debug_log', 'edd_tools_debug_log_display' );
  * @since 2.8.7
  */
 function edd_handle_submit_debug_log() {
-	global $edd_logs;
+	$edd_logs = EDD()->debug_log;
 
 	if ( ! current_user_can( 'manage_shop_settings' ) ) {
 		return;

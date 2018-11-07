@@ -36,7 +36,7 @@ function edd_add_download_meta_box() {
 		add_meta_box( 'edd_product_settings', sprintf( __( '%1$s Settings', 'easy-digital-downloads' ), edd_get_label_singular(), edd_get_label_plural() ),  'edd_render_settings_meta_box', $post_type, 'side', 'default' );
 
 		/** Product Notes */
-		add_meta_box( 'edd_product_notes', sprintf( __( '%1$s Notes', 'easy-digital-downloads' ), edd_get_label_singular(), edd_get_label_plural() ), 'edd_render_product_notes_meta_box', $post_type, 'normal', 'high' );
+		add_meta_box( 'edd_product_notes', sprintf( __( '%1$s Instructions', 'easy-digital-downloads' ), edd_get_label_singular(), edd_get_label_plural() ), 'edd_render_product_notes_meta_box', $post_type, 'normal', 'high' );
 
 		if ( current_user_can( 'view_product_stats', get_the_ID() ) ) {
 			/** Product Stats */
@@ -926,7 +926,7 @@ function edd_render_refund_row( $post_id ) {
 			</label>
 		</p>
 		<p>
-			<?php _e( 'Empty for global. <code>0</code> for unlimited', 'easy-digital-downloads' ); ?>
+			<?php _e( 'Leave blank to use global setting. Enter <code>0</code> for unlimited', 'easy-digital-downloads' ); ?>
 		</p>
 	</div>
 <?php
@@ -959,7 +959,7 @@ function edd_render_download_limit_row( $post_id ) {
 			<input class="small-text" name="_edd_download_limit" type="number" min="0" max="5000" step="1" value="<?php echo esc_attr ( $edd_download_limit ); ?>" />
 		</label>
 		<p>
-			<?php _e( 'Empty for global. <code>0</code> for unlimited', 'easy-digital-downloads' ); ?>
+			<?php _e( 'Leave blank to use global setting. Enter <code>0</code> for unlimited', 'easy-digital-downloads' ); ?>
 		</p>
 	</div>
 <?php
@@ -1193,7 +1193,7 @@ function edd_render_product_notes_field( $post_id ) {
 	$product_notes = edd_get_product_notes( $post_id );
 ?>
 	<textarea rows="1" cols="40" class="large-texarea" name="edd_product_notes" id="edd_product_notes_field"><?php echo esc_textarea( $product_notes ); ?></textarea>
-	<p><?php _e( 'Special notes or instructions for this product. These notes will be added to the purchase receipt.', 'easy-digital-downloads' ); ?></p>
+	<p><?php printf( __( 'Special instructions for this %s. These will be added to the sales receipt, and may be used by some extensions or themes.', 'easy-digital-downloads' ), strtolower( edd_get_label_singular() ) ); ?></p>
 <?php
 }
 add_action( 'edd_product_notes_meta_box_fields', 'edd_render_product_notes_field' );
