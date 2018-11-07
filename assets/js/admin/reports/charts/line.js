@@ -1,17 +1,17 @@
-/* global eddAdminReportsCharts, edd_vars */
-
-Chart.defaults.global.pointHitDetectionRadius = 5;
-
-const { charts } = eddAdminReportsCharts;
-const { currency_sign, currency_pos } = edd_vars;
+/* global Chart */
 
 /**
- * Render a chart.
+ * Internal dependencies.
+ */
+import { getLabelWithTypeCondition } from './utils';
+
+/**
+ * Render a line chart.
  *
  * @param {Object} config Global chart config.
  * @return {Chart}
  */
-const renderChart = ( config ) => {
+export const render = ( config ) => {
 	const {
 		dates,
 		options,
@@ -42,11 +42,9 @@ const renderChart = ( config ) => {
 	} );
 
 	// Config tooltips.
-	config.options.tooltips = {
-		...config.options.tooltips,
-		...getToolTipConfig( config ),
-		callbacks: isPie( config ) ? getPieTooltipConfig( config ) : getLineTooltipConfig( config ),
-	};
+	config.options.tooltips = tooltipConfig( config );
+
+	console.log(config);
 
 	// Render
 	return new Chart( document.getElementById( target ), config );
@@ -58,112 +56,11 @@ const renderChart = ( config ) => {
  * @param {Object} config Global chart config.
  * @return {Object}
  */
-const getLineTooltipConfig = ( config ) => ( {
-	/**
-	 * Generate a label.
-	 *
-	 * @param {Object} t
-	 * @param {Object} d
-	 */
-	label: function( t, d ) {
-		let conditional = '';
-		let yLabel = t.yLabel;
+export const tooltipConfig = ( config ) => ( {
+	enabled: false,
+	mode: 'index',
+	position: 'nearest',
 
-		const {
-			target,
-			options: {
-				datasets,
-			},
-		} = config;
-
-		if ( datasets ) {
-			_.each( datasets, ( dataset ) => {
-				const { type } = dataset;
-				
-				if ( 'currency' === type ) {
-					conditional += `t.datasetIndex === ${ target } || `;
-				}
-			} );
-		}
-
-		conditional.slice( 0, -4 );
-
-		if ( '' !== conditional ) {
-			if ( 'before' === currency_pos ) {
-				yLabel = currency_sign + t.yLabel.toFixed( 2 );
-			} else {
-				yLabel = t.yLabel.toFixed( 2 ) + currency_sign;
-			}
-		}
-
-		return d.datasets[ t.datasetIndex ].label + ': ' + yLabel;
-	},
-} );
-
-/**
- * Get custom tooltip config for pie charts.
- *
- * @param {Object} config Global chart config.
- * @return {Object}
- */
-const getPieTooltipConfig = ( config ) => ( {
-	/**
-	 * Generate a label.
-	 *
-	 * @param {Object} t
-	 * @param {Object} d
-	 */
-	label: function( t, d ) {
-		// @todo DRY this with Line config.
-		let conditional = '';
-		let yLabel = t.yLabel;
-
-		const {
-			target,
-			options: {
-				datasets,
-			},
-		} = config;
-
-		if ( datasets ) {
-			_.each( datasets, ( dataset ) => {
-				const { type } = dataset;
-				
-				if ( 'currency' === type ) {
-					conditional += `t.datasetIndex === ${ target } || `;
-				}
-			} );
-		}
-
-		conditional.slice( 0, -4 );
-
-		const dataset = d.datasets[ t.datasetIndex ];
-		const total = dataset.data.reduce( function( previousValue, currentValue, currentIndex, array ) {
-			return previousValue + currentValue;
-		} );
-
-		const currentValue = dataset.data[ t.index ];
-		const precentage = Math.floor( ( ( currentValue / total ) * 100 ) + 0.5 );
-
-		if ( '' !== conditional ) {
-			if ( 'before' === currency_pos ) {
-				yLabel = currency_sign + t.yLabel.toFixed( 2 );
-			} else {
-				yLabel = t.yLabel.toFixed( 2 ) + currency_sign;
-			}
-		}
-
-		return d.labels[ t.index ] + ': ' + currentValue + ' (' + precentage + '%)';
-	},
-} );
-
-/**
- * Get shared tooltip configuration.
- *
- * @param {Object} config Global chart config.
- * @return {Object}
- */
-const getToolTipConfig = ( config ) => ( {
 	/**
 	 * Output a a custom tooltip.
 	 *
@@ -239,23 +136,18 @@ const getToolTipConfig = ( config ) => ( {
 		tooltipEl.style.fontStyle = tooltip._bodyFontStyle;
 		tooltipEl.style.padding = tooltip.yPadding + 'px ' + tooltip.xPadding + 'px';
 	},
+
+	callbacks: {
+		/**
+		 * Generate a label.
+		 *
+		 * @param {Object} t
+		 * @param {Object} d
+		 */
+		label: function( t, d ) {
+			let label = getLabelWithTypeCondition( t.yLabel, config );
+
+			return `${ d.datasets[ t.datasetIndex ].label }: ${ label }`;
+		},
+	}
 } );
-
-/**
- * Determine if a pie graph.
- *
- * @todo maybe pass from data?
- *
- * @param {Object} config Chart config.
- * @return {Bool}
- */
-const isPie = ( config ) => {
-	const { type } = config;
-
-	return type === 'pie' || type === 'doughnut';
-};
-
-/**
- * Render the registered charts.
- */
-_.each( charts, ( config ) => renderChart( config ) );
