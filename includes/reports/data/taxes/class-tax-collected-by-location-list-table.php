@@ -14,6 +14,7 @@ namespace EDD\Reports\Data\Taxes;
 defined( 'ABSPATH' ) || exit;
 
 use EDD\Admin\List_Table;
+use EDD\Reports;
 
 /**
  * Tax_Collected_by_Location class.
@@ -101,13 +102,7 @@ class Tax_Collected_By_Location extends List_Table {
 				$location .= ' &mdash; ' . edd_get_state_name( $tax_rate->name, $tax_rate->description );
 			}
 
-			$from = empty( $tax_rate->start_date ) || '0000-00-00 00:00:00' === $tax_rate->start_date
-				? '&mdash;'
-				: edd_date_i18n( EDD()->utils->date( $tax_rate->start_date, null, true )->startOfDay()->timestamp );
-
-			$to = empty( $tax_rate->end_date ) || '0000-00-00 00:00:00' === $tax_rate->end_date
-				? '&mdash;'
-				: edd_date_i18n( EDD()->utils->date( $tax_rate->end_date, null, true )->endOfDay()->timestamp );
+			$date_filter = Reports\get_filter_value( 'dates' );
 
 			$region = ! empty( $tax_rate->description )
 				? $wpdb->prepare( ' AND region = %s', esc_sql( $tax_rate->description ) )
@@ -116,12 +111,12 @@ class Tax_Collected_By_Location extends List_Table {
 			// Date query.
 			$date_query = '';
 
-			if ( ! empty( $tax_rate->start_date ) && '0000-00-00 00:00:00' !== $tax_rate->start_date ) {
-				$date_query .= $wpdb->prepare( "AND {$wpdb->edd_orders}.date_created >= %s", esc_sql( $tax_rate->start_date ) );
+			if ( ! empty( $date_filter['from'] ) && '0000-00-00 00:00:00' !== $to ) {
+				$date_query .= $wpdb->prepare( " AND {$wpdb->edd_orders}.date_created >= %s", esc_sql( date( 'Y-n-d H:i:s', EDD()->utils->date( $date_filter['from'], null, true )->endOfDay()->timestamp ) ) );
 			}
 
-			if ( ! empty( $tax_rate->end_date ) && '0000-00-00 00:00:00' !== $tax_rate->end_date ) {
-				$date_query .= $wpdb->prepare( "AND {$wpdb->edd_orders}.date_created <= %s", esc_sql( $tax_rate->end_date ) );
+			if ( ! empty( $date_filter['from'] ) && '0000-00-00 00:00:00' !== $from ) {
+				$date_query .= $wpdb->prepare( " AND {$wpdb->edd_orders}.date_created <= %s", esc_sql( date( 'Y-n-d H:i:s', EDD()->utils->date( $date_filter['to'], null, true )->endOfDay()->timestamp ) ) );
 			}
 
 			$results = $wpdb->get_row( $wpdb->prepare( "
@@ -138,13 +133,22 @@ class Tax_Collected_By_Location extends List_Table {
 				'tax'      => 0.00
 			) );
 
+			$from = empty( $date_filter['from'] ) || '0000-00-00 00:00:00' === $date_filter['from']
+				? '&mdash;'
+				: edd_date_i18n( EDD()->utils->date( $date_filter['from'], null, true )->startOfDay()->timestamp );
+
+			$to = empty( $date_filter['to'] ) || '0000-00-00 00:00:00' === $date_filter['to']
+				? '&mdash;'
+				: edd_date_i18n( EDD()->utils->date( $date_filter['to'], null, true )->endOfDay()->timestamp );
+
+
 			$data[] = array(
 				'country'  => $location,
 				'tax_rate' => floatval( $tax_rate->amount ) . '%',
 				'from'     => $from,
 				'to'       => $to,
-				'gross'    => edd_currency_filter( edd_format_amount( floatval( $results['total'] - $results['tax'] ) ) ),
-				'net'      => edd_currency_filter( edd_format_amount( floatval( $results['total'] ) ) ),
+				'gross'    => edd_currency_filter( edd_format_amount( floatval( $results['total'] ) ) ),
+				'net'      => edd_currency_filter( edd_format_amount( floatval( $results['total'] - $results['tax'] ) ) ),
 			);
 		}
 
