@@ -1,6 +1,11 @@
 /* global Chart */
 
 /**
+ * Internal dependencies.
+ */
+import { toolTipBaseConfig } from './utils';
+
+/**
  * Render a line chart.
  *
  * @param {Object} config Global chart config.
@@ -23,6 +28,8 @@ export const render = ( config ) => {
  * @return {Object}
  */
 export const tooltipConfig = ( config ) => ( {
+	...toolTipBaseConfig,
+
 	callbacks: {
 		/**
 		 * Generate a label.
@@ -42,5 +49,5 @@ export const tooltipConfig = ( config ) => ( {
 
 			return `${ d.labels[ t.index ] }: ${ currentValue } (${ precentage }%)`;
 		},
-	}
+	},
 } );
