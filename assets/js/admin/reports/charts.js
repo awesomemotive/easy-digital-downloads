@@ -46,7 +46,7 @@ const renderChart = ( config ) => {
 		...config.options.tooltips,
 		...getToolTipConfig( config ),
 		callbacks: isPie( config ) ? getPieTooltipConfig( config ) : getLineTooltipConfig( config ),
-	}
+	};
 
 	// Render
 	return new Chart( document.getElementById( target ), config );
@@ -65,7 +65,7 @@ const getLineTooltipConfig = ( config ) => ( {
 	 * @param {Object} t
 	 * @param {Object} d
 	 */
-	label: function ( t, d ) {
+	label: function( t, d ) {
 		let conditional = '';
 		let yLabel = t.yLabel;
 
@@ -73,7 +73,7 @@ const getLineTooltipConfig = ( config ) => ( {
 			target,
 			options: {
 				datasets,
-			}
+			},
 		} = config;
 
 		if ( datasets ) {
@@ -82,7 +82,7 @@ const getLineTooltipConfig = ( config ) => ( {
 				
 				if ( 'currency' === type ) {
 					conditional += `t.datasetIndex === ${ target } || `;
-				};
+				}
 			} );
 		}
 
@@ -90,13 +90,13 @@ const getLineTooltipConfig = ( config ) => ( {
 
 		if ( '' !== conditional ) {
 			if ( 'before' === currency_pos ) {
-				yLabel = currency_sign + t.yLabel.toFixed(2);
+				yLabel = currency_sign + t.yLabel.toFixed( 2 );
 			} else {
-				yLabel = t.yLabel.toFixed(2) + currency_sign;
+				yLabel = t.yLabel.toFixed( 2 ) + currency_sign;
 			}
 		}
 
-		return d.datasets[t.datasetIndex].label + ': ' + yLabel;
+		return d.datasets[ t.datasetIndex ].label + ': ' + yLabel;
 	},
 } );
 
@@ -113,7 +113,7 @@ const getPieTooltipConfig = ( config ) => ( {
 	 * @param {Object} t
 	 * @param {Object} d
 	 */
-	label: function ( t, d ) {
+	label: function( t, d ) {
 		// @todo DRY this with Line config.
 		let conditional = '';
 		let yLabel = t.yLabel;
@@ -122,7 +122,7 @@ const getPieTooltipConfig = ( config ) => ( {
 			target,
 			options: {
 				datasets,
-			}
+			},
 		} = config;
 
 		if ( datasets ) {
@@ -131,25 +131,25 @@ const getPieTooltipConfig = ( config ) => ( {
 				
 				if ( 'currency' === type ) {
 					conditional += `t.datasetIndex === ${ target } || `;
-				};
+				}
 			} );
 		}
 
 		conditional.slice( 0, -4 );
 
-		var dataset = d.datasets[ t.datasetIndex ];
-		var total = dataset.data.reduce( function( previousValue, currentValue, currentIndex, array ) {
+		const dataset = d.datasets[ t.datasetIndex ];
+		const total = dataset.data.reduce( function( previousValue, currentValue, currentIndex, array ) {
 			return previousValue + currentValue;
 		} );
 
-		var currentValue = dataset.data[ t.index ];
-		var precentage = Math.floor( ( ( currentValue / total ) * 100 ) + 0.5 );
+		const currentValue = dataset.data[ t.index ];
+		const precentage = Math.floor( ( ( currentValue / total ) * 100 ) + 0.5 );
 
 		if ( '' !== conditional ) {
 			if ( 'before' === currency_pos ) {
-				yLabel = currency_sign + t.yLabel.toFixed(2);
+				yLabel = currency_sign + t.yLabel.toFixed( 2 );
 			} else {
-				yLabel = t.yLabel.toFixed(2) + currency_sign;
+				yLabel = t.yLabel.toFixed( 2 ) + currency_sign;
 			}
 		}
 
@@ -169,9 +169,9 @@ const getToolTipConfig = ( config ) => ( {
 	 *
 	 * @param {Object} tooltip Tooltip data.
 	 */
-	custom: function ( tooltip ) {
+	custom: function( tooltip ) {
 		// Tooltip element.
-		var tooltipEl = document.getElementById( 'edd-chartjs-tooltip' );
+		let tooltipEl = document.getElementById( 'edd-chartjs-tooltip' );
 
 		if ( ! tooltipEl ) {
 			tooltipEl = document.createElement( 'div' );
@@ -190,7 +190,7 @@ const getToolTipConfig = ( config ) => ( {
 		// Set caret position.
 		tooltipEl.classList.remove( 'above', 'below', 'no-transform' );
 		if ( tooltip.yAlign ) {
-			tooltipEl.classList.add(tooltip.yAlign );
+			tooltipEl.classList.add( tooltip.yAlign );
 		} else {
 			tooltipEl.classList.add( 'no-transform' );
 		}
@@ -201,34 +201,34 @@ const getToolTipConfig = ( config ) => ( {
 
 		// Set Text
 		if ( tooltip.body ) {
-			var titleLines = tooltip.title || [];
-			var bodyLines = tooltip.body.map( getBody );
+			const titleLines = tooltip.title || [];
+			const bodyLines = tooltip.body.map( getBody );
 
-			var innerHtml = '<thead>';
+			let innerHtml = '<thead>';
 
-			titleLines.forEach( function ( title ) {
+			titleLines.forEach( function( title ) {
 				innerHtml += '<tr><th>' + title + '</th></tr>';
-			});
+			} );
 
 			innerHtml += '</thead><tbody>';
 
-			bodyLines.forEach( function ( body, i ) {
-				var colors = tooltip.labelColors[ i ];
-				var style = 'background:' + colors.borderColor;
+			bodyLines.forEach( function( body, i ) {
+				const colors = tooltip.labelColors[ i ];
+				let style = 'background:' + colors.borderColor;
 				style += '; border-color:' + colors.borderColor;
 				style += '; border-width: 2px';
-				var span = '<span class="edd-chartjs-tooltip-key" style="' + style + '"></span>';
+				const span = '<span class="edd-chartjs-tooltip-key" style="' + style + '"></span>';
 				innerHtml += '<tr><td>' + span + body + '</td></tr>';
-			});
+			} );
 
 			innerHtml += '</tbody>';
 
-			var tableRoot = tooltipEl.querySelector( 'table' );
+			const tableRoot = tooltipEl.querySelector( 'table' );
 			tableRoot.innerHTML = innerHtml;
 		}
 
-		var positionY = this._chart.canvas.offsetTop;
-		var positionX = this._chart.canvas.offsetLeft;
+		const positionY = this._chart.canvas.offsetTop;
+		const positionX = this._chart.canvas.offsetLeft;
 
 		// Display, position, and set styles for font
 		tooltipEl.style.opacity = 1;
@@ -252,8 +252,8 @@ const getToolTipConfig = ( config ) => ( {
 const isPie = ( config ) => {
 	const { type } = config;
 
-	return type === 'pie' || type  === 'doughnut';
-}
+	return type === 'pie' || type === 'doughnut';
+};
 
 /**
  * Render the registered charts.
