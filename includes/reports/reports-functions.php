@@ -961,7 +961,7 @@ function default_display_charts_group( $report ) {
 	);
 
 	foreach ( $charts as $endpoint_id => $chart ) {
-		$chart_data['charts'][ $endpoint_id ] = json_decode( $chart->get_manifest()->build_config() );
+		$chart_data['charts'][ $endpoint_id ] = $chart->get_manifest()->build_config();
 ?>
 
 	<div id="edd-reports-charts-wrap" class="edd-report-wrap">

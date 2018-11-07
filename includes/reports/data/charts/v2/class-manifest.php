@@ -359,7 +359,7 @@ class Manifest implements Error_Logger {
 			)
 		);
 
-		return json_encode( $config );
+		return $config;
 	}
 
 	/**
