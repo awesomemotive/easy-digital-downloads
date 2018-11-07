@@ -95,10 +95,10 @@ function edd_get_adjustments_tabs() {
 	// Tabs
 	$tabs = array(
 		'discount' => __( 'Discounts', 'easy-digital-downloads' ),
-		'credit'   => __( 'Credits',   'easy-digital-downloads' ),
-		'fee'      => __( 'Fees',      'easy-digital-downloads' )
+//		'credit'   => __( 'Credits',   'easy-digital-downloads' ),
+//		'fee'      => __( 'Fees',      'easy-digital-downloads' )
 	);
 
 	// Filter & return
-	return apply_filters( 'edd_tools_tabs', $tabs );
+	return apply_filters( 'edd_adjustments_tabs', $tabs );
 }
