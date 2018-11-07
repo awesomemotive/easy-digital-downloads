@@ -386,8 +386,8 @@ function edd_ajax_add_discount_note() {
 		: 0;
 
 	// Get note contents (maybe sanitize)
-	$note        = ! empty( $_POST['note'] )
-		? wp_kses( stripslashes_deep( $_POST['note'] ), array() )
+	$note = ! empty( $_POST['note'] )
+		? trim( wp_kses( stripslashes_deep( $_POST['note'] ), edd_get_allowed_tags() ) )
 		: '';
 
 	// Bail if no discount

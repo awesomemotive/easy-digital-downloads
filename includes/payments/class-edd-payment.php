@@ -1201,7 +1201,16 @@ class EDD_Payment {
 			$subtotal -= round( $tax, edd_currency_decimal_filter() );
 		}
 
-		$total = $subtotal - $discount + $tax;
+		$fees = 0;
+		if ( ! empty( $args['fees'] ) && is_array( $args['fees'] ) ) {
+			foreach ( $args['fees'] as $feekey => $fee ) {
+				$fees += $fee['amount'];
+			}
+
+			$fees = round( $fees, edd_currency_decimal_filter() );
+		}
+
+		$total      = $subtotal - $discount + $tax + $fees;
 
 		// Do not allow totals to go negative
 		if ( $total < 0 ) {
@@ -1733,11 +1742,11 @@ class EDD_Payment {
 	public function add_note( $note = '' ) {
 
 		// Bail if no note specified.
-		if ( ! $note || empty( $note ) ) {
+		if ( empty( $note ) ) {
 			return false;
 		}
 
-		$note_id = edd_insert_payment_note( $this->ID, esc_html( $note ) );
+		$note_id = edd_insert_payment_note( $this->ID, $note );
 
 		if ( $note_id ) {
 			return true;

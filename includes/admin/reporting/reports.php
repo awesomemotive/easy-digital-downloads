@@ -154,6 +154,8 @@ function edd_output_report_callback( $report_id = '' ) {
  * @return void
  */
 function edd_reports_page() {
+	// Enqueue scripts.
+	wp_enqueue_script( 'edd-admin-reports' );
 	?>
 
     <div class="wrap">
@@ -1791,7 +1793,6 @@ function edd_register_taxes_report( $reports ) {
 							: array( 'download_id' => '', 'price_id' => '' );
 
 						$stats = new EDD\Stats();
-
 						return $stats->get_tax( array(
 							'output'      => 'formatted',
 							'range'       => $filter['range'],

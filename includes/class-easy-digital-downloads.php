@@ -170,6 +170,7 @@ final class Easy_Digital_Downloads {
 		self::$instance->roles           = new EDD_Roles();
 		self::$instance->fees            = new EDD_Fees();
 		self::$instance->api             = new EDD_API();
+		self::$instance->debug_log       = new EDD_Logging();
 		self::$instance->utils           = new EDD\Utilities();
 		self::$instance->session         = new EDD_Session();
 		self::$instance->html            = new EDD_HTML_Elements();
@@ -184,6 +185,9 @@ final class Easy_Digital_Downloads {
 		if ( is_admin() ) {
 			self::$instance->notices = new EDD_Notices();
 		}
+
+		// Parachute
+		self::$instance->backcompat_globals();
 
 		// Return the instance
 		return self::$instance;
@@ -670,8 +674,9 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/shortcodes.php';
 		require_once EDD_PLUGIN_DIR . 'includes/install.php';
 
-		// Must always be loaded to ensure cron runs
+		// Admin files to load globally (cron, bar, etc...)
 		require_once EDD_PLUGIN_DIR . 'includes/admin/tracking.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/admin-bar.php';
 	}
 
 	/**
@@ -734,6 +739,17 @@ final class Easy_Digital_Downloads {
 	private function include_frontend() {
 		require_once EDD_PLUGIN_DIR . 'includes/process-download.php';
 		require_once EDD_PLUGIN_DIR . 'includes/theme-compatibility.php';
+	}
+
+	/**
+	 * Backwards compatibility for old global values
+	 *
+	 * @since 3.0
+	 */
+	private function backcompat_globals() {
+
+		// The $edd_logs global
+		$GLOBALS['edd_logs'] = self::$instance->debug_log;
 	}
 }
 endif; // End if class_exists check.
