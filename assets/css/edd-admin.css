@@ -415,6 +415,14 @@ a.edd-delete:hover {
 	margin-right: 10px;
 }
 
+.edd-add-order-item td {
+	vertical-align: middle;
+}
+
+.edd-add-order-item input {
+	width: 80%;
+}
+
 /* Note Styles
 -------------------------------------------------------------- */
 
@@ -1336,9 +1344,6 @@ input[class*="edd-price-field"] {
 }
 #edd-edit-order-form input.large-text {
 	width: 90%;
-}
-.edd-edit-purchase-element ul li.download {
-	width: 35%;
 }
 .edd-edit-purchase-element ul li.item_price {
 	width: 15%;

@@ -930,6 +930,8 @@ function edd_ajax_add_order_item() {
 		? sanitize_text_field( $_POST['region'] )
 		: '';
 
+	$editable = 1 !== absint( $_POST['editable'] );
+
 	// Bail if missing any data.
 	if ( empty( $nonce ) || empty( $download ) ) {
 		edd_die( '-1' );
@@ -978,22 +980,34 @@ function edd_ajax_add_order_item() {
 
 		ob_start(); ?>
 
-		<tr data-key="0">
+		<tr class="edd-add-order-item" data-key="0">
 			<td class="name column-name column-primary"><a class="row-title" href=""><?php echo esc_html( $response['name'] ); ?></a></td>
-			<td class="overridable amount column-amount" data-type="amount"><?php echo esc_html( $symbol ); ?><span class="value"><?php echo esc_html( edd_format_amount( $response['amount'] ) ); ?></span></td>
+
+			<td class="overridable amount column-amount" data-type="amount">
+				<?php echo esc_html( $symbol ); ?>
+				<input type="text" class="download-amount" name="downloads[0][amount]" value="<?php echo esc_attr( edd_format_amount( $response['amount'] ) ); ?>" <?php disabled( $editable ); ?> />
+			</td>
+
 			<?php if ( edd_item_quantities_enabled() ) : ?>
-				<td class="overridable quantity column-quantity" data-type="quantity"><span class="value"><?php echo esc_html( $quantity ); ?></span></td>
+				<td class="overridable quantity column-quantity" data-type="quantity">
+					<input type="text" class="download-quantity" name="downloads[0][quantity]" value="<?php echo esc_attr( $quantity ); ?>" <?php disabled( $editable ); ?> />
+				</td>
 			<?php endif; ?>
+
 			<?php if ( edd_use_taxes() ) : ?>
-				<td class="overridable tax column-tax" data-type="tax"><?php echo esc_html( $symbol ); ?><span class="value"><?php echo esc_html( edd_format_amount( $response['tax'] ) ); ?></span></td>
+				<td class="overridable tax column-tax" data-type="tax">
+					<?php echo esc_html( $symbol ); ?>
+					<input type="text" class="download-tax" name="downloads[0][tax]" value="<?php echo esc_attr( edd_format_amount( $response['tax'] ) ); ?>" <?php disabled( $editable ); ?> />
+				</td>
 			<?php endif; ?>
-			<td class="overridable total column-total" data-type="total"><?php echo esc_html( $symbol ); ?><span class="value"><?php echo esc_html( edd_format_amount( $response['total'] ) ); ?></span></td>
+
+			<td class="overridable total column-total" data-type="total">
+					<?php echo esc_html( $symbol ); ?>
+					<input type="text" class="download-total" name="downloads[0][total]" value="<?php echo esc_attr( edd_format_amount( $response['total'] ) ); ?>" <?php disabled( $editable ); ?> />
+			</td>
+
 			<th scope="row" class="check-column"><a href="#" class="remove-item"><span class="dashicons dashicons-no"></span></a></th>
 			<input type="hidden" class="download-id" name="downloads[0][id]" value="<?php echo esc_attr( $download['download_id'] ); ?>" />
-			<input type="hidden" class="download-amount" name="downloads[0][amount]" value="<?php echo esc_attr( edd_format_amount( $response['amount'] ) ); ?>" />
-			<input type="hidden" class="download-quantity" name="downloads[0][quantity]" value="<?php echo esc_attr( $quantity ); ?>" />
-			<input type="hidden" class="download-tax" name="downloads[0][tax]" value="<?php echo esc_attr( edd_format_amount( $response['tax'] ) ); ?>" />
-			<input type="hidden" class="download-total" name="downloads[0][total]" value="<?php echo esc_attr( edd_format_amount( $response['total'] ) ); ?>" />
 			<input type="hidden" class="download-price-id" name="downloads[0][price_id]" value="<?php echo esc_attr( $download['price_id'] ); // WPCS: XSS ok. ?>" />
 		</tr>
 
