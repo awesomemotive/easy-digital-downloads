@@ -926,7 +926,7 @@ function edd_render_refund_row( $post_id ) {
 			</label>
 		</p>
 		<p>
-			<?php _e( 'Empty for global. <code>0</code> for unlimited', 'easy-digital-downloads' ); ?>
+			<?php _e( 'Leave blank to use global setting. Enter <code>0</code> for unlimited', 'easy-digital-downloads' ); ?>
 		</p>
 	</div>
 <?php
@@ -959,7 +959,7 @@ function edd_render_download_limit_row( $post_id ) {
 			<input class="small-text" name="_edd_download_limit" type="number" min="0" max="5000" step="1" value="<?php echo esc_attr ( $edd_download_limit ); ?>" />
 		</label>
 		<p>
-			<?php _e( 'Empty for global. <code>0</code> for unlimited', 'easy-digital-downloads' ); ?>
+			<?php _e( 'Leave blank to use global setting. Enter <code>0</code> for unlimited', 'easy-digital-downloads' ); ?>
 		</p>
 	</div>
 <?php
