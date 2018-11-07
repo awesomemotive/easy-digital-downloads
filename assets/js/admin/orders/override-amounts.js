@@ -32,5 +32,13 @@ import EDD_Add_Order from './index.js';
 
 		// Get a fresh set of inputs. Mark current inputs as editable.
 		document.querySelectorAll( '.overridable input' ).forEach( ( el ) => el.readOnly = false );
+
+		// Mark the override for saving the data.
+		const input = document.createElement( 'input' );
+		input.name = 'edd_add_order_override';
+		input.value = true;
+		input.type = 'hidden';
+
+		document.getElementById( 'edd-add-order-form' ).appendChild( input );
 	} );
 } ) ();
