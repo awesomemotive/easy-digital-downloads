@@ -985,25 +985,25 @@ function edd_ajax_add_order_item() {
 
 			<td class="overridable amount column-amount" data-type="amount">
 				<?php echo esc_html( $symbol ); ?>
-				<input type="text" class="download-amount" name="downloads[0][amount]" value="<?php echo esc_attr( edd_format_amount( $response['amount'] ) ); ?>" <?php disabled( $editable ); ?> />
+				<input type="text" class="download-amount" name="downloads[0][amount]" value="<?php echo esc_attr( edd_format_amount( $response['amount'] ) ); ?>" <?php readonly( $editable ); ?> />
 			</td>
 
 			<?php if ( edd_item_quantities_enabled() ) : ?>
 				<td class="overridable quantity column-quantity" data-type="quantity">
-					<input type="text" class="download-quantity" name="downloads[0][quantity]" value="<?php echo esc_attr( $quantity ); ?>" <?php disabled( $editable ); ?> />
+					<input type="text" class="download-quantity" name="downloads[0][quantity]" value="<?php echo esc_attr( $quantity ); ?>" <?php readonly( $editable ); ?> />
 				</td>
 			<?php endif; ?>
 
 			<?php if ( edd_use_taxes() ) : ?>
 				<td class="overridable tax column-tax" data-type="tax">
 					<?php echo esc_html( $symbol ); ?>
-					<input type="text" class="download-tax" name="downloads[0][tax]" value="<?php echo esc_attr( edd_format_amount( $response['tax'] ) ); ?>" <?php disabled( $editable ); ?> />
+					<input type="text" class="download-tax" name="downloads[0][tax]" value="<?php echo esc_attr( edd_format_amount( $response['tax'] ) ); ?>" <?php readonly( $editable ); ?> />
 				</td>
 			<?php endif; ?>
 
 			<td class="overridable total column-total" data-type="total">
 					<?php echo esc_html( $symbol ); ?>
-					<input type="text" class="download-total" name="downloads[0][total]" value="<?php echo esc_attr( edd_format_amount( $response['total'] ) ); ?>" <?php disabled( $editable ); ?> />
+					<input type="text" class="download-total" name="downloads[0][total]" value="<?php echo esc_attr( edd_format_amount( $response['total'] ) ); ?>" <?php readonly( $editable ); ?> />
 			</td>
 
 			<th scope="row" class="check-column"><a href="#" class="remove-item"><span class="dashicons dashicons-no"></span></a></th>
