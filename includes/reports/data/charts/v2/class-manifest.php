@@ -417,11 +417,6 @@ class Manifest implements Error_Logger {
 					'display' => $this->get_endpoint()->get_label() && $this->get_endpoint()->get( 'show_chart_title' ),
 					'text'    => $this->get_endpoint()->get_label(),
 				),
-				'tooltips'   => array(
-					'enabled'  => false,
-					'mode'     =>'index',
-					'position' => 'nearest',
-				),
 				'scales'     => array(
 					'xAxes' => array(
 						array(
