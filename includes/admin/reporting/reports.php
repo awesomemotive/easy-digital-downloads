@@ -1793,7 +1793,6 @@ function edd_register_taxes_report( $reports ) {
 							: array( 'download_id' => '', 'price_id' => '' );
 
 						$stats = new EDD\Stats();
-
 						return $stats->get_tax( array(
 							'output'      => 'formatted',
 							'range'       => $filter['range'],
