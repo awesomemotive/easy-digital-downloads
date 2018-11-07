@@ -2097,7 +2097,7 @@ msgstr ""
 
 #: includes/admin/downloads/metabox.php:933
 #: includes/admin/downloads/metabox.php:965
-msgid "Empty for global. <code>0</code> for unlimited"
+msgid "Leave blank to use global setting. Enter <code>0</code> for unlimited"
 msgstr ""
 
 #: includes/admin/downloads/metabox.php:934
