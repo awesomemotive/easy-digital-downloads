@@ -287,6 +287,7 @@ class EDD_Discount extends Adjustment {
 
 		// Property
 		} elseif ( property_exists( $this, $key ) ) {
+
 			return $this->{$key};
 
 		// Other...
@@ -587,6 +588,28 @@ class EDD_Discount extends Adjustment {
 		 * @param int    $ID   Discount ID.
 		 */
 		return apply_filters( 'edd_get_discount_code', $this->code, $this->id );
+	}
+
+	/**
+	 * Retrieve the ID of the discount.
+	 *
+	 * @since 3.0
+	 *
+	 * @return int Discount ID.
+	 */
+	public function get_ID() {
+		return $this->id;
+	}
+
+	/**
+	 * Retrieve the name of the discount.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string Discount name.
+	 */
+	public function get_name() {
+		return $this->name;
 	}
 
 	/**
