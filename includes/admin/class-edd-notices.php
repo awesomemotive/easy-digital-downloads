@@ -217,7 +217,7 @@ class EDD_Notices {
 		if ( empty( $purchase_page ) || ( 'trash' === get_post_status( $purchase_page ) ) && ! edd_get_option( 'dismissed_notice_checkout' ) ) {
 			$this->add_notice( array(
 				'id'             => 'edd-no-purchase-page',
-				'message'        => sprintf( __( 'No checkout page is configured. Set one in <a href="%s">Settings</a>.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) ),
+				'message'        => sprintf( __( 'No checkout page is configured. Set one in <a href="%s">Settings</a>.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings&tab=general&section=pages' ) ),
 				'class'          => 'error',
 				'is_dismissible' => false
 			) );
