@@ -204,9 +204,9 @@ function edd_get_purchase_link( $args = array() ) {
 			<?php endif; ?>
 			<?php if( ! $download->is_free( $args['price_id'] ) && ! edd_download_is_tax_exclusive( $download->ID ) ): ?>
 				<?php if ( edd_display_tax_rate() && edd_prices_include_tax() ) {
-					echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Includes %1$s&#37; tax', 'easy-digital-downloads' ), edd_get_tax_rate() * 100 ) . '</span>';
+					echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Includes %1$s&#37; tax', 'easy-digital-downloads' ), edd_get_formatted_tax_rate() ) . '</span>';
 				} elseif ( edd_display_tax_rate() && ! edd_prices_include_tax() ) {
-					echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Excluding %1$s&#37; tax', 'easy-digital-downloads' ), edd_get_tax_rate() * 100 ) . '</span>';
+					echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Excluding %1$s&#37; tax', 'easy-digital-downloads' ), edd_get_formatted_tax_rate() ) . '</span>';
 				} ?>
 			<?php endif; ?>
 		</div><!--end .edd_purchase_submit_wrapper-->
