@@ -65,7 +65,7 @@ function edd_no_gateway_error() {
 	if ( empty( $gateways ) && edd_get_cart_total() > 0 ) {
 		remove_action( 'edd_after_cc_fields', 'edd_default_cc_address_fields' );
 		remove_action( 'edd_cc_form', 'edd_get_cc_form' );
-		edd_set_error( 'no_gateways', __( 'You must enable a payment gateway to use Easy Digital Downloads', 'easy-digital-downloads' ) );
+		edd_set_error( 'no_gateways', __( 'You must enable a payment gateway to use Easy Digital Downloads.', 'easy-digital-downloads' ) );
 	} else {
 		edd_unset_error( 'no_gateways' );
 	}

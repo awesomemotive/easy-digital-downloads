@@ -809,7 +809,7 @@ final class EDD_Amazon_Payments {
 
 		// should validate that we have a reference ID here, perhaps even fire the API call here
 		if ( empty( $post_data['edd_amazon_reference_id'] ) ) {
-			edd_set_error( 'missing_reference_id', __( 'Missing Reference ID, please try again', 'easy-digital-downloads' ) );
+			edd_set_error( 'missing_reference_id', __( 'Missing Reference ID, please try again.', 'easy-digital-downloads' ) );
 		}
 	}
 
@@ -823,7 +823,7 @@ final class EDD_Amazon_Payments {
 	public function process_purchase( $purchase_data ) {
 
 		if ( empty( $purchase_data['post_data']['edd_amazon_reference_id'] ) ) {
-			edd_set_error( 'missing_reference_id', __( 'Missing Reference ID, please try again', 'easy-digital-downloads' ) );
+			edd_set_error( 'missing_reference_id', __( 'Missing Reference ID, please try again.', 'easy-digital-downloads' ) );
 		}
 
 		$errors = edd_get_errors();
