@@ -58,7 +58,7 @@ function edd_get_purchase_link( $args = array() ) {
 		}
 
 
-		edd_set_error( 'set_checkout', sprintf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) ) );
+		edd_set_error( 'set_checkout', sprintf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings&tab=general&section=pages' ) ) );
 		edd_print_errors();
 
 		$no_checkout_error_displayed = true;
