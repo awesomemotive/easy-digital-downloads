@@ -243,7 +243,7 @@ function edd_get_cc_form() {
 						)
 					);
 				?>
-				<span><?php _e( 'This is a secure SSL encrypted payment.', 'easy-digital-downloads' ); ?></span>
+				<span><?php _e( 'This is a secure SSL encrypted payment', 'easy-digital-downloads' ); ?></span>
 			</div>
 		<?php endif; ?>
 		<p id="edd-card-number-wrap">
