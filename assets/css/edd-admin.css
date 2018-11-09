@@ -2133,6 +2133,10 @@ body.download_page_edd-reports {
 	line-height: 1;
 	display: inline-block;
 	transition: all .2s ease-in-out;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	max-width: 80%;
 }
 
 #edd-reports-tiles-wrap .inside .tile-amount {
