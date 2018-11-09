@@ -905,6 +905,7 @@ function edd_get_registered_settings() {
 						'type'    => 'color_select',
 						'chosen'  => true,
 						'options' => edd_get_button_colors(),
+						'std'     => 'blue'
 					),
 					'checkout_label' => array(
 						'id'   => 'checkout_label',
