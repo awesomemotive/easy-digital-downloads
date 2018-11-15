@@ -764,6 +764,7 @@ final class EDD_Amazon_Payments {
 					new OffAmazonPayments.Widgets.Wallet({
 						sellerId: edd_amazon.sellerId,
 						amazonOrderReferenceId: edd_amazon.referenceID,
+
 						design: {
 							designMode: 'responsive'
 						},
@@ -773,7 +774,7 @@ final class EDD_Amazon_Payments {
 						onError: function(error) {
 							jQuery('#edd_purchase_submit').prepend( '<div class="edd_errors"><p class="edd_error" id="edd_error_"' + error.getErrorCode() + '>' + error.getErrorMessage() + '</p></div>' );
 						}
-					}).bind("edd-amazon-wallet-box");
+					}).setPresentmentCurrency( edd_global_vars.currency_code ).bind("edd-amazon-wallet-box");
 
 				} else {
 
@@ -791,7 +792,7 @@ final class EDD_Amazon_Payments {
 						onError: function(error) {
 							jQuery('#edd_purchase_submit').prepend( '<div class="edd_errors"><p class="edd_error" id="edd_error_"' + error.getErrorCode() + '>' + error.getErrorMessage() + '</p></div>' );
 						}
-					}).bind("edd-amazon-wallet-box");
+					}).setPresentmentCurrency( edd_global_vars.currency_code ).bind("edd-amazon-wallet-box");
 
 				}
 			</script>
