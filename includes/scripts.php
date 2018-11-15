@@ -60,6 +60,7 @@ function edd_load_scripts() {
 			'checkout_error_anchor' => '#edd_purchase_submit',
 			'currency_sign'         => edd_currency_filter(''),
 			'currency_pos'          => edd_get_option( 'currency_position', 'before' ),
+			'currency_code'         => edd_get_currency(),
 			'decimal_separator'     => edd_get_option( 'decimal_separator', '.' ),
 			'thousands_separator'   => edd_get_option( 'thousands_separator', ',' ),
 			'no_gateway'            => __( 'Please select a payment method', 'easy-digital-downloads' ),
