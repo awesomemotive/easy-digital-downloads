@@ -73,10 +73,10 @@ class Tax_Collected_By_Location extends List_Table {
 	public function get_columns() {
 		return array(
 			'country'  => __( 'Country/Region', 'easy-digital-downloads' ),
-			'tax_rate' => __( 'Tax Rate', 'easy-digital-downloads' ),
 			'from'     => __( 'From', 'easy-digital-downloads' ),
 			'to'       => __( 'To', 'easy-digital-downloads' ),
 			'gross'    => __( 'Gross', 'easy-digital-downloads' ),
+			'tax'      => __( 'Tax', 'easy-digital-downloads' ),
 			'net'      => __( 'Net', 'easy-digital-downloads' ),
  		);
 	}
@@ -144,10 +144,10 @@ class Tax_Collected_By_Location extends List_Table {
 
 			$data[] = array(
 				'country'  => $location,
-				'tax_rate' => floatval( $tax_rate->amount ) . '%',
 				'from'     => $from,
 				'to'       => $to,
 				'gross'    => edd_currency_filter( edd_format_amount( floatval( $results['total'] ) ) ),
+				'tax'      => edd_currency_filter( edd_format_amount( floatval( $results['tax'] ) ) ),
 				'net'      => edd_currency_filter( edd_format_amount( floatval( $results['total'] - $results['tax'] ) ) ),
 			);
 		}
