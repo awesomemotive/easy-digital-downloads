@@ -101,20 +101,20 @@ class Tax_Collected_By_Location extends List_Table {
 		$date_query  = '';
 
 		if ( ! empty( $date_filter['from'] ) && '0000-00-00 00:00:00' !== $date_filter['from'] ) {
-			$date_query .= $wpdb->prepare( " AND {$wpdb->edd_orders}.date_created >= %s", esc_sql( date( 'Y-n-d H:i:s', EDD()->utils->date( $date_filter['from'], null, true )->endOfDay()->timestamp ) ) );
+			$date_query .= $wpdb->prepare( " AND {$wpdb->edd_orders}.date_created >= %s", esc_sql( EDD()->utils->date( $date_filter['from'], null, false )->startOfDay()->format( 'mysql' ) ) );
 		}
 
 		if ( ! empty( $date_filter['to'] ) && '0000-00-00 00:00:00' !== $date_filter['to'] ) {
-			$date_query .= $wpdb->prepare( " AND {$wpdb->edd_orders}.date_created <= %s", esc_sql( date( 'Y-n-d H:i:s', EDD()->utils->date( $date_filter['to'], null, true )->endOfDay()->timestamp ) ) );
+			$date_query .= $wpdb->prepare( " AND {$wpdb->edd_orders}.date_created <= %s", esc_sql( EDD()->utils->date( $date_filter['to'], null, false )->endOfDay()->format( 'mysql' ) ) );
 		}
 
 		$from = empty( $date_filter['from'] ) || '0000-00-00 00:00:00' === $date_filter['from']
 				? '&mdash;'
-				: edd_date_i18n( EDD()->utils->date( $date_filter['from'], null, true )->startOfDay()->timestamp );
+				: edd_date_i18n( EDD()->utils->date( $date_filter['from'], null, false )->startOfDay()->timestamp );
 
 		$to = empty( $date_filter['to'] ) || '0000-00-00 00:00:00' === $date_filter['to']
 			? '&mdash;'
-			: edd_date_i18n( EDD()->utils->date( $date_filter['to'], null, true )->endOfDay()->timestamp );
+			: edd_date_i18n( EDD()->utils->date( $date_filter['to'], null, false )->endOfDay()->timestamp );
 
 		/*
 		 * We need to first calculate the total tax collected for all orders so we can determine the amount of tax collected for the global rate
