@@ -91,33 +91,40 @@ class Tax_Collected_By_Location extends List_Table {
 	public function get_data() {
 		global $wpdb;
 
-		$data = array();
+		$data        = array();
+		$tax_rates   = edd_get_tax_rates( array(), OBJECT );
+		$date_filter = Reports\get_filter_value( 'dates' );
 
-		$tax_rates = edd_get_tax_rates( array(), OBJECT );
+		// Date query.
+		$date_query  = '';
+
+		if ( ! empty( $date_filter['from'] ) && '0000-00-00 00:00:00' !== $to ) {
+			$date_query .= $wpdb->prepare( " AND {$wpdb->edd_orders}.date_created >= %s", esc_sql( date( 'Y-n-d H:i:s', EDD()->utils->date( $date_filter['from'], null, true )->endOfDay()->timestamp ) ) );
+		}
+
+		if ( ! empty( $date_filter['from'] ) && '0000-00-00 00:00:00' !== $from ) {
+			$date_query .= $wpdb->prepare( " AND {$wpdb->edd_orders}.date_created <= %s", esc_sql( date( 'Y-n-d H:i:s', EDD()->utils->date( $date_filter['to'], null, true )->endOfDay()->timestamp ) ) );
+		}
+
+		$from = empty( $date_filter['from'] ) || '0000-00-00 00:00:00' === $date_filter['from']
+				? '&mdash;'
+				: edd_date_i18n( EDD()->utils->date( $date_filter['from'], null, true )->startOfDay()->timestamp );
+
+		$to = empty( $date_filter['to'] ) || '0000-00-00 00:00:00' === $date_filter['to']
+			? '&mdash;'
+			: edd_date_i18n( EDD()->utils->date( $date_filter['to'], null, true )->endOfDay()->timestamp );
 
 		foreach ( $tax_rates as $tax_rate ) {
+
 			$location = edd_get_country_name( $tax_rate->name );
 
 			if ( ! empty( $tax_rate->description ) ) {
 				$location .= ' &mdash; ' . edd_get_state_name( $tax_rate->name, $tax_rate->description );
 			}
 
-			$date_filter = Reports\get_filter_value( 'dates' );
-
 			$region = ! empty( $tax_rate->description )
 				? $wpdb->prepare( ' AND region = %s', esc_sql( $tax_rate->description ) )
 				: '';
-
-			// Date query.
-			$date_query = '';
-
-			if ( ! empty( $date_filter['from'] ) && '0000-00-00 00:00:00' !== $to ) {
-				$date_query .= $wpdb->prepare( " AND {$wpdb->edd_orders}.date_created >= %s", esc_sql( date( 'Y-n-d H:i:s', EDD()->utils->date( $date_filter['from'], null, true )->endOfDay()->timestamp ) ) );
-			}
-
-			if ( ! empty( $date_filter['from'] ) && '0000-00-00 00:00:00' !== $from ) {
-				$date_query .= $wpdb->prepare( " AND {$wpdb->edd_orders}.date_created <= %s", esc_sql( date( 'Y-n-d H:i:s', EDD()->utils->date( $date_filter['to'], null, true )->endOfDay()->timestamp ) ) );
-			}
 
 			$results = $wpdb->get_results( $wpdb->prepare( "
 				SELECT SUM(tax) as tax, SUM(total) as total, country, region
@@ -131,14 +138,6 @@ class Tax_Collected_By_Location extends List_Table {
 				'total'    => 0.00,
 				'tax'      => 0.00
 			) );
-
-			$from = empty( $date_filter['from'] ) || '0000-00-00 00:00:00' === $date_filter['from']
-				? '&mdash;'
-				: edd_date_i18n( EDD()->utils->date( $date_filter['from'], null, true )->startOfDay()->timestamp );
-
-			$to = empty( $date_filter['to'] ) || '0000-00-00 00:00:00' === $date_filter['to']
-				? '&mdash;'
-				: edd_date_i18n( EDD()->utils->date( $date_filter['to'], null, true )->endOfDay()->timestamp );
 
 			$data[] = array(
 				'country'  => $location,
