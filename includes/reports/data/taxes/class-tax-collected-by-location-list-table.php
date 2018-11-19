@@ -119,12 +119,11 @@ class Tax_Collected_By_Location extends List_Table {
 				$date_query .= $wpdb->prepare( " AND {$wpdb->edd_orders}.date_created <= %s", esc_sql( date( 'Y-n-d H:i:s', EDD()->utils->date( $date_filter['to'], null, true )->endOfDay()->timestamp ) ) );
 			}
 
-			$results = $wpdb->get_row( $wpdb->prepare( "
-				SELECT tax, total, country, region
+			$results = $wpdb->get_results( $wpdb->prepare( "
+				SELECT SUM(tax) as tax, SUM(total) as total, country, region
 				FROM {$wpdb->edd_orders}
 				INNER JOIN {$wpdb->edd_order_addresses} ON {$wpdb->edd_order_addresses}.order_id = {$wpdb->edd_orders}.id
 				WHERE {$wpdb->edd_order_addresses}.country = %s {$region} {$date_query}
-				GROUP BY country, region
 			", esc_sql( $tax_rate->name ) ), ARRAY_A );
 
 			$results = wp_parse_args( $results, array(
@@ -141,14 +140,13 @@ class Tax_Collected_By_Location extends List_Table {
 				? '&mdash;'
 				: edd_date_i18n( EDD()->utils->date( $date_filter['to'], null, true )->endOfDay()->timestamp );
 
-
 			$data[] = array(
 				'country'  => $location,
 				'from'     => $from,
 				'to'       => $to,
-				'gross'    => edd_currency_filter( edd_format_amount( floatval( $results['total'] ) ) ),
-				'tax'      => edd_currency_filter( edd_format_amount( floatval( $results['tax'] ) ) ),
-				'net'      => edd_currency_filter( edd_format_amount( floatval( $results['total'] - $results['tax'] ) ) ),
+				'gross'    => edd_currency_filter( edd_format_amount( floatval( $results[0]['total'] ) ) ),
+				'tax'      => edd_currency_filter( edd_format_amount( floatval( $results[0]['tax'] ) ) ),
+				'net'      => edd_currency_filter( edd_format_amount( floatval( $results[0]['total'] - $results[0]['tax'] ) ) ),
 			);
 		}
 
