@@ -129,7 +129,9 @@ class Tax_Collected_By_Location extends List_Table {
 
 		foreach ( $tax_rates as $tax_rate ) {
 
-			if( array_key_exists( $tax_rate->name . '-' . $tax_rate->description, $data ) ) {
+			$country_region = $tax_rate->name . '-' . $tax_rate->description;
+
+			if ( array_key_exists( $country_region, $data ) ) {
 				continue; // We've already pulled numbers for this country / region
 			}
 
@@ -153,7 +155,7 @@ class Tax_Collected_By_Location extends List_Table {
 			$all_orders[0]['tax']   -= $results[0]['tax'];
 			$all_orders[0]['total'] -= $results[0]['total'];
 
-			$data[ $tax_rate->name . '-' . $tax_rate->description ] = array(
+			$data[ $country_region ] = array(
 				'country'  => $location,
 				'from'     => $from,
 				'to'       => $to,
