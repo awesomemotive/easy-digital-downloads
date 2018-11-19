@@ -92,17 +92,19 @@ class Tax_Collected_By_Location extends List_Table {
 		global $wpdb;
 
 		$data        = array();
+		$countries   = array();
+		$regions     = array();
 		$tax_rates   = edd_get_tax_rates( array(), OBJECT );
 		$date_filter = Reports\get_filter_value( 'dates' );
 
 		// Date query.
 		$date_query  = '';
 
-		if ( ! empty( $date_filter['from'] ) && '0000-00-00 00:00:00' !== $to ) {
+		if ( ! empty( $date_filter['from'] ) && '0000-00-00 00:00:00' !== $date_filter['from'] ) {
 			$date_query .= $wpdb->prepare( " AND {$wpdb->edd_orders}.date_created >= %s", esc_sql( date( 'Y-n-d H:i:s', EDD()->utils->date( $date_filter['from'], null, true )->endOfDay()->timestamp ) ) );
 		}
 
-		if ( ! empty( $date_filter['from'] ) && '0000-00-00 00:00:00' !== $from ) {
+		if ( ! empty( $date_filter['to'] ) && '0000-00-00 00:00:00' !== $date_filter['to'] ) {
 			$date_query .= $wpdb->prepare( " AND {$wpdb->edd_orders}.date_created <= %s", esc_sql( date( 'Y-n-d H:i:s', EDD()->utils->date( $date_filter['to'], null, true )->endOfDay()->timestamp ) ) );
 		}
 
@@ -113,6 +115,17 @@ class Tax_Collected_By_Location extends List_Table {
 		$to = empty( $date_filter['to'] ) || '0000-00-00 00:00:00' === $date_filter['to']
 			? '&mdash;'
 			: edd_date_i18n( EDD()->utils->date( $date_filter['to'], null, true )->endOfDay()->timestamp );
+
+		/*
+		 * We need to first calculate the total tax collected for all orders so we can determine the amount of tax collected for the global rate
+		 *
+		 * The total determined here will be reduced by the amount collected for each specified tax rate/region.
+		 */
+		$all_orders = $wpdb->get_results( "
+			SELECT SUM(tax) as tax, SUM(total) as total
+			FROM {$wpdb->edd_orders}
+			WHERE 1=1 {$date_query}
+		", ARRAY_A );
 
 		foreach ( $tax_rates as $tax_rate ) {
 
@@ -133,11 +146,8 @@ class Tax_Collected_By_Location extends List_Table {
 				WHERE {$wpdb->edd_order_addresses}.country = %s {$region} {$date_query}
 			", esc_sql( $tax_rate->name ) ), ARRAY_A );
 
-			$results = wp_parse_args( $results, array(
-				'subtotal' => 0.00,
-				'total'    => 0.00,
-				'tax'      => 0.00
-			) );
+			$all_orders[0]['tax']   -= $results[0]['tax'];
+			$all_orders[0]['total'] -= $results[0]['total'];
 
 			$data[] = array(
 				'country'  => $location,
@@ -147,6 +157,19 @@ class Tax_Collected_By_Location extends List_Table {
 				'tax'      => edd_currency_filter( edd_format_amount( floatval( $results[0]['tax'] ) ) ),
 				'net'      => edd_currency_filter( edd_format_amount( floatval( $results[0]['total'] - $results[0]['tax'] ) ) ),
 			);
+		}
+
+		if( $all_orders[0]['total'] > 0 && $all_orders[0]['tax'] > 0 ) {
+
+			$data[] = array(
+				'country'  => __( 'Global Rate', 'easy-digital-downloads' ),
+				'from'     => $from,
+				'to'       => $to,
+				'gross'    => edd_currency_filter( edd_format_amount( floatval( max( 0, $all_orders[0]['total'] ) ) ) ),
+				'tax'      => edd_currency_filter( edd_format_amount( floatval( max( 0, $all_orders[0]['tax'] ) ) ) ),
+				'net'      => edd_currency_filter( edd_format_amount( floatval( max( 0, $all_orders[0]['total'] - $all_orders[0]['tax'] ) ) ) ),
+			);
+
 		}
 
 		return $data;
