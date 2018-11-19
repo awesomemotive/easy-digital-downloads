@@ -129,6 +129,10 @@ class Tax_Collected_By_Location extends List_Table {
 
 		foreach ( $tax_rates as $tax_rate ) {
 
+			if( array_key_exists( $tax_rate->name . '-' . $tax_rate->description, $data ) ) {
+				continue; // We've already pulled numbers for this country / region
+			}
+
 			$location = edd_get_country_name( $tax_rate->name );
 
 			if ( ! empty( $tax_rate->description ) ) {
@@ -149,7 +153,7 @@ class Tax_Collected_By_Location extends List_Table {
 			$all_orders[0]['tax']   -= $results[0]['tax'];
 			$all_orders[0]['total'] -= $results[0]['total'];
 
-			$data[] = array(
+			$data[ $tax_rate->name . '-' . $tax_rate->description ] = array(
 				'country'  => $location,
 				'from'     => $from,
 				'to'       => $to,
@@ -161,7 +165,7 @@ class Tax_Collected_By_Location extends List_Table {
 
 		if( $all_orders[0]['total'] > 0 && $all_orders[0]['tax'] > 0 ) {
 
-			$data[] = array(
+			$data[ 'global' ] = array(
 				'country'  => __( 'Global Rate', 'easy-digital-downloads' ),
 				'from'     => $from,
 				'to'       => $to,
