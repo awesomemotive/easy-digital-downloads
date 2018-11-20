@@ -1193,7 +1193,7 @@ function edd_render_product_notes_field( $post_id ) {
 	$product_notes = edd_get_product_notes( $post_id );
 ?>
 	<textarea rows="1" cols="40" class="large-texarea" name="edd_product_notes" id="edd_product_notes_field"><?php echo esc_textarea( $product_notes ); ?></textarea>
-	<p><?php printf( __( 'Special instructions for this %s. These will be added to the sales receipt, and may be used by some extensions or themes.', 'easy-digital-downloads' ), strtolower( edd_get_label_singular() ) ); ?></p>
+	<p><?php printf( __( 'Special instructions for this %s. These will be added to the purchase receipt, and may be used by some extensions or themes.', 'easy-digital-downloads' ), strtolower( edd_get_label_singular() ) ); ?></p>
 <?php
 }
 add_action( 'edd_product_notes_meta_box_fields', 'edd_render_product_notes_field' );
