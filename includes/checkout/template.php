@@ -772,12 +772,19 @@ add_action( 'edd_checkout_form_top', 'edd_discount_field', -1 );
  * @return void
  */
 function edd_terms_agreement() {
+
+	/**
+	 * No terms agreement output of any kind should ever show unless the checkbox
+     * is present for the customer to check: 'Agree to Terms' setting.
+     */
 	if ( edd_get_option( 'show_agree_to_terms', false ) ) {
+
 		$agree_text  = edd_get_option( 'agree_text', '' );
 		$agree_label = edd_get_option( 'agree_label', __( 'Agree to Terms?', 'easy-digital-downloads' ) );
 
 		ob_start();
-?>
+        ?>
+
 		<fieldset id="edd_terms_agreement">
 			<div id="edd_terms" class="edd-terms" style="display:none;">
 				<?php
@@ -790,40 +797,13 @@ function edd_terms_agreement() {
 				<a href="#" class="edd_terms_links"><?php _e( 'Show Terms', 'easy-digital-downloads' ); ?></a>
 				<a href="#" class="edd_terms_links" style="display:none;"><?php _e( 'Hide Terms', 'easy-digital-downloads' ); ?></a>
 			</div>
-
-			<?php if ( '1' !== edd_get_option( 'show_agree_to_privacy_policy', false ) && '1' === edd_get_option( 'show_privacy_policy_on_checkout', false ) ) : ?>
-				<?php
-
-				$privacy_page    = get_option( 'wp_page_for_privacy_policy' );
-
-				if ( ! empty( $privacy_page ) ) {
-
-					$privacy_text    = get_post_field( 'post_content', $privacy_page );
-
-					if ( ! empty( $privacy_text  ) ) {
-						?>
-						<div id="edd-privacy-policy" class="edd-terms" style="display:none;">
-								<?php
-								do_action( 'edd_before_privacy_policy' );
-								echo wpautop( do_shortcode( stripslashes( $privacy_text ) ) );
-								do_action( 'edd_after_privacy_policy' );
-								?>
-						</div>
-						<div id="edd-show-privacy-policy" class="edd-show-terms">
-							<a href="#" class="edd_terms_links"><?php _e( 'Show Privacy Policy', 'easy-digital-downloads' ); ?></a>
-							<a href="#" class="edd_terms_links" style="display:none;"><?php _e( 'Hide Privacy Policy', 'easy-digital-downloads' ); ?></a>
-						</div>
-						<?php
-					}
-
-				}
-			endif ?>
 			<div class="edd-terms-agreement">
 				<input name="edd_agree_to_terms" class="required" type="checkbox" id="edd_agree_to_terms" value="1"/>
 				<label for="edd_agree_to_terms"><?php echo stripslashes( $agree_label ); ?></label>
 			</div>
 		</fieldset>
-<?php
+
+        <?php
 		$html_output = ob_get_clean();
 
 		echo apply_filters( 'edd_checkout_terms_agreement_html', $html_output );
@@ -841,45 +821,66 @@ add_action( 'edd_purchase_form_before_submit', 'edd_terms_agreement' );
  * @return void
  */
 function edd_privacy_agreement() {
-	if ( '1' === edd_get_option( 'show_agree_to_privacy_policy', false ) ) {
-		$agree_label     = edd_get_option( 'privacy_agree_label', __( 'Agree to Privacy Policy?', 'easy-digital-downloads' ) );
+
+    $show_privacy_policy_checkbox = edd_get_option( 'show_agree_to_privacy_policy', false );
+	$show_privacy_policy_text     = edd_get_option( 'show_privacy_policy_on_checkout', false );
+
+	/**
+	 * Privacy Policy output has dual functionality, unlike Agree to Terms output:
+     *
+     * 1. A checkbox (and associated label) can show on checkout if the 'Agree to Privacy Policy' setting
+     *    is checked. This is because a Privacy Policy can be agreed upon without displaying the policy
+     *    itself. Keep in mind the label field supports anchor tags, so the policy can be linked to.
+     *
+	 * 2. The Privacy Policy text, which is post_content pulled from the WP core Privacy Policy page when
+	 *    you have the 'Show the Privacy Policy on checkout' setting checked, can be displayed on checkout
+     *    regardless of whether or not the customer has to explicitly agreed to the policy by checking the
+     *    checkbox from point #1 above.
+     *
+     * Because these two display options work independently, having either setting checked triggers output.
+	 */
+	if ( '1' === $show_privacy_policy_checkbox || '1' === $show_privacy_policy_text ) {
+
+		$agree_label  = edd_get_option( 'privacy_agree_label', __( 'Agree to Privacy Policy?', 'easy-digital-downloads' ) );
+		$privacy_page = get_option( 'wp_page_for_privacy_policy' );
+		$privacy_text = get_post_field( 'post_content', $privacy_page );
 
 		ob_start();
 		?>
 		<fieldset id="edd-privacy-policy-agreement">
 
-			<?php if ( '1' === edd_get_option( 'show_privacy_policy_on_checkout', false ) ) : ?>
-				<?php
+			<?php
 
-				$privacy_page    = get_option( 'wp_page_for_privacy_policy' );
+                // Show Privacy Policy text if the setting is checked, the WP Privacy Page is set, and content exists.
+                if ( '1' === $show_privacy_policy_text && ( $privacy_page && ! empty( $privacy_text ) ) ) {
+                    ?>
+                    <div id="edd-privacy-policy" class="edd-terms" style="display:none;">
+                        <?php
+                        do_action( 'edd_before_privacy_policy' );
+                        echo wpautop( do_shortcode( stripslashes( $privacy_text ) ) );
+                        do_action( 'edd_after_privacy_policy' );
+                        ?>
+                    </div>
+                    <div id="edd-show-privacy-policy" class="edd-show-terms">
+                        <a href="#"
+                           class="edd_terms_links"><?php _e( 'Show Privacy Policy', 'easy-digital-downloads' ); ?></a>
+                        <a href="#" class="edd_terms_links"
+                           style="display:none;"><?php _e( 'Hide Privacy Policy', 'easy-digital-downloads' ); ?></a>
+                    </div>
+                    <?php
+                }
 
-				if ( ! empty( $privacy_page ) ) {
+                // Show Privacy Policy checkbox and label if the setting is checked.
+				if ( '1' === $show_privacy_policy_checkbox ) {
+					?>
+                    <div class="edd-privacy-policy-agreement">
+                        <input name="edd_agree_to_privacy_policy" class="required" type="checkbox" id="edd-agree-to-privacy-policy" value="1"/>
+                        <label for="edd-agree-to-privacy-policy"><?php echo stripslashes( $agree_label ); ?></label>
+                    </div>
+                    <?php
+                }
+            ?>
 
-					$privacy_text    = get_post_field( 'post_content', $privacy_page );
-
-					if ( ! empty( $privacy_text  ) ) {
-						?>
-						<div id="edd-privacy-policy" class="edd-terms" style="display:none;">
-							<?php
-							do_action( 'edd_before_privacy_policy' );
-							echo wpautop( do_shortcode( stripslashes( $privacy_text ) ) );
-							do_action( 'edd_after_privacy_policy' );
-							?>
-						</div>
-						<div id="edd-show-privacy-policy" class="edd-show-terms">
-							<a href="#" class="edd_terms_links"><?php _e( 'Show Privacy Policy', 'easy-digital-downloads' ); ?></a>
-							<a href="#" class="edd_terms_links" style="display:none;"><?php _e( 'Hide Privacy Policy', 'easy-digital-downloads' ); ?></a>
-						</div>
-						<?php
-					}
-
-				}
-			endif ?>
-
-			<div class="edd-privacy-policy-agreement">
-				<input name="edd_agree_to_privacy_policy" class="required" type="checkbox" id="edd-agree-to-privacy-policy" value="1"/>
-				<label for="edd-agree-to-privacy-policy"><?php echo stripslashes( $agree_label ); ?></label>
-			</div>
 		</fieldset>
 		<?php
 		$html_output = ob_get_clean();
