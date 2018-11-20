@@ -786,17 +786,28 @@ function edd_terms_agreement() {
         ?>
 
 		<fieldset id="edd_terms_agreement">
-			<div id="edd_terms" class="edd-terms" style="display:none;">
-				<?php
-					do_action( 'edd_before_terms' );
-					echo wpautop( stripslashes( $agree_text ) );
-					do_action( 'edd_after_terms' );
-				?>
-			</div>
-			<div id="edd_show_terms" class="edd-show-terms">
-				<a href="#" class="edd_terms_links"><?php _e( 'Show Terms', 'easy-digital-downloads' ); ?></a>
-				<a href="#" class="edd_terms_links" style="display:none;"><?php _e( 'Hide Terms', 'easy-digital-downloads' ); ?></a>
-			</div>
+
+			<?php
+                // Show Agreement Text output only if content exists. Remember that the Agree to Terms
+                // label supports anchors tags, so the terms may be on a separate page.
+                if ( ! empty( $agree_text ) ) {
+                    ?>
+
+                    <div id="edd_terms" class="edd-terms" style="display:none;">
+                        <?php
+                            do_action( 'edd_before_terms' );
+                            echo wpautop( stripslashes( $agree_text ) );
+                            do_action( 'edd_after_terms' );
+                        ?>
+                    </div>
+                    <div id="edd_show_terms" class="edd-show-terms">
+                        <a href="#" class="edd_terms_links"><?php _e( 'Show Terms', 'easy-digital-downloads' ); ?></a>
+                        <a href="#" class="edd_terms_links" style="display:none;"><?php _e( 'Hide Terms', 'easy-digital-downloads' ); ?></a>
+                    </div>
+                    <?php
+                }
+            ?>
+
 			<div class="edd-terms-agreement">
 				<input name="edd_agree_to_terms" class="required" type="checkbox" id="edd_agree_to_terms" value="1"/>
 				<label for="edd_agree_to_terms"><?php echo stripslashes( $agree_label ); ?></label>
@@ -850,7 +861,6 @@ function edd_privacy_agreement() {
 		<fieldset id="edd-privacy-policy-agreement">
 
 			<?php
-
                 // Show Privacy Policy text if the setting is checked, the WP Privacy Page is set, and content exists.
                 if ( '1' === $show_privacy_policy_text && ( $privacy_page && ! empty( $privacy_text ) ) ) {
                     ?>
