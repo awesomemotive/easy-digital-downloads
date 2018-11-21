@@ -1495,7 +1495,7 @@ function edd_register_payment_gateways_report( $reports ) {
 			'views' => array(
 				'chart' => array(
 					'data_callback' => function() use ( $filter ) {
-                        $stats = new EDD\Stats();
+						$stats = new EDD\Stats();
 						$g = $stats->get_gateway_sales( array(
 							'grouped' => true,
 							'range'   => $filter['range'],
@@ -1503,18 +1503,18 @@ function edd_register_payment_gateways_report( $reports ) {
 
 						$gateways = array_flip( array_keys( edd_get_payment_gateways() ) );
 
-                        foreach ( $g as $data ) {
-                            $gateways[ $data->gateway ] = $data->total;
-                        }
+						foreach ( $g as $data ) {
+							$gateways[ $data->gateway ] = $data->total;
+						}
 
-                        $gateways = array_map( function( $v ) {
-                            return null === $v
-                                ? 0
-                                : $v;
-                        }, $gateways );
+						$gateways = array_map( function( $v ) {
+							return null === $v
+								? 0
+								: $v;
+						}, $gateways );
 
 						return array(
-							'sales' => array_filter( array_values( $gateways ) ),
+							'sales' => array_values( $gateways ),
 						);
 					},
 					'type' => 'pie',
@@ -1562,7 +1562,7 @@ function edd_register_payment_gateways_report( $reports ) {
 						}, $gateways ) );
 
 						return array(
-							'earnings' => array_filter( $gateways ),
+							'earnings' => $gateways,
 						);
 					},
 					'type' => 'pie',
