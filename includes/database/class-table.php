@@ -13,7 +13,6 @@ namespace EDD\Database;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
 /**
  * A base WordPress database table class, which facilitates the creation of
  * and schema changes to individual database tables.
@@ -31,7 +30,7 @@ if ( ! class_exists( '\\EDD\\Database\\Tables\\Base' ) ) :
  *
  * @since 3.0
  */
-abstract class Table extends \EDD\Database\Base {
+abstract class Table extends Base {
 
 	/**
 	 * @var string Table name, without the global table prefix
@@ -89,14 +88,35 @@ abstract class Table extends \EDD\Database\Base {
 	protected $charset_collation = '';
 
 	/**
-	 * @var string The last error, if any.
-	 */
-	protected $last_error = '';
-
-	/**
 	 * @var array Key => value array of versions => methods
 	 */
 	protected $upgrades = array();
+
+	/** Interfaces ************************************************************/
+
+	/**
+	 * Array of interface objects instantiated during init
+	 *
+	 * @since 3.0
+	 *
+	 * @var array
+	 */
+	private $interfaces = array();
+
+	/**
+	 * Array of interface keys
+	 *
+	 * @since 3.0
+	 *
+	 * @var array
+	 */
+	private $interface_keys = array(
+		'schema' => false,
+		'table'  => false,
+		'query'  => false,
+		'object' => false,
+		'meta'   => false
+	);
 
 	/** Methods ***************************************************************/
 
@@ -546,49 +566,6 @@ abstract class Table extends \EDD\Database\Base {
 		return true;
 	}
 
-	/** Protected *************************************************************/
-
-	/**
-	 * Return the global database interface
-	 *
-	 * @since 3.0
-	 *
-	 * @return \wpdb Database interface or False
-	 */
-	protected static function get_db() {
-		return isset( $GLOBALS['wpdb'] )
-			? $GLOBALS['wpdb']
-			: false;
-	}
-
-	/**
-	 * Check if the query failed
-	 *
-	 * @since 3.0
-	 *
-	 * @param mixed $result
-	 * @return boolean
-	 */
-	protected function is_success( $result = false ) {
-
-		// Bail if no row exists
-		if ( empty( $result ) ) {
-			$retval = false;
-
-		// Bail if an error occurred
-		} elseif ( is_wp_error( $result ) ) {
-			$this->last_error = $result;
-			$retval           = false;
-
-		// No errors
-		} else {
-			$retval = true;
-		}
-
-		// Return the result
-		return (bool) $retval;
-	}
-
 	/** Private ***************************************************************/
 
 	/**
@@ -830,4 +807,3 @@ abstract class Table extends \EDD\Database\Base {
 		return $clean;
 	}
 }
-endif;

@@ -955,22 +955,34 @@ function default_display_charts_group( $report ) {
 		return;
 	}
 
-	$charts = $report->get_endpoints( 'charts' ); ?>
+	$charts     = $report->get_endpoints( 'charts' );
+	$chart_data = array(
+		'charts'   => array(),
+	);
 
-	<div id="edd-reports-charts-wrap" class="edd-report-wrap"><?php
+	foreach ( $charts as $endpoint_id => $chart ) {
+		$chart_data['charts'][ $endpoint_id ] = $chart->get_manifest()->build_config();
+?>
 
-		foreach ( $charts as $endpoint_id => $chart ) :
+	<div id="edd-reports-charts-wrap" class="edd-report-wrap">
 
-			?><div class="edd-reports-chart edd-reports-chart-<?php echo esc_attr( $chart->get_type() ); ?>" id="edd-reports-table-<?php echo esc_attr( $endpoint_id ); ?>">
-				<h3><?php echo esc_html( $chart->get_label() ); ?></h3><?php
+			<div class="edd-reports-chart edd-reports-chart-<?php echo esc_attr( $chart->get_type() ); ?>" id="edd-reports-table-<?php echo esc_attr( $endpoint_id ); ?>">
+				<h3><?php echo esc_html( $chart->get_label() ); ?></h3>
 
-				$chart->display();
+				<?php $chart->display(); ?>
+			</div>
 
-			?></div><?php
+			<div class="clear"></div>
 
-		endforeach;
+	</div>
+<?php
+	}
 
-	?><div class="clear"></div></div><?php
+	wp_localize_script(
+		'edd-admin-reports',
+		'eddAdminReportsCharts',
+		$chart_data
+	);
 }
 
 /**
