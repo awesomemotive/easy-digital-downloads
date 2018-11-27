@@ -824,4 +824,92 @@ class Column extends Base {
 		// Return the new UUID
 		return $uuid;
 	}
+
+	/**
+	 * Return a string representation of what this column's properties look like
+	 * in a MySQL
+	 *
+	 * @since 3.0
+	 *
+	 * return string
+	 */
+	public function get_create_string() {
+
+		// Default return val
+		$retval = '';
+
+		// Bail if no name
+		if ( ! empty( $this->name ) ) {
+			$retval .= $this->name;
+		}
+
+		// Type
+		if ( ! empty( $this->type ) ) {
+			$retval .= " {$this->type}";
+		}
+
+		// Length
+		if ( ! empty( $this->length ) ) {
+			$retval .= '(' . $this->length . ')';
+		}
+
+		// Unsigned
+		if ( ! empty( $this->unsigned ) ) {
+			$retval .= " unsigned";
+		}
+
+		// Zerofill
+		if ( ! empty( $this->zerofill ) ) {
+			// TBD
+		}
+
+		// Binary
+		if ( ! empty( $this->binary ) ) {
+			// TBD
+		}
+
+		// Allow null
+		if ( ! empty( $this->allow_null ) ) {
+			$retval .= " NOT NULL ";
+		}
+
+		// Default
+		if ( ! empty( $this->default ) ) {
+			$retval .= " default '{$this->default}'";
+
+		// A literal false means no default value
+		} elseif ( false !== $this->default ) {
+
+			// Numeric
+			if ( $this->is_numeric() ) {
+				$retval .= " default '0'";
+			} elseif ( $this->is_type( 'datetime' ) ) {
+				$retval .= " default '0000-00-00 00:00:00'";
+			} else {
+				$retval .= " default ''";
+			}
+		}
+
+		// Extra
+		if ( ! empty( $this->extra ) ) {
+			$retval .= " {$this->extra}";
+		}
+
+		// Encoding
+		if ( ! empty( $this->encoding ) ) {
+
+		} else {
+
+		}
+
+		// Collation
+		if ( ! empty( $this->collation ) ) {
+
+		} else {
+
+		}
+
+		// Return the create string
+		return $retval;
+	}
 }
