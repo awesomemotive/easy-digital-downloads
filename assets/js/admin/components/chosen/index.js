@@ -51,6 +51,7 @@ jQuery( document ).ready( function( $ ) {
 			select_type = select.data( 'search-type' ),
 			no_bundles = container.hasClass( 'no-bundles' ),
 			variations = container.hasClass( 'variations' ),
+			variations_only = container.hasClass( 'variations-only' ),
 
 			lastKey = e.which,
 			search_type = 'edd_download_search';
@@ -105,6 +106,7 @@ jQuery( document ).ready( function( $ ) {
 					action: search_type,
 					no_bundles: no_bundles,
 					variations: variations,
+					variations_only: variations_only,
 				},
 
 				beforeSend: function() {

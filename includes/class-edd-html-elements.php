@@ -128,7 +128,6 @@ class EDD_HTML_Elements {
 
 				if ( false === $args['variations'] || ! $args['show_variations_only'] ) {
 					$title = esc_html( $product->post_title );
-var_dump($args); exit;
 					if ( $has_variations && ! $args['show_variations_only'] ) {
 						$title .= ' (' . __( 'All Price Options', 'easy-digital-downloads' ) . ')';
 					}
@@ -194,6 +193,10 @@ var_dump($args); exit;
 
 		if ( $args['variations'] ) {
 			$args['class'] .= ' variations';
+		}
+
+		if ( $args['show_variations_only'] ) {
+			$args['class'] .= ' variations-only';
 		}
 
 		// 'all' gets created as an option if passed via the `selected` argument.
