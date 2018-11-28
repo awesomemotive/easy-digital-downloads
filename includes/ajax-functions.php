@@ -609,6 +609,10 @@ function edd_ajax_download_search() {
 		? filter_var( $_GET['variations'], FILTER_VALIDATE_BOOLEAN )
 		: false;
 
+	$variations_only = isset( $_GET['variations_only'] )
+		? filter_var( $_GET['variations_only'], FILTER_VALIDATE_BOOLEAN )
+		: false;
+
 	// Are we including all statuses, or only public ones?
 	$status = ! current_user_can( 'edit_products' )
 		? apply_filters( 'edd_product_dropdown_status_nopriv', array( 'publish' ) )
@@ -647,14 +651,18 @@ function edd_ajax_download_search() {
 		// Loop through all items...
 		foreach ( $items as $post_id => $title ) {
 
+			// Look for variable pricing
+			$prices = edd_get_variable_prices( $post_id );
+
+			if ( ! empty( $prices ) && ( false === $variations|| ! $variations_only ) ) {
+				$title .= ' (' . __( 'All Price Options', 'easy-digital-downloads' ) . ')';
+			}
+
 			// Add item to results array
 			$search['results'][] = array(
 				'id'   => $post_id,
 				'name' => $title
 			);
-
-			// Look for variable pricing
-			$prices = edd_get_variable_prices( $post_id );
 
 			// Maybe include variable pricing
 			if ( ! empty( $variations ) && ! empty( $prices ) ) {
