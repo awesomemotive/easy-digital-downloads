@@ -462,15 +462,6 @@ class EDD_CLI extends WP_CLI_Command {
 		}
 	}
 
-	/*
-	 * Add an 'orders' method to call to the existing payments method, since we're changing this terminology in 3.0.
-	 *
-	 * @since 3.0
-	 */
-	public function orders( $args, $assoc_args ) {
-		$this->payments( $args, $assoc_args );
-	}
-
 	/**
 	 * Create sample purchase data for your EDD site
 	 *
