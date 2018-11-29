@@ -84,10 +84,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var core_js_modules_es6_function_name__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_function_name__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es6.regexp.replace */ "./node_modules/core-js/modules/es6.regexp.replace.js");
 /* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/objectSpread */ "./node_modules/@babel/runtime/helpers/objectSpread.js");
-/* harmony import */ var _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var utils_chosen_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! utils/chosen.js */ "./assets/js/utils/chosen.js");
-
+/* harmony import */ var utils_chosen_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! utils/chosen.js */ "./assets/js/utils/chosen.js");
 
 
 
@@ -98,18 +95,10 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 jQuery(document).ready(function ($) {
-  // If the input does not have a search type, assume no searching is needed.
+  // Globally apply to elements on the page.
   $('.edd-select-chosen').each(function () {
     var el = $(this);
-    var mergedVars = utils_chosen_js__WEBPACK_IMPORTED_MODULE_3__["chosenVars"];
-
-    if (!el.data('search-type')) {
-      mergedVars = _babel_runtime_helpers_objectSpread__WEBPACK_IMPORTED_MODULE_2___default()({
-        disable_search_threshold: 13
-      }, utils_chosen_js__WEBPACK_IMPORTED_MODULE_3__["chosenVars"]);
-    }
-
-    el.chosen(mergedVars);
+    el.chosen(Object(utils_chosen_js__WEBPACK_IMPORTED_MODULE_2__["getChosenVars"])(el));
   });
   $('.edd-select-chosen .chosen-search input').each(function () {
     // Bail if placeholder already set
@@ -488,14 +477,16 @@ __webpack_require__.r(__webpack_exports__);
 /*!***********************************!*\
   !*** ./assets/js/utils/chosen.js ***!
   \***********************************/
-/*! exports provided: chosenVars */
+/*! exports provided: chosenVars, getChosenVars */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "chosenVars", function() { return chosenVars; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getChosenVars", function() { return getChosenVars; });
 /* global edd_vars */
 var chosenVars = {
+  disable_search_threshold: 13,
   search_contains: true,
   inherit_select_classes: true,
   single_backstroke_delete: false,
@@ -503,64 +494,23 @@ var chosenVars = {
   placeholder_text_multiple: edd_vars.one_or_more_option,
   no_results_text: edd_vars.no_results_text
 };
+/**
+ * Determine the variables used to initialie Chosen on an element.
+ *
+ * @param {Object} el select element.
+ * @return {Object} Variables for Chosen.
+ */
 
-/***/ }),
+var getChosenVars = function getChosenVars(el) {
+  var inputVars = chosenVars; // Ensure <select data-search-type="download"> or similar can use search always.
+  // These types of fields start with no options and are updated via AJAX.
 
-/***/ "./node_modules/@babel/runtime/helpers/defineProperty.js":
-/*!***************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/defineProperty.js ***!
-  \***************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
+  if (el.data('search-type')) {
+    delete inputVars.disable_search_threshold;
   }
 
-  return obj;
-}
-
-module.exports = _defineProperty;
-
-/***/ }),
-
-/***/ "./node_modules/@babel/runtime/helpers/objectSpread.js":
-/*!*************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/objectSpread.js ***!
-  \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var defineProperty = __webpack_require__(/*! ./defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
-
-function _objectSpread(target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
-    var ownKeys = Object.keys(source);
-
-    if (typeof Object.getOwnPropertySymbols === 'function') {
-      ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
-        return Object.getOwnPropertyDescriptor(source, sym).enumerable;
-      }));
-    }
-
-    ownKeys.forEach(function (key) {
-      defineProperty(target, key, source[key]);
-    });
-  }
-
-  return target;
-}
-
-module.exports = _objectSpread;
+  return inputVars;
+};
 
 /***/ }),
 
