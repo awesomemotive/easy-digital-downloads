@@ -1,7 +1,6 @@
 /* global edd_vars */
 
 export const chosenVars = {
-	disable_search_threshold: 13,
 	search_contains: true,
 	inherit_select_classes: true,
 	single_backstroke_delete: false,
