@@ -4,7 +4,21 @@
 import { chosenVars } from 'utils/chosen.js';
 
 jQuery( document ).ready( function( $ ) {
-	$( '.edd-select-chosen' ).chosen( chosenVars );
+
+	// If the input does not have a search type, assume no searching is needed.
+	$( '.edd-select-chosen' ).each( function() {
+		const el = $( this );
+		let mergedVars = chosenVars;
+
+		if ( ! el.data( 'search-type' ) ) {
+			mergedVars = {
+				disable_search_threshold: 13,
+				...chosenVars,
+			};
+		}
+
+		el.chosen( mergedVars );
+	} );
 
 	$( '.edd-select-chosen .chosen-search input' ).each( function() {
 		// Bail if placeholder already set
