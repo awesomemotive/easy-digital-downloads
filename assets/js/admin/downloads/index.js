@@ -1,7 +1,7 @@
 /**
  * Internal dependencies.
  */
-import { chosenVars } from 'utils/chosen.js';
+import { getChosenVars } from 'utils/chosen.js';
 import { edd_attach_tooltips } from 'admin/components/tooltips';
 import './bulk-edit.js';
 
@@ -105,7 +105,10 @@ var EDD_Download_Configuration = {
 			clone.insertAfter( row ).find( 'input, textarea, select' ).filter( ':visible' ).eq( 0 ).focus();
 
 			// Setup chosen fields again if they exist
-			clone.find( '.edd-select-chosen' ).chosen( chosenVars );
+			clone.find( '.edd-select-chosen' ).each( function() {
+				const el = $( this );
+				el.chosen( getChosenVars( el ) );
+			} );
 			clone.find( '.edd-select-chosen' ).css( 'width', '100%' );
 			clone.find( '.edd-select-chosen .chosen-search input' ).attr( 'placeholder', edd_vars.search_placeholder );
 		} );

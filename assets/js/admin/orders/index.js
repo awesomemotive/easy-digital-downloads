@@ -1,7 +1,7 @@
 /**
  * Internal dependencies.
  */
-import { chosenVars } from 'utils/chosen.js';
+import { getChosenVars } from 'utils/chosen.js';
 
 jQuery( document ).ready( function( $ ) {
 	// Toggle advanced filters on Orders page.
@@ -213,7 +213,10 @@ var EDD_Add_Order = {
 
 				if ( response.html ) {
 					$( '.customer-address-select-wrap' ).html( response.html ).show();
-					$( '.customer-address-select-wrap select' ).chosen( chosenVars );
+					$( '.customer-address-select-wrap select' ).each( function() {
+						const el = $( this );
+						el.chosen( getChosenVars( el ) );
+					} );
 				} else {
 					$( '.customer-address-select-wrap' ).html( '' ).hide();
 				}

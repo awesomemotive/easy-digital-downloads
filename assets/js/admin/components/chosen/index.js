@@ -3,23 +3,14 @@
 /**
  * Internal dependencies.
  */
-import { chosenVars } from 'utils/chosen.js';
+import { getChosenVars } from 'utils/chosen.js';
 
 jQuery( document ).ready( function( $ ) {
 
-	// If the input does not have a search type, assume no searching is needed.
+	// Globally apply to elements on the page.
 	$( '.edd-select-chosen' ).each( function() {
 		const el = $( this );
-		let mergedVars = chosenVars;
-
-		if ( ! el.data( 'search-type' ) ) {
-			mergedVars = {
-				disable_search_threshold: 13,
-				...chosenVars,
-			};
-		}
-
-		el.chosen( mergedVars );
+		el.chosen( getChosenVars( el ) );
 	} );
 
 	$( '.edd-select-chosen .chosen-search input' ).each( function() {
