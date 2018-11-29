@@ -1,3 +1,5 @@
+/* global _ */
+
 /**
  * Internal dependencies.
  */
@@ -30,7 +32,6 @@ jQuery( document ).ready( function( $ ) {
 			placeholder = selectElem.data( 'search-placeholder' );
 
 		if ( placeholder ) {
-			console.log( placeholder );
 			$( this ).attr( 'placeholder', placeholder );
 		}
 	} );
@@ -56,7 +57,7 @@ jQuery( document ).ready( function( $ ) {
 		typingTimer;
 
 	// Replace options with search results
-	$( document.body ).on( 'keyup', typingTimerElements, function( e ) {
+	$( document.body ).on( 'keyup', typingTimerElements, _.debounce( function( e ) {
 		let	element = $( this ),
 			val = element.val(),
 			container = element.closest( '.edd-select-chosen' ),
@@ -108,52 +109,48 @@ jQuery( document ).ready( function( $ ) {
 			container.append( '<span class="spinner is-active"></span>' );
 		}
 
-		clearTimeout( typingTimer );
+		$.ajax( {
+			type: 'GET',
+			dataType: 'json',
+			url: ajaxurl,
+			data: {
+				s: val,
+				action: search_type,
+				no_bundles: no_bundles,
+				variations: variations,
+				variations_only: variations_only,
+			},
 
-		typingTimer = setTimeout( function() {
-			$.ajax( {
-				type: 'GET',
-				dataType: 'json',
-				url: ajaxurl,
-				data: {
-					s: val,
-					action: search_type,
-					no_bundles: no_bundles,
-					variations: variations,
-					variations_only: variations_only,
-				},
+			beforeSend: function() {
+				select.closest( 'ul.chosen-results' ).empty();
+			},
 
-				beforeSend: function() {
-					select.closest( 'ul.chosen-results' ).empty();
-				},
+			success: function( data ) {
+				// Remove all options but those that are selected
+				$( 'option:not(:selected)', select ).remove();
 
-				success: function( data ) {
-					// Remove all options but those that are selected
-					$( 'option:not(:selected)', select ).remove();
+				// Add any option that doesn't already exist
+				$.each( data, function( key, item ) {
+					if ( ! $( 'option[value="' + item.id + '"]', select ).length ) {
+						select.prepend( '<option value="' + item.id + '">' + item.name + '</option>' );
+					}
+				} );
 
-					// Add any option that doesn't already exist
-					$.each( data, function( key, item ) {
-						if ( ! $( 'option[value="' + item.id + '"]', select ).length ) {
-							select.prepend( '<option value="' + item.id + '">' + item.name + '</option>' );
-						}
-					} );
+				// Get the text immediately before triggering an update.
+				// Any sooner will cause the text to jump around.
+				const val = element.val();
 
-					// Get the text immediately before triggering an update.
-					// Any sooner will cause the text to jump around.
-					const val = element.val();
+				// Update the options
+				select.trigger( 'chosen:updated' );
 
-					// Update the options
-					select.trigger( 'chosen:updated' );
-
-					element.val( val );
-				},
-			} ).fail( function( response ) {
-				if ( window.console && window.console.log ) {
-					console.log( response );
-				}
-			} ).done( function( response ) {
-				container.children( '.spinner' ).remove();
-			} );
-		}, userInteractionInterval );
-	} );
+				element.val( val );
+			},
+		} ).fail( function( response ) {
+			if ( window.console && window.console.log ) {
+				console.log( response );
+			}
+		} ).done( function( response ) {
+			container.children( '.spinner' ).remove();
+		} );
+	}, userInteractionInterval ) );
 } );
