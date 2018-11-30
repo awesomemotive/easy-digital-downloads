@@ -424,6 +424,11 @@ class EDD_Payment_History_Table extends List_Table {
 				break;
 			case 'gateway':
 				$value = edd_get_gateway_admin_label( $order->gateway );
+
+				if ( empty( $value ) ) {
+					$value = '&mdash;';
+				}
+
 				break;
 			default:
 				$value = method_exists( $order, 'get_' . $column_name )
