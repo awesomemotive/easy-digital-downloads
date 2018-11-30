@@ -213,12 +213,6 @@ class Order_Items_Table extends List_Table {
 		$status      = strtolower( $order_item->status );
 		$row_actions = array();
 
-		// Edit
-		$row_actions['edit'] = '<a href="' . add_query_arg( array(
-				'edd-action' => 'edit_order_item',
-				'order_item' => $order_item->id,
-			), $base ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
-
 		// No state
 		$state = '';
 
@@ -231,10 +225,6 @@ class Order_Items_Table extends List_Table {
 				), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Complete', 'easy-digital-downloads' ) . '</a>';
 
 		} elseif ( in_array( $status, array( 'inherit', 'publish' ), true ) ) {
-
-			if ( edd_get_download_files( $order_item->id, $order_item->price_id ) ) {
-				$row_actions['copy'] = '<span class="edd-copy-download-link-wrapper"><a href="" class="edd-copy-download-link" data-download-id="' . esc_attr( $order_item->id ) . '" data-price-id="' . esc_attr( $order_item->id ) . '">' . __( 'Link', 'easy-digital-downloads' ) . '</a>';
-			}
 
 			$row_actions['refund'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
 					'edd-action' => 'handle_order_item_change',
@@ -252,12 +242,6 @@ class Order_Items_Table extends List_Table {
 				), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Reverse', 'easy-digital-downloads' ) . '</a>';
 		}
 
-		// Delete
-		$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-				'edd-action' => 'delete_order_item',
-				'order_item' => $order_item->id,
-			), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
-
 		// Filter all order_item row actions
 		$row_actions = apply_filters( 'edd_order_item_row_actions', $row_actions, $order_item );
 
@@ -268,9 +252,9 @@ class Order_Items_Table extends List_Table {
 
 		// Wrap order_item title in strong anchor
 		$order_item_title = '<strong><a class="row-title" href="' . add_query_arg( array(
-				'edd-action' => 'edit_order_item',
-				'order_item' => $order_item->id,
-			), $base ) . '">' . $order_item->get_order_item_name() . '</a>' . $state . '</strong>';
+				'action' => 'edit',
+				'post'  => $order_item->product_id,
+			), admin_url( 'post.php' )  ) . '">' . $order_item->get_order_item_name() . '</a>' . $state . '</strong>';
 
 		// Return order_item title & row actions
 		return $order_item_title . $this->row_actions( $row_actions );
@@ -330,7 +314,6 @@ class Order_Items_Table extends List_Table {
 	public function get_bulk_actions() {
 		return array(
 			'refund' => __( 'Refund', 'easy-digital-downloads' ),
-			'delete' => __( 'Delete', 'easy-digital-downloads' ),
 		);
 	}
 
