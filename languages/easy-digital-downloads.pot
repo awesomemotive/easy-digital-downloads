@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 2.9.8\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2018-10-01 20:25:04+00:00\n"
+"POT-Creation-Date: 2018-12-01 06:17:31+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1765,7 +1765,7 @@ msgstr ""
 
 #: includes/admin/downloads/metabox.php:1031
 #: includes/admin/settings/register-settings.php:747
-#: includes/admin/thickbox.php:59 includes/checkout/template.php:984
+#: includes/admin/thickbox.php:59 includes/checkout/template.php:997
 #: includes/shortcodes.php:49 includes/template-functions.php:78
 msgid "Purchase"
 msgstr ""
@@ -1874,7 +1874,7 @@ msgstr ""
 msgid "Products (Raw)"
 msgstr ""
 
-#: includes/admin/import/class-batch-import-payments.php:602
+#: includes/admin/import/class-batch-import-payments.php:611
 msgid "payments"
 msgstr ""
 
@@ -2420,24 +2420,24 @@ msgstr ""
 msgid "Type to search all Countries"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:753
+#: includes/admin/payments/view-order-details.php:754
 #: includes/admin/settings/register-settings.php:333
 msgid "Select a state"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:756
+#: includes/admin/payments/view-order-details.php:757
 msgid "Type to search all States/Provinces"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:777
+#: includes/admin/payments/view-order-details.php:778
 msgid "Payment Notes"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:792
+#: includes/admin/payments/view-order-details.php:793
 msgid "No payment notes"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:798
+#: includes/admin/payments/view-order-details.php:799
 msgid "Add Note"
 msgstr ""
 
@@ -3998,7 +3998,7 @@ msgid "The button label for completing a free purchase."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:754
-#: includes/checkout/template.php:987
+#: includes/checkout/template.php:1000
 msgid "Free Download"
 msgstr ""
 
@@ -5468,35 +5468,39 @@ msgstr ""
 msgid "Enter discount"
 msgstr ""
 
-#: includes/checkout/template.php:777 includes/checkout/template.php:845
+#: includes/checkout/template.php:783
 msgid "Agree to Terms?"
 msgstr ""
 
-#: includes/checkout/template.php:790
+#: includes/checkout/template.php:804
 msgid "Show Terms"
 msgstr ""
 
-#: includes/checkout/template.php:791
+#: includes/checkout/template.php:805
 msgid "Hide Terms"
 msgstr ""
 
-#: includes/checkout/template.php:813 includes/checkout/template.php:870
+#: includes/checkout/template.php:855
+msgid "Agree to Privacy Policy?"
+msgstr ""
+
+#: includes/checkout/template.php:877
 msgid "Show Privacy Policy"
 msgstr ""
 
-#: includes/checkout/template.php:814 includes/checkout/template.php:871
+#: includes/checkout/template.php:879
 msgid "Hide Privacy Policy"
 msgstr ""
 
-#: includes/checkout/template.php:901
+#: includes/checkout/template.php:914
 msgid "Purchase Total:"
 msgstr ""
 
-#: includes/checkout/template.php:927
+#: includes/checkout/template.php:940
 msgid "Go back"
 msgstr ""
 
-#: includes/checkout/template.php:950
+#: includes/checkout/template.php:963
 msgid "Next"
 msgstr ""
 
@@ -7048,7 +7052,7 @@ msgstr ""
 msgid "Status changed from %s to %s"
 msgstr ""
 
-#: includes/payments/actions.php:460 includes/payments/actions.php:520
+#: includes/payments/actions.php:460 includes/payments/actions.php:522
 msgid "Error resuming payment."
 msgstr ""
 
@@ -7056,15 +7060,15 @@ msgstr ""
 msgid "Payment recovery triggered URL"
 msgstr ""
 
-#: includes/payments/actions.php:542 includes/payments/actions.php:576
+#: includes/payments/actions.php:544 includes/payments/actions.php:578
 msgid "To complete this payment, please login to your account."
 msgstr ""
 
-#: includes/payments/actions.php:544
+#: includes/payments/actions.php:546
 msgid "Lost Password"
 msgstr ""
 
-#: includes/payments/actions.php:545 templates/shortcode-login.php:33
+#: includes/payments/actions.php:547 templates/shortcode-login.php:33
 msgid "Lost Password?"
 msgstr ""
 
@@ -8438,7 +8442,7 @@ msgctxt "Address country"
 msgid "Country:"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:741
+#: includes/admin/payments/view-order-details.php:742
 msgctxt "State / province of address"
 msgid "State / Province:"
 msgstr ""
