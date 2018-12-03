@@ -384,14 +384,14 @@ const EDD_Edit_Payment = {
 				};
 
 			$.ajax( {
-				type: "POST",
+				type: 'POST',
 				data: postData,
 				url: ajaxurl,
 				success: function( link ) {
-					$( "#edd-download-link" ).dialog( {
+					$( '#edd-download-link' ).dialog( {
 						width: 400,
 					} ).html( '<textarea rows="10" cols="40" id="edd-download-link-textarea">' + link + '</textarea>' );
-					$( "#edd-download-link-textarea" ).focus().select();
+					$( '#edd-download-link-textarea' ).focus().select();
 					return false;
 				},
 			} ).fail( function( data ) {

@@ -226,6 +226,10 @@ class Order_Items_Table extends List_Table {
 
 		} elseif ( in_array( $status, array( 'inherit', 'publish' ), true ) ) {
 
+			if ( edd_get_download_files( $order_item->product_id, $order_item->price_id ) ) {
+				$row_actions['copy'] = '<span class="edd-copy-download-link-wrapper"><a href="" class="edd-copy-download-link" data-download-id="' . esc_attr( $order_item->product_id ) . '" data-price-id="' . esc_attr( $order_item->price_id ) . '">' . __( 'Copy Download Link', 'easy-digital-downloads' ) . '</a>';
+			}
+
 			$row_actions['refund'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
 					'edd-action' => 'handle_order_item_change',
 					'status'     => 'refunded',

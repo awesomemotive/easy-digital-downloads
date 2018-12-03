@@ -112,4 +112,4 @@ if ( empty( $order ) ) {
 
 </div><!-- /.wrap -->
 
-<div id="edd-download-link"></div>
+<div id="edd-download-link" title="<?php _e( 'Download Links', 'easy-digital-downloads' ); ?>"></div>
