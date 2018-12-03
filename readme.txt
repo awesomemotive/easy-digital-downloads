@@ -5,8 +5,8 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.4
-Tested up to: 4.9.8
-Stable Tag: 2.9.8
+Tested up to: 5.0
+Stable Tag: 2.9.9
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -188,6 +188,18 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+
+= 2.9.9, December 3, 2018 =
+* Fix: State/province cannot be updated on order details screen when country is changed.
+* Fix: "Show Privacy Policy" text link is positioned incorrectly.
+* Fix: "Agree to Terms?" text shows twice on checkout with some configurations.
+* Fix: Nonce verification failure when state/province field is not visible.
+* Fix: Fees / Discounts can be duplicated when payment recovery link is clicked.
+* Fix: Incorrect DocBlock for edd_currency_filter.
+* Fix: Slashes not removed when saving profile name field.
+* Fix: Item amount set to 0.00 improperly during CSV import if the "Products (Raw)" column is used but does not include a {}.
+* Fix: Privacy policy text not shown if terms of use checkbox is disabled.
+* Fix: Log messages not saved to debug log file if they contain non UTF-8 characters.
 
 = 2.9.8, October 1, 2018 =
 * Fix: Updated Amazon Payments onboarding URL.
