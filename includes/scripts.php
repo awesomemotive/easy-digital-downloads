@@ -417,6 +417,7 @@ function edd_enqueue_admin_styles( $hook = '' ) {
 	$styles = array(
 		'jquery-chosen',
 		'thickbox',
+		'wp-jquery-ui-dialog',
 		'wp-color-picker',
 		'edd-admin',
 		'edd-admin-chosen',
