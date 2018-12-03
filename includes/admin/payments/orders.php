@@ -217,7 +217,7 @@ function edd_order_details_email( $order ) {
 
 		<?php else : ?>
 
-			<input readonly value="<?php echo esc_attr( $order->email ); ?>" />
+			<input readonly type="email" value="<?php echo esc_attr( $order->email ); ?>" />
 
 		<?php endif; ?>
 
