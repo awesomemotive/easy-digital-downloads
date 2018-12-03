@@ -194,7 +194,7 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * Fix: "Show Privacy Policy" text link is positioned incorrectly.
 * Fix: "Agree to Terms?" text shows twice on checkout with some configurations.
 * Fix: Nonce verification failure when state/province field is not visible.
-* Fix: Fees / Discounts can be duplicated when payment receovery link is clicked.
+* Fix: Fees / Discounts can be duplicated when payment recovery link is clicked.
 * Fix: Incorrect DocBlock for edd_currency_filter.
 * Fix: Slashes not removed when saving profile name field.
 * Fix: Item amount set to 0.00 improperly during CSV import if the "Products (Raw)" column is used but does not include a {}.
