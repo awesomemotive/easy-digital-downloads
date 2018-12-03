@@ -636,7 +636,7 @@ function edd_ajax_download_search() {
 				array(
 				'key'     => '_edd_product_type',
 				'value'   => 'bundle',
-				'compare' => 'NOT EXISTS'
+				'compare' => '!='
 			)
 		);
 	}
@@ -658,19 +658,20 @@ function edd_ajax_download_search() {
 				$title .= ' (' . __( 'All Price Options', 'easy-digital-downloads' ) . ')';
 			}
 
-			// Add item to results array
-			$search['results'][] = array(
-				'id'   => $post_id,
-				'name' => $title
-			);
+			if ( ! $variations_only ) {
+				// Add item to results array
+				$search['results'][] = array(
+					'id'   => $post_id,
+					'name' => $title
+				);
+			}
 
 			// Maybe include variable pricing
 			if ( ! empty( $variations ) && ! empty( $prices ) ) {
 				foreach ( $prices as $key => $value ) {
 					$name  = ! empty( $value['name']  ) ? $value['name']  : '';
-					$index = ! empty( $value['index'] ) ? $value['index'] : $key;
 
-					if ( ! empty( $name ) && ! empty( $index ) ) {
+					if ( ! empty( $name ) ) {
 						$search['results'][] = array(
 							'id'   => $post_id . '_' . $key,
 							'name' => esc_html( $title . ': ' . $name ),
