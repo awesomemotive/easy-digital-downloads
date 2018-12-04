@@ -20,7 +20,8 @@ var EDD_Download_Configuration = {
 	},
 	clone_repeatable: function( row ) {
 		// Retrieve the highest current key
-		let key = highest = 1;
+		let key = 1;
+		let highest = 1;
 		row.parent().find( '.edd_repeatable_row' ).each( function() {
 			const current = $( this ).data( 'key' );
 			if ( parseInt( current ) > highest ) {
@@ -104,7 +105,7 @@ var EDD_Download_Configuration = {
 			clone.insertAfter( row ).find( 'input, textarea, select' ).filter( ':visible' ).eq( 0 ).focus();
 
 			// Setup chosen fields again if they exist
-			clone.find( '.edd-select-chosen' ).chosen( chosen_vars );
+			clone.find( '.edd-select-chosen' ).chosen( chosenVars );
 			clone.find( '.edd-select-chosen' ).css( 'width', '100%' );
 			clone.find( '.edd-select-chosen .chosen-search input' ).attr( 'placeholder', edd_vars.search_placeholder );
 		} );

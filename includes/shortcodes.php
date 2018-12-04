@@ -898,7 +898,7 @@ function edd_process_profile_editor_updates( $data ) {
 		}
 
 		$update_args = array(
-			'name' => $first_name . ' ' . $last_name,
+			'name'  => stripslashes( $first_name . ' ' . $last_name ),
 		);
 
 		$customer->update( $update_args );

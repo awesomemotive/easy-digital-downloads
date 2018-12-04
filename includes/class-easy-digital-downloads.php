@@ -674,8 +674,9 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/shortcodes.php';
 		require_once EDD_PLUGIN_DIR . 'includes/install.php';
 
-		// Must always be loaded to ensure cron runs
+		// Admin files to load globally (cron, bar, etc...)
 		require_once EDD_PLUGIN_DIR . 'includes/admin/tracking.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/admin-bar.php';
 	}
 
 	/**

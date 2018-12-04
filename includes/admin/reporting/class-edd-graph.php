@@ -142,9 +142,8 @@ class EDD_Graph {
 	 * @since 1.9
 	 */
 	public function load_scripts() {
-		// Use minified libraries if SCRIPT_DEBUG is turned off
-		$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-		wp_enqueue_script( 'jquery-flot', EDD_PLUGIN_URL . 'assets/js/jquery.flot' . $suffix . '.js' );
+		wp_enqueue_script( 'jquery-flot',      EDD_PLUGIN_URL . 'assets/js/vendor/jquery.flot.min.js' );
+		wp_enqueue_script( 'jquery-flot-time', EDD_PLUGIN_URL . 'assets/js/vendor/jquery.flot.time.min.js' );
 
 		/**
 		 * Fires immediately after the legacy Flot JS graphing framework is enqueued.
