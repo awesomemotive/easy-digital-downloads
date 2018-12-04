@@ -300,6 +300,7 @@ function edd_register_admin_scripts() {
 	wp_register_script( 'edd-admin-tax-rates',             $js_dir . 'edd-admin-tax-rates.js',               array( 'wp-backbone', 'jquery-chosen' ), $version, true );
 	wp_register_script( 'edd-admin-email-tags',            $js_dir . 'edd-admin-email-tags.js',              array( 'thickbox', 'wp-util' ), $version );
 	wp_register_script( 'edd-admin-scripts-compatibility', $js_dir . 'edd-admin-backwards-compatibility.js', array( 'jquery', 'edd-admin-scripts' ), $version );
+	wp_register_script( 'edd-admin-tools-export',          $js_dir . 'edd-admin-tools-export.js',            array( 'jquery' ), $version );
 
 	// Individual admin pages.
 	$admin_pages = array(
@@ -392,6 +393,11 @@ function edd_enqueue_admin_scripts( $hook = '' ) {
 	// Downloads page.
 	if ( edd_is_admin_page( 'download' ) ) {
 		wp_enqueue_script( 'edd-admin-downloads' );
+	}
+
+	// Upgrades Page
+	if ( 'edd-admin-upgrades' === $hook ) {
+		wp_enqueue_script( 'edd-admin-tools-export' );
 	}
 }
 add_action( 'admin_enqueue_scripts', 'edd_enqueue_admin_scripts' );
