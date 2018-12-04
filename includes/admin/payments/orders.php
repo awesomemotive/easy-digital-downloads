@@ -23,8 +23,11 @@ defined( 'ABSPATH' ) || exit;
  */
 function edd_order_sections( $item = false ) {
 	// Enqueue scripts.
-	wp_enqueue_script( 'edd-admin-payments' );
-	wp_enqueue_script( 'edd-admin-orders' );
+	if ( edd_is_add_order_page() ) {
+		wp_enqueue_script( 'edd-admin-orders' );
+	} else {
+		wp_enqueue_script( 'edd-admin-payments' );
+	}
 
 	// Instantiate the Sections class and sections array
 	$sections = new EDD\Admin\Order_Sections();
