@@ -38,7 +38,7 @@ final class Customers extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201807270003;
+	protected $version = 201810090001;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -52,6 +52,7 @@ final class Customers extends Table {
 		'201807130001' => 201807130001,
 		'201807130002' => 201807130002,
 		'201807270003' => 201807270003,
+		'201810090001' => 201810090001,
 	);
 
 	/**
@@ -65,7 +66,7 @@ final class Customers extends Table {
 		$this->schema = "id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 			user_id bigint(20) unsigned NOT NULL default '0',
 			email varchar(100) NOT NULL default '',
-			name mediumtext NOT NULL,
+			name varchar(255) NOT NULL default '',
 			status varchar(20) NOT NULL default '',
 			purchase_value decimal(18,9) NOT NULL default '0',
 			purchase_count bigint(20) unsigned NOT NULL default '0',
@@ -96,6 +97,7 @@ final class Customers extends Table {
 			delete_option( $this->prefix . 'edd_customers_db_version' );
 
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `email` varchar(100) NOT NULL default ''" );
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `name` varchar(255) NOT NULL default ''" );
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `user_id` bigint(20) unsigned NOT NULL default '0'" );
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `purchase_value` decimal(18,9) NOT NULL default '0'" );
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `purchase_count` bigint(20) unsigned NOT NULL default '0'" );
@@ -193,6 +195,24 @@ final class Customers extends Table {
 				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;
 			" );
 		}
+
+		// Return success/fail
+		return $this->is_success( $result );
+	}
+
+	/**
+	 * Upgrade to version 201810090001
+	 * - Modify the `name` column from mediumtext to varchar(255)
+	 *
+	 * @since 3.0
+	 *
+	 * @return boolean
+	 */
+	protected function __201810090001() {
+
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY `name` varchar(255) NOT NULL default '';
+		" );
 
 		// Return success/fail
 		return $this->is_success( $result );

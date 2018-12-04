@@ -18,7 +18,7 @@ new \EDD\Reports\Init();
  *
  * @coversDefaultClass \EDD\Reports\Data\Charts\v2\Manifest
  */
-class Manfiest_Tests extends \EDD_UnitTestCase {
+class Manifest_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * @var \EDD\Reports\Data\Charts\v2\Manifest

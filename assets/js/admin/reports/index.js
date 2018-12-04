@@ -4,6 +4,7 @@
  * Internal dependencies.
  */
 import { eddLabelFormatter, eddLegendFormatterSales, eddLegendFormatterEarnings } from './formatting.js';
+import './charts';
 
 // Enable reports meta box toggle states.
 if ( typeof postboxes !== 'undefined' && /edd-reports/.test( pagenow ) ) {
