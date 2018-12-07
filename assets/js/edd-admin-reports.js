@@ -96,8 +96,9 @@ Chart.defaults.global.pointHitDetectionRadius = 5; // Get Bootstrapped chart dat
 
 var charts = {};
 if ( typeof eddAdminReportsCharts !== 'undefined' ) {
-  var _eddAdminReportsChart = eddAdminReportsCharts,
-      charts = _eddAdminReportsChart.charts;
+  var _eddAdminReportsChart = eddAdminReportsCharts;
+  
+  charts = _eddAdminReportsChart.charts;
 }
 /**
  * Render the registered charts.
