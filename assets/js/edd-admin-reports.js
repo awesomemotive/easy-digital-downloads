@@ -94,8 +94,11 @@ __webpack_require__.r(__webpack_exports__);
 
 Chart.defaults.global.pointHitDetectionRadius = 5; // Get Bootstrapped chart data.
 
-var _eddAdminReportsChart = eddAdminReportsCharts,
-    charts = _eddAdminReportsChart.charts;
+var charts = {};
+if ( typeof eddAdminReportsCharts !== 'undefined' ) {
+  var _eddAdminReportsChart = eddAdminReportsCharts,
+      charts = _eddAdminReportsChart.charts;
+}
 /**
  * Render the registered charts.
  */
