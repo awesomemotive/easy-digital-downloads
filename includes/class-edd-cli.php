@@ -1444,64 +1444,44 @@ class EDD_CLI extends WP_CLI_Command {
 			$download_ids_with_files[ $meta_item->post_id ] = array_keys( $files );
 		}
 
-		// Next, find all payment records that exist for the downloads that have files.
-		$sales_logs_args = array(
-			'post_parent'            => array_keys( $download_ids_with_files ),
-			'log_type'               => 'sale',
-			'posts_per_page'         => - 1,
-			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false,
-		);
-
-		$sales_logs     = $edd_logs->get_connected_logs( $sales_logs_args );
-		$sales_log_meta = array();
-		$payments       = array();
+		global $wpdb;
+		$product_ids = implode('","', array_keys( $download_ids_with_files ) );
+		$table       = $wpdb->prefix . 'edd_order_items';
+		$sql         = 'SELECT order_id, product_id, price_id, uuid FROM ' . $table . ' WHERE product_id IN ( "' . $product_ids . '")';
+		$results     = $wpdb->get_results( $sql );
 
 		// Now generate some download logs for the files.
 		$progress = \WP_CLI\Utils\make_progress_bar( 'Creating File Download Logs', $number );
 		$i        = 1;
 		while ( $i <= $number ) {
-			$sales_log_key = array_rand( $sales_logs, 1 );
-			$sales_log     = $sales_logs[ $sales_log_key ];
-			if ( ! empty( $sales_log_meta[ $sales_log->ID ] ) ) {
-				$meta = $sales_log_meta[ $sales_log->ID ];
-			} else {
-				$meta                             = get_post_meta( $sales_log->ID );
-				$sales_log_meta[ $sales_log->ID ] = $meta;
-			}
+			$found_item = array_rand( $results, 1 );
+			$item       = $results[ $found_item ];
 
+			$order_id    = (int) $item->order_id;
+			$order       = edd_get_order( $order_id );
+			$product_id  = (int) $item->product_id;
 
-			$payment_id  = (int) $meta['_edd_log_payment_id'][0];
-			$download_id = (int) $sales_log->post_parent;
-
-			if ( isset( $meta['_edd_log_price_id'] ) ) {
-				$price_id = (int) $meta['_edd_log_price_id'][0];
+			if ( edd_has_variable_prices( $product_id ) ) {
+				$price_id = (int) $item->price_id;
 			} else {
 				$price_id = false;
 			}
 
-			if ( ! isset( $payments[ $payment_id ] ) ) {
-				$payment                 = edd_get_payment( $payment_id );
-				$payments[ $payment_id ] = $payment;
-			} else {
-				$payment = $payments[ $payment_id ];
-			}
-
-			$customer = new EDD_Customer( $payment->customer_id );
+			$customer = new EDD_Customer( $order->customer_id );
 
 			$user_info = array(
-				'email' => $payment->email,
-				'id'    => $payment->user_id,
-				'name'  => $customer->name,
+				'email' => $order->email,
+				'id'    => $order->user_id,
+				'name'  => $order->name,
 			);
 
-			if ( empty( $download_ids_with_files[ $download_id ] ) ) {
+			if ( empty( $download_ids_with_files[ $product_id ] ) ) {
 				continue;
 			}
 
-			$file_id_key = array_rand( $download_ids_with_files[ $download_id ], 1 );
-			$file_key    = $download_ids_with_files[ $download_id ][ $file_id_key ];
-			edd_record_download_in_log( $download_id, $file_key, $user_info, edd_get_ip(), $payment_id, $price_id );
+			$file_id_key = array_rand( $download_ids_with_files[ $product_id ], 1 );
+			$file_key    = $download_ids_with_files[ $product_id ][ $file_id_key ];
+			edd_record_download_in_log( $product_id, $file_key, $user_info, edd_get_ip(), $order_id, $price_id );
 
 			$progress->tick();
 			$i ++;
