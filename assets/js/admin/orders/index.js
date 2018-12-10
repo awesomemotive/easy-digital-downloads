@@ -240,6 +240,7 @@ var EDD_Add_Order = {
 
 			$( '#edd-add-order-form input[name="edd_order_address[address]"]' ).val( address.address );
 			$( '#edd-add-order-form input[name="edd_order_address[address2]"]' ).val( address.address2 );
+			$( '#edd-add-order-form input[name="edd_order_address[postal_code]"]' ).val( address.postal_code );
 			$( '#edd-add-order-form input[name="edd_order_address[city]"]' ).val( address.city );
 			select.val( address.country ).trigger( 'chosen:updated' );
 			$( '#edd-add-order-form input[name="edd_order_address[address_id]"]' ).val( val );
