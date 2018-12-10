@@ -257,11 +257,19 @@ var EDD_Add_Order = {
         nonce: $('#edd_add_order_nonce').val()
       };
       $.post(ajaxurl, data, function (response) {
-        // Store response for later use.
-        edd_admin_globals.customer_address_ajax_result = response;
+        var success = response.success,
+            data = response.data;
 
-        if (response.html) {
-          $('.customer-address-select-wrap').html(response.html).show();
+        if (!success) {
+          $('.customer-address-select-wrap').html('').hide();
+          return;
+        } // Store response for later use.
+
+
+        edd_admin_globals.customer_address_ajax_result = data;
+
+        if (data.html) {
+          $('.customer-address-select-wrap').html(data.html).show();
           $('.customer-address-select-wrap select').chosen(utils_chosen_js__WEBPACK_IMPORTED_MODULE_2__["chosenVars"]);
         } else {
           $('.customer-address-select-wrap').html('').hide();
