@@ -289,7 +289,7 @@ function edd_admin_get_script_version() {
 function edd_register_admin_scripts() {
 	$js_dir     = EDD_PLUGIN_URL . 'assets/js/';
 	$version    = edd_admin_get_script_version();
-	$admin_deps = array( 'jquery', 'jquery-form' );
+	$admin_deps = array( 'jquery', 'jquery-form', 'underscore' );
 
 	// Register scripts
 	wp_register_script( 'jquery-chosen',                   $js_dir . 'vendor/jquery.chosen.min.js',          array( 'jquery' ), $version );

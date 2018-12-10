@@ -90,25 +90,29 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 
- // Set ChartJS defaults.
 
-Chart.defaults.global.pointHitDetectionRadius = 5; // Get Bootstrapped chart data.
 
-var _eddAdminReportsChart = eddAdminReportsCharts,
-    charts = _eddAdminReportsChart.charts;
-/**
- * Render the registered charts.
- */
+(function () {
+  if (_.isUndefined(window.eddAdminReportsCharts)) {
+    return;
+  } // Set ChartJS defaults.
 
-_.each(charts, function (config) {
-  var isPie = Object(_utils_js__WEBPACK_IMPORTED_MODULE_2__["isPieChart"])(config);
 
-  if (Object(_utils_js__WEBPACK_IMPORTED_MODULE_2__["isPieChart"])(config)) {
-    Object(_pie_js__WEBPACK_IMPORTED_MODULE_1__["render"])(config);
-  } else {
-    Object(_line_js__WEBPACK_IMPORTED_MODULE_0__["render"])(config);
-  }
-});
+  Chart.defaults.global.pointHitDetectionRadius = 5;
+  /**
+   * Render the registered charts.
+   */
+
+  _.each(window.eddAdminReportsCharts.charts, function (config) {
+    var isPie = Object(_utils_js__WEBPACK_IMPORTED_MODULE_2__["isPieChart"])(config);
+
+    if (Object(_utils_js__WEBPACK_IMPORTED_MODULE_2__["isPieChart"])(config)) {
+      Object(_pie_js__WEBPACK_IMPORTED_MODULE_1__["render"])(config);
+    } else {
+      Object(_line_js__WEBPACK_IMPORTED_MODULE_0__["render"])(config);
+    }
+  });
+})();
 
 /***/ }),
 
