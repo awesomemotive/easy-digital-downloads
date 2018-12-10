@@ -22,32 +22,13 @@ export const isPieChart = ( config ) => {
  * @param {string} label Current label.
  * @param {Object} config Global chart config.
  */
-export const getLabelWithTypeCondition = ( label, config ) => {
+export const getLabelWithTypeCondition = ( label, datasetConfig ) => {
 	const { currency_sign, currency_pos } = edd_vars;
-	let conditional = '';
 	let newLabel = label;
 
-	const {
-		target,
-		options: {
-			datasets,
-		},
-	} = config;
+	const { type } = datasetConfig;
 
-	if ( datasets ) {
-		_.each( datasets, ( dataset ) => {
-			const { type } = dataset;
-
-			if ( 'currency' === type ) {
-				conditional += `t.datasetIndex === ${ target } || `;
-			}
-		} );
-	}
-
-	conditional.slice( 0, -4 );
-
-	if ( '' !== conditional ) {
-		// @todo support better currency locales.
+	if ( 'currency' === type ) {
 		const amount = label.toFixed( 2 );
 
 		if ( 'before' === currency_pos ) {
