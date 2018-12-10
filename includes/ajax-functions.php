@@ -1129,12 +1129,13 @@ add_action( 'wp_ajax_edd_add_adjustment_to_order', 'edd_ajax_add_adjustment_to_o
  * Search for customer addresses and return a list.
  *
  * @since 3.0
+ * @return array Custom address data.
  */
 function edd_ajax_customer_addresses() {
 
 	// Bail if user cannot manage shop settings.
 	if ( ! current_user_can( 'manage_shop_settings' ) ) {
-		edd_die( '-1' );
+		return wp_send_json_error();
 	}
 
 	// Set up parameters.
@@ -1148,7 +1149,7 @@ function edd_ajax_customer_addresses() {
 
 	// Bail if missing any data.
 	if ( empty( $nonce ) || empty( $customer_id ) ) {
-		edd_die( '-1' );
+		return wp_send_json_error();
 	}
 
 	$response = array();
@@ -1209,9 +1210,7 @@ function edd_ajax_customer_addresses() {
 		}
 	}
 
-	echo wp_json_encode( $response );
-
-	edd_die();
+	return wp_send_json_success( $response );
 }
 add_action( 'wp_ajax_edd_customer_addresses', 'edd_ajax_customer_addresses' );
 
