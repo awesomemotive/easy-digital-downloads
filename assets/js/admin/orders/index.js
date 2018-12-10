@@ -208,11 +208,19 @@ var EDD_Add_Order = {
 				};
 
 			$.post( ajaxurl, data, function( response ) {
-				// Store response for later use.
-				edd_admin_globals.customer_address_ajax_result = response;
+				const { success, data } = response;
 
-				if ( response.html ) {
-					$( '.customer-address-select-wrap' ).html( response.html ).show();
+				if ( ! success ) {
+					$( '.customer-address-select-wrap' ).html( '' ).hide();
+
+					return;
+				}
+
+				// Store response for later use.
+				edd_admin_globals.customer_address_ajax_result = data;
+
+				if ( data.html ) {
+					$( '.customer-address-select-wrap' ).html( data.html ).show();
 					$( '.customer-address-select-wrap select' ).chosen( chosenVars );
 				} else {
 					$( '.customer-address-select-wrap' ).html( '' ).hide();
