@@ -34,7 +34,7 @@ function edd_upgrades_screen() {
 		// Until we have fully migrated all upgrade scripts to this new system,
 		// we will selectively enqueue the necessary scripts.
 		add_filter( 'edd_load_admin_scripts', '__return_true' );
-		edd_load_admin_scripts( '' );
+		edd_load_admin_scripts( 'edd-admin-upgrades' );
 
 		// This is the new method to register an upgrade routine, so we can use
 		// an ajax and progress bar to display any needed upgrades.
