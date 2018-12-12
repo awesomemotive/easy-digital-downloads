@@ -13,6 +13,8 @@ namespace EDD\Reports\Data\Payment_Gateways;
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+use EDD\Stats as Stats;
+use EDD\Reports as Reports;
 use EDD\Admin\List_Table;
 
 /**
@@ -85,13 +87,20 @@ class Gateway_Stats extends List_Table {
 	 * @return array $reports_data All the data for customer reports
 	 */
 	public function reports_data() {
+		$filter = Reports\get_filter_value( 'dates' );
 
 		$reports_data = array();
 		$gateways     = edd_get_payment_gateways();
 
 		foreach ( $gateways as $gateway_id => $gateway ) {
+			$stats = new Stats();
 
-			$complete_count = edd_count_sales_by_gateway( $gateway_id, 'publish' );
+			$complete_count = $stats->get_gateway_sales( array(
+				'range'   => $filter['range'],
+				'gateway' => $gateway_id,
+			) );
+
+			//$complete_count = edd_count_sales_by_gateway( $gateway_id, 'publish' );
 			$pending_count  = edd_count_sales_by_gateway( $gateway_id, array( 'pending', 'failed' ) );
 
 			$reports_data[] = array(

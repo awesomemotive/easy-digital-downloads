@@ -1390,10 +1390,30 @@ class Stats {
 			? $this->get_db()->prepare( 'AND gateway = %s', sanitize_text_field( $this->query_vars['gateway'] ) )
 			: '';
 
-		$sql = "SELECT gateway, {$function} AS total
+		$status = isset( $this->query_vars['status'] )
+			? $this->query_vars['status']
+			: array( 'publish', 'revoked' );
+
+		if ( ! is_array( $status ) ) {
+			$status =  'any' !== $status
+				? explode( ',', $status )
+				: false;
+		}
+
+		if ( ! $status ) {
+			$sql = "SELECT gateway, {$function} AS total
 				FROM {$this->query_vars['table']}
 				WHERE 1=1 {$this->query_vars['status_sql']} {$gateway} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				GROUP BY gateway";
+		} else {
+			$status__in = "'" . implode( "','", array_map( 'sanitize_text_field', $status ) ) . "'";
+			$sql = "SELECT gateway, {$function} AS total
+				FROM {$this->query_vars['table']}
+				WHERE 1=1 {$this->query_vars['status_sql']} {$gateway} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+				AND status IN ({$status__in})
+				GROUP BY gateway";
+		}
+
 
 		$result = $this->get_db()->get_results( $sql );
 
