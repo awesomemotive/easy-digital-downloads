@@ -76,6 +76,7 @@ class Gateway_Stats extends List_Table {
 			'label'          => __( 'Gateway',                'easy-digital-downloads' ),
 			'complete_sales' => __( 'Complete Sales',         'easy-digital-downloads' ),
 			'pending_sales'  => __( 'Pending / Failed Sales', 'easy-digital-downloads' ),
+			'refunded_sales' => __( 'Refunded Sales', 'easy-digital-downloads' ),
 			'total_sales'    => __( 'Total Sales',            'easy-digital-downloads' ),
 		);
 	}
@@ -98,17 +99,41 @@ class Gateway_Stats extends List_Table {
 			$complete_count = $stats->get_gateway_sales( array(
 				'range'   => $filter['range'],
 				'gateway' => $gateway_id,
+				'status'  => array( 'publish', 'revoked' ),
+				'type'    => array( 'sale' ),
 			) );
 
 			//$complete_count = edd_count_sales_by_gateway( $gateway_id, 'publish' );
-			$pending_count  = edd_count_sales_by_gateway( $gateway_id, array( 'pending', 'failed' ) );
+
+			$pending_count = $stats->get_gateway_sales( array(
+				'range'   => $filter['range'],
+				'gateway' => $gateway_id,
+				'status'  => array( 'pending', 'failed' ),
+				'type'    => array( 'sale' ),
+			) );
+
+			$refunded_count = $stats->get_gateway_sales( array(
+				'range'   => $filter['range'],
+				'gateway' => $gateway_id,
+				'status'  => array( 'complete' ),
+				'type'    => array( 'refund' ),
+			) );
+
+			$total_count = $stats->get_gateway_sales( array(
+				'range'   => $filter['range'],
+				'gateway' => $gateway_id,
+				'status'  => 'any',
+				'type'    => array( 'sale' ),
+			) );
+			// $pending_count  = edd_count_sales_by_gateway( $gateway_id, array( 'pending', 'failed' ) );
 
 			$reports_data[] = array(
 				'ID'             => $gateway_id,
 				'label'          => '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&gateway=' . $gateway_id ) . '">' . esc_html( $gateway['admin_label'] ) . '</a>',
 				'complete_sales' => edd_format_amount( $complete_count, false ),
 				'pending_sales'  => edd_format_amount( $pending_count, false ),
-				'total_sales'    => edd_format_amount( $complete_count + $pending_count, false ),
+				'refunded_sales' => edd_format_amount( $refunded_count, false ),
+				'total_sales'    => edd_format_amount( $total_count, false ),
 			);
 		}
 
