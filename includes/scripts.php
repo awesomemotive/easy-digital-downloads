@@ -393,6 +393,11 @@ function edd_enqueue_admin_scripts( $hook = '' ) {
 	if ( edd_is_admin_page( 'download' ) ) {
 		wp_enqueue_script( 'edd-admin-downloads' );
 	}
+
+	// Upgrades Page
+	if ( 'edd-admin-upgrades' === $hook ) {
+		wp_enqueue_script( 'edd-admin-tools-export' );
+	}
 }
 add_action( 'admin_enqueue_scripts', 'edd_enqueue_admin_scripts' );
 
