@@ -104,6 +104,8 @@ class Stats {
 				'range'             => '',
 				'status'            => array( 'publish', 'revoked' ),
 				'status_sql'        => '',
+				'type'              => array(),
+				'type_sql'          => '',
 				'where_sql'         => '',
 				'date_query_sql'    => '',
 				'date_query_column' => '',
