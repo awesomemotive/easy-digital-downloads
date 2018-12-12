@@ -2274,7 +2274,8 @@ function edd_register_discounts_report( $reports ) {
 						$stats = new EDD\Stats();
 
 						$r = apply_filters( 'edd_reports_discounts_most_popular_discount', $stats->get_most_popular_discounts( array(
-							'range' => $filter['range'],
+							'range'  => $filter['range'],
+							'number' => 1,
 						) ) );
 
 						if ( ! empty( $r ) ) {
