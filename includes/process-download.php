@@ -131,7 +131,7 @@ function edd_process_download() {
 		}
 
 		// Allow the file to be altered before any headers are sent
-		$requested_file = apply_filters( 'edd_requested_file', $requested_file, $download_files, $args['file_key'] );
+		$requested_file = apply_filters( 'edd_requested_file', $requested_file, $download_files, $args['file_key'], $args );
 
 		if( 'x_sendfile' == $method && ( ! function_exists( 'apache_get_modules' ) || ! in_array( 'mod_xsendfile', apache_get_modules() ) ) ) {
 			// If X-Sendfile is selected but is not supported, fallback to Direct
@@ -800,7 +800,10 @@ function edd_readfile_chunked( $file, $retbytes = true ) {
 
 	header( 'Accept-Ranges: bytes' );
 
-	set_time_limit( 0 );
+	if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
+		@set_time_limit(0);
+	}
+
 	fseek( $handle, $seek_start );
 
 	while ( ! @feof( $handle ) ) {
