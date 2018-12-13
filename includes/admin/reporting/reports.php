@@ -1477,7 +1477,7 @@ function edd_register_payment_gateways_report( $reports ) {
 		) );
 
 		$reports->register_endpoint( 'gateway_stats', array(
-			'label' => __( 'Gateway Stats', 'easy-digital-downloads' ),
+			'label' => __( 'Gateway Stats', 'easy-digital-downloads' ) . ' &mdash; ' . $options[ $filter['range'] ],
 			'views' => array(
 				'table' => array(
 					'display_args' => array(
@@ -1497,8 +1497,8 @@ function edd_register_payment_gateways_report( $reports ) {
 					'data_callback' => function() use ( $filter ) {
 						$stats = new EDD\Stats();
 						$g = $stats->get_gateway_sales( array(
-							'grouped' => true,
-							'range'   => $filter['range'],
+							'range'    => $filter['range'],
+							'grouped'  => true,
 						) );
 
 						$gateways = array_flip( array_keys( edd_get_payment_gateways() ) );

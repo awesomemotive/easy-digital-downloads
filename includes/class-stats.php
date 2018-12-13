@@ -104,6 +104,8 @@ class Stats {
 				'range'             => '',
 				'status'            => array( 'publish', 'revoked' ),
 				'status_sql'        => '',
+				'type'              => array(),
+				'type_sql'          => '',
 				'where_sql'         => '',
 				'date_query_sql'    => '',
 				'date_query_column' => '',
@@ -1391,9 +1393,9 @@ class Stats {
 			: '';
 
 		$sql = "SELECT gateway, {$function} AS total
-				FROM {$this->query_vars['table']}
-				WHERE 1=1 {$this->query_vars['status_sql']} {$gateway} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
-				GROUP BY gateway";
+			FROM {$this->query_vars['table']}
+			WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$gateway} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+			GROUP BY gateway";
 
 		$result = $this->get_db()->get_results( $sql );
 
@@ -1465,7 +1467,7 @@ class Stats {
 	 *
 	 * @param array $query See \EDD\Stats::get_gateway_data().
 	 *
-	 * @return array List of objects containing the number of sales processed either for every gateway or the gateway
+	 * @return int|array List of objects containing the number of sales processed either for every gateway or the gateway
 	 *               passed as a query parameter.
 	 */
 	public function get_gateway_sales( $query = array() ) {
@@ -2436,6 +2438,8 @@ class Stats {
 			'range'             => '',
 			'status'            => array( 'publish', 'revoked' ),
 			'status_sql'        => '',
+			'type'              => array(),
+			'type_sql'          => '',
 			'where_sql'         => '',
 			'date_query_sql'    => '',
 			'date_query_column' => '',
@@ -2589,11 +2593,23 @@ class Stats {
 
 		// Generate status SQL if statuses have been set.
 		if ( ! empty( $this->query_vars['status'] ) ) {
-			$this->query_vars['status'] = array_map( 'sanitize_text_field', $this->query_vars['status'] );
+			if ( 'any' === $this->query_vars['status'] ) {
+				$this->query_vars['status_sql'] = '';
+			} else {
+				$this->query_vars['status'] = array_map( 'sanitize_text_field', $this->query_vars['status'] );
 
-			$placeholders = implode( ', ', array_fill( 0, count( $this->query_vars['status'] ), '%s' ) );
+				$placeholders = implode( ', ', array_fill( 0, count( $this->query_vars['status'] ), '%s' ) );
 
-			$this->query_vars['status_sql'] = $this->get_db()->prepare( "AND {$this->query_vars['table']}.status IN ({$placeholders})", $this->query_vars['status'] );
+				$this->query_vars['status_sql'] = $this->get_db()->prepare( "AND {$this->query_vars['table']}.status IN ({$placeholders})", $this->query_vars['status'] );
+			}
+		}
+
+		if ( ! empty( $this->query_vars['type'] ) ) {
+			$this->query_vars['type'] = array_map( 'sanitize_text_field', $this->query_vars['type'] );
+
+			$placeholders = implode( ', ', array_fill( 0, count( $this->query_vars['type'] ), '%s' ) );
+
+			$this->query_vars['type_sql'] = $this->get_db()->prepare( "AND {$this->query_vars['table']}.type IN ({$placeholders})", $this->query_vars['type'] );
 		}
 	}
 
