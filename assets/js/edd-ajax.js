@@ -437,7 +437,10 @@ jQuery(document).ready(function ($) {
 			field_name = 'edd_address_state';
 		}
 
-		if( 'card_state' != $this.attr('id') ) {
+		var state_inputs = document.getElementById('card_state');
+
+		// If the country is being changed, and there is a state field being shown...
+		if( 'card_state' != $this.attr('id') && null != state_inputs ) {
 			var nonce = $(this).data('nonce');
 
 			// If the country field has changed, we need to update the state/province field

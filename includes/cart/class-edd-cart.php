@@ -647,7 +647,8 @@ class EDD_Cart {
 
 		$discounts = false === $discount ? $this->get_discounts() : array( $discount );
 
-		if ( ! empty( $discounts ) ) {
+		// If discounts exist, only apply them to non-free cart items
+		if ( ! empty( $discounts ) && 0.00 != $price ) {
 			foreach ( $discounts as $discount ) {
 				$code_id = edd_get_discount_id_by_code( $discount );
 

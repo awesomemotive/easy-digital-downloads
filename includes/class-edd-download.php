@@ -850,7 +850,7 @@ class EDD_Download {
 
 		global $wpdb;
 
-		if ( empty( $meta_key ) || empty( $meta_value ) ) {
+		if ( empty( $meta_key ) || ( ! is_numeric( $meta_value ) && empty( $meta_value ) ) ) {
 			return false;
 		}
 

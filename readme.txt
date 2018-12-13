@@ -1,12 +1,12 @@
 === Easy Digital Downloads ===
 Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
-Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel
+Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.4
-Tested up to: 4.9.7
-Stable Tag: 2.9.6
+Tested up to: 5.0
+Stable Tag: 2.9.9
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -45,7 +45,6 @@ Payment gateways supported through free or premium extension:
 * SOFORT Banking
 * BitPay
 * Coinbase
-* Payza
 
 See our [gateways category](https://easydigitaldownloads.com/downloads/category/gateways/?utm_source=extensions&utm_medium=description_tab&utm_content=gateways&utm_campaign=readme) in the extensions catalogue for a complete list of supported gateways. There are also a large number of additional gateways developed and supported by [3rd party developers](https://easydigitaldownloads.com/3rd-party-extensions/#gateways).
 
@@ -189,6 +188,39 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+
+= 2.9.9, December 3, 2018 =
+* Fix: State/province cannot be updated on order details screen when country is changed.
+* Fix: "Show Privacy Policy" text link is positioned incorrectly.
+* Fix: "Agree to Terms?" text shows twice on checkout with some configurations.
+* Fix: Nonce verification failure when state/province field is not visible.
+* Fix: Fees / Discounts can be duplicated when payment recovery link is clicked.
+* Fix: Incorrect DocBlock for edd_currency_filter.
+* Fix: Slashes not removed when saving profile name field.
+* Fix: Item amount set to 0.00 improperly during CSV import if the "Products (Raw)" column is used but does not include a {}.
+* Fix: Privacy policy text not shown if terms of use checkbox is disabled.
+* Fix: Log messages not saved to debug log file if they contain non UTF-8 characters.
+
+= 2.9.8, October 1, 2018 =
+* Fix: Updated Amazon Payments onboarding URL.
+* Fix: Insert Download media button would not output expected plain text styles.
+* Fix: Adding a discount code on a cart with free products caused a division by zero error.
+* Fix: Removed unnecessary clearfix rule from CSS.
+* New: Repositioned and refactored the pagination in the [downloads] shortcode to allow better customization.
+* Dev: All available contextual arguments were added to the edd_requested_file filter.
+
+= 2.9.7, September 10, 2018 =
+* Fix: The edd_cart_amount data attributes were not updated when quantities were changed at checkout.
+* Fix: Updated the zip/postal code validation for Mongolia.
+* Fix: Updating a download meta to 0 using the EDD_Download class would not save correctly.
+* Fix: Corrected an issue with mobile file downloads sometimes getting corrupted.
+* Fix: Incorrect label "for" attributes were being used on the checkout login form.
+* Fix: Prevent the vertical scrollbar in Firefox when hovering over tooltips.
+* Fix: Corrected some issues with EDD Sessions and WP Admin.
+* Fix: Test Purchase Email Subject ampersands were getting improperly HTML encoded.
+* New: Updated the EDD_SL_Plugin_Updater to support icons and have a health check.
+* New: Added the date generated to system info.
+* New: EDD API now supports "order" and "orderby" parameters for the products endpoint.
 
 = 2.9.6, July 16, 2018 =
 * Fix: "Error: You must login to complete your purchase" shown incorrectly on checkout.
