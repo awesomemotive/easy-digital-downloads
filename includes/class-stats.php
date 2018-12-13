@@ -1108,7 +1108,7 @@ class Stats {
 				FROM {$this->query_vars['table']}
 				WHERE 1=1 {$discount} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				GROUP BY description
-				ORDER BY {$this->query_vars['date_query_column']} DESC
+				ORDER BY count DESC
 				LIMIT {$number}";
 
 		$result = $this->get_db()->get_results( $sql );
@@ -1165,13 +1165,13 @@ class Stats {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_order_adjustments;
-		$this->query_vars['column']            = 'amount';
+		$this->query_vars['column']            = 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$function      = $this->get_db()->prepare( 'SUM(%s)', $this->query_vars['column'] );
+		$function      = str_replace( "'", '', $this->get_db()->prepare( 'SUM(%s)', $this->query_vars['column'] ) );
 		$discount_code = ! empty( $this->query_vars['discount_code'] )
 			? $this->get_db()->prepare( 'AND type = %s AND description = %s', 'discount', sanitize_text_field( $this->query_vars['discount_code'] ) )
 			: $this->get_db()->prepare( 'AND type = %s', 'discount' );
@@ -1223,13 +1223,13 @@ class Stats {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_order_adjustments;
-		$this->query_vars['column']            = 'amount';
+		$this->query_vars['column']            = 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$function      = $this->get_db()->prepare( 'AVG(%s)', $this->query_vars['column'] );
+		$function      = str_replace( "'", '', $this->get_db()->prepare( 'AVG(%s)', $this->query_vars['column'] ) );
 		$type_discount = $this->get_db()->prepare( 'AND type = %s', 'discount' );
 
 		$sql = "SELECT {$function}
