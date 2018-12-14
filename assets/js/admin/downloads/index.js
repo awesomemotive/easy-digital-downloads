@@ -317,17 +317,18 @@ var EDD_Download_Configuration = {
 			file_frame.open();
 		} );
 
+		// @todo Break this out and remove jQuery.
 		$( '.edd_repeatable_upload_field' )
 			.on( 'focus', function() {
-				var input = $( this );
+				const input = $( this );
 
 				input.data( 'originalFile', input.val() );
 			} )
 			.on( 'change', function() {
-				var input        = $( this ),
-					originalFile = input.data( 'originalFile' );
+				const input = $( this );
+				const originalFile = input.data( 'originalFile' );
 
-				if( originalFile !== input.val() ) {
+				if ( originalFile !== input.val() ) {
 					input
 						.closest( '.edd-repeatable-row-standard-fields' )
 						.find( '.edd_repeatable_attachment_id_field' )
