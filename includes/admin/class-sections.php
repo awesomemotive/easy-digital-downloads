@@ -139,7 +139,6 @@ class Sections {
 				<div class="section-wrap">
 					<?php echo $this->get_all_section_contents(); ?>
 				</div>
-				<br class="clear" />
 			</div>
 			<?php $this->nonce_field();
 
