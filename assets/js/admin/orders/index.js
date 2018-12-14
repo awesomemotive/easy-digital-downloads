@@ -208,11 +208,19 @@ var EDD_Add_Order = {
 				};
 
 			$.post( ajaxurl, data, function( response ) {
-				// Store response for later use.
-				edd_admin_globals.customer_address_ajax_result = response;
+				const { success, data } = response;
 
-				if ( response.html ) {
-					$( '.customer-address-select-wrap' ).html( response.html ).show();
+				if ( ! success ) {
+					$( '.customer-address-select-wrap' ).html( '' ).hide();
+
+					return;
+				}
+
+				// Store response for later use.
+				edd_admin_globals.customer_address_ajax_result = data;
+
+				if ( data.html ) {
+					$( '.customer-address-select-wrap' ).html( data.html ).show();
 					$( '.customer-address-select-wrap select' ).chosen( chosenVars );
 				} else {
 					$( '.customer-address-select-wrap' ).html( '' ).hide();
@@ -232,6 +240,7 @@ var EDD_Add_Order = {
 
 			$( '#edd-add-order-form input[name="edd_order_address[address]"]' ).val( address.address );
 			$( '#edd-add-order-form input[name="edd_order_address[address2]"]' ).val( address.address2 );
+			$( '#edd-add-order-form input[name="edd_order_address[postal_code]"]' ).val( address.postal_code );
 			$( '#edd-add-order-form input[name="edd_order_address[city]"]' ).val( address.city );
 			select.val( address.country ).trigger( 'chosen:updated' );
 			$( '#edd-add-order-form input[name="edd_order_address[address_id]"]' ).val( val );

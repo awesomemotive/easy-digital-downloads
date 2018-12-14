@@ -623,11 +623,13 @@ function edd_order_details_extras( $order = false ) {
 			<div class="edd-admin-box">
 				<?php do_action( 'edd_view_order_details_payment_meta_before', $order->id ); ?>
 
-				<?php if ( ! edd_is_add_order_page() && $order->gateway ) : ?>
+				<?php if ( ! edd_is_add_order_page() && ! empty( $order->id ) ) : ?>
+					<?php if ( ! empty( $order->gateway ) ) : ?>
 					<div class="edd-order-gateway edd-admin-box-inside">
 						<span class="label"><?php esc_html_e( 'Gateway', 'easy-digital-downloads' ); ?>:</span>
 						<?php echo edd_get_gateway_admin_label( $order->gateway ); ?>
 					</div>
+					<?php endif; ?>
 				<?php else : ?>
 					<div class="edd-order-gateway edd-admin-box-inside">
 						<span class="label"><?php esc_html_e( 'Gateway', 'easy-digital-downloads' ); ?>:</span>

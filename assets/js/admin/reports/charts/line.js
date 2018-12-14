@@ -65,7 +65,10 @@ export const tooltipConfig = ( config ) => ( {
 		 * @param {Object} d
 		 */
 		label: function( t, d ) {
-			const label = getLabelWithTypeCondition( t.yLabel, config );
+			const { options: { datasets } } = config;
+
+			const datasetConfig = datasets[ Object.keys( datasets )[ t.datasetIndex ] ];
+			const label = getLabelWithTypeCondition( t.yLabel, datasetConfig );
 
 			return `${ d.datasets[ t.datasetIndex ].label }: ${ label }`;
 		},
