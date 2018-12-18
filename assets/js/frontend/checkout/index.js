@@ -185,7 +185,6 @@ window.EDD_Checkout = ( function( $ ) {
 				card_field.addClass( 'error' );
 			} else {
 				$card_type.removeClass( 'off' );
-				console.log(result.card_type);
 				$card_type.html( getCreditCardIcon( result.card_type.name ) );
 				$card_type.addClass( result.card_type.name );
 				if ( result.length_valid && result.luhn_valid ) {

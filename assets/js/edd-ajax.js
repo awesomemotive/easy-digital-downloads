@@ -256,7 +256,6 @@ window.EDD_Checkout = function ($) {
         card_field.addClass('error');
       } else {
         $card_type.removeClass('off');
-        console.log(result.card_type);
         $card_type.html(Object(_utils_js__WEBPACK_IMPORTED_MODULE_2__["getCreditCardIcon"])(result.card_type.name));
         $card_type.addClass(result.card_type.name);
 
