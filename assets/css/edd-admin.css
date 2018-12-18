@@ -2527,6 +2527,7 @@ body.download_page_edd-reports {
 }
 .edd-sections-wrap .edd-vertical-sections:not(.meta-box) .section-wrap > div {
 	min-height: 500px;
+	height: 100%;
 }
 .edd-sections-wrap .section-wrap .customer-section:not(:last-child) {
 	border-bottom: 1px solid #eee;
@@ -2996,13 +2997,8 @@ body.download_page_edd-reports {
 
 .edd-vertical-sections {
 	overflow: visible;
-	background: linear-gradient( 90deg, #f5f5f5 0%, #f5f5f5 20%, #fff 20%, #fff 100% );
-}
-
-@media only screen and ( max-width: 782px ) {
-	.edd-vertical-sections {
-		background: linear-gradient( 90deg, #f5f5f5 0%, #f5f5f5 48px, #fff 48px, #fff 100% );
-	}
+	display: block;
+	display: flex;
 }
 
 .edd-vertical-sections .section-nav {
@@ -3010,9 +3006,9 @@ body.download_page_edd-reports {
 	float: left;
 	width: 20%;
 	line-height: 1em;
-	margin: 0 -1px -1px 0;
+	margin: 0 -1px 0 0;
 	padding: 0;
-	background-color: #fcfcfc;
+	background-color: #f5f5f5;
 	border-right: 1px solid #e5e5e5;
 	box-sizing: border-box;
 	max-width: 200px;
@@ -3023,6 +3019,7 @@ body.download_page_edd-reports {
 	position: relative;
 	margin: 0;
 	padding: 0;
+	background-color: #fcfcfc;
 }
 
 .edd-vertical-sections .section-nav li a {
@@ -3033,6 +3030,19 @@ body.download_page_edd-reports {
 	text-decoration: none;
 	border-bottom: 1px solid #e5e5e5;
 	box-shadow: none;
+	position: relative;
+}
+
+.edd-vertical-sections .section-nav li[aria-selected="true"] a:after {
+	content: '';
+	width: 1px;
+	height: 100%;
+	background: #fff;
+	position: absolute;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	z-index: 3;
 }
 
 .edd-vertical-sections .section-nav li a > .dashicons,
@@ -3057,6 +3067,11 @@ body.download_page_edd-reports {
 	background-color: #fff;
 	border-right: none;
 	margin-right: -1px;
+}
+
+/* Fresh */
+.admin-color-fresh .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+	border-left: 5px solid #0073aa;
 }
 
 /* Blue */
