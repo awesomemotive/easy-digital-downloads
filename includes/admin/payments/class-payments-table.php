@@ -420,7 +420,8 @@ class EDD_Payment_History_Table extends List_Table {
 				$value = edd_currency_filter( edd_format_amount( $order->total ), $order->currency );
 				break;
 			case 'date':
-				$value = '<time datetime="' . esc_attr( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString() ) . '">' . edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString(), 'M. d, Y' ) . '<br>' . edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString(), 'H:i' ) . '</time>';
+				$date  = EDD()->utils->date( $order->date_created, null, true )->toDateTimeString();
+				$value = '<time datetime="' . esc_attr( $date ) . '">' . edd_date_i18n( $date, 'M. d, Y' ) . '<br>' . edd_date_i18n( $date, 'H:i' ) . '</time>';
 				break;
 			case 'gateway':
 				$value = edd_get_gateway_admin_label( $order->gateway );

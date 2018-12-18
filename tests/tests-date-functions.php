@@ -64,7 +64,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 	 * @covers ::edd_get_timezone_id()
 	 */
 	public function test_get_timezone_should_return_the_current_timezone_based_on_WP_settings() {
-		$this->assertSame( 'America/New_York', edd_get_timezone_id() );
+		$this->assertSame( 'GMT-5', edd_get_timezone_id() );
 	}
 
 	/**
