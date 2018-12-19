@@ -7,6 +7,12 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
+/**
+ * Notes:
+ *
+ * [1] Backwards compatibility for vertical tabs < 3.0
+ */
+
 .edd-hidden {
 	display: none;
 }
@@ -2782,30 +2788,12 @@ body.download_page_edd-reports {
 	}
 }
 @media screen and ( max-width: 781px ) {
-	#edd-item-tab-wrapper,
+	#edd-item-tab-wrapper, /** [1] */
 	.edd-sections-wrap .section-wrap {
 		margin: 0;
 		width: 100%;
 	}
-	#edd-item-tab-wrapper-list {
-		background: #fff;
-		margin: 0;
-	}
-	#edd-item-tab-wrapper-list li,
-	#edd-item-tab-wrapper-list li.active {
-		float: left;
-		display: inline;
-		font-size: 14px;
-		box-sizing: border-box;
-		border-width: 0 1px 1px 0;
-		border-style: solid;
-		border-color: #e5e5e5;
-		width: 33.33333%;
-	}
-	#edd-item-tab-wrapper-list li:nth-child(3n+3) {
-		border-width: 0 0 1px 0;
-	}
-	#edd-item-tab-wrapper-list .dashicons {
+	#edd-item-tab-wrapper-list .dashicons { /** [1] */
 		font-size: 18px;
 	}
 	.edd-item-has-tabs  .edd-sections-wrap .section-wrap {
@@ -2994,12 +2982,6 @@ body.download_page_edd-reports {
 /* Tools Styles
 -------------------------------------------------------------- */
 
-/**
- * Vertical sections used throughout the UI.
- *
- * [1] Backwards compatibility for < 3.0
- */
-
 .edd-vertical-sections {
 	overflow: visible;
 	background: linear-gradient( 90deg, #f5f5f5 0%, #f5f5f5 20%, #fff 20%, #fff 100% );
@@ -3011,7 +2993,7 @@ body.download_page_edd-reports {
 	}
 }
 
-#edd-item-tab-wrapper, /* [1] */
+#edd-item-tab-wrapper, /** [1] */
 .edd-vertical-sections .section-nav {
 	position: relative;
 	float: left;
@@ -3029,7 +3011,7 @@ body.download_page_edd-reports {
 	margin: 0;
 }
 
-#edd-item-tab-wrapper li, /* [1] */
+#edd-item-tab-wrapper li, /** [1] */
 .edd-vertical-sections .section-nav li {
 	display: block;
 	position: relative;
@@ -3037,8 +3019,8 @@ body.download_page_edd-reports {
 	padding: 0;
 }
 
-#edd-item-tab-wrapper li a, /* [1] */
-#edd-item-tab-wrapper li > .edd-item-tab-label-wrap, /* [1] */
+#edd-item-tab-wrapper li a, /** [1] */
+#edd-item-tab-wrapper li > .edd-item-tab-label-wrap, /** [1] */
 .edd-vertical-sections .section-nav li a {
 	display: block;
 	margin: 0;
@@ -3049,7 +3031,7 @@ body.download_page_edd-reports {
 	box-shadow: none;
 }
 
-#edd-item-tab-wrapper li > .edd-item-tab-label-wrap { /* [1] */
+#edd-item-tab-wrapper li > .edd-item-tab-label-wrap { /** [1] */
 	background-color: #fff;
 }
 
@@ -3130,6 +3112,7 @@ body.download_page_edd-reports {
 
 @media only screen and ( max-width: 782px ) {
 
+	#edd-item-tab-wrapper, /** [1] */
 	.edd-vertical-sections .section-nav {
 		width: 48px;
 	}
@@ -3150,6 +3133,7 @@ body.download_page_edd-reports {
 		height: 24px;
 	}
 
+	#edd-item-tab-wrapper .edd-item-tab-label, /** [1] */
 	.section-nav li .label {
 		overflow: hidden;
 		position: absolute;
