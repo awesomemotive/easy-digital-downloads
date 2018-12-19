@@ -3168,6 +3168,25 @@ body.download_page_edd-reports {
 	width: 80%;
 }
 
+#edd-item-card-wrapper .item-section { /** [1] */
+	background: #fff;
+	overflow: hidden;
+	box-sizing: border-box;
+}
+
+div:not(#edd-item-tab-wrapper) + #edd-item-card-wrapper .item-section { /** [1] */
+	margin: 25px 0;
+	padding: 20px;
+	border: 1px solid #e5e5e5;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+#edd-item-tab-wrapper + #edd-item-card-wrapper { /** [1] */
+	padding: 20px;
+	border-left: 1px solid #e5e5e5;
+	box-sizing: border-box;
+}
+
 @media only screen and ( min-width: 1200px ) {
 	#edd-item-card-wrapper, /** [1] */
 	#edd-graphs-filter,
@@ -3177,6 +3196,7 @@ body.download_page_edd-reports {
 }
 
 @media only screen and ( max-width: 782px ) {
+	#edd-item-card-wrapper, /** [1] */
 	#edd-graphs-filter,
 	.edd-vertical-sections .section-wrap {
 		width: calc( 100% - 48px );
