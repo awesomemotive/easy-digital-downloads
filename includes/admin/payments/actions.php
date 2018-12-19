@@ -236,18 +236,28 @@ function edd_update_payment_details( $data = array() ) {
 			? sanitize_text_field( $data['edd-new-customer-email'] )
 			: '';
 
-		$names = isset( $data['edd-new-customer-name'] )
-			? sanitize_text_field( $data['edd-new-customer-name'] )
+		// Sanitize first name
+		$first_name = isset( $data['edd-new-customer-first-name'] )
+			? sanitize_text_field( $data['edd-new-customer-first-name'] )
 			: '';
 
-		if ( empty( $email ) || empty( $names ) ) {
+		// Sanitize last name
+		$last_name = isset( $data['edd-new-customer-last-name'] )
+			? sanitize_text_field( $data['edd-new-customer-last-name'] )
+			: '';
+
+		// Combine
+		$name = $first_name . ' ' . $last_name;
+
+		if ( empty( $email ) || empty( $name ) ) {
 			wp_die( esc_html__( 'New Customers require a name and email address', 'easy-digital-downloads' ) );
 		}
 
 		$customer = new EDD_Customer( $email );
+
 		if ( empty( $customer->id ) ) {
 			$customer_data = array(
-				'name'  => $names,
+				'name'  => $name,
 				'email' => $email,
 			);
 
@@ -274,18 +284,18 @@ function edd_update_payment_details( $data = array() ) {
 	} elseif ( $curr_customer_id !== $new_customer_id ) {
 		$customer = new EDD_Customer( $new_customer_id );
 		$email    = $customer->email;
-		$names    = $customer->name;
+		$name     = $customer->name;
 
 		$previous_customer = new EDD_Customer( $curr_customer_id );
 		$customer_changed = true;
 	} else {
 		$customer = new EDD_Customer( $curr_customer_id );
 		$email    = $customer->email;
-		$names    = $customer->name;
+		$name     = $customer->name;
 	}
 
 	// Setup first and last name from input values.
-	$names      = explode( ' ', $names );
+	$names      = explode( ' ', $name );
 	$first_name = ! empty( $names[0] ) ? $names[0] : '';
 	$last_name  = '';
 
@@ -301,9 +311,12 @@ function edd_update_payment_details( $data = array() ) {
 		$customer->attach_payment( $order_id, false );
 
 		// If purchase was completed and not ever refunded, adjust stats of customers
-		if ( 'revoked' === $status || 'publish' === $status ) {
+		if ( 'revoked' === $new_status || 'publish' === $new_status ) {
 			$previous_customer->recalculate_stats();
-			$customer->recalculate_stats();
+
+			if ( ! empty( $customer ) ) {
+				$customer->recalculate_stats();
+			}
 		}
 
 		$order_update_args['customer_id'] = $customer->id;
