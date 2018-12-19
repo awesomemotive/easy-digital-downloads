@@ -2994,6 +2994,12 @@ body.download_page_edd-reports {
 /* Tools Styles
 -------------------------------------------------------------- */
 
+/**
+ * Vertical sections used throughout the UI.
+ *
+ * [1] Backwards compatibility for < 3.0
+ */
+
 .edd-vertical-sections {
 	overflow: visible;
 	background: linear-gradient( 90deg, #f5f5f5 0%, #f5f5f5 20%, #fff 20%, #fff 100% );
@@ -3005,6 +3011,7 @@ body.download_page_edd-reports {
 	}
 }
 
+#edd-item-tab-wrapper, /* [1] */
 .edd-vertical-sections .section-nav {
 	position: relative;
 	float: left;
@@ -3018,6 +3025,11 @@ body.download_page_edd-reports {
 	max-width: 200px;
 }
 
+#edd-item-tab-wrapper-list { /** [1] */
+	margin: 0;
+}
+
+#edd-item-tab-wrapper li, /* [1] */
 .edd-vertical-sections .section-nav li {
 	display: block;
 	position: relative;
@@ -3025,6 +3037,8 @@ body.download_page_edd-reports {
 	padding: 0;
 }
 
+#edd-item-tab-wrapper li a, /* [1] */
+#edd-item-tab-wrapper li > .edd-item-tab-label-wrap, /* [1] */
 .edd-vertical-sections .section-nav li a {
 	display: block;
 	margin: 0;
@@ -3033,6 +3047,10 @@ body.download_page_edd-reports {
 	text-decoration: none;
 	border-bottom: 1px solid #e5e5e5;
 	box-shadow: none;
+}
+
+#edd-item-tab-wrapper li > .edd-item-tab-label-wrap { /* [1] */
+	background-color: #fff;
 }
 
 .edd-vertical-sections .section-nav li a > .dashicons,
@@ -3144,12 +3162,14 @@ body.download_page_edd-reports {
 
 /* Content wrapper */
 
+#edd-item-card-wrapper, /** [1] */
 .edd-vertical-sections .section-wrap {
 	float: left;
 	width: 80%;
 }
 
 @media only screen and ( min-width: 1200px ) {
+	#edd-item-card-wrapper, /** [1] */
 	#edd-graphs-filter,
 	.edd-vertical-sections:not(.meta-box) .section-wrap {
 		width: calc( 100% - 200px );
