@@ -609,6 +609,19 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 
 	}
 
+	if( empty( $customer ) ) {
+
+		$customer = new EDD_Customer( $payment->customer_id );
+
+	}
+
+	// Record the payer email on the EDD_Customer record if it is different than the email entered on checkout
+	if( ! empty( $data['payer_email'] ) && $data['payer_email'] != $customer->email ) {
+
+		$customer->add_email( $data['payer_email'] );
+
+	}
+
 	if ( $payment_status == 'refunded' || $payment_status == 'reversed' ) {
 
 		// Process a refund
