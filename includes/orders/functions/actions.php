@@ -365,7 +365,10 @@ function edd_add_manual_order( $args = array() ) {
 		edd_update_order_meta( $order_id, 'unlimited_downloads', 1 );
 	}
 
-	$customer->recalculate_stats();
+	if ( ! empty( $customer ) ) {
+		$customer->recalculate_stats();
+	}
+
 	edd_increase_total_earnings( $order_total );
 
 	// Setup order number.
