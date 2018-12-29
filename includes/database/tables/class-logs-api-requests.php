@@ -29,7 +29,7 @@ final class Logs_Api_Requests extends Table {
 	 * @since 3.0
 	 * @var string
 	 */
-	protected $name = 'edd_logs_api_requests';
+	protected $name = 'logs_api_requests';
 
 	/**
 	 * Database version

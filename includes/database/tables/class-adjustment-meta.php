@@ -29,7 +29,7 @@ final class Adjustment_Meta extends Table {
 	 * @since 3.0
 	 * @var string
 	 */
-	protected $name = 'edd_adjustmentmeta';
+	protected $name = 'adjustmentmeta';
 
     /**
      * Database version.
