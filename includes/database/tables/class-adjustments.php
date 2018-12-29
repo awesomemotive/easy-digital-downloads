@@ -29,7 +29,7 @@ final class Adjustments extends Table {
 	 * @since 3.0
 	 * @var string
 	 */
-	protected $name = 'edd_adjustments';
+	protected $name = 'adjustments';
 
 	/**
 	 * Database version.

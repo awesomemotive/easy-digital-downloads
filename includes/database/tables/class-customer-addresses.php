@@ -29,7 +29,7 @@ final class Customer_Addresses extends Table {
 	 * @since 3.0
 	 * @var string
 	 */
-	protected $name = 'edd_customer_addresses';
+	protected $name = 'customer_addresses';
 
 	/**
 	 * Database version

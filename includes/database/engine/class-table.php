@@ -1,6 +1,6 @@
 <?php
 /**
- * Base Easy Digital Downloads Custom Table Class.
+ * Base Custom Database Table Class.
  *
  * @package     EDD
  * @subpackage  Database\Tables
@@ -68,14 +68,19 @@ abstract class Table extends Base {
 	protected $db_version = 0;
 
 	/**
-	 * @var string Table prefix
+	 * @var string Table prefix, including the site prefix
 	 */
-	protected $prefix = '';
+	protected $table_prefix = '';
 
 	/**
 	 * @var string Table name
 	 */
 	protected $table_name = '';
+
+	/**
+	 * @var string Table name, prefixed from the base
+	 */
+	protected $prefixed_name = '';
 
 	/**
 	 * @var string Table schema
@@ -612,21 +617,34 @@ abstract class Table extends Base {
 			return;
 		}
 
-		// Global
+		// Set variables for global tables
 		if ( $this->is_global() ) {
-			$this->prefix           = $db->get_blog_prefix( 0 );
-			$db->{$this->name}      = "{$this->prefix}{$this->name}";
-			$db->ms_global_tables[] = $this->name;
+			$site_id = 0;
+			$tables  = 'ms_global_tables';
 
-		// Site
+		// Set variables for per-site tables
 		} else {
-			$this->prefix      = $db->get_blog_prefix( null );
-			$db->{$this->name} = "{$this->prefix}{$this->name}";
-			$db->tables[]      = $this->name;
+			$site_id = null;
+			$tables  = 'tables';
 		}
 
-		// Set the table name locally
-		$this->table_name = $db->{$this->name};
+		// Set the table prefix and prefix the table name
+		$this->table_prefix  = $db->get_blog_prefix( $site_id );
+		$this->prefixed_name = $this->apply_prefix( $this->name );
+
+		// Get the prefixed table name
+		$prefixed_table_name = "{$this->table_prefix}{$this->prefixed_name}";
+
+		// Set the database interface
+		$db->{$this->prefixed_name} = $this->table_name = $prefixed_table_name;
+
+		// Create the array if it does not exist
+		if ( ! isset( $db->{$tables} ) ) {
+			$db->{$tables} = array();
+		}
+
+		// Add the table to the global table array
+		$db->{$tables}[] = $this->prefixed_name;
 
 		// Charset
 		if ( ! empty( $db->charset ) ) {
