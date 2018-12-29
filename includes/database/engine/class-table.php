@@ -798,6 +798,11 @@ abstract class Table extends Base {
 	 */
 	private function sanitize_table_name( $name = '' ) {
 
+		// Bail if empty or not a string
+		if ( empty( $name ) || ! is_string( $name ) ) {
+			return false;
+		}
+
 		// Trim spaces off the ends
 		$unspace = trim( $name );
 
