@@ -593,7 +593,7 @@ class Stats {
 
 		$sql = "SELECT AVG( TIMESTAMPDIFF( SECOND, {$this->query_vars['table']}.{$this->query_vars['column']}, o2.date_created ) ) AS time_to_refund
 				FROM {$this->query_vars['table']}
-				INNER JOIN wp_edd_orders o2 ON {$this->query_vars['table']}.id = o2.parent
+				INNER JOIN {$this->query['table']} o2 ON {$this->query_vars['table']}.id = o2.parent
 				WHERE 1=1 {$type_sql} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 
 		$result = $this->get_db()->get_var( $sql );
@@ -2045,10 +2045,10 @@ class Stats {
 
 		if ( 'AVG' === $function ) {
 			$sql = "SELECT COUNT(id) / total_customers AS average
-					FROM wp_edd_orders
+					FROM {$this->query['table']}
 					CROSS JOIN (
 						SELECT COUNT(DISTINCT customer_id) AS total_customers
-						FROM wp_edd_orders
+						FROM {$this->query['table']}
 					) o
 					WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		} else {
