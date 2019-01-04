@@ -929,18 +929,76 @@ function edd_paypal_process_pdt_on_return() {
 		$debug_args['body']['at'] = str_pad( substr( $debug_args['body']['at'], -6 ), strlen( $debug_args['body']['at'] ), '*', STR_PAD_LEFT );
 		edd_debug_log( 'Attempting to verify PayPal payment with PDT. Args: ' . print_r( $debug_args, true ) );
 
-		$request = wp_remote_post( edd_get_paypal_redirect( true, true ), $remote_post_vars );
+		edd_debug_log( 'Sending PDT Verification request to ' . edd_get_paypal_redirect() );
+
+		$request = wp_remote_post( edd_get_paypal_redirect(), $remote_post_vars );
 
 		if ( ! is_wp_error( $request ) ) {
 
 			$body = wp_remote_retrieve_body( $request );
 
-			if( false !== strpos( $body, 'SUCCESS' ) ) {
+			// parse the data
+			$lines = explode( "\n", trim( $body ) );
+			$data  = array();
+			if ( strcmp ( $lines[0], "SUCCESS" ) == 0 ) {
 
-				// Purchase verified, set to completed
-				$payment->status = 'publish';
+				for ( $i = 1; $i < count( $lines ); $i++ ) {
+					$parsed_line = explode( "=", $lines[ $i ],2 );
+					$data[ urldecode( $parsed_line[0] ) ] = urldecode( $parsed_line[1] );
+				}
+
+				if ( ! isset( $data['payment_gross'] ) ) {
+
+					edd_debug_log( 'Attempt to verify PayPal payment with PDT failed due to payment total missing' );
+					$payment->add_note( __( 'Payment failed while validating PayPal PDT. Missing payment_gross.', 'easy-digital-downloads' ) );
+					$payment->status = 'failed';
+
+				} elseif ( (float) $data['payment_gross'] < (float) $payment->total ) {
+
+					/**
+					 * Here we account for payments that are less than the expected results only. There are times that
+					 * PayPal will sometimes round and have $0.01 more than the amount. The goal here is to protect store owners
+					 * from getting paid less than expected.
+					 */
+					edd_debug_log( 'Attempt to verify PayPal payment with PDT failed due to payment total discrepancy' );
+					$payment->add_note( sprintf( __( 'Payment failed while validating PayPal PDT. Amount expected: %f. Amount Received: %f', 'easy-digital-downloads' ), $payment->total, $data['payment_gross'] ) );
+					$payment->status = 'failed';
+
+				} else {
+
+					// Verify the status
+					switch( strtolower( $data['payment_status'] ) ) {
+
+						case 'completed':
+							$payment->status = 'publish';
+							break;
+
+						case 'failed':
+							$payment->status = 'failed';
+							break;
+
+						default:
+							$payment->status = 'pending';
+							break;
+
+					}
+
+				}
+
 				$payment->transaction_id = sanitize_text_field( $_GET['tx'] );
 				$payment->save();
+
+			} elseif ( strcmp ( $lines[0], "FAIL" ) == 0 ) {
+
+				edd_debug_log( 'Attempt to verify PayPal payment with PDT failed due to PDT failure response: ' . print_r( $body, true ) );
+				$payment->add_note( __( 'Payment failed while validating PayPal PDT.', 'easy-digital-downloads' ) );
+				$payment->status = 'failed';
+
+			} else {
+
+				edd_debug_log( 'Attempt to verify PayPal payment with PDT met with an unexpected result: ' . print_r( $body, true ) );
+				$payment->add_note( __( 'PayPal PDT encountered an unexpected result, payment set to pending', 'easy-digital-downloads' ) );
+				$payment->status = 'pending';
 
 			}
 
