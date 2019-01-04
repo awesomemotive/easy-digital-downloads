@@ -3,7 +3,7 @@
 /**
  * Internal dependencies.
  */
-import { recalculate_taxes } from './edd-checkout-global.js';
+import { recalculate_taxes } from './checkout';
 
 jQuery( document ).ready( function( $ ) {
 	// Hide unneeded elements. These are things that are required in case JS breaks or isn't present
