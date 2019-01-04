@@ -993,12 +993,14 @@ function edd_paypal_process_pdt_on_return() {
 				edd_debug_log( 'Attempt to verify PayPal payment with PDT failed due to PDT failure response: ' . print_r( $body, true ) );
 				$payment->add_note( __( 'Payment failed while validating PayPal PDT.', 'easy-digital-downloads' ) );
 				$payment->status = 'failed';
+				$payment->save();
 
 			} else {
 
 				edd_debug_log( 'Attempt to verify PayPal payment with PDT met with an unexpected result: ' . print_r( $body, true ) );
 				$payment->add_note( __( 'PayPal PDT encountered an unexpected result, payment set to pending', 'easy-digital-downloads' ) );
 				$payment->status = 'pending';
+				$payment->save();
 
 			}
 
