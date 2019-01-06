@@ -947,13 +947,31 @@ function edd_paypal_process_pdt_on_return() {
 					$data[ urldecode( $parsed_line[0] ) ] = urldecode( $parsed_line[1] );
 				}
 
-				if ( ! isset( $data['payment_gross'] ) ) {
+				if ( isset( $data['mc_gross'] ) ) {
+
+					$total = $data['mc_gross'];
+
+				} else if ( isset( $data['payment_gross'] ) ) {
+
+					$total = $data['payment_gross'];
+
+				} else if ( isset( $_REQUEST['amt'] ) ) {
+
+					$total = $_REQUEST['amt'];
+
+				} else {
+
+					$total = null;
+
+				}
+
+				if ( is_null( $total ) ) {
 
 					edd_debug_log( 'Attempt to verify PayPal payment with PDT failed due to payment total missing' );
-					$payment->add_note( __( 'Payment failed while validating PayPal PDT. Missing payment_gross.', 'easy-digital-downloads' ) );
-					$payment->status = 'failed';
+					$payment->add_note( __( 'Payment could not be verified while validating PayPal PDT. Missing payment total fields.', 'easy-digital-downloads' ) );
+					$payment->status = 'pending';
 
-				} elseif ( (float) $data['payment_gross'] < (float) $payment->total ) {
+				} elseif ( (float) $total < (float) $payment->total ) {
 
 					/**
 					 * Here we account for payments that are less than the expected results only. There are times that
