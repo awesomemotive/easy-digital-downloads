@@ -616,9 +616,9 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 	}
 
 	// Record the payer email on the EDD_Customer record if it is different than the email entered on checkout
-	if( ! empty( $data['payer_email'] ) && $data['payer_email'] != $customer->email ) {
+	if( ! empty( $data['payer_email'] ) && ! in_array( strtolower( $data['payer_email'] ), array_map( 'strtolower', $customer->emails ) ) ) {
 
-		$customer->add_email( $data['payer_email'] );
+		$customer->add_email( strtolower( $data['payer_email'] ) );
 
 	}
 
