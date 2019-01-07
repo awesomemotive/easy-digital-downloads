@@ -382,7 +382,7 @@ var EDD_Add_Order = {
         var tax_rate = parseFloat(data.tax_rate);
         $('.orderitems tbody tr:not(.no-items)').each(function () {
           var amount = parseFloat($('.amount .value', this).text());
-          var quantity = $('.quantity .value', this) ? parseFloat($('.column-quantity .value', this).text()) : 1;
+          var quantity = $('.quantity .value', this).length > 0 ? parseFloat($('.column-quantity .value', this).text()) : 1;
           var calculated = amount * quantity;
           var tax = 0;
 
