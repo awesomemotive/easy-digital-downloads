@@ -393,8 +393,9 @@ var EDD_Add_Order = {
 
 	update_totals: function() {
 		let subtotal = 0,
-			tax = 0,
+			discounts = 0,
 			adjustments = 0,
+			tax = 0,
 			total = 0;
 
 		$( '.orderitems tbody tr:not(.no-items)' ).each( function() {
@@ -463,7 +464,7 @@ var EDD_Add_Order = {
 								total -= item_tax_reduction;
 							}
 
-							adjustments += reduction;
+							discounts += reduction;
 							total -= reduction;
 						} );
 					} else {
@@ -487,13 +488,18 @@ var EDD_Add_Order = {
 			tax = 0;
 		}
 
+		if ( isNaN( discounts ) ) {
+			discounts = 0;
+		}
+
 		if ( isNaN( adjustments ) ) {
 			adjustments = 0;
 		}
 
 		$( ' .edd-order-subtotal .value' ).html( subtotal.toFixed( edd_vars.currency_decimals ) );
+		$( ' .edd-order-discounts .value' ).html( discounts.toFixed( edd_vars.currency_decimals ) );
+		$( ' .edd-order-adjustments .value' ).html( adjustments.toFixed( edd_vars.currency_decimals ) );
 		$( ' .edd-order-taxes .value' ).html( tax.toFixed( edd_vars.currency_decimals ) );
-		$( ' .edd-order-discounts .value' ).html( adjustments.toFixed( edd_vars.currency_decimals ) );
 		$( ' .edd-order-total .value ' ).html( total.toFixed( edd_vars.currency_decimals ) );
 	},
 
