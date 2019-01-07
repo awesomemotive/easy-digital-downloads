@@ -5,7 +5,7 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.6
-Tested up to: 4.9.7
+Tested up to: 5.0.2
 Stable Tag: 3.0
 License: GNU Version 2 or Any Later Version
 
@@ -187,6 +187,25 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+
+= 2.9.11, January 6, 2019 =
+* Fix: PayPal PDT amount validation fails for some accounts due to missing payment_gross field.
+* Tweak: PayPal email address now registered to EDD_Customer during IPN processing if the email is not already registered.
+
+= 2.9.10, January 4, 2019 =
+* Security Fix: Avoid a possible PayPal Standard price manipulation when using PDT (Payment Data Transfer)
+
+= 2.9.9, December 3, 2018 =
+* Fix: State/province cannot be updated on order details screen when country is changed.
+* Fix: "Show Privacy Policy" text link is positioned incorrectly.
+* Fix: "Agree to Terms?" text shows twice on checkout with some configurations.
+* Fix: Nonce verification failure when state/province field is not visible.
+* Fix: Fees / Discounts can be duplicated when payment recovery link is clicked.
+* Fix: Incorrect DocBlock for edd_currency_filter.
+* Fix: Slashes not removed when saving profile name field.
+* Fix: Item amount set to 0.00 improperly during CSV import if the "Products (Raw)" column is used but does not include a {}.
+* Fix: Privacy policy text not shown if terms of use checkbox is disabled.
+* Fix: Log messages not saved to debug log file if they contain non UTF-8 characters.
 
 = 2.9.8, October 1, 2018 =
 * Fix: Updated Amazon Payments onboarding URL.

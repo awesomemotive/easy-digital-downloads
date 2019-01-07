@@ -1,7 +1,8 @@
-# Copyright (C) 2018 Easy Digital Downloads
+# Copyright (C) 2019 Easy Digital Downloads
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< .merge_file_EGlSxJ
 <<<<<<< HEAD
@@ -45,10 +46,15 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
 "POT-Creation-Date: 2018-09-10 22:52:27+00:00\n"
 >>>>>>> master
+=======
+"Project-Id-Version: Easy Digital Downloads 2.9.11\n"
+"Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
+"POT-Creation-Date: 2019-01-06 16:30:56+00:00\n"
+>>>>>>> master
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2018-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2019-MO-DA HO:MI+ZONE\n"
 "Last-Translator: WP-Translations (http://wp-translations.org/)\n"
 "Language-Team: WP-Translations <wpt@wp-translations.org>\n"
 "Language: en_US\n"
@@ -2169,7 +2175,11 @@ msgstr ""
 =======
 #: includes/admin/downloads/metabox.php:1031
 #: includes/admin/settings/register-settings.php:747
+<<<<<<< HEAD
 #: includes/admin/thickbox.php:59 includes/checkout/template.php:984
+>>>>>>> master
+=======
+#: includes/admin/thickbox.php:59 includes/checkout/template.php:997
 >>>>>>> master
 #: includes/shortcodes.php:49 includes/template-functions.php:78
 msgid "Purchase"
@@ -2286,7 +2296,7 @@ msgstr ""
 msgid "Products (Raw)"
 msgstr ""
 
-#: includes/admin/import/class-batch-import-payments.php:602
+#: includes/admin/import/class-batch-import-payments.php:611
 msgid "payments"
 msgstr ""
 
@@ -2925,17 +2935,38 @@ msgid "Search Countries"
 msgstr ""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: includes/admin/payments/view-order-details.php:545
 #: includes/admin/settings/register-settings.php:456
 =======
 #: includes/admin/payments/view-order-details.php:753
+=======
+#: includes/admin/payments/view-order-details.php:754
+>>>>>>> master
 #: includes/admin/settings/register-settings.php:333
 >>>>>>> master
 msgid "Select a state"
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/admin/payments/view-order-details.php:548
 msgid "Search States/Provinces"
+=======
+#: includes/admin/payments/view-order-details.php:757
+msgid "Type to search all States/Provinces"
+msgstr ""
+
+#: includes/admin/payments/view-order-details.php:778
+msgid "Payment Notes"
+msgstr ""
+
+#: includes/admin/payments/view-order-details.php:793
+msgid "No payment notes"
+msgstr ""
+
+#: includes/admin/payments/view-order-details.php:799
+msgid "Add Note"
+>>>>>>> master
 msgstr ""
 
 #: includes/admin/payments/view-order-details.php:568
@@ -5516,8 +5547,12 @@ msgid "The button label for completing a free purchase."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:754
+<<<<<<< HEAD
 >>>>>>> master
 #: includes/checkout/template.php:987
+>>>>>>> master
+=======
+#: includes/checkout/template.php:1000
 >>>>>>> master
 msgid "Free Download"
 msgstr ""
@@ -7783,35 +7818,43 @@ msgstr ""
 msgid "Enter discount"
 msgstr ""
 
-#: includes/checkout/template.php:777 includes/checkout/template.php:845
+#: includes/checkout/template.php:783
 msgid "Agree to Terms?"
 msgstr ""
 
-#: includes/checkout/template.php:790
+#: includes/checkout/template.php:804
 msgid "Show Terms"
 msgstr ""
 
-#: includes/checkout/template.php:791
+#: includes/checkout/template.php:805
 msgid "Hide Terms"
 msgstr ""
 
-#: includes/checkout/template.php:813 includes/checkout/template.php:870
+#: includes/checkout/template.php:855
+msgid "Agree to Privacy Policy?"
+msgstr ""
+
+#: includes/checkout/template.php:877
 msgid "Show Privacy Policy"
 msgstr ""
 
-#: includes/checkout/template.php:814 includes/checkout/template.php:871
+#: includes/checkout/template.php:879
 msgid "Hide Privacy Policy"
 msgstr ""
 
-#: includes/checkout/template.php:901
+#: includes/checkout/template.php:914
 msgid "Purchase Total:"
 msgstr ""
 
-#: includes/checkout/template.php:927
+#: includes/checkout/template.php:940
 msgid "Go back"
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/checkout/template.php:950
+>>>>>>> master
+=======
+#: includes/checkout/template.php:963
 >>>>>>> master
 msgid "Next"
 msgstr ""
@@ -9107,8 +9150,13 @@ msgstr ""
 #: includes/gateways/paypal-standard.php:469
 #: includes/gateways/paypal-standard.php:558
 #: includes/gateways/paypal-standard.php:568
+<<<<<<< HEAD
 #: includes/gateways/paypal-standard.php:628
 #: includes/gateways/paypal-standard.php:637
+>>>>>>> master
+=======
+#: includes/gateways/paypal-standard.php:641
+#: includes/gateways/paypal-standard.php:650
 >>>>>>> master
 msgid "IPN Error"
 msgstr ""
@@ -9328,23 +9376,27 @@ msgstr ""
 msgid "Payment failed due to invalid currency in PayPal IPN."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:628
+#: includes/gateways/paypal-standard.php:641
 msgid "Invalid payment amount in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:631
+#: includes/gateways/paypal-standard.php:644
 msgid "Payment failed due to invalid amount in PayPal IPN."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:637
+#: includes/gateways/paypal-standard.php:650
 msgid "Invalid purchase key in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:639
+#: includes/gateways/paypal-standard.php:652
 msgid "Payment failed due to invalid purchase key in PayPal IPN."
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/gateways/paypal-standard.php:645
+>>>>>>> master
+=======
+#: includes/gateways/paypal-standard.php:658
 >>>>>>> master
 #: tests/helpers/class-helper-payment.php:131
 #: tests/helpers/class-helper-payment.php:234
@@ -9355,6 +9407,7 @@ msgstr ""
 msgid "PayPal Transaction ID: %s"
 msgstr ""
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: includes/gateways/paypal-standard.php:653
 msgid "Payment made via eCheck and will clear automatically in 5-8 days"
@@ -9368,15 +9421,26 @@ msgstr ""
 
 #: includes/gateways/paypal-standard.php:666
 >>>>>>> master
+=======
+#: includes/gateways/paypal-standard.php:672
+msgid "Payment made via eCheck and will clear automatically in 5-8 days"
+msgstr ""
+
+#: includes/gateways/paypal-standard.php:679
+>>>>>>> master
 msgid ""
 "Payment requires a confirmed customer address and must be accepted manually "
 "through PayPal"
 msgstr ""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: includes/gateways/paypal-standard.php:666
 =======
 #: includes/gateways/paypal-standard.php:672
+>>>>>>> master
+=======
+#: includes/gateways/paypal-standard.php:685
 >>>>>>> master
 msgid ""
 "Payment must be accepted manually through PayPal due to international "
@@ -9384,15 +9448,20 @@ msgid ""
 msgstr ""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: includes/gateways/paypal-standard.php:672
 =======
 #: includes/gateways/paypal-standard.php:678
+>>>>>>> master
+=======
+#: includes/gateways/paypal-standard.php:691
 >>>>>>> master
 msgid ""
 "Payment received in non-shop currency and must be accepted manually through "
 "PayPal"
 msgstr ""
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: includes/gateways/paypal-standard.php:679
 =======
@@ -9415,14 +9484,27 @@ msgstr ""
 #: includes/gateways/paypal-standard.php:697
 =======
 #: includes/gateways/paypal-standard.php:691
+=======
+#: includes/gateways/paypal-standard.php:698
+msgid ""
+"Payment is being reviewed by PayPal staff as high-risk or in possible "
+"violation of government regulations"
+msgstr ""
+
+#: includes/gateways/paypal-standard.php:704
+>>>>>>> master
 msgid "Payment was sent to non-confirmed or non-registered email address."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:697
+#: includes/gateways/paypal-standard.php:710
 msgid "PayPal account must be upgraded before this payment can be accepted"
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/gateways/paypal-standard.php:703
+>>>>>>> master
+=======
+#: includes/gateways/paypal-standard.php:716
 >>>>>>> master
 msgid ""
 "PayPal account is not verified. Verify account in order to accept this "
@@ -9430,15 +9512,20 @@ msgid ""
 msgstr ""
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 #: includes/gateways/paypal-standard.php:703
 =======
 #: includes/gateways/paypal-standard.php:709
+>>>>>>> master
+=======
+#: includes/gateways/paypal-standard.php:722
 >>>>>>> master
 msgid ""
 "Payment is pending for unknown reasons. Contact PayPal support for "
 "assistance"
 msgstr ""
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #: includes/gateways/paypal-standard.php:756
 msgid "Partial PayPal refund processed: %s"
@@ -9467,30 +9554,57 @@ msgstr ""
 #: includes/gateways/paypal-standard.php:1182
 =======
 #: includes/gateways/paypal-standard.php:762
+=======
+#: includes/gateways/paypal-standard.php:775
+>>>>>>> master
 msgid "Partial PayPal refund processed: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:767
+#: includes/gateways/paypal-standard.php:780
 msgid "PayPal Payment #%s Refunded for reason: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:768
+#: includes/gateways/paypal-standard.php:781
 msgid "PayPal Refund Transaction ID: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:1026
+#: includes/gateways/paypal-standard.php:984
+msgid ""
+"Payment could not be verified while validating PayPal PDT. Missing payment "
+"total fields."
+msgstr ""
+
+#: includes/gateways/paypal-standard.php:995
+msgid ""
+"Payment failed while validating PayPal PDT. Amount expected: %f. Amount "
+"Received: %f"
+msgstr ""
+
+#: includes/gateways/paypal-standard.php:1025
+msgid "Payment failed while validating PayPal PDT."
+msgstr ""
+
+#: includes/gateways/paypal-standard.php:1032
+msgid "PayPal PDT encountered an unexpected result, payment set to pending"
+msgstr ""
+
+#: includes/gateways/paypal-standard.php:1117
 msgid "Refund Payment in PayPal"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:1173
+#: includes/gateways/paypal-standard.php:1264
 msgid "PayPal refund failed for unknown reason."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:1183
+#: includes/gateways/paypal-standard.php:1274
 msgid "PayPal refund transaction ID: %s"
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/gateways/paypal-standard.php:1187
+>>>>>>> master
+=======
+#: includes/gateways/paypal-standard.php:1278
 >>>>>>> master
 msgid "PayPal refund failed: %s"
 msgstr ""
@@ -9775,7 +9889,11 @@ msgstr ""
 msgid "Status changed from %s to %s"
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/payments/actions.php:496 includes/payments/actions.php:555
+=======
+#: includes/payments/actions.php:460 includes/payments/actions.php:522
+>>>>>>> master
 msgid "Error resuming payment."
 msgstr ""
 
@@ -9783,6 +9901,7 @@ msgstr ""
 msgid "Payment recovery triggered URL"
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/payments/actions.php:576 includes/payments/actions.php:610
 msgid "To complete this payment, please login to your account."
 msgstr ""
@@ -9792,6 +9911,17 @@ msgid "Lost Password"
 msgstr ""
 
 #: includes/payments/actions.php:579 templates/shortcode-login.php:33
+=======
+#: includes/payments/actions.php:544 includes/payments/actions.php:578
+msgid "To complete this payment, please login to your account."
+msgstr ""
+
+#: includes/payments/actions.php:546
+msgid "Lost Password"
+msgstr ""
+
+#: includes/payments/actions.php:547 templates/shortcode-login.php:33
+>>>>>>> master
 msgid "Lost Password?"
 msgstr ""
 
@@ -11333,7 +11463,11 @@ msgctxt "Address country"
 msgid "Country:"
 msgstr ""
 
+<<<<<<< HEAD
 #: includes/admin/payments/view-order-details.php:533
+=======
+#: includes/admin/payments/view-order-details.php:742
+>>>>>>> master
 msgctxt "State / province of address"
 msgid "State / Province:"
 msgstr ""
