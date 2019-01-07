@@ -29,7 +29,7 @@ final class Customer_Meta extends Table {
 	 * @since 3.0
 	 * @var string
 	 */
-	protected $name = 'edd_customermeta';
+	protected $name = 'customermeta';
 
 	/**
 	 * Database version
@@ -82,8 +82,8 @@ final class Customer_Meta extends Table {
 	 * @since 3.0
 	 */
 	public function maybe_upgrade() {
-		if ( false !== get_option( $this->prefix . 'edd_customermeta_db_version', false ) ) {
-			delete_option( $this->prefix . 'edd_customermeta_db_version' );
+		if ( false !== get_option( $this->table_prefix . 'edd_customermeta_db_version', false ) ) {
+			delete_option( $this->table_prefix . 'edd_customermeta_db_version' );
 
 			if ( $this->column_exists( 'customer_id' ) && ! $this->column_exists( 'edd_customer_id' ) ) {
 				$this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE `customer_id` `edd_customer_id` bigint(20) unsigned NOT NULL default '0';" );

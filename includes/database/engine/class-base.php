@@ -5,7 +5,7 @@
  * @package     EDD
  * @subpackage  Database
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @license     http://opensource.org/licenses/gpl-3.0.0.php GNU Public License
  * @since       3.0
  */
 namespace EDD\Database;
@@ -24,10 +24,20 @@ defined( 'ABSPATH' ) || exit;
  */
 class Base {
 
+	/** Global Properties *****************************************************/
+
+	/**
+	 * Global prefix used for tables/hooks/cache-groups/etc...
+	 *
+	 * @since 3.0.0
+	 * @var   string
+	 */
+	protected $prefix = 'edd';
+
 	/**
 	 * The last database error, if any.
 	 *
-	 * @since 3.0
+	 * @since 3.0.0
 	 * @var   mixed
 	 */
 	protected $last_error = false;
@@ -108,6 +118,21 @@ class Base {
 	}
 
 	/** Protected *************************************************************/
+
+	/**
+	 * Maybe append the prefix to string.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $string
+	 * @param string $sep
+	 * @return string
+	 */
+	protected function apply_prefix( $string = '', $sep = '_' ) {
+		return ! empty( $this->prefix )
+			? "{$this->prefix}{$sep}{$string}"
+			: $string;
+	}
 
 	/**
 	 * Set class variables from arguments.

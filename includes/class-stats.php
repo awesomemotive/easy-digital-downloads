@@ -104,6 +104,8 @@ class Stats {
 				'range'             => '',
 				'status'            => array( 'publish', 'revoked' ),
 				'status_sql'        => '',
+				'type'              => array(),
+				'type_sql'          => '',
 				'where_sql'         => '',
 				'date_query_sql'    => '',
 				'date_query_column' => '',
@@ -591,7 +593,7 @@ class Stats {
 
 		$sql = "SELECT AVG( TIMESTAMPDIFF( SECOND, {$this->query_vars['table']}.{$this->query_vars['column']}, o2.date_created ) ) AS time_to_refund
 				FROM {$this->query_vars['table']}
-				INNER JOIN wp_edd_orders o2 ON {$this->query_vars['table']}.id = o2.parent
+				INNER JOIN {$this->query['table']} o2 ON {$this->query_vars['table']}.id = o2.parent
 				WHERE 1=1 {$type_sql} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 
 		$result = $this->get_db()->get_var( $sql );
@@ -1108,7 +1110,7 @@ class Stats {
 				FROM {$this->query_vars['table']}
 				WHERE 1=1 {$discount} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				GROUP BY description
-				ORDER BY {$this->query_vars['date_query_column']} DESC
+				ORDER BY count DESC
 				LIMIT {$number}";
 
 		$result = $this->get_db()->get_results( $sql );
@@ -1165,13 +1167,13 @@ class Stats {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_order_adjustments;
-		$this->query_vars['column']            = 'amount';
+		$this->query_vars['column']            = 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$function      = $this->get_db()->prepare( 'SUM(%s)', $this->query_vars['column'] );
+		$function      = str_replace( "'", '', $this->get_db()->prepare( 'SUM(%s)', $this->query_vars['column'] ) );
 		$discount_code = ! empty( $this->query_vars['discount_code'] )
 			? $this->get_db()->prepare( 'AND type = %s AND description = %s', 'discount', sanitize_text_field( $this->query_vars['discount_code'] ) )
 			: $this->get_db()->prepare( 'AND type = %s', 'discount' );
@@ -1223,13 +1225,13 @@ class Stats {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_order_adjustments;
-		$this->query_vars['column']            = 'amount';
+		$this->query_vars['column']            = 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$function      = $this->get_db()->prepare( 'AVG(%s)', $this->query_vars['column'] );
+		$function      = str_replace( "'", '', $this->get_db()->prepare( 'AVG(%s)', $this->query_vars['column'] ) );
 		$type_discount = $this->get_db()->prepare( 'AND type = %s', 'discount' );
 
 		$sql = "SELECT {$function}
@@ -1391,9 +1393,9 @@ class Stats {
 			: '';
 
 		$sql = "SELECT gateway, {$function} AS total
-				FROM {$this->query_vars['table']}
-				WHERE 1=1 {$this->query_vars['status_sql']} {$gateway} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
-				GROUP BY gateway";
+			FROM {$this->query_vars['table']}
+			WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$gateway} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+			GROUP BY gateway";
 
 		$result = $this->get_db()->get_results( $sql );
 
@@ -1465,7 +1467,7 @@ class Stats {
 	 *
 	 * @param array $query See \EDD\Stats::get_gateway_data().
 	 *
-	 * @return array List of objects containing the number of sales processed either for every gateway or the gateway
+	 * @return int|array List of objects containing the number of sales processed either for every gateway or the gateway
 	 *               passed as a query parameter.
 	 */
 	public function get_gateway_sales( $query = array() ) {
@@ -2043,10 +2045,10 @@ class Stats {
 
 		if ( 'AVG' === $function ) {
 			$sql = "SELECT COUNT(id) / total_customers AS average
-					FROM wp_edd_orders
+					FROM {$this->query['table']}
 					CROSS JOIN (
 						SELECT COUNT(DISTINCT customer_id) AS total_customers
-						FROM wp_edd_orders
+						FROM {$this->query['table']}
 					) o
 					WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		} else {
@@ -2436,6 +2438,8 @@ class Stats {
 			'range'             => '',
 			'status'            => array( 'publish', 'revoked' ),
 			'status_sql'        => '',
+			'type'              => array(),
+			'type_sql'          => '',
 			'where_sql'         => '',
 			'date_query_sql'    => '',
 			'date_query_column' => '',
@@ -2589,11 +2593,23 @@ class Stats {
 
 		// Generate status SQL if statuses have been set.
 		if ( ! empty( $this->query_vars['status'] ) ) {
-			$this->query_vars['status'] = array_map( 'sanitize_text_field', $this->query_vars['status'] );
+			if ( 'any' === $this->query_vars['status'] ) {
+				$this->query_vars['status_sql'] = '';
+			} else {
+				$this->query_vars['status'] = array_map( 'sanitize_text_field', $this->query_vars['status'] );
 
-			$placeholders = implode( ', ', array_fill( 0, count( $this->query_vars['status'] ), '%s' ) );
+				$placeholders = implode( ', ', array_fill( 0, count( $this->query_vars['status'] ), '%s' ) );
 
-			$this->query_vars['status_sql'] = $this->get_db()->prepare( "AND {$this->query_vars['table']}.status IN ({$placeholders})", $this->query_vars['status'] );
+				$this->query_vars['status_sql'] = $this->get_db()->prepare( "AND {$this->query_vars['table']}.status IN ({$placeholders})", $this->query_vars['status'] );
+			}
+		}
+
+		if ( ! empty( $this->query_vars['type'] ) ) {
+			$this->query_vars['type'] = array_map( 'sanitize_text_field', $this->query_vars['type'] );
+
+			$placeholders = implode( ', ', array_fill( 0, count( $this->query_vars['type'] ), '%s' ) );
+
+			$this->query_vars['type_sql'] = $this->get_db()->prepare( "AND {$this->query_vars['table']}.type IN ({$placeholders})", $this->query_vars['type'] );
 		}
 	}
 

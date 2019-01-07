@@ -29,7 +29,7 @@ final class Logs extends Table {
 	 * @since 3.0
 	 * @var string
 	 */
-	protected $name = 'edd_logs';
+	protected $name = 'logs';
 
 	/**
 	 * Database version.
