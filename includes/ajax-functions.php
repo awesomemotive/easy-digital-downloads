@@ -1108,6 +1108,7 @@ function edd_ajax_add_adjustment_to_order() {
 				<td class="type column-type"><?php esc_html_e( 'Credit', 'easy-digital-downloads' ); ?></td>
 				<td class="description column-description"><?php echo $description; // WPCS: XSS ok. ?></span></td>
 				<td class="amount column-amount"><?php echo esc_html( $symbol ); ?><span class="value"><?php echo esc_html( edd_format_amount( $amount ) ); ?></span></td>
+				<th scope="row" class="check-column"><a href="#" class="remove-item"><span class="dashicons dashicons-no"></span></a></th>
 				<input type="hidden" class="credit-description" name="adjustments[credit][0][description]" value="<?php echo $description; // WPCS: XSS ok. ?>" />
 				<input type="hidden" class="credit-amount" name="adjustments[credit][0][amount]" value="<?php echo $amount; // WPCS: XSS ok. ?>" />
 			</tr>
