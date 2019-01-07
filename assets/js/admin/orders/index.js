@@ -63,8 +63,14 @@ var EDD_Add_Order = {
 			spinner.css( 'visibility', 'visible' );
 
 			$.post( ajaxurl, data, function( response ) {
+				const { success, data } = response;
+
+				if ( ! success ) {
+					return;
+				}
+
 				$( '.orderitems .no-items' ).hide();
-				$( '.orderitems tbody' ).append( response.html );
+				$( '.orderitems tbody' ).append( data.html );
 
 				EDD_Add_Order.update_totals();
 				EDD_Add_Order.reindex();
@@ -113,8 +119,14 @@ var EDD_Add_Order = {
 			spinner.css( 'visibility', 'visible' );
 
 			$.post( ajaxurl, data, function( response ) {
+				const { success, data } = response;
+
+				if ( ! success ) {
+					return;
+				}
+
 				$( '.orderadjustments .no-items' ).hide();
-				$( '.orderadjustments tbody' ).append( response.html );
+				$( '.orderadjustments tbody' ).append( data.html );
 
 				EDD_Add_Order.update_totals();
 				EDD_Add_Order.reindex();
@@ -325,28 +337,45 @@ var EDD_Add_Order = {
 		};
 
 		$.post( ajaxurl, data, function( response ) {
-			if ( '' !== response.tax_rate ) {
-				const tax_rate = parseFloat( response.tax_rate );
+			const { success, data } = response;
+
+			if ( ! success ) {
+				return;
+			}
+
+			if ( '' !== data.tax_rate ) {
+				const tax_rate = parseFloat( data.tax_rate );
 
 				$( '.orderitems tbody tr:not(.no-items)' ).each( function() {
-					let amount = parseFloat( $( '.amount .value', this ).text() ),
-						quantity = parseFloat( $( '.quantity .value', this ).text() ),
-						calculated = amount * quantity,
-						tax = 0;
+					const amount = parseFloat( $( '.amount .value', this ).text() );
+					const quantity = $( '.quantity .value', this ) ? parseFloat( $( '.column-quantity .value', this ).text() ) : 1;
+					const calculated = amount * quantity;
+					let tax = 0;
 
-					if ( response.prices_include_tax ) {
+					if ( data.prices_include_tax ) {
 						const pre_tax = parseFloat( calculated / ( 1 + tax_rate ) );
 						tax = parseFloat( calculated - pre_tax );
 					} else {
 						tax = calculated * tax_rate;
 					}
 
-					let storeCurrency = edd_vars.currency,
-						decimalPlaces = edd_vars.currency_decimals,
-						total = calculated + tax;
+					const storeCurrency = edd_vars.currency;
+					const decimalPlaces = edd_vars.currency_decimals;
+					const total = calculated + tax;
 
-					$( '.tax .value', this ).text( tax.toLocaleString( storeCurrency, { style: 'decimal', currency: storeCurrency, minimumFractionDigits: decimalPlaces, maximumFractionDigits: decimalPlaces } ) );
-					$( '.total .value', this ).text( total.toLocaleString( storeCurrency, { style: 'decimal', currency: storeCurrency, minimumFractionDigits: decimalPlaces, maximumFractionDigits: decimalPlaces } ) );
+					$( '.tax .value', this ).text( tax.toLocaleString( storeCurrency, {
+						style: 'decimal',
+						currency: storeCurrency,
+						minimumFractionDigits: decimalPlaces,
+						maximumFractionDigits: decimalPlaces ,
+					} ) );
+
+					$( '.total .value', this ).text( total.toLocaleString( storeCurrency, {
+						style: 'decimal',
+						currency: storeCurrency,
+						minimumFractionDigits: decimalPlaces,
+						maximumFractionDigits: decimalPlaces,
+					} ) );
 				} );
 			}
 		}, 'json' ).done( function() {
