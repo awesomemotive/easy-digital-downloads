@@ -357,30 +357,13 @@ class Utilities {
 		if ( ! empty( $timezone ) ) {
 			$retval = $timezone;
 
-		// Use GMT offset to calculate from list
-		} elseif ( ! empty( $gmt_offset ) ) {
-
-			// Attempt to guess the timezone string from the GMT offset & DST
-			$is_dst   = date( 'I' );
-			$timezone = timezone_name_from_abbr( '', $gmt_offset, $is_dst );
-
-			// Return the timezone
-			if ( false !== $timezone ) {
-				$retval = $timezone;
-
-				// Last try, guess timezone string manually
-			} else {
-				$list = timezone_abbreviations_list();
-
-				foreach ( $list as $abbr ) {
-					foreach ( $abbr as $city ) {
-						if ( ( $city['dst'] == $is_dst ) && ( $city['offset'] == $gmt_offset ) ) {
-							$retval = $city['timezone_id'];
-							break 2;
-						}
-					}
-				}
-			}
+		// Use GMT offset to calculate
+		} elseif ( is_numeric( $gmt_offset ) ) {
+			$hours   = abs( floor( $gmt_offset / HOUR_IN_SECONDS ) );
+			$minutes = abs( floor( ( $gmt_offset / MINUTE_IN_SECONDS ) % MINUTE_IN_SECONDS ) );
+			$math    = ( $gmt_offset >= 0 ) ? '+' : '-';
+			$value   = ! empty( $minutes )  ? "{$hours}:{$minutes}" : $hours;
+			$retval  = "GMT{$math}{$value}";
 		}
 
 		// Set
