@@ -33,7 +33,7 @@ defined( 'ABSPATH' ) || exit;
 class Schema extends Base {
 
 	/**
-	 * Array of database column objects to turn into \EDD\Database\Column
+	 * Array of database column objects to turn into Column
 	 *
 	 * @since 3.0
 	 * @access public

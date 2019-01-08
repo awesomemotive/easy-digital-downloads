@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  *
- * @see \EDD\Database\Query::__construct() for accepted arguments.
+ * @see Query::__construct() for accepted arguments.
  *
  * @property string $prefix
  * @property string $table_name
@@ -298,6 +298,7 @@ class Query extends Base {
 	public function __construct( $query = array() ) {
 
 		// Setup
+		$this->set_alias();
 		$this->set_prefix();
 		$this->set_columns();
 		$this->set_item_shape();
@@ -337,6 +338,19 @@ class Query extends Base {
 	 */
 	private function set_last_changed() {
 		$this->last_changed = microtime();
+	}
+
+	/**
+	 * Set up the table alias if not already set in the class.
+	 *
+	 * This happens before prefixes are applied.
+	 *
+	 * @since 3.0
+	 */
+	private function set_alias() {
+		if ( empty( $this->table_alias ) ) {
+			$this->table_alias = $this->first_letters( $this->table_name );
+		}
 	}
 
 	/**
@@ -696,7 +710,7 @@ class Query extends Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return mixed \EDD\Database\Schemas\Column object, or false
+	 * @return mixed Column object, or false
 	 */
 	private function get_column_field( $args = array(), $field = '', $default = false ) {
 
@@ -714,7 +728,7 @@ class Query extends Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return mixed \EDD\Database\Schemas\Column object, or false
+	 * @return mixed Column object, or false
 	 */
 	private function get_column_by( $args = array() ) {
 
@@ -793,7 +807,7 @@ class Query extends Base {
 		 *
 		 * @since 3.0
 		 *
-		 * @param \EDD\Database\Query &$this Current instance of \EDD\Database\Query, passed by reference.
+		 * @param Query &$this Current instance of Query, passed by reference.
 		 */
 		do_action_ref_array( $this->apply_prefix( "pre_get_{$this->item_name_plural}" ), array( &$this ) );
 
@@ -1041,9 +1055,8 @@ class Query extends Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @see \EDD\Database\Query::__construct()
-	 *
-	 * @param string|array $query Array or string of \EDD\Database\Query arguments. See \EDD\Database\Query::__construct().
+	 * @see See Query::__construct().
+	 * @param string|array $query Array or string of Query arguments.
 	 */
 	private function parse_query( $query = array() ) {
 
@@ -1061,7 +1074,7 @@ class Query extends Base {
 		 *
 		 * @since 3.0
 		 *
-		 * @param \EDD\Database\Query &$this The \EDD\Database\Query instance (passed by reference).
+		 * @param \Sugar_Calendar\Database\Query &$this The Query instance (passed by reference).
 		 */
 		do_action_ref_array( $this->apply_prefix( "parse_{$this->item_name_plural}_query" ), array( &$this ) );
 	}
@@ -1200,13 +1213,13 @@ class Query extends Base {
 			}
 
 			/**
-			 * Filters the columns to search in a \EDD\Database\Query search.
+			 * Filters the columns to search in a Query search.
 			 *
 			 * @since 3.0
 			 *
 			 * @param array  $search_columns Array of column names to be searched.
 			 * @param string $search         Text being searched.
-			 * @param object $this           The current \EDD\Database\Query instance.
+			 * @param object $this           The current Query instance.
 			 */
 			$search_columns = (array) apply_filters( $this->apply_prefix( "{$this->item_name_plural}_search_columns" ), $search_columns, $this->query_vars['search'], $this );
 
@@ -1438,7 +1451,7 @@ class Query extends Base {
 		 * @since 3.0
 		 *
 		 * @param array  $retval An array of items.
-		 * @param object &$this  Current instance of \EDD\Database\Query, passed by reference.
+		 * @param object &$this  Current instance of Query, passed by reference.
 		 */
 		$retval = (array) apply_filters_ref_array( $this->apply_prefix( "the_{$this->item_name_plural}" ), array( $retval, &$this ) );
 
