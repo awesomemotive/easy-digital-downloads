@@ -4,34 +4,24 @@
  *
  * @package     EDD
  * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
-// Load WP_List_Table if not loaded
-if ( ! class_exists( 'WP_List_Table' ) ) {
-	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
-}
+use EDD\Admin\List_Table;
 
 /**
- * EDD_Gateawy_Reports_Table Class
+ * EDD_Gateway_Reports_Table Class
  *
  * Renders the Download Reports table
  *
  * @since 1.5
  */
-class EDD_Gateawy_Reports_Table extends WP_List_Table {
-
-	/**
-	 * @var int Number of items per page
-	 * @since 1.5
-	 */
-	public $per_page = 30;
-
+class EDD_Gateway_Reports_Table extends List_Table {
 
 	/**
 	 * Get things started
@@ -40,15 +30,11 @@ class EDD_Gateawy_Reports_Table extends WP_List_Table {
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		global $status, $page;
-
-		// Set parent defaults
 		parent::__construct( array(
-			'singular' => edd_get_label_singular(),
-			'plural'   => edd_get_label_plural(),
-			'ajax'     => false,
+			'singular' => 'report-gateway',
+			'plural'   => 'report-gateways',
+			'ajax'     => false
 		) );
-
 	}
 
 	/**
@@ -84,27 +70,13 @@ class EDD_Gateawy_Reports_Table extends WP_List_Table {
 	 * @return array $columns Array of all the list table columns
 	 */
 	public function get_columns() {
-		$columns = array(
-			'label'          => __( 'Gateway', 'easy-digital-downloads' ),
-			'complete_sales' => __( 'Complete Sales', 'easy-digital-downloads' ),
+		return array(
+			'label'          => __( 'Gateway',                'easy-digital-downloads' ),
+			'complete_sales' => __( 'Complete Sales',         'easy-digital-downloads' ),
 			'pending_sales'  => __( 'Pending / Failed Sales', 'easy-digital-downloads' ),
-			'total_sales'    => __( 'Total Sales', 'easy-digital-downloads' ),
+			'total_sales'    => __( 'Total Sales',            'easy-digital-downloads' )
 		);
-
-		return $columns;
 	}
-
-
-	/**
-	 * Retrieve the current page number
-	 *
-	 * @since 1.5
-	 * @return int Current page number
-	 */
-	public function get_paged() {
-		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
-	}
-
 
 	/**
 	 * Outputs the reporting views
@@ -113,10 +85,10 @@ class EDD_Gateawy_Reports_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function bulk_actions( $which = '' ) {
-		// These aren't really bulk actions but this outputs the markup in the right place
+		// These aren't really bulk actions but this outputs the markup in
+		// the right place.
 		edd_report_views();
 	}
-
 
 	/**
 	 * Build all the reports data
@@ -138,7 +110,7 @@ class EDD_Gateawy_Reports_Table extends WP_List_Table {
 				'ID'             => $gateway_id,
 				'label'          => $gateway['admin_label'],
 				'complete_sales' => edd_format_amount( $complete_count, false ),
-				'pending_sales'  => edd_format_amount( $pending_count, false ),
+				'pending_sales'  => edd_format_amount( $pending_count,  false ),
 				'total_sales'    => edd_format_amount( $complete_count + $pending_count, false ),
 			);
 		}
@@ -146,14 +118,13 @@ class EDD_Gateawy_Reports_Table extends WP_List_Table {
 		return $reports_data;
 	}
 
-
 	/**
 	 * Setup the final data for the table
 	 *
 	 * @since 1.5
-	 * @uses EDD_Gateawy_Reports_Table::get_columns()
-	 * @uses EDD_Gateawy_Reports_Table::get_sortable_columns()
-	 * @uses EDD_Gateawy_Reports_Table::reports_data()
+	 * @uses EDD_Gateway_Reports_Table::get_columns()
+	 * @uses EDD_Gateway_Reports_Table::get_sortable_columns()
+	 * @uses EDD_Gateway_Reports_Table::reports_data()
 	 * @return void
 	 */
 	public function prepare_items() {
@@ -162,6 +133,12 @@ class EDD_Gateawy_Reports_Table extends WP_List_Table {
 		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 		$this->items           = $this->reports_data();
-
 	}
 }
+
+/**
+ * Back-compat for typo
+ *
+ * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/6549
+ */
+class_alias( 'EDD_Gateway_Reports_Table', 'EDD_Gateawy_Reports_Table' );

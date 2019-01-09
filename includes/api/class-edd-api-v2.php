@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Classes/API
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.6
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_API_V2 Class
@@ -277,7 +277,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 
 		unset( $args['startdate'], $args['enddate'] );
 
-		$customer_query = EDD()->customers->get_customers( $args );
+		$customer_query = edd_get_customers( $args );
 		$customer_count = 0;
 
 		if( $customer_query ) {
@@ -452,7 +452,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 					$c++;
 				}
 
-				$sales['sales'][ $i ]['discounts'] = ( ! empty( $discount_values ) ? $discount_values : null );;
+				$sales['sales'][ $i ]['discounts'] = ( ! empty( $discount_values ) ? $discount_values : null );
 				$sales['sales'][ $i ]['products']  = $cart_items;
 
 				$i++;

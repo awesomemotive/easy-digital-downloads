@@ -3,42 +3,41 @@
  * Roles and Capabilities
  *
  * @package     EDD
- * @subpackage  Classes/Roles
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @subpackage  Roles
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4.4
 */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Roles Class
  *
- * This class handles the role creation and assignment of capabilities for those roles.
+ * This class handles the role creation and assignment of capabilities for those
+ * roles.
  *
- * These roles let us have Shop Accountants, Shop Workers, etc, each of whom can do
- * certain things within the EDD store
+ * These roles let us have Shop Accountants, Shop Workers, etc, each of whom
+ * can do certain things within the EDD store.
  *
  * @since 1.4.4
  */
 class EDD_Roles {
 
 	/**
-	 * Get things going
+	 * Constructor.
 	 *
 	 * @since 1.4.4
 	 */
 	public function __construct() {
-
 		add_filter( 'map_meta_cap', array( $this, 'meta_caps' ), 10, 4 );
 	}
 
 	/**
-	 * Add new shop roles with default WP caps
+	 * Add new shop roles with default WordPress capabilities.
 	 *
 	 * @since 1.4.4
-	 * @return void
 	 */
 	public function add_roles() {
 		add_role( 'shop_manager', __( 'Shop Manager', 'easy-digital-downloads' ), array(
@@ -69,43 +68,41 @@ class EDD_Roles {
 			'publish_pages'          => true,
 			'publish_posts'          => true,
 			'read_private_pages'     => true,
-			'read_private_posts'     => true
+			'read_private_posts'     => true,
 		) );
 
 		add_role( 'shop_accountant', __( 'Shop Accountant', 'easy-digital-downloads' ), array(
-		    'read'                   => true,
-		    'edit_posts'             => false,
-		    'delete_posts'           => false
+			'read'         => true,
+			'edit_posts'   => false,
+			'delete_posts' => false,
 		) );
 
 		add_role( 'shop_worker', __( 'Shop Worker', 'easy-digital-downloads' ), array(
-			'read'                   => true,
-			'edit_posts'             => false,
-			'upload_files'           => true,
-			'delete_posts'           => false
+			'read'         => true,
+			'edit_posts'   => false,
+			'upload_files' => true,
+			'delete_posts' => false,
 		) );
 
 		add_role( 'shop_vendor', __( 'Shop Vendor', 'easy-digital-downloads' ), array(
-			'read'                   => true,
-			'edit_posts'             => false,
-			'upload_files'           => true,
-			'delete_posts'           => false
+			'read'         => true,
+			'edit_posts'   => false,
+			'upload_files' => true,
+			'delete_posts' => false,
 		) );
 	}
 
 	/**
-	 * Add new shop-specific capabilities
+	 * Add new shop-specific capabilities.
 	 *
 	 * @since  1.4.4
-	 * @global WP_Roles $wp_roles
-	 * @return void
 	 */
 	public function add_caps() {
 		global $wp_roles;
 
-		if ( class_exists('WP_Roles') ) {
+		if ( class_exists( 'WP_Roles' ) ) {
 			if ( ! isset( $wp_roles ) ) {
-				$wp_roles = new WP_Roles();
+				$wp_roles = new WP_Roles(); // WPCS: override ok.
 			}
 		}
 
@@ -122,7 +119,7 @@ class EDD_Roles {
 			$wp_roles->add_cap( 'administrator', 'manage_shop_discounts' );
 			$wp_roles->add_cap( 'administrator', 'manage_shop_settings' );
 
-			// Add the main post type capabilities
+			// Add the main post type capabilities.
 			$capabilities = $this->get_core_caps();
 			foreach ( $capabilities as $cap_group ) {
 				foreach ( $cap_group as $cap ) {
@@ -150,10 +147,11 @@ class EDD_Roles {
 	}
 
 	/**
-	 * Gets the core post type capabilities
+	 * Gets the core post type capabilities.
 	 *
-	 * @since  1.4.4
-	 * @return array $capabilities Core post type capabilities
+	 * @since 1.4.4
+	 *
+	 * @return array $capabilities Core post type capabilities.
 	 */
 	public function get_core_caps() {
 		$capabilities = array();
@@ -193,27 +191,42 @@ class EDD_Roles {
 	}
 
 	/**
-	 * Map meta caps to primitive caps
+	 * Map meta caps to primitive caps.
 	 *
-	 * @since  2.0
+	 * @since 2.0
+	 *
+	 * @param array  $caps    Capabilities for meta capability.
+	 * @param string $cap     Capability name.
+	 * @param int    $user_id User ID.
+	 * @param mixed  $args    Arguments.
+	 *
 	 * @return array $caps
 	 */
-	public function meta_caps( $caps, $cap, $user_id, $args ) {
+	public function meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
 
-		switch( $cap ) {
+		// Ensure user ID is a valid integer.
+		$user_id = absint( $user_id );
 
-			case 'view_product_stats' :
-
-				if( empty( $args[0] ) ) {
+		switch ( $cap ) {
+			case 'view_product_stats':
+				if ( empty( $args[0] ) ) {
 					break;
 				}
 
 				$download = get_post( $args[0] );
+
+				// Bail if download was not found.
 				if ( empty( $download ) ) {
 					break;
 				}
 
-				if( user_can( $user_id, 'view_shop_reports' ) || $user_id == $download->post_author ) {
+				// No stats for auto-drafts.
+				if ( 'auto-draft' === $download->post_status ) {
+					$caps = array( 'do_not_allow' );
+					break;
+				}
+
+				if ( user_can( $user_id, 'view_shop_reports' ) || absint( $download->post_author ) === $user_id ) {
 					$caps = array();
 				}
 
@@ -225,22 +238,21 @@ class EDD_Roles {
 	}
 
 	/**
-	 * Remove core post type capabilities (called on uninstall)
+	 * Remove core post type capabilities (called on uninstall).
 	 *
 	 * @since 1.5.2
-	 * @return void
 	 */
 	public function remove_caps() {
-
 		global $wp_roles;
 
 		if ( class_exists( 'WP_Roles' ) ) {
 			if ( ! isset( $wp_roles ) ) {
-				$wp_roles = new WP_Roles();
+				$wp_roles = new WP_Roles(); // WPCS: override ok.
 			}
 		}
 
 		if ( is_object( $wp_roles ) ) {
+
 			/** Shop Manager Capabilities */
 			$wp_roles->remove_cap( 'shop_manager', 'view_shop_reports' );
 			$wp_roles->remove_cap( 'shop_manager', 'view_shop_sensitive_data' );

@@ -6,6 +6,10 @@
  */
 class Tests_Register_Meta extends EDD_UnitTestCase {
 
+	protected $payment_id;
+
+	protected $download_id;
+
 	public function setUp() {
 		parent::setUp();
 		$this->payment_id  = EDD_Helper_Payment::create_simple_payment();
@@ -58,14 +62,19 @@ class Tests_Register_Meta extends EDD_UnitTestCase {
 	}
 
 	public function test_intval_wrapper() {
+		$this->setExpectedIncorrectUsage( 'add_post_meta()/update_post_meta()' );
+
 		update_post_meta( $this->payment_id, '_edd_payment_customer_id', '90.4' );
+
 		$this->assertEquals( '90', edd_get_payment_meta( $this->payment_id, '_edd_payment_customer_id', true ) );
 
 		update_post_meta( $this->payment_id, '_edd_payment_customer_id', '-1.43' );
-		$this->assertEquals( '-1', edd_get_payment_meta( $this->payment_id, '_edd_payment_customer_id', true ) );
+		$this->assertEquals( '0', edd_get_payment_meta( $this->payment_id, '_edd_payment_customer_id', true ) );
 	}
 
 	public function test_sanitize_array() {
+		$this->setExpectedIncorrectUsage( 'add_post_meta()/update_post_meta()' );
+
 		$object = new StdClass;
 		$object->one = 1;
 		$object->two = 2;

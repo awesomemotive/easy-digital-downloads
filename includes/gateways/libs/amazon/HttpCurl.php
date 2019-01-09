@@ -2,7 +2,7 @@
 namespace PayWithAmazon;
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /* Class HttpCurl
  * Handles Curl POST function for all requests

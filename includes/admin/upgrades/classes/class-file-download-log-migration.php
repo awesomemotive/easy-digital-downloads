@@ -8,11 +8,11 @@
  * @subpackage  Admin/Classes/EDD_SL_License_Log_Migration
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       2.6.2
+ * @since       2.9.2
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_File_Download_Log_Migration Class
@@ -50,7 +50,6 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 	 * @return array $data The data for the CSV file
 	 */
 	public function get_data() {
-
 		$step_items = $this->get_log_ids_for_current_step();
 
 		if ( ! is_array( $step_items ) ) {
@@ -98,7 +97,6 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 	 * @return int
 	 */
 	public function get_percentage_complete() {
-
 		$total = (int) get_option( 'edd_fdlm_total_logs', 0 );
 
 		$percentage = 100;
@@ -153,11 +151,7 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 	}
 
 	public function headers() {
-		ignore_user_abort( true );
-
-		if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
-			set_time_limit( 0 );
-		}
+		edd_set_time_limit();
 	}
 
 	/**

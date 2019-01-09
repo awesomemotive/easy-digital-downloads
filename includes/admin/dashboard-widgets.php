@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Admin/Dashboard
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Registers the dashboard widgets
@@ -38,6 +38,7 @@ add_action('wp_dashboard_setup', 'edd_register_dashboard_widgets', 10 );
  * @return void
  */
 function edd_dashboard_sales_widget( ) {
+	wp_enqueue_script( 'edd-admin-dashboard' );
 	echo '<p><img src=" ' . esc_attr( set_url_scheme( EDD_PLUGIN_URL . 'assets/images/loading.gif', 'relative' ) ) . '"/></p>';
 }
 

@@ -5,7 +5,7 @@
  * Description: The easiest way to sell digital products with WordPress.
  * Author: Easy Digital Downloads
  * Author URI: https://easydigitaldownloads.com
- * Version: 2.9.9
+ * Version: 3.0.0-beta-1
  * Text Domain: easy-digital-downloads
  * Domain Path: languages
  *
@@ -24,382 +24,454 @@
  *
  * @package EDD
  * @category Core
- * @author Pippin Williamson
- * @version 2.9.9
  */
 
 // Exit if accessed directly.
-if ( ! defined( 'ABSPATH' ) ) exit;
-
-if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
+defined( 'ABSPATH' ) || exit;
 
 /**
- * Main Easy_Digital_Downloads Class.
+ * The main plugin requirements checker
  *
- * @since 1.4
+ * @since 3.0
  */
-final class Easy_Digital_Downloads {
-	/** Singleton *************************************************************/
+final class EDD_Requirements_Check {
 
 	/**
-	 * @var Easy_Digital_Downloads The one true Easy_Digital_Downloads
-	 * @since 1.4
+	 * Plugin file
+	 *
+	 * @since 3.0
+	 * @var string
 	 */
-	private static $instance;
+	private $file = '';
 
 	/**
-	 * EDD Roles Object.
+	 * Plugin basename
 	 *
-	 * @var object|EDD_Roles
-	 * @since 1.5
+	 * @since 3.0
+	 * @var string
 	 */
-	public $roles;
+	private $base = '';
 
 	/**
-	 * EDD Cart Fees Object.
+	 * Requirements array
 	 *
-	 * @var object|EDD_Fees
-	 * @since 1.5
+	 * @todo Extend WP_Dependencies
+	 * @var array
+	 * @since 3.0
 	 */
-	public $fees;
+	private $requirements = array(
+
+		// PHP
+		'php' => array(
+			'minimum' => '5.4.0',
+			'name'    => 'PHP',
+			'exists'  => true,
+			'current' => false,
+			'checked' => false,
+			'met'     => false
+		),
+
+		// WordPress
+		'wp' => array(
+			'minimum' => '4.4.0',
+			'name'    => 'WordPress',
+			'exists'  => true,
+			'current' => false,
+			'checked' => false,
+			'met'     => false
+		)
+	);
 
 	/**
-	 * EDD API Object.
+	 * Setup plugin requirements
 	 *
-	 * @var object|EDD_API
-	 * @since 1.5
+	 * @since 3.0
 	 */
-	public $api;
+	public function __construct() {
 
-	/**
-	 * EDD HTML Session Object.
-	 *
-	 * This holds cart items, purchase sessions, and anything else stored in the session.
-	 *
-	 * @var object|EDD_Session
-	 * @since 1.5
-	 */
-	public $session;
+		// Setup file & base
+		$this->file = __FILE__;
+		$this->base = plugin_basename( $this->file );
 
-	/**
-	 * EDD HTML Element Helper Object.
-	 *
-	 * @var object|EDD_HTML_Elements
-	 * @since 1.5
-	 */
-	public $html;
+		// Always load translations
+		add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 
-	/**
-	 * EDD Emails Object.
-	 *
-	 * @var object|EDD_Emails
-	 * @since 2.1
-	 */
-	public $emails;
-
-	/**
-	 * EDD Email Template Tags Object.
-	 *
-	 * @var object|EDD_Email_Template_Tags
-	 * @since 1.9
-	 */
-	public $email_tags;
-
-	/**
-	 * EDD Customers DB Object.
-	 *
-	 * @var object|EDD_DB_Customers
-	 * @since 2.1
-	 */
-	public $customers;
-
-	/**
-	 * EDD Customer meta DB Object.
-	 *
-	 * @var object|EDD_DB_Customer_Meta
-	 * @since 2.6
-	 */
-	public $customer_meta;
-
-	/**
-	 * EDD Cart Object
-	 *
-	 * @var object|EDD_Cart
-	 * @since 2.7
-	 */
-	public $cart;
-
-	/**
-	 * Main Easy_Digital_Downloads Instance.
-	 *
-	 * Insures that only one instance of Easy_Digital_Downloads exists in memory at any one
-	 * time. Also prevents needing to define globals all over the place.
-	 *
-	 * @since 1.4
-	 * @static
-	 * @staticvar array $instance
-	 * @uses Easy_Digital_Downloads::setup_constants() Setup the constants needed.
-	 * @uses Easy_Digital_Downloads::includes() Include the required files.
-	 * @uses Easy_Digital_Downloads::load_textdomain() load the language files.
-	 * @see EDD()
-	 * @return object|Easy_Digital_Downloads The one true Easy_Digital_Downloads
-	 */
-	public static function instance() {
-		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Easy_Digital_Downloads ) ) {
-			self::$instance = new Easy_Digital_Downloads;
-			self::$instance->setup_constants();
-
-			add_action( 'plugins_loaded', array( self::$instance, 'load_textdomain' ) );
-
-			self::$instance->includes();
-			self::$instance->roles         = new EDD_Roles();
-			self::$instance->fees          = new EDD_Fees();
-			self::$instance->api           = new EDD_API();
-			self::$instance->session       = new EDD_Session();
-			self::$instance->html          = new EDD_HTML_Elements();
-			self::$instance->emails        = new EDD_Emails();
-			self::$instance->email_tags    = new EDD_Email_Template_Tags();
-			self::$instance->customers     = new EDD_DB_Customers();
-			self::$instance->customer_meta = new EDD_DB_Customer_Meta();
-			self::$instance->payment_stats = new EDD_Payment_Stats();
-			self::$instance->cart          = new EDD_Cart();
-		}
-
-		return self::$instance;
+		// Load or quit
+		$this->met()
+			? $this->load()
+			: $this->quit();
 	}
 
 	/**
-	 * Throw error on object clone.
+	 * Quit without loading
 	 *
-	 * The whole idea of the singleton design pattern is that there is a single
-	 * object therefore, we don't want the object to be cloned.
-	 *
-	 * @since 1.6
-	 * @access protected
-	 * @return void
+	 * @since 3.0
 	 */
-	public function __clone() {
-		// Cloning instances of the class is forbidden.
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'easy-digital-downloads' ), '1.6' );
+	private function quit() {
+		add_action( 'admin_head',                        array( $this, 'admin_head'        ) );
+		add_filter( "plugin_action_links_{$this->base}", array( $this, 'plugin_row_links'  ) );
+		add_action( "after_plugin_row_{$this->base}",    array( $this, 'plugin_row_notice' ) );
 	}
 
-	/**
-	 * Disable unserializing of the class.
-	 *
-	 * @since 1.6
-	 * @access protected
-	 * @return void
-	 */
-	public function __wakeup() {
-		// Unserializing instances of the class is forbidden.
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'easy-digital-downloads' ), '1.6' );
-	}
+	/** Specific Methods ******************************************************/
 
 	/**
-	 * Setup plugin constants.
+	 * Load normally
 	 *
-	 * @access private
-	 * @since 1.4
-	 * @return void
+	 * @since 3.0
 	 */
-	private function setup_constants() {
+	private function load() {
 
-		// Plugin version.
-		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '2.9.9' );
+		// Maybe include the bundled bootstrapper
+		if ( ! class_exists( 'Easy_Digital_Downloads' ) ) {
+			require_once dirname( $this->file ) . '/includes/class-easy-digital-downloads.php';
 		}
 
-		// Plugin Folder Path.
-		if ( ! defined( 'EDD_PLUGIN_DIR' ) ) {
-			define( 'EDD_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-		}
+		// Maybe hook-in the bootstrapper
+		if ( class_exists( 'Easy_Digital_Downloads' ) ) {
 
-		// Plugin Folder URL.
-		if ( ! defined( 'EDD_PLUGIN_URL' ) ) {
-			define( 'EDD_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-		}
+			// Bootstrap to plugins_loaded before priority 10 to make sure
+			// add-ons are loaded after us.
+			add_action( 'plugins_loaded', array( $this, 'bootstrap' ), 4 );
 
-		// Plugin Root File.
-		if ( ! defined( 'EDD_PLUGIN_FILE' ) ) {
-			define( 'EDD_PLUGIN_FILE', __FILE__ );
-		}
-
-		// Make sure CAL_GREGORIAN is defined.
-		if ( ! defined( 'CAL_GREGORIAN' ) ) {
-			define( 'CAL_GREGORIAN', 1 );
+			// Register the activation hook
+			register_activation_hook( $this->file, array( $this, 'install' ) );
 		}
 	}
 
 	/**
-	 * Include required files.
+	 * Install, usually on an activation hook.
 	 *
-	 * @access private
-	 * @since 1.4
-	 * @return void
+	 * @since 3.0
 	 */
-	private function includes() {
-		global $edd_options;
+	public function install() {
 
-		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/register-settings.php';
-		$edd_options = edd_get_settings();
+		// Bootstrap to include all of the necessary files
+		$this->bootstrap();
 
-		require_once EDD_PLUGIN_DIR . 'includes/actions.php';
-		if( file_exists( EDD_PLUGIN_DIR . 'includes/deprecated-functions.php' ) ) {
-			require_once EDD_PLUGIN_DIR . 'includes/deprecated-functions.php';
-		}
-		require_once EDD_PLUGIN_DIR . 'includes/ajax-functions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/api/class-edd-api.php';
-		require_once EDD_PLUGIN_DIR . 'includes/template-functions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/template-actions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/checkout/template.php';
-		require_once EDD_PLUGIN_DIR . 'includes/checkout/functions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/cart/class-edd-cart.php';
-		require_once EDD_PLUGIN_DIR . 'includes/cart/functions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/cart/template.php';
-		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-customers.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-customer-meta.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer-query.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-discount.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-download.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cache-helper.php';
-		if ( defined( 'WP_CLI' ) && WP_CLI ) {
-			require_once EDD_PLUGIN_DIR . 'includes/class-edd-cli.php';
-		}
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cron.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-fees.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-html-elements.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-license-handler.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-logging.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-session.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-stats.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-roles.php';
-		require_once EDD_PLUGIN_DIR . 'includes/country-functions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/formatting.php';
-		require_once EDD_PLUGIN_DIR . 'includes/widgets.php';
-		require_once EDD_PLUGIN_DIR . 'includes/misc-functions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/mime-types.php';
-		require_once EDD_PLUGIN_DIR . 'includes/gateways/actions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/gateways/functions.php';
-		if ( version_compare( phpversion(), 5.3, '>' ) ) {
-			require_once EDD_PLUGIN_DIR . 'includes/gateways/amazon-payments.php';
-		}
-		require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal-standard.php';
-		require_once EDD_PLUGIN_DIR . 'includes/gateways/manual.php';
-		require_once EDD_PLUGIN_DIR . 'includes/discount-functions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/payments/functions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/payments/actions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/payments/class-payment-stats.php';
-		require_once EDD_PLUGIN_DIR . 'includes/payments/class-payments-query.php';
-		require_once EDD_PLUGIN_DIR . 'includes/payments/class-edd-payment.php';
-		require_once EDD_PLUGIN_DIR . 'includes/download-functions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/scripts.php';
-		require_once EDD_PLUGIN_DIR . 'includes/post-types.php';
-		require_once EDD_PLUGIN_DIR . 'includes/plugin-compatibility.php';
-		require_once EDD_PLUGIN_DIR . 'includes/emails/class-edd-emails.php';
-		require_once EDD_PLUGIN_DIR . 'includes/emails/class-edd-email-tags.php';
-		require_once EDD_PLUGIN_DIR . 'includes/emails/functions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/emails/template.php';
-		require_once EDD_PLUGIN_DIR . 'includes/emails/actions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/error-tracking.php';
-		require_once EDD_PLUGIN_DIR . 'includes/user-functions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/query-filters.php';
-		require_once EDD_PLUGIN_DIR . 'includes/tax-functions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/process-purchase.php';
-		require_once EDD_PLUGIN_DIR . 'includes/login-register.php';
-		require_once EDD_PLUGIN_DIR . 'includes/shortcodes.php';
-		require_once EDD_PLUGIN_DIR . 'includes/admin/tracking.php'; // Must be loaded on frontend to ensure cron runs
-		require_once EDD_PLUGIN_DIR . 'includes/privacy-functions.php';
+		// Network wide?
+		$network_wide = ! empty( $_GET['networkwide'] )
+			? (bool) $_GET['networkwide']
+			: false;
 
-		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
-			require_once EDD_PLUGIN_DIR . 'includes/admin/add-ons.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-footer.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-notices.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/dashboard-widgets.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/thickbox.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/upload-functions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/downloads/dashboard-columns.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/customers/customers.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/customers/customer-functions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/customers/customer-actions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/downloads/metabox.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/downloads/contextual-help.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/contextual-help.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-actions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/discount-codes.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/import/import-actions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/import/import-functions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/actions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/payments-history.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/contextual-help.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/contextual-help.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/export-functions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/reports.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-graph.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/class-edd-pie-graph.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/graphing.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/display-settings.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/contextual-help.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/tools.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/plugins.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-heartbeat.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/tools/tools-actions.php';
+		// Call the installer directly during the activation hook
+		edd_install( $network_wide );
+	}
+
+	/**
+	 * Bootstrap everything.
+	 *
+	 * @since 3.0
+	 */
+	public function bootstrap() {
+		Easy_Digital_Downloads::instance( $this->file );
+	}
+
+	/**
+	 * Plugin specific URL for an external requirements page.
+	 *
+	 * @since 3.0
+	 * @return string
+	 */
+	private function unmet_requirements_url() {
+		return 'https://docs.easydigitaldownloads.com/article/2051-minimum-requirements-for-edd-3-0';
+	}
+
+	/**
+	 * Plugin specific text to quickly explain what's wrong.
+	 *
+	 * @since 3.0
+	 * @return string
+	 */
+	private function unmet_requirements_text() {
+		esc_html_e( 'This plugin is not fully active.', 'easy-digital-downloads' );
+	}
+
+	/**
+	 * Plugin specific text to describe a single unmet requirement.
+	 *
+	 * @since 3.0
+	 * @return string
+	 */
+	private function unmet_requirements_description_text() {
+		return esc_html__( 'Requires %s (%s), but (%s) is installed.', 'easy-digital-downloads' );
+	}
+
+	/**
+	 * Plugin specific text to describe a single missing requirement.
+	 *
+	 * @since 3.0
+	 * @return string
+	 */
+	private function unmet_requirements_missing_text() {
+		return esc_html__( 'Requires %s (%s), but it appears to be missing.', 'easy-digital-downloads' );
+	}
+
+	/**
+	 * Plugin specific text used to link to an external requirements page.
+	 *
+	 * @since 3.0
+	 * @return string
+	 */
+	private function unmet_requirements_link() {
+		return esc_html__( 'Requirements', 'easy-digital-downloads' );
+	}
+
+	/**
+	 * Plugin specific aria label text to describe the requirements link.
+	 *
+	 * @since 3.0
+	 * @return string
+	 */
+	private function unmet_requirements_label() {
+		return esc_html__( 'Easy Digital Download Requirements', 'easy-digital-downloads' );
+	}
+
+	/**
+	 * Plugin specific text used in CSS to identify attribute IDs and classes.
+	 *
+	 * @since 3.0
+	 * @return string
+	 */
+	private function unmet_requirements_name() {
+		return 'edd-requirements';
+	}
+
+	/** Agnostic Methods ******************************************************/
+
+	/**
+	 * Plugin agnostic method to output the additional plugin row
+	 *
+	 * @since 3.0
+	 */
+	public function plugin_row_notice() {
+		?><tr class="active <?php echo esc_attr( $this->unmet_requirements_name() ); ?>-row">
+		<th class="check-column">
+			<span class="dashicons dashicons-warning"></span>
+		</th>
+		<td class="column-primary">
+			<?php $this->unmet_requirements_text(); ?>
+		</td>
+		<td class="column-description">
+			<?php $this->unmet_requirements_description(); ?>
+		</td>
+		</tr><?php
+	}
+
+	/**
+	 * Plugin agnostic method used to output all unmet requirement information
+	 *
+	 * @since 3.0
+	 */
+	private function unmet_requirements_description() {
+		foreach ( $this->requirements as $properties ) {
+			if ( empty( $properties['met'] ) ) {
+				$this->unmet_requirement_description( $properties );
+			}
+		}
+	}
+
+	/**
+	 * Plugin agnostic method to output specific unmet requirement information
+	 *
+	 * @since 3.0
+	 * @param array $requirement
+	 */
+	private function unmet_requirement_description( $requirement = array() ) {
+
+		// Requirement exists, but is out of date
+		if ( ! empty( $requirement['exists'] ) ) {
+			$text = sprintf(
+				$this->unmet_requirements_description_text(),
+				'<strong>' . esc_html( $requirement['name']    ) . '</strong>',
+				'<strong>' . esc_html( $requirement['minimum'] ) . '</strong>',
+				'<strong>' . esc_html( $requirement['current'] ) . '</strong>'
+			);
+
+			// Requirement could not be found
 		} else {
-			require_once EDD_PLUGIN_DIR . 'includes/process-download.php';
-			require_once EDD_PLUGIN_DIR . 'includes/theme-compatibility.php';
+			$text = sprintf(
+				$this->unmet_requirements_missing_text(),
+				'<strong>' . esc_html( $requirement['name']    ) . '</strong>',
+				'<strong>' . esc_html( $requirement['minimum'] ) . '</strong>'
+			);
 		}
 
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-register-meta.php';
-		require_once EDD_PLUGIN_DIR . 'includes/install.php';
+		// Output the description
+		echo '<p>' . $text . '</p>';
 	}
 
 	/**
-	 * Loads the plugin language files.
+	 * Plugin agnostic method to output unmet requirements styling
+	 *
+	 * @since 3.0
+	 */
+	public function admin_head() {
+
+		// Get the requirements row name
+		$name = $this->unmet_requirements_name(); ?>
+
+		<style id="<?php echo esc_attr( $name ); ?>">
+			.plugins tr[data-plugin="<?php echo esc_html( $this->base ); ?>"] th,
+			.plugins tr[data-plugin="<?php echo esc_html( $this->base ); ?>"] td,
+			.plugins .<?php echo esc_html( $name ); ?>-row th,
+			.plugins .<?php echo esc_html( $name ); ?>-row td {
+				background: #fff5f5;
+			}
+			.plugins tr[data-plugin="<?php echo esc_html( $this->base ); ?>"] th {
+				box-shadow: none;
+			}
+			.plugins .<?php echo esc_html( $name ); ?>-row th span {
+				margin-left: 6px;
+				color: #dc3232;
+			}
+			.plugins tr[data-plugin="<?php echo esc_html( $this->base ); ?>"] th,
+			.plugins .<?php echo esc_html( $name ); ?>-row th.check-column {
+				border-left: 4px solid #dc3232 !important;
+			}
+			.plugins .<?php echo esc_html( $name ); ?>-row .column-description p {
+				margin: 0;
+				padding: 0;
+			}
+			.plugins .<?php echo esc_html( $name ); ?>-row .column-description p:not(:last-of-type) {
+				margin-bottom: 8px;
+			}
+		</style>
+		<?php
+	}
+
+	/**
+	 * Plugin agnostic method to add the "Requirements" link to row actions
+	 *
+	 * @since 3.0
+	 * @param array $links
+	 * @return array
+	 */
+	public function plugin_row_links( $links = array() ) {
+
+		// Add the Requirements link
+		$links['requirements'] =
+			'<a href="' . esc_url( $this->unmet_requirements_url() ) . '" aria-label="' . esc_attr( $this->unmet_requirements_label() ) . '">'
+			. esc_html( $this->unmet_requirements_link() )
+			. '</a>';
+
+		// Return links with Requirements link
+		return $links;
+	}
+
+	/** Checkers **************************************************************/
+
+	/**
+	 * Plugin specific requirements checker
+	 *
+	 * @since 3.0
+	 */
+	private function check() {
+
+		// Loop through requirements
+		foreach ( $this->requirements as $dependency => $properties ) {
+
+			// Which dependency are we checking?
+			switch ( $dependency ) {
+
+				// PHP
+				case 'php' :
+					$version = phpversion();
+					break;
+
+				// WP
+				case 'wp' :
+					$version = get_bloginfo( 'version' );
+					break;
+
+				// Unknown
+				default :
+					$version = false;
+					break;
+			}
+
+			// Merge to original array
+			if ( ! empty( $version ) ) {
+				$this->requirements[ $dependency ] = array_merge( $this->requirements[ $dependency ], array(
+					'current' => $version,
+					'checked' => true,
+					'met'     => version_compare( $version, $properties['minimum'], '>=' )
+				) );
+			}
+		}
+	}
+
+	/**
+	 * Have all requirements been met?
+	 *
+	 * @since 3.0
+	 *
+	 * @return boolean
+	 */
+	public function met() {
+
+		// Run the check
+		$this->check();
+
+		// Default to true (any false below wins)
+		$retval  = true;
+		$to_meet = wp_list_pluck( $this->requirements, 'met' );
+
+		// Look for unmet dependencies, and exit if so
+		foreach ( $to_meet as $met ) {
+			if ( empty( $met ) ) {
+				$retval = false;
+				continue;
+			}
+		}
+
+		// Return
+		return $retval;
+	}
+
+	/** Translations **********************************************************/
+
+	/**
+	 * Plugin specific text-domain loader.
 	 *
 	 * @since 1.4
 	 * @return void
 	 */
 	public function load_textdomain() {
-		global $wp_version;
 
 		/*
-		 * Due to the introduction of language packs through translate.wordpress.org, loading our textdomain is complex.
+		 * Due to the introduction of language packs through translate.wordpress.org,
+		 * loading our textdomain is complex.
 		 *
 		 * In v2.4.6, our textdomain changed from "edd" to "easy-digital-downloads".
 		 *
-		 * To support existing translation files from before the change, we must look for translation files in several places and under several names.
+		 * To support existing translation files from before the change, we must
+		 * look for translation files in several places and under several names.
 		 *
 		 * - wp-content/languages/plugins/easy-digital-downloads (introduced with language packs)
 		 * - wp-content/languages/edd/ (custom folder we have supported since 1.4)
 		 * - wp-content/plugins/easy-digital-downloads/languages/
 		 *
-		 * In wp-content/languages/edd/ we must look for "easy-digital-downloads-{lang}_{country}.mo"
-		 * In wp-content/languages/edd/ we must look for "edd-{lang}_{country}.mo" as that was the old file naming convention
-		 * In wp-content/languages/plugins/easy-digital-downloads/ we only need to look for "easy-digital-downloads-{lang}_{country}.mo" as that is the new structure
-		 * In wp-content/plugins/easy-digital-downloads/languages/, we must look for both naming conventions. This is done by filtering "load_textdomain_mofile"
+		 * In wp-content/languages/edd/ we must look for:
+		 * - "easy-digital-downloads-{lang}_{country}.mo"
 		 *
+		 * In wp-content/languages/edd/ we must look for:
+		 * - "edd-{lang}_{country}.mo" as that was the old file naming convention
+		 *
+		 * In wp-content/languages/plugins/easy-digital-downloads/ we only need to look for:
+		 * - "easy-digital-downloads-{lang}_{country}.mo" as that is the new structure
+		 *
+		 * In wp-content/plugins/easy-digital-downloads/languages/, we must look for:
+		 * - both naming conventions. This is done by filtering "load_textdomain_mofile"
 		 */
-
 		add_filter( 'load_textdomain_mofile', array( $this, 'load_old_textdomain' ), 10, 2 );
 
 		// Set filter for plugin's languages directory.
-		$edd_lang_dir  = dirname( plugin_basename( EDD_PLUGIN_FILE ) ) . '/languages/';
-		$edd_lang_dir  = apply_filters( 'edd_languages_directory', $edd_lang_dir );
-
-		// Traditional WordPress plugin locale filter.
-
-		$get_locale = get_locale();
-
-		if ( $wp_version >= 4.7 ) {
-
-			$get_locale = get_user_locale();
-		}
+		$edd_lang_dir = dirname( $this->base ) . '/languages/';
+		$edd_lang_dir = apply_filters( 'edd_languages_directory', $edd_lang_dir );
+		$get_locale   = function_exists( 'get_user_locale' )
+			? get_user_locale()
+			: get_locale();
 
 		/**
 		 * Defines the plugin language locale used in Easy Digital Downloads.
@@ -407,74 +479,52 @@ final class Easy_Digital_Downloads {
 		 * @var $get_locale The locale to use. Uses get_user_locale()` in WordPress 4.7 or greater,
 		 *                  otherwise uses `get_locale()`.
 		 */
-		$locale        = apply_filters( 'plugin_locale',  $get_locale, 'easy-digital-downloads' );
-		$mofile        = sprintf( '%1$s-%2$s.mo', 'easy-digital-downloads', $locale );
+		$locale = apply_filters( 'plugin_locale', $get_locale, 'easy-digital-downloads' );
+		$mofile = sprintf( '%1$s-%2$s.mo', 'easy-digital-downloads', $locale );
 
 		// Look for wp-content/languages/edd/easy-digital-downloads-{lang}_{country}.mo
-		$mofile_global1 = WP_LANG_DIR . '/edd/easy-digital-downloads-' . $locale . '.mo';
+		$mofile_global1 = WP_LANG_DIR . "/edd/easy-digital-downloads-{$locale}.mo";
 
 		// Look for wp-content/languages/edd/edd-{lang}_{country}.mo
-		$mofile_global2 = WP_LANG_DIR . '/edd/edd-' . $locale . '.mo';
+		$mofile_global2 = WP_LANG_DIR . "/edd/edd-{$locale}.mo";
 
 		// Look in wp-content/languages/plugins/easy-digital-downloads
-		$mofile_global3 = WP_LANG_DIR . '/plugins/easy-digital-downloads/' . $mofile;
+		$mofile_global3 = WP_LANG_DIR . "/plugins/easy-digital-downloads/{$mofile}";
 
+		// Try to load from first global location
 		if ( file_exists( $mofile_global1 ) ) {
-
 			load_textdomain( 'easy-digital-downloads', $mofile_global1 );
 
+			// Try to load from next global location
 		} elseif ( file_exists( $mofile_global2 ) ) {
-
 			load_textdomain( 'easy-digital-downloads', $mofile_global2 );
 
+			// Try to load from next global location
 		} elseif ( file_exists( $mofile_global3 ) ) {
-
 			load_textdomain( 'easy-digital-downloads', $mofile_global3 );
 
+			// Load the default language files
 		} else {
-
-			// Load the default language files.
 			load_plugin_textdomain( 'easy-digital-downloads', false, $edd_lang_dir );
 		}
-
 	}
 
 	/**
 	 * Load a .mo file for the old textdomain if one exists.
 	 *
-	 * h/t: https://github.com/10up/grunt-wp-plugin/issues/21#issuecomment-62003284
+	 * @see https://github.com/10up/grunt-wp-plugin/issues/21#issuecomment-62003284
 	 */
-	function load_old_textdomain( $mofile, $textdomain ) {
+	public function load_old_textdomain( $mofile, $textdomain ) {
 
-		if ( $textdomain === 'easy-digital-downloads' && ! file_exists( $mofile ) ) {
+		// Fallback for old text domain
+		if ( ( 'easy-digital-downloads' === $textdomain ) && ! file_exists( $mofile ) ) {
 			$mofile = dirname( $mofile ) . DIRECTORY_SEPARATOR . str_replace( $textdomain, 'edd', basename( $mofile ) );
 		}
 
+		// Return (possibly overridden) mofile
 		return $mofile;
 	}
-
 }
 
-endif; // End if class_exists check.
-
-
-/**
- * The main function for that returns Easy_Digital_Downloads
- *
- * The main function responsible for returning the one true Easy_Digital_Downloads
- * Instance to functions everywhere.
- *
- * Use this function like you would a global variable, except without needing
- * to declare the global.
- *
- * Example: <?php $edd = EDD(); ?>
- *
- * @since 1.4
- * @return object|Easy_Digital_Downloads The one true Easy_Digital_Downloads Instance.
- */
-function EDD() {
-	return Easy_Digital_Downloads::instance();
-}
-
-// Get EDD Running.
-EDD();
+// Invoke the checker
+new EDD_Requirements_Check();

@@ -4,9 +4,9 @@ Plugin URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
-Requires at least: 4.4
-Tested up to: 5.0
-Stable Tag: 2.9.9
+Requires at least: 4.6
+Tested up to: 5.0.2
+Stable Tag: 3.0
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -161,7 +161,6 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * [Coinbase](https://easydigitaldownloads.com/downloads/coinbase-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=coinbase-payment-gateway&utm_campaign=readme)
 * [SOFORT Banking](https://easydigitaldownloads.com/downloads/sofort-banking-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=sofort-banking-gateway&utm_campaign=readme)
 * [PayU India](https://easydigitaldownloads.com/downloads/payu-india-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=payu-india-payment-gateway&utm_campaign=readme)
-* [Payza](https://easydigitaldownloads.com/downloads/payza-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=payza-payment-gateway&utm_campaign=readme)
 * [PayPlug](https://easydigitaldownloads.com/downloads/payplug-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=payplug-gateway&utm_campaign=readme)
 * [GoCardless](https://easydigitaldownloads.com/downloads/gocardless-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=gocardless-payment-gateway&utm_campaign=readme)
 * [Zombaio](https://easydigitaldownloads.com/downloads/zombaio-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=zombaio-payment-gateway&utm_campaign=readme)
@@ -188,6 +187,13 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+
+= 2.9.11, January 6, 2019 =
+* Fix: PayPal PDT amount validation fails for some accounts due to missing payment_gross field.
+* Tweak: PayPal email address now registered to EDD_Customer during IPN processing if the email is not already registered.
+
+= 2.9.10, January 4, 2019 =
+* Security Fix: Avoid a possible PayPal Standard price manipulation when using PDT (Payment Data Transfer)
 
 = 2.9.9, December 3, 2018 =
 * Fix: State/province cannot be updated on order details screen when country is changed.
