@@ -1,14 +1,14 @@
 <?php
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD DB base class
  *
  * @package     EDD
  * @subpackage  Classes/EDD DB
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.1
 */

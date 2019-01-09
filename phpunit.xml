@@ -37,6 +37,11 @@
 			</exclude>
 		</whitelist>
 	</filter>
+	<groups>
+		<exclude>
+			<group>edd_ajax</group>
+		</exclude>
+	</groups>
 	<listeners>
 		<listener class="SpeedTrapListener" file="tests/phpunit/speed-trap-listener.php">
 			<arguments>

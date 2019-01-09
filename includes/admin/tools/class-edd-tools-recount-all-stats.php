@@ -11,7 +11,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Tools_Recount_All_Stats Class
@@ -50,8 +50,9 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 	 * @return array $data The data for the CSV file
 	 */
 	public function get_data() {
-		global $edd_logs, $wpdb;
+		global $wpdb;
 
+		$edd_logs           = EDD()->debug_log;
 		$totals             = $this->get_stored_data( 'edd_temp_recount_all_stats'  );
 		$payment_items      = $this->get_stored_data( 'edd_temp_payment_items'      );
 		$processed_payments = $this->get_stored_data( 'edd_temp_processed_payments' );
@@ -223,11 +224,7 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 	}
 
 	public function headers() {
-		ignore_user_abort( true );
-
-		if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
-			set_time_limit( 0 );
-		}
+		edd_set_time_limit();
 	}
 
 	/**
@@ -245,7 +242,7 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 	}
 
 	public function pre_fetch() {
-		global $edd_logs, $wpdb;
+		global $wpdb;
 
 		if ( $this->step == 1 ) {
 			$this->delete_data( 'edd_temp_recount_all_total' );
@@ -296,6 +293,7 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 				'nopaging'        => true,
 			) );
 
+			$edd_logs = EDD()->debug_log;
 			$all_logs = $edd_logs->get_connected_logs( $args, 'sale' );
 
 			if ( $all_logs ) {

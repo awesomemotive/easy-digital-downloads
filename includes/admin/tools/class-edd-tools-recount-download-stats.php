@@ -11,7 +11,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Tools_Recount_Stats Class
@@ -50,7 +50,7 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 	 * @return array $data The data for the CSV file
 	 */
 	public function get_data() {
-		global $edd_logs, $wpdb;
+		global $wpdb;
 
 		$accepted_statuses  = apply_filters( 'edd_recount_accepted_statuses', array( 'publish', 'revoked' ) );
 
@@ -78,8 +78,10 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 			'fields'         => 'ids',
 		) );
 
-		$log_ids = $edd_logs->get_connected_logs( $args, 'sale' );
+		$edd_logs = EDD()->debug_log;
+		$log_ids  = $edd_logs->get_connected_logs( $args, 'sale' );
 		$this->_log_ids_debug = array();
+
 		if ( $log_ids ) {
 			$log_ids     = implode( ',', $log_ids );
 			$payment_ids = $wpdb->get_col( "SELECT meta_value FROM $wpdb->postmeta WHERE meta_key='_edd_log_payment_id' AND post_id IN ($log_ids)" );
@@ -145,7 +147,7 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 	 * @return int
 	 */
 	public function get_percentage_complete() {
-		global $edd_logs, $wpdb;
+		global $wpdb;
 
 		if ( $this->step == 1 ) {
 			$this->delete_data( 'edd_recount_total_' . $this->download_id );
@@ -165,7 +167,8 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 				'nopaging'       => true,
 			) );
 
-			$log_ids = $edd_logs->get_connected_logs( $args, 'sale' );
+			$edd_logs = EDD()->debug_log;
+			$log_ids  = $edd_logs->get_connected_logs( $args, 'sale' );
 
 			if ( $log_ids ) {
 				$log_ids     = implode( ',', $log_ids );
@@ -238,11 +241,7 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 	}
 
 	public function headers() {
-		ignore_user_abort( true );
-
-		if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
-			set_time_limit( 0 );
-		}
+		edd_set_time_limit();
 	}
 
 	/**

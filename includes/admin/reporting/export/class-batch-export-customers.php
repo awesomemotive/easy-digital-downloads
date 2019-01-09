@@ -5,24 +5,25 @@
  * This class handles customer export
  *
  * @package     EDD
- * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @subpackage  Admin/Reporting/Export
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.4
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Batch_Customers_Export Class
  *
  * @since 2.4
+ * @since 3.0 Allowed customers to be exported by taxonomy.
  */
 class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 
 	/**
-	 * Our export type. Used for export-type specific filters/actions
+	 * Our export type. Used for export-type specific filters/actions.
 	 *
 	 * @var string
 	 * @since 2.4
@@ -30,65 +31,65 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 	public $export_type = 'customers';
 
 	/**
-	 * Set the CSV columns
+	 * Taxonomy.
+	 *
+	 * @since 3.0
+	 * @var int
+	 */
+	public $taxonomy = null;
+
+	/**
+	 * Set the CSV columns.
 	 *
 	 * @since 2.4
+	 *
 	 * @return array $cols All the columns
 	 */
 	public function csv_cols() {
-
 		$cols = array(
-			'id'        => __( 'ID',   'easy-digital-downloads' ),
-			'name'      => __( 'Name',   'easy-digital-downloads' ),
+			'id'        => __( 'ID', 'easy-digital-downloads' ),
+			'name'      => __( 'Name', 'easy-digital-downloads' ),
 			'email'     => __( 'Email', 'easy-digital-downloads' ),
 			'purchases' => __( 'Number of Purchases', 'easy-digital-downloads' ),
-			'amount'    => __( 'Customer Value', 'easy-digital-downloads' )
+			'amount'    => __( 'Customer Value', 'easy-digital-downloads' ),
 		);
 
 		return $cols;
 	}
 
 	/**
-	 * Get the Export Data
+	 * Get the export data.
 	 *
 	 * @since 2.4
-	 *   Database API
-	 * @global object $edd_logs EDD Logs Object
-	 * @return array $data The data for the CSV file
+	 * @since 3.0 Updated to use new query methods.
+	 *
+	 * @return array $data The data for the CSV file.
 	 */
 	public function get_data() {
+		global $wpdb;
 
 		$data = array();
 
-		if ( ! empty( $this->download ) ) {
+		// Taxonomy.
+		if ( ! empty( $this->taxonomy ) ) {
+			$taxonomy = $wpdb->prepare( 't.term_id = %d', $this->taxonomy );
 
-			// Export customers of a specific product
-			global $edd_logs;
+			$limit = $wpdb->prepare( '%d, %d', 30 * ( $this->step - 1 ), 30 );
 
-			$args = array(
-				'post_parent'    => absint( $this->download ),
-				'log_type'       => 'sale',
-				'posts_per_page' => 30,
-				'paged'          => $this->step
-			);
+			$sql = "SELECT DISTINCT o.customer_id
+					FROM {$wpdb->terms} t
+					INNER JOIN {$wpdb->term_taxonomy} tt ON t.term_id = tt.term_id
+					INNER JOIN {$wpdb->term_relationships} tr ON tr.term_taxonomy_id = tt.term_taxonomy_id
+					INNER JOIN {$wpdb->edd_order_items} oi ON tr.object_id = oi.product_id
+					INNER JOIN {$wpdb->edd_orders} o ON oi.order_id = o.id
+					WHERE {$taxonomy}
+					LIMIT {$limit}";
 
-			if( null !== $this->price_id ) {
-				$args['meta_query'] = array(
-					array(
-						'key'   => '_edd_log_price_id',
-						'value' => (int) $this->price_id
-					)
-				);
-			}
+			$results = $wpdb->get_col( $sql ); // WPCS: unprepared SQL ok.
 
-			$logs = $edd_logs->get_connected_logs( $args );
-
-			if ( $logs ) {
-				foreach ( $logs as $log ) {
-
-					$payment_id  = get_post_meta( $log->ID, '_edd_log_payment_id', true );
-					$customer_id = edd_get_payment_customer_id( $payment_id );
-					$customer    = new EDD_Customer( $customer_id );
+			if ( $results ) {
+				foreach ( $results as $customer_id ) {
+					$customer = new EDD_Customer( $customer_id );
 
 					$data[] = array(
 						'id'        => $customer->id,
@@ -100,21 +101,53 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 				}
 			}
 
-		} else {
+		// Download.
+		} elseif ( ! empty( $this->download ) ) {
+			// Export customers of a specific product
 
-			// Export all customers
-			$offset    = 30 * ( $this->step - 1 );
-			$customers = EDD()->customers->get_customers( array( 'number' => 30, 'offset' => $offset ) );
+			$args = array(
+				'product_id' => absint( $this->download ),
+				'number'     => 30,
+				'offset'     => 30 * ( $this->step - 1 ),
+			);
+
+			if ( null !== $this->price_id ) {
+				$args['price_id'] = (int) $this->price_id;
+			}
+
+			$order_items = edd_get_order_items( $args );
+
+			if ( $order_items ) {
+				foreach ( $order_items as $item ) {
+					$order = edd_get_order( $item->order_id );
+
+					$customer = new EDD_Customer( $order->customer_id );
+
+					$data[] = array(
+						'id'        => $customer->id,
+						'name'      => $customer->name,
+						'email'     => $customer->email,
+						'purchases' => $customer->purchase_count,
+						'amount'    => edd_format_amount( $customer->purchase_value ),
+					);
+				}
+			}
+
+		// All customers.
+		} else {
+			$customers = edd_get_customers( array(
+				'number' => 30,
+				'offset' => 30 * ( $this->step - 1 ),
+			) );
 
 			$i = 0;
 
 			foreach ( $customers as $customer ) {
-
-				$data[$i]['id']        = $customer->id;
-				$data[$i]['name']      = $customer->name;
-				$data[$i]['email']     = $customer->email;
-				$data[$i]['purchases'] = $customer->purchase_count;
-				$data[$i]['amount']    = edd_format_amount( $customer->purchase_value );
+				$data[ $i ]['id']        = $customer->id;
+				$data[ $i ]['name']      = $customer->name;
+				$data[ $i ]['email']     = $customer->email;
+				$data[ $i ]['purchases'] = $customer->purchase_count;
+				$data[ $i ]['amount']    = edd_format_amount( $customer->purchase_value );
 
 				$i++;
 			}
@@ -127,29 +160,25 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 	}
 
 	/**
-	 * Return the calculated completion percentage
+	 * Return the calculated completion percentage.
 	 *
 	 * @since 2.4
-	 * @return int
+	 *
+	 * @return float Percentage complete.
 	 */
 	public function get_percentage_complete() {
-
 		$percentage = 0;
 
-		// We can't count the number when getting them for a specific download
-		if( empty( $this->download ) ) {
+		// We can't count the number when getting them for a specific download.
+		if ( empty( $this->download ) ) {
+			$total = edd_count_customers();
 
-			$total = EDD()->customers->count();
-
-			if( $total > 0 ) {
-
+			if ( $total > 0 ) {
 				$percentage = ( ( 30 * $this->step ) / $total ) * 100;
-
 			}
-
 		}
 
-		if( $percentage > 100 ) {
+		if ( $percentage > 100 ) {
 			$percentage = 100;
 		}
 
@@ -160,12 +189,28 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 	 * Set the properties specific to the Customers export
 	 *
 	 * @since 2.4.2
-	 * @param array $request The Form Data passed into the batch processing
+	 *
+	 * @param array $request Form data passed into the batch processing.
 	 */
 	public function set_properties( $request ) {
-		$this->start    = isset( $request['start'] )            ? sanitize_text_field( $request['start'] ) : '';
-		$this->end      = isset( $request['end']  )             ? sanitize_text_field( $request['end']  )  : '';
-		$this->download = isset( $request['download']         ) ? absint( $request['download']         )   : null;
-		$this->price_id = ! empty( $request['edd_price_option'] ) && 0 !== $request['edd_price_option'] ? absint( $request['edd_price_option'] )   : null;
+		$this->start = isset( $request['start'] )
+			? sanitize_text_field( $request['start'] )
+			: '';
+
+		$this->end = isset( $request['end'] )
+			? sanitize_text_field( $request['end'] )
+			: '';
+
+		$this->taxonomy = isset( $request['taxonomy'] )
+			? absint( $request['taxonomy'] )
+			: null;
+
+		$this->download = isset( $request['download'] )
+			? absint( $request['download'] )
+			: null;
+
+		$this->price_id = ! empty( $request['edd_price_option'] ) && 0 !== $request['edd_price_option']
+			? absint( $request['edd_price_option'] )
+			: null;
 	}
 }

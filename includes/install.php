@@ -4,13 +4,88 @@
  *
  * @package     EDD
  * @subpackage  Functions/Install
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
+ */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Get the current database version
+ *
+ * @since 3.0
+ *
+ * @return string
+ */
+function edd_get_db_version() {
+	$db_version = get_option( 'edd_version' );
+	$retval     = ! empty( $db_version )
+		? edd_format_db_version( $db_version )
+		: false;
+
+	return $retval;
+}
+
+/**
+ * Update the EDD version in the options table
+ *
+ * @since 3.0
+ */
+function edd_update_db_version() {
+	if ( defined( 'EDD_VERSION' ) ) {
+		update_option( 'edd_version', edd_format_db_version( EDD_VERSION ) );
+	}
+}
+
+/**
+ * Format the EDD version (going into or coming from the database.)
+ *
+ * @since 3.0
+ *
+ * @param string $version
+ * @return string
+ */
+function edd_format_db_version( $version = '' ) {
+	return preg_replace( '/[^0-9.].*/', '', $version );
+}
+
+/**
+ * Check if the upgrade routine has been run for a specific action
+ *
+ * @since  2.3
+ * @param  string $upgrade_action The upgrade action to check completion for
+ * @return bool                   If the action has been added to the copmleted actions array
+ */
+function edd_has_upgrade_completed( $upgrade_action = '' ) {
+
+	// Bail if no upgrade action to check
+	if ( empty( $upgrade_action ) ) {
+		return false;
+	}
+
+	// Get completed upgrades
+	$completed_upgrades = edd_get_completed_upgrades();
+
+	// Return true if in array, false if not
+	return in_array( $upgrade_action, $completed_upgrades, true );
+}
+
+/**
+ * Get's the array of completed upgrade actions
+ *
+ * @since  2.3
+ * @return array The array of completed upgrades
+ */
+function edd_get_completed_upgrades() {
+
+	// Get the completed upgrades for this site
+	$completed_upgrades = get_option( 'edd_completed_upgrades', array() );
+
+	// Return array of completed upgrades
+	return (array) $completed_upgrades;
+}
 
 /**
  * Install
@@ -18,49 +93,94 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Runs on plugin install by setting up the post types, custom taxonomies,
  * flushing rewrite rules to initiate the new 'downloads' slug and also
  * creates the plugin and populates the settings fields for those plugin
- * pages. After successful install, the user is redirected to the EDD Welcome
- * screen.
+ * pages.
  *
  * @since 1.0
- * @global $wpdb
- * @global $edd_options
- * @param  bool $network_side If the plugin is being network-activated
+ * @param  bool $network_wide If the plugin is being network-activated
  * @return void
  */
 function edd_install( $network_wide = false ) {
+
+	// Multi-site install
+	if ( is_multisite() && ! empty( $network_wide ) ) {
+		edd_run_multisite_install();
+
+	// Single site install
+	} else {
+		edd_run_install();
+	}
+}
+
+/**
+ * Run the EDD installation on every site in the current network.
+ *
+ * @since 3.0
+ */
+function edd_run_multisite_install() {
 	global $wpdb;
 
-	if ( is_multisite() && $network_wide ) {
+	// Get site count
+	$network_id = get_current_network_id();
+	$query      = $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->blogs} WHERE site_id = %d", $network_id );
+	$count      = $wpdb->get_var( $query );
 
-		foreach ( $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs LIMIT 100" ) as $blog_id ) {
-
-			switch_to_blog( $blog_id );
-			edd_run_install();
-			restore_current_blog();
-
-		}
-
-	} else {
-
-		edd_run_install();
-
+	// Bail if no sites (this is really strange and bad)
+	if ( empty( $count ) || is_wp_error( $count ) ) {
+		return;
 	}
 
+	// Setup the steps
+	$per_step    = 100;
+	$total_steps = ceil( $count / $per_step );
+	$step        = 1;
+	$offset      = 0;
+
+	// Step through all sites in this network in groups of 100
+	do {
+
+		// Get next batch of site IDs
+		$query    = $wpdb->prepare( "SELECT blog_id FROM {$wpdb->blogs} WHERE site_id = %d LIMIT %d, %d", $network_id, $offset, $per_step );
+		$site_ids = $wpdb->get_col( $query );
+
+		// Proceed if site IDs exist
+		if ( ! empty( $site_ids ) ) {
+			foreach ( $site_ids as $site_id ) {
+				edd_run_install( $site_id );
+			}
+		}
+
+		// Bump the limit for the next iteration
+		$offset = ( $step * $per_step ) - 1;
+
+		// Bump the step
+		++$step;
+
+	// Bail when steps are greater than or equal to total steps
+	} while ( $total_steps > $step );
 }
-register_activation_hook( EDD_PLUGIN_FILE, 'edd_install' );
 
 /**
  * Run the EDD Install process
  *
- * @since  2.5
- * @return void
+ * @since 2.5
+ * @since 3.0 Added $site_id parameter
  */
-function edd_run_install() {
-	global $wpdb, $edd_options;
+function edd_run_install( $site_id = false ) {
 
-	if( ! function_exists( 'edd_create_protection_files' ) ) {
-		require_once EDD_PLUGIN_DIR . 'includes/admin/upload-functions.php';
+	// Not switched
+	$switched = false;
+
+	// Maybe switch to a site
+	if ( ! empty( $site_id ) ) {
+		switch_to_blog( $site_id );
+		$switched = true;
 	}
+
+	// Get the current database version
+	$current_version = edd_get_db_version();
+
+	// Setup the components (customers, discounts, logs, etc...)
+	edd_setup_components();
 
 	// Setup the Downloads Custom Post Type
 	edd_setup_edd_post_types();
@@ -71,158 +191,257 @@ function edd_run_install() {
 	// Clear the permalinks
 	flush_rewrite_rules( false );
 
-	// Add Upgraded From Option
-	$current_version = get_option( 'edd_version' );
-	if ( $current_version ) {
+	// Install the default pages
+	edd_install_pages();
+
+	// Maybe save the previous version, only if different than current
+	if ( ! empty( $current_version ) && ( edd_format_db_version( EDD_VERSION ) !== $current_version ) ) {
 		update_option( 'edd_version_upgraded_from', $current_version );
 	}
 
-	// Setup some default options
-	$options = array();
-
-	// Pull options from WP, not EDD's global
-	$current_options = get_option( 'edd_settings', array() );
-
-	// Checks if the purchase page option exists
-	$purchase_page = array_key_exists( 'purchase_page', $current_options ) ? get_post( $current_options['purchase_page'] ) : false;
-	if ( empty( $purchase_page ) ) {
-		// Checkout Page
-		$checkout = wp_insert_post(
-			array(
-				'post_title'     => __( 'Checkout', 'easy-digital-downloads' ),
-				'post_content'   => '[download_checkout]',
-				'post_status'    => 'publish',
-				'post_author'    => 1,
-				'post_type'      => 'page',
-				'comment_status' => 'closed'
-			)
-		);
-
-		$options['purchase_page'] = $checkout;
-	}
-
-	$checkout = isset( $checkout ) ? $checkout : $current_options['purchase_page'];
-
-	$success_page = array_key_exists( 'success_page', $current_options ) ? get_post( $current_options['success_page'] ) : false;
-	if ( empty( $success_page ) ) {
-		// Purchase Confirmation (Success) Page
-		$success = wp_insert_post(
-			array(
-				'post_title'     => __( 'Purchase Confirmation', 'easy-digital-downloads' ),
-				'post_content'   => __( 'Thank you for your purchase! [edd_receipt]', 'easy-digital-downloads' ),
-				'post_status'    => 'publish',
-				'post_author'    => 1,
-				'post_parent'    => $checkout,
-				'post_type'      => 'page',
-				'comment_status' => 'closed'
-			)
-		);
-
-		$options['success_page'] = $success;
-	}
-
-	$failure_page = array_key_exists( 'failure_page', $current_options ) ? get_post( $current_options['failure_page'] ) : false;
-	if ( empty( $failure_page ) ) {
-		// Failed Purchase Page
-		$failed = wp_insert_post(
-			array(
-				'post_title'     => __( 'Transaction Failed', 'easy-digital-downloads' ),
-				'post_content'   => __( 'Your transaction failed, please try again or contact site support.', 'easy-digital-downloads' ),
-				'post_status'    => 'publish',
-				'post_author'    => 1,
-				'post_type'      => 'page',
-				'post_parent'    => $checkout,
-				'comment_status' => 'closed'
-			)
-		);
-
-		$options['failure_page'] = $failed;
-	}
-
-	$history_page = array_key_exists( 'purchase_history_page', $current_options ) ? get_post( $current_options['purchase_history_page'] ) : false;
-	if ( empty( $history_page ) ) {
-		// Purchase History (History) Page
-		$history = wp_insert_post(
-			array(
-				'post_title'     => __( 'Purchase History', 'easy-digital-downloads' ),
-				'post_content'   => '[purchase_history]',
-				'post_status'    => 'publish',
-				'post_author'    => 1,
-				'post_type'      => 'page',
-				'post_parent'    => $checkout,
-				'comment_status' => 'closed'
-			)
-		);
-
-		$options['purchase_history_page'] = $history;
-	}
-
-	// Populate some default values
-	foreach( edd_get_registered_settings() as $tab => $sections ) {
-		foreach( $sections as $section => $settings) {
-
-			// Check for backwards compatibility
-			$tab_sections = edd_get_settings_tab_sections( $tab );
-			if( ! is_array( $tab_sections ) || ! array_key_exists( $section, $tab_sections ) ) {
-				$section = 'main';
-				$settings = $sections;
-			}
-
-			foreach ( $settings as $option ) {
-
-				if( ! empty( $option['type'] ) && 'checkbox' == $option['type'] && ! empty( $option['std'] ) ) {
-					$options[ $option['id'] ] = '1';
-				}
-
-			}
-		}
-
-	}
-
-	$merged_options = array_merge( $edd_options, $options );
-	$edd_options    = $merged_options;
-
-	update_option( 'edd_settings', $merged_options );
-	update_option( 'edd_version', EDD_VERSION );
+	// Install the default settings
+	edd_install_settings();
 
 	// Create wp-content/uploads/edd/ folder and the .htaccess file
-	edd_create_protection_files( true );
+	if ( ! function_exists( 'edd_create_protection_files' ) ) {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/upload-functions.php';
+	}
+	if ( function_exists( 'edd_create_protection_files' ) ) {
+		edd_create_protection_files( true );
+	}
 
 	// Create EDD shop roles
 	$roles = new EDD_Roles;
 	$roles->add_roles();
 	$roles->add_caps();
 
+	// API version
 	$api = new EDD_API;
 	update_option( 'edd_default_api_version', 'v' . $api->get_version() );
-
-	// Create the customer databases
-	@EDD()->customers->create_table();
-	@EDD()->customer_meta->create_table();
 
 	// Check for PHP Session support, and enable if available
 	EDD()->session->use_php_sessions();
 
-	// Add a temporary option to note that EDD pages have been created
-	set_transient( '_edd_installed', $merged_options, 30 );
+	// Maybe set all upgrades as complete (only on fresh installation)
+	edd_set_all_upgrades_complete();
 
-	if ( ! $current_version ) {
+	// Update the database version (must be at end, but before site restore)
+	edd_update_db_version();
+
+	// Maybe switch back
+	if ( true === $switched ) {
+		restore_current_blog();
+	}
+}
+
+/**
+ * Maybe set upgrades as complete during a fresh
+ * @since 3.0
+ */
+function edd_set_all_upgrades_complete() {
+
+	// Bail if not a fresh installation
+	if ( ! edd_get_db_version() ) {
+		return;
+	}
+
+	// Maybe include an admin-area only file/function
+	if ( ! function_exists( 'edd_set_upgrade_complete' ) ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
+	}
 
-		// When new upgrade routines are added, mark them as complete on fresh install
-		$upgrade_routines = array(
-			'upgrade_payment_taxes',
-			'upgrade_customer_payments_association',
-			'upgrade_user_api_keys',
-			'remove_refunded_sale_logs',
-			'update_file_download_log_data',
-		);
+	// When new upgrade routines are added, mark them as complete on fresh install
+	$upgrade_routines = array(
+		'upgrade_payment_taxes',
+		'upgrade_customer_payments_association',
+		'upgrade_user_api_keys',
+		'remove_refunded_sale_logs',
+		'update_file_download_log_data',
+	);
 
-		foreach ( $upgrade_routines as $upgrade ) {
-			edd_set_upgrade_complete( $upgrade );
+	// Loop through upgrade routines and mark them as complete
+	foreach ( $upgrade_routines as $upgrade ) {
+		edd_set_upgrade_complete( $upgrade );
+	}
+}
+
+/**
+ * Install the required pages
+ *
+ * @since 3.0
+ */
+function edd_install_pages() {
+
+	// Get all of the EDD settings
+	$current_options = get_option( 'edd_settings', array() );
+
+	// Required store pages
+	$pages = array_flip( array(
+		'purchase_page',
+		'success_page',
+		'failure_page',
+		'purchase_history_page'
+	) );
+
+	// Look for missing pages
+	$missing_pages  = array_diff_key( $pages, $current_options );
+	$pages_to_check = array_intersect_key( $current_options, $pages );
+
+	// Query for any existing pages
+	$posts = new WP_Query( array(
+		'include'   => array_values( $pages_to_check ),
+		'post_type' => 'page'
+	) );
+
+	// Default value for checkout page
+	$checkout = 0;
+
+	// We'll only update settings on change
+	$changed  = false;
+
+	// Loop through all pages, fix or create any missing ones
+	foreach ( array_flip( $pages ) as $page ) {
+
+		// Checks if the page option exists
+		$page_object = empty( $missing_pages[ $page ] ) && ! empty( $posts->posts ) && ! empty( $pages_to_check[ $page ] )
+			? wp_filter_object_list( $posts->posts, array( 'ID' => $pages_to_check[ $page ] ) )
+			: array();
+
+		// Skip if page exists
+		if ( ! empty( $page_object ) ) {
+
+			// Get the first item in the array
+			$page_object = reset( $page_object );
+
+			// Set the checkout page
+			if ( 'purchase_page' === $page ) {
+				$checkout = $page_object->ID;
+			}
+
+			// Skip if page exists
+			continue;
+		}
+
+		// Get page attributes for missing pages
+		switch ( $page ) {
+
+			// Checkout
+			case 'purchase_page' :
+				$page_attributes = array(
+					'post_title'     => __( 'Checkout', 'easy-digital-downloads' ),
+					'post_content'   => '[download_checkout]',
+					'post_status'    => 'publish',
+					'post_author'    => 1,
+					'post_parent'    => 0,
+					'post_type'      => 'page',
+					'comment_status' => 'closed'
+				);
+				break;
+
+			// Success
+			case 'success_page' :
+				$page_attributes = array(
+					'post_title'     => __( 'Purchase Confirmation', 'easy-digital-downloads' ),
+					'post_content'   => __( 'Thank you for your purchase! [edd_receipt]', 'easy-digital-downloads' ),
+					'post_status'    => 'publish',
+					'post_author'    => 1,
+					'post_parent'    => $checkout,
+					'post_type'      => 'page',
+					'comment_status' => 'closed'
+				);
+				break;
+
+			// Failure
+			case 'failure_page' :
+				$page_attributes = array(
+					'post_title'     => __( 'Transaction Failed', 'easy-digital-downloads' ),
+					'post_content'   => __( 'Your transaction failed, please try again or contact site support.', 'easy-digital-downloads' ),
+					'post_status'    => 'publish',
+					'post_author'    => 1,
+					'post_type'      => 'page',
+					'post_parent'    => $checkout,
+					'comment_status' => 'closed'
+				);
+				break;
+
+			// Purchase History
+			case 'purchase_history_page' :
+				$page_attributes = array(
+					'post_title'     => __( 'Purchase History', 'easy-digital-downloads' ),
+					'post_content'   => '[purchase_history]',
+					'post_status'    => 'publish',
+					'post_author'    => 1,
+					'post_type'      => 'page',
+					'post_parent'    => $checkout,
+					'comment_status' => 'closed'
+				);
+				break;
+		}
+
+		// Create the new page
+		$new_page = wp_insert_post( $page_attributes );
+
+		// Update the checkout page ID
+		if ( 'purchase_page' === $page ) {
+			$checkout = $new_page;
+		}
+
+		// Set the page option
+		$current_options[ $page ] = $new_page;
+
+		// Pages changed
+		$changed = true;
+	}
+
+	// Update the option
+	if ( true === $changed ) {
+		update_option( 'edd_settings', $current_options );
+	}
+}
+
+/**
+ * Install the default settings
+ *
+ * @since 3.0
+ *
+ * @global array $edd_options
+ */
+function edd_install_settings() {
+	global $edd_options;
+
+	// Setup some default options
+	$options = array();
+
+	// Populate some default values
+	$all_settings = edd_get_registered_settings();
+
+	if ( ! empty( $all_settings ) ) {
+		foreach ( $all_settings as $tab => $sections ) {
+			foreach ( $sections as $section => $settings) {
+
+				// Check for backwards compatibility
+				$tab_sections = edd_get_settings_tab_sections( $tab );
+				if ( ! is_array( $tab_sections ) || ! array_key_exists( $section, $tab_sections ) ) {
+					$section  = 'main';
+					$settings = $sections;
+				}
+
+				foreach ( $settings as $option ) {
+					if ( ! empty( $option['type'] ) && 'checkbox' == $option['type'] && ! empty( $option['std'] ) ) {
+						$options[ $option['id'] ] = '1';
+					}
+				}
+			}
 		}
 	}
 
+	// Get the settings
+	$settings       = get_option( 'edd_settings', array() );
+	$merged_options = array_merge( $settings, $options );
+	$edd_options    = $merged_options;
+
+	// Update the settings
+	update_option( 'edd_settings', $merged_options );
 }
 
 /**
@@ -237,43 +456,17 @@ function edd_run_install() {
  * @param  array  $meta    Blog Meta
  * @return void
  */
-function edd_new_blog_created( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
+function edd_new_blog_created( $blog_id ) {
 
-	if ( is_plugin_active_for_network( plugin_basename( EDD_PLUGIN_FILE ) ) ) {
-
-		switch_to_blog( $blog_id );
-		edd_install();
-		restore_current_blog();
-
+	// Bail if plugin is not activated for the network
+	if ( ! is_plugin_active_for_network( plugin_basename( EDD_PLUGIN_FILE ) ) ) {
+		return;
 	}
 
+	// Run the installation for this site
+	edd_run_install( $blog_id );
 }
-add_action( 'wpmu_new_blog', 'edd_new_blog_created', 10, 6 );
-
-
-/**
- * Drop our custom tables when a mu site is deleted
- *
- * @since  2.5
- * @param  array $tables  The tables to drop
- * @param  int   $blog_id The Blog ID being deleted
- * @return array          The tables to drop
- */
-function edd_wpmu_drop_tables( $tables, $blog_id ) {
-
-	switch_to_blog( $blog_id );
-	$customers_db     = new EDD_DB_Customers();
-	$customer_meta_db = new EDD_DB_Customer_Meta();
-	if ( $customers_db->installed() ) {
-		$tables[] = $customers_db->table_name;
-		$tables[] = $customer_meta_db->table_name;
-	}
-	restore_current_blog();
-
-	return $tables;
-
-}
-add_filter( 'wpmu_drop_tables', 'edd_wpmu_drop_tables', 10, 2 );
+add_action( 'wpmu_new_blog', 'edd_new_blog_created', 10 );
 
 /**
  * Post-installation
@@ -290,36 +483,14 @@ function edd_after_install() {
 		return;
 	}
 
-	$edd_options     = get_transient( '_edd_installed' );
-	$edd_table_check = get_option( '_edd_table_check', false );
+	$edd_options = get_transient( '_edd_installed' );
 
-	if ( false === $edd_table_check || current_time( 'timestamp' ) > $edd_table_check ) {
-
-		if ( ! @EDD()->customer_meta->installed() ) {
-
-			// Create the customer meta database (this ensures it creates it on multisite instances where it is network activated)
-			@EDD()->customer_meta->create_table();
-
-		}
-
-		if ( ! @EDD()->customers->installed() ) {
-			// Create the customers database (this ensures it creates it on multisite instances where it is network activated)
-			@EDD()->customers->create_table();
-			@EDD()->customer_meta->create_table();
-
-			do_action( 'edd_after_install', $edd_options );
-		}
-
-		update_option( '_edd_table_check', ( current_time( 'timestamp' ) + WEEK_IN_SECONDS ) );
-
-	}
+	do_action( 'edd_after_install', $edd_options );
 
 	if ( false !== $edd_options ) {
 		// Delete the transient
 		delete_transient( '_edd_installed' );
 	}
-
-
 }
 add_action( 'admin_init', 'edd_after_install' );
 

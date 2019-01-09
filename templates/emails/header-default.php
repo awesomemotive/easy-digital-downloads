@@ -7,7 +7,8 @@
  * @version     2.1
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+ // Exit if accessed directly
+defined( 'ABSPATH' ) || exit;
 
 // For gmail compatibility, including CSS styles in head/body are stripped out therefore styles need to be inline. These variables contain rules which are added to the template inline. !important; is a gmail hack to prevent styles being stripped if it doesn't like something.
 $body = "

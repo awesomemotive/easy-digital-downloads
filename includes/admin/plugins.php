@@ -4,15 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Admin/Plugins
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.8
  */
 
-
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
-
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Plugins row action links
@@ -23,11 +21,18 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @param string $file plugin file path and name being processed
  * @return array $links
  */
-function edd_plugin_action_links( $links, $file ) {
-	$settings_link = '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-settings' ) . '">' . esc_html__( 'General Settings', 'easy-digital-downloads' ) . '</a>';
-	if ( $file == 'easy-digital-downloads/easy-digital-downloads.php' )
-		array_unshift( $links, $settings_link );
+function edd_plugin_action_links( $links = array(), $file = '' ) {
 
+	// Only EDD plugin row
+	if ( EDD_PLUGIN_BASE === $file ) {
+		$settings_url = edd_get_admin_url( array(
+			'page' => 'edd-settings'
+		) );
+
+		$links['settings'] = '<a href="' . esc_url( $settings_url ) . '">' . esc_html__( 'Settings', 'easy-digital-downloads' ) . '</a>';
+	}
+
+	// Return array of links
 	return $links;
 }
 add_filter( 'plugin_action_links', 'edd_plugin_action_links', 10, 2 );
@@ -38,27 +43,24 @@ add_filter( 'plugin_action_links', 'edd_plugin_action_links', 10, 2 );
  *
  * @author Michael Cannon <mc@aihr.us>
  * @since 1.8
- * @param array $input already defined meta links
+ * @param array $links already defined meta links
  * @param string $file plugin file path and name being processed
  * @return array $input
  */
-function edd_plugin_row_meta( $input, $file ) {
-	if ( $file != 'easy-digital-downloads/easy-digital-downloads.php' )
-		return $input;
+function edd_plugin_row_meta( $links = array(), $file = '' ) {
 
-	$edd_link = esc_url( add_query_arg( array(
+	// Only EDD plugin row
+	if ( EDD_PLUGIN_BASE === $file ) {
+		$extensions_url = add_query_arg( array(
 			'utm_source'   => 'plugins-page',
 			'utm_medium'   => 'plugin-row',
 			'utm_campaign' => 'admin',
-		), 'https://easydigitaldownloads.com/downloads/' )
-	);
+		), 'https://easydigitaldownloads.com/downloads/' );
 
-	$links = array(
-		'<a href="' . $edd_link . '">' . esc_html__( 'Extensions', 'easy-digital-downloads' ) . '</a>',
-	);
+		$links['extensions'] = '<a href="' . esc_url( $extensions_url ) . '">' . esc_html__( 'Extensions', 'easy-digital-downloads' ) . '</a>';
+	}
 
-	$input = array_merge( $input, $links );
-
-	return $input;
+	// Return array of links
+	return $links;
 }
 add_filter( 'plugin_row_meta', 'edd_plugin_row_meta', 10, 2 );
