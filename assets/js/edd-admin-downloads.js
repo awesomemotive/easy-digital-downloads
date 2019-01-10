@@ -478,6 +478,18 @@ var EDD_Download_Configuration = {
       }); // Finally, open the modal
 
       file_frame.open();
+    }); // @todo Break this out and remove jQuery.
+
+    $('.edd_repeatable_upload_field').on('focus', function () {
+      var input = $(this);
+      input.data('originalFile', input.val());
+    }).on('change', function () {
+      var input = $(this);
+      var originalFile = input.data('originalFile');
+
+      if (originalFile !== input.val()) {
+        input.closest('.edd-repeatable-row-standard-fields').find('.edd_repeatable_attachment_id_field').val(0);
+      }
     });
     var file_frame;
     window.formfield = '';
