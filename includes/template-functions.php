@@ -1029,6 +1029,14 @@ function edd_download_shortcode_full_content() {
  * @return string
  */
 function edd_download_shortcode_excerpt() {
+	// Adjust excerpt lengths.
+	add_filter( 'excerpt_length', 'edd_download_shortcode_excerpt_length' );
+
+	// Ensure we use `the_excerpt` filter (for length).
+	ob_start();
+	the_excerpt();
+	$excerpt = ob_get_clean();
+
 	/**
 	 * Filters the excerpt output for an individual download in [downloads] shortcode.
 	 *
@@ -1036,7 +1044,12 @@ function edd_download_shortcode_excerpt() {
 	 *
 	 * @param string $excerpt Download excerpt.
 	 */
-	return apply_filters( 'edd_downloads_excerpt', wp_trim_excerpt() );
+	$excerpt = apply_filters( 'edd_downloads_excerpt', $excerpt );
+
+	// Let other excerpt lengths act independently again.
+	remove_filter( 'excerpt_length', 'edd_download_shortcode_excerpt_length' );
+
+	return $excerpt;
 }
 
 /**
