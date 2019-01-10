@@ -7,8 +7,8 @@
  * @package EDD
  * @category Template
  * @author Easy Digital Downloads
- * @version 2.0.0
- * @version 3.0 Uses the new `edd_downlaod_shortcode_except() function`
+ * @version 2.0
+ * @version 3.0 Uses the new `edd_download_shortcode_except()` function
  */
 ?>
 
