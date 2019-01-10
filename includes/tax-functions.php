@@ -31,34 +31,6 @@ function edd_use_taxes() {
 }
 
 /**
- * Filter tax usage based on existing acive tax rates.
- *
- * Registered at 9 priority to allow existing filters to continue to
- * override the expected option value.
- *
- * Filtering the option retrieval vs. the function return so the settings
- * UI properly reflects the status.
- *
- * @since 3.0
- *
- * @param bool $enable_taxes If taxes are enabled (via database option).
- * @return bool Enable taxes if there is an active tax rate.
- */
-function edd_force_use_taxes( $enable_taxes ) {
-	$rates = edd_get_tax_rates( array(
-		'number' => 1,
-		'status' => 'active',
-	) );
-
-	if ( ! empty( $rates ) ) {
-		return true;
-	}
-
-	return $enable_taxes;
-}
-add_filter( 'edd_get_option_enable_taxes', 'edd_force_use_taxes', 9 );
-
-/**
  * Retrieve tax rates
  *
  * @since 1.6
