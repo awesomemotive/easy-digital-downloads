@@ -1,3 +1,8 @@
+/**
+ * Internal dependencies.
+ */
+import { getCreditCardIcon } from './utils.js';
+
 /* global edd_global_vars */
 
 let ajax_tax_count = 0;
@@ -180,6 +185,7 @@ window.EDD_Checkout = ( function( $ ) {
 				card_field.addClass( 'error' );
 			} else {
 				$card_type.removeClass( 'off' );
+				$card_type.html( getCreditCardIcon( result.card_type.name ) );
 				$card_type.addClass( result.card_type.name );
 				if ( result.length_valid && result.luhn_valid ) {
 					card_field.addClass( 'valid' );

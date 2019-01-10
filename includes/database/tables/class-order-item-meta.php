@@ -29,7 +29,7 @@ final class Order_Item_Meta extends Table {
 	 * @since 3.0
 	 * @var string
 	 */
-	protected $name = 'edd_order_itemmeta';
+	protected $name = 'order_itemmeta';
 
 	/**
 	 * Database version

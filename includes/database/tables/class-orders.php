@@ -29,7 +29,7 @@ final class Orders extends Table {
 	 * @since  3.0
 	 * @var    string
 	 */
-	protected $name = 'edd_orders';
+	protected $name = 'orders';
 
 	/**
 	 * Database version.

@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  *
- * @see \EDD\Database\Schemas\Column::__construct() for accepted arguments.
+ * @see Column::__construct() for accepted arguments.
  */
 class Column extends Base {
 

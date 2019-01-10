@@ -29,7 +29,7 @@ final class Note_Meta extends Table {
 	 * @since 3.0
 	 * @var string
 	 */
-	protected $name = 'edd_notemeta';
+	protected $name = 'notemeta';
 
 	/**
 	 * Database version

@@ -1,6 +1,6 @@
 <?php
 /**
- * Base Easy Digital Downloads Custom Table Class.
+ * Base Custom Database Table Class.
  *
  * @package     EDD
  * @subpackage  Database\Tables
@@ -68,14 +68,19 @@ abstract class Table extends Base {
 	protected $db_version = 0;
 
 	/**
-	 * @var string Table prefix
+	 * @var string Table prefix, including the site prefix
 	 */
-	protected $prefix = '';
+	protected $table_prefix = '';
 
 	/**
 	 * @var string Table name
 	 */
 	protected $table_name = '';
+
+	/**
+	 * @var string Table name, prefixed from the base
+	 */
+	protected $prefixed_name = '';
 
 	/**
 	 * @var string Table schema
@@ -588,9 +593,12 @@ abstract class Table extends Base {
 			return;
 		}
 
+		// Setup the prefixed name
+		$this->prefixed_name = $this->apply_prefix( $this->name );
+
 		// Maybe create database key
 		if ( empty( $this->db_version_key ) ) {
-			$this->db_version_key = "wpdb_{$this->name}_version";
+			$this->db_version_key = "wpdb_{$this->prefixed_name}_version";
 		}
 	}
 
@@ -612,21 +620,33 @@ abstract class Table extends Base {
 			return;
 		}
 
-		// Global
+		// Set variables for global tables
 		if ( $this->is_global() ) {
-			$this->prefix           = $db->get_blog_prefix( 0 );
-			$db->{$this->name}      = "{$this->prefix}{$this->name}";
-			$db->ms_global_tables[] = $this->name;
+			$site_id = 0;
+			$tables  = 'ms_global_tables';
 
-		// Site
+		// Set variables for per-site tables
 		} else {
-			$this->prefix      = $db->get_blog_prefix( null );
-			$db->{$this->name} = "{$this->prefix}{$this->name}";
-			$db->tables[]      = $this->name;
+			$site_id = null;
+			$tables  = 'tables';
 		}
 
-		// Set the table name locally
-		$this->table_name = $db->{$this->name};
+		// Set the table prefix and prefix the table name
+		$this->table_prefix  = $db->get_blog_prefix( $site_id );
+
+		// Get the prefixed table name
+		$prefixed_table_name = "{$this->table_prefix}{$this->prefixed_name}";
+
+		// Set the database interface
+		$db->{$this->prefixed_name} = $this->table_name = $prefixed_table_name;
+
+		// Create the array if it does not exist
+		if ( ! isset( $db->{$tables} ) ) {
+			$db->{$tables} = array();
+		}
+
+		// Add the table to the global table array
+		$db->{$tables}[] = $this->prefixed_name;
 
 		// Charset
 		if ( ! empty( $db->charset ) ) {
@@ -760,50 +780,5 @@ abstract class Table extends Base {
 
 		// Return callable, if any
 		return $callable;
-	}
-
-	/**
-	 * Sanitize a table name string
-	 *
-	 * Applies the following formatting to a string:
-	 * - No accents
-	 * - No special characters
-	 * - No hyphens
-	 * - No double underscores
-	 * - No trailing underscores
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $name The name of the database table
-	 *
-	 * @return string Sanitized database table name
-	 */
-	private function sanitize_table_name( $name = '' ) {
-
-		// Trim spaces off the ends
-		$unspace = trim( $name );
-
-		// Only non-accented table names (avoid truncation)
-		$accents = remove_accents( $unspace );
-
-		// Only lowercase characters, hyphens, and dashes (avoid index corruption)
-		$lower   = sanitize_key( $accents );
-
-		// Replace hyphens with single underscores
-		$under   = str_replace( '-',  '_', $lower );
-
-		// Single underscores only
-		$single  = str_replace( '__', '_', $under );
-
-		// Remove trailing underscores
-		$clean   = trim( $single, '_' );
-
-		// Bail if table name was garbaged
-		if ( empty( $clean ) ) {
-			return false;
-		}
-
-		// Return the cleaned table name
-		return $clean;
 	}
 }
