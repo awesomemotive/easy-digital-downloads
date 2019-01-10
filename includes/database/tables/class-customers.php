@@ -29,7 +29,7 @@ final class Customers extends Table {
 	 * @since 3.0
 	 * @var string
 	 */
-	protected $name = 'edd_customers';
+	protected $name = 'customers';
 
 	/**
 	 * Database version
@@ -93,8 +93,8 @@ final class Customers extends Table {
 	 * @since 3.0
 	 */
 	public function maybe_upgrade() {
-		if ( false !== get_option( $this->prefix . 'edd_customers_db_version', false ) ) {
-			delete_option( $this->prefix . 'edd_customers_db_version' );
+		if ( false !== get_option( $this->table_prefix . 'edd_customers_db_version', false ) ) {
+			delete_option( $this->table_prefix . 'edd_customers_db_version' );
 
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `email` varchar(100) NOT NULL default ''" );
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `name` varchar(255) NOT NULL default ''" );
