@@ -348,6 +348,7 @@ function edd_count_payments( $args = array() ) {
 		'end-date'   => null,
 		'download'   => null,
 		'gateway'    => null,
+		'type'       => 'sale',
 	) );
 
 	$select  = 'SELECT edd_o.status, COUNT(*) AS count';
@@ -414,6 +415,10 @@ function edd_count_payments( $args = array() ) {
 		$where .= $wpdb->prepare( ' AND edd_o.gateway = %s', sanitize_text_field( $args['gateway'] ) );
 	}
 
+	if ( ! empty( $args['type'] ) ) {
+		$where .= $wpdb->prepare( ' AND edd_o.type = %s', sanitize_text_field( $args['type'] ) );
+	}
+
 	if ( ! empty( $args['start-date'] ) && false !== strpos( $args['start-date'], '/' ) ) {
 		$date_parts = explode( '/', $args['start-date'] );
 		$month      = ! empty( $date_parts[0] ) && is_numeric( $date_parts[0] ) ? $date_parts[0] : 0;
@@ -461,7 +466,7 @@ function edd_count_payments( $args = array() ) {
 	$counts = $wpdb->get_results( $query, ARRAY_A );
 
 	// Here for backwards compatibility.
-	$statuses = get_post_stati();
+	$statuses = array_merge( get_post_stati(), edd_get_payment_status_keys() );
 	if ( isset( $statuses['private'] ) && empty( $args['s'] ) ) {
 		unset( $statuses['private'] );
 	}
@@ -657,7 +662,7 @@ function edd_is_payment_complete( $order_id = 0 ) {
  * @return int $count Total sales
  */
 function edd_get_total_sales() {
-	$payments = edd_count_payments();
+	$payments = edd_count_payments( array( 'type' => 'sale' ) );
 
 	return $payments->revoked + $payments->complete;
 }
