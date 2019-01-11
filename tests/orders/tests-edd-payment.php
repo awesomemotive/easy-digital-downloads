@@ -114,11 +114,11 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 
 	public function test_updating_payment_status_to_publish() {
 		// Test backwards compat
-		edd_update_payment_status( $this->payment->ID, 'publish' );
+		edd_update_payment_status( $this->payment->ID, 'complete' );
 
 		// Need to get the payment again since it's been updated
 		$this->payment = edd_get_payment( $this->payment->ID );
-		$this->assertEquals( 'publish', $this->payment->status );
+		$this->assertEquals( 'complete', $this->payment->status );
 		$this->assertEquals( 'Completed', $this->payment->status_nicename );
 	}
 
@@ -506,7 +506,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$earnings = $download->earnings;
 		$sales    = $download->sales;
 
-		edd_undo_purchase_on_refund( $this->payment->ID, 'refunded', 'publish' );
+		edd_undo_purchase_on_refund( $this->payment->ID, 'refunded', 'complete' );
 
 		wp_cache_flush();
 
@@ -534,7 +534,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_modify_cart_item_price() {
-		$this->payment->status = 'publish';
+		$this->payment->status = 'complete';
 		$this->payment->save();
 
 		$this->payment->modify_cart_item( 0, array( 'item_price' => 1 ) );
@@ -547,7 +547,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_modify_cart_item_quantity() {
-		$this->payment->status = 'publish';
+		$this->payment->status = 'complete';
 		$this->payment->save();
 
 		$this->payment->modify_cart_item( 0, array(
@@ -564,7 +564,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_modify_cart_item_tax() {
-		$this->payment->status = 'publish';
+		$this->payment->status = 'complete';
 		$this->payment->save();
 
 		$this->payment->modify_cart_item( 0, array( 'tax' => 2 ) );
@@ -575,7 +575,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_modify_cart_item_discount() {
-		$this->payment->status = 'publish';
+		$this->payment->status = 'complete';
 		$this->payment->save();
 
 		$original_total = $this->payment->cart_details[0]['price'];
@@ -588,7 +588,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_modify_cart_item_with_disallowed_changes_should_return_false() {
-		$this->payment->status = 'publish';
+		$this->payment->status = 'complete';
 		$this->payment->save();
 
 		$change_permitted = $this->payment->modify_cart_item( 0, array(

@@ -109,21 +109,21 @@ class Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_update_payment_status() {
-		edd_update_payment_status( self::$payment->ID, 'publish' );
+		edd_update_payment_status( self::$payment->ID, 'complete' );
 
 		$out = edd_get_payments();
 
-		$this->assertEquals( 'publish', $out[0]->post_status );
+		$this->assertEquals( 'complete', $out[0]->status );
 	}
 
 	public function test_update_payment_status_with_invalid_id() {
-		$updated = edd_update_payment_status( 12121212, 'publish' );
+		$updated = edd_update_payment_status( 12121212, 'complete' );
 
 		$this->assertFalse( $updated );
 	}
 
 	public function test_check_for_existing_payment() {
-		edd_update_payment_status( self::$payment->ID, 'publish' );
+		edd_update_payment_status( self::$payment->ID, 'complete' );
 
 		$this->assertTrue( edd_check_for_existing_payment( self::$payment->ID ) );
 	}
@@ -148,7 +148,7 @@ class Payment_Tests extends \EDD_UnitTestCase {
 
 		$expected = array(
 			'pending'    => 'Pending',
-			'publish'    => 'Completed',
+			'complete'   => 'Completed',
 			'refunded'   => 'Refunded',
 			'failed'     => 'Failed',
 			'revoked'    => 'Revoked',
@@ -163,14 +163,18 @@ class Payment_Tests extends \EDD_UnitTestCase {
 		$out = edd_get_payment_status_keys();
 
 		$expected = array(
-			'abandoned',
-			'failed',
-			'pending',
-			'processing',
-			'publish',
-			'refunded',
-			'revoked',
+			'pending'    => __( 'Pending',    'easy-digital-downloads' ),
+			'processing' => __( 'Processing', 'easy-digital-downloads' ),
+			'complete'   => __( 'Completed',  'easy-digital-downloads' ),
+			'refunded'   => __( 'Refunded',   'easy-digital-downloads' ),
+			'revoked'    => __( 'Revoked',    'easy-digital-downloads' ),
+			'failed'     => __( 'Failed',     'easy-digital-downloads' ),
+			'abandoned'  => __( 'Abandoned',  'easy-digital-downloads' )
 		);
+
+		asort( $expected );
+
+		$expected = array_keys( $expected );
 
 		$this->assertInternalType( 'array', $out );
 		$this->assertEquals( $expected, $out );
@@ -183,7 +187,7 @@ class Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_get_payment_completed_date() {
-		edd_update_payment_status( self::$payment->ID, 'publish' );
+		edd_update_payment_status( self::$payment->ID, 'complete' );
 		$payment = new \EDD_Payment( self::$payment->ID );
 
 		$this->assertInternalType( 'string', $payment->completed_date );
@@ -191,7 +195,7 @@ class Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_get_payment_completed_date_bc() {
-		edd_update_payment_status( self::$payment->ID, 'publish' );
+		edd_update_payment_status( self::$payment->ID, 'complete' );
 		$completed_date = edd_get_payment_completed_date( self::$payment->ID );
 
 		$this->assertInternalType( 'string', $completed_date );

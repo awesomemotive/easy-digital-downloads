@@ -52,7 +52,7 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 	public function get_data() {
 		global $wpdb;
 
-		$accepted_statuses  = apply_filters( 'edd_recount_accepted_statuses', array( 'publish', 'revoked' ) );
+		$accepted_statuses  = apply_filters( 'edd_recount_accepted_statuses', array( 'complete', 'revoked' ) );
 
 		if ( $this->step == 1 ) {
 			$this->delete_data( 'edd_temp_recount_download_stats' );
@@ -153,7 +153,7 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 			$this->delete_data( 'edd_recount_total_' . $this->download_id );
 		}
 
-		$accepted_statuses  = apply_filters( 'edd_recount_accepted_statuses', array( 'publish', 'revoked' ) );
+		$accepted_statuses  = apply_filters( 'edd_recount_accepted_statuses', array( 'complete', 'revoked' ) );
 		$total   = $this->get_stored_data( 'edd_recount_total_' . $this->download_id );
 
 		if ( false === $total ) {
@@ -180,7 +180,7 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 				unset( $payment_ids );
 
 				foreach ( $payments as $payment ) {
-					if ( in_array( $payment->post_status, $accepted_statuses ) ) {
+					if ( in_array( $payment->status, $accepted_statuses ) ) {
 						continue;
 					}
 
