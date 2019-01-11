@@ -462,7 +462,7 @@ class EDD_Payment_History_Table extends List_Table {
 		$email = $order->email;
 
 		// Resend
-		if ( 'publish' === $order->status && ! empty( $email ) ) {
+		if ( 'complete' === $order->status && ! empty( $email ) ) {
 			$row_actions['email_links'] = '<a href="' . add_query_arg( array(
 				'edd-action'  => 'email_links',
 				'purchase_id' => $order->id
@@ -515,7 +515,7 @@ class EDD_Payment_History_Table extends List_Table {
 		$status = $this->get_status();
 
 		// State
-		if ( ( ! empty( $status ) && ( $order->status !== $status ) ) || ( empty( $status ) && ( 'publish' !== $order->status ) ) ) {
+		if ( ( ! empty( $status ) && ( $order->status !== $status ) ) || ( empty( $status ) && ( 'complete' !== $order->status ) ) ) {
 			$state = ' &mdash; ' . edd_get_payment_status_label( $order->status );
 		}
 
@@ -532,7 +532,7 @@ class EDD_Payment_History_Table extends List_Table {
 		);
 
 		// Refund
-		if ( 'publish' === $order->status ) {
+		if ( 'complete' === $order->status ) {
 			$refund_url            = add_query_arg( array(), admin_url( 'edit.php' ) );
 			$row_actions['refund'] = '<a href="' . esc_url( $refund_url ) . '">' . esc_html__( 'Refund', 'easy-digital-downloads' ) . '</a>';
 		}
@@ -599,7 +599,7 @@ class EDD_Payment_History_Table extends List_Table {
 	 */
 	public function get_bulk_actions() {
 		return apply_filters( 'edd_payments_table_bulk_actions', array(
-			'set-status-publish'     => __( 'Mark Completed',   'easy-digital-downloads' ),
+			'set-status-complete'     => __( 'Mark Completed',   'easy-digital-downloads' ),
 			'set-status-pending'     => __( 'Mark Pending',     'easy-digital-downloads' ),
 			'set-status-processing'  => __( 'Mark Processing',  'easy-digital-downloads' ),
 			'set-status-refunded'    => __( 'Mark Refunded',    'easy-digital-downloads' ),

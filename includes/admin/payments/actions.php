@@ -311,7 +311,7 @@ function edd_update_payment_details( $data = array() ) {
 		$customer->attach_payment( $order_id, false );
 
 		// If purchase was completed and not ever refunded, adjust stats of customers
-		if ( 'revoked' === $new_status || 'publish' === $new_status ) {
+		if ( 'revoked' === $new_status || 'complete' === $new_status ) {
 			$previous_customer->recalculate_stats();
 
 			if ( ! empty( $customer ) ) {
@@ -346,7 +346,7 @@ function edd_update_payment_details( $data = array() ) {
 	}
 
 	// Adjust total store earnings if the payment total has been changed
-	if ( $new_total !== $curr_total && ( 'publish' === $status || 'revoked' === $status ) ) {
+	if ( $new_total !== $curr_total && ( 'complete' === $status || 'revoked' === $status ) ) {
 		if ( $new_total > $curr_total ) {
 
 			// Increase if our new total is higher
@@ -392,7 +392,7 @@ add_action( 'edd_update_payment_details', 'edd_update_payment_details' );
  * Trigger a Purchase Deletion
  *
  * @since 1.3.4
- * @param $data Arguments passed
+ * @param array $data Arguments passed
  * @return void
  */
 function edd_trigger_purchase_delete( $data ) {
@@ -505,8 +505,8 @@ function edd_orders_list_table_process_bulk_actions() {
 				edd_delete_purchase( $id );
 				break;
 
-			case 'set-status-publish':
-				edd_update_payment_status( $id, 'publish' );
+			case 'set-status-complete':
+				edd_update_payment_status( $id, 'complete' );
 				break;
 
 			case 'set-status-pending':

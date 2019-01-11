@@ -99,7 +99,7 @@ class Gateway_Stats extends List_Table {
 			$complete_count = $stats->get_gateway_sales( array(
 				'range'   => $filter['range'],
 				'gateway' => $gateway_id,
-				'status'  => array( 'publish', 'revoked' ),
+				'status'  => array( 'complete', 'revoked' ),
 				'type'    => array( 'sale' ),
 			) );
 

@@ -52,7 +52,7 @@ if ( $purchases ) :
 							<td class="edd_download_download_files">
 								<?php
 
-								if ( 'publish' == $payment->post_status ) :
+								if ( 'complete' == $payment->status ) :
 
 									if ( $download_files ) :
 

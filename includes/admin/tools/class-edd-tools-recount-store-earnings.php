@@ -62,7 +62,7 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 			$this->store_data( 'edd_temp_recount_earnings', $total );
 		}
 
-		$accepted_statuses  = apply_filters( 'edd_recount_accepted_statuses', array( 'publish', 'revoked' ) );
+		$accepted_statuses  = apply_filters( 'edd_recount_accepted_statuses', array( 'complete', 'revoked' ) );
 
 		$args = apply_filters( 'edd_recount_earnings_args', array(
 			'number' => $this->per_step,

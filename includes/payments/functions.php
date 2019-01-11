@@ -152,7 +152,7 @@ function edd_insert_payment( $order_data = array() ) {
  *
  * @return bool True if the status was updated successfully, false otherwise.
  */
-function edd_update_payment_status( $order_id = 0, $new_status = 'publish' ) {
+function edd_update_payment_status( $order_id = 0, $new_status = 'complete' ) {
 	return edd_update_order_status( $order_id, $new_status );
 }
 
@@ -184,7 +184,7 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
 	$customer = edd_get_customer( $customer_id );
 
 	// Only decrease earnings if they haven't already been decreased (or were never increased for this payment).
-	if ( 'revoked' === $status || 'publish' === $status ) {
+	if ( 'revoked' === $status || 'complete' === $status ) {
 		edd_decrease_total_earnings( $amount );
 
 		// Clear the This Month earnings (this_monththis_month is NOT a typo)
@@ -604,7 +604,7 @@ function edd_get_payment_statuses() {
 	return apply_filters( 'edd_payment_statuses', array(
 		'pending'    => __( 'Pending',    'easy-digital-downloads' ),
 		'processing' => __( 'Processing', 'easy-digital-downloads' ),
-		'publish'    => __( 'Completed',  'easy-digital-downloads' ),
+		'complete'   => __( 'Completed',  'easy-digital-downloads' ),
 		'refunded'   => __( 'Refunded',   'easy-digital-downloads' ),
 		'revoked'    => __( 'Revoked',    'easy-digital-downloads' ),
 		'failed'     => __( 'Failed',     'easy-digital-downloads' ),
@@ -659,7 +659,7 @@ function edd_is_payment_complete( $order_id = 0 ) {
 function edd_get_total_sales() {
 	$payments = edd_count_payments();
 
-	return $payments->revoked + $payments->publish;
+	return $payments->revoked + $payments->complete;
 }
 
 /**
@@ -688,7 +688,7 @@ function edd_get_total_earnings( $include_taxes = true ) {
 			$total = $wpdb->get_var( "
 				SELECT SUM(total) {$exclude_taxes_sql} AS total
 				FROM {$wpdb->edd_orders}
-				WHERE status IN ('publish', 'revoked')
+				WHERE status IN ('complete', 'revoked')
 			" );
 
 			$total = (float) edd_number_not_negative( (float) $total );
