@@ -548,7 +548,8 @@ class EDD_Payment_History_Table extends List_Table {
 		$actions = $this->row_actions( $row_actions );
 
 		// Primary link
-		$link = '<strong><a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $order->get_number() ) . '</a>' . esc_html( $state ) . '</strong>';
+		$order_number = $order->type == 'sale' ? $order->get_number() : $order->order_number;
+		$link = '<strong><a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $order_number ) . '</a>' . esc_html( $state ) . '</strong>';
 
 		// Concatenate & return the results
 		return $link . $actions;
@@ -769,10 +770,7 @@ class EDD_Payment_History_Table extends List_Table {
 
 		// Force EDD\Orders\Order objects to be returned
 		$r['output'] = 'orders';
-		$p = new EDD_Payments_Query( $r );
-
-		// Setup items
-		$items = $p->get_payments();
+		$items = edd_get_orders( $r );
 
 		// Get customer IDs and count from payments
 		$customer_ids = array_unique( wp_list_pluck( $items, 'customer_id' ) );
