@@ -75,6 +75,8 @@ final class Init {
 
 		$reports = $this->legacy_reports( $reports );
 
+		$reports = $this->register_core_endpoint_views( $reports );
+
 		/**
 		 * Fires when the Reports API is initialized.
 		 *
@@ -225,4 +227,28 @@ final class Init {
 		// Return reports array
 		return $reports;
 	}
+
+	/**
+	 * Registers the core endpoint views.
+	 *
+	 * @since 3.0
+	 *
+	 * @param Data\Report_Registry $reports Reports registry instance.
+	 */
+	private function register_core_endpoint_views( $reports ) {
+		$views      = new Data\Endpoint_View_Registry();
+		$core_views = $views->get_core_views();
+
+		try {
+			foreach ( $core_views as $view_id => $atts ) {
+				$views->register_endpoint_view( $view_id, $atts );
+			}
+		} catch ( \EDD_Exception $exception ) {
+			edd_debug_log_exception( $exception );
+		}
+
+		return $reports;
+	}
+
+
 }
