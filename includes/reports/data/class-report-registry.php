@@ -229,10 +229,10 @@ class Report_Registry extends Reports\Registry implements Utils\Static_Registry 
 	 *
 	 * @throws \EDD_Exception if all expected attributes are not set.
 	 *
-	 * @see \EDD\Reports\Data\Endpoint_View_Registry::add_endpoint_view()
+	 * @see \EDD\Reports\Data\Endpoint_View_Registry::register_endpoint_view()
 	 *
 	 * @param string $view_id    View ID. Currently only core endpoint views can be added.
-	 * @param array  $attributes Attributes of the endpoint view. See Endpoint_View_Registry::add_endpoint_view()
+	 * @param array  $attributes Attributes of the endpoint view. See Endpoint_View_Registry::register_endpoint_view()
 	 *                           for more information on expected/allowed arguments.
 	 * @return bool True if the endpoint view was successfully registered, otherwise false.
 	 */
@@ -244,7 +244,7 @@ class Report_Registry extends Reports\Registry implements Utils\Static_Registry 
 			return false;
 		}
 
-		return $registry->add_endpoint_view( $view_id, $attributes );
+		return $registry->register_endpoint_view( $view_id, $attributes );
 	}
 
 	/**
