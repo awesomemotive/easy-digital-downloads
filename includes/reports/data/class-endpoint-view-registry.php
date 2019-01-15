@@ -79,7 +79,7 @@ final class Endpoint_View_Registry extends Reports\Registry implements Utils\Sta
 	}
 
 	/**
-	 * Adds a new endpoint view to the master registry.
+	 * Registers a new endpoint view to the master registry.
 	 *
 	 * @since 3.0
 	 *
@@ -99,7 +99,7 @@ final class Endpoint_View_Registry extends Reports\Registry implements Utils\Sta
 	 * }
 	 * @return bool True if the report was successfully registered, otherwise false.
 	 */
-	public function add_endpoint_view( $view_id, $attributes ) {
+	public function register_endpoint_view( $view_id, $attributes ) {
 		$error = false;
 
 		$view_atts = $this->get_core_view( $view_id );
