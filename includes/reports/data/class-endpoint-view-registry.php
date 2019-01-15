@@ -109,7 +109,7 @@ class Endpoint_View_Registry extends Reports\Registry implements Utils\Static_Re
 		}
 
 		if ( ! empty( $attributes['group_callback'] ) ) {
-			$view_atts['group_callback'] = $attributes['group_callback']
+			$view_atts['group_callback'] = $attributes['group_callback'];
 		}
 
 		if ( ! empty( $attributes['handler'] ) ) {
