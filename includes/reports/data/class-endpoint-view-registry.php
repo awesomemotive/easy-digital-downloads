@@ -141,14 +141,11 @@ class Endpoint_View_Registry extends Reports\Registry implements Utils\Static_Re
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $sort  Optional. How to sort the list of registered endpoint views before retrieval.
-	 *                      Accepts 'ID' (alphabetized by item ID), or empty (none).
-	 *                      Default empty.
 	 * @param string $group Optional. The reports group to retrieve reports for. Default 'core'.
 	 * @return array Endpoint view records.
 	 */
-	public function get_endpoint_views( $sort = '', $group = '' ) {
-		$views = $this->get_items_sorted( $sort );
+	public function get_endpoint_views( $group = '' ) {
+		$views = $this->get_items_sorted( 'ID' );
 
 		foreach ( $views as $view_id => $atts ) {
 			if ( $group !== $atts['group'] ) {
