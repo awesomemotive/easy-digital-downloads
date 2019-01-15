@@ -223,6 +223,31 @@ class Report_Registry extends Reports\Registry implements Utils\Static_Registry 
 	}
 
 	/**
+	 * Registers an endpoint view to the master endpoint views registry.
+	 *
+	 * @since 3.0
+	 *
+	 * @throws \EDD_Exception if all expected attributes are not set.
+	 *
+	 * @see \EDD\Reports\Data\Endpoint_View_Registry::add_endpoint_view()
+	 *
+	 * @param string $view_id    View ID. Currently only core endpoint views can be added.
+	 * @param array  $attributes Attributes of the endpoint view. See Endpoint_View_Registry::add_endpoint_view()
+	 *                           for more information on expected/allowed arguments.
+	 * @return bool True if the endpoint view was successfully registered, otherwise false.
+	 */
+	public function register_endpoint_view( $view_id, $attributes ) {
+		/** @var \EDD\Reports\Data\Endpoint_View_Registry|\WP_Error $registry */
+		$registry = EDD()->utils->get_registry( 'reports:endpoints:views' );
+
+		if ( is_wp_error( $registry ) ) {
+			return false;
+		}
+
+		return $registry->add_endpoint_view( $view_id, $attributes );
+	}
+
+	/**
 	 * Builds and retrieves a Report object.
 	 *
 	 * @since 3.0
