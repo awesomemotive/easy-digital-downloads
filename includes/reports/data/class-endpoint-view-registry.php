@@ -206,6 +206,48 @@ final class Endpoint_View_Registry extends Reports\Registry implements Utils\Sta
 	 * @return array List of supported endpoint types and their attributes.
 	 */
 	public function get_core_views() {
-
+		return array(
+			'tile'  => array(
+				'group'          => 'tiles',
+				'group_callback' => __NAMESPACE__ . '\\default_display_tiles_group',
+				'handler'        => 'EDD\Reports\Data\Tile_Endpoint',
+				'fields'         => array(
+					'data_callback'    => '::get_data',
+					'display_callback' => __NAMESPACE__ . '\\default_display_tile',
+					'display_args'     => array(
+						'type'             => '',
+						'context'          => 'primary',
+						'comparison_label' => __( 'All time', 'easy-digital-downloads' ),
+					),
+				),
+			),
+			'chart' => array(
+				'group'          => 'charts',
+				'group_callback' => __NAMESPACE__ . '\\default_display_charts_group',
+				'handler'        => 'EDD\Reports\Data\Chart_Endpoint',
+				'fields'         => array(
+					'type'             => 'line',
+					'options'          => array(),
+					'data_callback'    => '::get_data',
+					'display_callback' => '::display',
+					'display_args'     => array(
+						'colors' => 'core',
+					),
+				),
+			),
+			'table' => array(
+				'group'          => 'tables',
+				'group_callback' => __NAMESPACE__ . '\\default_display_tables_group',
+				'handler'        => 'EDD\Reports\Data\Table_Endpoint',
+				'fields'         => array(
+					'data_callback'    => '::prepare_items',
+					'display_callback' => '::display',
+					'display_args'     => array(
+						'class_name' => '',
+						'class_file' => '',
+					),
+				),
+			),
+		);
 	}
 }
