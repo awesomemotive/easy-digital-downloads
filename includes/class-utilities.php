@@ -116,6 +116,14 @@ class Utilities {
 				}
 				break;
 
+			case 'reports:endpoints:views':
+				if ( ! did_action( 'edd_reports_init' ) ) {
+					_doing_it_wrong( __FUNCTION__, 'The Endpoint Views registry cannot be retrieved prior to the edd_reports_init hook.', 'EDD 3.0' );
+				} elseif ( class_exists( '\EDD\Reports\Data\Endpoint_View_Registry' ) ) {
+					$registry = Reports\Data\Endpoint_View_Registry::instance();
+				}
+				break;
+
 			default:
 				$registry = new \WP_Error( 'invalid_registry', "The '{$name}' registry does not exist." );
 				break;
