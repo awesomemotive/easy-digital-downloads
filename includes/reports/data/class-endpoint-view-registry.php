@@ -23,7 +23,7 @@ use EDD\Reports;
  *
  * @method array get_endpoint_view( string $view_id )
  */
-class Endpoint_View_Registry extends Reports\Registry implements Utils\Static_Registry {
+final class Endpoint_View_Registry extends Reports\Registry implements Utils\Static_Registry {
 
 	/**
 	 * Item error label.
