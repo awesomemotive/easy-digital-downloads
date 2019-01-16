@@ -5,7 +5,7 @@
  */
 import TaxRate from './../models/tax-rate.js';
 import RegionField from './../views/region-field.js';
-import { chosenVars } from 'utils/chosen.js';
+import { chosenVars } from 'js/utils/chosen.js';
 
 /**
  * Add a new rate "form".

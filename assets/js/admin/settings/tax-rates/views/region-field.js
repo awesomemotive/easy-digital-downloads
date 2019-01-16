@@ -3,7 +3,7 @@
 /**
  * Internal dependencies.
  */
-import { chosenVars } from 'utils/chosen.js';
+import { chosenVars } from 'js/utils/chosen.js';
 
 const RegionField = wp.Backbone.View.extend( {
 	/**

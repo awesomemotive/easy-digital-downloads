@@ -2583,10 +2583,10 @@ function edd_shop_states_callback( $args ) {
 function edd_tax_rates_callback( $args ) {
 	$rates = edd_get_tax_rates( array(), OBJECT );
 
-	wp_enqueue_script( 'edd-admin-tax-rates' );
-	wp_enqueue_style( 'edd-admin-tax-rates' );
+	wp_enqueue_script( 'edd-admin-settings-tax-rates' );
+	wp_enqueue_style( 'edd-admin-settings-tax-rates' );
 
-	wp_localize_script( 'edd-admin-tax-rates', 'eddTaxRates', array(
+	wp_localize_script( 'edd-admin-settings-tax-rates', 'eddTaxRates', array(
 		'rates' => $rates,
 		'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
 	) );

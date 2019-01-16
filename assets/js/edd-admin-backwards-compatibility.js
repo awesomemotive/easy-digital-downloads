@@ -66,15 +66,15 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/admin/backwards-compatibility.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/admin/backwards-compatibility/index.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./assets/js/admin/backwards-compatibility.js":
-/*!****************************************************!*\
-  !*** ./assets/js/admin/backwards-compatibility.js ***!
-  \****************************************************/
+/***/ "./assets/js/admin/backwards-compatibility/index.js":
+/*!**********************************************************!*\
+  !*** ./assets/js/admin/backwards-compatibility/index.js ***!
+  \**********************************************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 

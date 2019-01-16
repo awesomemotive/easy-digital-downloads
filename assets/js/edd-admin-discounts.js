@@ -80,7 +80,7 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var utils_jquery_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! utils/jquery.js */ "./assets/js/utils/jquery.js");
+/* harmony import */ var js_utils_jquery_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! js/utils/jquery.js */ "./assets/js/utils/jquery.js");
 /**
  * Internal dependencies.
  */
@@ -89,7 +89,7 @@ __webpack_require__.r(__webpack_exports__);
  * DOM ready.
  */
 
-Object(utils_jquery_js__WEBPACK_IMPORTED_MODULE_0__["jQueryReady"])(function () {
+Object(js_utils_jquery_js__WEBPACK_IMPORTED_MODULE_0__["jQueryReady"])(function () {
   var products = $('#products');
 
   if (!products) {

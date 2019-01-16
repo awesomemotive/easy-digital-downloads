@@ -4,22 +4,16 @@
 const webpack = require( 'webpack' );
 const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
 const UglifyJS = require( 'uglify-es' );
+const ExtractTextPlugin = require( 'extract-text-webpack-plugin' );
+const WebpackRTLPlugin = require( 'webpack-rtl-plugin' );
 
-const adminPages = [
-	'customers',
-	'dashboard',
-	'discounts',
-	'downloads',
-	'tools/export',
-	'tools/import',
-	'notes',
-	'orders',
-	'reports',
-	'payments',
-	'settings',
-	'tools',
-];
-
+/**
+ * Minify a string of Javascript.
+ * This does not transform anything, it simply removes whitespace.
+ *
+ * @param {string} content Content to minify.
+ * @return string
+ */
 const minifyJs = ( content ) => {
 	return Promise.resolve( Buffer.from( UglifyJS.minify( content.toString() ).code ) );
 };
@@ -29,24 +23,43 @@ const config = {
 	mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
 	resolve: {
 		modules: [
-			`${ __dirname }/assets/js`,
+			`${ __dirname }/assets`,
 			'node_modules',
 		],
 	},
 	entry: Object.assign(
+		// Admin Javascript.
+		{
+			'edd-admin': './assets/js/admin',
+		},
 		// Dynamic entry points for individual admin pages.
-		adminPages.reduce( ( memo, path ) => {
+		// These are transformed to a standard `edd-admin-${ entry }` format.
+		[
+			'customers',
+			'dashboard',
+			'discounts',
+			'downloads',
+			'tools/export',
+			'tools/import',
+			'notes',
+			'orders',
+			'reports',
+			'payments',
+			'settings',
+			'settings/tax-rates',
+			'settings/email-tags',
+			'tools',
+			'backwards-compatibility',
+		].reduce( ( memo, path ) => {
 			memo[ `edd-admin-${ path.replace( '/', '-' ) }` ] = `./assets/js/admin/${ path }`;
 			return memo;
 		}, {} ),
+
+		// Frontend Javascript.
 		{
-			'edd-admin': './assets/js/admin',
-			'edd-admin-backwards-compatibility': './assets/js/admin/backwards-compatibility.js',
-			'edd-admin-tax-rates': './assets/js/admin/settings/tax-rates',
-			'edd-admin-email-tags': './assets/js/admin/settings/email-tags',
 			'edd-ajax': './assets/js/frontend/edd-ajax.js',
 			'edd-checkout-global': './assets/js/frontend/checkout',
-		}
+		},
 	),
 	output: {
 		filename: 'assets/js/[name].js',

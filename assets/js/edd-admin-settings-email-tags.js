@@ -1289,4 +1289,4 @@ for (var collections = getKeys(DOMIterables), i = 0; i < collections.length; i++
 /***/ })
 
 /******/ });
-//# sourceMappingURL=edd-admin-email-tags.js.map
+//# sourceMappingURL=edd-admin-settings-email-tags.js.map

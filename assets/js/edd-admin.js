@@ -71,6 +71,72 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./assets/css/admin/chosen.css":
+/*!*************************************!*\
+  !*** ./assets/css/admin/chosen.css ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ "./assets/css/admin/datepicker.css":
+/*!*****************************************!*\
+  !*** ./assets/css/admin/datepicker.css ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ "./assets/css/admin/menu.css":
+/*!***********************************!*\
+  !*** ./assets/css/admin/menu.css ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ "./assets/css/admin/settings-email-tags.css":
+/*!**************************************************!*\
+  !*** ./assets/css/admin/settings-email-tags.css ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ "./assets/css/admin/settings-tax-rates.css":
+/*!*************************************************!*\
+  !*** ./assets/css/admin/settings-tax-rates.css ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
+/***/ "./assets/css/admin/style.css":
+/*!************************************!*\
+  !*** ./assets/css/admin/style.css ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
 /***/ "./assets/js/admin/components/chosen/index.js":
 /*!****************************************************!*\
   !*** ./assets/js/admin/components/chosen/index.js ***!
@@ -84,7 +150,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var core_js_modules_es6_function_name__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_function_name__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es6.regexp.replace */ "./node_modules/core-js/modules/es6.regexp.replace.js");
 /* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var utils_chosen_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! utils/chosen.js */ "./assets/js/utils/chosen.js");
+/* harmony import */ var js_utils_chosen_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! js/utils/chosen.js */ "./assets/js/utils/chosen.js");
 
 
 
@@ -93,7 +159,7 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 jQuery(document).ready(function ($) {
-  $('.edd-select-chosen').chosen(utils_chosen_js__WEBPACK_IMPORTED_MODULE_2__["chosenVars"]);
+  $('.edd-select-chosen').chosen(js_utils_chosen_js__WEBPACK_IMPORTED_MODULE_2__["chosenVars"]);
   $('.edd-select-chosen .chosen-search input').each(function () {
     // Bail if placeholder already set
     if ($(this).attr('placeholder')) {
@@ -448,18 +514,40 @@ jQuery(document).ready(function ($) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_date_picker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/date-picker */ "./assets/js/admin/components/date-picker/index.js");
-/* harmony import */ var _components_date_picker__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_components_date_picker__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _components_chosen__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/chosen */ "./assets/js/admin/components/chosen/index.js");
-/* harmony import */ var _components_tooltips__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/tooltips */ "./assets/js/admin/components/tooltips/index.js");
-/* harmony import */ var _components_vertical_sections__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/vertical-sections */ "./assets/js/admin/components/vertical-sections/index.js");
-/* harmony import */ var _components_sortable_list__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/sortable-list */ "./assets/js/admin/components/sortable-list/index.js");
-/* harmony import */ var _components_sortable_list__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_components_sortable_list__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _components_user_search__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/user-search */ "./assets/js/admin/components/user-search/index.js");
-/* harmony import */ var _components_user_search__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_components_user_search__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var css_admin_style_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! css/admin/style.css */ "./assets/css/admin/style.css");
+/* harmony import */ var css_admin_style_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(css_admin_style_css__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var css_admin_chosen_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! css/admin/chosen.css */ "./assets/css/admin/chosen.css");
+/* harmony import */ var css_admin_chosen_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(css_admin_chosen_css__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var css_admin_datepicker_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! css/admin/datepicker.css */ "./assets/css/admin/datepicker.css");
+/* harmony import */ var css_admin_datepicker_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(css_admin_datepicker_css__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var css_admin_menu_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! css/admin/menu.css */ "./assets/css/admin/menu.css");
+/* harmony import */ var css_admin_menu_css__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(css_admin_menu_css__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var css_admin_settings_tax_rates_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! css/admin/settings-tax-rates.css */ "./assets/css/admin/settings-tax-rates.css");
+/* harmony import */ var css_admin_settings_tax_rates_css__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(css_admin_settings_tax_rates_css__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var css_admin_settings_email_tags_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! css/admin/settings-email-tags.css */ "./assets/css/admin/settings-email-tags.css");
+/* harmony import */ var css_admin_settings_email_tags_css__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(css_admin_settings_email_tags_css__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var js_admin_components_date_picker__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! js/admin/components/date-picker */ "./assets/js/admin/components/date-picker/index.js");
+/* harmony import */ var js_admin_components_date_picker__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(js_admin_components_date_picker__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var js_admin_components_chosen__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! js/admin/components/chosen */ "./assets/js/admin/components/chosen/index.js");
+/* harmony import */ var js_admin_components_tooltips__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! js/admin/components/tooltips */ "./assets/js/admin/components/tooltips/index.js");
+/* harmony import */ var js_admin_components_vertical_sections__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! js/admin/components/vertical-sections */ "./assets/js/admin/components/vertical-sections/index.js");
+/* harmony import */ var js_admin_components_sortable_list__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! js/admin/components/sortable-list */ "./assets/js/admin/components/sortable-list/index.js");
+/* harmony import */ var js_admin_components_sortable_list__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(js_admin_components_sortable_list__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var js_admin_components_user_search__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! js/admin/components/user-search */ "./assets/js/admin/components/user-search/index.js");
+/* harmony import */ var js_admin_components_user_search__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(js_admin_components_user_search__WEBPACK_IMPORTED_MODULE_11__);
+/**
+ * Asset dependencies.
+ */
+
+
+
+
+
+
 /**
  * Internal dependencies.
  */
+
 
 
 

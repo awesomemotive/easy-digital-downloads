@@ -84,7 +84,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es6.array.find */ "./node_modules/core-js/modules/es6.array.find.js");
 /* harmony import */ var core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var utils_chosen_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! utils/chosen.js */ "./assets/js/utils/chosen.js");
+/* harmony import */ var js_utils_chosen_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! js/utils/chosen.js */ "./assets/js/utils/chosen.js");
 
 
 
@@ -151,7 +151,7 @@ var EDD_Edit_Payment = {
           state_wrapper.replaceWith('<input type="text" name="edd-payment-address[0][region]" value="" class="edd-edit-toggles medium-text"/>');
         } else {
           state_wrapper.replaceWith(response);
-          $('#edd-order-address-state-wrap select').chosen(utils_chosen_js__WEBPACK_IMPORTED_MODULE_2__["chosenVars"]);
+          $('#edd-order-address-state-wrap select').chosen(js_utils_chosen_js__WEBPACK_IMPORTED_MODULE_2__["chosenVars"]);
         }
       });
       return false;

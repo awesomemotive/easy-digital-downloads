@@ -1,7 +1,7 @@
 /**
  * Internal dependencies.
  */
-import { chosenVars } from 'utils/chosen.js';
+import { chosenVars } from 'js/utils/chosen.js';
 
 jQuery( document ).ready( function( $ ) {
 	$( '.edd-select-chosen' ).chosen( chosenVars );

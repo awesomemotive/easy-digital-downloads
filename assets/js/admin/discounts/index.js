@@ -1,7 +1,7 @@
 /**
  * Internal dependencies.
  */
-import { jQueryReady } from 'utils/jquery.js';
+import { jQueryReady } from 'js/utils/jquery.js';
 
 /**
  * DOM ready.
