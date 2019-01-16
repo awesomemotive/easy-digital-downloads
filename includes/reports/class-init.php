@@ -236,7 +236,7 @@ final class Init {
 	 * @param Data\Report_Registry $reports Reports registry instance.
 	 */
 	private function register_core_endpoint_views( $reports ) {
-		$views      = new Data\Endpoint_View_Registry();
+		$views      = Data\Endpoint_View_Registry::instance();
 		$core_views = $views->get_core_views();
 
 		try {
