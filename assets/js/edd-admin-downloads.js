@@ -136,7 +136,7 @@ jQuery(document).ready(function ($) {
 jQuery(document).ready(function ($) {
   $('body').on('click', '#the-list .editinline', function () {
     var post_id = $(this).closest('tr').attr('id');
-    post_id = post_id.replace("post-", "");
+    post_id = post_id.replace('post-', '');
     var $edd_inline_data = $('#post-' + post_id);
     var regprice = $edd_inline_data.find('.column-price .downloadprice-' + post_id).val(); // If variable priced product disable editing, otherwise allow price changes
 
@@ -285,7 +285,7 @@ var EDD_Download_Configuration = {
     });
   },
   move: function move() {
-    $(".edd_repeatable_table .edd-repeatables-wrap").sortable({
+    $('.edd_repeatable_table .edd-repeatables-wrap').sortable({
       axis: 'y',
       handle: '.edd-draghandle-anchor',
       items: '.edd_repeatable_row',
@@ -447,12 +447,12 @@ var EDD_Download_Configuration = {
               selectedURL = attachment.url,
               selectedName = attachment.title.length > 0 ? attachment.title : attachment.filename;
 
-          if (selectedSize && typeof attachment.sizes[selectedSize] !== "undefined") {
+          if (selectedSize && typeof attachment.sizes[selectedSize] !== 'undefined') {
             selectedURL = attachment.sizes[selectedSize].url;
           }
 
           if ('image' === attachment.type) {
-            if (selectedSize && typeof attachment.sizes[selectedSize] !== "undefined") {
+            if (selectedSize && typeof attachment.sizes[selectedSize] !== 'undefined') {
               selectedName = selectedName + '-' + attachment.sizes[selectedSize].width + 'x' + attachment.sizes[selectedSize].height;
             } else {
               selectedName = selectedName + '-' + attachment.width + 'x' + attachment.height;
@@ -526,9 +526,9 @@ $(document.body).on('click', '.toggle-custom-price-option-section', function (e)
   var first_input;
 
   if (show) {
-    first_input = $(":input:not(input[type=button],input[type=submit],button):visible:first", header.siblings('.edd-custom-price-option-sections-wrap'));
+    first_input = $(':input:not(input[type=button],input[type=submit],button):visible:first', header.siblings('.edd-custom-price-option-sections-wrap'));
   } else {
-    first_input = $(":input:not(input[type=button],input[type=submit],button):visible:first", header.siblings('.edd-repeatable-row-standard-fields'));
+    first_input = $(':input:not(input[type=button],input[type=submit],button):visible:first', header.siblings('.edd-repeatable-row-standard-fields'));
   }
 
   first_input.focus();
