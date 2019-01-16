@@ -128,7 +128,7 @@ var EDD_Export = {
         action: 'edd_do_ajax_export',
         step: step
       },
-      dataType: "json",
+      dataType: 'json',
       success: function success(response) {
         if ('done' === response.step || response.error || response.success) {
           // We need to get the actual in progress form, not all forms on the page

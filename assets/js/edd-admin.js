@@ -120,7 +120,7 @@ jQuery(document).ready(function ($) {
   $('.chosen-choices').on('click', function () {
     var placeholder = $(this).parent().prev().data('search-placeholder');
 
-    if (typeof placeholder === "undefined") {
+    if (typeof placeholder === 'undefined') {
       placeholder = edd_vars.type_to_search;
     }
 
@@ -353,9 +353,9 @@ jQuery(document).ready(function ($) {
       exclude: exclude
     };
     $.ajax({
-      type: "POST",
+      type: 'POST',
       data: data,
-      dataType: "json",
+      dataType: 'json',
       url: ajaxurl,
       success: function success(search_response) {
         $('.edd_user_search_wrap').removeClass('loading');

@@ -112,7 +112,10 @@ var ajax_tax_count = 0;
  */
 
 function recalculate_taxes(state) {
-  if ('1' != edd_global_vars.taxes_enabled) return; // Taxes not enabled
+  if ('1' != edd_global_vars.taxes_enabled) {
+    return;
+  } // Taxes not enabled
+
 
   var $edd_cc_address = jQuery('#edd_cc_address');
   var billing_country = $edd_cc_address.find('#billing_country').val(),
@@ -139,9 +142,9 @@ function recalculate_taxes(state) {
   jQuery('#edd_purchase_submit [type=submit]').after('<span class="edd-loading-ajax edd-recalculate-taxes-loading edd-loading"></span>');
   var current_ajax_count = ++ajax_tax_count;
   return jQuery.ajax({
-    type: "POST",
+    type: 'POST',
     data: postData,
-    dataType: "json",
+    dataType: 'json',
     url: edd_global_vars.ajaxurl,
     xhrFields: {
       withCredentials: true
@@ -183,7 +186,7 @@ window.EDD_Checkout = function ($) {
 
   function init() {
     $body = $(document.body);
-    $form = $("#edd_purchase_form");
+    $form = $('#edd_purchase_form');
     $edd_cart_amount = $('.edd_cart_amount');
     before_discount = $edd_cart_amount.text();
     $checkout_form_wrap = $('#edd_checkout_form_wrap');
@@ -308,9 +311,9 @@ window.EDD_Checkout = function ($) {
     $('#edd-discount-error-wrap').html('').hide();
     edd_discount_loader.show();
     $.ajax({
-      type: "POST",
+      type: 'POST',
       data: postData,
-      dataType: "json",
+      dataType: 'json',
       url: edd_global_vars.ajaxurl,
       xhrFields: {
         withCredentials: true
@@ -373,9 +376,9 @@ window.EDD_Checkout = function ($) {
       code: $this.data('code')
     };
     $.ajax({
-      type: "POST",
+      type: 'POST',
       data: postData,
-      dataType: "json",
+      dataType: 'json',
       url: edd_global_vars.ajaxurl,
       xhrFields: {
         withCredentials: true
@@ -430,9 +433,9 @@ window.EDD_Checkout = function ($) {
     }; //edd_discount_loader.show();
 
     $.ajax({
-      type: "POST",
+      type: 'POST',
       data: postData,
-      dataType: "json",
+      dataType: 'json',
       url: edd_global_vars.ajaxurl,
       xhrFields: {
         withCredentials: true
@@ -482,7 +485,7 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * Generate markup for a credit card icon based on a passed type.
  *
- * @param {String} type Credit card type.
+ * @param {string} type Credit card type.
  * @return HTML markup.
  */
 var getCreditCardIcon = function getCreditCardIcon(type) {
