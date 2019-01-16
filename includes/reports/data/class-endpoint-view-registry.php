@@ -141,19 +141,10 @@ final class Endpoint_View_Registry extends Reports\Registry implements Utils\Sta
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $group Optional. The reports group to retrieve reports for. Default 'core'.
 	 * @return array Endpoint view records.
 	 */
-	public function get_endpoint_views( $group = '' ) {
-		$views = $this->get_items_sorted( 'ID' );
-
-		foreach ( $views as $view_id => $atts ) {
-			if ( $group !== $atts['group'] ) {
-				unset( $views[ $view_id ] );
-			}
-		}
-
-		return $views;
+	public function get_endpoint_views() {
+		return $this->get_items_sorted( 'ID' );
 	}
 
 	/**
