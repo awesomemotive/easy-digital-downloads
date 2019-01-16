@@ -206,6 +206,12 @@ function get_current_report() {
  * @return array List of supported endpoint types.
  */
 function get_endpoint_views() {
+	if ( ! did_action( 'edd_reports_init' ) ) {
+		_doing_it_wrong( __FUNCTION__, 'Endpoint views cannot be retrieved prior to the firing of the edd_reports_init hook.', 'EDD 3.0' );
+
+		return array();
+	}
+
 	/** @var Data\Endpoint_View_Registry|\WP_Error $registry */
 	$registry = EDD()->utils->get_registry( 'reports:endpoints:views' );
 
