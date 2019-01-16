@@ -75,6 +75,10 @@ const config = {
 				to: 'assets/js/vendor/jquery.chosen.min.js',
 			},
 			{
+				from: './node_modules/chosen-js/chosen.min.css',
+				to: 'assets/css/chosen.css',
+			},
+			{
 				from: './node_modules/chart.js/dist/Chart.min.js',
 				to: 'assets/js/vendor/chartjs.min.js',
 			},
@@ -113,8 +117,52 @@ const config = {
 				to: 'assets/js/vendor/jquery.payment.min.js',
 			},
 		] ),
+		new WebpackRTLPlugin( {
+			suffix: '-rtl',
+			minify: process.env.NODE_ENV === 'production' ? { safe: true } : false,
+		} ),
 	],
 };
+
+// Configuration for the ExtractTextPlugin.
+const extractConfig = {
+	use: [
+		{
+			loader: 'raw-loader',
+		},
+		{
+			loader: 'postcss-loader',
+			options: {
+				plugins: [
+					require( 'autoprefixer' ),
+				],
+			},
+		},
+	],
+};
+
+// Extract Admin CSS and put in the correct place.
+[
+	'style',
+	'chosen',
+	'menu',
+	'datepicker',
+	'settings-email-tags',
+	'settings-tax-rates',
+].forEach( ( name ) => {
+	const file = new ExtractTextPlugin( {
+		filename: `./assets/css/edd-admin-${ name }.css`,
+	} );
+
+	const rule = {
+		test: new RegExp( `${ name }\.css$` ),
+		use: file.extract( extractConfig ),
+		include: /css/,
+	};
+
+	config.plugins.push( file );
+	config.module.rules.push( rule );
+} );
 
 if ( config.mode !== 'production' ) {
 	config.devtool = process.env.SOURCEMAP || 'source-map';

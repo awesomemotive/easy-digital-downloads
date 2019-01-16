@@ -338,20 +338,31 @@ add_action( 'admin_init', 'edd_register_admin_scripts' );
  * @since 3.0
  */
 function edd_register_admin_styles() {
-	$css_dir     = EDD_PLUGIN_URL . 'assets/css/';
-	$css_suffix  = is_rtl() ? '-rtl' : '';
-	$css_suffix .= edd_doing_script_debug() ? '.css' : '.min.css';
-	$version     = edd_admin_get_script_version();
-	$deps        = array( 'edd-admin' );
+	$css_dir = EDD_PLUGIN_URL . 'assets/css/';
+	$version = edd_admin_get_script_version();
+	$deps    = array( 'edd-admin' );
 
-	// Register styles
-	wp_register_style( 'jquery-chosen',         $css_dir . 'chosen'               . $css_suffix, array(), $version );
-	wp_register_style( 'edd-admin',             $css_dir . 'edd-admin'            . $css_suffix, array(), $version );
-	wp_register_style( 'edd-admin-menu',        $css_dir . 'edd-admin-menu'       . $css_suffix, array(), $version );
-	wp_register_style( 'edd-admin-chosen',      $css_dir . 'edd-admin-chosen'     . $css_suffix, $deps,   $version );
-	wp_register_style( 'edd-admin-email-tags',  $css_dir . 'edd-admin-email-tags' . $css_suffix, $deps,   $version );
-	wp_register_style( 'edd-admin-datepicker',  $css_dir . 'edd-admin-datepicker' . $css_suffix, $deps,   $version );
-	wp_register_style( 'edd-admin-tax-rates',   $css_dir . 'edd-admin-tax-rates'  . $css_suffix, $deps,   $version );
+	// Chosen vendor file includes RTL definitions.
+	wp_register_style( 'jquery-chosen', $css_dir . 'chosen.css', array(), $version );
+
+	// Base.
+	wp_register_style( 'edd-admin', $css_dir . 'edd-admin-style.css', array(), $version );
+	wp_style_add_data( 'edd-admin', 'rtl', 'replace' );
+
+	// Extra enhancements.
+	$extras = array(
+		'menu',
+		'chosen',
+		'datepicker',
+		'settings-tax-rates',
+		'settings-email-tags',
+	);
+
+	foreach ( $extras as $file ) {
+		$slug = 'edd-admin-' . $file;
+		wp_register_style( $slug, $css_dir . 'edd-admin-' . $file . '.css', $deps, $version );
+		wp_style_add_data( $slug, 'rtl', 'replace' );
+	}
 }
 add_action( 'admin_init', 'edd_register_admin_styles' );
 
