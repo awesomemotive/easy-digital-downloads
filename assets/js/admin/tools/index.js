@@ -35,7 +35,7 @@ const EDD_Tools = {
 	},
 	recount_stats: function() {
 		$( document.body ).on( 'change', '#recount-stats-type', function() {
-			let export_form = $( '#edd-tools-recount-form' ),
+			const export_form = $( '#edd-tools-recount-form' ),
 				selected_type = $( 'option:selected', this ).data( 'type' ),
 				submit_button = $( '#recount-stats-submit' ),
 				products = $( '#tools-product-dropdown' );
@@ -73,7 +73,7 @@ const EDD_Tools = {
 		} );
 
 		$( '#edd-tools-recount-form' ).submit( function( e ) {
-			let selection = $( '#recount-stats-type' ).val(),
+			const selection = $( '#recount-stats-type' ).val(),
 				export_form = $( this ),
 				selected_type = $( 'option:selected', this ).data( 'type' );
 
@@ -81,7 +81,7 @@ const EDD_Tools = {
 				const is_confirmed = $( '#confirm-reset' ).is( ':checked' );
 				if ( is_confirmed ) {
 					return true;
-				} 
+				}
 				has_errors = true;
 			}
 
