@@ -48,7 +48,7 @@
 }
 
 #edd-admin-tax-rates th.edd-tax-rates-table-checkbox input {
-	margin-left: 2px;
+	margin-right: 2px;
 }
 
 /**
@@ -76,8 +76,8 @@
 }
 
 #edd-admin-tax-rates .edd-admin-tax-rates-table-hide {
-	float: right;
-	margin-right: 10px;
+	float: left;
+	margin-left: 10px;
 }
 
 #edd-admin-tax-rates .edd-tax-rate-table-add {
