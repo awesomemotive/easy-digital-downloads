@@ -200,11 +200,11 @@ final class Endpoint_View_Registry extends Reports\Registry implements Utils\Sta
 		return array(
 			'tile'  => array(
 				'group'          => 'tiles',
-				'group_callback' => __NAMESPACE__ . '\\default_display_tiles_group',
+				'group_callback' => 'EDD\Reports\default_display_tiles_group',
 				'handler'        => 'EDD\Reports\Data\Tile_Endpoint',
 				'fields'         => array(
 					'data_callback'    => '::get_data',
-					'display_callback' => __NAMESPACE__ . '\\default_display_tile',
+					'display_callback' => 'EDD\Reports\default_display_tile',
 					'display_args'     => array(
 						'type'             => '',
 						'context'          => 'primary',
@@ -214,7 +214,7 @@ final class Endpoint_View_Registry extends Reports\Registry implements Utils\Sta
 			),
 			'chart' => array(
 				'group'          => 'charts',
-				'group_callback' => __NAMESPACE__ . '\\default_display_charts_group',
+				'group_callback' => 'EDD\Reports\default_display_charts_group',
 				'handler'        => 'EDD\Reports\Data\Chart_Endpoint',
 				'fields'         => array(
 					'type'             => 'line',
@@ -228,7 +228,7 @@ final class Endpoint_View_Registry extends Reports\Registry implements Utils\Sta
 			),
 			'table' => array(
 				'group'          => 'tables',
-				'group_callback' => __NAMESPACE__ . '\\default_display_tables_group',
+				'group_callback' => 'EDD\Reports\default_display_tables_group',
 				'handler'        => 'EDD\Reports\Data\Table_Endpoint',
 				'fields'         => array(
 					'data_callback'    => '::prepare_items',
