@@ -467,7 +467,7 @@ function _edd_privacy_get_payment_action( $order ) {
 	// If the store owner has not saved any special settings for the actions to be taken, use defaults.
 	if ( empty( $action ) ) {
 		switch ( $order->status ) {
-			case 'publish':
+			case 'complete':
 			case 'refunded':
 			case 'revoked':
 				$action = 'anonymize';

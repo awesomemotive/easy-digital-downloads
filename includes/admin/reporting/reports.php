@@ -1624,7 +1624,7 @@ function edd_register_payment_gateways_report( $reports ) {
 							$results = $wpdb->get_results( $wpdb->prepare(
 								"SELECT COUNT(total) AS sales, SUM(total) AS earnings, {$sql_clauses['select']}
 								 FROM {$wpdb->edd_orders} o
-								 WHERE gateway = %s AND status IN ('publish', 'revoked') AND date_created >= %s AND date_created <= %s
+								 WHERE gateway = %s AND status IN ('complete', 'revoked') AND date_created >= %s AND date_created <= %s
 								 GROUP BY {$sql_clauses['groupby']}
 								 ORDER BY {$sql_clauses['orderby']} ASC",
 								esc_sql( $gateway ), $dates['start']->copy()->format( 'mysql' ), $dates['end']->copy()->format( 'mysql' ) ) );
