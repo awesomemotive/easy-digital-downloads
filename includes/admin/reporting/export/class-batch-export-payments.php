@@ -218,7 +218,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 				'currency'     => $order->currency,
 				'ip'           => $order->ip,
 				'mode'         => $order->mode,
-				'status'       => ( 'publish' === $order->status ) ? 'complete' : $order->status,
+				'status'       => $order->status,
 				'country_name' => isset( $user_info['address']['country'] ) ? edd_get_country_name( $user_info['address']['country'] ) : '',
         'state_name'   => isset( $user_info['address']['state'] )   ? edd_get_state_name( $user_info['address']['country'], $user_info['address']['state'] ) : '',
 			);

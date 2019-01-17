@@ -340,8 +340,8 @@ function edd_update_order_status( $order_id = 0, $new_status = '' ) {
 	$payment = edd_get_payment( $order_id );
 
 	// Override to `publish`
-	if ( in_array( $new_status, array( 'completed', 'complete' ), true ) ) {
-		$new_status = 'publish';
+	if ( in_array( $new_status, array( 'completed', 'publish' ), true ) ) {
+		$new_status = 'complete';
 	}
 
 	// Get the old (current) status

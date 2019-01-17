@@ -7,7 +7,7 @@ class Order extends \WP_UnitTest_Factory_For_Thing {
 		parent::__construct( $factory );
 
 		$this->default_generation_definitions = array(
-			'status'          => 'publish',
+			'status'          => 'complete',
 			'type'            => 'order',
 			'date_completed'  => EDD()->utils->date( 'now' )->toDateTimeString(),
 			'date_refundable' => EDD()->utils->date( 'now' )->addDays( 30 )->toDateTimeString(),
