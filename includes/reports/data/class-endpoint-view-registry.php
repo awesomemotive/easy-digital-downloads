@@ -117,7 +117,7 @@ final class Endpoint_View_Registry extends Reports\Registry implements Utils\Sta
 		}
 
 		if ( ! empty( $attributes['fields']['display_callback'] ) ) {
-			$view_atts['fields']['display_callback'];
+			$view_atts['fields']['display_callback'] = $attributes['fields']['display_callback'];
 		}
 
 		try {
