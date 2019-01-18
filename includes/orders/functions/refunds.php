@@ -36,7 +36,7 @@ function edd_is_order_refundable( $order_id = 0 ) {
 	}
 
 	// Only completed orders can be refunded.
-	if ( 'publish' !== $order->status ) {
+	if ( 'complete' !== $order->status ) {
 		return false;
 	}
 

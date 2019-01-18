@@ -721,7 +721,7 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 		}
 
 		// Only update stats when published or revoked
-		if ( ! in_array( $payment->status, array( 'publish', 'revoked' ), true ) ) {
+		if ( ! in_array( $payment->status, array( 'complete', 'revoked' ), true ) ) {
 			$update_stats = false;
 		}
 
@@ -755,14 +755,14 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 		// Get total orders
 		$this->purchase_count = edd_count_orders( array(
 			'customer_id' => $this->id,
-			'status'      => 'publish'
+			'status'      => 'complete'
 		) );
 
 		// Get order IDs
 		$totals = edd_get_orders( array(
 			'customer_id'   => $this->id,
 			'number'        => $this->purchase_count,
-			'status'        => 'publish',
+			'status'        => 'complete',
 			'fields'        => 'total',
 			'no_found_rows' => true
 		) );

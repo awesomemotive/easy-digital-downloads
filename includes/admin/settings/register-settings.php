@@ -1094,7 +1094,7 @@ function edd_get_registered_settings() {
 		// Add Privacy settings for statuses
 		foreach ( $payment_statuses as $status => $label ) {
 			switch ( $status ) {
-				case 'publish':
+				case 'complete':
 				case 'refunded':
 				case 'revoked':
 					$action = 'anonymize';
