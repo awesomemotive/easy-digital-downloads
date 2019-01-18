@@ -1,24 +1,24 @@
 /**
  * Generate markup for a credit card icon based on a passed type.
  *
- * @param {String} type Credit card type.
+ * @param {string} type Credit card type.
  * @return HTML markup.
  */
 export const getCreditCardIcon = ( type ) => {
-  let width;
-  let name = type;
+	let width;
+	let name = type;
 
-  switch ( type ) {
-    case 'amex':
-      name = 'americanexpress';
-      width = 32;
-      break;
-    default:
-      width = 50;
-      break;
-  }
+	switch ( type ) {
+		case 'amex':
+			name = 'americanexpress';
+			width = 32;
+			break;
+		default:
+			width = 50;
+			break;
+	}
 
-  return `
+	return `
     <svg
       width=${ width }
       height=${ 32 }

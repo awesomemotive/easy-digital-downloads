@@ -81,7 +81,7 @@ class EDD_Batch_Sales_And_Earnings_Export extends EDD_Batch_Export {
 			'offset' => ( $this->step * 30 ) - 30,
 		);
 
-		$status         = "AND {$wpdb->edd_orders}.status IN ( '" . implode( "', '", $wpdb->_escape( array( 'publish', 'revoked' ) ) ) . "' )";
+		$status         = "AND {$wpdb->edd_orders}.status IN ( '" . implode( "', '", $wpdb->_escape( array( 'complete', 'revoked' ) ) ) . "' )";
 		$date_query_sql = '';
 
 		// Customer ID.

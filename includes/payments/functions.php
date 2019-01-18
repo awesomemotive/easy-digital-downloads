@@ -152,7 +152,7 @@ function edd_insert_payment( $order_data = array() ) {
  *
  * @return bool True if the status was updated successfully, false otherwise.
  */
-function edd_update_payment_status( $order_id = 0, $new_status = 'publish' ) {
+function edd_update_payment_status( $order_id = 0, $new_status = 'complete' ) {
 	return edd_update_order_status( $order_id, $new_status );
 }
 
@@ -184,7 +184,7 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
 	$customer = edd_get_customer( $customer_id );
 
 	// Only decrease earnings if they haven't already been decreased (or were never increased for this payment).
-	if ( 'revoked' === $status || 'publish' === $status ) {
+	if ( 'revoked' === $status || 'complete' === $status ) {
 		edd_decrease_total_earnings( $amount );
 
 		// Clear the This Month earnings (this_monththis_month is NOT a typo)
@@ -348,6 +348,7 @@ function edd_count_payments( $args = array() ) {
 		'end-date'   => null,
 		'download'   => null,
 		'gateway'    => null,
+		'type'       => 'sale',
 	) );
 
 	$select  = 'SELECT edd_o.status, COUNT(*) AS count';
@@ -414,6 +415,10 @@ function edd_count_payments( $args = array() ) {
 		$where .= $wpdb->prepare( ' AND edd_o.gateway = %s', sanitize_text_field( $args['gateway'] ) );
 	}
 
+	if ( ! empty( $args['type'] ) ) {
+		$where .= $wpdb->prepare( ' AND edd_o.type = %s', sanitize_text_field( $args['type'] ) );
+	}
+
 	if ( ! empty( $args['start-date'] ) && false !== strpos( $args['start-date'], '/' ) ) {
 		$date_parts = explode( '/', $args['start-date'] );
 		$month      = ! empty( $date_parts[0] ) && is_numeric( $date_parts[0] ) ? $date_parts[0] : 0;
@@ -461,7 +466,7 @@ function edd_count_payments( $args = array() ) {
 	$counts = $wpdb->get_results( $query, ARRAY_A );
 
 	// Here for backwards compatibility.
-	$statuses = get_post_stati();
+	$statuses = array_merge( get_post_stati(), edd_get_payment_status_keys() );
 	if ( isset( $statuses['private'] ) && empty( $args['s'] ) ) {
 		unset( $statuses['private'] );
 	}
@@ -604,7 +609,7 @@ function edd_get_payment_statuses() {
 	return apply_filters( 'edd_payment_statuses', array(
 		'pending'    => __( 'Pending',    'easy-digital-downloads' ),
 		'processing' => __( 'Processing', 'easy-digital-downloads' ),
-		'publish'    => __( 'Completed',  'easy-digital-downloads' ),
+		'complete'   => __( 'Completed',  'easy-digital-downloads' ),
 		'refunded'   => __( 'Refunded',   'easy-digital-downloads' ),
 		'revoked'    => __( 'Revoked',    'easy-digital-downloads' ),
 		'failed'     => __( 'Failed',     'easy-digital-downloads' ),
@@ -657,9 +662,9 @@ function edd_is_payment_complete( $order_id = 0 ) {
  * @return int $count Total sales
  */
 function edd_get_total_sales() {
-	$payments = edd_count_payments();
+	$payments = edd_count_payments( array( 'type' => 'sale' ) );
 
-	return $payments->revoked + $payments->publish;
+	return $payments->revoked + $payments->complete;
 }
 
 /**
@@ -688,7 +693,7 @@ function edd_get_total_earnings( $include_taxes = true ) {
 			$total = $wpdb->get_var( "
 				SELECT SUM(total) {$exclude_taxes_sql} AS total
 				FROM {$wpdb->edd_orders}
-				WHERE status IN ('publish', 'revoked')
+				WHERE status IN ('complete', 'revoked')
 			" );
 
 			$total = (float) edd_number_not_negative( (float) $total );

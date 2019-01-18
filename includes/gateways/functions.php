@@ -478,7 +478,7 @@ function edd_record_gateway_error( $title = '', $message = '', $parent = 0 ) {
  *
  * @return int Number of orders placed based on the gateway.
  */
-function edd_count_sales_by_gateway( $gateway_label = 'paypal', $status = 'publish' ) {
+function edd_count_sales_by_gateway( $gateway_label = 'paypal', $status = 'complete' ) {
 	return edd_count_orders( array(
 		'gateway' => $gateway_label,
 		'status'  => $status,
