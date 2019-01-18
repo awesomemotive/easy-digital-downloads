@@ -29,7 +29,7 @@ var EDD_Customer = {
 	add_email: function() {
 		$( document.body ).on( 'click', '#add-customer-email', function( e ) {
 			e.preventDefault();
-			let button = $( this ),
+			const button = $( this ),
 				wrapper = button.parent().parent().parent().parent(),
 				customer_id = wrapper.find( 'input[name="customer-id"]' ).val(),
 				email = wrapper.find( 'input[name="additional-email"]' ).val(),
@@ -73,7 +73,7 @@ var EDD_Customer = {
 			e.preventDefault();
 
 			if ( confirm( edd_vars.disconnect_customer ) ) {
-				let customer_id = $( 'input[name="customerinfo[id]"]' ).val(),
+				const customer_id = $( 'input[name="customerinfo[id]"]' ).val(),
 					postData = {
 						edd_action: 'disconnect-userid',
 						customer_id: customer_id,
@@ -98,7 +98,7 @@ var EDD_Customer = {
 	},
 	change_country: function() {
 		$( 'select[name="customerinfo[country]"]' ).change( function() {
-			let select = $( this ),
+			const select = $( this ),
 				data = {
 					action: 'edd_get_shop_states',
 					country: select.val(),
