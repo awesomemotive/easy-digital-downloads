@@ -17,7 +17,7 @@ const EDD_Settings = {
 		}
 
 		// Settings Upload field JS
-		if ( typeof wp === "undefined" || '1' !== edd_vars.new_media_ui ) {
+		if ( typeof wp === 'undefined' || '1' !== edd_vars.new_media_ui ) {
 			// Old Thickbox uploader
 			const edd_settings_upload_button = $( '.edd_settings_upload_button' );
 			if ( edd_settings_upload_button.length > 0 ) {
@@ -108,7 +108,7 @@ const EDD_Settings = {
 	},
 
 	misc: function() {
-		let downloadMethod = $( 'select[name="edd_settings[download_method]"]' ),
+		const downloadMethod = $( 'select[name="edd_settings[download_method]"]' ),
 			symlink = downloadMethod.parent().parent().next();
 
 		// Hide Symlink option if Download Method is set to Direct
@@ -131,7 +131,7 @@ const EDD_Settings = {
 
 	gateways: function() {
 		$( '#edd-payment-gateways input[type="checkbox"]' ).on( 'change', function() {
-			let gateway = $( this ),
+			const gateway = $( this ),
 				gateway_key = gateway.data( 'gateway-key' ),
 				default_gateway = $( '#edd_settings\\[default_gateway\\]' ),
 				option = default_gateway.find( 'option[value="' + gateway_key + '"]' );
@@ -152,7 +152,7 @@ const EDD_Settings = {
 
 	location: function() {
 		$( 'select.edd_countries_filter' ).on( 'change', function() {
-			let select = $( this ),
+			const select = $( this ),
 				data = {
 					action: 'edd_get_shop_states',
 					country: select.val(),

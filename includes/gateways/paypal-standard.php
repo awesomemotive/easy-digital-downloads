@@ -623,7 +623,7 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 
 	} else {
 
-		if ( get_post_status( $payment_id ) == 'publish' ) {
+		if ( edd_get_payment_status( $payment_id ) == 'complete' ) {
 			return; // Only complete payments once
 		}
 
@@ -651,7 +651,7 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 
 			edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'easy-digital-downloads' ) , $data['txn_id'] ) );
 			edd_set_payment_transaction_id( $payment_id, $data['txn_id'], number_format( (float) $paypal_amount, 2 ) );
-			edd_update_payment_status( $payment_id, 'publish' );
+			edd_update_payment_status( $payment_id, 'complete' );
 
 		} else if ( 'pending' == $payment_status && isset( $data['pending_reason'] ) ) {
 
@@ -995,7 +995,7 @@ function edd_paypal_process_pdt_on_return() {
 					switch( strtolower( $data['payment_status'] ) ) {
 
 						case 'completed':
-							$payment->status = 'publish';
+							$payment->status = 'complete';
 							break;
 
 						case 'failed':
@@ -1151,7 +1151,7 @@ function edd_maybe_refund_paypal_purchase( EDD_Payment $payment ) {
 	$processed = $payment->get_meta( '_edd_paypal_refunded', true );
 
 	// If the status is not set to "refunded", return early.
-	if ( 'publish' !== $payment->old_status && 'revoked' !== $payment->old_status ) {
+	if ( 'complete' !== $payment->old_status && 'revoked' !== $payment->old_status ) {
 		return;
 	}
 

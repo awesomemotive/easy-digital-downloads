@@ -1903,9 +1903,9 @@ class EDD_Payment {
 			return false;
 		}
 
-		// Override to `publish`.
-		if ( 'completed' === $status || 'complete' === $status ) {
-			$status = 'publish';
+		// Override to `complete` since 3.0.
+		if ( 'completed' === $status || 'publish' === $status ) {
+			$status = 'complete';
 		}
 
 		// Get the old (current) status.
@@ -1927,18 +1927,19 @@ class EDD_Payment {
 			do_action( 'edd_before_payment_status_change', $this->ID, $status, $old_status );
 
 			$update_fields = apply_filters( 'edd_update_payment_status_fields', array(
-				'post_status' => $status,
+				'status' => $status,
 			) );
 
-			/**
-			 * Map the array keys to ones accepted by the new methods.
-			 *
-			 * @since 3.0
-			 */
-			$update_fields['status'] = $update_fields['post_status'];
+			// Account for someone filtering and using `post_status`
+			if ( isset( $update_fields['post_status'] ) ) {
+				_edd_generic_deprecated( 'EDD_Payment::update_status', '3.0', __( 'Array key "post_status" is no longer a supported attribute for the "edd_update_payment_status_fields" filter. Please use "status" instead.', 'easy-digital-downloads' ) );
+
+				$update_fields['status'] = $update_fields['post_status'];
+				unset( $update_fields['post_status'] );
+			}
 
 			// Strip data that does not need to be passed to `edd_update_order()`.
-			unset( $update_fields['ID'], $update_fields['post_status'] );
+			unset( $update_fields['ID'] );
 
 			/**
 			 * As per the new refund API introduce in 3.0, the order is only
@@ -2705,7 +2706,7 @@ class EDD_Payment {
 		$process_refund = true;
 
 		// If the payment was not in publish or revoked status, don't decrement stats as they were never incremented
-		if ( ( 'publish' !== $this->old_status && 'revoked' !== $this->old_status ) || 'refunded' !== $this->status ) {
+		if ( ( 'complete' !== $this->old_status && 'revoked' !== $this->old_status ) || 'refunded' !== $this->status ) {
 			$process_refund = false;
 		}
 
@@ -2762,7 +2763,7 @@ class EDD_Payment {
 		$process_pending = true;
 
 		// If the payment was not in publish or revoked status, don't decrement stats as they were never incremented
-		if ( ( 'publish' !== $this->old_status && 'revoked' !== $this->old_status ) || ! $this->in_process() ) {
+		if ( ( 'complete' !== $this->old_status && 'revoked' !== $this->old_status ) || ! $this->in_process() ) {
 			$process_pending = false;
 		}
 

@@ -161,6 +161,22 @@ class Order extends Query {
 	 * }
 	 */
 	public function __construct( $query = array() ) {
+
+		// In EDD 3.0 we converted our use of the status 'publish' to 'complete', this accounts for queries using publish.
+		if ( isset( $query['status'] ) ) {
+			if ( is_array( $query['status'] ) && in_array( 'publish',  $query['status'] ) ) {
+				foreach ( $query['status'] as $key => $status ) {
+					if ( 'publish' === $status ) {
+						unset( $query['status'][ $key ] );
+					}
+				}
+
+				$query['status'][] = 'complete';
+			} else if ( 'publish' === $query['status'] ) {
+				$query['status'] = 'complete';
+			}
+		}
+
 		parent::__construct( $query );
 	}
 }

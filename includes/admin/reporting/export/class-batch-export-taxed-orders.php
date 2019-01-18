@@ -219,7 +219,7 @@ class EDD_Batch_Taxed_Orders_Export extends EDD_Batch_Export {
 				'currency'     => $order->currency,
 				'ip'           => $order->ip,
 				'mode'         => $order->mode,
-				'status'       => ( 'publish' === $order->status ) ? 'complete' : $order->status,
+				'status'       => $order->status,
 				'country_name' => isset( $user_info['address']['country'] ) ? edd_get_country_name( $user_info['address']['country'] ) : '',
 			);
 		}

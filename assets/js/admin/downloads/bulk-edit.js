@@ -2,7 +2,7 @@ jQuery( document ).ready( function( $ ) {
 	$( 'body' ).on( 'click', '#the-list .editinline', function() {
 		let post_id = $( this ).closest( 'tr' ).attr( 'id' );
 
-		post_id = post_id.replace( "post-", "" );
+		post_id = post_id.replace( 'post-', '' );
 
 		const $edd_inline_data = $( '#post-' + post_id );
 

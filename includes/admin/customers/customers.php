@@ -826,7 +826,7 @@ function edd_customers_view( $customer = null ) {
 					$state  = '';
 
 					// State
-					if ( 'publish' !== $order->status ) {
+					if ( 'complete' !== $order->status ) {
 						$state = ' &mdash; ' . edd_get_payment_status_label( $order->status );
 					}
 

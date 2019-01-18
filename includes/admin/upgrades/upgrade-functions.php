@@ -686,8 +686,7 @@ function edd_v21_upgrade_customers_db() {
 
 				foreach ( $payments as $payment ) {
 
-					$status = get_post_status( $payment->ID );
-					if ( 'revoked' == $status || 'publish' == $status ) {
+					if ( 'revoked' == $payment->status || 'complete' == $payment->status ) {
 						$total_value += $payment->total;
 						$total_count += 1;
 					}
