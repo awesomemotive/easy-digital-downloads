@@ -13,7 +13,7 @@ const EDD_Export = {
 		$( document.body ).on( 'submit', '.edd-export-form', function( e ) {
 			e.preventDefault();
 
-			let form = $( this ),
+			const form = $( this ),
 				submitButton = form.find( 'input[type="submit"]' ).first();
 
 			if ( submitButton.hasClass( 'button-disabled' ) || submitButton.is( ':disabled' ) ) {
@@ -40,7 +40,7 @@ const EDD_Export = {
 				action: 'edd_do_ajax_export',
 				step: step,
 			},
-			dataType: "json",
+			dataType: 'json',
 			success: function( response ) {
 				if ( 'done' === response.step || response.error || response.success ) {
 					// We need to get the actual in progress form, not all forms on the page
