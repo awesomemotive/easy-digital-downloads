@@ -103,6 +103,23 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		// We need to store an array of the args used to instantiate the class, so that we can use it in later hooks.
 		$this->args = wp_parse_args( $args, $defaults );
+
+		// In EDD 3.0 we switched from 'publish' to 'complete' for the final state of a completed payment, this accounts for that change.
+		if ( is_array( $this->args['status'] ) && in_array( 'publish', $this->args['status'] ) ) {
+
+			foreach ( $this->args['status'] as $key => $status ) {
+				if ( $status === 'publish' ) {
+					unset( $this->args['status'][ $key ] );
+				}
+			}
+
+			$this->args['status'][] = 'complete';
+
+		} else if ( 'publish' === $this->args['status'] ) {
+
+			$this->args['status'] = 'complete';
+
+		}
 	}
 
 	/**
