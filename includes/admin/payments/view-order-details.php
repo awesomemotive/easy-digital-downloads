@@ -345,7 +345,34 @@ $customer       = new EDD_Customer( $payment->customer_id );
 
 							<?php $column_count = edd_use_taxes() ? 'columns-5' : 'columns-4'; ?>
 
-							<?php if ( is_array( $cart_items ) ) :
+							<?php
+
+							// If there are no cart items, add a paceholder product so that it can be duplicated through JS, which is how proeucts are added to orders.
+							if ( empty( $cart_items ) ) {
+								$cart_items = array(
+									array(
+										'name' => __( 'No download attached to this order', 'easy-digital-downloads' ),
+										'id'   => 0,
+										'item_number' => array(
+											'id'       => 0,
+											'quantity' => 0,
+											'options'  => array(
+												'quantity' => 0,
+												'price_id' => 0,
+											)
+										),
+										'item_price' => 0,
+										'quantity'   => 0,
+										'discount'   => 0,
+										'subtotal'   => 0,
+										'tax'        => 0,
+										'fees'       => array(),
+										'price'      => 0
+									)
+								);
+							}
+
+							if ( is_array( $cart_items ) ) :
 								$is_qty_enabled = edd_item_quantities_enabled() ? ' item_quantity' : '' ;
 								?>
 								<div id="edd-purchased-files" class="postbox edd-edit-purchase-element <?php echo $column_count; ?>">
