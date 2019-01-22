@@ -62,7 +62,7 @@ before_script:
 
 script:
 - phpenv config-rm xdebug.ini
-- phpunit
+- vendor/bin/phpunit
 
 branches:
   only:
