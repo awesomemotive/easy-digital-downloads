@@ -106,9 +106,9 @@ class EDD_Categories_Reports_Table extends List_Table {
 	 * Build all the reports data
 	 *
 	 * @since  2.4
-	 * @return array $reports_data All the data for customer reports
+	 * @return array All the data for customer reports
 	 */
-	public function reports_data() {
+	public function get_data() {
 
 		/*
 		 * Date filtering
@@ -361,6 +361,6 @@ class EDD_Categories_Reports_Table extends List_Table {
 		$hidden                = array(); // No hidden columns
 		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-		$this->items           = $this->reports_data();
+		$this->items           = $this->get_data();
 	}
 }

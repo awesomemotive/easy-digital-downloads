@@ -268,7 +268,7 @@ class EDD_Customer_Reports_Table extends List_Table {
 	 *
 	 * @return array $reports_data All the data for customer reports
 	 */
-	public function reports_data() {
+	public function get_data() {
 		$data    = array();
 		$paged   = $this->get_paged();
 		$offset  = $this->per_page * ( $paged - 1 );
@@ -340,7 +340,7 @@ class EDD_Customer_Reports_Table extends List_Table {
 			$this->get_sortable_columns()
 		);
 
-		$this->items = $this->reports_data();
+		$this->items = $this->get_data();
 
 		$status = $this->get_status( 'total' );
 

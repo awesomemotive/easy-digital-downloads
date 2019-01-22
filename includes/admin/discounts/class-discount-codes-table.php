@@ -352,7 +352,7 @@ class EDD_Discount_Codes_Table extends List_Table {
 	 *
 	 * @return array Discount codes.
 	 */
-	public function discount_codes_data() {
+	public function get_data() {
 		return edd_get_discounts( array(
 			'number'  => $this->per_page,
 			'paged'   => $this->get_paged(),
@@ -374,7 +374,7 @@ class EDD_Discount_Codes_Table extends List_Table {
 		$sortable = $this->get_sortable_columns();
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-		$this->items           = $this->discount_codes_data();
+		$this->items           = $this->get_data();
 
 		$status = $this->get_status( 'total' );
 
