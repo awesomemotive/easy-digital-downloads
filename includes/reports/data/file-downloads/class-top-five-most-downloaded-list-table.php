@@ -34,7 +34,7 @@ class Top_Five_Most_Downloaded_List_Table extends List_Table {
 	 *
 	 * @return array Downloads.
 	 */
-	public function download_data() {
+	public function get_data() {
 		$filter = Reports\get_filter_value( 'dates' );
 
 		$stats = new Stats();
@@ -146,7 +146,7 @@ class Top_Five_Most_Downloaded_List_Table extends List_Table {
 		$sortable = $this->get_sortable_columns();
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-		$this->items           = $this->download_data();
+		$this->items           = $this->get_data();
 	}
 
 	/**
