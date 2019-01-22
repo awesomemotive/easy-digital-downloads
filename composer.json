@@ -13,7 +13,6 @@
         "composer/installers": "~1.0"
     },
     "require-dev": {
-        "satooshi/php-coveralls": "dev-master",
         "phpunit/phpunit": "4.8.* || 5.7.*",
         "phpunit/php-invoker": "1.1.3"
     },
