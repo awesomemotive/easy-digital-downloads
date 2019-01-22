@@ -587,8 +587,14 @@ jQuery(document).ready(function ($) {
 					download_title = download_title + ' - ' + price_name;
 				}
 
-				var count = $('#edd-purchased-files div.row').length;
-				var clone = $('#edd-purchased-files div.row:last').clone();
+				var count = $('#edd-purchased-files div.row:not(.edd-purchased-files-header)').length;
+
+				// If there are no rows in the list of cart items
+				if ( 0 == count ) {
+					alert( edd_vars.no_downloads_error );
+				}
+
+				var clone = $('#edd-purchased-files div.row:not(.edd-purchased-files-header):last').clone();
 
 				clone.find( '.download span' ).html( '<a href="post.php?post=' + download_id + '&action=edit"></a>' );
 				clone.find( '.download span a' ).text( download_title );
