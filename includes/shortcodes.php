@@ -865,7 +865,17 @@ function edd_process_profile_editor_updates( $data ) {
 	// Update user.
 	$updated = wp_update_user( $userdata );
 
-	// Possibly update the customer.
+	// If the current user does not have an associated customer record, create one.
+	if ( ! $customer && $updated ) {
+		$customer_id = edd_add_customer( array(
+			'user_id' => $updated,
+			'email'   => $email,
+		) );
+
+		$customer = edd_get_customer_by( 'id', $customer_id );
+	}
+
+	// Try to update customer data.
 	if ( $customer ) {
 
 		// Update the primary address.
@@ -891,6 +901,7 @@ function edd_process_profile_editor_updates( $data ) {
 		// Add a customer address.
 		} else {
 			edd_add_customer_address( array(
+				'customer_id' => $customer->id,
 				'type'        => 'primary',
 				'address'     => $address['line1'],
 				'address2'    => $address['line2'],
