@@ -94,6 +94,15 @@ abstract class List_Table extends \WP_List_Table {
 	}
 
 	/**
+	 * Retrieves the data to be populated into the list table.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Array of list table data.
+	 */
+	abstract public function get_data();
+
+	/**
 	 * Retrieve the view types
 	 *
 	 * @since 1.4
