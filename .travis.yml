@@ -60,9 +60,9 @@ before_script:
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - |
     if [[ ${TRAVIS_PHP_VERSION:0:2} == "7." ]]; then
-      composer global require "phpunit/phpunit=5.7.*"
+      composer global require --dev --no-update "phpunit/phpunit=5.7.*"
     else
-      composer global require "phpunit/phpunit=4.8.*"
+      composer global require --dev --no-update "phpunit/phpunit=4.8.*"
     fi
 
 script:
