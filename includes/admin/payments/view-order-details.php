@@ -370,6 +370,10 @@ $customer       = new EDD_Customer( $payment->customer_id );
 										'price'      => 0
 									)
 								);
+
+								$cart_items_existed = false;
+							} else {
+								$cart_items_existed = true;
 							}
 
 							if ( is_array( $cart_items ) ) :
@@ -444,12 +448,14 @@ $customer       = new EDD_Customer( $payment->customer_id );
 															</a>
 														<?php else: ?>
 															<span class="deleted">
-																<?php if ( ! empty( $cart_item['name'] ) ) : ?>
-																	<?php echo $cart_item['name']; ?>&nbsp;-&nbsp;
+																<?php if ( ! $cart_items_existed ) {
+																	echo $cart_item['name'];
+																} else if ( ! empty( $cart_item['name'] ) ) {
+																	echo $cart_item['name']; ?>&nbsp;-&nbsp;
 																	<em>(<?php _e( 'Deleted', 'easy-digital-downloads' ); ?>)</em>
-																<?php else: ?>
+																<?php } else { ?>
 																	<em><?php printf( __( '%s deleted', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></em>
-																<?php endif; ?>
+																<?php } ?>
 															</span>
 														<?php endif; ?>
 													</span>
