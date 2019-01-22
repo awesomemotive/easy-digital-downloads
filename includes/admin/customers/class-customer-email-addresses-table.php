@@ -313,7 +313,7 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 	 *
 	 * @return array $data All the row data
 	 */
-	public function get_items() {
+	public function get_data() {
 		$data    = array();
 		$paged   = $this->get_paged();
 		$offset  = $this->per_page * ( $paged - 1 );
@@ -380,7 +380,7 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 			$this->get_sortable_columns()
 		);
 
-		$this->items = $this->get_items();
+		$this->items = $this->get_data();
 
 		$status = $this->get_status( 'total' );
 

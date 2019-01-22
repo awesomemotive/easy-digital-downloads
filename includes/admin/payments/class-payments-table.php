@@ -651,7 +651,7 @@ class EDD_Payment_History_Table extends List_Table {
 	 *
 	 * @return array $payment_data Array of all the data for the orders.
 	 */
-	public function payments_data() {
+	public function get_data() {
 		$args = array();
 
 		$per_page   = $this->per_page;
@@ -801,7 +801,7 @@ class EDD_Payment_History_Table extends List_Table {
 		$columns     = $this->get_columns();
 		$sortable    = $this->get_sortable_columns();
 		$status      = $this->get_status( 'total' );
-		$this->items = $this->payments_data();
+		$this->items = $this->get_data();
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 

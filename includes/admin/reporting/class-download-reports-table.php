@@ -223,9 +223,9 @@ class EDD_Download_Reports_Table extends List_Table {
 	 * Build all the reports data
 	 *
 	 * @since 1.5
-	 * @return array $reports_data All the data for customer reports
+	 * @return array All the data for customer reports
 	 */
-	public function reports_data() {
+	public function get_data() {
 		$reports_data = array();
 
 		$downloads = $this->products->posts;
@@ -265,7 +265,7 @@ class EDD_Download_Reports_Table extends List_Table {
 		);
 
 		$total_items = $this->get_total_downloads();
-		$this->items = $this->reports_data();
+		$this->items = $this->get_data();
 
 		$this->set_pagination_args( array(
 			'total_items' => $total_items,
