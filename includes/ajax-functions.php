@@ -633,7 +633,7 @@ function edd_ajax_download_search() {
 	if ( true === $no_bundles ) {
 		$args['meta_query'] = array(
 			'relation' => 'AND',
-				array(
+			array(
 				'key'     => '_edd_product_type',
 				'value'   => 'bundle',
 				'compare' => '!='
@@ -658,7 +658,7 @@ function edd_ajax_download_search() {
 				$title .= ' (' . __( 'All Price Options', 'easy-digital-downloads' ) . ')';
 			}
 
-			if ( ! $variations_only ) {
+			if ( empty( $prices ) || ! $variations_only ) {
 				// Add item to results array
 				$search['results'][] = array(
 					'id'   => $post_id,
