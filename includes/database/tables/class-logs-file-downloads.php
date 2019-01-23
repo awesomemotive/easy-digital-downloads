@@ -29,7 +29,7 @@ final class Logs_File_Downloads extends Table {
 	 * @since 3.0
 	 * @var string
 	 */
-	protected $name = 'edd_logs_file_downloads';
+	protected $name = 'logs_file_downloads';
 
 	/**
 	 * Database version

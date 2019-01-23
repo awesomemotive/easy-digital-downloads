@@ -3,7 +3,7 @@
 /**
  * Internal dependencies.
  */
-import { recalculate_taxes } from './edd-checkout-global.js';
+import { recalculate_taxes } from './checkout';
 
 jQuery( document ).ready( function( $ ) {
 	// Hide unneeded elements. These are things that are required in case JS breaks or isn't present
@@ -12,7 +12,7 @@ jQuery( document ).ready( function( $ ) {
 
 	// Send Remove from Cart requests
 	$( document.body ).on( 'click.eddRemoveFromCart', '.edd-remove-from-cart', function( event ) {
-		let $this = $( this ),
+		const $this = $( this ),
 			item = $this.data( 'cart-item' ),
 			action = $this.data( 'action' ),
 			id = $this.data( 'download-id' ),
@@ -24,9 +24,9 @@ jQuery( document ).ready( function( $ ) {
 			};
 
 		 $.ajax( {
-			type: "POST",
+			type: 'POST',
 			data: data,
-			dataType: "json",
+			dataType: 'json',
 			url: edd_scripts.ajaxurl,
 			xhrFields: {
 				withCredentials: true,
@@ -46,7 +46,7 @@ jQuery( document ).ready( function( $ ) {
 					//Reset the data-cart-item attributes to match their new values in the EDD session cart array
 					$( '.edd-cart' ).each( function() {
 						let cart_item_counter = 0;
-						$( this ).find( "[data-cart-item]" ).each( function() {
+						$( this ).find( '[data-cart-item]' ).each( function() {
 							$( this ).attr( 'data-cart-item', cart_item_counter );
 							cart_item_counter = cart_item_counter + 1;
 						} );
@@ -101,7 +101,8 @@ jQuery( document ).ready( function( $ ) {
 	$( document.body ).on( 'click.eddAddToCart', '.edd-add-to-cart', function( e ) {
 		e.preventDefault();
 
-		var $this = $( this ), form = $this.closest( 'form' );
+		var $this = $( this ),
+			form = $this.closest( 'form' );
 
 		// Disable button, preventing rapid additions to cart during ajax request
 		$this.prop( 'disabled', true );
@@ -176,9 +177,9 @@ jQuery( document ).ready( function( $ ) {
 		};
 
 		$.ajax( {
-			type: "POST",
+			type: 'POST',
 			data: data,
-			dataType: "json",
+			dataType: 'json',
 			url: edd_scripts.ajaxurl,
 			xhrFields: {
 				withCredentials: true,
@@ -283,7 +284,7 @@ jQuery( document ).ready( function( $ ) {
 
 	// Show the login form on the checkout page
 	$( '#edd_checkout_form_wrap' ).on( 'click', '.edd_checkout_register_login', function() {
-		let $this = $( this ),
+		const $this = $( this ),
 			data = {
 				action: $this.data( 'action' ),
 				nonce: $this.data( 'nonce' ),
@@ -374,7 +375,7 @@ jQuery( document ).ready( function( $ ) {
 	$( document ).on( 'click', '#edd_purchase_form #edd_purchase_submit [type=submit]', function( e ) {
 		const eddPurchaseform = document.getElementById( 'edd_purchase_form' );
 
-		if ( typeof eddPurchaseform.checkValidity === "function" && false === eddPurchaseform.checkValidity() ) {
+		if ( typeof eddPurchaseform.checkValidity === 'function' && false === eddPurchaseform.checkValidity() ) {
 			return;
 		}
 
@@ -430,7 +431,7 @@ jQuery( document ).ready( function( $ ) {
 			};
 
 			$.ajax( {
-				type: "POST",
+				type: 'POST',
 				data: postData,
 				url: edd_scripts.ajaxurl,
 				xhrFields: {
@@ -438,9 +439,9 @@ jQuery( document ).ready( function( $ ) {
 				},
 				success: function( response ) {
 					if ( is_checkout ) {
-						$form = $( "#edd_purchase_form" );
+						$form = $( '#edd_purchase_form' );
 					} else {
-						$form = $this.closest( "form" );
+						$form = $this.closest( 'form' );
 					}
 
 					const state_inputs = 'input[name="card_state"], select[name="card_state"], input[name="edd_address_state"], select[name="edd_address_state"]';

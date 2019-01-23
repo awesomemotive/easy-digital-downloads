@@ -26,7 +26,7 @@ function edd_add_order_page_content() {
 		'id'              => 0,
 		'parent'          => 0,
 		'order_number'    => 0,
-		'status'          => 'publish',
+		'status'          => 'complete',
 		'date_created'    => '0000-00-00 00:00:00',
 		'date_modified'   => '0000-00-00 00:00:00',
 		'date_refundable' => '0000-00-00 00:00:00',

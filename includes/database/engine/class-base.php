@@ -1,11 +1,11 @@
 <?php
 /**
- * Base Custom Table Class.
+ * Base Custom Database Table Class.
  *
  * @package     EDD
  * @subpackage  Database
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @license     http://opensource.org/licenses/gpl-3.0.0.php GNU Public License
  * @since       3.0
  */
 namespace EDD\Database;
@@ -24,10 +24,20 @@ defined( 'ABSPATH' ) || exit;
  */
 class Base {
 
+	/** Global Properties *****************************************************/
+
+	/**
+	 * Global prefix used for tables/hooks/cache-groups/etc...
+	 *
+	 * @since 3.0.0
+	 * @var   string
+	 */
+	protected $prefix = 'edd';
+
 	/**
 	 * The last database error, if any.
 	 *
-	 * @since 3.0
+	 * @since 3.0.0
 	 * @var   mixed
 	 */
 	protected $last_error = false;
@@ -108,6 +118,115 @@ class Base {
 	}
 
 	/** Protected *************************************************************/
+
+	/**
+	 * Maybe append the prefix to string.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $string
+	 * @param string $sep
+	 * @return string
+	 */
+	protected function apply_prefix( $string = '', $sep = '_' ) {
+		return ! empty( $this->prefix )
+			? "{$this->prefix}{$sep}{$string}"
+			: $string;
+	}
+
+	/**
+	 * Return the first letters of a string of words with a separator.
+	 *
+	 * Used primarily to guess at table aliases when none is manually set.
+	 *
+	 * Applies the following formatting to a string:
+	 * - Trim whitespace
+	 * - No accents
+	 * - No trailing underscores
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $string
+	 * @param string $sep
+	 * @return string
+	 */
+	protected function first_letters( $string = '', $sep = '_' ) {
+
+		// Set empty default return value
+		$retval = '';
+
+		// Bail if empty or not a string
+		if ( empty( $string ) || ! is_string( $string ) ) {
+			return $retval;
+		}
+
+		// Trim spaces off the ends
+		$unspace = trim( $string );
+		$accents = remove_accents( $unspace );
+		$lower   = strtolower( $accents );
+		$parts   = explode( $sep, $lower );
+
+		// Loop through parts and concatenate the first letters together
+		foreach ( $parts as $part ) {
+			$retval .= substr( $part, 0, 1 );
+		}
+
+		// Return the result
+		return $retval;
+	}
+
+	/**
+	 * Sanitize a table name string.
+	 *
+	 * Used to make sure that a table name value meets MySQL expectations.
+	 *
+	 * Applies the following formatting to a string:
+	 * - Trim whitespace
+	 * - No accents
+	 * - No special characters
+	 * - No hyphens
+	 * - No double underscores
+	 * - No trailing underscores
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $name The name of the database table
+	 *
+	 * @return string Sanitized database table name
+	 */
+	protected function sanitize_table_name( $name = '' ) {
+
+		// Bail if empty or not a string
+		if ( empty( $name ) || ! is_string( $name ) ) {
+			return false;
+		}
+
+		// Trim spaces off the ends
+		$unspace = trim( $name );
+
+		// Only non-accented table names (avoid truncation)
+		$accents = remove_accents( $unspace );
+
+		// Only lowercase characters, hyphens, and dashes (avoid index corruption)
+		$lower   = sanitize_key( $accents );
+
+		// Replace hyphens with single underscores
+		$under   = str_replace( '-',  '_', $lower );
+
+		// Single underscores only
+		$single  = str_replace( '__', '_', $under );
+
+		// Remove trailing underscores
+		$clean   = trim( $single, '_' );
+
+		// Bail if table name was garbaged
+		if ( empty( $clean ) ) {
+			return false;
+		}
+
+		// Return the cleaned table name
+		return $clean;
+	}
 
 	/**
 	 * Set class variables from arguments.

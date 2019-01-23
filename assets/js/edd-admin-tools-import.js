@@ -132,8 +132,14 @@ var EDD_Import = {
           row = select.parents('tr').first(),
           options = '',
           columns = response.data.columns.sort(function (a, b) {
-        if (a < b) return -1;
-        if (a > b) return 1;
+        if (a < b) {
+          return -1;
+        }
+
+        if (a > b) {
+          return 1;
+        }
+
         return 0;
       });
       $.each(columns, function (key, value) {
@@ -190,7 +196,7 @@ var EDD_Import = {
         action: 'edd_do_ajax_import',
         step: step
       },
-      dataType: "json",
+      dataType: 'json',
       success: function success(response) {
         if ('done' === response.data.step || response.data.error) {
           // We need to get the actual in progress form, not all forms on the page

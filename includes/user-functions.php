@@ -43,8 +43,8 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
 		if ( strpos( $status, ',' ) ) {
 			$status = explode( ',', $status );
 		} else {
-			$status = 'complete' === $status
-				? 'publish'
+			$status = 'publish' === $status
+				? 'complete'
 				: $status;
 
 			$status = array( $status );
@@ -100,7 +100,11 @@ function edd_get_users_purchases( $user = 0, $number = 20, $pagination = false, 
  *
  * @return WP_Post[]|false Array of products, false otherwise.
  */
-function edd_get_users_purchased_products( $user = 0, $status = 'publish' ) {
+function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
+
+	if ( $status === 'publish' ) {
+		$status = 'complete';
+	}
 
 	// Fall back to user ID
 	if ( empty( $user ) ) {

@@ -999,6 +999,82 @@ function edd_download_shortcode_item( $atts, $i ) {
 add_action( 'edd_download_shortcode_item', 'edd_download_shortcode_item', 10, 2 );
 
 /**
+ * Output full content for a download item in the [downloads] shortcode.
+ *
+ * Strips the [downloads] shortcode to avoid recursion.
+ *
+ * @since 3.0
+ *
+ * @return string
+ */
+function edd_download_shortcode_full_content() {
+	$pattern = get_shortcode_regex( array( 'downloads' ) );
+	$content = preg_replace( "/$pattern/", '', get_the_content( '' ) );
+
+	/**
+	 * Filters the full content output for an individual download in [downloads] shortcode.
+	 *
+	 * @since 1.2
+	 *
+	 * @param string $content Download content.
+	 */
+	return apply_filters( 'edd_downloads_content', $content );
+}
+
+/**
+ * Output an excerpt for a download item in the [downloads] shortcode.
+ *
+ * @since 3.0
+ *
+ * @return string
+ */
+function edd_download_shortcode_excerpt() {
+	// Adjust excerpt lengths.
+	add_filter( 'excerpt_length', 'edd_download_shortcode_excerpt_length' );
+
+	// Ensure we use `the_excerpt` filter (for length).
+	ob_start();
+	the_excerpt();
+	$excerpt = ob_get_clean();
+
+	/**
+	 * Filters the excerpt output for an individual download in [downloads] shortcode.
+	 *
+	 * @since 1.2
+	 *
+	 * @param string $excerpt Download excerpt.
+	 */
+	$excerpt = apply_filters( 'edd_downloads_excerpt', $excerpt );
+
+	// Let other excerpt lengths act independently again.
+	remove_filter( 'excerpt_length', 'edd_download_shortcode_excerpt_length' );
+
+	return $excerpt;
+}
+
+/**
+ * Callback for the [downloads] shortcode excerpt length.
+ *
+ * Added as a callable function so it can be removed after the downloads are output.
+ *
+ * @since 3.0
+ *
+ * @return int
+ */
+function edd_download_shortcode_excerpt_length() {
+	$length = 30;
+
+	/**
+	 * Filters the length of the generated excerpts in the [downloads] shortcode.
+	 *
+	 * @since 3.0
+	 *
+	 * @param int $length Length of the excerpt (in words).
+	 */
+	return apply_filters( 'edd_download_shortcode_excerpt_length', $length );
+}
+
+/**
  * Load the pagination for the [downloads] shortcode.
  *
  * @since 2.9.8

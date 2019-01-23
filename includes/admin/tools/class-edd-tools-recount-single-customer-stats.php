@@ -75,7 +75,7 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 					continue;
 				}
 
-				$should_process_payment = 'publish' == $payment->post_status || 'revoked' == $payment->post_status ? true : false;
+				$should_process_payment = 'complete' == $payment->status || 'revoked' == $payment->status ? true : false;
 				$should_process_payment = apply_filters( 'edd_customer_recount_should_process_payment', $should_process_payment, $payment );
 
 				if( true === $should_process_payment ) {

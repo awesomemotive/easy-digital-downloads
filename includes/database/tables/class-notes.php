@@ -29,7 +29,7 @@ final class Notes extends Table {
 	 * @since 3.0
 	 * @var string
 	 */
-	protected $name = 'edd_notes';
+	protected $name = 'notes';
 
 	/**
 	 * Database version

@@ -39,7 +39,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 	 *
 	 * @return float|int Total amount of sales based on the passed arguments.
 	 */
-	public function get_sales( $download_id = 0, $start_date = false, $end_date = false, $status = 'publish' ) {
+	public function get_sales( $download_id = 0, $start_date = false, $end_date = false, $status = 'complete' ) {
 		global $wpdb;
 
 		$this->setup_dates( $start_date, $end_date );
@@ -94,7 +94,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 				"SELECT COUNT(edd_oi.id) AS sales
 				 FROM {$wpdb->edd_order_items} edd_oi
 				 INNER JOIN {$wpdb->edd_orders} edd_o ON edd_oi.order_id = edd_o.id
-				 WHERE edd_o.status IN ('publish', 'revoked') AND edd_oi.product_id = %d {$date_query_sql}",
+				 WHERE edd_o.status IN ('complete', 'revoked') AND edd_oi.product_id = %d {$date_query_sql}",
 			$download_id ) );
 
 			$count = null === $result
@@ -138,7 +138,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 			$args = array(
 				'post_type'              => 'edd_payment',
 				'nopaging'               => true,
-				'post_status'            => array( 'publish', 'revoked' ),
+				'post_status'            => array( 'complete', 'revoked' ),
 				'fields'                 => 'ids',
 				'update_post_term_cache' => false,
 				'suppress_filters'       => false,
@@ -241,7 +241,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 					"SELECT edd_oi.tax, edd_oi.total
 					 FROM {$wpdb->edd_order_items} edd_oi
 					 INNER JOIN {$wpdb->edd_orders} edd_o ON edd_oi.order_id = edd_o.id
-					 WHERE edd_o.status IN ('publish', 'revoked') AND edd_oi.product_id = %d {$date_query_sql}",
+					 WHERE edd_o.status IN ('complete', 'revoked') AND edd_oi.product_id = %d {$date_query_sql}",
 				$download_id ) );
 
 				$earnings = 0;
@@ -305,7 +305,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 	 *
 	 * @return array|false Total amount of sales based on the passed arguments.
 	 */
-	public function get_sales_by_range( $range = 'today', $day_by_day = false, $start_date = false, $end_date = false, $status = 'publish' ) {
+	public function get_sales_by_range( $range = 'today', $day_by_day = false, $start_date = false, $end_date = false, $status = 'complete' ) {
 		global $wpdb;
 
 		$this->setup_dates( $start_date, $end_date );
@@ -344,7 +344,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 				$grouping = 'YEAR(edd_o.date_created), MONTH(edd_o.date_created), DAY(edd_o.date_created), HOUR(edd_o.date_created)';
 			}
 
-			$statuses = apply_filters( 'edd_payment_stats_post_statuses', array( 'publish', 'revoked' ) );
+			$statuses = apply_filters( 'edd_payment_stats_post_statuses', array( 'complete', 'revoked' ) );
 			$statuses = "'" . implode( "', '", $statuses ) . "'";
 
 			$sales = $wpdb->get_results( $wpdb->prepare(
@@ -416,7 +416,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 				$grouping = 'YEAR(edd_o.date_created), MONTH(edd_o.date_created), DAY(edd_o.date_created), HOUR(edd_o.date_created)';
 			}
 
-			$statuses = apply_filters( 'edd_payment_stats_post_statuses', array( 'publish', 'revoked' ) );
+			$statuses = apply_filters( 'edd_payment_stats_post_statuses', array( 'complete', 'revoked' ) );
 			$statuses = "'" . implode( "', '", $statuses ) . "'";
 
 			$earnings = $wpdb->get_results( $wpdb->prepare(

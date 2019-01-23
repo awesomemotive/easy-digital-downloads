@@ -289,7 +289,7 @@ function edd_admin_get_script_version() {
 function edd_register_admin_scripts() {
 	$js_dir     = EDD_PLUGIN_URL . 'assets/js/';
 	$version    = edd_admin_get_script_version();
-	$admin_deps = array( 'jquery', 'jquery-form' );
+	$admin_deps = array( 'jquery', 'jquery-form', 'underscore' );
 
 	// Register scripts
 	wp_register_script( 'jquery-chosen',                   $js_dir . 'vendor/jquery.chosen.min.js',          array( 'jquery' ), $version );
@@ -392,6 +392,11 @@ function edd_enqueue_admin_scripts( $hook = '' ) {
 	// Downloads page.
 	if ( edd_is_admin_page( 'download' ) ) {
 		wp_enqueue_script( 'edd-admin-downloads' );
+	}
+
+	// Upgrades Page
+	if ( 'edd-admin-upgrades' === $hook ) {
+		wp_enqueue_script( 'edd-admin-tools-export' );
 	}
 }
 add_action( 'admin_enqueue_scripts', 'edd_enqueue_admin_scripts' );

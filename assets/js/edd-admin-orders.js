@@ -142,8 +142,15 @@ var EDD_Add_Order = {
       };
       spinner.css('visibility', 'visible');
       $.post(ajaxurl, data, function (response) {
+        var success = response.success,
+            data = response.data;
+
+        if (!success) {
+          return;
+        }
+
         $('.orderitems .no-items').hide();
-        $('.orderitems tbody').append(response.html);
+        $('.orderitems tbody').append(data.html);
         EDD_Add_Order.update_totals();
         EDD_Add_Order.reindex();
         spinner.css('visibility', 'hidden'); // Display `Override` button if it exists.
@@ -181,8 +188,15 @@ var EDD_Add_Order = {
           spinner = $('.edd-add-adjustment-to-purchase .spinner');
       spinner.css('visibility', 'visible');
       $.post(ajaxurl, data, function (response) {
+        var success = response.success,
+            data = response.data;
+
+        if (!success) {
+          return;
+        }
+
         $('.orderadjustments .no-items').hide();
-        $('.orderadjustments tbody').append(response.html);
+        $('.orderadjustments tbody').append(data.html);
         EDD_Add_Order.update_totals();
         EDD_Add_Order.reindex();
         spinner.css('visibility', 'hidden');
@@ -257,11 +271,19 @@ var EDD_Add_Order = {
         nonce: $('#edd_add_order_nonce').val()
       };
       $.post(ajaxurl, data, function (response) {
-        // Store response for later use.
-        edd_admin_globals.customer_address_ajax_result = response;
+        var success = response.success,
+            data = response.data;
 
-        if (response.html) {
-          $('.customer-address-select-wrap').html(response.html).show();
+        if (!success) {
+          $('.customer-address-select-wrap').html('').hide();
+          return;
+        } // Store response for later use.
+
+
+        edd_admin_globals.customer_address_ajax_result = data;
+
+        if (data.html) {
+          $('.customer-address-select-wrap').html(data.html).show();
           $('.customer-address-select-wrap select').each(function () {
             var el = $(this);
             el.chosen(Object(utils_chosen_js__WEBPACK_IMPORTED_MODULE_2__["getChosenVars"])(el));
@@ -281,6 +303,7 @@ var EDD_Add_Order = {
           address = edd_admin_globals.customer_address_ajax_result.addresses[val];
       $('#edd-add-order-form input[name="edd_order_address[address]"]').val(address.address);
       $('#edd-add-order-form input[name="edd_order_address[address2]"]').val(address.address2);
+      $('#edd-add-order-form input[name="edd_order_address[postal_code]"]').val(address.postal_code);
       $('#edd-add-order-form input[name="edd_order_address[city]"]').val(address.city);
       select.val(address.country).trigger('chosen:updated');
       $('#edd-add-order-form input[name="edd_order_address[address_id]"]').val(val);
@@ -351,24 +374,31 @@ var EDD_Add_Order = {
       nonce: $('#edd_add_order_nonce').val()
     };
     $.post(ajaxurl, data, function (response) {
-      if ('' !== response.tax_rate) {
-        var tax_rate = parseFloat(response.tax_rate);
-        $('.orderitems tbody tr:not(.no-items)').each(function () {
-          var amount = parseFloat($('.amount .value', this).text()),
-              quantity = parseFloat($('.quantity .value', this).text()),
-              calculated = amount * quantity,
-              tax = 0;
+      var success = response.success,
+          data = response.data;
 
-          if (response.prices_include_tax) {
+      if (!success) {
+        return;
+      }
+
+      if ('' !== data.tax_rate) {
+        var tax_rate = parseFloat(data.tax_rate);
+        $('.orderitems tbody tr:not(.no-items)').each(function () {
+          var amount = parseFloat($('.amount .value', this).text());
+          var quantity = $('.quantity .value', this) ? parseFloat($('.column-quantity .value', this).text()) : 1;
+          var calculated = amount * quantity;
+          var tax = 0;
+
+          if (data.prices_include_tax) {
             var pre_tax = parseFloat(calculated / (1 + tax_rate));
             tax = parseFloat(calculated - pre_tax);
           } else {
             tax = calculated * tax_rate;
           }
 
-          var storeCurrency = edd_vars.currency,
-              decimalPlaces = edd_vars.currency_decimals,
-              total = calculated + tax;
+          var storeCurrency = edd_vars.currency;
+          var decimalPlaces = edd_vars.currency_decimals;
+          var total = calculated + tax;
           $('.tax .value', this).text(tax.toLocaleString(storeCurrency, {
             style: 'decimal',
             currency: storeCurrency,
@@ -395,8 +425,9 @@ var EDD_Add_Order = {
   },
   update_totals: function update_totals() {
     var subtotal = 0,
-        tax = 0,
+        discounts = 0,
         adjustments = 0,
+        tax = 0,
         total = 0;
     $('.orderitems tbody tr:not(.no-items)').each(function () {
       var row = $(this),
@@ -459,7 +490,7 @@ var EDD_Add_Order = {
                 total -= item_tax_reduction;
               }
 
-              adjustments += reduction;
+              discounts += reduction;
               total -= reduction;
             });
           } else {
@@ -483,13 +514,18 @@ var EDD_Add_Order = {
       tax = 0;
     }
 
+    if (isNaN(discounts)) {
+      discounts = 0;
+    }
+
     if (isNaN(adjustments)) {
       adjustments = 0;
     }
 
     $(' .edd-order-subtotal .value').html(subtotal.toFixed(edd_vars.currency_decimals));
+    $(' .edd-order-discounts .value').html(discounts.toFixed(edd_vars.currency_decimals));
+    $(' .edd-order-adjustments .value').html(adjustments.toFixed(edd_vars.currency_decimals));
     $(' .edd-order-taxes .value').html(tax.toFixed(edd_vars.currency_decimals));
-    $(' .edd-order-discounts .value').html(adjustments.toFixed(edd_vars.currency_decimals));
     $(' .edd-order-total .value ').html(total.toFixed(edd_vars.currency_decimals));
   },
   validate: function validate() {

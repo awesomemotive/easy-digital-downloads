@@ -585,7 +585,11 @@ function edd_downloads_query( $atts, $content = null ) {
 
 	do_action( 'edd_downloads_list_before', $atts );
 
+	// Ensure buttons are not appended to content.
+	remove_filter( 'the_content', 'edd_after_download_content' );
+
 	ob_start();
+
 
 	if ( $downloads->have_posts() ) :
 		$i = 1;
@@ -618,6 +622,9 @@ function edd_downloads_query( $atts, $content = null ) {
 	do_action( 'edd_downloads_list_after', $atts, $downloads, $query );
 
 	$display = ob_get_clean();
+
+	// Ensure buttons are appended to content.
+	add_filter( 'the_content', 'edd_after_download_content' );
 
 	return apply_filters( 'downloads_shortcode', $display, $atts, $atts['buy_button'], $atts['columns'], '', $downloads, $atts['excerpt'], $atts['full_content'], $atts['price'], $atts['thumbnails'], $query );
 }
@@ -858,7 +865,17 @@ function edd_process_profile_editor_updates( $data ) {
 	// Update user.
 	$updated = wp_update_user( $userdata );
 
-	// Possibly update the customer.
+	// If the current user does not have an associated customer record, create one.
+	if ( ! $customer && $updated ) {
+		$customer_id = edd_add_customer( array(
+			'user_id' => $updated,
+			'email'   => $email,
+		) );
+
+		$customer = edd_get_customer_by( 'id', $customer_id );
+	}
+
+	// Try to update customer data.
 	if ( $customer ) {
 
 		// Update the primary address.
@@ -884,6 +901,7 @@ function edd_process_profile_editor_updates( $data ) {
 		// Add a customer address.
 		} else {
 			edd_add_customer_address( array(
+				'customer_id' => $customer->id,
 				'type'        => 'primary',
 				'address'     => $address['line1'],
 				'address2'    => $address['line2'],
