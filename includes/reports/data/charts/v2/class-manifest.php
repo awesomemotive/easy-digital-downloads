@@ -325,7 +325,7 @@ class Manifest implements Error_Logger {
 		wp_enqueue_script( 'edd-admin-reports' );
 		wp_add_inline_script(
 			'edd-admin-reports',
-			sprintf( 'window.eddRenderReportChart(%s)', wp_json_encode( $this->build_config() ) )
+			sprintf( 'window.edd.renderChart(%s)', wp_json_encode( $this->build_config() ) )
 		);
 	}
 
