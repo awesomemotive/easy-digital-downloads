@@ -165,11 +165,22 @@ add_action( 'save_post', 'edd_download_meta_box_save', 10, 2 );
  * @return array
  */
 function edd_sanitize_bundled_products_save( $products = array() ) {
-	$products = array_map( 'absint', (array) $products );
-	$self     = array_search( get_the_ID(), $products, true );
 
-	if ( $self !== false ) {
-		unset( $products[ $self ] );
+	$products = array_map( function( $value ) {
+		return preg_replace( '/[^0-9_]/', '', $value );
+	}, (array) $products );
+
+	foreach ( $products as $key => $value ) {
+		$underscore_pos = strpos( $value, '_' );
+		if ( is_numeric( $underscore_pos ) ) {
+			$product_id = substr( $value, 0, $underscore_pos );
+		} else {
+			$product_id = $value;
+		}
+
+		if ( $product_id === get_the_ID() ) {
+			unset( $products[ $key ] );
+		}
 	}
 
 	return array_values( array_unique( $products ) );
