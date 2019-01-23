@@ -298,6 +298,19 @@ class Manifest implements Error_Logger {
 		return $handler;
 	}
 
+	/**
+	 * Generate the name of an element used to reference a rendered chart.
+	 *
+	 * @since 3.0
+	 *
+	 * @return string
+	 */
+	public function get_target_el() {
+		$endpoint = $this->get_endpoint();
+		$default  = "edd_reports_graph_{$endpoint->get_id()}";
+		
+		return $endpoint->get_display_arg( 'target', $default );
+	}
 
 	/**
 	 * Renders the manifest in JS form.
@@ -305,16 +318,10 @@ class Manifest implements Error_Logger {
 	 * @since 3.0
 	 */
 	public function render() {
-		// @todo abstract this.
-		$endpoint  = $this->get_endpoint();
-		$default   = "edd_reports_graph_{$endpoint->get_id()}";
-		$target_el = $endpoint->get_display_arg( 'target', $default );
+		// Render a <canvas> element to inject the chart in to.
+		printf( '<canvas id="%s"></canvas>', esc_attr( $this->get_target_el() ) );
 
-		// The target ID has to be JS compatible, so no dashes.
-		$target_el = str_replace( '-', '_', $target_el );
-
-		echo '<canvas id="' . esc_attr( $target_el ) . '"></canvas>'; // phpcs: ignore
-
+		// Enqueue script and configuration to render the chart.
 		wp_enqueue_script( 'edd-admin-reports' );
 		wp_add_inline_script(
 			'edd-admin-reports',
@@ -327,7 +334,7 @@ class Manifest implements Error_Logger {
 	 *
 	 * @since 3.0
 	 *
-	 * @return string JSON-encoded config object.
+	 * @return object Config object.
 	 */
 	public function build_config() {
 		$config = new \stdClass();
@@ -344,18 +351,10 @@ class Manifest implements Error_Logger {
 		$dates['start']->setTimezone( edd_get_timezone_id() );
 		$dates['end']->setTimezone( edd_get_timezone_id() );
 
-		// @todo abstract this.
-		$endpoint  = $this->get_endpoint();
-		$default   = "edd_reports_graph_{$endpoint->get_id()}";
-		$target_el = $endpoint->get_display_arg( 'target', $default );
-
-		// The target ID has to be JS compatible, so no dashes.
-		$target_el = str_replace( '-', '_', $target_el );
-
 		$config->type         = $this->get_type();
 		$config->data         = $this->get_chart_data();
 		$config->options      = $this->get_chart_options();
-		$config->target       = $target_el;
+		$config->target       = $this->get_target_el();
 		$config->dates        = array_merge(
 			$dates,
 			array(
