@@ -919,7 +919,7 @@ function edd_ajax_add_order_item() {
 
 	// Bail if user cannot manage shop settings.
 	if ( ! current_user_can( 'manage_shop_settings' ) ) {
-		edd_die( '-1' );
+		wp_send_json_error();
 	}
 
 	// Set up parameters.
@@ -941,12 +941,12 @@ function edd_ajax_add_order_item() {
 
 	// Bail if missing any data.
 	if ( empty( $nonce ) || empty( $download ) ) {
-		edd_die( '-1' );
+		wp_send_json_error();
 	}
 
 	// Bail if nonce fails.
 	if ( ! wp_verify_nonce( $nonce, 'edd_add_order_nonce' ) ) {
-		edd_die( '-1' );
+		wp_send_json_error();
 	}
 
 	$response = array();
@@ -1014,9 +1014,7 @@ function edd_ajax_add_order_item() {
 		$response['html'] = $html;
 	}
 
-	echo wp_json_encode( $response );
-
-	edd_die();
+	return wp_send_json_success( $response );
 }
 add_action( 'wp_ajax_edd_add_order_item', 'edd_ajax_add_order_item' );
 
@@ -1024,7 +1022,7 @@ function edd_ajax_add_adjustment_to_order() {
 
 	// Bail if user cannot manage shop settings.
 	if ( ! current_user_can( 'manage_shop_settings' ) ) {
-		edd_die( '-1' );
+		wp_send_json_error();
 	}
 
 	// Set up parameters.
@@ -1043,7 +1041,7 @@ function edd_ajax_add_adjustment_to_order() {
 
 	// Bail if nonce fails.
 	if ( ! wp_verify_nonce( $nonce, 'edd_add_order_nonce' ) ) {
-		edd_die( '-1' );
+		wp_send_json_error();
 	}
 
 	$response = array();
@@ -1052,7 +1050,7 @@ function edd_ajax_add_adjustment_to_order() {
 
 	// Bail if an invalid type is passed.
 	if ( ! in_array( $type, $valid_types, true ) ) {
-		edd_die( '-1' );
+		wp_send_json_error();
 	}
 
 	static $symbol = null;
@@ -1069,14 +1067,14 @@ function edd_ajax_add_adjustment_to_order() {
 
 			// Bail if no discount ID passed.
 			if ( empty( $discount ) ) {
-				edd_die( '-1' );
+				wp_send_json_error();
 			}
 
 			$discount = edd_get_discount( $discount );
 
 			// Bail if discount not found.
 			if ( ! $discount ) {
-				edd_die( '-1' );
+				wp_send_json_error();
 			}
 
 			ob_start(); ?>
@@ -1119,6 +1117,7 @@ function edd_ajax_add_adjustment_to_order() {
 				<td class="type column-type"><?php esc_html_e( 'Credit', 'easy-digital-downloads' ); ?></td>
 				<td class="description column-description"><?php echo $description; // WPCS: XSS ok. ?></span></td>
 				<td class="amount column-amount"><?php echo esc_html( $symbol ); ?><span class="value"><?php echo esc_html( edd_format_amount( $amount ) ); ?></span></td>
+				<th scope="row" class="check-column"><a href="#" class="remove-item"><span class="dashicons dashicons-no"></span></a></th>
 				<input type="hidden" class="credit-description" name="adjustments[credit][0][description]" value="<?php echo $description; // WPCS: XSS ok. ?>" />
 				<input type="hidden" class="credit-amount" name="adjustments[credit][0][amount]" value="<?php echo $amount; // WPCS: XSS ok. ?>" />
 			</tr>
@@ -1132,9 +1131,7 @@ function edd_ajax_add_adjustment_to_order() {
 			break;
 	}
 
-	echo wp_json_encode( $response );
-
-	edd_die();
+	return wp_send_json_success( $response );
 }
 add_action( 'wp_ajax_edd_add_adjustment_to_order', 'edd_ajax_add_adjustment_to_order' );
 
@@ -1142,12 +1139,13 @@ add_action( 'wp_ajax_edd_add_adjustment_to_order', 'edd_ajax_add_adjustment_to_o
  * Search for customer addresses and return a list.
  *
  * @since 3.0
+ * @return array Custom address data.
  */
 function edd_ajax_customer_addresses() {
 
 	// Bail if user cannot manage shop settings.
 	if ( ! current_user_can( 'manage_shop_settings' ) ) {
-		edd_die( '-1' );
+		return wp_send_json_error();
 	}
 
 	// Set up parameters.
@@ -1161,7 +1159,7 @@ function edd_ajax_customer_addresses() {
 
 	// Bail if missing any data.
 	if ( empty( $nonce ) || empty( $customer_id ) ) {
-		edd_die( '-1' );
+		return wp_send_json_error();
 	}
 
 	$response = array();
@@ -1222,9 +1220,7 @@ function edd_ajax_customer_addresses() {
 		}
 	}
 
-	echo wp_json_encode( $response );
-
-	edd_die();
+	return wp_send_json_success( $response );
 }
 add_action( 'wp_ajax_edd_customer_addresses', 'edd_ajax_customer_addresses' );
 
@@ -1237,7 +1233,7 @@ function edd_ajax_add_order_recalculate_taxes() {
 
 	// Bail if user cannot manage shop settings.
 	if ( ! current_user_can( 'manage_shop_settings' ) ) {
-		edd_die( '-1' );
+		return wp_send_json_error();
 	}
 
 	// Set up parameters.
@@ -1255,12 +1251,12 @@ function edd_ajax_add_order_recalculate_taxes() {
 
 	// Bail if missing any data.
 	if ( empty( $nonce ) ) {
-		edd_die( '-1' );
+		return wp_send_json_error();
 	}
 
 	// Bail if nonce verification failed.
 	if ( ! wp_verify_nonce( $nonce, 'edd_add_order_nonce' ) ) {
-		edd_die( '-1' );
+		return wp_send_json_error();
 	}
 
 	$response = array();
@@ -1270,8 +1266,6 @@ function edd_ajax_add_order_recalculate_taxes() {
 	$response['tax_rate'] = $rate;
 	$response['prices_include_tax'] = (bool) edd_prices_include_tax();
 
-	echo wp_json_encode( $response );
-
-	edd_die();
+	return wp_send_json_success( $response );
 }
 add_action( 'wp_ajax_edd_add_order_recalculate_taxes', 'edd_ajax_add_order_recalculate_taxes' );

@@ -108,6 +108,8 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 	 * Gets the log entries for the current view
 	 *
 	 * @since 1.4
+	 *
+	 * @param $log_query array Arguments for getting logs.
      *
 	 * @return array $logs_data Array of all the logs.
 	 */
@@ -125,21 +127,21 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 					? $meta['_edd_log_customer_id'][0]
 					: edd_get_payment_customer_id( $log->order_id );
 
-				if ( ! array_key_exists( $log->download_id, $this->queried_files ) ) {
-					$files = get_post_meta( $log->download_id, 'edd_download_files', true );
-					$this->queried_files[ $log->download_id ] = $files;
+				if ( ! array_key_exists( $log->product_id, $this->queried_files ) ) {
+					$files = get_post_meta( $log->product_id, 'edd_download_files', true );
+					$this->queried_files[ $log->product_id ] = $files;
 				} else {
-					$files = $this->queried_files[ $log->download_id ];
+					$files = $this->queried_files[ $log->product_id ];
 				}
 
 				// For backwards compatibility purposes
-				$user = edd_get_customer( $log->user_id );
+				$customer = edd_get_customer( $log->user_id );
 
 				$user_info = ! empty( $user )
 					? array(
-						'id'    => $user->ID,
-						'email' => $user->user_email,
-						'name'  => $user->display_name,
+						'id'    => $customer->ID,
+						'email' => $customer->user_email,
+						'name'  => $customer->display_name,
 					)
 					: array();
 

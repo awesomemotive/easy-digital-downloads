@@ -66,15 +66,15 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/frontend/edd-checkout-global.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/frontend/checkout/index.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./assets/js/frontend/edd-checkout-global.js":
-/*!***************************************************!*\
-  !*** ./assets/js/frontend/edd-checkout-global.js ***!
-  \***************************************************/
+/***/ "./assets/js/frontend/checkout/index.js":
+/*!**********************************************!*\
+  !*** ./assets/js/frontend/checkout/index.js ***!
+  \**********************************************/
 /*! exports provided: recalculate_taxes */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -85,10 +85,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var core_js_modules_es6_function_name__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_function_name__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es6.array.find */ "./node_modules/core-js/modules/es6.array.find.js");
 /* harmony import */ var core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils.js */ "./assets/js/frontend/checkout/utils.js");
 
 
+
+/**
+ * Internal dependencies.
+ */
 
 /* global edd_global_vars */
+
 var ajax_tax_count = 0;
 /**
  * Recalulate taxes.
@@ -98,7 +104,10 @@ var ajax_tax_count = 0;
  */
 
 function recalculate_taxes(state) {
-  if ('1' != edd_global_vars.taxes_enabled) return; // Taxes not enabled
+  if ('1' != edd_global_vars.taxes_enabled) {
+    return;
+  } // Taxes not enabled
+
 
   var $edd_cc_address = jQuery('#edd_cc_address');
   var billing_country = $edd_cc_address.find('#billing_country').val(),
@@ -125,9 +134,9 @@ function recalculate_taxes(state) {
   jQuery('#edd_purchase_submit [type=submit]').after('<span class="edd-loading-ajax edd-recalculate-taxes-loading edd-loading"></span>');
   var current_ajax_count = ++ajax_tax_count;
   return jQuery.ajax({
-    type: "POST",
+    type: 'POST',
     data: postData,
-    dataType: "json",
+    dataType: 'json',
     url: edd_global_vars.ajaxurl,
     xhrFields: {
       withCredentials: true
@@ -169,7 +178,7 @@ window.EDD_Checkout = function ($) {
 
   function init() {
     $body = $(document.body);
-    $form = $("#edd_purchase_form");
+    $form = $('#edd_purchase_form');
     $edd_cart_amount = $('.edd_cart_amount');
     before_discount = $edd_cart_amount.text();
     $checkout_form_wrap = $('#edd_checkout_form_wrap');
@@ -250,6 +259,7 @@ window.EDD_Checkout = function ($) {
         card_field.addClass('error');
       } else {
         $card_type.removeClass('off');
+        $card_type.html(Object(_utils_js__WEBPACK_IMPORTED_MODULE_2__["getCreditCardIcon"])(result.card_type.name));
         $card_type.addClass(result.card_type.name);
 
         if (result.length_valid && result.luhn_valid) {
@@ -293,9 +303,9 @@ window.EDD_Checkout = function ($) {
     $('#edd-discount-error-wrap').html('').hide();
     edd_discount_loader.show();
     $.ajax({
-      type: "POST",
+      type: 'POST',
       data: postData,
-      dataType: "json",
+      dataType: 'json',
       url: edd_global_vars.ajaxurl,
       xhrFields: {
         withCredentials: true
@@ -358,9 +368,9 @@ window.EDD_Checkout = function ($) {
       code: $this.data('code')
     };
     $.ajax({
-      type: "POST",
+      type: 'POST',
       data: postData,
-      dataType: "json",
+      dataType: 'json',
       url: edd_global_vars.ajaxurl,
       xhrFields: {
         withCredentials: true
@@ -415,9 +425,9 @@ window.EDD_Checkout = function ($) {
     }; //edd_discount_loader.show();
 
     $.ajax({
-      type: "POST",
+      type: 'POST',
       data: postData,
-      dataType: "json",
+      dataType: 'json',
       url: edd_global_vars.ajaxurl,
       xhrFields: {
         withCredentials: true
@@ -451,6 +461,42 @@ window.EDD_Checkout = function ($) {
 
 
 window.jQuery(document).ready(EDD_Checkout.init);
+
+/***/ }),
+
+/***/ "./assets/js/frontend/checkout/utils.js":
+/*!**********************************************!*\
+  !*** ./assets/js/frontend/checkout/utils.js ***!
+  \**********************************************/
+/*! exports provided: getCreditCardIcon */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCreditCardIcon", function() { return getCreditCardIcon; });
+/**
+ * Generate markup for a credit card icon based on a passed type.
+ *
+ * @param {string} type Credit card type.
+ * @return HTML markup.
+ */
+var getCreditCardIcon = function getCreditCardIcon(type) {
+  var width;
+  var name = type;
+
+  switch (type) {
+    case 'amex':
+      name = 'americanexpress';
+      width = 32;
+      break;
+
+    default:
+      width = 50;
+      break;
+  }
+
+  return "\n    <svg\n      width=".concat(width, "\n      height=", 32, "\n      class=\"payment-icon icon-").concat(name, "\"\n      role=\"img\"\n    >\n      <use\n        href=\"#icon-").concat(name, "\"\n        xlink:href=\"#icon-").concat(name, "\">\n      </use>\n    </svg>");
+};
 
 /***/ }),
 

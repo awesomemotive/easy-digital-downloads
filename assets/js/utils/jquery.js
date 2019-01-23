@@ -10,5 +10,5 @@
 export const jQueryReady = function( callback ) {
 	( function( $ ) {
 		$( callback );
-	} )( jQuery );
+	}( jQuery ) );
 };

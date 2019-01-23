@@ -19,7 +19,7 @@ jQuery( document ).ready( function( $ ) {
 			return;
 		}
 
-		let selectElem = $( this ).parent().parent().parent().prev( 'select.edd-select-chosen' ),
+		const selectElem = $( this ).parent().parent().parent().prev( 'select.edd-select-chosen' ),
 			placeholder = selectElem.data( 'search-placeholder' );
 
 		if ( placeholder ) {
@@ -30,7 +30,7 @@ jQuery( document ).ready( function( $ ) {
 	// Add placeholders for Chosen input fields
 	$( '.chosen-choices' ).on( 'click', function() {
 		let placeholder = $( this ).parent().prev().data( 'search-placeholder' );
-		if ( typeof placeholder === "undefined" ) {
+		if ( typeof placeholder === 'undefined' ) {
 			placeholder = edd_vars.type_to_search;
 		}
 		$( this ).children( 'li' ).children( 'input' ).attr( 'placeholder', placeholder );

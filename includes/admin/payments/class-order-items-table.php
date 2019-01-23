@@ -230,7 +230,7 @@ class Order_Items_Table extends List_Table {
 					'order_item' => $order_item->id,
 				), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Complete', 'easy-digital-downloads' ) . '</a>';
 
-		} elseif ( in_array( $status, array( 'inherit', 'publish' ), true ) ) {
+		} elseif ( in_array( $status, array( 'inherit', 'complete' ), true ) ) {
 
 			if ( edd_get_download_files( $order_item->id, $order_item->price_id ) ) {
 				$row_actions['copy'] = '<span class="edd-copy-download-link-wrapper"><a href="" class="edd-copy-download-link" data-download-id="' . esc_attr( $order_item->id ) . '" data-price-id="' . esc_attr( $order_item->id ) . '">' . __( 'Link', 'easy-digital-downloads' ) . '</a>';
@@ -368,7 +368,7 @@ class Order_Items_Table extends List_Table {
 					break;
 				case 'complete':
 					edd_update_order_item( $id, array(
-						'status' => 'publish',
+						'status' => 'complete',
 					) );
 					break;
 			}

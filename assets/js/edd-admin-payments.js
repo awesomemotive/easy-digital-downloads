@@ -253,7 +253,7 @@ var EDD_Edit_Payment = {
 
       var new_customer = $('#edd-new-customer');
 
-      if ($('.new-customer').is(":visible")) {
+      if ($('.new-customer').is(':visible')) {
         new_customer.val(1);
       } else {
         new_customer.val(0);
@@ -411,7 +411,7 @@ var EDD_Edit_Payment = {
           download_id: download_id
         };
         $.ajax({
-          type: "POST",
+          type: 'POST',
           data: postData,
           url: ajaxurl,
           success: function success(response) {
@@ -454,14 +454,14 @@ var EDD_Edit_Payment = {
         price_id: link.data('price-id')
       };
       $.ajax({
-        type: "POST",
+        type: 'POST',
         data: postData,
         url: ajaxurl,
         success: function success(link) {
-          $("#edd-download-link").dialog({
+          $('#edd-download-link').dialog({
             width: 400
           }).html('<textarea rows="10" cols="40" id="edd-download-link-textarea">' + link + '</textarea>');
-          $("#edd-download-link-textarea").focus().select();
+          $('#edd-download-link-textarea').focus().select();
           return false;
         }
       }).fail(function (data) {
