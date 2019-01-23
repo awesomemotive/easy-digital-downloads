@@ -314,6 +314,12 @@ class Manifest implements Error_Logger {
 		$target_el = str_replace( '-', '_', $target_el );
 
 		echo '<canvas id="' . esc_attr( $target_el ) . '"></canvas>'; // phpcs: ignore
+
+		wp_enqueue_script( 'edd-admin-reports' );
+		wp_add_inline_script(
+			'edd-admin-reports',
+			sprintf( 'window.eddRenderReportChart(%s)', wp_json_encode( $this->build_config() ) )
+		);
 	}
 
 	/**
