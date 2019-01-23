@@ -102,7 +102,7 @@ var EDD_Settings = {
     } // Settings Upload field JS
 
 
-    if (typeof wp === "undefined" || '1' !== edd_vars.new_media_ui) {
+    if (typeof wp === 'undefined' || '1' !== edd_vars.new_media_ui) {
       // Old Thickbox uploader
       var edd_settings_upload_button = $('.edd_settings_upload_button');
 

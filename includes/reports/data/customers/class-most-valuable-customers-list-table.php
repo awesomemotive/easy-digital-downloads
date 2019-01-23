@@ -50,7 +50,7 @@ class Most_Valuable_Customers_List_Table extends \EDD_Customer_Reports_Table {
 				GROUP BY customer_id
 				LIMIT 5";
 
-		$results = $wpdb->get_results( $wpdb->prepare( $sql, sanitize_text_field( 'publish' ), sanitize_text_field( 'revoked' ), $start_date, $end_date ) );
+		$results = $wpdb->get_results( $wpdb->prepare( $sql, sanitize_text_field( 'complete' ), sanitize_text_field( 'revoked' ), $start_date, $end_date ) );
 
 		foreach ( $results as $result ) {
 			$customer = edd_get_customer( (int) $result->customer_id );

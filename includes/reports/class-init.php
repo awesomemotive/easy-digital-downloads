@@ -36,6 +36,7 @@ final class Init {
 		// Dependencies.
 		require_once $reports_dir . 'class-registry.php';
 		require_once $reports_dir . 'data/class-base-object.php';
+		require_once $reports_dir . 'data/class-endpoint-view-registry.php';
 
 		// Reports.
 		require_once $reports_dir . 'data/class-report-registry.php';
@@ -73,6 +74,8 @@ final class Init {
 		$reports = Data\Report_Registry::instance();
 
 		$reports = $this->legacy_reports( $reports );
+
+		$reports = $this->register_core_endpoint_views( $reports );
 
 		/**
 		 * Fires when the Reports API is initialized.
@@ -224,4 +227,28 @@ final class Init {
 		// Return reports array
 		return $reports;
 	}
+
+	/**
+	 * Registers the core endpoint views.
+	 *
+	 * @since 3.0
+	 *
+	 * @param Data\Report_Registry $reports Reports registry instance.
+	 */
+	private function register_core_endpoint_views( $reports ) {
+		$views      = Data\Endpoint_View_Registry::instance();
+		$core_views = $views->get_core_views();
+
+		try {
+			foreach ( $core_views as $view_id => $atts ) {
+				$views->register_endpoint_view( $view_id, $atts );
+			}
+		} catch ( \EDD_Exception $exception ) {
+			edd_debug_log_exception( $exception );
+		}
+
+		return $reports;
+	}
+
+
 }

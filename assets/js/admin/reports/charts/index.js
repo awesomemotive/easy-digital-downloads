@@ -20,7 +20,7 @@ import { isPieChart } from './utils.js';
 	 */
 	_.each( window.eddAdminReportsCharts.charts, ( config ) => {
 		const isPie = isPieChart( config );
-		
+
 		if ( isPieChart( config ) ) {
 			pieChartRender( config );
 		} else {

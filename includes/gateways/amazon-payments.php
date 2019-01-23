@@ -894,7 +894,7 @@ final class EDD_Amazon_Payments {
 
 			edd_set_payment_transaction_id( $payment_id, $reference_id, $purchase_data['price'] );
 
-			edd_update_payment_status( $payment_id, 'publish' );
+			edd_update_payment_status( $payment_id, 'complete' );
 
 			// Empty the shopping cart
 			edd_empty_cart();
@@ -1071,7 +1071,7 @@ final class EDD_Amazon_Payments {
 	 */
 	public function process_refund( $payment_id, $new_status, $old_status ) {
 
-		if ( 'publish' !== $old_status && 'revoked' !== $old_status ) {
+		if ( 'complete' !== $old_status && 'revoked' !== $old_status ) {
 			return;
 		}
 

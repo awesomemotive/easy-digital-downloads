@@ -82,7 +82,7 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 		$this->assertSame( 'refunded', $o->status );
 
 		// Verify type.
-		$this->assertSame( 'order', $o->type );
+		$this->assertSame( 'sale', $o->type );
 
 		// Verify total.
 		$this->assertSame( 120.0, floatval( $o->total ) );

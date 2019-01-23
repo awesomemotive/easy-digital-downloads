@@ -250,7 +250,7 @@ var EDD_Edit_Payment = {
 
       var new_customer = $('#edd-new-customer');
 
-      if ($('.new-customer').is(":visible")) {
+      if ($('.new-customer').is(':visible')) {
         new_customer.val(1);
       } else {
         new_customer.val(0);
@@ -408,7 +408,7 @@ var EDD_Edit_Payment = {
           download_id: download_id
         };
         $.ajax({
-          type: "POST",
+          type: 'POST',
           data: postData,
           url: ajaxurl,
           success: function success(response) {

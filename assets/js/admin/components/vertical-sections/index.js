@@ -18,7 +18,7 @@ jQuery( document ).ready( function( $ ) {
 			j.preventDefault();
 
 			// Get the `href` attribute of the item.
-			let them = $( this ),
+			const them = $( this ),
 				href = them.attr( 'href' ),
 				rents = them.parents( '.edd-vertical-sections' );
 

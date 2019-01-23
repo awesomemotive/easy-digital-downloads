@@ -38,7 +38,7 @@ final class Orders extends Table {
 	 * @since  3.0
 	 * @var    int
 	 */
-	protected $version = 201808150001;
+	protected $version = 201901110001;
 
 	/**
 	 * Array of upgrade versions and methods.
@@ -52,6 +52,7 @@ final class Orders extends Table {
 		'201807270003' => 201807270003,
 		'201808140001' => 201808140001,
 		'201808150001' => 201808150001,
+		'201901110001' => 201901110001,
 	);
 
 	/**
@@ -186,6 +187,22 @@ final class Orders extends Table {
 		" );
 
 		// Return success/fail.
+		return $this->is_success( true );
+	}
+
+	/**
+	 * Upgrade to version 201901110001
+	 * - Set any 'publish' status items to 'complete'.
+	 *
+	 * @since 3.0
+	 *
+	 * @return boolean
+	 */
+	protected function __201901110001() {
+		$this->get_db()->query( "
+			UPDATE {$this->table_name} set `status` = 'complete' WHERE `status` = 'publish';
+		" );
+
 		return $this->is_success( true );
 	}
 }
