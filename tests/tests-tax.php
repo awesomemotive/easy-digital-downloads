@@ -41,7 +41,7 @@ class Tests_Taxes extends EDD_UnitTestCase {
 
 		self::$order = edd_get_order( EDD_Helper_Payment::create_simple_payment_with_tax() );
 
-		edd_update_order_status( self::$order->ID, 'publish' );
+		edd_update_order_status( self::$order->ID, 'complete' );
 
 		// Setup global tax rate
 

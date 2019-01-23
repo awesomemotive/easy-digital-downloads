@@ -65,7 +65,7 @@ function edd_manual_payment( $purchase_data ) {
 	$payment = edd_insert_payment( $payment_data );
 
 	if ( $payment ) {
-		edd_update_payment_status( $payment, 'publish' );
+		edd_update_payment_status( $payment, 'complete' );
 		// Empty the shopping cart
 		edd_empty_cart();
 		edd_send_to_success_page();

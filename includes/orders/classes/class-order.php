@@ -567,6 +567,6 @@ class Order extends Rows\Order {
 	 * @return bool True if the order is complete, false otherwise.
 	 */
 	public function is_complete() {
-		return ( 'publish' === $this->status );
+		return ( 'complete' === $this->status );
 	}
 }

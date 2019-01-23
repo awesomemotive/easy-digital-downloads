@@ -63,7 +63,7 @@ final class EDD_Requirements_Check {
 
 		// PHP
 		'php' => array(
-			'minimum' => '5.4.0',
+			'minimum' => '5.3.0',
 			'name'    => 'PHP',
 			'exists'  => true,
 			'current' => false,
@@ -73,7 +73,7 @@ final class EDD_Requirements_Check {
 
 		// WordPress
 		'wp' => array(
-			'minimum' => '4.4.0',
+			'minimum' => '4.7.0',
 			'name'    => 'WordPress',
 			'exists'  => true,
 			'current' => false,

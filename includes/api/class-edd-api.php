@@ -1473,14 +1473,14 @@ class EDD_API {
 				'meta_value' => $wp_query->query_vars['email'],
 				'number'     => $this->per_page(),
 				'page'       => $this->get_paged(),
-				'status'     => 'publish',
+				'status'     => 'complete',
 			) );
 		} else {
 			$query = edd_get_payments( array(
 				'fields' => 'ids',
 				'number' => $this->per_page(),
 				'page'   => $this->get_paged(),
-				'status' => 'publish',
+				'status' => 'complete',
 			) );
 		}
 

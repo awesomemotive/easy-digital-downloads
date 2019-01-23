@@ -174,7 +174,7 @@ var EDD_Notes = {
         };
         edd_note.addClass('deleting');
         $.ajax({
-          type: "POST",
+          type: 'POST',
           data: postData,
           url: ajaxurl,
           success: function success(response) {

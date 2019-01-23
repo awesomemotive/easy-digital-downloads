@@ -224,7 +224,7 @@ class Order_Items_Table extends List_Table {
 					'order_item' => $order_item->id,
 				), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Complete', 'easy-digital-downloads' ) . '</a>';
 
-		} elseif ( in_array( $status, array( 'inherit', 'publish' ), true ) ) {
+		} elseif ( in_array( $status, array( 'inherit', 'complete' ), true ) ) {
 
 			$files = edd_get_download_files( $order_item->product_id, $order_item->price_id );
 			if ( ! empty( $files ) ) {
@@ -357,7 +357,7 @@ class Order_Items_Table extends List_Table {
 					break;
 				case 'complete':
 					edd_update_order_item( $id, array(
-						'status' => 'publish',
+						'status' => 'complete',
 					) );
 					break;
 			}
