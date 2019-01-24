@@ -26,7 +26,7 @@ const EDD_Notes = {
 		$( '#edd-add-note' ).on( 'click', function( e ) {
 			e.preventDefault();
 
-			let edd_button = $( this ),
+			const edd_button = $( this ),
 				edd_note = $( '#edd-note' ),
 				edd_notes = $( '.edd-notes' ),
 				edd_no_notes = $( '.edd-no-notes' ),
@@ -87,7 +87,7 @@ const EDD_Notes = {
 		$( document.body ).on( 'click', '.edd-delete-note', function( e ) {
 			e.preventDefault();
 
-			let edd_link = $( this ),
+			const edd_link = $( this ),
 				edd_notes = $( '.edd-note' ),
 				edd_note = edd_link.parents( '.edd-note' ),
 				edd_no_notes = $( '.edd-no-notes' ),
@@ -103,7 +103,7 @@ const EDD_Notes = {
 				edd_note.addClass( 'deleting' );
 
 				$.ajax( {
-					type: "POST",
+					type: 'POST',
 					data: postData,
 					url: ajaxurl,
 					success: function( response ) {

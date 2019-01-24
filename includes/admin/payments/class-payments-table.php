@@ -420,7 +420,8 @@ class EDD_Payment_History_Table extends List_Table {
 				$value = edd_currency_filter( edd_format_amount( $order->total ), $order->currency );
 				break;
 			case 'date':
-				$value = '<time datetime="' . esc_attr( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString() ) . '">' . edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString(), 'M. d, Y' ) . '<br>' . edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString(), 'H:i' ) . '</time>';
+				$date  = EDD()->utils->date( $order->date_created, null, true )->toDateTimeString();
+				$value = '<time datetime="' . esc_attr( $date ) . '">' . edd_date_i18n( $date, 'M. d, Y' ) . '<br>' . edd_date_i18n( $date, 'H:i' ) . '</time>';
 				break;
 			case 'gateway':
 				$value = edd_get_gateway_admin_label( $order->gateway );
@@ -461,7 +462,7 @@ class EDD_Payment_History_Table extends List_Table {
 		$email = $order->email;
 
 		// Resend
-		if ( 'publish' === $order->status && ! empty( $email ) ) {
+		if ( 'complete' === $order->status && ! empty( $email ) ) {
 			$row_actions['email_links'] = '<a href="' . add_query_arg( array(
 				'edd-action'  => 'email_links',
 				'purchase_id' => $order->id
@@ -514,7 +515,7 @@ class EDD_Payment_History_Table extends List_Table {
 		$status = $this->get_status();
 
 		// State
-		if ( ( ! empty( $status ) && ( $order->status !== $status ) ) || ( empty( $status ) && ( 'publish' !== $order->status ) ) ) {
+		if ( ( ! empty( $status ) && ( $order->status !== $status ) ) || ( empty( $status ) && ( 'complete' !== $order->status ) ) ) {
 			$state = ' &mdash; ' . edd_get_payment_status_label( $order->status );
 		}
 
@@ -531,7 +532,7 @@ class EDD_Payment_History_Table extends List_Table {
 		);
 
 		// Refund
-		if ( 'publish' === $order->status ) {
+		if ( 'complete' === $order->status ) {
 			$refund_url            = add_query_arg( array(), admin_url( 'edit.php' ) );
 			$row_actions['refund'] = '<a href="' . esc_url( $refund_url ) . '">' . esc_html__( 'Refund', 'easy-digital-downloads' ) . '</a>';
 		}
@@ -547,7 +548,8 @@ class EDD_Payment_History_Table extends List_Table {
 		$actions = $this->row_actions( $row_actions );
 
 		// Primary link
-		$link = '<strong><a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $order->get_number() ) . '</a>' . esc_html( $state ) . '</strong>';
+		$order_number = $order->type == 'sale' ? $order->get_number() : $order->order_number;
+		$link = '<strong><a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $order_number ) . '</a>' . esc_html( $state ) . '</strong>';
 
 		// Concatenate & return the results
 		return $link . $actions;
@@ -598,7 +600,7 @@ class EDD_Payment_History_Table extends List_Table {
 	 */
 	public function get_bulk_actions() {
 		return apply_filters( 'edd_payments_table_bulk_actions', array(
-			'set-status-publish'     => __( 'Mark Completed',   'easy-digital-downloads' ),
+			'set-status-complete'     => __( 'Mark Completed',   'easy-digital-downloads' ),
 			'set-status-pending'     => __( 'Mark Pending',     'easy-digital-downloads' ),
 			'set-status-processing'  => __( 'Mark Processing',  'easy-digital-downloads' ),
 			'set-status-refunded'    => __( 'Mark Refunded',    'easy-digital-downloads' ),
@@ -768,10 +770,7 @@ class EDD_Payment_History_Table extends List_Table {
 
 		// Force EDD\Orders\Order objects to be returned
 		$r['output'] = 'orders';
-		$p = new EDD_Payments_Query( $r );
-
-		// Setup items
-		$items = $p->get_payments();
+		$items = edd_get_orders( $r );
 
 		// Get customer IDs and count from payments
 		$customer_ids = array_unique( wp_list_pluck( $items, 'customer_id' ) );

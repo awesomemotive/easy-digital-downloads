@@ -32,7 +32,7 @@ if ( is_user_logged_in() ):
 						<span class="edd_purchase_amount"><?php echo edd_currency_filter( edd_format_amount( $payment->total ) ); ?></span>
 					</td>
 					<td class="edd_purchase_details">
-						<?php if( $payment->status != 'publish' ) : ?>
+						<?php if( $payment->status != 'complete' ) : ?>
 							<span class="edd_purchase_status <?php echo $payment->status; ?>"><?php echo $payment->status_nicename; ?></span>
 							<?php if ( $payment->is_recoverable() ) : ?>
 								&mdash; <a href="<?php echo $payment->get_recovery_url(); ?>"><?php _e( 'Complete Purchase', 'easy-digital-downloads' ); ?></a>

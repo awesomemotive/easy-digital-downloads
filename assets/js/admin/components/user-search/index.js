@@ -20,9 +20,9 @@ jQuery( document ).ready( function( $ ) {
 			};
 
 			$.ajax( {
-				type: "POST",
+				type: 'POST',
 				data: data,
-				dataType: "json",
+				dataType: 'json',
 				url: ajaxurl,
 
 				success: function( search_response ) {

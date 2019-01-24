@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  *
- * @see \EDD\Database\Query::__construct() for accepted arguments.
+ * @see Query::__construct() for accepted arguments.
  *
  * @property string $prefix
  * @property string $table_name
@@ -44,16 +44,6 @@ defined( 'ABSPATH' ) || exit;
  * @property string $date_query_sql
  */
 class Query extends Base {
-
-	/** Global Properties *****************************************************/
-
-	/**
-	 * Global prefix used for tables/hooks/cache-groups/etc...
-	 *
-	 * @since 3.0
-	 * @var   string
-	 */
-	protected $prefix = 'edd';
 
 	/** Table Properties ******************************************************/
 
@@ -308,6 +298,7 @@ class Query extends Base {
 	public function __construct( $query = array() ) {
 
 		// Setup
+		$this->set_alias();
 		$this->set_prefix();
 		$this->set_columns();
 		$this->set_item_shape();
@@ -350,20 +341,27 @@ class Query extends Base {
 	}
 
 	/**
+	 * Set up the table alias if not already set in the class.
+	 *
+	 * This happens before prefixes are applied.
+	 *
+	 * @since 3.0
+	 */
+	private function set_alias() {
+		if ( empty( $this->table_alias ) ) {
+			$this->table_alias = $this->first_letters( $this->table_name );
+		}
+	}
+
+	/**
 	 * Prefix table names, cache groups, and other things.
 	 *
-	 * This is to avoid conflicts with other plugins or themes that might be doing their own things.
+	 * This is to avoid conflicts with other plugins or themes that might be
+	 * doing their own things.
 	 *
 	 * @since 3.0
 	 */
 	private function set_prefix() {
-
-		// Bail if no prefix
-		if ( empty( $this->prefix ) ) {
-			return;
-		}
-
-		// Add prefixes to class properties
 		$this->table_name  = $this->apply_prefix( $this->table_name       );
 		$this->table_alias = $this->apply_prefix( $this->table_alias      );
 		$this->cache_group = $this->apply_prefix( $this->cache_group, '-' );
@@ -712,7 +710,7 @@ class Query extends Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return mixed \EDD\Database\Schemas\Column object, or false
+	 * @return mixed Column object, or false
 	 */
 	private function get_column_field( $args = array(), $field = '', $default = false ) {
 
@@ -730,7 +728,7 @@ class Query extends Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return mixed \EDD\Database\Schemas\Column object, or false
+	 * @return mixed Column object, or false
 	 */
 	private function get_column_by( $args = array() ) {
 
@@ -809,7 +807,7 @@ class Query extends Base {
 		 *
 		 * @since 3.0
 		 *
-		 * @param \EDD\Database\Query &$this Current instance of \EDD\Database\Query, passed by reference.
+		 * @param Query &$this Current instance of Query, passed by reference.
 		 */
 		do_action_ref_array( $this->apply_prefix( "pre_get_{$this->item_name_plural}" ), array( &$this ) );
 
@@ -1057,9 +1055,8 @@ class Query extends Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @see \EDD\Database\Query::__construct()
-	 *
-	 * @param string|array $query Array or string of \EDD\Database\Query arguments. See \EDD\Database\Query::__construct().
+	 * @see See Query::__construct().
+	 * @param string|array $query Array or string of Query arguments.
 	 */
 	private function parse_query( $query = array() ) {
 
@@ -1077,7 +1074,7 @@ class Query extends Base {
 		 *
 		 * @since 3.0
 		 *
-		 * @param \EDD\Database\Query &$this The \EDD\Database\Query instance (passed by reference).
+		 * @param \Sugar_Calendar\Database\Query &$this The Query instance (passed by reference).
 		 */
 		do_action_ref_array( $this->apply_prefix( "parse_{$this->item_name_plural}_query" ), array( &$this ) );
 	}
@@ -1216,13 +1213,13 @@ class Query extends Base {
 			}
 
 			/**
-			 * Filters the columns to search in a \EDD\Database\Query search.
+			 * Filters the columns to search in a Query search.
 			 *
 			 * @since 3.0
 			 *
 			 * @param array  $search_columns Array of column names to be searched.
 			 * @param string $search         Text being searched.
-			 * @param object $this           The current \EDD\Database\Query instance.
+			 * @param object $this           The current Query instance.
 			 */
 			$search_columns = (array) apply_filters( $this->apply_prefix( "{$this->item_name_plural}_search_columns" ), $search_columns, $this->query_vars['search'], $this );
 
@@ -1416,21 +1413,6 @@ class Query extends Base {
 	/** Private Shapers *******************************************************/
 
 	/**
-	 * Maybe append the prefix to string.
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $string
-	 * @param string $sep
-	 * @return string
-	 */
-	private function apply_prefix( $string = '', $sep = '_' ) {
-		return ! empty( $this->prefix )
-			? "{$this->prefix}{$sep}{$string}"
-			: $string;
-	}
-
-	/**
 	 * Shape items into their most relevant objects.
 	 *
 	 * This will try to use item_shape, but will fallback to a private
@@ -1469,7 +1451,7 @@ class Query extends Base {
 		 * @since 3.0
 		 *
 		 * @param array  $retval An array of items.
-		 * @param object &$this  Current instance of \EDD\Database\Query, passed by reference.
+		 * @param object &$this  Current instance of Query, passed by reference.
 		 */
 		$retval = (array) apply_filters_ref_array( $this->apply_prefix( "the_{$this->item_name_plural}" ), array( $retval, &$this ) );
 
@@ -1852,7 +1834,7 @@ class Query extends Base {
 
 	/**
 	 * Shape an item from the database into the type of object it always wanted
-	 * to be when it grew up (EDD_Customer, EDD_Discount, EDD_Payment, etc...)
+	 * to be when it grew up.
 	 *
 	 * @since 3.0
 	 *
@@ -2788,80 +2770,84 @@ class Query extends Base {
 			}
 		}
 
+		// Setup base SQL query.
+		$query  = "SELECT ";
+		$query .= implode( ',', $cols );
+		$query .= " FROM {$this->get_table_name()} {$this->table_alias} ";
+		$query .= " WHERE 1=1 ";
+
 		// Ensure valid columns have been passed for the `WHERE` clause.
 		if ( ! empty( $where_cols ) ) {
-			foreach ( $where_cols as $column => $values ) {
+
+			// Get keys from where columns
+			$columns = array_keys( $where_cols );
+
+			// Loop through columns and unset any invalid names
+			foreach ( $columns as $column ) {
 				if ( ! array_key_exists( $column, $column_names ) ) {
 					unset( $where_cols[ $column ] );
 				}
 			}
-		}
 
-		// Setup base SQL query.
-		$query  = 'SELECT ';
-		$query .= implode( ',', $cols );
-		$query .= " FROM {$this->get_table_name()} {$this->table_alias} ";
-		$query .= ' WHERE 1=1 ';
+			// Parse WHERE clauses.
+			foreach ( $where_cols as $column => $compare ) {
 
-		// Parse WHERE clauses.
-		foreach ( $where_cols as $column => $compare ) {
+				// Basic WHERE clause.
+				if ( ! is_array( $compare ) ) {
+					$query .= " AND {$this->table_alias}.{$column} = {$compare} ";
 
-			// Basic WHERE clause.
-			if ( ! is_array( $compare ) ) {
-				$query .= " AND {$this->table_alias}.{$column} = {$compare} ";
+				// More complex WHERE clause.
+				} else {
+					$value = isset( $compare['value'] )
+						? $compare['value']
+						: false;
 
-			// More complex WHERE clause.
-			} else {
-				$value = isset( $compare['value'] )
-					? $compare['value']
-					: false;
-
-				// Skip if a value was not provided.
-				if ( false === $value ) {
-					continue;
-				}
-
-				// Default compare clause to equals.
-				$compare_clause = isset( $compare['compare'] )
-					? trim( strtoupper( $compare['compare'] ) )
-					: '=';
-
-				// Array (unprepared)
-				if ( is_array( $compare['value'] ) ) {
-
-					// Default to IN if clause not specified.
-					if ( ! in_array( $compare_clause, array( 'IN', 'NOT IN', 'BETWEEN' ), true ) ) {
-						$compare_clause = 'IN';
+					// Skip if a value was not provided.
+					if ( false === $value ) {
+						continue;
 					}
 
-					// Parse & escape for IN and NOT IN.
-					if ( 'IN' === $compare_clause || 'NOT IN' === $compare_clause ) {
-						$value = "('" . implode( "','", $this->get_db()->_escape( $compare['value'] ) ) . "')";
+					// Default compare clause to equals.
+					$compare_clause = isset( $compare['compare'] )
+						? trim( strtoupper( $compare['compare'] ) )
+						: '=';
 
-					// Parse & escape for BETWEEN.
-					} elseif ( is_array( $value ) && 2 === count( $value ) && 'BETWEEN' === $compare_clause ) {
-						$_this = $this->get_db()->_escape( $value[0] );
-						$_that = $this->get_db()->_escape( $value[1] );
-						$value = " {$_this} AND {$_that} ";
+					// Array (unprepared)
+					if ( is_array( $compare['value'] ) ) {
+
+						// Default to IN if clause not specified.
+						if ( ! in_array( $compare_clause, array( 'IN', 'NOT IN', 'BETWEEN' ), true ) ) {
+							$compare_clause = 'IN';
+						}
+
+						// Parse & escape for IN and NOT IN.
+						if ( 'IN' === $compare_clause || 'NOT IN' === $compare_clause ) {
+							$value = "('" . implode( "','", $this->get_db()->_escape( $compare['value'] ) ) . "')";
+
+						// Parse & escape for BETWEEN.
+						} elseif ( is_array( $value ) && 2 === count( $value ) && 'BETWEEN' === $compare_clause ) {
+							$_this = $this->get_db()->_escape( $value[0] );
+							$_that = $this->get_db()->_escape( $value[1] );
+							$value = " {$_this} AND {$_that} ";
+						}
 					}
-				}
 
-				// Add WHERE clause.
-				$query .= " AND {$this->table_alias}.{$column} {$compare_clause} {$value} ";
+					// Add WHERE clause.
+					$query .= " AND {$this->table_alias}.{$column} {$compare_clause} {$value} ";
+				}
 			}
 		}
 
 		// Maybe set an offset.
 		if ( ! empty( $offset ) ) {
-			$offset_values = explode( ',', $offset );
-			$offset_values = array_filter( $offset_values, 'intval' );
-			$offset        = implode( ',', $offset_values );
-
+			$values = explode( ',', $offset );
+			$values = array_filter( $values, 'intval' );
+			$offset = implode( ',', $values );
 			$query .= " OFFSET {$offset} ";
 		}
 
 		// Maybe set a limit.
-		if ( ! empty( $limit ) && $limit > 0 ) {
+		if ( ! empty( $limit ) && ( $limit > 0 ) ) {
 			$limit  = intval( $limit );
 			$query .= " LIMIT {$limit} ";
 		}

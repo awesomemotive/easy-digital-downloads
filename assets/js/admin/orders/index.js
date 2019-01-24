@@ -49,7 +49,7 @@ var EDD_Add_Order = {
 		button.on( 'click', function( e ) {
 			e.preventDefault();
 
-			let select = $( '.edd-order-add-download-select' ),
+			const select = $( '.edd-order-add-download-select' ),
 				spinner = $( '.edd-add-download-to-purchase .spinner' ),
 				data = {
 					action: 'edd_add_order_item',
@@ -64,8 +64,14 @@ var EDD_Add_Order = {
 			spinner.css( 'visibility', 'visible' );
 
 			$.post( ajaxurl, data, function( response ) {
+				const { success, data } = response;
+
+				if ( ! success ) {
+					return;
+				}
+
 				$( '.orderitems .no-items' ).hide();
-				$( '.orderitems tbody' ).append( response.html );
+				$( '.orderitems tbody' ).append( data.html );
 
 				EDD_Add_Order.update_totals();
 				EDD_Add_Order.reindex();
@@ -96,7 +102,7 @@ var EDD_Add_Order = {
 		$( '.edd-add-order-adjustment-button' ).on( 'click', function( e ) {
 			e.preventDefault();
 
-			let data = {
+			const data = {
 					action: 'edd_add_adjustment_to_order',
 					nonce: $( '#edd_add_order_nonce' ).val(),
 					type: $( '.edd-order-add-adjustment-select' ).val(),
@@ -114,8 +120,14 @@ var EDD_Add_Order = {
 			spinner.css( 'visibility', 'visible' );
 
 			$.post( ajaxurl, data, function( response ) {
+				const { success, data } = response;
+
+				if ( ! success ) {
+					return;
+				}
+
 				$( '.orderadjustments .no-items' ).hide();
-				$( '.orderadjustments tbody' ).append( response.html );
+				$( '.orderadjustments tbody' ).append( data.html );
 
 				EDD_Add_Order.update_totals();
 				EDD_Add_Order.reindex();
@@ -129,7 +141,7 @@ var EDD_Add_Order = {
 		$( document.body ).on( 'click', '.orderitems .remove-item, .orderadjustments .remove-item', function( e ) {
 			e.preventDefault();
 
-			let $this = $( this ),
+			const $this = $( this ),
 				tbody = $this.parents( 'tbody' );
 
 			$this.parents( 'tr' ).remove();
@@ -147,7 +159,7 @@ var EDD_Add_Order = {
 
 	fetch_addresses: function() {
 		$( '.edd-payment-change-customer-input' ).on( 'change', function() {
-			let $this = $( this ),
+			const $this = $( this ),
 				data = {
 					action: 'edd_customer_addresses',
 					customer_id: $this.val(),
@@ -155,11 +167,19 @@ var EDD_Add_Order = {
 				};
 
 			$.post( ajaxurl, data, function( response ) {
-				// Store response for later use.
-				edd_admin_globals.customer_address_ajax_result = response;
+				const { success, data } = response;
 
-				if ( response.html ) {
-					$( '.customer-address-select-wrap' ).html( response.html ).show();
+				if ( ! success ) {
+					$( '.customer-address-select-wrap' ).html( '' ).hide();
+
+					return;
+				}
+
+				// Store response for later use.
+				edd_admin_globals.customer_address_ajax_result = data;
+
+				if ( data.html ) {
+					$( '.customer-address-select-wrap' ).html( data.html ).show();
 					$( '.customer-address-select-wrap select' ).chosen( chosenVars );
 				} else {
 					$( '.customer-address-select-wrap' ).html( '' ).hide();
@@ -172,13 +192,14 @@ var EDD_Add_Order = {
 
 	select_address: function() {
 		$( document.body ).on( 'change', '.customer-address-select-wrap .add-order-customer-address-select', function() {
-			let $this = $( this ),
+			const $this = $( this ),
 				val = $this.val(),
 				select = $( '#edd-add-order-form select#edd_order_address_country' ),
 				address = edd_admin_globals.customer_address_ajax_result.addresses[ val ];
 
 			$( '#edd-add-order-form input[name="edd_order_address[address]"]' ).val( address.address );
 			$( '#edd-add-order-form input[name="edd_order_address[address2]"]' ).val( address.address2 );
+			$( '#edd-add-order-form input[name="edd_order_address[postal_code]"]' ).val( address.postal_code );
 			$( '#edd-add-order-form input[name="edd_order_address[city]"]' ).val( address.city );
 			select.val( address.country ).trigger( 'chosen:updated' );
 			$( '#edd-add-order-form input[name="edd_order_address[address_id]"]' ).val( val );
@@ -205,7 +226,7 @@ var EDD_Add_Order = {
 		} );
 
 		$( '.edd-order-address-country' ).on( 'change', function() {
-			let select = $( this ),
+			const select = $( this ),
 				data = {
 					action: 'edd_get_shop_states',
 					country: select.val(),
@@ -263,28 +284,45 @@ var EDD_Add_Order = {
 		};
 
 		$.post( ajaxurl, data, function( response ) {
-			if ( '' !== response.tax_rate ) {
-				const tax_rate = parseFloat( response.tax_rate );
+			const { success, data } = response;
+
+			if ( ! success ) {
+				return;
+			}
+
+			if ( '' !== data.tax_rate ) {
+				const tax_rate = parseFloat( data.tax_rate );
 
 				$( '.orderitems tbody tr:not(.no-items)' ).each( function() {
-					let amount = parseFloat( $( '.amount .value', this ).text() ),
-						quantity = parseFloat( $( '.quantity .value', this ).text() ),
-						calculated = amount * quantity,
-						tax = 0;
+					const amount = parseFloat( $( '.amount .value', this ).text() );
+					const quantity = $( '.quantity .value', this ) ? parseFloat( $( '.column-quantity .value', this ).text() ) : 1;
+					const calculated = amount * quantity;
+					let tax = 0;
 
-					if ( response.prices_include_tax ) {
+					if ( data.prices_include_tax ) {
 						const pre_tax = parseFloat( calculated / ( 1 + tax_rate ) );
 						tax = parseFloat( calculated - pre_tax );
 					} else {
 						tax = calculated * tax_rate;
 					}
 
-					let storeCurrency = edd_vars.currency,
-						decimalPlaces = edd_vars.currency_decimals,
-						total = calculated + tax;
+					const storeCurrency = edd_vars.currency;
+					const decimalPlaces = edd_vars.currency_decimals;
+					const total = calculated + tax;
 
-					$( '.tax .value', this ).text( tax.toLocaleString( storeCurrency, { style: 'decimal', currency: storeCurrency, minimumFractionDigits: decimalPlaces, maximumFractionDigits: decimalPlaces } ) );
-					$( '.total .value', this ).text( total.toLocaleString( storeCurrency, { style: 'decimal', currency: storeCurrency, minimumFractionDigits: decimalPlaces, maximumFractionDigits: decimalPlaces } ) );
+					$( '.tax .value', this ).text( tax.toLocaleString( storeCurrency, {
+						style: 'decimal',
+						currency: storeCurrency,
+						minimumFractionDigits: decimalPlaces,
+						maximumFractionDigits: decimalPlaces,
+					} ) );
+
+					$( '.total .value', this ).text( total.toLocaleString( storeCurrency, {
+						style: 'decimal',
+						currency: storeCurrency,
+						minimumFractionDigits: decimalPlaces,
+						maximumFractionDigits: decimalPlaces,
+					} ) );
 				} );
 			}
 		}, 'json' ).done( function() {
@@ -302,8 +340,9 @@ var EDD_Add_Order = {
 
 	update_totals: function() {
 		let subtotal = 0,
-			tax = 0,
+			discounts = 0,
 			adjustments = 0,
+			tax = 0,
 			total = 0;
 
 		$( '.orderitems tbody tr:not(.no-items)' ).each( function() {
@@ -365,14 +404,14 @@ var EDD_Add_Order = {
 							const reduction = parseFloat( ( item_amount / 100 ) * amount );
 
 							if ( $( this ).find( '.tax' ).length ) {
-								let item_tax = parseFloat( $( this ).find( '.tax .value' ).text() ),
+								const item_tax = parseFloat( $( this ).find( '.tax .value' ).text() ),
 									item_tax_reduction = parseFloat( item_tax / 100 * amount );
 
 								tax -= item_tax_reduction;
 								total -= item_tax_reduction;
 							}
 
-							adjustments += reduction;
+							discounts += reduction;
 							total -= reduction;
 						} );
 					} else {
@@ -396,13 +435,18 @@ var EDD_Add_Order = {
 			tax = 0;
 		}
 
+		if ( isNaN( discounts ) ) {
+			discounts = 0;
+		}
+
 		if ( isNaN( adjustments ) ) {
 			adjustments = 0;
 		}
 
 		$( ' .edd-order-subtotal .value' ).html( subtotal.toFixed( edd_vars.currency_decimals ) );
+		$( ' .edd-order-discounts .value' ).html( discounts.toFixed( edd_vars.currency_decimals ) );
+		$( ' .edd-order-adjustments .value' ).html( adjustments.toFixed( edd_vars.currency_decimals ) );
 		$( ' .edd-order-taxes .value' ).html( tax.toFixed( edd_vars.currency_decimals ) );
-		$( ' .edd-order-discounts .value' ).html( adjustments.toFixed( edd_vars.currency_decimals ) );
 		$( ' .edd-order-total .value ' ).html( total.toFixed( edd_vars.currency_decimals ) );
 	},
 

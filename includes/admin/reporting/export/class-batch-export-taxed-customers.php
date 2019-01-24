@@ -61,7 +61,7 @@ class EDD_Batch_Taxed_Customers_Export extends EDD_Batch_Export {
 		$args = array(
 			'number'     => 30,
 			'offset'     => ( $this->step * 30 ) - 30,
-			'status__in' => array( 'publish', 'revoked' ),
+			'status__in' => array( 'complete', 'revoked' ),
 			'order'      => 'ASC',
 			'orderby'    => 'date',
 			'fields'     => 'customer_id',
@@ -126,7 +126,7 @@ class EDD_Batch_Taxed_Customers_Export extends EDD_Batch_Export {
 	public function get_percentage_complete() {
 		$args = array(
 			'fields'     => 'ids',
-			'status__in' => array( 'publish', 'revoked' ),
+			'status__in' => array( 'complete', 'revoked' ),
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
