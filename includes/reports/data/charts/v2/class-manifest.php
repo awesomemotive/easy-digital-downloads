@@ -305,219 +305,15 @@ class Manifest implements Error_Logger {
 	 * @since 3.0
 	 */
 	public function render() {
-		$config = $this->build_config();
-
-		// Dates.
-		$dates        = Reports\get_dates_filter( 'objects' );
-		$day_by_day   = Reports\get_dates_filter_day_by_day();
-		$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
-
-		// Adjust end date forward by 1 second to push into the next day (for ChartJS display purposes).
-		$dates['end']->addSeconds( 1 );
-
+		// @todo abstract this.
 		$endpoint  = $this->get_endpoint();
 		$default   = "edd_reports_graph_{$endpoint->get_id()}";
 		$target_el = $endpoint->get_display_arg( 'target', $default );
 
-		// Apply UTC offset.
-		$dates['start']->setTimezone( edd_get_timezone_id() );
-		$dates['end']->setTimezone( edd_get_timezone_id() );
-
 		// The target ID has to be JS compatible, so no dashes.
 		$target_el = str_replace( '-', '_', $target_el );
-		?>
-		<canvas id="<?php echo esc_attr( $target_el ); ?>"></canvas>
 
-		<script type="application/javascript">
-			Chart.defaults.global.pointHitDetectionRadius = 5;
-
-			// Bring in chart config.
-			<?php echo esc_js( $target_el ); ?> = <?php echo $config; ?>;
-
-			<?php if ( ! $this->is_pie_manifest() ) : ?>
-				// Convert dataset x-axis values to moment() objects.
-				<?php echo esc_js( $target_el ); ?>.data.datasets.forEach( function( dataset ) {
-					dataset.data.forEach( function( pair, index ) {
-						<?php if ( false === $hour_by_hour ) : ?>
-                        pair.x = moment( pair.x ).utcOffset( 0 ).format( 'LLL' );
-						<?php else : ?>
-                        pair.x = moment( pair.x ).utcOffset( <?php echo esc_js( EDD()->utils->get_gmt_offset() / HOUR_IN_SECONDS ); ?> ).format( 'LLL' );
-						<?php endif; ?>
-					} );
-				} );
-
-				// Set min and max moment() values for the x-axis.
-				<?php echo esc_js( $target_el ); ?>.options.scales.xAxes.forEach( function( xaxis ) {
-					<?php if ( false === $day_by_day ) : ?>
-						xaxis.time.unit = 'month';
-					<?php endif; ?>
-
-					xaxis.time.min = moment( '<?php echo esc_js( $dates['start']->toDateTimeString() ); ?>' );
-					xaxis.time.max = moment( '<?php echo esc_js( $dates['end']->toDateTimeString() ); ?>' );
-				} );
-
-				// Dynamically display currency.
-				<?php echo esc_js( $target_el ); ?>.options.tooltips = {
-					enabled: false,
-					mode: 'index',
-					position: 'nearest',
-					callbacks: {
-						label: function (t, d) {
-							<?php
-							$options = $this->get_endpoint()->get_options();
-
-							$callback_conditional = '';
-
-							if ( is_array( $options ) && isset( $options['datasets'] ) ) {
-								$i = 0;
-								foreach ( $options['datasets'] as $dataset ) {
-									if ( isset( $dataset['type'] ) && 'currency' === $dataset['type'] ) {
-										$callback_conditional .= 't.datasetIndex === ' . $i . ' || ';
-									}
-									$i ++;
-								}
-							}
-
-							$callback_conditional = substr( $callback_conditional, 0, -4 );
-							?>
-							var yLabel = t.yLabel;
-
-							<?php if ( ! empty( $callback_conditional ) ) : ?>
-							if ( <?php echo esc_js( $callback_conditional ); ?> ) {
-								yLabel = '<?php echo esc_js( html_entity_decode( edd_currency_symbol( edd_get_currency() ) ) ); ?>' + t.yLabel.toFixed(2);
-							}
-							<?php endif; ?>
-
-							return d.datasets[t.datasetIndex].label + ': ' + yLabel;
-						}
-					},
-
-					custom: function (tooltip) {
-						// Tooltip element.
-						var tooltipEl = document.getElementById( 'edd-chartjs-tooltip' );
-
-						if ( ! tooltipEl ) {
-							tooltipEl = document.createElement( 'div' );
-							tooltipEl.id = 'edd-chartjs-tooltip';
-							tooltipEl.innerHTML = '<table></table>';
-							this._chart.canvas.parentNode.appendChild( tooltipEl );
-						}
-
-						// Hide if no tooltip.
-						if ( tooltip.opacity === 0 ) {
-							tooltipEl.style.opacity = 0;
-							return;
-						}
-
-						// Set caret position.
-						tooltipEl.classList.remove( 'above', 'below', 'no-transform' );
-						if ( tooltip.yAlign ) {
-							tooltipEl.classList.add(tooltip.yAlign );
-						} else {
-							tooltipEl.classList.add( 'no-transform' );
-						}
-
-						function getBody( bodyItem ) {
-							return bodyItem.lines;
-						}
-
-						// Set Text
-						if ( tooltip.body ) {
-							var titleLines = tooltip.title || [];
-							var bodyLines = tooltip.body.map( getBody );
-
-							var innerHtml = '<thead>';
-
-							titleLines.forEach( function ( title ) {
-								innerHtml += '<tr><th>' + title + '</th></tr>';
-							});
-
-							innerHtml += '</thead><tbody>';
-
-							bodyLines.forEach( function ( body, i ) {
-								var colors = tooltip.labelColors[ i ];
-								var style = 'background:' + colors.borderColor;
-								style += '; border-color:' + colors.borderColor;
-								style += '; border-width: 2px';
-								var span = '<span class="edd-chartjs-tooltip-key" style="' + style + '"></span>';
-								innerHtml += '<tr><td>' + span + body + '</td></tr>';
-							});
-
-							innerHtml += '</tbody>';
-
-							var tableRoot = tooltipEl.querySelector( 'table' );
-							tableRoot.innerHTML = innerHtml;
-						}
-
-						var positionY = this._chart.canvas.offsetTop;
-						var positionX = this._chart.canvas.offsetLeft;
-
-						// Display, position, and set styles for font
-						tooltipEl.style.opacity = 1;
-						tooltipEl.style.left = positionX + tooltip.caretX + 'px';
-						tooltipEl.style.top = positionY + tooltip.caretY + 'px';
-						tooltipEl.style.fontFamily = tooltip._bodyFontFamily;
-						tooltipEl.style.fontSize = tooltip.bodyFontSize + 'px';
-						tooltipEl.style.fontStyle = tooltip._bodyFontStyle;
-						tooltipEl.style.padding = tooltip.yPadding + 'px ' + tooltip.xPadding + 'px';
-					}
-				};
-
-			<?php else : // Pie charts ?>
-
-			// Display percentage amounts with label.
-			<?php echo esc_js( $target_el ); ?>.options.tooltips = {
-				callbacks: {
-					label: function( t, d ) {
-						<?php
-						$options = $this->get_endpoint()->get_options();
-
-						$callback_conditional = '';
-
-						if ( is_array( $options ) && isset( $options['datasets'] ) ) {
-							$i = 0;
-							foreach ( $options['datasets'] as $dataset ) {
-								if ( isset( $dataset['type'] ) && 'currency' === $dataset['type'] ) {
-									$callback_conditional .= 't.datasetIndex === ' . $i . ' || ';
-								}
-								$i++;
-							}
-						}
-
-						$callback_conditional = substr( $callback_conditional, 0, -4 );
-						?>
-
-						var dataset = d.datasets[ t.datasetIndex ];
-
-						var total = dataset.data.reduce( function( previousValue, currentValue, currentIndex, array ) {
-							return previousValue + currentValue;
-						} );
-
-						var currentValue = dataset.data[ t.index ];
-
-						var precentage = Math.floor( ( ( currentValue / total ) * 100 ) + 0.5 );
-
-						<?php if ( ! empty( $callback_conditional ) ) : ?>
-						if ( <?php echo esc_js( $callback_conditional ); ?> ) {
-							currentValue = '<?php echo esc_js( html_entity_decode( edd_currency_symbol( edd_get_currency() ) ) ); ?>' + currentValue.toFixed(2);
-						}
-						<?php endif; ?>
-
-						return d.labels[ t.index ] + ': ' + currentValue + ' (' + precentage + '%)';
-					}
-				}
-			};
-
-			<?php endif; ?>
-
-			// Instantiate the chart.
-			<?php echo esc_js( $target_el ); ?>_chart = new Chart(
-				$( '#<?php echo esc_js( $target_el ); ?>' ),
-				<?php echo esc_js( $target_el ); ?>
-			);
-
-		</script>
-		<?php
+		echo '<canvas id="' . esc_attr( $target_el ) . '"></canvas>'; // phpcs: ignore
 	}
 
 	/**
@@ -527,14 +323,43 @@ class Manifest implements Error_Logger {
 	 *
 	 * @return string JSON-encoded config object.
 	 */
-	protected function build_config() {
+	public function build_config() {
 		$config = new \stdClass();
 
-		$config->type    = $this->get_type();
-		$config->data    = $this->get_chart_data();
-		$config->options = $this->get_chart_options();
+		// Dates.
+		$dates        = Reports\get_dates_filter( 'objects' );
+		$day_by_day   = Reports\get_dates_filter_day_by_day();
+		$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
 
-		return json_encode( $config );
+		// Adjust end date forward by 1 second to push into the next day (for ChartJS display purposes).
+		$dates['end']->addSeconds( 1 );
+
+		// Apply UTC offset.
+		$dates['start']->setTimezone( edd_get_timezone_id() );
+		$dates['end']->setTimezone( edd_get_timezone_id() );
+
+		// @todo abstract this.
+		$endpoint  = $this->get_endpoint();
+		$default   = "edd_reports_graph_{$endpoint->get_id()}";
+		$target_el = $endpoint->get_display_arg( 'target', $default );
+
+		// The target ID has to be JS compatible, so no dashes.
+		$target_el = str_replace( '-', '_', $target_el );
+
+		$config->type         = $this->get_type();
+		$config->data         = $this->get_chart_data();
+		$config->options      = $this->get_chart_options();
+		$config->target       = $target_el;
+		$config->dates        = array_merge(
+			$dates,
+			array(
+				'hour_by_hour' => $hour_by_hour,
+				'day_by_day'   => $day_by_day,
+				'utc_offset'   => esc_js( EDD()->utils->get_gmt_offset() / HOUR_IN_SECONDS ),
+			)
+		);
+
+		return $config;
 	}
 
 	/**
@@ -618,7 +443,7 @@ class Manifest implements Error_Logger {
 			);
 		}
 
-		return array_merge( $defaults, $this->get_options() );
+		return array_merge( $defaults, $this->get_endpoint()->get_options() );
 	}
 
 	/**

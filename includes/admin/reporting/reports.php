@@ -1477,7 +1477,7 @@ function edd_register_payment_gateways_report( $reports ) {
 		) );
 
 		$reports->register_endpoint( 'gateway_stats', array(
-			'label' => __( 'Gateway Stats', 'easy-digital-downloads' ),
+			'label' => __( 'Gateway Stats', 'easy-digital-downloads' ) . ' &mdash; ' . $options[ $filter['range'] ],
 			'views' => array(
 				'table' => array(
 					'display_args' => array(
@@ -1495,26 +1495,26 @@ function edd_register_payment_gateways_report( $reports ) {
 			'views' => array(
 				'chart' => array(
 					'data_callback' => function() use ( $filter ) {
-                        $stats = new EDD\Stats();
+						$stats = new EDD\Stats();
 						$g = $stats->get_gateway_sales( array(
-							'grouped' => true,
-							'range'   => $filter['range'],
+							'range'    => $filter['range'],
+							'grouped'  => true,
 						) );
 
 						$gateways = array_flip( array_keys( edd_get_payment_gateways() ) );
 
-                        foreach ( $g as $data ) {
-                            $gateways[ $data->gateway ] = $data->total;
-                        }
+						foreach ( $g as $data ) {
+							$gateways[ $data->gateway ] = $data->total;
+						}
 
-                        $gateways = array_map( function( $v ) {
-                            return null === $v
-                                ? 0
-                                : $v;
-                        }, $gateways );
+						$gateways = array_map( function( $v ) {
+							return null === $v
+								? 0
+								: $v;
+						}, $gateways );
 
 						return array(
-							'sales' => array_filter( array_values( $gateways ) ),
+							'sales' => array_values( $gateways ),
 						);
 					},
 					'type' => 'pie',
@@ -1562,7 +1562,7 @@ function edd_register_payment_gateways_report( $reports ) {
 						}, $gateways ) );
 
 						return array(
-							'earnings' => array_filter( $gateways ),
+							'earnings' => $gateways,
 						);
 					},
 					'type' => 'pie',
@@ -1624,7 +1624,7 @@ function edd_register_payment_gateways_report( $reports ) {
 							$results = $wpdb->get_results( $wpdb->prepare(
 								"SELECT COUNT(total) AS sales, SUM(total) AS earnings, {$sql_clauses['select']}
 								 FROM {$wpdb->edd_orders} o
-								 WHERE gateway = %s AND status IN ('publish', 'revoked') AND date_created >= %s AND date_created <= %s
+								 WHERE gateway = %s AND status IN ('complete', 'revoked') AND date_created >= %s AND date_created <= %s
 								 GROUP BY {$sql_clauses['groupby']}
 								 ORDER BY {$sql_clauses['orderby']} ASC",
 								esc_sql( $gateway ), $dates['start']->copy()->format( 'mysql' ), $dates['end']->copy()->format( 'mysql' ) ) );
@@ -2274,7 +2274,8 @@ function edd_register_discounts_report( $reports ) {
 						$stats = new EDD\Stats();
 
 						$r = apply_filters( 'edd_reports_discounts_most_popular_discount', $stats->get_most_popular_discounts( array(
-							'range' => $filter['range'],
+							'range'  => $filter['range'],
+							'number' => 1,
 						) ) );
 
 						if ( ! empty( $r ) ) {

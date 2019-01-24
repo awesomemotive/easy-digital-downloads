@@ -4,7 +4,7 @@ export var eddLabelFormatter = function( label, series ) {
 };
 
 export var eddLegendFormatterSales = function( label, series ) {
-	let slug = label.toLowerCase().replace( /\s/g, '-' ),
+	const slug = label.toLowerCase().replace( /\s/g, '-' ),
 		color = '<div class="edd-legend-color" style="background-color: ' + series.color + '"></div>',
 		value = '<div class="edd-pie-legend-item">' + label + ': ' + Math.round( series.percent ) + '% (' + eddFormatNumber( series.data[ 0 ][ 1 ] ) + ')</div>',
 		item = '<div id="' + series.edd_vars.id + slug + '" class="edd-legend-item-wrapper">' + color + value + '</div>';
@@ -15,7 +15,7 @@ export var eddLegendFormatterSales = function( label, series ) {
 };
 
 export var eddLegendFormatterEarnings = function( label, series ) {
-	let slug = label.toLowerCase().replace( /\s/g, '-' ),
+	const slug = label.toLowerCase().replace( /\s/g, '-' ),
 		color = '<div class="edd-legend-color" style="background-color: ' + series.color + '"></div>',
 		value = '<div class="edd-pie-legend-item">' + label + ': ' + Math.round( series.percent ) + '% (' + eddFormatCurrency( series.data[ 0 ][ 1 ] ) + ')</div>',
 		item = '<div id="' + series.edd_vars.id + slug + '" class="edd-legend-item-wrapper">' + color + value + '</div>';

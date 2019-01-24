@@ -395,14 +395,14 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/interface-edd-exception.php';
 		require_once EDD_PLUGIN_DIR . 'includes/component-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-component.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-base.php';
 
-		// Database Resources
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-column.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-schema.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-query.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-row.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/class-table.php';
+		// Database Engine
+		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-base.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-column.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-schema.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-query.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-row.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-table.php';
 
 		// Database Schemas
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-adjustments.php';

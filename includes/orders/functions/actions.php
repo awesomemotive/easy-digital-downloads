@@ -43,7 +43,7 @@ function edd_add_manual_order( $args = array() ) {
 	// Parse args.
 	$data = wp_parse_args( $args, array(
 		'downloads'               => array(),
-		'edd-payment-status'      => 'publish',
+		'edd-payment-status'      => 'complete',
 		'payment_key'             => '',
 		'gateway'                 => '',
 		'transaction_id'          => '',
@@ -108,7 +108,7 @@ function edd_add_manual_order( $args = array() ) {
 	$status = sanitize_text_field( $data['edd-payment-status'] );
 
 	if ( empty( $status ) || ! in_array( $status, array_keys( edd_get_payment_statuses() ), true ) ) {
-		$status = 'publish';
+		$status = 'complete';
 	}
 
 	// Parse date.
@@ -120,7 +120,7 @@ function edd_add_manual_order( $args = array() ) {
 		: 'live';
 
 	// Get completed date if publish
-	$completed = ( 'publish' === $data['edd-payment-status'] )
+	$completed = ( 'complete' === $data['edd-payment-status'] )
 		? $date
 		: '';
 
@@ -365,7 +365,10 @@ function edd_add_manual_order( $args = array() ) {
 		edd_update_order_meta( $order_id, 'unlimited_downloads', 1 );
 	}
 
-	$customer->recalculate_stats();
+	if ( ! empty( $customer ) ) {
+		$customer->recalculate_stats();
+	}
+
 	edd_increase_total_earnings( $order_total );
 
 	// Setup order number.
@@ -394,7 +397,7 @@ function edd_add_manual_order( $args = array() ) {
 	}
 
 	// Trigger edd_complete_purchase.
-	if ( 'publish' === $status ) {
+	if ( 'complete' === $status ) {
 		edd_update_order_status( $order_id, $status );
 	}
 

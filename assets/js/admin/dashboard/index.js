@@ -1,7 +1,7 @@
 jQuery( document ).ready( function( $ ) {
 	if ( $( '#edd_dashboard_sales' ).length ) {
 		$.ajax( {
-			type: "GET",
+			type: 'GET',
 			data: {
 				action: 'edd_load_dashboard_widget',
 			},

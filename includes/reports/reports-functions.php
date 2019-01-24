@@ -206,49 +206,22 @@ function get_current_report() {
  * @return array List of supported endpoint types.
  */
 function get_endpoint_views() {
-	return array(
-		'tile'  => array(
-			'group'          => 'tiles',
-			'group_callback' => __NAMESPACE__ . '\\default_display_tiles_group',
-			'handler'        => 'EDD\Reports\Data\Tile_Endpoint',
-			'fields'         => array(
-				'data_callback'    => '::get_data',
-				'display_callback' => __NAMESPACE__ . '\\default_display_tile',
-				'display_args'     => array(
-					'type'             => '',
-					'context'          => 'primary',
-					'comparison_label' => __( 'All time', 'easy-digital-downloads' ),
-				),
-			),
-		),
-		'chart' => array(
-			'group'          => 'charts',
-			'group_callback' => __NAMESPACE__ . '\\default_display_charts_group',
-			'handler'        => 'EDD\Reports\Data\Chart_Endpoint',
-			'fields'         => array(
-				'type'             => 'line',
-				'options'          => array(),
-				'data_callback'    => '::get_data',
-				'display_callback' => '::display',
-				'display_args'     => array(
-					'colors' => 'core',
-				),
-			),
-		),
-		'table' => array(
-			'group'          => 'tables',
-			'group_callback' => __NAMESPACE__ . '\\default_display_tables_group',
-			'handler'        => 'EDD\Reports\Data\Table_Endpoint',
-			'fields'         => array(
-				'data_callback'    => '::prepare_items',
-				'display_callback' => '::display',
-				'display_args'     => array(
-					'class_name' => '',
-					'class_file' => '',
-				),
-			),
-		),
-	);
+	if ( ! did_action( 'edd_reports_init' ) ) {
+		_doing_it_wrong( __FUNCTION__, 'Endpoint views cannot be retrieved prior to the firing of the edd_reports_init hook.', 'EDD 3.0' );
+
+		return array();
+	}
+
+	/** @var Data\Endpoint_View_Registry|\WP_Error $registry */
+	$registry = EDD()->utils->get_registry( 'reports:endpoints:views' );
+
+	if ( empty( $registry ) || is_wp_error( $registry ) ) {
+		return array();
+	} else {
+		$views = $registry->get_endpoint_views();
+	}
+
+	return $views;
 }
 
 /**
@@ -955,22 +928,34 @@ function default_display_charts_group( $report ) {
 		return;
 	}
 
-	$charts = $report->get_endpoints( 'charts' ); ?>
+	$charts     = $report->get_endpoints( 'charts' );
+	$chart_data = array(
+		'charts'   => array(),
+	);
 
-	<div id="edd-reports-charts-wrap" class="edd-report-wrap"><?php
+	foreach ( $charts as $endpoint_id => $chart ) {
+		$chart_data['charts'][ $endpoint_id ] = $chart->get_manifest()->build_config();
+?>
 
-		foreach ( $charts as $endpoint_id => $chart ) :
+	<div id="edd-reports-charts-wrap" class="edd-report-wrap">
 
-			?><div class="edd-reports-chart edd-reports-chart-<?php echo esc_attr( $chart->get_type() ); ?>" id="edd-reports-table-<?php echo esc_attr( $endpoint_id ); ?>">
-				<h3><?php echo esc_html( $chart->get_label() ); ?></h3><?php
+			<div class="edd-reports-chart edd-reports-chart-<?php echo esc_attr( $chart->get_type() ); ?>" id="edd-reports-table-<?php echo esc_attr( $endpoint_id ); ?>">
+				<h3><?php echo esc_html( $chart->get_label() ); ?></h3>
 
-				$chart->display();
+				<?php $chart->display(); ?>
+			</div>
 
-			?></div><?php
+			<div class="clear"></div>
 
-		endforeach;
+	</div>
+<?php
+	}
 
-	?><div class="clear"></div></div><?php
+	wp_localize_script(
+		'edd-admin-reports',
+		'eddAdminReportsCharts',
+		$chart_data
+	);
 }
 
 /**
