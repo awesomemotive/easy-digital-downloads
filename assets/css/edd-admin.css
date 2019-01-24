@@ -421,6 +421,16 @@ a.edd-delete:hover {
 	margin-right: 10px;
 }
 
+.order-customer-info .customer-details span {
+	display: block;
+	margin-bottom: 5px;
+}
+
+.order-customer-info .customer-details span.customer-name {
+	font-size: 1.5em;
+	font-weight: 400;
+}
+
 /* Note Styles
 -------------------------------------------------------------- */
 
@@ -1420,6 +1430,17 @@ input[class*="edd-price-field"] {
 }
 #edd-order-resend-receipt .edd-order-resend-receipt-addresses {
 	margin-top: 10px;
+}
+.edd-order-resend-receipt-header {
+	font-size: 14px;
+	line-height: 1.4;
+}
+.edd-order-resend-receipt-addresses label {
+	display: block;
+	line-height: 1.75em;
+}
+.edd-order-resend-receipt-addresses label:last-child {
+	margin-bottom: 10px;
 }
 .edd-admin-box-inside:last-child {
 	border-bottom: 0;

@@ -138,17 +138,39 @@ function edd_order_details_customer( $order ) {
 	<div>
 		<div class="column-container order-customer-info">
 			<?php if ( ! empty( $customer ) ) : ?>
-				<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $order->customer_id ); ?>"><?php echo esc_html( $customer->name ); ?></a>
-				<input type="hidden" name="edd-current-customer" value="<?php echo esc_attr( $order->customer_id ); ?>"/>
+				<div class="avatar-wrap left" id="customer-avatar">
+					<?php echo get_avatar( $customer->email, 75 ); ?><br />
+					<span>
+						<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ); ?>" class="button-secondary"><?php _e( 'View', 'easy-digital-downloads' ); ?></a>
+					</span>
+				</div>
+				<div class="customer-details">
+					<span class="customer-name">
+						<?php echo esc_html( $customer->name ); ?>
+					</span>
+					</span>
+					<span>
+						<?php echo esc_html( $customer->email ); ?>
+					</span>
+					<span>
+						<?php
+						printf(
+						/* translators: The date. */
+							esc_html__( 'Customer since %s', 'easy-digital-downloads' ),
+							esc_html( edd_date_i18n( $customer->date_created ) )
+						);
+						?>
+					</span>
+				</div>
 			<?php else : ?>
 				&mdash;
 			<?php endif; ?>
 
 			<div style="clear: both;">
+				<br />
 				<hr>
-				<a href="#change" class="edd-payment-change-customer"><?php echo $change_text; // WPCS: XSS ok. ?></a>
-				&nbsp;|&nbsp;
-				<a href="#new" class="edd-payment-new-customer"><?php esc_html_e( 'New', 'easy-digital-downloads' ); ?></a>
+				<a href="#change" class="edd-payment-change-customer button-secondary"><?php echo $change_text; // WPCS: XSS ok. ?></a>&nbsp;
+				<a href="#new" class="edd-payment-new-customer button-secondary"><?php esc_html_e( 'New', 'easy-digital-downloads' ); ?></a>
 			</div>
 		</div>
 
@@ -208,14 +230,17 @@ function edd_order_details_email( $order ) {
 
 	<div><?php
 		if ( ! empty( $customer->emails ) && count( (array) $customer->emails ) > 1 ) : ?>
+			<span class="edd-order-resend-receipt-header">
+				<?php _e( 'Choose an email address to send the receipt to:', 'easy-digital-downloads' ); ?>
+			</span>
 
-			<span class="edd-order-resend-receipt-addresses" style="display:none;">
-				<select class="edd-order-resend-receipt-email">
-					<option value=""><?php esc_html_e( ' -- select email --', 'easy-digital-downloads' ); ?></option>
-					<?php foreach ( $customer->emails as $email ) : ?>
-						<option value="<?php echo rawurlencode( sanitize_email( $email ) ); ?>"><?php echo esc_attr( $email ); ?></option>
-					<?php endforeach; ?>
-				</select>
+			<span class="edd-order-resend-receipt-addresses">
+				<?php foreach ( $customer->emails as $key => $email ) : ?>
+				<label>
+					<input autocomplete="off" class="edd-order-resend-receipt-email" name="edd-order-resend-receipt-address" type="radio" value="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" />
+					<?php echo esc_attr( $email ); ?>
+				</label>
+				<?php endforeach; ?>
 			</span>
 
 		<?php else : ?>

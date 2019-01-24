@@ -359,14 +359,19 @@ const EDD_Edit_Payment = {
 		} );
 
 		$( document.body ).on( 'change', '.edd-order-resend-receipt-email', function() {
-			const href = $( '#edd-select-receipt-email' ).prop( 'href' ) + '&email=' + $( this ).val();
+			const selected = $('input:radio.edd-order-resend-receipt-email:checked').val();
 
+			$( '#edd-select-receipt-email').data( 'email', selected );
+		} );
+
+		$( document.body).on( 'click', '#edd-select-receipt-email', function () {
 			if ( confirm( edd_vars.resend_receipt ) ) {
+				const href = $( this ).prop( 'href' ) + '&email=' + $( this ).data( 'email' );
 				window.location = href;
 			}
 		} );
 
-		$( document.body ).on( 'click', '#edd-resend-receipt', function( e ) {
+		$( document.body ).on( 'click', '#edd-resend-receipt', function() {
 			return confirm( edd_vars.resend_receipt );
 		} );
 	},
