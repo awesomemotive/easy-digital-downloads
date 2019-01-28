@@ -19,6 +19,8 @@ export const render = ( config ) => {
 		target,
 	} = config;
 
+	Chart.defaults.global.pointHitDetectionRadius = 5;
+
 	// Convert dataset x-axis values to moment() objects.
 	_.each( data.datasets, ( dataset ) => {
 		_.each( dataset.data, ( pair, index ) => {
