@@ -26,9 +26,17 @@
 .edd-wrap a {
 	text-decoration: none;
 }
+
+/**
+ * Tag specificity should not be needed, but cannot
+ * safely be removed for fear of breaking even more things.
+ */
+.wp-core-ui .edd-delete,
 a.edd-delete {
 	color: #a00;
 }
+
+.wp-core-ui .edd-delete:hover,
 a.edd-delete:hover {
 	color: #f00;
 }
@@ -419,6 +427,14 @@ a.edd-delete:hover {
 	white-space: nowrap;
 	text-align: right;
 	margin-right: 10px;
+}
+
+.order-customer-info .customer-details-wrap {
+	overflow: hidden;
+}
+
+.order-customer-info .customer-details-actions {
+	margin-bottom: 0;
 }
 
 .order-customer-info .customer-details span {
