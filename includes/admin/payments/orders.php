@@ -174,7 +174,7 @@ function edd_order_details_customer( $order ) {
 				<button class="edd-payment-change-customer button-secondary"><?php echo $change_text; // WPCS: XSS ok. ?></button>
 				&nbsp;
 				<button class="edd-payment-new-customer button-secondary"><?php esc_html_e( 'Assign New Customer', 'easy-digital-downloads' ); ?></button>
-		</p>
+			</p>
 		</div>
 
 		<div class="column-container change-customer" style="display: none">
