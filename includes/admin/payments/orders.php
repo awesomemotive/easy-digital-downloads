@@ -129,7 +129,7 @@ function edd_order_details_customer( $order ) {
 
 	$change_text = edd_is_add_order_page()
 		? esc_html__( 'Assign', 'easy-digital-downloads' )
-		: esc_html__( 'Reassign', 'easy-digital-downloads' );
+		: esc_html__( 'Switch Customer', 'easy-digital-downloads' );
 
 	$customer_id = ! empty( $customer )
 		? $customer->id
@@ -137,41 +137,44 @@ function edd_order_details_customer( $order ) {
 
 	<div>
 		<div class="column-container order-customer-info">
-			<?php if ( ! empty( $customer ) ) : ?>
-				<div class="avatar-wrap left" id="customer-avatar">
-					<?php echo get_avatar( $customer->email, 75 ); ?><br />
-					<span>
-						<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ); ?>" class="button-secondary"><?php _e( 'View', 'easy-digital-downloads' ); ?></a>
-					</span>
-				</div>
-				<div class="customer-details">
-					<span class="customer-name">
-						<?php echo esc_html( $customer->name ); ?>
-					</span>
-					</span>
-					<span>
-						<?php echo esc_html( $customer->email ); ?>
-					</span>
-					<span>
-						<?php
-						printf(
-						/* translators: The date. */
-							esc_html__( 'Customer since %s', 'easy-digital-downloads' ),
-							esc_html( edd_date_i18n( $customer->date_created ) )
-						);
-						?>
-					</span>
-				</div>
-			<?php else : ?>
-				&mdash;
-			<?php endif; ?>
+			<div class="customer-details-wrap">
+				<?php if ( ! empty( $customer ) ) : ?>
+					<div class="avatar-wrap left" id="customer-avatar">
+						<?php echo get_avatar( $customer->email, 75 ); ?><br />
+					</div>
+					<div class="customer-details">
+						<span class="customer-name">
+							<?php echo esc_html( $customer->name ); ?>
+						</span>
 
-			<div style="clear: both;">
-				<br />
-				<hr>
-				<a href="#change" class="edd-payment-change-customer button-secondary"><?php echo $change_text; // WPCS: XSS ok. ?></a>&nbsp;
-				<a href="#new" class="edd-payment-new-customer button-secondary"><?php esc_html_e( 'New', 'easy-digital-downloads' ); ?></a>
+						<span>
+							<?php echo esc_html( $customer->email ); ?>
+						</span>
+
+						<span>
+							<?php
+							printf(
+							/* translators: The date. */
+								esc_html__( 'Customer since %s', 'easy-digital-downloads' ),
+								esc_html( edd_date_i18n( $customer->date_created ) )
+							);
+							?>
+						</span>
+
+						<span>
+							<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ); ?>"><?php _e( 'View customer record', 'easy-digital-downloads' ); ?></a>
+						</span>
+					</div>
+				<?php else : ?>
+					&mdash;
+				<?php endif; ?>
 			</div>
+
+			<p class="customer-details-actions">
+				<button class="edd-payment-change-customer button-secondary"><?php echo $change_text; // WPCS: XSS ok. ?></button>
+				&nbsp;
+				<button class="edd-payment-new-customer button-secondary"><?php esc_html_e( 'Assign New Customer', 'easy-digital-downloads' ); ?></button>
+		</p>
 		</div>
 
 		<div class="column-container change-customer" style="display: none">
@@ -185,7 +188,10 @@ function edd_order_details_customer( $order ) {
 			?>
 
 			<input type="hidden" id="edd-change-customer" name="edd-change-customer" value="0" />
-			<a href="#cancel" class="edd-payment-change-customer-cancel edd-delete"><?php esc_html_e( 'Cancel', 'easy-digital-downloads' ); ?></a>
+
+			<p>
+				<button class="edd-payment-change-customer-cancel edd-delete button-link"><?php esc_html_e( 'Cancel', 'easy-digital-downloads' ); ?></button>
+			</p>
 		</div>
 
 		<div class="column-container new-customer" style="display: none">
@@ -206,7 +212,7 @@ function edd_order_details_customer( $order ) {
 
 			<p>
 				<input type="hidden" id="edd-new-customer" name="edd-new-customer" value="0" />
-				<a href="#cancel" class="edd-payment-new-customer-cancel edd-delete"><?php esc_html_e( 'Cancel', 'easy-digital-downloads' ); ?></a>
+				<button class="edd-payment-new-customer-cancel edd-delete button-link"><?php esc_html_e( 'Cancel', 'easy-digital-downloads' ); ?></button>
 			</p>
 		</div>
 	</div>
