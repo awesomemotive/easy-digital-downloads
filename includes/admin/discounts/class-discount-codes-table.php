@@ -346,11 +346,25 @@ class EDD_Discount_Codes_Table extends List_Table {
 	}
 
 	/**
-	 * Retrieve all the data for all the discount codes.
+	 * Retrieves all the data for all the discount codes.
 	 *
 	 * @since 1.4
+	 * @deprecated 3.0 Use get_data()
 	 *
 	 * @return array Discount codes.
+	 */
+	public function discount_codes_data() {
+		_edd_deprecated_function( __METHOD__, '3.0', 'get_data' );
+
+		return $this->get_data();
+	}
+
+	/**
+	 * Retrieves all of the table data for the discount codes.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Discount codes table data.
 	 */
 	public function get_data() {
 		return edd_get_discounts( array(
