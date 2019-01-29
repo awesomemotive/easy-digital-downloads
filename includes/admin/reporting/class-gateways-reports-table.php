@@ -91,10 +91,25 @@ class EDD_Gateway_Reports_Table extends List_Table {
 	}
 
 	/**
-	 * Build all the reports data
+	 * Builds and retrieves all of the payment gateways reports data.
 	 *
 	 * @since 1.5
-	 * @return array All the data for customer reports
+	 * @deprecated 3.0 Use get_data()
+	 *
+	 * @return array All the data for customer reports.
+	 */
+	public function reports_data() {
+		_edd_deprecated_function( __METHOD__, '3.0', 'get_data' );
+
+		return $this->get_data();
+	}
+
+	/**
+	 * Retrieves all of the payment gateways reports data.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Payment gateways reports table data.
 	 */
 	public function get_data() {
 
