@@ -103,10 +103,25 @@ class EDD_Categories_Reports_Table extends List_Table {
 	}
 
 	/**
-	 * Build all the reports data
+	 * Builds and retrieves of all the categories reports data.
 	 *
-	 * @since  2.4
-	 * @return array All the data for customer reports
+	 * @since 2.4
+	 * @edeprecated 3.0 Use get_data()
+	 *
+	 * @return array All the data for customer reports.
+	 */
+	public function reports_data() {
+		_edd_deprecated_function( __METHOD__, '3.0', 'get_data' );
+
+		return $this->get_data();
+	}
+
+	/**
+	 * Builds and retrieves all of the categories reports data.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Categories reports table data.
 	 */
 	public function get_data() {
 
