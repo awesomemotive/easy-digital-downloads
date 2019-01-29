@@ -1,7 +1,7 @@
 /**
  * Internal dependencies.
  */
-import { chosenVars } from 'utils/chosen.js';
+import { getChosenVars } from 'utils/chosen.js';
 
 jQuery( document ).ready( function( $ ) {
 	$( '.download_page_edd-payment-history table.orders .row-actions .delete a, a.edd-delete-payment' ).on( 'click', function() {
@@ -65,7 +65,10 @@ const EDD_Edit_Payment = {
 					state_wrapper.replaceWith( '<input type="text" name="edd-payment-address[0][region]" value="" class="edd-edit-toggles medium-text"/>' );
 				} else {
 					state_wrapper.replaceWith( response );
-					$( '#edd-order-address-state-wrap select' ).chosen( chosenVars );
+					$( '#edd-order-address-state-wrap select' ).each( function() {
+						const el = $( this );
+						el.chosen( getChosenVars( el ) );
+					} );
 				}
 			} );
 
