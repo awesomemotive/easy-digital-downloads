@@ -338,18 +338,6 @@ function edd_listen_for_paypal_ipn() {
 
 		edd_debug_log( 'PayPal IPN endpoint loaded' );
 
-		/**
-		 * This is necessary to delay execution of PayPal PDT and to avoid a race condition causing the order status
-		 * updates to be triggered twice.
-		 *
-		 * @since 2.9.4
-		 * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/6605
-		 */
-		$token = edd_get_option( 'paypal_identity_token' );
-		if ( $token ) {
-			sleep( 5 );
-		}
-
 		do_action( 'edd_verify_paypal_ipn' );
 	}
 }
@@ -655,9 +643,14 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 
 		if ( 'completed' == $payment_status || edd_is_test_mode() ) {
 
-			edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'easy-digital-downloads' ) , $data['txn_id'] ) );
-			edd_set_payment_transaction_id( $payment_id, $data['txn_id'] );
-			edd_update_payment_status( $payment_id, 'publish' );
+			$token = edd_get_option( 'paypal_identity_token', false );
+			if ( empty( $token ) ) {
+				edd_insert_payment_note( $payment_id, sprintf( __( 'PayPal Transaction ID: %s', 'easy-digital-downloads' ) , $data['txn_id'] ) );
+				edd_set_payment_transaction_id( $payment_id, $data['txn_id'] );
+				edd_update_payment_status( $payment_id, 'publish' );
+			} else {
+				edd_debug_log( 'PayPal IPN ignored for completing purchase due to PDT being configured.' );
+			}
 
 		} else if ( 'pending' == $payment_status && isset( $data['pending_reason'] ) ) {
 
