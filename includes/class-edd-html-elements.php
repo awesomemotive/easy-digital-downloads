@@ -32,17 +32,18 @@ class EDD_HTML_Elements {
 	 */
 	public function product_dropdown( $args = array() ) {
 		$defaults = array(
-			'name'        => 'products',
-			'id'          => 'products',
-			'class'       => '',
-			'multiple'    => false,
-			'selected'    => 0,
-			'chosen'      => false,
-			'number'      => 30,
-			'bundles'     => true,
-			'variations'  => false,
-			'placeholder' => sprintf( __( 'Choose a %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
-			'data'        => array(
+			'name'                 => 'products',
+			'id'                   => 'products',
+			'class'                => '',
+			'multiple'             => false,
+			'selected'             => 0,
+			'chosen'               => false,
+			'number'               => 30,
+			'bundles'              => true,
+			'variations'           => false,
+			'show_variations_only' => false,
+			'placeholder'          => sprintf( __( 'Choose a %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
+			'data'                 => array(
 				'search-type'        => 'download',
 				'search-placeholder' => sprintf( __( 'Search %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
 			),
@@ -123,8 +124,17 @@ class EDD_HTML_Elements {
 		$options[0] = '';
 		if ( $products ) {
 			foreach ( $products as $product ) {
-				$options[ absint( $product->ID ) ] = esc_html( $product->post_title );
-				if ( $args['variations'] && edd_has_variable_prices( $product->ID ) ) {
+				$has_variations = edd_has_variable_prices( $product->ID );
+
+				if ( false === $args['variations'] || ! $args['show_variations_only'] ) {
+					$title = esc_html( $product->post_title );
+					if ( $has_variations && ! $args['show_variations_only'] ) {
+						$title .= ' (' . __( 'All Price Options', 'easy-digital-downloads' ) . ')';
+					}
+					$options[ absint( $product->ID ) ] = $title;
+				}
+
+				if ( $args['variations'] && $has_variations ) {
 					$prices = edd_get_variable_prices( $product->ID );
 					foreach ( $prices as $key => $value ) {
 						$name = ! empty( $value['name'] ) ? $value['name'] : '';
@@ -183,6 +193,10 @@ class EDD_HTML_Elements {
 
 		if ( $args['variations'] ) {
 			$args['class'] .= ' variations';
+		}
+
+		if ( $args['show_variations_only'] ) {
+			$args['class'] .= ' variations-only';
 		}
 
 		// 'all' gets created as an option if passed via the `selected` argument.

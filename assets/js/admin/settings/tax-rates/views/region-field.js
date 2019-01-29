@@ -3,7 +3,7 @@
 /**
  * Internal dependencies.
  */
-import { chosenVars } from 'utils/chosen.js';
+import { getChosenVars } from 'utils/chosen.js';
 
 const RegionField = wp.Backbone.View.extend( {
 	/**
@@ -27,7 +27,10 @@ const RegionField = wp.Backbone.View.extend( {
 			this.setElement( '<input type="text" id="tax_rate_region" />' );
 		} else {
 			this.$el.html( this.states );
-			this.$el.find( 'select' ).chosen( chosenVars );
+			this.$el.find( 'select' ).each( function() {
+				const el = $( this );
+				el.chosen( getChosenVars( el ) );
+			} );
 		}
 	},
 } );

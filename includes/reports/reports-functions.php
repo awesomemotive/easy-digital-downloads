@@ -928,13 +928,9 @@ function default_display_charts_group( $report ) {
 		return;
 	}
 
-	$charts     = $report->get_endpoints( 'charts' );
-	$chart_data = array(
-		'charts'   => array(),
-	);
+	$charts = $report->get_endpoints( 'charts' );
 
 	foreach ( $charts as $endpoint_id => $chart ) {
-		$chart_data['charts'][ $endpoint_id ] = $chart->get_manifest()->build_config();
 ?>
 
 	<div id="edd-reports-charts-wrap" class="edd-report-wrap">
@@ -950,12 +946,6 @@ function default_display_charts_group( $report ) {
 	</div>
 <?php
 	}
-
-	wp_localize_script(
-		'edd-admin-reports',
-		'eddAdminReportsCharts',
-		$chart_data
-	);
 }
 
 /**
