@@ -354,7 +354,7 @@ class EDD_Discount_Codes_Table extends List_Table {
 	 * @return array Discount codes.
 	 */
 	public function discount_codes_data() {
-		_edd_deprecated_function( __METHOD__, '3.0', 'get_data' );
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Discount_Codes_Table::get_data()' );
 
 		return $this->get_data();
 	}

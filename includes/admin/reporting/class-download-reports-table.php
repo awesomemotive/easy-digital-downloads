@@ -228,7 +228,7 @@ class EDD_Download_Reports_Table extends List_Table {
 	 * @return array All the data for customer reports.
 	 */
 	public function reports_data() {
-		_edd_deprecated_function( __METHOD__, '3.0', 'get_data' );
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Download_Reports_Table::get_data()' );
 
 		return $this->get_data();
 	}

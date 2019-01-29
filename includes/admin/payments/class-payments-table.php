@@ -668,7 +668,7 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @return array $payment_data Array of all the data for the orders.
 	 */
 	public function payments_data() {
-		_edd_deprecated_function( __METHOD__, '3.0', 'get_data' );
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Payment_History_Table::get_data()' );
 
 		return $this->get_data();
 	}
