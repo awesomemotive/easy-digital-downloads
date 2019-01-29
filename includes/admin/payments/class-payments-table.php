@@ -660,11 +660,25 @@ class EDD_Payment_History_Table extends List_Table {
 	}
 
 	/**
-	 * Retrieve all the data for all the orders.
+	 * Retrieves all the data for all the orders.
 	 *
 	 * @since 1.4
+	 * @deprecated 3.0 Use get_data()
 	 *
 	 * @return array $payment_data Array of all the data for the orders.
+	 */
+	public function payments_data() {
+		_edd_deprecated_function( __METHOD__, '3.0', 'get_data' );
+
+		return $this->get_data();
+	}
+
+	/**
+	 * Retrieves all of the orders data based on current filters.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Orders table data.
 	 */
 	public function get_data() {
 		$args = array();
