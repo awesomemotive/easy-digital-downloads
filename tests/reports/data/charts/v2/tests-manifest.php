@@ -285,6 +285,23 @@ class Manifest_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_get_chart_options_default_pie_options_should_match() {
 		$expected = array(
+			'datasets'   => array(
+				'test' => array(
+					'label' => 'Sales',
+					'backgroundColor' => array(
+						'rgb(234,16,109)',
+						'rgb(98,133,193)',
+						'rgb(151,99,143)',
+						'rgb(244,10,43)',
+					),
+				),
+			),
+			'labels'     => array(
+				0 => 'First',
+				1 => 'Second',
+				2 => 'Third',
+				3 => 'Fourth',
+			),
 			'responsive' => true,
 			'legend'     => array(
 				'position' => 'left',
@@ -360,6 +377,17 @@ class Manifest_Tests extends \EDD_UnitTestCase {
 				),
 			),
 			'labels'   => array( 'First', 'Second', 'Third', 'Fourth' ),
+			'datasets' => array(
+				'foo' => array(
+					'label' => 'Sales',
+					'backgroundColor' => array(
+						'rgb(234,16,109)',
+						'rgb(98,133,193)',
+						'rgb(151,99,143)',
+						'rgb(244,10,43)',
+					),
+				)
+			),
 		);
 
 		$this->assertEqualSetsWithIndex( $expected, $manifest->get_chart_options() );

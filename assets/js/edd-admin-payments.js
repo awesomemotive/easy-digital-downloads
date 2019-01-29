@@ -151,7 +151,10 @@ var EDD_Edit_Payment = {
           state_wrapper.replaceWith('<input type="text" name="edd-payment-address[0][region]" value="" class="edd-edit-toggles medium-text"/>');
         } else {
           state_wrapper.replaceWith(response);
-          $('#edd-order-address-state-wrap select').chosen(utils_chosen_js__WEBPACK_IMPORTED_MODULE_2__["chosenVars"]);
+          $('#edd-order-address-state-wrap select').each(function () {
+            var el = $(this);
+            el.chosen(Object(utils_chosen_js__WEBPACK_IMPORTED_MODULE_2__["getChosenVars"])(el));
+          });
         }
       });
       return false;
@@ -250,7 +253,7 @@ var EDD_Edit_Payment = {
 
       var new_customer = $('#edd-new-customer');
 
-      if ($('.new-customer').is(":visible")) {
+      if ($('.new-customer').is(':visible')) {
         new_customer.val(1);
       } else {
         new_customer.val(0);
@@ -408,7 +411,7 @@ var EDD_Edit_Payment = {
           download_id: download_id
         };
         $.ajax({
-          type: "POST",
+          type: 'POST',
           data: postData,
           url: ajaxurl,
           success: function success(response) {
@@ -430,13 +433,16 @@ var EDD_Edit_Payment = {
       emails_wrap.slideDown();
     });
     $(document.body).on('change', '.edd-order-resend-receipt-email', function () {
-      var href = $('#edd-select-receipt-email').prop('href') + '&email=' + $(this).val();
-
+      var selected = $('input:radio.edd-order-resend-receipt-email:checked').val();
+      $('#edd-select-receipt-email').data('email', selected);
+    });
+    $(document.body).on('click', '#edd-select-receipt-email', function () {
       if (confirm(edd_vars.resend_receipt)) {
+        var href = $(this).prop('href') + '&email=' + $(this).data('email');
         window.location = href;
       }
     });
-    $(document.body).on('click', '#edd-resend-receipt', function (e) {
+    $(document.body).on('click', '#edd-resend-receipt', function () {
       return confirm(edd_vars.resend_receipt);
     });
   },
@@ -451,14 +457,14 @@ var EDD_Edit_Payment = {
         price_id: link.data('price-id')
       };
       $.ajax({
-        type: "POST",
+        type: 'POST',
         data: postData,
         url: ajaxurl,
         success: function success(link) {
-          $("#edd-download-link").dialog({
+          $('#edd-download-link').dialog({
             width: 400
           }).html('<textarea rows="10" cols="40" id="edd-download-link-textarea">' + link + '</textarea>');
-          $("#edd-download-link-textarea").focus().select();
+          $('#edd-download-link-textarea').focus().select();
           return false;
         }
       }).fail(function (data) {
@@ -479,12 +485,13 @@ jQuery(document).ready(function ($) {
 /*!***********************************!*\
   !*** ./assets/js/utils/chosen.js ***!
   \***********************************/
-/*! exports provided: chosenVars */
+/*! exports provided: chosenVars, getChosenVars */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "chosenVars", function() { return chosenVars; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getChosenVars", function() { return getChosenVars; });
 /* global edd_vars */
 var chosenVars = {
   disable_search_threshold: 13,
@@ -494,6 +501,23 @@ var chosenVars = {
   placeholder_text_single: edd_vars.one_option,
   placeholder_text_multiple: edd_vars.one_or_more_option,
   no_results_text: edd_vars.no_results_text
+};
+/**
+ * Determine the variables used to initialie Chosen on an element.
+ *
+ * @param {Object} el select element.
+ * @return {Object} Variables for Chosen.
+ */
+
+var getChosenVars = function getChosenVars(el) {
+  var inputVars = chosenVars; // Ensure <select data-search-type="download"> or similar can use search always.
+  // These types of fields start with no options and are updated via AJAX.
+
+  if (el.data('search-type')) {
+    delete inputVars.disable_search_threshold;
+  }
+
+  return inputVars;
 };
 
 /***/ }),

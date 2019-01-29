@@ -14,12 +14,13 @@ let ajax_tax_count = 0;
  * @return {Promise}
  */
 export function recalculate_taxes( state ) {
-	if ( '1' != edd_global_vars.taxes_enabled )
-		return; // Taxes not enabled
+	if ( '1' != edd_global_vars.taxes_enabled ) {
+		return;
+	} // Taxes not enabled
 
 	const $edd_cc_address = jQuery( '#edd_cc_address' );
 
-	let billing_country = $edd_cc_address.find( '#billing_country' ).val(),
+	const billing_country = $edd_cc_address.find( '#billing_country' ).val(),
 		card_address = $edd_cc_address.find( '#card_address' ).val(),
 		card_address_2 = $edd_cc_address.find( '#card_address_2' ).val(),
 		card_city = $edd_cc_address.find( '#card_city' ).val(),
@@ -46,9 +47,9 @@ export function recalculate_taxes( state ) {
 	const current_ajax_count = ++ajax_tax_count;
 
 	return jQuery.ajax( {
-		type: "POST",
+		type: 'POST',
 		data: postData,
-		dataType: "json",
+		dataType: 'json',
 		url: edd_global_vars.ajaxurl,
 		xhrFields: {
 			withCredentials: true,
@@ -91,7 +92,7 @@ window.EDD_Checkout = ( function( $ ) {
 
 	function init() {
 		$body = $( document.body );
-		$form = $( "#edd_purchase_form" );
+		$form = $( '#edd_purchase_form' );
 		$edd_cart_amount = $( '.edd_cart_amount' );
 		before_discount = $edd_cart_amount.text();
 		$checkout_form_wrap = $( '#edd_checkout_form_wrap' );
@@ -199,7 +200,7 @@ window.EDD_Checkout = ( function( $ ) {
 	}
 
 	function edd_format_card_number( form ) {
-		let card_number = form.find( '.card-number' ),
+		const card_number = form.find( '.card-number' ),
 			card_cvc = form.find( '.card-cvc' ),
 			card_expiry = form.find( '.card-expiry' );
 
@@ -213,7 +214,7 @@ window.EDD_Checkout = ( function( $ ) {
 	function apply_discount( event ) {
 		event.preventDefault();
 
-		let $this = $( this ),
+		const $this = $( this ),
 			discount_code = $( '#edd-discount' ).val(),
 			edd_discount_loader = $( '#edd-discount-loader' );
 
@@ -231,9 +232,9 @@ window.EDD_Checkout = ( function( $ ) {
 		edd_discount_loader.show();
 
 		$.ajax( {
-			type: "POST",
+			type: 'POST',
 			data: postData,
-			dataType: "json",
+			dataType: 'json',
 			url: edd_global_vars.ajaxurl,
 			xhrFields: {
 				withCredentials: true,
@@ -292,15 +293,16 @@ window.EDD_Checkout = ( function( $ ) {
 	}
 
 	function remove_discount( event ) {
-		let $this = $( this ), postData = {
-			action: 'edd_remove_discount',
-			code: $this.data( 'code' ),
-		};
+		const $this = $( this ),
+			postData = {
+				action: 'edd_remove_discount',
+				code: $this.data( 'code' ),
+			};
 
 		$.ajax( {
-			type: "POST",
+			type: 'POST',
 			data: postData,
-			dataType: "json",
+			dataType: 'json',
 			url: edd_global_vars.ajaxurl,
 			xhrFields: {
 				withCredentials: true,
@@ -342,14 +344,14 @@ window.EDD_Checkout = ( function( $ ) {
 	}
 
 	function update_item_quantities( event ) {
-		let $this = $( this ),
+		const $this = $( this ),
 			quantity = $this.val(),
 			key = $this.data( 'key' ),
 			download_id = $this.closest( '.edd_cart_item' ).data( 'download-id' ),
 			options = $this.parent().find( 'input[name="edd-cart-download-' + key + '-options"]' ).val();
 
 		const edd_cc_address = $( '#edd_cc_address' );
-		let billing_country = edd_cc_address.find( '#billing_country' ).val(),
+		const billing_country = edd_cc_address.find( '#billing_country' ).val(),
 			card_state = edd_cc_address.find( '#card_state' ).val();
 
 		const postData = {
@@ -364,9 +366,9 @@ window.EDD_Checkout = ( function( $ ) {
 		//edd_discount_loader.show();
 
 		$.ajax( {
-			type: "POST",
+			type: 'POST',
 			data: postData,
-			dataType: "json",
+			dataType: 'json',
 			url: edd_global_vars.ajaxurl,
 			xhrFields: {
 				withCredentials: true,
@@ -399,7 +401,7 @@ window.EDD_Checkout = ( function( $ ) {
 		init: init,
 		recalculate_taxes: recalculate_taxes,
 	};
-} )( window.jQuery );
+}( window.jQuery ) );
 
 // init on document.ready
 window.jQuery( document ).ready( EDD_Checkout.init );

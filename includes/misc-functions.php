@@ -732,6 +732,35 @@ function _edd_deprecated_file( $file, $version, $replacement = null, $message = 
 	}
 }
 
+function _edd_generic_deprecated( $function, $version, $message ) {
+	/**
+	 * Fires immediately before a generic deprecated notice is output.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string function  The function that the deprecation is happening in.
+	 * @param string $version  The version of EDD that deprecated the code..
+	 * @param string $message  The message to supply for the deprecation.
+	 */
+	do_action( 'edd_generic_deprecated', $function, $version, $message );
+
+	$show_errors = current_user_can( 'manage_options' );
+
+	/**
+	 * Filters whether to trigger the error output for the deprecation.
+	 *
+	 * @since 3.0
+	 *
+	 * @param bool $show_errors Whether to trigger errors for deprecated calls..
+	 */
+	if ( WP_DEBUG && apply_filters( 'edd_generic_deprecated_trigger_error', $show_errors ) ) {
+		$message = empty( $message ) ? '' : ' ' . $message;
+
+		/* translators: 1: PHP file name, 2: EDD version number */
+		trigger_error( sprintf( __( 'Code within %1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s. See message for further details.', 'easy-digital-downloads' ), $function, $version ) . $message );
+	}
+}
+
 /**
  * Fires functions attached to a deprecated EDD filter hook.
  *
@@ -744,6 +773,7 @@ function _edd_deprecated_file( $file, $version, $replacement = null, $message = 
  * @param string $version     The version of WordPress that deprecated the hook.
  * @param string $replacement Optional. The hook that should have been used. Default false.
  * @param string $message     Optional. A message regarding the change. Default null.
+ * @return
  */
 function edd_apply_filters_deprecated( $tag, $args, $version, $replacement = false, $message = null ) {
 	if ( ! has_filter( $tag ) ) {
@@ -1478,7 +1508,7 @@ function edd_get_status_label( $status = '' ) {
 
 			// Payments
 			'processing' => __( 'Processing', 'easy-digital-downloads' ),
-			'publish'    => __( 'Completed',  'easy-digital-downloads' ),
+			'complete'   => __( 'Completed',  'easy-digital-downloads' ),
 			'refunded'   => __( 'Refunded',   'easy-digital-downloads' ),
 			'revoked'    => __( 'Revoked',    'easy-digital-downloads' ),
 			'failed'     => __( 'Failed',     'easy-digital-downloads' ),

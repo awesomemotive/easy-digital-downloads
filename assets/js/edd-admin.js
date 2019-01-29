@@ -88,12 +88,18 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+/* global _ */
+
 /**
  * Internal dependencies.
  */
 
 jQuery(document).ready(function ($) {
-  $('.edd-select-chosen').chosen(utils_chosen_js__WEBPACK_IMPORTED_MODULE_2__["chosenVars"]);
+  // Globally apply to elements on the page.
+  $('.edd-select-chosen').each(function () {
+    var el = $(this);
+    el.chosen(Object(utils_chosen_js__WEBPACK_IMPORTED_MODULE_2__["getChosenVars"])(el));
+  });
   $('.edd-select-chosen .chosen-search input').each(function () {
     // Bail if placeholder already set
     if ($(this).attr('placeholder')) {
@@ -104,7 +110,6 @@ jQuery(document).ready(function ($) {
         placeholder = selectElem.data('search-placeholder');
 
     if (placeholder) {
-      console.log(placeholder);
       $(this).attr('placeholder', placeholder);
     }
   }); // Add placeholders for Chosen input fields
@@ -112,7 +117,7 @@ jQuery(document).ready(function ($) {
   $('.chosen-choices').on('click', function () {
     var placeholder = $(this).parent().prev().data('search-placeholder');
 
-    if (typeof placeholder === "undefined") {
+    if (typeof placeholder === 'undefined') {
       placeholder = edd_vars.type_to_search;
     }
 
@@ -128,7 +133,7 @@ jQuery(document).ready(function ($) {
       typingTimerElements = '.edd-select-chosen .chosen-search input, .edd-select-chosen .search-field input',
       typingTimer; // Replace options with search results
 
-  $(document.body).on('keyup', typingTimerElements, function (e) {
+  $(document.body).on('keyup', typingTimerElements, _.debounce(function (e) {
     var element = $(this),
         val = element.val(),
         container = element.closest('.edd-select-chosen'),
@@ -136,6 +141,7 @@ jQuery(document).ready(function ($) {
         select_type = select.data('search-type'),
         no_bundles = container.hasClass('no-bundles'),
         variations = container.hasClass('variations'),
+        variations_only = container.hasClass('variations-only'),
         lastKey = e.which,
         search_type = 'edd_download_search'; // String replace the chosen container IDs
 
@@ -163,46 +169,44 @@ jQuery(document).ready(function ($) {
       container.append('<span class="spinner is-active"></span>');
     }
 
-    clearTimeout(typingTimer);
-    typingTimer = setTimeout(function () {
-      $.ajax({
-        type: 'GET',
-        dataType: 'json',
-        url: ajaxurl,
-        data: {
-          s: val,
-          action: search_type,
-          no_bundles: no_bundles,
-          variations: variations
-        },
-        beforeSend: function beforeSend() {
-          select.closest('ul.chosen-results').empty();
-        },
-        success: function success(data) {
-          // Remove all options but those that are selected
-          $('option:not(:selected)', select).remove(); // Add any option that doesn't already exist
+    $.ajax({
+      type: 'GET',
+      dataType: 'json',
+      url: ajaxurl,
+      data: {
+        s: val,
+        action: search_type,
+        no_bundles: no_bundles,
+        variations: variations,
+        variations_only: variations_only
+      },
+      beforeSend: function beforeSend() {
+        select.closest('ul.chosen-results').empty();
+      },
+      success: function success(data) {
+        // Remove all options but those that are selected
+        $('option:not(:selected)', select).remove(); // Add any option that doesn't already exist
 
-          $.each(data, function (key, item) {
-            if (!$('option[value="' + item.id + '"]', select).length) {
-              select.prepend('<option value="' + item.id + '">' + item.name + '</option>');
-            }
-          }); // Get the text immediately before triggering an update.
-          // Any sooner will cause the text to jump around.
+        $.each(data, function (key, item) {
+          if (!$('option[value="' + item.id + '"]', select).length) {
+            select.prepend('<option value="' + item.id + '">' + item.name + '</option>');
+          }
+        }); // Get the text immediately before triggering an update.
+        // Any sooner will cause the text to jump around.
 
-          var val = element.val(); // Update the options
+        var val = element.val(); // Update the options
 
-          select.trigger('chosen:updated');
-          element.val(val);
-        }
-      }).fail(function (response) {
-        if (window.console && window.console.log) {
-          console.log(response);
-        }
-      }).done(function (response) {
-        container.children('.spinner').remove();
-      });
-    }, userInteractionInterval);
-  });
+        select.trigger('chosen:updated');
+        element.val(val);
+      }
+    }).fail(function (response) {
+      if (window.console && window.console.log) {
+        console.log(response);
+      }
+    }).done(function (response) {
+      container.children('.spinner').remove();
+    });
+  }, userInteractionInterval));
 });
 
 /***/ }),
@@ -345,9 +349,9 @@ jQuery(document).ready(function ($) {
       exclude: exclude
     };
     $.ajax({
-      type: "POST",
+      type: 'POST',
       data: data,
-      dataType: "json",
+      dataType: 'json',
       url: ajaxurl,
       success: function success(search_response) {
         $('.edd_user_search_wrap').removeClass('loading');
@@ -473,12 +477,13 @@ __webpack_require__.r(__webpack_exports__);
 /*!***********************************!*\
   !*** ./assets/js/utils/chosen.js ***!
   \***********************************/
-/*! exports provided: chosenVars */
+/*! exports provided: chosenVars, getChosenVars */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "chosenVars", function() { return chosenVars; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getChosenVars", function() { return getChosenVars; });
 /* global edd_vars */
 var chosenVars = {
   disable_search_threshold: 13,
@@ -488,6 +493,23 @@ var chosenVars = {
   placeholder_text_single: edd_vars.one_option,
   placeholder_text_multiple: edd_vars.one_or_more_option,
   no_results_text: edd_vars.no_results_text
+};
+/**
+ * Determine the variables used to initialie Chosen on an element.
+ *
+ * @param {Object} el select element.
+ * @return {Object} Variables for Chosen.
+ */
+
+var getChosenVars = function getChosenVars(el) {
+  var inputVars = chosenVars; // Ensure <select data-search-type="download"> or similar can use search always.
+  // These types of fields start with no options and are updated via AJAX.
+
+  if (el.data('search-type')) {
+    delete inputVars.disable_search_threshold;
+  }
+
+  return inputVars;
 };
 
 /***/ }),

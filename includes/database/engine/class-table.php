@@ -593,9 +593,12 @@ abstract class Table extends Base {
 			return;
 		}
 
+		// Setup the prefixed name
+		$this->prefixed_name = $this->apply_prefix( $this->name );
+
 		// Maybe create database key
 		if ( empty( $this->db_version_key ) ) {
-			$this->db_version_key = "wpdb_{$this->name}_version";
+			$this->db_version_key = "wpdb_{$this->prefixed_name}_version";
 		}
 	}
 
@@ -630,7 +633,6 @@ abstract class Table extends Base {
 
 		// Set the table prefix and prefix the table name
 		$this->table_prefix  = $db->get_blog_prefix( $site_id );
-		$this->prefixed_name = $this->apply_prefix( $this->name );
 
 		// Get the prefixed table name
 		$prefixed_table_name = "{$this->table_prefix}{$this->prefixed_name}";
@@ -778,55 +780,5 @@ abstract class Table extends Base {
 
 		// Return callable, if any
 		return $callable;
-	}
-
-	/**
-	 * Sanitize a table name string
-	 *
-	 * Applies the following formatting to a string:
-	 * - No accents
-	 * - No special characters
-	 * - No hyphens
-	 * - No double underscores
-	 * - No trailing underscores
-	 *
-	 * @since 3.0
-	 *
-	 * @param string $name The name of the database table
-	 *
-	 * @return string Sanitized database table name
-	 */
-	private function sanitize_table_name( $name = '' ) {
-
-		// Bail if empty or not a string
-		if ( empty( $name ) || ! is_string( $name ) ) {
-			return false;
-		}
-
-		// Trim spaces off the ends
-		$unspace = trim( $name );
-
-		// Only non-accented table names (avoid truncation)
-		$accents = remove_accents( $unspace );
-
-		// Only lowercase characters, hyphens, and dashes (avoid index corruption)
-		$lower   = sanitize_key( $accents );
-
-		// Replace hyphens with single underscores
-		$under   = str_replace( '-',  '_', $lower );
-
-		// Single underscores only
-		$single  = str_replace( '__', '_', $under );
-
-		// Remove trailing underscores
-		$clean   = trim( $single, '_' );
-
-		// Bail if table name was garbaged
-		if ( empty( $clean ) ) {
-			return false;
-		}
-
-		// Return the cleaned table name
-		return $clean;
 	}
 }

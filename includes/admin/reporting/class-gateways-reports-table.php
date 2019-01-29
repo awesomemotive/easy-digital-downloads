@@ -103,7 +103,7 @@ class EDD_Gateway_Reports_Table extends List_Table {
 
 		foreach ( $gateways as $gateway_id => $gateway ) {
 
-			$complete_count = edd_count_sales_by_gateway( $gateway_id, 'publish' );
+			$complete_count = edd_count_sales_by_gateway( $gateway_id, 'complete' );
 			$pending_count  = edd_count_sales_by_gateway( $gateway_id, array( 'pending', 'failed' ) );
 
 			$reports_data[] = array(

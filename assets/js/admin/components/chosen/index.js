@@ -1,10 +1,17 @@
+/* global _ */
+
 /**
  * Internal dependencies.
  */
-import { chosenVars } from 'utils/chosen.js';
+import { getChosenVars } from 'utils/chosen.js';
 
 jQuery( document ).ready( function( $ ) {
-	$( '.edd-select-chosen' ).chosen( chosenVars );
+
+	// Globally apply to elements on the page.
+	$( '.edd-select-chosen' ).each( function() {
+		const el = $( this );
+		el.chosen( getChosenVars( el ) );
+	} );
 
 	$( '.edd-select-chosen .chosen-search input' ).each( function() {
 		// Bail if placeholder already set
@@ -12,11 +19,10 @@ jQuery( document ).ready( function( $ ) {
 			return;
 		}
 
-		let selectElem = $( this ).parent().parent().parent().prev( 'select.edd-select-chosen' ),
+		const selectElem = $( this ).parent().parent().parent().prev( 'select.edd-select-chosen' ),
 			placeholder = selectElem.data( 'search-placeholder' );
 
 		if ( placeholder ) {
-			console.log( placeholder );
 			$( this ).attr( 'placeholder', placeholder );
 		}
 	} );
@@ -24,7 +30,7 @@ jQuery( document ).ready( function( $ ) {
 	// Add placeholders for Chosen input fields
 	$( '.chosen-choices' ).on( 'click', function() {
 		let placeholder = $( this ).parent().prev().data( 'search-placeholder' );
-		if ( typeof placeholder === "undefined" ) {
+		if ( typeof placeholder === 'undefined' ) {
 			placeholder = edd_vars.type_to_search;
 		}
 		$( this ).children( 'li' ).children( 'input' ).attr( 'placeholder', placeholder );
@@ -42,7 +48,7 @@ jQuery( document ).ready( function( $ ) {
 		typingTimer;
 
 	// Replace options with search results
-	$( document.body ).on( 'keyup', typingTimerElements, function( e ) {
+	$( document.body ).on( 'keyup', typingTimerElements, _.debounce( function( e ) {
 		let	element = $( this ),
 			val = element.val(),
 			container = element.closest( '.edd-select-chosen' ),
@@ -51,6 +57,7 @@ jQuery( document ).ready( function( $ ) {
 			select_type = select.data( 'search-type' ),
 			no_bundles = container.hasClass( 'no-bundles' ),
 			variations = container.hasClass( 'variations' ),
+			variations_only = container.hasClass( 'variations-only' ),
 
 			lastKey = e.which,
 			search_type = 'edd_download_search';
@@ -93,51 +100,48 @@ jQuery( document ).ready( function( $ ) {
 			container.append( '<span class="spinner is-active"></span>' );
 		}
 
-		clearTimeout( typingTimer );
+		$.ajax( {
+			type: 'GET',
+			dataType: 'json',
+			url: ajaxurl,
+			data: {
+				s: val,
+				action: search_type,
+				no_bundles: no_bundles,
+				variations: variations,
+				variations_only: variations_only,
+			},
 
-		typingTimer = setTimeout( function() {
-			$.ajax( {
-				type: 'GET',
-				dataType: 'json',
-				url: ajaxurl,
-				data: {
-					s: val,
-					action: search_type,
-					no_bundles: no_bundles,
-					variations: variations,
-				},
+			beforeSend: function() {
+				select.closest( 'ul.chosen-results' ).empty();
+			},
 
-				beforeSend: function() {
-					select.closest( 'ul.chosen-results' ).empty();
-				},
+			success: function( data ) {
+				// Remove all options but those that are selected
+				$( 'option:not(:selected)', select ).remove();
 
-				success: function( data ) {
-					// Remove all options but those that are selected
-					$( 'option:not(:selected)', select ).remove();
+				// Add any option that doesn't already exist
+				$.each( data, function( key, item ) {
+					if ( ! $( 'option[value="' + item.id + '"]', select ).length ) {
+						select.prepend( '<option value="' + item.id + '">' + item.name + '</option>' );
+					}
+				} );
 
-					// Add any option that doesn't already exist
-					$.each( data, function( key, item ) {
-						if ( ! $( 'option[value="' + item.id + '"]', select ).length ) {
-							select.prepend( '<option value="' + item.id + '">' + item.name + '</option>' );
-						}
-					} );
+				// Get the text immediately before triggering an update.
+				// Any sooner will cause the text to jump around.
+				const val = element.val();
 
-					// Get the text immediately before triggering an update.
-					// Any sooner will cause the text to jump around.
-					const val = element.val();
+				// Update the options
+				select.trigger( 'chosen:updated' );
 
-					// Update the options
-					select.trigger( 'chosen:updated' );
-
-					element.val( val );
-				},
-			} ).fail( function( response ) {
-				if ( window.console && window.console.log ) {
-					console.log( response );
-				}
-			} ).done( function( response ) {
-				container.children( '.spinner' ).remove();
-			} );
-		}, userInteractionInterval );
-	} );
+				element.val( val );
+			},
+		} ).fail( function( response ) {
+			if ( window.console && window.console.log ) {
+				console.log( response );
+			}
+		} ).done( function( response ) {
+			container.children( '.spinner' ).remove();
+		} );
+	}, userInteractionInterval ) );
 } );

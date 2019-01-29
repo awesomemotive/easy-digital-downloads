@@ -1,7 +1,7 @@
 /**
  * Internal dependencies.
  */
-import { chosenVars } from 'utils/chosen.js';
+import { getChosenVars } from 'utils/chosen.js';
 import { edd_attach_tooltips } from 'admin/components/tooltips';
 import './bulk-edit.js';
 
@@ -98,21 +98,24 @@ var EDD_Download_Configuration = {
 		$( document.body ).on( 'click', '.edd_add_repeatable', function( e ) {
 			e.preventDefault();
 
-			let button = $( this ),
+			const button = $( this ),
 				row = button.parent().prev().children( '.edd_repeatable_row:last-child' ),
 				clone = EDD_Download_Configuration.clone_repeatable( row );
 
 			clone.insertAfter( row ).find( 'input, textarea, select' ).filter( ':visible' ).eq( 0 ).focus();
 
 			// Setup chosen fields again if they exist
-			clone.find( '.edd-select-chosen' ).chosen( chosenVars );
+			clone.find( '.edd-select-chosen' ).each( function() {
+				const el = $( this );
+				el.chosen( getChosenVars( el ) );
+			} );
 			clone.find( '.edd-select-chosen' ).css( 'width', '100%' );
 			clone.find( '.edd-select-chosen .chosen-search input' ).attr( 'placeholder', edd_vars.search_placeholder );
 		} );
 	},
 
 	move: function() {
-		$( ".edd_repeatable_table .edd-repeatables-wrap" ).sortable( {
+		$( '.edd_repeatable_table .edd-repeatables-wrap' ).sortable( {
 			axis: 'y',
 			handle: '.edd-draghandle-anchor',
 			items: '.edd_repeatable_row',
@@ -197,7 +200,7 @@ var EDD_Download_Configuration = {
 
 	type: function() {
 		$( document.body ).on( 'change', '#_edd_product_type', function( e ) {
-			let edd_products = $( '#edd_products' ),
+			const edd_products = $( '#edd_products' ),
 				edd_download_files = $( '#edd_download_files' ),
 				edd_download_limit_wrap = $( '#edd_download_limit_wrap' );
 
@@ -215,7 +218,7 @@ var EDD_Download_Configuration = {
 
 	prices: function() {
 		$( document.body ).on( 'change', '#edd_variable_pricing', function( e ) {
-			let checked = $( this ).is( ':checked' ),
+			const checked = $( this ).is( ':checked' ),
 				single = $( '#edd_regular_price_field' ),
 				variable = $( '#edd_variable_price_fields, .edd_repeatable_table .pricing' ),
 				bundleRow = $( '.edd-bundled-product-row, .edd-repeatable-row-standard-fields' );
@@ -281,12 +284,12 @@ var EDD_Download_Configuration = {
 						selectedURL = attachment.url,
 						selectedName = attachment.title.length > 0 ? attachment.title : attachment.filename;
 
-					if ( selectedSize && typeof attachment.sizes[ selectedSize ] !== "undefined" ) {
+					if ( selectedSize && typeof attachment.sizes[ selectedSize ] !== 'undefined' ) {
 						selectedURL = attachment.sizes[ selectedSize ].url;
 					}
 
 					if ( 'image' === attachment.type ) {
-						if ( selectedSize && typeof attachment.sizes[ selectedSize ] !== "undefined" ) {
+						if ( selectedSize && typeof attachment.sizes[ selectedSize ] !== 'undefined' ) {
 							selectedName = selectedName + '-' + attachment.sizes[ selectedSize ].width + 'x' + attachment.sizes[ selectedSize ].height;
 						} else {
 							selectedName = selectedName + '-' + attachment.width + 'x' + attachment.height;
@@ -301,7 +304,7 @@ var EDD_Download_Configuration = {
 						window.formfield.find( '.edd_repeatable_name_field' ).val( selectedName );
 					} else {
 						// Create a new row for all additional attachments
-						let row = window.formfield,
+						const row = window.formfield,
 							clone = EDD_Download_Configuration.clone_repeatable( row );
 
 						clone.find( '.edd_repeatable_attachment_id_field' ).val( attachment.id );
@@ -317,13 +320,32 @@ var EDD_Download_Configuration = {
 			file_frame.open();
 		} );
 
+		// @todo Break this out and remove jQuery.
+		$( '.edd_repeatable_upload_field' )
+			.on( 'focus', function() {
+				const input = $( this );
+
+				input.data( 'originalFile', input.val() );
+			} )
+			.on( 'change', function() {
+				const input = $( this );
+				const originalFile = input.data( 'originalFile' );
+
+				if ( originalFile !== input.val() ) {
+					input
+						.closest( '.edd-repeatable-row-standard-fields' )
+						.find( '.edd_repeatable_attachment_id_field' )
+						.val( 0 );
+				}
+			} );
+
 		var file_frame;
 		window.formfield = '';
 	},
 
 	updatePrices: function() {
 		$( '#edd_price_fields' ).on( 'keyup', '.edd_variable_prices_name', function() {
-			let key = $( this ).parents( '.edd_repeatable_row' ).data( 'key' ),
+			const key = $( this ).parents( '.edd_repeatable_row' ).data( 'key' ),
 				name = $( this ).val(),
 				field_option = $( '.edd_repeatable_condition_field option[value=' + key + ']' );
 
@@ -344,10 +366,10 @@ var EDD_Download_Configuration = {
 $( document.body ).on( 'click', '.toggle-custom-price-option-section', function( e ) {
 	e.preventDefault();
 
-	let toggle = $( this ),
-		show = toggle.html() === edd_vars.show_advanced_settings
-			? true
-			: false;
+	const toggle = $( this ),
+		show = toggle.html() === edd_vars.show_advanced_settings ?
+			true :
+			false;
 
 	if ( show ) {
 		toggle.html( edd_vars.hide_advanced_settings );
@@ -360,9 +382,9 @@ $( document.body ).on( 'click', '.toggle-custom-price-option-section', function(
 
 	let first_input;
 	if ( show ) {
-		first_input = $( ":input:not(input[type=button],input[type=submit],button):visible:first", header.siblings( '.edd-custom-price-option-sections-wrap' ) );
+		first_input = $( ':input:not(input[type=button],input[type=submit],button):visible:first', header.siblings( '.edd-custom-price-option-sections-wrap' ) );
 	} else {
-		first_input = $( ":input:not(input[type=button],input[type=submit],button):visible:first", header.siblings( '.edd-repeatable-row-standard-fields' ) );
+		first_input = $( ':input:not(input[type=button],input[type=submit],button):visible:first', header.siblings( '.edd-repeatable-row-standard-fields' ) );
 	}
 	first_input.focus();
 } );
