@@ -425,6 +425,11 @@ class EDD_Payment_History_Table extends List_Table {
 				break;
 			case 'gateway':
 				$value = edd_get_gateway_admin_label( $order->gateway );
+
+				if ( empty( $value ) ) {
+					$value = '&mdash;';
+				}
+
 				break;
 			default:
 				$value = method_exists( $order, 'get_' . $column_name )
@@ -633,15 +638,25 @@ class EDD_Payment_History_Table extends List_Table {
 	 */
 	public function get_payment_counts() {
 
-		// Get the type to get counts for
-		$type = ! empty( $_GET['order_type'] )
-			? sanitize_key( $_GET['order_type'] )
-			: 'sale';
+		$args = $this->parse_args();
+
+		// Remove some args that aren't used for counts.
+		if ( isset( $args['orderby'] ) ) {
+			unset( $args['orderby'] );
+		}
+
+		if ( isset( $args['order'] ) ) {
+			unset( $args['order'] );
+		}
+
+		if ( isset( $args['per_page'] ) ) {
+			unset( $args['per_page'] );
+		}
+
+		$args['paged'] = false;
 
 		// Get order counts by type
-		$this->counts = edd_get_order_counts( array(
-			'type' => $type
-		) );
+		$this->counts = edd_get_order_counts( $args );
 	}
 
 	/**
@@ -655,11 +670,48 @@ class EDD_Payment_History_Table extends List_Table {
 		$args = array();
 
 		$per_page   = $this->per_page;
+		$args       = $this->parse_args();
+
+		// Drop in our per_page argument.
+		$args['per_page'] = $per_page;
+
+		// No empties
+		$r = wp_parse_args( array_filter( $args ) );
+
+		// Force EDD\Orders\Order objects to be returned
+		$r['output'] = 'orders';
+		$items = edd_get_orders( $r );
+
+		// Get customer IDs and count from payments
+		$customer_ids = array_unique( wp_list_pluck( $items, 'customer_id' ) );
+		$cust_count   = count( $customer_ids );
+
+		// Maybe prime customer objects (if more than number of queries)
+		if ( $cust_count > 1 ) {
+			edd_get_customers( array(
+				'id__in'        => $customer_ids,
+				'no_found_rows' => true,
+				'number'        => $cust_count
+			) );
+		}
+
+		// Return items
+		return $items;
+	}
+
+	/**
+	 * Builds an array of arguments for getting orders for the list table, counts, and pagination.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Array of arguments to use for querying orders.
+	 */
+	private function parse_args () {
 		$status     = $this->get_status();
 		$paged      = isset( $_GET['paged'] )      ? absint( $_GET['paged'] )                   : null;
 		$user       = isset( $_GET['user'] )       ? absint( $_GET['user'] )                    : null;
 		$customer   = isset( $_GET['customer'] )   ? absint( $_GET['customer'] )                : null;
-		$orderby    = isset( $_GET['orderby'] )    ? sanitize_key( $_GET['orderby'] )           : 'id';
+		$orderby    = isset( $_GET['orderby'] )    ? sanitize_key( $_GET['orderby'] )           : 'date_created';
 		$order      = isset( $_GET['order'] )      ? sanitize_key( $_GET['order'] )             : 'DESC';
 		$search     = isset( $_GET['s'] )          ? sanitize_text_field( $_GET['s'] )          : null;
 		$start_date = isset( $_GET['start-date'] ) ? sanitize_text_field( $_GET['start-date'] ) : null;
@@ -687,7 +739,6 @@ class EDD_Payment_History_Table extends List_Table {
 		}
 
 		$args = array(
-			'number'   => $per_page,
 			'paged'    => $paged,
 			'orderby'  => $orderby,
 			'order'    => $order,
@@ -765,28 +816,7 @@ class EDD_Payment_History_Table extends List_Table {
 			$args['region'] = $region;
 		}
 
-		// No empties
-		$r = wp_parse_args( array_filter( $args ) );
-
-		// Force EDD\Orders\Order objects to be returned
-		$r['output'] = 'orders';
-		$items = edd_get_orders( $r );
-
-		// Get customer IDs and count from payments
-		$customer_ids = array_unique( wp_list_pluck( $items, 'customer_id' ) );
-		$cust_count   = count( $customer_ids );
-
-		// Maybe prime customer objects (if more than number of queries)
-		if ( $cust_count > 1 ) {
-			edd_get_customers( array(
-				'id__in'        => $customer_ids,
-				'no_found_rows' => true,
-				'number'        => $cust_count
-			) );
-		}
-
-		// Return items
-		return $items;
+		return $args;
 	}
 
 	/**
