@@ -533,8 +533,8 @@ class EDD_CLI extends WP_CLI_Command {
 				$statuses = array_keys( edd_get_payment_statuses() );
 
 				if ( in_array( $assoc_args['status'], $statuses, true ) ) {
-					$status = ( 'complete' === $assoc_args['status'] )
-						? 'publish'
+					$status = ( 'publish' === $assoc_args['status'] )
+						? 'complete'
 						: $assoc_args['status'];
 				} else {
 					WP_CLI::warning( sprintf(

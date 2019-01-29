@@ -42,7 +42,7 @@ function edd_orders_page_primary_nav( $active_tab = '' ) {
 			) );
 
 			// Remove the section from the tabs so we always end up at the main section
-			$tab_url = remove_query_arg( 'section', $tab_url );
+			$tab_url = remove_query_arg( array( 'section', 'status' ), $tab_url );
 			$active  = $active_tab === $tab_id
 				? ' nav-tab-active'
 				: '';

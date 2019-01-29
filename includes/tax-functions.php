@@ -351,7 +351,7 @@ function edd_get_sales_tax_for_year( $year = null ) {
 	if ( ! empty( $year ) ) {
 		$year = absint( $year );
 
-		$tax = $wpdb->get_var( $wpdb->prepare( "SELECT SUM(tax) FROM {$wpdb->edd_orders} WHERE status IN('publish', 'revoked') AND YEAR(date_created) = %d", $year ) );
+		$tax = $wpdb->get_var( $wpdb->prepare( "SELECT SUM(tax) FROM {$wpdb->edd_orders} WHERE status IN('complete', 'revoked') AND YEAR(date_created) = %d", $year ) );
 	}
 
 	if ( ! $tax || is_null( $tax ) ) {

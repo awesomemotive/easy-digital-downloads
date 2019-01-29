@@ -1,7 +1,7 @@
 /**
  * Internal dependencies.
  */
-import { chosenVars } from 'utils/chosen.js';
+import { getChosenVars } from 'utils/chosen.js';
 
 jQuery( document ).ready( function( $ ) {
 	$( '.download_page_edd-payment-history table.orders .row-actions .delete a, a.edd-delete-payment' ).on( 'click', function() {
@@ -47,7 +47,7 @@ const EDD_Edit_Payment = {
 	edit_address: function() {
 		// Update base state field based on selected base country
 		$( 'select[name="edd-payment-address[0][country]"]' ).change( function() {
-			let select = $( this ),
+			const select = $( this ),
 				data = {
 					action: 'edd_get_shop_states',
 					country: select.val(),
@@ -65,7 +65,10 @@ const EDD_Edit_Payment = {
 					state_wrapper.replaceWith( '<input type="text" name="edd-payment-address[0][region]" value="" class="edd-edit-toggles medium-text"/>' );
 				} else {
 					state_wrapper.replaceWith( response );
-					$( '#edd-order-address-state-wrap select' ).chosen( chosenVars );
+					$( '#edd-order-address-state-wrap select' ).each( function() {
+						const el = $( this );
+						el.chosen( getChosenVars( el ) );
+					} );
 				}
 			} );
 
@@ -84,7 +87,7 @@ const EDD_Edit_Payment = {
 			}
 
 			if ( confirm( edd_vars.delete_payment_download ) ) {
-				let key = $( this ).data( 'key' ),
+				const key = $( this ).data( 'key' ),
 					download_id = $( 'input[name="edd-payment-details-downloads[' + key + '][id]"]' ).val(),
 					price_id = $( 'input[name="edd-payment-details-downloads[' + key + '][price_id]"]' ).val(),
 					quantity = $( 'input[name="edd-payment-details-downloads[' + key + '][quantity]"]' ).val(),
@@ -129,7 +132,7 @@ const EDD_Edit_Payment = {
 		$( '#edd-customer-details' ).on( 'click', '.edd-payment-change-customer, .edd-payment-change-customer-cancel', function( e ) {
 			e.preventDefault();
 
-			let change_customer = $( this ).hasClass( 'edd-payment-change-customer' ),
+			const change_customer = $( this ).hasClass( 'edd-payment-change-customer' ),
 				cancel = $( this ).hasClass( 'edd-payment-change-customer-cancel' );
 
 			if ( change_customer ) {
@@ -162,7 +165,7 @@ const EDD_Edit_Payment = {
 
 			var new_customer = $( '#edd-new-customer' );
 
-			if ( $( '.new-customer' ).is( ":visible" ) ) {
+			if ( $( '.new-customer' ).is( ':visible' ) ) {
 				new_customer.val( 1 );
 			} else {
 				new_customer.val( 0 );
@@ -175,7 +178,7 @@ const EDD_Edit_Payment = {
 		$( '.edd-edit-purchase-element' ).on( 'click', '#edd-order-add-download', function( e ) {
 			e.preventDefault();
 
-			let order_download_select = $( '#edd_order_download_select' ),
+			const order_download_select = $( '#edd_order_download_select' ),
 				order_download_quantity = $( '#edd-order-download-quantity' ),
 				order_download_price = $( '#edd-order-download-price' ),
 				order_download_tax = $( '#edd-order-download-tax' ),
@@ -218,7 +221,7 @@ const EDD_Edit_Payment = {
 				download_title = download_title + ' - ' + price_name;
 			}
 
-			let count = $( '#edd-order-items div.row' ).length,
+			const count = $( '#edd-order-items div.row' ).length,
 				clone = $( '#edd-order-items div.row:last' ).clone();
 
 			clone.find( '.download span' ).html( '<a href="post.php?post=' + download_id + '&action=edit"></a>' );
@@ -324,7 +327,7 @@ const EDD_Edit_Payment = {
 	variable_prices_check: function() {
 		// On Download Select, Check if Variable Prices Exist
 		$( '.edd-edit-purchase-element' ).on( 'change', 'select#edd_order_download_select', function() {
-			let select = $( this ),
+			const select = $( this ),
 				download_id = select.val();
 
 			if ( parseInt( download_id ) > 0 ) {
@@ -334,7 +337,7 @@ const EDD_Edit_Payment = {
 				};
 
 				$.ajax( {
-					type: "POST",
+					type: 'POST',
 					data: postData,
 					url: ajaxurl,
 					success: function( response ) {
@@ -359,14 +362,19 @@ const EDD_Edit_Payment = {
 		} );
 
 		$( document.body ).on( 'change', '.edd-order-resend-receipt-email', function() {
-			const href = $( '#edd-select-receipt-email' ).prop( 'href' ) + '&email=' + $( this ).val();
+			const selected = $('input:radio.edd-order-resend-receipt-email:checked').val();
 
+			$( '#edd-select-receipt-email').data( 'email', selected );
+		} );
+
+		$( document.body).on( 'click', '#edd-select-receipt-email', function () {
 			if ( confirm( edd_vars.resend_receipt ) ) {
+				const href = $( this ).prop( 'href' ) + '&email=' + $( this ).data( 'email' );
 				window.location = href;
 			}
 		} );
 
-		$( document.body ).on( 'click', '#edd-resend-receipt', function( e ) {
+		$( document.body ).on( 'click', '#edd-resend-receipt', function() {
 			return confirm( edd_vars.resend_receipt );
 		} );
 	},
@@ -375,7 +383,7 @@ const EDD_Edit_Payment = {
 		$( document.body ).on( 'click', '.edd-copy-download-link', function( e ) {
 			e.preventDefault();
 
-			let link = $( this ),
+			const link = $( this ),
 				postData = {
 					action: 'edd_get_file_download_link',
 					payment_id: $( 'input[name="edd_payment_id"]' ).val(),
@@ -384,14 +392,14 @@ const EDD_Edit_Payment = {
 				};
 
 			$.ajax( {
-				type: "POST",
+				type: 'POST',
 				data: postData,
 				url: ajaxurl,
 				success: function( link ) {
-					$( "#edd-download-link" ).dialog( {
+					$( '#edd-download-link' ).dialog( {
 						width: 400,
 					} ).html( '<textarea rows="10" cols="40" id="edd-download-link-textarea">' + link + '</textarea>' );
-					$( "#edd-download-link-textarea" ).focus().select();
+					$( '#edd-download-link-textarea' ).focus().select();
 					return false;
 				},
 			} ).fail( function( data ) {

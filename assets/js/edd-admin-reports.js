@@ -90,29 +90,26 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 
+ // Access existing global `edd` variable, or create a new object.
 
+window.edd = window.edd || {};
+/**
+ * Render a chart based on config.
+ *
+ * This function is attached to the `edd` property attached to the `window`.
+ *
+ * @param {Object} config Chart config.
+ */
 
-(function () {
-  if (_.isUndefined(window.eddAdminReportsCharts)) {
-    return;
-  } // Set ChartJS defaults.
+window.edd.renderChart = function (config) {
+  var isPie = Object(_utils_js__WEBPACK_IMPORTED_MODULE_2__["isPieChart"])(config);
 
-
-  Chart.defaults.global.pointHitDetectionRadius = 5;
-  /**
-   * Render the registered charts.
-   */
-
-  _.each(window.eddAdminReportsCharts.charts, function (config) {
-    var isPie = Object(_utils_js__WEBPACK_IMPORTED_MODULE_2__["isPieChart"])(config);
-
-    if (Object(_utils_js__WEBPACK_IMPORTED_MODULE_2__["isPieChart"])(config)) {
-      Object(_pie_js__WEBPACK_IMPORTED_MODULE_1__["render"])(config);
-    } else {
-      Object(_line_js__WEBPACK_IMPORTED_MODULE_0__["render"])(config);
-    }
-  });
-})();
+  if (Object(_utils_js__WEBPACK_IMPORTED_MODULE_2__["isPieChart"])(config)) {
+    Object(_pie_js__WEBPACK_IMPORTED_MODULE_1__["render"])(config);
+  } else {
+    Object(_line_js__WEBPACK_IMPORTED_MODULE_0__["render"])(config);
+  }
+};
 
 /***/ }),
 
@@ -158,7 +155,8 @@ var render = function render(config) {
   var dates = config.dates,
       options = config.options,
       data = config.data,
-      target = config.target; // Convert dataset x-axis values to moment() objects.
+      target = config.target;
+  Chart.defaults.global.pointHitDetectionRadius = 5; // Convert dataset x-axis values to moment() objects.
 
   _.each(data.datasets, function (dataset) {
     _.each(dataset.data, function (pair, index) {
@@ -244,7 +242,8 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 var render = function render(config) {
-  var target = config.target; // Config tooltips.
+  var target = config.target;
+  Chart.defaults.global.pointHitDetectionRadius = 5; // Config tooltips.
 
   config.options.tooltips = tooltipConfig(config); // Render
 

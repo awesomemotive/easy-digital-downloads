@@ -36,7 +36,7 @@ const EDD_Reports = {
 	date_options: function() {
 		// Show hide extended date options
 		$( 'select.edd-graphs-date-options' ).on( 'change', function( event ) {
-			let	select = $( this ),
+			const	select = $( this ),
 				date_range_options = select.parent().siblings( '.edd-date-range-options' );
 
 			if ( 'other' === select.val() ) {
@@ -50,7 +50,7 @@ const EDD_Reports = {
 	customers_export: function() {
 		// Show / hide Download option when exporting customers
 		$( '#edd_customer_export_download' ).change( function() {
-			let $this = $( this ),
+			const $this = $( this ),
 				download_id = $( 'option:selected', $this ).val(),
 				customer_export_option = $( '#edd_customer_export_option' );
 
@@ -82,7 +82,7 @@ const EDD_Reports = {
 
 	filters: function() {
 		$( '.edd_countries_filter' ).on( 'change', function() {
-			let select = $( this ),
+			const select = $( this ),
 				data = {
 					action: 'edd_get_shop_states',
 					country: select.val(),

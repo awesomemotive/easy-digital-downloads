@@ -871,7 +871,7 @@ function edd_process_signed_download_url( $args ) {
 	$args['key']         = edd_get_payment_meta( $order_parts[0], '_edd_payment_purchase_key', true );
 
 	$payment = new EDD_Payment( $args['payment'] );
-	$args['has_access']  = 'publish' === $payment->status ? true : false;
+	$args['has_access']  = 'complete' === $payment->status ? true : false;
 
 	return $args;
 }

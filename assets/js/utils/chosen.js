@@ -9,3 +9,21 @@ export const chosenVars = {
 	placeholder_text_multiple: edd_vars.one_or_more_option,
 	no_results_text: edd_vars.no_results_text,
 };
+
+/**
+ * Determine the variables used to initialie Chosen on an element.
+ *
+ * @param {Object} el select element.
+ * @return {Object} Variables for Chosen.
+ */
+export const getChosenVars = ( el ) => {
+	let inputVars = chosenVars;
+
+	// Ensure <select data-search-type="download"> or similar can use search always.
+	// These types of fields start with no options and are updated via AJAX.
+	if ( el.data( 'search-type' ) ) {
+		delete inputVars.disable_search_threshold;
+	}
+
+	return inputVars;
+}
