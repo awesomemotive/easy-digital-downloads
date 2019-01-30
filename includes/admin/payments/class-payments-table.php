@@ -660,13 +660,29 @@ class EDD_Payment_History_Table extends List_Table {
 	}
 
 	/**
-	 * Retrieve all the data for all the orders.
+	 * Retrieves all the data for all the orders.
 	 *
 	 * @since 1.4
+	 * @deprecated 3.0 Use get_data()
 	 *
 	 * @return array $payment_data Array of all the data for the orders.
 	 */
 	public function payments_data() {
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Payment_History_Table::get_data()' );
+
+		return $this->get_data();
+	}
+
+	/**
+	 * Retrieves all of the orders data based on current filters.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Orders table data.
+	 */
+	public function get_data() {
+		$args = array();
+
 		$per_page   = $this->per_page;
 		$args       = $this->parse_args();
 
@@ -829,7 +845,7 @@ class EDD_Payment_History_Table extends List_Table {
 		$columns     = $this->get_columns();
 		$sortable    = $this->get_sortable_columns();
 		$status      = $this->get_status( 'total' );
-		$this->items = $this->payments_data();
+		$this->items = $this->get_data();
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 

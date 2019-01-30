@@ -262,13 +262,27 @@ class EDD_Customer_Reports_Table extends List_Table {
 	}
 
 	/**
-	 * Build all the reports data
+	 * Builds and retrieves all the reports data.
 	 *
 	 * @since 1.5
+	 * @deprecated 3.0 Use get_data()
 	 *
-	 * @return array $reports_data All the data for customer reports
+	 * @return array All the data for customer reports.
 	 */
 	public function reports_data() {
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Customer_Reports_Table::get_data()' );
+
+		return $this->get_data();
+	}
+
+	/**
+	 * Retrieves all of the items to display, given the current filters.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array $data All the row data.
+	 */
+	public function get_data() {
 		$data    = array();
 		$paged   = $this->get_paged();
 		$offset  = $this->per_page * ( $paged - 1 );
@@ -340,7 +354,7 @@ class EDD_Customer_Reports_Table extends List_Table {
 			$this->get_sortable_columns()
 		);
 
-		$this->items = $this->reports_data();
+		$this->items = $this->get_data();
 
 		$status = $this->get_status( 'total' );
 
