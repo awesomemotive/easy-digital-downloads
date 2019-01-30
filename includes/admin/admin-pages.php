@@ -228,7 +228,7 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 		case 'settings':
 			switch ( $passed_view ) {
 				case 'general':
-					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-settings' === $page && ( 'genera' === $tab || false === $tab ) ) {
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-settings' === $page && ( 'general' === $tab || false === $tab ) ) {
 						$found = true;
 					}
 					break;
