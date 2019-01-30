@@ -346,13 +346,27 @@ class EDD_Discount_Codes_Table extends List_Table {
 	}
 
 	/**
-	 * Retrieve all the data for all the discount codes.
+	 * Retrieves all the data for all the discount codes.
 	 *
 	 * @since 1.4
+	 * @deprecated 3.0 Use get_data()
 	 *
 	 * @return array Discount codes.
 	 */
 	public function discount_codes_data() {
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Discount_Codes_Table::get_data()' );
+
+		return $this->get_data();
+	}
+
+	/**
+	 * Retrieves all of the table data for the discount codes.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Discount codes table data.
+	 */
+	public function get_data() {
 		return edd_get_discounts( array(
 			'number'  => $this->per_page,
 			'paged'   => $this->get_paged(),
@@ -374,7 +388,7 @@ class EDD_Discount_Codes_Table extends List_Table {
 		$sortable = $this->get_sortable_columns();
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-		$this->items           = $this->discount_codes_data();
+		$this->items           = $this->get_data();
 
 		$status = $this->get_status( 'total' );
 

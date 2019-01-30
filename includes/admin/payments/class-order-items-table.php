@@ -392,7 +392,7 @@ class Order_Items_Table extends List_Table {
 	 * @since 3.0
 	 * @return array $order_items_data Array of all the data for the order_item codes
 	 */
-	public function order_items_data() {
+	public function get_data() {
 
 		// Return if we are adding a new order.
 		if ( edd_is_add_order_page() ) {
@@ -431,7 +431,7 @@ class Order_Items_Table extends List_Table {
 			$this->get_sortable_columns(),
 		);
 
-		$this->items = $this->order_items_data();
+		$this->items = $this->get_data();
 
 		$status = $this->get_status( 'total' );
 

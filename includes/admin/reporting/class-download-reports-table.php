@@ -220,12 +220,27 @@ class EDD_Download_Reports_Table extends List_Table {
 	}
 
 	/**
-	 * Build all the reports data
+	 * Build and retrieves all of the download reports data.
 	 *
 	 * @since 1.5
-	 * @return array $reports_data All the data for customer reports
+	 * @deprecated 3.0 Use get_data()
+	 *
+	 * @return array All the data for customer reports.
 	 */
 	public function reports_data() {
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Download_Reports_Table::get_data()' );
+
+		return $this->get_data();
+	}
+
+	/**
+	 * Retrieves all of the download reports data.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Download reports table data.
+	 */
+	public function get_data() {
 		$reports_data = array();
 
 		$downloads = $this->products->posts;
@@ -265,7 +280,7 @@ class EDD_Download_Reports_Table extends List_Table {
 		);
 
 		$total_items = $this->get_total_downloads();
-		$this->items = $this->reports_data();
+		$this->items = $this->get_data();
 
 		$this->set_pagination_args( array(
 			'total_items' => $total_items,
