@@ -232,11 +232,7 @@ class Order_Items_Table extends List_Table {
 				$row_actions['copy'] = '<span class="edd-copy-download-link-wrapper"><a href="" class="edd-copy-download-link" data-download-id="' . esc_attr( $order_item->product_id ) . '" data-price-id="' . esc_attr( $order_item->price_id ) . '">' . $copy_text . '</a>';
 			}
 
-			$row_actions['refund'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-					'edd-action' => 'handle_order_item_change',
-					'status'     => 'refunded',
-					'order_item' => $order_item->id,
-				), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Refund', 'easy-digital-downloads' ) . '</a>';
+			$row_actions['refund'] = '<a class="edd-refund-order" href="">' . __( 'Refund', 'easy-digital-downloads' ) . '</a>';
 
 			// Inactive, so add "activate" action
 		} elseif ( 'refunded' === $status ) {

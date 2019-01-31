@@ -131,6 +131,7 @@ var EDD_Edit_Payment = {
     this.variable_prices_check();
     this.resend_receipt();
     this.copy_download_link();
+    this.refund_order();
   },
   edit_address: function edit_address() {
     // Update base state field based on selected base country
@@ -472,6 +473,47 @@ var EDD_Edit_Payment = {
           console.log(data);
         }
       });
+    });
+  },
+  refund_order: function refund_order() {
+    $(document.body).on('click', '.edd-refund-order', function (e) {
+      e.preventDefault();
+      var link = $(this),
+          postData = {
+            action: 'edd_generate_refund_form',
+            order_id: $('input[name="edd_payment_id"]').val(),
+          };
+
+      console.log(postData);
+
+      $.ajax({
+        type   : 'POST',
+        data   : postData,
+        url    : ajaxurl,
+        success: function success(data) {
+          let modal_content = '';
+          if ( data.success ) {
+            modal_content = data.html;
+          } else {
+            modal_content = data.message;
+          }
+          $('#edd-refund-order-dialog').dialog({
+            width: 800,
+            modal: true,
+            resizable: false,
+            draggable: false
+          }).html(modal_content);
+          return false;
+        }
+      }).fail(function (data) {
+        $('#edd-refund-order-dialog').dialog({
+          width: 800,
+          modal: true,
+          resizable: false,
+          draggable: false
+        }).html(data.message);
+        return false;
+      })
     });
   }
 };
