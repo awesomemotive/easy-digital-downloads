@@ -113,3 +113,5 @@ if ( empty( $order ) ) {
 </div><!-- /.wrap -->
 
 <div id="edd-download-link" title="<?php _e( 'Download Links', 'easy-digital-downloads' ); ?>"></div>
+<div id="edd-refund-order-dialog" title="<?php _e( 'Submit Refund', 'easy-digital-downloads' ); ?>"></div>
+
