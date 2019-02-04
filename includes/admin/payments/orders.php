@@ -941,6 +941,47 @@ function edd_order_details_amounts( $order ) {
 }
 
 /**
+ * Output the order details refunds box
+ *
+ * @since 3.0
+ *
+ * @param object $order
+ */
+function edd_order_details_refunds( $order ) {
+	$refunds_db = new \EDD\Database\Queries\Order();
+
+	$refunds = $refunds_db->query( array( 'type' => 'refund', 'parent' => $order->id ) );
+	if ( empty( $refunds ) ) {
+		return;
+	}
+	?>
+
+	<div id="edd-order-refunds" class="postbox edd-order-data">
+		<h3 class="hndle"><span><?php esc_html_e( 'Related Refunds', 'easy-digital-downloads' ); ?></span></h3>
+
+		<div class="inside">
+			<?php do_action( 'edd_view_order_details_refunds_before', $order->id ); ?>
+			<ul id="edd-order-refunds-list">
+			<?php foreach( $refunds as $refund ) : ?>
+				<?php $order_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $refund->id ); ?>
+				<li>
+					<span class="howto"><?php echo date_i18n( get_option( 'date_format' ), strtotime( $refund->completed_date ) ); ?></span>
+					<a href="<?php echo esc_url( $order_url ); ?>">
+						<?php echo '#' . $refund->number ?>
+					</a>&nbsp;&ndash;&nbsp;
+					<span><?php echo edd_currency_filter( edd_format_amount( $refund->total ) ); ?>&nbsp;&ndash;&nbsp;</span>
+					<span><?php echo $refund->status; ?></span>
+				</li>
+			<?php endforeach; ?>
+			</ul>
+			<?php do_action( 'edd_view_order_details_refunds_after', $order->id ); ?>
+		</div>
+	</div>
+
+	<?php
+}
+
+/**
  * Check if we are on the `Add New Order` page, or editing an existing one.
  *
  * @since 3.0

@@ -531,7 +531,7 @@ function edd_ajax_generate_refund_form() {
 	// Output buffer the form before we include it in the JSON response.
 	ob_start();
 	?>
-	<table>
+	<table id="edd-process-refund-form">
 	<?php
 	// Load list table if not already loaded
 	if ( ! class_exists( '\\EDD\\Admin\\Refund_Items_Table' ) ) {
@@ -543,6 +543,10 @@ function edd_ajax_generate_refund_form() {
 	$refund_items->display();
 	?>
 	</table>
+	<div id="edd-submit-refund-status" style="display: none;">
+		<span class="edd-submit-refund-message"></span>
+		 <a class="edd-submit-refund-url" href=""><?php _e( 'View Refund', 'easy-digital-downloads' ); ?></a>
+	</div>
 	<?php
 	$html = trim( ob_get_clean() );
 
@@ -555,6 +559,30 @@ function edd_ajax_generate_refund_form() {
 
 }
 add_action( 'wp_ajax_edd_generate_refund_form', 'edd_ajax_generate_refund_form' );
+
+function edd_ajax_process_refund_form() {
+	$order_id = absint( $_POST['order_id'] );
+	$item_ids = array_map( 'absint', $_POST['item_ids'] );
+	$refund_id = edd_refund_order( $order_id, 'complete', $item_ids );
+
+	if ( ! empty( $refund_id ) ) {
+		$return = array(
+			'success'    => true,
+			'refund_id'  => $refund_id,
+			'message'    => sprintf( __( 'Refund successfully processed.', 'easy-digital-downloads' ) ),
+			'refund_url' => admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $refund_id ),
+		);
+		wp_send_json( $return, 200 );
+	} else {
+		$return = array(
+			'success'    => false,
+			'message'    => sprintf( __( 'Unable to process refund.', 'easy-digital-downloads' ) ),
+		);
+
+		wp_send_json( $return, 200 );
+	}
+}
+add_action( 'wp_ajax_edd_process_refund_form', 'edd_ajax_process_refund_form' );
 
 /**
  * Process Orders list table bulk actions. This is necessary because we need to
