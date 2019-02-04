@@ -1426,6 +1426,12 @@ input[class*="edd-price-field"] {
 	font-style: italic;
 	padding: 5px;
 }
+#edd-refund-order-dialog #edd-refund-submit-subtotal td {
+	border-top: 2px solid #9c9c9c;
+}
+#edd-refund-order-dialog .edd-refund-submit-line-total td:first-child {
+	text-align: right;
+}
 #edd-order-logs ul {
 	margin: 0;
 	padding: 0;
