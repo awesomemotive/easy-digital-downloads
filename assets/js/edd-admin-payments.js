@@ -484,7 +484,6 @@ var EDD_Edit_Payment = {
         action: 'edd_generate_refund_form',
         order_id: $('input[name="edd_payment_id"]').val()
       };
-      console.log(postData);
       $.ajax({
         type: 'POST',
         data: postData,
@@ -580,6 +579,54 @@ var EDD_Edit_Payment = {
           $(this).prop('checked', false).trigger('change');
         });
       }
+    }); // Process the refund form after the button is clicked.
+
+    $(document.body).on('click', '#edd-submit-refund-submit', function (e) {
+      $(this).addClass('disabled');
+      $('#edd-submit-refund-status').hide();
+      var item_ids = [],
+          refund_subtotal = $('#edd-refund-submit-subtotal-amount').data('refund-subtotal'),
+          refund_tax = $('#edd-refund-submit-tax-amount').data('refund-tax'),
+          refund_total = $('#edd-refund-submit-total-amount').data('refund-total'); // Get the Order Item IDs we're going to be refunding.
+
+      var item_checkboxes = $('#edd-refund-order-dialog tbody .check-column input[type="checkbox"]');
+      item_checkboxes.each(function () {
+        if ($(this).is(':checked')) {
+          var item_id = $(this).parent().parent().data('order-item');
+          item_ids.push(item_id);
+        }
+      });
+      e.preventDefault();
+      var postData = {
+        action: 'edd_process_refund_form',
+        item_ids: item_ids,
+        refund_subtotal: refund_subtotal,
+        refund_tax: refund_tax,
+        refund_total: refund_total,
+        order_id: $('input[name="edd_payment_id"]').val()
+      };
+      $.ajax({
+        type: 'POST',
+        data: postData,
+        url: ajaxurl,
+        success: function success(data) {
+          if (data.success) {
+            $('#edd-refund-order-dialog table').hide();
+            $('.edd-submit-refund-message').text(data.message);
+            $('.edd-submit-refund-url').attr('href', data.refund_url);
+            $('.edd-submit-refund-url').show();
+            $('#edd-submit-refund-status').show();
+          } else {
+            $('.edd-submit-refund-message').text(data.message);
+            $('.edd-submit-refund-url').hide();
+            $('#edd-submit-refund-status').show();
+            $('#edd-submit-refund-submit').removeClass('disabled');
+          }
+        }
+      }).fail(function (data) {
+        $('#edd-submit-refund-submit').removeClass('disabled');
+        return false;
+      });
     });
   }
 };

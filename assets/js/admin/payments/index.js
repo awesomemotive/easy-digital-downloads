@@ -422,8 +422,6 @@ const EDD_Edit_Payment = {
 					order_id: $('input[name="edd_payment_id"]').val(),
 				};
 
-			console.log(postData);
-
 			$.ajax({
 				type   : 'POST',
 				data   : postData,
@@ -474,16 +472,16 @@ const EDD_Edit_Payment = {
 			}
 
 			let new_subtotal = 0,
-				new_tax = 0,
-				new_total = 0;
+				new_tax      = 0,
+				new_total    = 0;
 
 			$('#edd-refund-order-dialog tbody .check-column input[type="checkbox"]:checked').each( function() {
 				let item_parent = $(this).parent().parent();
 
 				// Values for this item.
-				let item_amount = parseFloat( item_parent.find('span[data-amount]').data('amount') ),
-					item_tax    = parseFloat( item_parent.find('span[data-tax]').data('tax') ),
-					item_total  = parseFloat( item_parent.find('span[data-total]').data('total') ),
+				let item_amount   = parseFloat( item_parent.find('span[data-amount]').data('amount') ),
+					item_tax      = parseFloat( item_parent.find('span[data-tax]').data('tax') ),
+					item_total    = parseFloat( item_parent.find('span[data-total]').data('total') ),
 					item_quantity = parseInt( item_parent.find('.column-quantity').text() );
 
 				new_subtotal += item_amount;
@@ -492,8 +490,8 @@ const EDD_Edit_Payment = {
 			});
 
 			new_subtotal = parseFloat(new_subtotal).toFixed( edd_vars.currency_decimals );
-			new_tax = parseFloat(new_tax).toFixed( edd_vars.currency_decimals );
-			new_total = parseFloat(new_total).toFixed( edd_vars.currency_decimals );
+			new_tax      = parseFloat(new_tax).toFixed( edd_vars.currency_decimals );
+			new_total    = parseFloat(new_total).toFixed( edd_vars.currency_decimals );
 
 			$('#edd-refund-submit-subtotal-amount').data('refund-subtotal', new_subtotal ).text( new_subtotal );
 			$('#edd-refund-submit-tax-amount').data('refund-tax', new_tax ).text( new_tax );
@@ -518,6 +516,59 @@ const EDD_Edit_Payment = {
 					$(this).prop('checked', false).trigger('change');
 				});
 			}
+		});
+
+		// Process the refund form after the button is clicked.
+		$(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
+			$(this).addClass('disabled');
+			$('#edd-submit-refund-status').hide();
+			let item_ids = [],
+				refund_subtotal = $('#edd-refund-submit-subtotal-amount').data('refund-subtotal'),
+				refund_tax      = $('#edd-refund-submit-tax-amount').data('refund-tax'),
+				refund_total    = $('#edd-refund-submit-total-amount').data('refund-total');
+
+			// Get the Order Item IDs we're going to be refunding.
+			const item_checkboxes = $('#edd-refund-order-dialog tbody .check-column input[type="checkbox"]');
+			item_checkboxes.each(function() {
+				if ( $(this).is(':checked') ) {
+					let item_id = $(this).parent().parent().data('order-item');
+					item_ids.push(item_id);
+				}
+			});
+
+			e.preventDefault();
+
+			var postData = {
+					action  : 'edd_process_refund_form',
+					item_ids : item_ids,
+					refund_subtotal: refund_subtotal,
+					refund_tax : refund_tax,
+					refund_total : refund_total,
+					order_id: $('input[name="edd_payment_id"]').val(),
+				};
+
+			$.ajax({
+				type   : 'POST',
+				data   : postData,
+				url    : ajaxurl,
+				success: function success(data) {
+					if ( data.success ) {
+						$('#edd-refund-order-dialog table').hide();
+						$('.edd-submit-refund-message').text(data.message);
+						$('.edd-submit-refund-url').attr('href', data.refund_url);
+						$('.edd-submit-refund-url').show();
+						$('#edd-submit-refund-status').show();
+					} else {
+						$('.edd-submit-refund-message').text(data.message);
+						$('.edd-submit-refund-url').hide();
+						$('#edd-submit-refund-status').show();
+						$('#edd-submit-refund-submit').removeClass('disabled');
+					}
+				}
+			}).fail(function (data) {
+				$('#edd-submit-refund-submit').removeClass('disabled');
+				return false;
+			});
 		});
 	}
 

@@ -1407,6 +1407,9 @@ input[class*="edd-price-field"] {
 .edd-admin-box .right {
 	float: right;
 }
+#edd-order-refunds-list {
+	padding-left: 25px;
+}
 #poststuff .edd-order-data .inside {
 	margin: 0;
 	padding: 0;
