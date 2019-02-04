@@ -42,6 +42,7 @@ const EDD_Edit_Payment = {
 		this.variable_prices_check();
 		this.resend_receipt();
 		this.copy_download_link();
+		this.refund_order();
 	},
 
 	edit_address: function() {
@@ -409,6 +410,117 @@ const EDD_Edit_Payment = {
 			} );
 		} );
 	},
+
+	refund_order: function refund_order() {
+
+		// Loads the modal when the refund button is clicked.
+		$(document.body).on('click', '.edd-refund-order', function (e) {
+			e.preventDefault();
+			var link     = $(this),
+				postData = {
+					action  : 'edd_generate_refund_form',
+					order_id: $('input[name="edd_payment_id"]').val(),
+				};
+
+			console.log(postData);
+
+			$.ajax({
+				type   : 'POST',
+				data   : postData,
+				url    : ajaxurl,
+				success: function success(data) {
+					let modal_content = '';
+					if (data.success) {
+						modal_content = data.html;
+					} else {
+						modal_content = data.message;
+					}
+
+					$('#edd-refund-order-dialog').dialog({
+						position: { my: 'top center', at: 'center center-25%' },
+						width    : '75%',
+						modal    : true,
+						resizable: false,
+						draggable: false,
+						open: function( event, ui ) {
+							$(this).html( modal_content );
+						},
+						close: function( event, ui ) {
+							$(this).html( '' );
+						}
+					});
+					return false;
+				}
+			}).fail(function (data) {
+				$('#edd-refund-order-dialog').dialog({
+					position: { my: 'top center', at: 'center center-25%' },
+					width    : '75%',
+					modal    : true,
+					resizable: false,
+					draggable: false
+				}).html(data.message);
+				return false;
+			});
+		});
+
+		// Handles including items in the refund.
+		$(document.body).on( 'change', '#edd-refund-order-dialog tbody .check-column input[type="checkbox"]', function () {
+			let parent = $(this).parent().parent();
+
+			if ( $(this).is(':checked') ) {
+				parent.addClass('refunded');
+			} else {
+				parent.removeClass('refunded');
+			}
+
+			let new_subtotal = 0,
+				new_tax = 0,
+				new_total = 0;
+
+			$('#edd-refund-order-dialog tbody .check-column input[type="checkbox"]:checked').each( function() {
+				let item_parent = $(this).parent().parent();
+
+				// Values for this item.
+				let item_amount = parseFloat( item_parent.find('span[data-amount]').data('amount') ),
+					item_tax    = parseFloat( item_parent.find('span[data-tax]').data('tax') ),
+					item_total  = parseFloat( item_parent.find('span[data-total]').data('total') ),
+					item_quantity = parseInt( item_parent.find('.column-quantity').text() );
+
+				new_subtotal += item_amount;
+				new_tax      += item_tax;
+				new_total    += item_total;
+			});
+
+			new_subtotal = parseFloat(new_subtotal).toFixed( edd_vars.currency_decimals );
+			new_tax = parseFloat(new_tax).toFixed( edd_vars.currency_decimals );
+			new_total = parseFloat(new_total).toFixed( edd_vars.currency_decimals );
+
+			$('#edd-refund-submit-subtotal-amount').data('refund-subtotal', new_subtotal ).text( new_subtotal );
+			$('#edd-refund-submit-tax-amount').data('refund-tax', new_tax ).text( new_tax );
+			$('#edd-refund-submit-total-amount').data('refund-total', new_total ).text( new_total );
+
+			if ( new_total > 0 ) {
+				$('#edd-submit-refund-submit').removeClass('disabled');
+			} else {
+				$('#edd-submit-refund-submit').addClass('disabled');
+			}
+		});
+
+		// Listen for the bulk action checkbox, since WP doesn't trigger a change on sub-items.
+		$(document.body).on('change', '#edd-refund-order-dialog #cb-select-all-1', function() {
+			let item_checkboxes = $('#edd-refund-order-dialog tbody .check-column input[type="checkbox"]');
+			if ( $(this).is(':checked')) {
+				item_checkboxes.each(function() {
+					$(this).prop('checked', true).trigger('change');
+				});
+			} else {
+				item_checkboxes.each(function() {
+					$(this).prop('checked', false).trigger('change');
+				});
+			}
+		});
+	}
+
 };
 
 jQuery( document ).ready( function( $ ) {

@@ -501,7 +501,7 @@ function edd_ajax_generate_refund_form() {
 	}
 
 	$order = edd_get_order( $order_id );
-	if ( false === $order ) {
+	if ( empty( $order ) ) {
 		$return = array(
 			'success' => false,
 			'message' => __( 'Invalid order', 'easy-digital-downloads' ),
@@ -530,9 +530,20 @@ function edd_ajax_generate_refund_form() {
 
 	// Output buffer the form before we include it in the JSON response.
 	ob_start();
+	?>
+	<table>
+	<?php
+	// Load list table if not already loaded
+	if ( ! class_exists( '\\EDD\\Admin\\Refund_Items_Table' ) ) {
+		require_once 'class-refund-items-table.php';
+	}
 
-	var_dump(edd_get_order_items(array( 'order_id' => $order_id)));
-
+	$refund_items = new EDD\Admin\Refund_Items_Table();
+	$refund_items->prepare_items();
+	$refund_items->display();
+	?>
+	</table>
+	<?php
 	$html = trim( ob_get_clean() );
 
 	$return = array(
