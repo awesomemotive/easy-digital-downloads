@@ -536,12 +536,6 @@ class EDD_Payment_History_Table extends List_Table {
 			'view' => '<a href="' . esc_url( $view_url ) . '">' . esc_html__( 'Edit', 'easy-digital-downloads' ) . '</a>',
 		);
 
-		// Refund
-		if ( 'complete' === $order->status ) {
-			$refund_url            = add_query_arg( array(), admin_url( 'edit.php' ) );
-			$row_actions['refund'] = '<a href="' . esc_url( $refund_url ) . '">' . esc_html__( 'Refund', 'easy-digital-downloads' ) . '</a>';
-		}
-
 		// Keep Delete at the end
 		$delete_url = wp_nonce_url( add_query_arg( array(
 			'edd-action'  => 'delete_payment',
