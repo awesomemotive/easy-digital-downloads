@@ -511,6 +511,7 @@ var EDD_Edit_Payment = {
             },
             close: function close(event, ui) {
               $(this).html('');
+              location.reload();
             }
           });
           return false;
