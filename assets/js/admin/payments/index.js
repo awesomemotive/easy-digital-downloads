@@ -520,6 +520,7 @@ const EDD_Edit_Payment = {
 
 		// Process the refund form after the button is clicked.
 		$(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
+			$('.edd-submit-refund-message').removeClass('success').removeClass('fail');
 			$(this).addClass('disabled');
 			$('#edd-submit-refund-status').hide();
 			let item_ids = [],
@@ -552,15 +553,21 @@ const EDD_Edit_Payment = {
 				data   : postData,
 				url    : ajaxurl,
 				success: function success(data) {
+					const message_target = $('.edd-submit-refund-message'),
+						url_target     = $('.edd-submit-refund-url');
+
 					if ( data.success ) {
 						$('#edd-refund-order-dialog table').hide();
-						$('.edd-submit-refund-message').text(data.message);
-						$('.edd-submit-refund-url').attr('href', data.refund_url);
-						$('.edd-submit-refund-url').show();
+						$('#edd-refund-order-dialog .tablenav').hide();
+
+						message_target.text(data.message).addClass('success');
+						url_target.attr('href', data.refund_url).show();
+
 						$('#edd-submit-refund-status').show();
 					} else {
-						$('.edd-submit-refund-message').text(data.message);
-						$('.edd-submit-refund-url').hide();
+						message_target.text(data.message).addClass('fail');
+						url_target.hide();
+
 						$('#edd-submit-refund-status').show();
 						$('#edd-submit-refund-submit').removeClass('disabled');
 					}

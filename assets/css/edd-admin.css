@@ -1410,6 +1410,24 @@ input[class*="edd-price-field"] {
 #edd-order-refunds-list {
 	padding-left: 25px;
 }
+#edd-submit-refund-status {
+	text-align: center;
+	font-size: 1.2em;
+	vertical-align: middle;
+}
+#edd-submit-refund-status .edd-submit-refund-message::before{
+	font-family: dashicons;
+	font-size: 1.5em;
+	vertical-align: middle;
+}
+#edd-submit-refund-status .edd-submit-refund-message.success::before{
+	content: "\f147";
+	color: #339933;
+}
+#edd-submit-refund-status .edd-submit-refund-message.fail::before{
+	content: "\f335";
+	color: #993333;
+}
 #poststuff .edd-order-data .inside {
 	margin: 0;
 	padding: 0;
