@@ -445,6 +445,7 @@ const EDD_Edit_Payment = {
 						},
 						close: function( event, ui ) {
 							$(this).html( '' );
+							location.reload();
 						}
 					});
 					return false;
