@@ -970,7 +970,7 @@ function edd_order_details_refunds( $order ) {
 						<?php echo '#' . $refund->number ?>
 					</a>&nbsp;&ndash;&nbsp;
 					<span><?php echo edd_currency_filter( edd_format_amount( $refund->total ) ); ?>&nbsp;&ndash;&nbsp;</span>
-					<span><?php echo $refund->status; ?></span>
+					<span><?php echo edd_get_status_label( $refund->status ); ?></span>
 				</li>
 			<?php endforeach; ?>
 			</ul>

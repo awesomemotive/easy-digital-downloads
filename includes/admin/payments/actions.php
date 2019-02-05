@@ -531,6 +531,10 @@ function edd_ajax_generate_refund_form() {
 	// Output buffer the form before we include it in the JSON response.
 	ob_start();
 	?>
+	<div id="edd-submit-refund-status" style="display: none;">
+		<span class="edd-submit-refund-message"></span>
+		<a class="edd-submit-refund-url" href=""><?php _e( 'View Refund', 'easy-digital-downloads' ); ?></a>
+	</div>
 	<table id="edd-process-refund-form">
 	<?php
 	// Load list table if not already loaded
@@ -543,10 +547,6 @@ function edd_ajax_generate_refund_form() {
 	$refund_items->display();
 	?>
 	</table>
-	<div id="edd-submit-refund-status" style="display: none;">
-		<span class="edd-submit-refund-message"></span>
-		 <a class="edd-submit-refund-url" href=""><?php _e( 'View Refund', 'easy-digital-downloads' ); ?></a>
-	</div>
 	<?php
 	$html = trim( ob_get_clean() );
 
