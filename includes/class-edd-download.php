@@ -160,7 +160,7 @@ class EDD_Download {
 			return false;
 		}
 
-		if( 'download' !== $download->post_type ) {
+		if( ! in_array( $download->post_type, apply_filters( 'edd_allowed_post_types', array( 'download') ) ) ) {
 			return false;
 		}
 
