@@ -585,6 +585,7 @@ var EDD_Edit_Payment = {
     $(document.body).on('click', '#edd-submit-refund-submit', function (e) {
       $('.edd-submit-refund-message').removeClass('success').removeClass('fail');
       $(this).addClass('disabled');
+      $('#edd-refund-submit-button-wrapper .spinner').css('visibility', 'visible');
       $('#edd-submit-refund-status').hide();
       var item_ids = [],
           refund_subtotal = $('#edd-refund-submit-subtotal-amount').data('refund-subtotal'),
@@ -627,6 +628,7 @@ var EDD_Edit_Payment = {
             url_target.hide();
             $('#edd-submit-refund-status').show();
             $('#edd-submit-refund-submit').removeClass('disabled');
+            $('#edd-submit-refund-button-wrapper .spinner').css('visibility', 'hidden');
           }
         }
       }).fail(function (data) {
@@ -637,6 +639,7 @@ var EDD_Edit_Payment = {
         url_target.hide();
         $('#edd-submit-refund-status').show();
         $('#edd-submit-refund-submit').removeClass('disabled');
+        $('#edd-submit-refund-button-wrapper .spinner').css('visibility', 'hidden');
         return false;
       });
     });
