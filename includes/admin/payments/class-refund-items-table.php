@@ -29,13 +29,14 @@ class Refund_Items_Table extends List_Table {
 	 * @see   WP_List_Table::__construct()
 	 */
 	public function __construct() {
+		global $hook_suffix;
+
 		parent::__construct( array(
-			'singular' => __( 'Order Item',  'easy-digital-downloads' ),
-			'plural'   => __( 'Order Items', 'easy-digital-downloads' ),
+			'singular' => __( 'Refund Item',  'easy-digital-downloads' ),
+			'plural'   => __( 'Refund Items', 'easy-digital-downloads' ),
 			'ajax'     => false,
 		) );
 
-		$this->process_bulk_action();
 		$this->get_counts();
 	}
 
@@ -214,13 +215,15 @@ class Refund_Items_Table extends List_Table {
 	 * @return string Displays a checkbox
 	 */
 	public function column_cb( $order_item ) {
-		return sprintf(
-			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
-			/*$1%s*/
-			'order_item',
-			/*$2%s*/
-			$order_item->id
-		);
+		if ( 'refunded' !== $order_item->status ) {
+			return sprintf(
+				'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+				/*$1%s*/
+				'order_item',
+				/*$2%s*/
+				$order_item->id
+			);
+		}
 	}
 
 	/**
@@ -456,8 +459,9 @@ class Refund_Items_Table extends List_Table {
 		<tr id="edd-refund-submit-total" class="edd-refund-submit-line-total">
 			<td colspan="<?php echo $this->get_column_count() - 1; ?>"></td>
 
-			<td>
+			<td id="edd-refund-submit-button-wrapper">
 				<a id="edd-submit-refund-submit" class="disabled button-primary"><?php _e( 'Submit Refund', 'easy-digital-downloads' ); ?></a>
+				<span class="spinner"></span>
 			</td>
 		</tr>
 		<?php

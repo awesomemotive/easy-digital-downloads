@@ -591,7 +591,7 @@ function edd_ajax_process_refund_form() {
 
 	// Verify the nonce.
 	$nonce = ! empty( $_POST['nonce'] ) ? sanitize_text_field( $_POST['nonce'] ) : false;
-	if ( empty( $nonce) || ! wp_verify_nonce( $nonce, '' ) ) {
+	if ( empty( $nonce) || ! wp_verify_nonce( $nonce, 'bulk-refunditems' ) ) {
 		$return = array(
 			'success'    => false,
 			'message'    => sprintf( __( 'Nonce validation failed when submitting refund.', 'easy-digital-downloads' ) ),
