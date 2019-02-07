@@ -1419,14 +1419,18 @@ input[class*="edd-price-field"] {
 	font-family: dashicons;
 	font-size: 1.5em;
 	vertical-align: middle;
+	color: #fff;
+	border-radius: 16px;
+	margin: 5px;
 }
 #edd-submit-refund-status .edd-submit-refund-message.success::before{
 	content: "\f147";
-	color: #339933;
+	background-color: #339933;
+	padding-right: 1px;
 }
 #edd-submit-refund-status .edd-submit-refund-message.fail::before{
 	content: "\f335";
-	color: #993333;
+	background-color: #993333;
 }
 #poststuff .edd-order-data .inside {
 	margin: 0;

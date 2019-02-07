@@ -462,6 +462,7 @@ function edd_ajax_generate_file_download_link() {
 add_action( 'wp_ajax_edd_get_file_download_link', 'edd_ajax_generate_file_download_link' );
 
 /**
+ * Renders the refund form that is used to process a refund.
  *
  * @since 3.0
  *
@@ -473,7 +474,7 @@ function edd_ajax_generate_refund_form() {
 	if ( ! is_user_logged_in() ) {
 		$return = array(
 			'success' => false,
-			'message' => __( 'You do not have permission to perform this action', 'easy-digital-downloads' ),
+			'message' => __( 'You must be logged in to perform this action.', 'easy-digital-downloads' ),
 		);
 
 		wp_send_json( $return, 401 );
@@ -483,7 +484,7 @@ function edd_ajax_generate_refund_form() {
 	if ( ! current_user_can( 'edit_shop_payments' ) ) {
 		$return = array(
 			'success' => false,
-			'message' => __( 'Your account does not have permission to perform this action', 'easy-digital-downloads' ),
+			'message' => __( 'Your account does not have permission to perform this action.', 'easy-digital-downloads' ),
 		);
 
 		wp_send_json( $return, 401 );
@@ -522,7 +523,7 @@ function edd_ajax_generate_refund_form() {
 	if ( 'refund' === $order->type ) {
 		$return = array(
 			'success' => false,
-			'message' => __( 'Cannot refund an order of type refund', 'easy-digital-downloads' ),
+			'message' => __( 'Cannot refund an order that is already refunded.', 'easy-digital-downloads' ),
 		);
 
 		wp_send_json( $return, 404 );
@@ -560,7 +561,45 @@ function edd_ajax_generate_refund_form() {
 }
 add_action( 'wp_ajax_edd_generate_refund_form', 'edd_ajax_generate_refund_form' );
 
+/**
+ * Processes the results from the Submit Refund form
+ *
+ * @since 3.0
+ * @return void
+ */
 function edd_ajax_process_refund_form() {
+
+	// Verify we have a logged user.
+	if ( ! is_user_logged_in() ) {
+		$return = array(
+			'success' => false,
+			'message' => __( 'You must be logged in to perform this action.', 'easy-digital-downloads' ),
+		);
+
+		wp_send_json( $return, 401 );
+	}
+
+	// Verify the logged in user has permission to edit shop payments.
+	if ( ! current_user_can( 'edit_shop_payments' ) ) {
+		$return = array(
+			'success' => false,
+			'message' => __( 'Your account does not have permission to perform this action', 'easy-digital-downloads' ),
+		);
+
+		wp_send_json( $return, 401 );
+	}
+
+	// Verify the nonce.
+	$nonce = ! empty( $_POST['nonce'] ) ? sanitize_text_field( $_POST['nonce'] ) : false;
+	if ( empty( $nonce) || ! wp_verify_nonce( $nonce, '' ) ) {
+		$return = array(
+			'success'    => false,
+			'message'    => sprintf( __( 'Nonce validation failed when submitting refund.', 'easy-digital-downloads' ) ),
+		);
+
+		wp_send_json( $return, 401 );
+	}
+
 	$order_id = absint( $_POST['order_id'] );
 	$item_ids = array_map( 'absint', $_POST['item_ids'] );
 	$refund_id = edd_refund_order( $order_id, 'complete', $item_ids );
