@@ -547,6 +547,7 @@ const EDD_Edit_Payment = {
 					refund_tax : refund_tax,
 					refund_total : refund_total,
 					order_id: $('input[name="edd_payment_id"]').val(),
+					nonce: $('#edd-process-refund-form #_wpnonce').val(),
 				};
 
 			$.ajax({
@@ -574,6 +575,15 @@ const EDD_Edit_Payment = {
 					}
 				}
 			}).fail(function (data) {
+				const message_target = $('.edd-submit-refund-message'),
+					  url_target     = $('.edd-submit-refund-url'),
+					  json           = data.responseJSON;
+
+
+				message_target.text(json.message).addClass('fail');
+				url_target.hide();
+
+				$('#edd-submit-refund-status').show();
 				$('#edd-submit-refund-submit').removeClass('disabled');
 				return false;
 			});
