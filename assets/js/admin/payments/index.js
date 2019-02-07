@@ -464,7 +464,8 @@ const EDD_Edit_Payment = {
 
 		// Handles including items in the refund.
 		$(document.body).on( 'change', '#edd-refund-order-dialog tbody .check-column input[type="checkbox"]', function () {
-			let parent = $(this).parent().parent();
+			let parent = $(this).parent().parent(),
+				all_checkboxes = $('#edd-refund-order-dialog tbody .check-column input[type="checkbox"]');
 
 			if ( $(this).is(':checked') ) {
 				parent.addClass('refunded');
@@ -475,6 +476,10 @@ const EDD_Edit_Payment = {
 			let new_subtotal = 0,
 				new_tax      = 0,
 				new_total    = 0;
+
+			// Set a readonly while we recalculate, to avoid race conditions in the browser.
+			all_checkboxes.prop('readonly', true);
+			$('#edd-refund-submit-button-wrapper .spinner').css('visibility', 'visible');
 
 			$('#edd-refund-order-dialog tbody .check-column input[type="checkbox"]:checked').each( function() {
 				let item_parent = $(this).parent().parent();
@@ -503,6 +508,11 @@ const EDD_Edit_Payment = {
 			} else {
 				$('#edd-submit-refund-submit').addClass('disabled');
 			}
+
+			// Remove the readonly.
+			all_checkboxes.prop('readonly', false);
+			$('#edd-refund-submit-button-wrapper .spinner').css('visibility', 'hidden');
+
 		});
 
 		// Listen for the bulk action checkbox, since WP doesn't trigger a change on sub-items.
