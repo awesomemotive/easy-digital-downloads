@@ -93,17 +93,14 @@ if ( $purchases ) :
 		endforeach;
 		?>
 	</table>
-	<div id="edd_download_history_pagination" class="edd_pagination navigation">
-		<?php
-		$big = 999999;
-		echo paginate_links( array(
-			'base'    => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-			'format'  => '?paged=%#%',
-			'current' => max( 1, get_query_var( 'paged' ) ),
-			'total'   => ceil( edd_count_purchases_of_customer() / 20 ) // 20 items per page
-		) );
-		?>
-	</div>
+	<?php
+		echo edd_pagination( 
+			array(
+				'type'  => 'download_history',
+				'total' => ceil( edd_count_purchases_of_customer() / 20 ) // 20 items per page
+			)
+		);
+	?>
 	<?php do_action( 'edd_after_download_history' ); ?>
 <?php else : ?>
 	<p class="edd-no-downloads"><?php _e( 'You have not purchased any downloads', 'easy-digital-downloads' ); ?></p>

@@ -1244,27 +1244,15 @@ final class EDD_Amazon_Payments {
 	 * Retrieve the URL for connecting Amazon account to EDD
 	 *
 	 * @since  2.4
+	 * @since  2.9.8 - Updated registration URL per Amazon Reps
 	 * @return string
 	 */
 	private function get_registration_url() {
-
-		switch ( edd_get_shop_country() ) {
-			case 'GB':
-				$base_url = 'https://payments.amazon.co.uk/preregistration/lpa';
-			break;
-			case 'DE':
-				$base_url = 'https://payments.amazon.de/preregistration/lpa';
-			break;
-			default:
-				$base_url = 'https://sellercentral.amazon.com/hz/me/sp/signup';
-			break;
-		}
+		$base_url = 'https://payments.amazon.com/register';
 
 		$query_args = array(
-			'solutionProviderId' => 'A3JST9YM1SX7LB',
-			'marketplaceId'      => 'AGWSWK15IEJJ7',
-			'solutionProviderToken' => 'AAAAAQAAAAEAAAAQnngerc8vYweGDt8byl2smgAAAHBgMm923quugHaGmPi%2B3sqo93TSL1aKwU85v71Zh7EXVK8De%2FuahjCFHft3cxN3rwAF4Iwg03sDW0jnkLULmFk7M1Fr69IV2XF477m0kU1EM0Z%2FbQssHdLai%2Fzoce1jZVmw8So3F2jhiDyfTHUK2AYP',
-			'solutionProviderOptions' => 'lwa%3Bmws-acc%3B',
+			'registration_source' => 'SPPD',
+			'spId'                => 'A3JST9YM1SX7LB',
 		);
 
 		return add_query_arg( $query_args, $base_url );

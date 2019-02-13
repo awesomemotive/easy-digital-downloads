@@ -320,6 +320,9 @@ function edd_get_registered_settings() {
 						'options'     => edd_get_country_list(),
 						'chosen'      => true,
 						'placeholder' => __( 'Select a country', 'easy-digital-downloads' ),
+						'data'        => array(
+							'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
+						)
 					),
 					'base_state' => array(
 						'id'          => 'base_state',
@@ -1188,6 +1191,15 @@ function edd_settings_sanitize_taxes( $input ) {
 
 	$new_rates = ! empty( $_POST['tax_rates'] ) ? array_values( $_POST['tax_rates'] ) : array();
 
+	foreach ( $new_rates as $key => $rate ) {
+		$rate = array_filter( $rate );
+		if ( empty( $rate ) ) {
+			unset( $new_rates[ $key ] );
+		}
+	}
+
+	$new_rates = ! empty( $new_rates ) ? array_values( $new_rates ) : array();
+
 	update_option( 'edd_tax_rates', $new_rates );
 
 	return $input;
@@ -1913,11 +1925,15 @@ function edd_select_callback($args) {
 		$class .= ' edd-select-chosen';
 	}
 
+	$nonce = isset( $args['data']['nonce'] )
+		? ' data-nonce="' . sanitize_text_field( $args['data']['nonce'] ) . '" '
+		: '';
+
 	// If the Select Field allows Multiple values, save as an Array
 	$name_attr = 'edd_settings[' . esc_attr( $args['id'] ) . ']';
 	$name_attr = ( $args['multiple'] ) ? $name_attr . '[]' : $name_attr;
 
-	$html = '<select id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="' . $name_attr . '" class="' . $class . '" data-placeholder="' . esc_html( $placeholder ) . '" ' . ( ( $args['multiple'] ) ? 'multiple="true"' : '' ) . '>';
+	$html = '<select ' . $nonce . ' id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="' . $name_attr . '" class="' . $class . '" data-placeholder="' . esc_html( $placeholder ) . '" ' . ( ( $args['multiple'] ) ? 'multiple="true"' : '' ) . '>';
 
 	foreach ( $args['options'] as $option => $name ) {
 
@@ -2119,7 +2135,6 @@ function edd_shop_states_callback($args) {
  */
 function edd_tax_rates_callback($args) {
 	$rates = edd_get_tax_rates();
-
 	$class = edd_sanitize_html_class( $args['field_class'] );
 
 	ob_start(); ?>
@@ -2147,7 +2162,10 @@ function edd_tax_rates_callback($args) {
 						'show_option_none' => false,
 						'class'            => 'edd-tax-country',
 						'chosen'           => false,
-						'placeholder'      => __( 'Choose a country', 'easy-digital-downloads' )
+						'placeholder'      => __( 'Choose a country', 'easy-digital-downloads' ),
+						'data'             => array(
+							'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
+						)
 					) );
 					?>
 				</td>
@@ -2192,7 +2210,10 @@ function edd_tax_rates_callback($args) {
 						'show_option_none' => false,
 						'class'            => 'edd-tax-country',
 						'chosen'           => false,
-						'placeholder'      => __( 'Choose a country', 'easy-digital-downloads' )
+						'placeholder'      => __( 'Choose a country', 'easy-digital-downloads' ),
+						'data'             => array(
+							'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
+						)
 					) ); ?>
 				</td>
 				<td class="edd_tax_state">

@@ -733,6 +733,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 															'data'             => array(
 																'search-type'        => 'no_ajax',
 																'search-placeholder' => __( 'Type to search all Countries', 'easy-digital-downloads' ),
+																'nonce'              => wp_create_nonce( 'edd-country-field-nonce' )
 															),
 														) );
 														?>

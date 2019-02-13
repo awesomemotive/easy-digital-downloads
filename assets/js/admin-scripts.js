@@ -414,6 +414,7 @@ jQuery(document).ready(function ($) {
 				var data = {
 					action: 'edd_get_shop_states',
 					country: $this.val(),
+					nonce: $this.data('nonce'),
 					field_name: 'edd-payment-address[0][state]'
 				};
 				$.post(ajaxurl, data, function (response) {
@@ -1101,7 +1102,8 @@ jQuery(document).ready(function ($) {
 				var $this = $(this), $tr = $this.closest('tr');
 				var data = {
 					action: 'edd_get_shop_states',
-					country: $(this).val(),
+					country: $this.val(),
+					nonce: $this.data('nonce'),
 					field_name: 'edd_settings[base_state]'
 				};
 				$.post(ajaxurl, data, function (response) {
@@ -1121,7 +1123,8 @@ jQuery(document).ready(function ($) {
 				var $this = $(this);
 				var data = {
 					action: 'edd_get_shop_states',
-					country: $(this).val(),
+					country: $this.val(),
+					nonce: $this.data('nonce'),
 					field_name: $this.attr('name').replace('country', 'state')
 				};
 				$.post(ajaxurl, data, function (response) {
@@ -1940,6 +1943,7 @@ jQuery(document).ready(function ($) {
 				var data = {
 					action: 'edd_get_shop_states',
 					country: $this.val(),
+					nonce: $this.data('nonce'),
 					field_name: 'customerinfo[state]'
 				};
 				$.post(ajaxurl, data, function (response) {

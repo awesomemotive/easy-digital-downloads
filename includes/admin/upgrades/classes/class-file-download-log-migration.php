@@ -47,62 +47,48 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 	 *
 	 * @access public
 	 * @since 2.9.2
-	 * @global object $wpdb Used to query the database using the WordPress
-	 *   Database API
 	 * @return array $data The data for the CSV file
 	 */
 	public function get_data() {
 
-		global $wpdb;
+		$step_items = $this->get_log_ids_for_current_step();
 
-		$items = $this->get_stored_data( 'edd_file_download_log_ids' );
-
-		if ( ! is_array( $items ) ) {
+		if ( ! is_array( $step_items ) ) {
 			return false;
 		}
 
-		$offset     = ( $this->step - 1 ) * $this->per_step;
-		$step_items = array_slice( $items, $offset, $this->per_step, true );
-
-		if ( $step_items ) {
-
-			foreach ( $step_items as $log_id ) {
-
-				$log_id           = (int) $log_id['object_id'];
-				$sanitized_log_id = absint( $log_id );
-
-				if ( $sanitized_log_id !== $log_id ) {
-					edd_debug_log( "Log ID mismatch, skipping log ID {$log_id}" );
-					continue;
-				}
-
-				$has_customer_id = get_post_meta( $log_id, '_edd_log_customer_id', true );
-				if ( ! empty( $has_customer_id ) ) {
-					continue;
-				}
-
-				$payment_id = $wpdb->get_var( "SELECT meta_value FROM {$wpdb->postmeta} WHERE post_id = {$sanitized_log_id} AND meta_key = '_edd_log_payment_id'" );
-				if ( ! empty( $payment_id ) ) {
-					$payment     = edd_get_payment( $payment_id );
-					$customer_id = $payment->customer_id;
-
-					if ( $customer_id < 0 ) {
-						$customer_id = 0;
-					}
-
-					update_post_meta( $log_id, '_edd_log_customer_id', $customer_id );
-					delete_post_meta( $log_id, '_edd_log_user_info' );
-
-				}
-
-			}
-
-			return true;
-
+		if ( empty( $step_items ) ) {
+			return false;
 		}
 
-		return false;
+		foreach ( $step_items as $log_id ) {
+			$log_id           = (int) $log_id;
+			$sanitized_log_id = absint( $log_id );
 
+			if ( $sanitized_log_id !== $log_id ) {
+				edd_debug_log( "Log ID mismatch, skipping log ID {$log_id}" );
+				continue;
+			}
+
+			$has_customer_id = (int) get_post_meta( $log_id, '_edd_log_customer_id', true );
+			if ( ! empty( $has_customer_id ) ) {
+				continue;
+			}
+
+			$payment_id = (int) get_post_meta( $log_id, '_edd_log_payment_id', true );
+			if ( ! empty( $payment_id ) ) {
+				$customer_id = edd_get_payment_customer_id( $payment_id );
+
+				if ( $customer_id < 0 ) {
+					$customer_id = 0;
+				}
+
+				update_post_meta( $log_id, '_edd_log_customer_id', $customer_id );
+				delete_post_meta( $log_id, '_edd_log_user_info' );
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -113,13 +99,12 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 	 */
 	public function get_percentage_complete() {
 
-		$items = $this->get_stored_data( 'edd_file_download_log_ids', false );
-		$total = count( $items );
+		$total = (int) get_option( 'edd_fdlm_total_logs', 0 );
 
 		$percentage = 100;
 
 		if( $total > 0 ) {
-			$percentage = ( ( $this->per_step * $this->step ) / $total ) * 100;
+			$percentage = ( ( $this->step * $this->per_step ) / $total ) * 100;
 		}
 
 		if( $percentage > 100 ) {
@@ -158,9 +143,9 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 			$this->done = false;
 			return true;
 		} else {
-			$this->delete_data( 'edd_file_download_log_ids' );
-
-			$this->done    = true;
+			$this->done = true;
+			delete_option( 'edd_fdlm_total_logs' );
+			delete_option( 'edd_fdlm_term_tax_id' );
 			$this->message = __( 'File download logs updated successfully.', 'easy-digital-downloads' );
 			edd_set_upgrade_complete( 'update_file_download_log_data' );
 			return false;
@@ -190,84 +175,69 @@ class EDD_File_Download_Log_Migration extends EDD_Batch_Export {
 		edd_die();
 	}
 
+	/**
+	 * Fetch total number of log IDs needing migration
+	 *
+	 * @since 2.9.5
+	 *
+	 * @global object $wpdb
+	 */
 	public function pre_fetch() {
 		global $wpdb;
 
-		// Get all the file download logs
-		if ( $this->step == 1 ) {
-			$this->delete_data( 'edd_file_download_log_ids' );
+		// Default count (assume no entries)
+		$log_id_count = 0;
 
-			$term_id     = $wpdb->get_var( "SELECT term_id FROM {$wpdb->terms} WHERE name = 'file_download'" );
-			$term_tax_id = $wpdb->get_var( "SELECT term_taxonomy_id FROM {$wpdb->term_taxonomy} WHERE term_id = {$term_id} AND taxonomy = 'edd_log_type'" );
-			$log_ids     = $wpdb->get_results( "SELECT object_id FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = {$term_tax_id}" );
+		// Query for a term ID (make sure log items exist)
+		$term_id = $wpdb->get_var( "SELECT term_id FROM {$wpdb->terms} WHERE name = 'file_download' LIMIT 1" );
 
-			$this->store_data( 'edd_file_download_log_ids', $log_ids );
+		// Log items exist...
+		if ( ! empty( $term_id ) ) {
 
+			// Query for possible entries...
+			$term_tax_id  = $wpdb->get_var( $wpdb->prepare( "SELECT term_taxonomy_id FROM {$wpdb->term_taxonomy} WHERE term_id = %d AND taxonomy = 'edd_log_type' LIMIT 1", $term_id ) );
+
+			// Entries exist...
+			if ( ! empty( $term_tax_id ) ) {
+
+				// Cache the term taxonomy ID
+				update_option( 'edd_fdlm_term_tax_id', $term_tax_id );
+
+				// Count the number of entries!
+				$log_id_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = %d", $term_tax_id ) );
+			}
 		}
 
+		// Temporarily save the number of rows
+		update_option( 'edd_fdlm_total_logs', (int) $log_id_count );
 	}
 
 	/**
-	 * Given a key, get the information from the Database Directly
+	 * Get the log IDs (50 based on this->per_step) for the current step
 	 *
-	 * @since  2.9.2
-	 * @param  string $key The option_name
-	 * @return mixed       Returns the data from the database
+	 * @since 2.9.5
+	 *
+	 * @global object $wpdb
+	 * @return array
 	 */
-	private function get_stored_data( $key ) {
+	private function get_log_ids_for_current_step() {
 		global $wpdb;
-		$value = $wpdb->get_var(
-			$wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = '%s'", $key )
-		);
 
-		if ( empty( $value ) ) {
-			return false;
+		// Default values
+		$log_ids = array();
+		$offset  = ( $this->step * $this->per_step ) - $this->per_step;
+
+		// Count the number of entries!
+		$term_tax_id = (int) get_option( 'edd_fdlm_term_tax_id', 0 );
+
+		// Only query if term taxonomy ID was prefetched
+		if ( ! empty( $term_tax_id ) ) {
+			$log_ids = $wpdb->get_col( $wpdb->prepare( "SELECT object_id FROM {$wpdb->term_relationships} WHERE term_taxonomy_id = %d LIMIT %d, %d", $term_tax_id, $offset, $this->per_step ) );
 		}
 
-		$maybe_json = json_decode( $value );
-		if ( ! is_null( $maybe_json ) ) {
-			$value = json_decode( $value, true );
-		}
-
-		return $value;
+		// Always return an array
+		return ! is_wp_error( $log_ids )
+			? (array) $log_ids
+			: array();
 	}
-
-	/**
-	 * Give a key, store the value
-	 *
-	 * @since  2.9.2
-	 * @param  string $key   The option_name
-	 * @param  mixed  $value  The value to store
-	 * @return void
-	 */
-	private function store_data( $key, $value ) {
-		global $wpdb;
-
-		$value = is_array( $value ) ? wp_json_encode( $value ) : esc_attr( $value );
-
-		$data = array(
-			'option_name'  => $key,
-			'option_value' => $value,
-			'autoload'     => 'no',
-		);
-
-		$formats = array(
-			'%s', '%s', '%s',
-		);
-
-		$wpdb->replace( $wpdb->options, $data, $formats );
-	}
-
-	/**
-	 * Delete an option
-	 *
-	 * @since  2.9.2
-	 * @param  string $key The option_name to delete
-	 * @return void
-	 */
-	private function delete_data( $key ) {
-		global $wpdb;
-		$wpdb->delete( $wpdb->options, array( 'option_name' => $key ) );
-	}
-
 }

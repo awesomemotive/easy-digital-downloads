@@ -240,7 +240,7 @@ function edd_customers_view( $customer ) {
 						<input class="info-item" type="text" data-key="line1" name="customerinfo[line1]" placeholder="<?php _e( 'Address 1', 'easy-digital-downloads' ); ?>" value="<?php echo $address['line1']; ?>" />
 						<input class="info-item" type="text" data-key="line2" name="customerinfo[line2]" placeholder="<?php _e( 'Address 2', 'easy-digital-downloads' ); ?>" value="<?php echo $address['line2']; ?>" />
 						<input class="info-item" type="text" data-key="city" name="customerinfo[city]" placeholder="<?php _e( 'City', 'easy-digital-downloads' ); ?>" value="<?php echo $address['city']; ?>" />
-						<select data-key="country" name="customerinfo[country]" id="billing_country" class="billing_country edd-select edit-item">
+						<select data-key="country" name="customerinfo[country]" id="billing_country" class="billing_country edd-select edit-item" data-nonce="<?php echo wp_create_nonce( 'edd-country-field-nonce' ); ?>">
 							<?php
 
 							$selected_country = $address['country'];

@@ -184,7 +184,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 			if ( ! edd_is_ajax_disabled() ) {
 
-				echo '<a href="#" class="edd-add-to-cart ' . esc_attr( $class ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $data_price . ' ' . $button_display . '><span class="edd-add-to-cart-label">' . $args['text'] . '</span> <span class="edd-loading" aria-label="' . esc_attr__( 'Loading', 'easy-digital-downloads' ) . '"></span></a>';
+				echo '<a href="#" class="edd-add-to-cart ' . esc_attr( $class ) . '" data-nonce="' .  wp_create_nonce( 'edd-add-to-cart-' . $download->ID ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $data_price . ' ' . $button_display . '><span class="edd-add-to-cart-label">' . $args['text'] . '</span> <span class="edd-loading" aria-label="' . esc_attr__( 'Loading', 'easy-digital-downloads' ) . '"></span></a>';
 
 			}
 
@@ -1139,3 +1139,82 @@ function edd_download_shortcode_item( $atts, $i ) {
 	edd_get_template_part( 'shortcode', 'download' );
 }
 add_action( 'edd_download_shortcode_item', 'edd_download_shortcode_item', 10, 2 );
+
+/**
+ * Load the pagination for the [downloads] shortcode.
+ *
+ * @since 2.9.8
+ *
+ * @param array  $atts The [downloads] shortcode attributes.
+ * @param object $downloads The WP_Query.
+ * @param array  $query EDD's array of attributes used to construct the main WP_Query.
+ */
+function edd_downloads_pagination( $atts, $downloads, $query ) {
+	if ( filter_var( $atts['pagination'], FILTER_VALIDATE_BOOLEAN ) ) {
+		$args = array(
+			'type'    => 'download',
+			'format'  => '?paged=%#%',
+			'current' => max( 1, $query['paged'] ),
+			'total'   => $downloads->max_num_pages
+		);
+
+		if ( is_single() ) {
+			$args['base'] = get_permalink() . '%#%';
+		} else {
+			$big          = 999999;
+			$search_for   = array( $big, '#038;' );
+			$replace_with = array( '%#%', '&' );
+			$args['base'] = str_replace( $search_for, $replace_with, get_pagenum_link( $big ) );
+		}
+
+		$args = apply_filters( 'edd_download_pagination_args', $args, $atts, $downloads, $query );
+
+		echo edd_pagination( $args );
+	}
+}
+add_action( 'edd_downloads_list_after', 'edd_downloads_pagination', 10, 3 );
+
+/**
+ * Build pagination
+ *
+ * @since 2.9.8
+ * 
+ * @param array $args The arguments used to build the pagination.
+ */
+function edd_pagination( $args = array() ) {
+
+	$big = 999999;
+
+	$defaults = array(
+		'base'    => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+		'format'  => '?paged=%#%',
+		'current' => max( 1, get_query_var( 'paged' ) ),
+		'type'    => '',
+		'total'   => '',
+	);
+
+	$args = wp_parse_args( $args, $defaults );
+
+	$type  = $args['type'];
+	$total = $args['total'];
+
+	// Type and total must be specified.
+	if ( empty( $type ) || empty( $total ) ) {
+		return false;
+	}
+
+	$pagination = paginate_links(
+		array(
+			'base'    => $args['base'],
+			'format'  => $args['format'],
+			'current' => $args['current'],
+			'total'   => $total
+		)
+	);
+
+	if ( ! empty( $pagination ) ) : ?>
+		<div id="edd_<?php echo $type; ?>_pagination" class="edd_pagination navigation">
+			<?php echo $pagination; ?>
+		</div>
+	<?php endif;
+}

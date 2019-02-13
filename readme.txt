@@ -1,12 +1,12 @@
 === Easy Digital Downloads ===
 Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
-Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel
+Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.4
-Tested up to: 4.9.6
-Stable Tag: 2.9.3
+Tested up to: 5.0.2
+Stable Tag: 2.9.11
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -45,7 +45,6 @@ Payment gateways supported through free or premium extension:
 * SOFORT Banking
 * BitPay
 * Coinbase
-* Payza
 
 See our [gateways category](https://easydigitaldownloads.com/downloads/category/gateways/?utm_source=extensions&utm_medium=description_tab&utm_content=gateways&utm_campaign=readme) in the extensions catalogue for a complete list of supported gateways. There are also a large number of additional gateways developed and supported by [3rd party developers](https://easydigitaldownloads.com/3rd-party-extensions/#gateways).
 
@@ -189,6 +188,81 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+
+= 2.9.11, January 6, 2019 =
+* Fix: PayPal PDT amount validation fails for some accounts due to missing payment_gross field.
+* Tweak: PayPal email address now registered to EDD_Customer during IPN processing if the email is not already registered.
+
+= 2.9.10, January 4, 2019 =
+* Security Fix: Avoid a possible PayPal Standard price manipulation when using PDT (Payment Data Transfer)
+
+= 2.9.9, December 3, 2018 =
+* Fix: State/province cannot be updated on order details screen when country is changed.
+* Fix: "Show Privacy Policy" text link is positioned incorrectly.
+* Fix: "Agree to Terms?" text shows twice on checkout with some configurations.
+* Fix: Nonce verification failure when state/province field is not visible.
+* Fix: Fees / Discounts can be duplicated when payment recovery link is clicked.
+* Fix: Incorrect DocBlock for edd_currency_filter.
+* Fix: Slashes not removed when saving profile name field.
+* Fix: Item amount set to 0.00 improperly during CSV import if the "Products (Raw)" column is used but does not include a {}.
+* Fix: Privacy policy text not shown if terms of use checkbox is disabled.
+* Fix: Log messages not saved to debug log file if they contain non UTF-8 characters.
+
+= 2.9.8, October 1, 2018 =
+* Fix: Updated Amazon Payments onboarding URL.
+* Fix: Insert Download media button would not output expected plain text styles.
+* Fix: Adding a discount code on a cart with free products caused a division by zero error.
+* Fix: Removed unnecessary clearfix rule from CSS.
+* New: Repositioned and refactored the pagination in the [downloads] shortcode to allow better customization.
+* Dev: All available contextual arguments were added to the edd_requested_file filter.
+
+= 2.9.7, September 10, 2018 =
+* Fix: The edd_cart_amount data attributes were not updated when quantities were changed at checkout.
+* Fix: Updated the zip/postal code validation for Mongolia.
+* Fix: Updating a download meta to 0 using the EDD_Download class would not save correctly.
+* Fix: Corrected an issue with mobile file downloads sometimes getting corrupted.
+* Fix: Incorrect label "for" attributes were being used on the checkout login form.
+* Fix: Prevent the vertical scrollbar in Firefox when hovering over tooltips.
+* Fix: Corrected some issues with EDD Sessions and WP Admin.
+* Fix: Test Purchase Email Subject ampersands were getting improperly HTML encoded.
+* New: Updated the EDD_SL_Plugin_Updater to support icons and have a health check.
+* New: Added the date generated to system info.
+* New: EDD API now supports "order" and "orderby" parameters for the products endpoint.
+
+= 2.9.6, July 16, 2018 =
+* Fix: "Error: You must login to complete your purchase" shown incorrectly on checkout.
+* Fix: WordPress database error in File Download Log updater.
+
+= 2.9.5, July 12, 2018 =
+* Fix: Changing the country field in the admin would not display the State fields.
+* Fix: File Download Log Migration from version 2.9.2 would fail on some sites.
+
+= 2.9.4, July 9, 2018 =
+* Fix: Added nonce checks to multiple AJAX calls. If you have customized any of the following beyond CSS, please review this blog post:
+* https://easydigitaldownloads.com/development/2018/07/05/important-update-to-ajax-requests-in-easy-digital-downloads-2-9-4
+* templates/widget-cart-item.php
+* templates/shortcode-profile-editor.php
+* templates/checkout_cart.php
+* The following functions includes/checkout/template.php:
+* edd_default_cc_address_fields()
+* edd_get_register_fields()
+* edd_get_login_fields()
+* edd_payment_mode_select()
+* edd_checkout_hidden_fields()
+* Fix: Important - Don't allow guest purchases for an email address that has an existing user.
+* Fix: Unexpected behavior in 'redirect to checkout' when multiple checkout pages were used.
+* Fix: Saving an order in the admin when prices were inclusive of tax could cause incorrect item price amounts to be saved.
+* Fix: PHP 7.2 Compatibility - Some PHP notices were being thrown while activating Easy Digital Downloads.
+* Fix: The EDD_Cart class now forces the cart contents to always be an array.
+* Fix: The process of adding past purchases to a new user now verifies the user has an email address.
+* Fix: The file download log export did not contain the name of the user who downloaded the file.
+* Fix: Attempting to add a new customer to an order gave unexpected results when using the email address of an existing customer.
+* Fix: Tax rate 'Apply to whole country' label could not be clicked when no tax rates have ever existed.
+* Fix: The Shop Accountant role was not able to manage the tax exclusion at a product level.
+* Fix: In some cases, PayPal IPN and PDT would cause double payment processing.
+* Tweak: Easy Digital Downloads sessions can now be started when in the wp-admin path.
+* New: When taxes are being recalculated at checkout, an AJAX indicator is now shown below the purchase button.
+* Dev: Filters were added to the AJAX responses for adding and removing items from the cart.
 
 = 2.9.3, May 25, 2018 =
 * Fix: Corrected multiple inconsistencies in the Privacy Policy Checkbox at checkout.

@@ -174,15 +174,6 @@
 	font-size: 95%;
 	margin: 0 0 5px;
 }
-#edd_checkout_form_wrap label:after {
-	display: block;
-	visibility: hidden;
-	float: none;
-	clear: both;
-	height: 0;
-	text-indent: -9999px;
-	content: ".";
-}
 #edd_checkout_form_wrap span.edd-description {
 	color: #666;
 	font-size: 80%;
@@ -1012,9 +1003,6 @@ input.edd_submit_plain {
 }
 .edd_download .edd_price {
 	margin-bottom: 10px;
-}
-#edd_download_pagination {
-	clear: both;
 }
 
 /* =Misc styles

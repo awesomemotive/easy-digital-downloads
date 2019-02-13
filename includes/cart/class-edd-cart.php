@@ -198,7 +198,7 @@ class EDD_Cart {
 
 		do_action( 'edd_cart_contents_loaded' );
 
-		return $this->contents;
+		return (array) $this->contents;
 	}
 
 	/**
@@ -358,7 +358,7 @@ class EDD_Cart {
 	 * @return boolean
 	 */
 	public function is_empty() {
-		return 0 === sizeof( $this->contents );
+		return 0 === count( (array) $this->get_contents() );
 	}
 
 	/**
@@ -647,7 +647,8 @@ class EDD_Cart {
 
 		$discounts = false === $discount ? $this->get_discounts() : array( $discount );
 
-		if ( ! empty( $discounts ) ) {
+		// If discounts exist, only apply them to non-free cart items
+		if ( ! empty( $discounts ) && 0.00 != $price ) {
 			foreach ( $discounts as $discount ) {
 				$code_id = edd_get_discount_id_by_code( $discount );
 

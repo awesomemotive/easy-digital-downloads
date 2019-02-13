@@ -1147,7 +1147,16 @@ class EDD_Payment {
 			$subtotal -= round( $tax, edd_currency_decimal_filter() );
 		}
 
-		$total      = $subtotal - $discount + $tax;
+		$fees = 0;
+		if ( ! empty( $args['fees'] ) && is_array( $args['fees'] ) ) {
+			foreach ( $args['fees'] as $feekey => $fee ) {
+				$fees += $fee['amount'];
+			}
+
+			$fees = round( $fees, edd_currency_decimal_filter() );
+		}
+
+		$total      = $subtotal - $discount + $tax + $fees;
 
 		// Do not allow totals to go negative
 		if( $total < 0 ) {
@@ -1402,6 +1411,11 @@ class EDD_Payment {
 
 		$merged_item = array_merge( $current_args, $args );
 
+		// Format the item_price correctly now
+		$merged_item['item_price']  = edd_sanitize_amount( $merged_item['item_price'] );
+		$new_subtotal               = floatval( $merged_item['item_price'] ) * $merged_item['quantity'];
+		$merged_item['price']       = edd_prices_include_tax() ? $new_subtotal : $new_subtotal + $merged_item['tax'];
+
 		// Sort the current and new args, and checksum them. If no changes. No need to fire a modification.
 		ksort( $current_args );
 		ksort( $merged_item );
@@ -1410,11 +1424,6 @@ class EDD_Payment {
 			return false;
 		}
 
-		// Format the item_price correctly now
-		$merged_item['item_price'] = edd_sanitize_amount( $merged_item['item_price'] );
-
-		$new_subtotal                       = floatval( $merged_item['item_price'] ) * $merged_item['quantity'];
-		$merged_item['price']               = $new_subtotal + $merged_item['tax'];
 		$this->cart_details[ $cart_index ]  = $merged_item;
 		$modified_download                  = $merged_item;
 		$modified_download['action']        = 'modify';
