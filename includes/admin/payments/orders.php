@@ -438,11 +438,12 @@ function edd_order_details_items( $order ) {
 						<span class="edd-order-details-label-mobile"><?php printf( esc_html_x( '%s To Add', 'order details select item to add - mobile', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></span>
 
 						<?php echo EDD()->html->product_dropdown( array(
-							'name'       => 'edd-order-add-download-select',
-							'id'         => 'edd-order-add-download-select',
-							'class'      => 'edd-order-add-download-select',
-							'chosen'     => true,
-							'variations' => true,
+							'name'                 => 'edd-order-add-download-select',
+							'id'                   => 'edd-order-add-download-select',
+							'class'                => 'edd-order-add-download-select',
+							'chosen'               => true,
+							'variations'           => true,
+							'show_variations_only' => true,
 						) ); // WPCS: XSS ok. ?>
 
 						<?php if ( edd_item_quantities_enabled() ) : ?>
