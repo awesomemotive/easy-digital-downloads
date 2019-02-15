@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: Easy Digital Downloads
+ * Plugin Name: Easy Digital Downloads (OM Fork)
  * Plugin URI: https://easydigitaldownloads.com
  * Description: The easiest way to sell digital products with WordPress.
  * Author: Easy Digital Downloads
  * Author URI: https://easydigitaldownloads.com
- * Version: 2.9.11
+ * Version: 1.0.0
  * Text Domain: easy-digital-downloads
  * Domain Path: languages
  *
