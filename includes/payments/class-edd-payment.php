@@ -1080,7 +1080,7 @@ class EDD_Payment {
 		$download = new EDD_Download( $download_id );
 
 		// Bail if this post isn't a download
-		if( ! $download || $download->post_type !== 'download' ) {
+		if( ! $download || ! in_array( $download->post_type, apply_filters( 'edd_allowed_post_types', array( 'download') ) ) ) {
 			return false;
 		}
 
