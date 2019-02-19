@@ -311,12 +311,11 @@ $customer       = new EDD_Customer( $payment->customer_id );
 									<div class="edd-admin-box">
 
 										<div class="edd-admin-box-inside">
-
 											<p>
 												<a href="<?php echo admin_url( '/edit.php?post_type=download&page=edd-reports&tab=logs&payment=' . $payment_id ); ?>"><?php _e( 'View file download log for purchase', 'easy-digital-downloads' ); ?></a>
 											</p>
 											<p>
-												<?php $download_log_url = admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs&user=' . $user_id ); ?>
+												<?php $download_log_url = admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs&user='.$user_id.'&customer='.$customer->id ); ?>
 												<a href="<?php echo $download_log_url; ?>"><?php _e( 'View customer download log', 'easy-digital-downloads' ); ?></a>
 											</p>
 											<p>
