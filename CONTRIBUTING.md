@@ -6,6 +6,12 @@ When contributing please ensure you follow the guidelines below so that we can k
 
 __Please Note:__ GitHub is for bug reports and contributions only - if you have a support question or a request for a customization don't post here, go to our [Support page](https://easydigitaldownloads.com/support/) instead.
 
+## Developer Certificate of Origin
+By contributing to Easy Digital Downloads, you agree to the Developer Certificate of Origin, which can be reviewed here:
+[https://developercertificate.org](https://developercertificate.org/)
+
+In it's simplest form, the DCO states that you have permission to supply the code submitted to Easy Digital Downloads. Please take a moment to review this agreement before you make your first contribution.
+
 ## Getting Started
 
 * __Do not report potential security vulnerabilities here. Email them privately to our security team at [security@easydigitaldownloads.com](mailto:security@easydigitaldownloads.com)__
