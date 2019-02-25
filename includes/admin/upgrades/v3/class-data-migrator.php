@@ -374,7 +374,7 @@ class Data_Migrator {
 		$order_data = array(
 			'parent'         => $data->post_parent,
 			'order_number'   => $order_number,
-			'status'         => $data->post_status,
+			'status'         => 'publish' === $data->post_status ? 'complete' : $data->post_status,
 			'type'           => $type,
 			'date_created'   => $data->post_date_gmt, // GMT is stored in the database as the offset is applied by the new query classes.
 			'date_modified'  => $data->post_modified_gmt, // GMT is stored in the database as the offset is applied by the new query classes.
