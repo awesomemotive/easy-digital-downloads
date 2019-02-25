@@ -10,7 +10,7 @@ __Please Note:__ GitHub is for bug reports and contributions only - if you have 
 By contributing to Easy Digital Downloads, you agree to the Developer Certificate of Origin, which can be reviewed here:
 [https://developercertificate.org](https://developercertificate.org/)
 
-In it's simplest form, the DCO states that you have permission to supply the code submitted to Easy Digital Downloads. Please take a moment to review this agreement before you make your first contribution.
+In its simplest form, the DCO states that you have permission to supply the code submitted to Easy Digital Downloads. Please take a moment to review this agreement before you make your first contribution.
 
 ## Getting Started
 
