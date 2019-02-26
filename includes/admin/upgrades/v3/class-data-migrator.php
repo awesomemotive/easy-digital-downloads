@@ -398,10 +398,17 @@ class Data_Migrator {
 
 		if ( 'refunded' === $order_status ) {
 			$refund_data = $order_data;
-			$refund_data['parent'] = $order_id;
-			$refund_data['number'] = $order_id . apply_filters( 'edd_order_refund_suffix', '-R-' ) . '1';
-			$refund_data['type']   = 'refund';
-			$refund_data['status'] = 'complete';
+			$refund_data['parent']       = $order_id;
+			$refund_data['order_number'] = $order_id . apply_filters( 'edd_order_refund_suffix', '-R-' ) . '1';
+			$refund_data['type']         = 'refund';
+			$refund_data['status']       = 'complete';
+
+			// Negate the amounts
+			$refund_data['subtotal'] = edd_negate_amount( $subtotal );
+			$refund_data['tax']      = edd_negate_amount( $tax );
+			$refund_data['discount'] = edd_negate_amount( $discount );
+			$refund_data['total']    = edd_negate_amount( $total );
+
 
 			// These are the best guess at the date it was refunded since we didn't store that prior.
 			$refund_data['date_created']  = $data->post_modified_gmt;
