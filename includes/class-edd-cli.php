@@ -810,6 +810,18 @@ class EDD_CLI extends WP_CLI_Command {
 	}
 
 	/**
+	 * Run the EDD 3.0 Migration via WP-CLI
+	 *
+	 * ## OPTIONS
+	 *
+	 * --force=<boolean>: If the routine should be run even if the upgrade routine has been run already
+	 *
+	 * @param $args
+	 * @param $assoc_args
+	 */
+	public function v30_migration( $args, $assoc_args ) {}
+
+	/**
 	 * Migrate Discounts to the custom tables
 	 *
 	 * ## OPTIONS
