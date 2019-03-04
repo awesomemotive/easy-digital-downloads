@@ -971,8 +971,8 @@ class EDD_CLI extends WP_CLI_Command {
 			LEFT JOIN {$wpdb->term_taxonomy} AS tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id)
 			LEFT JOIN {$wpdb->terms} AS t ON (tt.term_id = t.term_id)
 			WHERE p.post_type = 'edd_log' AND t.slug != 'sale' 
-			GROUP BY p.ID
 		";
+
 		$results = $wpdb->get_results( $sql );
 		$total   = count( $results );
 
