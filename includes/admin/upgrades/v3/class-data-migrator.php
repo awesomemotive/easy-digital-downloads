@@ -340,11 +340,6 @@ class Data_Migrator {
 		$customer_id    = isset( $meta['_edd_payment_customer_id'][0] ) ? $meta['_edd_payment_customer_id'][0] : 0;
 		$date_completed = isset( $meta['_edd_completed_date'][0] ) ? $meta['_edd_completed_date'][0] : '0000-00-00 00:00:00';
 
-		// Maybe convert the date completed to UTC.
-		if ( '0000-00-00 00:00:00' !== $date_completed ) {
-			$date_completed = EDD()->utils->date( $date_completed, edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString();
-		}
-
 		// Do not use -1 as the user ID.
 		$user_id = ( -1 === $user_id )
 			? 0
@@ -368,6 +363,12 @@ class Data_Migrator {
 		} );
 
 		$order_status = 'publish' === $data->post_status ? 'complete' : $data->post_status;
+
+		// Maybe convert the date completed to UTC.
+		$non_completed_statuses = apply_filters( 'edd_30_noncomplete_statuses', array ( 'pending', 'cancelled', 'abandoned', 'processing' ) );
+		if ( ! in_array( $order_status, $non_completed_statuses ) && '0000-00-00 00:00:00' !== $date_completed ) {
+			$date_completed = EDD()->utils->date( $date_completed, edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString();
+		}
 
 		$order_data = array(
 			'parent'         => $data->post_parent,
