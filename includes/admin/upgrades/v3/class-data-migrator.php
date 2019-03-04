@@ -398,7 +398,10 @@ class Data_Migrator {
 		$refund_id = 0;
 
 		if ( 'refunded' === $order_status ) {
+
+			// Since the refund is a near copy of the original order, copy over the arguments.
 			$refund_data = $order_data;
+
 			$refund_data['parent']       = $order_id;
 			$refund_data['order_number'] = $order_id . apply_filters( 'edd_order_refund_suffix', '-R-' ) . '1';
 			$refund_data['type']         = 'refund';
@@ -416,6 +419,7 @@ class Data_Migrator {
 			$refund_data['date_modified'] = $data->post_modified_gmt;
 
 			$refund_id = edd_add_order( $refund_data );
+
 		}
 
 		// First & last name.
@@ -585,7 +589,10 @@ class Data_Migrator {
 				$order_item_id = edd_add_order_item( $order_item_args );
 
 				if ( ! empty( $refund_id ) ) {
+
+					// Since the refund is a near copy of the original order, copy over the arguments.
 					$refund_item_args = $order_item_args;
+
 					$refund_item_args['order_id'] = $refund_id;
 					$refund_item_args['status']   = 'refunded';
 
@@ -602,6 +609,7 @@ class Data_Migrator {
 					$refund_item_args['date_modified'] = $data->post_modified_gmt;
 
 					$refund_order_item_id = edd_add_order_item( $refund_item_args );
+
 				}
 
 				// Store order item fees as adjustments.
@@ -693,7 +701,10 @@ class Data_Migrator {
 				edd_add_order_item( $order_item_args );
 
 				if ( ! empty( $refund_id ) ) {
+
+					// Since the refund is a near copy of the original order, copy over the arguments.
 					$refund_item_args = $order_item_args;
+
 					$refund_item_args['order_id'] = $refund_id;
 					$refund_item_args['quantity'] = edd_negate_amount( 1 );
 					$refund_item_args['amount']   = edd_negate_amount( (float) $payment_meta['amount'] );
@@ -761,7 +772,10 @@ class Data_Migrator {
 				edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
 
 				if ( ! empty( $refund_id ) ) {
+
+					// Since the refund is a near copy of the original order, copy over the arguments.
 					$refund_adjustment_args = $adjustment_args;
+
 					$refund_adjustment_args['object_id'] = $refund_id;
 
 					// Negate the amounts.
