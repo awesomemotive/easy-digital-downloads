@@ -819,7 +819,17 @@ class EDD_CLI extends WP_CLI_Command {
 	 * @param $args
 	 * @param $assoc_args
 	 */
-	public function v30_migration( $args, $assoc_args ) {}
+	public function v30_migration( $args, $assoc_args ) {
+
+		$this->migrate_payments( $args, $assoc_args );
+		$this->migrate_customer_data( $args, $assoc_args );
+		$this->migrate_logs( $args, $assoc_args );
+		$this->migrate_tax_rates( $args, $assoc_args );
+		$this->migrate_discounts( $args, $assoc_args );
+		$this->migrate_order_notes( $args, $assoc_args );
+		$this->migrate_customer_notes( $args, $assoc_args );
+
+	}
 
 	/**
 	 * Migrate Discounts to the custom tables
