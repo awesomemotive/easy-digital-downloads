@@ -214,8 +214,8 @@ class Data_Migrator {
 			$log_data = array(
 				'product_id'    => $data->post_parent,
 				'file_id'       => $post_meta['_edd_log_file_id'],
-				'order_id'      => $post_meta['_edd_log_payment_id'],
-				'price_id'      => isset( $post_meta['_edd_log_price_id'] ) ? $post_meta['_edd_log_price_id'] : 0,
+				'order_id'      => isset( $post_meta['_edd_log_payment_id'] )  ? $post_meta['_edd_log_payment_id']  : 0,
+				'price_id'      => isset( $post_meta['_edd_log_price_id'] )    ? $post_meta['_edd_log_price_id']    : 0,
 				'customer_id'   => isset( $post_meta['_edd_log_customer_id'] ) ? $post_meta['_edd_log_customer_id'] : 0,
 				'ip'            => $post_meta['_edd_log_ip'],
 				'date_created'  => $data->post_date_gmt,
@@ -345,20 +345,23 @@ class Data_Migrator {
 			? 0
 			: $user_id;
 
+		// Account for possible double serialization of the cart_details
+		$cart_details = maybe_unserialize( $payment_meta['cart_details'] );
+
 		// Calculate totals.
-		$subtotal = (float) array_reduce( wp_list_pluck( $payment_meta['cart_details'], 'subtotal' ), function( $carry, $item ) {
+		$subtotal = (float) array_reduce( wp_list_pluck( $cart_details, 'subtotal' ), function( $carry, $item ) {
 			return $carry += $item;
 		} );
 
-		$tax = (float) array_reduce( wp_list_pluck( $payment_meta['cart_details'], 'tax' ), function( $carry, $item ) {
+		$tax = (float) array_reduce( wp_list_pluck( $cart_details, 'tax' ), function( $carry, $item ) {
 			return $carry += $item;
 		} );
 
-		$discount = (float) array_reduce( wp_list_pluck( $payment_meta['cart_details'], 'discount' ), function( $carry, $item ) {
+		$discount = (float) array_reduce( wp_list_pluck( $cart_details, 'discount' ), function( $carry, $item ) {
 			return $carry += $item;
 		} );
 
-		$total = (float) array_reduce( wp_list_pluck( $payment_meta['cart_details'], 'price' ), function( $carry, $item ) {
+		$total = (float) array_reduce( wp_list_pluck( $cart_details, 'price' ), function( $carry, $item ) {
 			return $carry += $item;
 		} );
 
@@ -423,15 +426,15 @@ class Data_Migrator {
 		}
 
 		// First & last name.
-		$user_info['first_name'] = isset( $user_info['first_name'] )
+		$user_info['first_name'] = ! empty( $user_info['first_name'] )
 			? $user_info['first_name']
 			: '';
-		$user_info['last_name']  = isset( $user_info['last_name'] )
+		$user_info['last_name']  = ! empty( $user_info['last_name'] )
 			? $user_info['last_name']
 			: '';
 
 		// Add order address.
-		$user_info['address'] = isset( $user_info['address'] )
+		$user_info['address'] = ! empty( $user_info['address'] )
 			? $user_info['address']
 			: array();
 
@@ -446,14 +449,14 @@ class Data_Migrator {
 
 		$order_address_data = array(
 			'order_id'    => $order_id,
-			'first_name'  => $user_info['first_name'],
-			'last_name'   => $user_info['last_name'],
-			'address'     => $user_info['address']['line1'],
-			'address2'    => $user_info['address']['line2'],
-			'city'        => $user_info['address']['city'],
-			'region'      => $user_info['address']['state'],
-			'country'     => $user_info['address']['country'],
-			'postal_code' => $user_info['address']['zip'],
+			'first_name'  => isset( $user_info['first_name'] )         ? $user_info['first_name']         : '',
+			'last_name'   => isset( $user_info['last_name'] )          ? $user_info['last_name']          : '',
+			'address'     => isset( $user_info['address']['line1'] )   ? $user_info['address']['line1']   : '',
+			'address2'    => isset( $user_info['address']['line2'] )   ? $user_info['address']['line2']   : '',
+			'city'        => isset( $user_info['address']['city'] )    ? $user_info['address']['city']    : '',
+			'region'      => isset( $user_info['address']['state'] )   ? $user_info['address']['state']   : '',
+			'country'     => isset( $user_info['address']['country'] ) ? $user_info['address']['country'] : '',
+			'postal_code' => isset( $user_info['address']['zip'] )     ? $user_info['address']['zip']     : '',
 		);
 
 		// Remove empty data.
