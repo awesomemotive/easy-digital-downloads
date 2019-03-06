@@ -139,7 +139,11 @@ function _edd_die_handler() {
  * @return void
  */
 function edd_die( $message = '', $title = '', $status = 400 ) {
-	add_filter( 'wp_die_ajax_handler', '_edd_die_handler', 10, 3 );
-	add_filter( 'wp_die_handler', '_edd_die_handler', 10, 3 );
-	wp_die( $message, $title, array( 'response' => $status ));
+	
+	if( defined( 'EDD_UNIT_TESTS' ) ) {
+		add_filter( 'wp_die_ajax_handler', '_edd_die_handler', 10, 3 );
+		add_filter( 'wp_die_handler', '_edd_die_handler', 10, 3 );
+		wp_die( $message, $title, array( 'response' => $status ));
+	}
+	exit;
 }
