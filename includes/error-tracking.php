@@ -139,19 +139,9 @@ function _edd_die_handler() {
  * @return void
  */
 function edd_die( $message = '', $title = '', $status = 400 ) {
-
-	$doing_unit_tests = defined( 'EDD_UNIT_TESTS' ) && true === EDD_UNIT_TESTS;
-	$doing_api_call   = defined( 'EDD_DOING_API' )  && true === EDD_DOING_API;
-
-	if ( $doing_api_call && ! $doing_unit_tests ) {
-		exit;
-	}
-
-	if ( $doing_unit_tests ) {
-		add_filter( 'wp_die_ajax_handler', '_edd_die_handler', 10, 3 );
-		add_filter( 'wp_die_handler', '_edd_die_handler', 10, 3 );
-
-	}
+	add_filter( 'wp_die_ajax_handler', '_edd_die_handler', 10, 3 );
+	add_filter( 'wp_die_handler'     , '_edd_die_handler', 10, 3 );
+	add_filter( 'wp_die_json_handler', '_edd_die_handler', 10, 3 );
 
 	wp_die( $message, $title, array( 'response' => $status ));
 }
