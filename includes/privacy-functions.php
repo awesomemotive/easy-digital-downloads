@@ -637,6 +637,11 @@ function edd_privacy_customer_record_exporter( $email_address = '', $page = 1 ) 
 function edd_privacy_billing_information_exporter( $email_address = '', $page = 1 ) {
 
 	$customer = new EDD_Customer( $email_address );
+
+	if ( empty( $customer->id ) ) {
+		return array( 'data' => array(), 'done' => true );
+	}
+
 	$payments = edd_get_payments( array(
 		'customer' => $customer->id,
 		'output'   => 'payments',
@@ -802,6 +807,11 @@ function edd_privacy_file_download_log_exporter( $email_address = '', $page = 1 
 	global $edd_logs;
 
 	$customer = new EDD_Customer( $email_address );
+
+	if ( empty( $customer->id ) ) {
+		return array( 'data' => array(), 'done' => true );
+	}
+
 	$log_query = array(
 		'log_type'               => 'file_download',
 		'posts_per_page'         => 100,
