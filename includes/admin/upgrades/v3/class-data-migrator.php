@@ -330,7 +330,7 @@ class Data_Migrator {
 		$meta = get_post_custom( $data->ID );
 
 		$payment_meta = maybe_unserialize( $meta['_edd_payment_meta'][0] );
-		$user_info    = $payment_meta['user_info'];
+		$user_info    = maybe_unserialize( $payment_meta['user_info'] );
 
 		$order_number   = isset( $meta['_edd_payment_number'][0] ) ? $meta['_edd_payment_number'][0] : '';
 		$user_id        = isset( $meta['_edd_payment_user_id'][0] ) && ! empty( $meta['_edd_payment_user_id'][0] ) ? $meta['_edd_payment_user_id'][0] : 0;
@@ -538,7 +538,7 @@ class Data_Migrator {
 
 		// The cart_items array key did not exist in earlier versions of EDD.
 		$cart_items = isset( $payment_meta['cart_details'] )
-			? $payment_meta['cart_details']
+			? maybe_unserialize( $payment_meta['cart_details'] )
 			: array();
 
 		if ( ! empty( $cart_items ) ) {
