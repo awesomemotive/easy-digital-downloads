@@ -480,8 +480,8 @@ class Data_Migrator {
 		// Maybe add email address to customer record
 		$customer = edd_get_customer( $customer_id );
 		if ( $customer ) {
-			$primary = ( $customer->email === $payment_meta['email'] );
-			$customer->add_email( $payment_meta['email'], $primary );
+			$primary = ( $customer->email === $purchase_email );
+			$customer->add_email( $purchase_email, $primary );
 		}
 
 		/** Migrate meta *********************************************/
