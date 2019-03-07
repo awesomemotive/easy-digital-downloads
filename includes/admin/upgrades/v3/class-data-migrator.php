@@ -332,6 +332,11 @@ class Data_Migrator {
 		$payment_meta = maybe_unserialize( $meta['_edd_payment_meta'][0] );
 		$user_info    = maybe_unserialize( $payment_meta['user_info'] );
 
+		// Some old EDD data has the user info serialized, but starting with something other than a: so it can't be unserialized
+		if ( ! is_array( $user_info ) && is_string( $user_info ) ) {
+			$user_info = substr_replace( $user_info, 'a', 0, 1 );
+		}
+
 		$order_number   = isset( $meta['_edd_payment_number'][0] ) ? $meta['_edd_payment_number'][0] : '';
 		$user_id        = isset( $meta['_edd_payment_user_id'][0] ) && ! empty( $meta['_edd_payment_user_id'][0] ) ? $meta['_edd_payment_user_id'][0] : 0;
 		$ip             = isset( $meta['_edd_payment_user_ip'][0] ) ? $meta['_edd_payment_user_ip'][0] : '';
@@ -363,20 +368,40 @@ class Data_Migrator {
 
 		// Account for possible double serialization of the cart_details
 		$cart_details = maybe_unserialize( $payment_meta['cart_details'] );
+		// Some old EDD data has the cart details serialized, but starting with something other than a: so it can't be unserialized
+		if ( ! is_array( $cart_details ) && is_string( $cart_details ) ) {
+			$cart_details = substr_replace( $cart_details, 'a', 0, 1 );
+		}
+
+		// Account for possible double serialization of the cart_details
+		$cart_downloads = maybe_unserialize( $payment_meta['downloads'] );
+		// Some old EDD data has the downloads serialized, but starting with something other than a: so it can't be unserialized
+		if ( ! is_array( $cart_downloads ) && is_string( $cart_downloads ) ) {
+			$cart_downloads = substr_replace( $cart_downloads, 'a', 0, 1 );
+		}
+
+		$order_status = 'publish' === $data->post_status ? 'complete' : $data->post_status;
+
+		// If there are no items, and it's abandoned, just return, since this isn't a valid order.
+		if ( 'abandoned' === $order_status && empty( $cart_downloads ) && empty( $cart_details ) ) {
+			edd_debug_log( 'Skipping order ' . $data->ID . ' due to abandoned status and no products.', true );
+			return;
+		}
 
 		$subtotal = 0;
 		$tax      = 0;
 		$discount = 0;
 		$total    = 0;
 
-		foreach ( $cart_details as $cart_item ) {
-			$subtotal += (float) isset( $cart_item['subtotal'] ) ? $cart_item['subtotal'] : 0;
-			$tax      += (float) isset( $cart_item['tax'] )      ? $cart_item['tax']      : 0;
-			$discount += (float) isset( $cart_item['discount'] ) ? $cart_item['discount'] : 0;
-			$total    += (float) isset( $cart_item['total'] )    ? $cart_item['total']    : 0;
+		// In some cases (very few) there is no cart details...so we have to just avoid this part.
+		if ( ! empty( $cart_details ) && is_array( $cart_details ) ) {
+			foreach ( $cart_details as $cart_item ) {
+				$subtotal += (float) isset( $cart_item['subtotal'] ) ? $cart_item['subtotal'] : 0;
+				$tax      += (float) isset( $cart_item['tax'] )      ? $cart_item['tax']      : 0;
+				$discount += (float) isset( $cart_item['discount'] ) ? $cart_item['discount'] : 0;
+				$total    += (float) isset( $cart_item['total'] )    ? $cart_item['total']    : 0;
+			}
 		}
-
-		$order_status = 'publish' === $data->post_status ? 'complete' : $data->post_status;
 
 		// Maybe convert the date completed to UTC.
 		$non_completed_statuses = apply_filters( 'edd_30_noncomplete_statuses', array ( 'pending', 'cancelled', 'abandoned', 'processing' ) );
@@ -536,13 +561,8 @@ class Data_Migrator {
 
 		/** Create order items ***************************************/
 
-		// The cart_items array key did not exist in earlier versions of EDD.
-		$cart_items = isset( $payment_meta['cart_details'] )
-			? maybe_unserialize( $payment_meta['cart_details'] )
-			: array();
-
-		if ( ! empty( $cart_items ) ) {
-			foreach ( $cart_items as $key => $cart_item ) {
+		if ( ! empty( $cart_details ) ) {
+			foreach ( $cart_details as $key => $cart_item ) {
 				// Reset any conditional IDs to be safe.
 				$refund_order_item_id = 0;
 
@@ -690,8 +710,8 @@ class Data_Migrator {
 
 			// Compatibility with older versions of EDD.
 			// Older versions stored a single dimensional array of download IDs.
-		} elseif ( isset( $payment_meta['downloads'] ) && count( $payment_meta['downloads'] ) === count( $payment_meta['downloads'], COUNT_RECURSIVE ) ) {
-			foreach ( $payment_meta['downloads'] as $cart_index => $download_id ) {
+		} elseif ( is_array( $cart_downloads ) && count( $cart_downloads ) === count( $cart_downloads, COUNT_RECURSIVE ) ) {
+			foreach ( $cart_downloads as $cart_index => $download_id ) {
 				$download = edd_get_download( $download_id );
 
 				$order_item_args = array(
