@@ -821,6 +821,9 @@ class EDD_CLI extends WP_CLI_Command {
 	 */
 	public function v30_migration( $args, $assoc_args ) {
 
+		// Suspend the cache addition while we're migrating.
+		wp_suspend_cache_addition( true );
+
 		$this->migrate_payments( $args, $assoc_args );
 		$this->migrate_customer_data( $args, $assoc_args );
 		$this->migrate_logs( $args, $assoc_args );
