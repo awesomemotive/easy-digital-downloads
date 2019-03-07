@@ -437,15 +437,15 @@ class Data_Migrator {
 		}
 
 		// First & last name.
-		$user_info['first_name'] = isset( $user_info['first_name'] )
+		$user_info['first_name'] = ! empty( $user_info['first_name'] )
 			? $user_info['first_name']
 			: '';
-		$user_info['last_name']  = isset( $user_info['last_name'] )
+		$user_info['last_name']  = ! empty( $user_info['last_name'] )
 			? $user_info['last_name']
 			: '';
 
 		// Add order address.
-		$user_info['address'] = isset( $user_info['address'] )
+		$user_info['address'] = ! empty( $user_info['address'] )
 			? $user_info['address']
 			: array();
 
@@ -488,7 +488,7 @@ class Data_Migrator {
 		edd_maybe_add_customer_address( $customer_id, $customer_address_data );
 
 		// Maybe add email address to customer record
-		if ( $customer ) {
+		if ( ! empty( $customer ) && $customer instanceof EDD_Customer ) {
 			$primary = ( $customer->email === $purchase_email );
 			$customer->add_email( $purchase_email, $primary );
 		}
