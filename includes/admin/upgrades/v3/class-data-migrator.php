@@ -339,6 +339,12 @@ class Data_Migrator {
 		$gateway        = isset( $meta['_edd_payment_gateway'][0] ) && ! empty( $meta['_edd_payment_gateway'][0] ) ? $meta['_edd_payment_gateway'][0] : 'manual';
 		$customer_id    = isset( $meta['_edd_payment_customer_id'][0] ) ? $meta['_edd_payment_customer_id'][0] : 0;
 		$date_completed = isset( $meta['_edd_completed_date'][0] ) ? $meta['_edd_completed_date'][0] : '0000-00-00 00:00:00';
+		$purchase_key   = isset( $meta['_edd_payment_purchase_key'][0]) ? $meta['_edd_payment_purchase_key'][0] : false;
+		$purchase_email = isset( $meta['_edd_payment_user_email'][0] ) ? $meta['_edd_payment_user_email'][0] : $payment_meta['email'];
+
+		if ( false === $purchase_key ) {
+			$purchase_key = isset( $payment_meta['key'] ) ? $payment_meta['key'] : '';
+		}
 
 		// Do not use -1 as the user ID.
 		$user_id = ( -1 === $user_id )
@@ -348,22 +354,17 @@ class Data_Migrator {
 		// Account for possible double serialization of the cart_details
 		$cart_details = maybe_unserialize( $payment_meta['cart_details'] );
 
-		// Calculate totals.
-		$subtotal = (float) array_reduce( wp_list_pluck( $cart_details, 'subtotal' ), function( $carry, $item ) {
-			return $carry += $item;
-		} );
+		$subtotal = 0;
+		$tax      = 0;
+		$discount = 0;
+		$total    = 0;
 
-		$tax = (float) array_reduce( wp_list_pluck( $cart_details, 'tax' ), function( $carry, $item ) {
-			return $carry += $item;
-		} );
-
-		$discount = (float) array_reduce( wp_list_pluck( $cart_details, 'discount' ), function( $carry, $item ) {
-			return $carry += $item;
-		} );
-
-		$total = (float) array_reduce( wp_list_pluck( $cart_details, 'price' ), function( $carry, $item ) {
-			return $carry += $item;
-		} );
+		foreach ( $cart_details as $cart_item ) {
+			$subtotal += (float) isset( $cart_item['subtotal'] ) ? $cart_item['subtotal'] : 0;
+			$tax      += (float) isset( $cart_item['tax'] )      ? $cart_item['tax']      : 0;
+			$discount += (float) isset( $cart_item['discount'] ) ? $cart_item['discount'] : 0;
+			$total    += (float) isset( $cart_item['total'] )    ? $cart_item['total']    : 0;
+		}
 
 		$order_status = 'publish' === $data->post_status ? 'complete' : $data->post_status;
 
@@ -383,12 +384,12 @@ class Data_Migrator {
 			'date_completed' => $date_completed,
 			'user_id'        => $user_id,
 			'customer_id'    => $customer_id,
-			'email'          => $payment_meta['email'],
+			'email'          => $purchase_email,
 			'ip'             => $ip,
 			'gateway'        => $gateway,
 			'mode'           => $mode,
 			'currency'       => $payment_meta['currency'],
-			'payment_key'    => $payment_meta['key'],
+			'payment_key'    => $purchase_key,
 			'subtotal'       => $subtotal,
 			'tax'            => $tax,
 			'discount'       => $discount,
@@ -426,15 +427,15 @@ class Data_Migrator {
 		}
 
 		// First & last name.
-		$user_info['first_name'] = ! empty( $user_info['first_name'] )
+		$user_info['first_name'] = isset( $user_info['first_name'] )
 			? $user_info['first_name']
 			: '';
-		$user_info['last_name']  = ! empty( $user_info['last_name'] )
+		$user_info['last_name']  = isset( $user_info['last_name'] )
 			? $user_info['last_name']
 			: '';
 
 		// Add order address.
-		$user_info['address'] = ! empty( $user_info['address'] )
+		$user_info['address'] = isset( $user_info['address'] )
 			? $user_info['address']
 			: array();
 
