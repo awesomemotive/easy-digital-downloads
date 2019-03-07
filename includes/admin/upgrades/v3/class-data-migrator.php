@@ -342,6 +342,16 @@ class Data_Migrator {
 		$purchase_key   = isset( $meta['_edd_payment_purchase_key'][0]) ? $meta['_edd_payment_purchase_key'][0] : false;
 		$purchase_email = isset( $meta['_edd_payment_user_email'][0] ) ? $meta['_edd_payment_user_email'][0] : $payment_meta['email'];
 
+		// Get the customer object
+		if ( ! empty( $customer_id ) ) {
+			$customer = edd_get_customer( $customer_id );
+		} else if ( ! empty( $purchase_email ) ) {
+			$customer = edd_get_customer_by( 'email', $purchase_email );
+			if ( $customer ) {
+				$customer_id = $customer->id;
+			}
+		}
+
 		if ( false === $purchase_key ) {
 			$purchase_key = isset( $payment_meta['key'] ) ? $payment_meta['key'] : '';
 		}
@@ -478,7 +488,6 @@ class Data_Migrator {
 		edd_maybe_add_customer_address( $customer_id, $customer_address_data );
 
 		// Maybe add email address to customer record
-		$customer = edd_get_customer( $customer_id );
 		if ( $customer ) {
 			$primary = ( $customer->email === $purchase_email );
 			$customer->add_email( $purchase_email, $primary );
