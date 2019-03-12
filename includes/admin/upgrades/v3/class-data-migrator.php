@@ -399,7 +399,7 @@ class Data_Migrator {
 				$subtotal += (float) isset( $cart_item['subtotal'] ) ? $cart_item['subtotal'] : 0;
 				$tax      += (float) isset( $cart_item['tax'] )      ? $cart_item['tax']      : 0;
 				$discount += (float) isset( $cart_item['discount'] ) ? $cart_item['discount'] : 0;
-				$total    += (float) isset( $cart_item['total'] )    ? $cart_item['total']    : 0;
+				$total    += (float) isset( $cart_item['price'] )    ? $cart_item['price']    : 0;
 			}
 		}
 
