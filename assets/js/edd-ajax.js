@@ -437,7 +437,7 @@ jQuery(document).ready(function ($) {
 			field_name = 'edd_address_state';
 		}
 
-		var state_inputs = document.getElementById('card_state');
+		var state_inputs = document.getElementById(field_name );
 
 		// If the country is being changed, and there is a state field being shown...
 		if( 'card_state' != $this.attr('id') && null != state_inputs ) {
@@ -468,7 +468,7 @@ jQuery(document).ready(function ($) {
 					var state_inputs = 'input[name="card_state"], select[name="card_state"], input[name="edd_address_state"], select[name="edd_address_state"]';
 
 					if( 'nostates' == $.trim(response) ) {
-						var text_field = '<input type="text" id="card_state" name="card_state" class="card-state edd-input required" value=""/>';
+						var text_field = '<input type="text" id=' + field_name + ' name="card_state" class="card-state edd-input required" value=""/>';
 						$form.find(state_inputs).replaceWith( text_field );
 					} else {
 						$form.find(state_inputs).replaceWith( response );
