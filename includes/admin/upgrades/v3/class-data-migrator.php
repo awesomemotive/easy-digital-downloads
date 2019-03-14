@@ -414,12 +414,44 @@ class Data_Migrator {
 			$date_completed = EDD()->utils->date( $date_completed, edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString();
 		}
 
+		// Account for a situation where the post_date_gmt is set to 0000-00-00 00:00:00
+		$date_created_gmt = $data->post_date_gmt;
+		if ( '0000-00-00 00:00:00' === $date_created_gmt ) {
+
+			$date_created_gmt  = new DateTime( $data->post_date );
+			$modified_time     = new DateTime( $data->post_modified );
+			$modified_time_gmt = new DateTime( $data->post_modified_gmt );
+
+			$diff = $modified_time_gmt->diff( $modified_time );
+
+			$time_diff = 'PT';
+
+			// Add hours to the offset string.
+			if ( ! empty( $diff->h ) ) {
+				$time_diff .= $diff->h . 'H';
+			}
+
+			// Add minutes to the offset string.
+			if ( ! empty( $diff->i ) ) {
+				$time_diff .= $diff->i . 'M';
+			}
+
+			// Account for -/+ GMT offsets.
+			if ( 1 === $diff->invert ) {
+				$date_created_gmt->add( new DateInterval( $time_diff ) );
+			} else {
+				$date_created_gmt->sub( new DateInterval( $time_diff ) );
+			}
+
+			$date_created_gmt = $date_created_gmt->format('Y-m-d H:i:s');
+		}
+
 		$order_data = array(
 			'parent'         => $data->post_parent,
 			'order_number'   => $order_number,
 			'status'         => $order_status,
 			'type'           => 'sale',
-			'date_created'   => $data->post_date_gmt, // GMT is stored in the database as the offset is applied by the new query classes.
+			'date_created'   => $date_created_gmt, // GMT is stored in the database as the offset is applied by the new query classes.
 			'date_modified'  => $data->post_modified_gmt, // GMT is stored in the database as the offset is applied by the new query classes.
 			'date_completed' => $date_completed,
 			'user_id'        => $user_id,
@@ -620,7 +652,7 @@ class Data_Migrator {
 					'discount'      => $cart_item['discount'],
 					'tax'           => $cart_item['tax'],
 					'total'         => (float) $cart_item['price'],
-					'date_created'  => $data->post_date_gmt,
+					'date_created'  => $date_created_gmt,
 					'date_modified' => $data->post_modified_gmt,
 				);
 
@@ -732,7 +764,7 @@ class Data_Migrator {
 					'discount'      => 0.00,
 					'tax'           => 0.00,
 					'total'         => (float) $payment_meta['amount'],
-					'date_created'  => $data->post_date_gmt,
+					'date_created'  => $date_created_gmt,
 					'date_modified' => $data->post_modified_gmt,
 				);
 
