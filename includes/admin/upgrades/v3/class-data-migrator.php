@@ -335,6 +335,11 @@ class Data_Migrator {
 		// Some old EDD data has the user info serialized, but starting with something other than a: so it can't be unserialized
 		if ( ! is_array( $user_info ) && is_string( $user_info ) ) {
 			$user_info = substr_replace( $user_info, 'a', 0, 1 );
+			$user_info = maybe_unserialize( $user_info );
+
+			if ( ! is_array( $user_info ) ) {
+				$user_info = array();
+			}
 		}
 
 		$order_number   = isset( $meta['_edd_payment_number'][0] ) ? $meta['_edd_payment_number'][0] : '';
@@ -367,14 +372,14 @@ class Data_Migrator {
 			: $user_id;
 
 		// Account for possible double serialization of the cart_details
-		$cart_details = maybe_unserialize( $payment_meta['cart_details'] );
+		$cart_details = isset( $payment_meta['cart_details'] ) ? maybe_unserialize( $payment_meta['cart_details'] ) : array();
 		// Some old EDD data has the cart details serialized, but starting with something other than a: so it can't be unserialized
 		if ( ! is_array( $cart_details ) && is_string( $cart_details ) ) {
 			$cart_details = substr_replace( $cart_details, 'a', 0, 1 );
 		}
 
 		// Account for possible double serialization of the cart_details
-		$cart_downloads = maybe_unserialize( $payment_meta['downloads'] );
+		$cart_downloads = isset( $payment_meta['downloads'] ) ? maybe_unserialize( $payment_meta['downloads'] ) : array();
 		// Some old EDD data has the downloads serialized, but starting with something other than a: so it can't be unserialized
 		if ( ! is_array( $cart_downloads ) && is_string( $cart_downloads ) ) {
 			$cart_downloads = substr_replace( $cart_downloads, 'a', 0, 1 );
