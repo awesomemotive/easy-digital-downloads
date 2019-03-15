@@ -1371,6 +1371,7 @@ class EDD_CLI extends WP_CLI_Command {
 			SELECT *
 			FROM {$wpdb->posts}
 			WHERE post_type = 'edd_payment'
+			ORDER BY ID ASC
 		";
 		$results = $wpdb->get_results( $sql );
 		$total   = count( $results );
