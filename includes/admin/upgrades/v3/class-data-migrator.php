@@ -949,6 +949,9 @@ class Data_Migrator {
 
 		// Store the legacy ID in order meta.
 		edd_add_order_meta( $order_id, 'legacy_order_id', $data->ID );
+
+		// Now that we're done, let's run a hook here so we can allow extensions to make any necessary changes
+		do_action( 'edd_30_migrate_order', $order_id, $data->ID );
 	}
 
 	/**
