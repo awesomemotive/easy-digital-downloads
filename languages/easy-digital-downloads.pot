@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.9.11\n"
+"Project-Id-Version: Easy Digital Downloads 2.9.12\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2019-02-15 22:12:02+00:00\n"
+"POT-Creation-Date: 2019-03-25 22:37:30+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22,7 +22,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-Bookmarks: \n"
 "X-Textdomain-Support: yes\n"
-"X-Generator: grunt-wp-i18n1.0.2\n"
+"X-Generator: grunt-wp-i18n 1.0.3\n"
 
 #: easy-digital-downloads.php:183 easy-digital-downloads.php:195
 msgid "Cheatin&#8217; huh?"
@@ -663,7 +663,7 @@ msgid "Customer since %s"
 msgstr ""
 
 #: includes/admin/customers/customers.php:313
-#: includes/privacy-functions.php:857
+#: includes/privacy-functions.php:867
 msgid "User ID"
 msgstr ""
 
@@ -751,7 +751,7 @@ msgid "Remove"
 msgstr ""
 
 #: includes/admin/customers/customers.php:416
-#: includes/checkout/template.php:182 includes/privacy-functions.php:754
+#: includes/checkout/template.php:182 includes/privacy-functions.php:759
 msgid "Email Address"
 msgstr ""
 
@@ -802,7 +802,7 @@ msgstr ""
 #: includes/admin/reporting/export/class-batch-export-file-downloads.php:41
 #: includes/admin/reporting/export/class-batch-export-payments.php:60
 #: includes/admin/reporting/export/class-batch-export-sales.php:49
-#: includes/admin/tools.php:587 includes/privacy-functions.php:932
+#: includes/admin/tools.php:587 includes/privacy-functions.php:942
 #: templates/history-purchases.php:19 templates/shortcode-receipt.php:59
 msgid "Date"
 msgstr ""
@@ -814,7 +814,7 @@ msgstr ""
 #: includes/admin/reporting/class-export-payments.php:80
 #: includes/admin/reporting/export/class-batch-export-downloads.php:48
 #: includes/admin/reporting/export/class-batch-export-payments.php:65
-#: includes/admin/tools.php:614 includes/privacy-functions.php:766
+#: includes/admin/tools.php:614 includes/privacy-functions.php:771
 msgid "Status"
 msgstr ""
 
@@ -2399,7 +2399,7 @@ msgid "Click \"Save Payment\" to create new customer"
 msgstr ""
 
 #: includes/admin/payments/view-order-details.php:689
-#: includes/checkout/template.php:347 includes/privacy-functions.php:758
+#: includes/checkout/template.php:347 includes/privacy-functions.php:763
 msgid "Billing Address"
 msgstr ""
 
@@ -2572,8 +2572,8 @@ msgstr ""
 #: includes/admin/reporting/export/class-batch-export-api-requests.php:41
 #: includes/admin/reporting/export/class-batch-export-file-downloads.php:43
 #: includes/admin/reporting/export/class-batch-export-payments.php:63
-#: includes/admin/tools.php:542 includes/privacy-functions.php:762
-#: includes/privacy-functions.php:861 includes/privacy-functions.php:940
+#: includes/admin/tools.php:542 includes/privacy-functions.php:767
+#: includes/privacy-functions.php:871 includes/privacy-functions.php:950
 msgid "IP Address"
 msgstr ""
 
@@ -2866,7 +2866,7 @@ msgstr ""
 #: includes/admin/reporting/export/class-batch-export-payments.php:42
 #: includes/admin/reporting/export/class-batch-export-sales.php:41
 #: includes/admin/tools.php:524 includes/privacy-functions.php:581
-#: includes/privacy-functions.php:853
+#: includes/privacy-functions.php:863
 msgid "Customer ID"
 msgstr ""
 
@@ -7490,7 +7490,7 @@ msgid "Payment ID %d successfully anonymized."
 msgstr ""
 
 #: includes/privacy-functions.php:533 includes/privacy-functions.php:577
-#: includes/privacy-functions.php:1126
+#: includes/privacy-functions.php:1136
 msgid "Customer Record"
 msgstr ""
 
@@ -7498,8 +7498,8 @@ msgstr ""
 msgid "Billing Information"
 msgstr ""
 
-#: includes/privacy-functions.php:549 includes/privacy-functions.php:949
-#: includes/privacy-functions.php:1141
+#: includes/privacy-functions.php:549 includes/privacy-functions.php:959
+#: includes/privacy-functions.php:1151
 msgid "API Access Logs"
 msgstr ""
 
@@ -7515,91 +7515,91 @@ msgstr ""
 msgid "Agreed to Privacy Policy"
 msgstr ""
 
-#: includes/privacy-functions.php:732
+#: includes/privacy-functions.php:737
 msgid "Order ID / Number"
 msgstr ""
 
-#: includes/privacy-functions.php:736
+#: includes/privacy-functions.php:741
 msgid "Order Date"
 msgstr ""
 
-#: includes/privacy-functions.php:740
+#: includes/privacy-functions.php:745
 msgid "Order Completed Date"
 msgstr ""
 
-#: includes/privacy-functions.php:746
+#: includes/privacy-functions.php:751
 msgid "Order Total"
 msgstr ""
 
-#: includes/privacy-functions.php:750
+#: includes/privacy-functions.php:755
 msgid "Order Items"
 msgstr ""
 
-#: includes/privacy-functions.php:775
+#: includes/privacy-functions.php:780
 msgid "Customer Orders"
 msgstr ""
 
-#: includes/privacy-functions.php:841
+#: includes/privacy-functions.php:851
 msgid "Date of Download"
 msgstr ""
 
-#: includes/privacy-functions.php:845
+#: includes/privacy-functions.php:855
 msgid "Product Downloaded"
 msgstr ""
 
-#: includes/privacy-functions.php:849
+#: includes/privacy-functions.php:859
 msgid "Order ID"
 msgstr ""
 
-#: includes/privacy-functions.php:870 includes/privacy-functions.php:1136
+#: includes/privacy-functions.php:880 includes/privacy-functions.php:1146
 msgid "File Download Logs"
 msgstr ""
 
-#: includes/privacy-functions.php:936
+#: includes/privacy-functions.php:946
 msgid "Request"
 msgstr ""
 
-#: includes/privacy-functions.php:1012
+#: includes/privacy-functions.php:1022
 msgid "Possibly Delete Customer"
 msgstr ""
 
-#: includes/privacy-functions.php:1078
+#: includes/privacy-functions.php:1088
 msgid "Customer for %s not deleted, due to remaining payments."
 msgstr ""
 
-#: includes/privacy-functions.php:1096
+#: includes/privacy-functions.php:1106
 msgid "Customer for %s successfully deleted."
 msgstr ""
 
-#: includes/privacy-functions.php:1107
+#: includes/privacy-functions.php:1117
 msgid "Customer for %s failed to be deleted."
 msgstr ""
 
-#: includes/privacy-functions.php:1131
+#: includes/privacy-functions.php:1141
 msgid "Payment Record"
 msgstr ""
 
-#: includes/privacy-functions.php:1174
+#: includes/privacy-functions.php:1184
 msgid "Customer for %s has been anonymized."
 msgstr ""
 
-#: includes/privacy-functions.php:1199
+#: includes/privacy-functions.php:1209
 msgid "No payments found for %s."
 msgstr ""
 
-#: includes/privacy-functions.php:1200
+#: includes/privacy-functions.php:1210
 msgid "All eligible payments anonymized or deleted for %s."
 msgstr ""
 
-#: includes/privacy-functions.php:1273
+#: includes/privacy-functions.php:1283
 msgid "All eligible file download logs anonymized or deleted for %s."
 msgstr ""
 
-#: includes/privacy-functions.php:1322
+#: includes/privacy-functions.php:1332
 msgid "No User found for %s, no access logs to remove."
 msgstr ""
 
-#: includes/privacy-functions.php:1347
+#: includes/privacy-functions.php:1357
 msgid "All API access logs deleted for %s."
 msgstr ""
 
