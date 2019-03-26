@@ -5,8 +5,8 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.4
-Tested up to: 5.0.2
-Stable Tag: 2.9.11
+Tested up to: 5.1.1
+Stable Tag: 2.9.12
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -188,6 +188,13 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+= 2.9.12, March 26, 2019 =
+* Fix: Limit PayPal PDT verification to purchase sessions.
+* Fix: Discount start times were not accounting for GMT offsets.
+* Fix: Improved reliability of the State field when selecting different countries.
+* Fix: GDPR Data Exporter now skips any requests for customer data when no customer is found for a user.
+* Fix: WordPress 5.x : apiFetch call was resulting in invalid JSON response.
+* Fix: Corrected a conditional check typo when determining if settings page is EDD related.
 
 = 2.9.11, January 6, 2019 =
 * Fix: PayPal PDT amount validation fails for some accounts due to missing payment_gross field.
