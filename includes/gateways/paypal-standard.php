@@ -909,7 +909,18 @@ function edd_paypal_process_pdt_on_return() {
 		return;
 	}
 
-	$payment = new EDD_Payment( $payment_id );
+	$purchase_session = edd_get_purchase_session();
+	$payment          = new EDD_Payment( $payment_id );
+
+	// If there is no purchase session, don't try and fire PDT.
+	if ( empty( $purchase_session ) ) {
+		return;
+	}
+
+	// Do not fire a PDT verification if the purchase session does not match the payment-id PDT is asking to verify.
+	if ( ! empty( $purchase_session['purchase_key'] ) && $payment->key !== $purchase_session['purchase_key'] ) {
+		return;
+	}
 
 	if( $token && ! empty( $_GET['tx'] ) && $payment->ID > 0 ) {
 
