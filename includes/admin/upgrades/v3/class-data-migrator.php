@@ -326,6 +326,7 @@ class Data_Migrator {
 		}
 
 		/** Create a new order ***************************************/
+		global $wpdb;
 
 		$meta = get_post_custom( $data->ID );
 
@@ -446,8 +447,13 @@ class Data_Migrator {
 			$date_created_gmt = $date_created_gmt->format('Y-m-d H:i:s');
 		}
 
+		$parent = 0;
+		if ( ! empty( $data->post_parent ) ) {
+			$parent = $wpdb->get_var( $wpdb->prepare( "SELECT edd_order_id FROM {$wpdb->edd_ordermeta} WHERE meta_key = %s AND meta_value = %d", esc_sql( 'legacy_order_id' ), $data->ID ) );
+		}
+
 		$order_data = array(
-			'parent'         => $data->post_parent,
+			'parent'         => ! empty( $parent ) ? $parent : 0,
 			'order_number'   => $order_number,
 			'status'         => $order_status,
 			'type'           => 'sale',
