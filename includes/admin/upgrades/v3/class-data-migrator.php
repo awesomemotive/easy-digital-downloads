@@ -328,6 +328,7 @@ class Data_Migrator {
 		/** Create a new order ***************************************/
 		global $wpdb;
 
+		// Get's all the post meta for this payment.
 		$meta = get_post_custom( $data->ID );
 
 		$payment_meta = maybe_unserialize( $meta['_edd_payment_meta'][0] );
@@ -386,6 +387,7 @@ class Data_Migrator {
 			$cart_downloads = substr_replace( $cart_downloads, 'a', 0, 1 );
 		}
 
+		// If the order status is 'publish' convert it to the new 'complete' status.
 		$order_status = 'publish' === $data->post_status ? 'complete' : $data->post_status;
 
 		// If there are no items, and it's abandoned, just return, since this isn't a valid order.
@@ -401,12 +403,15 @@ class Data_Migrator {
 
 		// In some cases (very few) there is no cart details...so we have to just avoid this part.
 		if ( ! empty( $cart_details ) && is_array( $cart_details ) ) {
+
+			// Loop through the items in the purchase to build the totals.
 			foreach ( $cart_details as $cart_item ) {
 				$subtotal += (float) isset( $cart_item['subtotal'] ) ? $cart_item['subtotal'] : 0;
 				$tax      += (float) isset( $cart_item['tax'] )      ? $cart_item['tax']      : 0;
 				$discount += (float) isset( $cart_item['discount'] ) ? $cart_item['discount'] : 0;
 				$total    += (float) isset( $cart_item['price'] )    ? $cart_item['price']    : 0;
 			}
+
 		}
 
 		// Maybe convert the date completed to UTC.
@@ -447,11 +452,13 @@ class Data_Migrator {
 			$date_created_gmt = $date_created_gmt->format('Y-m-d H:i:s');
 		}
 
+		// Find the parent payment, if there is one.
 		$parent = 0;
 		if ( ! empty( $data->post_parent ) ) {
 			$parent = $wpdb->get_var( $wpdb->prepare( "SELECT edd_order_id FROM {$wpdb->edd_ordermeta} WHERE meta_key = %s AND meta_value = %d", esc_sql( 'legacy_order_id' ), $data->ID ) );
 		}
 
+		// Build the order data before inserting.
 		$order_data = array(
 			'parent'         => ! empty( $parent ) ? $parent : 0,
 			'order_number'   => $order_number,
@@ -479,6 +486,7 @@ class Data_Migrator {
 		// Reset the $refund_id variable so that we don't end up accidentally creating refunds.
 		$refund_id = 0;
 
+		// If the order status is 'refunded', we need to generate a new order with the type of 'refund'.
 		if ( 'refunded' === $order_status ) {
 
 			// Since the refund is a near copy of the original order, copy over the arguments.
@@ -563,10 +571,13 @@ class Data_Migrator {
 
 		/** Migrate meta *********************************************/
 
+		// Unlimited downloads meta is not an order property, so we set it on the order meta for the new order ID.
 		if ( isset( $meta['_edd_payment_unlimited_downloads'] ) && ! empty( $meta['_edd_payment_unlimited_downloads'][0] ) ) {
 			edd_add_order_meta( $order_id, 'unlimited_downloads', $meta['_edd_payment_unlimited_downloads'][0] );
 		}
 
+		// Transaction IDs are no longer meta, and have their own table and data set, so we need to add the transactions.
+		// @TODO: Add support for multiple transaction IDs (from things like Stripe).
 		if ( isset( $meta['_edd_payment_transaction_id'] ) && ! empty( $meta['_edd_payment_transaction_id'][0] ) ) {
 			edd_add_order_transaction( array(
 				'object_id'      => $order_id,
@@ -595,15 +606,17 @@ class Data_Migrator {
 			'tax',
 		);
 
+		// Remove all the core payment meta from the array, and...
 		$remaining_payment_meta = array_diff_key( $meta['_edd_payment_meta'], array_flip( $core_meta_keys ) );
 
-		// If we have extra payment meta, it needs to be migrated across.
+		// ..If we have extra payment meta, it needs to be migrated across.
 		if ( 0 < count( $remaining_payment_meta ) ) {
 			edd_add_order_meta( $order_id, 'payment_meta', $remaining_payment_meta );
 		}
 
 		/** Create order items ***************************************/
 
+		// Now we iterate through all the cart items and make rows in the order items table.
 		if ( ! empty( $cart_details ) ) {
 			foreach ( $cart_details as $key => $cart_item ) {
 				// Reset any conditional IDs to be safe.
@@ -664,6 +677,7 @@ class Data_Migrator {
 
 				$order_item_id = edd_add_order_item( $order_item_args );
 
+				// If the order status is refunded, we also need to add all the refunded order items on the refund order as well.
 				if ( ! empty( $refund_id ) ) {
 
 					// Since the refund is a near copy of the original order, copy over the arguments.
@@ -718,6 +732,7 @@ class Data_Migrator {
 						// Fee ID.
 						edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
 
+						// If we refunded the main order, the fees also need to be added to the refund order type we created.
 						if ( ! empty( $refund_id ) ) {
 							$refund_adjustment_args = $adjustment_args;
 							$refund_adjustment_args['object_id'] = $refund_order_item_id;
@@ -776,6 +791,7 @@ class Data_Migrator {
 
 				edd_add_order_item( $order_item_args );
 
+				// If the order was refunded, we also need to add these items to the refund order.
 				if ( ! empty( $refund_id ) ) {
 
 					// Since the refund is a near copy of the original order, copy over the arguments.
@@ -944,9 +960,10 @@ class Data_Migrator {
 			'_edd_payment_number',
 		);
 
+		// Determine what main payment meta keys were from core and what were custom...
 		$remaining_meta = array_diff_key( $meta, array_flip( $core_meta_keys ) );
 
-		// Migrate additional payment meta.
+		// ...and whatever is not from core, needs to be added as new order meta.
 		foreach ( $remaining_meta as $meta_key => $meta_value ) {
 			$meta_value = $meta_value[0];
 
