@@ -335,13 +335,11 @@ class Data_Migrator {
 		$user_info    = maybe_unserialize( $payment_meta['user_info'] );
 
 		// Some old EDD data has the user info serialized, but starting with something other than a: so it can't be unserialized
-		if ( ! is_array( $user_info ) && is_string( $user_info ) ) {
-			$user_info = substr_replace( $user_info, 'a', 0, 1 );
-			$user_info = maybe_unserialize( $user_info );
+		$user_info = self::fix_possible_serialization( $user_info );
+		$user_info = maybe_unserialize( $user_info );
 
-			if ( ! is_array( $user_info ) ) {
-				$user_info = array();
-			}
+		if ( ! is_array( $user_info ) ) {
+			$user_info = array();
 		}
 
 		$order_number   = isset( $meta['_edd_payment_number'][0] ) ? $meta['_edd_payment_number'][0] : '';
@@ -375,17 +373,15 @@ class Data_Migrator {
 
 		// Account for possible double serialization of the cart_details
 		$cart_details = isset( $payment_meta['cart_details'] ) ? maybe_unserialize( $payment_meta['cart_details'] ) : array();
+
 		// Some old EDD data has the cart details serialized, but starting with something other than a: so it can't be unserialized
-		if ( ! is_array( $cart_details ) && is_string( $cart_details ) ) {
-			$cart_details = substr_replace( $cart_details, 'a', 0, 1 );
-		}
+		$cart_details = self::fix_possible_serialization( $cart_details );
 
 		// Account for possible double serialization of the cart_details
 		$cart_downloads = isset( $payment_meta['downloads'] ) ? maybe_unserialize( $payment_meta['downloads'] ) : array();
+
 		// Some old EDD data has the downloads serialized, but starting with something other than a: so it can't be unserialized
-		if ( ! is_array( $cart_downloads ) && is_string( $cart_downloads ) ) {
-			$cart_downloads = substr_replace( $cart_downloads, 'a', 0, 1 );
-		}
+		$cart_downloads = self::fix_possible_serialization( $cart_downloads );
 
 		// If the order status is 'publish' convert it to the new 'complete' status.
 		$order_status = 'publish' === $data->post_status ? 'complete' : $data->post_status;
@@ -1010,5 +1006,22 @@ class Data_Migrator {
 		);
 
 		edd_add_adjustment( $adjustment_data );
+	}
+
+	/**
+	 * Given that some data quite possible has bad serialization, we need to possibly fix the bad serialization.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param $data
+	 *
+	 * @return mixed
+	 */
+	private static function fix_possible_serialization( $data ) {
+		if ( ! is_array( $data ) && is_string( $data ) ) {
+			$data = substr_replace( $data, 'a', 0, 1 );
+		}
+
+		return $data;
 	}
 }
