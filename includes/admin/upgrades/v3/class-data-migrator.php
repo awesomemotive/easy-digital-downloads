@@ -113,7 +113,7 @@ class Data_Migrator {
 			if ( ! empty( $notes ) ) {
 				foreach ( $notes as $note ) {
 					$date = isset( $note[0] )
-						? Carbon::parse( $note[0], edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString()
+						? \Carbon\Carbon::parse( $note[0], edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString()
 						: '';
 
 					$note_content = isset( $note[1] )
