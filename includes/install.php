@@ -238,7 +238,7 @@ function edd_new_blog_created( $blog ) {
 	}
 
 	if ( ! is_int( $blog ) ) {
-		$blog_id = $blog_id->id;
+		$blog = $blog->id;
 	}
 
 	switch_to_blog( $blog );
