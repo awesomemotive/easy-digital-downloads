@@ -229,26 +229,23 @@ function edd_run_install() {
  * When a new Blog is created in multisite, see if EDD is network activated, and run the installer
  *
  * @since  2.5
- * @param  int    $blog_id The Blog ID created
- * @param  int    $user_id The User ID set as the admin
- * @param  string $domain  The URL
- * @param  string $path    Site Path
- * @param  int    $site_id The Site ID
- * @param  array  $meta    Blog Meta
+ * @param  int $blog_id The Blog ID created
  * @return void
  */
-function edd_new_blog_created( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
-
-	if ( is_plugin_active_for_network( plugin_basename( EDD_PLUGIN_FILE ) ) ) {
-
-		switch_to_blog( $blog_id );
-		edd_install();
-		restore_current_blog();
-
+function edd_new_blog_created( $blog_id ) {
+	if ( ! is_plugin_active_for_network( plugin_basename( EDD_PLUGIN_FILE ) ) ) {
+		return;
 	}
 
+	switch_to_blog( $blog_id );
+	edd_install();
+	restore_current_blog();
 }
-add_action( 'wpmu_new_blog', 'edd_new_blog_created', 10, 6 );
+if ( version_compare( get_bloginfo( 'version' ), '5.1', '>=' ) ) {
+	add_action( 'wp_initialize_site', 'edd_new_blog_created' );
+} else {
+	add_action( 'wpmu_new_blog', 'edd_new_blog_created' );
+}
 
 
 /**
