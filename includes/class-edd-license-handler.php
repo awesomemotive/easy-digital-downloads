@@ -261,6 +261,10 @@ class EDD_License {
 			'url'        => home_url()
 		);
 
+		if ( ! empty( $this->item_id ) ) {
+			$api_params['item_id'] = $this->item_id;
+		}
+
 		// Call the API
 		$response = wp_remote_post(
 			$this->api_url,
@@ -321,6 +325,10 @@ class EDD_License {
 				'url'        => home_url()
 			);
 
+			if ( ! empty( $this->item_id ) ) {
+				$api_params['item_id'] = $this->item_id;
+			}
+
 			// Call the API
 			$response = wp_remote_post(
 				$this->api_url,
@@ -368,6 +376,10 @@ class EDD_License {
 			'item_name' => urlencode( $this->item_name ),
 			'url'       => home_url()
 		);
+
+		if ( ! empty( $this->item_id ) ) {
+			$api_params['item_id'] = $this->item_id;
+		}
 
 		// Call the API
 		$response = wp_remote_post(
