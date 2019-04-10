@@ -23,8 +23,11 @@ defined( 'ABSPATH' ) || exit;
  */
 function edd_order_sections( $item = false ) {
 	// Enqueue scripts.
-	wp_enqueue_script( 'edd-admin-payments' );
-	wp_enqueue_script( 'edd-admin-orders' );
+	if ( edd_is_add_order_page() ) {
+		wp_enqueue_script( 'edd-admin-orders' );
+	} else {
+		wp_enqueue_script( 'edd-admin-payments' );
+	}
 
 	// Instantiate the Sections class and sections array
 	$sections = new EDD\Admin\Order_Sections();
@@ -126,7 +129,7 @@ function edd_order_details_customer( $order ) {
 
 	$change_text = edd_is_add_order_page()
 		? esc_html__( 'Assign', 'easy-digital-downloads' )
-		: esc_html__( 'Reassign', 'easy-digital-downloads' );
+		: esc_html__( 'Switch Customer', 'easy-digital-downloads' );
 
 	$customer_id = ! empty( $customer )
 		? $customer->id
@@ -134,19 +137,44 @@ function edd_order_details_customer( $order ) {
 
 	<div>
 		<div class="column-container order-customer-info">
-			<?php if ( ! empty( $customer ) ) : ?>
-				<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $order->customer_id ); ?>"><?php echo esc_html( $customer->name ); ?></a>
-				<input type="hidden" name="edd-current-customer" value="<?php echo esc_attr( $order->customer_id ); ?>"/>
-			<?php else : ?>
-				&mdash;
-			<?php endif; ?>
+			<div class="customer-details-wrap">
+				<?php if ( ! empty( $customer ) ) : ?>
+					<div class="avatar-wrap left" id="customer-avatar">
+						<?php echo get_avatar( $customer->email, 75 ); ?><br />
+					</div>
+					<div class="customer-details">
+						<span class="customer-name">
+							<?php echo esc_html( $customer->name ); ?>
+						</span>
 
-			<div style="clear: both;">
-				<hr>
-				<a href="#change" class="edd-payment-change-customer"><?php echo $change_text; // WPCS: XSS ok. ?></a>
-				&nbsp;|&nbsp;
-				<a href="#new" class="edd-payment-new-customer"><?php esc_html_e( 'New', 'easy-digital-downloads' ); ?></a>
+						<span>
+							<?php echo esc_html( $customer->email ); ?>
+						</span>
+
+						<span>
+							<?php
+							printf(
+							/* translators: The date. */
+								esc_html__( 'Customer since %s', 'easy-digital-downloads' ),
+								esc_html( edd_date_i18n( $customer->date_created ) )
+							);
+							?>
+						</span>
+
+						<span>
+							<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ); ?>"><?php _e( 'View customer record', 'easy-digital-downloads' ); ?></a>
+						</span>
+					</div>
+				<?php else : ?>
+					&mdash;
+				<?php endif; ?>
 			</div>
+
+			<p class="customer-details-actions">
+				<button class="edd-payment-change-customer button-secondary"><?php echo $change_text; // WPCS: XSS ok. ?></button>
+				&nbsp;
+				<button class="edd-payment-new-customer button-secondary"><?php esc_html_e( 'Assign New Customer', 'easy-digital-downloads' ); ?></button>
+			</p>
 		</div>
 
 		<div class="column-container change-customer" style="display: none">
@@ -160,7 +188,10 @@ function edd_order_details_customer( $order ) {
 			?>
 
 			<input type="hidden" id="edd-change-customer" name="edd-change-customer" value="0" />
-			<a href="#cancel" class="edd-payment-change-customer-cancel edd-delete"><?php esc_html_e( 'Cancel', 'easy-digital-downloads' ); ?></a>
+
+			<p>
+				<button class="edd-payment-change-customer-cancel edd-delete button-link"><?php esc_html_e( 'Cancel', 'easy-digital-downloads' ); ?></button>
+			</p>
 		</div>
 
 		<div class="column-container new-customer" style="display: none">
@@ -181,7 +212,7 @@ function edd_order_details_customer( $order ) {
 
 			<p>
 				<input type="hidden" id="edd-new-customer" name="edd-new-customer" value="0" />
-				<a href="#cancel" class="edd-payment-new-customer-cancel edd-delete"><?php esc_html_e( 'Cancel', 'easy-digital-downloads' ); ?></a>
+				<button class="edd-payment-new-customer-cancel edd-delete button-link"><?php esc_html_e( 'Cancel', 'easy-digital-downloads' ); ?></button>
 			</p>
 		</div>
 	</div>
@@ -205,19 +236,22 @@ function edd_order_details_email( $order ) {
 
 	<div><?php
 		if ( ! empty( $customer->emails ) && count( (array) $customer->emails ) > 1 ) : ?>
+			<span class="edd-order-resend-receipt-header">
+				<?php _e( 'Choose an email address to send the receipt to:', 'easy-digital-downloads' ); ?>
+			</span>
 
-			<span class="edd-order-resend-receipt-addresses" style="display:none;">
-				<select class="edd-order-resend-receipt-email">
-					<option value=""><?php esc_html_e( ' -- select email --', 'easy-digital-downloads' ); ?></option>
-					<?php foreach ( $customer->emails as $email ) : ?>
-						<option value="<?php echo rawurlencode( sanitize_email( $email ) ); ?>"><?php echo esc_attr( $email ); ?></option>
-					<?php endforeach; ?>
-				</select>
+			<span class="edd-order-resend-receipt-addresses">
+				<?php foreach ( $customer->emails as $key => $email ) : ?>
+				<label>
+					<input autocomplete="off" class="edd-order-resend-receipt-email" name="edd-order-resend-receipt-address" type="radio" value="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" />
+					<?php echo esc_attr( $email ); ?>
+				</label>
+				<?php endforeach; ?>
 			</span>
 
 		<?php else : ?>
 
-			<input readonly value="<?php echo esc_attr( $order->email ); ?>" />
+			<input readonly type="email" value="<?php echo esc_attr( $order->email ); ?>" />
 
 		<?php endif; ?>
 
@@ -404,11 +438,12 @@ function edd_order_details_items( $order ) {
 						<span class="edd-order-details-label-mobile"><?php printf( esc_html_x( '%s To Add', 'order details select item to add - mobile', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></span>
 
 						<?php echo EDD()->html->product_dropdown( array(
-							'name'       => 'edd-order-add-download-select',
-							'id'         => 'edd-order-add-download-select',
-							'class'      => 'edd-order-add-download-select',
-							'chosen'     => true,
-							'variations' => true,
+							'name'                 => 'edd-order-add-download-select',
+							'id'                   => 'edd-order-add-download-select',
+							'class'                => 'edd-order-add-download-select',
+							'chosen'               => true,
+							'variations'           => true,
+							'show_variations_only' => true,
 						) ); // WPCS: XSS ok. ?>
 
 						<?php if ( edd_item_quantities_enabled() ) : ?>

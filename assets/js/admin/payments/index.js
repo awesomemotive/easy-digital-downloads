@@ -1,7 +1,7 @@
 /**
  * Internal dependencies.
  */
-import { chosenVars } from 'utils/chosen.js';
+import { getChosenVars } from 'utils/chosen.js';
 
 jQuery( document ).ready( function( $ ) {
 	$( '.download_page_edd-payment-history table.orders .row-actions .delete a, a.edd-delete-payment' ).on( 'click', function() {
@@ -65,7 +65,10 @@ const EDD_Edit_Payment = {
 					state_wrapper.replaceWith( '<input type="text" name="edd-payment-address[0][region]" value="" class="edd-edit-toggles medium-text"/>' );
 				} else {
 					state_wrapper.replaceWith( response );
-					$( '#edd-order-address-state-wrap select' ).chosen( chosenVars );
+					$( '#edd-order-address-state-wrap select' ).each( function() {
+						const el = $( this );
+						el.chosen( getChosenVars( el ) );
+					} );
 				}
 			} );
 
@@ -359,14 +362,19 @@ const EDD_Edit_Payment = {
 		} );
 
 		$( document.body ).on( 'change', '.edd-order-resend-receipt-email', function() {
-			const href = $( '#edd-select-receipt-email' ).prop( 'href' ) + '&email=' + $( this ).val();
+			const selected = $('input:radio.edd-order-resend-receipt-email:checked').val();
 
+			$( '#edd-select-receipt-email').data( 'email', selected );
+		} );
+
+		$( document.body).on( 'click', '#edd-select-receipt-email', function () {
 			if ( confirm( edd_vars.resend_receipt ) ) {
+				const href = $( this ).prop( 'href' ) + '&email=' + $( this ).data( 'email' );
 				window.location = href;
 			}
 		} );
 
-		$( document.body ).on( 'click', '#edd-resend-receipt', function( e ) {
+		$( document.body ).on( 'click', '#edd-resend-receipt', function() {
 			return confirm( edd_vars.resend_receipt );
 		} );
 	},

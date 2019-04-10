@@ -293,6 +293,19 @@ class EDD_Base_Log_List_Table extends List_Table {
 	}
 
 	/**
+	 * Retrieves the logs data.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Logs data.
+	 */
+	public function get_data() {
+		$log_query = $this->get_query_args();
+
+		return $this->get_logs( $log_query );
+	}
+
+	/**
 	 * Setup the final data for the table.
 	 *
 	 * @since 3.0
@@ -305,8 +318,8 @@ class EDD_Base_Log_List_Table extends List_Table {
 			$this->get_sortable_columns()
 		);
 
+		$this->items = $this->get_data();
 		$log_query   = $this->get_query_args();
-		$this->items = $this->get_logs( $log_query );
 		$total_items = $this->get_total( $log_query );
 
 		$this->set_pagination_args( array(

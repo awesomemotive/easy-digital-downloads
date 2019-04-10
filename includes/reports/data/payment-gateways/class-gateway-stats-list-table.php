@@ -85,9 +85,9 @@ class Gateway_Stats extends List_Table {
 	 * Build all the reports data
 	 *
 	 * @since 1.5
-	 * @return array $reports_data All the data for customer reports
+	 * @return array All the data for customer reports
 	 */
-	public function reports_data() {
+	public function get_data() {
 		$filter = Reports\get_filter_value( 'dates' );
 
 		$reports_data = array();
@@ -154,7 +154,7 @@ class Gateway_Stats extends List_Table {
 		$hidden                = array(); // No hidden columns
 		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-		$this->items           = $this->reports_data();
+		$this->items           = $this->get_data();
 	}
 
 	/**

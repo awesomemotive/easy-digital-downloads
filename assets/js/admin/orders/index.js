@@ -1,7 +1,7 @@
 /**
  * Internal dependencies.
  */
-import { chosenVars } from 'utils/chosen.js';
+import { getChosenVars } from 'utils/chosen.js';
 import './override-amounts.js';
 
 jQuery( document ).ready( function( $ ) {
@@ -179,8 +179,11 @@ var EDD_Add_Order = {
 				edd_admin_globals.customer_address_ajax_result = data;
 
 				if ( data.html ) {
-					$( '.customer-address-select-wrap' ).html( data.html ).show();
-					$( '.customer-address-select-wrap select' ).chosen( chosenVars );
+					$('.customer-address-select-wrap').html(data.html).show();
+					$('.customer-address-select-wrap select').each(function () {
+						const el = $(this);
+						el.chosen(getChosenVars(el));
+					});
 				} else {
 					$( '.customer-address-select-wrap' ).html( '' ).hide();
 				}
@@ -295,7 +298,7 @@ var EDD_Add_Order = {
 
 				$( '.orderitems tbody tr:not(.no-items)' ).each( function() {
 					const amount = parseFloat( $( '.amount .value', this ).text() );
-					const quantity = $( '.quantity .value', this ) ? parseFloat( $( '.column-quantity .value', this ).text() ) : 1;
+					const quantity = $( '.quantity .value', this ).length > 0 ? parseFloat( $( '.column-quantity .value', this ).text() ) : 1;
 					const calculated = amount * quantity;
 					let tax = 0;
 

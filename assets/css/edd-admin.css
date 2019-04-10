@@ -26,9 +26,17 @@
 .edd-wrap a {
 	text-decoration: none;
 }
+
+/**
+ * Tag specificity should not be needed, but cannot
+ * safely be removed for fear of breaking even more things.
+ */
+.wp-core-ui .edd-delete,
 a.edd-delete {
 	color: #a00;
 }
+
+.wp-core-ui .edd-delete:hover,
 a.edd-delete:hover {
 	color: #f00;
 }
@@ -434,6 +442,24 @@ a.edd-delete:hover {
 	background: none;
 	border: 1px solid transparent;
 	box-shadow: none;
+}
+
+.order-customer-info .customer-details-wrap {
+	overflow: hidden;
+}
+
+.order-customer-info .customer-details-actions {
+	margin-bottom: 0;
+}
+
+.order-customer-info .customer-details span {
+	display: block;
+	margin-bottom: 5px;
+}
+
+.order-customer-info .customer-details span.customer-name {
+	font-size: 1.5em;
+	font-weight: 400;
 }
 
 /* Note Styles
@@ -1432,6 +1458,17 @@ input[class*="edd-price-field"] {
 }
 #edd-order-resend-receipt .edd-order-resend-receipt-addresses {
 	margin-top: 10px;
+}
+.edd-order-resend-receipt-header {
+	font-size: 14px;
+	line-height: 1.4;
+}
+.edd-order-resend-receipt-addresses label {
+	display: block;
+	line-height: 1.75em;
+}
+.edd-order-resend-receipt-addresses label:last-child {
+	margin-bottom: 10px;
 }
 .edd-admin-box-inside:last-child {
 	border-bottom: 0;

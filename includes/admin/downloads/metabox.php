@@ -165,11 +165,22 @@ add_action( 'save_post', 'edd_download_meta_box_save', 10, 2 );
  * @return array
  */
 function edd_sanitize_bundled_products_save( $products = array() ) {
-	$products = array_map( 'absint', (array) $products );
-	$self     = array_search( get_the_ID(), $products, true );
 
-	if ( $self !== false ) {
-		unset( $products[ $self ] );
+	$products = array_map( function( $value ) {
+		return preg_replace( '/[^0-9_]/', '', $value );
+	}, (array) $products );
+
+	foreach ( $products as $key => $value ) {
+		$underscore_pos = strpos( $value, '_' );
+		if ( is_numeric( $underscore_pos ) ) {
+			$product_id = substr( $value, 0, $underscore_pos );
+		} else {
+			$product_id = $value;
+		}
+
+		if ( $product_id === get_the_ID() ) {
+			unset( $products[ $key ] );
+		}
 	}
 
 	return array_values( array_unique( $products ) );
@@ -579,13 +590,14 @@ function edd_render_products_field( $post_id ) {
 										<span class="edd-repeatable-row-setting-label"><?php printf( __( 'Select %s:', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></span>
 										<?php
 										echo EDD()->html->product_dropdown( array(
-											'name'       => '_edd_bundled_products[]',
-											'id'         => 'edd_bundled_products_' . $index,
-											'selected'   => $product,
-											'multiple'   => false,
-											'chosen'     => true,
-											'bundles'    => false,
-											'variations' => true,
+											'name'                 => '_edd_bundled_products[]',
+											'id'                   => 'edd_bundled_products_' . $index,
+											'selected'             => $product,
+											'multiple'             => false,
+											'chosen'               => true,
+											'bundles'              => false,
+											'variations'           => true,
+											'show_variations_only' => true,
 										) );
 										?>
 									</div>
@@ -639,12 +651,13 @@ function edd_render_products_field( $post_id ) {
 									<span class="edd-repeatable-row-setting-label"><?php printf( __( 'Select %s:', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></span>
 									<?php
 									echo EDD()->html->product_dropdown( array(
-										'name'       => '_edd_bundled_products[]',
-										'id'         => 'edd_bundled_products_1',
-										'multiple'   => false,
-										'chosen'     => true,
-										'bundles'    => false,
-										'variations' => true,
+										'name'                 => '_edd_bundled_products[]',
+										'id'                   => 'edd_bundled_products_1',
+										'multiple'             => false,
+										'chosen'               => true,
+										'bundles'              => false,
+										'variations'           => true,
+										'show_variations_only' => true,
 									) );
 									?>
 								</div>

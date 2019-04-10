@@ -359,7 +359,7 @@ class Order_Adjustments_Table extends List_Table {
 	 *
 	 * @return array $order_adjustments_data Array of all the data for the order adjustments.
 	 */
-	public function order_adjustments_data() {
+	public function get_data() {
 
 		// Return if we are adding a new order.
 		if ( edd_is_add_order_page() ) {
@@ -399,7 +399,7 @@ class Order_Adjustments_Table extends List_Table {
 			$this->get_sortable_columns(),
 		);
 
-		$this->items = $this->order_adjustments_data();
+		$this->items = $this->get_data();
 
 		$type = isset( $_GET['adjustment_type'] ) // WPCS: CSRF ok.
 			? sanitize_key( $_GET['adjustment_type'] )
