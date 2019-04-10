@@ -185,7 +185,7 @@ class Base extends \EDD_Batch_Export {
 				break;
 			case static::DISCOUNTS:
 				$id = $this->get_db()->get_var( $this->get_db()->prepare(
-					"SELECT edd_discount_id FROM {$this->get_db()->edd_discountmeta} WHERE meta_key = 'legacy_discount_id' AND meta_value = %d",
+					"SELECT edd_discount_id FROM {$this->get_db()->edd_adjustmentmeta} WHERE meta_key = 'legacy_discount_id' AND meta_value = %d",
 					$legacy_id
 				) );
 				break;
