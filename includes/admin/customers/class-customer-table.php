@@ -152,14 +152,14 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		$name        = '#' . $item['id'] . ' ';
 		$name       .= ! empty( $item['name'] ) ? $item['name'] : '<em>' . __( 'Unnamed Customer','easy-digital-downloads' ) . '</em>';
 		$user        = ! empty( $item['user_id'] ) ? $item['user_id'] : $item['email'];
+		$customer    = new EDD_Customer( $item['id'] );
 		$view_url    = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $item['id'] );
 		$actions     = array(
 			'view'   => '<a href="' . $view_url . '">' . __( 'View', 'easy-digital-downloads' ) . '</a>',
-			'logs'   => '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs&user=' . urlencode( $user ) ) . '">' . __( 'Download log', 'easy-digital-downloads' ) . '</a>',
+			'logs'   => '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs&customer=' . $customer->id ) . '">' . __( 'Download log', 'easy-digital-downloads' ) . '</a>',
 			'delete' => '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>'
 		);
 
-		$customer = new EDD_Customer( $item['id'] );
 		$pending  = edd_user_pending_verification( $customer->user_id ) ? ' <em>' . __( '(Pending Verification)', 'easy-digital-downloads' ) . '</em>' : '';
 
 		return '<a href="' . esc_url( $view_url ) . '">' . $name . '</a>' . $pending . $this->row_actions( $actions );
