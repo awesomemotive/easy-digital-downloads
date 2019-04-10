@@ -367,15 +367,13 @@ class Data_Migrator {
 			return $carry += $item;
 		} );
 
-		$type = 'refunded' === $data->post_status
-			? 'refund'
-			: 'sale';
+		$order_status = 'publish' === $data->post_status ? 'complete' : $data->post_status;
 
 		$order_data = array(
 			'parent'         => $data->post_parent,
 			'order_number'   => $order_number,
-			'status'         => $data->post_status,
-			'type'           => $type,
+			'status'         => $order_status,
+			'type'           => 'sale',
 			'date_created'   => $data->post_date_gmt, // GMT is stored in the database as the offset is applied by the new query classes.
 			'date_modified'  => $data->post_modified_gmt, // GMT is stored in the database as the offset is applied by the new query classes.
 			'date_completed' => $date_completed,
@@ -394,6 +392,30 @@ class Data_Migrator {
 		);
 
 		$order_id = edd_add_order( $order_data );
+
+		// Reset the $refund_id variable so that we don't end up accidentally creating refunds.
+		$refund_id = 0;
+
+		if ( 'refunded' === $order_status ) {
+			$refund_data = $order_data;
+			$refund_data['parent']       = $order_id;
+			$refund_data['order_number'] = $order_id . apply_filters( 'edd_order_refund_suffix', '-R-' ) . '1';
+			$refund_data['type']         = 'refund';
+			$refund_data['status']       = 'complete';
+
+			// Negate the amounts
+			$refund_data['subtotal'] = edd_negate_amount( $subtotal );
+			$refund_data['tax']      = edd_negate_amount( $tax );
+			$refund_data['discount'] = edd_negate_amount( $discount );
+			$refund_data['total']    = edd_negate_amount( $total );
+
+
+			// These are the best guess at the date it was refunded since we didn't store that prior.
+			$refund_data['date_created']  = $data->post_modified_gmt;
+			$refund_data['date_modified'] = $data->post_modified_gmt;
+
+			$refund_id = edd_add_order( $refund_data );
+		}
 
 		// First & last name.
 		$user_info['first_name'] = isset( $user_info['first_name'] )
@@ -503,6 +525,9 @@ class Data_Migrator {
 
 		if ( ! empty( $cart_items ) ) {
 			foreach ( $cart_items as $key => $cart_item ) {
+				// Reset any conditional IDs to be safe.
+				$refund_order_item_id = 0;
+
 				// Get product name.
 				$product_name = isset( $cart_item['name'] )
 					? $cart_item['name']
@@ -545,6 +570,7 @@ class Data_Migrator {
 					'price_id'      => $price_id,
 					'cart_index'    => $key,
 					'type'          => 'download',
+					'status'        => $order_status,
 					'quantity'      => $cart_item['quantity'],
 					'amount'        => (float) $cart_item['item_price'],
 					'subtotal'      => $cart_item['subtotal'],
@@ -557,9 +583,31 @@ class Data_Migrator {
 
 				$order_item_id = edd_add_order_item( $order_item_args );
 
+				if ( ! empty( $refund_id ) ) {
+					$refund_item_args = $order_item_args;
+					$refund_item_args['order_id'] = $refund_id;
+					$refund_item_args['status']   = 'refunded';
+
+					// Negate the amounts
+					$refund_item_args['quantity'] = edd_negate_amount( $cart_item['quantity'] );
+					$refund_item_args['amount']   = edd_negate_amount( (float) $cart_item['item_price'] );
+					$refund_item_args['subtotal'] = edd_negate_amount( $cart_item['subtotal'] );
+					$refund_item_args['discount'] = edd_negate_amount( $cart_item['discount'] );
+					$refund_item_args['tax']      = edd_negate_amount( $cart_item['tax'] );
+					$refund_item_args['total']    = edd_negate_amount( (float) $cart_item['price'] );
+
+					// These are our best estimates since we did not store the refund date previously.
+					$refund_item_args['date_crated']   = $data->post_modified_gmt;
+					$refund_item_args['date_modified'] = $data->post_modified_gmt;
+
+					$refund_order_item_id = edd_add_order_item( $refund_item_args );
+				}
+
 				// Store order item fees as adjustments.
 				if ( isset( $cart_item['fees'] ) && ! empty( $cart_item['fees'] ) ) {
 					foreach ( $cart_item['fees'] as $fee_id => $fee ) {
+						// Reset any conditional IDs to be safe.
+						$refund_adjustment_id = 0;
 
 						$tax_rate = isset( $meta['_edd_payment_tax_rate'][0] )
 							? (float) $meta['_edd_payment_tax_rate'][0]
@@ -570,7 +618,7 @@ class Data_Migrator {
 							: 0.00;
 
 						// Add the adjustment.
-						$adjustment_id = edd_add_order_adjustment( array(
+						$adjustment_args = array(
 							'object_id'   => $order_item_id,
 							'object_type' => 'order_item',
 							'type'        => 'fee',
@@ -578,19 +626,41 @@ class Data_Migrator {
 							'subtotal'    => floatval( $fee['amount'] ),
 							'tax'         => $tax,
 							'total'       => floatval( $fee['amount'] ) + $tax,
-						) );
+						);
+
+						$adjustment_id = edd_add_order_adjustment( $adjustment_args );
 
 						// Fee ID.
 						edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
 
+						if ( ! empty( $refund_id ) ) {
+							$refund_adjustment_args = $adjustment_args;
+							$refund_adjustment_args['object_id'] = $refund_order_item_id;
+							$refund_adjustment_args['subtotal']  = edd_negate_amount( floatval( $fee['amount'] ) );
+							$refund_adjustment_args['tax']       = edd_negate_amount( $tax );
+							$refund_adjustment_args['total']     = edd_negate_amount( floatval( $fee['amount'] ) + $tax );
+
+
+							$refund_adjustment_id = edd_add_order_adjustment( $refund_adjustment_args );
+							edd_add_order_adjustment_meta( $refund_adjustment_id, 'fee_id', $fee_id );
+						}
+
 						// Maybe store download ID.
 						if ( isset( $fee['download_id'] ) && ! empty( $fee['download_id'] ) ) {
 							edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
+
+							if ( ! empty( $refund_adjustment_id ) ) {
+								edd_add_order_adjustment_meta( $refund_adjustment_id, 'download_id', $fee['download_id'] );
+							}
 						}
 
 						// Maybe store price ID.
 						if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
 							edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
+
+							if ( ! empty( $refund_adjustment_id ) ) {
+								edd_add_order_adjustment_meta( $refund_adjustment_id, 'price_id', $fee['price_id'] );
+							}
 						}
 					}
 				}
@@ -620,6 +690,21 @@ class Data_Migrator {
 				);
 
 				edd_add_order_item( $order_item_args );
+
+				if ( ! empty( $refund_id ) ) {
+					$refund_item_args = $order_item_args;
+					$refund_item_args['order_id'] = $refund_id;
+					$refund_item_args['quantity'] = edd_negate_amount( 1 );
+					$refund_item_args['amount']   = edd_negate_amount( (float) $payment_meta['amount'] );
+					$refund_item_args['subtotal'] = edd_negate_amount( (float) $payment_meta['amount'] );
+					$refund_item_args['total']    = edd_negate_amount( (float) $payment_meta['amount'] );
+
+					// These are the best guess at the time, since we didn't store this data previously.
+					$refund_item_args['date_created']  = $data->post_modified_gmt;
+					$refund_item_args['date_modified'] = $data->post_modified_gmt;
+
+					edd_add_order_item( $order_item_args );
+				}
 			}
 		}
 
@@ -638,8 +723,20 @@ class Data_Migrator {
 			'total'       => $tax_rate,
 		) );
 
+		if ( ! empty( $refund_id ) ) {
+			edd_add_order_adjustment( array(
+				'object_id'   => $refund_id,
+				'object_type' => 'order',
+				'type_id'     => 0,
+				'type'        => 'tax_rate',
+				'total'       => $tax_rate,
+			) );
+		}
+
 		if ( isset( $payment_meta['fees'] ) && ! empty( $payment_meta['fees'] ) ) {
 			foreach ( $payment_meta['fees'] as $fee_id => $fee ) {
+				// Reset any conditional IDs to be safe.
+				$refund_adjustment_id = 0;
 
 				// Reverse engineer the tax calculation.
 				$tax = ( isset( $fee['no_tax'] ) && false === $fee['no_tax'] && ! empty( $tax_rate ) ) || ( $fee['amount'] < 0 && ! empty( $tax_rate ) )
@@ -647,7 +744,7 @@ class Data_Migrator {
 					: 0.00;
 
 				// Add the adjustment.
-				$adjustment_id = edd_add_order_adjustment( array(
+				$adjustment_args = array(
 					'object_id'   => $order_id,
 					'object_type' => 'order',
 					'type'        => 'fee',
@@ -655,19 +752,41 @@ class Data_Migrator {
 					'subtotal'    => floatval( $fee['amount'] ),
 					'tax'         => $tax,
 					'total'       => floatval( $fee['amount'] ) + $tax,
-				) );
+				);
+
+				$adjustment_id = edd_add_order_adjustment( $adjustment_args );
 
 				// Fee ID.
 				edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
 
+				if ( ! empty( $refund_id ) ) {
+					$refund_adjustment_args = $adjustment_args;
+					$refund_adjustment_args['object_id'] = $refund_id;
+
+					// Negate the amounts.
+					$refund_adjustment_args['subtotal'] = edd_negate_amount( floatval( $fee['amount'] ) );
+					$refund_adjustment_args['tax']      = edd_negate_amount( $tax );
+					$refund_adjustment_args['total']    = edd_negate_amount( floatval( $fee['amount'] ) + $tax );
+
+					$refund_adjustment_id = edd_add_order_adjustment( $refund_adjustment_args );
+				}
+
 				// Maybe store download ID.
 				if ( isset( $fee['download_id'] ) && ! empty( $fee['download_id'] ) ) {
 					edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
+
+					if ( ! empty( $refund_adjustment_id ) ) {
+						edd_add_order_adjustment_meta( $refund_adjustment_id, 'download_id', $fee['download_id'] );
+					}
 				}
 
 				// Maybe store price ID.
 				if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
 					edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
+
+					if ( ! empty( $refund_adjustment_id ) ) {
+						edd_add_order_adjustment_meta( $refund_adjustment_id, 'price_id', $fee['price_id'] );
+					}
 				}
 			}
 		}
@@ -700,6 +819,18 @@ class Data_Migrator {
 					'subtotal'    => $subtotal - $discount->get_discounted_amount( $subtotal ),
 					'total'       => $subtotal - $discount->get_discounted_amount( $subtotal ),
 				) );
+
+				if ( ! empty( $refund_id ) ) {
+					edd_add_order_adjustment( array(
+						'object_id'   => $refund_id,
+						'object_type' => 'order',
+						'type_id'     => $discount->id,
+						'type'        => 'discount',
+						'description' => $discount,
+						'subtotal'    => edd_negate_amount($subtotal - $discount->get_discounted_amount( $subtotal ) ),
+						'total'       => edd_negate_amount( $subtotal - $discount->get_discounted_amount( $subtotal ) ),
+					) );
+				}
 			}
 		}
 

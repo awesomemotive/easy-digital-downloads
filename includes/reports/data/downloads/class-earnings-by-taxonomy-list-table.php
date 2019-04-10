@@ -30,7 +30,7 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 	 *
 	 * @return array Taxonomies.
 	 */
-	public function taxonomy_data() {
+	public function get_data() {
 		global $wpdb;
 
 		$date       = EDD()->utils->date( 'now' );
@@ -237,7 +237,7 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 		$sortable = $this->get_sortable_columns();
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-		$this->items           = $this->taxonomy_data();
+		$this->items           = $this->get_data();
 	}
 
 	/**

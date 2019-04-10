@@ -609,6 +609,10 @@ function edd_ajax_download_search() {
 		? filter_var( $_GET['variations'], FILTER_VALIDATE_BOOLEAN )
 		: false;
 
+	$variations_only = isset( $_GET['variations_only'] )
+		? filter_var( $_GET['variations_only'], FILTER_VALIDATE_BOOLEAN )
+		: false;
+
 	// Are we including all statuses, or only public ones?
 	$status = ! current_user_can( 'edit_products' )
 		? apply_filters( 'edd_product_dropdown_status_nopriv', array( 'publish' ) )
@@ -629,10 +633,10 @@ function edd_ajax_download_search() {
 	if ( true === $no_bundles ) {
 		$args['meta_query'] = array(
 			'relation' => 'AND',
-				array(
+			array(
 				'key'     => '_edd_product_type',
 				'value'   => 'bundle',
-				'compare' => 'NOT EXISTS'
+				'compare' => '!='
 			)
 		);
 	}
@@ -647,22 +651,27 @@ function edd_ajax_download_search() {
 		// Loop through all items...
 		foreach ( $items as $post_id => $title ) {
 
-			// Add item to results array
-			$search['results'][] = array(
-				'id'   => $post_id,
-				'name' => $title
-			);
-
 			// Look for variable pricing
 			$prices = edd_get_variable_prices( $post_id );
+
+			if ( ! empty( $prices ) && ( false === $variations|| ! $variations_only ) ) {
+				$title .= ' (' . __( 'All Price Options', 'easy-digital-downloads' ) . ')';
+			}
+
+			if ( empty( $prices ) || ! $variations_only ) {
+				// Add item to results array
+				$search['results'][] = array(
+					'id'   => $post_id,
+					'name' => $title
+				);
+			}
 
 			// Maybe include variable pricing
 			if ( ! empty( $variations ) && ! empty( $prices ) ) {
 				foreach ( $prices as $key => $value ) {
 					$name  = ! empty( $value['name']  ) ? $value['name']  : '';
-					$index = ! empty( $value['index'] ) ? $value['index'] : $key;
 
-					if ( ! empty( $name ) && ! empty( $index ) ) {
+					if ( ! empty( $name ) ) {
 						$search['results'][] = array(
 							'id'   => $post_id . '_' . $key,
 							'name' => esc_html( $title . ': ' . $name ),
