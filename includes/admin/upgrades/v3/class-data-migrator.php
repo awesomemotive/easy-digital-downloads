@@ -113,7 +113,7 @@ class Data_Migrator {
 			if ( ! empty( $notes ) ) {
 				foreach ( $notes as $note ) {
 					$date = isset( $note[0] )
-						? EDD\Utils\Date::parse( $note[0], edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString()
+						? \EDD\Utils\Date::parse( $note[0], edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString()
 						: '';
 
 					$note_content = isset( $note[1] )
