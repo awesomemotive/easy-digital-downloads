@@ -45,7 +45,7 @@
 		"copy-webpack-plugin": "5.0.2",
 		"cross-env": "5.2.0",
 		"eslint": "5.16.0",
-		"grunt": "^1.0.3",
+		"grunt": "^1.0.4",
 		"grunt-checktextdomain": "^1.0.1",
 		"grunt-contrib-clean": "^1.1.0",
 		"grunt-contrib-compress": "^1.4.3",
