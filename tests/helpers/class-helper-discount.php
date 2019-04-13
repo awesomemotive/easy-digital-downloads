@@ -35,8 +35,8 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 			'name'              => '20 Percent Off',
 			'type'              => 'percent',
 			'amount'            => '20',
-			'start'             => '12/12/2010 00:00:00',
-			'expiration'        => '12/31/2050 23:59:59',
+			'start'             => date( 'm/d/Y', time() ) . ' 00:00:00',
+			'expiration'        => date( 'm/d/Y', time() ) . ' 23:59:59',
 			'min_price'         => 128,
 			'status'            => 'active',
 			'product_condition' => 'all'
@@ -61,8 +61,8 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 			'name'              => '$10 Off',
 			'type'              => 'flat',
 			'amount'            => '10',
-			'start'             => '12/12/2010 00:00:00',
-			'expiration'        => '12/31/2050 23:59:59',
+			'start'             => date( 'm/d/Y', time() ) . ' 00:00:00',
+			'expiration'        => date( 'm/d/Y', time() ) . ' 23:59:59',
 			'min_price'         => 128,
 			'status'            => 'active',
 			'product_condition' => 'all'
