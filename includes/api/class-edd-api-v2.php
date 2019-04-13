@@ -398,6 +398,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 				$sales['sales'][ $i ]['gateway']        = $payment->gateway;
 				$sales['sales'][ $i ]['email']          = $payment->email;
 				$sales['sales'][ $i ]['date']           = $payment->date;
+				$sales['sales'][ $i ]['ip']           	= $payment->ip;
 
 				$c = 0;
 
@@ -454,6 +455,8 @@ class EDD_API_V2 extends EDD_API_V1 {
 
 				$sales['sales'][ $i ]['discounts'] = ( ! empty( $discount_values ) ? $discount_values : null );;
 				$sales['sales'][ $i ]['products']  = $cart_items;
+
+				$sales['sales'][ $i ] = apply_filters( 'edd_api_sale', $sales['sales'][ $i ], $payment, $this );
 
 				$i++;
 			}
