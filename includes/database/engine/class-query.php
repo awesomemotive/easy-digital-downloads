@@ -1618,16 +1618,31 @@ class Query extends Base {
 		// Get primary column
 		$primary = $this->get_primary_column_name();
 
-		// Bail if data to add includes the primary column
-		if ( isset( $data[ $primary ] ) ) {
-			return false;
+		// If data includes primary column, check if item already exists
+		if ( ! empty( $data[ $primary ] ) ) {
+
+			// Shape the primary item ID
+			$item_id = $this->shape_item_id( $data[ $primary ] );
+
+			// Get item by ID (from database, not cache)
+			$item    = $this->get_item_raw( $primary, $item_id );
+
+			// Bail if item already exists
+			if ( ! empty( $item ) ) {
+				return false;
+			}
+
+			// Set data primary ID to newly shaped ID
+			$data[ $primary ] = $item_id;
 		}
 
 		// Get default values for item (from columns)
 		$item = $this->default_item();
 
-		// Unset the primary key value from defaults
-		unset( $item[ $primary ] );
+		// Unset the primary key if not part of data array (auto-incremented)
+		if ( empty( $data[ $primary ] ) ) {
+			unset( $item[ $primary ] );
+		}
 
 		// Cut out non-keys for meta
 		$columns = $this->get_column_names();
