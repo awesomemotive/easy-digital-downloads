@@ -158,7 +158,7 @@ abstract class Table extends Base {
 	/** Abstract **************************************************************/
 
 	/**
-	 * Setup this database table
+	 * Setup the database table
 	 *
 	 * @since 3.0
 	 */
@@ -488,10 +488,47 @@ abstract class Table extends Base {
 		return $count;
 	}
 
+	/** Auto-Increment ********************************************************/
+
+	/**
+	 * Set the auto_increment value of the database table
+	 *
+	 * @since 3.0
+	 *
+	 * @param int $number
+	 *
+	 * @return mixed
+	 */
+	public function set_auto_increment( $number = 1 ) {
+
+		// Get the database interface
+		$db = $this->get_db();
+
+		// Bail if no database interface is available
+		if ( empty( $db ) ) {
+			return;
+		}
+
+		// Number cannot be less than 1
+		if ( ! is_numeric( $number ) || ( $number <= 0 ) ) {
+			$number = 1;
+		}
+
+		// Format the number
+		$number = absint( $number );
+
+		// Query statement
+		$query  = "ALTER TABLE {$this->table_name} AUTO_INCREMENT={$number};";
+		$result = $db->query( $query );
+
+		// Query success/fail
+		return $this->is_success( $result );
+	}
+
 	/** Upgrades **************************************************************/
 
 	/**
-	 * Upgrade this database table
+	 * Upgrade the database table
 	 *
 	 * @since 3.0
 	 *
