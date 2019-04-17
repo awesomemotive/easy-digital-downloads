@@ -535,6 +535,8 @@ jQuery(document).ready(function ($) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index.js */ "./assets/js/admin/orders/index.js");
+/* global _ */
+
 /**
  * Internal dependencies.
  */
@@ -546,31 +548,37 @@ __webpack_require__.r(__webpack_exports__);
   if (!toggle) {
     return;
   }
+
+  var isOverrideableEl = document.querySelector('input[name="edd-order-download-is-overrideable"]');
   /**
    * A new download has been added.
    */
 
-
-  $(document).on('edd-admin-add-order-download', function () {
-    toggle.disabled = false; // Update on change.
-
-    document.querySelectorAll('.overridable input').forEach(function (el) {
+  $(document).on('edd-admin-add-order-download', function (response) {
+    // Update on change.
+    _.each(document.querySelectorAll('.overridable input'), function (el) {
       return el.addEventListener('keyup', _index_js__WEBPACK_IMPORTED_MODULE_0__["default"].update_totals);
     }); // Update on addition.
 
-    return _index_js__WEBPACK_IMPORTED_MODULE_0__["default"].update_totals();
+
+    _index_js__WEBPACK_IMPORTED_MODULE_0__["default"].update_totals(); // Keep toggle disabled if necesseary.
+
+    toggle.disabled = 1 == isOverrideableEl.value;
   });
   /**
    * Allow edits.
    */
 
   toggle.addEventListener('click', function () {
-    // Tell future download item additions to be editable.
-    document.querySelector('input[name="edd-order-download-is-overrideable"]').value = 1; // Get a fresh set of inputs. Mark current inputs as editable.
+    // Disable the button.
+    this.disabled = true; // Tell future download item additions to be editable.
 
-    document.querySelectorAll('.overridable input').forEach(function (el) {
+    isOverrideableEl.value = 1; // Get a fresh set of inputs. Mark current inputs as editable.
+
+    _.each(document.querySelectorAll('.overridable input'), function (el) {
       return el.readOnly = false;
     }); // Mark the override for saving the data.
+
 
     var input = document.createElement('input');
     input.name = 'edd_add_order_override';
