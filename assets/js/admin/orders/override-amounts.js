@@ -19,7 +19,7 @@ import EDD_Add_Order from './index.js';
 	 */
 	$( document ).on( 'edd-admin-add-order-download', function( response ) {
 		// Update on change.
-		document.querySelectorAll( '.overridable input' ).forEach( ( el ) => el.addEventListener( 'keyup', EDD_Add_Order.update_totals ) );
+		_.each( document.querySelectorAll( '.overridable input' ), ( el ) => el.addEventListener( 'keyup', EDD_Add_Order.update_totals ) );
 
 		// Update on addition.
 		EDD_Add_Order.update_totals();
@@ -39,7 +39,7 @@ import EDD_Add_Order from './index.js';
 		isOverrideableEl.value = 1;
 
 		// Get a fresh set of inputs. Mark current inputs as editable.
-		document.querySelectorAll( '.overridable input' ).forEach( ( el ) => el.readOnly = false );
+		_.each( document.querySelectorAll( '.overridable input' ), ( el ) => el.readOnly = false );
 
 		// Mark the override for saving the data.
 		const input = document.createElement( 'input' );
