@@ -381,7 +381,7 @@ abstract class Table extends Base {
 		}
 
 		// Query statement
-		$query  = "CREATE TABLE {$this->table_name} ( {$this->schema} ) {$this->charset_collation};";
+		$query  = "CREATE TABLE {$this->table_name} ( {$this->schema} ) {$this->charset_collation}";
 		$result = $db->query( $query );
 
 		// Was the table created?
@@ -518,7 +518,7 @@ abstract class Table extends Base {
 		$number = absint( $number );
 
 		// Query statement
-		$query  = "ALTER TABLE {$this->table_name} AUTO_INCREMENT={$number};";
+		$query  = "ALTER TABLE {$this->table_name} AUTO_INCREMENT={$number}";
 		$result = $db->query( $query );
 
 		// Query success/fail
