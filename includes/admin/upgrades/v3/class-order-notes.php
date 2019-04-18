@@ -52,7 +52,7 @@ class Order_Notes extends Base {
 
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $result ) {
-				$result->object_id = $this->find_legacy_id( $result->comment_post_ID, 'orders' );
+				$result->object_id = $result->comment_post_ID;
 				Data_Migrator::order_notes( $result );
 			}
 

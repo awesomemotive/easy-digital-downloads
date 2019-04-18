@@ -158,45 +158,6 @@ class Base extends \EDD_Batch_Export {
 	}
 
 	/**
-	 * Fetch a legacy ID when migrating.
-	 *
-	 * @since 3.0
-	 *
-	 * @param int    $legacy_id Legacy ID.
-	 * @param string $type      Type.
-	 *
-	 * @return int|false New ID if found, false otherwise.
-	 */
-	protected function find_legacy_id( $legacy_id = 0, $type = '' ) {
-
-		// Bail if nothing passed.
-		if ( empty( $legacy_id ) || empty( $type ) ) {
-			return $legacy_id;
-		}
-
-		$legacy_id = absint( $legacy_id );
-
-		switch ( $type ) {
-			case static::ORDERS:
-				$id = $this->get_db()->get_var( $this->get_db()->prepare(
-					"SELECT edd_order_id FROM {$this->get_db()->edd_ordermeta} WHERE meta_key = 'legacy_order_id' AND meta_value = %d",
-					$legacy_id
-				) );
-				break;
-			case static::DISCOUNTS:
-				$id = $this->get_db()->get_var( $this->get_db()->prepare(
-					"SELECT edd_discount_id FROM {$this->get_db()->edd_discountmeta} WHERE meta_key = 'legacy_discount_id' AND meta_value = %d",
-					$legacy_id
-				) );
-				break;
-		}
-
-		return ! empty( $id )
-			? absint( $id )
-			: false;
-	}
-
-	/**
 	 * Return the global database interface.
 	 *
 	 * @since 3.0
