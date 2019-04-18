@@ -2,6 +2,7 @@
  * Internal dependencies.
  */
 import { getChosenVars } from 'utils/chosen.js';
+import './override-amounts.js';
 
 jQuery( document ).ready( function( $ ) {
 	// Toggle advanced filters on Orders page.
@@ -22,7 +23,6 @@ var EDD_Add_Order = {
 	init: function() {
 		this.add_order_item();
 		this.add_adjustment();
-		this.override();
 		this.remove();
 		this.fetch_addresses();
 		this.select_address();
@@ -58,6 +58,7 @@ var EDD_Add_Order = {
 					region: $( '.edd-order-address-region' ).val(),
 					download: select.val(),
 					quantity: $( '.edd-add-order-quantity' ).val(),
+					editable: $( 'input[name="edd-order-download-is-overrideable"]' ).val(),
 				};
 
 			spinner.css( 'visibility', 'visible' );
@@ -77,8 +78,8 @@ var EDD_Add_Order = {
 
 				spinner.css( 'visibility', 'hidden' );
 
-				// Display `Override` button if it exists.
-				$( '.edd-override' ).removeAttr( 'disabled' );
+				// Let other things happen. jQuery event for now.
+				$( document ).trigger( 'edd-admin-add-order-download', response );
 			}, 'json' );
 		} );
 	},
@@ -134,60 +135,6 @@ var EDD_Add_Order = {
 				spinner.css( 'visibility', 'hidden' );
 			}, 'json' );
 		} );
-	},
-
-	override: function() {
-		$( '.edd-override' ).on( 'click', function() {
-			$( this ).prop( 'disabled', 'disabled' );
-
-			$( this ).attr( 'data-override', 'true' );
-
-			$( document.body ).on( 'click', '.orderitems tr td .value', EDD_Add_Order.switchToInput );
-
-			$( '<input>' ).attr( {
-				type: 'hidden',
-				name: 'edd_add_order_override',
-				value: 'true',
-			} ).appendTo( '#edd-add-order-form' );
-		} );
-	},
-
-	switchToInput: function() {
-		const input = $( '<input>', {
-			val: $( this ).text(),
-			type: 'text',
-		} );
-
-		$( this ).replaceWith( input );
-		input.on( 'blur', EDD_Add_Order.switchToSpan );
-		input.select();
-	},
-
-	switchToSpan: function() {
-		const span = $( '<span>', {
-			text: parseFloat( $( this ).val() ).toLocaleString( edd_vars.currency, {
-				style: 'decimal',
-				currency: edd_vars.currency,
-				minimumFractionDigits: edd_vars.currency_decimals,
-				maximumFractionDigits: edd_vars.currency_decimals,
-			} ),
-		} );
-
-		const type = $( this ).parent().data( 'type' ),
-			input = $( this ).parents( 'tr' ).find( '.download-' + type );
-
-		if ( 'quantity' === type ) {
-			span.text( parseInt( $( this ).val() ) );
-		}
-
-		input.val( span.text() );
-
-		span.addClass( 'value' );
-		$( this ).replaceWith( span );
-
-		EDD_Add_Order.update_totals();
-
-		span.on( 'click', EDD_Add_Order.switchToInput );
 	},
 
 	remove: function() {
@@ -408,16 +355,16 @@ var EDD_Add_Order = {
 				item_tax = 0,
 				item_total;
 
-			item_amount = parseFloat( row.find( '.amount .value' ).text() );
+			item_amount = parseFloat( row.find( '.amount input' ).val() );
 
 			if ( row.find( '.quantity' ).length ) {
-				item_quantity = parseFloat( row.find( '.quantity .value' ).text() );
+				item_quantity = parseFloat( row.find( '.quantity input' ).val() );
 			}
 
 			subtotal += item_amount * item_quantity;
 
 			if ( row.find( '.tax' ).length ) {
-				item_tax = parseFloat( row.find( '.tax .value' ).text() );
+				item_tax = parseFloat( row.find( '.tax input' ).val() );
 
 				if ( ! isNaN( item_tax ) && ! edd_vars.taxes_included ) {
 					item_amount += item_tax;
@@ -533,3 +480,5 @@ var EDD_Add_Order = {
 jQuery( document ).ready( function( $ ) {
 	EDD_Add_Order.init();
 } );
+
+export default EDD_Add_Order;
