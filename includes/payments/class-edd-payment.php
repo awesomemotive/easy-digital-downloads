@@ -512,9 +512,9 @@ class EDD_Payment {
 		$this->customer_id     = $this->order->customer_id;
 		$this->user_id         = $this->setup_user_id();
 		$this->email           = $this->setup_email();
-		$this->user_info       = $this->setup_user_info();
 		$this->address         = $this->setup_address();
 		$this->discounts       = $this->setup_discounts();
+		$this->user_info       = $this->setup_user_info();
 		$this->first_name      = $this->user_info['first_name'];
 		$this->last_name       = $this->user_info['last_name'];
 
