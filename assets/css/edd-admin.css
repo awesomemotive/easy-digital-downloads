@@ -429,6 +429,21 @@ a.edd-delete:hover {
 	margin-right: 10px;
 }
 
+.edd-add-order-item td {
+	vertical-align: middle;
+}
+
+.edd-add-order-item input {
+	width: 80%;
+}
+
+.edd-add-order-item input[readonly] {
+	color: #555;
+	background: none;
+	border: 1px solid transparent;
+	box-shadow: none;
+}
+
 .order-customer-info .customer-details-wrap {
 	overflow: hidden;
 }
@@ -1368,9 +1383,6 @@ input[class*="edd-price-field"] {
 }
 #edd-edit-order-form input.large-text {
 	width: 90%;
-}
-.edd-edit-purchase-element ul li.download {
-	width: 35%;
 }
 .edd-edit-purchase-element ul li.item_price {
 	width: 15%;
