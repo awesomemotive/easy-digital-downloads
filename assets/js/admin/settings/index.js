@@ -7,6 +7,7 @@ const EDD_Settings = {
 		this.misc();
 		this.gateways();
 		this.location();
+		this.tax_warning();
 	},
 
 	general: function() {
@@ -173,6 +174,10 @@ const EDD_Settings = {
 			return false;
 		} );
 	},
+
+	tax_warning: function() {
+		$('#edd-tax-disabled-notice').addClass('notice notice-warning');
+	}
 };
 
 jQuery( document ).ready( function( $ ) {
