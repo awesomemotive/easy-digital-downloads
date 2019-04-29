@@ -961,7 +961,7 @@ class Data_Migrator {
 
 		// ...and whatever is not from core, needs to be added as new order meta.
 		foreach ( $remaining_meta as $meta_key => $meta_value ) {
-			$meta_value = $meta_value[0];
+			$meta_value = maybe_unserialize( $meta_value[0] );
 
 			edd_add_order_meta( $order_id, $meta_key, $meta_value );
 		}
