@@ -115,7 +115,7 @@ function setupEmailTags() {
    * @param {object} node Button node.
    */
 
-  insertButtons.forEach(function (node) {
+  _.each(insertButtons, function (node) {
     /**
      * Listen for clicks on tag buttons.
      */
@@ -137,7 +137,7 @@ function filterEmailTags() {
   filterInput.addEventListener('keyup', function (event) {
     var searchTerm = event.target.value;
     var foundTags = Object(_utils_js__WEBPACK_IMPORTED_MODULE_0__["searchItems"])(eddEmailTagsInserter.items, searchTerm);
-    tagItems.forEach(function (node) {
+    _.each(tagItems, function (node) {
       var found = _.findWhere(foundTags, {
         tag: node.dataset.tag
       });
