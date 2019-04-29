@@ -810,6 +810,31 @@ class EDD_CLI extends WP_CLI_Command {
 	}
 
 	/**
+	 * Run the EDD 3.0 Migration via WP-CLI
+	 *
+	 * ## OPTIONS
+	 *
+	 * --force=<boolean>: If the routine should be run even if the upgrade routine has been run already
+	 *
+	 * @param $args
+	 * @param $assoc_args
+	 */
+	public function v30_migration( $args, $assoc_args ) {
+
+		// Suspend the cache addition while we're migrating.
+		wp_suspend_cache_addition( true );
+
+		$this->migrate_payments( $args, $assoc_args );
+		$this->migrate_customer_data( $args, $assoc_args );
+		$this->migrate_logs( $args, $assoc_args );
+		$this->migrate_tax_rates( $args, $assoc_args );
+		$this->migrate_discounts( $args, $assoc_args );
+		$this->migrate_order_notes( $args, $assoc_args );
+		$this->migrate_customer_notes( $args, $assoc_args );
+
+	}
+
+	/**
 	 * Migrate Discounts to the custom tables
 	 *
 	 * ## OPTIONS
@@ -949,8 +974,8 @@ class EDD_CLI extends WP_CLI_Command {
 			LEFT JOIN {$wpdb->term_taxonomy} AS tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id)
 			LEFT JOIN {$wpdb->terms} AS t ON (tt.term_id = t.term_id)
 			WHERE p.post_type = 'edd_log' AND t.slug != 'sale' 
-			GROUP BY p.ID
 		";
+
 		$results = $wpdb->get_results( $sql );
 		$total   = count( $results );
 
@@ -1346,6 +1371,7 @@ class EDD_CLI extends WP_CLI_Command {
 			SELECT *
 			FROM {$wpdb->posts}
 			WHERE post_type = 'edd_payment'
+			ORDER BY ID ASC
 		";
 		$results = $wpdb->get_results( $sql );
 		$total   = count( $results );
@@ -1369,10 +1395,13 @@ class EDD_CLI extends WP_CLI_Command {
 			$progress->finish();
 
 			WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
-			$new_count = edd_count_orders();
+			$new_count = edd_count_orders( array( 'type' => 'sale' ) );
 			$old_count = $wpdb->get_col( "SELECT count(ID) FROM {$wpdb->posts} WHERE post_type = 'edd_payment'", 0 );
 			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
 			WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
+
+			$refund_count = edd_count_orders( array( 'type' => 'refund' ) );
+			WP_CLI::line( __( 'Refund Records Created: ', 'easy-digital-downloads' ) . $refund_count );
 
 			edd_update_db_version();
 			edd_set_upgrade_complete( 'migrate_payments' );
