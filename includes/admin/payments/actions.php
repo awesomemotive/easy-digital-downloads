@@ -481,7 +481,7 @@ function edd_orders_list_table_process_bulk_actions() {
 		: '';
 
 	// Bail if we aren't processing bulk actions.
-	if ( 'action' !== $action ) {
+	if ( '-1' === $action ) {
 		return;
 	}
 
