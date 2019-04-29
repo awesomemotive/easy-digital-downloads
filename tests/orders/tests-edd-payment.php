@@ -520,7 +520,7 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_modifying_address() {
-		$this->payment->address = array(
+		$new_address = array(
 			'line1'   => '123 Main St',
 			'line2'   => '',
 			'city'    => 'New York City',
@@ -528,9 +528,10 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 			'zip'     => '10010',
 			'country' => 'US',
 		);
+		$this->payment->address = $new_address;
 		$this->payment->save();
 
-		$this->assertEquals( $this->payment->address, $this->payment->user_info['address'] );
+		$this->assertEquals( $new_address, $this->payment->address );
 	}
 
 	public function test_modify_cart_item_price() {

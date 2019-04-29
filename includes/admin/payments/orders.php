@@ -25,6 +25,7 @@ function edd_order_sections( $item = false ) {
 	// Enqueue scripts.
 	if ( edd_is_add_order_page() ) {
 		wp_enqueue_script( 'edd-admin-orders' );
+		wp_enqueue_script( 'edd-admin-payments' );
 	} else {
 		wp_enqueue_script( 'edd-admin-payments' );
 	}
@@ -459,6 +460,7 @@ function edd_order_details_items( $order ) {
 
 				<input type="hidden" name="edd-payment-downloads-changed" id="edd-payment-downloads-changed" value="" />
 				<input type="hidden" name="edd-payment-removed" id="edd-payment-removed" value="{}" />
+				<input type="hidden" name="edd-order-download-is-overrideable" value="0" />
 
 				<?php if ( ! edd_item_quantities_enabled() ) : ?>
 					<input type="hidden" id="edd-order-download-quantity" name="edd-order-download-quantity" value="1" />
@@ -763,7 +765,7 @@ function edd_order_details_logs( $order ) {
  * @param object $order
  */
 function edd_order_details_attributes( $order ) {
-	
+
 	$rtl_class = is_rtl()
 		? ' chosen-rtl'
 		: '';
@@ -863,12 +865,6 @@ function edd_order_details_attributes( $order ) {
 				</div>
 				<?php endif; ?>
 
-				<?php if ( edd_is_add_order_page() && current_user_can( 'edit_shop_payments' ) ) : ?>
-				<div id="delete-action">
-					<button type="button" class="edd-override button button-secondary" disabled="disabled"><?php esc_html_e( 'Override', 'easy-digital-downloads' ); ?></button>
-				</div>
-				<?php endif; ?>
-
 				<div id="publishing-action">
 					<span class="spinner"></span>
 					<input type="submit" id="edd-order-submit" class="button button-primary right" value="<?php esc_attr_e( 'Save Order', 'easy-digital-downloads' ); ?>"/>
@@ -936,6 +932,15 @@ function edd_order_details_amounts( $order ) {
 				<?php do_action( 'edd_view_order_details_totals_after', $order->id ); ?>
 			</div>
 		</div>
+
+		<?php if ( edd_is_add_order_page() && current_user_can( 'edit_shop_payments' ) ) : ?>
+		<div id="major-publishing-actions">
+			<div id="publishing-action">
+				<button type="button" class="edd-override button button-secondary" disabled><?php esc_html_e( 'Override Amounts', 'easy-digital-downloads' ); ?></button>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<?php endif; ?>
 	</div>
 
 <?php
