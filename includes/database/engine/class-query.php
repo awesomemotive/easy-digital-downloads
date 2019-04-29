@@ -811,10 +811,12 @@ class Query extends Base {
 		 */
 		do_action_ref_array( $this->apply_prefix( "pre_get_{$this->item_name_plural}" ), array( &$this ) );
 
-		// Never limit, never update item/meta caches when counting
+		// When counting, never limit/update/order, and no item/meta caches
 		if ( ! empty( $this->query_vars['count'] ) ) {
 			$this->query_vars['number']            = false;
 			$this->query_vars['offset']            = false;
+			$this->query_vars['order']             = false;
+			$this->query_vars['orderby']           = false;
 			$this->query_vars['no_found_rows']     = true;
 			$this->query_vars['update_item_cache'] = false;
 			$this->query_vars['update_meta_cache'] = false;
