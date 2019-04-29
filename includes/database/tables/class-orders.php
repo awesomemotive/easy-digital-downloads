@@ -96,6 +96,31 @@ final class Orders extends Table {
 	}
 
 	/**
+	 * Create the table
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool
+	 */
+	public function create() {
+
+		$created = parent::create();
+
+		// After successful creation, we need to set the auto_increment for legacy orders.
+		if ( ! empty( $created ) ) {
+
+			$result = $this->get_db()->query( "SELECT ID FROM {$this->get_db()->prefix}posts WHERE post_type = 'edd_payment' ORDER BY ID DESC LIMIT 1;" );
+
+			if ( ! empty( $result )  ) {
+				$auto_increment = $result + 1;
+				$this->get_db()->query( "ALTER TABLE {$this->table_name}  AUTO_INCREMENT = {$auto_increment};" );
+			}
+
+		}
+
+	}
+
+	/**
 	 * Upgrade to version 201806110001
 	 * - Add the `date_refundable` datetime column.
 	 *
