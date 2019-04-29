@@ -814,6 +814,7 @@ class Query extends Base {
 		// Never limit, never update item/meta caches when counting
 		if ( ! empty( $this->query_vars['count'] ) ) {
 			$this->query_vars['number']            = false;
+			$this->query_vars['offset']            = false;
 			$this->query_vars['no_found_rows']     = true;
 			$this->query_vars['update_item_cache'] = false;
 			$this->query_vars['update_meta_cache'] = false;
