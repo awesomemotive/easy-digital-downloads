@@ -113,7 +113,7 @@ class Data_Migrator {
 			if ( ! empty( $notes ) ) {
 				foreach ( $notes as $note ) {
 					$date = isset( $note[0] )
-						? Carbon::parse( $note[0], edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString()
+						? EDD()->utils->date( $note[0], edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString()
 						: '';
 
 					$note_content = isset( $note[1] )
@@ -214,8 +214,8 @@ class Data_Migrator {
 			$log_data = array(
 				'product_id'    => $data->post_parent,
 				'file_id'       => $post_meta['_edd_log_file_id'],
-				'order_id'      => $post_meta['_edd_log_payment_id'],
-				'price_id'      => isset( $post_meta['_edd_log_price_id'] ) ? $post_meta['_edd_log_price_id'] : 0,
+				'order_id'      => isset( $post_meta['_edd_log_payment_id'] )  ? $post_meta['_edd_log_payment_id']  : 0,
+				'price_id'      => isset( $post_meta['_edd_log_price_id'] )    ? $post_meta['_edd_log_price_id']    : 0,
 				'customer_id'   => isset( $post_meta['_edd_log_customer_id'] ) ? $post_meta['_edd_log_customer_id'] : 0,
 				'ip'            => $post_meta['_edd_log_ip'],
 				'date_created'  => $data->post_date_gmt,
@@ -326,11 +326,21 @@ class Data_Migrator {
 		}
 
 		/** Create a new order ***************************************/
+		global $wpdb;
 
+		// Get's all the post meta for this payment.
 		$meta = get_post_custom( $data->ID );
 
 		$payment_meta = maybe_unserialize( $meta['_edd_payment_meta'][0] );
-		$user_info    = $payment_meta['user_info'];
+		$user_info    = maybe_unserialize( $payment_meta['user_info'] );
+
+		// Some old EDD data has the user info serialized, but starting with something other than a: so it can't be unserialized
+		$user_info = self::fix_possible_serialization( $user_info );
+		$user_info = maybe_unserialize( $user_info );
+
+		if ( ! is_array( $user_info ) ) {
+			$user_info = array();
+		}
 
 		$order_number   = isset( $meta['_edd_payment_number'][0] ) ? $meta['_edd_payment_number'][0] : '';
 		$user_id        = isset( $meta['_edd_payment_user_id'][0] ) && ! empty( $meta['_edd_payment_user_id'][0] ) ? $meta['_edd_payment_user_id'][0] : 0;
@@ -339,10 +349,21 @@ class Data_Migrator {
 		$gateway        = isset( $meta['_edd_payment_gateway'][0] ) && ! empty( $meta['_edd_payment_gateway'][0] ) ? $meta['_edd_payment_gateway'][0] : 'manual';
 		$customer_id    = isset( $meta['_edd_payment_customer_id'][0] ) ? $meta['_edd_payment_customer_id'][0] : 0;
 		$date_completed = isset( $meta['_edd_completed_date'][0] ) ? $meta['_edd_completed_date'][0] : '0000-00-00 00:00:00';
+		$purchase_key   = isset( $meta['_edd_payment_purchase_key'][0]) ? $meta['_edd_payment_purchase_key'][0] : false;
+		$purchase_email = isset( $meta['_edd_payment_user_email'][0] ) ? $meta['_edd_payment_user_email'][0] : $payment_meta['email'];
 
-		// Maybe convert the date completed to UTC.
-		if ( '0000-00-00 00:00:00' !== $date_completed ) {
-			$date_completed = EDD()->utils->date( $date_completed, edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString();
+		// Get the customer object
+		if ( ! empty( $customer_id ) ) {
+			$customer = edd_get_customer( $customer_id );
+		} else if ( ! empty( $purchase_email ) ) {
+			$customer = edd_get_customer_by( 'email', $purchase_email );
+			if ( $customer ) {
+				$customer_id = $customer->id;
+			}
+		}
+
+		if ( false === $purchase_key ) {
+			$purchase_key = isset( $payment_meta['key'] ) ? $payment_meta['key'] : '';
 		}
 
 		// Do not use -1 as the user ID.
@@ -350,41 +371,106 @@ class Data_Migrator {
 			? 0
 			: $user_id;
 
-		// Calculate totals.
-		$subtotal = (float) array_reduce( wp_list_pluck( $payment_meta['cart_details'], 'subtotal' ), function( $carry, $item ) {
-			return $carry += $item;
-		} );
+		// Account for possible double serialization of the cart_details
+		$cart_details = isset( $payment_meta['cart_details'] ) ? maybe_unserialize( $payment_meta['cart_details'] ) : array();
 
-		$tax = (float) array_reduce( wp_list_pluck( $payment_meta['cart_details'], 'tax' ), function( $carry, $item ) {
-			return $carry += $item;
-		} );
+		// Some old EDD data has the cart details serialized, but starting with something other than a: so it can't be unserialized
+		$cart_details = self::fix_possible_serialization( $cart_details );
 
-		$discount = (float) array_reduce( wp_list_pluck( $payment_meta['cart_details'], 'discount' ), function( $carry, $item ) {
-			return $carry += $item;
-		} );
+		// Account for possible double serialization of the cart_details
+		$cart_downloads = isset( $payment_meta['downloads'] ) ? maybe_unserialize( $payment_meta['downloads'] ) : array();
 
-		$total = (float) array_reduce( wp_list_pluck( $payment_meta['cart_details'], 'price' ), function( $carry, $item ) {
-			return $carry += $item;
-		} );
+		// Some old EDD data has the downloads serialized, but starting with something other than a: so it can't be unserialized
+		$cart_downloads = self::fix_possible_serialization( $cart_downloads );
 
+		// If the order status is 'publish' convert it to the new 'complete' status.
 		$order_status = 'publish' === $data->post_status ? 'complete' : $data->post_status;
 
+		// If there are no items, and it's abandoned, just return, since this isn't a valid order.
+		if ( 'abandoned' === $order_status && empty( $cart_downloads ) && empty( $cart_details ) ) {
+			edd_debug_log( 'Skipping order ' . $data->ID . ' due to abandoned status and no products.', true );
+			return;
+		}
+
+		$subtotal = 0;
+		$tax      = 0;
+		$discount = 0;
+		$total    = 0;
+
+		// In some cases (very few) there is no cart details...so we have to just avoid this part.
+		if ( ! empty( $cart_details ) && is_array( $cart_details ) ) {
+
+			// Loop through the items in the purchase to build the totals.
+			foreach ( $cart_details as $cart_item ) {
+				$subtotal += (float) isset( $cart_item['subtotal'] ) ? $cart_item['subtotal'] : 0;
+				$tax      += (float) isset( $cart_item['tax'] )      ? $cart_item['tax']      : 0;
+				$discount += (float) isset( $cart_item['discount'] ) ? $cart_item['discount'] : 0;
+				$total    += (float) isset( $cart_item['price'] )    ? $cart_item['price']    : 0;
+			}
+
+		}
+
+		// Maybe convert the date completed to UTC.
+		$non_completed_statuses = apply_filters( 'edd_30_noncomplete_statuses', array ( 'pending', 'cancelled', 'abandoned', 'processing' ) );
+		if ( ! in_array( $order_status, $non_completed_statuses ) && '0000-00-00 00:00:00' !== $date_completed ) {
+			$date_completed = EDD()->utils->date( $date_completed, edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString();
+		}
+
+		// Account for a situation where the post_date_gmt is set to 0000-00-00 00:00:00
+		$date_created_gmt = $data->post_date_gmt;
+		if ( '0000-00-00 00:00:00' === $date_created_gmt ) {
+
+			$date_created_gmt  = new DateTime( $data->post_date );
+			$modified_time     = new DateTime( $data->post_modified );
+			$modified_time_gmt = new DateTime( $data->post_modified_gmt );
+
+			$diff = $modified_time_gmt->diff( $modified_time );
+
+			$time_diff = 'PT';
+
+			// Add hours to the offset string.
+			if ( ! empty( $diff->h ) ) {
+				$time_diff .= $diff->h . 'H';
+			}
+
+			// Add minutes to the offset string.
+			if ( ! empty( $diff->i ) ) {
+				$time_diff .= $diff->i . 'M';
+			}
+
+			// Account for -/+ GMT offsets.
+			if ( 1 === $diff->invert ) {
+				$date_created_gmt->add( new DateInterval( $time_diff ) );
+			} else {
+				$date_created_gmt->sub( new DateInterval( $time_diff ) );
+			}
+
+			$date_created_gmt = $date_created_gmt->format('Y-m-d H:i:s');
+		}
+
+		// Find the parent payment, if there is one.
+		$parent = 0;
+		if ( ! empty( $data->post_parent ) ) {
+			$parent = $wpdb->get_var( $wpdb->prepare( "SELECT edd_order_id FROM {$wpdb->edd_ordermeta} WHERE meta_key = %s AND meta_value = %d", esc_sql( 'legacy_order_id' ), $data->ID ) );
+		}
+
+		// Build the order data before inserting.
 		$order_data = array(
-			'parent'         => $data->post_parent,
+			'parent'         => ! empty( $parent ) ? $parent : 0,
 			'order_number'   => $order_number,
 			'status'         => $order_status,
 			'type'           => 'sale',
-			'date_created'   => $data->post_date_gmt, // GMT is stored in the database as the offset is applied by the new query classes.
+			'date_created'   => $date_created_gmt, // GMT is stored in the database as the offset is applied by the new query classes.
 			'date_modified'  => $data->post_modified_gmt, // GMT is stored in the database as the offset is applied by the new query classes.
 			'date_completed' => $date_completed,
 			'user_id'        => $user_id,
 			'customer_id'    => $customer_id,
-			'email'          => $payment_meta['email'],
+			'email'          => $purchase_email,
 			'ip'             => $ip,
 			'gateway'        => $gateway,
 			'mode'           => $mode,
 			'currency'       => $payment_meta['currency'],
-			'payment_key'    => $payment_meta['key'],
+			'payment_key'    => $purchase_key,
 			'subtotal'       => $subtotal,
 			'tax'            => $tax,
 			'discount'       => $discount,
@@ -396,8 +482,12 @@ class Data_Migrator {
 		// Reset the $refund_id variable so that we don't end up accidentally creating refunds.
 		$refund_id = 0;
 
+		// If the order status is 'refunded', we need to generate a new order with the type of 'refund'.
 		if ( 'refunded' === $order_status ) {
+
+			// Since the refund is a near copy of the original order, copy over the arguments.
 			$refund_data = $order_data;
+
 			$refund_data['parent']       = $order_id;
 			$refund_data['order_number'] = $order_id . apply_filters( 'edd_order_refund_suffix', '-R-' ) . '1';
 			$refund_data['type']         = 'refund';
@@ -415,18 +505,19 @@ class Data_Migrator {
 			$refund_data['date_modified'] = $data->post_modified_gmt;
 
 			$refund_id = edd_add_order( $refund_data );
+
 		}
 
 		// First & last name.
-		$user_info['first_name'] = isset( $user_info['first_name'] )
+		$user_info['first_name'] = ! empty( $user_info['first_name'] )
 			? $user_info['first_name']
 			: '';
-		$user_info['last_name']  = isset( $user_info['last_name'] )
+		$user_info['last_name']  = ! empty( $user_info['last_name'] )
 			? $user_info['last_name']
 			: '';
 
 		// Add order address.
-		$user_info['address'] = isset( $user_info['address'] )
+		$user_info['address'] = ! empty( $user_info['address'] )
 			? $user_info['address']
 			: array();
 
@@ -441,14 +532,14 @@ class Data_Migrator {
 
 		$order_address_data = array(
 			'order_id'    => $order_id,
-			'first_name'  => $user_info['first_name'],
-			'last_name'   => $user_info['last_name'],
-			'address'     => $user_info['address']['line1'],
-			'address2'    => $user_info['address']['line2'],
-			'city'        => $user_info['address']['city'],
-			'region'      => $user_info['address']['state'],
-			'country'     => $user_info['address']['country'],
-			'postal_code' => $user_info['address']['zip'],
+			'first_name'  => isset( $user_info['first_name'] )         ? $user_info['first_name']         : '',
+			'last_name'   => isset( $user_info['last_name'] )          ? $user_info['last_name']          : '',
+			'address'     => isset( $user_info['address']['line1'] )   ? $user_info['address']['line1']   : '',
+			'address2'    => isset( $user_info['address']['line2'] )   ? $user_info['address']['line2']   : '',
+			'city'        => isset( $user_info['address']['city'] )    ? $user_info['address']['city']    : '',
+			'region'      => isset( $user_info['address']['state'] )   ? $user_info['address']['state']   : '',
+			'country'     => isset( $user_info['address']['country'] ) ? $user_info['address']['country'] : '',
+			'postal_code' => isset( $user_info['address']['zip'] )     ? $user_info['address']['zip']     : '',
 		);
 
 		// Remove empty data.
@@ -469,18 +560,20 @@ class Data_Migrator {
 		edd_maybe_add_customer_address( $customer_id, $customer_address_data );
 
 		// Maybe add email address to customer record
-		$customer = edd_get_customer( $customer_id );
-		if ( $customer ) {
-			$primary = ( $customer->email === $payment_meta['email'] );
-			$customer->add_email( $payment_meta['email'], $primary );
+		if ( ! empty( $customer ) && $customer instanceof EDD_Customer ) {
+			$primary = ( $customer->email === $purchase_email );
+			$customer->add_email( $purchase_email, $primary );
 		}
 
 		/** Migrate meta *********************************************/
 
+		// Unlimited downloads meta is not an order property, so we set it on the order meta for the new order ID.
 		if ( isset( $meta['_edd_payment_unlimited_downloads'] ) && ! empty( $meta['_edd_payment_unlimited_downloads'][0] ) ) {
 			edd_add_order_meta( $order_id, 'unlimited_downloads', $meta['_edd_payment_unlimited_downloads'][0] );
 		}
 
+		// Transaction IDs are no longer meta, and have their own table and data set, so we need to add the transactions.
+		// @TODO: Add support for multiple transaction IDs (from things like Stripe).
 		if ( isset( $meta['_edd_payment_transaction_id'] ) && ! empty( $meta['_edd_payment_transaction_id'][0] ) ) {
 			edd_add_order_transaction( array(
 				'object_id'      => $order_id,
@@ -509,22 +602,19 @@ class Data_Migrator {
 			'tax',
 		);
 
+		// Remove all the core payment meta from the array, and...
 		$remaining_payment_meta = array_diff_key( $meta['_edd_payment_meta'], array_flip( $core_meta_keys ) );
 
-		// If we have extra payment meta, it needs to be migrated across.
+		// ..If we have extra payment meta, it needs to be migrated across.
 		if ( 0 < count( $remaining_payment_meta ) ) {
 			edd_add_order_meta( $order_id, 'payment_meta', $remaining_payment_meta );
 		}
 
 		/** Create order items ***************************************/
 
-		// The cart_items array key did not exist in earlier versions of EDD.
-		$cart_items = isset( $payment_meta['cart_details'] )
-			? $payment_meta['cart_details']
-			: array();
-
-		if ( ! empty( $cart_items ) ) {
-			foreach ( $cart_items as $key => $cart_item ) {
+		// Now we iterate through all the cart items and make rows in the order items table.
+		if ( ! empty( $cart_details ) ) {
+			foreach ( $cart_details as $key => $cart_item ) {
 				// Reset any conditional IDs to be safe.
 				$refund_order_item_id = 0;
 
@@ -577,14 +667,18 @@ class Data_Migrator {
 					'discount'      => $cart_item['discount'],
 					'tax'           => $cart_item['tax'],
 					'total'         => (float) $cart_item['price'],
-					'date_created'  => $data->post_date_gmt,
+					'date_created'  => $date_created_gmt,
 					'date_modified' => $data->post_modified_gmt,
 				);
 
 				$order_item_id = edd_add_order_item( $order_item_args );
 
+				// If the order status is refunded, we also need to add all the refunded order items on the refund order as well.
 				if ( ! empty( $refund_id ) ) {
+
+					// Since the refund is a near copy of the original order, copy over the arguments.
 					$refund_item_args = $order_item_args;
+
 					$refund_item_args['order_id'] = $refund_id;
 					$refund_item_args['status']   = 'refunded';
 
@@ -601,6 +695,7 @@ class Data_Migrator {
 					$refund_item_args['date_modified'] = $data->post_modified_gmt;
 
 					$refund_order_item_id = edd_add_order_item( $refund_item_args );
+
 				}
 
 				// Store order item fees as adjustments.
@@ -633,6 +728,7 @@ class Data_Migrator {
 						// Fee ID.
 						edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
 
+						// If we refunded the main order, the fees also need to be added to the refund order type we created.
 						if ( ! empty( $refund_id ) ) {
 							$refund_adjustment_args = $adjustment_args;
 							$refund_adjustment_args['object_id'] = $refund_order_item_id;
@@ -668,8 +764,8 @@ class Data_Migrator {
 
 			// Compatibility with older versions of EDD.
 			// Older versions stored a single dimensional array of download IDs.
-		} elseif ( isset( $payment_meta['downloads'] ) && count( $payment_meta['downloads'] ) === count( $payment_meta['downloads'], COUNT_RECURSIVE ) ) {
-			foreach ( $payment_meta['downloads'] as $cart_index => $download_id ) {
+		} elseif ( is_array( $cart_downloads ) && count( $cart_downloads ) === count( $cart_downloads, COUNT_RECURSIVE ) ) {
+			foreach ( $cart_downloads as $cart_index => $download_id ) {
 				$download = edd_get_download( $download_id );
 
 				$order_item_args = array(
@@ -685,14 +781,18 @@ class Data_Migrator {
 					'discount'      => 0.00,
 					'tax'           => 0.00,
 					'total'         => (float) $payment_meta['amount'],
-					'date_created'  => $data->post_date_gmt,
+					'date_created'  => $date_created_gmt,
 					'date_modified' => $data->post_modified_gmt,
 				);
 
 				edd_add_order_item( $order_item_args );
 
+				// If the order was refunded, we also need to add these items to the refund order.
 				if ( ! empty( $refund_id ) ) {
+
+					// Since the refund is a near copy of the original order, copy over the arguments.
 					$refund_item_args = $order_item_args;
+
 					$refund_item_args['order_id'] = $refund_id;
 					$refund_item_args['quantity'] = edd_negate_amount( 1 );
 					$refund_item_args['amount']   = edd_negate_amount( (float) $payment_meta['amount'] );
@@ -760,7 +860,10 @@ class Data_Migrator {
 				edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
 
 				if ( ! empty( $refund_id ) ) {
+
+					// Since the refund is a near copy of the original order, copy over the arguments.
 					$refund_adjustment_args = $adjustment_args;
+
 					$refund_adjustment_args['object_id'] = $refund_id;
 
 					// Negate the amounts.
@@ -853,17 +956,21 @@ class Data_Migrator {
 			'_edd_payment_number',
 		);
 
+		// Determine what main payment meta keys were from core and what were custom...
 		$remaining_meta = array_diff_key( $meta, array_flip( $core_meta_keys ) );
 
-		// Migrate additional payment meta.
+		// ...and whatever is not from core, needs to be added as new order meta.
 		foreach ( $remaining_meta as $meta_key => $meta_value ) {
-			$meta_value = $meta_value[0];
+			$meta_value = maybe_unserialize( $meta_value[0] );
 
 			edd_add_order_meta( $order_id, $meta_key, $meta_value );
 		}
 
 		// Store the legacy ID in order meta.
 		edd_add_order_meta( $order_id, 'legacy_order_id', $data->ID );
+
+		// Now that we're done, let's run a hook here so we can allow extensions to make any necessary changes
+		do_action( 'edd_30_migrate_order', $order_id, $data->ID );
 	}
 
 	/**
@@ -899,5 +1006,22 @@ class Data_Migrator {
 		);
 
 		edd_add_adjustment( $adjustment_data );
+	}
+
+	/**
+	 * Given that some data quite possible has bad serialization, we need to possibly fix the bad serialization.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param $data
+	 *
+	 * @return mixed
+	 */
+	private static function fix_possible_serialization( $data ) {
+		if ( ! is_array( $data ) && is_string( $data ) ) {
+			$data = substr_replace( $data, 'a', 0, 1 );
+		}
+
+		return $data;
 	}
 }
