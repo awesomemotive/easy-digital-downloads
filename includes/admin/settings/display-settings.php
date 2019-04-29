@@ -240,10 +240,12 @@ function edd_tax_settings_display_tax_disabled_notice() {
 	}
 
 	?>
-	<div class="notice notice-warning">
-		<p>
-			<?php _e( 'Taxes are currently disabled. Rates listed below will not be applied to purchases until taxes are enabled.', 'easy-digital-downloads' ); ?>
-		</p>
+	<div class="notice-wrap" style="clear: both;">
+		<div id="edd-tax-disabled-notice">
+			<p>
+				<?php _e( 'Taxes are currently disabled. Rates listed below will not be applied to purchases until taxes are enabled.', 'easy-digital-downloads' ); ?>
+			</p>
+		</div>
 	</div>
 	<?php
 
