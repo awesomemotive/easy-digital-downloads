@@ -332,7 +332,7 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 		$this->args = $this->parse_pagination_args( $args );
 
 		// Get the data
-		$emails = edd_get_customer_email_addresses( $args );
+		$emails = edd_get_customer_email_addresses( $this->args );
 
 		if ( ! empty( $emails ) ) {
 			foreach ( $emails as $customer ) {
