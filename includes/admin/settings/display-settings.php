@@ -227,3 +227,25 @@ function edd_options_page() {
 	// Output the current buffer
 	echo ob_get_clean();
 }
+
+/**
+ * Conditionally shows a notice on the Tax Rates screen if taxes are disabled, to inform users that while they are adding
+ * tax rates, they will not be applied until taxes are enabled.
+ *
+ * @since 3.0
+ */
+function edd_tax_settings_display_tax_disabled_notice() {
+	if ( edd_use_taxes() ) {
+		return;
+	}
+
+	?>
+	<div class="notice notice-warning">
+		<p>
+			<?php _e( 'Taxes are currently disabled. Rates listed below will not be applied to purchases until taxes are enabled.', 'easy-digital-downloads' ); ?>
+		</p>
+	</div>
+	<?php
+
+}
+add_action( 'edd_settings_tab_top_taxes_rates', 'edd_tax_settings_display_tax_disabled_notice', 10 );
