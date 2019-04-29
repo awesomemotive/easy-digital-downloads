@@ -75,7 +75,7 @@
 /*!*****************************************!*\
   !*** ./assets/js/admin/orders/index.js ***!
   \*****************************************/
-/*! no exports provided */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -85,12 +85,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es6.array.find */ "./node_modules/core-js/modules/es6.array.find.js");
 /* harmony import */ var core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var utils_chosen_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! utils/chosen.js */ "./assets/js/utils/chosen.js");
+/* harmony import */ var _override_amounts_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./override-amounts.js */ "./assets/js/admin/orders/override-amounts.js");
 
 
 
 /**
  * Internal dependencies.
  */
+
 
 jQuery(document).ready(function ($) {
   // Toggle advanced filters on Orders page.
@@ -109,7 +111,6 @@ var EDD_Add_Order = {
   init: function init() {
     this.add_order_item();
     this.add_adjustment();
-    this.override();
     this.remove();
     this.fetch_addresses();
     this.select_address();
@@ -138,7 +139,8 @@ var EDD_Add_Order = {
         country: $('.edd-order-address-country').val(),
         region: $('.edd-order-address-region').val(),
         download: select.val(),
-        quantity: $('.edd-add-order-quantity').val()
+        quantity: $('.edd-add-order-quantity').val(),
+        editable: $('input[name="edd-order-download-is-overrideable"]').val()
       };
       spinner.css('visibility', 'visible');
       $.post(ajaxurl, data, function (response) {
@@ -153,9 +155,9 @@ var EDD_Add_Order = {
         $('.orderitems tbody').append(data.html);
         EDD_Add_Order.update_totals();
         EDD_Add_Order.reindex();
-        spinner.css('visibility', 'hidden'); // Display `Override` button if it exists.
+        spinner.css('visibility', 'hidden'); // Let other things happen. jQuery event for now.
 
-        $('.edd-override').removeAttr('disabled');
+        $(document).trigger('edd-admin-add-order-download', response);
       }, 'json');
     });
   },
@@ -202,49 +204,6 @@ var EDD_Add_Order = {
         spinner.css('visibility', 'hidden');
       }, 'json');
     });
-  },
-  override: function override() {
-    $('.edd-override').on('click', function () {
-      $(this).prop('disabled', 'disabled');
-      $(this).attr('data-override', 'true');
-      $(document.body).on('click', '.orderitems tr td .value', EDD_Add_Order.switchToInput);
-      $('<input>').attr({
-        type: 'hidden',
-        name: 'edd_add_order_override',
-        value: 'true'
-      }).appendTo('#edd-add-order-form');
-    });
-  },
-  switchToInput: function switchToInput() {
-    var input = $('<input>', {
-      val: $(this).text(),
-      type: 'text'
-    });
-    $(this).replaceWith(input);
-    input.on('blur', EDD_Add_Order.switchToSpan);
-    input.select();
-  },
-  switchToSpan: function switchToSpan() {
-    var span = $('<span>', {
-      text: parseFloat($(this).val()).toLocaleString(edd_vars.currency, {
-        style: 'decimal',
-        currency: edd_vars.currency,
-        minimumFractionDigits: edd_vars.currency_decimals,
-        maximumFractionDigits: edd_vars.currency_decimals
-      })
-    });
-    var type = $(this).parent().data('type'),
-        input = $(this).parents('tr').find('.download-' + type);
-
-    if ('quantity' === type) {
-      span.text(parseInt($(this).val()));
-    }
-
-    input.val(span.text());
-    span.addClass('value');
-    $(this).replaceWith(span);
-    EDD_Add_Order.update_totals();
-    span.on('click', EDD_Add_Order.switchToInput);
   },
   remove: function remove() {
     $(document.body).on('click', '.orderitems .remove-item, .orderadjustments .remove-item', function (e) {
@@ -385,7 +344,7 @@ var EDD_Add_Order = {
         var tax_rate = parseFloat(data.tax_rate);
         $('.orderitems tbody tr:not(.no-items)').each(function () {
           var amount = parseFloat($('.amount .value', this).text());
-          var quantity = $('.quantity .value', this) ? parseFloat($('.column-quantity .value', this).text()) : 1;
+          var quantity = $('.quantity .value', this).length > 0 ? parseFloat($('.column-quantity .value', this).text()) : 1;
           var calculated = amount * quantity;
           var tax = 0;
 
@@ -435,16 +394,16 @@ var EDD_Add_Order = {
           item_quantity = 1,
           item_tax = 0,
           item_total;
-      item_amount = parseFloat(row.find('.amount .value').text());
+      item_amount = parseFloat(row.find('.amount input').val());
 
       if (row.find('.quantity').length) {
-        item_quantity = parseFloat(row.find('.quantity .value').text());
+        item_quantity = parseFloat(row.find('.quantity input').val());
       }
 
       subtotal += item_amount * item_quantity;
 
       if (row.find('.tax').length) {
-        item_tax = parseFloat(row.find('.tax .value').text());
+        item_tax = parseFloat(row.find('.tax input').val());
 
         if (!isNaN(item_tax) && !edd_vars.taxes_included) {
           item_amount += item_tax;
@@ -554,6 +513,72 @@ var EDD_Add_Order = {
 jQuery(document).ready(function ($) {
   EDD_Add_Order.init();
 });
+/* harmony default export */ __webpack_exports__["default"] = (EDD_Add_Order);
+
+/***/ }),
+
+/***/ "./assets/js/admin/orders/override-amounts.js":
+/*!****************************************************!*\
+  !*** ./assets/js/admin/orders/override-amounts.js ***!
+  \****************************************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index.js */ "./assets/js/admin/orders/index.js");
+/* global _ */
+
+/**
+ * Internal dependencies.
+ */
+
+
+(function () {
+  var toggle = document.querySelector('.edd-override');
+
+  if (!toggle) {
+    return;
+  }
+
+  var isOverrideableEl = document.querySelector('input[name="edd-order-download-is-overrideable"]');
+  /**
+   * A new download has been added.
+   */
+
+  $(document).on('edd-admin-add-order-download', function (response) {
+    // Update on change.
+    _.each(document.querySelectorAll('.overridable input'), function (el) {
+      return el.addEventListener('keyup', _index_js__WEBPACK_IMPORTED_MODULE_0__["default"].update_totals);
+    }); // Update on addition.
+
+
+    _index_js__WEBPACK_IMPORTED_MODULE_0__["default"].update_totals(); // Keep toggle disabled if necesseary.
+
+    toggle.disabled = 1 == isOverrideableEl.value;
+  });
+  /**
+   * Allow edits.
+   */
+
+  toggle.addEventListener('click', function () {
+    // Disable the button.
+    this.disabled = true; // Tell future download item additions to be editable.
+
+    isOverrideableEl.value = 1; // Get a fresh set of inputs. Mark current inputs as editable.
+
+    _.each(document.querySelectorAll('.overridable input'), function (el) {
+      return el.readOnly = false;
+    }); // Mark the override for saving the data.
+
+
+    var input = document.createElement('input');
+    input.name = 'edd_add_order_override';
+    input.value = true;
+    input.type = 'hidden';
+    document.getElementById('edd-add-order-form').appendChild(input);
+  });
+})();
 
 /***/ }),
 

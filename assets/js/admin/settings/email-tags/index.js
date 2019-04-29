@@ -17,7 +17,7 @@ function setupEmailTags() {
 	 *
 	 * @param {object} node Button node.
 	 */
-	insertButtons.forEach( function( node ) {
+	_.each( insertButtons, function( node ) {
 		/**
 		 * Listen for clicks on tag buttons.
 		 */
@@ -41,7 +41,7 @@ function filterEmailTags() {
 		const searchTerm = event.target.value;
 		const foundTags = searchItems( eddEmailTagsInserter.items, searchTerm );
 
-		tagItems.forEach( function( node ) {
+		_.each( tagItems, function( node ) {
 			const found = _.findWhere( foundTags, { tag: node.dataset.tag } );
 
 			node.style.display = ! found ? 'none' : 'block';
