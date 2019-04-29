@@ -370,7 +370,7 @@ class EDD_Payment_History_Table extends List_Table {
 			'customer' => __( 'Customer',  'easy-digital-downloads' ),
 			'gateway'  => __( 'Gateway',   'easy-digital-downloads' ),
 			'amount'   => __( 'Amount',    'easy-digital-downloads' ),
-			'date'     => __( 'Completed', 'easy-digital-downloads' )
+			'date'     => __( 'Date', 'easy-digital-downloads' )
 		) );
 	}
 

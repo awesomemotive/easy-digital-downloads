@@ -411,6 +411,7 @@ class Refund_Items_Table extends List_Table {
 			</td>
 		</tr>
 
+		<?php if ( edd_use_taxes() ) : ?>
 		<tr id="edd-refund-submit-tax" class="edd-refund-submit-line-total">
 			<td colspan="<?php echo $this->get_column_count() - 1; ?>">
 				<?php _e( 'Refund Tax Total', 'easy-digital-downloads' ); ?>
@@ -433,6 +434,7 @@ class Refund_Items_Table extends List_Table {
 				?>
 			</td>
 		</tr>
+		<?php endif; ?>
 
 		<tr id="edd-refund-submit-total" class="edd-refund-submit-line-total">
 			<td colspan="<?php echo $this->get_column_count() - 1; ?>">
