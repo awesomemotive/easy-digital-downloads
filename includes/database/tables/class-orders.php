@@ -109,7 +109,7 @@ final class Orders extends Table {
 		// After successful creation, we need to set the auto_increment for legacy orders.
 		if ( ! empty( $created ) ) {
 
-			$result = $this->get_db()->query( "SELECT ID FROM {$this->get_db()->prefix}posts WHERE post_type = 'edd_payment' ORDER BY ID DESC LIMIT 1;" );
+			$result = $this->get_db()->get_var( "SELECT ID FROM {$this->get_db()->prefix}posts WHERE post_type = 'edd_payment' ORDER BY ID DESC LIMIT 1;" );
 
 			if ( ! empty( $result )  ) {
 				$auto_increment = $result + 1;
