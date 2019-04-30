@@ -11,6 +11,14 @@ import Manager from './views/manager.js';
  * DOM ready.
  */
 document.addEventListener( 'DOMContentLoaded', () => {
+	// Show notice if taxes are not enabled.
+	const noticeEl = document.getElementById( 'edd-tax-disabled-notice' );
+
+	if ( noticeEl ) {
+		noticeEl.classList.add( 'notice' );
+		noticeEl.classList.add( 'notice-warning' );
+	}
+
 	// Start manager with a blank collection.
 	const manager = new Manager( {
 		collection: new TaxRates(),
