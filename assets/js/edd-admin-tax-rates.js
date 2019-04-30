@@ -147,7 +147,15 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 document.addEventListener('DOMContentLoaded', function () {
-  // Start manager with a blank collection.
+  // Show notice if taxes are not enabled.
+  var noticeEl = document.getElementById('edd-tax-disabled-notice');
+
+  if (noticeEl) {
+    noticeEl.classList.add('notice');
+    noticeEl.classList.add('notice-warning');
+  } // Start manager with a blank collection.
+
+
   var manager = new _views_manager_js__WEBPACK_IMPORTED_MODULE_2__["default"]({
     collection: new _collections_tax_rates_js__WEBPACK_IMPORTED_MODULE_1__["default"]()
   });
