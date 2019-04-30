@@ -408,12 +408,6 @@ class Data_Migrator {
 
 		}
 
-		// Maybe convert the date completed to UTC.
-		$non_completed_statuses = apply_filters( 'edd_30_noncomplete_statuses', array ( 'pending', 'cancelled', 'abandoned', 'processing' ) );
-		if ( ! in_array( $order_status, $non_completed_statuses ) && '0000-00-00 00:00:00' !== $date_completed ) {
-			$date_completed = EDD()->utils->date( $date_completed, edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString();
-		}
-
 		// Account for a situation where the post_date_gmt is set to 0000-00-00 00:00:00
 		$date_created_gmt = $data->post_date_gmt;
 		if ( '0000-00-00 00:00:00' === $date_created_gmt ) {
@@ -444,6 +438,18 @@ class Data_Migrator {
 			}
 
 			$date_created_gmt = $date_created_gmt->format('Y-m-d H:i:s');
+		}
+
+		// Maybe convert the date completed to UTC or backfill the date_completed.
+		$non_completed_statuses = apply_filters( 'edd_30_noncomplete_statuses', array ( 'pending', 'cancelled', 'abandoned', 'processing' ) );
+		if ( ! in_array( $order_status, $non_completed_statuses ) ) {
+
+			if ( '0000-00-00 00:00:00' !== $date_completed ) {  // Update the data_completed to the UTC.
+				$date_completed = EDD()->utils->date( $date_completed, edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString();
+			} elseif ( '0000-00-00 00:00:00' === $date_completed ) { // Backfill a missing date_completed (for things like recurring payments).
+				$date_completed = $date_created_gmt;
+			}
+
 		}
 
 		// Find the parent payment, if there is one.
@@ -963,7 +969,7 @@ class Data_Migrator {
 
 		// ...and whatever is not from core, needs to be added as new order meta.
 		foreach ( $remaining_meta as $meta_key => $meta_value ) {
-			$meta_value = $meta_value[0];
+			$meta_value = maybe_unserialize( $meta_value[0] );
 
 			edd_add_order_meta( $order_id, $meta_key, $meta_value );
 		}
