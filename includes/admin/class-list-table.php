@@ -200,8 +200,8 @@ abstract class List_Table extends \WP_List_Table {
 			'orderby' => $orderby
 		) );
 
-		// Return (filtered & uniqued) args
-		return array_filter( array_unique( $r ) );
+		// Return args
+		return array_filter( $r );
 	}
 
 	/**
