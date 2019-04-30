@@ -318,7 +318,9 @@ function edd_register_admin_scripts() {
 		),
 		'payments'     => array(),
 		'settings'     => array(),
-		'tools'        => array(),
+		'tools'        => array(
+			'edd-admin-tools-export'
+		),
 	);
 
 	foreach ( $admin_pages as $page => $deps ) {
