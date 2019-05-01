@@ -118,6 +118,8 @@ final class Orders extends Table {
 
 		}
 
+		return $created;
+
 	}
 
 	/**
