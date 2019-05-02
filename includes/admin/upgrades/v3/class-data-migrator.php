@@ -170,6 +170,7 @@ class Data_Migrator {
 			$args['name'] = $data->post_title;
 		}
 
+		$args['id']            = $data->ID;
 		$args['date_created']  = $data->post_date_gmt;
 		$args['date_modified'] = $data->post_modified_gmt;
 
@@ -182,9 +183,6 @@ class Data_Migrator {
 				edd_add_adjustment_meta( $discount_id, $key, $value );
 			}
 		}
-
-		// Store legacy discount ID.
-		edd_add_adjustment_meta( $discount_id, 'legacy_discount_id', $data->ID );
 	}
 
 	/**
@@ -462,6 +460,7 @@ class Data_Migrator {
 
 		// Build the order data before inserting.
 		$order_data = array(
+			'id'             => $data->ID,
 			'parent'         => ! empty( $parent ) ? $parent : 0,
 			'order_number'   => $order_number,
 			'status'         => $order_status,
@@ -484,6 +483,9 @@ class Data_Migrator {
 		);
 
 		$order_id = edd_add_order( $order_data );
+
+		// Do not pass the original order ID into other arrays
+		unset( $order_data['id'] );
 
 		// Reset the $refund_id variable so that we don't end up accidentally creating refunds.
 		$refund_id = 0;
@@ -971,9 +973,6 @@ class Data_Migrator {
 
 			edd_add_order_meta( $order_id, $meta_key, $meta_value );
 		}
-
-		// Store the legacy ID in order meta.
-		edd_add_order_meta( $order_id, 'legacy_order_id', $data->ID );
 
 		// Now that we're done, let's run a hook here so we can allow extensions to make any necessary changes
 		do_action( 'edd_30_migrate_order', $order_id, $data->ID );

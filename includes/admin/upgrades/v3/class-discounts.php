@@ -53,7 +53,7 @@ class Discounts extends Base {
 			foreach ( $results as $result ) {
 
 				// Check if discount has already been migrated.
-				if ( $this->find_legacy_id( $result->ID, static::DISCOUNTS ) ) {
+				if ( edd_get_discount( $result->ID ) ) {
 					continue;
 				}
 
