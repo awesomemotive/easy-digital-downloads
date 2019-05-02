@@ -822,23 +822,26 @@ class Data_Migrator {
 			? (float) $meta['_edd_payment_tax_rate'][0]
 			: 0.00;
 
-		// Tax rate is no longer stored in meta.
-		edd_add_order_adjustment( array(
-			'object_id'   => $order_id,
-			'object_type' => 'order',
-			'type_id'     => 0,
-			'type'        => 'tax_rate',
-			'total'       => $tax_rate,
-		) );
 
-		if ( ! empty( $refund_id ) ) {
+		if ( ! empty( $tax_rate ) ) {
+			// Tax rate is no longer stored in meta.
 			edd_add_order_adjustment( array(
-				'object_id'   => $refund_id,
+				'object_id'   => $order_id,
 				'object_type' => 'order',
 				'type_id'     => 0,
 				'type'        => 'tax_rate',
 				'total'       => $tax_rate,
 			) );
+
+			if ( ! empty( $refund_id ) ) {
+				edd_add_order_adjustment( array(
+					'object_id'   => $refund_id,
+					'object_type' => 'order',
+					'type_id'     => 0,
+					'type'        => 'tax_rate',
+					'total'       => $tax_rate,
+				) );
+			}
 		}
 
 		if ( isset( $payment_meta['fees'] ) && ! empty( $payment_meta['fees'] ) ) {
