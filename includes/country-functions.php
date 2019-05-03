@@ -105,6 +105,9 @@ function edd_get_shop_states( $country = null ) {
 		case 'MY' :
 			$states = edd_get_malaysian_states_list();
 			break;
+		case 'MZ' :
+			$states = edd_get_mozambique_states_list();
+			break;
 		case 'NP' :
 			$states = edd_get_nepalese_states_list();
 			break;
@@ -1524,6 +1527,31 @@ function edd_get_mexican_states_list() {
 	);
 
 	return apply_filters( 'edd_mexican_states', $states );
+}
+
+/**
+ * Get Mozambique States
+ *
+ * @since 2.9.13
+ * @return array $states A list of states
+ */
+function edd_get_mozambique_states_list() {
+	$states = array(
+		''       => '',
+		'MZ-MPM' => 'Maputo/city',
+		'MZ-P' 	 => 'Cabo Delgado',
+		'MZ-G'   => 'Gaza',
+		'MZ-I'   => 'Inhambane',
+		'MZ-B'   => 'Manica',
+		'MZ-L'   => 'Maputo',
+		'MZ-N'   => 'Nampula',
+		'MZ-A'   => 'Niassa',
+		'MZ-S'   => 'Sofala',
+		'MZ-T'   => 'Tete',
+		'MZ-Q'   => 'Zambézia',
+	);
+
+	return apply_filters( 'edd_mozambique_states', $states );
 }
 
 /**
