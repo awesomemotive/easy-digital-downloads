@@ -27,6 +27,14 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 abstract class List_Table extends \WP_List_Table {
 
 	/**
+	 * Arguments for the data set.
+	 *
+	 * @since 3.0
+	 * @var   array
+	 */
+	public $args = array();
+
+	/**
 	 * Number of results to show per page.
 	 *
 	 * @since 3.0
@@ -156,6 +164,44 @@ abstract class List_Table extends \WP_List_Table {
 		}
 
 		return $views;
+	}
+
+	/**
+	 * Parse pagination query arguments into keys & values that the Query class
+	 * can understand and use to retrieve the correct results from the database.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $args
+	 *
+	 * @return array
+	 */
+	public function parse_pagination_args( $args = array() ) {
+
+		// Get pagination values
+		$order   = isset( $_GET['order']   ) ? sanitize_text_field( $_GET['order']   ) : 'DESC'; // WPCS: CSRF ok.
+		$orderby = isset( $_GET['orderby'] ) ? sanitize_text_field( $_GET['orderby'] ) : 'id'; // WPCS: CSRF ok.
+		$paged   = $this->get_paged();
+
+		// Only perform paged math if numeric and greater than 1
+		if ( ! empty( $paged ) && is_numeric( $paged ) && ( $paged > 1 ) ) {
+			$offset = ceil( $this->per_page * ( $paged - 1 ) );
+
+		// Otherwise, default to the first page of results
+		} else {
+			$offset = 0;
+		}
+
+		// Parse pagination args into passed args
+		$r = wp_parse_args( $args, array(
+			'number'  => $this->per_page,
+			'offset'  => $offset,
+			'order'   => $order,
+			'orderby' => $orderby
+		) );
+
+		// Return args
+		return array_filter( $r );
 	}
 
 	/**

@@ -400,23 +400,19 @@ class Order_Items_Table extends List_Table {
 		}
 
 		// Query args.
-		$status  = $this->get_status();
-		$orderby = isset( $_GET['orderby'] ) ? sanitize_key( $_GET['orderby'] ) : 'id';
-		$order   = isset( $_GET['order'] ) ? sanitize_key( $_GET['order'] ) : 'DESC';
-		$search  = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : null;
-		$paged   = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
-		$id      = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
+		$status = $this->get_status();
+		$search = isset( $_GET['s']  ) ? sanitize_text_field( $_GET['s'] ) : null;
+		$id     = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
 
-		// Get order items.
-		return edd_get_order_items( array(
+		// Set args.
+		$this->args = $this->parse_pagination_args( array(
 			'order_id' => $id,
-			'number'   => $this->per_page,
-			'paged'    => $paged,
-			'orderby'  => $orderby,
-			'order'    => $order,
 			'status'   => $status,
 			'search'   => $search,
 		) );
+
+		// Get order items.
+		return edd_get_order_items( $this->args );
 	}
 
 	/**
@@ -438,9 +434,9 @@ class Order_Items_Table extends List_Table {
 		// Maybe setup pagination.
 		if ( ! edd_is_add_order_page() ) {
 			$this->set_pagination_args( array(
+				'total_pages' => ceil( $this->counts[ $status ] / $this->per_page ),
 				'total_items' => $this->counts[ $status ],
 				'per_page'    => $this->per_page,
-				'total_pages' => ceil( $this->counts[ $status ] / $this->per_page ),
 			) );
 		}
 	}
