@@ -319,13 +319,13 @@ class EDD_Base_Log_List_Table extends List_Table {
 		);
 
 		$this->items = $this->get_data();
-		$log_query   = $this->get_query_args();
+		$log_query   = $this->get_query_args( false );
 		$total_items = $this->get_total( $log_query );
 
 		$this->set_pagination_args( array(
+			'total_pages' => ceil( $total_items / $this->per_page ),
 			'total_items' => $total_items,
 			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $total_items / $this->per_page )
 		) );
 	}
 
@@ -334,15 +334,11 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 *
 	 * @since 3.0
 	 *
+	 * @param bool $paginate Whether to add pagination arguments
+	 *
 	 * @return array
 	 */
-	protected function get_query_args() {
-
-		// Pagination
-		$paged  = $this->get_paged();
-		$offset = ( $paged > 1 )
-			? ( ( $paged - 1 ) * $this->per_page )
-			: 0;
+	protected function get_query_args( $paginate = true ) {
 
 		// Defaults
 		$retval = array(
@@ -350,8 +346,6 @@ class EDD_Base_Log_List_Table extends List_Table {
 			'customer_id' => $this->get_filtered_customer(),
 			'payment_id'  => $this->get_filtered_payment(),
 			'meta_query'  => $this->get_meta_query(),
-			'offset'      => $offset,
-			'number'      => $this->per_page
 		);
 
 		// Search
@@ -403,7 +397,9 @@ class EDD_Base_Log_List_Table extends List_Table {
 		}
 
 		// Return query arguments
-		return $retval;
+		return ( true === $paginate )
+			? $this->parse_pagination_args( $retval )
+			: $retval;
 	}
 
 	/**
