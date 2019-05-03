@@ -30,7 +30,7 @@ function edd_add_ons_page() {
 	ob_start(); ?>
 	<div class="wrap" id="edd-add-ons">
 		<h1 class="wp-heading-inline"><?php echo edd_get_label_plural(); ?></h1>
-		<a href="<?php echo admin_url( 'post-new.php?post_type=download' ); ?>" class="page-title-action">Add New</a>
+		<a href="<?php echo admin_url( 'post-new.php?post_type=download' ); ?>" class="page-title-action"><?php _e( 'Add New', 'easy-digital-downloads' );?></a>
 		<hr class="wp-header-end">
 		<?php edd_display_product_tabs(); ?>
 		<h2>
