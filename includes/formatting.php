@@ -152,7 +152,7 @@ function edd_currency_filter( $price = '', $currency = '' ) {
 				$formatted = $symbol . $price;
 				break;
 			default :
-				$formatted = $currency . ' ' . $price;
+				$formatted = $symbol . ' ' . $price;
 				break;
 		endswitch;
 		$formatted = apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_before', $formatted, $currency, $price );
@@ -171,7 +171,7 @@ function edd_currency_filter( $price = '', $currency = '' ) {
 				$formatted = $price . $symbol;
 				break;
 			default :
-				$formatted = $price . ' ' . $currency;
+				$formatted = $price . ' ' . $symbol;
 				break;
 		endswitch;
 		$formatted = apply_filters( 'edd_' . strtolower( $currency ) . '_currency_filter_after', $formatted, $currency, $price );
