@@ -811,9 +811,12 @@ class Query extends Base {
 		 */
 		do_action_ref_array( $this->apply_prefix( "pre_get_{$this->item_name_plural}" ), array( &$this ) );
 
-		// Never limit, never update item/meta caches when counting
+		// When counting, never limit/update/order, and no item/meta caches
 		if ( ! empty( $this->query_vars['count'] ) ) {
 			$this->query_vars['number']            = false;
+			$this->query_vars['offset']            = false;
+			$this->query_vars['order']             = false;
+			$this->query_vars['orderby']           = false;
 			$this->query_vars['no_found_rows']     = true;
 			$this->query_vars['update_item_cache'] = false;
 			$this->query_vars['update_meta_cache'] = false;
@@ -1618,16 +1621,31 @@ class Query extends Base {
 		// Get primary column
 		$primary = $this->get_primary_column_name();
 
-		// Bail if data to add includes the primary column
-		if ( isset( $data[ $primary ] ) ) {
-			return false;
+		// If data includes primary column, check if item already exists
+		if ( ! empty( $data[ $primary ] ) ) {
+
+			// Shape the primary item ID
+			$item_id = $this->shape_item_id( $data[ $primary ] );
+
+			// Get item by ID (from database, not cache)
+			$item    = $this->get_item_raw( $primary, $item_id );
+
+			// Bail if item already exists
+			if ( ! empty( $item ) ) {
+				return false;
+			}
+
+			// Set data primary ID to newly shaped ID
+			$data[ $primary ] = $item_id;
 		}
 
 		// Get default values for item (from columns)
 		$item = $this->default_item();
 
-		// Unset the primary key value from defaults
-		unset( $item[ $primary ] );
+		// Unset the primary key if not part of data array (auto-incremented)
+		if ( empty( $data[ $primary ] ) ) {
+			unset( $item[ $primary ] );
+		}
 
 		// Cut out non-keys for meta
 		$columns = $this->get_column_names();
