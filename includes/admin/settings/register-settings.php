@@ -453,6 +453,12 @@ function edd_get_registered_settings() {
 		'emails' => apply_filters('edd_settings_emails',
 			array(
 				'main' => array(
+					'sendwp' => array(
+						'id'      => 'sendwp',
+						'name'    => __( 'SendWP', 'easy-digital-downloads' ),
+						'desc'    => __( 'Tired of unreliable email delivery? Connect SendWP now for simple, cheap, reliable transactional emails.', 'easy-digital-downloads' ),
+						'type'    => 'sendwp',
+					),
 					'email_template' => array(
 						'id'      => 'email_template',
 						'name'    => __( 'Email Template', 'easy-digital-downloads' ),
@@ -2122,6 +2128,27 @@ function edd_shop_states_callback($args) {
 	$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
+}
+
+/**
+ * SendWP Callback
+ *
+ * Renders SendWP Settings
+ *
+ * @since 2.9.x
+ * @param array $args Arguments passed by the setting
+ * @return void
+ */
+function edd_sendwp_callback($args) {
+
+
+	ob_start(); ?>
+	<p><?php echo $args['desc']; ?></p>
+	<p>
+		<button id="edd-sendwp-connect" class="button"><?php _e( 'Connect SendWP', 'easy-digital-downloads' ); ?></button>
+	</p>
+	<?php
+	echo ob_get_clean();
 }
 
 /**
