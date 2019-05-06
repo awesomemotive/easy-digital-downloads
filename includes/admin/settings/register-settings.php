@@ -750,8 +750,8 @@ function edd_get_registered_settings() {
 						'type'          => 'radio',
 						'std'           => 'no',
 						'options'       => array(
-							'yes' => __( 'Prices include tax', 'easy-digital-downloads' ),
-							'no'  => __( 'Prices do not include tax',  'easy-digital-downloads' ),
+							'yes' => __( 'Yes, I will enter prices inclusive of tax', 'easy-digital-downloads' ),
+							'no'  => __( 'No, I will enter prices exclusive of tax', 'easy-digital-downloads' ),
 						),
 						'tooltip_title' => __( 'Prices Inclusive of Tax', 'easy-digital-downloads' ),
 						'tooltip_desc'  => __( 'When using prices inclusive of tax, you will be entering your prices as the total amount you want a customer to pay for the download, including tax. Easy Digital Downloads will calculate the proper amount to tax the customer for the defined total price.', 'easy-digital-downloads' ),
