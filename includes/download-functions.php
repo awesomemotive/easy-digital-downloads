@@ -1208,8 +1208,7 @@ function edd_get_download_token( $url = '' ) {
 
 	}
 
-	$token = md5( $parts['path'] . '?' . $parts['query'] );
-
+	$token = hash_hmac( 'sha256', $parts['path'] . '?' . $parts['query'], wp_salt( 'edd_file_download_link' ) );
 	return $token;
 
 }
@@ -1261,7 +1260,7 @@ function edd_validate_url_token( $url = '' ) {
 
 		}
 
-		if ( isset( $query_args['token'] ) && $query_args['token'] == edd_get_download_token( $url ) ) {
+		if ( isset( $query_args['token'] ) && hash_equals( $query_args['token'], edd_get_download_token( $url ) ) ) {
 
 			$ret = true;
 

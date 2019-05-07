@@ -5,8 +5,8 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: ecommerce, e-commerce, sell, downloads, store, paypal, checkout, shop
 Requires at least: 4.4
-Tested up to: 5.1.1
-Stable Tag: 2.9.12
+Tested up to: 5.2
+Stable Tag: 2.9.13
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -188,6 +188,16 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+
+= 2.9.13, May 7, 2019 =
+* Fix: An error was being logged when using API V2 to get products by category.
+* Fix: Corrected an issue with multisite on versions of WordPress greater than 5.0.
+* Fix: Multiple improvements with the EDD_License handler.
+* Fix: Made it possible to add products to product-less payments.
+* Fix: Fixed the link to filter file download logs by customer.
+* Fix: Improved strength of file download link hashes.
+* Fix: Improved local file location detection.
+
 = 2.9.12, March 26, 2019 =
 * Fix: Limit PayPal PDT verification to purchase sessions.
 * Fix: Discount start times were not accounting for GMT offsets.

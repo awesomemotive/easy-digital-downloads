@@ -184,6 +184,11 @@ function edd_process_download() {
 			set_magic_quotes_runtime(0);
 		}
 
+		$file_is_in_allowed_location = edd_local_file_location_is_allowed( $file_details, $schemes, $requested_file );
+		if ( false === $file_is_in_allowed_location ) {
+			wp_die( __( 'Sorry, this file could not be downloaded.', 'easy-digital-downloads' ), __( 'Error Downloading File', 'easy-digital-downloads' ), 403 );
+		}
+
 		@session_write_close();
 		if( function_exists( 'apache_setenv' ) ) {
 			@apache_setenv('no-gzip', 1);
@@ -979,6 +984,36 @@ function edd_check_file_url_head( $requested_file, $args, $method ) {
 	}
 
 }
+
+/**
+ * Determines if a file should be allowed to be downloaded by making sure it's within the wp-content directory.
+ *
+ * @since 2.9.13
+ *
+ * @param $file_details
+ * @param $schemas
+ * @param $requested_file
+ *
+ * @return boolean
+ */
+function edd_local_file_location_is_allowed( $file_details, $schemas, $requested_file ) {
+	$should_allow = true;
+
+	// If the file is an absolute path, make sure it's in the wp-content directory, to prevent store owners from accidentally allowing privileged files from being downloaded.
+	if ( ( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemas ) ) && isset( $file_details['path'] ) ) {
+		/** This is an absolute path */
+
+		$requested_file = realpath( $requested_file );
+
+		if ( 0 !== strpos( $requested_file, ABSPATH ) || false === strpos( $requested_file, WP_CONTENT_DIR ) ) {
+			// If the file is not within the WP_CONTENT_DIR, it should not be able to be downloaded.
+			$should_allow = false;
+		}
+	}
+
+	return apply_filters( 'edd_local_file_location_is_allowed', $should_allow, $file_details, $schemas, $requested_file );
+}
+
 /**
  * Filter removed in EDD 2.7
  *
