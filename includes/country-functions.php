@@ -54,6 +54,9 @@ function edd_get_shop_states( $country = null ) {
 		case 'US' :
 			$states = edd_get_states_list();
 			break;
+		case 'AF' :
+			$states = edd_afghanistan_provinces_list();
+			break;
 		case 'AO' :
 			$states = edd_get_angola_provinces_list();
 			break;
@@ -74,6 +77,9 @@ function edd_get_shop_states( $country = null ) {
 			break;
 		case 'CN' :
 			$states = edd_get_chinese_states_list();
+			break;
+		case 'DZ' :
+			$states = edd_get_algeria_provinces_list();
 			break;
 		case 'GB' :
 			$states = edd_get_united_kingdom_states_list();
@@ -1114,6 +1120,117 @@ function edd_get_united_kingdom_states_list() {
 	);
 
 	return apply_filters( 'edd_united_kingdom_states', $states );
+}
+
+
+/**
+ * Get Afghanistan States
+ *
+ * @since 1.0
+ * @return array $states A list of states
+ */
+function edd_afghanistan_provinces_list() {
+	$states = array(
+		''   => '',
+		'AF-BDS' => 'Badakhshan',
+		'AF-BDG' => 'Badghis',
+		'AF-BGL' => 'Baghlan',
+		'AF-BAL' => 'Balkh',
+		'AF-BAM' => 'Bamyan',
+		'AF-DAY' => 'Daykundi',
+		'AF-FRA' => 'Farah',
+		'AF-FYB' => 'Faryab',
+		'AF-GHA' => 'Ghazni',
+		'AF-GHO' => 'Ghor',
+		'AF-HEK' => 'Helmand',
+		'AF-HER' => 'Herat',
+		'AF-JOW' => 'Jowzjan',
+		'AF-KAB' => 'Kabul',
+		'AF-KAN' => 'Kandahar',
+		'AF-KAP' => 'Kapisa',
+		'AF-KHO' => 'Khost',
+		'AF-KNR' => 'Kunar',
+		'AF-KDZ' => 'Kunduz',
+		'AF-LAG' => 'Laghman',
+		'AF-LOG' => 'Logar',
+		'AF-NAN' => 'Nangarhar',
+		'AF-NIM' => 'Nimruz',
+		'AF-NUR' => 'Nuristan',
+		'AF-PIA' => 'Paktia',
+		'AF-PKA' => 'Paktika',
+		'AF-PAN' => 'Panjshir',
+		'AF-PAR' => 'parwan',
+		'AF-SAM' => 'Samangan',
+		'AF-SAR' => 'Sar-e Pol',
+		'AF-TAK' => 'Takhar',
+		'AF-URU' => 'Urozgan',
+		'AF-WAR' => 'Wardak',
+		'AF-ZAB' => 'Zabul',
+	);
+
+	return apply_filters( 'edd_afghanistan_provinces', $states );
+}
+
+/**
+ * Get Algeria States
+ *
+ * @since 1.0
+ * @return array $states A list of states
+ */
+function edd_get_algeria_provinces_list() {
+	$states = array(
+		''   => '',
+		'DZ-01' => 'Adrar',
+		'DZ-44' => 'A&#239;n Defla',
+		'DZ-46' => 'A&#239;n Témouchent',
+		'DZ-16' => 'Alger',
+		'DZ-23' => 'Annaba',
+		'DZ-05' => 'Batna',
+		'DZ-08' => 'Béchar',
+		'DZ-06' => 'Béja&#239;a',
+		'DZ-07' => 'Biskra',
+		'DZ-09' => 'Blida',
+		'DZ-34' => 'Bordj Bou Arréridj',
+		'DZ-10' => 'Bouira',
+		'DZ-35' => 'Boumerdès',
+		'DZ-02' => 'Chlef',
+		'DZ-25' => 'Constantine',
+		'DZ-17' => 'Djelfa',
+		'DZ-32' => 'El Bayadh',
+		'DZ-39' => 'El Oued',
+		'DZ-36' => 'El Tarf',
+		'DZ-47' => 'Gharda&#239;a',
+		'DZ-24' => 'Guelma',
+		'DZ-33' => 'Illizi',
+		'DZ-18' => 'Jijel',
+		'DZ-40' => 'Khenchela',
+		'DZ-03' => 'Laghouat',
+		'DZ-28' => 'M&#39;sila',
+		'DZ-29' => 'Mascara',
+		'DZ-43' => 'Médéa',
+		'DZ-27' => 'Mila',
+		'DZ-45' => 'Mostaganem',
+		'DZ-31' => 'Naama',
+		'DZ-30' => 'Oran',
+		'DZ-04' => 'Oum El Bouaghi',
+		'DZ-48' => 'Relizane',
+		'DZ-20' => 'Sa&#239;da',
+		'DZ-19' => 'Sétif',
+		'DZ-22' => 'Sidi Bel Abbès',
+		'DZ-21' => 'Skikda',
+		'DZ-41' => 'Souk Ahras',
+		'DZ-11' => 'Tamanrasset',
+		'DZ-12' => 'Tébessa',
+		'DZ-34' => 'Tiaret',
+		'DZ-37' => 'Tindouf',
+		'DZ-42' => 'Tipaza',
+		'DZ-38' => 'Tissemsilt',
+		'DZ-15' => 'Tizi Ouzou',
+		'DZ-13' => 'TLemcen',
+
+	);
+
+	return apply_filters( 'edd_algeria_provinces', $states );
 }
 
 /**
