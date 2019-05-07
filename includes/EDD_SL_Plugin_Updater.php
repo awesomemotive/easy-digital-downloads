@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Allows plugins to use their own update API.
  *
  * @author Easy Digital Downloads
- * @version 1.6.17
+ * @version 1.6.19
  */
 class EDD_SL_Plugin_Updater {
 
@@ -121,6 +121,9 @@ class EDD_SL_Plugin_Updater {
 
 				$_transient_data->response[ $this->name ] = $version_info;
 
+				// Make sure the plugin property is set to the plugin's name/location. See issue 1463 on Software Licensing's GitHub repo.
+				$_transient_data->response[ $this->name ]->plugin = $this->name;
+
 			}
 
 			$_transient_data->last_checked           = time();
@@ -180,6 +183,14 @@ class EDD_SL_Plugin_Updater {
 
 				if ( isset( $version_info->icons ) && ! is_array( $version_info->icons ) ) {
 					$version_info->icons = $this->convert_object_to_array( $version_info->icons );
+				}
+
+				if ( isset( $version_info->icons ) && ! is_array( $version_info->icons ) ) {
+					$version_info->icons = $this->convert_object_to_array( $version_info->icons );
+				}
+
+				if ( isset( $version_info->contributors ) && ! is_array( $version_info->contributors ) ) {
+					$version_info->contributors = $this->convert_object_to_array( $version_info->contributors );
 				}
 
 				$this->set_version_info_cache( $version_info );
@@ -316,6 +327,15 @@ class EDD_SL_Plugin_Updater {
 			$_data->icons = $this->convert_object_to_array( $_data->icons );
 		}
 
+		// Convert contributors into an associative array, since we're getting an object, but Core expects an array.
+		if ( isset( $_data->contributors ) && ! is_array( $_data->contributors ) ) {
+			$_data->contributors = $this->convert_object_to_array( $_data->contributors );
+		}
+
+		if( ! isset( $_data->plugin ) ) {
+			$_data->plugin = $this->name;
+		}
+
 		return $_data;
 	}
 
@@ -334,7 +354,7 @@ class EDD_SL_Plugin_Updater {
 	private function convert_object_to_array( $data ) {
 		$new_data = array();
 		foreach ( $data as $key => $value ) {
-			$new_data[ $key ] = $value;
+			$new_data[ $key ] = is_object( $value ) ? $this->convert_object_to_array( $value ) : $value;
 		}
 
 		return $new_data;
@@ -372,6 +392,8 @@ class EDD_SL_Plugin_Updater {
 
 		global $wp_version, $edd_plugin_url_available;
 
+		$verify_ssl = $this->verify_ssl();
+
 		// Do a quick status check on this domain if we haven't already checked it.
 		$store_hash = md5( $this->api_url );
 		if ( ! is_array( $edd_plugin_url_available ) || ! isset( $edd_plugin_url_available[ $store_hash ] ) ) {
@@ -385,7 +407,7 @@ class EDD_SL_Plugin_Updater {
 				$edd_plugin_url_available[ $store_hash ] = false;
 			} else {
 				$test_url = $scheme . '://' . $host . $port;
-				$response = wp_remote_get( $test_url, array( 'timeout' => $this->health_check_timeout, 'sslverify' => true ) );
+				$response = wp_remote_get( $test_url, array( 'timeout' => $this->health_check_timeout, 'sslverify' => $verify_ssl ) );
 				$edd_plugin_url_available[ $store_hash ] = is_wp_error( $response ) ? false : true;
 			}
 		}
@@ -416,7 +438,6 @@ class EDD_SL_Plugin_Updater {
 			'beta'       => ! empty( $data['beta'] ),
 		);
 
-		$verify_ssl = $this->verify_ssl();
 		$request    = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => $verify_ssl, 'body' => $api_params ) );
 
 		if ( ! is_wp_error( $request ) ) {
