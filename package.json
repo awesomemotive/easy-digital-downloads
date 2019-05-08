@@ -1,6 +1,6 @@
 {
   "name": "easy-digital-downloads",
-  "version": "2.9.13",
+  "version": "2.9.14",
   "private": true,
   "devDependencies": {
     "grunt": "^1.0.4",
