@@ -2175,7 +2175,7 @@ function easy_digital_downloads_sendwp_remote_install() {
 	// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 	jQuery.post(ajaxurl, data, function(response) {
 		var data = JSON.parse(response);
-		easy_digital_downloads_sendwp_register_client(data.register_url, data.client_name, data.client_secret, data.redirect, data.partner_id);
+		easy_digital_downloads_sendwp_register_client(data.register_url, data.client_name, data.client_secret, data.client_redirect, data.partner_id);
 	});
 }
 
