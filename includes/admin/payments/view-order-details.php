@@ -89,6 +89,9 @@ if ( empty( $order ) ) {
 							// Details sections
 							edd_order_details_sections( $order );
 
+							// Legacy hook from pre version 3 of Easy Digital Downloads.
+							do_action( 'edd_view_order_details_billing_after', $order->id );
+
 							// After body
 							do_action( 'edd_view_order_details_main_after', $order->id );
 
