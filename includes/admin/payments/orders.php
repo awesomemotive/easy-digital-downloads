@@ -380,7 +380,6 @@ function edd_order_details_addresses( $order ) {
 			<input type="hidden" name="edd_order_address[address_id]" value="<?php echo esc_attr( $address->id ); ?>" />
 		</div>
 
-		<?php do_action( 'edd_view_order_details_billing_after', $order->id ); ?>
 	</div><!-- /#edd-order-address -->
 
 	<?php do_action( 'edd_payment_billing_details', $order->id );
