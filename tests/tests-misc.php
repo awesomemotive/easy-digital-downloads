@@ -783,18 +783,64 @@ class Test_Misc extends EDD_UnitTestCase {
 	}
 
 	function test_should_allow_file_download_uploaded_file_in_content_absolute_in_content() {
+		$this->write_test_file( trailingslashit( WP_CONTENT_DIR ) . 'test-file.jpg' );
 		$file_details   = array ( 'path' => trailingslashit( WP_CONTENT_DIR ) . 'test-file.jpg' );
 		$schemas        = array ( 0 => 'http', 1 => 'https' );
 		$requested_file =  trailingslashit( WP_CONTENT_DIR ) . 'test-file.jpg';
 
 		$this->assertTrue( edd_local_file_location_is_allowed( $file_details, $schemas, $requested_file ) );
+		$this->delete_test_file( trailingslashit( WP_CONTENT_DIR ) . 'test-file.jpg' );
 	}
 
 	function test_should_allow_file_download_uploaded_file_in_content_absolute_outside_of_content() {
+		$this->write_test_file( trailingslashit( ABSPATH ) . 'test-file.jpg' );
 		$file_details   = array ( 'path' => trailingslashit( ABSPATH ) . 'test-file.jpg' );
 		$schemas        = array ( 0 => 'http', 1 => 'https' );
 		$requested_file =  trailingslashit( ABSPATH ) . 'test-file.jpg';
 
 		$this->assertFalse( edd_local_file_location_is_allowed( $file_details, $schemas, $requested_file ) );
+		$this->delete_test_file( trailingslashit( ABSPATH ) . 'test-file.jpg' );
+	}
+
+	function test_should_allow_file_download_uploaded_file_in_content_url_on_windows_WAMP() {
+		$file_details   = array ( 'scheme' => 'https', 'host' => site_url(), 'path' => 'E:\wamp\www\site\wp/wp-content/my-files/test-file.jpg' );
+		$schemas        = array ( 0 => 'http', 1 => 'https' );
+		$requested_file = trailingslashit( site_url() ) . '/wp-content/my-files/test-file.jpg';
+
+		$this->assertTrue( edd_local_file_location_is_allowed( $file_details, $schemas, $requested_file ) );
+	}
+
+	function test_should_allow_file_download_uploaded_file_in_content_absolute_outside_of_content_on_windows_WAMP() {
+		$file_details   = array ( 'path' => 'E:\wamp\www\site\wp/test-file.jpg' );
+		$schemas        = array ( 0 => 'http', 1 => 'https' );
+		$requested_file = 'E:\wamp\www\site\wp/test-file.jpg';
+
+		$this->assertFalse( edd_local_file_location_is_allowed( $file_details, $schemas, $requested_file ) );
+	}
+
+	function test_should_allow_file_download_uploaded_file_in_content_url_on_windows_IIS() {
+		$file_details   = array ( 'scheme' => 'https', 'host' => site_url(), 'path' => 'C:\inetpub\wwwroot\mysite/wp-content/my-files/test-file.jpg' );
+		$schemas        = array ( 0 => 'http', 1 => 'https' );
+		$requested_file = trailingslashit( site_url() ) . '/wp-content/my-files/test-file.jpg';
+
+		$this->assertTrue( edd_local_file_location_is_allowed( $file_details, $schemas, $requested_file ) );
+	}
+
+	function test_should_allow_file_download_uploaded_file_in_content_absolute_outside_of_content_on_windows_IIS() {
+		$file_details   = array ( 'path' => 'C:\inetpub\wwwroot\mysite/test-file.jpg' );
+		$schemas        = array ( 0 => 'http', 1 => 'https' );
+		$requested_file = 'C:\inetpub\wwwroot\mysite/test-file.jpg';
+
+		$this->assertFalse( edd_local_file_location_is_allowed( $file_details, $schemas, $requested_file ) );
+	}
+
+	private function write_test_file( $full_file_path ) {
+		$file = fopen( $full_file_path,"w" );
+		fwrite( $file,"" );
+		fclose( $file );
+	}
+
+	private function delete_test_file( $full_file_path ) {
+		unlink( $full_file_path );
 	}
 }

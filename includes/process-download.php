@@ -7,7 +7,7 @@
  * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-  */
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -1001,14 +1001,17 @@ function edd_local_file_location_is_allowed( $file_details, $schemas, $requested
 
 	// If the file is an absolute path, make sure it's in the wp-content directory, to prevent store owners from accidentally allowing privileged files from being downloaded.
 	if ( ( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemas ) ) && isset( $file_details['path'] ) ) {
+
 		/** This is an absolute path */
+		$requested_file         = wp_normalize_path( realpath( $requested_file ) );
+		$normalized_abspath     = wp_normalize_path( ABSPATH );
+		$normalized_content_dir = wp_normalize_path( WP_CONTENT_DIR );
 
-		$requested_file = realpath( $requested_file );
-
-		if ( 0 !== strpos( $requested_file, ABSPATH ) || false === strpos( $requested_file, WP_CONTENT_DIR ) ) {
+		if ( 0 !== strpos( $requested_file, $normalized_abspath ) || false === strpos( $requested_file, $normalized_content_dir ) ) {
 			// If the file is not within the WP_CONTENT_DIR, it should not be able to be downloaded.
 			$should_allow = false;
 		}
+
 	}
 
 	return apply_filters( 'edd_local_file_location_is_allowed', $should_allow, $file_details, $schemas, $requested_file );
