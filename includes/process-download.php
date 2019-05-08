@@ -1003,7 +1003,7 @@ function edd_local_file_location_is_allowed( $file_details, $schemas, $requested
 	if ( ( ! isset( $file_details['scheme'] ) || ! in_array( $file_details['scheme'], $schemas ) ) && isset( $file_details['path'] ) ) {
 		/** This is an absolute path */
 
-		$requested_file = realpath( $requested_file );
+		$requested_file = wp_normalize_path( realpath( $requested_file ) );
 
 		if ( 0 !== strpos( $requested_file, ABSPATH ) || false === strpos( $requested_file, WP_CONTENT_DIR ) ) {
 			// If the file is not within the WP_CONTENT_DIR, it should not be able to be downloaded.
