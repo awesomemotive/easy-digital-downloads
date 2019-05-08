@@ -1071,7 +1071,6 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 		if ( 'primary' === $type ) {
 			$address = edd_get_customer_addresses( array(
 				'number'      => 1,
-				'type'        => 'primary',
 				'customer_id' => $this->id,
 			) );
 
@@ -1082,6 +1081,7 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 			}
 		} else {
 			return edd_get_customer_addresses( array(
+				'number'      => 1,
 				'customer_id' => $this->id,
 				'type'        => $type,
 			) );
