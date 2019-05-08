@@ -797,4 +797,20 @@ class Test_Misc extends EDD_UnitTestCase {
 
 		$this->assertFalse( edd_local_file_location_is_allowed( $file_details, $schemas, $requested_file ) );
 	}
+
+	function test_should_allow_file_download_uploaded_file_in_content_url_on_windows() {
+		$file_details   = array ( 'scheme' => 'https', 'host' => site_url(), 'path' => 'E:\wamp\www\site\wp/wp-content/my-files/test-file.jpg' );
+		$schemas        = array ( 0 => 'http', 1 => 'https' );
+		$requested_file = trailingslashit( site_url() ) . '/wp-content/my-files/test-file.jpg';
+
+		$this->assertTrue( edd_local_file_location_is_allowed( $file_details, $schemas, $requested_file ) );
+	}
+
+	function test_should_allow_file_download_uploaded_file_in_content_absolute_outside_of_content_on_windows() {
+		$file_details   = array ( 'path' => 'E:\wamp\www\site\wp/test-file.jpg' );
+		$schemas        = array ( 0 => 'http', 1 => 'https' );
+		$requested_file = 'E:\wamp\www\site\wp/test-file.jpg';
+
+		$this->assertFalse( edd_local_file_location_is_allowed( $file_details, $schemas, $requested_file ) );
+	}
 }
