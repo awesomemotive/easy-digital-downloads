@@ -61,6 +61,143 @@ function edd_add_order( $data = array() ) {
 }
 
 /**
+ * Move an order to the trashed status
+ *
+ * @since 3.0
+ *
+ * @param $order_id
+ *
+ * @return bool      true if the order was trashed successfully, false if not
+ */
+function edd_trash_order( $order_id ) {
+	$order = edd_get_order( $order_id );
+
+	if ( empty( $order ) ) {
+		return false;
+	}
+
+	$orders         = new EDD\Database\Queries\Order();
+	$current_status = $order->status;
+
+	$trashed = $orders->update_item( $order_id, array(
+		'status' => 'trash',
+	) ); new EDD\Database\Queries\Order();
+
+	if ( ! empty( $trashed ) ) {
+
+		// If successfully trashed, store the pre-trashed status in meta, so we can possibly restore it.
+		edd_add_order_meta( $order_id, '_pre_trash_status', $current_status );
+
+		// Update the status of any order to 'trashed'.
+		$order_items = edd_get_order_items( array(
+			'order_id'      => $order_id,
+			'no_found_rows' => true,
+		) );
+
+		$items = new EDD\Database\Queries\Order_Item();
+		foreach ( $order_items as $item ) {
+			$current_item_status = $item->status;
+
+			$item_trashed = $items->update_item( $item->id, array(
+				'status' => 'trash',
+			) );
+
+			if ( ! empty( $item_trashed ) ) {
+				edd_add_order_item_meta( $item->id, '_pre_trash_status', $current_item_status );
+			}
+		}
+
+		// Now look for any orders with the refund type.
+		$refund_orders = edd_get_orders( array(
+			'type'   => 'refund',
+			'parent' => $order_id,
+		) );
+
+		if ( ! empty( $refund_orders ) ) {
+			foreach( $refund_orders as $refund ) {
+
+				$current_refund_status = $refund->status;
+				$refund_trashed = edd_trash_order( $refund->id );
+
+				if ( ! empty( $refund_trashed ) ) {
+					edd_add_order_meta( $refund->id, '_pre_trash_status', $current_refund_status );
+				}
+
+			}
+		}
+
+	}
+
+	return $trashed;
+}
+
+function edd_restore_order( $order_id ) {
+	$order = edd_get_order( $order_id );
+
+	if ( empty( $order ) ) {
+		return false;
+	}
+
+	if ( 'trash' !== $order->status ) {
+		return false;
+	}
+
+	$orders = new EDD\Database\Queries\Order();
+
+	$pre_trash_status = edd_get_order_meta( $order_id, '_pre_trash_status' );
+	if ( empty( $pre_trash_status ) ) {
+		return false;
+	}
+
+	$restored = $orders->update_item( $order_id, array(
+		'status' => $pre_trash_status,
+	) );
+
+	if ( ! empty( $restored ) ) {
+
+		// If successfully trashed, store the pre-trashed status in meta, so we can possibly restore it.
+		edd_delete_order_meta( $order_id, '_pre_trash_status' );
+
+		// Update the status of any order to 'trashed'.
+		$order_items = edd_get_order_items( array(
+			'order_id'      => $order_id,
+			'no_found_rows' => true,
+		) );
+
+		$items = new EDD\Database\Queries\Order_Item();
+		foreach ( $order_items as $item ) {
+			$pre_trash_status = edd_get_order_item_meta( $item->id, '_pre_trash_status' );
+
+			if ( ! empty( $pre_trash_status ) ) {
+				$restored_item = $items->update_item( $item->id, array(
+					'status' => $pre_trash_status,
+				) );
+
+				if ( ! empty( $restored_item ) ) {
+					edd_delete_order_item_meta( $item->id, '_pre_trash_status' );
+				}
+			}
+
+		}
+
+		// Now look for any orders with the refund type.
+		$refund_orders = edd_get_orders( array(
+			'type'   => 'refund',
+			'parent' => $order_id,
+		) );
+
+		if ( ! empty( $refund_orders ) ) {
+			foreach( $refund_orders as $refund ) {
+				edd_restore_order( $refund->id );
+			}
+		}
+
+	}
+
+	return $restored;
+}
+
+/**
  * Delete an order.
  *
  * @since 3.0
@@ -281,6 +418,29 @@ function edd_get_order_counts( $args = array() ) {
 }
 
 /** Helpers *******************************************************************/
+
+/**
+ * Determine if an order ID is able to be trashed.
+ *
+ * @param $order_id
+ *
+ * @return bool
+ */
+function edd_is_order_trashable( $order_id ) {
+	$order        = edd_get_order( $order_id );
+	$is_trashable = true;
+
+	if ( empty( $order ) ) {
+		return $is_trashable;
+	}
+
+	$non_trashable_statuses = apply_filters( 'edd_non_trashable_statuses', array( 'trash' ) );
+	if ( in_array( $order->status, $non_trashable_statuses ) ) {
+		return false;
+	}
+
+	return (bool) apply_filters( 'edd_is_order_trashable', $is_trashable, $order );
+}
 
 /**
  * Check if an order can be recovered.
