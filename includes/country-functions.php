@@ -52,7 +52,7 @@ function edd_get_shop_states( $country = null ) {
 	switch( $country ) :
 
 		case 'US' :
-			$states = edd_get_states_list();
+			$states = edd_get_us_states_list();
 			break;
 		case 'AF' :
 			$states = edd_afghanistan_provinces_list();
@@ -61,7 +61,7 @@ function edd_get_shop_states( $country = null ) {
 			$states = edd_get_angola_provinces_list();
 			break;
 		case 'CA' :
-			$states = edd_get_provinces_list();
+			$states = edd_get_canada_provinces_list();
 			break;
 		case 'AU' :
 			$states = edd_get_australian_states_list();
@@ -417,7 +417,7 @@ function edd_get_country_list() {
  * @since       1.2
  * @return      array
  */
-function edd_get_states_list() {
+function edd_get_us_states_list() {
 	$states = array(
 		''   => '',
 		'AL' => 'Alabama',
@@ -529,7 +529,7 @@ function edd_get_angola_provinces_list() {
  * @since       1.2
  * @return      array
  */
-function edd_get_provinces_list() {
+function edd_get_canada_provinces_list() {
 	$provinces = array(
 		''   => '',
 		'AB' => 'Alberta',
