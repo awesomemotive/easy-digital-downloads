@@ -619,7 +619,7 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @return array $actions Bulk actions.
 	 */
 	public function get_bulk_actions() {
-		return apply_filters( 'edd_payments_table_bulk_actions', array(
+		$action = array(
 			'set-status-complete'     => __( 'Mark Completed',   'easy-digital-downloads' ),
 			'set-status-pending'     => __( 'Mark Pending',     'easy-digital-downloads' ),
 			'set-status-processing'  => __( 'Mark Processing',  'easy-digital-downloads' ),
@@ -629,9 +629,16 @@ class EDD_Payment_History_Table extends List_Table {
 			'set-status-abandoned'   => __( 'Mark Abandoned',   'easy-digital-downloads' ),
 			'set-status-preapproval' => __( 'Mark Preapproved', 'easy-digital-downloads' ),
 			'set-status-cancelled'   => __( 'Mark Cancelled',   'easy-digital-downloads' ),
-			'resend-receipt'         => __( 'Resend  Receipts', 'easy-digital-downloads' ),
-			'delete'                 => __( 'Delete',           'easy-digital-downloads' )
-		) );
+			'resend-receipt'         => __( 'Resend Receipts', 'easy-digital-downloads' ),
+		);
+
+		if ( 'trash' === $this->get_status() ) {
+			$action['restore'] = __( 'Restore', 'easy-digital-downloads' );
+		} else {
+			$action['trash'] = __( 'Trash', 'easy-digital-downloads' );
+		}
+
+		return apply_filters( 'edd_payments_table_bulk_actions', $action );
 	}
 
 	/**

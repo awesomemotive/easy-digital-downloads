@@ -552,7 +552,7 @@ function edd_orders_list_table_process_bulk_actions() {
 		: '';
 
 	// Bail if we aren't processing bulk actions.
-	if ( 'action' !== $action ) {
+	if ( '-1' === $action ) {
 		return;
 	}
 
@@ -572,10 +572,12 @@ function edd_orders_list_table_process_bulk_actions() {
 
 	foreach ( $ids as $id ) {
 		switch ( $action ) {
-			case 'delete':
-				edd_delete_purchase( $id );
+			case 'trash':
+				edd_trash_order( $id );
 				break;
-
+			case 'restore':
+				edd_restore_order( $id );
+				break;
 			case 'set-status-complete':
 				edd_update_payment_status( $id, 'complete' );
 				break;
