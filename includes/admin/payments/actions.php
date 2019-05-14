@@ -412,6 +412,30 @@ function edd_trigger_purchase_delete( $data ) {
 add_action( 'edd_delete_payment', 'edd_trigger_purchase_delete' );
 
 /**
+ * Trigger the action of moving an order to the 'trash' status
+ *
+ * @since 3.0
+ *
+ * @param $data
+ * @return void
+ */
+function edd_trigger_trash_order( $data ) {
+	if ( wp_verify_nonce( $data['_wpnonce'], 'edd_payment_nonce' ) ) {
+
+		$payment_id = absint( $data['purchase_id'] );
+
+		if ( ! current_user_can( 'delete_shop_payments', $payment_id ) ) {
+			wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+		}
+
+		edd_trash_order( $payment_id );
+
+		edd_redirect( admin_url( '/edit.php?post_type=download&page=edd-payment-history&edd-message=order_trashed' ) );
+	}
+}
+add_action( 'edd_trash_order', 'edd_trigger_trash_order' );
+
+/**
  * Retrieves a new download link for a purchased file
  *
  * @since 2.0

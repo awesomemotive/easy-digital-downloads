@@ -543,11 +543,20 @@ class EDD_Payment_History_Table extends List_Table {
 		}
 
 		// Keep Delete at the end
-		$delete_url = wp_nonce_url( add_query_arg( array(
-			'edd-action'  => 'delete_payment',
-			'purchase_id' => $order->id,
-		), $this->base_url ), 'edd_payment_nonce' );
-		$row_actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete', 'easy-digital-downloads' ) . '</a>';
+		if ( edd_is_order_trashable( $order->id ) ) {
+			$delete_url = wp_nonce_url( add_query_arg( array(
+				'edd-action'  => 'trash_order',
+				'purchase_id' => $order->id,
+			), $this->base_url ), 'edd_payment_nonce' );
+			$row_actions['trash'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Trash', 'easy-digital-downloads' ) . '</a>';
+		} elseif ( edd_is_order_restorable( $order->id ) ) {
+			$delete_url = wp_nonce_url( add_query_arg( array(
+				'edd-action'  => 'restore_order',
+				'purchase_id' => $order->id,
+			), $this->base_url ), 'edd_payment_nonce' );
+			$row_actions['restore'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Restore', 'easy-digital-downloads' ) . '</a>';
+		}
+
 
 		// Row actions
 		$actions = $this->row_actions( $row_actions );
@@ -673,6 +682,10 @@ class EDD_Payment_History_Table extends List_Table {
 
 		// Force EDD\Orders\Order objects to be returned
 		$this->args['output'] = 'orders';
+
+		if ( empty( $this->args['status'] ) || 'trash' !== $this->args['status'] ) {
+			$this->args['status__not_in'] = array( 'trash' );
+		}
 
 		// Get data
 		$items = edd_get_orders( $this->args );
