@@ -650,6 +650,8 @@ class EDD_Payment_History_Table extends List_Table {
 		// Get the args (without pagination)
 		$args = $this->parse_args( false );
 
+		unset( $args['status'], $args['status__not_in'], $args['status__in'] );
+
 		// Get order counts by type
 		$this->counts = edd_get_order_counts( $args );
 	}
