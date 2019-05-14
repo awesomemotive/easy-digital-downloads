@@ -691,7 +691,7 @@ class EDD_Payment_History_Table extends List_Table {
 		// Force EDD\Orders\Order objects to be returned
 		$this->args['output'] = 'orders';
 
-		if ( empty( $this->args['status'] ) || 'trash' !== $this->args['status'] ) {
+		if ( empty( $this->args['status'] ) ) {
 			$this->args['status__not_in'] = array( 'trash' );
 		}
 
