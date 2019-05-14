@@ -481,6 +481,12 @@ class EDD_Notices {
 						'message' => __( 'The order has been moved to the trash.', 'easy-digital-downloads' )
 					) );
 					break;
+				case 'order_restored' :
+					$this->add_notice( array(
+						'id'      => 'edd-order-restored',
+						'message' => __( 'The order has been restored.', 'easy-digital-downloads' )
+					) );
+					break;
 				case 'payment_deleted' :
 					$this->add_notice( array(
 						'id'      => 'edd-payment-deleted',

@@ -412,6 +412,29 @@ function edd_trigger_purchase_delete( $data ) {
 add_action( 'edd_delete_payment', 'edd_trigger_purchase_delete' );
 
 /**
+ * New in 3.0, destroys an order, and all it's data, and related data.
+ *
+ * @since 3.0
+ *
+ * @param $data
+ */
+function edd_trigger_destroy_order( $data ) {
+	if ( wp_verify_nonce( $data['_wpnonce'], 'edd_payment_nonce' ) ) {
+
+		$payment_id = absint( $data['purchase_id'] );
+
+		if ( ! current_user_can( 'delete_shop_payments', $payment_id ) ) {
+			wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+		}
+
+		edd_destroy_order( $payment_id );
+
+		edd_redirect( admin_url( '/edit.php?post_type=download&page=edd-payment-history&edd-message=payment_deleted' ) );
+	}
+}
+add_action( 'edd_delete_order', 'edd_trigger_destroy_order' );
+
+/**
  * Trigger the action of moving an order to the 'trash' status
  *
  * @since 3.0
@@ -434,6 +457,30 @@ function edd_trigger_trash_order( $data ) {
 	}
 }
 add_action( 'edd_trash_order', 'edd_trigger_trash_order' );
+
+/**
+ * Trigger the action of restoring an order from the 'trash' status
+ *
+ * @since 3.0
+ *
+ * @param $data
+ * @return void
+ */
+function edd_trigger_restore_order( $data ) {
+	if ( wp_verify_nonce( $data['_wpnonce'], 'edd_payment_nonce' ) ) {
+
+		$payment_id = absint( $data['purchase_id'] );
+
+		if ( ! current_user_can( 'delete_shop_payments', $payment_id ) ) {
+			wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+		}
+
+		edd_restore_order( $payment_id );
+
+		edd_redirect( admin_url( '/edit.php?post_type=download&page=edd-payment-history&edd-message=order_restored' ) );
+	}
+}
+add_action( 'edd_restore_order', 'edd_trigger_restore_order' );
 
 /**
  * Retrieves a new download link for a purchased file
