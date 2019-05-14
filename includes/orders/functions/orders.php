@@ -70,11 +70,12 @@ function edd_add_order( $data = array() ) {
  * @return bool      true if the order was trashed successfully, false if not
  */
 function edd_trash_order( $order_id ) {
-	$order = edd_get_order( $order_id );
 
-	if ( empty( $order ) ) {
+	if ( false === edd_is_order_trashable( $order_id ) ) {
 		return false;
 	}
+
+	$order = edd_get_order( $order_id );
 
 	$orders         = new EDD\Database\Queries\Order();
 	$current_status = $order->status;
@@ -128,15 +129,25 @@ function edd_trash_order( $order_id ) {
 
 	}
 
-	return $trashed;
+	return filter_var( $trashed, FILTER_VALIDATE_BOOLEAN );
 }
 
+/**
+ * Restore an order from the trashed status to it's previous status.
+ *
+ * @since 3.0
+ *
+ * @param $order_id
+ *
+ * @return bool      true if the order was trashed successfully, false if not
+ */
 function edd_restore_order( $order_id ) {
-	$order = edd_get_order( $order_id );
 
-	if ( empty( $order ) ) {
+	if ( false === edd_is_order_restorable( $order_id ) ) {
 		return false;
 	}
+
+	$order = edd_get_order( $order_id );
 
 	if ( 'trash' !== $order->status ) {
 		return false;
@@ -144,7 +155,7 @@ function edd_restore_order( $order_id ) {
 
 	$orders = new EDD\Database\Queries\Order();
 
-	$pre_trash_status = edd_get_order_meta( $order_id, '_pre_trash_status' );
+	$pre_trash_status = edd_get_order_meta( $order_id, '_pre_trash_status', true );
 	if ( empty( $pre_trash_status ) ) {
 		return false;
 	}
@@ -166,7 +177,7 @@ function edd_restore_order( $order_id ) {
 
 		$items = new EDD\Database\Queries\Order_Item();
 		foreach ( $order_items as $item ) {
-			$pre_trash_status = edd_get_order_item_meta( $item->id, '_pre_trash_status' );
+			$pre_trash_status = edd_get_order_item_meta( $item->id, '_pre_trash_status', true );
 
 			if ( ! empty( $pre_trash_status ) ) {
 				$restored_item = $items->update_item( $item->id, array(
@@ -194,7 +205,7 @@ function edd_restore_order( $order_id ) {
 
 	}
 
-	return $restored;
+	return filter_var( $restored, FILTER_VALIDATE_BOOLEAN );
 }
 
 /**
@@ -428,18 +439,40 @@ function edd_get_order_counts( $args = array() ) {
  */
 function edd_is_order_trashable( $order_id ) {
 	$order        = edd_get_order( $order_id );
-	$is_trashable = true;
+	$is_trashable = false;
 
 	if ( empty( $order ) ) {
 		return $is_trashable;
 	}
 
 	$non_trashable_statuses = apply_filters( 'edd_non_trashable_statuses', array( 'trash' ) );
-	if ( in_array( $order->status, $non_trashable_statuses ) ) {
-		return false;
+	if ( ! in_array( $order->status, $non_trashable_statuses ) ) {
+		$is_trashable = true;
 	}
 
 	return (bool) apply_filters( 'edd_is_order_trashable', $is_trashable, $order );
+}
+
+/**
+ * Determine if an order ID is able to be restored from the trash.
+ *
+ * @param $order_id
+ *
+ * @return bool
+ */
+function edd_is_order_restorable( $order_id ) {
+	$order         = edd_get_order( $order_id );
+	$is_restorable = false;
+
+	if ( empty( $order ) ) {
+		return $is_restorable;
+	}
+
+	if ( 'trash' === $order->status ) {
+		$is_restorable = true;
+	}
+
+	return (bool) apply_filters( 'edd_is_order_restorable', $is_restorable, $order );
 }
 
 /**
