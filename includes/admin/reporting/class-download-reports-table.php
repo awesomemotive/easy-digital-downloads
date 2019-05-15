@@ -267,9 +267,9 @@ class EDD_Download_Reports_Table extends List_Table {
 	 * @since 1.5
 	 * @uses EDD_Download_Reports_Table::get_columns()
 	 * @uses EDD_Download_Reports_Table::get_sortable_columns()
-	 * @uses EDD_Download_Reports_Table::reports_data()
-	 * @uses EDD_Download_Reports_Table::get_pagenum()
 	 * @uses EDD_Download_Reports_Table::get_total_downloads()
+	 * @uses EDD_Download_Reports_Table::get_data()
+	 * @uses EDD_Download_Reports_Table::set_pagination_args()
 	 * @return void
 	 */
 	public function prepare_items() {
@@ -283,9 +283,9 @@ class EDD_Download_Reports_Table extends List_Table {
 		$this->items = $this->get_data();
 
 		$this->set_pagination_args( array(
+			'total_pages' => ceil( $total_items / $this->per_page ),
 			'total_items' => $total_items,
 			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $total_items / $this->per_page )
 		) );
 	}
 }

@@ -24,14 +24,6 @@ use EDD\Admin\List_Table;
 class EDD_Customer_Reports_Table extends List_Table {
 
 	/**
-	 * The arguments for the data set
-	 *
-	 * @var array
-	 * @since  2.6
-	 */
-	public $args = array();
-
-	/**
 	 * Get things started
 	 *
 	 * @since 1.5
@@ -283,21 +275,9 @@ class EDD_Customer_Reports_Table extends List_Table {
 	 * @return array $data All the row data.
 	 */
 	public function get_data() {
-		$data    = array();
-		$paged   = $this->get_paged();
-		$offset  = $this->per_page * ( $paged - 1 );
-		$search  = $this->get_search();
-		$status  = $this->get_status();
-		$order   = isset( $_GET['order']   ) ? sanitize_text_field( $_GET['order']   ) : 'DESC'; // WPCS: CSRF ok.
-		$orderby = isset( $_GET['orderby'] ) ? sanitize_text_field( $_GET['orderby'] ) : 'id'; // WPCS: CSRF ok.
-
-		$args = array(
-			'limit'   => $this->per_page,
-			'offset'  => $offset,
-			'order'   => $order,
-			'orderby' => $orderby,
-			'status'  => $status,
-		);
+		$data   = array();
+		$search = $this->get_search();
+		$args   = array( 'status' => $this->get_status() );
 
 		// Email search
 		if ( is_email( $search ) ) {
@@ -321,10 +301,13 @@ class EDD_Customer_Reports_Table extends List_Table {
 			$args['search_columns'] = array( 'name', 'email' );
 		}
 
-		$this->args = $args;
-		$customers  = edd_get_customers( $args );
+		// Parse pagination
+		$this->args = $this->parse_pagination_args( $args );
 
-		if ( $customers ) {
+		// Get the data
+		$customers  = edd_get_customers( $this->args );
+
+		if ( ! empty( $customers ) ) {
 			foreach ( $customers as $customer ) {
 				$data[] = array(
 					'id'           => $customer->id,
@@ -362,7 +345,7 @@ class EDD_Customer_Reports_Table extends List_Table {
 		$this->set_pagination_args( array(
 			'total_pages' => ceil( $this->counts[ $status ] / $this->per_page ),
 			'total_items' => $this->counts[ $status ],
-			'per_page'    => $this->per_page
+			'per_page'    => $this->per_page,
 		) );
 	}
 }

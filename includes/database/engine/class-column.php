@@ -472,8 +472,8 @@ class Column extends Base {
 			'allow_null' => false,
 			'default'    => '',
 			'extra'      => '',
-			'encoding'   => $GLOBALS['wpdb']->charset,
-			'collation'  => $GLOBALS['wpdb']->collate,
+			'encoding'   => $this->get_db()->charset,
+			'collation'  => $this->get_db()->collate,
 			'comment'    => '',
 
 			// Query
