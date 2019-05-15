@@ -54,7 +54,7 @@ class Orders extends Base {
 			foreach ( $results as $result ) {
 
 				// Check if order has already been migrated.
-				if ( $this->find_legacy_id( $result->ID, static::ORDERS ) ) {
+				if ( edd_get_order( $result->ID ) ) {
 					continue;
 				}
 
