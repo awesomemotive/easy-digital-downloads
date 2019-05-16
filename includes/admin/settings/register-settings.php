@@ -750,8 +750,8 @@ function edd_get_registered_settings() {
 						'type'          => 'radio',
 						'std'           => 'no',
 						'options'       => array(
-							'yes' => __( 'All prices include tax', 'easy-digital-downloads' ),
-							'no'  => __( 'No prices include tax',  'easy-digital-downloads' ),
+							'yes' => __( 'Yes, I will enter prices inclusive of tax', 'easy-digital-downloads' ),
+							'no'  => __( 'No, I will enter prices exclusive of tax', 'easy-digital-downloads' ),
 						),
 						'tooltip_title' => __( 'Prices Inclusive of Tax', 'easy-digital-downloads' ),
 						'tooltip_desc'  => __( 'When using prices inclusive of tax, you will be entering your prices as the total amount you want a customer to pay for the download, including tax. Easy Digital Downloads will calculate the proper amount to tax the customer for the defined total price.', 'easy-digital-downloads' ),
@@ -778,6 +778,26 @@ function edd_get_registered_settings() {
 						'tooltip_desc'  => __( 'This option will determine whether the product price displays with or without tax on checkout.', 'easy-digital-downloads' ),
 					),
 				),
+				'rates' => array(
+					'tax_rate' => array(
+						'id'            => 'tax_rate',
+						'name'          => __( 'Default Rate', 'easy-digital-downloads' ),
+						'desc'          => __( 'Customers not in a region below will be charged this tax rate instead. Enter <code>6.5</code> for 6.5%. ', 'easy-digital-downloads' ),
+						'type'          => 'number',
+						'size'          => 'small',
+						'step'          => '0.0001',
+						'min'           => '0',
+						'max'           => '99',
+						'tooltip_title' => __( 'Default Rate', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'If the customer\'s address fails to meet the below tax rules, you can define a default tax rate to be applied to all other customers. Enter a percentage, such as 6.5 for 6.5%.', 'easy-digital-downloads' ),
+					),
+					'tax_rates' => array(
+						'id'   => 'tax_rates',
+						'name' => '<strong>' . __( 'Regional Rates', 'easy-digital-downloads' ) . '</strong>',
+						'desc' => __( 'Add tax rates for specific regions to override the base rate.', 'easy-digital-downloads' ),
+						'type' => 'tax_rates',
+					),
+				)
 			) ),
 
 			// Extension Settings
@@ -1145,65 +1165,6 @@ function edd_get_registered_settings() {
 	// Filter & return
 	return apply_filters( 'edd_registered_settings', $edd_settings );
 }
-
-/**
- * Add "Rates" subtab to "Taxes" tab when global taxes are enabled.
- *
- * @since 3.0
- *
- * @param array $tax_tabs
- *
- * @return array
- */
-function edd_settings_sections_taxes( $tax_tabs ) {
-	if ( ! edd_get_option( 'enable_taxes' ) ) {
-		return $tax_tabs;
-	}
-
-	$tax_tabs['rates'] = __( 'Rates', 'easy-digital-downloads' );
-
-	return $tax_tabs;
-}
-add_filter( 'edd_settings_sections_taxes', 'edd_settings_sections_taxes' );
-
-/**
- * Add "Rates" subtab settings to "Taxes" tab when global taxes are enabled.
- *
- * @since 3.0
- *
- * @param array $tax_settings
- *
- * @return array
- */
-function edd_settings_taxes( $tax_settings ) {
-	if ( ! edd_get_option( 'enable_taxes' ) ) {
-		return $tax_settings;
-	}
-
-	$tax_settings['rates'] = array(
-		'tax_rate' => array(
-			'id'            => 'tax_rate',
-			'name'          => __( 'Default Rate', 'easy-digital-downloads' ),
-			'desc'          => __( 'Customers not in a region below will be charged this tax rate instead. Enter <code>6.5</code> for 6.5%. ', 'easy-digital-downloads' ),
-			'type'          => 'number',
-			'size'          => 'small',
-			'step'          => '0.0001',
-			'min'           => '0',
-			'max'           => '99',
-			'tooltip_title' => __( 'Default Rate', 'easy-digital-downloads' ),
-			'tooltip_desc'  => __( 'If the customer\'s address fails to meet the below tax rules, you can define a default tax rate to be applied to all other customers. Enter a percentage, such as 6.5 for 6.5%.', 'easy-digital-downloads' ),
-		),
-		'tax_rates' => array(
-			'id'   => 'tax_rates',
-			'name' => '<strong>' . __( 'Regional Rates', 'easy-digital-downloads' ) . '</strong>',
-			'desc' => __( 'Add tax rates for specific regions to override the base rate.', 'easy-digital-downloads' ),
-			'type' => 'tax_rates',
-		),
-	);
-
-	return $tax_settings;
-}
-add_filter( 'edd_settings_taxes', 'edd_settings_taxes' );
 
 /**
  * Settings Sanitization
@@ -1674,6 +1635,7 @@ function edd_get_registered_settings_sections() {
 			) ),
 			'taxes'      => apply_filters( 'edd_settings_sections_taxes', array(
 				'main'               => __( 'General', 'easy-digital-downloads' ),
+				'rates'              => __( 'Rates',   'easy-digital-downloads' ),
 			) ),
 			'privacy'    => apply_filters( 'edd_settings_section_privacy', array(
 				'main'               => __( 'Privacy Policy',     'easy-digital-downloads' ),

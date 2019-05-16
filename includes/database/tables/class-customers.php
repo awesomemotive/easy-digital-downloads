@@ -113,6 +113,10 @@ final class Customers extends Table {
 				$this->get_db()->query( "UPDATE {$this->table_name} SET `date_modified` = `date_created`" );
 				$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX date_created (date_created)" );
 			}
+
+			if ( ! $this->column_exists( 'uuid' ) ) {
+				$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;" );
+			}
 		}
 
 		parent::maybe_upgrade();

@@ -632,22 +632,8 @@ class EDD_Payment_History_Table extends List_Table {
 	 */
 	public function get_payment_counts() {
 
-		$args = $this->parse_args();
-
-		// Remove some args that aren't used for counts.
-		if ( isset( $args['orderby'] ) ) {
-			unset( $args['orderby'] );
-		}
-
-		if ( isset( $args['order'] ) ) {
-			unset( $args['order'] );
-		}
-
-		if ( isset( $args['per_page'] ) ) {
-			unset( $args['per_page'] );
-		}
-
-		$args['paged'] = false;
+		// Get the args (without pagination)
+		$args = $this->parse_args( false );
 
 		// Get order counts by type
 		$this->counts = edd_get_order_counts( $args );
@@ -675,20 +661,15 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @return array Orders table data.
 	 */
 	public function get_data() {
-		$args = array();
 
-		$per_page   = $this->per_page;
-		$args       = $this->parse_args();
-
-		// Drop in our per_page argument.
-		$args['per_page'] = $per_page;
-
-		// No empties
-		$r = wp_parse_args( array_filter( $args ) );
+		// Parse args (with pagination)
+		$this->args = $this->parse_args( true );
 
 		// Force EDD\Orders\Order objects to be returned
-		$r['output'] = 'orders';
-		$items = edd_get_orders( $r );
+		$this->args['output'] = 'orders';
+
+		// Get data
+		$items = edd_get_orders( $this->args );
 
 		// Get customer IDs and count from payments
 		$customer_ids = array_unique( wp_list_pluck( $items, 'customer_id' ) );
@@ -712,15 +693,14 @@ class EDD_Payment_History_Table extends List_Table {
 	 *
 	 * @since 3.0
 	 *
+	 * @param bool $paginate Whether to add pagination arguments
+	 *
 	 * @return array Array of arguments to use for querying orders.
 	 */
-	private function parse_args () {
+	private function parse_args( $paginate = true ) {
 		$status     = $this->get_status();
-		$paged      = isset( $_GET['paged'] )      ? absint( $_GET['paged'] )                   : null;
 		$user       = isset( $_GET['user'] )       ? absint( $_GET['user'] )                    : null;
 		$customer   = isset( $_GET['customer'] )   ? absint( $_GET['customer'] )                : null;
-		$orderby    = isset( $_GET['orderby'] )    ? sanitize_key( $_GET['orderby'] )           : 'date_created';
-		$order      = isset( $_GET['order'] )      ? sanitize_key( $_GET['order'] )             : 'DESC';
 		$search     = isset( $_GET['s'] )          ? sanitize_text_field( $_GET['s'] )          : null;
 		$start_date = isset( $_GET['start-date'] ) ? sanitize_text_field( $_GET['start-date'] ) : null;
 		$end_date   = isset( $_GET['end-date'] )   ? sanitize_text_field( $_GET['end-date'] )   : $start_date;
@@ -747,9 +727,6 @@ class EDD_Payment_History_Table extends List_Table {
 		}
 
 		$args = array(
-			'paged'    => $paged,
-			'orderby'  => $orderby,
-			'order'    => $order,
 			'user'     => $user,
 			'customer' => $customer,
 			'status'   => $status,
@@ -824,7 +801,10 @@ class EDD_Payment_History_Table extends List_Table {
 			$args['region'] = $region;
 		}
 
-		return $args;
+		// Return args, possibly with pagination
+		return ( true === $paginate )
+			? $this->parse_pagination_args( $args )
+			: $args;
 	}
 
 	/**
@@ -844,9 +824,9 @@ class EDD_Payment_History_Table extends List_Table {
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
 		$this->set_pagination_args( array(
+			'total_pages' => ceil( $this->counts[ $status ] / $this->per_page ),
 			'total_items' => $this->counts[ $status ],
 			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $this->counts[ $status ] / $this->per_page )
 		) );
 	}
 }
