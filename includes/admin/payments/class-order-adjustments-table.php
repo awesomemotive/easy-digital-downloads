@@ -367,24 +367,19 @@ class Order_Adjustments_Table extends List_Table {
 		}
 
 		// Query args
-		$orderby = isset( $_GET['orderby'] ) ? sanitize_key( $_GET['orderby'] ) : 'id';
-		$order   = isset( $_GET['order'] ) ? sanitize_key( $_GET['order'] ) : 'DESC';
-		$type    = isset( $_GET['type'] ) ? sanitize_key( $_GET['type'] ) : '';
-		$search  = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : null;
-		$paged   = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
-		$id      = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
+		$type   = isset( $_GET['type'] ) ? sanitize_key( $_GET['type'] ) : '';
+		$search = isset( $_GET['s']    ) ? sanitize_text_field( $_GET['s'] ) : null;
+		$id     = isset( $_GET['id']   ) ? absint( $_GET['id'] ) : 0;
 
-		// Get order_adjustments
-		return edd_get_order_adjustments( array(
+		$this->args = $this->parse_pagination_args( array(
 			'object_id'   => $id,
 			'object_type' => 'order',
-			'number'      => $this->per_page,
-			'paged'       => $paged,
-			'orderby'     => $orderby,
-			'order'       => $order,
 			'type'        => $type,
 			'search'      => $search,
 		) );
+
+		// Get order_adjustments
+		return edd_get_order_adjustments( $this->args );
 	}
 
 	/**
@@ -407,9 +402,9 @@ class Order_Adjustments_Table extends List_Table {
 
 		// Setup pagination
 		$this->set_pagination_args( array(
+			'total_pages' => ceil( $this->counts[ $type ] / $this->per_page ),
 			'total_items' => $this->counts[ $type ],
 			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $this->counts[ $type ] / $this->per_page ),
 		) );
 	}
 
