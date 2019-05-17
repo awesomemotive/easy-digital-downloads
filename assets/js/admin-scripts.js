@@ -1219,7 +1219,8 @@ jQuery(document).ready(function ($) {
 			$('#edd-sendwp-connect').on('click', function(e) {
 
 				e.preventDefault();
-
+				$(this).html( edd_vars.wait + ' <span class="spinner is-active"></span>' );
+				document.body.style.cursor = 'wait';
 				easy_digital_downloads_sendwp_remote_install();
 
 			});
