@@ -263,7 +263,7 @@ class Order_Items_Table extends List_Table {
 			), admin_url( 'post.php' )  ) . '">' . $order_item->get_order_item_name() . '</a>' . $state . '</strong>';
 
 		// Return order_item title & row actions
-		return $order_item_title . $this->row_actions( $row_actions );
+		return apply_filters( 'edd_order_item_title_and_actions', $order_item_title . $this->row_actions( $row_actions ), $order_item );
 	}
 
 	/**
