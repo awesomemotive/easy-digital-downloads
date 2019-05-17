@@ -334,6 +334,7 @@ function wp_ajax_easy_digital_downloads_sendwp_remote_install_handler () {
 		'client_name' => sendwp_get_client_name(),
 		'client_secret' => sendwp_get_client_secret(),
 		'client_redirect' => sendwp_get_client_redirect(),
+		//'client_redirect' => admin_url( '/edit.php?post_type=download&page=edd-settings&tab=emails' ), // Custom redirects aren't supported yet
 	) );
 	exit;
 }
