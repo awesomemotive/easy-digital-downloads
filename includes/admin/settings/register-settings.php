@@ -456,7 +456,7 @@ function edd_get_registered_settings() {
 					'sendwp' => array(
 						'id'      => 'sendwp',
 						'name'    => __( 'SendWP', 'easy-digital-downloads' ),
-						'desc'    => __( 'Tired of unreliable email delivery? Connect SendWP now for simple, cheap, reliable transactional emails.', 'easy-digital-downloads' ),
+						'desc'    => __( 'Tired of unreliable email delivery? Connect SendWP now for simple, cheap, reliable transactional emails. Learn more about <a href="https://sendwp.com" target="_blank">SendWP</a>.', 'easy-digital-downloads' ),
 						'type'    => 'sendwp',
 					),
 					'email_template' => array(
