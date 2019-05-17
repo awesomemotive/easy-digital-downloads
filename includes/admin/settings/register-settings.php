@@ -2145,7 +2145,11 @@ function edd_sendwp_callback($args) {
 	ob_start(); ?>
 	<p><?php echo $args['desc']; ?></p>
 	<p>
-		<button id="edd-sendwp-connect" class="button"><?php _e( 'Connect SendWP', 'easy-digital-downloads' ); ?></button>
+		<?php if( function_exists( 'sendwp_forwarding_enabled' ) && sendwp_forwarding_enabled() ) : ?>
+			<a href="<?php echo admin_url( '/tools.php?page=sendwp' ); ?>" class="button"><?php _e( 'Disconnect SendWP', 'easy-digital-downloads' ); ?></a>
+		<?php else : ?>
+			<button id="edd-sendwp-connect" class="button"><?php _e( 'Connect SendWP', 'easy-digital-downloads' ); ?></button>
+		<?php endif; ?>
 	</p>
 	<?php
 	echo ob_get_clean();
