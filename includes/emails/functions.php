@@ -301,9 +301,10 @@ function wp_ajax_easy_digital_downloads_sendwp_remote_install_handler () {
 		) );
 
 		if ( is_wp_error( $api ) ) {
-			ob_end_clean();
-			echo json_encode( array( 'error' => $api->get_error_message(), 'debug' => $api ) );
-			exit;
+			wp_send_json_error( array(
+				'error' => $install->get_error_message(),
+				'debug' => $api 
+			) );
 		}
 
 		/*
@@ -312,9 +313,10 @@ function wp_ajax_easy_digital_downloads_sendwp_remote_install_handler () {
 		$upgrader = new Plugin_Upgrader( new WP_Ajax_Upgrader_Skin() );
 		$install = $upgrader->install( $api->download_link );
 		if ( is_wp_error( $install ) ) {
-			ob_end_clean();
-			echo json_encode( array( 'error' => $install->get_error_message(), 'debug' => $api ) );
-			exit;
+			wp_send_json_error( array(
+				'error' => $install->get_error_message(),
+				'debug' => $api 
+			) );
 		}
 
 		/*
@@ -333,19 +335,18 @@ function wp_ajax_easy_digital_downloads_sendwp_remote_install_handler () {
 	* Final check to see if SendWP is available.
 	*/
 	if( ! function_exists('sendwp_get_server_url') ) {
-		ob_end_clean();
-		echo json_encode( array( 'error' => __( 'Something went wrong. SendWP was not installed correctly.', 'easy-digital-downloads' ) ) );
-		exit;
+		wp_send_json_error( array(
+			'error' => __( 'Something went wrong. SendWP was not installed correctly.', 'easy-digital-downloads' )
+		) );
 	}
 
-	echo json_encode( array(
+	wp_send_json_success( array(
 		'partner_id' => 81,
 		'register_url' => sendwp_get_server_url() . '_/signup',
 		'client_name' => sendwp_get_client_name(),
 		'client_secret' => sendwp_get_client_secret(),
 		'client_redirect' => sendwp_get_client_redirect(),
-		//'client_redirect' => admin_url( '/edit.php?post_type=download&page=edd-settings&tab=emails' ), // Custom redirects aren't supported yet
+		//'client_redirect' => admin_url( '/edit.php?post_type=download&page=edd-settings&tab=emails' ),
 	) );
-	exit;
 }
 add_action( 'wp_ajax_easy_digital_downloads_sendwp_remote_install', 'wp_ajax_easy_digital_downloads_sendwp_remote_install_handler' );
