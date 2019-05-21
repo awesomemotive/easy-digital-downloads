@@ -2174,9 +2174,23 @@ function easy_digital_downloads_sendwp_remote_install() {
 	};
 
 	// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
-	jQuery.post(ajaxurl, data, function(response) {
-		var data = JSON.parse(response);
-		easy_digital_downloads_sendwp_register_client(data.register_url, data.client_name, data.client_secret, data.client_redirect, data.partner_id);
+	jQuery.post(ajaxurl, data, function( response ) {
+
+		if( ! response.success ) {
+
+			if( confirm( response.data.error ) ) {
+				location.reload();
+				return;
+			}
+		}
+
+		easy_digital_downloads_sendwp_register_client(
+			response.data.register_url,
+			response.data.client_name,
+			response.data.client_secret,
+			response.data.client_redirect,
+			response.data.partner_id
+		);
 	});
 }
 
