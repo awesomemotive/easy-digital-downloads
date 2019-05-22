@@ -691,6 +691,24 @@ function edd_build_order( $order_data = array() ) {
 
 			$order_item_id = edd_add_order_item( $order_item_args );
 
+			if ( ! empty( $item['item_number']['options'] ) ) {
+				// Collect any item_number options and store them.
+
+				// Remove our price_id and quantity, as they are columns on the order item now.
+				unset( $item['item_number']['options']['price_id'] );
+				unset( $item['item_number']['options']['quantity'] );
+
+				foreach ( $item['item_number']['options'] as $option_key => $value ) {
+					if ( is_array( $value ) ) {
+						$value = maybe_serialize( $value );
+					}
+
+					$option_key = '_option_' . sanitize_key( $option_key );
+
+					edd_add_order_item_meta( $order_item_id, $option_key, $value );
+				}
+			}
+
 			// Store order item fees as adjustments.
 			if ( isset( $item['fees'] ) && ! empty( $item['fees'] ) ) {
 				foreach ( $item['fees'] as $fee_id => $fee ) {
