@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
 function edd_add_discount( $data = array() ) {
 
 	// Juggle requirements and products.
-	$product_requirements = isset( $data['products'] )          ? $data['products']          : null;
+	$product_requirements = isset( $data['product_reqs'] )      ? $data['product_reqs']      : null;
 	$excluded_products    = isset( $data['excluded_products'] ) ? $data['excluded_products'] : null;
 	unset( $data['product_reqs'], $data['excluded_products'] );
 
