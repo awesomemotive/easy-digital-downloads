@@ -688,14 +688,14 @@ class Data_Migrator {
 					unset( $cart_item['item_number']['options']['price_id'] );
 					unset( $cart_item['item_number']['options']['quantity'] );
 
-					foreach ( $cart_item['item_number']['options'] as $key => $value ) {
+					foreach ( $cart_item['item_number']['options'] as $option_key => $value ) {
 						if ( is_array( $value ) ) {
 							$value = maybe_serialize( $value );
 						}
 
-						$key = '_option_' . sanitize_key( $key );
+						$option_key = '_option_' . sanitize_key( $option_key );
 
-						edd_add_order_item_meta( $order_item_id, $key, $value );
+						edd_add_order_item_meta( $order_item_id, $option_key, $value );
 					}
 				}
 
@@ -729,14 +729,14 @@ class Data_Migrator {
 						unset( $cart_item['item_number']['options']['price_id'] );
 						unset( $cart_item['item_number']['options']['quantity'] );
 
-						foreach ( $cart_item['item_number']['options'] as $key => $value ) {
+						foreach ( $cart_item['item_number']['options'] as $option_key => $value ) {
 							if ( is_array( $value ) ) {
 								$value = maybe_serialize( $value );
 							}
 
-							$key = '_option_' . sanitize_key( $key );
+							$option_key = '_option_' . sanitize_key( $option_key );
 
-							edd_add_order_item_meta( $refund_order_item_id, $key, $value );
+							edd_add_order_item_meta( $refund_order_item_id, $option_key, $value );
 						}
 					}
 
