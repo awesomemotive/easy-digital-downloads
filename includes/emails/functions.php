@@ -295,8 +295,6 @@ function edd_sendwp_remote_install_handler () {
 		) );
 	}
 
-	$plugin_slug = 'sendwp';
-
 	include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 	include_once ABSPATH . 'wp-admin/includes/file.php';
 	include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
@@ -309,7 +307,7 @@ function edd_sendwp_remote_install_handler () {
 		* Use the WordPress Plugins API to get the plugin download link.
 		*/
 		$api = plugins_api( 'plugin_information', array(
-			'slug' => $plugin_slug,
+			'slug' => 'sendwp',
 		) );
 
 		if ( is_wp_error( $api ) ) {
