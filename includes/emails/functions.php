@@ -331,10 +331,6 @@ function edd_sendwp_remote_install_handler () {
 			) );
 		}
 
-		/*
-		* Activate the plugin based on the results of the upgrader.
-		* @NOTE Assume this works, if the download works - otherwise there is a false positive if the plugin is already installed.
-		*/
 		$activated = activate_plugin( $upgrader->plugin_info() );
 
 	} else {
