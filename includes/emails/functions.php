@@ -345,8 +345,8 @@ function wp_ajax_easy_digital_downloads_sendwp_remote_install_handler () {
 		'register_url' => sendwp_get_server_url() . '_/signup',
 		'client_name' => sendwp_get_client_name(),
 		'client_secret' => sendwp_get_client_secret(),
-		'client_redirect' => sendwp_get_client_redirect(),
-		//'client_redirect' => admin_url( '/edit.php?post_type=download&page=edd-settings&tab=emails' ),
+		//'client_redirect' => sendwp_get_client_redirect(),
+		'client_redirect' => admin_url( '/edit.php?post_type=download&page=edd-settings&tab=emails' ),
 	) );
 }
 add_action( 'wp_ajax_easy_digital_downloads_sendwp_remote_install', 'wp_ajax_easy_digital_downloads_sendwp_remote_install_handler' );
