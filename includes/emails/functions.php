@@ -288,6 +288,13 @@ function edd_get_email_names( $user_info, $payment = false ) {
  * @since 2.9.15
  */
 function edd_sendwp_remote_install_handler () {
+
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		wp_send_json_error( array(
+			'error' => __( 'You do not have permission to do this.', 'easy-digital-downloads' )
+		) );
+	}
+
 	$plugin_slug = 'sendwp';
 
 	include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
@@ -361,6 +368,12 @@ add_action( 'wp_ajax_edd_sendwp_remote_install', 'edd_sendwp_remote_install_hand
  * @since 2.9.15
  */
 function edd_sendwp_disconnect () {
+
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		wp_send_json_error( array(
+			'error' => __( 'You do not have permission to do this.', 'easy-digital-downloads' )
+		) );
+	}
 
 	sendwp_disconnect_client();
 
