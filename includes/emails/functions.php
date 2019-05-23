@@ -282,6 +282,11 @@ function edd_get_email_names( $user_info, $payment = false ) {
 	return $email_names;
 }
 
+/**
+ * Handle installation and connection for SendWP via ajax
+ *
+ * @since 2.9.15
+ */
 function edd_sendwp_remote_install_handler () {
 	$plugin_slug = 'sendwp';
 
@@ -350,6 +355,11 @@ function edd_sendwp_remote_install_handler () {
 }
 add_action( 'wp_ajax_edd_sendwp_remote_install', 'edd_sendwp_remote_install_handler' );
 
+/**
+ * Handle deactivation of SendWP via ajax
+ *
+ * @since 2.9.15
+ */
 function edd_sendwp_disconnect () {
 
 	sendwp_disconnect_client();
