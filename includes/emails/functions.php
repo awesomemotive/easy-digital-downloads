@@ -282,7 +282,7 @@ function edd_get_email_names( $user_info, $payment = false ) {
 	return $email_names;
 }
 
-function wp_ajax_easy_digital_downloads_sendwp_remote_install_handler () {
+function edd_sendwp_remote_install_handler () {
 	$plugin_slug = 'sendwp';
 
 	include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
@@ -303,7 +303,7 @@ function wp_ajax_easy_digital_downloads_sendwp_remote_install_handler () {
 		if ( is_wp_error( $api ) ) {
 			wp_send_json_error( array(
 				'error' => $install->get_error_message(),
-				'debug' => $api 
+				'debug' => $api
 			) );
 		}
 
@@ -315,7 +315,7 @@ function wp_ajax_easy_digital_downloads_sendwp_remote_install_handler () {
 		if ( is_wp_error( $install ) ) {
 			wp_send_json_error( array(
 				'error' => $install->get_error_message(),
-				'debug' => $api 
+				'debug' => $api
 			) );
 		}
 
@@ -345,8 +345,17 @@ function wp_ajax_easy_digital_downloads_sendwp_remote_install_handler () {
 		'register_url' => sendwp_get_server_url() . '_/signup',
 		'client_name' => sendwp_get_client_name(),
 		'client_secret' => sendwp_get_client_secret(),
-		//'client_redirect' => sendwp_get_client_redirect(),
 		'client_redirect' => admin_url( '/edit.php?post_type=download&page=edd-settings&tab=emails&edd-message=sendwp-connected' ),
 	) );
 }
-add_action( 'wp_ajax_easy_digital_downloads_sendwp_remote_install', 'wp_ajax_easy_digital_downloads_sendwp_remote_install_handler' );
+add_action( 'wp_ajax_edd_sendwp_remote_install', 'edd_sendwp_remote_install_handler' );
+
+function edd_sendwp_disconnect () {
+
+	sendwp_disconnect_client();
+
+	deactivate_plugins( 'sendwp/sendwp.php' );
+
+	wp_send_json_success();
+}
+add_action( 'wp_ajax_edd_sendwp_disconnect', 'edd_sendwp_disconnect' );

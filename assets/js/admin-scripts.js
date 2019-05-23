@@ -1225,6 +1225,14 @@ jQuery(document).ready(function ($) {
 
 			});
 
+			$('#edd-sendwp-disconnect').on('click', function(e) {
+				e.preventDefault();
+				$(this).html( edd_vars.wait + ' <span class="spinner is-active"></span>' );
+				document.body.style.cursor = 'wait';
+				easy_digital_downloads_sendwp_disconnect();
+
+			});
+
 		},
 
 		misc : function() {
@@ -2170,7 +2178,7 @@ function edd_attach_tooltips( selector ) {
 
 function easy_digital_downloads_sendwp_remote_install() {
 	var data = {
-		'action': 'easy_digital_downloads_sendwp_remote_install',
+		'action': 'edd_sendwp_remote_install',
 	};
 
 	// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
@@ -2191,6 +2199,16 @@ function easy_digital_downloads_sendwp_remote_install() {
 			response.data.client_redirect,
 			response.data.partner_id
 		);
+	});
+}
+
+function easy_digital_downloads_sendwp_disconnect() {
+	var data = {
+		'action': 'edd_sendwp_disconnect',
+	};
+
+	jQuery.post(ajaxurl, data, function( response ) {
+		location.reload();
 	});
 }
 
