@@ -1219,7 +1219,7 @@ jQuery(document).ready(function ($) {
 			$('#edd-sendwp-connect').on('click', function(e) {
 
 				e.preventDefault();
-				$(this).html( edd_vars.wait + ' <span class="spinner is-active"></span>' );
+				$(this).html( '<span class="dashicons dashicons-email"></span>' + edd_vars.wait + ' <span class="edd-loading"></span>' );
 				document.body.style.cursor = 'wait';
 				easy_digital_downloads_sendwp_remote_install();
 

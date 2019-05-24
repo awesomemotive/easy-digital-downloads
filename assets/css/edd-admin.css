@@ -1079,6 +1079,61 @@ td.edd_order_price {
 /* Settings page styles
 -------------------------------------------------------------- */
 
+#edd-sendwp-connect {
+	font-size: 16px;
+	height: auto;
+	padding: 8px 14px;
+	margin: 0 0 6px;
+}
+#edd-sendwp-connect .dashicons {
+	line-height: 29px;
+	margin-right: 8px;
+}
+#edd-sendwp-connect .edd-loading {
+	position: relative;
+	top: 3px;
+	margin-left: 4px;
+	box-shadow: 0 0 2px rgba(0,0,0,.2);
+}
+#edd-sendwp-connect .edd-loading {
+	-webkit-animation: edd-spinning 1.1s infinite linear;
+	animation: edd-spinning 1.1s infinite linear;
+	border-top: 2px solid rgba(255, 255, 255, 0.5);
+	border-right: 2px solid rgba(255, 255, 255, 0.5);
+	border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+	border-left: 2px solid #fff;
+	font-size: 14px;
+	filter: alpha(opacity=0);
+	-ms-transform: translateZ(0);
+	transform: translateZ(0);
+}
+#edd-sendwp-connect .edd-loading,
+#edd-sendwp-connect .edd-loading:after {
+	border-radius: 50%;
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+}
+@-webkit-keyframes edd-spinning {
+	0% {
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	100% {
+		-webkit-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+@keyframes edd-spinning {
+	0% {
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	100% {
+		-webkit-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
 #edd_tax_rates {
 	margin: 1em 0 0;
 }
