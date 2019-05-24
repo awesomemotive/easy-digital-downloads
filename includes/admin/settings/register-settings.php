@@ -2172,9 +2172,7 @@ function edd_sendwp_callback($args) {
 		?>
 
 		<p>
-			<button id="edd-sendwp-disconnect" class="button">
-				<?php _e( 'Disconnect SendWP', 'easy-digital-downloads' ); ?>
-			</button>
+			<button id="edd-sendwp-disconnect" class="button"><?php _e( 'Disconnect SendWP', 'easy-digital-downloads' ); ?></button>
 		</p>
 		<p>Your site is connected to SendWP. <?php echo $forwarding_enabled ? $connected : $disconnected ; ?></p>
 
@@ -2183,9 +2181,7 @@ function edd_sendwp_callback($args) {
 		?>
 
 		<p>
-			<button id="edd-sendwp-connect" class="button button-primary">
-				<span class="dashicons dashicons-email"></span>
-				<?php _e( 'Connect SendWP', 'easy-digital-downloads' ); ?>
+			<button id="edd-sendwp-connect" class="button button-primary"><span class="dashicons dashicons-email"></span><?php _e( 'Connect SendWP', 'easy-digital-downloads' ); ?>
 			</button>
 		</p>
 
