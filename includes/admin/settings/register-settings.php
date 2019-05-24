@@ -2151,27 +2151,43 @@ function edd_shop_states_callback($args) {
  */
 function edd_sendwp_callback($args) {
 
+	// Connection status partial label based on the state of the SendWP email sending setting (Tools -> SendWP)
+	$connected = sprintf(
+		__( '<a href="https://sendwp.com/account/" target="_blank">Click here</a> to visit your account.', 'easy-digital-downloads' )
+	);
+	$disconnected = sprintf(
+		__( '<em><strong>Note:</strong> Email sending is currently disabled. <a href="' . admin_url( '/tools.php?page=sendwp' ) . '">Click here</a> to enable it.</em>', 'easy-digital-downloads' )
+	);
+
+	// Checks if email sending is enabled, which also depends on a successful client connection via sendwp_client_connected()
+	$forwarding_enabled = function_exists( 'sendwp_forwarding_enabled' ) && sendwp_forwarding_enabled() ? true : false;
 
 	ob_start();
 
-	if( function_exists( 'sendwp_forwarding_enabled' ) && sendwp_forwarding_enabled() ) :
+	// Output the appropriate button and label based on connection status
+	if( $forwarding_enabled ) :
 		?>
+
 		<p>
 			<button id="edd-sendwp-disconnect" class="button">
 				<?php _e( 'Disconnect SendWP', 'easy-digital-downloads' ); ?>
 			</button>
 		</p>
+		<p>Your site is connected to SendWP. <?php echo $forwarding_enabled ? $connected : $disconnected ; ?></p>
+
 		<?php
 	else :
 		?>
+
 		<p>
 			<button id="edd-sendwp-connect" class="button button-primary">
 				<span class="dashicons dashicons-email"></span>
 				<?php _e( 'Connect SendWP', 'easy-digital-downloads' ); ?>
 			</button>
 		</p>
-		<p><?php echo $args['desc']; ?></p>
+
 		<?php
+		echo $args['desc'];
 	endif;
 
 	echo ob_get_clean();
