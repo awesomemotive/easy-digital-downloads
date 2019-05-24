@@ -2152,16 +2152,28 @@ function edd_shop_states_callback($args) {
 function edd_sendwp_callback($args) {
 
 
-	ob_start(); ?>
-	<p>
-		<?php if( function_exists( 'sendwp_forwarding_enabled' ) && sendwp_forwarding_enabled() ) : ?>
-			<a href="<?php echo admin_url( '/tools.php?page=sendwp' ); ?>" class="button"><?php _e( 'Disconnect SendWP', 'easy-digital-downloads' ); ?></a>
-		<?php else : ?>
-			<button id="edd-sendwp-connect" class="button-primary"><span class="dashicons dashicons-email"></span><?php _e( 'Connect SendWP', 'easy-digital-downloads' ); ?></button>
-		<?php endif; ?>
-	</p>
-	<p><?php echo $args['desc']; ?></p>
-	<?php
+	ob_start();
+
+	if( function_exists( 'sendwp_forwarding_enabled' ) && sendwp_forwarding_enabled() ) :
+		?>
+		<p>
+			<button id="edd-sendwp-disconnect" class="button">
+				<?php _e( 'Disconnect SendWP', 'easy-digital-downloads' ); ?>
+			</button>
+		</p>
+		<?php
+	else :
+		?>
+		<p>
+			<button id="edd-sendwp-connect" class="button button-primary">
+				<span class="dashicons dashicons-email"></span>
+				<?php _e( 'Connect SendWP', 'easy-digital-downloads' ); ?>
+			</button>
+		</p>
+		<p><?php echo $args['desc']; ?></p>
+		<?php
+	endif;
+
 	echo ob_get_clean();
 }
 
