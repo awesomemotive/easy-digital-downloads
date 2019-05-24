@@ -453,15 +453,25 @@ function edd_get_registered_settings() {
 		'emails' => apply_filters('edd_settings_emails',
 			array(
 				'main' => array(
+					'sendwp_header' => array(
+						'id'   => 'sendwp_header',
+						'name' => '<strong>' . __( 'SendWP Settings', 'easy-digital-downloads' ) . '</strong>',
+						'type' => 'header',
+					),
 					'sendwp' => array(
 						'id'      => 'sendwp',
-						'name'    => __( 'SendWP', 'easy-digital-downloads' ),
-						'desc'    => __( 'Tired of unreliable email delivery? Connect SendWP now for simple, cheap, reliable email delivery so you can stop worrying if your customers are getting their emails. Learn more about <a href="https://sendwp.com" target="_blank">SendWP</a>.', 'easy-digital-downloads' ),
+						'name'    => __( 'Connection Status', 'easy-digital-downloads' ),
+						'desc'    => __( '<p>Looking for a reliable, affordable way to deliver important emails to your customers? Try <a href="https://sendwp.com" target="_blank">SendWP</a>.</p><p>For more information, see the <a href="https://docs.easydigitaldownloads.com/article/2143-sendwp-email-delivery" target="_blank">documentation</a>.</p>', 'easy-digital-downloads' ),
 						'type'    => 'sendwp',
+					),
+					'email_header' => array(
+						'id'   => 'email_header',
+						'name' => '<strong>' . __( 'Email Configuration', 'easy-digital-downloads' ) . '</strong>',
+						'type' => 'header',
 					),
 					'email_template' => array(
 						'id'      => 'email_template',
-						'name'    => __( 'Email Template', 'easy-digital-downloads' ),
+						'name'    => __( 'Template', 'easy-digital-downloads' ),
 						'desc'    => __( 'Choose a template. Click "Save Changes" then "Preview Purchase Receipt" to see the new template.', 'easy-digital-downloads' ),
 						'type'    => 'select',
 						'options' => edd_get_email_templates(),
@@ -2143,14 +2153,14 @@ function edd_sendwp_callback($args) {
 
 
 	ob_start(); ?>
-	<p><?php echo $args['desc']; ?></p>
 	<p>
 		<?php if( function_exists( 'sendwp_forwarding_enabled' ) && sendwp_forwarding_enabled() ) : ?>
 			<a href="<?php echo admin_url( '/tools.php?page=sendwp' ); ?>" class="button"><?php _e( 'Disconnect SendWP', 'easy-digital-downloads' ); ?></a>
 		<?php else : ?>
-			<button id="edd-sendwp-connect" class="button"><?php _e( 'Connect SendWP', 'easy-digital-downloads' ); ?></button>
+			<button id="edd-sendwp-connect" class="button-primary"><span class="dashicons dashicons-email"></span><?php _e( 'Connect SendWP', 'easy-digital-downloads' ); ?></button>
 		<?php endif; ?>
 	</p>
+	<p><?php echo $args['desc']; ?></p>
 	<?php
 	echo ob_get_clean();
 }
