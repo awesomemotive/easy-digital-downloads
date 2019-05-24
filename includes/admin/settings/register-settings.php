@@ -2152,20 +2152,23 @@ function edd_shop_states_callback($args) {
 function edd_sendwp_callback($args) {
 
 	// Connection status partial label based on the state of the SendWP email sending setting (Tools -> SendWP)
-	$connected = sprintf(
+	$connected    = sprintf(
 		__( '<a href="https://sendwp.com/account/" target="_blank">Click here</a> to visit your account.', 'easy-digital-downloads' )
 	);
 	$disconnected = sprintf(
 		__( '<em><strong>Note:</strong> Email sending is currently disabled. <a href="' . admin_url( '/tools.php?page=sendwp' ) . '">Click here</a> to enable it.</em>', 'easy-digital-downloads' )
 	);
 
-	// Checks if email sending is enabled, which also depends on a successful client connection via sendwp_client_connected()
+	// Checks if SendWP is connected
+	$client_connected = function_exists( 'sendwp_client_connected' ) && sendwp_client_connected() ? true : false;
+
+	// Checks if email sending is enabled in SendWP
 	$forwarding_enabled = function_exists( 'sendwp_forwarding_enabled' ) && sendwp_forwarding_enabled() ? true : false;
 
 	ob_start();
 
 	// Output the appropriate button and label based on connection status
-	if( $forwarding_enabled ) :
+	if( $client_connected ) :
 		?>
 
 		<p>
