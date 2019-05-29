@@ -461,7 +461,7 @@ function edd_get_registered_settings() {
 					'sendwp' => array(
 						'id'      => 'sendwp',
 						'name'    => __( 'Connection Status', 'easy-digital-downloads' ),
-						'desc'    => __( '<p>Looking for a reliable, affordable way to deliver important emails to your customers? Try <a href="https://sendwp.com" target="_blank">SendWP</a>.</p><p>For more information, see the <a href="https://docs.easydigitaldownloads.com/article/2143-sendwp-email-delivery" target="_blank">documentation</a>.</p>', 'easy-digital-downloads' ),
+						'desc'    => __( '<p>Looking for a reliable, affordable way to deliver important emails to your customers? Try <a href="https://sendwp.com" target="_blank">SendWP</a>.</p><p>For more information on this paid service, see the <a href="https://docs.easydigitaldownloads.com/article/2143-sendwp-email-delivery" target="_blank">documentation</a>.</p>', 'easy-digital-downloads' ),
 						'type'    => 'sendwp',
 					),
 					'email_header' => array(
