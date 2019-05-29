@@ -2145,7 +2145,7 @@ function edd_shop_states_callback($args) {
  *
  * Renders SendWP Settings
  *
- * @since 2.9.x
+ * @since 2.9.15
  * @param array $args Arguments passed by the setting
  * @return void
  */
