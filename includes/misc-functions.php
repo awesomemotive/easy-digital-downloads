@@ -175,7 +175,7 @@ function edd_string_is_image_url( $str ) {
  */
 function edd_get_ip() {
 
-	$ip = '127.0.0.1';
+	$ip = false;
 
 	if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
 		// Check ip from share internet.
@@ -190,13 +190,12 @@ function edd_get_ip() {
 		$ips = explode( ',', wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) );
 		if ( is_array( $ips ) ) {
 			$ip = filter_var( $ips[0], FILTER_VALIDATE_IP );
-			if ( false !== $ip ) {
-				$ip = trim( $ip );
-			}
 		}
 	} elseif ( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
 		$ip = filter_var( wp_unslash( $_SERVER['REMOTE_ADDR'] ), FILTER_VALIDATE_IP );
 	}
+
+	$ip = false !== $ip ? $ip : '127.0.0.1';
 
 	// Fix potential CSV returned from $_SERVER variables.
 	$ip_array = explode( ',', $ip );
