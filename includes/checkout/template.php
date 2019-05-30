@@ -972,11 +972,13 @@ function edd_checkout_button_next() {
  * @return string
  */
 function edd_checkout_button_purchase() {
-	$enabled_gateways = edd_get_enabled_payment_gateways();
 
 	ob_start();
 
-	if ( ! empty( $enabled_gateways ) || empty( edd_get_cart_total() ) ) {
+	$enabled_gateways = edd_get_enabled_payment_gateways();
+	$cart_total       = edd_get_cart_total();
+
+	if ( ! empty( $enabled_gateways ) || empty( $cart_total ) ) {
 		$color = edd_get_option( 'checkout_color', 'blue' );
 		$color = ( $color == 'inherit' ) ? '' : $color;
 		$style = edd_get_option( 'button_style', 'button' );
