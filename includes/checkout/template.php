@@ -976,7 +976,7 @@ function edd_checkout_button_purchase() {
 
 	ob_start();
 
-	if ( ! empty( $enabled_gateways ) ) {
+	if ( ! empty( $enabled_gateways ) || empty( edd_get_cart_total() ) ) {
 		$color = edd_get_option( 'checkout_color', 'blue' );
 		$color = ( $color == 'inherit' ) ? '' : $color;
 		$style = edd_get_option( 'button_style', 'button' );
