@@ -173,6 +173,9 @@ class EDD_Notices {
 					case 'api-key-revoked' :
 						$notices['updated']['edd-api-key-revoked'] = __( 'API keys successfully revoked.', 'easy-digital-downloads' );
 						break;
+					case 'sendwp-connected' :
+						$notices['updated']['edd-sendwp-connected'] = __( 'SendWP has been successfully connected!', 'easy-digital-downloads' );
+						break;
 				}
 			}
 
