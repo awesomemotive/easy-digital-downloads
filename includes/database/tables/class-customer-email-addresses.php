@@ -38,7 +38,7 @@ final class Customer_Email_Addresses extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201808170001;
+	protected $version = 201906010001;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -50,6 +50,7 @@ final class Customer_Email_Addresses extends Table {
 	protected $upgrades = array(
 		'201808140001' => 201808140001,
 		'201808170001' => 201808170001,
+		'201906010001' => 201906010001,
 	);
 
 	/**
@@ -63,7 +64,6 @@ final class Customer_Email_Addresses extends Table {
 		$this->schema = "id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 			customer_id bigint(20) unsigned NOT NULL default '0',
 			type varchar(20) NOT NULL default 'secondary',
-			status varchar(20) NOT NULL default 'active',
 			email varchar(100) NOT NULL default '',
 			date_created datetime NOT NULL default '0000-00-00 00:00:00',
 			date_modified datetime NOT NULL default '0000-00-00 00:00:00',
@@ -72,7 +72,6 @@ final class Customer_Email_Addresses extends Table {
 			KEY customer (customer_id),
 			KEY email (email),
 			KEY type (type(20)),
-			KEY status (status(20)),
 			KEY date_created (date_created)";
 	}
 
@@ -116,4 +115,23 @@ final class Customer_Email_Addresses extends Table {
 		// Return success/fail
 		return $this->is_success( $result );
 	}
+
+	/**
+	 * Upgrade to version 201906010001
+	 * - Remove the 'status' column.
+	 *
+	 * @since 3.0
+	 *
+	 * @return boolean
+	 */
+	protected function __201906010001() {
+
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} DROP COLUMN `status`
+		" );
+
+		// Return success/fail.
+		return $this->is_success( $result );
+	}
+
 }
