@@ -38,7 +38,7 @@ final class Adjustments extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201807270003;
+	protected $version = 201906030001;
 
 	/**
 	 * Array of upgrade versions and methods.
@@ -49,7 +49,8 @@ final class Adjustments extends Table {
 	 */
 	protected $upgrades = array(
 		'201806140002' => 201806140002,
-		'201807270003' => 201807270003
+		'201807270003' => 201807270003,
+		'201906030001' => 201906030001,
 	);
 
 	/**
@@ -219,6 +220,24 @@ final class Adjustments extends Table {
 		}
 
 		// Return success/fail
+		return $this->is_success( $result );
+	}
+
+	/**
+	 * Upgrade to version 201906030001
+	 * - Drop the `product_condition` column.
+	 *
+	 * @since 3.0
+	 *
+	 * @return boolean True if upgrade was successful, false otherwise.
+	 */
+	protected function __201906030001() {
+
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} DROP COLUMN `product_condition`
+		" );
+
+		// Return success/fail.
 		return $this->is_success( $result );
 	}
 }
