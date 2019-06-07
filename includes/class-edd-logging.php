@@ -153,7 +153,7 @@ class EDD_Logging {
 
 		// Set up variables to hold data to go into the logs table by default.
 		$data = array(
-			'message'     => $args['post_content'],
+			'content'     => $args['post_content'],
 			'object_id'   => isset( $args['post_parent'] )
 				? $args['post_parent']
 				: 0,
