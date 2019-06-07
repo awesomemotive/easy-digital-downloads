@@ -46,13 +46,13 @@ defined( 'ABSPATH' ) || exit;
  */
 function edd_add_log( $data = array() ) {
 
-	// An object ID and object type must be supplied for every log that is
+	// An object type must be supplied for every log that is
 	// inserted into the database.
-	if ( empty( $data['object_id'] ) || empty( $data['object_type'] ) ) {
+	if ( empty( $data['object_type'] ) ) {
 		return false;
 	}
 
-	// Instantiate a query object
+	// Instantiate a query object.
 	$logs = new EDD\Database\Queries\Log();
 
 	return $logs->add_item( $data );
