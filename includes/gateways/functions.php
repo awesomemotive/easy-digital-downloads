@@ -463,7 +463,7 @@ function edd_get_chosen_gateway() {
  *
  * @return int ID of the new log entry.
  */
-function edd_record_gateway_error( $title = '', $message = '', $parent = 0 ) {
+function edd_record_gateway_error( $title = '', $message = '', $parent = null ) {
 	return edd_record_log( $title, $message, $parent, 'gateway_error' );
 }
 
