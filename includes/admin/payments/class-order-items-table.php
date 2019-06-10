@@ -216,7 +216,6 @@ class Order_Items_Table extends List_Table {
 		// No state
 		$state = '';
 
-		// Active, so add "deactivate" action
 		if ( empty( $status ) ) {
 			$row_actions['complete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
 					'edd-action' => 'handle_order_item_change',
@@ -238,7 +237,6 @@ class Order_Items_Table extends List_Table {
 					'order_item' => $order_item->id,
 				), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Refund', 'easy-digital-downloads' ) . '</a>';
 
-			// Inactive, so add "activate" action
 		} elseif ( 'refunded' === $status ) {
 			$state                   = __( 'Refunded', 'easy-digital-downloads' );
 			$row_actions['activate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(

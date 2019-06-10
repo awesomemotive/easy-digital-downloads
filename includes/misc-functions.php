@@ -1559,10 +1559,13 @@ function edd_format_counts( $counts = array(), $groupby = '' ) {
 		// Loop through statuses
 		foreach ( $counts->items as $count ) {
 			$c[ $count[ $groupby ] ] = absint( $count['count'] );
+
+			// We don't want to include trashed orders in the counts.
+			if ( 'trash' !== $count['status'] ) {
+				$c['total'] += $count['count'];
+			}
 		}
 
-		// Total
-		$c['total'] = array_sum( $c );
 	}
 
 	// Return array of counts
