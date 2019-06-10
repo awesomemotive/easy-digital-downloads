@@ -34,7 +34,6 @@ defined( 'ABSPATH' ) || exit;
  * @property int $use_count
  * @property int $once_per_customer
  * @property float $min_charge_amount
- * @property string $product_condition
  * @property string $start_date
  * @property string $end_date
  * @property string $date_created
@@ -154,15 +153,6 @@ class Adjustment extends Base_Object {
 	 * @var    bool
 	 */
 	protected $once_per_customer = null;
-
-	/**
-	 * Product Condition.
-	 *
-	 * @since  3.0
-	 * @access protected
-	 * @var    string
-	 */
-	protected $product_condition;
 
 	/**
 	 * Created Date.
