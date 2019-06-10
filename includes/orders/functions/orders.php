@@ -826,6 +826,7 @@ function edd_build_order( $order_data = array() ) {
 				'tax'          => $item['tax'],
 				'total'        => $item['price'],
 				'item_price'   => $item['item_price'], // Added for backwards compatibility
+				'date_created' => ! empty( $order_data['date_created'] ) ? $order_data['date_created'] : '',
 			);
 
 			/**
