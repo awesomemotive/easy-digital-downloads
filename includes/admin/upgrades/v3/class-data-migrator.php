@@ -681,6 +681,24 @@ class Data_Migrator {
 
 				$order_item_id = edd_add_order_item( $order_item_args );
 
+				if ( ! empty( $cart_item['item_number']['options'] ) ) {
+					// Collect any item_number options and store them.
+
+					// Remove our price_id and quantity, as they are columns on the order item now.
+					unset( $cart_item['item_number']['options']['price_id'] );
+					unset( $cart_item['item_number']['options']['quantity'] );
+
+					foreach ( $cart_item['item_number']['options'] as $option_key => $value ) {
+						if ( is_array( $value ) ) {
+							$value = maybe_serialize( $value );
+						}
+
+						$option_key = '_option_' . sanitize_key( $option_key );
+
+						edd_add_order_item_meta( $order_item_id, $option_key, $value );
+					}
+				}
+
 				// If the order status is refunded, we also need to add all the refunded order items on the refund order as well.
 				if ( ! empty( $refund_id ) ) {
 
@@ -703,6 +721,24 @@ class Data_Migrator {
 					$refund_item_args['date_modified'] = $data->post_modified_gmt;
 
 					$refund_order_item_id = edd_add_order_item( $refund_item_args );
+
+					if ( ! empty( $cart_item['item_number']['options'] ) ) {
+						// Collect any item_number options and store them.
+
+						// Remove our price_id and quantity, as they are columns on the order item now.
+						unset( $cart_item['item_number']['options']['price_id'] );
+						unset( $cart_item['item_number']['options']['quantity'] );
+
+						foreach ( $cart_item['item_number']['options'] as $option_key => $value ) {
+							if ( is_array( $value ) ) {
+								$value = maybe_serialize( $value );
+							}
+
+							$option_key = '_option_' . sanitize_key( $option_key );
+
+							edd_add_order_item_meta( $refund_order_item_id, $option_key, $value );
+						}
+					}
 
 				}
 
