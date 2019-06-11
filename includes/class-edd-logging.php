@@ -141,7 +141,7 @@ class EDD_Logging {
 		$args = wp_parse_args( $log_data, array(
 			'post_type'    => 'edd_log',
 			'post_status'  => 'publish',
-			'post_parent'  => null,
+			'post_parent'  => 0,
 			'post_content' => '',
 			'log_type'     => false,
 		) );
@@ -156,7 +156,7 @@ class EDD_Logging {
 			'content'     => $args['post_content'],
 			'object_id'   => isset( $args['post_parent'] )
 				? $args['post_parent']
-				: null,
+				: 0,
 			'object_type' => isset( $args['log_type'] )
 				? $args['log_type']
 				: 'unknown',
@@ -728,7 +728,7 @@ class EDD_Logging {
  *
  * @return int ID of the new log.
  */
-function edd_record_log( $title = '', $message = '', $parent = null, $type = null ) {
+function edd_record_log( $title = '', $message = '', $parent = 0, $type = null ) {
 	$edd_logs = EDD()->debug_log;
 
 	return $edd_logs->add( $title, $message, $parent, $type );
