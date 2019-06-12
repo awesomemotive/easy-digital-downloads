@@ -118,7 +118,12 @@ class EDD_API_Request_Log_Table extends WP_List_Table {
 	 * @return string Column Name
 	 */
 	public function column_default( $item, $column_name ) {
-		return $item[ $column_name ];
+		switch ( $column_name ) {
+			case 'ip':
+				return '<a href="' . esc_url( 'https://ipinfo.io/' . esc_attr( $item['ip'] ) ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $item['ip'] ) . '</a>';
+			default:
+				return $item[ $column_name ];
+		}
 	}
 
 	/**
