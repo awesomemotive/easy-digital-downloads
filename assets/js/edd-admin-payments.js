@@ -131,6 +131,7 @@ var EDD_Edit_Payment = {
     this.variable_prices_check();
     this.resend_receipt();
     this.copy_download_link();
+    this.add_note();
   },
   edit_address: function edit_address() {
     // Update base state field based on selected base country
@@ -472,6 +473,40 @@ var EDD_Edit_Payment = {
           console.log(data);
         }
       });
+    });
+  },
+  add_note: function add_note() {
+    $('#edd-add-note').on('click', function (e) {
+      e.preventDefault();
+      var postData = {
+        action: 'edd_insert_payment_note',
+        payment_id: $(this).data('object-id'),
+        note: $('#edd-note').val(),
+        nonce: $('#edd_note_nonce').val()
+      };
+
+      if (postData.note) {
+        $.ajax({
+          type: 'POST',
+          data: postData,
+          url: ajaxurl,
+          success: function success(response) {
+            $('#edd-notes').append(response);
+            $('.edd-no-notes').hide();
+            $('#edd-note').val('');
+          }
+        }).fail(function (data) {
+          if (window.console && window.console.log) {
+            console.log(data);
+          }
+        });
+      } else {
+        var border_color = $('#edd-note').css('border-color');
+        $('#edd-note').css('border-color', 'red');
+        setTimeout(function () {
+          $('#edd-note').css('border-color', border_color);
+        }, 500);
+      }
     });
   }
 };
