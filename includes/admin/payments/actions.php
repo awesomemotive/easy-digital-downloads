@@ -625,3 +625,31 @@ function edd_orders_list_table_process_bulk_actions() {
 	wp_redirect( wp_get_referer() );
 }
 add_action( 'load-download_page_edd-payment-history', 'edd_orders_list_table_process_bulk_actions' );
+
+/**
+ * Listen for the AJAX call to store a payment note.
+ */
+function edd_ajax_store_payment_note() {
+
+	$payment_id = absint( $_POST['payment_id'] );
+	$note       = wp_kses( $_POST['note'], array() );
+	$nonce      = isset( $_POST['nonce'] ) ? sanitize_text_field( $_POST['nonce'] ) : false;
+
+	if ( ! wp_verify_nonce( $nonce, 'edd_note' ) ) {
+		wp_die( __( 'Failed to save note. Verification failed', 'easy-digital-downloads' ) );
+	}
+
+	if( ! current_user_can( 'edit_shop_payments', $payment_id ) ) {
+		wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
+	if( empty( $payment_id ) )
+		die( '-1' );
+
+	if( empty( $note ) )
+		die( '-1' );
+
+	$note_id = edd_insert_payment_note( $payment_id, $note );
+	die( edd_get_payment_note_html( $note_id ) );
+}
+add_action( 'wp_ajax_edd_insert_payment_note', 'edd_ajax_store_payment_note' );
