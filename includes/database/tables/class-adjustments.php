@@ -236,14 +236,20 @@ final class Adjustments extends Table {
 		// Look for column
 		$result = $this->column_exists( 'product_condition' );
 
-		// Maybe add column
-		if ( false === $result ) {
-			$result = $this->get_db()->query( "
+		// Maybe remove column
+		if ( true === $result ) {
+
+			// Try to remove it
+			$result = ! $this->get_db()->query( "
 				ALTER TABLE {$this->table_name} DROP COLUMN `product_condition`
 			" );
-		}
 
-		// Return success/fail.
-		return $this->is_success( $result );
+			// Return success/fail
+			return $this->is_success( $result );
+
+		// Return true because column is already gone
+		} else {
+			return $this->is_success( true );
+		}
 	}
 }
