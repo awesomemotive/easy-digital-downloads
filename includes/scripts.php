@@ -312,11 +312,13 @@ function edd_register_admin_scripts() {
 		'tools-export' => array(),
 		'tools-import' => array(),
 		'notes'        => array(),
-		'orders'       => array(),
+		'orders'       => array(), // This is for the Add New Order.
 		'reports'      => array(
 			'edd-chart-js',
 		),
-		'payments'     => array(),
+		'payments'     => array( // This is for the View Order Details.
+			'edd-admin-notes',
+		),
 		'settings'     => array(),
 		'tools'        => array(),
 	);
