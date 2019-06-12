@@ -409,6 +409,7 @@ const EDD_Edit_Payment = {
 			} );
 		} );
 	},
+
 };
 
 jQuery( document ).ready( function( $ ) {
