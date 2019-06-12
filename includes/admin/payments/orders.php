@@ -22,13 +22,6 @@ defined( 'ABSPATH' ) || exit;
  * @param mixed $item
  */
 function edd_order_sections( $item = false ) {
-	// Enqueue scripts.
-	if ( edd_is_add_order_page() ) {
-		wp_enqueue_script( 'edd-admin-orders' );
-		wp_enqueue_script( 'edd-admin-payments' );
-	} else {
-		wp_enqueue_script( 'edd-admin-payments' );
-	}
 
 	// Instantiate the Sections class and sections array
 	$sections = new EDD\Admin\Order_Sections();
