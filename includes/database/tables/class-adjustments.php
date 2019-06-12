@@ -233,9 +233,15 @@ final class Adjustments extends Table {
 	 */
 	protected function __201906030001() {
 
-		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} DROP COLUMN `product_condition`
-		" );
+		// Look for column
+		$result = $this->column_exists( 'product_condition' );
+
+		// Maybe add column
+		if ( false === $result ) {
+			$result = $this->get_db()->query( "
+				ALTER TABLE {$this->table_name} DROP COLUMN `product_condition`
+			" );
+		}
 
 		// Return success/fail.
 		return $this->is_success( $result );
