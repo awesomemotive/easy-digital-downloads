@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.9.15\n"
+"Project-Id-Version: Easy Digital Downloads 2.9.16\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2019-06-01 00:46:33+00:00\n"
+"POT-Creation-Date: 2019-06-12 03:55:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -66,7 +66,7 @@ msgstr ""
 #: includes/admin/payments/actions.php:381
 #: includes/admin/payments/view-order-details.php:22
 #: includes/admin/payments/view-order-details.php:32
-#: includes/admin/reporting/class-api-requests-logs-list-table.php:142
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:147
 #: includes/admin/reporting/class-export.php:164
 #: includes/admin/reporting/class-gateway-error-logs-list-table.php:128
 #: includes/admin/reporting/export/class-batch-export.php:131
@@ -2480,23 +2480,23 @@ msgstr ""
 msgid "Request Speed"
 msgstr ""
 
-#: includes/admin/reporting/class-api-requests-logs-list-table.php:133
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:138
 msgid "View Request"
 msgstr ""
 
-#: includes/admin/reporting/class-api-requests-logs-list-table.php:139
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:144
 msgid "API Request:"
 msgstr ""
 
-#: includes/admin/reporting/class-api-requests-logs-list-table.php:145
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:150
 msgid "API User:"
 msgstr ""
 
-#: includes/admin/reporting/class-api-requests-logs-list-table.php:147
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:152
 msgid "API Key:"
 msgstr ""
 
-#: includes/admin/reporting/class-api-requests-logs-list-table.php:149
+#: includes/admin/reporting/class-api-requests-logs-list-table.php:154
 msgid "Request Date:"
 msgstr ""
 
@@ -6984,137 +6984,137 @@ msgstr ""
 msgid "Passwords do not match"
 msgstr ""
 
-#: includes/misc-functions.php:319 tests/tests-misc.php:75
+#: includes/misc-functions.php:332 tests/tests-misc.php:75
 msgid "US Dollars (&#36;)"
 msgstr ""
 
-#: includes/misc-functions.php:320 tests/tests-misc.php:76
+#: includes/misc-functions.php:333 tests/tests-misc.php:76
 msgid "Euros (&euro;)"
 msgstr ""
 
-#: includes/misc-functions.php:321 tests/tests-misc.php:77
+#: includes/misc-functions.php:334 tests/tests-misc.php:77
 msgid "Pound Sterling (&pound;)"
 msgstr ""
 
-#: includes/misc-functions.php:322 tests/tests-misc.php:78
+#: includes/misc-functions.php:335 tests/tests-misc.php:78
 msgid "Australian Dollars (&#36;)"
 msgstr ""
 
-#: includes/misc-functions.php:323 tests/tests-misc.php:79
+#: includes/misc-functions.php:336 tests/tests-misc.php:79
 msgid "Brazilian Real (R&#36;)"
 msgstr ""
 
-#: includes/misc-functions.php:324 tests/tests-misc.php:80
+#: includes/misc-functions.php:337 tests/tests-misc.php:80
 msgid "Canadian Dollars (&#36;)"
 msgstr ""
 
-#: includes/misc-functions.php:325 tests/tests-misc.php:81
+#: includes/misc-functions.php:338 tests/tests-misc.php:81
 msgid "Czech Koruna"
 msgstr ""
 
-#: includes/misc-functions.php:326 tests/tests-misc.php:82
+#: includes/misc-functions.php:339 tests/tests-misc.php:82
 msgid "Danish Krone"
 msgstr ""
 
-#: includes/misc-functions.php:327 tests/tests-misc.php:83
+#: includes/misc-functions.php:340 tests/tests-misc.php:83
 msgid "Hong Kong Dollar (&#36;)"
 msgstr ""
 
-#: includes/misc-functions.php:328 tests/tests-misc.php:84
+#: includes/misc-functions.php:341 tests/tests-misc.php:84
 msgid "Hungarian Forint"
 msgstr ""
 
-#: includes/misc-functions.php:329 tests/tests-misc.php:85
+#: includes/misc-functions.php:342 tests/tests-misc.php:85
 msgid "Israeli Shekel (&#8362;)"
 msgstr ""
 
-#: includes/misc-functions.php:330 tests/tests-misc.php:86
+#: includes/misc-functions.php:343 tests/tests-misc.php:86
 msgid "Japanese Yen (&yen;)"
 msgstr ""
 
-#: includes/misc-functions.php:331 tests/tests-misc.php:87
+#: includes/misc-functions.php:344 tests/tests-misc.php:87
 msgid "Malaysian Ringgits"
 msgstr ""
 
-#: includes/misc-functions.php:332 tests/tests-misc.php:88
+#: includes/misc-functions.php:345 tests/tests-misc.php:88
 msgid "Mexican Peso (&#36;)"
 msgstr ""
 
-#: includes/misc-functions.php:333 tests/tests-misc.php:89
+#: includes/misc-functions.php:346 tests/tests-misc.php:89
 msgid "New Zealand Dollar (&#36;)"
 msgstr ""
 
-#: includes/misc-functions.php:334 tests/tests-misc.php:90
+#: includes/misc-functions.php:347 tests/tests-misc.php:90
 msgid "Norwegian Krone"
 msgstr ""
 
-#: includes/misc-functions.php:335 tests/tests-misc.php:91
+#: includes/misc-functions.php:348 tests/tests-misc.php:91
 msgid "Philippine Pesos"
 msgstr ""
 
-#: includes/misc-functions.php:336 tests/tests-misc.php:92
+#: includes/misc-functions.php:349 tests/tests-misc.php:92
 msgid "Polish Zloty"
 msgstr ""
 
-#: includes/misc-functions.php:337 tests/tests-misc.php:93
+#: includes/misc-functions.php:350 tests/tests-misc.php:93
 msgid "Singapore Dollar (&#36;)"
 msgstr ""
 
-#: includes/misc-functions.php:338 tests/tests-misc.php:94
+#: includes/misc-functions.php:351 tests/tests-misc.php:94
 msgid "Swedish Krona"
 msgstr ""
 
-#: includes/misc-functions.php:339 tests/tests-misc.php:95
+#: includes/misc-functions.php:352 tests/tests-misc.php:95
 msgid "Swiss Franc"
 msgstr ""
 
-#: includes/misc-functions.php:340 tests/tests-misc.php:96
+#: includes/misc-functions.php:353 tests/tests-misc.php:96
 msgid "Taiwan New Dollars"
 msgstr ""
 
-#: includes/misc-functions.php:341 tests/tests-misc.php:97
+#: includes/misc-functions.php:354 tests/tests-misc.php:97
 msgid "Thai Baht (&#3647;)"
 msgstr ""
 
-#: includes/misc-functions.php:342 tests/tests-misc.php:98
+#: includes/misc-functions.php:355 tests/tests-misc.php:98
 msgid "Indian Rupee (&#8377;)"
 msgstr ""
 
-#: includes/misc-functions.php:343 tests/tests-misc.php:99
+#: includes/misc-functions.php:356 tests/tests-misc.php:99
 msgid "Turkish Lira (&#8378;)"
 msgstr ""
 
-#: includes/misc-functions.php:344 tests/tests-misc.php:100
+#: includes/misc-functions.php:357 tests/tests-misc.php:100
 msgid "Iranian Rial (&#65020;)"
 msgstr ""
 
-#: includes/misc-functions.php:345 tests/tests-misc.php:101
+#: includes/misc-functions.php:358 tests/tests-misc.php:101
 msgid "Russian Rubles"
 msgstr ""
 
-#: includes/misc-functions.php:346 tests/tests-misc.php:102
+#: includes/misc-functions.php:359 tests/tests-misc.php:102
 msgid "Angolan Kwanza"
 msgstr ""
 
-#: includes/misc-functions.php:535
+#: includes/misc-functions.php:548
 msgid ""
 "%1$s is <strong>deprecated</strong> since Easy Digital Downloads version "
 "%2$s! Use %3$s instead."
 msgstr ""
 
-#: includes/misc-functions.php:539
+#: includes/misc-functions.php:552
 msgid ""
 "%1$s is <strong>deprecated</strong> since Easy Digital Downloads version "
 "%2$s with no alternative available."
 msgstr ""
 
-#: includes/misc-functions.php:576
+#: includes/misc-functions.php:589
 msgid ""
 "The %1$s argument of %2$s is <strong>deprecated</strong> since Easy Digital "
 "Downloads version %3$s! Please use %4$s instead."
 msgstr ""
 
-#: includes/misc-functions.php:580
+#: includes/misc-functions.php:593
 msgid ""
 "The %1$s argument of %2$s is <strong>deprecated</strong> since Easy Digital "
 "Downloads version %3$s with no alternative available."
