@@ -42,7 +42,6 @@ const EDD_Edit_Payment = {
 		this.variable_prices_check();
 		this.resend_receipt();
 		this.copy_download_link();
-		this.add_note();
 	},
 
 	edit_address: function() {
@@ -411,46 +410,6 @@ const EDD_Edit_Payment = {
 		} );
 	},
 
-	add_note : function() {
-
-		$('#edd-add-note').on('click', function (e) {
-			const note_field = $('#edd-note');
-
-			e.preventDefault();
-			var postData = {
-				action    : 'edd_insert_payment_note',
-				payment_id: $(this).data('object-id'),
-				note      : note_field.val(),
-				nonce     : $('#edd_note_nonce').val()
-			};
-
-			if (postData.note) {
-
-				$.ajax({
-					type   : 'POST',
-					data   : postData,
-					url    : ajaxurl,
-					success: function (response) {
-						$('#edd-notes').append(response);
-						$('.edd-no-notes').hide();
-						note_field.val('');
-					}
-				}).fail(function (data) {
-					if (window.console && window.console.log) {
-						console.log(data);
-					}
-				});
-
-			} else {
-				var border_color = note_field.css('border-color');
-				note_field.css('border-color', 'red');
-				setTimeout(function () {
-					$('#edd-note').css('border-color', border_color);
-				}, 500);
-			}
-
-		});
-	}
 };
 
 jQuery( document ).ready( function( $ ) {
