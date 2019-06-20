@@ -436,8 +436,8 @@ class Tests_Discounts extends EDD_UnitTestCase {
 			'amount'            => '1',
 			'code'              => 'EXCLUDES',
 			'product_condition' => 'all',
-			'start'             => date( 'm/d/Y H:i:s', time() ),
-			'expiration'        => date( 'm/d/Y H:i:s', time() + HOUR_IN_SECONDS ),
+			'start'             => date( 'm/d/Y H:i:s', time() - ( 2 * HOUR_IN_SECONDS ) ),
+			'expiration'        => date( 'm/d/Y H:i:s', time() + ( 2 * HOUR_IN_SECONDS ) ),
 			'min_price'         => 23,
 			'status'            => 'active',
 			'excluded-products' => array( $download_2->ID ),
@@ -452,9 +452,6 @@ class Tests_Discounts extends EDD_UnitTestCase {
 		$download_3 = EDD_Helper_Download::create_simple_download();
 		edd_add_to_cart( $download_3->ID );
 		$this->assertTrue( edd_discount_is_min_met( $discount ) );
-
-		$discount_obj = edd_get_discount( $discount );
-		$this->assertFalse( edd_is_discount_valid( $discount_obj->code ) );
 
 		EDD_Helper_Download::delete_download( $download_1->ID );
 		EDD_Helper_Download::delete_download( $download_2->ID );
