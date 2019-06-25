@@ -709,7 +709,7 @@ class Data_Migrator {
 					$refund_item_args['status']   = 'refunded';
 
 					// Negate the amounts
-					$refund_item_args['quantity'] = edd_negate_amount( $cart_item['quantity'] );
+					$refund_item_args['quantity'] = edd_negate_int( $cart_item['quantity'] );
 					$refund_item_args['amount']   = edd_negate_amount( (float) $cart_item['item_price'] );
 					$refund_item_args['subtotal'] = edd_negate_amount( $cart_item['subtotal'] );
 					$refund_item_args['discount'] = edd_negate_amount( $cart_item['discount'] );
@@ -838,7 +838,7 @@ class Data_Migrator {
 					$refund_item_args = $order_item_args;
 
 					$refund_item_args['order_id'] = $refund_id;
-					$refund_item_args['quantity'] = edd_negate_amount( 1 );
+					$refund_item_args['quantity'] = edd_negate_int( 1 );
 					$refund_item_args['amount']   = edd_negate_amount( (float) $payment_meta['amount'] );
 					$refund_item_args['subtotal'] = edd_negate_amount( (float) $payment_meta['amount'] );
 					$refund_item_args['total']    = edd_negate_amount( (float) $payment_meta['amount'] );
