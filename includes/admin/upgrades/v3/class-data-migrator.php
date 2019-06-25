@@ -636,6 +636,13 @@ class Data_Migrator {
 					? absint( $cart_item['item_number']['options']['price_id'] )
 					: 0;
 
+				if ( ! empty( $product_name ) ) {
+					$option_name = edd_get_price_option_name( $cart_item['id'], $price_id );
+					if ( ! empty( $option_name ) ) {
+						$product_name .= ' — ' . $option_name;
+					}
+				}
+
 				// Get item price.
 				$cart_item['item_price'] = isset( $cart_item['item_price'] )
 					? (float) $cart_item['item_price']
