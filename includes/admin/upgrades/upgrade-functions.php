@@ -1546,7 +1546,7 @@ function edd_upgrade_render_v30_migration() {
 
 							<span class="edd-migration unavailable" style="<?php echo $migration_complete ? '' : 'display: none'; ?>">
 								<input type="submit" disabled="disabled" id="migrate-customer-addresses-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
-								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
+								&mdash; <?php _e( 'Your customer addresses been upgraded.', 'easy-digital-downloads' ); ?>
 							</span>
 						<?php else: ?>
 							<input type="submit" disabled="disabled" id="migrate-customer-addresses-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
@@ -1586,7 +1586,7 @@ function edd_upgrade_render_v30_migration() {
 
 							<span class="edd-migration unavailable" style="<?php echo $migration_complete ? '' : 'display: none'; ?>">
 								<input type="submit" disabled="disabled" id="migrate-customer-email-addresses-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
-								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
+								&mdash; <?php _e( 'Your customer email addresses have been upgraded.', 'easy-digital-downloads' ); ?>
 							</span>
 						<?php else: ?>
 							<input type="submit" disabled="disabled" id="migrate-customer-email-addresses-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
@@ -1626,7 +1626,7 @@ function edd_upgrade_render_v30_migration() {
 
 							<span class="edd-migration unavailable" style="<?php echo $migration_complete ? '' : 'display: none'; ?>">
 								<input type="submit" disabled="disabled" id="migrate-logs-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
-								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
+								&mdash; <?php _e( 'Your logs database has been upgraded.', 'easy-digital-downloads' ); ?>
 							</span>
 						<?php else: ?>
 							<input type="submit" disabled="disabled" id="migrate-logs-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
@@ -1666,7 +1666,7 @@ function edd_upgrade_render_v30_migration() {
 
 							<span class="edd-migration unavailable" style="<?php echo $migration_complete ? '' : 'display: none'; ?>">
 								<input type="submit" disabled="disabled" id="migrate-tax-rates-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
-								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
+								&mdash; <?php _e( 'Your tax rates have been upgraded.', 'easy-digital-downloads' ); ?>
 							</span>
 						<?php else: ?>
 							<input type="submit" disabled="disabled" id="migrate-tax-rates-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
@@ -1706,7 +1706,7 @@ function edd_upgrade_render_v30_migration() {
 
 							<span class="edd-migration unavailable" style="<?php echo $migration_complete ? '' : 'display: none'; ?>">
 								<input type="submit" disabled="disabled" id="migrate-discounts-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
-								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
+								&mdash; <?php _e( 'Your discounts have been upgraded.', 'easy-digital-downloads' ); ?>
 							</span>
 						<?php else: ?>
 							<input type="submit" disabled="disabled" id="migrate-discounts-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
@@ -1746,7 +1746,7 @@ function edd_upgrade_render_v30_migration() {
 
 							<span class="edd-migration unavailable" style="<?php echo $migration_complete ? '' : 'display: none'; ?>">
 								<input type="submit" disabled="disabled" id="migrate-order-notes-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
-								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
+								&mdash; <?php _e( 'Your orders notes have been upgraded.', 'easy-digital-downloads' ); ?>
 							</span>
 						<?php else: ?>
 							<input type="submit" disabled="disabled" id="migrate-order-notes-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
@@ -1786,7 +1786,7 @@ function edd_upgrade_render_v30_migration() {
 
 							<span class="edd-migration unavailable" style="<?php echo $migration_complete ? '' : 'display: none'; ?>">
 								<input type="submit" disabled="disabled" id="migrate-customer-notes-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
-								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
+								&mdash; <?php _e( 'Your customer notes have been upgraded.', 'easy-digital-downloads' ); ?>
 							</span>
 						<?php else: ?>
 							<input type="submit" disabled="disabled" id="migrate-customer-notes-submit" value="<?php _e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
@@ -1829,7 +1829,7 @@ function edd_upgrade_render_v30_migration() {
 
 							<span class="edd-migration unavailable" style="<?php echo $migration_complete ? '' : 'display: none'; ?>">
 								<input type="submit" disabled="disabled" id="remove-legacy-data-submit" value="<?php _e( 'Remove Legacy Data', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
-								&mdash; <?php _e( 'Your orders database has been upgraded.', 'easy-digital-downloads' ); ?>
+								&mdash; <?php _e( 'Your legacy data has been removed.', 'easy-digital-downloads' ); ?>
 							</span>
 						<?php else: ?>
 							<input type="submit" disabled="disabled" id="remove-legacy-data-submit" value="<?php _e( 'Remove Legacy Data', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
