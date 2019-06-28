@@ -52,6 +52,17 @@ class Order_Addresses extends Schema {
 			'default'  => '0'
 		),
 
+		// type.
+		array(
+			'name'       => 'type',
+			'type'       => 'varchar',
+			'length'     => '20',
+			'default'    => 'billing',
+			'searchable' => false,
+			'sortable'   => true,
+			'transition' => true,
+		),
+
 		// first_name
 		array(
 			'name'       => 'first_name',
