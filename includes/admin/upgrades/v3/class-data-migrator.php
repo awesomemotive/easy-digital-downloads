@@ -55,6 +55,7 @@ class Data_Migrator {
 			edd_add_customer_address( array(
 				'customer_id' => $customer->id,
 				'type'        => 'primary',
+				'name'        => $customer->name,
 				'address'     => $address['line1'],
 				'address2'    => $address['line2'],
 				'city'        => $address['city'],
@@ -540,8 +541,7 @@ class Data_Migrator {
 
 		$order_address_data = array(
 			'order_id'    => $order_id,
-			'first_name'  => isset( $user_info['first_name'] )         ? $user_info['first_name']         : '',
-			'last_name'   => isset( $user_info['last_name'] )          ? $user_info['last_name']          : '',
+			'name'        => trim( $user_info['first_name'] . ' ' . $user_info['last_name'] ),
 			'address'     => isset( $user_info['address']['line1'] )   ? $user_info['address']['line1']   : '',
 			'address2'    => isset( $user_info['address']['line2'] )   ? $user_info['address']['line2']   : '',
 			'city'        => isset( $user_info['address']['city'] )    ? $user_info['address']['city']    : '',
