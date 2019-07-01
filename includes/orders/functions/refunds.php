@@ -205,7 +205,7 @@ function edd_refund_order( $order_id = 0, $status = 'complete' ) {
 			'cart_index'   => $item->cart_index,
 			'type'         => $item->type,
 			'status'       => 'refunded',
-			'quantity'     => edd_negate_amount( $item->quantity ),
+			'quantity'     => edd_negate_int( $item->quantity ),
 			'amount'       => edd_negate_amount( $item->amount ),
 			'subtotal'     => edd_negate_amount( $item->subtotal ),
 			'discount'     => edd_negate_amount( $item->discount ),

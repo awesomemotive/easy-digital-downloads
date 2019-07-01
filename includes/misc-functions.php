@@ -1483,11 +1483,23 @@ function edd_admin_filter_bar( $context = '', $item = null ) {
  *
  * @since 3.0
  *
- * @param int|float $value Amount to negate.
+ * @param float $value Amount to negate.
  * @return float Negated amount.
  */
-function edd_negate_amount( $value = 0 ) {
+function edd_negate_amount( $value = 0.00 ) {
 	return abs( floatval( $value ) ) * -1;
+}
+
+/**
+ * Negate an integer
+ *
+ * @since 3.0
+ *
+ * @param int $value
+ * @return int
+ */
+function edd_negate_int( $value = 0 ) {
+	return intval( $value ) * -1;
 }
 
 /**
