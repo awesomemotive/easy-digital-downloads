@@ -109,7 +109,7 @@ final class Order_Addresses extends Table {
 	}
 	/**
 	 * Upgrade to version 201906280001
-	 * - Add the `uuid` varchar column
+	 * - Add the `type` varchar column
 	 *
 	 * @since 3.0
 	 *
