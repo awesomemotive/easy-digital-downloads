@@ -157,7 +157,7 @@ function edd_refund_order( $order_id = 0, $status = 'complete' ) {
 
 			// First revision to order.
 			} else {
-				$number = $last_order->order_number . $refund_suffix . '1';
+				$number = $last_order->id . $refund_suffix . '1';
 			}
 
 		// Append to ID.
@@ -165,7 +165,7 @@ function edd_refund_order( $order_id = 0, $status = 'complete' ) {
 			$number = $last_order->id . $refund_suffix . '1';
 		}
 	} else {
-		$number = $order->get_number() . $refund_suffix . '1';
+		$number = $order->id . $refund_suffix . '1';
 	}
 
 	/** Insert order **********************************************************/
