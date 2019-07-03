@@ -260,6 +260,14 @@ class Order_Items_Table extends List_Table {
 				'post'  => $order_item->product_id,
 			), admin_url( 'post.php' )  ) . '">' . $order_item->get_order_item_name() . '</a>' . $state . '</strong>';
 
+		// See what the current name of the product is:
+		$current_product_name = edd_get_download_name( $order_item->product_id, $order_item->price_id );
+		if ( strtolower( htmlentities( $current_product_name ) ) !== strtolower( htmlentities( $order_item->get_order_item_name() ) ) ) {
+			$status_help = '<p>' . sprintf( __( 'This product has been renamed since this purchase. It is now %s.', 'easy-digital-downloads' ), $current_product_name );
+
+			$order_item_title .= ' <span alt="f223" class="edd-help-tip dashicons dashicons-backup" title="' . $status_help . '"></span>';
+		}
+
 		// Return order_item title & row actions
 		return apply_filters( 'edd_order_item_title_and_actions', $order_item_title . $this->row_actions( $row_actions ), $order_item );
 	}
