@@ -1,6 +1,6 @@
 <?php
 /**
- * Order Items Table Class.
+ * Refund Items Table Class.
  *
  * @package     EDD
  * @subpackage  Admin/Orders
@@ -16,11 +16,11 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Order_Items_Table Class.
  *
- * Renders the Order Items table on the Order Items page.
+ * Renders the Refund Items table on the Refund modal.
  *
  * @since 3.0
  */
-class Order_Items_Table extends List_Table {
+class Refund_Items_Table extends List_Table {
 
 	/**
 	 * Constructor.
@@ -29,13 +29,14 @@ class Order_Items_Table extends List_Table {
 	 * @see   WP_List_Table::__construct()
 	 */
 	public function __construct() {
+		global $hook_suffix;
+
 		parent::__construct( array(
-			'singular' => __( 'Order Item',  'easy-digital-downloads' ),
-			'plural'   => __( 'Order Items', 'easy-digital-downloads' ),
+			'singular' => __( 'Refund Item',  'easy-digital-downloads' ),
+			'plural'   => __( 'Refund Items', 'easy-digital-downloads' ),
 			'ajax'     => false,
 		) );
 
-		$this->process_bulk_action();
 		$this->get_counts();
 	}
 
@@ -46,22 +47,7 @@ class Order_Items_Table extends List_Table {
 	 *
 	 * @return string Base URL.
 	 */
-	public function get_base_url() {
-
-		// Remove some query arguments
-		$base = remove_query_arg( edd_admin_removable_query_args(), edd_get_admin_base_url() );
-
-		$id = isset( $_GET['id'] )
-			? absint( $_GET['id'] )
-			: 0;
-
-		// Add base query args
-		return add_query_arg( array(
-			'page' => 'edd-payment-history',
-			'view' => 'view-order-details',
-			'id'   => $id,
-		), $base );
-	}
+	public function get_base_url() {}
 
 	/**
 	 * Retrieve the view types.
@@ -127,19 +113,7 @@ class Order_Items_Table extends List_Table {
 	 *
 	 * @return array Array of all the sortable columns.
 	 */
-	public function get_sortable_columns() {
-		return edd_is_add_order_page()
-			? array()
-			: array(
-				'name'     => array( 'product_name', false ),
-				'status'   => array( 'status', false ),
-				'quantity' => array( 'quantity', false ),
-				'amount'   => array( 'amount', false ),
-				'discount' => array( 'discount', false ),
-				'tax'      => array( 'tax', false ),
-				'total'    => array( 'total', false ),
-			);
-	}
+	public function get_sortable_columns() { return array(); }
 
 	/**
 	 * Gets the name of the primary column.
@@ -196,7 +170,23 @@ class Order_Items_Table extends List_Table {
 			$symbol   = edd_currency_symbol( $currency );
 		}
 
-		return $symbol . edd_format_amount( $order_item->{$column_name} );
+		$currency_pos = edd_get_option( 'currency_position', 'before' );
+
+		$formatted_amount = '';
+
+		if ( 'before' === $currency_pos ) {
+			$formatted_amount .= $symbol;
+		}
+
+		$formatted_amount .= '<span data-' . $column_name . '="' . edd_sanitize_amount( $order_item->{$column_name} ) . '">' .
+		                     edd_format_amount( $order_item->{$column_name} ) .
+		                     '</span>';
+
+		if ( 'after' === $currency_pos ) {
+			$formatted_amount .= $symbol;
+		}
+
+		return $formatted_amount;
 	}
 
 	/**
@@ -209,55 +199,10 @@ class Order_Items_Table extends List_Table {
 	 * @return string Data shown in the Name column
 	 */
 	public function column_name( $order_item ) {
-		$base        = $this->get_base_url();
-		$status      = strtolower( $order_item->status );
-		$row_actions = array();
-
-		// No state
-		$state = '';
-
-		if ( empty( $status ) ) {
-			$row_actions['complete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-					'edd-action' => 'handle_order_item_change',
-					'status'     => 'inherit',
-					'order_item' => $order_item->id,
-				), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Complete', 'easy-digital-downloads' ) . '</a>';
-
-		} elseif ( in_array( $status, array( 'inherit', 'complete' ), true ) ) {
-
-			$files = edd_get_download_files( $order_item->product_id, $order_item->price_id );
-			if ( ! empty( $files ) ) {
-				$copy_text = _n( 'Copy Download Link', 'Copy Download Links', count( $files ), 'easy-digital-downloads' );
-				$row_actions['copy'] = '<span class="edd-copy-download-link-wrapper"><a href="" class="edd-copy-download-link" data-download-id="' . esc_attr( $order_item->product_id ) . '" data-price-id="' . esc_attr( $order_item->price_id ) . '">' . $copy_text . '</a>';
-			}
-
-			$row_actions['refund'] = '<a class="edd-refund-order" href="">' . __( 'Refund', 'easy-digital-downloads' ) . '</a>';
-
-		} elseif ( 'refunded' === $status ) {
-			$state                   = __( 'Refunded', 'easy-digital-downloads' );
-			$row_actions['activate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-					'edd-action' => 'handle_order_item_change',
-					'status'     => 'inherit',
-					'order_item' => $order_item->id,
-				), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Reverse', 'easy-digital-downloads' ) . '</a>';
-		}
-
-		// Filter all order_item row actions
-		$row_actions = apply_filters( 'edd_order_item_row_actions', $row_actions, $order_item );
-
-		// Format order item state
-		if ( ! empty( $state ) ) {
-			$state = ' &mdash; <span class="order-item-state">' . $state . '</span>';
-		}
-
 		// Wrap order_item title in strong anchor
-		$order_item_title = '<strong><a class="row-title" href="' . add_query_arg( array(
-				'action' => 'edit',
-				'post'  => $order_item->product_id,
-			), admin_url( 'post.php' )  ) . '">' . $order_item->get_order_item_name() . '</a>' . $state . '</strong>';
+		$order_item_title = '<strong>' . $order_item->get_order_item_name() . '</strong>';
 
-		// Return order_item title & row actions
-		return apply_filters( 'edd_order_item_title_and_actions', $order_item_title . $this->row_actions( $row_actions ), $order_item );
+		return $order_item_title;
 	}
 
 	/**
@@ -270,13 +215,15 @@ class Order_Items_Table extends List_Table {
 	 * @return string Displays a checkbox
 	 */
 	public function column_cb( $order_item ) {
-		return sprintf(
-			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
-			/*$1%s*/
-			'order_item',
-			/*$2%s*/
-			$order_item->id
-		);
+		if ( 'refunded' !== $order_item->status ) {
+			return sprintf(
+				'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+				/*$1%s*/
+				'order_item',
+				/*$2%s*/
+				$order_item->id
+			);
+		}
 	}
 
 	/**
@@ -300,9 +247,7 @@ class Order_Items_Table extends List_Table {
 	 * @since 3.0
 	 */
 	public function no_items() {
-		edd_is_add_order_page()
-			? esc_html_e( 'Add an order item.', 'easy-digital-downloads' )
-			: esc_html_e( 'No order items found.', 'easy-digital-downloads' );
+		esc_html_e( 'No order items found.', 'easy-digital-downloads' );
 	}
 
 	/**
@@ -311,52 +256,14 @@ class Order_Items_Table extends List_Table {
 	 * @since 3.0
 	 * @return array $actions Array of the bulk actions
 	 */
-	public function get_bulk_actions() {
-		return array(
-			'refund' => __( 'Refund', 'easy-digital-downloads' ),
-		);
-	}
+	public function get_bulk_actions() { return array(); }
 
 	/**
 	 * Process the bulk actions
 	 *
 	 * @since 3.0
 	 */
-	public function process_bulk_action() {
-		if ( empty( $_REQUEST['_wpnonce'] ) ) {
-			return;
-		}
-
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-order_items' ) ) {
-			return;
-		}
-
-		$ids = isset( $_GET['order_item'] )
-			? $_GET['order_item']
-			: false;
-
-		if ( ! is_array( $ids ) ) {
-			$ids = array( $ids );
-		}
-
-		foreach ( $ids as $id ) {
-			switch ( $this->current_action() ) {
-				case 'delete':
-					edd_delete_order_item( $id );
-					break;
-				case 'refund':
-					edd_update_order_item( $id, array(
-						'status' => 'refunded',
-					) );
-					break;
-				case 'complete':
-					edd_update_order_item( $id, array(
-						'status' => 'complete',
-					) );
-					break;
-			}
-		}
-	}
+	public function process_bulk_action() {}
 
 	/**
 	 * Retrieve the order_item code counts
@@ -388,25 +295,14 @@ class Order_Items_Table extends List_Table {
 	 */
 	public function get_data() {
 
-		// Return if we are adding a new order.
-		if ( edd_is_add_order_page() ) {
-			return array();
-		}
-
 		// Query args.
-		$status = $this->get_status();
-		$search = isset( $_GET['s']  ) ? sanitize_text_field( $_GET['s'] ) : null;
-		$id     = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
-
-		// Set args.
-		$this->args = $this->parse_pagination_args( array(
-			'order_id' => $id,
-			'status'   => $status,
-			'search'   => $search,
-		) );
+		$id = isset( $_POST['order_id'] ) ? absint( $_POST['order_id'] ) : 0;
 
 		// Get order items.
-		return edd_get_order_items( $this->args );
+		return edd_get_order_items( array(
+			'order_id' => $id,
+			'number'   => 999,
+		) );
 	}
 
 	/**
@@ -422,17 +318,6 @@ class Order_Items_Table extends List_Table {
 		);
 
 		$this->items = $this->get_data();
-
-		$status = $this->get_status( 'total' );
-
-		// Maybe setup pagination.
-		if ( ! edd_is_add_order_page() ) {
-			$this->set_pagination_args( array(
-				'total_pages' => ceil( $this->counts[ $status ] / $this->per_page ),
-				'total_items' => $this->counts[ $status ],
-				'per_page'    => $this->per_page,
-			) );
-		}
 	}
 
 	/**
@@ -454,10 +339,133 @@ class Order_Items_Table extends List_Table {
 		$class = implode( ' ', $classes );
 		?>
 
-		<tr id="order-item-<?php echo esc_attr( $item->id ); ?>" class="<?php echo esc_html( $class ); ?>">
+		<tr id="order-item-<?php echo esc_attr( $item->id ); ?>" data-order-item="<?php echo esc_attr( $item->id ); ?>" class="<?php echo esc_html( $class ); ?>">
 			<?php $this->single_row_columns( $item ); ?>
 		</tr>
 
+		<?php
+	}
+
+	public function display() {
+		$singular = $this->_args['singular'];
+
+		$this->display_tablenav( 'top' );
+
+		$this->screen->render_screen_reader_content( 'heading_list' );
+		?>
+		<table class="wp-list-table <?php echo implode( ' ', $this->get_table_classes() ); ?>">
+			<thead>
+			<tr>
+				<?php $this->print_column_headers(); ?>
+			</tr>
+			</thead>
+
+			<tbody id="the-list"<?php
+			if ( $singular ) {
+				echo " data-wp-lists='list:$singular'";
+			} ?>>
+			<?php $this->display_rows_or_placeholder(); ?>
+			</tbody>
+
+		</table>
+		<?php
+		$this->display_tablenav( 'bottom' );
+	}
+
+	public function display_rows() {
+		static $currency_symbol = null;
+
+		foreach ( $this->items as $item ) {
+
+			if ( is_null( $currency_symbol ) ) {
+				$currency = edd_get_order( $item->order_id )->currency;
+				$currency_symbol   = edd_currency_symbol( $currency );
+				$currency_position = edd_get_option( 'currency_position', 'before' );
+			}
+
+			$this->single_row( $item );
+		}
+
+		// Now we need to add the columns for the totals.
+		?>
+		<tr id="edd-refund-submit-subtotal" class="edd-refund-submit-line-total">
+			<td colspan="<?php echo $this->get_column_count() - 1; ?>">
+				<?php _e( 'Refund Subtotal', 'easy-digital-downloads' ); ?>
+			</td>
+
+			<td>
+				<?php
+				if ( 'before' === $currency_position ) {
+					?><span><?php echo $currency_symbol; ?></span><?php
+				}
+
+				$subtotal = edd_format_amount( 0.00 );
+				?><span id="edd-refund-submit-subtotal-amount" data-refund-subtotal="<?php echo $subtotal; ?>">
+					<?php echo $subtotal; ?>
+				</span><?php
+
+				if ( 'after' === $currency_position ) {
+					?><span><?php echo $currency_symbol; ?></span><?php
+				}
+				?>
+			</td>
+		</tr>
+
+		<?php if ( edd_use_taxes() ) : ?>
+		<tr id="edd-refund-submit-tax" class="edd-refund-submit-line-total">
+			<td colspan="<?php echo $this->get_column_count() - 1; ?>">
+				<?php _e( 'Refund Tax Total', 'easy-digital-downloads' ); ?>
+			</td>
+
+			<td>
+				<?php
+				if ( 'before' === $currency_position ) {
+					?><span><?php echo $currency_symbol; ?></span><?php
+				}
+
+				$tax = edd_format_amount( 0.00 );
+				?><span id="edd-refund-submit-tax-amount" data-refund-tax="<?php echo $tax; ?>">
+					<?php echo $tax; ?>
+				</span><?php
+
+				if ( 'after' === $currency_position ) {
+					?><span><?php echo $currency_symbol; ?></span><?php
+				}
+				?>
+			</td>
+		</tr>
+		<?php endif; ?>
+
+		<tr id="edd-refund-submit-total" class="edd-refund-submit-line-total">
+			<td colspan="<?php echo $this->get_column_count() - 1; ?>">
+				<?php _e( 'Refund Total', 'easy-digital-downloads' ); ?>
+			</td>
+
+			<td>
+				<?php
+				if ( 'before' === $currency_position ) {
+					?><span><?php echo $currency_symbol; ?></span><?php
+				}
+
+				$total = edd_format_amount( 0.00 );
+				?><span id="edd-refund-submit-total-amount" data-refund-total="<?php echo $total; ?>">
+					<?php echo $total; ?>
+				</span><?php
+
+				if ( 'after' === $currency_position ) {
+					?><span><?php echo $currency_symbol; ?></span><?php
+				}
+				?>
+			</td>
+		</tr>
+		<tr id="edd-refund-submit-total" class="edd-refund-submit-line-total">
+			<td colspan="<?php echo $this->get_column_count() - 1; ?>"></td>
+
+			<td id="edd-refund-submit-button-wrapper">
+				<a id="edd-submit-refund-submit" class="disabled button-primary"><?php _e( 'Submit Refund', 'easy-digital-downloads' ); ?></a>
+				<span class="spinner"></span>
+			</td>
+		</tr>
 		<?php
 	}
 }
