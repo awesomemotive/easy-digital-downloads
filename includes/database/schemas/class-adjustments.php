@@ -165,14 +165,6 @@ final class Adjustments extends Schema {
 			'validate'   => 'edd_sanitize_amount'
 		),
 
-		// product_condition
-		array(
-			'name'       => 'product_condition',
-			'type'       => 'varchar',
-			'length'     => '20',
-			'default'    => '',
-		),
-
 		// start_date
 		array(
 			'name'       => 'start_date',

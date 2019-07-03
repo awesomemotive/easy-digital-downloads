@@ -87,7 +87,7 @@ $minutes      = edd_get_minute_values();
 					</th>
 					<td>
 						<?php echo EDD()->html->product_dropdown( array(
-							'name'        => 'products[]',
+							'name'        => 'product_reqs[]',
 							'id'          => 'products',
 							'selected'    => array(),
 							'multiple'    => true,
