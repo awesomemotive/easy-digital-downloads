@@ -537,11 +537,26 @@ class EDD_Payment_History_Table extends List_Table {
 		);
 
 		// Keep Delete at the end
-		$delete_url = wp_nonce_url( add_query_arg( array(
-			'edd-action'  => 'delete_payment',
-			'purchase_id' => $order->id,
-		), $this->base_url ), 'edd_payment_nonce' );
-		$row_actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete', 'easy-digital-downloads' ) . '</a>';
+		if ( edd_is_order_trashable( $order->id ) ) {
+			$trash_url = wp_nonce_url( add_query_arg( array(
+				'edd-action'  => 'trash_order',
+				'purchase_id' => $order->id,
+			), $this->base_url ), 'edd_payment_nonce' );
+			$row_actions['trash'] = '<a href="' . esc_url( $trash_url ) . '">' . esc_html__( 'Trash', 'easy-digital-downloads' ) . '</a>';
+		} elseif ( edd_is_order_restorable( $order->id ) ) {
+			$restore_url = wp_nonce_url( add_query_arg( array(
+				'edd-action'  => 'restore_order',
+				'purchase_id' => $order->id,
+			), $this->base_url ), 'edd_payment_nonce' );
+			$row_actions['restore'] = '<a href="' . esc_url( $restore_url ) . '">' . esc_html__( 'Restore', 'easy-digital-downloads' ) . '</a>';
+
+			$delete_url = wp_nonce_url( add_query_arg( array(
+				'edd-action'  => 'delete_order',
+				'purchase_id' => $order->id,
+			), $this->base_url ), 'edd_payment_nonce' );
+			$row_actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete', 'easy-digital-downloads' ) . '</a>';
+		}
+
 
 		// Row actions
 		$actions = $this->row_actions( $row_actions );
@@ -598,7 +613,7 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @return array $actions Bulk actions.
 	 */
 	public function get_bulk_actions() {
-		return apply_filters( 'edd_payments_table_bulk_actions', array(
+		$action = array(
 			'set-status-complete'     => __( 'Mark Completed',   'easy-digital-downloads' ),
 			'set-status-pending'     => __( 'Mark Pending',     'easy-digital-downloads' ),
 			'set-status-processing'  => __( 'Mark Processing',  'easy-digital-downloads' ),
@@ -608,9 +623,16 @@ class EDD_Payment_History_Table extends List_Table {
 			'set-status-abandoned'   => __( 'Mark Abandoned',   'easy-digital-downloads' ),
 			'set-status-preapproval' => __( 'Mark Preapproved', 'easy-digital-downloads' ),
 			'set-status-cancelled'   => __( 'Mark Cancelled',   'easy-digital-downloads' ),
-			'resend-receipt'         => __( 'Resend  Receipts', 'easy-digital-downloads' ),
-			'delete'                 => __( 'Delete',           'easy-digital-downloads' )
-		) );
+			'resend-receipt'         => __( 'Resend Receipts', 'easy-digital-downloads' ),
+		);
+
+		if ( 'trash' === $this->get_status() ) {
+			$action['restore'] = __( 'Restore', 'easy-digital-downloads' );
+		} else {
+			$action['trash'] = __( 'Trash', 'easy-digital-downloads' );
+		}
+
+		return apply_filters( 'edd_payments_table_bulk_actions', $action );
 	}
 
 	/**
@@ -634,6 +656,8 @@ class EDD_Payment_History_Table extends List_Table {
 
 		// Get the args (without pagination)
 		$args = $this->parse_args( false );
+
+		unset( $args['status'], $args['status__not_in'], $args['status__in'] );
 
 		// Get order counts by type
 		$this->counts = edd_get_order_counts( $args );
@@ -667,6 +691,10 @@ class EDD_Payment_History_Table extends List_Table {
 
 		// Force EDD\Orders\Order objects to be returned
 		$this->args['output'] = 'orders';
+
+		if ( empty( $this->args['status'] ) ) {
+			$this->args['status__not_in'] = array( 'trash' );
+		}
 
 		// Get data
 		$items = edd_get_orders( $this->args );

@@ -178,7 +178,7 @@ class Refund_Items_Table extends List_Table {
 			$formatted_amount .= $symbol;
 		}
 
-		$formatted_amount .= '<span data-' . $column_name . '="' . edd_format_amount( $order_item->{$column_name} ) . '">' .
+		$formatted_amount .= '<span data-' . $column_name . '="' . edd_sanitize_amount( $order_item->{$column_name} ) . '">' .
 		                     edd_format_amount( $order_item->{$column_name} ) .
 		                     '</span>';
 
