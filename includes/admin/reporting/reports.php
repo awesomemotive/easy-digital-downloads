@@ -1988,7 +1988,7 @@ function edd_register_file_downloads_report( $reports ) {
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
 						$stats = new EDD\Stats();
-						$d = $stats->get_most_downloaded_products();
+						$d = $stats->get_most_downloaded_products( array( 'range' => $filter['range'] ) );
 						if ( $d ) {
 							return apply_filters( 'edd_reports_file_downloads_most_downloaded_product', esc_html( $d[0]->object->post_title ) );
 						}
