@@ -38,7 +38,7 @@ final class Order_Addresses extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201906280001;
+	protected $version = 201906250001;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -49,7 +49,7 @@ final class Order_Addresses extends Table {
 	 */
 	protected $upgrades = array(
 		'201807270003' => 201807270003,
-		'201906280001' => 201906280001,
+		'201906250001' => 201906250001,
 	);
 
 	/**
@@ -63,9 +63,7 @@ final class Order_Addresses extends Table {
 		$max_index_length = 191;
 		$this->schema     = "id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 			order_id bigint(20) unsigned NOT NULL default '0',
-			type varchar(20) NOT NULL default 'billing',
-			first_name mediumtext NOT NULL,
-			last_name mediumtext NOT NULL,
+			name mediumtext NOT NULL,
 			address mediumtext NOT NULL,
 			address2 mediumtext NOT NULL,
 			city mediumtext NOT NULL,
@@ -107,27 +105,45 @@ final class Order_Addresses extends Table {
 		// Return success/fail
 		return $this->is_success( $result );
 	}
+
 	/**
-	 * Upgrade to version 201906280001
-	 * - Add the `type` varchar column
+	 * Upgrade to version 201906250001
+	 * - Adds the 'name' column
+	 * - Combines the `first_name` and `last_name` columns to the `name` column.
+	 * - Removes the `first_name` and `last_name` columns.
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201906280001() {
+	protected function __201906250001() {
 
-		// Look for column.
-		$result = $this->column_exists( 'type' );
+		$success = true;
 
-		// Maybe add column.
-		if ( false === $result ) {
-			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `type` varchar(20) default 'billing' AFTER `order_id`;
+		$column_exists = $this->column_exists( 'name' );
+
+		// Don't take any action if the column already exists.
+		if ( false === $column_exists ) {
+			$column_exists = $this->get_db()->query( "
+				ALTER TABLE {$this->table_name} ADD COLUMN `name` mediumtext NOT NULL AFTER `last_name`;
 			" );
+
 		}
 
-		// Return success/fail.
-		return $this->is_success( $result );
+		$deprecated_columns_exist = ( $this->column_exists( 'first_name' ) && $this->column_exists( 'last_name' ) );
+		if ( $column_exists && $deprecated_columns_exist ) {
+			$data_merged = $this->get_db()->query( "
+					UPDATE {$this->table_name} SET name = CONCAT(first_name, ' ', last_name);
+				" );
+
+			if ( $data_merged ) {
+				$success = $this->get_db()->query( "
+					ALTER TABLE {$this->table_name} DROP first_name, DROP last_name;
+				" );
+				}
+		}
+
+		return $this->is_success( $success );
 	}
+
 }
