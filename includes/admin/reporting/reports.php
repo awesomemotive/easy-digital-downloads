@@ -1075,7 +1075,7 @@ function edd_register_refunds_report( $reports ) {
 						$stats  = new EDD\Stats();
 						$number = $stats->get_order_refund_count( array(
 							'range'  => $filter['range'],
-							'status' => array( 'refunded' ),
+							'status' => array( 'complete' ),
 						) );
 						return apply_filters( 'edd_reports_refunds_fully_refunded_order_count', esc_html( $number ) );
 					},
@@ -1219,10 +1219,10 @@ function edd_register_refunds_report( $reports ) {
 						$results = $wpdb->get_results( $wpdb->prepare(
 							"SELECT COUNT(total) AS number, SUM(total) AS amount, {$sql_clauses['select']}
 							 FROM {$wpdb->edd_orders} o
-							 WHERE status IN (%s, %s) AND date_created >= %s AND date_created <= %s
+							 WHERE status IN (%s, %s) AND date_created >= %s AND date_created <= %s AND type = 'refund'
 							 GROUP BY {$sql_clauses['groupby']}
 							 ORDER BY {$sql_clauses['orderby']} ASC",
-							esc_sql( 'refunded' ), esc_sql( 'partially_refunded' ), $dates['start']->copy()->format( 'mysql' ), $dates['end']->copy()->format( 'mysql' ) ) );
+							esc_sql( 'complete' ), esc_sql( 'partially_refunded' ), $dates['start']->copy()->format( 'mysql' ), $dates['end']->copy()->format( 'mysql' ) ) );
 
 						$number = array();
 						$amount = array();
@@ -1988,7 +1988,7 @@ function edd_register_file_downloads_report( $reports ) {
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
 						$stats = new EDD\Stats();
-						$d = $stats->get_most_downloaded_products();
+						$d = $stats->get_most_downloaded_products( array( 'range' => $filter['range'] ) );
 						if ( $d ) {
 							return apply_filters( 'edd_reports_file_downloads_most_downloaded_product', esc_html( $d[0]->object->post_title ) );
 						}
