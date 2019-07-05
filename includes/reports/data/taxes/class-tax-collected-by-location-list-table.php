@@ -32,7 +32,7 @@ class Tax_Collected_By_Location extends List_Table {
 	public function __construct() {
 		parent::__construct( array(
 			'singular' => 'report-tax-collected-by-location',
-			'plural'   => 'report-tax-collected-by-locationss',
+			'plural'   => 'report-tax-collected-by-locations',
 			'ajax'     => false,
 		) );
 	}

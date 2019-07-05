@@ -756,8 +756,7 @@ function edd_build_order( $order_data = array() ) {
 
 	$order_address_data = array(
 		'order_id'    => $order_id,
-		'first_name'  => $order_data['user_info']['first_name'],
-		'last_name'   => $order_data['user_info']['last_name'],
+		'name'        => $order_data['user_info']['first_name'] . ' ' . $order_data['user_info']['last_name'],
 		'address'     => $order_data['user_info']['address']['line1'],
 		'address2'    => $order_data['user_info']['address']['line2'],
 		'city'        => $order_data['user_info']['address']['city'],
