@@ -63,17 +63,9 @@ class Order_Addresses extends Schema {
 			'transition' => true,
 		),
 
-		// first_name
+		// name
 		array(
-			'name'       => 'first_name',
-			'type'       => 'mediumtext',
-			'searchable' => true,
-			'sortable'   => true
-		),
-
-		// last_name
-		array(
-			'name'       => 'last_name',
+			'name'       => 'name',
 			'type'       => 'mediumtext',
 			'searchable' => true,
 			'sortable'   => true
