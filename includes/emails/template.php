@@ -182,6 +182,7 @@ function edd_get_email_body_content( $payment_id = 0, $payment_data = array() ) 
  */
 function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data = array() ) {
 	$payment = edd_get_payment( $payment_id );
+	$order   = edd_get_order( $payment_id );
 
 	if( $payment->user_id > 0 ) {
 		$user_data = get_userdata( $payment->user_id );
@@ -194,16 +195,9 @@ function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data 
 
 	$download_list = '';
 
-	if( is_array( $payment->downloads ) ) {
-		foreach( $payment->downloads as $item ) {
-			$download = new EDD_Download( $item['id'] );
-			$title    = $download->get_name();
-			if( isset( $item['options'] ) ) {
-				if( isset( $item['options']['price_id'] ) ) {
-					$title .= ' - ' . edd_get_price_option_name( $item['id'], $item['options']['price_id'], $payment_id );
-				}
-			}
-			$download_list .= html_entity_decode( $title, ENT_COMPAT, 'UTF-8' ) . "\n";
+	if( ! empty( $order->get_items() ) ) {
+		foreach( $order->get_items() as $item ) {
+			$download_list .= html_entity_decode( $item->product_name, ENT_COMPAT, 'UTF-8' ) . "\n";
 		}
 	}
 
