@@ -38,7 +38,7 @@ final class Order_Addresses extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201906250001;
+	protected $version = 201906280001;
 
 	/**
 	 * Array of upgrade versions and methods
