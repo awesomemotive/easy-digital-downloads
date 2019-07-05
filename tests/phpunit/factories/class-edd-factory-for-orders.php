@@ -51,6 +51,7 @@ class Order extends \WP_UnitTest_Factory_For_Thing {
 			'discount'     => 5,
 			'tax'          => 25,
 			'total'        => 120,
+			'quantity'     => 1,
 		) );
 
 		edd_add_order_adjustment( array(

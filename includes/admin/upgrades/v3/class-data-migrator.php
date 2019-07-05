@@ -55,6 +55,7 @@ class Data_Migrator {
 			edd_add_customer_address( array(
 				'customer_id' => $customer->id,
 				'type'        => 'primary',
+				'name'        => $customer->name,
 				'address'     => $address['line1'],
 				'address2'    => $address['line2'],
 				'city'        => $address['city'],
@@ -540,8 +541,7 @@ class Data_Migrator {
 
 		$order_address_data = array(
 			'order_id'    => $order_id,
-			'first_name'  => isset( $user_info['first_name'] )         ? $user_info['first_name']         : '',
-			'last_name'   => isset( $user_info['last_name'] )          ? $user_info['last_name']          : '',
+			'name'        => trim( $user_info['first_name'] . ' ' . $user_info['last_name'] ),
 			'address'     => isset( $user_info['address']['line1'] )   ? $user_info['address']['line1']   : '',
 			'address2'    => isset( $user_info['address']['line2'] )   ? $user_info['address']['line2']   : '',
 			'city'        => isset( $user_info['address']['city'] )    ? $user_info['address']['city']    : '',
@@ -709,7 +709,7 @@ class Data_Migrator {
 					$refund_item_args['status']   = 'refunded';
 
 					// Negate the amounts
-					$refund_item_args['quantity'] = edd_negate_amount( $cart_item['quantity'] );
+					$refund_item_args['quantity'] = edd_negate_int( $cart_item['quantity'] );
 					$refund_item_args['amount']   = edd_negate_amount( (float) $cart_item['item_price'] );
 					$refund_item_args['subtotal'] = edd_negate_amount( $cart_item['subtotal'] );
 					$refund_item_args['discount'] = edd_negate_amount( $cart_item['discount'] );
@@ -838,7 +838,7 @@ class Data_Migrator {
 					$refund_item_args = $order_item_args;
 
 					$refund_item_args['order_id'] = $refund_id;
-					$refund_item_args['quantity'] = edd_negate_amount( 1 );
+					$refund_item_args['quantity'] = edd_negate_int( 1 );
 					$refund_item_args['amount']   = edd_negate_amount( (float) $payment_meta['amount'] );
 					$refund_item_args['subtotal'] = edd_negate_amount( (float) $payment_meta['amount'] );
 					$refund_item_args['total']    = edd_negate_amount( (float) $payment_meta['amount'] );

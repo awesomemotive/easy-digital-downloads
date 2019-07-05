@@ -38,7 +38,7 @@ final class Customer_Addresses extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201807270003;
+	protected $version = 201906250001;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -49,6 +49,7 @@ final class Customer_Addresses extends Table {
 	 */
 	protected $upgrades = array(
 		'201807270003' => 201807270003,
+		'201906250001' => 201906250001,
 	);
 
 	/**
@@ -63,6 +64,7 @@ final class Customer_Addresses extends Table {
 			customer_id bigint(20) unsigned NOT NULL default '0',
 			type varchar(20) NOT NULL default 'billing',
 			status varchar(20) NOT NULL default 'active',
+			name mediumtext NOT NULL,
 			address mediumtext NOT NULL,
 			address2 mediumtext NOT NULL,
 			city mediumtext NOT NULL,
@@ -100,6 +102,27 @@ final class Customer_Addresses extends Table {
 		}
 
 		// Return success/fail
+		return $this->is_success( $result );
+	}
+
+	/**
+	 * Upgrade to version 201906250001
+	 * - Add the `name` mediumtext column
+	 *
+	 * @since 3.0
+	 *
+	 * @return boolean
+	 */
+	protected function __201906250001() {
+
+		$result = $this->column_exists( 'name' );
+
+		if ( false === $result ) {
+			$result = $this->get_db()->query( "
+				ALTER TABLE {$this->table_name} ADD COLUMN `name` mediumtext AFTER `status`;
+			" );
+		}
+
 		return $this->is_success( $result );
 	}
 }

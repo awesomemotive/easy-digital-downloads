@@ -533,6 +533,168 @@ function edd_ajax_generate_file_download_link() {
 add_action( 'wp_ajax_edd_get_file_download_link', 'edd_ajax_generate_file_download_link' );
 
 /**
+ * Renders the refund form that is used to process a refund.
+ *
+ * @since 3.0
+ *
+ * @return void
+ */
+function edd_ajax_generate_refund_form() {
+
+	// Verify we have a logged user.
+	if ( ! is_user_logged_in() ) {
+		$return = array(
+			'success' => false,
+			'message' => __( 'You must be logged in to perform this action.', 'easy-digital-downloads' ),
+		);
+
+		wp_send_json( $return, 401 );
+	}
+
+	// Verify the logged in user has permission to edit shop payments.
+	if ( ! current_user_can( 'edit_shop_payments' ) ) {
+		$return = array(
+			'success' => false,
+			'message' => __( 'Your account does not have permission to perform this action.', 'easy-digital-downloads' ),
+		);
+
+		wp_send_json( $return, 401 );
+	}
+
+	$order_id = isset( $_POST['order_id'] ) && is_numeric( $_POST['order_id'] ) ? absint( $_POST['order_id'] ) : false;
+
+	if ( empty( $order_id ) ) {
+		$return = array(
+			'success' => false,
+			'message' => __( 'Invalid order ID', 'easy-digital-downloads' ),
+		);
+
+		wp_send_json( $return, 400 );
+	}
+
+	$order = edd_get_order( $order_id );
+	if ( empty( $order ) ) {
+		$return = array(
+			'success' => false,
+			'message' => __( 'Invalid order', 'easy-digital-downloads' ),
+		);
+
+		wp_send_json( $return, 404 );
+	}
+
+	if ( 'refunded' === $order->status ) {
+		$return = array(
+			'success' => false,
+			'message' => __( 'Order is already refunded', 'easy-digital-downloads' ),
+		);
+
+		wp_send_json( $return, 404 );
+	}
+
+	if ( 'refund' === $order->type ) {
+		$return = array(
+			'success' => false,
+			'message' => __( 'Cannot refund an order that is already refunded.', 'easy-digital-downloads' ),
+		);
+
+		wp_send_json( $return, 404 );
+	}
+
+	// Output buffer the form before we include it in the JSON response.
+	ob_start();
+	?>
+	<div id="edd-submit-refund-status" style="display: none;">
+		<span class="edd-submit-refund-message"></span>
+		<a class="edd-submit-refund-url" href=""><?php _e( 'View Refund', 'easy-digital-downloads' ); ?></a>
+	</div>
+	<table id="edd-process-refund-form">
+	<?php
+	// Load list table if not already loaded
+	if ( ! class_exists( '\\EDD\\Admin\\Refund_Items_Table' ) ) {
+		require_once 'class-refund-items-table.php';
+	}
+
+	$refund_items = new EDD\Admin\Refund_Items_Table();
+	$refund_items->prepare_items();
+	$refund_items->display();
+	?>
+	</table>
+	<?php
+	$html = trim( ob_get_clean() );
+
+	$return = array(
+		'success' => true,
+		'html'    => $html,
+	);
+
+	wp_send_json( $return, 200 );
+
+}
+add_action( 'wp_ajax_edd_generate_refund_form', 'edd_ajax_generate_refund_form' );
+
+/**
+ * Processes the results from the Submit Refund form
+ *
+ * @since 3.0
+ * @return void
+ */
+function edd_ajax_process_refund_form() {
+
+	// Verify we have a logged user.
+	if ( ! is_user_logged_in() ) {
+		$return = array(
+			'success' => false,
+			'message' => __( 'You must be logged in to perform this action.', 'easy-digital-downloads' ),
+		);
+
+		wp_send_json( $return, 401 );
+	}
+
+	// Verify the logged in user has permission to edit shop payments.
+	if ( ! current_user_can( 'edit_shop_payments' ) ) {
+		$return = array(
+			'success' => false,
+			'message' => __( 'Your account does not have permission to perform this action', 'easy-digital-downloads' ),
+		);
+
+		wp_send_json( $return, 401 );
+	}
+
+	// Verify the nonce.
+	$nonce = ! empty( $_POST['nonce'] ) ? sanitize_text_field( $_POST['nonce'] ) : false;
+	if ( empty( $nonce) || ! wp_verify_nonce( $nonce, 'bulk-refunditems' ) ) {
+		$return = array(
+			'success'    => false,
+			'message'    => sprintf( __( 'Nonce validation failed when submitting refund.', 'easy-digital-downloads' ) ),
+		);
+
+		wp_send_json( $return, 401 );
+	}
+
+	$order_id = absint( $_POST['order_id'] );
+	$item_ids = array_map( 'absint', $_POST['item_ids'] );
+	$refund_id = edd_refund_order( $order_id, 'complete', $item_ids );
+
+	if ( ! empty( $refund_id ) ) {
+		$return = array(
+			'success'    => true,
+			'refund_id'  => $refund_id,
+			'message'    => sprintf( __( 'Refund successfully processed.', 'easy-digital-downloads' ) ),
+			'refund_url' => admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $refund_id ),
+		);
+		wp_send_json( $return, 200 );
+	} else {
+		$return = array(
+			'success'    => false,
+			'message'    => sprintf( __( 'Unable to process refund.', 'easy-digital-downloads' ) ),
+		);
+
+		wp_send_json( $return, 200 );
+	}
+}
+add_action( 'wp_ajax_edd_process_refund_form', 'edd_ajax_process_refund_form' );
+
+/**
  * Process Orders list table bulk actions. This is necessary because we need to
  * redirect to ensure filters do not get applied when bulk actions are being
  * processed. This processing cannot happen within the `EDD_Payment_History_Table`

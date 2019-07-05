@@ -698,7 +698,14 @@ textarea[name="edd-note"] {
 .wp-list-table.orderitems .column-discount,
 .wp-list-table.orderitems .column-tax,
 .wp-list-table.orderitems .column-total,
-.wp-list-table.orderitems .column-subtotal {
+.wp-list-table.orderitems .column-subtotal,
+.wp-list-table.refunditems .column-status,
+.wp-list-table.refunditems .column-quantity,
+.wp-list-table.refunditems .column-amount,
+.wp-list-table.refunditems .column-discount,
+.wp-list-table.refunditems .column-tax,
+.wp-list-table.refunditems .column-total,
+.wp-list-table.refunditems .column-subtotal {
 	width: 17%;
 }
 
@@ -729,6 +736,7 @@ textarea[name="edd-note"] {
 .wp-list-table.discounts .column-primary strong,
 .wp-list-table.orders .column-primary strong,
 .wp-list-table.orderitems .column-primary strong,
+.wp-list-table.refunditems .column-primary strong,
 .wp-list-table.orderadjustments .column-primary strong {
 	font-size: 14px;
 }
@@ -736,7 +744,9 @@ textarea[name="edd-note"] {
 .wp-list-table.orders tr.refunded td,
 .wp-list-table.orders tr.refunded th,
 .wp-list-table.orderitems tr.refunded td,
-.wp-list-table.orderitems tr.refunded th {
+.wp-list-table.orderitems tr.refunded th,
+.wp-list-table.refunditems tr.refunded td,
+.wp-list-table.refunditems tr.refunded th{
 	background: #ffddee;
 }
 
@@ -1419,6 +1429,35 @@ input[class*="edd-price-field"] {
 .edd-admin-box .right {
 	float: right;
 }
+#edd-order-refunds-list {
+	padding-left: 25px;
+}
+#edd-refund-submit-button-wrapper .spinner {
+	float: none;
+	vertical-align: top;
+}
+#edd-submit-refund-status {
+	text-align: center;
+	font-size: 1.2em;
+	vertical-align: middle;
+}
+#edd-submit-refund-status .edd-submit-refund-message::before{
+	font-family: dashicons;
+	font-size: 1.5em;
+	vertical-align: middle;
+	color: #fff;
+	border-radius: 16px;
+	margin: 5px;
+}
+#edd-submit-refund-status .edd-submit-refund-message.success::before{
+	content: "\f147";
+	background-color: #339933;
+	padding-right: 1px;
+}
+#edd-submit-refund-status .edd-submit-refund-message.fail::before{
+	content: "\f335";
+	background-color: #993333;
+}
 #poststuff .edd-order-data .inside {
 	margin: 0;
 	padding: 0;
@@ -1437,6 +1476,12 @@ input[class*="edd-price-field"] {
 	color: #9c9c9c;
 	font-style: italic;
 	padding: 5px;
+}
+#edd-refund-order-dialog #edd-refund-submit-subtotal td {
+	border-top: 2px solid #9c9c9c;
+}
+#edd-refund-order-dialog .edd-refund-submit-line-total td:first-child {
+	text-align: right;
 }
 #edd-order-logs ul {
 	margin: 0;
