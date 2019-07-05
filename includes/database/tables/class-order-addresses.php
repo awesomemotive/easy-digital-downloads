@@ -50,6 +50,7 @@ final class Order_Addresses extends Table {
 	protected $upgrades = array(
 		'201807270003' => 201807270003,
 		'201906250001' => 201906250001,
+		'201906280001' => 201906280001,
 	);
 
 	/**
@@ -63,6 +64,7 @@ final class Order_Addresses extends Table {
 		$max_index_length = 191;
 		$this->schema     = "id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 			order_id bigint(20) unsigned NOT NULL default '0',
+			type varchar(20) NOT NULL default 'billing',
 			name mediumtext NOT NULL,
 			address mediumtext NOT NULL,
 			address2 mediumtext NOT NULL,
@@ -144,6 +146,30 @@ final class Order_Addresses extends Table {
 		}
 
 		return $this->is_success( $success );
+	}
+
+	/**
+	 * Upgrade to version 201906280001
+	 * - Add the `type` varchar column
+	 *
+	 * @since 3.0
+	 *
+	 * @return boolean
+	 */
+	protected function __201906280001() {
+
+		// Look for column.
+		$result = $this->column_exists( 'type' );
+
+		// Maybe add column.
+		if ( false === $result ) {
+			$result = $this->get_db()->query( "
+				ALTER TABLE {$this->table_name} ADD COLUMN `type` varchar(20) default 'billing' AFTER `order_id`;
+			" );
+		}
+
+		// Return success/fail.
+		return $this->is_success( $result );
 	}
 
 }
