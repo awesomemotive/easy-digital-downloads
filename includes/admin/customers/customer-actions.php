@@ -164,12 +164,12 @@ function edd_edit_customer( $args = array() ) {
 			edd_add_customer_address( $address );
 		}
 
-		// Update some payment meta if we need to
-		$payments_array = explode( ',', $customer->payment_ids );
-
 		if ( (int) $customer->user_id !== (int) $previous_user_id ) {
-			foreach ( $payments_array as $payment_id ) {
-				edd_update_payment_meta( $payment_id, '_edd_payment_user_id', $customer->user_id );
+			// Update some payment meta if we need to
+			$order_ids = edd_get_orders( array( 'customer_id' => $customer->id, 'number' => 9999 ) );
+
+			foreach ( $order_ids as $order_id ) {
+				edd_update_order( $order_id, array( 'user_id' => $customer->user_id ) );
 			}
 		}
 
@@ -477,10 +477,10 @@ function edd_disconnect_customer_user_id( $args = array() ) {
 	$customer_args = array( 'user_id' => 0 );
 
 	if ( $customer->update( $customer_args ) ) {
-		global $wpdb;
 
-		if ( ! empty( $customer->payment_ids ) ) {
-			$wpdb->query( "UPDATE $wpdb->postmeta SET meta_value = 0 WHERE meta_key = '_edd_payment_user_id' AND post_id IN ( $customer->payment_ids )" );
+		$order_ids = edd_get_orders( array( 'customer_id' => $customer->id, 'number' => 9999 ) );
+		foreach ( $order_ids as $order_id ) {
+			edd_update_order( $order_id, array( 'user_id' => 0 ) );
 		}
 
 		$output['success'] = true;
