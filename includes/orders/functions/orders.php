@@ -1000,11 +1000,6 @@ function edd_build_order( $order_data = array() ) {
 	if ( ! empty( $fees ) ) {
 		foreach ( $fees as $key => $fee ) {
 
-			// Skip adding fee if it was specific to a download in the cart.
-			if ( isset( $fee['download_id'] ) && ! empty( $fee['download_id'] ) ) {
-				continue;
-			}
-
 			add_filter( 'edd_prices_include_tax', '__return_false' );
 
 			$tax = ( isset( $fee['no_tax'] ) && false === $fee['no_tax'] ) || $fee['amount'] < 0
