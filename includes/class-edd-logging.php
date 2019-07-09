@@ -159,7 +159,7 @@ class EDD_Logging {
 				: 0,
 			'object_type' => isset( $args['log_type'] )
 				? $args['log_type']
-				: 'unknown',
+				: null,
 		);
 
 		$type = $args['log_type'];

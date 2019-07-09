@@ -47,8 +47,8 @@ defined( 'ABSPATH' ) || exit;
 function edd_add_log( $data = array() ) {
 
 	// An object type must be supplied for every log that is
-	// inserted into the database.
-	if ( empty( $data['object_type'] ) ) {
+	// inserted into the database. However, null is allowed.
+	if ( empty( $data['object_type'] ) && ! is_null() ) {
 		return false;
 	}
 
