@@ -49,9 +49,9 @@ function edd_add_log( $data = array() ) {
 	// An object type must be supplied for every log that is
 	// inserted into the database.
 	if ( empty( $data['object_type'] ) ) {
-		// The object_type is set to null, which is allowed, but only if the object_id is also empty.
+		// If the object_type is set to null, check the value of the object_id.
 		if ( is_null( $data['object_type'] ) ) {
-			// The object_id is not empty but the object_type is, so fail this log attempt.
+			// If the object_id is not empty but the object_type is, fail this log attempt.
 			if ( ! empty( $data['object_id'] ) ) {
 				return false;
 			}
