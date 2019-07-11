@@ -164,15 +164,6 @@ function edd_edit_customer( $args = array() ) {
 			edd_add_customer_address( $address );
 		}
 
-		if ( (int) $customer->user_id !== (int) $previous_user_id ) {
-			// Update some payment meta if we need to
-			$order_ids = edd_get_orders( array( 'customer_id' => $customer->id, 'number' => 9999 ) );
-
-			foreach ( $order_ids as $order_id ) {
-				edd_update_order( $order_id, array( 'user_id' => $customer->user_id ) );
-			}
-		}
-
 		$output['success']       = true;
 		$customer_data           = array_merge( $customer_data, $address );
 		$output['customer_info'] = $customer_data;
@@ -477,11 +468,6 @@ function edd_disconnect_customer_user_id( $args = array() ) {
 	$customer_args = array( 'user_id' => 0 );
 
 	if ( $customer->update( $customer_args ) ) {
-
-		$order_ids = edd_get_orders( array( 'customer_id' => $customer->id, 'number' => 9999 ) );
-		foreach ( $order_ids as $order_id ) {
-			edd_update_order( $order_id, array( 'user_id' => 0 ) );
-		}
 
 		$output['success'] = true;
 
