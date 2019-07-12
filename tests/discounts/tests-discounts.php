@@ -79,10 +79,6 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 		parent::tearDown();
 	}
 
-	public static function tearDownAfterClass() {
-		parent::tearDownAfterClass();
-	}
-
 	/**
 	 * @covers ::setup_discount()
 	 */
