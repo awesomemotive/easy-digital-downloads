@@ -79,6 +79,10 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 		parent::tearDown();
 	}
 
+	public static function tearDownAfterClass() {
+		parent::tearDownAfterClass();
+	}
+
 	/**
 	 * @covers ::setup_discount()
 	 */
@@ -589,13 +593,6 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 */
 	public function test_discount_type() {
 		$this->assertSame( 'percent', edd_get_discount_type( self::$discount_id ) );
-	}
-
-	/**
-	 * @covers \edd_get_discount_product_condition()
-	 */
-	public function test_discount_product_condition() {
-		$this->assertSame( 'all', edd_get_discount_product_condition( self::$discount_id ) );
 	}
 
 	/**
