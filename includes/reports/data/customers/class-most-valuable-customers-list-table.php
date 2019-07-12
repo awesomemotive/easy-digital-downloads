@@ -34,7 +34,7 @@ class Most_Valuable_Customers_List_Table extends \EDD_Customer_Reports_Table {
 	 *
 	 * @return array $data Customers.
 	 */
-	public function reports_data() {
+	public function get_data() {
 		global $wpdb;
 
 		$data = array();
@@ -46,8 +46,9 @@ class Most_Valuable_Customers_List_Table extends \EDD_Customer_Reports_Table {
 
 		$sql = "SELECT customer_id, COUNT(id) AS order_count, SUM(total) AS total_spent
 				FROM {$wpdb->edd_orders}
-				WHERE status IN (%s, %s) AND date_created >= %s AND date_created <= %s
+				WHERE status IN (%s, %s) AND date_created >= %s AND date_created <= %s AND type = 'sale'
 				GROUP BY customer_id
+				ORDER BY total_spent DESC
 				LIMIT 5";
 
 		$results = $wpdb->get_results( $wpdb->prepare( $sql, sanitize_text_field( 'complete' ), sanitize_text_field( 'revoked' ), $start_date, $end_date ) );

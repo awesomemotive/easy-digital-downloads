@@ -61,6 +61,154 @@ function edd_add_order( $data = array() ) {
 }
 
 /**
+ * Move an order to the trashed status
+ *
+ * @since 3.0
+ *
+ * @param $order_id
+ *
+ * @return bool      true if the order was trashed successfully, false if not
+ */
+function edd_trash_order( $order_id ) {
+
+	if ( false === edd_is_order_trashable( $order_id ) ) {
+		return false;
+	}
+
+	$order = edd_get_order( $order_id );
+
+	$orders         = new EDD\Database\Queries\Order();
+	$current_status = $order->status;
+
+	$trashed = $orders->update_item( $order_id, array(
+		'status' => 'trash',
+	) ); new EDD\Database\Queries\Order();
+
+	if ( ! empty( $trashed ) ) {
+
+		// If successfully trashed, store the pre-trashed status in meta, so we can possibly restore it.
+		edd_add_order_meta( $order_id, '_pre_trash_status', $current_status );
+
+		// Update the status of any order to 'trashed'.
+		$order_items = edd_get_order_items( array(
+			'order_id'      => $order_id,
+			'no_found_rows' => true,
+		) );
+
+		$items = new EDD\Database\Queries\Order_Item();
+		foreach ( $order_items as $item ) {
+			$current_item_status = $item->status;
+
+			$item_trashed = $items->update_item( $item->id, array(
+				'status' => 'trash',
+			) );
+
+			if ( ! empty( $item_trashed ) ) {
+				edd_add_order_item_meta( $item->id, '_pre_trash_status', $current_item_status );
+			}
+		}
+
+		// Now look for any orders with the refund type.
+		$refund_orders = edd_get_orders( array(
+			'type'   => 'refund',
+			'parent' => $order_id,
+		) );
+
+		if ( ! empty( $refund_orders ) ) {
+			foreach( $refund_orders as $refund ) {
+
+				$current_refund_status = $refund->status;
+				$refund_trashed = edd_trash_order( $refund->id );
+
+				if ( ! empty( $refund_trashed ) ) {
+					edd_add_order_meta( $refund->id, '_pre_trash_status', $current_refund_status );
+				}
+
+			}
+		}
+
+	}
+
+	return filter_var( $trashed, FILTER_VALIDATE_BOOLEAN );
+}
+
+/**
+ * Restore an order from the trashed status to it's previous status.
+ *
+ * @since 3.0
+ *
+ * @param $order_id
+ *
+ * @return bool      true if the order was trashed successfully, false if not
+ */
+function edd_restore_order( $order_id ) {
+
+	if ( false === edd_is_order_restorable( $order_id ) ) {
+		return false;
+	}
+
+	$order = edd_get_order( $order_id );
+
+	if ( 'trash' !== $order->status ) {
+		return false;
+	}
+
+	$orders = new EDD\Database\Queries\Order();
+
+	$pre_trash_status = edd_get_order_meta( $order_id, '_pre_trash_status', true );
+	if ( empty( $pre_trash_status ) ) {
+		return false;
+	}
+
+	$restored = $orders->update_item( $order_id, array(
+		'status' => $pre_trash_status,
+	) );
+
+	if ( ! empty( $restored ) ) {
+
+		// If successfully trashed, store the pre-trashed status in meta, so we can possibly restore it.
+		edd_delete_order_meta( $order_id, '_pre_trash_status' );
+
+		// Update the status of any order to 'trashed'.
+		$order_items = edd_get_order_items( array(
+			'order_id'      => $order_id,
+			'no_found_rows' => true,
+		) );
+
+		$items = new EDD\Database\Queries\Order_Item();
+		foreach ( $order_items as $item ) {
+			$pre_trash_status = edd_get_order_item_meta( $item->id, '_pre_trash_status', true );
+
+			if ( ! empty( $pre_trash_status ) ) {
+				$restored_item = $items->update_item( $item->id, array(
+					'status' => $pre_trash_status,
+				) );
+
+				if ( ! empty( $restored_item ) ) {
+					edd_delete_order_item_meta( $item->id, '_pre_trash_status' );
+				}
+			}
+
+		}
+
+		// Now look for any orders with the refund type.
+		$refund_orders = edd_get_orders( array(
+			'type'   => 'refund',
+			'parent' => $order_id,
+		) );
+
+		if ( ! empty( $refund_orders ) ) {
+			foreach( $refund_orders as $refund ) {
+				edd_restore_order( $refund->id );
+			}
+		}
+
+	}
+
+	return filter_var( $restored, FILTER_VALIDATE_BOOLEAN );
+}
+
+/**
  * Delete an order.
  *
  * @since 3.0
@@ -88,43 +236,61 @@ function edd_delete_order( $order_id = 0 ) {
  */
 function edd_destroy_order( $order_id = 0 ) {
 
-	// Get items.
-	$items = edd_get_order_items( array(
-		'order_id'      => $order_id,
-		'no_found_rows' => true,
-	) );
-
-	// Destroy items (and their adjustments).
-	if ( ! empty( $items ) ) {
-		foreach ( $items as $item ) {
-			edd_delete_order_item( $item->id );
-		}
-	}
-
-	// Get adjustments.
-	$adjustments = edd_get_order_adjustments( array(
-		'object_id'     => $order_id,
-		'object_type'   => 'order',
-		'no_found_rows' => true,
-	) );
-
-	// Destroy adjustments.
-	if ( ! empty( $adjustments ) ) {
-		foreach ( $adjustments as $adjustment ) {
-			edd_delete_order_adjustment( $adjustment->id );
-		}
-	}
-
-	// Get address.
-	$address = edd_get_order_address_by( 'order_id', $order_id );
-
-	// Destroy address.
-	if ( $address ) {
-		edd_delete_order_address( $address->id );
-	}
-
 	// Delete the order
-	return edd_delete_order( $order_id );
+	$destroyed = edd_delete_order( $order_id );
+
+	if ( $destroyed ) {
+		// Get items.
+		$items = edd_get_order_items( array(
+			'order_id'      => $order_id,
+			'no_found_rows' => true,
+		) );
+
+		// Destroy items (and their adjustments).
+		if ( ! empty( $items ) ) {
+			foreach ( $items as $item ) {
+				edd_delete_order_item( $item->id );
+			}
+		}
+
+		// Get adjustments.
+		$adjustments = edd_get_order_adjustments( array(
+			'object_id'     => $order_id,
+			'object_type'   => 'order',
+			'no_found_rows' => true,
+		) );
+
+		// Destroy adjustments.
+		if ( ! empty( $adjustments ) ) {
+			foreach ( $adjustments as $adjustment ) {
+				edd_delete_order_adjustment( $adjustment->id );
+			}
+		}
+
+		// Get address.
+		$address = edd_get_order_address_by( 'order_id', $order_id );
+
+		// Destroy address.
+		if ( $address ) {
+			edd_delete_order_address( $address->id );
+		}
+
+		// Now look for any orders with the refund type.
+		$refund_orders = edd_get_orders( array(
+			'type'   => 'refund',
+			'parent' => $order_id,
+		) );
+
+		if ( ! empty( $refund_orders ) ) {
+			foreach( $refund_orders as $refund ) {
+				edd_destroy_order( $refund->id );
+			}
+		}
+	}
+
+
+
+	return $destroyed;
 }
 
 /**
@@ -281,6 +447,51 @@ function edd_get_order_counts( $args = array() ) {
 }
 
 /** Helpers *******************************************************************/
+
+/**
+ * Determine if an order ID is able to be trashed.
+ *
+ * @param $order_id
+ *
+ * @return bool
+ */
+function edd_is_order_trashable( $order_id ) {
+	$order        = edd_get_order( $order_id );
+	$is_trashable = false;
+
+	if ( empty( $order ) ) {
+		return $is_trashable;
+	}
+
+	$non_trashable_statuses = apply_filters( 'edd_non_trashable_statuses', array( 'trash' ) );
+	if ( ! in_array( $order->status, $non_trashable_statuses ) ) {
+		$is_trashable = true;
+	}
+
+	return (bool) apply_filters( 'edd_is_order_trashable', $is_trashable, $order );
+}
+
+/**
+ * Determine if an order ID is able to be restored from the trash.
+ *
+ * @param $order_id
+ *
+ * @return bool
+ */
+function edd_is_order_restorable( $order_id ) {
+	$order         = edd_get_order( $order_id );
+	$is_restorable = false;
+
+	if ( empty( $order ) ) {
+		return $is_restorable;
+	}
+
+	if ( 'trash' === $order->status ) {
+		$is_restorable = true;
+	}
+
+	return (bool) apply_filters( 'edd_is_order_restorable', $is_restorable, $order );
+}
 
 /**
  * Check if an order can be recovered.
@@ -545,8 +756,7 @@ function edd_build_order( $order_data = array() ) {
 
 	$order_address_data = array(
 		'order_id'    => $order_id,
-		'first_name'  => $order_data['user_info']['first_name'],
-		'last_name'   => $order_data['user_info']['last_name'],
+		'name'        => $order_data['user_info']['first_name'] . ' ' . $order_data['user_info']['last_name'],
 		'address'     => $order_data['user_info']['address']['line1'],
 		'address2'    => $order_data['user_info']['address']['line2'],
 		'city'        => $order_data['user_info']['address']['city'],
@@ -600,10 +810,16 @@ function edd_build_order( $order_data = array() ) {
 				? $item['subtotal']
 				: (float) $item['quantity'] * $item['item_price'];
 
+			$item_name   = $item['name'];
+			$option_name = edd_get_price_option_name( $item['id'], $price_id );
+			if ( ! empty( $option_name ) ) {
+				$item_name .= ' — ' . $option_name;
+			}
+
 			$order_item_args = array(
 				'order_id'     => $order_id,
 				'product_id'   => $item['id'],
-				'product_name' => $item['name'],
+				'product_name' => $item_name,
 				'price_id'     => $price_id,
 				'cart_index'   => $key,
 				'type'         => 'download',
@@ -615,6 +831,7 @@ function edd_build_order( $order_data = array() ) {
 				'tax'          => $item['tax'],
 				'total'        => $item['price'],
 				'item_price'   => $item['item_price'], // Added for backwards compatibility
+				'date_created' => ! empty( $order_data['date_created'] ) ? $order_data['date_created'] : '',
 			);
 
 			/**
@@ -690,6 +907,24 @@ function edd_build_order( $order_data = array() ) {
 			$order_item_args['total']    = round( $total,                       $decimal_filter );
 
 			$order_item_id = edd_add_order_item( $order_item_args );
+
+			if ( ! empty( $item['item_number']['options'] ) ) {
+				// Collect any item_number options and store them.
+
+				// Remove our price_id and quantity, as they are columns on the order item now.
+				unset( $item['item_number']['options']['price_id'] );
+				unset( $item['item_number']['options']['quantity'] );
+
+				foreach ( $item['item_number']['options'] as $option_key => $value ) {
+					if ( is_array( $value ) ) {
+						$value = maybe_serialize( $value );
+					}
+
+					$option_key = '_option_' . sanitize_key( $option_key );
+
+					edd_add_order_item_meta( $order_item_id, $option_key, $value );
+				}
+			}
 
 			// Store order item fees as adjustments.
 			if ( isset( $item['fees'] ) && ! empty( $item['fees'] ) ) {

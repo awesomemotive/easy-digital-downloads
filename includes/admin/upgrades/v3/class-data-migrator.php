@@ -55,6 +55,7 @@ class Data_Migrator {
 			edd_add_customer_address( array(
 				'customer_id' => $customer->id,
 				'type'        => 'primary',
+				'name'        => $customer->name,
 				'address'     => $address['line1'],
 				'address2'    => $address['line2'],
 				'city'        => $address['city'],
@@ -540,8 +541,7 @@ class Data_Migrator {
 
 		$order_address_data = array(
 			'order_id'    => $order_id,
-			'first_name'  => isset( $user_info['first_name'] )         ? $user_info['first_name']         : '',
-			'last_name'   => isset( $user_info['last_name'] )          ? $user_info['last_name']          : '',
+			'name'        => trim( $user_info['first_name'] . ' ' . $user_info['last_name'] ),
 			'address'     => isset( $user_info['address']['line1'] )   ? $user_info['address']['line1']   : '',
 			'address2'    => isset( $user_info['address']['line2'] )   ? $user_info['address']['line2']   : '',
 			'city'        => isset( $user_info['address']['city'] )    ? $user_info['address']['city']    : '',
@@ -636,6 +636,13 @@ class Data_Migrator {
 					? absint( $cart_item['item_number']['options']['price_id'] )
 					: 0;
 
+				if ( ! empty( $product_name ) ) {
+					$option_name = edd_get_price_option_name( $cart_item['id'], $price_id );
+					if ( ! empty( $option_name ) ) {
+						$product_name .= ' — ' . $option_name;
+					}
+				}
+
 				// Get item price.
 				$cart_item['item_price'] = isset( $cart_item['item_price'] )
 					? (float) $cart_item['item_price']
@@ -681,6 +688,24 @@ class Data_Migrator {
 
 				$order_item_id = edd_add_order_item( $order_item_args );
 
+				if ( ! empty( $cart_item['item_number']['options'] ) ) {
+					// Collect any item_number options and store them.
+
+					// Remove our price_id and quantity, as they are columns on the order item now.
+					unset( $cart_item['item_number']['options']['price_id'] );
+					unset( $cart_item['item_number']['options']['quantity'] );
+
+					foreach ( $cart_item['item_number']['options'] as $option_key => $value ) {
+						if ( is_array( $value ) ) {
+							$value = maybe_serialize( $value );
+						}
+
+						$option_key = '_option_' . sanitize_key( $option_key );
+
+						edd_add_order_item_meta( $order_item_id, $option_key, $value );
+					}
+				}
+
 				// If the order status is refunded, we also need to add all the refunded order items on the refund order as well.
 				if ( ! empty( $refund_id ) ) {
 
@@ -691,7 +716,7 @@ class Data_Migrator {
 					$refund_item_args['status']   = 'refunded';
 
 					// Negate the amounts
-					$refund_item_args['quantity'] = edd_negate_amount( $cart_item['quantity'] );
+					$refund_item_args['quantity'] = edd_negate_int( $cart_item['quantity'] );
 					$refund_item_args['amount']   = edd_negate_amount( (float) $cart_item['item_price'] );
 					$refund_item_args['subtotal'] = edd_negate_amount( $cart_item['subtotal'] );
 					$refund_item_args['discount'] = edd_negate_amount( $cart_item['discount'] );
@@ -703,6 +728,24 @@ class Data_Migrator {
 					$refund_item_args['date_modified'] = $data->post_modified_gmt;
 
 					$refund_order_item_id = edd_add_order_item( $refund_item_args );
+
+					if ( ! empty( $cart_item['item_number']['options'] ) ) {
+						// Collect any item_number options and store them.
+
+						// Remove our price_id and quantity, as they are columns on the order item now.
+						unset( $cart_item['item_number']['options']['price_id'] );
+						unset( $cart_item['item_number']['options']['quantity'] );
+
+						foreach ( $cart_item['item_number']['options'] as $option_key => $value ) {
+							if ( is_array( $value ) ) {
+								$value = maybe_serialize( $value );
+							}
+
+							$option_key = '_option_' . sanitize_key( $option_key );
+
+							edd_add_order_item_meta( $refund_order_item_id, $option_key, $value );
+						}
+					}
 
 				}
 
@@ -802,7 +845,7 @@ class Data_Migrator {
 					$refund_item_args = $order_item_args;
 
 					$refund_item_args['order_id'] = $refund_id;
-					$refund_item_args['quantity'] = edd_negate_amount( 1 );
+					$refund_item_args['quantity'] = edd_negate_int( 1 );
 					$refund_item_args['amount']   = edd_negate_amount( (float) $payment_meta['amount'] );
 					$refund_item_args['subtotal'] = edd_negate_amount( (float) $payment_meta['amount'] );
 					$refund_item_args['total']    = edd_negate_amount( (float) $payment_meta['amount'] );

@@ -171,7 +171,7 @@ function edd_get_download_name( $download_id = 0, $price_id = 0 ) {
 
 		// Product has prices
 		if ( ! empty( $price_name ) ) {
-			$retval .= ' &mdash; ' . $price_name;
+			$retval .= ' — ' . $price_name;
 		}
 	}
 
