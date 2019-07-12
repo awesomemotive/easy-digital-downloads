@@ -56,7 +56,7 @@ var EDD_Customer = {
 						wrapper.before( '<div class="notice-container"><div class="notice notice-error inline"><p>' + response.message + '</p></div></div>' );
 						wrapper.find( '.spinner' ).css( 'visibility', 'hidden' );
 					}
-				}, userInteractionInterval );
+				}, 342 );
 			}, 'json' );
 		} );
 	},

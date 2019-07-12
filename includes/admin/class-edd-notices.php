@@ -475,6 +475,18 @@ class EDD_Notices {
 		// Shop reports errors
 		if ( current_user_can( 'view_shop_reports' ) ) {
 			switch( $notice ) {
+				case 'order_trashed' :
+					$this->add_notice( array(
+						'id'      => 'edd-order-trashed',
+						'message' => __( 'The order has been moved to the trash.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'order_restored' :
+					$this->add_notice( array(
+						'id'      => 'edd-order-restored',
+						'message' => __( 'The order has been restored.', 'easy-digital-downloads' )
+					) );
+					break;
 				case 'payment_deleted' :
 					$this->add_notice( array(
 						'id'      => 'edd-payment-deleted',
