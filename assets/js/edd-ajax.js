@@ -29,8 +29,12 @@ eddDocIsReady( function() {
 	var $ = $ || jQuery;
 
 	// Hide unneeded elements. These are things that are required in case JS breaks or isn't present
-	$('.edd-no-js').hide();
-	$('a.edd-add-to-cart').addClass('edd-has-js');
+	document.querySelectorAll( '.edd-no-js' ).forEach( function( el ) {
+		el.style.display = 'none';
+	});
+	document.querySelectorAll( 'a.edd-add-to-cart' ).forEach( function( el ) {
+		el.classList.add( 'edd-has-js' );
+	});
 
 	// Send Remove from Cart requests
 	$(document.body).on('click.eddRemoveFromCart', '.edd-remove-from-cart', function (event) {
@@ -61,49 +65,61 @@ eddDocIsReady( function() {
 						return false;
 					}
 
-					// Remove the selected cart item
-					$('.edd-cart').each( function() {
-						$(this).find("[data-cart-item='" + item + "']").parent().remove();
+					// Remove the selected cart item.
+					document.querySelectorAll( '.edd-cart' ).forEach( function( el ) {
+						var parentEl = el.querySelectorAll( "[data-cart-item='" + item + "']" ).parentNode;
+						parentEl.parentNode.removeChild( parentEl );
 					});
 
 					//Reset the data-cart-item attributes to match their new values in the EDD session cart array
-					$('.edd-cart').each( function() {
+					document.querySelectorAll( '.edd-cart' ).forEach( function( el ) {
 						var cart_item_counter = 0;
-						$(this).find("[data-cart-item]").each( function() {
-							$(this).attr('data-cart-item', cart_item_counter);
+						el.querySelectorAll( '[data-cart-item]' ).forEach( function( childEl ) {
+							childEl.setAttribute( 'data-cart-item', cart_item_counter );
 							cart_item_counter = cart_item_counter + 1;
 						});
 					});
 
 					// Check to see if the purchase form(s) for this download is present on this page
-					if( $( '[id^=edd_purchase_' + id + ']' ).length ) {
-						$( '[id^=edd_purchase_' + id + '] .edd_go_to_checkout' ).hide();
-						$( '[id^=edd_purchase_' + id + '] a.edd-add-to-cart' ).show().removeAttr('data-edd-loading');
+					if ( document.querySelectorAll( '[id^=edd_purchase_' + id + ']' ).length ) {
+						document.querySelectorAll( '[id^=edd_purchase_' + id + '] .edd_go_to_checkout' ).forEach( function( el ) {
+							el.style.display = 'none';
+						});
+						document.querySelectorAll( '[id^=edd_purchase_' + id + '] a.edd-add-to-cart' ).forEach( function( el ) {
+							el.style.display = 'block';
+							el.removeAttribute( 'data-edd-loading' );
+						});
 						if ( edd_scripts.quantities_enabled == '1' ) {
-							$( '[id^=edd_purchase_' + id + '] .edd_download_quantity_wrapper' ).show();
+							document.querySelectorAll( '[id^=edd_purchase_' + id + '] .edd_download_quantity_wrapper' ).forEach( function( el ) {
+								el.style.display = 'block';
+							});
 						}
 					}
 
-					$('span.edd-cart-quantity').text( response.cart_quantity );
+					document.querySelectorAll( 'span.edd-cart-quantity' ).textContent( response.cart_quantity );
 					$(document.body).trigger('edd_quantity_updated', [ response.cart_quantity ]);
 					if ( edd_scripts.taxes_enabled ) {
-						$('.cart_item.edd_subtotal span').html( response.subtotal );
-						$('.cart_item.edd_cart_tax span').html( response.tax );
+						document.querySelectorAll( '.cart_item.edd_subtotal span' ).innerHTML( response.subtotal );
+						document.querySelectorAll( '.cart_item.edd_cart_tax span' ).innerHTML( response.tax );
 					}
 
-					$('.cart_item.edd_total span').html( response.total );
+					document.querySelectorAll( '.cart_item.edd_total span' ).innerHTML( response.total );
 
 					if( response.cart_quantity == 0 ) {
-						$('.cart_item.edd_subtotal,.edd-cart-number-of-items,.cart_item.edd_checkout,.cart_item.edd_cart_tax,.cart_item.edd_total').hide();
-						$('.edd-cart').each( function() {
-
-							var cart_wrapper = $(this).parent();
-							if ( cart_wrapper ) {
-								cart_wrapper.addClass('cart-empty')
-								cart_wrapper.removeClass('cart-not-empty');
+						document.querySelectorAll('.cart_item.edd_subtotal,.edd-cart-number-of-items,.cart_item.edd_checkout,.cart_item.edd_cart_tax,.cart_item.edd_total').forEach( function( el ) {
+							el.style.display = 'none';
+						});
+						document.querySelectorAll( '.edd-cart' ).forEach( function( el ) {
+							var newLi = document.createElement( 'li' );
+							if ( el.parentNode ) {
+								el.parentNode.classList.add('cart-empty')
+								el.parentNode.classList.remove( 'cart-not-empty' );
 							}
 
-							$(this).append('<li class="cart_item empty">' + edd_scripts.empty_cart_message + '</li>');
+							newLi.classList.add( 'cart_item' );
+							newLi.classList.add( 'empty' );
+							newLi.innerHTML = edd_scripts.empty_cart_message;
+							el.appendChild( newLi );
 						});
 					}
 
