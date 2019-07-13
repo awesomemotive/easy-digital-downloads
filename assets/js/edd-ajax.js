@@ -315,7 +315,9 @@ eddDocIsReady( function() {
 
 					// Show the "number of items in cart" message
 					if ( $('.edd-cart-number-of-items').css('display') == 'none') {
-						$('.edd-cart-number-of-items').show('slow');
+						document.querySelectorAll( '.edd-cart-number-of-items' ).forEach( function( el ) {
+							el.style.display = 'block';
+						});
 					}
 
 					if( variable_price == 'no' || price_mode != 'multi' ) {
@@ -381,7 +383,9 @@ eddDocIsReady( function() {
 			};
 
 		// Show the ajax loader
-		$('.edd-cart-ajax').show();
+		document.querySelectorAll( '.edd-cart-ajax' ).forEach( function( el ) {
+			el.style.display = 'block';
+		});
 
 		$.post(edd_scripts.ajaxurl, data, function (checkout_response) {
 			document.querySelectorAll( '#edd_checkout_login_register' ).forEach( function( el ) {
@@ -604,7 +608,9 @@ eddDocIsReady( function() {
 function edd_load_gateway( payment_mode ) {
 
 	// Show the ajax loader
-	jQuery('.edd-cart-ajax').show();
+	document.querySelectorAll( '.edd-cart-ajax' ).forEach( function( el ) {
+		el.style.display = 'block';
+	});
 	document.querySelectorAll( '#edd_purchase_form_wrap' ).forEach( function( el ) {
 		var loadingSpan = document.createElement( 'span' );
 		loadingSpan.classList.add( 'edd-loading-ajax' );
