@@ -93,8 +93,9 @@ eddDocIsReady( function() {
 
 					// Remove the selected cart item.
 					document.querySelectorAll( '.edd-cart' ).forEach( function( el ) {
-						var parentEl = el.querySelectorAll( "[data-cart-item='" + item + "']" ).parentNode;
-						parentEl.parentNode.removeChild( parentEl );
+						el.querySelectorAll( "[data-cart-item='" + item + "']" ).forEach( function( cartItem ) {
+							cartItem.parentNode.parentNode.removeChild( cartItem.parentNode );
+						});
 					});
 
 					//Reset the data-cart-item attributes to match their new values in the EDD session cart array
@@ -122,14 +123,21 @@ eddDocIsReady( function() {
 						}
 					}
 
-					document.querySelectorAll( 'span.edd-cart-quantity' ).textContent( response.cart_quantity );
+					document.querySelectorAll( 'span.edd-cart-quantity' ).textContent = response.cart_quantity;
 					$(document.body).trigger('edd_quantity_updated', [ response.cart_quantity ]);
 					if ( edd_scripts.taxes_enabled ) {
-						document.querySelectorAll( '.cart_item.edd_subtotal span' ).innerHTML( response.subtotal );
-						document.querySelectorAll( '.cart_item.edd_cart_tax span' ).innerHTML( response.tax );
+						document.querySelectorAll( '.cart_item.edd_subtotal span' ).forEach( function( el ) {
+							el.innerHTML = response.subtotal;
+						});
+						document.querySelectorAll( '.cart_item.edd_cart_tax span' ).forEach( function( el ) {
+							el.innerHTML = response.tax;
+						});
 					}
 
-					document.querySelectorAll( '.cart_item.edd_total span' ).innerHTML( response.total );
+					document.querySelectorAll( '.cart_item.edd_total span' ).forEach( function( el ) {
+						console.log( el );
+						el.innerHTML = response.total;
+					});
 
 					if( response.cart_quantity == 0 ) {
 						document.querySelectorAll('.cart_item.edd_subtotal,.edd-cart-number-of-items,.cart_item.edd_checkout,.cart_item.edd_cart_tax,.cart_item.edd_total').forEach( function( el ) {
@@ -279,10 +287,7 @@ eddDocIsReady( function() {
 					});
 
 					document.querySelectorAll( '.widget_edd_cart_widget .edd-cart' ).forEach( function( el ) {
-						var target = el.querySelector( '.edd-cart-meta' );
-						document.querySelectorAll( response.cart_item ).forEach( function( cartEl ) {
-							cartEl.insertBefore( target, cartEl.firstChild );
-						});
+						el.querySelector( '.edd-cart-meta' ).insertAdjacentHTML( 'beforebegin', response.cart_item );
 
 						if ( el.parentNode ) {
 							el.parentNode.classList.add( 'cart-not-empty' );
@@ -335,7 +340,9 @@ eddDocIsReady( function() {
 					if( $( '.edd_download_purchase_form' ).length && ( variable_price == 'no' || ! form.find('.edd_price_option_' + download).is('input:hidden') ) ) {
 						document.querySelectorAll( '.edd_download_purchase_form *[data-download-id="' + download + '"]' ).forEach( function( el ) {
 							var parent_form = el.closest( 'form' );
-							parent_form.querySelectorAll( 'a.edd-add-to-cart' ).style.display = 'none';
+							parent_form.querySelectorAll( 'a.edd-add-to-cart' ).forEach( function( el ) {
+								el.style.display = 'none';
+							});
 							if ( 'multi' !== price_mode ) {
 								parent_form.querySelectorAll( '.edd_download_quantity_wrapper' ).forEach( function( qtyWrapper ) {
 									eddSlideUp( qtyWrapper );
