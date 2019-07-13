@@ -1,5 +1,32 @@
 var edd_scripts;
-jQuery(document).ready(function ($) {
+
+/**
+ * Run event after the DOM is ready.
+ *
+ * Emulates jQuery.ready().
+ * 
+ * @see https://vanillajstoolkit.com/helpers/ready/
+ * @param {function} fn - The function we want to run.
+ * @returns {void}
+ */
+function eddDocIsReady( fn ) {
+
+	// Sanity check.
+	if ( 'function' !== typeof fn ) {
+		return;
+	}
+
+	// If document is already loaded, run method.
+	if ( 'complete' === document.readyState ) {
+		return fn();
+	}
+
+	// Otherwise, wait until document is loaded.
+	document.addEventListener( 'DOMContentLoaded', fn, false );
+}
+
+eddDocIsReady( function() {
+	var $ = $ || jQuery;
 
 	// Hide unneeded elements. These are things that are required in case JS breaks or isn't present
 	$('.edd-no-js').hide();
