@@ -424,13 +424,16 @@ eddDocIsReady( function() {
 
 		$.post(edd_global_vars.ajaxurl, data, function(data) {
 
+			document.querySelectorAll( '.edd_errors' ).forEach( function( el ) {
+				el.parentNode.removeChild( el );
+			});
 			if ( $.trim(data) == 'success' ) {
-				$('.edd_errors').remove();
 				window.location = edd_scripts.checkout_page;
 			} else {
 				$('#edd_login_fields input[type=submit]').val(complete_purchase_val);
-				$('.edd-loading-ajax').remove();
-				$('.edd_errors').remove();
+				document.querySelectorAll( '.edd-loading-ajax' ).forEach( function( el ) {
+					el.parentNode.removeChild( el );
+				});
 				$('#edd-user-login-submit').before(data);
 			}
 		});
@@ -501,16 +504,19 @@ eddDocIsReady( function() {
 		$(this).after('<span class="edd-loading-ajax edd-loading"></span>');
 
 		$.post(edd_global_vars.ajaxurl, $('#edd_purchase_form').serialize() + '&action=edd_process_checkout&edd_ajax=true', function(data) {
+			document.querySelectorAll( '.edd_errors' ).forEach( function( el ) {
+				el.parentNode.removeChild( el );
+			});
 			if ( $.trim(data) == 'success' ) {
-				$('.edd_errors').remove();
 				document.querySelectorAll( '.edd-error' ).forEach( function( el ) {
 					el.style.display = 'none';
 				});
 				$(eddPurchaseform).submit();
 			} else {
 				$('#edd-purchase-button').val(complete_purchase_val);
-				$('.edd-loading-ajax').remove();
-				$('.edd_errors').remove();
+				document.querySelectorAll( '.edd-loading-ajax' ).forEach( function( el ) {
+					el.parentNode.removeChild( el );
+				});
 				document.querySelectorAll( '.edd-error' ).forEach( function( el ) {
 					el.style.display = 'none';
 				});
