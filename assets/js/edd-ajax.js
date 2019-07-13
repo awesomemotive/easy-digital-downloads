@@ -25,6 +25,18 @@ function eddDocIsReady( fn ) {
 	document.addEventListener( 'DOMContentLoaded', fn, false );
 }
 
+function eddEventTrigger( el, eventName, data ) {
+	var event;
+	if ( window.CustomEvent ) {
+		event = new CustomEvent( eventName, { detail: data } );
+	} else {
+		event = document.createEvent( 'CustomEvent' );
+		event.initCustomEvent( eventName, true, true, data );
+	}
+
+	el.dispatchEvent( event );
+}
+
 function eddSlideUp( target, duration ) {
 	duration = duration || 400;
 	target.style.transitionProperty = 'height, margin, padding';
@@ -124,7 +136,7 @@ eddDocIsReady( function() {
 					}
 
 					document.querySelectorAll( 'span.edd-cart-quantity' ).textContent = response.cart_quantity;
-					$(document.body).trigger('edd_quantity_updated', [ response.cart_quantity ]);
+					eddEventTrigger( document.body, 'edd_quantity_updated', [ response.cart_quantity ] );
 					if ( edd_scripts.taxes_enabled ) {
 						document.querySelectorAll( '.cart_item.edd_subtotal span' ).forEach( function( el ) {
 							el.innerHTML = response.subtotal;
@@ -157,7 +169,7 @@ eddDocIsReady( function() {
 						});
 					}
 
-					$(document.body).trigger('edd_cart_item_removed', [ response ]);
+					eddEventTrigger( document.body, 'edd_cart_item_removed', [ response ] );
 				}
 			}
 		}).fail(function (response) {
@@ -315,7 +327,7 @@ eddDocIsReady( function() {
 
 					$('span.edd-cart-quantity').each(function() {
 						$(this).text(response.cart_quantity);
-						$(document.body).trigger('edd_quantity_updated', [ response.cart_quantity ]);
+						eddEventTrigger( document.body, 'edd_quantity_updated', [ response.cart_quantity ] );
 					});
 
 					// Show the "number of items in cart" message
@@ -366,8 +378,7 @@ eddDocIsReady( function() {
 					// Re-enable the add to cart button
 					$this.prop('disabled', false);
 
-					$(document.body).trigger('edd_cart_item_added', [ response ]);
-
+					eddEventTrigger( document.body, 'edd_cart_item_added', [ response ] );
 				}
 			}
 		}).fail(function (response) {
@@ -486,8 +497,7 @@ eddDocIsReady( function() {
 		} else {
 
 			// The form is already on page, just trigger that the gateway is loaded so further action can be taken.
-			$('body').trigger('edd_gateway_loaded', [ chosen_gateway ]);
-
+			eddEventTrigger( document.body, 'edd_gateway_loaded', [ chosen_gateway ] );
 		}
 	}
 
@@ -530,7 +540,7 @@ eddDocIsReady( function() {
 				$( edd_global_vars.checkout_error_anchor ).before(data);
 				$('#edd-purchase-button').prop( 'disabled', false );
 
-				$(document.body).trigger( 'edd_checkout_error', [ data ] );
+				eddEventTrigger( document.body, 'edd_checkout_error', [ data ] );
 			}
 		});
 
@@ -587,9 +597,8 @@ eddDocIsReady( function() {
 					}
 
 					if ( is_checkout ) {
-						$(document.body).trigger('edd_cart_billing_address_updated', [ response ]);
+						eddEventTrigger( document.body, 'edd_cart_billing_address_updated', [ response ] );
 					}
-
 				}
 			}).fail(function (data) {
 				if ( window.console && window.console.log ) {
@@ -651,8 +660,7 @@ function edd_load_gateway( payment_mode ) {
 			document.querySelectorAll( '.edd-no-js' ).forEach( function( el ) {
 				el.style.display = 'none';
 			});
-			jQuery('body').trigger('edd_gateway_loaded', [ payment_mode ]);
+			eddEventTrigger( document.body, 'edd_gateway_loaded', [ payment_mode ] );
 		}
 	);
-
 }
