@@ -75,19 +75,18 @@ eddDocIsReady( function() {
 	});
 
 	// Send Remove from Cart requests
-	$(document.body).on('click.eddRemoveFromCart', '.edd-remove-from-cart', function (event) {
-		var $this  = $(this),
-			item   = $this.data('cart-item'),
-			action = $this.data('action'),
-			id     = $this.data('download-id'),
-			nonce  = $this.data('nonce'),
+	$(document.body).on('click.eddRemoveFromCart', '.edd-remove-from-cart', function( event ) {
+		var item   = this.getAttribute( 'data-cart-item' ),
+			action = this.getAttribute( 'data-action' ),
+			id     = this.getAttribute( 'data-download-id' ),
+			nonce  = this.getAttribute( 'data-nonce' ),
 			data   = {
 				action: action,
 				cart_item: item,
 				nonce: nonce
 			};
 
-		 $.ajax({
+		$.ajax({
 			type: "POST",
 			data: data,
 			dataType: "json",
@@ -191,19 +190,19 @@ eddDocIsReady( function() {
 		var $this = $(this), form = $this.closest('form');
 
 		// Disable button, preventing rapid additions to cart during ajax request
-		$this.prop('disabled', true);
+		this.setAttribute( 'disabled', true );
 
-		var $spinner = $this.find('.edd-loading');
+		var $spinner  = $this.find('.edd-loading');
 		var container = $this.closest('div');
 
 		// Show the spinner
-		$this.attr('data-edd-loading', '');
+		this.setAttribute( 'data-edd-loading', '' );
 
 		var form           = $this.parents('form').last();
-		var download       = $this.data('download-id');
-		var variable_price = $this.data('variable-price');
-		var price_mode     = $this.data('price-mode');
-		var nonce          = $this.data('nonce');
+		var download       = this.getAttribute( 'data-download-id' );
+		var variable_price = this.getAttribute( 'data-variable-price' );
+		var price_mode     = this.getAttribute( 'data-price-mode' );
+		var nonce          = this.getAttribute( 'data-nonce' );
 		var item_price_ids = [];
 		var free_items     = true;
 
@@ -241,7 +240,7 @@ eddDocIsReady( function() {
 
 		} else {
 			item_price_ids[0] = download;
-			if ( $this.data('price') && $this.data('price') > 0 ) {
+			if ( this.getAttribute( 'data-price' ) && this.getAttribute( 'data-price' ) > 0 ) {
 				free_items = false;
 			}
 		}
@@ -325,8 +324,8 @@ eddDocIsReady( function() {
 					// Update the cart quantity
 					var items_added = $( '.edd-cart-item-title', response.cart_item ).length;
 
-					$('span.edd-cart-quantity').each(function() {
-						$(this).text(response.cart_quantity);
+					document.querySelectorAll( 'span.edd-cart-quantity').forEach( function( el ) {
+						el.innerHTML = response.cart_quantity;
 						eddEventTrigger( document.body, 'edd_quantity_updated', [ response.cart_quantity ] );
 					});
 
@@ -435,9 +434,9 @@ eddDocIsReady( function() {
 		var data = {
 			action : 'edd_process_checkout_login',
 			edd_ajax : 1,
-			edd_user_login : $('#edd_login_fields #edd_user_login').val(),
-			edd_user_pass : $('#edd_login_fields #edd_user_pass').val(),
-			edd_login_nonce : $('#edd_login_nonce').val(),
+			edd_user_login : document.querySelector( '#edd_login_fields #edd_user_login' ).value,
+			edd_user_pass : document.querySelector( '#edd_login_fields #edd_user_pass' ).value,
+			edd_login_nonce : document.querySelector( '#edd_login_nonce').value,
 		};
 
 		$.post(edd_global_vars.ajaxurl, data, function(data) {
@@ -478,7 +477,7 @@ eddDocIsReady( function() {
 		var chosen_gateway = false;
 		var ajax_needed    = false;
 
-		if ( $('select#edd-gateway, input.edd-gateway').length ) {
+		if ( document.querySelectorAll( 'select#edd-gateway, input.edd-gateway' ).length ) {
 			chosen_gateway = $("meta[name='edd-chosen-gateway']").attr('content');
 			ajax_needed    = true;
 		}
