@@ -67,8 +67,10 @@ jQuery( document ).ready( function( $ ) {
 					}
 
 					// Remove the selected cart item
-					$( '.edd-cart' ).each( function() {
-						$( this ).find( "[data-cart-item='" + item + "']" ).parent().remove();
+					document.querySelectorAll( '.edd-cart' ).forEach( function( el ) {
+						el.querySelectorAll( "[data-cart-item='" + item + "']" ).forEach( function( cartEl ) {
+							cartEl.parentNode.parentNode.removeChild( cartEl.parentNode );
+						} );
 					} );
 
 					//Reset the data-cart-item attributes to match their new values in the EDD session cart array
@@ -363,13 +365,16 @@ jQuery( document ).ready( function( $ ) {
 		};
 
 		$.post( edd_global_vars.ajaxurl, data, function( data ) {
+			document.querySelectorAll( '.edd_errors' ).forEach( function( el ) {
+				el.parentNode.removeChild( el );
+			} );
 			if ( $.trim( data ) === 'success' ) {
-				$( '.edd_errors' ).remove();
 				window.location = edd_scripts.checkout_page;
 			} else {
 				$( '#edd_login_fields input[type=submit]' ).val( complete_purchase_val );
-				$( '.edd-loading-ajax' ).remove();
-				$( '.edd_errors' ).remove();
+				document.querySelectorAll( '.edd-loading-ajax' ).forEach( function( el ) {
+					el.parentNode.removeChild( el );
+				} );
 				$( '#edd-user-login-submit' ).before( data );
 			}
 		} );
@@ -435,13 +440,17 @@ jQuery( document ).ready( function( $ ) {
 			document.querySelectorAll( '.edd-error' ).forEach( function( el ) {
 				el.style.display = 'none';
 			} );
+			document.querySelectorAll( '.edd_errors' ).forEach( function( el ) {
+				el.parentNode.removeChild( el );
+			} );
+
 			if ( $.trim( data ) === 'success' ) {
-				$( '.edd_errors' ).remove();
 				$( eddPurchaseform ).submit();
 			} else {
 				$( '#edd-purchase-button' ).val( complete_purchase_val );
-				$( '.edd-loading-ajax' ).remove();
-				$( '.edd_errors' ).remove();
+				document.querySelectorAll( '.edd-loading-ajax' ).forEach( function( el ) {
+					el.parentNode.removeChild( el );
+				} );
 				$( edd_global_vars.checkout_error_anchor ).before( data );
 				$( '#edd-purchase-button' ).prop( 'disabled', false );
 

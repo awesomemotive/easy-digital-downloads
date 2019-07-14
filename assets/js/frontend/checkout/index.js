@@ -66,7 +66,9 @@ export function recalculate_taxes( state ) {
 				tax_data.response = tax_response;
 				jQuery( 'body' ).trigger( 'edd_taxes_recalculated', [ tax_data ] );
 			}
-			jQuery( '.edd-recalculate-taxes-loading' ).remove();
+			document.querySelectorAll( '.edd-recalculate-taxes-loading' ).forEach( function( el ) {
+				el.parentNode.removeChild( el );
+			} );
 		},
 	} ).fail( function( data ) {
 		if ( window.console && window.console.log ) {
