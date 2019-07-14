@@ -5,9 +5,37 @@
  */
 import { recalculate_taxes } from './checkout';
 
+function eddSlideUp( target, duration ) {
+	duration                        = duration || 400;
+	target.style.transitionProperty = 'height, margin, padding';
+	target.style.transitionDuration = duration + 'ms';
+	target.style.boxSizing          = 'border-box';
+	target.style.height             = target.offsetHeight + 'px';
+	target.offsetHeight;
+	target.style.overflow           = 'hidden';
+	target.style.height             = 0;
+	target.style.paddingTop         = 0;
+	target.style.paddingBottom      = 0;
+	target.style.marginTop          = 0;
+	target.style.marginBottom       = 0;
+	window.setTimeout( function() {
+		target.style.display = 'none';
+		target.style.removeProperty( 'height' );
+		target.style.removeProperty( 'padding-top' );
+		target.style.removeProperty( 'padding-bottom' );
+		target.style.removeProperty( 'margin-top' );
+		target.style.removeProperty( 'margin-bottom' );
+		target.style.removeProperty( 'overflow' );
+		target.style.removeProperty( 'transition-duration' );
+		target.style.removeProperty( 'transition-property' );
+	}, duration );
+}
+
 jQuery( document ).ready( function( $ ) {
 	// Hide unneeded elements. These are things that are required in case JS breaks or isn't present
-	$( '.edd-no-js' ).hide();
+	document.querySelectorAll( '.edd-no-js' ).forEach( function( el ) {
+		el.style.display = 'none';
+	} );
 	$( 'a.edd-add-to-cart' ).addClass( 'edd-has-js' );
 
 	// Send Remove from Cart requests
@@ -54,7 +82,9 @@ jQuery( document ).ready( function( $ ) {
 
 					// Check to see if the purchase form(s) for this download is present on this page
 					if ( $( '[id^=edd_purchase_' + id + ']' ).length ) {
-						$( '[id^=edd_purchase_' + id + '] .edd_go_to_checkout' ).hide();
+						document.querySelectorAll( '[id^=edd_purchase_' + id + '] .edd_go_to_checkout' ).forEach( function( el ) {
+							el.style.display = 'none';
+						} );
 						$( '[id^=edd_purchase_' + id + '] a.edd-add-to-cart' ).show().removeAttr( 'data-edd-loading' );
 						if ( edd_scripts.quantities_enabled === '1' ) {
 							$( '[id^=edd_purchase_' + id + '] .edd_download_quantity_wrapper' ).show();
@@ -71,7 +101,9 @@ jQuery( document ).ready( function( $ ) {
 					$( '.cart_item.edd_total span' ).html( response.total );
 
 					if ( response.cart_quantity === 0 ) {
-						$( '.cart_item.edd_subtotal,.edd-cart-number-of-items,.cart_item.edd_checkout,.cart_item.edd_cart_tax,.cart_item.edd_total' ).hide();
+						document.querySelectorAll( '.cart_item.edd_subtotal,.edd-cart-number-of-items,.cart_item.edd_checkout,.cart_item.edd_cart_tax,.cart_item.edd_total' ).forEach( function( el ) {
+							el.style.display = 'none';
+						} );
 						$( '.edd-cart' ).each( function() {
 							const cart_wrapper = $( this ).parent();
 							if ( cart_wrapper ) {
@@ -201,7 +233,9 @@ jQuery( document ).ready( function( $ ) {
 					$( '.cart_item.edd_checkout' ).show();
 
 					if ( $( '.cart_item.empty' ).length ) {
-						$( '.cart_item.empty' ).hide();
+						document.querySelectorAll( '.cart_item.empty' ).forEach( function( el ) {
+							el.style.display = 'none';
+						 } );
 					}
 
 					$( '.widget_edd_cart_widget .edd-cart' ).each( function( cart ) {
@@ -249,12 +283,18 @@ jQuery( document ).ready( function( $ ) {
 
 					// Update all buttons for same download
 					if ( $( '.edd_download_purchase_form' ).length && ( variable_price === 'no' || ! form.find( '.edd_price_option_' + download ).is( 'input:hidden' ) ) ) {
-						const parent_form = $( '.edd_download_purchase_form *[data-download-id="' + download + '"]' ).parents( 'form' );
-						$( 'a.edd-add-to-cart', parent_form ).hide();
-						if ( price_mode !== 'multi' ) {
-							parent_form.find( '.edd_download_quantity_wrapper' ).slideUp();
-						}
-						$( '.edd_go_to_checkout', parent_form ).show().removeAttr( 'data-edd-loading' );
+						document.querySelectorAll( '.edd_download_purchase_form *[data-download-id="' + download + '"]' ).forEach( function( el ) {
+							var parent_form = el.closest( 'form' );
+							parent_form.querySelectorAll( 'a.edd-add-to-cart' ).forEach( function( addToCartEl ) {
+								addToCartEl.style.display = 'none';
+							} );
+							if ( 'multi' !== price_mode ) {
+								parent_form.querySelectorAll( '.edd_download_quantity_wrapper' ).forEach( function( qtyWrapperEl ) {
+									eddSlideUp( qtyWrapperEl );
+								} );
+							}
+							$( '.edd_go_to_checkout', parent_form ).show().removeAttr( 'data-edd-loading' );
+						} );
 					}
 
 					if ( response !== 'incart' ) {
@@ -297,7 +337,9 @@ jQuery( document ).ready( function( $ ) {
 			$( '#edd_checkout_login_register' ).html( edd_scripts.loading );
 			$( '#edd_checkout_login_register' ).html( checkout_response );
 			// Hide the ajax loader
-			$( '.edd-cart-ajax' ).hide();
+			document.querySelectorAll( '.edd-cart-ajax' ).forEach( function( el ) {
+				el.style.display = 'none';
+			} );
 		} );
 		return false;
 	} );
@@ -390,15 +432,16 @@ jQuery( document ).ready( function( $ ) {
 		$( this ).after( '<span class="edd-loading-ajax edd-loading"></span>' );
 
 		$.post( edd_global_vars.ajaxurl, $( '#edd_purchase_form' ).serialize() + '&action=edd_process_checkout&edd_ajax=true', function( data ) {
+			document.querySelectorAll( '.edd-error' ).forEach( function( el ) {
+				el.style.display = 'none';
+			} );
 			if ( $.trim( data ) === 'success' ) {
 				$( '.edd_errors' ).remove();
-				$( '.edd-error' ).hide();
 				$( eddPurchaseform ).submit();
 			} else {
 				$( '#edd-purchase-button' ).val( complete_purchase_val );
 				$( '.edd-loading-ajax' ).remove();
 				$( '.edd_errors' ).remove();
-				$( '.edd-error' ).hide();
 				$( edd_global_vars.checkout_error_anchor ).before( data );
 				$( '#edd-purchase-button' ).prop( 'disabled', false );
 
@@ -504,7 +547,9 @@ function edd_load_gateway( payment_mode ) {
 	jQuery.post( url, { action: 'edd_load_gateway', edd_payment_mode: payment_mode, nonce: nonce },
 		function( response ) {
 			jQuery( '#edd_purchase_form_wrap' ).html( response );
-			jQuery( '.edd-no-js' ).hide();
+			document.querySelectorAll( '.edd-no-js' ).forEach( function( el ) {
+				el.style.display = 'none';
+			} );
 			jQuery( 'body' ).trigger( 'edd_gateway_loaded', [ payment_mode ] );
 		}
 	);

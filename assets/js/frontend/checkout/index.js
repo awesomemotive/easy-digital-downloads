@@ -157,12 +157,14 @@ window.EDD_Checkout = ( function( $ ) {
 		// When discount link is clicked, hide the link, then show the discount input and set focus.
 		$body.on( 'click', '.edd_discount_link', function( e ) {
 			e.preventDefault();
-			$( '.edd_discount_link' ).parent().hide();
+			document.querySelectorAll( '.edd_discount_link' ).forEach( function( el ) {
+				el.parentNode.style.display = 'none';
+			} );
 			$( '#edd-discount-code-wrap' ).show().find( '#edd-discount' ).focus();
 		} );
 
 		// Hide / show discount fields for browsers without javascript enabled
-		$body.find( '#edd-discount-code-wrap' ).hide();
+		document.body.querySelector( '#edd-discount-code-wrap' ).style.display = 'none';
 		$body.find( '#edd_show_discount' ).show();
 
 		// Update the checkout when item quantities are updated
@@ -228,7 +230,9 @@ window.EDD_Checkout = ( function( $ ) {
 			form: $( '#edd_purchase_form' ).serialize(),
 		};
 
-		$( '#edd-discount-error-wrap' ).html( '' ).hide();
+		document.querySelector( '#edd-discount-error-wrap' ).innerHTML               = '';
+		document.querySelector( '#edd-discount-error-wrap' ).innerHTML.style.display = 'none';
+
 		edd_discount_loader.show();
 
 		$.ajax( {
@@ -281,7 +285,7 @@ window.EDD_Checkout = ( function( $ ) {
 					}
 					$body.trigger( 'edd_discount_failed', [ discount_response ] );
 				}
-				edd_discount_loader.hide();
+				document.querySelector( '#edd-discount-loader' ).style.display = 'none';
 			},
 		} ).fail( function( data ) {
 			if ( window.console && window.console.log ) {
@@ -325,7 +329,9 @@ window.EDD_Checkout = ( function( $ ) {
 				$( '.edd_cart_discount' ).html( discount_response.html );
 
 				if ( ! discount_response.discounts ) {
-					$( '.edd_cart_discount_row' ).hide();
+					document.querySelectorAll( '.edd_cart_discount_row' ).forEach( function( el ) {
+						el.style.display = 'none';
+					} );
 				}
 
 				recalculate_taxes();
