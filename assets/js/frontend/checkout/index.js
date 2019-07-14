@@ -18,14 +18,14 @@ export function recalculate_taxes( state ) {
 		return;
 	} // Taxes not enabled
 
-	const $edd_cc_address = jQuery( '#edd_cc_address' );
+	const edd_cc_address = document.querySelector( '#edd_cc_address' );
 
-	const billing_country = $edd_cc_address.find( '#billing_country' ).val(),
-		card_address = $edd_cc_address.find( '#card_address' ).val(),
-		card_address_2 = $edd_cc_address.find( '#card_address_2' ).val(),
-		card_city = $edd_cc_address.find( '#card_city' ).val(),
-		card_state = $edd_cc_address.find( '#card_state' ).val(),
-		card_zip = $edd_cc_address.find( '#card_zip' ).val();
+	const billing_country = edd_cc_address.querySelector( '#billing_country' ).value,
+		card_address      = edd_cc_address.querySelector( '#card_address' ).value,
+		card_address_2    = edd_cc_address.querySelector( '#card_address_2' ).value,
+		card_city         = edd_cc_address.querySelector( '#card_city' ).value,
+		card_state        = edd_cc_address.querySelector( '#card_state' ).value,
+		card_zip          = edd_cc_address.querySelector( '#card_zip' ).value;
 
 	if ( ! state ) {
 		state = card_state;
