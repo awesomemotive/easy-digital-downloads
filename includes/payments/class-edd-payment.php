@@ -3513,7 +3513,7 @@ class EDD_Payment {
 	 * @return int|string Payment number.
 	 */
 	private function get_number() {
-		return apply_filters( 'edd_payment_number', $this->number, $this->ID, $this );
+		return $this->number;
 	}
 
 	/**

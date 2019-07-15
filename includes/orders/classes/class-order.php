@@ -278,9 +278,13 @@ class Order extends Rows\Order {
 	 * @return string
 	 */
 	public function get_number() {
-		return $this->order_number && edd_get_option( 'enable_sequential' )
-			? $this->order_number
-			: $this->id;
+		if ( $this->order_number && edd_get_option( 'enable_sequential' ) ) {
+			$number = $this->order_number;
+		} else {
+			$number = $this->id;
+		}
+
+		return apply_filters( 'edd_payment_number', $number, $this->ID, null );
 	}
 
 	/**
