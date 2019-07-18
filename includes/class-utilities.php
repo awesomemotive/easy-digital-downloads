@@ -379,7 +379,7 @@ class Utilities {
 				 * will stop DateTimeZone from causing a fatal error in these circumstances. We are not accounting for DST here
 				 * since the user has picked a numeric offset, and thus shouldn't expect the DST to take affect.
 				 */
-				$retval = timezone_name_from_abbr('', $gmt_offset, 0 );
+				$retval = timezone_name_from_abbr('', $gmt_offset, date( 'I' ) );
 
 			} else {
 
