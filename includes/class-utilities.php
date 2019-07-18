@@ -379,7 +379,8 @@ class Utilities {
 				 * will stop DateTimeZone from causing a fatal error in these circumstances. We need to account for opposite of DST here
 				 * in order to properly determine expected dates.
 				 */
-				$is_dst = empty( date( 'I' ) ) ? 1 : 0;
+				$is_dst = date( 'I' );
+				$is_dst = empty( $is_dst ) ? 1 : 0;
 				$retval = timezone_name_from_abbr('', $gmt_offset, $is_dst );
 
 			} else {
