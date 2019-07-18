@@ -80,10 +80,6 @@ class EDD_Emails {
 		if ( 'none' === $this->get_template() ) {
 			$this->html = false;
 		}
-
-		add_action( 'edd_email_send_before', array( $this, 'send_before' ) );
-		add_action( 'edd_email_send_after', array( $this, 'send_after' ) );
-
 	}
 
 	/**
@@ -292,6 +288,8 @@ class EDD_Emails {
 			return false;
 		}
 
+		$this->send_before();
+
 		/**
 		 * Hooks before the email is sent
 		 *
@@ -323,6 +321,8 @@ class EDD_Emails {
 
 			error_log( $log_message );
 		}
+
+		$this->send_after();
 
 		/**
 		 * Hooks after the email is sent
