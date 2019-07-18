@@ -592,13 +592,6 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \edd_get_discount_product_condition()
-	 */
-	public function test_discount_product_condition() {
-		$this->assertSame( 'all', edd_get_discount_product_condition( self::$discount_id ) );
-	}
-
-	/**
 	 * @covers \edd_is_discount_not_global()
 	 */
 	public function test_discount_is_not_global() {
