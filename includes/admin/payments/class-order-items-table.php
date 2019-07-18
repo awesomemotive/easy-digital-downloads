@@ -234,7 +234,7 @@ class Order_Items_Table extends List_Table {
 			$row_actions['refund'] = '<a class="edd-refund-order" href="">' . __( 'Refund', 'easy-digital-downloads' ) . '</a>';
 
 		} elseif ( 'refunded' === $status ) {
-			$state                   = __( 'Refunded', 'easy-digital-downloads' );
+			$state = __( 'Refunded', 'easy-digital-downloads' );
 		}
 
 		// Filter all order_item row actions
