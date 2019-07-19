@@ -552,6 +552,7 @@ class EDD_Discount extends Adjustment {
 		 */
 		$this->excluded_products = (array) edd_get_adjustment_meta( $this->id, 'excluded_product',    false );
 		$this->product_reqs      = (array) edd_get_adjustment_meta( $this->id, 'product_requirement', false );
+		$this->product_condition = (string) edd_get_adjustment_meta( $this->id, 'product_condition', true );
 
 		/**
 		 * Fires after the instance of the EDD_Discount object is set up. Allows extensions to add items to this object via hook.

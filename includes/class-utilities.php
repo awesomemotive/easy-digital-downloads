@@ -376,10 +376,10 @@ class Utilities {
 				 * of the string timezone since DateTimeZone doesn't support instantiation from a GMT offset in these versions of PHP.
 				 *
 				 * timezone_name_from_abbr allows us to look up a TimeZone string like "America/Chicago" from the offset, which
-				 * will stop DateTimeZone from causing a fatal error in these circumstances. We are not accounting for DST here
-				 * since the user has picked a numeric offset, and thus shouldn't expect the DST to take affect.
+				 * will stop DateTimeZone from causing a fatal error in these circumstances.
 				 */
-				$retval = timezone_name_from_abbr('', $gmt_offset, 0 );
+				$is_dst = date( 'I' );
+				$retval = timezone_name_from_abbr('', $gmt_offset, $is_dst );
 
 			} else {
 
