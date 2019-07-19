@@ -425,8 +425,8 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_parse_dates_for_range_with_today_range_should_return_those_dates() {
 		$expected = array(
-			'start' => self::$date->copy()->startOfDay()->toDateTimeString(),
-			'end'   => self::$date->copy()->endOfDay()->toDateTimeString(),
+			'start' => self::$date->copy()->setTimezone( edd_get_timezone_id() )->startOfDay()->setTimezone( 'UTC' ),
+			'end'   => self::$date->copy()->setTimezone( edd_get_timezone_id() )->endOfDay()->setTimezone( 'UTC' ),
 			'range' => 'today',
 		);
 
@@ -445,8 +445,8 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_parse_dates_for_range_with_yesterday_range_should_return_those_dates() {
 		$expected = array(
-			'start' => self::$date->copy()->subDay( 1 )->startOfDay()->toDateTimeString(),
-			'end'   => self::$date->copy()->subDay( 1 )->endOfDay()->toDateTimeString(),
+			'start' => self::$date->copy()->setTimezone( edd_get_timezone_id() )->subDay( 1 )->startOfDay()->setTimezone( 'UTC' ),
+			'end'   => self::$date->copy()->setTimezone( edd_get_timezone_id() )->subDay( 1 )->endOfDay()->setTimezone( 'UTC' ),
 			'range' => 'yesterday',
 		);
 

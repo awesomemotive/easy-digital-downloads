@@ -74,6 +74,14 @@ class Customer_Addresses extends Schema {
 			'transition' => true
 		),
 
+		// name
+		array(
+			'name'       => 'name',
+			'type'       => 'mediumtext',
+			'searchable' => true,
+			'sortable'   => true
+		),
+
 		// address
 		array(
 			'name'       => 'address',
