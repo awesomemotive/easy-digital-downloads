@@ -195,8 +195,9 @@ function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data 
 
 	$download_list = '';
 
-	if( ! empty( $order->get_items() ) ) {
-		foreach( $order->get_items() as $item ) {
+	$order_items = $order->get_items();
+	if( ! empty( $order_items ) ) {
+		foreach( $order_items as $item ) {
 			$download_list .= html_entity_decode( $item->product_name, ENT_COMPAT, 'UTF-8' ) . "\n";
 		}
 	}

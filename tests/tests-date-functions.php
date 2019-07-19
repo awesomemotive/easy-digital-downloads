@@ -67,7 +67,8 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 		if ( version_compare( phpversion(), '5.5', '<' ) ) {
 
 			// Tests our logic around a shortcoming in PHP 5.3 and 5.4 with DateTimeZone
-			$expected = timezone_name_from_abbr('', get_option( 'gmt_offset', 0 ) * HOUR_IN_SECONDS, 0 );
+			$is_dst   = date( 'I' );
+			$expected = timezone_name_from_abbr('', get_option( 'gmt_offset', 0 ) * HOUR_IN_SECONDS, $is_dst );
 			$this->assertSame( $expected, edd_get_timezone_id() );
 
 		} else {
