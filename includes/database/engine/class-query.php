@@ -1404,7 +1404,7 @@ class Query extends Base {
 
 		// Bail if malformed
 		if ( empty( $order ) || ! is_string( $order ) ) {
-			return `DESC`;
+			return 'DESC';
 		}
 
 		// Ascending or Descending
