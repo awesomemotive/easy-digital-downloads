@@ -316,7 +316,7 @@ class Order extends Rows\Order {
 		 * @param int       The row ID of the Payment/Order.
 		 * @param EDD_Order Prior to EDD 3.0, this was an EDD_Payment object. Now it is an EDD_Order object.
 		 */
-		return apply_filters( 'edd_payment_number', $number, $this->ID, $this );
+		$number = apply_filters( 'edd_payment_number', $number, $this->ID, $this );
 
 		/**
 		 * This filter is exactly the same as edd_payment_number, and exists purely so that
@@ -328,7 +328,9 @@ class Order extends Rows\Order {
 		 * @param int       The row ID of the Payment/Order.
 		 * @param EDD_Order The EDD_Order object.
 		 */
-		return apply_filters( 'edd_order_number', $number, $this->ID, $this );
+		$number = apply_filters( 'edd_order_number', $number, $this->ID, $this );
+
+		return $number;
 	}
 
 	/**
