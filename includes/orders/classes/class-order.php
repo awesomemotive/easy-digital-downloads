@@ -278,13 +278,44 @@ class Order extends Rows\Order {
 	 * @return string
 	 */
 	public function get_number() {
+
+		static $number;
+
+		/**
+		 * Make sure we only set up the order_number once.
+		 * Without this check, calling edd_get_payment_meta from a function
+		 * hooked to edd_payment_number would cause an infinite loop. For example, if you
+		 * hook a function (call it "function_a") to edd_payment_number and
+		 * call edd_get_payment_meta within it, this will happen:
+		 * edd_get_payment_meta calls EDD_Payment->get_meta which calls
+		 * EDD/Orders/Order->get_number() which runs the
+		 * edd_payment_number filter, which calls function_a again, starting an infinite loop.
+		 * This check prevents that.
+		 */
+		if ( ! is_null( $number ) ) {
+			return $number;
+		}
+
 		if ( $this->order_number && edd_get_option( 'enable_sequential' ) ) {
 			$number = $this->order_number;
 		} else {
 			$number = $this->id;
 		}
 
-		return apply_filters( 'edd_payment_number', $number, $this->ID, null );
+		/**
+		 * The edd_payment_number filter allows the order_number value to be changed.
+		 *
+		 * This filter used to run in the  EDD_Payment class's get_number method upon its setup.
+		 * It now exists only here in EDD_Order since EDD 3.0. EDD Payment gets its order_number
+		 * value from EDD_Order (this class), so it gets run for both EDD_Payment and EDD_Order this way.
+		 *
+		 * @since 2.5
+		 *
+		 * @param string    The unique value to represent this order. This is a string because pre-fixes and post-fixes can be appended via the filter.
+		 * @param int       The row ID of the Payment/Order.
+		 * @param EDD_Order Prior to EDD 3.0, this was an EDD_Payment object. Now it is an EDD_Order object.
+		 */
+		return apply_filters( 'edd_payment_number', $number, $this->ID, $this );
 	}
 
 	/**
