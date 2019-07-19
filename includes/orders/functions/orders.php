@@ -756,8 +756,7 @@ function edd_build_order( $order_data = array() ) {
 
 	$order_address_data = array(
 		'order_id'    => $order_id,
-		'first_name'  => $order_data['user_info']['first_name'],
-		'last_name'   => $order_data['user_info']['last_name'],
+		'name'        => $order_data['user_info']['first_name'] . ' ' . $order_data['user_info']['last_name'],
 		'address'     => $order_data['user_info']['address']['line1'],
 		'address2'    => $order_data['user_info']['address']['line2'],
 		'city'        => $order_data['user_info']['address']['city'],
@@ -811,10 +810,16 @@ function edd_build_order( $order_data = array() ) {
 				? $item['subtotal']
 				: (float) $item['quantity'] * $item['item_price'];
 
+			$item_name   = $item['name'];
+			$option_name = edd_get_price_option_name( $item['id'], $price_id );
+			if ( ! empty( $option_name ) ) {
+				$item_name .= ' — ' . $option_name;
+			}
+
 			$order_item_args = array(
 				'order_id'     => $order_id,
 				'product_id'   => $item['id'],
-				'product_name' => $item['name'],
+				'product_name' => $item_name,
 				'price_id'     => $price_id,
 				'cart_index'   => $key,
 				'type'         => 'download',

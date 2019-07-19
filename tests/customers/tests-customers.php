@@ -365,4 +365,25 @@ class Tests_Customers extends \EDD_UnitTestCase {
 	public function test_get_customer_pending_payments_should_be_empty() {
 		$this->assertEmpty( self::$customers[0]->get_payments( 'pending' ) );
 	}
+
+	public function test_customer_and_user_order_lookup_success() {
+		self::$customers[0]->attach_payment( self::$order );
+
+		$customers_orders = edd_get_orders( array( 'customer_id' => self::$customers[0]->id, 'number' => 9999 ) );
+		$users_orders     = edd_get_orders( array( 'user_id' => self::$customers[0]->user_id, 'number' => 9999 ) );
+
+		$this->assertEquals( $customers_orders, $users_orders );
+	}
+
+	public function test_customer_and_user_order_lookup_success_after_user_id_change() {
+		self::$customers[0]->attach_payment( self::$order );
+
+		self::$customers[0]->update( array( 'user_id' => 2 ) );
+		$this->assertSame( '2', self::$customers[0]->user_id );
+
+		$customers_orders = edd_get_orders( array( 'customer_id' => self::$customers[0]->id, 'number' => 9999 ) );
+		$users_orders     = edd_get_orders( array( 'user_id' => self::$customers[0]->user_id, 'number' => 9999 ) );
+
+		$this->assertEquals( $customers_orders, $users_orders );
+	}
 }

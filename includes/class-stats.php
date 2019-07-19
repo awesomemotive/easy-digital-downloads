@@ -403,7 +403,9 @@ class Stats {
 	public function get_order_refund_count( $query = array() ) {
 		$query['status'] = isset( $query['status'] )
 			? $query['status']
-			: array( 'refunded', 'partially_refunded' );
+			: array( 'complete', 'partially_refunded' );
+
+		$query['type'] = 'refund';
 
 		return $this->get_order_count( $query );
 	}
@@ -541,7 +543,8 @@ class Stats {
 	 * @return string Formatted amount from refunded orders.
 	 */
 	public function get_order_refund_amount( $query = array() ) {
-		$query['status'] = array( 'refunded', 'partially_refunded' );
+		$query['status'] = array( 'complete', 'partially_refunded' );
+		$query['type']   = 'refund';
 
 		// Request raw output so we can run `abs()` on the value.
 		$query['output'] = 'raw';
@@ -691,7 +694,7 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$status_sql = $this->get_db()->prepare( 'AND status IN(%s, %s)', esc_sql( 'refunded' ), esc_sql( 'partially_refunded' ) );
+		$status_sql = $this->get_db()->prepare( "AND status IN(%s, %s) AND type = '%s'", esc_sql( 'complete' ), esc_sql( 'partially_refunded' ), esc_sql( 'refund' ) );
 
 		$ignore_free = $this->get_db()->prepare( "AND {$this->query_vars['table']}.total > %d", 0 );
 
