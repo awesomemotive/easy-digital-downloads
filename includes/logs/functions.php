@@ -46,13 +46,22 @@ defined( 'ABSPATH' ) || exit;
  */
 function edd_add_log( $data = array() ) {
 
-	// An object ID and object type must be supplied for every log that is
+	// An object type must be supplied for every log that is
 	// inserted into the database.
-	if ( empty( $data['object_id'] ) || empty( $data['object_type'] ) ) {
-		return false;
+	if ( empty( $data['object_type'] ) ) {
+		// If the object_type is set to null, check the value of the object_id.
+		if ( is_null( $data['object_type'] ) ) {
+			// If the object_id is not empty but the object_type is, fail this log attempt.
+			if ( ! empty( $data['object_id'] ) ) {
+				return false;
+			}
+			// The object_type is not null, and it is empty. No log will take place.
+		} else {
+			return false;
+		}
 	}
 
-	// Instantiate a query object
+	// Instantiate a query object.
 	$logs = new EDD\Database\Queries\Log();
 
 	return $logs->add_item( $data );
