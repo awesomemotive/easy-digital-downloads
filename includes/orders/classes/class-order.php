@@ -310,6 +310,7 @@ class Order extends Rows\Order {
 		 * value from EDD_Order (this class), so it gets run for both EDD_Payment and EDD_Order this way.
 		 *
 		 * @since 2.5
+		 * @since 3.0 Updated the 3rd paramater from an EDD_Payment object to an EDD_Order object.
 		 *
 		 * @param string    The unique value to represent this order. This is a string because pre-fixes and post-fixes can be appended via the filter.
 		 * @param int       The row ID of the Payment/Order.
