@@ -151,13 +151,15 @@ class EDD_Logging {
 		// Used to dynamically dispatch the method call to insert() to the correct class.
 		$insert_method = 'edd_add_log';
 
-		// Set up variables to hold data to go into the logs table by default
+		// Set up variables to hold data to go into the logs table by default.
 		$data = array(
-			'message'     => $args['post_content'],
-			'object_id'   => $args['post_parent'],
-			'object_type' => isset( $args['object_type'] )
-				? $args['object_type']
-				: 'download',
+			'content'     => $args['post_content'],
+			'object_id'   => isset( $args['post_parent'] )
+				? $args['post_parent']
+				: 0,
+			'object_type' => isset( $args['log_type'] )
+				? $args['log_type']
+				: null,
 		);
 
 		$type = $args['log_type'];

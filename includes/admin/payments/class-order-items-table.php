@@ -234,12 +234,7 @@ class Order_Items_Table extends List_Table {
 			$row_actions['refund'] = '<a class="edd-refund-order" href="">' . __( 'Refund', 'easy-digital-downloads' ) . '</a>';
 
 		} elseif ( 'refunded' === $status ) {
-			$state                   = __( 'Refunded', 'easy-digital-downloads' );
-			$row_actions['activate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-					'edd-action' => 'handle_order_item_change',
-					'status'     => 'inherit',
-					'order_item' => $order_item->id,
-				), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Reverse', 'easy-digital-downloads' ) . '</a>';
+			$state = __( 'Refunded', 'easy-digital-downloads' );
 		}
 
 		// Filter all order_item row actions
