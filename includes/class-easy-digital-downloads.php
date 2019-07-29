@@ -441,7 +441,9 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-customers.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-logs.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-logs-api-requests.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-log-api-request-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-logs-file-downloads.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-log-file-download-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-notes.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-orders.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-addresses.php';
@@ -588,11 +590,17 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/manual.php';
 
 		// Logs
-		require_once EDD_PLUGIN_DIR . 'includes/logs/class-api-request-log.php';
-		require_once EDD_PLUGIN_DIR . 'includes/logs/class-file-download-log.php';
-		require_once EDD_PLUGIN_DIR . 'includes/logs/class-log.php';
-		require_once EDD_PLUGIN_DIR . 'includes/logs/functions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/logs/meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/logs/api-request-log/class-api-request-log.php';
+		require_once EDD_PLUGIN_DIR . 'includes/logs/api-request-log/functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/logs/api-request-log/meta.php';
+
+		require_once EDD_PLUGIN_DIR . 'includes/logs/file-download-log/class-file-download-log.php';
+		require_once EDD_PLUGIN_DIR . 'includes/logs/file-download-log/functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/logs/file-download-log/meta.php';
+
+		require_once EDD_PLUGIN_DIR . 'includes/logs/log/class-log.php';
+		require_once EDD_PLUGIN_DIR . 'includes/logs/log/functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/logs/log/meta.php';
 
 		// Notes
 		require_once EDD_PLUGIN_DIR . 'includes/notes/class-note.php';

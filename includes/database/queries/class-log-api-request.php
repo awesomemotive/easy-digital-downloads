@@ -8,9 +8,10 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
+
 namespace EDD\Database\Queries;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 use EDD\Database\Query;
