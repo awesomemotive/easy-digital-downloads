@@ -3201,7 +3201,7 @@ class EDD_Payment {
 	 * @return int|string Integer by default, or string if sequential order numbers is enabled.
 	 */
 	private function setup_payment_number() {
-		return $this->order->get_number();
+		return $this->order->order_number;
 	}
 
 	/**
@@ -3513,7 +3513,7 @@ class EDD_Payment {
 	 * @return int|string Payment number.
 	 */
 	private function get_number() {
-		return $this->number;
+		return $this->order->get_number();
 	}
 
 	/**
