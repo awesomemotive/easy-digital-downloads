@@ -205,6 +205,7 @@ class Payment_Tests extends \EDD_UnitTestCase {
 	public function test_get_payment_number() {
 		global $edd_options;
 		$edd_options['enable_sequential'] = 1;
+		$edd_options['sequential_prefix'] = 'EDD-';
 
 		$payment_id = \EDD_Helper_Payment::create_simple_payment();
 
