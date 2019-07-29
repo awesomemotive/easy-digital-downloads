@@ -279,23 +279,6 @@ class Order extends Rows\Order {
 	 */
 	public function get_number() {
 
-		static $number;
-
-		/**
-		 * Make sure we only set up the order_number once.
-		 * Without this check, calling edd_get_payment_meta from a function
-		 * hooked to edd_payment_number would cause an infinite loop. For example, if you
-		 * hook a function (call it "function_a") to edd_payment_number and
-		 * call edd_get_payment_meta within it, this will happen:
-		 * edd_get_payment_meta calls EDD_Payment->get_meta which calls
-		 * EDD/Orders/Order->get_number() which runs the
-		 * edd_payment_number filter, which calls function_a again, starting an infinite loop.
-		 * This check prevents that.
-		 */
-		if ( ! is_null( $number ) ) {
-			return $number;
-		}
-
 		if ( $this->order_number && edd_get_option( 'enable_sequential' ) ) {
 			$number = $this->order_number;
 		} else {
