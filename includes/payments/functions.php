@@ -768,11 +768,7 @@ function edd_decrease_total_earnings( $amount = 0 ) {
  * @return mixed Will be an array if $single is false. Will be value of meta data field if $single is true.
  */
 function edd_get_payment_meta( $payment_id = 0, $key = '_edd_payment_meta', $single = true ) {
-	$payment = edd_get_payment( $payment_id );
-
-	return $payment
-		? $payment->get_meta( $key, $single )
-		: false;
+	return edd_get_order_meta( $payment_id, $key, $single );
 }
 
 /**
