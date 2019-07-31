@@ -223,7 +223,6 @@ function edd_setup_components() {
 		'meta'   => '\\EDD\\Database\\Tables\\Log_Api_Request_Meta',
 		'query'  => '\\EDD\\Database\\Queries\\Log_Api_Request',
 		'object' => '\\EDD\\Logs\\Api_Request_Log',
-		'meta'   => false
 	) );
 
 	// Register log file download.
@@ -233,7 +232,6 @@ function edd_setup_components() {
 		'meta'   => '\\EDD\\Database\\Tables\\Log_File_Download_Meta',
 		'query'  => '\\EDD\\Database\\Queries\\Log_File_Download',
 		'object' => '\\EDD\\Logs\\File_Download_Log',
-		'meta'   => false
 	) );
 
 	// Set the locally static setup var.
