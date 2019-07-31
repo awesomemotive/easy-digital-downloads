@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 use EDD\Database\Table;
 
 /**
- * Setup the global "edd_filedownloadlogmeta" database table
+ * Setup the global "edd_file_download_logmeta" database table
  *
  * @since 3.0
  */
@@ -29,7 +29,7 @@ final class Log_File_Download_Meta extends Table {
 	 * @since 3.0
 	 * @var string
 	 */
-	protected $name = 'filedownloadlogmeta';
+	protected $name = 'file_download_logmeta';
 
 	/**
 	 * Database version
@@ -54,7 +54,7 @@ final class Log_File_Download_Meta extends Table {
 			meta_key varchar(255) DEFAULT NULL,
 			meta_value longtext DEFAULT NULL,
 			PRIMARY KEY (meta_id),
-			KEY edd_file_download_log_id (edd_log_id),
+			KEY edd_file_download_log_id (edd_file_download_log_id),
 			KEY meta_key (meta_key({$max_index_length}))";
 	}
 }
