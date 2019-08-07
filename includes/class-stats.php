@@ -121,6 +121,7 @@ class Stats {
 				'price_id'          => '',
 			);
 		}
+
 	}
 
 	/** Calculation Methods ***************************************************/
@@ -405,7 +406,11 @@ class Stats {
 			? $query['status']
 			: array( 'complete', 'partially_refunded' );
 
-		$query['type'] = 'refund';
+		if ( ! array( $query['status'] ) ) {
+			$query['status'] = array( $query['status'] );
+		}
+
+		$query['type'] = array( 'refund' );
 
 		return $this->get_order_count( $query );
 	}
@@ -544,7 +549,7 @@ class Stats {
 	 */
 	public function get_order_refund_amount( $query = array() ) {
 		$query['status'] = array( 'complete', 'partially_refunded' );
-		$query['type']   = 'refund';
+		$query['type']   = array( 'refund' );
 
 		// Request raw output so we can run `abs()` on the value.
 		$query['output'] = 'raw';
@@ -2608,6 +2613,12 @@ class Stats {
 		}
 
 		if ( ! empty( $this->query_vars['type'] ) ) {
+
+			// We always want to format this as an array, so account for a possible string.
+			if ( ! is_array( $this->query_vars['type'] ) ) {
+				$this->query_vars['type'] = array( $this->query_vars['type'] );
+			}
+
 			$this->query_vars['type'] = array_map( 'sanitize_text_field', $this->query_vars['type'] );
 
 			$placeholders = implode( ', ', array_fill( 0, count( $this->query_vars['type'] ), '%s' ) );
