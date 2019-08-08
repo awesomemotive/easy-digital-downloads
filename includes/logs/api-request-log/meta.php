@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
  * @return int|false Meta ID on success, false on failure.
  */
 function edd_add_api_request_log_meta( $api_request_log_id, $meta_key, $meta_value, $unique = false ) {
-	return add_metadata( 'edd_api_request_log', $api_request_log_id, $meta_key, $meta_value, $unique );
+	return add_metadata( 'edd_log_api_request', $api_request_log_id, $meta_key, $meta_value, $unique );
 }
 
 /**
@@ -43,7 +43,7 @@ function edd_add_api_request_log_meta( $api_request_log_id, $meta_key, $meta_val
  * @return bool True on success, false on failure.
  */
 function edd_delete_api_request_log_meta( $api_request_log_id, $meta_key, $meta_value = '' ) {
-	return delete_metadata( 'edd_api_request_log', $api_request_log_id, $meta_key, $meta_value );
+	return delete_metadata( 'edd_log_api_request', $api_request_log_id, $meta_key, $meta_value );
 }
 
 /**
@@ -59,7 +59,7 @@ function edd_delete_api_request_log_meta( $api_request_log_id, $meta_key, $meta_
  * @return mixed Will be an array if $single is false. Will be value of meta data field if $single is true.
  */
 function edd_get_api_request_log_meta( $api_request_log_id, $key = '', $single = false ) {
-	return get_metadata( 'edd_api_request_log', $api_request_log_id, $key, $single );
+	return get_metadata( 'edd_log_api_request', $api_request_log_id, $key, $single );
 }
 
 /**
@@ -80,7 +80,7 @@ function edd_get_api_request_log_meta( $api_request_log_id, $key = '', $single =
  * @return int|bool Meta ID if the key didn't exist, true on successful update, false on failure.
  */
 function edd_update_api_request_log_meta( $api_request_log_id, $meta_key, $meta_value, $prev_value = '' ) {
-	return update_metadata( 'edd_api_request_log', $api_request_log_id, $meta_key, $meta_value, $prev_value );
+	return update_metadata( 'edd_log_api_request', $api_request_log_id, $meta_key, $meta_value, $prev_value );
 }
 
 /**
@@ -93,5 +93,5 @@ function edd_update_api_request_log_meta( $api_request_log_id, $meta_key, $meta_
  * @return bool Whether the log meta key was deleted from the database.
  */
 function edd_delete_api_request_log_meta_by_key( $meta_key ) {
-	return delete_metadata( 'edd_api_request_log', null, $meta_key, '', true );
+	return delete_metadata( 'edd_log_api_request', null, $meta_key, '', true );
 }

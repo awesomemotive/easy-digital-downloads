@@ -29,7 +29,7 @@ final class Log_Api_Request_Meta extends Table {
 	 * @since 3.0
 	 * @var string
 	 */
-	protected $name = 'api_request_logmeta';
+	protected $name = 'log_api_requestmeta';
 
 	/**
 	 * Database version
