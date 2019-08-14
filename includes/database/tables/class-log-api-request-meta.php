@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 use EDD\Database\Table;
 
 /**
- * Setup the global "edd_api_request_logmeta" database table
+ * Setup the global "edd_log_api_requestmeta" database table
  *
  * @since 3.0
  */
@@ -50,11 +50,11 @@ final class Log_Api_Request_Meta extends Table {
 	protected function set_schema() {
 		$max_index_length = 191;
 		$this->schema     = "meta_id bigint(20) unsigned NOT NULL auto_increment,
-			edd_api_request_log_id bigint(20) unsigned NOT NULL default '0',
+			edd_log_api_request_id bigint(20) unsigned NOT NULL default '0',
 			meta_key varchar(255) DEFAULT NULL,
 			meta_value longtext DEFAULT NULL,
 			PRIMARY KEY (meta_id),
-			KEY edd_api_request_log_id (edd_api_request_log_id),
+			KEY edd_log_api_request_id (edd_log_api_request_id),
 			KEY meta_key (meta_key({$max_index_length}))";
 	}
 }
