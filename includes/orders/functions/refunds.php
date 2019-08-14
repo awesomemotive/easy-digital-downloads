@@ -276,16 +276,6 @@ function edd_refund_order( $order_id = 0, $status = 'complete', $order_items = a
 		) );
 	}
 
-	// Log the refund.
-	edd_add_log( array(
-		'object_id'   => $order_id,
-		'object_type' => 'order',
-		'user_id'     => get_current_user_id(),
-		'type'        => 'refund',
-		'title'       => __( 'Refund Issued', 'easy-digital-downloads' ),
-		'content'     => __( 'A refund for the entire order was issued.', 'easy-digital-downloads' ),
-	) );
-
 	// Update order status to `refunded` once refund is complete and if all items are marked as refunded.
 	$all_refunded = true;
 	$order_items = edd_get_order_items( array(
