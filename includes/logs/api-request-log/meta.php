@@ -13,7 +13,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Add meta data field to a file download log.
+ * Add meta data field to an api request log.
  *
  * @since 3.0
  *
@@ -63,7 +63,7 @@ function edd_get_api_request_log_meta( $api_request_log_id, $key = '', $single =
 }
 
 /**
- * Update file download log meta field based on file download log ID.
+ * Update api request log meta field based on api request log ID.
  *
  * Use the $prev_value parameter to differentiate between meta fields with the
  * same key and log ID.

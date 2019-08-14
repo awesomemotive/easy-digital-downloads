@@ -1,5 +1,5 @@
 <?php
-namespace EDD\File_Download_Logs;
+namespace EDD\Api_Request_Logs;
 
 /**
  * Logs Meta DB Tests
@@ -8,9 +8,9 @@ namespace EDD\File_Download_Logs;
  * @group database
  * @group edd_logs
  *
- * @coversDefaultClass \EDD\Database\Queries\Log_File_Download
+ * @coversDefaultClass \EDD\Database\Queries\Log_Api_Request
  */
-class File_Download_Log_Meta_Tests extends \EDD_UnitTestCase {
+class Api_Request_Log_Meta_Tests extends \EDD_UnitTestCase {
 
 	/**
 	 * Discount object test fixture.
@@ -24,13 +24,13 @@ class File_Download_Log_Meta_Tests extends \EDD_UnitTestCase {
 	 * Set up fixtures.
 	 */
 	public static function wpSetUpBeforeClass() {
-		self::$log = parent::edd()->file_download_log->create_and_get();
+		self::$log = parent::edd()->api_request_log->create_and_get();
 	}
 
 	public function tearDown() {
 		parent::tearDown();
 
-		edd_get_component_interface( 'log_file_download', 'meta' )->truncate();
+		edd_get_component_interface( 'log_api_request', 'meta' )->truncate();
 	}
 
 	/**
@@ -38,7 +38,7 @@ class File_Download_Log_Meta_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Logs\Log::add_meta()
 	 */
 	public function test_add_metadata_with_empty_key_value_should_return_false() {
-		$this->assertFalse( edd_add_file_download_log_meta( self::$log->id, '', '' ) );
+		$this->assertFalse( edd_add_api_request_log_meta( self::$log->id, '', '' ) );
 	}
 
 	/**
@@ -46,7 +46,7 @@ class File_Download_Log_Meta_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Logs\Log::add_meta()
 	 */
 	public function test_add_metadata_with_empty_value_should_be_true() {
-		$this->assertSame( 1, edd_add_file_download_log_meta( self::$log->id, 'test_key', '' ) );
+		$this->assertSame( 1, edd_add_api_request_log_meta( self::$log->id, 'test_key', '' ) );
 	}
 
 	/**
@@ -54,7 +54,7 @@ class File_Download_Log_Meta_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Logs\Log::add_meta()
 	 */
 	public function test_add_metadata_with_key_value_should_not_be_empty() {
-		$this->assertSame( 1, edd_add_file_download_log_meta( self::$log->id, 'test_key', '1' ) );
+		$this->assertSame( 1, edd_add_api_request_log_meta( self::$log->id, 'test_key', '1' ) );
 	}
 
 	/**
@@ -62,7 +62,7 @@ class File_Download_Log_Meta_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Logs\Log::update_meta()
 	 */
 	public function test_update_metadata_with_empty_key_value_should_be_empty() {
-		$this->assertSame( false, edd_update_file_download_log_meta( self::$log->id, '', '' ) );
+		$this->assertSame( false, edd_update_api_request_log_meta( self::$log->id, '', '' ) );
 	}
 
 	/**
@@ -70,7 +70,7 @@ class File_Download_Log_Meta_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Logs\Log::update_meta()
 	 */
 	public function test_update_metadata_with_empty_value_should_not_be_empty() {
-		$this->assertSame( 1, edd_update_file_download_log_meta( self::$log->id, 'test_key_2', '' ) );
+		$this->assertSame( 1, edd_update_api_request_log_meta( self::$log->id, 'test_key_2', '' ) );
 	}
 
 	/**
@@ -78,7 +78,7 @@ class File_Download_Log_Meta_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Logs\Log::update_meta()
 	 */
 	public function test_update_metadata_with_key_value_should_not_be_empty() {
-		$this->assertSame( 1, edd_update_file_download_log_meta( self::$log->id, 'test_key_2', '1' ) );
+		$this->assertSame( 1, edd_update_api_request_log_meta( self::$log->id, 'test_key_2', '1' ) );
 	}
 
 	/**
@@ -86,7 +86,7 @@ class File_Download_Log_Meta_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Logs\Log::get_meta()
 	 */
 	public function test_get_metadata_with_no_args_should_be_empty() {
-		$this->assertSame( array(), edd_get_file_download_log_meta( self::$log->id ) );
+		$this->assertSame( array(), edd_get_api_request_log_meta( self::$log->id ) );
 	}
 
 	/**
@@ -94,7 +94,7 @@ class File_Download_Log_Meta_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Logs\Log::get_meta()
 	 */
 	public function test_get_metadata_with_invalid_key_should_be_empty() {
-		$this->assertSame( '', edd_get_file_download_log_meta( self::$log->id, 'key_that_does_not_exist', true ) );
+		$this->assertSame( '', edd_get_api_request_log_meta( self::$log->id, 'key_that_does_not_exist', true ) );
 	}
 
 	/**
@@ -102,8 +102,8 @@ class File_Download_Log_Meta_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Logs\Log::get_meta()
 	 */
 	public function test_get_metadata_after_update_should_return_that_value() {
-		edd_update_file_download_log_meta( self::$log->id, 'test_key_2', '1' );
-		$this->assertSame( '1', edd_get_file_download_log_meta( self::$log->id, 'test_key_2', true ) );
+		edd_update_api_request_log_meta( self::$log->id, 'test_key_2', '1' );
+		$this->assertSame( '1', edd_get_api_request_log_meta( self::$log->id, 'test_key_2', true ) );
 	}
 
 	/**
@@ -111,8 +111,8 @@ class File_Download_Log_Meta_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Logs\Log::delete_meta()
 	 */
 	public function test_delete_metadata_with_valid_key_should_return_true() {
-		edd_update_file_download_log_meta( self::$log->id, 'test_key', '1' );
-		$this->assertTrue( edd_delete_file_download_log_meta( self::$log->id, 'test_key' ) );
+		edd_update_api_request_log_meta( self::$log->id, 'test_key', '1' );
+		$this->assertTrue( edd_delete_api_request_log_meta( self::$log->id, 'test_key' ) );
 	}
 
 	/**
@@ -120,6 +120,6 @@ class File_Download_Log_Meta_Tests extends \EDD_UnitTestCase {
 	 * @covers \EDD\Logs\Log::delete_meta()
 	 */
 	public function test_delete_metadata_with_invalid_key_should_return_false() {
-		$this->assertFalse( edd_delete_file_download_log_meta( self::$log->id, 'key_that_does_not_exist' ) );
+		$this->assertFalse( edd_delete_api_request_log_meta( self::$log->id, 'key_that_does_not_exist' ) );
 	}
 }
