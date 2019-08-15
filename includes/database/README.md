@@ -158,7 +158,19 @@ This table's data is intended to be immutable.
 | date_modified | The date this row was last modified. |
 | uuid | A unique identifying string representing this row. |
 
-## The File Download Logs Table:
+## The Log API Request Meta Table:
+This table stores various and custom/extra information about an API Request Log.
+
+This table's data is intended to be immutable.
+
+| Table Column  | Table Column's Description |
+| ------------- | ------------- |
+| meta_id | The unique id of the row, which auto increments.  |
+| edd_log_api_request_id  | The id of the api request log to which this row relates. |
+| meta_key | The reference key (like a variable name) of the data in question. |
+| meta_value | The value. This can be anything needed as its purpose is for anything extra. |
+
+## The Logs File Downloads Table:
 Every time a deliverable file is downloaded via EDD, it is logged in this table.
 
 This table's data is intended to be immutable.
@@ -176,6 +188,18 @@ This table's data is intended to be immutable.
 | date_created | The date this row was created. |
 | date_modified | The date this row was last modified. |
 | uuid | A unique identifying string representing this row. |
+
+## The Log File Download Meta Table:
+This table stores various and custom/extra information about a file download log.
+
+This table's data is intended to be immutable.
+
+| Table Column  | Table Column's Description |
+| ------------- | ------------- |
+| meta_id | The unique id of the row, which auto increments.  |
+| edd_log_file_download_id  | The id of the file download log to which this row relates. |
+| meta_key | The reference key (like a variable name) of the data in question. |
+| meta_value | The value. This can be anything needed as its purpose is for anything extra. |
 
 ## The Note Meta Table:
 This table stores various and custom/extra information about a note.
