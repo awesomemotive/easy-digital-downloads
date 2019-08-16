@@ -139,6 +139,7 @@ function edd_payment_history_page() {
 		// List Table
 		case 'list' :
 		default :
+			wp_enqueue_script( 'edd-admin-payments' );
 			edd_order_list_table_content();
 			break;
 	}
