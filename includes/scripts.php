@@ -401,10 +401,6 @@ function edd_enqueue_admin_scripts( $hook = '' ) {
 		wp_enqueue_script( 'edd-admin-tools-export' );
 	}
 
-	// Orders List Table
-	if ( edd_is_admin_page( 'payments' ) ) {
-		wp_enqueue_script( 'edd-admin-payments' );
-	}
 }
 add_action( 'admin_enqueue_scripts', 'edd_enqueue_admin_scripts' );
 
