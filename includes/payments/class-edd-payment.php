@@ -2611,6 +2611,7 @@ class EDD_Payment {
 						'transaction_id' => $meta_value,
 						'gateway'        => $this->gateway,
 						'status'         => 'complete',
+						'total'          => $this->total,
 					) );
 				}
 		}
