@@ -192,34 +192,34 @@ class Order_Address_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::edd_get_order_addresses
 	 */
-	public function test_get_order_addresses_with_orderby_first_name_and_order_asc_should_return_true() {
+	public function test_get_order_addresses_with_orderby_name_and_order_asc_should_return_true() {
 		$order_addresses = edd_get_order_addresses( array(
-			'orderby' => 'first_name',
+			'orderby' => 'name',
 			'order'   => 'asc',
 		) );
 
-		$this->assertTrue( $order_addresses[0]->first_name < $order_addresses[1]->first_name );
+		$this->assertTrue( $order_addresses[0]->name < $order_addresses[1]->name );
 	}
 
 	/**
 	 * @covers ::edd_get_order_addresses
 	 */
-	public function test_get_order_addresses_with_orderby_first_name_and_order_desc_should_return_true() {
+	public function test_get_order_addresses_with_orderby_name_and_order_desc_should_return_true() {
 		$order_addresses = edd_get_order_addresses( array(
-			'orderby' => 'first_name',
+			'orderby' => 'name',
 			'order'   => 'desc',
 		) );
 
-		$this->assertTrue( $order_addresses[0]->first_name > $order_addresses[1]->first_name );
+		$this->assertTrue( $order_addresses[0]->name > $order_addresses[1]->name );
 	}
 
 	/**
 	 * @covers ::edd_get_order_addresses
 	 */
-	public function test_get_order_addresses_with_first_name__in_should_return_1() {
+	public function test_get_order_addresses_with_name__in_should_return_1() {
 		$order_addresses = edd_get_order_addresses( array(
-			'first_name__in' => array(
-				'first_name' . \WP_UnitTest_Generator_Sequence::$incr,
+			'name__in' => array(
+				'name' . \WP_UnitTest_Generator_Sequence::$incr,
 			),
 		) );
 
@@ -229,59 +229,9 @@ class Order_Address_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::edd_get_order_addresses
 	 */
-	public function test_get_order_addresses_with_first_name__not_in_should_return_5() {
+	public function test_get_order_addresses_with_name__not_in_should_return_5() {
 		$order_addresses = edd_get_order_addresses( array(
-			'first_name__not_in' => array(
-				999,
-			),
-		) );
-
-		$this->assertCount( 5, $order_addresses );
-	}
-
-	/**
-	 * @covers ::edd_get_order_addresses
-	 */
-	public function test_get_order_addresses_with_orderby_last_name_and_order_asc_should_return_true() {
-		$order_addresses = edd_get_order_addresses( array(
-			'orderby' => 'last_name',
-			'order'   => 'asc',
-		) );
-
-		$this->assertTrue( $order_addresses[0]->last_name < $order_addresses[1]->last_name );
-	}
-
-	/**
-	 * @covers ::edd_get_order_addresses
-	 */
-	public function test_get_order_addresses_with_orderby_last_name_and_order_desc_should_return_true() {
-		$order_addresses = edd_get_order_addresses( array(
-			'orderby' => 'last_name',
-			'order'   => 'desc',
-		) );
-
-		$this->assertTrue( $order_addresses[0]->last_name > $order_addresses[1]->last_name );
-	}
-
-	/**
-	 * @covers ::edd_get_order_addresses
-	 */
-	public function test_get_order_addresses_with_last_name__in_should_return_1() {
-		$order_addresses = edd_get_order_addresses( array(
-			'last_name__in' => array(
-				'last_name' . \WP_UnitTest_Generator_Sequence::$incr,
-			),
-		) );
-
-		$this->assertCount( 1, $order_addresses );
-	}
-
-	/**
-	 * @covers ::edd_get_order_addresses
-	 */
-	public function test_get_order_addresses_with_last_name__not_in_should_return_5() {
-		$order_addresses = edd_get_order_addresses( array(
-			'last_name__not_in' => array(
+			'name__not_in' => array(
 				999,
 			),
 		) );
@@ -614,20 +564,9 @@ class Order_Address_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::edd_get_order_addresses
 	 */
-	public function test_get_order_addresses_with_invalid_first_name_should_return_0() {
+	public function test_get_order_addresses_with_invalid_name_should_return_0() {
 		$transactions = edd_get_order_addresses( array(
-			'first_name' => -999,
-		) );
-
-		$this->assertCount( 0, $transactions );
-	}
-
-	/**
-	 * @covers ::edd_get_order_addresses
-	 */
-	public function test_get_order_addresses_with_invalid_last_name_should_return_0() {
-		$transactions = edd_get_order_addresses( array(
-			'last_name' => -999,
+			'name' => -999,
 		) );
 
 		$this->assertCount( 0, $transactions );

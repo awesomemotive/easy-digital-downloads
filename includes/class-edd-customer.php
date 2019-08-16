@@ -334,11 +334,24 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 
 		do_action( 'edd_customer_pre_update', $this->id, $data );
 
-		$updated = false;
+		$updated          = false;
+		$previous_user_id = $this->user_id;
 
 		if ( edd_update_customer( $this->id, $data ) ) {
 			$customer = edd_get_customer( $this->id );
 			$this->setup_customer( $customer );
+
+			// If the user ID changed, we need to update all the orders associated with this customer and change the user ID.
+			if ( intval( $previous_user_id ) !== intval( $this->user_id ) ) {
+
+				// Update some payment meta if we need to
+				$order_ids = edd_get_orders( array( 'customer_id' => $this->id, 'number' => 9999 ) );
+
+				foreach ( $order_ids as $order_id ) {
+					edd_update_order( $order_id, array( 'user_id' => $this->user_id ) );
+				}
+
+			}
 
 			$updated = true;
 		}

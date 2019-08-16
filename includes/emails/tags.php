@@ -281,30 +281,30 @@ add_action( 'edd_add_email_tags', 'edd_setup_email_tags' );
  */
 function edd_email_tag_download_list( $payment_id ) {
 	$payment = new EDD_Payment( $payment_id );
+	$order   = edd_get_order( $payment_id );
 
 	$payment_data  = $payment->get_meta();
 	$download_list = '<ul>';
 	$cart_items    = $payment->cart_details;
 	$email         = $payment->email;
 
-	if ( $cart_items ) {
+	if ( $order->get_items() ) {
 		$show_names = apply_filters( 'edd_email_show_names', true );
 		$show_links = apply_filters( 'edd_email_show_links', true );
 
-		foreach ( $cart_items as $item ) {
+		foreach ( $order->get_items() as $item ) {
 
 			if ( edd_use_skus() ) {
-				$sku = edd_get_download_sku( $item['id'] );
+				$sku = edd_get_download_sku( $item->product_id );
 			}
 
 			if ( edd_item_quantities_enabled() ) {
-				$quantity = $item['quantity'];
+				$quantity = $item->quantity;
 			}
 
-			$price_id = edd_get_cart_item_price_id( $item );
 			if ( $show_names ) {
 
-				$title = '<strong>' . get_the_title( $item['id'] ) . '</strong>';
+				$title = '<strong>' . $item->product_name . '</strong>';
 
 				if ( ! empty( $quantity ) && $quantity > 1 ) {
 					$title .= "&nbsp;&ndash;&nbsp;" . __( 'Quantity', 'easy-digital-downloads' ) . ': ' . $quantity;
@@ -314,14 +314,10 @@ function edd_email_tag_download_list( $payment_id ) {
 					$title .= "&nbsp;&ndash;&nbsp;" . __( 'SKU', 'easy-digital-downloads' ) . ': ' . $sku;
 				}
 
-				if( ! empty( $price_id ) && 0 !== $price_id ){
-					$title .= "&nbsp;&ndash;&nbsp;" . edd_get_price_option_name( $item['id'], $price_id, $payment_id );
-				}
-
-				$download_list .= '<li>' . apply_filters( 'edd_email_receipt_download_title', $title, $item, $price_id, $payment_id ) . '<br/>';
+				$download_list .= '<li>' . apply_filters( 'edd_email_receipt_download_title', $title, $cart_items[ $item->cart_index ], $item->price_id, $payment_id ) . '<br/>';
 			}
 
-			$files = edd_get_download_files( $item['id'], $price_id );
+			$files = edd_get_download_files( $item->product_id, $item->price_id );
 
 			if ( ! empty( $files ) ) {
 
@@ -329,7 +325,7 @@ function edd_email_tag_download_list( $payment_id ) {
 
 					if ( $show_links ) {
 						$download_list .= '<div>';
-							$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $item['id'], $price_id );
+							$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $item->product_id, $item->price_id );
 							$download_list .= '<a href="' . esc_url_raw( $file_url ) . '">' . edd_get_file_name( $file ) . '</a>';
 							$download_list .= '</div>';
 					} else {
@@ -340,9 +336,9 @@ function edd_email_tag_download_list( $payment_id ) {
 
 				}
 
-			} elseif ( edd_is_bundled_product( $item['id'] ) ) {
+			} elseif ( edd_is_bundled_product( $item->product_id ) ) {
 
-				$bundled_products = apply_filters( 'edd_email_tag_bundled_products', edd_get_bundled_products( $item['id'], $price_id ), $item, $payment_id, 'download_list' );
+				$bundled_products = apply_filters( 'edd_email_tag_bundled_products', edd_get_bundled_products( $item->product_id, $item->price_id ), $item, $payment_id, 'download_list' );
 
 				foreach ( $bundled_products as $bundle_item ) {
 
@@ -353,7 +349,7 @@ function edd_email_tag_download_list( $payment_id ) {
 					foreach ( $download_files as $filekey => $file ) {
 						if ( $show_links ) {
 							$download_list .= '<div>';
-							$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $bundle_item, $price_id );
+							$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $bundle_item, $item->price_id );
 							$download_list .= '<a href="' . esc_url( $file_url ) . '">' . edd_get_file_name( $file ) . '</a>';
 							$download_list .= '</div>';
 						} else {
@@ -366,8 +362,8 @@ function edd_email_tag_download_list( $payment_id ) {
 
 			} else {
 
-				$no_downloads_message = apply_filters( 'edd_receipt_no_files_found_text', __( 'No downloadable files found.', 'easy-digital-downloads' ), $item['id'] );
-				$no_downloads_message = apply_filters( 'edd_email_receipt_no_downloads_message', $no_downloads_message, $item['id'], $price_id, $payment_id );
+				$no_downloads_message = apply_filters( 'edd_receipt_no_files_found_text', __( 'No downloadable files found.', 'easy-digital-downloads' ), $item->product_id );
+				$no_downloads_message = apply_filters( 'edd_email_receipt_no_downloads_message', $no_downloads_message, $item->product_id, $item->price_id, $payment_id );
 
 				if ( ! empty( $no_downloads_message ) ){
 					$download_list .= '<div>';
@@ -377,8 +373,8 @@ function edd_email_tag_download_list( $payment_id ) {
 			}
 
 
-			if ( '' != edd_get_product_notes( $item['id'] ) ) {
-				$download_list .= ' &mdash; <small>' . edd_get_product_notes( $item['id'] ) . '</small>';
+			if ( '' != edd_get_product_notes( $item->product_id ) ) {
+				$download_list .= ' &mdash; <small>' . edd_get_product_notes( $item->product_id ) . '</small>';
 			}
 
 
@@ -403,30 +399,30 @@ function edd_email_tag_download_list( $payment_id ) {
  */
 function edd_email_tag_download_list_plain( $payment_id ) {
 	$payment = new EDD_Payment( $payment_id );
+	$order   = edd_get_order( $payment_id );
 
 	$payment_data  = $payment->get_meta();
 	$cart_items    = $payment->cart_details;
 	$email         = $payment->email;
 	$download_list = '';
 
-	if ( $cart_items ) {
+	if ( $order->get_items() ) {
 		$show_names = apply_filters( 'edd_email_show_names', true );
 		$show_links = apply_filters( 'edd_email_show_links', true );
 
-		foreach ( $cart_items as $item ) {
+		foreach ( $order->get_items() as $item ) {
 
 			if ( edd_use_skus() ) {
-				$sku = edd_get_download_sku( $item['id'] );
+				$sku = edd_get_download_sku( $item->product_id );
 			}
 
 			if ( edd_item_quantities_enabled() ) {
-				$quantity = $item['quantity'];
+				$quantity = $item->quantity;
 			}
 
-			$price_id = edd_get_cart_item_price_id( $item );
 			if ( $show_names ) {
 
-				$title = get_the_title( $item['id'] );
+				$title = $item->product_name;
 
 				if ( ! empty( $quantity ) && $quantity > 1 ) {
 					$title .= __( 'Quantity', 'easy-digital-downloads' ) . ': ' . $quantity;
@@ -436,23 +432,19 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 					$title .= __( 'SKU', 'easy-digital-downloads' ) . ': ' . $sku;
 				}
 
-				if ( $price_id !== null ) {
-					$title .= edd_get_price_option_name( $item['id'], $price_id, $payment_id );
-				}
-
 				$download_list .= "\n";
 
-				$download_list .= apply_filters( 'edd_email_receipt_download_title', $title, $item, $price_id, $payment_id )  . "\n";
+				$download_list .= apply_filters( 'edd_email_receipt_download_title', $title, $cart_items[ $item->cart_index ], $item->price_id, $payment_id )  . "\n";
 			}
 
-			$files = edd_get_download_files( $item['id'], $price_id );
+			$files = edd_get_download_files( $item->product_id, $item->price_id );
 
 			if ( ! empty( $files ) ) {
 
 				foreach ( $files as $filekey => $file ) {
 					if( $show_links ) {
 						$download_list .= "\n";
-						$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $item['id'], $price_id );
+						$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $item->product_id, $item->price_id );
 						$download_list .= edd_get_file_name( $file ) . ': ' . $file_url . "\n";
 					} else {
 						$download_list .= "\n";
@@ -460,9 +452,9 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 					}
 				}
 
-			} elseif ( edd_is_bundled_product( $item['id'] ) ) {
+			} elseif ( edd_is_bundled_product( $item->product_id ) ) {
 
-				$bundled_products = apply_filters( 'edd_email_tag_bundled_products', edd_get_bundled_products( $item['id'] ), $item, $payment_id, 'download_list' );
+				$bundled_products = apply_filters( 'edd_email_tag_bundled_products', edd_get_bundled_products( $item->product_id ), $cart_items[ $item->cart_index ], $payment_id, 'download_list' );
 
 				foreach ( $bundled_products as $bundle_item ) {
 
@@ -472,7 +464,7 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 
 					foreach ( $files as $filekey => $file ) {
 						if( $show_links ) {
-							$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $bundle_item, $price_id );
+							$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $bundle_item, $item->price_id );
 							$download_list .= edd_get_file_name( $file ) . ': ' . $file_url . "\n";
 						} else {
 							$download_list .= edd_get_file_name( $file ) . "\n";
@@ -482,9 +474,9 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 			}
 
 
-			if ( '' != edd_get_product_notes( $item['id'] ) ) {
+			if ( '' != edd_get_product_notes( $item->product_id ) ) {
 				$download_list .= "\n";
-				$download_list .= edd_get_product_notes( $item['id'] ) . "\n";
+				$download_list .= edd_get_product_notes( $item->product_id ) . "\n";
 			}
 		}
 	}

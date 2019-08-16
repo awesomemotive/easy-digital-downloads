@@ -121,6 +121,7 @@ class Stats {
 				'price_id'          => '',
 			);
 		}
+
 	}
 
 	/** Calculation Methods ***************************************************/
@@ -403,7 +404,13 @@ class Stats {
 	public function get_order_refund_count( $query = array() ) {
 		$query['status'] = isset( $query['status'] )
 			? $query['status']
-			: array( 'refunded', 'partially_refunded' );
+			: array( 'complete', 'partially_refunded' );
+
+		if ( ! array( $query['status'] ) ) {
+			$query['status'] = array( $query['status'] );
+		}
+
+		$query['type'] = array( 'refund' );
 
 		return $this->get_order_count( $query );
 	}
@@ -541,7 +548,8 @@ class Stats {
 	 * @return string Formatted amount from refunded orders.
 	 */
 	public function get_order_refund_amount( $query = array() ) {
-		$query['status'] = array( 'refunded', 'partially_refunded' );
+		$query['status'] = array( 'complete', 'partially_refunded' );
+		$query['type']   = array( 'refund' );
 
 		// Request raw output so we can run `abs()` on the value.
 		$query['output'] = 'raw';
@@ -691,7 +699,7 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$status_sql = $this->get_db()->prepare( 'AND status IN(%s, %s)', esc_sql( 'refunded' ), esc_sql( 'partially_refunded' ) );
+		$status_sql = $this->get_db()->prepare( "AND status IN(%s, %s) AND type = '%s'", esc_sql( 'complete' ), esc_sql( 'partially_refunded' ), esc_sql( 'refund' ) );
 
 		$ignore_free = $this->get_db()->prepare( "AND {$this->query_vars['table']}.total > %d", 0 );
 
@@ -2605,6 +2613,12 @@ class Stats {
 		}
 
 		if ( ! empty( $this->query_vars['type'] ) ) {
+
+			// We always want to format this as an array, so account for a possible string.
+			if ( ! is_array( $this->query_vars['type'] ) ) {
+				$this->query_vars['type'] = array( $this->query_vars['type'] );
+			}
+
 			$this->query_vars['type'] = array_map( 'sanitize_text_field', $this->query_vars['type'] );
 
 			$placeholders = implode( ', ', array_fill( 0, count( $this->query_vars['type'] ), '%s' ) );
