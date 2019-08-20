@@ -81,9 +81,9 @@ function edd_sanitize_amount( $amount = 0 ) {
 	$sanitized = number_format( (float) $sanitized, $decimals, '.', '' );
 
 	/**
-	 * Filter the unformatted amount before returning
+	 * Filter the sanitized amount before returning
 	 *
-	 * @since 3.0
+	 * @since unknown
 	 *
 	 * @param mixed  $sanitized     Sanitized amount.
 	 * @param mixed  $amount        Original amount.
