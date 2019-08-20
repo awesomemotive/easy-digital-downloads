@@ -13,78 +13,108 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Sanitize Amount
+ * Sanitize a numeric value.
  *
- * Returns a sanitized amount by stripping out thousands separators.
+ * Use this function to "unformat" a previously formatted numeric value.
+ *
+ * (Most commonly, this is when accepting input from a form field where the
+ * value is likely to derived from the site or user preferences.)
  *
  * @since 1.0
- * @param string $amount Price amount to format
- * @return string $amount Newly sanitized amount
+ *
+ * @param mixed $amount Default 0. Numeric amount to sanitize.
+ *
+ * @return string $amount Newly sanitized amount.
  */
-function edd_sanitize_amount( $amount = '' ) {
-	$is_negative   = false;
-	$thousands_sep = edd_get_option( 'thousands_separator', ',' );
-	$decimal_sep   = edd_get_option( 'decimal_separator',   '.' );
+function edd_sanitize_amount( $amount = 0 ) {
 
-	// Sanitize the amount
-	if ( $decimal_sep === ',' && false !== ( $found = strpos( $amount, $decimal_sep ) ) ) {
-		if ( ( $thousands_sep == '.' || $thousands_sep == ' ' ) && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
+	// Get separators
+	$decimal_sep   = edd_get_option( 'decimal_separator',   '.' );
+	$thousands_sep = edd_get_option( 'thousands_separator', ',' );
+
+	// Look for separators in amount
+	$found_decimal   = strpos( $amount, $decimal_sep   );
+	$found_thousands = strpos( $amount, $thousands_sep );
+
+	// Amount contains comma as decimal separator
+	if ( ( $decimal_sep === ',' ) && ( false !== $found_decimal ) ) {
+
+		// Amount contains period or space as thousands separator
+		if ( in_array( $thousands_sep, array( '.', ' ' ), true ) && ( false !== $found_thousands ) ) {
 			$amount = str_replace( $thousands_sep, '', $amount );
-		} elseif( empty( $thousands_sep ) && false !== ( $found = strpos( $amount, '.' ) ) ) {
+
+		// Amount contains period
+		} elseif ( empty( $thousands_sep ) && ( false !== strpos( $amount, '.' ) ) ) {
 			$amount = str_replace( '.', '', $amount );
 		}
 
 		$amount = str_replace( $decimal_sep, '.', $amount );
-	} elseif( $thousands_sep === ',' && false !== ( $found = strpos( $amount, $thousands_sep ) ) ) {
+
+	// Amount contains comma as thousands separator
+	} elseif( ( $thousands_sep === ',' ) && ( false !== $found_thousands ) ) {
 		$amount = str_replace( $thousands_sep, '', $amount );
 	}
 
-	// Negative
-	if ( $amount < 0 ) {
-		$is_negative = true;
-	}
+	// Check if negative (before stripping characters below)
+	$negative_exponent = ( $amount < 0 )
+		? -1
+		: 1;
 
-	// Only numbers
+	// Only numbers and period
 	$amount = preg_replace( '/[^0-9\.]/', '', $amount );
 
 	/**
-	 * Filter number of decimals to use for prices
+	 * Filter number of decimals to use for sanitized amount
 	 *
 	 * @since unknown
 	 *
-	 * @param int $number Number of decimals
-	 * @param int|string $amount Price
+	 * @param int        $number Default 2. Number of decimals.
+	 * @param int|string $amount Amount being sanitized.
 	 */
 	$decimals = apply_filters( 'edd_sanitize_amount_decimals', 2, $amount );
-	$amount   = number_format( (float) $amount, $decimals, '.', '' );
 
-	if ( true === $is_negative ) {
-		$amount *= -1;
-	}
+	// Flip back to negative
+	$sanitized = $amount * $negative_exponent;
+
+	// Format amount using decimals and a period for the decimal separator
+	// (no thousands separator; also rounds up or down)
+	$sanitized = number_format( (float) $sanitized, $decimals, '.', '' );
 
 	/**
-	 * Filter the sanitized price before returning
+	 * Filter the unformatted amount before returning
 	 *
-	 * @since unknown
+	 * @since 3.0
 	 *
-	 * @param string $amount Price
+	 * @param mixed  $sanitized     Sanitized amount.
+	 * @param mixed  $amount        Original amount.
+	 * @param int    $decimals      Default 2. Number of decimals.
+	 * @param string $decimal_sep   Default '.'. Decimal separator.
+	 * @param string $thousands_sep Default ','. Thousands separator.
 	 */
-	return apply_filters( 'edd_sanitize_amount', $amount );
+	return apply_filters( 'edd_sanitize_amount', $sanitized, $amount, $decimals, $decimal_sep, $thousands_sep );
 }
 
 /**
- * Returns a nicely formatted amount.
+ * Format a numeric value.
+ *
+ * Uses the decimal & thousands separator settings, and the number of decimals,
+ * to format any numeric value.
+ *
+ * (Most commonly, this is used to apply site or user preferences to a numeric
+ * value for output to the page.)
  *
  * @since 1.0
  *
- * @param string $amount   Price amount to format
- * @param string $decimals Whether or not to use decimals.  Useful when set to false for non-currency numbers.
+ * @param mixed  $amount   Default 0. Numeric amount to format.
+ * @param string $decimals Default true. Whether or not to use decimals. Useful when set to false for non-currency numbers.
  *
  * @return string $amount Newly formatted amount or Price Not Available
  */
-function edd_format_amount( $amount, $decimals = true ) {
-	$thousands_sep = edd_get_option( 'thousands_separator', ',' );
+function edd_format_amount( $amount = 0, $decimals = true ) {
+
+	// Get separators
 	$decimal_sep   = edd_get_option( 'decimal_separator',   '.' );
+	$thousands_sep = edd_get_option( 'thousands_separator', ',' );
 
 	// Format the amount
 	if ( $decimal_sep === ',' && false !== ( $sep_found = strpos( $amount, $decimal_sep ) ) ) {
@@ -107,9 +137,30 @@ function edd_format_amount( $amount, $decimals = true ) {
 		$amount = 0;
 	}
 
-	$decimals  = apply_filters( 'edd_format_amount_decimals', $decimals ? 2 : 0, $amount );
+	/**
+	 * Filter number of decimals to use for formatted amount
+	 *
+	 * @since unknown
+	 *
+	 * @param int        $number        Default 2. Number of decimals.
+	 * @param int|string $amount        Amount being formatted.
+	 */
+	$decimals = apply_filters( 'edd_format_amount_decimals', $decimals ? 2 : 0, $amount );
+
+	// Format amount using decimals and separators (also rounds up or down)
 	$formatted = number_format( (float) $amount, $decimals, $decimal_sep, $thousands_sep );
 
+	/**
+	 * Filter the formatted amount before returning
+	 *
+	 * @since unknown
+	 *
+	 * @param mixed  $formatted     Formatted amount.
+	 * @param mixed  $amount        Original amount.
+	 * @param int    $decimals      Default 2. Number of decimals.
+	 * @param string $decimal_sep   Default '.'. Decimal separator.
+	 * @param string $thousands_sep Default ','. Thousands separator.
+	 */
 	return apply_filters( 'edd_format_amount', $formatted, $amount, $decimals, $decimal_sep, $thousands_sep );
 }
 
