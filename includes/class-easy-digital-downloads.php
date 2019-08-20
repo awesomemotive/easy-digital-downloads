@@ -441,9 +441,9 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-customers.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-logs.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-logs-api-requests.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-log-api-request-meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-logs-api-request-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-logs-file-downloads.php';
-		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-log-file-download-meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-logs-file-download-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-notes.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-orders.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-addresses.php';

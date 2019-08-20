@@ -220,7 +220,7 @@ function edd_setup_components() {
 	edd_register_component( 'log_api_request', array(
 		'schema' => '\\EDD\\Database\\Schema\\Logs_Api_Requests',
 		'table'  => '\\EDD\\Database\\Tables\\Logs_Api_Requests',
-		'meta'   => '\\EDD\\Database\\Tables\\Log_Api_Request_Meta',
+		'meta'   => '\\EDD\\Database\\Tables\\Logs_Api_Request_Meta',
 		'query'  => '\\EDD\\Database\\Queries\\Log_Api_Request',
 		'object' => '\\EDD\\Logs\\Api_Request_Log',
 	) );
@@ -229,7 +229,7 @@ function edd_setup_components() {
 	edd_register_component( 'log_file_download', array(
 		'schema' => '\\EDD\\Database\\Schema\\Logs_File_Downloads',
 		'table'  => '\\EDD\\Database\\Tables\\Logs_File_Downloads',
-		'meta'   => '\\EDD\\Database\\Tables\\Log_File_Download_Meta',
+		'meta'   => '\\EDD\\Database\\Tables\\Logs_File_Download_Meta',
 		'query'  => '\\EDD\\Database\\Queries\\Log_File_Download',
 		'object' => '\\EDD\\Logs\\File_Download_Log',
 	) );
