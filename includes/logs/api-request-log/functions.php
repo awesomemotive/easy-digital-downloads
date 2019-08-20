@@ -135,7 +135,7 @@ function edd_get_api_request_log( $api_request_log_id = 0 ) {
 function edd_get_api_request_log_by( $field = '', $value = '' ) {
 	$api_request_logs = new EDD\Database\Queries\Log_Api_Request();
 
-	// Return note
+	// Return API Request Log.
 	return $api_request_logs->get_item_by( $field, $value );
 }
 
