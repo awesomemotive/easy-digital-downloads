@@ -16,11 +16,11 @@ defined( 'ABSPATH' ) || exit;
 use EDD\Database\Table;
 
 /**
- * Setup the global "edd_log_file_downloadmeta" database table
+ * Setup the global "edd_logs_api_requestmeta" database table
  *
  * @since 3.0
  */
-final class Log_File_Download_Meta extends Table {
+final class Logs_Api_Request_Meta extends Table {
 
 	/**
 	 * Table name
@@ -29,7 +29,7 @@ final class Log_File_Download_Meta extends Table {
 	 * @since 3.0
 	 * @var string
 	 */
-	protected $name = 'log_file_downloadmeta';
+	protected $name = 'logs_api_requestmeta';
 
 	/**
 	 * Database version
@@ -50,11 +50,11 @@ final class Log_File_Download_Meta extends Table {
 	protected function set_schema() {
 		$max_index_length = 191;
 		$this->schema     = "meta_id bigint(20) unsigned NOT NULL auto_increment,
-			edd_log_file_download_id bigint(20) unsigned NOT NULL default '0',
+			edd_logs_api_request_id bigint(20) unsigned NOT NULL default '0',
 			meta_key varchar(255) DEFAULT NULL,
 			meta_value longtext DEFAULT NULL,
 			PRIMARY KEY (meta_id),
-			KEY edd_log_file_download_id (edd_log_file_download_id),
+			KEY edd_logs_api_request_id (edd_logs_api_request_id),
 			KEY meta_key (meta_key({$max_index_length}))";
 	}
 }
