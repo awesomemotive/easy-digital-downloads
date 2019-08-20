@@ -166,7 +166,7 @@ This table's data is intended to be immutable.
 | Table Column  | Table Column's Description |
 | ------------- | ------------- |
 | meta_id | The unique id of the row, which auto increments.  |
-| edd_log_api_request_id  | The id of the api request log to which this row relates. |
+| edd_logs_api_request_id  | The id of the api request log to which this row relates. |
 | meta_key | The reference key (like a variable name) of the data in question. |
 | meta_value | The value. This can be anything needed as its purpose is for anything extra. |
 
@@ -197,7 +197,7 @@ This table's data is intended to be immutable.
 | Table Column  | Table Column's Description |
 | ------------- | ------------- |
 | meta_id | The unique id of the row, which auto increments.  |
-| edd_log_file_download_id  | The id of the file download log to which this row relates. |
+| edd_logs_file_download_id  | The id of the file download log to which this row relates. |
 | meta_key | The reference key (like a variable name) of the data in question. |
 | meta_value | The value. This can be anything needed as its purpose is for anything extra. |
 
