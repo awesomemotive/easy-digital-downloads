@@ -92,7 +92,7 @@ class Tests_Logging extends EDD_UnitTestCase {
 	 * @covers ::delete_logs()
 	 */
 	public function test_delete_logs() {
-		self::$object->delete_logs( self::$log_id );
+		self::$object->delete_logs( 1 );
 
 		$this->assertSame( 0, self::$object->get_log_count( 1, 'gateway_error' ) );
 	}
