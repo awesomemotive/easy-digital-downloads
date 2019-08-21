@@ -28,6 +28,7 @@ var EDD_Add_Order = {
 		this.select_address();
 		this.recalculate_total();
 		this.validate();
+		this.filters();
 	},
 
 	add_order_item: function() {
@@ -473,6 +474,32 @@ var EDD_Add_Order = {
 				$( '#publishing-action .spinner' ).css( 'visibility', 'hidden' );
 				return false;
 			}
+		} );
+	},
+
+	filters: function() {
+		$( '.edd_countries_filter' ).on( 'change', function() {
+
+			console.log( 'sdgsgsdg');
+			const select = $( this ),
+				data = {
+					action: 'edd_get_shop_states',
+					country: select.val(),
+					nonce: select.data( 'nonce' ),
+					field_name: 'edd_regions_filter',
+				};
+
+			$.post( ajaxurl, data, function( response ) {
+				$( 'select.edd_regions_filter' ).find( 'option:gt(0)' ).remove();
+
+				if ( 'nostates' !== response ) {
+					$( response ).find( 'option:gt(0)' ).appendTo( 'select.edd_regions_filter' );
+				}
+
+				$( 'select.edd_regions_filter' ).trigger( 'chosen:updated' );
+			} );
+
+			return false;
 		} );
 	},
 };
