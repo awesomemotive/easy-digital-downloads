@@ -4,16 +4,6 @@
 import { getChosenVars } from 'utils/chosen.js';
 import './override-amounts.js';
 
-jQuery( document ).ready( function( $ ) {
-	// Toggle advanced filters on Orders page.
-	$( '.edd-advanced-filters-button' ).on( 'click', function( e ) {
-		// Prevnt submit action
-		e.preventDefault();
-
-		$( '#edd-advanced-filters' ).toggleClass( 'open' );
-	} );
-} );
-
 const edd_admin_globals = {};
 
 /**
