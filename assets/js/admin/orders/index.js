@@ -470,7 +470,6 @@ var EDD_Add_Order = {
 	filters: function() {
 		$( '.edd_countries_filter' ).on( 'change', function() {
 
-			console.log( 'sdgsgsdg');
 			const select = $( this ),
 				data = {
 					action: 'edd_get_shop_states',
