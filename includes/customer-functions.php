@@ -493,6 +493,7 @@ function edd_delete_customer_address( $customer_address_id = 0 ) {
  *
  *     @type int    $customer_id   Customer ID. Default `0`.
  *     @type string $type          Address type. Default `billing`.
+ *     @type int $primary          If the address is the primary. Default '0'.
  *     @type string $status        Address status, if used or not. Default `active`.
  *     @type string $address       First line of address. Default empty.
  *     @type string $address2      Second line of address. Default empty.
@@ -629,7 +630,8 @@ function edd_maybe_add_customer_address( $customer_id = 0, $data = array() ) {
 
 	// Add to the table if an address does not exist.
 	if ( 0 === $c ) {
-		$data['type'] = 'billing';
+		$data['type']       = 'billing';
+		$data['is_primary'] = 1;
 		return edd_add_customer_address( $data );
 	}
 
@@ -676,8 +678,8 @@ function edd_maybe_update_customer_primary_address( $customer_id = 0, $data = ar
 	$address_ids = edd_get_customer_addresses( array(
 		'fields'      => 'ids',
 		'customer_id' => $customer_id,
-		'type'        => 'primary',
-		'number'      => 1,
+		'type'        => $data['type'],
+		'is_primary'  => 1,
 	) );
 
 	// Primary address exists, so update it.
@@ -685,9 +687,10 @@ function edd_maybe_update_customer_primary_address( $customer_id = 0, $data = ar
 		$address_id = $address_ids[0];
 		edd_update_customer_address( $address_id, $data );
 
+		// @todo When the update for a primary address is made, all other addresses of type should be set to non-primary.
 	// Add primary address.
 	} else {
-		$data['type'] = 'primary';
+		$data['is_primary'] = 1;
 		$address_id = edd_add_customer_address( $data );
 	}
 

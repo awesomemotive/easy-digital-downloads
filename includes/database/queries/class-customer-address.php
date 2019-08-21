@@ -113,6 +113,9 @@ class Customer_Address extends Query {
 	 *     @type string       $type                 Limit results to those affiliated with a given type. Default empty.
 	 *     @type array        $type__in             Array of types to include affiliated orders for. Default empty.
 	 *     @type array        $type__not_in         Array of types to exclude affiliated orders for. Default empty.
+	 *     @type int          $is_primary           Limit results to those listed as primary. Default empty.
+	 *     @type array        $is_primary__in       Array of types to include primary for. Default empty.
+	 *     @type array        $is_primary__not_in   Array of types to exclude primary for. Default empty.
 	 *     @type string       $status               An address statuses to only return that address. Default empty.
 	 *     @type array        $status__in           Array of address statuses to include. Default empty.
 	 *     @type array        $status__not_in       Array of address statuses to exclude. Default empty.

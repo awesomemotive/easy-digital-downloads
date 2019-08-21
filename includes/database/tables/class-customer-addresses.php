@@ -38,7 +38,7 @@ final class Customer_Addresses extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201906250001;
+	protected $version = 201908200001;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -50,6 +50,7 @@ final class Customer_Addresses extends Table {
 	protected $upgrades = array(
 		'201807270003' => 201807270003,
 		'201906250001' => 201906250001,
+		'201908200001' => 201908200001,
 	);
 
 	/**
@@ -63,6 +64,7 @@ final class Customer_Addresses extends Table {
 		$this->schema = "id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 			customer_id bigint(20) unsigned NOT NULL default '0',
 			type varchar(20) NOT NULL default 'billing',
+			is_primary tinyint(1) UNSIGNED NOT NULL default '0',
 			status varchar(20) NOT NULL default 'active',
 			name mediumtext NOT NULL,
 			address mediumtext NOT NULL,
@@ -78,7 +80,8 @@ final class Customer_Addresses extends Table {
 			KEY customer (customer_id),
 			KEY type (type(20)),
 			KEY status (status(20)),
-			KEY date_created (date_created)";
+			KEY date_created (date_created),
+			KEY customer_primary (customer_id,type(20),is_primary)";
 	}
 
 	/**
@@ -121,6 +124,33 @@ final class Customer_Addresses extends Table {
 			$result = $this->get_db()->query( "
 				ALTER TABLE {$this->table_name} ADD COLUMN `name` mediumtext AFTER `status`;
 			" );
+		}
+
+		return $this->is_success( $result );
+	}
+
+	/**
+	 * Upgrade to version 201908200001
+	 * - Add the `is_primary` tinyint column
+	 * - Add the index for customer_id, type, and primary
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool
+	 */
+	protected function __201908200001() {
+		$result = $this->column_exists( 'is_primary' );
+
+		if ( false === $result ) {
+			$result = $this->get_db()->query( "
+				ALTER TABLE {$this->table_name} ADD COLUMN `is_primary` tinyint UNSIGNED DEFAULT '0' AFTER `type`;
+			" );
+
+			if ( false !== $result ) {
+				$index_result = $this->get_db()->query( "
+					CREATE INDEX customer_primary ON {$this->table_name}(customer_id, type(20), is_primary);
+				" );
+			}
 		}
 
 		return $this->is_success( $result );

@@ -1076,28 +1076,22 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $type Address type. Default primary.
+	 * @param string $type Address type. Default billing.
 	 *
-	 * @return array|\EDD\Customers\Customer_Address Object if primary address requested, array otherwise.
+	 * @return null|\EDD\Customers\Customer_Address Object.
 	 */
-	public function get_address( $type = 'primary' ) {
-		if ( 'primary' === $type ) {
-			$address = edd_get_customer_addresses( array(
-				'number'      => 1,
-				'customer_id' => $this->id,
-			) );
+	public function get_address( $type = 'billing' ) {
+		$address = edd_get_customer_addresses( array(
+			'customer_id' => $this->id,
+			'type'        => $type,
+			'is_primary'  => 1,
+			'number'      => 1,
+		) );
 
-			if ( is_array( $address ) && ! empty( $address ) ) {
-				return $address[0];
-			} else {
-				return null;
-			}
+		if ( is_array( $address ) && ! empty( $address ) ) {
+			return $address[0];
 		} else {
-			return edd_get_customer_addresses( array(
-				'number'      => 1,
-				'customer_id' => $this->id,
-				'type'        => $type,
-			) );
+			return null;
 		}
 	}
 

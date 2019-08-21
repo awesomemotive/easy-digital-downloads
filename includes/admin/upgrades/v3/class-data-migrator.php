@@ -54,7 +54,8 @@ class Data_Migrator {
 		if ( $customer ) {
 			edd_add_customer_address( array(
 				'customer_id' => $customer->id,
-				'type'        => 'primary',
+				'type'        => 'billing',
+				'is_primary'  => 1,
 				'name'        => $customer->name,
 				'address'     => $address['line1'],
 				'address2'    => $address['line2'],

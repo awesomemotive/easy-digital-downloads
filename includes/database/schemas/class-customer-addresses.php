@@ -63,6 +63,17 @@ class Customer_Addresses extends Schema {
 			'transition' => true
 		),
 
+		// is_primary
+		array(
+			'name'       => 'is_primary',
+			'type'       => 'tinyint',
+			'length'     => '1',
+			'default'    => '0',
+			'searchable' => true,
+			'sortable'   => true,
+			'transition' => true,
+		),
+
 		// status
 		array(
 			'name'       => 'status',

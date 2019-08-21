@@ -255,7 +255,7 @@ class Customer extends Base {
 		// Fetch saved primary address.
 		$addresses = edd_get_customer_addresses( array(
 			'number'      => 1,
-			'type'        => 'primary',
+			'type'        => 'billing',
 			'customer_id' => $object_id,
 		) );
 
