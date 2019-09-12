@@ -404,7 +404,6 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * Tweak: Added a colon that was missing on taxes & subtotal of the purchase confirmation.
 * Tweak: Add debug logging to PayPal IPN capturing.
 
-
 = 2.8.12, November 10, 2017 =
 * Fix: Reverted some of the performance improvements due to edge case errors.
 * Fix: Corrected a misspelled function edd_render_dowwn_tax_options.
