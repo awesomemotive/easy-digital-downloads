@@ -23,6 +23,7 @@ window.edd.renderChart = ( config ) => {
 	if ( isPieChart( config ) ) {
 		pieChartRender( config );
 	} else {
+		console.log( config );
 		lineChartRender( config );
 	}
 };

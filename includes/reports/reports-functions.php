@@ -10,6 +10,8 @@
  */
 namespace EDD\Reports;
 
+use DateTimeZone, DateTime, edd_get_timezone_abbr, edd_get_utc_equivalent_date;
+
 //
 // Endpoint and report helpers.
 //
@@ -387,17 +389,17 @@ function get_filter_value( $filter ) {
 	if ( false !== $filter_value ) {
 		$value = $filter_value;
 
-	// Maybe use dates defaults
+		// Maybe use dates defaults
 	} elseif ( 'dates' === $filter ) {
 
 		// Default to last 30 days for filter value.
 		$default = 'last_30_days';
-		$date    = EDD()->utils->date( 'now' );
+		$date    = EDD()->utils->date( 'now', edd_get_timezone_id(), false );
 		$dates   = parse_dates_for_range( $date, $default );
 		$value   = array(
 			'from'  => $dates['start']->format( 'Y-m-d' ),
 			'to'    => $dates['end']->format( 'Y-m-d' ),
-			'range' => $default
+			'range' => $default,
 		);
 	}
 
@@ -459,20 +461,22 @@ function clear_filter( $filter ) {
 function get_dates_filter_options() {
 	static $options = null;
 
+	$timezone_abbreviation = edd_get_timezone_abbr();
+
 	if ( is_null( $options ) ) {
 		$options = array(
-			'other'        => __( 'Custom',       'easy-digital-downloads' ),
-			'today'        => __( 'Today',        'easy-digital-downloads' ),
-			'yesterday'    => __( 'Yesterday',    'easy-digital-downloads' ),
-			'this_week'    => __( 'This Week',    'easy-digital-downloads' ),
-			'last_week'    => __( 'Last Week',    'easy-digital-downloads' ),
-			'last_30_days' => __( 'Last 30 Days', 'easy-digital-downloads' ),
-			'this_month'   => __( 'This Month',   'easy-digital-downloads' ),
-			'last_month'   => __( 'Last Month',   'easy-digital-downloads' ),
-			'this_quarter' => __( 'This Quarter', 'easy-digital-downloads' ),
-			'last_quarter' => __( 'Last Quarter', 'easy-digital-downloads' ),
-			'this_year'    => __( 'This Year',    'easy-digital-downloads' ),
-			'last_year'    => __( 'Last Year',    'easy-digital-downloads' )
+			'other'        => __( 'Custom', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
+			'today'        => __( 'Today', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
+			'yesterday'    => __( 'Yesterday', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
+			'this_week'    => __( 'This Week', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
+			'last_week'    => __( 'Last Week', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
+			'last_30_days' => __( 'Last 30 Days', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
+			'this_month'   => __( 'This Month', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
+			'last_month'   => __( 'Last Month', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
+			'this_quarter' => __( 'This Quarter', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
+			'last_quarter' => __( 'Last Quarter', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
+			'this_year'    => __( 'This Year', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
+			'last_year'    => __( 'Last Year', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
 		);
 	}
 
@@ -506,8 +510,10 @@ function get_dates_filter_options() {
  * }
  */
 function get_dates_filter( $values = 'strings', $timezone = null ) {
-	$date  = EDD()->utils->date( 'now', $timezone, false );
-	$dates = parse_dates_for_range( $date );
+
+	$timezone = empty( $timezone ) ? edd_get_timezone_id() : $timezone;
+	$date     = EDD()->utils->date( 'now', $timezone, false );
+	$dates    = parse_dates_for_range( $date );
 
 	if ( 'strings' === $values ) {
 		if ( ! empty( $dates['start'] ) ) {
@@ -537,6 +543,36 @@ function get_dates_filter( $values = 'strings', $timezone = null ) {
 }
 
 /**
+ * Retrieves the UTC equivalent start and end date filters.
+ *
+ * @since 3.0
+ *
+ * @return array|\EDD\Utils\Date[] {
+ *     Query date range for the current graph filter request.
+ *
+ *     @type string|\EDD\Utils\Date $start Start day and time (based on the beginning of the given day).
+ *                                         If `$values` is 'objects', a Carbon object, otherwise a date
+ *                                         time string.
+ *     @type string|\EDD\Utils\Date $end   End day and time (based on the end of the given day). If `$values`
+ *                                         is 'objects', a Carbon object, otherwise a date time string.
+ * }
+ */
+function get_dates_filter_utc_equivalent() {
+	$dates = get_dates_filter( 'objects' );
+
+	foreach ( $dates as $date_key => $date_object ) {
+
+		$instance_check = 'EDD\Utils\Date';
+		if ( ! $date_object instanceof $instance_check ) {
+			continue;
+		}
+		$dates[ $date_key ] = edd_get_utc_equivalent_date( $date_object );
+	}
+
+	return $dates;
+}
+
+/**
  * Parses start and end dates for the given range.
  *
  * @since 3.0
@@ -547,6 +583,8 @@ function get_dates_filter( $values = 'strings', $timezone = null ) {
  * @return \EDD\Utils\Date[] Array of start and end date objects.
  */
 function parse_dates_for_range( $date, $range = null ) {
+
+	$date = EDD()->utils->date( 'now', edd_get_timezone_id(), false );
 
 	if ( null === $range || ! array_key_exists( $range, get_dates_filter_options() ) ) {
 		$range = get_dates_filter_range();
@@ -570,15 +608,15 @@ function parse_dates_for_range( $date, $range = null ) {
 
 		case 'today':
 			$dates = array(
-				'start' => $date->copy()->setTimezone( edd_get_timezone_id() )->startOfDay()->setTimezone( 'UTC' ),
-				'end'   => $date->copy()->setTimezone( edd_get_timezone_id() )->endOfDay()->setTimezone( 'UTC' ),
+				'start' => $date->copy()->startOfDay(),
+				'end'   => $date->copy()->endOfDay(),
 			);
 			break;
 
 		case 'yesterday':
 			$dates = array(
-				'start' => $date->copy()->setTimezone( edd_get_timezone_id() )->subDay( 1 )->startOfDay()->setTimezone( 'UTC' ),
-				'end'   => $date->copy()->setTimezone( edd_get_timezone_id() )->subDay( 1 )->endOfDay()->setTimezone( 'UTC' ),
+				'start' => $date->copy()->subDay( 1 )->startOfDay(),
+				'end'   => $date->copy()->subDay( 1 )->endOfDay(),
 			);
 			break;
 
@@ -643,8 +681,8 @@ function parse_dates_for_range( $date, $range = null ) {
 			}
 
 			$dates = array(
-				'start' => EDD()->utils->date( $start, null, false )->startOfDay(),
-				'end'   => EDD()->utils->date( $end, null, false )->endOfDay(),
+				'start' => EDD()->utils->date( $start, edd_get_timezone_id(), false )->startOfDay(),
+				'end'   => EDD()->utils->date( $end, edd_get_timezone_id(), false )->endOfDay(),
 			);
 			break;
 	}
