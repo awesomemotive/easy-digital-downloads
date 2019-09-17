@@ -431,7 +431,7 @@ function edd_register_overview_report( $reports ) {
 					'data_callback' => function () use ( $filter ) {
 						global $wpdb;
 
-						$dates        = Reports\get_dates_filter( 'objects' );
+						$dates        = Reports\get_dates_filter_utc_equivalent();
 						$day_by_day   = Reports\get_dates_filter_day_by_day();
 						$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
 
@@ -469,9 +469,9 @@ function edd_register_overview_report( $reports ) {
 						// Initialise all arrays with timestamps and set values to 0.
 						while ( strtotime( $dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $dates['end']->copy()->format( 'mysql' ) ) ) {
 							if ( $hour_by_hour ) {
-							    $timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $dates['start']->day, $dates['start']->hour, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
+								$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $dates['start']->day, $dates['start']->hour, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
 
-							    $sales[ $timestamp ][] = $timestamp;
+								$sales[ $timestamp ][] = $timestamp;
 								$sales[ $timestamp ][] = 0;
 
 								$earnings[ $timestamp ][] = $timestamp;
@@ -874,7 +874,7 @@ function edd_register_downloads_report( $reports ) {
 				        'data_callback' => function () use ( $filter, $download_data ) {
 					        global $wpdb;
 
-					        $dates        = Reports\get_dates_filter( 'objects' );
+					        $dates        = Reports\get_dates_filter_utc_equivalent();
 					        $day_by_day   = Reports\get_dates_filter_day_by_day();
 					        $hour_by_hour = Reports\get_dates_filter_hour_by_hour();
 
@@ -1192,7 +1192,7 @@ function edd_register_refunds_report( $reports ) {
 					'data_callback' => function () use ( $filter ) {
 						global $wpdb;
 
-						$dates        = Reports\get_dates_filter( 'objects' );
+						$dates        = Reports\get_dates_filter_utc_equivalent();
 						$day_by_day   = Reports\get_dates_filter_day_by_day();
 						$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
 
@@ -1595,7 +1595,7 @@ function edd_register_payment_gateways_report( $reports ) {
 						'data_callback' => function () use ( $filter ) {
 							global $wpdb;
 
-							$dates        = Reports\get_dates_filter( 'objects' );
+							$dates        = Reports\get_dates_filter_utc_equivalent();
 							$day_by_day   = Reports\get_dates_filter_day_by_day();
 							$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
 
@@ -2020,7 +2020,7 @@ function edd_register_file_downloads_report( $reports ) {
 					'data_callback' => function () use ( $filter, $download_data ) {
 						global $wpdb;
 
-						$dates        = Reports\get_dates_filter( 'objects' );
+						$dates        = Reports\get_dates_filter_utc_equivalent();
 						$day_by_day   = Reports\get_dates_filter_day_by_day();
 						$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
 
@@ -2332,7 +2332,7 @@ function edd_register_discounts_report( $reports ) {
 						'data_callback' => function () use ( $filter, $d ) {
 							global $wpdb;
 
-							$dates        = Reports\get_dates_filter( 'objects' );
+							$dates        = Reports\get_dates_filter_utc_equivalent();
 							$day_by_day   = Reports\get_dates_filter_day_by_day();
 							$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
 
@@ -2581,7 +2581,7 @@ function edd_register_customer_report( $reports ) {
 					'data_callback' => function () use ( $filter ) {
 						global $wpdb;
 
-						$dates        = Reports\get_dates_filter( 'objects' );
+						$dates        = Reports\get_dates_filter_utc_equivalent();
 						$day_by_day   = Reports\get_dates_filter_day_by_day();
 						$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
 

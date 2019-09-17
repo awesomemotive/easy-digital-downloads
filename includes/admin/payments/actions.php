@@ -105,9 +105,10 @@ function edd_update_payment_details( $data = array() ) {
 	} elseif ( $minute < 0 ) {
 		$minute = 00;
 	}
-	
-	// Date
-	$date = date( 'Y-m-d', strtotime( $date ) ) . ' ' . $hour . ':' . $minute . ':00';
+
+	// The date is entered in the WP timezone. We need to convert it to UTC prior to saving now.
+	$date = edd_get_utc_equivalent_date( EDD()->utils->date( $date . ' ' . $hour . ':' . $minute . ':00', edd_get_timezone_id(), false ) );
+	$date = $date->format( 'Y-m-d H:i:s' );
 
 	// Address
 	$address = $data['edd_order_address'];

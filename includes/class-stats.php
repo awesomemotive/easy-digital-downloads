@@ -1662,7 +1662,7 @@ class Stats {
 
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']} o
-					INNER JOIN {$this->get_db()->edd_order_items} oi ON o.id = oi.order_id 
+					INNER JOIN {$this->get_db()->edd_order_items} oi ON o.id = oi.order_id
 					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
 
 			$this->pre_query( $query );
