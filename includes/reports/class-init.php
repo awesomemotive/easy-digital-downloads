@@ -144,11 +144,10 @@ final class Init {
 	 *
 	 * @since 3.0
 	 *
-	 * @param array $reports
-	 *
-	 * @return array
+	 * @param Data\Report_Registry $reports Reports registry instance.
+	 * @return Data\Report_Registry Reports registry.
 	 */
-	private function legacy_reports( $reports = array() ) {
+	private function legacy_reports( $reports ) {
 
 		// Bail if no legacy reports
 		if ( ! has_filter( 'edd_report_views' ) ) {
