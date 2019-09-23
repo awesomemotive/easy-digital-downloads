@@ -211,14 +211,18 @@ final class Init {
 			// Legacy label
 			$legacy_label = $label . '<span class="edd-legacy-label edd-chip">' . __( 'Legacy', 'easy-digital-downloads' ) . '</span>';
 
-			// Add report
-			$reports->add_report( $report_id, array(
-				'label'            => $legacy_label,
-				'group'            => 'core',
-				'icon'             => 'chart-area',
-				'priority'         => $priority,
-				'display_callback' => $callback
-			) );
+			try {
+				// Add report
+				$reports->add_report( $report_id, array(
+					'label'            => $legacy_label,
+					'group'            => 'core',
+					'icon'             => 'chart-area',
+					'priority'         => $priority,
+					'display_callback' => $callback
+				) );
+			} catch ( \EDD_Exception $exception ) {
+				edd_debug_log_exception( $exception );
+			}
 
 			// Bump the priority
 			++$priority;
