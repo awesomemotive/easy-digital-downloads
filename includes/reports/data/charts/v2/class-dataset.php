@@ -266,6 +266,8 @@ abstract class Dataset implements Error_Logger {
 						'y' => $values[1],
 					);
 				} else {
+					print_r( $values );
+					//die();
 					$processed[ $key ] = array(
 						'x' => $values * 1000,
 					);
