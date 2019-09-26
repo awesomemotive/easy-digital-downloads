@@ -238,7 +238,8 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 				}
 
 				// Custom fields
-
+				// Allow for hooking into the import process to import custom data
+				do_action( 'edd_import_download_process_step', $download_id, $row );
 
 				$i++;
 			}
