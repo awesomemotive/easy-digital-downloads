@@ -122,7 +122,6 @@ window.edd.renderChart = function (config) {
   if (Object(_utils_js__WEBPACK_IMPORTED_MODULE_2__["isPieChart"])(config)) {
     Object(_pie_js__WEBPACK_IMPORTED_MODULE_1__["render"])(config);
   } else {
-    console.log(config);
     Object(_line_js__WEBPACK_IMPORTED_MODULE_0__["render"])(config);
   }
 };
@@ -167,8 +166,7 @@ var render = function render(config) {
 
   _.each(data.datasets, function (dataset) {
     _.each(dataset.data, function (pair, index) {
-      console.log(pair.x); // Moment.js accepts a date object so we'll turn the timestamp into a date object here.
-
+      // Moment.js accepts a date object so we'll turn the timestamp into a date object here.
       var date = new Date(parseInt(pair.x)); // Offset the moment.js so it is set to match the WordPress timezone, which is n dates.utc_offset
 
       pair.x = moment(date).utcOffset(parseInt(dates.utc_offset)).format('LLL');

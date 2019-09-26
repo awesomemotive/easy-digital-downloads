@@ -25,8 +25,6 @@ export const render = ( config ) => {
 	_.each( data.datasets, ( dataset ) => {
 		_.each( dataset.data, ( pair, index ) => {
 
-			console.log( pair.x );
-
 			// Moment.js accepts a date object so we'll turn the timestamp into a date object here.
 			let date = new Date( parseInt( pair.x ) );
 
