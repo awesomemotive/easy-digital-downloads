@@ -510,10 +510,7 @@ function get_dates_filter_options() {
  * }
  */
 function get_dates_filter( $values = 'strings', $timezone = null ) {
-
-	$timezone = empty( $timezone ) ? edd_get_timezone_id() : $timezone;
-	$date     = EDD()->utils->date( 'now', $timezone, false );
-	$dates    = parse_dates_for_range( $date );
+	$dates = parse_dates_for_range( $date );
 
 	if ( 'strings' === $values ) {
 		if ( ! empty( $dates['start'] ) ) {
@@ -543,36 +540,6 @@ function get_dates_filter( $values = 'strings', $timezone = null ) {
 }
 
 /**
- * Retrieves the UTC equivalent start and end date filters.
- *
- * @since 3.0
- *
- * @return array|\EDD\Utils\Date[] {
- *     Query date range for the current graph filter request.
- *
- *     @type string|\EDD\Utils\Date $start Start day and time (based on the beginning of the given day).
- *                                         If `$values` is 'objects', a Carbon object, otherwise a date
- *                                         time string.
- *     @type string|\EDD\Utils\Date $end   End day and time (based on the end of the given day). If `$values`
- *                                         is 'objects', a Carbon object, otherwise a date time string.
- * }
- */
-function get_dates_filter_utc_equivalent() {
-	$dates = get_dates_filter( 'objects' );
-
-	foreach ( $dates as $date_key => $date_object ) {
-
-		$instance_check = 'EDD\Utils\Date';
-		if ( ! $date_object instanceof $instance_check ) {
-			continue;
-		}
-		$dates[ $date_key ] = edd_get_utc_equivalent_date( $date_object );
-	}
-
-	return $dates;
-}
-
-/**
  * Parses start and end dates for the given range.
  *
  * @since 3.0
@@ -584,6 +551,7 @@ function get_dates_filter_utc_equivalent() {
  */
 function parse_dates_for_range( $date, $range = null ) {
 
+	// Set the time ranges in the user's timezone, so they ultimately see them in their own timezone.
 	$date = EDD()->utils->date( 'now', edd_get_timezone_id(), false );
 
 	if ( null === $range || ! array_key_exists( $range, get_dates_filter_options() ) ) {
@@ -686,6 +654,10 @@ function parse_dates_for_range( $date, $range = null ) {
 			);
 			break;
 	}
+
+	// Convert the values to the UTC equivalent so that we can query the database using UTC.
+	$dates['start'] = edd_get_utc_equivalent_date( $dates['start'] );
+	$dates['end']   = edd_get_utc_equivalent_date( $dates['end'] );
 
 	$dates['range'] = $range;
 
