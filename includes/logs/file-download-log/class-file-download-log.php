@@ -1,6 +1,6 @@
 <?php
 /**
- * Logs API - API Request Log Object.
+ * Logs API - File Download Log Object.
  *
  * @package     EDD
  * @subpackage  Logs
@@ -8,7 +8,7 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
-namespace EDD\Logs;
+namespace EDD\File_Download_Logs\File_Download_Log;
 
 use EDD\Base_Object;
 
@@ -16,86 +16,76 @@ use EDD\Base_Object;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * API Request Log Class.
+ * EDD_File_Download_Log Class.
  *
  * @since 3.0
  *
  * @property int $id
- * @property int $user_id
- * @property string $api_key
- * @property string $token
- * @property string $version
- * @property string $request
- * @property string $error
+ * @property int $product_id
+ * @property int $file_id
+ * @property int $order_id
+ * @property int $price_id
+ * @property int $customer_id
  * @property string $ip
- * @property string $time
+ * @property string $user_agent
  * @property string $date_created
  * @property string $date_modified
  */
-class Api_Request_Log extends Base_Object {
+class File_Download_Log extends Base_Object {
 
 	/**
-	 * API request log ID.
+	 * File download log ID.
 	 *
-	 * @since  3.0.0
+	 * @since  3.0
 	 * @access protected
 	 * @var    int
 	 */
 	protected $id;
 
 	/**
-	 * User ID.
+	 * Product ID.
 	 *
-	 * @since  3.0.0
+	 * @since  3.0
 	 * @access protected
 	 * @var    int
 	 */
-	protected $user_id;
+	protected $product_id;
 
 	/**
-	 * API key.
-	 *
-	 * @since  3.0.0
-	 * @access protected
-	 * @var    string
-	 */
-	protected $api_key;
-
-	/**
-	 * API token.
+	 * File ID.
 	 *
 	 * @since  3.0
 	 * @access protected
-	 * @var    string
+	 * @var    int
 	 */
-	protected $token;
+	protected $file_id;
 
 	/**
-	 * API version.
+	 * Order ID.
 	 *
 	 * @since  3.0
 	 * @access protected
-	 * @var    string
+	 * @var    int
 	 */
-	protected $version;
+	protected $order_id;
 
 	/**
-	 * API request.
+	 * Price ID.
 	 *
-	 * @since  3.0.0
+	 * @since  3.0
 	 * @access protected
-	 * @var    string
+	 * @var    int
 	 */
-	protected $request;
+	protected $price_id;
 
 	/**
-	 * Request errors.
+	 * Customer ID.
 	 *
-	 * @since  3.0.0
+	 * @since  3.0
 	 * @access protected
-	 * @var    string
+	 * @var    int
 	 */
-	protected $error;
+	protected $customer_id;
 
 	/**
 	 * IP.
@@ -107,16 +97,16 @@ class Api_Request_Log extends Base_Object {
 	protected $ip;
 
 	/**
-	 * Speed of the API request.
+	 * User Agent.
 	 *
 	 * @since  3.0
 	 * @access protected
-	 * @var    float
+	 * @var    string
 	 */
-	protected $time;
+	protected $user_agent;
 
 	/**
-	 * Date log was created.
+	 * Date created.
 	 *
 	 * @since  3.0
 	 * @access protected

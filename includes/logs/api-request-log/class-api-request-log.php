@@ -1,6 +1,6 @@
 <?php
 /**
- * Logs API - File Download Log Object.
+ * Logs API - API Request Log Object.
  *
  * @package     EDD
  * @subpackage  Logs
@@ -8,7 +8,7 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
-namespace EDD\Logs;
+namespace EDD\Api_Request_Logs\Api_Request_Log;
 
 use EDD\Base_Object;
 
@@ -16,76 +16,86 @@ use EDD\Base_Object;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * EDD_File_Download_Log Class.
+ * API Request Log Class.
  *
  * @since 3.0
  *
  * @property int $id
- * @property int $product_id
- * @property int $file_id
- * @property int $order_id
- * @property int $price_id
- * @property int $customer_id
+ * @property int $user_id
+ * @property string $api_key
+ * @property string $token
+ * @property string $version
+ * @property string $request
+ * @property string $error
  * @property string $ip
- * @property string $user_agent
+ * @property string $time
  * @property string $date_created
  * @property string $date_modified
  */
-class File_Download_Log extends Base_Object {
+class Api_Request_Log extends Base_Object {
 
 	/**
-	 * File download log ID.
+	 * API request log ID.
 	 *
-	 * @since  3.0
+	 * @since  3.0.0
 	 * @access protected
 	 * @var    int
 	 */
 	protected $id;
 
 	/**
-	 * Product ID.
+	 * User ID.
 	 *
-	 * @since  3.0
+	 * @since  3.0.0
 	 * @access protected
 	 * @var    int
 	 */
-	protected $product_id;
+	protected $user_id;
 
 	/**
-	 * File ID.
+	 * API key.
 	 *
-	 * @since  3.0
+	 * @since  3.0.0
 	 * @access protected
-	 * @var    int
+	 * @var    string
 	 */
-	protected $file_id;
+	protected $api_key;
 
 	/**
-	 * Order ID.
+	 * API token.
 	 *
 	 * @since  3.0
 	 * @access protected
-	 * @var    int
+	 * @var    string
 	 */
-	protected $order_id;
+	protected $token;
 
 	/**
-	 * Price ID.
+	 * API version.
 	 *
 	 * @since  3.0
 	 * @access protected
-	 * @var    int
+	 * @var    string
 	 */
-	protected $price_id;
+	protected $version;
 
 	/**
-	 * Customer ID.
+	 * API request.
 	 *
-	 * @since  3.0
+	 * @since  3.0.0
 	 * @access protected
-	 * @var    int
+	 * @var    string
 	 */
-	protected $customer_id;
+	protected $request;
+
+	/**
+	 * Request errors.
+	 *
+	 * @since  3.0.0
+	 * @access protected
+	 * @var    string
+	 */
+	protected $error;
 
 	/**
 	 * IP.
@@ -97,16 +107,16 @@ class File_Download_Log extends Base_Object {
 	protected $ip;
 
 	/**
-	 * User Agent.
+	 * Speed of the API request.
 	 *
 	 * @since  3.0
 	 * @access protected
-	 * @var    string
+	 * @var    float
 	 */
-	protected $user_agent;
+	protected $time;
 
 	/**
-	 * Date created.
+	 * Date log was created.
 	 *
 	 * @since  3.0
 	 * @access protected
