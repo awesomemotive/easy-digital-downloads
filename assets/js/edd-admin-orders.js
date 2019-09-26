@@ -94,14 +94,6 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 
-jQuery(document).ready(function ($) {
-  // Toggle advanced filters on Orders page.
-  $('.edd-advanced-filters-button').on('click', function (e) {
-    // Prevnt submit action
-    e.preventDefault();
-    $('#edd-advanced-filters').toggleClass('open');
-  });
-});
 var edd_admin_globals = {};
 /**
  * Add order
