@@ -737,6 +737,10 @@ class Column extends Base {
 		} elseif ( $this->is_type( array( 'tinyint', 'int' ) ) ) {
 			$callback = 'intval';
 
+		// Decimal fallback
+		} elseif ( $this->is_type( 'decimal' ) ) {
+			$callback = array( $this, 'validate_decimal' );
+
 		// Datetime fallback
 		} elseif ( $this->is_type( 'datetime' ) ) {
 			$callback = array( $this, 'validate_datetime' );
@@ -774,6 +778,54 @@ class Column extends Base {
 
 		// Return the validated value
 		return $value;
+	}
+
+	/**
+	 * Validate a decimal
+	 *
+	 * (Recommended decimal column length is '18,9'.)
+	 *
+	 * This is used to validate a mixed value before it is saved into a decimal
+	 * column in a database table.
+	 *
+	 * Uses number_format() which does rounding to the last decimal if your
+	 * value is longer than specified.
+	 *
+	 * @since 3.0
+	 *
+	 * @param mixed $value    Default empty string. The decimal value to validate
+	 * @param int   $decimals Default 9. The number of decimal points to accept
+	 *
+	 * @return float
+	 */
+	public function validate_decimal( $value = 0, $decimals = 9 ) {
+
+		// Protect against non-numeric values
+		if ( ! is_numeric( $value ) ) {
+			$value = 0;
+		}
+
+		// Protect against non-numeric decimals
+		if ( ! is_numeric( $decimals ) ) {
+			$decimals = 9;
+		}
+
+		// Is the value negative?
+		$negative_exponent = ( $value < 0 )
+			? -1
+			: 1;
+
+		// Only numbers and period
+		$value = preg_replace( '/[^0-9\.]/', '', (string) $value );
+
+		// Format to number of decimals, and cast as float
+		$formatted = number_format( $value, $decimals, '.', '' );
+
+		// Adjust for negative values
+		$retval = $formatted * $negative_exponent;
+
+		// Return
+		return $retval;
 	}
 
 	/**

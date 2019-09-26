@@ -101,7 +101,6 @@ class Order_Adjustments extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
-			'validate'   => 'edd_sanitize_amount',
 			'searchable' => true,
 			'sortable'   => true
 		),
@@ -112,7 +111,6 @@ class Order_Adjustments extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
-			'validate'   => 'edd_sanitize_amount',
 			'searchable' => true,
 			'sortable'   => true
 		),
@@ -123,7 +121,6 @@ class Order_Adjustments extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
-			'validate'   => 'edd_sanitize_amount',
 			'searchable' => true,
 			'sortable'   => true
 		),
