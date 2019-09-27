@@ -122,10 +122,10 @@ function edd_refund_order( $order_id = 0, $status = 'complete', $order_items = a
 	 *
 	 * @param int $order_id Order ID.
 	 */
-	$should_refund = apply_filters( 'edd_should_process_order_refund', '__return_true', $order_id );
+	$should_refund = apply_filters( 'edd_should_process_order_refund', true, $order_id );
 
 	// Bail if refund is blocked.
-	if ( ! $should_refund ) {
+	if ( true !== $should_refund ) {
 		return false;
 	}
 
@@ -348,10 +348,10 @@ function edd_refund_order_item( $order_item_id = 0 ) {
 	 *
 	 * @param int $order_item Order item ID.
 	 */
-	$should_refund = apply_filters( 'edd_should_process_partial_refund', '__return_true', $order_item_id );
+	$should_refund = apply_filters( 'edd_should_process_partial_refund', true, $order_item_id );
 
 	// Bail if refund is blocked.
-	if ( ! $should_refund ) {
+	if ( true !== $should_refund ) {
 		return false;
 	}
 
