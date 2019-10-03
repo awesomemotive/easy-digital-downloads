@@ -834,14 +834,6 @@ class Test_Misc extends EDD_UnitTestCase {
 		$this->assertFalse( edd_local_file_location_is_allowed( $file_details, $schemas, $requested_file ) );
 	}
 
-	function test_is_countable_defined() {
-		$this->assertTrue( function_exists( 'is_countable' ) );
-	}
-
-	function test_is_iterable_defined() {
-		$this->assertTrue( function_exists( 'is_iterable' ) );
-	}
-
 	private function write_test_file( $full_file_path ) {
 		$file = fopen( $full_file_path,"w" );
 		fwrite( $file,"" );
