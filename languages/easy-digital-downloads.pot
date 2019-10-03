@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.9.16\n"
+"Project-Id-Version: Easy Digital Downloads 2.9.17\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2019-06-12 03:55:19+00:00\n"
+"POT-Creation-Date: 2019-10-03 00:49:20+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -88,8 +88,8 @@ msgstr ""
 #: includes/admin/upgrades/upgrade-functions.php:901
 #: includes/admin/upgrades/upgrade-functions.php:1029
 #: includes/admin/upgrades/upgrade-functions.php:1114
-#: includes/api/class-edd-api.php:1969 includes/api/class-edd-api.php:1974
-#: includes/api/class-edd-api.php:1986 includes/api/class-edd-api.php:1988
+#: includes/api/class-edd-api.php:1974 includes/api/class-edd-api.php:1979
+#: includes/api/class-edd-api.php:1991 includes/api/class-edd-api.php:1993
 #: includes/cart/class-edd-cart.php:1424 includes/cart/class-edd-cart.php:1438
 #: includes/class-edd-license-handler.php:309
 #: includes/deprecated-functions.php:517 includes/deprecated-functions.php:532
@@ -436,7 +436,7 @@ msgstr ""
 #: includes/admin/payments/class-payments-table.php:367
 #: includes/admin/payments/class-payments-table.php:435
 #: includes/admin/settings/register-settings.php:946
-#: includes/payments/functions.php:1618
+#: includes/payments/functions.php:1616
 msgid "Delete"
 msgstr ""
 
@@ -554,7 +554,7 @@ msgstr ""
 #: includes/admin/import/import-functions.php:31
 #: includes/admin/import/import-functions.php:113
 #: includes/admin/reporting/export/export-actions.php:23
-#: includes/api/class-edd-api.php:1969
+#: includes/api/class-edd-api.php:1974
 #: includes/class-edd-license-handler.php:309
 msgid "Nonce verification failed"
 msgstr ""
@@ -1965,32 +1965,32 @@ msgid "Completed"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:249
-#: includes/payments/functions.php:771
+#: includes/payments/functions.php:769
 msgid "Pending"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:250
-#: includes/payments/functions.php:777
+#: includes/payments/functions.php:775
 msgid "Processing"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:251
-#: includes/payments/functions.php:773
+#: includes/payments/functions.php:771
 msgid "Refunded"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:252
-#: includes/payments/functions.php:776
+#: includes/payments/functions.php:774
 msgid "Revoked"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:253
-#: includes/payments/functions.php:774
+#: includes/payments/functions.php:772
 msgid "Failed"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:254
-#: includes/payments/functions.php:775
+#: includes/payments/functions.php:773
 msgid "Abandoned"
 msgstr ""
 
@@ -5154,93 +5154,93 @@ msgstr ""
 msgid "All Prices"
 msgstr ""
 
-#: includes/api/class-edd-api-v2.php:166 includes/api/class-edd-api.php:1115
-#: includes/api/class-edd-api.php:1298 includes/api/class-edd-api.php:1415
+#: includes/api/class-edd-api-v2.php:166 includes/api/class-edd-api.php:1120
+#: includes/api/class-edd-api.php:1303 includes/api/class-edd-api.php:1420
 msgid "Product %s not found!"
 msgstr ""
 
-#: includes/api/class-edd-api-v2.php:240 includes/api/class-edd-api.php:1220
-#: includes/api/class-edd-api.php:1315
+#: includes/api/class-edd-api-v2.php:240 includes/api/class-edd-api.php:1225
+#: includes/api/class-edd-api.php:1320
 msgid "The end date must be later than the start date!"
 msgstr ""
 
-#: includes/api/class-edd-api-v2.php:341 includes/api/class-edd-api.php:1057
+#: includes/api/class-edd-api-v2.php:341 includes/api/class-edd-api.php:1062
 msgid "Customer %s not found!"
 msgstr ""
 
-#: includes/api/class-edd-api-v2.php:346 includes/api/class-edd-api.php:1062
+#: includes/api/class-edd-api-v2.php:346 includes/api/class-edd-api.php:1067
 msgid "No customers found!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:456
+#: includes/api/class-edd-api.php:461
 msgid "You must specify both a token and API key!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:473
+#: includes/api/class-edd-api.php:478
 msgid "Your request could not be authenticated!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:491
+#: includes/api/class-edd-api.php:496
 msgid "Invalid API key!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:507
+#: includes/api/class-edd-api.php:512
 msgid "Invalid API version!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:682
+#: includes/api/class-edd-api.php:687
 msgid "Invalid query!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1225 includes/api/class-edd-api.php:1320
+#: includes/api/class-edd-api.php:1230 includes/api/class-edd-api.php:1325
 msgid "Invalid or no date range specified!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1265 includes/api/class-edd-api.php:1384
+#: includes/api/class-edd-api.php:1270 includes/api/class-edd-api.php:1389
 msgid "There was an error retrieving earnings."
 msgstr ""
 
-#: includes/api/class-edd-api.php:1559
+#: includes/api/class-edd-api.php:1564
 msgid "No discounts found!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1606
+#: includes/api/class-edd-api.php:1611
 msgid "Discount %s not found!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1678
+#: includes/api/class-edd-api.php:1683
 msgid "No download logs found!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1934 includes/user-functions.php:1072
+#: includes/api/class-edd-api.php:1939 includes/user-functions.php:1072
 msgid "Easy Digital Downloads API Keys"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1943 includes/user-functions.php:1077
+#: includes/api/class-edd-api.php:1948 includes/user-functions.php:1077
 msgid "Generate API Key"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1945 includes/user-functions.php:1079
+#: includes/api/class-edd-api.php:1950 includes/user-functions.php:1079
 msgid "Public key:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1946 includes/user-functions.php:1080
+#: includes/api/class-edd-api.php:1951 includes/user-functions.php:1080
 msgid "Secret key:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1947 includes/user-functions.php:1081
+#: includes/api/class-edd-api.php:1952 includes/user-functions.php:1081
 msgid "Token:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1949 includes/user-functions.php:1083
+#: includes/api/class-edd-api.php:1954 includes/user-functions.php:1083
 msgid "Revoke API Keys"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1974
+#: includes/api/class-edd-api.php:1979
 msgid "User ID Required"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1986 includes/api/class-edd-api.php:1988
+#: includes/api/class-edd-api.php:1991 includes/api/class-edd-api.php:1993
 msgid "You do not have permission to %s API keys for this user"
 msgstr ""
 
@@ -7152,11 +7152,11 @@ msgstr ""
 msgid "Payment recovery processed"
 msgstr ""
 
-#: includes/payments/functions.php:772
+#: includes/payments/functions.php:770
 msgid "Complete"
 msgstr ""
 
-#: includes/payments/functions.php:1603
+#: includes/payments/functions.php:1601
 msgid "EDD Bot"
 msgstr ""
 
@@ -8422,7 +8422,7 @@ msgid "Number of items in cart"
 msgstr ""
 
 #: tests/bootstrap.php:39
-msgid "HTTP Requests disbaled for unit tests"
+msgid "HTTP Requests disabled for unit tests"
 msgstr ""
 
 #. Description of the plugin/theme
