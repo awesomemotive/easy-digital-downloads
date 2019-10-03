@@ -323,6 +323,11 @@ class EDD_API {
 				$secret = $this->get_user_secret_key( $user );
 				$public = urldecode( $wp_query->query_vars['key'] );
 
+				// Verify that if user has secret key or not.
+				if ( ! $secret ) {
+					$this->invalid_auth();
+				}
+
 				$valid = $this->check_keys( $secret, $public, $token );
 				if ( $valid ) {
 					$this->is_valid_request = true;
