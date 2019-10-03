@@ -5,7 +5,7 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: ecommerce, e-commerce, sell, downloads, store, paypal, checkout, shop
 Requires at least: 4.4
-Tested up to: 5.2.1
+Tested up to: 5.2.3
 Stable Tag: 2.9.17
 License: GNU Version 2 or Any Later Version
 
