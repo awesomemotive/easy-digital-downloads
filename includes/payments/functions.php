@@ -711,26 +711,28 @@ function edd_get_payment_status( $payment, $return_label = false ) {
 
 	if( is_numeric( $payment ) ) {
 
-		$payment = edd_get_payment( $payment );
+		$payment = new EDD_Payment( $payment );
 
-		if( empty( $payment ) ) {
+		if( ! $payment->ID > 0 ) {
 			return false;
 		}
 
-	} else if ( $payment instanceof WP_Post ) {
-		$payment = edd_get_payment( $payment->ID );
 	}
 
-	if ( ! is_object( $payment ) || ! isset( $payment->status ) ) {
+	if ( ! is_object( $payment ) || ! isset( $payment->post_status ) ) {
 		return false;
 	}
 
 	if ( true === $return_label ) {
-		$status = edd_get_payment_status_label( $payment->status );
+		return edd_get_payment_status_label( $payment->post_status );
 	} else {
-		$keys      = edd_get_payment_status_keys();
-		$found_key = array_search( strtolower( $payment->status ), $keys );
-		$status    = array_key_exists( $found_key, $keys ) ? $keys[ $found_key ] : false;
+		$statuses = edd_get_payment_statuses();
+
+		// Account that our 'publish' status is labeled 'Complete'
+		$post_status = 'publish' == $payment->status ? 'Complete' : $payment->post_status;
+
+		// Make sure we're matching cases, since they matter
+		return array_search( strtolower( $post_status ), array_map( 'strtolower', $statuses ) );
 	}
 
 	return ! empty( $status ) ? $status : false;
