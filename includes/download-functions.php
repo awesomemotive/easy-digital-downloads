@@ -1336,3 +1336,14 @@ function edd_get_bundle_pricing_variations( $download_id = 0 ) {
 	$download = new EDD_Download( $download_id );
 	return $download->get_bundle_pricing_variations();
 }
+
+/**
+ * Gets the list of post types that should use download metadata.
+ *
+ * @since 3.1
+ * @return array List of post types.
+ */
+function edd_get_download_meta_post_types() {
+
+	return apply_filters( 'edd_download_metabox_post_types' , array( 'download' ) );
+}
