@@ -52,6 +52,7 @@ See our [gateways category](https://easydigitaldownloads.com/downloads/category/
 
 = Go further with extensions =
 
+
 With add-on plugins from our [extensions catalogue](https://easydigitaldownloads.com/downloads/?utm_source=extensions&utm_medium=description_tab&utm_content=extensions&utm_campaign=readme) you can super-charge your digital store. Some of our extension highlights include:
 
 * [Software Licensing](https://easydigitaldownloads.com/downloads/software-licensing/?utm_source=extension&utm_medium=description_tab&utm_content=software-licensing&utm_campaign=readme) provides a complete solution for selling software license keys
@@ -76,6 +77,7 @@ These are just a few of the extensions we offer to help super-charge your digita
 Extensible, adaptable, and open source -- Easy Digital Downloads is created with developers in mind. Contribute on [GitHub](https://github.com/easydigitaldownloads/easy-digital-downloads).
 
 == Installation ==
+
 
 1. Activate the plugin
 2. Go to Downloads > Settings and configure the options
@@ -128,6 +130,7 @@ Place the [purchase_history] shortcode on any page.
 If you want to just show a list of the files the user has purchased, use the [download_history] shortcode instead.
 
 = How do I display products? =
+
 
 There are several different ways, each well [documented](http://docs.easydigitaldownloads.com/category/870-product-display?utm_source=edd_readme&utm_medium=faq_tab&utm_content=faqs&utm_campaign=readme).
 
@@ -191,6 +194,8 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+
+
 = 2.9.17, October 2, 2019 =
 * Security Fix: Prevent an authentication bypass to the EDD REST API when no API keys exist.
 
@@ -229,6 +234,7 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * Security Fix: Avoid a possible PayPal Standard price manipulation when using PDT (Payment Data Transfer)
 
 = 2.9.9, December 3, 2018 =
+
 * Fix: State/province cannot be updated on order details screen when country is changed.
 * Fix: "Show Privacy Policy" text link is positioned incorrectly.
 * Fix: "Agree to Terms?" text shows twice on checkout with some configurations.
@@ -241,6 +247,7 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * Fix: Log messages not saved to debug log file if they contain non UTF-8 characters.
 
 = 2.9.8, October 1, 2018 =
+
 * Fix: Updated Amazon Payments onboarding URL.
 * Fix: Insert Download media button would not output expected plain text styles.
 * Fix: Adding a discount code on a cart with free products caused a division by zero error.
@@ -249,6 +256,7 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * Dev: All available contextual arguments were added to the edd_requested_file filter.
 
 = 2.9.7, September 10, 2018 =
+
 * Fix: The edd_cart_amount data attributes were not updated when quantities were changed at checkout.
 * Fix: Updated the zip/postal code validation for Mongolia.
 * Fix: Updating a download meta to 0 using the EDD_Download class would not save correctly.
@@ -262,10 +270,12 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * New: EDD API now supports "order" and "orderby" parameters for the products endpoint.
 
 = 2.9.6, July 16, 2018 =
+
 * Fix: "Error: You must login to complete your purchase" shown incorrectly on checkout.
 * Fix: WordPress database error in File Download Log updater.
 
 = 2.9.5, July 12, 2018 =
+
 * Fix: Changing the country field in the admin would not display the State fields.
 * Fix: File Download Log Migration from version 2.9.2 would fail on some sites.
 
@@ -297,11 +307,13 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * Dev: Filters were added to the AJAX responses for adding and removing items from the cart.
 
 = 2.9.3, May 25, 2018 =
+
 * Fix: Corrected multiple inconsistencies in the Privacy Policy Checkbox at checkout.
 * Fix: Corrected an issue causing "You must agree to the privacy policy" from showing when it wasn't required.
 * Dev: Complete Checkout button is no longer required to be a `submit` input.
 
 = 2.9.2, May 24, 2018 =
+
 * GDPR: Support for WordPress Core Privacy Exporter and Eraser.
 * GDPR: Added Privacy Policy template for WordPress Core Privacy Policy editor.
 * GDPR: Added new "Privacy" tab to the Easy Digital Downloads Settings.
