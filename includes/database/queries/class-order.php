@@ -179,4 +179,59 @@ class Order extends Query {
 
 		parent::__construct( $query );
 	}
+
+	public function query( $query ) {
+		if ( ! empty( $query['country'] ) ) {
+			add_filter( 'edd_orders_query_clauses', array( $this, 'query_by_country' ) );
+		}
+
+		parent::query( $query );
+
+		if ( ! empty( $query['country'] ) ) {
+			remove_filter( 'edd_orders_query_clauses', array( $this, 'query_by_country' ) );
+		}
+	}
+
+	public function query_by_country( $clauses ) {
+		$primary_alias = $this->table_alias;
+		$primary_column = parent::get_primary_column_name();
+
+		$order_addresses_query = new \EDD\Database\Queries\Order_Address();
+		$join_alias            = $order_addresses_query->table_alias;
+		$join_primary_column   = $order_addresses_query->get_primary_column_name();
+
+		$country_join = " LEFT JOIN {$order_addresses_query->table_name} {$join_alias} ON {$primary_alias}.{$primary_column} = {$join_alias}.{$join_primary_column}";
+		$clauses['join'] .= ' ' . $country_join;
+
+		$where_clauses = array();
+		if ( ! empty( $this->query_vars['country'] ) ) {
+			$country = sanitize_text_field( $this->query_vars['country'] );
+			$where_clauses[] = "{$join_alias}.country = '{$country}'";
+			$this->query_var_defaults['country'] = $country;
+		}
+
+		if ( ! empty( $this->query_vars['region'] ) ) {
+			$region = sanitize_text_field( $this->query_vars['region'] );
+			$where_clauses[] = "{$join_alias}.region = '{$region}'";
+			$this->query_var_defaults['region'] = $region;
+		}
+
+		$where_clause = implode( ' AND ', $where_clauses );
+
+		if ( ! empty( $clauses['where'] ) ) {
+			$clauses['where'] .= ' AND ' . $where_clause;
+		} else {
+			$clauses['where'] = $where_clause;
+		}
+
+		return $clauses;
+	}
+
+	protected function set_query_var_defaults() {
+		parent::set_query_var_defaults();
+
+		$this->query_var_defaults['country'] = false;
+		$this->query_var_defaults['region']  = false;
+	}
+
 }
