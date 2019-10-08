@@ -42,7 +42,7 @@ class Order_Address extends Query {
 	 * @access public
 	 * @var string
 	 */
-	protected $table_alias = 'ca';
+	protected $table_alias = 'oa';
 
 	/**
 	 * Name of class used to setup the database schema
