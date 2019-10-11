@@ -660,53 +660,59 @@ add_action( 'edd_payment_mode_select', 'edd_payment_mode_select' );
 */
 function edd_show_payment_icons() {
 
-	if( edd_show_gateways() && did_action( 'edd_payment_mode_top' ) ) {
+	if ( edd_show_gateways() && did_action( 'edd_payment_mode_top' ) ) {
 		return;
 	}
 
 	$payment_methods = edd_get_option( 'accepted_cards', array() );
 
-	if( empty( $payment_methods ) ) {
+	if ( empty( $payment_methods ) ) {
 		return;
 	}
 
 	echo '<div class="edd-payment-icons">';
 
-	foreach( $payment_methods as $key => $card ) {
+	foreach ( $payment_methods as $key => $card ) {
 
-		if( edd_string_is_image_url( $key ) ) {
-
+		if ( edd_string_is_image_url( $key ) ) {
 			echo '<img class="payment-icon" src="' . esc_url( $key ) . '"/>';
-
 		} else {
+			$type = '';
 
-			$card = strtolower( str_replace( ' ', '', $card ) );
+			$card_lowercase = strtolower( str_replace( ' ', '', $card ) );
 
-			if( has_filter( 'edd_accepted_payment_' . $card . '_image' ) ) {
-
-				$image = apply_filters( 'edd_accepted_payment_' . $card . '_image', '' );
-
+			if ( has_filter( 'edd_accepted_payment_' . $card_lowercase . '_image' ) ) {
+				$image = apply_filters( 'edd_accepted_payment_' . $card_lowercase . '_image', '' );
 			} else {
+				// Set the type to SVG.
+				$type = 'svg';
 
-				$image = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . $card . '.png', false );
+				// Get SVG dimensions.
+				$dimensions = edd_svg_dimensions( $key );
 
-				// Replaces backslashes with forward slashes for Windows systems
-				$plugin_dir  = wp_normalize_path( WP_PLUGIN_DIR );
-				$content_dir = wp_normalize_path( WP_CONTENT_DIR );
-				$image       = wp_normalize_path( $image );
-
-				$image = str_replace( $plugin_dir, WP_PLUGIN_URL, $image );
-				$image = str_replace( $content_dir, WP_CONTENT_URL, $image );
+				// Get SVG markup.
+				$image = edd_get_svg( 
+					array( 
+						'icon'    => $key,
+						'width'   => $dimensions['width'],
+						'height'  => $dimensions['height'],
+						'title'   => $card,
+						'classes' => array( 'payment-icon' )
+					)
+				);
 
 			}
 
-			if( edd_is_ssl_enforced() || is_ssl() ) {
-
+			if ( edd_is_ssl_enforced() || is_ssl() ) {
 				$image = edd_enforced_ssl_asset_filter( $image );
-
 			}
 
-			echo '<img class="payment-icon" src="' . esc_url( $image ) . '"/>';
+			if ( 'svg' === $type ) {
+				echo $image;
+			} else {
+				echo '<img class="payment-icon" src="' . esc_url( $image ) . '"/>';
+			}
+
 		}
 
 	}

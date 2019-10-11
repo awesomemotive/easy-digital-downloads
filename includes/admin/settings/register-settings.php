@@ -1551,63 +1551,73 @@ function edd_multicheck_callback( $args ) {
  * @return void
  */
 function edd_payment_icons_callback( $args ) {
+	ob_start();
+
 	$edd_option = edd_get_option( $args['id'] );
+	$class      = edd_sanitize_html_class( $args['field_class'] );
+	?>
+	<input type="hidden" name="edd_settings[<?php echo edd_sanitize_key( $args['id'] ); ?>]" value="-1" />
 
-	$class = edd_sanitize_html_class( $args['field_class'] );
+	<?php if ( ! empty( $args['options'] ) ) : ?>
+		<?php foreach ( $args['options'] as $key => $option ) : ?>
 
-	$html = '<input type="hidden" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="-1" />';
-	if ( ! empty( $args['options'] ) ) {
-		foreach( $args['options'] as $key => $option ) {
-
-			if( isset( $edd_option[ $key ] ) ) {
-				$enabled = $option;
-			} else {
-				$enabled = NULL;
-			}
-
-			$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="edd-settings-payment-icon-wrapper">';
-
-				$html .= '<input name="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="' . $class . '" type="checkbox" value="' . esc_attr( $option ) . '" ' . checked( $option, $enabled, false ) . '/>&nbsp;';
-
-				if( edd_string_is_image_url( $key ) ) {
-
-					$html .= '<img class="payment-icon" src="' . esc_url( $key ) . '" style="width:32px;height:24px;position:relative;top:6px;margin-right:5px;"/>';
-
+			<?php
+				if ( isset( $edd_option[ $key ] ) ) {
+					$enabled = $option;
 				} else {
+					$enabled = NULL;
+				}
+			?>
+			<div class="edd-settings-payment-icon-wrapper">
+				<input name="edd_settings[<?php echo edd_sanitize_key( $args['id'] ); ?>][<?php echo edd_sanitize_key( $key ); ?>]" id="edd_settings[<?php echo edd_sanitize_key( $args['id'] ); ?>][<?php echo edd_sanitize_key( $key ); ?>]" class="<?php echo $class; ?>" type="checkbox" value="<?php echo esc_attr( $option ); ?>" <?php echo checked( $option, $enabled, false ); ?> />
+				
+				<label for="edd_settings[<?php echo edd_sanitize_key( $args['id'] ); ?>][<?php echo edd_sanitize_key( $key ); ?>]">
 
+				<?php if ( edd_string_is_image_url( $key ) ) : ?>
+					<span class="payment-icon-image"><img class="payment-icon" src="<?php echo esc_url( $key ); ?>" /></span>
+				<?php else : 
+					
+					$type = '';
 					$card = strtolower( str_replace( ' ', '', $option ) );
 
-					if( has_filter( 'edd_accepted_payment_' . $card . '_image' ) ) {
-
+					if ( has_filter( 'edd_accepted_payment_' . $card . '_image' ) ) {
 						$image = apply_filters( 'edd_accepted_payment_' . $card . '_image', '' );
-
 					} else {
+						// Set the type to SVG.
+						$type = 'svg';
 
-						$image       = edd_locate_template( 'images' . DIRECTORY_SEPARATOR . 'icons' . DIRECTORY_SEPARATOR . $card . '.png', false );
-						$content_dir = WP_CONTENT_DIR;
+						// Get SVG dimensions.
+						$dimensions = edd_svg_dimensions( $key );
 
-						if( function_exists( 'wp_normalize_path' ) ) {
-
-							// Replaces backslashes with forward slashes for Windows systems
-							$image = wp_normalize_path( $image );
-							$content_dir = wp_normalize_path( $content_dir );
-
-						}
-
-						$image = str_replace( $content_dir, content_url(), $image );
-
+						// Get SVG markup.
+						$image = edd_get_svg( 
+							array( 
+								'icon'    => $key,
+								'width'   => $dimensions['width'],
+								'height'  => $dimensions['height'],
+								'title'   => $option,
+								'classes' => array( 'payment-icon' )
+							)
+						);
 					}
 
-					$html .= '<img class="payment-icon" src="' . esc_url( $image ) . '" style="width:32px;height:24px;position:relative;top:6px;margin-right:5px;"/>';
-				}
+					if ( 'svg' === $type ) {
+						echo '<span class="payment-icon-image">' . $image . '</span>';
+					} else {
+						echo '<span class="payment-icon-image"><img class="payment-icon" src="' . esc_url( $image ) . '"/></span>';
+					}
 
+					endif; ?>
+					<span class="payment-option-name"><?php echo $option; ?></span>
+				</label>
+			</div>
+			
+		<?php endforeach; ?>
+		<p class="description" style="margin-top:16px;"><?php echo wp_kses_post( $args['desc'] ); ?></p>
+	<?php endif; ?>
 
-			$html .= $option . '</label>';
-
-		}
-		$html .= '<p class="description" style="margin-top:16px;">' . wp_kses_post( $args['desc'] ) . '</p>';
-	}
-
+<?php
+	$html = ob_get_clean();
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
 

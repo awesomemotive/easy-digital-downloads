@@ -66,10 +66,32 @@ a.edd-delete:hover {
 }
 
 .download_page_edd-settings .edd-settings-payment-icon-wrapper {
-	margin-right:10px;
-	line-height:16px;
-	height:16px;
-	display: table;
+	margin-top: 5px;
+}
+
+.download_page_edd-settings .edd-settings-payment-icon-wrapper input {
+	margin-top: 1px;
+}
+
+.download_page_edd-settings .form-table .edd-settings-payment-icon-wrapper input[type="checkbox"] + label {
+	margin: 0;
+	display: inline-block;
+}
+
+.download_page_edd-settings .payment-icon {
+	max-width: 100%;
+	display: block;
+}
+
+.download_page_edd-settings .edd-settings-payment-icon-wrapper .payment-icon-image {
+	margin-right: 5px;
+	width: 32px;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.download_page_edd-settings .edd-settings-payment-icon-wrapper .payment-option-name {
+	vertical-align: middle;
 }
 
 /* =Add Ons Styles

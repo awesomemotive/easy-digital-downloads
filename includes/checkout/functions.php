@@ -608,3 +608,32 @@ function edd_purchase_form_validate_cc_exp_date( $exp_month, $exp_year ) {
 	return $expiration >= time();
 
 }
+
+/**
+ * Loads SVG icons into the EDD Checkout footer.
+ * 
+ * @since 2.9.x
+ */
+function edd_svg_checkout_icons() {
+
+	// Only load icons at EDD Checkout.
+	if ( ! edd_is_checkout() ) {
+		return;
+	}
+
+	// Create array to hold icons.
+	$icons = array();
+
+	// Get payment methods.
+	$payment_methods = edd_get_option( 'accepted_cards', array() );
+
+	if ( ! empty( $payment_methods ) ) {
+		foreach ( $payment_methods as $key => $method ) {
+			// Add each payment method's key to $icons array. I.e "mastercard".
+			$icons[] = $key;
+		}
+	}
+
+	return edd_svg_icons( $icons );
+}
+add_action( 'wp_footer', 'edd_svg_checkout_icons', 9999 );
