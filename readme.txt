@@ -406,7 +406,6 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * Tweak: Added a colon that was missing on taxes & subtotal of the purchase confirmation.
 * Tweak: Add debug logging to PayPal IPN capturing.
 
-
 = 2.8.12, November 10, 2017 =
 * Fix: Reverted some of the performance improvements due to edge case errors.
 * Fix: Corrected a misspelled function edd_render_dowwn_tax_options.
@@ -1508,7 +1507,6 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * Fix: Trashed downloads can be purchased with custom add to cart URLs
 * Tweak: Added filters to join and where clauses in edd_count_payments()
 * Tweak: Improved logic and flexibility for Products endpoint of the REST API
-
 
 = 2.3.8, April 27, 2015 =
 
