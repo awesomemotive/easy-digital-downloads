@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.9.17\n"
+"Project-Id-Version: Easy Digital Downloads 2.9.18-201910160001\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2019-10-16 22:19:27+00:00\n"
+"POT-Creation-Date: 2019-10-18 18:04:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5980,73 +5980,73 @@ msgstr ""
 msgid "The price of the product."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:118
+#: includes/class-edd-register-meta.php:123
 msgid "An array of variable prices for the product."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:133
+#: includes/class-edd-register-meta.php:158
 msgid "The files associated with the product, available for download."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:147
+#: includes/class-edd-register-meta.php:173
 msgid "An array of product IDs to associate with a bundle."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:162
+#: includes/class-edd-register-meta.php:195
 msgid ""
 "Defines how this product's 'Purchase' button should behave, either add to "
 "cart or buy now"
 msgstr ""
 
-#: includes/class-edd-register-meta.php:177
+#: includes/class-edd-register-meta.php:210
 msgid ""
 "When variable pricing is enabled, this value defines which option should be "
 "chosen by default."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:202
+#: includes/class-edd-register-meta.php:235
 msgid "The email address associated with the purchase."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:217
+#: includes/class-edd-register-meta.php:250
 msgid "The Customer ID associated with the payment."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:231
+#: includes/class-edd-register-meta.php:264
 msgid "The User ID associated with the payment."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:245
+#: includes/class-edd-register-meta.php:278
 msgid "The IP address the payment was made from."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:259
+#: includes/class-edd-register-meta.php:292
 msgid "The unique purchase key for this payment."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:273
+#: includes/class-edd-register-meta.php:306
 msgid "The purchase total for this payment."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:287
+#: includes/class-edd-register-meta.php:320
 msgid "Identifies if the purchase was made in Test or Live mode."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:301
+#: includes/class-edd-register-meta.php:334
 msgid "The registered gateway that was used to process this payment."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:315
+#: includes/class-edd-register-meta.php:348
 msgid ""
 "Array of payment meta that contains cart details, downloads, amounts, "
 "taxes, discounts, and subtotals, etc."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:329
+#: includes/class-edd-register-meta.php:362
 msgid "The total amount of tax paid for this payment."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:343
+#: includes/class-edd-register-meta.php:376
 msgid "The date this payment was changed to the `completed` status."
 msgstr ""
 
