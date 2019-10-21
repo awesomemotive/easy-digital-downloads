@@ -82,6 +82,7 @@ function edd_process_download() {
 		 * If we have an attachment ID stored, use get_attached_file() to retrieve absolute URL
 		 * If this fails or returns a relative path, we fail back to our own absolute URL detection
 		 */
+		$from_attachment_id = false;
 		if( edd_is_local_file( $requested_file ) && $attachment_id && 'attachment' == get_post_type( $attachment_id ) ) {
 
 			if( 'pdf' === strtolower( edd_get_file_extension( $requested_file ) ) ) {
@@ -124,7 +125,8 @@ function edd_process_download() {
 
 			if( $attached_file ) {
 
-				$requested_file = $attached_file;
+				$from_attachment_id = true;
+				$requested_file     = $attached_file;
 
 			}
 
@@ -184,9 +186,12 @@ function edd_process_download() {
 			set_magic_quotes_runtime(0);
 		}
 
-		$file_is_in_allowed_location = edd_local_file_location_is_allowed( $file_details, $schemes, $requested_file );
-		if ( false === $file_is_in_allowed_location ) {
-			wp_die( __( 'Sorry, this file could not be downloaded.', 'easy-digital-downloads' ), __( 'Error Downloading File', 'easy-digital-downloads' ), 403 );
+		// If we're using an attachment ID to get the file, even by path, we can ignore this check.
+		if ( false === $from_attachment_id ) {
+			$file_is_in_allowed_location = edd_local_file_location_is_allowed( $file_details, $schemes, $requested_file );
+			if ( false === $file_is_in_allowed_location ) {
+				wp_die( __( 'Sorry, this file could not be downloaded.', 'easy-digital-downloads' ), __( 'Error Downloading File', 'easy-digital-downloads' ), 403 );
+			}
 		}
 
 		@session_write_close();

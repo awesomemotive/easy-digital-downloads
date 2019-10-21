@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.9.17\n"
+"Project-Id-Version: Easy Digital Downloads 2.9.18-201910160001\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2019-10-03 00:56:44+00:00\n"
+"POT-Creation-Date: 2019-10-18 18:04:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -97,7 +97,7 @@ msgstr ""
 #: includes/emails/actions.php:53 includes/emails/template.php:243
 #: includes/error-tracking.php:40 includes/gateways/functions.php:221
 #: includes/gateways/manual.php:33 includes/gateways/paypal-standard.php:168
-#: includes/process-download.php:298 includes/process-download.php:889
+#: includes/process-download.php:303 includes/process-download.php:894
 #: includes/query-filters.php:48 includes/user-functions.php:895
 #: includes/user-functions.php:920 includes/user-functions.php:973
 msgid "Error"
@@ -254,8 +254,8 @@ msgid ""
 msgstr ""
 
 #: includes/admin/class-edd-notices.php:49
-#: includes/admin/class-edd-notices.php:67
-#: includes/admin/class-edd-notices.php:84
+#: includes/admin/class-edd-notices.php:70
+#: includes/admin/class-edd-notices.php:87
 msgid "Dismiss Notice"
 msgstr ""
 
@@ -265,149 +265,149 @@ msgid ""
 "processed. <a href=\"%s\">Settings</a>."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:64
+#: includes/admin/class-edd-notices.php:67
 msgid ""
 "The download files in %s are not currently protected due to your site "
 "running on NGINX."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:65
+#: includes/admin/class-edd-notices.php:68
 msgid ""
 "To protect them, you must add a redirect rule as explained in <a "
 "href=\"http://docs.easydigitaldownloads.com/article/682-protected-download-"
 "files-on-nginx\">this guide</a>."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:66
+#: includes/admin/class-edd-notices.php:69
 msgid ""
 "If you have already added the redirect rule, you may safely dismiss this "
 "notice"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:81
+#: includes/admin/class-edd-notices.php:84
 msgid "The Easy Digital Downloads .htaccess file is missing from %s!"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:82
+#: includes/admin/class-edd-notices.php:85
 msgid ""
 "First, please resave the Misc settings tab a few times. If this warning "
 "continues to appear, create a file called \".htaccess\" in the %s "
 "directory, and copy the following into it:"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:96
+#: includes/admin/class-edd-notices.php:99
 msgid ""
 "Easy Digital Downloads 2.5 contains a <a href=\"%s\">built in recount "
 "tool</a>. Please <a href=\"%s\">deactivate the Easy Digital Downloads - "
 "Recount Earnings plugin</a>"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:118
+#: includes/admin/class-edd-notices.php:121
 msgid "Discount code added."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:121
+#: includes/admin/class-edd-notices.php:124
 msgid "There was a problem adding your discount code, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:124
+#: includes/admin/class-edd-notices.php:127
 msgid "A discount with that code already exists, please use a different code."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:127
+#: includes/admin/class-edd-notices.php:130
 #: includes/admin/discounts/edit-discount.php:33
 msgid "Discount code updated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:130
+#: includes/admin/class-edd-notices.php:133
 msgid "There was a problem updating your discount code, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:133
+#: includes/admin/class-edd-notices.php:136
 msgid ""
 "The discount code could not be added because one or more of the required "
 "fields was empty, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:136
+#: includes/admin/class-edd-notices.php:139
 msgid ""
 "The discount code entered is invalid; only alphanumeric characters are "
 "allowed, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:144
+#: includes/admin/class-edd-notices.php:147
 msgid "The payment has been deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:147
+#: includes/admin/class-edd-notices.php:150
 msgid "The purchase receipt has been resent."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:150
+#: includes/admin/class-edd-notices.php:153
 msgid "The reports have been refreshed."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:153
+#: includes/admin/class-edd-notices.php:156
 msgid "The payment note has been deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:162
+#: includes/admin/class-edd-notices.php:165
 msgid "The settings have been imported."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:165
+#: includes/admin/class-edd-notices.php:168
 msgid "API keys successfully generated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:168
+#: includes/admin/class-edd-notices.php:171
 msgid "The specified user already has API keys."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:171
+#: includes/admin/class-edd-notices.php:174
 msgid "API keys successfully regenerated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:174
+#: includes/admin/class-edd-notices.php:177
 msgid "API keys successfully revoked."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:177
+#: includes/admin/class-edd-notices.php:180
 msgid "SendWP has been successfully connected!"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:186
+#: includes/admin/class-edd-notices.php:189
 msgid "The payment note has been added successfully."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:189
+#: includes/admin/class-edd-notices.php:192
 msgid "The payment has been successfully updated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:198
+#: includes/admin/class-edd-notices.php:201
 msgid "Customer successfully deleted"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:201
+#: includes/admin/class-edd-notices.php:204
 msgid "User successfully verified"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:204
+#: includes/admin/class-edd-notices.php:207
 msgid "Customer email added"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:207
+#: includes/admin/class-edd-notices.php:210
 msgid "Customer email removed"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:210
+#: includes/admin/class-edd-notices.php:213
 msgid "Failed to remove customer email"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:213
+#: includes/admin/class-edd-notices.php:216
 msgid "Primary email updated for customer"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:216
+#: includes/admin/class-edd-notices.php:219
 msgid "Failed to set primary email"
 msgstr ""
 
@@ -436,7 +436,7 @@ msgstr ""
 #: includes/admin/payments/class-payments-table.php:367
 #: includes/admin/payments/class-payments-table.php:435
 #: includes/admin/settings/register-settings.php:946
-#: includes/payments/functions.php:1618
+#: includes/payments/functions.php:1616
 msgid "Delete"
 msgstr ""
 
@@ -1965,32 +1965,32 @@ msgid "Completed"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:249
-#: includes/payments/functions.php:771
+#: includes/payments/functions.php:769
 msgid "Pending"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:250
-#: includes/payments/functions.php:777
+#: includes/payments/functions.php:775
 msgid "Processing"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:251
-#: includes/payments/functions.php:773
+#: includes/payments/functions.php:771
 msgid "Refunded"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:252
-#: includes/payments/functions.php:776
+#: includes/payments/functions.php:774
 msgid "Revoked"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:253
-#: includes/payments/functions.php:774
+#: includes/payments/functions.php:772
 msgid "Failed"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:254
-#: includes/payments/functions.php:775
+#: includes/payments/functions.php:773
 msgid "Abandoned"
 msgstr ""
 
@@ -5980,73 +5980,73 @@ msgstr ""
 msgid "The price of the product."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:118
+#: includes/class-edd-register-meta.php:123
 msgid "An array of variable prices for the product."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:133
+#: includes/class-edd-register-meta.php:158
 msgid "The files associated with the product, available for download."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:147
+#: includes/class-edd-register-meta.php:173
 msgid "An array of product IDs to associate with a bundle."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:162
+#: includes/class-edd-register-meta.php:195
 msgid ""
 "Defines how this product's 'Purchase' button should behave, either add to "
 "cart or buy now"
 msgstr ""
 
-#: includes/class-edd-register-meta.php:177
+#: includes/class-edd-register-meta.php:210
 msgid ""
 "When variable pricing is enabled, this value defines which option should be "
 "chosen by default."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:202
+#: includes/class-edd-register-meta.php:235
 msgid "The email address associated with the purchase."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:217
+#: includes/class-edd-register-meta.php:250
 msgid "The Customer ID associated with the payment."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:231
+#: includes/class-edd-register-meta.php:264
 msgid "The User ID associated with the payment."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:245
+#: includes/class-edd-register-meta.php:278
 msgid "The IP address the payment was made from."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:259
+#: includes/class-edd-register-meta.php:292
 msgid "The unique purchase key for this payment."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:273
+#: includes/class-edd-register-meta.php:306
 msgid "The purchase total for this payment."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:287
+#: includes/class-edd-register-meta.php:320
 msgid "Identifies if the purchase was made in Test or Live mode."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:301
+#: includes/class-edd-register-meta.php:334
 msgid "The registered gateway that was used to process this payment."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:315
+#: includes/class-edd-register-meta.php:348
 msgid ""
 "Array of payment meta that contains cart details, downloads, amounts, "
 "taxes, discounts, and subtotals, etc."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:329
+#: includes/class-edd-register-meta.php:362
 msgid "The total amount of tax paid for this payment."
 msgstr ""
 
-#: includes/class-edd-register-meta.php:343
+#: includes/class-edd-register-meta.php:376
 msgid "The date this payment was changed to the `completed` status."
 msgstr ""
 
@@ -6376,7 +6376,7 @@ msgid ""
 "of a purchase. HTML is accepted. Available template tags:"
 msgstr ""
 
-#: includes/deprecated-functions.php:517 includes/process-download.php:889
+#: includes/deprecated-functions.php:517 includes/process-download.php:894
 msgid "Sorry but you have hit your download limit for this file."
 msgstr ""
 
@@ -7152,11 +7152,11 @@ msgstr ""
 msgid "Payment recovery processed"
 msgstr ""
 
-#: includes/payments/functions.php:772
+#: includes/payments/functions.php:770
 msgid "Complete"
 msgstr ""
 
-#: includes/payments/functions.php:1603
+#: includes/payments/functions.php:1601
 msgid "EDD Bot"
 msgstr ""
 
@@ -7659,39 +7659,39 @@ msgstr ""
 msgid "All API access logs deleted for %s."
 msgstr ""
 
-#: includes/process-download.php:146
+#: includes/process-download.php:148
 msgid "Error downloading file. Please contact support."
 msgstr ""
 
-#: includes/process-download.php:146
+#: includes/process-download.php:148
 msgid "File download error"
 msgstr ""
 
-#: includes/process-download.php:189
+#: includes/process-download.php:193
 msgid "Sorry, this file could not be downloaded."
 msgstr ""
 
-#: includes/process-download.php:189
+#: includes/process-download.php:193
 msgid "Error Downloading File"
 msgstr ""
 
-#: includes/process-download.php:297
+#: includes/process-download.php:302
 msgid "You do not have permission to download this file"
 msgstr ""
 
-#: includes/process-download.php:298
+#: includes/process-download.php:303
 msgid "Purchase Verification Failed"
 msgstr ""
 
-#: includes/process-download.php:965
+#: includes/process-download.php:970
 msgid "Invalid file"
 msgstr ""
 
-#: includes/process-download.php:972
+#: includes/process-download.php:977
 msgid "The requested file could not be found. Error 404."
 msgstr ""
 
-#: includes/process-download.php:973
+#: includes/process-download.php:978
 msgid "File not found"
 msgstr ""
 
@@ -8422,7 +8422,7 @@ msgid "Number of items in cart"
 msgstr ""
 
 #: tests/bootstrap.php:39
-msgid "HTTP Requests disbaled for unit tests"
+msgid "HTTP Requests disabled for unit tests"
 msgstr ""
 
 #. Description of the plugin/theme
