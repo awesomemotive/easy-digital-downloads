@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: ecommerce, e-commerce, sell, downloads, store, paypal, checkout, shop
 Requires at least: 4.4
 Tested up to: 5.2.3
-Stable Tag: 2.9.17
+Stable Tag: 2.9.18
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -188,6 +188,13 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+= 2.9.18, October 21, 2019 =
+* Fix: Updated calls to register_meta for WordPress 5.3 compatibility.
+* Fix: Refactored edd_get_payment_status to work when Payment statuses are translated.
+* Fix: Improved the compatibility of file downloads with hosting configurations that involve symlinks for uploads.
+* Dev: Added the 'edd_show_nginx_redirect_notice' filter to allow programmatically hiding the nginx file protection admin notice.
+* Dev: Added polyfills for is_countable and is_iterable into EDD core.
+
 = 2.9.17, October 2, 2019 =
 * Security Fix: Prevent an authentication bypass to the EDD REST API when no API keys exist.
 
