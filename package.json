@@ -1,6 +1,6 @@
 {
   "name": "easy-digital-downloads",
-  "version": "2.9.18",
+  "version": "2.9.19",
   "private": true,
   "devDependencies": {
     "grunt": "^1.0.4",
@@ -16,6 +16,6 @@
     "makepot": "^0.3.0"
   },
   "dependencies": {
-    "npm": "^6.9.0"
+    "npm": "^6.12.0"
   }
 }
