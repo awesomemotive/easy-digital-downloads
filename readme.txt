@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: ecommerce, e-commerce, sell, downloads, store, paypal, checkout, shop
 Requires at least: 4.4
 Tested up to: 5.2.3
-Stable Tag: 2.9.18
+Stable Tag: 2.9.19
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -188,6 +188,9 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+= 2.9.19, October 28, 2019 =
+* Fix: Limit register_meta calls to be for the download post type only, in preparation for WordPress 5.3 compatibility.
+
 = 2.9.18, October 21, 2019 =
 * Fix: Updated calls to register_meta for WordPress 5.3 compatibility.
 * Fix: Refactored edd_get_payment_status to work when Payment statuses are translated.

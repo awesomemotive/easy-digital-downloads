@@ -69,6 +69,7 @@ class EDD_Register_Meta {
 			'post',
 			'_edd_download_earnings',
 			array(
+				'object_subtype'    => 'download',
 				'sanitize_callback' => 'edd_sanitize_amount',
 				'type'              => 'float',
 				'description'       => __( 'The total earnings for the specified product', 'easy-digital-downloads' ),
@@ -84,6 +85,7 @@ class EDD_Register_Meta {
 			'post',
 			'_edd_download_sales',
 			array(
+				'object_subtype'    => 'download',
 				'sanitize_callback' => array( $this, 'intval_wrapper' ),
 				'type'              => 'float',
 				'description'       => __( 'The number of sales for the specified product.', 'easy-digital-downloads' ),
@@ -98,6 +100,7 @@ class EDD_Register_Meta {
 			'post',
 			'edd_price',
 			array(
+				'object_subtype'    => 'download',
 				'sanitize_callback' => array( $this, 'sanitize_price' ),
 				'type'              => 'float',
 				'description'       => __( 'The price of the product.', 'easy-digital-downloads' ),
@@ -117,6 +120,7 @@ class EDD_Register_Meta {
 			'post',
 			'edd_variable_prices',
 			array(
+				'object_subtype'    => 'download',
 				'sanitize_callback' => array( $this, 'sanitize_variable_prices' ),
 				'single'            => true,
 				'type'              => 'object',
@@ -153,6 +157,7 @@ class EDD_Register_Meta {
 			'post',
 			'edd_download_files',
 			array(
+				'object_subtype'    => 'download',
 				'sanitize_callback' => array( $this, 'sanitize_files' ),
 				'type'              => 'array',
 				'description'       => __( 'The files associated with the product, available for download.', 'easy-digital-downloads' ),
@@ -167,6 +172,7 @@ class EDD_Register_Meta {
 			'post',
 			'_edd_bundled_products',
 			array(
+				'object_subtype'    => 'download',
 				'sanitize_callback' => array( $this, 'sanitize_array' ),
 				'single'            => true,
 				'type'              => 'array',
@@ -190,6 +196,7 @@ class EDD_Register_Meta {
 			'post',
 			'_edd_button_behavior',
 			array(
+				'object_subtype'    => 'download',
 				'sanitize_callback' => 'sanitize_text_field',
 				'type'              => 'string',
 				'description'       => __( "Defines how this product's 'Purchase' button should behave, either add to cart or buy now", 'easy-digital-downloads' ),
@@ -205,6 +212,7 @@ class EDD_Register_Meta {
 			'post',
 			'_edd_default_price_id',
 			array(
+				'object_subtype'    => 'download',
 				'sanitize_callback' => array( $this, 'intval_wrapper' ),
 				'type'              => 'int',
 				'description'       => __( 'When variable pricing is enabled, this value defines which option should be chosen by default.', 'easy-digital-downloads' ),
@@ -230,6 +238,7 @@ class EDD_Register_Meta {
 			'post',
 			'_edd_payment_user_email',
 			array(
+				'object_subtype'    => 'edd_payment',
 				'sanitize_callback' => 'sanitize_email',
 				'type'              => 'string',
 				'description'       => __( 'The email address associated with the purchase.', 'easy-digital-downloads' ),
@@ -245,6 +254,7 @@ class EDD_Register_Meta {
 			'post',
 			'_edd_payment_customer_id',
 			array(
+				'object_subtype'    => 'edd_payment',
 				'sanitize_callback' => array( $this, 'intval_wrapper' ),
 				'type'              => 'int',
 				'description'       => __( 'The Customer ID associated with the payment.', 'easy-digital-downloads' ),
@@ -259,6 +269,7 @@ class EDD_Register_Meta {
 			'post',
 			'_edd_payment_user_id',
 			array(
+				'object_subtype'    => 'edd_payment',
 				'sanitize_callback' => array( $this, 'intval_wrapper' ),
 				'type'              => 'int',
 				'description'       => __( 'The User ID associated with the payment.', 'easy-digital-downloads' ),
