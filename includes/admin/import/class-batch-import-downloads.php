@@ -311,49 +311,6 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 	}
 
 	/**
-	 * Convert a files string containing delimiters to an array
-	 *
-	 * @since 2.9.20
-	 * @param $str Input string to convert to an array
-	 * @return array
-	 */
-	public function convert_file_string_to_array( $str = '' ) {
-
-		$array = array();
-
-		if( is_array( $str ) ) {
-			return array_map( 'trim', $str );
-		}
-
-		// Look for standard delimiters
-		if( false !== strpos( $str, '|' ) ) {
-
-			$delimiter = '|';
-
-		} elseif( false !== strpos( $str, ',' ) ) {
-
-			$delimiter = ',';
-
-		} elseif( false !== strpos( $str, ';' ) ) {
-
-			$delimiter = ';';
-
-		}
-
-		if( ! empty( $delimiter ) ) {
-
-			$array = (array) explode( $delimiter, $str );
-
-		} else {
-
-			$array[] = $str;
-		}
-
-		return array_map( 'trim', $array );
-
-	}
-
-	/**
 	 * Set up and store the file downloads
 	 *
 	 * @since 2.6
