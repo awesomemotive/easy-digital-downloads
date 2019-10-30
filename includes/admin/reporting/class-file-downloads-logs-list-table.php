@@ -112,15 +112,15 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 *
 	 * @since 1.4
 	 *
-	 * @param array $item Contains all the data of the log item
-	 * @param string $column_name The name of the column
+	 * @param array  $item Contains all the data of the log item.
+	 * @param string $column_name The name of the column.
 	 *
 	 * @return string Column Name
 	 */
 	public function column_default( $item, $column_name ) {
 		$base_url = remove_query_arg( 'paged' );
 		switch ( $column_name ) {
-			case 'download' :
+			case 'download':
 				$download      = new EDD_Download( $item[ $column_name ] );
 				$column_value  = $download->get_name();
 
@@ -128,13 +128,13 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 					$column_value .= ' &mdash; ' . edd_get_price_option_name( $download->ID, $item['price_id'] );
 				}
 
-				return '<a href="' . add_query_arg( 'download', $download->ID, $base_url ) . '" >' . $column_value . '</a>';
-			case 'customer' :
-				return '<a href="' . add_query_arg( 'customer', $item[ 'customer' ]->id, $base_url ) . '">' . $item['customer']->name . '</a>';
-			case 'payment_id' :
-				return $item['payment_id'] !== false ? '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item['payment_id'] ) . '">' . edd_get_payment_number( $item['payment_id'] ) . '</a>' : '';
-			case 'ip' :
-				return '<a href="https://ipinfo.io/' . $item['ip']  . '" target="_blank" rel="noopener noreferrer">' . $item['ip']  . '</a>';
+				return '<a href="' . esc_url( add_query_arg( 'download', $download->ID, $base_url ) ) . '" >' . $column_value . '</a>';
+			case 'customer':
+				return '<a href="' . esc_url( add_query_arg( 'customer', $item['customer']->id, $base_url ) ) . '">' . $item['customer']->name . '</a>';
+			case 'payment_id':
+				return false !== $item['payment_id'] ? '<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . esc_attr( $item['payment_id'] ) ) ) . '">' . edd_get_payment_number( $item['payment_id'] ) . '</a>' : '';
+			case 'ip':
+				return '<a href="' . esc_url( 'https://ipinfo.io/' . $item['ip'] ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $item['ip'] ) . '</a>';
 			default:
 				return $item[ $column_name ];
 		}

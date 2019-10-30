@@ -316,7 +316,7 @@ $customer       = new EDD_Customer( $payment->customer_id );
 												<a href="<?php echo admin_url( '/edit.php?post_type=download&page=edd-reports&tab=logs&payment=' . $payment_id ); ?>"><?php _e( 'View file download log for purchase', 'easy-digital-downloads' ); ?></a>
 											</p>
 											<p>
-												<?php $download_log_url = admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs&user=' . $user_id ); ?>
+												<?php $download_log_url = admin_url( 'edit.php?post_type=download&page=edd-reports&tab=logs&customer=' . $customer->id ); ?>
 												<a href="<?php echo $download_log_url; ?>"><?php _e( 'View customer download log', 'easy-digital-downloads' ); ?></a>
 											</p>
 											<p>
@@ -345,7 +345,38 @@ $customer       = new EDD_Customer( $payment->customer_id );
 
 							<?php $column_count = edd_use_taxes() ? 'columns-5' : 'columns-4'; ?>
 
-							<?php if ( is_array( $cart_items ) ) :
+							<?php
+
+							// If there are no cart items, add a paceholder product so that it can be duplicated through JS, which is how proeucts are added to orders.
+							if ( empty( $cart_items ) ) {
+								$cart_items = array(
+									array(
+										'name' => __( 'No download attached to this order', 'easy-digital-downloads' ),
+										'id'   => 0,
+										'item_number' => array(
+											'id'       => 0,
+											'quantity' => 0,
+											'options'  => array(
+												'quantity' => 0,
+												'price_id' => 0,
+											)
+										),
+										'item_price' => 0,
+										'quantity'   => 0,
+										'discount'   => 0,
+										'subtotal'   => 0,
+										'tax'        => 0,
+										'fees'       => array(),
+										'price'      => 0
+									)
+								);
+
+								$cart_items_existed = false;
+							} else {
+								$cart_items_existed = true;
+							}
+
+							if ( is_array( $cart_items ) ) :
 								$is_qty_enabled = edd_item_quantities_enabled() ? ' item_quantity' : '' ;
 								?>
 								<div id="edd-purchased-files" class="postbox edd-edit-purchase-element <?php echo $column_count; ?>">
@@ -417,12 +448,14 @@ $customer       = new EDD_Customer( $payment->customer_id );
 															</a>
 														<?php else: ?>
 															<span class="deleted">
-																<?php if ( ! empty( $cart_item['name'] ) ) : ?>
-																	<?php echo $cart_item['name']; ?>&nbsp;-&nbsp;
+																<?php if ( ! $cart_items_existed ) {
+																	echo $cart_item['name'];
+																} else if ( ! empty( $cart_item['name'] ) ) {
+																	echo $cart_item['name']; ?>&nbsp;-&nbsp;
 																	<em>(<?php _e( 'Deleted', 'easy-digital-downloads' ); ?>)</em>
-																<?php else: ?>
+																<?php } else { ?>
 																	<em><?php printf( __( '%s deleted', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></em>
-																<?php endif; ?>
+																<?php } ?>
 															</span>
 														<?php endif; ?>
 													</span>

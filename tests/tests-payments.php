@@ -135,6 +135,22 @@ class Tests_Payments extends EDD_UnitTestCase {
 		$this->assertFalse( edd_get_payment_status( 1212121212121 ) );
 	}
 
+	public function test_get_payment_status_translated() {
+		add_filter( 'locale', function() { return 'fr_FR'; }, 10 );
+		$lang_file = EDD_PLUGIN_DIR . 'languages/easy-digital-downloads-fr_FR.mo';
+		load_textdomain( 'easy-digital-downloads', $lang_file );
+
+		$this->assertEquals( 'pending', edd_get_payment_status( $this->_payment_id ) );
+		$this->assertEquals( 'pending', edd_get_payment_status( get_post( $this->_payment_id ) ) );
+		$payment = new EDD_Payment( $this->_payment_id );
+		$this->assertEquals( 'En attente', edd_get_payment_status_label( $payment->post_status ) );
+		$this->assertEquals( 'pending', edd_get_payment_status( $payment ) );
+		$this->assertFalse( edd_get_payment_status( 1212121212121 ) );
+
+		remove_filter( 'locale', function() { return 'fr_FR'; }, 10 );
+		unload_textdomain( 'easy-digital-downloads' );
+	}
+
 	public function test_get_payment_status_label() {
 		$this->assertEquals( 'Pending', edd_get_payment_status( $this->_payment_id, true ) );
 		$this->assertEquals( 'Pending', edd_get_payment_status( get_post( $this->_payment_id ), true ) );
