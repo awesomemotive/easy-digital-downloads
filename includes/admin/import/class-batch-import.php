@@ -246,6 +246,51 @@ class EDD_Batch_Import {
 	}
 
 	/**
+	 * Convert a files string containing delimiters to an array.
+	 *
+	 * This is identical to str_to_array() except it ignores all / characters.
+	 *
+	 * @since 2.9.20
+	 * @param $str Input string to convert to an array
+	 * @return array
+	 */
+	public function convert_file_string_to_array( $str = '' ) {
+
+		$array = array();
+
+		if( is_array( $str ) ) {
+			return array_map( 'trim', $str );
+		}
+
+		// Look for standard delimiters
+		if( false !== strpos( $str, '|' ) ) {
+
+			$delimiter = '|';
+
+		} elseif( false !== strpos( $str, ',' ) ) {
+
+			$delimiter = ',';
+
+		} elseif( false !== strpos( $str, ';' ) ) {
+
+			$delimiter = ';';
+
+		}
+
+		if( ! empty( $delimiter ) ) {
+
+			$array = (array) explode( $delimiter, $str );
+
+		} else {
+
+			$array[] = $str;
+		}
+
+		return array_map( 'trim', $array );
+
+	}
+
+	/**
 	 * Trims a column value for preview
 	 *
 	 * @since 2.6
