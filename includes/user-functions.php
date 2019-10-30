@@ -549,7 +549,7 @@ function edd_get_customer_address( $user_id = 0 ) {
 		'state'   => '',
 	) );
 
-	return $address;
+	return apply_filters( 'edd_get_customer_address', $address );
 }
 
 /**
