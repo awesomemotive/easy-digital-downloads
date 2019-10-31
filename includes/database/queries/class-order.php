@@ -286,19 +286,19 @@ class Order extends Query {
 		if ( ! empty( $this->query_vars['country'] ) && 'all' !== $this->query_vars['country'] ) {
 			// Filter by the order address's region (state/province/etc)..
 			if ( ! empty( $this->query_vars['region'] ) && 'all' !== $this->query_vars['region'] ) {
-				$country_join = " LEFT JOIN {$order_addresses_query->table_name} {$join_alias} ON {$primary_alias}.{$primary_column} = {$join_alias}.order_id WHERE {$join_alias}.country = '{$this->query_vars['country'] }' AND {$join_alias}.region = '{$this->query_vars['region']}' {$where_clause}";
+				$location_join = " LEFT JOIN {$order_addresses_query->table_name} {$join_alias} ON {$primary_alias}.{$primary_column} = {$join_alias}.order_id WHERE {$join_alias}.country = '{$this->query_vars['country'] }' AND {$join_alias}.region = '{$this->query_vars['region']}' {$where_clause}";
 				// Add the region to the query var defaults.
 				$this->query_var_defaults['region'] = $region;
 
 				// Filter only by the country, not by region.
 			} else {
-					$country_join = " LEFT JOIN {$order_addresses_query->table_name} {$join_alias} ON {$primary_alias}.{$primary_column} = {$join_alias}.order_id WHERE {$join_alias}.country = '{$this->query_vars['country'] }' {$where_clause}";
+					$location_join = " LEFT JOIN {$order_addresses_query->table_name} {$join_alias} ON {$primary_alias}.{$primary_column} = {$join_alias}.order_id WHERE {$join_alias}.country = '{$this->query_vars['country'] }' {$where_clause}";
 					// Add the country to the query var defaults.
 					$this->query_var_defaults['country'] = $country;
 			}
 
 			// Add the customized join to the query.
-			$clauses['join'] .= ' ' . $country_join;
+			$clauses['join'] .= ' ' . $location_join;
 
 		}
 
