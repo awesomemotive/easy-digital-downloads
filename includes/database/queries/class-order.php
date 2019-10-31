@@ -287,7 +287,7 @@ class Order extends Query {
 			// Filter by the order address's region (state/province/etc)..
 			if ( ! empty( $this->query_vars['region'] ) && 'all' !== $this->query_vars['region'] ) {
 				$country_join = " LEFT JOIN {$order_addresses_query->table_name} {$join_alias} ON {$primary_alias}.{$primary_column} = {$join_alias}.order_id WHERE {$join_alias}.country = '{$this->query_vars['country'] }' AND {$join_alias}.region = '{$this->query_vars['region']}' {$where_clause}";
-				// Add the resion to the query var defaults.
+				// Add the region to the query var defaults.
 				$this->query_var_defaults['region'] = $region;
 				// Filter only by the country, not by region.
 			} else {
