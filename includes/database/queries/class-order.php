@@ -289,6 +289,7 @@ class Order extends Query {
 				$country_join = " LEFT JOIN {$order_addresses_query->table_name} {$join_alias} ON {$primary_alias}.{$primary_column} = {$join_alias}.order_id WHERE {$join_alias}.country = '{$this->query_vars['country'] }' AND {$join_alias}.region = '{$this->query_vars['region']}' {$where_clause}";
 				// Add the region to the query var defaults.
 				$this->query_var_defaults['region'] = $region;
+
 				// Filter only by the country, not by region.
 			} else {
 					$country_join = " LEFT JOIN {$order_addresses_query->table_name} {$join_alias} ON {$primary_alias}.{$primary_column} = {$join_alias}.order_id WHERE {$join_alias}.country = '{$this->query_vars['country'] }' {$where_clause}";
