@@ -164,7 +164,7 @@ class Order extends Query {
 
 		// In EDD 3.0 we converted our use of the status 'publish' to 'complete', this accounts for queries using publish.
 		if ( isset( $query['status'] ) ) {
-			if ( is_array( $query['status'] ) && in_array( 'publish',  $query['status'] ) ) {
+			if ( is_array( $query['status'] ) && in_array( 'publish', $query['status'], true ) ) {
 				foreach ( $query['status'] as $key => $status ) {
 					if ( 'publish' === $status ) {
 						unset( $query['status'][ $key ] );
@@ -172,7 +172,7 @@ class Order extends Query {
 				}
 
 				$query['status'][] = 'complete';
-			} else if ( 'publish' === $query['status'] ) {
+			} elseif ( 'publish' === $query['status'] ) {
 				$query['status'] = 'complete';
 			}
 		}
@@ -185,44 +185,51 @@ class Order extends Query {
 			add_filter( 'edd_orders_query_clauses', array( $this, 'query_by_country' ) );
 		}
 
-		parent::query( $query );
+		$result = parent::query( $query );
 
 		if ( ! empty( $query['country'] ) ) {
 			remove_filter( 'edd_orders_query_clauses', array( $this, 'query_by_country' ) );
 		}
+
+		return $result;
 	}
 
 	public function query_by_country( $clauses ) {
-		$primary_alias = $this->table_alias;
+
+		$primary_alias  = $this->table_alias;
 		$primary_column = parent::get_primary_column_name();
 
 		$order_addresses_query = new \EDD\Database\Queries\Order_Address();
 		$join_alias            = $order_addresses_query->table_alias;
 		$join_primary_column   = $order_addresses_query->get_primary_column_name();
 
-		$country_join = " LEFT JOIN {$order_addresses_query->table_name} {$join_alias} ON {$primary_alias}.{$primary_column} = {$join_alias}.{$join_primary_column}";
-		$clauses['join'] .= ' ' . $country_join;
-
-		$where_clauses = array();
-		if ( ! empty( $this->query_vars['country'] ) ) {
-			$country = sanitize_text_field( $this->query_vars['country'] );
-			$where_clauses[] = "{$join_alias}.country = '{$country}'";
-			$this->query_var_defaults['country'] = $country;
-		}
-
-		if ( ! empty( $this->query_vars['region'] ) ) {
-			$region = sanitize_text_field( $this->query_vars['region'] );
-			$where_clauses[] = "{$join_alias}.region = '{$region}'";
-			$this->query_var_defaults['region'] = $region;
-		}
-
-		$where_clause = implode( ' AND ', $where_clauses );
-
 		if ( ! empty( $clauses['where'] ) ) {
-			$clauses['where'] .= ' AND ' . $where_clause;
+			$where_clause = ' AND ' . $clauses['where'];
 		} else {
-			$clauses['where'] = $where_clause;
+			$where_clause = '';
 		}
+
+		// Filter by the order address's country.
+		if ( ! empty( $this->query_vars['country'] ) && 'all' !== $this->query_vars['country'] ) {
+			// Filter by the order address's region (state/province/etc)..
+			if ( ! empty( $this->query_vars['region'] ) && 'all' !== $this->query_vars['region'] ) {
+				$country_join = " LEFT JOIN {$order_addresses_query->table_name} {$join_alias} ON {$primary_alias}.{$primary_column} = {$join_alias}.order_id WHERE {$join_alias}.country = '{$this->query_vars['country'] }' AND {$join_alias}.region = '{$this->query_vars['region']}' {$where_clause}";
+				// Add the resion to the query var defaults.
+				$this->query_var_defaults['region'] = $region;
+				// Filter only by the country, not by region.
+			} else {
+					$country_join = " LEFT JOIN {$order_addresses_query->table_name} {$join_alias} ON {$primary_alias}.{$primary_column} = {$join_alias}.order_id WHERE {$join_alias}.country = '{$this->query_vars['country'] }' {$where_clause}";
+					// Add the country to the query var defaults.
+					$this->query_var_defaults['country'] = $country;
+			}
+
+			// Add the customized join to the query.
+			$clauses['join'] .= ' ' . $country_join;
+
+		}
+
+		// We have added the wheres to the join calls so we don't need it to be here anymore.
+		unset( $clauses['where'] );
 
 		return $clauses;
 	}
