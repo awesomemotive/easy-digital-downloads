@@ -894,6 +894,7 @@ function edd_process_profile_editor_updates( $data ) {
 				'address'     => $address['line1'],
 				'address2'    => $address['line2'],
 				'city'        => $address['city'],
+				'country'     => $address['country'],
 				'region'      => $address['state'],
 				'postal_code' => $address['zip'],
 			) );
@@ -906,6 +907,7 @@ function edd_process_profile_editor_updates( $data ) {
 				'address'     => $address['line1'],
 				'address2'    => $address['line2'],
 				'city'        => $address['city'],
+				'country'     => $address['country'],
 				'region'      => $address['state'],
 				'postal_code' => $address['zip'],
 			) );
