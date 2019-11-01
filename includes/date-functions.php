@@ -65,7 +65,7 @@ function edd_get_utc_equivalent_date( $edd_date_object ) {
 }
 
 /**
- * Accept an EDD date object set in UTC, and get the WP/EDD Timezoneequivalent version of it.
+ * Accept an EDD date object set in UTC, and get the WP/EDD Timezone equivalent version of it.
  * The EDD date object must be in UTC. The one you'll get back will be the WP timezone equivalent of that time.
  * This is useful when showing date information to the user, so that they see it in the proper timezone, instead of UTC.
  *
@@ -85,7 +85,7 @@ function edd_get_edd_timezone_equivalent_date_from_utc( $edd_date_object ) {
 		return false;
 	}
 
-	// Convert the timezone (and this, also the time) from UTC to the WP/EDD Timezone.
+	// Convert the timezone (and thus, also the time) from UTC to the WP/EDD Timezone.
 	$edd_timezone = new DateTimeZone( edd_get_timezone_id() );
 	$edd_date_object->setTimezone( $edd_timezone );
 
