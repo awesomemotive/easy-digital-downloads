@@ -1421,6 +1421,7 @@ function edd_tools_sysinfo_get() {
 	$return .= 'PHP Version:              ' . PHP_VERSION . "\n";
 	$return .= 'MySQL Version:            ' . $wpdb->db_version() . "\n";
 	$return .= 'Webserver Info:           ' . $_SERVER['SERVER_SOFTWARE'] . "\n";
+	$return .= 'TLS Info:                 ' . apply_filters( 'edd_get_tlsinfo', $return ) . "\n";
 
 	$return  = apply_filters( 'edd_sysinfo_after_webserver_config', $return );
 
@@ -1467,6 +1468,26 @@ function edd_tools_sysinfo_get() {
 	return $return;
 }
 
+/**
+ * Get TLS Info
+ *
+ * @since       2.9
+ * @return      string
+ */
+function edd_tools_tlsinfo() {
+
+	if( ! function_exists( 'curl_init' ) ) {
+		return 'TLS info unavaible while cURL is disabled';
+	}
+
+	$ch = curl_init( 'https://www.howsmyssl.com/a/check' );
+	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+	$data = curl_exec( $ch );
+
+	$json = json_decode( $data );
+	return $json->tls_version;
+}
+add_filter( 'edd_get_tlsinfo', 'edd_tools_tlsinfo' );
 
 /**
  * Generates a System Info download file
