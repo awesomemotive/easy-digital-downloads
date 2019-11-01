@@ -394,8 +394,7 @@ function get_filter_value( $filter ) {
 
 		// Default to last 30 days for filter value.
 		$default = 'last_30_days';
-		$date    = EDD()->utils->date( 'now', edd_get_timezone_id(), false );
-		$dates   = parse_dates_for_range( $date, $default );
+		$dates   = parse_dates_for_range( $default );
 		$value   = array(
 			'from'  => $dates['start']->format( 'Y-m-d' ),
 			'to'    => $dates['end']->format( 'Y-m-d' ),
@@ -510,7 +509,7 @@ function get_dates_filter_options() {
  * }
  */
 function get_dates_filter( $values = 'strings', $timezone = null ) {
-	$dates = parse_dates_for_range( $date );
+	$dates = parse_dates_for_range();
 
 	if ( 'strings' === $values ) {
 		if ( ! empty( $dates['start'] ) ) {
@@ -544,12 +543,11 @@ function get_dates_filter( $values = 'strings', $timezone = null ) {
  *
  * @since 3.0
  *
- * @param \EDD\Utils\Date $date  Date object.
  * @param string          $range Optional. Range value to generate start and end dates for against `$date`.
  *                               Default is the current range as derived from the session.
  * @return \EDD\Utils\Date[] Array of start and end date objects.
  */
-function parse_dates_for_range( $date, $range = null ) {
+function parse_dates_for_range( $range = null ) {
 
 	// Set the time ranges in the user's timezone, so they ultimately see them in their own timezone.
 	$date = EDD()->utils->date( 'now', edd_get_timezone_id(), false );
