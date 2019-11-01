@@ -767,11 +767,7 @@ class Column extends Base {
 				? $this->default
 				: '0000-00-00 00:00:00';
 
-		// Fallback if WordPress function exists
-		} elseif ( function_exists( 'date_i18n' ) ) {
-			$value = date_i18n( 'Y-m-d H:i:s', strtotime( $value ), true );
-
-		// Fallback if only PHP date function exists
+		// Fallback if PHP date function exists
 		} elseif ( function_exists( 'date' ) ) {
 			$value = date( 'Y-m-d H:i:s', strtotime( $value ) );
 		}
