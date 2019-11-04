@@ -147,7 +147,7 @@ class Tax_Collected_By_Location extends List_Table {
 
 			$results;
 
-			if ( $location !== __( 'Global Rate', 'easy-digital-downloads' ) ) {
+			if ( 'global' !== $tax_rate->scope ) {
 				$results = $wpdb->get_results( $wpdb->prepare( "
 					SELECT SUM(tax) as tax, SUM(total) as total, country, region
 					FROM {$wpdb->edd_orders}
