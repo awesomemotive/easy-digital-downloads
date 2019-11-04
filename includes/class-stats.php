@@ -2756,7 +2756,7 @@ class Stats {
 		$date_filters = Reports\get_dates_filter_options();
 
 		foreach ( $date_filters as $range => $label ) {
-			$this->date_ranges[ $range ] = Reports\parse_dates_for_range( $date, $range );
+			$this->date_ranges[ $range ] = Reports\parse_dates_for_range( $range );
 
 			switch ( $range ) {
 				case 'this_month':
