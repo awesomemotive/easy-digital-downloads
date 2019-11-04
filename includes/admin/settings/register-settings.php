@@ -25,7 +25,7 @@ function edd_get_option( $key = '', $default = false ) {
 	global $edd_options;
 
 	// Special case for tax_rate
-	if ( $key === 'tax_rate' ) {
+	if ( 'tax_rate' === $key ) {
 		$value = (float) edd_get_default_tax_rate();
 	} else {
 		$value = ! empty( $edd_options[ $key ] )

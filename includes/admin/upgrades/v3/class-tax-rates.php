@@ -48,8 +48,9 @@ class Tax_Rates extends Base {
 
 		if ( isset ($edd_options['tax_rate']) ) {
 			$data = [
-				'country' => __( 'Global Rate', 'easy-digital-downloads' ),
-				'rate' => $edd_options['tax_rate'],
+				'country'        => __( 'Global Rate', 'easy-digital-downloads' ),
+				'rate'           => $edd_options['tax_rate'],
+				'is_global_rate' => true,
 			];
 
 			$results[] = $data;

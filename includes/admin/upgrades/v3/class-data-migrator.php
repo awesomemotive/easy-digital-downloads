@@ -1040,7 +1040,7 @@ class Data_Migrator {
 
 		$scope;
 
-		if ( $data['country'] === __( 'Global Rate', 'easy-digital-dowloads' ) ) {
+		if ( isset( $data['is_global_rate'] ) ) {
 			$scope = 'global';
 		} else {
 			$scope = isset( $data['global'] )
@@ -1062,7 +1062,7 @@ class Data_Migrator {
 			'description' => $region,
 		);
 
-		if ($scope === 'global') {
+		if ( isset( $data['is_global_rate'] ) ) {
 			// Change the global settings
 			$id = edd_add_adjustment( $adjustment_data );
 			edd_update_option( 'edd_default_tax_rate_id', $id );
