@@ -973,7 +973,7 @@ class EDD_CLI extends WP_CLI_Command {
 			LEFT JOIN {$wpdb->term_relationships} AS tr ON (p.ID = tr.object_id)
 			LEFT JOIN {$wpdb->term_taxonomy} AS tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id)
 			LEFT JOIN {$wpdb->terms} AS t ON (tt.term_id = t.term_id)
-			WHERE p.post_type = 'edd_log' AND t.slug != 'sale' 
+			WHERE p.post_type = 'edd_log' AND t.slug != 'sale'
 		";
 
 		$results = $wpdb->get_results( $sql );
@@ -1303,10 +1303,10 @@ class EDD_CLI extends WP_CLI_Command {
 
 		if ( isset ($edd_options['tax_rate']) ) {
 			$data = [
-				'country' => __( 'GLOBAL', 'easy-digital-downloads' ),
+				'country' => __( 'Global Rate', 'easy-digital-downloads' ),
 				'rate' => $edd_options['tax_rate'],
 			];
-			
+
 			$tax_rates[] = $data;
 		}
 
