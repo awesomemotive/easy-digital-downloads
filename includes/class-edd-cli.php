@@ -1298,6 +1298,18 @@ class EDD_CLI extends WP_CLI_Command {
 		// Migrate user addresses first.
 		$tax_rates = get_option( 'edd_tax_rates', array() );
 
+		// Migrate edd_options[tax_rate], it will be tracked through DB from now on
+		global $edd_options;
+
+		if ( isset ($edd_options['tax_rate']) ) {
+			$data = [
+				'country' => __( 'GLOBAL', 'easy-digital-downloads' ),
+				'rate' => $edd_options['tax_rate'],
+			];
+			
+			$tax_rates[] = $data;
+		}
+
 		if ( ! empty( $tax_rates ) ) {
 			$progress = new \cli\progress\Bar( 'Migrating Tax Rates', count( $tax_rates ) );
 
