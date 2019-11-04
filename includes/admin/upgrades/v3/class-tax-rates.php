@@ -42,6 +42,19 @@ class Tax_Rates extends Base {
 		$offset = ( $this->step - 1 ) * $this->per_step;
 
 		$results = get_option( 'edd_tax_rates', array() );
+
+		// Migrate edd_options[tax_rate], it will be tracked through DB from now on
+		global $edd_options;
+
+		if ( isset ($edd_options['tax_rate']) ) {
+			$data = [
+				'country' => __( 'GLOBAL', 'easy-digital-downloads' ),
+				'rate' => $edd_options['tax_rate'],
+			];
+
+			$results[] = $data;
+		}
+
 		$results = array_slice( $results, $offset, $this->per_step, true );
 
 		if ( ! empty( $results ) ) {
