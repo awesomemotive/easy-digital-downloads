@@ -1403,7 +1403,7 @@ function edd_settings_sanitize_tax_rate( $input ) {
 	$tax_rate = $_POST['edd_settings']['tax_rate'];
 
 	$adjustment_data = array(
-		'name'        => __( 'GLOBAL', 'easy-digital-dowloads' ),
+		'name'        => __( 'Global Rate', 'easy-digital-dowloads' ),
 		'type'        => 'tax_rate',
 		'scope'       => 'global',
 		'amount_type' => 'percent',

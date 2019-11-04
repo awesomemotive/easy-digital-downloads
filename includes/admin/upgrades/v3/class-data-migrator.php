@@ -1040,7 +1040,7 @@ class Data_Migrator {
 
 		$scope;
 
-		if ( $data['country'] === 'GLOBAL' ) {
+		if ( $data['country'] === __( 'Global Rate', 'easy-digital-dowloads' ) ) {
 			$scope = 'global';
 		} else {
 			$scope = isset( $data['global'] )
