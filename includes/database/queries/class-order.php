@@ -158,6 +158,8 @@ class Order extends Query {
 	 *     @type string       $order                How to order retrieved orders. Accepts 'ASC', 'DESC'. Default 'DESC'.
 	 *     @type string       $search               Search term(s) to retrieve matching orders for. Default empty.
 	 *     @type bool         $update_cache         Whether to prime the cache for found orders. Default false.
+	 *     @type string       $country              Limit results to those affiliated with a given country. Default empty.
+	 *     @type string       $region               Limit results to those affiliated with a given region. Default empty.
 	 * }
 	 */
 	public function __construct( $query = array() ) {
@@ -243,9 +245,11 @@ class Order extends Query {
 	 *     @type string       $order                How to order retrieved orders. Accepts 'ASC', 'DESC'. Default 'DESC'.
 	 *     @type string       $search               Search term(s) to retrieve matching orders for. Default empty.
 	 *     @type bool         $update_cache         Whether to prime the cache for found orders. Default false.
+	 *     @type string       $country              Limit results to those affiliated with a given country. Default empty.
+	 *     @type string       $region               Limit results to those affiliated with a given region. Default empty.
 	 * }
 	 */
-	public function query( $query ) {
+	public function query( $query = array() ) {
 		if ( ! empty( $query['country'] ) ) {
 			add_filter( 'edd_orders_query_clauses', array( $this, 'query_by_country' ) );
 		}
@@ -269,6 +273,8 @@ class Order extends Query {
 	 */
 	public function query_by_country( $clauses ) {
 
+		global $wpdb;
+
 		$primary_alias  = $this->table_alias;
 		$primary_column = parent::get_primary_column_name();
 
@@ -286,15 +292,20 @@ class Order extends Query {
 		if ( ! empty( $this->query_vars['country'] ) && 'all' !== $this->query_vars['country'] ) {
 			// Filter by the order address's region (state/province/etc)..
 			if ( ! empty( $this->query_vars['region'] ) && 'all' !== $this->query_vars['region'] ) {
-				$location_join = " LEFT JOIN {$order_addresses_query->table_name} {$join_alias} ON {$primary_alias}.{$primary_column} = {$join_alias}.order_id WHERE {$join_alias}.country = '{$this->query_vars['country'] }' AND {$join_alias}.region = '{$this->query_vars['region']}' {$where_clause}";
+				$prepared_values = array(
+					$order_addresses_query->table_name,
+				);
+
+				$location_join = " LEFT JOIN {$order_addresses_query->table_name} {$join_alias} ON {$primary_alias}.{$primary_column} = {$join_alias}.order_id WHERE {$join_alias}.country = " . $wpdb->prepare( '%s', $this->query_vars['country'] ) . " AND {$join_alias}.region = " . $wpdb->prepare( '%s', $this->query_vars['region'] ) . " {$where_clause}";
+
 				// Add the region to the query var defaults.
-				$this->query_var_defaults['region'] = $region;
+				$this->query_var_defaults['region'] = $this->query_vars['region'];
 
 				// Filter only by the country, not by region.
 			} else {
-					$location_join = " LEFT JOIN {$order_addresses_query->table_name} {$join_alias} ON {$primary_alias}.{$primary_column} = {$join_alias}.order_id WHERE {$join_alias}.country = '{$this->query_vars['country'] }' {$where_clause}";
+					$location_join = " LEFT JOIN {$order_addresses_query->table_name} {$join_alias} ON {$primary_alias}.{$primary_column} = {$join_alias}.order_id WHERE {$join_alias}.country = " . $wpdb->prepare( '%s', $this->query_vars['country'] ) . " {$where_clause}";
 					// Add the country to the query var defaults.
-					$this->query_var_defaults['country'] = $country;
+					$this->query_var_defaults['country'] = $this->query_vars['country'];
 			}
 
 			// Add the customized join to the query.
