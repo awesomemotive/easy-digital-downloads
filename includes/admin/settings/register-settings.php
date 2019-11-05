@@ -2181,7 +2181,7 @@ function edd_sendwp_callback($args) {
 		?>
 
 		<p>
-			<button id="edd-sendwp-connect" class="button button-primary"><span class="dashicons dashicons-email"></span><?php _e( 'Connect SendWP', 'easy-digital-downloads' ); ?>
+			<button type="button" id="edd-sendwp-connect" class="button button-primary"><span class="dashicons dashicons-email"></span><?php esc_html_e( 'Connect SendWP', 'easy-digital-downloads' ); ?>
 			</button>
 		</p>
 
