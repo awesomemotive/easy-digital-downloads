@@ -1400,7 +1400,7 @@ function edd_settings_sanitize_tax_rate( $input ) {
 		return $input;
 	}
 
-	$tax_rate = $_POST['edd_settings']['tax_rate'];
+	$tax_rate = sanitize_text_field( $_POST['edd_settings']['tax_rate'] );
 
 	$adjustment_data = array(
 		'name'        => __( 'Global Rate', 'easy-digital-dowloads' ),
@@ -1463,12 +1463,14 @@ function edd_settings_sanitize_taxes( $input ) {
 			? sanitize_text_field( $tax_rate['state'] )
 			: '';
 
+		$rate = sanitize_text_field( $tax_rate['rate'] );
+		
 		$adjustment_data = array(
 			'name'        => sanitize_text_field( $tax_rate['country'] ),
 			'type'        => 'tax_rate',
 			'scope'       => $scope,
 			'amount_type' => 'percent',
-			'amount'      => floatval( $tax_rate['rate'] ),
+			'amount'      => floatval( $rate ),
 			'description' => $region,
 		);
 
