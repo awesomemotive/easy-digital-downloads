@@ -1421,7 +1421,7 @@ function edd_tools_sysinfo_get() {
 	$return .= 'PHP Version:              ' . PHP_VERSION . "\n";
 	$return .= 'MySQL Version:            ' . $wpdb->db_version() . "\n";
 	$return .= 'Webserver Info:           ' . $_SERVER['SERVER_SOFTWARE'] . "\n";
-	$return .= 'TLS Info:                 ' . apply_filters( 'edd_get_tlsinfo', $return ) . "\n";
+	$return .= 'TLS Info:                 ' . apply_filters( 'edd_get_tlsinfo', esc_html__( 'Unavailable', 'easy-digital-downloads' ) ) . "\n";
 
 	$return  = apply_filters( 'edd_sysinfo_after_webserver_config', $return );
 
@@ -1474,18 +1474,21 @@ function edd_tools_sysinfo_get() {
  * @since       2.9
  * @return      string
  */
-function edd_tools_tlsinfo() {
+function edd_tools_tlsinfo( $fail_response ) {
 
-	if( ! function_exists( 'curl_init' ) ) {
-		return 'TLS info unavaible while cURL is disabled';
+	$tls_info = false;
+
+	if ( ini_get( 'allow_url_fopen' ) ) {
+		$tls_info = file_get_contents( 'https://www.howsmyssl.com/a/check' );
 	}
 
-	$ch = curl_init( 'https://www.howsmyssl.com/a/check' );
-	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-	$data = curl_exec( $ch );
+	if ( false !== $tls_info ) {
+		$tls_info    = json_decode( $tls_info );
+		$tls_version = sanitize_text_field( $tls_info->tls_version );
+		return $tls_version;
+	}
 
-	$json = json_decode( $data );
-	return $json->tls_version;
+	return $fail_response;
 }
 add_filter( 'edd_get_tlsinfo', 'edd_tools_tlsinfo' );
 
