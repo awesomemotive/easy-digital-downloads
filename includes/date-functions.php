@@ -28,7 +28,10 @@ function edd_date_i18n( $timestamp, $format = 'date' ) {
 		$timestamp = strtotime( $timestamp );
 	}
 
-	return date_i18n( $format, (int) $timestamp );
+	// We need to get the timezone offset so we can pass that to date_i18n.
+	$date = EDD()->utils->date( 'now', edd_get_timezone_id(), false );
+
+	return date_i18n( $format, (int) $timestamp + $date->getOffset() );
 }
 
 /**
