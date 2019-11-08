@@ -1257,20 +1257,27 @@ function edd_render_review_status_metabox() {
 
 	} else {
 
-		$base_url   = 'https://easydigitaldownloads.com/downloads/product-reviews';
-		$utm_medium = 'enable-reviews';
+		// Adjust UTM params based on state of promotion
 		if ( true === $is_promo_active ) {
-			$utm_medium = 'enable-reviews-bfcm-promo';
+			$args     = array(
+				'utm_source'   => 'edd-download-metabox',
+				'utm_medium'   => 'wp-admin',
+				'utm_campaign' => 'bfcm2019',
+				'utm_content'  => 'product-reviews-metabox-bfcm',
+			);
+		} else {
+			$args     = array(
+				'utm_source'   => 'edit-download',
+				'utm_medium'   => 'enable-reviews',
+				'utm_campaign' => 'admin',
+			);
 		}
-		$args     = array(
-			'utm_source'   => 'edit-download',
-			'utm_medium'   => $utm_medium,
-			'utm_campaign' => 'admin',
-		);
+
+		$base_url   = 'https://easydigitaldownloads.com/downloads/product-reviews';
 		$url = add_query_arg( $args, $base_url );
 		?>
 		<p>
-			<?php printf( __( 'Would you like to enable reviews for this product? Check out our <a target="_blank" href="%s">Product Reviews</a> extension.', 'easy-digital-downloads' ), $url ); ?>
+			<?php printf( __( 'Would you like to enable reviews for this product? Check out our <a target="_blank" href="%s">Product Reviews</a> extension.', 'easy-digital-downloads' ), esc_url( $url ) ); ?>
 		</p>
 		<?php
 		// Add an additional note if a promotion is active.
@@ -1298,13 +1305,14 @@ function edd_render_review_status_metabox() {
 function edd_render_promo_metabox() {
 	ob_start();
 
-	$base_url = 'https://easydigitaldownloads.com/pricing';
-	$args     = array(
-		'utm_source'   => 'edit-download',
-		'utm_medium'   => 'bfcm-promo',
-		'utm_campaign' => 'admin',
+	// Build the main URL for the promotion
+	$args = array(
+		'utm_source'   => 'edd-download-metabox',
+		'utm_medium'   => 'wp-admin',
+		'utm_campaign' => 'bfcm2019',
+		'utm_content'  => 'bfcm-metabox',
 	);
-	$url = add_query_arg( $args, $base_url );
+	$url  = add_query_arg( $args, 'https://easydigitaldownloads.com/pricing/' );
 	?>
 	<p>
 		<?php
