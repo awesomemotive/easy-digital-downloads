@@ -1030,7 +1030,7 @@ function edd_is_promo_active() {
 	$now   = time();
 
 	// Only display sidebar if the page is loaded within the date range.
-	if ( ( $now ) > $start && ( $now < $end ) ) {
+	if ( ( $now > $start ) && ( $now < $end ) ) {
 		return true;
 	}
 
