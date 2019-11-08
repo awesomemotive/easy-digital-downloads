@@ -1260,7 +1260,7 @@ function edd_render_review_status_metabox() {
 		// Adjust UTM params based on state of promotion
 		if ( true === $is_promo_active ) {
 			$args     = array(
-				'utm_source'   => 'edd-download-metabox',
+				'utm_source'   => 'download-metabox',
 				'utm_medium'   => 'wp-admin',
 				'utm_campaign' => 'bfcm2019',
 				'utm_content'  => 'product-reviews-metabox-bfcm',
@@ -1307,7 +1307,7 @@ function edd_render_promo_metabox() {
 
 	// Build the main URL for the promotion
 	$args = array(
-		'utm_source'   => 'edd-download-metabox',
+		'utm_source'   => 'download-metabox',
 		'utm_medium'   => 'wp-admin',
 		'utm_campaign' => 'bfcm2019',
 		'utm_content'  => 'bfcm-metabox',
