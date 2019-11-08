@@ -123,13 +123,13 @@ function edd_options_page() {
 			echo '</ul></div>';
 		}
 
-		// Find out if we're displaying a sidebar
+		// Find out if we're displaying a sidebar.
 		$is_promo_active = edd_is_promo_active();
 		$wrapper_class   = ( true === $is_promo_active )
 			? array( ' edd-has-sidebar' )
 			: '';
 		?>
-		<div id="tab_container" class="<?php echo $active_tab . '-tab' ?>">
+		<div id="tab_container" class="<?php echo esc_attr( $active_tab . '-tab' ); ?>">
 			<div class="edd-settings-wrap<?php echo esc_attr( implode( ' ', $wrapper_class ) ); ?> wp-clearfix">
 				<div class="edd-settings-content">
 					<form method="post" action="options.php">
@@ -146,16 +146,18 @@ function edd_options_page() {
 
 							do_settings_sections( 'edd_settings_' . $active_tab . '_' . $section );
 
-							do_action( 'edd_settings_tab_bottom_' . $active_tab . '_' . $section  );
+							do_action( 'edd_settings_tab_bottom_' . $active_tab . '_' . $section );
 
-							// For backwards compatibility
+							// For backwards compatibility.
 							if ( 'main' === $section ) {
 								do_action( 'edd_settings_tab_bottom', $active_tab );
 							}
 
-							// If the main section was empty and we overrode the view with the next subsection, prepare the section for saving
+							// If the main section was empty and we overrode the view with the next subsection, prepare the section for saving.
 							if ( true === $override ) {
-								?><input type="hidden" name="edd_section_override" value="<?php echo $section; ?>" /><?php
+								?>
+								<input type="hidden" name="edd_section_override" value="<?php echo esc_attr( $section ); ?>" />
+								<?php
 							}
 							?>
 						</table>

@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_add_download_meta_box() {
 	$reviews_location = edd_reviews_location();
 	$is_promo_active  = edd_is_promo_active();
-	$post_types       = apply_filters( 'edd_download_metabox_post_types' , array( 'download' ) );
+	$post_types       = apply_filters( 'edd_download_metabox_post_types', array( 'download' ) );
 
 	foreach ( $post_types as $post_type ) {
 
@@ -48,7 +48,7 @@ function edd_add_download_meta_box() {
 			add_meta_box( 'edd-reviews-status', __( 'Product Reviews', 'easy-digital-downloads' ), 'edd_render_review_status_metabox', 'download', 'side', 'low' );
 		}
 
-		// If a promotion is active and Product Reviews is either activated or installed but not activated, show promo
+		// If a promotion is active and Product Reviews is either activated or installed but not activated, show promo.
 		if ( true === $is_promo_active ) {
 			if ( class_exists( 'EDD_Reviews' ) || ( ! class_exists( 'EDD_Reviews' ) && ! empty( $reviews_location ) ) ) {
 				add_meta_box( 'edd-promo', __( 'Black Friday & Cyber Monday sale!', 'easy-digital-downloads' ), 'edd_render_promo_metabox', 'download', 'side', 'low' );
@@ -1239,8 +1239,8 @@ function edd_reviews_location() {
  * @return void
  */
 function edd_render_review_status_metabox() {
-	$reviews_location     = edd_reviews_location();
-	$is_promo_active      = edd_is_promo_active();
+	$reviews_location = edd_reviews_location();
+	$is_promo_active  = edd_is_promo_active();
 
 	ob_start();
 
@@ -1257,34 +1257,37 @@ function edd_render_review_status_metabox() {
 
 	} else {
 
-		// Adjust UTM params based on state of promotion
+		// Adjust UTM params based on state of promotion.
 		if ( true === $is_promo_active ) {
-			$args     = array(
+			$args = array(
 				'utm_source'   => 'download-metabox',
 				'utm_medium'   => 'wp-admin',
 				'utm_campaign' => 'bfcm2019',
 				'utm_content'  => 'product-reviews-metabox-bfcm',
 			);
 		} else {
-			$args     = array(
+			$args = array(
 				'utm_source'   => 'edit-download',
 				'utm_medium'   => 'enable-reviews',
 				'utm_campaign' => 'admin',
 			);
 		}
 
-		$base_url   = 'https://easydigitaldownloads.com/downloads/product-reviews';
-		$url = add_query_arg( $args, $base_url );
+		$base_url = 'https://easydigitaldownloads.com/downloads/product-reviews';
+		$url      = add_query_arg( $args, $base_url );
 		?>
 		<p>
-			<?php printf( __( 'Would you like to enable reviews for this product? Check out our <a target="_blank" href="%s">Product Reviews</a> extension.', 'easy-digital-downloads' ), esc_url( $url ) ); ?>
+			<?php
+			// Translators: The %s represents the link to the Product Reviews extension.
+			echo wp_kses_post( sprintf( __( 'Would you like to enable reviews for this product? Check out our <a target="_blank" href="%s">Product Reviews</a> extension.', 'easy-digital-downloads' ), esc_url( $url ) ) );
+			?>
 		</p>
 		<?php
 		// Add an additional note if a promotion is active.
 		if ( true === $is_promo_active ) {
 			?>
 			<p>
-				<?php _e( 'Act now and <strong>SAVE 25%</strong> on your purchase. Sale ends <em>23:59 PM December 6th CST</em>. Use code <code>BFCM2019</code> at checkout.', 'easy-digital-downloads' ); ?>
+				<?php echo wp_kses_post( __( 'Act now and <strong>SAVE 25%</strong> on your purchase. Sale ends <em>23:59 PM December 6th CST</em>. Use code <code>BFCM2019</code> at checkout.', 'easy-digital-downloads' ) ); ?>
 			</p>
 			<?php
 		}
@@ -1293,7 +1296,7 @@ function edd_render_review_status_metabox() {
 	$rendered = ob_get_contents();
 	ob_end_clean();
 
-	echo $rendered;
+	echo wp_kses_post( $rendered );
 }
 
 /**
@@ -1305,7 +1308,7 @@ function edd_render_review_status_metabox() {
 function edd_render_promo_metabox() {
 	ob_start();
 
-	// Build the main URL for the promotion
+	// Build the main URL for the promotion.
 	$args = array(
 		'utm_source'   => 'download-metabox',
 		'utm_medium'   => 'wp-admin',
@@ -1316,14 +1319,15 @@ function edd_render_promo_metabox() {
 	?>
 	<p>
 		<?php
-		printf( __( 'Save 25&#37; on all Easy Digital Downloads purchases <strong>this week</strong>, including renewals and upgrades! Sale ends 23:59 PM December 6th CST. <a target="_blank" href="%s">Don\'t miss out</a>!', 'easy-digital-downloads' ), $url );
+		// Translators: The %s represents the link to the pricing page on the Easy Digital Downloads website.
+		echo wp_kses_post( sprintf( __( 'Save 25&#37; on all Easy Digital Downloads purchases <strong>this week</strong>, including renewals and upgrades! Sale ends 23:59 PM December 6th CST. <a target="_blank" href="%s">Don\'t miss out</a>!', 'easy-digital-downloads' ), $url ) );
 		?>
 	</p>
 	<?php
 	$rendered = ob_get_contents();
 	ob_end_clean();
 
-	echo $rendered;
+	echo wp_kses_post( $rendered );
 }
 
 /**

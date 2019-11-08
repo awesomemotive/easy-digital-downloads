@@ -1024,12 +1024,12 @@ function edd_doing_cron() {
  */
 function edd_is_promo_active() {
 
-	// Set the date/time range based on UTC
+	// Set the date/time range based on UTC.
 	$start = strtotime( '2019-11-29 06:00:00' );
 	$end   = strtotime( '2019-12-07 05:59:59' );
 	$now   = time();
 
-	// Only display sidebar if the page is loaded within the date range
+	// Only display sidebar if the page is loaded within the date range.
 	if ( ( $now ) > $start && ( $now < $end ) ) {
 		return true;
 	}
