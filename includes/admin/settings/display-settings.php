@@ -182,7 +182,24 @@ function edd_options_page() {
  * @return string
  */
 function edd_options_sidebar() {
+
+	// Get settings tab and section info
+	$active_tab     = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : 'general';
+	$active_tab     = array_key_exists( $active_tab, edd_get_settings_tabs() ) ? $active_tab : 'general';
+	$active_section = isset( $_GET['section'] ) ? sanitize_text_field( $_GET['section'] ) : 'main';
+	$active_section = array_key_exists( $active_section, edd_get_settings_tab_sections( $active_tab ) ) ? $active_section : 'main';
+
+	// The coupon code we're promoting
 	$coupon_code = 'BCFM2019';
+
+	// Build the main URL for the promotion
+	$args = array(
+		'utm_source'   => 'edd-settings',
+		'utm_medium'   => 'wp-admin',
+		'utm_campaign' => 'bfcm2019',
+		'utm_content'  => 'sidebar-promo-' . $active_tab . '-' . $active_section,
+	);
+	$url  = add_query_arg( $args, 'https://easydigitaldownloads.com/pricing/' );
 	?>
 	<div class="edd-settings-sidebar">
 		<div class="edd-settings-sidebar-content">
@@ -198,7 +215,7 @@ function edd_options_sidebar() {
 				<p class="edd-coupon-note"><?php _e( 'Sale ends 23:59 PM December 6th CST. Save 25% on <a href="https://sandhillsdev.com/projects/" target="_blank">our other plugins</a>.', 'easy-digital-downloads' ); ?></p>
 			</div>
 			<div class="edd-sidebar-footer-section">
-				<a class="edd-cta-button" href="https://easydigitaldownloads.com/pricing/" target="_blank"><?php _e( 'Shop Now!', 'easy-digital-downloads' ); ?></a>
+				<a class="edd-cta-button" href="<?php echo esc_url( $url ); ?>" target="_blank"><?php _e( 'Shop Now!', 'easy-digital-downloads' ); ?></a>
 			</div>
 		</div>
 	</div>

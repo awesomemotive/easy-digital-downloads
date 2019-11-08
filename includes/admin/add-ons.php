@@ -87,12 +87,23 @@ function edd_add_ons_page() {
 			// Display a promotional element before all add ons if a promotion is active
 			$is_promo_active  = edd_is_promo_active();
 			if ( true === $is_promo_active ) {
+
+				// Build the main URL for the promotion
+				$args = array(
+					'utm_source'   => 'edd-add-ons-feed',
+					'utm_medium'   => 'wp-admin',
+					'utm_campaign' => 'bfcm2019',
+					'utm_content'  => 'first-feed-element-' . $active_tab,
+				);
+				$url  = add_query_arg( $args, 'https://easydigitaldownloads.com/pricing/' );
 				?>
 				<div class="edd-add-ons-promo edd-extension">
 					<h3 class="edd-extension-title">Black Friday & Cyber Monday sale!</h3>
-					<img class="attachment-download-grid-thumb size-download-grid-thumb wp-post-image" src="<?php echo esc_url( EDD_PLUGIN_URL . 'assets/images/promo/edd-25-percent-off.png' ); ?>">
+					<a href="<?php echo esc_url( $url ); ?>" title="Black Friday & Cyber Monday sale">
+						<img class="attachment-download-grid-thumb size-download-grid-thumb wp-post-image" src="<?php echo esc_url( EDD_PLUGIN_URL . 'assets/images/promo/edd-25-percent-off.png' ); ?>">
+					</a>
 					<p><?php _e( 'Save 25% on all Easy Digital Downloads purchases <strong>this week</strong>, including renewals and upgrades! Use code <span class="bfcm-code">BFCM2019</span> at checkout.', 'easy-digital-downloads' ); ?></p>
-					<a class="button-secondary" href="https://easydigitaldownloads.com/pricing/" target="_blank"><?php _e( 'Don\'t miss out!', 'easy-digital-downloads' ); ?></a>
+					<a class="button-secondary" href="<?php echo esc_url( $url ); ?>" target="_blank"><?php _e( 'Don\'t miss out!', 'easy-digital-downloads' ); ?></a>
 					<span class="sale-ends"><?php _e( 'Sale ends 23:59 PM December 6th CST', 'easy-digital-downloads' ); ?></span>
 				</div>
 				<?php
