@@ -421,7 +421,7 @@ class EDD_Payment_History_Table extends List_Table {
 				break;
 			case 'date':
 				$date  = EDD()->utils->date( $order->date_created, null, true )->toDateTimeString();
-				$value = '<time datetime="' . esc_attr( $date ) . '">' . edd_date_i18n( $date, 'M. d, Y' ) . '<br>' . edd_date_i18n( $date, 'H:i' ) . '</time>';
+				$value = '<time datetime="' . esc_attr( $date ) . '">' . edd_date_i18n( $date, 'M. d, Y' ) . '<br>' . edd_date_i18n( $date, 'H:i' ) . ' ' . $timezone_abbreviation . '</time>';
 				break;
 			case 'gateway':
 				$value = edd_get_gateway_admin_label( $order->gateway );
