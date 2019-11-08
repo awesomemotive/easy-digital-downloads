@@ -382,7 +382,7 @@ class EDD_Cart {
 
 		do_action( 'edd_pre_add_to_cart', $download_id, $options );
 
-		$this->contents = apply_filters( 'edd_pre_add_to_cart_contents', $this->contents );
+		$this->contents = apply_filters( 'edd_pre_add_to_cart_contents', $this->contents, $download_id, $options );
 
 		$quantities_enabled = edd_item_quantities_enabled() && ! edd_download_quantities_disabled( $download_id );
 
