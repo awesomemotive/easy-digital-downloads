@@ -23,15 +23,10 @@ defined( 'ABSPATH' ) || exit;
  */
 function edd_get_option( $key = '', $default = false ) {
 	global $edd_options;
-
-	// Special case for tax_rate
-	if ( 'tax_rate' === $key ) {
-		$value = (float) edd_get_default_tax_rate();
-	} else {
-		$value = ! empty( $edd_options[ $key ] )
-			? $edd_options[ $key ]
-			: $default;
-	}
+	
+	$value = ! empty( $edd_options[ $key ] )
+		? $edd_options[ $key ]
+		: $default;
 
 	$value = apply_filters( 'edd_get_option', $value, $key, $default );
 
@@ -791,6 +786,7 @@ function edd_get_registered_settings() {
 						'type'          => 'number',
 						'size'          => 'small',
 						'step'          => '0.0001',
+						'std'						=> (float) edd_get_default_tax_rate(),
 						'min'           => '0',
 						'max'           => '99',
 						'tooltip_title' => __( 'Default Rate', 'easy-digital-downloads' ),
