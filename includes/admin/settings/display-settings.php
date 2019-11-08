@@ -100,7 +100,7 @@ function edd_options_page() {
 		$number_of_sections = count( $sections );
 		$number = 0;
 		if ( $number_of_sections > 1 ) {
-			echo '<div><ul class="subsubsub">';
+			echo '<div class="wp-clearfix"><ul class="subsubsub">';
 			foreach( $sections as $section_id => $section_name ) {
 				echo '<li>';
 				$number++;
@@ -122,39 +122,85 @@ function edd_options_page() {
 			}
 			echo '</ul></div>';
 		}
+
+		// Find out if we're displaying a sidebar
+		$is_promo_active = edd_is_promo_active();
+		$wrapper_class   = ( true === $is_promo_active )
+			? array( ' edd-has-sidebar' )
+			: '';
 		?>
-		<div id="tab_container">
-			<form method="post" action="options.php">
-				<table class="form-table">
+		<div id="tab_container" class="<?php echo $active_tab . '-tab' ?>">
+			<div class="edd-settings-wrap<?php echo esc_attr( implode( ' ', $wrapper_class ) ); ?> wp-clearfix">
+				<div class="edd-settings-content">
+					<form method="post" action="options.php">
+						<table class="form-table">
+							<?php
+
+							settings_fields( 'edd_settings' );
+
+							if ( 'main' === $section ) {
+								do_action( 'edd_settings_tab_top', $active_tab );
+							}
+
+							do_action( 'edd_settings_tab_top_' . $active_tab . '_' . $section );
+
+							do_settings_sections( 'edd_settings_' . $active_tab . '_' . $section );
+
+							do_action( 'edd_settings_tab_bottom_' . $active_tab . '_' . $section  );
+
+							// For backwards compatibility
+							if ( 'main' === $section ) {
+								do_action( 'edd_settings_tab_bottom', $active_tab );
+							}
+
+							// If the main section was empty and we overrode the view with the next subsection, prepare the section for saving
+							if ( true === $override ) {
+								?><input type="hidden" name="edd_section_override" value="<?php echo $section; ?>" /><?php
+							}
+							?>
+						</table>
+						<?php submit_button(); ?>
+					</form>
+				</div>
 				<?php
-
-				settings_fields( 'edd_settings' );
-
-				if ( 'main' === $section ) {
-					do_action( 'edd_settings_tab_top', $active_tab );
-				}
-
-				do_action( 'edd_settings_tab_top_' . $active_tab . '_' . $section );
-
-				do_settings_sections( 'edd_settings_' . $active_tab . '_' . $section );
-
-				do_action( 'edd_settings_tab_bottom_' . $active_tab . '_' . $section  );
-
-				// For backwards compatibility
-				if ( 'main' === $section ) {
-					do_action( 'edd_settings_tab_bottom', $active_tab );
-				}
-
-				// If the main section was empty and we overrode the view with the next subsection, prepare the section for saving
-				if ( true === $override ) {
-					?><input type="hidden" name="edd_section_override" value="<?php echo $section; ?>" /><?php
+				if ( true === $is_promo_active ) {
+					edd_options_sidebar();
 				}
 				?>
-				</table>
-				<?php submit_button(); ?>
-			</form>
+			</div>
 		</div><!-- #tab_container-->
 	</div><!-- .wrap -->
 	<?php
 	echo ob_get_clean();
+}
+
+/**
+ * Display the sidebar
+ *
+ * @since 2.9.20
+ *
+ * @return string
+ */
+function edd_options_sidebar() {
+	$coupon_code = 'BCFM2019';
+	?>
+	<div class="edd-settings-sidebar">
+		<div class="edd-settings-sidebar-content">
+			<div class="edd-sidebar-header-section">
+				<img class="edd-bcfm-header" src="<?php echo esc_url( EDD_PLUGIN_URL . 'assets/images/promo/bfcm-header.svg' ); ?>">
+			</div>
+			<div class="edd-sidebar-description-section">
+				<p class="edd-sidebar-description"><?php _e( 'Save 25% on all Easy Digital Downloads purchases <strong>this week</strong>, including renewals and upgrades!', 'easy-digital-downloads' ); ?></p>
+			</div>
+			<div class="edd-sidebar-coupon-section">
+				<label for="edd-coupon-code"><?php _e( 'Use code at checkout:', 'easy-digital-downloads' ); ?></label>
+				<input id="edd-coupon-code" type="text" value="<?php echo $coupon_code; ?>" readonly>
+				<p class="edd-coupon-note"><?php _e( 'Sale ends 23:59 PM December 6th CST. Save 25% on <a href="https://sandhillsdev.com/projects/" target="_blank">our other plugins</a>.', 'easy-digital-downloads' ); ?></p>
+			</div>
+			<div class="edd-sidebar-footer-section">
+				<a class="edd-cta-button" href="https://easydigitaldownloads.com/pricing/" target="_blank"><?php _e( 'Shop Now!', 'easy-digital-downloads' ); ?></a>
+			</div>
+		</div>
+	</div>
+	<?php
 }
