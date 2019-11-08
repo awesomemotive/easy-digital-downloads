@@ -90,7 +90,7 @@ function edd_add_ons_page() {
 
 				// Build the main URL for the promotion
 				$args = array(
-					'utm_source'   => 'edd-add-ons-feed',
+					'utm_source'   => 'add-ons-feed',
 					'utm_medium'   => 'wp-admin',
 					'utm_campaign' => 'bfcm2019',
 					'utm_content'  => 'first-feed-element-' . $active_tab,

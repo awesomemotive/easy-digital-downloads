@@ -194,7 +194,7 @@ function edd_options_sidebar() {
 
 	// Build the main URL for the promotion
 	$args = array(
-		'utm_source'   => 'edd-settings',
+		'utm_source'   => 'settings',
 		'utm_medium'   => 'wp-admin',
 		'utm_campaign' => 'bfcm2019',
 		'utm_content'  => 'sidebar-promo-' . $active_tab . '-' . $active_section,
