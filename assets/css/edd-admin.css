@@ -133,6 +133,7 @@ a.edd-delete:hover {
 #edd-add-ons .edd-extension .wp-post-image {
 	width: 100%;
 	height: auto;
+	vertical-align: bottom;
 }
 
 /* Discount Code Styles
@@ -1860,4 +1861,179 @@ td.edd_order_price {
 
 #edd-debug-log .edd-inline-button {
 	margin-left: 5px;
+}
+
+/* Promotional element styles
+-------------------------------------------------------------- */
+
+/* Settings sidebar */
+.edd-settings-sidebar {
+	padding-top: 27px;
+}
+
+.edd-settings-sidebar-content {
+	background-color: #fff;
+	text-align: center;
+	border: 1px solid #ddd;
+	box-sizing: border-box;
+	max-width: 300px;
+}
+
+.edd-settings-sidebar-content p {
+	font-size: 14px;
+	line-height: 1.5;
+	margin-top: 0;
+}
+
+/* Settings sidebar header section */
+.edd-sidebar-header-section {
+	background-color: #35495c;
+	line-height: 1;
+	padding: 26px 20px 24px;
+	border-bottom: 3px dashed #fafafa;
+}
+
+/* Settings sidebar description section */
+.edd-sidebar-description-section {
+	background-color: #fafafa;
+	padding: 16px 20px;
+	border-bottom: 1px solid #ddd;
+}
+
+.edd-sidebar-description-section .edd-sidebar-description {
+	margin: 0;
+}
+
+/* Settings sidebar coupon section */
+.edd-sidebar-coupon-section {
+	font-size: 14px;
+	padding: 16px 20px;
+}
+
+.edd-sidebar-coupon-section label {
+	display: block;
+	line-height: 1.4;
+	margin-bottom: 6px;
+}
+
+.edd-sidebar-coupon-section label strong {
+	color: #253b51;
+	font-weight: 700;
+}
+
+.edd-sidebar-coupon-section input {
+	background: #f4f7fa;
+	font-size: 22px;
+	font-weight: 600;
+	text-align: center;
+	padding: 10px;
+	border: 2px dashed #2794da;
+	border-radius: 4px;
+	margin-bottom: 16px;
+	box-shadow: none;
+	width: 100%;
+}
+
+.edd-sidebar-coupon-section input:focus {
+	border: 2px dashed #2794da;
+	box-shadow: none;
+}
+
+.edd-settings-sidebar-content .edd-coupon-note {
+	color: #6c7883;
+	font-size: 13px;
+	font-style: italic;
+	margin: 0;
+}
+
+.edd-settings-sidebar-content .edd-coupon-note a {
+	color: #253b51;
+}
+
+.edd-settings-sidebar-content .edd-coupon-note a:hover {
+	text-decoration: none;
+}
+
+/* Settings sidebar footer section */
+.edd-sidebar-footer-section {
+	background-color: #fafafa;
+	padding: 16px 20px;
+	border-top: 1px solid #ddd;
+}
+
+.edd-sidebar-footer-section .edd-cta-button {
+	display: block;
+	background-color: #2794da;
+	color: #fff;
+	text-decoration: none;
+	font-size: 20px;
+	font-weight: 700;
+	text-transform: uppercase;
+	padding: 17px 10px;
+	border: none;
+	border-radius: 4px;
+	width: 100%;
+	box-sizing: border-box;
+	box-shadow: none;
+	transition: background-color .2s;
+}
+
+.edd-sidebar-footer-section .edd-cta-button:hover {
+	background-color: #2386c5;
+}
+
+/* Settings sidebar responsive behavior */
+@media all and ( min-width: 1080px ) {
+
+	.edd-has-sidebar .edd-settings-content {
+		float: left;
+		width: 67%;
+	}
+
+	.edd-has-sidebar .edd-settings-sidebar {
+		float: right;
+		width: 31%;
+	}
+}
+
+@media all and ( min-width: 1240px ) {
+
+	.edd-has-sidebar .edd-settings-content {
+		width: 74%;
+	}
+
+	.edd-has-sidebar .edd-settings-sidebar {
+		width: 23%;
+	}
+}
+
+/* Settings - Move sidebar below content only on Taxes tab */
+.taxes-tab .edd-has-sidebar .edd-settings-content,
+.taxes-tab .edd-has-sidebar .edd-settings-sidebar {
+	float: none;
+	width: 100%;
+}
+
+/* Extensions (add-ons) page promotional element */
+.bfcm-promo-img-container {
+	background-color: #35495c;
+	width: 100%;
+	height: 160px;
+}
+
+.bfcm-code {
+	color: #2794da;
+	font-weight: 700;
+}
+
+.sale-ends {
+	position: absolute;
+	bottom: 9px;
+	right: 14px;
+	display: inline-block;
+	color: #6c7883;
+	font-size: 12px;
+	text-align: right;
+	font-style: italic;
+	width: 150px;
 }
