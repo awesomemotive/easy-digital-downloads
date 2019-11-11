@@ -82,10 +82,39 @@ function edd_add_ons_page() {
 			</ul>
 		</div>
 		<div id="tab_container">
-			<?php echo edd_add_ons_get_feed( $active_tab ); ?>
+			<?php
+
+			// Display a promotional element before all add ons if a promotion is active.
+			$is_promo_active = edd_is_promo_active();
+			if ( true === $is_promo_active ) {
+
+				// Build the main URL for the promotion.
+				$args = array(
+					'utm_source'   => 'add-ons-feed',
+					'utm_medium'   => 'wp-admin',
+					'utm_campaign' => 'bfcm2019',
+					'utm_content'  => 'first-feed-element-' . $active_tab,
+				);
+				$url  = add_query_arg( $args, 'https://easydigitaldownloads.com/pricing/' );
+				?>
+				<div class="edd-add-ons-promo edd-extension">
+					<h3 class="edd-extension-title">Black Friday & Cyber Monday sale!</h3>
+					<a href="<?php echo esc_url( $url ); ?>" title="Black Friday & Cyber Monday sale">
+						<img class="attachment-download-grid-thumb size-download-grid-thumb wp-post-image" src="<?php echo esc_url( EDD_PLUGIN_URL . 'assets/images/promo/edd-25-percent-off.png' ); ?>">
+					</a>
+					<p><?php echo wp_kses_post( __( 'Save 25% on all Easy Digital Downloads purchases <strong>this week</strong>, including renewals and upgrades! Use code <span class="bfcm-code">BFCM2019</span> at checkout.', 'easy-digital-downloads' ) ); ?></p>
+					<a class="button-secondary" href="<?php echo esc_url( $url ); ?>" target="_blank"><?php esc_html_e( 'Don\'t miss out!', 'easy-digital-downloads' ); ?></a>
+					<span class="sale-ends"><?php esc_html_e( 'Sale ends 23:59 PM December 6th CST', 'easy-digital-downloads' ); ?></span>
+				</div>
+				<?php
+			}
+
+			// Display all add ons.
+			echo wp_kses_post( edd_add_ons_get_feed( $active_tab ) );
+			?>
 			<div class="clear"></div>
 			<div class="edd-add-ons-footer">
-				<a href="https://easydigitaldownloads.com/downloads/?utm_source=plugin-addons-page&utm_medium=plugin&utm_campaign=<?php echo $campaign; ?>&utm_content=All%20Extensions" class="button-primary" target="_blank"><?php _e( 'Browse All Integrations', 'easy-digital-downloads' ); ?></a>
+				<a href="https://easydigitaldownloads.com/downloads/?utm_source=plugin-addons-page&utm_medium=plugin&utm_campaign=<?php echo esc_attr( $campaign ); ?>&utm_content=All%20Extensions" class="button-primary" target="_blank"><?php esc_html_e( 'Browse All Integrations', 'easy-digital-downloads' ); ?></a>
 			</div>
 		</div><!-- #tab_container-->
 	</div>

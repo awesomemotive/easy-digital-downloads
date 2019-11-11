@@ -21,8 +21,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return void
  */
 function edd_add_download_meta_box() {
-
-	$post_types = apply_filters( 'edd_download_metabox_post_types' , array( 'download' ) );
+	$reviews_location = edd_reviews_location();
+	$is_promo_active  = edd_is_promo_active();
+	$post_types       = apply_filters( 'edd_download_metabox_post_types', array( 'download' ) );
 
 	foreach ( $post_types as $post_type ) {
 
@@ -47,6 +48,12 @@ function edd_add_download_meta_box() {
 			add_meta_box( 'edd-reviews-status', __( 'Product Reviews', 'easy-digital-downloads' ), 'edd_render_review_status_metabox', 'download', 'side', 'low' );
 		}
 
+		// If a promotion is active and Product Reviews is either activated or installed but not activated, show promo.
+		if ( true === $is_promo_active ) {
+			if ( class_exists( 'EDD_Reviews' ) || ( ! class_exists( 'EDD_Reviews' ) && ! empty( $reviews_location ) ) ) {
+				add_meta_box( 'edd-promo', __( 'Black Friday & Cyber Monday sale!', 'easy-digital-downloads' ), 'edd_render_promo_metabox', 'download', 'side', 'low' );
+			}
+		}
 	}
 }
 add_action( 'add_meta_boxes', 'edd_add_download_meta_box' );
@@ -1204,30 +1211,45 @@ function edd_render_stats_meta_box() {
 }
 
 /**
+ * Get the path of the Product Reviews plugin
+ *
+ * @since 2.9.20
+ *
+ * @return mixed|string
+ */
+function edd_reviews_location() {
+	$possible_locations = array( 'edd-reviews/edd-reviews.php', 'EDD-Reviews/edd-reviews.php' );
+	$reviews_location   = '';
+
+	foreach ( $possible_locations as $location ) {
+
+		if ( 0 !== validate_plugin( $location ) ) {
+			continue;
+		}
+		$reviews_location = $location;
+	}
+
+	return $reviews_location;
+}
+
+/**
  * Outputs a metabox for the Product Reviews extension to show or activate it.
  *
  * @since 2.8
  * @return void
  */
 function edd_render_review_status_metabox() {
+	$reviews_location = edd_reviews_location();
+	$is_promo_active  = edd_is_promo_active();
+
 	ob_start();
 
-	$possible_locations = array( 'edd-reviews/edd-reviews.php', 'EDD-Reviews/edd-reviews.php' );
-	$plugin_found       = false;
-	foreach ( $possible_locations as $location ) {
-		if ( 0 !== validate_plugin( $location ) ) {
-			continue;
-		}
-
-		$plugin_found = $location;
-		break;
-	}
-	if ( false !== $plugin_found ) {
-
-		$base_url = wp_nonce_url( admin_url( 'plugins.php' ), 'activate-plugin_' . $plugin_found );
-		$args     = array(
+	if ( ! empty( $reviews_location ) ) {
+		$review_path  = '';
+		$base_url     = wp_nonce_url( admin_url( 'plugins.php' ), 'activate-plugin_' . $reviews_location );
+		$args         = array(
 			'action'        => 'activate',
-			'plugin'        => sanitize_text_field( $plugin_found ),
+			'plugin'        => sanitize_text_field( $reviews_location ),
 			'plugin_status' => 'all',
 		);
 		$activate_url = add_query_arg( $args, $base_url );
@@ -1235,26 +1257,77 @@ function edd_render_review_status_metabox() {
 
 	} else {
 
+		// Adjust UTM params based on state of promotion.
+		if ( true === $is_promo_active ) {
+			$args = array(
+				'utm_source'   => 'download-metabox',
+				'utm_medium'   => 'wp-admin',
+				'utm_campaign' => 'bfcm2019',
+				'utm_content'  => 'product-reviews-metabox-bfcm',
+			);
+		} else {
+			$args = array(
+				'utm_source'   => 'edit-download',
+				'utm_medium'   => 'enable-reviews',
+				'utm_campaign' => 'admin',
+			);
+		}
+
 		$base_url = 'https://easydigitaldownloads.com/downloads/product-reviews';
-		$args     = array(
-			'utm_source'   => 'edit-download',
-			'utm_medium'   => 'enable-reviews',
-			'utm_campaign' => 'admin',
-		);
-		$url = add_query_arg( $args, $base_url );
+		$url      = add_query_arg( $args, $base_url );
 		?>
 		<p>
-			<?php printf( __( 'Would you like to enable reviews for this product? Check out our <a target="_blank" href="%s">Product Reviews</a> extension.', 'easy-digital-downloads' ), $url ); ?>
+			<?php
+			// Translators: The %s represents the link to the Product Reviews extension.
+			echo wp_kses_post( sprintf( __( 'Would you like to enable reviews for this product? Check out our <a target="_blank" href="%s">Product Reviews</a> extension.', 'easy-digital-downloads' ), esc_url( $url ) ) );
+			?>
 		</p>
 		<?php
-
+		// Add an additional note if a promotion is active.
+		if ( true === $is_promo_active ) {
+			?>
+			<p>
+				<?php echo wp_kses_post( __( 'Act now and <strong>SAVE 25%</strong> on your purchase. Sale ends <em>23:59 PM December 6th CST</em>. Use code <code>BFCM2019</code> at checkout.', 'easy-digital-downloads' ) ); ?>
+			</p>
+			<?php
+		}
 	}
-
 
 	$rendered = ob_get_contents();
 	ob_end_clean();
 
-	echo $rendered;
+	echo wp_kses_post( $rendered );
+}
+
+/**
+ * Outputs a metabox for promotional content.
+ *
+ * @since 2.9.20
+ * @return void
+ */
+function edd_render_promo_metabox() {
+	ob_start();
+
+	// Build the main URL for the promotion.
+	$args = array(
+		'utm_source'   => 'download-metabox',
+		'utm_medium'   => 'wp-admin',
+		'utm_campaign' => 'bfcm2019',
+		'utm_content'  => 'bfcm-metabox',
+	);
+	$url  = add_query_arg( $args, 'https://easydigitaldownloads.com/pricing/' );
+	?>
+	<p>
+		<?php
+		// Translators: The %s represents the link to the pricing page on the Easy Digital Downloads website.
+		echo wp_kses_post( sprintf( __( 'Save 25&#37; on all Easy Digital Downloads purchases <strong>this week</strong>, including renewals and upgrades! Sale ends 23:59 PM December 6th CST. <a target="_blank" href="%s">Don\'t miss out</a>!', 'easy-digital-downloads' ), $url ) );
+		?>
+	</p>
+	<?php
+	$rendered = ob_get_contents();
+	ob_end_clean();
+
+	echo wp_kses_post( $rendered );
 }
 
 /**

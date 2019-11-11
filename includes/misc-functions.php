@@ -1013,6 +1013,31 @@ function edd_doing_cron() {
 }
 
 /**
+ * Check to see if we should be displaying promotional content
+ *
+ * In various parts of the plugin, we may choose to promote something like a sale for a limited time only. This
+ * function should be used to set the conditions under which the promotions will display.
+ *
+ * @since 2.9.20
+ *
+ * @return bool
+ */
+function edd_is_promo_active() {
+
+	// Set the date/time range based on UTC.
+	$start = strtotime( '2019-11-29 06:00:00' );
+	$end   = strtotime( '2019-12-07 05:59:59' );
+	$now   = time();
+
+	// Only display sidebar if the page is loaded within the date range.
+	if ( ( $now > $start ) && ( $now < $end ) ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
  * Polyfills for is_countable and is_iterable
  *
  * This helps with plugin compatibility going forward. Many extensions have issues with more modern PHP versions,
