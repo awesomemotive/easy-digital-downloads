@@ -127,7 +127,7 @@ function edd_options_page() {
 		$is_promo_active = edd_is_promo_active();
 		$wrapper_class   = ( true === $is_promo_active )
 			? array( ' edd-has-sidebar' )
-			: '';
+			: array();
 		?>
 		<div id="tab_container" class="<?php echo esc_attr( $active_tab . '-tab' ); ?>">
 			<div class="edd-settings-wrap<?php echo esc_attr( implode( ' ', $wrapper_class ) ); ?> wp-clearfix">
