@@ -196,7 +196,8 @@ function edd_process_after_payment_actions( $payment_id = 0, $force = false ) {
 
 	$payment->add_note( __( 'After payment actions processed.', 'easy-digital-downloads' ) );
 	$payment->update_meta( '_edd_complete_actions_run', time() ); // This is in GMT
-	do_action( 'edd_after_payment_actions', $payment_id );
+
+	do_action( 'edd_after_payment_actions', $payment_id, $payment, new EDD_Customer( $payment->customer_id ) );
 }
 add_action( 'edd_after_payment_scheduled_actions', 'edd_process_after_payment_actions', 10, 1 );
 
