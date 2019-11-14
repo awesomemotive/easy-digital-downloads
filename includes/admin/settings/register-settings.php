@@ -786,7 +786,7 @@ function edd_get_registered_settings() {
 						'type'          => 'number',
 						'size'          => 'small',
 						'step'          => '0.0001',
-						'std'						=> (float) edd_get_default_tax_rate(),
+						'std'		=> (float) edd_get_default_tax_rate(),
 						'min'           => '0',
 						'max'           => '99',
 						'tooltip_title' => __( 'Default Rate', 'easy-digital-downloads' ),
