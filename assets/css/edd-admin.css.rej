@@ -1,0 +1,8 @@
+diff a/assets/css/edd-admin.css b/assets/css/edd-admin.css	(rejected hunks)
+@@ -1860,4 +1870,4 @@ td.edd_order_price {
+ 
+ #edd-debug-log .edd-inline-button {
+ 	margin-left: 5px;
+-}
+\ No newline at end of file
++}
