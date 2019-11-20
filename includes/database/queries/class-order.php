@@ -280,7 +280,6 @@ class Order extends Query {
 
 		$order_addresses_query = new \EDD\Database\Queries\Order_Address();
 		$join_alias            = $order_addresses_query->table_alias;
-		$join_primary_column   = $order_addresses_query->get_primary_column_name();
 
 		if ( ! empty( $clauses['where'] ) ) {
 			$where_clause = ' AND ' . $clauses['where'];
@@ -292,18 +291,22 @@ class Order extends Query {
 		if ( ! empty( $this->query_vars['country'] ) && 'all' !== $this->query_vars['country'] ) {
 			// Filter by the order address's region (state/province/etc)..
 			if ( ! empty( $this->query_vars['region'] ) && 'all' !== $this->query_vars['region'] ) {
-				$prepared_values = array(
-					$order_addresses_query->table_name,
+				$location_join = $wpdb->prepare(
+					" LEFT JOIN {$order_addresses_query->table_name} {$join_alias} ON {$primary_alias}.{$primary_column} = {$join_alias}.order_id WHERE {$join_alias}.country = %s AND {$join_alias}.region = %s {$where_clause}",
+					$this->query_vars['country'],
+					$this->query_vars['region']
 				);
-
-				$location_join = " LEFT JOIN {$order_addresses_query->table_name} {$join_alias} ON {$primary_alias}.{$primary_column} = {$join_alias}.order_id WHERE {$join_alias}.country = " . $wpdb->prepare( '%s', $this->query_vars['country'] ) . " AND {$join_alias}.region = " . $wpdb->prepare( '%s', $this->query_vars['region'] ) . " {$where_clause}";
 
 				// Add the region to the query var defaults.
 				$this->query_var_defaults['region'] = $this->query_vars['region'];
 
 				// Filter only by the country, not by region.
 			} else {
-					$location_join = " LEFT JOIN {$order_addresses_query->table_name} {$join_alias} ON {$primary_alias}.{$primary_column} = {$join_alias}.order_id WHERE {$join_alias}.country = " . $wpdb->prepare( '%s', $this->query_vars['country'] ) . " {$where_clause}";
+					$location_join = $wpdb->prepare(
+						" LEFT JOIN {$order_addresses_query->table_name} {$join_alias} ON {$primary_alias}.{$primary_column} = {$join_alias}.order_id WHERE {$join_alias}.country = %s {$where_clause}",
+						$this->query_vars['country']
+					);
+
 					// Add the country to the query var defaults.
 					$this->query_var_defaults['country'] = $this->query_vars['country'];
 			}
