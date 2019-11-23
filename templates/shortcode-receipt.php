@@ -21,6 +21,8 @@ $cart      = edd_get_payment_meta_cart_details( $payment->ID, true );
 $user      = edd_get_payment_meta_user_info( $payment->ID );
 $email     = edd_get_payment_user_email( $payment->ID );
 $status    = edd_get_payment_status( $payment, true );
+
+do_action( 'edd_payment_receipt_before_table', $payment, $edd_receipt_args );
 ?>
 <table id="edd_purchase_receipt" class="edd-table">
 	<thead>
