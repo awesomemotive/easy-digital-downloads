@@ -2178,6 +2178,8 @@ function edd_sendwp_callback($args) {
 
 	ob_start();
 
+	echo $args['desc'];
+
 	// Output the appropriate button and label based on connection status
 	if( $client_connected ) :
 		?>
@@ -2192,12 +2194,11 @@ function edd_sendwp_callback($args) {
 		?>
 
 		<p>
-			<button type="button" id="edd-sendwp-connect" class="button button-primary"><span class="dashicons dashicons-email"></span><?php esc_html_e( 'Connect SendWP', 'easy-digital-downloads' ); ?>
+			<button type="button" id="edd-sendwp-connect" class="button button-primary"><?php esc_html_e( 'Connect SendWP', 'easy-digital-downloads' ); ?>
 			</button>
 		</p>
 
 		<?php
-		echo $args['desc'];
 	endif;
 
 	echo ob_get_clean();
@@ -2218,6 +2219,8 @@ function edd_jilt_callback( $args ) {
 	$connected   = $activated && edd_jilt()->get_integration()->is_jilt_connected();
 	$connect_url = $activated ? edd_jilt()->get_connect_url() : '';
 	$account_url = $connected ? edd_jilt()->get_integration()->get_jilt_app_url() : '';
+
+	echo wp_kses_post( $args['desc'] );
 
 	if ( $activated ) :
 		?>
@@ -2245,7 +2248,6 @@ function edd_jilt_callback( $args ) {
 
 			<p>
 				<a id="edd-jilt-connect" class="button button-primary" href="<?php echo esc_url( $connect_url ); ?>">
-					<span class="dashicons dashicons-email"></span>
 					<?php esc_html_e( 'Connect to Jilt', 'easy-digital-downloads' ); ?>
 				</a>
 			</p>
@@ -2256,15 +2258,12 @@ function edd_jilt_callback( $args ) {
 
 		<p>
 			<button id="edd-jilt-connect" class="button button-primary">
-				<span class="dashicons dashicons-email"></span>
 				<?php esc_html_e( 'Install Jilt', 'easy-digital-downloads' ); ?>
 			</button>
 		</p>
 
 	<?php
 	endif;
-
-	echo wp_kses_post( $args['desc'] );
 }
 
 /**

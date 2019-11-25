@@ -1219,7 +1219,7 @@ jQuery(document).ready(function ($) {
 			$('#edd-sendwp-connect').on('click', function(e) {
 
 				e.preventDefault();
-				$(this).html( '<span class="dashicons dashicons-email"></span>' + edd_vars.wait + ' <span class="edd-loading"></span>' );
+				$(this).html( edd_vars.wait + ' <span class="edd-loading"></span>' );
 				document.body.style.cursor = 'wait';
 				easy_digital_downloads_sendwp_remote_install();
 
@@ -1236,7 +1236,7 @@ jQuery(document).ready(function ($) {
 			$('#edd-jilt-connect').on('click', function(e) {
 
 				e.preventDefault();
-				$(this).html( '<span class="dashicons dashicons-email"></span>' + edd_vars.wait + ' <span class="edd-loading"></span>' );
+				$(this).html( edd_vars.wait + ' <span class="edd-loading"></span>' );
 				document.body.style.cursor = 'wait';
 				easy_digital_downloads_jilt_remote_install();
 			});
