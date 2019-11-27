@@ -448,25 +448,53 @@ function edd_install_settings() {
  * When a new Blog is created in multisite, see if EDD is network activated, and run the installer
  *
  * @since  2.5
- * @param  int    $blog_id The Blog ID created
- * @param  int    $user_id The User ID set as the admin
- * @param  string $domain  The URL
- * @param  string $path    Site Path
- * @param  int    $site_id The Site ID
- * @param  array  $meta    Blog Meta
+ * @param  int|WP_Site $blog WordPress 5.1 passes a WP_Site object.
  * @return void
  */
-function edd_new_blog_created( $blog_id ) {
+function edd_new_blog_created( $blog ) {
 
 	// Bail if plugin is not activated for the network
 	if ( ! is_plugin_active_for_network( plugin_basename( EDD_PLUGIN_FILE ) ) ) {
 		return;
 	}
 
-	// Run the installation for this site
-	edd_run_install( $blog_id );
+	if ( ! is_int( $blog ) ) {
+		$blog = $blog->id;
+	}
+
+	switch_to_blog( $blog );
+	edd_install();
+	restore_current_blog();
 }
-add_action( 'wpmu_new_blog', 'edd_new_blog_created', 10 );
+if ( version_compare( get_bloginfo( 'version' ), '5.1', '>=' ) ) {
+	add_action( 'wp_initialize_site', 'edd_new_blog_created' );
+} else {
+	add_action( 'wpmu_new_blog', 'edd_new_blog_created' );
+}
+
+/**
+ * Drop our custom tables when a mu site is deleted
+ *
+ * @deprecated 3.0   Handled by WP_DB_Table
+ * @since      2.5
+ * @param      array $tables  The tables to drop
+ * @param      int   $blog_id The Blog ID being deleted
+ * @return     array          The tables to drop
+ */
+function edd_wpmu_drop_tables( $tables, $blog_id ) {
+
+	switch_to_blog( $blog_id );
+	$customers_db     = new EDD_DB_Customers();
+	$customer_meta_db = new EDD_DB_Customer_Meta();
+	if ( $customers_db->installed() ) {
+		$tables[] = $customers_db->table_name;
+		$tables[] = $customer_meta_db->table_name;
+	}
+	restore_current_blog();
+
+	return $tables;
+
+}
 
 /**
  * Post-installation

@@ -34,8 +34,8 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 			'max_uses'          => 10,
 			'min_charge_amount' => 128,
 			'product_condition' => 'all',
-			'start_date'        => '2010-12-12 00:00:00',
-			'end_date'          => '2050-12-31 23:59:59'
+			'start'             => date( 'm/d/Y', time() ) . ' 00:00:00',
+			'expiration'        => date( 'm/d/Y', time() ) . ' 23:59:59',
 		) );
 	}
 
@@ -76,8 +76,8 @@ class EDD_Helper_Discount extends WP_UnitTestCase {
 			'use_count'         => 0,
 			'min_charge_amount' => 128,
 			'product_condition' => 'all',
-			'start_date'        => '2010-12-12 00:00:00',
-			'end_date'          => '2050-12-31 23:59:59'
+			'start'             => date( 'm/d/Y', time() ) . ' 00:00:00',
+			'expiration'        => date( 'm/d/Y', time() ) . ' 23:59:59',
 		) );
 	}
 
