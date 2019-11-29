@@ -192,7 +192,7 @@ function edd_options_sidebar() {
 	$active_section = array_key_exists( $active_section, edd_get_settings_tab_sections( $active_tab ) ) ? $active_section : 'main';
 
 	// The coupon code we're promoting
-	$coupon_code = 'BCFM2019';
+	$coupon_code = 'BFCM2019';
 
 	// Build the main URL for the promotion
 	$args = array(
@@ -206,7 +206,7 @@ function edd_options_sidebar() {
 	<div class="edd-settings-sidebar">
 		<div class="edd-settings-sidebar-content">
 			<div class="edd-sidebar-header-section">
-				<img class="edd-bcfm-header" src="<?php echo esc_url( EDD_PLUGIN_URL . 'assets/images/promo/bfcm-header.svg' ); ?>">
+				<img class="edd-bfcm-header" src="<?php echo esc_url( EDD_PLUGIN_URL . 'assets/images/promo/bfcm-header.svg' ); ?>">
 			</div>
 			<div class="edd-sidebar-description-section">
 				<p class="edd-sidebar-description"><?php _e( 'Save 25% on all Easy Digital Downloads purchases <strong>this week</strong>, including renewals and upgrades!', 'easy-digital-downloads' ); ?></p>
