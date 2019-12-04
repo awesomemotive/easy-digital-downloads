@@ -415,6 +415,7 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @return string Column name.
 	 */
 	public function column_default( $order, $column_name ) {
+		$timezone_abbreviation = edd_get_timezone_abbr();
 		switch ( $column_name ) {
 			case 'amount':
 				$value = edd_currency_filter( edd_format_amount( $order->total ), $order->currency );
