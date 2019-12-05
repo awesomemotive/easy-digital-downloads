@@ -1,6 +1,6 @@
 {
 	"name": "easy-digital-downloads",
-	"version": "2.9.11",
+	"version": "2.9.20",
 	"description": "The easiest way to sell digital products with WordPress.",
 	"private": true,
 	"license": "GPL-2.0-or-later",
@@ -15,7 +15,7 @@
 	"homepage": "https://easydigitaldownloads.com",
 	"engines": {
 		"node": ">=8.0.0",
-		"npm": ">=6.0.0"
+		"npm": ">=6.12.0"
 	},
 	"babel": {
 		"presets": [

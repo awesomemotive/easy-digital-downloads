@@ -67,6 +67,10 @@ const config = {
 		$: 'jQuery',
 	},
 	plugins: [
+		new webpack.ProvidePlugin( {
+			$: 'jquery',
+			jQuery: 'jquery'
+		} ),
 		// Copy vendor files to ensure 3rd party plugins relying on a script
 		// handle to exist continue to be enqueued.
 		new CopyWebpackPlugin( [

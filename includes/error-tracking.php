@@ -140,8 +140,9 @@ function _edd_die_handler() {
  */
 function edd_die( $message = '', $title = '', $status = 400 ) {
 	if ( ! defined( 'EDD_UNIT_TESTS' ) ) {
-		add_filter( 'wp_die_ajax_handler', '_edd_die_handler' );
-		add_filter( 'wp_die_handler',      '_edd_die_handler' );
+		add_filter( 'wp_die_ajax_handler', '_edd_die_handler', 10, 3 );
+		add_filter( 'wp_die_handler'     , '_edd_die_handler', 10, 3 );
+		add_filter( 'wp_die_json_handler', '_edd_die_handler', 10, 3 );
 	}
 
 	wp_die( $message, $title, array( 'response' => $status ) );

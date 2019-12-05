@@ -52,8 +52,8 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 	 *
 	 * @since 1.4
 	 *
-	 * @param array $item Contains all the data of the log item
-	 * @param string $column_name The name of the column
+	 * @param array  $item Contains all the data of the log item.
+	 * @param string $column_name The name of the column.
 	 *
 	 * @return string Column Name
 	 */
@@ -66,19 +66,19 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 					? edd_get_download_name( $download->ID, $item['price_id'] )
 					: edd_get_download_name( $download->ID );
 
-				return '<a href="' . add_query_arg( 'download', $download->ID, $base_url ) . '" >' . $column_value . '</a>';
+				return '<a href="' . esc_url( add_query_arg( 'download', $download->ID, $base_url ) ) . '" >' . $column_value . '</a>';
 			case 'customer' :
 				return ! empty( $item[ 'customer' ]->id )
-					? '<a href="' . add_query_arg( 'customer', $item[ 'customer' ]->id, $base_url ) . '">' . $item['customer']->name . '</a>'
+					? '<a href="' . esc_url( add_query_arg( 'customer', $item[ 'customer' ]->id, $base_url ) ) . '">' . $item['customer']->name . '</a>'
 					: '&mdash;';
 
 			case 'payment_id' :
 				$number = edd_get_payment_number( $item['payment_id'] );
 				return ! empty( $number )
-					? '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item['payment_id'] ) . '">' . esc_html( $number ) . '</a>'
+					? '<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . esc_attr( $item['payment_id'] ) ) ) . '">' . esc_html( $number ) . '</a>'
 					: '&mdash;';
 			case 'ip' :
-				return '<a href="https://ipinfo.io/' . $item['ip']  . '" target="_blank" rel="noopener noreferrer">' . $item['ip']  . '</a>';
+				return '<a href="' . esc_url( 'https://ipinfo.io/' . esc_attr( $item['ip'] ) )  . '" target="_blank" rel="noopener noreferrer">' . esc_html( $item['ip'] )  . '</a>';
 			default:
 				return $item[ $column_name ];
 		}
