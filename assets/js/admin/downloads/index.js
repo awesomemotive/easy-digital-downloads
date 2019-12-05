@@ -75,6 +75,10 @@ var EDD_Download_Configuration = {
 			$( this ).text( parseInt( key ) );
 		} );
 
+		clone.find( 'input.edd_repeatable_index' ).each( function() {
+			$( this ).val( parseInt( $( this ).data( 'key' ) ) );
+		} );
+
 		clone.find( 'span.edd_file_id' ).each( function() {
 			$( this ).text( parseInt( key ) );
 		} );

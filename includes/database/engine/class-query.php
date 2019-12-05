@@ -336,7 +336,7 @@ class Query extends Base {
 	 *
 	 * @since 3.0
 	 */
-	private function set_last_changed() {
+	protected function set_last_changed() {
 		$this->last_changed = microtime();
 	}
 
@@ -347,7 +347,7 @@ class Query extends Base {
 	 *
 	 * @since 3.0
 	 */
-	private function set_alias() {
+	protected function set_alias() {
 		if ( empty( $this->table_alias ) ) {
 			$this->table_alias = $this->first_letters( $this->table_name );
 		}
@@ -361,7 +361,7 @@ class Query extends Base {
 	 *
 	 * @since 3.0
 	 */
-	private function set_prefix() {
+	protected function set_prefix() {
 		$this->table_name  = $this->apply_prefix( $this->table_name       );
 		$this->table_alias = $this->apply_prefix( $this->table_alias      );
 		$this->cache_group = $this->apply_prefix( $this->cache_group, '-' );
@@ -372,7 +372,7 @@ class Query extends Base {
 	 *
 	 * @since 3.0
 	 */
-	private function set_columns() {
+	protected function set_columns() {
 
 		// Bail if no table schema
 		if ( ! class_exists( $this->table_schema ) ) {
@@ -393,7 +393,7 @@ class Query extends Base {
 	 *
 	 * @since 3.0
 	 */
-	private function set_item_shape() {
+	protected function set_item_shape() {
 		if ( empty( $this->item_shape ) || ! class_exists( $this->item_shape ) ) {
 			$this->item_shape = 'EDD\\Database\\Row';
 		}
@@ -404,7 +404,7 @@ class Query extends Base {
 	 *
 	 * @since 3.0
 	 */
-	private function set_query_var_defaults() {
+	protected function set_query_var_defaults() {
 
 		// Default query variables
 		$this->query_var_defaults = array(
@@ -467,7 +467,7 @@ class Query extends Base {
 	 *
 	 * @param array $clauses
 	 */
-	private function set_request_clauses( $clauses = array() ) {
+	protected function set_request_clauses( $clauses = array() ) {
 
 		// Found rows
 		$found_rows = empty( $this->query_vars['no_found_rows'] )
@@ -523,7 +523,7 @@ class Query extends Base {
 	 *
 	 * @since 3.0
 	 */
-	private function set_request() {
+	protected function set_request() {
 		$filtered      = array_filter( $this->request_clauses );
 		$clauses       = array_map( 'trim', $filtered );
 		$this->request = implode( ' ', $clauses );
@@ -535,7 +535,7 @@ class Query extends Base {
 	 * @since 3.0
 	 * @param array $item_ids
 	 */
-	private function set_items( $item_ids = array() ) {
+	protected function set_items( $item_ids = array() ) {
 
 		// Bail if counting, to avoid shaping items
 		if ( ! empty( $this->query_vars['count'] ) ) {
@@ -561,7 +561,7 @@ class Query extends Base {
 	 *
 	 * @param  array $item_ids Optional array of item IDs
 	 */
-	private function set_found_items( $item_ids = array() ) {
+	protected function set_found_items( $item_ids = array() ) {
 
 		// Items were not found
 		if ( empty( $item_ids ) ) {
@@ -609,7 +609,7 @@ class Query extends Base {
 	 * @param array $args See WP_Date_Query
 	 * @return \WP_Meta_Query
 	 */
-	private function get_meta_query( $args = array() ) {
+	protected function get_meta_query( $args = array() ) {
 		return new \WP_Meta_Query( $args );
 	}
 
@@ -623,7 +623,7 @@ class Query extends Base {
 	 *
 	 * @return \WP_Date_Query
 	 */
-	private function get_date_query( $args = array(), $column = 'date_created' ) {
+	protected function get_date_query( $args = array(), $column = 'date_created' ) {
 
 		// Filter valid date columns for these columns
 		add_filter( 'date_query_valid_columns', array( $this, '__filter_valid_date_columns' ), 2 );
@@ -668,7 +668,7 @@ class Query extends Base {
 	 *
 	 * @return string
 	 */
-	private function get_current_time() {
+	protected function get_current_time() {
 		return gmdate( "Y-m-d\TH:i:s\Z" );
 	}
 
@@ -679,7 +679,7 @@ class Query extends Base {
 	 *
 	 * @return string
 	 */
-	private function get_table_name() {
+	protected function get_table_name() {
 		return $this->get_db()->{$this->table_name};
 	}
 
@@ -690,7 +690,7 @@ class Query extends Base {
 	 *
 	 * @return array
 	 */
-	private function get_column_names() {
+	protected function get_column_names() {
 		return array_flip( $this->get_columns( array(), 'and', 'name' ) );
 	}
 
@@ -701,7 +701,7 @@ class Query extends Base {
 	 *
 	 * @return string Default "id", Primary column name if not empty
 	 */
-	private function get_primary_column_name() {
+	protected function get_primary_column_name() {
 		return $this->get_column_field( array( 'primary' => true ), 'name', 'id' );
 	}
 
@@ -712,7 +712,7 @@ class Query extends Base {
 	 *
 	 * @return mixed Column object, or false
 	 */
-	private function get_column_field( $args = array(), $field = '', $default = false ) {
+	protected function get_column_field( $args = array(), $field = '', $default = false ) {
 
 		// Get column
 		$column = $this->get_column_by( $args );
@@ -730,7 +730,7 @@ class Query extends Base {
 	 *
 	 * @return mixed Column object, or false
 	 */
-	private function get_column_by( $args = array() ) {
+	protected function get_column_by( $args = array() ) {
 
 		// Filter columns
 		$filter = $this->get_columns( $args );
@@ -746,7 +746,7 @@ class Query extends Base {
 	 *
 	 * @since 3.0
 	 */
-	private function get_columns( $args = array(), $operator = 'and', $field = false ) {
+	protected function get_columns( $args = array(), $operator = 'and', $field = false ) {
 
 		// Filter columns
 		$filter = wp_filter_object_list( $this->columns, $args, $operator, $field );
@@ -766,7 +766,7 @@ class Query extends Base {
 	 * @param string $column_value Value to query for
 	 * @return mixed False if empty/error, Object if successful
 	 */
-	private function get_item_raw( $column_name = '', $column_value = '' ) {
+	protected function get_item_raw( $column_name = '', $column_value = '' ) {
 
 		// Bail if no name or value
 		if ( empty( $column_name ) || empty( $column_value ) ) {
@@ -800,7 +800,7 @@ class Query extends Base {
 	 *
 	 * @return array|int List of items, or number of items when 'count' is passed as a query var.
 	 */
-	private function get_items() {
+	protected function get_items() {
 
 		/**
 		 * Fires before object items are retrieved.
@@ -872,7 +872,7 @@ class Query extends Base {
 	 *
 	 * @return int|array A single count of item IDs if a count query. An array of item IDs if a full query.
 	 */
-	private function get_item_ids() {
+	protected function get_item_ids() {
 
 		// Setup primary column, and parse the where clause
 		$this->parse_where();
@@ -950,7 +950,7 @@ class Query extends Base {
 	 * @param string $order
 	 * @return string
 	 */
-	private function get_order_by( $order = '' ) {
+	protected function get_order_by( $order = '' ) {
 
 		// Default orderby primary column
 		$orderby = "{$this->parse_orderby()} {$order}";
@@ -1032,7 +1032,7 @@ class Query extends Base {
 	 * @param array  $columns Columns to search.
 	 * @return string Search SQL.
 	 */
-	private function get_search_sql( $string = '', $columns = array() ) {
+	protected function get_search_sql( $string = '', $columns = array() ) {
 
 		// Array or String
 		$like = ( false !== strpos( $string, '*' ) )
@@ -1061,7 +1061,7 @@ class Query extends Base {
 	 * @see See Query::__construct().
 	 * @param string|array $query Array or string of Query arguments.
 	 */
-	private function parse_query( $query = array() ) {
+	protected function parse_query( $query = array() ) {
 
 		// Setup the query_vars_original var
 		$this->query_var_originals = wp_parse_args( $query );
@@ -1087,7 +1087,7 @@ class Query extends Base {
 	 *
 	 * @since 3.0
 	 */
-	private function parse_where() {
+	protected function parse_where() {
 
 		// Defaults
 		$where = $searchable = $date_query = array();
@@ -1287,7 +1287,7 @@ class Query extends Base {
 	 * @param bool   $alias
 	 * @return string
 	 */
-	private function parse_fields( $fields = '', $alias = true ) {
+	protected function parse_fields( $fields = '', $alias = true ) {
 
 		// Default return value
 		$primary = $this->get_primary_column_name();
@@ -1322,7 +1322,7 @@ class Query extends Base {
 	 * @param string $groupby
 	 * @return string
 	 */
-	private function parse_groupby( $groupby = '', $alias = true ) {
+	protected function parse_groupby( $groupby = '', $alias = true ) {
 
 		// Bail if empty
 		if ( empty( $groupby ) ) {
@@ -1363,7 +1363,7 @@ class Query extends Base {
 	 * @param string $orderby Field for the items to be ordered by.
 	 * @return string|false Value to used in the ORDER clause. False otherwise.
 	 */
-	private function parse_orderby( $orderby = 'id' ) {
+	protected function parse_orderby( $orderby = 'id' ) {
 
 		// Default value
 		$parsed = "{$this->table_alias}.{$this->get_primary_column_name()}";
@@ -1400,7 +1400,7 @@ class Query extends Base {
 	 * @param string $order The 'order' query variable.
 	 * @return string The sanitized 'order' query variable.
 	 */
-	private function parse_order( $order  = '' ) {
+	protected function parse_order( $order  = '' ) {
 
 		// Bail if malformed
 		if ( empty( $order ) || ! is_string( $order ) ) {
@@ -1429,7 +1429,7 @@ class Query extends Base {
 	 * @param array $items
 	 * @return array
 	 */
-	private function shape_items( $items = array() ) {
+	protected function shape_items( $items = array() ) {
 
 		// Force to stdClass if querying for fields
 		if ( ! empty( $this->query_vars['fields'] ) ) {
@@ -1472,7 +1472,7 @@ class Query extends Base {
 	 * @param array $items
 	 * @return array
 	 */
-	private function get_item_fields( $items = array() ) {
+	protected function get_item_fields( $items = array() ) {
 
 		// Get the primary column
 		$primary = $this->get_primary_column_name();
@@ -1512,7 +1512,7 @@ class Query extends Base {
 	 * @param  mixed $item
 	 * @return int
 	 */
-	private function shape_item_id( $item = 0 ) {
+	protected function shape_item_id( $item = 0 ) {
 		$retval  = 0;
 		$primary = $this->get_primary_column_name();
 
@@ -1859,7 +1859,7 @@ class Query extends Base {
 	 * @param mixed ID of item, or row from database
 	 * @return mixed False on error, Object of single-object class type on success
 	 */
-	private function shape_item( $item = 0 ) {
+	protected function shape_item( $item = 0 ) {
 
 		// Get the item from an ID
 		if ( is_numeric( $item ) ) {
@@ -1888,7 +1888,7 @@ class Query extends Base {
 	 * @param array $item
 	 * @return mixed False on error, Array of validated values on success
 	 */
-	private function validate_item( $item = array() ) {
+	protected function validate_item( $item = array() ) {
 
 		// Bail if item is empty
 		if ( empty( $item ) ) {
@@ -1941,7 +1941,7 @@ class Query extends Base {
 	 *
 	 * @return mixed Object|Array without keys the current user does not have caps for
 	 */
-	private function reduce_item( $method = 'update', $item = array() ) {
+	protected function reduce_item( $method = 'update', $item = array() ) {
 
 		// Bail if item is empty
 		if ( empty( $item ) ) {
@@ -1984,7 +1984,7 @@ class Query extends Base {
 	 *
 	 * @return array
 	 */
-	private function default_item() {
+	protected function default_item() {
 
 		// Default return value
 		$retval   = array();
@@ -2013,7 +2013,7 @@ class Query extends Base {
 	 * @param array $item
 	 * @return array
 	 */
-	private function transition_item( $new_data = array(), $old_data = array() ) {
+	protected function transition_item( $new_data = array(), $old_data = array() ) {
 
 		// Look for transition columns
 		$columns = $this->get_columns( array( 'transition' => true ), 'and', 'name' );
@@ -2211,7 +2211,7 @@ class Query extends Base {
 	 *
 	 * @return array
 	 */
-	private function get_registered_meta_keys( $object_subtype = '' ) {
+	protected function get_registered_meta_keys( $object_subtype = '' ) {
 		global $wp_meta_keys;
 
 		// Get the object type
@@ -2241,7 +2241,7 @@ class Query extends Base {
 	 *
 	 * @param array $meta
 	 */
-	private function save_extra_item_meta( $item_id = 0, $meta = array() ) {
+	protected function save_extra_item_meta( $item_id = 0, $meta = array() ) {
 
 		// Bail if there is no bulk meta to save
 		$item_id = $this->shape_item_id( $item_id );
@@ -2276,7 +2276,7 @@ class Query extends Base {
 	 *
 	 * @param int $item_id
 	 */
-	private function delete_all_item_meta( $item_id = 0 ) {
+	protected function delete_all_item_meta( $item_id = 0 ) {
 
 		// Bail if no meta was returned
 		$item_id = $this->shape_item_id( $item_id );
@@ -2314,7 +2314,7 @@ class Query extends Base {
 	 *
 	 * @return mixed Table name if exists, False if not
 	 */
-	private function get_meta_table_name() {
+	protected function get_meta_table_name() {
 
 		// Maybe apply table prefix
 		$table = $this->apply_prefix( $this->item_name );
@@ -2332,7 +2332,7 @@ class Query extends Base {
 	 *
 	 * @return string
 	 */
-	private function get_cache_key( $group = '' ) {
+	protected function get_cache_key( $group = '' ) {
 
 		// Slice query vars
 		$slice = wp_array_slice_assoc( $this->query_vars, array_keys( $this->query_var_defaults ) );
@@ -2356,7 +2356,7 @@ class Query extends Base {
 	 * @param string $group
 	 * @return string
 	 */
-	private function get_cache_group( $group = '' ) {
+	protected function get_cache_group( $group = '' ) {
 
 		// Get the primary column
 		$primary = $this->get_primary_column_name();
@@ -2380,7 +2380,7 @@ class Query extends Base {
 	 *
 	 * @return array
 	 */
-	private function get_cache_groups() {
+	protected function get_cache_groups() {
 
 		// Return value
 		$cache_groups = array();
@@ -2424,7 +2424,7 @@ class Query extends Base {
 	 *
 	 * @return boolean False if empty
 	 */
-	private function prime_item_caches( $item_ids = array(), $force = false ) {
+	protected function prime_item_caches( $item_ids = array(), $force = false ) {
 
 		// Bail if no items to cache
 		if ( empty( $item_ids ) ) {
@@ -2477,7 +2477,7 @@ class Query extends Base {
 	 *
 	 * @param array $items
 	 */
-	private function update_item_cache( $items = array() ) {
+	protected function update_item_cache( $items = array() ) {
 
 		// Maybe query for single item
 		if ( is_numeric( $items ) ) {
@@ -2533,7 +2533,7 @@ class Query extends Base {
 	 *
 	 * @return boolean
 	 */
-	private function clean_item_cache( $items = array() ) {
+	protected function clean_item_cache( $items = array() ) {
 
 		// Bail if no items to clean
 		if ( empty( $items ) ) {
@@ -2569,7 +2569,7 @@ class Query extends Base {
 	 *
 	 * @since 3.0
 	 */
-	private function update_last_changed_cache( $group = '' ) {
+	protected function update_last_changed_cache( $group = '' ) {
 
 		// Fallback to microtime
 		if ( empty( $this->last_changed ) ) {
@@ -2592,7 +2592,7 @@ class Query extends Base {
 	 *
 	 * @return int The last time a cache group was changed
 	 */
-	private function get_last_changed_cache( $group = '' ) {
+	protected function get_last_changed_cache( $group = '' ) {
 
 		// Get the last changed cache value
 		$last_changed = $this->cache_get( 'last_changed', $group );
@@ -2616,7 +2616,7 @@ class Query extends Base {
 	 *
 	 * @return array
 	 */
-	private function get_non_cached_ids( $item_ids = array(), $group = '' ) {
+	protected function get_non_cached_ids( $item_ids = array(), $group = '' ) {
 		$retval = array();
 
 		// Bail if no item IDs
@@ -2647,7 +2647,7 @@ class Query extends Base {
 	 * @param string $group  Cache group. Defaults to $this->cache_group
 	 * @param int    $expire Expiration.
 	 */
-	private function cache_add( $key = '', $value = '', $group = '', $expire = 0 ) {
+	protected function cache_add( $key = '', $value = '', $group = '', $expire = 0 ) {
 
 		// Bail if cache invalidation is suspended
 		if ( wp_suspend_cache_addition() ) {
@@ -2675,7 +2675,7 @@ class Query extends Base {
 	 * @param string  $group Cache group. Defaults to $this->cache_group
 	 * @param boolean $force
 	 */
-	private function cache_get( $key = '', $group = '', $force = false ) {
+	protected function cache_get( $key = '', $group = '', $force = false ) {
 
 		// Bail if no cache key
 		if ( empty( $key ) ) {
@@ -2699,7 +2699,7 @@ class Query extends Base {
 	 * @param string $group  Cache group. Defaults to $this->cache_group
 	 * @param int    $expire Expiration.
 	 */
-	private function cache_set( $key = '', $value = '', $group = '', $expire = 0 ) {
+	protected function cache_set( $key = '', $value = '', $group = '', $expire = 0 ) {
 
 		// Bail if cache invalidation is suspended
 		if ( wp_suspend_cache_addition() ) {
@@ -2728,7 +2728,7 @@ class Query extends Base {
 	 * @param string $key   Cache key.
 	 * @param string $group Cache group. Defaults to $this->cache_group
 	 */
-	private function cache_delete( $key = '', $group = '' ) {
+	protected function cache_delete( $key = '', $group = '' ) {
 		global $_wp_suspend_cache_invalidation;
 
 		// Bail if cache invalidation is suspended

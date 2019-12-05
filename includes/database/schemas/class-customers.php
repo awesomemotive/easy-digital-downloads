@@ -89,8 +89,7 @@ class Customers extends Schema {
 			'length'     => '18,9',
 			'default'    => '0',
 			'sortable'   => true,
-			'searchable' => true,
-			'validate'   => 'edd_sanitize_amount',
+			'searchable' => true
 		),
 
 		// purchase_count

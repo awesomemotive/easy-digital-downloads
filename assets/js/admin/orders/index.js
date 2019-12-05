@@ -4,16 +4,6 @@
 import { getChosenVars } from 'utils/chosen.js';
 import './override-amounts.js';
 
-jQuery( document ).ready( function( $ ) {
-	// Toggle advanced filters on Orders page.
-	$( '.edd-advanced-filters-button' ).on( 'click', function( e ) {
-		// Prevnt submit action
-		e.preventDefault();
-
-		$( '#edd-advanced-filters' ).toggleClass( 'open' );
-	} );
-} );
-
 const edd_admin_globals = {};
 
 /**
@@ -28,6 +18,7 @@ var EDD_Add_Order = {
 		this.select_address();
 		this.recalculate_total();
 		this.validate();
+		this.filters();
 	},
 
 	add_order_item: function() {
@@ -473,6 +464,31 @@ var EDD_Add_Order = {
 				$( '#publishing-action .spinner' ).css( 'visibility', 'hidden' );
 				return false;
 			}
+		} );
+	},
+
+	filters: function() {
+		$( '.edd_countries_filter' ).on( 'change', function() {
+
+			const select = $( this ),
+				data = {
+					action: 'edd_get_shop_states',
+					country: select.val(),
+					nonce: select.data( 'nonce' ),
+					field_name: 'edd_regions_filter',
+				};
+
+			$.post( ajaxurl, data, function( response ) {
+				$( 'select.edd_regions_filter' ).find( 'option:gt(0)' ).remove();
+
+				if ( 'nostates' !== response ) {
+					$( response ).find( 'option:gt(0)' ).appendTo( 'select.edd_regions_filter' );
+				}
+
+				$( 'select.edd_regions_filter' ).trigger( 'chosen:updated' );
+			} );
+
+			return false;
 		} );
 	},
 };

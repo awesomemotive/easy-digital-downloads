@@ -73,7 +73,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 			}
 
 			if( ! empty( $args['category'] ) ) {
-				if ( strpos( $args['category'], ',' ) ) {
+				if ( is_string( $args[ 'categrory' ] ) ) {
 					$args['category'] = explode( ',', $args['category'] );
 				}
 

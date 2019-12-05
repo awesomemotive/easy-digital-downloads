@@ -545,7 +545,7 @@ function edd_register_downloads_report( $reports ) {
 								if ( $d->object->has_variable_prices() ) {
 									$prices = array_values( wp_filter_object_list( $d->object->get_prices(), array( 'index' => absint( $d->price_id ) ) ) );
 
-									$title .= is_array( $prices )
+									$title .= ( is_array( $prices ) && isset( $prices[0] ) )
 										? ': ' . $prices[0]['name']
 										: '';
 								}
