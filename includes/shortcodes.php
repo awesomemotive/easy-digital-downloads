@@ -614,7 +614,7 @@ function edd_downloads_query( $atts, $content = null ) {
 		</div>
 
 		<?php
-		
+
 	else:
 		printf( _x( 'No %s found', 'download post type name', 'easy-digital-downloads' ), edd_get_label_plural() );
 	endif;
@@ -896,6 +896,7 @@ function edd_process_profile_editor_updates( $data ) {
 				'city'        => $address['city'],
 				'region'      => $address['state'],
 				'postal_code' => $address['zip'],
+				'country'     => $address['country']
 			) );
 
 		// Add a customer address.
@@ -908,6 +909,7 @@ function edd_process_profile_editor_updates( $data ) {
 				'city'        => $address['city'],
 				'region'      => $address['state'],
 				'postal_code' => $address['zip'],
+				'country'     => $address['country']
 			) );
 		}
 
