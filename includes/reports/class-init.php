@@ -144,11 +144,10 @@ final class Init {
 	 *
 	 * @since 3.0
 	 *
-	 * @param array $reports
-	 *
-	 * @return array
+	 * @param Data\Report_Registry $reports Reports registry instance.
+	 * @return Data\Report_Registry Reports registry.
 	 */
-	private function legacy_reports( $reports = array() ) {
+	private function legacy_reports( $reports ) {
 
 		// Bail if no legacy reports
 		if ( ! has_filter( 'edd_report_views' ) ) {
@@ -211,14 +210,18 @@ final class Init {
 			// Legacy label
 			$legacy_label = $label . '<span class="edd-legacy-label edd-chip">' . __( 'Legacy', 'easy-digital-downloads' ) . '</span>';
 
-			// Add report
-			$reports->add_report( $report_id, array(
-				'label'            => $legacy_label,
-				'group'            => 'core',
-				'icon'             => 'chart-area',
-				'priority'         => $priority,
-				'display_callback' => $callback
-			) );
+			try {
+				// Add report
+				$reports->add_report( $report_id, array(
+					'label'            => $legacy_label,
+					'group'            => 'core',
+					'icon'             => 'chart-area',
+					'priority'         => $priority,
+					'display_callback' => $callback
+				) );
+			} catch ( \EDD_Exception $exception ) {
+				edd_debug_log_exception( $exception );
+			}
 
 			// Bump the priority
 			++$priority;

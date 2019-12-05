@@ -213,8 +213,16 @@ class EDD_Logging {
 			: false;
 
 		// Set log meta, if any
-		if ( $log_id && ( 'edd_add_log' === $insert_method ) && ! empty( $log_meta ) ) {
-			$log = edd_get_log( $log_id );
+		if ( $log_id && ! empty( $log_meta ) ) {
+
+			// Use the right log fetching function based on the type of log this is.
+			if ( 'edd_add_api_request_log' === $insert_method ) {
+				$log = edd_get_file_download_log( $log_id );
+			} elseif ( 'edd_add_file_download_log' === $insert_method ) {
+				$log = edd_get_file_download_log( $log_id );
+			} else {
+				$log = edd_get_log( $log_id );
+			}
 
 			foreach ( (array) $log_meta as $key => $meta ) {
 				$log->add_meta( sanitize_key( $key ), $meta );

@@ -5,7 +5,7 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
 Requires at least: 4.6
-Tested up to: 5.0.2
+Tested up to: 5.3
 Stable Tag: 3.0
 License: GNU Version 2 or Any Later Version
 
@@ -28,7 +28,7 @@ Easy Digital Downloads has been translated into more than two dozen languages an
 
 = Payment gateways for everyone =
 
-The internet has made it possible for anyone to sell their products to a world-wide audience. No matter where you live, Easy Digital Downloads can work for you. We offer integrations for the most common merchant processors and, through 3rd party extensions, support for many, many more as well.
+The internet has made it possible for anyone to sell their products to a world-wide audience. No matter where you live, Easy Digital Downloads can be your eCommerce solution. We offer integrations for the most common merchant processors and, through 3rd party extensions, support for many, many more as well.
 
 Payment gateways supported in the core, free plugin:
 
@@ -85,7 +85,7 @@ Extensible, adaptable, and open source -- Easy Digital Downloads is created with
 > It’s clear that EDD was made by developers for developers. The extensibility is endless.
 > Scott Buscemi – Lumen Foundry
 
-= Testimonials = 
+= Testimonials =
 
 > If anyone asks me what they should use for downloadable products on their WordPress site, it’s a no-brainer as far as EDD goes.
 > Bob Dunn - BobWP
@@ -252,6 +252,51 @@ If it's digital, it can be sold with Easy Digital Downloads. Here are a few type
 9. Checkout screen
 
 == Changelog ==
+= 2.9.20, November 14, 2019 =
+* Fix: CSV download import issues with file to price assignments and AmazonS3 files.
+* Fix: The edd_after_payment_actions action fired via cron was missing attributes.
+* Fix: The SendWP connection link was visited if enter/return was pressed to update settings.
+* New: Promotional elements added to EDD admin screens.
+
+= 2.9.19, October 28, 2019 =
+* Fix: Limit register_meta calls to be for the download post type only, in preparation for WordPress 5.3 compatibility.
+
+= 2.9.18, October 21, 2019 =
+* Fix: Updated calls to register_meta for WordPress 5.3 compatibility.
+* Fix: Refactored edd_get_payment_status to work when Payment statuses are translated.
+* Fix: Improved the compatibility of file downloads with hosting configurations that involve symlinks for uploads.
+* Dev: Added the 'edd_show_nginx_redirect_notice' filter to allow programmatically hiding the nginx file protection admin notice.
+* Dev: Added polyfills for is_countable and is_iterable into EDD core.
+
+= 2.9.17, October 2, 2019 =
+* Security Fix: Prevent an authentication bypass to the EDD REST API when no API keys exist.
+
+= 2.9.16, June 11, 2019 =
+* Security Fix: Prevent a stored XSS (Cross Site Scripting) attempt on the IP addresses for logs.
+
+= 2.9.15, May 31, 2019 =
+* Fix: Prevent a fatal error during checkout when no gateways are returned as active.
+* New: Added support for SendWP to help with email deliverability.
+
+= 2.9.14, May 8, 2019 =
+* Fix: Corrected an issue in local file location detection for Windows servers.
+
+= 2.9.13, May 7, 2019 =
+* Fix: An error was being logged when using API V2 to get products by category.
+* Fix: Corrected an issue with multisite on versions of WordPress greater than 5.0.
+* Fix: Multiple improvements with the EDD_License handler.
+* Fix: Made it possible to add products to product-less payments.
+* Fix: Fixed the link to filter file download logs by customer.
+* Fix: Improved strength of file download link hashes.
+* Fix: Improved local file location detection.
+
+= 2.9.12, March 26, 2019 =
+* Fix: Limit PayPal PDT verification to purchase sessions.
+* Fix: Discount start times were not accounting for GMT offsets.
+* Fix: Improved reliability of the State field when selecting different countries.
+* Fix: GDPR Data Exporter now skips any requests for customer data when no customer is found for a user.
+* Fix: WordPress 5.x : apiFetch call was resulting in invalid JSON response.
+* Fix: Corrected a conditional check typo when determining if settings page is EDD related.
 
 = 2.9.11, January 6, 2019 =
 * Fix: PayPal PDT amount validation fails for some accounts due to missing payment_gross field.

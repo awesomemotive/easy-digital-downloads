@@ -762,7 +762,7 @@ class EDD_Payment_History_Table extends List_Table {
 			'gateway'  => $gateway,
 			'mode'     => $mode,
 			'type'     => $type,
-			's'        => $search,
+			'search'   => $search,
 		);
 
 		// Search

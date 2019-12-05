@@ -354,6 +354,7 @@ a.edd-delete:hover {
 #edd-add-ons .edd-extension .wp-post-image {
 	width: 100%;
 	height: auto;
+	vertical-align: bottom;
 }
 
 /* Insert Download
@@ -2124,6 +2125,73 @@ body.download_page_edd-reports {
 	width: 33.3%;
 }
 
+#edd_tax_rates {
+	margin: 1em 0 0;
+}
+
+[id*="edd-sendwp-"].button {
+	font-size: 16px;
+	height: auto;
+	padding: 8px 14px;
+	margin: 0 0 6px;
+}
+[id*="edd-sendwp-"].button .dashicons {
+	line-height: 29px;
+	margin-right: 8px;
+}
+[id*="edd-sendwp-"].button .edd-loading,
+[id*="edd-sendwp-"].button .edd-loading:after {
+	border-radius: 50%;
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+}
+[id*="edd-sendwp-"].button .edd-loading {
+	position: relative;
+	top: 3px;
+	margin-left: 4px;
+	box-shadow: 0 0 2px rgba(0,0,0,.2);
+}
+[id*="edd-sendwp-"].button .edd-loading {
+	-webkit-animation: edd-spinning 1.1s infinite linear;
+	animation: edd-spinning 1.1s infinite linear;
+	border-top: 2px solid rgba(255, 255, 255, 0.5);
+	border-right: 2px solid rgba(255, 255, 255, 0.5);
+	border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+	border-left: 2px solid #fff;
+	font-size: 14px;
+	filter: alpha(opacity=0);
+	-ms-transform: translateZ(0);
+	transform: translateZ(0);
+}
+#edd-sendwp-disconnect.button .edd-loading.dark {
+	border-top-color: rgba(0, 0, 0, 0.2);
+	border-right-color: rgba(0, 0, 0, 0.2);
+	border-bottom-color: rgba(0, 0, 0, 0.2);
+	border-left-color: #666;
+	box-shadow: none;
+}
+@-webkit-keyframes edd-spinning {
+	0% {
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	100% {
+		-webkit-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+@keyframes edd-spinning {
+	0% {
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	100% {
+		-webkit-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
+
 #edd-reports-tiles-wrap #dashboard-widgets .sortable-placeholder {
 	padding: 0;
 	margin: 0 0 20px 0;
@@ -3296,4 +3364,183 @@ div:not(#edd-item-tab-wrapper) + #edd-item-card-wrapper .item-section { /** [1] 
 .section-content {
 	border-left: 1px solid #e5e5e5;
 	min-height: 155px;
+}
+
+#edd-debug-log .edd-inline-button {
+	margin-left: 5px;
+}
+
+/* Promotional element styles
+-------------------------------------------------------------- */
+
+/* Settings sidebar */
+.edd-settings-sidebar {
+	padding-top: 27px;
+}
+
+.edd-settings-sidebar-content {
+	background-color: #fff;
+	text-align: center;
+	border: 1px solid #ddd;
+	box-sizing: border-box;
+	max-width: 300px;
+}
+
+.edd-settings-sidebar-content p {
+	font-size: 14px;
+	line-height: 1.5;
+	margin-top: 0;
+}
+
+/* Settings sidebar header section */
+.edd-sidebar-header-section {
+	background-color: #35495c;
+	line-height: 1;
+	padding: 26px 20px 24px;
+	border-bottom: 3px dashed #fafafa;
+}
+
+/* Settings sidebar description section */
+.edd-sidebar-description-section {
+	background-color: #fafafa;
+	padding: 16px 20px;
+	border-bottom: 1px solid #ddd;
+}
+
+.edd-sidebar-description-section .edd-sidebar-description {
+	margin: 0;
+}
+
+/* Settings sidebar coupon section */
+.edd-sidebar-coupon-section {
+	font-size: 14px;
+	padding: 16px 20px;
+}
+
+.edd-sidebar-coupon-section label {
+	display: block;
+	line-height: 1.4;
+	margin-bottom: 6px;
+}
+
+.edd-sidebar-coupon-section label strong {
+	color: #253b51;
+	font-weight: 700;
+}
+
+.edd-sidebar-coupon-section input {
+	background: #f4f7fa;
+	font-size: 22px;
+	font-weight: 600;
+	text-align: center;
+	padding: 10px;
+	border: 2px dashed #2794da;
+	border-radius: 4px;
+	margin-bottom: 16px;
+	box-shadow: none;
+	width: 100%;
+}
+
+.edd-sidebar-coupon-section input:focus {
+	border: 2px dashed #2794da;
+	box-shadow: none;
+}
+
+.edd-settings-sidebar-content .edd-coupon-note {
+	color: #6c7883;
+	font-size: 13px;
+	font-style: italic;
+	margin: 0;
+}
+
+.edd-settings-sidebar-content .edd-coupon-note a {
+	color: #253b51;
+}
+
+.edd-settings-sidebar-content .edd-coupon-note a:hover {
+	text-decoration: none;
+}
+
+/* Settings sidebar footer section */
+.edd-sidebar-footer-section {
+	background-color: #fafafa;
+	padding: 16px 20px;
+	border-top: 1px solid #ddd;
+}
+
+.edd-sidebar-footer-section .edd-cta-button {
+	display: block;
+	background-color: #2794da;
+	color: #fff;
+	text-decoration: none;
+	font-size: 20px;
+	font-weight: 700;
+	text-transform: uppercase;
+	padding: 17px 10px;
+	border: none;
+	border-radius: 4px;
+	width: 100%;
+	box-sizing: border-box;
+	box-shadow: none;
+	transition: background-color .2s;
+}
+
+.edd-sidebar-footer-section .edd-cta-button:hover {
+	background-color: #2386c5;
+}
+
+/* Settings sidebar responsive behavior */
+@media all and ( min-width: 1080px ) {
+
+	.edd-has-sidebar .edd-settings-content {
+		float: left;
+		width: 67%;
+	}
+
+	.edd-has-sidebar .edd-settings-sidebar {
+		float: right;
+		width: 31%;
+	}
+}
+
+@media all and ( min-width: 1240px ) {
+
+	.edd-has-sidebar .edd-settings-content {
+		width: 74%;
+	}
+
+	.edd-has-sidebar .edd-settings-sidebar {
+		width: 23%;
+	}
+}
+
+/* Settings - Move sidebar below content only on Taxes tab */
+.taxes-tab .edd-has-sidebar .edd-settings-content,
+.taxes-tab .edd-has-sidebar .edd-settings-sidebar {
+	float: none;
+	width: 100%;
+}
+
+/* Extensions (add-ons) page promotional element */
+.bfcm-promo-img-container {
+	background-color: #35495c;
+	width: 100%;
+	height: 160px;
+}
+
+.bfcm-code {
+	color: #2794da;
+	font-weight: 700;
+}
+
+.sale-ends {
+	position: absolute;
+	bottom: 9px;
+	right: 14px;
+	display: inline-block;
+	color: #6c7883;
+	font-size: 12px;
+	text-align: right;
+	font-style: italic;
+	width: 150px;
 }
