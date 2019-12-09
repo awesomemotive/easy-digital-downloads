@@ -415,13 +415,14 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @return string Column name.
 	 */
 	public function column_default( $order, $column_name ) {
+		$timezone_abbreviation = edd_get_timezone_abbr();
 		switch ( $column_name ) {
 			case 'amount':
 				$value = edd_currency_filter( edd_format_amount( $order->total ), $order->currency );
 				break;
 			case 'date':
 				$date  = EDD()->utils->date( $order->date_created, null, true )->toDateTimeString();
-				$value = '<time datetime="' . esc_attr( $date ) . '">' . edd_date_i18n( $date, 'M. d, Y' ) . '<br>' . edd_date_i18n( $date, 'H:i' ) . '</time>';
+				$value = '<time datetime="' . esc_attr( $date ) . '">' . edd_date_i18n( $date, 'M. d, Y' ) . '<br>' . edd_date_i18n( $date, 'H:i' ) . ' ' . $timezone_abbreviation . '</time>';
 				break;
 			case 'gateway':
 				$value = edd_get_gateway_admin_label( $order->gateway );

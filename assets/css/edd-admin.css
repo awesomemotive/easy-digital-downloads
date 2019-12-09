@@ -1962,9 +1962,6 @@ body.download_page_edd-reports {
 #edd-dashboard-widgets-wrap .postbox h3 {
 	cursor: default;
 }
-.edd-graphs-date-options {
-	max-width: 130px !important; /* Chosen Override */
-}
 #edd-filters .filter-items .edd-date-range-options {
 	display: inline-block;
 	margin: 10px 4px 10px 0;

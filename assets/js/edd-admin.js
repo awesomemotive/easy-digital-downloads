@@ -1,1 +1,522 @@
-!function(e){var t={};function n(s){if(t[s])return t[s].exports;var o=t[s]={i:s,l:!1,exports:{}};return e[s].call(o.exports,o,o.exports,n),o.l=!0,o.exports}n.m=e,n.c=t,n.d=function(e,t,s){n.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:s})},n.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},n.t=function(e,t){if(1&t&&(e=n(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var s=Object.create(null);if(n.r(s),Object.defineProperty(s,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var o in e)n.d(s,o,function(t){return e[t]}.bind(null,o));return s},n.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return n.d(t,"a",t),t},n.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},n.p="",n(n.s=24)}([function(e,t,n){"use strict";n.d(t,"a",function(){return o});const s={disable_search_threshold:13,search_contains:!0,inherit_select_classes:!0,single_backstroke_delete:!1,placeholder_text_single:edd_vars.one_option,placeholder_text_multiple:edd_vars.one_or_more_option,no_results_text:edd_vars.no_results_text},o=e=>{let t=s;return e.data("search-type")&&delete t.disable_search_threshold,t}},,function(e,t,n){"use strict";n.d(t,"a",function(){return s});const s=function(e){e.tooltip({content:function(){return $(this).prop("title")},tooltipClass:"edd-ui-tooltip",position:{my:"center top",at:"center bottom+10",collision:"flipfit"},hide:{duration:200},show:{duration:200}})};jQuery(document).ready(function(e){s(e(".edd-help-tip"))})},,,,,,,,,,,function(e,t){jQuery(document).ready(function(e){const t=e("input.edd_datepicker");t.length>0&&t.attr("autocomplete","off").datepicker({dateFormat:edd_vars.date_picker_format,beforeShow:function(){e("#ui-datepicker-div").removeClass("ui-datepicker").addClass("edd-datepicker")}})})},function(e,t){jQuery(document).ready(function(e){e(".edd-vertical-sections.use-js .section-content").hide(),e(".edd-vertical-sections.use-js .section-content:first-child").show(),e(".edd-vertical-sections.use-js .section-nav :first-child").attr("aria-selected","true"),e(".which-section").text(e(".section-nav :first-child a").text()),e(".edd-vertical-sections.use-js .section-nav li a").on("click",function(t){t.preventDefault();const n=e(this),s=n.attr("href"),o=n.parents(".edd-vertical-sections");o.find(".section-content").hide(),o.find(s).show(),o.find(".section-title").attr("aria-selected","false"),n.parent().attr("aria-selected","true"),o.find("div.chosen-container").css("width","100%"),e(".which-section").text(n.text())})})},function(e,t){jQuery(document).ready(function(e){const t=e("ul.edd-sortable-list");t.length>0&&t.sortable({axis:"y",items:"li",cursor:"move",tolerance:"pointer",containment:"parent",distance:2,opacity:.7,scroll:!0,stop:function(){const t=e.map(e(this).children("li"),function(t){return e(t).data("key")});e(this).prev("input.edd-order").val(t)}})})},function(e,t){jQuery(document).ready(function(e){e(".edd-ajax-user-search").keyup(function(){let t=e(this).val(),n="";e(this).data("exclude")&&(n=e(this).data("exclude")),e(".edd_user_search_wrap").addClass("loading");const s={action:"edd_search_users",user_name:t,exclude:n};e.ajax({type:"POST",data:s,dataType:"json",url:ajaxurl,success:function(t){e(".edd_user_search_wrap").removeClass("loading"),e(".edd_user_search_results").removeClass("hidden"),e(".edd_user_search_results span").html(""),t.results&&e(t.results).appendTo(".edd_user_search_results span")}})}).blur(function(){t?t=!1:(e(this).removeClass("loading"),e(".edd_user_search_results").addClass("hidden"))}).focus(function(){e(this).keyup()}),e(document.body).on("click.eddSelectUser",".edd_user_search_results span a",function(t){t.preventDefault();const n=e(this).data("login");e(".edd-ajax-user-search").val(n),e(".edd_user_search_results").addClass("hidden"),e(".edd_user_search_results span").html("")}),e(document.body).on("click.eddCancelUserSearch",".edd_user_search_results a.edd-ajax-user-cancel",function(t){t.preventDefault(),e(".edd-ajax-user-search").val(""),e(".edd_user_search_results").addClass("hidden"),e(".edd_user_search_results span").html("")});var t=!1;e(".edd_user_search_results").mousedown(function(){t=!0})})},,,,,,,,function(e,t,n){"use strict";n.r(t);n(13);var s=n(0);jQuery(document).ready(function(e){e(".edd-select-chosen").each(function(){const t=e(this);t.chosen(Object(s.a)(t))}),e(".edd-select-chosen .chosen-search input").each(function(){if(e(this).attr("placeholder"))return;const t=e(this).parent().parent().parent().prev("select.edd-select-chosen").data("search-placeholder");t&&e(this).attr("placeholder",t)}),e(".chosen-choices").on("click",function(){let t=e(this).parent().prev().data("search-placeholder");void 0===t&&(t=edd_vars.type_to_search),e(this).children("li").children("input").attr("placeholder",t)}),e("#post").on("click",".edd-thickbox",function(){e(".edd-select-chosen","#choose-download").css("width","100%")});e(document.body).on("keyup",".edd-select-chosen .chosen-search input, .edd-select-chosen .search-field input",_.debounce(function(t){let n=e(this),s=n.val(),o=n.closest(".edd-select-chosen"),r=o.prev(),a=r.data("search-type"),c=o.hasClass("no-bundles"),d=o.hasClass("variations"),i=o.hasClass("variations-only"),l=t.which,u="edd_download_search";o.attr("id").replace("_chosen",""),void 0!==a&&"no_ajax"!==a&&(u="edd_"+a+"_search",s.length<=3&&"edd_download_search"===u||16===l||13===l||91===l||17===l||37===l||38===l||39===l||40===l?o.children(".spinner").remove():(o.children(".spinner").length||o.append('<span class="spinner is-active"></span>'),e.ajax({type:"GET",dataType:"json",url:ajaxurl,data:{s:s,action:u,no_bundles:c,variations:d,variations_only:i},beforeSend:function(){r.closest("ul.chosen-results").empty()},success:function(t){e("option:not(:selected)",r).remove(),e.each(t,function(t,n){e('option[value="'+n.id+'"]',r).length||r.prepend('<option value="'+n.id+'">'+n.name+"</option>")});const s=n.val();r.trigger("chosen:updated"),n.val(s)}}).fail(function(e){window.console&&window.console.log&&console.log(e)}).done(function(e){o.children(".spinner").remove()})))},342))});n(2),n(14),n(15),n(16)}]);
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./assets/js/admin/index.js");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./assets/js/admin/components/chosen/index.js":
+/*!****************************************************!*\
+  !*** ./assets/js/admin/components/chosen/index.js ***!
+  \****************************************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var utils_chosen_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! utils/chosen.js */ "./assets/js/utils/chosen.js");
+/* global _ */
+
+/**
+ * Internal dependencies.
+ */
+
+jQuery(document).ready(function ($) {
+  // Globally apply to elements on the page.
+  $('.edd-select-chosen').each(function () {
+    var el = $(this);
+    el.chosen(Object(utils_chosen_js__WEBPACK_IMPORTED_MODULE_0__["getChosenVars"])(el));
+  });
+  $('.edd-select-chosen .chosen-search input').each(function () {
+    // Bail if placeholder already set
+    if ($(this).attr('placeholder')) {
+      return;
+    }
+
+    var selectElem = $(this).parent().parent().parent().prev('select.edd-select-chosen'),
+        placeholder = selectElem.data('search-placeholder');
+
+    if (placeholder) {
+      $(this).attr('placeholder', placeholder);
+    }
+  }); // Add placeholders for Chosen input fields
+
+  $('.chosen-choices').on('click', function () {
+    var placeholder = $(this).parent().prev().data('search-placeholder');
+
+    if (typeof placeholder === 'undefined') {
+      placeholder = edd_vars.type_to_search;
+    }
+
+    $(this).children('li').children('input').attr('placeholder', placeholder);
+  }); // This fixes the Chosen box being 0px wide when the thickbox is opened
+
+  $('#post').on('click', '.edd-thickbox', function () {
+    $('.edd-select-chosen', '#choose-download').css('width', '100%');
+  }); // Variables for setting up the typing timer
+  // Time in ms, Slow - 521ms, Moderate - 342ms, Fast - 300ms
+
+  var userInteractionInterval = 342,
+      typingTimerElements = '.edd-select-chosen .chosen-search input, .edd-select-chosen .search-field input',
+      typingTimer; // Replace options with search results
+
+  $(document.body).on('keyup', typingTimerElements, _.debounce(function (e) {
+    var element = $(this),
+        val = element.val(),
+        container = element.closest('.edd-select-chosen'),
+        select = container.prev(),
+        select_type = select.data('search-type'),
+        no_bundles = container.hasClass('no-bundles'),
+        variations = container.hasClass('variations'),
+        variations_only = container.hasClass('variations-only'),
+        lastKey = e.which,
+        search_type = 'edd_download_search'; // String replace the chosen container IDs
+
+    container.attr('id').replace('_chosen', ''); // Detect if we have a defined search type, otherwise default to downloads
+
+    if (typeof select_type !== 'undefined') {
+      // Don't trigger AJAX if this select has all options loaded
+      if ('no_ajax' === select_type) {
+        return;
+      }
+
+      search_type = 'edd_' + select_type + '_search';
+    } else {
+      return;
+    } // Don't fire if short or is a modifier key (shift, ctrl, apple command key, or arrow keys)
+
+
+    if (val.length <= 3 && 'edd_download_search' === search_type || lastKey === 16 || lastKey === 13 || lastKey === 91 || lastKey === 17 || lastKey === 37 || lastKey === 38 || lastKey === 39 || lastKey === 40) {
+      container.children('.spinner').remove();
+      return;
+    } // Maybe append a spinner
+
+
+    if (!container.children('.spinner').length) {
+      container.append('<span class="spinner is-active"></span>');
+    }
+
+    $.ajax({
+      type: 'GET',
+      dataType: 'json',
+      url: ajaxurl,
+      data: {
+        s: val,
+        action: search_type,
+        no_bundles: no_bundles,
+        variations: variations,
+        variations_only: variations_only
+      },
+      beforeSend: function beforeSend() {
+        select.closest('ul.chosen-results').empty();
+      },
+      success: function success(data) {
+        // Remove all options but those that are selected
+        $('option:not(:selected)', select).remove(); // Add any option that doesn't already exist
+
+        $.each(data, function (key, item) {
+          if (!$('option[value="' + item.id + '"]', select).length) {
+            select.prepend('<option value="' + item.id + '">' + item.name + '</option>');
+          }
+        }); // Get the text immediately before triggering an update.
+        // Any sooner will cause the text to jump around.
+
+        var val = element.val(); // Update the options
+
+        select.trigger('chosen:updated');
+        element.val(val);
+      }
+    }).fail(function (response) {
+      if (window.console && window.console.log) {
+        console.log(response);
+      }
+    }).done(function (response) {
+      container.children('.spinner').remove();
+    });
+  }, userInteractionInterval));
+});
+
+/***/ }),
+
+/***/ "./assets/js/admin/components/date-picker/index.js":
+/*!*********************************************************!*\
+  !*** ./assets/js/admin/components/date-picker/index.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * Date picker
+ *
+ * This juggles a few CSS classes to avoid styling collisions with other
+ * third-party plugins.
+ */
+jQuery(document).ready(function ($) {
+  var edd_datepicker = $('input.edd_datepicker');
+
+  if (edd_datepicker.length > 0) {
+    edd_datepicker // Disable autocomplete to avoid it covering the calendar
+    .attr('autocomplete', 'off') // Invoke the datepickers
+    .datepicker({
+      dateFormat: edd_vars.date_picker_format,
+      beforeShow: function beforeShow() {
+        $('#ui-datepicker-div').removeClass('ui-datepicker').addClass('edd-datepicker');
+      }
+    });
+  }
+});
+
+/***/ }),
+
+/***/ "./assets/js/admin/components/sortable-list/index.js":
+/*!***********************************************************!*\
+  !*** ./assets/js/admin/components/sortable-list/index.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * Sortables
+ *
+ * This makes certain settings sortable, and attempts to stash the results
+ * in the nearest .edd-order input value.
+ */
+jQuery(document).ready(function ($) {
+  var edd_sortables = $('ul.edd-sortable-list');
+
+  if (edd_sortables.length > 0) {
+    edd_sortables.sortable({
+      axis: 'y',
+      items: 'li',
+      cursor: 'move',
+      tolerance: 'pointer',
+      containment: 'parent',
+      distance: 2,
+      opacity: 0.7,
+      scroll: true,
+
+      /**
+       * When sorting stops, assign the value to the previous input.
+       * This input should be a hidden text field
+       */
+      stop: function stop() {
+        var keys = $.map($(this).children('li'), function (el) {
+          return $(el).data('key');
+        });
+        $(this).prev('input.edd-order').val(keys);
+      }
+    });
+  }
+});
+
+/***/ }),
+
+/***/ "./assets/js/admin/components/tooltips/index.js":
+/*!******************************************************!*\
+  !*** ./assets/js/admin/components/tooltips/index.js ***!
+  \******************************************************/
+/*! exports provided: edd_attach_tooltips */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "edd_attach_tooltips", function() { return edd_attach_tooltips; });
+/**
+ * Attach tooltips
+ *
+ * @param {string} selector
+ */
+var edd_attach_tooltips = function edd_attach_tooltips(selector) {
+  selector.tooltip({
+    content: function content() {
+      return $(this).prop('title');
+    },
+    tooltipClass: 'edd-ui-tooltip',
+    position: {
+      my: 'center top',
+      at: 'center bottom+10',
+      collision: 'flipfit'
+    },
+    hide: {
+      duration: 200
+    },
+    show: {
+      duration: 200
+    }
+  });
+};
+jQuery(document).ready(function ($) {
+  edd_attach_tooltips($('.edd-help-tip'));
+});
+
+/***/ }),
+
+/***/ "./assets/js/admin/components/user-search/index.js":
+/*!*********************************************************!*\
+  !*** ./assets/js/admin/components/user-search/index.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+jQuery(document).ready(function ($) {
+  // AJAX user search
+  $('.edd-ajax-user-search') // Search
+  .keyup(function () {
+    var user_search = $(this).val(),
+        exclude = '';
+
+    if ($(this).data('exclude')) {
+      exclude = $(this).data('exclude');
+    }
+
+    $('.edd_user_search_wrap').addClass('loading');
+    var data = {
+      action: 'edd_search_users',
+      user_name: user_search,
+      exclude: exclude
+    };
+    $.ajax({
+      type: 'POST',
+      data: data,
+      dataType: 'json',
+      url: ajaxurl,
+      success: function success(search_response) {
+        $('.edd_user_search_wrap').removeClass('loading');
+        $('.edd_user_search_results').removeClass('hidden');
+        $('.edd_user_search_results span').html('');
+
+        if (search_response.results) {
+          $(search_response.results).appendTo('.edd_user_search_results span');
+        }
+      }
+    });
+  }) // Hide
+  .blur(function () {
+    if (edd_user_search_mouse_down) {
+      edd_user_search_mouse_down = false;
+    } else {
+      $(this).removeClass('loading');
+      $('.edd_user_search_results').addClass('hidden');
+    }
+  }) // Show
+  .focus(function () {
+    $(this).keyup();
+  });
+  $(document.body).on('click.eddSelectUser', '.edd_user_search_results span a', function (e) {
+    e.preventDefault();
+    var login = $(this).data('login');
+    $('.edd-ajax-user-search').val(login);
+    $('.edd_user_search_results').addClass('hidden');
+    $('.edd_user_search_results span').html('');
+  });
+  $(document.body).on('click.eddCancelUserSearch', '.edd_user_search_results a.edd-ajax-user-cancel', function (e) {
+    e.preventDefault();
+    $('.edd-ajax-user-search').val('');
+    $('.edd_user_search_results').addClass('hidden');
+    $('.edd_user_search_results span').html('');
+  }); // Cancel user-search.blur when picking a user
+
+  var edd_user_search_mouse_down = false;
+  $('.edd_user_search_results').mousedown(function () {
+    edd_user_search_mouse_down = true;
+  });
+});
+
+/***/ }),
+
+/***/ "./assets/js/admin/components/vertical-sections/index.js":
+/*!***************************************************************!*\
+  !*** ./assets/js/admin/components/vertical-sections/index.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+jQuery(document).ready(function ($) {
+  // Hides the section content.
+  $('.edd-vertical-sections.use-js .section-content').hide(); // Shows the first section's content.
+
+  $('.edd-vertical-sections.use-js .section-content:first-child').show(); // Makes the 'aria-selected' attribute true for the first section nav item.
+
+  $('.edd-vertical-sections.use-js .section-nav :first-child').attr('aria-selected', 'true'); // Copies the current section item title to the box header.
+
+  $('.which-section').text($('.section-nav :first-child a').text()); // When a section nav item is clicked.
+
+  $('.edd-vertical-sections.use-js .section-nav li a').on('click', function (j) {
+    // Prevent the default browser action when a link is clicked.
+    j.preventDefault(); // Get the `href` attribute of the item.
+
+    var them = $(this),
+        href = them.attr('href'),
+        rents = them.parents('.edd-vertical-sections'); // Hide all section content.
+
+    rents.find('.section-content').hide(); // Find the section content that matches the section nav item and show it.
+
+    rents.find(href).show(); // Set the `aria-selected` attribute to false for all section nav items.
+
+    rents.find('.section-title').attr('aria-selected', 'false'); // Set the `aria-selected` attribute to true for this section nav item.
+
+    them.parent().attr('aria-selected', 'true'); // Maybe re-Chosen
+
+    rents.find('div.chosen-container').css('width', '100%'); // Copy the current section item title to the box header.
+
+    $('.which-section').text(them.text());
+  }); // click()
+});
+
+/***/ }),
+
+/***/ "./assets/js/admin/index.js":
+/*!**********************************!*\
+  !*** ./assets/js/admin/index.js ***!
+  \**********************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_date_picker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/date-picker */ "./assets/js/admin/components/date-picker/index.js");
+/* harmony import */ var _components_date_picker__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_components_date_picker__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _components_chosen__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/chosen */ "./assets/js/admin/components/chosen/index.js");
+/* harmony import */ var _components_tooltips__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/tooltips */ "./assets/js/admin/components/tooltips/index.js");
+/* harmony import */ var _components_vertical_sections__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/vertical-sections */ "./assets/js/admin/components/vertical-sections/index.js");
+/* harmony import */ var _components_vertical_sections__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_components_vertical_sections__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _components_sortable_list__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/sortable-list */ "./assets/js/admin/components/sortable-list/index.js");
+/* harmony import */ var _components_sortable_list__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_components_sortable_list__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _components_user_search__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/user-search */ "./assets/js/admin/components/user-search/index.js");
+/* harmony import */ var _components_user_search__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_components_user_search__WEBPACK_IMPORTED_MODULE_5__);
+/**
+ * Internal dependencies.
+ */
+
+
+
+
+
+
+
+/***/ }),
+
+/***/ "./assets/js/utils/chosen.js":
+/*!***********************************!*\
+  !*** ./assets/js/utils/chosen.js ***!
+  \***********************************/
+/*! exports provided: chosenVars, getChosenVars */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "chosenVars", function() { return chosenVars; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getChosenVars", function() { return getChosenVars; });
+/* global edd_vars */
+var chosenVars = {
+  disable_search_threshold: 13,
+  search_contains: true,
+  inherit_select_classes: true,
+  single_backstroke_delete: false,
+  placeholder_text_single: edd_vars.one_option,
+  placeholder_text_multiple: edd_vars.one_or_more_option,
+  no_results_text: edd_vars.no_results_text
+};
+/**
+ * Determine the variables used to initialie Chosen on an element.
+ *
+ * @param {Object} el select element.
+ * @return {Object} Variables for Chosen.
+ */
+
+var getChosenVars = function getChosenVars(el) {
+  var inputVars = chosenVars; // Ensure <select data-search-type="download"> or similar can use search always.
+  // These types of fields start with no options and are updated via AJAX.
+
+  if (el.data('search-type')) {
+    delete inputVars.disable_search_threshold;
+  }
+
+  return inputVars;
+};
+
+/***/ })
+
+/******/ });
+//# sourceMappingURL=edd-admin.js.map

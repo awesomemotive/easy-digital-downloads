@@ -63,6 +63,9 @@ class EDD_Customer_Reports_Table extends List_Table {
 	 * @return string Column Name
 	 */
 	public function column_default( $item, $column_name ) {
+
+		$timezone_abbreviation = edd_get_timezone_abbr();
+
 		switch ( $column_name ) {
 
 			case 'id' :
@@ -86,7 +89,7 @@ class EDD_Customer_Reports_Table extends List_Table {
 				break;
 
 			case 'date_created' :
-				$value = '<time datetime="' . esc_attr( $item['date_created'] ) . '">' . edd_date_i18n( $item['date_created'], 'M. d, Y' ) . '<br>' . edd_date_i18n( $item['date_created'], 'H:i' ) . '</time>';
+				$value = '<time datetime="' . esc_attr( $item['date_created'] ) . '">' . edd_date_i18n( $item['date_created'], 'M. d, Y' ) . '<br>' . edd_date_i18n( $item['date_created'], 'H:i' ) . ' ' . $timezone_abbreviation . '</time>';
 				break;
 
 			default:

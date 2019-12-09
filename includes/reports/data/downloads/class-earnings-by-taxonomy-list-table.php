@@ -33,9 +33,8 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 	public function get_data() {
 		global $wpdb;
 
-		$date       = EDD()->utils->date( 'now' );
 		$filter     = Reports\get_filter_value( 'dates' );
-		$date_range = Reports\parse_dates_for_range( $date, $filter['range'] );
+		$date_range = Reports\parse_dates_for_range( $filter['range'] );
 
 		// Generate date query SQL if dates have been set.
 		$date_query_sql = '';

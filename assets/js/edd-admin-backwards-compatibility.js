@@ -91,9 +91,9 @@
   !*** ./assets/js/admin/backwards-compatibility.js ***!
   \****************************************************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-/* WEBPACK VAR INJECTION */(function(jQuery) {/* global edd_backcompat_vars */
+/* global edd_backcompat_vars */
 
 /**
  * Developer Notice: The contents of this JavaScript file are not to be relied on in any future versions of EDD
@@ -167,18 +167,6 @@ jQuery(document).ready(function ($) {
     $(this).prepend('<span class="edd-custom-price-option-section-title">' + edd_backcompat_vars.recurring_payments_settings + '</span>');
   });
 });
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! jquery */ "jquery")))
-
-/***/ }),
-
-/***/ "jquery":
-/*!*************************!*\
-  !*** external "jQuery" ***!
-  \*************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = jQuery;
 
 /***/ })
 
