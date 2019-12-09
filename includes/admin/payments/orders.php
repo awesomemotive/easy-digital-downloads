@@ -766,9 +766,9 @@ function edd_order_details_attributes( $order ) {
 		? ''
 		: edd_get_payment( $order->id )->get_recovery_url();
 
-	$order_date = edd_is_add_order_page()
-		? EDD()->utils->date( 'now', edd_get_timezone_id(), true )->timestamp
-		: strtotime( $order->date_created ); ?>
+	$order_date = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $order->date_created, 'utc', true ) );
+
+	?>
 
 	<div id="edd-order-update" class="postbox edd-order-data">
 		<h3 class="hndle">
@@ -808,16 +808,16 @@ function edd_order_details_attributes( $order ) {
 
 				<div class="edd-admin-box-inside">
 					<span class="label"><?php esc_html_e( 'Date:', 'easy-digital-downloads' ); ?></span>
-					<input type="text" name="edd-payment-date" value="<?php echo esc_attr( date( 'Y-m-d', $order_date ) ); ?>" class="medium-text edd_datepicker" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
+					<input type="text" name="edd-payment-date" value="<?php echo esc_attr( $order_date->format( 'Y-m-d' ) ); ?>" class="medium-text edd_datepicker" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
 				</div>
 
 				<div class="edd-admin-box-inside">
-					<span class="label"><?php esc_html_e( 'Time:', 'easy-digital-downloads' ); ?></span>
+					<span class="label"><?php echo esc_html( __( 'Time', 'easy-digital-downloads' ) . ' (' . edd_get_timezone_abbr() . ') :' ); ?></span>
 					<?php
 					echo EDD()->html->select( array(
 						'name'             => 'edd-payment-time-hour',
 						'options'          => edd_get_hour_values(),
-						'selected'         => date( 'G', $order_date ),
+						'selected'         => $order_date->format( 'G' ),
 						'chosen'           => true,
 						'class'            => 'edd-time',
 						'show_option_none' => false,
@@ -829,7 +829,7 @@ function edd_order_details_attributes( $order ) {
 					echo EDD()->html->select( array(
 						'name'             => 'edd-payment-time-min',
 						'options'          => edd_get_minute_values(),
-						'selected'         => date( 'i', $order_date ),
+						'selected'         => $order_date->format( 'i' ),
 						'chosen'           => true,
 						'class'            => 'edd-time',
 						'show_option_none' => false,

@@ -165,6 +165,8 @@ $minutes      = edd_get_minute_values();
 							'show_option_none' => false,
 							'show_option_all'  => false,
 						) ); // WPCS: XSS ok.
+
+						echo esc_html( ' (' . edd_get_timezone_abbr() . ')' );
 						?>
 						<p class="description"><?php esc_html_e( 'Pick the date this discount will start on. Leave blank for no start date.', 'easy-digital-downloads' ); ?></p>
 					</td>
@@ -200,6 +202,8 @@ $minutes      = edd_get_minute_values();
 							'show_option_none' => false,
 							'show_option_all'  => false,
 						) ); // WPCS: XSS ok.
+
+						echo esc_html( ' (' . edd_get_timezone_abbr() . ')' );
 						?>
 						<p class="description"><?php esc_html_e( 'Pick the date this discount will expire on. Leave blank to never expire.', 'easy-digital-downloads' ); ?></p>
 					</td>

@@ -749,7 +749,8 @@ function edd_parse_report_dates( $form_data ) {
 
 				} else {
 
-					$dates = Reports\parse_dates_for_range( EDD()->utils->date(), $range );
+					$date  = EDD()->utils->date( 'now', edd_get_timezone_id(), false );
+					$dates = Reports\parse_dates_for_range( $range );
 					$session_data = array(
 						'from'  => $dates['start']->format( 'date-mysql' ),
 						'to'    => $dates['end']->format( 'date-mysql' ),
