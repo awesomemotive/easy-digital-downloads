@@ -25,6 +25,9 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit;
 // Load EDD file.
 include_once( 'easy-digital-downloads.php' );
 
+$plugin = new EDD_Requirements_Check;
+$plugin->bootstrap();
+
 global $wpdb, $wp_roles;
 
 if( edd_get_option( 'uninstall_on_delete' ) ) {
