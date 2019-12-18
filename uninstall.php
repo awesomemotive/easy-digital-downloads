@@ -125,7 +125,12 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 	}
 
 	// Remove all database tables
-	$edd_db_tables = array( 'customers', 'customermeta', 'adjustment', 'adjustmentmeta', 'logs', 'logmeta', 'notes', 'notemeta', 'orders', 'ordermeta', 'order_items', 'order_itemmeta', 'order_adjustments' );
+	$edd_db_tables = array(
+		'adjustmentmeta', 'adjustments', 'customer_addresses', 'customer_email_addresses', 'customermeta', 'customers',
+		'logmeta', 'logs', 'logs_api_requestmeta', 'logs_api_requests', 'logs_file_downloadmeta', 'logs_file_downloads',
+		'notemeta', 'notes', 'order_addresses', 'order_adjustmentmeta', 'order_itemmeta', 'order_items',
+		'order_transactions', 'ordermeta', 'orders'
+	);
 	foreach ( $edd_db_tables as $table ) {
 		$query = "DROP TABLE IF EXISTS {$wpdb->prefix}edd_{$table}";
 		$wpdb->query( $query );
