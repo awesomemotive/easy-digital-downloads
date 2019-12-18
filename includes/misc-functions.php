@@ -1586,7 +1586,7 @@ function edd_format_counts( $counts = array(), $groupby = '' ) {
 			$c[ $count[ $groupby ] ] = absint( $count['count'] );
 
 			// We don't want to include trashed orders in the counts.
-			if ( 'trash' !== $count['status'] ) {
+			if ( ! isset( $count['status'] ) || 'trash' !== $count['status'] ) {
 				$c['total'] += $count['count'];
 			}
 		}
