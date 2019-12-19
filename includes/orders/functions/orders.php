@@ -1037,9 +1037,10 @@ function edd_build_order( $order_data = array() ) {
 		? $order_data['user_info']['discount']
 		: array();
 
+
 	if ( ! is_array( $discounts ) ) {
 		/** @var string $discounts */
-		$discounts = explode( ',', $discounts );
+		$discounts = array_map( 'trim', explode( ',', $discounts ) );
 	}
 
 	if ( ! empty( $discounts ) && ( 'none' !== $discounts[0] ) ) {
