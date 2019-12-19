@@ -1056,10 +1056,11 @@ function edd_build_order( $order_data = array() ) {
 					'object_type' => 'order',
 					'type_id'     => $discount->id,
 					'type'        => 'discount',
-					'description' => $discount,
+					'description' => $discount->code,
 					'subtotal'    => $discounted_amount,
 					'total'       => $discounted_amount,
 				) );
+
 			}
 		}
 	}
