@@ -91,9 +91,9 @@
   !*** ./assets/js/admin/tools/index.js ***!
   \****************************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-/**
+/* WEBPACK VAR INJECTION */(function($, jQuery) {/**
  * Tools screen JS
  */
 var EDD_Tools = {
@@ -207,6 +207,18 @@ var EDD_Tools = {
 jQuery(document).ready(function ($) {
   EDD_Tools.init();
 });
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! jquery */ "jquery"), __webpack_require__(/*! jquery */ "jquery")))
+
+/***/ }),
+
+/***/ "jquery":
+/*!*************************!*\
+  !*** external "jQuery" ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = jQuery;
 
 /***/ })
 

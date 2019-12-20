@@ -91,9 +91,9 @@
   !*** ./assets/js/admin/tools/import/index.js ***!
   \***********************************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-/**
+/* WEBPACK VAR INJECTION */(function($, jQuery) {/**
  * Import screen JS
  */
 var EDD_Import = {
@@ -237,6 +237,18 @@ var EDD_Import = {
 jQuery(document).ready(function ($) {
   EDD_Import.init();
 });
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! jquery */ "jquery"), __webpack_require__(/*! jquery */ "jquery")))
+
+/***/ }),
+
+/***/ "jquery":
+/*!*************************!*\
+  !*** external "jQuery" ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = jQuery;
 
 /***/ })
 

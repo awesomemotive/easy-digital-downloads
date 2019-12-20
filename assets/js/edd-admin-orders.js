@@ -95,21 +95,13 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var utils_chosen_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! utils/chosen.js */ "./assets/js/utils/chosen.js");
+/* WEBPACK VAR INJECTION */(function($, jQuery) {/* harmony import */ var utils_chosen_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! utils/chosen.js */ "./assets/js/utils/chosen.js");
 /* harmony import */ var _override_amounts_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./override-amounts.js */ "./assets/js/admin/orders/override-amounts.js");
 /**
  * Internal dependencies.
  */
 
 
-jQuery(document).ready(function ($) {
-  // Toggle advanced filters on Orders page.
-  $('.edd-advanced-filters-button').on('click', function (e) {
-    // Prevnt submit action
-    e.preventDefault();
-    $('#edd-advanced-filters').toggleClass('open');
-  });
-});
 var edd_admin_globals = {};
 /**
  * Add order
@@ -124,6 +116,7 @@ var EDD_Add_Order = {
     this.select_address();
     this.recalculate_total();
     this.validate();
+    this.filters();
   },
   add_order_item: function add_order_item() {
     var button = $('.edd-add-order-item-button'); // Toggle form.
@@ -516,12 +509,34 @@ var EDD_Add_Order = {
         return false;
       }
     });
+  },
+  filters: function filters() {
+    $('.edd_countries_filter').on('change', function () {
+      var select = $(this),
+          data = {
+        action: 'edd_get_shop_states',
+        country: select.val(),
+        nonce: select.data('nonce'),
+        field_name: 'edd_regions_filter'
+      };
+      $.post(ajaxurl, data, function (response) {
+        $('select.edd_regions_filter').find('option:gt(0)').remove();
+
+        if ('nostates' !== response) {
+          $(response).find('option:gt(0)').appendTo('select.edd_regions_filter');
+        }
+
+        $('select.edd_regions_filter').trigger('chosen:updated');
+      });
+      return false;
+    });
   }
 };
 jQuery(document).ready(function ($) {
   EDD_Add_Order.init();
 });
 /* harmony default export */ __webpack_exports__["default"] = (EDD_Add_Order);
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! jquery */ "jquery"), __webpack_require__(/*! jquery */ "jquery")))
 
 /***/ }),
 
@@ -534,7 +549,7 @@ jQuery(document).ready(function ($) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index.js */ "./assets/js/admin/orders/index.js");
+/* WEBPACK VAR INJECTION */(function($) {/* harmony import */ var _index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index.js */ "./assets/js/admin/orders/index.js");
 /* global _ */
 
 /**
@@ -587,6 +602,7 @@ __webpack_require__.r(__webpack_exports__);
     document.getElementById('edd-add-order-form').appendChild(input);
   });
 })();
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! jquery */ "jquery")))
 
 /***/ }),
 
@@ -628,6 +644,17 @@ var getChosenVars = function getChosenVars(el) {
 
   return inputVars;
 };
+
+/***/ }),
+
+/***/ "jquery":
+/*!*************************!*\
+  !*** external "jQuery" ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = jQuery;
 
 /***/ })
 

@@ -91,9 +91,9 @@
   !*** ./assets/js/admin/notes/index.js ***!
   \****************************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-/**
+/* WEBPACK VAR INJECTION */(function($, jQuery) {/**
  * Notes
  */
 var EDD_Notes = {
@@ -218,6 +218,18 @@ var EDD_Notes = {
 jQuery(document).ready(function ($) {
   EDD_Notes.init();
 });
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! jquery */ "jquery"), __webpack_require__(/*! jquery */ "jquery")))
+
+/***/ }),
+
+/***/ "jquery":
+/*!*************************!*\
+  !*** external "jQuery" ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = jQuery;
 
 /***/ })
 
