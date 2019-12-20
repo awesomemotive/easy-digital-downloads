@@ -95,7 +95,7 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "recalculate_taxes", function() { return recalculate_taxes; });
+/* WEBPACK VAR INJECTION */(function(jQuery) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "recalculate_taxes", function() { return recalculate_taxes; });
 /* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils.js */ "./assets/js/frontend/checkout/utils.js");
 /**
  * Internal dependencies.
@@ -469,6 +469,7 @@ window.EDD_Checkout = function ($) {
 
 
 window.jQuery(document).ready(EDD_Checkout.init);
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! jquery */ "jquery")))
 
 /***/ }),
 
@@ -517,7 +518,7 @@ var getCreditCardIcon = function getCreditCardIcon(type) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _checkout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./checkout */ "./assets/js/frontend/checkout/index.js");
+/* WEBPACK VAR INJECTION */(function(jQuery) {/* harmony import */ var _checkout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./checkout */ "./assets/js/frontend/checkout/index.js");
 /* global edd_scripts, edd_global_vars */
 
 /**
@@ -905,7 +906,9 @@ jQuery(document).ready(function ($) {
       field_name = 'edd_address_state';
     }
 
-    if ('card_state' !== $this.attr('id')) {
+    var state_inputs = document.getElementById(field_name);
+
+    if ('card_state' !== $this.attr('id') && null != state_inputs) {
       var nonce = $(this).data('nonce'); // If the country field has changed, we need to update the state/province field
 
       var postData = {
@@ -931,7 +934,7 @@ jQuery(document).ready(function ($) {
           var state_inputs = 'input[name="card_state"], select[name="card_state"], input[name="edd_address_state"], select[name="edd_address_state"]';
 
           if ('nostates' === $.trim(response)) {
-            var text_field = '<input type="text" name="card_state" class="card-state edd-input required" value=""/>';
+            var text_field = '<input type="text" id="' + field_name + '" name="card_state" class="card-state edd-input required" value=""/>';
             $form.find(state_inputs).replaceWith(text_field);
           } else {
             $form.find(state_inputs).replaceWith(response);
@@ -994,6 +997,18 @@ function edd_load_gateway(payment_mode) {
 
 
 window.edd_load_gateway = edd_load_gateway;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! jquery */ "jquery")))
+
+/***/ }),
+
+/***/ "jquery":
+/*!*************************!*\
+  !*** external "jQuery" ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = jQuery;
 
 /***/ })
 

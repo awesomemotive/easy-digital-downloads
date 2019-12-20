@@ -91,9 +91,9 @@
   !*** ./assets/js/admin/dashboard/index.js ***!
   \********************************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-jQuery(document).ready(function ($) {
+/* WEBPACK VAR INJECTION */(function(jQuery) {jQuery(document).ready(function ($) {
   if ($('#edd_dashboard_sales').length) {
     $.ajax({
       type: 'GET',
@@ -107,6 +107,18 @@ jQuery(document).ready(function ($) {
     });
   }
 });
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! jquery */ "jquery")))
+
+/***/ }),
+
+/***/ "jquery":
+/*!*************************!*\
+  !*** external "jQuery" ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = jQuery;
 
 /***/ })
 

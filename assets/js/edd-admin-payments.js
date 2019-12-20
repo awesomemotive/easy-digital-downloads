@@ -95,7 +95,7 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var utils_chosen_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! utils/chosen.js */ "./assets/js/utils/chosen.js");
+/* WEBPACK VAR INJECTION */(function(jQuery, $) {/* harmony import */ var utils_chosen_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! utils/chosen.js */ "./assets/js/utils/chosen.js");
 /**
  * Internal dependencies.
  */
@@ -121,6 +121,12 @@ jQuery(document).ready(function ($) {
     }
 
     return false;
+  }); // Toggle advanced filters on Orders page.
+
+  $('.edd-advanced-filters-button').on('click', function (e) {
+    // Prevent submit action
+    e.preventDefault();
+    $('#edd-advanced-filters').toggleClass('open');
   });
 });
 /**
@@ -664,6 +670,7 @@ var EDD_Edit_Payment = {
 jQuery(document).ready(function ($) {
   EDD_Edit_Payment.init();
 });
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! jquery */ "jquery"), __webpack_require__(/*! jquery */ "jquery")))
 
 /***/ }),
 
@@ -705,6 +712,17 @@ var getChosenVars = function getChosenVars(el) {
 
   return inputVars;
 };
+
+/***/ }),
+
+/***/ "jquery":
+/*!*************************!*\
+  !*** external "jQuery" ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = jQuery;
 
 /***/ })
 

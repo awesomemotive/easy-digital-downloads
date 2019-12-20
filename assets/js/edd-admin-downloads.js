@@ -95,7 +95,7 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "edd_attach_tooltips", function() { return edd_attach_tooltips; });
+/* WEBPACK VAR INJECTION */(function($, jQuery) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "edd_attach_tooltips", function() { return edd_attach_tooltips; });
 /**
  * Attach tooltips
  *
@@ -123,6 +123,7 @@ var edd_attach_tooltips = function edd_attach_tooltips(selector) {
 jQuery(document).ready(function ($) {
   edd_attach_tooltips($('.edd-help-tip'));
 });
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! jquery */ "jquery"), __webpack_require__(/*! jquery */ "jquery")))
 
 /***/ }),
 
@@ -131,9 +132,9 @@ jQuery(document).ready(function ($) {
   !*** ./assets/js/admin/downloads/bulk-edit.js ***!
   \************************************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-jQuery(document).ready(function ($) {
+/* WEBPACK VAR INJECTION */(function(jQuery) {jQuery(document).ready(function ($) {
   $('body').on('click', '#the-list .editinline', function () {
     var post_id = $(this).closest('tr').attr('id');
     post_id = post_id.replace('post-', '');
@@ -167,6 +168,7 @@ jQuery(document).ready(function ($) {
     $.post(ajaxurl, data);
   });
 });
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! jquery */ "jquery")))
 
 /***/ }),
 
@@ -179,7 +181,7 @@ jQuery(document).ready(function ($) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var utils_chosen_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! utils/chosen.js */ "./assets/js/utils/chosen.js");
+/* WEBPACK VAR INJECTION */(function($, jQuery) {/* harmony import */ var utils_chosen_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! utils/chosen.js */ "./assets/js/utils/chosen.js");
 /* harmony import */ var admin_components_tooltips__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! admin/components/tooltips */ "./assets/js/admin/components/tooltips/index.js");
 /* harmony import */ var _bulk_edit_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./bulk-edit.js */ "./assets/js/admin/downloads/bulk-edit.js");
 /* harmony import */ var _bulk_edit_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_bulk_edit_js__WEBPACK_IMPORTED_MODULE_2__);
@@ -256,6 +258,9 @@ var EDD_Download_Configuration = {
     });
     clone.find('span.edd_price_id').each(function () {
       $(this).text(parseInt(key));
+    });
+    clone.find('input.edd_repeatable_index').each(function () {
+      $(this).val(parseInt($(this).data('key')));
     });
     clone.find('span.edd_file_id').each(function () {
       $(this).text(parseInt(key));
@@ -542,6 +547,7 @@ var EDD_Download_Configuration = {
 jQuery(document).ready(function ($) {
   EDD_Download_Configuration.init();
 });
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! jquery */ "jquery"), __webpack_require__(/*! jquery */ "jquery")))
 
 /***/ }),
 
@@ -583,6 +589,17 @@ var getChosenVars = function getChosenVars(el) {
 
   return inputVars;
 };
+
+/***/ }),
+
+/***/ "jquery":
+/*!*************************!*\
+  !*** external "jQuery" ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = jQuery;
 
 /***/ })
 

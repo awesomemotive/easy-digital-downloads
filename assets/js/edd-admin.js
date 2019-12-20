@@ -95,7 +95,7 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var utils_chosen_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! utils/chosen.js */ "./assets/js/utils/chosen.js");
+/* WEBPACK VAR INJECTION */(function(jQuery) {/* harmony import */ var utils_chosen_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! utils/chosen.js */ "./assets/js/utils/chosen.js");
 /* global _ */
 
 /**
@@ -216,6 +216,7 @@ jQuery(document).ready(function ($) {
     });
   }, userInteractionInterval));
 });
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! jquery */ "jquery")))
 
 /***/ }),
 
@@ -224,9 +225,9 @@ jQuery(document).ready(function ($) {
   !*** ./assets/js/admin/components/date-picker/index.js ***!
   \*********************************************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-/**
+/* WEBPACK VAR INJECTION */(function(jQuery) {/**
  * Date picker
  *
  * This juggles a few CSS classes to avoid styling collisions with other
@@ -246,6 +247,7 @@ jQuery(document).ready(function ($) {
     });
   }
 });
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! jquery */ "jquery")))
 
 /***/ }),
 
@@ -254,9 +256,9 @@ jQuery(document).ready(function ($) {
   !*** ./assets/js/admin/components/sortable-list/index.js ***!
   \***********************************************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-/**
+/* WEBPACK VAR INJECTION */(function(jQuery) {/**
  * Sortables
  *
  * This makes certain settings sortable, and attempts to stash the results
@@ -289,6 +291,7 @@ jQuery(document).ready(function ($) {
     });
   }
 });
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! jquery */ "jquery")))
 
 /***/ }),
 
@@ -301,7 +304,7 @@ jQuery(document).ready(function ($) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "edd_attach_tooltips", function() { return edd_attach_tooltips; });
+/* WEBPACK VAR INJECTION */(function($, jQuery) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "edd_attach_tooltips", function() { return edd_attach_tooltips; });
 /**
  * Attach tooltips
  *
@@ -329,6 +332,7 @@ var edd_attach_tooltips = function edd_attach_tooltips(selector) {
 jQuery(document).ready(function ($) {
   edd_attach_tooltips($('.edd-help-tip'));
 });
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! jquery */ "jquery"), __webpack_require__(/*! jquery */ "jquery")))
 
 /***/ }),
 
@@ -337,9 +341,9 @@ jQuery(document).ready(function ($) {
   !*** ./assets/js/admin/components/user-search/index.js ***!
   \*********************************************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-jQuery(document).ready(function ($) {
+/* WEBPACK VAR INJECTION */(function(jQuery) {jQuery(document).ready(function ($) {
   // AJAX user search
   $('.edd-ajax-user-search') // Search
   .keyup(function () {
@@ -402,6 +406,7 @@ jQuery(document).ready(function ($) {
     edd_user_search_mouse_down = true;
   });
 });
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! jquery */ "jquery")))
 
 /***/ }),
 
@@ -410,9 +415,9 @@ jQuery(document).ready(function ($) {
   !*** ./assets/js/admin/components/vertical-sections/index.js ***!
   \***************************************************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-jQuery(document).ready(function ($) {
+/* WEBPACK VAR INJECTION */(function(jQuery) {jQuery(document).ready(function ($) {
   // Hides the section content.
   $('.edd-vertical-sections.use-js .section-content').hide(); // Shows the first section's content.
 
@@ -443,6 +448,7 @@ jQuery(document).ready(function ($) {
     $('.which-section').text(them.text());
   }); // click()
 });
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! jquery */ "jquery")))
 
 /***/ }),
 
@@ -515,6 +521,17 @@ var getChosenVars = function getChosenVars(el) {
 
   return inputVars;
 };
+
+/***/ }),
+
+/***/ "jquery":
+/*!*************************!*\
+  !*** external "jQuery" ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = jQuery;
 
 /***/ })
 
