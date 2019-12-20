@@ -502,6 +502,17 @@ function edd_get_registered_settings() {
 						'desc' => '',
 						'type' => 'hook',
 					),
+					'advanced_emails_header' => array(
+						'id'   => 'advanced_emails_header',
+						'name' => '<strong>' . __( 'Advanced emails', 'easy-digital-downloads' ) . '</strong>',
+						'type' => 'header',
+					),
+					'jilt'                   => array(
+						'id'   => 'jilt',
+						'name' => __( 'Enhanced emails via Jilt', 'easy-digital-downloads' ),
+						'desc' => '<p>' . __( 'Create beautiful transactional, automated, and marketing emails using a drag-and-drop editor with <a href="https://jilt.com/?utm_source=edd-core&utm_medium=referral&utm_campaign=edd-enhanced-emails" target="_blank" rel="noopener noreferrer">Jilt</a>.', 'easy-digital-downloads' ) . '</p><p>' . __( 'Learn more about free and paid plans in the <a href="https://docs.easydigitaldownloads.com/article/2199-jilt-overview" target="_blank" rel="noopener noreferrer">documentation</a>.', 'easy-digital-downloads' ) . '</p>',
+						'type' => 'jilt',
+					),
 				),
 				'purchase_receipts' => array(
 					'purchase_receipt_email_settings' => array(
@@ -2167,6 +2178,8 @@ function edd_sendwp_callback($args) {
 
 	ob_start();
 
+	echo $args['desc'];
+
 	// Output the appropriate button and label based on connection status
 	if( $client_connected ) :
 		?>
@@ -2181,15 +2194,76 @@ function edd_sendwp_callback($args) {
 		?>
 
 		<p>
-			<button type="button" id="edd-sendwp-connect" class="button button-primary"><span class="dashicons dashicons-email"></span><?php esc_html_e( 'Connect SendWP', 'easy-digital-downloads' ); ?>
+			<button type="button" id="edd-sendwp-connect" class="button button-primary"><?php esc_html_e( 'Connect SendWP', 'easy-digital-downloads' ); ?>
 			</button>
 		</p>
 
 		<?php
-		echo $args['desc'];
 	endif;
 
 	echo ob_get_clean();
+}
+
+/**
+ * Jilt Callback
+ *
+ * Renders Jilt Settings
+ *
+ * @since n.n.n
+ * @param array $args arguments passed by the setting.
+ * @return void
+ */
+function edd_jilt_callback( $args ) {
+
+	$activated   = is_callable( 'edd_jilt' );
+	$connected   = $activated && edd_jilt()->get_integration()->is_jilt_connected();
+	$connect_url = $activated ? edd_jilt()->get_connect_url() : '';
+	$account_url = $connected ? edd_jilt()->get_integration()->get_jilt_app_url() : '';
+
+	echo wp_kses_post( $args['desc'] );
+
+	if ( $activated ) :
+		?>
+
+		<?php if ( $connected ) : ?>
+
+			<p>
+				<button id="edd-jilt-disconnect" class="button"><?php esc_html_e( 'Disconnect Jilt', 'easy-digital-downloads' ); ?></button>
+			</p>
+
+			<p>
+				<?php
+				wp_kses_post(
+					sprintf(
+						/* Translators: %1$s - <a> tag, %2$s - </a> tag */
+						__( '%1$sClick here%2$s to visit your Jilt dashboard', 'easy-digital-downloads' ),
+						'<a href="' . esc_url( $account_url ) . '" target="_blank">',
+						'</a>'
+					)
+				);
+				?>
+			</p>
+
+		<?php else : ?>
+
+			<p>
+				<a id="edd-jilt-connect" class="button button-primary" href="<?php echo esc_url( $connect_url ); ?>">
+					<?php esc_html_e( 'Connect to Jilt', 'easy-digital-downloads' ); ?>
+				</a>
+			</p>
+
+		<?php endif; ?>
+
+	<?php else : ?>
+
+		<p>
+			<button id="edd-jilt-connect" class="button button-primary">
+				<?php esc_html_e( 'Install Jilt', 'easy-digital-downloads' ); ?>
+			</button>
+		</p>
+
+	<?php
+	endif;
 }
 
 /**
