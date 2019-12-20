@@ -3,8 +3,13 @@
 	"version": "2.9.20",
 	"description": "The easiest way to sell digital products with WordPress.",
 	"private": true,
+	"author": "Sandhills Development, LLC",
 	"license": "GPL-2.0-or-later",
-	"main": "webpack.config.js",
+	"keywords": [
+		"wordpress",
+		"wordpress-plugin"
+	],
+	"homepage": "https://easydigitaldownloads.com",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/easydigitaldownloads/easy-digital-downloads/"
@@ -12,21 +17,11 @@
 	"bugs": {
 		"url": "https://github.com/easydigitaldownloads/easy-digital-downloads/issues"
 	},
-	"homepage": "https://easydigitaldownloads.com",
 	"engines": {
 		"node": ">=8.0.0",
 		"npm": ">=6.12.0"
 	},
-	"babel": {
-		"presets": [
-			"@wordpress/babel-preset-default"
-		]
-	},
-	"eslintConfig": {
-		"extends": [
-			"plugin:@wordpress/eslint-plugin/recommended"
-		]
-	},
+	"main": "webpack.config.js",
 	"dependencies": {
 		"chart.js": "2.7.2",
 		"chosen-js": "1.8.7",
@@ -37,15 +32,8 @@
 		"moment": "2.22.2"
 	},
 	"devDependencies": {
-		"@babel/core": "7.4.3",
-		"@wordpress/babel-preset-default": "4.1.0",
-		"@wordpress/browserslist-config": "2.3.0",
-		"@wordpress/eslint-plugin": "2.1.0",
-		"babel-loader": "8.0.5",
 		"@wordpress/scripts": "6.1.0",
 		"copy-webpack-plugin": "5.0.2",
-		"cross-env": "5.2.0",
-		"eslint": "5.16.0",
 		"grunt": "^1.0.4",
 		"grunt-checktextdomain": "^1.0.1",
 		"grunt-contrib-clean": "^1.1.0",
