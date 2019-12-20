@@ -42,6 +42,7 @@
 		"@wordpress/browserslist-config": "2.3.0",
 		"@wordpress/eslint-plugin": "2.1.0",
 		"babel-loader": "8.0.5",
+		"@wordpress/scripts": "6.1.0",
 		"copy-webpack-plugin": "5.0.2",
 		"cross-env": "5.2.0",
 		"eslint": "5.16.0",
@@ -62,10 +63,13 @@
 		"webpack-cli": "3.3.0"
 	},
 	"scripts": {
-		"build": "cross-env NODE_ENV=production webpack",
-		"dev": "cross-env NODE_ENV=default webpack --watch",
-		"lint": "./node_modules/.bin/eslint .; exit 0",
-		"lint:fix": "./node_modules/.bin/eslint . --fix; exit 0",
+		"build": "wp-scripts build && npm run i18n",
+		"dev": "wp-scripts start",
+		"check-engines": "wp-scripts check-engines",
+		"check-licenses": "wp-scripts check-licenses --production",
+		"lint:js": "wp-scripts lint-js .",
+		"lint:js--fix": "wp-scripts lint-js . --fix",
+		"lint:pkg-json": "wp-scripts lint-pkg-json",
 		"package-plugin": "npm run build && grunt build"
 	}
 }
