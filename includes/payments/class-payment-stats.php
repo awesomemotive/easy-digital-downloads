@@ -177,27 +177,48 @@ class EDD_Payment_Stats extends EDD_Stats {
 					$payment_ids = $wpdb->get_col( "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = '_edd_log_payment_id' AND post_id IN ($log_ids);" );
 
 					foreach ( $payment_ids as $payment_id ) {
-						$items = edd_get_payment_meta_cart_details( $payment_id );
+
+						$payment = new EDD_Payment( $payment_id );
+						$items   = edd_get_payment_meta_cart_details( $payment_id );
 
 						foreach ( $items as $cart_key => $item ) {
+
 							if ( $item['id'] != $download_id ) {
 								continue;
 							}
 
-							$earnings += $item['price'];
+							/*
+							 * Prior to version 2.9.9, there was a bug with item-specific earnings.
+							 *
+							 * To get around it, we will use alternate calculation logic if the payment was created before version 2.9.9 was released.
+							 *
+							 * This is not a perfect fix but is as close as we can get to accurate reporting.
+							 *
+							 * See https://github.com/easydigitaldownloads/easy-digital-downloads/issues/7507
+							 */
+							if( $payment->date > '2018-12-03' ) {
 
-							// Check if there are any item specific fees
-							if ( ! empty( $item['fees'] ) ) {
-								foreach ( $item['fees'] as $key => $fee ) {
-									$earnings += $fee['amount'];
+								$earnings += $item['price'];
+
+							} else {
+
+
+								$earnings += $item['item_price'];
+
+								if ( ! empty( $item['fees'] ) ) {
+									foreach ( $item['fees'] as $key => $fee ) {
+										$earnings += $fee['amount'];
+									}
 								}
-							}
 
-							$earnings = apply_filters( 'edd_payment_stats_item_earnings', $earnings, $payment_id, $cart_key, $item );
+							}
 
 							if ( ! $include_taxes ) {
 								$earnings -= edd_get_payment_item_tax( $payment_id, $cart_key );
 							}
+
+							$earnings = apply_filters( 'edd_payment_stats_item_earnings', $earnings, $payment_id, $cart_key, $item );
+
 						}
 					}
 				}
