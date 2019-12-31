@@ -67,7 +67,7 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 			}
 
 			// Increase the earnings for this download ID
-			edd_increase_earnings( $download['id'], $increase_earnings );
+			edd_increase_earnings( $download['id'], $download['price'] );
 			edd_increase_purchase_count( $download['id'], $download['quantity'] );
 
 		}
