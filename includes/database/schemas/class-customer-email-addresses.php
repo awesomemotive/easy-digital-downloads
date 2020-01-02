@@ -64,17 +64,6 @@ class Customer_Email_Addresses extends Schema {
 			'transition' => true
 		),
 
-		// status
-		array(
-			'name'       => 'status',
-			'type'       => 'varchar',
-			'length'     => '20',
-			'default'    => 'active',
-			'searchable' => false,
-			'sortable'   => true,
-			'transition' => true
-		),
-
 		// email
 		array(
 			'name'       => 'email',
