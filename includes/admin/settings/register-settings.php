@@ -1428,11 +1428,9 @@ function edd_settings_sanitize_tax_rate( $input ) {
 		edd_update_adjustment( $id, $adjustment_data );
 	} else {
 		$id = edd_add_adjustment( $adjustment_data );
-		edd_update_option( 'edd_default_tax_rate_id', $id );
+		$input['edd_default_tax_rate_id'] = $id;
 	}
 
-	// Unset the old key
-	unset( $input['tax_rate'] );
 	return $input;
 }
 
