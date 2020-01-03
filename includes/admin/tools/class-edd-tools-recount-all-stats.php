@@ -131,7 +131,7 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 					 *
 					 * See https://github.com/easydigitaldownloads/easy-digital-downloads/issues/7507
 					 */
-					if( $payment->date > '2018-12-03' ) {
+					if ( $payment->date > '2018-12-03' ) {
 
 						$amount = $item['price'];
 
