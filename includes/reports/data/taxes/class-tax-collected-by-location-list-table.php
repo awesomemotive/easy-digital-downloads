@@ -145,12 +145,24 @@ class Tax_Collected_By_Location extends List_Table {
 				? $wpdb->prepare( ' AND region = %s', esc_sql( $tax_rate->description ) )
 				: '';
 
-			$results = $wpdb->get_results( $wpdb->prepare( "
-				SELECT SUM(tax) as tax, SUM(total) as total, country, region
-				FROM {$wpdb->edd_orders}
-				INNER JOIN {$wpdb->edd_order_addresses} ON {$wpdb->edd_order_addresses}.order_id = {$wpdb->edd_orders}.id
-				WHERE {$wpdb->edd_order_addresses}.country = %s {$region} {$date_query}
-			", esc_sql( $tax_rate->name ) ), ARRAY_A );
+			$results;
+
+			if ( 'global' !== $tax_rate->scope ) {
+				$results = $wpdb->get_results( $wpdb->prepare( "
+					SELECT SUM(tax) as tax, SUM(total) as total, country, region
+					FROM {$wpdb->edd_orders}
+					INNER JOIN {$wpdb->edd_order_addresses} ON {$wpdb->edd_order_addresses}.order_id = {$wpdb->edd_orders}.id
+					WHERE {$wpdb->edd_order_addresses}.country = %s {$region} {$date_query}
+				", esc_sql( $tax_rate->name ) ), ARRAY_A );
+			} else {
+				$results = $wpdb->get_results( "
+					SELECT SUM(tax) as tax, SUM(total) as total, country, region
+					FROM {$wpdb->edd_orders}
+					INNER JOIN {$wpdb->edd_order_addresses} ON {$wpdb->edd_order_addresses}.order_id = {$wpdb->edd_orders}.id
+					WHERE {$wpdb->edd_order_addresses}.country NOT IN ( SELECT name FROM {$wpdb->edd_adjustments}
+					WHERE scope != 'global' AND type = 'tax_rate') {$date_query}
+				", ARRAY_A );
+			}
 
 			$all_orders[0]['tax']   -= $results[0]['tax'];
 			$all_orders[0]['total'] -= $results[0]['total'];
@@ -163,19 +175,6 @@ class Tax_Collected_By_Location extends List_Table {
 				'tax'      => edd_currency_filter( edd_format_amount( floatval( $results[0]['tax'] ) ) ),
 				'net'      => edd_currency_filter( edd_format_amount( floatval( $results[0]['total'] - $results[0]['tax'] ) ) ),
 			);
-		}
-
-		if( $all_orders[0]['total'] > 0 && $all_orders[0]['tax'] > 0 ) {
-
-			$data[ 'global' ] = array(
-				'country'  => __( 'Global Rate', 'easy-digital-downloads' ),
-				'from'     => $from,
-				'to'       => $to,
-				'gross'    => edd_currency_filter( edd_format_amount( floatval( max( 0, $all_orders[0]['total'] ) ) ) ),
-				'tax'      => edd_currency_filter( edd_format_amount( floatval( max( 0, $all_orders[0]['tax'] ) ) ) ),
-				'net'      => edd_currency_filter( edd_format_amount( floatval( max( 0, $all_orders[0]['total'] - $all_orders[0]['tax'] ) ) ) ),
-			);
-
 		}
 
 		return $data;

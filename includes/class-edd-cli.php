@@ -973,7 +973,7 @@ class EDD_CLI extends WP_CLI_Command {
 			LEFT JOIN {$wpdb->term_relationships} AS tr ON (p.ID = tr.object_id)
 			LEFT JOIN {$wpdb->term_taxonomy} AS tt ON (tr.term_taxonomy_id = tt.term_taxonomy_id)
 			LEFT JOIN {$wpdb->terms} AS t ON (tt.term_id = t.term_id)
-			WHERE p.post_type = 'edd_log' AND t.slug != 'sale' 
+			WHERE p.post_type = 'edd_log' AND t.slug != 'sale'
 		";
 
 		$results = $wpdb->get_results( $sql );
@@ -1297,6 +1297,19 @@ class EDD_CLI extends WP_CLI_Command {
 
 		// Migrate user addresses first.
 		$tax_rates = get_option( 'edd_tax_rates', array() );
+
+		// Migrate edd_options[tax_rate], it will be tracked through DB from now on
+		global $edd_options;
+
+		if ( isset ($edd_options['tax_rate']) ) {
+			$data = [
+				'country'        => __( 'Global Rate', 'easy-digital-downloads' ),
+				'rate'           => $edd_options['tax_rate'],
+				'is_global_rate' => true,
+			];
+
+			$tax_rates[] = $data;
+		}
 
 		if ( ! empty( $tax_rates ) ) {
 			$progress = new \cli\progress\Bar( 'Migrating Tax Rates', count( $tax_rates ) );
