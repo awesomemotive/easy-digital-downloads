@@ -7,7 +7,7 @@
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
+ */
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -40,7 +40,7 @@ function edd_options_page_primary_nav( $active_tab = '' ) {
 
 			// Link
 			echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . $active . '">';
-				echo esc_html( $tab_name );
+			echo esc_html( $tab_name );
 			echo '</a>';
 		}
 		?>
@@ -96,9 +96,11 @@ function edd_options_page_secondary_nav( $active_tab = '', $section = '', $secti
 		$links[ $section_id ] = '<li class="' . esc_attr( $class ) . '"><a class="' . esc_attr( $class ) . '" href="' . esc_url( $tab_url ) . '">' . esc_html( $section_name ) . '</a><li>';
 	} ?>
 
-	<ul class="subsubsub edd-settings-sub-nav">
-		<?php echo implode( '', $links ); ?>
-	</ul>
+	<div class="wp-clearfix">
+		<ul class="subsubsub edd-settings-sub-nav">
+			<?php echo implode( '', $links ); ?>
+		</ul>
+	</div>
 
 	<?php
 }
@@ -117,38 +119,102 @@ function edd_options_page_form( $active_tab = '', $section = '', $override = fal
 	// Setup the action & section suffix
 	$suffix = ! empty( $section )
 		? $active_tab . '_' . $section
-		: $active_tab . '_main'; ?>
+		: $active_tab . '_main';
 
-	<form method="post" action="options.php" class="edd-settings-form">
+	// Find out if we're displaying a sidebar.
+	$is_promo_active = edd_is_promo_active();
+	$wrapper_class   = ( true === $is_promo_active )
+		? array( ' edd-has-sidebar' )
+		: array();
+	?>
+
+	<div class="edd-settings-wrap<?php echo esc_attr( implode( ' ', $wrapper_class ) ); ?> wp-clearfix">
+		<div class="edd-settings-content">
+			<form method="post" action="options.php" class="edd-settings-form">
+				<?php
+
+				settings_fields( 'edd_settings' );
+
+				if ( 'main' === $section ) {
+					do_action( 'edd_settings_tab_top', $active_tab );
+				}
+
+				do_action( 'edd_settings_tab_top_' . $suffix );
+
+				do_settings_sections( 'edd_settings_' . $suffix );
+
+				do_action( 'edd_settings_tab_bottom_' . $suffix  );
+
+				// For backwards compatibility
+				if ( 'main' === $section ) {
+					do_action( 'edd_settings_tab_bottom', $active_tab );
+				}
+
+				// If the main section was empty and we overrode the view with the
+				// next subsection, prepare the section for saving
+				if ( true === $override ) {
+					?><input type="hidden" name="edd_section_override" value="<?php echo esc_attr( $section ); ?>" /><?php
+				}
+
+				submit_button(); ?>
+			</form>
+		</div>
 		<?php
-
-		settings_fields( 'edd_settings' );
-
-		if ( 'main' === $section ) {
-			do_action( 'edd_settings_tab_top', $active_tab );
+		if ( true === $is_promo_active ) {
+			edd_options_sidebar();
 		}
+		?>
+	</div>
 
-		do_action( 'edd_settings_tab_top_' . $suffix );
+	<?php
+}
 
-		do_settings_sections( 'edd_settings_' . $suffix );
+/**
+ * Display the sidebar
+ *
+ * @since 2.9.20
+ *
+ * @return string
+ */
+function edd_options_sidebar() {
 
-		do_action( 'edd_settings_tab_bottom_' . $suffix  );
+	// Get settings tab and section info
+	$active_tab     = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : 'general';
+	$active_tab     = array_key_exists( $active_tab, edd_get_settings_tabs() ) ? $active_tab : 'general';
+	$active_section = isset( $_GET['section'] ) ? sanitize_text_field( $_GET['section'] ) : 'main';
+	$active_section = array_key_exists( $active_section, edd_get_settings_tab_sections( $active_tab ) ) ? $active_section : 'main';
 
-		// For backwards compatibility
-		if ( 'main' === $section ) {
-			do_action( 'edd_settings_tab_bottom', $active_tab );
-		}
+	// The coupon code we're promoting
+	$coupon_code = 'BCFM2019';
 
-		// If the main section was empty and we overrode the view with the
-		// next subsection, prepare the section for saving
-		if ( true === $override ) {
-			?><input type="hidden" name="edd_section_override" value="<?php echo esc_attr( $section ); ?>" /><?php
-		}
-
-		submit_button(); ?>
-	</form>
-
-<?php
+	// Build the main URL for the promotion
+	$args = array(
+		'utm_source'   => 'settings',
+		'utm_medium'   => 'wp-admin',
+		'utm_campaign' => 'bfcm2019',
+		'utm_content'  => 'sidebar-promo-' . $active_tab . '-' . $active_section,
+	);
+	$url  = add_query_arg( $args, 'https://easydigitaldownloads.com/pricing/' );
+	?>
+	<div class="edd-settings-sidebar">
+		<div class="edd-settings-sidebar-content">
+			<div class="edd-sidebar-header-section">
+				<img class="edd-bcfm-header" src="<?php echo esc_url( EDD_PLUGIN_URL . 'assets/images/promo/bfcm-header.svg' ); ?>">
+			</div>
+			<div class="edd-sidebar-description-section">
+				<p class="edd-sidebar-description"><?php _e( 'Save 25% on all Easy Digital Downloads purchases <strong>this week</strong>, including renewals and upgrades!', 'easy-digital-downloads' ); ?></p>
+			</div>
+			<div class="edd-sidebar-coupon-section">
+				<label for="edd-coupon-code"><?php _e( 'Use code at checkout:', 'easy-digital-downloads' ); ?></label>
+				<input id="edd-coupon-code" type="text" value="<?php echo $coupon_code; ?>" readonly>
+				<p class="edd-coupon-note"><?php _e( 'Sale ends 23:59 PM December 6th CST. Save 25% on <a href="https://sandhillsdev.com/projects/" target="_blank">our other plugins</a>.', 'easy-digital-downloads' ); ?></p>
+			</div>
+			<div class="edd-sidebar-footer-section">
+				<a class="edd-cta-button" href="<?php echo esc_url( $url ); ?>" target="_blank"><?php _e( 'Shop Now!', 'easy-digital-downloads' ); ?></a>
+			</div>
+		</div>
+	</div>
+	<?php
 }
 
 /**
@@ -222,7 +288,7 @@ function edd_options_page() {
 		// Form
 		edd_options_page_form( $active_tab, $section, $override );
 
-	?></div><!-- .wrap --><?php
+		?></div><!-- .wrap --><?php
 
 	// Output the current buffer
 	echo ob_get_clean();

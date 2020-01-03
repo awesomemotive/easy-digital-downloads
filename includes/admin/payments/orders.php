@@ -22,13 +22,6 @@ defined( 'ABSPATH' ) || exit;
  * @param mixed $item
  */
 function edd_order_sections( $item = false ) {
-	// Enqueue scripts.
-	if ( edd_is_add_order_page() ) {
-		wp_enqueue_script( 'edd-admin-orders' );
-		wp_enqueue_script( 'edd-admin-payments' );
-	} else {
-		wp_enqueue_script( 'edd-admin-payments' );
-	}
 
 	// Instantiate the Sections class and sections array
 	$sections = new EDD\Admin\Order_Sections();
@@ -380,7 +373,6 @@ function edd_order_details_addresses( $order ) {
 			<input type="hidden" name="edd_order_address[address_id]" value="<?php echo esc_attr( $address->id ); ?>" />
 		</div>
 
-		<?php do_action( 'edd_view_order_details_billing_after', $order->id ); ?>
 	</div><!-- /#edd-order-address -->
 
 	<?php do_action( 'edd_payment_billing_details', $order->id );
@@ -774,9 +766,9 @@ function edd_order_details_attributes( $order ) {
 		? ''
 		: edd_get_payment( $order->id )->get_recovery_url();
 
-	$order_date = edd_is_add_order_page()
-		? EDD()->utils->date( 'now', edd_get_timezone_id(), true )->timestamp
-		: strtotime( $order->date_created ); ?>
+	$order_date = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $order->date_created, 'utc', true ) );
+
+	?>
 
 	<div id="edd-order-update" class="postbox edd-order-data">
 		<h3 class="hndle">
@@ -816,16 +808,16 @@ function edd_order_details_attributes( $order ) {
 
 				<div class="edd-admin-box-inside">
 					<span class="label"><?php esc_html_e( 'Date:', 'easy-digital-downloads' ); ?></span>
-					<input type="text" name="edd-payment-date" value="<?php echo esc_attr( date( 'Y-m-d', $order_date ) ); ?>" class="medium-text edd_datepicker" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
+					<input type="text" name="edd-payment-date" value="<?php echo esc_attr( $order_date->format( 'Y-m-d' ) ); ?>" class="medium-text edd_datepicker" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
 				</div>
 
 				<div class="edd-admin-box-inside">
-					<span class="label"><?php esc_html_e( 'Time:', 'easy-digital-downloads' ); ?></span>
+					<span class="label"><?php echo esc_html( __( 'Time', 'easy-digital-downloads' ) . ' (' . edd_get_timezone_abbr() . ') :' ); ?></span>
 					<?php
 					echo EDD()->html->select( array(
 						'name'             => 'edd-payment-time-hour',
 						'options'          => edd_get_hour_values(),
-						'selected'         => date( 'G', $order_date ),
+						'selected'         => $order_date->format( 'G' ),
 						'chosen'           => true,
 						'class'            => 'edd-time',
 						'show_option_none' => false,
@@ -837,7 +829,7 @@ function edd_order_details_attributes( $order ) {
 					echo EDD()->html->select( array(
 						'name'             => 'edd-payment-time-min',
 						'options'          => edd_get_minute_values(),
-						'selected'         => date( 'i', $order_date ),
+						'selected'         => $order_date->format( 'i' ),
 						'chosen'           => true,
 						'class'            => 'edd-time',
 						'show_option_none' => false,
@@ -944,6 +936,47 @@ function edd_order_details_amounts( $order ) {
 	</div>
 
 <?php
+}
+
+/**
+ * Output the order details refunds box
+ *
+ * @since 3.0
+ *
+ * @param object $order
+ */
+function edd_order_details_refunds( $order ) {
+	$refunds_db = new \EDD\Database\Queries\Order();
+
+	$refunds = $refunds_db->query( array( 'type' => 'refund', 'parent' => $order->id ) );
+	if ( empty( $refunds ) ) {
+		return;
+	}
+	?>
+
+	<div id="edd-order-refunds" class="postbox edd-order-data">
+		<h3 class="hndle"><span><?php esc_html_e( 'Related Refunds', 'easy-digital-downloads' ); ?></span></h3>
+
+		<div class="inside">
+			<?php do_action( 'edd_view_order_details_refunds_before', $order->id ); ?>
+			<ul id="edd-order-refunds-list">
+			<?php foreach( $refunds as $refund ) : ?>
+				<?php $order_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $refund->id ); ?>
+				<li>
+					<span class="howto"><?php echo date_i18n( get_option( 'date_format' ), strtotime( $refund->completed_date ) ); ?></span>
+					<a href="<?php echo esc_url( $order_url ); ?>">
+						<?php echo '#' . $refund->number ?>
+					</a>&nbsp;&ndash;&nbsp;
+					<span><?php echo edd_currency_filter( edd_format_amount( $refund->total ) ); ?>&nbsp;&ndash;&nbsp;</span>
+					<span><?php echo edd_get_status_label( $refund->status ); ?></span>
+				</li>
+			<?php endforeach; ?>
+			</ul>
+			<?php do_action( 'edd_view_order_details_refunds_after', $order->id ); ?>
+		</div>
+	</div>
+
+	<?php
 }
 
 /**

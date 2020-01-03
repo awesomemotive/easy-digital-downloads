@@ -1065,11 +1065,6 @@ class EDD_CLI extends WP_CLI_Command {
 			$progress = new \cli\progress\Bar( 'Migrating Notes', $total );
 
 			foreach ( $results as $result ) {
-				$result->object_id = $wpdb->get_var( $wpdb->prepare(
-					"SELECT edd_order_id FROM {$wpdb->edd_ordermeta} WHERE meta_key = 'legacy_order_id' AND meta_value = %d",
-					$result->comment_post_ID
-				) );
-
 				\EDD\Admin\Upgrades\v3\Data_Migrator::order_notes( $result );
 
 				$progress->tick();
@@ -1382,7 +1377,7 @@ class EDD_CLI extends WP_CLI_Command {
 			foreach ( $results as $result ) {
 
 				// Check if order has already been migrated.
-				$migrated = $wpdb->get_var( $wpdb->prepare( "SELECT meta_id FROM {$wpdb->edd_ordermeta} WHERE meta_key = %s AND meta_value = %d", esc_sql( 'legacy_order_id' ), $result->ID ) );
+				$migrated = edd_get_order( $result->ID );
 				if ( $migrated ) {
 					continue;
 				}
@@ -1510,7 +1505,17 @@ class EDD_CLI extends WP_CLI_Command {
 
 			$file_id_key = array_rand( $download_ids_with_files[ $product_id ], 1 );
 			$file_key    = $download_ids_with_files[ $product_id ][ $file_id_key ];
-			edd_record_download_in_log( $product_id, $file_key, $user_info, edd_get_ip(), $order_id, $price_id );
+			edd_add_file_download_log( array(
+				'product_id'   => absint( $product_id ),
+				'file_id'      => absint( $file_key ),
+				'order_id'     => absint( $order_id ),
+				'price_id'     => absint( $price_id ),
+				'customer_id'  => $order->customer_id,
+				'ip'           => edd_get_ip(),
+				'user_agent'   => 'EDD; WPCLI; download_logs;',
+				'date_created' => $order->date_completed,
+			) );
+			//edd_record_download_in_log( $product_id, $file_key, $user_info, edd_get_ip(), $order_id, $price_id );
 
 			$progress->tick();
 			$i ++;

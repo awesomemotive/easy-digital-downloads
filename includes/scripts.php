@@ -312,11 +312,13 @@ function edd_register_admin_scripts() {
 		'tools-export' => array(),
 		'tools-import' => array(),
 		'notes'        => array(),
-		'orders'       => array(),
+		'orders'       => array(), // This is for the Add New Order.
 		'reports'      => array(
 			'edd-chart-js',
 		),
-		'payments'     => array(),
+		'payments'     => array( // This is for the View Order Details.
+			'edd-admin-notes',
+		),
 		'settings'     => array(),
 		'tools'        => array(
 			'edd-admin-tools-export'
@@ -400,6 +402,7 @@ function edd_enqueue_admin_scripts( $hook = '' ) {
 	if ( 'edd-admin-upgrades' === $hook ) {
 		wp_enqueue_script( 'edd-admin-tools-export' );
 	}
+
 }
 add_action( 'admin_enqueue_scripts', 'edd_enqueue_admin_scripts' );
 
@@ -487,6 +490,8 @@ function edd_localize_admin_scripts() {
 		'unsupported_browser'         => __( 'We are sorry but your browser is not compatible with this kind of file upload. Please upgrade your browser.', 'easy-digital-downloads' ),
 		'show_advanced_settings'      => __( 'Show advanced settings', 'easy-digital-downloads' ),
 		'hide_advanced_settings'      => __( 'Hide advanced settings', 'easy-digital-downloads' ),
+		'no_downloads_error'          => __( 'There are no downloads attached to this payment', 'easy-digital-downloads' ),
+		'wait'                        => __( 'Please wait &hellip;', 'easy-digital-downloads' ),
 
 		// Features
 		'quantities_enabled'          => edd_item_quantities_enabled(),

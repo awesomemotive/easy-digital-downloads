@@ -118,7 +118,6 @@ final class Adjustments extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
-			'validate'   => 'edd_sanitize_amount',
 			'searchable' => true
 		),
 
@@ -161,16 +160,7 @@ final class Adjustments extends Schema {
 			'name'       => 'min_charge_amount',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0',
-			'validate'   => 'edd_sanitize_amount'
-		),
-
-		// product_condition
-		array(
-			'name'       => 'product_condition',
-			'type'       => 'varchar',
-			'length'     => '20',
-			'default'    => '',
+			'default'    => '0'
 		),
 
 		// start_date

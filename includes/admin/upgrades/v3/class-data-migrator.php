@@ -55,6 +55,7 @@ class Data_Migrator {
 			edd_add_customer_address( array(
 				'customer_id' => $customer->id,
 				'type'        => 'primary',
+				'name'        => $customer->name,
 				'address'     => $address['line1'],
 				'address2'    => $address['line2'],
 				'city'        => $address['city'],
@@ -170,6 +171,7 @@ class Data_Migrator {
 			$args['name'] = $data->post_title;
 		}
 
+		$args['id']            = $data->ID;
 		$args['date_created']  = $data->post_date_gmt;
 		$args['date_modified'] = $data->post_modified_gmt;
 
@@ -182,9 +184,6 @@ class Data_Migrator {
 				edd_add_adjustment_meta( $discount_id, $key, $value );
 			}
 		}
-
-		// Store legacy discount ID.
-		edd_add_adjustment_meta( $discount_id, 'legacy_discount_id', $data->ID );
 	}
 
 	/**
@@ -410,12 +409,6 @@ class Data_Migrator {
 
 		}
 
-		// Maybe convert the date completed to UTC.
-		$non_completed_statuses = apply_filters( 'edd_30_noncomplete_statuses', array ( 'pending', 'cancelled', 'abandoned', 'processing' ) );
-		if ( ! in_array( $order_status, $non_completed_statuses ) && '0000-00-00 00:00:00' !== $date_completed ) {
-			$date_completed = EDD()->utils->date( $date_completed, edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString();
-		}
-
 		// Account for a situation where the post_date_gmt is set to 0000-00-00 00:00:00
 		$date_created_gmt = $data->post_date_gmt;
 		if ( '0000-00-00 00:00:00' === $date_created_gmt ) {
@@ -448,6 +441,18 @@ class Data_Migrator {
 			$date_created_gmt = $date_created_gmt->format('Y-m-d H:i:s');
 		}
 
+		// Maybe convert the date completed to UTC or backfill the date_completed.
+		$non_completed_statuses = apply_filters( 'edd_30_noncomplete_statuses', array ( 'pending', 'cancelled', 'abandoned', 'processing' ) );
+		if ( ! in_array( $order_status, $non_completed_statuses ) ) {
+
+			if ( '0000-00-00 00:00:00' !== $date_completed ) {  // Update the data_completed to the UTC.
+				$date_completed = EDD()->utils->date( $date_completed, edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString();
+			} elseif ( '0000-00-00 00:00:00' === $date_completed ) { // Backfill a missing date_completed (for things like recurring payments).
+				$date_completed = $date_created_gmt;
+			}
+
+		}
+
 		// Find the parent payment, if there is one.
 		$parent = 0;
 		if ( ! empty( $data->post_parent ) ) {
@@ -456,6 +461,7 @@ class Data_Migrator {
 
 		// Build the order data before inserting.
 		$order_data = array(
+			'id'             => $data->ID,
 			'parent'         => ! empty( $parent ) ? $parent : 0,
 			'order_number'   => $order_number,
 			'status'         => $order_status,
@@ -478,6 +484,9 @@ class Data_Migrator {
 		);
 
 		$order_id = edd_add_order( $order_data );
+
+		// Do not pass the original order ID into other arrays
+		unset( $order_data['id'] );
 
 		// Reset the $refund_id variable so that we don't end up accidentally creating refunds.
 		$refund_id = 0;
@@ -532,8 +541,7 @@ class Data_Migrator {
 
 		$order_address_data = array(
 			'order_id'    => $order_id,
-			'first_name'  => isset( $user_info['first_name'] )         ? $user_info['first_name']         : '',
-			'last_name'   => isset( $user_info['last_name'] )          ? $user_info['last_name']          : '',
+			'name'        => trim( $user_info['first_name'] . ' ' . $user_info['last_name'] ),
 			'address'     => isset( $user_info['address']['line1'] )   ? $user_info['address']['line1']   : '',
 			'address2'    => isset( $user_info['address']['line2'] )   ? $user_info['address']['line2']   : '',
 			'city'        => isset( $user_info['address']['city'] )    ? $user_info['address']['city']    : '',
@@ -628,6 +636,13 @@ class Data_Migrator {
 					? absint( $cart_item['item_number']['options']['price_id'] )
 					: 0;
 
+				if ( ! empty( $product_name ) ) {
+					$option_name = edd_get_price_option_name( $cart_item['id'], $price_id );
+					if ( ! empty( $option_name ) ) {
+						$product_name .= ' — ' . $option_name;
+					}
+				}
+
 				// Get item price.
 				$cart_item['item_price'] = isset( $cart_item['item_price'] )
 					? (float) $cart_item['item_price']
@@ -673,6 +688,24 @@ class Data_Migrator {
 
 				$order_item_id = edd_add_order_item( $order_item_args );
 
+				if ( ! empty( $cart_item['item_number']['options'] ) ) {
+					// Collect any item_number options and store them.
+
+					// Remove our price_id and quantity, as they are columns on the order item now.
+					unset( $cart_item['item_number']['options']['price_id'] );
+					unset( $cart_item['item_number']['options']['quantity'] );
+
+					foreach ( $cart_item['item_number']['options'] as $option_key => $value ) {
+						if ( is_array( $value ) ) {
+							$value = maybe_serialize( $value );
+						}
+
+						$option_key = '_option_' . sanitize_key( $option_key );
+
+						edd_add_order_item_meta( $order_item_id, $option_key, $value );
+					}
+				}
+
 				// If the order status is refunded, we also need to add all the refunded order items on the refund order as well.
 				if ( ! empty( $refund_id ) ) {
 
@@ -683,7 +716,7 @@ class Data_Migrator {
 					$refund_item_args['status']   = 'refunded';
 
 					// Negate the amounts
-					$refund_item_args['quantity'] = edd_negate_amount( $cart_item['quantity'] );
+					$refund_item_args['quantity'] = edd_negate_int( $cart_item['quantity'] );
 					$refund_item_args['amount']   = edd_negate_amount( (float) $cart_item['item_price'] );
 					$refund_item_args['subtotal'] = edd_negate_amount( $cart_item['subtotal'] );
 					$refund_item_args['discount'] = edd_negate_amount( $cart_item['discount'] );
@@ -695,6 +728,24 @@ class Data_Migrator {
 					$refund_item_args['date_modified'] = $data->post_modified_gmt;
 
 					$refund_order_item_id = edd_add_order_item( $refund_item_args );
+
+					if ( ! empty( $cart_item['item_number']['options'] ) ) {
+						// Collect any item_number options and store them.
+
+						// Remove our price_id and quantity, as they are columns on the order item now.
+						unset( $cart_item['item_number']['options']['price_id'] );
+						unset( $cart_item['item_number']['options']['quantity'] );
+
+						foreach ( $cart_item['item_number']['options'] as $option_key => $value ) {
+							if ( is_array( $value ) ) {
+								$value = maybe_serialize( $value );
+							}
+
+							$option_key = '_option_' . sanitize_key( $option_key );
+
+							edd_add_order_item_meta( $refund_order_item_id, $option_key, $value );
+						}
+					}
 
 				}
 
@@ -794,7 +845,7 @@ class Data_Migrator {
 					$refund_item_args = $order_item_args;
 
 					$refund_item_args['order_id'] = $refund_id;
-					$refund_item_args['quantity'] = edd_negate_amount( 1 );
+					$refund_item_args['quantity'] = edd_negate_int( 1 );
 					$refund_item_args['amount']   = edd_negate_amount( (float) $payment_meta['amount'] );
 					$refund_item_args['subtotal'] = edd_negate_amount( (float) $payment_meta['amount'] );
 					$refund_item_args['total']    = edd_negate_amount( (float) $payment_meta['amount'] );
@@ -814,23 +865,26 @@ class Data_Migrator {
 			? (float) $meta['_edd_payment_tax_rate'][0]
 			: 0.00;
 
-		// Tax rate is no longer stored in meta.
-		edd_add_order_adjustment( array(
-			'object_id'   => $order_id,
-			'object_type' => 'order',
-			'type_id'     => 0,
-			'type'        => 'tax_rate',
-			'total'       => $tax_rate,
-		) );
 
-		if ( ! empty( $refund_id ) ) {
+		if ( ! empty( $tax_rate ) ) {
+			// Tax rate is no longer stored in meta.
 			edd_add_order_adjustment( array(
-				'object_id'   => $refund_id,
+				'object_id'   => $order_id,
 				'object_type' => 'order',
 				'type_id'     => 0,
 				'type'        => 'tax_rate',
 				'total'       => $tax_rate,
 			) );
+
+			if ( ! empty( $refund_id ) ) {
+				edd_add_order_adjustment( array(
+					'object_id'   => $refund_id,
+					'object_type' => 'order',
+					'type_id'     => 0,
+					'type'        => 'tax_rate',
+					'total'       => $tax_rate,
+				) );
+			}
 		}
 
 		if ( isset( $payment_meta['fees'] ) && ! empty( $payment_meta['fees'] ) ) {
@@ -965,9 +1019,6 @@ class Data_Migrator {
 
 			edd_add_order_meta( $order_id, $meta_key, $meta_value );
 		}
-
-		// Store the legacy ID in order meta.
-		edd_add_order_meta( $order_id, 'legacy_order_id', $data->ID );
 
 		// Now that we're done, let's run a hook here so we can allow extensions to make any necessary changes
 		do_action( 'edd_30_migrate_order', $order_id, $data->ID );

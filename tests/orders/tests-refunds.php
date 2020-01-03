@@ -126,6 +126,10 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 
 		// Verify total.
 		$this->assertSame( -120.0, floatval( $o->total ) );
+
+		$refunded_items = edd_get_order_items( $refunded_order );
+
+		$this->assertEquals( edd_negate_int( $order_items[0]->quantity ), $refunded_items[0]->quantity );
 	}
 
 	/**

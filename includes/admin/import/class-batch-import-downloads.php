@@ -192,7 +192,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 				// setup files
 				if( ! empty( $this->field_mapping['files'] ) && ! empty( $row[ $this->field_mapping['files'] ] ) ) {
 
-					$files = $this->str_to_array( $row[ $this->field_mapping['files'] ] );
+					$files = $this->convert_file_string_to_array( $row[ $this->field_mapping['files'] ] );
 
 					$this->set_files( $download_id, $files );
 
@@ -339,13 +339,11 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 				}
 
 				$download_file_args = array(
-					'file' => $file_url,
-					'name' => basename( $file_url ),
+					'index'     => $file_id,
+					'file'      => $file_url,
+					'name'      => basename( $file_url ),
+					'condition' => empty( $condition ) ? 'all' : $condition
 				);
-
-				if ( ! empty( $condition ) ) {
-					$download_file_args['condition'] = $condition;
-				}
 
 				$download_files[ $file_id ] = $download_file_args;
 				$file_id++;

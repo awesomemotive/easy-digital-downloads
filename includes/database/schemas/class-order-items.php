@@ -125,8 +125,7 @@ class Order_Items extends Schema {
 			'name'       => 'amount',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0',
-			'validate'   => 'edd_sanitize_amount'
+			'default'    => '0'
 		),
 
 		// subtotal
@@ -134,8 +133,7 @@ class Order_Items extends Schema {
 			'name'       => 'subtotal',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0',
-			'validate'   => 'edd_sanitize_amount'
+			'default'    => '0'
 		),
 
 		// discount
@@ -143,8 +141,7 @@ class Order_Items extends Schema {
 			'name'       => 'discount',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0',
-			'validate'   => 'edd_sanitize_amount'
+			'default'    => '0'
 		),
 
 		// tax
@@ -152,8 +149,7 @@ class Order_Items extends Schema {
 			'name'       => 'tax',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0',
-			'validate'   => 'edd_sanitize_amount'
+			'default'    => '0'
 		),
 
 		// total
@@ -161,8 +157,7 @@ class Order_Items extends Schema {
 			'name'       => 'total',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0',
-			'validate'   => 'edd_sanitize_amount'
+			'default'    => '0'
 		),
 
 		// date_created

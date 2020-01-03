@@ -38,7 +38,7 @@ final class Order_Items extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201807270003;
+	protected $version = 201906240001;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -50,6 +50,7 @@ final class Order_Items extends Table {
 	protected $upgrades = array(
 		'201807270002' => 201807270002,
 		'201807270003' => 201807270003,
+		'201906240001' => 201906240001,
 	);
 
 	/**
@@ -68,7 +69,7 @@ final class Order_Items extends Table {
 			cart_index bigint(20) unsigned NOT NULL default '0',
 			type varchar(20) NOT NULL default 'download',
 			status varchar(20) NOT NULL default '',
-			quantity bigint(20) unsigned NOT NULL default '0',
+			quantity int signed NOT NULL default '0',
 			amount decimal(18,9) NOT NULL default '0',
 			subtotal decimal(18,9) NOT NULL default '0',
 			discount decimal(18,9) NOT NULL default '0',
@@ -135,6 +136,24 @@ final class Order_Items extends Table {
 				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;
 			" );
 		}
+
+		// Return success/fail
+		return $this->is_success( $result );
+	}
+
+	/**
+	 * Upgrade to version 201906240001
+	 * - Make the quantity column signed so it can contain negative numbers.
+	 * - Switch the quantity column from bigint to int for storage optimization.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool
+	 */
+	protected function __201906240001() {
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY `quantity` int signed NOT NULL default '0';
+		" );
 
 		// Return success/fail
 		return $this->is_success( $result );

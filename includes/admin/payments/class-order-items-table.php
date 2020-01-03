@@ -216,7 +216,6 @@ class Order_Items_Table extends List_Table {
 		// No state
 		$state = '';
 
-		// Active, so add "deactivate" action
 		if ( empty( $status ) ) {
 			$row_actions['complete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
 					'edd-action' => 'handle_order_item_change',
@@ -232,20 +231,10 @@ class Order_Items_Table extends List_Table {
 				$row_actions['copy'] = '<span class="edd-copy-download-link-wrapper"><a href="" class="edd-copy-download-link" data-download-id="' . esc_attr( $order_item->product_id ) . '" data-price-id="' . esc_attr( $order_item->price_id ) . '">' . $copy_text . '</a>';
 			}
 
-			$row_actions['refund'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-					'edd-action' => 'handle_order_item_change',
-					'status'     => 'refunded',
-					'order_item' => $order_item->id,
-				), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Refund', 'easy-digital-downloads' ) . '</a>';
+			$row_actions['refund'] = '<a class="edd-refund-order" href="">' . __( 'Refund', 'easy-digital-downloads' ) . '</a>';
 
-			// Inactive, so add "activate" action
 		} elseif ( 'refunded' === $status ) {
-			$state                   = __( 'Refunded', 'easy-digital-downloads' );
-			$row_actions['activate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-					'edd-action' => 'handle_order_item_change',
-					'status'     => 'inherit',
-					'order_item' => $order_item->id,
-				), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Reverse', 'easy-digital-downloads' ) . '</a>';
+			$state = __( 'Refunded', 'easy-digital-downloads' );
 		}
 
 		// Filter all order_item row actions
@@ -262,8 +251,16 @@ class Order_Items_Table extends List_Table {
 				'post'  => $order_item->product_id,
 			), admin_url( 'post.php' )  ) . '">' . $order_item->get_order_item_name() . '</a>' . $state . '</strong>';
 
+		// See what the current name of the product is:
+		$current_product_name = edd_get_download_name( $order_item->product_id, $order_item->price_id );
+		if ( strtolower( htmlentities( $current_product_name ) ) !== strtolower( htmlentities( $order_item->get_order_item_name() ) ) ) {
+			$status_help = '<p>' . sprintf( __( 'This product has been renamed since this purchase. It is now %s.', 'easy-digital-downloads' ), $current_product_name );
+
+			$order_item_title .= ' <span alt="f223" class="edd-help-tip dashicons dashicons-backup" title="' . $status_help . '"></span>';
+		}
+
 		// Return order_item title & row actions
-		return $order_item_title . $this->row_actions( $row_actions );
+		return apply_filters( 'edd_order_item_title_and_actions', $order_item_title . $this->row_actions( $row_actions ), $order_item );
 	}
 
 	/**
@@ -400,23 +397,19 @@ class Order_Items_Table extends List_Table {
 		}
 
 		// Query args.
-		$status  = $this->get_status();
-		$orderby = isset( $_GET['orderby'] ) ? sanitize_key( $_GET['orderby'] ) : 'id';
-		$order   = isset( $_GET['order'] ) ? sanitize_key( $_GET['order'] ) : 'DESC';
-		$search  = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : null;
-		$paged   = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
-		$id      = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
+		$status = $this->get_status();
+		$search = isset( $_GET['s']  ) ? sanitize_text_field( $_GET['s'] ) : null;
+		$id     = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
 
-		// Get order items.
-		return edd_get_order_items( array(
+		// Set args.
+		$this->args = $this->parse_pagination_args( array(
 			'order_id' => $id,
-			'number'   => $this->per_page,
-			'paged'    => $paged,
-			'orderby'  => $orderby,
-			'order'    => $order,
 			'status'   => $status,
 			'search'   => $search,
 		) );
+
+		// Get order items.
+		return edd_get_order_items( $this->args );
 	}
 
 	/**
@@ -438,9 +431,9 @@ class Order_Items_Table extends List_Table {
 		// Maybe setup pagination.
 		if ( ! edd_is_add_order_page() ) {
 			$this->set_pagination_args( array(
+				'total_pages' => ceil( $this->counts[ $status ] / $this->per_page ),
 				'total_items' => $this->counts[ $status ],
 				'per_page'    => $this->per_page,
-				'total_pages' => ceil( $this->counts[ $status ] / $this->per_page ),
 			) );
 		}
 	}

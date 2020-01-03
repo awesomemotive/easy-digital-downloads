@@ -66,7 +66,7 @@ class EDD_Notices {
 		} elseif ( is_array( $r['message'] ) ) {
 			$message       = '<p>' . implode( '</p><p>', array_map( array( $this, 'esc_notice' ), $r['message'] ) ) . '</p>';
 
-		// Messages as objects
+			// Messages as objects
 		} elseif ( is_wp_error( $r['message'] ) ) {
 			$default_class = 'is-error';
 			$errors        = $r['message']->get_error_messages();
@@ -85,7 +85,7 @@ class EDD_Notices {
 					break;
 			}
 
-		// Message is an unknown format, so bail
+			// Message is an unknown format, so bail
 		} else {
 			return false;
 		}
@@ -268,7 +268,8 @@ class EDD_Notices {
 		) ), 'edd_notice_nonce' );
 
 		// Running NGINX
-		if ( ! empty( $GLOBALS['is_nginx'] ) ) {
+		$show_nginx_notice = apply_filters( 'edd_show_nginx_redirect_notice', true );
+		if ( $show_nginx_notice && ! empty( $GLOBALS['is_nginx'] ) ) {
 			$this->add_notice( array(
 				'id'             => 'edd-nginx',
 				'class'          => 'error',
@@ -475,6 +476,18 @@ class EDD_Notices {
 		// Shop reports errors
 		if ( current_user_can( 'view_shop_reports' ) ) {
 			switch( $notice ) {
+				case 'order_trashed' :
+					$this->add_notice( array(
+						'id'      => 'edd-order-trashed',
+						'message' => __( 'The order has been moved to the trash.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'order_restored' :
+					$this->add_notice( array(
+						'id'      => 'edd-order-restored',
+						'message' => __( 'The order has been restored.', 'easy-digital-downloads' )
+					) );
+					break;
 				case 'payment_deleted' :
 					$this->add_notice( array(
 						'id'      => 'edd-payment-deleted',
@@ -536,6 +549,11 @@ class EDD_Notices {
 						'message' => __( 'API keys successfully revoked.', 'easy-digital-downloads' )
 					) );
 					break;
+				case 'sendwp-connected' :
+					$this->add_notice( array(
+						'id'      => 'edd-sendwp-connected',
+						'message' => __( 'SendWP has been successfully connected!', 'easy-digital-downloads' )
+					) );
 			}
 		}
 

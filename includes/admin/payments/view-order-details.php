@@ -31,7 +31,7 @@ if ( empty( $order ) ) {
 } ?>
 
 <div class="wrap edd-wrap">
-    <h1><?php printf( __( 'Edit Order: %s', 'easy-digital-downloads' ), $order->number ); ?></h1>
+	<h1><?php printf( __( 'Edit Order: %s', 'easy-digital-downloads' ), $order->number ); ?></h1>
 
 	<hr class="wp-header-end">
 
@@ -39,9 +39,23 @@ if ( empty( $order ) ) {
 		<p>Testers: This page is newly refreshed and non-functioning for this beta.</p>
 	</div>
 
+	<?php if ( 'refund' === $order->type ) : ?>
+		<div class="notice notice-info">
+			<p>
+				<?php
+				printf(
+					__( 'You are viewing a refund order. To view the original order, %sclick here%s.', 'easy-digital-downloads' ),
+					'<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $order->parent ) . '">',
+					'</a>'
+				);
+				?>
+			</p>
+		</div>
+	<?php endif; ?>
+
 	<?php do_action( 'edd_view_order_details_before', $order->id ); ?>
 
-    <form id="edd-edit-order-form" method="post">
+	<form id="edd-edit-order-form" method="post">
 		<?php do_action( 'edd_view_order_details_form_top', $order->id ); ?>
 
 		<div id="poststuff">
@@ -59,6 +73,9 @@ if ( empty( $order ) ) {
 
 							// Attributes
 							edd_order_details_attributes( $order );
+
+							// Related Refunds
+							edd_order_details_refunds( $order );
 
 							// Extras
 							edd_order_details_extras( $order );
@@ -89,6 +106,9 @@ if ( empty( $order ) ) {
 							// Details sections
 							edd_order_details_sections( $order );
 
+							// Legacy hook from pre version 3 of Easy Digital Downloads.
+							do_action( 'edd_view_order_details_billing_after', $order->id );
+
 							// After body
 							do_action( 'edd_view_order_details_main_after', $order->id );
 
@@ -113,3 +133,4 @@ if ( empty( $order ) ) {
 </div><!-- /.wrap -->
 
 <div id="edd-download-link" title="<?php _e( 'Download Links', 'easy-digital-downloads' ); ?>"></div>
+<div id="edd-refund-order-dialog" title="<?php _e( 'Submit Refund', 'easy-digital-downloads' ); ?>"></div>

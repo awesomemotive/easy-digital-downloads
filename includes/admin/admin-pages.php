@@ -313,7 +313,7 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 		case 'settings':
 			switch ( $passed_view ) {
 				case 'general':
-					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-settings' === $page && ( 'genera' === $tab || false === $tab ) ) {
+					if ( ( 'download' === $typenow || 'download' === $post_type ) && $pagenow === 'edit.php' && 'edd-settings' === $page && ( 'general' === $tab || false === $tab ) ) {
 						$found = true;
 					}
 					break;
@@ -453,3 +453,25 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 
 	return (bool) apply_filters( 'edd_is_admin_page', $found, $page, $view, $passed_page, $passed_view );
 }
+
+/**
+ * Forces the Cache-Control header on our admin pages to send the no-store header
+ * which prevents the back-forward cache (bfcache) from storing a copy of this page in local
+ * cache. This helps make sure that page elements modified via AJAX and DOM manipulations aren't
+ * incorrectly shown as if they never changed.
+ *
+ * @since 3.0
+ * @param array $headers An array of nocache headers.
+ *
+ * @return array
+ */
+function _edd_bfcache_buster( $headers ) {
+	if ( ! is_admin() & ! edd_is_admin_page() ) {
+		return $headers;
+	}
+
+	$headers['Cache-Control'] = 'no-cache, must-revalidate, max-age=0, no-store';
+
+	return $headers;
+}
+add_filter( 'nocache_headers', '_edd_bfcache_buster', 10, 1 );

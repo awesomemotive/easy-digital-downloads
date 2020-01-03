@@ -38,7 +38,7 @@ final class Adjustments extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201807270003;
+	protected $version = 201906030001;
 
 	/**
 	 * Array of upgrade versions and methods.
@@ -49,7 +49,8 @@ final class Adjustments extends Table {
 	 */
 	protected $upgrades = array(
 		'201806140002' => 201806140002,
-		'201807270003' => 201807270003
+		'201807270003' => 201807270003,
+		'201906030001' => 201906030001,
 	);
 
 	/**
@@ -73,7 +74,6 @@ final class Adjustments extends Table {
 			use_count bigint(20) unsigned NOT NULL default '0',
 			once_per_customer int(1) NOT NULL default '0',
 			min_charge_amount decimal(18,9) NOT NULL default '0',
-			product_condition varchar(20) NOT NULL DEFAULT 'all',
 			start_date datetime NOT NULL default '0000-00-00 00:00:00',
 			end_date datetime NOT NULL default '0000-00-00 00:00:00',
 			date_created datetime NOT NULL default '0000-00-00 00:00:00',
@@ -83,6 +83,33 @@ final class Adjustments extends Table {
 			KEY code_status_type_scope_amount (code(50),status(20),type(20),scope(20),amount_type(20)),
 			KEY date_created (date_created),
 			KEY date_start_end (start_date,end_date)";
+	}
+
+	/**
+	 * Create the table
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool
+	 */
+	public function create() {
+
+		$created = parent::create();
+
+		// After successful creation, we need to set the auto_increment for legacy orders.
+		if ( ! empty( $created ) ) {
+
+			$result = $this->get_db()->get_var( "SELECT ID FROM {$this->get_db()->prefix}posts WHERE post_type = 'edd_discount' ORDER BY ID DESC LIMIT 1;" );
+
+			if ( ! empty( $result )  ) {
+				$auto_increment = $result + 1;
+				$this->get_db()->query( "ALTER TABLE {$this->table_name}  AUTO_INCREMENT = {$auto_increment};" );
+			}
+
+		}
+
+		return $created;
+
 	}
 
 	/**
@@ -132,7 +159,6 @@ final class Adjustments extends Table {
 					'use_count'         => $discount->use_count,
 					'once_per_customer' => $discount->once_per_customer,
 					'min_cart_price'    => $discount->min_cart_price,
-					'product_condition' => $discount->product_condition,
 					'date_created'      => $discount->date_created,
 					'date_modified'     => $discount->date_modified,
 					'start_date'        => $discount->start_date,
@@ -195,5 +221,35 @@ final class Adjustments extends Table {
 
 		// Return success/fail
 		return $this->is_success( $result );
+	}
+
+	/**
+	 * Upgrade to version 201906030001
+	 * - Drop the `product_condition` column.
+	 *
+	 * @since 3.0
+	 *
+	 * @return boolean True if upgrade was successful, false otherwise.
+	 */
+	protected function __201906030001() {
+
+		// Look for column
+		$result = $this->column_exists( 'product_condition' );
+
+		// Maybe remove column
+		if ( true === $result ) {
+
+			// Try to remove it
+			$result = ! $this->get_db()->query( "
+				ALTER TABLE {$this->table_name} DROP COLUMN `product_condition`
+			" );
+
+			// Return success/fail
+			return $this->is_success( $result );
+
+		// Return true because column is already gone
+		} else {
+			return $this->is_success( true );
+		}
 	}
 }

@@ -419,7 +419,9 @@ jQuery( document ).ready( function( $ ) {
 			field_name = 'edd_address_state';
 		}
 
-		if ( 'card_state' !== $this.attr( 'id' ) ) {
+		let state_inputs = document.getElementById( field_name );
+
+		if ( 'card_state' !== $this.attr( 'id' ) && null != state_inputs ) {
 			const nonce = $( this ).data( 'nonce' );
 
 			// If the country field has changed, we need to update the state/province field
@@ -447,7 +449,7 @@ jQuery( document ).ready( function( $ ) {
 					const state_inputs = 'input[name="card_state"], select[name="card_state"], input[name="edd_address_state"], select[name="edd_address_state"]';
 
 					if ( 'nostates' === $.trim( response ) ) {
-						const text_field = '<input type="text" name="card_state" class="card-state edd-input required" value=""/>';
+						const text_field = '<input type="text" id="' + field_name + '" name="card_state" class="card-state edd-input required" value=""/>';
 						$form.find( state_inputs ).replaceWith( text_field );
 					} else {
 						$form.find( state_inputs ).replaceWith( response );

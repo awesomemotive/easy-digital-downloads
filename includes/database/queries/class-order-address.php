@@ -42,7 +42,7 @@ class Order_Address extends Query {
 	 * @access public
 	 * @var string
 	 */
-	protected $table_alias = 'ca';
+	protected $table_alias = 'oa';
 
 	/**
 	 * Name of class used to setup the database schema
@@ -110,12 +110,9 @@ class Order_Address extends Query {
 	 *     @type int          $order_id             A order ID to only return that object. Default empty.
 	 *     @type array        $order_id__in         Array of order IDs to include. Default empty.
 	 *     @type array        $order_id__not_in     Array of order IDs to exclude. Default empty.
-	 *     @type string       $first_name           A first name to only return that address. Default empty.
-	 *     @type array        $first_name__in       Array of first names to include. Default empty.
-	 *     @type array        $first_name__not_in   Array of first names to exclude. Default empty.
-	 *     @type string       $last_name            A last name to only return that address. Default empty.
-	 *     @type array        $last_name__in        Array of last names to include. Default empty.
-	 *     @type array        $last_name__not_in    Array of last names to exclude. Default empty.
+	 *     @type string       $name                 A name to only return that address.
+	 *     @type array        $name__in             Array of names to include. Default empty.
+	 *     @type array        $name__not_in         Array of names to exclude. Default empty.
 	 *     @type string       $address              An address to only return that address. Default empty.
 	 *     @type array        $address__in          Array of addresses to include. Default empty.
 	 *     @type array        $address__not_in      Array of addresses to exclude. Default empty.

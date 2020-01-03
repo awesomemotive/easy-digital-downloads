@@ -142,10 +142,11 @@ class EDD_Discount_Codes_Table extends List_Table {
 	 * @return string Start  date
 	 */
 	public function column_start_date( $discount ) {
-		$start_date = $discount->start_date;
+		$start_date            = $discount->start_date;
+		$timezone_abbreviation = edd_get_timezone_abbr();
 
 		if ( $start_date ) {
-			$display = edd_date_i18n( $start_date, 'M. d, Y' ) . '<br>' . edd_date_i18n( $start_date, 'H:i' );
+			$display = edd_date_i18n( $start_date, 'M. d, Y' ) . '<br>' . edd_date_i18n( $start_date, 'H:i' ) . ' ' . $timezone_abbreviation;
 		} else {
 			$display = '&mdash;';
 		}
@@ -162,10 +163,11 @@ class EDD_Discount_Codes_Table extends List_Table {
 	 * @return string Expiration date.
 	 */
 	public function column_end_date( $discount ) {
-		$expiration = $discount->end_date;
+		$expiration            = $discount->end_date;
+		$timezone_abbreviation = edd_get_timezone_abbr();
 
 		if ( $expiration ) {
-			$display = edd_date_i18n( $expiration, 'M. d, Y' ) . '<br>' . edd_date_i18n( $expiration, 'H:i' );
+			$display = edd_date_i18n( $expiration, 'M. d, Y' ) . '<br>' . edd_date_i18n( $expiration, 'H:i' ) . ' ' . $timezone_abbreviation;
 		} else {
 			$display = '&mdash;';
 		}
@@ -367,14 +369,15 @@ class EDD_Discount_Codes_Table extends List_Table {
 	 * @return array Discount codes table data.
 	 */
 	public function get_data() {
-		return edd_get_discounts( array(
-			'number'  => $this->per_page,
-			'paged'   => $this->get_paged(),
-			'orderby' => sanitize_text_field( $this->get_request_var( 'orderby', 'id'   ) ),
-			'order'   => sanitize_text_field( $this->get_request_var( 'order',   'DESC' ) ),
-			'status'  => $this->get_status(),
-			'search'  => $this->get_search()
+
+		// Parse pagination
+		$this->args = $this->parse_pagination_args( array(
+			'status' => $this->get_status(),
+			'search' => $this->get_search(),
 		) );
+
+		// Return data
+		return edd_get_discounts( $this->args );
 	}
 
 	/**
@@ -394,9 +397,9 @@ class EDD_Discount_Codes_Table extends List_Table {
 
 		// Setup pagination
 		$this->set_pagination_args( array(
+			'total_pages' => ceil( $this->counts[ $status ] / $this->per_page ),
 			'total_items' => $this->counts[ $status ],
 			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $this->counts[ $status ] / $this->per_page )
 		) );
 	}
 }
