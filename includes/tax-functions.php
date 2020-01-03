@@ -45,11 +45,16 @@ function edd_get_default_tax_rate() {
 	if( ! empty( $rate_id ) ) {
 
 		$default = edd_get_tax_rates( array( 'id' => $rate_id ), OBJECT );
-		$default = $default[0]->amount;
+
+		if( $default ) {
+
+			$default = $default[0]->amount;
+			
+		}
 
 	}
 
-	return apply_filters( 'edd_get_default_tax_rate', $rate_id );
+	return apply_filters( 'edd_get_default_tax_rate', $default );
 
 }
 
@@ -227,7 +232,6 @@ function edd_get_tax_rate( $country = '', $region = '' ) {
 			? edd_get_shop_state()
 			: $region;
 	}
-
 	// Attempt to determine the applicable tax rate.
 	if ( ! empty( $country ) ) {
 
