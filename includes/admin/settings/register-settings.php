@@ -1418,13 +1418,14 @@ function edd_settings_sanitize_tax_rate( $input ) {
 		'name'        => __( 'Global Rate', 'easy-digital-dowloads' ),
 		'type'        => 'tax_rate',
 		'scope'       => 'global',
+		'status'      => 'active',
 		'amount_type' => 'percent',
 		'amount'      => floatval( $tax_rate ),
 	);
 
 	$id = edd_get_option( 'edd_default_tax_rate_id' );
 
-	if ( ! empty( $id ) ) {
+	if ( ! empty( $id ) && edd_get_default_tax_rate() ) {
 		edd_update_adjustment( $id, $adjustment_data );
 	} else {
 		$id = edd_add_adjustment( $adjustment_data );
