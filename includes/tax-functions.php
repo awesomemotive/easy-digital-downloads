@@ -31,6 +31,21 @@ function edd_use_taxes() {
 }
 
 /**
+ * Returns the default tax_rate stored in adjustments
+ *
+ * @since 3.0
+ *
+ * @return array|\EDD\Adjustments\Adjustment Tax rate.
+ */
+function edd_get_default_tax_rate() {
+	// Default rate
+	$id      = edd_get_option( 'edd_default_tax_rate_id' );
+	$default = edd_get_tax_rates( array( 'id' => $id ), OBJECT );
+
+	return $default[0]->amount;
+}
+
+/**
  * Retrieve tax rates
  *
  * @since 1.6
@@ -156,7 +171,7 @@ function edd_active_tax_rates_query_clauses( $clauses ) {
 function edd_get_tax_rate( $country = '', $region = '' ) {
 
 	// Default rate
-	$rate = (float) edd_get_option( 'tax_rate', 0 );
+	$rate = (float) edd_get_default_tax_rate();
 
 	// Get the address, to try to get the tax rate
 	$user_address = edd_get_customer_address();
