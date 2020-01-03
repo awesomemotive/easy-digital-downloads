@@ -51,7 +51,7 @@
 		"webpack-cli": "3.3.0"
 	},
 	"scripts": {
-		"build": "wp-scripts build && npm run i18n",
+		"build": "wp-scripts build && grunt build",
 		"dev": "wp-scripts start",
 		"check-engines": "wp-scripts check-engines",
 		"check-licenses": "wp-scripts check-licenses --production",
