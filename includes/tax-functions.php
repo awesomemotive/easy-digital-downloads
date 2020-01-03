@@ -39,10 +39,18 @@ function edd_use_taxes() {
  */
 function edd_get_default_tax_rate() {
 	// Default rate
-	$id      = edd_get_option( 'edd_default_tax_rate_id' );
-	$default = edd_get_tax_rates( array( 'id' => $id ), OBJECT );
+	$default = 0;
+	$rate_id = edd_get_option( 'edd_default_tax_rate_id' );
 
-	return $default[0]->amount;
+	if( ! empty( $rate_id ) ) {
+
+		$default = edd_get_tax_rates( array( 'id' => $rate_id ), OBJECT );
+		$default = $default[0]->amount;
+
+	}
+
+	return apply_filters( 'edd_get_default_tax_rate', $rate_id );
+
 }
 
 /**
