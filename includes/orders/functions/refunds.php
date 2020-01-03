@@ -79,12 +79,13 @@ function edd_is_order_refundable( $order_id = 0 ) {
  *
  * @since 3.0
  *
- * @param int    $order_id Order ID.
- * @param string $status   Optional. Refund status. Default `complete`.
+ * @param int    $order_id    Order ID.
+ * @param string $status      Optional. Refund status. Default `complete`.
+ * @param array  $order_items Optional. Array of Order Item IDs to allow for a partial refund.
  *
  * @return int|false New order ID if successful, false otherwise.
  */
-function edd_refund_order( $order_id = 0, $status = 'complete' ) {
+function edd_refund_order( $order_id = 0, $status = 'complete', $order_items = array() ) {
 	global $wpdb;
 
 	// Bail if no order ID was passed.
@@ -121,10 +122,10 @@ function edd_refund_order( $order_id = 0, $status = 'complete' ) {
 	 *
 	 * @param int $order_id Order ID.
 	 */
-	$should_refund = apply_filters( 'edd_should_process_order_refund', '__return_true', $order_id );
+	$should_refund = apply_filters( 'edd_should_process_order_refund', true, $order_id );
 
 	// Bail if refund is blocked.
-	if ( ! $should_refund ) {
+	if ( true !== $should_refund ) {
 		return false;
 	}
 
@@ -157,7 +158,7 @@ function edd_refund_order( $order_id = 0, $status = 'complete' ) {
 
 			// First revision to order.
 			} else {
-				$number = $last_order->order_number . $refund_suffix . '1';
+				$number = $last_order->id . $refund_suffix . '1';
 			}
 
 		// Append to ID.
@@ -165,11 +166,35 @@ function edd_refund_order( $order_id = 0, $status = 'complete' ) {
 			$number = $last_order->id . $refund_suffix . '1';
 		}
 	} else {
-		$number = $order->get_number() . $refund_suffix . '1';
+		$number = $order->id . $refund_suffix . '1';
 	}
 
 	/** Insert order **********************************************************/
 
+	if ( is_array( $order_items ) && ! empty( $order_items ) ) {
+
+		$subtotal = 0;
+		$discount = 0;
+		$tax      = 0;
+		$total    = 0;
+
+		foreach ( $order->items as $item ) {
+			if ( ! in_array( $item->id, $order_items ) ) {
+				continue;
+			}
+
+			$subtotal += $item->subtotal;
+			$discount += $item->discount;
+			$tax      += $item->tax;
+			$total    += $item->total;
+		}
+
+	} else {
+		$subtotal = $order->subtotal;
+		$discount = $order->discount;
+		$tax      = $order->tax;
+		$total    = $order->total;
+	}
 	$order_data = array(
 		'parent'       => $order_id,
 		'order_number' => $number,
@@ -183,10 +208,10 @@ function edd_refund_order( $order_id = 0, $status = 'complete' ) {
 		'mode'         => $order->mode,
 		'currency'     => $order->currency,
 		'payment_key'  => strtolower( md5( uniqid() ) ),
-		'subtotal'     => edd_negate_amount( $order->subtotal ),
-		'discount'     => edd_negate_amount( $order->discount ),
-		'tax'          => edd_negate_amount( $order->tax ),
-		'total'        => edd_negate_amount( $order->total ),
+		'subtotal'     => edd_negate_amount( $subtotal ),
+		'discount'     => edd_negate_amount( $discount ),
+		'tax'          => edd_negate_amount( $tax ),
+		'total'        => edd_negate_amount( $total ),
 	);
 
 	// Full refund is inserted first to allow for conditional checks to run later
@@ -197,6 +222,12 @@ function edd_refund_order( $order_id = 0, $status = 'complete' ) {
 	/** Insert order items ****************************************************/
 
 	foreach ( $order->items as $item ) {
+
+		// If the $order_items var is an array, and it's not empty, verify this item is one being refunded.
+		if ( is_array( $order_items ) && ! empty( $order_items ) && ! in_array( $item->id, $order_items ) ) {
+			continue;
+		}
+
 		$order_item_id = edd_add_order_item( array(
 			'order_id'     => $new_order_id,
 			'product_id'   => $item->product_id,
@@ -205,7 +236,7 @@ function edd_refund_order( $order_id = 0, $status = 'complete' ) {
 			'cart_index'   => $item->cart_index,
 			'type'         => $item->type,
 			'status'       => 'refunded',
-			'quantity'     => edd_negate_amount( $item->quantity ),
+			'quantity'     => edd_negate_int( $item->quantity ),
 			'amount'       => edd_negate_amount( $item->amount ),
 			'subtotal'     => edd_negate_amount( $item->subtotal ),
 			'discount'     => edd_negate_amount( $item->discount ),
@@ -225,6 +256,9 @@ function edd_refund_order( $order_id = 0, $status = 'complete' ) {
 				'total'       => edd_negate_amount( $adjustment->total ),
 			) );
 		}
+
+		// Set the order item as 'refunded' on the original order.
+		edd_update_order_item( $item->id, array( 'status' => 'refunded' ) );
 	}
 
 	/** Insert order adjustments **********************************************/
@@ -242,18 +276,20 @@ function edd_refund_order( $order_id = 0, $status = 'complete' ) {
 		) );
 	}
 
-	// Log the refund.
-	edd_add_log( array(
-		'object_id'   => $order_id,
-		'object_type' => 'order',
-		'user_id'     => get_current_user_id(),
-		'type'        => 'refund',
-		'title'       => __( 'Refund Issued', 'easy-digital-downloads' ),
-		'content'     => __( 'A refund for the entire order was issued.', 'easy-digital-downloads' ),
+	// Update order status to `refunded` once refund is complete and if all items are marked as refunded.
+	$all_refunded = true;
+	$order_items = edd_get_order_items( array(
+		'order_id' => $order_id,
+		'number'   => 999,
 	) );
 
-	// Update order status to `refunded` once refund is complete.
-	if ( 'complete' === $status ) {
+	foreach ( $order_items as $order_item ) {
+		if ( 'refunded' !== $order_item->status ) {
+			$all_refunded = false;
+			break;
+		}
+	}
+	if ( 'complete' === $status && $all_refunded ) {
 		edd_update_order( $order_id, array(
 			'status' => 'refunded',
 		) );
@@ -312,10 +348,10 @@ function edd_refund_order_item( $order_item_id = 0 ) {
 	 *
 	 * @param int $order_item Order item ID.
 	 */
-	$should_refund = apply_filters( 'edd_should_process_partial_refund', '__return_true', $order_item_id );
+	$should_refund = apply_filters( 'edd_should_process_partial_refund', true, $order_item_id );
 
 	// Bail if refund is blocked.
-	if ( ! $should_refund ) {
+	if ( true !== $should_refund ) {
 		return false;
 	}
 

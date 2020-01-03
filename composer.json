@@ -6,7 +6,7 @@
     "homepage": "https://easydigitaldownloads.com/",
     "license": "GPL-2.0+",
     "support": {
-   	  "issues": "https://easydigitaldownloads.com/support"
+        "issues": "https://easydigitaldownloads.com/support"
     },
     "require": {
         "php": ">=5.3.0",

@@ -171,7 +171,7 @@ function edd_get_download_name( $download_id = 0, $price_id = 0 ) {
 
 		// Product has prices
 		if ( ! empty( $price_name ) ) {
-			$retval .= ' &mdash; ' . $price_name;
+			$retval .= ' — ' . $price_name;
 		}
 	}
 
@@ -1579,8 +1579,7 @@ function edd_get_download_token( $url = '' ) {
 		$parts['path'] = '';
 	}
 
-	$token = md5( $parts['path'] . '?' . $parts['query'] );
-
+	$token = hash_hmac( 'sha256', $parts['path'] . '?' . $parts['query'], wp_salt( 'edd_file_download_link' ) );
 	return $token;
 }
 
@@ -1625,7 +1624,7 @@ function edd_validate_url_token( $url = '' ) {
 			wp_die( apply_filters( 'edd_download_link_expired_text', esc_html__( 'Sorry but your download link has expired.', 'easy-digital-downloads' ) ), esc_html__( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		}
 
-		if ( isset( $query_args['token'] ) && edd_get_download_token( $url ) === $query_args['token'] ) {
+		if ( isset( $query_args['token'] ) && hash_equals( $query_args['token'], edd_get_download_token( $url ) ) ) {
 			$ret = true;
 		}
 	}

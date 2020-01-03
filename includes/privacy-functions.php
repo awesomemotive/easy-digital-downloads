@@ -648,6 +648,10 @@ function edd_privacy_customer_record_exporter( $email_address = '', $page = 1 ) 
 function edd_privacy_billing_information_exporter( $email_address = '', $page = 1 ) {
 	$customer = new EDD_Customer( $email_address );
 
+	if ( empty( $customer->id ) ) {
+		return array( 'data' => array(), 'done' => true );
+	}
+
 	$orders = edd_get_orders( array(
 		'customer_id' => $customer->id,
 		'number'      => 30,
@@ -828,6 +832,10 @@ function edd_privacy_billing_information_exporter( $email_address = '', $page = 
  */
 function edd_privacy_file_download_log_exporter( $email_address = '', $page = 1 ) {
 	$customer = new EDD_Customer( $email_address );
+
+	if ( empty( $customer->id ) ) {
+		return array( 'data' => array(), 'done' => true );
+	}
 
 	$logs = edd_get_file_download_logs( array(
 		'customer_id' => $customer->id,

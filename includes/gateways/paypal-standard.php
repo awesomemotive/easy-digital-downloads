@@ -313,11 +313,29 @@ function edd_process_paypal_purchase( $purchase_data ) {
 		// Fix for some sites that encode the entities
 		$paypal_redirect = str_replace( '&amp;', '&', $paypal_redirect );
 
-		// Redirect to PayPal
+		// Allow paypal as a redirect destination.
+		add_filter( 'allowed_redirect_hosts', 'edd_allow_redirect_to_paypal', 10 );
+
+		// Redirect to PayPal.
 		edd_redirect( $paypal_redirect );
 	}
 }
 add_action( 'edd_gateway_paypal', 'edd_process_paypal_purchase' );
+
+/**
+ * Add paypal.com to the list of allowed hosts that wp_safe_redirect can redirect to.
+ *
+ * @since 3.0
+ * @param array $redirects - The list of urls that wp_safe_redirect can redirect to.
+ * @return array
+ */
+function edd_allow_redirect_to_paypal( $redirects ) {
+	$redirects[] = 'www.sandbox.paypal.com';
+	$redirects[] = 'sandbox.paypal.com';
+	$redirects[] = 'www.paypal.com';
+	$redirects[] = 'paypal.com';
+	return $redirects;
+}
 
 /**
  * Listens for a PayPal IPN requests and then sends to the processing function
@@ -903,7 +921,18 @@ function edd_paypal_process_pdt_on_return() {
 		return;
 	}
 
-	$payment = new EDD_Payment( $payment_id );
+	$purchase_session = edd_get_purchase_session();
+	$payment          = new EDD_Payment( $payment_id );
+
+	// If there is no purchase session, don't try and fire PDT.
+	if ( empty( $purchase_session ) ) {
+		return;
+	}
+
+	// Do not fire a PDT verification if the purchase session does not match the payment-id PDT is asking to verify.
+	if ( ! empty( $purchase_session['purchase_key'] ) && $payment->key !== $purchase_session['purchase_key'] ) {
+		return;
+	}
 
 	if ( $token && ! empty( $_GET['tx'] ) && $payment->ID > 0 ) {
 

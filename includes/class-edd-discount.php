@@ -552,6 +552,7 @@ class EDD_Discount extends Adjustment {
 		 */
 		$this->excluded_products = (array) edd_get_adjustment_meta( $this->id, 'excluded_product',    false );
 		$this->product_reqs      = (array) edd_get_adjustment_meta( $this->id, 'product_requirement', false );
+		$this->product_condition = (string) edd_get_adjustment_meta( $this->id, 'product_condition', true );
 
 		/**
 		 * Fires after the instance of the EDD_Discount object is set up. Allows extensions to add items to this object via hook.
@@ -1240,7 +1241,7 @@ class EDD_Discount extends Adjustment {
 		if ( $this->start_date ) {
 			$start_date = strtotime( $this->start_date );
 
-			if ( $start_date < current_time( 'timestamp' ) ) {
+			if ( $start_date < time() ) {
 				// Discount has pased the start date
 				$return = true;
 			} elseif ( $set_error ) {
@@ -1279,7 +1280,7 @@ class EDD_Discount extends Adjustment {
 
 		$end_date = strtotime( $this->end_date );
 
-		if ( $end_date < current_time( 'timestamp' ) ) {
+		if ( $end_date < time() ) {
 			if ( $update ) {
 				$this->update_status( 'expired' );
 			}

@@ -428,105 +428,9 @@ function edd_register_overview_report( $reports ) {
 			'label' => __( 'Sales and Earnings', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
 			'views' => array(
 				'chart' => array(
-					'data_callback' => function () use ( $filter ) {
-						global $wpdb;
-
-						$dates        = Reports\get_dates_filter( 'objects' );
-						$day_by_day   = Reports\get_dates_filter_day_by_day();
-						$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
-
-						$sql_clauses = array(
-							'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day',
-							'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
-							'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
-						);
-
-						if ( ! $day_by_day ) {
-							$sql_clauses = array(
-								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
-								'groupby' => 'YEAR(date_created), MONTH(date_created)',
-								'orderby' => 'YEAR(date_created), MONTH(date_created)',
-							);
-						} elseif ( $hour_by_hour ) {
-							$sql_clauses = array(
-								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day, HOUR(date_created) AS hour',
-								'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
-								'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
-							);
-						}
-
-						$results = $wpdb->get_results( $wpdb->prepare(
-							"SELECT COUNT(id) AS sales, SUM(total) AS earnings, {$sql_clauses['select']}
-					         FROM {$wpdb->edd_orders} edd_o
-					         WHERE date_created >= %s AND date_created <= %s
-                             GROUP BY {$sql_clauses['groupby']}
-                             ORDER BY {$sql_clauses['orderby']} ASC",
-							$dates['start']->copy()->format( 'mysql' ), $dates['end']->copy()->format( 'mysql' ) ) );
-
-						$sales    = array();
-						$earnings = array();
-
-						// Initialise all arrays with timestamps and set values to 0.
-						while ( strtotime( $dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $dates['end']->copy()->format( 'mysql' ) ) ) {
-							if ( $hour_by_hour ) {
-							    $timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $dates['start']->day, $dates['start']->hour, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
-
-							    $sales[ $timestamp ][] = $timestamp;
-								$sales[ $timestamp ][] = 0;
-
-								$earnings[ $timestamp ][] = $timestamp;
-								$earnings[ $timestamp ][] = 0.00;
-
-								$dates['start']->addHour( 1 );
-							} else {
-								$day = ( true === $day_by_day )
-									? $dates['start']->day
-									: 1;
-
-								$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
-
-								$sales[ $timestamp ][] = $timestamp;
-								$sales[ $timestamp ][] = 0;
-
-								$earnings[ $timestamp ][] = $timestamp;
-								$earnings[ $timestamp ][] = 0.00;
-
-								$dates['start'] = ( true === $day_by_day )
-									? $dates['start']->addDays( 1 )
-									: $dates['start']->addMonth( 1 );
-							}
-						}
-
-						foreach ( $results as $result ) {
-							if ( $hour_by_hour ) {
-
-								/**
-								 * If this is hour by hour, the database returns the timestamps in UTC and an offset
-								 * needs to be applied to that.
-								 */
-								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $result->day, $result->hour, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
-							} else {
-								$day = ( true === $day_by_day )
-									? $result->day
-									: 1;
-
-								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
-							}
-
-							$sales[ $timestamp ][1]    = $result->sales;
-							$earnings[ $timestamp ][1] = floatval( $result->earnings );
-						}
-
-						$sales    = array_values( $sales );
-						$earnings = array_values( $earnings );
-
-						return array(
-							'sales'    => $sales,
-							'earnings' => $earnings,
-						);
-					},
+					'data_callback' => 'edd_overview_sales_earnings_chart',
 					'type'          => 'line',
-					'options' => array(
+					'options'       => array(
 						'datasets' => array(
 							'sales'    => array(
 								'label'                => __( 'Sales', 'easy-digital-downloads' ),
@@ -641,7 +545,7 @@ function edd_register_downloads_report( $reports ) {
 								if ( $d->object->has_variable_prices() ) {
 									$prices = array_values( wp_filter_object_list( $d->object->get_prices(), array( 'index' => absint( $d->price_id ) ) ) );
 
-									$title .= is_array( $prices )
+									$title .= ( is_array( $prices ) && isset( $prices[0] ) )
 										? ': ' . $prices[0]['name']
 										: '';
 								}
@@ -1075,7 +979,7 @@ function edd_register_refunds_report( $reports ) {
 						$stats  = new EDD\Stats();
 						$number = $stats->get_order_refund_count( array(
 							'range'  => $filter['range'],
-							'status' => array( 'refunded' ),
+							'status' => array( 'complete' ),
 						) );
 						return apply_filters( 'edd_reports_refunds_fully_refunded_order_count', esc_html( $number ) );
 					},
@@ -1189,103 +1093,7 @@ function edd_register_refunds_report( $reports ) {
 			'label' => __( 'Refunds', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
 			'views' => array(
 				'chart' => array(
-					'data_callback' => function () use ( $filter ) {
-						global $wpdb;
-
-						$dates        = Reports\get_dates_filter( 'objects' );
-						$day_by_day   = Reports\get_dates_filter_day_by_day();
-						$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
-
-						$sql_clauses = array(
-							'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day',
-							'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
-							'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created)',
-						);
-
-						if ( ! $day_by_day ) {
-							$sql_clauses = array(
-								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month',
-								'groupby' => 'YEAR(date_created), MONTH(date_created)',
-								'orderby' => 'YEAR(date_created), MONTH(date_created)',
-							);
-						} elseif ( $hour_by_hour ) {
-							$sql_clauses = array(
-								'select'  => 'YEAR(date_created) AS year, MONTH(date_created) AS month, DAY(date_created) AS day, HOUR(date_created) AS hour',
-								'groupby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
-								'orderby' => 'YEAR(date_created), MONTH(date_created), DAY(date_created), HOUR(date_created)',
-							);
-						}
-
-						$results = $wpdb->get_results( $wpdb->prepare(
-							"SELECT COUNT(total) AS number, SUM(total) AS amount, {$sql_clauses['select']}
-							 FROM {$wpdb->edd_orders} o
-							 WHERE status IN (%s, %s) AND date_created >= %s AND date_created <= %s
-							 GROUP BY {$sql_clauses['groupby']}
-							 ORDER BY {$sql_clauses['orderby']} ASC",
-							esc_sql( 'refunded' ), esc_sql( 'partially_refunded' ), $dates['start']->copy()->format( 'mysql' ), $dates['end']->copy()->format( 'mysql' ) ) );
-
-						$number = array();
-						$amount = array();
-
-						// Initialise all arrays with timestamps and set values to 0.
-						while ( strtotime( $dates['start']->copy()->format( 'mysql' ) ) <= strtotime( $dates['end']->copy()->format( 'mysql' ) ) ) {
-							if ( $hour_by_hour ) {
-								$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $dates['start']->day, $dates['start']->hour, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
-
-								$number[ $timestamp ][] = $timestamp;
-								$number[ $timestamp ][] = 0;
-
-								$amount[ $timestamp ][] = $timestamp;
-								$amount[ $timestamp ][] = 0.00;
-
-								$dates['start']->addHour( 1 );
-							} else {
-								$day = ( true === $day_by_day )
-									? $dates['start']->day
-									: 1;
-
-								$timestamp = \Carbon\Carbon::create( $dates['start']->year, $dates['start']->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
-
-								$number[ $timestamp ][] = $timestamp;
-								$number[ $timestamp ][] = 0;
-
-								$amount[ $timestamp ][] = $timestamp;
-								$amount[ $timestamp ][] = 0.00;
-
-								$dates['start'] = ( true === $day_by_day )
-									? $dates['start']->addDays( 1 )
-									: $dates['start']->addMonth( 1 );
-							}
-						}
-
-						foreach ( $results as $result ) {
-							if ( $hour_by_hour ) {
-
-								/**
-								 * If this is hour by hour, the database returns the timestamps in UTC and an offset
-								 * needs to be applied to that.
-								 */
-								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $result->day, $result->hour, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
-							} else {
-								$day = ( true === $day_by_day )
-									? $result->day
-									: 1;
-
-								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
-							}
-
-							$number[ $timestamp ][1] = $result->number;
-							$amount[ $timestamp ][1] = floatval( abs( $result->amount ) );
-						}
-
-						$number = array_values( $number );
-						$amount = array_values( $amount );
-
-						return array(
-							'number' => $number,
-							'amount' => $amount,
-						);
-					},
+					'data_callback' => 'edd_overview_refunds_chart',
 					'type'          => 'line',
 					'options'       => array(
 						'datasets' => array(
@@ -1988,7 +1796,7 @@ function edd_register_file_downloads_report( $reports ) {
 				'tile' => array(
 					'data_callback' => function () use ( $filter ) {
 						$stats = new EDD\Stats();
-						$d = $stats->get_most_downloaded_products();
+						$d = $stats->get_most_downloaded_products( array( 'range' => $filter['range'] ) );
 						if ( $d ) {
 							return apply_filters( 'edd_reports_file_downloads_most_downloaded_product', esc_html( $d[0]->object->post_title ) );
 						}

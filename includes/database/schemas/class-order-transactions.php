@@ -93,8 +93,7 @@ class Order_Transactions extends Schema {
 			'name'       => 'total',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0',
-			'validate'   => 'edd_sanitize_amount'
+			'default'    => '0'
 		),
 
 		// date_created

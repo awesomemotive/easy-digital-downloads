@@ -2611,6 +2611,7 @@ class EDD_Payment {
 						'transaction_id' => $meta_value,
 						'gateway'        => $this->gateway,
 						'status'         => 'complete',
+						'total'          => $this->total,
 					) );
 				}
 		}
@@ -3201,7 +3202,7 @@ class EDD_Payment {
 	 * @return int|string Integer by default, or string if sequential order numbers is enabled.
 	 */
 	private function setup_payment_number() {
-		return $this->order->get_number();
+		return $this->order->order_number;
 	}
 
 	/**
@@ -3513,7 +3514,7 @@ class EDD_Payment {
 	 * @return int|string Payment number.
 	 */
 	private function get_number() {
-		return apply_filters( 'edd_payment_number', $this->number, $this->ID, $this );
+		return $this->order->get_number();
 	}
 
 	/**

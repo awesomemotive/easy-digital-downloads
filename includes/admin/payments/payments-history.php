@@ -117,23 +117,29 @@ function edd_get_payment_view() {
  */
 function edd_payment_history_page() {
 
+	// Enqueue Admin Orders
+	wp_enqueue_script( 'edd-admin-orders' );
+
 	// What are we viewing?
 	switch ( edd_get_payment_view() ) {
 
 		// Edit
 		case 'view-order-details' :
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/view-order-details.php';
+			wp_enqueue_script( 'edd-admin-payments' );
 			break;
 
 		// Add
 		case 'add-order' :
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/add-order.php';
+			wp_enqueue_script( 'edd-admin-payments' );
 			edd_add_order_page_content();
 			break;
 
 		// List Table
 		case 'list' :
 		default :
+			wp_enqueue_script( 'edd-admin-payments' );
 			edd_order_list_table_content();
 			break;
 	}

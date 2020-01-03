@@ -79,7 +79,6 @@ class Manifest implements Error_Logger {
 	 */
 	public function __construct( $endpoint ) {
 		$this->setup_error_logger();
-
 		$this->set_type( $endpoint->get_type() );
 		$this->set_endpoint( $endpoint );
 
@@ -308,7 +307,7 @@ class Manifest implements Error_Logger {
 	public function get_target_el() {
 		$endpoint = $this->get_endpoint();
 		$default  = "edd_reports_graph_{$endpoint->get_id()}";
-		
+
 		return $endpoint->get_display_arg( 'target', $default );
 	}
 

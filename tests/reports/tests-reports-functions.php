@@ -339,7 +339,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'last_year'    => __( 'Last Year', 'easy-digital-downloads' ),
 			'other'        => __( 'Custom', 'easy-digital-downloads' )
 		);
-		
+
 		$this->assertEqualSetsWithIndex( $expected, get_dates_filter_options() );
 	}
 
@@ -390,7 +390,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'this_month',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'this_month' );
+		$result = parse_dates_for_range( 'this_month' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -410,7 +410,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'last_month',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'last_month' );
+		$result = parse_dates_for_range( 'last_month' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -425,12 +425,12 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_parse_dates_for_range_with_today_range_should_return_those_dates() {
 		$expected = array(
-			'start' => self::$date->copy()->startOfDay()->toDateTimeString(),
-			'end'   => self::$date->copy()->endOfDay()->toDateTimeString(),
+			'start' => self::$date->copy()->setTimezone( edd_get_timezone_id() )->startOfDay()->setTimezone( 'UTC' ),
+			'end'   => self::$date->copy()->setTimezone( edd_get_timezone_id() )->endOfDay()->setTimezone( 'UTC' ),
 			'range' => 'today',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'today' );
+		$result = parse_dates_for_range( 'today' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -445,12 +445,12 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_parse_dates_for_range_with_yesterday_range_should_return_those_dates() {
 		$expected = array(
-			'start' => self::$date->copy()->subDay( 1 )->startOfDay()->toDateTimeString(),
-			'end'   => self::$date->copy()->subDay( 1 )->endOfDay()->toDateTimeString(),
+			'start' => self::$date->copy()->setTimezone( edd_get_timezone_id() )->subDay( 1 )->startOfDay()->setTimezone( 'UTC' ),
+			'end'   => self::$date->copy()->setTimezone( edd_get_timezone_id() )->subDay( 1 )->endOfDay()->setTimezone( 'UTC' ),
 			'range' => 'yesterday',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'yesterday' );
+		$result = parse_dates_for_range( 'yesterday' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -470,7 +470,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'this_week',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'this_week' );
+		$result = parse_dates_for_range( 'this_week' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -490,7 +490,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'last_week',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'last_week' );
+		$result = parse_dates_for_range( 'last_week' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -510,7 +510,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'last_30_days',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'last_30_days' );
+		$result = parse_dates_for_range( 'last_30_days' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -530,7 +530,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'this_quarter',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'this_quarter' );
+		$result = parse_dates_for_range( 'this_quarter' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -550,7 +550,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'last_quarter',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'last_quarter' );
+		$result = parse_dates_for_range( 'last_quarter' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -570,7 +570,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'this_year',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'this_year' );
+		$result = parse_dates_for_range( 'this_year' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -590,7 +590,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'last_year',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'last_year' );
+		$result = parse_dates_for_range( 'last_year' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -618,7 +618,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'other',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'other' );
+		$result = parse_dates_for_range( 'other' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -638,7 +638,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'last_30_days',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'fake' );
+		$result = parse_dates_for_range( 'fake' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -757,8 +757,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		clear_filter( 'dates' );
 
 		// Default to last 30 days for filter value.
-		$date  = EDD()->utils->date( 'now' );
-		$dates = parse_dates_for_range( $date, 'last_30_days' );
+		$dates = parse_dates_for_range( 'last_30_days' );
 
 		$expected = array(
 			'from'  => $dates['start']->format( 'Y-m-d' ),
