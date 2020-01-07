@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function edd_get_option( $key = '', $default = false ) {
 	global $edd_options;
-	
+
 	$value = ! empty( $edd_options[ $key ] )
 		? $edd_options[ $key ]
 		: $default;
@@ -795,19 +795,6 @@ function edd_get_registered_settings() {
 					),
 				),
 				'rates' => array(
-					'tax_rate' => array(
-						'id'            => 'tax_rate',
-						'name'          => __( 'Default Rate', 'easy-digital-downloads' ),
-						'desc'          => __( 'Customers not in a region below will be charged this tax rate instead. Enter <code>6.5</code> for 6.5%. ', 'easy-digital-downloads' ),
-						'type'          => 'number',
-						'size'          => 'small',
-						'step'          => '0.0001',
-						'std'           => (float) edd_get_default_tax_rate(),
-						'min'           => '0',
-						'max'           => '99',
-						'tooltip_title' => __( 'Default Rate', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'If the customer\'s address fails to meet the below tax rules, you can define a default tax rate to be applied to all other customers. Enter a percentage, such as 6.5 for 6.5%.', 'easy-digital-downloads' ),
-					),
 					'tax_rates' => array(
 						'id'   => 'tax_rates',
 						'name' => '<strong>' . __( 'Regional Rates', 'easy-digital-downloads' ) . '</strong>',
@@ -1392,50 +1379,6 @@ function edd_settings_sanitize_misc_accounting( $input ) {
 add_filter( 'edd_settings_misc-accounting_sanitize', 'edd_settings_sanitize_misc_accounting' );
 
 /**
- * Default Tax Rate Settins Sanitization
- *
- * Saves to adjustments database as special type
- *
- * @since 3.0
- *
- * @param array $input The value inputted in the field
- *
- * @return array $input Sanitized value.
- */
-function edd_settings_sanitize_tax_rate( $input ) {
-
-	if ( ! current_user_can( 'manage_shop_settings' ) ) {
-		return $input;
-	}
-
-	if ( ! isset( $_POST['edd_settings']['tax_rate'] ) ) {
-		return $input;
-	}
-
-	$tax_rate = sanitize_text_field( $_POST['edd_settings']['tax_rate'] );
-
-	$adjustment_data = array(
-		'name'        => __( 'Global Rate', 'easy-digital-dowloads' ),
-		'type'        => 'tax_rate',
-		'scope'       => 'global',
-		'status'      => 'active',
-		'amount_type' => 'percent',
-		'amount'      => floatval( $tax_rate ),
-	);
-
-	$id = edd_get_option( 'edd_default_tax_rate_id' );
-
-	if ( ! empty( $id ) && edd_get_default_tax_rate() ) {
-		edd_update_adjustment( $id, $adjustment_data );
-	} else {
-		$id = edd_add_adjustment( $adjustment_data );
-		$input['edd_default_tax_rate_id'] = $id;
-	}
-
-	return $input;
-}
-
-/**
  * Taxes Settings Sanitization
  *
  * Adds a settings error (for the updated message)
@@ -1452,9 +1395,6 @@ function edd_settings_sanitize_taxes( $input ) {
 	if ( ! current_user_can( 'manage_shop_settings' ) ) {
 		return $input;
 	}
-
-	// Check for default tax rate changes first
-	$input = edd_settings_sanitize_tax_rate( $input );
 
 	if ( ! isset( $_POST['tax_rates'] ) ) {
 		return $input;
@@ -1475,7 +1415,7 @@ function edd_settings_sanitize_taxes( $input ) {
 			: '';
 
 		$rate = sanitize_text_field( $tax_rate['rate'] );
-		
+
 		$adjustment_data = array(
 			'name'        => sanitize_text_field( $tax_rate['country'] ),
 			'type'        => 'tax_rate',
