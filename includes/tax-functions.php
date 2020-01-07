@@ -31,34 +31,6 @@ function edd_use_taxes() {
 }
 
 /**
- * Returns the default tax_rate stored in adjustments
- *
- * @since 3.0
- *
- * @return array|\EDD\Adjustments\Adjustment Tax rate.
- */
-function edd_get_default_tax_rate() {
-	// Default rate
-	$default = 0;
-	$rate_id = edd_get_option( 'edd_default_tax_rate_id' );
-
-	if( ! empty( $rate_id ) ) {
-
-		$default = edd_get_tax_rates( array( 'id' => $rate_id ), OBJECT );
-
-		if( $default ) {
-
-			$default = $default[0]->amount;
-			
-		}
-
-	}
-
-	return apply_filters( 'edd_get_default_tax_rate', $default );
-
-}
-
-/**
  * Retrieve tax rates
  *
  * @since 1.6

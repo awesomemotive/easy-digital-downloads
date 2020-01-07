@@ -1465,7 +1465,6 @@ function edd_tools_sysinfo_get() {
 	// EDD Taxes
 	$return .= "\n" . '-- EDD Tax Configuration' . "\n\n";
 	$return .= 'Taxes:                    ' . ( edd_use_taxes() ? "Enabled\n" : "Disabled\n" );
-	$return .= 'Default Rate:             ' . edd_get_formatted_tax_rate() . "\n";
 	$return .= 'Display On Checkout:      ' . ( edd_get_option( 'checkout_include_tax', false ) ? "Displayed\n" : "Not Displayed\n" );
 	$return .= 'Prices Include Tax:       ' . ( edd_prices_include_tax() ? "Yes\n" : "No\n" );
 
