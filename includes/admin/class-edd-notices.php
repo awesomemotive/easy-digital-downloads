@@ -355,6 +355,29 @@ class EDD_Notices {
 					'is_dismissible' => false
 				) );
 			}
+
+			// Default tax rate detected
+			if ( edd_get_option( 'tax_rate' ) && edd_is_test_mode() ) {
+
+				// URL to fix this
+				$url = add_query_arg( array(
+					'post_type' => 'download',
+					'page'      => 'edd-settings',
+					'tab'       => 'taxes',
+					'section'   => 'rates'
+				) );
+
+				// Link
+				$link = '<a href="' . esc_url( $url ) . '">' . __( 'Review Tax Rates', 'easy-digital-downloads' ) . '</a>';
+
+				// Add the notice
+				$this->add_notice( array(
+					'id'             => 'edd-gateways',
+					'class'          => '',
+					'message'        => sprintf( __( 'A default tax rate was detected. This option was removed in Easy Digital Downloads 3.0. Please confirm your tax rates are properly configured and update tax settings to remove this notice. %s.', 'easy-digital-downloads' ), $link ),
+					'is_dismissible' => false
+				) );
+			}
 		}
 	}
 
