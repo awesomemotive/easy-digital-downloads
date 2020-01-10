@@ -357,7 +357,7 @@ class EDD_Notices {
 			}
 
 			// Default tax rate detected
-			if ( edd_get_option( 'tax_rate' ) && edd_is_test_mode() ) {
+			if ( edd_get_option( 'tax_rate' ) ) {
 
 				// URL to fix this
 				$url = add_query_arg( array(
