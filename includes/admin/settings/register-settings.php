@@ -1863,8 +1863,10 @@ function edd_textarea_callback( $args ) {
 	}
 
 	$class = edd_sanitize_html_class( $args['field_class'] );
+	$rows = isset( $args['rows'] ) ? (int) $args['rows'] : 5;
+	$cols = isset( $args['cols'] ) ? (int) $args['cols'] : 50;
 
-	$html = '<textarea class="' . $class . ' large-text" cols="50" rows="5" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
+	$html = '<textarea class="' . $class . ' large-text" cols="' . esc_attr( $cols ) . '" rows="' . esc_attr( $rows ) . '" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']">' . esc_textarea( stripslashes( $value ) ) . '</textarea>';
 	$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
