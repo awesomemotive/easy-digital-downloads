@@ -6,6 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: ecommerce, e-commerce, sell, downloads, store, paypal, checkout, shop
 Requires at least: 4.4
 Tested up to: 5.3
+Requires PHP: 5.6
 Stable Tag: 2.9.20
 License: GNU Version 2 or Any Later Version
 
