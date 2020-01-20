@@ -71,7 +71,7 @@ if ( $purchases ) :
 										endforeach;
 
 									else :
-										apply_filters('edd_receipt_no_files_found_text', __( 'No downloadable files found.', 'easy-digital-downloads' ), $download['id']);
+										echo apply_filters('edd_receipt_no_files_found_text', __( 'No downloadable files found.', 'easy-digital-downloads' ), $download['id']);
 									endif; // End if payment complete
 
 								else : ?>
