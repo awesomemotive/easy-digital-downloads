@@ -554,7 +554,7 @@ function edd_order_details_adjustments( $order ) {
 				<ul>
 					<li class="credit" style="display: none;">
 						<input type="text" class="edd-add-order-credit-description" value="" placeholder="Description" />
-						<input type="number" class="edd-add-order-credit-amount" value="" min="1" placeholder="Amount" />
+						<input type="text" class="edd-add-order-credit-amount" value="" placeholder="Amount" />
 					</li>
 				</ul>
 
