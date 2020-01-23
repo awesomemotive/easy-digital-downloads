@@ -39,10 +39,11 @@ class Most_Valuable_Customers_List_Table extends \EDD_Customer_Reports_Table {
 
 		$data = array();
 
-		$filter = Reports\get_filter_value( 'dates' );
+		$filter     = Reports\get_filter_value( 'dates' );
+		$date_range = Reports\parse_dates_for_range( $filter['range'] );
 
-		$start_date = sanitize_text_field( date( 'Y-m-d 00:00:00', strtotime( $filter['from'] ) ) );
-		$end_date   = sanitize_text_field( date( 'Y-m-d 23:59:59', strtotime( $filter['to'] ) ) );
+		$start_date = sanitize_text_field( date( 'Y-m-d 00:00:00', strtotime( $date_range['start'] ) ) );
+		$end_date   = sanitize_text_field( date( 'Y-m-d 23:59:59', strtotime( $date_range['end'] ) ) );
 
 		$sql = "SELECT customer_id, COUNT(id) AS order_count, SUM(total) AS total_spent
 				FROM {$wpdb->edd_orders}
