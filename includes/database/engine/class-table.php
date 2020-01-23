@@ -314,7 +314,7 @@ abstract class Table extends Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return bool
+	 * @return bool|void
 	 */
 	public function exists() {
 
@@ -341,7 +341,7 @@ abstract class Table extends Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return bool
+	 * @return bool|void
 	 */
 	public function column_exists( $name = '' ) {
 
@@ -368,7 +368,7 @@ abstract class Table extends Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return bool
+	 * @return bool|void
 	 */
 	public function create() {
 
@@ -393,7 +393,7 @@ abstract class Table extends Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return mixed
+	 * @return bool|void
 	 */
 	public function drop() {
 
@@ -418,7 +418,7 @@ abstract class Table extends Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return mixed
+	 * @return bool|void
 	 */
 	public function truncate() {
 
@@ -443,7 +443,7 @@ abstract class Table extends Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return mixed
+	 * @return int|void Number of items deleted.
 	 */
 	public function delete_all() {
 
@@ -468,7 +468,7 @@ abstract class Table extends Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return mixed
+	 * @return void|int
 	 */
 	public function count() {
 
@@ -497,7 +497,7 @@ abstract class Table extends Base {
 	 *
 	 * @param int $number
 	 *
-	 * @return mixed
+	 * @return bool|void
 	 */
 	public function set_auto_increment( $number = 1 ) {
 
