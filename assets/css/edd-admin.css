@@ -107,7 +107,7 @@ a.edd-delete:hover {
 
 /* Coffee */
 .admin-color-coffee .edd-settings-sub-nav a.current {
-	border-bottom-color: #096484;
+	border-bottom-color: #c7a589;
 }
 
 /* Ectoplasm */
@@ -117,7 +117,7 @@ a.edd-delete:hover {
 
 /* Midnight */
 .admin-color-midnight .edd-settings-sub-nav a.current {
-	border-bottom-color: #26292c;
+	border-bottom-color: #e14d43;
 }
 
 /* Ocean */
@@ -3237,9 +3237,8 @@ body.download_page_edd-reports {
 #edd-item-tab-wrapper li a:hover,
 .edd-vertical-sections .section-nav li a:hover,
 .edd-vertical-sections .section-nav li a:focus {
-	background-color: #eee;
-	outline: 2px solid #0073aa;
-	outline-offset: -2px;
+	box-shadow: inset 5px 0;
+	transition: all .5s;
 }
 
 .edd-vertical-sections .section-nav .section-title--is-active a:after {
@@ -3274,7 +3273,6 @@ body.download_page_edd-reports {
 }
 
 .edd-vertical-sections .section-nav .section-title--is-active a {
-	position: relative;
 	font-weight: bold;
 	color: #555;
 	background-color: #fff;
@@ -3293,55 +3291,75 @@ body.download_page_edd-reports {
 }
 
 /* Fresh */
+.admin-color-fresh .edd-vertical-sections .section-nav li a:hover,
+.admin-color-fresh .edd-vertical-sections .section-nav li a:focus,
 .admin-color-fresh .edd-vertical-sections .section-nav .section-title--is-active a {
-	border-left: 5px solid #0073aa;
+	box-shadow: inset 5px 0 #0073aa;
 }
 
 /* Blue */
+.admin-color-blue .edd-vertical-sections .section-nav li a:hover,
+.admin-color-blue .edd-vertical-sections .section-nav li a:focus,
 .admin-color-blue .edd-vertical-sections .section-nav .section-title--is-active a {
-	border-left: 5px solid #096484;
+	box-shadow: inset 5px 0 #096484;
 }
 
 /* Coffee */
+.admin-color-coffee .edd-vertical-sections .section-nav li a:hover,
+.admin-color-coffee .edd-vertical-sections .section-nav li a:focus,
 .admin-color-coffee .edd-vertical-sections .section-nav .section-title--is-active a {
-	border-left: 5px solid #096484;
+	box-shadow: inset 5px 0 #c7a589;
 }
 
 /* Ectoplasm */
+.admin-color-ectoplasm .edd-vertical-sections .section-nav li a:hover,
+.admin-color-ectoplasm .edd-vertical-sections .section-nav li a:focus,
 .admin-color-ectoplasm .edd-vertical-sections .section-nav .section-title--is-active a {
-	border-left: 5px solid #a3b745;
+	box-shadow: inset 5px 0 #a3b745;
 }
 
 /* Midnight */
+.admin-color-midnight .edd-vertical-sections .section-nav li a:hover,
+.admin-color-midnight .edd-vertical-sections .section-nav li a:focus,
 .admin-color-midnight .edd-vertical-sections .section-nav .section-title--is-active a {
-	border-left: 5px solid #26292c;
+	box-shadow: inset 5px 0 #e14d43;
 }
 
 /* Ocean */
+.admin-color-ocean .edd-vertical-sections .section-nav li a:hover,
+.admin-color-ocean .edd-vertical-sections .section-nav li a:focus,
 .admin-color-ocean .edd-vertical-sections .section-nav .section-title--is-active a {
-	border-left: 5px solid #627c83;
+	box-shadow: inset 5px 0 #627c83;
 }
 
 /* Sunrise */
+.admin-color-sunrise .edd-vertical-sections .section-nav li a:hover,
+.admin-color-sunrise .edd-vertical-sections .section-nav li a:focus,
 .admin-color-sunrise .edd-vertical-sections .section-nav .section-title--is-active a {
-	border-left: 5px solid #be3631;
+	box-shadow: inset 5px 0 #be3631;
 }
 
 /* Light */
+.admin-color-light .edd-vertical-sections .section-nav li a:hover,
+.admin-color-light .edd-vertical-sections .section-nav li a:focus,
 .admin-color-light .edd-vertical-sections .section-nav .section-title--is-active a {
-	border-left: 5px solid #888;
+	box-shadow: inset 5px 0 #888;
 }
 
 /* bbPress Color Schemes */
 
 /* Evergreen */
+.admin-color-evergreen .edd-vertical-sections .section-nav li a:hover,
+.admin-color-evergreen .edd-vertical-sections .section-nav li a:focus,
 .admin-color-evergreen .edd-vertical-sections .section-nav .section-title--is-active a {
-	border-left: 5px solid #36533f;
+	box-shadow: inset 5px 0 #36533f;
 }
 
 /* Mint */
+.admin-color-mint .edd-vertical-sections .section-nav li a:hover,
+.admin-color-mint .edd-vertical-sections .section-nav li a:focus,
 .admin-color-mint .edd-vertical-sections .section-nav .section-title--is-active a {
-	border-left: 5px solid #4f6d59;
+	box-shadow: inset 5px 0 #4f6d59;
 }
 
 .edd-vertical-sections .section-nav .section-title--is-active .dashicons {
