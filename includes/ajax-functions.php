@@ -982,9 +982,11 @@ function edd_ajax_add_order_item() {
 		$response['total']    = floatval( ( $amount * $quantity ) + $response['tax'] );
 
 		static $symbol = null;
+		static $symbol_position = null;
 
 		if ( null === $symbol ) {
-			$symbol = edd_currency_symbol( edd_get_currency() );
+			$symbol            = edd_currency_symbol( edd_get_currency() );
+			$currency_position = edd_get_option( 'currency_position', 'before' );
 		}
 
 		ob_start(); ?>
@@ -993,26 +995,47 @@ function edd_ajax_add_order_item() {
 			<td class="name column-name column-primary"><a class="row-title" href=""><?php echo esc_html( $response['name'] ); ?></a></td>
 
 			<td class="overridable amount column-amount" data-type="amount">
-				<?php echo esc_html( $symbol ); ?>
-				<input type="text" class="download-amount" name="downloads[0][amount]" value="<?php echo esc_attr( edd_format_amount( $response['amount'] ) ); ?>" <?php readonly( $editable ); ?> />
+				<div class="edd-amount edd-amount--currency-position-<?php echo esc_attr( $currency_position ); ?>">
+					<div class="edd-amount__symbol">
+						<?php echo esc_html( $symbol ); ?>
+					</div>
+
+					<div class="edd-amount__input">
+						<input type="text" class="download-amount" name="downloads[0][amount]" value="<?php echo esc_attr( edd_format_amount( $response['amount'] ) ); ?>" <?php readonly( $editable ); ?> />
+					</div>
+				</div>
 			</td>
 
 			<?php if ( edd_item_quantities_enabled() ) : ?>
 				<td class="overridable quantity column-quantity" data-type="quantity">
-					<input type="text" class="download-quantity" name="downloads[0][quantity]" value="<?php echo esc_attr( $quantity ); ?>" <?php readonly( $editable ); ?> />
+					<input type="number" step="1" min="1" class="download-quantity" name="downloads[0][quantity]" value="<?php echo esc_attr( $quantity ); ?>" <?php readonly( $editable ); ?> />
 				</td>
 			<?php endif; ?>
 
 			<?php if ( edd_use_taxes() ) : ?>
 				<td class="overridable tax column-tax" data-type="tax">
-					<?php echo esc_html( $symbol ); ?>
-					<input type="text" class="download-tax" name="downloads[0][tax]" value="<?php echo esc_attr( edd_format_amount( $response['tax'] ) ); ?>" <?php readonly( $editable ); ?> />
+					<div class="edd-amount edd-amount--currency-position-<?php echo esc_attr( $currency_position ); ?>">
+						<div class="edd-amount__symbol">
+							<?php echo esc_html( $symbol ); ?>
+						</div>
+
+						<div class="edd-amount__input">
+							<input type="text" class="download-tax" name="downloads[0][tax]" value="<?php echo esc_attr( edd_format_amount( $response['tax'] ) ); ?>" <?php readonly( $editable ); ?> />
+						</div>
+					</div>
 				</td>
 			<?php endif; ?>
 
 			<td class="overridable total column-total" data-type="total">
-					<?php echo esc_html( $symbol ); ?>
-					<input type="text" class="download-total" name="downloads[0][total]" value="<?php echo esc_attr( edd_format_amount( $response['total'] ) ); ?>" <?php readonly( $editable ); ?> />
+				<div class="edd-amount edd-amount--currency-position-<?php echo esc_attr( $currency_position ); ?>">
+					<div class="edd-amount__symbol">
+						<?php echo esc_html( $symbol ); ?>
+					</div>
+
+					<div class="edd-amount__input">
+						<input type="text" class="download-total" name="downloads[0][total]" value="<?php echo esc_attr( edd_format_amount( $response['total'] ) ); ?>" <?php readonly( $editable ); ?> />
+					</div>
+				</div>
 			</td>
 
 			<th scope="row" class="check-column"><a href="#" class="remove-item"><span class="dashicons dashicons-no"></span></a></th>
@@ -1065,12 +1088,6 @@ function edd_ajax_add_adjustment_to_order() {
 	// Bail if an invalid type is passed.
 	if ( ! in_array( $type, $valid_types, true ) ) {
 		wp_send_json_error();
-	}
-
-	static $symbol = null;
-
-	if ( null === $symbol ) {
-		$symbol = edd_currency_symbol( edd_get_currency() );
 	}
 
 	switch ( $type ) {
@@ -1130,7 +1147,7 @@ function edd_ajax_add_adjustment_to_order() {
 				<td class="name column-name column-primary"><a class="row-title" href=""><?php esc_html_e( 'Order Credit', 'easy-digital-downloads' ); ?></a></td>
 				<td class="type column-type"><?php esc_html_e( 'Credit', 'easy-digital-downloads' ); ?></td>
 				<td class="description column-description"><?php echo $description; // WPCS: XSS ok. ?></span></td>
-				<td class="amount column-amount"><?php echo esc_html( $symbol ); ?><span class="value"><?php echo esc_html( edd_format_amount( $amount ) ); ?></span></td>
+				<td class="amount column-amount"><span class="value"><?php echo esc_html( edd_currency_filter( edd_format_amount( $amount ) ) ); ?></span></td>
 				<th scope="row" class="check-column"><a href="#" class="remove-item"><span class="dashicons dashicons-no"></span></a></th>
 				<input type="hidden" class="credit-description" name="adjustments[credit][0][description]" value="<?php echo $description; // WPCS: XSS ok. ?>" />
 				<input type="hidden" class="credit-amount" name="adjustments[credit][0][amount]" value="<?php echo $amount; // WPCS: XSS ok. ?>" />

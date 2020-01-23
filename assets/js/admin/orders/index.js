@@ -1,10 +1,11 @@
 /**
  * Internal dependencies.
  */
-import { getChosenVars } from 'utils/chosen.js';
+import { Currency, getChosenVars } from 'utils';
 import './override-amounts.js';
 
 const edd_admin_globals = {};
+const currency = new Currency;
 
 /**
  * Add order
@@ -102,7 +103,7 @@ var EDD_Add_Order = {
 						discount: $( '.edd-order-add-discount-select' ).val(),
 						credit: {
 							description: $( '.edd-add-order-credit-description' ).val(),
-							amount: $( '.edd-add-order-credit-amount' ).val(),
+							amount: currency.unformat( $( '.edd-add-order-credit-amount' ).val() ),
 						},
 					},
 				},
@@ -346,7 +347,7 @@ var EDD_Add_Order = {
 				item_tax = 0,
 				item_total;
 
-			item_amount = parseFloat( row.find( '.amount input' ).val() );
+			item_amount = currency.unformat( row.find( '.amount input' ).val() );
 
 			if ( row.find( '.quantity' ).length ) {
 				item_quantity = parseFloat( row.find( '.quantity input' ).val() );
@@ -355,7 +356,7 @@ var EDD_Add_Order = {
 			subtotal += item_amount * item_quantity;
 
 			if ( row.find( '.tax' ).length ) {
-				item_tax = parseFloat( row.find( '.tax input' ).val() );
+				item_tax = currency.unformat( row.find( '.tax input' ).val() );
 
 				if ( ! isNaN( item_tax ) && ! edd_vars.taxes_included ) {
 					item_amount += item_tax;
@@ -363,7 +364,7 @@ var EDD_Add_Order = {
 				}
 			}
 
-			item_total = item_amount * item_quantity;
+			item_total = subtotal + tax;
 
 			total += item_total;
 		} );
@@ -374,36 +375,17 @@ var EDD_Add_Order = {
 				amount = 0;
 
 			type = row.data( 'adjustment' );
+			amount = currency.unformat( row.find( '.column-amount .value', row ).text() );
 
 			switch ( type ) {
 				case 'credit':
-					amount = parseFloat( row.find( 'input.credit-amount', row ).val() );
 					adjustments += amount;
 					total -= amount;
 					break;
 				case 'discount':
-					amount = parseFloat( row.find( 'input.discount-amount', row ).val() );
-
 					if ( 'percent' === row.find( 'input.discount-type' ).val() ) {
 						$( '.orderitems tbody tr:not(.no-items)' ).each( function() {
-							let item_amount = $( this ).find( '.amount .value' ).text(),
-								quantity = 1;
-
-							if ( $( this ).find( '.quantity' ).length ) {
-								quantity = parseFloat( $( this ).find( '.quantity' ).text() );
-							}
-
-							item_amount *= quantity;
-
-							const reduction = parseFloat( ( item_amount / 100 ) * amount );
-
-							if ( $( this ).find( '.tax' ).length ) {
-								const item_tax = parseFloat( $( this ).find( '.tax .value' ).text() ),
-									item_tax_reduction = parseFloat( item_tax / 100 * amount );
-
-								tax -= item_tax_reduction;
-								total -= item_tax_reduction;
-							}
+							const reduction = parseFloat( ( amount / 100 ) * subtotal );
 
 							discounts += reduction;
 							total -= reduction;
@@ -437,11 +419,11 @@ var EDD_Add_Order = {
 			adjustments = 0;
 		}
 
-		$( ' .edd-order-subtotal .value' ).html( subtotal.toFixed( edd_vars.currency_decimals ) );
-		$( ' .edd-order-discounts .value' ).html( discounts.toFixed( edd_vars.currency_decimals ) );
-		$( ' .edd-order-adjustments .value' ).html( adjustments.toFixed( edd_vars.currency_decimals ) );
-		$( ' .edd-order-taxes .value' ).html( tax.toFixed( edd_vars.currency_decimals ) );
-		$( ' .edd-order-total .value ' ).html( total.toFixed( edd_vars.currency_decimals ) );
+		$( '.edd-order-subtotal .value' ).html( currency.formatCurrency( subtotal ) );
+		$( '.edd-order-discounts .value' ).html( currency.formatCurrency( discounts ) );
+		$( '.edd-order-adjustments .value' ).html( currency.formatCurrency( adjustments ) );
+		$( '.edd-order-taxes .value' ).html( currency.formatCurrency( tax ) );
+		$( '.edd-order-total .value' ).html( currency.formatCurrency( total ) );
 	},
 
 	validate: function() {

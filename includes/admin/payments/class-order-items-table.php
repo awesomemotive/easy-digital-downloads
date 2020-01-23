@@ -189,14 +189,7 @@ class Order_Items_Table extends List_Table {
 	 * @return string Formatted amount.
 	 */
 	private function format_currency( $order_item, $column_name ) {
-		static $symbol = null;
-
-		if ( is_null( $symbol ) ) {
-			$currency = edd_get_order( $order_item->order_id )->currency;
-			$symbol   = edd_currency_symbol( $currency );
-		}
-
-		return $symbol . edd_format_amount( $order_item->{$column_name} );
+		return edd_currency_filter( edd_format_amount( $order_item->{$column_name} ) );
 	}
 
 	/**

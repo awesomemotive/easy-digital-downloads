@@ -19,7 +19,7 @@ import EDD_Add_Order from './index.js';
 	 */
 	$( document ).on( 'edd-admin-add-order-download', function( response ) {
 		// Update on change.
-		_.each( document.querySelectorAll( '.overridable input' ), ( el ) => el.addEventListener( 'keyup', EDD_Add_Order.update_totals ) );
+		_.each( document.querySelectorAll( '.overridable input' ), ( el ) => el.addEventListener( 'input', EDD_Add_Order.update_totals ) );
 
 		// Update on addition.
 		EDD_Add_Order.update_totals();
