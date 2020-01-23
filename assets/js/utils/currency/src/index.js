@@ -8,7 +8,7 @@ const number_format = require( 'locutus/php/strings/number_format' );
 /**
  * Currency
  */
-class Currency {
+export const Currency = class Currency {
 
 	/**
 	 * Creates configuration for currency formatting.
@@ -139,5 +139,3 @@ class Currency {
 	}
 
 }
-
-export default Currency;
