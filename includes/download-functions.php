@@ -917,32 +917,33 @@ function edd_set_file_download_limit_override( $download_id = 0, $payment_id = 0
  */
 function edd_is_file_at_download_limit( $download_id = 0, $payment_id = 0, $file_id = 0, $price_id = false ) {
 
-	// Checks to see if at limit
-	$logs = new EDD_Logging();
-
-	$meta_query = array(
-		'relation'	=> 'AND',
-		array(
-			'key' 	=> '_edd_log_file_id',
-			'value' => (int) $file_id
-		),
-		array(
-			'key' 	=> '_edd_log_payment_id',
-			'value' => (int) $payment_id
-		),
-		array(
-			'key' 	=> '_edd_log_price_id',
-			'value' => (int) $price_id
-		)
-	);
-
-	$ret                = false;
-	$download_count     = $logs->get_log_count( $download_id, 'file_download', $meta_query );
-
 	$download_limit     = edd_get_file_download_limit( $download_id );
 	$unlimited_purchase = edd_payment_has_unlimited_downloads( $payment_id );
 
 	if ( ! empty( $download_limit ) && empty( $unlimited_purchase ) ) {
+
+		// Checks to see if at limit
+		$logs = new EDD_Logging();
+
+		$meta_query = array(
+			'relation'	=> 'AND',
+			array(
+				'key' 	=> '_edd_log_file_id',
+				'value' => (int) $file_id
+			),
+			array(
+				'key' 	=> '_edd_log_payment_id',
+				'value' => (int) $payment_id
+			),
+			array(
+				'key' 	=> '_edd_log_price_id',
+				'value' => (int) $price_id
+			)
+		);
+
+		$ret                = false;
+		$download_count     = $logs->get_log_count( $download_id, 'file_download', $meta_query );
+
 		if ( $download_count >= $download_limit ) {
 			$ret = true;
 
