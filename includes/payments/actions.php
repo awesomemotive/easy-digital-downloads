@@ -66,18 +66,8 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 			}
 
-			$increase_earnings = $download['price'];
-			if ( ! empty( $download['fees'] ) ) {
-				foreach ( $download['fees'] as $fee ) {
-					if ( $fee['amount'] > 0 ) {
-						continue;
-					}
-					$increase_earnings += $fee['amount'];
-				}
-			}
-
 			// Increase the earnings for this download ID
-			edd_increase_earnings( $download['id'], $increase_earnings );
+			edd_increase_earnings( $download['id'], $download['price'] );
 			edd_increase_purchase_count( $download['id'], $download['quantity'] );
 
 		}

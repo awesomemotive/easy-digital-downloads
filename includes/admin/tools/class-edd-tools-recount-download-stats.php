@@ -91,6 +91,8 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 
 			foreach ( $payments as $payment ) {
 
+				$payment = new EDD_Payment( $payment->ID );
+
 				if ( ! in_array( $payment->post_status, $accepted_statuses ) ) {
 					continue;
 				}
@@ -105,17 +107,34 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 
 					$this->_log_ids_debug[] = $payment->ID;
 
-					$amount = $item['price'];
+					/*
+					 * Prior to version 2.9.9, there was a bug with item-specific earnings.
+					 *
+					 * To get around it, we will use alternate calculation logic if the payment was created before version 2.9.9 was released.
+					 *
+					 * This is not a perfect fix but is as close as we can get to accurate reporting.
+					 *
+					 * See https://github.com/easydigitaldownloads/easy-digital-downloads/issues/7507
+					 */
+					if ( $payment->date > '2018-12-03' ) {
 
-					if ( ! empty( $item['fees'] ) ) {
-						foreach( $item['fees'] as $fee ) {
-							// Only let negative fees affect earnings
-							if ( $fee['amount'] > 0 ) {
-								continue;
+						$amount = $item['price'];
+
+					} else {
+
+						$amount = $item['price'];
+
+						if ( ! empty( $item['fees'] ) ) {
+							foreach( $item['fees'] as $fee ) {
+								// Only let negative fees affect earnings
+								if ( $fee['amount'] > 0 ) {
+									continue;
+								}
+
+								$amount += $fee['amount'];
 							}
-
-							$amount += $fee['amount'];
 						}
+
 					}
 
 					$totals['sales']++;
