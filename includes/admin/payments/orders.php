@@ -76,6 +76,12 @@ function edd_get_order_details_sections( $order ) {
 			'icon'     => 'admin-comments',
 			'callback' => 'edd_order_details_notes',
 		),
+		array(
+			'id'       => 'logs',
+			'label'    => __( 'Logs', 'easy-digital-downloads' ),
+			'icon'     => 'admin-tools',
+			'callback' => 'edd_order_details_logs',
+		),
 	);
 
 	// Override sections if adding a new order.
@@ -394,6 +400,47 @@ function edd_order_details_notes( $order ) {
 	</div>
 
 	<?php
+}
+
+/**
+ * Outputs the Order Details logs section.
+ *
+ * @since 3.0
+ *
+ * @param \EDD\Orders\Order $order
+ */
+function edd_order_details_logs( $order ) {
+?>
+
+	<div>
+		<?php
+		/**
+		 * Allows output before the list of logs.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param int $order_id ID of the current order.
+		 */
+		do_action( 'edd_view_order_details_logs_before', $order->id );
+		?>
+
+		<p><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=logs&payment=' . $order->id ); ?>"><?php esc_html_e( 'File Download Log for Order', 'easy-digital-downloads' ); ?></a></p>
+		<p><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=logs&customer=' . $order->customer_id ); ?>"><?php esc_html_e( 'Customer Download Log', 'easy-digital-downloads' ); ?></a></p>
+		<p><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . esc_attr( edd_get_payment_user_email( $order->id ) ) ); ?>"><?php esc_html_e( 'Customer Orders', 'easy-digital-downloads' ); ?></a></p>
+
+		<?php
+		/**
+		 * Allows further output after the list of logs.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param int $order_id ID of the current order.
+		 */
+		do_action( 'edd_view_order_details_logs_after', $order->id );
+		?>
+	</div>
+
+<?php
 }
 
 /** Main **********************************************************************/
@@ -716,37 +763,6 @@ function edd_order_details_extras( $order = false ) {
 	</div>
 
 <?php
-}
-
-/**
- * Output the order details logs box
- *
- * @since 3.0
- *
- * @param object $order
- */
-function edd_order_details_logs( $order ) {
-	?>
-
-	<div id="edd-order-logs" class="postbox edd-order-logs">
-		<h3 class="hndle"><span><?php esc_html_e( 'Logs', 'easy-digital-downloads' ); ?></span></h3>
-
-		<div class="inside">
-			<div class="edd-admin-box">
-				<div class="edd-admin-box-inside">
-					<ul>
-						<li><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=logs&payment=' . $order->id ); ?>"><?php esc_html_e( 'File Download Log for Order', 'easy-digital-downloads' ); ?></a></li>
-						<li><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=logs&customer=' . $order->customer_id ); ?>"><?php esc_html_e( 'Customer Download Log', 'easy-digital-downloads' ); ?></a></li>
-						<li><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . esc_attr( edd_get_payment_user_email( $order->id ) ) ); ?>"><?php esc_html_e( 'Customer Orders', 'easy-digital-downloads' ); ?></a></li>
-					</ul>
-				</div>
-
-				<?php do_action( 'edd_view_order_details_logs_inner', $order->id ); ?>
-			</div><!-- /.column-container -->
-		</div><!-- /.inside -->
-	</div><!-- /#edd-order-logs -->
-
-	<?php
 }
 
 /**
