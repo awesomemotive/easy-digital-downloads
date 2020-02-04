@@ -364,7 +364,7 @@ var Manager = wp.Backbone.View.extend({
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.array.find */ "./node_modules/core-js/modules/es6.array.find.js");
+/* WEBPACK VAR INJECTION */(function($) {/* harmony import */ var core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.array.find */ "./node_modules/core-js/modules/es6.array.find.js");
 /* harmony import */ var core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var utils_chosen_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! utils/chosen.js */ "./assets/js/utils/chosen.js");
 
@@ -405,6 +405,7 @@ var RegionField = wp.Backbone.View.extend({
   }
 });
 /* harmony default export */ __webpack_exports__["default"] = (RegionField);
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! jquery */ "jquery")))
 
 /***/ }),
 
@@ -417,7 +418,7 @@ var RegionField = wp.Backbone.View.extend({
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.array.find */ "./node_modules/core-js/modules/es6.array.find.js");
+/* WEBPACK VAR INJECTION */(function($) {/* harmony import */ var core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.array.find */ "./node_modules/core-js/modules/es6.array.find.js");
 /* harmony import */ var core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _models_tax_rate_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../models/tax-rate.js */ "./assets/js/admin/settings/tax-rates/models/tax-rate.js");
 /* harmony import */ var _views_region_field_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./../views/region-field.js */ "./assets/js/admin/settings/tax-rates/views/region-field.js");
@@ -558,6 +559,7 @@ var TableAdd = wp.Backbone.View.extend({
   }
 });
 /* harmony default export */ __webpack_exports__["default"] = (TableAdd);
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! jquery */ "jquery")))
 
 /***/ }),
 
@@ -1697,6 +1699,17 @@ NAME in FProto || __webpack_require__(/*! ./_descriptors */ "./node_modules/core
   }
 });
 
+
+/***/ }),
+
+/***/ "jquery":
+/*!*************************!*\
+  !*** external "jQuery" ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = jQuery;
 
 /***/ })
 
