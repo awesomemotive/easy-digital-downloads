@@ -24,7 +24,7 @@ function edd_date_i18n( $timestamp, $format = 'date' ) {
 	$format = edd_get_date_format( $format );
 
 	// If timestamp is a string, attempt to turn it into a timestamp.
-	if ( is_string( $timestamp ) ) {
+	if ( ! is_numeric( $timestamp ) ) {
 		$timestamp = strtotime( $timestamp );
 	}
 

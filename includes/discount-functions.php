@@ -28,6 +28,16 @@ function edd_add_discount( $data = array() ) {
 	$product_condition    = isset( $data['product_condition'] ) ? $data['product_condition'] : null;
 	unset( $data['product_reqs'], $data['excluded_products'], $data['product_condition'] );
 
+	if ( isset( $data['expiration'] ) ) {
+		$data['end_date'] = $data['expiration'];
+		unset( $data['expiration'] );
+	}
+
+	if ( isset( $data['start'] ) ) {
+		$data['start_date'] = $data['start'];
+		unset( $data['start'] );
+	}
+
 	// Setup the discounts query.
 	$discounts = new EDD\Compat\Discount_Query();
 
