@@ -11,6 +11,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
+		// All tests will take the -5 (Central Time Zone) into account.
 		update_option( 'gmt_offset', -5 );
 
 		EDD()->utils->get_gmt_offset( true );
