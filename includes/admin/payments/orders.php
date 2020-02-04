@@ -419,6 +419,12 @@ function edd_order_details_items( $order ) {
 	<div id="edd-order-items" class="postbox edd-edit-purchase-element">
 		<h3 class="hndle">
 			<span><?php _e( 'Order Items', 'easy-digital-downloads' ); ?></span>
+
+			<?php if ( edd_is_add_order_page() && current_user_can( 'edit_shop_payments' ) ) : ?>
+				<label class="edd-toggle">
+					<span class="label"><?php esc_html_e( 'Override amounts', 'easy-digital-downloads' ); ?></span>
+					<input type="checkbox" id="edd-override-amounts" />
+				</label>
 			<?php endif; ?>
 		</h3>
 
@@ -918,15 +924,6 @@ function edd_order_details_amounts( $order ) {
 				<?php do_action( 'edd_view_order_details_totals_after', $order->id ); ?>
 			</div>
 		</div>
-
-		<?php if ( edd_is_add_order_page() && current_user_can( 'edit_shop_payments' ) ) : ?>
-		<div id="major-publishing-actions">
-			<div id="publishing-action">
-				<button type="button" class="edd-override button button-secondary" disabled><?php esc_html_e( 'Override Amounts', 'easy-digital-downloads' ); ?></button>
-			</div>
-			<div class="clear"></div>
-		</div>
-		<?php endif; ?>
 	</div>
 
 <?php
