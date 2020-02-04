@@ -24,12 +24,6 @@ var EDD_Add_Order = {
 	add_order_item: function() {
 		const button = $( '.edd-add-order-item-button' );
 
-		// Toggle form.
-		$( '#edd-order-items' ).on( 'click', 'h3 .edd-metabox-title-action', function( e ) {
-			e.preventDefault();
-			$( '#edd-order-items' ).children( '.edd-add-download-to-purchase' ).slideToggle();
-		} );
-
 		button.prop( 'disabled', 'disabled' );
 
 		$( '.edd-order-add-download-select' ).on( 'change', function() {
@@ -76,12 +70,6 @@ var EDD_Add_Order = {
 	},
 
 	add_adjustment: function() {
-		// Toggle form.
-		$( '#edd-order-adjustments' ).on( 'click', 'h3 .edd-metabox-title-action', function( e ) {
-			e.preventDefault();
-			$( '#edd-order-adjustments' ).children( '.edd-add-adjustment-to-purchase' ).slideToggle();
-		} );
-
 		$( '.edd-order-add-adjustment-select' ).on( 'change', function() {
 			const type = $( this ).val();
 

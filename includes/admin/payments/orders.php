@@ -422,7 +422,7 @@ function edd_order_details_items( $order ) {
 
 			<?php if ( edd_is_add_order_page() && current_user_can( 'edit_shop_payments' ) ) : ?>
 				<label class="edd-toggle">
-					<span class="label"><?php esc_html_e( 'Override amounts', 'easy-digital-downloads' ); ?></span>
+					<span class="label"><?php esc_html_e( 'Manually adjust amounts', 'easy-digital-downloads' ); ?></span>
 					<input type="checkbox" id="edd-override-amounts" />
 				</label>
 			<?php endif; ?>
