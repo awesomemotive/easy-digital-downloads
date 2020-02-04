@@ -30,32 +30,31 @@ if ( empty( $order ) ) {
 	wp_die( __( 'The specified ID does not belong to an order. Please try again', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ) );
 } ?>
 
-<div class="wrap edd-wrap">
-	<h1><?php printf( __( 'Edit Order: %s', 'easy-digital-downloads' ), $order->number ); ?></h1>
+<form id="edd-edit-order-form" method="post">
 
-	<hr class="wp-header-end">
+	<?php edd_order_details_publish( $order ); ?>
 
-	<div class="notice notice-info">
-		<p>Testers: This page is newly refreshed and non-functioning for this beta.</p>
-	</div>
+	<div class="wrap edd-wrap">
+		<h1><?php printf( __( 'Edit Order: %s', 'easy-digital-downloads' ), $order->number ); ?></h1>
 
-	<?php if ( 'refund' === $order->type ) : ?>
-		<div class="notice notice-info">
-			<p>
-				<?php
-				printf(
-					__( 'You are viewing a refund order. To view the original order, %sclick here%s.', 'easy-digital-downloads' ),
-					'<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $order->parent ) . '">',
-					'</a>'
-				);
-				?>
-			</p>
-		</div>
-	<?php endif; ?>
+		<hr class="wp-header-end">
 
-	<?php do_action( 'edd_view_order_details_before', $order->id ); ?>
+		<?php if ( 'refund' === $order->type ) : ?>
+			<div class="notice notice-info">
+				<p>
+					<?php
+					printf(
+						__( 'You are viewing a refund order. To view the original order, %sclick here%s.', 'easy-digital-downloads' ),
+						'<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $order->parent ) . '">',
+						'</a>'
+					);
+					?>
+				</p>
+			</div>
+		<?php endif; ?>
 
-	<form id="edd-edit-order-form" method="post">
+		<?php do_action( 'edd_view_order_details_before', $order->id ); ?>
+
 		<?php do_action( 'edd_view_order_details_form_top', $order->id ); ?>
 
 		<div id="poststuff">
@@ -68,11 +67,11 @@ if ( empty( $order ) ) {
 							// Before sidebar
 							do_action( 'edd_view_order_details_sidebar_before', $order->id );
 
-							// Amounts
-							edd_order_details_amounts( $order );
-
 							// Attributes
 							edd_order_details_attributes( $order );
+
+							// Amounts
+							edd_order_details_amounts( $order );
 
 							// Related Refunds
 							edd_order_details_refunds( $order );
@@ -126,11 +125,12 @@ if ( empty( $order ) ) {
 		wp_nonce_field( 'edd_update_payment_details_nonce' ); ?>
 		<input type="hidden" name="edd_payment_id" value="<?php echo esc_attr( $order->id ); ?>"/>
 		<input type="hidden" name="edd_action" value="update_payment_details"/>
-	</form>
 
-	<?php do_action( 'edd_view_order_details_after', $order->id ); ?>
+		<?php do_action( 'edd_view_order_details_after', $order->id ); ?>
 
-</div><!-- /.wrap -->
+	</div><!-- /.wrap -->
+
+</form>
 
 <div id="edd-download-link" title="<?php _e( 'Download Links', 'easy-digital-downloads' ); ?>"></div>
 <div id="edd-refund-order-dialog" title="<?php _e( 'Submit Refund', 'easy-digital-downloads' ); ?>"></div>

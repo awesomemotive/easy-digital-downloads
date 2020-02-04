@@ -12,6 +12,52 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+/** Publishing ******************************************************************/
+
+/**
+ * Outputs publishing actions.
+ *
+ * UI is modelled off block-editor header region.
+ *
+ * @since 3.0
+ *
+ * @param EDD\Orders\Order $order Current order.
+ */
+function edd_order_details_publish( $order ) {
+	$action_name = edd_is_add_order_page()
+		? __( 'Create Order', 'easy-digital-downloads' )
+		: __( 'Save Order', 'easy-digital-downloads' )
+?>
+
+	<div class="edit-post-editor-regions__header">
+		<div class="edit-post-header">
+
+			<div>
+				<?php if ( ! edd_is_add_order_page() ) : ?>
+				<div id="delete-action">
+					<a href="<?php echo wp_nonce_url( add_query_arg( array(
+						'edd-action'  => 'delete_payment',
+						'purchase_id' => $order->id,
+					), admin_url( 'edit.php?post_type=download&page=edd-payment-history' ) ), 'edd_payment_nonce' ) ?>"
+							class="edd-delete-payment edd-delete"><?php esc_html_e( 'Delete Order', 'easy-digital-downloads' ); ?></a>
+				</div>
+				<?php endif; ?>
+			</div>
+
+			<div>
+				<div id="publishing-action">
+					<span class="spinner"></span>
+					<input type="submit" id="edd-order-submit" class="button button-primary right" value="<?php echo esc_html( $action_name ); ?>"/>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+
+<?php
+}
+
 /** Sections ******************************************************************/
 
 /**
@@ -843,30 +889,6 @@ function edd_order_details_attributes( $order ) {
 			</div><!-- /.edd-admin-box -->
 		</div><!-- /.inside -->
 
-		<div class="edd-order-update-box edd-admin-box">
-			<?php do_action( 'edd_view_order_details_update_before', $order->id ); ?>
-
-			<div id="major-publishing-actions">
-				<?php if ( ! edd_is_add_order_page() ) : ?>
-				<div id="delete-action">
-					<a href="<?php echo wp_nonce_url( add_query_arg( array(
-						'edd-action'  => 'delete_payment',
-						'purchase_id' => $order->id,
-					), admin_url( 'edit.php?post_type=download&page=edd-payment-history' ) ), 'edd_payment_nonce' ) ?>"
-					   class="edd-delete-payment edd-delete"><?php esc_html_e( 'Delete Order', 'easy-digital-downloads' ); ?></a>
-				</div>
-				<?php endif; ?>
-
-				<div id="publishing-action">
-					<span class="spinner"></span>
-					<input type="submit" id="edd-order-submit" class="button button-primary right" value="<?php esc_attr_e( 'Save Order', 'easy-digital-downloads' ); ?>"/>
-				</div>
-				<div class="clear"></div>
-			</div>
-
-			<?php do_action( 'edd_view_order_details_update_after', $order->id ); ?>
-
-		</div>
 	</div>
 
 <?php
