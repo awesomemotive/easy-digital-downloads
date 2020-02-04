@@ -80,19 +80,22 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.array.find */ "./node_modules/core-js/modules/es6.array.find.js");
+/* WEBPACK VAR INJECTION */(function($, jQuery) {/* harmony import */ var core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.array.find */ "./node_modules/core-js/modules/es6.array.find.js");
 /* harmony import */ var core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_array_find__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _sendwp__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./sendwp */ "./assets/js/admin/settings/sendwp/index.js");
 
 
 /**
  * Settings screen JS
  */
+
 var EDD_Settings = {
   init: function init() {
     this.general();
     this.misc();
     this.gateways();
     this.location();
+    this.emails();
   },
   general: function general() {
     var edd_color_picker = $('.edd-color-picker');
@@ -244,11 +247,178 @@ var EDD_Settings = {
       });
       return false;
     });
+  },
+  emails: function emails() {
+    $('#edd-sendwp-connect').on('click', function (e) {
+      e.preventDefault();
+      $(this).html('<span class="dashicons dashicons-email"></span>' + edd_vars.wait + ' <span class="edd-loading"></span>');
+      document.body.style.cursor = 'wait';
+      Object(_sendwp__WEBPACK_IMPORTED_MODULE_1__["sendwpRemoteInstall"])();
+    });
+    $('#edd-sendwp-disconnect').on('click', function (e) {
+      e.preventDefault();
+      $(this).html(edd_vars.wait + ' <span class="edd-loading dark"></span>');
+      document.body.style.cursor = 'wait';
+      Object(_sendwp__WEBPACK_IMPORTED_MODULE_1__["sendwpDisconnect"])();
+    });
   }
 };
 jQuery(document).ready(function ($) {
   EDD_Settings.init();
 });
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! jquery */ "jquery"), __webpack_require__(/*! jquery */ "jquery")))
+
+/***/ }),
+
+/***/ "./assets/js/admin/settings/sendwp/index.js":
+/*!**************************************************!*\
+  !*** ./assets/js/admin/settings/sendwp/index.js ***!
+  \**************************************************/
+/*! exports provided: sendwpRemoteInstall, sendwpDisconnect */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(jQuery) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sendwpRemoteInstall", function() { return sendwpRemoteInstall; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sendwpDisconnect", function() { return sendwpDisconnect; });
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/slicedToArray.js");
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__);
+
+var sendwpRemoteInstall = function sendwpRemoteInstall() {
+  var data = {
+    'action': 'edd_sendwp_remote_install'
+  }; // since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
+
+  jQuery.post(ajaxurl, data, function (response) {
+    if (!response.success) {
+      if (confirm(response.data.error)) {
+        location.reload();
+        return;
+      }
+    }
+
+    sendwpRegisterClient(response.data.register_url, response.data.client_name, response.data.client_secret, response.data.client_redirect, response.data.partner_id);
+  });
+};
+var sendwpDisconnect = function sendwpDisconnect() {
+  var data = {
+    'action': 'edd_sendwp_disconnect'
+  };
+  jQuery.post(ajaxurl, data, function (response) {
+    location.reload();
+  });
+};
+
+var sendwpRegisterClient = function sendwpRegisterClient(register_url, client_name, client_secret, client_redirect, partner_id) {
+  var form = document.createElement('form');
+  form.setAttribute('method', 'POST');
+  form.setAttribute('action', register_url);
+  var attributes = [['client_name', client_name], ['client_secret', client_secret], ['client_redirect', client_redirect], ['partner_id', partner_id]];
+
+  for (var _i = 0; _i < attributes.length; _i++) {
+    var _attributes$_i = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(attributes[_i], 2),
+        attr_name = _attributes$_i[0],
+        attr_value = _attributes$_i[1];
+
+    var input = document.createElement('input');
+    input.setAttribute('type', 'hidden');
+    input.setAttribute('name', attr_name);
+    input.setAttribute('value', attr_value);
+    form.appendChild(input);
+  }
+
+  document.body.appendChild(form);
+  form.submit();
+};
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! jquery */ "jquery")))
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/arrayWithHoles.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/arrayWithHoles.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+module.exports = _arrayWithHoles;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _iterableToArrayLimit(arr, i) {
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+
+  try {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+
+  return _arr;
+}
+
+module.exports = _iterableToArrayLimit;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/nonIterableRest.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/nonIterableRest.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance");
+}
+
+module.exports = _nonIterableRest;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/slicedToArray.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/slicedToArray.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayWithHoles = __webpack_require__(/*! ./arrayWithHoles */ "./node_modules/@babel/runtime/helpers/arrayWithHoles.js");
+
+var iterableToArrayLimit = __webpack_require__(/*! ./iterableToArrayLimit */ "./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js");
+
+var nonIterableRest = __webpack_require__(/*! ./nonIterableRest */ "./node_modules/@babel/runtime/helpers/nonIterableRest.js");
+
+function _slicedToArray(arr, i) {
+  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || nonIterableRest();
+}
+
+module.exports = _slicedToArray;
 
 /***/ }),
 
@@ -950,6 +1120,17 @@ $export($export.P + $export.F * forced, 'Array', {
 });
 __webpack_require__(/*! ./_add-to-unscopables */ "./node_modules/core-js/modules/_add-to-unscopables.js")(KEY);
 
+
+/***/ }),
+
+/***/ "jquery":
+/*!*************************!*\
+  !*** external "jQuery" ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = jQuery;
 
 /***/ })
 
