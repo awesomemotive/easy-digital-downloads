@@ -445,6 +445,7 @@ function edd_order_details_items( $order ) {
 							'chosen'               => true,
 							'variations'           => true,
 							'show_variations_only' => true,
+							'number'               => 15,
 						) ); // WPCS: XSS ok. ?>
 
 						<?php if ( edd_item_quantities_enabled() ) : ?>
