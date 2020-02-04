@@ -419,13 +419,15 @@ function edd_order_details_items( $order ) {
 	<div id="edd-order-items" class="postbox edd-edit-purchase-element">
 		<h3 class="hndle">
 			<span><?php _e( 'Order Items', 'easy-digital-downloads' ); ?></span>
-			<?php if ( edd_is_add_order_page() ) : ?>
-				<a href="#" class="edd-metabox-title-action"><?php _e( 'Add Item', 'easy-digital-downloads' ); ?></a>
 			<?php endif; ?>
 		</h3>
 
+		<div class="edd-order-children-wrapper <?php echo 'child-count-' . count( $order_items->items ); ?>">
+			<?php $order_items->display(); ?>
+		</div>
+
 		<?php if ( edd_is_add_order_page() ) : ?>
-			<div class="edd-add-download-to-purchase" style="display: none;">
+			<div class="edd-add-download-to-purchase">
 				<ul>
 					<li class="download">
 						<span class="edd-order-details-label-mobile"><?php printf( esc_html_x( '%s To Add', 'order details select item to add - mobile', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></span>
@@ -463,10 +465,6 @@ function edd_order_details_items( $order ) {
 				<?php endif; ?>
 			</div>
 		<?php endif; ?>
-
-		<div class="edd-order-children-wrapper <?php echo 'child-count-' . count( $order_items->items ); ?>">
-			<?php $order_items->display(); ?>
-		</div>
 	</div>
 
 	<?php do_action( 'edd_view_order_details_files_after', $order->id ); ?>
@@ -495,14 +493,14 @@ function edd_order_details_adjustments( $order ) {
 	<div id="edd-order-adjustments" class="postbox edd-edit-purchase-element">
 		<h3 class="hndle">
 			<span><?php esc_html_e( 'Order Adjustments', 'easy-digital-downloads' ); ?></span>
-
-			<?php if ( edd_is_add_order_page() ) : ?>
-				<a href="#" class="edd-metabox-title-action"><?php esc_html_e( 'Add Adjustment', 'easy-digital-downloads' ); ?></a>
-			<?php endif; ?>
 		</h3>
 
+		<div class="edd-order-children-wrapper <?php echo 'child-count-' . count( $order_adjustments->items ); ?>">
+			<?php $order_adjustments->display(); ?>
+		</div>
+
 		<?php if ( edd_is_add_order_page() ) : ?>
-			<div class="edd-add-adjustment-to-purchase" style="display: none;">
+			<div class="edd-add-adjustment-to-purchase">
 				<ul>
 					<li class="adjustment">
 						<span class="edd-order-details-label-mobile"><?php echo esc_html_x( 'Adjustment To Add', 'order details select adjustment to add - mobile', 'easy-digital-downloads' ); ?></span>
@@ -567,10 +565,6 @@ function edd_order_details_adjustments( $order ) {
 				</ul>
 			</div>
 		<?php endif; ?>
-
-		<div class="edd-order-children-wrapper <?php echo 'child-count-' . count( $order_adjustments->items ); ?>"">
-			<?php $order_adjustments->display(); ?>
-		</div>
 	</div>
 
 <?php
