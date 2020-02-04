@@ -1484,7 +1484,7 @@ input[class*="edd-price-field"] {
 #edd-refund-order-dialog .edd-refund-submit-line-total td:first-child {
 	text-align: right;
 }
-#edd-order-logs ul {
+#edd_general_logs p {
 	margin: 0;
 	padding: 0;
 }
