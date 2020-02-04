@@ -2700,7 +2700,7 @@ body.download_page_edd-reports {
 .edd-sections-wrap .section-wrap .customer-section table {
 	margin-bottom: 20px;
 }
-.edd-sections-wrap .section-wrap .section-content {
+.edd-sections-wrap .section-wrap {
 	border-left: 1px solid #e5e5e5;
 }
 .edd-sections-wrap .section-wrap .section-content > div {
@@ -2755,10 +2755,6 @@ body.download_page_edd-reports {
 	margin-top: -3px;
 	margin-right: 50px;
 	width: 202px;
-}
-.edd-sections-wrap .section-wrap .customer-info {
-	margin-bottom: 10px;
-	min-height: 185px;
 }
 .edd-sections-wrap .section-wrap .info-wrapper {
 	min-height: 125px;
@@ -3359,11 +3355,6 @@ div:not(#edd-item-tab-wrapper) + #edd-item-card-wrapper .item-section { /** [1] 
 	.edd-vertical-sections .section-wrap {
 		width: calc( 100% - 48px );
 	}
-}
-
-.section-content {
-	border-left: 1px solid #e5e5e5;
-	min-height: 155px;
 }
 
 #edd-debug-log .edd-inline-button {
