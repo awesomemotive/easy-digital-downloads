@@ -474,6 +474,10 @@ a.edd-delete:hover {
 	font-weight: 400;
 }
 
+.edd-order-add-download-select .spinner {
+	display: none;
+}
+
 /* Note Styles
 -------------------------------------------------------------- */
 
