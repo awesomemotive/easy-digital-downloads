@@ -147,15 +147,22 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::get_expiration()
 	 */
-	public function test_get_discount_expiration_by_property() {
-		$this->assertEquals( '2050-12-31 23:59:59', self::$discount->expiration );
+	public function test_get_discount_expiration_by_property_backcompat() {
+		$this->assertEquals( date( 'Y-m-d', time() ) . ' 23:59:59', self::$discount->expiration );
 	}
 
 	/**
 	 * @covers ::get_expiration()
 	 */
-	public function test_get_discount_expiration_by_method() {
-		$this->assertEquals( '2050-12-31 23:59:59', self::$discount->get_expiration() );
+	public function test_get_discount_expiration_by_method_backcompat() {
+		$this->assertEquals( date( 'Y-m-d', time() ) . ' 23:59:59', self::$discount->get_expiration() );
+	}
+
+	/**
+	 * @covers ::end_date
+	 */
+	public function test_get_discount_end_date_by_property() {
+		$this->assertEquals( date( 'Y-m-d', time() ) . ' 23:59:59', self::$discount->end_date );
 	}
 
 	/**
@@ -539,14 +546,14 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 * @covers \edd_get_discount_start_date()
 	 */
 	public function test_discount_start_date() {
-		$this->assertSame( date( 'm/d/Y', time() ) . ' 00:00:00', edd_get_discount_start_date( self::$discount_id ) );
+		$this->assertSame( date( 'Y-m-d', time() ) . ' 00:00:00', edd_get_discount_start_date( self::$discount_id ) );
 	}
 
 	/**
 	 * @covers \edd_get_discount_expiration()
 	 */
 	public function test_discount_expiration_date() {
-		$this->assertSame( date( 'm/d/Y', time() ) . ' 23:59:59', edd_get_discount_expiration( self::$discount_id ) );
+		$this->assertSame( date( 'Y-m-d', time() ) . ' 23:59:59', edd_get_discount_expiration( self::$discount_id ) );
 	}
 
 	/**
@@ -970,6 +977,8 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 		edd_add_to_cart( $download_3->ID );
 		$this->assertTrue( edd_discount_is_min_met( $discount ) );
 
+		edd_empty_cart();
+		edd_add_to_cart( $download_2->ID );
 		$discount_obj = edd_get_discount( $discount );
 		$this->assertFalse( edd_is_discount_valid( $discount_obj->code ) );
 

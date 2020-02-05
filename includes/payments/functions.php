@@ -1272,7 +1272,7 @@ function edd_remove_payment_prefix_postfix( $number ) {
 
 	// Remove the postfix
 	$length      = strlen( $number );
-	$postfix_pos = strrpos( $number, $postfix );
+	$postfix_pos = strrpos( $number, strval( $postfix ) );
 	if ( false !== $postfix_pos ) {
 		$number = substr_replace( $number, '', $postfix_pos, $length );
 	}
