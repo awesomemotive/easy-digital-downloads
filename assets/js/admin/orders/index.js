@@ -433,8 +433,9 @@ var EDD_Add_Order = {
 	},
 
 	validate: function() {
-		$( '#edd-add-order-form' ).on( 'submit', function() {
+		$( '#edd-add-order-form, #edd-edit-order-form' ).on( 'submit', function() {
 			$( '#publishing-action .spinner' ).css( 'visibility', 'visible' );
+			$( '#edd-order-submit' ).prop( 'disabled', true );
 
 			if ( $( '.orderitems tr.no-items' ).is( ':visible' ) ) {
 				$( '#edd-add-order-no-items-error' ).slideDown();
@@ -448,8 +449,9 @@ var EDD_Add_Order = {
 				$( '#edd-add-order-customer-error' ).slideUp();
 			}
 
-			if ( $( '.notice' ).is( ':visible' ) ) {
+			if ( $( '.notice:not(.updated)' ).is( ':visible' ) ) {
 				$( '#publishing-action .spinner' ).css( 'visibility', 'hidden' );
+				$( '#edd-order-submit' ).prop( 'disabled', false );
 				return false;
 			}
 		} );

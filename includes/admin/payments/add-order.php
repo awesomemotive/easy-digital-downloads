@@ -46,22 +46,24 @@ function edd_add_order_page_content() {
 
 	?>
 
-	<div class="wrap edd-wrap">
-		<h1><?php esc_html_e( 'Add New Order', 'easy-digital-downloads' ); ?></h1>
+	<form id="edd-add-order-form" method="post">
 
-		<hr class="wp-header-end">
+		<?php edd_order_details_publish( $order ); ?>
 
-		<div class="notice notice-error" id="edd-add-order-customer-error" style="display: none;">
-			<p><strong><?php esc_html_e( 'Error', 'easy-digital-downloads' ); ?>:</strong> <?php esc_html_e( 'Please select an existing customer or create a new customer.', 'easy-digital-downloads' ); ?></p>
-		</div>
+		<div class="wrap edd-wrap">
+			<h1><?php esc_html_e( 'Add New Order', 'easy-digital-downloads' ); ?></h1>
 
-		<div class="notice notice-error" id="edd-add-order-no-items-error" style="display: none">
-			<p><strong><?php esc_html_e( 'Error', 'easy-digital-downloads' ); ?>:</strong> <?php esc_html_e( 'Please add an item to this order.', 'easy-digital-downloads' ); ?></p>
-		</div>
+			<hr class="wp-header-end">
 
-		<?php do_action( 'edd_add_order_before' ); ?>
+			<div class="notice notice-error" id="edd-add-order-customer-error" style="display: none;">
+				<p><strong><?php esc_html_e( 'Error', 'easy-digital-downloads' ); ?>:</strong> <?php esc_html_e( 'Please select an existing customer or create a new customer.', 'easy-digital-downloads' ); ?></p>
+			</div>
 
-		<form id="edd-add-order-form" method="post">
+			<div class="notice notice-error" id="edd-add-order-no-items-error" style="display: none">
+				<p><strong><?php esc_html_e( 'Error', 'easy-digital-downloads' ); ?>:</strong> <?php esc_html_e( 'Please add an item to this order.', 'easy-digital-downloads' ); ?></p>
+			</div>
+
+			<?php do_action( 'edd_add_order_before' ); ?>
 
 			<?php do_action( 'edd_add_order_form_top' ); ?>
 
@@ -75,11 +77,11 @@ function edd_add_order_page_content() {
 								// Before sidebar.
 								do_action( 'edd_add_order_details_sidebar_before' );
 
-								// Amounts.
-								edd_order_details_amounts( $order );
-
 								// Attributes.
 								edd_order_details_attributes( $order );
+
+								// Amounts.
+								edd_order_details_amounts( $order );
 
 								// Extras.
 								edd_order_details_extras( $order );
@@ -124,11 +126,11 @@ function edd_add_order_page_content() {
 			?>
 			<input type="hidden" name="edd_action" value="add_order" />
 
-		</form>
+			<?php do_action( 'edd_add_order_after' ); ?>
 
-		<?php do_action( 'edd_add_order_after' ); ?>
+		</div>
 
-	</div>
+	</form>
 
 <?php
 }
