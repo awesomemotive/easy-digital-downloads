@@ -467,9 +467,9 @@ a.edd-delete:hover {
 -------------------------------------------------------------- */
 
 .edd-notes .edd-note {
+	padding: 10px;
 	background-color: #ffffee;
-	border-left: 5px solid #cccc00;
-	box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
+	border: 1px solid #cccc00;
 	width: 100%;
 	position: relative;
 	margin-bottom: 10px;
@@ -481,39 +481,20 @@ a.edd-delete:hover {
 	opacity: 0.5;
 }
 
+.edd-notes .edd-note__header {
+	display: flex;
+	align-items: center;
+}
+
 .edd-add-note .spinner {
 	float: none;
 	display: inline-block;
 	margin: 0;
 }
 
-.edd-notes .edd-note div {
-	padding: 5px 10px;
-	margin: 0;
-}
-
-.edd-notes .edd-note .edd-note-author {
-	padding: 2px 2px 2px 0;
-	float: left;
-}
-
 .edd-notes .edd-note time {
-	float: left;
 	font-size: 11px;
-	line-height: 11px;
 	color: #aaa;
-	padding: 5px 0;
-	vertical-align: middle;
-}
-
-.edd-notes .edd-note p {
-	clear: both;
-	padding: 5px 0;
-	margin: 0;
-}
-
-.edd-notes .edd-note p a {
-	color: #000;
 }
 
 .edd-notes .edd-note .edd-note-author {
@@ -521,19 +502,18 @@ a.edd-delete:hover {
 }
 
 .edd-notes .edd-note .edd-delete-note {
-	position: absolute;
-	right: 0;
-	top: 0;
-	margin: 10px;
-	font-size: 10px;
-	line-height: 10px;
+	color: #a00;
+	font-weight: bold;
 	text-decoration: none;
-	color: #aaa;
-	z-index: 1;
+	margin-left: auto;
 }
 
 .edd-notes .edd-note .edd-delete-note:hover {
 	color: #888;
+}
+
+.edd-notes .edd-note p:last-child {
+	margin-bottom: 0;
 }
 
 .edd-notes .edd-no-notes {
