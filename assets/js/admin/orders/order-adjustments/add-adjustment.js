@@ -4,10 +4,12 @@
  * Internal dependencies
  */
 import { reindex } from './index.js';
-import { jQueryReady } from 'utils/jquery.js';
+import { jQueryReady, Currency } from 'utils';
 import { updateAmounts } from './../order-amounts';
 
 jQueryReady( () => {
+
+	const currency = new Currency;
 
 	// Toggle form.
 	$( '#edd-order-adjustments' ).on( 'click', 'h3 .edd-metabox-title-action', function( e ) {
@@ -35,7 +37,7 @@ jQueryReady( () => {
 				discount: $( '.edd-order-add-discount-select' ).val(),
 				credit: {
 					description: $( '.edd-add-order-credit-description' ).val(),
-					amount: $( '.edd-add-order-credit-amount' ).val(),
+					amount: currency.unformat( $( '.edd-add-order-credit-amount' ).val() ),
 				},
 			},
 		},
