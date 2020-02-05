@@ -131,64 +131,58 @@ function edd_order_details_customer( $order ) {
 
 	<div>
 		<div class="column-container order-customer-info">
-			<div class="customer-details-wrap">
-				<?php if ( ! empty( $customer ) ) : ?>
-					<div class="avatar-wrap left" id="customer-avatar">
-						<?php echo get_avatar( $customer->email, 75 ); ?><br />
-					</div>
-					<div class="customer-details">
-						<span class="customer-name">
-							<?php echo esc_html( $customer->name ); ?>
-						</span>
+			<div class="column-container change-customer">
+				<?php
+				echo EDD()->html->customer_dropdown( array(
+					'class'         => 'edd-payment-change-customer-input',
+					'selected'      => $customer_id,
+					'name'          => 'customer-id',
+					'none_selected' => esc_html__( 'Attach an existing customer', 'easy-digital-downloads' ),
+					'placeholder'   => esc_html__( 'Type to search all customers', 'easy-digital-downloads' ),
+				) ); // WPCS: XSS ok.
+				?>
 
-						<span>
-							<?php echo esc_html( $customer->email ); ?>
-						</span>
-
-						<span>
-							<?php
-							printf(
-							/* translators: The date. */
-								esc_html__( 'Customer since %s', 'easy-digital-downloads' ),
-								esc_html( edd_date_i18n( $customer->date_created ) )
-							);
-							?>
-						</span>
-
-						<span>
-							<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ); ?>"><?php _e( 'View customer record', 'easy-digital-downloads' ); ?></a>
-						</span>
-					</div>
-				<?php else : ?>
-					&mdash;
-				<?php endif; ?>
+				<input type="hidden" id="edd-change-customer" name="edd-change-customer" value="0" />
 			</div>
 
-			<p class="customer-details-actions">
-				<button class="edd-payment-change-customer button-secondary"><?php echo $change_text; // WPCS: XSS ok. ?></button>
-				&nbsp;
-				<button class="edd-payment-new-customer button-secondary"><?php esc_html_e( 'Assign New Customer', 'easy-digital-downloads' ); ?></button>
-			</p>
-		</div>
+			<div class="customer-details-wrap" style="display: <?php echo esc_attr( ! empty( $customer ) ? 'flex' : 'none' ); ?>">
+				<div class="avatar-wrap" id="customer-avatar">
+					<span class="spinner is-active"></span>
+				</div>
+				<div class="customer-details" style="display: none;">
+					<span class="customer-since">
+						<?php
+						echo wp_kses(
+							sprintf(
+								__( 'Customer since %s', 'easy-digital-downloads' ), '<span>&hellip;</span>' ),
+							array(
+								'span' => true,
+							)
+						);
+						?>
+					</span>
 
-		<div class="column-container change-customer" style="display: none">
-			<?php
-			echo EDD()->html->customer_dropdown( array(
-				'class'       => 'edd-payment-change-customer-input',
-				'selected'    => $customer_id,
-				'name'        => 'customer-id',
-				'placeholder' => esc_html__( 'Type to search all Customers', 'easy-digital-downloads' ),
-			) ); // WPCS: XSS ok.
-			?>
-
-			<input type="hidden" id="edd-change-customer" name="edd-change-customer" value="0" />
+					<span class="customer-record">
+						<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers' ) ); ?>"><?php esc_html_e( 'View customer record', 'easy-digital-downloads' ); ?></a>
+					</span>
+				</div>
+			</div>
 
 			<p>
-				<button class="edd-payment-change-customer-cancel edd-delete button-link"><?php esc_html_e( 'Cancel', 'easy-digital-downloads' ); ?></button>
+				<span class="description"><?php echo esc_html_x( 'or', 'divider', 'easy-digital-downloads' ); ?></span>
+			</p>
+
+			<p class="customer-details-actions">
+				<button class="edd-payment-new-customer button-secondary"><?php esc_html_e( 'Create a new customer', 'easy-digital-downloads' ); ?></button>
 			</p>
 		</div>
 
 		<div class="column-container new-customer" style="display: none">
+			<p style="margin-top: 0;">
+				<input type="hidden" id="edd-new-customer" name="edd-new-customer" value="0" />
+				<button class="edd-payment-new-customer-cancel button-link"><?php esc_html_e( '&larr; Use an existing customer', 'easy-digital-downloads' ); ?></button>
+			</p>
+
 			<p>
 				<strong><?php esc_html_e( 'First Name', 'easy-digital-downloads' ); ?>:</strong>
 				<input type="text" name="edd-new-customer-first-name" value="" class="medium-text"/>
@@ -202,11 +196,6 @@ function edd_order_details_customer( $order ) {
 			<p>
 				<strong><?php esc_html_e( 'Email', 'easy-digital-downloads' ); ?>:</strong>
 				<input type="email" name="edd-new-customer-email" value="" class="medium-text"/>
-			</p>
-
-			<p>
-				<input type="hidden" id="edd-new-customer" name="edd-new-customer" value="0" />
-				<button class="edd-payment-new-customer-cancel edd-delete button-link"><?php esc_html_e( 'Cancel', 'easy-digital-downloads' ); ?></button>
 			</p>
 		</div>
 	</div>
