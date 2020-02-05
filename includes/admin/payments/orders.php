@@ -194,6 +194,7 @@ function edd_order_details_customer( $order ) {
 				) ); // WPCS: XSS ok.
 				?>
 				<input type="hidden" name="current-customer-id" value="<?php echo esc_attr( $customer_id ); ?>" />
+				<?php wp_nonce_field( 'edd_customer_details_nonce', 'edd_customer_details_nonce' ); ?>
 			</div>
 
 			<div class="customer-details-wrap" style="display: <?php echo esc_attr( ! empty( $customer ) ? 'flex' : 'none' ); ?>">
