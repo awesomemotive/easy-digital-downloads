@@ -193,8 +193,7 @@ function edd_order_details_customer( $order ) {
 					'placeholder'   => esc_html__( 'Type to search all customers', 'easy-digital-downloads' ),
 				) ); // WPCS: XSS ok.
 				?>
-
-				<input type="hidden" id="edd-change-customer" name="edd-change-customer" value="0" />
+				<input type="hidden" name="current-customer-id" value="<?php echo esc_attr( $customer_id ); ?>" />
 			</div>
 
 			<div class="customer-details-wrap" style="display: <?php echo esc_attr( ! empty( $customer ) ? 'flex' : 'none' ); ?>">
