@@ -20,7 +20,7 @@ jQueryReady( () => {
 	 */
 	$( document ).on( 'edd-admin-add-order-download', function( response ) {
 		// Update on change.
-		_.each( document.querySelectorAll( '.overridable input' ), ( el ) => el.addEventListener( 'input', updateAmounts ) );
+		_.each( document.querySelectorAll( '.overridable input' ), ( el ) => el.addEventListener( 'keyup', updateAmounts ) );
 
 		// Update on addition.
 		updateAmounts();

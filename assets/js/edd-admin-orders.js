@@ -339,7 +339,7 @@ Object(utils_jquery_js__WEBPACK_IMPORTED_MODULE_0__["jQueryReady"])(function () 
   $(document).on('edd-admin-add-order-download', function (response) {
     // Update on change.
     _.each(document.querySelectorAll('.overridable input'), function (el) {
-      return el.addEventListener('input', _utils_js__WEBPACK_IMPORTED_MODULE_1__["updateAmounts"]);
+      return el.addEventListener('keyup', _utils_js__WEBPACK_IMPORTED_MODULE_1__["updateAmounts"]);
     }); // Update on addition.
 
 
