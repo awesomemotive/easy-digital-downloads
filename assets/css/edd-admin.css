@@ -423,6 +423,80 @@ a.edd-delete:hover {
 /* Add/View Order Styles
 -------------------------------------------------------------- */
 
+/** Fix for sticky header region. */
+.download_page_edd-payment-history #poststuff {
+	overflow: hidden;
+}
+
+/** Mimic WordPress 5.0 block-editor header region styles. */
+.download_page_edd-payment-history .edit-post-editor-regions__header {
+	flex-shrink: 0;
+	height: auto;
+	border-bottom: 1px solid #e2e4e7;
+	z-index: 30;
+	position: -webkit-sticky;
+	position: sticky;
+	top: 32px;
+
+	/** EDD-specific */
+	margin-left: -20px;
+}
+
+@media screen and (max-width: 782px) {
+
+	.download_page_edd-payment-history .edit-post-editor-regions__header {
+		position: initial;
+		top: 46px;
+	}
+}
+
+.download_page_edd-payment-history .edit-post-header {
+	height: 56px;
+	padding: 4px 2px;
+	background: #fff;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+
+	/** EDD-specific */
+	max-width: 100%;
+	box-sizing: border-box;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+@media screen and (max-width: 782px) {
+
+	.download_page_edd-payment-history .edit-post-header {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+}
+
+@media (min-width: 280px) {
+
+	.download_page_edd-payment-history .edit-post-header {
+		flex-wrap: nowrap;
+	}
+}
+
+.download_page_edd-payment-history .edit-post-header #publishing-action {
+	display: flex;
+	align-items: center;
+}
+
+.download_page_edd-payment-history .edit-post-header #publishing-action .spinner {
+	margin: 0 5px 0 0;
+}
+
+.download_page_edd-payment-history .edit-post-header .button-primary {
+	margin: 2px;
+	height: 34px;
+	line-height: 32px;
+	font-size: 13px;
+}
+
 #edd-order-items .hndle {
 	display: flex;
 	align-items: center;
