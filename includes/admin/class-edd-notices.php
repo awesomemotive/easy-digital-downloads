@@ -368,13 +368,14 @@ class EDD_Notices {
 				) );
 
 				// Link
-				$link = '<a href="' . esc_url( $url ) . '">' . __( 'Review Tax Rates', 'easy-digital-downloads' ) . '</a>';
+				$link = '<a href="' . esc_url( $url ) . '" class="button button-secondary">' . __( 'Review Tax Rates', 'easy-digital-downloads' ) . '</a>';
 
 				// Add the notice
 				$this->add_notice( array(
-					'class'          => '',
-					'message'        => sprintf( __( 'A default tax rate was detected. This option was removed in Easy Digital Downloads 3.0. Please confirm your tax rates are properly configured and update tax settings to remove this notice. %s.', 'easy-digital-downloads' ), $link ),
 					'id'             => 'edd-default-tax-rate',
+					'class'          => 'error',
+					/* translators: Link to review existing tax rates. */
+					'message'        => '<strong>' . __( 'A default tax rate was detected.', 'easy-digital-downloads' ) . '</strong></p><p>' . __( 'This setting is no longer used in this version of Easy Digital Downloads. Please confirm your regional tax rates are properly configured and update tax settings to remove this notice.', 'easy-digital-downloads' ) . '</p><p>' . $link,
 					'is_dismissible' => false
 				) );
 			}
