@@ -7,7 +7,7 @@ import { jQueryReady } from 'utils/jquery.js';
 import { updateAmounts } from './utils.js';
 
 jQueryReady( () => {
-	const toggle = document.querySelector( '.edd-override' );
+	const toggle = document.getElementById( 'edd-override-amounts' );
 
 	if ( ! toggle ) {
 		return;
@@ -32,7 +32,7 @@ jQueryReady( () => {
 	/**
 	 * Allow edits.
 	 */
-	toggle.addEventListener( 'click', function() {
+	toggle.addEventListener( 'change', function() {
 		// Disable the button.
 		this.disabled = true;
 

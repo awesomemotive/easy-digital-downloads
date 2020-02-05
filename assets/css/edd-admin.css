@@ -422,6 +422,91 @@ a.edd-delete:hover {
 
 /* Add/View Order Styles
 -------------------------------------------------------------- */
+
+/** Fix for sticky header region. */
+.download_page_edd-payment-history #poststuff {
+	overflow: hidden;
+}
+
+/** Mimic WordPress 5.0 block-editor header region styles. */
+.download_page_edd-payment-history .edit-post-editor-regions__header {
+	flex-shrink: 0;
+	height: auto;
+	border-bottom: 1px solid #e2e4e7;
+	z-index: 30;
+	position: -webkit-sticky;
+	position: sticky;
+	top: 32px;
+
+	/** EDD-specific */
+	margin-left: -20px;
+}
+
+@media screen and (max-width: 782px) {
+
+	.download_page_edd-payment-history .edit-post-editor-regions__header {
+		position: initial;
+		top: 46px;
+	}
+}
+
+.download_page_edd-payment-history .edit-post-header {
+	height: 56px;
+	padding: 4px 2px;
+	background: #fff;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+
+	/** EDD-specific */
+	max-width: 100%;
+	box-sizing: border-box;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+@media screen and (max-width: 782px) {
+
+	.download_page_edd-payment-history .edit-post-header {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+}
+
+@media (min-width: 280px) {
+
+	.download_page_edd-payment-history .edit-post-header {
+		flex-wrap: nowrap;
+	}
+}
+
+.download_page_edd-payment-history .edit-post-header #publishing-action {
+	display: flex;
+	align-items: center;
+}
+
+.download_page_edd-payment-history .edit-post-header #publishing-action .spinner {
+	margin: 0 5px 0 0;
+}
+
+.download_page_edd-payment-history .edit-post-header .button-primary {
+	margin: 2px;
+	height: 34px;
+	line-height: 32px;
+	font-size: 13px;
+}
+
+#edd-order-items .hndle {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+#edd-order-items .hndle .edd-toggle {
+	font-weight: normal;
+}
+
 .edd-vertical-sections .new-customer strong {
 	width: 85px;
 	display: inline-block;
@@ -463,13 +548,17 @@ a.edd-delete:hover {
 	font-weight: 400;
 }
 
+.edd-order-add-download-select .spinner {
+	display: none;
+}
+
 /* Note Styles
 -------------------------------------------------------------- */
 
 .edd-notes .edd-note {
+	padding: 10px;
 	background-color: #ffffee;
-	border-left: 5px solid #cccc00;
-	box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
+	border: 1px solid #cccc00;
 	width: 100%;
 	position: relative;
 	margin-bottom: 10px;
@@ -481,39 +570,20 @@ a.edd-delete:hover {
 	opacity: 0.5;
 }
 
+.edd-notes .edd-note__header {
+	display: flex;
+	align-items: center;
+}
+
 .edd-add-note .spinner {
 	float: none;
 	display: inline-block;
 	margin: 0;
 }
 
-.edd-notes .edd-note div {
-	padding: 5px 10px;
-	margin: 0;
-}
-
-.edd-notes .edd-note .edd-note-author {
-	padding: 2px 2px 2px 0;
-	float: left;
-}
-
 .edd-notes .edd-note time {
-	float: left;
 	font-size: 11px;
-	line-height: 11px;
 	color: #aaa;
-	padding: 5px 0;
-	vertical-align: middle;
-}
-
-.edd-notes .edd-note p {
-	clear: both;
-	padding: 5px 0;
-	margin: 0;
-}
-
-.edd-notes .edd-note p a {
-	color: #000;
 }
 
 .edd-notes .edd-note .edd-note-author {
@@ -521,19 +591,18 @@ a.edd-delete:hover {
 }
 
 .edd-notes .edd-note .edd-delete-note {
-	position: absolute;
-	right: 0;
-	top: 0;
-	margin: 10px;
-	font-size: 10px;
-	line-height: 10px;
+	color: #a00;
+	font-weight: bold;
 	text-decoration: none;
-	color: #aaa;
-	z-index: 1;
+	margin-left: auto;
 }
 
 .edd-notes .edd-note .edd-delete-note:hover {
 	color: #888;
+}
+
+.edd-notes .edd-note p:last-child {
+	margin-bottom: 0;
 }
 
 .edd-notes .edd-no-notes {
@@ -1484,7 +1553,7 @@ input[class*="edd-price-field"] {
 #edd-refund-order-dialog .edd-refund-submit-line-total td:first-child {
 	text-align: right;
 }
-#edd-order-logs ul {
+#edd_general_logs p {
 	margin: 0;
 	padding: 0;
 }
@@ -1601,8 +1670,10 @@ input[class*="edd-price-field"] {
 	vertical-align: top;
 }
 .edd-edit-purchase-element ul {
-	font-size: 0;
 	margin: 0 0 15px;
+}
+.edd-edit-purchase-element ul:last-of-type {
+	margin-bottom: 0;
 }
 #edd-order-data .data span {
 	color: #666;
@@ -1653,8 +1724,8 @@ input[class*="edd-price-field"] {
 
 .edd-add-download-to-purchase,
 .edd-add-adjustment-to-purchase {
-	padding: 15px 15px 0;
-	border-bottom: 1px solid #e5e5e5;
+	padding: 15px;
+	border-top: 1px solid #e5e5e5;
 	background-color: #f5f5f5;
 }
 .edd-add-download-to-purchase .chosen-container,
@@ -2700,7 +2771,7 @@ body.download_page_edd-reports {
 .edd-sections-wrap .section-wrap .customer-section table {
 	margin-bottom: 20px;
 }
-.edd-sections-wrap .section-wrap .section-content {
+.edd-sections-wrap .section-wrap {
 	border-left: 1px solid #e5e5e5;
 }
 .edd-sections-wrap .section-wrap .section-content > div {
@@ -2755,10 +2826,6 @@ body.download_page_edd-reports {
 	margin-top: -3px;
 	margin-right: 50px;
 	width: 202px;
-}
-.edd-sections-wrap .section-wrap .customer-info {
-	margin-bottom: 10px;
-	min-height: 185px;
 }
 .edd-sections-wrap .section-wrap .info-wrapper {
 	min-height: 125px;
@@ -3359,11 +3426,6 @@ div:not(#edd-item-tab-wrapper) + #edd-item-card-wrapper .item-section { /** [1] 
 	.edd-vertical-sections .section-wrap {
 		width: calc( 100% - 48px );
 	}
-}
-
-.section-content {
-	border-left: 1px solid #e5e5e5;
-	min-height: 155px;
 }
 
 #edd-debug-log .edd-inline-button {
