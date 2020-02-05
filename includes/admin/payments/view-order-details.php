@@ -79,9 +79,6 @@ if ( empty( $order ) ) {
 							// Extras
 							edd_order_details_extras( $order );
 
-							// Logs
-							edd_order_details_logs( $order );
-
 							// After sidebar
 							do_action( 'edd_view_order_details_sidebar_after', $order->id );
 
