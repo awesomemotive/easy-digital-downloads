@@ -11,7 +11,17 @@ php:
   - 7.3
   - 7.4
 
+env:
+  - WP_VERSION=latest WP_MULTISITE=0
+  - WP_VERSION=5.2.5 WP_MULTISITE=0
+  - WP_VERSION=5.1.4 WP_MULTISITE=0
+  - WP_VERSION=5.0.8 WP_MULTISITE=0
+  - WP_VERSION=4.9.13 WP_MULTISITE=0
+
 matrix:
+  include:
+    - php: 7.2
+      env: WP_VERSION=latest WP_MULTISITE=1
   exclude:
     - php: 7.4
       env: WP_VERSION=4.9.13 WP_MULTISITE=0
@@ -23,18 +33,6 @@ matrix:
       env: WP_VERSION=5.2.5 WP_MULTISITE=0
     - php: 7.3
       env: WP_VERSION=4.9.13 WP_MULTISITE=0
-
-env:
-  - WP_VERSION=latest WP_MULTISITE=0
-  - WP_VERSION=5.2.5 WP_MULTISITE=0
-  - WP_VERSION=5.1.4 WP_MULTISITE=0
-  - WP_VERSION=5.0.8 WP_MULTISITE=0
-  - WP_VERSION=4.9.13 WP_MULTISITE=0
-
-matrix:
-    include:
-        - php: 7.2
-          env: WP_VERSION=latest WP_MULTISITE=1
 
 before_script:
   - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
