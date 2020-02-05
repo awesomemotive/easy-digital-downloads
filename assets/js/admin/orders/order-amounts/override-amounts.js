@@ -1,12 +1,13 @@
-/* global _ */
+/* global $, _ */
 
 /**
  * Internal dependencies.
  */
-import EDD_Add_Order from './index.js';
+import { jQueryReady } from 'utils/jquery.js';
+import { updateAmounts } from './utils.js';
 
-( () => {
-	const toggle = document.querySelector( '.edd-override' );
+jQueryReady( () => {
+	const toggle = document.getElementById( 'edd-override-amounts' );
 
 	if ( ! toggle ) {
 		return;
@@ -19,10 +20,10 @@ import EDD_Add_Order from './index.js';
 	 */
 	$( document ).on( 'edd-admin-add-order-download', function( response ) {
 		// Update on change.
-		_.each( document.querySelectorAll( '.overridable input' ), ( el ) => el.addEventListener( 'keyup', EDD_Add_Order.update_totals ) );
+		_.each( document.querySelectorAll( '.overridable input' ), ( el ) => el.addEventListener( 'keyup', updateAmounts ) );
 
 		// Update on addition.
-		EDD_Add_Order.update_totals();
+		updateAmounts();
 
 		// Keep toggle disabled if necesseary.
 		toggle.disabled = 1 == isOverrideableEl.value;
@@ -31,7 +32,7 @@ import EDD_Add_Order from './index.js';
 	/**
 	 * Allow edits.
 	 */
-	toggle.addEventListener( 'click', function() {
+	toggle.addEventListener( 'change', function() {
 		// Disable the button.
 		this.disabled = true;
 
@@ -49,4 +50,4 @@ import EDD_Add_Order from './index.js';
 
 		document.getElementById( 'edd-add-order-form' ).appendChild( input );
 	} );
-} ) ();
+} );
