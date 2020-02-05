@@ -8,23 +8,37 @@ import { jQueryReady } from 'utils/jquery.js';
 jQueryReady( () => {
 
 	// Change Customer.
-	$( '#edd-customer-details' ).on( 'click', '.edd-payment-change-customer, .edd-payment-change-customer-cancel', function( e ) {
-		e.preventDefault();
+	$( '.edd-payment-change-customer-input' ).on( 'change', function() {
+		const $this = $( this ),
+			data = {
+				action: 'edd_customer_details',
+				customer_id: $this.val(),
+			};
 
-		const change_customer = $( this ).hasClass( 'edd-payment-change-customer' ),
-			cancel = $( this ).hasClass( 'edd-payment-change-customer-cancel' );
-
-		if ( change_customer ) {
-			$( '.order-customer-info' ).hide();
-			$( '.change-customer' ).show();
-			setTimeout( function() {
-				$( '.edd-payment-change-customer-input' ).css( 'width', '300' );
-			}, 1 );
-		} else if ( cancel ) {
-			$( '.order-customer-info' ).show();
-			$( '.change-customer' ).hide();
+		if ( '' === data.customer_id ) {
+			return;
 		}
+
+		$( '.customer-details' ).css( 'display', 'none' );
+		$( '#customer-avatar' ).html( '<span class="spinner is-active"></span>' );
+
+		$.post( ajaxurl, data, function( response ) {
+			const { success, data } = response;
+
+			if ( success ) {
+				$( '.customer-details' ).css( 'display', 'flex' );
+				$( '.customer-details-wrap' ).css( 'display', 'flex' );
+
+				$( '#customer-avatar' ).html( data.avatar );
+				$( '.customer-since span' ).html( data.date_created_i18n );
+				$( '.customer-record a' ).prop( 'href', data._links.self );
+			} else {
+				$( '.customer-details-wrap' ).css( 'display', 'none' );
+			}
+		}, 'json' );
 	} );
+
+	$( '.edd-payment-change-customer-input' ).trigger( 'change' );
 
 	// New Customer.
 	$( '#edd-customer-details' ).on( 'click', '.edd-payment-new-customer, .edd-payment-new-customer-cancel', function( e ) {
