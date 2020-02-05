@@ -372,9 +372,9 @@ class EDD_Notices {
 
 				// Add the notice
 				$this->add_notice( array(
-					'id'             => 'edd-gateways',
 					'class'          => '',
 					'message'        => sprintf( __( 'A default tax rate was detected. This option was removed in Easy Digital Downloads 3.0. Please confirm your tax rates are properly configured and update tax settings to remove this notice. %s.', 'easy-digital-downloads' ), $link ),
+					'id'             => 'edd-default-tax-rate',
 					'is_dismissible' => false
 				) );
 			}
