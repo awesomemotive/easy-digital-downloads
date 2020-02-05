@@ -422,6 +422,17 @@ a.edd-delete:hover {
 
 /* Add/View Order Styles
 -------------------------------------------------------------- */
+
+#edd-order-items .hndle {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+#edd-order-items .hndle .edd-toggle {
+	font-weight: normal;
+}
+
 .edd-vertical-sections .new-customer strong {
 	width: 85px;
 	display: inline-block;
@@ -461,6 +472,10 @@ a.edd-delete:hover {
 .order-customer-info .customer-details span.customer-name {
 	font-size: 1.5em;
 	font-weight: 400;
+}
+
+.edd-order-add-download-select .spinner {
+	display: none;
 }
 
 /* Note Styles
@@ -1581,8 +1596,10 @@ input[class*="edd-price-field"] {
 	vertical-align: top;
 }
 .edd-edit-purchase-element ul {
-	font-size: 0;
 	margin: 0 0 15px;
+}
+.edd-edit-purchase-element ul:last-of-type {
+	margin-bottom: 0;
 }
 #edd-order-data .data span {
 	color: #666;
@@ -1633,8 +1650,8 @@ input[class*="edd-price-field"] {
 
 .edd-add-download-to-purchase,
 .edd-add-adjustment-to-purchase {
-	padding: 15px 15px 0;
-	border-bottom: 1px solid #e5e5e5;
+	padding: 15px;
+	border-top: 1px solid #e5e5e5;
 	background-color: #f5f5f5;
 }
 .edd-add-download-to-purchase .chosen-container,

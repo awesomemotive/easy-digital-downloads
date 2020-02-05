@@ -6,7 +6,7 @@
 import EDD_Add_Order from './index.js';
 
 ( () => {
-	const toggle = document.querySelector( '.edd-override' );
+	const toggle = document.getElementById( 'edd-override-amounts' );
 
 	if ( ! toggle ) {
 		return;
@@ -31,7 +31,7 @@ import EDD_Add_Order from './index.js';
 	/**
 	 * Allow edits.
 	 */
-	toggle.addEventListener( 'click', function() {
+	toggle.addEventListener( 'change', function() {
 		// Disable the button.
 		this.disabled = true;
 
