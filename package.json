@@ -18,8 +18,8 @@
 		"url": "https://github.com/easydigitaldownloads/easy-digital-downloads/issues"
 	},
 	"engines": {
-		"node": ">=8.0.0",
-		"npm": ">=6.12.0"
+		"node": ">=10.0.0",
+		"npm": ">=6.9.0"
 	},
 	"main": "webpack.config.js",
 	"dependencies": {
@@ -32,8 +32,8 @@
 		"moment": "2.22.2"
 	},
 	"devDependencies": {
-		"@wordpress/scripts": "6.1.0",
-		"copy-webpack-plugin": "5.0.2",
+		"@wordpress/scripts": "7.0.1",
+		"copy-webpack-plugin": "5.1.1",
 		"grunt": "^1.0.4",
 		"grunt-checktextdomain": "^1.0.1",
 		"grunt-contrib-clean": "^1.1.0",
@@ -46,9 +46,9 @@
 		"load-grunt-tasks": "^3.5.2",
 		"makepot": "^0.3.0",
 		"uglify-es": "3.3.9",
-		"uglifyjs-webpack-plugin": "2.1.2",
-		"webpack": "4.29.6",
-		"webpack-cli": "3.3.0"
+		"uglifyjs-webpack-plugin": "2.2.0",
+		"webpack": "4.41.5",
+		"webpack-cli": "3.3.10"
 	},
 	"scripts": {
 		"build": "wp-scripts build && grunt build",
