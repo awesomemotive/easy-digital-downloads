@@ -334,7 +334,7 @@ class EDD_Discount extends Adjustment {
 					return 'edd_discount';
 
 				case 'expiration':
-					return $this->end_date;
+					return $this->get_expiration();
 
 				case 'start':
 					return $this->start_date;
