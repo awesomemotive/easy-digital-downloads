@@ -1250,23 +1250,23 @@ function edd_ajax_customer_details() {
 	}
 
 	// Set up parameters.
-	// $nonce = isset( $_POST['nonce'] )
-	// 	? sanitize_text_field( $_POST['nonce'] )
-	// 	: '';
+	$nonce = isset( $_POST['nonce'] )
+		? sanitize_text_field( $_POST['nonce'] )
+		: '';
 
 	$customer_id = isset( $_POST['customer_id'] )
 		? absint( $_POST['customer_id'] )
 		: 0;
 
 	// Bail if missing any data.
-	// if ( empty( $nonce ) || empty( $customer_id ) ) {
-	// 	return wp_send_json_error();
-	// }
+	if ( empty( $nonce ) || empty( $customer_id ) ) {
+		return wp_send_json_error();
+	}
 
 	// Bail if nonce verification failed.
-	// if ( ! wp_verify_nonce( $nonce, 'edd_add_order_nonce' ) ) {
-	// 	return wp_send_json_error();
-	// }
+	if ( ! wp_verify_nonce( $nonce, 'edd_customer_details_nonce' ) ) {
+		return wp_send_json_error();
+	}
 
 	// Fetch customer.
 	$customer = edd_get_customer( $customer_id );

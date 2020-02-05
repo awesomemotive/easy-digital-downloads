@@ -13,6 +13,7 @@ jQueryReady( () => {
 			data = {
 				action: 'edd_customer_details',
 				customer_id: $this.val(),
+				nonce: $( '#edd_customer_details_nonce' ).val(),
 			};
 
 		if ( '' === data.customer_id ) {
