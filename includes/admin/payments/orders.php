@@ -1011,7 +1011,7 @@ function edd_order_details_refunds( $order ) {
 					<?php
 						echo wp_kses(
 							sprintf(
-								/* translators */
+								/* translators %1$s Refund number. %2$s Refund total. %3$s Refund date. */
 								__( '%1$s refunded %2$s on %3$s', 'easy-digital-downloads' ),
 								'<a href="' . esc_url( $refund_url ) . '">' . $refund->order_number . '</a>',
 								'<strong>' . edd_currency_filter( edd_format_amount( $refund->total * -1 ) ) . '</strong>',
