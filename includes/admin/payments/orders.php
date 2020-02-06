@@ -988,21 +988,56 @@ function edd_order_details_refunds( $order ) {
 		<h3 class="hndle"><span><?php esc_html_e( 'Related Refunds', 'easy-digital-downloads' ); ?></span></h3>
 
 		<div class="inside">
-			<?php do_action( 'edd_view_order_details_refunds_before', $order->id ); ?>
-			<ul id="edd-order-refunds-list">
-			<?php foreach( $refunds as $refund ) : ?>
-				<?php $order_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $refund->id ); ?>
-				<li>
-					<span class="howto"><?php echo date_i18n( get_option( 'date_format' ), strtotime( $refund->completed_date ) ); ?></span>
-					<a href="<?php echo esc_url( $order_url ); ?>">
-						<?php echo '#' . $refund->number ?>
-					</a>&nbsp;&ndash;&nbsp;
-					<span><?php echo edd_currency_filter( edd_format_amount( $refund->total ) ); ?>&nbsp;&ndash;&nbsp;</span>
-					<span><?php echo edd_get_status_label( $refund->status ); ?></span>
-				</li>
-			<?php endforeach; ?>
-			</ul>
-			<?php do_action( 'edd_view_order_details_refunds_after', $order->id ); ?>
+			<?php
+			/**
+			 * Allows output before listing related Refunds.
+			 *
+			 * @since 3.0
+			 *
+			 * @param int $order_id Current order ID.
+			 */
+			do_action( 'edd_view_order_details_refunds_before', $order->id );
+
+			foreach( $refunds as $refund ) :
+				$refund_url = edd_get_admin_url(
+					array(
+						'id'        => $refund->id,
+						'page'      => 'edd-payment-history',
+						'view'      => 'view-refund-details',
+					),
+				);
+				?>
+				<div class="edd-admin-box-inside">
+					<?php
+						echo wp_kses(
+							sprintf(
+								/* translators */
+								__( '%1$s refunded %2$s on %3$s', 'easy-digital-downloads' ),
+								'<a href="' . esc_url( $refund_url ) . '">' . $refund->order_number . '</a>',
+								'<strong>' . edd_currency_filter( edd_format_amount( $refund->total * -1 ) ) . '</strong>',
+								date_i18n( get_option( 'date_format' ), strtotime( $refund->completed_date ) )
+							),
+							array(
+								'a'      => array(
+									'href' => true,
+								),
+								'strong' => true,
+							)
+						);
+					?>
+				</div>
+				<?php
+				endforeach;
+
+				/**
+				 * Allows further output after listing related Refunds.
+				 *
+				 * @since 3.0
+				 *
+				 * @param int $order_id Current order ID.
+				 */
+				do_action( 'edd_view_order_details_refunds_after', $order->id );
+				?>
 		</div>
 	</div>
 
