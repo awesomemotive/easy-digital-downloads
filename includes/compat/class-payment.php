@@ -152,6 +152,14 @@ class Payment extends Base {
 			'_edd_payment_number',
 		);
 
+		/**
+		 * Allows the whitelisted post meta keys to be filtered. Extensions should add their meta key(s) to this
+		 * list if they want add/update/get post meta calls to be routed to order meta.
+		 *
+		 * @param array $meta_keys
+		 */
+		$meta_keys = apply_filters( 'edd_30_post_meta_key_whitelist', $meta_keys );
+
 		// Bail early of not a back-compat key
 		if ( ! in_array( $meta_key, $meta_keys, true ) ) {
 			return $value;
@@ -207,6 +215,9 @@ class Payment extends Base {
 			case '_edd_payment_number':
 				$value = $order->get_number();
 				break;
+			default :
+				$value = edd_get_order_meta( $order->id, $meta_key, true );
+				break;
 		}
 
 		if ( $this->show_notices ) {
@@ -252,6 +263,14 @@ class Payment extends Base {
 			'_edd_payment_tax',
 			'_edd_payment_number',
 		);
+
+		/**
+		 * Allows the whitelisted post meta keys to be filtered. Extensions should add their meta key(s) to this
+		 * list if they want add/update/get post meta calls to be routed to order meta.
+		 *
+		 * @param array $meta_keys
+		 */
+		$meta_keys = apply_filters( 'edd_30_post_meta_key_whitelist', $meta_keys );
 
 		// Bail early of not a back-compat key
 		if ( ! in_array( $meta_key, $meta_keys, true ) ) {
