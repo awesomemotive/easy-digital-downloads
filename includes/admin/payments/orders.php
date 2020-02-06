@@ -1004,7 +1004,7 @@ function edd_order_details_refunds( $order ) {
 						'id'        => $refund->id,
 						'page'      => 'edd-payment-history',
 						'view'      => 'view-refund-details',
-					),
+					)
 				);
 				?>
 				<div class="edd-admin-box-inside">

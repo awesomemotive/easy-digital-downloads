@@ -686,8 +686,8 @@ function edd_ajax_process_refund_form() {
 					'page'      => 'edd-payment-history',
 					'view'      => 'view-refund-details',
 					'id'        => $refund_id,
-				),
-			),
+				)
+			)
 		);
 		wp_send_json( $return, 200 );
 	} else {

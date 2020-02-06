@@ -27,7 +27,7 @@ function edd_refund_details_notice( $refund ) {
 			'id'        => $refund->parent,
 			'page'      => 'edd-payment-history',
 			'view'      => 'view-order-details',
-		),
+		)
 	);
 ?>
 
