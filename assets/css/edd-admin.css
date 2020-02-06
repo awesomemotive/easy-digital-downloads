@@ -552,6 +552,11 @@ a.edd-delete:hover {
 	display: none;
 }
 
+.edd-order-refund-items .wp-list-table {
+	border-top: 0;
+	border-bottom: 0;
+}
+
 /* Note Styles
 -------------------------------------------------------------- */
 
@@ -817,7 +822,7 @@ textarea[name="edd-note"] {
 .wp-list-table.orderitems tr.refunded th,
 .wp-list-table.refunditems tr.refunded td,
 .wp-list-table.refunditems tr.refunded th{
-	background: #ffddee;
+	background: rgba(170, 0, 0, 0.06);
 }
 
 .wp-list-table.emails .column-customer .avatar,

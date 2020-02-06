@@ -681,7 +681,13 @@ function edd_ajax_process_refund_form() {
 			'success'    => true,
 			'refund_id'  => $refund_id,
 			'message'    => sprintf( __( 'Refund successfully processed.', 'easy-digital-downloads' ) ),
-			'refund_url' => admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $refund_id ),
+			'refund_url' => edd_get_admin_url(
+				array(
+					'page'      => 'edd-payment-history',
+					'view'      => 'view-refund-details',
+					'id'        => $refund_id,
+				),
+			),
 		);
 		wp_send_json( $return, 200 );
 	} else {

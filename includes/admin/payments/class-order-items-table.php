@@ -188,7 +188,7 @@ class Order_Items_Table extends List_Table {
 	 *
 	 * @return string Formatted amount.
 	 */
-	private function format_currency( $order_item, $column_name ) {
+	protected function format_currency( $order_item, $column_name ) {
 		static $symbol = null;
 
 		if ( is_null( $symbol ) ) {
