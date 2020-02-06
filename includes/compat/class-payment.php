@@ -157,6 +157,8 @@ class Payment extends Base {
 		 * list if they want add/update/get post meta calls to be routed to order meta.
 		 *
 		 * @param array $meta_keys
+		 *
+		 * @since 3.0
 		 */
 		$meta_keys = apply_filters( 'edd_30_post_meta_key_whitelist', $meta_keys );
 
@@ -269,6 +271,8 @@ class Payment extends Base {
 		 * list if they want add/update/get post meta calls to be routed to order meta.
 		 *
 		 * @param array $meta_keys
+		 * 
+		 * @since 3.0
 		 */
 		$meta_keys = apply_filters( 'edd_30_post_meta_key_whitelist', $meta_keys );
 
