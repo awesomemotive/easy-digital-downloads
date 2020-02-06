@@ -1,3 +1,5 @@
+/* global _ */
+
 /**
  * Internal dependencies
  */
@@ -35,5 +37,42 @@ jQueryReady( () => {
 			return false;
 		}
 	} );
+
+	/**
+	 * Redirect to a specific order when clicking an Order "Number" column.
+	 *
+	 * @since 3.0
+	 */
+	( () => {
+		const numberColumns = document.querySelectorAll( '#edd-payments-filter td.column-number' );
+
+		_.each( numberColumns, ( column ) => {
+			const viewLink = column.querySelector( '.row-title' );
+
+			if ( ! viewLink ) {
+				return;
+			}
+
+			/**
+			 * Redirect to a specific order when the column is clicked.
+			 *
+			 * @param {Event} e Click event.
+			 */
+			column.addEventListener( 'click', ( e ) => {
+				const {
+					target: {
+						tagName,
+					}
+				} = e;
+
+				// Only continue through on the <td> or <strong> (status).
+				if ( ! ( 'TD' === tagName || 'STRONG' === tagName ) ) {
+					return;
+				}
+
+				window.location.href = viewLink.href;
+			} );
+		} );
+	} ) ();
 
 } );
