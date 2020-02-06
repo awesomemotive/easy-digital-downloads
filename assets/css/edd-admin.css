@@ -828,6 +828,10 @@ textarea[name="edd-note"] {
 	border-radius: 5px;
 }
 
+#edd-payments-filter td.column-number:hover {
+	cursor: pointer;
+}
+
 /* Row Actions
 -------------------------------------------------------------- */
 
