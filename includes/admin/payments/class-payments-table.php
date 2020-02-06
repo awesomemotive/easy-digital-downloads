@@ -528,7 +528,7 @@ class EDD_Payment_History_Table extends List_Table {
 		// View URL
 		$view_url = edd_get_admin_url( array(
 			'page' => 'edd-payment-history',
-			'view' => 'order' === $order->type
+			'view' => 'sale' === $order->type
 				? 'view-order-details'
 				: 'view-refund-details',
 			'id'   => $order->id,
