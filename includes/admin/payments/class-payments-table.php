@@ -367,11 +367,11 @@ class EDD_Payment_History_Table extends List_Table {
 		return apply_filters( 'edd_payments_table_columns', array(
 			'cb'       => '<input type="checkbox" />', // Render a checkbox instead of text
 			'number'   => __( 'Number',    'easy-digital-downloads' ),
-			'status'   => '',
 			'customer' => __( 'Customer',  'easy-digital-downloads' ),
 			'gateway'  => __( 'Gateway',   'easy-digital-downloads' ),
 			'amount'   => __( 'Amount',    'easy-digital-downloads' ),
-			'date'     => __( 'Date', 'easy-digital-downloads' )
+			'date'     => __( 'Date', 'easy-digital-downloads' ),
+			'status'   => __( 'Status', 'easy-digital-downloads' ),
 		) );
 	}
 
