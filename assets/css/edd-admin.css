@@ -552,6 +552,19 @@ a.edd-delete:hover {
 	display: none;
 }
 
+/** Columns */
+.wp-list-table.orders .column-number .row-title {
+	display:  block;
+}
+
+.wp-list-table.orders .column-date {
+	width: 15%;
+}
+
+.wp-list-table.orders .column-status {
+	width: 18%;
+}
+
 /** Status labels */
 .edd-admin-order-status-label {
 	padding: 2px 9px;
@@ -573,7 +586,6 @@ a.edd-delete:hover {
 }
 
 	.edd-admin-order-status-label--refunded .edd-admin-order-status-label__icon {
-		margin-left: 4px;
 		font-size: 16px;
 		width: 16px;
 		height: 16px;
@@ -585,14 +597,18 @@ a.edd-delete:hover {
 }
 
 	.edd-admin-order-status-label--failed .edd-admin-order-status-label__icon {
+		margin-left: 0;
 		margin-top: -1px;
-		margin-bottom: -1px;
 	}
 
 .edd-admin-order-status-label--complete {
 	color: #017d5c;
 	background: #e5f5f0;
 }
+
+	.edd-admin-order-status-label--complete .edd-admin-order-status-label__icon {
+		margin-left: 0px;
+	}
 
 .edd-admin-order-status-label--pending {
 	color: #7d6e01;
@@ -799,7 +815,6 @@ textarea[name="edd-note"] {
 	width: 13%
 }
 
-.wp-list-table.orders .column-date,
 .wp-list-table.customers .column-date_created,
 .wp-list-table.discounts .column-code,
 .wp-list-table.discounts .column-start_date,
