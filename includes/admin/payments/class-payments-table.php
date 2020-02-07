@@ -26,6 +26,15 @@ use EDD\Admin\List_Table;
 class EDD_Payment_History_Table extends List_Table {
 
 	/**
+	 * Determines the current Order type.
+	 *
+	 * @since 3.0
+	 *
+	 * @var string $type Order type
+	 */
+	protected $type;
+
+	/**
 	 * URL of this page.
 	 *
 	 * @var string
@@ -49,6 +58,16 @@ class EDD_Payment_History_Table extends List_Table {
 			'ajax'     => false
 		) );
 
+		// Use registered types
+		$types = array_keys( edd_get_order_types() );
+		if ( ! empty( $_GET['order_type'] ) && in_array( $_GET['order_type'], $types, true ) ) {
+			$this->type = sanitize_key( $_GET['order_type'] );
+
+		// Default to 'sale' if type is unrecognized
+		} else {
+			$this->type = 'sale';
+		}
+
 		$this->set_base_url();
 		$this->filter_bar_hooks();
 		$this->get_payment_counts();
@@ -62,21 +81,10 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @since 3.0
 	 */
 	private function set_base_url() {
-
-		// Use registered types
-		$types = array_keys( edd_get_order_types() );
-		if ( ! empty( $_GET['order_type'] ) && in_array( $_GET['order_type'], $types, true ) ) {
-			$type = sanitize_key( $_GET['order_type'] );
-
-		// Default to 'sale' if type is unrecognized
-		} else {
-			$type = 'sale';
-		}
-
 		// Carry the type over to the base URL
 		$this->base_url = edd_get_admin_url( array(
 			'page'       => 'edd-payment-history',
-			'order_type' => $type
+			'order_type' => $this->type
 		) );
 	}
 
