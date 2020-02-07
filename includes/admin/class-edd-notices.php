@@ -319,8 +319,7 @@ class EDD_Notices {
 		if ( edd_get_option( 'tax_rate' ) ) {
 
 			// URL to fix this
-			$url = add_query_arg( array(
-				'post_type' => 'download',
+			$url = edd_get_admin_url( array(
 				'page'      => 'edd-settings',
 				'tab'       => 'taxes',
 				'section'   => 'rates'
