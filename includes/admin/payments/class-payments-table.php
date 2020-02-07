@@ -227,7 +227,7 @@ class EDD_Payment_History_Table extends List_Table {
 
 			<div class="inside">
 				<fieldset>
-					<legend for="order-amount-filter-type"><?php esc_html_e( 'Amount is', 'easy-digital-downloads' ); ?></legend>
+					<legend for="order-amount-filter-type"><?php esc_html_e( 'Total is', 'easy-digital-downloads' ); ?></legend>
 					<?php
 					$options = array(
 						'=' => __( 'equal to', 'easy-digital-downloads' ),
@@ -372,15 +372,29 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @return array $columns Array of all the list table columns.
 	 */
 	public function get_columns() {
-		return apply_filters( 'edd_payments_table_columns', array(
+		$columns = array(
 			'cb'       => '<input type="checkbox" />', // Render a checkbox instead of text
 			'number'   => __( 'Number',    'easy-digital-downloads' ),
 			'customer' => __( 'Customer',  'easy-digital-downloads' ),
 			'gateway'  => __( 'Gateway',   'easy-digital-downloads' ),
-			'amount'   => __( 'Amount',    'easy-digital-downloads' ),
+			'amount'   => __( 'Total',    'easy-digital-downloads' ),
 			'date'     => __( 'Date', 'easy-digital-downloads' ),
-			'status'   => __( 'Status', 'easy-digital-downloads' ),
-		) );
+		);
+
+		if ( 'sale' === $this->type ) {
+			$columns['status'] = __( 'Status', 'easy-digital-downloads' );
+		}
+
+		/**
+		 * Filters the columns for Orders and Refunds table.
+		 *
+		 * @since unknown
+		 *
+		 * @param array $columns Table columns.
+		 */
+		$columns = apply_filters( 'edd_payments_table_columns', $columns );
+
+		return $columns;
 	}
 
 	/**
@@ -441,6 +455,9 @@ class EDD_Payment_History_Table extends List_Table {
 				}
 
 				break;
+			case 'status':
+				$value = edd_get_order_status_badge( $order->status );
+				break;
 			default:
 				$value = method_exists( $order, 'get_' . $column_name )
 					? call_user_func( array( $order, 'get_' . $column_name ) )
@@ -449,30 +466,6 @@ class EDD_Payment_History_Table extends List_Table {
 		}
 
 		return apply_filters( 'edd_payments_table_column', $value, $order->id, $column_name );
-	}
-
-	public function column_status( $order ) {
-		$status = $order->status;
-
-		echo '<span class="edd-admin-order-status-label edd-admin-order-status-label--' . esc_attr( $status ) . '">';
-
-		echo '<span class="edd-admin-order-status-label__text">';
-		echo edd_get_payment_status_label( $status );
-		echo '</span>';
-
-		switch( $status ) {
-			case 'refunded' :
-				echo '<span class="edd-admin-order-status-label__icon dashicons dashicons-undo"></span>';
-				break;
-			case 'failed' :
-				echo '<span class="edd-admin-order-status-label__icon dashicons dashicons-no-alt"></span>';
-				break;
-			case 'complete' :
-				echo '<span class="edd-admin-order-status-label__icon dashicons dashicons-yes"></span>';
-				break;
-		}
-
-		echo '</span>';
 	}
 
 	/**
