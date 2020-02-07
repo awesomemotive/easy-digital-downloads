@@ -134,6 +134,7 @@ class EDD_Notices {
 		if ( current_user_can( 'manage_shop_settings' ) ) {
 			$this->add_system_notices();
 			$this->add_data_notices();
+			$this->add_tax_rate_notice();
 			$this->add_settings_notices();
 		}
 
@@ -314,29 +315,43 @@ class EDD_Notices {
 				'message'        => sprintf( __( 'Easy Digital Downloads 2.5 contains a <a href="%s">built in recount tool</a>. Please <a href="%s">deactivate the Easy Digital Downloads - Recount Earnings plugin</a>', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ), admin_url( 'plugins.php' ) )
 			) );
 		}
+	}
 
-		// Default tax rate detected
-		if ( edd_get_option( 'tax_rate' ) ) {
+	/**
+	 * Adds a notice about the deprecated Default Rate for Taxes.
+	 *
+	 * @since 3.0
+	 */
+	private function add_tax_rate_notice() {
 
-			// URL to fix this
-			$url = edd_get_admin_url( array(
-				'page'      => 'edd-settings',
-				'tab'       => 'taxes',
-				'section'   => 'rates'
-			) );
-
-			// Link
-			$link = '<a href="' . esc_url( $url ) . '" class="button button-secondary">' . __( 'Review Tax Rates', 'easy-digital-downloads' ) . '</a>';
-
-			// Add the notice
-			$this->add_notice( array(
-				'id'             => 'edd-default-tax-rate',
-				'class'          => 'error',
-				/* translators: Link to review existing tax rates. */
-				'message'        => '<strong>' . __( 'A default tax rate was detected.', 'easy-digital-downloads' ) . '</strong></p><p>' . __( 'This setting is no longer used in this version of Easy Digital Downloads. Please confirm your regional tax rates are properly configured and update tax settings to remove this notice.', 'easy-digital-downloads' ) . '</p><p>' . $link,
-				'is_dismissible' => false
-			) );
+		// Default tax rate not detected.
+		if ( false === edd_get_option( 'tax_rate' ) ) {
+			return;
 		}
+
+		// On Rates page, settings notice is shown.
+		if ( ! empty( $_GET['page'] ) && 'edd-settings' === $_GET['page'] && ! empty( $_GET['section'] ) && 'rates' === $_GET['section'] ) {
+			return;
+		}
+
+		// URL to fix this
+		$url = edd_get_admin_url( array(
+			'page'      => 'edd-settings',
+			'tab'       => 'taxes',
+			'section'   => 'rates'
+		) );
+
+		// Link
+		$link = '<a href="' . esc_url( $url ) . '" class="button button-secondary">' . __( 'Review Tax Rates', 'easy-digital-downloads' ) . '</a>';
+
+		// Add the notice
+		$this->add_notice( array(
+			'id'             => 'edd-default-tax-rate',
+			'class'          => 'error',
+			/* translators: Link to review existing tax rates. */
+			'message'        => '<strong>' . __( 'A default tax rate was detected.', 'easy-digital-downloads' ) . '</strong></p><p>' . __( 'This setting is no longer used in this version of Easy Digital Downloads. Please confirm your regional tax rates are properly configured and update tax settings to remove this notice.', 'easy-digital-downloads' ) . '</p><p>' . $link,
+			'is_dismissible' => false
+		) );
 	}
 
 	/**
