@@ -556,7 +556,7 @@ a.edd-delete:hover {
 .edd-admin-order-status-label {
 	padding: 2px 9px;
 	border-radius: 20px;
-	background: #e2e4e7;
+	background: #ececec;
 	display: inline-flex;
 	align-items: center;
 }
@@ -570,8 +570,6 @@ a.edd-delete:hover {
 }
 
 .edd-admin-order-status-label--refunded {
-	color: inherit;
-	background: #e2e4e7;
 }
 
 	.edd-admin-order-status-label--refunded .edd-admin-order-status-label__icon {
@@ -599,6 +597,11 @@ a.edd-delete:hover {
 .edd-admin-order-status-label--pending {
 	color: #7d6e01;
 	background: #f5f2e5;
+}
+
+.edd-admin-order-status-label--processing {
+	color: #015a7d;
+	background: #e5f1f5;
 }
 
 /* Note Styles
