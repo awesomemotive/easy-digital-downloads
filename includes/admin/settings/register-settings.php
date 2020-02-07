@@ -1161,7 +1161,7 @@ function edd_get_registered_settings() {
 						'type'          => 'tax_rate',
 						'name'          => __( 'Default Rate', 'easy-digital-downloads' ),
 						'desc'          => (
-							'<div class="notice inline notice-error"><p>' . __( 'This setting is no longer used in this version of Easy Digital Downloads. Please confirm your regional tax rates are properly configured properlty below click "Save Changes" to dismiss this notice.', 'easy-digital-downloads' ) . '</p></div>'
+							'<div class="notice inline notice-error"><p>' . __( 'This setting is no longer used in this version of Easy Digital Downloads. Please confirm your regional tax rates are properly configured properly below, then click "Save Changes" to dismiss this notice.', 'easy-digital-downloads' ) . '</p></div>'
 						),
 					),
 				),
