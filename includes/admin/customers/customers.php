@@ -816,20 +816,14 @@ function edd_customers_view( $customer = null ) {
 			<tr>
 				<th class="column-primary"><?php _e( 'Number', 'easy-digital-downloads' ); ?></th>
 				<th><?php _e( 'Gateway', 'easy-digital-downloads' ); ?></th>
-				<th><?php _e( 'Amount', 'easy-digital-downloads' ); ?></th>
-				<th><?php _e( 'Completed', 'easy-digital-downloads' ); ?></th>
+				<th><?php _e( 'Total', 'easy-digital-downloads' ); ?></th>
+				<th><?php _e( 'Date', 'easy-digital-downloads' ); ?></th>
+				<th><?php _e( 'Status', 'easy-digital-downloads' ); ?></th>
 			</tr>
 			</thead>
 			<tbody>
 			<?php if ( ! empty( $orders ) ) :
 				foreach ( $orders as $order ) :
-					$state  = '';
-
-					// State
-					if ( 'complete' !== $order->status ) {
-						$state = ' &mdash; ' . edd_get_payment_status_label( $order->status );
-					}
-
 					// View URL
 					$view_url = edd_get_admin_url( array(
 						'page' => 'edd-payment-history',
@@ -837,13 +831,16 @@ function edd_customers_view( $customer = null ) {
 						'id'   => $order->id,
 					) );
 
-					$link = '<strong><a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $order->get_number() ) . '</a>' . esc_html( $state ) . '</strong>'; ?>
+					$link = '<a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $order->get_number() ) . '</a>'; ?>
 
 					<tr>
 						<td class="column-primary"><strong><?php echo $link; ?></strong></td>
 						<td><?php echo edd_get_gateway_admin_label( $order->gateway ); ?></td>
 						<td><?php echo edd_currency_filter( edd_format_amount( $order->total ), $order->currency ); ?></td>
 						<td><time datetime="<?php echo esc_attr( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString() ); ?>"><?php echo edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString(), 'M. d, Y' ) . '<br>' . edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString(), 'H:i' ); ?></time></td>
+						<td>
+							<?php echo edd_get_order_status_badge( $order->status ); ?>
+						</td>
 					</tr>
 
 				<?php endforeach;
