@@ -1019,3 +1019,86 @@ function edd_order_details_refunds( $order ) {
 function edd_is_add_order_page() {
 	return isset( $_GET['view'] ) && 'add-order' === sanitize_key( $_GET['view'] ); // WPCS: CSRF ok.
 }
+
+/**
+ * Returns markup for an Order status badge.
+ *
+ * @since 3.0
+ *
+ * @param string $order_status Order status slug.
+ * @return string
+ */
+function edd_get_order_status_badge( $order_status ) {
+
+	switch( $order_status ) {
+		case 'refunded' :
+			$icon = '<span class="edd-admin-order-status-label__icon dashicons dashicons-undo"></span>';
+			break;
+		case 'failed' :
+			$icon = '<span class="edd-admin-order-status-label__icon dashicons dashicons-no-alt"></span>';
+			break;
+		case 'complete' :
+			$icon = '<span class="edd-admin-order-status-label__icon dashicons dashicons-yes"></span>';
+			break;
+		default:
+			$icon = '';
+	}
+
+	/**
+	 * Filters the markup for the order status badge icon.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $icon Icon HTML markup.
+	 */
+	$icon = apply_filters( 'edd_get_order_status_badge_icon', $icon, $order_status );
+
+	ob_start();
+?>
+
+<span class="edd-admin-order-status-label edd-admin-order-status-label--<?php echo esc_attr( $order_status ); ?>">
+
+	<span class="edd-admin-order-status-label__text">
+		<?php echo edd_get_payment_status_label( $order_status ); ?>
+	</span>
+	<span class="edd-admin-order-status-label__icon">
+		<?php
+		echo wp_kses(
+			$icon,
+			array(
+				'span'    => array(
+					'class' => true,
+				),
+				'svg'     => array(
+					'class'       => true,
+					'xmlns'       => true,
+					'width'       => true,
+					'height'      => true,
+					'viewbox'     => true,
+					'aria-hidden' => true,
+					'role'        => true,
+					'focusable'   => true,
+				),
+				'path'    => array(
+					'fill'      => true,
+					'fill-rule' => true,
+					'd'         => true,
+					'transform' => true,
+				),
+				'polygon' => array(
+					'fill'      => true,
+					'fill-rule' => true,
+					'points'    => true,
+					'transform' => true,
+					'focusable' => true,
+				),
+			)
+		);
+		?>
+	</span>
+
+</span>
+
+<?php
+	return ob_get_clean();
+}
