@@ -367,6 +367,7 @@ class EDD_Payment_History_Table extends List_Table {
 		return apply_filters( 'edd_payments_table_columns', array(
 			'cb'       => '<input type="checkbox" />', // Render a checkbox instead of text
 			'number'   => __( 'Number',    'easy-digital-downloads' ),
+			'status'   => '',
 			'customer' => __( 'Customer',  'easy-digital-downloads' ),
 			'gateway'  => __( 'Gateway',   'easy-digital-downloads' ),
 			'amount'   => __( 'Amount',    'easy-digital-downloads' ),
@@ -440,6 +441,30 @@ class EDD_Payment_History_Table extends List_Table {
 		}
 
 		return apply_filters( 'edd_payments_table_column', $value, $order->id, $column_name );
+	}
+
+	public function column_status( $order ) {
+		$status = $order->status;
+
+		echo '<span class="edd-admin-order-status-label edd-admin-order-status-label--' . esc_attr( $status ) . '">';
+
+		echo '<span class="edd-admin-order-status-label__text">';
+		echo edd_get_payment_status_label( $status );
+		echo '</span>';
+
+		switch( $status ) {
+			case 'refunded' :
+				echo '<span class="edd-admin-order-status-label__icon dashicons dashicons-undo"></span>';
+				break;
+			case 'failed' :
+				echo '<span class="edd-admin-order-status-label__icon dashicons dashicons-no-alt"></span>';
+				break;
+			case 'complete' :
+				echo '<span class="edd-admin-order-status-label__icon dashicons dashicons-yes"></span>';
+				break;
+		}
+
+		echo '</span>';
 	}
 
 	/**
@@ -517,13 +542,7 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @return string Displays a checkbox.
 	 */
 	public function column_number( $order ) {
-		$state  = '';
 		$status = $this->get_status();
-
-		// State
-		if ( ( ! empty( $status ) && ( $order->status !== $status ) ) || ( empty( $status ) && ( 'complete' !== $order->status ) ) ) {
-			$state = ' &mdash; ' . edd_get_payment_status_label( $order->status );
-		}
 
 		// View URL
 		$view_url = edd_get_admin_url( array(
@@ -564,7 +583,7 @@ class EDD_Payment_History_Table extends List_Table {
 
 		// Primary link
 		$order_number = $order->type == 'sale' ? $order->get_number() : $order->order_number;
-		$link = '<strong><a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $order_number ) . '</a>' . esc_html( $state ) . '</strong>';
+		$link = '<a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $order_number ) . '</a>';
 
 		// Concatenate & return the results
 		return $link . $actions;
