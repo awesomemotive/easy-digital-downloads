@@ -552,6 +552,55 @@ a.edd-delete:hover {
 	display: none;
 }
 
+/** Status labels */
+.edd-admin-order-status-label {
+	padding: 2px 9px;
+	border-radius: 20px;
+	background: #e2e4e7;
+	display: inline-flex;
+	align-items: center;
+}
+
+.edd-admin-order-status-label__text {
+}
+
+.edd-admin-order-status-label__icon {
+	opacity: 0.80;
+	margin: 0 -2px 0 2px;
+}
+
+.edd-admin-order-status-label--refunded {
+	color: inherit;
+	background: #e2e4e7;
+}
+
+	.edd-admin-order-status-label--refunded .edd-admin-order-status-label__icon {
+		margin-left: 4px;
+		font-size: 16px;
+		width: 16px;
+		height: 16px;
+	}
+
+.edd-admin-order-status-label--failed {
+	color: #ac3d3d;
+	background: #ffd6d6;
+}
+
+	.edd-admin-order-status-label--failed .edd-admin-order-status-label__icon {
+		margin-top: -1px;
+		margin-bottom: -1px;
+	}
+
+.edd-admin-order-status-label--complete {
+	color: #017d5c;
+	background: #e5f5f0;
+}
+
+.edd-admin-order-status-label--pending {
+	color: #7d6e01;
+	background: #f5f2e5;
+}
+
 /* Note Styles
 -------------------------------------------------------------- */
 
@@ -730,8 +779,6 @@ textarea[name="edd-note"] {
 .wp-list-table.discounts .column-amount,
 .wp-list-table.discounts .column-status,
 .wp-list-table.addresses .column-type,
-.wp-list-table.orders .column-amount,
-.wp-list-table.orders .column-status,
 .wp-list-table.posts .column-earnings {
 	width: 11%;
 }
@@ -749,6 +796,7 @@ textarea[name="edd-note"] {
 	width: 13%
 }
 
+.wp-list-table.orders .column-date,
 .wp-list-table.customers .column-date_created,
 .wp-list-table.discounts .column-code,
 .wp-list-table.discounts .column-start_date,
@@ -756,8 +804,7 @@ textarea[name="edd-note"] {
 .wp-list-table.downloads .column-date,
 .wp-list-table.downloads .column-customer,
 .wp-list-table.addresses .column-date_created,
-.wp-list-table.emails .column-date_created,
-.wp-list-table.orders .column-date {
+.wp-list-table.emails .column-date_created {
 	width: 14%;
 }
 
@@ -777,11 +824,6 @@ textarea[name="edd-note"] {
 .wp-list-table.refunditems .column-total,
 .wp-list-table.refunditems .column-subtotal {
 	width: 17%;
-}
-
-.wp-list-table.orders .column-gateway,
-.wp-list-table.orders .column-customer {
-	width: 18%;
 }
 
 .wp-list-table.addresses .column-customer,
@@ -804,15 +846,12 @@ textarea[name="edd-note"] {
 .wp-list-table.emails .column-primary strong,
 .wp-list-table.addresses .column-primary strong,
 .wp-list-table.discounts .column-primary strong,
-.wp-list-table.orders .column-primary strong,
 .wp-list-table.orderitems .column-primary strong,
 .wp-list-table.refunditems .column-primary strong,
 .wp-list-table.orderadjustments .column-primary strong {
 	font-size: 14px;
 }
 
-.wp-list-table.orders tr.refunded td,
-.wp-list-table.orders tr.refunded th,
 .wp-list-table.orderitems tr.refunded td,
 .wp-list-table.orderitems tr.refunded th,
 .wp-list-table.refunditems tr.refunded td,
