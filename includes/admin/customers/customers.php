@@ -856,7 +856,11 @@ function edd_customers_view( $customer = null ) {
 
 				<?php endforeach;
 			else: ?>
-				<tr><td colspan="5" class="no-items"><?php esc_html_e( 'No Payments Found', 'easy-digital-downloads' ); ?></td></tr>
+				<tr><td colspan="5" class="no-items"><?php esc_html_e( 'No orders found', 'easy-digital-downloads' ); ?></td></tr>
+			<?php endif; ?>
+			</tbody>
+		</table>
+
 		<h3><?php _e( 'Recent Refunds', 'easy-digital-downloads' ); ?></h3>
 		<table class="wp-list-table widefat striped customer-payments">
 			<thead>
