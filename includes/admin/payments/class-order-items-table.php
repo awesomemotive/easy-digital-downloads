@@ -213,6 +213,11 @@ class Order_Items_Table extends List_Table {
 		$status      = strtolower( $order_item->status );
 		$row_actions = array();
 
+		// See what the current name of the product is:
+		$current_product_name = edd_get_download_name( $order_item->product_id, $order_item->price_id );
+		$changed_name         = strtolower( htmlentities( $current_product_name ) ) !== strtolower( htmlentities( $order_item->get_order_item_name() ) );
+		$status_help          = sprintf( __( 'This product has been renamed since this purchase. It is now %s.', 'easy-digital-downloads' ), $current_product_name );
+
 		// No state
 		$state = '';
 
@@ -249,13 +254,11 @@ class Order_Items_Table extends List_Table {
 		$order_item_title = '<strong><a class="row-title" href="' . add_query_arg( array(
 				'action' => 'edit',
 				'post'  => $order_item->product_id,
-			), admin_url( 'post.php' )  ) . '">' . $order_item->get_order_item_name() . '</a>' . $state . '</strong>';
+		), admin_url( 'post.php' )  ) . '" aria-label="' . $order_item->get_order_item_name() . esc_attr( true === $changed_name ? ( ': ' . $status_help ) : '' ) . '">';
+		$order_item_title .= $order_item->get_order_item_name();
+		$order_item_title .= '</a>' . $state . '</strong>';
 
-		// See what the current name of the product is:
-		$current_product_name = edd_get_download_name( $order_item->product_id, $order_item->price_id );
-		if ( strtolower( htmlentities( $current_product_name ) ) !== strtolower( htmlentities( $order_item->get_order_item_name() ) ) ) {
-			$status_help = '<p>' . sprintf( __( 'This product has been renamed since this purchase. It is now %s.', 'easy-digital-downloads' ), $current_product_name );
-
+		if ( true === $changed_name ) {
 			$order_item_title .= ' <span alt="f223" class="edd-help-tip dashicons dashicons-backup" title="' . $status_help . '"></span>';
 		}
 
