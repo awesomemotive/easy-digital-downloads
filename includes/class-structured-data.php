@@ -179,7 +179,7 @@ class Structured_Data {
 					'@type'           => 'Offer',
 					'price'           => $price['amount'],
 					'priceCurrency'   => edd_get_currency(),
-					'priceValidUntil' => null,
+					'priceValidUntil' => date( 'c', time() + YEAR_IN_SECONDS ),
 					'itemOffered'     => $data['name'] . ' - ' . $price['name'],
 					'url'             => $data['url'],
 					'availability'    => 'http://schema.org/InStock',
