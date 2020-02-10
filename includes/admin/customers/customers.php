@@ -440,10 +440,17 @@ function edd_customers_view( $customer = null ) {
 	$addresses = $customer->get_addresses();
 
 	// Orders
+	// Orders and refunds.
 	$orders = edd_get_orders( array(
 		'customer_id' => $customer->id,
 		'number'      => 10,
 		'type'        => 'sale',
+	) );
+
+	$refunds = edd_get_orders( array(
+		'customer_id' => $customer->id,
+		'number'      => 10,
+		'type'        => 'refund',
 	) );
 
 	// Downloads
@@ -850,6 +857,38 @@ function edd_customers_view( $customer = null ) {
 				<?php endforeach;
 			else: ?>
 				<tr><td colspan="5" class="no-items"><?php esc_html_e( 'No Payments Found', 'easy-digital-downloads' ); ?></td></tr>
+		<h3><?php _e( 'Recent Refunds', 'easy-digital-downloads' ); ?></h3>
+		<table class="wp-list-table widefat striped customer-payments">
+			<thead>
+			<tr>
+				<th class="column-primary"><?php _e( 'Number', 'easy-digital-downloads' ); ?></th>
+				<th><?php _e( 'Gateway', 'easy-digital-downloads' ); ?></th>
+				<th><?php _e( 'Total', 'easy-digital-downloads' ); ?></th>
+				<th><?php _e( 'Date', 'easy-digital-downloads' ); ?></th>
+			</tr>
+			</thead>
+			<tbody>
+			<?php if ( ! empty( $refunds ) ) :
+				foreach ( $refunds as $refund ) :
+					// View URL
+					$view_url = edd_get_admin_url( array(
+						'page' => 'edd-payment-history',
+						'view' => 'view-order-details',
+						'id'   => $refund->id,
+					) );
+
+					$link = '<a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $refund->order_number ) . '</a>'; ?>
+
+					<tr>
+						<td class="column-primary"><strong><?php echo $link; ?></strong></td>
+						<td><?php echo edd_get_gateway_admin_label( $refund->gateway ); ?></td>
+						<td><?php echo edd_currency_filter( edd_format_amount( $refund->total ), $refund->currency ); ?></td>
+						<td><time datetime="<?php echo esc_attr( EDD()->utils->date( $refund->date_created, null, true )->toDateTimeString() ); ?>"><?php echo edd_date_i18n( EDD()->utils->date( $refund->date_created, null, true )->toDateTimeString(), 'M. d, Y' ) . '<br>' . edd_date_i18n( EDD()->utils->date( $refund->date_created, null, true )->toDateTimeString(), 'H:i' ); ?></time></td>
+					</tr>
+
+				<?php endforeach;
+			else: ?>
+				<tr><td colspan="5" class="no-items"><?php esc_html_e( 'No refunds found', 'easy-digital-downloads' ); ?></td></tr>
 			<?php endif; ?>
 			</tbody>
 		</table>
