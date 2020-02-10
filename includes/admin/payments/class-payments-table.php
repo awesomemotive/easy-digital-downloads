@@ -375,21 +375,11 @@ class EDD_Payment_History_Table extends List_Table {
 		$columns = array(
 			'cb'       => '<input type="checkbox" />', // Render a checkbox instead of text
 			'number'   => __( 'Number',    'easy-digital-downloads' ),
-		);
-
-		// Add status for sales.
-		if ( 'sale' === $this->type ) {
-			$columns['status'] = __( 'Status', 'easy-digital-downloads' );
-		}
-
-		$columns = array_merge(
-			$columns,
-			array(
-				'customer' => __( 'Customer',  'easy-digital-downloads' ),
-				'gateway'  => __( 'Gateway',   'easy-digital-downloads' ),
-				'amount'   => __( 'Total',    'easy-digital-downloads' ),
-				'date'     => __( 'Date', 'easy-digital-downloads' ),
-			)
+			'customer' => __( 'Customer',  'easy-digital-downloads' ),
+			'gateway'  => __( 'Gateway',   'easy-digital-downloads' ),
+			'amount'   => __( 'Total',    'easy-digital-downloads' ),
+			'date'     => __( 'Date', 'easy-digital-downloads' ),
+			'status'   => __( 'Status', 'easy-digital-downloads' ),
 		);
 
 		/**
