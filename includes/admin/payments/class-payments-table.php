@@ -375,15 +375,22 @@ class EDD_Payment_History_Table extends List_Table {
 		$columns = array(
 			'cb'       => '<input type="checkbox" />', // Render a checkbox instead of text
 			'number'   => __( 'Number',    'easy-digital-downloads' ),
-			'customer' => __( 'Customer',  'easy-digital-downloads' ),
-			'gateway'  => __( 'Gateway',   'easy-digital-downloads' ),
-			'amount'   => __( 'Total',    'easy-digital-downloads' ),
-			'date'     => __( 'Date', 'easy-digital-downloads' ),
 		);
 
+		// Add status for sales.
 		if ( 'sale' === $this->type ) {
 			$columns['status'] = __( 'Status', 'easy-digital-downloads' );
 		}
+
+		$columns = array_merge(
+			$columns,
+			array(
+				'customer' => __( 'Customer',  'easy-digital-downloads' ),
+				'gateway'  => __( 'Gateway',   'easy-digital-downloads' ),
+				'amount'   => __( 'Total',    'easy-digital-downloads' ),
+				'date'     => __( 'Date', 'easy-digital-downloads' ),
+			)
+		);
 
 		/**
 		 * Filters the columns for Orders and Refunds table.
@@ -407,6 +414,7 @@ class EDD_Payment_History_Table extends List_Table {
 	public function get_sortable_columns() {
 		return apply_filters( 'edd_payments_table_sortable_columns', array(
 			'number'   => array( 'id',           true  ),
+			'status'   => array( 'status',       false ),
 			'customer' => array( 'customer_id',  false ),
 			'gateway'  => array( 'gateway',      false ),
 			'amount'   => array( 'total',        false ),
