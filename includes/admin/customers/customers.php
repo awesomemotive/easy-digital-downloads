@@ -824,8 +824,8 @@ function edd_customers_view( $customer = null ) {
 			<tr>
 				<th class="column-primary"><?php _e( 'Number', 'easy-digital-downloads' ); ?></th>
 				<th><?php _e( 'Gateway', 'easy-digital-downloads' ); ?></th>
-				<th><?php _e( 'Amount', 'easy-digital-downloads' ); ?></th>
-				<th><?php _e( 'Completed', 'easy-digital-downloads' ); ?></th>
+				<th><?php _e( 'Total', 'easy-digital-downloads' ); ?></th>
+				<th><?php _e( 'Date', 'easy-digital-downloads' ); ?></th>
 			</tr>
 			</thead>
 			<tbody>
