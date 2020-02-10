@@ -153,10 +153,15 @@ class Structured_Data {
 				'@type' => 'Thing',
 				'name'  => get_bloginfo( 'name' ),
 			),
-			'image'       => wp_get_attachment_image_url( get_post_thumbnail_id( $download->ID ) ),
 			'sku'         => $download->get_sku(),
 		);
 
+		// Add image if it exists.
+		$image_url = wp_get_attachment_image_url( get_post_thumbnail_id( $download->ID ) );
+
+		if ( false !== $image_url ) {
+			$data['image'] = esc_url( $image_url );
+		}
 		if ( $download->has_variable_prices() ) {
 			$variable_prices = $download->get_prices();
 
