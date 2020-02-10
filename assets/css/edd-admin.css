@@ -883,8 +883,8 @@ textarea[name="edd-note"] {
 .wp-list-table.orderitems tr.refunded td,
 .wp-list-table.orderitems tr.refunded th,
 .wp-list-table.refunditems tr.refunded td,
-.wp-list-table.refunditems tr.refunded th{
-	background: #ffddee;
+.wp-list-table.refunditems tr.refunded th {
+	background: #ececec;
 }
 
 .wp-list-table.orderadjustments .column-desc,
@@ -899,11 +899,6 @@ textarea[name="edd-note"] {
 	margin-right: 10px;
 	margin-top: 1px;
 	border-radius: 5px;
-}
-
-.wp-list-table .refunded th,
-.wp-list-table .refunded td {
-	background: #ececec;
 }
 
 /* Row Actions
