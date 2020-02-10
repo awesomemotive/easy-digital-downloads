@@ -531,7 +531,7 @@ a.edd-delete:hover {
 }
 
 .order-customer-info .customer-details-wrap {
-	margin: 15px 0 0;
+	margin: 15px 0;
 	align-items: center;
 }
 
@@ -543,6 +543,12 @@ a.edd-delete:hover {
 	display: flex;
 	flex-direction: column;
 } 
+
+.order-customer-info .customer-details .customer-since {
+	color: #666;
+	display: block;
+	margin: 4px 0 6px;
+}
 
 .order-customer-info .customer-details > span {
 	margin-bottom: 5px;

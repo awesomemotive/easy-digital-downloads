@@ -1279,7 +1279,7 @@ function edd_ajax_customer_details() {
 		'id'                => esc_html( $customer->id ),
 		'name'              => esc_html( $customer->name ),
 		'email'             => esc_html( $customer->email ),
-		'avatar'            => get_avatar( $customer->email, 45 ),
+		'avatar'            => get_avatar( $customer->email, 50 ),
 		'date_created'      => esc_html( $customer->date_created ),
 		'date_created_i18n' => esc_html( edd_date_i18n( $customer->date_created ) ),
 		'_links'            => array(

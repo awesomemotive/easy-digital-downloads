@@ -31,6 +31,7 @@ jQueryReady( () => {
 				$( '.customer-details-wrap' ).css( 'display', 'flex' );
 
 				$( '#customer-avatar' ).html( data.avatar );
+				$( '.customer-name' ).html( data.name );
 				$( '.customer-since span' ).html( data.date_created_i18n );
 				$( '.customer-record a' ).prop( 'href', data._links.self );
 			} else {

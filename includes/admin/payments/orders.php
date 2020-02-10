@@ -184,13 +184,15 @@ function edd_order_details_customer( $order ) {
 	<div>
 		<div class="column-container order-customer-info">
 			<div class="column-container change-customer">
+				<label for="customer_id" class="edd-order-details-label-mobile"><?php esc_html_e( 'Assign to an existing customer', 'easy-digital-downloads' ); ?></label>
 				<?php
 				echo EDD()->html->customer_dropdown( array(
 					'class'         => 'edd-payment-change-customer-input',
 					'selected'      => $customer_id,
+					'id'            => 'customer-id',
 					'name'          => 'customer-id',
-					'none_selected' => esc_html__( 'Attach an existing customer', 'easy-digital-downloads' ),
-					'placeholder'   => esc_html__( 'Type to search all customers', 'easy-digital-downloads' ),
+					'none_selected' => esc_html__( 'Search for a customer', 'easy-digital-downloads' ),
+					'placeholder'   => esc_html__( 'Search for a customer', 'easy-digital-downloads' ),
 				) ); // WPCS: XSS ok.
 				?>
 				<input type="hidden" name="current-customer-id" value="<?php echo esc_attr( $customer_id ); ?>" />
@@ -202,7 +204,8 @@ function edd_order_details_customer( $order ) {
 					<span class="spinner is-active"></span>
 				</div>
 				<div class="customer-details" style="display: none;">
-					<span class="customer-since">
+					<strong class="customer-name"></strong>
+					<em class="customer-since">
 						<?php
 						echo wp_kses(
 							sprintf(
@@ -212,7 +215,7 @@ function edd_order_details_customer( $order ) {
 							)
 						);
 						?>
-					</span>
+					</em>
 
 					<span class="customer-record">
 						<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers' ) ); ?>"><?php esc_html_e( 'View customer record', 'easy-digital-downloads' ); ?></a>
@@ -220,12 +223,8 @@ function edd_order_details_customer( $order ) {
 				</div>
 			</div>
 
-			<p>
-				<span class="description"><?php echo esc_html_x( 'or', 'divider', 'easy-digital-downloads' ); ?></span>
-			</p>
-
-			<p class="customer-details-actions">
-				<button class="edd-payment-new-customer button-secondary"><?php esc_html_e( 'Create a new customer', 'easy-digital-downloads' ); ?></button>
+			<p class="description">
+				or <button class="edd-payment-new-customer button-link"><?php esc_html_e( 'create a new customer', 'easy-digital-downloads' ); ?></button>
 			</p>
 		</div>
 
