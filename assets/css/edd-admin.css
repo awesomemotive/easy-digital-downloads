@@ -566,56 +566,56 @@ a.edd-delete:hover {
 }
 
 /** Status labels */
-.edd-admin-order-status-label {
-	padding: 2px 9px;
-	border-radius: 20px;
+.edd-admin-order-status-badge {
+	padding: 2px 7px;
+	border-radius: 4px;
 	background: #ececec;
 	display: inline-flex;
 	align-items: center;
 }
 
-.edd-admin-order-status-label__text {
+.edd-admin-order-status-badge__text {
 }
 
-.edd-admin-order-status-label__icon {
+.edd-admin-order-status-badge__icon {
 	opacity: 0.80;
 	margin: 0 -2px 0 2px;
 }
 
-.edd-admin-order-status-label--refunded {
+.edd-admin-order-status-badge--refunded {
 }
 
-	.edd-admin-order-status-label--refunded .edd-admin-order-status-label__icon {
+	.edd-admin-order-status-badge--refunded .edd-admin-order-status-badge__icon {
 		font-size: 16px;
 		width: 16px;
 		height: 16px;
 	}
 
-.edd-admin-order-status-label--failed {
+.edd-admin-order-status-badge--failed {
 	color: #ac3d3d;
 	background: #ffd6d6;
 }
 
-	.edd-admin-order-status-label--failed .edd-admin-order-status-label__icon {
+	.edd-admin-order-status-badge--failed .edd-admin-order-status-badge__icon {
 		margin-left: 0;
 		margin-top: -1px;
 	}
 
-.edd-admin-order-status-label--complete {
+.edd-admin-order-status-badge--complete {
 	color: #017d5c;
 	background: #e5f5f0;
 }
 
-	.edd-admin-order-status-label--complete .edd-admin-order-status-label__icon {
+	.edd-admin-order-status-badge--complete .edd-admin-order-status-badge__icon {
 		margin-left: 0px;
 	}
 
-.edd-admin-order-status-label--pending {
+.edd-admin-order-status-badge--pending {
 	color: #7d6e01;
 	background: #f5f2e5;
 }
 
-.edd-admin-order-status-label--processing {
+.edd-admin-order-status-badge--processing {
 	color: #015a7d;
 	background: #e5f1f5;
 }
