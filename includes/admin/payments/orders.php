@@ -292,25 +292,28 @@ function edd_order_details_email( $order ) {
 
 	<div><?php
 		if ( ! empty( $customer->emails ) && count( (array) $customer->emails ) > 1 ) : ?>
-			<span class="edd-order-resend-receipt-header">
-				<?php _e( 'Choose an email address to send the receipt to:', 'easy-digital-downloads' ); ?>
-			</span>
+			<fieldset class="edd-order-resend-email-chooser">
+				<legend>
+					<?php _e( 'Send to', 'easy-digital-downloads' ); ?>
+				</legend>
 
-			<span class="edd-order-resend-receipt-addresses">
-				<?php foreach ( $customer->emails as $key => $email ) : ?>
-				<label>
-					<input autocomplete="off" class="edd-order-resend-receipt-email" name="edd-order-resend-receipt-address" type="radio" value="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" />
-					<?php echo esc_attr( $email ); ?>
-				</label>
+				<?php foreach ( $all_emails as $key => $email ) : ?>
+				<p>
+					<label for="<?php echo rawurlencode( sanitize_email( $email ) ); ?>">
 						<input autocomplete="off" id="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" class="edd-order-resend-receipt-email" name="edd-order-resend-receipt-address" type="radio" value="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" <?php checked( true, ( 'primary' === $key ) ); ?> />
+						<?php echo esc_attr( $email ); ?>
+					</label>
+				</p>
 				<?php endforeach; ?>
-			</span>
+			</fieldset>
 
 		<?php else : ?>
 
 			<input readonly type="email" value="<?php echo esc_attr( $order->email ); ?>" />
 
 		<?php endif; ?>
+
+		<p class="description"><?php esc_html_e( 'Send a new copy of the purchase receipt to the email address used for this order. If download URLs were included in the original receipt, new ones will be included.', 'easy-digital-downloads' ); ?></p>
 
 		<a href="<?php echo esc_url( add_query_arg( array(
 			'edd-action'  => 'email_links',
@@ -320,8 +323,6 @@ function edd_order_details_email( $order ) {
 		} else {
 			echo esc_attr( 'edd-resend-receipt' );
 		} ?>" class="button-secondary"><?php esc_html_e( 'Resend Receipt', 'easy-digital-downloads' ); ?></a>
-
-		<p class="description"><?php esc_html_e( 'Send a new copy of the purchase receipt to the email address used for this order. If download URLs were included in the original receipt, new ones will be included.', 'easy-digital-downloads' ); ?></p>
 
 		<?php do_action( 'edd_view_order_details_resend_receipt_after', $order->id ); ?>
 
