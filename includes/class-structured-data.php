@@ -152,7 +152,9 @@ class Structured_Data {
 				'@type' => 'Thing',
 				'name'  => get_bloginfo( 'name' ),
 			),
-			'sku'         => $download->get_sku(),
+			'sku'         => '-' === $download->get_sku()
+				? $download->ID
+				: $download->get_sku(),
 		);
 
 		// Add image if it exists.
