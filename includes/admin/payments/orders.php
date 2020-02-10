@@ -1032,13 +1032,13 @@ function edd_get_order_status_badge( $order_status ) {
 
 	switch( $order_status ) {
 		case 'refunded' :
-			$icon = '<span class="edd-admin-order-status-label__icon dashicons dashicons-undo"></span>';
+			$icon = '<span class="edd-admin-order-status-badge__icon dashicons dashicons-undo"></span>';
 			break;
 		case 'failed' :
-			$icon = '<span class="edd-admin-order-status-label__icon dashicons dashicons-no-alt"></span>';
+			$icon = '<span class="edd-admin-order-status-badge__icon dashicons dashicons-no-alt"></span>';
 			break;
 		case 'complete' :
-			$icon = '<span class="edd-admin-order-status-label__icon dashicons dashicons-yes"></span>';
+			$icon = '<span class="edd-admin-order-status-badge__icon dashicons dashicons-yes"></span>';
 			break;
 		default:
 			$icon = '';
@@ -1056,12 +1056,12 @@ function edd_get_order_status_badge( $order_status ) {
 	ob_start();
 ?>
 
-<span class="edd-admin-order-status-label edd-admin-order-status-label--<?php echo esc_attr( $order_status ); ?>">
+<span class="edd-admin-order-status-badge edd-admin-order-status-badge--<?php echo esc_attr( $order_status ); ?>">
 
-	<span class="edd-admin-order-status-label__text">
+	<span class="edd-admin-order-status-badge__text">
 		<?php echo edd_get_payment_status_label( $order_status ); ?>
 	</span>
-	<span class="edd-admin-order-status-label__icon">
+	<span class="edd-admin-order-status-badge__icon">
 		<?php
 		echo wp_kses(
 			$icon,
