@@ -294,7 +294,7 @@ function edd_order_details_email( $order ) {
 		if ( ! empty( $customer->emails ) && count( (array) $customer->emails ) > 1 ) : ?>
 			<fieldset class="edd-order-resend-email-chooser">
 				<legend>
-					<?php _e( 'Send to', 'easy-digital-downloads' ); ?>
+					<?php _e( 'Send email receipt to', 'easy-digital-downloads' ); ?>
 				</legend>
 
 				<?php foreach ( $all_emails as $key => $email ) : ?>
