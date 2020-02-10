@@ -147,7 +147,6 @@ class Structured_Data {
 		$data = array(
 			'@type'       => 'Product',
 			'name'        => $download->post_title,
-			'description' => $download->post_excerpt,
 			'url'         => get_permalink( $download->ID ),
 			'brand'       => array(
 				'@type' => 'Thing',
@@ -162,6 +161,12 @@ class Structured_Data {
 		if ( false !== $image_url ) {
 			$data['image'] = esc_url( $image_url );
 		}
+
+		// Add description if it is not blank.
+		if ( '' !== $download->post_excerpt ) {
+			$data['description'] = $download->post_excerpt;
+		}
+
 		if ( $download->has_variable_prices() ) {
 			$variable_prices = $download->get_prices();
 
