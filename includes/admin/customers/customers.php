@@ -443,6 +443,7 @@ function edd_customers_view( $customer = null ) {
 	$orders = edd_get_orders( array(
 		'customer_id' => $customer->id,
 		'number'      => 10,
+		'type'        => 'sale',
 	) );
 
 	// Downloads
