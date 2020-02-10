@@ -786,8 +786,6 @@ textarea[name="edd-note"] {
 	width: 5%;
 }
 
-.wp-list-table.addresses .column-region,
-.wp-list-table.addresses .column-country,
 .wp-list-table.posts .column-sales,
 .wp-list-table.customers .column-order_count,
 .wp-list-table.discounts .column-use_count {
@@ -803,6 +801,11 @@ textarea[name="edd-note"] {
 .wp-list-table.addresses .column-type,
 .wp-list-table.posts .column-earnings {
 	width: 11%;
+}
+
+.wp-list-table.addresses .column-region,
+.wp-list-table.addresses .column-country {
+	width: 10%;
 }
 
 .wp-list-table.addresses .column-type,
@@ -824,6 +827,29 @@ textarea[name="edd-note"] {
 	width: 14%;
 }
 
+.wp-list-table.orderadjustments .column-amount,
+.wp-list-table.orderitems .column-status,
+.wp-list-table.orderitems .column-quantity,
+.wp-list-table.orderitems .column-amount,
+.wp-list-table.orderitems .column-discount,
+.wp-list-table.orderitems .column-tax,
+.wp-list-table.orderitems .column-total,
+.wp-list-table.orderitems .column-subtotal,
+.wp-list-table.refunditems .column-status,
+.wp-list-table.refunditems .column-quantity,
+.wp-list-table.refunditems .column-amount,
+.wp-list-table.refunditems .column-discount,
+.wp-list-table.refunditems .column-tax,
+.wp-list-table.refunditems .column-total,
+.wp-list-table.refunditems .column-subtotal {
+	width: 17%;
+}
+
+.wp-list-table.orders .column-gateway,
+.wp-list-table.orders .column-customer {
+	width: 18%;
+}
+
 .wp-list-table.orders .column-number,
 .wp-list-table.addresses .column-customer,
 .wp-list-table.emails .column-customer,
@@ -835,6 +861,30 @@ textarea[name="edd-note"] {
 .wp-list-table.apikeys .column-token,
 .wp-list-table.apikeys .column-secret {
 	width: 25%;
+}
+
+.wp-list-table.orderadjustments .column-desc {
+	width: 34%;
+}
+
+.wp-list-table.customers .column-primary strong,
+.wp-list-table.emails .column-primary strong,
+.wp-list-table.addresses .column-primary strong,
+.wp-list-table.discounts .column-primary strong,
+.wp-list-table.orders .column-primary strong,
+.wp-list-table.orderitems .column-primary strong,
+.wp-list-table.refunditems .column-primary strong,
+.wp-list-table.orderadjustments .column-primary strong {
+	font-size: 14px;
+}
+
+.wp-list-table.orders tr.refunded td,
+.wp-list-table.orders tr.refunded th,
+.wp-list-table.orderitems tr.refunded td,
+.wp-list-table.orderitems tr.refunded th,
+.wp-list-table.refunditems tr.refunded td,
+.wp-list-table.refunditems tr.refunded th{
+	background: #ffddee;
 }
 
 .wp-list-table.orderadjustments .column-desc,
