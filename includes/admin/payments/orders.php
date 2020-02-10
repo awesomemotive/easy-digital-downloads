@@ -278,7 +278,17 @@ function edd_order_details_customer( $order ) {
  * @param object $order
  */
 function edd_order_details_email( $order ) {
-	$customer = edd_get_customer( $order->customer_id ); ?>
+	$customer   = edd_get_customer( $order->customer_id );
+	$all_emails = array( 'primary' => $customer->email );
+
+	foreach ( $customer->emails as $key => $email ) {
+		if ( $customer->email === $email ) {
+			continue;
+		}
+
+		$all_emails[ $key ] = $email;
+	}
+?>
 
 	<div><?php
 		if ( ! empty( $customer->emails ) && count( (array) $customer->emails ) > 1 ) : ?>
@@ -292,6 +302,7 @@ function edd_order_details_email( $order ) {
 					<input autocomplete="off" class="edd-order-resend-receipt-email" name="edd-order-resend-receipt-address" type="radio" value="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" />
 					<?php echo esc_attr( $email ); ?>
 				</label>
+						<input autocomplete="off" id="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" class="edd-order-resend-receipt-email" name="edd-order-resend-receipt-address" type="radio" value="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" <?php checked( true, ( 'primary' === $key ) ); ?> />
 				<?php endforeach; ?>
 			</span>
 
