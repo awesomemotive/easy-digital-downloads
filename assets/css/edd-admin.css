@@ -557,12 +557,9 @@ a.edd-delete:hover {
 	display:  block;
 }
 
+.wp-list-table.orders .column-status,
 .wp-list-table.orders .column-date {
 	width: 15%;
-}
-
-.wp-list-table.orders .column-status {
-	width: 18%;
 }
 
 /** Status labels */
@@ -827,6 +824,7 @@ textarea[name="edd-note"] {
 	width: 14%;
 }
 
+.wp-list-table.orders .column-number,
 .wp-list-table.addresses .column-customer,
 .wp-list-table.emails .column-customer,
 .wp-list-table.customers .column-email {
