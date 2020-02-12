@@ -763,9 +763,9 @@ class Column extends Base {
 
 		// Fallback for empty values
 		if ( empty( $value ) || ( '0000-00-00 00:00:00' === $value ) ) {
-			$value = ! empty( $this->default )
+			$value = ! empty( $this->default ) || ( is_null( $this->default ) && $this->allow_null )
 				? $this->default
-				: '0000-00-00 00:00:00';
+				: '';
 
 		// Fallback if PHP date function exists
 		} elseif ( function_exists( 'date' ) ) {
