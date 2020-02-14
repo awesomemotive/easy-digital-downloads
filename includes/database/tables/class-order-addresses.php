@@ -38,7 +38,7 @@ final class Order_Addresses extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201906280001;
+	protected $version = 202002140001;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -51,6 +51,7 @@ final class Order_Addresses extends Table {
 		'201807270003' => 201807270003,
 		'201906250001' => 201906250001,
 		'201906280001' => 201906280001,
+		'202002140001' => 202002140001,
 	);
 
 	/**
@@ -72,8 +73,8 @@ final class Order_Addresses extends Table {
 			region mediumtext NOT NULL,
 			postal_code varchar(32) NOT NULL default '',
 			country mediumtext NOT NULL,
-			date_created datetime NOT NULL default '0000-00-00 00:00:00',
-			date_modified datetime NOT NULL default '0000-00-00 00:00:00',
+			date_created datetime NOT NULL default CURRENT_TIMESTAMP,
+			date_modified datetime NOT NULL default CURRENT_TIMESTAMP,
 			uuid varchar(100) NOT NULL default '',
 			PRIMARY KEY (id),
 			KEY order_id (order_id),
@@ -170,6 +171,29 @@ final class Order_Addresses extends Table {
 
 		// Return success/fail.
 		return $this->is_success( $result );
+	}
+
+	/**
+	 * Upgrade to version 202002140001
+	 *  - Change default value to `CURRENT_TIMESTAMP` for columns `date_created` and `date_modified`.
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	protected function __202002140001() {
+
+		// Update `date_created`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_created` datetime NOT NULL default CURRENT_TIMESTAMP;
+		" );
+
+		// Update `date_modified`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_modified` datetime NOT NULL default CURRENT_TIMESTAMP;
+		" );
+
+		return $this->is_success( $result );
+
 	}
 
 }

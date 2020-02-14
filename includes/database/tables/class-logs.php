@@ -38,7 +38,7 @@ final class Logs extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201807270003;
+	protected $version = 202002140001;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -51,6 +51,7 @@ final class Logs extends Table {
 		'201807240001' => 201807240001,
 		'201807270002' => 201807270002,
 		'201807270003' => 201807270003,
+		'202002140001' => 202002140001
 	);
 
 	/**
@@ -68,8 +69,8 @@ final class Logs extends Table {
 		type varchar(20) DEFAULT NULL,
 		title varchar(200) DEFAULT NULL,
 		content longtext DEFAULT NULL,
-		date_created datetime NOT NULL default '0000-00-00 00:00:00',
-		date_modified datetime NOT NULL default '0000-00-00 00:00:00',
+		date_created datetime NOT NULL default CURRENT_TIMESTAMP,
+		date_modified datetime NOT NULL default CURRENT_TIMESTAMP,
 		uuid varchar(100) NOT NULL default '',
 		PRIMARY KEY (id),
 		KEY object_id_type (object_id,object_type(20)),
@@ -144,5 +145,28 @@ final class Logs extends Table {
 
 		// Return success/fail
 		return $this->is_success( $result );
+	}
+
+	/**
+	 * Upgrade to version 202002140001
+	 *  - Change default value to `CURRENT_TIMESTAMP` for columns `date_created` and `date_modified`.
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	protected function __202002140001() {
+
+		// Update `date_created`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_created` datetime NOT NULL default CURRENT_TIMESTAMP;
+		" );
+
+		// Update `date_modified`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_modified` datetime NOT NULL default CURRENT_TIMESTAMP;
+		" );
+
+		return $this->is_success( $result );
+
 	}
 }
