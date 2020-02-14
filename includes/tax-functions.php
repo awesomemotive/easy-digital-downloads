@@ -134,8 +134,8 @@ function edd_active_tax_rates_query_clauses( $clauses ) {
 	$date = \Carbon\Carbon::now( edd_get_timezone_id() )->toDateTimeString();
 
 	$clauses['where'] .= "
-		AND ( start_date < '{$date}' OR start_date = '0000-00-00 00:00:00' )
-		AND ( end_date > '{$date}' OR end_date = '0000-00-00 00:00:00' )
+		AND ( start_date < '{$date}' OR start_date IS NULL )
+		AND ( end_date > '{$date}' OR end_date IS NULL )
 	";
 
 	return $clauses;

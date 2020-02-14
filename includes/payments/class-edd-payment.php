@@ -2524,7 +2524,7 @@ class EDD_Payment {
 				return edd_update_order_meta( $this->ID, 'payment_meta', $meta_value );
 			case '_edd_completed_date':
 				$meta_value = empty( $meta_value )
-					? '0000-00-00 00:00:00'
+					? null
 					: $meta_value;
 
 				edd_update_order( $this->ID, array(
@@ -3343,7 +3343,7 @@ class EDD_Payment {
 	 * @return string Date payment was completed.
 	 */
 	private function get_completed_date() {
-		if ( '0000-00-00 00:00:00' === $this->completed_date ) {
+		if ( is_null( $this->completed_date ) ) {
 			$date = false;
 		} else {
 			$date = $this->completed_date;
