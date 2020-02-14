@@ -38,7 +38,7 @@ final class Orders extends Table {
 	 * @since  3.0
 	 * @var    int
 	 */
-	protected $version = 201901110001;
+	protected $version = 202002140001;
 
 	/**
 	 * Array of upgrade versions and methods.
@@ -53,6 +53,7 @@ final class Orders extends Table {
 		'201808140001' => 201808140001,
 		'201808150001' => 201808150001,
 		'201901110001' => 201901110001,
+		'202002140001' => 202002140001
 	);
 
 	/**
