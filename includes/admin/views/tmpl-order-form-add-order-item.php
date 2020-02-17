@@ -60,7 +60,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 				<input
 					type="checkbox"
 					id="auto-calculate"
-					<# if ( true !== data.state.isAdjustingManually ) { #>
+					<# if ( true !== data.isAdjustingManually ) { #>
 						checked
 					<# } #>
 					<# if ( '' === data.id ) { #>
@@ -87,7 +87,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 			</label>
 		</p>
 
-		<# if ( true === data.state.isAdjustingManually ) { #>
+		<# if ( true === data.isAdjustingManually ) { #>
 			<p>
 				<label for=""><?php esc_html_e( 'Unit Price', 'easy-digital-downloads' ); ?></label>
 				<span class="edd-amount">
@@ -153,7 +153,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 				type="submit"
 				class="button button-primary edd-ml-auto"
 				value="<?php echo esc_html( sprintf( __( 'Add %s', 'easy-digital-downloads' ), edd_get_label_singular() ) ); ?>"
-				<# if ( '' === data.id || ( 0 === data.subtotal && true === data.state.isAdjustingManually ) ) { #>
+				<# if ( '' === data.id || ( 0 === data.subtotal && true === data.isAdjustingManually ) ) { #>
 					disabled
 				<# } #>
 			/>
