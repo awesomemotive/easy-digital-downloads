@@ -601,6 +601,11 @@ table.edd-order-overview-summary {
 	color: #dc3232;
 }
 
+/** Adjustments */
+.edd-order-overview-summary__adjustments th {
+	font-weight: 600;
+}
+
 /** Totals */
 .edd-order-overview-summary__totals th {
 	font-weight: 600;
@@ -625,6 +630,10 @@ table.edd-order-overview-summary {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+}
+
+.edd-order-overview-actions .button {
+	margin-left: 10px;
 }
 
 .edd-order-overview-actions__locked {
