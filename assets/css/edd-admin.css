@@ -684,6 +684,10 @@ table.edd-order-overview-summary {
 	opacity: 0.75;
 }
 
+.edd-order-overview-add-discount select {
+	width: 100%;
+}
+
 /* Note Styles
 -------------------------------------------------------------- */
 

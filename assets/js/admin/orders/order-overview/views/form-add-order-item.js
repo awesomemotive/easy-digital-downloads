@@ -4,6 +4,9 @@
  * Internal dependencies
  */
 import {
+	Dialog,
+} from './';
+import {
 	OrderItem,
 } from './../models';
 import { getChosenVars } from 'utils/chosen.js';
@@ -19,7 +22,7 @@ const number = new NumberFormat();
  * @class FormAddOrderItem
  * @augments wp.Backbone.View
  */
-export const FormAddOrderItem = wp.Backbone.View.extend( /** Lends FormAddItem.prototype */ {
+export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype */ {
 	/**
 	 * @since 3.0
 	 */
@@ -58,18 +61,10 @@ export const FormAddOrderItem = wp.Backbone.View.extend( /** Lends FormAddItem.p
 	 * @augments wp.Backbone.View
 	 */
 	initialize() {
-		// Create a jQuery UI modal.
-		$( '#edd-admin-order-add-item-dialog' ).dialog( {
-			position: { 
-				my: 'top center', 
-				at: 'center center-25%'
-			},
-			width: '350px',
-			modal: true,
-			resizable: false,
-			draggable: false,
-			autoOpen: false,
-		} );
+		// Assign collection from State.
+		this.collection = this.options.state.get( 'items' );
+
+		Dialog.prototype.initialize.apply( this, arguments );
 
 		// Create a fresh OrderItem to be added.
 		// Defines additional attributes that the view can modify.
@@ -85,9 +80,6 @@ export const FormAddOrderItem = wp.Backbone.View.extend( /** Lends FormAddItem.p
 
 		// Rerender when Overview tax configuration has changed.
 		this.listenTo( this.options.state, 'change:hasTax', this.render );
-
-		// Automatically close dialog when an OrderItem is added.
-		this.listenTo( this.options.state.get( 'items' ), 'add', this.closeDialog );
 	},
 
 	/**
@@ -312,13 +304,8 @@ export const FormAddOrderItem = wp.Backbone.View.extend( /** Lends FormAddItem.p
 
 		const {
 			item,
-			options,
 			isAdjustingManually,
 		} = this;
-
-		const {
-			state,
-		} = options;
 
 		// Use manual amounts if adjusting manually.
 		if ( true === isAdjustingManually ) {
@@ -339,35 +326,6 @@ export const FormAddOrderItem = wp.Backbone.View.extend( /** Lends FormAddItem.p
 		}
 
 		// Add OrderItem to OrderItems.
-		state.get( 'items' ).add( item );
-	},
-
-	/**
-	 * Opens the jQuery UI Dialog containing this view.
-	 *
-	 * @since 3.0
-	 *
-	 * @return {FormAddOrderItem}
-	 */
-	openDialog() {
-		$( '#edd-admin-order-add-item-dialog' ).dialog( 'open' );
-
-		return this;
-	},
-
-	/**
-	 * Closes the jQuery UI Dialog containing this view.
-	 *
-	 * @since 3.0
-	 *
-	 * @return {FormAddOrderItem}
-	 */
-	closeDialog() {
-		$( '#edd-admin-order-add-item-dialog' ).dialog( 'close' );
-
-		// Prevent events from stacking.
-		this.undelegateEvents();
-
-		return this;
+		this.collection.add( item );
 	},
 } );

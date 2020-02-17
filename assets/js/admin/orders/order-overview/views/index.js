@@ -9,4 +9,7 @@ export * from './summary.js';
 export * from './totals.js';
 export * from './actions.js';
 
+export * from './dialog.js';
+
 export * from './form-add-order-item.js';
+export * from './form-add-order-discount.js';

@@ -4,8 +4,8 @@
  * Internal dependencies
  */
 import {
-	Adjustment,
-	Discount,
+	OrderAdjustment,
+	OrderAdjustmentDiscount,
 } from './../models';
 
 /**
@@ -41,10 +41,10 @@ export const Adjustments = Backbone.Collection.extend( /** @lends Adjustments.pr
 	model( attributes, options ) {
 		switch ( attributes.type ) {
 			case 'discount':
-				return new Discount( attributes, options );
+				return new OrderAdjustmentDiscount( attributes, options );
 				break;
 			default:
-				return new Adjustment( attributes, options);
+				return new OrderAdjustment( attributes, options);
 		}
 	},
 
