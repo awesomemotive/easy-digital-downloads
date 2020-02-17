@@ -545,6 +545,132 @@ a.edd-delete:hover {
 	display: none;
 }
 
+/** Overview */
+table.edd-order-overview-summary {
+	border-width: 0 0 1px;
+	table-layout: fixed;
+}
+
+.edd-order-overview .column-right {
+	text-align: right;
+}
+
+.edd-ml-auto {
+	margin-left: auto !important;
+}
+
+/** Items */
+.edd-order-overview-summary__items > :nth-child(odd) {
+	background-color: #f9f9f9;
+}
+
+.edd-order-overview-summary__items tr:last-child th,
+.edd-order-overview-summary__items tr:last-child td {
+	border-bottom: 1px solid #e5e5e5;
+}
+
+.edd-order-overview-summary th.column-name {
+	width: 42%;
+}
+
+.edd-order-overview-summary th.column-quantity,
+.edd-order-overview-summary th.column-amount,
+.edd-order-overview-summary th.column-subtotal {
+	width: 16%;
+}
+
+.edd-order-overview-summary .row-actions .text {
+	color: #555;
+}
+
+.edd-order-overview-summary td.column-name {
+	display: flex;
+	align-items: center;
+}
+
+.edd-order-overview-summary td.column-name .delete {
+	display: inline-block;
+	margin-right: 10px;
+	margin-left: -8px;
+	padding: 10px;
+	border-right: 1px solid #e5e5e5;
+	color: #a00;
+}
+
+.edd-order-overview-summary td.column-name .delete:hover {
+	color: #dc3232;
+}
+
+/** Totals */
+.edd-order-overview-summary__totals th {
+	font-weight: 600;
+}
+
+.edd-order-overview-summary__totals .total {
+	color: #017d5c;
+	font-size: 150%;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	display: inline-block;
+}
+
+.edd-order-overview-summary__totals tr:last-child th,
+.edd-order-overview-summary__totals tr:last-child td:not(:first-of-type) {
+	border-top: 1px solid #e5e5e5;
+}
+
+/** Actions */
+#edd-order-overview-actions.inside {
+	margin-top: 0;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.edd-order-overview-actions__locked {
+	font-style: italic;
+	opacity: 0.80;
+}
+
+/** Modal */
+.edd-order-overview-modal form > p {
+	margin-top: 0;
+}
+
+.edd-order-overview-modal form label {
+	display: block;
+	margin-bottom: 4px;
+}
+
+.edd-order-overview-modal form .submit {
+	margin: 0 -16px -16px;
+	padding: 16px;
+	background: #fcfcfc;
+	border-top: 1px solid #dfdfdf;
+	display: flex;
+	align-items: center;
+}
+
+.edd-order-overview-add-item [for="auto-calculate"] {
+	display: flex;
+	align-items: center;
+}
+
+.edd-order-overview-add-item [for="auto-calculate"] input[type="checkbox"] {
+	margin-top: 0;
+}
+
+.edd-order-overview-add-item [for="auto-calculate"] .label {
+	line-height: 1.15;
+	margin-left: 8px;
+}
+
+.edd-order-overview-add-item [for="auto-calculate"] .label small {
+	margin-top: 4px;
+	display: block;
+	opacity: 0.75;
+}
+
 /* Note Styles
 -------------------------------------------------------------- */
 

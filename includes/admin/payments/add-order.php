@@ -50,7 +50,7 @@ function edd_add_order_page_content() {
 
 		<?php edd_order_details_publish( $order ); ?>
 
-		<div class="wrap edd-wrap">
+		<div class="wrap edd-wrap edd-clearfix">
 			<h1><?php esc_html_e( 'Add New Order', 'easy-digital-downloads' ); ?></h1>
 
 			<hr class="wp-header-end">
@@ -80,9 +80,6 @@ function edd_add_order_page_content() {
 								// Attributes.
 								edd_order_details_attributes( $order );
 
-								// Amounts.
-								edd_order_details_amounts( $order );
-
 								// Extras.
 								edd_order_details_extras( $order );
 
@@ -101,10 +98,7 @@ function edd_add_order_page_content() {
 								do_action( 'edd_add_order_details_main_before' );
 
 								// Items.
-								edd_order_details_items( $order );
-
-								// Adjustments.
-								edd_order_details_adjustments( $order );
+								edd_order_details_overview( $order );
 
 								// Details sections.
 								edd_order_details_sections( $order );
@@ -128,9 +122,17 @@ function edd_add_order_page_content() {
 
 			<?php do_action( 'edd_add_order_after' ); ?>
 
-		</div>
+		</div><!-- /.wrap -->
 
 	</form>
+
+	<div
+		id="edd-admin-order-add-item-dialog"
+		title="<?php esc_attr_e( 'Add Download', 'easy-digital-downloads' ); ?>"
+		style="display: none;"
+	>
+		<div id="edd-admin-order-add-item-dialog-content"></div>
+	</div>
 
 <?php
 }
