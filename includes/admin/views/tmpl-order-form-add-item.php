@@ -36,7 +36,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 		<# if ( false !== data.config.hasQuantity ) { #>
 			<p>
 				<label for="">
-					<?php esc_html_e( 'Quantity' ); ?>
+					<?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?>
 				</label>
 				<input
 					type="number"
@@ -89,7 +89,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 
 		<# if ( true === data.config.isAdjustingManually ) { #>
 			<p>
-				<label for=""><?php esc_html_e( 'Unit Price' ); ?></label>
+				<label for=""><?php esc_html_e( 'Unit Price', 'easy-digital-downloads' ); ?></label>
 				<span class="edd-amount">
 					<?php if ( 'before' === $currency_position ) : ?>
 						<?php echo edd_currency_filter( '' ); ?>
@@ -109,7 +109,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 
 			<# if ( false !== data.config.hasTax ) { #>
 				<p>
-					<label for=""><?php esc_html_e( 'Tax' ); ?></label>
+					<label for=""><?php esc_html_e( 'Tax', 'easy-digital-downloads' ); ?></label>
 					<span class="edd-amount">
 						<?php if ( 'before' === $currency_position ) : ?>
 							<?php echo edd_currency_filter( '' ); ?>
@@ -129,7 +129,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 			<# } #>
 
 			<p>
-				<label for=""><?php esc_html_e( 'Amount' ); ?></label>
+				<label for=""><?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></label>
 				<span class="edd-amount">
 					<?php if ( 'before' === $currency_position ) : ?>
 						<?php echo edd_currency_filter( '' ); ?>
