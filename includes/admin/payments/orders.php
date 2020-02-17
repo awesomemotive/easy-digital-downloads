@@ -574,7 +574,8 @@ function edd_order_details_overview( $order ) {
 		'totals',
 		'item',
 		'adjustment',
-		'form-add-item',
+		'form-add-order-item',
+		'form-add-order-discount',
 	);
 
 	foreach ( $templates as $tmpl ) {
@@ -599,6 +600,13 @@ function edd_order_details_overview( $order ) {
 	<div id="edd-order-overview-actions" class="edd-order-overview-actions inside">
 		<?php if ( true === edd_is_add_order_page() ) : ?>
 			<div class="edd-ml-auto"></div>
+			<button
+				id="add-discount"
+				class="button button-secondary"
+			>
+				<?php echo esc_html_x( 'Add Discount', 'Apply a discount to an order', 'easy-digital-downloads' ); ?>
+			</button>
+
 			<button
 				id="add-item"
 				class="button button-secondary"

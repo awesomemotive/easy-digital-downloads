@@ -134,5 +134,13 @@ function edd_add_order_page_content() {
 		<div id="edd-admin-order-add-item-dialog-content"></div>
 	</div>
 
+	<div
+		id="edd-admin-order-add-discount-dialog"
+		title="<?php esc_attr_e( 'Add Discount', 'easy-digital-downloads' ); ?>"
+		style="display: none;"
+	>
+		<div id="edd-admin-order-add-discount-dialog-content"></div>
+	</div>
+
 <?php
 }

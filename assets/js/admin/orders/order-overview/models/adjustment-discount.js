@@ -8,22 +8,25 @@ import {
 } from './';
 
 /**
- * Discount
+ * AdjustmentDiscount
  *
  * A single Order Discount.
  *
  * @since 3.0
  *
- * @class Discount
- * @augments Backbone.Model
+ * @class AdjustmentDiscount
+ * @augments Adjustment
  */
-export const Discount = Adjustment.extend( /** Lends Adjustment.prototype */ {
+export const AdjustmentDiscount = Adjustment.extend( /** Lends AdjustmentDiscount.prototype */ {
 
 	/**
 	 * @since 3.0
 	 */
 	defaults: {
 		...Adjustment.prototype.defaults,
+
+		parent: 0,
+		type: 'discount',
 
 		productRequirements: [],
 		productExclusions: [],

@@ -3,7 +3,7 @@
 /**
  * Adjustment
  *
- * A single Order Adjustment.
+ * A single Adjustment.
  *
  * @since 3.0
  *
