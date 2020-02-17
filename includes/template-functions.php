@@ -278,7 +278,7 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 	), $download_id );
 
 	// Sanitize those class names and form them into a string
-	$css_classes_string = implode( array_map( 'sanitize_html_class', $css_classes_array ), ' ' );
+	$css_classes_string = implode( ' ', array_map( 'sanitize_html_class', $css_classes_array ) );
 
 	if ( edd_item_in_cart( $download_id ) && ! edd_single_price_option_mode( $download_id ) ) {
 		return;
@@ -1112,7 +1112,7 @@ add_action( 'edd_downloads_list_after', 'edd_downloads_pagination', 10, 3 );
  * Build pagination
  *
  * @since 2.9.8
- * 
+ *
  * @param array $args The arguments used to build the pagination.
  */
 function edd_pagination( $args = array() ) {
