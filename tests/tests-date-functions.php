@@ -11,6 +11,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
+		// All tests will take the -5 (Central Time Zone) into account.
 		update_option( 'gmt_offset', -5 );
 
 		EDD()->utils->get_gmt_offset( true );
@@ -30,7 +31,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 	 * @covers ::edd_date_i18n()
 	 */
 	public function test_date_i18n_with_timestamp_and_no_format_should_return_localized_date_in_date_format() {
-		$expected = gmdate( get_option( 'date_format', '' ), strtotime( '01/02/2003' ) );
+		$expected = 'January 1, 2003';
 		$actual   = edd_date_i18n( '01/02/2003' );
 
 		$this->assertSame( $expected, $actual );
@@ -40,7 +41,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 	 * @covers ::edd_date_i18n()
 	 */
 	public function test_date_i18n_with_empty_format_should_return_localized_date_in_date_format() {
-		$expected = gmdate( get_option( 'date_format', '' ), strtotime( '01/02/2003' ) );
+		$expected = 'January 1, 2003';
 		$actual   = edd_date_i18n( '01/02/2003', '' );
 
 		$this->assertSame( $expected, $actual );
@@ -50,14 +51,14 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 	 * @covers ::edd_date_i18n()
 	 */
 	public function test_date_i18n_with_invalid_timestamp_and_no_format_should_return_1970() {
-		$this->assertSame( 'January 1, 1970', edd_date_i18n( 'foo' ) );
+		$this->assertSame( 'December 31, 1969', edd_date_i18n( 'foo' ) );
 	}
 
 	/**
 	 * @covers ::edd_date_i18n()
 	 */
 	public function test_date_i18n_invalid_timestamp_and_format_should_return_1970_and_respect_format() {
-		$this->assertSame( 'January 1, 1970 12:00 am', edd_date_i18n( 'foo', 'datetime' ) );
+		$this->assertSame( 'December 31, 1969 7:00 pm', edd_date_i18n( 'foo', 'datetime' ) );
 	}
 
 	/**
@@ -127,14 +128,14 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 	public function test_get_report_dates_correct_this_month_at_the_end_of_the_month_utc() {
 		$_REQUEST['range'] = 'this_month';
 
+		// Since we are using GMT time, the 'end of month' is techincally in next month.
 		$dates = edd_get_report_dates( 'UTC' );
-
-		$this->assertEquals( $dates['day'], 1 );
-		$this->assertEquals( $dates['m_start'], date( 'n' ) );
-		$this->assertEquals( $dates['year'], date( 'Y' ) );
-		$this->assertEquals( $dates['day_end'], cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] ) );
-		$this->assertEquals( $dates['m_end'], date( 'n' ) );
-		$this->assertEquals( $dates['year_end'], date( 'Y' ) );
+		$this->assertEquals( 1, $dates['day'] );
+		$this->assertEquals( date( 'n' ), $dates['m_start'] );
+		$this->assertEquals( date( 'Y' ), $dates['year'] );
+		$this->assertEquals( 1, $dates['day_end'] );
+		$this->assertEquals( date( 'n' ) + 1, $dates['m_end'] );
+		$this->assertEquals( date( 'Y' ), $dates['year_end'] );
 	}
 
 	/**
@@ -148,12 +149,12 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 
 		$auk_date = edd()->utils->date( 'now', 'Pacific/Auckland' );
 
-		$this->assertEquals( $dates['day'], 1 );
-		$this->assertEquals( $dates['m_start'], $auk_date->format( 'n' ) );
-		$this->assertEquals( $dates['year'], $auk_date->format( 'Y' ) );
-		$this->assertEquals( $dates['day_end'], cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] ) );
-		$this->assertEquals( $dates['m_end'], $auk_date->format( 'n' ) );
-		$this->assertEquals( $dates['year_end'], $auk_date->format( 'Y' ) );
+		$this->assertEquals( 1, $dates['day'] );
+		$this->assertEquals( $auk_date->format( 'n' ), $dates['m_start'] );
+		$this->assertEquals( $auk_date->format( 'Y' ), $dates['year'] );
+		$this->assertEquals( 1, $dates['day_end'] );
+		$this->assertEquals( $auk_date->format( 'n' ) + 1, $dates['m_end'] );
+		$this->assertEquals( $auk_date->format( 'Y' ), $dates['year_end'] );
 	}
 
 	/**
@@ -165,12 +166,12 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 
 		$dates = edd_get_report_dates( 'UTC' );
 
-		$this->assertEquals( $dates['day'], 1 );
-		$this->assertEquals( $dates['m_start'], date( 'n' ) );
-		$this->assertEquals( $dates['year'], date( 'Y' ) );
-		$this->assertEquals( $dates['day_end'], cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] ) );
-		$this->assertEquals( $dates['m_end'], date( 'n' ) );
-		$this->assertEquals( $dates['year_end'], date( 'Y' ) );
+		$this->assertEquals( 1, $dates['day'] );
+		$this->assertEquals( date( 'n' ), $dates['m_start'] );
+		$this->assertEquals( date( 'Y' ), $dates['year'] );
+		$this->assertEquals( 1, $dates['day_end'] );
+		$this->assertEquals( date( 'n' ) + 1, $dates['m_end'] );
+		$this->assertEquals( date( 'Y' ), $dates['year_end'] );
 	}
 
 	/**
@@ -182,12 +183,12 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 
 		$dates = edd_get_report_dates( 'America/Los_Angeles' );
 
-		$this->assertEquals( $dates['day'], 1 );
-		$this->assertEquals( $dates['m_start'], date( 'n' ) );
-		$this->assertEquals( $dates['year'], date( 'Y' ) );
-		$this->assertEquals( $dates['day_end'], cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] ) );
-		$this->assertEquals( $dates['m_end'], date( 'n' ) );
-		$this->assertEquals( $dates['year_end'], date( 'Y' ) );
+		$this->assertEquals( 1, $dates['day'] );
+		$this->assertEquals( date( 'n' ), $dates['m_start'] );
+		$this->assertEquals( date( 'Y' ), $dates['year'] );
+		$this->assertEquals( 1, $dates['day_end'] );
+		$this->assertEquals( date( 'n' ) + 1, $dates['m_end'] );
+		$this->assertEquals( date( 'Y' ), $dates['year_end'] );
 	}
 
 	/**
@@ -200,11 +201,11 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 		$current_time = current_time( 'timestamp' );
 		$dates = edd_get_report_dates( 'UTC' );
 
-		$this->assertEquals( $dates['day'], 1 );
-		$this->assertEquals( $dates['m_start'], date( 'n', $current_time ) );
-		$this->assertEquals( $dates['year'], date( 'Y', $current_time ) );
-		$this->assertEquals( $dates['day_end'], cal_days_in_month( CAL_GREGORIAN, $dates['m_start'], $dates['year'] ) );
-		$this->assertEquals( $dates['m_end'], date( 'n', $current_time ) );
-		$this->assertEquals( $dates['year_end'], date( 'Y', $current_time ) );
+		$this->assertEquals( 1, $dates['day'] );
+		$this->assertEquals( date( 'n', $current_time ), $dates['m_start'] );
+		$this->assertEquals( date( 'Y', $current_time ), $dates['year'] );
+		$this->assertEquals( 1, $dates['day_end'] );
+		$this->assertEquals( date( 'n', $current_time ) + 1, $dates['m_end'] );
+		$this->assertEquals( date( 'Y', $current_time ), $dates['year_end'] );
 	}
 }
