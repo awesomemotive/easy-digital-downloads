@@ -50,7 +50,7 @@ add_filter( 'views_edit-download', 'edd_products_tabs', 10, 1 );
  *
  * @since 3.0
  *
- * @return mixed
+ * @return void
  */
 function edd_taxonomies_tabs() {
 
