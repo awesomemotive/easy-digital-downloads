@@ -17,11 +17,9 @@
 	display: none;
 }
 .edd-clearfix:after {
-	content: ".";
-	display: block;
-	height: 0;
-	text-indent: -9999px;
-	visibility: hidden;
+	content: "";
+	display: table;
+	clear: both;
 }
 .edd-wrap a {
 	text-decoration: none;
@@ -422,11 +420,6 @@ a.edd-delete:hover {
 
 /* Add/View Order Styles
 -------------------------------------------------------------- */
-
-/** Fix for sticky header region. */
-.download_page_edd-payment-history #poststuff {
-	overflow: hidden;
-}
 
 /** Mimic WordPress 5.0 block-editor header region styles. */
 .download_page_edd-payment-history .edit-post-editor-regions__header {
