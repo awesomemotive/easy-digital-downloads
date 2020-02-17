@@ -73,6 +73,7 @@ class Schema extends Base {
 	 *
 	 * @since 3.0
 	 * @access protected
+	 * @return string
 	 */
 	protected function to_string() {
 
