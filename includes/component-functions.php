@@ -70,7 +70,7 @@ function edd_register_component( $name = '', $args = array() ) {
  * @since 3.0
  * @param string $name
  *
- * @return mixed False if not exists, EDD_Component if exists
+ * @return EDD\Component|false False if not exists, EDD\Component if exists
  */
 function edd_get_component( $name = '' ) {
 	$name = sanitize_key( $name );
@@ -88,7 +88,7 @@ function edd_get_component( $name = '' ) {
  * @param string $component
  * @param string $interface
  *
- * @return mixed False if not exists, EDD_Component interface if exists
+ * @return mixed False if not exists, EDD Component interface if exists
  */
 function edd_get_component_interface( $component = '', $interface = '' ) {
 
