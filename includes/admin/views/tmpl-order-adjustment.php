@@ -27,9 +27,17 @@ $view_url = edd_get_admin_url(
 			<a href="<?php echo esc_url( $view_url ); ?>&discount={{ data.typeId }}">{{ data.description }}</a>
 		</small>
 	<# } else if ( 'credit' === data.type ) { #>
-
+		<?php esc_html_e( 'Order Credit', 'easy-digital-downloads' ); ?>
+		<br />
+		<small>
+			{{ data.description }}
+		</small>
 	<# } else { #>
-
+		<?php esc_html_e( 'Order Fee', 'easy-digital-downloads' ); ?>
+		<br />
+		<small>
+			{{ data.description }}
+		</small>
 	<# } #>
 </th>
 

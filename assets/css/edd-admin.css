@@ -606,6 +606,10 @@ table.edd-order-overview-summary {
 	font-weight: 600;
 }
 
+.edd-order-overview-summary__adjustments th small {
+	font-weight: normal;
+}
+
 /** Totals */
 .edd-order-overview-summary__totals th {
 	font-weight: 600;
