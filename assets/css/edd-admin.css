@@ -2574,8 +2574,8 @@ body.download_page_edd-reports {
 	width: 42px;
 	height: 24px;
 	background-color: #ccc;
-	-webkit-transition: .4s;
-	transition: .4s;
+	-webkit-transition: background 0.2s ease;
+	transition: background 0.2s ease;
 	border-radius: 34px;
 	box-shadow: none;
 	border: none;
@@ -2595,18 +2595,24 @@ body.download_page_edd-reports {
 	left: 3px;
 	bottom: 3px;
 	background-color: white;
-	-webkit-transition: .4s;
-	transition: .4s;
+	-webkit-transition: 0.1s transform ease;
+	transition: 0.1s transform ease;
 	border-radius: 50%;
 }
 
 .edd-toggle input[type="checkbox"]:checked {
-	background-color: #00a0d2;
+	background-color: #007cba;
 }
 
 .edd-toggle input[type="checkbox"]:active,
 .edd-toggle input[type="checkbox"]:focus {
-	outline: auto 3px -webkit-focus-ring-color;
+	outline: 0;
+	box-shadow: 0 0 0 1px #fff, 0 0 0 3px #7e8993;
+}
+
+.edd-toggle input[type="checkbox"]:checked:active,
+.edd-toggle input[type="checkbox"]:checked:focus {
+	box-shadow: 0 0 0 1px #fff, 0 0 0 3px #007cba;
 }
 
 .edd-toggle input[type="checkbox"]:checked:before {
