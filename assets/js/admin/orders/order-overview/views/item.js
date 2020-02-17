@@ -3,7 +3,9 @@
 /**
  * Internal dependencies
  */
-// import { Currency } from 'utils';
+import { Currency } from '@easy-digital-downloads/currency';
+
+const currency = new Currency();
 
 /**
  * Item
@@ -32,15 +34,6 @@ export const Item = wp.Backbone.View.extend( /** Lends Item.prototype */ {
 	},
 
 	/**
-	 * Temporary...
-	 *
-	 * @todo use Currency library.
-	 */
-	formatCurrency( amount ) {
-		return `$${ Math.round( amount ) }`;
-	},
-
-	/**
 	 * Prepares data to be used in `render` method.
 	 *
 	 * @since 3.0
@@ -54,8 +47,6 @@ export const Item = wp.Backbone.View.extend( /** Lends Item.prototype */ {
 		const {
 			options,
 			model,
-
-			formatCurrency,
 		} = this;
 
 		const {
@@ -69,10 +60,10 @@ export const Item = wp.Backbone.View.extend( /** Lends Item.prototype */ {
 				...config.toJSON(),
 			},
 
-			amountCurrency: formatCurrency( this.model.get( 'amount' ) ),
-			subtotalCurrency: formatCurrency( this.model.get( 'subtotal' ) ),
-			taxCurrency: formatCurrency( this.model.get( 'tax' ) ),
-			discountCurrency: formatCurrency( this.model.get( 'discount' ) ),
+			amountCurrency: currency.format( this.model.get( 'amount' ) ),
+			subtotalCurrency: currency.format( this.model.get( 'subtotal' ) ),
+			taxCurrency: currency.format( this.model.get( 'tax' ) ),
+			discountCurrency: currency.format( this.model.get( 'discount' ) ),
 		};
 	},
 

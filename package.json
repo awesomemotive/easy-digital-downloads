@@ -44,6 +44,7 @@
 		"grunt-rtlcss": "~2.0.1",
 		"grunt-wp-i18n": "^1.0.2",
 		"load-grunt-tasks": "^3.5.2",
+		"locutus": "^2.0.11",
 		"makepot": "^0.3.0",
 		"uglify-es": "3.3.9",
 		"uglifyjs-webpack-plugin": "2.2.0",

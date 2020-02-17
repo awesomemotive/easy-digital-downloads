@@ -98,7 +98,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 					<input
 						type="text"
 						id="amount"
-						value="{{ data.amountCurrency }}"
+						value="{{ data.amountFormatted }}"
 					/>
 
 					<?php if ( 'after' === $currency_position ) : ?>
@@ -118,7 +118,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 						<input
 							type="text"
 							id="tax"
-							value="{{ data.taxCurrency }}"
+							value="{{ data.taxFormatted }}"
 						/>
 
 						<?php if ( 'after' === $currency_position ) : ?>
@@ -138,7 +138,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 					<input
 						type="text"
 						id="subtotal"
-						value="{{ data.subtotalCurrency }}"
+						value="{{ data.subtotalFormatted }}"
 					/>
 
 					<?php if ( 'after' === $currency_position ) : ?>
