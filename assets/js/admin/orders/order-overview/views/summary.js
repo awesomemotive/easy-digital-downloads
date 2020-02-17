@@ -38,6 +38,10 @@ export const Summary = wp.Backbone.View.extend( /** Lends Summary.prototype */ {
 		);
 
 		this.views.add(
+			new Adjustments( this.options )
+		);
+
+		this.views.add(
 			new Totals( this.options )
 		);
 

@@ -112,6 +112,15 @@ export const Totals = wp.Backbone.View.extend( /** Lends Totals.prototype */ {
 			return subtotal += +item.get( 'subtotal' )
 		} );
 
+		// Add or substract all adjustment subtotals.
+		_.each( this.options.config.get( 'adjustments' ).models, ( adjustment ) => {
+			if ( 'discount' === adjustment.get( 'type' ) || 'credit' === adjustment.get( 'type' ) ) {
+				return subtotal -= +adjustment.get( 'subtotal' )
+			} else {
+				return subtotal += +adjustment.get( 'subtotal' )
+			}
+		} );
+
 		return subtotal;
 	},
 

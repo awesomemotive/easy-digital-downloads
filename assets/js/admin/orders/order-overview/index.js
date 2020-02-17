@@ -11,6 +11,7 @@ import {
 
 import {
 	Items,
+	Adjustments,
 } from './collections';
 
 import {
@@ -33,11 +34,15 @@ jQueryReady( () => {
 		hasTax,
 		hasQuantity,
 		items,
+		adjustments,
 	} = eddAdminOrderOverview;
 
 	// Create collections.
 	const itemsCollection = new Items();
 	itemsCollection.set( items );
+
+	const adjustmentsCollection = new Adjustments();
+	adjustmentsCollection.set( adjustments );
 
 	// Create config for Overview.
 	const config = new OverviewConfig( {
@@ -47,6 +52,7 @@ jQueryReady( () => {
 			: hasTax,
 		hasQuantity: '1' === hasQuantity,
 		items: itemsCollection,
+		adjustments: adjustmentsCollection,
 	} );
 
 	// Create the Overview.

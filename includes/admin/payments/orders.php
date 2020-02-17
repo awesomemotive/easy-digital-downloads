@@ -500,12 +500,24 @@ function edd_order_details_logs( $order ) {
  * @param object $order
  */
 function edd_order_details_overview( $order ) {
-	$_items = array();
+	$_items       = array();
+	$_adjustments = array();
 
 	if ( true !== edd_is_add_order_page() ) {
 		$items = edd_get_order_items( array(
 			'order_id' => $order->id,
 			'number'   => 999,
+		) );
+
+		$adjustments = edd_get_order_adjustments( array(
+			'object_id'   => $order->id,
+			'object_type' => 'order',
+			'number'      => 999,
+			'type'        => array(
+				'discount',
+				'credit',
+				'fee',
+			),
 		) );
 
 		foreach ( $items as $item ) {
@@ -524,6 +536,22 @@ function edd_order_details_overview( $order ) {
 				'dateModified' => esc_html( $item->date_modified ),
 			);
 		}
+
+		foreach ( $adjustments as $adjustment ) {
+			$_adjustments[] = array(
+				'id'           => esc_html( $adjustment->id ),
+				'objectId'     => esc_html( $adjustment->object_id ),
+				'objectType'   => esc_html( $adjustment->object_type ),
+				'type'         => esc_html( $adjustment->type ),
+				'typeId'       => esc_html( $adjustment->type_id ),
+				'description'  => esc_html( $adjustment->description ),
+				'subtotal'     => esc_html( $adjustment->subtotal ),
+				'tax'          => esc_html( $adjustment->tax ),
+				'total'        => esc_html( $adjustment->total ),
+				'dateCreated'  => esc_html( $adjustment->date_created ),
+				'dateModified' => esc_html( $adjustment->date_modified ),
+			);
+		}
 	}
 
 	wp_localize_script(
@@ -531,6 +559,7 @@ function edd_order_details_overview( $order ) {
 		'eddAdminOrderOverview',
 		array(
 			'items'       => $_items,
+			'adjustments' => $_adjustments,
 			'isAdding'    => true === edd_is_add_order_page(),
 			'hasQuantity' => true,
 			'hasTax'      => array(
@@ -544,6 +573,7 @@ function edd_order_details_overview( $order ) {
 	$templates = array(
 		'totals',
 		'item',
+		'adjustment',
 		'form-add-item',
 	);
 
