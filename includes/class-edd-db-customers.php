@@ -374,6 +374,11 @@ class EDD_DB_Customers extends EDD_DB  {
 			return NULL;
 		}
 
+		$found = apply_filters( 'edd_pre_get_customer', null, $field, $value, $this );
+		if ( null !== $found ) {
+			return $found;
+		}
+
 		if ( 'id' == $field || 'user_id' == $field ) {
 			// Make sure the value is numeric to avoid casting objects, for example,
 			// to int 1.
@@ -421,11 +426,10 @@ class EDD_DB_Customers extends EDD_DB  {
 
 		$results = $query->query( $args );
 
-		if ( empty( $results ) ) {
-			return false;
-		}
+		$customer = ! empty( $results ) ? array_shift( $results ) : false;
+		$customer = apply_filters( "edd_get_customer_by_{$field}", $customer, $args, $this );
 
-		return array_shift( $results );
+		return apply_filters( 'edd_get_customer', $customer, $args, $this );
 	}
 
 	/**
