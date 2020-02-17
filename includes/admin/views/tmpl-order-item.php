@@ -18,7 +18,7 @@ $view_url = add_query_arg(
 ?>
 
 <td class="has-row-actions column-name">
-	<# if ( true === data.config.isAdding ) { #>
+	<# if ( true === data.state.isAdding ) { #>
 	<button class="button-link delete" id="remove">
 		<span class="dashicons dashicons-no"></span>
 	</button>
@@ -37,7 +37,7 @@ $view_url = add_query_arg(
 			<span class="text"><strong><?php esc_html_e( 'Discount:', 'easy-digital-downloads' ); ?></strong> {{ data.discountCurrency }}</span> | 
 			<# } #>
 
-			<# if ( false !== data.config.hasTax && data.tax > 0 ) { #>
+			<# if ( false !== data.state.hasTax && data.tax > 0 ) { #>
 			<span class="text"><strong><?php esc_html_e( 'Tax:', 'easy-digital-downloads' ); ?></strong> {{ data.taxCurrency }}</span> | 
 			<# } #>
 
@@ -52,7 +52,7 @@ $view_url = add_query_arg(
 	{{ data.amountCurrency }}
 </td>
 
-<# if ( true === data.config.hasQuantity ) { #>
+<# if ( true === data.state.hasQuantity ) { #>
 <td>
 	{{ data.quantity }}
 </td>

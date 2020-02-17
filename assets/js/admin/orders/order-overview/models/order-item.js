@@ -1,16 +1,16 @@
 /* global Backbone */
 
 /**
- * Item
+ * OrderItem
  *
  * A single Order Item.
  *
  * @since 3.0
  *
- * @class Item
+ * @class OrderItem
  * @augments Backbone.Model
  */
-export const Item = Backbone.Model.extend( /** Lends Item.prototype */ {
+export const OrderItem = Backbone.Model.extend( /** Lends Item.prototype */ {
 
 	/**
 	 * @since 3.0

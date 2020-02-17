@@ -4,7 +4,7 @@
  * Internal dependencies
  */
 import {
-	FormAddItem,
+	FormAddOrderItem,
 } from './';
 
 /**
@@ -38,7 +38,7 @@ export const Actions = wp.Backbone.View.extend( /** Lends Actions.prototype */ {
 	addItem( e ) {
 		e.preventDefault();
 
-		new FormAddItem( this.options )
+		new FormAddOrderItem( this.options )
 			.openDialog()
 			.render();
 	},

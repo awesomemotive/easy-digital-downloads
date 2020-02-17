@@ -1,12 +1,12 @@
 export * from './overview.js';
 
-export * from './items.js';
-export * from './item.js';
-export * from './adjustments.js';
-export * from './adjustment.js';
+export * from './order-items.js';
+export * from './order-item.js';
+export * from './order-adjustments.js';
+export * from './order-adjustment.js';
 
 export * from './summary.js';
 export * from './totals.js';
 export * from './actions.js';
 
-export * from './form-add-item.js';
+export * from './form-add-order-item.js';

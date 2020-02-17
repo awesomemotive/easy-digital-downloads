@@ -41,7 +41,7 @@ export const Totals = wp.Backbone.View.extend( /** Lends Totals.prototype */ {
 	 */
 	initialize() {
 		// Rerender when Items adds or removes an Item.
-		this.listenTo( this.options.config.get( 'items' ), 'add remove', this.render );
+		this.listenTo( this.options.state.get( 'items' ), 'add remove', this.render );
 
 		// Bind context.
 		this.getSubtotal = this.getSubtotal.bind( this );
@@ -69,11 +69,11 @@ export const Totals = wp.Backbone.View.extend( /** Lends Totals.prototype */ {
 		} = this;
 
 		const {
-			config,
+			state,
 		} = options;
 		
 		// Determine column offset -- using cart quantities requires an extra column.
-		const colspan = true === config.get( 'hasQuantity' )
+		const colspan = true === state.get( 'hasQuantity' )
 			? 2 
 			: 1;
 
@@ -82,8 +82,10 @@ export const Totals = wp.Backbone.View.extend( /** Lends Totals.prototype */ {
 		const total = getTotal();
 
 		return {
+			state: {
+				...state.toJSON(),
+			},
 			config: {
-				...config.toJSON(),
 				colspan,
 			},
 
@@ -108,12 +110,12 @@ export const Totals = wp.Backbone.View.extend( /** Lends Totals.prototype */ {
 		let subtotal = 0;
 
 		// Add all item subtotals.
-		_.each( this.options.config.get( 'items' ).models, ( item ) => {
+		_.each( this.options.state.get( 'items' ).models, ( item ) => {
 			return subtotal += +item.get( 'subtotal' )
 		} );
 
 		// Add or substract all adjustment subtotals.
-		_.each( this.options.config.get( 'adjustments' ).models, ( adjustment ) => {
+		_.each( this.options.state.get( 'adjustments' ).models, ( adjustment ) => {
 			if ( 'discount' === adjustment.get( 'type' ) || 'credit' === adjustment.get( 'type' ) ) {
 				return subtotal -= +adjustment.get( 'subtotal' )
 			} else {
@@ -135,7 +137,7 @@ export const Totals = wp.Backbone.View.extend( /** Lends Totals.prototype */ {
 		let tax = 0;
 
 		// Add all item taxes.
-		_.each( this.options.config.get( 'items' ).models, ( item ) => {
+		_.each( this.options.state.get( 'items' ).models, ( item ) => {
 			return tax += +item.get( 'tax' )
 		} );
 

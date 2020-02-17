@@ -15,7 +15,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 <div class="edd-order-overview-modal">
 	<form class="edd-order-overview-add-item">
 		<p>
-			<label for="">
+			<label for="download">
 				<?php echo esc_html( edd_get_label_singular() ); ?>
 			</label>
 
@@ -33,7 +33,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 			</select>
 		</p>
 
-		<# if ( false !== data.config.hasQuantity ) { #>
+		<# if ( false !== data.state.hasQuantity ) { #>
 			<p>
 				<label for="">
 					<?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?>
@@ -60,7 +60,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 				<input
 					type="checkbox"
 					id="auto-calculate"
-					<# if ( true !== data.config.isAdjustingManually ) { #>
+					<# if ( true !== data.state.isAdjustingManually ) { #>
 						checked
 					<# } #>
 					<# if ( '' === data.id ) { #>
@@ -69,13 +69,13 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 				/>
 				<span class="label">
 					<?php esc_html_e( 'Automatically calculate amounts', 'easy-digital-downloads' ); ?>
-					<# if ( false !== data.config.hasTax ) { #>
+					<# if ( false !== data.state.hasTax ) { #>
 					<small>
-						<# if ( false !== data.config.hasTax.rate && '' !== data.config.hasTax.country ) { #>
+						<# if ( false !== data.state.hasTax.rate && '' !== data.state.hasTax.country ) { #>
 						<?php
 						printf(
 							esc_html__( 'Tax Rate: %s', 'easy-digital-downloads' ),
-							'{{ data.config.hasTax.country}}<# if ( \'\' !== data.config.hasTax.region ) { #>: {{ data.config.hasTax.region }}<# } #> &ndash; {{ data.config.hasTax.rate }}%'
+							'{{ data.state.hasTax.country}}<# if ( \'\' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate }}%'
 						); // WPCS: XSS okay.
 						?>
 						<# } else { #>
@@ -87,7 +87,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 			</label>
 		</p>
 
-		<# if ( true === data.config.isAdjustingManually ) { #>
+		<# if ( true === data.state.isAdjustingManually ) { #>
 			<p>
 				<label for=""><?php esc_html_e( 'Unit Price', 'easy-digital-downloads' ); ?></label>
 				<span class="edd-amount">
@@ -107,7 +107,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 				</span>
 			</p>
 
-			<# if ( false !== data.config.hasTax ) { #>
+			<# if ( false !== data.state.hasTax ) { #>
 				<p>
 					<label for=""><?php esc_html_e( 'Tax', 'easy-digital-downloads' ); ?></label>
 					<span class="edd-amount">
@@ -153,7 +153,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 				type="submit"
 				class="button button-primary edd-ml-auto"
 				value="<?php echo esc_html( sprintf( __( 'Add %s', 'easy-digital-downloads' ), edd_get_label_singular() ) ); ?>"
-				<# if ( '' === data.id || ( 0 === data.subtotal && true === data.config.isAdjustingManually ) ) { #>
+				<# if ( '' === data.id || ( 0 === data.subtotal && true === data.state.isAdjustingManually ) ) { #>
 					disabled
 				<# } #>
 			/>
