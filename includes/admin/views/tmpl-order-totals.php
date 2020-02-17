@@ -12,21 +12,19 @@
 
 <tr>
 	<td></td>
-	<th colspan="{{ data.config.colspan }}">Subtotal</th>
-	<td class="column-right">{{ data.subtotal }}</td>
+	<th colspan="{{ data.config.colspan }}"><?php esc_html_e( 'Subtotal', 'easy-digital-downloads' ); ?></th>
 </tr>
 
 <# if ( false !== data.config.hasTax ) { #>
 <tr>
 	<td></td>
-	<th colspan="{{ data.config.colspan }}">Tax</th>
-	<td class="column-right">{{ data.tax }}</td>
+	<th colspan="{{ data.config.colspan }}"><?php esc_html_e( 'Tax', 'easy-digital-downloads' ); ?></th>
 </tr>
 <# } #>
 
 <tr>
 	<td></td>
-	<th colspan="{{ data.config.colspan }}">Total</th>
+	<th colspan="{{ data.config.colspan }}"><?php esc_html_e( 'Total', 'easy-digital-downloads' ); ?></th>
 	<td class="column-right">
 		<span class="total">{{ data.total }}</span>
 	</td>
