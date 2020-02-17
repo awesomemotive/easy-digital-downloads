@@ -1,4 +1,4 @@
-/* global wp */
+/* global wp, _ */
 
 /**
  * Internal dependencies
@@ -8,14 +8,14 @@ import { Currency } from '@easy-digital-downloads/currency';
 const currency = new Currency();
 
 /**
- * Adjustment
+ * OrderItem
  *
  * @since 3.0
  *
- * @class Adjustment
+ * @class OrderItem
  * @augments wp.Backbone.View
  */
-export const Adjustment = wp.Backbone.View.extend( /** Lends Adjustment.prototype */ {
+export const OrderItem = wp.Backbone.View.extend( /** Lends Item.prototype */ {
 	/**
 	 * @since 3.0
 	 */
@@ -24,7 +24,7 @@ export const Adjustment = wp.Backbone.View.extend( /** Lends Adjustment.prototyp
 	/**
 	 * @since 3.0
 	 */
-	template: wp.template( 'edd-admin-order-adjustment' ),
+	template: wp.template( 'edd-admin-order-item' ),
 
 	/**
 	 * @since 3.0
@@ -50,28 +50,25 @@ export const Adjustment = wp.Backbone.View.extend( /** Lends Adjustment.prototyp
 		} = this;
 
 		const {
-			config,
+			state,
 		} = options;
-
-		// Determine column offset -- using cart quantities requires an extra column.
-		const colspan = true === config.get( 'hasQuantity' )
-			? 2 
-			: 1;
 
 		return {
 			...model.toJSON(),
 
-			config: {
-				...config.toJSON(),
-				colspan,
+			state: {
+				...state.toJSON(),
 			},
 
-			totalCurrency: currency.format( this.model.get( 'total' ) ),
+			amountCurrency: currency.format( this.model.get( 'amount' ) ),
+			subtotalCurrency: currency.format( this.model.get( 'subtotal' ) ),
+			taxCurrency: currency.format( this.model.get( 'tax' ) ),
+			discountCurrency: currency.format( this.model.get( 'discount' ) ),
 		};
 	},
 
 	/**
-	 * Removes the current Adjustment from Adjustments.
+	 * Removes the current Item from Items.
 	 *
 	 * @since 3.0
 	 *
@@ -80,6 +77,6 @@ export const Adjustment = wp.Backbone.View.extend( /** Lends Adjustment.prototyp
 	onDelete( e ) {
 		e.preventDefault();
 
-		this.options.config.get( 'adjustments' ).remove( this.model );
+		this.options.state.get( 'items' ).remove( this.model );
 	},
 } );

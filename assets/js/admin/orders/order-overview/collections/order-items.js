@@ -4,7 +4,7 @@
  * Internal dependencies
  */
 import {
-	Item,
+	OrderItem,
 } from './../models';
 
 /**
@@ -22,6 +22,6 @@ export const Items = Backbone.Collection.extend( /** @lends Items.prototype */ {
 	/**
 	 * @since 3.0
 	 */
-	model: Item,
+	model: OrderItem,
 
 } );

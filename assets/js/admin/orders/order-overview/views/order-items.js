@@ -4,7 +4,7 @@
  * Internal dependencies
  */
 import {
-	Item
+	OrderItem
 } from './';
 
 /**
@@ -15,7 +15,7 @@ import {
  * @class Items
  * @augments wp.Backbone.View
  */
-export const Items = wp.Backbone.View.extend( /** Lends Items.prototype */ {
+export const OrderItems = wp.Backbone.View.extend( /** Lends Items.prototype */ {
 	/**
 	 * @since 3.0
 	 */
@@ -30,8 +30,8 @@ export const Items = wp.Backbone.View.extend( /** Lends Items.prototype */ {
 	 * @since 3.0
 	 */
 	initialize() {
-		this.listenTo( this.options.config.get( 'items' ), 'add', this.onAdd );
-		this.listenTo( this.options.config.get( 'items' ), 'remove', this.render );
+		this.listenTo( this.options.state.get( 'items' ), 'add', this.onAdd );
+		this.listenTo( this.options.state.get( 'items' ), 'remove', this.render );
 	},
 
 	/**
@@ -43,28 +43,28 @@ export const Items = wp.Backbone.View.extend( /** Lends Items.prototype */ {
 	 */
 	render() {
 		const {
-			config,
+			state,
 		} = this.options;
 
 		// Clear existing Item views.
 		this.views.remove();
 
 		// Add Items.
-		_.each( config.get( 'items' ).models, ( item ) => this.onAdd( item ) );
+		_.each( state.get( 'items' ).models, ( item ) => this.onAdd( item ) );
 
 		return this;
 	},
 
 	/**
-	 * Adds an Item subview.
+	 * Adds an OrderItem subview.
 	 *
 	 * @since 3.0
 	 *
-	 * @param {Item} Item to add to view.
+	 * @param {OrderItem} Item to add to view.
 	 */
 	onAdd( model ) {
 		this.views.add(
-			new Item( {
+			new OrderItem( {
 				...this.options,
 				model,
 			} )

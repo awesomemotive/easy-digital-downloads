@@ -15,7 +15,7 @@ import {
 } from './collections';
 
 import {
-	OverviewConfig,
+	State,
 } from './models';
 
 /**
@@ -44,8 +44,8 @@ jQueryReady( () => {
 	const adjustmentsCollection = new Adjustments();
 	adjustmentsCollection.set( adjustments );
 
-	// Create config for Overview.
-	const config = new OverviewConfig( {
+	// Create and hydrate state.
+	const state = new State( {
 		isAdding: '1' === isAdding,
 		hasTax: '0' === hasTax
 			? false
@@ -57,7 +57,7 @@ jQueryReady( () => {
 
 	// Create the Overview.
 	const overview = new Overview( {
-		config,
+		state,
 	} );
 
 	// Render the Overview.
@@ -110,7 +110,7 @@ jQueryReady( () => {
 					// Make a percentage.
 					rate = rate * 100;
 
-					overview.options.config.set( 'hasTax', {
+					overview.options.state.set( 'hasTax', {
 						country,
 						region,
 						rate,
@@ -122,7 +122,7 @@ jQueryReady( () => {
 				 * @since 3.0
 				 */
 				error() {
-					overview.options.config.set( 'hasTax', false );
+					overview.options.state.set( 'hasTax', false );
 				}
 			} );
 		};

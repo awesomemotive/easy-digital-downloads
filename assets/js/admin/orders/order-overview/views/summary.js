@@ -4,8 +4,8 @@
  * Internal dependencies
  */
 import {
-	Items,
-	Adjustments,
+	OrderItems,
+	OrderAdjustments,
 	Totals,
 } from './';
 
@@ -34,11 +34,11 @@ export const Summary = wp.Backbone.View.extend( /** Lends Summary.prototype */ {
 	 */
 	render() {
 		this.views.add(
-			new Items( this.options )
+			new OrderItems( this.options )
 		);
 
 		this.views.add(
-			new Adjustments( this.options )
+			new OrderAdjustments( this.options )
 		);
 
 		this.views.add(

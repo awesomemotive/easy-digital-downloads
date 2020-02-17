@@ -1,16 +1,14 @@
 /* global Backbone */
 
 /**
- * Overview configuration.
- *
- * Mainly used for high-level state management.
+ * State management.
  *
  * @since 3.0
  *
- * @class OverviewConfig
+ * @class State
  * @augments Backbone.Model
  */
-export const OverviewConfig = Backbone.Model.extend( /** Lends OverviewConfig.prototype */ {
+export const State = Backbone.Model.extend( /** Lends State.prototype */ {
 
 	/**
 	 * @since 3.0
@@ -20,6 +18,7 @@ export const OverviewConfig = Backbone.Model.extend( /** Lends OverviewConfig.pr
 		hasQuantity: false,
 		hasTax: false,
 		items: [],
+		adjustments: [],
 	},
 
 } );

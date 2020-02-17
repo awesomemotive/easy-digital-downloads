@@ -16,7 +16,7 @@
 	<td class="column-right">{{ data.subtotalCurrency }}</td>
 </tr>
 
-<# if ( false !== data.config.hasTax ) { #>
+<# if ( false !== data.state.hasTax ) { #>
 <tr>
 	<td></td>
 	<th colspan="{{ data.config.colspan }}"><?php esc_html_e( 'Tax', 'easy-digital-downloads' ); ?></th>

@@ -4,7 +4,7 @@
  * Internal dependencies
  */
 import {
-	Item,
+	OrderItem,
 } from './../models';
 import { getChosenVars } from 'utils/chosen.js';
 import { NumberFormat } from '@easy-digital-downloads/currency';
@@ -16,10 +16,10 @@ const number = new NumberFormat();
  *
  * @since 3.0
  *
- * @class FormAddItem
+ * @class FormAddOrderItem
  * @augments wp.Backbone.View
  */
-export const FormAddItem = wp.Backbone.View.extend( /** Lends FormAddItem.prototype */ {
+export const FormAddOrderItem = wp.Backbone.View.extend( /** Lends FormAddItem.prototype */ {
 	/**
 	 * @since 3.0
 	 */
@@ -28,13 +28,13 @@ export const FormAddItem = wp.Backbone.View.extend( /** Lends FormAddItem.protot
 	/**
 	 * @since 3.0
 	 */
-	template: wp.template( 'edd-admin-order-form-add-item' ),
+	template: wp.template( 'edd-admin-order-form-add-order-item' ),
 
 	/**
 	 * @since 3.0
 	 */
 	events: {
-		'submit form': 'onAddItem',
+		'submit form': 'onAdd',
 
 		'change #download': 'onChangeDownload',
 		'change #quantity': 'onChangeQuantity',
@@ -54,7 +54,7 @@ export const FormAddItem = wp.Backbone.View.extend( /** Lends FormAddItem.protot
 	 *
 	 * @since 3.0
 	 *
-	 * @constructs FormAddItem
+	 * @constructs FormAddOrderItem
 	 * @augments wp.Backbone.View
 	 */
 	initialize() {
@@ -71,9 +71,9 @@ export const FormAddItem = wp.Backbone.View.extend( /** Lends FormAddItem.protot
 			autoOpen: false,
 		} );
 
-		// Create a fresh Item to be added.
+		// Create a fresh OrderItem to be added.
 		// Defines additional attributes that the view can modify.
-		this.item = new Item( {
+		this.item = new OrderItem( {
 			amountManual: 0,
 			taxManual: 0,
 			subtotalManual: 0,
@@ -84,10 +84,10 @@ export const FormAddItem = wp.Backbone.View.extend( /** Lends FormAddItem.protot
 		this.listenTo( this.item, 'change:download', this.render );
 
 		// Rerender when Overview tax configuration has changed.
-		this.listenTo( this.options.config, 'change:hasTax', this.render );
+		this.listenTo( this.options.state, 'change:hasTax', this.render );
 
-		// Automatically close dialog when an Item is added.
-		this.listenTo( this.options.config.get( 'items' ), 'add', this.closeDialog );
+		// Automatically close dialog when an OrderItem is added.
+		this.listenTo( this.options.state.get( 'items' ), 'add', this.closeDialog );
 	},
 
 	/**
@@ -108,14 +108,14 @@ export const FormAddItem = wp.Backbone.View.extend( /** Lends FormAddItem.protot
 		} = this;
 
 		const {
-			config,
+			state,
 		} = options;
 
 		return {
 			...item.toJSON(),
 
-			config: {
-				...config.toJSON(),
+			state: {
+				...state.toJSON(),
 				isAdjustingManually,
 			},
 
@@ -130,7 +130,7 @@ export const FormAddItem = wp.Backbone.View.extend( /** Lends FormAddItem.protot
 	 *
 	 * @since 3.0
 	 *
-	 * @return {FormAddItem} Current view.
+	 * @return {FormAddOrderItem} Current view.
 	 */
 	render() {
 		wp.Backbone.View.prototype.render.apply( this );
@@ -147,7 +147,7 @@ export const FormAddItem = wp.Backbone.View.extend( /** Lends FormAddItem.protot
 	},
 
 	/**
-	 * Updates the Item when the Download changes.
+	 * Updates the OrderItem when the Download changes.
 	 *
 	 * @since 3.0
 	 *
@@ -162,7 +162,7 @@ export const FormAddItem = wp.Backbone.View.extend( /** Lends FormAddItem.protot
 		} = e;
 
 		const {
-			config,
+			state,
 		} = this.options;
 
 		// Find the selected Download.
@@ -189,11 +189,11 @@ export const FormAddItem = wp.Backbone.View.extend( /** Lends FormAddItem.protot
 
 		// Request amounts from the server.
 		const quantity = this.item.get( 'quantity' );
-		const country = false !== config.get( 'hasTax' )
-			? config.get( 'hasTax' ).country
+		const country = false !== state.get( 'hasTax' )
+			? state.get( 'hasTax' ).country
 			: '';
-		const region = false !== config.get( 'hasTax' )
-			? config.get( 'hasTax' ).region
+		const region = false !== state.get( 'hasTax' )
+			? state.get( 'hasTax' ).region
 			: '';
 		
 		wp.ajax.send(
@@ -207,7 +207,7 @@ export const FormAddItem = wp.Backbone.View.extend( /** Lends FormAddItem.protot
 					region,
 				},
 				/**
-				 * Updates the Item's attributes on successful retrieval.
+				 * Updates the OrderItem's attributes on successful retrieval.
 				 *
 				 * @since 3.0
 				 *
@@ -242,7 +242,7 @@ export const FormAddItem = wp.Backbone.View.extend( /** Lends FormAddItem.protot
 	},
 
 	/**
-	 * Updates the Item's quantity on change.
+	 * Updates the OrderItem's quantity on change.
 	 *
 	 * @since 3.0
 	 * @todo Validate.
@@ -254,7 +254,7 @@ export const FormAddItem = wp.Backbone.View.extend( /** Lends FormAddItem.protot
 	},
 
 	/**
-	 * Updates the Item's manually managed amount on change.
+	 * Updates the OrderItem's manually managed amount on change.
 	 *
 	 * @since 3.0
 	 *
@@ -265,7 +265,7 @@ export const FormAddItem = wp.Backbone.View.extend( /** Lends FormAddItem.protot
 	},
 
 	/**
-	 * Updates the Item's manually managed tax on change.
+	 * Updates the OrderItem's manually managed tax on change.
 	 *
 	 * @since 3.0
 	 *
@@ -276,7 +276,7 @@ export const FormAddItem = wp.Backbone.View.extend( /** Lends FormAddItem.protot
 	},
 
 	/**
-	 * Updates the Item's manually managed subtotal on change.
+	 * Updates the OrderItem's manually managed subtotal on change.
 	 *
 	 * @since 3.0
 	 *
@@ -301,13 +301,13 @@ export const FormAddItem = wp.Backbone.View.extend( /** Lends FormAddItem.protot
 	},
 
 	/**
-	 * Adds an Item to the Items collection.
+	 * Adds an OrderItem to the OrderItems collection.
 	 *
 	 * @since 3.0
 	 *
 	 * @param {Object} e Submit event.
 	 */
-	onAddItem( e ) {
+	onAdd( e ) {
 		e.preventDefault();
 
 		const {
@@ -317,7 +317,7 @@ export const FormAddItem = wp.Backbone.View.extend( /** Lends FormAddItem.protot
 		} = this;
 
 		const {
-			config,
+			state,
 		} = options;
 
 		// Use manual amounts if adjusting manually.
@@ -338,8 +338,8 @@ export const FormAddItem = wp.Backbone.View.extend( /** Lends FormAddItem.protot
 			} );
 		}
 
-		// Add Item to Items.
-		config.get( 'items' ).add( item );
+		// Add OrderItem to OrderItems.
+		state.get( 'items' ).add( item );
 	},
 
 	/**
@@ -347,7 +347,7 @@ export const FormAddItem = wp.Backbone.View.extend( /** Lends FormAddItem.protot
 	 *
 	 * @since 3.0
 	 *
-	 * @return {FormAddItem}
+	 * @return {FormAddOrderItem}
 	 */
 	openDialog() {
 		$( '#edd-admin-order-add-item-dialog' ).dialog( 'open' );
@@ -360,7 +360,7 @@ export const FormAddItem = wp.Backbone.View.extend( /** Lends FormAddItem.protot
 	 *
 	 * @since 3.0
 	 *
-	 * @return {FormAddItem}
+	 * @return {FormAddOrderItem}
 	 */
 	closeDialog() {
 		$( '#edd-admin-order-add-item-dialog' ).dialog( 'close' );

@@ -10,30 +10,22 @@
  * @class Adjustment
  * @augments Backbone.Model
  */
-export const Adjustment = Backbone.Model.extend( /** Lends Item.prototype */ {
+export const Adjustment = Backbone.Model.extend( /** Lends Adjustment.prototype */ {
 
 	/**
 	 * @since 3.0
 	 */
 	defaults: {
 		id: '',
-		objectId: '',
-		objectType: '',
+		parent: '',
+		name: '',
+		code: '',
+		status: '',
 		type: '',
-		typeId: 0,
+		scope: '',
+		amountType: '',
+		amount: 0,
 		description: '',
-		subtotal: 1,
-		tax: 0,
-		total: 0,
-		dateCreated: '',
-		dateModified: '',
 	},
-
-	/**
-	 * Sets the unique identifer to the `eddUid` attribute.
-	 *
-	 * @since 3.0
-	 */
-	idAttribute: 'objectId',
 
 } );
