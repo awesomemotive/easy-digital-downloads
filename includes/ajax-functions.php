@@ -1239,11 +1239,11 @@ function edd_ajax_customer_addresses() {
 add_action( 'wp_ajax_edd_customer_addresses', 'edd_ajax_customer_addresses' );
 
 /**
- * Recalculate taxes when adding a new order and the country/region field is changed.
+ * Retrieves a tax rate for a specific location.
  *
  * @since 3.0
  */
-function edd_ajax_add_order_recalculate_taxes() {
+function edd_ajax_get_tax_rate() {
 
 	// Bail if user cannot manage shop settings.
 	if ( ! current_user_can( 'manage_shop_settings' ) ) {
@@ -1269,7 +1269,7 @@ function edd_ajax_add_order_recalculate_taxes() {
 	}
 
 	// Bail if nonce verification failed.
-	if ( ! wp_verify_nonce( $nonce, 'edd_add_order_nonce' ) ) {
+	if ( ! wp_verify_nonce( $nonce, 'edd_get_tax_rate_nonce' ) ) {
 		return wp_send_json_error();
 	}
 
@@ -1282,4 +1282,65 @@ function edd_ajax_add_order_recalculate_taxes() {
 
 	return wp_send_json_success( $response );
 }
-add_action( 'wp_ajax_edd_add_order_recalculate_taxes', 'edd_ajax_add_order_recalculate_taxes' );
+add_action( 'wp_ajax_edd_get_tax_rate', 'edd_ajax_get_tax_rate' );
+
+/**
+ * Retrieves a potential Order Item's amounts.
+ *
+ * @since 3.0
+ */
+function edd_admin_order_get_item_amounts() {
+	$tax = isset( $_POST['tax'] ) && false !== $_POST['tax'];
+
+	$id = isset( $_POST['id'] )
+		? sanitize_text_field( $_POST['id'] )
+		: 0;
+
+	$price_id = isset( $_POST['priceId'] )
+		? sanitize_text_field( $_POST['priceId'] )
+		: 0;
+
+	$quantity = isset( $_POST['quantity'] )
+		? sanitize_text_field( $_POST['quantity'] )
+		: 0;
+
+	$country = isset( $tax['country'] )
+		? sanitize_text_field( $tax['country'] )
+		: '';
+
+	$region = isset( $tax['region'] )
+		? sanitize_text_field( $tax['region'] )
+		: '';
+
+
+	$item = edd_get_download( $id );
+
+	if ( $item ) {
+		if ( ! $item->has_variable_prices() ) {
+			$amount = floatval( $item->get_price() );
+		} else {
+			$prices = $item->get_prices();
+
+			if ( isset( $prices[ $price_id ] ) ) {
+				$price  = $prices[ $price_id ];
+				$amount = floatval( $price['amount'] );
+			}
+		}
+
+		if ( edd_use_taxes() ) {
+			$tax = edd_calculate_tax( $amount * $quantity, $country, $region );
+		} else { 
+			$tax = 0;
+		}
+
+		wp_send_json_success( array(
+			'subtotal' => $amount,
+			'amount'   => $amount,
+			'tax'      => $tax,
+			'total'    => $amount + $tax,
+		) );
+	} else {
+
+	}
+}
+add_action( 'wp_ajax_edd-admin-order-get-item-amounts', 'edd_admin_order_get_item_amounts' );

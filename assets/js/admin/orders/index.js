@@ -1,8 +1,7 @@
 /**
  * Internal dependencies
  */
-import './order-items';
-import './order-adjustments';
+import './order-overview';
 import './order-amounts';
 import './order-details';
 import './list-table.js';

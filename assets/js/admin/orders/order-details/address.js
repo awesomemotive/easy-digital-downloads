@@ -10,70 +10,6 @@ import { updateAmounts } from './../order-amounts';
 // Store customer search results to help prefill address data.
 let CUSTOMER_SEARCH_RESULTS = {};
 
-/**
- * Recalculates tax amounts when an address changes.
- *
- * @note This only updates the UI and does not affect server-side processing.
- *
- * @since 3.0.0
- */
-function recalculateTaxes() {
-	$( '#publishing-action .spinner' ).css( 'visibility', 'visible' );
-
-	const data = {
-		action: 'edd_add_order_recalculate_taxes',
-		country: $( '.edd-order-address-country' ).val(),
-		region: $( '.edd-order-address-region' ).val(),
-		nonce: $( '#edd_add_order_nonce' ).val(),
-	};
-
-	$.post( ajaxurl, data, function( response ) {
-		const { success, data } = response;
-
-		if ( ! success ) {
-			return;
-		}
-
-		if ( '' !== data.tax_rate ) {
-			const tax_rate = parseFloat( data.tax_rate );
-
-			$( '.orderitems tbody tr:not(.no-items)' ).each( function() {
-				const amount = parseFloat( $( '.download-amount', this ).val() );
-				const quantity = $( '.download-quantity', this ).length > 0 ? parseFloat( $( '.download-quantity', this ).val() ) : 1;
-				const calculated = amount * quantity;
-				let tax = 0;
-
-				if ( data.prices_include_tax ) {
-					const pre_tax = parseFloat( calculated / ( 1 + tax_rate ) );
-					tax = parseFloat( calculated - pre_tax );
-				} else {
-					tax = calculated * tax_rate;
-				}
-
-				const storeCurrency = edd_vars.currency;
-				const decimalPlaces = edd_vars.currency_decimals;
-				const total = calculated + tax;
-
-				$( '.download-tax', this ).val( tax.toLocaleString( storeCurrency, {
-					style: 'decimal',
-					minimumFractionDigits: decimalPlaces,
-					maximumFractionDigits: decimalPlaces,
-				} ) );
-
-				$( '.download-total', this ).val( total.toLocaleString( storeCurrency, {
-					style: 'decimal',
-					minimumFractionDigits: decimalPlaces,
-					maximumFractionDigits: decimalPlaces,
-				} ) );
-			} );
-		}
-	}, 'json' ).done( function() {
-		$( '#publishing-action .spinner' ).css( 'visibility', 'hidden' );
-
-		updateAmounts();
-	} );
-}
-
 jQueryReady( () => {
 
 	// Update base state field based on selected base country
@@ -192,11 +128,7 @@ jQueryReady( () => {
 			}
 
 			$( 'select.edd-order-address-region' ).trigger( 'chosen:updated' );
-		} )
-			.done( recalculateTaxes );
+		} );
 	} );
-
-	// Region change.
-	$( '.edd-order-address-region' ).on( 'change', recalculateTaxes );
 
 } );
