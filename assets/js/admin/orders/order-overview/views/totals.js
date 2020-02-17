@@ -3,7 +3,9 @@
 /**
  * Internal dependencies
  */
-// import { Currency } from 'utils';
+import { Currency } from '@easy-digital-downloads/currency';
+
+const currency = new Currency();
 
 /**
  * Order totals
@@ -28,13 +30,6 @@ export const Totals = wp.Backbone.View.extend( /** Lends Totals.prototype */ {
 	 * @since 3.0
 	 */
 	template: wp.template( 'edd-admin-order-totals' ),
-
-	/**
-	 * @todo Use formatting library.
-	 */
-	formatCurrency( amount ) {
-		return `$${ Math.round( amount ) }`;
-	},
 
 	/**
 	 * Order totals view.
@@ -68,7 +63,6 @@ export const Totals = wp.Backbone.View.extend( /** Lends Totals.prototype */ {
 		const {
 			options,
 
-			formatCurrency,
 			getSubtotal,
 			getTax,
 			getTotal,
@@ -83,15 +77,23 @@ export const Totals = wp.Backbone.View.extend( /** Lends Totals.prototype */ {
 			? 2 
 			: 1;
 
+		const subtotal = getSubtotal();
+		const tax = getTax();
+		const total = getTotal();
+
 		return {
 			config: {
 				...config.toJSON(),
 				colspan,
 			},
 
-			subtotal: formatCurrency( getSubtotal() ),
-			tax: formatCurrency( getTax() ),
-			total: formatCurrency( getTotal() ),
+			subtotal,
+			tax,
+			total,
+
+			subtotalCurrency: currency.format( subtotal ),
+			taxCurrency: currency.format( tax ),
+			totalCurrency: currency.format( total ),
 		}
 	},
 
@@ -100,7 +102,7 @@ export const Totals = wp.Backbone.View.extend( /** Lends Totals.prototype */ {
 	 *
 	 * @since 3.0
 	 *
-	 * @return {Number} Order subtotal.
+	 * @return {number} Order subtotal.
 	 */
 	getSubtotal() {
 		let subtotal = 0;
@@ -118,7 +120,7 @@ export const Totals = wp.Backbone.View.extend( /** Lends Totals.prototype */ {
 	 *
 	 * @since 3.0
 	 *
-	 * @return {Number} Order tax.
+	 * @return {number} Order tax.
 	 */
 	getTax() {
 		let tax = 0;
@@ -136,7 +138,7 @@ export const Totals = wp.Backbone.View.extend( /** Lends Totals.prototype */ {
 	 *
 	 * @since 3.0
 	 *
-	 * @return {Number} Order total.
+	 * @return {number} Order total.
 	 */
 	getTotal() {
 		return this.getSubtotal() + this.getTax();
