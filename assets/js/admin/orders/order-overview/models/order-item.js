@@ -36,6 +36,9 @@ export const OrderItem = Backbone.Model.extend( /** Lends Item.prototype */ {
 		//
 		// @example 9_1
 		eddUid: '',
+
+		// Determines if this Order Item has manually set amounts.
+		isAdjustingManually: false,
 	},
 
 	/**

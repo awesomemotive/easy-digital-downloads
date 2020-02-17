@@ -48,11 +48,6 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 	},
 
 	/**
-	 * @since 3.0
-	 */
-	isAdjustingManually: false,
-
-	/**
 	 * "Add Item" view.
 	 *
 	 * @since 3.0
@@ -75,7 +70,7 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 		} );
 
 		// Rerender on Download or Autocalculate changes.
-		this.listenTo( this.item, 'change:auto', this.render );
+		this.listenTo( this.item, 'change:isAdjustingManually', this.render );
 		this.listenTo( this.item, 'change:download', this.render );
 
 		// Rerender when Overview tax configuration has changed.
@@ -95,7 +90,6 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 	prepare() {
 		const {
 			item,
-			isAdjustingManually,
 			options,
 		} = this;
 
@@ -108,7 +102,6 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 
 			state: {
 				...state.toJSON(),
-				isAdjustingManually,
 			},
 
 			amountFormatted: number.format( item.get( 'amount' ) * item.get( 'quantity' ) ),
@@ -288,8 +281,9 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 	onAutoCalculateToggle( e ) {
 		e.preventDefault();
 
-		this.isAdjustingManually = ! e.target.checked;
-		this.item.trigger( 'change:auto' );
+		this.item.set( {
+			isAdjustingManually: ! e.target.checked,
+		} );
 	},
 
 	/**
@@ -304,11 +298,10 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 
 		const {
 			item,
-			isAdjustingManually,
 		} = this;
 
 		// Use manual amounts if adjusting manually.
-		if ( true === isAdjustingManually ) {
+		if ( true === item.get( 'isAdjustingManually' ) ) {
 			item.set( {
 				amount: number.unformat( item.get( 'amountManual' ) ),
 				tax: number.unformat( item.get( 'taxManual' ) ),
