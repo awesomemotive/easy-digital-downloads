@@ -32,6 +32,11 @@ export const OrderAdjustment = Backbone.Model.extend( /** Lends Adjustment.proto
 	/**
 	 * @since 3.0
 	 */
+	idAttribute: 'typeId',
+
+	/**
+	 * @since 3.0
+	 */
 	getTotal() {
 		return this.get( 'total' );
 	}

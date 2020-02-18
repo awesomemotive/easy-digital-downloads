@@ -588,7 +588,7 @@ table.edd-order-overview-summary {
 	align-items: center;
 }
 
-.edd-order-overview-summary td.column-name .delete {
+.edd-order-overview-summary .column-name .delete {
 	display: inline-block;
 	margin-right: 10px;
 	margin-left: -8px;
@@ -628,6 +628,15 @@ table.edd-order-overview-summary {
 	border-top: 1px solid #e5e5e5;
 }
 
+.edd-order-overview-summary__adjustments th.column-name {
+	position: relative;
+}
+
+.edd-order-overview-summary__adjustments th.column-name .delete {
+	position: absolute;
+	left:  -40px;
+}
+
 /** Actions */
 #edd-order-overview-actions.inside {
 	margin-top: 0;
@@ -650,9 +659,18 @@ table.edd-order-overview-summary {
 	margin-top: 0;
 }
 
+.edd-order-overview-modal fieldset legend,
 .edd-order-overview-modal form label {
 	display: block;
 	margin-bottom: 4px;
+}
+
+.edd-order-overview-modal fieldset {
+	margin-bottom: calc(1em - 3px);
+}
+
+.edd-order-overview-modal fieldset > p {
+	margin: 2px 0 3px;
 }
 
 .edd-order-overview-modal form .submit {
@@ -684,6 +702,7 @@ table.edd-order-overview-summary {
 	opacity: 0.75;
 }
 
+.edd-order-overview-add-adjustment #description,
 .edd-order-overview-add-discount select {
 	width: 100%;
 }

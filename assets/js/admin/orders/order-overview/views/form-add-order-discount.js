@@ -96,6 +96,8 @@ export const FormAddOrderDiscount = Dialog.extend( /** Lends FormAddItem.prototy
 				.find( '#discount' )
 				.focus();
 		}
+
+		return this;
 	},
 
 	/**
@@ -125,6 +127,9 @@ export const FormAddOrderDiscount = Dialog.extend( /** Lends FormAddItem.prototy
 
 		// Update Order Adjustment.
 		this.discount.set( {
+			// Set ID so it is unique
+			// @todo Investigate why idAttribute is not working on the model.
+			id: parseInt( discount.value ),
 			typeId: parseInt( discount.value ),
 			description: adjustment.code,
 		} );

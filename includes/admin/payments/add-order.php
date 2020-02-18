@@ -142,5 +142,13 @@ function edd_add_order_page_content() {
 		<div id="edd-admin-order-add-discount-dialog-content"></div>
 	</div>
 
+	<div
+		id="edd-admin-order-add-adjustment-dialog"
+		title="<?php esc_attr_e( 'Add Adjustment', 'easy-digital-downloads' ); ?>"
+		style="display: none;"
+	>
+		<div id="edd-admin-order-add-adjustment-dialog-content"></div>
+	</div>
+
 <?php
 }
