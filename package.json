@@ -32,6 +32,8 @@
 		"moment": "2.22.2"
 	},
 	"devDependencies": {
+		"@wordpress/dom": "2.8.0",
+		"@wordpress/keycodes": "^2.9.0",
 		"@wordpress/scripts": "7.0.1",
 		"copy-webpack-plugin": "5.1.1",
 		"grunt": "^1.0.4",
