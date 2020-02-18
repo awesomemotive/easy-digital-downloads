@@ -30,8 +30,19 @@ export const OrderAdjustments = wp.Backbone.View.extend( /** Lends Adjustments.p
 	 * @since 3.0
 	 */
 	initialize() {
-		this.listenTo( this.options.state.get( 'adjustments' ), 'add', this.onAdd );
-		this.listenTo( this.options.state.get( 'adjustments' ), 'remove', this.render );
+		const {
+			render,
+			onAdd,
+			options,
+		} = this;
+
+		const {
+			state,
+		} = options;
+
+		this.listenTo( state.get( 'adjustments' ), 'add', onAdd );
+		this.listenTo( state.get( 'adjustments' ), 'remove', render );
+		this.listenTo( state.get( 'items' ), 'add remove', render );
 	},
 
 	/**
@@ -63,6 +74,10 @@ export const OrderAdjustments = wp.Backbone.View.extend( /** Lends Adjustments.p
 	 * @param {OrderAdjustment} OrderAdjustment to add to view.
 	 */
 	onAdd( model ) {
+		// Keep state context available.
+		// @todo Find a better way?
+		model.set( 'options', this.options );
+
 		this.views.add(
 			new OrderAdjustment( {
 				...this.options,

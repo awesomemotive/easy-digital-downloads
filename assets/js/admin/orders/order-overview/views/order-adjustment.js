@@ -68,7 +68,7 @@ export const OrderAdjustment = wp.Backbone.View.extend( /** Lends Adjustment.pro
 				colspan,
 			},
 
-			totalCurrency: currency.format( this.model.get( 'total' ) ),
+			totalCurrency: currency.format( model.getTotal() ),
 		};
 	},
 

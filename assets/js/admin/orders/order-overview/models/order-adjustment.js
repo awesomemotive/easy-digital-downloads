@@ -29,4 +29,11 @@ export const OrderAdjustment = Backbone.Model.extend( /** Lends Adjustment.proto
 		dateModified: '',
 	},
 
+	/**
+	 * @since 3.0
+	 */
+	getTotal() {
+		return this.get( 'total' );
+	}
+
 } );
