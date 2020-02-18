@@ -1,4 +1,4 @@
-/* global Backbone */
+/* global Backbone, _ */
 
 /**
  * Internal dependencies
@@ -36,5 +36,24 @@ export const OrderAdjustmentDiscount = OrderAdjustment.extend( /** Lends Adjustm
 	 * @since 3.0
 	 */
 	idAttribute: 'typeId',
+
+	/**
+	 * @since 3.0
+	 */
+	getTotal() {
+		let total = 0;
+
+		const {
+			state,
+		} = this.get( 'options' );
+
+		const items = state.get( 'items' );
+
+		_.each( items.models, ( item ) => {
+			total += +item.get( 'discount' );
+		} );
+
+		return total;
+	}
 
 } );

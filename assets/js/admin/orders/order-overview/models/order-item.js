@@ -1,4 +1,4 @@
-/* global Backbone */
+/* global Backbone, _ */
 
 /**
  * OrderItem
@@ -48,4 +48,34 @@ export const OrderItem = Backbone.Model.extend( /** Lends Item.prototype */ {
 	 */
 	idAttribute: 'eddUid',
 
+	/**
+	 * @since 3.0
+	 */
+	getAmounts( { items, country, region, adjustments } ) {
+		const id = this.get( 'id' );
+		const priceId = this.get( 'priceId' );
+		const quantity = this.get( 'quantity' );
+		const ids = 0 === items.pluck( 'id' ).length
+			? [ id ]
+			: items.pluck( 'id' );
+		const discounts = _.pluck(
+			adjustments.getByType( 'discount' ),
+			'id'
+		);
+		
+		return wp.ajax.send(
+			'edd-admin-order-get-item-amounts', 
+			{
+				data: {
+					id,
+					ids,
+					priceId,
+					quantity,
+					country,
+					region,
+					discounts,
+				},
+			},
+		);
+	},
 } );

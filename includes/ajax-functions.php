@@ -1296,6 +1296,10 @@ function edd_admin_order_get_item_amounts() {
 		? sanitize_text_field( $_POST['id'] )
 		: 0;
 
+	$all_ids = isset( $_POST['ids'] )
+		? array_map( 'intval', $_POST['ids'] )
+		: array();
+
 	$price_id = isset( $_POST['priceId'] )
 		? sanitize_text_field( $_POST['priceId'] )
 		: 0;
@@ -1312,6 +1316,9 @@ function edd_admin_order_get_item_amounts() {
 		? sanitize_text_field( $tax['region'] )
 		: '';
 
+	$discounts = isset( $_POST['discounts'] )
+		? array_map( 'intval', $_POST['discounts'] )
+		: array();
 
 	$item = edd_get_download( $id );
 
@@ -1333,9 +1340,29 @@ function edd_admin_order_get_item_amounts() {
 			$tax = 0;
 		}
 
+		// Start with the base price and remove discounted amounts.
+		// @todo Create a function that returns the discount amount.
+		$discounted_amount = $amount;
+
+		foreach ( $discounts as $discount_id ) {
+			$valid = edd_validate_discount( $discount_id, $all_ids );
+
+			if ( false === $valid ) {
+				continue;
+			}
+
+			$discounted_amount -= edd_get_discounted_amount(
+				edd_get_discount_code( $discount_id ),
+				$amount
+			);
+		}
+
 		wp_send_json_success( array(
 			'subtotal' => $amount,
 			'amount'   => $amount,
+			'discount' => $discounted_amount === $amount
+				? 0
+				: $discounted_amount,
 			'tax'      => $tax,
 			'total'    => $amount + $tax,
 		) );

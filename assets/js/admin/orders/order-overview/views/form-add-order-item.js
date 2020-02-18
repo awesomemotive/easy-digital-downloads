@@ -169,61 +169,45 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 			priceId = parseInt( parts[1] );
 		}
 
-		// Find name.
-		const name = selected.text;
+		// Update basic attributes.
+		this.item.set( {
+			eddUid,
+			id,
+			priceId,
+			name: selected.text,
+		} );
 
-		// Request amounts from the server.
-		const quantity = this.item.get( 'quantity' );
-		const country = false !== state.get( 'hasTax' )
-			? state.get( 'hasTax' ).country
-			: '';
-		const region = false !== state.get( 'hasTax' )
-			? state.get( 'hasTax' ).region
-			: '';
-		
-		wp.ajax.send(
-			'edd-admin-order-get-item-amounts', 
-			{
-				data: {
-					id,
-					priceId,
-					quantity,
-					country,
-					region,
-				},
-				/**
-				 * Updates the OrderItem's attributes on successful retrieval.
-				 *
-				 * @since 3.0
-				 *
-				 * @param {Object} response AJAX response.
-				 */
-				success: ( response ) => {
-					const {
-						amount,
-						subtotal,
-						tax,
-					} = response;
+		// Update amount attributes.
+		this.item.getAmounts( {
+			country: state.getTaxCountry(),
+			region: state.getTaxRegion(),
+			items: state.get( 'items' ),
+			adjustments: state.get( 'adjustments' ),
+		} )
+			.done( ( response ) => {
+				const {
+					amount,
+					discount,
+					tax,
+					subtotal,
+					total,
+				} = response;
 
-					this.item.set( {
-						eddUid,
+				this.item.set( {
+					amount,
+					discount,
+					tax,
+					subtotal,
+					total,
 
-						id,
-						priceId,
-						name,
-						amount,
-						tax,
-						subtotal,
+					amountManual: number.format( amount ),
+					taxManual: number.format( tax ),
+					subtotalManual: number.format( subtotal ),
+				} );
 
-						amountManual: number.format( amount ),
-						taxManual: number.format( tax ),
-						subtotalManual: number.format( subtotal ),
-					} );
-
-					this.item.trigger( 'change:download' );
-				},
-			},
-		);
+				// Rerender once complete.
+				this.item.trigger( 'change:download' );
+			} );
 	},
 
 	/**
@@ -298,7 +282,13 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 
 		const {
 			item,
+			collection,
+			options,
 		} = this;
+
+		const {
+			state,
+		} = options;
 
 		// Use manual amounts if adjusting manually.
 		if ( true === item.get( 'isAdjustingManually' ) ) {
@@ -318,7 +308,19 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 			} );
 		}
 
-		// Add OrderItem to OrderItems.
-		this.collection.add( item );
+		// Update discount amount based on new amounts.
+		item.getAmounts( {
+			country: state.getTaxCountry(),
+			region: state.getTaxRegion(),
+			items: state.get( 'items' ),
+			adjustments: state.get( 'adjustments' ),
+		} )
+			.done( ( response ) => {
+				// Update Discount.
+				item.set( 'discount', response.discount );
+
+				// Add OrderItem to OrderItems.
+				collection.add( item );
+			} );
 	},
 } );
