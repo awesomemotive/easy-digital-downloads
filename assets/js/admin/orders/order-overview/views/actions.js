@@ -6,6 +6,7 @@
 import {
 	FormAddOrderItem,
 	FormAddOrderDiscount,
+	FormAddOrderAdjustment,
 } from './';
 
 /**
@@ -28,6 +29,7 @@ export const Actions = wp.Backbone.View.extend( /** Lends Actions.prototype */ {
 	events: {
 		'click #add-item': 'onAddOrderItem',
 		'click #add-discount': 'onAddOrderDiscount',
+		'click #add-adjustment': 'onAddOrderAdjustment',
 	},
 
 	/**
@@ -60,4 +62,18 @@ export const Actions = wp.Backbone.View.extend( /** Lends Actions.prototype */ {
 			.render();
 	},
 
+	/**
+	 * Renders the "Add Adjustment" flow.
+	 *
+	 * @since 3.0
+	 *
+	 * @param {Object} e Click event.
+	 */
+	onAddOrderAdjustment( e ) {
+		e.preventDefault();
+
+		new FormAddOrderAdjustment( this.options )
+			.openDialog()
+			.render();
+	},
 } );

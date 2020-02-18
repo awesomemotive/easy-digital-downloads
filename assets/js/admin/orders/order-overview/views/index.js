@@ -13,3 +13,4 @@ export * from './dialog.js';
 
 export * from './form-add-order-item.js';
 export * from './form-add-order-discount.js';
+export * from './form-add-order-adjustment.js';

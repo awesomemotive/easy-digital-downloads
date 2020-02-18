@@ -24,6 +24,7 @@ $discounts = edd_get_discounts( array(
 			<select
 				id="discount"
 				class="edd-select"
+				required
 			>
 				<option value=""><?php esc_html_e( 'Choose a discount', 'easy-digital-downloads' ); ?></option>
 				<?php
