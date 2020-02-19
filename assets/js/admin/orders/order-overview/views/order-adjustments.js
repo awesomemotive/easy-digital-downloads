@@ -82,7 +82,6 @@ export const OrderAdjustments = wp.Backbone.View.extend( /** Lends Adjustments.p
 		state.get( 'items' )
 			.updateAmounts()
 			.done( () => {
-				console.log('adding view' );
 				this.views.add(
 					new OrderAdjustment( {
 						...this.options,
