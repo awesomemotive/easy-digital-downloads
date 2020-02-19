@@ -41,9 +41,11 @@ $view_url = add_query_arg(
 			<span class="text"><strong><?php esc_html_e( 'Tax:', 'easy-digital-downloads' ); ?></strong> {{ data.taxCurrency }}</span> | 
 			<# } #>
 
+			<# if ( false === data.state.isAdding ) { #>
 			<button class="button-link">
 				<?php echo esc_html( 'Copy Download Link', 'easy-digital-downloads' ); ?>
 			</button>
+			<# } #>
 		</div>
 	</div>
 </td>
