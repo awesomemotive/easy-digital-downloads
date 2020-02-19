@@ -6,9 +6,16 @@
 import {
 	Dialog,
 } from './';
+
 import {
 	OrderAdjustment,
 } from './../models';
+
+import {
+	NumberFormat,
+} from '@easy-digital-downloads/currency';
+
+const number = new NumberFormat();
 
 /**
  * "Add Adjustment" view
@@ -18,7 +25,7 @@ import {
  * @class FormAddOrderAdjustment
  * @augments wp.Backbone.View
  */
-export const FormAddOrderAdjustment = Dialog.extend( /** Lends FormAddItem.prototype */ {
+export const FormAddOrderAdjustment = Dialog.extend( /** Lends FormAddOrderAdjustment.prototype */ {
 	/**
 	 * @since 3.0
 	 */
@@ -30,28 +37,41 @@ export const FormAddOrderAdjustment = Dialog.extend( /** Lends FormAddItem.proto
 	template: wp.template( 'edd-admin-order-form-add-order-adjustment' ),
 
 	/**
-	 * @since 3.0
-	 */
-	events: {
-		'submit form': 'onAdd',
-	},
-
-	/**
-	 * "Add Discount" view.
+	 * "Add Adjustment" view.
 	 *
 	 * @since 3.0
 	 *
 	 * @constructs FormAddOrderAdjustment
-	 * @augments wp.Backbone.View
+	 * @augments Dialog
 	 */
 	initialize() {
+		Dialog.prototype.initialize.apply( this, arguments );
+
+		// Set loading state.
+		this.loading = false;
+
+		// Delegate additional events.
+		this.addEvents( {
+			'change [name="type"]': 'onChangeType',
+			'keyup #amount': 'onChangeAmount',
+			'keyup #description': 'onChangeDescription',
+
+			'submit form': 'onAdd',
+		} );
+
 		// Assign collection from State.
 		this.collection = this.options.state.get( 'adjustments' );
 
-		Dialog.prototype.initialize.apply( this, arguments );
-
 		// Create a fresh OrderAdjustment to be added.
-		this.adjustment = new OrderAdjustment();
+		this.model = new OrderAdjustment( {
+			id: Math.random( 0, 999 ), // Create a unique ID so it can be added to the Collection.
+			type: 'fee',
+			amount: '',
+		} );
+
+		// Listen for events.
+		this.listenTo( this.model, 'change', this.render );
+		this.listenTo( this.collection, 'add', this.closeDialog );
 	},
 
 	/**
@@ -65,16 +85,88 @@ export const FormAddOrderAdjustment = Dialog.extend( /** Lends FormAddItem.proto
 	 * @return {Object} The data for this view.
 	 */
 	prepare() {
-		const {
-			adjustment,
-		} = this;
-
 		return {
-			...adjustment.toJSON(),
+			...this.model.toJSON(),
+
+			config: {
+				loading: this.loading,
+			}
 		};
 	},
 
 	/**
+	 * Updates the Adjustment when the Type changes.
+	 *
+	 * @since 3.0
+	 *
+	 * @param {Object} e Change event
+	 */
+	onChangeType( e ) {
+		const {
+			preventDefault,
+			target: {
+				value: type,
+			}
+		} = e;
+
+		preventDefault();
+
+		this.model.set( {
+			type,
+		} );
+	},
+
+	/**
+	 * Updates the Adjustment when the Description changes.
+	 *
+	 * @since 3.0
+	 *
+	 * @param {Object} e Change event
+	 */
+	onChangeDescription( e ) {
+		const {
+			preventDefault,
+			target: {
+				value: description,
+			}
+		} = e;
+
+		preventDefault();
+
+		this.model.set( {
+			description,
+		} );
+	},
+
+	/**
+	 * Updates the Adjustment when the Amount changes.
+	 *
+	 * @since 3.0
+	 *
+	 * @param {Object} e Change event
+	 */
+	onChangeAmount( e ) {
+		const {
+			preventDefault,
+			target: {
+				value: amount,
+			}
+		} = e;
+
+		preventDefault();
+
+		const amountNumber = number.unformat( amount );
+
+		this.model.set( {
+			amount,
+			subtotal: amountNumber,
+			total: amountNumber,
+		} );
+	},
+
+	/**
+	 * Adds an Adjustment to the Adjustments collection.
+	 *
 	 * @since 3.0
 	 *
 	 * @param {Object} e Submit event.
@@ -82,6 +174,6 @@ export const FormAddOrderAdjustment = Dialog.extend( /** Lends FormAddItem.proto
 	onAdd( e ) {
 		e.preventDefault();
 
-		this.collection.add( this.adjustment );
+		this.collection.add( this.model );
 	}
 } );
