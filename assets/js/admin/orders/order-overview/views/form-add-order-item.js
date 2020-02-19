@@ -6,11 +6,18 @@
 import {
 	Dialog,
 } from './';
+
 import {
 	OrderItem,
 } from './../models';
-import { getChosenVars } from 'utils/chosen.js';
-import { NumberFormat } from '@easy-digital-downloads/currency';
+
+import {
+	getChosenVars,
+} from 'utils/chosen.js';
+
+import {
+	NumberFormat,
+} from '@easy-digital-downloads/currency';
 
 const number = new NumberFormat();
 
@@ -75,6 +82,9 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 
 		// Rerender when Overview tax configuration has changed.
 		this.listenTo( this.options.state, 'change:hasTax', this.render );
+
+		// Close Dialog when a model is added.
+		this.listenTo( this.collection, 'add', this.closeDialog );
 	},
 
 	/**
