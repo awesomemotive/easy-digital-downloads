@@ -4,16 +4,13 @@
  * Internal dependencies
  */
 import {
+	Base,
 	Dialog,
 } from './';
 
 import {
 	OrderItem,
 } from './../models';
-
-import {
-	getChosenVars,
-} from 'utils/chosen.js';
 
 import {
 	NumberFormat,
@@ -57,16 +54,17 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 
 			'change #download': 'onChangeDownload',
 			'change #quantity': 'onChangeQuantity',
-			'change #amount': 'onChangeAmount',
-			'change #tax': 'onChangeTax',
-			'change #subtotal': 'onChangeSubtotal',
-			'change #auto-calculate' : 'onAutoCalculateToggle',
+			'change #auto-calculate': 'onAutoCalculateToggle',
+
+			'keyup #amount': 'onChangeAmount',
+			'keyup #tax': 'onChangeTax',
+			'keyup #subtotal': 'onChangeSubtotal',
 		} );
 
-		// Assign collection from State.
+		// Assign Collection from State.
 		this.collection = this.options.state.get( 'items' );
 
-		// Create a fresh OrderItem to be added.
+		// Create a fresh `OrderItem` to be added.
 		this.model = new OrderItem( {
 			amountManual: 0,
 			taxManual: 0,
@@ -90,47 +88,26 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 	 * @return {Object} The data for this view.
 	 */
 	prepare() {
-		const {
-			model,
-			options,
-		} = this;
+		const model = this.model;
+		const quantity = model.get( 'quantity' );
 
-		const {
-			state,
-		} = options;
+		let amount = model.get( 'amount' ) * quantity;
+		let tax = model.get( 'tax' ) * quantity;
+		let subtotal = model.get( 'subtotal' ) * quantity;
+
+		if ( true === model.get( 'isAdjustingManually' ) ) {
+			amount = model.get( 'amountManual' );
+			tax = model.get( 'taxManual' );
+			subtotal = model.get( 'subtotalManual' );
+		}
 
 		return {
-			...model.toJSON(),
+			...Base.prototype.prepare.apply( this ),
 
-			state: {
-				...state.toJSON(),
-			},
-
-			amountFormatted: number.format( model.get( 'amount' ) * model.get( 'quantity' ) ),
-			taxFormatted: number.format( model.get( 'tax' ) * model.get( 'quantity' ) ),
-			subtotalFormatted: number.format( model.get( 'subtotal' ) * model.get( 'quantity' ) ),
+			amountManual: number.format( amount ),
+			taxManual: number.format( tax ),
+			subtotalManual: number.format( subtotal ),
 		};
-	},
-
-	/**
-	 * Renders the view.
-	 *
-	 * @since 3.0
-	 *
-	 * @return {FormAddOrderItem} Current view.
-	 */
-	render() {
-		wp.Backbone.View.prototype.render.apply( this );
-
-		// Reinialize Chosen.js
-		this.$el.find( '.edd-select-chosen' ).each( function() {
-			$( this ).chosen( {
-				...getChosenVars( $( this ) ),
-				width: '100%',
-			} );
-		} );
-
-		return this;
 	},
 
 	/**
@@ -210,7 +187,7 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 	},
 
 	/**
-	 * Updates the OrderItem's quantity on change.
+	 * Updates the `OrderItem`'s when the Quantity changes.
 	 *
 	 * @since 3.0
 	 * @todo Validate.
@@ -222,7 +199,7 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 	},
 
 	/**
-	 * Updates the OrderItem's manually managed amount on change.
+	 * Updates the `OrderItem`'s when the manually managed Amount changes.
 	 *
 	 * @since 3.0
 	 *
@@ -233,7 +210,7 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 	},
 
 	/**
-	 * Updates the OrderItem's manually managed tax on change.
+	 * Updates the `OrderItem`'s when the manually managed Tax changes.
 	 *
 	 * @since 3.0
 	 *
@@ -244,7 +221,7 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 	},
 
 	/**
-	 * Updates the OrderItem's manually managed subtotal on change.
+	 * Updates the `OrderItem`'s when the manually managed Subtotal changes.
 	 *
 	 * @since 3.0
 	 *

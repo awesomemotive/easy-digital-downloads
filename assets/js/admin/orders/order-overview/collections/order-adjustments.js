@@ -9,23 +9,21 @@ import {
 } from './../models';
 
 /**
- * Adjustments
- *
- * Collection for Order Adjustments.
+ * Collection of `OrderAdjustment`s.
  *
  * @since 3.0
  *
  * @class Adjustments
  * @augments Backbone.Collection
  */
-export const Adjustments = Backbone.Collection.extend( /** @lends Adjustments.prototype */ {
+export const OrderAdjustments = Backbone.Collection.extend( /** @lends Adjustments.prototype */ {
 
 	/**
-	 * Adjustments collection.
+	 * Initializes the `OrderAdjustments` collection.
 	 *
 	 * @since 3.0
 	 *
-	 * @constructs Adjustments
+	 * @constructs OrderAdjustments
 	 * @augments Backbone.Collection
 	 */
 	initialize() {
@@ -33,10 +31,12 @@ export const Adjustments = Backbone.Collection.extend( /** @lends Adjustments.pr
 	},
 
 	/**
+	 * Determines which Model to use and instantiates it.
+	 *
 	 * @since 3.0
 	 *
 	 * @param {Object} attributes Model attributes.
-	 * @param {Object} options Model options?
+	 * @param {Object} options Model options.
 	 */
 	model( attributes, options ) {
 		switch ( attributes.type ) {
@@ -49,17 +49,16 @@ export const Adjustments = Backbone.Collection.extend( /** @lends Adjustments.pr
 	},
 
 	/**
-	 * Retrieve all adjustments of a certain type.
+	 * Returns a list of `OrderAdjustment`s by type.
 	 *
 	 * @since 3.0
 	 *
-	 * @param {string} type Type of adjustment to retrieve.
+	 * @param {string} type Type of adjustment to retrieve. `fee`, `credit`, or `discount`.
 	 * @return {Array} List of type-specific adjustments.
 	 */
 	getByType( type ) {
 		return this.where( {
 			type,
 		} );
-	}
-
+	},
 } );

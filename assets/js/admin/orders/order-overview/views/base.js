@@ -1,17 +1,25 @@
-/* global wp */
+/* global wp, _ */
 
 /**
  * WordPress dependencies
  */
-import { focus } from '@wordpress/dom';
-import { TAB } from '@wordpress/keycodes';
+import {
+	focus,
+} from '@wordpress/dom';
+
+/**
+ * Internal dependencies
+ */
+import {
+	getChosenVars,
+} from 'utils/chosen.js';
 
 // Set noconflict when using Lodash (@wordpress packages) and Underscores.
 // @todo Find a better place to set this up. Webpack?
 window.lodash = _.noConflict();
 
 /**
- * Base View
+ * Base
  *
  * Supplies additional functionality and helpers beyond
  * what is provided by `wp.Backbone.View`.
@@ -26,7 +34,7 @@ window.lodash = _.noConflict();
  */
 export const Base = wp.Backbone.View.extend( /** Lends Base.prototype */ {
 	/**
-	 * Defines base events to help maintain focus and caret.
+	 * Defines base events to help maintain focus and caret position.
 	 *
 	 * @since 3.0
 	 */
@@ -80,7 +88,8 @@ export const Base = wp.Backbone.View.extend( /** Lends Base.prototype */ {
 			preventDefault,
 		} = e;
 
-		if ( TAB !== keyCode ) {
+		// 9 = TAB
+		if ( 9 !== keyCode ) {
 			return;
 		}
 
@@ -139,14 +148,63 @@ export const Base = wp.Backbone.View.extend( /** Lends Base.prototype */ {
 	},
 
 	/**
-	 * Restores focus and caret position after render.
+	 * Prepares data to be used in `render` method.
+	 *
+	 * @since 3.0
+	 *
+	 * @see wp.Backbone.View
+	 * @link https://github.com/WordPress/WordPress/blob/master/wp-includes/js/wp-backbone.js
+	 *
+	 * @return {Object} The data for this view.
+	 */
+	prepare() {
+		return this.model
+			? {
+				...this.model.toJSON(),
+				state: this.options.state.toJSON(),
+			}
+			: {};
+	},
+
+	/**
+	 * Adds additional handling after initial render.
 	 *
 	 * @since 3.0
 	 */
 	render() {
 		wp.Backbone.View.prototype.render.apply( this );
 
+		this.initializeSelects();
+		this.setFocus();
+
+		return this;
+	},
+
+	/**
+	 * Reinitializes special <select> fields.
+	 *
+	 * @since 3.0
+	 */
+	initializeSelects() {
+		const selects = this.el.querySelectorAll( '.edd-select-chosen' );
+		
+		// Reinialize Chosen.js
+		_.each( selects, ( el ) => {
+			$( el ).chosen( {
+				...getChosenVars( $( el ) ),
+				width: '100%',
+			} );
+		} );
+	},
+
+	/**
+	 * Sets the focus and caret position.
+	 *
+	 * @since 3.0
+	 */
+	setFocus() {
 		const {
+			el,
 			focusedEl,
 			focusedElCaretPos,
 		} = this;
@@ -159,12 +217,12 @@ export const Base = wp.Backbone.View.extend( /** Lends Base.prototype */ {
 		// Convert full element in to a usable selector.
 		// We can't search for the actual HTMLElement because
 		// the DOM has since changed.
-		let selector = '' !== focusedEl.id
+		const selector = '' !== focusedEl.id
 			? `#${ focusedEl.id }`
 			: `[name="${ focusedEl.name }"]`;
 
 		// Focus element.
-		const elToFocus = this.el.querySelector( selector );
+		const elToFocus = el.querySelector( selector );
 		elToFocus.focus();
 
 		// Attempt to set the caret position.
@@ -176,7 +234,5 @@ export const Base = wp.Backbone.View.extend( /** Lends Base.prototype */ {
 				);
 			}
 		} catch ( error ) {}
-
-		return this;
 	},
 } );

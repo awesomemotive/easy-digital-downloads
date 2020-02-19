@@ -32,17 +32,11 @@ $discounts = edd_get_discounts( array(
 					foreach ( $discounts as $discount ) :
 				?>
 					<option
-						data-product-requirements="<?php echo esc_attr( implode( ',', $discount->get_product_reqs() ) ); ?>"
-						data-product-exclusions="<?php echo esc_attr( implode( ',', $discount->get_excluded_products() ) ); ?>"
-						data-product-condition="<?php echo esc_attr( $discount->product_condition ); ?>"
-						data-amount-type="<?php echo esc_attr( $discount->amount_type ); ?>"
-						data-amount="<?php echo esc_attr( $discount->amount ); ?>"
-						data-name="<?php echo esc_attr( $discount->name ); ?>"
 						data-code="<?php echo esc_attr( $discount->code ); ?>"
-						data-scope="<?php echo esc_attr( $discount->scope ); ?>"
-						data-status="<?php echo esc_attr( $discount->status ); ?>"
-						data-id="<?php echo esc_attr( $discount->id ); ?>"
 						value="<?php echo esc_attr( $discount->id ); ?>"
+						<# if ( data._selected ) { #>
+							selected
+						<# } #>
 					>
 						<?php echo esc_html( $discount->name ); ?>: <?php echo esc_html( $discount->code ); ?>
 					</option>

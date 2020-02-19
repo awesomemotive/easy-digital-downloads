@@ -1,4 +1,4 @@
-/* global wp, _ */
+/* global wp */
 
 /**
  * Internal dependencies
@@ -18,7 +18,7 @@ import {
 const number = new NumberFormat();
 
 /**
- * "Add Adjustment" view
+ * FormAddOrderAdjustment
  *
  * @since 3.0
  *
@@ -56,10 +56,10 @@ export const FormAddOrderAdjustment = Dialog.extend( /** Lends FormAddOrderAdjus
 			'submit form': 'onAdd',
 		} );
 
-		// Assign collection from State.
+		// Assign Collection from State.
 		this.collection = this.options.state.get( 'adjustments' );
 
-		// Create a fresh OrderAdjustment to be added.
+		// Create a fresh `OrderAdjustment` to be added.
 		this.model = new OrderAdjustment( {
 			id: Math.random( 0, 999 ), // Create a unique ID so it can be added to the Collection.
 			type: 'fee',
@@ -72,82 +72,42 @@ export const FormAddOrderAdjustment = Dialog.extend( /** Lends FormAddOrderAdjus
 	},
 
 	/**
-	 * Prepares data to be used in `render` method.
-	 *
-	 * @since 3.0
-	 *
-	 * @see wp.Backbone.View
-	 * @link https://github.com/WordPress/WordPress/blob/master/wp-includes/js/wp-backbone.js
-	 *
-	 * @return {Object} The data for this view.
-	 */
-	prepare() {
-		return {
-			...this.model.toJSON(),
-		};
-	},
-
-	/**
-	 * Updates the Adjustment when the Type changes.
+	 * Updates the `OrderAdjustment` when the Type changes.
 	 *
 	 * @since 3.0
 	 *
 	 * @param {Object} e Change event
 	 */
 	onChangeType( e ) {
-		const {
-			preventDefault,
-			target: {
-				value: type,
-			}
-		} = e;
-
-		preventDefault();
-
 		this.model.set( {
-			type,
+			type: e.target.value,
 		} );
 	},
 
 	/**
-	 * Updates the Adjustment when the Description changes.
+	 * Updates the `OrderAdjustment` when the Description changes.
 	 *
 	 * @since 3.0
 	 *
 	 * @param {Object} e Change event
 	 */
 	onChangeDescription( e ) {
-		const {
-			preventDefault,
-			target: {
-				value: description,
-			}
-		} = e;
-
-		preventDefault();
-
 		this.model.set( {
-			description,
+			description: e.target.value,
 		} );
 	},
 
 	/**
-	 * Updates the Adjustment when the Amount changes.
+	 * Updates the `OrderAdjustment` when the Amount changes.
 	 *
 	 * @since 3.0
 	 *
 	 * @param {Object} e Change event
 	 */
 	onChangeAmount( e ) {
-		const {
-			preventDefault,
-			target: {
-				value: amount,
-			}
-		} = e;
+		e.preventDefault();
 
-		preventDefault();
-
+		const amount = e.target.value;
 		const amountNumber = number.unformat( amount );
 
 		this.model.set( {
@@ -158,7 +118,7 @@ export const FormAddOrderAdjustment = Dialog.extend( /** Lends FormAddOrderAdjus
 	},
 
 	/**
-	 * Adds an Adjustment to the Adjustments collection.
+	 * Adds an `OrderAdjustment` to `OrderAdjustments`.
 	 *
 	 * @since 3.0
 	 *

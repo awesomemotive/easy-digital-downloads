@@ -130,9 +130,9 @@ export const Totals = wp.Backbone.View.extend( /** Lends Totals.prototype */ {
 		_.each( adjustments.models, ( adjustment ) => {
 			if ( [ 'discount', 'credit' ].includes( adjustment.get( 'type' ) ) ) {
 				return subtotal -= +adjustment.getTotal();
-			} else {
-				return subtotal += +adjustment.getTotal();
-			}
+			} 
+
+			return subtotal += +adjustment.getTotal();
 		} );
 
 		return subtotal;

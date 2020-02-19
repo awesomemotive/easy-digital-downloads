@@ -89,7 +89,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 
 		<# if ( true === data.isAdjustingManually ) { #>
 			<p>
-				<label for=""><?php esc_html_e( 'Unit Price', 'easy-digital-downloads' ); ?></label>
+				<label for="amount"><?php esc_html_e( 'Unit Price', 'easy-digital-downloads' ); ?></label>
 				<span class="edd-amount">
 					<?php if ( 'before' === $currency_position ) : ?>
 						<?php echo edd_currency_filter( '' ); ?>
@@ -98,7 +98,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 					<input
 						type="text"
 						id="amount"
-						value="{{ data.amountFormatted }}"
+						value="{{ data.amountManual }}"
 					/>
 
 					<?php if ( 'after' === $currency_position ) : ?>
@@ -109,7 +109,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 
 			<# if ( false !== data.state.hasTax ) { #>
 				<p>
-					<label for=""><?php esc_html_e( 'Tax', 'easy-digital-downloads' ); ?></label>
+					<label for="tax"><?php esc_html_e( 'Tax', 'easy-digital-downloads' ); ?></label>
 					<span class="edd-amount">
 						<?php if ( 'before' === $currency_position ) : ?>
 							<?php echo edd_currency_filter( '' ); ?>
@@ -118,7 +118,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 						<input
 							type="text"
 							id="tax"
-							value="{{ data.taxFormatted }}"
+							value="{{ data.taxManual }}"
 						/>
 
 						<?php if ( 'after' === $currency_position ) : ?>
@@ -129,7 +129,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 			<# } #>
 
 			<p>
-				<label for=""><?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></label>
+				<label for="subtotal"><?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></label>
 				<span class="edd-amount">
 					<?php if ( 'before' === $currency_position ) : ?>
 						<?php echo edd_currency_filter( '' ); ?>
@@ -138,7 +138,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 					<input
 						type="text"
 						id="subtotal"
-						value="{{ data.subtotalFormatted }}"
+						value="{{ data.subtotalManual }}"
 					/>
 
 					<?php if ( 'after' === $currency_position ) : ?>
