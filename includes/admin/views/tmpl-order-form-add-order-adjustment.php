@@ -24,7 +24,9 @@
 						id="fee"
 						name="type"
 						value="fee"
-						checked
+						<# if ( 'fee' === data.type ) { #>
+							checked
+						<# } #>
 					/>
 					<?php echo esc_html_e( 'Fee', 'easy-digital-downloads' ); ?>
 				</label>
@@ -37,6 +39,9 @@
 						id="credit"
 						name="type"
 						value="credit"
+						<# if ( 'credit' === data.type ) { #>
+							checked
+						<# } #>
 					/>
 					<?php echo esc_html_e( 'Credit', 'easy-digital-downloads' ); ?>
 				</label>
@@ -55,7 +60,7 @@
 				<input
 					type="text"
 					id="amount"
-					value="{{ data.amountFormatted }}"
+					value="{{ data.amount }}"
 					required
 				/>
 
@@ -77,11 +82,15 @@
 		</p>
 
 		<p class="submit">
+			<# if ( true === data.config.loading ) { #>
+				<span class="spinner is-active"></span>
+			<# } #>
 			<input
+				id="submit"
 				type="submit"
-				class="button button-primary edd-ml-auto"
+				class="button button-primary <# if ( false === data.config.loading ) { #>edd-ml-auto<# } #>"
 				value="<?php esc_html_e( 'Add Adjustment', 'easy-digital-downloads' ); ?>"
-				<# if ( '' === data.id ) { #>
+				<# if ( 0 === data.total ) { #>
 					disabled
 				<# } #>
 			/>

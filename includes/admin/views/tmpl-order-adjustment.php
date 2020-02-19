@@ -2,6 +2,8 @@
 /**
  * Order Overview: Adjustment
  *
+ * @todo Use a separate view for different types to avoid so many conditionals?
+ *
  * @package     EDD
  * @subpackage  Admin/Views
  * @copyright   Copyright (c) 2020, Sandhills Development, LLC
@@ -19,25 +21,32 @@ $view_url = edd_get_admin_url(
 
 <td></td>
 
-<th colspan="{{ data.config.colspan }}">
+<th class="column-name" colspan="{{ data.config.colspan }}">
+	<# if ( true === data.state.isAdding ) { #>
+	<button class="button-link delete" id="remove">
+		<span class="dashicons dashicons-no"></span>
+	</button>
+	<# } #>
+
 	<# if ( 'discount' === data.type ) { #>
 		<?php esc_html_e( 'Discount', 'easy-digital-downloads' ); ?>
 		<br />
 		<small>
 			<a href="<?php echo esc_url( $view_url ); ?>&discount={{ data.typeId }}">{{ data.description }}</a>
 		</small>
-	<# } else if ( 'credit' === data.type ) { #>
-		<?php esc_html_e( 'Order Credit', 'easy-digital-downloads' ); ?>
-		<br />
-		<small>
-			{{ data.description }}
-		</small>
 	<# } else { #>
-		<?php esc_html_e( 'Order Fee', 'easy-digital-downloads' ); ?>
-		<br />
-		<small>
-			{{ data.description }}
-		</small>
+		<# if ( 'credit' === data.type ) { #>
+			<?php esc_html_e( 'Order Credit', 'easy-digital-downloads' ); ?>
+		<# } else { #>
+			<?php esc_html_e( 'Order Fee', 'easy-digital-downloads' ); ?>
+		<# } #>
+
+		<# if ( '' !== data.description ) { #>
+			<br />
+			<small>
+				{{ data.description }}
+			</small>
+		<# } #>
 	<# } #>
 </th>
 
