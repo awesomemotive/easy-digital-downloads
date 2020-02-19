@@ -40,8 +40,13 @@ export const Totals = wp.Backbone.View.extend( /** Lends Totals.prototype */ {
 	 * @augments wp.Backbone.View
 	 */
 	initialize() {
+		const {
+			state,
+		} = this.options;
+
 		// Rerender when Items adds or removes an Item.
-		this.listenTo( this.options.state.get( 'items' ), 'add remove', this.render );
+		this.listenTo( state.get( 'items' ), 'add remove change', this.render );
+		this.listenTo( state.get( 'adjustments' ), 'add remove', this.render );
 
 		// Bind context.
 		this.getSubtotal = this.getSubtotal.bind( this );
@@ -109,17 +114,24 @@ export const Totals = wp.Backbone.View.extend( /** Lends Totals.prototype */ {
 	getSubtotal() {
 		let subtotal = 0;
 
+		const {
+			state,
+		} = this.options;
+
+		const items = state.get( 'items' );
+		const adjustments = state.get( 'adjustments' );
+
 		// Add all item subtotals.
-		_.each( this.options.state.get( 'items' ).models, ( item ) => {
+		_.each( items.models, ( item ) => {
 			return subtotal += +item.get( 'subtotal' )
 		} );
 
 		// Add or substract all adjustment subtotals.
-		_.each( this.options.state.get( 'adjustments' ).models, ( adjustment ) => {
-			if ( 'discount' === adjustment.get( 'type' ) || 'credit' === adjustment.get( 'type' ) ) {
-				return subtotal -= +adjustment.get( 'subtotal' )
+		_.each( adjustments.models, ( adjustment ) => {
+			if ( [ 'discount', 'credit' ].includes( adjustment.get( 'type' ) ) ) {
+				return subtotal -= +adjustment.getTotal();
 			} else {
-				return subtotal += +adjustment.get( 'subtotal' )
+				return subtotal += +adjustment.getTotal();
 			}
 		} );
 
