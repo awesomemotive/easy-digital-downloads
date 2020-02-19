@@ -34,6 +34,13 @@ export const OrderItem = wp.Backbone.View.extend( /** Lends Item.prototype */ {
 	},
 
 	/**
+	 * @since 3.0
+	 */
+	initialize() {
+		this.listenTo( this.model, 'change', this.render );
+	},
+
+	/**
 	 * Prepares data to be used in `render` method.
 	 *
 	 * @since 3.0

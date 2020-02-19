@@ -51,17 +51,18 @@ export const OrderItem = Backbone.Model.extend( /** Lends Item.prototype */ {
 	/**
 	 * @since 3.0
 	 */
-	getAmounts( { items, country, region, adjustments } ) {
+	getAmounts( {
+		itemIds = [],
+		discountIds = [],
+		country = '',
+		region = '',
+	} ) {
 		const id = this.get( 'id' );
 		const priceId = this.get( 'priceId' );
 		const quantity = this.get( 'quantity' );
-		const ids = 0 === items.pluck( 'id' ).length
-			? [ id ]
-			: items.pluck( 'id' );
-		const discounts = _.pluck(
-			adjustments.getByType( 'discount' ),
-			'id'
-		);
+
+		const ids = [ id, ...itemIds ];
+		const discounts = discountIds;
 		
 		return wp.ajax.send(
 			'edd-admin-order-get-item-amounts', 

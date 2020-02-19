@@ -31,18 +31,15 @@ export const OrderAdjustments = wp.Backbone.View.extend( /** Lends Adjustments.p
 	 */
 	initialize() {
 		const {
-			render,
-			onAdd,
-			options,
-		} = this;
-
-		const {
 			state,
-		} = options;
+		} = this.options;
 
-		this.listenTo( state.get( 'adjustments' ), 'add', onAdd );
-		this.listenTo( state.get( 'adjustments' ), 'remove', render );
-		this.listenTo( state.get( 'items' ), 'add remove', render );
+		const items = state.get( 'items' );
+		const adjustments = state.get( 'adjustments' );
+
+		this.listenTo( adjustments, 'add', this.onAdd );
+		this.listenTo( adjustments, 'remove', this.render );
+		this.listenTo( items, 'add remove', this.render );
 	},
 
 	/**
@@ -78,11 +75,20 @@ export const OrderAdjustments = wp.Backbone.View.extend( /** Lends Adjustments.p
 		// @todo Find a better way?
 		model.set( 'options', this.options );
 
-		this.views.add(
-			new OrderAdjustment( {
-				...this.options,
-				model,
-			} )
-		);
+		const {
+			state,
+		} = this.options;
+
+		state.get( 'items' )
+			.updateAmounts()
+			.done( () => {
+				console.log('adding view' );
+				this.views.add(
+					new OrderAdjustment( {
+						...this.options,
+						model,
+					} )
+				);
+			} );
 	}
 } );

@@ -23,7 +23,7 @@ const number = new NumberFormat();
  * @since 3.0
  *
  * @class FormAddOrderAdjustment
- * @augments wp.Backbone.View
+ * @augments Dialog
  */
 export const FormAddOrderAdjustment = Dialog.extend( /** Lends FormAddOrderAdjustment.prototype */ {
 	/**
@@ -46,9 +46,6 @@ export const FormAddOrderAdjustment = Dialog.extend( /** Lends FormAddOrderAdjus
 	 */
 	initialize() {
 		Dialog.prototype.initialize.apply( this, arguments );
-
-		// Set loading state.
-		this.loading = false;
 
 		// Delegate additional events.
 		this.addEvents( {
@@ -87,10 +84,6 @@ export const FormAddOrderAdjustment = Dialog.extend( /** Lends FormAddOrderAdjus
 	prepare() {
 		return {
 			...this.model.toJSON(),
-
-			config: {
-				loading: this.loading,
-			}
 		};
 	},
 
@@ -175,5 +168,5 @@ export const FormAddOrderAdjustment = Dialog.extend( /** Lends FormAddOrderAdjus
 		e.preventDefault();
 
 		this.collection.add( this.model );
-	}
+	},
 } );

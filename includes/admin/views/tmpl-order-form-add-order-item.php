@@ -79,7 +79,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 						); // WPCS: XSS okay.
 						?>
 						<# } else { #>
-						<?php esc_html_e( 'Select an address to calculate tax amounts', 'easy-digital-downloads' ); ?>
+						<?php esc_html_e( 'Set an address to calculate tax amounts', 'easy-digital-downloads' ); ?>
 						<# } #>
 					</small>
 					<# } #>

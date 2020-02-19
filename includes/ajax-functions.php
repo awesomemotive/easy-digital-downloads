@@ -1275,7 +1275,7 @@ function edd_ajax_get_tax_rate() {
 
 	$response = array();
 
-	$rate = edd_get_tax_rate( $country, $region );
+	$rate = edd_get_tax_rate( $country, $region, $fallback = false );
 
 	$response['tax_rate'] = $rate;
 	$response['prices_include_tax'] = (bool) edd_prices_include_tax();
@@ -1293,19 +1293,19 @@ function edd_admin_order_get_item_amounts() {
 	$tax = isset( $_POST['tax'] ) && false !== $_POST['tax'];
 
 	$id = isset( $_POST['id'] )
-		? sanitize_text_field( $_POST['id'] )
+		? intval( sanitize_text_field( $_POST['id'] ) )
 		: 0;
 
 	$all_ids = isset( $_POST['ids'] )
-		? array_map( 'intval', $_POST['ids'] )
+		? array_unique( array_map( 'intval', $_POST['ids'] ) )
 		: array();
 
 	$price_id = isset( $_POST['priceId'] )
-		? sanitize_text_field( $_POST['priceId'] )
+		? intval( sanitize_text_field( $_POST['priceId'] ) )
 		: 0;
 
 	$quantity = isset( $_POST['quantity'] )
-		? sanitize_text_field( $_POST['quantity'] )
+		? intval( sanitize_text_field( $_POST['quantity'] ) )
 		: 0;
 
 	$country = isset( $tax['country'] )
@@ -1317,7 +1317,7 @@ function edd_admin_order_get_item_amounts() {
 		: '';
 
 	$discounts = isset( $_POST['discounts'] )
-		? array_map( 'intval', $_POST['discounts'] )
+		? array_unique( array_map( 'intval', $_POST['discounts'] ) )
 		: array();
 
 	$item = edd_get_download( $id );
@@ -1334,37 +1334,49 @@ function edd_admin_order_get_item_amounts() {
 			}
 		}
 
-		if ( edd_use_taxes() ) {
-			$tax = edd_calculate_tax( $amount * $quantity, $country, $region );
+		$subtotal = $amount * $quantity;
+
+		$use_taxes = edd_use_taxes();
+		$tax_rate   = edd_get_tax_rate( $country, $region, $fallback = false );
+
+		if ( true === $use_taxes && 0 !== $tax_rate ) {
+			$tax = edd_calculate_tax( $subtotal, $country, $region );
 		} else { 
 			$tax = 0;
 		}
 
 		// Start with the base price and remove discounted amounts.
 		// @todo Create a function that returns the discount amount.
-		$discounted_amount = $amount;
+		$discounted_amount = $subtotal;
 
 		foreach ( $discounts as $discount_id ) {
-			$valid = edd_validate_discount( $discount_id, $all_ids );
+			$discount = edd_get_discount( $discount_id );
+			$valid    = edd_validate_discount( $discount->id, $all_ids );
 
 			if ( false === $valid ) {
 				continue;
 			}
 
-			$discounted_amount -= edd_get_discounted_amount(
-				edd_get_discount_code( $discount_id ),
-				$amount
-			);
+			$product_reqs = array_map( 'intval', $discount->get_product_reqs() );
+
+			if (
+				'global' !== $discount->get_scope() &&
+				! in_array( $id, $product_reqs, true )
+			) {
+				continue;
+			}
+
+			$discounted_amount -= $discount->get_discounted_amount( $subtotal );
 		}
 
 		wp_send_json_success( array(
-			'subtotal' => $amount,
+			'subtotal' => $subtotal,
 			'amount'   => $amount,
-			'discount' => $discounted_amount === $amount
+			'discount' => $discounted_amount === $subtotal
 				? 0
 				: $discounted_amount,
 			'tax'      => $tax,
-			'total'    => $amount + $tax,
+			'total'    => $subtotal + $tax,
 		) );
 	} else {
 
