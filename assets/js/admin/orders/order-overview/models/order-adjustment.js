@@ -3,23 +3,23 @@
 /**
  * OrderAdjustment
  *
- * A single Order Adjustment.
- *
  * @since 3.0
  *
  * @class OrderAdjustment
  * @augments Backbone.Model
  */
-export const OrderAdjustment = Backbone.Model.extend( /** Lends Adjustment.prototype */ {
+export const OrderAdjustment = Backbone.Model.extend( /** Lends OrderAdjustment.prototype */ {
 
 	/**
 	 * @since 3.0
+	 *
+	 * @typedef {Object} OrderAdjustment
 	 */
 	defaults: {
 		id: '',
 		objectId: '',
 		objectType: '',
-		type: '',
+		type: 'order',
 		typeId: 0,
 		description: '',
 		subtotal: 1,
@@ -35,10 +35,11 @@ export const OrderAdjustment = Backbone.Model.extend( /** Lends Adjustment.proto
 	idAttribute: 'typeId',
 
 	/**
+	 * Returns the `OrderAdjustment` total.
+	 *
 	 * @since 3.0
 	 */
 	getTotal() {
 		return this.get( 'total' );
-	}
-
+	},
 } );

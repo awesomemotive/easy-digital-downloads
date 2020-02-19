@@ -1,44 +1,39 @@
-/* global Backbone, _ */
+/* global Backbone */
 
 /**
  * Internal dependencies
  */
 import {
 	OrderAdjustment,
-	AdjustmentDiscount,
 } from './';
 
 /**
  * OrderAdjustmentDiscount
- *
- * A single Order Adjustment Discount.
  *
  * @since 3.0
  *
  * @class OrderAdjustmentDiscount
  * @augments Backbone.Model
  */
-export const OrderAdjustmentDiscount = OrderAdjustment.extend( /** Lends Adjustment.prototype */ {
+export const OrderAdjustmentDiscount = OrderAdjustment.extend( /** Lends OrderAdjustmentDiscount.prototype */ {
 
 	/**
 	 * @since 3.0
+	 *
+	 * @typedef {Object} OrderAdjustmentDiscount
 	 */
 	defaults: {
 		...OrderAdjustment.prototype.defaults,
-
-		objectType: 'order',
 		type: 'discount',
-
-		adjustment: new AdjustmentDiscount(),
 	},
 
 	/**
+	 * Returns the `OrderAdjustmentDiscount`'s total based on the current values
+	 * of all `OrderItems`.
+	 *
 	 * @since 3.0
-	 */
-	idAttribute: 'typeId',
-
-	/**
-	 * @since 3.0
+	 *
+	 * @return {number} `OrderAdjustmentDiscount` total.
 	 */
 	getTotal() {
 		let total = 0;
@@ -49,11 +44,10 @@ export const OrderAdjustmentDiscount = OrderAdjustment.extend( /** Lends Adjustm
 
 		const items = state.get( 'items' );
 
-		_.each( items.models, ( item ) => {
+		items.models.forEach( ( item ) => {
 			total += +item.get( 'discount' );
 		} );
 
 		return total;
-	}
-
+	},
 } );

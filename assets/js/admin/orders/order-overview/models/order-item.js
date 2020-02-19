@@ -3,17 +3,17 @@
 /**
  * OrderItem
  *
- * A single Order Item.
- *
  * @since 3.0
  *
  * @class OrderItem
  * @augments Backbone.Model
  */
-export const OrderItem = Backbone.Model.extend( /** Lends Item.prototype */ {
+export const OrderItem = Backbone.Model.extend( /** Lends OrderItem.prototype */ {
 
 	/**
 	 * @since 3.0
+	 *
+	 * @typedef {Object} OrderItem
 	 */
 	defaults: {
 		id: '',
@@ -37,25 +37,34 @@ export const OrderItem = Backbone.Model.extend( /** Lends Item.prototype */ {
 		// @example 9_1
 		eddUid: '',
 
-		// Determines if this Order Item has manually set amounts.
+		// Determines if this `OrderItem` has manually set amounts.
 		isAdjustingManually: false,
 	},
 
 	/**
-	 * Sets the unique identifer to the `eddUid` attribute.
+	 * Sets the Model's unique identifer to the `eddUid` attribute.
 	 *
 	 * @since 3.0
 	 */
 	idAttribute: 'eddUid',
 
 	/**
+	 * Retrieves amounts for the `OrderItem` based on other `OrderItem`s and `OrderAdjustment`s.
+	 *
 	 * @since 3.0
+	 *
+	 * @param {Object} args Arguments to pass as data in the XHR request.
+	 * @param {string} args.country Country code to determine tax rate.
+	 * @param {string} args.region Region to determine tax rate.
+	 * @param {Array} args.itemIds List of current `OrderItems`s.
+	 * @param {Array} args.discountIds List of `OrderAdjustmentDiscount`s to calculate amounts against.
+	 * @return {$.promise} A jQuery promise that represents the request.
 	 */
 	getAmounts( {
-		itemIds = [],
-		discountIds = [],
 		country = '',
 		region = '',
+		itemIds = [],
+		discountIds = [],
 	} ) {
 		const id = this.get( 'id' );
 		const priceId = this.get( 'priceId' );

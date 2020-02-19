@@ -1,4 +1,4 @@
-/* global wp, $ */
+/* global wp */
 
 /**
  * Internal dependencies
@@ -10,7 +10,7 @@ import {
 } from './';
 
 /**
- * Overview actions
+ * Actions
  *
  * @since 3.0
  *

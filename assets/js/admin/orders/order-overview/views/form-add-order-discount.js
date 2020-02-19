@@ -48,64 +48,23 @@ export const FormAddOrderDiscount = Dialog.extend( /** Lends FormAddItem.prototy
 	 * @augments wp.Backbone.View
 	 */
 	initialize() {
-		// Assign collection from State.
-		this.collection = this.options.state.get( 'adjustments' );
-
 		Dialog.prototype.initialize.apply( this, arguments );
 
-		// Create a fresh OrderAdjustmentDiscount to be added.
-		this.discount = new OrderAdjustmentDiscount();
+		// Assign Collection from State.
+		this.collection = this.options.state.get( 'adjustments' );
 
-		// Rerender when a Discount has changed.
-		this.listenTo( this.discount, 'change', this.render );
+		// Create a fresh `OrderAdjustmentDiscount` to be added.
+		this.model = new OrderAdjustmentDiscount( {
+			_selected: false,
+		} );
 
-		// Close Dialog when a model is added.
+		// Listen for events.
+		this.listenTo( this.model, 'change', this.render );
 		this.listenTo( this.collection, 'add', this.closeDialog );
 	},
 
 	/**
-	 * Prepares data to be used in `render` method.
-	 *
-	 * @since 3.0
-	 *
-	 * @see wp.Backbone.View
-	 * @link https://github.com/WordPress/WordPress/blob/master/wp-includes/js/wp-backbone.js
-	 *
-	 * @return {Object} The data for this view.
-	 */
-	prepare() {
-		const {
-			discount,
-		} = this;
-
-		return {
-			...discount.toJSON(),
-		};
-	},
-
-	/**
-	 * @since 3.0
-	 */
-	render() {
-		wp.Backbone.View.prototype.render.apply( this, arguments );
-
-		// Reselect Discount.
-		// @todo Use a separate view/model to manage this?
-		if ( 0 !== this.discount.get( 'typeId' ) ) {
-			this.$el
-				.find( `#discount option[value="${ this.discount.get( 'typeId' ) }"]` )
-				.prop( 'selected', true )
-
-			this.$el
-				.find( '#discount' )
-				.focus();
-		}
-
-		return this;
-	},
-
-	/**
-	 * Updates the OrderDiscounts's discount on change.
+	 * Updates the `OrderDiscounts` when the Discount changes.
 	 *
 	 * @since 3.0
 	 *
@@ -120,33 +79,43 @@ export const FormAddOrderDiscount = Dialog.extend( /** Lends FormAddItem.prototy
 			},
 		} = e;
 
+		const {
+			model,
+		} = this;
+
 		preventDefault();
 
 		const discount = options[ selectedIndex ];
 		const adjustment = discount.dataset;
 
 		if ( '' === discount.value ) {
-			return this.discount.set( OrderAdjustmentDiscount.prototype.defaults );
+			return model.set( OrderAdjustmentDiscount.prototype.defaults );
 		}
 
+		// @todo Find a better way to manage selection.
+		_.each( this.collection.models, ( d ) => d.set(
+			{
+				_selected: false,
+			}, {
+				silent: true,
+			}
+		) );
+
 		// Update Order Adjustment.
-		this.discount.set( {
+		model.set( {
 			// Set ID so it is unique
 			// @todo Investigate why idAttribute is not working on the model.
 			id: parseInt( discount.value ),
 			typeId: parseInt( discount.value ),
 			description: adjustment.code,
-		} );
 
-		// Update Adjustment with known information.
-		this.discount.get( 'adjustment' ).set( {
-			...adjustment,
-			productRequirements: _.without( adjustment.productRequirements.split( ',' ), '' ),
-			productExclusions: _.without( adjustment.productExclusions.split( ',' ), '' ),
+			_selected: true,
 		} );
 	},
 
 	/**
+	 * Adds an `OrderAdjustmentDiscount` to `OrderAdjustments`.
+	 *
 	 * @since 3.0
 	 *
 	 * @param {Object} e Submit event.
@@ -154,6 +123,6 @@ export const FormAddOrderDiscount = Dialog.extend( /** Lends FormAddItem.prototy
 	onAdd( e ) {
 		e.preventDefault();
 
-		this.collection.add( this.discount );
+		this.collection.add( this.model );
 	}
 } );

@@ -10,8 +10,8 @@ import {
 } from './views';
 
 import {
-	Items,
-	Adjustments,
+	OrderItems,
+	OrderAdjustments,
 } from './collections';
 
 import {
@@ -47,26 +47,20 @@ jQueryReady( () => {
 	} );
 
 	// Create collections and add to state.
-	const itemsCollection = new Items( items, {
-		state,
-	} );
-
-	const adjustmentsCollection = new Adjustments( adjustments, {
-		state,
-	} );
-
 	state.set( {
-		items: itemsCollection,
-		adjustments: adjustmentsCollection,
+		items: new OrderItems( items, {
+			state,
+		} ),
+		adjustments: new OrderAdjustments( adjustments, {
+			state,
+		} ),
 	} );
 
-	// Create the Overview.
+	// Create and render the Overview.
 	const overview = new Overview( {
 		state,
-	} );
-
-	// Render the Overview.
-	overview.render();
+	} )
+		.render();
 
 	/**
 	 * Adjusts Overview tax configuration when a region changes.
