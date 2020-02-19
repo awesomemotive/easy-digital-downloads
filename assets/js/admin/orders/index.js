@@ -2,9 +2,7 @@
  * Internal dependencies
  */
 import './order-overview';
-import './order-amounts';
 import './order-details';
-import './list-table.js';
 
 import { jQueryReady } from 'utils/jquery.js';
 

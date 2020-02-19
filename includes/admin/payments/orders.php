@@ -887,63 +887,6 @@ function edd_order_details_attributes( $order ) {
 }
 
 /**
- * Output the order details amounts box
- *
- * @since 3.0
- *
- * @param object $order
- */
-function edd_order_details_amounts( $order ) {
-?>
-
-	<div id="edd-order-amounts" class="postbox edd-order-data">
-		<h3 class="hndle"><span><?php esc_html_e( 'Order Amounts', 'easy-digital-downloads' ); ?></span></h3>
-
-		<div class="inside">
-			<div class="edd-order-update-box edd-admin-box">
-				<?php do_action( 'edd_view_order_details_totals_before', $order->id ); ?>
-
-				<div class="edd-order-subtotal edd-admin-box-inside">
-					<span class="label"><?php esc_html_e( 'Subtotal', 'easy-digital-downloads' ); ?>:</span><?php
-					echo esc_html( edd_currency_symbol( $order->currency ) );
-					?><span class="value"><?php echo esc_attr( edd_format_amount( $order->subtotal ) ); ?></span>
-				</div>
-
-				<div class="edd-order-discounts edd-admin-box-inside">
-					<span class="label"><?php esc_html_e( 'Discount', 'easy-digital-downloads' ); ?>:</span><?php
-					echo esc_html( edd_currency_symbol( $order->currency ) );
-					?><span class="value"><?php echo esc_attr( edd_format_amount( $order->discount ) ); ?></span>
-				</div>
-
-				<div class="edd-order-adjustments edd-admin-box-inside">
-					<span class="label"><?php esc_html_e( 'Adjustments', 'easy-digital-downloads' ); ?>:</span><?php
-					echo esc_html( edd_currency_symbol( $order->currency ) );
-					?><span class="value"><?php echo esc_attr( edd_format_amount( $order->discount ) ); ?></span>
-				</div>
-
-				<?php if ( edd_use_taxes() ) : ?>
-					<div class="edd-order-taxes edd-admin-box-inside">
-						<span class="label"><?php esc_html_e( 'Tax', 'easy-digital-downloads' ); ?>:</span><?php
-						echo esc_html( edd_currency_symbol( $order->currency ) );
-						?><span class="value"><?php echo esc_attr( edd_format_amount( $order->tax ) ); ?></span>
-					</div>
-				<?php endif; ?>
-
-				<div class="edd-order-total edd-admin-box-inside">
-					<span class="label"><?php esc_html_e( 'Total', 'easy-digital-downloads' ); ?>:</span><?php
-					echo esc_html( edd_currency_symbol( $order->currency ) );
-					?><span class="value"><?php echo esc_attr( edd_format_amount( $order->total ) ); ?></span>
-				</div>
-
-				<?php do_action( 'edd_view_order_details_totals_after', $order->id ); ?>
-			</div>
-		</div>
-	</div>
-
-<?php
-}
-
-/**
  * Output the order details refunds box
  *
  * @since 3.0

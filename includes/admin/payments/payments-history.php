@@ -150,7 +150,6 @@ function edd_payment_history_page() {
  */
 function edd_order_list_table_content() {
 	require_once EDD_PLUGIN_DIR . 'includes/admin/payments/class-payments-table.php';
-	require_once EDD_PLUGIN_DIR . 'includes/admin/payments/class-order-items-table.php';
 	$orders_table = new EDD_Payment_History_Table();
 	$orders_table->prepare_items();
 
