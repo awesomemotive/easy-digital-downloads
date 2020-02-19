@@ -6,6 +6,7 @@
 import {
 	Dialog,
 } from './';
+
 import {
 	OrderAdjustmentDiscount,
 } from './../models';
@@ -57,6 +58,9 @@ export const FormAddOrderDiscount = Dialog.extend( /** Lends FormAddItem.prototy
 
 		// Rerender when a Discount has changed.
 		this.listenTo( this.discount, 'change', this.render );
+
+		// Close Dialog when a model is added.
+		this.listenTo( this.collection, 'add', this.closeDialog );
 	},
 
 	/**

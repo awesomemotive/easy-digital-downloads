@@ -1,6 +1,13 @@
 /* global wp */
 
 /**
+ * Internal dependencies
+ */
+import {
+	Base,
+} from './';
+
+/**
  * "Dialog" view
  *
  * @since 3.0
@@ -8,8 +15,7 @@
  * @class Dialog
  * @augments wp.Backbone.View
  */
-export const Dialog = wp.Backbone.View.extend( /** Lends FormAddItem.prototype */ {
-
+export const Dialog = Base.extend( /** Lends Dialog.prototype */ {
 	/**
 	 * "Dialog" view.
 	 *
@@ -30,9 +36,6 @@ export const Dialog = wp.Backbone.View.extend( /** Lends FormAddItem.prototype *
 			draggable: false,
 			autoOpen: false,
 		} );
-
-		// Automatically close dialog when an OrderItem is added.
-		this.listenTo( this.collection, 'add', this.closeDialog );
 	},
 
 	/**
