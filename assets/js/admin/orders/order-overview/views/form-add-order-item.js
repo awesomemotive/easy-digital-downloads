@@ -27,7 +27,7 @@ const number = new NumberFormat();
  * @since 3.0
  *
  * @class FormAddOrderItem
- * @augments wp.Backbone.View
+ * @augments Dialog
  */
 export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype */ {
 	/**
@@ -41,20 +41,6 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 	template: wp.template( 'edd-admin-order-form-add-order-item' ),
 
 	/**
-	 * @since 3.0
-	 */
-	events: {
-		'submit form': 'onAdd',
-
-		'change #download': 'onChangeDownload',
-		'change #quantity': 'onChangeQuantity',
-		'change #amount': 'onChangeAmount',
-		'change #tax': 'onChangeTax',
-		'change #subtotal': 'onChangeSubtotal',
-		'change #auto-calculate' : 'onAutoCalculateToggle',
-	},
-
-	/**
 	 * "Add Item" view.
 	 *
 	 * @since 3.0
@@ -63,27 +49,33 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 	 * @augments wp.Backbone.View
 	 */
 	initialize() {
+		Dialog.prototype.initialize.apply( this, arguments );
+
+		// Delegate additional events.
+		this.addEvents( {
+			'submit form': 'onAdd',
+
+			'change #download': 'onChangeDownload',
+			'change #quantity': 'onChangeQuantity',
+			'change #amount': 'onChangeAmount',
+			'change #tax': 'onChangeTax',
+			'change #subtotal': 'onChangeSubtotal',
+			'change #auto-calculate' : 'onAutoCalculateToggle',
+		} );
+
 		// Assign collection from State.
 		this.collection = this.options.state.get( 'items' );
 
-		Dialog.prototype.initialize.apply( this, arguments );
-
 		// Create a fresh OrderItem to be added.
-		// Defines additional attributes that the view can modify.
-		this.item = new OrderItem( {
+		this.model = new OrderItem( {
 			amountManual: 0,
 			taxManual: 0,
 			subtotalManual: 0,
 		} );
 
-		// Rerender on Download or Autocalculate changes.
-		this.listenTo( this.item, 'change:isAdjustingManually', this.render );
-		this.listenTo( this.item, 'change:download', this.render );
-
-		// Rerender when Overview tax configuration has changed.
+		// Listen for events.
+		this.listenTo( this.model, 'change', this.render );
 		this.listenTo( this.options.state, 'change:hasTax', this.render );
-
-		// Close Dialog when a model is added.
 		this.listenTo( this.collection, 'add', this.closeDialog );
 	},
 
@@ -99,7 +91,7 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 	 */
 	prepare() {
 		const {
-			item,
+			model,
 			options,
 		} = this;
 
@@ -108,15 +100,15 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 		} = options;
 
 		return {
-			...item.toJSON(),
+			...model.toJSON(),
 
 			state: {
 				...state.toJSON(),
 			},
 
-			amountFormatted: number.format( item.get( 'amount' ) * item.get( 'quantity' ) ),
-			taxFormatted: number.format( item.get( 'tax' ) * item.get( 'quantity' ) ),
-			subtotalFormatted: number.format( item.get( 'subtotal' ) * item.get( 'quantity' ) ),
+			amountFormatted: number.format( model.get( 'amount' ) * model.get( 'quantity' ) ),
+			taxFormatted: number.format( model.get( 'tax' ) * model.get( 'quantity' ) ),
+			subtotalFormatted: number.format( model.get( 'subtotal' ) * model.get( 'quantity' ) ),
 		};
 	},
 
@@ -180,7 +172,7 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 		}
 
 		// Update basic attributes.
-		this.item.set( {
+		this.model.set( {
 			eddUid,
 			id,
 			priceId,
@@ -188,13 +180,13 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 		} );
 
 		// Update amount attributes.
-		this.item.getAmounts( {
+		this.model.getAmounts( {
 			country: state.getTaxCountry(),
 			region: state.getTaxRegion(),
 			items: state.get( 'items' ),
 			adjustments: state.get( 'adjustments' ),
 		} )
-			.done( ( response ) => {
+			.then( ( response ) => {
 				const {
 					amount,
 					discount,
@@ -203,7 +195,7 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 					total,
 				} = response;
 
-				this.item.set( {
+				this.model.set( {
 					amount,
 					discount,
 					tax,
@@ -214,9 +206,6 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 					taxManual: number.format( tax ),
 					subtotalManual: number.format( subtotal ),
 				} );
-
-				// Rerender once complete.
-				this.item.trigger( 'change:download' );
 			} );
 	},
 
@@ -229,7 +218,7 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 	 * @param {Object} e Change event.
 	 */
 	onChangeQuantity( e ) {
-		this.item.set( 'quantity', parseInt( e.target.value ) );
+		this.model.set( 'quantity', parseInt( e.target.value ) );
 	},
 
 	/**
@@ -240,7 +229,7 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 	 * @param {Object} e Change event.
 	 */
 	onChangeAmount( e ) {
-		this.item.set( 'amountManual', e.target.value );
+		this.model.set( 'amountManual', e.target.value );
 	},
 
 	/**
@@ -251,7 +240,7 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 	 * @param {Object} e Change event.
 	 */
 	onChangeTax( e ) {
-		this.item.set( 'taxManual', e.target.value );
+		this.model.set( 'taxManual', e.target.value );
 	},
 
 	/**
@@ -262,7 +251,7 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 	 * @param {Object} e Change event.
 	 */
 	onChangeSubtotal( e ) {
-		this.item.set( 'subtotalManual', e.target.value );
+		this.model.set( 'subtotalManual', e.target.value );
 	},
 
 	/**
@@ -275,7 +264,7 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 	onAutoCalculateToggle( e ) {
 		e.preventDefault();
 
-		this.item.set( {
+		this.model.set( {
 			isAdjustingManually: ! e.target.checked,
 		} );
 	},
@@ -291,7 +280,7 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 		e.preventDefault();
 
 		const {
-			item,
+			model,
 			collection,
 			options,
 		} = this;
@@ -301,36 +290,36 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 		} = options;
 
 		// Use manual amounts if adjusting manually.
-		if ( true === item.get( 'isAdjustingManually' ) ) {
-			item.set( {
-				amount: number.unformat( item.get( 'amountManual' ) ),
-				tax: number.unformat( item.get( 'taxManual' ) ),
-				subtotal: number.unformat( item.get( 'subtotalManual' ) ),
+		if ( true === model.get( 'isAdjustingManually' ) ) {
+			model.set( {
+				amount: number.unformat( model.get( 'amountManual' ) ),
+				tax: number.unformat( model.get( 'taxManual' ) ),
+				subtotal: number.unformat( model.get( 'subtotalManual' ) ),
 			} );
 
-		// Duplicate base amounts by the quantity set.
+			// Duplicate base amounts by the quantity set.
 		} else {
-			const quantity = item.get( 'quantity' );
+			const quantity = model.get( 'quantity' );
 
-			item.set( {
-				tax: item.get( 'tax' ) * quantity,
-				subtotal: item.get( 'subtotal' ) * quantity,
+			model.set( {
+				tax: model.get( 'tax' ) * quantity,
+				subtotal: model.get( 'subtotal' ) * quantity,
 			} );
 		}
 
 		// Update discount amount based on new amounts.
-		item.getAmounts( {
+		model.getAmounts( {
 			country: state.getTaxCountry(),
 			region: state.getTaxRegion(),
 			items: state.get( 'items' ),
 			adjustments: state.get( 'adjustments' ),
 		} )
-			.done( ( response ) => {
+			.then( ( response ) => {
 				// Update Discount.
-				item.set( 'discount', response.discount );
+				model.set( 'discount', response.discount );
 
 				// Add OrderItem to OrderItems.
-				collection.add( item );
+				collection.add( model );
 			} );
 	},
 } );

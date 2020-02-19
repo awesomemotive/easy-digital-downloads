@@ -82,13 +82,10 @@
 		</p>
 
 		<p class="submit">
-			<# if ( true === data.config.loading ) { #>
-				<span class="spinner is-active"></span>
-			<# } #>
 			<input
 				id="submit"
 				type="submit"
-				class="button button-primary <# if ( false === data.config.loading ) { #>edd-ml-auto<# } #>"
+				class="button button-primary"
 				value="<?php esc_html_e( 'Add Adjustment', 'easy-digital-downloads' ); ?>"
 				<# if ( 0 === data.total ) { #>
 					disabled

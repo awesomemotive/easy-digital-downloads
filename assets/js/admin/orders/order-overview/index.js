@@ -37,13 +37,6 @@ jQueryReady( () => {
 		adjustments,
 	} = eddAdminOrderOverview;
 
-	// Create collections.
-	const itemsCollection = new Items();
-	itemsCollection.set( items );
-
-	const adjustmentsCollection = new Adjustments();
-	adjustmentsCollection.set( adjustments );
-
 	// Create and hydrate state.
 	const state = new State( {
 		isAdding: '1' === isAdding,
@@ -51,6 +44,18 @@ jQueryReady( () => {
 			? false
 			: hasTax,
 		hasQuantity: '1' === hasQuantity,
+	} );
+
+	// Create collections and add to state.
+	const itemsCollection = new Items( items, {
+		state,
+	} );
+
+	const adjustmentsCollection = new Adjustments( adjustments, {
+		state,
+	} );
+
+	state.set( {
 		items: itemsCollection,
 		adjustments: adjustmentsCollection,
 	} );

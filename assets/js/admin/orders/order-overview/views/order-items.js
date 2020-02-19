@@ -32,6 +32,7 @@ export const OrderItems = wp.Backbone.View.extend( /** Lends Items.prototype */ 
 	initialize() {
 		this.listenTo( this.options.state.get( 'items' ), 'add', this.onAdd );
 		this.listenTo( this.options.state.get( 'items' ), 'remove', this.render );
+		this.listenTo( this.options.state.get( 'adjustments' ), 'remove', this.onRemoveAdjustment );
 	},
 
 	/**
@@ -69,5 +70,18 @@ export const OrderItems = wp.Backbone.View.extend( /** Lends Items.prototype */ 
 				model,
 			} )
 		);
-	}
+	},
+
+	/**
+	 * @since 3.0
+	 */
+	onRemoveAdjustment() {
+		const {
+			state,
+		} = this.options;
+
+		state.get( 'items' )
+			.updateAmounts()
+			.done( () => this.render );
+	},
 } );

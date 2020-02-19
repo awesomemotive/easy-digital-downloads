@@ -1,4 +1,4 @@
-/* global wp */
+/* global wp, _ */
 
 /**
  * Internal dependencies
@@ -82,6 +82,22 @@ export const OrderAdjustment = wp.Backbone.View.extend( /** Lends Adjustment.pro
 	onDelete( e ) {
 		e.preventDefault();
 
-		this.options.state.get( 'adjustments' ).remove( this.model );
+		const {
+			state,
+		} = this.options;
+
+		state.get( 'items' )
+			.updateAmounts( {
+				// Remove the current Discount when finding new amounts.
+				discountIds: _.reject(
+					state.get( 'adjustments' ).pluck( 'id' ),
+					{
+						id: this.model.get( 'id' ),
+					}
+				),
+			} )
+			.done( () => {
+				state.get( 'adjustments' ).remove( this.model );
+			} );
 	},
 } );

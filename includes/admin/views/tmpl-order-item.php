@@ -34,11 +34,11 @@ $view_url = add_query_arg(
 
 		<div class="row-actions">
 			<# if ( data.discount > 0 ) { #>
-			<span class="text"><strong><?php esc_html_e( 'Discount:', 'easy-digital-downloads' ); ?></strong> {{ data.discountCurrency }}</span> | 
+			<span class="text"><strong><?php esc_html_e( 'Discount:', 'easy-digital-downloads' ); ?></strong> {{ data.discountCurrency }}</span>
 			<# } #>
 
 			<# if ( false !== data.state.hasTax && data.tax > 0 ) { #>
-			<span class="text"><strong><?php esc_html_e( 'Tax:', 'easy-digital-downloads' ); ?></strong> {{ data.taxCurrency }}</span> | 
+			<span class="text"><strong><?php esc_html_e( 'Tax:', 'easy-digital-downloads' ); ?></strong> {{ data.taxCurrency }}</span>
 			<# } #>
 
 			<# if ( false === data.state.isAdding ) { #>
