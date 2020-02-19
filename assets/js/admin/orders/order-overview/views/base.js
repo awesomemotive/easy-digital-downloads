@@ -31,8 +31,8 @@ export const Base = wp.Backbone.View.extend( /** Lends Base.prototype */ {
 	 * @since 3.0
 	 */
 	events: {
-		'keydown input': 'handleTabBehavior',
-		'keydown textarea': 'handleTabBehavior',
+		'keyup input': 'handleTabBehavior',
+		'keyup textarea': 'handleTabBehavior',
 
 		'change input': 'onChange',
 		'change textarea': 'onChange',

@@ -635,6 +635,10 @@ table.edd-order-overview-summary {
 .edd-order-overview-summary__adjustments th.column-name .delete {
 	position: absolute;
 	left:  -40px;
+	top: 50%;
+	margin-top: -15px;
+	padding-top: 5px;
+	padding-bottom: 5px;
 }
 
 /** Actions */
@@ -680,6 +684,9 @@ table.edd-order-overview-summary {
 	border-top: 1px solid #dfdfdf;
 	display: flex;
 	align-items: center;
+}
+.edd-order-overview-modal form .submit .spinner {
+	margin: 0 10px 0 auto;
 }
 
 .edd-order-overview-add-item [for="auto-calculate"] {
