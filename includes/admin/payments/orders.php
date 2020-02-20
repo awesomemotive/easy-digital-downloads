@@ -577,6 +577,7 @@ function edd_order_details_overview( $order ) {
 		'totals',
 		'item',
 		'adjustment',
+		'adjustment-discount',
 		'form-add-order-item',
 		'form-add-order-discount',
 		'form-add-order-adjustment',
