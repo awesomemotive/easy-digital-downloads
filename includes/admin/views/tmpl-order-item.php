@@ -42,9 +42,11 @@ $view_url = add_query_arg(
 			<# } #>
 
 			<# if ( false === data.state.isAdding ) { #>
-			<button class="button-link">
-				<?php echo esc_html( 'Copy Download Link', 'easy-digital-downloads' ); ?>
-			</button>
+			<span>
+				<button class="button-link">
+					<?php echo esc_html( 'Copy Download Link', 'easy-digital-downloads' ); ?>
+				</button>
+			</span>
 			<# } #>
 		</div>
 	</div>
