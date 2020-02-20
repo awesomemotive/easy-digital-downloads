@@ -11,15 +11,14 @@ const numberFormatter = require( 'locutus/php/strings/number_format' );
  * @class NumberFormat
  */
 export const NumberFormat = class NumberFormat {
-
 	/**
 	 * Creates configuration for number formatting.
 	 *
 	 * @todo Validate configuration.
 	 * @since 3.0
+	 * @param {Object} config Configuration for the number formatter.
 	 * @param {number} [config.decimalPlaces=edd_vars.currency_decimals] The number of decimals places to format to.
 	 * @param {string} [config.decimalSeparator=edd_vars.decimal_separator] The separator between the number and decimal.
-	 * @param config
 	 * @param {string} [config.thousandsSeparator=edd_vars.thousands_separator] Thousands separator.
 	 */
 	constructor( config = {} ) {
@@ -34,7 +33,7 @@ export const NumberFormat = class NumberFormat {
 			decimalSeparator,
 			thousandSeparator,
 			...config,
-		}
+		};
 	}
 
 	/**
@@ -55,11 +54,7 @@ export const NumberFormat = class NumberFormat {
 			number = '0';
 		}
 
-		const {
-			precision,
-			decimalSeparator,
-			thousandSeparator
-		} = this.config;
+		const { precision, decimalSeparator, thousandSeparator } = this.config;
 
 		return numberFormatter(
 			number,
@@ -79,10 +74,7 @@ export const NumberFormat = class NumberFormat {
 	 * @return {number} 0 If number cannot be unformatted properly.
 	 */
 	unformat( number ) {
-		const {
-			decimalSeparator,
-			thousandSeparator
-		} = this.config;
+		const { decimalSeparator, thousandSeparator } = this.config;
 
 		if ( 'string' !== typeof number ) {
 			number = String( number );
@@ -97,9 +89,6 @@ export const NumberFormat = class NumberFormat {
 
 		const parsed = parseFloat( unformatted );
 
-		return isNaN( parsed )
-			? 0
-			: parsed;
+		return isNaN( parsed ) ? 0 : parsed;
 	}
-
-}
+};
