@@ -43,6 +43,11 @@ function edd_add_manual_order( $args = array() ) {
 	// Parse args.
 	$data = wp_parse_args( $args, array(
 		'downloads'               => array(),
+		'adjustments'             => array(),
+		'subtotal'                => 0.00,
+		'tax'                     => 0.00,
+		'total'                   => 0.00,
+		'discount'                => 0.00,
 		'edd-payment-status'      => 'complete',
 		'payment_key'             => '',
 		'gateway'                 => '',
@@ -144,12 +149,6 @@ function edd_add_manual_order( $args = array() ) {
 		$customer->attach_payment( $order_id, false );
 	}
 
-	// Declare variables to store amounts for the order.
-	$order_subtotal = 0.00;
-	$total_tax      = 0.00;
-	$total_discount = 0.00;
-	$order_total    = 0.00;
-
 	/** Insert order address **************************************************/
 
 	if ( isset( $data['edd_order_address'] ) ) {
@@ -197,9 +196,6 @@ function edd_add_manual_order( $args = array() ) {
 				continue;
 			}
 
-			$discount = 0.00;
-			$tax      = 0.00;
-
 			// Quantity.
 			$quantity = isset( $download['quantity'] )
 				? absint( $download['quantity'] )
@@ -210,59 +206,34 @@ function edd_add_manual_order( $args = array() ) {
 				? absint( $download['price_id'] )
 				: false;
 
-			// Fetch variable price.
-			if ( $d->has_variable_prices() && false !== $price_id ) {
-				$prices = $d->get_prices();
+			// Amounts.
+			$amounts  = array(
+				'amount',
+				'subtotal',
+				'discount',
+				'tax',
+				'total'
+			);
 
-				if ( isset( $prices[ $price_id ] ) ) {
-					$amount = $prices[ $price_id ]['amount'];
-				} else {
-					$amount   = edd_get_lowest_price_option( $d->ID );
-					$price_id = edd_get_lowest_price_id( $d->ID );
-				}
+			$amount = isset( $download[ 'amount' ] )
+				? sanitize_text_field( $download[ 'amount' ] )
+				: 0.00;
 
-			// Fetch flat price.
-			} else {
-				$amount = $d->get_price();
-			}
+			$subtotal = isset( $download[ 'subtotal' ] )
+				? sanitize_text_field( $download[ 'subtotal' ] )
+				: 0.00;
 
-			$amount   = isset( $data['edd_add_order_override'] )
-				? floatval( $download['total'] )
-				: floatval( $amount );
-			$subtotal = floatval( $amount * $quantity );
+			$discount = isset( $download[ 'discount' ] )
+				? sanitize_text_field( $download[ 'discount' ] )
+				: 0.00;
 
-			// Apply percent discounts.
-			if ( isset( $data['adjustments']['discount'] ) ) {
-				$discounts = wp_filter_object_list( $data['adjustments']['discount'], array( 'type' => 'percent' ) );
+			$tax = isset( $download[ 'tax' ] )
+				? sanitize_text_field( $download[ 'tax' ] )
+				: 0.00;
 
-				if ( ! empty( $discounts ) ) {
-					foreach ( $discounts as $discount ) {
-						$dis = edd_get_discount( absint( $discount['id'] ) );
-
-						// Skip if discount not found.
-						if ( empty( $dis ) ) {
-							continue;
-						}
-
-						$discount = $subtotal * ( $dis->amount / 100 );
-					}
-				}
-			}
-
-			if ( edd_use_taxes() ) {
-				$tax = edd_prices_include_tax()
-					? 0.00
-					: edd_calculate_tax( $subtotal - $discount, $address['country'], $address['region'] );
-
-				$tax = isset( $data['edd_add_order_override'] )
-					? floatval( $download['tax'] )
-					: $tax;
-			}
-
-			// Calculate total.
-			$total = isset( $data['edd_add_order_override'] )
-				? $download['total']
-				: floatval( $subtotal - $discount + $tax );
+			$total = isset( $download[ 'total' ] )
+				? sanitize_text_field( $download[ 'total' ] )
+				: 0.00;
 
 			// Add to edd_order_items table.
 			edd_add_order_item( array(
@@ -284,67 +255,49 @@ function edd_add_manual_order( $args = array() ) {
 			// Increase the earnings for this download.
 			edd_increase_earnings( absint( $download['id'] ), $total );
 			edd_increase_purchase_count( absint( $download['id'] ), $quantity );
-
-			// Update running totals.
-			$order_subtotal += $subtotal;
-			$total_tax      += $tax;
-			$total_discount += $discount;
-			$order_total    += $total;
 		}
 	}
 
 	/** Insert adjustments ****************************************************/
 
-	// Credit needs to be applied first.
-	if ( ! empty( $data['adjustments']['credit'] ) ) {
-		foreach ( $data['adjustments']['credit'] as $adjustment ) {
+	$adjustments = array();
+
+	// Adjustments.
+	if ( isset( $data['adjustments'] ) ) {
+		foreach ( $data['adjustments'] as $adjustment ) {
 			edd_add_order_adjustment( array(
 				'object_id'   => $order_id,
 				'object_type' => 'order',
-				'type'        => 'credit',
-				'subtotal'    => floatval( $adjustment['amount'] ),
-				'total'       => floatval( $adjustment['amount'] ),
+				'type'        => sanitize_text_field( $adjustment['type'] ),
+				'description' => sanitize_text_field( $adjustment['description'] ),
+				'subtotal'    => sanitize_text_field( $adjustment['amount'] ),
+				'total'       => sanitize_text_field( $adjustment['amount'] ),
 			) );
-
-			// Subtract from order total.
-			$order_total -= floatval( $adjustment['amount'] );
 		}
 	}
 
-	// Discounts are applied last.
-	if ( ! empty( $data['adjustments']['discount'] ) ) {
-		foreach ( $data['adjustments']['discount'] as $adjustment ) {
-			$discount = edd_get_discount( absint( $adjustment['id'] ) );
+	// Discounts.
+	if ( isset( $data['discounts'] ) ) {
+		foreach ( $data['discounts'] as $discount ) {
+			$d = edd_get_discount( absint( $discount['type_id'] ) );
 
-			// Skip if discount doesn't exist
-			if ( empty( $discount ) ) {
+			if ( empty( $d ) ) {
 				continue;
-			}
-
-			// Only add flat discounts to $total_discount.
-			if ( 'flat' === $discount->amount_type ) {
-				$amount          = floatval( $discount->amount );
-				$total_discount += $amount;
-			} else {
-				$amount = floatval( $order_subtotal * ( $discount->amount / 100 ) );
 			}
 
 			// Store discount.
 			edd_add_order_adjustment( array(
 				'object_id'   => $order_id,
 				'object_type' => 'order',
-				'type_id'     => $discount->id,
+				'type_id'     => intval( $discount['type_id'] ),
 				'type'        => 'discount',
-				'description' => $discount->code,
-				'subtotal'    => $amount,
-				'total'       => $amount,
+				'description' => sanitize_text_field( $discount['code'] ),
+				'subtotal'    => sanitize_text_field( $discount['amount'] ),
+				'total'       => sanitize_text_field( $discount['amount'] ),
 			) );
 
 			// Increase discount usage.
-			$discount->increase_usage();
-
-			// Subtract from order total.
-			$order_total -= $amount;
+			$d->increase_usage();
 		}
 	}
 

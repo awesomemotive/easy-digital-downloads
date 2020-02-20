@@ -66,6 +66,7 @@ export const OrderAdjustment = Base.extend(
 					colspan,
 				},
 
+				cid: this.cid,
 				totalCurrency: currency.format( this.model.getTotal() ),
 			};
 		},

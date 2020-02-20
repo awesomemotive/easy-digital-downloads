@@ -1381,22 +1381,13 @@ function edd_admin_order_get_item_amounts() {
 			continue;
 		}
 
-		$product_reqs = array_map( 'intval', $discount->get_product_reqs() );
-
-		if (
-			'global' !== $discount->get_scope() &&
-			! in_array( $id, $product_reqs, true )
-		) {
-			continue;
-		}
-
 		$discounted_amount -= $discount->get_discounted_amount( $subtotal );
 	}
 
 	$use_taxes = edd_use_taxes();
-	$tax_rate   = edd_get_tax_rate( $country, $region, $fallback = false );
+	$tax_rate  = edd_get_tax_rate( $country, $region, $fallback = false );
 
-	if ( true === $use_taxes && 0 !== $tax_rate ) {
+	if ( true === $use_taxes && 0 !== intval( $tax_rate ) ) {
 		$tax = edd_calculate_tax( $subtotal, $country, $region );
 	} else { 
 		$tax = 0;
