@@ -5,6 +5,7 @@
  */
 import {
 	Dialog,
+	Base,
 } from './';
 
 import {
@@ -61,6 +62,35 @@ export const FormAddOrderDiscount = Dialog.extend( /** Lends FormAddItem.prototy
 		// Listen for events.
 		this.listenTo( this.model, 'change', this.render );
 		this.listenTo( this.collection, 'add', this.closeDialog );
+	},
+
+	/**
+	 * Prepares data to be used in `render` method.
+	 *
+	 * @since 3.0
+	 *
+	 * @see wp.Backbone.View
+	 * @link https://github.com/WordPress/WordPress/blob/master/wp-includes/js/wp-backbone.js
+	 *
+	 * @return {Object} The data for this view.
+	 */
+	prepare() {
+		const {
+			model,
+			options,
+		} = this;
+
+		const {
+			state,
+		} = options;
+
+		return {
+			...Base.prototype.prepare.apply( this ),
+
+			_isDuplicate: undefined !== state.get( 'adjustments' ).findWhere( {
+				id: model.get( 'id' ),
+			} ),
+		};
 	},
 
 	/**
@@ -124,5 +154,5 @@ export const FormAddOrderDiscount = Dialog.extend( /** Lends FormAddItem.prototy
 		e.preventDefault();
 
 		this.collection.add( this.model );
-	}
+	},
 } );
