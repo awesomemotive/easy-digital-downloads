@@ -37,7 +37,7 @@ $view_url = add_query_arg(
 			<span class="text"><strong><?php esc_html_e( 'Discount:', 'easy-digital-downloads' ); ?></strong> {{ data.discountCurrency }}</span>
 			<# } #>
 
-			<# if ( false !== data.state.hasTax && data.tax > 0 ) { #>
+			<# if ( false !== data.state.hasTax ) { #>
 			<span class="text"><strong><?php esc_html_e( 'Tax:', 'easy-digital-downloads' ); ?></strong> {{ data.taxCurrency }}</span>
 			<# } #>
 
@@ -48,6 +48,7 @@ $view_url = add_query_arg(
 				</button>
 			</span>
 			<# } #>
+			&nbsp;
 		</div>
 	</div>
 </td>
@@ -66,8 +67,9 @@ $view_url = add_query_arg(
 	{{ data.subtotalCurrency }}
 </td>
 
-<input type="hidden" value="{{ data.id }}" name="downloads[][id]" />
-<input type="hidden" value="{{ data.priceId }}" name="downloads[][price_id]" />
-<input type="hidden" value="{{ data.amount }}" name="downloads[][amount]" />
-<input type="hidden" value="{{ data.tax }}" name="downloads[][tax]" />
-<input type="hidden" value="{{ data.subtotal }}" name="downloads[][subtotal]" />
+<input type="hidden" value="{{ data.id }}" name="downloads[{{ data.cid }}][id]" />
+<input type="hidden" value="{{ data.priceId }}" name="downloads[{{ data.cid }}][price_id]" />
+<input type="hidden" value="{{ data.quantity }}" name="downloads[{{ data.cid }}][quantity]" />
+<input type="hidden" value="{{ data.amount }}" name="downloads[{{ data.cid }}][amount]" />
+<input type="hidden" value="{{ data.tax }}" name="downloads[{{ data.cid }}][tax]" />
+<input type="hidden" value="{{ data.subtotal }}" name="downloads[{{ data.cid }}][subtotal]" />
