@@ -45,6 +45,12 @@ $discounts = edd_get_discounts( array(
 				endif;
 				?>
 			</select>
+
+			<# if ( true === data._isDuplicate ) { #>
+			<span class="edd-order-overview-error">
+			<?php esc_html_e( 'This Discount already applied to the Order.', 'easy-digital-downloads' ); ?>
+			</span>
+			<# } #>
 		</p>
 
 		<p class="submit">
@@ -52,7 +58,7 @@ $discounts = edd_get_discounts( array(
 				type="submit"
 				class="button button-primary edd-ml-auto"
 				value="<?php esc_html_e( 'Add Discount', 'easy-digital-downloads' ); ?>"
-				<# if ( 0 === data.typeId ) { #>
+				<# if ( 0 === data.typeId || true === data._isDuplicate ) { #>
 					disabled
 				<# } #>
 			/>
