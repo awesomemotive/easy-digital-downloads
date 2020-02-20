@@ -567,6 +567,9 @@ function edd_order_details_overview( $order ) {
 				'country' => '',
 				'region'  => '',
 			),
+			'nonces' => array(
+				'edd_admin_order_get_item_amounts' => wp_create_nonce( 'edd_admin_order_get_item_amounts' ),
+			),
 		)
 	);
 

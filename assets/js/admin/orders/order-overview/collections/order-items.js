@@ -7,6 +7,12 @@ import {
 	OrderItem,
 } from './../models';
 
+import {
+	NumberFormat,
+} from '@easy-digital-downloads/currency';
+
+const number = new NumberFormat();
+
 /**
  * Collection of `OrderItem`s.
  *
@@ -73,20 +79,44 @@ export const OrderItems = Backbone.Collection.extend( /** @lends Items.prototype
 		// Keep track of all jQuery Promises.
 		const promises = [];
 
-		// Update each `Item`'s amounts.
+		// Find each `OrderItem`'s amounts.
 		_.each( items.models, ( item ) => {
 			const amounts = item.getAmounts( {
 				...defaults,
 				...args,
 			} );
 
-			// Update individual `Item` with new amounts.
-			amounts.done( ( response ) => item.set( response ) );
+			// Update individual `OrderItem` with new amounts.
+			amounts.done( ( response ) => {
+				// Update `OrderItem`.
+				const {
+					amount,
+					discount,
+					tax,
+					subtotal,
+					total,
+				} = _.mapObject( response, ( v ) => number.unformat( v ) );
+
+				if ( true === item.get( '_isAdjustingManually' ) ) {
+					item.set( {
+						discount,
+					} );
+				} else {
+					item.set( {
+						amount,
+						discount,
+						tax,
+						subtotal,
+						total,
+					} );
+				}
+			} );
 
 			// Track jQuery Promise.
 			promises.push( amounts );
 		} );
 
+		// Return list of jQuery Promises.
 		return $.when.apply( $, promises );
 	},
 } );

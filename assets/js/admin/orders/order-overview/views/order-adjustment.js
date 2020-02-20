@@ -3,7 +3,13 @@
 /**
  * Internal dependencies
  */
-import { Currency } from '@easy-digital-downloads/currency';
+import {
+	Base,
+} from './';
+
+import {
+	Currency,
+} from '@easy-digital-downloads/currency';
 
 const currency = new Currency();
 
@@ -15,7 +21,7 @@ const currency = new Currency();
  * @class OrderAdjustment
  * @augments wp.Backbone.View
  */
-export const OrderAdjustment = wp.Backbone.View.extend( /** Lends Adjustment.prototype */ {
+export const OrderAdjustment = Base.extend( /** Lends Adjustment.prototype */ {
 	/**
 	 * @since 3.0
 	 */
@@ -45,13 +51,8 @@ export const OrderAdjustment = wp.Backbone.View.extend( /** Lends Adjustment.pro
 	 */
 	prepare() {
 		const {
-			options,
-			model,
-		} = this;
-
-		const {
 			state,
-		} = options;
+		} = this.options;
 
 		// Determine column offset -- using cart quantities requires an extra column.
 		const colspan = true === state.get( 'hasQuantity' )
@@ -59,16 +60,13 @@ export const OrderAdjustment = wp.Backbone.View.extend( /** Lends Adjustment.pro
 			: 1;
 
 		return {
-			...model.toJSON(),
+			...Base.prototype.prepare.apply( this ),
 
-			state: {
-				...state.toJSON(),
-			},
 			config: {
 				colspan,
 			},
 
-			totalCurrency: currency.format( model.getTotal() ),
+			totalCurrency: currency.format( this.model.getTotal() ),
 		};
 	},
 

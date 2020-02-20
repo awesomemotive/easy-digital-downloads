@@ -1287,10 +1287,29 @@ add_action( 'wp_ajax_edd_get_tax_rate', 'edd_ajax_get_tax_rate' );
 /**
  * Retrieves a potential Order Item's amounts.
  *
+ * @todo Nonce check
+ *
  * @since 3.0
  */
 function edd_admin_order_get_item_amounts() {
+	// Set up parameters.
+	$nonce = isset( $_POST['nonce'] )
+		? sanitize_text_field( $_POST['nonce'] )
+		: '';
+
+	// Bail if missing any data.
+	if ( empty( $nonce ) ) {
+		return wp_send_json_error();
+	}
+
+	// Bail if nonce verification failed.
+	if ( ! wp_verify_nonce( $nonce, 'edd_admin_order_get_item_amounts' ) ) {
+		return wp_send_json_error();
+	}
+
 	$tax = isset( $_POST['tax'] ) && false !== $_POST['tax'];
+
+	$is_adjusting_manually = isset( $_POST['_isAdjustingManually'] ) && false !== $_POST['_isAdjustingManually'];
 
 	$id = isset( $_POST['id'] )
 		? intval( sanitize_text_field( $_POST['id'] ) )
@@ -1322,7 +1341,15 @@ function edd_admin_order_get_item_amounts() {
 
 	$item = edd_get_download( $id );
 
-	if ( $item ) {
+	// Bail if no Download is found.
+	if ( ! $item ) {
+		return wp_send_json_error();
+	}
+
+	// Use base Amount if sent.
+	if ( isset( $_POST['amount'] ) && '0' !== $_POST['amount'] ) {
+		$amount = sanitize_text_field( $_POST['amount'] );
+	} else {
 		if ( ! $item->has_variable_prices() ) {
 			$amount = floatval( $item->get_price() );
 		} else {
@@ -1333,53 +1360,58 @@ function edd_admin_order_get_item_amounts() {
 				$amount = floatval( $price['amount'] );
 			}
 		}
-
-		$subtotal = $amount * $quantity;
-
-		$use_taxes = edd_use_taxes();
-		$tax_rate   = edd_get_tax_rate( $country, $region, $fallback = false );
-
-		if ( true === $use_taxes && 0 !== $tax_rate ) {
-			$tax = edd_calculate_tax( $subtotal, $country, $region );
-		} else { 
-			$tax = 0;
-		}
-
-		// Start with the base price and remove discounted amounts.
-		// @todo Create a function that returns the discount amount.
-		$discounted_amount = $subtotal;
-
-		foreach ( $discounts as $discount_id ) {
-			$discount = edd_get_discount( $discount_id );
-			$valid    = edd_validate_discount( $discount->id, $all_ids );
-
-			if ( false === $valid ) {
-				continue;
-			}
-
-			$product_reqs = array_map( 'intval', $discount->get_product_reqs() );
-
-			if (
-				'global' !== $discount->get_scope() &&
-				! in_array( $id, $product_reqs, true )
-			) {
-				continue;
-			}
-
-			$discounted_amount -= $discount->get_discounted_amount( $subtotal );
-		}
-
-		wp_send_json_success( array(
-			'subtotal' => $subtotal,
-			'amount'   => $amount,
-			'discount' => $discounted_amount === $subtotal
-				? 0
-				: $discounted_amount,
-			'tax'      => $tax,
-			'total'    => $subtotal + $tax,
-		) );
-	} else {
-
 	}
+
+	// Use base Subtotal if sent.
+	if ( isset( $_POST['subtotal'] ) && '0' !== $_POST['subtotal'] ) {
+		$subtotal = sanitize_text_field( $_POST['subtotal'] );
+	} else {
+		$subtotal = $amount * $quantity;
+	}
+
+	// Start with the base price and remove discounted amounts.
+	// @todo Create a function that returns the discount amount.
+	$discounted_amount = $subtotal;
+
+	foreach ( $discounts as $discount_id ) {
+		$discount = edd_get_discount( $discount_id );
+		$valid    = edd_validate_discount( $discount->id, $all_ids );
+
+		if ( false === $valid ) {
+			continue;
+		}
+
+		$product_reqs = array_map( 'intval', $discount->get_product_reqs() );
+
+		if (
+			'global' !== $discount->get_scope() &&
+			! in_array( $id, $product_reqs, true )
+		) {
+			continue;
+		}
+
+		$discounted_amount -= $discount->get_discounted_amount( $subtotal );
+	}
+
+	$use_taxes = edd_use_taxes();
+	$tax_rate   = edd_get_tax_rate( $country, $region, $fallback = false );
+
+	if ( true === $use_taxes && 0 !== $tax_rate ) {
+		$tax = edd_calculate_tax( $subtotal, $country, $region );
+	} else { 
+		$tax = 0;
+	}
+
+	$amounts = array(
+		'subtotal' => $subtotal,
+		'amount'   => $amount,
+		'discount' => $discounted_amount === $subtotal
+			? 0
+			: $discounted_amount,
+		'tax'      => $tax,
+		'total'    => $subtotal + $tax,
+	);
+
+	wp_send_json_success( array_map( 'edd_format_amount', $amounts ) );
 }
 add_action( 'wp_ajax_edd-admin-order-get-item-amounts', 'edd_admin_order_get_item_amounts' );
