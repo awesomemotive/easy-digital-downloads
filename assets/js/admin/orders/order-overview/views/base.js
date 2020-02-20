@@ -39,8 +39,12 @@ export const Base = wp.Backbone.View.extend( /** Lends Base.prototype */ {
 	 * @since 3.0
 	 */
 	events: {
-		'keyup input': 'handleTabBehavior',
-		'keyup textarea': 'handleTabBehavior',
+		'keydown input': 'handleTabBehavior',
+		'keydown textarea': 'handleTabBehavior',
+
+		'focus input': 'onFocus',
+		'focus textarea': 'onFocus',
+		'focus select': 'onFocus',
 
 		'change input': 'onChange',
 		'change textarea': 'onChange',
@@ -123,7 +127,18 @@ export const Base = wp.Backbone.View.extend( /** Lends Base.prototype */ {
 	},
 
 	/**
-	 * Maintains focus when modifying an <input /> or <textarea />
+	 * Tracks the current element when focusing.
+	 *
+	 * @since 3.0
+	 *
+	 * @param {Object} e Change event.
+	 */
+	onFocus( e ) {
+		this.focusedEl = e.target;
+	},
+
+	/**
+	 * Tracks the current cursor position when editing.
 	 *
 	 * @since 3.0
 	 *
@@ -135,15 +150,20 @@ export const Base = wp.Backbone.View.extend( /** Lends Base.prototype */ {
 			keyCode,
 		} = e;
 
-		this.focusedEl = target;
+		// 9 = TAB
+		if ( undefined !== typeof keyCode && 9 === keyCode ) {
+			return;
+		}
 
 		// Attempt to find the caret position.
-		if ( target.selectionStart ) {
-			try {
-				this.focusedElCaretPos = target.selectionStart;
-			} catch ( error ) {
-				this.focusedElCaretPos = target.value.length;
-			}
+		if ( ! target.selectionStart ) {
+			return;
+		}
+
+		try {
+			this.focusedElCaretPos = target.selectionStart;
+		} catch ( error ) {
+			this.focusedElCaretPos = target.value.length;
 		}
 	},
 
@@ -217,12 +237,28 @@ export const Base = wp.Backbone.View.extend( /** Lends Base.prototype */ {
 		// Convert full element in to a usable selector.
 		// We can't search for the actual HTMLElement because
 		// the DOM has since changed.
-		const selector = '' !== focusedEl.id
-			? `#${ focusedEl.id }`
-			: `[name="${ focusedEl.name }"]`;
+		let selector = null;
+
+		if ( '' !== focusedEl.id ) {
+			selector = `#${ focusedEl.id }`;
+		} else if ( '' !== focusedEl.name ) {
+			selector = `[name="${ focusedEl.name }"]`;
+		} else if ( focusedEl.classList.length > 0 ) {
+			selector = `.${ [ ...focusedEl.classList ].join( '.' ) }`;
+		}
+
+		// Do nothing if we can't generate a selector.
+		if ( null === selector ) {
+			return;
+		}
 
 		// Focus element.
 		const elToFocus = el.querySelector( selector );
+
+		if ( ! elToFocus ) {
+			return;
+		}
+
 		elToFocus.focus();
 
 		// Attempt to set the caret position.
