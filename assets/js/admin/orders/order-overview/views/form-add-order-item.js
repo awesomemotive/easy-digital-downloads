@@ -50,8 +50,6 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 
 		// Delegate additional events.
 		this.addEvents( {
-			'submit form': 'onAdd',
-
 			'change #download': 'onChangeDownload',
 			'change #quantity': 'onChangeQuantity',
 			'change #auto-calculate': 'onAutoCalculateToggle',
@@ -59,17 +57,15 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 			'keyup #amount': 'onChangeAmount',
 			'keyup #tax': 'onChangeTax',
 			'keyup #subtotal': 'onChangeSubtotal',
+
+			'submit form': 'onAdd',
 		} );
 
 		// Assign Collection from State.
 		this.collection = this.options.state.get( 'items' );
 
 		// Create a fresh `OrderItem` to be added.
-		this.model = new OrderItem( {
-			amountManual: 0,
-			taxManual: 0,
-			subtotalManual: 0,
-		} );
+		this.model = new OrderItem();
 
 		// Listen for events.
 		this.listenTo( this.model, 'change', this.render );
@@ -99,11 +95,11 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 
 		const quantity = model.get( 'quantity' );
 
-		let amount = model.get( 'amount' ) * quantity;
-		let tax = model.get( 'tax' ) * quantity;
-		let subtotal = model.get( 'subtotal' ) * quantity;
+		let amount = number.format( model.get( 'amount' ) * quantity );
+		let tax = number.format( model.get( 'tax' ) * quantity );
+		let subtotal = number.format( model.get( 'subtotal' ) * quantity );
 
-		if ( true === model.get( 'isAdjustingManually' ) ) {
+		if ( true === model.get( '_isAdjustingManually' ) ) {
 			amount = model.get( 'amountManual' );
 			tax = model.get( 'taxManual' );
 			subtotal = model.get( 'subtotalManual' );
@@ -112,9 +108,9 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 		return {
 			...Base.prototype.prepare.apply( this ),
 
-			amountManual: number.format( amount ),
-			taxManual: number.format( tax ),
-			subtotalManual: number.format( subtotal ),
+			amountManual: amount,
+			taxManual: tax,
+			subtotalManual: subtotal,
 
 			_isDuplicate: undefined !== state.get( 'items' ).findWhere( {
 				id: model.get( 'id' ),
@@ -254,7 +250,7 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 		e.preventDefault();
 
 		this.model.set( {
-			isAdjustingManually: ! e.target.checked,
+			_isAdjustingManually: ! e.target.checked,
 		} );
 	},
 
@@ -279,7 +275,7 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 		} = options;
 
 		// Use manual amounts if adjusting manually.
-		if ( true === model.get( 'isAdjustingManually' ) ) {
+		if ( true === model.get( '_isAdjustingManually' ) ) {
 			model.set( {
 				amount: number.unformat( model.get( 'amountManual' ) ),
 				tax: number.unformat( model.get( 'taxManual' ) ),

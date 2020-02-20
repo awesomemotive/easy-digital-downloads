@@ -5,6 +5,7 @@
  */
 import {
 	Dialog,
+	Base,
 } from './';
 
 import {
@@ -79,9 +80,7 @@ export const FormAddOrderAdjustment = Dialog.extend( /** Lends FormAddOrderAdjus
 	 * @param {Object} e Change event
 	 */
 	onChangeType( e ) {
-		this.model.set( {
-			type: e.target.value,
-		} );
+		this.model.set( 'type', e.target.value );
 	},
 
 	/**
@@ -92,9 +91,7 @@ export const FormAddOrderAdjustment = Dialog.extend( /** Lends FormAddOrderAdjus
 	 * @param {Object} e Change event
 	 */
 	onChangeDescription( e ) {
-		this.model.set( {
-			description: e.target.value,
-		} );
+		this.model.set( 'description', e.target.value );
 	},
 
 	/**
@@ -105,9 +102,14 @@ export const FormAddOrderAdjustment = Dialog.extend( /** Lends FormAddOrderAdjus
 	 * @param {Object} e Change event
 	 */
 	onChangeAmount( e ) {
-		e.preventDefault();
+		const {
+			preventDefault,
+			target,
+		} = e;
 
-		const amount = e.target.value;
+		preventDefault();
+
+		const amount = target.value;
 		const amountNumber = number.unformat( amount );
 
 		this.model.set( {

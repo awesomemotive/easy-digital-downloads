@@ -1,9 +1,15 @@
-/* global wp, _ */
+/* global wp */
 
 /**
  * Internal dependencies
  */
-import { Currency } from '@easy-digital-downloads/currency';
+import {
+	Base,
+} from './';
+
+import {
+	Currency,
+} from '@easy-digital-downloads/currency';
 
 const currency = new Currency();
 
@@ -15,7 +21,7 @@ const currency = new Currency();
  * @class OrderItem
  * @augments wp.Backbone.View
  */
-export const OrderItem = wp.Backbone.View.extend( /** Lends Item.prototype */ {
+export const OrderItem = Base.extend( /** Lends OrderItem.prototype */ {
 	/**
 	 * @since 3.0
 	 */
@@ -61,16 +67,12 @@ export const OrderItem = wp.Backbone.View.extend( /** Lends Item.prototype */ {
 		} = options;
 
 		return {
-			...model.toJSON(),
+			...Base.prototype.prepare.apply( this ),
 
-			state: {
-				...state.toJSON(),
-			},
-
-			amountCurrency: currency.format( this.model.get( 'amount' ) ),
-			subtotalCurrency: currency.format( this.model.get( 'subtotal' ) ),
-			taxCurrency: currency.format( this.model.get( 'tax' ) ),
-			discountCurrency: currency.format( this.model.get( 'discount' ) ),
+			amountCurrency: currency.format( model.get( 'amount' ) ),
+			subtotalCurrency: currency.format( model.get( 'subtotal' ) ),
+			taxCurrency: currency.format( model.get( 'tax' ) ),
+			discountCurrency: currency.format( model.get( 'discount' ) ),
 		};
 	},
 

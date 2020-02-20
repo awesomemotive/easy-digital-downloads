@@ -38,7 +38,12 @@ export const OrderItem = Backbone.Model.extend( /** Lends OrderItem.prototype */
 		eddUid: '',
 
 		// Determines if this `OrderItem` has manually set amounts.
-		isAdjustingManually: false,
+		_isAdjustingManually: false,
+
+		// Track manually set amounts.
+		amountManual: 0,
+		taxManual: 0,
+		subtotalManual: 0,
 	},
 
 	/**
@@ -66,9 +71,19 @@ export const OrderItem = Backbone.Model.extend( /** Lends OrderItem.prototype */
 		itemIds = [],
 		discountIds = [],
 	} ) {
-		const id = this.get( 'id' );
-		const priceId = this.get( 'priceId' );
-		const quantity = this.get( 'quantity' );
+		const {
+			nonces: {
+				edd_admin_order_get_item_amounts: nonce,
+			}
+		} = window.eddAdminOrderOverview
+
+		const {
+			id,
+			priceId,
+			quantity,
+			amount,
+			subtotal,
+		} = _.clone( this.attributes );
 
 		const ids = [ id, ...itemIds ];
 		const discounts = discountIds;
@@ -77,10 +92,13 @@ export const OrderItem = Backbone.Model.extend( /** Lends OrderItem.prototype */
 			'edd-admin-order-get-item-amounts', 
 			{
 				data: {
+					nonce,
 					id,
 					ids,
 					priceId,
 					quantity,
+					amount,
+					subtotal,
 					country,
 					region,
 					discounts,
