@@ -5,7 +5,6 @@
  */
 import { getChosenVars } from 'utils/chosen.js';
 import { jQueryReady } from 'utils/jquery.js';
-import { updateAmounts } from './../order-amounts';
 
 // Store customer search results to help prefill address data.
 let CUSTOMER_SEARCH_RESULTS = {};
