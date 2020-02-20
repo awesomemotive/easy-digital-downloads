@@ -1,11 +1,7 @@
-/* global Backbone */
-
 /**
  * Internal dependencies
  */
-import {
-	OrderAdjustment,
-} from './';
+import { OrderAdjustment } from './';
 
 /**
  * OrderAdjustmentDiscount
@@ -15,39 +11,38 @@ import {
  * @class OrderAdjustmentDiscount
  * @augments Backbone.Model
  */
-export const OrderAdjustmentDiscount = OrderAdjustment.extend( /** Lends OrderAdjustmentDiscount.prototype */ {
+export const OrderAdjustmentDiscount = OrderAdjustment.extend(
+	/** Lends OrderAdjustmentDiscount.prototype */ {
+		/**
+		 * @since 3.0
+		 *
+		 * @typedef {Object} OrderAdjustmentDiscount
+		 */
+		defaults: {
+			...OrderAdjustment.prototype.defaults,
+			type: 'discount',
+		},
 
-	/**
-	 * @since 3.0
-	 *
-	 * @typedef {Object} OrderAdjustmentDiscount
-	 */
-	defaults: {
-		...OrderAdjustment.prototype.defaults,
-		type: 'discount',
-	},
+		/**
+		 * Returns the `OrderAdjustmentDiscount`'s total based on the current values
+		 * of all `OrderItems`.
+		 *
+		 * @since 3.0
+		 *
+		 * @return {number} `OrderAdjustmentDiscount` total.
+		 */
+		getTotal() {
+			let total = 0;
 
-	/**
-	 * Returns the `OrderAdjustmentDiscount`'s total based on the current values
-	 * of all `OrderItems`.
-	 *
-	 * @since 3.0
-	 *
-	 * @return {number} `OrderAdjustmentDiscount` total.
-	 */
-	getTotal() {
-		let total = 0;
+			const { state } = this.get( 'options' );
 
-		const {
-			state,
-		} = this.get( 'options' );
+			const items = state.get( 'items' );
 
-		const items = state.get( 'items' );
+			items.models.forEach( ( item ) => {
+				total += +item.get( 'discount' );
+			} );
 
-		items.models.forEach( ( item ) => {
-			total += +item.get( 'discount' );
-		} );
-
-		return total;
-	},
-} );
+			return total;
+		},
+	}
+);

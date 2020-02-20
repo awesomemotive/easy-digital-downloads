@@ -33,7 +33,7 @@
 	},
 	"devDependencies": {
 		"@wordpress/dom": "2.8.0",
-		"@wordpress/scripts": "7.0.1",
+		"@wordpress/scripts": "7.1.0",
 		"copy-webpack-plugin": "5.1.1",
 		"grunt": "^1.0.4",
 		"grunt-checktextdomain": "^1.0.1",
@@ -57,8 +57,8 @@
 		"dev": "wp-scripts start",
 		"check-engines": "wp-scripts check-engines",
 		"check-licenses": "wp-scripts check-licenses --production",
-		"lint:js": "wp-scripts lint-js .",
-		"lint:js--fix": "wp-scripts lint-js . --fix",
+		"lint:js": "wp-scripts lint-js ./assets/js/ ",
+		"lint:js--fix": "wp-scripts lint-js ./assets/js --fix",
 		"lint:pkg-json": "wp-scripts lint-pkg-json",
 		"package-plugin": "npm run build && grunt build",
 		"test:unit": "wp-scripts test-unit-js --config tests/jest/jest.config.js"
