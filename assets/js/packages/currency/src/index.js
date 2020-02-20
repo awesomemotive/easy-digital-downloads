@@ -14,7 +14,6 @@ export { NumberFormat } from './number.js';
  * @class Currency
  */
 export const Currency = class Currency {
-
 	/**
 	 * Creates configuration for currency formatting.
 	 *
@@ -48,7 +47,7 @@ export const Currency = class Currency {
 			decimalSeparator,
 			thousandSeparator,
 			...config,
-		}
+		};
 
 		this.number = new NumberFormat( this.config );
 	}
@@ -62,10 +61,7 @@ export const Currency = class Currency {
 	 * @return {?string} A formatted string.
 	 */
 	format( number ) {
-		const {
-			currencySymbol,
-			currencySymbolPosition,
-		} = this.config;
+		const { currencySymbol, currencySymbolPosition } = this.config;
 
 		// Create a formatted number.
 		const formattedNumber = this.number.format( number );
@@ -94,14 +90,11 @@ export const Currency = class Currency {
 	 * @return {number} Unformatted number.
 	 */
 	unformat( currency ) {
-		const {
-			currencySymbol,
-		} = this.config;
+		const { currencySymbol } = this.config;
 
 		// Remove any existing currency symbol.
 		const number = currency.replace( currencySymbol, '' );
 
 		return this.number.unformat( number );
 	}
-
-}
+};
