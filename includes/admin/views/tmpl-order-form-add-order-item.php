@@ -31,6 +31,20 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 						<option value="{{ data.id }}<# if ( 0 !== data.priceId ) { #>_{{ data.priceId }}<# } #>" selected>{{ data.name }}</option>
 					<# } #>
 			</select>
+
+			<# if ( true === data._isDuplicate ) { #>
+			<span class="edd-order-overview-error">
+			<?php
+			/* translators: %s "Download" singular label. */
+			echo esc_html(
+				sprintf(
+					__( 'This %s already exists in the Order. Please remove it before adding it again.', 'easy-digital-downloads' ),
+					edd_get_label_singular()
+				)
+			);
+			?>
+			</span>
+			<# } #>
 		</p>
 
 		<# if ( false !== data.state.hasQuantity ) { #>
@@ -45,7 +59,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 					value="{{ data.quantity }}"
 					step="1"
 					min="1"
-					<# if ( '' === data.id ) { #>
+					<# if ( '' === data.id || true === data._isDuplicate ) { #>
 						disabled
 					<# } #>
 				/>
@@ -63,7 +77,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 					<# if ( true !== data.isAdjustingManually ) { #>
 						checked
 					<# } #>
-					<# if ( '' === data.id ) { #>
+					<# if ( '' === data.id || true === data._isDuplicate ) { #>
 						disabled
 					<# } #>
 				/>
@@ -153,7 +167,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 				type="submit"
 				class="button button-primary edd-ml-auto"
 				value="<?php echo esc_html( sprintf( __( 'Add %s', 'easy-digital-downloads' ), edd_get_label_singular() ) ); ?>"
-				<# if ( '' === data.id || ( 0 === data.subtotal && true === data.isAdjustingManually ) ) { #>
+				<# if ( '' === data.id || true === data._isDuplicate ) { #>
 					disabled
 				<# } #>
 			/>
