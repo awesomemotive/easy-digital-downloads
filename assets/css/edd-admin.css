@@ -658,7 +658,7 @@ table.edd-order-overview-summary {
 	opacity: 0.80;
 }
 
-/** Modal */
+/** Dialog */
 .edd-order-overview-modal form > p {
 	margin-top: 0;
 }
@@ -712,6 +712,13 @@ table.edd-order-overview-summary {
 .edd-order-overview-add-adjustment #description,
 .edd-order-overview-add-discount select {
 	width: 100%;
+}
+
+.edd-order-overview-error {
+	font-style: italic;
+	color: #a00;
+	display: block;
+	margin: 4px 0;
 }
 
 /* Note Styles
