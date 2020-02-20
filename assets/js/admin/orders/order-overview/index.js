@@ -1,22 +1,15 @@
-/* global wp, _ */
+/* global _, $ */
 
 /**
  * Internal dependencies
  */
 import { jQueryReady } from 'utils/jquery.js';
 
-import {
-	Overview,
-} from './views';
+import { Overview } from './views';
 
-import {
-	OrderItems,
-	OrderAdjustments,
-} from './collections';
+import { OrderItems, OrderAdjustments } from './collections';
 
-import {
-	State,
-} from './models';
+import { State } from './models';
 
 /**
  * Setup Order Overview on DOM ready.
@@ -35,14 +28,12 @@ jQueryReady( () => {
 		hasQuantity,
 		items,
 		adjustments,
-	} = eddAdminOrderOverview;
+	} = window.eddAdminOrderOverview;
 
 	// Create and hydrate state.
 	const state = new State( {
 		isAdding: '1' === isAdding,
-		hasTax: '0' === hasTax
-			? false
-			: hasTax,
+		hasTax: '0' === hasTax ? false : hasTax,
 		hasQuantity: '1' === hasQuantity,
 	} );
 
@@ -59,8 +50,7 @@ jQueryReady( () => {
 	// Create and render the Overview.
 	const overview = new Overview( {
 		state,
-	} )
-		.render();
+	} ).render();
 
 	/**
 	 * Adjusts Overview tax configuration when a region changes.
@@ -68,8 +58,12 @@ jQueryReady( () => {
 	 * @since 3.0
 	 */
 	( () => {
-		const countryInput = document.getElementById( 'edd_order_address_country' );
-		const regionInput = document.getElementById( 'edd_order_address_region' );
+		const countryInput = document.getElementById(
+			'edd_order_address_country'
+		);
+		const regionInput = document.getElementById(
+			'edd_order_address_region'
+		);
 
 		if ( ! ( countryInput && regionInput ) ) {
 			return;
@@ -81,12 +75,14 @@ jQueryReady( () => {
 		 * @since 3.0
 		 */
 		function getTaxRate() {
-			const country = countryInput.options[ countryInput.selectedIndex ].value;
+			const country =
+				countryInput.options[ countryInput.selectedIndex ].value;
 			const region = regionInput.options
 				? regionInput.options[ regionInput.selectedIndex ].value
-				: regionInput.value
+				: regionInput.value;
 
-			const nonce = document.getElementById( 'edd_get_tax_rate_nonce' ).value;
+			const nonce = document.getElementById( 'edd_get_tax_rate_nonce' )
+				.value;
 
 			wp.ajax.send( 'edd_get_tax_rate', {
 				data: {
@@ -102,9 +98,7 @@ jQueryReady( () => {
 				 * @param {Object} response AJAX response.
 				 */
 				success( response ) {
-					let {
-						tax_rate: rate,
-					} = response;
+					let { tax_rate: rate } = response;
 
 					// Make a percentage.
 					rate = rate * 100;
@@ -122,9 +116,9 @@ jQueryReady( () => {
 				 */
 				error() {
 					overview.options.state.set( 'hasTax', false );
-				}
+				},
 			} );
-		};
+		}
 
 		// Update rate on Address change.
 		//
@@ -134,5 +128,5 @@ jQueryReady( () => {
 		$( countryInput ).on( 'change', _.debounce( getTaxRate, 250 ) );
 		$( regionInput ).on( 'change', getTaxRate );
 		$( regionInput ).on( 'keyup', _.debounce( getTaxRate, 250 ) );
-	} ) ();
+	} )();
 } );
