@@ -26,13 +26,21 @@ export const OrderAdjustment = Base.extend(
 		/**
 		 * @since 3.0
 		 */
-		template: wp.template( 'edd-admin-order-adjustment' ),
-
-		/**
-		 * @since 3.0
-		 */
 		events: {
 			'click .delete': 'onDelete',
+		},
+
+		initialize() {
+			Base.prototype.initialize.apply( this );
+
+			switch ( this.model.get( 'type' ) ) {
+				case 'credit':
+				case 'fee':
+					this.template = wp.template( 'edd-admin-order-adjustment' );
+					break;
+				default:
+					this.template = wp.template( 'edd-admin-order-adjustment-discount' );
+			}
 		},
 
 		/**

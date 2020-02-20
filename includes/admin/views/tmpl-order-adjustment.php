@@ -2,8 +2,6 @@
 /**
  * Order Overview: Adjustment
  *
- * @todo Use a separate view for different types to avoid so many conditionals?
- *
  * @package     EDD
  * @subpackage  Admin/Views
  * @copyright   Copyright (c) 2020, Sandhills Development, LLC
@@ -28,28 +26,24 @@ $view_url = edd_get_admin_url(
 	</button>
 	<# } #>
 
-	<# if ( 'discount' === data.type ) { #>
-		<?php esc_html_e( 'Discount', 'easy-digital-downloads' ); ?>
+	<# if ( 'credit' === data.type ) { #>
+		<?php esc_html_e( 'Order Credit', 'easy-digital-downloads' ); ?>
+	<# } else { #>
+		<?php esc_html_e( 'Order Fee', 'easy-digital-downloads' ); ?>
+	<# } #>
+
+	<# if ( '' !== data.description ) { #>
 		<br />
 		<small>
-			<a href="<?php echo esc_url( $view_url ); ?>&discount={{ data.typeId }}">{{ data.description }}</a>
+			{{ data.description }}
 		</small>
-	<# } else { #>
-		<# if ( 'credit' === data.type ) { #>
-			<?php esc_html_e( 'Order Credit', 'easy-digital-downloads' ); ?>
-		<# } else { #>
-			<?php esc_html_e( 'Order Fee', 'easy-digital-downloads' ); ?>
-		<# } #>
-
-		<# if ( '' !== data.description ) { #>
-			<br />
-			<small>
-				{{ data.description }}
-			</small>
-		<# } #>
 	<# } #>
 </th>
 
 <td class="column-right">
-	<# if ( 'discount' === data.type || 'credit' === data.type ) { #>&ndash;<# } #>{{ data.totalCurrency }}
+	<# if ( 'credit' === data.type ) { #>&ndash;<# } #>{{ data.totalCurrency }}
 </td>
+
+<input type="hidden" value="{{ data.type }}" name="adjustments[{{ data.type }}][{{ data.cid }}][type]" />
+<input type="hidden" value="{{ data.amount }}" name="adjustments[{{ data.type }}][{{ data.cid }}][amount]" />
+<input type="hidden" value="{{ data.description }}" name="adjustments[{{ data.type }}][{{ data.cid }}][description]" />
