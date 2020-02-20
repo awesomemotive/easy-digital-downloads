@@ -88,7 +88,15 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 	 * @return {Object} The data for this view.
 	 */
 	prepare() {
-		const model = this.model;
+		const {
+			model,
+			options,
+		} = this;
+
+		const {
+			state,
+		} = options;
+
 		const quantity = model.get( 'quantity' );
 
 		let amount = model.get( 'amount' ) * quantity;
@@ -107,6 +115,10 @@ export const FormAddOrderItem = Dialog.extend( /** Lends FormAddItem.prototype *
 			amountManual: number.format( amount ),
 			taxManual: number.format( tax ),
 			subtotalManual: number.format( subtotal ),
+
+			_isDuplicate: undefined !== state.get( 'items' ).findWhere( {
+				id: model.get( 'id' ),
+			} ),
 		};
 	},
 
