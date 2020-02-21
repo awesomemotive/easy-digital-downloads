@@ -235,6 +235,11 @@ function edd_admin_edit_discount( $data = array() ) {
 	$to_update['product_reqs']      = isset( $data['product_reqs']      ) ? wp_parse_id_list( $data['product_reqs']      ) : '';
 	$to_update['excluded_products'] = isset( $data['excluded_products'] ) ? wp_parse_id_list( $data['excluded_products'] ) : '';
 
+	// "Once per customer" checkbox.
+	$to_update['once_per_customer'] = isset( $data['once_per_customer'] )
+		? 1
+		: 0;
+
 	// Strip out known non-columns
 	$to_strip = array(
 
