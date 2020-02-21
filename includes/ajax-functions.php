@@ -1369,19 +1369,35 @@ function edd_admin_order_get_item_amounts() {
 		$subtotal = $amount * $quantity;
 	}
 
+	// Track order_item adjustments.
+	// The API does not currently differentiate between order and order_item level adjustments
+	// so we need to track which amount comes from which adjustment for each item.
+	$adjustments = array();
+
 	// Start with the base price and remove discounted amounts.
 	// @todo Create a function that returns the discount amount.
-	$discounted_amount = $subtotal;
+	$discount = 0;
 
 	foreach ( $discounts as $discount_id ) {
-		$discount = edd_get_discount( $discount_id );
-		$valid    = edd_validate_discount( $discount->id, $all_ids );
+		$d     = edd_get_discount( $discount_id );
+		// $valid = edd_validate_discount( $d->id, $all_ids );
+    //
+		// if ( false === $valid ) {
+		// 	continue;
+		// }
 
-		if ( false === $valid ) {
-			continue;
-		}
+		$discounted_amount = $d->get_discounted_amount( $subtotal );
+		$discount_amount   = ( $subtotal - $discounted_amount );
 
-		$discounted_amount -= $discount->get_discounted_amount( $subtotal );
+		$discount += $discount_amount;
+
+		$adjustments[] = array(
+			'id'          => $d->id,
+			'description' => $d->get_code(),
+			'type'        => 'discount',
+			'subtotal'    => $discount_amount,
+			'total'       => $discount_amount,
+		);
 	}
 
 	$use_taxes = edd_use_taxes();
@@ -1396,13 +1412,18 @@ function edd_admin_order_get_item_amounts() {
 	$amounts = array(
 		'subtotal' => $subtotal,
 		'amount'   => $amount,
-		'discount' => $discounted_amount === $subtotal
-			? 0
-			: $discounted_amount,
+		'discount' => $discount,
 		'tax'      => $tax,
 		'total'    => $subtotal + $tax,
 	);
 
-	wp_send_json_success( array_map( 'edd_format_amount', $amounts ) );
+	$amounts = array_map( 'edd_format_amount', $amounts );
+
+	wp_send_json_success( array_merge(
+		$amounts,
+		array(
+			'adjustments' => $adjustments,
+		)
+	) );
 }
 add_action( 'wp_ajax_edd-admin-order-get-item-amounts', 'edd_admin_order_get_item_amounts' );

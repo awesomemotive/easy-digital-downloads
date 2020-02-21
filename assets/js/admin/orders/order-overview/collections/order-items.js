@@ -86,9 +86,14 @@ export const OrderItems = Backbone.Collection.extend( {
 						total,
 					} = _.mapObject( response, ( v ) => number.unformat( v ) );
 
+					const {
+						adjustments,
+					} = response;
+
 					if ( true === item.get( '_isAdjustingManually' ) ) {
 						item.set( {
 							discount,
+							adjustments, // @todo Map to an Adjustment model.
 						} );
 					} else {
 						item.set( {
@@ -97,6 +102,7 @@ export const OrderItems = Backbone.Collection.extend( {
 							tax,
 							subtotal,
 							total,
+							adjustments, // @todo Map to an Adjustment model.
 						} );
 					}
 
