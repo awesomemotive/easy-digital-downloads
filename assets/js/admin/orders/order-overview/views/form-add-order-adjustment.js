@@ -46,11 +46,14 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 			'submit form': 'onAdd',
 		} );
 
+		const { state } = this.options;
+
 		// Assign Collection from State.
-		this.collection = this.options.state.get( 'adjustments' );
+		this.collection = state.get( 'adjustments' );
 
 		// Create a fresh `OrderAdjustment` to be added.
 		this.model = new OrderAdjustment( {
+			state,
 			id: Math.random( 0, 999 ), // Create a unique ID so it can be added to the Collection.
 			type: 'fee',
 			amount: '',

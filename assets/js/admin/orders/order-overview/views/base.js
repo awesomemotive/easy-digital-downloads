@@ -169,7 +169,7 @@ export const Base = wp.Backbone.View.extend( {
 		return this.model
 			? {
 				...this.model.toJSON(),
-				state: this.options.state.toJSON(),
+				state: this.model.get( 'state' ).toJSON(),
 			}
 			: {};
 	},

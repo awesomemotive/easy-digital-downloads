@@ -28,52 +28,26 @@ export const OrderItems = wp.Backbone.View.extend( {
 	 * @since 3.0
 	 */
 	initialize() {
-		this.listenTo(
-			this.options.state.get( 'items' ),
-			'add',
-			this.onAdd
-		);
-		this.listenTo(
-			this.options.state.get( 'items' ),
-			'remove',
-			this.render
-		);
-		this.listenTo(
-			this.options.state.get( 'adjustments' ),
-			'remove',
-			this.onRemoveAdjustment
-		);
-	},
-
-	/**
-	 * Renders the view.
-	 *
-	 * @since 3.0
-	 *
-	 * @return {Items} Current view.
-	 */
-	render() {
 		const { state } = this.options;
 
-		// Clear existing Item views.
-		this.views.remove();
+		const items = state.get( 'items' );
+		const adjustments = state.get( 'adjustments' );
 
-		// Add Items.
-		_.each( state.get( 'items' ).models, ( item ) =>
-			this.onAdd( item )
-		);
+		// Listen for events.
+		this.listenTo( items, 'add', this.add );
+		this.listenTo( items, 'remove', this.remove );
 
-		return this;
+		this.listenTo( adjustments, 'add remove', this.onChangeAdjustments );
 	},
 
 	/**
-	 * Adds an OrderItem subview.
+	 * Adds an `OrderItem` subview.
 	 *
 	 * @since 3.0
 	 *
-	 * @param {OrderItem} model Item to add to view.
+	 * @param {OrderItem} model OrderItem 
 	 */
-	onAdd( model ) {
+	add( model ) {
 		this.views.add(
 			new OrderItem( {
 				...this.options,
@@ -83,9 +57,34 @@ export const OrderItems = wp.Backbone.View.extend( {
 	},
 
 	/**
+	 * Removes an `OrderItem` subview.
+	 *
+	 * @since 3.0
+	 *
+	 * @param {OrderItem} model OrderItem 
+	 */
+	remove( model ) {
+		let subview = null;
+
+		// Find the subview containing the model.
+		this.views.get().forEach( ( view ) => {
+			const { model: viewModel } = view;
+
+			if ( parseInt( viewModel.get( 'id' ) ) === parseInt( model.id ) ) {
+				subview = view;
+			}
+		} );
+
+		// Remove subview if found.
+		if ( null !== subview ) {
+			subview.remove();
+		}
+	},
+
+	/**
 	 * @since 3.0
 	 */
-	onRemoveAdjustment() {
+	onChangeAdjustments() {
 		const { state } = this.options;
 
 		state

@@ -32,6 +32,7 @@ export const OrderAdjustment = Base.extend( {
 	initialize() {
 		Base.prototype.initialize.apply( this );
 
+		// Set template depending on type.
 		switch ( this.model.get( 'type' ) ) {
 			case 'credit':
 			case 'fee':
@@ -40,6 +41,11 @@ export const OrderAdjustment = Base.extend( {
 			default:
 				this.template = wp.template( 'edd-admin-order-adjustment-discount' );
 		}
+
+		const { state } = this.options;
+
+		// Listen for events.
+		this.listenTo( state.get( 'items' ), 'updatedAmounts', this.render );
 	},
 
 	/**
@@ -82,19 +88,14 @@ export const OrderAdjustment = Base.extend( {
 
 		const { state } = this.options;
 
+		// Remove Adjustment.
+		state
+			.get( 'adjustments' )
+			.remove( this.model );
+
+		// Update OrderItem amounts.
 		state
 			.get( 'items' )
-			.updateAmounts( {
-				// Remove the current Discount when finding new amounts.
-				discountIds: _.reject(
-					state.get( 'adjustments' ).pluck( 'id' ),
-					{
-						id: this.model.get( 'id' ),
-					}
-				),
-			} )
-			.done( () => {
-				state.get( 'adjustments' ).remove( this.model );
-			} );
+			.updateAmounts();
 	},
 } );

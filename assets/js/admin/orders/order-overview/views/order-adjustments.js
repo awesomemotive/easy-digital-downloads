@@ -33,71 +33,49 @@ export const OrderAdjustments = wp.Backbone.View.extend( {
 		const items = state.get( 'items' );
 		const adjustments = state.get( 'adjustments' );
 
-		this.listenTo( adjustments, 'add', this.onAdd );
-		this.listenTo( adjustments, 'remove', this.render );
-		this.listenTo( items, 'add remove', this.render );
+		// Listen for events.
+		this.listenTo( adjustments, 'add', this.add );
+		this.listenTo( adjustments, 'remove', this.remove );
 	},
 
 	/**
-	 * Renders the view.
-	 *
-	 * @since 3.0
-	 *
-	 * @return {OrderAdjustments} Current view.
-	 */
-	render() {
-		const { state } = this.options;
-
-		// Clear existing OrderAdjustment views.
-		this.views.remove();
-
-		// Add OrderAdjustments.
-		_.each( state.get( 'adjustments' ).models, ( item ) =>
-			this.onAdd( item )
-		);
-
-		return this;
-	},
-
-	/**
-	 * Adds an OrderAdjustment subview.
-	 *
-	 * @todo This is messy/hacky.
-	 * The `OrderItem` amount updates should be called within
-	 * the `OrderItems` view.
+	 * Adds an `OrderAdjustment` subview.
 	 *
 	 * @since 3.0
 	 *
 	 * @param {OrderAdjustment} model OrderAdjustment to add to view.
 	 */
-	onAdd( model ) {
-		// Keep state context available.
-		model.set( 'options', this.options );
+	add( model ) {
+		this.views.add(
+			new OrderAdjustment( {
+				...this.options,
+				model,
+			} )
+		);
+	},
 
-		const { state } = this.options;
+	/**
+	 * Removes an `OrderAdjustment` subview.
+	 *
+	 * @since 3.0
+	 *
+	 * @param {OrderAdjustment} model OrderAdjustment to remove from view.
+	 */
+	remove( model ) {
+		let subview = null;
 
-		// Do not recalculate amounts when viewing an order.
-		if ( false === state.get( 'isAdding' ) ) {
-			this.views.add(
-				new OrderAdjustment( {
-					...this.options,
-					model,
-				} )
-			);
+		// Find the Subview containing the model.
+		this.views.get().forEach( ( view ) => {
+			const { model: viewModel } = view;
 
-			return;
+			if ( parseInt( viewModel.get( 'id' ) ) === parseInt( model.id ) ) {
+				subview = view;
+			}
+		} );
+
+		// Remove Subview if found.
+		if ( null !== subview ) {
+			subview.remove();
 		}
-
-		state
-			.get( 'items' )
-			.updateAmounts()
-			.done( () => {
-				this.views.add(
-					new OrderAdjustment( {
-						...this.options,
-						model,
-					} )
-				);
-			} );
 	},
 } );
