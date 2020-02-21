@@ -1,3 +1,5 @@
+/* global _ */
+
 /**
  * Internal dependencies
  */
@@ -37,7 +39,14 @@ export const OrderAdjustmentDiscount = OrderAdjustment.extend( {
 		const { models: items } = state.get( 'items' );
 
 		items.forEach( ( item ) => {
-			total += +item.get( 'discount' );
+			const adjustments = item.get( 'adjustments' );
+			const discounts = _.filter( adjustments, ( adjustment ) => {
+				return adjustment.description === this.get( 'description' );
+			} );
+
+			discounts.forEach( ( discount ) => {
+				total += +discount.total;
+			} );
 		} );
 
 		return total;

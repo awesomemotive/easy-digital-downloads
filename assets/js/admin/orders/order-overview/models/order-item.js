@@ -43,6 +43,13 @@ export const OrderItem = Backbone.Model.extend( {
 		amountManual: 0,
 		taxManual: 0,
 		subtotalManual: 0,
+
+		// Track Adjustments
+		//
+		// Currently the API does not associate discounts at the OrderItem
+		// level. However, we need to know which Adjustments make up
+		// the total OrderItem discount amount.
+		adjustments: [],
 	},
 
 	/**
