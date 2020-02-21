@@ -69,42 +69,50 @@ export const OrderItems = Backbone.Collection.extend( {
 
 		// Find each `OrderItem`'s amounts.
 		_.each( items.models, ( item ) => {
-			const amounts = item.getAmounts( {
+			const updateAmounts = item.getAmounts( {
 				...defaults,
 				...args,
 			} );
 
 			// Update individual `OrderItem` with new amounts.
-			amounts.done( ( response ) => {
-				// Update `OrderItem`.
-				const {
-					amount,
-					discount,
-					tax,
-					subtotal,
-					total,
-				} = _.mapObject( response, ( v ) => number.unformat( v ) );
-
-				if ( true === item.get( '_isAdjustingManually' ) ) {
-					item.set( {
-						discount,
-					} );
-				} else {
-					item.set( {
+			updateAmounts
+				.done( ( response ) => {
+					// Update `OrderItem`.
+					const {
 						amount,
 						discount,
 						tax,
 						subtotal,
 						total,
-					} );
-				}
-			} );
+					} = _.mapObject( response, ( v ) => number.unformat( v ) );
+
+					if ( true === item.get( '_isAdjustingManually' ) ) {
+						item.set( {
+							discount,
+						} );
+					} else {
+						item.set( {
+							amount,
+							discount,
+							tax,
+							subtotal,
+							total,
+						} );
+					}
+
+					item.trigger( 'updatedAmounts' );
+				} );
 
 			// Track jQuery Promise.
-			promises.push( amounts );
+			promises.push( updateAmounts );
 		} );
 
 		// Return list of jQuery Promises.
-		return $.when.apply( $, promises );
+		const updateAmounts = $.when.apply( $, promises );
+
+		updateAmounts
+			.done( () => items.trigger( 'updatedAmounts' ) );
+
+		return updateAmounts;
 	},
 } );

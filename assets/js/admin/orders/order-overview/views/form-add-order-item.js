@@ -50,15 +50,19 @@ export const FormAddOrderItem = Dialog.extend( {
 			'submit form': 'onAdd',
 		} );
 
+		const { state } = this.options;
+
 		// Assign Collection from State.
-		this.collection = this.options.state.get( 'items' );
+		this.collection = state.get( 'items' );
 
 		// Create a fresh `OrderItem` to be added.
-		this.model = new OrderItem();
+		this.model = new OrderItem( {
+			state,
+		} );
 
 		// Listen for events.
 		this.listenTo( this.model, 'change', this.render );
-		this.listenTo( this.options.state, 'change:hasTax', this.render );
+		this.listenTo( this.model.get( 'state' ), 'change:hasTax', this.render );
 		this.listenTo( this.collection, 'add', this.closeDialog );
 	},
 
@@ -154,11 +158,10 @@ export const FormAddOrderItem = Dialog.extend( {
 				adjustments: state.get( 'adjustments' ),
 			} )
 			.then( ( response ) => {
-				const { amount, discount, tax, subtotal, total } = response;
+				const { amount, tax, subtotal, total } = response;
 
 				this.model.set( {
 					amount,
-					discount,
 					tax,
 					subtotal,
 					total,
@@ -241,7 +244,6 @@ export const FormAddOrderItem = Dialog.extend( {
 		e.preventDefault();
 
 		const { model, collection, options } = this;
-
 		const { state } = options;
 
 		// Use manual amounts if adjusting manually.
@@ -262,20 +264,14 @@ export const FormAddOrderItem = Dialog.extend( {
 			} );
 		}
 
-		// Update discount amount based on new amounts.
-		model
-			.getAmounts( {
-				country: state.getTaxCountry(),
-				region: state.getTaxRegion(),
-				items: state.get( 'items' ),
-				adjustments: state.get( 'adjustments' ),
-			} )
-			.then( ( response ) => {
-				// Update Discount.
-				model.set( 'discount', response.discount );
+		// Add to collection but do not alert.
+		collection.add( model, {
+			silent: true,
+		} );
 
-				// Add OrderItem to OrderItems.
-				collection.add( model );
-			} );
+		// Update all amounts with new item and alert when done.
+		collection
+			.updateAmounts()
+			.done( () => collection.trigger( 'add', model ) );
 	},
 } );

@@ -39,10 +39,10 @@ jQueryReady( () => {
 
 	// Create collections and add to state.
 	state.set( {
-		items: new OrderItems( items, {
+		items: new OrderItems( null, {
 			state,
 		} ),
-		adjustments: new OrderAdjustments( adjustments, {
+		adjustments: new OrderAdjustments( null, {
 			state,
 		} ),
 	} );
@@ -51,6 +51,18 @@ jQueryReady( () => {
 	const overview = new Overview( {
 		state,
 	} ).render();
+
+	// Hydrate collections.
+	// Adding individually vs. `set` so the state can be attached.
+	items.forEach( ( item ) => state.get( 'items' ).add( {
+		state,
+		...item,
+	} ) );
+
+	adjustments.forEach( ( adjustment ) => state.get( 'adjustments' ).add( {
+		state,
+		...adjustment,
+	} ) );
 
 	/**
 	 * Adjusts Overview tax configuration when a region changes.

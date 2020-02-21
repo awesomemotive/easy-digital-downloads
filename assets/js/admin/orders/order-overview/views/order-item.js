@@ -72,6 +72,16 @@ export const OrderItem = Base.extend( {
 	onDelete( e ) {
 		e.preventDefault();
 
-		this.state.get( 'items' ).remove( this.model );
+		const { state } = this.options;
+
+		// Remove OrderItem.
+		state
+			.get( 'items' )
+			.remove( this.model );
+
+		// Update remaining OrderItem amounts.
+		state
+			.get( 'items' )
+			.updateAmounts();
 	},
 } );

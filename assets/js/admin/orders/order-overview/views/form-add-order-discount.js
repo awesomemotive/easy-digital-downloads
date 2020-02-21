@@ -45,11 +45,14 @@ export const FormAddOrderDiscount = Dialog.extend( {
 	initialize() {
 		Dialog.prototype.initialize.apply( this, arguments );
 
+		const { state } = this.options;
+
 		// Assign Collection from State.
-		this.collection = this.options.state.get( 'adjustments' );
+		this.collection = state.get( 'adjustments' );
 
 		// Create a fresh `OrderAdjustmentDiscount` to be added.
 		this.model = new OrderAdjustmentDiscount( {
+			state,
 			_selected: false,
 		} );
 

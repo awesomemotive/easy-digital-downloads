@@ -24,7 +24,7 @@ export const OrderAdjustmentDiscount = OrderAdjustment.extend( {
 
 	/**
 	 * Returns the `OrderAdjustmentDiscount`'s total based on the current values
-	 * of all `OrderItems`.
+	 * of all `OrderItems` discounts.
 	 *
 	 * @since 3.0
 	 *
@@ -33,11 +33,10 @@ export const OrderAdjustmentDiscount = OrderAdjustment.extend( {
 	getTotal() {
 		let total = 0;
 
-		const { state } = this.get( 'options' );
+		const state = this.get( 'state' );
+		const { models: items } = state.get( 'items' );
 
-		const items = state.get( 'items' );
-
-		items.models.forEach( ( item ) => {
+		items.forEach( ( item ) => {
 			total += +item.get( 'discount' );
 		} );
 
