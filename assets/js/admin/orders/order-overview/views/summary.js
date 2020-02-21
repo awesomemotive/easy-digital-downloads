@@ -15,28 +15,26 @@ import { OrderItems, OrderAdjustments, Totals } from './';
  * @class Summary
  * @augments wp.Backbone.view
  */
-export const Summary = wp.Backbone.View.extend(
-	/** Lends Summary.prototype */ {
-		/**
-		 * @since 3.0
-		 */
-		el: '#edd-order-overview-summary',
+export const Summary = wp.Backbone.View.extend( {
+	/**
+	 * @since 3.0
+	 */
+	el: '#edd-order-overview-summary',
 
-		/**
-		 * Renders the view.
-		 *
-		 * @since 3.0
-		 *
-		 * @return {Summary} Current view.
-		 */
-		render() {
-			this.views.add( new OrderItems( this.options ) );
+	/**
+	 * Renders the view.
+	 *
+	 * @since 3.0
+	 *
+	 * @return {Summary} Current view.
+	 */
+	render() {
+		this.views.add( new OrderItems( this.options ) );
 
-			this.views.add( new OrderAdjustments( this.options ) );
+		this.views.add( new OrderAdjustments( this.options ) );
 
-			this.views.add( new Totals( this.options ) );
+		this.views.add( new Totals( this.options ) );
 
-			return this;
-		},
-	}
-);
+		return this;
+	},
+} );
