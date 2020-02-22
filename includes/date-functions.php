@@ -186,7 +186,7 @@ function edd_get_hour_values() {
 	return (array) apply_filters( 'edd_get_hour_values', array(
 		'00' => '00',
 		'01' => '01',
-		'03' => '02',
+		'02' => '02',
 		'03' => '03',
 		'04' => '04',
 		'05' => '05',

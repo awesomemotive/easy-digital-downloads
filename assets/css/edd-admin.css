@@ -663,13 +663,21 @@ textarea[name="edd-note"] {
 	height: 100px;
 }
 
+.edd-amount-type-wrapper {
+	position: relative;
+	display: inline-block;
+}
+
 .edd-amount-type-select-wrapper {
 	position: absolute;
 	width: 45px;
-	margin: 2px;
 	background: #fafafa;
 	opacity: 0.9;
-	overflow: hidden;
+	top: 1px;
+	left: 1px;
+	bottom: 1px;
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
 }
 
 .edd-amount-type-wrapper .edd-amount-type-select-wrapper:after {
@@ -688,18 +696,26 @@ textarea[name="edd-note"] {
 }
 
 .edd-amount-type-wrapper select {
+	line-height: 1;
+	text-align: center;
 	border: 0;
 	background: transparent;
-	height: 27px;
 	width: 45px;
-	padding: 0 7px 0 9px;
+	min-height: 0;
+	height: 100%;
 	margin: 0;
-	text-align: center;
+	padding-left: 8px;
 	border-right: 1px solid #ddd;
 	-webkit-appearance: none;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
 	box-shadow: none;
 	position: relative;
 	z-index: 3;
+}
+
+.edd-amount-type-wrapper input {
+	margin: 0;
 }
 
 .edd-amount-type-wrapper #edd-amount {

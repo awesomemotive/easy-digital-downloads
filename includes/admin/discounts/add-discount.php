@@ -83,12 +83,12 @@ $minutes      = edd_get_minute_values();
 
 				<tr>
 					<th scope="row" valign="top">
-						<label for="edd-products"><?php printf( esc_html__( '%s Requirements', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
+						<label for="edd_products"><?php printf( esc_html__( '%s Requirements', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
 					</th>
 					<td>
 						<?php echo EDD()->html->product_dropdown( array(
 							'name'        => 'product_reqs[]',
-							'id'          => 'products',
+							'id'          => 'edd_products',
 							'selected'    => array(),
 							'multiple'    => true,
 							'chosen'      => true,
