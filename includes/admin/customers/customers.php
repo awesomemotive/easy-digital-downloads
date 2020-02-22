@@ -843,7 +843,7 @@ function edd_customers_view( $customer = null ) {
 						<td class="column-primary"><strong><?php echo $link; ?></strong></td>
 						<td><?php echo edd_get_gateway_admin_label( $order->gateway ); ?></td>
 						<td><?php echo edd_currency_filter( edd_format_amount( $order->total ), $order->currency ); ?></td>
-						<td><time datetime="<?php echo esc_attr( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString() ); ?>"><?php echo edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString(), 'M. d, Y' ) . '<br>' . edd_date_i18n( strtotime( $order->date_created ), 'H:i' ) . ' ' . edd_get_timezone_abbr(); ?></time></td>
+						<td><time datetime="<?php echo esc_attr( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString() ); ?>"><?php echo edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString(), 'M. d, Y' ) . '<br>' . edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString(), 'H:i' ); ?></time></td>
 					</tr>
 
 				<?php endforeach;
