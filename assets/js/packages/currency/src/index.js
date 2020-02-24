@@ -63,11 +63,15 @@ export const Currency = class Currency {
 	format( number ) {
 		const { currencySymbol, currencySymbolPosition } = this.config;
 
-		// Create a formatted number.
-		const formattedNumber = this.number.format( number );
-
-		// Apply currency symbol.
+		let formattedNumber = this.number.format( number );
+		let isNegative = formattedNumber < 0;
 		let currency = '';
+
+		// Turn a negative value positive so we can put &ndash; before
+		// currency symbol if needed.
+		if ( isNegative ) {
+			formattedNumber = this.number.format( formattedNumber * -1 );
+		}
 
 		switch ( currencySymbolPosition ) {
 			case 'before':
@@ -76,6 +80,11 @@ export const Currency = class Currency {
 			case 'after':
 				currency = formattedNumber + currencySymbol;
 				break;
+		}
+
+		// Place negative symbol before currency symbol if needed.
+		if ( isNegative ) {
+			currency = `-${ currency }`;
 		}
 
 		return currency;

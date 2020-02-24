@@ -44,6 +44,34 @@ export const OrderItem = Backbone.Model.extend( {
 	},
 
 	/**
+	 * Returns the total Discount amount.
+	 *
+	 * @todo Clear up how/when a Discount amount is dynmically calculated
+	 * vs. using the saved value.
+	 *
+	 * It could use `state.get( 'isAdding' )`, but that's not great either.
+	 *
+	 * @since 3.0
+	 *
+	 * @return {number}
+	 */
+	getDiscountTotal() {
+		const _discounts = this.get( '_discounts' );
+
+		// If there are no internally tracked Discounts use
+		// the initial value.
+		//
+		// This ensues a value is available when viewing an existing Order.
+		if ( 0 === _discounts.length ) {
+			return this.get( 'discount' );
+		}
+
+		return _.reduce( _discounts, ( total, _discount ) => {
+			return total + _discount.amount;
+		}, 0 );
+	},
+
+	/**
 	 * Retrieves amounts for the `OrderItem` based on other `OrderItem`s and `OrderAdjustment`s.
 	 *
 	 * @since 3.0

@@ -41,8 +41,6 @@ export const OrderItems = wp.Backbone.View.extend( {
 		// Listen for events.
 		this.listenTo( items, 'add', this.render );
 		this.listenTo( items, 'remove', this.remove );
-
-		this.listenTo( adjustments, 'add remove', this.onChangeAdjustments );
 	},
 
 	render() {
@@ -103,17 +101,5 @@ export const OrderItems = wp.Backbone.View.extend( {
 		if ( null !== subview ) {
 			subview.remove();
 		}
-	},
-
-	/**
-	 * @since 3.0
-	 */
-	onChangeAdjustments() {
-		const { state } = this.options;
-
-		state
-			.get( 'items' )
-			.updateAmounts()
-			.done( () => this.render );
 	},
 } );

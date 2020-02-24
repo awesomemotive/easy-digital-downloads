@@ -130,6 +130,20 @@ export const FormAddOrderDiscount = Dialog.extend( {
 		const { model, options } = this;
 		const { state } = options;
 
-		state.get( 'adjustments' ).add( model );
+		state.set( 'isFetching', true );
+
+		const items = state.get( 'items' );
+		const adjustments = state.get( 'adjustments' );
+
+		// Add to collection but do not alert.
+		adjustments.add( model, {
+			silent: true,
+		} );
+
+		// Update all amounts with new item and alert when done.
+		items
+			.updateAmounts()
+			.done( () => adjustments.trigger( 'add', model ) )
+			.done( () => state.set( 'isFetching', false ) );
 	},
 } );
