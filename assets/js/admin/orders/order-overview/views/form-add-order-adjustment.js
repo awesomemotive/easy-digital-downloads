@@ -44,6 +44,7 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 
 		// Delegate additional events.
 		this.addEvents( {
+			'change #object_type': 'onChangeObjectType',
 			'change [name="type"]': 'onChangeType',
 			'keyup #amount': 'onChangeAmount',
 			'keyup #description': 'onChangeDescription',
@@ -93,6 +94,41 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 				id: item.get( 'id' ),
 				productName: item.get( 'productName' ),
 			} ) ),
+		}
+	},
+
+	/**
+	 * Updates the `OrderAdjustment` when the Object Type changes.
+	 *
+	 * @since 3.0
+	 *
+	 * @param {Object} e Change event
+	 */
+	onChangeObjectType( e ) {
+		const {
+			target: { options, selectedIndex },
+		} = e;
+
+		const selected = options[ selectedIndex ];
+
+		const objectType = selected.value;
+		let objectId = this.model.get( 'objectId' );
+
+		// Apply to a specific `OrderItem`.
+		if ( 'order_item' === objectType ) {
+			objectId = selected.dataset.orderItemId;
+
+			this.model.set( {
+				objectId,
+				objectType,
+			} );
+
+		// Apply to the whole order.
+		} else {
+			this.model.set( {
+				objectType,
+				objectId,
+			} );
 		}
 	},
 
