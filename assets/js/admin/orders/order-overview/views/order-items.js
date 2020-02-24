@@ -6,11 +6,11 @@
 import { OrderItem } from './';
 
 /**
- * Items
+ * OrderItems
  *
  * @since 3.0
  *
- * @class Items
+ * @class OrderItems
  * @augments wp.Backbone.View
  */
 export const OrderItems = wp.Backbone.View.extend( {
@@ -25,7 +25,12 @@ export const OrderItems = wp.Backbone.View.extend( {
 	className: 'edd-order-overview-summary__items',
 
 	/**
+	 * "Order Items" view.
+	 *
 	 * @since 3.0
+	 *
+	 * @constructs OrderItem
+	 * @augments Base
 	 */
 	initialize() {
 		const { state } = this.options;

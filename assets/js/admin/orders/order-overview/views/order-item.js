@@ -33,9 +33,15 @@ export const OrderItem = Base.extend( {
 	},
 
 	/**
+	 * "Order Item" view.
+	 *
 	 * @since 3.0
+	 *
+	 * @constructs OrderItem
+	 * @augments Base
 	 */
 	initialize() {
+		// Listen for events.
 		this.listenTo( this.model, 'change', this.render );
 	},
 
