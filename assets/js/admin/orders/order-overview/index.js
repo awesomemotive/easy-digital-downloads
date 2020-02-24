@@ -4,12 +4,12 @@
  * Internal dependencies
  */
 import { jQueryReady } from 'utils/jquery.js';
-
 import { Overview } from './views';
-
 import { OrderItems, OrderAdjustments } from './collections';
-
 import { State } from './models';
+
+// Temporarily include old Refund flow.
+import './_refund.js';
 
 /**
  * Setup Order Overview on DOM ready.
