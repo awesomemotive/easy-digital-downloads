@@ -45,9 +45,11 @@ export const OrderAdjustmentDiscount = OrderAdjustment.extend( {
 
 		items.forEach( ( item ) => {
 			// Find all `OrderItem` internall tracked Discounts that match this `OrderAdjustment`
-			const _discounts = item.get( '_discounts' ).filter( ( _discount ) => {
-				return _discount.code === this.get( 'description' );
-			} );
+			const _discounts = item
+				.get( '_discounts' )
+				.filter( ( _discount ) => {
+					return _discount.code === this.get( 'description' );
+				} );
 
 			if ( 0 === _discounts.length ) {
 				total = this.get( 'total' );

@@ -69,9 +69,12 @@ export const OrderAdjustments = Backbone.Collection.extend( {
 	 * @return {bool} True if the Collection contains the Model.
 	 */
 	has( model ) {
-		return undefined !== this.findWhere( {
-			typeId: model.get( 'typeId' ),
-		} );
+		return (
+			undefined !==
+			this.findWhere( {
+				typeId: model.get( 'typeId' ),
+			} )
+		);
 	},
 
 	/**

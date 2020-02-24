@@ -56,15 +56,19 @@ jQueryReady( () => {
 	//
 	// These are added invidually, and after the fact, so State
 	// can be associated with each Model.
-	items.forEach( ( item ) => state.get( 'items' ).add( {
-		state,
-		...item,
-	} ) );
+	items.forEach( ( item ) =>
+		state.get( 'items' ).add( {
+			state,
+			...item,
+		} )
+	);
 
-	adjustments.forEach( ( adjustment ) => state.get( 'adjustments' ).add( {
-		state,
-		...adjustment,
-	} ) );
+	adjustments.forEach( ( adjustment ) =>
+		state.get( 'adjustments' ).add( {
+			state,
+			...adjustment,
+		} )
+	);
 
 	// ... finally render the Overview once all data is set.
 	overview.render();

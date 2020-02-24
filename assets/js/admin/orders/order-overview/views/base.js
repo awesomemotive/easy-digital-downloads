@@ -185,9 +185,9 @@ export const Base = wp.Backbone.View.extend( {
 	prepare() {
 		return this.model
 			? {
-				...this.model.toJSON(),
-				state: this.model.get( 'state' ).toJSON(),
-			}
+					...this.model.toJSON(),
+					state: this.model.get( 'state' ).toJSON(),
+			  }
 			: {};
 	},
 

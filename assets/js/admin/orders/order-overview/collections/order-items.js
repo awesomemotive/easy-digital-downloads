@@ -51,8 +51,10 @@ export const OrderItems = Backbone.Collection.extend( {
 	 */
 	has( model ) {
 		const duplicates = this.filter( ( item ) => {
-			const itemId = item.get( 'productId' ) + '_' + item.get( 'priceId' );
-			const modelId = model.get( 'productId' ) + '_' + model.get( 'priceId' );
+			const itemId =
+				item.get( 'productId' ) + '_' + item.get( 'priceId' );
+			const modelId =
+				model.get( 'productId' ) + '_' + model.get( 'priceId' );
 
 			return itemId === modelId;
 		} );
@@ -101,9 +103,11 @@ export const OrderItems = Backbone.Collection.extend( {
 				.done( ( response ) => item.setAmounts( response ) )
 				// Track how much of each Discount is applied to an `OrderItem`.
 				// There is not currently API support for `OrderItem`-level `OrderAdjustment`s.
-				.done( ( { _discounts } ) => item.set( {
-					_discounts,
-				} ) );
+				.done( ( { _discounts } ) =>
+					item.set( {
+						_discounts,
+					} )
+				);
 
 			// Track jQuery Promise.
 			promises.push( getItemAmounts );

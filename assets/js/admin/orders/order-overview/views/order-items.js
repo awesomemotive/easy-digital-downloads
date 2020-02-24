@@ -56,7 +56,7 @@ export const OrderItems = wp.Backbone.View.extend( {
 					...this.options,
 				} )
 			);
-		// Render each item.
+			// Render each item.
 		} else {
 			_.each( items.models, ( model ) => this.add( model ) );
 		}
@@ -67,7 +67,7 @@ export const OrderItems = wp.Backbone.View.extend( {
 	 *
 	 * @since 3.0
 	 *
-	 * @param {OrderItem} model OrderItem 
+	 * @param {OrderItem} model OrderItem
 	 */
 	add( model ) {
 		this.views.add(
@@ -83,7 +83,7 @@ export const OrderItems = wp.Backbone.View.extend( {
 	 *
 	 * @since 3.0
 	 *
-	 * @param {OrderItem} model OrderItem 
+	 * @param {OrderItem} model OrderItem
 	 */
 	remove( model ) {
 		let subview = null;

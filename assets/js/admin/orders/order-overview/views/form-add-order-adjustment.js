@@ -91,7 +91,7 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 				id: item.get( 'id' ),
 				productName: item.get( 'productName' ),
 			} ) ),
-		}
+		};
 	},
 
 	/**
@@ -120,7 +120,7 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 				objectType,
 			} );
 
-		// Apply to the whole order.
+			// Apply to the whole order.
 		} else {
 			this.model.set( {
 				objectType,
