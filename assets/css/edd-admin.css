@@ -736,6 +736,10 @@ table.edd-order-overview-summary {
 	margin: 4px 0;
 }
 
+.edd-order-copy-download-link textarea {
+	width: 100%;
+}
+
 /* Note Styles
 -------------------------------------------------------------- */
 
