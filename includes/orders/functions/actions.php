@@ -207,14 +207,6 @@ function edd_add_manual_order( $args = array() ) {
 				: false;
 
 			// Amounts.
-			$amounts  = array(
-				'amount',
-				'subtotal',
-				'discount',
-				'tax',
-				'total'
-			);
-
 			$amount = isset( $download[ 'amount' ] )
 				? sanitize_text_field( $download[ 'amount' ] )
 				: 0.00;

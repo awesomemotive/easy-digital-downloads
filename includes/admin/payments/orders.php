@@ -644,8 +644,8 @@ function edd_order_details_overview( $order ) {
 				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title=""></span>
 			</div>
 			<button
-				id="add-item"
-				class="button button-secondary"
+				id="refund"
+				class="button button-secondary edd-refund-order"
 			>
 				<?php esc_html_e( 'Issue Refund', 'easy-digital-downloads' ); ?>
 			</button>

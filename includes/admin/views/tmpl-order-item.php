@@ -73,3 +73,4 @@ $view_url = add_query_arg(
 <input type="hidden" value="{{ data.amount }}" name="downloads[{{ data.id }}][amount]" />
 <input type="hidden" value="{{ data.tax }}" name="downloads[{{ data.id }}][tax]" />
 <input type="hidden" value="{{ data.subtotal }}" name="downloads[{{ data.id }}][subtotal]" />
+<input type="hidden" value="{{ data.total }}" name="downloads[{{ data.id }}][total]" />
