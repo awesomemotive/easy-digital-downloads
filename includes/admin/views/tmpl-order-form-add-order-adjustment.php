@@ -48,6 +48,33 @@
 			</p>
 		</fieldset>
 
+		<# if ( 'fee' === data.type && data.orderItems.length > 0 ) { #>
+		<p>
+			<label for="object_type">
+				<?php esc_html_e( 'Apply to', 'easy-digital-downloads' ); ?>
+			</label>
+
+			<select
+				id="object_type"
+				class="edd-select"
+				required
+			>
+				<option value="order"><?php esc_html_e( 'Entire order', 'easy-digital-downloads' ); ?></option>
+				<# _.each( data.orderItems, ( item ) => { #>
+					<option
+						value="order_item"
+						data-order-item-id={{ item.id }}
+						<# if ( item.id === data.objectId ) { #>
+							selected
+						<# } #>
+					>
+						{{ item.productName }}
+					</option>
+				<# } ); #>
+			</select>
+		</p>
+		<# } #>
+
 		<p>
 			<label for="amount">
 				<?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?>
