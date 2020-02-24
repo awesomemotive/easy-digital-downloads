@@ -1287,8 +1287,6 @@ add_action( 'wp_ajax_edd_get_tax_rate', 'edd_ajax_get_tax_rate' );
 /**
  * Retrieves a potential Order Item's amounts.
  *
- * @todo Nonce check
- *
  * @since 3.0
  */
 function edd_admin_order_get_item_amounts() {
@@ -1331,8 +1329,8 @@ function edd_admin_order_get_item_amounts() {
 		? sanitize_text_field( $tax['region'] )
 		: '';
 
-	$product_ids = isset( $_POST['product_ids'] )
-		? array_unique( array_map( 'intval', $_POST['product_ids'] ) )
+	$product_ids = isset( $_POST['productIds'] )
+		? array_unique( array_map( 'intval', $_POST['productIds'] ) )
 		: array();
 
 	$discounts = isset( $_POST['discounts'] )
@@ -1349,6 +1347,8 @@ function edd_admin_order_get_item_amounts() {
 	// Use base Amount if sent.
 	if ( isset( $_POST['amount'] ) && '0' !== $_POST['amount'] ) {
 		$amount = sanitize_text_field( $_POST['amount'] );
+	
+	// Determine amount from Download record.
 	} else {
 		if ( ! $download->has_variable_prices() ) {
 			$amount = floatval( $download->get_price() );
@@ -1369,35 +1369,50 @@ function edd_admin_order_get_item_amounts() {
 		$subtotal = $amount * $quantity;
 	}
 
-	// Track order_item adjustments.
-	// The API does not currently differentiate between order and order_item level adjustments
-	// so we need to track which amount comes from which adjustment for each item.
-	$adjustments = array();
+	$discount   = 0;
 
-	// Start with the base price and remove discounted amounts.
-	// @todo Create a function that returns the discount amount.
-	$discount = 0;
+	// Track how much of each Discount is applied to an `OrderItem`.
+	// There is not currently API support for `OrderItem`-level `OrderAdjustment`s.
+	$_discounts = array();
 
 	foreach ( $discounts as $discount_id ) {
-		$d     = edd_get_discount( $discount_id );
-		// $valid = edd_validate_discount( $d->id, $product_ids );
-    //
-		// if ( false === $valid ) {
-		// 	continue;
-		// }
+		$d = edd_get_discount( $discount_id );
 
+		if ( empty( $d ) ) {
+			continue;
+		}
+
+		// Validate Discount against current Order Items.
+		$valid = edd_validate_discount( $d->id, $product_ids );
+
+		if ( false === $valid ) {
+			continue;
+		}
+
+		// Apply Discount to affected Order Items.
+		// @todo Helper function somewhere?
+		$product_requirements = $d->get_product_reqs();
+		$product_requirements = array_map( 'absint', $product_requirements );
+		asort( $product_requirements );
+		$product_requirements = array_filter( array_values( $product_requirements ) );
+
+		if (
+			( 'not_global' === $d->get_scope() ) &&
+			! in_array( $product_id, $product_requirements, true )
+		) {
+			continue;
+		}
+
+		// Find the discounted amount.
 		$discounted_amount = $d->get_discounted_amount( $subtotal );
 		$discount_amount   = ( $subtotal - $discounted_amount );
 
-		$discount += $discount_amount;
-
-		$adjustments[] = array(
-			'id'          => $d->id,
-			'description' => $d->get_code(),
-			'type'        => 'discount',
-			'subtotal'    => $discount_amount,
-			'total'       => $discount_amount,
+		$_discounts[] = array(
+			'code'   => $d->code,
+			'amount' => $discount_amount,
 		);
+
+		$discount += $discount_amount;
 	}
 
 	$use_taxes = edd_use_taxes();
@@ -1410,8 +1425,8 @@ function edd_admin_order_get_item_amounts() {
 	}
 
 	$amounts = array(
-		'subtotal' => $subtotal,
 		'amount'   => $amount,
+		'subtotal' => $subtotal,
 		'discount' => $discount,
 		'tax'      => $tax,
 		'total'    => $subtotal + $tax,
@@ -1422,7 +1437,7 @@ function edd_admin_order_get_item_amounts() {
 	wp_send_json_success( array_merge(
 		$amounts,
 		array(
-			'adjustments' => $adjustments,
+			'_discounts' => $_discounts,
 		)
 	) );
 }
