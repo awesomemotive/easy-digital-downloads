@@ -39,6 +39,28 @@ export const OrderItems = Backbone.Collection.extend( {
 	},
 
 	/**
+	 * Determines if `OrderItems` contains a specific `OrderItem`.
+	 *
+	 * Uses the `OrderItem`s Product ID and Price ID to create a unique
+	 * value to check against.
+	 *
+	 * @since 3.0
+	 *
+	 * @param {OrderItem} model Model to look for.
+	 * @return {bool} True if the Collection contains the Model.
+	 */
+	has( model ) {
+		const duplicates = this.filter( ( item ) => {
+			const itemId = item.get( 'productId' ) + '_' + item.get( 'priceId' );
+			const modelId = model.get( 'productId' ) + '_' + model.get( 'priceId' );
+
+			return itemId === modelId;
+		} );
+
+		return duplicates.length > 0;
+	},
+
+	/**
 	 * Updates the amounts for all current `OrderItem`s.
 	 *
 	 * @since 3.0
