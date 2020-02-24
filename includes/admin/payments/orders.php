@@ -644,14 +644,17 @@ function edd_order_details_overview( $order ) {
 		<?php else : ?>
 			<div class="edd-order-overview-actions__locked">
 				<?php esc_html_e( 'Order items cannot be modified.', 'easy-digital-downloads' ); ?>
-				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title=""></span>
+				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Issue a refund to adjust the net total for this order.', 'easy-digital-downloads' ); ?>"></span>
 			</div>
+
+			<?php if ( 'refunded' !== $order->status ) : ?>
 			<button
 				id="refund"
 				class="button button-secondary edd-refund-order"
 			>
 				<?php esc_html_e( 'Issue Refund', 'easy-digital-downloads' ); ?>
 			</button>
+			<?php endif; ?>
 
 		<?php endif; ?>
 	</div>

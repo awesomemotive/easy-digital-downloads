@@ -70,6 +70,9 @@ if ( empty( $order ) ) {
 							// Attributes
 							edd_order_details_attributes( $order );
 
+							// Related Refunds
+							edd_order_details_refunds( $order );
+
 							// Extras
 							edd_order_details_extras( $order );
 
