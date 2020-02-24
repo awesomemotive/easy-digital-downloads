@@ -47,13 +47,15 @@ jQueryReady( () => {
 		} ),
 	} );
 
-	// Create and render the Overview.
+	// Create Overview.
 	const overview = new Overview( {
 		state,
-	} ).render();
+	} );
 
 	// Hydrate collections.
-	// Adding individually vs. `set` so the state can be attached.
+	//
+	// These are added invidually, and after the fact, so State
+	// can be associated with each Model.
 	items.forEach( ( item ) => state.get( 'items' ).add( {
 		state,
 		...item,
@@ -64,8 +66,11 @@ jQueryReady( () => {
 		...adjustment,
 	} ) );
 
+	// ... finally render the Overview once all data is set.
+	overview.render();
+
 	/**
-	 * Adjusts Overview tax configuration when a region changes.
+	 * Adjusts Overview tax configuration when the Customer's address changes.
 	 *
 	 * @since 3.0
 	 */

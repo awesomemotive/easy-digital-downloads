@@ -20,6 +20,7 @@ export const State = Backbone.Model.extend(
 		 */
 		defaults: {
 			isAdding: false,
+			isFetching: false,
 			hasQuantity: false,
 			hasTax: false,
 			items: [],

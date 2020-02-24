@@ -559,6 +559,10 @@ table.edd-order-overview-summary {
 	margin-left: auto !important;
 }
 
+.edd-ml-auto + .edd-ml-auto {
+	margin-left: 10px !important;
+}
+
 /** Items */
 .edd-order-overview-summary__items > :nth-child(odd) {
 	background-color: #f9f9f9;
@@ -695,8 +699,9 @@ table.edd-order-overview-summary {
 	display: flex;
 	align-items: center;
 }
+
 .edd-order-overview-modal form .submit .spinner {
-	margin: 0 10px 0 auto;
+	margin: 0;
 }
 
 .edd-order-overview-add-item [for="auto-calculate"] {

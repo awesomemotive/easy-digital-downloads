@@ -60,6 +60,23 @@ export const Base = wp.Backbone.View.extend( {
 	},
 
 	/**
+	 * "Base" view.
+	 *
+	 * @since 3.0
+	 *
+	 * @constructs Base
+	 * @augments wp.Backbone.View
+	 */
+	initialize() {
+		wp.Backbone.View.prototype.initialize.apply( this );
+
+		const { state } = this.options;
+
+		// Listen for events.
+		this.listenTo( state, 'change:isFetching', this.render );
+	},
+
+	/**
 	 * Merges additional events with existing events.
 	 *
 	 * @since 3.0
