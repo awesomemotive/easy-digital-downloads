@@ -324,7 +324,7 @@ window.EDD_Checkout = ( function( $ ) {
 
 				$( '.edd_cart_discount' ).html( discount_response.html );
 
-				if ( ! discount_response.discounts ) {
+				if ( discount_response.discounts && 0 === discount_response.discounts.length ) {
 					$( '.edd_cart_discount_row' ).hide();
 				}
 
