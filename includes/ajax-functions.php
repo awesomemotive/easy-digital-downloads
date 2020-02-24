@@ -1311,13 +1311,9 @@ function edd_admin_order_get_item_amounts() {
 
 	$is_adjusting_manually = isset( $_POST['_isAdjustingManually'] ) && false !== $_POST['_isAdjustingManually'];
 
-	$id = isset( $_POST['id'] )
-		? intval( sanitize_text_field( $_POST['id'] ) )
+	$product_id = isset( $_POST['productId'] )
+		? intval( sanitize_text_field( $_POST['productId'] ) )
 		: 0;
-
-	$all_ids = isset( $_POST['ids'] )
-		? array_unique( array_map( 'intval', $_POST['ids'] ) )
-		: array();
 
 	$price_id = isset( $_POST['priceId'] )
 		? intval( sanitize_text_field( $_POST['priceId'] ) )
@@ -1335,14 +1331,18 @@ function edd_admin_order_get_item_amounts() {
 		? sanitize_text_field( $tax['region'] )
 		: '';
 
+	$product_ids = isset( $_POST['product_ids'] )
+		? array_unique( array_map( 'intval', $_POST['product_ids'] ) )
+		: array();
+
 	$discounts = isset( $_POST['discounts'] )
 		? array_unique( array_map( 'intval', $_POST['discounts'] ) )
 		: array();
 
-	$item = edd_get_download( $id );
+	$download = edd_get_download( $product_id );
 
 	// Bail if no Download is found.
-	if ( ! $item ) {
+	if ( ! $download ) {
 		return wp_send_json_error();
 	}
 
@@ -1350,10 +1350,10 @@ function edd_admin_order_get_item_amounts() {
 	if ( isset( $_POST['amount'] ) && '0' !== $_POST['amount'] ) {
 		$amount = sanitize_text_field( $_POST['amount'] );
 	} else {
-		if ( ! $item->has_variable_prices() ) {
-			$amount = floatval( $item->get_price() );
+		if ( ! $download->has_variable_prices() ) {
+			$amount = floatval( $download->get_price() );
 		} else {
-			$prices = $item->get_prices();
+			$prices = $download->get_prices();
 
 			if ( isset( $prices[ $price_id ] ) ) {
 				$price  = $prices[ $price_id ];
@@ -1380,7 +1380,7 @@ function edd_admin_order_get_item_amounts() {
 
 	foreach ( $discounts as $discount_id ) {
 		$d     = edd_get_discount( $discount_id );
-		// $valid = edd_validate_discount( $d->id, $all_ids );
+		// $valid = edd_validate_discount( $d->id, $product_ids );
     //
 		// if ( false === $valid ) {
 		// 	continue;

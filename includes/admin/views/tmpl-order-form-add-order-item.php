@@ -27,8 +27,8 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 				data-search-placeholder="<?php echo esc_html_e( 'Search for a download', 'easy-digital-downloads' ); ?>"
 				data-search-type="download">
 					<option value=""></option>
-					<# if ( data.id ) { #>
-						<option value="{{ data.id }}<# if ( 0 !== data.priceId ) { #>_{{ data.priceId }}<# } #>" selected>{{ data.name }}</option>
+					<# if ( data.productId ) { #>
+						<option value="{{ data.productId }}<# if ( 0 !== data.priceId ) { #>_{{ data.priceId }}<# } #>" selected>{{ data.productName }}</option>
 					<# } #>
 			</select>
 
@@ -59,7 +59,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 					value="{{ data.quantity }}"
 					step="1"
 					min="1"
-					<# if ( '' === data.id || true === data._isDuplicate ) { #>
+					<# if ( '' === data.productId || true === data._isDuplicate ) { #>
 						disabled
 					<# } #>
 				/>
@@ -77,7 +77,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 					<# if ( true !== data._isAdjustingManually ) { #>
 						checked
 					<# } #>
-					<# if ( '' === data.id || true === data._isDuplicate ) { #>
+					<# if ( '' === data.productId || true === data._isDuplicate ) { #>
 						disabled
 					<# } #>
 				/>
@@ -167,7 +167,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 				type="submit"
 				class="button button-primary edd-ml-auto"
 				value="<?php echo esc_html( sprintf( __( 'Add %s', 'easy-digital-downloads' ), edd_get_label_singular() ) ); ?>"
-				<# if ( '' === data.id || true === data._isDuplicate ) { #>
+				<# if ( '' === data.productId || true === data._isDuplicate ) { #>
 					disabled
 				<# } #>
 			/>

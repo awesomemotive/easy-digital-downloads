@@ -29,7 +29,7 @@ $view_url = add_query_arg(
 			href="<?php echo esc_url( $view_url ); ?>&post={{ data.id }}"
 			class="row-title"
 		>
-			{{{ data.name }}}
+			{{{ data.productName }}}
 		</a>
 
 		<div class="row-actions">
@@ -67,9 +67,9 @@ $view_url = add_query_arg(
 	{{ data.subtotalCurrency }}
 </td>
 
-<input type="hidden" value="{{ data.id }}" name="downloads[{{ data.cid }}][id]" />
-<input type="hidden" value="{{ data.priceId }}" name="downloads[{{ data.cid }}][price_id]" />
-<input type="hidden" value="{{ data.quantity }}" name="downloads[{{ data.cid }}][quantity]" />
-<input type="hidden" value="{{ data.amount }}" name="downloads[{{ data.cid }}][amount]" />
-<input type="hidden" value="{{ data.tax }}" name="downloads[{{ data.cid }}][tax]" />
-<input type="hidden" value="{{ data.subtotal }}" name="downloads[{{ data.cid }}][subtotal]" />
+<input type="hidden" value="{{ data.productId }}" name="downloads[{{ data.id }}][id]" />
+<input type="hidden" value="{{ data.priceId }}" name="downloads[{{ data.id }}][price_id]" />
+<input type="hidden" value="{{ data.quantity }}" name="downloads[{{ data.id }}][quantity]" />
+<input type="hidden" value="{{ data.amount }}" name="downloads[{{ data.id }}][amount]" />
+<input type="hidden" value="{{ data.tax }}" name="downloads[{{ data.id }}][tax]" />
+<input type="hidden" value="{{ data.subtotal }}" name="downloads[{{ data.id }}][subtotal]" />

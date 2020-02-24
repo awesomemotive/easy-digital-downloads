@@ -46,7 +46,7 @@ export const OrderItems = Backbone.Collection.extend( {
 	 * @param {Object} args Configuration to calculate individual `OrderItem` amounts against.
 	 * @param {string} args.country Country code to determine tax rate.
 	 * @param {string} args.region Region to determine tax rate.
-	 * @param {Array} args.itemIds List of current `OrderItems`s.
+	 * @param {Array} args.productIds List of current products added to the Order.
 	 * @param {Array} args.discountIds List of `OrderAdjustmentDiscount`s to calculate amounts against.
 	 * @return {$.promise} A jQuery promise representing zero or more requests.
 	 */
@@ -60,7 +60,7 @@ export const OrderItems = Backbone.Collection.extend( {
 		const defaults = {
 			country: state.getTaxCountry(),
 			region: state.getTaxRegion(),
-			itemIds: items.pluck( 'id' ),
+			productIds: items.pluck( 'productIds' ),
 			discountIds: adjustments.pluck( 'id' ),
 		};
 
@@ -86,9 +86,7 @@ export const OrderItems = Backbone.Collection.extend( {
 						total,
 					} = _.mapObject( response, ( v ) => number.unformat( v ) );
 
-					const {
-						adjustments,
-					} = response;
+					const { adjustments } = response;
 
 					if ( true === item.get( '_isAdjustingManually' ) ) {
 						item.set( {

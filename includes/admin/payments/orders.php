@@ -522,9 +522,11 @@ function edd_order_details_overview( $order ) {
 
 		foreach ( $items as $item ) {
 			$_items[] = array(
-				'id'           => esc_html( $item->product_id ),
-				'name'         => esc_html( $item->get_order_item_name() ),
+				'productId'    => esc_html( $item->product_id ),
+				'productName'  => esc_html( $item->get_order_item_name() ),
 				'priceId'      => esc_html( $item->price_id ),
+				'cartIndex'    => esc_html( $item->cart_index ),
+				'type'         => esc_html( $item->type ),
 				'status'       => esc_html( $item->status ),
 				'quantity'     => esc_html( $item->quantity ),
 				'amount'       => esc_html( $item->amount ),
@@ -534,6 +536,7 @@ function edd_order_details_overview( $order ) {
 				'total'        => esc_html( $item->total ),
 				'dateCreated'  => esc_html( $item->date_created ),
 				'dateModified' => esc_html( $item->date_modified ),
+				'uuid'         => esc_html( $item->uuid ),
 			);
 		}
 
