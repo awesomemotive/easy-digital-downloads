@@ -3,7 +3,7 @@
 /**
  * Internal dependencies
  */
-import { OrderAdjustment } from './';
+import { Base, OrderAdjustment } from './';
 
 /**
  * OrderAdjustments
@@ -34,8 +34,24 @@ export const OrderAdjustments = wp.Backbone.View.extend( {
 		const adjustments = state.get( 'adjustments' );
 
 		// Listen for events.
-		this.listenTo( adjustments, 'add', this.add );
+		// Render full collection on add to ensure sort order is reflected.
+		this.listenTo( adjustments, 'add', this.render );
 		this.listenTo( adjustments, 'remove', this.remove );
+	},
+
+	/**
+	 * Render the collection.
+	 *
+	 * @since 3.0
+	 */
+	render() {
+		const { state } = this.options;
+		const adjustments = state.get( 'adjustments' );
+
+		// Remove existing `OrderAdjustment`s.
+		this.views.remove();
+
+		_.each( adjustments.models, ( model ) => this.add( model ) );
 	},
 
 	/**

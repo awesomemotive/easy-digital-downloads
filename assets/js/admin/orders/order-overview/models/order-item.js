@@ -38,12 +38,9 @@ export const OrderItem = Backbone.Model.extend( {
 		taxManual: 0,
 		subtotalManual: 0,
 
-		// Track Adjustments
-		//
-		// Currently the API does not associate discounts at the OrderItem
-		// level. However, we need to know which Adjustments make up
-		// the total OrderItem discount amount.
-		adjustments: [],
+		// Track how much of each Discount is applied to an `OrderItem`.
+		// There is not currently API support for `OrderItem`-level `OrderAdjustment`s.
+		_discounts: [],
 	},
 
 	/**
@@ -86,5 +83,41 @@ export const OrderItem = Backbone.Model.extend( {
 				discounts: _.uniq( discountIds ),
 			},
 		} );
+	},
+
+	/**
+	 * Bulk sets amounts.
+	 *
+	 * Only adjusts the Discount amount if adjusting manually.
+	 *
+	 * @since 3.0
+	 *
+	 * @param {Object} amounts Amounts to set.
+	 * @param {number} amounts.amount `OrderItem` unit price.
+	 * @param {number} amounts.discount `OrderItem` discount amount.
+	 * @param {number} amounts.tax `OrderItem` tax amount.
+	 * @param {number} amounts.subtotal `OrderItem` subtotal amount.
+	 * @param {number} amounts.total `OrderItem` total amount.
+	 */
+	setAmounts( {
+		amount = 0,
+		discount = 0,
+		tax = 0,
+		subtotal = 0,
+		total = 0,
+	} ) {
+		if ( true === this.get( '_isAdjustingManually' ) ) {
+			this.set( {
+				discount,
+			} );
+		} else {
+			this.set( {
+				amount,
+				discount,
+				tax,
+				subtotal,
+				total,
+			} );
+		}
 	},
 } );

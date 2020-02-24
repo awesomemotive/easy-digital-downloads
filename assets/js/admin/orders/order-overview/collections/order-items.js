@@ -69,58 +69,25 @@ export const OrderItems = Backbone.Collection.extend( {
 
 		// Find each `OrderItem`'s amounts.
 		_.each( items.models, ( item ) => {
-			const updateAmounts = item.getAmounts( {
+			const getItemAmounts = item.getAmounts( {
 				...defaults,
 				...args,
 			} );
 
-			// Update individual `OrderItem` with new amounts.
-			updateAmounts
-				.done( ( response ) => {
-					// Update `OrderItem`.
-					const {
-						amount,
-						discount,
-						tax,
-						subtotal,
-						total,
-					} = _.mapObject( response, ( v ) => number.unformat( v ) );
-
-					const { _discounts, } = response;
-
-					if ( true === item.get( '_isAdjustingManually' ) ) {
-						item.set( {
-							discount,
-
-							// Keep track of Discount amounts for each `OrderItem`.
-							_discounts,
-						} );
-					} else {
-						item.set( {
-							amount,
-							discount,
-							tax,
-							subtotal,
-							total,
-
-							// Keep track of Discount amounts for each `OrderItem`.
-							_discounts,
-						} );
-					}
-
-					item.trigger( 'updatedAmounts' );
-				} );
+			getItemAmounts
+				// Update individual `OrderItem`s and `OrderAdjustment`s with new amounts.
+				.done( ( response ) => item.setAmounts( response ) )
+				// Track how much of each Discount is applied to an `OrderItem`.
+				// There is not currently API support for `OrderItem`-level `OrderAdjustment`s.
+				.done( ( { _discounts } ) => item.set( {
+					_discounts,
+				} ) );
 
 			// Track jQuery Promise.
-			promises.push( updateAmounts );
+			promises.push( getItemAmounts );
 		} );
 
 		// Return list of jQuery Promises.
-		const updateAmounts = $.when.apply( $, promises );
-
-		updateAmounts
-			.done( () => items.trigger( 'updatedAmounts' ) );
-
-		return updateAmounts;
+		return $.when.apply( $, promises );
 	},
 } );

@@ -39,13 +39,14 @@ export const OrderAdjustmentDiscount = OrderAdjustment.extend( {
 		const { models: items } = state.get( 'items' );
 
 		items.forEach( ( item ) => {
-			const adjustments = item.get( 'adjustments' );
-			const discounts = _.filter( adjustments, ( adjustment ) => {
-				return adjustment.description === this.get( 'description' );
-			} );
+			// Find all `OrderItem` internall tracked Discounts that match this `OrderAdjustment`
+			const _discounts = item.get( '_discounts' ).filter( ( _discount ) => {
+				return _discount.code === this.get( 'description' );
+			}, 0 );
 
-			discounts.forEach( ( discount ) => {
-				total += +discount.total;
+			// Sum all amounts.
+			_.each( _discounts, ( _discount ) => {
+				total += +_discount.amount;
 			} );
 		} );
 

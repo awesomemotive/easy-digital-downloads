@@ -60,7 +60,7 @@
 				<input
 					type="text"
 					id="amount"
-					value="{{ data.amount }}"
+					value="{{ data.amountManual }}"
 					required
 				/>
 
