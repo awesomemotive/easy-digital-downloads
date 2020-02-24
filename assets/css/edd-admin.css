@@ -664,6 +664,11 @@ table.edd-order-overview-summary {
 }
 
 /** Dialog */
+.download_page_edd-payment-history .ui-dialog,
+.download_page_edd-payment-history .ui-dialog-content {
+	overflow: visible;
+}
+
 .edd-order-overview-modal form > p {
 	margin-top: 0;
 }
@@ -1253,10 +1258,6 @@ marquee {
 
 }
 
-.download_page_edd-payment-history .ui-dialog .ui-dialog-titlebar-close span {
-	margin-left: -8px;
-	margin-top: -8px;
-}
 #edd-download-link-textarea {
 	width: 100%;
 }

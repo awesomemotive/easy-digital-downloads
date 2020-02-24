@@ -45,7 +45,10 @@ export const OrderAdjustment = Base.extend( {
 		const { state } = this.options;
 
 		// Listen for events.
-		this.listenTo( state.get( 'items' ), 'updatedAmounts', this.render );
+		//
+		// `change:_discounts` is triggered at Model-level and bubbled to
+		// the Collection by Backbone.
+		this.listenTo( state.get( 'items' ), 'change:_discounts', this.render );
 	},
 
 	/**

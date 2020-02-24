@@ -57,9 +57,6 @@ export const FormAddOrderItem = Dialog.extend( {
 
 		const { state } = this.options;
 
-		// Assign Collection from State.
-		this.collection = state.get( 'items' );
-
 		// Create a fresh `OrderItem` to be added.
 		this.model = new OrderItem( {
 			id: uuid(),
@@ -70,8 +67,8 @@ export const FormAddOrderItem = Dialog.extend( {
 
 		// Listen for events.
 		this.listenTo( this.model, 'change', this.render );
-		this.listenTo( this.model.get( 'state' ), 'change:hasTax', this.render );
-		this.listenTo( this.collection, 'add', this.closeDialog );
+		this.listenTo( state, 'change:hasTax', this.render );
+		this.listenTo( state.get( 'items' ), 'add', this.closeDialog );
 	},
 
 	/**
@@ -100,10 +97,7 @@ export const FormAddOrderItem = Dialog.extend( {
 			subtotal = model.get( 'subtotalManual' );
 		}
 
-		const _isDuplicate = undefined !== state.get( 'items' ).findWhere( {
-			id: model.get( 'id' ),
-		} );
-
+		const _isDuplicate = state.get( 'items' ).has( model );
 		const _isAdjustingManually = model.get( '_isAdjustingManually' );
 
 		return {
@@ -239,7 +233,7 @@ export const FormAddOrderItem = Dialog.extend( {
 	},
 
 	/**
-	 * Adds an OrderItem to the OrderItems collection.
+	 * Adds an `OrderItem` to `OrderItems`.
 	 *
 	 * @since 3.0
 	 *
@@ -248,7 +242,7 @@ export const FormAddOrderItem = Dialog.extend( {
 	onAdd( e ) {
 		e.preventDefault();
 
-		const { model, collection, options } = this;
+		const { model, options } = this;
 		const { state } = options;
 
 		// Use manual amounts if adjusting manually.
@@ -269,14 +263,16 @@ export const FormAddOrderItem = Dialog.extend( {
 			} );
 		}
 
+		const items = state.get( 'items' );
+
 		// Add to collection but do not alert.
-		collection.add( model, {
+		items.add( model, {
 			silent: true,
 		} );
 
 		// Update all amounts with new item and alert when done.
-		collection
+		items
 			.updateAmounts()
-			.done( () => collection.trigger( 'add', model ) );
+			.done( () => items.trigger( 'add', model ) );
 	},
 } );
