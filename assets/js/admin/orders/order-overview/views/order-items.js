@@ -3,7 +3,7 @@
 /**
  * Internal dependencies
  */
-import { OrderItem } from './';
+import { OrderItem, NoOrderItems } from './';
 
 /**
  * OrderItems
@@ -39,10 +39,29 @@ export const OrderItems = wp.Backbone.View.extend( {
 		const adjustments = state.get( 'adjustments' );
 
 		// Listen for events.
-		this.listenTo( items, 'add', this.add );
+		this.listenTo( items, 'add', this.render );
 		this.listenTo( items, 'remove', this.remove );
 
 		this.listenTo( adjustments, 'add remove', this.onChangeAdjustments );
+	},
+
+	render() {
+		const { state } = this.options;
+		const items = state.get( 'items' );
+
+		this.views.remove();
+
+		// Nothing available.
+		if ( 0 === items.length ) {
+			this.views.set(
+				new NoOrderItems( {
+					...this.options,
+				} )
+			);
+		// Render each item.
+		} else {
+			_.each( items.models, ( model ) => this.add( model ) );
+		}
 	},
 
 	/**
