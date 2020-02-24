@@ -21,7 +21,7 @@ $view_url = edd_get_admin_url(
 
 <th class="column-name" colspan="{{ data.config.colspan }}">
 	<# if ( true === data.state.isAdding ) { #>
-	<button class="button-link delete" id="remove">
+	<button class="button-link delete">
 		<span class="dashicons dashicons-no"></span>
 	</button>
 	<# } #>
