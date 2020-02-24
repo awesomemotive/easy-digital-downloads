@@ -64,7 +64,7 @@ export const Currency = class Currency {
 		const { currencySymbol, currencySymbolPosition } = this.config;
 
 		let formattedNumber = this.number.format( number );
-		let isNegative = formattedNumber < 0;
+		const isNegative = formattedNumber < 0;
 		let currency = '';
 
 		// Turn a negative value positive so we can put &ndash; before

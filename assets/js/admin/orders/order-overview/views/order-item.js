@@ -87,14 +87,10 @@ export const OrderItem = Base.extend( {
 		const { state } = options;
 
 		// Remove OrderItem.
-		state
-			.get( 'items' )
-			.remove( model );
+		state.get( 'items' ).remove( model );
 
 		// Update remaining OrderItem amounts.
-		state
-			.get( 'items' )
-			.updateAmounts();
+		state.get( 'items' ).updateAmounts();
 	},
 
 	/**

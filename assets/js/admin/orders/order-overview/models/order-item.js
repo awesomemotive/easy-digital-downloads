@@ -66,9 +66,13 @@ export const OrderItem = Backbone.Model.extend( {
 			return this.get( 'discount' );
 		}
 
-		return _.reduce( _discounts, ( total, _discount ) => {
-			return total + _discount.amount;
-		}, 0 );
+		return _.reduce(
+			_discounts,
+			( total, _discount ) => {
+				return total + _discount.amount;
+			},
+			0
+		);
 	},
 
 	/**

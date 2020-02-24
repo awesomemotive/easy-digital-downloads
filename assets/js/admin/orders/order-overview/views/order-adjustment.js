@@ -39,7 +39,9 @@ export const OrderAdjustment = Base.extend( {
 				this.template = wp.template( 'edd-admin-order-adjustment' );
 				break;
 			default:
-				this.template = wp.template( 'edd-admin-order-adjustment-discount' );
+				this.template = wp.template(
+					'edd-admin-order-adjustment-discount'
+				);
 		}
 
 		const { state } = this.options;
@@ -99,13 +101,9 @@ export const OrderAdjustment = Base.extend( {
 		const { state } = this.options;
 
 		// Remove `OrderAdjustment`.
-		state
-			.get( 'adjustments' )
-			.remove( this.model );
+		state.get( 'adjustments' ).remove( this.model );
 
 		// Update `OrderItem` amounts.
-		state
-			.get( 'items' )
-			.updateAmounts();
+		state.get( 'items' ).updateAmounts();
 	},
 } );

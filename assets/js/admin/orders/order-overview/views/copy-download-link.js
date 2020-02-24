@@ -72,8 +72,7 @@ export const CopyDownloadLink = Dialog.extend( {
 
 		// Select the contents if a link is available.
 		if ( false !== link && '' !== link ) {
-			el.querySelector( '#link' )
-				.select();
+			el.querySelector( '#link' ).select();
 		}
 	},
 
@@ -93,7 +92,7 @@ export const CopyDownloadLink = Dialog.extend( {
 			type: 'POST',
 			url: ajaxurl,
 			data: {
-				action:'edd_get_file_download_link',
+				action: 'edd_get_file_download_link',
 				payment_id: orderId,
 				download_id: productId,
 				price_id: priceId,

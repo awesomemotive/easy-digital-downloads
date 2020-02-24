@@ -41,16 +41,8 @@ export const Totals = wp.Backbone.View.extend( {
 		const { state } = this.options;
 
 		// Listen for events.
-		this.listenTo(
-			state.get( 'items' ),
-			'add remove change',
-			this.render
-		);
-		this.listenTo(
-			state.get( 'adjustments' ),
-			'add remove',
-			this.render
-		);
+		this.listenTo( state.get( 'items' ), 'add remove change', this.render );
+		this.listenTo( state.get( 'adjustments' ), 'add remove', this.render );
 	},
 
 	/**
