@@ -29,16 +29,15 @@ $view_url = edd_get_admin_url(
 	<# if ( 'credit' === data.type ) { #>
 		<?php esc_html_e( 'Order Credit', 'easy-digital-downloads' ); ?>
 	<# } else { #>
-		<# if ( false !== data.orderItem ) { #>
-			{{ data.orderItem.productName }}
-		<# } else { #>
-			<?php esc_html_e( 'Order Fee', 'easy-digital-downloads' ); ?>
-		<# } #>
+		<?php esc_html_e( 'Order Fee', 'easy-digital-downloads' ); ?>
 	<# } #>
 
 	<# if ( '' !== data.description ) { #>
 		<br />
 		<small>
+			<# if ( false !== data.orderItem ) { #>
+				{{ data.orderItem.productName }}:&nbsp;
+			<# } #>
 			{{ data.description }}
 		</small>
 	<# } #>

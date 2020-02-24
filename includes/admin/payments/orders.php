@@ -565,12 +565,16 @@ function edd_order_details_overview( $order ) {
 			'items'       => $_items,
 			'adjustments' => $_adjustments,
 			'isAdding'    => true === edd_is_add_order_page(),
-			'hasQuantity' => true,
-			'hasTax'      => array(
-				'rate'    => 0,
-				'country' => '',
-				'region'  => '',
-			),
+			'hasQuantity' => true === edd_item_quantities_enabled()
+				? 1
+				: 0,
+			'hasTax'      => true === edd_use_taxes()
+				? array(
+					'rate'    => 0,
+					'country' => '',
+					'region'  => '',
+				)
+				: 0,
 			'nonces' => array(
 				'edd_admin_order_get_item_amounts' => wp_create_nonce( 'edd_admin_order_get_item_amounts' ),
 			),
@@ -582,6 +586,7 @@ function edd_order_details_overview( $order ) {
 		'item',
 		'adjustment',
 		'adjustment-discount',
+		'no-items',
 		'form-add-order-item',
 		'form-add-order-discount',
 		'form-add-order-adjustment',
@@ -600,7 +605,9 @@ function edd_order_details_overview( $order ) {
 			<tr>
 				<th class="column-name"><?php echo esc_html( edd_get_label_singular() ); ?></th>
 				<th class="column-amount"><?php esc_html_e( 'Unit Price', 'easy-digital-downloads' ); ?></th>
+				<?php if ( true === edd_item_quantities_enabled() ) : ?>
 				<th class="column-quantity"><?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?></th>
+				<?php endif; ?>
 				<th class="column-subtotal column-right"><?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></th>
 			</tr>
 		</thead>
@@ -616,12 +623,14 @@ function edd_order_details_overview( $order ) {
 				<?php echo esc_html_x( 'Add Adjustment', 'Apply an adjustment to an order', 'easy-digital-downloads' ); ?>
 			</button>
 
+			<?php if ( true === edd_has_active_discounts() ) : ?>
 			<button
 				id="add-discount"
 				class="button button-secondary"
 			>
 				<?php echo esc_html_x( 'Add Discount', 'Apply a discount to an order', 'easy-digital-downloads' ); ?>
 			</button>
+			<?php endif; ?>
 
 			<button
 				id="add-item"

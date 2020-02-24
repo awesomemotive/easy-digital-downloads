@@ -34,7 +34,6 @@ export const OrderAdjustments = wp.Backbone.View.extend( {
 		const adjustments = state.get( 'adjustments' );
 
 		// Listen for events.
-		// Render full collection on add to ensure sort order is reflected.
 		this.listenTo( adjustments, 'add', this.render );
 		this.listenTo( adjustments, 'remove', this.remove );
 	},

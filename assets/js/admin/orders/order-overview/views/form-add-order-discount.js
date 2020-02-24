@@ -52,20 +52,16 @@ export const FormAddOrderDiscount = Dialog.extend( {
 
 		const { state } = this.options;
 
-		// Assign Collection from State.
-		this.collection = state.get( 'adjustments' );
-
 		// Create a fresh `OrderAdjustmentDiscount` to be added.
 		this.model = new OrderAdjustmentDiscount( {
 			id: uuid(),
-			_selected: false,
 
 			state,
 		} );
 
 		// Listen for events.
 		this.listenTo( this.model, 'change', this.render );
-		this.listenTo( this.collection, 'add', this.closeDialog );
+		this.listenTo( state.get( 'adjustments' ), 'add', this.closeDialog );
 	},
 
 	/**
@@ -82,9 +78,7 @@ export const FormAddOrderDiscount = Dialog.extend( {
 		const { model, options } = this;
 		const { state } = options;
 
-		const _isDuplicate = undefined !== state.get( 'adjustments' ).findWhere( {
-			id: model.get( 'id' ),
-		} );
+		const _isDuplicate = state.get( 'adjustments' ).has( model );
 
 		return {
 			...Base.prototype.prepare.apply( this ),
@@ -117,25 +111,9 @@ export const FormAddOrderDiscount = Dialog.extend( {
 			return model.set( OrderAdjustmentDiscount.prototype.defaults );
 		}
 
-		// Deselect all other items.
-		// @todo Find a better way to manage selection.
-		_.each( this.collection.models, ( d ) =>
-			d.set(
-				{
-					_selected: false,
-				},
-				{
-					silent: true,
-				}
-			)
-		);
-
-		// Update Order Adjustment.
 		model.set( {
 			typeId: parseInt( discount.value ),
 			description: adjustment.code,
-
-			_selected: true,
 		} );
 	},
 
@@ -149,6 +127,9 @@ export const FormAddOrderDiscount = Dialog.extend( {
 	onAdd( e ) {
 		e.preventDefault();
 
-		this.collection.add( this.model );
+		const { model, options } = this;
+		const { state } = options;
+
+		state.get( 'adjustments' ).add( model );
 	},
 } );

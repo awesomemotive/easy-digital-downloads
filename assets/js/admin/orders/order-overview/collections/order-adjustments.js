@@ -61,6 +61,20 @@ export const OrderAdjustments = Backbone.Collection.extend( {
 	},
 
 	/**
+	 * Determines if `OrderAdjustments` contains a specific `OrderAdjustment`.
+	 *
+	 * @since 3.0
+	 *
+	 * @param {OrderAdjustment} model Model to look for.
+	 * @return {bool} True if the Collection contains the Model.
+	 */
+	has( model ) {
+		return undefined !== this.findWhere( {
+			typeId: model.get( 'typeId' ),
+		} );
+	},
+
+	/**
 	 * Returns a list of `OrderAdjustment`s by type.
 	 *
 	 * @since 3.0

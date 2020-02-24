@@ -11,6 +11,7 @@
 
 $discounts = edd_get_discounts( array(
 	'number' => 100,
+	'status' => 'active',
 ) );
 ?>
 
@@ -34,11 +35,11 @@ $discounts = edd_get_discounts( array(
 					<option
 						data-code="<?php echo esc_attr( $discount->code ); ?>"
 						value="<?php echo esc_attr( $discount->id ); ?>"
-						<# if ( true === data._selected ) { #>
+						<# if ( <?php echo esc_js( $discount->id ); ?> === data.typeId ) { #>
 							selected
 						<# } #>
 					>
-						<?php echo esc_html( $discount->name ); ?>: <?php echo esc_html( $discount->code ); ?>
+						<?php echo esc_html( $discount->code ); ?> &ndash; <?php echo esc_html( $discount->name ); ?>
 					</option>
 				<?php
 					endforeach;
@@ -48,7 +49,7 @@ $discounts = edd_get_discounts( array(
 
 			<# if ( true === data._isDuplicate ) { #>
 			<span class="edd-order-overview-error">
-			<?php esc_html_e( 'This Discount already applied to the Order.', 'easy-digital-downloads' ); ?>
+				<?php esc_html_e( 'This Discount already applied to the Order.', 'easy-digital-downloads' ); ?>
 			</span>
 			<# } #>
 		</p>
