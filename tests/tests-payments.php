@@ -138,7 +138,7 @@ class Tests_Payments extends EDD_UnitTestCase {
 	public function test_get_payment_status_translated() {
 		add_filter( 'locale', array( $this, 'alter_lang_to_fr' ), 10 );
 		$lang_file = EDD_PLUGIN_DIR . 'languages/easy-digital-downloads-fr_FR.mo';
-		load_textdomain( 'easy-digital-downloads', $lang_file );
+		@load_textdomain( 'easy-digital-downloads', $lang_file );
 
 		$this->assertEquals( 'pending', edd_get_payment_status( $this->_payment_id ) );
 		$this->assertEquals( 'pending', edd_get_payment_status( get_post( $this->_payment_id ) ) );
