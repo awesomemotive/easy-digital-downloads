@@ -863,7 +863,7 @@ function edd_order_details_attributes( $order ) {
 					echo EDD()->html->select( array(
 						'name'             => 'edd-payment-time-hour',
 						'options'          => edd_get_hour_values(),
-						'selected'         => $order_date->format( 'G' ),
+						'selected'         => $order_date->format( 'H' ),
 						'chosen'           => true,
 						'class'            => 'edd-time',
 						'show_option_none' => false,
