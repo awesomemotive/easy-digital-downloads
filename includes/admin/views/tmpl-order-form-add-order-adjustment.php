@@ -14,7 +14,7 @@
 	<form class="edd-order-overview-add-adjustment">
 		<fieldset>
 			<legend>
-				<?php esc_html_e( 'Adjustment Type', 'easy-digital-downloads' ); ?>
+				<?php esc_html_e( 'Type', 'easy-digital-downloads' ); ?>
 			</legend>
 
 			<p>

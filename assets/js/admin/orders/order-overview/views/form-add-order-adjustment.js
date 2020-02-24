@@ -54,9 +54,6 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 
 		const { state } = this.options;
 
-		// Assign Collection from State.
-		this.collection = state.get( 'adjustments' );
-
 		// Create a model `OrderAdjustment` to be added.
 		this.model = new OrderAdjustment( {
 			id: uuid(),
@@ -69,7 +66,7 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 
 		// Listen for events.
 		this.listenTo( this.model, 'change', this.render );
-		this.listenTo( this.collection, 'add', this.closeDialog );
+		this.listenTo( state.get( 'adjustments' ), 'add', this.closeDialog );
 	},
 
 	/**
@@ -186,6 +183,9 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 	onAdd( e ) {
 		e.preventDefault();
 
-		this.collection.add( this.model );
+		const { model, options } = this;
+		const { state } = options;
+
+		state.get( 'adjustments' ).add( model );
 	},
 } );
