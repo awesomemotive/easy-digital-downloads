@@ -149,8 +149,10 @@ function edd_active_tax_rates_query_clauses( $clauses ) {
  *            Renamed $state parameter to $region.
  *            Added $fallback parameter to only get rate for passed Country and Region.
  *
- * @param string $country Country.
- * @param string $region  Region.
+ * @param string  $country Country.
+ * @param string  $region  Region.
+ * @param boolean $fallback Fall back to the current Customer's address information
+ *                          or server $_POST data. Default true.
  *
  * @return mixed|void
  */

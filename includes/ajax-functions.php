@@ -1305,8 +1305,6 @@ function edd_admin_order_get_item_amounts() {
 		return wp_send_json_error();
 	}
 
-	$tax = isset( $_POST['tax'] ) && false !== $_POST['tax'];
-
 	$is_adjusting_manually = isset( $_POST['_isAdjustingManually'] ) && false !== $_POST['_isAdjustingManually'];
 
 	$product_id = isset( $_POST['productId'] )
@@ -1321,12 +1319,12 @@ function edd_admin_order_get_item_amounts() {
 		? intval( sanitize_text_field( $_POST['quantity'] ) )
 		: 0;
 
-	$country = isset( $tax['country'] )
-		? sanitize_text_field( $tax['country'] )
+	$country = isset( $_POST['country'] )
+		? sanitize_text_field( $_POST['country'] )
 		: '';
 
-	$region = isset( $tax['region'] )
-		? sanitize_text_field( $tax['region'] )
+	$region = isset( $_POST['region'] )
+		? sanitize_text_field( $_POST['region'] )
 		: '';
 
 	$product_ids = isset( $_POST['productIds'] )
@@ -1369,7 +1367,7 @@ function edd_admin_order_get_item_amounts() {
 		$subtotal = $amount * $quantity;
 	}
 
-	$discount   = 0;
+	$discount = 0;
 
 	// Track how much of each Discount is applied to an `OrderItem`.
 	// There is not currently API support for `OrderItem`-level `OrderAdjustment`s.
@@ -1418,8 +1416,8 @@ function edd_admin_order_get_item_amounts() {
 	$use_taxes = edd_use_taxes();
 	$tax_rate  = edd_get_tax_rate( $country, $region, $fallback = false );
 
-	if ( true === $use_taxes && 0 !== intval( $tax_rate ) ) {
-		$tax = edd_calculate_tax( $subtotal, $country, $region );
+	if ( true === $use_taxes && 0 !== floatval( $tax_rate ) ) {
+		$tax = edd_calculate_tax( floatval( $subtotal ), $country, $region );
 	} else { 
 		$tax = 0;
 	}
