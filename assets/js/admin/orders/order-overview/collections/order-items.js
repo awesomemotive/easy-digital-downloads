@@ -60,8 +60,8 @@ export const OrderItems = Backbone.Collection.extend( {
 		const defaults = {
 			country: state.getTaxCountry(),
 			region: state.getTaxRegion(),
-			productIds: items.pluck( 'productIds' ),
-			discountIds: adjustments.pluck( 'id' ),
+			productIds: items.pluck( 'productId' ),
+			discountIds: adjustments.pluck( 'typeId' ),
 		};
 
 		// Keep track of all jQuery Promises.
@@ -86,12 +86,14 @@ export const OrderItems = Backbone.Collection.extend( {
 						total,
 					} = _.mapObject( response, ( v ) => number.unformat( v ) );
 
-					const { adjustments } = response;
+					const { _discounts, } = response;
 
 					if ( true === item.get( '_isAdjustingManually' ) ) {
 						item.set( {
 							discount,
-							adjustments, // @todo Map to an Adjustment model.
+
+							// Keep track of Discount amounts for each `OrderItem`.
+							_discounts,
 						} );
 					} else {
 						item.set( {
@@ -100,7 +102,9 @@ export const OrderItems = Backbone.Collection.extend( {
 							tax,
 							subtotal,
 							total,
-							adjustments, // @todo Map to an Adjustment model.
+
+							// Keep track of Discount amounts for each `OrderItem`.
+							_discounts,
 						} );
 					}
 

@@ -44,6 +44,7 @@ $view_url = edd_get_admin_url(
 	<# if ( 'credit' === data.type ) { #>&ndash;<# } #>{{ data.totalCurrency }}
 </td>
 
-<input type="hidden" value="{{ data.type }}" name="adjustments[{{ data.type }}][{{ data.cid }}][type]" />
-<input type="hidden" value="{{ data.amount }}" name="adjustments[{{ data.type }}][{{ data.cid }}][amount]" />
-<input type="hidden" value="{{ data.description }}" name="adjustments[{{ data.type }}][{{ data.cid }}][description]" />
+<input type="hidden" value="{{ data.objectType }}" name="adjustments[{{ data.type }}][{{ data.id }}][object_type]" />
+<input type="hidden" value="{{ data.type }}" name="adjustments[{{ data.type }}][{{ data.id }}][type]" />
+<input type="hidden" value="{{ data.amount }}" name="adjustments[{{ data.type }}][{{ data.id }}][amount]" />
+<input type="hidden" value="{{ data.description }}" name="adjustments[{{ data.type }}][{{ data.id }}][description]" />

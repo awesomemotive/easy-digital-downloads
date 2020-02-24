@@ -545,14 +545,15 @@ function edd_order_details_overview( $order ) {
 				'id'           => esc_html( $adjustment->id ),
 				'objectId'     => esc_html( $adjustment->object_id ),
 				'objectType'   => esc_html( $adjustment->object_type ),
-				'type'         => esc_html( $adjustment->type ),
 				'typeId'       => esc_html( $adjustment->type_id ),
+				'type'         => esc_html( $adjustment->type ),
 				'description'  => esc_html( $adjustment->description ),
 				'subtotal'     => esc_html( $adjustment->subtotal ),
 				'tax'          => esc_html( $adjustment->tax ),
 				'total'        => esc_html( $adjustment->total ),
 				'dateCreated'  => esc_html( $adjustment->date_created ),
 				'dateModified' => esc_html( $adjustment->date_modified ),
+				'uuid'         => esc_html( $adjustment->uuid ),
 			);
 		}
 	}

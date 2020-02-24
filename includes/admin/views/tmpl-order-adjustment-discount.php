@@ -37,6 +37,6 @@ $view_url = edd_get_admin_url(
 	&ndash;{{ data.totalCurrency }}
 </td>
 
-<input type="hidden" value="{{ data.typeId }}" name="discounts[{{ data.cid }}][type_id]" />
-<input type="hidden" value="{{ data.amount }}" name="discounts[{{ data.cid }}][amount]" />
-<input type="hidden" value="{{ data.description }}" name="discounts[{{ data.cid }}][code]" />
+<input type="hidden" value="{{ data.typeId }}" name="discounts[{{ data.id }}][type_id]" />
+<input type="hidden" value="{{ data.amount }}" name="discounts[{{ data.id }}][amount]" />
+<input type="hidden" value="{{ data.description }}" name="discounts[{{ data.id }}][code]" />
