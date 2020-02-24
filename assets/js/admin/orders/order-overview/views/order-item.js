@@ -2,9 +2,10 @@
  * Internal dependencies
  */
 import { Base } from './';
-import { Currency } from '@easy-digital-downloads/currency';
+import { Currency, NumberFormat } from '@easy-digital-downloads/currency';
 
 const currency = new Currency();
+const number = new NumberFormat();
 
 /**
  * OrderItem
@@ -58,13 +59,17 @@ export const OrderItem = Base.extend( {
 	prepare() {
 		const { model } = this;
 
+		const discountTotal = _.reduce( model.get( '_discounts' ), ( total, _discount ) => {
+			return total + _discount.amount;
+		}, 0 );
+
 		return {
 			...Base.prototype.prepare.apply( this ),
 
 			amountCurrency: currency.format( model.get( 'amount' ) ),
 			subtotalCurrency: currency.format( model.get( 'subtotal' ) ),
 			taxCurrency: currency.format( model.get( 'tax' ) ),
-			discountCurrency: currency.format( model.get( 'discount' ) ),
+			discountCurrency: currency.format( discountTotal ),
 		};
 	},
 

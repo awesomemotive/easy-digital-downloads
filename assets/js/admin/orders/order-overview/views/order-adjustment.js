@@ -59,10 +59,15 @@ export const OrderAdjustment = Base.extend( {
 	 * @return {Object} The data for this view.
 	 */
 	prepare() {
+		const { model, options } = this;
 		const { state } = this.options;
 
 		// Determine column offset -- using cart quantities requires an extra column.
 		const colspan = true === state.get( 'hasQuantity' ) ? 2 : 1;
+
+		const orderItem = state.get( 'items' ).findWhere( {
+			id: model.get( 'objectId' ),
+		} );
 
 		return {
 			...Base.prototype.prepare.apply( this ),
@@ -71,7 +76,8 @@ export const OrderAdjustment = Base.extend( {
 				colspan,
 			},
 
-			totalCurrency: currency.format( this.model.getTotal() ),
+			orderItem: orderItem ? orderItem.toJSON() : false,
+			totalCurrency: currency.format( model.getTotal() ),
 		};
 	},
 
@@ -87,12 +93,12 @@ export const OrderAdjustment = Base.extend( {
 
 		const { state } = this.options;
 
-		// Remove Adjustment.
+		// Remove `OrderAdjustment`.
 		state
 			.get( 'adjustments' )
 			.remove( this.model );
 
-		// Update OrderItem amounts.
+		// Update `OrderItem` amounts.
 		state
 			.get( 'items' )
 			.updateAmounts();

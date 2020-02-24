@@ -1,7 +1,12 @@
 /**
+ * External dependencies
+ */
+import uuid from 'uuid-random';
+
+/**
  * Internal dependencies
  */
-import { Dialog } from './';
+import { Base, Dialog } from './';
 import { OrderAdjustment } from './../models';
 import { NumberFormat } from '@easy-digital-downloads/currency';
 
@@ -51,17 +56,44 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 		// Assign Collection from State.
 		this.collection = state.get( 'adjustments' );
 
-		// Create a fresh `OrderAdjustment` to be added.
+		// Create a model `OrderAdjustment` to be added.
 		this.model = new OrderAdjustment( {
-			state,
-			id: Math.random( 0, 999 ), // Create a unique ID so it can be added to the Collection.
+			id: uuid(),
+			objectType: 'order',
 			type: 'fee',
-			amount: '',
+			amountManual: '',
+
+			state,
 		} );
 
 		// Listen for events.
 		this.listenTo( this.model, 'change', this.render );
 		this.listenTo( this.collection, 'add', this.closeDialog );
+	},
+
+	/**
+	 * Prepares data to be used in `render` method.
+	 *
+	 * @since 3.0
+	 *
+	 * @see wp.Backbone.View
+	 * @see https://github.com/WordPress/WordPress/blob/master/wp-includes/js/wp-backbone.js
+	 *
+	 * @return {Object} The data for this view.
+	 */
+	prepare() {
+		const { model, options } = this;
+		const { state } = options;
+
+		return {
+			...Base.prototype.prepare.apply( this ),
+
+			// Pass existing OrderItems so we can apply a fee at OrderItem level.
+			orderItems: state.get( 'items' ).models.map( ( item ) => ( {
+				id: item.get( 'id' ),
+				productName: item.get( 'productName' ),
+			} ) ),
+		}
 	},
 
 	/**
@@ -98,11 +130,11 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 
 		preventDefault();
 
-		const amount = target.value;
-		const amountNumber = number.unformat( amount );
+		const amountManual = target.value;
+		const amountNumber = number.unformat( amountManual );
 
 		this.model.set( {
-			amount,
+			amountManual,
 			subtotal: amountNumber,
 			total: amountNumber,
 		} );
