@@ -55,11 +55,15 @@ $discounts = edd_get_discounts( array(
 		</p>
 
 		<p class="submit">
+			<# if ( true === data.state.isFetching ) { #>
+				<span class="spinner is-active edd-ml-auto"></span>
+			<# } #>
+
 			<input
 				type="submit"
 				class="button button-primary edd-ml-auto"
 				value="<?php esc_html_e( 'Add Discount', 'easy-digital-downloads' ); ?>"
-				<# if ( 0 === data.typeId || true === data._isDuplicate ) { #>
+				<# if ( 0 === data.typeId || true === data._isDuplicate || true === data.state.isFetching ) { #>
 					disabled
 				<# } #>
 			/>

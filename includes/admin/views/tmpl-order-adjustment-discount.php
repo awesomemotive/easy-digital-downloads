@@ -38,5 +38,6 @@ $view_url = edd_get_admin_url(
 </td>
 
 <input type="hidden" value="{{ data.typeId }}" name="discounts[{{ data.id }}][type_id]" />
-<input type="hidden" value="{{ data.amount }}" name="discounts[{{ data.id }}][amount]" />
 <input type="hidden" value="{{ data.description }}" name="discounts[{{ data.id }}][code]" />
+<input type="hidden" value="{{ data.subtotal }}" name="discounts[{{ data.id }}][subtotal]" />
+<input type="hidden" value="{{ data.total }}" name="discounts[{{ data.id }}][total]" />

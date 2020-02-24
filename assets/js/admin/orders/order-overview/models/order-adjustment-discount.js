@@ -28,6 +28,11 @@ export const OrderAdjustmentDiscount = OrderAdjustment.extend( {
 	 * Returns the `OrderAdjustmentDiscount`'s total based on the current values
 	 * of all `OrderItems` discounts.
 	 *
+	 * @todo Clear up how/when a Discount amount is dynmically calculated
+	 * vs. using the saved value.
+	 *
+	 * It could use `state.get( 'isAdding' )`, but that's not great either.
+	 *
 	 * @since 3.0
 	 *
 	 * @return {number} `OrderAdjustmentDiscount` total.
@@ -42,7 +47,12 @@ export const OrderAdjustmentDiscount = OrderAdjustment.extend( {
 			// Find all `OrderItem` internall tracked Discounts that match this `OrderAdjustment`
 			const _discounts = item.get( '_discounts' ).filter( ( _discount ) => {
 				return _discount.code === this.get( 'description' );
-			}, 0 );
+			} );
+
+			if ( 0 === _discounts.length ) {
+				total = this.get( 'total' );
+				return;
+			}
 
 			// Sum all amounts.
 			_.each( _discounts, ( _discount ) => {

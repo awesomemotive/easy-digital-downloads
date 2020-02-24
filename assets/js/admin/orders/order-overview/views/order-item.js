@@ -59,13 +59,12 @@ export const OrderItem = Base.extend( {
 	prepare() {
 		const { model } = this;
 
-		const discountTotal = _.reduce( model.get( '_discounts' ), ( total, _discount ) => {
-			return total + _discount.amount;
-		}, 0 );
+		const discountTotal = model.getDiscountTotal();
 
 		return {
 			...Base.prototype.prepare.apply( this ),
 
+			discount: discountTotal,
 			amountCurrency: currency.format( model.get( 'amount' ) ),
 			subtotalCurrency: currency.format( model.get( 'subtotal' ) ),
 			taxCurrency: currency.format( model.get( 'tax' ) ),
@@ -83,12 +82,13 @@ export const OrderItem = Base.extend( {
 	onDelete( e ) {
 		e.preventDefault();
 
-		const { state } = this.options;
+		const { model, options } = this;
+		const { state } = options;
 
 		// Remove OrderItem.
 		state
 			.get( 'items' )
-			.remove( this.model );
+			.remove( model );
 
 		// Update remaining OrderItem amounts.
 		state

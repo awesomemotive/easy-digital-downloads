@@ -109,7 +109,6 @@ export const OrderItems = Backbone.Collection.extend( {
 			promises.push( getItemAmounts );
 		} );
 
-		// Return list of jQuery Promises.
 		return $.when.apply( $, promises );
 	},
 } );

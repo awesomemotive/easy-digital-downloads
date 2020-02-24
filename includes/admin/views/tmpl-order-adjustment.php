@@ -44,10 +44,11 @@ $view_url = edd_get_admin_url(
 </th>
 
 <td class="column-right">
-	<# if ( 'credit' === data.type ) { #>&ndash;<# } #>{{ data.totalCurrency }}
+	{{ data.totalCurrency }}
 </td>
 
-<input type="hidden" value="{{ data.objectType }}" name="adjustments[{{ data.type }}][{{ data.id }}][object_type]" />
-<input type="hidden" value="{{ data.type }}" name="adjustments[{{ data.type }}][{{ data.id }}][type]" />
-<input type="hidden" value="{{ data.amount }}" name="adjustments[{{ data.type }}][{{ data.id }}][amount]" />
-<input type="hidden" value="{{ data.description }}" name="adjustments[{{ data.type }}][{{ data.id }}][description]" />
+<input type="hidden" value="{{ data.objectType }}" name="adjustments[{{ data.id }}][object_type]" />
+<input type="hidden" value="{{ data.type }}" name="adjustments[{{ data.id }}][type]" />
+<input type="hidden" value="{{ data.description }}" name="adjustments[{{ data.id }}][description]" />
+<input type="hidden" value="{{ data.subtotal }}" name="adjustments[{{ data.id }}][subtotal]" />
+<input type="hidden" value="{{ data.total }}" name="adjustments[{{ data.id }}][total]" />

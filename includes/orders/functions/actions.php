@@ -267,7 +267,7 @@ function edd_add_manual_order( $args = array() ) {
 		foreach ( $data['adjustments'] as $adjustment ) {
 			edd_add_order_adjustment( array(
 				'object_id'   => $order_id,
-				'object_type' => 'order',
+				'object_type' => sanitize_text_field( $adjustment['object_type'] ),
 				'type'        => sanitize_text_field( $adjustment['type'] ),
 				'description' => sanitize_text_field( $adjustment['description'] ),
 				'subtotal'    => sanitize_text_field( $adjustment['amount'] ),
@@ -292,8 +292,8 @@ function edd_add_manual_order( $args = array() ) {
 				'type_id'     => intval( $discount['type_id'] ),
 				'type'        => 'discount',
 				'description' => sanitize_text_field( $discount['code'] ),
-				'subtotal'    => sanitize_text_field( $discount['amount'] ),
-				'total'       => sanitize_text_field( $discount['amount'] ),
+				'subtotal'    => sanitize_text_field( $discount['subtotal'] ),
+				'total'       => sanitize_text_field( $discount['total'] ),
 			) );
 
 			// Increase discount usage.

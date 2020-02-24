@@ -79,6 +79,8 @@ export const OrderAdjustment = Base.extend( {
 				colspan,
 			},
 
+			total: model.getTotal(),
+			subtotal: model.getTotal(),
 			orderItem: orderItem ? orderItem.toJSON() : false,
 			totalCurrency: currency.format( model.getTotal() ),
 		};
