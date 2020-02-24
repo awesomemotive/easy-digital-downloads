@@ -52,9 +52,14 @@ export const Dialog = Base.extend( {
 	 *
 	 * @since 3.0
 	 *
+	 * @param {Object=} e Event that triggered the close.
 	 * @return {Dialog} Current view.
 	 */
-	closeDialog() {
+	closeDialog( e ) {
+		if ( e && e.preventDefault ) {
+			e.preventDefault();
+		}
+
 		this.$el.dialog( 'close' );
 
 		// Prevent events from stacking.

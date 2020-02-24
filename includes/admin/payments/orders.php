@@ -522,6 +522,8 @@ function edd_order_details_overview( $order ) {
 
 		foreach ( $items as $item ) {
 			$_items[] = array(
+				'id'           => esc_html( $item->id ),
+				'orderId'      => esc_html( $item->order_id ),
 				'productId'    => esc_html( $item->product_id ),
 				'productName'  => esc_html( $item->get_order_item_name() ),
 				'priceId'      => esc_html( $item->price_id ),
@@ -587,6 +589,7 @@ function edd_order_details_overview( $order ) {
 		'adjustment',
 		'adjustment-discount',
 		'no-items',
+		'copy-download-link',
 		'form-add-order-item',
 		'form-add-order-discount',
 		'form-add-order-adjustment',

@@ -1,7 +1,7 @@
 /**
  * Internal dependencies
  */
-import { Base } from './';
+import { Base, CopyDownloadLink } from './';
 import { Currency, NumberFormat } from '@easy-digital-downloads/currency';
 
 const currency = new Currency();
@@ -31,6 +31,7 @@ export const OrderItem = Base.extend( {
 	 */
 	events: {
 		'click .delete': 'onDelete',
+		'click .copy-download-link': 'onCopyDownloadLink',
 	},
 
 	/**
@@ -94,5 +95,26 @@ export const OrderItem = Base.extend( {
 		state
 			.get( 'items' )
 			.updateAmounts();
+	},
+
+	/**
+	 * Opens a Dialog that fetches Download File URLs.
+	 *
+	 * @since 3.0
+	 *
+	 * @param {Object} e Click event.
+	 */
+	onCopyDownloadLink( e ) {
+		e.preventDefault();
+
+		const { options, model } = this;
+
+		new CopyDownloadLink( {
+			orderId: model.get( 'orderId' ),
+			productId: model.get( 'productId' ),
+			priceId: model.get( 'priceId' ),
+		} )
+			.openDialog()
+			.render();
 	},
 } );

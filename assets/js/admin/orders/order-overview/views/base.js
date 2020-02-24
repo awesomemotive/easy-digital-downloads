@@ -231,7 +231,7 @@ export const Base = wp.Backbone.View.extend( {
 		const { el, focusedEl, focusedElCaretPos } = this;
 
 		// Do nothing extra if nothing is focused.
-		if ( null === focusedEl ) {
+		if ( null === focusedEl || 'undefined' === typeof focusedEl ) {
 			return;
 		}
 

@@ -43,8 +43,8 @@ $view_url = add_query_arg(
 
 			<# if ( false === data.state.isAdding ) { #>
 			<span>
-				<button class="button-link">
-					<?php echo esc_html( 'Copy Download Link', 'easy-digital-downloads' ); ?>
+				<button class="button-link copy-download-link">
+					<?php echo esc_html( sprintf( __( 'Copy %s Links', 'easy-digital-downloads' ), edd_get_label_singular() ) ); ?>
 				</button>
 			</span>
 			<# } #>

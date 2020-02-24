@@ -120,5 +120,12 @@ if ( empty( $order ) ) {
 
 </form>
 
-<div id="edd-download-link" title="<?php _e( 'Download Links', 'easy-digital-downloads' ); ?>"></div>
 <div id="edd-refund-order-dialog" title="<?php _e( 'Submit Refund', 'easy-digital-downloads' ); ?>"></div>
+
+<div
+	id="edd-admin-order-copy-download-link-dialog"
+	title="<?php echo esc_html( sprintf( __( 'Copy %s Links', 'easy-digital-downloads' ), edd_get_label_singular() ) ); ?>"
+	style="display: none;"
+>
+	<div id="edd-admin-order-copy-download-link-dialog-content"></div>
+</div>
