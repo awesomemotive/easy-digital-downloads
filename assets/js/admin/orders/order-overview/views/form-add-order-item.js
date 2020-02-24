@@ -37,7 +37,7 @@ export const FormAddOrderItem = Dialog.extend( {
 	 * @since 3.0
 	 *
 	 * @constructs FormAddOrderItem
-	 * @augments wp.Backbone.View
+	 * @augments Base
 	 */
 	initialize() {
 		Dialog.prototype.initialize.apply( this, arguments );
@@ -245,6 +245,8 @@ export const FormAddOrderItem = Dialog.extend( {
 		const { model, options } = this;
 		const { state } = options;
 
+		state.set( 'isFetching', true );
+
 		// Use manual amounts if adjusting manually.
 		if ( true === model.get( '_isAdjustingManually' ) ) {
 			model.set( {
@@ -273,6 +275,7 @@ export const FormAddOrderItem = Dialog.extend( {
 		// Update all amounts with new item and alert when done.
 		items
 			.updateAmounts()
-			.done( () => items.trigger( 'add', model ) );
+			.done( () => items.trigger( 'add', model ) )
+			.done( () => state.set( 'isFetching', false ) );
 	},
 } );

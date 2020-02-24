@@ -163,11 +163,15 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 		<# } #>
 
 		<p class="submit">
+			<# if ( true === data.state.isFetching ) { #>
+				<span class="spinner is-active edd-ml-auto"></span>
+			<# } #>
+
 			<input
 				type="submit"
 				class="button button-primary edd-ml-auto"
 				value="<?php echo esc_html( sprintf( __( 'Add %s', 'easy-digital-downloads' ), edd_get_label_singular() ) ); ?>"
-				<# if ( 0 === data.productId || true === data._isDuplicate ) { #>
+				<# if ( 0 === data.productId || true === data._isDuplicate || true === data.state.isFetching ) { #>
 					disabled
 				<# } #>
 			/>
