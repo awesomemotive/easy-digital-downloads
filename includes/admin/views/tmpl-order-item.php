@@ -26,7 +26,7 @@ $view_url = add_query_arg(
 
 	<div class="edd-order-overview-summary__items-name">
 		<a
-			href="<?php echo esc_url( $view_url ); ?>&post={{ data.id }}"
+			href="<?php echo esc_url( $view_url ); ?>&post={{ data.productId }}"
 			class="row-title"
 		>
 			{{{ data.productName }}}

@@ -30,9 +30,7 @@ export const Summary = wp.Backbone.View.extend( {
 	 */
 	render() {
 		this.views.add( new OrderItems( this.options ) );
-
 		this.views.add( new OrderAdjustments( this.options ) );
-
 		this.views.add( new Totals( this.options ) );
 
 		return this;

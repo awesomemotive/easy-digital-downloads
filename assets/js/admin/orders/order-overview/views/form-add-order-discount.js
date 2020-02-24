@@ -1,6 +1,11 @@
 /* global _ */
 
 /**
+ * External dependencies
+ */
+import uuid from 'uuid-random';
+
+/**
  * Internal dependencies
  */
 import { Dialog, Base } from './';
@@ -52,8 +57,10 @@ export const FormAddOrderDiscount = Dialog.extend( {
 
 		// Create a fresh `OrderAdjustmentDiscount` to be added.
 		this.model = new OrderAdjustmentDiscount( {
-			state,
+			id: uuid(),
 			_selected: false,
+
+			state,
 		} );
 
 		// Listen for events.
@@ -73,17 +80,16 @@ export const FormAddOrderDiscount = Dialog.extend( {
 	 */
 	prepare() {
 		const { model, options } = this;
-
 		const { state } = options;
+
+		const _isDuplicate = undefined !== state.get( 'adjustments' ).findWhere( {
+			id: model.get( 'id' ),
+		} );
 
 		return {
 			...Base.prototype.prepare.apply( this ),
 
-			_isDuplicate:
-			undefined !==
-			state.get( 'adjustments' ).findWhere( {
-				id: model.get( 'id' ),
-			} ),
+			_isDuplicate,
 		};
 	},
 
@@ -111,6 +117,7 @@ export const FormAddOrderDiscount = Dialog.extend( {
 			return model.set( OrderAdjustmentDiscount.prototype.defaults );
 		}
 
+		// Deselect all other items.
 		// @todo Find a better way to manage selection.
 		_.each( this.collection.models, ( d ) =>
 			d.set(
@@ -125,9 +132,6 @@ export const FormAddOrderDiscount = Dialog.extend( {
 
 		// Update Order Adjustment.
 		model.set( {
-			// Set ID so it is unique
-			// @todo Investigate why idAttribute is not working on the model.
-			id: parseInt( discount.value ),
 			typeId: parseInt( discount.value ),
 			description: adjustment.code,
 

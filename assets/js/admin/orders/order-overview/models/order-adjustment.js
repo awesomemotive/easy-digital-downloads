@@ -15,23 +15,19 @@ export const OrderAdjustment = Backbone.Model.extend( {
 	 * @typedef {Object} OrderAdjustment
 	 */
 	defaults: {
-		id: '',
-		objectId: '',
+		id: 0,
+		objectId: 0,
 		objectType: '',
-		type: 'order',
 		typeId: 0,
+		type: 'order',
 		description: '',
-		subtotal: 1,
+		subtotal: 0,
 		tax: 0,
 		total: 0,
 		dateCreated: '',
 		dateModified: '',
+		uuid: '',
 	},
-
-	/**
-	 * @since 3.0
-	 */
-	idAttribute: 'typeId',
 
 	/**
 	 * Returns the `OrderAdjustment` total.

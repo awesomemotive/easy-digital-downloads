@@ -34,7 +34,7 @@ $discounts = edd_get_discounts( array(
 					<option
 						data-code="<?php echo esc_attr( $discount->code ); ?>"
 						value="<?php echo esc_attr( $discount->id ); ?>"
-						<# if ( data._selected ) { #>
+						<# if ( true === data._selected ) { #>
 							selected
 						<# } #>
 					>

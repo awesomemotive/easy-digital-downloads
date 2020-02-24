@@ -1,4 +1,9 @@
 /**
+ * External dependencies
+ */
+import uuid from 'uuid-random';
+
+/**
  * Internal dependencies
  */
 import { Base, Dialog } from './';
@@ -57,10 +62,10 @@ export const FormAddOrderItem = Dialog.extend( {
 
 		// Create a fresh `OrderItem` to be added.
 		this.model = new OrderItem( {
-			state,
-
-			// Determines if this `OrderItem` has manually set amounts.
+			id: uuid(),
 			_isAdjustingManually: false,
+
+			state,
 		} );
 
 		// Listen for events.
