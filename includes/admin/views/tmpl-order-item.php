@@ -19,7 +19,7 @@ $view_url = add_query_arg(
 
 <td class="has-row-actions column-name">
 	<# if ( true === data.state.isAdding ) { #>
-	<button class="button-link delete" id="remove">
+	<button class="button-link delete">
 		<span class="dashicons dashicons-no"></span>
 	</button>
 	<# } #>
