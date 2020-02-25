@@ -38,7 +38,7 @@ final class Log_Meta extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201805220001;
+	protected $version = 201805221;
 
 	/**
 	 * Setup the database schema
