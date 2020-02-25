@@ -511,7 +511,6 @@ function edd_order_details_overview( $order ) {
 
 		$adjustments = edd_get_order_adjustments( array(
 			'object_id'   => $order->id,
-			'object_type' => 'order',
 			'number'      => 999,
 			'type'        => array(
 				'discount',

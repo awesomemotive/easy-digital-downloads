@@ -56,10 +56,12 @@ export const FormAddOrderItem = Dialog.extend( {
 		} );
 
 		const { state } = this.options;
+		const id = uuid();
 
 		// Create a fresh `OrderItem` to be added.
 		this.model = new OrderItem( {
-			id: uuid(),
+			id,
+			orderId: id,
 			_isAdjustingManually: false,
 
 			state,

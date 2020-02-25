@@ -262,8 +262,8 @@ function edd_add_manual_order( $args = array() ) {
 				'object_type' => sanitize_text_field( $adjustment['object_type'] ),
 				'type'        => sanitize_text_field( $adjustment['type'] ),
 				'description' => sanitize_text_field( $adjustment['description'] ),
-				'subtotal'    => sanitize_text_field( $adjustment['amount'] ),
-				'total'       => sanitize_text_field( $adjustment['amount'] ),
+				'subtotal'    => sanitize_text_field( $adjustment['subtotal'] ),
+				'total'       => sanitize_text_field( $adjustment['total'] ),
 			) );
 		}
 	}
