@@ -1395,6 +1395,7 @@ function edd_admin_order_get_item_amounts() {
 		$product_requirements = array_filter( array_values( $product_requirements ) );
 
 		if (
+			! empty( $product_requirements ) && 
 			( 'not_global' === $d->get_scope() ) &&
 			! in_array( $product_id, $product_requirements, true )
 		) {
