@@ -88,6 +88,24 @@ export const State = Backbone.Model.extend(
 		},
 
 		/**
+		 * Retrieves the Order discount.
+		 *
+		 * @since 3.0
+		 *
+		 * @return {number} Order discount.
+		 */
+		getDiscount() {
+			let discount = 0;
+			const adjustments = this.get( 'adjustments' ).getByType( 'discount' );
+
+			adjustments.forEach( ( adjustment ) => {
+				return discount += +adjustment.getTotal();
+			} );
+
+			return discount;
+		},
+
+		/**
 		 * Retrieves the Order tax.
 		 *
 		 * @since 3.0

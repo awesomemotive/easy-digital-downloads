@@ -31,3 +31,8 @@
 		<span class="total">{{ data.totalCurrency }}</span>
 	</td>
 </tr>
+
+<input type="hidden" value="{{ data.subtotal }}" name="subtotal" />
+<input type="hidden" value="{{ data.tax }}" name="tax" />
+<input type="hidden" value="{{ data.discount }}" name="discount" />
+<input type="hidden" value="{{ data.total }}" name="total" />
