@@ -559,6 +559,10 @@ table.edd-order-overview-summary {
 	margin-right: auto !important;
 }
 
+.edd-ml-auto + .edd-ml-auto {
+	margin-right: 10px !important;
+}
+
 /** Items */
 .edd-order-overview-summary__items > :nth-child(odd) {
 	background-color: #f9f9f9;
@@ -664,6 +668,11 @@ table.edd-order-overview-summary {
 }
 
 /** Dialog */
+.download_page_edd-payment-history .ui-dialog,
+.download_page_edd-payment-history .ui-dialog-content {
+	overflow: visible;
+}
+
 .edd-order-overview-modal form > p {
 	margin-top: 0;
 }
@@ -690,8 +699,9 @@ table.edd-order-overview-summary {
 	display: flex;
 	align-items: center;
 }
+
 .edd-order-overview-modal form .submit .spinner {
-	margin: 0 auto 0 10px;
+	margin: 0;
 }
 
 .edd-order-overview-add-item [for="auto-calculate"] {
@@ -724,6 +734,10 @@ table.edd-order-overview-summary {
 	color: #a00;
 	display: block;
 	margin: 4px 0;
+}
+
+.edd-order-copy-download-link textarea {
+	width: 100%;
 }
 
 /* Note Styles
@@ -1253,10 +1267,6 @@ marquee {
 
 }
 
-.download_page_edd-payment-history .ui-dialog .ui-dialog-titlebar-close span {
-	margin-right: -8px;
-	margin-top: -8px;
-}
 #edd-download-link-textarea {
 	width: 100%;
 }
