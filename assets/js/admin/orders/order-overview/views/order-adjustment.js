@@ -71,7 +71,7 @@ export const OrderAdjustment = Base.extend( {
 		const colspan = true === state.get( 'hasQuantity' ) ? 2 : 1;
 
 		const orderItem = state.get( 'items' ).findWhere( {
-			id: model.get( 'objectId' ),
+			orderId: model.get( 'objectId' ),
 		} );
 
 		return {
