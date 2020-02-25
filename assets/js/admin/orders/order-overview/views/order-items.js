@@ -3,7 +3,8 @@
 /**
  * Internal dependencies
  */
-import { OrderItem, NoOrderItems } from './';
+import { OrderItem } from './order-item.js';
+import { NoOrderItems } from './no-order-items.js';
 
 /**
  * OrderItems

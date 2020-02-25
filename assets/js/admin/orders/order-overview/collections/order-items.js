@@ -3,7 +3,7 @@
 /**
  * Internal dependencies
  */
-import { OrderItem } from './../models';
+import { OrderItem } from './../models/order-item.js';
 import { NumberFormat } from '@easy-digital-downloads/currency';
 
 const number = new NumberFormat();

@@ -1,7 +1,7 @@
 /**
  * Internal dependencies
  */
-import { Base } from './';
+import { Base } from './base.js';
 
 /**
  * "Dialog" view

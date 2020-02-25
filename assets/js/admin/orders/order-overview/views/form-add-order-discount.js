@@ -8,8 +8,9 @@ import uuid from 'uuid-random';
 /**
  * Internal dependencies
  */
-import { Dialog, Base } from './';
-import { OrderAdjustmentDiscount } from './../models';
+import { Dialog } from './dialog.js';
+import { Base } from './base.js';
+import { OrderAdjustmentDiscount } from './../models/order-adjustment-discount.js';
 
 /**
  * "Add Discount" view
@@ -81,7 +82,7 @@ export const FormAddOrderDiscount = Dialog.extend( {
 		const _isDuplicate = state.get( 'adjustments' ).has( model );
 
 		return {
-			...Base.prototype.prepare.apply( this ),
+			...Base.prototype.prepare.apply( this, arguments ),
 
 			_isDuplicate,
 		};

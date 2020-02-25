@@ -1,7 +1,8 @@
 /**
  * Internal dependencies
  */
-import { Base, CopyDownloadLink } from './';
+import { Base } from './base.js';
+import { CopyDownloadLink } from './copy-download-link.js';
 import { Currency, NumberFormat } from '@easy-digital-downloads/currency';
 
 const currency = new Currency();
@@ -63,7 +64,7 @@ export const OrderItem = Base.extend( {
 		const discountTotal = model.getDiscountTotal();
 
 		return {
-			...Base.prototype.prepare.apply( this ),
+			...Base.prototype.prepare.apply( this, arguments ),
 
 			discount: discountTotal,
 			amountCurrency: currency.format( model.get( 'amount' ) ),

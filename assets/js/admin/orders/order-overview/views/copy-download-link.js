@@ -1,7 +1,8 @@
 /**
  * Internal dependencies
  */
-import { Base, Dialog } from './';
+import { Base } from './base.js';
+import { Dialog } from './dialog.js';
 
 /**
  * "Copy Download Link" view
@@ -31,7 +32,7 @@ export const CopyDownloadLink = Dialog.extend( {
 	 * @augments Base
 	 */
 	initialize() {
-		Dialog.prototype.initialize.apply( this );
+		Dialog.prototype.initialize.apply( this, arguments );
 
 		this.link = false;
 
@@ -66,7 +67,7 @@ export const CopyDownloadLink = Dialog.extend( {
 	 * @since 3.0
 	 */
 	render() {
-		Base.prototype.render.apply( this );
+		Base.prototype.render.apply( this, arguments );
 
 		const { el, link } = this;
 

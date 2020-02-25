@@ -3,7 +3,9 @@
 /**
  * Internal dependencies
  */
-import { OrderItems, OrderAdjustments, Totals } from './';
+import { OrderItems } from './order-items.js';
+import { OrderAdjustments } from './order-adjustments.js';
+import { Totals } from './totals.js';
 
 /**
  * Overview summary

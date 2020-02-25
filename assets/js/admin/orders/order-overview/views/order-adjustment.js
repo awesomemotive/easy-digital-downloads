@@ -3,7 +3,7 @@
 /**
  * Internal dependencies
  */
-import { Base } from './';
+import { Base } from './base.js';
 import { Currency } from '@easy-digital-downloads/currency';
 
 const currency = new Currency();
@@ -75,7 +75,7 @@ export const OrderAdjustment = Base.extend( {
 		} );
 
 		return {
-			...Base.prototype.prepare.apply( this ),
+			...Base.prototype.prepare.apply( this, arguments ),
 
 			config: {
 				colspan,
