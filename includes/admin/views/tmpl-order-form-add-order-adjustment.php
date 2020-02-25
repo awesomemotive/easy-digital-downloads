@@ -112,7 +112,7 @@
 			<input
 				id="submit"
 				type="submit"
-				class="button button-primary"
+				class="button button-primary edd-ml-auto"
 				value="<?php esc_html_e( 'Add Adjustment', 'easy-digital-downloads' ); ?>"
 				<# if ( 0 === data.total ) { #>
 					disabled
