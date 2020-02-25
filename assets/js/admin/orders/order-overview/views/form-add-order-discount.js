@@ -56,6 +56,7 @@ export const FormAddOrderDiscount = Dialog.extend( {
 		// Create a fresh `OrderAdjustmentDiscount` to be added.
 		this.model = new OrderAdjustmentDiscount( {
 			id: uuid(),
+			typeId: uuid(),
 
 			state,
 		} );
