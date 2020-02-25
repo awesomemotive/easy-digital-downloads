@@ -89,7 +89,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 						<?php
 						printf(
 							esc_html__( 'Tax Rate: %s', 'easy-digital-downloads' ),
-							'{{ data.state.hasTax.country}}<# if ( \'\' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate }}%'
+							'{{ data.state.hasTax.country}}<# if ( \'\' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate.toFixed( 2 ) }}%'
 						); // WPCS: XSS okay.
 						?>
 						<# } else { #>
