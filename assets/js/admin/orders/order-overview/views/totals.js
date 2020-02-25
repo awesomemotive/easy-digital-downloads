@@ -64,6 +64,7 @@ export const Totals = wp.Backbone.View.extend( {
 		const subtotal = state.getSubtotal();
 		const tax = state.getTax();
 		const total = state.getTotal();
+		const discount = state.getDiscount();
 
 		return {
 			state: {
@@ -76,6 +77,7 @@ export const Totals = wp.Backbone.View.extend( {
 			subtotal,
 			tax,
 			total,
+			discount,
 
 			subtotalCurrency: currency.format( subtotal ),
 			taxCurrency: currency.format( tax ),

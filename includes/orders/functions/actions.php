@@ -129,6 +129,12 @@ function edd_add_manual_order( $args = array() ) {
 		? $date
 		: '';
 
+	// Amounts
+	$order_subtotal = floatval( $data['subtotal'] );
+	$order_tax      = floatval( $data['tax'] );
+	$order_discount = floatval( $data['discount'] );
+	$order_total    = floatval( $data['total'] );
+
 	// Add the order ID
 	$order_id = edd_add_order( array(
 		'status'         => 'pending', // Always insert as pending initially.
@@ -140,6 +146,10 @@ function edd_add_manual_order( $args = array() ) {
 		'mode'           => $mode,
 		'currency'       => edd_get_currency(),
 		'payment_key'    => sanitize_text_field( $data['payment_key'] ),
+		'subtotal'       => $order_subtotal,
+		'tax'            => $order_tax,
+		'discount'       => $order_discount,
+		'total'          => $order_total,
 		'date_created'   => $date,
 		'date_completed' => $completed,
 	) );
@@ -208,23 +218,23 @@ function edd_add_manual_order( $args = array() ) {
 
 			// Amounts.
 			$amount = isset( $download[ 'amount' ] )
-				? sanitize_text_field( $download[ 'amount' ] )
+				? floatval( $download[ 'amount' ] )
 				: 0.00;
 
 			$subtotal = isset( $download[ 'subtotal' ] )
-				? sanitize_text_field( $download[ 'subtotal' ] )
+				? floatval( $download[ 'subtotal' ] )
 				: 0.00;
 
 			$discount = isset( $download[ 'discount' ] )
-				? sanitize_text_field( $download[ 'discount' ] )
+				? floatval( $download[ 'discount' ] )
 				: 0.00;
 
 			$tax = isset( $download[ 'tax' ] )
-				? sanitize_text_field( $download[ 'tax' ] )
+				? floatval( $download[ 'tax' ] )
 				: 0.00;
 
 			$total = isset( $download[ 'total' ] )
-				? sanitize_text_field( $download[ 'total' ] )
+				? floatval( $download[ 'total' ] )
 				: 0.00;
 
 			// Add to edd_order_items table.
@@ -262,8 +272,8 @@ function edd_add_manual_order( $args = array() ) {
 				'object_type' => sanitize_text_field( $adjustment['object_type'] ),
 				'type'        => sanitize_text_field( $adjustment['type'] ),
 				'description' => sanitize_text_field( $adjustment['description'] ),
-				'subtotal'    => sanitize_text_field( $adjustment['subtotal'] ),
-				'total'       => sanitize_text_field( $adjustment['total'] ),
+				'subtotal'    => floatval( $adjustment['subtotal'] ),
+				'total'       => floatval( $adjustment['total'] ),
 			) );
 		}
 	}
@@ -284,8 +294,8 @@ function edd_add_manual_order( $args = array() ) {
 				'type_id'     => intval( $discount['type_id'] ),
 				'type'        => 'discount',
 				'description' => sanitize_text_field( $discount['code'] ),
-				'subtotal'    => sanitize_text_field( $discount['subtotal'] ),
-				'total'       => sanitize_text_field( $discount['total'] ),
+				'subtotal'    => floatval( $discount['subtotal'] ),
+				'total'       => floatval( $discount['total'] ),
 			) );
 
 			// Increase discount usage.
@@ -325,16 +335,12 @@ function edd_add_manual_order( $args = array() ) {
 		$order_number = edd_format_payment_number( $number );
 
 		update_option( 'edd_last_payment_number', $number );
-	}
 
-	// Update totals & maybe add order number.
-	edd_update_order( $order_id, array(
-		'order_number' => $order_number,
-		'subtotal'     => $order_subtotal,
-		'tax'          => $total_tax,
-		'discount'     => $total_discount,
-		'total'        => $order_total,
-	) );
+		// Update totals & maybe add order number.
+		edd_update_order( $order_id, array(
+			'order_number' => $order_number,
+		) );
+	}
 
 	// Stop purchase receipt from being sent.
 	if ( ! isset( $data['edd_order_send_receipt'] ) ) {
