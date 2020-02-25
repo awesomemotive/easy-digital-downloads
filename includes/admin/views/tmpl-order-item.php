@@ -31,6 +31,9 @@ $view_url = add_query_arg(
 		>
 			{{{ data.productName }}}
 		</a>
+		<# if ( 'refunded' === data.status ) { #>
+			&mdash; <?php esc_html_e( 'Refunded', 'easy-digital-downloads' ); ?>
+		<# } #>
 
 		<div class="row-actions">
 			<# if ( data.discount > 0 ) { #>
@@ -41,7 +44,7 @@ $view_url = add_query_arg(
 			<span class="text"><strong><?php esc_html_e( 'Tax:', 'easy-digital-downloads' ); ?></strong> {{ data.taxCurrency }}</span>
 			<# } #>
 
-			<# if ( false === data.state.isAdding ) { #>
+			<# if ( false === data.state.isAdding && 'complete' === data.status ) { #>
 			<span>
 				<button class="button-link copy-download-link">
 					<?php echo esc_html( sprintf( __( 'Copy %s Links', 'easy-digital-downloads' ), edd_get_label_singular() ) ); ?>
