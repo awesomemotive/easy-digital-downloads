@@ -6,8 +6,9 @@ import uuid from 'uuid-random';
 /**
  * Internal dependencies
  */
-import { Base, Dialog } from './';
-import { OrderAdjustment } from './../models';
+import { Base } from './base.js';
+import { Dialog } from './dialog.js';
+import { OrderAdjustment } from './../models/order-adjustment.js';
 import { NumberFormat } from '@easy-digital-downloads/currency';
 
 const number = new NumberFormat();
@@ -84,7 +85,7 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 		const { state } = options;
 
 		return {
-			...Base.prototype.prepare.apply( this ),
+			...Base.prototype.prepare.apply( this, arguments ),
 
 			// Pass existing OrderItems so we can apply a fee at OrderItem level.
 			orderItems: state.get( 'items' ).models.map( ( item ) => ( {

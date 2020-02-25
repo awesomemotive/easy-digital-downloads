@@ -6,8 +6,9 @@ import uuid from 'uuid-random';
 /**
  * Internal dependencies
  */
-import { Base, Dialog } from './';
-import { OrderItem } from './../models';
+import { Base } from './base.js';
+import { Dialog } from './dialog.js';
+import { OrderItem } from './../models/order-item.js';
 import { NumberFormat } from '@easy-digital-downloads/currency';
 
 const number = new NumberFormat();
@@ -103,7 +104,7 @@ export const FormAddOrderItem = Dialog.extend( {
 		const _isAdjustingManually = model.get( '_isAdjustingManually' );
 
 		return {
-			...Base.prototype.prepare.apply( this ),
+			...Base.prototype.prepare.apply( this, arguments ),
 
 			amountManual: amount,
 			taxManual: tax,

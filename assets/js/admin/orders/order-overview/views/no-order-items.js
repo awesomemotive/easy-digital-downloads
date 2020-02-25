@@ -1,7 +1,7 @@
 /**
  * Internal dependencies
  */
-import { Base } from './';
+import { Base } from './base.js';
 
 /**
  * NoOrderItems
@@ -40,7 +40,7 @@ export const NoOrderItems = wp.Backbone.View.extend( {
 		const colspan = true === state.get( 'hasQuantity' ) ? 4 : 3;
 
 		return {
-			...Base.prototype.prepare.apply( this ),
+			...Base.prototype.prepare.apply( this, arguments ),
 
 			config: {
 				colspan,

@@ -3,7 +3,8 @@
 /**
  * Internal dependencies
  */
-import { OrderAdjustment, OrderAdjustmentDiscount } from './../models';
+import { OrderAdjustment } from './../models/order-adjustment.js';
+import { OrderAdjustmentDiscount } from './../models/order-adjustment-discount.js';
 
 /**
  * Collection of `OrderAdjustment`s.

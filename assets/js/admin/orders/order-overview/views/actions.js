@@ -1,11 +1,9 @@
 /**
  * Internal dependencies
  */
-import {
-	FormAddOrderItem,
-	FormAddOrderDiscount,
-	FormAddOrderAdjustment,
-} from './';
+import { FormAddOrderItem } from './form-add-order-item.js';
+import { FormAddOrderDiscount } from './form-add-order-discount.js';
+import { FormAddOrderAdjustment } from './form-add-order-adjustment.js';
 
 /**
  * Actions

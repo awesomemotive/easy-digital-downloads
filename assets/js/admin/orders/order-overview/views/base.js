@@ -56,7 +56,7 @@ export const Base = wp.Backbone.View.extend( {
 		this.focusedEl = null;
 		this.focusedElCaretPos = 0;
 
-		wp.Backbone.View.prototype.preinitialize.apply( this );
+		wp.Backbone.View.prototype.preinitialize.apply( this, arguments );
 	},
 
 	/**
@@ -68,7 +68,7 @@ export const Base = wp.Backbone.View.extend( {
 	 * @augments wp.Backbone.View
 	 */
 	initialize() {
-		wp.Backbone.View.prototype.initialize.apply( this );
+		wp.Backbone.View.prototype.initialize.apply( this, arguments );
 
 		const { state } = this.options;
 
@@ -197,7 +197,7 @@ export const Base = wp.Backbone.View.extend( {
 	 * @since 3.0
 	 */
 	render() {
-		wp.Backbone.View.prototype.render.apply( this );
+		wp.Backbone.View.prototype.render.apply( this, arguments );
 
 		this.initializeSelects();
 		this.setFocus();

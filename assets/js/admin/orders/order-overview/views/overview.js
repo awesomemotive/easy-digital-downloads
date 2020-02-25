@@ -3,7 +3,8 @@
 /**
  * Internal dependencies
  */
-import { Summary, Actions } from './';
+import { Summary } from './summary.js';
+import { Actions } from './actions.js';
 
 /**
  * Overview
