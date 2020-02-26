@@ -12,8 +12,8 @@
 $view_url = edd_get_admin_url(
 	array(
 		'page'       => 'edd-discounts',
-		'edd-action' => 'edit_discount'
-	),
+		'edd-action' => 'edit_discount',
+	)
 );
 ?>
 
