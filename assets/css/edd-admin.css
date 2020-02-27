@@ -1492,9 +1492,6 @@ input[class*="edd-price-field"] {
 .edd-edit-purchase-element ul li.price {
 	width: 20%;
 }
-.edd-admin-box .label {
-	font-weight: 600;
-}
 .edd-admin-box-inside {
 	border-bottom: 1px solid #f1f1f1;
 	clear: both;
@@ -1502,11 +1499,32 @@ input[class*="edd-price-field"] {
 	margin: 0;
 	word-wrap: break-word;
 }
+.edd-admin-box-inside--row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
 .edd-admin-box-inside > p {
 	margin: 8px 3px;
 }
 .edd-admin-box-inside .strong {
 	font-weight: 600;
+}
+.edd-admin-box div:not(.edd-admin-box-inside--row) .label {
+	display: block;
+	margin-bottom: 4px;
+	margin-right: 0;
+}
+.edd-admin-box .label--has-tip {
+	display: flex;
+	align-items: center;
+}
+.edd-admin-box .label--has-tip .edd-help-tip {
+	margin-top: 0;
+	font-size: 20px;
+}
+.edd-admin-box div:not(.edd-admin-box-inside--row) .label--has-checkbox {
+	margin-bottom: 0;
 }
 .edd-payment-fees .fee-label {
 	color: #666;
@@ -1579,9 +1597,6 @@ input[class*="edd-price-field"] {
 	width: 100%;
 }
 .edd-admin-box-inside span.label {
-	display: inline-block;
-	width: 85px;
-	text-align: right;
 	margin-right: 10px;
 }
 #edd-order-resend-receipt .inside {
