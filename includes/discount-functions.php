@@ -726,7 +726,7 @@ function edd_get_discount_status_label( $discount_id = null ) {
  * @return boolean Whether or not discount code is not global.
  */
 function edd_is_discount_not_global( $discount_id = 0 ) {
-	return ( 'global' === edd_get_discount_field( $discount_id, 'scope' ) );
+	return ( 'not_global' === edd_get_discount_field( $discount_id, 'scope' ) );
 }
 
 /**
