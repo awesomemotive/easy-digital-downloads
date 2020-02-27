@@ -610,7 +610,7 @@ function edd_customers_view( $customer = null ) {
 		<p class="customer-terms-agreement-date info-item">
 			<?php
 			if ( ! empty( $agreement_timestamp ) ) {
-				echo esc_html( date_i18n( get_option( 'date_format' ) . ' H:i:s', $agreement_timestamp ) );
+				echo esc_html( edd_date_i18n( $agreement_timestamp, get_option( 'date_format' ) . ' H:i:s' ) . ' ' . edd_get_timezone_abbr() );
 
 				esc_html_e( ' &mdash; Agreed to Terms', 'easy-digital-downloads' );
 
@@ -624,7 +624,7 @@ function edd_customers_view( $customer = null ) {
 				esc_html_e( 'No terms agreement found.', 'easy-digital-downloads' );
 
 			} else {
-				echo esc_html( date_i18n( get_option( 'date_format' ) . ' H:i:s', $last_payment_date ) );
+				echo esc_html( edd_date_i18n( $last_payment_date, get_option( 'date_format' ) . ' H:i:s' ) . ' ' . edd_get_timezone_abbr() );
 
 				esc_html_e( ' &mdash; Agreed to Terms', 'easy-digital-downloads' );
 				?>
@@ -637,7 +637,7 @@ function edd_customers_view( $customer = null ) {
 
 		<p class="customer-privacy-policy-date info-item">
 			<?php if ( ! empty( $privacy_timestamp ) ) {
-				echo esc_html( date_i18n( get_option( 'date_format' ) . ' H:i:s', $privacy_timestamp ) );
+				echo esc_html( edd_date_i18n( $privacy_timestamp, get_option( 'date_format' ) . ' H:i:s' ) . ' ' . edd_get_timezone_abbr() );
 
 				esc_html_e( ' &mdash; Agreed to Privacy Policy', 'easy-digital-downloads' );
 
@@ -651,7 +651,7 @@ function edd_customers_view( $customer = null ) {
 				esc_html_e( 'No privacy policy agreement found.', 'easy-digital-downloads' );
 
 			} else {
-				echo esc_html( date_i18n( get_option( 'date_format' ) . ' H:i:s', $last_payment_date ) );
+				echo esc_html( edd_date_i18n( $last_payment_date, get_option( 'date_format' ) . ' H:i:s' ) . ' ' . edd_get_timezone_abbr() );
 
 				esc_html_e( ' &mdash; Agreed to Privacy Policy', 'easy-digital-downloads' );
 				?>
@@ -729,7 +729,7 @@ function edd_customers_view( $customer = null ) {
 								: '&mdash;';
 							?>
 						</td>
-						<td><time datetime="<?php echo esc_attr( EDD()->utils->date( $address->date_created, null, true )->toDateTimeString() ); ?>"><?php echo edd_date_i18n( EDD()->utils->date( $address->date_created, null, true )->toDateTimeString(), 'M. d, Y' ) . '<br>' . edd_date_i18n( EDD()->utils->date( $address->date_created, null, true )->toDateTimeString(), 'H:i' ); ?></time></td>
+						<td><time datetime="<?php echo esc_attr( EDD()->utils->date( $address->date_created, null, true )->toDateTimeString() ); ?>"><?php echo edd_date_i18n( EDD()->utils->date( $address->date_created, null, true )->toDateTimeString(), 'M. d, Y' ) . '<br>' . edd_date_i18n( strtotime( $address->date_created ), 'H:i' ) . ' ' . edd_get_timezone_abbr(); ?></time></td>
 					</tr>
 
 				<?php endforeach; ?>
@@ -843,7 +843,7 @@ function edd_customers_view( $customer = null ) {
 						<td class="column-primary"><strong><?php echo $link; ?></strong></td>
 						<td><?php echo edd_get_gateway_admin_label( $order->gateway ); ?></td>
 						<td><?php echo edd_currency_filter( edd_format_amount( $order->total ), $order->currency ); ?></td>
-						<td><time datetime="<?php echo esc_attr( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString() ); ?>"><?php echo edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString(), 'M. d, Y' ) . '<br>' . edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString(), 'H:i' ); ?></time></td>
+						<td><time datetime="<?php echo esc_attr( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString() ); ?>"><?php echo edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString(), 'M. d, Y' ) . '<br>' . edd_date_i18n( strtotime( $order->date_created ), 'H:i' ) . ' ' . edd_get_timezone_abbr(); ?></time></td>
 					</tr>
 
 				<?php endforeach;

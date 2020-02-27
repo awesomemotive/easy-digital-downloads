@@ -96,25 +96,26 @@ class Tax_Collected_By_Location extends List_Table {
 		$regions     = array();
 		$tax_rates   = edd_get_tax_rates( array(), OBJECT );
 		$date_filter = Reports\get_filter_value( 'dates' );
+		$date_range  = Reports\parse_dates_for_range( $date_filter['range'] );
 
 		// Date query.
 		$date_query  = '';
 
-		if ( ! empty( $date_filter['from'] ) && '0000-00-00 00:00:00' !== $date_filter['from'] ) {
-			$date_query .= $wpdb->prepare( " AND {$wpdb->edd_orders}.date_created >= %s", esc_sql( EDD()->utils->date( $date_filter['from'], null, false )->startOfDay()->format( 'mysql' ) ) );
+		if ( ! empty( $date_range['start'] ) && '0000-00-00 00:00:00' !== $date_range['start'] ) {
+			$date_query .= $wpdb->prepare( " AND {$wpdb->edd_orders}.date_created >= %s", esc_sql( EDD()->utils->date( $date_range['start'], null, false )->startOfDay()->format( 'mysql' ) ) );
 		}
 
-		if ( ! empty( $date_filter['to'] ) && '0000-00-00 00:00:00' !== $date_filter['to'] ) {
-			$date_query .= $wpdb->prepare( " AND {$wpdb->edd_orders}.date_created <= %s", esc_sql( EDD()->utils->date( $date_filter['to'], null, false )->endOfDay()->format( 'mysql' ) ) );
+		if ( ! empty( $date_range['end'] ) && '0000-00-00 00:00:00' !== $date_range['end'] ) {
+			$date_query .= $wpdb->prepare( " AND {$wpdb->edd_orders}.date_created <= %s", esc_sql( EDD()->utils->date( $date_range['end'], null, false )->endOfDay()->format( 'mysql' ) ) );
 		}
 
-		$from = empty( $date_filter['from'] ) || '0000-00-00 00:00:00' === $date_filter['from']
+		$from = empty( $date_range['start'] ) || '0000-00-00 00:00:00' === $date_range['start']
 				? '&mdash;'
-				: edd_date_i18n( EDD()->utils->date( $date_filter['from'], null, false )->startOfDay()->timestamp );
+				: edd_date_i18n( EDD()->utils->date( $date_range['start'], null, false )->startOfDay()->timestamp );
 
-		$to = empty( $date_filter['to'] ) || '0000-00-00 00:00:00' === $date_filter['to']
+		$to = empty( $date_range['end'] ) || '0000-00-00 00:00:00' === $date_range['end']
 			? '&mdash;'
-			: edd_date_i18n( EDD()->utils->date( $date_filter['to'], null, false )->endOfDay()->timestamp );
+			: edd_date_i18n( EDD()->utils->date( $date_range['end'], null, false )->endOfDay()->timestamp );
 
 		/*
 		 * We need to first calculate the total tax collected for all orders so we can determine the amount of tax collected for the global rate

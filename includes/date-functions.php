@@ -24,7 +24,7 @@ function edd_date_i18n( $timestamp, $format = 'date' ) {
 	$format = edd_get_date_format( $format );
 
 	// If timestamp is a string, attempt to turn it into a timestamp.
-	if ( is_string( $timestamp ) ) {
+	if ( ! is_numeric( $timestamp ) ) {
 		$timestamp = strtotime( $timestamp );
 	}
 
@@ -186,7 +186,7 @@ function edd_get_hour_values() {
 	return (array) apply_filters( 'edd_get_hour_values', array(
 		'00' => '00',
 		'01' => '01',
-		'03' => '02',
+		'02' => '02',
 		'03' => '03',
 		'04' => '04',
 		'05' => '05',
