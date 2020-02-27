@@ -3,10 +3,10 @@ Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze
 Donate link: https://easydigitaldownloads.com/donate/
-Tags: ecommerce, e-commerce, sell, downloads, store, paypal, checkout, shop
-Requires at least: 4.4
-Tested up to: 5.2.3
-Stable Tag: 2.9.19
+Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
+Requires at least: 4.6
+Tested up to: 5.3
+Stable Tag: 3.0
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -18,6 +18,9 @@ Easy Digital Downloads is a complete eCommerce solution for selling digital prod
 = Sell effortlessly =
 
 Whether it is software, documents, photos, ebooks, songs, graphics, or any other type of media file, Easy Digital Downloads provides a complete system for effortlessly selling your digital products.
+
+> Why would anybody use any other plugin to sell digital products? If you want an easy-to-implement checkout cart, EDD does everything you need. And it's easy to use for a simpleton like me. Not having to worry about how money gets from our website to our Stripe and PayPal accounts is a magical feeling.
+> Joe Howard - WP Buffs
 
 = Localized for your language =
 
@@ -48,6 +51,9 @@ Payment gateways supported through free or premium extension:
 
 See our [gateways category](https://easydigitaldownloads.com/downloads/category/gateways/?utm_source=extensions&utm_medium=description_tab&utm_content=gateways&utm_campaign=readme) in the extensions catalogue for a complete list of supported gateways. There are also a large number of additional gateways developed and supported by [3rd party developers](https://easydigitaldownloads.com/3rd-party-extensions/#gateways).
 
+> What can I say? Stripe is my go-to payment processor and without this add-on I don’t know what I would do. Connect EDD to your Stripe account in seconds and you’re done! Having a simple option to toggle test mode is also a valuable development tool. This is one of my go-to EDD extensions.
+> Matt Whiteley – Whiteley Designs
+
 = Go further with extensions =
 
 With add-on plugins from our [extensions catalogue](https://easydigitaldownloads.com/downloads/?utm_source=extensions&utm_medium=description_tab&utm_content=extensions&utm_campaign=readme) you can super-charge your digital store. Some of our extension highlights include:
@@ -64,13 +70,34 @@ With add-on plugins from our [extensions catalogue](https://easydigitaldownloads
 * [MailChimp](https://easydigitaldownloads.com/downloads/mailchimp/?utm_source=extension&utm_medium=description_tab&utm_content=mailchimp&utm_campaign=readme) connects your store to your MailChimp account so you can easily subscribe customers to email lists based on what they purchase
 * [AWeber](https://easydigitaldownloads.com/downloads/aweber/?utm_source=extension&utm_medium=description_tab&utm_content=aweber&utm_campaign=readme) connects your store to your AWeber account so you can easily subscribe customers to email lists based on what they purchase
 * [Amazon S3](https://easydigitaldownloads.com/downloads/amazon-s3/?utm_source=extension&utm_medium=description_tab&utm_content=amazon-s3&utm_campaign=readme) lets you securely host files on Amazon S3 for more reliable and secure file delivery
-* [Dropbox File Store](https://easydigitaldownloads.com/downloads/dropbox-file-store//?utm_source=extension&utm_medium=description_tab&utm_content=dropbox-file-store/&utm_campaign=readme) lets you securely host files in your Dropbox account for more reliable and secure file delivery
+* [Dropbox File Store](https://easydigitaldownloads.com/downloads/dropbox-file-store/?utm_source=extension&utm_medium=description_tab&utm_content=dropbox-file-store/&utm_campaign=readme) lets you securely host files in your Dropbox account for more reliable and secure file delivery
+* [All Access](https://easydigitaldownloads.com/downloads/all-access/?utm_source=extension&utm_medium=description_tab&utm_content=all-access/&utm_campaign=readme) allows customers to buy access to all, or a collection of, your products with a single purchase
+
+> I started an online music supply with EDD this year and I am loving it. I purchased the EDD Extended Pass to set up a marketplace where I sell original, royalty-free music and my investment has already paid for itself in the first 6 months. Freakin' love it!
+> Christopher Postill - Sounds Like an Earful
 
 These are just a few of the extensions we offer to help super-charge your digital store. See our complete [extensions catalogue](https://easydigitaldownloads.com/downloads/?utm_source=extensions&utm_medium=description_tab&utm_content=extensions&utm_campaign=readme) for more. There are also hundreds of extensions created by Easy Digital Downloads community members, which can be found on our [3rd Party Extensions page](https://easydigitaldownloads.com/3rd-party-extensions/?utm_source=3rd-party-extensions&utm_medium=description_tab&utm_content=3rd-party-extensions&utm_campaign=readme).
 
 = Built with developers in mind =
 
 Extensible, adaptable, and open source -- Easy Digital Downloads is created with developers in mind. Contribute on [GitHub](https://github.com/easydigitaldownloads/easy-digital-downloads).
+
+> It’s clear that EDD was made by developers for developers. The extensibility is endless.
+> Scott Buscemi – Lumen Foundry
+
+= Testimonials =
+
+> If anyone asks me what they should use for downloadable products on their WordPress site, it’s a no-brainer as far as EDD goes.
+> Bob Dunn - BobWP
+
+> I've never considered selling on any other platform than Easy Digital Downloads. No other platform is built with digital products in mind that has the features and years of experience that EDD has.
+> Scott Deluzio - WP1099
+
+> EDD has been a long standing, rock-solid e-commerce solution for WordPress. The team lives and breathes WordPress, understand the platform, and is embedded in the community.
+> Joe Casabona - Creator Courses
+
+> After trying various e-commerce plugins to sell digital products and subscriptions on multiple websites, we decided to give EDD a try. It's been 5 years, and we never looked back. In comparison to other e-commerce plugins, EDD is lightweight, stable, fast, straightforward to use, and has one of the richest add-ons environment available on WordPress.
+> Nicolas Martin - Flea Market Insiders
 
 == Installation ==
 
@@ -157,23 +184,60 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 * [PayPal Payments Advanced](https://easydigitaldownloads.com/downloads/paypal-payments-advanced/?utm_source=gateway&utm_medium=faq_tab&utm_content=paypal-payments-advanced&utm_campaign=readme)
 * [ClickBank](https://easydigitaldownloads.com/downloads/edd-clickbank-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=clickbank&utm_campaign=readme)
 * [Wallet](https://easydigitaldownloads.com/downloads/wallet/?utm_source=gateway&utm_medium=faq_tab&utm_content=wallet&utm_campaign=readme)
-* [BitPay](https://easydigitaldownloads.com/downloads/bitpay-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=bitpay-payment-gateway&utm_campaign=readme)
 * [Coinbase](https://easydigitaldownloads.com/downloads/coinbase-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=coinbase-payment-gateway&utm_campaign=readme)
 * [SOFORT Banking](https://easydigitaldownloads.com/downloads/sofort-banking-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=sofort-banking-gateway&utm_campaign=readme)
-* [PayU India](https://easydigitaldownloads.com/downloads/payu-india-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=payu-india-payment-gateway&utm_campaign=readme)
-* [Payza](https://easydigitaldownloads.com/downloads/payza-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=payza-payment-gateway&utm_campaign=readme)
-* [PayPlug](https://easydigitaldownloads.com/downloads/payplug-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=payplug-gateway&utm_campaign=readme)
-* [GoCardless](https://easydigitaldownloads.com/downloads/gocardless-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=gocardless-payment-gateway&utm_campaign=readme)
-* [Zombaio](https://easydigitaldownloads.com/downloads/zombaio-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=zombaio-payment-gateway&utm_campaign=readme)
-* [Realex](https://easydigitaldownloads.com/downloads/realex-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=realex-gateway&utm_campaign=readme)
-* [CyberSource](https://easydigitaldownloads.com/downloads/cybersource-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=cybersource-gateway&utm_campaign=readme)
-* [Paylane](https://easydigitaldownloads.com/downloads/paylane-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=paylane-payment-gateway&utm_campaign=readme)
-* [ePay](https://easydigitaldownloads.com/downloads/epay-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=epay-payment-gateway&utm_campaign=readme)
-* [Netbanx](https://easydigitaldownloads.com/downloads/netbanx-payment-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=netbanx-payment-gateway&utm_campaign=readme)
-* [Realex](https://easydigitaldownloads.com/downloads/realex-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=realex-gateway&utm_campaign=readme)
-* [PayTrace](https://easydigitaldownloads.com/downloads/paytrace/?utm_source=gateway&utm_medium=faq_tab&utm_content=paytrace&utm_campaign=readme)
-* [iPay88](https://easydigitaldownloads.com/downloads/ipay88-gateway/?utm_source=gateway&utm_medium=faq_tab&utm_content=ipay88-gateway&utm_campaign=readme)
 
+= What types of products can I sell? =
+
+If it's digital, it can be sold with Easy Digital Downloads. Here are a few types of products commonly sold using EDD, and quotes from real customers doing so:
+
+**Ebooks**
+
+> After selling my first eBook with Easy Digital Downloads, I’ve definitely determined it to be the only way to sell eBooks. It has all the features I need to run a successful eBook store of any size.
+> Adam Silver – ConciergeWP
+
+**Video**
+
+> I’ve been developing video and audio products for a client site and Easy Digital Downloads was easy to setup, easy to edit and sales have already begun! Also when I needed tech support, they were responsive and solved the issue quickly.
+> Tana Dean - Dean Design
+
+**Audio**
+
+> Selling music with EDD is awesome. At the beginning of this year, I decided to start up a passive-income side hustle by selling my own original music for content creators to use in their projects. I looked around at different marketplaces I could sell with but ultimately decided I wanted to have full control over how my music was presented, priced, etc. EDD seemed like a pretty solid solution and I haven’t looked back since. I have a growing library of almost 100 products, an awesome community of creators that use my site and more time to invest in making tunes.
+> Christopher Postill – Sounds Like an Earful
+
+**WordPress plugins**
+
+> For those looking to sell their plugins on their own terms for a one-time yearly fee, there is no better solution. It’s a long-term investment that will pay for itself in no time, so long as you focus on making your product worth buying ;) It also doesn’t hurt that it’s supported by a great team of developers, support staff, writers and more.
+> Mark Zahra – RebelCode
+
+> With Software Licensing and Recurring Payments together, I have a solid platform for selling and updating plugins with automatic renewal payments. And I don’t have to maintain the platform, letting me focus on growing my business and making my plugins the best they can be!
+> Brian Hogg – Event Calendar Newsletter
+
+**WordPress themes**
+
+> I wanted a quick and easy to use plugin for selling some of my premium child themes. I said goodbye to a membership plugin that I used earlier after I found EDD. Absolutely mind blowing, easy to use and all its addons made me fall in love with it.
+> Puneet Sahalot – IdeaBox Creations
+
+**Desktop software**
+
+> EDD is the number one choice for selling digital products. I’m amazed at how easy it is to set up a software store using EDD.
+> Yudhistira Mauris – WP House
+
+**Documents**
+
+> EDD has allowed me to turn my expertise into a business by selling documents to educators around the globe. It’s easy to upload documents and more importantly, easy for customers to download them.
+> Sarah Crowther – The Arty Teacher
+
+**Courses**
+
+> EDD’s integration with LearnDash is incredibly easy to set up, and it just works. A customer buys a course and they are automatically enrolled—just the way it should be. No complicated setup. No huge list of options. Just a seamless integration that lets you focus on creating more content for your students.
+> Dave Warfel – Escape Creative
+
+**Services**
+
+> I sell services online – so although I don’t sell downloads, I also don’t have products that need shipping or inventory. I chose EDD because it was easy to set up. It works with Stripe, my payment processor, and allows me to have reminders sent for recurring payments. The support is responsive and helpful, and there are lots of code snippets available to allow customization beyond the basics.
+> Tara Claeys – Design TLC
 
 == Screenshots ==
 
@@ -188,6 +252,12 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+= 2.9.20, November 14, 2019 =
+* Fix: CSV download import issues with file to price assignments and AmazonS3 files.
+* Fix: The edd_after_payment_actions action fired via cron was missing attributes.
+* Fix: The SendWP connection link was visited if enter/return was pressed to update settings.
+* New: Promotional elements added to EDD admin screens.
+
 = 2.9.19, October 28, 2019 =
 * Fix: Limit register_meta calls to be for the download post type only, in preparation for WordPress 5.3 compatibility.
 

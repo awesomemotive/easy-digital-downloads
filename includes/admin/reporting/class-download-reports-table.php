@@ -4,18 +4,15 @@
  *
  * @package     EDD
  * @subpackage  Admin/Reports
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.5
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
-// Load WP_List_Table if not loaded
-if ( ! class_exists( 'WP_List_Table' ) ) {
-	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
-}
+use EDD\Admin\List_Table;
 
 /**
  * EDD_Download_Reports_Table Class
@@ -24,13 +21,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  *
  * @since 1.5
  */
-class EDD_Download_Reports_Table extends WP_List_Table {
-
-	/**
-	 * @var int Number of items per page
-	 * @since 1.5
-	 */
-	public $per_page = 30;
+class EDD_Download_Reports_Table extends List_Table {
 
 	/**
 	 * @var object Query results
@@ -45,19 +36,15 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		global $status, $page;
-
-		// Set parent defaults
 		parent::__construct( array(
-			'singular' => edd_get_label_singular(),
-			'plural'   => edd_get_label_plural(),
-			'ajax'     => false,
+			'singular' => 'report-' . edd_get_label_singular(),
+			'plural'   => 'report-' . edd_get_label_plural(),
+			'ajax'     => false
 		) );
 
 		add_action( 'edd_report_view_actions', array( $this, 'category_filter' ) );
 
 		$this->query();
-
 	}
 
 	/**
@@ -104,42 +91,29 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 * @return array $columns Array of all the list table columns
 	 */
 	public function get_columns() {
-		$columns = array(
+		return array(
 			'title'            => edd_get_label_singular(),
-			'sales'            => __( 'Sales', 'easy-digital-downloads' ),
-			'earnings'         => __( 'Earnings', 'easy-digital-downloads' ),
-			'average_sales'    => __( 'Monthly Average Sales', 'easy-digital-downloads' ),
+			'sales'            => __( 'Sales',                    'easy-digital-downloads' ),
+			'earnings'         => __( 'Earnings',                 'easy-digital-downloads' ),
+			'average_sales'    => __( 'Monthly Average Sales',    'easy-digital-downloads' ),
 			'average_earnings' => __( 'Monthly Average Earnings', 'easy-digital-downloads' ),
-			'details'          => __( 'Detailed Report', 'easy-digital-downloads' ),
+			'details'          => __( 'Detailed Report',          'easy-digital-downloads' )
 		);
-
-		return $columns;
 	}
 
 	/**
-	 * Retrieve the table's sortable columns
+	 * Retrieve the sortable columns
 	 *
 	 * @since 1.4
 	 * @return array Array of all the sortable columns
 	 */
 	public function get_sortable_columns() {
 		return array(
-			'title'    => array( 'title', true ),
-			'sales'    => array( 'sales', false ),
-			'earnings' => array( 'earnings', false ),
+			'title'    => array( 'title',    true  ),
+			'sales'    => array( 'sales',    false ),
+			'earnings' => array( 'earnings', false )
 		);
 	}
-
-	/**
-	 * Retrieve the current page number
-	 *
-	 * @since 1.5
-	 * @return int Current page number
-	 */
-	public function get_paged() {
-		return isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
-	}
-
 
 	/**
 	 * Retrieve the category being viewed
@@ -148,9 +122,8 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 * @return int Category ID
 	 */
 	public function get_category() {
-		return isset( $_GET['category'] ) ? absint( $_GET['category'] ) : 0;
+		return absint( $this->get_request_var( 'category', 0 ) );
 	}
-
 
 	/**
 	 * Retrieve the total number of downloads
@@ -161,23 +134,26 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	public function get_total_downloads() {
 		$total  = 0;
 		$counts = wp_count_posts( 'download', 'readable' );
-		foreach( $counts as $status => $count ) {
+
+		foreach( $counts as $count ) {
 			$total += $count;
 		}
+
 		return $total;
 	}
 
 	/**
 	 * Outputs the reporting views
 	 *
+	 * These aren't really bulk actions but this outputs the markup in the
+	 * right place.
+	 *
 	 * @since 1.5
 	 * @return void
 	 */
 	public function bulk_actions( $which = '' ) {
-		// These aren't really bulk actions but this outputs the markup in the right place
 		edd_report_views();
 	}
-
 
 	/**
 	 * Attaches the category filter to the log views
@@ -186,11 +162,10 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function category_filter() {
-		if( get_terms( 'download_category' ) ) {
+		if ( get_terms( 'download_category' ) ) {
 			echo EDD()->html->category_dropdown( 'category', $this->get_category() );
 		}
 	}
-
 
 	/**
 	 * Performs the products query
@@ -200,8 +175,8 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 	 */
 	public function query() {
 
-		$orderby  = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'title';
-		$order    = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
+		$orderby  = sanitize_text_field( $this->get_request_var( 'orderby', 'title' ) );
+		$order    = sanitize_text_field( $this->get_request_var( 'order',   'DESC'  ) );
 		$category = $this->get_category();
 
 		$args = array(
@@ -211,47 +186,61 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 			'fields'           => 'ids',
 			'posts_per_page'   => $this->per_page,
 			'paged'            => $this->get_paged(),
-			'suppress_filters' => true,
+			'suppress_filters' => true
 		);
 
-		if( ! empty( $category ) ) {
+		if ( ! empty( $category ) ) {
 			$args['tax_query'] = array(
 				array(
 					'taxonomy' => 'download_category',
-					'terms'    => $category,
+					'terms'    => $category
 				)
 			);
 		}
 
-		switch ( $orderby ) :
+		switch ( $orderby ) {
 			case 'title' :
 				$args['orderby'] = 'title';
 				break;
 
 			case 'sales' :
-				$args['orderby'] = 'meta_value_num';
+				$args['orderby']  = 'meta_value_num';
 				$args['meta_key'] = '_edd_download_sales';
 				break;
 
 			case 'earnings' :
-				$args['orderby'] = 'meta_value_num';
+				$args['orderby']  = 'meta_value_num';
 				$args['meta_key'] = '_edd_download_earnings';
 				break;
-		endswitch;
+		}
 
-		$args = apply_filters( 'edd_download_reports_prepare_items_args', $args, $this );
+		$r = apply_filters( 'edd_download_reports_prepare_items_args', $args, $this );
 
-		$this->products = new WP_Query( $args );
-
+		$this->products = new WP_Query( $r );
 	}
 
 	/**
-	 * Build all the reports data
+	 * Build and retrieves all of the download reports data.
 	 *
 	 * @since 1.5
-	 * @return array $reports_data All the data for customer reports
+	 * @deprecated 3.0 Use get_data()
+	 *
+	 * @return array All the data for customer reports.
 	 */
 	public function reports_data() {
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Download_Reports_Table::get_data()' );
+
+		return $this->get_data();
+	}
+
+	/**
+	 * Retrieves all of the download reports data.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array Download reports table data.
+	 */
+	public function get_data() {
 		$reports_data = array();
 
 		$downloads = $this->products->posts;
@@ -272,38 +261,31 @@ class EDD_Download_Reports_Table extends WP_List_Table {
 		return $reports_data;
 	}
 
-
 	/**
 	 * Setup the final data for the table
 	 *
 	 * @since 1.5
 	 * @uses EDD_Download_Reports_Table::get_columns()
 	 * @uses EDD_Download_Reports_Table::get_sortable_columns()
-	 * @uses EDD_Download_Reports_Table::reports_data()
-	 * @uses EDD_Download_Reports_Table::get_pagenum()
 	 * @uses EDD_Download_Reports_Table::get_total_downloads()
+	 * @uses EDD_Download_Reports_Table::get_data()
+	 * @uses EDD_Download_Reports_Table::set_pagination_args()
 	 * @return void
 	 */
 	public function prepare_items() {
-		$columns = $this->get_columns();
-
-		$hidden = array(); // No hidden columns
-
-		$sortable = $this->get_sortable_columns();
-
-		$this->_column_headers = array( $columns, $hidden, $sortable );
-
-		$data = $this->reports_data();
+		$this->_column_headers = array(
+			$this->get_columns(),
+			array(),
+			$this->get_sortable_columns()
+		);
 
 		$total_items = $this->get_total_downloads();
-
-		$this->items = $data;
+		$this->items = $this->get_data();
 
 		$this->set_pagination_args( array(
-				'total_items' => $total_items,
-				'per_page'    => $this->per_page,
-				'total_pages' => ceil( $total_items / $this->per_page ),
-			)
-		);
+			'total_pages' => ceil( $total_items / $this->per_page ),
+			'total_items' => $total_items,
+			'per_page'    => $this->per_page,
+		) );
 	}
 }

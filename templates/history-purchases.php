@@ -27,12 +27,12 @@ if ( is_user_logged_in() ):
 				<tr class="edd_purchase_row">
 					<?php do_action( 'edd_purchase_history_row_start', $payment->ID, $payment->payment_meta ); ?>
 					<td class="edd_purchase_id">#<?php echo $payment->number ?></td>
-					<td class="edd_purchase_date"><?php echo date_i18n( get_option('date_format'), strtotime( $payment->date ) ); ?></td>
+					<td class="edd_purchase_date"><?php echo edd_date_i18n( $payment->date ); ?></td>
 					<td class="edd_purchase_amount">
 						<span class="edd_purchase_amount"><?php echo edd_currency_filter( edd_format_amount( $payment->total ) ); ?></span>
 					</td>
 					<td class="edd_purchase_details">
-						<?php if( $payment->status != 'publish' ) : ?>
+						<?php if( $payment->status != 'complete' ) : ?>
 							<span class="edd_purchase_status <?php echo $payment->status; ?>"><?php echo $payment->status_nicename; ?></span>
 							<?php if ( $payment->is_recoverable() ) : ?>
 								&mdash; <a href="<?php echo $payment->get_recovery_url(); ?>"><?php _e( 'Complete Purchase', 'easy-digital-downloads' ); ?></a>

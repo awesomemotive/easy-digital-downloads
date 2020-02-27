@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Functions/Templates
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Append Purchase Link
@@ -58,7 +58,7 @@ function edd_get_purchase_link( $args = array() ) {
 		}
 
 
-		edd_set_error( 'set_checkout', sprintf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings' ) ) );
+		edd_set_error( 'set_checkout', sprintf( __( 'No checkout page has been configured. Visit <a href="%s">Settings</a> to set one.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings&tab=general&section=pages' ) ) );
 		edd_print_errors();
 
 		$no_checkout_error_displayed = true;
@@ -204,9 +204,9 @@ function edd_get_purchase_link( $args = array() ) {
 			<?php endif; ?>
 			<?php if( ! $download->is_free( $args['price_id'] ) && ! edd_download_is_tax_exclusive( $download->ID ) ): ?>
 				<?php if ( edd_display_tax_rate() && edd_prices_include_tax() ) {
-					echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Includes %1$s&#37; tax', 'easy-digital-downloads' ), edd_get_tax_rate() * 100 ) . '</span>';
+					echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Includes %1$s&#37; tax', 'easy-digital-downloads' ), edd_get_formatted_tax_rate() ) . '</span>';
 				} elseif ( edd_display_tax_rate() && ! edd_prices_include_tax() ) {
-					echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Excluding %1$s&#37; tax', 'easy-digital-downloads' ), edd_get_tax_rate() * 100 ) . '</span>';
+					echo '<span class="edd_purchase_tax_rate">' . sprintf( __( 'Excluding %1$s&#37; tax', 'easy-digital-downloads' ), edd_get_formatted_tax_rate() ) . '</span>';
 				} ?>
 			<?php endif; ?>
 		</div><!--end .edd_purchase_submit_wrapper-->
@@ -270,7 +270,6 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 
 	$type   = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
 	$mode   = edd_single_price_option_mode( $download_id ) ? 'multi' : 'single';
-	$schema = edd_add_schema_microdata() ? ' itemprop="offers" itemscope itemtype="http://schema.org/Offer"' : '';
 
 	// Filter the class names for the edd_price_options div
 	$css_classes_array = apply_filters( 'edd_price_options_classes', array(
@@ -279,7 +278,7 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 	), $download_id );
 
 	// Sanitize those class names and form them into a string
-	$css_classes_string = implode( array_map( 'sanitize_html_class', $css_classes_array ), ' ' );
+	$css_classes_string = implode( ' ', array_map( 'sanitize_html_class', $css_classes_array ) );
 
 	if ( edd_item_in_cart( $download_id ) && ! edd_single_price_option_mode( $download_id ) ) {
 		return;
@@ -292,25 +291,20 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 			if ( $prices ) :
 				$checked_key = isset( $_GET['price_option'] ) ? absint( $_GET['price_option'] ) : edd_get_default_variable_price( $download_id );
 				foreach ( $prices as $key => $price ) :
-					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . $form_id . '"' . $schema . '>';
+					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . $form_id . '">';
 						echo '<label for="' . esc_attr( 'edd_price_option_' . $download_id . '_' . $key . $form_id ) . '">';
 							echo '<input type="' . $type . '" ' . checked( apply_filters( 'edd_price_option_checked', $checked_key, $download_id, $key ), $key, false ) . ' name="edd_options[price_id][]" id="' . esc_attr( 'edd_price_option_' . $download_id . '_' . $key . $form_id ) . '" class="' . esc_attr( 'edd_price_option_' . $download_id ) . '" value="' . esc_attr( $key ) . '" data-price="' . edd_get_price_option_amount( $download_id, $key ) .'"/>&nbsp;';
 
-							$item_prop = edd_add_schema_microdata() ? ' itemprop="description"' : '';
-
 							// Construct the default price output.
-							$price_output = '<span class="edd_price_option_name"' . $item_prop . '>' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price">' . edd_currency_filter( edd_format_amount( $price['amount'] ) ) . '</span>';
+							$price_output = '<span class="edd_price_option_name">' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price">' . edd_currency_filter( edd_format_amount( $price['amount'] ) ) . '</span>';
+
+							$item_prop = ''; // Changed to an empty string due to migration from microdata to JSON-LD in EDD 3.0
 
 							// Filter the default price output
 							$price_output = apply_filters( 'edd_price_option_output', $price_output, $download_id, $key, $price, $form_id, $item_prop );
 
 							// Output the filtered price output
 							echo $price_output;
-
-							if( edd_add_schema_microdata() ) {
-								echo '<meta itemprop="price" content="' . esc_attr( $price['amount'] ) .'" />';
-								echo '<meta itemprop="priceCurrency" content="' . esc_attr( edd_get_currency() ) .'" />';
-							}
 
 						echo '</label>';
 						do_action( 'edd_after_price_option', $key, $price, $download_id );
@@ -325,31 +319,6 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 	do_action( 'edd_after_price_options', $download_id );
 }
 add_action( 'edd_purchase_link_top', 'edd_purchase_variable_pricing', 10, 2 );
-
-/**
- * Output schema markup for single price products.
- *
- * @since  2.6.14
- * @param  int $download_id The download being output.
- * @return void
- */
-function edd_purchase_link_single_pricing_schema( $download_id = 0, $args = array() ) {
-
-	// Bail if the product has variable pricing, or if we aren't showing schema data.
-	if ( edd_has_variable_prices( $download_id ) || ! edd_add_schema_microdata() ) {
-		return;
-	}
-
-	// Grab the information we need.
-	$download = new EDD_Download( $download_id );
-	?>
-	<span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-		<meta itemprop="price" content="<?php echo esc_attr( $download->price ); ?>" />
-		<meta itemprop="priceCurrency" content="<?php echo esc_attr( edd_get_currency() ); ?>" />
-	</span>
-	<?php
-}
-add_action( 'edd_purchase_link_top', 'edd_purchase_link_single_pricing_schema', 10, 2 );
 
 /**
  * Display the quantity field for a variable price when multi-purchase mode is enabled
@@ -778,117 +747,6 @@ function edd_get_theme_template_dir_name() {
 }
 
 /**
- * Should we add schema.org microdata?
- *
- * @since 1.7
- * @return bool
- */
-function edd_add_schema_microdata() {
-	// Don't modify anything until after wp_head() is called
-	$ret = (bool)did_action( 'wp_head' );
-	return apply_filters( 'edd_add_schema_microdata', $ret );
-}
-
-/**
- * Add Microdata to download titles
- *
- * @since 1.5
- * @author Sunny Ratilal
- * @param string $title Post Title
- * @param int $id Post ID
- * @return string $title New title
- */
-function edd_microdata_title( $title, $id = 0 ) {
-	global $post;
-
-	if( ! edd_add_schema_microdata() || ! is_object( $post ) ) {
-		return $title;
-	}
-
-	if ( $post->ID == $id && is_singular( 'download' ) && 'download' == get_post_type( intval( $id ) ) ) {
-		$title = '<span itemprop="name">' . $title . '</span>';
-	}
-
-	return $title;
-}
-add_filter( 'the_title', 'edd_microdata_title', 10, 2 );
-
-/**
- * Start Microdata to wrapper download
- *
- * @since 2.3
- * @author Chris Klosowski
- *
- * @return void
- */
-function edd_microdata_wrapper_open( $query ) {
-	global $post;
-
-	static $microdata_open = NULL;
-
-	if( ! edd_add_schema_microdata() || true === $microdata_open || ! is_object( $query ) ) {
-		return;
-	}
-
-	if ( $query && ! empty( $query->query['post_type'] ) && $query->query['post_type'] == 'download' && is_singular( 'download' ) && $query->is_main_query() ) {
-		$microdata_open = true;
-		echo '<span itemscope itemtype="http://schema.org/Product">';
-	}
-
-}
-add_action( 'loop_start', 'edd_microdata_wrapper_open', 10 );
-
-/**
- * End Microdata to wrapper download
- *
- * @since 2.3
- * @author Chris Klosowski
- *
- * @return void
- */
-function edd_microdata_wrapper_close() {
-	global $post;
-
-	static $microdata_close = NULL;
-
-	if( ! edd_add_schema_microdata() || true === $microdata_close || ! is_object( $post ) ) {
-		return;
-	}
-
-	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
-		$microdata_close = true;
-		echo '</span>';
-	}
-}
-add_action( 'loop_end', 'edd_microdata_wrapper_close', 10 );
-
-/**
- * Add Microdata to download description
- *
- * @since 1.5
- * @author Sunny Ratilal
- *
- * @param $content
- * @return mixed|void New title
- */
-function edd_microdata_description( $content ) {
-	global $post;
-
-	static $microdata_description = NULL;
-
-	if( ! edd_add_schema_microdata() || true === $microdata_description || ! is_object( $post ) ) {
-		return $content;
-	}
-
-	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
-		$microdata_description = true;
-		$content = apply_filters( 'edd_microdata_wrapper', '<div itemprop="description">' . $content . '</div>' );
-	}
-	return $content;
-}
-add_filter( 'the_content', 'edd_microdata_description', 10 );
-
-/**
  * Add no-index and no-follow to EDD checkout and purchase confirmation pages
  *
  * @since 2.0
@@ -1141,6 +999,82 @@ function edd_download_shortcode_item( $atts, $i ) {
 add_action( 'edd_download_shortcode_item', 'edd_download_shortcode_item', 10, 2 );
 
 /**
+ * Output full content for a download item in the [downloads] shortcode.
+ *
+ * Strips the [downloads] shortcode to avoid recursion.
+ *
+ * @since 3.0
+ *
+ * @return string
+ */
+function edd_download_shortcode_full_content() {
+	$pattern = get_shortcode_regex( array( 'downloads' ) );
+	$content = preg_replace( "/$pattern/", '', get_the_content( '' ) );
+
+	/**
+	 * Filters the full content output for an individual download in [downloads] shortcode.
+	 *
+	 * @since 1.2
+	 *
+	 * @param string $content Download content.
+	 */
+	return apply_filters( 'edd_downloads_content', $content );
+}
+
+/**
+ * Output an excerpt for a download item in the [downloads] shortcode.
+ *
+ * @since 3.0
+ *
+ * @return string
+ */
+function edd_download_shortcode_excerpt() {
+	// Adjust excerpt lengths.
+	add_filter( 'excerpt_length', 'edd_download_shortcode_excerpt_length' );
+
+	// Ensure we use `the_excerpt` filter (for length).
+	ob_start();
+	the_excerpt();
+	$excerpt = ob_get_clean();
+
+	/**
+	 * Filters the excerpt output for an individual download in [downloads] shortcode.
+	 *
+	 * @since 1.2
+	 *
+	 * @param string $excerpt Download excerpt.
+	 */
+	$excerpt = apply_filters( 'edd_downloads_excerpt', $excerpt );
+
+	// Let other excerpt lengths act independently again.
+	remove_filter( 'excerpt_length', 'edd_download_shortcode_excerpt_length' );
+
+	return $excerpt;
+}
+
+/**
+ * Callback for the [downloads] shortcode excerpt length.
+ *
+ * Added as a callable function so it can be removed after the downloads are output.
+ *
+ * @since 3.0
+ *
+ * @return int
+ */
+function edd_download_shortcode_excerpt_length() {
+	$length = 30;
+
+	/**
+	 * Filters the length of the generated excerpts in the [downloads] shortcode.
+	 *
+	 * @since 3.0
+	 *
+	 * @param int $length Length of the excerpt (in words).
+	 */
+	return apply_filters( 'edd_download_shortcode_excerpt_length', $length );
+}
+
+/**
  * Load the pagination for the [downloads] shortcode.
  *
  * @since 2.9.8
@@ -1178,7 +1112,7 @@ add_action( 'edd_downloads_list_after', 'edd_downloads_pagination', 10, 3 );
  * Build pagination
  *
  * @since 2.9.8
- * 
+ *
  * @param array $args The arguments used to build the pagination.
  */
 function edd_pagination( $args = array() ) {

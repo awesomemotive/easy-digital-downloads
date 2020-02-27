@@ -4,61 +4,35 @@ sudo: false
 dist: trusty
 
 php:
-  - 5.4
-  - 5.5
   - 5.6
   - 7.0
   - 7.1
   - 7.2
+  - 7.3
+  - 7.4
 
 env:
   - WP_VERSION=latest WP_MULTISITE=0
-  - WP_VERSION=5.1.1 WP_MULTISITE=0
-  - WP_VERSION=5.0.4 WP_MULTISITE=0
-  - WP_VERSION=4.9.10 WP_MULTISITE=0
-  - WP_VERSION=4.8.9 WP_MULTISITE=0
-  - WP_VERSION=4.7.13 WP_MULTISITE=0
-  - WP_VERSION=4.6.13 WP_MULTISITE=0
-  - WP_VERSION=4.5.16 WP_MULTISITE=0
-  - WP_VERSION=4.4.17 WP_MULTISITE=0
+  - WP_VERSION=5.2.5 WP_MULTISITE=0
+  - WP_VERSION=5.1.4 WP_MULTISITE=0
+  - WP_VERSION=5.0.8 WP_MULTISITE=0
+  - WP_VERSION=4.9.13 WP_MULTISITE=0
 
 matrix:
   include:
-    - php: 7.1
-      env: WP_VERSION=latest WP_MULTISITE=0
-    - php: 7.1
-      env: WP_VERSION=4.7.12 WP_MULTISITE=0
-    - php: 5.6
+    - php: 7.2
       env: WP_VERSION=latest WP_MULTISITE=1
-    - php: 5.3
-      env: WP_VERSION=4.7.12 WP_MULTISITE=0
-      dist: precise
-    - php: 5.3
-      env: WP_VERSION=4.6.13 WP_MULTISITE=0
-      dist: precise
-    - php: 5.3
-      env: WP_VERSION=4.5.16 WP_MULTISITE=0
-      dist: precise
-    - php: 5.3
-      env: WP_VERSION=4.4.17 WP_MULTISITE=0
-      dist: precise
   exclude:
-    - php: 7.1
-      env: WP_VERSION=4.6.13 WP_MULTISITE=0
-    - php: 7.1
-      env: WP_VERSION=4.5.16 WP_MULTISITE=0
-    - php: 7.1
-      env: WP_VERSION=4.4.17 WP_MULTISITE=0
-    - php: 7.2
-      env: WP_VERSION=4.5.16 WP_MULTISITE=0
-    - php: 7.2
-      env: WP_VERSION=4.4.17 WP_MULTISITE=0
-    - php: 5.3
-      env: WP_VERSION=latest WP_MULTISITE=0
-    - php: 5.4
-      env: WP_VERSION=latest WP_MULTISITE=0
-    - php: 5.5
-      env: WP_VERSION=latest WP_MULTISITE=0
+    - php: 7.4
+      env: WP_VERSION=4.9.13 WP_MULTISITE=0
+    - php: 7.4
+      env: WP_VERSION=5.0.8 WP_MULTISITE=0
+    - php: 7.4
+      env: WP_VERSION=5.1.4 WP_MULTISITE=0
+    - php: 7.4
+      env: WP_VERSION=5.2.5 WP_MULTISITE=0
+    - php: 7.3
+      env: WP_VERSION=4.9.13 WP_MULTISITE=0
 
 before_script:
   - bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION

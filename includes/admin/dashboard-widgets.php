@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Admin/Dashboard
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Registers the dashboard widgets
@@ -38,6 +38,7 @@ add_action('wp_dashboard_setup', 'edd_register_dashboard_widgets', 10 );
  * @return void
  */
 function edd_dashboard_sales_widget( ) {
+	wp_enqueue_script( 'edd-admin-dashboard' );
 	echo '<p><img src=" ' . esc_attr( set_url_scheme( EDD_PLUGIN_URL . 'assets/images/loading.gif', 'relative' ) ) . '"/></p>';
 }
 
@@ -68,7 +69,7 @@ function edd_load_dashboard_sales_widget( ) {
 						<td class="b b-earnings"><?php echo edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'this_month' ) ) ); ?></td>
 					</tr>
 					<tr>
-						<?php $monthly_sales = $stats->get_sales( 0, 'this_month', false, array( 'publish', 'revoked' ) ); ?>
+						<?php $monthly_sales = $stats->get_sales( 0, 'this_month', false, array( 'complete', 'revoked' ) ); ?>
 						<td class="first t monthly_sales"><?php echo _n( 'Sale', 'Sales', $monthly_sales, 'easy-digital-downloads' ); ?></td>
 						<td class="b b-sales"><?php echo edd_format_amount( $monthly_sales, false ); ?></td>
 					</tr>
@@ -87,7 +88,7 @@ function edd_load_dashboard_sales_widget( ) {
 					</tr>
 					<tr>
 						<td class="first t sales">
-							<?php $last_month_sales = $stats->get_sales( 0, 'last_month', false, array( 'publish', 'revoked' ) ); ?>
+							<?php $last_month_sales = $stats->get_sales( 0, 'last_month', false, array( 'complete', 'revoked' ) ); ?>
 							<?php echo _n( 'Sale', 'Sales', edd_format_amount( $last_month_sales, false ), 'easy-digital-downloads' ); ?>
 						</td>
 						<td class="b b-last-month-sales">
@@ -119,7 +120,7 @@ function edd_load_dashboard_sales_widget( ) {
 							<?php _e( 'Sales', 'easy-digital-downloads' ); ?>
 						</td>
 						<td class="last b b-sales">
-							<?php $sales_today = $stats->get_sales( 0, 'today', false, array( 'publish', 'revoked' ) ); ?>
+							<?php $sales_today = $stats->get_sales( 0, 'today', false, array( 'complete', 'revoked' ) ); ?>
 							<?php echo edd_format_amount( $sales_today, false ); ?>
 						</td>
 					</tr>
@@ -148,12 +149,7 @@ function edd_load_dashboard_sales_widget( ) {
 		<div style="clear: both"></div>
 		<?php do_action( 'edd_sales_summary_widget_after_stats', $stats ); ?>
 		<?php
-		$p_query = new EDD_Payments_Query( array(
-			'number'   => 5,
-			'status'   => 'publish'
-		) );
-
-		$payments = $p_query->get_payments();
+		$payments = edd_get_payments( array( 'number' => 5, 'status' => 'complete' ) );
 
 		if ( $payments ) { ?>
 		<div class="table recent_purchases">
