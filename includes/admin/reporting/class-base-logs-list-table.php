@@ -110,7 +110,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * Return the customer we are filtering logs by, if any
 	 *
 	 * @since 3.0
-	 * @return mixed int If customer ID, string If Email, false if not present
+	 * @return int|string|false int If customer ID, string If Email, false if not present
 	 */
 	public function get_filtered_customer() {
 		$ret = false;

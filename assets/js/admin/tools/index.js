@@ -73,6 +73,8 @@ const EDD_Tools = {
 		} );
 
 		$( '#edd-tools-recount-form' ).submit( function( e ) {
+			e.preventDefault();
+
 			const selection = $( '#recount-stats-type' ).val(),
 				export_form = $( this ),
 				selected_type = $( 'option:selected', this ).data( 'type' );
