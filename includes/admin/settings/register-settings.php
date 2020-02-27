@@ -1174,8 +1174,10 @@ function edd_get_registered_settings() {
 			$edd_settings['styles'] = edd_apply_filters_deprecated(
 				'edd_settings_styles',
 				array(
-					'main'    => array(),
-					'buttons' => array(),
+					array(
+						'main'    => array(),
+						'buttons' => array(),
+					),
 				),
 				'3.0',
 				'edd_settings_misc'
