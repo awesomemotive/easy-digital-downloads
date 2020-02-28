@@ -30,6 +30,14 @@ export const Totals = wp.Backbone.View.extend( {
 	template: wp.template( 'edd-admin-order-totals' ),
 
 	/**
+	 * @since 3.0
+	 */
+	events: {
+		'click #notice-tax-change .notice-dismiss': 'onDismissTaxRateChange',
+		'click #notice-tax-change .update-amounts': 'onUpdateAmounts',
+	},
+
+	/**
 	 * Order totals view.
 	 *
 	 * @since 3.0
@@ -41,6 +49,7 @@ export const Totals = wp.Backbone.View.extend( {
 		const { state } = this.options;
 
 		// Listen for events.
+		this.listenTo( state, 'change:hasTax', this.render );
 		this.listenTo( state.get( 'items' ), 'add remove change', this.render );
 		this.listenTo( state.get( 'adjustments' ), 'add remove', this.render );
 	},
@@ -65,10 +74,12 @@ export const Totals = wp.Backbone.View.extend( {
 		const tax = state.getTax();
 		const total = state.getTotal();
 		const discount = state.getDiscount();
+		const hasNewTaxRate = state.hasNewTaxRate();
 
 		return {
 			state: {
 				...state.toJSON(),
+				hasNewTaxRate,
 			},
 			config: {
 				colspan,
@@ -83,5 +94,35 @@ export const Totals = wp.Backbone.View.extend( {
 			taxCurrency: currency.format( tax ),
 			totalCurrency: currency.format( total ),
 		};
+	},
+
+	/**
+	 * Dismisses Tax Rate change notice.
+	 *
+	 * @since 3.0
+	 */
+	onDismissTaxRateChange() {
+		const { state } = this.options;
+		// Reset amount
+		state.set( 'hasTax', state.get( 'hasTax' ) );
+
+		// Manually trigger change because new and previous attributes
+		// are the same so Backbone will not.
+		state.trigger( 'change:hasTax' );
+	},
+
+	/**
+	 * Updates amounts for existing Order Items.
+	 *
+	 * @since 3.0
+	 */
+	onUpdateAmounts() {
+		const { state } = this.options;
+
+		state.get( 'items' )
+			.updateAmounts()
+			.done( ( response ) => {
+				this.onDismissTaxRateChange();
+			} );
 	},
 } );

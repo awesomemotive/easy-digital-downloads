@@ -97,7 +97,7 @@ export const OrderItem = Backbone.Model.extend( {
 			nonces: { edd_admin_order_get_item_amounts: nonce },
 		} = window.eddAdminOrderOverview;
 
-		const { productId, priceId, quantity, amount, subtotal } = _.clone(
+		const { productId, priceId, quantity, amount, tax, subtotal } = _.clone(
 			this.attributes
 		);
 
@@ -108,6 +108,7 @@ export const OrderItem = Backbone.Model.extend( {
 				priceId,
 				quantity,
 				amount,
+				tax,
 				subtotal,
 				country,
 				region,
