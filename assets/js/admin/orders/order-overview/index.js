@@ -27,6 +27,8 @@ jQueryReady( () => {
 		isAdding,
 		hasTax,
 		hasQuantity,
+		hasDiscounts,
+		order,
 		items,
 		adjustments,
 	} = window.eddAdminOrderOverview;
@@ -36,6 +38,8 @@ jQueryReady( () => {
 		isAdding: '1' === isAdding,
 		hasTax: '0' === hasTax ? false : hasTax,
 		hasQuantity: '1' === hasQuantity,
+		hasDiscounts: '1' === hasDiscounts,
+		order,
 	} );
 
 	// Create collections and add to state.

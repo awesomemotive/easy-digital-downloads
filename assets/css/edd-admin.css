@@ -624,6 +624,10 @@ table.edd-order-overview-summary {
 	font-weight: 600;
 }
 
+.edd-order-overview-summary__totals th small {
+	font-weight: normal;
+}
+
 .edd-order-overview-summary__totals .total {
 	color: #017d5c;
 	font-size: 150%;
@@ -648,6 +652,14 @@ table.edd-order-overview-summary {
 	margin-top: -15px;
 	padding-top: 5px;
 	padding-bottom: 5px;
+}
+
+.edd-order-overview-summary__totals .notice {
+	margin: -1px;
+}
+
+.edd-order-overview-summary__totals .notice p {
+	margin: 0.5em 0;
 }
 
 /** Actions */
