@@ -134,7 +134,7 @@ function edd_add_manual_order( $args = array() ) {
 		'gateway'        => sanitize_text_field( $data['gateway'] ),
 		'mode'           => $mode,
 		'currency'       => edd_get_currency(),
-		'payment_key'    => sanitize_text_field( $data['payment_key'] ),
+		'payment_key'    => ! empty( $data['payment_key'] ) ? sanitize_text_field( $data['payment_key'] ) : strtolower( md5( uniqid() ) ),
 		'date_created'   => $date,
 		'date_completed' => $completed,
 	) );
