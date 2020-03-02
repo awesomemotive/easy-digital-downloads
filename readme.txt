@@ -189,7 +189,7 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
-= 2.9.21, February 24, 2020 =
+= 2.9.21, March 2, 2020 =
 * Fix: Corrected a reporting issue with earnings when using negative fees, such as Discounts Pro.
 * Fix: Only count the number of downloads for a purchase when download counts are not unlimited.
 * Fix: Fixed a typo in the settings text.
