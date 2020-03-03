@@ -566,7 +566,7 @@ class EDD_Payment_History_Table extends List_Table {
 		}
 
 		// $payment exists for backwards compatibility purposes in the below filter.
-		$payment     = edd_get_payment( $order->id );
+		$payment = edd_get_payment( $order->id );
 
 		/**
 		 * Filters the row actions.
