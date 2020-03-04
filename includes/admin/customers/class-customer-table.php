@@ -63,6 +63,9 @@ class EDD_Customer_Reports_Table extends List_Table {
 	 * @return string Column Name
 	 */
 	public function column_default( $item, $column_name ) {
+
+		$timezone_abbreviation = edd_get_timezone_abbr();
+
 		switch ( $column_name ) {
 
 			case 'id' :
@@ -86,7 +89,7 @@ class EDD_Customer_Reports_Table extends List_Table {
 				break;
 
 			case 'date_created' :
-				$value = '<time datetime="' . esc_attr( $item['date_created'] ) . '">' . edd_date_i18n( $item['date_created'], 'M. d, Y' ) . '<br>' . edd_date_i18n( $item['date_created'], 'H:i' ) . '</time>';
+				$value = '<time datetime="' . esc_attr( $item['date_created'] ) . '">' . edd_date_i18n( $item['date_created'], 'M. d, Y' ) . '<br>' . edd_date_i18n( $item['date_created'], 'H:i' ) . ' ' . $timezone_abbreviation . '</time>';
 				break;
 
 			default:
@@ -149,7 +152,6 @@ class EDD_Customer_Reports_Table extends List_Table {
 	/**
 	 * Render the checkbox column
 	 *
-	 * @access public
 	 * @since 3.0
 	 *
 	 * @param EDD_Customer $item Customer object.
@@ -167,7 +169,6 @@ class EDD_Customer_Reports_Table extends List_Table {
 	/**
 	 * Retrieve the customer counts
 	 *
-	 * @access public
 	 * @since 3.0
 	 * @return void
 	 */
@@ -211,7 +212,6 @@ class EDD_Customer_Reports_Table extends List_Table {
 	/**
 	 * Retrieve the bulk actions
 	 *
-	 * @access public
 	 * @since 3.0
 	 * @return array Array of the bulk actions
 	 */
@@ -224,7 +224,6 @@ class EDD_Customer_Reports_Table extends List_Table {
 	/**
 	 * Process the bulk actions
 	 *
-	 * @access public
 	 * @since 3.0
 	 */
 	public function process_bulk_action() {
@@ -283,19 +282,19 @@ class EDD_Customer_Reports_Table extends List_Table {
 		if ( is_email( $search ) ) {
 			$args['email'] = $search;
 
-		// Customer ID
+			// Customer ID
 		} elseif ( is_numeric( $search ) ) {
 			$args['id'] = $search;
 		} elseif ( strpos( $search, 'c:' ) !== false ) {
 			$args['id'] = trim( str_replace( 'c:', '', $search ) );
 
-		// User ID
+			// User ID
 		} elseif ( strpos( $search, 'user:' ) !== false ) {
 			$args['user_id'] = trim( str_replace( 'u:', '', $search ) );
 		} elseif ( strpos( $search, 'u:' ) !== false ) {
 			$args['user_id'] = trim( str_replace( 'u:', '', $search ) );
 
-		// Other...
+			// Other...
 		} else {
 			$args['search']         = $search;
 			$args['search_columns'] = array( 'name', 'email' );
@@ -341,9 +340,13 @@ class EDD_Customer_Reports_Table extends List_Table {
 
 		$status = $this->get_status( 'total' );
 
+		// Add condition to be sure we don't divide by zero.
+		// If $this->per_page is 0, then set total pages to 1.
+		$total_pages = $this->per_page ? ceil( (int) $this->counts[ $status ] / (int) $this->per_page ) : 1;
+
 		// Setup pagination
 		$this->set_pagination_args( array(
-			'total_pages' => ceil( $this->counts[ $status ] / $this->per_page ),
+			'total_pages' => $total_pages,
 			'total_items' => $this->counts[ $status ],
 			'per_page'    => $this->per_page,
 		) );

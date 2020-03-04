@@ -73,6 +73,11 @@ function edd_sanitize_amount( $amount = 0 ) {
 	 */
 	$decimals = apply_filters( 'edd_sanitize_amount_decimals', 2, $amount );
 
+	// Check for empty strings before we multiply.
+	if ( '' === $amount ) {
+		$amount = 0;
+	}
+
 	// Flip back to negative
 	$sanitized = $amount * $negative_exponent;
 

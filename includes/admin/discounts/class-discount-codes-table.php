@@ -142,10 +142,11 @@ class EDD_Discount_Codes_Table extends List_Table {
 	 * @return string Start  date
 	 */
 	public function column_start_date( $discount ) {
-		$start_date = $discount->start_date;
+		$start_date            = $discount->start_date;
+		$timezone_abbreviation = edd_get_timezone_abbr();
 
 		if ( $start_date ) {
-			$display = edd_date_i18n( $start_date, 'M. d, Y' ) . '<br>' . edd_date_i18n( $start_date, 'H:i' );
+			$display = edd_date_i18n( $start_date, 'M. d, Y' ) . '<br>' . edd_date_i18n( $start_date, 'H:i' ) . ' ' . $timezone_abbreviation;
 		} else {
 			$display = '&mdash;';
 		}
@@ -162,10 +163,11 @@ class EDD_Discount_Codes_Table extends List_Table {
 	 * @return string Expiration date.
 	 */
 	public function column_end_date( $discount ) {
-		$expiration = $discount->end_date;
+		$expiration            = $discount->end_date;
+		$timezone_abbreviation = edd_get_timezone_abbr();
 
 		if ( $expiration ) {
-			$display = edd_date_i18n( $expiration, 'M. d, Y' ) . '<br>' . edd_date_i18n( $expiration, 'H:i' );
+			$display = edd_date_i18n( $expiration, 'M. d, Y' ) . '<br>' . edd_date_i18n( $expiration, 'H:i' ) . ' ' . $timezone_abbreviation;
 		} else {
 			$display = '&mdash;';
 		}

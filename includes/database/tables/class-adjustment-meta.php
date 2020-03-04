@@ -38,7 +38,7 @@ final class Adjustment_Meta extends Table {
      * @since 3.0
      * @var int
      */
-    protected $version = 201806140002;
+    protected $version = 201806142;
 
     /**
      * Array of upgrade versions and methods.
@@ -48,7 +48,7 @@ final class Adjustment_Meta extends Table {
      * @var array
      */
     protected $upgrades = array(
-        '201806140002' => 201806140002
+        '201806142' => 201806142
     );
 
 	/**
@@ -69,7 +69,7 @@ final class Adjustment_Meta extends Table {
 	}
 
     /**
-     * Upgrade to version 201806140002
+     * Upgrade to version 201806142
      * - Migrate data from `edd_discounts` to `edd_adjustments`.
      *
 	 * This is only for 3.0 beta testers, and can be removed in 3.0.1 or above.
@@ -78,7 +78,7 @@ final class Adjustment_Meta extends Table {
      *
      * @return boolean True if upgrade was successful, false otherwise.
      */
-    protected function __201806140002() {
+    protected function __201806142() {
 
         // Old discounts table
         $table_name = $this->get_db()->get_blog_prefix( null ) . 'edd_discountmeta';

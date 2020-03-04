@@ -330,6 +330,11 @@ class EDD_API {
 				$secret = $this->get_user_secret_key( $user );
 				$public = urldecode( $wp_query->query_vars['key'] );
 
+				// Verify that if user has secret key or not.
+				if ( ! $secret ) {
+					$this->invalid_auth();
+				}
+
 				$valid = $this->check_keys( $secret, $public, $token );
 				if ( $valid ) {
 					$this->is_valid_request = true;
@@ -1599,7 +1604,7 @@ class EDD_API {
 				$discount_list['discounts'][ $count ]['status']                = $discount->post_status;
 				$discount_list['discounts'][ $count ]['product_requirements']  = edd_get_discount_product_reqs( $discount->ID );
 				$discount_list['discounts'][ $count ]['requirement_condition'] = edd_get_discount_product_condition( $discount->ID );
-				$discount_list['discounts'][ $count ]['global_discount']       = edd_is_discount_not_global( $discount->ID );
+				$discount_list['discounts'][ $count ]['global_discount']       = 'global' === edd_get_discount_scope($discount->ID);
 				$discount_list['discounts'][ $count ]['single_use']            = edd_discount_is_single_use( $discount->ID );
 
 				$count ++;
@@ -1620,7 +1625,7 @@ class EDD_API {
 				$discount_list['discounts'][0]['status']                = get_post_field( 'post_status', $discount );
 				$discount_list['discounts'][0]['product_requirements']  = edd_get_discount_product_reqs( $discount );
 				$discount_list['discounts'][0]['requirement_condition'] = edd_get_discount_product_condition( $discount );
-				$discount_list['discounts'][0]['global_discount']       = edd_is_discount_not_global( $discount );
+				$discount_list['discounts'][0]['global_discount']       = 'global' === edd_get_discount_scope($discount);
 				$discount_list['discounts'][0]['single_use']            = edd_discount_is_single_use( $discount );
 			} else {
 				$error['error'] = sprintf( __( 'Discount %s not found!', 'easy-digital-downloads' ), $discount );

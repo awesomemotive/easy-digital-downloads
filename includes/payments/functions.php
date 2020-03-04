@@ -560,18 +560,14 @@ function edd_get_payment_status( $order, $return_label = false ) {
 	}
 
 	if ( true === $return_label ) {
-		return edd_get_payment_status_label( $status );
+		$status = edd_get_payment_status_label( $status );
 	} else {
-		$statuses = edd_get_payment_statuses();
-
-		// Account that our 'publish' status is labeled 'Complete'
-		$post_status = $order->is_complete()
-			? 'Completed'
-			: $status;
-
-		// Make sure we're matching cases, since they matter
-		return array_search( strtolower( $post_status ), array_map( 'strtolower', $statuses ), true );
+		$keys      = edd_get_payment_status_keys();
+		$found_key = array_search( strtolower( $status ), $keys );
+		$status    = array_key_exists( $found_key, $keys ) ? $keys[ $found_key ] : false;
 	}
+
+	return ! empty( $status ) ? $status : false;
 }
 
 /**
@@ -1276,7 +1272,7 @@ function edd_remove_payment_prefix_postfix( $number ) {
 
 	// Remove the postfix
 	$length      = strlen( $number );
-	$postfix_pos = strrpos( $number, $postfix );
+	$postfix_pos = strrpos( $number, strval( $postfix ) );
 	if ( false !== $postfix_pos ) {
 		$number = substr_replace( $number, '', $postfix_pos, $length );
 	}

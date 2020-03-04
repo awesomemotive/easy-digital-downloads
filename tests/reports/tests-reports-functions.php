@@ -325,21 +325,24 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @group edd_dates
 	 */
 	public function test_get_dates_filter_options_should_match_defaults() {
+
+		$timezone_abbreviation = 'GMT+0000';;
+
 		$expected = array(
-			'today'        => __( 'Today', 'easy-digital-downloads' ),
-			'yesterday'    => __( 'Yesterday', 'easy-digital-downloads' ),
-			'this_week'    => __( 'This Week', 'easy-digital-downloads' ),
-			'last_week'    => __( 'Last Week', 'easy-digital-downloads' ),
-			'last_30_days' => __( 'Last 30 Days', 'easy-digital-downloads' ),
-			'this_month'   => __( 'This Month', 'easy-digital-downloads' ),
-			'last_month'   => __( 'Last Month', 'easy-digital-downloads' ),
-			'this_quarter' => __( 'This Quarter', 'easy-digital-downloads' ),
-			'last_quarter' => __( 'Last Quarter', 'easy-digital-downloads' ),
-			'this_year'    => __( 'This Year', 'easy-digital-downloads' ),
-			'last_year'    => __( 'Last Year', 'easy-digital-downloads' ),
-			'other'        => __( 'Custom', 'easy-digital-downloads' )
+			'other'        => __( 'Custom', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
+			'today'        => __( 'Today', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
+			'yesterday'    => __( 'Yesterday', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
+			'this_week'    => __( 'This Week', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
+			'last_week'    => __( 'Last Week', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
+			'last_30_days' => __( 'Last 30 Days', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
+			'this_month'   => __( 'This Month', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
+			'last_month'   => __( 'Last Month', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
+			'this_quarter' => __( 'This Quarter', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
+			'last_quarter' => __( 'Last Quarter', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
+			'this_year'    => __( 'This Year', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
+			'last_year'    => __( 'Last Year', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
 		);
-		
+
 		$this->assertEqualSetsWithIndex( $expected, get_dates_filter_options() );
 	}
 
@@ -390,7 +393,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'this_month',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'this_month' );
+		$result = parse_dates_for_range( 'this_month' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -410,7 +413,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'last_month',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'last_month' );
+		$result = parse_dates_for_range( 'last_month' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -430,7 +433,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'today',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'today' );
+		$result = parse_dates_for_range( 'today' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -450,7 +453,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'yesterday',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'yesterday' );
+		$result = parse_dates_for_range( 'yesterday' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -470,7 +473,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'this_week',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'this_week' );
+		$result = parse_dates_for_range( 'this_week' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -490,7 +493,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'last_week',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'last_week' );
+		$result = parse_dates_for_range( 'last_week' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -510,7 +513,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'last_30_days',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'last_30_days' );
+		$result = parse_dates_for_range( 'last_30_days' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -530,7 +533,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'this_quarter',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'this_quarter' );
+		$result = parse_dates_for_range( 'this_quarter' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -550,7 +553,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'last_quarter',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'last_quarter' );
+		$result = parse_dates_for_range( 'last_quarter' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -570,7 +573,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'this_year',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'this_year' );
+		$result = parse_dates_for_range( 'this_year' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -590,7 +593,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'last_year',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'last_year' );
+		$result = parse_dates_for_range( 'last_year' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -618,7 +621,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'other',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'other' );
+		$result = parse_dates_for_range( 'other' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -638,7 +641,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'range' => 'last_30_days',
 		);
 
-		$result = parse_dates_for_range( self::$date, 'fake' );
+		$result = parse_dates_for_range( 'fake' );
 
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
@@ -757,8 +760,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		clear_filter( 'dates' );
 
 		// Default to last 30 days for filter value.
-		$date  = EDD()->utils->date( 'now' );
-		$dates = parse_dates_for_range( $date, 'last_30_days' );
+		$dates = parse_dates_for_range( 'last_30_days' );
 
 		$expected = array(
 			'from'  => $dates['start']->format( 'Y-m-d' ),
