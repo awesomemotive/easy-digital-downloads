@@ -793,7 +793,7 @@ function edd_order_details_extras( $order = false ) {
 						<input type="checkbox" name="edd-unlimited-downloads" id="edd_unlimited_downloads" value="1"<?php checked( true, $unlimited, true ); ?>/>
 						<?php esc_html_e( 'Unlimited Downloads', 'easy-digital-downloads' ); ?>
 						<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Unlimited Downloads</strong>: checking this box will override all other file download limits for this purchase, granting the customer unliimited downloads of all files included on the purchase.', 'easy-digital-downloads' ); ?>"></span>
-					</span>
+					</label>
 				</div>
 
 				<?php if ( edd_is_add_order_page() ) : ?>
