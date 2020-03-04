@@ -525,6 +525,12 @@ function edd_debug_log( $message = '', $force = false ) {
 
 	if ( edd_is_debug_mode() || $force ) {
 
+		if( function_exists( 'mb_convert_encoding' ) ) {
+
+			$message = mb_convert_encoding( $message, 'UTF-8' );
+	
+		}
+	
 		$edd_logs->log_to_file( $message );
 
 	}

@@ -453,9 +453,25 @@ function edd_get_registered_settings() {
 		'emails' => apply_filters('edd_settings_emails',
 			array(
 				'main' => array(
+					'sendwp_header' => array(
+						'id'   => 'sendwp_header',
+						'name' => '<strong>' . __( 'SendWP Settings', 'easy-digital-downloads' ) . '</strong>',
+						'type' => 'header',
+					),
+					'sendwp' => array(
+						'id'      => 'sendwp',
+						'name'    => __( 'Connection Status', 'easy-digital-downloads' ),
+						'desc'    => '<p>' . __( 'Looking for a reliable, affordable way to deliver important emails to your customers? Try <a href="https://sendwp.com" target="_blank" rel="noopener noreferrer">SendWP</a>.', 'easy-digital-downloads' ) . '</p><p>' . __( 'For more information on this paid service, see the <a href="https://docs.easydigitaldownloads.com/article/2143-sendwp-email-delivery" target="_blank" rel="noopener noreferrer">documentation</a>.', 'easy-digital-downloads' ) . '</p>',
+						'type'    => 'sendwp',
+					),
+					'email_header' => array(
+						'id'   => 'email_header',
+						'name' => '<strong>' . __( 'Email Configuration', 'easy-digital-downloads' ) . '</strong>',
+						'type' => 'header',
+					),
 					'email_template' => array(
 						'id'      => 'email_template',
-						'name'    => __( 'Email Template', 'easy-digital-downloads' ),
+						'name'    => __( 'Template', 'easy-digital-downloads' ),
 						'desc'    => __( 'Choose a template. Click "Save Changes" then "Preview Purchase Receipt" to see the new template.', 'easy-digital-downloads' ),
 						'type'    => 'select',
 						'options' => edd_get_email_templates(),
@@ -485,6 +501,17 @@ function edd_get_registered_settings() {
 						'name' => '',
 						'desc' => '',
 						'type' => 'hook',
+					),
+					'advanced_emails_header' => array(
+						'id'   => 'advanced_emails_header',
+						'name' => '<strong>' . __( 'Advanced emails', 'easy-digital-downloads' ) . '</strong>',
+						'type' => 'header',
+					),
+					'jilt'                   => array(
+						'id'   => 'jilt',
+						'name' => __( 'Enhanced emails via Jilt', 'easy-digital-downloads' ),
+						'desc' => '<p>' . __( 'Create beautiful transactional, automated, and marketing emails using a drag-and-drop editor with <a href="https://jilt.com/?utm_source=edd-core&utm_medium=referral&utm_campaign=edd-enhanced-emails" target="_blank" rel="noopener noreferrer">Jilt</a>.', 'easy-digital-downloads' ) . '</p><p>' . __( 'Learn more about free and paid plans in the <a href="https://docs.easydigitaldownloads.com/article/2199-jilt-overview" target="_blank" rel="noopener noreferrer">documentation</a>.', 'easy-digital-downloads' ) . '</p>',
+						'type' => 'jilt',
 					),
 				),
 				'purchase_receipts' => array(
@@ -2122,6 +2149,121 @@ function edd_shop_states_callback($args) {
 	$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
+}
+
+/**
+ * SendWP Callback
+ *
+ * Renders SendWP Settings
+ *
+ * @since 2.9.15
+ * @param array $args Arguments passed by the setting
+ * @return void
+ */
+function edd_sendwp_callback($args) {
+
+	// Connection status partial label based on the state of the SendWP email sending setting (Tools -> SendWP)
+	$connected    = sprintf(
+		__( '<a href="https://sendwp.com/account/" target="_blank" rel="noopener noreferrer">Click here</a> to visit your account.', 'easy-digital-downloads' )
+	);
+	$disconnected = sprintf(
+		__( '<em><strong>Note:</strong> Email sending is currently disabled. <a href="' . admin_url( '/tools.php?page=sendwp' ) . '">Click here</a> to enable it.</em>', 'easy-digital-downloads' )
+	);
+
+	// Checks if SendWP is connected
+	$client_connected = function_exists( 'sendwp_client_connected' ) && sendwp_client_connected() ? true : false;
+
+	// Checks if email sending is enabled in SendWP
+	$forwarding_enabled = function_exists( 'sendwp_forwarding_enabled' ) && sendwp_forwarding_enabled() ? true : false;
+
+	ob_start();
+
+	echo $args['desc'];
+
+	// Output the appropriate button and label based on connection status
+	if( $client_connected ) :
+		?>
+
+		<p>
+			<button id="edd-sendwp-disconnect" class="button"><?php _e( 'Disconnect SendWP', 'easy-digital-downloads' ); ?></button>
+		</p>
+		<p>Your site is connected to SendWP. <?php echo $forwarding_enabled ? $connected : $disconnected ; ?></p>
+
+		<?php
+	else :
+		?>
+
+		<p>
+			<button type="button" id="edd-sendwp-connect" class="button button-primary"><?php esc_html_e( 'Connect SendWP', 'easy-digital-downloads' ); ?>
+			</button>
+		</p>
+
+		<?php
+	endif;
+
+	echo ob_get_clean();
+}
+
+/**
+ * Jilt Callback
+ *
+ * Renders Jilt Settings
+ *
+ * @since n.n.n
+ * @param array $args arguments passed by the setting.
+ * @return void
+ */
+function edd_jilt_callback( $args ) {
+
+	$activated   = is_callable( 'edd_jilt' );
+	$connected   = $activated && edd_jilt()->get_integration()->is_jilt_connected();
+	$connect_url = $activated ? edd_jilt()->get_connect_url() : '';
+	$account_url = $connected ? edd_jilt()->get_integration()->get_jilt_app_url() : '';
+
+	echo wp_kses_post( $args['desc'] );
+
+	if ( $activated ) :
+		?>
+
+		<?php if ( $connected ) : ?>
+
+			<p>
+				<button id="edd-jilt-disconnect" class="button"><?php esc_html_e( 'Disconnect Jilt', 'easy-digital-downloads' ); ?></button>
+			</p>
+
+			<p>
+				<?php
+				wp_kses_post(
+					sprintf(
+						/* Translators: %1$s - <a> tag, %2$s - </a> tag */
+						__( '%1$sClick here%2$s to visit your Jilt dashboard', 'easy-digital-downloads' ),
+						'<a href="' . esc_url( $account_url ) . '" target="_blank">',
+						'</a>'
+					)
+				);
+				?>
+			</p>
+
+		<?php else : ?>
+
+			<p>
+				<a id="edd-jilt-connect" class="button button-primary" href="<?php echo esc_url( $connect_url ); ?>">
+					<?php esc_html_e( 'Connect to Jilt', 'easy-digital-downloads' ); ?>
+				</a>
+			</p>
+
+		<?php endif; ?>
+
+	<?php else : ?>
+
+		<p>
+			<button id="edd-jilt-connect" class="button button-primary">
+				<?php esc_html_e( 'Install Jilt', 'easy-digital-downloads' ); ?>
+			</button>
+		</p>
+
+	<?php
+	endif;
 }
 
 /**

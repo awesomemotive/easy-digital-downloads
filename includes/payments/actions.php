@@ -66,18 +66,8 @@ function edd_complete_purchase( $payment_id, $new_status, $old_status ) {
 
 			}
 
-			$increase_earnings = $download['price'];
-			if ( ! empty( $download['fees'] ) ) {
-				foreach ( $download['fees'] as $fee ) {
-					if ( $fee['amount'] > 0 ) {
-						continue;
-					}
-					$increase_earnings += $fee['amount'];
-				}
-			}
-
 			// Increase the earnings for this download ID
-			edd_increase_earnings( $download['id'], $increase_earnings );
+			edd_increase_earnings( $download['id'], $download['price'] );
 			edd_increase_purchase_count( $download['id'], $download['quantity'] );
 
 		}
@@ -196,7 +186,8 @@ function edd_process_after_payment_actions( $payment_id = 0, $force = false ) {
 
 	$payment->add_note( __( 'After payment actions processed.', 'easy-digital-downloads' ) );
 	$payment->update_meta( '_edd_complete_actions_run', time() ); // This is in GMT
-	do_action( 'edd_after_payment_actions', $payment_id );
+
+	do_action( 'edd_after_payment_actions', $payment_id, $payment, new EDD_Customer( $payment->customer_id ) );
 }
 add_action( 'edd_after_payment_scheduled_actions', 'edd_process_after_payment_actions', 10, 1 );
 

@@ -609,6 +609,19 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 
 	}
 
+	if( empty( $customer ) ) {
+
+		$customer = new EDD_Customer( $payment->customer_id );
+
+	}
+
+	// Record the payer email on the EDD_Customer record if it is different than the email entered on checkout
+	if( ! empty( $data['payer_email'] ) && ! in_array( strtolower( $data['payer_email'] ), array_map( 'strtolower', $customer->emails ) ) ) {
+
+		$customer->add_email( strtolower( $data['payer_email'] ) );
+
+	}
+
 	if ( $payment_status == 'refunded' || $payment_status == 'reversed' ) {
 
 		// Process a refund
@@ -896,7 +909,18 @@ function edd_paypal_process_pdt_on_return() {
 		return;
 	}
 
-	$payment = new EDD_Payment( $payment_id );
+	$purchase_session = edd_get_purchase_session();
+	$payment          = new EDD_Payment( $payment_id );
+
+	// If there is no purchase session, don't try and fire PDT.
+	if ( empty( $purchase_session ) ) {
+		return;
+	}
+
+	// Do not fire a PDT verification if the purchase session does not match the payment-id PDT is asking to verify.
+	if ( ! empty( $purchase_session['purchase_key'] ) && $payment->key !== $purchase_session['purchase_key'] ) {
+		return;
+	}
 
 	if( $token && ! empty( $_GET['tx'] ) && $payment->ID > 0 ) {
 
@@ -929,17 +953,95 @@ function edd_paypal_process_pdt_on_return() {
 		$debug_args['body']['at'] = str_pad( substr( $debug_args['body']['at'], -6 ), strlen( $debug_args['body']['at'] ), '*', STR_PAD_LEFT );
 		edd_debug_log( 'Attempting to verify PayPal payment with PDT. Args: ' . print_r( $debug_args, true ) );
 
-		$request = wp_remote_post( edd_get_paypal_redirect( true, true ), $remote_post_vars );
+		edd_debug_log( 'Sending PDT Verification request to ' . edd_get_paypal_redirect() );
+
+		$request = wp_remote_post( edd_get_paypal_redirect(), $remote_post_vars );
 
 		if ( ! is_wp_error( $request ) ) {
 
 			$body = wp_remote_retrieve_body( $request );
 
-			if( false !== strpos( $body, 'SUCCESS' ) ) {
+			// parse the data
+			$lines = explode( "\n", trim( $body ) );
+			$data  = array();
+			if ( strcmp ( $lines[0], "SUCCESS" ) == 0 ) {
 
-				// Purchase verified, set to completed
-				$payment->status = 'publish';
+				for ( $i = 1; $i < count( $lines ); $i++ ) {
+					$parsed_line = explode( "=", $lines[ $i ],2 );
+					$data[ urldecode( $parsed_line[0] ) ] = urldecode( $parsed_line[1] );
+				}
+
+				if ( isset( $data['mc_gross'] ) ) {
+
+					$total = $data['mc_gross'];
+
+				} else if ( isset( $data['payment_gross'] ) ) {
+
+					$total = $data['payment_gross'];
+
+				} else if ( isset( $_REQUEST['amt'] ) ) {
+
+					$total = $_REQUEST['amt'];
+
+				} else {
+
+					$total = null;
+
+				}
+
+				if ( is_null( $total ) ) {
+
+					edd_debug_log( 'Attempt to verify PayPal payment with PDT failed due to payment total missing' );
+					$payment->add_note( __( 'Payment could not be verified while validating PayPal PDT. Missing payment total fields.', 'easy-digital-downloads' ) );
+					$payment->status = 'pending';
+
+				} elseif ( (float) $total < (float) $payment->total ) {
+
+					/**
+					 * Here we account for payments that are less than the expected results only. There are times that
+					 * PayPal will sometimes round and have $0.01 more than the amount. The goal here is to protect store owners
+					 * from getting paid less than expected.
+					 */
+					edd_debug_log( 'Attempt to verify PayPal payment with PDT failed due to payment total discrepancy' );
+					$payment->add_note( sprintf( __( 'Payment failed while validating PayPal PDT. Amount expected: %f. Amount Received: %f', 'easy-digital-downloads' ), $payment->total, $data['payment_gross'] ) );
+					$payment->status = 'failed';
+
+				} else {
+
+					// Verify the status
+					switch( strtolower( $data['payment_status'] ) ) {
+
+						case 'completed':
+							$payment->status = 'publish';
+							break;
+
+						case 'failed':
+							$payment->status = 'failed';
+							break;
+
+						default:
+							$payment->status = 'pending';
+							break;
+
+					}
+
+				}
+
 				$payment->transaction_id = sanitize_text_field( $_GET['tx'] );
+				$payment->save();
+
+			} elseif ( strcmp ( $lines[0], "FAIL" ) == 0 ) {
+
+				edd_debug_log( 'Attempt to verify PayPal payment with PDT failed due to PDT failure response: ' . print_r( $body, true ) );
+				$payment->add_note( __( 'Payment failed while validating PayPal PDT.', 'easy-digital-downloads' ) );
+				$payment->status = 'failed';
+				$payment->save();
+
+			} else {
+
+				edd_debug_log( 'Attempt to verify PayPal payment with PDT met with an unexpected result: ' . print_r( $body, true ) );
+				$payment->add_note( __( 'PayPal PDT encountered an unexpected result, payment set to pending', 'easy-digital-downloads' ) );
+				$payment->status = 'pending';
 				$payment->save();
 
 			}

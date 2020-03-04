@@ -3,10 +3,11 @@ Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze
 Donate link: https://easydigitaldownloads.com/donate/
-Tags: download, downloads, e-store, eshop, digital downloads, e-commerce, wp-ecommerce, wp ecommerce, ecommerce, ebook
+Tags: ecommerce, e-commerce, sell, downloads, store, paypal, checkout, shop
 Requires at least: 4.4
-Tested up to: 4.9.8
-Stable Tag: 2.9.8
+Tested up to: 5.3
+Requires PHP: 5.3
+Stable Tag: 2.9.21
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -25,7 +26,7 @@ Easy Digital Downloads has been translated into more than two dozen languages an
 
 = Payment gateways for everyone =
 
-The internet has made it possible for anyone to sell their products to a world-wide audience. No matter where you live, Easy Digital Downloads can work for you. We offer integrations for the most common merchant processors and, through 3rd party extensions, support for many, many more as well.
+The internet has made it possible for anyone to sell their products to a world-wide audience. No matter where you live, Easy Digital Downloads can be your eCommerce solution. We offer integrations for the most common merchant processors and, through 3rd party extensions, support for many, many more as well.
 
 Payment gateways supported in the core, free plugin:
 
@@ -188,6 +189,77 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+= 2.9.21, March 2, 2020 =
+* Fix: Corrected a reporting issue with earnings when using negative fees, such as Discounts Pro.
+* Fix: Only count the number of downloads for a purchase when download counts are not unlimited.
+* Fix: Fixed a typo in the settings text.
+* Dev: Added a supported PHP Version to the plugin headers.
+* New: Added information about the Jilt integration into the email settings.
+
+= 2.9.20, November 14, 2019 =
+* Fix: CSV download import issues with file to price assignments and AmazonS3 files.
+* Fix: The edd_after_payment_actions action fired via cron was missing attributes.
+* Fix: The SendWP connection link was visited if enter/return was pressed to update settings.
+* New: Promotional elements added to EDD admin screens.
+
+= 2.9.19, October 28, 2019 =
+* Fix: Limit register_meta calls to be for the download post type only, in preparation for WordPress 5.3 compatibility.
+
+= 2.9.18, October 21, 2019 =
+* Fix: Updated calls to register_meta for WordPress 5.3 compatibility.
+* Fix: Refactored edd_get_payment_status to work when Payment statuses are translated.
+* Fix: Improved the compatibility of file downloads with hosting configurations that involve symlinks for uploads.
+* Dev: Added the 'edd_show_nginx_redirect_notice' filter to allow programmatically hiding the nginx file protection admin notice.
+* Dev: Added polyfills for is_countable and is_iterable into EDD core.
+
+= 2.9.17, October 2, 2019 =
+* Security Fix: Prevent an authentication bypass to the EDD REST API when no API keys exist.
+
+= 2.9.16, June 11, 2019 =
+* Security Fix: Prevent a stored XSS (Cross Site Scripting) attempt on the IP addresses for logs.
+
+= 2.9.15, May 31, 2019 =
+* Fix: Prevent a fatal error during checkout when no gateways are returned as active.
+* New: Added support for SendWP to help with email deliverability.
+
+= 2.9.14, May 8, 2019 =
+* Fix: Corrected an issue in local file location detection for Windows servers.
+
+= 2.9.13, May 7, 2019 =
+* Fix: An error was being logged when using API V2 to get products by category.
+* Fix: Corrected an issue with multisite on versions of WordPress greater than 5.0.
+* Fix: Multiple improvements with the EDD_License handler.
+* Fix: Made it possible to add products to product-less payments.
+* Fix: Fixed the link to filter file download logs by customer.
+* Fix: Improved strength of file download link hashes.
+* Fix: Improved local file location detection.
+
+= 2.9.12, March 26, 2019 =
+* Fix: Limit PayPal PDT verification to purchase sessions.
+* Fix: Discount start times were not accounting for GMT offsets.
+* Fix: Improved reliability of the State field when selecting different countries.
+* Fix: GDPR Data Exporter now skips any requests for customer data when no customer is found for a user.
+* Fix: WordPress 5.x : apiFetch call was resulting in invalid JSON response.
+* Fix: Corrected a conditional check typo when determining if settings page is EDD related.
+
+= 2.9.11, January 6, 2019 =
+* Fix: PayPal PDT amount validation fails for some accounts due to missing payment_gross field.
+* Tweak: PayPal email address now registered to EDD_Customer during IPN processing if the email is not already registered.
+
+= 2.9.10, January 4, 2019 =
+* Security Fix: Avoid a possible PayPal Standard price manipulation when using PDT (Payment Data Transfer)
+
+= 2.9.9, December 3, 2018 =
+* Fix: State/province cannot be updated on order details screen when country is changed.
+* Fix: "Show Privacy Policy" text link is positioned incorrectly.
+* Fix: "Agree to Terms?" text shows twice on checkout with some configurations.
+* Fix: Nonce verification failure when state/province field is not visible.
+* Fix: Fees / Discounts can be duplicated when payment recovery link is clicked.
+* Fix: Incorrect DocBlock for edd_currency_filter.
+* Fix: Slashes not removed when saving profile name field.
+* Fix: Item amount set to 0.00 improperly during CSV import if the "Products (Raw)" column is used but does not include a {}.
+* Fix: Privacy policy text not shown if terms of use checkbox is disabled.
+* Fix: Log messages not saved to debug log file if they contain non UTF-8 characters.
 
 = 2.9.8, October 1, 2018 =
 * Fix: Updated Amazon Payments onboarding URL.
