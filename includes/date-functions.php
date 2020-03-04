@@ -24,11 +24,14 @@ function edd_date_i18n( $timestamp, $format = 'date' ) {
 	$format = edd_get_date_format( $format );
 
 	// If timestamp is a string, attempt to turn it into a timestamp.
-	if ( is_string( $timestamp ) ) {
+	if ( ! is_numeric( $timestamp ) ) {
 		$timestamp = strtotime( $timestamp );
 	}
 
-	return date_i18n( $format, (int) $timestamp );
+	// We need to get the timezone offset so we can pass that to date_i18n.
+	$date = EDD()->utils->date( 'now', edd_get_timezone_id(), false );
+
+	return date_i18n( $format, (int) $timestamp + $date->getOffset() );
 }
 
 /**
@@ -39,6 +42,70 @@ function edd_date_i18n( $timestamp, $format = 'date' ) {
  */
 function edd_get_timezone_id() {
 	return EDD()->utils->get_time_zone( true );
+}
+
+/**
+ * Accept an EDD date object and get the UTC equivalent version of it.
+ * The EDD date object passed-in can be in any timezone. The one you'll get back will be the UTC equivalent of that time.
+ * This is useful when querying data from the tables by a user-defined date range, like "today".
+ *
+ * @since 3.0
+ * @param EDD\Utils\Date $edd_date_object The EDD Date object for which you wish to get the UTC equiavalent.
+ * @return EDD\Utils\Date The EDD date object set at the UTC equivalent time.
+ */
+function edd_get_utc_equivalent_date( $edd_date_object ) {
+
+	$instance_check = 'EDD\Utils\Date';
+	if ( ! $edd_date_object instanceof $instance_check ) {
+		return false;
+	}
+
+	// Convert the timezone (and thus, also the time) from the WP/EDD Timezone to the UTC equivalent.
+	$utc_timezone = new DateTimeZone( 'utc' );
+	$edd_date_object->setTimezone( $utc_timezone );
+
+	return $edd_date_object;
+}
+
+/**
+ * Accept an EDD date object set in UTC, and get the WP/EDD Timezone equivalent version of it.
+ * The EDD date object must be in UTC. The one you'll get back will be the WP timezone equivalent of that time.
+ * This is useful when showing date information to the user, so that they see it in the proper timezone, instead of UTC.
+ *
+ * @since 3.0
+ * @param EDD\Utils\Date $edd_date_object The EDD Date object for which you wish to get the UTC equiavalent.
+ * @return EDD\Utils\Date The EDD date object set at the UTC equivalent time.
+ */
+function edd_get_edd_timezone_equivalent_date_from_utc( $edd_date_object ) {
+
+	$instance_check = 'EDD\Utils\Date';
+	if ( ! $edd_date_object instanceof $instance_check ) {
+		return false;
+	}
+
+	// If you passed a date object to this function that isn't set to UTC, that is incorrect usage.
+	if ( 'UTC' !== $edd_date_object->format( 'T' ) ) {
+		return false;
+	}
+
+	// Convert the timezone (and thus, also the time) from UTC to the WP/EDD Timezone.
+	$edd_timezone = new DateTimeZone( edd_get_timezone_id() );
+	$edd_date_object->setTimezone( $edd_timezone );
+
+	return $edd_date_object;
+}
+
+/**
+ * Get the timezone abbreviation for the WordPress timezone setting.
+ *
+ * @since 3.0
+ *
+ * @return string The abreviation for the current WordPress timezone setting.
+ */
+function edd_get_timezone_abbr() {
+	$edd_timezone    = edd_get_timezone_id();
+	$edd_date_object = EDD()->utils->date( 'now', $edd_timezone, true );
+	return $edd_date_object->format( 'T' );
 }
 
 /**
@@ -119,7 +186,7 @@ function edd_get_hour_values() {
 	return (array) apply_filters( 'edd_get_hour_values', array(
 		'00' => '00',
 		'01' => '01',
-		'03' => '02',
+		'02' => '02',
 		'03' => '03',
 		'04' => '04',
 		'05' => '05',

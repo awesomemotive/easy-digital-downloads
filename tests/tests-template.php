@@ -34,16 +34,16 @@ class Test_Template extends EDD_UnitTestCase {
 		edd_pagination( $args );
 		$output = ob_get_clean();
 		// Verify it has the current page as 1
-		$this->assertContains( " class='page-numbers current'>1</span>", $output );
+		$this->assertSame( 1, preg_match( '/class=(\"|\')page-numbers current(\"|\')>1<\/span>/', $output ) );
 
 		// Verify that it contains page 2
-		$this->assertContains( "<a class='page-numbers' href='http://example.org/?paged=2'>2</a>", $output );
+		$this->assertSame( 1, preg_match( '/<a class=(\"|\')page-numbers(\"|\') href=(\"|\')http\:\/\/example\.org\/\?paged=2(\"|\')>2<\/a>/', $output ) );
 
 		// Verify that the 'next' button appears.
-		$this->assertContains( '<a class="next page-numbers" href="http://example.org/?paged=2">Next &raquo;</a>', $output );
+		$this->assertSame( 1, preg_match( '/<a class=(\"|\')next page-numbers(\"|\') href=(\"|\')http\:\/\/example\.org\/\?paged=2(\"|\')>Next &raquo;<\/a>/', $output ) );
 
 		// Verify that the 'previous' button does not appear.
-		$this->assertNotContains( 'class="prev ', $output );
+		$this->assertEmpty( preg_match( '/class=(\"|\')prev /', $output ) );
 	}
 
 	public function test_pagination_threepages_page2() {
@@ -57,15 +57,15 @@ class Test_Template extends EDD_UnitTestCase {
 		edd_pagination( $args );
 		$output = ob_get_clean();
 		// Verify it has the current page as 2
-		$this->assertContains( " class='page-numbers current'>2</span>", $output );
+		$this->assertSame( 1, preg_match( '/class=(\"|\')page-numbers current(\"|\')>2<\/span>/', $output ) );
 
 		// Verify that it contains pages 1 and 3
-		$this->assertContains( "<a class='page-numbers' href='http://example.org/?paged=1'>1</a>", $output );
-		$this->assertContains( "<a class='page-numbers' href='http://example.org/?paged=3'>3</a>", $output );
+		$this->assertSame( 1, preg_match( '/<a class=(\"|\')page-numbers(\"|\') href=(\"|\')http\:\/\/example\.org\/\?paged=1(\"|\')>1<\/a>/', $output ) );
+		$this->assertSame( 1, preg_match( '/<a class=(\"|\')page-numbers(\"|\') href=(\"|\')http\:\/\/example\.org\/\?paged=3(\"|\')>3<\/a>/', $output ) );
 
 		// Verify that the 'next' and 'previous' buttons appear.
-		$this->assertContains( '<a class="next page-numbers" href="http://example.org/?paged=3">Next &raquo;</a>', $output );
-		$this->assertContains( '<a class="prev page-numbers" href="http://example.org/?paged=1">&laquo; Previous</a>', $output );
+		$this->assertSame( 1, preg_match( '/<a class=(\"|\')prev page-numbers(\"|\') href=(\"|\')http\:\/\/example\.org\/\?paged=1(\"|\')>&laquo; Previous<\/a>/', $output ) );
+		$this->assertSame( 1, preg_match( '/<a class=(\"|\')next page-numbers(\"|\') href=(\"|\')http\:\/\/example\.org\/\?paged=3(\"|\')>Next &raquo;<\/a>/', $output ) );
 	}
 
 	public function test_pagination_threepages_page3() {
@@ -78,18 +78,18 @@ class Test_Template extends EDD_UnitTestCase {
 
 		edd_pagination( $args );
 		$output = ob_get_clean();
-		// Verify it has the current page as 2
-		$this->assertContains( " class='page-numbers current'>3</span>", $output );
+		// Verify it has the current page as 3
+		$this->assertSame( 1, preg_match( '/class=(\"|\')page-numbers current(\"|\')>3<\/span>/', $output ) );
 
-		// Verify that it contains pages 1 and 3
-		$this->assertContains( "<a class='page-numbers' href='http://example.org/?paged=1'>1</a>", $output );
-		$this->assertContains( "<a class='page-numbers' href='http://example.org/?paged=2'>2</a>", $output );
+		// Verify that it contains pages 1 and 2
+		$this->assertSame( 1, preg_match( '/<a class=(\"|\')page-numbers(\"|\') href=(\"|\')http\:\/\/example\.org\/\?paged=1(\"|\')>1<\/a>/', $output ) );
+		$this->assertSame( 1, preg_match( '/<a class=(\"|\')page-numbers(\"|\') href=(\"|\')http\:\/\/example\.org\/\?paged=2(\"|\')>2<\/a>/', $output ) );
 
 		// Verify that the 'previous' button appears for the correct page.
-		$this->assertContains( '<a class="prev page-numbers" href="http://example.org/?paged=2">&laquo; Previous</a>', $output );
+		$this->assertSame( 1, preg_match( '/<a class=(\"|\')prev page-numbers(\"|\') href=(\"|\')http\:\/\/example\.org\/\?paged=2(\"|\')>&laquo; Previous<\/a>/', $output ) );
 
 		// Verify that the 'next' button does not appear.
-		$this->assertNotContains( 'class="next ', $output );
+		$this->assertEmpty( preg_match( '/class=(\"|\')next /', $output ) );
 	}
 
 	public function test_pagination_has_elipses() {
@@ -102,23 +102,24 @@ class Test_Template extends EDD_UnitTestCase {
 
 		edd_pagination( $args );
 		$output = ob_get_clean();
-		// Verify it has the current page as 2
-		$this->assertContains( "class='page-numbers current'>5</span>", $output );
+		// Verify it has the current page as 5
+		$this->assertSame( 1, preg_match( '/class=(\"|\')page-numbers current(\"|\')>5<\/span>/', $output ) );
 
 		// Verify that it contains page 1
-		$this->assertContains( "<a class='page-numbers' href='http://example.org/?paged=1'>1</a>", $output );
+		$this->assertSame( 1, preg_match( '/<a class=(\"|\')page-numbers(\"|\') href=(\"|\')http\:\/\/example\.org\/\?paged=1(\"|\')>1<\/a>/', $output ) );
 
 		// Verify that it does not contain page 2 (replaced by elipses)
-		$this->assertNotContains( "<a class='page-numbers' href='http://example.org/?paged=2'>2</a>", $output );
+		$this->assertEmpty( preg_match( '/<a class=(\"|\')page-numbers(\"|\') href=(\"|\')http\:\/\/example\.org\/\?paged=2(\"|\')>2<\/a>/', $output ) );
 
 		// Verify that two elipses items are present.
-		$this->assertSame( 2, substr_count( $output, '<span class="page-numbers dots">&hellip;</span>' ) );
+		preg_match_all( '/<span class=(\'|\")page-numbers dots(\'|\")>&hellip;<\/span>/', $output, $matches );
+		$this->assertSame( 2, count( $matches[0] ) );
 
 		// Verify the last item shows.
-		$this->assertContains( "<a class='page-numbers' href='http://example.org/?paged=100'>100</a>", $output );
+		$this->assertSame( 1, preg_match( '/<a class=(\"|\')page-numbers(\"|\') href=(\"|\')http\:\/\/example\.org\/\?paged=100(\"|\')>100<\/a>/', $output ) );
 
 		// Verify that the 'previous' button appears.
-		$this->assertContains( '<a class="prev page-numbers" href="http://example.org/?paged=4">&laquo; Previous</a>', $output );
-		$this->assertContains( '<a class="next page-numbers" href="http://example.org/?paged=6">Next &raquo;</a>', $output );
+		$this->assertSame( 1, preg_match( '/<a class=(\"|\')next page-numbers(\"|\') href=(\"|\')http\:\/\/example\.org\/\?paged=6(\"|\')>Next &raquo;<\/a>/', $output ) );
+		$this->assertSame( 1, preg_match( '/<a class=(\"|\')prev page-numbers(\"|\') href=(\"|\')http\:\/\/example\.org\/\?paged=4(\"|\')>&laquo; Previous<\/a>/', $output ) );
 	}
 }

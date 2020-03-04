@@ -1,3 +1,5 @@
+import { sendwpRemoteInstall, sendwpDisconnect } from './sendwp';
+
 /**
  * Settings screen JS
  */
@@ -7,6 +9,7 @@ const EDD_Settings = {
 		this.misc();
 		this.gateways();
 		this.location();
+		this.emails();
 	},
 
 	general: function() {
@@ -173,6 +176,22 @@ const EDD_Settings = {
 			return false;
 		} );
 	},
+
+	emails: function() {
+		$('#edd-sendwp-connect').on('click', function(e) {
+			e.preventDefault();
+			$(this).html( '<span class="dashicons dashicons-email"></span>' + edd_vars.wait + ' <span class="edd-loading"></span>' );
+			document.body.style.cursor = 'wait';
+			sendwpRemoteInstall();
+		});
+
+		$('#edd-sendwp-disconnect').on('click', function(e) {
+			e.preventDefault();
+			$(this).html( edd_vars.wait + ' <span class="edd-loading dark"></span>' );
+			document.body.style.cursor = 'wait';
+			sendwpDisconnect();
+		});
+	}
 };
 
 jQuery( document ).ready( function( $ ) {

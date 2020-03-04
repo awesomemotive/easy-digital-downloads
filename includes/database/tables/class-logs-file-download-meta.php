@@ -38,7 +38,7 @@ final class Logs_File_Download_Meta extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201907290001;
+	protected $version = 201907291;
 
 	/**
 	 * Setup the database schema

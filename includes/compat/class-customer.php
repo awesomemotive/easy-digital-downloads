@@ -228,7 +228,7 @@ class Customer extends Base {
 			}
 		}
 
-		return $value;
+		return array( $value );
 	}
 
 	/**

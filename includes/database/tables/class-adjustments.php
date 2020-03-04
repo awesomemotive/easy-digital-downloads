@@ -38,7 +38,7 @@ final class Adjustments extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201906030001;
+	protected $version = 201906031;
 
 	/**
 	 * Array of upgrade versions and methods.
@@ -48,9 +48,9 @@ final class Adjustments extends Table {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201806140002' => 201806140002,
-		'201807270003' => 201807270003,
-		'201906030001' => 201906030001,
+		'201806142' => 201806142,
+		'201807273' => 201807273,
+		'201906031' => 201906031,
 	);
 
 	/**
@@ -113,7 +113,7 @@ final class Adjustments extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201806140002
+	 * Upgrade to version 201806142
 	 * - Migrate data from `edd_discounts` to `edd_adjustments`.
 	 *
 	 * This is only for 3.0 beta testers, and can be removed in 3.0.1 or above.
@@ -123,7 +123,7 @@ final class Adjustments extends Table {
 	 *
 	 * @return boolean True if upgrade was successful, false otherwise.
 	 */
-	protected function __201806140002() {
+	protected function __201806142() {
 
 		// Old discounts table
 		$table_name = $this->get_db()->get_blog_prefix( null ) . 'edd_discounts';
@@ -180,7 +180,7 @@ final class Adjustments extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201807110001
+	 * Upgrade to version 201807111
 	 * - Rename `min_cart_price` to `min_charge_amount`.
 	 *
 	 * This is only for 3.0 beta testers, and can be removed in 3.0.1 or above.
@@ -190,7 +190,7 @@ final class Adjustments extends Table {
 	 *
 	 * @return boolean True if upgrade was successful, false otherwise.
 	 */
-	protected function __201807110001() {
+	protected function __201807111() {
 		$retval = $this->get_db()->query( "
 			ALTER TABLE {$this->table_name} CHANGE `min_cart_price` `min_charge_amount` decimal(18,9) NOT NULL default '0';
 		" );
@@ -200,14 +200,14 @@ final class Adjustments extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201807270003
+	 * Upgrade to version 201807273
 	 * - Add the `uuid` varchar column.
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean True if upgrade was successful, false otherwise.
 	 */
-	protected function __201807270003() {
+	protected function __201807273() {
 
 		// Look for column
 		$result = $this->column_exists( 'uuid' );
@@ -224,14 +224,14 @@ final class Adjustments extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201906030001
+	 * Upgrade to version 201906031
 	 * - Drop the `product_condition` column.
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean True if upgrade was successful, false otherwise.
 	 */
-	protected function __201906030001() {
+	protected function __201906031() {
 
 		// Look for column
 		$result = $this->column_exists( 'product_condition' );

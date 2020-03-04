@@ -334,7 +334,7 @@ class EDD_Discount extends Adjustment {
 					return 'edd_discount';
 
 				case 'expiration':
-					return $this->end_date;
+					return $this->get_expiration();
 
 				case 'start':
 					return $this->start_date;
@@ -1241,7 +1241,7 @@ class EDD_Discount extends Adjustment {
 		if ( $this->start_date ) {
 			$start_date = strtotime( $this->start_date );
 
-			if ( $start_date < current_time( 'timestamp' ) ) {
+			if ( $start_date < time() ) {
 				// Discount has pased the start date
 				$return = true;
 			} elseif ( $set_error ) {
@@ -1280,7 +1280,7 @@ class EDD_Discount extends Adjustment {
 
 		$end_date = strtotime( $this->end_date );
 
-		if ( $end_date < current_time( 'timestamp' ) ) {
+		if ( $end_date < time() ) {
 			if ( $update ) {
 				$this->update_status( 'expired' );
 			}

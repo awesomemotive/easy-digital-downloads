@@ -147,15 +147,22 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::get_expiration()
 	 */
-	public function test_get_discount_expiration_by_property() {
-		$this->assertEquals( '2050-12-31 23:59:59', self::$discount->expiration );
+	public function test_get_discount_expiration_by_property_backcompat() {
+		$this->assertEquals( date( 'Y-m-d', time() ) . ' 23:59:59', self::$discount->expiration );
 	}
 
 	/**
 	 * @covers ::get_expiration()
 	 */
-	public function test_get_discount_expiration_by_method() {
-		$this->assertEquals( '2050-12-31 23:59:59', self::$discount->get_expiration() );
+	public function test_get_discount_expiration_by_method_backcompat() {
+		$this->assertEquals( date( 'Y-m-d', time() ) . ' 23:59:59', self::$discount->get_expiration() );
+	}
+
+	/**
+	 * @covers ::end_date
+	 */
+	public function test_get_discount_end_date_by_property() {
+		$this->assertEquals( date( 'Y-m-d', time() ) . ' 23:59:59', self::$discount->end_date );
 	}
 
 	/**
@@ -438,8 +445,8 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 			'amount'            => '20',
 			'code'              => '20OFF',
 			'product_condition' => 'all',
-			'start'             => '12/12/2050 00:00:00',
-			'expiration'        => '12/31/2050 00:00:00',
+			'start'             => date( 'm/d/Y', time() ) . ' 00:00:00',
+			'expiration'        => date( 'm/d/Y', time() ) . ' 23:59:59',
 			'max'               => 10,
 			'uses'              => 54,
 			'min_price'         => 128,
@@ -492,8 +499,8 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 			'amount'            => '20',
 			'code'              => '20OFFEXPIRED',
 			'product_condition' => 'all',
-			'start'             => '12/12/1998 00:00:00',
-			'expiration'        => '12/31/1998 00:00:00',
+			'start'             => date( 'm/d/Y', time() - DAY_IN_SECONDS*5 ) . ' 00:00:00',
+			'expiration'        => date( 'm/d/Y', time() - DAY_IN_SECONDS*5 ) . ' 23:59:59',
 			'max'               => 10,
 			'uses'              => 54,
 			'min_price'         => 128,
@@ -539,14 +546,14 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 * @covers \edd_get_discount_start_date()
 	 */
 	public function test_discount_start_date() {
-		$this->assertSame( '2010-12-12 00:00:00', edd_get_discount_start_date( self::$discount_id ) );
+		$this->assertSame( date( 'Y-m-d', time() ) . ' 00:00:00', edd_get_discount_start_date( self::$discount_id ) );
 	}
 
 	/**
 	 * @covers \edd_get_discount_expiration()
 	 */
 	public function test_discount_expiration_date() {
-		$this->assertSame( '2050-12-31 23:59:59', edd_get_discount_expiration( self::$discount_id ) );
+		$this->assertSame( date( 'Y-m-d', time() ) . ' 23:59:59', edd_get_discount_expiration( self::$discount_id ) );
 	}
 
 	/**
@@ -617,6 +624,12 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 */
 	public function test_discount_is_expired() {
 		$this->assertFalse( edd_is_discount_expired( self::$discount_id ) );
+	}
+
+	public function test_discount_is_expired_timezone_change() {
+		update_option( 'gmt_offset', 25 );
+		$this->assertFalse( edd_is_discount_expired( self::$discount_id ) );
+		update_option( 'gmt_offset', 0 );
 	}
 
 	/**
@@ -911,8 +924,8 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 			'amount'            => '1',
 			'code'              => 'EXCLUDES',
 			'product_condition' => 'all',
-			'start'             => '12/12/2050 00:00:00',
-			'expiration'        => '12/31/2050 00:00:00',
+			'start'             => date( 'm/d/Y H:i:s', time() ),
+			'expiration'        => date( 'm/d/Y H:i:s', time() + HOUR_IN_SECONDS ),
 			'min_price'         => 23,
 			'status'            => 'active',
 			'excluded-products' => array( $download_2->ID ),
@@ -947,8 +960,8 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 			'amount'            => '1',
 			'code'              => 'EXCLUDES',
 			'product_condition' => 'all',
-			'start'             => '12/12/2050 00:00:00',
-			'expiration'        => '12/31/2050 00:00:00',
+			'start'             => date( 'm/d/Y H:i:s', time() ),
+			'expiration'        => date( 'm/d/Y H:i:s', time() + HOUR_IN_SECONDS ),
 			'min_price'         => 23,
 			'status'            => 'active',
 			'excluded-products' => array( $download_2->ID ),
@@ -964,6 +977,8 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 		edd_add_to_cart( $download_3->ID );
 		$this->assertTrue( edd_discount_is_min_met( $discount ) );
 
+		edd_empty_cart();
+		edd_add_to_cart( $download_2->ID );
 		$discount_obj = edd_get_discount( $discount );
 		$this->assertFalse( edd_is_discount_valid( $discount_obj->code ) );
 

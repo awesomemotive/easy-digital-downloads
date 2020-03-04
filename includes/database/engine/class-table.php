@@ -314,7 +314,7 @@ abstract class Table extends Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return bool
+	 * @return bool|void
 	 */
 	public function exists() {
 
@@ -341,7 +341,7 @@ abstract class Table extends Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return bool
+	 * @return bool|void
 	 */
 	public function column_exists( $name = '' ) {
 
@@ -368,7 +368,7 @@ abstract class Table extends Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return bool
+	 * @return bool|void
 	 */
 	public function create() {
 
@@ -393,7 +393,7 @@ abstract class Table extends Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return mixed
+	 * @return bool|void
 	 */
 	public function drop() {
 
@@ -418,7 +418,7 @@ abstract class Table extends Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return mixed
+	 * @return bool|void
 	 */
 	public function truncate() {
 
@@ -443,7 +443,7 @@ abstract class Table extends Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return mixed
+	 * @return int|void Number of items deleted.
 	 */
 	public function delete_all() {
 
@@ -468,7 +468,7 @@ abstract class Table extends Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return mixed
+	 * @return void|int
 	 */
 	public function count() {
 
@@ -497,7 +497,7 @@ abstract class Table extends Base {
 	 *
 	 * @param int $number
 	 *
-	 * @return mixed
+	 * @return bool|void
 	 */
 	public function set_auto_increment( $number = 1 ) {
 
@@ -728,6 +728,25 @@ abstract class Table extends Base {
 		$this->db_version = $this->is_global()
 			? get_network_option( get_main_network_id(), $this->db_version_key, false )
 			:         get_option(                        $this->db_version_key, false );
+
+		/**
+		 * If the DB version is higher than the stated version and is 12 digits long, we need to update it to our
+		 * new, shorter format of 9 digits.
+		 *
+		 * This is only for 3.0 beta testers, and can be removed in 3.0.1 or above.
+		 *
+		 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/7579
+		 */
+		if ( version_compare( $this->db_version, $this->version, '<=' ) || 12 !== strlen( $this->db_version ) ) {
+			return;
+		}
+
+		// Parse the new version number from the existing. Converting from {YYYY}{mm}{dd}{xxxx} to {YYYY}{mm}{dd}{x}
+		$date             = substr( $this->db_version, 0, 8 );
+		$increment        = substr( $this->db_version, 8, 4 );
+		$this->db_version = intval( $date . intval( $increment ) ); // Trims off the three prefixed zeros.
+
+		$this->set_db_version( $this->db_version );
 	}
 
 	/**
@@ -737,8 +756,8 @@ abstract class Table extends Base {
 	 */
 	private function delete_db_version() {
 		$this->db_version = $this->is_global()
-			? delete_network_option( get_main_network_id(), $this->db_version_key, false )
-			:         delete_option(                        $this->db_version_key, false );
+			? delete_network_option( get_main_network_id(), $this->db_version_key )
+			:         delete_option(                        $this->db_version_key );
 	}
 
 	/**

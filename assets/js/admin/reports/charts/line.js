@@ -24,11 +24,13 @@ export const render = ( config ) => {
 	// Convert dataset x-axis values to moment() objects.
 	_.each( data.datasets, ( dataset ) => {
 		_.each( dataset.data, ( pair, index ) => {
-			if ( ! dates.hour_by_hour ) {
-				pair.x = moment( pair.x ).utcOffset( 0 ).format( 'LLL' );
-			} else {
-				pair.x = moment( pair.x ).utcOffset( dates.utc_offset ).format( 'LLL' );
-			}
+
+			// Moment.js accepts a date object so we'll turn the timestamp into a date object here.
+			let date = new Date( parseInt( pair.x ) );
+
+			// Offset the moment.js so it is set to match the WordPress timezone, which is n dates.utc_offset
+			pair.x = moment( date ).utcOffset( parseInt( dates.utc_offset ) ).format( 'LLL' );
+
 		} );
 	} );
 

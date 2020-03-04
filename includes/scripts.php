@@ -320,7 +320,9 @@ function edd_register_admin_scripts() {
 			'edd-admin-notes',
 		),
 		'settings'     => array(),
-		'tools'        => array(),
+		'tools'        => array(
+			'edd-admin-tools-export'
+		),
 	);
 
 	foreach ( $admin_pages as $page => $deps ) {
@@ -488,6 +490,8 @@ function edd_localize_admin_scripts() {
 		'unsupported_browser'         => __( 'We are sorry but your browser is not compatible with this kind of file upload. Please upgrade your browser.', 'easy-digital-downloads' ),
 		'show_advanced_settings'      => __( 'Show advanced settings', 'easy-digital-downloads' ),
 		'hide_advanced_settings'      => __( 'Hide advanced settings', 'easy-digital-downloads' ),
+		'no_downloads_error'          => __( 'There are no downloads attached to this payment', 'easy-digital-downloads' ),
+		'wait'                        => __( 'Please wait &hellip;', 'easy-digital-downloads' ),
 
 		// Features
 		'quantities_enabled'          => edd_item_quantities_enabled(),

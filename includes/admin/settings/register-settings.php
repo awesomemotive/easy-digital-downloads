@@ -621,9 +621,25 @@ function edd_get_registered_settings() {
 			// Emails Settings
 			'emails' => apply_filters( 'edd_settings_emails', array(
 				'main' => array(
+					'sendwp_header' => array(
+						'id'   => 'sendwp_header',
+						'name' => '<strong>' . __( 'SendWP Settings', 'easy-digital-downloads' ) . '</strong>',
+						'type' => 'header',
+					),
+					'sendwp' => array(
+						'id'      => 'sendwp',
+						'name'    => __( 'Connection Status', 'easy-digital-downloads' ),
+						'desc'    => '<p>' . __( 'Looking for a reliable, affordable way to deliver important emails to your customers? Try <a href="https://sendwp.com" target="_blank" rel="noopener noreferrer">SendWP</a>.', 'easy-digital-downloads' ) . '</p><p>' . __( 'For more information on this paid service, see the <a href="https://docs.easydigitaldownloads.com/article/2143-sendwp-email-delivery" target="_blank" rel="noopener noreferrer">documentation</a>.', 'easy-digital-downloads' ) . '</p>',
+						'type'    => 'sendwp',
+					),
+					'email_header' => array(
+						'id'   => 'email_header',
+						'name' => '<strong>' . __( 'Email Configuration', 'easy-digital-downloads' ) . '</strong>',
+						'type' => 'header',
+					),
 					'email_template' => array(
 						'id'      => 'email_template',
-						'name'    => __( 'Email Template', 'easy-digital-downloads' ),
+						'name'    => __( 'Template', 'easy-digital-downloads' ),
 						'desc'    => __( 'Choose a template. Click "Save Changes" then "Preview Purchase Receipt" to see the new template.', 'easy-digital-downloads' ),
 						'type'    => 'select',
 						'chosen'  => true,
@@ -779,22 +795,10 @@ function edd_get_registered_settings() {
 					),
 				),
 				'rates' => array(
-					'tax_rate' => array(
-						'id'            => 'tax_rate',
-						'name'          => __( 'Default Rate', 'easy-digital-downloads' ),
-						'desc'          => __( 'Customers not in a region below will be charged this tax rate instead. Enter <code>6.5</code> for 6.5%. ', 'easy-digital-downloads' ),
-						'type'          => 'number',
-						'size'          => 'small',
-						'step'          => '0.0001',
-						'min'           => '0',
-						'max'           => '99',
-						'tooltip_title' => __( 'Default Rate', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'If the customer\'s address fails to meet the below tax rules, you can define a default tax rate to be applied to all other customers. Enter a percentage, such as 6.5 for 6.5%.', 'easy-digital-downloads' ),
-					),
 					'tax_rates' => array(
 						'id'   => 'tax_rates',
 						'name' => '<strong>' . __( 'Regional Rates', 'easy-digital-downloads' ) . '</strong>',
-						'desc' => __( 'Add tax rates for specific regions to override the base rate.', 'easy-digital-downloads' ),
+						'desc' => __( 'Configure rates for each region you wish to collect sales tax in.', 'easy-digital-downloads' ),
 						'type' => 'tax_rates',
 					),
 				)
@@ -1057,8 +1061,8 @@ function edd_get_registered_settings() {
 					'show_privacy_policy_on_checkout' => array(
 						'id'    => 'show_privacy_policy_on_checkout',
 						'name'  => __( 'Privacy Policy on Checkout',                     'easy-digital-downloads' ),
-						'check' => __( 'Display the entire Privacy Policy at checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_attr( admin_url( 'privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) .'</a>.',
-						'desc'  => __( 'Display your Privacy Policy on checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_attr( admin_url( 'privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) .'</a>.',
+						'check' => __( 'Display the entire Privacy Policy at checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_attr( admin_url( 'options-privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) .'</a>.',
+						'desc'  => __( 'Display your Privacy Policy on checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_attr( admin_url( 'options-privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) .'</a>.',
 						'type'  => 'checkbox',
 					),
 				),
@@ -1148,13 +1152,32 @@ function edd_get_registered_settings() {
 			$edd_settings['misc']['button_text']['buy_now_text']['tooltip_desc']  = __( 'Buy Now buttons are only available for stores that have a single supported gateway active and that do not use taxes.', 'easy-digital-downloads' );
 		}
 
+		// Show a disabled "Default Rate" in "Tax Rates" if the value is not 0.
+		if ( false !== edd_get_option( 'tax_rate' ) ) {
+			$edd_settings['taxes']['rates'] = array_merge( 
+				array(
+					'tax_rate' => array(
+						'id'            => 'tax_rate',
+						'type'          => 'tax_rate',
+						'name'          => __( 'Default Rate', 'easy-digital-downloads' ),
+						'desc'          => (
+							'<div class="notice inline notice-error"><p>' . __( 'This setting is no longer used in this version of Easy Digital Downloads. Please confirm your regional tax rates are properly configured properly below, then click "Save Changes" to dismiss this notice.', 'easy-digital-downloads' ) . '</p></div>'
+						),
+					),
+				),
+				$edd_settings['taxes']['rates']
+			);
+		}
+
 		// Allow registered settings to surface the deprecated "Styles" tab.
 		if ( has_filter( 'edd_settings_styles' ) ) {
 			$edd_settings['styles'] = edd_apply_filters_deprecated(
 				'edd_settings_styles',
 				array(
-					'main'    => array(),
-					'buttons' => array(),
+					array(
+						'main'    => array(),
+						'buttons' => array(),
+					),
 				),
 				'3.0',
 				'edd_settings_misc'
@@ -2185,8 +2208,10 @@ function edd_number_callback( $args ) {
 	$min  = isset( $args['min']  ) ? $args['min']  : 0;
 	$step = isset( $args['step'] ) ? $args['step'] : 1;
 
+	$disabled = ! empty( $args['disabled'] ) ? ' disabled="disabled"' : '';
+
 	$size  = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html  = '<input type="number" step="' . esc_attr( $step ) . '" max="' . esc_attr( $max ) . '" min="' . esc_attr( $min ) . '" class="' . $class . ' ' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" ' . $name . ' value="' . esc_attr( stripslashes( $value ) ) . '"/>';
+	$html  = '<input type="number" step="' . esc_attr( $step ) . '" max="' . esc_attr( $max ) . '" min="' . esc_attr( $min ) . '" class="' . $class . ' ' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" ' . $name . ' value="' . esc_attr( stripslashes( $value ) ) . '"' . $disabled . ' />';
 	$html .= '<p class="description"> ' . wp_kses_post( $args['desc'] ) . '</p>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
@@ -2529,6 +2554,70 @@ function edd_shop_states_callback( $args ) {
 	$html .= '<p class="description"> ' . wp_kses_post( $args['desc'] ) . '</p>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
+}
+
+/**
+ * SendWP Callback
+ *
+ * Renders SendWP Settings
+ *
+ * @since 2.9.15
+ * @param array $args Arguments passed by the setting
+ * @return void
+ */
+function edd_sendwp_callback($args) {
+
+	// Connection status partial label based on the state of the SendWP email sending setting (Tools -> SendWP)
+	$connected    = sprintf(
+		__( '<a href="https://sendwp.com/account/" target="_blank" rel="noopener noreferrer">Click here</a> to visit your account.', 'easy-digital-downloads' )
+	);
+	$disconnected = sprintf(
+		__( '<em><strong>Note:</strong> Email sending is currently disabled. <a href="' . admin_url( '/tools.php?page=sendwp' ) . '">Click here</a> to enable it.</em>', 'easy-digital-downloads' )
+	);
+
+	// Checks if SendWP is connected
+	$client_connected = function_exists( 'sendwp_client_connected' ) && sendwp_client_connected() ? true : false;
+
+	// Checks if email sending is enabled in SendWP
+	$forwarding_enabled = function_exists( 'sendwp_forwarding_enabled' ) && sendwp_forwarding_enabled() ? true : false;
+
+	ob_start();
+
+	// Output the appropriate button and label based on connection status
+	if( $client_connected ) :
+		?>
+
+		<p>
+			<button id="edd-sendwp-disconnect" class="button"><?php _e( 'Disconnect SendWP', 'easy-digital-downloads' ); ?></button>
+		</p>
+		<p>Your site is connected to SendWP. <?php echo $forwarding_enabled ? $connected : $disconnected ; ?></p>
+
+		<?php
+	else :
+		?>
+
+		<p>
+			<button type="button" id="edd-sendwp-connect" class="button button-primary"><span class="dashicons dashicons-email"></span><?php esc_html_e( 'Connect SendWP', 'easy-digital-downloads' ); ?>
+			</button>
+		</p>
+
+		<?php
+		echo $args['desc'];
+	endif;
+
+	echo ob_get_clean();
+}
+
+/**
+ * Outputs the "Default Rate" setting.
+ *
+ * @since 3.0
+ *
+ * @param array $args Arguments passed to the setting.
+ */
+function edd_tax_rate_callback( $args ) {
+	echo '<input type="hidden" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="" />';
+	echo wp_kses_post( $args['desc'] );
 }
 
 /**
