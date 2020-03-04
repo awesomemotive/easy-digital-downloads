@@ -413,9 +413,9 @@ class Data_Migrator {
 		$date_created_gmt = $data->post_date_gmt;
 		if ( '0000-00-00 00:00:00' === $date_created_gmt ) {
 
-			$date_created_gmt  = new DateTime( $data->post_date );
-			$modified_time     = new DateTime( $data->post_modified );
-			$modified_time_gmt = new DateTime( $data->post_modified_gmt );
+			$date_created_gmt  = new \DateTime( $data->post_date );
+			$modified_time     = new \DateTime( $data->post_modified );
+			$modified_time_gmt = new \DateTime( $data->post_modified_gmt );
 
 			$diff = $modified_time_gmt->diff( $modified_time );
 
@@ -433,9 +433,9 @@ class Data_Migrator {
 
 			// Account for -/+ GMT offsets.
 			if ( 1 === $diff->invert ) {
-				$date_created_gmt->add( new DateInterval( $time_diff ) );
+				$date_created_gmt->add( new \DateInterval( $time_diff ) );
 			} else {
-				$date_created_gmt->sub( new DateInterval( $time_diff ) );
+				$date_created_gmt->sub( new \DateInterval( $time_diff ) );
 			}
 
 			$date_created_gmt = $date_created_gmt->format('Y-m-d H:i:s');
