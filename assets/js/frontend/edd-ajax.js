@@ -3,7 +3,7 @@
 /**
  * Internal dependencies.
  */
-import { recalculate_taxes } from './checkout';
+import { recalculateTaxes } from './checkout/utils.js';
 
 jQuery( document ).ready( function( $ ) {
 	// Hide unneeded elements. These are things that are required in case JS breaks or isn't present
@@ -465,11 +465,11 @@ jQuery( document ).ready( function( $ ) {
 				}
 			} ).done( function( data ) {
 				if ( is_checkout ) {
-					recalculate_taxes();
+					recalculateTaxes();
 				}
 			} );
 		} else if ( is_checkout ) {
-			recalculate_taxes();
+			recalculateTaxes();
 		}
 
 		return false;
@@ -481,7 +481,7 @@ jQuery( document ).ready( function( $ ) {
 	// If is_checkout, recalculate sales tax on postalCode change.
 	$( document.body ).on( 'change', '#edd_cc_address input[name=card_zip]', function() {
 		if ( typeof edd_global_vars !== 'undefined' ) {
-			recalculate_taxes();
+			recalculateTaxes();
 		}
 	} );
 } );
