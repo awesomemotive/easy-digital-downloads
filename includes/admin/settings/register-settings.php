@@ -2639,7 +2639,11 @@ function edd_tax_rates_callback( $args ) {
 
 	wp_localize_script( 'edd-admin-tax-rates', 'eddTaxRates', array(
 		'rates' => $rates,
-		'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
+		'nonce' => wp_create_nonce( 'edd-country-field-nonce' ),
+		'i18n'  => array(
+			/* translators: Tax rate country code */
+			'multipleCountryWide' => esc_html__( 'Only one country-wide tax rate can be active at once. Please deactivate the existing %s country-wide rate before adding another.', 'easy-digital-downloads' ),
+		),
 	) );
 
 	$templates = array(
