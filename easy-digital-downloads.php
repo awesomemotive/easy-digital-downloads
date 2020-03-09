@@ -401,6 +401,8 @@ final class Easy_Digital_Downloads {
 			$get_locale = get_user_locale();
 		}
 
+		unload_textdomain( 'easy-digital-downloads' );
+
 		/**
 		 * Defines the plugin language locale used in Easy Digital Downloads.
 		 *
