@@ -382,7 +382,19 @@ class EDD_Cart {
 
 		do_action( 'edd_pre_add_to_cart', $download_id, $options );
 
-		$this->contents = apply_filters( 'edd_pre_add_to_cart_contents', $this->contents );
+		/**
+		 * Pre-Add to Cart Contents.
+		 *
+		 * Prior to adding the new item to the cart, allow filtering of the current contents
+		 *
+		 * @since
+		 * @since 3.0 Added the additional $download_id and $options arguments.
+		 *
+		 * @param array The current cart contents.
+		 * @param int   The download ID being added to the cart.
+		 * @param array The options for the item being added including but not limited to quantity.
+		 */
+		$this->contents = apply_filters( 'edd_pre_add_to_cart_contents', $this->contents, $download_id, $options );
 
 		$quantities_enabled = edd_item_quantities_enabled() && ! edd_download_quantities_disabled( $download_id );
 
