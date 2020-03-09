@@ -552,6 +552,15 @@ a.edd-delete:hover {
 	display: none;
 }
 
+.edd-order-resend-email-chooser legend {
+	font-weight: bold;
+	margin-bottom: 4px;
+}
+
+.edd-order-resend-email-chooser p {
+	margin: 4px 0;
+}
+
 /* Note Styles
 -------------------------------------------------------------- */
 
