@@ -38,7 +38,7 @@ final class Logs_File_Downloads extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201806280001;
+	protected $version = 201806281;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -48,8 +48,8 @@ final class Logs_File_Downloads extends Table {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201806280001' => 201806280001,
-		'201807270003' => 201807270003
+		'201806281' => 201806281,
+		'201807273' => 201807273
 	);
 
 	/**
@@ -78,14 +78,14 @@ final class Logs_File_Downloads extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201806280001
+	 * Upgrade to version 201806281
 	 * - Rename  `download_id` column to `product_id`
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201806280001() {
+	protected function __201806281() {
 
 		// Alter the database with separate queries so indexes succeed
 		$this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE COLUMN download_id product_id bigint(20) unsigned NOT NULL default 0" );
@@ -99,14 +99,14 @@ final class Logs_File_Downloads extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201807270003
+	 * Upgrade to version 201807273
 	 * - Add the `uuid` varchar column
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201807270003() {
+	protected function __201807273() {
 
 		// Look for column
 		$result = $this->column_exists( 'uuid' );
