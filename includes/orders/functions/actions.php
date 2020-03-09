@@ -268,7 +268,7 @@ function edd_add_manual_order( $args = array() ) {
 			edd_add_order_item( array(
 				'order_id'     => $order_id,
 				'product_id'   => absint( $download['id'] ),
-				'product_name' => $d->post_title,
+				'product_name' => edd_get_download_name( $download['id'], absint( $price_id ) ),
 				'price_id'     => absint( $price_id ),
 				'cart_index'   => $cart_key,
 				'type'         => 'download',
