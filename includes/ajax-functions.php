@@ -1239,6 +1239,59 @@ function edd_ajax_customer_addresses() {
 add_action( 'wp_ajax_edd_customer_addresses', 'edd_ajax_customer_addresses' );
 
 /**
+ * Returns details about a Customer.
+ *
+ * @since 3.0
+ */
+function edd_ajax_customer_details() {
+	// Bail if user cannot manage shop settings.
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return wp_send_json_error();
+	}
+
+	// Set up parameters.
+	$nonce = isset( $_POST['nonce'] )
+		? sanitize_text_field( $_POST['nonce'] )
+		: '';
+
+	$customer_id = isset( $_POST['customer_id'] )
+		? absint( $_POST['customer_id'] )
+		: 0;
+
+	// Bail if missing any data.
+	if ( empty( $nonce ) || empty( $customer_id ) ) {
+		return wp_send_json_error();
+	}
+
+	// Bail if nonce verification failed.
+	if ( ! wp_verify_nonce( $nonce, 'edd_customer_details_nonce' ) ) {
+		return wp_send_json_error();
+	}
+
+	// Fetch customer.
+	$customer = edd_get_customer( $customer_id );
+
+	if ( ! $customer ) {
+		return wp_send_json_error();
+	}
+
+	$response = array(
+		'id'                => esc_html( $customer->id ),
+		'name'              => esc_html( $customer->name ),
+		'email'             => esc_html( $customer->email ),
+		'avatar'            => get_avatar( $customer->email, 50 ),
+		'date_created'      => esc_html( $customer->date_created ),
+		'date_created_i18n' => esc_html( edd_date_i18n( $customer->date_created ) ),
+		'_links'            => array(
+			'self' => esc_url_raw( admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) ),
+		),
+	);
+
+	return wp_send_json_success( $response );
+}
+add_action( 'wp_ajax_edd_customer_details', 'edd_ajax_customer_details' );
+
+/**
  * Recalculate taxes when adding a new order and the country/region field is changed.
  *
  * @since 3.0
