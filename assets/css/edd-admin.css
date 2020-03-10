@@ -531,21 +531,27 @@ a.edd-delete:hover {
 }
 
 .order-customer-info .customer-details-wrap {
-	overflow: hidden;
+	margin: 15px 0;
+	align-items: center;
 }
 
-.order-customer-info .customer-details-actions {
-	margin-bottom: 0;
+.order-customer-info .customer-details-wrap .spinner {
+	margin: 0;
 }
 
-.order-customer-info .customer-details span {
+.order-customer-info .customer-details {
+	display: flex;
+	flex-direction: column;
+} 
+
+.order-customer-info .customer-details .customer-since {
+	color: #666;
 	display: block;
-	margin-bottom: 5px;
+	margin: 4px 0 6px;
 }
 
-.order-customer-info .customer-details span.customer-name {
-	font-size: 1.5em;
-	font-weight: 400;
+.order-customer-info .customer-details > span {
+	margin-bottom: 5px;
 }
 
 .edd-order-add-download-select .spinner {
@@ -2822,12 +2828,11 @@ body.download_page_edd-reports {
 }
 .edd-sections-wrap .section-wrap .avatar-wrap {
 	float: left;
-	padding-right: 20px;
+	padding-right: 10px;
 	text-align: center;
 }
 .edd-sections-wrap .section-wrap img.avatar {
 	border-radius: 5px;
-	margin-bottom: 10px;
 }
 .edd-sections-wrap .section-wrap .customer-id {
 	position: absolute;
