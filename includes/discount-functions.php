@@ -206,7 +206,7 @@ function edd_update_discount( $discount_id = 0, $data = array() ) {
 		}
 
 		unset( $data['product_reqs'] );
-	} else {
+	} elseif ( isset( $data['product_reqs'] ) ) {
 		edd_delete_adjustment_meta( $discount_id, 'product_requirement' );
 
 		// We don't have product conditions when there are no product requirements.
@@ -229,7 +229,7 @@ function edd_update_discount( $discount_id = 0, $data = array() ) {
 		}
 
 		unset( $data['excluded_products'] );
-	} else {
+	} elseif( isset( $data['excluded_products'] ) ) {
 		edd_delete_adjustment_meta( $discount_id, 'excluded_product' );
 	}
 

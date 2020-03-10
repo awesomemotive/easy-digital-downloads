@@ -38,7 +38,7 @@ final class Customer_Email_Addresses extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201808170001;
+	protected $version = 201808171;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -48,8 +48,8 @@ final class Customer_Email_Addresses extends Table {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201808140001' => 201808140001,
-		'201808170001' => 201808170001,
+		'201808141' => 201808141,
+		'201808171' => 201808171,
 	);
 
 	/**
@@ -77,14 +77,14 @@ final class Customer_Email_Addresses extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201808140001
+	 * Upgrade to version 201808141
 	 * - Add the `uuid` varchar column
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201808140001() {
+	protected function __201808141() {
 
 		// Look for column
 		$result = $this->column_exists( 'uuid' );
@@ -101,14 +101,14 @@ final class Customer_Email_Addresses extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201808170001
+	 * Upgrade to version 201808171
 	 * - Add the `email` varchar column
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201808170001() {
+	protected function __201808171() {
 
 		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY COLUMN `email` varchar(100) NOT NULL default ''" );
 		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX email (email)" );

@@ -1061,8 +1061,8 @@ function edd_get_registered_settings() {
 					'show_privacy_policy_on_checkout' => array(
 						'id'    => 'show_privacy_policy_on_checkout',
 						'name'  => __( 'Privacy Policy on Checkout',                     'easy-digital-downloads' ),
-						'check' => __( 'Display the entire Privacy Policy at checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_attr( admin_url( 'privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) .'</a>.',
-						'desc'  => __( 'Display your Privacy Policy on checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_attr( admin_url( 'privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) .'</a>.',
+						'check' => __( 'Display the entire Privacy Policy at checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_attr( admin_url( 'options-privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) .'</a>.',
+						'desc'  => __( 'Display your Privacy Policy on checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_attr( admin_url( 'options-privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) .'</a>.',
 						'type'  => 'checkbox',
 					),
 				),
@@ -2639,7 +2639,11 @@ function edd_tax_rates_callback( $args ) {
 
 	wp_localize_script( 'edd-admin-tax-rates', 'eddTaxRates', array(
 		'rates' => $rates,
-		'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
+		'nonce' => wp_create_nonce( 'edd-country-field-nonce' ),
+		'i18n'  => array(
+			/* translators: Tax rate country code */
+			'multipleCountryWide' => esc_html__( 'Only one country-wide tax rate can be active at once. Please deactivate the existing %s country-wide rate before adding another.', 'easy-digital-downloads' ),
+		),
 	) );
 
 	$templates = array(
