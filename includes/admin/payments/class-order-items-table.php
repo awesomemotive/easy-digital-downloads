@@ -132,6 +132,7 @@ class Order_Items_Table extends List_Table {
 			? array()
 			: array(
 				'name'     => array( 'product_name', false ),
+				'status'   => array( 'status', false ),
 				'quantity' => array( 'quantity', false ),
 				'amount'   => array( 'amount', false ),
 				'discount' => array( 'discount', false ),
@@ -212,7 +213,17 @@ class Order_Items_Table extends List_Table {
 		$status      = strtolower( $order_item->status );
 		$row_actions = array();
 
-		if ( in_array( $status, array( 'inherit', 'complete' ), true ) ) {
+		// No state
+		$state = '';
+
+		if ( empty( $status ) ) {
+			$row_actions['complete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
+					'edd-action' => 'handle_order_item_change',
+					'status'     => 'inherit',
+					'order_item' => $order_item->id,
+				), $base ), 'edd_order_item_nonce' ) ) . '">' . __( 'Complete', 'easy-digital-downloads' ) . '</a>';
+
+		} elseif ( in_array( $status, array( 'inherit', 'complete' ), true ) ) {
 
 			$files = edd_get_download_files( $order_item->product_id, $order_item->price_id );
 			if ( ! empty( $files ) ) {
@@ -221,27 +232,31 @@ class Order_Items_Table extends List_Table {
 			}
 
 			$row_actions['refund'] = '<a class="edd-refund-order" href="">' . __( 'Refund', 'easy-digital-downloads' ) . '</a>';
+
+		} elseif ( 'refunded' === $status ) {
+			$state = __( 'Refunded', 'easy-digital-downloads' );
 		}
 
 		// Filter all order_item row actions
 		$row_actions = apply_filters( 'edd_order_item_row_actions', $row_actions, $order_item );
 
+		// Format order item state
+		if ( ! empty( $state ) ) {
+			$state = ' &mdash; <span class="order-item-state">' . $state . '</span>';
+		}
+
 		// Wrap order_item title in strong anchor
-		$order_item_title = '<a class="row-title" href="' . add_query_arg( array(
+		$order_item_title = '<strong><a class="row-title" href="' . add_query_arg( array(
 				'action' => 'edit',
 				'post'  => $order_item->product_id,
-			), admin_url( 'post.php' )  ) . '">' . $order_item->get_order_item_name() . '</a>';
+			), admin_url( 'post.php' )  ) . '">' . $order_item->get_order_item_name() . '</a>' . $state . '</strong>';
 
 		// See what the current name of the product is:
 		$current_product_name = edd_get_download_name( $order_item->product_id, $order_item->price_id );
 		if ( strtolower( htmlentities( $current_product_name ) ) !== strtolower( htmlentities( $order_item->get_order_item_name() ) ) ) {
-			$status_help = sprintf( __( 'This product has been renamed since this purchase. It is now %s.', 'easy-digital-downloads' ), $current_product_name );
+			$status_help = '<p>' . sprintf( __( 'This product has been renamed since this purchase. It is now %s.', 'easy-digital-downloads' ), $current_product_name );
 
 			$order_item_title .= ' <span alt="f223" class="edd-help-tip dashicons dashicons-backup" title="' . $status_help . '"></span>';
-		}
-
-		if ( 'refunded' === $status ) {
-			$order_item_title .= edd_get_order_status_badge( $status );
 		}
 
 		// Return order_item title & row actions
