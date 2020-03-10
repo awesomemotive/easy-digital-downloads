@@ -572,6 +572,18 @@ class EDD_Payment_History_Table extends List_Table {
 			$name = '&mdash;';
 		}
 
+		/**
+		 * Filters the output of the Email column in the Payments table.
+		 *
+		 * @since 1.4
+		 * @since 3.0 Run manually inside of the `customer` column for backwards compatibility.
+		 *
+		 * @param string $name Customer name.
+		 * @param int    $order_id ID of the Payment/Order.
+		 * @param string $column_name Name of the current column (email).
+		 */
+		$name = apply_filters( 'edd_payments_table_column', $name, $order->id, 'email' );
+
 		return $name;
 	}
 
