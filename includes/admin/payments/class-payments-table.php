@@ -442,54 +442,6 @@ class EDD_Payment_History_Table extends List_Table {
 	}
 
 	/**
-	 * Render the Email column.
-	 *
-	 * @since 1.4
-	 * @since 3.0 Updated to use the new EDD\Orders\Order class.
-	 *
-	 * @param EDD\Orders\Order $order Order object.
-	 * @return string Data shown in the Email column
-	 */
-	public function column_email( $order ) {
-
-		// Always include the "View" link
-		$row_actions = array();
-
-		// Add search term string back to base URL
-		$search_terms = isset( $_GET['s'] )
-			? trim( $_GET['s'] )
-			: '';
-
-		if ( ! empty( $search_terms ) ) {
-			$this->base_url = add_query_arg( 's', $search_terms, $this->base_url );
-		}
-
-		$email = $order->email;
-
-		// Resend
-		if ( 'complete' === $order->status && ! empty( $email ) ) {
-			$row_actions['email_links'] = '<a href="' . add_query_arg( array(
-				'edd-action'  => 'email_links',
-				'purchase_id' => $order->id
-			), $this->base_url ) . '">' . __( 'Resend Receipt', 'easy-digital-downloads' ) . '</a>';
-		}
-
-		// This exists for backwards compatibility purposes.
-		$payment     = edd_get_payment( $order->id );
-		$row_actions = apply_filters( 'edd_payment_row_actions', $row_actions, $payment );
-
-		if ( empty( $email ) ) {
-			$email = __( '(unknown)', 'easy-digital-downloads' );
-		}
-
-		// Concatenate the results
-		$value = $email . $this->row_actions( $row_actions );
-
-		// Filter & return
-		return apply_filters( 'edd_payments_table_column', $value, $order->id, 'email' );
-	}
-
-	/**
 	 * Render the checkbox column.
 	 *
 	 * @since 1.4
