@@ -22,6 +22,14 @@ $cart    = edd_get_payment_meta_cart_details( $order->id, true );
 $user    = edd_get_payment_meta_user_info( $order->id );
 $status  = edd_get_payment_status( $order, true );
 
+/**
+ * Output HTML/perform actions before displaying the receipt table
+ *
+ * @since 3.0.0
+ *
+ * @param EDD_Payment  $payment           EDD_Payment object
+ * @param array        $edd_receipt_args  arguments for the receipt shortcode
+ */
 do_action( 'edd_payment_receipt_before_table', $payment, $edd_receipt_args );
 ?>
 <table id="edd_purchase_receipt" class="edd-table">
