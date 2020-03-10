@@ -134,6 +134,24 @@ const TableAdd = wp.Backbone.View.extend( {
 	addTaxRate: function( event ) {
 		event.preventDefault();
 
+		const existingCountryWide = this.collection.filter( ( rate ) => (
+			'' === this.model.get( 'region' ) && (
+				this.model.get( 'country' ) === rate.get( 'country' ) &&
+				true === rate.get( 'global' ) &&
+				'active' === rate.get( 'status' )
+			)
+		) );
+
+		const {
+			i18n,
+		} = eddTaxRates;
+
+		if ( existingCountryWide.length > 0 ) {
+			alert( i18n.multipleCountryWide.replace( '%s', this.model.get( 'country' ) ) );
+
+			return;
+		}
+
 		// Merge cid as ID to make this a unique model.
 		this.collection.add( _.extend(
 			this.model.attributes,

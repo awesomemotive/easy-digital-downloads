@@ -38,7 +38,7 @@ final class Customer_Addresses extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201906250001;
+	protected $version = 201906251;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -48,8 +48,8 @@ final class Customer_Addresses extends Table {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201807270003' => 201807270003,
-		'201906250001' => 201906250001,
+		'201807273' => 201807273,
+		'201906251' => 201906251,
 	);
 
 	/**
@@ -82,14 +82,14 @@ final class Customer_Addresses extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201807270003
+	 * Upgrade to version 201807273
 	 * - Add the `uuid` varchar column
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201807270003() {
+	protected function __201807273() {
 
 		// Look for column
 		$result = $this->column_exists( 'uuid' );
@@ -106,14 +106,14 @@ final class Customer_Addresses extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201906250001
+	 * Upgrade to version 201906251
 	 * - Add the `name` mediumtext column
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201906250001() {
+	protected function __201906251() {
 
 		$result = $this->column_exists( 'name' );
 
