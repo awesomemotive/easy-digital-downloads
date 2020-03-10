@@ -1,85 +1,10 @@
 /**
  * Internal dependencies.
  */
-import { getCreditCardIcon } from './utils.js';
-
-/* global edd_global_vars */
-
-let ajax_tax_count = 0;
-
-/**
- * Recalulate taxes.
- *
- * @param {string} state State to calculate taxes for.
- * @return {Promise}
- */
-export function recalculate_taxes( state ) {
-	if ( '1' != edd_global_vars.taxes_enabled ) {
-		return;
-	} // Taxes not enabled
-
-	const $edd_cc_address = jQuery( '#edd_cc_address' );
-
-	const billing_country = $edd_cc_address.find( '#billing_country' ).val(),
-		card_address = $edd_cc_address.find( '#card_address' ).val(),
-		card_address_2 = $edd_cc_address.find( '#card_address_2' ).val(),
-		card_city = $edd_cc_address.find( '#card_city' ).val(),
-		card_state = $edd_cc_address.find( '#card_state' ).val(),
-		card_zip = $edd_cc_address.find( '#card_zip' ).val();
-
-	if ( ! state ) {
-		state = card_state;
-	}
-
-	const postData = {
-		action: 'edd_recalculate_taxes',
-		card_address: card_address,
-		card_address_2: card_address_2,
-		card_city: card_city,
-		card_zip: card_zip,
-		state: state,
-		billing_country: billing_country,
-		nonce: jQuery( '#edd-checkout-address-fields-nonce' ).val(),
-	};
-
-	jQuery( '#edd_purchase_submit [type=submit]' ).after( '<span class="edd-loading-ajax edd-recalculate-taxes-loading edd-loading"></span>' );
-
-	const current_ajax_count = ++ajax_tax_count;
-
-	return jQuery.ajax( {
-		type: 'POST',
-		data: postData,
-		dataType: 'json',
-		url: edd_global_vars.ajaxurl,
-		xhrFields: {
-			withCredentials: true,
-		},
-		success: function( tax_response ) {
-			// Only update tax info if this response is the most recent ajax call.
-			// Avoids bug with form autocomplete firing multiple ajax calls at the same time and not
-			// being able to predict the call response order.
-			if ( current_ajax_count === ajax_tax_count ) {
-				jQuery( '#edd_checkout_cart_form' ).replaceWith( tax_response.html );
-				jQuery( '.edd_cart_amount' ).html( tax_response.total );
-				const tax_data = new Object();
-				tax_data.postdata = postData;
-				tax_data.response = tax_response;
-				jQuery( 'body' ).trigger( 'edd_taxes_recalculated', [ tax_data ] );
-			}
-			jQuery( '.edd-recalculate-taxes-loading' ).remove();
-		},
-	} ).fail( function( data ) {
-		if ( window.console && window.console.log ) {
-			console.log( data );
-			if ( current_ajax_count === ajax_tax_count ) {
-				jQuery( 'body' ).trigger( 'edd_taxes_recalculated', [ tax_data ] );
-			}
-		}
-	} );
-}
+import { getCreditCardIcon, recalculateTaxes } from './utils.js';
 
 // Backwards compatibility. Assign function to global namespace.
-window.recalculate_taxes = recalculate_taxes;
+window.recalculate_taxes = recalculateTaxes;
 
 window.EDD_Checkout = ( function( $ ) {
 	'use strict';
@@ -254,7 +179,7 @@ window.EDD_Checkout = ( function( $ ) {
 
 						$( '#edd-discount', $checkout_form_wrap ).val( '' );
 
-						recalculate_taxes();
+						recalculateTaxes();
 
 						const inputs = $( '#edd_cc_fields .edd-input, #edd_cc_fields .edd-select,#edd_cc_address .edd-input, #edd_cc_address .edd-select,#edd_payment_mode_select .edd-input, #edd_payment_mode_select .edd-select' );
 
@@ -324,11 +249,11 @@ window.EDD_Checkout = ( function( $ ) {
 
 				$( '.edd_cart_discount' ).html( discount_response.html );
 
-				if ( ! discount_response.discounts ) {
+				if ( discount_response.discounts && 0 === discount_response.discounts.length ) {
 					$( '.edd_cart_discount_row' ).hide();
 				}
 
-				recalculate_taxes();
+				recalculateTaxes();
 
 				$( '#edd_cc_fields,#edd_cc_address' ).slideDown();
 
@@ -399,7 +324,7 @@ window.EDD_Checkout = ( function( $ ) {
 	// Expose some functions or variables to window.EDD_Checkout object
 	return {
 		init: init,
-		recalculate_taxes: recalculate_taxes,
+		recalculate_taxes: recalculateTaxes,
 	};
 }( window.jQuery ) );
 

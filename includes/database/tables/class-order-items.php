@@ -38,7 +38,7 @@ final class Order_Items extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201906240001;
+	protected $version = 201906241;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -48,9 +48,9 @@ final class Order_Items extends Table {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201807270002' => 201807270002,
-		'201807270003' => 201807270003,
-		'201906240001' => 201906240001,
+		'201807272' => 201807272,
+		'201807273' => 201807273,
+		'201906241' => 201906241,
 	);
 
 	/**
@@ -84,14 +84,14 @@ final class Order_Items extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201807270002
+	 * Upgrade to version 201807272
 	 * - Add the `date_modified` varchar column
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201807270002() {
+	protected function __201807272() {
 
 		// Look for column
 		$result = $this->column_exists( 'date_created' );
@@ -118,14 +118,14 @@ final class Order_Items extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201807270003
+	 * Upgrade to version 201807273
 	 * - Add the `uuid` varchar column
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201807270003() {
+	protected function __201807273() {
 
 		// Look for column
 		$result = $this->column_exists( 'uuid' );
@@ -142,7 +142,7 @@ final class Order_Items extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201906240001
+	 * Upgrade to version 201906241
 	 * - Make the quantity column signed so it can contain negative numbers.
 	 * - Switch the quantity column from bigint to int for storage optimization.
 	 *
@@ -150,7 +150,7 @@ final class Order_Items extends Table {
 	 *
 	 * @return bool
 	 */
-	protected function __201906240001() {
+	protected function __201906241() {
 		$result = $this->get_db()->query( "
 			ALTER TABLE {$this->table_name} MODIFY `quantity` int signed NOT NULL default '0';
 		" );

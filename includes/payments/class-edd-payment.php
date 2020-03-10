@@ -1989,6 +1989,16 @@ class EDD_Payment {
 			}
 
 			do_action( 'edd_update_payment_status', $this->ID, $status, $old_status );
+
+			if ( 'complete' === $old_status ) {
+				// Trigger the action again to account for add-ons listening for status changes from "publish".
+
+				if ( apply_filters( 'edd_show_deprecated_notices', ( defined( 'WP_DEBUG' ) && WP_DEBUG ) ) ) {
+					_edd_generic_deprecated( 'edd_update_payment_status', '3.0', __( 'The "publish" payment status has been replaced with "complete". Please check for both when listening for status changes.', 'easy-digital-downloads' ) );
+				}
+
+				do_action( 'edd_update_payment_status', $this->ID, $status, 'publish' );
+			}
 		}
 
 		return $updated;

@@ -795,22 +795,10 @@ function edd_get_registered_settings() {
 					),
 				),
 				'rates' => array(
-					'tax_rate' => array(
-						'id'            => 'tax_rate',
-						'name'          => __( 'Default Rate', 'easy-digital-downloads' ),
-						'desc'          => __( 'Customers not in a region below will be charged this tax rate instead. Enter <code>6.5</code> for 6.5%. ', 'easy-digital-downloads' ),
-						'type'          => 'number',
-						'size'          => 'small',
-						'step'          => '0.0001',
-						'min'           => '0',
-						'max'           => '99',
-						'tooltip_title' => __( 'Default Rate', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'If the customer\'s address fails to meet the below tax rules, you can define a default tax rate to be applied to all other customers. Enter a percentage, such as 6.5 for 6.5%.', 'easy-digital-downloads' ),
-					),
 					'tax_rates' => array(
 						'id'   => 'tax_rates',
 						'name' => '<strong>' . __( 'Regional Rates', 'easy-digital-downloads' ) . '</strong>',
-						'desc' => __( 'Add tax rates for specific regions to override the base rate.', 'easy-digital-downloads' ),
+						'desc' => __( 'Configure rates for each region you wish to collect sales tax in.', 'easy-digital-downloads' ),
 						'type' => 'tax_rates',
 					),
 				)
@@ -1073,8 +1061,8 @@ function edd_get_registered_settings() {
 					'show_privacy_policy_on_checkout' => array(
 						'id'    => 'show_privacy_policy_on_checkout',
 						'name'  => __( 'Privacy Policy on Checkout',                     'easy-digital-downloads' ),
-						'check' => __( 'Display the entire Privacy Policy at checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_attr( admin_url( 'privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) .'</a>.',
-						'desc'  => __( 'Display your Privacy Policy on checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_attr( admin_url( 'privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) .'</a>.',
+						'check' => __( 'Display the entire Privacy Policy at checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_attr( admin_url( 'options-privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) .'</a>.',
+						'desc'  => __( 'Display your Privacy Policy on checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_attr( admin_url( 'options-privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) .'</a>.',
 						'type'  => 'checkbox',
 					),
 				),
@@ -1164,13 +1152,32 @@ function edd_get_registered_settings() {
 			$edd_settings['misc']['button_text']['buy_now_text']['tooltip_desc']  = __( 'Buy Now buttons are only available for stores that have a single supported gateway active and that do not use taxes.', 'easy-digital-downloads' );
 		}
 
+		// Show a disabled "Default Rate" in "Tax Rates" if the value is not 0.
+		if ( false !== edd_get_option( 'tax_rate' ) ) {
+			$edd_settings['taxes']['rates'] = array_merge( 
+				array(
+					'tax_rate' => array(
+						'id'            => 'tax_rate',
+						'type'          => 'tax_rate',
+						'name'          => __( 'Default Rate', 'easy-digital-downloads' ),
+						'desc'          => (
+							'<div class="notice inline notice-error"><p>' . __( 'This setting is no longer used in this version of Easy Digital Downloads. Please confirm your regional tax rates are properly configured properly below, then click "Save Changes" to dismiss this notice.', 'easy-digital-downloads' ) . '</p></div>'
+						),
+					),
+				),
+				$edd_settings['taxes']['rates']
+			);
+		}
+
 		// Allow registered settings to surface the deprecated "Styles" tab.
 		if ( has_filter( 'edd_settings_styles' ) ) {
 			$edd_settings['styles'] = edd_apply_filters_deprecated(
 				'edd_settings_styles',
 				array(
-					'main'    => array(),
-					'buttons' => array(),
+					array(
+						'main'    => array(),
+						'buttons' => array(),
+					),
 				),
 				'3.0',
 				'edd_settings_misc'
@@ -2201,8 +2208,10 @@ function edd_number_callback( $args ) {
 	$min  = isset( $args['min']  ) ? $args['min']  : 0;
 	$step = isset( $args['step'] ) ? $args['step'] : 1;
 
+	$disabled = ! empty( $args['disabled'] ) ? ' disabled="disabled"' : '';
+
 	$size  = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-	$html  = '<input type="number" step="' . esc_attr( $step ) . '" max="' . esc_attr( $max ) . '" min="' . esc_attr( $min ) . '" class="' . $class . ' ' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" ' . $name . ' value="' . esc_attr( stripslashes( $value ) ) . '"/>';
+	$html  = '<input type="number" step="' . esc_attr( $step ) . '" max="' . esc_attr( $max ) . '" min="' . esc_attr( $min ) . '" class="' . $class . ' ' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" ' . $name . ' value="' . esc_attr( stripslashes( $value ) ) . '"' . $disabled . ' />';
 	$html .= '<p class="description"> ' . wp_kses_post( $args['desc'] ) . '</p>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
@@ -2600,6 +2609,18 @@ function edd_sendwp_callback($args) {
 }
 
 /**
+ * Outputs the "Default Rate" setting.
+ *
+ * @since 3.0
+ *
+ * @param array $args Arguments passed to the setting.
+ */
+function edd_tax_rate_callback( $args ) {
+	echo '<input type="hidden" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . esc_attr( $args['id'] ) . ']" value="" />';
+	echo wp_kses_post( $args['desc'] );
+}
+
+/**
  * Tax Rates Callback
  *
  * Renders tax rates table
@@ -2618,7 +2639,11 @@ function edd_tax_rates_callback( $args ) {
 
 	wp_localize_script( 'edd-admin-tax-rates', 'eddTaxRates', array(
 		'rates' => $rates,
-		'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
+		'nonce' => wp_create_nonce( 'edd-country-field-nonce' ),
+		'i18n'  => array(
+			/* translators: Tax rate country code */
+			'multipleCountryWide' => esc_html__( 'Only one country-wide tax rate can be active at once. Please deactivate the existing %s country-wide rate before adding another.', 'easy-digital-downloads' ),
+		),
 	) );
 
 	$templates = array(
