@@ -1,39 +1,36 @@
 <?php
 
 /**
+ * EDD_Payment_Stats Tests.
+ *
  * @group edd_stats
+ * @coversDefaultClass EDD_Payment_Stats
  */
 class Tests_Stats extends EDD_UnitTestCase {
 
-	protected $_post;
-	protected $_stats;
-	protected $_payment_stats;
-
-	public function setUp() {
-		parent::setUp();
-		$this->_payment_id = EDD_Helper_Payment::create_simple_payment_with_tax();
-		edd_update_payment_status( $this->_payment_id );
-	}
-
-	public function tearDown() {
-		global $wpdb;
-
-		parent::tearDown();
-		EDD_Helper_Payment::delete_payment( $this->_payment_id );
-		$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE 'edd_stats_%'" );
-	}
-
-	/*
+	/**
+	 * EDD_Payment_Stats fixture.
 	 *
-	 * EDD_Stats tests
-	 *
+	 * @var \EDD_Payment_Stats
 	 */
+	protected static $stats;
+
+	/**
+	 * Order fixture.
+	 *
+	 * @var EDD\Orders\Order
+	 */
+	protected static $order;
+
+	/**
+	 * Set up fixtures once.
+	 */
+	public static function wpSetUpBeforeClass() {
+		self::$stats = new EDD_Payment_Stats();
+		self::$order = parent::edd()->order->create_and_get();
+	}
 
 	public function test_predefined_date_rages() {
-
-		$stats = new EDD_Stats();
-		$out = $stats->get_predefined_dates();
-
 		$expected = array(
 			'today'        => 'Today',
 			'yesterday'    => 'Yesterday',
@@ -44,99 +41,89 @@ class Tests_Stats extends EDD_UnitTestCase {
 			'this_quarter' => 'This Quarter',
 			'last_quarter' => 'Last Quarter',
 			'this_year'    => 'This Year',
-			'last_year'    => 'Last Year'
+			'last_year'    => 'Last Year',
 		);
 
-		$this->assertEquals( $expected, $out );
-
+		$this->assertEqualSetsWithIndex( $expected, self::$stats->get_predefined_dates() );
 	}
 
-	public function test_setup_dates() {
+	public function test_setting_up_date_yesterday_start_should_return_true() {
+		self::$stats->setup_dates( 'yesterday' );
 
-		$stats = new EDD_Stats();
-
-		$stats->setup_dates( 'yesterday' );
-		$this->assertInternalType( 'numeric', $stats->start_date );
-		$this->assertInternalType( 'numeric', $stats->end_date );
-		$this->assertGreaterThan( $stats->start_date, $stats->end_date );
-
-		// Set some valid predefined date ranges
-		$stats->setup_dates( 'yesterday', 'today' );
-		$this->assertInternalType( 'numeric', $stats->start_date );
-		$this->assertInternalType( 'numeric', $stats->end_date );
-		$this->assertGreaterThan( $stats->start_date, $stats->end_date );
-
-		// Set some valid dates
-		$stats->setup_dates( '2012-01-12', '2012-04-15' );
-		$this->assertInternalType( 'numeric', $stats->start_date );
-		$this->assertInternalType( 'numeric', $stats->end_date );
-		$this->assertGreaterThan( $stats->start_date, $stats->end_date );
-
-		// Set some valid date strings
-		$stats->setup_dates( 'January 15, 2013', 'February 24, 2013' );
-		$this->assertInternalType( 'numeric', $stats->start_date );
-		$this->assertInternalType( 'numeric', $stats->end_date );
-		$this->assertGreaterThan( $stats->start_date, $stats->end_date );
-
-
-		// Set some valid timestamps
-		$stats->setup_dates( '1379635200', '1379645200' );
-		$this->assertInternalType( 'numeric', $stats->start_date );
-		$this->assertInternalType( 'numeric', $stats->end_date );
-		$this->assertGreaterThan( $stats->start_date, $stats->end_date );
-
-		// Set some invalid dates
-		$stats->setup_dates( 'nonvaliddatestring', 'nonvaliddatestring' );
-		$this->assertInstanceOf( 'WP_Error', $stats->start_date );
-		$this->assertInstanceOf( 'WP_Error', $stats->end_date );
-
+		$this->assertInternalType( 'numeric', self::$stats->start_date );
+		$this->assertInternalType( 'numeric', self::$stats->end_date );
+		$this->assertGreaterThan( self::$stats->start_date, self::$stats->end_date );
 	}
 
+	public function test_setting_up_date_yesterday_start_today_end_should_return_true() {
+		self::$stats->setup_dates( 'yesterday', 'today' );
 
-	/*
-	 *
-	 * EDD_Payment_Stats tests
-	 *
-	 */
-
-	public function test_get_earnings_by_date() {
-
-		$stats = new EDD_Payment_Stats;
-		$earnings = $stats->get_earnings( 0, 'this_month' );
-		$this->assertEquals( 131, $earnings );
-
-		$earnings_minus_taxes = $stats->get_earnings( 0, 'this_month', false, false );
-		$this->assertEquals( 120, $earnings_minus_taxes );
+		$this->assertInternalType( 'numeric', self::$stats->start_date );
+		$this->assertInternalType( 'numeric', self::$stats->end_date );
+		$this->assertGreaterThan( self::$stats->start_date, self::$stats->end_date );
 	}
 
-	public function test_get_sales_by_date() {
+	public function test_setting_up_dates_with_date_time_strings_should_return_true() {
+		self::$stats->setup_dates( 'January 15, 2013', 'February 24, 2013' );
 
-		$stats = new EDD_Payment_Stats;
-		$sales = $stats->get_sales( 0, 'this_month' );
-
-		$this->assertEquals( 1, $sales );
+		$this->assertInternalType( 'numeric', self::$stats->start_date );
+		$this->assertInternalType( 'numeric', self::$stats->end_date );
+		$this->assertGreaterThan( self::$stats->start_date, self::$stats->end_date );
 	}
 
-	public function test_get_earnings_by_date_of_download() {
-		$payment = new EDD_Payment( $this->_payment_id );
-		$download_id = $payment->downloads[0]['id'];
+	public function test_setting_up_dates_With_timestamps_should_return_true() {
+		self::$stats->setup_dates( '1379635200', '1379645200' );
 
-		$stats = new EDD_Payment_Stats;
-		$earnings = $stats->get_earnings( $download_id, 'this_month' );
-		$this->assertEquals( 21, $earnings );
-
-		$earnings_minus_taxes = $stats->get_earnings( $download_id, 'this_month', false, false );
-		$this->assertEquals( 20, $earnings_minus_taxes );
+		$this->assertInternalType( 'numeric', self::$stats->start_date );
+		$this->assertInternalType( 'numeric', self::$stats->end_date );
+		$this->assertGreaterThan( self::$stats->start_date, self::$stats->end_date );
 	}
 
-	public function test_get_sales_by_date_of_download() {
-		$payment = new EDD_Payment( $this->_payment_id );
-		$download_id = $payment->downloads[0]['id'];
+	public function test_setting_up_invalid_dates_should_return_WP_Error() {
+		self::$stats->setup_dates( 'nonvaliddatestring', 'nonvaliddatestring' );
 
-		$stats = new EDD_Payment_Stats;
-		$sales = $stats->get_sales( $download_id, 'this_month' );
-
-		$this->assertEquals( 1, $sales );
+		$this->assertInstanceOf( 'WP_Error', self::$stats->start_date );
+		$this->assertInstanceOf( 'WP_Error', self::$stats->end_date );
 	}
 
+	public function test_get_earnings_for_this_month_should_be_120() {
+		$earnings = self::$stats->get_earnings( 0, 'this_month' );
+
+		$this->assertSame( 120.0, $earnings );
+	}
+
+	public function test_get_earnings_for_this_month_excluding_taxes_should_be_95() {
+		$earnings = self::$stats->get_earnings( 0, 'this_month', false, false );
+
+		$this->assertSame( 95.0, $earnings );
+	}
+
+	public function test_get_earnings_for_this_month_for_download_should_return_120() {
+		$earnings = self::$stats->get_earnings( 1, 'this_month' );
+		$this->assertEquals( 120.0, $earnings );
+	}
+
+	public function test_get_earnings_for_this_month_for_download_excluding_taxes_should_return_95() {
+		$earnings = self::$stats->get_earnings( 1, 'this_month', false, false );
+		$this->assertEquals( 95.0, $earnings );
+	}
+
+	public function test_get_sales_for_this_month_should_be_1() {
+		$sales = self::$stats->get_sales( 0, 'this_month' );
+
+		$this->assertSame( 1, $sales );
+	}
+
+	public function test_get_sales_for_this_month_for_download_should_return_1() {
+		$earnings = self::$stats->get_sales( 1, 'this_month' );
+		$this->assertEquals( 1, $earnings );
+	}
+
+	public function test_get_sales_by_range_for_today() {
+		$sales = self::$stats->get_sales_by_range( 'today' );
+
+		$this->assertNotEmpty( $sales );
+		$this->assertEquals( 1, $sales[0]['count'] );
+		$this->assertEquals( date( 'Y' ), $sales[0]['y'] );
+	}
 }

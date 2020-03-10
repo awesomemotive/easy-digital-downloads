@@ -14,7 +14,7 @@
  *
  * @package     EDD
  * @subpackage  Uninstall
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.4.3
  */
@@ -24,6 +24,9 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit;
 
 // Load EDD file.
 include_once( 'easy-digital-downloads.php' );
+
+$plugin = new EDD_Requirements_Check;
+$plugin->bootstrap();
 
 global $wpdb, $wp_roles;
 
@@ -72,21 +75,30 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 	}
 
 	/** Delete all the Plugin Options */
-	delete_option( 'edd_settings' );
-	delete_option( 'edd_version' );
-	delete_option( 'edd_use_php_sessions' );
-	delete_option( 'edd_default_api_version' );
-	delete_option( 'wp_edd_customers_db_version' );
-	delete_option( 'wp_edd_customermeta_db_version' );
-	delete_option( 'edd_completed_upgrades' );
-	delete_option( 'widget_edd_cart_widget' );
-	delete_option( 'widget_edd_categories_tags_widget' );
-	delete_option( 'widget_edd_product_details' );
-	delete_option( '_edd_table_check' );
-	delete_option( 'edd_tracking_notice' );
-	delete_option( 'edd_earnings_total' );
-	delete_option( 'edd_tax_rates' );
-	delete_option( 'edd_version_upgraded_from' );
+	$edd_options = array(
+		'edd_completed_upgrades',
+		'edd_default_api_version',
+		'edd_earnings_total',
+		'edd_settings',
+		'edd_tracking_notice',
+		'edd_tax_rates',
+		'edd_use_php_sessions',
+		'edd_version',
+		'edd_version_upgraded_from',
+
+		// Widgets
+		'widget_edd_product_details',
+		'widget_edd_cart_widget',
+		'widget_edd_categories_tags_widget',
+
+		// Deprecated 3.0.0
+		'wp_edd_customers_db_version',
+		'wp_edd_customermeta_db_version',
+		'_edd_table_check'
+	);
+	foreach ( $edd_options as $option ) {
+		delete_option( $option );
+	}
 
 	/** Delete Capabilities */
 	EDD()->roles->remove_caps();
@@ -98,8 +110,27 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 	}
 
 	// Remove all database tables
-	$wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "edd_customers" );
-	$wpdb->query( "DROP TABLE IF EXISTS " . $wpdb->prefix . "edd_customermeta" );
+	foreach ( EDD()->components as $component ) {
+		/**
+		 * @var EDD\Database\Table $table
+		 */
+		$table = $component->get_interface( 'table' );
+
+		if ( $table instanceof EDD\Database\Table ) {
+			$table->uninstall();
+		}
+
+		// Check to see if this component has a meta table to uninstall.
+
+		/**
+		 * @var EDD\Database\Table $meta_table
+		 */
+		$meta_table = $component->get_interface( 'meta' );
+
+		if ( $meta_table instanceof EDD\Database\Table ) {
+			$meta_table->uninstall();
+		}
+	}
 
 	/** Cleanup Cron Events */
 	wp_clear_scheduled_hook( 'edd_daily_scheduled_events' );

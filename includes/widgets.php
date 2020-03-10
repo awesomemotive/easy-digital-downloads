@@ -6,13 +6,13 @@
  *
  * @package     EDD
  * @subpackage  Widgets
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
 */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /*
 |--------------------------------------------------------------------------
@@ -288,25 +288,25 @@ class EDD_Product_Details_Widget extends WP_Widget {
 		echo $args['before_widget'];
 
 		// Display the widget title.
-		if( $title ) {
+		if ( $title ) {
 			echo $args['before_title'] . $title . $args['after_title'];
 		}
 
 		do_action( 'edd_product_details_widget_before_title' , $instance , $download_id );
 
-		// download title.
+		// Download title.
 		echo $download_title;
 
 		do_action( 'edd_product_details_widget_before_purchase_button' , $instance , $download_id );
-		// purchase button.
+
+		// Purchase button.
 		echo $purchase_button;
 
-		// categories and tags.
+		// Categories.
 		$category_list  = false;
 		$category_label = '';
 		if ( $categories ) {
-
-			$category_terms = get_the_terms( $download_id, 'download_category' );
+			$category_terms = (array) get_the_terms( $download_id, 'download_category' );
 
 			if ( $category_terms && ! is_wp_error( $category_terms ) ) {
 				$category_list     = get_the_term_list( $download_id, 'download_category', '', ', ' );
@@ -314,14 +314,14 @@ class EDD_Product_Details_Widget extends WP_Widget {
 				$category_labels   = edd_get_taxonomy_labels( 'download_category' );
 				$category_label    = $category_count > 1 ? $category_labels['name'] : $category_labels['singular_name'];
 			}
-
 		}
 
+		// Tags.
 		$tag_list  = false;
 		$tag_label = '';
-		if ( $tags ) {
 
-			$tag_terms = get_the_terms( $download_id, 'download_tag' );
+		if ( $tags ) {
+			$tag_terms = (array) get_the_terms( $download_id, 'download_tag' );
 
 			if ( $tag_terms && ! is_wp_error( $tag_terms ) ) {
 				$tag_list     = get_the_term_list( $download_id, 'download_tag', '', ', ' );
@@ -329,17 +329,14 @@ class EDD_Product_Details_Widget extends WP_Widget {
 				$tag_taxonomy = edd_get_taxonomy_labels( 'download_tag' );
 				$tag_label    = $tag_count > 1 ? $tag_taxonomy['name'] : $tag_taxonomy['singular_name'];
 			}
-
 		}
-
 
 		$text = '';
 
-		if( $category_list || $tag_list ) {
+		if ( $category_list || $tag_list ) {
 			$text .= '<p class="edd-meta">';
 
-			if( $category_list ) {
-
+			if ( $category_list ) {
 				$text .= '<span class="categories">%1$s: %2$s</span><br/>';
 			}
 

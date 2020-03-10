@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Emails
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Email the download link(s) and payment confirmation to the buyer in a
@@ -312,7 +312,7 @@ function edd_sendwp_remote_install_handler () {
 
 		if ( is_wp_error( $api ) ) {
 			wp_send_json_error( array(
-				'error' => $install->get_error_message(),
+				'error' => $api->get_error_message(),
 				'debug' => $api
 			) );
 		}

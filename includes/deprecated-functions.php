@@ -6,13 +6,15 @@
  *
  * @package     EDD
  * @subpackage  Deprecated
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 
+use EDD\Reports;
+
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Get Download Sales Log
@@ -53,44 +55,6 @@ function edd_get_download_sales_log( $download_id, $paginate = false, $number = 
 }
 
 /**
- * Get File Download Log
- *
- * Returns an array of file download dates and user info.
- *
- * @deprecated 1.3.4
- * @since 1.0
- *
- * @param int $download_id the ID number of the download to retrieve a log for
- * @param bool $paginate whether to paginate the results or not
- * @param int $number the number of results to return
- * @param int $offset the number of items to skip
- *
- * @return mixed array|bool
-*/
-function edd_get_file_download_log( $download_id, $paginate = false, $number = 10, $offset = 0 ) {
-	$backtrace = debug_backtrace();
-
-	_edd_deprecated_function( __FUNCTION__, '1.3.4', null, $backtrace );
-
-	$download_log = get_post_meta( $download_id, '_edd_file_download_log', true );
-
-	if ( $download_log ) {
-		$download_log = array_reverse( $download_log );
-		$log = array();
-		$log['number'] = count( $download_log );
-		$log['downloads'] = $download_log;
-
-		if ( $paginate ) {
-			$log['downloads'] = array_slice( $download_log, $offset, $number );
-		}
-
-		return $log;
-	}
-
-	return false;
-}
-
-/**
  * Get Downloads Of Purchase
  *
  * Retrieves an array of all files purchased.
@@ -113,8 +77,9 @@ function edd_get_downloads_of_purchase( $payment_id, $payment_meta = null ) {
 
 	$downloads = maybe_unserialize( $payment_meta['downloads'] );
 
-	if ( $downloads )
+	if ( $downloads ) {
 		return $downloads;
+	}
 
 	return false;
 }
@@ -214,8 +179,9 @@ function edd_show_has_purchased_item_message() {
 
 	global $user_ID, $post;
 
-	if( !isset( $post->ID ) )
+	if ( !isset( $post->ID ) ) {
 		return;
+	}
 
 	if ( edd_has_user_purchased( $user_ID, $post->ID ) ) {
 		$alert = '<p class="edd_has_purchased">' . __( 'You have already purchased this item, but you may purchase it again.', 'easy-digital-downloads' ) . '</p>';
@@ -270,7 +236,7 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 			$amount = edd_get_discounted_amount( $posted_discount, $amount );
 		}
 
-		if( ! empty( $discounts ) ) {
+		if ( ! empty( $discounts ) ) {
 			// Apply the discounted amount from discounts already applied
 			$amount -= edd_get_cart_discounted_amount();
 		}
@@ -281,8 +247,9 @@ function edd_get_cart_amount( $add_taxes = true, $local_override = false ) {
 		$amount += $tax;
 	}
 
-	if( $amount < 0 )
+	if ( $amount < 0 ) {
 		$amount = 0.00;
+	}
 
 	return apply_filters( 'edd_get_cart_amount', $amount, $add_taxes, $local_override );
 }
@@ -408,7 +375,7 @@ function edd_get_email_body_footer() {
  * @param array $payment_data An array of meta information for the payment
  * @return string $email Formatted email with the template applied
  */
-function edd_apply_email_template( $body, $payment_id, $payment_data=array() ) {
+function edd_apply_email_template( $body, $payment_id, $payment_data = array() ) {
 	global $edd_options;
 
 	$backtrace = debug_backtrace();
@@ -419,10 +386,12 @@ function edd_apply_email_template( $body, $payment_id, $payment_data=array() ) {
 	$template_name = apply_filters( 'edd_email_template', $template_name, $payment_id );
 
 	if ( $template_name == 'none' ) {
-		if ( is_admin() )
+		if ( is_admin() ) {
 			$body = edd_email_preview_template_tags( $body );
+		}
 
-		return $body; // Return the plain email with no template
+		// Return the plain email with no template
+		return $body;
 	}
 
 	ob_start();
@@ -431,8 +400,9 @@ function edd_apply_email_template( $body, $payment_id, $payment_data=array() ) {
 
 	$template = ob_get_clean();
 
-	if ( is_admin() )
+	if ( is_admin() ) {
 		$body = edd_email_preview_template_tags( $body );
+	}
 
 	$body = apply_filters( 'edd_purchase_receipt_' . $template_name, $body );
 
@@ -504,8 +474,9 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
 			if ( ! empty( $cart_details ) ) {
 				foreach ( $cart_details as $cart_key => $cart_item ) {
 
-					if ( $cart_item['id'] != $download_id )
+					if ( $cart_item['id'] != $download_id ) {
 						continue;
+					}
 
 					$price_options 	= isset( $cart_item['item_number']['options'] ) ? $cart_item['item_number']['options'] : false;
 					$price_id 		= isset( $price_options['price_id'] ) ? $price_options['price_id'] : false;
@@ -513,13 +484,15 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
 					$file_condition = edd_get_file_price_condition( $cart_item['id'], $file_key );
 
 					// Check to see if the file download limit has been reached
-					if ( edd_is_file_at_download_limit( $cart_item['id'], $payment->ID, $file_key, $price_id ) )
+					if ( edd_is_file_at_download_limit( $cart_item['id'], $payment->ID, $file_key, $price_id ) ) {
 						wp_die( apply_filters( 'edd_download_limit_reached_text', __( 'Sorry but you have hit your download limit for this file.', 'easy-digital-downloads' ) ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+					}
 
 					// If this download has variable prices, we have to confirm that this file was included in their purchase
 					if ( ! empty( $price_options ) && $file_condition != 'all' && edd_has_variable_prices( $cart_item['id'] ) ) {
-						if ( $file_condition == $price_options['price_id'] )
+						if ( $file_condition == $price_options['price_id'] ) {
 							return $payment->ID;
+						}
 					}
 
 					// Make sure the link hasn't expired
@@ -533,9 +506,7 @@ function edd_verify_download_link( $download_id = 0, $key = '', $email = '', $ex
 					}
 					return $payment->ID; // Payment has been verified and link is still valid
 				}
-
 			}
-
 		}
 
 	} else {
@@ -606,8 +577,8 @@ function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour 
 		'monthnum'       => $month_num,
 		'post_status'    => array( 'publish', 'revoked' ),
 		'fields'         => 'ids',
-		'update_post_term_cache' => false,
 		'include_taxes'  => $include_taxes,
+		'update_post_term_cache' => false,
 	);
 
 	if ( ! empty( $day ) ) {
@@ -687,14 +658,17 @@ function edd_get_sales_by_date( $day = null, $month_num = null, $year = null, $h
 		);
 	}
 
-	if ( ! empty( $month_num ) )
+	if ( ! empty( $month_num ) ) {
 		$args['monthnum'] = $month_num;
+	}
 
-	if ( ! empty( $day ) )
+	if ( ! empty( $day ) ) {
 		$args['day'] = $day;
+	}
 
-	if ( ! empty( $hour ) )
+	if ( ! empty( $hour ) ) {
 		$args['hour'] = $hour;
+	}
 
 	$args = apply_filters( 'edd_get_sales_by_date_args', $args  );
 
@@ -730,4 +704,410 @@ function edd_get_paypal_page_style() {
 
 	$page_style = trim( edd_get_option( 'paypal_page_style', 'PayPal' ) );
 	return apply_filters( 'edd_paypal_page_style', $page_style );
+}
+
+/**
+ * Should we add schema.org microdata?
+ *
+ * @since 1.7
+ * @since 3.0 - Deprecated as the switch was made to JSON-LD.
+ * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5240
+ *
+ * @return bool
+ */
+function edd_add_schema_microdata() {
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '3.0', 'EDD_Structured_Data', $backtrace );
+
+	// Don't modify anything until after wp_head() is called
+	$ret = (bool)did_action( 'wp_head' );
+	return apply_filters( 'edd_add_schema_microdata', $ret );
+}
+
+/**
+ * Add Microdata to download titles
+ *
+ * @since 1.5
+ * @since 3.0 - Deprecated as the switch was made to JSON-LD.
+ * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5240
+ *
+ * @param string $title Post Title
+ * @param int $id Post ID
+ * @return string $title New title
+ */
+function edd_microdata_title( $title, $id = 0 ) {
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '3.0', 'EDD_Structured_Data', $backtrace );
+
+	global $post;
+
+	if ( ! edd_add_schema_microdata() || ! is_object( $post ) ) {
+		return $title;
+	}
+
+	if ( $post->ID == $id && is_singular( 'download' ) && 'download' == get_post_type( intval( $id ) ) ) {
+		$title = '<span itemprop="name">' . $title . '</span>';
+	}
+
+	return $title;
+}
+
+/**
+ * Start Microdata to wrapper download
+ *
+ * @since 2.3
+ * @since 3.0 - Deprecated as the switch was made to JSON-LD.
+ * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5240
+ *
+ * @return void
+ */
+function edd_microdata_wrapper_open( $query ) {
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '3.0', 'EDD_Structured_Data', $backtrace );
+
+	static $microdata_open = NULL;
+
+	if ( ! edd_add_schema_microdata() || true === $microdata_open || ! is_object( $query ) ) {
+		return;
+	}
+
+	if ( $query && ! empty( $query->query['post_type'] ) && $query->query['post_type'] == 'download' && is_singular( 'download' ) && $query->is_main_query() ) {
+		$microdata_open = true;
+		echo '<div itemscope itemtype="http://schema.org/Product">';
+	}
+}
+
+/**
+ * End Microdata to wrapper download
+ *
+ * @since 2.3
+ * @since 3.0 - Deprecated as the switch was made to JSON-LD.
+ * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5240
+ *
+ * @return void
+ */
+function edd_microdata_wrapper_close() {
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '3.0', 'EDD_Structured_Data', $backtrace );
+
+	global $post;
+
+	static $microdata_close = NULL;
+
+	if ( ! edd_add_schema_microdata() || true === $microdata_close || ! is_object( $post ) ) {
+		return;
+	}
+
+	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
+		$microdata_close = true;
+		echo '</div>';
+	}
+}
+
+/**
+ * Add Microdata to download description
+ *
+ * @since 1.5
+ * @since 3.0 - Deprecated as the switch was made to JSON-LD.
+ * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5240
+ *
+ * @param $content
+ * @return mixed|void New title
+ */
+function edd_microdata_description( $content ) {
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '3.0', 'EDD_Structured_Data', $backtrace );
+
+	global $post;
+
+	static $microdata_description = NULL;
+
+	if ( ! edd_add_schema_microdata() || true === $microdata_description || ! is_object( $post ) ) {
+		return $content;
+	}
+
+	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
+		$microdata_description = true;
+		$content = apply_filters( 'edd_microdata_wrapper', '<div itemprop="description">' . $content . '</div>' );
+	}
+	return $content;
+}
+
+/**
+ * Output schema markup for single price products.
+ *
+ * @since  2.6.14
+ * @since 3.0 - Deprecated as the switch was made to JSON-LD.
+ * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/5240
+ *
+ * @param  int $download_id The download being output.
+ * @return void
+ */
+function edd_purchase_link_single_pricing_schema( $download_id = 0, $args = array() ) {
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '3.0', 'EDD_Structured_Data', $backtrace );
+
+	// Bail if the product has variable pricing, or if we aren't showing schema data.
+	if ( edd_has_variable_prices( $download_id ) || ! edd_add_schema_microdata() ) {
+		return;
+	}
+
+	// Grab the information we need.
+	$download = new EDD_Download( $download_id );
+	?>
+    <span itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+		<meta itemprop="price" content="<?php echo esc_attr( $download->price ); ?>" />
+		<meta itemprop="priceCurrency" content="<?php echo esc_attr( edd_get_currency() ); ?>" />
+	</span>
+	<?php
+}
+
+/**
+ * Renders the Logs tab in the Reports screen.
+ *
+ * @since 1.3
+ * @deprecated 3.0 Use edd_tools_tab_logs() instead.
+ * @see edd_tools_tab_logs()
+ * @return void
+ */
+function edd_reports_tab_logs() {
+	_edd_deprecated_function( __FUNCTION__, '3.0', 'edd_tools_tab_logs' );
+
+	if ( ! function_exists( 'edd_tools_tab_logs' ) ) {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/tools/logs.php';
+	}
+
+	edd_tools_tab_logs();
+}
+
+/**
+ * Defines views for the legacy 'Reports' tab.
+ *
+ * @since 1.4
+ * @deprecated 3.0 Use \EDD\Reports\get_reports()
+ * @see \EDD\Reports\get_reports()
+ *
+ * @return array $views Report Views
+ */
+function edd_reports_default_views() {
+	_edd_deprecated_function( __FUNCTION__, '3.0', '\EDD\Reports\get_reports' );
+
+	return Reports\get_reports();
+}
+
+/**
+ * Renders the Reports page
+ *
+ * @since 1.3
+ * @deprecated 3.0 Unused.
+ */
+function edd_reports_tab_reports() {
+
+	_edd_deprecated_function( __FUNCTION__, '3.0' );
+
+	if ( ! current_user_can( 'view_shop_reports' ) ) {
+		wp_die( __( 'You do not have permission to access this report', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
+	$current_view = 'earnings';
+	$views        = edd_reports_default_views();
+
+	if ( isset( $_GET['view'] ) && array_key_exists( $_GET['view'], $views ) ) {
+		$current_view = $_GET['view'];
+	}
+
+	/**
+	 * Legacy: fired inside the old global 'Reports' tab.
+	 *
+	 * The dynamic portion of the hook name, `$current_view`, represented the parsed value of
+	 * the 'view' query variable.
+	 *
+	 * @since 1.3
+	 * @deprecated 3.0 Unused.
+	 */
+	edd_do_action_deprecated( 'edd_reports_view_' . $current_view, array(), '3.0' );
+
+}
+
+/**
+ * Default Report Views
+ *
+ * Checks the $_GET['view'] parameter to ensure it exists within the default allowed views.
+ *
+ * @param string $default Default view to use.
+ *
+ * @since 1.9.6
+ * @deprecated 3.0 Unused.
+ *
+ * @return string $view Report View
+ */
+function edd_get_reporting_view( $default = 'earnings' ) {
+
+	_edd_deprecated_function( __FUNCTION__, '3.0' );
+
+	if ( ! isset( $_GET['view'] ) || ! in_array( $_GET['view'], array_keys( edd_reports_default_views() ) ) ) {
+		$view = $default;
+	} else {
+		$view = $_GET['view'];
+	}
+
+	/**
+	 * Legacy: filters the current reporting view (now implemented solely via the 'tab' var).
+	 *
+	 * @since 1.9.6
+	 * @deprecated 3.0 Unused.
+	 *
+	 * @param string $view View slug.
+	 */
+	return edd_apply_filters_deprecated( 'edd_get_reporting_view', array( $view ), '3.0' );
+}
+
+/**
+ * Renders the Reports Page Views Drop Downs
+ *
+ * @since 1.3
+ * @deprecated 3.0 Unused.
+ *
+ * @return void
+ */
+function edd_report_views() {
+
+	_edd_deprecated_function( __FUNCTION__, '3.0' );
+
+	/**
+	 * Legacy: fired before the view actions drop-down was output.
+	 *
+	 * @since 1.3
+	 * @deprecated 3.0 Unused.
+	 */
+	edd_do_action_deprecated( 'edd_report_view_actions', array(), '3.0' );
+
+	/**
+	 * Legacy: fired after the view actions drop-down was output.
+	 *
+	 * @since 1.3
+	 * @deprecated 3.0 Unused.
+	 */
+	edd_do_action_deprecated( 'edd_report_view_actions_after', array(), '3.0' );
+
+	return;
+}
+
+/**
+ * Sets up the dates used to filter graph data
+ *
+ * Date sent via $_GET is read first and then modified (if needed) to match the
+ * selected date-range (if any)
+ *
+ * @since 1.3
+ * @deprecated 3.0 Use \EDD\Reports\get_dates_filter() instead
+ * @see \EDD\Reports\get_dates_filter()
+ *
+ * @param string $timezone Optional. Timezone to force for report filter dates calculations.
+ *                         Default is the WP timezone.
+ * @return array Array of report filter dates.
+ */
+function edd_get_report_dates( $timezone = null ) {
+
+	_edd_deprecated_function( __FUNCTION__, '3.0', '\EDD\Reports\get_dates_filter' );
+
+	Reports\Init::bootstrap();
+
+	add_filter( 'edd_get_dates_filter_range', '\EDD\Reports\compat_filter_date_range' );
+
+	$filter_dates = Reports\get_dates_filter( 'objects', $timezone );
+	$range        = Reports\get_dates_filter_range();
+
+	remove_filter( 'edd_get_report_dates_default_range', '\EDD\Reports\compat_filter_date_range' );
+
+	$dates = array(
+		'range'    => $range,
+		'day'      => $filter_dates['start']->format( 'd' ),
+		'day_end'  => $filter_dates['end']->format( 'd' ),
+		'm_start'  => $filter_dates['start']->month,
+		'm_end'    => $filter_dates['end']->month,
+		'year'     => $filter_dates['start']->year,
+		'year_end' => $filter_dates['end']->year,
+	);
+
+	/**
+	 * Filters the legacy list of parsed report dates for use in the Reports API.
+	 *
+	 * @since 1.3
+	 * @deprecated 3.0
+	 *
+	 * @param array $dates Array of legacy date parts.
+	 */
+	return edd_apply_filters_deprecated( 'edd_report_dates', array( $dates ), '3.0' );
+}
+
+/**
+ * Intercept default Edit post links for EDD orders and rewrite them to the View Order Details screen.
+ *
+ * @since 1.8.3
+ * @deprecated 3.0 No alternative present as get_post() does not work with orders.
+ *
+ * @param $url
+ * @param $post_id
+ * @param $context
+ *
+ * @return string
+ */
+function edd_override_edit_post_for_payment_link( $url = '', $post_id = 0, $context = '') {
+	_edd_deprecated_function( __FUNCTION__, '3.0', '' );
+
+	$post = get_post( $post_id );
+
+	if ( empty( $post ) ) {
+		return $url;
+	}
+
+	if ( 'edd_payment' !== $post->post_type ) {
+		return $url;
+	}
+
+	return edd_get_admin_url( array(
+		'page' => 'edd-payment-history',
+		'view' => 'view-order-details',
+		'id'   => $post_id
+	) );
+}
+
+/**
+ * Record sale as a log.
+ *
+ * Stores log information for a download sale.
+ *
+ * @since 1.0
+ * @deprecated 3.0 Sales logs are no longed stored.
+ *
+ * @param int    $download_id Download ID
+ * @param int    $payment_id  Payment ID.
+ * @param int    $price_id    Optional. Price ID.
+ * @param string $sale_date   Optional. Date of the sale.
+ */
+function edd_record_sale_in_log( $download_id = 0, $payment_id, $price_id = false, $sale_date = null ) {
+	_edd_deprecated_function( __FUNCTION__, '3.0' );
+
+	$edd_logs = EDD()->debug_log;
+
+	$log_data = array(
+		'post_parent'   => $download_id,
+		'log_type'      => 'sale',
+		'post_date'     => ! empty( $sale_date ) ? $sale_date : null,
+		'post_date_gmt' => ! empty( $sale_date ) ? get_gmt_from_date( $sale_date ) : null,
+	);
+
+	$log_meta = array(
+		'payment_id' => $payment_id,
+		'price_id'   => (int) $price_id,
+	);
+
+	$edd_logs->insert_log( $log_data, $log_meta );
 }

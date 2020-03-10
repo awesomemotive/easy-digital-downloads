@@ -11,7 +11,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Tools_Recount_All_Stats Class
@@ -50,12 +50,13 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 	 * @return array $data The data for the CSV file
 	 */
 	public function get_data() {
-		global $edd_logs, $wpdb;
+		global $wpdb;
 
+		$edd_logs           = EDD()->debug_log;
 		$totals             = $this->get_stored_data( 'edd_temp_recount_all_stats'  );
 		$payment_items      = $this->get_stored_data( 'edd_temp_payment_items'      );
 		$processed_payments = $this->get_stored_data( 'edd_temp_processed_payments' );
-		$accepted_statuses  = apply_filters( 'edd_recount_accepted_statuses', array( 'publish', 'revoked' ) );
+		$accepted_statuses  = apply_filters( 'edd_recount_accepted_statuses', array( 'complete', 'revoked' ) );
 
 		if ( false === $totals ) {
 			$totals = array();
@@ -75,7 +76,7 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 			'post_parent__in' => $all_downloads,
 			'post_type'       => 'edd_log',
 			'posts_per_page'  => $this->per_step,
-			'post_status'     => 'publish',
+			'post_status'     => 'complete',
 			'paged'           => $this->step,
 			'log_type'        => 'sale',
 			'fields'          => 'ids',
@@ -223,11 +224,7 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 	}
 
 	public function headers() {
-		ignore_user_abort( true );
-
-		if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
-			set_time_limit( 0 );
-		}
+		edd_set_time_limit();
 	}
 
 	/**
@@ -245,7 +242,7 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 	}
 
 	public function pre_fetch() {
-		global $edd_logs, $wpdb;
+		global $wpdb;
 
 		if ( $this->step == 1 ) {
 			$this->delete_data( 'edd_temp_recount_all_total' );
@@ -254,7 +251,7 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 			$this->delete_data( 'edd_temp_processed_payments' );
 		}
 
-		$accepted_statuses = apply_filters( 'edd_recount_accepted_statuses', array( 'publish', 'revoked' ) );
+		$accepted_statuses = apply_filters( 'edd_recount_accepted_statuses', array( 'complete', 'revoked' ) );
 		$total             = $this->get_stored_data( 'edd_temp_recount_all_total' );
 
 		if ( false === $total ) {
@@ -290,12 +287,13 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 			$args  = apply_filters( 'edd_recount_download_stats_total_args', array(
 				'post_parent__in' => $all_downloads,
 				'post_type'       => 'edd_log',
-				'post_status'     => 'publish',
+				'post_status'     => 'complete',
 				'log_type'        => 'sale',
 				'fields'          => 'ids',
 				'nopaging'        => true,
 			) );
 
+			$edd_logs = EDD()->debug_log;
 			$all_logs = $edd_logs->get_connected_logs( $args, 'sale' );
 
 			if ( $all_logs ) {

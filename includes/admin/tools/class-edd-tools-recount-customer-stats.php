@@ -11,7 +11,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * EDD_Tools_Recount_Stats Class
@@ -52,13 +52,13 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 	public function get_data() {
 
 		$args = array(
-			'number'       => $this->per_step,
-			'offset'       => $this->per_step * ( $this->step - 1 ),
-			'orderby'      => 'id',
-			'order'        => 'DESC',
+			'limit'   => $this->per_step,
+			'offset'  => $this->per_step * ( $this->step - 1 ),
+			'orderby' => 'id',
+			'order'   => 'DESC',
 		);
 
-		$customers = EDD()->customers->get_customers( $args );
+		$customers = edd_get_customers( $args );
 
 		if ( $customers ) {
 
@@ -101,7 +101,7 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 
 					foreach ( $payments as $payment ) {
 
-						$should_process_payment = 'publish' == $payment->post_status || 'revoked' == $payment->post_status ? true : false;
+						$should_process_payment = 'complete' == $payment->status || 'revoked' == $payment->status ? true : false;
 						$should_process_payment = apply_filters( 'edd_customer_recount_should_process_payment', $should_process_payment, $payment );
 
 						if( true === $should_process_payment ) {
@@ -155,7 +155,7 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 			'order'        => 'DESC',
 		);
 
-		$customers = EDD()->customers->get_customers( $args );
+		$customers = edd_get_customers( $args );
 		$total     = count( $customers );
 
 		$percentage = 100;
@@ -204,11 +204,7 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 	}
 
 	public function headers() {
-		ignore_user_abort( true );
-
-		if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
-			set_time_limit( 0 );
-		}
+		edd_set_time_limit();
 	}
 
 	/**

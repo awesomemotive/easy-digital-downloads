@@ -16,6 +16,7 @@ class Tests_Formatting extends EDD_UnitTestCase {
 
 	public function test_sanitize_amount() {
 
+		$this->assertEquals( '0', edd_sanitize_amount( '' ) );
 		$this->assertEquals( '20000.20', edd_sanitize_amount( '20,000.20' ) );
 		$this->assertEquals( '22000.20', edd_sanitize_amount( '22 000.20' ) );
 		$this->assertEquals( '20.20', edd_sanitize_amount( '20.2' ) );
@@ -100,5 +101,13 @@ class Tests_Formatting extends EDD_UnitTestCase {
 
 		// Reset the option
 		edd_update_option( 'currency', $initial_currency );
+	}
+
+	public function test_decimal_filter_with_currency_passed_should_return_0() {
+		$this->assertSame( 0, edd_currency_decimal_filter( 2, 'RIAL' ) );
+
+		$this->assertSame( 0, edd_currency_decimal_filter( 2, 'HUF' ) );
+
+		$this->assertSame( 0, edd_currency_decimal_filter( 2, 'JPY' ) );
 	}
 }

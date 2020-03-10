@@ -4,13 +4,13 @@
  *
  * @package     EDD
  * @subpackage  Emails
- * @copyright   Copyright (c) 2015, Pippin Williamson
+ * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Gets all the email templates that have been registerd. The list is extendable
@@ -81,7 +81,7 @@ function edd_email_preview_template_tags( $message ) {
 	$message = str_replace( '{name}', $user->display_name, $message );
 	$message = str_replace( '{fullname}', $user->display_name, $message );
  	$message = str_replace( '{username}', $user->user_login, $message );
-	$message = str_replace( '{date}', date( get_option( 'date_format' ), current_time( 'timestamp' ) ), $message );
+	$message = str_replace( '{date}', edd_date_i18n( current_time( 'timestamp' ) ), $message );
 	$message = str_replace( '{subtotal}', $sub_total, $message );
 	$message = str_replace( '{tax}', $tax, $message );
 	$message = str_replace( '{price}', $price, $message );
@@ -182,6 +182,7 @@ function edd_get_email_body_content( $payment_id = 0, $payment_data = array() ) 
  */
 function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data = array() ) {
 	$payment = edd_get_payment( $payment_id );
+	$order   = edd_get_order( $payment_id );
 
 	if( $payment->user_id > 0 ) {
 		$user_data = get_userdata( $payment->user_id );
@@ -194,20 +195,14 @@ function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data 
 
 	$download_list = '';
 
-	if( is_array( $payment->downloads ) ) {
-		foreach( $payment->downloads as $item ) {
-			$download = new EDD_Download( $item['id'] );
-			$title    = $download->get_name();
-			if( isset( $item['options'] ) ) {
-				if( isset( $item['options']['price_id'] ) ) {
-					$title .= ' - ' . edd_get_price_option_name( $item['id'], $item['options']['price_id'], $payment_id );
-				}
-			}
-			$download_list .= html_entity_decode( $title, ENT_COMPAT, 'UTF-8' ) . "\n";
+	$order_items = $order->get_items();
+	if( ! empty( $order_items ) ) {
+		foreach( $order_items as $item ) {
+			$download_list .= html_entity_decode( $item->product_name, ENT_COMPAT, 'UTF-8' ) . "\n";
 		}
 	}
 
-	$gateway = edd_get_gateway_admin_label( $payment->gateway );
+	$gateway = edd_get_gateway_checkout_label( $payment->gateway );
 
 	$default_email_body = __( 'Hello', 'easy-digital-downloads' ) . "\n\n" . sprintf( __( 'A %s purchase has been made', 'easy-digital-downloads' ), edd_get_label_plural() ) . ".\n\n";
 	$default_email_body .= sprintf( __( '%s sold:', 'easy-digital-downloads' ), edd_get_label_plural() ) . "\n\n";
@@ -239,13 +234,15 @@ function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data 
  * @author Sunny Ratilal
  */
 function edd_render_receipt_in_browser() {
-	if ( ! isset( $_GET['payment_key'] ) )
+	if ( ! isset( $_GET['payment_key'] ) ) {
 		wp_die( __( 'Missing purchase key.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ) );
+	}
 
 	$key = urlencode( $_GET['payment_key'] );
 
 	ob_start();
-	//Disallows caching of the page
+
+	// Disallows caching of the page
 	header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 	header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
 	header("Cache-Control: post-check=0, pre-check=0", false);
