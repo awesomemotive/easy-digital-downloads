@@ -1,4 +1,9 @@
 /**
+ * WordPress dependencies
+ */
+const defaultConfig = require( '@wordpress/scripts/config/webpack.config.js' );
+
+/**
  * External dependencies
  */
 const webpack = require( 'webpack' );
@@ -26,8 +31,10 @@ const minifyJs = ( content ) => {
 
 // Webpack configuration.
 const config = {
-	mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+	...defaultConfig,
+	devtool: 'source-map',
 	resolve: {
+		...defaultConfig.resolve,
 		modules: [
 			`${ __dirname }/assets/js`,
 			'node_modules',
@@ -51,16 +58,6 @@ const config = {
 	output: {
 		filename: 'assets/js/[name].js',
 		path: __dirname,
-	},
-	module: {
-		rules: [
-			{
-				test: /.js$/,
-				use: 'babel-loader',
-				exclude: /node_modules/,
-				include: /assets\/js/,
-			},
-		],
 	},
 	externals: {
 		jquery: 'jQuery',
@@ -119,9 +116,5 @@ const config = {
 		] ),
 	],
 };
-
-if ( config.mode !== 'production' ) {
-	config.devtool = process.env.SOURCEMAP || 'source-map';
-}
 
 module.exports = config;

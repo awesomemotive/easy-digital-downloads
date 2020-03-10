@@ -28,9 +28,9 @@ defined( 'ABSPATH' ) || exit;
  * @property string $item_name_plural
  * @property string $item_shape
  * @property string $cache_group
- * @property string $columns
- * @property string $query_clauses
- * @property string $request_clauses
+ * @property array $columns
+ * @property array $query_clauses
+ * @property array $request_clauses
  * @property \WP_Meta_Query $meta_query
  * @property \WP_Date_Query $date_query
  * @property array $query_vars
@@ -1077,7 +1077,7 @@ class Query extends Base {
 		 *
 		 * @since 3.0
 		 *
-		 * @param \Sugar_Calendar\Database\Query &$this The Query instance (passed by reference).
+		 * @param Query &$this The Query instance (passed by reference).
 		 */
 		do_action_ref_array( $this->apply_prefix( "parse_{$this->item_name_plural}_query" ), array( &$this ) );
 	}
@@ -1454,7 +1454,7 @@ class Query extends Base {
 		 * @since 3.0
 		 *
 		 * @param array  $retval An array of items.
-		 * @param object &$this  Current instance of Query, passed by reference.
+		 * @param Query &$this  Current instance of Query, passed by reference.
 		 */
 		$retval = (array) apply_filters_ref_array( $this->apply_prefix( "the_{$this->item_name_plural}" ), array( $retval, &$this ) );
 
@@ -1537,7 +1537,7 @@ class Query extends Base {
 	 * @since 3.0
 	 *
 	 * @param int $item_id
-	 * @return mixed False if empty/error, Object if successful
+	 * @return object|false False if empty/error, Object if successful
 	 */
 	public function get_item( $item_id = 0 ) {
 
@@ -1558,7 +1558,7 @@ class Query extends Base {
 	 *
 	 * @param string $column_name  Name of database column
 	 * @param string $column_value Value to query for
-	 * @return mixed False if empty/error, Object if successful
+	 * @return object|false False if empty/error, Object if successful
 	 */
 	public function get_item_by( $column_name = '', $column_value = '' ) {
 
@@ -1856,8 +1856,8 @@ class Query extends Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @param mixed ID of item, or row from database
-	 * @return mixed False on error, Object of single-object class type on success
+	 * @param int|object ID of item, or row from database
+	 * @return object|false False on error, Object of single-object class type on success
 	 */
 	protected function shape_item( $item = 0 ) {
 
@@ -1886,7 +1886,7 @@ class Query extends Base {
 	 * @since 3.0
 	 *
 	 * @param array $item
-	 * @return mixed False on error, Array of validated values on success
+	 * @return array|false False on error, Array of validated values on success
 	 */
 	protected function validate_item( $item = array() ) {
 
@@ -1937,9 +1937,9 @@ class Query extends Base {
 	 * @since 3.0
 	 *
 	 * @param string $method select|insert|update|delete
-	 * @param mixed  $item   Object|Array of keys/values to reduce
+	 * @param array|object  $item   Object|Array of keys/values to reduce
 	 *
-	 * @return mixed Object|Array without keys the current user does not have caps for
+	 * @return array|object Object|Array without keys the current user does not have caps for
 	 */
 	protected function reduce_item( $method = 'update', $item = array() ) {
 
@@ -2011,7 +2011,6 @@ class Query extends Base {
 	 * @since 3.0
 	 *
 	 * @param array $item
-	 * @return array
 	 */
 	protected function transition_item( $new_data = array(), $old_data = array() ) {
 
@@ -2085,7 +2084,7 @@ class Query extends Base {
 	 * @param string $meta_key
 	 * @param string $meta_value
 	 * @param string $unique
-	 * @return mixed
+	 * @return int|false The meta ID on success, false on failure.
 	 */
 	protected function add_item_meta( $item_id = 0, $meta_key = '', $meta_value = '', $unique = false ) {
 
@@ -2115,7 +2114,7 @@ class Query extends Base {
 	 * @param int     $item_id
 	 * @param string  $meta_key
 	 * @param boolean $single
-	 * @return mixed
+	 * @return mixed Single metadata value, or array of values
 	 */
 	protected function get_item_meta( $item_id = 0, $meta_key = '', $single = false ) {
 
@@ -2146,7 +2145,8 @@ class Query extends Base {
 	 * @param string $meta_key
 	 * @param string $meta_value
 	 * @param string $prev_value
-	 * @return mixed
+	 * @return int|bool The new meta field ID if a field with the given key didn't exist and was
+	 *                  therefore added, true on successful update, false on failure.
 	 */
 	protected function update_item_meta( $item_id = 0, $meta_key = '', $meta_value = '', $prev_value = '' ) {
 
@@ -2177,7 +2177,7 @@ class Query extends Base {
 	 * @param string $meta_key
 	 * @param string $meta_value
 	 * @param string $delete_all
-	 * @return mixed
+	 * @return bool True on successful delete, false on failure.
 	 */
 	protected function delete_item_meta( $item_id = 0, $meta_key = '', $meta_value = '', $delete_all = false ) {
 
@@ -2312,7 +2312,7 @@ class Query extends Base {
 	 *
 	 * @since 3.0
 	 *
-	 * @return mixed Table name if exists, False if not
+	 * @return string|false Metadata table name, or false if no metadata table exists
 	 */
 	protected function get_meta_table_name() {
 
@@ -2422,7 +2422,7 @@ class Query extends Base {
 	 * @param array   $item_ids
 	 * @param boolean $force
 	 *
-	 * @return boolean False if empty
+	 * @return boolean|void False if empty
 	 */
 	protected function prime_item_caches( $item_ids = array(), $force = false ) {
 
@@ -2476,6 +2476,8 @@ class Query extends Base {
 	 * @since 3.0
 	 *
 	 * @param array $items
+	 *
+	 * @return boolean|void False if empty
 	 */
 	protected function update_item_cache( $items = array() ) {
 
@@ -2531,7 +2533,7 @@ class Query extends Base {
 	 *
 	 * @param array $items
 	 *
-	 * @return boolean
+	 * @return boolean|void False if empty
 	 */
 	protected function clean_item_cache( $items = array() ) {
 
@@ -2568,6 +2570,8 @@ class Query extends Base {
 	 * Update the last_changed key for the cache group
 	 *
 	 * @since 3.0
+	 *
+	 * @return int The last time a cache group was changed
 	 */
 	protected function update_last_changed_cache( $group = '' ) {
 
@@ -2674,6 +2678,9 @@ class Query extends Base {
 	 * @param string  $key   Cache key.
 	 * @param string  $group Cache group. Defaults to $this->cache_group
 	 * @param boolean $force
+	 *
+	 * @return void|boolean|mixed False on failure to retrieve contents or the cache
+	 *                            contents on success
 	 */
 	protected function cache_get( $key = '', $group = '', $force = false ) {
 

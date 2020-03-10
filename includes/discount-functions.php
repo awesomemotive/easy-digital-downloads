@@ -28,6 +28,16 @@ function edd_add_discount( $data = array() ) {
 	$product_condition    = isset( $data['product_condition'] ) ? $data['product_condition'] : null;
 	unset( $data['product_reqs'], $data['excluded_products'], $data['product_condition'] );
 
+	if ( isset( $data['expiration'] ) ) {
+		$data['end_date'] = $data['expiration'];
+		unset( $data['expiration'] );
+	}
+
+	if ( isset( $data['start'] ) ) {
+		$data['start_date'] = $data['start'];
+		unset( $data['start'] );
+	}
+
 	// Setup the discounts query.
 	$discounts = new EDD\Compat\Discount_Query();
 
@@ -196,7 +206,7 @@ function edd_update_discount( $discount_id = 0, $data = array() ) {
 		}
 
 		unset( $data['product_reqs'] );
-	} else {
+	} elseif ( isset( $data['product_reqs'] ) ) {
 		edd_delete_adjustment_meta( $discount_id, 'product_requirement' );
 
 		// We don't have product conditions when there are no product requirements.
@@ -219,7 +229,7 @@ function edd_update_discount( $discount_id = 0, $data = array() ) {
 		}
 
 		unset( $data['excluded_products'] );
-	} else {
+	} elseif( isset( $data['excluded_products'] ) ) {
 		edd_delete_adjustment_meta( $discount_id, 'excluded_product' );
 	}
 
@@ -716,7 +726,7 @@ function edd_get_discount_status_label( $discount_id = null ) {
  * @return boolean Whether or not discount code is not global.
  */
 function edd_is_discount_not_global( $discount_id = 0 ) {
-	return ( 'global' === edd_get_discount_field( $discount_id, 'scope' ) );
+	return ( 'not_global' === edd_get_discount_field( $discount_id, 'scope' ) );
 }
 
 /**

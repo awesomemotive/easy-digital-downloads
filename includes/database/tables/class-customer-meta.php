@@ -38,7 +38,7 @@ final class Customer_Meta extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201807110001;
+	protected $version = 201807111;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -48,7 +48,7 @@ final class Customer_Meta extends Table {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201807110001' => 201807110001
+		'201807111' => 201807111
 	);
 
 	/**
@@ -96,7 +96,7 @@ final class Customer_Meta extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201807110001
+	 * Upgrade to version 201807111
 	 * - Rename  `customer_id` column to `edd_customer_id`
 	 * - Add `status` column.
 	 *
@@ -104,7 +104,7 @@ final class Customer_Meta extends Table {
 	 *
 	 * @return bool
 	 */
-	protected function __201807110001() {
+	protected function __201807111() {
 
 		// Alter the database with separate queries so indexes succeed
 		if ( $this->column_exists( 'customer_id' ) && ! $this->column_exists( 'edd_customer_id' ) ) {
