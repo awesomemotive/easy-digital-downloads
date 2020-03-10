@@ -536,6 +536,14 @@ class EDD_Payment_History_Table extends List_Table {
 			'view' => '<a href="' . esc_url( $view_url ) . '">' . esc_html__( 'Edit', 'easy-digital-downloads' ) . '</a>',
 		);
 
+		// Resend Receipt
+		if ( 'complete' === $order->status && ! empty( $order->email ) ) {
+			$row_actions['email_links'] = '<a href="' . esc_url( add_query_arg( array(
+					'edd-action'  => 'email_links',
+					'purchase_id' => $order->id
+				), $this->base_url ) ) . '">' . __( 'Resend Receipt', 'easy-digital-downloads' ) . '</a>';
+		}
+
 		// Keep Delete at the end
 		if ( edd_is_order_trashable( $order->id ) ) {
 			$trash_url = wp_nonce_url( add_query_arg( array(
@@ -557,6 +565,16 @@ class EDD_Payment_History_Table extends List_Table {
 			$row_actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete', 'easy-digital-downloads' ) . '</a>';
 		}
 
+		// $payment exists for backwards compatibility purposes in the below filter.
+		$payment = edd_get_payment( $order->id );
+
+		/**
+		 * Filters the row actions.
+		 *
+		 * @param array             $row_actions
+		 * @param EDD_Payment|false $payment
+		 */
+		$row_actions = apply_filters( 'edd_payment_row_actions', $row_actions, $payment );
 
 		// Row actions
 		$actions = $this->row_actions( $row_actions );

@@ -20,7 +20,7 @@ jQueryReady( () => {
 			$( '#edd-add-order-no-items-error' ).slideUp();
 		}
 
-		if ( $( '.order-customer-info' ).is( ':visible' ) ) {
+		if ( $( '.order-customer-info' ).is( ':visible' ) && '0' === $( '#customer_id' ).val() ) {
 			$( '#edd-add-order-customer-error' ).slideDown();
 		} else {
 			$( '#edd-add-order-customer-error' ).slideUp();
