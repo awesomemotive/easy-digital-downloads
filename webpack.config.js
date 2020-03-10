@@ -36,8 +36,6 @@ const config = {
 	devtool: 'source-map',
 	resolve: {
 		...defaultConfig.resolve,
-
-		// Easier entry point.
 		modules: [
 			`${ __dirname }/assets/js`,
 			'node_modules',

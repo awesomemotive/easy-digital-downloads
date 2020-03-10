@@ -183,64 +183,57 @@ function edd_order_details_customer( $order ) {
 
 	<div>
 		<div class="column-container order-customer-info">
-			<div class="customer-details-wrap">
-				<?php if ( ! empty( $customer ) ) : ?>
-					<div class="avatar-wrap left" id="customer-avatar">
-						<?php echo get_avatar( $customer->email, 75 ); ?><br />
-					</div>
-					<div class="customer-details">
-						<span class="customer-name">
-							<?php echo esc_html( $customer->name ); ?>
-						</span>
-
-						<span>
-							<?php echo esc_html( $customer->email ); ?>
-						</span>
-
-						<span>
-							<?php
-							printf(
-							/* translators: The date. */
-								esc_html__( 'Customer since %s', 'easy-digital-downloads' ),
-								esc_html( edd_date_i18n( $customer->date_created ) )
-							);
-							?>
-						</span>
-
-						<span>
-							<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ); ?>"><?php _e( 'View customer record', 'easy-digital-downloads' ); ?></a>
-						</span>
-					</div>
-				<?php else : ?>
-					&mdash;
-				<?php endif; ?>
+			<div class="column-container change-customer">
+				<label for="customer_id" class="edd-order-details-label-mobile"><?php esc_html_e( 'Assign to an existing customer', 'easy-digital-downloads' ); ?></label>
+				<?php
+				echo EDD()->html->customer_dropdown( array(
+					'class'         => 'edd-payment-change-customer-input',
+					'selected'      => $customer_id,
+					'id'            => 'customer-id',
+					'name'          => 'customer-id',
+					'none_selected' => esc_html__( 'Search for a customer', 'easy-digital-downloads' ),
+					'placeholder'   => esc_html__( 'Search for a customer', 'easy-digital-downloads' ),
+				) ); // WPCS: XSS ok.
+				?>
+				<input type="hidden" name="current-customer-id" value="<?php echo esc_attr( $customer_id ); ?>" />
+				<?php wp_nonce_field( 'edd_customer_details_nonce', 'edd_customer_details_nonce' ); ?>
 			</div>
 
-			<p class="customer-details-actions">
-				<button class="edd-payment-change-customer button-secondary"><?php echo $change_text; // WPCS: XSS ok. ?></button>
-				&nbsp;
-				<button class="edd-payment-new-customer button-secondary"><?php esc_html_e( 'Assign New Customer', 'easy-digital-downloads' ); ?></button>
-			</p>
-		</div>
+			<div class="customer-details-wrap" style="display: <?php echo esc_attr( ! empty( $customer ) ? 'flex' : 'none' ); ?>">
+				<div class="avatar-wrap" id="customer-avatar">
+					<span class="spinner is-active"></span>
+				</div>
+				<div class="customer-details" style="display: none;">
+					<strong class="customer-name"></strong>
+					<em class="customer-since">
+						<?php
+						echo wp_kses(
+							sprintf(
+								__( 'Customer since %s', 'easy-digital-downloads' ), '<span>&hellip;</span>' ),
+							array(
+								'span' => true,
+							)
+						);
+						?>
+					</em>
 
-		<div class="column-container change-customer" style="display: none">
-			<?php
-			echo EDD()->html->customer_dropdown( array(
-				'class'       => 'edd-payment-change-customer-input',
-				'selected'    => $customer_id,
-				'name'        => 'customer-id',
-				'placeholder' => esc_html__( 'Type to search all Customers', 'easy-digital-downloads' ),
-			) ); // WPCS: XSS ok.
-			?>
+					<span class="customer-record">
+						<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers' ) ); ?>"><?php esc_html_e( 'View customer record', 'easy-digital-downloads' ); ?></a>
+					</span>
+				</div>
+			</div>
 
-			<input type="hidden" id="edd-change-customer" name="edd-change-customer" value="0" />
-
-			<p>
-				<button class="edd-payment-change-customer-cancel edd-delete button-link"><?php esc_html_e( 'Cancel', 'easy-digital-downloads' ); ?></button>
+			<p class="description">
+				or <button class="edd-payment-new-customer button-link"><?php esc_html_e( 'create a new customer', 'easy-digital-downloads' ); ?></button>
 			</p>
 		</div>
 
 		<div class="column-container new-customer" style="display: none">
+			<p style="margin-top: 0;">
+				<input type="hidden" id="edd-new-customer" name="edd-new-customer" value="0" />
+				<button class="edd-payment-new-customer-cancel button-link"><?php esc_html_e( '&larr; Use an existing customer', 'easy-digital-downloads' ); ?></button>
+			</p>
+
 			<p>
 				<strong><?php esc_html_e( 'First Name', 'easy-digital-downloads' ); ?>:</strong>
 				<input type="text" name="edd-new-customer-first-name" value="" class="medium-text"/>
@@ -254,11 +247,6 @@ function edd_order_details_customer( $order ) {
 			<p>
 				<strong><?php esc_html_e( 'Email', 'easy-digital-downloads' ); ?>:</strong>
 				<input type="email" name="edd-new-customer-email" value="" class="medium-text"/>
-			</p>
-
-			<p>
-				<input type="hidden" id="edd-new-customer" name="edd-new-customer" value="0" />
-				<button class="edd-payment-new-customer-cancel edd-delete button-link"><?php esc_html_e( 'Cancel', 'easy-digital-downloads' ); ?></button>
 			</p>
 		</div>
 	</div>
@@ -278,28 +266,42 @@ function edd_order_details_customer( $order ) {
  * @param object $order
  */
 function edd_order_details_email( $order ) {
-	$customer = edd_get_customer( $order->customer_id ); ?>
+	$customer   = edd_get_customer( $order->customer_id );
+	$all_emails = array( 'primary' => $customer->email );
+
+	foreach ( $customer->emails as $key => $email ) {
+		if ( $customer->email === $email ) {
+			continue;
+		}
+
+		$all_emails[ $key ] = $email;
+	}
+?>
 
 	<div><?php
 		if ( ! empty( $customer->emails ) && count( (array) $customer->emails ) > 1 ) : ?>
-			<span class="edd-order-resend-receipt-header">
-				<?php _e( 'Choose an email address to send the receipt to:', 'easy-digital-downloads' ); ?>
-			</span>
+			<fieldset class="edd-order-resend-email-chooser">
+				<legend>
+					<?php _e( 'Send email receipt to', 'easy-digital-downloads' ); ?>
+				</legend>
 
-			<span class="edd-order-resend-receipt-addresses">
-				<?php foreach ( $customer->emails as $key => $email ) : ?>
-				<label>
-					<input autocomplete="off" class="edd-order-resend-receipt-email" name="edd-order-resend-receipt-address" type="radio" value="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" />
-					<?php echo esc_attr( $email ); ?>
-				</label>
+				<?php foreach ( $all_emails as $key => $email ) : ?>
+				<p>
+					<label for="<?php echo rawurlencode( sanitize_email( $email ) ); ?>">
+						<input autocomplete="off" id="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" class="edd-order-resend-receipt-email" name="edd-order-resend-receipt-address" type="radio" value="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" <?php checked( true, ( 'primary' === $key ) ); ?> />
+						<?php echo esc_attr( $email ); ?>
+					</label>
+				</p>
 				<?php endforeach; ?>
-			</span>
+			</fieldset>
 
 		<?php else : ?>
 
 			<input readonly type="email" value="<?php echo esc_attr( $order->email ); ?>" />
 
 		<?php endif; ?>
+
+		<p class="description"><?php esc_html_e( 'Send a new copy of the purchase receipt to the email address used for this order. If download URLs were included in the original receipt, new ones will be included.', 'easy-digital-downloads' ); ?></p>
 
 		<a href="<?php echo esc_url( add_query_arg( array(
 			'edd-action'  => 'email_links',
@@ -309,8 +311,6 @@ function edd_order_details_email( $order ) {
 		} else {
 			echo esc_attr( 'edd-resend-receipt' );
 		} ?>" class="button-secondary"><?php esc_html_e( 'Resend Receipt', 'easy-digital-downloads' ); ?></a>
-
-		<p class="description"><?php esc_html_e( 'Send a new copy of the purchase receipt to the email address used for this order. If download URLs were included in the original receipt, new ones will be included.', 'easy-digital-downloads' ); ?></p>
 
 		<?php do_action( 'edd_view_order_details_resend_receipt_after', $order->id ); ?>
 
@@ -789,7 +789,7 @@ function edd_order_details_extras( $order = false ) {
 						<input type="checkbox" name="edd-unlimited-downloads" id="edd_unlimited_downloads" value="1"<?php checked( true, $unlimited, true ); ?>/>
 						<?php esc_html_e( 'Unlimited Downloads', 'easy-digital-downloads' ); ?>
 						<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Unlimited Downloads</strong>: checking this box will override all other file download limits for this purchase, granting the customer unliimited downloads of all files included on the purchase.', 'easy-digital-downloads' ); ?>"></span>
-					</span>
+					</label>
 				</div>
 
 				<?php if ( edd_is_add_order_page() ) : ?>
