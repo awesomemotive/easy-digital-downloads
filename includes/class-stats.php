@@ -160,6 +160,13 @@ class Stats {
 		$this->query_vars['column']            = 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
 
+		/*
+		 * By default we're checking sales only and excluding refunds. This gives us gross order earnings.
+		 * This may be overridden in $query parameters that get passed through.
+		 */
+		$this->query_vars['type']   = 'sale';
+		$this->query_vars['status'] = array( 'complete', 'revoked', 'refunded', 'partially_refunded' );
+
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
@@ -251,6 +258,13 @@ class Stats {
 		$this->query_vars['table']             = $this->get_db()->edd_orders;
 		$this->query_vars['column']            = 'id';
 		$this->query_vars['date_query_column'] = 'date_created';
+
+		/*
+		 * By default we're checking sales only and excluding refunds. This gives us gross order counts.
+		 * This may be overridden in $query parameters that get passed through.
+		 */
+		$this->query_vars['type']   = 'sale';
+		$this->query_vars['status'] = array( 'complete', 'revoked', 'refunded', 'partially_refunded' );
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
