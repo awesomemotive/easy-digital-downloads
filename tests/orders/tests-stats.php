@@ -1,6 +1,8 @@
 <?php
 namespace EDD;
 
+use EDD\Orders\Order;
+
 /**
  * Stats Tests.
  *
@@ -21,9 +23,16 @@ class Stats_Tests extends \EDD_UnitTestCase {
 	/**
 	 * Orders test fixture.
 	 *
-	 * @var array
+	 * @var Order[]
 	 */
 	protected static $orders;
+
+	/**
+	 * Refunds test fixture.
+	 *
+	 * @var array
+	 */
+	protected static $refunds;
 
 	/**
 	 * Set up fixtures once.
@@ -31,6 +40,11 @@ class Stats_Tests extends \EDD_UnitTestCase {
 	public static function wpSetUpBeforeClass() {
 		self::$stats  = new Stats();
 		self::$orders = parent::edd()->order->create_many( 5 );
+
+		// Refund two of those orders.
+		for ( $i = 0; $i < 2; $i++ ) {
+			self::$refunds[] = edd_refund_order( self::$orders[ $i ] );
+		}
 	}
 
 	/**
@@ -115,5 +129,27 @@ class Stats_Tests extends \EDD_UnitTestCase {
 		) );
 
 		$this->assertSame( 5, $count );
+	}
+
+	/**
+	 * @covers ::get_order_refund_count
+	 */
+	public function test_get_order_refund_count_with_range_last_year_should_be_0() {
+		$count = self::$stats->get_order_refund_count( array(
+			'range' => 'last_year',
+		) );
+
+		$this->assertSame( 0, $count );
+	}
+
+	/**
+	 * @covers ::get_order_refund_count
+	 */
+	public function test_get_order_refund_count_with_range_this_year_should_be_2() {
+		$count = self::$stats->get_order_refund_count( array(
+			'range' => 'this_year',
+		) );
+
+		$this->assertSame( 2, $count );
 	}
 }
