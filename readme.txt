@@ -5,9 +5,9 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: ecommerce, e-commerce, sell, downloads, store, paypal, checkout, shop
 Requires at least: 4.4
-Tested up to: 5.3
+Tested up to: 5.4
 Requires PHP: 5.3
-Stable Tag: 2.9.21
+Stable Tag: 2.9.22
 License: GNU Version 2 or Any Later Version
 
 The easiest way to sell digital products with WordPress.
@@ -189,6 +189,11 @@ Yes. Easy Digital Downloads also includes default support for Amazon Payments an
 9. Checkout screen
 
 == Changelog ==
+= 2.9.22, March 12, 2020 =
+* Fix: Corrected an issue that caused custom translation files from being ignored when official translations are loaded.
+* Fix: The default return condition when determining if a purchase has reached its download limit was erroneously removed.
+* Fix: When determining the discount amount for a cart item, it was possible to enter into a situation that caused a division by zero warning.
+
 = 2.9.21, March 2, 2020 =
 * Fix: Corrected a reporting issue with earnings when using negative fees, such as Discounts Pro.
 * Fix: Only count the number of downloads for a purchase when download counts are not unlimited.
