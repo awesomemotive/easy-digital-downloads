@@ -1039,11 +1039,13 @@ function display_taxes_filter() {
 	$taxes         = get_filter_value( 'taxes' ); 
 	$exclude_taxes = isset( $taxes['exclude_taxes'] ) && true == $taxes['exclude_taxes'];
 ?>
-
-    <span class="edd-graph-filter-options graph-option-section">
-        <input type="checkbox" id="exclude_taxes" <?php checked( true, $exclude_taxes, true ); ?> value="1" name="exclude_taxes"/>
-        <label for="exclude_taxes"><?php esc_html_e( 'Exclude Taxes', 'easy-digital-downloads' ); ?></label>
-    </span><?php
+	<span class="edd-graph-filter-options graph-option-section">
+		<label for="exclude_taxes">
+			<input type="checkbox" id="exclude_taxes" <?php checked( true, $exclude_taxes, true ); ?> value="1" name="exclude_taxes"/>
+			<?php esc_html_e( 'Exclude Taxes', 'easy-digital-downloads' ); ?>
+		</label>
+	</span>
+<?php
 }
 
 /**
