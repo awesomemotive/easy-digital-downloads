@@ -172,4 +172,26 @@ class Stats_Tests extends \EDD_UnitTestCase {
 
 		$this->assertSame( 2, $count );
 	}
+
+	/**
+	 * @covers ::get_order_refund_amount
+	 */
+	public function test_get_order_refund_amount_with_range_last_year_should_be_0() {
+		$earnings = self::$stats->get_order_refund_amount( array(
+			'range' => 'last_year',
+		) );
+
+		$this->assertSame( 0.00, $earnings );
+	}
+
+	/**
+	 * @covers ::get_order_refund_amount
+	 */
+	public function test_get_order_refund_amount_with_range_this_year_should_be_240() {
+		$earnings = self::$stats->get_order_refund_amount( array(
+			'range' => 'this_year',
+		) );
+
+		$this->assertSame( 240.00, $earnings );
+	}
 }
