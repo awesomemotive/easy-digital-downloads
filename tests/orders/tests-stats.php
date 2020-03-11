@@ -152,4 +152,26 @@ class Stats_Tests extends \EDD_UnitTestCase {
 
 		$this->assertSame( 2, $count );
 	}
+
+	/**
+	 * @covers ::get_order_item_refund_count
+	 */
+	public function test_get_order_item_refund_count_with_range_last_year_should_be_0() {
+		$count = self::$stats->get_order_item_refund_count( array(
+			'range' => 'last_year',
+		) );
+
+		$this->assertSame( 0, $count );
+	}
+
+	/**
+	 * @covers ::get_order_item_refund_count
+	 */
+	public function test_get_order_item_refund_count_with_range_this_year_should_be_2() {
+		$count = self::$stats->get_order_item_refund_count( array(
+			'range' => 'this_year',
+		) );
+
+		$this->assertSame( 2, $count );
+	}
 }
