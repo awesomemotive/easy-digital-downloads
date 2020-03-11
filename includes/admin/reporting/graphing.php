@@ -761,7 +761,9 @@ function edd_parse_report_dates( $form_data ) {
 				break;
 
 			case 'taxes':
-				$session_data = isset( $form_data['exclude_taxes'] );
+				$session_data = array(
+					'exclude_taxes' => isset( $form_data['exclude_taxes'] ),
+				);
 
 				break;
 
