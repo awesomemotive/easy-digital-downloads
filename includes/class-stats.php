@@ -584,7 +584,7 @@ class Stats {
 	 *     @type string $end       End day and time (based on the end of the given day).
 	 *     @type string $range     Date range. If a range is passed, this will override and `start` and `end`
 	 *                             values passed. See \EDD\Reports\get_dates_filter_options() for valid date ranges.
-	 *     @type string $function  SQL function. Accepts `COUNT` and `AVG`. Default `COUNT`.
+	 *     @type string $function  SQL function. Accepts `AVG` only. Default `AVG`.
 	 *     @type string $where_sql Reserved for internal use. Allows for additional WHERE clauses to be appended to the
 	 *                             query.
 	 *     @type string $output    The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
