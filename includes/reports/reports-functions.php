@@ -1036,6 +1036,10 @@ function display_products_filter() {
  * @since 3.0
  */
 function display_taxes_filter() {
+	if ( false === edd_use_taxes() ) {
+		return;
+	}
+
 	$taxes         = get_filter_value( 'taxes' ); 
 	$exclude_taxes = isset( $taxes['exclude_taxes'] ) && true == $taxes['exclude_taxes'];
 ?>
