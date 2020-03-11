@@ -143,18 +143,16 @@ function edd_download_meta_box_save( $post_id, $post ) {
 			$global_ability = edd_get_option( 'refundability', 'refundable' );
 
 			if ( isset( $_POST[ $field ] ) ) {
-				if ( 'refundable' !== $global_ability ) {
-					update_post_meta( $post_id, $field, 'refundable' );
-				} else {
-					update_post_meta( $post_id, $field, '' );
-				}
+				$value = 'refundable' !== $global_ability
+					? 'refundable'
+					: '';
 			} else {
-				if ( 'nonrefundable' !== $global_ability ) {
-					update_post_meta( $post_id, $field, 'nonrefundable' );
-				} else {
-					update_post_meta( $post_id, $field, '' );
-				}
+				$value = 'nonrefundable' !== $global_ability
+					? 'nonrefundable'
+					: '';
 			}
+
+			update_post_meta( $post_id, $field, $value );
 		} else {
 
 			if ( isset( $_POST[ $field ] ) ) {
