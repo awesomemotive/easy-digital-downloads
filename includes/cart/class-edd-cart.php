@@ -686,7 +686,7 @@ class EDD_Cart {
 								}
 							}
 
-							$item_subtotal       = ( $price * $item['quantity'] );
+							$item_subtotal     = ( $price * $item['quantity'] );
 							$subtotal_percent  = ! empty( $items_subtotal ) ? ( $item_subtotal / $items_subtotal ) : 0;
 							$code_amount       = edd_get_discount_amount( $code_id );
 							$discounted_amount = $code_amount * $subtotal_percent;
