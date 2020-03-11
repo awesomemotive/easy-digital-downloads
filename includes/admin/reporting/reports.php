@@ -219,7 +219,7 @@ function edd_register_overview_report( $reports ) {
 					'data_callback' => function () use ( $dates, $taxes ) {
 						$stats = new EDD\Stats( array(
 							'range'         => $dates['range'],
-							'exclude_taxes' => isset( $taxes['exclude_taxes'] ),
+							'exclude_taxes' => isset( $taxes['exclude_taxes'] ) && true === $taxes['exclude_taxes'],
 							'output'        => 'formatted',
 						) );
 
@@ -240,7 +240,7 @@ function edd_register_overview_report( $reports ) {
 					'data_callback' => function () use ( $taxes ) {
 						$stats = new EDD\Stats( array(
 							'output'        => 'formatted',
-							'exclude_taxes' => isset( $taxes['exclude_taxes'] ),
+							'exclude_taxes' => isset( $taxes['exclude_taxes'] ) && true === $taxes['exclude_taxes'],
 						) );
 
 						return $stats->get_order_count() . ' / ' . $stats->get_order_earnings();
@@ -261,7 +261,7 @@ function edd_register_overview_report( $reports ) {
 						$stats = new EDD\Stats();
 						return apply_filters( 'edd_reports_overview_earnings', $stats->get_order_earnings( array(
 							'range'         => $dates['range'],
-							'exclude_taxes' => isset( $taxes['exclude_taxes'] ),
+							'exclude_taxes' => isset( $taxes['exclude_taxes'] ) && true === $taxes['exclude_taxes'],
 							'relative'      => true,
 						) ) );
 					},
@@ -343,7 +343,7 @@ function edd_register_overview_report( $reports ) {
 							'output'        => 'formatted',
 							'relative'      => true,
 							'range'         => $dates['range'],
-							'exclude_taxes' => isset( $taxes['exclude_taxes'] ),
+							'exclude_taxes' => isset( $taxes['exclude_taxes'] ) && true === $taxes['exclude_taxes'],
 						) ) );
 					},
 					'display_args'  => array(
@@ -576,7 +576,7 @@ function edd_register_downloads_report( $reports ) {
 						$stats = new EDD\Stats( array(
 							'function'      => 'AVG',
 							'range'         => $dates['range'],
-							'exclude_taxes' => isset( $taxes['exclude_taxes'] ),
+							'exclude_taxes' => isset( $taxes['exclude_taxes'] ) && true === $taxes['exclude_taxes'],
 							'output'        => 'formatted',
 						) );
 
@@ -1027,7 +1027,7 @@ function edd_register_refunds_report( $reports ) {
 						$stats  = new EDD\Stats();
 						$amount = $stats->get_order_refund_amount( array(
 							'range'         => $dates['range'],
-							'exclude_taxes' => isset( $taxes['exclude_taxes'] ),
+							'exclude_taxes' => isset( $taxes['exclude_taxes'] ) && true === $taxes['exclude_taxes'],
 							'output'        => 'formatted',
 						) );
 
@@ -1050,7 +1050,7 @@ function edd_register_refunds_report( $reports ) {
 						return apply_filters( 'edd_reports_refunds_average_refund_amount', $stats->get_order_refund_amount( array(
 							'function'      => 'AVG',
 							'range'         => $dates['range'],
-							'exclude_taxes' => isset( $taxes['exclude_taxes'] ),
+							'exclude_taxes' => isset( $taxes['exclude_taxes'] ) && true === $taxes['exclude_taxes'],
 							'output'        => 'formatted',
 						) ) );
 					},
@@ -1223,7 +1223,7 @@ function edd_register_payment_gateways_report( $reports ) {
 
 						return apply_filters( 'edd_reports_gateways_earnings', $stats->get_gateway_earnings( array(
 							'range'         => $dates['range'],
-							'exclude_taxes' => isset( $taxes['exclude_taxes'] ),
+							'exclude_taxes' => isset( $taxes['exclude_taxes'] ) && true === $taxes['exclude_taxes'],
 							'gateway'       => $gateway,
 							'output'        => 'formatted',
 						) ) );
@@ -1276,14 +1276,14 @@ function edd_register_payment_gateways_report( $reports ) {
 						if ( empty( $gateway ) ) {
 							return apply_filters( 'edd_reports_gateways_average_order_value', $stats->get_order_earnings( array(
 								'range'         => $dates['range'],
-								'exclude_taxes' => isset( $taxes['exclude_taxes'] ),
+								'exclude_taxes' => isset( $taxes['exclude_taxes'] ) && true === $taxes['exclude_taxes'],
 								'function'      => 'AVG',
 								'output'        => 'formatted',
 							) ) );
 						} else {
 							return apply_filters( 'edd_reports_gateways_average_order_value', $stats->get_gateway_earnings( array(
 								'range'         => $dates['range'],
-								'exclude_taxes' => isset( $taxes['exclude_taxes'] ),
+								'exclude_taxes' => isset( $taxes['exclude_taxes'] ) && true === $taxes['exclude_taxes'],
 								'gateway'       => $gateway,
 								'function'      => 'AVG',
 								'output'        => 'formatted',
@@ -1369,7 +1369,7 @@ function edd_register_payment_gateways_report( $reports ) {
 						$g = $stats->get_gateway_earnings( array(
 							'grouped'       => true,
 							'range'         => $dates['range'],
-							'exclude_taxes' => isset( $taxes['exclude_taxes'] ),
+							'exclude_taxes' => isset( $taxes['exclude_taxes'] ) && true === $taxes['exclude_taxes'],
 						) );
 
 						$gateways = array_flip( array_keys( edd_get_payment_gateways() ) );
@@ -2316,7 +2316,7 @@ function edd_register_customer_report( $reports ) {
 						$stats = new EDD\Stats();
 						return $stats->get_customer_lifetime_value( array(
 							'function'      => 'AVG',
-							'exclude_taxes' => isset( $taxes['exclude_taxes'] ),
+							'exclude_taxes' => isset( $taxes['exclude_taxes'] ) && true === $taxes['exclude_taxes'],
 							'output'        => 'formatted',
 						) );
 					},
@@ -2333,7 +2333,7 @@ function edd_register_customer_report( $reports ) {
 						return apply_filters( 'edd_reports_customers_average_customer_value', $stats->get_customer_lifetime_value( array(
 							'function'      => 'AVG',
 							'range'         => $dates['range'],
-							'exclude_taxes' => isset( $taxes['exclude_taxes'] ),
+							'exclude_taxes' => isset( $taxes['exclude_taxes'] ) && true === $taxes['exclude_taxes'],
 							'output'        => 'formatted',
 						) ) );
 					},
