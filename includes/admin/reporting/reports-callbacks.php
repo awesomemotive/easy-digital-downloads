@@ -120,8 +120,8 @@ function edd_overview_refunds_chart() {
 	$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
 
 	$column = true === $taxes['exclude_taxes']
-			? 'subtotal'
-			: 'total';
+		? 'subtotal'
+		: 'total';
 
 	$sql_clauses = array(
 		'select'  => 'date_created AS date',

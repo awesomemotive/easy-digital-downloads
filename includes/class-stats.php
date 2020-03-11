@@ -1966,7 +1966,9 @@ class Stats {
 					) o
 					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		} else {
-			$column = true === $this->query_vars['exclude_taxes'] ? 'subtotal' : 'total';
+			$column = true === $this->query_vars['exclude_taxes']
+				? 'subtotal'
+				: 'total';
 
 			$sql = "SELECT {$function} AS total
 					FROM (
