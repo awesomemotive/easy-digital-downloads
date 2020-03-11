@@ -468,6 +468,9 @@ class Stats {
 			? $query['status']
 			: array( 'refunded', 'partially_refunded' );
 
+		// Ensure we only pick up records from refund objects and not the original sale.
+		$this->query_vars['where_sql'] .= " AND {$this->get_db()->edd_orders}.type = 'refund' ";
+
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
@@ -490,20 +493,23 @@ class Stats {
 		if ( 'AVG' === $this->query_vars['function'] ) {
 			$sql = "SELECT AVG(id) AS total
 					FROM (
-						SELECT COUNT(id) AS id
+						SELECT COUNT({$this->query_vars['table']}.id) AS id
 						FROM {$this->query_vars['table']}
+						INNER JOIN {$this->get_db()->edd_orders} ON( {$this->get_db()->edd_orders}.id = {$this->query_vars['table']}.order_id )
 						WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 						GROUP BY order_id
 					) AS counts";
 		} elseif ( true === $this->query_vars['grouped'] ) {
-			$sql = "SELECT product_id, price_id, {$function} AS total
+			$sql = "SELECT {$this->query_vars['table']}.product_id, {$this->query_vars['table']}.price_id, {$function} AS total
 					FROM {$this->query_vars['table']}
+					INNER JOIN {$this->get_db()->edd_orders} ON( {$this->get_db()->edd_orders}.id = {$this->query_vars['table']}.order_id )
 					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 					GROUP BY product_id, price_id
 					ORDER BY total DESC";
 		} else {
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']}
+					INNER JOIN {$this->get_db()->edd_orders} ON( {$this->get_db()->edd_orders}.id = {$this->query_vars['table']}.order_id )
 					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		}
 
