@@ -571,13 +571,20 @@ class Stats {
 		$query['status'] = array( 'complete', 'partially_refunded' );
 		$query['type']   = array( 'refund' );
 
-		// Request raw output so we can run `abs()` on the value.
+		/*
+		 * Request raw output so we can run `abs()` on the value.
+		 * But save the original value so we can restore it later.
+		 */
+		$original_output = isset( $query['output'] ) ? $query['output'] : 'raw';
 		$query['output'] = 'raw';
 
 		$retval = $this->get_order_earnings( $query );
 
+		// Restore original format.
+		$this->query_vars['output'] = $original_output;
+
 		// Format & return.
-		return edd_currency_filter( edd_format_amount( abs( $retval ) ) );
+		return $this->maybe_format( abs( $retval ) );
 	}
 
 	/**
