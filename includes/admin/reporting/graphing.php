@@ -696,7 +696,28 @@ function edd_parse_report_dates( $form_data ) {
 	}
 
 	if ( ! empty( $form_data['edd_redirect'] ) ) {
-		edd_redirect( $form_data['edd_redirect'] );
+		$redirect = $form_data['edd_redirect'];
+
+		// Ensure data is available in the URL for legacy reports.
+		if ( ! empty( $form_data['range'] ) ) {
+			$redirect = add_query_arg(
+				array(
+					'range' => $form_data['range'],
+				),
+				$redirect
+			);
+		}
+
+		if ( ! empty( $form_data['exclude_taxes'] ) ) {
+			$redirect = add_query_arg(
+				array(
+					'exclude_taxes' => true,
+				),
+				$redirect
+			);
+		}
+
+		edd_redirect( $redirect );
 	}
 }
 add_action( 'edd_filter_reports', 'edd_parse_report_dates' );
