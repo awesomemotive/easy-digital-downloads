@@ -1,8 +1,6 @@
 <?php
 namespace EDD;
 
-use EDD\Orders\Order;
-
 /**
  * Stats Tests.
  *
@@ -23,7 +21,7 @@ class Stats_Tests extends \EDD_UnitTestCase {
 	/**
 	 * Orders test fixture.
 	 *
-	 * @var Order[]
+	 * @var int[]
 	 */
 	protected static $orders;
 
