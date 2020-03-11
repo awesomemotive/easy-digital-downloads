@@ -33,8 +33,9 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 	public function get_data() {
 		global $wpdb;
 
-		$filter     = Reports\get_filter_value( 'dates' );
-		$date_range = Reports\parse_dates_for_range( $filter['range'] );
+		$dates      = Reports\get_filter_value( 'dates' );
+		$taxes      = Reports\get_filter_value( 'taxes' );
+		$date_range = Reports\parse_dates_for_range( $dates['range'] );
 
 		// Generate date query SQL if dates have been set.
 		$date_query_sql = '';
@@ -88,7 +89,11 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 			$placeholders   = implode( ', ', array_fill( 0, count( $taxonomies[ $k ]['object_ids'] ), '%d' ) );
 			$product_id__in = $wpdb->prepare( "product_id IN({$placeholders})", $taxonomies[ $k ]['object_ids'] );
 
-			$sql = "SELECT total, COUNT(id) AS sales
+			$column = true === $taxes['exclude_taxes']
+				? 'subtotal'
+				: 'total';
+
+			$sql = "SELECT {$column} as total, COUNT(id) AS sales
 					FROM {$wpdb->edd_order_items}
 					WHERE {$product_id__in} {$date_query_sql}";
 

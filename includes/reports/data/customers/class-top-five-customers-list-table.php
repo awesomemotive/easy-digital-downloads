@@ -10,6 +10,8 @@
  */
 namespace EDD\Reports\Data\Customers;
 
+use EDD\Reports as Reports;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -33,32 +35,75 @@ class Top_Five_Customers_List_Table extends \EDD_Customer_Reports_Table {
 	 * @return array $data Customers.
 	 */
 	public function get_data() {
-		$data = array();
+		$data  = array();
+		$taxes = Reports\get_filter_value( 'taxes' );
 
-		$args = array(
-			'number'  => 5,
-			'order'   => 'DESC',
-			'orderby' => 'purchase_value',
-		);
-
-		$customers = edd_get_customers( $args );
-
-		foreach ( $customers as $customer ) {
-			/** @var \EDD_Customer $customer */
-
-			$user_id = ! empty( $customer->user_id )
-				? intval( $customer->user_id )
-				: 0;
-
-			$data[] = array(
-				'id'           => $customer->id,
-				'user_id'      => $user_id,
-				'name'         => $customer->name,
-				'email'        => $customer->email,
-				'order_count'  => $customer->purchase_count,
-				'spent'        => $customer->purchase_value,
-				'date_created' => $customer->date_created,
+		if ( false === $taxes['exclude_taxes'] ) {
+			$args = array(
+				'number'  => 5,
+				'order'   => 'DESC',
+				'orderby' => 'purchase_value',
 			);
+
+			$customers = edd_get_customers( $args );
+
+			foreach ( $customers as $customer ) {
+				/** @var \EDD_Customer $customer */
+
+				$user_id = ! empty( $customer->user_id )
+					? intval( $customer->user_id )
+					: 0;
+
+				$data[] = array(
+					'id'           => $customer->id,
+					'user_id'      => $user_id,
+					'name'         => $customer->name,
+					'email'        => $customer->email,
+					'order_count'  => $customer->purchase_count,
+					'spent'        => $customer->purchase_value,
+					'date_created' => $customer->date_created,
+				);
+			}
+		} else {
+			global $wpdb;
+
+			// @todo DRY with Most_Valuable_Customers_List_Table
+
+			$column = true === $taxes['exclude_taxes']
+				? 'subtotal'
+				: 'total';
+
+			$sql = "SELECT customer_id, COUNT(id) AS order_count, SUM({$column}) AS total_spent
+					FROM {$wpdb->edd_orders}
+					WHERE status IN (%s, %s) AND type = 'sale'
+					GROUP BY customer_id
+					ORDER BY total_spent DESC
+					LIMIT 5";
+
+			$results = $wpdb->get_results( $wpdb->prepare( $sql, sanitize_text_field( 'complete' ), sanitize_text_field( 'revoked' ) ) );
+
+			foreach ( $results as $result ) {
+				$customer = edd_get_customer( (int) $result->customer_id );
+
+				// Skip if customer record not found.
+				if ( ! $customer ) {
+					continue;
+				}
+
+				$user_id = ! empty( $customer->user_id )
+					? intval( $customer->user_id )
+					: 0;
+
+				$data[] = array(
+					'id'           => $customer->id,
+					'user_id'      => $user_id,
+					'name'         => $customer->name,
+					'email'        => $customer->email,
+					'order_count'  => absint( $result->order_count ),
+					'spent'        => $result->total_spent,
+					'date_created' => $customer->date_created,
+				);
+			}
 		}
 
 		return $data;
