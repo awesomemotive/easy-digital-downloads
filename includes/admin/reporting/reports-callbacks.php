@@ -34,7 +34,7 @@ function edd_overview_sales_earnings_chart() {
 		'orderby' => 'DATE(date_created)',
 	);
 
-	$column = true === $taxes['exclude_taxes']
+	$column = isset( $taxes['exclude_taxes'] ) && true === $taxes['exclude_taxes']
 		? 'subtotal'
 		: 'total';
 
@@ -124,7 +124,7 @@ function edd_overview_refunds_chart() {
 	$day_by_day   = Reports\get_dates_filter_day_by_day();
 	$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
 
-	$column = true === $taxes['exclude_taxes']
+	$column = isset( $taxes['exclude_taxes'] ) && true === $taxes['exclude_taxes']
 		? 'subtotal'
 		: 'total';
 
