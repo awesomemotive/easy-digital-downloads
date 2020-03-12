@@ -24,19 +24,15 @@ function edd_overview_sales_earnings_chart() {
 	global $wpdb;
 
 	$dates        = Reports\get_dates_filter( 'objects' );
-	$taxes        = Reports\get_filter_value( 'taxes' );
 	$day_by_day   = Reports\get_dates_filter_day_by_day();
 	$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
+	$column       = Reports\get_taxes_excluded_filter() ? 'subtotal' : 'total';
 
 	$sql_clauses = array(
 		'select'  => 'date_created AS date',
 		'groupby' => 'DATE(date_created)',
 		'orderby' => 'DATE(date_created)',
 	);
-
-	$column = isset( $taxes['exclude_taxes'] ) && true === $taxes['exclude_taxes']
-		? 'subtotal'
-		: 'total';
 
 	$results = $wpdb->get_results(
 		$wpdb->prepare(
@@ -120,13 +116,9 @@ function edd_overview_refunds_chart() {
 	global $wpdb;
 
 	$dates        = Reports\get_dates_filter( 'objects' );
-	$taxes        = Reports\get_filter_value( 'taxes' );
 	$day_by_day   = Reports\get_dates_filter_day_by_day();
 	$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
-
-	$column = isset( $taxes['exclude_taxes'] ) && true === $taxes['exclude_taxes']
-		? 'subtotal'
-		: 'total';
+	$column       = Reports\get_taxes_excluded_filter() ? 'subtotal' : 'total';
 
 	$sql_clauses = array(
 		'select'  => 'date_created AS date',

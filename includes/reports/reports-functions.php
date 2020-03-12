@@ -767,6 +767,23 @@ function get_dates_filter_day_by_day() {
 	return $day_by_day;
 }
 
+/**
+ * Retrieves the tax exclusion filter.
+ *
+ * @since 3.0
+ *
+ * @return bool True if taxes should be excluded from calculations.
+ */
+function get_taxes_excluded_filter() {
+	$taxes = get_filter_value( 'taxes' );
+
+	if ( ! isset( $taxes['exclude_taxes'] ) ) {
+		return false;
+	}
+
+	return (bool) $taxes['exclude_taxes'];
+}
+
 /** Display *******************************************************************/
 
 /**
