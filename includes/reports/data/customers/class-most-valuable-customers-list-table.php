@@ -42,13 +42,10 @@ class Most_Valuable_Customers_List_Table extends \EDD_Customer_Reports_Table {
 		$dates      = Reports\get_filter_value( 'dates' );
 		$taxes      = Reports\get_filter_value( 'taxes' );
 		$date_range = Reports\parse_dates_for_range( $dates['range'] );
+		$column     = Reports\get_taxes_excluded_filter() ? 'subtotal' : 'total';
 
 		$start_date = sanitize_text_field( date( 'Y-m-d 00:00:00', strtotime( $date_range['start'] ) ) );
 		$end_date   = sanitize_text_field( date( 'Y-m-d 23:59:59', strtotime( $date_range['end'] ) ) );
-
-		$column = true === $taxes['exclude_taxes']
-			? 'subtotal'
-			: 'total';
 
 		$sql = "SELECT customer_id, COUNT(id) AS order_count, SUM({$column}) AS total_spent
 				FROM {$wpdb->edd_orders}

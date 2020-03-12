@@ -89,9 +89,7 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 			$placeholders   = implode( ', ', array_fill( 0, count( $taxonomies[ $k ]['object_ids'] ), '%d' ) );
 			$product_id__in = $wpdb->prepare( "product_id IN({$placeholders})", $taxonomies[ $k ]['object_ids'] );
 
-			$column = true === $taxes['exclude_taxes']
-				? 'subtotal'
-				: 'total';
+			$column = Reports\get_taxes_excluded_filter() ? 'subtotal' : 'total';
 
 			$sql = "SELECT {$column} as total, COUNT(id) AS sales
 					FROM {$wpdb->edd_order_items}
