@@ -32,7 +32,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 					<# } #>
 			</select>
 
-			<# if ( true === data._isDuplicate ) { #>
+			<# if ( true === data.state.isDuplicate ) { #>
 			<span class="edd-order-overview-error">
 			<?php
 			/* translators: %s "Download" singular label. */
@@ -59,7 +59,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 					value="{{ data.quantity }}"
 					step="1"
 					min="1"
-					<# if ( 0 === data.productId || true === data._isDuplicate ) { #>
+					<# if ( 0 === data.productId || true === data.state.isDuplicate ) { #>
 						disabled
 					<# } #>
 				/>
@@ -74,34 +74,46 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 				<input
 					type="checkbox"
 					id="auto-calculate"
-					<# if ( true !== data._isAdjustingManually ) { #>
+					<# if ( true !== data.state.isAdjustingManually ) { #>
 						checked
 					<# } #>
-					<# if ( 0 === data.productId || true === data._isDuplicate ) { #>
+					<# if ( 0 === data.productId || true === data.state.isDuplicate ) { #>
 						disabled
 					<# } #>
 				/>
 				<span class="label">
 					<?php esc_html_e( 'Automatically calculate amounts', 'easy-digital-downloads' ); ?>
-					<# if ( false !== data.state.hasTax ) { #>
+					<# if ( false !== data.state.hasTax.rate && '' !== data.state.hasTax.country ) { #>
+					<br />
 					<small>
-						<# if ( false !== data.state.hasTax.rate && '' !== data.state.hasTax.country ) { #>
 						<?php
 						printf(
 							esc_html__( 'Tax Rate: %s', 'easy-digital-downloads' ),
 							'{{ data.state.hasTax.country}}<# if ( \'\' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate.toFixed( 2 ) }}%'
 						); // WPCS: XSS okay.
 						?>
-						<# } else { #>
-						<?php esc_html_e( 'Set an address to calculate tax amounts', 'easy-digital-downloads' ); ?>
-						<# } #>
 					</small>
 					<# } #>
 				</span>
 			</label>
 		</p>
 
-		<# if ( true === data._isAdjustingManually ) { #>
+		<# if ( false !== data.state.hasTax && '' === data.state.hasTax.country && false === data.state.isAdjustingManually ) { #>
+			<div class="notice notice-warning">
+				<p>
+					<strong><?php esc_html_e( 'No tax rate has been set.', 'easy-digital-downloads' ); ?></strong><br />
+					<?php esc_html_e( 'Tax rates are defined by the customer\'s billing address.', 'easy-digital-downloads' ); ?>
+				</p>
+				<p>
+					<button class="button" id="set-address">
+						<?php esc_html_e( 'Set an address', 'easy-digital-downloads' ); ?>
+					</button>
+				</p>
+			</div>
+		<# } #>
+
+		<# if ( true === data.state.isAdjustingManually ) { #>
+
 			<p>
 				<label for="amount"><?php esc_html_e( 'Unit Price', 'easy-digital-downloads' ); ?></label>
 				<span class="edd-amount">
@@ -123,7 +135,17 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 
 			<# if ( false !== data.state.hasTax ) { #>
 				<p>
-					<label for="tax"><?php esc_html_e( 'Tax', 'easy-digital-downloads' ); ?></label>
+					<label for="tax">
+						<?php esc_html_e( 'Tax', 'easy-digital-downloads' ); ?>
+						<# if ( '' !== data.state.hasTax.country ) { #>
+							<?php
+							printf(
+								esc_html_x( '(%s)', 'add order item tax rate', 'easy-digital-downloads' ),
+								'{{ data.state.hasTax.country}}<# if ( \'\' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate.toFixed( 2 ) }}%'
+							); // WPCS: XSS okay.
+							?>
+						<# } #>
+					</label>
 					<span class="edd-amount">
 						<?php if ( 'before' === $currency_position ) : ?>
 							<?php echo edd_currency_filter( '' ); ?>
@@ -160,6 +182,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 					<?php endif; ?>
 				</span>
 			</p>
+
 		<# } #>
 
 		<p class="submit">
@@ -171,7 +194,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 				type="submit"
 				class="button button-primary edd-ml-auto"
 				value="<?php echo esc_html( sprintf( __( 'Add %s', 'easy-digital-downloads' ), edd_get_label_singular() ) ); ?>"
-				<# if ( 0 === data.productId || true === data._isDuplicate || true === data.state.isFetching ) { #>
+				<# if ( 0 === data.productId || true === data.state.isDuplicate || true === data.state.isFetching ) { #>
 					disabled
 				<# } #>
 			/>
