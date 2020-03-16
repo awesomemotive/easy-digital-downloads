@@ -53,6 +53,8 @@ export const FormAddOrderItem = Dialog.extend( {
 			'keyup #tax': 'onChangeTax',
 			'keyup #subtotal': 'onChangeSubtotal',
 
+			'click #set-address': 'onSetAddress',
+
 			'submit form': 'onAdd',
 		} );
 
@@ -233,6 +235,29 @@ export const FormAddOrderItem = Dialog.extend( {
 		this.model.set( {
 			_isAdjustingManually: ! e.target.checked,
 		} );
+	},
+
+	/**
+	 * Closes dialog and opens "Order Details - Address" section.
+	 *
+	 * @since 3.0
+	 *
+	 * @param {Object} e Click event.
+	 */
+	onSetAddress( e ) {
+		e.preventDefault();
+
+		this.closeDialog();
+
+		const button = $( '[href="#edd_general_address"]' );
+
+		if ( ! button ) {
+			return;
+		}
+
+		button.trigger( 'click' );
+
+		$( '#edd_order_address_country' ).focus();
 	},
 
 	/**
