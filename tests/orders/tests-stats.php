@@ -194,4 +194,30 @@ class Stats_Tests extends \EDD_UnitTestCase {
 
 		$this->assertSame( 240.00, $earnings );
 	}
+
+	/**
+	 * @covers ::get_refund_rate
+	 */
+	public function test_get_get_refund_rate_with_range_last_year_should_be_0() {
+		$refund_rate = self::$stats->get_refund_rate( array(
+			'range'  => 'last_year',
+			'output' => 'raw',
+			'status' => array( 'complete', 'revoked', 'refunded', 'partially_refunded' ),
+		) );
+
+		$this->assertSame( 0, $refund_rate );
+	}
+
+	/**
+	 * @covers ::get_refund_rate
+	 */
+	public function test_get_get_refund_rate_with_range_this_year_should_be_40() {
+		$refund_rate = self::$stats->get_refund_rate( array(
+			'range'  => 'this_year',
+			'output' => 'raw',
+			'status' => array( 'complete', 'revoked', 'refunded', 'partially_refunded' ),
+		) );
+
+		$this->assertSame( 40.0, $refund_rate );
+	}
 }

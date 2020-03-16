@@ -726,14 +726,14 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$status_sql = $this->get_db()->prepare( "AND status IN(%s, %s) AND type = '%s'", esc_sql( 'complete' ), esc_sql( 'partially_refunded' ), esc_sql( 'refund' ) );
+		$status_sql = $this->get_db()->prepare( "AND status = %s AND type = '%s'", esc_sql( 'complete' ), esc_sql( 'refund' ) );
 
 		$ignore_free = $this->get_db()->prepare( "AND {$this->query_vars['table']}.total > %d", 0 );
 
-		$sql = "SELECT SUM(ABS({$this->query_vars['table']}.total)) / o.total * 100 AS `refund_rate`
+		$sql = "SELECT COUNT(id ) / o.number_orders * 100 AS `refund_rate`
 				FROM {$this->query_vars['table']}
 				CROSS JOIN (
-					SELECT SUM(id) AS total
+					SELECT COUNT(id) AS number_orders
 					FROM {$this->query_vars['table']}
 					WHERE 1=1 {$this->query_vars['status_sql']} {$ignore_free} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				) o
