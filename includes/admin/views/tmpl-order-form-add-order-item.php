@@ -47,61 +47,48 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 			<# } #>
 		</p>
 
-		<# if ( false !== data.state.hasQuantity ) { #>
-			<p>
-				<label for="">
-					<?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?>
-				</label>
-				<input
-					type="number"
-					id="quantity"
-					class="edd-add-order-quantity"
-					value="{{ data.quantity }}"
-					step="1"
-					min="1"
-					<# if ( 0 === data.productId || true === data._isDuplicate ) { #>
-						disabled
-					<# } #>
-				/>
-			</p>
-		<# } #>
+		<# if ( 0 !== data.productId && false === data.state.isDuplicate ) { #>
 
-		<p>
-			<label
-				class="edd-toggle"
-				for="auto-calculate"
-			>
-				<input
-					type="checkbox"
-					id="auto-calculate"
-					<# if ( true !== data._isAdjustingManually ) { #>
-						checked
-					<# } #>
-					<# if ( 0 === data.productId || true === data._isDuplicate ) { #>
-						disabled
-					<# } #>
-				/>
-				<span class="label">
-					<?php esc_html_e( 'Automatically calculate amounts', 'easy-digital-downloads' ); ?>
-					<# if ( false !== data.state.hasTax ) { #>
-					<small>
-						<# if ( false !== data.state.hasTax.rate && '' !== data.state.hasTax.country ) { #>
-						<?php
-						printf(
-							esc_html__( 'Tax Rate: %s', 'easy-digital-downloads' ),
-							'{{ data.state.hasTax.country}}<# if ( \'\' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate.toFixed( 2 ) }}%'
-						); // WPCS: XSS okay.
-						?>
-						<# } else { #>
-						<?php esc_html_e( 'Set an address to calculate tax amounts', 'easy-digital-downloads' ); ?>
+			<# if ( false !== data.state.hasQuantity ) { #>
+				<p>
+					<label for="">
+						<?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?>
+					</label>
+					<input
+						type="number"
+						id="quantity"
+						class="edd-add-order-quantity"
+						value="{{ data.quantity }}"
+						step="1"
+						min="1"
+						<# if ( 0 === data.productId || true === data.state.isDuplicate ) { #>
+							disabled
 						<# } #>
-					</small>
-					<# } #>
-				</span>
-			</label>
-		</p>
+					/>
+				</p>
+			<# } #>
 
-		<# if ( true === data._isAdjustingManually ) { #>
+			<p>
+				<label
+					class="edd-toggle"
+					for="auto-calculate"
+				>
+					<input
+						type="checkbox"
+						id="auto-calculate"
+						<# if ( true !== data.state.isAdjustingManually ) { #>
+							checked
+						<# } #>
+						<# if ( 0 === data.productId || true === data.state.isDuplicate ) { #>
+							disabled
+						<# } #>
+					/>
+					<span class="label">
+						<?php esc_html_e( 'Automatically calculate amounts', 'easy-digital-downloads' ); ?>
+					</span>
+				</label>
+			</p>
+
 			<p>
 				<label for="amount"><?php esc_html_e( 'Unit Price', 'easy-digital-downloads' ); ?></label>
 				<span class="edd-amount">
@@ -113,6 +100,9 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 						type="text"
 						id="amount"
 						value="{{ data.amountManual }}"
+						<# if ( false === data.state.isAdjustingManually ) { #>
+							readonly
+						<# } #>
 					/>
 
 					<?php if ( 'after' === $currency_position ) : ?>
@@ -123,7 +113,17 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 
 			<# if ( false !== data.state.hasTax ) { #>
 				<p>
-					<label for="tax"><?php esc_html_e( 'Tax', 'easy-digital-downloads' ); ?></label>
+					<label for="tax">
+						<?php esc_html_e( 'Tax', 'easy-digital-downloads' ); ?>
+						<# if ( '' !== data.state.hasTax.country ) { #>
+							<?php
+							printf(
+								esc_html_x( '(%s)', 'add order item tax rate', 'easy-digital-downloads' ),
+								'{{ data.state.hasTax.country}}<# if ( \'\' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate.toFixed( 2 ) }}%'
+							); // WPCS: XSS okay.
+							?>
+						<# } #>
+					</label>
 					<span class="edd-amount">
 						<?php if ( 'before' === $currency_position ) : ?>
 							<?php echo edd_currency_filter( '' ); ?>
@@ -133,6 +133,9 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 							type="text"
 							id="tax"
 							value="{{ data.taxManual }}"
+							<# if ( false === data.state.isAdjustingManually ) { #>
+								readonly
+							<# } #>
 						/>
 
 						<?php if ( 'after' === $currency_position ) : ?>
@@ -140,6 +143,13 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 						<?php endif; ?>
 					</span>
 				</p>
+				<# if ( '' === data.state.hasTax.country ) { #>
+					<p>
+						<button class="button" id="set-address">
+							<?php esc_html_e( 'Choose an address to calculate tax rate', 'easy-digital-downloads' ); ?>
+						</button>
+					</p>
+				<# } #>
 			<# } #>
 
 			<p>
@@ -153,6 +163,9 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 						type="text"
 						id="subtotal"
 						value="{{ data.subtotalManual }}"
+						<# if ( false === data.state.isAdjustingManually ) { #>
+							readonly
+						<# } #>
 					/>
 
 					<?php if ( 'after' === $currency_position ) : ?>
