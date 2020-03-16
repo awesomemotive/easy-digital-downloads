@@ -238,7 +238,7 @@ function edd_add_manual_order( $args = array() ) {
 				: 0.00;
 
 			// Add to edd_order_items table.
-			edd_add_order_item( array(
+			$order_item_id = edd_add_order_item( array(
 				'order_id'     => $order_id,
 				'product_id'   => absint( $download['id'] ),
 				'product_name' => edd_get_download_name( $download['id'], absint( $price_id ) ),
@@ -254,9 +254,24 @@ function edd_add_manual_order( $args = array() ) {
 				'total'        => $total,
 			) );
 
-			// Increase the earnings for this download.
-			edd_increase_earnings( absint( $download['id'] ), $total );
-			edd_increase_purchase_count( absint( $download['id'] ), $quantity );
+			if ( false !== $order_item_id ) {
+				if ( isset( $download['adjustments'] ) ) {
+					foreach ( $download['adjustments'] as $adjustment ) {
+						edd_add_order_adjustment( array(
+							'object_id'   => $order_item_id,
+							'object_type' => sanitize_text_field( $adjustment['object_type'] ),
+							'type'        => sanitize_text_field( $adjustment['type'] ),
+							'description' => sanitize_text_field( $adjustment['description'] ),
+							'subtotal'    => floatval( $adjustment['subtotal'] ),
+							'total'       => floatval( $adjustment['total'] ),
+						) );
+					}
+				}
+
+				// Increase the earnings for this download.
+				edd_increase_earnings( absint( $download['id'] ), $total );
+				edd_increase_purchase_count( absint( $download['id'] ), $quantity );
+			}
 		}
 	}
 
@@ -269,7 +284,7 @@ function edd_add_manual_order( $args = array() ) {
 		foreach ( $data['adjustments'] as $adjustment ) {
 			edd_add_order_adjustment( array(
 				'object_id'   => $order_id,
-				'object_type' => sanitize_text_field( $adjustment['object_type'] ),
+				'object_type' => 'order',
 				'type'        => sanitize_text_field( $adjustment['type'] ),
 				'description' => sanitize_text_field( $adjustment['description'] ),
 				'subtotal'    => floatval( $adjustment['subtotal'] ),

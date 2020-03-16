@@ -19,7 +19,7 @@ export const OrderAdjustment = Backbone.Model.extend( {
 		objectId: 0,
 		objectType: '',
 		typeId: 0,
-		type: 'order',
+		type: '',
 		description: '',
 		subtotal: 0,
 		tax: 0,
@@ -30,11 +30,11 @@ export const OrderAdjustment = Backbone.Model.extend( {
 	},
 
 	/**
-	 * Returns the `OrderAdjustment` total.
+	 * Returns the `OrderAdjustment` amount.
 	 *
 	 * @since 3.0
 	 */
-	getTotal() {
+	getAmount() {
 		return this.get( 'total' );
 	},
 } );
