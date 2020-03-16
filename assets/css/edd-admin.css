@@ -736,6 +736,10 @@ table.edd-order-overview-summary {
 	opacity: 0.75;
 }
 
+.edd-order-overview-add-item .notice {
+	margin: 0 0 1rem;
+}
+
 .edd-order-overview-add-adjustment #description,
 .edd-order-overview-add-discount select {
 	width: 100%;
