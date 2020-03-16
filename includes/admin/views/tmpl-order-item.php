@@ -41,7 +41,11 @@ $view_url = add_query_arg(
 			<# } #>
 
 			<# if ( false !== data.state.hasTax ) { #>
-			<span class="text"><strong><?php esc_html_e( 'Tax:', 'easy-digital-downloads' ); ?></strong> {{ data.taxCurrency }}</span>
+			<span class="text">
+				<strong><?php esc_html_e( 'Tax:', 'easy-digital-downloads' ); ?></strong>
+				{{ data.taxCurrency }}
+				<# if ( true === data.config.isAdjustingManually ) { #>&dagger;<# } #>
+			</span>
 			<# } #>
 
 			<# if ( false === data.state.isAdding && 'complete' === data.status ) { #>
@@ -58,6 +62,7 @@ $view_url = add_query_arg(
 
 <td>
 	{{ data.amountCurrency }}
+	<# if ( true === data.config.isAdjustingManually ) { #>&dagger;<# } #>
 </td>
 
 <# if ( true === data.state.hasQuantity ) { #>
@@ -68,6 +73,7 @@ $view_url = add_query_arg(
 
 <td class="column-right">
 	{{ data.subtotalCurrency }}
+	<# if ( true === data.config.isAdjustingManually ) { #>&dagger;<# } #>
 </td>
 
 <input type="hidden" value="{{ data.productId }}" name="downloads[{{ data.id }}][id]" />
