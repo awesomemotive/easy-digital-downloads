@@ -418,7 +418,7 @@ class Stats {
 	public function get_order_refund_count( $query = array() ) {
 		$query['status'] = isset( $query['status'] )
 			? $query['status']
-			: array( 'complete', 'partially_refunded' );
+			: array( 'complete' );
 
 		if ( ! array( $query['status'] ) ) {
 			$query['status'] = array( $query['status'] );
@@ -466,7 +466,7 @@ class Stats {
 		// Base value for status.
 		$query['status'] = isset( $query['status'] )
 			? $query['status']
-			: array( 'refunded', 'partially_refunded' );
+			: array( 'refunded' );
 
 		// Ensure we only pick up records from refund objects and not the original sale.
 		$this->query_vars['where_sql'] .= " AND {$this->get_db()->edd_orders}.type = 'refund' ";
@@ -568,7 +568,7 @@ class Stats {
 	 * @return string Formatted amount from refunded orders.
 	 */
 	public function get_order_refund_amount( $query = array() ) {
-		$query['status'] = array( 'complete', 'partially_refunded' );
+		$query['status'] = array( 'complete' );
 		$query['type']   = array( 'refund' );
 
 		/*
