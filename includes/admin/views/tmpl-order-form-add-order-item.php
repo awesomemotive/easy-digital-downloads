@@ -32,7 +32,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 					<# } #>
 			</select>
 
-			<# if ( true === data._isDuplicate ) { #>
+			<# if ( true === data.state.isDuplicate ) { #>
 			<span class="edd-order-overview-error">
 			<?php
 			/* translators: %s "Download" singular label. */
@@ -173,6 +173,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 					<?php endif; ?>
 				</span>
 			</p>
+
 		<# } #>
 
 		<p class="submit">
@@ -184,7 +185,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 				type="submit"
 				class="button button-primary edd-ml-auto"
 				value="<?php echo esc_html( sprintf( __( 'Add %s', 'easy-digital-downloads' ), edd_get_label_singular() ) ); ?>"
-				<# if ( 0 === data.productId || true === data._isDuplicate || true === data.state.isFetching ) { #>
+				<# if ( 0 === data.productId || true === data.state.isDuplicate || true === data.state.isFetching ) { #>
 					disabled
 				<# } #>
 			/>

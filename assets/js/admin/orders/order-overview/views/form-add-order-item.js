@@ -65,7 +65,6 @@ export const FormAddOrderItem = Dialog.extend( {
 		this.model = new OrderItem( {
 			id,
 			orderId: id,
-			_isAdjustingManually: false,
 
 			state,
 		} );
@@ -102,18 +101,23 @@ export const FormAddOrderItem = Dialog.extend( {
 			subtotal = model.get( 'subtotalManual' );
 		}
 
-		const _isDuplicate = state.get( 'items' ).has( model );
-		const _isAdjustingManually = model.get( '_isAdjustingManually' );
+		const isDuplicate = state.get( 'items' ).has( model );
+		const isAdjustingManually = model.get( '_isAdjustingManually' );
+
+		const defaults = Base.prototype.prepare.apply( this, arguments );
 
 		return {
-			...Base.prototype.prepare.apply( this, arguments ),
+			...defaults,
 
 			amountManual: amount,
 			taxManual: tax,
 			subtotalManual: subtotal,
 
-			_isAdjustingManually,
-			_isDuplicate,
+			state: {
+				...defaults.state,
+				isAdjustingManually,
+				isDuplicate,
+			}
 		};
 	},
 
