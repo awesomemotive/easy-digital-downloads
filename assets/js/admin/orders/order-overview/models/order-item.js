@@ -41,6 +41,9 @@ export const OrderItem = Backbone.Model.extend( {
 		// Track how much of each Discount is applied to an `OrderItem`.
 		// There is not currently API support for `OrderItem`-level `OrderAdjustment`s.
 		_discounts: [],
+
+		// Track if the amounts have been adjusted manually on addition.
+		_isAdjustingManually: false,
 	},
 
 	/**
