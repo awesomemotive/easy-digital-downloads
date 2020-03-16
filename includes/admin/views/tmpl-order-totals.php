@@ -46,7 +46,7 @@
 				<?php
 				echo esc_html( 
 					sprintf(
-						__( 'The tax rate has been updated to %1$s. Items added previously have not been adjusted.', 'easy-digital-dwonloads' ),
+						__( 'The tax rate has been updated to %1$s. Existing item amounts have not been updated.', 'easy-digital-downloads' ),
 						'{{ data.state.hasTax.rate.toFixed( 2 ) }}%',
 					)
 				);
@@ -72,7 +72,14 @@
 
 <tr>
 	<td></td>
-	<th colspan="{{ data.config.colspan }}"><?php esc_html_e( 'Total', 'easy-digital-downloads' ); ?></th>
+	<th colspan="{{ data.config.colspan }}">
+		<?php esc_html_e( 'Total', 'easy-digital-downloads' ); ?>
+
+		<# if ( data.state.hasManualAdjustment ) { #>
+			<br />
+			<small><?php esc_html_e( '&dagger; Some amounts have been manually adjusted.', 'easy-digital-downloads' ); ?></small>
+		<# } #>
+	</th>
 	<td class="column-right">
 		<span class="total">{{ data.totalCurrency }}</span>
 	</td>

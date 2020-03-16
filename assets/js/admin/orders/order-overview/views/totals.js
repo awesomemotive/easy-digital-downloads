@@ -75,11 +75,15 @@ export const Totals = wp.Backbone.View.extend( {
 		const total = state.getTotal();
 		const discount = state.getDiscount();
 		const hasNewTaxRate = state.hasNewTaxRate();
+		const hasManualAdjustment = undefined !== state.get( 'items' ).findWhere( {
+			_isAdjustingManually: true,
+		} );
 
 		return {
 			state: {
 				...state.toJSON(),
 				hasNewTaxRate,
+				hasManualAdjustment,
 			},
 			config: {
 				colspan,
