@@ -17,16 +17,69 @@
 </tr>
 
 <# if ( false !== data.state.hasTax ) { #>
+
 <tr>
 	<td></td>
-	<th colspan="{{ data.config.colspan }}"><?php esc_html_e( 'Tax', 'easy-digital-downloads' ); ?></th>
+	<th colspan="{{ data.config.colspan }}">
+		<?php esc_html_e( 'Tax', 'easy-digital-downloads' ); ?>
+		<# if ( false !== data.state.hasTax ) { #>
+		<br />
+		<small>
+			<# if ( false !== data.state.hasTax.rate && '' !== data.state.hasTax.country ) { #>
+				{{ data.state.hasTax.country}}<# if ( '' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate.toFixed( 2 ) }}%
+			<# } #>
+		</small>
+		<# } #>
+	</th>
 	<td class="column-right">{{ data.taxCurrency }}</td>
 </tr>
+
+<# if ( false !== data.state.hasNewTaxRate && data.state.items.length > 0 ) { #>
+<tr>
+	<td></td>
+	<td colspan="{{ data.config.colspan + 1 }}" style="padding: 0;">
+		<div
+			id="notice-tax-change"
+			class="notice notice-warning is-dismissible"
+		>
+			<p>
+				<?php
+				echo esc_html( 
+					sprintf(
+						__( 'The tax rate has been updated to %1$s. Existing automatically calculated amounts have not been updated.', 'easy-digital-downloads' ),
+						'{{ data.state.hasTax.rate.toFixed( 2 ) }}%',
+					)
+				);
+				?>
+			</p>
+			<p>
+				<button
+					class="button button-secondary button-small update-amounts"
+					style="marign-left: 0;"
+				>
+					<?php esc_html_e( 'Update Amounts', 'easy-digital-downloads' ); ?>
+				</button>
+			</p>
+
+			<button type="button" class="notice-dismiss">
+				<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'easy-digital-downloads' ); ?></span>
+			</button>
+		</div>
+	</td>
+</tr>
+<# } #>
 <# } #>
 
 <tr>
 	<td></td>
-	<th colspan="{{ data.config.colspan }}"><?php esc_html_e( 'Total', 'easy-digital-downloads' ); ?></th>
+	<th colspan="{{ data.config.colspan }}">
+		<?php esc_html_e( 'Total', 'easy-digital-downloads' ); ?>
+
+		<# if ( data.state.hasManualAdjustment ) { #>
+			<br />
+			<small><?php esc_html_e( '&dagger; Some amounts have been manually adjusted.', 'easy-digital-downloads' ); ?></small>
+		<# } #>
+	</th>
 	<td class="column-right">
 		<span class="total">{{ data.totalCurrency }}</span>
 	</td>

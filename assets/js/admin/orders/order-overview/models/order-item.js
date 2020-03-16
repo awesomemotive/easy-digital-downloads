@@ -41,6 +41,9 @@ export const OrderItem = Backbone.Model.extend( {
 		// Track how much of each Discount is applied to an `OrderItem`.
 		// There is not currently API support for `OrderItem`-level `OrderAdjustment`s.
 		_discounts: [],
+
+		// Track if the amounts have been adjusted manually on addition.
+		_isAdjustingManually: false,
 	},
 
 	/**
@@ -97,7 +100,7 @@ export const OrderItem = Backbone.Model.extend( {
 			nonces: { edd_admin_order_get_item_amounts: nonce },
 		} = window.eddAdminOrderOverview;
 
-		const { productId, priceId, quantity, amount, subtotal } = _.clone(
+		const { productId, priceId, quantity, amount, tax, subtotal } = _.clone(
 			this.attributes
 		);
 
@@ -108,6 +111,7 @@ export const OrderItem = Backbone.Model.extend( {
 				priceId,
 				quantity,
 				amount,
+				tax,
 				subtotal,
 				country,
 				region,

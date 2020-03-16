@@ -53,6 +53,8 @@ export const FormAddOrderItem = Dialog.extend( {
 			'keyup #tax': 'onChangeTax',
 			'keyup #subtotal': 'onChangeSubtotal',
 
+			'click #set-address': 'onSetAddress',
+
 			'submit form': 'onAdd',
 		} );
 
@@ -63,7 +65,6 @@ export const FormAddOrderItem = Dialog.extend( {
 		this.model = new OrderItem( {
 			id,
 			orderId: id,
-			_isAdjustingManually: false,
 
 			state,
 		} );
@@ -100,18 +101,23 @@ export const FormAddOrderItem = Dialog.extend( {
 			subtotal = model.get( 'subtotalManual' );
 		}
 
-		const _isDuplicate = state.get( 'items' ).has( model );
-		const _isAdjustingManually = model.get( '_isAdjustingManually' );
+		const isDuplicate = state.get( 'items' ).has( model );
+		const isAdjustingManually = model.get( '_isAdjustingManually' );
+
+		const defaults = Base.prototype.prepare.apply( this, arguments );
 
 		return {
-			...Base.prototype.prepare.apply( this, arguments ),
+			...defaults,
 
 			amountManual: amount,
 			taxManual: tax,
 			subtotalManual: subtotal,
 
-			_isAdjustingManually,
-			_isDuplicate,
+			state: {
+				...defaults.state,
+				isAdjustingManually,
+				isDuplicate,
+			}
 		};
 	},
 
@@ -233,6 +239,29 @@ export const FormAddOrderItem = Dialog.extend( {
 		this.model.set( {
 			_isAdjustingManually: ! e.target.checked,
 		} );
+	},
+
+	/**
+	 * Closes dialog and opens "Order Details - Address" section.
+	 *
+	 * @since 3.0
+	 *
+	 * @param {Object} e Click event.
+	 */
+	onSetAddress( e ) {
+		e.preventDefault();
+
+		this.closeDialog();
+
+		const button = $( '[href="#edd_general_address"]' );
+
+		if ( ! button ) {
+			return;
+		}
+
+		button.trigger( 'click' );
+
+		$( '#edd_order_address_country' ).focus();
 	},
 
 	/**

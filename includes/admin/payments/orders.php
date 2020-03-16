@@ -563,20 +563,22 @@ function edd_order_details_overview( $order ) {
 		'edd-admin-orders',
 		'eddAdminOrderOverview',
 		array(
-			'items'       => $_items,
-			'adjustments' => $_adjustments,
-			'isAdding'    => true === edd_is_add_order_page(),
-			'hasQuantity' => true === edd_item_quantities_enabled()
-				? 1
-				: 0,
-			'hasTax'      => true === edd_use_taxes()
+			'items'        => $_items,
+			'adjustments'  => $_adjustments,
+			'isAdding'     => true === edd_is_add_order_page(),
+			'hasQuantity'  => true === edd_item_quantities_enabled(),
+			'hasTax'       => true === edd_use_taxes()
 				? array(
 					'rate'    => 0,
 					'country' => '',
 					'region'  => '',
 				)
 				: 0,
-			'nonces' => array(
+			'hasDiscounts' => true === edd_has_active_discounts(),
+			'order'        => array(
+				'status' => $order->status,
+			),
+			'nonces'       => array(
 				'edd_admin_order_get_item_amounts' => wp_create_nonce( 'edd_admin_order_get_item_amounts' ),
 			),
 		)
