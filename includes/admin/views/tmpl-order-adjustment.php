@@ -47,6 +47,7 @@ $view_url = edd_get_admin_url(
 	{{ data.totalCurrency }}
 </td>
 
+<input type="hidden" value="{{ data.objectId }}" name="adjustments[{{ data.id }}][object_id]" />
 <input type="hidden" value="{{ data.objectType }}" name="adjustments[{{ data.id }}][object_type]" />
 <input type="hidden" value="{{ data.type }}" name="adjustments[{{ data.id }}][type]" />
 <input type="hidden" value="{{ data.description }}" name="adjustments[{{ data.id }}][description]" />

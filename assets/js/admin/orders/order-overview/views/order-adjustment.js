@@ -70,9 +70,11 @@ export const OrderAdjustment = Base.extend( {
 		// Determine column offset -- using cart quantities requires an extra column.
 		const colspan = true === state.get( 'hasQuantity' ) ? 2 : 1;
 
-		const orderItem = state.get( 'items' ).findWhere( {
-			orderId: model.get( 'objectId' ),
-		} );
+		const orderItem = _.first( state.get( 'items' ).filter( ( item ) => {
+			return undefined !== item.get( 'adjustments' ).findWhere( {
+				objectId: item.get( 'id' ),
+			} );
+		} ) );
 
 		return {
 			...Base.prototype.prepare.apply( this, arguments ),
@@ -81,10 +83,10 @@ export const OrderAdjustment = Base.extend( {
 				colspan,
 			},
 
-			total: model.getTotal(),
-			subtotal: model.getTotal(),
+			total: model.getAmount(),
+			subtotal: model.getAmount(),
 			orderItem: orderItem ? orderItem.toJSON() : false,
-			totalCurrency: currency.format( model.getTotal() ),
+			totalCurrency: currency.format( model.getAmount() ),
 		};
 	},
 

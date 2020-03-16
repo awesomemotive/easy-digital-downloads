@@ -61,16 +61,18 @@ export const OrderItem = Base.extend( {
 	prepare() {
 		const { model } = this;
 
-		const discountTotal = model.getDiscountTotal();
+		const discountAmount = model.getDiscountAmount();
 
 		return {
 			...Base.prototype.prepare.apply( this, arguments ),
 
-			discount: discountTotal,
+			discount: discountAmount,
 			amountCurrency: currency.format( model.get( 'amount' ) ),
 			subtotalCurrency: currency.format( model.get( 'subtotal' ) ),
 			taxCurrency: currency.format( model.get( 'tax' ) ),
-			discountCurrency: currency.format( discountTotal ),
+			discountCurrency: currency.format( discountAmount ),
+
+			adjustments: model.get( 'adjustments' ).toJSON(),
 		};
 	},
 

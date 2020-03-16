@@ -57,19 +57,25 @@ jQueryReady( () => {
 	//
 	// These are added invidually, and after the fact, so State
 	// can be associated with each Model.
-	items.forEach( ( item ) =>
+	items.forEach( ( item ) => {
+		// Avoid overriding the OrderAdjustments collection if
+		// the hydration data is empty.
+		if ( 0 === item.adjustments.length ) {
+			delete item.adjustments;
+		}
+
 		state.get( 'items' ).add( {
 			state,
 			...item,
 		} )
-	);
+	} );
 
-	adjustments.forEach( ( adjustment ) =>
+	adjustments.forEach( ( adjustment ) => {
 		state.get( 'adjustments' ).add( {
 			state,
 			...adjustment,
 		} )
-	);
+	} );
 
 	// ... finally render the Overview once all data is set.
 	overview.render();

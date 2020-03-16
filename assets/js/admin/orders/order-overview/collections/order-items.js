@@ -1,8 +1,14 @@
 /* global Backbone, $, _ */
 
 /**
+ * External dependencies
+ */
+import uuid from 'uuid-random';
+
+/**
  * Internal dependencies
  */
+import { OrderAdjustmentDiscount } from './../models/order-adjustment-discount.js';
 import { OrderItem } from './../models/order-item.js';
 import { NumberFormat } from '@easy-digital-downloads/currency';
 
@@ -99,15 +105,24 @@ export const OrderItems = Backbone.Collection.extend( {
 			} );
 
 			getItemAmounts
+				// Update `OrderItem`-level Adjustments.
+				.done( ( { adjustments } ) => {
+					if ( 0 === adjustments.length ) {
+						return;
+					}
+
+					const orderAdjustments = adjustments.map( ( adjustment ) => {
+						return new OrderAdjustmentDiscount( {
+							...adjustment,
+							id: uuid(),
+							objectId: item.get( 'id' ),
+						} );
+					} );
+
+					item.get( 'adjustments' ).add( orderAdjustments );
+				} )
 				// Update individual `OrderItem`s and `OrderAdjustment`s with new amounts.
-				.done( ( response ) => item.setAmounts( response ) )
-				// Track how much of each Discount is applied to an `OrderItem`.
-				// There is not currently API support for `OrderItem`-level `OrderAdjustment`s.
-				.done( ( { _discounts } ) =>
-					item.set( {
-						_discounts,
-					} )
-				);
+				.done( ( response ) => item.setAmounts( response ) );
 
 			// Track jQuery Promise.
 			promises.push( getItemAmounts );

@@ -63,25 +63,25 @@ export const State = Backbone.Model.extend(
 		getSubtotal() {
 			let subtotal = 0;
 
-			const items = this.get( 'items' );
-			const adjustments = this.get( 'adjustments' );
+			const { models: items } = this.get( 'items' );
+			const { models: adjustments } = this.get( 'adjustments' );
 
 			// Add all item subtotals.
-			_.each( items.models, ( item ) => {
-				return ( subtotal += +item.get( 'subtotal' ) );
+			_.each( items, ( item ) => {
+				subtotal += +item.get( 'subtotal' );
 			} );
 
 			// Add or substract all adjustment subtotals.
-			_.each( adjustments.models, ( adjustment ) => {
+			_.each( adjustments, ( adjustment ) => {
 				if (
 					[ 'discount', 'credit' ].includes(
 						adjustment.get( 'type' )
 					)
 				) {
-					return ( subtotal -= +adjustment.getTotal() );
+					subtotal -= +adjustment.getAmount();
+				} else {
+					subtotal += +adjustment.getAmount();
 				}
-
-				return ( subtotal += +adjustment.getTotal() );
 			} );
 
 			return subtotal;
@@ -99,7 +99,7 @@ export const State = Backbone.Model.extend(
 			const adjustments = this.get( 'adjustments' ).getByType( 'discount' );
 
 			adjustments.forEach( ( adjustment ) => {
-				return discount += +adjustment.getTotal();
+				return discount += +adjustment.getAmount();
 			} );
 
 			return discount;

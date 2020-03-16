@@ -1424,7 +1424,7 @@ function edd_admin_order_get_item_amounts() {
 
 	// Track how much of each Discount is applied to an `OrderItem`.
 	// There is not currently API support for `OrderItem`-level `OrderAdjustment`s.
-	$_discounts = array();
+	$adjustments = array();
 
 	foreach ( $discounts as $discount_id ) {
 		$d = edd_get_discount( $discount_id );
@@ -1459,9 +1459,13 @@ function edd_admin_order_get_item_amounts() {
 		$discounted_amount = $d->get_discounted_amount( $subtotal );
 		$discount_amount   = ( $subtotal - $discounted_amount );
 
-		$_discounts[] = array(
-			'code'   => $d->code,
-			'amount' => $discount_amount,
+		$adjustments[] = array(
+			'objectType'  => 'order_item',
+			'type'        => 'discount',
+			'typeId'      => $d->id,
+			'description' => $d->code,
+			'subtotal'    => $discount_amount,
+			'total'       => $discount_amount,
 		);
 
 		$discount += $discount_amount;
@@ -1489,7 +1493,7 @@ function edd_admin_order_get_item_amounts() {
 	wp_send_json_success( array_merge(
 		$amounts,
 		array(
-			'_discounts' => $_discounts,
+			'adjustments' => $adjustments,
 		)
 	) );
 }
