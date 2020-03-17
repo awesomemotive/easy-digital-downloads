@@ -8,6 +8,7 @@ import uuid from 'uuid-random';
 /**
  * Internal dependencies
  */
+import { OrderAdjustments } from './../collections/order-adjustments.js';
 import { OrderAdjustmentDiscount } from './../models/order-adjustment-discount.js';
 import { OrderItem } from './../models/order-item.js';
 import { NumberFormat } from '@easy-digital-downloads/currency';
@@ -98,7 +99,7 @@ export const OrderItems = Backbone.Collection.extend( {
 		const promises = [];
 
 		// Find each `OrderItem`'s amounts.
-		_.each( items.models, ( item ) => {
+		items.models.forEach( ( item ) => {
 			const getItemAmounts = item.getAmounts( {
 				...defaults,
 				...args,
@@ -107,11 +108,8 @@ export const OrderItems = Backbone.Collection.extend( {
 			getItemAmounts
 				// Update `OrderItem`-level Adjustments.
 				.done( ( { adjustments } ) => {
-					if ( 0 === adjustments.length ) {
-						return;
-					}
-
-					const orderAdjustments = adjustments.map( ( adjustment ) => {
+					// Map returned Discounts to `OrderAdjustmentDiscount`.
+					const orderItemDiscounts = adjustments.map( ( adjustment ) => {
 						return new OrderAdjustmentDiscount( {
 							...adjustment,
 							id: uuid(),
@@ -119,7 +117,16 @@ export const OrderItems = Backbone.Collection.extend( {
 						} );
 					} );
 
-					item.get( 'adjustments' ).add( orderAdjustments );
+					// Gather existing `fee` and `credit` `OrderItem`-level Adjustments.
+					const orderItemAdjustments = item.get( 'adjustments' ).filter( ( adjustment ) => {
+						return [ 'fee', 'credit' ].includes( adjustment.type );
+					} );
+
+					// Reset `OrderAdjustments` collection with new data.
+					item.set( 'adjustments', new OrderAdjustments( [
+						...orderItemDiscounts,
+						...orderItemAdjustments,
+					] ) );
 				} )
 				// Update individual `OrderItem`s and `OrderAdjustment`s with new amounts.
 				.done( ( response ) => item.setAmounts( response ) );

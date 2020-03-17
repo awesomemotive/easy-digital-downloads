@@ -72,7 +72,7 @@ export const OrderAdjustments = Backbone.Collection.extend( {
 	 * @return {number}
 	 */
 	modelId( attributes ) {
-		return attributes.typeId;
+		return `${ attributes.type }-${ attributes.typeId }-${ attributes.description }`;
 	},
 
 	/**

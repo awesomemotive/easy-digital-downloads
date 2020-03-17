@@ -40,18 +40,17 @@ export const OrderAdjustments = wp.Backbone.View.extend( {
 	},
 
 	/**
-	 * Render the collection.
+	 * Renders initial view.
 	 *
 	 * @since 3.0
 	 */
 	render() {
 		const { state } = this.options;
-		const adjustments = state.get( 'adjustments' );
+		const { models: adjustments } = state.get( 'adjustments' );
 
-		// Remove existing `OrderAdjustment`s.
 		this.views.remove();
 
-		_.each( adjustments.models, ( model ) => this.add( model ) );
+		_.each( adjustments, ( adjustment ) => this.add( adjustment ) );
 	},
 
 	/**

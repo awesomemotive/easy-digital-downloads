@@ -24,6 +24,9 @@ export const OrderAdjustmentDiscount = OrderAdjustment.extend( {
 		type: 'discount',
 	},
 
+	/**
+	 * @since 3.0
+	 */
 	idAttribute: 'typeId',
 
 	/**
@@ -38,6 +41,12 @@ export const OrderAdjustmentDiscount = OrderAdjustment.extend( {
 		let amount = 0;
 
 		const state = this.get( 'state' );
+
+		// Return stored amount if viewing an existing Order.
+		if ( false === state.get( 'isAdding' ) ) {
+			return OrderAdjustment.prototype.getAmount.apply( this, arguments );
+		}
+
 		const { models: items } = state.get( 'items' );
 
 		items.forEach( ( item ) => {
