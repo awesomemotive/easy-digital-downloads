@@ -101,7 +101,7 @@ export const FormAddOrderItem = Dialog.extend( {
 			subtotal = model.get( 'subtotalManual' );
 		}
 
-		const isDuplicate = state.get( 'items' ).has( model );
+		const isDuplicate = false === state.get( 'isFetching' ) && true === state.get( 'items' ).has( model );
 		const isAdjustingManually = model.get( '_isAdjustingManually' );
 
 		const defaults = Base.prototype.prepare.apply( this, arguments );
