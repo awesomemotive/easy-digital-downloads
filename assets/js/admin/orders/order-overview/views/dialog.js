@@ -31,6 +31,9 @@ export const Dialog = Base.extend( {
 			resizable: false,
 			draggable: false,
 			autoOpen: false,
+			create: function() {
+				$( this ).css( 'maxWidth', '90vw' );
+			},
 		} );
 	},
 

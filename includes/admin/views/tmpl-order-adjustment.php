@@ -19,7 +19,7 @@ $view_url = edd_get_admin_url(
 
 <td></td>
 
-<th class="column-name" colspan="{{ data.config.colspan }}">
+<td class="column-primary" colspan="{{ data.config.colspan }}">
 	<# if ( true === data.state.isAdding ) { #>
 	<button class="button-link delete">
 		<span class="dashicons dashicons-no"></span>
@@ -41,9 +41,9 @@ $view_url = edd_get_admin_url(
 			{{ data.description }}
 		</small>
 	<# } #>
-</th>
+</td>
 
-<td class="column-right">
+<td class="column-right" data-colname="<?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?>">
 	<# if ( 'credit' === data.type ) { #>&ndash;<# } #>{{ data.totalCurrency }}
 </td>
 

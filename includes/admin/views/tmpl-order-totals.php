@@ -10,77 +10,84 @@
  */
 ?>
 
-<tr>
+<tr class="is-expanded">
 	<td></td>
-	<th colspan="{{ data.config.colspan }}"><?php esc_html_e( 'Subtotal', 'easy-digital-downloads' ); ?></th>
-	<td class="column-right">{{ data.subtotalCurrency }}</td>
+	<td colspan="{{ data.config.colspan }}" class="column-primary">
+		<?php esc_html_e( 'Subtotal', 'easy-digital-downloads' ); ?>
+	</td>
+	<td class="column-right" data-colname="<?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?>">
+		{{ data.subtotalCurrency }}
+	</td>
 </tr>
 
 <# if ( false !== data.state.hasTax ) { #>
 
-<tr>
-	<td></td>
-	<th colspan="{{ data.config.colspan }}">
-		<?php esc_html_e( 'Tax', 'easy-digital-downloads' ); ?>
-		<# if ( false !== data.state.hasTax ) { #>
-		<br />
-		<small>
-			<# if ( false !== data.state.hasTax.rate && '' !== data.state.hasTax.country ) { #>
-				{{ data.state.hasTax.country}}<# if ( '' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate.toFixed( 2 ) }}%
+	<tr class="is-expanded">
+		<td></td>
+		<td colspan="{{ data.config.colspan }}" class="column-primary">
+			<?php esc_html_e( 'Tax', 'easy-digital-downloads' ); ?>
+			<# if ( false !== data.state.hasTax ) { #>
+			<br />
+			<small>
+				<# if ( false !== data.state.hasTax.rate && '' !== data.state.hasTax.country ) { #>
+					{{ data.state.hasTax.country}}<# if ( '' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate.toFixed( 2 ) }}%
+				<# } #>
+			</small>
 			<# } #>
-		</small>
-		<# } #>
-	</th>
-	<td class="column-right">{{ data.taxCurrency }}</td>
-</tr>
+		</td>
+		<td class="column-right" data-colname="<?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?>">
+			{{ data.taxCurrency }}
+		</td>
+	</tr>
 
-<# if ( false !== data.state.hasNewTaxRate && data.state.items.length > 0 ) { #>
-<tr>
-	<td></td>
-	<td colspan="{{ data.config.colspan + 1 }}" style="padding: 0;">
-		<div
-			id="notice-tax-change"
-			class="notice notice-warning is-dismissible"
-		>
-			<p>
-				<?php
-				echo esc_html( 
-					sprintf(
-						__( 'The tax rate has been updated to %1$s. Existing automatically calculated amounts have not been updated.', 'easy-digital-downloads' ),
-						'{{ data.state.hasTax.rate.toFixed( 2 ) }}%',
-					)
-				);
-				?>
-			</p>
-			<p>
-				<button
-					class="button button-secondary button-small update-amounts"
-					style="marign-left: 0;"
-				>
-					<?php esc_html_e( 'Update Amounts', 'easy-digital-downloads' ); ?>
+	<# if ( false !== data.state.hasNewTaxRate && data.state.items.length > 0 ) { #>
+	<tr class="is-expanded">
+		<td></td>
+		<td colspan="{{ data.config.colspan + 1 }}" style="padding: 0;" class="column-primary">
+			<div
+				id="notice-tax-change"
+				class="notice notice-warning is-dismissible"
+			>
+				<p>
+					<?php
+					echo esc_html( 
+						sprintf(
+							__( 'The tax rate has been updated to %1$s. Existing automatically calculated amounts have not been updated.', 'easy-digital-downloads' ),
+							'{{ data.state.hasTax.rate.toFixed( 2 ) }}%',
+						)
+					);
+					?>
+				</p>
+				<p>
+					<button
+						class="button button-secondary button-small update-amounts"
+						style="marign-left: 0;"
+					>
+						<?php esc_html_e( 'Update Amounts', 'easy-digital-downloads' ); ?>
+					</button>
+				</p>
+
+				<button type="button" class="notice-dismiss">
+					<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'easy-digital-downloads' ); ?></span>
 				</button>
-			</p>
+			</div>
+		</td>
+	</tr>
+	<# } #>
 
-			<button type="button" class="notice-dismiss">
-				<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'easy-digital-downloads' ); ?></span>
-			</button>
-		</div>
-	</td>
-</tr>
-<# } #>
 <# } #>
 
-<tr>
+<tr class="is-expanded">
 	<td></td>
-	<th colspan="{{ data.config.colspan }}">
+	<td colspan="{{ data.config.colspan }}" class="column-primary">
 		<?php esc_html_e( 'Total', 'easy-digital-downloads' ); ?>
 
 		<# if ( data.state.hasManualAdjustment ) { #>
 			<br />
 			<small><?php esc_html_e( '&dagger; Some amounts have been manually adjusted.', 'easy-digital-downloads' ); ?></small>
 		<# } #>
-	</th>
-	<td class="column-right">
+	</td>
+	<td class="column-right" data-colname="<?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?>">
 		<span class="total">{{ data.totalCurrency }}</span>
 	</td>
 </tr>

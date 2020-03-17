@@ -643,7 +643,7 @@ function edd_order_details_overview( $order ) {
 	<table id="edd-order-overview-summary" class="widefat wp-list-table edd-order-overview-summary">
 		<thead>
 			<tr>
-				<th class="column-name"><?php echo esc_html( edd_get_label_singular() ); ?></th>
+				<th class="column-name column-primary"><?php echo esc_html( edd_get_label_singular() ); ?></th>
 				<th class="column-amount"><?php esc_html_e( 'Unit Price', 'easy-digital-downloads' ); ?></th>
 				<?php if ( true === edd_item_quantities_enabled() ) : ?>
 				<th class="column-quantity"><?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?></th>
@@ -655,7 +655,6 @@ function edd_order_details_overview( $order ) {
 
 	<div id="edd-order-overview-actions" class="edd-order-overview-actions inside">
 		<?php if ( true === edd_is_add_order_page() ) : ?>
-			<div class="edd-ml-auto"></div>
 			<button
 				id="add-adjustment"
 				class="button button-secondary"
