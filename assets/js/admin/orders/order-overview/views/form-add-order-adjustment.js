@@ -197,8 +197,11 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 			const orderItem = items.findWhere( {
 				id: model.get( 'objectId' ),
 			} );
+			console.log(model);
 
 			orderItem.get( 'adjustments' ).add( model );
+			// Adding to the Collection doesn't bubble up a change event.
+			orderItem.trigger( 'change' );
 		}
 
 		// Add to `Order` level.

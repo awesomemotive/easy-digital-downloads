@@ -44,6 +44,11 @@ export const OrderItems = wp.Backbone.View.extend( {
 		this.listenTo( items, 'remove', this.remove );
 	},
 
+	/**
+	 * Renders initial view.
+	 *
+	 * @since 3.0
+	 */
 	render() {
 		const { state } = this.options;
 		const items = state.get( 'items' );

@@ -198,7 +198,9 @@ function edd_add_manual_order( $args = array() ) {
 		// Re-index downloads.
 		$data['downloads'] = array_values( $data['downloads'] );
 
-		foreach ( $data['downloads'] as $cart_key => $download ) {
+		$downloads = array_reverse( $data['downloads'] );
+
+		foreach ( $downloads as $cart_key => $download ) {
 			$d = edd_get_download( absint( $download['id'] ) );
 
 			// Skip if download no longer exists
@@ -256,14 +258,22 @@ function edd_add_manual_order( $args = array() ) {
 
 			if ( false !== $order_item_id ) {
 				if ( isset( $download['adjustments'] ) ) {
-					foreach ( $download['adjustments'] as $adjustment ) {
+					$order_item_adjustments = array_reverse( $download['adjustments'] );
+
+					foreach ( $order_item_adjustments as $order_item_adjustment ) {
+
+						// Discounts are not tracked at the Order Item level.
+						if ( 'discount' === $order_item_adjustment['type'] ) {
+							continue;
+						}
+
 						edd_add_order_adjustment( array(
 							'object_id'   => $order_item_id,
-							'object_type' => sanitize_text_field( $adjustment['object_type'] ),
-							'type'        => sanitize_text_field( $adjustment['type'] ),
-							'description' => sanitize_text_field( $adjustment['description'] ),
-							'subtotal'    => floatval( $adjustment['subtotal'] ),
-							'total'       => floatval( $adjustment['total'] ),
+							'object_type' => sanitize_text_field( $order_item_adjustment['object_type'] ),
+							'type'        => sanitize_text_field( $order_item_adjustment['type'] ),
+							'description' => sanitize_text_field( $order_item_adjustment['description'] ),
+							'subtotal'    => floatval( $order_item_adjustment['subtotal'] ),
+							'total'       => floatval( $order_item_adjustment['total'] ),
 						) );
 					}
 				}
@@ -281,7 +291,9 @@ function edd_add_manual_order( $args = array() ) {
 
 	// Adjustments.
 	if ( isset( $data['adjustments'] ) ) {
-		foreach ( $data['adjustments'] as $adjustment ) {
+		$adjustments = array_reverse( $data['adjustments'] );
+
+		foreach ( $adjustments as $adjustment ) {
 			edd_add_order_adjustment( array(
 				'object_id'   => $order_id,
 				'object_type' => 'order',
@@ -295,7 +307,9 @@ function edd_add_manual_order( $args = array() ) {
 
 	// Discounts.
 	if ( isset( $data['discounts'] ) ) {
-		foreach ( $data['discounts'] as $discount ) {
+		$discounts = array_reverse( $data['discounts'] );
+
+		foreach ( $discounts as $discount ) {
 			$d = edd_get_discount( absint( $discount['type_id'] ) );
 
 			if ( empty( $d ) ) {

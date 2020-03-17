@@ -44,13 +44,8 @@ export const OrderAdjustment = Base.extend( {
 				);
 		}
 
-		const { state } = this.options;
-
 		// Listen for events.
-		//
-		// `change:_discounts` is triggered at Model-level and bubbled to
-		// the Collection by Backbone.
-		this.listenTo( state.get( 'items' ), 'change:_discounts', this.render );
+		this.listenTo( this.model, 'change', this.render );
 	},
 
 	/**
@@ -70,11 +65,15 @@ export const OrderAdjustment = Base.extend( {
 		// Determine column offset -- using cart quantities requires an extra column.
 		const colspan = true === state.get( 'hasQuantity' ) ? 2 : 1;
 
-		const orderItem = _.first( state.get( 'items' ).filter( ( item ) => {
-			return undefined !== item.get( 'adjustments' ).findWhere( {
-				objectId: item.get( 'id' ),
-			} );
-		} ) );
+		let orderItem;
+
+		if ( 'order_item' === model.get( 'object_type' ) ) {
+			orderItem = _.first( state.get( 'items' ).filter( ( item ) => {
+				return undefined !== item.get( 'adjustments' ).findWhere( {
+					objectId: item.get( 'id' ),
+				} );
+			} ) );
+		}
 
 		return {
 			...Base.prototype.prepare.apply( this, arguments ),
