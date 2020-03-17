@@ -509,17 +509,39 @@ function edd_order_details_overview( $order ) {
 			'number'   => 999,
 		) );
 
-		$adjustments = edd_get_order_adjustments( array(
-			'object_id'   => $order->id,
-			'number'      => 999,
-			'type'        => array(
-				'discount',
-				'credit',
-				'fee',
-			),
-		) );
-
 		foreach ( $items as $item ) {
+			$item_adjustments = array();
+
+			$adjustments = edd_get_order_adjustments( array(
+				'object_id'   => $item->id,
+				'number'      => 999,
+				'object_type' => 'order_item',
+				'type'        => array(
+					'discount',
+					'credit',
+					'fee',
+				),
+			) );
+
+			foreach ( $adjustments as $adjustment ) {
+				// @todo edd_get_order_adjustment_to_json()?
+				$item_adjustments[] = array(
+					'id'           => esc_html( $adjustment->id ),
+					'objectId'     => esc_html( $adjustment->object_id ),
+					'objectType'   => esc_html( $adjustment->object_type ),
+					'typeId'       => esc_html( $adjustment->type_id ),
+					'type'         => esc_html( $adjustment->type ),
+					'description'  => esc_html( $adjustment->description ),
+					'subtotal'     => esc_html( $adjustment->subtotal ),
+					'tax'          => esc_html( $adjustment->tax ),
+					'total'        => esc_html( $adjustment->total ),
+					'dateCreated'  => esc_html( $adjustment->date_created ),
+					'dateModified' => esc_html( $adjustment->date_modified ),
+					'uuid'         => esc_html( $adjustment->uuid ),
+				);
+			}
+
+			// @todo edd_get_order_item_to_json()?
 			$_items[] = array(
 				'id'           => esc_html( $item->id ),
 				'orderId'      => esc_html( $item->order_id ),
@@ -538,10 +560,24 @@ function edd_order_details_overview( $order ) {
 				'dateCreated'  => esc_html( $item->date_created ),
 				'dateModified' => esc_html( $item->date_modified ),
 				'uuid'         => esc_html( $item->uuid ),
+
+				'adjustments'  => $item_adjustments,
 			);
 		}
 
+		$adjustments = edd_get_order_adjustments( array(
+			'object_id'   => $order->id,
+			'number'      => 999,
+			'object_type' => 'order',
+			'type'        => array(
+				'discount',
+				'credit',
+				'fee',
+			),
+		) );
+
 		foreach ( $adjustments as $adjustment ) {
+			// @todo edd_get_order_adjustment_to_json()?
 			$_adjustments[] = array(
 				'id'           => esc_html( $adjustment->id ),
 				'objectId'     => esc_html( $adjustment->object_id ),

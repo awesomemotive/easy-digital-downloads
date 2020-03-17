@@ -198,7 +198,9 @@ function edd_add_manual_order( $args = array() ) {
 		// Re-index downloads.
 		$data['downloads'] = array_values( $data['downloads'] );
 
-		foreach ( $data['downloads'] as $cart_key => $download ) {
+		$downloads = array_reverse( $data['downloads'] );
+
+		foreach ( $downloads as $cart_key => $download ) {
 			$d = edd_get_download( absint( $download['id'] ) );
 
 			// Skip if download no longer exists
@@ -238,7 +240,7 @@ function edd_add_manual_order( $args = array() ) {
 				: 0.00;
 
 			// Add to edd_order_items table.
-			edd_add_order_item( array(
+			$order_item_id = edd_add_order_item( array(
 				'order_id'     => $order_id,
 				'product_id'   => absint( $download['id'] ),
 				'product_name' => edd_get_download_name( $download['id'], absint( $price_id ) ),
@@ -254,9 +256,32 @@ function edd_add_manual_order( $args = array() ) {
 				'total'        => $total,
 			) );
 
-			// Increase the earnings for this download.
-			edd_increase_earnings( absint( $download['id'] ), $total );
-			edd_increase_purchase_count( absint( $download['id'] ), $quantity );
+			if ( false !== $order_item_id ) {
+				if ( isset( $download['adjustments'] ) ) {
+					$order_item_adjustments = array_reverse( $download['adjustments'] );
+
+					foreach ( $order_item_adjustments as $order_item_adjustment ) {
+
+						// Discounts are not tracked at the Order Item level.
+						if ( 'discount' === $order_item_adjustment['type'] ) {
+							continue;
+						}
+
+						edd_add_order_adjustment( array(
+							'object_id'   => $order_item_id,
+							'object_type' => sanitize_text_field( $order_item_adjustment['object_type'] ),
+							'type'        => sanitize_text_field( $order_item_adjustment['type'] ),
+							'description' => sanitize_text_field( $order_item_adjustment['description'] ),
+							'subtotal'    => floatval( $order_item_adjustment['subtotal'] ),
+							'total'       => floatval( $order_item_adjustment['total'] ),
+						) );
+					}
+				}
+
+				// Increase the earnings for this download.
+				edd_increase_earnings( absint( $download['id'] ), $total );
+				edd_increase_purchase_count( absint( $download['id'] ), $quantity );
+			}
 		}
 	}
 
@@ -266,10 +291,12 @@ function edd_add_manual_order( $args = array() ) {
 
 	// Adjustments.
 	if ( isset( $data['adjustments'] ) ) {
-		foreach ( $data['adjustments'] as $adjustment ) {
+		$adjustments = array_reverse( $data['adjustments'] );
+
+		foreach ( $adjustments as $adjustment ) {
 			edd_add_order_adjustment( array(
 				'object_id'   => $order_id,
-				'object_type' => sanitize_text_field( $adjustment['object_type'] ),
+				'object_type' => 'order',
 				'type'        => sanitize_text_field( $adjustment['type'] ),
 				'description' => sanitize_text_field( $adjustment['description'] ),
 				'subtotal'    => floatval( $adjustment['subtotal'] ),
@@ -280,7 +307,9 @@ function edd_add_manual_order( $args = array() ) {
 
 	// Discounts.
 	if ( isset( $data['discounts'] ) ) {
-		foreach ( $data['discounts'] as $discount ) {
+		$discounts = array_reverse( $data['discounts'] );
+
+		foreach ( $discounts as $discount ) {
 			$d = edd_get_discount( absint( $discount['type_id'] ) );
 
 			if ( empty( $d ) ) {

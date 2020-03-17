@@ -1,8 +1,15 @@
 /* global Backbone, $, _ */
 
 /**
+ * External dependencies
+ */
+import uuid from 'uuid-random';
+
+/**
  * Internal dependencies
  */
+import { OrderAdjustments } from './../collections/order-adjustments.js';
+import { OrderAdjustmentDiscount } from './../models/order-adjustment-discount.js';
 import { OrderItem } from './../models/order-item.js';
 import { NumberFormat } from '@easy-digital-downloads/currency';
 
@@ -92,22 +99,37 @@ export const OrderItems = Backbone.Collection.extend( {
 		const promises = [];
 
 		// Find each `OrderItem`'s amounts.
-		_.each( items.models, ( item ) => {
+		items.models.forEach( ( item ) => {
 			const getItemAmounts = item.getAmounts( {
 				...defaults,
 				...args,
 			} );
 
 			getItemAmounts
+				// Update `OrderItem`-level Adjustments.
+				.done( ( { adjustments } ) => {
+					// Map returned Discounts to `OrderAdjustmentDiscount`.
+					const orderItemDiscounts = adjustments.map( ( adjustment ) => {
+						return new OrderAdjustmentDiscount( {
+							...adjustment,
+							id: uuid(),
+							objectId: item.get( 'id' ),
+						} );
+					} );
+
+					// Gather existing `fee` and `credit` `OrderItem`-level Adjustments.
+					const orderItemAdjustments = item.get( 'adjustments' ).filter( ( adjustment ) => {
+						return [ 'fee', 'credit' ].includes( adjustment.type );
+					} );
+
+					// Reset `OrderAdjustments` collection with new data.
+					item.set( 'adjustments', new OrderAdjustments( [
+						...orderItemDiscounts,
+						...orderItemAdjustments,
+					] ) );
+				} )
 				// Update individual `OrderItem`s and `OrderAdjustment`s with new amounts.
-				.done( ( response ) => item.setAmounts( response ) )
-				// Track how much of each Discount is applied to an `OrderItem`.
-				// There is not currently API support for `OrderItem`-level `OrderAdjustment`s.
-				.done( ( { _discounts } ) =>
-					item.set( {
-						_discounts,
-					} )
-				);
+				.done( ( response ) => item.setAmounts( response ) );
 
 			// Track jQuery Promise.
 			promises.push( getItemAmounts );

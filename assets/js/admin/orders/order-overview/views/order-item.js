@@ -61,13 +61,12 @@ export const OrderItem = Base.extend( {
 	prepare() {
 		const { model } = this;
 
-		const discountTotal = model.getDiscountTotal();
-		const isAdjustingManually = model.get( '_isAdjustingManually' );
+		const discountAmount = model.getDiscountAmount();
 
 		return {
 			...Base.prototype.prepare.apply( this, arguments ),
 
-			discount: discountTotal,
+			discount: discountAmount,
 			amountCurrency: currency.format( model.get( 'amount' ) ),
 			subtotalCurrency: currency.format( model.get( 'subtotal' ) ),
 			taxCurrency: currency.format( model.get( 'tax' ) ),
@@ -76,6 +75,8 @@ export const OrderItem = Base.extend( {
 			config: {
 				isAdjustingManually,
 			}
+
+			adjustments: model.get( 'adjustments' ).toJSON(),
 		};
 	},
 

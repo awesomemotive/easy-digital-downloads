@@ -62,6 +62,20 @@ export const OrderAdjustments = Backbone.Collection.extend( {
 	},
 
 	/**
+	 * Defines the model's attribute that defines it's ID.
+	 *
+	 * Uses the `OrderAdjustment`'s Type ID.
+	 *
+	 * @since 3.0
+	 *
+	 * @param {Object} attributes Model attributes.
+	 * @return {number}
+	 */
+	modelId( attributes ) {
+		return `${ attributes.type }-${ attributes.typeId }-${ attributes.description }`;
+	},
+
+	/**
 	 * Determines if `OrderAdjustments` contains a specific `OrderAdjustment`.
 	 *
 	 * @since 3.0
