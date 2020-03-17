@@ -557,12 +557,22 @@ table.edd-order-overview-summary {
 	table-layout: fixed;
 }
 
-.edd-order-overview .column-right {
-	text-align: left;
+@media screen and (min-width: 782px) {
+
+	.edd-order-overview .column-right {
+		text-align: left;
+	}
 }
 
 .edd-ml-auto {
 	margin-right: auto !important;
+}
+
+@media screen and (min-width: 782px) {
+
+	.edd-ml-lg-auto {
+		margin-right: auto !important;
+	}
 }
 
 .edd-ml-auto + .edd-ml-auto {
@@ -574,13 +584,28 @@ table.edd-order-overview-summary {
 	background-color: #f9f9f9;
 }
 
-.edd-order-overview-summary__items tr:last-child th,
-.edd-order-overview-summary__items tr:last-child td {
-	border-bottom: 1px solid #e5e5e5;
+@media screen and (min-width: 782px) {
+
+	.edd-order-overview-summary__items tr:last-child th,
+	.edd-order-overview-summary__items tr:last-child td {
+		border-bottom: 1px solid #e5e5e5;
+	}
 }
 
 .edd-order-overview-summary th.column-name {
 	width: 42%;
+}
+
+@media screen and (max-width: 782px) {
+
+	.edd-order-overview-summary .row-actions > *,
+	.edd-order-overview-summary__items-name .row-actions {
+		display: block !important;
+	}
+
+	.edd-order-overview-summary .row-actions > *:not(:first-child):before {
+		display: none;
+	}
 }
 
 .edd-order-overview-summary th.column-quantity,
@@ -617,29 +642,35 @@ table.edd-order-overview-summary {
 }
 
 /** Adjustments */
-.edd-order-overview-summary__adjustments th {
+.edd-order-overview-summary__adjustments .column-primary {
 	font-weight: 600;
 }
 
-.edd-order-overview-summary__adjustments th small {
+.edd-order-overview-summary__adjustments td small {
 	font-weight: normal;
 }
 
 /** Totals */
-.edd-order-overview-summary__totals th {
+.edd-order-overview-summary__totals .column-primary {
 	font-weight: 600;
 }
 
-.edd-order-overview-summary__totals th small {
+.edd-order-overview-summary__totals td small {
 	font-weight: normal;
 }
 
 .edd-order-overview-summary__totals .total {
 	color: #017d5c;
-	font-size: 150%;
-	padding-top: 5px;
-	padding-bottom: 5px;
 	display: inline-block;
+}
+
+@media screen and (min-width: 782px) {
+
+	.edd-order-overview-summary__totals .total {
+		font-size: 150%;
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
 }
 
 .edd-order-overview-summary__totals tr:last-child th,
@@ -673,16 +704,40 @@ table.edd-order-overview-summary {
 	margin-top: 0;
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
+	flex-wrap: wrap;
 }
 
 .edd-order-overview-actions .button {
-	margin-right: 10px;
+	width: 100%;
+	margin-bottom: 12px;
+}
+
+.edd-order-overview-actions .button:last-of-type {
+	margin-bottom: 0;
+}
+
+@media screen and (min-width: 782px) {
+	.edd-order-overview-actions .button {
+		width: auto;
+		margin-right: 12px;
+		margin-bottom: 0;
+	}
+
+	.edd-order-overview-actions .button:first-of-type {
+		margin-right: auto;
+	}
 }
 
 .edd-order-overview-actions__locked {
 	font-style: italic;
 	opacity: 0.80;
+}
+
+@media screen and (max-width: 782px) {
+
+	.edd-order-overview-actions__locked {
+		margin-bottom: 12px;
+	}
 }
 
 /** Dialog */
