@@ -25,6 +25,11 @@ export const OrderAdjustment = Base.extend( {
 	/**
 	 * @since 3.0
 	 */
+	className: 'is-expanded',
+
+	/**
+	 * @since 3.0
+	 */
 	events: {
 		'click .delete': 'onDelete',
 	},

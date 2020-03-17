@@ -17,7 +17,7 @@ $view_url = add_query_arg(
 );
 ?>
 
-<td class="has-row-actions column-name">
+<td class="has-row-actions column-name column-primary">
 	<# if ( true === data.state.isAdding ) { #>
 	<button class="button-link delete">
 		<span class="dashicons dashicons-no"></span>
@@ -55,23 +55,26 @@ $view_url = add_query_arg(
 				</button>
 			</span>
 			<# } #>
-			&nbsp;
 		</div>
 	</div>
+
+	<button type="button" class="toggle-row">
+		<span class="screen-reader-text">Show more details</span>
+	</button>
 </td>
 
-<td>
+<td data-colname="<?php esc_html_e( 'Unit Price', 'easy-digital-downloads' ); ?>">
 	{{ data.amountCurrency }}
 	<# if ( true === data.config.isAdjustingManually ) { #>&dagger;<# } #>
 </td>
 
 <# if ( true === data.state.hasQuantity ) { #>
-<td>
+<td data-colname="<?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?>">
 	{{ data.quantity }}
 </td>
 <# } #>
 
-<td class="column-right">
+<td class="column-right" data-colname="<?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?>">
 	{{ data.subtotalCurrency }}
 	<# if ( true === data.config.isAdjustingManually ) { #>&dagger;<# } #>
 </td>
