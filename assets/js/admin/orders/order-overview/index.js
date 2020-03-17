@@ -86,8 +86,6 @@ jQueryReady( () => {
 	// ... finally render the Overview once all data is set.
 	overview.render();
 
-	window.state = state;
-
 	/**
 	 * Adjusts Overview tax configuration when the Customer's address changes.
 	 *
