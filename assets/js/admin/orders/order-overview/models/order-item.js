@@ -1,6 +1,11 @@
 /* global Backbone, _, $ */
 
 /**
+ * Internal dependencies
+ */
+import { OrderAdjustments } from './../collections/order-adjustments.js';
+
+/**
  * OrderItem
  *
  * @since 3.0
@@ -38,44 +43,45 @@ export const OrderItem = Backbone.Model.extend( {
 		taxManual: 0,
 		subtotalManual: 0,
 
-		// Track how much of each Discount is applied to an `OrderItem`.
-		// There is not currently API support for `OrderItem`-level `OrderAdjustment`s.
-		_discounts: [],
-
 		// Track if the amounts have been adjusted manually on addition.
 		_isAdjustingManually: false,
+
+		// Track `OrderItem`-level adjustments.
+		//
+		// The handling of Adjustments in the API is currently somewhat
+		// fragmented with certain extensions creating Adjustments at the
+		// `Order` level, some at a duplicate `OrderItem` level, and some both.
+		adjustments: new OrderAdjustments(),
 	},
 
 	/**
-	 * Returns the total Discount amount.
+	 * Returns the Discount amount.
 	 *
-	 * @todo Clear up how/when a Discount amount is dynmically calculated
-	 * vs. using the saved value.
+	 * If an Order is being added the amount is calculated based
+	 * on the total of `OrderItem`-level Adjustments that are
+	 * currently applied.
 	 *
-	 * It could use `state.get( 'isAdding' )`, but that's not great either.
+	 * If an Order has already been added use the amount stored
+	 * directly in the database.
 	 *
 	 * @since 3.0
 	 *
-	 * @return {number}
+	 * @return {number} Discount amount.
 	 */
-	getDiscountTotal() {
-		const _discounts = this.get( '_discounts' );
+	getDiscountAmount() {
+		let amount = 0;
 
-		// If there are no internally tracked Discounts use
-		// the initial value.
-		//
-		// This ensues a value is available when viewing an existing Order.
-		if ( 0 === _discounts.length ) {
+		const discounts = this.get( 'adjustments' ).getByType( 'discount' );
+
+		if ( 0 === discounts.length ) {
 			return this.get( 'discount' );
 		}
 
-		return _.reduce(
-			_discounts,
-			( total, _discount ) => {
-				return total + _discount.amount;
-			},
-			0
-		);
+		discounts.forEach( ( discount ) => {
+			amount += +discount.get( 'subtotal' );
+		} );
+
+		return amount;
 	},
 
 	/**

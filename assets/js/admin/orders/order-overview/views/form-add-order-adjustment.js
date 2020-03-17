@@ -58,6 +58,8 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 		// Create a model `OrderAdjustment` to be added.
 		this.model = new OrderAdjustment( {
 			id: uuid(),
+			objectId: uuid(),
+			typeId: uuid(),
 			objectType: 'order',
 			type: 'fee',
 			amountManual: '',
@@ -187,6 +189,23 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 		const { model, options } = this;
 		const { state } = options;
 
-		state.get( 'adjustments' ).add( model );
+		const adjustments = state.get( 'adjustments' );
+		const items = state.get( 'items' );
+
+		// Add at `OrderItem` level if necessary.
+		if ( 'order_item' === model.get( 'objectType' ) ) {
+			const orderItem = items.findWhere( {
+				id: model.get( 'objectId' ),
+			} );
+			console.log(model);
+
+			orderItem.get( 'adjustments' ).add( model );
+			// Adding to the Collection doesn't bubble up a change event.
+			orderItem.trigger( 'change' );
+		}
+
+		// Add to `Order` level.
+		model.set( 'objectType', 'order' );
+		adjustments.add( model );
 	},
 } );

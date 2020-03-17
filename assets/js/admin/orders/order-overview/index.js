@@ -6,6 +6,7 @@
 import { jQueryReady } from 'utils/jquery.js';
 import { Overview } from './views/overview.js';
 import { OrderItems } from './collections/order-items.js';
+import { OrderItem } from './models/order-item.js';
 import { OrderAdjustments } from './collections/order-adjustments.js';
 import { State } from './models/state.js';
 
@@ -58,25 +59,34 @@ jQueryReady( () => {
 	} );
 
 	// Hydrate collections.
-	//
-	// These are added invidually, and after the fact, so State
-	// can be associated with each Model.
-	items.forEach( ( item ) =>
-		state.get( 'items' ).add( {
-			state,
-			...item,
-		} )
-	);
 
-	adjustments.forEach( ( adjustment ) =>
+	// Hydrate `OrderItem`s.
+	//
+	// Models are created manually before being added to the collection to
+	// ensure attributes maintain schema with deep model attributes.
+	items.forEach( ( item ) => {
+		const orderItemAdjustments = new OrderAdjustments( item.adjustments );
+		const orderItem = new OrderItem( {
+			...item,
+			adjustments: orderItemAdjustments,
+			state,
+		} );
+
+		state.get( 'items' ).add( orderItem );
+	} );
+
+	// Hyrdate `Order`-level `Adjustments`.
+	adjustments.forEach( ( adjustment ) => {
 		state.get( 'adjustments' ).add( {
 			state,
 			...adjustment,
 		} )
-	);
+	} );
 
 	// ... finally render the Overview once all data is set.
 	overview.render();
+
+	window.state = state;
 
 	/**
 	 * Adjusts Overview tax configuration when the Customer's address changes.
