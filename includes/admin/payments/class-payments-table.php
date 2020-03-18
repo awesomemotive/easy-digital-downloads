@@ -712,21 +712,21 @@ class EDD_Payment_History_Table extends List_Table {
 	}
 
 	/**
-	 * Retrieve the view types
+	 * Retrieves the Payments table views.
 	 *
 	 * @since 1.4
 	 *
-	 * @return array $views All the views available
+	 * @return array $views Available views.
 	 */
 	public function get_views() {
 		$views = parent::get_views();
 
 		/**
-		 * Filters the Payment History's view types.
+		 * Filters the Payment table's views.
 		 *
 		 * @since 1.4
 		 *
-		 * @param array $views Payment History view types.
+		 * @param array $views Payment table's views.
 		 */
 		$views = apply_filters( 'edd_payments_table_views', $views );
 
