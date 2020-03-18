@@ -182,9 +182,10 @@ function edd_register_overview_report( $reports ) {
 	try {
 
 		// Variables to hold date filter values.
-		$options = Reports\get_dates_filter_options();
-		$filter  = Reports\get_filter_value( 'dates' );
-		$label   = $options[ $filter['range'] ];
+		$options       = Reports\get_dates_filter_options();
+		$dates         = Reports\get_filter_value( 'dates' );
+		$exclude_taxes = Reports\get_taxes_excluded_filter();
+		$label         = $options[ $dates['range'] ];
 
 		$reports->add_report( 'overview', array(
 			'label'     => __( 'Overview', 'easy-digital-downloads' ),
@@ -215,10 +216,11 @@ function edd_register_overview_report( $reports ) {
 			'label' => __( 'Sales / Earnings', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () use ( $dates, $exclude_taxes ) {
 						$stats = new EDD\Stats( array(
-							'range'  => $filter['range'],
-							'output' => 'formatted',
+							'range'         => $dates['range'],
+							'exclude_taxes' => $exclude_taxes,
+							'output'        => 'formatted',
 						) );
 
 						return $stats->get_order_count() . ' / ' . $stats->get_order_earnings();
@@ -235,9 +237,10 @@ function edd_register_overview_report( $reports ) {
 			'label' => __( 'Sales / Earnings', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () {
+					'data_callback' => function () use ( $exclude_taxes ) {
 						$stats = new EDD\Stats( array(
-							'output' => 'formatted',
+							'output'        => 'formatted',
+							'exclude_taxes' => $exclude_taxes,
 						) );
 
 						return $stats->get_order_count() . ' / ' . $stats->get_order_earnings();
@@ -254,11 +257,12 @@ function edd_register_overview_report( $reports ) {
 			'label' => __( 'Earnings', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () use ( $dates, $exclude_taxes ) {
 						$stats = new EDD\Stats();
 						return apply_filters( 'edd_reports_overview_earnings', $stats->get_order_earnings( array(
-							'range'    => $filter['range'],
-							'relative' => true,
+							'range'         => $dates['range'],
+							'exclude_taxes' => $exclude_taxes,
+							'relative'      => true,
 						) ) );
 					},
 					'display_args'  => array(
@@ -273,10 +277,10 @@ function edd_register_overview_report( $reports ) {
 			'label' => __( 'Sales', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () use ( $dates ) {
 						$stats = new EDD\Stats();
 						return apply_filters( 'edd_reports_overview_sales', $stats->get_order_count( array(
-							'range'    => $filter['range'],
+							'range'    => $dates['range'],
 							'relative' => true,
 						) ) );
 					},
@@ -292,10 +296,10 @@ function edd_register_overview_report( $reports ) {
 			'label' => __( 'Refunds', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () use ( $dates ) {
 						$stats = new EDD\Stats();
 						return apply_filters( 'edd_reports_overview_refunds', $stats->get_order_refund_count( array(
-							'range' => $filter['range'],
+							'range' => $dates['range'],
 							'relative' => true,
 						) ) );
 					},
@@ -311,11 +315,11 @@ function edd_register_overview_report( $reports ) {
 			'label' => __( 'Average Revenue per Customer', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () use ( $dates ) {
 						$stats = new EDD\Stats();
 						return apply_filters( 'edd_reports_overview_average_customer_revenue', $stats->get_customer_lifetime_value( array(
 							'function' => 'AVG',
-							'range'    => $filter['range'],
+							'range'    => $dates['range'],
 							'output'   => 'formatted',
 							'relative' => true,
 						) ) );
@@ -332,13 +336,14 @@ function edd_register_overview_report( $reports ) {
 			'label' => __( 'Average Order Value', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () use ( $dates, $exclude_taxes ) {
 						$stats = new EDD\Stats();
 						return apply_filters( 'edd_reports_overview_average_order_value', $stats->get_order_earnings( array(
-							'function' => 'AVG',
-							'output'   => 'formatted',
-							'relative' => true,
-							'range'    => $filter['range'],
+							'function'      => 'AVG',
+							'output'        => 'formatted',
+							'relative'      => true,
+							'range'         => $dates['range'],
+							'exclude_taxes' => $exclude_taxes,
 						) ) );
 					},
 					'display_args'  => array(
@@ -353,10 +358,10 @@ function edd_register_overview_report( $reports ) {
 			'label' => __( 'Customer Growth', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () use ( $dates ) {
 						$stats = new EDD\Stats();
 						return apply_filters( 'edd_reports_overview_new_customers', $stats->get_customer_count( array(
-							'range'    => $filter['range'],
+							'range'    => $dates['range'],
 							'relative' => true,
 						) ) );
 					},
@@ -372,10 +377,10 @@ function edd_register_overview_report( $reports ) {
 			'label' => __( 'File Downloads', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () use ( $dates ) {
 						$stats = new EDD\Stats();
 						return apply_filters( 'edd_reports_overview_new_customers', $stats->get_file_download_count( array(
-							'range'    => $filter['range'],
+							'range'    => $dates['range'],
 							'relative' => true,
 						) ) );
 					},
@@ -391,10 +396,10 @@ function edd_register_overview_report( $reports ) {
 			'label' => __( 'Taxes', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () use ( $dates ) {
 						$stats = new EDD\Stats();
 						return apply_filters( 'edd_reports_overview_taxes', $stats->get_tax( array(
-							'range'    => $filter['range'],
+							'range'    => $dates['range'],
 							'relative' => true,
 						) ) );
 					},
@@ -410,10 +415,10 @@ function edd_register_overview_report( $reports ) {
 			'label' => __( 'Busiest Day', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () use ( $dates ) {
 						$stats = new EDD\Stats();
 						return apply_filters( 'edd_reports_overview_busiest_day', $stats->get_busiest_day( array(
-							'range' => $filter['range'],
+							'range' => $dates['range'],
 						) ) );
 					},
 					'display_args'  => array(
@@ -477,9 +482,10 @@ function edd_register_downloads_report( $reports ) {
 	try {
 
 		// Variables to hold date filter values.
-		$options = Reports\get_dates_filter_options();
-		$filter  = Reports\get_filter_value( 'dates' );
-		$label   = $options[ $filter['range'] ];
+		$options       = Reports\get_dates_filter_options();
+		$dates         = Reports\get_filter_value( 'dates' );
+		$exclude_taxes = Reports\get_taxes_excluded_filter();
+		$label         = $options[ $dates['range'] ];
 
 		$download_data = Reports\get_filter_value( 'products' );
 		$download_data = ! empty( $download_data ) && 'all' !== Reports\get_filter_value( 'products' )
@@ -516,24 +522,24 @@ function edd_register_downloads_report( $reports ) {
 				'charts' => array(
 					'download_sales_by_variations',
 					'download_earnings_by_variations',
-                    'download_sales_earnings_chart'
+					'download_sales_earnings_chart'
 				),
 				'tables' => array(
 					'top_selling_downloads',
 					'earnings_by_taxonomy',
 				),
 			),
-            'filters'   => array( 'products', 'countries', 'regions' )
+			'filters'  => array( 'products', 'countries', 'regions', 'taxes' )
 		) );
 
 		$reports->register_endpoint( 'most_valuable_download', array(
 			'label' => sprintf( __( 'Most Valuable %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () use ( $dates ) {
 						$stats = new EDD\Stats();
 						$d = $stats->get_most_valuable_order_items( array(
-							'range' => $filter['range'],
+							'range' => $dates['range'],
 						) );
 
 						if ( ! empty( $d ) && isset( $d[0] ) ) {
@@ -566,11 +572,12 @@ function edd_register_downloads_report( $reports ) {
 			'label' => __( 'Average Sales / Earnings', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () use ( $dates, $exclude_taxes ) {
 						$stats = new EDD\Stats( array(
-							'function' => 'AVG',
-							'range'    => $filter['range'],
-							'output'   => 'formatted',
+							'function'      => 'AVG',
+							'range'         => $dates['range'],
+							'exclude_taxes' => $exclude_taxes,
+							'output'        => 'formatted',
 						) );
 
 						return $stats->get_order_item_count() . ' / ' . $stats->get_order_item_earnings();
@@ -927,9 +934,10 @@ function edd_register_refunds_report( $reports ) {
 	try {
 
 		// Variables to hold date filter values.
-		$options = Reports\get_dates_filter_options();
-		$filter  = Reports\get_filter_value( 'dates' );
-		$label   = $options[ $filter['range'] ];
+		$options       = Reports\get_dates_filter_options();
+		$dates         = Reports\get_filter_value( 'dates' );
+		$exclude_taxes = Reports\get_taxes_excluded_filter();
+		$label         = $options[ $dates['range'] ];
 
 		$reports->add_report( 'refunds', array(
 			'label'     => __( 'Refunds', 'easy-digital-downloads' ),
@@ -949,17 +957,17 @@ function edd_register_refunds_report( $reports ) {
 					'refunds_chart',
 				),
 			),
-			'filters'   => array( 'products' ),
+			'filters'   => array( 'products', 'taxes' ),
 		) );
 
 		$reports->register_endpoint( 'refund_count', array(
 			'label' => __( 'Number of Refunds', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () use ( $dates ) {
 						$stats  = new EDD\Stats();
 						$number = $stats->get_order_refund_count( array(
-							'range' => $filter['range'],
+							'range' => $dates['range'],
 						) );
 						return apply_filters( 'edd_reports_refunds_refund_count', esc_html( $number ) );
 					},
@@ -975,10 +983,10 @@ function edd_register_refunds_report( $reports ) {
 			'label' => __( 'Number of Fully Refunded Orders', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () use ( $dates ) {
 						$stats  = new EDD\Stats();
 						$number = $stats->get_order_refund_count( array(
-							'range'  => $filter['range'],
+							'range'  => $dates['range'],
 							'status' => array( 'complete' ),
 						) );
 						return apply_filters( 'edd_reports_refunds_fully_refunded_order_count', esc_html( $number ) );
@@ -995,10 +1003,10 @@ function edd_register_refunds_report( $reports ) {
 			'label' => __( 'Number of Fully Refunded Items', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () use ( $dates ) {
 						$stats  = new EDD\Stats();
 						$number = $stats->get_order_item_refund_count( array(
-							'range'  => $filter['range'],
+							'range'  => $dates['range'],
 							'status' => array( 'refunded' ),
 						) );
 						return apply_filters( 'edd_reports_refunds_fully_refunded_order_item_count', esc_html( $number ) );
@@ -1015,11 +1023,12 @@ function edd_register_refunds_report( $reports ) {
 			'label' => __( 'Total Refund Amount', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () use ( $dates, $exclude_taxes ) {
 						$stats  = new EDD\Stats();
 						$amount = $stats->get_order_refund_amount( array(
-							'range'  => $filter['range'],
-							'output' => 'formatted',
+							'range'         => $dates['range'],
+							'exclude_taxes' => $exclude_taxes,
+							'output'        => 'formatted',
 						) );
 
 						return apply_filters( 'edd_reports_refunds_refund_amount', esc_html( $amount ) );
@@ -1036,12 +1045,13 @@ function edd_register_refunds_report( $reports ) {
 			'label' => __( 'Average Refund Amount', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () use ( $dates, $exclude_taxes ) {
 						$stats = new EDD\Stats();
 						return apply_filters( 'edd_reports_refunds_average_refund_amount', $stats->get_order_refund_amount( array(
-							'function' => 'AVG',
-							'range'    => $filter['range'],
-							'output'   => 'formatted',
+							'function'      => 'AVG',
+							'range'         => $dates['range'],
+							'exclude_taxes' => $exclude_taxes,
+							'output'        => 'formatted',
 						) ) );
 					},
 					'display_args'  => array(
@@ -1056,10 +1066,10 @@ function edd_register_refunds_report( $reports ) {
 			'label' => __( 'Average Time to Refund', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () use ( $dates ) {
 						$stats = new EDD\Stats();
 						return $stats->get_average_refund_time( array(
-							'range' => $filter['range'],
+							'range' => $dates['range'],
 						) );
 					},
 					'display_args'  => array(
@@ -1074,10 +1084,10 @@ function edd_register_refunds_report( $reports ) {
 			'label' => __( 'Refund Rate', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () use ( $dates ) {
 						$stats = new EDD\Stats();
 						return apply_filters( 'edd_reports_refunds_refund_rate', $stats->get_refund_rate( array(
-							'range'  => $filter['range'],
+							'range'  => $dates['range'],
 							'output' => 'formatted',
 						) ) );
 					},
@@ -1142,15 +1152,16 @@ function edd_register_payment_gateways_report( $reports ) {
 	try {
 
 		// Variables to hold date filter values.
-		$options = Reports\get_dates_filter_options();
-		$filter  = Reports\get_filter_value( 'dates' );
-		$gateway = Reports\get_filter_value( 'gateways' );
+		$options       = Reports\get_dates_filter_options();
+		$dates         = Reports\get_filter_value( 'dates' );
+		$exclude_taxes = Reports\get_taxes_excluded_filter();
+		$label         = $options[ $dates['range'] ];
 
 		$gateway = ! empty( $gateway ) && 'all' !== $gateway
 			? ' (' . esc_html( edd_get_gateway_admin_label( $gateway ) ) . ')'
 			: '';
 
-		$label = $options[ $filter['range'] ] . $gateway;
+		$label = $options[ $dates['range'] ] . $gateway;
 
 		$reports->add_report( 'gateways', array(
 			'label'     => __( 'Payment Gateways', 'easy-digital-downloads' ),
@@ -1172,14 +1183,14 @@ function edd_register_payment_gateways_report( $reports ) {
 					'gateway_sales_earnings_chart',
 				),
 			),
-			'filters'   => array( 'gateways' ),
+			'filters'   => array( 'gateways', 'taxes' ),
 		) );
 
 		$reports->register_endpoint( 'sales_per_gateway', array(
 			'label' => __( 'Sales', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () use ( $dates ) {
 						$gateway = 'all' !== Reports\get_filter_value( 'gateways' )
 							? Reports\get_filter_value( 'gateways' )
 							: '';
@@ -1187,7 +1198,7 @@ function edd_register_payment_gateways_report( $reports ) {
 						$stats = new EDD\Stats();
 
 						return apply_filters( 'edd_reports_gateways_sales', $stats->get_gateway_sales( array(
-							'range'   => $filter['range'],
+							'range'   => $dates['range'],
 							'gateway' => $gateway,
 						) ) );
 					},
@@ -1203,7 +1214,7 @@ function edd_register_payment_gateways_report( $reports ) {
 			'label' => __( 'Earnings', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () use ( $dates, $exclude_taxes ) {
 						$gateway = 'all' !== Reports\get_filter_value( 'gateways' )
 							? Reports\get_filter_value( 'gateways' )
 							: '';
@@ -1211,9 +1222,10 @@ function edd_register_payment_gateways_report( $reports ) {
 						$stats = new EDD\Stats();
 
 						return apply_filters( 'edd_reports_gateways_earnings', $stats->get_gateway_earnings( array(
-							'range'   => $filter['range'],
-							'gateway' => $gateway,
-							'output'  => 'formatted',
+							'range'         => $dates['range'],
+							'exclude_taxes' => $exclude_taxes,
+							'gateway'       => $gateway,
+							'output'        => 'formatted',
 						) ) );
 					},
 					'display_args'  => array(
@@ -1228,7 +1240,7 @@ function edd_register_payment_gateways_report( $reports ) {
 			'label' => __( 'Refunds', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () use ( $dates ) {
 						$gateway = 'all' !== Reports\get_filter_value( 'gateways' )
 							? Reports\get_filter_value( 'gateways' )
 							: '';
@@ -1236,7 +1248,7 @@ function edd_register_payment_gateways_report( $reports ) {
 						$stats = new EDD\Stats();
 
 						return apply_filters( 'edd_reports_gateways_refunds', $stats->get_gateway_earnings( array(
-							'range'   => $filter['range'],
+							'range'   => $dates['range'],
 							'gateway' => $gateway,
 							'output'  => 'formatted',
 							'status'  => array( 'refunded' ),
@@ -1254,7 +1266,7 @@ function edd_register_payment_gateways_report( $reports ) {
 			'label' => __( 'Average Order Value', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () use ( $dates, $exclude_taxes ) {
 						$gateway = 'all' !== Reports\get_filter_value( 'gateways' )
 							? Reports\get_filter_value( 'gateways' )
 							: '';
@@ -1263,16 +1275,18 @@ function edd_register_payment_gateways_report( $reports ) {
 
 						if ( empty( $gateway ) ) {
 							return apply_filters( 'edd_reports_gateways_average_order_value', $stats->get_order_earnings( array(
-								'range'    => $filter['range'],
-								'function' => 'AVG',
-								'output'   => 'formatted',
+								'range'         => $dates['range'],
+								'exclude_taxes' => $exclude_taxes,
+								'function'      => 'AVG',
+								'output'        => 'formatted',
 							) ) );
 						} else {
 							return apply_filters( 'edd_reports_gateways_average_order_value', $stats->get_gateway_earnings( array(
-								'range'    => $filter['range'],
-								'gateway'  => $gateway,
-								'function' => 'AVG',
-								'output'   => 'formatted',
+								'range'         => $dates['range'],
+								'exclude_taxes' => $exclude_taxes,
+								'gateway'       => $gateway,
+								'function'      => 'AVG',
+								'output'        => 'formatted',
 							) ) );
 						}
 					},
@@ -1285,7 +1299,7 @@ function edd_register_payment_gateways_report( $reports ) {
 		) );
 
 		$reports->register_endpoint( 'gateway_stats', array(
-			'label' => __( 'Gateway Stats', 'easy-digital-downloads' ) . ' &mdash; ' . $options[ $filter['range'] ],
+			'label' => __( 'Gateway Stats', 'easy-digital-downloads' ) . ' &mdash; ' . $options[ $dates['range'] ],
 			'views' => array(
 				'table' => array(
 					'display_args' => array(
@@ -1299,13 +1313,13 @@ function edd_register_payment_gateways_report( $reports ) {
 		$gateway_list = array_map( 'edd_get_gateway_admin_label', array_keys( edd_get_payment_gateways() ) );
 
 		$reports->register_endpoint( 'gateway_sales_breakdown', array(
-			'label' => __( 'Gateway Sales', 'easy-digital-downloads' ) . ' &mdash; ' . $options[ $filter['range'] ],
+			'label' => __( 'Gateway Sales', 'easy-digital-downloads' ) . ' &mdash; ' . $options[ $dates['range'] ],
 			'views' => array(
 				'chart' => array(
-					'data_callback' => function() use ( $filter ) {
+					'data_callback' => function() use ( $dates ) {
 						$stats = new EDD\Stats();
 						$g = $stats->get_gateway_sales( array(
-							'range'    => $filter['range'],
+							'range'    => $dates['range'],
 							'grouped'  => true,
 						) );
 
@@ -1347,14 +1361,15 @@ function edd_register_payment_gateways_report( $reports ) {
 		) );
 
 		$reports->register_endpoint( 'gateway_earnings_breakdown', array(
-			'label' => __( 'Gateway Earnings', 'easy-digital-downloads' ) . ' &mdash; ' . $options[ $filter['range'] ],
+			'label' => __( 'Gateway Earnings', 'easy-digital-downloads' ) . ' &mdash; ' . $options[ $dates['range'] ],
 			'views' => array(
 				'chart' => array(
-					'data_callback' => function() use ( $filter ) {
+					'data_callback' => function() use ( $dates, $exclude_taxes ) {
 						$stats = new EDD\Stats();
 						$g = $stats->get_gateway_earnings( array(
-							'grouped' => true,
-							'range'   => $filter['range'],
+							'grouped'       => true,
+							'range'         => $dates['range'],
+							'exclude_taxes' => $exclude_taxes,
 						) );
 
 						$gateways = array_flip( array_keys( edd_get_payment_gateways() ) );
@@ -1400,7 +1415,7 @@ function edd_register_payment_gateways_report( $reports ) {
 				'label' => __( 'Sales and Earnings', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
 				'views' => array(
 					'chart' => array(
-						'data_callback' => function () use ( $filter ) {
+						'data_callback' => function () use ( $dates, $exclude_taxes ) {
 							global $wpdb;
 
 							$dates        = Reports\get_dates_filter( 'objects' );
@@ -1428,9 +1443,12 @@ function edd_register_payment_gateways_report( $reports ) {
 							}
 
 							$gateway = Reports\get_filter_value( 'gateways' );
+							$column  = $exclude_taxes
+								? 'subtotal'
+								: 'total';
 
 							$results = $wpdb->get_results( $wpdb->prepare(
-								"SELECT COUNT(total) AS sales, SUM(total) AS earnings, {$sql_clauses['select']}
+								"SELECT COUNT({$column}) AS sales, SUM({$column}) AS earnings, {$sql_clauses['select']}
 								 FROM {$wpdb->edd_orders} o
 								 WHERE gateway = %s AND status IN ('complete', 'revoked') AND date_created >= %s AND date_created <= %s
 								 GROUP BY {$sql_clauses['groupby']}
@@ -1548,9 +1566,10 @@ function edd_register_taxes_report( $reports ) {
 	try {
 
 		// Variables to hold date filter values.
-		$options = Reports\get_dates_filter_options();
-		$filter  = Reports\get_filter_value( 'dates' );
-		$label   = $options[ $filter['range'] ];
+		$options       = Reports\get_dates_filter_options();
+		$dates         = Reports\get_filter_value( 'dates' );
+		$exclude_taxes = Reports\get_taxes_excluded_filter();
+		$label         = $options[ $dates['range'] ];
 
 		$download_data = Reports\get_filter_value( 'products' );
 		$download_data = ! empty( $download_data ) && 'all' !== Reports\get_filter_value( 'products' )
@@ -1594,7 +1613,7 @@ function edd_register_taxes_report( $reports ) {
 			'label' => __( 'Total Tax Collected', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () use ( $dates ) {
 						$download = Reports\get_filter_value( 'products' );
 						$download = ! empty( $download ) && 'all' !== Reports\get_filter_value( 'products' )
 							? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
@@ -1603,7 +1622,7 @@ function edd_register_taxes_report( $reports ) {
 						$stats = new EDD\Stats();
 						return $stats->get_tax( array(
 							'output'      => 'formatted',
-							'range'       => $filter['range'],
+							'range'       => $dates['range'],
 							'download_id' => $download['download_id'],
 							'price_id'    => (string) $download['price_id'],
 						) );
@@ -1629,7 +1648,7 @@ function edd_register_taxes_report( $reports ) {
 				'label' => __( 'Total Tax Collected for ', 'easy-digital-downloads' ) . $location,
 				'views' => array(
 					'tile' => array(
-						'data_callback' => function () use ( $filter, $country, $region ) {
+						'data_callback' => function () use ( $dates, $country, $region ) {
 							$download = Reports\get_filter_value( 'products' );
 							$download = ! empty( $download ) && 'all' !== Reports\get_filter_value( 'products' )
 								? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
@@ -1639,7 +1658,7 @@ function edd_register_taxes_report( $reports ) {
 
 							return $stats->get_tax_by_location( array(
 								'output'      => 'formatted',
-								'range'       => $filter['range'],
+								'range'       => $dates['range'],
 								'download_id' => $download['download_id'],
 								'price_id'    => (string) $download['price_id'],
 								'country'     => $country,
@@ -2262,9 +2281,10 @@ function edd_register_customer_report( $reports ) {
 	try {
 
 		// Variables to hold date filter values.
-		$options = Reports\get_dates_filter_options();
-		$filter  = Reports\get_filter_value( 'dates' );
-		$label   = $options[ $filter['range'] ];
+		$options       = Reports\get_dates_filter_options();
+		$dates         = Reports\get_filter_value( 'dates' );
+		$exclude_taxes = Reports\get_taxes_excluded_filter();
+		$label         = $options[ $dates['range'] ];
 
 		$reports->add_report( 'customers', array(
 			'label'     => __( 'Customers', 'easy-digital-downloads' ),
@@ -2286,18 +2306,19 @@ function edd_register_customer_report( $reports ) {
 					'new_customers',
 				),
 			),
-			'filters'   => array( 'dates' ),
+			'filters'   => array( 'dates', 'taxes' ),
 		) );
 
 		$reports->register_endpoint( 'lifetime_value_of_customer', array(
 			'label' => __( 'Average Lifetime Value', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () {
+					'data_callback' => function () use ( $exclude_taxes ) {
 						$stats = new EDD\Stats();
 						return $stats->get_customer_lifetime_value( array(
-							'function' => 'AVG',
-							'output'   => 'formatted',
+							'function'      => 'AVG',
+							'exclude_taxes' => $exclude_taxes,
+							'output'        => 'formatted',
 						) );
 					},
 				),
@@ -2308,12 +2329,13 @@ function edd_register_customer_report( $reports ) {
 			'label' => __( 'Average Value', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () use ( $dates, $exclude_taxes ) {
 						$stats = new EDD\Stats();
 						return apply_filters( 'edd_reports_customers_average_customer_value', $stats->get_customer_lifetime_value( array(
-							'function' => 'AVG',
-							'range'    => $filter['range'],
-							'output'   => 'formatted',
+							'function'      => 'AVG',
+							'range'         => $dates['range'],
+							'exclude_taxes' => $exclude_taxes,
+							'output'        => 'formatted',
 						) ) );
 					},
 					'display_args'  => array(
@@ -2386,7 +2408,7 @@ function edd_register_customer_report( $reports ) {
 			'label' => __( 'New Customers', 'easy-digital-downloads' ) . ' &mdash; ' . $label,
 			'views' => array(
 				'chart' => array(
-					'data_callback' => function () use ( $filter ) {
+					'data_callback' => function () {
 						global $wpdb;
 
 						$dates        = Reports\get_dates_filter( 'objects' );

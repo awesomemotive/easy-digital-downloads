@@ -26,6 +26,7 @@ function edd_overview_sales_earnings_chart() {
 	$dates        = Reports\get_dates_filter( 'objects' );
 	$day_by_day   = Reports\get_dates_filter_day_by_day();
 	$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
+	$column       = Reports\get_taxes_excluded_filter() ? 'subtotal' : 'total';
 
 	$sql_clauses = array(
 		'select'  => 'date_created AS date',
@@ -35,7 +36,7 @@ function edd_overview_sales_earnings_chart() {
 
 	$results = $wpdb->get_results(
 		$wpdb->prepare(
-			"SELECT COUNT(id) AS sales, SUM(total) AS earnings, {$sql_clauses['select']}
+			"SELECT COUNT(id) AS sales, SUM({$column}) AS earnings, {$sql_clauses['select']}
  				 FROM {$wpdb->edd_orders} edd_o
  				 WHERE date_created >= %s AND date_created <= %s
 				 GROUP BY {$sql_clauses['groupby']}
@@ -117,6 +118,7 @@ function edd_overview_refunds_chart() {
 	$dates        = Reports\get_dates_filter( 'objects' );
 	$day_by_day   = Reports\get_dates_filter_day_by_day();
 	$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
+	$column       = Reports\get_taxes_excluded_filter() ? 'subtotal' : 'total';
 
 	$sql_clauses = array(
 		'select'  => 'date_created AS date',
@@ -126,7 +128,7 @@ function edd_overview_refunds_chart() {
 
 	$results = $wpdb->get_results(
 		$wpdb->prepare(
-			"SELECT COUNT(id) AS number, SUM(total) AS amount, {$sql_clauses['select']}
+			"SELECT COUNT(id) AS number, SUM({$column}) AS amount, {$sql_clauses['select']}
  				 FROM {$wpdb->edd_orders} edd_o
  				 WHERE status IN (%s, %s) AND date_created >= %s AND date_created <= %s AND type = 'refund'
 				 GROUP BY {$sql_clauses['groupby']}
