@@ -289,9 +289,14 @@ function edd_refund_order( $order_id = 0, $status = 'complete', $order_items = a
 			break;
 		}
 	}
+
 	if ( 'complete' === $status && $all_refunded ) {
 		edd_update_order( $order_id, array(
 			'status' => 'refunded',
+		) );
+	} elseif ( 'complete' === $status && false === $all_refunded ) {
+		edd_update_order( $order_id, array(
+			'status' => 'partially_refunded',
 		) );
 	}
 
