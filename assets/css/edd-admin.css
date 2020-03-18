@@ -806,11 +806,12 @@ textarea[name="edd-note"] {
 
 .download_page_edd-reports #edd-filters {
 	margin-top: 8px;
+	padding-bottom: 0;
 }
 
 #edd-filters .filter-items > span:not(.edd-date-range-options) {
 	display: inline-block;
-	margin: 10px 4px 10px 0;
+	margin: 10px 6px 0 0;
 	max-width: 200px;
 }
 
@@ -1967,11 +1968,29 @@ body.download_page_edd-reports {
 }
 
 .download_page_edd-reports #edd-filters {
-	margin-bottom: -5px;
+	margin-bottom: -1px;
+	box-shadow: none;
+	z-index: 3;
+	justify-content: space-between;
+	display: flex;
+	flex-wrap: wrap;
 }
+
 .download_page_edd-reports #edd-filters .filter-items {
-	float: none;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	flex: 1 1 75%;
+	padding-bottom: 10px;
 }
+
+@media screen and ( max-width: 782px ) {
+
+	.download_page_edd-reports #edd-filters .filter-items {
+		flex-basis: 100%:
+	}
+}
+
 .download_page_edd-reports #edd-item-wrapper {
 	margin: 0;
 }
