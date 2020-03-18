@@ -1034,22 +1034,15 @@ function edd_get_checkout_button_purchase_label() {
  * the T&Cs text
  *
  * @since 1.0
+ * @since 3.0 Moved to external scripts in assets/js/frontend/checkout/components/agree-to-terms
  */
 function edd_agree_to_terms_js() {
-	if ( edd_get_option( 'show_agree_to_terms', false ) || edd_get_option( 'show_agree_to_privacy_policy', false ) ) : ?>
-	<script type="text/javascript">
-		jQuery(document).ready(function($){
-			$( document.body ).on( 'click', '.edd_terms_links', function() {
-				$( this ).parent().prev( '.edd-terms' ).slideToggle();
-				$( this ).parent().find( '.edd_terms_links' ).toggle();
-
-				return false;
-			});
-		});
-	</script><?php
-	endif;
+	_doing_it_wrong(
+		__FUNCTION__,
+		__( 'No longer used. Script moved to external edd-checkout script.', 'easy-digital-downloads' ),
+		'3.0'
+	);
 }
-add_action( 'edd_checkout_form_top', 'edd_agree_to_terms_js' );
 
 /**
  * Renders the hidden Checkout fields

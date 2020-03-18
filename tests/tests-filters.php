@@ -183,7 +183,6 @@ class Tests_Filters extends EDD_UnitTestCase {
 		global $wp_filter;
 		$this->assertArrayHasKey( 'edd_discount_field', $wp_filter['edd_checkout_form_top'][-1] );
 		$this->assertArrayHasKey( 'edd_show_payment_icons', $wp_filter['edd_checkout_form_top'][10] );
-		$this->assertArrayHasKey( 'edd_agree_to_terms_js', $wp_filter['edd_checkout_form_top'][10] );
 	}
 
 	public function test_edd_empty_cart() {
