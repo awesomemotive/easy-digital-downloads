@@ -1901,6 +1901,7 @@ function edd_get_spain_states_list() {
  */
 function edd_get_netherlands_provinces_list() {
 	$provinces = array(
+		''   => '',
 		'DR' => __( 'Drenthe', 'easy-digital-downloads' ),
 		'FL' => __( 'Flevoland', 'easy-digital-downloads' ),
 		'FR' => __( 'Friesland', 'easy-digital-downloads' ),
