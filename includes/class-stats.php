@@ -164,6 +164,13 @@ class Stats {
 		$this->query_vars['column']            = true === $this->query_vars['exclude_taxes'] ? 'subtotal' : 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
 
+		/*
+		 * By default we're checking sales only and excluding refunds. This gives us gross order earnings.
+		 * This may be overridden in $query parameters that get passed through.
+		 */
+		$this->query_vars['type']   = 'sale';
+		$this->query_vars['status'] = array( 'complete', 'revoked', 'refunded', 'partially_refunded' );
+
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
@@ -182,13 +189,13 @@ class Stats {
 					CROSS JOIN (
 						SELECT IFNULL({$function}, 0) AS relative
 						FROM {$this->query_vars['table']}
-						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
+						WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
 					) o
-					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		} else {
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
 		}
 
 		$result = $this->get_db()->get_row( $sql );
@@ -256,6 +263,13 @@ class Stats {
 		$this->query_vars['column']            = 'id';
 		$this->query_vars['date_query_column'] = 'date_created';
 
+		/*
+		 * By default we're checking sales only and excluding refunds. This gives us gross order counts.
+		 * This may be overridden in $query parameters that get passed through.
+		 */
+		$this->query_vars['type']   = 'sale';
+		$this->query_vars['status'] = array( 'complete', 'revoked', 'refunded', 'partially_refunded' );
+
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
@@ -274,13 +288,13 @@ class Stats {
 					CROSS JOIN (
 						SELECT IFNULL(COUNT(id), 0) AS relative
 						FROM {$this->query_vars['table']}
-						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
+						WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
 					) o
-					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		} else {
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		}
 
 		$result = $this->get_db()->get_row( $sql );
@@ -408,7 +422,7 @@ class Stats {
 	public function get_order_refund_count( $query = array() ) {
 		$query['status'] = isset( $query['status'] )
 			? $query['status']
-			: array( 'complete', 'partially_refunded' );
+			: array( 'complete' );
 
 		if ( ! array( $query['status'] ) ) {
 			$query['status'] = array( $query['status'] );
@@ -456,7 +470,10 @@ class Stats {
 		// Base value for status.
 		$query['status'] = isset( $query['status'] )
 			? $query['status']
-			: array( 'refunded', 'partially_refunded' );
+			: array( 'refunded' );
+
+		// Ensure we only pick up records from refund objects and not the original sale.
+		$this->query_vars['where_sql'] .= " AND {$this->get_db()->edd_orders}.type = 'refund' ";
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
@@ -480,20 +497,23 @@ class Stats {
 		if ( 'AVG' === $this->query_vars['function'] ) {
 			$sql = "SELECT AVG(id) AS total
 					FROM (
-						SELECT COUNT(id) AS id
+						SELECT COUNT({$this->query_vars['table']}.id) AS id
 						FROM {$this->query_vars['table']}
+						INNER JOIN {$this->get_db()->edd_orders} ON( {$this->get_db()->edd_orders}.id = {$this->query_vars['table']}.order_id )
 						WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 						GROUP BY order_id
 					) AS counts";
 		} elseif ( true === $this->query_vars['grouped'] ) {
-			$sql = "SELECT product_id, price_id, {$function} AS total
+			$sql = "SELECT {$this->query_vars['table']}.product_id, {$this->query_vars['table']}.price_id, {$function} AS total
 					FROM {$this->query_vars['table']}
+					INNER JOIN {$this->get_db()->edd_orders} ON( {$this->get_db()->edd_orders}.id = {$this->query_vars['table']}.order_id )
 					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 					GROUP BY product_id, price_id
 					ORDER BY total DESC";
 		} else {
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']}
+					INNER JOIN {$this->get_db()->edd_orders} ON( {$this->get_db()->edd_orders}.id = {$this->query_vars['table']}.order_id )
 					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		}
 
@@ -553,16 +573,23 @@ class Stats {
 	 * @return string Formatted amount from refunded orders.
 	 */
 	public function get_order_refund_amount( $query = array() ) {
-		$query['status'] = array( 'complete', 'partially_refunded' );
+		$query['status'] = array( 'complete' );
 		$query['type']   = array( 'refund' );
 
-		// Request raw output so we can run `abs()` on the value.
+		/*
+		 * Request raw output so we can run `abs()` on the value.
+		 * But save the original value so we can restore it later.
+		 */
+		$original_output = isset( $query['output'] ) ? $query['output'] : 'raw';
 		$query['output'] = 'raw';
 
 		$retval = $this->get_order_earnings( $query );
 
+		// Restore original format.
+		$this->query_vars['output'] = $original_output;
+
 		// Format & return.
-		return edd_currency_filter( edd_format_amount( abs( $retval ) ) );
+		return $this->maybe_format( abs( $retval ) );
 	}
 
 	/**
@@ -705,14 +732,14 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$status_sql = $this->get_db()->prepare( "AND status IN(%s, %s) AND type = '%s'", esc_sql( 'complete' ), esc_sql( 'partially_refunded' ), esc_sql( 'refund' ) );
+		$status_sql = $this->get_db()->prepare( "AND status = %s AND type = '%s'", esc_sql( 'complete' ), esc_sql( 'refund' ) );
 
 		$ignore_free = $this->get_db()->prepare( "AND {$this->query_vars['table']}.total > %d", 0 );
 
-		$sql = "SELECT SUM(ABS({$this->query_vars['table']}.total)) / o.total * 100 AS `refund_rate`
+		$sql = "SELECT COUNT(id ) / o.number_orders * 100 AS `refund_rate`
 				FROM {$this->query_vars['table']}
 				CROSS JOIN (
-					SELECT SUM(id) AS total
+					SELECT COUNT(id) AS number_orders
 					FROM {$this->query_vars['table']}
 					WHERE 1=1 {$this->query_vars['status_sql']} {$ignore_free} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				) o

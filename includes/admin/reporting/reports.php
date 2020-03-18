@@ -1089,6 +1089,7 @@ function edd_register_refunds_report( $reports ) {
 						return apply_filters( 'edd_reports_refunds_refund_rate', $stats->get_refund_rate( array(
 							'range'  => $dates['range'],
 							'output' => 'formatted',
+							'status' => array( 'complete', 'revoked', 'refunded', 'partially_refunded' )
 						) ) );
 					},
 					'display_args'  => array(
