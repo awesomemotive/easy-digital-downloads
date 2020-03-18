@@ -379,7 +379,16 @@ class EDD_Payment_Stats extends EDD_Stats {
 				$grouping = 'YEAR(edd_o.date_created), MONTH(edd_o.date_created), DAY(edd_o.date_created), HOUR(edd_o.date_created)';
 			}
 
-			$statuses = apply_filters( 'edd_payment_stats_post_statuses', array( 'complete', 'revoked' ) );
+			$statuses = array( 'complete', 'publish', 'revoked', 'refunded', 'partially_refunded' );
+
+			/**
+			 * Filters Order statuses that should be included when calculating stats.
+			 *
+			 * @since 2.7
+			 *
+			 * @param array $statuses Order statuses to include when generating stats.
+			 */
+			$statuses = apply_filters( 'edd_payment_stats_post_statuses', $statuses );
 			$statuses = "'" . implode( "', '", $statuses ) . "'";
 
 			$sales = $wpdb->get_results( $wpdb->prepare(
@@ -451,7 +460,16 @@ class EDD_Payment_Stats extends EDD_Stats {
 				$grouping = 'YEAR(edd_o.date_created), MONTH(edd_o.date_created), DAY(edd_o.date_created), HOUR(edd_o.date_created)';
 			}
 
-			$statuses = apply_filters( 'edd_payment_stats_post_statuses', array( 'complete', 'revoked' ) );
+			$statuses = array( 'complete', 'publish', 'revoked', 'refunded', 'partially_refunded' );
+
+			/**
+			 * Filters Order statuses that should be included when calculating stats.
+			 *
+			 * @since 2.7
+			 *
+			 * @param array $statuses Order statuses to include when generating stats.
+			 */
+			$statuses = apply_filters( 'edd_payment_stats_post_statuses', $statuses );
 			$statuses = "'" . implode( "', '", $statuses ) . "'";
 
 			$earnings = $wpdb->get_results( $wpdb->prepare(
