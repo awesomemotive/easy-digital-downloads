@@ -1039,7 +1039,7 @@ function edd_get_checkout_button_purchase_label() {
 function edd_agree_to_terms_js() {
 	_doing_it_wrong(
 		__FUNCTION__,
-		__( 'No longer used. Script moved to external edd-checkout script.', 'easy-digital-downloads' ),
+		__( 'No longer used. Script moved to external `edd-checkout-global` script.', 'easy-digital-downloads' ),
 		'3.0'
 	);
 }
