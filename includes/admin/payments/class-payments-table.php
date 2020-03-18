@@ -517,16 +517,29 @@ class EDD_Payment_History_Table extends List_Table {
 			$row_actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete', 'easy-digital-downloads' ) . '</a>';
 		}
 
-		// $payment exists for backwards compatibility purposes in the below filter.
-		$payment = edd_get_payment( $order->id );
+		if ( has_filter( 'edd_payment_row_actions' ) ) {
+			$payment = edd_get_payment( $order->id );
+
+			/**
+			 * Filters the row actions.
+			 *
+			 * @deprecated 3.0
+			 *
+			 * @param array             $row_actions
+			 * @param EDD_Payment|false $payment
+			 */
+			$row_actions = apply_filters_deprecated( 'edd_payment_row_actions', array( $row_actions, $payment ), '3.0', 'edd_order_row_actions' );
+		}
 
 		/**
 		 * Filters the row actions.
 		 *
-		 * @param array             $row_actions
-		 * @param EDD_Payment|false $payment
+		 * @param array            $row_actions Array of row actions.
+		 * @param EDD\Orders\Order $order       Order object.
+		 *
+		 * @since 3.0
 		 */
-		$row_actions = apply_filters( 'edd_payment_row_actions', $row_actions, $payment );
+		$row_actions = apply_filters( 'edd_order_row_actions', $row_actions, $order );
 
 		// Row actions
 		$actions = $this->row_actions( $row_actions );
