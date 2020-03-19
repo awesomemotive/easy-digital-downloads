@@ -623,16 +623,6 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 }
 
 /**
- * Show report graph date filters
- *
- * @since 1.3
- * @deprecated Deprecated since 3.0 as report graph controls are automatically output.
- */
-function edd_reports_graph_controls() {
-	_doing_it_wrong( __FUNCTION__, 'Report graph controls are automatically output.', 'EDD 3.0' );
-}
-
-/**
  * Grabs all of the selected date info and then redirects appropriately
  *
  * @since 1.3
