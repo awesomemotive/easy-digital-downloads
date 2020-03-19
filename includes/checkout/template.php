@@ -1030,21 +1030,6 @@ function edd_get_checkout_button_purchase_label() {
 }
 
 /**
- * Outputs the JavaScript code for the Agree to Terms section to toggle
- * the T&Cs text
- *
- * @since 1.0
- * @since 3.0 Moved to external scripts in assets/js/frontend/checkout/components/agree-to-terms
- */
-function edd_agree_to_terms_js() {
-	_doing_it_wrong(
-		__FUNCTION__,
-		__( 'No longer used. Script moved to external `edd-checkout-global` script.', 'easy-digital-downloads' ),
-		'3.0'
-	);
-}
-
-/**
  * Renders the hidden Checkout fields
  *
  * @since 1.3.2
