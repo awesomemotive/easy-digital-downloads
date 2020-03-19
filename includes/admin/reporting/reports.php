@@ -509,25 +509,51 @@ function edd_register_downloads_report( $reports ) {
 			}
 		}
 
+		$tiles = array_filter( array(
+			'most_valuable_download',
+			'average_download_sales_earnings',
+			'download_sales_earnings',
+		), function( $endpoint ) use ( $download_data ) {
+			switch( $endpoint ) {
+				case 'most_valuable_download' :
+				case 'average_download_sales_earnings' :
+					return false === $download_data;
+					break;
+				default:
+					return true;
+			}
+		} );
+
+		$charts = array_filter( array(
+			'download_sales_by_variations',
+			'download_earnings_by_variations',
+			'download_sales_earnings_chart'
+		), function( $endpoint ) use ( $download_data ) {
+			switch( $endpoint ) {
+				case 'download_sales_by_variations' :
+				case 'download_earnings_by_variations' :
+					return false !== $download_data;
+					break;
+				default:
+					return true;
+			}
+		} );
+
+		$tables = array_filter( array(
+			'top_selling_downloads',
+			'earnings_by_taxonomy',
+		), function( $endpoint ) use ( $download_data ) {
+			return false === $download_data;
+		} );
+
 		$reports->add_report( 'downloads', array(
 			'label'     => edd_get_label_plural(),
 			'priority'  => 10,
 			'icon'      => 'download',
 			'endpoints' => array(
-				'tiles'  => array(
-					'most_valuable_download',
-					'average_download_sales_earnings',
-					'download_sales_earnings',
-				),
-				'charts' => array(
-					'download_sales_by_variations',
-					'download_earnings_by_variations',
-					'download_sales_earnings_chart'
-				),
-				'tables' => array(
-					'top_selling_downloads',
-					'earnings_by_taxonomy',
-				),
+				'tiles'  => $tiles,
+				'charts' => $charts,
+				'tables' => $tables,
 			),
 			'filters'  => array( 'products', 'countries', 'regions', 'taxes' )
 		) );
@@ -1157,32 +1183,38 @@ function edd_register_payment_gateways_report( $reports ) {
 		$dates         = Reports\get_filter_value( 'dates' );
 		$exclude_taxes = Reports\get_taxes_excluded_filter();
 		$label         = $options[ $dates['range'] ];
+		$gateway       = Reports\get_filter_value( 'gateways' );
+		$label         = $options[ $dates['range'] ];
 
-		$gateway = ! empty( $gateway ) && 'all' !== $gateway
-			? ' (' . esc_html( edd_get_gateway_admin_label( $gateway ) ) . ')'
-			: '';
+		$tiles = array(
+			'sales_per_gateway',
+			'earnings_per_gateway',
+			'refunds_per_gateway',
+			'average_value_per_gateway',
+		);
 
-		$label = $options[ $dates['range'] ] . $gateway;
+		$tables = array_filter( array(
+			'gateway_stats',
+		), function( $endpoint ) use ( $gateway ) {
+			return empty( $gateway ) || 'all' === $gateway;
+		} );
+
+		$charts = array_filter( array(
+			'gateway_sales_breakdown',
+			'gateway_earnings_breakdown',
+			'gateway_sales_earnings_chart',
+		), function( $endpoint ) use ( $gateway ) {
+			return empty( $gateway ) || 'all' === $gateway;
+		} );
 
 		$reports->add_report( 'gateways', array(
 			'label'     => __( 'Payment Gateways', 'easy-digital-downloads' ),
 			'icon'      => 'image-filter',
 			'priority'  => 20,
 			'endpoints' => array(
-				'tiles'  => array(
-					'sales_per_gateway',
-					'earnings_per_gateway',
-					'refunds_per_gateway',
-					'average_value_per_gateway',
-				),
-				'tables' => array(
-					'gateway_stats',
-				),
-				'charts' => array(
-					'gateway_sales_breakdown',
-					'gateway_earnings_breakdown',
-					'gateway_sales_earnings_chart',
-				),
+				'tiles'  => $tiles,
+				'tables' => $tables,
+				'charts' => $charts,
 			),
 			'filters'   => array( 'gateways', 'taxes' ),
 		) );
@@ -1726,23 +1758,41 @@ function edd_register_file_downloads_report( $reports ) {
 			}
 		}
 
+		$tiles = array_filter( array(
+			'number_of_file_downloads',
+			'average_file_downloads_per_customer',
+			'most_downloaded_product',
+			'average_file_downloads_per_order',
+		), function( $endpoint ) use ( $download_data ) {
+			switch( $endpoint ) {
+				case 'average_file_downloads_per_customer' :
+				case 'most_downloaded_product' :
+				case 'average_file_downloads_per_order' :
+					return false === $download_data;
+					break;
+				default:
+					return true;
+			}
+		} );
+
+		$tables = array_filter( array(
+			'top_five_most_downloaded_products',
+		), function( $endpoint ) use ( $download_data ) {
+			return false === $download_data;
+		} );
+
+		$charts = array(
+			'file_downloads_chart',
+		);
+
 		$reports->add_report( 'file_downloads', array(
 			'label'     => __( 'File Downloads', 'easy-digital-downloads' ),
 			'icon'      => 'download',
 			'priority'  => 30,
 			'endpoints' => array(
-				'tiles'  => array(
-					'number_of_file_downloads',
-					'average_file_downloads_per_customer',
-					'most_downloaded_product',
-					'average_file_downloads_per_order',
-				),
-				'tables' => array(
-					'top_five_most_downloaded_products',
-				),
-				'charts' => array(
-					'file_downloads_chart',
-				),
+				'tiles'  => $tiles,
+				'tables' => $tables,
+				'charts' => $charts,
 			),
 			'filters'   => array( 'products' ),
 		) );
