@@ -940,7 +940,7 @@ function edd_render_refund_row( $post_id ) {
 		<p>
 			<strong>
 				<?php esc_html_e( 'Refunds', 'easy-digital-downloads' ); ?>
-				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo wp_kses( __( '<strong>Refundability</strong>: Allow or disallow refunds for this specific product. When allowed, the refund window will be used on all future purchases.<br /><strong>Refund Window</strong>: Limit the number of days this product can be refunded after purchasing.', 'easy-digital-downloads' ), array( 'strong' => true, 'br' => true ) ); ?>"></span>
+				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo wp_kses( __( '<strong>Refundable</strong>: Allow or disallow refunds for this specific product. When allowed, the refund window will be used on all future purchases.<br /><strong>Refund Window</strong>: Limit the number of days this product can be refunded after purchasing.', 'easy-digital-downloads' ), array( 'strong' => true, 'br' => true ) ); ?>"></span>
 			</strong>
 		</p>
 
