@@ -525,7 +525,7 @@ function edd_get_registered_settings() {
 					),
 					'refundability' => array(
 						'id'      => 'refundability',
-						'name'    => __( 'Product Refundability', 'easy-digital-downloads' ),
+						'name'    => __( 'Product Refunds', 'easy-digital-downloads' ),
 						'desc'    => __( 'By default, products without an explicit setting will default to this.', 'easy-digital-downloads' ),
 						'type'    => 'select',
 						'std'     => 'refundable',
