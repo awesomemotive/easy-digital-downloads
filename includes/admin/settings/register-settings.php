@@ -520,7 +520,7 @@ function edd_get_registered_settings() {
 						'std'     => 'refundable',
 						'chosen'  => true,
 						'options' => edd_get_refundability_types()
-					)
+					),
 					'refund_window' => array(
 						'id'   => 'refund_window',
 						'name' => __( 'Refund Window', 'easy-digital-downloads' ),
