@@ -171,6 +171,15 @@ class Stats {
 		$this->query_vars['type']   = 'sale';
 		$this->query_vars['status'] = array( 'complete', 'revoked', 'refunded', 'partially_refunded' );
 
+		/**
+		 * Filters Order statuses that should be included when calculating stats.
+		 *
+		 * @since 2.7
+		 *
+		 * @param array $statuses Order statuses to include when generating stats.
+		 */
+		$this->query_vars['status'] = apply_filters( 'edd_payment_stats_post_statuses', $this->query_vars['status'] );
+
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
@@ -269,6 +278,15 @@ class Stats {
 		 */
 		$this->query_vars['type']   = 'sale';
 		$this->query_vars['status'] = array( 'complete', 'revoked', 'refunded', 'partially_refunded' );
+
+		/**
+		 * Filters Order statuses that should be included when calculating stats.
+		 *
+		 * @since 2.7
+		 *
+		 * @param array $statuses Order statuses to include when generating stats.
+		 */
+		$this->query_vars['status'] = apply_filters( 'edd_payment_stats_post_statuses', $this->query_vars['status'] );
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
