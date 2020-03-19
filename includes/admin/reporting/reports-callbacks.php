@@ -34,11 +34,25 @@ function edd_overview_sales_earnings_chart() {
 		'orderby' => 'DATE(date_created)',
 	);
 
+	$statuses = array( 'complete', 'publish', 'revoked', 'refunded', 'partially_refunded' );
+
+	/**
+	 * Filters Order statuses that should be included when calculating stats.
+	 *
+	 * @since 2.7
+	 *
+	 * @param array $statuses Order statuses to include when generating stats.
+	 */
+	$statuses = apply_filters( 'edd_payment_stats_post_statuses', $statuses );
+	$statuses = "'" . implode( "', '", $statuses ) . "'";
+
 	$results = $wpdb->get_results(
 		$wpdb->prepare(
 			"SELECT COUNT(id) AS sales, SUM({$column}) AS earnings, {$sql_clauses['select']}
  				 FROM {$wpdb->edd_orders} edd_o
  				 WHERE date_created >= %s AND date_created <= %s
+ 				 AND type = 'sale'
+ 				 AND status IN( {$statuses} )
 				 GROUP BY {$sql_clauses['groupby']}
 				 ORDER BY {$sql_clauses['orderby']} ASC",
 			$dates['start']->copy()->format( 'mysql' ),
