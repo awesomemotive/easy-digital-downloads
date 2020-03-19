@@ -487,8 +487,9 @@ function edd_register_downloads_report( $reports ) {
 		$exclude_taxes = Reports\get_taxes_excluded_filter();
 		$label         = $options[ $dates['range'] ];
 
-		$download_data = Reports\get_filter_value( 'products' );
-		$download_data = ! empty( $download_data ) && 'all' !== Reports\get_filter_value( 'products' )
+		$download_data    = Reports\get_filter_value( 'products' );
+		$single_variation = strpos( $download_data, '_' );
+		$download_data    = ! empty( $download_data ) && 'all' !== Reports\get_filter_value( 'products' )
 			? edd_parse_product_dropdown_value( Reports\get_filter_value( 'products' ) )
 			: false;
 
@@ -667,7 +668,7 @@ function edd_register_downloads_report( $reports ) {
 			),
 		) );
 
-        if ( $download_data && $download->has_variable_prices() ) {
+        if ( $download_data && $download->has_variable_prices() && false === $single_variation ) {
 	        $prices = $download->get_prices();
 
 	        $reports->register_endpoint( 'download_sales_by_variations', array(
