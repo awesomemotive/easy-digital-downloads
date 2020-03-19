@@ -2406,10 +2406,10 @@ class Stats {
 			? absint( $this->query_vars['number'] )
 			: 1;
 
-		$sql = "SELECT product_id, price_id, COUNT(id) AS total
+		$sql = "SELECT product_id, file_id, COUNT(id) AS total
 				FROM {$this->query_vars['table']}
 				WHERE 1=1 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
-				GROUP BY product_id, price_id
+				GROUP BY product_id, file_id
 				ORDER BY total DESC
 				LIMIT {$number}";
 
@@ -2419,7 +2419,7 @@ class Stats {
 
 			// Format resultant object.
 			$value->product_id = absint( $value->product_id );
-			$value->price_id   = absint( $value->price_id );
+			$value->file_id    = absint( $value->file_id );
 			$value->total      = absint( $value->total );
 
 			// Add instance of EDD_Download to resultant object.
