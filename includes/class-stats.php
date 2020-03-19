@@ -2475,6 +2475,10 @@ class Stats {
 			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
 			: '';
 
+		$file_id = ! empty( $this->query_vars['file_id'] )
+			? $this->get_db()->prepare( 'AND file_id = %d', absint( $this->query_vars['file_id'] ) )
+			: '';
+
 		$sql = "SELECT AVG(total) AS total
 				FROM (
 					SELECT {$this->query_vars['column']}, COUNT(id) AS total
