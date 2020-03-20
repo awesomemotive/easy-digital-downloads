@@ -24,14 +24,6 @@ jQuery( document ).ready( function( $ ) {
 		}
 		return false;
 	} );
-
-	// Toggle advanced filters on Orders page.
-	$( '.edd-advanced-filters-button' ).on( 'click', function( e ) {
-		// Prevent submit action
-		e.preventDefault();
-
-		$( '#edd-advanced-filters' ).toggleClass( 'open' );
-	} );
 } );
 
 /**
