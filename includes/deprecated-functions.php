@@ -1000,6 +1000,16 @@ function edd_report_views() {
 }
 
 /**
+ * Show report graph date filters.
+ *
+ * @since 1.3
+ * @deprecated 3.0 Unused.
+ */
+function edd_reports_graph_controls() {
+	_edd_deprecated_function( __FUNCTION__, 'EDD 3.0' );
+}
+
+/**
  * Sets up the dates used to filter graph data
  *
  * Date sent via $_GET is read first and then modified (if needed) to match the
