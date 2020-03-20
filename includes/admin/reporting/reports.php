@@ -486,7 +486,6 @@ function edd_register_downloads_report( $reports ) {
 		$dates         = Reports\get_filter_value( 'dates' );
 		$exclude_taxes = Reports\get_taxes_excluded_filter();
 		$label         = $options[ $dates['range'] ];
-		$filter        = Reports\get_filters();
 
 		$download_data = Reports\get_filter_value( 'products' );
 		$download_data = ! empty( $download_data ) && 'all' !== Reports\get_filter_value( 'products' )
@@ -620,7 +619,7 @@ function edd_register_downloads_report( $reports ) {
 			    'label' => $endpoint_label,
 			    'views' => array(
 				    'tile' => array(
-					    'data_callback' => function () use ( $filter, $download_data, $country, $region, $dates ) {
+					    'data_callback' => function () use ( $download_data, $country, $region, $dates ) {
 						    $stats = new EDD\Stats( array(
 							    'product_id' => absint( $download_data['download_id'] ),
 							    'price_id'   => absint( $download_data['price_id'] ),
@@ -675,7 +674,7 @@ function edd_register_downloads_report( $reports ) {
 		        'label' => __( 'Sales by Variation for ', 'easy-digital-downloads' ) . esc_html( $download->post_title ) . ' &mdash; ' . $label,
 		        'views' => array(
 			        'chart' => array(
-				        'data_callback' => function() use ( $filter, $download_data, $prices, $dates ) {
+				        'data_callback' => function() use ( $download_data, $prices, $dates ) {
 					        $stats = new EDD\Stats();
 					        $sales = $stats->get_order_item_count( array(
 						        'product_id' => absint( $download_data['download_id'] ),
@@ -724,7 +723,7 @@ function edd_register_downloads_report( $reports ) {
 		        'label' => __( 'Earnings by Variation for ', 'easy-digital-downloads' ) . esc_html( $download->post_title ) . ' &mdash; ' . $label,
 		        'views' => array(
 			        'chart' => array(
-				        'data_callback' => function() use ( $filter, $download_data, $prices, $dates ) {
+				        'data_callback' => function() use ( $download_data, $prices, $dates ) {
 					        $stats = new EDD\Stats();
 					        $earnings = $stats->get_order_item_earnings( array(
 						        'product_id' => absint( $download_data['download_id'] ),
@@ -783,7 +782,7 @@ function edd_register_downloads_report( $reports ) {
 		        'label' => __( 'Sales and Earnings for ', 'easy-digital-downloads' ) . esc_html( $download_label ),
 		        'views' => array(
 			        'chart' => array(
-				        'data_callback' => function () use ( $filter, $download_data ) {
+				        'data_callback' => function () use ( $download_data ) {
 					        global $wpdb;
 
 					        $dates        = Reports\get_dates_filter( 'objects' );
