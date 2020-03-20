@@ -809,9 +809,16 @@ textarea[name="edd-note"] {
 	padding-bottom: 0;
 }
 
+#edd-filters .filter-items {
+	margin: 10px 0;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
 #edd-filters .filter-items > span:not(.edd-date-range-options) {
 	display: inline-block;
-	margin: 10px 6px 0 0;
+	margin-right: 6px;
 	max-width: 200px;
 }
 
@@ -1981,7 +1988,6 @@ body.download_page_edd-reports {
 	align-items: center;
 	flex-wrap: wrap;
 	flex: 1 1 75%;
-	padding-bottom: 10px;
 }
 
 @media screen and ( max-width: 782px ) {
