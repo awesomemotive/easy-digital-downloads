@@ -1993,7 +1993,7 @@ body.download_page_edd-reports {
 @media screen and ( max-width: 782px ) {
 
 	.download_page_edd-reports #edd-filters .filter-items {
-		flex-basis: 100%:
+		flex-basis: 100%;
 	}
 }
 
