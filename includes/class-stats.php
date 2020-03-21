@@ -2409,7 +2409,7 @@ class Stats {
 		$sql = "SELECT product_id, file_id, COUNT(id) AS total
 				FROM {$this->query_vars['table']}
 				WHERE 1=1 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
-				GROUP BY product_id, file_id
+				GROUP BY product_id
 				ORDER BY total DESC
 				LIMIT {$number}";
 
