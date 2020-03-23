@@ -3,6 +3,7 @@
 /**
  * Internal dependencies.
  */
+import { NumberFormat } from '@easy-digital-downloads/currency';
 import { getLabelWithTypeCondition, toolTipBaseConfig } from './utils';
 
 /**
@@ -12,19 +13,31 @@ import { getLabelWithTypeCondition, toolTipBaseConfig } from './utils';
  * @return {Chart}
  */
 export const render = ( config ) => {
-	const {
-		dates,
-		options,
-		data,
-		target,
-	} = config;
+	const { target } = config;
+	const number = new NumberFormat();
 
-
-	// Config tooltips.
-	config.options.tooltips = tooltipConfig( config );
+	const lineConfig = {
+		...config,
+		options: {
+			...config.options,
+			tooltips: tooltipConfig( config ),
+			scales: {
+				...config.options.scales,
+				yAxes: [
+					{
+						ticks: {
+							callback: ( value, index, values ) => {
+								return number.format( value );
+							},
+						},
+					},
+				],
+			},
+		},
+	};
 
 	// Render
-	return new Chart( document.getElementById( target ), config );
+	return new Chart( document.getElementById( target ), lineConfig );
 };
 
 /**
