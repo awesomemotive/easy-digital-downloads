@@ -384,7 +384,7 @@ class EDD_DB_Customers extends EDD_DB  {
 		 * @param mixed|null $customer               Customer to return instead. Default null to use default method.
 		 * @param string     $field                  The field to retrieve by.
 		 * @param mixed      $value                  The value to search by.
-		 * @param EDD_DB_Customers $edd_customers_db Customer's database class.
+		 * @param EDD_DB_Customers $edd_customers_db Customer database class.
 		 */
 		$found = apply_filters( 'edd_pre_get_customer', null, $field, $value, $this );
 
@@ -448,7 +448,7 @@ class EDD_DB_Customers extends EDD_DB  {
 		 *
 		 * @param object|false     $customer         Customer query result. False if no Customer is found.
 		 * @param array            $args             Arguments used to query the Customer.
-		 * @param EDD_DB_Customers $edd_customers_db Customer's database class.
+		 * @param EDD_DB_Customers $edd_customers_db Customer database class.
 		 */
 		$customer = apply_filters( "edd_get_customer_by_{$field}", $customer, $args, $this );
 
@@ -459,7 +459,7 @@ class EDD_DB_Customers extends EDD_DB  {
 		 *
 		 * @param object|false     $customer         Customer query result. False if no Customer is found.
 		 * @param array            $args             Arguments used to query the Customer.
-		 * @param EDD_DB_Customers $edd_customers_db Customer's database class.
+		 * @param EDD_DB_Customers $edd_customers_db Customer database class.
 		 */
 		$customer = apply_filters( 'edd_get_customer', $customer, $args, $this );
 
