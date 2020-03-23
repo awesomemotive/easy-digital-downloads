@@ -466,8 +466,6 @@ class EDD_Base_Log_List_Table extends List_Table {
 		<?php endif; ?>
 
 		<span id="edd-after-core-filters">
-			<?php do_action( 'edd_payment_advanced_filters_after_fields' ); ?>
-
 			<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'easy-digital-downloads' ); ?>"/>
 
 			<?php if ( ! empty( $start_date ) || ! empty( $end_date ) || ! empty( $download ) || ! empty( $customer ) ) : ?>
