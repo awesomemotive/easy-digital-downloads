@@ -531,21 +531,27 @@ a.edd-delete:hover {
 }
 
 .order-customer-info .customer-details-wrap {
-	overflow: hidden;
+	margin: 15px 0;
+	align-items: center;
 }
 
-.order-customer-info .customer-details-actions {
-	margin-bottom: 0;
+.order-customer-info .customer-details-wrap .spinner {
+	margin: 0;
 }
 
-.order-customer-info .customer-details span {
+.order-customer-info .customer-details {
+	display: flex;
+	flex-direction: column;
+} 
+
+.order-customer-info .customer-details .customer-since {
+	color: #666;
 	display: block;
-	margin-bottom: 5px;
+	margin: 4px 0 6px;
 }
 
-.order-customer-info .customer-details span.customer-name {
-	font-size: 1.5em;
-	font-weight: 400;
+.order-customer-info .customer-details > span {
+	margin-bottom: 5px;
 }
 
 .edd-order-add-download-select .spinner {
@@ -555,6 +561,15 @@ a.edd-delete:hover {
 .edd-order-refund-items .wp-list-table {
 	border-top: 0;
 	border-bottom: 0;
+}
+
+.edd-order-resend-email-chooser legend {
+	font-weight: bold;
+	margin-bottom: 4px;
+}
+
+.edd-order-resend-email-chooser p {
+	margin: 4px 0;
 }
 
 /* Note Styles
@@ -668,13 +683,21 @@ textarea[name="edd-note"] {
 	height: 100px;
 }
 
+.edd-amount-type-wrapper {
+	position: relative;
+	display: inline-block;
+}
+
 .edd-amount-type-select-wrapper {
 	position: absolute;
 	width: 45px;
-	margin: 2px;
 	background: #fafafa;
 	opacity: 0.9;
-	overflow: hidden;
+	top: 1px;
+	left: 1px;
+	bottom: 1px;
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
 }
 
 .edd-amount-type-wrapper .edd-amount-type-select-wrapper:after {
@@ -693,18 +716,26 @@ textarea[name="edd-note"] {
 }
 
 .edd-amount-type-wrapper select {
+	line-height: 1;
+	text-align: center;
 	border: 0;
 	background: transparent;
-	height: 27px;
 	width: 45px;
-	padding: 0 7px 0 9px;
+	min-height: 0;
+	height: 100%;
 	margin: 0;
-	text-align: center;
+	padding-left: 8px;
 	border-right: 1px solid #ddd;
 	-webkit-appearance: none;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
 	box-shadow: none;
 	position: relative;
 	z-index: 3;
+}
+
+.edd-amount-type-wrapper input {
+	margin: 0;
 }
 
 .edd-amount-type-wrapper #edd-amount {
@@ -1481,9 +1512,6 @@ input[class*="edd-price-field"] {
 .edd-edit-purchase-element ul li.price {
 	width: 20%;
 }
-.edd-admin-box .label {
-	font-weight: 600;
-}
 .edd-admin-box-inside {
 	border-bottom: 1px solid #f1f1f1;
 	clear: both;
@@ -1491,11 +1519,32 @@ input[class*="edd-price-field"] {
 	margin: 0;
 	word-wrap: break-word;
 }
+.edd-admin-box-inside--row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
 .edd-admin-box-inside > p {
 	margin: 8px 3px;
 }
 .edd-admin-box-inside .strong {
 	font-weight: 600;
+}
+.edd-admin-box div:not(.edd-admin-box-inside--row) .label {
+	display: block;
+	margin-bottom: 4px;
+	margin-right: 0;
+}
+.edd-admin-box .label--has-tip {
+	display: flex;
+	align-items: center;
+}
+.edd-admin-box .label--has-tip .edd-help-tip {
+	margin-top: 0;
+	font-size: 20px;
+}
+.edd-admin-box div:not(.edd-admin-box-inside--row) .label--has-checkbox {
+	margin-bottom: 0;
 }
 .edd-payment-fees .fee-label {
 	color: #666;
@@ -1568,9 +1617,6 @@ input[class*="edd-price-field"] {
 	width: 100%;
 }
 .edd-admin-box-inside span.label {
-	display: inline-block;
-	width: 85px;
-	text-align: right;
 	margin-right: 10px;
 }
 #edd-order-resend-receipt .inside {
@@ -2787,12 +2833,11 @@ body.download_page_edd-reports {
 }
 .edd-sections-wrap .section-wrap .avatar-wrap {
 	float: left;
-	padding-right: 20px;
+	padding-right: 10px;
 	text-align: center;
 }
 .edd-sections-wrap .section-wrap img.avatar {
 	border-radius: 5px;
-	margin-bottom: 10px;
 }
 .edd-sections-wrap .section-wrap .customer-id {
 	position: absolute;
@@ -3302,54 +3347,54 @@ body.download_page_edd-reports {
 
 /* Fresh */
 .admin-color-fresh .edd-vertical-sections .section-nav li[aria-selected="true"] a {
-	border-left: 5px solid #0073aa;
+	box-shadow: inset 5px 0 #0073aa;
 }
 
 /* Blue */
 .admin-color-blue .edd-vertical-sections .section-nav li[aria-selected="true"] a {
-	border-left: 5px solid #096484;
+	box-shadow: inset 5px 0 #096484;
 }
 
 /* Coffee */
 .admin-color-coffee .edd-vertical-sections .section-nav li[aria-selected="true"] a {
-	border-left: 5px solid #096484;
+	box-shadow: inset 5px 0 #096484;
 }
 
 /* Ectoplasm */
 .admin-color-ectoplasm .edd-vertical-sections .section-nav li[aria-selected="true"] a {
-	border-left: 5px solid #a3b745;
+	box-shadow: inset 5px 0 #a3b745;
 }
 
 /* Midnight */
 .admin-color-midnight .edd-vertical-sections .section-nav li[aria-selected="true"] a {
-	border-left: 5px solid #26292c;
+	box-shadow: inset 5px 0 #26292c;
 }
 
 /* Ocean */
 .admin-color-ocean .edd-vertical-sections .section-nav li[aria-selected="true"] a {
-	border-left: 5px solid #627c83;
+	box-shadow: inset 5px 0 #627c83;
 }
 
 /* Sunrise */
 .admin-color-sunrise .edd-vertical-sections .section-nav li[aria-selected="true"] a {
-	border-left: 5px solid #be3631;
+	box-shadow: inset 5px 0 #be3631;
 }
 
 /* Light */
 .admin-color-light .edd-vertical-sections .section-nav li[aria-selected="true"] a {
-	border-left: 5px solid #888;
+	box-shadow: inset 5px 0 #888;
 }
 
 /* bbPress Color Schemes */
 
 /* Evergreen */
 .admin-color-evergreen .edd-vertical-sections .section-nav li[aria-selected="true"] a {
-	border-left: 5px solid #36533f;
+	box-shadow: inset 5px 0 #36533f;
 }
 
 /* Mint */
 .admin-color-mint .edd-vertical-sections .section-nav li[aria-selected="true"] a {
-	border-left: 5px solid #4f6d59;
+	box-shadow: inset 5px 0 #4f6d59;
 }
 
 .edd-vertical-sections .section-nav li[aria-selected="true"] .dashicons {

@@ -127,7 +127,7 @@ final class Easy_Digital_Downloads {
 	/**
 	 * EDD Components array
 	 *
-	 * @var array
+	 * @var EDD\Component[]
 	 * @since 3.0
 	 */
 	public $components = array();
@@ -343,17 +343,22 @@ final class Easy_Digital_Downloads {
 	 * This method exists to setup the bridges between EDD versions, most
 	 * notably between versions less than 2.9 and greater than 3.0.
 	 *
+	 * Compatibility classes are not set up during EDD uninstall in order to allow us to use WordPress functions
+	 * to cleanly delete the old custom post types from pre-3.0.
+	 *
 	 * @access private
 	 * @since 3.0
 	 * @return void
 	 */
 	private function setup_compat() {
-		new EDD\Compat\Discount();
-		new EDD\Compat\Customer();
-		new EDD\Compat\Log();
-		new EDD\Compat\Payment();
-		new EDD\Compat\Tax();
-		new EDD\Compat\Template();
+		if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) || plugin_basename( $this->file ) !== WP_UNINSTALL_PLUGIN ) {
+			new EDD\Compat\Discount();
+			new EDD\Compat\Customer();
+			new EDD\Compat\Log();
+			new EDD\Compat\Payment();
+			new EDD\Compat\Tax();
+			new EDD\Compat\Template();
+		}
 	}
 
 	/**
