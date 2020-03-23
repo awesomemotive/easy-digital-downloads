@@ -678,11 +678,11 @@ table.edd-order-overview-summary {
 	border-top: 1px solid #e5e5e5;
 }
 
-.edd-order-overview-summary__adjustments th.column-name {
+.edd-order-overview-summary__adjustments td.column-name {
 	position: relative;
 }
 
-.edd-order-overview-summary__adjustments th.column-name .delete {
+.edd-order-overview-summary__adjustments td.column-name .delete {
 	position: absolute;
 	left:  -40px;
 	top: 50%;
@@ -696,6 +696,7 @@ table.edd-order-overview-summary {
 }
 
 .edd-order-overview-summary__totals .notice p {
+	font-weight: normal;
 	margin: 0.5em 0;
 }
 

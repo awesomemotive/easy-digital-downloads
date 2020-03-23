@@ -19,28 +19,30 @@ $view_url = edd_get_admin_url(
 
 <td></td>
 
-<td class="column-primary" colspan="{{ data.config.colspan }}">
+<td class="column-primary column-nmae" colspan="{{ data.config.colspan }}">
 	<# if ( true === data.state.isAdding ) { #>
 	<button class="button-link delete">
 		<span class="dashicons dashicons-no"></span>
 	</button>
 	<# } #>
 
-	<# if ( 'credit' === data.type ) { #>
-		<?php esc_html_e( 'Order Credit', 'easy-digital-downloads' ); ?>
-	<# } else { #>
-		<?php esc_html_e( 'Order Fee', 'easy-digital-downloads' ); ?>
-	<# } #>
+	<div>
+		<# if ( 'credit' === data.type ) { #>
+			<?php esc_html_e( 'Order Credit', 'easy-digital-downloads' ); ?>
+		<# } else { #>
+			<?php esc_html_e( 'Order Fee', 'easy-digital-downloads' ); ?>
+		<# } #>
 
-	<# if ( '' !== data.description ) { #>
-		<br />
-		<small>
-			<# if ( false !== data.orderItem ) { #>
-				{{ data.orderItem.productName }}:&nbsp;
-			<# } #>
-			{{ data.description }}
-		</small>
-	<# } #>
+		<# if ( '' !== data.description ) { #>
+			<br />
+			<small>
+				<# if ( false !== data.orderItem ) { #>
+					{{ data.orderItem.productName }}:&nbsp;
+				<# } #>
+				{{ data.description }}
+			</small>
+		<# } #>
+	</div>
 </td>
 
 <td class="column-right" data-colname="<?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?>">
