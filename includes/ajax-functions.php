@@ -1475,7 +1475,7 @@ function edd_admin_order_get_item_amounts() {
 	$tax_rate  = edd_get_tax_rate( $country, $region, $fallback = false );
 
 	if ( true === $use_taxes && floatval( 0 ) !== floatval( $tax_rate ) ) {
-		$tax = edd_calculate_tax( floatval( $subtotal ), $country, $region );
+		$tax = edd_calculate_tax( floatval( $subtotal - $discount ), $country, $region );
 	} else { 
 		$tax = 0;
 	}
