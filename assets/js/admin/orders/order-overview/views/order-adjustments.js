@@ -83,7 +83,7 @@ export const OrderAdjustments = wp.Backbone.View.extend( {
 		this.views.get().forEach( ( view ) => {
 			const { model: viewModel } = view;
 
-			if ( viewModel.get( 'id' ) === model.id ) {
+			if ( viewModel.id === model.id ) {
 				subview = view;
 			}
 		} );
