@@ -519,7 +519,7 @@ function edd_get_registered_settings() {
 						'type'    => 'select',
 						'std'     => 'refundable',
 						'chosen'  => true,
-						'options' => edd_get_refundability_types()
+						'options' => edd_get_refundability_types(),
 					),
 					'refund_window' => array(
 						'id'   => 'refund_window',
