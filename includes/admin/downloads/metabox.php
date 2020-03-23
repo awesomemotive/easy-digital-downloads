@@ -943,7 +943,7 @@ function edd_render_refund_row( $post_id ) {
 							ucwords( $refundability )
 						),
 					),
-					$types,
+					$types
 				),
 				// Use the direct meta value to avoid falling back to default.
 				'selected'         => get_post_meta( $post_id, '_edd_refundability', true ),
