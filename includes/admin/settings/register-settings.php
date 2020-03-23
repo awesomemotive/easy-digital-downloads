@@ -530,7 +530,7 @@ function edd_get_registered_settings() {
 						'size' => 'small',
 						'max'  => 3650, // Ten year maximum, because why explicitly support longer
 						'min'  => 0,
-						'step' => 1
+						'step' => 1,
 					),
 				),
 				'api' => array(
