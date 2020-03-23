@@ -138,21 +138,6 @@ function edd_download_meta_box_save( $post_id, $post ) {
 			}
 
 			update_post_meta( $post_id, $field, $new_default_price_id );
-
-		} else if ( '_edd_refundability' === $field ) {
-			$global_ability = edd_get_option( 'refundability', 'refundable' );
-
-			if ( isset( $_POST[ $field ] ) ) {
-				$value = 'refundable' !== $global_ability
-					? 'refundable'
-					: '';
-			} else {
-				$value = 'nonrefundable' !== $global_ability
-					? 'nonrefundable'
-					: '';
-			}
-
-			update_post_meta( $post_id, $field, $value );
 		} else {
 
 			if ( isset( $_POST[ $field ] ) ) {
@@ -933,7 +918,6 @@ function edd_render_refund_row( $post_id ) {
 	$global_ability    = edd_get_option( 'refundability', 'refundable' );
 	$refundability     = isset( $types[ $global_ability ] ) ? $types[ $global_ability ] : __( 'Unknown', 'easy-digital-downloads' );
 	$global_window     = edd_get_option( 'refund_window', 30 );
-	$edd_refundability = edd_get_download_refundability( $post_id );
 	$edd_refund_window = edd_get_download_refund_window( $post_id ); ?>
 
 	<div class="edd-product-options-wrapper">
@@ -945,14 +929,27 @@ function edd_render_refund_row( $post_id ) {
 		</p>
 
 		<p>
-			<?php echo EDD()->html->checkbox( array(
-				'name'    => '_edd_refundability',
-				'label'   => esc_html__( 'Refundable', 'easy-digital-downloads' ),
-				'current' => 'refundable' === $edd_refundability || 'on' === $edd_refundability,
+			<label for="_edd_refundability" class="label--block">
+				<?php esc_html_e( 'Refund Status', 'easy-digital-downloads' ); ?>
+			</label>
+			<?php echo EDD()->html->select( array(
+				'name'             => '_edd_refundability',
+				'options'          => array_merge(
+					// Manually define a "none" option to set a blank value, vs. -1.
+					array(
+						'' => sprintf(
+							/** translators: Default refund status */
+							esc_html_x( 'Default (%1$s)', 'Download refund status', 'easy-digital-downloads' ),
+							ucwords( $refundability )
+						),
+					),
+					$types,
+				),
+				// Use the direct meta value to avoid falling back to default.
+				'selected'         => get_post_meta( $post_id, '_edd_refundability', true ),
+				'show_option_all'  => '',
+				'show_option_none' => '',
 			) ); ?>
-		</p>
-		<p class="description">
-			<?php printf( __( 'Overrides default: %s', 'easy-digital-downloads' ), $refundability ); ?>
 		</p>
 
 		<p>
