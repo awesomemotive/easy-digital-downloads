@@ -32,7 +32,7 @@
 		"moment": "2.22.2"
 	},
 	"devDependencies": {
-		"@wordpress/scripts": "7.0.1",
+		"@wordpress/scripts": "7.1.0",
 		"copy-webpack-plugin": "5.1.1",
 		"grunt": "^1.0.4",
 		"grunt-checktextdomain": "^1.0.1",
@@ -44,6 +44,7 @@
 		"grunt-rtlcss": "~2.0.1",
 		"grunt-wp-i18n": "^1.0.2",
 		"load-grunt-tasks": "^3.5.2",
+		"locutus": "^2.0.11",
 		"makepot": "^0.3.0",
 		"uglify-es": "3.3.9",
 		"uglifyjs-webpack-plugin": "2.2.0",
@@ -58,6 +59,7 @@
 		"lint:js": "wp-scripts lint-js .",
 		"lint:js--fix": "wp-scripts lint-js . --fix",
 		"lint:pkg-json": "wp-scripts lint-pkg-json",
-		"package-plugin": "npm run build && grunt build"
+		"package-plugin": "npm run build && grunt build",
+		"test:unit": "wp-scripts test-unit-js --config tests/jest/jest.config.js"
 	}
 }

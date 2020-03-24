@@ -2160,6 +2160,11 @@ body.download_page_edd-reports {
 	width: 33.3%;
 }
 
+/** Hide legacy report empty navigations */
+.download_page_edd-reports .section-content .tablenav.top {
+	display: none;
+}
+
 #edd_tax_rates {
 	margin: 1em 0 0;
 }
@@ -2728,6 +2733,7 @@ body.download_page_edd-reports {
 .edd-sections-wrap .edd-vertical-sections:not(.meta-box) .section-wrap > div {
 	min-height: 500px;
 	height: 100%;
+	overflow: hidden;
 }
 .edd-sections-wrap .section-wrap .customer-section:not(:last-child) {
 	border-bottom: 1px solid #eee;
@@ -2738,12 +2744,11 @@ body.download_page_edd-reports {
 .edd-sections-wrap .section-wrap .section-content {
 	border-left: 1px solid #e5e5e5;
 }
-.edd-sections-wrap .section-wrap .section-content > div {
-	padding: 0px 20px 5px;
+
+.edd-sections-wrap .section-wrap .section-content > * {
+	margin: 20px;
 }
-.edd-sections-wrap .section-wrap .section-content > div:not(.tablenav):first-child {
-	padding: 20px;
-}
+
 .edd-sections-wrap .section-wrap .avatar-wrap {
 	float: left;
 	padding-right: 20px;

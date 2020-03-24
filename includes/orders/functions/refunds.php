@@ -36,7 +36,7 @@ function edd_is_order_refundable( $order_id = 0 ) {
 	}
 
 	// Only completed orders can be refunded.
-	if ( 'complete' !== $order->status ) {
+	if ( ! in_array( $order->status, array( 'complete', 'publish', 'partially_refunded' ), true ) ) {
 		return false;
 	}
 
@@ -280,11 +280,14 @@ function edd_refund_order( $order_id = 0, $order_items = array() ) {
 			break;
 		}
 	}
-	if ( true === $all_refunded ) {
-		edd_update_order( $order_id, array(
-			'status' => 'refunded',
-		) );
-	}
+
+	$order_status = true === $all_refunded
+		? 'refunded'
+		: 'partially_refunded';
+
+	edd_update_order( $order_id, array(
+		'status' => $order_status,
+	) );
 
 	/**
 	 * Fires when an order has been refunded.
