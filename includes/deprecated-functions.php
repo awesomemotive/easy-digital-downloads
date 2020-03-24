@@ -1000,6 +1000,16 @@ function edd_report_views() {
 }
 
 /**
+ * Show report graph date filters.
+ *
+ * @since 1.3
+ * @deprecated 3.0 Unused.
+ */
+function edd_reports_graph_controls() {
+	_edd_deprecated_function( __FUNCTION__, 'EDD 3.0' );
+}
+
+/**
  * Sets up the dates used to filter graph data
  *
  * Date sent via $_GET is read first and then modified (if needed) to match the
@@ -1110,4 +1120,15 @@ function edd_record_sale_in_log( $download_id = 0, $payment_id, $price_id = fals
 	);
 
 	$edd_logs->insert_log( $log_data, $log_meta );
+}
+
+/**
+ * Outputs the JavaScript code for the Agree to Terms section to toggle
+ * the T&Cs text
+ *
+ * @since 1.0
+ * @deprecated 3.0 Moved to external scripts in assets/js/frontend/checkout/components/agree-to-terms
+ */
+function edd_agree_to_terms_js() {
+	_edd_deprecated_function( __FUNCTION__, '3.0' );
 }
