@@ -467,7 +467,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 
 		<?php if ( has_action( 'edd_payment_advanced_filters_after_fields' ) ) : ?>
 		<span id="edd-advanced-filters">
-			<input type="button" class="edd-advanced-filters-button button-secondary" value="<?php esc_html_e( 'More', 'easy-digital-downloads' ); ?>"/>
+			<input type="button" class="edd-advanced-filters-button button-secondary" value="<?php esc_attr_e( 'More', 'easy-digital-downloads' ); ?>"/>
 
 			<div class="inside">
 				<span id="edd-after-core-filters">
