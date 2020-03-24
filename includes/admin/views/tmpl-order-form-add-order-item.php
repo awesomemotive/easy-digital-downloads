@@ -62,6 +62,12 @@ if ( ! empty( $recent_downloads ) ) {
 
 <div class="edd-order-overview-modal">
 	<form class="edd-order-overview-add-item">
+		<# if ( false !== data.state.error ) { #>
+			<div class="notice notice-error">
+				<p>{{ data.state.error }}</p>
+			</div>
+		<# } #>
+
 		<p>
 			<label for="download">
 				<?php echo esc_html( edd_get_label_singular() ); ?>
