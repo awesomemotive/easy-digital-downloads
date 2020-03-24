@@ -10,6 +10,54 @@
  */
 
 $currency_position  = edd_get_option( 'currency_position', 'before' );
+
+//
+// Retrieve a list of recent Downloads to populate list.
+//
+// @todo this is similar to edd_ajax_download_search() but
+//       that cannot be used because it requires $_GET requests.
+//
+$downloads        = array();
+$recent_downloads = get_posts( array(
+	'orderby'        => 'date',
+	'order'          => 'ASC',
+	'post_type'      => 'download',
+	'posts_per_page' => 25,
+	'post_status'    => array(
+		'publish',
+		'draft',
+		'private',
+		'future',
+	),
+) );
+
+if ( ! empty( $recent_downloads ) ) {
+	$items = wp_list_pluck( $recent_downloads, 'post_title', 'ID' );
+
+	foreach ( $items as $download_id => $download_title ) {
+		$prices = edd_get_variable_prices( $download_id );
+
+		// Non-variable items.
+		if ( empty( $prices ) ) {
+			$downloads[] = array(
+				'id'   => $download_id,
+				'name' => $download_title,
+			);
+		// Variable items.
+		} else {
+			foreach ( $prices as $key => $value ) {
+				$name = ! empty( $value['name']  ) ? $value['name']  : '';
+
+				if ( ! empty( $name ) ) {
+					$downloads[] = array(
+						'id'   => $download_id . '_' . $key,
+						'name' => esc_html( $download_title . ': ' . $name ),
+					);
+				}
+			}
+		}
+	}
+}
 ?>
 
 <div class="edd-order-overview-modal">
@@ -30,6 +78,9 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 					<# if ( 0 !== data.productId ) { #>
 						<option value="{{ data.productId }}<# if ( 0 !== data.priceId ) { #>_{{ data.priceId }}<# } #>" selected>{{ data.productName }}</option>
 					<# } #>
+					<?php foreach ( $downloads as $download ) : ?>
+						<option value="<?php echo esc_attr( $download['id'] ); ?>"><?php echo esc_html( $download['name'] ); ?></option>
+					<?php endforeach; ?>
 			</select>
 
 			<# if ( true === data.state.isDuplicate ) { #>
