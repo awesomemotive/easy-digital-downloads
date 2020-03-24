@@ -1350,12 +1350,16 @@ function edd_admin_order_get_item_amounts() {
 
 	// Bail if missing any data.
 	if ( empty( $nonce ) ) {
-		return wp_send_json_error();
+		return wp_send_json_error( array(
+			'message' => esc_html__( 'Unable to verify action. Please refresh the page and try again.', 'easy-digital-downloads' ),
+		) );
 	}
 
 	// Bail if nonce verification failed.
 	if ( ! wp_verify_nonce( $nonce, 'edd_admin_order_get_item_amounts' ) ) {
-		return wp_send_json_error();
+		return wp_send_json_error( array(
+			'message' => esc_html__( 'Unable to verify action. Please refresh the page and try again.', 'easy-digital-downloads' ),
+		) );
 	}
 
 	$is_adjusting_manually = isset( $_POST['_isAdjustingManually'] ) && false !== $_POST['_isAdjustingManually'];
@@ -1392,7 +1396,9 @@ function edd_admin_order_get_item_amounts() {
 
 	// Bail if no Download is found.
 	if ( ! $download ) {
-		return wp_send_json_error();
+		return wp_send_json_error( array(
+			'message' => esc_html__( 'Unable to find download. Please refresh the page and try again.', 'easy-digital-downloads' ),
+		) );
 	}
 
 	// Use base Amount if sent.

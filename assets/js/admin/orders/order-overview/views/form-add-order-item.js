@@ -67,11 +67,13 @@ export const FormAddOrderItem = Dialog.extend( {
 			orderId: id,
 
 			state,
+
+			error: false,
 		} );
 
 		// Listen for events.
 		this.listenTo( this.model, 'change', this.render );
-		this.listenTo( state, 'change:hasTax', this.render );
+		this.listenTo( state, 'change', this.render );
 		this.listenTo( state.get( 'items' ), 'add', this.closeDialog );
 	},
 
@@ -103,6 +105,7 @@ export const FormAddOrderItem = Dialog.extend( {
 
 		const isDuplicate = false === state.get( 'isFetching' ) && true === state.get( 'items' ).has( model );
 		const isAdjustingManually = model.get( '_isAdjustingManually' );
+		const error = model.get( 'error' );
 
 		const defaults = Base.prototype.prepare.apply( this, arguments );
 
@@ -117,6 +120,7 @@ export const FormAddOrderItem = Dialog.extend( {
 				...defaults.state,
 				isAdjustingManually,
 				isDuplicate,
+				error,
 			}
 		};
 	},
@@ -130,13 +134,14 @@ export const FormAddOrderItem = Dialog.extend( {
 	 */
 	onChangeDownload( e ) {
 		const {
-			target: { options, selectedIndex },
+			target: { options: selectOptions, selectedIndex },
 		} = e;
 
-		const { state } = this.options;
+		const { model, options } = this;
+		const { state } = options;
 
 		// Find the selected Download.
-		const selected = options[ selectedIndex ];
+		const selected = selectOptions[ selectedIndex ];
 
 		// Set ID and Price ID.
 		let productId = selected.value;
@@ -150,25 +155,40 @@ export const FormAddOrderItem = Dialog.extend( {
 			priceId = parseInt( parts[ 1 ] );
 		}
 
+		state.set( 'isFetching', true );
+
 		// Update basic attributes.
-		this.model.set( {
+		model.set( {
 			productId,
 			priceId,
 			productName: selected.text,
+			error: false,
 		} );
 
 		// Update amount attributes.
-		this.model
+		model
 			.getAmounts( {
 				country: state.getTaxCountry(),
 				region: state.getTaxRegion(),
 				items: state.get( 'items' ),
 				adjustments: state.get( 'adjustments' ),
 			} )
+			.fail( ( { message: error } ) => {
+				// Clear fetching.
+				state.set( 'isFetching', false );
+
+				// Set error and reset model.
+				model.set( {
+					error,
+					productId: 0,
+					priceId: 0,
+					productName: '',
+				} );
+			} )
 			.then( ( response ) => {
 				const { amount, tax, subtotal, total } = response;
 
-				this.model.set( {
+				model.set( {
 					amount,
 					tax,
 					subtotal,
@@ -178,6 +198,9 @@ export const FormAddOrderItem = Dialog.extend( {
 					taxManual: number.format( tax ),
 					subtotalManual: number.format( subtotal ),
 				} );
+
+				// Clear fetching.
+				state.set( 'isFetching', false );
 			} );
 	},
 
@@ -307,7 +330,26 @@ export const FormAddOrderItem = Dialog.extend( {
 		// Update all amounts with new item and alert when done.
 		items
 			.updateAmounts()
-			.done( () => items.trigger( 'add', model ) )
-			.done( () => state.set( 'isFetching', false ) );
+			.fail( ( { message: error } ) => {
+				// Remove added model on failure.
+				// It is is added previously to calculate Discounts
+				// as if adding would be successful.
+				items.remove( model, {
+					silent: true,
+				} );
+
+				// Clear fetching.
+				state.set( 'isFetching', false );
+
+				// Set error.
+				model.set( 'error', error );
+			} )
+			.done( () => {
+				// Alert of succesful addition.
+				items.trigger( 'add', model ) 
+
+				// Clear fetching.
+				state.set( 'isFetching', false ) 
+			} );
 	},
 } );
