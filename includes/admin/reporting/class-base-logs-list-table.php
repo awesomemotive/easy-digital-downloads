@@ -481,7 +481,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 		</span>
 		<?php endif; ?>
 
-		<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'easy-digital-downloads' ); ?>"/>
+		<input type="submit" class="button-secondary" value="<?php esc_attr_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
 
 		<?php if ( ! empty( $start_date ) || ! empty( $end_date ) || ! empty( $download ) || ! empty( $customer ) ) : ?>
 			<a href="<?php echo esc_url( $clear_url ); ?>" class="button-secondary">
