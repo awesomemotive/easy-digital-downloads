@@ -163,28 +163,3 @@ function edd_get_htaccess_rules( $method = false ) {
 	$rules = apply_filters( 'edd_protected_directory_htaccess_rules', $rules, $method );
 	return $rules;
 }
-
-
-// For installs on pre WP 3.6
-if( ! function_exists( 'wp_is_writable' ) ) {
-
-	/**
-	 * Determine if a directory is writable.
-	 *
-	 * This function is used to work around certain ACL issues
-	 * in PHP primarily affecting Windows Servers.
-	 *
-	 * @see win_is_writable()
-	 *
-	 * @since 3.6.0
-	 *
-	 * @param string $path
-	 * @return bool
-	 */
-	function wp_is_writable( $path ) {
-	        if ( 'WIN' === strtoupper( substr( PHP_OS, 0, 3 ) ) )
-	                return win_is_writable( $path );
-	        else
-	                return @is_writable( $path );
-	}
-}
