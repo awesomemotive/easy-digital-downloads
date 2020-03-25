@@ -445,7 +445,7 @@ add_action( 'edd_after_price_option', 'edd_variable_price_quantity_field', 10, 3
 function edd_before_download_content( $content ) {
 	global $post;
 
-	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() && !post_password_required() ) {
+	if ( $post && $post instanceof WP_Post && 'download' === $post->post_type && is_singular( 'download' ) && is_main_query() && ! post_password_required() ) {
 		ob_start();
 		do_action( 'edd_before_download_content', $post->ID );
 		$content = ob_get_clean() . $content;
@@ -1178,7 +1178,7 @@ add_action( 'edd_downloads_list_after', 'edd_downloads_pagination', 10, 3 );
  * Build pagination
  *
  * @since 2.9.8
- * 
+ *
  * @param array $args The arguments used to build the pagination.
  */
 function edd_pagination( $args = array() ) {
