@@ -473,8 +473,6 @@ class EDD_Base_Log_List_Table extends List_Table {
 				<span id="edd-after-core-filters">
 					<fieldset class="edd-add-on-filters">
 						<legend><?php esc_html_e( 'Extras', 'easy-digital-downloads' ); ?></legend>
-
-						<?php do_action( 'edd_payment_advanced_filters_after_fields' ); ?>
 					</fieldset>
 				</span>
 			</div>
