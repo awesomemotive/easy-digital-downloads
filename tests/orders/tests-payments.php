@@ -158,13 +158,14 @@ class Payment_Tests extends \EDD_UnitTestCase {
 		$out = edd_get_payment_statuses();
 
 		$expected = array(
-			'pending'    => 'Pending',
-			'complete'   => 'Completed',
-			'refunded'   => 'Refunded',
-			'failed'     => 'Failed',
-			'revoked'    => 'Revoked',
-			'abandoned'  => 'Abandoned',
-			'processing' => 'Processing',
+			'pending'            => 'Pending',
+			'complete'           => 'Completed',
+			'refunded'           => 'Refunded',
+			'partially_refunded' => 'Partially Refunded',
+			'failed'             => 'Failed',
+			'revoked'            => 'Revoked',
+			'abandoned'          => 'Abandoned',
+			'processing'         => 'Processing',
 		);
 
 		$this->assertEquals( $expected, $out );
@@ -174,13 +175,14 @@ class Payment_Tests extends \EDD_UnitTestCase {
 		$out = edd_get_payment_status_keys();
 
 		$expected = array(
-			'pending'    => __( 'Pending',    'easy-digital-downloads' ),
-			'processing' => __( 'Processing', 'easy-digital-downloads' ),
-			'complete'   => __( 'Completed',  'easy-digital-downloads' ),
-			'refunded'   => __( 'Refunded',   'easy-digital-downloads' ),
-			'revoked'    => __( 'Revoked',    'easy-digital-downloads' ),
-			'failed'     => __( 'Failed',     'easy-digital-downloads' ),
-			'abandoned'  => __( 'Abandoned',  'easy-digital-downloads' )
+			'pending'            => __( 'Pending',    'easy-digital-downloads' ),
+			'processing'         => __( 'Processing', 'easy-digital-downloads' ),
+			'complete'           => __( 'Completed',  'easy-digital-downloads' ),
+			'refunded'           => __( 'Refunded',   'easy-digital-downloads' ),
+			'partially_refunded' => __( 'Partially Refunded', 'easy-digital-downloads' ),
+			'revoked'            => __( 'Revoked',    'easy-digital-downloads' ),
+			'failed'             => __( 'Failed',     'easy-digital-downloads' ),
+			'abandoned'          => __( 'Abandoned',  'easy-digital-downloads' )
 		);
 
 		asort( $expected );
