@@ -402,6 +402,16 @@ function get_filter_value( $filter ) {
 		);
 	}
 
+	/**
+	 * Filters a Report filter's value.
+	 *
+	 * @since 3.0
+	 *
+	 * @param mixed|string $value  Value of the filter if it exists, otherwise an empty string.
+	 * @param string       $filter Filter key to retrieve the value for.
+	 */
+	$value = apply_filters( 'edd_get_report_filter_value', $value, $filter );
+
 	return $value;
 }
 
