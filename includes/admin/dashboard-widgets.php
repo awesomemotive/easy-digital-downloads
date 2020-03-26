@@ -21,6 +21,8 @@ defined( 'ABSPATH' ) || exit;
  */
 function edd_register_dashboard_widgets() {
 	if ( current_user_can( apply_filters( 'edd_dashboard_stats_cap', 'view_shop_reports' ) ) ) {
+		wp_enqueue_script( 'edd-admin-dashboard' );
+
 		wp_add_dashboard_widget( 'edd_dashboard_sales', __('Easy Digital Downloads Sales Summary','easy-digital-downloads' ), 'edd_dashboard_sales_widget' );
 	}
 }
@@ -37,9 +39,11 @@ add_action('wp_dashboard_setup', 'edd_register_dashboard_widgets', 10 );
  * @since 1.2.2
  * @return void
  */
-function edd_dashboard_sales_widget( ) {
-	wp_enqueue_script( 'edd-admin-dashboard' );
+function edd_dashboard_sales_widget() {
+	echo '<div class="edd-dashboard-widget" data-edd-dashboard-widget="sales">';
 	echo '<p><img src=" ' . esc_attr( set_url_scheme( EDD_PLUGIN_URL . 'assets/images/loading.gif', 'relative' ) ) . '"/></p>';
+	echo '</div>';
+}
 }
 
 /**
@@ -195,7 +199,7 @@ function edd_load_dashboard_sales_widget( ) {
 	<?php
 	die();
 }
-add_action( 'wp_ajax_edd_load_dashboard_widget', 'edd_load_dashboard_sales_widget' );
+add_action( 'wp_ajax_edd_load_dashboard_sales_widget', 'edd_load_dashboard_sales_widget' );
 
 /**
  * Add download count to At a glance widget

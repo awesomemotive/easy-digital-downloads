@@ -1,14 +1,18 @@
+/* global ajaxurl */
+
 jQuery( document ).ready( function( $ ) {
-	if ( $( '#edd_dashboard_sales' ).length ) {
+	$( '.edd-dashboard-widget' ).each( function() {
+		const widget = $( this ).data( 'eddDashboardWidget' );
+
 		$.ajax( {
 			type: 'GET',
 			data: {
-				action: 'edd_load_dashboard_widget',
+				action: `edd_load_dashboard_${ widget}_widget`,
 			},
 			url: ajaxurl,
-			success: function( response ) {
-				$( '#edd_dashboard_sales .inside' ).html( response );
+			success: ( response ) => {
+				$( this ).replaceWith( response );
 			},
 		} );
-	}
+	} );
 } );
