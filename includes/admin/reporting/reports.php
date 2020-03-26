@@ -226,7 +226,6 @@ function edd_register_overview_report( $reports ) {
 						return $stats->get_order_count() . ' / ' . $stats->get_order_earnings();
 					},
 					'display_args'  => array(
-						'context'          => 'primary',
 						'comparison_label' => $label,
 					),
 				),
@@ -246,7 +245,6 @@ function edd_register_overview_report( $reports ) {
 						return $stats->get_order_count() . ' / ' . $stats->get_order_earnings();
 					},
 					'display_args'  => array(
-						'context'          => 'secondary',
 						'comparison_label' => __( 'All Time', 'easy-digital-downloads' ),
 					),
 				),
@@ -266,7 +264,6 @@ function edd_register_overview_report( $reports ) {
 						) ) );
 					},
 					'display_args'  => array(
-						'context'          => 'tertiary',
 						'comparison_label' => $label,
 					),
 				),
@@ -285,7 +282,6 @@ function edd_register_overview_report( $reports ) {
 						) ) );
 					},
 					'display_args'  => array(
-						'context'          => 'primary',
 						'comparison_label' => $label,
 					),
 				),
@@ -304,7 +300,6 @@ function edd_register_overview_report( $reports ) {
 						) ) );
 					},
 					'display_args'  => array(
-						'context'          => 'secondary',
 						'comparison_label' => $label,
 					),
 				),
@@ -325,7 +320,6 @@ function edd_register_overview_report( $reports ) {
 						) ) );
 					},
 					'display_args'  => array(
-						'context'          => 'tertiary',
 						'comparison_label' => $label,
 					),
 				),
@@ -347,7 +341,6 @@ function edd_register_overview_report( $reports ) {
 						) ) );
 					},
 					'display_args'  => array(
-						'context'          => 'primary',
 						'comparison_label' => $label,
 					),
 				),
@@ -366,7 +359,6 @@ function edd_register_overview_report( $reports ) {
 						) ) );
 					},
 					'display_args'  => array(
-						'context'          => 'secondary',
 						'comparison_label' => $label,
 					),
 				),
@@ -385,7 +377,6 @@ function edd_register_overview_report( $reports ) {
 						) ) );
 					},
 					'display_args'  => array(
-						'context'          => 'tertiary',
 						'comparison_label' => $label,
 					),
 				),
@@ -404,7 +395,6 @@ function edd_register_overview_report( $reports ) {
 						) ) );
 					},
 					'display_args'  => array(
-						'context'          => 'primary',
 						'comparison_label' => $label,
 					),
 				),
@@ -422,7 +412,6 @@ function edd_register_overview_report( $reports ) {
 						) ) );
 					},
 					'display_args'  => array(
-						'context'          => 'secondary',
 						'comparison_label' => $label,
 					),
 				),
@@ -587,7 +576,6 @@ function edd_register_downloads_report( $reports ) {
                         }
 					},
 					'display_args'  => array(
-						'context'          => 'primary',
 						'comparison_label' => $label,
 					),
 				),
@@ -609,7 +597,6 @@ function edd_register_downloads_report( $reports ) {
 						return $stats->get_order_item_count() . ' / ' . $stats->get_order_item_earnings();
 					},
 					'display_args'  => array(
-						'context'          => 'secondary',
 						'comparison_label' => $label,
 					),
 				),
@@ -661,7 +648,6 @@ function edd_register_downloads_report( $reports ) {
 						    return apply_filters( 'edd_reports_downloads_sales_earnings', esc_html( $sales . ' / ' . $earnings ) );
 					    },
 					    'display_args'  => array(
-						    'context'          => 'tertiary',
 						    'comparison_label' => $label . $download_label,
 					    ),
 				    ),
@@ -998,7 +984,6 @@ function edd_register_refunds_report( $reports ) {
 						return apply_filters( 'edd_reports_refunds_refund_count', esc_html( $number ) );
 					},
 					'display_args'  => array(
-						'context'          => 'primary',
 						'comparison_label' => $label,
 					),
 				),
@@ -1018,7 +1003,6 @@ function edd_register_refunds_report( $reports ) {
 						return apply_filters( 'edd_reports_refunds_fully_refunded_order_count', esc_html( $number ) );
 					},
 					'display_args'  => array(
-						'context'          => 'secondary',
 						'comparison_label' => $label,
 					),
 				),
@@ -1038,7 +1022,6 @@ function edd_register_refunds_report( $reports ) {
 						return apply_filters( 'edd_reports_refunds_fully_refunded_order_item_count', esc_html( $number ) );
 					},
 					'display_args'  => array(
-						'context'          => 'tertiary',
 						'comparison_label' => $label,
 					),
 				),
@@ -1060,7 +1043,6 @@ function edd_register_refunds_report( $reports ) {
 						return apply_filters( 'edd_reports_refunds_refund_amount', esc_html( $amount ) );
 					},
 					'display_args'  => array(
-						'context'          => 'primary',
 						'comparison_label' => $label,
 					),
 				),
@@ -1081,7 +1063,6 @@ function edd_register_refunds_report( $reports ) {
 						) ) );
 					},
 					'display_args'  => array(
-						'context'          => 'secondary',
 						'comparison_label' => $label,
 					),
 				),
@@ -1099,7 +1080,6 @@ function edd_register_refunds_report( $reports ) {
 						) );
 					},
 					'display_args'  => array(
-						'context'          => 'tertiary',
 						'comparison_label' => $label,
 					),
 				),
@@ -1119,7 +1099,6 @@ function edd_register_refunds_report( $reports ) {
 						) ) );
 					},
 					'display_args'  => array(
-						'context'          => 'primary',
 						'comparison_label' => $label,
 					),
 				),
@@ -1236,7 +1215,6 @@ function edd_register_payment_gateways_report( $reports ) {
 						) ) );
 					},
 					'display_args'  => array(
-						'context'          => 'primary',
 						'comparison_label' => $label,
 					),
 				),
@@ -1262,7 +1240,6 @@ function edd_register_payment_gateways_report( $reports ) {
 						) ) );
 					},
 					'display_args'  => array(
-						'context'          => 'secondary',
 						'comparison_label' => $label,
 					),
 				),
@@ -1288,7 +1265,6 @@ function edd_register_payment_gateways_report( $reports ) {
 						) ) );
 					},
 					'display_args'  => array(
-						'context'          => 'tertiary',
 						'comparison_label' => $label,
 					),
 				),
@@ -1324,7 +1300,6 @@ function edd_register_payment_gateways_report( $reports ) {
 						}
 					},
 					'display_args'  => array(
-						'context'          => 'primary',
 						'comparison_label' => $label,
 					),
 				),
@@ -1661,7 +1636,6 @@ function edd_register_taxes_report( $reports ) {
 						) );
 					},
 					'display_args'  => array(
-						'context'          => 'primary',
 						'comparison_label' => $label . $download_label,
 					),
 				),
@@ -1699,7 +1673,6 @@ function edd_register_taxes_report( $reports ) {
 							) );
 						},
 						'display_args'  => array(
-							'context'          => 'secondary',
 							'comparison_label' => $label . $download_label,
 						),
 					),
@@ -1815,7 +1788,6 @@ function edd_register_file_downloads_report( $reports ) {
 						) ) );
 					},
 					'display_args'  => array(
-						'context'          => 'primary',
 						'comparison_label' => $label . $download_label,
 					),
 				),
@@ -1834,7 +1806,6 @@ function edd_register_file_downloads_report( $reports ) {
 						) ) );
 					},
 					'display_args'  => array(
-						'context'          => 'secondary',
 						'comparison_label' => $label,
 					),
 				),
@@ -1853,7 +1824,6 @@ function edd_register_file_downloads_report( $reports ) {
                         ) ) );
 					},
 					'display_args'  => array(
-						'context'          => 'primary',
 						'comparison_label' => $label,
 					),
 				),
@@ -1872,7 +1842,6 @@ function edd_register_file_downloads_report( $reports ) {
 						}
 					},
 					'display_args'  => array(
-						'context'          => 'tertiary',
 						'comparison_label' => $label,
 					),
 				),
@@ -2078,25 +2047,6 @@ function edd_register_discounts_report( $reports ) {
 						) ) );
 					},
 					'display_args'  => array(
-						'context'          => 'primary',
-						'comparison_label' => $label,
-					),
-				),
-			),
-		) );
-
-		$reports->register_endpoint( 'ratio_of_discounted_orders', array(
-			'label' => __( 'Discount Ratio', 'easy-digital-downloads' ),
-			'views' => array(
-				'tile' => array(
-					'data_callback' => function () use ( $filter ) {
-						$stats = new EDD\Stats();
-						return apply_filters( 'edd_reports_discounts_ratio_of_discounted_orders', $stats->get_ratio_of_discounted_orders( array(
-							'range' => $filter['range'],
-						) ) );
-					},
-					'display_args'  => array(
-						'context'          => 'secondary',
 						'comparison_label' => $label,
 					),
 				),
@@ -2118,7 +2068,6 @@ function edd_register_discounts_report( $reports ) {
 						) ) );
 					},
 					'display_args'  => array(
-						'context'          => 'tertiary',
 						'comparison_label' => $label . $discount_label,
 					),
 				),
@@ -2137,7 +2086,6 @@ function edd_register_discounts_report( $reports ) {
 						) ) );
 					},
 					'display_args'  => array(
-						'context'          => 'primary',
 						'comparison_label' => $label,
 					),
 				),
@@ -2162,7 +2110,6 @@ function edd_register_discounts_report( $reports ) {
 						}
 					},
 					'display_args'  => array(
-						'context'          => 'secondary',
 						'comparison_label' => $label,
 					),
 				),
@@ -2182,7 +2129,6 @@ function edd_register_discounts_report( $reports ) {
 							) ) );
 						},
 						'display_args'  => array(
-							'context'          => 'tertiary',
 							'comparison_label' => $label . $discount_label,
 						),
 					),
@@ -2390,7 +2336,6 @@ function edd_register_customer_report( $reports ) {
 						) ) );
 					},
 					'display_args'  => array(
-						'context'          => 'secondary',
 						'comparison_label' => $label,
 					),
 				),
@@ -2407,9 +2352,6 @@ function edd_register_customer_report( $reports ) {
 							'function' => 'AVG',
 						) ) );
 					},
-					'display_args'  => array(
-						'context' => 'tertiary',
-					),
 				),
 			),
 		) );
@@ -2424,9 +2366,6 @@ function edd_register_customer_report( $reports ) {
 
 						return apply_filters( 'edd_reports_customers_average_age', $average_value . ' ' . __( 'days', 'easy-digital-downloads' ) );
 					},
-					'display_args'  => array(
-						'context' => 'primary',
-					),
 				),
 			),
 		) );

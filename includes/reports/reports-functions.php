@@ -823,59 +823,55 @@ function default_display_report( $report ) {
  * }
  * @return void Meta box display callbacks only echo output.
  */
-function default_display_tile( $report = null, $tile = array() ) {
+function default_display_tile( $endpoint, $data, $args ) {
+	echo '<span class="tile-label">' . esc_html( $endpoint->get_label() ) .'</span>';
 
-	// Bail if tile has no args
-	if ( ! isset( $tile['args'] ) ) {
-		return;
-	}
-
-	if ( empty( $tile['args']['data'] ) ) {
+	if ( empty( $data ) ) {
 		echo '<span class="tile-no-data tile-value">&mdash;</span>';
 	} else {
-		switch ( $tile['args']['display_args']['type'] ) {
+		switch ( $args['type'] ) {
 			case 'number':
-				echo '<span class="tile-number tile-value">' . edd_format_amount( $tile['args']['data'] ) . '</span>';
+				echo '<span class="tile-number tile-value">' . edd_format_amount( $data ) . '</span>';
 				break;
 
 			case 'split-number':
 				printf( '<span class="tile-amount tile-value">%1$d / %2$d</span>',
-					edd_format_amount( $tile['args']['data']['first_value'] ),
-					edd_format_amount( $tile['args']['data']['second_value'] )
+					edd_format_amount( $data['first_value'] ),
+					edd_format_amount( $data['second_value'] )
 				);
 				break;
 
 			case 'split-amount':
 				printf( '<span class="tile-amount tile-value">%1$d / %2$d</span>',
-					edd_currency_filter( edd_format_amount( $tile['args']['data']['first_value'] ) ),
-					edd_currency_filter( edd_format_amount( $tile['args']['data']['second_value'] ) )
+					edd_currency_filter( edd_format_amount( $data['first_value'] ) ),
+					edd_currency_filter( edd_format_amount( $data['second_value'] ) )
 				);
 				break;
 
 			case 'relative':
-				$direction = ( ! empty( $tile['args']['data']['direction'] ) && in_array( $tile['args']['data']['direction'], array( 'up', 'down' ), true ) )
-					? '-' . sanitize_key( $tile['args']['data']['direction'] )
+				$direction = ( ! empty( $data['direction'] ) && in_array( $data['direction'], array( 'up', 'down' ), true ) )
+					? '-' . sanitize_key( $data['direction'] )
 					: '';
-				echo '<span class="tile-change' . esc_attr( $direction ) . ' tile-value">' . edd_format_amount( $tile['args']['data']['value'] ) . '</span>';
+				echo '<span class="tile-change' . esc_attr( $direction ) . ' tile-value">' . edd_format_amount( $data['value'] ) . '</span>';
 				break;
 
 			case 'amount':
-				echo '<span class="tile-amount tile-value">' . edd_currency_filter( edd_format_amount( $tile['args']['data'] ) ) . '</span>';
+				echo '<span class="tile-amount tile-value">' . edd_currency_filter( edd_format_amount( $data ) ) . '</span>';
 				break;
 
 			case 'url':
-				echo '<span class="tile-url tile-value">' . esc_url( $tile['args']['data'] ) . '</span>';
+				echo '<span class="tile-url tile-value">' . esc_url( $data ) . '</span>';
 				break;
 
 			default:
 				$tags = wp_kses_allowed_html( 'post' );
-				echo '<span class="tile-value tile-default">' . wp_kses( $tile['args']['data'], $tags ) . '</span>';
+				echo '<span class="tile-value tile-default">' . wp_kses( $data, $tags ) . '</span>';
 				break;
 		}
 	}
 
-	if ( ! empty( $tile['args']['display_args']['comparison_label'] ) ) {
-		echo '<span class="tile-compare">' . esc_attr( $tile['args']['display_args']['comparison_label'] ) . '</span>';
+	if ( ! empty( $args['comparison_label'] ) ) {
+		echo '<span class="tile-compare">' . esc_attr( $args['comparison_label'] ) . '</span>';
 	}
 }
 
@@ -889,23 +885,17 @@ function default_display_tile( $report = null, $tile = array() ) {
 function default_display_tiles_group( $report ) {
 	if ( ! $report->has_endpoints( 'tiles' ) ) {
 		return;
-	} ?>
+	}
+
+	$tiles = $report->get_endpoints( 'tiles' );
+?>
 
 	<div id="edd-reports-tiles-wrap" class="edd-report-wrap">
-		<div id="dashboard-widgets" class="metabox-holder">
-			<div class="postbox-container">
-				<?php do_meta_boxes( 'download_page_edd-reports', 'primary', $report ); ?>
-			</div>
-
-			<div class="postbox-container">
-				<?php do_meta_boxes( 'download_page_edd-reports', 'secondary', $report ); ?>
-			</div>
-
-			<div class="postbox-container">
-				<?php do_meta_boxes( 'download_page_edd-reports', 'tertiary', $report ); ?>
-			</div>
-		</div>
-		<div class="clear"></div>
+		<?php
+		foreach ( $tiles as $endpoint_id => $tile ) : 
+			$tile->display();
+		endforeach;
+		?>
 	</div>
 
 	<?php
