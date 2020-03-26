@@ -9,6 +9,8 @@
  * @since       1.0
  */
 
+use EDD\Reports;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -24,6 +26,12 @@ function edd_register_dashboard_widgets() {
 		wp_enqueue_script( 'edd-admin-dashboard' );
 
 		wp_add_dashboard_widget( 'edd_dashboard_sales', __('Easy Digital Downloads Sales Summary','easy-digital-downloads' ), 'edd_dashboard_sales_widget' );
+
+		wp_add_dashboard_widget(
+			'edd_dashboard_report_overview',
+			__( 'Store Overview &ndash; This Week','easy-digital-downloads' ),
+			'edd_dashboard_report_widget'
+		);
 	}
 }
 add_action('wp_dashboard_setup', 'edd_register_dashboard_widgets', 10 );
@@ -44,7 +52,49 @@ function edd_dashboard_sales_widget() {
 	echo '<p><img src=" ' . esc_attr( set_url_scheme( EDD_PLUGIN_URL . 'assets/images/loading.gif', 'relative' ) ) . '"/></p>';
 	echo '</div>';
 }
+
+/**
+ * Report overview widget.
+ *
+ * @since 3.0
+ */
+function edd_dashboard_report_widget() {
+	echo '<div class="edd-dashboard-widget" data-edd-dashboard-widget="report">';
+	echo '<span class="spinner is-active" style="float: none; margin: 0;"></span>';
+	echo '</div>';
 }
+
+/**
+ * Loads the "Report" dashboard widget.
+ *
+ * @since 3.0
+ */
+function edd_dashboard_load_report_widget() {
+	// Force date filters to use the current week.
+	add_filter( 'edd_get_report_filter_value', function( $value, $filter ) {
+		if ( 'dates' !== $filter ) {
+			return $value;
+		}
+
+		$date = EDD()->utils->date( 'now', edd_get_timezone_id(), false );
+
+		return array(
+			'from'  => $date->copy()->startOfWeek(),
+			'to'    => $date->copy()->endOfWeek(),
+			'range' => 'this_week',
+		);
+	}, 10, 2 );
+
+	// Start the Reports API.
+	new Reports\Init();
+
+	// Output report.
+	$report = Reports\get_report( 'overview' );
+	$report->display();
+
+	die();
+}
+add_action( 'wp_ajax_edd_load_dashboard_report_widget', 'edd_dashboard_load_report_widget' );
 
 /**
  * Loads the dashboard sales widget via ajax
