@@ -20,6 +20,8 @@ window.edd = window.edd || {};
 window.edd.renderChart = ( config ) => {
 	const isPie = isPieChart( config );
 
+	Chart.defaults.global.pointHitDetectionRadius = 5;
+
 	if ( isPieChart( config ) ) {
 		pieChartRender( config );
 	} else {

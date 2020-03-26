@@ -809,9 +809,16 @@ textarea[name="edd-note"] {
 	padding-bottom: 0;
 }
 
+#edd-filters .filter-items {
+	margin: 10px 0;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
 #edd-filters .filter-items > span:not(.edd-date-range-options) {
 	display: inline-block;
-	margin: 10px 6px 0 0;
+	margin-right: 6px;
 	max-width: 200px;
 }
 
@@ -1981,13 +1988,12 @@ body.download_page_edd-reports {
 	align-items: center;
 	flex-wrap: wrap;
 	flex: 1 1 75%;
-	padding-bottom: 10px;
 }
 
 @media screen and ( max-width: 782px ) {
 
 	.download_page_edd-reports #edd-filters .filter-items {
-		flex-basis: 100%:
+		flex-basis: 100%;
 	}
 }
 
@@ -2158,6 +2164,11 @@ body.download_page_edd-reports {
 
 #edd-reports-tiles-wrap #dashboard-widgets .postbox-container {
 	width: 33.3%;
+}
+
+/** Hide legacy report empty navigations */
+.download_page_edd-reports .section-content .tablenav.top {
+	display: none;
 }
 
 #edd_tax_rates {
@@ -2717,6 +2728,7 @@ body.download_page_edd-reports {
 .edd-sections-wrap .edd-vertical-sections:not(.meta-box) .section-wrap > div {
 	min-height: 500px;
 	height: 100%;
+	overflow: hidden;
 }
 .edd-sections-wrap .section-wrap .customer-section:not(:last-child) {
 	border-bottom: 1px solid #eee;
@@ -2727,12 +2739,11 @@ body.download_page_edd-reports {
 .edd-sections-wrap .section-wrap .section-content {
 	border-left: 1px solid #e5e5e5;
 }
-.edd-sections-wrap .section-wrap .section-content > div {
-	padding: 0px 20px 5px;
+
+.edd-sections-wrap .section-wrap .section-content > * {
+	margin: 20px;
 }
-.edd-sections-wrap .section-wrap .section-content > div:not(.tablenav):first-child {
-	padding: 20px;
-}
+
 .edd-sections-wrap .section-wrap .avatar-wrap {
 	float: left;
 	padding-right: 20px;
