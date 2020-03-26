@@ -957,7 +957,7 @@ function edd_register_refunds_report( $reports ) {
 					'refunds_chart',
 				),
 			),
-			'filters'   => array( 'products', 'taxes' ),
+			'filters'   => array( 'taxes' ),
 		) );
 
 		$reports->register_endpoint( 'refund_count', array(
