@@ -50,9 +50,6 @@ function edd_admin_load_report() {
 		edd_redirect( $redirect_url );
 	}
 
-	// Enqueue the postbox JS
-	wp_enqueue_script( 'postbox' );
-
 	// Stash the report in the EDD global for future reference
 	EDD()->report = $report;
 }
