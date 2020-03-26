@@ -321,10 +321,14 @@ class Manifest implements Error_Logger {
 		printf( '<canvas id="%s"></canvas>', esc_attr( $this->get_target_el() ) );
 
 		// Enqueue script and configuration to render the chart.
-		wp_enqueue_script( 'edd-admin-reports' );
-		wp_add_inline_script(
-			'edd-admin-reports',
-			sprintf( 'window.edd.renderChart(%s)', wp_json_encode( $this->build_config() ) )
+		//
+		// Enqueued manually in case `wp_enqueue_script` or similar actions
+		// are not available, such as in an AJAX request.
+		wp_scripts()->do_items( 'edd-admin-reports' );
+
+		printf(
+			'<script type="text/javascript">window.edd.renderChart(%s)</script>',
+			wp_json_encode( $this->build_config() )
 		);
 	}
 
