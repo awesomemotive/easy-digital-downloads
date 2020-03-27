@@ -623,12 +623,13 @@ table.edd-order-overview-summary {
 	color: #555;
 }
 
-.edd-order-overview-summary td.column-name {
+.edd-order-overview-summary .removable {
 	display: flex;
 	align-items: center;
+	position: relative;
 }
 
-.edd-order-overview-summary .column-name .delete {
+.edd-order-overview-summary .removable .delete {
 	display: inline-block;
 	margin-right: 10px;
 	margin-left: -8px;
@@ -637,7 +638,7 @@ table.edd-order-overview-summary {
 	color: #a00;
 }
 
-.edd-order-overview-summary td.column-name .delete:hover {
+.edd-order-overview-summary .removable .delete:hover {
 	color: #dc3232;
 }
 
@@ -678,11 +679,7 @@ table.edd-order-overview-summary {
 	border-top: 1px solid #e5e5e5;
 }
 
-.edd-order-overview-summary__adjustments td.column-name {
-	position: relative;
-}
-
-.edd-order-overview-summary__adjustments td.column-name .delete {
+.edd-order-overview-summary__adjustments .removable .delete {
 	position: absolute;
 	left:  -40px;
 	top: 50%;

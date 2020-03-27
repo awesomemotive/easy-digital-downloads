@@ -19,29 +19,31 @@ $view_url = edd_get_admin_url(
 
 <td></td>
 
-<td class="column-primary column-nmae" colspan="{{ data.config.colspan }}">
-	<# if ( true === data.state.isAdding ) { #>
-	<button class="button-link delete">
-		<span class="dashicons dashicons-no"></span>
-	</button>
-	<# } #>
-
-	<div>
-		<# if ( 'credit' === data.type ) { #>
-			<?php esc_html_e( 'Order Credit', 'easy-digital-downloads' ); ?>
-		<# } else { #>
-			<?php esc_html_e( 'Order Fee', 'easy-digital-downloads' ); ?>
+<td class="column-primary" colspan="{{ data.config.colspan }}">
+	<div class="removable">
+		<# if ( true === data.state.isAdding ) { #>
+		<button class="button-link delete">
+			<span class="dashicons dashicons-no"></span>
+		</button>
 		<# } #>
 
-		<# if ( '' !== data.description ) { #>
-			<br />
-			<small>
-				<# if ( false !== data.orderItem ) { #>
-					{{ data.orderItem.productName }}:&nbsp;
-				<# } #>
-				{{ data.description }}
-			</small>
-		<# } #>
+		<div>
+			<# if ( 'credit' === data.type ) { #>
+				<?php esc_html_e( 'Order Credit', 'easy-digital-downloads' ); ?>
+			<# } else { #>
+				<?php esc_html_e( 'Order Fee', 'easy-digital-downloads' ); ?>
+			<# } #>
+
+			<# if ( '' !== data.description ) { #>
+				<br />
+				<small>
+					<# if ( false !== data.orderItem ) { #>
+						{{ data.orderItem.productName }}:&nbsp;
+					<# } #>
+					{{ data.description }}
+				</small>
+			<# } #>
+		</div>
 	</div>
 </td>
 
