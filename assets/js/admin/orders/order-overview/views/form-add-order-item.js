@@ -73,7 +73,7 @@ export const FormAddOrderItem = Dialog.extend( {
 
 		// Listen for events.
 		this.listenTo( this.model, 'change', this.render );
-		this.listenTo( state, 'change', this.render );
+		this.listenTo( state, 'change:isFetching', this.render );
 		this.listenTo( state.get( 'items' ), 'add', this.closeDialog );
 	},
 
