@@ -145,7 +145,15 @@ export const FormAddOrderDiscount = Dialog.extend( {
 		// Update all amounts with new item and alert when done.
 		items
 			.updateAmounts()
-			.done( () => adjustments.trigger( 'add', model ) )
-			.done( () => state.set( 'isFetching', false ) );
+			.done( () => {
+				// Stop listening to the model in this view.
+				this.stopListening( model );
+
+				// Alert of succesful addition.
+				adjustments.trigger( 'add', model );
+
+				// Clear fetching.
+				state.set( 'isFetching', false ) ;
+			} );
 	},
 } );

@@ -345,11 +345,14 @@ export const FormAddOrderItem = Dialog.extend( {
 				model.set( 'error', error );
 			} )
 			.done( () => {
+				// Stop listening to the model in this view.
+				this.stopListening( model );
+
 				// Alert of succesful addition.
-				items.trigger( 'add', model ) 
+				items.trigger( 'add', model );
 
 				// Clear fetching.
-				state.set( 'isFetching', false ) 
+				state.set( 'isFetching', false );
 			} );
 	},
 } );
