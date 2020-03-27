@@ -17,50 +17,52 @@ $view_url = add_query_arg(
 );
 ?>
 
-<td class="has-row-actions column-name column-primary">
-	<# if ( true === data.state.isAdding ) { #>
-	<button class="button-link delete">
-		<span class="dashicons dashicons-no"></span>
-	</button>
-	<# } #>
-
-	<div class="edd-order-overview-summary__items-name">
-		<a
-			href="<?php echo esc_url( $view_url ); ?>&post={{ data.productId }}"
-			class="row-title"
-		>
-			{{{ data.productName }}}
-		</a>
-		<# if ( 'refunded' === data.status ) { #>
-			&mdash; <?php esc_html_e( 'Refunded', 'easy-digital-downloads' ); ?>
+<td class="has-row-actions column-primary">
+	<div class="removable">
+		<# if ( true === data.state.isAdding ) { #>
+		<button class="button-link delete">
+			<span class="dashicons dashicons-no"></span>
+		</button>
 		<# } #>
 
-		<div class="row-actions">
-			<# if ( data.discount > 0 ) { #>
-			<span class="text"><strong><?php esc_html_e( 'Discount:', 'easy-digital-downloads' ); ?></strong> {{ data.discountCurrency }}</span>
+		<div class="edd-order-overview-summary__items-name">
+			<a
+				href="<?php echo esc_url( $view_url ); ?>&post={{ data.productId }}"
+				class="row-title"
+			>
+				{{{ data.productName }}}
+			</a>
+			<# if ( 'refunded' === data.status ) { #>
+				&mdash; <?php esc_html_e( 'Refunded', 'easy-digital-downloads' ); ?>
 			<# } #>
 
-			<# if ( false !== data.state.hasTax ) { #>
-			<span class="text">
-				<strong><?php esc_html_e( 'Tax:', 'easy-digital-downloads' ); ?></strong>
-				{{ data.taxCurrency }}
-				<# if ( true === data.config.isAdjustingManually ) { #>&dagger;<# } #>
-			</span>
-			<# } #>
+			<div class="row-actions">
+				<# if ( data.discount > 0 ) { #>
+				<span class="text"><strong><?php esc_html_e( 'Discount:', 'easy-digital-downloads' ); ?></strong> {{ data.discountCurrency }}</span>
+				<# } #>
 
-			<# if ( false === data.state.isAdding && 'complete' === data.status ) { #>
-			<span>
-				<button class="button-link copy-download-link">
-					<?php echo esc_html( sprintf( __( 'Copy %s Links', 'easy-digital-downloads' ), edd_get_label_singular() ) ); ?>
-				</button>
-			</span>
-			<# } #>
+				<# if ( false !== data.state.hasTax ) { #>
+				<span class="text">
+					<strong><?php esc_html_e( 'Tax:', 'easy-digital-downloads' ); ?></strong>
+					{{ data.taxCurrency }}
+					<# if ( true === data.config.isAdjustingManually ) { #>&dagger;<# } #>
+				</span>
+				<# } #>
+
+				<# if ( false === data.state.isAdding && 'complete' === data.status ) { #>
+				<span>
+					<button class="button-link copy-download-link">
+						<?php echo esc_html( sprintf( __( 'Copy %s Links', 'easy-digital-downloads' ), edd_get_label_singular() ) ); ?>
+					</button>
+				</span>
+				<# } #>
+			</div>
 		</div>
-	</div>
 
-	<button type="button" class="toggle-row">
-		<span class="screen-reader-text">Show more details</span>
-	</button>
+		<button type="button" class="toggle-row">
+			<span class="screen-reader-text">Show more details</span>
+		</button>
+	</div>
 </td>
 
 <td data-colname="<?php esc_html_e( 'Unit Price', 'easy-digital-downloads' ); ?>">

@@ -19,19 +19,21 @@ $view_url = edd_get_admin_url(
 
 <td></td>
 
-<td class="column-primary column-name" colspan="{{ data.config.colspan }}">
-	<# if ( true === data.state.isAdding ) { #>
-	<button class="button-link delete">
-		<span class="dashicons dashicons-no"></span>
-	</button>
-	<# } #>
+<td class="column-primary" colspan="{{ data.config.colspan }}">
+	<div class="removable">
+		<# if ( true === data.state.isAdding ) { #>
+		<button class="button-link delete">
+			<span class="dashicons dashicons-no"></span>
+		</button>
+		<# } #>
 
-	<div>
-		<?php esc_html_e( 'Discount', 'easy-digital-downloads' ); ?>
-		<br />
-		<small>
-			<a href="<?php echo esc_url( $view_url ); ?>&discount={{ data.typeId }}">{{ data.description }}</a>
-		</small>
+		<div>
+			<?php esc_html_e( 'Discount', 'easy-digital-downloads' ); ?>
+			<br />
+			<small>
+				<a href="<?php echo esc_url( $view_url ); ?>&discount={{ data.typeId }}">{{ data.description }}</a>
+			</small>
+		</div>
 	</div>
 </td>
 
