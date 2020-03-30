@@ -23,12 +23,12 @@ $user    = edd_get_payment_meta_user_info( $order->id );
 $status  = edd_get_payment_status( $order, true );
 
 /**
- * Output HTML/perform actions before displaying the receipt table
+ * Allows additional output before displaying the receipt table.
  *
- * @since 3.0.0
+ * @since 3.0
  *
- * @param EDD_Payment  $payment           EDD_Payment object
- * @param array        $edd_receipt_args  arguments for the receipt shortcode
+ * @param \EDD_Payment $payment          Current payment.
+ * @param array        $edd_receipt_args [edd_receipt] shortcode arguments.
  */
 do_action( 'edd_payment_receipt_before_table', $payment, $edd_receipt_args );
 ?>
