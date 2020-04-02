@@ -440,7 +440,12 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 			$actions['show_advanced'] = '<a href="#" class="toggle-custom-price-option-section">' . __( 'Show advanced settings', 'easy-digital-downloads' ) . '</a>';
 		}
 
-		$actions['remove'] = '<a class="edd-remove-row edd-delete" data-type="price">' . sprintf( __( 'Remove', 'easy-digital-downloads' ), $key ) . '<span class="screen-reader-text"> ' . sprintf( __( 'price option %s', 'easy-digital-downloads' ), $key ) . '</span></a>';
+		$actions['remove'] = sprintf(
+			'<a aria-label="%s" class="edd-remove-row edd-delete" data-type="price">%s</a>',
+			/* translators: %s: download price option */
+			sprintf( __( 'Remove price option %s', 'easy-digital-downloads' ), $key ),
+			__( 'Remove', 'easy-digital-downloads' )
+		);
 		?>
 		<span class="edd-repeatable-row-actions">
 			<?php echo implode( '&nbsp;&#124;&nbsp;', $actions ); ?>
@@ -646,7 +651,14 @@ function edd_render_products_field( $post_id ) {
 										?>
 									</div>
 									<span class="edd-bundled-product-actions">
-										<a class="edd-remove-row edd-delete" data-type="file"><?php printf( __( 'Remove', 'easy-digital-downloads' ), $index ); ?><span class="screen-reader-text"> <?php printf( __( 'bundle option %s', 'easy-digital-downloads' ), $index ); ?></span></a>
+									<?php
+									printf(
+										'<a aria-label="%s" class="edd-remove-row edd-delete" data-type="file">%s</a>',
+										/* translators: %s: download bundle option */
+										sprintf( esc_html__( 'Remove bundle option %s', 'easy-digital-downloads' ), $key ),
+										esc_html__( 'Remove', 'easy-digital-downloads' )
+									);
+									?>
 									</span>
 									<?php do_action( 'edd_download_products_table_row', $post_id ); ?>
 								</div>
@@ -702,7 +714,13 @@ function edd_render_products_field( $post_id ) {
 									?>
 								</div>
 								<span class="edd-bundled-product-actions">
-									<a class="edd-remove-row edd-delete" data-type="file" ><?php printf( __( 'Remove', 'easy-digital-downloads' ) ); ?><span class="screen-reader-text"> <?php __( 'bundle option 1', 'easy-digital-downloads' ); ?></span></a>
+								<?php
+								printf(
+									'<a aria-label="%s" class="edd-remove-row edd-delete" data-type="file">%s</a>',
+									esc_html__( 'Remove bundle option 1', 'easy-digital-downloads' ),
+									esc_html__( 'Remove', 'easy-digital-downloads' )
+								);
+								?>
 								</span>
 								<?php do_action( 'edd_download_products_table_row', $post_id ); ?>
 							</div>
@@ -827,8 +845,14 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 			<input type="hidden" name="edd_download_files[<?php echo $key; ?>][index]" class="edd_repeatable_index" value="<?php echo $index; ?>"/>
 		</span>
 		<span class="edd-repeatable-row-actions">
-			<a class="edd-remove-row edd-delete" data-type="file"><?php printf( __( 'Remove', 'easy-digital-downloads' ), $key ); ?><span class="screen-reader-text"> <?php printf( __( 'file %s', 'easy-digital-downloads' ), $key ); ?></span>
-			</a>
+		<?php
+		printf(
+			'<a aria-label="%s" class="edd-remove-row edd-delete" data-type="file">%s</a>',
+			/* translators: %s: download file */
+			sprintf( esc_html__( 'Remove file %s', 'easy-digital-downloads' ), $key ),
+			esc_html__( 'Remove', 'easy-digital-downloads' )
+		);
+		?>
 		</span>
 	</div>
 
