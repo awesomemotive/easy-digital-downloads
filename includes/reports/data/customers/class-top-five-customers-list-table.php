@@ -38,7 +38,7 @@ class Top_Five_Customers_List_Table extends \EDD_Customer_Reports_Table {
 		$data  = array();
 		$taxes = Reports\get_taxes_excluded_filter();
 
-		if ( ! $taxes ) {
+		if ( false === $taxes ) {
 			$args = array(
 				'number'  => 5,
 				'order'   => 'DESC',
