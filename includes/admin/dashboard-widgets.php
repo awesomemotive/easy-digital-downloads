@@ -157,8 +157,8 @@ function edd_load_dashboard_sales_widget( ) {
 				<thead>
 					<tr>
 						<td colspan="2">
-							<?php _e( 'Recent Purchases', 'easy-digital-downloads' ); ?>
-							<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>">&nbsp;&ndash;&nbsp;<?php _e( 'View All', 'easy-digital-downloads' ); ?></a>
+							<?php esc_html_e( 'Recent Purchases', 'easy-digital-downloads' ); ?>
+							&ndash;&nbsp;<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-payment-history' ) ); ?>"><?php esc_html_e( 'View All', 'easy-digital-downloads' ); ?></a>
 						</td>
 					</tr>
 				</thead>
