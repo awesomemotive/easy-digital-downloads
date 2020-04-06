@@ -149,7 +149,7 @@ function edd_load_dashboard_sales_widget( ) {
 		<div style="clear: both"></div>
 		<?php do_action( 'edd_sales_summary_widget_after_stats', $stats ); ?>
 		<?php
-		$payments = edd_get_payments( array( 'number' => 5, 'status' => 'complete' ) );
+		$payments = edd_get_orders( array( 'number' => 5, 'status' => 'complete' ) );
 
 		if ( $payments ) { ?>
 		<div class="table recent_purchases">
@@ -168,7 +168,7 @@ function edd_load_dashboard_sales_widget( ) {
 						<tr>
 							<td class="edd_order_label">
 								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>">
-									<?php echo get_the_title( $payment->ID ) ?>
+									<?php echo esc_html( $payment->get_number() ); ?>
 									&mdash; <?php echo $payment->email ?>
 								</a>
 								<?php if ( ! empty( $payment->user_id ) && ( $payment->user_id > 0 ) ) {
