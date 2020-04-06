@@ -168,13 +168,19 @@ function edd_load_dashboard_sales_widget( ) {
 						<tr>
 							<td class="edd_order_label">
 								<a href="<?php echo add_query_arg( 'id', $order->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>">
-									<?php echo esc_html( $order->get_number() ); ?>
-									&mdash; <?php echo $order->email ?>
-								</a>
+									<?php
+									$customer      = edd_get_customer( $order->customer_id );
+									$customer_name = $customer->name ? $customer->name : __( 'No Name', 'easy-digital-downloads' );
+									printf(
+										/* translators: 1. order number; 2. customer name */
+										esc_html__( '%1$s by %2$s', 'easy-digital-downloads' ),
+										esc_attr( $order->get_number() ),
+										esc_html( $customer_name )
+									); ?></a>
 								<?php if ( ! empty( $order->user_id ) && ( $order->user_id > 0 ) ) {
 									$user = get_user_by( 'id', $order->user_id );
 									if ( $user ) {
-										echo "(" . $user->data->user_login . ")";
+										echo "&nbsp;(" . $user->data->user_login . ")";
 									}
 								} ?>
 							</td>
