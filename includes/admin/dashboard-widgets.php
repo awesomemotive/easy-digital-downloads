@@ -149,7 +149,7 @@ function edd_load_dashboard_sales_widget( ) {
 		<div style="clear: both"></div>
 		<?php do_action( 'edd_sales_summary_widget_after_stats', $stats ); ?>
 		<?php
-		$orders = edd_get_orders( array( 'number' => 5, 'status' => 'complete' ) );
+		$orders = edd_get_orders( array( 'number' => 5, 'status' => 'complete', 'type' => 'sale' ) );
 
 		if ( $orders ) { ?>
 		<div class="table recent_purchases">
