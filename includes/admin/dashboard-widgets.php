@@ -149,9 +149,9 @@ function edd_load_dashboard_sales_widget( ) {
 		<div style="clear: both"></div>
 		<?php do_action( 'edd_sales_summary_widget_after_stats', $stats ); ?>
 		<?php
-		$payments = edd_get_orders( array( 'number' => 5, 'status' => 'complete' ) );
+		$orders = edd_get_orders( array( 'number' => 5, 'status' => 'complete' ) );
 
-		if ( $payments ) { ?>
+		if ( $orders ) { ?>
 		<div class="table recent_purchases">
 			<table>
 				<thead>
@@ -164,23 +164,23 @@ function edd_load_dashboard_sales_widget( ) {
 				</thead>
 				<tbody>
 					<?php
-					foreach ( $payments as $payment ) { ?>
+					foreach ( $orders as $order ) { ?>
 						<tr>
 							<td class="edd_order_label">
-								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>">
-									<?php echo esc_html( $payment->get_number() ); ?>
-									&mdash; <?php echo $payment->email ?>
+								<a href="<?php echo add_query_arg( 'id', $order->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>">
+									<?php echo esc_html( $order->get_number() ); ?>
+									&mdash; <?php echo $order->email ?>
 								</a>
-								<?php if ( ! empty( $payment->user_id ) && ( $payment->user_id > 0 ) ) {
-									$user = get_user_by( 'id', $payment->user_id );
+								<?php if ( ! empty( $order->user_id ) && ( $order->user_id > 0 ) ) {
+									$user = get_user_by( 'id', $order->user_id );
 									if ( $user ) {
 										echo "(" . $user->data->user_login . ")";
 									}
 								} ?>
 							</td>
 							<td class="edd_order_price">
-								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>">
-									<span class="edd_price_label"><?php echo edd_currency_filter( edd_format_amount( $payment->total ), edd_get_payment_currency_code( $payment->ID ) ); ?></span>
+								<a href="<?php echo add_query_arg( 'id', $order->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>">
+									<span class="edd_price_label"><?php echo edd_currency_filter( edd_format_amount( $order->total ), edd_get_payment_currency_code( $order->ID ) ); ?></span>
 								</a>
 							</td>
 						</tr>
@@ -190,7 +190,7 @@ function edd_load_dashboard_sales_widget( ) {
 			</table>
 		</div>
 		<?php } // End if ?>
-		<?php do_action( 'edd_sales_summary_widget_after_purchases', $payments ); ?>
+		<?php do_action( 'edd_sales_summary_widget_after_purchases', $orders ); ?>
 	</div>
 	<?php
 	die();
