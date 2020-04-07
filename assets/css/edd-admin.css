@@ -600,7 +600,6 @@ textarea[name="edd-note"] {
 }
 
 .edd-amount-type-wrapper select {
-	background-color: #fafafa;
 	border-top-left-radius: 0;
 	border-bottom-left-radius: 0;
 }
@@ -612,6 +611,10 @@ textarea[name="edd-note"] {
 	padding: 0 8px;
 	width: unset;
 	max-width: 125px;
+}
+
+.edd-amount-type-wrapper input:focus {
+	z-index: 2;
 }
 
 /* List Tables
