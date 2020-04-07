@@ -176,13 +176,8 @@ function edd_load_dashboard_sales_widget( ) {
 										esc_html__( '%1$s by %2$s', 'easy-digital-downloads' ),
 										esc_attr( $order->get_number() ),
 										esc_html( $customer_name )
-									); ?></a>
-								<?php if ( ! empty( $order->user_id ) && ( $order->user_id > 0 ) ) {
-									$user = get_user_by( 'id', $order->user_id );
-									if ( $user ) {
-										echo "&nbsp;(" . $user->data->user_login . ")";
-									}
-								} ?>
+									); ?>
+								</a>
 							</td>
 							<td class="edd_order_price">
 								<a href="<?php echo add_query_arg( 'id', $order->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>">
