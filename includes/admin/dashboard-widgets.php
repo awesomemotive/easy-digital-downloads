@@ -105,7 +105,7 @@ function edd_load_dashboard_sales_widget( ) {
 		die();
 	}
 
-	$stats = new EDD_Payment_Stats; ?>
+	$stats = new EDD_Payment_Stats();
 	$data  = edd_get_dashboard_sales_widget_data(); ?>
 	<div class="edd_dashboard_widget">
 		<div class="table table_left table_current_month">
