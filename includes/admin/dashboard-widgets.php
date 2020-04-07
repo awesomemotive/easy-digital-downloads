@@ -43,6 +43,57 @@ function edd_dashboard_sales_widget( ) {
 }
 
 /**
+ * Get the sales earnings/count data for the dashboard widget.
+ *
+ * @since 3.0.0
+ * @return array
+ */
+function edd_get_dashboard_sales_widget_data() {
+	$data               = array();
+	$this_month_sales   = new EDD\Stats(
+		array(
+			'range'  => 'this_month',
+			'output' => 'formatted',
+		)
+	);
+	$data['this_month'] = array(
+		'earnings' => $this_month_sales->get_order_earnings(),
+		'count'    => $this_month_sales->get_order_count(),
+	);
+	$last_month_sales   = new EDD\Stats(
+		array(
+			'range'  => 'last_month',
+			'output' => 'formatted',
+		)
+	);
+	$data['last_month'] = array(
+		'earnings' => $last_month_sales->get_order_earnings(),
+		'count'    => $last_month_sales->get_order_count(),
+	);
+	$today_sales        = new EDD\Stats(
+		array(
+			'range'  => 'today',
+			'output' => 'formatted',
+		)
+	);
+	$data['today']      = array(
+		'earnings' => $today_sales->get_order_earnings(),
+		'count'    => $today_sales->get_order_count(),
+	);
+	$total_sales        = new EDD\Stats(
+		array(
+			'output' => 'formatted',
+		)
+	);
+	$data['total']      = array(
+		'earnings' => $total_sales->get_order_earnings(),
+		'count'    => $total_sales->get_order_count(),
+	);
+
+	return $data;
+}
+
+/**
  * Loads the dashboard sales widget via ajax
  *
  * @since 2.1
