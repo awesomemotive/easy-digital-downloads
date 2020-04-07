@@ -107,5 +107,14 @@ export const OrderItems = wp.Backbone.View.extend( {
 		if ( null !== subview ) {
 			subview.remove();
 		}
+
+		// Last item was removed, show "No items".
+		if ( 0 === this.views.get().length ) {
+			this.views.set(
+				new NoOrderItems( {
+					...this.options,
+				} )
+			);
+		}
 	},
 } );
