@@ -140,7 +140,7 @@ if ( ! empty( $recent_downloads ) ) {
 				/>
 				<span class="label">
 					<?php esc_html_e( 'Automatically calculate amounts', 'easy-digital-downloads' ); ?>
-					<# if ( false !== data.state.hasTax.rate && '' !== data.state.hasTax.country ) { #>
+					<# if ( false !== data.state.hasTax && '' !== data.state.hasTax.country ) { #>
 					<br />
 					<small>
 						<?php
