@@ -152,17 +152,16 @@ function edd_load_dashboard_sales_widget( ) {
 		$orders = edd_get_orders( array( 'number' => 5, 'status' => 'complete', 'type' => 'sale' ) );
 
 		if ( $orders ) { ?>
-		<div class="table recent_purchases">
-			<h3><?php esc_html_e( 'Recent Purchases', 'easy-digital-downloads' ); ?></h3>
+		<div class="table recent_orders">
+			<h3><?php esc_html_e( 'Recent Orders', 'easy-digital-downloads' ); ?></h3>
 			<ul>
 			<?php
 			foreach ( $orders as $order ) {
-				$link = add_query_arg(
+				$link = edd_get_admin_url(
 					array(
-						'post_type' => 'download',
-						'page'      => 'edd-payment-history',
-						'view'      => 'view-order-details',
-						'id'        => $order->ID,
+						'page' => 'edd-payment-history',
+						'view' => 'view-order-details',
+						'id'   => $order->ID,
 					),
 					admin_url( 'edit.php' )
 				);
@@ -172,21 +171,20 @@ function edd_load_dashboard_sales_widget( ) {
 						<?php
 						$customer      = edd_get_customer( $order->customer_id );
 						$customer_name = $customer->name ? $customer->name : __( 'No Name', 'easy-digital-downloads' );
-						$item_counts   = edd_get_order_item_counts( array( 'order_id' => $order->ID ) );
-						printf(
-							wp_kses_post(
+						$item_counts   = edd_count_order_items( array( 'order_id' => $order->ID ) );
+						echo wp_kses_post(
+							sprintf(
 								/* translators: 1. customer name; 2. number of items purchased; 3. order total */
 								_n(
 									'%1$s purchased %2$s item for <strong>%3$s</strong>',
 									'%1$s purchased %2$s items for <strong>%3$s</strong>',
-									$item_counts['total'],
+									$item_counts,
 									'easy-digital-downloads'
-								)
-							),
-							esc_html( $customer_name ),
-							esc_html( $item_counts['total'] ),
-							esc_html( edd_currency_filter( edd_format_amount( edd_get_order_total( $order->ID ) ) ) ),
-							esc_html( $order->get_number() )
+								),
+								$customer_name,
+								$item_counts,
+								edd_currency_filter( edd_format_amount( edd_get_order_total( $order->ID ) ) )
+							)
 						);
 						?>
 					</a>
@@ -195,15 +193,13 @@ function edd_load_dashboard_sales_widget( ) {
 				<?php } // End foreach ?>
 		</ul>
 			<?php
-			$all_purchases_link = add_query_arg(
+			$all_orders_link = edd_get_admin_url(
 				array(
-					'post_type' => 'download',
-					'page'      => 'edd-payment-history',
+					'page' => 'edd-payment-history',
 				),
-				admin_url( 'edit.php' )
 			);
 			?>
-		<a href="<?php echo esc_url( $all_purchases_link ); ?>" class="button-secondary"><?php esc_html_e( 'View All Purchases', 'easy-digital-downloads' ); ?></a>
+		<a href="<?php echo esc_url( $all_orders_link ); ?>" class="button-secondary"><?php esc_html_e( 'View All Orders', 'easy-digital-downloads' ); ?></a>
 		</div>
 		<?php } // End if ?>
 		<?php do_action( 'edd_sales_summary_widget_after_purchases', $orders ); ?>
