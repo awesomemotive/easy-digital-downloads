@@ -94,10 +94,10 @@ function edd_load_dashboard_sales_widget( ) {
 				<tbody>
 					<tr>
 						<td class="first t monthly_earnings"><?php esc_html_e( 'Earnings', 'easy-digital-downloads' ); ?></td>
-						<td class="b b-earnings"><?php echo esc_attr( $data['this_month']['earnings'] ); ?></td>
+						<td class="b b-earnings"><?php echo esc_html( $data['this_month']['earnings'] ); ?></td>
 					</tr>
 						<td class="first t monthly_sales"><?php echo esc_html( _n( 'Sale', 'Sales', $data['this_month']['count'], 'easy-digital-downloads' ) ); ?></td>
-						<td class="b b-sales"><?php echo esc_attr( $data['this_month']['count'] ); ?></td>
+						<td class="b b-sales"><?php echo esc_html( $data['this_month']['count'] ); ?></td>
 					</tr>
 				</tbody>
 			</table>
@@ -110,11 +110,11 @@ function edd_load_dashboard_sales_widget( ) {
 				<tbody>
 					<tr>
 						<td class="first t earnings"><?php esc_html_e( 'Earnings', 'easy-digital-downloads' ); ?></td>
-						<td class="b b-last-month-earnings"><?php echo esc_attr( $data['last_month']['earnings'] ); ?></td>
+						<td class="b b-last-month-earnings"><?php echo esc_html( $data['last_month']['earnings'] ); ?></td>
 					</tr>
 					<tr>
 						<td class="first t sales"><?php echo esc_html( _n( 'Sale', 'Sales', $data['last_month']['count'], 'easy-digital-downloads' ) ); ?></td>
-						<td class="b b-last-month-sales"><?php echo esc_attr( $data['last_month']['count'] ); ?></td>
+						<td class="b b-last-month-sales"><?php echo esc_html( $data['last_month']['count'] ); ?></td>
 					</tr>
 				</tbody>
 			</table>
@@ -132,12 +132,12 @@ function edd_load_dashboard_sales_widget( ) {
 					<tr>
 						<td class="t sales"><?php esc_html_e( 'Earnings', 'easy-digital-downloads' ); ?></td>
 						<td class="last b b-earnings">
-							<?php echo esc_attr( $data['today']['earnings'] ); ?>
+							<?php echo esc_html( $data['today']['earnings'] ); ?>
 						</td>
 					</tr>
 					<tr class="t sales">
 						<td class="t sales"><?php echo esc_html( _n( 'Sale', 'Sales', $data['today']['count'], 'easy-digital-downloads' ) ); ?></td>
-						<td class="last b b-sales"><?php echo esc_attr( $data['today']['count'] ); ?></td>
+						<td class="last b b-sales"><?php echo esc_html( $data['today']['count'] ); ?></td>
 					</tr>
 				</tbody>
 			</table>
@@ -152,11 +152,11 @@ function edd_load_dashboard_sales_widget( ) {
 				<tbody>
 					<tr>
 						<td class="t earnings"><?php esc_html_e( 'Total Earnings', 'easy-digital-downloads' ); ?></td>
-						<td class="last b b-earnings"><?php echo esc_attr( $data['total']['earnings'] ); ?></td>
+						<td class="last b b-earnings"><?php echo esc_html( $data['total']['earnings'] ); ?></td>
 					</tr>
 					<tr>
 						<td class="t sales"><?php echo esc_html( _n( 'Sale', 'Sales', $data['total']['count'], 'easy-digital-downloads' ) ); ?></td>
-						<td class="last b b-sales"><?php echo esc_attr( $data['total']['count'] ); ?></td>
+						<td class="last b b-sales"><?php echo esc_html( $data['total']['count'] ); ?></td>
 					</tr>
 				</tbody>
 			</table>
