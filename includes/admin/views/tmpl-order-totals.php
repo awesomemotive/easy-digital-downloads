@@ -53,7 +53,7 @@
 					echo esc_html( 
 						sprintf(
 							__( 'The tax rate has been updated to %1$s. Existing automatically calculated amounts have not been updated.', 'easy-digital-downloads' ),
-							'{{ data.state.hasTax.rate.toFixed( 2 ) }}%',
+							'{{ data.state.hasTax.rate.toFixed( 2 ) }}%'
 						)
 					);
 					?>
