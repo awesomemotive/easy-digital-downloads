@@ -59,10 +59,10 @@ function edd_get_dashboard_sales_widget_data() {
 		if ( 'total' === $range ) {
 			unset( $args['range'] );
 		}
-		$sales          = new EDD\Stats( $args );
+		$stats          = new EDD\Stats( $args );
 		$data[ $range ] = array(
-			'earnings' => $sales->get_order_earnings(),
-			'count'    => $sales->get_order_count(),
+			'earnings' => $stats->get_order_earnings(),
+			'count'    => $stats->get_order_count(),
 		);
 	}
 
