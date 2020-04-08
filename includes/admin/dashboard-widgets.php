@@ -43,7 +43,7 @@ function edd_dashboard_sales_widget( ) {
 }
 
 /**
- * Get the sales earnings/count data for the dashboard widget.
+ * Gets the sales earnings/count data for the dashboard widget.
  *
  * @since 3.0.0
  * @return array
