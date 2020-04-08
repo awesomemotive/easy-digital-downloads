@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * Allows plugins to use their own update API.
  *
  * @author Easy Digital Downloads
- * @version 1.6.19
+ * @version 1.7
  */
 class EDD_SL_Plugin_Updater {
 
@@ -117,6 +117,7 @@ class EDD_SL_Plugin_Updater {
 
 		if ( false !== $version_info && is_object( $version_info ) && isset( $version_info->new_version ) ) {
 
+			$no_update = false;
 			if ( version_compare( $this->version, $version_info->new_version, '<' ) ) {
 
 				$_transient_data->response[ $this->name ] = $version_info;
@@ -124,11 +125,25 @@ class EDD_SL_Plugin_Updater {
 				// Make sure the plugin property is set to the plugin's name/location. See issue 1463 on Software Licensing's GitHub repo.
 				$_transient_data->response[ $this->name ]->plugin = $this->name;
 
+			} else {
+				$no_update              = new stdClass();
+				$no_update->id          = '';
+				$no_update->slug        = $this->slug;
+				$no_update->plugin      = $this->name;
+				$no_update->new_version = $version_info->new_version;
+				$no_update->url         = $version_info->homepage;
+				$no_update->package     = $version_info->package;
+				$no_update->icons       = $version_info->icons;
+				$no_update->banners     = $version_info->banners;
+				$no_update->banners_rtl = array();
 			}
 
 			$_transient_data->last_checked           = time();
 			$_transient_data->checked[ $this->name ] = $this->version;
 
+			if ( $no_update ) {
+				$_transient_data->no_update[ $this->name ] = $no_update;
+			}
 		}
 
 		return $_transient_data;
@@ -200,14 +215,29 @@ class EDD_SL_Plugin_Updater {
 				return;
 			}
 
+			$no_update = false;
 			if ( version_compare( $this->version, $version_info->new_version, '<' ) ) {
 
 				$update_cache->response[ $this->name ] = $version_info;
 
+			} else {
+				$no_update              = new stdClass();
+				$no_update->id          = '';
+				$no_update->slug        = $this->slug;
+				$no_update->plugin      = $this->name;
+				$no_update->new_version = $version_info->new_version;
+				$no_update->url         = $version_info->homepage;
+				$no_update->package     = $version_info->package;
+				$no_update->icons       = $version_info->icons;
+				$no_update->banners     = $version_info->banners;
+				$no_update->banners_rtl = array();
 			}
 
-			$update_cache->last_checked = time();
+			$update_cache->last_checked           = time();
 			$update_cache->checked[ $this->name ] = $this->version;
+			if ( $no_update ) {
+				$update_cache->no_update[ $this->name ] = $no_update;
+			}
 
 			set_site_transient( 'update_plugins', $update_cache );
 
