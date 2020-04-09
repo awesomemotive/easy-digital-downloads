@@ -32,7 +32,22 @@ function edd_order_details_publish( $order ) {
 	<div class="edit-post-editor-regions__header">
 		<div class="edit-post-header">
 
-			<div>
+			<div class="edit-post-header__settings">
+				<div id="publishing-action">
+					<span class="spinner"></span>
+					<input
+						type="submit"
+						id="edd-order-submit"
+						class="button button-primary right"
+						value="<?php echo esc_html( $action_name ); ?>"
+						<?php if ( ! edd_is_add_order_page() ) : ?>
+							autofocus
+						<?php endif; ?>
+					/>
+				</div>
+			</div>
+
+			<div class="edit-post-header__toolbar">
 				<?php if ( ! edd_is_add_order_page() ) : ?>
 				<div id="delete-action">
 					<a href="<?php echo wp_nonce_url( add_query_arg( array(
@@ -42,13 +57,6 @@ function edd_order_details_publish( $order ) {
 							class="edd-delete-payment edd-delete"><?php esc_html_e( 'Delete Order', 'easy-digital-downloads' ); ?></a>
 				</div>
 				<?php endif; ?>
-			</div>
-
-			<div>
-				<div id="publishing-action">
-					<span class="spinner"></span>
-					<input type="submit" id="edd-order-submit" class="button button-primary right" value="<?php echo esc_html( $action_name ); ?>"/>
-				</div>
 			</div>
 
 		</div>
@@ -569,7 +577,7 @@ function edd_order_details_items( $order ) {
 
 	<?php do_action( 'edd_view_order_details_files_after', $order->id ); ?>
 
-	<?php
+<?php
 }
 
 /**
