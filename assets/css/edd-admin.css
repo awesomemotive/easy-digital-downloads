@@ -481,7 +481,17 @@ a.edd-delete:hover {
 	}
 }
 
-.download_page_edd-payment-history .edit-post-header #publishing-action {
+.download_page_edd-payment-history .edit-post-header .edit-post-header__toolbar {
+	order: 0;
+}
+
+.download_page_edd-payment-history .edit-post-header .edit-post-header__settings {
+	order: 1;
+}
+
+.download_page_edd-payment-history .edit-post-header #publishing-action,
+.download_page_edd-payment-history .edit-post-header .edit-post-header__toolbar,
+.download_page_edd-payment-history .edit-post-header .edit-post-header__settings {
 	display: flex;
 	align-items: center;
 }
@@ -542,7 +552,7 @@ a.edd-delete:hover {
 .order-customer-info .customer-details {
 	display: flex;
 	flex-direction: column;
-} 
+}
 
 .order-customer-info .customer-details .customer-since {
 	color: #666;
