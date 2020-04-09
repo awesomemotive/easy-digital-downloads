@@ -70,26 +70,6 @@ function edd_add_order_page_content() {
 			<div id="poststuff">
 				<div id="edd-dashboard-widgets-wrap">
 					<div id="post-body" class="metabox-holder columns-2">
-						<div id="postbox-container-1" class="postbox-container">
-							<div id="side-sortables">
-								<?php
-
-								// Before sidebar.
-								do_action( 'edd_add_order_details_sidebar_before' );
-
-								// Attributes.
-								edd_order_details_attributes( $order );
-
-								// Extras.
-								edd_order_details_extras( $order );
-
-								// After sidebar.
-								do_action( 'edd_add_order_details_sidebar_after' );
-
-								?>
-							</div>
-						</div>
-
 						<div id="postbox-container-2" class="postbox-container">
 							<div id="normal-sortables">
 								<?php
@@ -105,6 +85,26 @@ function edd_add_order_page_content() {
 
 								// After body.
 								do_action( 'edd_add_order_details_main_after' );
+
+								?>
+							</div>
+						</div>
+
+						<div id="postbox-container-1" class="postbox-container">
+							<div id="side-sortables">
+								<?php
+
+								// Before sidebar.
+								do_action( 'edd_add_order_details_sidebar_before' );
+
+								// Attributes.
+								edd_order_details_attributes( $order );
+
+								// Extras.
+								edd_order_details_extras( $order );
+
+								// After sidebar.
+								do_action( 'edd_add_order_details_sidebar_after' );
 
 								?>
 							</div>

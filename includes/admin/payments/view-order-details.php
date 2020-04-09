@@ -60,29 +60,6 @@ if ( empty( $order ) ) {
 		<div id="poststuff">
 			<div id="edd-dashboard-widgets-wrap">
 				<div id="post-body" class="metabox-holder columns-2">
-					<div id="postbox-container-1" class="postbox-container">
-						<div id="side-sortables">
-							<?php
-
-							// Before sidebar
-							do_action( 'edd_view_order_details_sidebar_before', $order->id );
-
-							// Attributes
-							edd_order_details_attributes( $order );
-
-							// Related Refunds
-							edd_order_details_refunds( $order );
-
-							// Extras
-							edd_order_details_extras( $order );
-
-							// After sidebar
-							do_action( 'edd_view_order_details_sidebar_after', $order->id );
-
-							?>
-						</div>
-					</div>
-
 					<div id="postbox-container-2" class="postbox-container">
 						<div id="normal-sortables">
 							<?php
@@ -101,6 +78,29 @@ if ( empty( $order ) ) {
 
 							// After body
 							do_action( 'edd_view_order_details_main_after', $order->id );
+
+							?>
+						</div>
+					</div>
+
+					<div id="postbox-container-1" class="postbox-container">
+						<div id="side-sortables">
+							<?php
+
+							// Before sidebar
+							do_action( 'edd_view_order_details_sidebar_before', $order->id );
+
+							// Attributes
+							edd_order_details_attributes( $order );
+
+							// Related Refunds
+							edd_order_details_refunds( $order );
+
+							// Extras
+							edd_order_details_extras( $order );
+
+							// After sidebar
+							do_action( 'edd_view_order_details_sidebar_after', $order->id );
 
 							?>
 						</div>
