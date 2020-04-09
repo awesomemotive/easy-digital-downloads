@@ -729,13 +729,13 @@ class EDD_HTML_Elements {
 		$data = '';
 		if ( ! empty( $args['data'] ) ) {
 			foreach ( $args['data'] as $key => $value ) {
-				$data .= 'data-' . edd_sanitize_key( $key ) . '="' . esc_attr( $value ) . '" ';
+				$data .= 'data-' . esc_attr( $key ) . '="' . esc_attr( $value ) . '" ';
 			}
 		}
 
-		$output = '<span id="edd-' . edd_sanitize_key( $args['name'] ) . '-wrap">';
+		$output = '<span id="edd-' . esc_attr( $args['name'] ) . '-wrap">';
 		if ( ! empty( $args['label'] ) ) {
-			$output .= '<label class="edd-label" for="' . edd_sanitize_key( $args['id'] ) . '">' . esc_html( $args['label'] ) . '</label>';
+			$output .= '<label class="edd-label" for="' . esc_attr( $args['id'] ) . '">' . esc_html( $args['label'] ) . '</label>';
 		}
 
 		if ( ! empty( $args['desc'] ) ) {
@@ -799,13 +799,13 @@ class EDD_HTML_Elements {
 			$disabled = ' disabled="disabled"';
 		}
 
-		$output = '<span id="edd-' . edd_sanitize_key( $args['name'] ) . '-wrap">';
+		$output = '<span id="edd-' . esc_attr( $args['name'] ) . '-wrap">';
 
 		if ( ! empty( $args['label'] ) ) {
-			$output .= '<label class="edd-label" for="' . edd_sanitize_key( $args['name'] ) . '">' . esc_html( $args['label'] ) . '</label>';
+			$output .= '<label class="edd-label" for="' . esc_attr( $args['name'] ) . '">' . esc_html( $args['label'] ) . '</label>';
 		}
 
-		$output .= '<textarea name="' . esc_attr( $args['name'] ) . '" id="' . edd_sanitize_key( $args['name'] ) . '" class="' . $class . '"' . $disabled . '>' . esc_attr( $args['value'] ) . '</textarea>';
+		$output .= '<textarea name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['name'] ) . '" class="' . $class . '"' . $disabled . '>' . esc_attr( $args['value'] ) . '</textarea>';
 
 		if ( ! empty( $args['desc'] ) ) {
 			$output .= '<span class="edd-description">' . esc_html( $args['desc'] ) . '</span>';
