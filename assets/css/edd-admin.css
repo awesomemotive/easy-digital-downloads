@@ -1924,7 +1924,7 @@ body.download_page_edd-reports {
 	font-size: 10px;
 	text-transform: uppercase;
 	font-weight: bold;
-	line-height: 8px;
+	line-height: 1;
 	vertical-align: middle;
 	padding: 2px 2px 3px 3px;
 	margin: -1px 0 0 2px;
