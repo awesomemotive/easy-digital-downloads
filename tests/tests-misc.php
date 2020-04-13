@@ -504,6 +504,29 @@ class Test_Misc extends EDD_UnitTestCase {
 		$this->assertSame( $expected, edd_get_angola_provinces_list() );
 	}
 
+	public function test_netherlands_provinces_list() {
+		$expected = array(
+			''   => '',
+			'DR' => __( 'Drenthe', 'easy-digital-downloads' ),
+			'FL' => __( 'Flevoland', 'easy-digital-downloads' ),
+			'FR' => __( 'Friesland', 'easy-digital-downloads' ),
+			'GE' => __( 'Gelderland', 'easy-digital-downloads' ),
+			'GR' => __( 'Groningen', 'easy-digital-downloads' ),
+			'LI' => __( 'Limburg', 'easy-digital-downloads' ),
+			'NB' => __( 'North Brabant', 'easy-digital-downloads' ),
+			'NH' => __( 'North Holland', 'easy-digital-downloads' ),
+			'OV' => __( 'Overijssel', 'easy-digital-downloads' ),
+			'ZH' => __( 'South Holland', 'easy-digital-downloads' ),
+			'UT' => __( 'Utrecht', 'easy-digital-downloads' ),
+			'ZE' => __( 'Zeeland', 'easy-digital-downloads' ),
+			'BO' => __( 'Bonaire', 'easy-digital-downloads' ),
+			'SA' => __( 'Saba', 'easy-digital-downloads' ),
+			'SE' => __( 'Sint Eustatius', 'easy-digital-downloads' ),
+		);
+
+		$this->assertSame( $expected, edd_get_netherlands_provinces_list() );
+	}
+
 	public function test_month_num_to_name() {
 		$this->assertEquals( 'Jan', edd_month_num_to_name( 1 ) );
 	}

@@ -301,8 +301,17 @@ class Logs_Tests extends \EDD_UnitTestCase {
 	 * @covers ::query()
 	 */
 	public function test_get_logs_by_title_should_return_1() {
+		global $wp_version;
+
+		if ( version_compare( $wp_version, '5.4', '<' ) ) {
+			$title_search = 'Log title ' . \WP_UnitTest_Generator_Sequence::$incr;
+
+		} else {
+			$title_search = 'Log title ' . zeroise( \WP_UnitTest_Generator_Sequence::$incr, 7 );
+		}
+
 		$logs = edd_get_logs( array(
-			'title' => 'Log title ' . \WP_UnitTest_Generator_Sequence::$incr,
+			'title' => $title_search,
 		) );
 
 		$this->assertCount( 1, $logs );
