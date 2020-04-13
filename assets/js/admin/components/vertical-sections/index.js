@@ -2,14 +2,27 @@ jQuery( document ).ready( function( $ ) {
 	// Hides the section content.
 	$( '.edd-vertical-sections.use-js .section-content' ).hide();
 
-	// Shows the first section's content.
-	$( '.edd-vertical-sections.use-js .section-content:first-child' ).show();
+	var hash = window.location.hash;
+	if ( hash ) {
+		// Show the section content related to the URL.
+		$( '.edd-vertical-sections.use-js' ).find( hash ).show();
 
-	// Makes the 'aria-selected' attribute true for the first section nav item.
-	$( '.edd-vertical-sections.use-js .section-nav:first-child' ).attr( 'aria-selected', 'true' );
+		// Set the aria-selected for section titles to be false
+		$( '.edd-vertical-sections.use-js .section-title' ).attr( 'aria-selected', 'false' );
 
-	// Copies the current section item title to the box header.
-	$( '.which-section' ).text( $( '.section-nav :first-child a' ).text() );
+		// Set aria-selected true on the related link.
+		$( '.edd-vertical-sections.use-js' ).find( '.section-title a[href="' + hash + '"]' ).parents( '.section-title' ).attr( 'aria-selected', 'true' );
+
+	} else {
+		// Shows the first section's content.
+		$( '.edd-vertical-sections.use-js .section-content:first-child' ).show();
+
+		// Makes the 'aria-selected' attribute true for the first section nav item.
+		$( '.edd-vertical-sections.use-js .section-nav:first-child' ).attr( 'aria-selected', 'true' );
+
+		// Copies the current section item title to the box header.
+		$( '.which-section' ).text( $( '.section-nav :first-child a' ).text() );
+	}
 
 	// When a section nav item is clicked.
 	$( '.edd-vertical-sections.use-js .section-nav li a' ).on( 'click',
