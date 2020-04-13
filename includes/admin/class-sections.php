@@ -216,9 +216,13 @@ class Sections {
 			$url = $this->use_js
 				? '#' . esc_attr( $this->id . $section->id )
 				: add_query_arg( 'view', $section->id, $this->base_url );
-			?>
 
-			<li class="section-title">
+			// Special selected section
+			$selected = $this->is_current_section( $section->id )
+				? 'aria-selected="true"'
+				: ''; ?>
+
+			<li class="section-title" <?php echo $selected; ?>>
 				<a href="<?php echo esc_url( $url ); ?>">
 					<span class="dashicons dashicons-<?php echo esc_attr( $section->icon ); ?>"></span>
 					<span class="label"><?php echo $section->label; // Allow HTML ?></span>
@@ -254,8 +258,12 @@ class Sections {
 		// Loop through sections
 		foreach ( $sections as $section ) :
 
-			?>
-			<div id="<?php echo esc_attr( $this->id . $section->id ); ?>" class="section-content"><?php
+			// Special selected section
+			$selected = ! $this->is_current_section( $section->id )
+				? 'style="display: none;"'
+				: ''; ?>
+
+			<div id="<?php echo esc_attr( $this->id . $section->id ); ?>" class="section-content" <?php echo $selected; ?>><?php
 
 				// Callback or action
 				if ( ! empty( $section->callback ) ) {
