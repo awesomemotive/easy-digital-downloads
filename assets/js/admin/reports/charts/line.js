@@ -3,6 +3,7 @@
 /**
  * Internal dependencies.
  */
+import { NumberFormat } from '@easy-digital-downloads/currency';
 import { getLabelWithTypeCondition, toolTipBaseConfig } from './utils';
 
 /**
@@ -12,44 +13,31 @@ import { getLabelWithTypeCondition, toolTipBaseConfig } from './utils';
  * @return {Chart}
  */
 export const render = ( config ) => {
-	const {
-		dates,
-		options,
-		data,
-		target,
-	} = config;
+	const { target } = config;
+	const number = new NumberFormat();
 
-	Chart.defaults.global.pointHitDetectionRadius = 5;
-
-	// Convert dataset x-axis values to moment() objects.
-	_.each( data.datasets, ( dataset ) => {
-		_.each( dataset.data, ( pair, index ) => {
-
-			// Moment.js accepts a date object so we'll turn the timestamp into a date object here.
-			let date = new Date( parseInt( pair.x ) );
-
-			// Offset the moment.js so it is set to match the WordPress timezone, which is n dates.utc_offset
-			pair.x = moment( date ).utcOffset( parseInt( dates.utc_offset ) ).format( 'LLL' );
-
-		} );
-	} );
-
-	// Set min and max moment() values for the x-axis.
-	// @todo Not sure this is the correct way to be setting this?
-	_.each( options.scales.xAxes, ( xaxis ) => {
-		if ( ! dates.day_by_day ) {
-			xaxis.time.unit = 'month';
-		}
-
-		xaxis.time.min = moment( dates.start.date );
-		xaxis.time.max = moment( dates.end.date );
-	} );
-
-	// Config tooltips.
-	config.options.tooltips = tooltipConfig( config );
+	const lineConfig = {
+		...config,
+		options: {
+			...config.options,
+			tooltips: tooltipConfig( config ),
+			scales: {
+				...config.options.scales,
+				yAxes: [
+					{
+						ticks: {
+							callback: ( value, index, values ) => {
+								return number.format( value );
+							},
+						},
+					},
+				],
+			},
+		},
+	};
 
 	// Render
-	return new Chart( document.getElementById( target ), config );
+	return new Chart( document.getElementById( target ), lineConfig );
 };
 
 /**
