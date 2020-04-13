@@ -224,7 +224,7 @@ class Sections {
 
 			<li class="section-title" <?php echo $selected; ?>>
 				<a href="<?php echo esc_url( $url ); ?>">
-					<i class="dashicons dashicons-<?php echo esc_attr( $section->icon ); ?>"></i>
+					<span class="dashicons dashicons-<?php echo esc_attr( $section->icon ); ?>"></span>
 					<span class="label"><?php echo $section->label; // Allow HTML ?></span>
 				</a>
 			</li>
