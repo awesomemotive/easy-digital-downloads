@@ -3223,14 +3223,14 @@ body.download_page_edd-reports {
 #edd-item-tab-wrapper li a, /** [1] */
 #edd-item-tab-wrapper li > .edd-item-tab-label-wrap, /** [1] */
 .edd-vertical-sections .section-nav li a {
-	display: block;
+	display: flex;
 	margin: 0;
 	padding: 9px;
-	line-height: 20px !important;
 	text-decoration: none;
 	border-bottom: 1px solid #e5e5e5;
 	box-shadow: none;
 	position: relative;
+	align-items: center;
 }
 
 .edd-vertical-sections .section-nav li[aria-selected="true"] a:after {
