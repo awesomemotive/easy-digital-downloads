@@ -3282,6 +3282,15 @@ body.download_page_edd-reports {
 	margin-right: -1px;
 }
 
+.edd-vertical-sections .section-content,
+.no-js .edd-vertical-sections .section-nav {
+	display: none;
+}
+
+.no-js .edd-vertical-sections .section-content {
+	display: block;
+}
+
 /* Fresh */
 .admin-color-fresh .edd-vertical-sections .section-nav li[aria-selected="true"] a {
 	border-left: 5px solid #0073aa;
