@@ -216,13 +216,9 @@ class Sections {
 			$url = $this->use_js
 				? '#' . esc_attr( $this->id . $section->id )
 				: add_query_arg( 'view', $section->id, $this->base_url );
+			?>
 
-			// Special selected section
-			$selected = $this->is_current_section( $section->id )
-				? 'aria-selected="true"'
-				: ''; ?>
-
-			<li class="section-title" <?php echo $selected; ?>>
+			<li class="section-title">
 				<a href="<?php echo esc_url( $url ); ?>">
 					<span class="dashicons dashicons-<?php echo esc_attr( $section->icon ); ?>"></span>
 					<span class="label"><?php echo $section->label; // Allow HTML ?></span>
