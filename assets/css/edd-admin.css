@@ -1921,7 +1921,7 @@ body.download_page_edd-reports {
 }
 
 .edd-chip {
-	font-size: 7px;
+	font-size: 10px;
 	text-transform: uppercase;
 	font-weight: bold;
 	line-height: 8px;
@@ -1930,8 +1930,7 @@ body.download_page_edd-reports {
 	margin: -1px 0 0 2px;
 	border-radius: 3px;
 	color: #fff;
-	background-color: #bbb;
-	border: 1px solid #999;
+	background-color: #444;
 	opacity: 0.8;
 }
 
