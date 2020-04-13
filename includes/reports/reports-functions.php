@@ -568,8 +568,8 @@ function parse_dates_for_range( $range = null, $date = 'now' ) {
 
 		case 'last_month':
 			$dates = array(
-				'start' => $date->copy()->subMonth( 1 )->startOfMonth(),
-				'end'   => $date->copy()->subMonth( 1 )->endOfMonth(),
+				'start' => $date->copy()->subMonthNoOverflow( 1 )->startOfMonth(),
+				'end'   => $date->copy()->subMonthNoOverflow( 1 )->endOfMonth(),
 			);
 			break;
 
