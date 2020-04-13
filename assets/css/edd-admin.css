@@ -3197,7 +3197,6 @@ body.download_page_edd-reports {
 #edd-item-tab-wrapper, /** [1] */
 .edd-vertical-sections .section-nav {
 	position: relative;
-	float: left;
 	width: 20%;
 	line-height: 1em;
 	margin: 0 -1px 0 0;
