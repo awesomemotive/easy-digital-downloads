@@ -408,8 +408,8 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_parse_dates_for_range_with_last_month_range_should_return_those_dates() {
 		$expected = array(
-			'start' => self::$date->copy()->subMonth( 1 )->startOfMonth()->toDateTimeString(),
-			'end'   => self::$date->copy()->subMonth( 1 )->endOfMonth()->toDateTimeString(),
+			'start' => self::$date->copy()->subMonthNoOverflow( 1 )->startOfMonth()->toDateTimeString(),
+			'end'   => self::$date->copy()->subMonthNoOverflow( 1 )->endOfMonth()->toDateTimeString(),
 			'range' => 'last_month',
 		);
 
