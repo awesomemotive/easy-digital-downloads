@@ -3233,6 +3233,15 @@ body.download_page_edd-reports {
 	align-items: center;
 }
 
+#edd-item-tab-wrapper li a:focus,
+#edd-item-tab-wrapper li a:hover,
+.edd-vertical-sections .section-nav li a:hover,
+.edd-vertical-sections .section-nav li a:focus {
+	background-color: #eee;
+	outline: 2px solid #0073aa;
+	outline-offset: -2px;
+}
+
 .edd-vertical-sections .section-nav li[aria-selected="true"] a:after {
 	content: '';
 	width: 1px;
