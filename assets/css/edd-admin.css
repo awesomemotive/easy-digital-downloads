@@ -2736,7 +2736,7 @@ body.download_page_edd-reports {
 	display: inline-block;
 	z-index: 2;
 }
-.edd-sections-wrap .edd-vertical-sections:not(.meta-box) .section-wrap > div {
+.js .edd-sections-wrap .edd-vertical-sections:not(.meta-box) .section-wrap > div {
 	min-height: 500px;
 	height: 100%;
 	overflow: hidden;
@@ -3283,7 +3283,8 @@ body.download_page_edd-reports {
 }
 
 .edd-vertical-sections .section-content,
-.no-js .edd-vertical-sections .section-nav {
+.no-js .edd-vertical-sections .section-nav,
+.no-js .edd-item-header-small {
 	display: none;
 }
 
