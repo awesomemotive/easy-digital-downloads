@@ -3282,13 +3282,13 @@ body.download_page_edd-reports {
 	margin-right: -1px;
 }
 
-.edd-vertical-sections .section-content,
-.no-js .edd-vertical-sections .section-nav,
-.no-js .edd-item-header-small {
+.edd-vertical-sections.use-js .section-content,
+.no-js .edd-vertical-sections.use-js .section-nav,
+.no-js .edd-vertical-sections.use-js.edd-item-header-small {
 	display: none;
 }
 
-.no-js .edd-vertical-sections .section-content {
+.no-js .edd-vertical-sections.use-js .section-content {
 	display: block;
 }
 
