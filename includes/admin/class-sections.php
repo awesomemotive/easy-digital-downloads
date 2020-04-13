@@ -254,12 +254,8 @@ class Sections {
 		// Loop through sections
 		foreach ( $sections as $section ) :
 
-			// Special selected section
-			$selected = ! $this->is_current_section( $section->id )
-				? 'style="display: none;"'
-				: ''; ?>
-
-			<div id="<?php echo esc_attr( $this->id . $section->id ); ?>" class="section-content" <?php echo $selected; ?>><?php
+			?>
+			<div id="<?php echo esc_attr( $this->id . $section->id ); ?>" class="section-content"><?php
 
 				// Callback or action
 				if ( ! empty( $section->callback ) ) {
