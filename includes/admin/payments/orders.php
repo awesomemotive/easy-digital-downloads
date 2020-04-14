@@ -48,15 +48,6 @@ function edd_order_details_publish( $order ) {
 			</div>
 
 			<div class="edit-post-header__toolbar">
-				<?php if ( ! edd_is_add_order_page() ) : ?>
-				<div id="delete-action">
-					<a href="<?php echo wp_nonce_url( add_query_arg( array(
-						'edd-action'  => 'delete_payment',
-						'purchase_id' => $order->id,
-					), admin_url( 'edit.php?post_type=download&page=edd-payment-history' ) ), 'edd_payment_nonce' ) ?>"
-							class="edd-delete-payment edd-delete"><?php esc_html_e( 'Delete Order', 'easy-digital-downloads' ); ?></a>
-				</div>
-				<?php endif; ?>
 			</div>
 
 		</div>
@@ -867,6 +858,25 @@ function edd_order_details_attributes( $order ) {
 							<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $order->status, $key, true ); ?>><?php echo esc_html( $status ); ?></option>
 						<?php endforeach; ?>
 					</select>
+
+					<?php
+					if ( ! edd_is_add_order_page() ) :
+						$trash_url = wp_nonce_url(
+							edd_get_admin_url( array(
+								'page'        => 'edd-payment-history',
+								'order_type'  => 'sale',
+								'edd-action'  => 'trash_order',
+								'purchase_id' => $order->id,
+							) ),
+							'edd_payment_nonce'
+						);
+					?>
+					<div style="margin-top: 8px;">
+						<a href="<?php echo esc_url( $trash_url ); ?>" class="edd-delete-payment edd-delete">
+							<?php esc_html_e( 'Move to Trash', 'easy-digital-downloads' ); ?>
+						</a>
+					</div>
+					<?php endif; ?>
 				</div>
 
 				<?php if ( ! edd_is_add_order_page() && edd_is_order_recoverable( $order->id ) && ! empty( $recovery_url ) ) : ?>
