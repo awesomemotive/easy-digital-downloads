@@ -22,6 +22,11 @@ export const Actions = wp.Backbone.View.extend( {
 	/**
 	 * @since 3.0
 	 */
+	template: wp.template( 'edd-admin-order-actions' ),
+
+	/**
+	 * @since 3.0
+	 */
 	events: {
 		'click #add-item': 'onAddOrderItem',
 		'click #add-discount': 'onAddOrderDiscount',
