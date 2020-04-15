@@ -437,9 +437,10 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 	<div class="edd-repeatable-row-standard-fields">
 
 		<div class="edd-option-name">
-			<span class="edd-repeatable-row-setting-label"><?php _e( 'Option Name', 'easy-digital-downloads' ); ?></span>
+			<label for="edd_variable_prices-<?php echo esc_attr( $key ); ?>-name" class="edd-repeatable-row-setting-label"><?php esc_html_e( 'Option Name', 'easy-digital-downloads' ); ?></label>
 			<?php echo EDD()->html->text( array(
 				'name'        => 'edd_variable_prices[' . $key . '][name]',
+				'id'          => 'edd_variable_prices-' . $key . '-name',
 				'value'       => esc_attr( $args['name'] ),
 				'placeholder' => __( 'Option Name', 'easy-digital-downloads' ),
 				'class'       => 'edd_variable_prices_name large-text'
@@ -447,10 +448,11 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 		</div>
 
 		<div class="edd-option-price">
-			<span class="edd-repeatable-row-setting-label"><?php _e( 'Price', 'easy-digital-downloads' ); ?></span>
+			<label for="edd_variable_prices-<?php echo esc_attr( $key ); ?>-amount" class="edd-repeatable-row-setting-label"><?php esc_html_e( 'Price', 'easy-digital-downloads' ); ?></label>
 			<?php
 			$price_args = array(
 				'name'        => 'edd_variable_prices[' . $key . '][amount]',
+				'id'          => 'edd_variable_prices-' . $key . '-amount',
 				'value'       => $args['amount'],
 				'placeholder' => edd_format_amount( 9.99 ),
 				'class'       => 'edd-price-field'
@@ -469,11 +471,11 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 		</div>
 
 		<div class="edd_repeatable_default edd_repeatable_default_wrapper">
-			<span class="edd-repeatable-row-setting-label"><?php _e( 'Default', 'easy-digital-downloads' ); ?></span>
-			<label class="edd-default-price">
-				<input type="radio" <?php checked( $default_price_id, $key, true ); ?> class="edd_repeatable_default_input" name="_edd_default_price_id" value="<?php echo $key; ?>" />
+			<label for="edd_default_price_id_<?php echo esc_attr( $key ); ?>" class="edd-repeatable-row-setting-label"><?php esc_html_e( 'Default', 'easy-digital-downloads' ); ?></label>
+			<div class="edd-default-price">
+				<input type="radio" <?php checked( $default_price_id, $key, true ); ?> class="edd_repeatable_default_input" name="_edd_default_price_id" id="edd_default_price_id_<?php echo esc_attr( $key ); ?>" value="<?php echo $key; ?>" />
 				<span class="screen-reader-text"><?php printf( __( 'Set ID %s as default price', 'easy-digital-downloads' ), $key ); ?></span>
-			</label>
+			</div>
 		</div>
 
 	</div>
@@ -536,9 +538,7 @@ function edd_render_product_type_field( $post_id = 0 ) {
 	$types = edd_get_download_types();
 	$type  = edd_get_download_type( $post_id );
 ?>
-	<p>
-		<strong><?php echo apply_filters( 'edd_product_type_options_heading', __( 'Product Type Options:', 'easy-digital-downloads' ) ); ?></strong>
-	</p>
+	<label for="_edd_product_type"><strong><?php echo apply_filters( 'edd_product_type_options_heading', __( 'Product Type Options:', 'easy-digital-downloads' ) ); ?></strong></label>
 	<p>
 		<?php echo EDD()->html->select( array(
 			'options'          => $types,
@@ -548,7 +548,7 @@ function edd_render_product_type_field( $post_id = 0 ) {
 			'show_option_all'  => false,
 			'show_option_none' => false
 		) ); ?>
-		<label for="_edd_product_type"><?php _e( 'Select a product type', 'easy-digital-downloads' ); ?></label>
+		<span class="description"><?php _e( 'Select a product type', 'easy-digital-downloads' ); ?></span>
 		<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Product Type</strong>: Sell this item as a single product, or use the Bundle type to sell a collection of products.', 'easy-digital-downloads' ); ?>"></span>
 	</p>
 <?php
@@ -572,7 +572,7 @@ function edd_render_products_field( $post_id ) {
 	$prices           = $download->get_prices(); ?>
 
 	<div id="edd_products"<?php echo $display; ?>>
-		<div id="edd_file_fields" class="edd_meta_table_wrap">
+		<div id="edd_file_fields_<?php echo esc_attr( $type ); ?>" class="edd_meta_table_wrap">
 			<div class="widefat edd_repeatable_table">
 
 				<?php do_action( 'edd_download_products_table_head', $post_id ); ?>
@@ -731,7 +731,7 @@ function edd_render_files_field( $post_id = 0 ) {
 	<div id="edd_download_files"<?php echo $display; ?>>
 		<input type="hidden" id="edd_download_files" class="edd_repeatable_upload_name_field" value=""/>
 
-		<div id="edd_file_fields" class="edd_meta_table_wrap">
+		<div id="edd_file_fields_<?php echo esc_attr( $type ); ?>" class="edd_meta_table_wrap">
 			<div class="widefat edd_repeatable_table">
 
 				<div class="edd-file-fields edd-repeatables-wrap">
@@ -816,30 +816,33 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 
 	<div class="edd-repeatable-row-standard-fields<?php echo $variable_class; ?>">
 		<div class="edd-file-name">
-			<span class="edd-repeatable-row-setting-label"><?php _e( 'File Name', 'easy-digital-downloads' ); ?></span>
+			<label for="edd_download_files-<?php echo esc_attr( $key ); ?>-name" class="edd-repeatable-row-setting-label"><?php esc_html_e( 'File Name', 'easy-digital-downloads' ); ?></label>
 			<input type="hidden" name="edd_download_files[<?php echo absint( $key ); ?>][attachment_id]" class="edd_repeatable_attachment_id_field" value="<?php echo esc_attr( absint( $args['attachment_id'] ) ); ?>"/>
 			<input type="hidden" name="edd_download_files[<?php echo absint( $key ); ?>][thumbnail_size]" class="edd_repeatable_thumbnail_size_field" value="<?php echo esc_attr( $args['thumbnail_size'] ); ?>"/>
 			<?php echo EDD()->html->text( array(
 				'name'        => 'edd_download_files[' . $key . '][name]',
+				'id'          => 'edd_download_files-' . $key . '-name',
 				'value'       => $args['name'],
 				'placeholder' => __( 'My Neat File', 'easy-digital-downloads' ),
-				'class'       => 'edd_repeatable_name_field large-text'
+				'class'       => 'edd_repeatable_name_field large-text',
 			) ); ?>
 		</div>
 
 		<div class="edd-file-url">
-			<span class="edd-repeatable-row-setting-label"><?php _e( 'File URL', 'easy-digital-downloads' ); ?></span>
+			<label for="edd_download_files-<?php echo esc_attr( $key ); ?>-file" class="edd-repeatable-row-setting-label"><?php esc_html_e( 'File URL', 'easy-digital-downloads' ); ?></label>
 			<div class="edd_repeatable_upload_field_container">
 				<?php echo EDD()->html->text( array(
 					'name'        => 'edd_download_files[' . $key . '][file]',
+					'id'          => 'edd_download_files-' . $key . '-file',
 					'value'       => $args['file'],
 					'placeholder' => __( 'Enter, upload, choose from Media Library', 'easy-digital-downloads' ),
-					'class'       => 'edd_repeatable_upload_field edd_upload_field large-text'
+					'class'       => 'edd_repeatable_upload_field edd_upload_field large-text',
 				) ); ?>
 
 				<span class="edd_upload_file">
 					<a href="#" data-uploader-title="<?php _e( 'Select Files', 'easy-digital-downloads' ); ?>" data-uploader-button-text="<?php _e( 'Select', 'easy-digital-downloads' ); ?>" class="edd_upload_file_button" onclick="return false;">
 						<span class="dashicons dashicons-admin-links"></span>
+						<span class="screen-reader-text"><?php esc_html_e( 'Select Files', 'easy-digital-downloads' ); ?></span>
 					</a>
 				</span>
 			</div>
@@ -847,7 +850,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 
 		<div class="edd-file-assignment pricing"<?php echo $variable_display; ?>>
 
-			<span class="edd-repeatable-row-setting-label"><?php _e( 'Price Assignment', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Price Assignment</strong>: With variable pricing enabled, you can choose to allow certain price variations access to specific files, or allow all price variations to access a file.', 'easy-digital-downloads' ); ?>"></span></span>
+			<label for="edd_download_files_<?php echo esc_attr( $key ); ?>_condition" class="edd-repeatable-row-setting-label"><?php esc_html_e( 'Price Assignment', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Price Assignment</strong>: With variable pricing enabled, you can choose to allow certain price variations access to specific files, or allow all price variations to access a file.', 'easy-digital-downloads' ); ?>"></span></label>
 
 			<?php
 				$options = array();
@@ -860,6 +863,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 
 				echo EDD()->html->select( array(
 					'name'             => 'edd_download_files[' . $key . '][condition]',
+					'id'               => 'edd_download_files-' . $key . '-condition',
 					'class'            => 'edd_repeatable_condition_field',
 					'options'          => $options,
 					'selected'         => $args['condition'],
@@ -972,12 +976,10 @@ function edd_render_download_limit_row( $post_id ) {
 	$display = 'bundle' == edd_get_download_type( $post_id ) ? ' style="display: none;"' : '';
 ?>
 	<div class="edd-product-settings-wrapper" id="edd_download_limit_wrap"<?php echo $display; ?>>
-		<p>
-			<strong><?php _e( 'File Download Limit', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>File Download Limit</strong>: Limit the number of times a customer who purchased this product can access their download links.', 'easy-digital-downloads' ); ?>"></span></strong>
-		</p>
-		<label>
-			<input class="small-text" name="_edd_download_limit" type="number" min="0" max="5000" step="1" value="<?php echo esc_attr ( $edd_download_limit ); ?>" />
+		<label for="edd_download_limit">
+			<strong><?php esc_html_e( 'File Download Limit', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>File Download Limit</strong>: Limit the number of times a customer who purchased this product can access their download links.', 'easy-digital-downloads' ); ?>"></span></strong>
 		</label>
+		<input class="small-text" name="_edd_download_limit" id="edd_download_limit" type="number" min="0" max="5000" step="1" value="<?php echo esc_attr ( $edd_download_limit ); ?>" />
 		<p>
 			<?php _e( 'Leave blank to use global setting. Enter <code>0</code> for unlimited', 'easy-digital-downloads' ); ?>
 		</p>
@@ -1086,9 +1088,9 @@ function edd_render_meta_box_shortcode() {
 	$shortcode     = '[purchase_link id="' . absint( get_the_ID() ) . '" text="' . esc_html( $purchase_text ) . '" style="' . $style . '" color="' . esc_attr( $color ) . '"]'; ?>
 
 	<div class="edd-product-options-wrapper">
-		<p>
+		<label for="edd-purchase-shortcode">
 			<strong><?php _e( 'Purchase Shortcode', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Purchase Shortcode</strong>: Use this shortcode to output a purchase link for this product in the location of your choosing.', 'easy-digital-downloads' ); ?>"></span></strong>
-		</p>
+		</label>
 		<p>
 			<input type="text" id="edd-purchase-shortcode" readonly="readonly" value="<?php echo htmlentities( $shortcode ); ?>">
 		</p>
@@ -1212,7 +1214,8 @@ function edd_render_product_notes_meta_box() {
 function edd_render_product_notes_field( $post_id ) {
 	$product_notes = edd_get_product_notes( $post_id );
 ?>
-	<textarea rows="1" cols="40" class="large-texarea" name="edd_product_notes" id="edd_product_notes_field"><?php echo esc_textarea( $product_notes ); ?></textarea>
+	<label for="edd_product_notes_field" class="screen-reader-text"><?php esc_html_e( 'Download Instructions', 'easy-digital-downloads' ); ?></label>
+	<textarea rows="1" cols="40" class="large-textarea" name="edd_product_notes" id="edd_product_notes_field"><?php echo esc_textarea( $product_notes ); ?></textarea>
 	<p><?php printf( __( 'Special instructions for this %s. These will be added to the purchase receipt, and may be used by some extensions or themes.', 'easy-digital-downloads' ), strtolower( edd_get_label_singular() ) ); ?></p>
 <?php
 }
