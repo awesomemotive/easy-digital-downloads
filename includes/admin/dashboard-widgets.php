@@ -161,7 +161,7 @@ function edd_load_dashboard_sales_widget( ) {
 					array(
 						'page' => 'edd-payment-history',
 						'view' => 'view-order-details',
-						'id'   => $payment->ID,
+						'id'   => urlencode( $payment->ID ),
 					),
 					admin_url( 'edit.php' )
 				);
