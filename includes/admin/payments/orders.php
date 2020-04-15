@@ -351,27 +351,27 @@ function edd_order_details_addresses( $order ) {
 			</div>
 
 			<div class="input-wrap">
-				<label><?php esc_html_e( 'Line 1:', 'easy-digital-downloads' ); ?></label>
-				<input type="text" name="edd_order_address[address]" value="<?php echo esc_attr( $address->address ); ?>" />
+				<label for="edd_order_address[address]"><?php esc_html_e( 'Line 1:', 'easy-digital-downloads' ); ?></label>
+				<input type="text" name="edd_order_address[address]" id="edd_order_address[address]" value="<?php echo esc_attr( $address->address ); ?>" />
 			</div>
 
 			<div class="input-wrap">
-				<label><?php esc_html_e( 'Line 2:', 'easy-digital-downloads' ); ?></label>
-				<input type="text" name="edd_order_address[address2]" value="<?php echo esc_attr( $address->address2 ); ?>" />
+				<label for="edd_order_address[address2]"><?php esc_html_e( 'Line 2:', 'easy-digital-downloads' ); ?></label>
+				<input type="text" name="edd_order_address[address2]" id="edd_order_address[address2]" value="<?php echo esc_attr( $address->address2 ); ?>" />
 			</div>
 
 			<div class="input-wrap">
-				<label><?php echo esc_html_x( 'City:', 'Address City', 'easy-digital-downloads' ); ?></label>
-				<input type="text" name="edd_order_address[city]" value="<?php echo esc_attr( $address->city ); ?>" />
+				<label for="edd_order_address[city]"><?php echo esc_html_x( 'City:', 'Address City', 'easy-digital-downloads' ); ?></label>
+				<input type="text" name="edd_order_address[city]" id="edd_order_address[city]" value="<?php echo esc_attr( $address->city ); ?>" />
 			</div>
 
 			<div class="input-wrap">
-				<label><?php echo esc_html_x( 'Zip / Postal Code:', 'Zip / Postal code of address', 'easy-digital-downloads' ); ?></label>
-				<input type="text" name="edd_order_address[postal_code]" value="<?php echo esc_attr( $address->postal_code ); ?>" class="med-text" />
+				<label for="edd_order_address[postal_code]"><?php echo esc_html_x( 'Zip / Postal Code:', 'Zip / Postal code of address', 'easy-digital-downloads' ); ?></label>
+				<input type="text" name="edd_order_address[postal_code]" id="edd_order_address[postal_code]" value="<?php echo esc_attr( $address->postal_code ); ?>" class="med-text" />
 			</div>
 
 			<div class="input-wrap">
-				<label><?php echo esc_html_x( 'Country:', 'Address country', 'easy-digital-downloads' ); ?></label>
+				<label for="edd-order-address-country"><?php echo esc_html_x( 'Country:', 'Address country', 'easy-digital-downloads' ); ?></label>
 				<div id="edd-order-address-country-wrap">
 					<?php
 					echo EDD()->html->select( array(
@@ -395,7 +395,7 @@ function edd_order_details_addresses( $order ) {
 			</div>
 
 			<div class="input-wrap">
-				<label><?php echo _x( 'Region:', 'Region of address', 'easy-digital-downloads' ); ?></label>
+				<label for="edd-order-address-region"><?php echo _x( 'Region:', 'Region of address', 'easy-digital-downloads' ); ?></label>
 				<div id="edd-order-address-state-wrap">
 					<?php
 					$states = edd_get_shop_states( $address->country );
