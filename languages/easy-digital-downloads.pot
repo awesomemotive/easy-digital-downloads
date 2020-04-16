@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 2.9.22\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2020-03-12 23:02:26+00:00\n"
+"POT-Creation-Date: 2020-04-16 23:20:48+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -93,7 +93,7 @@ msgstr ""
 #: includes/cart/class-edd-cart.php:1425 includes/cart/class-edd-cart.php:1439
 #: includes/class-edd-license-handler.php:309
 #: includes/deprecated-functions.php:517 includes/deprecated-functions.php:532
-#: includes/deprecated-functions.php:542 includes/download-functions.php:1261
+#: includes/deprecated-functions.php:542 includes/download-functions.php:1266
 #: includes/emails/actions.php:53 includes/emails/template.php:243
 #: includes/error-tracking.php:40 includes/gateways/functions.php:221
 #: includes/gateways/manual.php:33 includes/gateways/paypal-standard.php:168
@@ -6477,7 +6477,7 @@ msgstr ""
 msgid "Sorry but you have hit your download limit for this file."
 msgstr ""
 
-#: includes/deprecated-functions.php:532 includes/download-functions.php:1261
+#: includes/deprecated-functions.php:532 includes/download-functions.php:1266
 msgid "Sorry but your download link has expired."
 msgstr ""
 
