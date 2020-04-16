@@ -150,6 +150,8 @@ class Payment extends Base {
 			'_edd_payment_total',
 			'_edd_payment_tax',
 			'_edd_payment_number',
+			'_edd_sl_upgraded_payment_id', // EDD SL
+			'_edd_sl_is_renewal', // EDD SL
 		);
 
 		/**
@@ -264,6 +266,8 @@ class Payment extends Base {
 			'_edd_payment_total',
 			'_edd_payment_tax',
 			'_edd_payment_number',
+			'_edd_sl_upgraded_payment_id', // EDD SL
+			'_edd_sl_is_renewal', // EDD SL
 		);
 
 		/**
