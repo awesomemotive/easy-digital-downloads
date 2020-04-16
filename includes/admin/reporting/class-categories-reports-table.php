@@ -94,7 +94,6 @@ class EDD_Categories_Reports_Table extends List_Table {
 				<?php
 				if ( 'top' === $which ) {
 					edd_report_views();
-					edd_reports_graph_controls();
 				}
 				?>
 			</div>
