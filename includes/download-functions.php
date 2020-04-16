@@ -938,7 +938,7 @@ function edd_is_file_at_download_limit( $download_id = 0, $payment_id = 0, $file
 					'value' => (int) $file_id,
 				),
 				array(
-					'key'   => '_edd_log_payment_id',git
+					'key'   => '_edd_log_payment_id',
 					'value' => (int) $payment_id,
 				),
 				array(
