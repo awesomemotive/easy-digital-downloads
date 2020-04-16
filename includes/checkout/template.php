@@ -1030,28 +1030,6 @@ function edd_get_checkout_button_purchase_label() {
 }
 
 /**
- * Outputs the JavaScript code for the Agree to Terms section to toggle
- * the T&Cs text
- *
- * @since 1.0
- */
-function edd_agree_to_terms_js() {
-	if ( edd_get_option( 'show_agree_to_terms', false ) || edd_get_option( 'show_agree_to_privacy_policy', false ) ) : ?>
-	<script type="text/javascript">
-		jQuery(document).ready(function($){
-			$( document.body ).on( 'click', '.edd_terms_links', function() {
-				$( this ).parent().prev( '.edd-terms' ).slideToggle();
-				$( this ).parent().find( '.edd_terms_links' ).toggle();
-
-				return false;
-			});
-		});
-	</script><?php
-	endif;
-}
-add_action( 'edd_checkout_form_top', 'edd_agree_to_terms_js' );
-
-/**
  * Renders the hidden Checkout fields
  *
  * @since 1.3.2

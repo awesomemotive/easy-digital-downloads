@@ -312,7 +312,6 @@ function edd_reports_graph() {
 
 				<div class="inside">
 					<?php
-					edd_reports_graph_controls();
 					$graph = new EDD_Graph( $data );
 					$graph->set( 'x_mode', 'time' );
 					$graph->set( 'multiple_y_axes', true );
@@ -607,7 +606,6 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 
 			<div class="inside">
 				<?php
-				edd_reports_graph_controls();
 				$graph = new EDD_Graph( $data );
 				$graph->set( 'x_mode', 'time' );
 				$graph->set( 'multiple_y_axes', true );
@@ -622,94 +620,6 @@ function edd_reports_graph_of_download( $download_id = 0 ) {
 	</div>
 	<?php
 	echo ob_get_clean();
-}
-
-/**
- * Show report graph date filters
- *
- * @since 1.3
- * @return void
-*/
-function edd_reports_graph_controls() {
-	$date_options = Reports\get_dates_filter_options();
-
-	$dates = edd_get_report_dates();
-	$view  = edd_get_reporting_view();
-	$taxes = ! empty( $_GET['exclude_taxes'] )
-		? false
-		: true;
-	$range = isset( $dates['range'] )
-		? sanitize_key( $dates['range'] )
-		: get_dates_filter_range();
-	$class = ( $range === 'other' )
-		? ''
-		: ' screen-reader-text';
-
-	$dates_values = \EDD\Reports\get_filter_value( 'dates' );
-
-	$from = empty( $dates_values['from'] ) ? '' : $dates_values['from'];
-	$to   = empty( $dates_values['to'] )   ? '' : $dates_values['to'];
-
-	if ( empty( $dates['day_end'] ) ) {
-		$dates['day_end'] = cal_days_in_month( CAL_GREGORIAN, date( 'n' ), date( 'Y' ) );
-	} ?>
-
-	<form id="edd-graphs-filter" method="get">
-		<div class="tablenav top">
-			<div class="alignleft actions">
-
-				<input type="hidden" name="post_type" value="download"/>
-				<input type="hidden" name="page" value="edd-reports"/>
-				<input type="hidden" name="view" value="<?php echo esc_attr( $view ); ?>"/>
-
-				<?php if( isset( $_GET['download-id'] ) ) : ?>
-					<input type="hidden" name="download-id" value="<?php echo absint( $_GET['download-id'] ); ?>"/>
-				<?php endif; ?>
-
-				<select class="edd-graphs-date-options" name="range">
-				<?php foreach ( $date_options as $key => $option ) : ?>
-					<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $dates['range'] ); ?>><?php echo esc_html( $option ); ?></option>
-				<?php endforeach; ?>
-				</select>
-
-				<div class="edd-date-range-options <?php echo esc_attr( $class ); ?>">
-					<fieldset>
-						<legend class="screen-reader-text"><?php esc_html_e( 'To and From dates for use with the Custom date option.', 'easy-digital-downloads' ); ?></legend>
-
-						<span id="edd-date-filters" class="edd-from-to-wrapper">
-							<?php
-
-							echo EDD()->html->date_field( array(
-								'id'          => 'filter_from',
-								'name'        => 'filter_from',
-								'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
-								'value'       => $from
-							) );
-
-							echo EDD()->html->date_field( array(
-								'id'          => 'filter_to',
-								'name'        => 'filter_to',
-								'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
-								'value'       => $to
-							) );
-
-						?></span>
-					</fieldset>
-				</div>
-
-				<div class="edd-graph-filter-options graph-option-section">
-					<input type="checkbox" id="exclude_taxes" <?php checked( false, $taxes, true ); ?> value="1" name="exclude_taxes" />
-					<label for="exclude_taxes"><?php _e( 'Exclude Taxes', 'easy-digital-downloads' ); ?></label>
-				</div>
-
-				<div class="edd-graph-filter-submit graph-option-section">
-					<input type="hidden" name="edd_action" value="filter_reports" />
-					<input type="submit" class="button-secondary" value="<?php _e( 'Filter', 'easy-digital-downloads' ); ?>"/>
-				</div>
-			</div>
-		</div>
-	</form>
-	<?php
 }
 
 /**
@@ -761,7 +671,9 @@ function edd_parse_report_dates( $form_data ) {
 				break;
 
 			case 'taxes':
-				$session_data = isset( $form_data['exclude_taxes'] );
+				$session_data = array(
+					'exclude_taxes' => isset( $form_data['exclude_taxes'] ),
+				);
 
 				break;
 
@@ -776,7 +688,28 @@ function edd_parse_report_dates( $form_data ) {
 	}
 
 	if ( ! empty( $form_data['edd_redirect'] ) ) {
-		edd_redirect( $form_data['edd_redirect'] );
+		$redirect = $form_data['edd_redirect'];
+
+		// Ensure data is available in the URL for legacy reports.
+		if ( ! empty( $form_data['range'] ) ) {
+			$redirect = add_query_arg(
+				array(
+					'range' => $form_data['range'],
+				),
+				$redirect
+			);
+		}
+
+		if ( ! empty( $form_data['exclude_taxes'] ) ) {
+			$redirect = add_query_arg(
+				array(
+					'exclude_taxes' => true,
+				),
+				$redirect
+			);
+		}
+
+		edd_redirect( $redirect );
 	}
 }
 add_action( 'edd_filter_reports', 'edd_parse_report_dates' );

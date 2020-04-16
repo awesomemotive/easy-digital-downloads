@@ -109,7 +109,10 @@ class Report_Registry extends Reports\Registry implements Utils\Static_Registry 
 			'priority'   => 10,
 			'group'      => 'core',
 			'capability' => 'view_shop_reports',
-			'filters'    => array( 'dates' )
+			'filters'    => array(
+				'dates',
+				'taxes',
+			)
 		);
 
 		$attributes['id'] = $report_id;
