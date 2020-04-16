@@ -1,4 +1,7 @@
-/* global edd_vars */
+/**
+ * Internal dependencies
+ */
+import { Currency } from '@easy-digital-downloads/currency';
 
 /**
  * Determine if a pie graph.
@@ -23,19 +26,13 @@ export const isPieChart = ( config ) => {
  * @param {Object} config Global chart config.
  */
 export const getLabelWithTypeCondition = ( label, datasetConfig ) => {
-	const { currency_sign, currency_pos } = edd_vars;
 	let newLabel = label;
-
 	const { type } = datasetConfig;
 
 	if ( 'currency' === type ) {
-		const amount = label.toFixed( 2 );
+		const currency = new Currency();
 
-		if ( 'before' === currency_pos ) {
-			newLabel = currency_sign + amount;
-		} else {
-			newLabel = amount + currency_sign;
-		}
+		newLabel = currency.format( label );
 	}
 
 	return newLabel;
