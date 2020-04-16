@@ -7,7 +7,7 @@ import { jQueryReady } from 'utils/jquery.js';
  * DOM ready.
  */
 jQueryReady( () => {
-	const products = $( '#products' );
+	const products = $( '#edd_products' );
 
 	if ( ! products ) {
 		return;

@@ -38,7 +38,7 @@ final class Customers extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201810090001;
+	protected $version = 201810091;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -48,11 +48,11 @@ final class Customers extends Table {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201807110001' => 201807110001,
-		'201807130001' => 201807130001,
-		'201807130002' => 201807130002,
-		'201807270003' => 201807270003,
-		'201810090001' => 201810090001,
+		'201807111' => 201807111,
+		'201807131' => 201807131,
+		'201807132' => 201807132,
+		'201807273' => 201807273,
+		'201810091' => 201810091,
 	);
 
 	/**
@@ -123,7 +123,7 @@ final class Customers extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201806070001
+	 * Upgrade to version 201806071
 	 * - Change `purchase_value` from mediumtext to decimal(18,9).
 	 * - Add the `status` column.
 	 *
@@ -131,7 +131,7 @@ final class Customers extends Table {
 	 *
 	 * @return bool
 	 */
-	protected function __201807110001() {
+	protected function __201807111() {
 
 		// Alter the database
 		$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `purchase_value` decimal(18,9) NOT NULL default '0'" );
@@ -146,14 +146,14 @@ final class Customers extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201807130001
+	 * Upgrade to version 201807131
 	 * - Add `date_modified` column.
 	 *
 	 * @since 3.0
 	 *
 	 * @return bool
 	 */
-	protected function __201807130001() {
+	protected function __201807131() {
 
 		if ( ! $this->column_exists( 'date_modified' ) ) {
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN date_modified datetime NOT NULL default '0000-00-00 00:00:00' AFTER `date_created`" );
@@ -164,14 +164,14 @@ final class Customers extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201807130002
+	 * Upgrade to version 201807132
 	 * - Set values of `date_modified` to `date_created` (no empties)
 	 *
 	 * @since 3.0
 	 *
 	 * @return bool
 	 */
-	protected function __201807130002() {
+	protected function __201807132() {
 
 		// Update modified row values
 		$this->get_db()->query( "UPDATE {$this->table_name} SET `date_modified` = `date_created`" );
@@ -181,14 +181,14 @@ final class Customers extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201807270003
+	 * Upgrade to version 201807273
 	 * - Add the `uuid` varchar column
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201807270003() {
+	protected function __201807273() {
 
 		// Look for column
 		$result = $this->column_exists( 'uuid' );
@@ -205,14 +205,14 @@ final class Customers extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201810090001
+	 * Upgrade to version 201810091
 	 * - Modify the `name` column from mediumtext to varchar(255)
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201810090001() {
+	protected function __201810091() {
 
 		$result = $this->get_db()->query( "
 			ALTER TABLE {$this->table_name} MODIFY `name` varchar(255) NOT NULL default '';

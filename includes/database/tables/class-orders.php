@@ -38,7 +38,7 @@ final class Orders extends Table {
 	 * @since  3.0
 	 * @var    int
 	 */
-	protected $version = 201901110001;
+	protected $version = 201901111;
 
 	/**
 	 * Array of upgrade versions and methods.
@@ -48,11 +48,11 @@ final class Orders extends Table {
 	 * @var    array
 	 */
 	protected $upgrades = array(
-		'201806110001' => 201806110001,
-		'201807270003' => 201807270003,
-		'201808140001' => 201808140001,
-		'201808150001' => 201808150001,
-		'201901110001' => 201901110001,
+		'201806111' => 201806111,
+		'201807273' => 201807273,
+		'201808141' => 201808141,
+		'201808151' => 201808151,
+		'201901111' => 201901111,
 	);
 
 	/**
@@ -123,14 +123,14 @@ final class Orders extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201806110001
+	 * Upgrade to version 201806111
 	 * - Add the `date_refundable` datetime column.
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201806110001() {
+	protected function __201806111() {
 
 		// Look for column
 		$result = $this->get_db()->query( "SHOW COLUMNS FROM {$this->table_name} LIKE 'date_refundable'" );
@@ -147,14 +147,14 @@ final class Orders extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201807270001
+	 * Upgrade to version 201807271
 	 * - Add the `uuid` varchar column
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201807270003() {
+	protected function __201807273() {
 
 		// Look for column
 		$result = $this->column_exists( 'uuid' );
@@ -171,14 +171,14 @@ final class Orders extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201808140001
+	 * Upgrade to version 201808141
 	 * - Add the `type` column.
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201808140001() {
+	protected function __201808141() {
 
 		// Look for column
 		$result = $this->column_exists( 'type' );
@@ -195,14 +195,14 @@ final class Orders extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201808150001
+	 * Upgrade to version 201808151
 	 * - Change the default value of the `type` column to `sale`.
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201808150001() {
+	protected function __201808151() {
 
 		// Alter the database
 		$this->get_db()->query( "
@@ -218,14 +218,14 @@ final class Orders extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201901110001
+	 * Upgrade to version 201901111
 	 * - Set any 'publish' status items to 'complete'.
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201901110001() {
+	protected function __201901111() {
 		$this->get_db()->query( "
 			UPDATE {$this->table_name} set `status` = 'complete' WHERE `status` = 'publish';
 		" );
