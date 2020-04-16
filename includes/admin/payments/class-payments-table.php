@@ -442,54 +442,6 @@ class EDD_Payment_History_Table extends List_Table {
 	}
 
 	/**
-	 * Render the Email column.
-	 *
-	 * @since 1.4
-	 * @since 3.0 Updated to use the new EDD\Orders\Order class.
-	 *
-	 * @param EDD\Orders\Order $order Order object.
-	 * @return string Data shown in the Email column
-	 */
-	public function column_email( $order ) {
-
-		// Always include the "View" link
-		$row_actions = array();
-
-		// Add search term string back to base URL
-		$search_terms = isset( $_GET['s'] )
-			? trim( $_GET['s'] )
-			: '';
-
-		if ( ! empty( $search_terms ) ) {
-			$this->base_url = add_query_arg( 's', $search_terms, $this->base_url );
-		}
-
-		$email = $order->email;
-
-		// Resend
-		if ( 'complete' === $order->status && ! empty( $email ) ) {
-			$row_actions['email_links'] = '<a href="' . add_query_arg( array(
-				'edd-action'  => 'email_links',
-				'purchase_id' => $order->id
-			), $this->base_url ) . '">' . __( 'Resend Receipt', 'easy-digital-downloads' ) . '</a>';
-		}
-
-		// This exists for backwards compatibility purposes.
-		$payment     = edd_get_payment( $order->id );
-		$row_actions = apply_filters( 'edd_payment_row_actions', $row_actions, $payment );
-
-		if ( empty( $email ) ) {
-			$email = __( '(unknown)', 'easy-digital-downloads' );
-		}
-
-		// Concatenate the results
-		$value = $email . $this->row_actions( $row_actions );
-
-		// Filter & return
-		return apply_filters( 'edd_payments_table_column', $value, $order->id, 'email' );
-	}
-
-	/**
 	 * Render the checkbox column.
 	 *
 	 * @since 1.4
@@ -565,16 +517,29 @@ class EDD_Payment_History_Table extends List_Table {
 			$row_actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete', 'easy-digital-downloads' ) . '</a>';
 		}
 
-		// $payment exists for backwards compatibility purposes in the below filter.
-		$payment = edd_get_payment( $order->id );
+		if ( has_filter( 'edd_payment_row_actions' ) ) {
+			$payment = edd_get_payment( $order->id );
+
+			/**
+			 * Filters the row actions.
+			 *
+			 * @deprecated 3.0
+			 *
+			 * @param array             $row_actions
+			 * @param EDD_Payment|false $payment
+			 */
+			$row_actions = apply_filters_deprecated( 'edd_payment_row_actions', array( $row_actions, $payment ), '3.0', 'edd_order_row_actions' );
+		}
 
 		/**
 		 * Filters the row actions.
 		 *
-		 * @param array             $row_actions
-		 * @param EDD_Payment|false $payment
+		 * @param array            $row_actions Array of row actions.
+		 * @param EDD\Orders\Order $order       Order object.
+		 *
+		 * @since 3.0
 		 */
-		$row_actions = apply_filters( 'edd_payment_row_actions', $row_actions, $payment );
+		$row_actions = apply_filters( 'edd_order_row_actions', $row_actions, $order );
 
 		// Row actions
 		$actions = $this->row_actions( $row_actions );
@@ -619,6 +584,18 @@ class EDD_Payment_History_Table extends List_Table {
 		} else {
 			$name = '&mdash;';
 		}
+
+		/**
+		 * Filters the output of the Email column in the Payments table.
+		 *
+		 * @since 1.4
+		 * @since 3.0 Run manually inside of the `customer` column for backwards compatibility.
+		 *
+		 * @param string $name Customer name.
+		 * @param int    $order_id ID of the Payment/Order.
+		 * @param string $column_name Name of the current column (email).
+		 */
+		$name = apply_filters( 'edd_payments_table_column', $name, $order->id, 'email' );
 
 		return $name;
 	}
@@ -732,6 +709,28 @@ class EDD_Payment_History_Table extends List_Table {
 
 		// Return items
 		return $items;
+	}
+
+	/**
+	 * Retrieves the Payments table views.
+	 *
+	 * @since 1.4
+	 *
+	 * @return array $views Available views.
+	 */
+	public function get_views() {
+		$views = parent::get_views();
+
+		/**
+		 * Filters the Payment table's views.
+		 *
+		 * @since 1.4
+		 *
+		 * @param array $views Payment table's views.
+		 */
+		$views = apply_filters( 'edd_payments_table_views', $views );
+
+		return $views;
 	}
 
 	/**

@@ -673,7 +673,7 @@ function edd_ajax_process_refund_form() {
 
 	$order_id = absint( $_POST['order_id'] );
 	$item_ids = array_map( 'absint', $_POST['item_ids'] );
-	$refund_id = edd_refund_order( $order_id, 'complete', $item_ids );
+	$refund_id = edd_refund_order( $order_id, $item_ids );
 
 	if ( ! empty( $refund_id ) ) {
 		$return = array(
