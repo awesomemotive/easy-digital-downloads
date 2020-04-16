@@ -1923,14 +1923,11 @@ body.download_page_edd-reports {
 .edd-chip {
 	font-size: 10px;
 	text-transform: uppercase;
-	font-weight: bold;
 	line-height: 1;
-	vertical-align: middle;
-	padding: 2px 2px 3px 3px;
+	padding: 3px;
 	border-radius: 3px;
 	color: #fff;
 	background-color: #444;
-	opacity: 0.8;
 }
 
 .edd-vertical-sections .edd-legacy-label {
