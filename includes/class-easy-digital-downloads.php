@@ -743,6 +743,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/tools/tools-actions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/admin-deprecated-functions.php';
 	}
 
 	/**
