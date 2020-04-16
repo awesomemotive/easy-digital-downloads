@@ -889,6 +889,7 @@ function edd_order_details_attributes( $order ) {
 						<?php echo esc_html( __( 'Time', 'easy-digital-downloads' ) . ' (' . edd_get_timezone_abbr() . ')' ); ?>
 					</label>
 
+					<label for="edd_payment_time_hour_chosen" class="screen-reader-text">Hour</label>
 					<?php
 					echo EDD()->html->select( array(
 						'name'             => 'edd-payment-time-hour',
@@ -902,6 +903,7 @@ function edd_order_details_attributes( $order ) {
 					) ); // WPCS: XSS ok.
 					?>
 					:
+					<label for="edd_payment_time_min" class="screen-reader-text">Minute</label>
 					<?php
 					echo EDD()->html->select( array(
 						'name'             => 'edd-payment-time-min',
