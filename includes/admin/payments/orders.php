@@ -603,7 +603,7 @@ function edd_order_details_adjustments( $order ) {
 			<div class="edd-add-adjustment-to-purchase">
 				<ul>
 					<li class="adjustment">
-						<span class="edd-order-details-label-mobile"><?php echo esc_html_x( 'Adjustment To Add', 'order details select adjustment to add - mobile', 'easy-digital-downloads' ); ?></span>
+						<label for="edd_order_add_adjustment_select" class="edd-order-details-label-mobile"><?php echo esc_html_x( 'Adjustment To Add', 'order details select adjustment to add - mobile', 'easy-digital-downloads' ); ?></label>
 
 						<?php echo EDD()->html->select( array(
 							'name'             => 'edd-order-add-adjustment-select',
