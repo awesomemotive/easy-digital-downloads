@@ -475,7 +475,7 @@ class Data_Migrator {
 			'ip'             => $ip,
 			'gateway'        => $gateway,
 			'mode'           => $mode,
-			'currency'       => $payment_meta['currency'],
+			'currency'       => ! empty( $payment_meta['currency'] ) ? $payment_meta['currency'] : edd_get_currency(),
 			'payment_key'    => $purchase_key,
 			'subtotal'       => $subtotal,
 			'tax'            => $tax,
