@@ -217,7 +217,11 @@ final class Init {
 					'group'            => 'core',
 					'icon'             => 'chart-area',
 					'priority'         => $priority,
-					'display_callback' => $callback
+					'display_callback' => $callback,
+					'filters'          => array(
+						'dates',
+						'taxes',
+					),
 				) );
 			} catch ( \EDD_Exception $exception ) {
 				edd_debug_log_exception( $exception );

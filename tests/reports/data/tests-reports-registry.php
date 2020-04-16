@@ -211,7 +211,7 @@ class Report_Registry_Tests extends \EDD_UnitTestCase {
 
 		$report = $this->registry->get_report( 'foo' );
 
-		$this->assertEqualSets( array( 'dates' ), $report['filters'] );
+		$this->assertEqualSets( array( 'dates', 'taxes' ), $report['filters'] );
 	}
 
 	/**

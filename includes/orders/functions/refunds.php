@@ -36,7 +36,7 @@ function edd_is_order_refundable( $order_id = 0 ) {
 	}
 
 	// Only completed orders can be refunded.
-	if ( 'complete' !== $order->status ) {
+	if ( ! in_array( $order->status, array( 'complete', 'publish', 'partially_refunded' ), true ) ) {
 		return false;
 	}
 
@@ -80,12 +80,11 @@ function edd_is_order_refundable( $order_id = 0 ) {
  * @since 3.0
  *
  * @param int    $order_id    Order ID.
- * @param string $status      Optional. Refund status. Default `complete`.
  * @param array  $order_items Optional. Array of Order Item IDs to allow for a partial refund.
  *
  * @return int|false New order ID if successful, false otherwise.
  */
-function edd_refund_order( $order_id = 0, $status = 'complete', $order_items = array() ) {
+function edd_refund_order( $order_id = 0, $order_items = array() ) {
 	global $wpdb;
 
 	// Bail if no order ID was passed.
@@ -95,14 +94,6 @@ function edd_refund_order( $order_id = 0, $status = 'complete', $order_items = a
 
 	// Ensure the order ID is an integer.
 	$order_id = absint( $order_id );
-
-	// Sanitize status.
-	$status = strtolower( sanitize_text_field( $status ) );
-
-	// Status can only either be `complete` or `pending`.
-	if ( ! in_array( $status, array( 'pending', 'complete' ), true ) ) {
-		$status = 'complete'; // Default to `complete`.
-	}
 
 	// Fetch order.
 	$order = edd_get_order( $order_id );
@@ -198,7 +189,7 @@ function edd_refund_order( $order_id = 0, $status = 'complete', $order_items = a
 	$order_data = array(
 		'parent'       => $order_id,
 		'order_number' => $number,
-		'status'       => $status,
+		'status'       => 'complete',
 		'type'         => 'refund',
 		'user_id'      => $order->user_id,
 		'customer_id'  => $order->customer_id,
@@ -289,11 +280,14 @@ function edd_refund_order( $order_id = 0, $status = 'complete', $order_items = a
 			break;
 		}
 	}
-	if ( 'complete' === $status && $all_refunded ) {
-		edd_update_order( $order_id, array(
-			'status' => 'refunded',
-		) );
-	}
+
+	$order_status = true === $all_refunded
+		? 'refunded'
+		: 'partially_refunded';
+
+	edd_update_order( $order_id, array(
+		'status' => $order_status,
+	) );
 
 	/**
 	 * Fires when an order has been refunded.
