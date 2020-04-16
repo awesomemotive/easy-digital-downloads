@@ -1317,8 +1317,6 @@ textarea#edd-payment-note {
 	color: #666;
 }
 input[class*="edd-price-field"] {
-	padding: 3px 5px;
-	width: 80%;
 	max-width: 125px;
 }
 [class*="item_"] [class*="edd-payment-details-download-"][type="number"].small-text,

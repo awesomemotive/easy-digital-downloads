@@ -309,26 +309,31 @@ function edd_render_price_field( $post_id ) {
 		</label>
 	</p>
 
-	<div id="edd_regular_price_field" class="edd_pricing_fields" <?php echo $price_display; ?>>
+	<div id="edd_regular_price_field" class="edd-form-group edd_pricing_fields" <?php echo $price_display; ?>>
+		<label for="edd_price" class="edd-form-group__label screen-reader-text"><?php esc_html_e( 'Price', 'easy-digital-downloads' ); ?></label>
+		<div class="edd-form-group__control">
 		<?php
 			$price_args = array(
 				'name'  => 'edd_price',
 				'id'    => 'edd_price',
 				'value' => isset( $price ) ? esc_attr( edd_format_amount( $price ) ) : '',
-				'class' => 'edd-price-field'
+				'class' => 'edd-form-group__input edd-price-field',
 			);
-		?>
+			if ( 'before' === $currency_position ) {
+				?>
+				<span class="edd-amount-control__currency is-before"><?php echo esc_html( edd_currency_filter( '' ) ); ?></span>
+				<?php
+				echo EDD()->html->text( $price_args );
+			} else {
+				echo EDD()->html->text( $price_args );
+				?>
+				<span class="edd-amount-control__currency is-after"><?php echo esc_html( edd_currency_filter( '' ) ); ?></span>
+				<?php
+			}
 
-		<label for="edd_price" class="screen-reader-text"><?php esc_html_e( 'Price', 'easy-digital-downloads' ); ?></label>
-		<?php if ( $currency_position == 'before' ) : ?>
-			<?php echo edd_currency_filter( '' ); ?>
-			<?php echo EDD()->html->text( $price_args ); ?>
-		<?php else : ?>
-			<?php echo EDD()->html->text( $price_args ); ?>
-			<?php echo edd_currency_filter( '' ); ?>
-		<?php endif; ?>
-
-		<?php do_action( 'edd_price_field', $post_id ); ?>
+			do_action( 'edd_price_field', $post_id );
+			?>
+		</div>
 	</div>
 
 	<?php do_action( 'edd_after_price_field', $post_id ); ?>
