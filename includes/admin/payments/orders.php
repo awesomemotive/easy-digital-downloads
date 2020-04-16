@@ -529,7 +529,7 @@ function edd_order_details_items( $order ) {
 			<div class="edd-add-download-to-purchase">
 				<ul>
 					<li class="download">
-						<span class="edd-order-details-label-mobile"><?php printf( esc_html_x( '%s To Add', 'order details select item to add - mobile', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></span>
+						<label for="edd_order_add_download_select_chosen" class="edd-order-details-label-mobile"><?php printf( esc_html_x( '%s To Add', 'order details select item to add - mobile', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
 
 						<?php echo EDD()->html->product_dropdown( array(
 							'name'                 => 'edd-order-add-download-select',
