@@ -1922,6 +1922,7 @@ body.download_page_edd-reports {
 
 .edd-chip {
 	font-size: 10px;
+	font-weight: bold;
 	text-transform: uppercase;
 	line-height: 1;
 	padding: 3px;
