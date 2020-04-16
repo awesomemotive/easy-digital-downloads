@@ -313,11 +313,13 @@ function edd_render_price_field( $post_id ) {
 		<?php
 			$price_args = array(
 				'name'  => 'edd_price',
+				'id'    => 'edd_price',
 				'value' => isset( $price ) ? esc_attr( edd_format_amount( $price ) ) : '',
 				'class' => 'edd-price-field'
 			);
 		?>
 
+		<label for="edd_price" class="screen-reader-text"><?php esc_html_e( 'Price', 'easy-digital-downloads' ); ?></label>
 		<?php if ( $currency_position == 'before' ) : ?>
 			<?php echo edd_currency_filter( '' ); ?>
 			<?php echo EDD()->html->text( $price_args ); ?>
@@ -594,7 +596,7 @@ function edd_render_products_field( $post_id ) {
 										<input type="hidden" name="edd_bundled_products[<?php echo $index; ?>][index]" class="edd_repeatable_index" value="<?php echo $index; ?>"/>
 									</div>
 									<div class="edd-bundled-product-item">
-										<span class="edd-repeatable-row-setting-label"><?php printf( __( 'Select %s:', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></span>
+										<label for="edd_bundled_products_<?php echo esc_attr( $index ); ?>" class="edd-repeatable-row-setting-label"><?php printf( __( 'Select %s:', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
 										<?php
 										echo EDD()->html->product_dropdown( array(
 											'name'                 => '_edd_bundled_products[]',
