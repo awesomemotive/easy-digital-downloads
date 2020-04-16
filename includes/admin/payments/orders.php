@@ -371,7 +371,7 @@ function edd_order_details_addresses( $order ) {
 			</div>
 
 			<div class="input-wrap">
-				<label for="edd-order-address-country"><?php echo esc_html_x( 'Country:', 'Address country', 'easy-digital-downloads' ); ?></label>
+				<label for="edd_order_address_country"><?php echo esc_html_x( 'Country:', 'Address country', 'easy-digital-downloads' ); ?></label>
 				<div id="edd-order-address-country-wrap">
 					<?php
 					echo EDD()->html->select( array(
@@ -395,7 +395,7 @@ function edd_order_details_addresses( $order ) {
 			</div>
 
 			<div class="input-wrap">
-				<label for="edd-order-address-region"><?php echo _x( 'Region:', 'Region of address', 'easy-digital-downloads' ); ?></label>
+				<label for="edd_order_address_region"><?php echo esc_html_x( 'Region:', 'Region of address', 'easy-digital-downloads' ); ?></label>
 				<div id="edd-order-address-state-wrap">
 					<?php
 					$states = edd_get_shop_states( $address->country );
