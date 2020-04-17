@@ -529,7 +529,7 @@ function edd_order_details_items( $order ) {
 			<div class="edd-add-download-to-purchase">
 				<ul>
 					<li class="download">
-						<label for="edd_order_add_download_select_chosen" class="edd-order-details-label-mobile"><?php printf( esc_html_x( '%s To Add', 'order details select item to add - mobile', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
+						<label for="edd_order_add_download_select" class="edd-order-details-label-mobile"><?php printf( esc_html_x( '%s To Add', 'order details select item to add - mobile', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
 
 						<?php echo EDD()->html->product_dropdown( array(
 							'name'                 => 'edd-order-add-download-select',
@@ -889,7 +889,7 @@ function edd_order_details_attributes( $order ) {
 						<?php echo esc_html( __( 'Time', 'easy-digital-downloads' ) . ' (' . edd_get_timezone_abbr() . ')' ); ?>
 					</label>
 
-					<label for="edd_payment_time_hour_chosen" class="screen-reader-text">Hour</label>
+					<label for="edd_payment_time_hour" class="screen-reader-text">Hour</label>
 					<?php
 					echo EDD()->html->select( array(
 						'name'             => 'edd-payment-time-hour',
