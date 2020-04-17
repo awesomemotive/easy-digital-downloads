@@ -320,8 +320,6 @@ function edd_get_registered_settings() {
 						'name'        => __( 'Business Type', 'easy-digital-downloads' ),
 						'desc'        => __( 'Choose "Individual" if you do not have an official/legal business ID, or "Company" if a regisitered business entity exists.', 'easy-digital-downloads' ),
 						'type'        => 'select',
-						'chosen'      => true,
-						'std'         => $site_name,
 						'options'     => array(
 							'individual' => esc_html__( 'Individual', 'easy-digital-downloads' ),
 							'company'    => esc_html__( 'Company',    'easy-digital-downloads' )
@@ -459,7 +457,6 @@ function edd_get_registered_settings() {
 						'name'    => __( 'Currency Position', 'easy-digital-downloads' ),
 						'desc'    => __( 'Choose the location of the currency sign.', 'easy-digital-downloads' ),
 						'type'    => 'select',
-						'chosen'  => true,
 						'options' => array(
 							'before' => __( 'Before ($10)', 'easy-digital-downloads' ),
 							'after'  => __( 'After (10$)',  'easy-digital-downloads' )
@@ -529,7 +526,6 @@ function edd_get_registered_settings() {
 						'desc'    => __( 'By default, products without an explicit setting will default to this.', 'easy-digital-downloads' ),
 						'type'    => 'select',
 						'std'     => 'refundable',
-						'chosen'  => true,
 						'options' => edd_get_refundability_types()
 					)
 				),
@@ -599,7 +595,6 @@ function edd_get_registered_settings() {
 						'name'    => __( 'Default Gateway', 'easy-digital-downloads' ),
 						'desc'    => __( 'Automatically select this gateway on checkout pages.<br>If empty, the first active gateway is selected instead.', 'easy-digital-downloads' ),
 						'type'    => 'gateway_select',
-						'chosen'  => true,
 						'options' => $gateways,
 					),
 					'accepted_cards' => array(
@@ -642,7 +637,6 @@ function edd_get_registered_settings() {
 						'name'    => __( 'Template', 'easy-digital-downloads' ),
 						'desc'    => __( 'Choose a template. Click "Save Changes" then "Preview Purchase Receipt" to see the new template.', 'easy-digital-downloads' ),
 						'type'    => 'select',
-						'chosen'  => true,
 						'options' => edd_get_email_templates(),
 					),
 					'email_logo' => array(
@@ -784,7 +778,6 @@ function edd_get_registered_settings() {
 						'name'          => __( 'Show in Checkout', 'easy-digital-downloads' ),
 						'desc'          => __( 'Should prices on the checkout page be shown with or without tax?', 'easy-digital-downloads' ),
 						'type'          => 'select',
-						'chosen'        => true,
 						'std'           => 'no',
 						'options'       => array(
 							'yes' => __( 'Including tax', 'easy-digital-downloads' ),
@@ -869,7 +862,6 @@ function edd_get_registered_settings() {
 						'name'    => __( 'Show Register / Login Form', 'easy-digital-downloads' ),
 						'desc'    => __( 'Display the registration and login forms on the checkout page for non-logged-in users.', 'easy-digital-downloads' ),
 						'type'    => 'select',
-						'chosen'  => true,
 						'std'     => 'none',
 						'options' => array(
 							'both'         => __( 'Registration and Login Forms', 'easy-digital-downloads' ),
@@ -899,7 +891,6 @@ function edd_get_registered_settings() {
 						'name'    => __( 'Default Button Style', 'easy-digital-downloads' ),
 						'desc'    => __( 'Choose the style you want to use for the buttons.', 'easy-digital-downloads' ),
 						'type'    => 'select',
-						'chosen'  => true,
 						'options' => edd_get_button_styles(),
 					),
 					'checkout_color' => array(
@@ -907,7 +898,6 @@ function edd_get_registered_settings() {
 						'name'    => __( 'Default Button Color', 'easy-digital-downloads' ),
 						'desc'    => __( 'Choose the color you want to use for the buttons.', 'easy-digital-downloads' ),
 						'type'    => 'color_select',
-						'chosen'  => true,
 						'options' => edd_get_button_colors(),
 						'std'     => 'blue'
 					),
@@ -953,7 +943,6 @@ function edd_get_registered_settings() {
 						'name'          => __( 'Download Method', 'easy-digital-downloads' ),
 						'desc'          => sprintf( __( 'Select the file download method. Note, not all methods work on all servers.', 'easy-digital-downloads' ), edd_get_label_singular() ),
 						'type'          => 'select',
-						'chosen'        => true,
 						'tooltip_title' => __( 'Download Method', 'easy-digital-downloads' ),
 						'tooltip_desc'  => __( 'Due to its consistency in multiple platforms and better file protection, \'forced\' is the default method. Because Easy Digital Downloads uses PHP to process the file with the \'forced\' method, larger files can cause problems with delivery, resulting in hitting the \'max execution time\' of the server. If users are getting 404 or 403 errors when trying to access their purchased files when using the \'forced\' method, changing to the \'redirect\' method can help resolve this.', 'easy-digital-downloads' ),
 						'options'       => array(
@@ -1061,8 +1050,8 @@ function edd_get_registered_settings() {
 					'show_privacy_policy_on_checkout' => array(
 						'id'    => 'show_privacy_policy_on_checkout',
 						'name'  => __( 'Privacy Policy on Checkout',                     'easy-digital-downloads' ),
-						'check' => __( 'Display the entire Privacy Policy at checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_attr( admin_url( 'privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) .'</a>.',
-						'desc'  => __( 'Display your Privacy Policy on checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_attr( admin_url( 'privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) .'</a>.',
+						'check' => __( 'Display the entire Privacy Policy at checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_attr( admin_url( 'options-privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) .'</a>.',
+						'desc'  => __( 'Display your Privacy Policy on checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_attr( admin_url( 'options-privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) .'</a>.',
 						'type'  => 'checkbox',
 					),
 				),
@@ -1174,8 +1163,10 @@ function edd_get_registered_settings() {
 			$edd_settings['styles'] = edd_apply_filters_deprecated(
 				'edd_settings_styles',
 				array(
-					'main'    => array(),
-					'buttons' => array(),
+					array(
+						'main'    => array(),
+						'buttons' => array(),
+					),
 				),
 				'3.0',
 				'edd_settings_misc'
@@ -2637,7 +2628,11 @@ function edd_tax_rates_callback( $args ) {
 
 	wp_localize_script( 'edd-admin-tax-rates', 'eddTaxRates', array(
 		'rates' => $rates,
-		'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
+		'nonce' => wp_create_nonce( 'edd-country-field-nonce' ),
+		'i18n'  => array(
+			/* translators: Tax rate country code */
+			'multipleCountryWide' => esc_html__( 'Only one country-wide tax rate can be active at once. Please deactivate the existing %s country-wide rate before adding another.', 'easy-digital-downloads' ),
+		),
 	) );
 
 	$templates = array(

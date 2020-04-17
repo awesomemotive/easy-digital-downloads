@@ -38,7 +38,7 @@ final class Order_Addresses extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 202002140001;
+	protected $version = 202002141;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -48,10 +48,10 @@ final class Order_Addresses extends Table {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201807270003' => 201807270003,
-		'201906250001' => 201906250001,
-		'201906280001' => 201906280001,
-		'202002140001' => 202002140001,
+		'201807273' => 201807273,
+		'201906251' => 201906251,
+		'201906281' => 201906281,
+		'202002141' => 202002141,
 	);
 
 	/**
@@ -86,14 +86,14 @@ final class Order_Addresses extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201807270003
+	 * Upgrade to version 201807273
 	 * - Add the `uuid` varchar column
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201807270003() {
+	protected function __201807273() {
 
 		// Look for column
 		$result = $this->column_exists( 'uuid' );
@@ -110,7 +110,7 @@ final class Order_Addresses extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201906250001
+	 * Upgrade to version 201906251
 	 * - Adds the 'name' column
 	 * - Combines the `first_name` and `last_name` columns to the `name` column.
 	 * - Removes the `first_name` and `last_name` columns.
@@ -119,7 +119,7 @@ final class Order_Addresses extends Table {
 	 *
 	 * @return boolean
 	 */
-	protected function __201906250001() {
+	protected function __201906251() {
 
 		$success = true;
 
@@ -150,14 +150,14 @@ final class Order_Addresses extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201906280001
+	 * Upgrade to version 201906281
 	 * - Add the `type` varchar column
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201906280001() {
+	protected function __201906281() {
 
 		// Look for column.
 		$result = $this->column_exists( 'type' );
@@ -174,13 +174,13 @@ final class Order_Addresses extends Table {
 	}
 
 	/**
-	 * Upgrade to version 202002140001
+	 * Upgrade to version 202002141
 	 *  - Change default value to `CURRENT_TIMESTAMP` for columns `date_created` and `date_modified`.
 	 *
 	 * @since 3.0
 	 * @return bool
 	 */
-	protected function __202002140001() {
+	protected function __202002141() {
 
 		// Update `date_created`.
 		$result = $this->get_db()->query( "

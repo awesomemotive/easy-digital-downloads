@@ -38,7 +38,7 @@ final class Order_Items extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 202002140001;
+	protected $version = 202002141;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -48,10 +48,10 @@ final class Order_Items extends Table {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201807270002' => 201807270002,
-		'201807270003' => 201807270003,
-		'201906240001' => 201906240001,
-		'202002140001' => 202002140001,
+		'201807272' => 201807272,
+		'201807273' => 201807273,
+		'201906241' => 201906241,
+		'202002141' => 202002141,
 	);
 
 	/**
@@ -85,14 +85,14 @@ final class Order_Items extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201807270002
+	 * Upgrade to version 201807272
 	 * - Add the `date_modified` varchar column
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201807270002() {
+	protected function __201807272() {
 
 		// Look for column
 		$result = $this->column_exists( 'date_created' );
@@ -119,14 +119,14 @@ final class Order_Items extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201807270003
+	 * Upgrade to version 201807273
 	 * - Add the `uuid` varchar column
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201807270003() {
+	protected function __201807273() {
 
 		// Look for column
 		$result = $this->column_exists( 'uuid' );
@@ -143,7 +143,7 @@ final class Order_Items extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201906240001
+	 * Upgrade to version 201906241
 	 * - Make the quantity column signed so it can contain negative numbers.
 	 * - Switch the quantity column from bigint to int for storage optimization.
 	 *
@@ -151,7 +151,7 @@ final class Order_Items extends Table {
 	 *
 	 * @return bool
 	 */
-	protected function __201906240001() {
+	protected function __201906241() {
 		$result = $this->get_db()->query( "
 			ALTER TABLE {$this->table_name} MODIFY `quantity` int signed NOT NULL default '0';
 		" );
@@ -161,13 +161,13 @@ final class Order_Items extends Table {
 	}
 
 	/**
-	 * Upgrade to version 202002140001
+	 * Upgrade to version 202002141
 	 *  - Change default value to `CURRENT_TIMESTAMP` for columns `date_created` and `date_modified`.
 	 *
 	 * @since 3.0
 	 * @return bool
 	 */
-	protected function __202002140001() {
+	protected function __202002141() {
 
 		// Update `date_created`.
 		$result = $this->get_db()->query( "
@@ -182,4 +182,5 @@ final class Order_Items extends Table {
 		return $this->is_success( $result );
 
 	}
+
 }

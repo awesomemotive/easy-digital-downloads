@@ -38,7 +38,7 @@ final class Customer_Email_Addresses extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 202002140001;
+	protected $version = 202002141;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -48,9 +48,9 @@ final class Customer_Email_Addresses extends Table {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201808140001' => 201808140001,
-		'201808170001' => 201808170001,
-		'202002140001' => 202002140001
+		'201808141' => 201808141,
+		'201808171' => 201808171,
+		'202002141' => 202002141,
 	);
 
 	/**
@@ -78,14 +78,14 @@ final class Customer_Email_Addresses extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201808140001
+	 * Upgrade to version 201808141
 	 * - Add the `uuid` varchar column
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201808140001() {
+	protected function __201808141() {
 
 		// Look for column
 		$result = $this->column_exists( 'uuid' );
@@ -102,14 +102,14 @@ final class Customer_Email_Addresses extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201808170001
+	 * Upgrade to version 201808171
 	 * - Add the `email` varchar column
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201808170001() {
+	protected function __201808171() {
 
 		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY COLUMN `email` varchar(100) NOT NULL default ''" );
 		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX email (email)" );
@@ -119,13 +119,13 @@ final class Customer_Email_Addresses extends Table {
 	}
 
 	/**
-	 * Upgrade to version 202002140001
+	 * Upgrade to version 202002141
 	 *  - Change default value to `CURRENT_TIMESTAMP` for columns `date_created` and `date_modified`.
 	 *
 	 * @since 3.0
 	 * @return bool
 	 */
-	protected function __202002140001() {
+	protected function __202002141() {
 
 		// Update `date_created`.
 		$result = $this->get_db()->query( "
@@ -140,4 +140,5 @@ final class Customer_Email_Addresses extends Table {
 		return $this->is_success( $result );
 
 	}
+
 }
