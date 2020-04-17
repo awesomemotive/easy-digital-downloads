@@ -38,7 +38,7 @@ final class Logs extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 202002140001;
+	protected $version = 202002141;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -48,10 +48,10 @@ final class Logs extends Table {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201807240001' => 201807240001,
-		'201807270002' => 201807270002,
-		'201807270003' => 201807270003,
-		'202002140001' => 202002140001
+		'201807241' => 201807241,
+		'201807272' => 201807272,
+		'201807273' => 201807273,
+		'202002141' => 202002141,
 	);
 
 	/**
@@ -80,14 +80,14 @@ final class Logs extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201807230001
+	 * Upgrade to version 201807231
 	 * - Add `user_id` column.
 	 *
 	 * @since 3.0
 	 *
 	 * @return bool
 	 */
-	protected function __201807240001() {
+	protected function __201807241() {
 
 		// Alter the database
 		if ( ! $this->column_exists( 'user_id' ) ) {
@@ -100,14 +100,14 @@ final class Logs extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201807270002
+	 * Upgrade to version 201807272
 	 * - Add the `date_modified` varchar column
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201807270002() {
+	protected function __201807272() {
 
 		// Look for column
 		$result = $this->column_exists( 'date_modified' );
@@ -124,14 +124,14 @@ final class Logs extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201807270003
+	 * Upgrade to version 201807273
 	 * - Add the `uuid` varchar column
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201807270003() {
+	protected function __201807273() {
 
 		// Look for column
 		$result = $this->column_exists( 'uuid' );
@@ -148,13 +148,13 @@ final class Logs extends Table {
 	}
 
 	/**
-	 * Upgrade to version 202002140001
+	 * Upgrade to version 202002141
 	 *  - Change default value to `CURRENT_TIMESTAMP` for columns `date_created` and `date_modified`.
 	 *
 	 * @since 3.0
 	 * @return bool
 	 */
-	protected function __202002140001() {
+	protected function __202002141() {
 
 		// Update `date_created`.
 		$result = $this->get_db()->query( "

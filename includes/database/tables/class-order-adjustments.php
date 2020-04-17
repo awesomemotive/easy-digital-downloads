@@ -38,7 +38,7 @@ final class Order_Adjustments extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 202002140001;
+	protected $version = 202002141;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -48,9 +48,9 @@ final class Order_Adjustments extends Table {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201807070001' => 201807070001,
-		'201807270003' => 201807270003,
-		'202002140001' => 202002140001,
+		'201807071' => 201807071,
+		'201807273' => 201807273,
+		'202002141' => 202002141,
 	);
 
 	/**
@@ -79,7 +79,7 @@ final class Order_Adjustments extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201807070001
+	 * Upgrade to version 201807071
 	 * - Add subtotal and tax columns.
 	 * - Rename amount column to total.
 	 *
@@ -87,7 +87,7 @@ final class Order_Adjustments extends Table {
 	 *
 	 * @return bool
 	 */
-	protected function __201807070001() {
+	protected function __201807071() {
 
 		// Alter the database.
 		$this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE `amount` `total` decimal(18,9) NOT NULL default '0'" );
@@ -99,14 +99,14 @@ final class Order_Adjustments extends Table {
 	}
 
 	/**
-	 * Upgrade to version 201807270003
+	 * Upgrade to version 201807273
 	 * - Add the `uuid` varchar column
 	 *
 	 * @since 3.0
 	 *
 	 * @return boolean
 	 */
-	protected function __201807270003() {
+	protected function __201807273() {
 
 		// Look for column
 		$result = $this->column_exists( 'uuid' );
@@ -123,13 +123,13 @@ final class Order_Adjustments extends Table {
 	}
 
 	/**
-	 * Upgrade to version 202002140001
+	 * Upgrade to version 202002141
 	 *  - Change default value to `CURRENT_TIMESTAMP` for columns `date_created` and `date_modified`.
 	 *
 	 * @since 3.0
 	 * @return bool
 	 */
-	protected function __202002140001() {
+	protected function __202002141() {
 
 		// Update `date_created`.
 		$result = $this->get_db()->query( "
@@ -144,4 +144,5 @@ final class Order_Adjustments extends Table {
 		return $this->is_success( $result );
 
 	}
+
 }

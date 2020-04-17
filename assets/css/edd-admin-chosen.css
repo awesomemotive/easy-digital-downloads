@@ -1,12 +1,6 @@
 /* Chosen styles
 -------------------------------------------------------------- */
 
-body.js select.edd-select-chosen {
-	height: 27px;
-	opacity: 0.2;
-	max-width: 300px;
-}
-
 .chosen-container.chosen-container-multi {
 	width: 100% !important;
 }
