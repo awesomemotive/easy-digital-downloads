@@ -42,10 +42,10 @@ jQuery( document ).ready( function( $ ) {
 			rents.find( href ).show();
 
 			// Set the `aria-selected` attribute to false for all section nav items.
-			rents.find( '.section-title' ).attr( 'aria-selected', 'false' );
+			rents.find( '.section-title' ).attr( 'aria-selected', 'false' ).removeClass( 'section-title--is-active' );
 
 			// Set the `aria-selected` attribute to true for this section nav item.
-			them.parent().attr( 'aria-selected', 'true' );
+			them.parent().attr( 'aria-selected', 'true' ).addClass( 'section-title--is-active' );
 
 			// Maybe re-Chosen
 			rents.find( 'div.chosen-container' ).css( 'width', '100%' );
