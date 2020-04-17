@@ -18,7 +18,7 @@ jQuery( document ).ready( function( $ ) {
 		$( '.edd-vertical-sections.use-js .section-content:first-child' ).show();
 
 		// Makes the 'aria-selected' attribute true for the first section nav item.
-		$( '.edd-vertical-sections.use-js .section-nav:first-child' ).attr( 'aria-selected', 'true' );
+		$( '.edd-vertical-sections.use-js .section-nav li:first-child' ).attr( 'aria-selected', 'true' );
 
 		// Copies the current section item title to the box header.
 		$( '.which-section' ).text( $( '.section-nav :first-child a' ).text() );
