@@ -152,6 +152,7 @@ class Payment extends Base {
 			'_edd_payment_number',
 			'_edd_sl_upgraded_payment_id', // EDD SL
 			'_edd_sl_is_renewal', // EDD SL
+			'_edds_stripe_customer_id', // EDD Stripe
 		);
 
 		/**
@@ -268,6 +269,7 @@ class Payment extends Base {
 			'_edd_payment_number',
 			'_edd_sl_upgraded_payment_id', // EDD SL
 			'_edd_sl_is_renewal', // EDD SL
+			'_edds_stripe_customer_id', // EDD Stripe
 		);
 
 		/**
@@ -275,7 +277,7 @@ class Payment extends Base {
 		 * list if they want add/update/get post meta calls to be routed to order meta.
 		 *
 		 * @param array $meta_keys
-		 * 
+		 *
 		 * @since 3.0
 		 */
 		$meta_keys = apply_filters( 'edd_30_post_meta_key_whitelist', $meta_keys );
