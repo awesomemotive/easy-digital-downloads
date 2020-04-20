@@ -291,41 +291,60 @@ function edd_order_details_email( $order ) {
 
 		$all_emails[ $key ] = $email;
 	}
+
+	$help = __( 'Send a new copy of the purchase receipt to the email address used for this order. If download URLs were included in the original receipt, new ones will be included.', 'easy-digital-downloads' );
 ?>
 
 	<div><?php
 		if ( ! empty( $customer->emails ) && count( (array) $customer->emails ) > 1 ) : ?>
-			<fieldset class="edd-order-resend-email-chooser">
-				<legend>
+			<fieldset class="edd-form-group">
+				<legend class="edd-form-group__label">
 					<?php _e( 'Send email receipt to', 'easy-digital-downloads' ); ?>
 				</legend>
 
 				<?php foreach ( $all_emails as $key => $email ) : ?>
-				<p>
+				<div class="edd-form-group__control is-radio">
+					<input autocomplete="off" id="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" class="edd-form-group__input" name="edd-order-resend-receipt-address" type="radio" value="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" <?php checked( true, ( 'primary' === $key ) ); ?> />
+
 					<label for="<?php echo rawurlencode( sanitize_email( $email ) ); ?>">
-						<input autocomplete="off" id="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" class="edd-order-resend-receipt-email" name="edd-order-resend-receipt-address" type="radio" value="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" <?php checked( true, ( 'primary' === $key ) ); ?> />
 						<?php echo esc_attr( $email ); ?>
 					</label>
-				</p>
+				</div>
 				<?php endforeach; ?>
+
+				<p class="edd-form-group__help">
+					<?php echo esc_html( $help ); ?>
+				</p>
 			</fieldset>
 
 		<?php else : ?>
 
-			<input readonly type="email" value="<?php echo esc_attr( $order->email ); ?>" />
+			<div class="edd-form-group">
+				<label class="edd-form-group__label screen-reader-text" for="<?php echo esc_attr( $order->email ); ?>">
+					<?php esc_html_e( 'Email Address', 'easy-digital-downloads' ); ?>
+				</label>
+
+				<div class="edd-form-group__control">
+					<input readonly type="email" class="edd-form-group__input" value="<?php echo esc_attr( $order->email ); ?>" />
+				</div>
+
+				<p class="edd-form-group__help">
+					<?php echo esc_html( $help ); ?>
+				</p>
+			</div>
 
 		<?php endif; ?>
 
-		<p class="description"><?php esc_html_e( 'Send a new copy of the purchase receipt to the email address used for this order. If download URLs were included in the original receipt, new ones will be included.', 'easy-digital-downloads' ); ?></p>
-
-		<a href="<?php echo esc_url( add_query_arg( array(
-			'edd-action'  => 'email_links',
-			'purchase_id' => $order->id,
-		) ) ); ?>" id="<?php if ( ! empty( $customer->emails ) && count( (array) $customer->emails ) > 1 ) {
-			echo esc_attr( 'edd-select-receipt-email' );
-		} else {
-			echo esc_attr( 'edd-resend-receipt' );
-		} ?>" class="button-secondary"><?php esc_html_e( 'Resend Receipt', 'easy-digital-downloads' ); ?></a>
+		<p>
+			<a href="<?php echo esc_url( add_query_arg( array(
+				'edd-action'  => 'email_links',
+				'purchase_id' => $order->id,
+			) ) ); ?>" id="<?php if ( ! empty( $customer->emails ) && count( (array) $customer->emails ) > 1 ) {
+				echo esc_attr( 'edd-select-receipt-email' );
+			} else {
+				echo esc_attr( 'edd-resend-receipt' );
+			} ?>" class="button-secondary"><?php esc_html_e( 'Resend Receipt', 'easy-digital-downloads' ); ?></a>
+		</p>
 
 		<?php do_action( 'edd_view_order_details_resend_receipt_after', $order->id ); ?>
 
