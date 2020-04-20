@@ -2066,6 +2066,24 @@ function edd_register_discounts_report( $reports ) {
 			),
 		) );
 
+		$reports->register_endpoint( 'ratio_of_discounted_orders', array(
+			'label' => __( 'Discount Ratio', 'easy-digital-downloads' ),
+			'views' => array(
+				'tile' => array(
+					'data_callback' => function () use ( $filter ) {
+						$stats = new EDD\Stats();
+						return apply_filters( 'edd_reports_discounts_ratio_of_discounted_orders', $stats->get_ratio_of_discounted_orders( array(
+							'range' => $filter['range'],
+						) ) );
+					},
+					'display_args'  => array(
+						'context'          => 'secondary',
+						'comparison_label' => $label,
+					),
+				),
+			),
+		) );
+
 		$reports->register_endpoint( 'customer_savings', array(
 			'label' => __( 'Customer Savings', 'easy-digital-downloads' ),
 			'views' => array(
