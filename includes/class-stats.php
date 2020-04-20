@@ -161,7 +161,7 @@ class Stats {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_orders;
-		$this->query_vars['column']            = true === $this->query_vars['exclude_taxes'] ? 'subtotal' : 'total';
+		$this->query_vars['column']            = true === $this->query_vars['exclude_taxes'] ? 'total - tax' : 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
 
 		/*
@@ -814,7 +814,7 @@ class Stats {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_order_items;
-		$this->query_vars['column']            = true === $this->query_vars['exclude_taxes'] ? 'subtotal' : 'total';
+		$this->query_vars['column']            = true === $this->query_vars['exclude_taxes'] ? 'total - tax' : 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
 
 		// Run pre-query checks and maybe generate SQL.
@@ -1229,7 +1229,7 @@ class Stats {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_order_adjustments;
-		$this->query_vars['column']            = true === $this->query_vars['exclude_taxes'] ? 'subtotal' : 'total';
+		$this->query_vars['column']            = true === $this->query_vars['exclude_taxes'] ? 'total - tax' : 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
 
 		// Run pre-query checks and maybe generate SQL.
@@ -1439,7 +1439,7 @@ class Stats {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_orders;
-		$this->query_vars['column']            = true === $this->query_vars['exclude_taxes'] ? 'subtotal' : 'total';
+		$this->query_vars['column']            = true === $this->query_vars['exclude_taxes'] ? 'total - tax' : 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
 		$this->query_vars['function']          = 'COUNT';
 
@@ -2012,7 +2012,7 @@ class Stats {
 					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		} else {
 			$column = true === $this->query_vars['exclude_taxes']
-				? 'subtotal'
+				? 'total - tax'
 				: 'total';
 
 			$sql = "SELECT {$function} AS total
@@ -2235,7 +2235,7 @@ class Stats {
 			: 1;
 
 		$column = true === $this->query_vars['exclude_taxes']
-			? 'subtotal'
+			? 'total - tax'
 			: 'total';
 
 		$sql = "SELECT customer_id, SUM({$column}) AS total
