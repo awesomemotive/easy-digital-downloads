@@ -374,6 +374,24 @@ class EDD_DB_Customers extends EDD_DB  {
 			return NULL;
 		}
 
+		/**
+		 * Filters the Customer before querying the database.
+		 *
+		 * Return a non-null value to bypass the default query and return early.
+		 *
+		 * @since 2.9.23
+		 *
+		 * @param mixed|null $customer               Customer to return instead. Default null to use default method.
+		 * @param string     $field                  The field to retrieve by.
+		 * @param mixed      $value                  The value to search by.
+		 * @param EDD_DB_Customers $edd_customers_db Customer database class.
+		 */
+		$found = apply_filters( 'edd_pre_get_customer', null, $field, $value, $this );
+
+		if ( null !== $found ) {
+			return $found;
+		}
+
 		if ( 'id' == $field || 'user_id' == $field ) {
 			// Make sure the value is numeric to avoid casting objects, for example,
 			// to int 1.
@@ -421,11 +439,31 @@ class EDD_DB_Customers extends EDD_DB  {
 
 		$results = $query->query( $args );
 
-		if ( empty( $results ) ) {
-			return false;
-		}
+		$customer = ! empty( $results ) ? array_shift( $results ) : false;
 
-		return array_shift( $results );
+		/**
+		 * Filters the single Customer retrieved from the database based on field.
+		 *
+		 * @since 2.9.23
+		 *
+		 * @param object|false     $customer         Customer query result. False if no Customer is found.
+		 * @param array            $args             Arguments used to query the Customer.
+		 * @param EDD_DB_Customers $edd_customers_db Customer database class.
+		 */
+		$customer = apply_filters( "edd_get_customer_by_{$field}", $customer, $args, $this );
+
+		/**
+		 * Filters the single Customer retrieved from the database.
+		 *
+		 * @since 2.9.23
+		 *
+		 * @param object|false     $customer         Customer query result. False if no Customer is found.
+		 * @param array            $args             Arguments used to query the Customer.
+		 * @param EDD_DB_Customers $edd_customers_db Customer database class.
+		 */
+		$customer = apply_filters( 'edd_get_customer', $customer, $args, $this );
+
+		return $customer;
 	}
 
 	/**
