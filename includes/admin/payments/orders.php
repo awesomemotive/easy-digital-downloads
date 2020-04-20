@@ -234,20 +234,35 @@ function edd_order_details_customer( $order ) {
 				<button class="edd-payment-new-customer-cancel button-link"><?php esc_html_e( '&larr; Use an existing customer', 'easy-digital-downloads' ); ?></button>
 			</p>
 
-			<p>
-				<strong><?php esc_html_e( 'First Name', 'easy-digital-downloads' ); ?>:</strong>
-				<input type="text" name="edd-new-customer-first-name" value="" class="medium-text"/>
-			</p>
+			<div class="edd-form-group">
+				<label class="edd-form-group__label" for="edd_new_customer_first_name">
+					<?php esc_html_e( 'First Name', 'easy-digital-downloads' ); ?>
+				</label>
 
-			<p>
-				<strong><?php esc_html_e( 'Last Name', 'easy-digital-downloads' ); ?>:</strong>
-				<input type="text" name="edd-new-customer-last-name" value="" class="medium-text"/>
-			</p>
+				<div class="edd-form-group__control">
+					<input type="text" id="edd_new_customer_first_name" name="edd-new-customer-first-name" value="" class="edd-form-group__input"/>
+				</div>
+			</div>
 
-			<p>
-				<strong><?php esc_html_e( 'Email', 'easy-digital-downloads' ); ?>:</strong>
-				<input type="email" name="edd-new-customer-email" value="" class="medium-text"/>
-			</p>
+			<div class="edd-form-group">
+				<label class="edd-form-group__label" for="edd_new_customer_last_name">
+					<?php esc_html_e( 'Last Name', 'easy-digital-downloads' ); ?>
+				</label>
+
+				<div class="edd-form-group__control">
+					<input type="text" id="edd_new_customer_last_name" name="edd-new-customer-last-name" value="" class="edd-form-group__input"/>
+				</div>
+			</div>
+
+			<div class="edd-form-group">
+				<label class="edd-form-group__label" for="edd_new_customer_email">
+					<?php esc_html_e( 'Email', 'easy-digital-downloads' ); ?>
+				</label>
+
+				<div class="edd-form-group__control">
+					<input type="email" id="edd_new_customer_email" name="edd-new-customer-email" value="" class="edd-form-group__input"/>
+				</div>
+			</div>
 		</div>
 	</div>
 
