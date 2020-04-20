@@ -920,40 +920,45 @@ function edd_is_file_at_download_limit( $download_id = 0, $payment_id = 0, $file
 	// Assume that the file download limit has not been hit.
 	$ret                = false;
 	$download_limit     = edd_get_file_download_limit( $download_id );
-	$unlimited_purchase = edd_payment_has_unlimited_downloads( $payment_id );
 
-	if ( ! empty( $download_limit ) && empty( $unlimited_purchase ) ) {
+	if ( ! empty( $download_limit ) ) {
 
-		// Checks to see if at limit
-		$logs = new EDD_Logging();
+		// The store does not have unlimited downloads, does this payment?
+		$unlimited_purchase = edd_payment_has_unlimited_downloads( $payment_id );
 
-		$meta_query = array(
-			'relation'	=> 'AND',
-			array(
-				'key' 	=> '_edd_log_file_id',
-				'value' => (int) $file_id
-			),
-			array(
-				'key' 	=> '_edd_log_payment_id',
-				'value' => (int) $payment_id
-			),
-			array(
-				'key' 	=> '_edd_log_price_id',
-				'value' => (int) $price_id
-			)
-		);
+		if ( empty( $unlimited_purchase ) ) {
 
-		$download_count     = $logs->get_log_count( $download_id, 'file_download', $meta_query );
+			// Get the file download count.
+			$logs = new EDD_Logging();
 
-		if ( $download_count >= $download_limit ) {
-			$ret = true;
+			$meta_query = array(
+				'relation'  => 'AND',
+				array(
+					'key'   => '_edd_log_file_id',
+					'value' => (int) $file_id,
+				),
+				array(
+					'key'   => '_edd_log_payment_id',
+					'value' => (int) $payment_id,
+				),
+				array(
+					'key'   => '_edd_log_price_id',
+					'value' => (int) $price_id,
+				)
+			);
 
-			// Check to make sure the limit isn't overwritten
-			// A limit is overwritten when purchase receipt is resent
-			$limit_override = edd_get_file_download_limit_override( $download_id, $payment_id );
+			$download_count     = $logs->get_log_count( $download_id, 'file_download', $meta_query );
 
-			if ( ! empty( $limit_override ) && $download_count < $limit_override ) {
-				$ret = false;
+			if ( $download_count >= $download_limit ) {
+				$ret = true;
+
+				// Check to make sure the limit isn't overwritten.
+				// A limit is overwritten when purchase receipt is resent.
+				$limit_override = edd_get_file_download_limit_override( $download_id, $payment_id );
+
+				if ( ! empty( $limit_override ) && $download_count < $limit_override ) {
+					$ret = false;
+				}
 			}
 		}
 	}
