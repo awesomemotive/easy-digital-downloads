@@ -240,7 +240,7 @@ function edd_order_details_customer( $order ) {
 				</label>
 
 				<div class="edd-form-group__control">
-					<input type="text" id="edd_new_customer_first_name" name="edd-new-customer-first-name" value="" class="edd-form-group__input"/>
+					<input type="text" id="edd_new_customer_first_name" name="edd-new-customer-first-name" value="" class="edd-form-group__input regular-text" />
 				</div>
 			</div>
 
@@ -250,7 +250,7 @@ function edd_order_details_customer( $order ) {
 				</label>
 
 				<div class="edd-form-group__control">
-					<input type="text" id="edd_new_customer_last_name" name="edd-new-customer-last-name" value="" class="edd-form-group__input"/>
+					<input type="text" id="edd_new_customer_last_name" name="edd-new-customer-last-name" value="" class="edd-form-group__input regular-text" />
 				</div>
 			</div>
 
@@ -260,7 +260,7 @@ function edd_order_details_customer( $order ) {
 				</label>
 
 				<div class="edd-form-group__control">
-					<input type="email" id="edd_new_customer_email" name="edd-new-customer-email" value="" class="edd-form-group__input"/>
+					<input type="email" id="edd_new_customer_email" name="edd-new-customer-email" value="" class="edd-form-group__input regular-text" />
 				</div>
 			</div>
 		</div>
