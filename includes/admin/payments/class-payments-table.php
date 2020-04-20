@@ -452,9 +452,11 @@ class EDD_Payment_History_Table extends List_Table {
 	 */
 	public function column_cb( $order ) {
 		return sprintf(
-			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+			'<input type="checkbox" name="%1$s[]" id="%1$s-%2$s" value="%2$s" /><label for="%1$s-%2$s" class="screen-reader-text">%3$s</label>',
 			'order',
-			$order->id
+			$order->id,
+			/* translators: the order number */
+			sprintf( __( 'Select %s', 'easy-digital-downloads' ), $order->get_number() )
 		);
 	}
 
