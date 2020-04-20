@@ -211,7 +211,7 @@ function edd_load_dashboard_sales_widget( ) {
 			$all_orders_link = edd_get_admin_url(
 				array(
 					'page' => 'edd-payment-history',
-				),
+				)
 			);
 			?>
 		<a href="<?php echo esc_url( $all_orders_link ); ?>" class="button-secondary"><?php esc_html_e( 'View All Orders', 'easy-digital-downloads' ); ?></a>
