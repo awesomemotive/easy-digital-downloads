@@ -14,8 +14,6 @@ import { toolTipBaseConfig } from './utils';
 export const render = ( config ) => {
 	const { target } = config;
 
-	Chart.defaults.global.pointHitDetectionRadius = 5;
-
 	// Config tooltips.
 	config.options.tooltips = tooltipConfig( config );
 

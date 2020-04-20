@@ -873,7 +873,7 @@ class Stats {
 			} );
 		} else {
 			$result = null === $result[0]->total
-				? 0.00
+				? $this->maybe_format( 0.00 )
 				: $this->maybe_format( floatval( $result[0]->total ) );
 		}
 
@@ -2723,7 +2723,7 @@ class Stats {
 	private function maybe_format( $data = null ) {
 
 		// Bail if nothing was passed.
-		if ( empty( $data ) || null === $data ) {
+		if ( null === $data ) {
 			return $data;
 		}
 
