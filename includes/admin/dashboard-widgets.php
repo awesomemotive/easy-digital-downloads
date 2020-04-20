@@ -170,7 +170,7 @@ function edd_load_dashboard_sales_widget( ) {
 					<a href="<?php echo esc_url( $link ); ?>">
 						<?php
 						$customer      = edd_get_customer( $payment->customer_id );
-						$customer_name = isset( $customer->name ) ? $customer->name : __( 'No Name', 'easy-digital-downloads' );
+						$customer_name = ! empty( $customer->name ) ? $customer->name : __( 'No Name', 'easy-digital-downloads' );
 						$item_count    = edd_count_order_items( array( 'order_id' => $payment->ID ) );
 						echo wp_kses_post(
 							sprintf(
