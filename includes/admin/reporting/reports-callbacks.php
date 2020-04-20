@@ -26,7 +26,7 @@ function edd_overview_sales_earnings_chart() {
 	$dates        = Reports\get_dates_filter( 'objects' );
 	$day_by_day   = Reports\get_dates_filter_day_by_day();
 	$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
-	$column       = Reports\get_taxes_excluded_filter() ? 'subtotal' : 'total';
+	$column       = Reports\get_taxes_excluded_filter() ? 'total - tax' : 'total';
 
 	$sql_clauses = array(
 		'select'  => 'date_created AS date',
@@ -132,7 +132,7 @@ function edd_overview_refunds_chart() {
 	$dates        = Reports\get_dates_filter( 'objects' );
 	$day_by_day   = Reports\get_dates_filter_day_by_day();
 	$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
-	$column       = Reports\get_taxes_excluded_filter() ? 'subtotal' : 'total';
+	$column       = Reports\get_taxes_excluded_filter() ? 'total - tax' : 'total';
 
 	$sql_clauses = array(
 		'select'  => 'date_created AS date',
