@@ -235,18 +235,18 @@ function edd_order_details_customer( $order ) {
 			</p>
 
 			<p>
-				<label for="edd-new-customer-first-name"><?php esc_html_e( 'First Name', 'easy-digital-downloads' ); ?>:</label>
-				<input type="text" name="edd-new-customer-first-name" id="edd-new-customer-first-name" value="" class="medium-text"/>
+				<label for="edd_new_customer_first_name"><?php esc_html_e( 'First Name', 'easy-digital-downloads' ); ?>:</label>
+				<input type="text" name="edd-new-customer-first-name" id="edd_new_customer_first_name" value="" class="medium-text"/>
 			</p>
 
 			<p>
-				<label for="edd-new-customer-last-name"><?php esc_html_e( 'Last Name', 'easy-digital-downloads' ); ?>:</label>
-				<input type="text" name="edd-new-customer-last-name" id="edd-new-customer-last-name" value="" class="medium-text"/>
+				<label for="edd_new_customer_last_name"><?php esc_html_e( 'Last Name', 'easy-digital-downloads' ); ?>:</label>
+				<input type="text" name="edd-new-customer-last-name" id="edd_new_customer_last_name" value="" class="medium-text"/>
 			</p>
 
 			<p>
-				<label for="edd-new-customer-email"><?php esc_html_e( 'Email', 'easy-digital-downloads' ); ?>:</label>
-				<input type="email" name="edd-new-customer-email" id="edd-new-customer-email" value="" class="medium-text"/>
+				<label for="edd_new_customer_email"><?php esc_html_e( 'Email', 'easy-digital-downloads' ); ?>:</label>
+				<input type="email" name="edd-new-customer-email" id="edd_new_customer_email" value="" class="medium-text"/>
 			</p>
 		</div>
 	</div>
