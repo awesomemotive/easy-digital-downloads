@@ -1532,24 +1532,25 @@ function edd_get_status_label( $status = '' ) {
 		$labels = array(
 
 			// Payments
-			'processing' => __( 'Processing', 'easy-digital-downloads' ),
-			'complete'   => __( 'Completed',  'easy-digital-downloads' ),
-			'refunded'   => __( 'Refunded',   'easy-digital-downloads' ),
-			'revoked'    => __( 'Revoked',    'easy-digital-downloads' ),
-			'failed'     => __( 'Failed',     'easy-digital-downloads' ),
-			'abandoned'  => __( 'Abandoned',  'easy-digital-downloads' ),
+			'processing'         => __( 'Processing', 'easy-digital-downloads' ),
+			'complete'           => __( 'Completed', 'easy-digital-downloads' ),
+			'refunded'           => __( 'Refunded', 'easy-digital-downloads' ),
+			'partially_refunded' => __( 'Partially Refunded', 'easy-digital-downloads' ),
+			'revoked'            => __( 'Revoked', 'easy-digital-downloads' ),
+			'failed'             => __( 'Failed', 'easy-digital-downloads' ),
+			'abandoned'          => __( 'Abandoned', 'easy-digital-downloads' ),
 
 			// Discounts
-			'active'     => __( 'Active',     'easy-digital-downloads' ),
-			'inactive'   => __( 'Inactive',   'easy-digital-downloads' ),
-			'expired'    => __( 'Expired',    'easy-digital-downloads' ),
+			'active'             => __( 'Active', 'easy-digital-downloads' ),
+			'inactive'           => __( 'Inactive', 'easy-digital-downloads' ),
+			'expired'            => __( 'Expired', 'easy-digital-downloads' ),
 
 			// Common
-			'pending'    => __( 'Pending',    'easy-digital-downloads' ),
-			'verified'   => __( 'Verified',   'easy-digital-downloads' ),
-			'spam'       => __( 'Spam',       'easy-digital-downloads' ),
-			'deleted'    => __( 'Deleted',    'easy-digital-downloads' ),
-			'cancelled'  => __( 'Cancelled',  'easy-digital-downloads' ),
+			'pending'            => __( 'Pending', 'easy-digital-downloads' ),
+			'verified'           => __( 'Verified', 'easy-digital-downloads' ),
+			'spam'               => __( 'Spam', 'easy-digital-downloads' ),
+			'deleted'            => __( 'Deleted', 'easy-digital-downloads' ),
+			'cancelled'          => __( 'Cancelled', 'easy-digital-downloads' ),
 		);
 	}
 
