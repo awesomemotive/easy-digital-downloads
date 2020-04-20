@@ -919,34 +919,46 @@ function edd_order_details_attributes( $order ) {
 				</div>
 
 				<div class="edd-admin-box-inside">
-					<label for="edd_payment_time_hour" class="label">
-						<?php echo esc_html( __( 'Time', 'easy-digital-downloads' ) . ' (' . edd_get_timezone_abbr() . ')' ); ?>
-					</label>
+					<fieldset class="edd-form-group">
+						<legend class="edd-form-group__label">
+							<?php echo esc_html( __( 'Time', 'easy-digital-downloads' ) . ' (' . edd_get_timezone_abbr() . ')' ); ?>
+						</legend>
 
-					<?php
-					echo EDD()->html->select( array(
-						'name'             => 'edd-payment-time-hour',
-						'id'               => 'edd-payment-time-hour',
-						'options'          => edd_get_hour_values(),
-						'selected'         => $order_date->format( 'H' ),
-						'chosen'           => true,
-						'class'            => 'edd-time',
-						'show_option_none' => false,
-						'show_option_all'  => false,
-					) ); // WPCS: XSS ok.
-					?>
-					:
-					<?php
-					echo EDD()->html->select( array(
-						'name'             => 'edd-payment-time-min',
-						'options'          => edd_get_minute_values(),
-						'selected'         => $order_date->format( 'i' ),
-						'chosen'           => true,
-						'class'            => 'edd-time',
-						'show_option_none' => false,
-						'show_option_all'  => false,
-					) ); // WPCS: XSS ok.
-					?>
+						<div class="edd-form-group__control">
+							<label for="edd-payment-time-hour" class="screen-reader-text">
+								<?php esc_html_e( 'Hour', 'easy-digital-downloads' ); ?>
+							</label>
+
+							<?php
+							echo EDD()->html->select( array(
+								'name'             => 'edd-payment-time-hour',
+								'id'               => 'edd-payment-time-hour',
+								'options'          => edd_get_hour_values(),
+								'selected'         => $order_date->format( 'H' ),
+								'chosen'           => true,
+								'class'            => 'edd-time',
+								'show_option_none' => false,
+								'show_option_all'  => false,
+							) ); // WPCS: XSS ok.
+							?>
+							:
+
+							<label for="edd-payment-time-min" class="screen-reader-text">
+								<?php esc_html_e( 'Minute', 'easy-digital-downloads' ); ?>
+							</label>
+							<?php
+							echo EDD()->html->select( array(
+								'name'             => 'edd-payment-time-min',
+								'options'          => edd_get_minute_values(),
+								'selected'         => $order_date->format( 'i' ),
+								'chosen'           => true,
+								'class'            => 'edd-time',
+								'show_option_none' => false,
+								'show_option_all'  => false,
+							) ); // WPCS: XSS ok.
+							?>
+						</div>
+					</fieldset>
 				</div>
 
 				<?php do_action( 'edd_view_order_details_update_inner', $order->id ); ?>
