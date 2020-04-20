@@ -197,25 +197,11 @@ class Order_Adjustments_Table extends List_Table {
 		// Filter all order_adjustment row actions
 		$row_actions = apply_filters( 'edd_order_adjustment_row_actions', $row_actions, $order_adjustment );
 
-		// Update name based on type
-		if ( 'discount' === $order_adjustment->type ) {
-			$name = edd_get_discount_field( $order_adjustment->type_id, 'name' );
-
-		} elseif ( 'tax_rate' === $order_adjustment->type ) {
-			$name = __( 'Tax', 'easy-digital-downloads' );
-
-		} elseif ( 'fee' === $order_adjustment->type ) {
-			$name = __( 'Fee', 'easy-digital-downloads' );
-
-		} else {
-			$name = '&mdash;';
-		}
-
 		// Wrap order_adjustment title in strong anchor
 		$order_adjustment_title = '<strong><a class="row-title" href="' . add_query_arg( array(
 			'edd-action'       => 'edit_order_adjustment',
 			'order_adjustment' => $order_adjustment->id,
-		), $base ) . '">' . esc_html( $name ) . '</a></strong>';
+		), $base ) . '">' . esc_html( $this->get_order_adjustment_type_name( $order_adjustment ) ) . '</a></strong>';
 
 		// Return order_adjustment title & row actions
 		return $order_adjustment_title . $this->row_actions( $row_actions );
@@ -251,8 +237,29 @@ class Order_Adjustments_Table extends List_Table {
 			/*$2%s*/
 			$order_adjustment->id,
 			/* translators: discount type */
-			sprintf( __( 'Select %s', 'easy-digital-downloads' ), $name )
+			sprintf( __( 'Select %s', 'easy-digital-downloads' ), $this->get_order_adjustment_type_name( $order_adjustment ) )
 		);
+	}
+
+	/**
+	 * Gets a user friendly name/label for the order adjustment type
+	 *
+	 * @param \EDD\Orders\Order_Adjustment $order_adjustment Order Adjustment object.
+	 * @return string
+	 */
+	private function get_order_adjustment_type_name( $order_adjustment ) {
+		$name = '&mdash;';
+		if ( 'discount' === $order_adjustment->type ) {
+			return edd_get_discount_field( $order_adjustment->type_id, 'name' );
+
+		} elseif ( 'tax_rate' === $order_adjustment->type ) {
+			return __( 'Tax', 'easy-digital-downloads' );
+
+		} elseif ( 'fee' === $order_adjustment->type ) {
+			return __( 'Fee', 'easy-digital-downloads' );
+		}
+
+		return $name;
 	}
 
 	/**
