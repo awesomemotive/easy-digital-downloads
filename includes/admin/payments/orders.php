@@ -843,7 +843,7 @@ function edd_order_details_attributes( $order ) {
 		<div class="inside">
 			<div class="edd-order-update-box edd-admin-box">
 				<div class="edd-admin-box-inside">
-					<label for="edd-payment-status" class="label label--has-tip">
+					<label for="edd_payment_status" class="label label--has-tip">
 						<?php
 						esc_html_e( 'Status', 'easy-digital-downloads' );
 
@@ -858,7 +858,7 @@ function edd_order_details_attributes( $order ) {
 						?>
 						<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo $status_help; // WPCS: XSS ok. ?>"></span>
 					</label>
-					<select name="edd-payment-status" id="edd-payment-status" class="edd-select-chosen <?php echo esc_attr( $rtl_class ); ?>">
+					<select name="edd-payment-status" id="edd_payment_status" class="edd-select-chosen <?php echo esc_attr( $rtl_class ); ?>">
 						<?php foreach ( edd_get_payment_statuses() as $key => $status ) : ?>
 							<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $order->status, $key, true ); ?>><?php echo esc_html( $status ); ?></option>
 						<?php endforeach; ?>
