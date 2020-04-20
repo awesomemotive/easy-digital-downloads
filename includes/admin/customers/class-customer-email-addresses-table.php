@@ -199,15 +199,16 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD_Customer $item Customer object.
+	 * @param array $item
 	 *
 	 * @return string Displays a checkbox
 	 */
 	public function column_cb( $item ) {
 		return sprintf(
-			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+			'<input type="checkbox" name="%1$s[]" id="%1$s-%2$s" value="%2$s" /><label for="%1$s-%2$s" class="screen-reader-text">%3$s</label>',
 			/*$1%s*/ 'customer',
-			/*$2%s*/ $item['id']
+			/*$2%s*/ $item['id'],
+			$item['email']
 		);
 	}
 
