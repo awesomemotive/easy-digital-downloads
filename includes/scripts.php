@@ -293,7 +293,7 @@ function edd_register_admin_scripts() {
 
 	// Register scripts
 	wp_register_script( 'jquery-chosen',                   $js_dir . 'vendor/jquery.chosen.min.js',          array( 'jquery' ), $version );
-	wp_register_script( 'jquery-flot',                     $js_dir . 'vendor/jquery.flot.min.js',            array( 'jquery' ), $version );
+	wp_register_script( 'edd-jquery-flot',                 $js_dir . 'vendor/jquery.flot.min.js',            array( 'jquery' ), $version );
 	wp_register_script( 'edd-moment-js',                   $js_dir . 'vendor/moment.min.js',                 array(), $version );
 	wp_register_script( 'edd-chart-js',                    $js_dir . 'vendor/chartjs.min.js',                array( 'edd-moment-js' ), $version );
 	wp_register_script( 'edd-admin-scripts',               $js_dir . 'edd-admin.js',                         $admin_deps, $version );
