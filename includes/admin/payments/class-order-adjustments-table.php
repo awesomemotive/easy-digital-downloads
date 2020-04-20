@@ -231,12 +231,27 @@ class Order_Adjustments_Table extends List_Table {
 	 * @return string Displays a checkbox.
 	 */
 	public function column_cb( $order_adjustment ) {
+		// Update name based on type
+		if ( 'discount' === $order_adjustment->type ) {
+			$name = edd_get_discount_field( $order_adjustment->type_id, 'name' );
+
+		} elseif ( 'tax_rate' === $order_adjustment->type ) {
+			$name = __( 'Tax', 'easy-digital-downloads' );
+
+		} elseif ( 'fee' === $order_adjustment->type ) {
+			$name = __( 'Fee', 'easy-digital-downloads' );
+
+		} else {
+			$name = '&mdash;';
+		}
 		return sprintf(
-			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+			'<input type="checkbox" name="%1$s[]" id="%1$s-%2$s" value="%2$s" /><label for="%1$s-%2$s" class="screen-reader-text">%3%s</label>',
 			/*$1%s*/
 			'order_adjustment',
 			/*$2%s*/
-			$order_adjustment->id
+			$order_adjustment->id,
+			/* translators: discount type */
+			sprintf( __( 'Select %s', 'easy-digital-downloads' ), $name )
 		);
 	}
 
