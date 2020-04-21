@@ -325,7 +325,7 @@ function edd_order_details_email( $order ) {
 				</label>
 
 				<div class="edd-form-group__control">
-					<input readonly type="email" class="edd-form-group__input" value="<?php echo esc_attr( $order->email ); ?>" />
+					<input readonly type="email" id="<?php echo esc_attr( $order->email ); ?>" class="edd-form-group__input" value="<?php echo esc_attr( $order->email ); ?>" />
 				</div>
 
 				<p class="edd-form-group__help">
@@ -385,27 +385,27 @@ function edd_order_details_addresses( $order ) {
 			</div>
 
 			<div class="input-wrap">
-				<label><?php esc_html_e( 'Line 1:', 'easy-digital-downloads' ); ?></label>
-				<input type="text" name="edd_order_address[address]" value="<?php echo esc_attr( $address->address ); ?>" />
+				<label for="edd_order_address_address"><?php esc_html_e( 'Line 1:', 'easy-digital-downloads' ); ?></label>
+				<input type="text" name="edd_order_address[address]" id="edd_order_address_address" value="<?php echo esc_attr( $address->address ); ?>" />
 			</div>
 
 			<div class="input-wrap">
-				<label><?php esc_html_e( 'Line 2:', 'easy-digital-downloads' ); ?></label>
-				<input type="text" name="edd_order_address[address2]" value="<?php echo esc_attr( $address->address2 ); ?>" />
+				<label for="edd_order_address_address2"><?php esc_html_e( 'Line 2:', 'easy-digital-downloads' ); ?></label>
+				<input type="text" name="edd_order_address[address2]" id="edd_order_address_address2" value="<?php echo esc_attr( $address->address2 ); ?>" />
 			</div>
 
 			<div class="input-wrap">
-				<label><?php echo esc_html_x( 'City:', 'Address City', 'easy-digital-downloads' ); ?></label>
-				<input type="text" name="edd_order_address[city]" value="<?php echo esc_attr( $address->city ); ?>" />
+				<label for="edd_order_address_city"><?php echo esc_html_x( 'City:', 'Address City', 'easy-digital-downloads' ); ?></label>
+				<input type="text" name="edd_order_address[city]" id="edd_order_address_city" value="<?php echo esc_attr( $address->city ); ?>" />
 			</div>
 
 			<div class="input-wrap">
-				<label><?php echo esc_html_x( 'Zip / Postal Code:', 'Zip / Postal code of address', 'easy-digital-downloads' ); ?></label>
-				<input type="text" name="edd_order_address[postal_code]" value="<?php echo esc_attr( $address->postal_code ); ?>" class="med-text" />
+				<label for="edd_order_address_postal_code"><?php echo esc_html_x( 'Zip / Postal Code:', 'Zip / Postal code of address', 'easy-digital-downloads' ); ?></label>
+				<input type="text" name="edd_order_address[postal_code]" id="edd_order_address_postal_code" value="<?php echo esc_attr( $address->postal_code ); ?>" class="med-text" />
 			</div>
 
 			<div class="input-wrap">
-				<label><?php echo esc_html_x( 'Country:', 'Address country', 'easy-digital-downloads' ); ?></label>
+				<label for="edd_order_address_country"><?php echo esc_html_x( 'Country:', 'Address country', 'easy-digital-downloads' ); ?></label>
 				<div id="edd-order-address-country-wrap">
 					<?php
 					echo EDD()->html->select( array(
@@ -429,7 +429,7 @@ function edd_order_details_addresses( $order ) {
 			</div>
 
 			<div class="input-wrap">
-				<label><?php echo _x( 'Region:', 'Region of address', 'easy-digital-downloads' ); ?></label>
+				<label for="edd_order_address_region"><?php echo esc_html_x( 'Region:', 'Region of address', 'easy-digital-downloads' ); ?></label>
 				<div id="edd-order-address-state-wrap">
 					<?php
 					$states = edd_get_shop_states( $address->country );
@@ -563,7 +563,7 @@ function edd_order_details_items( $order ) {
 			<div class="edd-add-download-to-purchase">
 				<ul>
 					<li class="download">
-						<span class="edd-order-details-label-mobile"><?php printf( esc_html_x( '%s To Add', 'order details select item to add - mobile', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></span>
+						<label for="edd_order_add_download_select" class="edd-order-details-label-mobile"><?php printf( esc_html_x( '%s To Add', 'order details select item to add - mobile', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
 
 						<?php echo EDD()->html->product_dropdown( array(
 							'name'                 => 'edd-order-add-download-select',
@@ -637,7 +637,7 @@ function edd_order_details_adjustments( $order ) {
 			<div class="edd-add-adjustment-to-purchase">
 				<ul>
 					<li class="adjustment">
-						<span class="edd-order-details-label-mobile"><?php echo esc_html_x( 'Adjustment To Add', 'order details select adjustment to add - mobile', 'easy-digital-downloads' ); ?></span>
+						<label for="edd_order_add_adjustment_select" class="edd-order-details-label-mobile"><?php echo esc_html_x( 'Adjustment To Add', 'order details select adjustment to add - mobile', 'easy-digital-downloads' ); ?></label>
 
 						<?php echo EDD()->html->select( array(
 							'name'             => 'edd-order-add-adjustment-select',
@@ -795,14 +795,14 @@ function edd_order_details_extras( $order = false ) {
 				<?php endif; ?>
 
 				<div class="edd-order-payment-key edd-admin-box-inside">
-					<span class="label"><?php esc_html_e( 'Key', 'easy-digital-downloads' ); ?></span>
-					<input type="text" name="payment_key" <?php echo esc_attr( $readonly ); ?> value="<?php echo esc_attr( $order->payment_key ); ?>" />
+					<label for="edd_payment_key" class="label"><?php esc_html_e( 'Key', 'easy-digital-downloads' ); ?></label>
+					<input type="text" name="payment_key" id="edd_payment_key" <?php echo esc_attr( $readonly ); ?> value="<?php echo esc_attr( $order->payment_key ); ?>" />
 				</div>
 
 				<div class="edd-order-ip edd-admin-box-inside">
-					<span class="label"><?php esc_html_e( 'IP', 'easy-digital-downloads' ); ?></span>
+					<label for="edd_ip" class="label"><?php esc_html_e( 'IP', 'easy-digital-downloads' ); ?></label>
 					<?php if ( edd_is_add_order_page() ) : ?>
-						<input type="text" name="ip" value="<?php echo esc_attr( edd_get_ip() ); ?>" />
+						<input type="text" name="ip" id="edd_ip" value="<?php echo esc_attr( edd_get_ip() ); ?>" />
 					<?php else : ?>
 						<span><?php echo edd_payment_get_ip_address_url( $order->id ); // WPCS: XSS ok. ?></span>
 					<?php endif; ?>
@@ -817,8 +817,8 @@ function edd_order_details_extras( $order = false ) {
 
 				<?php if ( edd_is_add_order_page() ) : ?>
 					<div class="edd-order-tx-id edd-admin-box-inside">
-						<span class="label"><?php esc_html_e( 'Transaction ID', 'easy-digital-downloads' ); ?></span>
-						<input type="text" name="transaction_id" value="" />
+						<label for="edd_transaction_id" class="label"><?php esc_html_e( 'Transaction ID', 'easy-digital-downloads' ); ?></label>
+						<input type="text" name="transaction_id" id="edd_transaction_id" value="" />
 					</div>
 				<?php endif; ?>
 
@@ -877,7 +877,7 @@ function edd_order_details_attributes( $order ) {
 		<div class="inside">
 			<div class="edd-order-update-box edd-admin-box">
 				<div class="edd-admin-box-inside">
-					<span class="label label--has-tip">
+					<label for="edd_payment_status" class="label label--has-tip">
 						<?php
 						esc_html_e( 'Status', 'easy-digital-downloads' );
 
@@ -891,8 +891,8 @@ function edd_order_details_attributes( $order ) {
 						$status_help .= '</ul>';
 						?>
 						<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo $status_help; // WPCS: XSS ok. ?>"></span>
-					</span>
-					<select name="edd-payment-status" class="edd-select-chosen <?php echo esc_attr( $rtl_class ); ?>">
+					</label>
+					<select name="edd-payment-status" id="edd_payment_status" class="edd-select-chosen <?php echo esc_attr( $rtl_class ); ?>">
 						<?php foreach ( edd_get_payment_statuses() as $key => $status ) : ?>
 							<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $order->status, $key, true ); ?>><?php echo esc_html( $status ); ?></option>
 						<?php endforeach; ?>
