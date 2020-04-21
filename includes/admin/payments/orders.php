@@ -184,17 +184,24 @@ function edd_order_details_customer( $order ) {
 	<div>
 		<div class="column-container order-customer-info">
 			<div class="column-container change-customer">
-				<label for="customer_id" class="edd-order-details-label-mobile"><?php esc_html_e( 'Assign to an existing customer', 'easy-digital-downloads' ); ?></label>
-				<?php
-				echo EDD()->html->customer_dropdown( array(
-					'class'         => 'edd-payment-change-customer-input',
-					'selected'      => $customer_id,
-					'id'            => 'customer-id',
-					'name'          => 'customer-id',
-					'none_selected' => esc_html__( 'Search for a customer', 'easy-digital-downloads' ),
-					'placeholder'   => esc_html__( 'Search for a customer', 'easy-digital-downloads' ),
-				) ); // WPCS: XSS ok.
-				?>
+				<div class="edd-form-group">
+					<label for="customer_id" class="edd-form-group__label edd-order-details-label-mobile"><?php esc_html_e( 'Assign to an existing customer', 'easy-digital-downloads' ); ?></label>
+					<div class="edd-form-group__control">
+						<?php
+						echo EDD()->html->customer_dropdown(
+							array(
+								'class'         => 'edd-payment-change-customer-input edd-form-group__input',
+								'selected'      => $customer_id,
+								'id'            => 'customer-id',
+								'name'          => 'customer-id',
+								'none_selected' => esc_html__( 'Search for a customer', 'easy-digital-downloads' ),
+								'placeholder'   => esc_html__( 'Search for a customer', 'easy-digital-downloads' ),
+							)
+						); // WPCS: XSS ok.
+						?>
+					</div>
+				</div>
+
 				<input type="hidden" name="current-customer-id" value="<?php echo esc_attr( $customer_id ); ?>" />
 				<?php wp_nonce_field( 'edd_customer_details_nonce', 'edd_customer_details_nonce' ); ?>
 			</div>
