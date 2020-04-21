@@ -235,7 +235,6 @@ class Order_Adjustments_Table extends List_Table {
 	 * @return string
 	 */
 	private function get_order_adjustment_type_name( $order_adjustment ) {
-		$name = '&mdash;';
 		if ( 'discount' === $order_adjustment->type ) {
 			return edd_get_discount_field( $order_adjustment->type_id, 'name' );
 
@@ -246,7 +245,7 @@ class Order_Adjustments_Table extends List_Table {
 			return __( 'Fee', 'easy-digital-downloads' );
 		}
 
-		return $name;
+		return '&mdash;';
 	}
 
 	/**
