@@ -590,23 +590,29 @@ function edd_order_details_items( $order ) {
 			<div class="edd-add-download-to-purchase">
 				<ul>
 					<li class="download">
-						<label for="edd_order_add_download_select" class="edd-order-details-label-mobile"><?php printf( esc_html_x( '%s To Add', 'order details select item to add - mobile', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
-
-						<?php echo EDD()->html->product_dropdown( array(
-							'name'                 => 'edd-order-add-download-select',
-							'id'                   => 'edd-order-add-download-select',
-							'class'                => 'edd-order-add-download-select',
-							'chosen'               => true,
-							'variations'           => true,
-							'show_variations_only' => true,
-							'number'               => 15,
-						) ); // WPCS: XSS ok. ?>
+						<div class="edd-form-group">
+							<label for="edd_order_add_download_select" class="edd-form-group__label edd-order-details-label-mobile"><?php printf( esc_html_x( '%s To Add', 'order details select item to add - mobile', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
+						<div class="edd-form-group__control">
+							<?php
+							echo EDD()->html->product_dropdown(
+								array(
+									'name'                 => 'edd-order-add-download-select',
+									'id'                   => 'edd-order-add-download-select',
+									'class'                => 'edd-order-add-download-select edd-form-group__input',
+									'chosen'               => true,
+									'variations'           => true,
+									'show_variations_only' => true,
+									'number'               => 15,
+								)
+							); // WPCS: XSS ok.
+							?>
+						</div>
 
 						<?php if ( edd_item_quantities_enabled() ) : ?>
 							&times;
 							<input type="number" class="edd-add-order-quantity" value="1" step="1" min="1" name="quantity" />
 						<?php endif; ?>
-
+						</div>
 						<button type="button" class="button button-secondary edd-add-order-item-button"><?php esc_html_e( 'Add', 'easy-digital-downloads' ); ?></button>
 
 						<span class="spinner"></span>

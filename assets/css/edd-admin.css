@@ -542,7 +542,7 @@ a.edd-delete:hover {
 .order-customer-info .customer-details {
 	display: flex;
 	flex-direction: column;
-} 
+}
 
 .order-customer-info .customer-details .customer-since {
 	color: #666;
