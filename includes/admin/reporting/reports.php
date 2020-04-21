@@ -1176,10 +1176,10 @@ function edd_register_payment_gateways_report( $reports ) {
 		), function( $endpoint ) use ( $gateway ) {
 			switch( $endpoint ) {
 				case 'gateway_sales_earnings_chart':
-					return 'all' !== $gateway;
+					return ! empty( $gateway ) && 'all' !== $gateway;
 					break;
 				default:
-					return 'all' === $gateway;
+					return ( empty( $gateway ) || 'all' === $gateway );
 			}
 		} );
 
