@@ -36,10 +36,12 @@ function edd_customers_page_primary_nav( $active_tab = '' ) {
 		foreach ( $tabs as $tab_id => $tab_name ) {
 
 			// Remove
-			$tab_url = add_query_arg( array(
-				'settings-updated' => false,
-				'page_type'        => $tab_id
-			) );
+			$tab_url = edd_get_admin_url(
+				array(
+					'page'      => 'edd-customers',
+					'page_type' => esc_attr( $tab_id ),
+				)
+			);
 
 			// Remove the section from the tabs so we always end up at the main section
 			$tab_url = remove_query_arg( 'section', $tab_url );
