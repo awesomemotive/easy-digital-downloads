@@ -1403,8 +1403,8 @@ function edd_admin_order_get_item_amounts() {
 
 	// Use base Amount if sent.
 	if ( isset( $_POST['amount'] ) && '0' !== $_POST['amount'] ) {
-		$amount = sanitize_text_field( $_POST['amount'] );
-	
+		$amount = edd_sanitize_amount( sanitize_text_field( $_POST['amount'] ) );
+
 	// Determine amount from Download record.
 	} else {
 		if ( ! $download->has_variable_prices() ) {
@@ -1421,7 +1421,7 @@ function edd_admin_order_get_item_amounts() {
 
 	// Use base Subtotal if sent.
 	if ( isset( $_POST['subtotal'] ) && '0' !== $_POST['subtotal'] ) {
-		$subtotal = sanitize_text_field( $_POST['subtotal'] );
+		$subtotal = edd_sanitize_amount( sanitize_text_field( $_POST['subtotal'] ) );
 	} else {
 		$subtotal = $amount * $quantity;
 	}
@@ -1486,21 +1486,13 @@ function edd_admin_order_get_item_amounts() {
 		$tax = 0;
 	}
 
-	$amounts = array(
-		'amount'   => $amount,
-		'subtotal' => $subtotal,
-		'discount' => $discount,
-		'tax'      => $tax,
-		'total'    => $subtotal + $tax,
-	);
-
-	$amounts = array_map( 'edd_format_amount', $amounts );
-
-	wp_send_json_success( array_merge(
-		$amounts,
-		array(
-			'adjustments' => $adjustments,
-		)
+	wp_send_json_success( array(
+		'amount'      => $amount,
+		'subtotal'    => $subtotal,
+		'discount'    => $discount,
+		'tax'         => $tax,
+		'total'       => $subtotal + $tax,
+		'adjustments' => $adjustments,
 	) );
 }
 add_action( 'wp_ajax_edd-admin-order-get-item-amounts', 'edd_admin_order_get_item_amounts' );
