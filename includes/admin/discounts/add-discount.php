@@ -71,7 +71,7 @@ $minutes      = edd_get_minute_values();
 							<label for="edd-amount-type" class="screen-reader-text"><?php esc_html_e( 'Amount Type', 'easy-digital-downloads' ); ?></label>
 							<select name="amount_type" id="edd-amount-type">
 								<option value="percent">%</option>
-								<option value="flat"><?php echo esc_html( edd_currency_filter( '' ) ); ?></option>
+								<option value="flat"><?php echo esc_html( edd_currency_symbol() ); ?></option>
 							</select>
 						</span>
 						<p class="description"><?php esc_html_e( 'The amount as a percentage or flat rate. Cannot be left blank.', 'easy-digital-downloads' ); ?></p>
