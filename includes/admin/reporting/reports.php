@@ -1445,7 +1445,7 @@ function edd_register_payment_gateways_report( $reports ) {
 
 							$gateway = Reports\get_filter_value( 'gateways' );
 							$column  = $exclude_taxes
-								? 'subtotal'
+								? 'total - tax'
 								: 'total';
 
 							$results = $wpdb->get_results( $wpdb->prepare(

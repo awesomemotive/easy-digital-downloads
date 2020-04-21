@@ -715,15 +715,9 @@ class EDD_Payments_Query extends EDD_Stats {
 			$arguments['status'] = $this->args['post_status'];
 		}
 
-		// If the status includes `any`, we don't need to pass anything to the query class.
-		if ( isset( $arguments['status'] ) && is_array( $arguments['status'] ) ) {
-			if ( isset( $arguments['status'][0] ) && 'any' === $arguments['status'][0] ) {
-				unset( $arguments['status'] );
-			}
-		}
-
-		if ( isset( $arguments['status'] ) && ! is_array( $arguments['status'] ) && 'any' === $arguments['status'] ) {
-			unset( $arguments['status'] );
+		// If the status includes `any`, we should set the status to our whitelisted keys.
+		if ( isset( $arguments['status'] ) && ( 'any' === $arguments['status'] || ( is_array( $arguments['status'] ) && in_array( 'any', $arguments['status'], true ) ) ) ) {
+			$arguments['status'] = edd_get_payment_status_keys();
 		}
 
 		if ( isset( $this->args['meta_query'] ) && is_array( $this->args['meta_query'] ) ) {
