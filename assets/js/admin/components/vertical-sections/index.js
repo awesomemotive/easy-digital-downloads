@@ -3,7 +3,7 @@ jQuery( document ).ready( function( $ ) {
 	$( '.edd-vertical-sections.use-js .section-content' ).hide();
 
 	var hash = window.location.hash;
-	if ( hash ) {
+	if ( hash && hash.includes( 'edd_' ) ) {
 		// Show the section content related to the URL.
 		$( '.edd-vertical-sections.use-js' ).find( hash ).show();
 
