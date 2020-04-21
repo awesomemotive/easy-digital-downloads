@@ -109,11 +109,8 @@ jQueryReady( () => {
 		 * @since 3.0
 		 */
 		function getTaxRate() {
-			const country =
-				countryInput.options[ countryInput.selectedIndex ].value;
-			const region = regionInput.options
-				? regionInput.options[ regionInput.selectedIndex ].value
-				: regionInput.value;
+			const country = $( '#edd_order_address_country' ).val();
+			const region = $( '#edd_order_address_region' ).val();
 
 			const nonce = document.getElementById( 'edd_get_tax_rate_nonce' )
 				.value;
@@ -159,8 +156,9 @@ jQueryReady( () => {
 		// Wait for Region field to be replaced when Country changes.
 		// Wait for typing when Regino field changes.
 		// jQuery listeners for Chosen compatibility.
-		$( countryInput ).on( 'change', _.debounce( getTaxRate, 250 ) );
-		$( regionInput ).on( 'change', getTaxRate );
-		$( regionInput ).on( 'keyup', _.debounce( getTaxRate, 250 ) );
+		$( '#edd_order_address_country' ).on( 'change', _.debounce( getTaxRate, 250 ) );
+
+		$( '#edd-order-address' ).on( 'change', '#edd_order_address_region', getTaxRate );
+		$( '#edd-order-address' ).on( 'keyup', '#edd_order_address_region', _.debounce( getTaxRate, 250 ) );
 	} )();
 } );
