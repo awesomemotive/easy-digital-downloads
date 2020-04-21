@@ -1,4 +1,10 @@
 jQuery( document ).ready( function( $ ) {
+
+	// If the current screen doesn't have JS sections, return.
+	if ( 0 === $( '.edd-vertical-sections.use-js' ).length ) {
+		return;
+	}
+
 	// Hides the section content.
 	$( '.edd-vertical-sections.use-js .section-content' ).hide();
 
