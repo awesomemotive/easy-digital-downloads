@@ -297,7 +297,8 @@ function edd_order_details_email( $order ) {
 
 		<?php else : ?>
 
-			<input readonly type="email" value="<?php echo esc_attr( $order->email ); ?>" />
+			<label for="edd_order_order_resend_receipt_address" class="screen-reader-text"><?php esc_html_e( 'Send email receipt to', 'easy-digital-downloads' ); ?></label>
+			<input readonly id="edd_order_order_resend_receipt_address" type="email" value="<?php echo esc_attr( $order->email ); ?>" />
 
 		<?php endif; ?>
 
