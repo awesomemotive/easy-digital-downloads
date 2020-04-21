@@ -82,7 +82,7 @@ jQueryReady( () => {
 
 		if ( 'nostates' === regions ) {
 			state_wrapper
-				.replaceWith( '<input type="text" name="edd_order_address[region]" value="" class="wide-fat" style="max-width: none; width: 100%;" />' );
+				.replaceWith( '<input type="text" name="edd_order_address[region]" id="edd_order_address_region" value="" class="wide-fat" style="max-width: none; width: 100%;" />' );
 		} else {
 			state_wrapper.replaceWith( regions );
 
@@ -99,7 +99,7 @@ jQueryReady( () => {
 	 * @since 3.0
 	 */
 	function updateRegionFieldOnChange() {
-		getStates( $( this ), 'edd_order_address[region]' ).done( replaceRegionField );
+		getStates( $( this ), 'edd_order_address_region' ).done( replaceRegionField );
 	}
 
 	$( document.body ).on( 'change', '.customer-address-select-wrap .add-order-customer-address-select', function() {
