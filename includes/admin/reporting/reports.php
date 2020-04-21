@@ -960,7 +960,7 @@ function edd_register_refunds_report( $reports ) {
 					'refunds_chart',
 				),
 			),
-			'filters'   => array( 'products', 'taxes' ),
+			'filters'   => array( 'taxes' ),
 		) );
 
 		$reports->register_endpoint( 'refund_count', array(
@@ -1446,10 +1446,10 @@ function edd_register_payment_gateways_report( $reports ) {
 							);
 						}
 
-						$gateway = Reports\get_filter_value( 'gateways' );
-						$column  = $exclude_taxes
-							? 'subtotal'
-							: 'total';
+            $gateway = Reports\get_filter_value( 'gateways' );
+            $column  = $exclude_taxes
+              ? 'total - tax'
+              : 'total';
 
 						$results = $wpdb->get_results( $wpdb->prepare(
 							"SELECT COUNT({$column}) AS sales, SUM({$column}) AS earnings, {$sql_clauses['select']}
