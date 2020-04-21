@@ -408,8 +408,8 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_parse_dates_for_range_with_last_month_range_should_return_those_dates() {
 		$expected = array(
-			'start' => self::$date->copy()->subMonth( 1 )->startOfMonth()->toDateTimeString(),
-			'end'   => self::$date->copy()->subMonth( 1 )->endOfMonth()->toDateTimeString(),
+			'start' => self::$date->copy()->subMonthNoOverflow( 1 )->startOfMonth()->toDateTimeString(),
+			'end'   => self::$date->copy()->subMonthNoOverflow( 1 )->endOfMonth()->toDateTimeString(),
 			'range' => 'last_month',
 		);
 
@@ -418,6 +418,28 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
 		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
+	}
+
+	/**
+	 * @covers \EDD\Reports\parse_dates_for_range()
+	 * @group edd_dates
+	 */
+	public function test_parse_dates_for_range_with_overflow_last_month_range_should_return_those_dates() {
+		$overflow_day  = '2020-03-30 00:00:00';
+		$overflow_date = EDD()->utils->date( $overflow_day );
+
+		$expected = array(
+			'start' => ( new \DateTime( '2020-02-01 00:00:00' ) )->format( 'Y-m-d H:i' ),
+			'end'   => ( new \DateTime( '2020-02-29 23:59:59' ) )->format( 'Y-m-d H:i' ),
+			'range' => 'last_month',
+		);
+
+		$result = parse_dates_for_range( 'last_month', $overflow_day );
+
+		// Explicitly strip seconds in case the test is slow.
+		$result = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
 
 		$this->assertEqualSetsWithIndex( $expected, $result );
 	}
