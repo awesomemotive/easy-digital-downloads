@@ -442,8 +442,7 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 
 		$actions['remove'] = sprintf(
 			'<a aria-label="%s" class="edd-remove-row edd-delete" data-type="price">%s</a>',
-			/* translators: %s: download price option */
-			esc_attr( sprintf( __( 'Remove price option %s', 'easy-digital-downloads' ), $key ) ),
+			esc_attr__( 'Remove price option', 'easy-digital-downloads' ),
 			esc_html__( 'Remove', 'easy-digital-downloads' )
 		);
 		?>
@@ -654,8 +653,7 @@ function edd_render_products_field( $post_id ) {
 									<?php
 									printf(
 										'<a aria-label="%s" class="edd-remove-row edd-delete" data-type="file">%s</a>',
-										/* translators: %s: download bundle option */
-										esc_attr( sprintf( __( 'Remove bundle option %s', 'easy-digital-downloads' ), $key ) ),
+										esc_attr__( 'Remove bundle option', 'easy-digital-downloads' ),
 										esc_html__( 'Remove', 'easy-digital-downloads' )
 									);
 									?>
@@ -717,7 +715,7 @@ function edd_render_products_field( $post_id ) {
 								<?php
 								printf(
 									'<a aria-label="%s" class="edd-remove-row edd-delete" data-type="file">%s</a>',
-									esc_attr__( 'Remove bundle option 1', 'easy-digital-downloads' ),
+									esc_attr__( 'Remove bundle option', 'easy-digital-downloads' ),
 									esc_html__( 'Remove', 'easy-digital-downloads' )
 								);
 								?>
@@ -848,8 +846,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 		<?php
 		printf(
 			'<a aria-label="%s" class="edd-remove-row edd-delete" data-type="file">%s</a>',
-			/* translators: %s: download file */
-			esc_attr( sprintf( __( 'Remove file %s', 'easy-digital-downloads' ), $key ) ),
+			esc_attr__( 'Remove file', 'easy-digital-downloads' ),
 			esc_html__( 'Remove', 'easy-digital-downloads' )
 		);
 		?>
