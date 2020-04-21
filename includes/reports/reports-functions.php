@@ -545,12 +545,13 @@ function get_dates_filter( $values = 'strings', $timezone = null ) {
  *
  * @param string          $range Optional. Range value to generate start and end dates for against `$date`.
  *                               Default is the current range as derived from the session.
+ * @param string          $date  Date string converted to `\EDD\Utils\Date` to anchor calculations to.
  * @return \EDD\Utils\Date[] Array of start and end date objects.
  */
-function parse_dates_for_range( $range = null ) {
+function parse_dates_for_range( $range = null, $date = 'now' ) {
 
 	// Set the time ranges in the user's timezone, so they ultimately see them in their own timezone.
-	$date = EDD()->utils->date( 'now', edd_get_timezone_id(), false );
+	$date = EDD()->utils->date( $date, edd_get_timezone_id(), false );
 
 	if ( null === $range || ! array_key_exists( $range, get_dates_filter_options() ) ) {
 		$range = get_dates_filter_range();
@@ -567,8 +568,8 @@ function parse_dates_for_range( $range = null ) {
 
 		case 'last_month':
 			$dates = array(
-				'start' => $date->copy()->subMonth( 1 )->startOfMonth(),
-				'end'   => $date->copy()->subMonth( 1 )->endOfMonth(),
+				'start' => $date->copy()->subMonthNoOverflow( 1 )->startOfMonth(),
+				'end'   => $date->copy()->subMonthNoOverflow( 1 )->endOfMonth(),
 			);
 			break;
 
