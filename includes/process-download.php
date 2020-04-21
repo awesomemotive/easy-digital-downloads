@@ -880,8 +880,15 @@ function edd_process_signed_download_url( $args ) {
 	$args['email']       = edd_get_payment_meta( $order_parts[0], '_edd_payment_user_email', true );
 	$args['key']         = edd_get_payment_meta( $order_parts[0], '_edd_payment_purchase_key', true );
 
-	$payment = new EDD_Payment( $args['payment'] );
-	$args['has_access']  = 'complete' === $payment->status ? true : false;
+	// Access is granted if there's at least one `complete` order item that matches the order + download + price ID.
+	$order_items = edd_count_order_items( array(
+		'order_id'   => $args['payment'],
+		'product_id' => $args['download'],
+		'price_id'   => ! empty( $args['price_id'] ) ? $args['price_id'] : '',
+		'status'     => 'complete'
+	) );
+
+	$args['has_access'] = $order_items > 0;
 
 	return $args;
 }
