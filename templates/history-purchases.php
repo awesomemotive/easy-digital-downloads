@@ -32,7 +32,7 @@ if ( is_user_logged_in() ):
 						<span class="edd_purchase_amount"><?php echo edd_currency_filter( edd_format_amount( $payment->total ) ); ?></span>
 					</td>
 					<td class="edd_purchase_details">
-						<?php if( $payment->status != 'complete' ) : ?>
+						<?php if( ! in_array( $payment->status, array( 'complete', 'partially_refunded' ) ) ) : ?>
 							<span class="edd_purchase_status <?php echo $payment->status; ?>"><?php echo $payment->status_nicename; ?></span>
 							<?php if ( $payment->is_recoverable() ) : ?>
 								&mdash; <a href="<?php echo $payment->get_recovery_url(); ?>"><?php _e( 'Complete Purchase', 'easy-digital-downloads' ); ?></a>
@@ -46,7 +46,7 @@ if ( is_user_logged_in() ):
 			<?php endforeach; ?>
 		</table>
 		<?php
-			echo edd_pagination( 
+			echo edd_pagination(
 				array(
 					'type'  => 'purchase_history',
 					'total' => ceil( edd_count_purchases_of_customer() / 20 ) // 20 items per page
