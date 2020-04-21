@@ -24,9 +24,15 @@ defined( 'ABSPATH' ) || exit;
 function edd_get_option( $key = '', $default = false ) {
 	global $edd_options;
 
-	$value = ! empty( $edd_options[ $key ] )
-		? $edd_options[ $key ]
-		: $default;
+	$value = $default;
+
+	if ( isset( $edd_options[ $key ] ) ) {
+		if ( is_numeric( $edd_options[ $key ] ) ) {
+			$value = $edd_options[ $key ];
+		} else {
+			$value = ! empty( $edd_options[ $key ] ) ? $edd_options[ $key ] : $default;
+		}
+	}
 
 	$value = apply_filters( 'edd_get_option', $value, $key, $default );
 
@@ -1143,7 +1149,7 @@ function edd_get_registered_settings() {
 
 		// Show a disabled "Default Rate" in "Tax Rates" if the value is not 0.
 		if ( false !== edd_get_option( 'tax_rate' ) ) {
-			$edd_settings['taxes']['rates'] = array_merge( 
+			$edd_settings['taxes']['rates'] = array_merge(
 				array(
 					'tax_rate' => array(
 						'id'            => 'tax_rate',
@@ -1190,7 +1196,7 @@ function edd_get_registered_settings() {
  *
  * @global array $edd_options Array of all the EDD Options
  *
- * @return string $input Sanitized value
+ * @return array $input Sanitized value
  */
 function edd_settings_sanitize( $input = array() ) {
 	global $edd_options;
@@ -1259,6 +1265,23 @@ function edd_settings_sanitize( $input = array() ) {
 						unset( $output[ $key ] );
 					}
 					break;
+				case 'number':
+					echo '<pre>';
+
+					if ( array_key_exists( $key, $output ) && ! array_key_exists( $key, $input ) ) {
+						unset( $output[ $key ] );
+					}
+
+					$setting_details = edd_get_registered_setting_details( $tab, $section, $key );
+					$number_type = false !== strpos( $setting_details['step'], '.' ) ? 'floatval' : 'intval';
+					$minimum   = $number_type( $setting_details['min'] );
+					$maximum   = $number_type( $setting_details['max'] );
+					$new_value = $number_type( $input[ $key ] );
+
+					if ( $minimum > $new_value || $maximum < $new_value ) {
+						unset( $output[ $key ] );
+					}
+					break;
 				default:
 					if ( array_key_exists( $key, $input ) && empty( $input[ $key ] ) || ( array_key_exists( $key, $output ) && ! array_key_exists( $key, $input ) ) ) {
 						unset( $output[ $key ] );
@@ -1270,7 +1293,7 @@ function edd_settings_sanitize( $input = array() ) {
 		}
 	}
 
-	// Return output
+	// Return output.
 	return (array) $output;
 }
 
@@ -1317,6 +1340,28 @@ function edd_get_registered_settings_types( $filtered_tab = false, $filtered_sec
 	}
 
 	return $setting_types;
+}
+
+/**
+ * Allow getting a specific setting's details.
+ *
+ * @since 3.0
+ *
+ * @param string $filtered_tab      The tab the setting's section is in.
+ * @param string $filtered_section  The section the setting is located in.
+ * @param string $setting_key       The key associated with the setting.
+ *
+ * @return array
+ */
+function edd_get_registered_setting_details( $filtered_tab = '', $filtered_section = '', $setting_key = '' ) {
+	$settings        = edd_get_registered_settings();
+	$setting_details = array();
+
+	if ( isset( $settings[ $filtered_tab ][ $filtered_section][ $setting_key ] ) ) {
+		$setting_details = $settings[ $filtered_tab ][ $filtered_section][ $setting_key ];
+	}
+
+	return $setting_details;
 }
 
 /**
@@ -2177,7 +2222,7 @@ function edd_email_callback( $args ) {
 function edd_number_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
 
-	if ( $edd_option ) {
+	if ( is_numeric( $edd_option ) ) {
 		$value = $edd_option;
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';
