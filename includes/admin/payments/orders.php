@@ -885,9 +885,9 @@ function edd_order_details_attributes( $order ) {
 				</div>
 
 				<div class="edd-admin-box-inside">
-					<label for="edd_payment_time_hour" class="label">
+					<span class="label">
 						<?php echo esc_html( __( 'Time', 'easy-digital-downloads' ) . ' (' . edd_get_timezone_abbr() . ')' ); ?>
-					</label>
+					</span>
 
 					<label for="edd_payment_time_hour" class="screen-reader-text">Hour</label>
 					<?php
