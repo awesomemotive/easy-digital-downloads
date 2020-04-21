@@ -391,76 +391,95 @@ function edd_order_details_addresses( $order ) {
 			<div class="input-wrap customer-address-select-wrap">
 			</div>
 
-			<div class="input-wrap">
-				<label for="edd_order_address_address"><?php esc_html_e( 'Line 1:', 'easy-digital-downloads' ); ?></label>
-				<input type="text" name="edd_order_address[address]" id="edd_order_address_address" value="<?php echo esc_attr( $address->address ); ?>" />
-			</div>
-
-			<div class="input-wrap">
-				<label for="edd_order_address_address2"><?php esc_html_e( 'Line 2:', 'easy-digital-downloads' ); ?></label>
-				<input type="text" name="edd_order_address[address2]" id="edd_order_address_address2" value="<?php echo esc_attr( $address->address2 ); ?>" />
-			</div>
-
-			<div class="input-wrap">
-				<label for="edd_order_address_city"><?php echo esc_html_x( 'City:', 'Address City', 'easy-digital-downloads' ); ?></label>
-				<input type="text" name="edd_order_address[city]" id="edd_order_address_city" value="<?php echo esc_attr( $address->city ); ?>" />
-			</div>
-
-			<div class="input-wrap">
-				<label for="edd_order_address_postal_code"><?php echo esc_html_x( 'Zip / Postal Code:', 'Zip / Postal code of address', 'easy-digital-downloads' ); ?></label>
-				<input type="text" name="edd_order_address[postal_code]" id="edd_order_address_postal_code" value="<?php echo esc_attr( $address->postal_code ); ?>" class="med-text" />
-			</div>
-
-			<div class="input-wrap">
-				<label for="edd_order_address_country"><?php echo esc_html_x( 'Country:', 'Address country', 'easy-digital-downloads' ); ?></label>
-				<div id="edd-order-address-country-wrap">
-					<?php
-					echo EDD()->html->select( array(
-						'options'          => edd_get_country_list(),
-						'name'             => 'edd_order_address[country]',
-						'id'               => 'edd-order-address-country',
-						'class'            => 'edd-order-address-country',
-						'selected'         => esc_attr( $address->country ),
-						'show_option_all'  => false,
-						'show_option_none' => false,
-						'chosen'           => true,
-						'placeholder'      => esc_html__( 'Select a country', 'easy-digital-downloads' ),
-						'data'             => array(
-							'nonce'              => wp_create_nonce( 'edd-country-field-nonce' ),
-							'search-type'        => 'no_ajax',
-							'search-placeholder' => esc_html__( 'Search Countries', 'easy-digital-downloads' ),
-						),
-					) ); // WPCS: XSS ok.
-					?>
+			<div class="edd-form-group">
+				<label for="edd_order_address_address" class="edd-form-group__label"><?php esc_html_e( 'Line 1:', 'easy-digital-downloads' ); ?></label>
+				<div class="edd-form-group__control">
+					<input type="text" name="edd_order_address[address]" id="edd_order_address_address" class="edd-form-group__input regular-text" value="<?php echo esc_attr( $address->address ); ?>" />
 				</div>
 			</div>
 
-			<div class="input-wrap">
-				<label for="edd_order_address_region"><?php echo esc_html_x( 'Region:', 'Region of address', 'easy-digital-downloads' ); ?></label>
-				<div id="edd-order-address-state-wrap">
+			<div class="edd-form-group">
+				<label for="edd_order_address_address2" class="edd-form-group__label"><?php esc_html_e( 'Line 2:', 'easy-digital-downloads' ); ?></label>
+				<div class="edd-form-group__control">
+					<input type="text" name="edd_order_address[address2]" class="edd-form-group__input regular-text" id="edd_order_address_address2" value="<?php echo esc_attr( $address->address2 ); ?>" />
+				</div>
+			</div>
+
+			<div class="edd-form-group">
+				<label for="edd_order_address_city" class="edd-form-group__label"><?php echo esc_html_x( 'City:', 'Address City', 'easy-digital-downloads' ); ?></label>
+				<div class="edd-form-group__control">
+					<input type="text" name="edd_order_address[city]" class="edd-form-group__input regular-text" id="edd_order_address_city" value="<?php echo esc_attr( $address->city ); ?>" />
+				</div>
+			</div>
+
+
+			<div class="edd-form-group">
+				<label for="edd_order_address_postal_code" class="edd-form-group__label"><?php echo esc_html_x( 'Zip / Postal Code:', 'Zip / Postal code of address', 'easy-digital-downloads' ); ?></label>
+				<div class="edd-form-group__control">
+					<input type="text" name="edd_order_address[postal_code]" class="edd-form-group__input regular-text" id="edd_order_address_postal_code" value="<?php echo esc_attr( $address->postal_code ); ?>" class="med-text" />
+				</div>
+			</div>
+
+			<div class="edd-form-group">
+				<label for="edd_order_address_country" class="edd-form-group__label"><?php echo esc_html_x( 'Country:', 'Address country', 'easy-digital-downloads' ); ?></label>
+				<div class="edd-form-group__control">
+					<!-- <div id="edd-order-address-country-wrap"> -->
 					<?php
-					$states = edd_get_shop_states( $address->country );
-					if ( ! empty( $states ) ) {
-						echo EDD()->html->select( array(
-							'options'          => $states,
-							'name'             => 'edd_order_address[region]',
-							'id'               => 'edd-order-address-region',
-							'class'            => 'edd-order-address-region',
-							'selected'         => esc_attr( $address->region ),
+					echo EDD()->html->select(
+						array(
+							'options'          => edd_get_country_list(),
+							'name'             => 'edd_order_address[country]',
+							'id'               => 'edd-order-address-country',
+							'class'            => 'edd-order-address-country edd-form-group__input',
+							'selected'         => esc_attr( $address->country ),
 							'show_option_all'  => false,
 							'show_option_none' => false,
 							'chosen'           => true,
-							'placeholder'      => esc_html__( 'Select a region', 'easy-digital-downloads' ),
+							'placeholder'      => esc_html__( 'Select a country', 'easy-digital-downloads' ),
 							'data'             => array(
+								'nonce'              => wp_create_nonce( 'edd-country-field-nonce' ),
 								'search-type'        => 'no_ajax',
-								'search-placeholder' => esc_html__( 'Search Regions', 'easy-digital-downloads' ),
+								'search-placeholder' => esc_html__( 'Search Countries', 'easy-digital-downloads' ),
 							),
-						) ); // WPCS: XSS ok.
-					} else { ?>
-						<input type="text" name="edd_order_address[region]" value="<?php echo esc_attr( $address->region ); ?>" />
-						<?php
-					} ?>
+						)
+					); // WPCS: XSS ok.
+					?>
+				<!-- </div> -->
 				</div>
+			</div>
+
+			<div class="edd-form-group">
+				<label for="edd_order_address_region" class="edd-form-group__label"><?php echo esc_html_x( 'Region:', 'Region of address', 'easy-digital-downloads' ); ?></label>
+				<!-- <div id="edd-order-address-state-wrap"> -->
+				<div class="edd-form-group__control">
+					<?php
+					$states = edd_get_shop_states( $address->country );
+					if ( ! empty( $states ) ) {
+						echo EDD()->html->select(
+							array(
+								'options'          => $states,
+								'name'             => 'edd_order_address[region]',
+								'id'               => 'edd-order-address-region',
+								'class'            => 'edd-order-address-region edd-form-group__input',
+								'selected'         => esc_attr( $address->region ),
+								'show_option_all'  => false,
+								'show_option_none' => false,
+								'chosen'           => true,
+								'placeholder'      => esc_html__( 'Select a region', 'easy-digital-downloads' ),
+								'data'             => array(
+									'search-type'        => 'no_ajax',
+									'search-placeholder' => esc_html__( 'Search Regions', 'easy-digital-downloads' ),
+								),
+							)
+						); // WPCS: XSS ok.
+					} else {
+						?>
+						<input type="text" name="edd_order_address[region]" class="edd-form-group__input" value="<?php echo esc_attr( $address->region ); ?>" />
+						<?php
+					}
+					?>
+				</div>
+				<!-- </div> -->
 			</div>
 
 			<input type="hidden" name="edd_order_address[address_id]" value="<?php echo esc_attr( $address->id ); ?>" />
@@ -468,7 +487,8 @@ function edd_order_details_addresses( $order ) {
 
 	</div><!-- /#edd-order-address -->
 
-	<?php do_action( 'edd_payment_billing_details', $order->id );
+	<?php
+	do_action( 'edd_payment_billing_details', $order->id );
 }
 
 /**
