@@ -800,7 +800,8 @@ function edd_customers_view( $customer = null ) {
 						<div class="add-customer-email-wrapper">
 							<input type="hidden" name="customer-id" value="<?php echo esc_attr( $customer->id ); ?>" />
 							<?php wp_nonce_field( 'edd-add-customer-email', 'add_email_nonce', false, true ); ?>
-							<input type="email" name="additional-email" value="" placeholder="<?php esc_html_e( 'Email Address', 'easy-digital-downloads' ); ?>" />&nbsp;
+							<label class="screen-reader-text" for="edd-additional-email"><?php esc_html_e( 'Email Address', 'easy-digital-downloads' ); ?></label>
+							<input type="email" name="additional-email" id="edd-additional-email" value="" placeholder="<?php esc_html_e( 'Email Address', 'easy-digital-downloads' ); ?>" />&nbsp;
 							<input type="checkbox" name="make-additional-primary" value="1" id="make-additional-primary" />&nbsp;<label for="make-additional-primary"><?php esc_html_e( 'Make Primary', 'easy-digital-downloads' ); ?></label>
 						</div>
 					</td>
