@@ -47,6 +47,8 @@ jQuery( document ).ready( function( $ ) {
 			// Maybe re-Chosen
 			rents.find( 'div.chosen-container' ).css( 'width', '100%' );
 
+			// Add the current "link" to the page URL
+			window.history.pushState( 'object or string', '', href );
 		}
 	); // click()
 } );
