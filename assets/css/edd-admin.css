@@ -3238,7 +3238,8 @@ body.download_page_edd-reports {
 .edd-vertical-sections .section-nav li a:hover,
 .edd-vertical-sections .section-nav li a:focus {
 	box-shadow: inset 5px 0;
-	transition: all .5s;
+	outline: 0;
+	transition: all .25s;
 }
 
 .edd-vertical-sections .section-nav .section-title--is-active a:after {
