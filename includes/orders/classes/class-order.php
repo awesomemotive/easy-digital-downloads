@@ -27,8 +27,8 @@ defined( 'ABSPATH' ) || exit;
  * @property string $status
  * @property string $date_created
  * @property string $date_modified
- * @property string $date_completed
- * @property string $date_refundable
+ * @property string|null $date_completed
+ * @property string|null $date_refundable
  * @property int $user_id
  * @property int $customer_id
  * @property string $email
@@ -107,7 +107,7 @@ class Order extends Rows\Order {
 	 * Date completed.
 	 *
 	 * @since 3.0
-	 * @var   string
+	 * @var   string|null
 	 */
 	protected $date_completed;
 
@@ -115,7 +115,7 @@ class Order extends Rows\Order {
 	 * Date refundable.
 	 *
 	 * @since 3.0
-	 * @var   string
+	 * @var   string|null
 	 */
 	protected $date_refundable;
 
