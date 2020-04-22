@@ -996,7 +996,7 @@ function edd_order_details_attributes( $order ) {
 					<label for="edd-payment-date" class="label">
 						<?php esc_html_e( 'Date', 'easy-digital-downloads' ); ?>
 					</label>
-					<input type="text" id="edd-payment-date" name="edd-payment-date" value="<?php echo esc_attr( $order_date->format( 'Y-m-d' ) ); ?>" class="medium-text edd_datepicker" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
+					<input type="text" id="edd-payment-date" name="edd-payment-date" value="<?php echo esc_attr( $order_date->format( 'Y-m-d' ) ); ?>" class="edd_datepicker" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
 
 				</div>
 
