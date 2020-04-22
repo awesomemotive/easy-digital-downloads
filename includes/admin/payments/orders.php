@@ -955,26 +955,30 @@ function edd_order_details_attributes( $order ) {
 		<div class="inside">
 			<div class="edd-order-update-box edd-admin-box">
 				<div class="edd-admin-box-inside">
-					<label for="edd_payment_status" class="label label--has-tip">
-						<?php
-						esc_html_e( 'Status', 'easy-digital-downloads' );
+					<div class="edd-form-group">
+						<label for="edd_payment_status" class="edd-form-group__label">
+							<?php
+							esc_html_e( 'Status', 'easy-digital-downloads' );
 
-						$status_help  = '<ul>';
-						$status_help .= '<li>' . __( '<strong>Pending</strong>: order is still processing or was abandoned by customer. Successful orders will be marked as Complete automatically once processing is finalized.', 'easy-digital-downloads' ) . '</li>';
-						$status_help .= '<li>' . __( '<strong>Complete</strong>: all processing is completed for this purchase.', 'easy-digital-downloads' ) . '</li>';
-						$status_help .= '<li>' . __( '<strong>Revoked</strong>: access to purchased items is disabled, perhaps due to policy violation or fraud.', 'easy-digital-downloads' ) . '</li>';
-						$status_help .= '<li>' . __( '<strong>Refunded</strong>: the purchase amount is returned to the customer and access to items is disabled.', 'easy-digital-downloads' ) . '</li>';
-						$status_help .= '<li>' . __( '<strong>Abandoned</strong>: the purchase attempt was not completed by the customer.', 'easy-digital-downloads' ) . '</li>';
-						$status_help .= '<li>' . __( '<strong>Failed</strong>: customer clicked Cancel before completing the purchase.', 'easy-digital-downloads' ) . '</li>';
-						$status_help .= '</ul>';
-						?>
-						<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo $status_help; // WPCS: XSS ok. ?>"></span>
-					</label>
-					<select name="edd-payment-status" id="edd_payment_status" class="edd-select-chosen <?php echo esc_attr( $rtl_class ); ?>">
-						<?php foreach ( edd_get_payment_statuses() as $key => $status ) : ?>
-							<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $order->status, $key, true ); ?>><?php echo esc_html( $status ); ?></option>
-						<?php endforeach; ?>
-					</select>
+							$status_help  = '<ul>';
+							$status_help .= '<li>' . __( '<strong>Pending</strong>: order is still processing or was abandoned by customer. Successful orders will be marked as Complete automatically once processing is finalized.', 'easy-digital-downloads' ) . '</li>';
+							$status_help .= '<li>' . __( '<strong>Complete</strong>: all processing is completed for this purchase.', 'easy-digital-downloads' ) . '</li>';
+							$status_help .= '<li>' . __( '<strong>Revoked</strong>: access to purchased items is disabled, perhaps due to policy violation or fraud.', 'easy-digital-downloads' ) . '</li>';
+							$status_help .= '<li>' . __( '<strong>Refunded</strong>: the purchase amount is returned to the customer and access to items is disabled.', 'easy-digital-downloads' ) . '</li>';
+							$status_help .= '<li>' . __( '<strong>Abandoned</strong>: the purchase attempt was not completed by the customer.', 'easy-digital-downloads' ) . '</li>';
+							$status_help .= '<li>' . __( '<strong>Failed</strong>: customer clicked Cancel before completing the purchase.', 'easy-digital-downloads' ) . '</li>';
+							$status_help .= '</ul>';
+							?>
+							<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo $status_help; // WPCS: XSS ok. ?>"></span>
+						</label>
+						<div class="edd-form-group__control">
+							<select name="edd-payment-status" id="edd_payment_status" class="edd-form-group__input edd-select-chosen <?php echo esc_attr( $rtl_class ); ?>">
+							<?php foreach ( edd_get_payment_statuses() as $key => $status ) : ?>
+								<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $order->status, $key, true ); ?>><?php echo esc_html( $status ); ?></option>
+							<?php endforeach; ?>
+							</select>
+						</div>
+					</div>
 				</div>
 
 				<?php if ( ! edd_is_add_order_page() && edd_is_order_recoverable( $order->id ) && ! empty( $recovery_url ) ) : ?>
@@ -1008,16 +1012,18 @@ function edd_order_details_attributes( $order ) {
 							</label>
 
 							<?php
-							echo EDD()->html->select( array(
-								'name'             => 'edd-payment-time-hour',
-								'id'               => 'edd-payment-time-hour',
-								'options'          => edd_get_hour_values(),
-								'selected'         => $order_date->format( 'H' ),
-								'chosen'           => true,
-								'class'            => 'edd-time',
-								'show_option_none' => false,
-								'show_option_all'  => false,
-							) ); // WPCS: XSS ok.
+							echo EDD()->html->select(
+								array(
+									'name'             => 'edd-payment-time-hour',
+									'id'               => 'edd-payment-time-hour',
+									'options'          => edd_get_hour_values(),
+									'selected'         => $order_date->format( 'H' ),
+									'chosen'           => true,
+									'class'            => 'edd-time edd-form-group__input',
+									'show_option_none' => false,
+									'show_option_all'  => false,
+								)
+							); // WPCS: XSS ok.
 							?>
 							:
 
@@ -1025,15 +1031,17 @@ function edd_order_details_attributes( $order ) {
 								<?php esc_html_e( 'Minute', 'easy-digital-downloads' ); ?>
 							</label>
 							<?php
-							echo EDD()->html->select( array(
-								'name'             => 'edd-payment-time-min',
-								'options'          => edd_get_minute_values(),
-								'selected'         => $order_date->format( 'i' ),
-								'chosen'           => true,
-								'class'            => 'edd-time',
-								'show_option_none' => false,
-								'show_option_all'  => false,
-							) ); // WPCS: XSS ok.
+							echo EDD()->html->select(
+								array(
+									'name'             => 'edd-payment-time-min',
+									'options'          => edd_get_minute_values(),
+									'selected'         => $order_date->format( 'i' ),
+									'chosen'           => true,
+									'class'            => 'edd-time edd-form-group__input',
+									'show_option_none' => false,
+									'show_option_all'  => false,
+								)
+							); // WPCS: XSS ok.
 							?>
 						</div>
 					</fieldset>
