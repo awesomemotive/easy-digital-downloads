@@ -161,7 +161,10 @@ function edd_refund_order( $order_id = 0, $order_items = array() ) {
 		return false;
 	}
 
-	if ( ! edd_is_order_refundable( $order_id ) ) {
+	if (
+		false === edd_is_order_refundable( $order_id ) &&
+		false === edd_is_order_refundable_by_override( $order->id )
+	) {
 		return false;
 	}
 
