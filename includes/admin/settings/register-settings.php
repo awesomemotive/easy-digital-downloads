@@ -509,6 +509,14 @@ function edd_get_registered_settings() {
 						'tooltip_title' => __( 'Refunds', 'easy-digital-downloads' ),
 						'tooltip_desc'  => __( 'As a shop owner, sometimes refunds are necessary. Use these settings to decide how refunds will work in your shop.', 'easy-digital-downloads' ),
 					),
+					'refundability' => array(
+						'id'      => 'refundability',
+						'name'    => __( 'Default Status', 'easy-digital-downloads' ),
+						'desc'    => __( 'Products without an explicit setting will default to this.', 'easy-digital-downloads' ),
+						'type'    => 'select',
+						'std'     => 'refundable',
+						'options' => edd_get_refundability_types(),
+					),
 					'refund_window' => array(
 						'id'   => 'refund_window',
 						'name' => __( 'Refund Window', 'easy-digital-downloads' ),
@@ -518,16 +526,8 @@ function edd_get_registered_settings() {
 						'size' => 'small',
 						'max'  => 3650, // Ten year maximum, because why explicitly support longer
 						'min'  => 0,
-						'step' => 1
+						'step' => 1,
 					),
-					'refundability' => array(
-						'id'      => 'refundability',
-						'name'    => __( 'Product Refundability', 'easy-digital-downloads' ),
-						'desc'    => __( 'By default, products without an explicit setting will default to this.', 'easy-digital-downloads' ),
-						'type'    => 'select',
-						'std'     => 'refundable',
-						'options' => edd_get_refundability_types()
-					)
 				),
 				'api' => array(
 					'api_settings' => array(

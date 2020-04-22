@@ -138,7 +138,6 @@ function edd_download_meta_box_save( $post_id, $post ) {
 			}
 
 			update_post_meta( $post_id, $field, $new_default_price_id );
-
 		} else {
 
 			if ( isset( $_POST[ $field ] ) ) {
@@ -919,33 +918,49 @@ function edd_render_refund_row( $post_id ) {
 	$global_ability    = edd_get_option( 'refundability', 'refundable' );
 	$refundability     = isset( $types[ $global_ability ] ) ? $types[ $global_ability ] : __( 'Unknown', 'easy-digital-downloads' );
 	$global_window     = edd_get_option( 'refund_window', 30 );
-	$edd_refundability = edd_get_download_refundability( $post_id );
 	$edd_refund_window = edd_get_download_refund_window( $post_id ); ?>
 
 	<div class="edd-product-options-wrapper">
-		<p><strong><?php _e( 'Refundability', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Refundability</strong>: Allow or disallow refunds for this specific product. When allowed, the refund window will be used on all future purchases.', 'easy-digital-downloads' ); ?>"></span></strong></p>
-		<p><?php echo EDD()->html->select( array(
-			'name'     => '_edd_refundability',
-			'options'  => $types,
-			'selected' => $edd_refundability,
-			'chosen'   => true,
+		<p>
+			<strong>
+				<?php esc_html_e( 'Refunds', 'easy-digital-downloads' ); ?>
+				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo wp_kses( __( '<strong>Refundable</strong>: Allow or disallow refunds for this specific product. When allowed, the refund window will be used on all future purchases.<br /><strong>Refund Window</strong>: Limit the number of days this product can be refunded after purchasing.', 'easy-digital-downloads' ), array( 'strong' => true, 'br' => true ) ); ?>"></span>
+			</strong>
+		</p>
 
-			'show_option_all'  => false,
-			'show_option_none' => '&mdash; ' . __( 'Use default', 'easy-digital-downloads' ) . ' &mdash;'
-		) ); ?></p>
 		<p>
-			<?php printf( __( 'Overrides default: %s', 'easy-digital-downloads' ), $refundability ); ?>
-		</p>
-	</div>
-	<div class="edd-product-options-wrapper">
-		<p><strong><?php _e( 'Refund Window', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Refund Window</strong>: Limit the number of days this product can be refunded after purchasing.', 'easy-digital-downloads' ); ?>"></span></strong></p>
-		<p>
-			<label>
-				<input class="small-text" name="_edd_refund_window" type="number" min="0" max="3650" step="1" value="<?php echo esc_attr( $edd_refund_window ); ?>" placeholder="<?php echo absint( $global_window ); ?>" />
-				<?php _e( 'Days', 'easy-digital-downloads' ); ?>
+			<label for="_edd_refundability" class="label--block">
+				<?php esc_html_e( 'Refund Status', 'easy-digital-downloads' ); ?>
 			</label>
+			<?php echo EDD()->html->select( array(
+				'name'             => '_edd_refundability',
+				'options'          => array_merge(
+					// Manually define a "none" option to set a blank value, vs. -1.
+					array(
+						'' => sprintf(
+							/** translators: Default refund status */
+							esc_html_x( 'Default (%1$s)', 'Download refund status', 'easy-digital-downloads' ),
+							ucwords( $refundability )
+						),
+					),
+					$types
+				),
+				// Use the direct meta value to avoid falling back to default.
+				'selected'         => get_post_meta( $post_id, '_edd_refundability', true ),
+				'show_option_all'  => '',
+				'show_option_none' => '',
+			) ); ?>
 		</p>
+
 		<p>
+			<label for="_edd_refund_window" class="label--block">
+				<?php esc_html_e( 'Refund Window', 'easy-digital-downloads' ); ?>
+			</label>
+			<input class="small-text" id="_edd_refund_window" name="_edd_refund_window" type="number" min="0" max="3650" step="1" value="<?php echo esc_attr( $edd_refund_window ); ?>" placeholder="<?php echo absint( $global_window ); ?>" />
+			<?php echo esc_html( _x( 'Days', 'refund window interval', 'easy-digital-downloads' ) ); ?>
+		</p>
+
+		<p class="description">
 			<?php _e( 'Leave blank to use global setting. Enter <code>0</code> for unlimited', 'easy-digital-downloads' ); ?>
 		</p>
 	</div>
