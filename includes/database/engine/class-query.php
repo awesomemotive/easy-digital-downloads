@@ -1898,8 +1898,8 @@ class Query extends Base {
 		// Loop through item attributes
 		foreach ( $item as $key => $value ) {
 
-			// Always strip slashes from all values
-			$value    = stripslashes( $value );
+			// Always strip slashes from non-null values
+			$value    = is_null( $value ) ? null : stripslashes( $value );
 
 			// Get callback for column
 			$callback = $this->get_column_field( array( 'name' => $key ), 'validate' );
