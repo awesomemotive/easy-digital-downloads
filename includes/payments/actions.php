@@ -39,8 +39,8 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 
 	$order = edd_get_order( $order_id );
 
-	$completed_date = '0000-00-00 00:00:00' === $order->date_completed
-		? ''
+	$completed_date = empty( $order->date_completed )
+		? null
 		: $order->date_completed;
 
 	$customer_id = $order->customer_id;
@@ -148,7 +148,7 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 	}
 
 	// Ensure this action only runs once ever
-	if ( empty( $completed_date ) || '0000-00-00 00:00:00' === $completed_date ) {
+	if ( empty( $completed_date ) ) {
 		$date = EDD()->utils->date()->format( 'mysql' );
 
 		$date_refundable = edd_get_refund_date( $date );
