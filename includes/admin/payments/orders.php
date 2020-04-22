@@ -733,12 +733,12 @@ function edd_order_details_adjustments( $order ) {
 				<ul>
 				<div class="edd-form-group">
 					<li class="credit" style="display: none;">
-						<label for="edd_add_order_credit_description screen-reader-text"><?php echo esc_html_e( 'Description', 'easy-digital-downloads' ); ?></label>
+						<label for="edd_add_order_credit_description" class="screen-reader-text"><?php echo esc_html_e( 'Description', 'easy-digital-downloads' ); ?></label>
 					<div class="edd-form-group__control">
 						<input type="text" class="edd-add-order-credit-description" value="" id="edd_add_order_credit_description" placeholder="<?php echo esc_attr( 'Description', 'easy-digital-downloads' ); ?>" />
 				</div>
 				<div class="edd-form-group">
-						<label for="amount screen-reader-text"><?php echo esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></label>
+						<label for="edd_add_order_credit_amount" class="screen-reader-text"><?php echo esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></label>
 					<div class="edd-form-group__control">
 						<input type="text" class="edd-add-order-credit-amount" value="" id="edd_add_order_credit_amount" min="1" placeholder="<?php echo esc_attr( 'Amount', 'easy-digital-downloads' ); ?>" />
 					</div>
