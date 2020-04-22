@@ -47,7 +47,7 @@ $is_override    = edd_is_order_refundable_by_override( $order->id );
 	<div class="edd-order-overview-actions__refund">
 		<?php if ( false === $is_refundable ) : ?>
 			<?php if ( true === $is_override ) : ?>
-				<span class="edd-help-tip dashicons dashicons-unlock" title="<?php esc_attr_e( 'The refund window for this Order has passed but you have the ability to override this.', 'easy-digital-downloads' ); ?>"></span>
+				<span class="edd-help-tip dashicons dashicons-unlock" title="<?php esc_attr_e( 'The refund window for this Order has passed; however, you have the ability to override this.', 'easy-digital-downloads' ); ?>"></span>
 			<?php else : ?>
 				<span class="edd-help-tip dashicons dashicons-lock" title="<?php esc_attr_e( 'The refund window for this Order has passed.', 'easy-digital-downloads' ); ?>"></span>
 			<?php endif; ?>
