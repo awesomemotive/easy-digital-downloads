@@ -388,7 +388,7 @@ function edd_order_details_addresses( $order ) {
 		<div class="order-data-address">
 			<h3><?php esc_html_e( 'Billing Address', 'easy-digital-downloads' ); ?></h3>
 
-			<div class="input-wrap customer-address-select-wrap">
+			<div class="customer-address-select-wrap">
 			</div>
 
 			<div class="edd-form-group">
