@@ -1266,8 +1266,6 @@ function edd_settings_sanitize( $input = array() ) {
 					}
 					break;
 				case 'number':
-					echo '<pre>';
-
 					if ( array_key_exists( $key, $output ) && ! array_key_exists( $key, $input ) ) {
 						unset( $output[ $key ] );
 					}
