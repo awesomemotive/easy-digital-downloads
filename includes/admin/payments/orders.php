@@ -588,9 +588,9 @@ function edd_order_details_items( $order ) {
 
 		<?php if ( edd_is_add_order_page() ) : ?>
 			<div class="edd-add-download-to-purchase">
-				<ul>
-					<li class="download">
-						<div class="edd-form-group">
+				<div class="edd-form-group">
+					<ul>
+						<li class="download">
 							<label for="edd_order_add_download_select" class="edd-form-group__label edd-order-details-label-mobile"><?php printf( esc_html_x( '%s To Add', 'order details select item to add - mobile', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
 						<div class="edd-form-group__control">
 							<?php
@@ -668,59 +668,82 @@ function edd_order_details_adjustments( $order ) {
 
 		<?php if ( edd_is_add_order_page() ) : ?>
 			<div class="edd-add-adjustment-to-purchase">
+			<div class="edd-form-group">
 				<ul>
 					<li class="adjustment">
-						<label for="edd_order_add_adjustment_select" class="edd-order-details-label-mobile"><?php echo esc_html_x( 'Adjustment To Add', 'order details select adjustment to add - mobile', 'easy-digital-downloads' ); ?></label>
-
-						<?php echo EDD()->html->select( array(
-							'name'             => 'edd-order-add-adjustment-select',
-							'id'               => 'edd-order-add-adjustment-select',
-							'class'            => 'edd-order-add-adjustment-select',
-							'options'          => array(
-								''         => '', // Empty  option needed to display placeholder.
-								'discount' => __( 'Discount', 'easy-digital-downloads' ),
-								'credit'   => __( 'Credit', 'easy-digital-downloads' ),
-							),
-							'placeholder'      => __( 'Choose an Adjustment Type', 'easy-digital-downloads' ),
-							'show_option_all'  => false,
-							'show_option_none' => false,
-							'chosen'           => true,
-						) ); // WPCS: XSS ok. ?>
+						<label for="edd_order_add_adjustment_select" class="edd-form-group__label edd-order-details-label-mobile"><?php echo esc_html_x( 'Adjustment To Add', 'order details select adjustment to add - mobile', 'easy-digital-downloads' ); ?></label>
+					<div class="edd-form-group__control">
+						<?php
+						echo EDD()->html->select(
+							array(
+								'name'             => 'edd-order-add-adjustment-select',
+								'id'               => 'edd-order-add-adjustment-select',
+								'class'            => 'edd-order-add-adjustment-select edd-form-group__input',
+								'options'          => array(
+									''         => '', // Empty  option needed to display placeholder.
+									'discount' => __( 'Discount', 'easy-digital-downloads' ),
+									'credit'   => __( 'Credit', 'easy-digital-downloads' ),
+								),
+								'placeholder'      => __( 'Choose an Adjustment Type', 'easy-digital-downloads' ),
+								'show_option_all'  => false,
+								'show_option_none' => false,
+								'chosen'           => true,
+							)
+						); // WPCS: XSS ok.
+						?>
+					</div>
 					</li>
 				</ul>
-
+			</div>
+			<div class="edd-form-group">
 				<ul>
 					<li class="discount" style="display: none;">
+						<label for="edd_order_add_discount_select" class="edd-form-group__label screen-reader-text"><?php esc_html_e( 'Discounts', 'easy-ditigal-downloads' ); ?></label>
+					<div class="edd-form-group__control">
 						<?php
-						$d = edd_get_discounts( array(
-							'fields' => array( 'code', 'name' ),
-							'number' => 100,
-						) );
+						$d = edd_get_discounts(
+							array(
+								'fields' => array( 'code', 'name' ),
+								'number' => 100,
+							)
+						);
 
 						$discounts = array();
 
 						foreach ( $d as $discount_data ) {
 							$discounts[ $discount_data->code ] = esc_html( $discount_data->name );
 						}
-
-						echo EDD()->html->discount_dropdown( array(
-							'name'             => 'edd-order-add-discount-select',
-							'class'            => 'edd-order-add-discount-select',
-							'id'               => 'edd-order-add-discount-select',
-							'chosen'           => true,
-							'selected'         => false,
-							'show_option_all'  => false,
-							'show_option_none' => false,
-						) );  // WPCS: XSS ok.
+						echo EDD()->html->discount_dropdown(
+							array(
+								'name'             => 'edd-order-add-discount-select',
+								'class'            => 'edd-order-add-discount-select edd-form-group__input',
+								'id'               => 'edd-order-add-discount-select',
+								'chosen'           => true,
+								'selected'         => false,
+								'show_option_all'  => false,
+								'show_option_none' => false,
+							)
+						);  // WPCS: XSS ok.
 						?>
+					</div>
 					</li>
 				</ul>
-
+			</div>
+			<div class="edd-form-group">
 				<ul>
+				<div class="edd-form-group">
 					<li class="credit" style="display: none;">
-						<input type="text" class="edd-add-order-credit-description" value="" placeholder="<?php echo esc_attr( 'Description', 'easy-digital-downloads' ); ?>" />
-						<input type="text" class="edd-add-order-credit-amount" value="" min="1" placeholder="<?php echo esc_attr( 'Amount', 'easy-digital-downloads' ); ?>" />
+						<label for="edd_add_order_credit_description screen-reader-text"><?php echo esc_html_e( 'Description', 'easy-digital-downloads' ); ?></label>
+					<div class="edd-form-group__control">
+						<input type="text" class="edd-add-order-credit-description" value="" id="edd_add_order_credit_description" placeholder="<?php echo esc_attr( 'Description', 'easy-digital-downloads' ); ?>" />
+				</div>
+				<div class="edd-form-group">
+						<label for="amount screen-reader-text"><?php echo esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></label>
+					<div class="edd-form-group__control">
+						<input type="text" class="edd-add-order-credit-amount" value="" id="edd_add_order_credit_amount" min="1" placeholder="<?php echo esc_attr( 'Amount', 'easy-digital-downloads' ); ?>" />
+					</div>
 					</li>
+				</div>
 				</ul>
 
 				<ul>
@@ -730,11 +753,12 @@ function edd_order_details_adjustments( $order ) {
 						<span class="spinner"></span>
 					</li>
 				</ul>
+				</div>
 			</div>
 		<?php endif; ?>
 	</div>
 
-<?php
+	<?php
 }
 
 /**
