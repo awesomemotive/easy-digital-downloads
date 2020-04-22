@@ -852,17 +852,25 @@ function edd_order_details_extras( $order = false ) {
 				<?php endif; ?>
 
 				<div class="edd-order-payment-key edd-admin-box-inside">
-					<label for="edd_payment_key" class="label"><?php esc_html_e( 'Key', 'easy-digital-downloads' ); ?></label>
-					<input type="text" name="payment_key" id="edd_payment_key" <?php echo esc_attr( $readonly ); ?> value="<?php echo esc_attr( $order->payment_key ); ?>" />
+					<div class="edd-form-group">
+						<label for="edd_payment_key" class="edd-form-group__label label"><?php esc_html_e( 'Key', 'easy-digital-downloads' ); ?></label>
+						<div class="edd-form-group__control">
+							<input type="text" name="payment_key" id="edd_payment_key" class="edd-form-group__input" <?php echo esc_attr( $readonly ); ?> value="<?php echo esc_attr( $order->payment_key ); ?>" />
+						</div>
+					</div>
 				</div>
 
 				<div class="edd-order-ip edd-admin-box-inside">
-					<label for="edd_ip" class="label"><?php esc_html_e( 'IP', 'easy-digital-downloads' ); ?></label>
-					<?php if ( edd_is_add_order_page() ) : ?>
-						<input type="text" name="ip" id="edd_ip" value="<?php echo esc_attr( edd_get_ip() ); ?>" />
-					<?php else : ?>
-						<span><?php echo edd_payment_get_ip_address_url( $order->id ); // WPCS: XSS ok. ?></span>
-					<?php endif; ?>
+					<div class="edd-form-group">
+						<label for="edd_ip" class="edd-form-group__label label"><?php esc_html_e( 'IP', 'easy-digital-downloads' ); ?></label>
+					<div class="edd-form-group__control">
+						<?php if ( edd_is_add_order_page() ) : ?>
+							<input type="text" name="ip" id="edd_ip" class="edd-form-group__input" value="<?php echo esc_attr( edd_get_ip() ); ?>" />
+						<?php else : ?>
+							<span><?php echo edd_payment_get_ip_address_url( $order->id ); // WPCS: XSS ok. ?></span>
+						<?php endif; ?>
+					</div>
+					</div>
 				</div>
 
 				<?php if ( $transaction_id ) : ?>
@@ -874,26 +882,39 @@ function edd_order_details_extras( $order = false ) {
 
 				<?php if ( edd_is_add_order_page() ) : ?>
 					<div class="edd-order-tx-id edd-admin-box-inside">
-						<label for="edd_transaction_id" class="label"><?php esc_html_e( 'Transaction ID', 'easy-digital-downloads' ); ?></label>
-						<input type="text" name="transaction_id" id="edd_transaction_id" value="" />
+						<div class="edd-form-group">
+							<label for="edd_transaction_id" class="edd-form-group__label label"><?php esc_html_e( 'Transaction ID', 'easy-digital-downloads' ); ?></label>
+							<div class="edd-form-group__control">
+								<input type="text" name="transaction_id" class="edd-form-group__input" id="edd_transaction_id" value="" />
+							</div>
+						</div>
 					</div>
 				<?php endif; ?>
 
 				<div class="edd-unlimited-downloads edd-admin-box-inside">
-					<label for="edd_unlimited_downloads" class="label label--has-tip label--has-checkbox">
-						<input type="checkbox" name="edd-unlimited-downloads" id="edd_unlimited_downloads" value="1"<?php checked( true, $unlimited, true ); ?>/>
-						<?php esc_html_e( 'Unlimited Downloads', 'easy-digital-downloads' ); ?>
-						<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Unlimited Downloads</strong>: checking this box will override all other file download limits for this purchase, granting the customer unliimited downloads of all files included on the purchase.', 'easy-digital-downloads' ); ?>"></span>
-					</label>
+					<div class="edd-form-group">
+						<div class="edd-form-group__control">
+							<input type="checkbox" name="edd-unlimited-downloads" id="edd_unlimited_downloads" class="edd-form-group__input" value="1"<?php checked( true, $unlimited, true ); ?>/>
+
+							<label for="edd_unlimited_downloads">
+							<?php esc_html_e( 'Unlimited Downloads', 'easy-digital-downloads' ); ?></label>
+							<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Unlimited Downloads</strong>: checking this box will override all other file download limits for this purchase, granting the customer unliimited downloads of all files included on the purchase.', 'easy-digital-downloads' ); ?>"></span>
+						</div>
+					</div>
 				</div>
 
 				<?php if ( edd_is_add_order_page() ) : ?>
 					<div class="edd-send-purchase-receipt edd-admin-box-inside">
-						<label class="description label label--has-tip label--has-checkbox" for="edd-order-send-receipt">
-							<input type="checkbox" name="edd_order_send_receipt" id="edd-order-send-receipt" value="1" />
-							<?php esc_html_e( 'Send Receipt', 'easy-digital-downloads' ); ?>
-							<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Send Receipt</strong>: checking this box will send the purchase receipt to the selected customer.', 'easy-digital-downloads' ); ?>"></span>
-						</label>
+						<div class="edd-form-group">
+							<div class="edd-form-group__control">
+								<input type="checkbox" name="edd_order_send_receipt" id="edd-order-send-receipt" class="edd-form-group__input" value="1" />
+
+								<label for="edd-order-send-receipt">
+								<?php esc_html_e( 'Send Receipt', 'easy-digital-downloads' ); ?>
+								</label>
+								<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Send Receipt</strong>: checking this box will send the purchase receipt to the selected customer.', 'easy-digital-downloads' ); ?>"></span>
+							</div>
+						</div>
 					</div>
 				<?php endif; ?>
 
