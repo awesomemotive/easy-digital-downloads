@@ -851,7 +851,7 @@ function edd_order_details_extras( $order = false ) {
 					</div>
 				<?php endif; ?>
 
-				<div class="edd-order-payment-key edd-admin-box-inside">
+				<div class="edd-admin-box-inside">
 					<div class="edd-form-group">
 						<label for="edd_payment_key" class="edd-form-group__label label"><?php esc_html_e( 'Key', 'easy-digital-downloads' ); ?></label>
 						<div class="edd-form-group__control">
