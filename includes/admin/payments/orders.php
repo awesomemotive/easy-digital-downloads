@@ -699,6 +699,32 @@ function edd_order_details_overview( $order ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/views/tmpl-order-' . $tmpl . '.php';
 		echo '</script>';
 	}
+?>
+
+<div id="edd-order-overview" class="postbox edd-edit-purchase-element edd-order-overview">
+	<table id="edd-order-overview-summary" class="widefat wp-list-table edd-order-overview-summary">
+		<thead>
+			<tr>
+				<th class="column-name column-primary"><?php echo esc_html( edd_get_label_singular() ); ?></th>
+				<th class="column-amount"><?php esc_html_e( 'Unit Price', 'easy-digital-downloads' ); ?></th>
+				<?php if ( true === edd_item_quantities_enabled() ) : ?>
+				<th class="column-quantity"><?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?></th>
+				<?php endif; ?>
+				<th class="column-subtotal column-right"><?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></th>
+			</tr>
+		</thead>
+	</table>
+
+	<div id="edd-order-overview-actions" class="edd-order-overview-actions inside">
+	</div>
+</div>
+
+<?php
+
+	/**
+	 * @since unknown
+	 */
+	do_action( 'edd_view_order_details_files_after', $order->id );
 }
 
 /**
