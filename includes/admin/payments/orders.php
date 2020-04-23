@@ -858,7 +858,7 @@ function edd_order_details_extras( $order = false ) {
 
 				<div class="edd-admin-box-inside">
 					<div class="edd-form-group">
-						<label for="edd_payment_key" class="edd-form-group__label label"><?php esc_html_e( 'Key', 'easy-digital-downloads' ); ?></label>
+						<label for="edd_payment_key" class="edd-form-group__label"><?php esc_html_e( 'Key', 'easy-digital-downloads' ); ?></label>
 						<div class="edd-form-group__control">
 							<input type="text" name="payment_key" id="edd_payment_key" class="edd-form-group__input" <?php echo esc_attr( $readonly ); ?> value="<?php echo esc_attr( $order->payment_key ); ?>" />
 						</div>
@@ -867,7 +867,7 @@ function edd_order_details_extras( $order = false ) {
 
 				<div class="edd-order-ip edd-admin-box-inside">
 					<div class="edd-form-group">
-						<label for="edd_ip" class="edd-form-group__label label"><?php esc_html_e( 'IP', 'easy-digital-downloads' ); ?></label>
+						<label for="edd_ip" class="edd-form-group__label"><?php esc_html_e( 'IP', 'easy-digital-downloads' ); ?></label>
 					<div class="edd-form-group__control">
 						<?php if ( edd_is_add_order_page() ) : ?>
 							<input type="text" name="ip" id="edd_ip" class="edd-form-group__input" value="<?php echo esc_attr( edd_get_ip() ); ?>" />
@@ -888,7 +888,7 @@ function edd_order_details_extras( $order = false ) {
 				<?php if ( edd_is_add_order_page() ) : ?>
 					<div class="edd-order-tx-id edd-admin-box-inside">
 						<div class="edd-form-group">
-							<label for="edd_transaction_id" class="edd-form-group__label label"><?php esc_html_e( 'Transaction ID', 'easy-digital-downloads' ); ?></label>
+							<label for="edd_transaction_id" class="edd-form-group__label"><?php esc_html_e( 'Transaction ID', 'easy-digital-downloads' ); ?></label>
 							<div class="edd-form-group__control">
 								<input type="text" name="transaction_id" class="edd-form-group__input" id="edd_transaction_id" value="" />
 							</div>
