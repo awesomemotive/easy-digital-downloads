@@ -987,12 +987,15 @@ function edd_order_details_attributes( $order ) {
 
 				<?php if ( ! edd_is_add_order_page() && edd_is_order_recoverable( $order->id ) && ! empty( $recovery_url ) ) : ?>
 					<div class="edd-admin-box-inside">
-						<span class="label label--has-tip">
-							<?php esc_html_e( 'Recover', 'easy-digital-downloads' ); ?>
-							<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_html_e( 'Pending and abandoned payments can be resumed by the customer, using this custom URL. Payments can be resumed only when they do not have a transaction ID from the gateway.', 'easy-digital-downloads' ); ?>"></span>
-						</span>
-
-						<input type="text" readonly="readonly" value="<?php echo esc_url( $recovery_url ); ?>"/>
+						<div class="edd-form-group">
+							<label class="edd-form-group__label" for="edd_recovery_url">
+								<?php esc_html_e( 'Recover', 'easy-digital-downloads' ); ?>
+								<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_html_e( 'Pending and abandoned payments can be resumed by the customer, using this custom URL. Payments can be resumed only when they do not have a transaction ID from the gateway.', 'easy-digital-downloads' ); ?>"></span>
+							</label>
+							<div class="edd-form-group__control">
+								<input type="text" class="edd-form-group__input" id="edd_recovery_url" readonly="readonly" value="<?php echo esc_url( $recovery_url ); ?>"/>
+							</div>
+						</div>
 					</div>
 				<?php endif; ?>
 
