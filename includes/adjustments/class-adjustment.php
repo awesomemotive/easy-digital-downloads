@@ -168,16 +168,16 @@ class Adjustment extends Base_Object {
 	 *
 	 * @since  3.0
 	 * @access protected
-	 * @var    string
+	 * @var    string|null
 	 */
-	protected $start_date;
+	protected $start_date = null;
 
 	/**
 	 * End Date.
 	 *
 	 * @since  3.0
 	 * @access protected
-	 * @var    string
+	 * @var    string|null
 	 */
-	protected $end_date;
+	protected $end_date = null;
 }
