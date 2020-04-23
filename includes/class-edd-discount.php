@@ -518,7 +518,7 @@ class EDD_Discount extends Adjustment {
 			switch ( $key ) {
 				case 'start_date':
 				case 'end_date':
-					if ( '0000-00-00 00:00:00' === $value ) {
+					if ( '0000-00-00 00:00:00' === $value || is_null( $value ) ) {
 						$this->{$key} = false;
 						break;
 					}

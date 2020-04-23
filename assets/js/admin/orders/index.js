@@ -1,15 +1,21 @@
 /**
  * Internal dependencies
  */
-import './order-items';
-import './order-adjustments';
-import './order-amounts';
+import './order-overview';
 import './order-details';
-import './list-table.js';
 
 import { jQueryReady } from 'utils/jquery.js';
 
 jQueryReady( () => {
+
+	// Move `.update-nag` items below the top header.
+	// `#update-nag` is legacy styling, which core still supports.
+	//
+	// `.notice` items are properly moved, but WordPress core
+	// does not move `.update-nag`.
+	if ( 0 !== $( '.edit-post-editor-regions__header' ).length ) {
+		$( 'div.update-nag, div#update-nag' ).insertAfter( $( '.edit-post-editor-regions__header' ) );
+	}
 
 	// "Validate" order form before submitting.
 	// @todo move somewhere else?
