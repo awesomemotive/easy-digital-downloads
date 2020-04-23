@@ -50,7 +50,7 @@ function edd_add_order_page_content() {
 
 		<?php edd_order_details_publish( $order ); ?>
 
-		<div class="wrap edd-wrap">
+		<div class="wrap edd-wrap edd-clearfix">
 			<h1><?php esc_html_e( 'Add New Order', 'easy-digital-downloads' ); ?></h1>
 
 			<hr class="wp-header-end">
@@ -70,6 +70,26 @@ function edd_add_order_page_content() {
 			<div id="poststuff">
 				<div id="edd-dashboard-widgets-wrap">
 					<div id="post-body" class="metabox-holder columns-2">
+						<div id="postbox-container-2" class="postbox-container">
+							<div id="normal-sortables">
+								<?php
+
+								// Before body.
+								do_action( 'edd_add_order_details_main_before' );
+
+								// Items.
+								edd_order_details_overview( $order );
+
+								// Details sections.
+								edd_order_details_sections( $order );
+
+								// After body.
+								do_action( 'edd_add_order_details_main_after' );
+
+								?>
+							</div>
+						</div>
+
 						<div id="postbox-container-1" class="postbox-container">
 							<div id="side-sortables">
 								<?php
@@ -80,37 +100,11 @@ function edd_add_order_page_content() {
 								// Attributes.
 								edd_order_details_attributes( $order );
 
-								// Amounts.
-								edd_order_details_amounts( $order );
-
 								// Extras.
 								edd_order_details_extras( $order );
 
 								// After sidebar.
 								do_action( 'edd_add_order_details_sidebar_after' );
-
-								?>
-							</div>
-						</div>
-
-						<div id="postbox-container-2" class="postbox-container">
-							<div id="normal-sortables">
-								<?php
-
-								// Before body.
-								do_action( 'edd_add_order_details_main_before' );
-
-								// Items.
-								edd_order_details_items( $order );
-
-								// Adjustments.
-								edd_order_details_adjustments( $order );
-
-								// Details sections.
-								edd_order_details_sections( $order );
-
-								// After body.
-								do_action( 'edd_add_order_details_main_after' );
 
 								?>
 							</div>
@@ -128,9 +122,33 @@ function edd_add_order_page_content() {
 
 			<?php do_action( 'edd_add_order_after' ); ?>
 
-		</div>
+		</div><!-- /.wrap -->
 
 	</form>
+
+	<div
+		id="edd-admin-order-add-item-dialog"
+		title="<?php esc_attr_e( 'Add Download', 'easy-digital-downloads' ); ?>"
+		style="display: none;"
+	>
+		<div id="edd-admin-order-add-item-dialog-content"></div>
+	</div>
+
+	<div
+		id="edd-admin-order-add-discount-dialog"
+		title="<?php esc_attr_e( 'Add Discount', 'easy-digital-downloads' ); ?>"
+		style="display: none;"
+	>
+		<div id="edd-admin-order-add-discount-dialog-content"></div>
+	</div>
+
+	<div
+		id="edd-admin-order-add-adjustment-dialog"
+		title="<?php esc_attr_e( 'Add Adjustment', 'easy-digital-downloads' ); ?>"
+		style="display: none;"
+	>
+		<div id="edd-admin-order-add-adjustment-dialog-content"></div>
+	</div>
 
 <?php
 }

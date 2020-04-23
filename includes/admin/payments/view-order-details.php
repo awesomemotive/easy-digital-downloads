@@ -34,7 +34,7 @@ if ( empty( $order ) ) {
 
 	<?php edd_order_details_publish( $order ); ?>
 
-	<div class="wrap edd-wrap">
+	<div class="wrap edd-wrap edd-clearfix">
 		<h1><?php printf( __( 'Edit Order: %s', 'easy-digital-downloads' ), $order->number ); ?></h1>
 
 		<hr class="wp-header-end">
@@ -60,6 +60,29 @@ if ( empty( $order ) ) {
 		<div id="poststuff">
 			<div id="edd-dashboard-widgets-wrap">
 				<div id="post-body" class="metabox-holder columns-2">
+					<div id="postbox-container-2" class="postbox-container">
+						<div id="normal-sortables">
+							<?php
+
+							// Before body
+							do_action( 'edd_view_order_details_main_before', $order->id );
+
+							// Overview
+							edd_order_details_overview( $order );
+
+							// Details sections
+							edd_order_details_sections( $order );
+
+							// Legacy hook from pre version 3 of Easy Digital Downloads.
+							do_action( 'edd_view_order_details_billing_after', $order->id );
+
+							// After body
+							do_action( 'edd_view_order_details_main_after', $order->id );
+
+							?>
+						</div>
+					</div>
+
 					<div id="postbox-container-1" class="postbox-container">
 						<div id="side-sortables">
 							<?php
@@ -70,9 +93,6 @@ if ( empty( $order ) ) {
 							// Attributes
 							edd_order_details_attributes( $order );
 
-							// Amounts
-							edd_order_details_amounts( $order );
-
 							// Related Refunds
 							edd_order_details_refunds( $order );
 
@@ -81,32 +101,6 @@ if ( empty( $order ) ) {
 
 							// After sidebar
 							do_action( 'edd_view_order_details_sidebar_after', $order->id );
-
-							?>
-						</div>
-					</div>
-
-					<div id="postbox-container-2" class="postbox-container">
-						<div id="normal-sortables">
-							<?php
-
-							// Before body
-							do_action( 'edd_view_order_details_main_before', $order->id );
-
-							// Items
-							edd_order_details_items( $order );
-
-							// Adjustments
-							edd_order_details_adjustments( $order );
-
-							// Details sections
-							edd_order_details_sections( $order );
-
-							// Legacy hook from pre version 3 of Easy Digital Downloads.
-							do_action( 'edd_view_order_details_billing_after', $order->id );
-
-							// After body
-							do_action( 'edd_view_order_details_main_after', $order->id );
 
 							?>
 						</div>
@@ -129,5 +123,12 @@ if ( empty( $order ) ) {
 
 </form>
 
-<div id="edd-download-link" title="<?php _e( 'Download Links', 'easy-digital-downloads' ); ?>"></div>
 <div id="edd-refund-order-dialog" title="<?php _e( 'Submit Refund', 'easy-digital-downloads' ); ?>"></div>
+
+<div
+	id="edd-admin-order-copy-download-link-dialog"
+	title="<?php echo esc_html( sprintf( __( 'Copy %s Links', 'easy-digital-downloads' ), edd_get_label_singular() ) ); ?>"
+	style="display: none;"
+>
+	<div id="edd-admin-order-copy-download-link-dialog-content"></div>
+</div>
