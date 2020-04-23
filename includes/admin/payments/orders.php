@@ -839,17 +839,16 @@ function edd_order_details_extras( $order = false ) {
 			<div class="edd-admin-box">
 				<?php do_action( 'edd_view_order_details_payment_meta_before', $order->id ); ?>
 
-				<?php if ( ! edd_is_add_order_page() && ! empty( $order->id ) ) : ?>
-					<?php if ( ! empty( $order->gateway ) ) : ?>
-						<div class="edd-order-gateway edd-admin-box-inside edd-admin-box-inside--row">
-							<div class="edd-form-group">
-								<label for="edd_gateway" class="edd-form-group__label"><?php esc_html_e( 'Gateway', 'easy-digital-downloads' ); ?></label>
-								<div class="edd-form-group__control">
-									<input class="edd-form-group__input" id="edd_gateway"><?php echo edd_get_gateway_admin_label( $order->gateway ); ?>/>
-								</div>
+
+				<?php if ( ! edd_is_add_order_page() ) : ?>
+					<div class="edd-order-gateway edd-admin-box-inside edd-admin-box-inside--row">
+						<div class="edd-form-group">
+							<label for="edd_gateway" class="edd-form-group__label"><?php esc_html_e( 'Gateway', 'easy-digital-downloads' ); ?></label>
+							<div class="edd-form-group__control">
+								<input class="edd-form-group__input" id="edd_gateway"><?php echo edd_get_gateway_admin_label( $order->gateway ); ?>/>
 							</div>
 						</div>
-					<?php endif; ?>
+					</div>
 				<?php else : ?>
 					<div class="edd-order-gateway edd-admin-box-inside">
 						<span class="label"><?php esc_html_e( 'Gateway', 'easy-digital-downloads' ); ?></span>
