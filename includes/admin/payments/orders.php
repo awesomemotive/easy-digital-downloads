@@ -1015,7 +1015,7 @@ function edd_order_details_attributes( $order ) {
 						</legend>
 
 						<div class="edd-form-group__control">
-							<label for="edd-payment-time-hour" class="screen-reader-text">
+							<label for="edd_payment_time_hour" class="screen-reader-text">
 								<?php esc_html_e( 'Hour', 'easy-digital-downloads' ); ?>
 							</label>
 
@@ -1035,7 +1035,7 @@ function edd_order_details_attributes( $order ) {
 							?>
 							:
 
-							<label for="edd-payment-time-min" class="screen-reader-text">
+							<label for="edd_payment_time_min" class="screen-reader-text">
 								<?php esc_html_e( 'Minute', 'easy-digital-downloads' ); ?>
 							</label>
 							<?php
