@@ -507,14 +507,6 @@ a.edd-delete:hover {
 	font-weight: normal;
 }
 
-.edd-vertical-sections .new-customer strong {
-	width: 85px;
-	display: inline-block;
-	white-space: nowrap;
-	text-align: right;
-	margin-right: 10px;
-}
-
 .edd-add-order-item td {
 	vertical-align: middle;
 }
@@ -1826,11 +1818,6 @@ input[class*="edd-price-field"] {
 	.edd-edit-purchase-element .edd-purchased-download-actions {
 		padding-top: 10px;
 	}
-	.edd-order-details-label-mobile {
-		display: block;
-		font-weight: 500;
-		padding-bottom: 6px;
-	}
 }
 
 @media screen and ( max-width: 1024px ) {
@@ -1864,10 +1851,6 @@ input[class*="edd-price-field"] {
 	.edd-edit-purchase-element ul li.price {
 		width: 20%;
 		padding-bottom: 10px;
-	}
-	.edd-order-details-label-mobile {
-		font-size: 14px;
-		font-weight: 500;
 	}
 	.edd-price-currency,
 	.edd-payment-details-download-amount {
