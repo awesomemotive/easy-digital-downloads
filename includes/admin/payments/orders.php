@@ -847,6 +847,7 @@ function edd_order_details_extras( $order = false ) {
 								<div class="edd-form-group__control">
 									<input class="edd-form-group__input" id="edd_gateway"><?php echo edd_get_gateway_admin_label( $order->gateway ); ?>/>
 								</div>
+							</div>
 						</div>
 					<?php endif; ?>
 				<?php else : ?>
