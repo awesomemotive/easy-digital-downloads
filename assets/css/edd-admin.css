@@ -3723,7 +3723,7 @@ div:not(#edd-item-tab-wrapper) + #edd-item-card-wrapper .item-section { /** [1] 
 
 .edd-form-group__label {
 	display: block;
-	margin-bottom: 4px;
+	margin-bottom: 8px;
 	padding: 0;
 }
 
