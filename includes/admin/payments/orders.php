@@ -612,12 +612,13 @@ function edd_order_details_items( $order ) {
 							&times;
 							<input type="number" class="edd-add-order-quantity" value="1" step="1" min="1" name="quantity" />
 						<?php endif; ?>
-						</div>
+
 						<button type="button" class="button button-secondary edd-add-order-item-button"><?php esc_html_e( 'Add', 'easy-digital-downloads' ); ?></button>
 
 						<span class="spinner"></span>
-					</li>
-				</ul>
+						</li>
+					</ul>
+				</div>
 
 				<input type="hidden" name="edd-payment-downloads-changed" id="edd-payment-downloads-changed" value="" />
 				<input type="hidden" name="edd-payment-removed" id="edd-payment-removed" value="{}" />
