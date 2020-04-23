@@ -1042,6 +1042,7 @@ function edd_order_details_attributes( $order ) {
 							echo EDD()->html->select(
 								array(
 									'name'             => 'edd-payment-time-min',
+									'id'               => 'edd-payment-time-min',
 									'options'          => edd_get_minute_values(),
 									'selected'         => $order_date->format( 'i' ),
 									'chosen'           => true,
