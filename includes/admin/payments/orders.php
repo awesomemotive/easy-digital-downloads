@@ -871,7 +871,7 @@ function edd_order_details_extras( $order = false ) {
 						<label for="edd_ip" class="edd-form-group__label"><?php esc_html_e( 'IP', 'easy-digital-downloads' ); ?></label>
 					<div class="edd-form-group__control">
 						<?php if ( edd_is_add_order_page() ) : ?>
-							<input type="text" name="ip" id="edd_ip" class="edd-form-group__input" value="<?php echo esc_attr( edd_get_ip() ); ?>" />
+							<input type="readonly" name="ip" id="edd_ip" class="edd-form-group__input" value="<?php echo esc_attr( edd_get_ip() ); ?>" />
 						<?php else : ?>
 							<span><?php echo edd_payment_get_ip_address_url( $order->id ); // WPCS: XSS ok. ?></span>
 						<?php endif; ?>
