@@ -1038,9 +1038,15 @@ class Data_Migrator {
 			return;
 		}
 
-		$scope = isset( $data['global'] )
+		$scope;
+
+		if ( isset( $data['is_global_rate'] ) ) {
+			$scope = 'global';
+		} else {
+			$scope = isset( $data['global'] )
 			? 'country'
 			: 'region';
+		}
 
 		$region = isset( $data['state'] )
 			? sanitize_text_field( $data['state'] )
@@ -1056,7 +1062,15 @@ class Data_Migrator {
 			'description' => $region,
 		);
 
-		edd_add_adjustment( $adjustment_data );
+		if ( isset( $data['is_global_rate'] ) ) {
+			// Change the global settings
+			$id = edd_add_adjustment( $adjustment_data );
+			edd_update_option( 'edd_default_tax_rate_id', $id );
+			edd_delete_option( 'tax_rate' );
+		} else {
+			edd_add_adjustment( $adjustment_data );
+		}
+
 	}
 
 	/**

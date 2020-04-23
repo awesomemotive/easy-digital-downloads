@@ -156,7 +156,7 @@ function edd_active_tax_rates_query_clauses( $clauses ) {
 function edd_get_tax_rate( $country = '', $region = '' ) {
 
 	// Default rate
-	$rate = (float) edd_get_option( 'tax_rate', 0 );
+	$rate = (float) edd_get_default_tax_rate();
 
 	// Get the address, to try to get the tax rate
 	$user_address = edd_get_customer_address();
@@ -204,7 +204,6 @@ function edd_get_tax_rate( $country = '', $region = '' ) {
 			? edd_get_shop_state()
 			: $region;
 	}
-
 	// Attempt to determine the applicable tax rate.
 	if ( ! empty( $country ) ) {
 

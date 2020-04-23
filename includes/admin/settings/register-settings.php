@@ -1422,12 +1422,14 @@ function edd_settings_sanitize_taxes( $input ) {
 			? sanitize_text_field( $tax_rate['state'] )
 			: '';
 
+		$rate = sanitize_text_field( $tax_rate['rate'] );
+
 		$adjustment_data = array(
 			'name'        => sanitize_text_field( $tax_rate['country'] ),
 			'type'        => 'tax_rate',
 			'scope'       => $scope,
 			'amount_type' => 'percent',
-			'amount'      => floatval( $tax_rate['rate'] ),
+			'amount'      => floatval( $rate ),
 			'description' => $region,
 		);
 
@@ -2621,7 +2623,8 @@ function edd_tax_rate_callback( $args ) {
  * @return void
  */
 function edd_tax_rates_callback( $args ) {
-	$rates = edd_get_tax_rates( array(), OBJECT );
+	$id    = edd_get_option( 'edd_default_tax_rate_id' );
+	$rates = edd_get_tax_rates( array( 'id__not_in' => [$id] ), OBJECT );
 
 	wp_enqueue_script( 'edd-admin-tax-rates' );
 	wp_enqueue_style( 'edd-admin-tax-rates' );
