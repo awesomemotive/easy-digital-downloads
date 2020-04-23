@@ -90,14 +90,15 @@ function edd_admin_get_note_html( $note_id = 0 ) {
 	?>
 
 	<div class="edd-note" id="edd-note-<?php echo esc_attr( $note->id ); ?>">
-		<div>
+		<div class="edd-note__header">
 			<strong class="edd-note-author"><?php echo esc_html( $author ); ?></strong>
 			<time datetime="<?php echo esc_attr( EDD()->utils->date( $note->date_created, null, true )->toDateTimeString() ); ?>"><?php echo edd_date_i18n( $note->date_created, 'datetime' ); ?></time>
-			<p><?php echo make_clickable( $note->content ); ?></p>
 			<a href="<?php echo esc_url( $delete_note_url ); ?>#edd-notes" class="edd-delete-note" data-note-id="<?php echo esc_attr( $note->id ); ?>" data-object-id="<?php echo esc_attr( $note->object_id ); ?>" data-object-type="<?php echo esc_attr( $note->object_type ); ?>">
-				<?php esc_html_e( 'Delete', 'easy-digital-downloads' ); ?>
+				<?php echo esc_html_x( '&times;', 'Delete note', 'easy-digital-downloads' ); ?>
 			</a>
 		</div>
+
+		<?php echo wpautop( make_clickable( $note->content ) ); ?>
 	</div>
 
 	<?php

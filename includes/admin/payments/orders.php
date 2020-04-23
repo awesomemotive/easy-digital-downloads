@@ -12,6 +12,51 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+/** Publishing ******************************************************************/
+
+/**
+ * Outputs publishing actions.
+ *
+ * UI is modelled off block-editor header region.
+ *
+ * @since 3.0
+ *
+ * @param EDD\Orders\Order $order Current order.
+ */
+function edd_order_details_publish( $order ) {
+	$action_name = edd_is_add_order_page()
+		? __( 'Create Order', 'easy-digital-downloads' )
+		: __( 'Save Order', 'easy-digital-downloads' )
+?>
+
+	<div class="edit-post-editor-regions__header">
+		<div class="edit-post-header">
+
+			<div class="edit-post-header__settings">
+				<div id="publishing-action">
+					<span class="spinner"></span>
+					<input
+						type="submit"
+						id="edd-order-submit"
+						class="button button-primary right"
+						value="<?php echo esc_html( $action_name ); ?>"
+						<?php if ( ! edd_is_add_order_page() ) : ?>
+							autofocus
+						<?php endif; ?>
+					/>
+				</div>
+			</div>
+
+			<div class="edit-post-header__toolbar">
+			</div>
+
+		</div>
+
+	</div>
+
+<?php
+}
+
 /** Sections ******************************************************************/
 
 /**
@@ -76,6 +121,12 @@ function edd_get_order_details_sections( $order ) {
 			'icon'     => 'admin-comments',
 			'callback' => 'edd_order_details_notes',
 		),
+		array(
+			'id'       => 'logs',
+			'label'    => __( 'Logs', 'easy-digital-downloads' ),
+			'icon'     => 'admin-tools',
+			'callback' => 'edd_order_details_logs',
+		),
 	);
 
 	// Override sections if adding a new order.
@@ -131,82 +182,70 @@ function edd_order_details_customer( $order ) {
 
 	<div>
 		<div class="column-container order-customer-info">
-			<div class="customer-details-wrap">
-				<?php if ( ! empty( $customer ) ) : ?>
-					<div class="avatar-wrap left" id="customer-avatar">
-						<?php echo get_avatar( $customer->email, 75 ); ?><br />
-					</div>
-					<div class="customer-details">
-						<span class="customer-name">
-							<?php echo esc_html( $customer->name ); ?>
-						</span>
-
-						<span>
-							<?php echo esc_html( $customer->email ); ?>
-						</span>
-
-						<span>
-							<?php
-							printf(
-							/* translators: The date. */
-								esc_html__( 'Customer since %s', 'easy-digital-downloads' ),
-								esc_html( edd_date_i18n( $customer->date_created ) )
-							);
-							?>
-						</span>
-
-						<span>
-							<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ); ?>"><?php _e( 'View customer record', 'easy-digital-downloads' ); ?></a>
-						</span>
-					</div>
-				<?php else : ?>
-					&mdash;
-				<?php endif; ?>
+			<div class="column-container change-customer">
+				<label for="customer_id" class="edd-order-details-label-mobile"><?php esc_html_e( 'Assign to an existing customer', 'easy-digital-downloads' ); ?></label>
+				<?php
+				echo EDD()->html->customer_dropdown( array(
+					'class'         => 'edd-payment-change-customer-input',
+					'selected'      => $customer_id,
+					'id'            => 'customer-id',
+					'name'          => 'customer-id',
+					'none_selected' => esc_html__( 'Search for a customer', 'easy-digital-downloads' ),
+					'placeholder'   => esc_html__( 'Search for a customer', 'easy-digital-downloads' ),
+				) ); // WPCS: XSS ok.
+				?>
+				<input type="hidden" name="current-customer-id" value="<?php echo esc_attr( $customer_id ); ?>" />
+				<?php wp_nonce_field( 'edd_customer_details_nonce', 'edd_customer_details_nonce' ); ?>
 			</div>
 
-			<p class="customer-details-actions">
-				<button class="edd-payment-change-customer button-secondary"><?php echo $change_text; // WPCS: XSS ok. ?></button>
-				&nbsp;
-				<button class="edd-payment-new-customer button-secondary"><?php esc_html_e( 'Assign New Customer', 'easy-digital-downloads' ); ?></button>
-			</p>
-		</div>
+			<div class="customer-details-wrap" style="display: <?php echo esc_attr( ! empty( $customer ) ? 'flex' : 'none' ); ?>">
+				<div class="avatar-wrap" id="customer-avatar">
+					<span class="spinner is-active"></span>
+				</div>
+				<div class="customer-details" style="display: none;">
+					<strong class="customer-name"></strong>
+					<em class="customer-since">
+						<?php
+						echo wp_kses(
+							sprintf(
+								__( 'Customer since %s', 'easy-digital-downloads' ), '<span>&hellip;</span>' ),
+							array(
+								'span' => true,
+							)
+						);
+						?>
+					</em>
 
-		<div class="column-container change-customer" style="display: none">
-			<?php
-			echo EDD()->html->customer_dropdown( array(
-				'class'       => 'edd-payment-change-customer-input',
-				'selected'    => $customer_id,
-				'name'        => 'customer-id',
-				'placeholder' => esc_html__( 'Type to search all Customers', 'easy-digital-downloads' ),
-			) ); // WPCS: XSS ok.
-			?>
+					<span class="customer-record">
+						<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=download&page=edd-customers' ) ); ?>"><?php esc_html_e( 'View customer record', 'easy-digital-downloads' ); ?></a>
+					</span>
+				</div>
+			</div>
 
-			<input type="hidden" id="edd-change-customer" name="edd-change-customer" value="0" />
-
-			<p>
-				<button class="edd-payment-change-customer-cancel edd-delete button-link"><?php esc_html_e( 'Cancel', 'easy-digital-downloads' ); ?></button>
+			<p class="description">
+				or <button class="edd-payment-new-customer button-link"><?php esc_html_e( 'create a new customer', 'easy-digital-downloads' ); ?></button>
 			</p>
 		</div>
 
 		<div class="column-container new-customer" style="display: none">
-			<p>
-				<strong><?php esc_html_e( 'First Name', 'easy-digital-downloads' ); ?>:</strong>
-				<input type="text" name="edd-new-customer-first-name" value="" class="medium-text"/>
-			</p>
-
-			<p>
-				<strong><?php esc_html_e( 'Last Name', 'easy-digital-downloads' ); ?>:</strong>
-				<input type="text" name="edd-new-customer-last-name" value="" class="medium-text"/>
-			</p>
-
-			<p>
-				<strong><?php esc_html_e( 'Email', 'easy-digital-downloads' ); ?>:</strong>
-				<input type="email" name="edd-new-customer-email" value="" class="medium-text"/>
-			</p>
-
-			<p>
+			<p style="margin-top: 0;">
 				<input type="hidden" id="edd-new-customer" name="edd-new-customer" value="0" />
-				<button class="edd-payment-new-customer-cancel edd-delete button-link"><?php esc_html_e( 'Cancel', 'easy-digital-downloads' ); ?></button>
+				<button class="edd-payment-new-customer-cancel button-link"><?php esc_html_e( '&larr; Use an existing customer', 'easy-digital-downloads' ); ?></button>
+			</p>
+
+			<p>
+				<label for="edd_new_customer_first_name"><?php esc_html_e( 'First Name', 'easy-digital-downloads' ); ?>:</label>
+				<input type="text" name="edd-new-customer-first-name" id="edd_new_customer_first_name" value="" class="medium-text"/>
+			</p>
+
+			<p>
+				<label for="edd_new_customer_last_name"><?php esc_html_e( 'Last Name', 'easy-digital-downloads' ); ?>:</label>
+				<input type="text" name="edd-new-customer-last-name" id="edd_new_customer_last_name" value="" class="medium-text"/>
+			</p>
+
+			<p>
+				<label for="edd_new_customer_email"><?php esc_html_e( 'Email', 'easy-digital-downloads' ); ?>:</label>
+				<input type="email" name="edd-new-customer-email" id="edd_new_customer_email" value="" class="medium-text"/>
 			</p>
 		</div>
 	</div>
@@ -226,28 +265,43 @@ function edd_order_details_customer( $order ) {
  * @param object $order
  */
 function edd_order_details_email( $order ) {
-	$customer = edd_get_customer( $order->customer_id ); ?>
+	$customer   = edd_get_customer( $order->customer_id );
+	$all_emails = array( 'primary' => $customer->email );
+
+	foreach ( $customer->emails as $key => $email ) {
+		if ( $customer->email === $email ) {
+			continue;
+		}
+
+		$all_emails[ $key ] = $email;
+	}
+?>
 
 	<div><?php
 		if ( ! empty( $customer->emails ) && count( (array) $customer->emails ) > 1 ) : ?>
-			<span class="edd-order-resend-receipt-header">
-				<?php _e( 'Choose an email address to send the receipt to:', 'easy-digital-downloads' ); ?>
-			</span>
+			<fieldset class="edd-order-resend-email-chooser">
+				<legend>
+					<?php _e( 'Send email receipt to', 'easy-digital-downloads' ); ?>
+				</legend>
 
-			<span class="edd-order-resend-receipt-addresses">
-				<?php foreach ( $customer->emails as $key => $email ) : ?>
-				<label>
-					<input autocomplete="off" class="edd-order-resend-receipt-email" name="edd-order-resend-receipt-address" type="radio" value="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" />
-					<?php echo esc_attr( $email ); ?>
-				</label>
+				<?php foreach ( $all_emails as $key => $email ) : ?>
+				<p>
+					<label for="<?php echo rawurlencode( sanitize_email( $email ) ); ?>">
+						<input autocomplete="off" id="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" class="edd-order-resend-receipt-email" name="edd-order-resend-receipt-address" type="radio" value="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" <?php checked( true, ( 'primary' === $key ) ); ?> />
+						<?php echo esc_attr( $email ); ?>
+					</label>
+				</p>
 				<?php endforeach; ?>
-			</span>
+			</fieldset>
 
 		<?php else : ?>
 
-			<input readonly type="email" value="<?php echo esc_attr( $order->email ); ?>" />
+			<label for="edd_order_order_resend_receipt_address" class="screen-reader-text"><?php esc_html_e( 'Send email receipt to', 'easy-digital-downloads' ); ?></label>
+			<input readonly id="edd_order_order_resend_receipt_address" type="email" value="<?php echo esc_attr( $order->email ); ?>" />
 
 		<?php endif; ?>
+
+		<p class="description"><?php esc_html_e( 'Send a new copy of the purchase receipt to the email address used for this order. If download URLs were included in the original receipt, new ones will be included.', 'easy-digital-downloads' ); ?></p>
 
 		<a href="<?php echo esc_url( add_query_arg( array(
 			'edd-action'  => 'email_links',
@@ -257,8 +311,6 @@ function edd_order_details_email( $order ) {
 		} else {
 			echo esc_attr( 'edd-resend-receipt' );
 		} ?>" class="button-secondary"><?php esc_html_e( 'Resend Receipt', 'easy-digital-downloads' ); ?></a>
-
-		<p class="description"><?php esc_html_e( 'Send a new copy of the purchase receipt to the email address used for this order. If download URLs were included in the original receipt, new ones will be included.', 'easy-digital-downloads' ); ?></p>
 
 		<?php do_action( 'edd_view_order_details_resend_receipt_after', $order->id ); ?>
 
@@ -299,27 +351,27 @@ function edd_order_details_addresses( $order ) {
 			</div>
 
 			<div class="input-wrap">
-				<label><?php esc_html_e( 'Line 1:', 'easy-digital-downloads' ); ?></label>
-				<input type="text" name="edd_order_address[address]" value="<?php echo esc_attr( $address->address ); ?>" />
+				<label for="edd_order_address_address"><?php esc_html_e( 'Line 1:', 'easy-digital-downloads' ); ?></label>
+				<input type="text" name="edd_order_address[address]" id="edd_order_address_address" value="<?php echo esc_attr( $address->address ); ?>" />
 			</div>
 
 			<div class="input-wrap">
-				<label><?php esc_html_e( 'Line 2:', 'easy-digital-downloads' ); ?></label>
-				<input type="text" name="edd_order_address[address2]" value="<?php echo esc_attr( $address->address2 ); ?>" />
+				<label for="edd_order_address_address2"><?php esc_html_e( 'Line 2:', 'easy-digital-downloads' ); ?></label>
+				<input type="text" name="edd_order_address[address2]" id="edd_order_address_address2" value="<?php echo esc_attr( $address->address2 ); ?>" />
 			</div>
 
 			<div class="input-wrap">
-				<label><?php echo esc_html_x( 'City:', 'Address City', 'easy-digital-downloads' ); ?></label>
-				<input type="text" name="edd_order_address[city]" value="<?php echo esc_attr( $address->city ); ?>" />
+				<label for="edd_order_address_city"><?php echo esc_html_x( 'City:', 'Address City', 'easy-digital-downloads' ); ?></label>
+				<input type="text" name="edd_order_address[city]" id="edd_order_address_city" value="<?php echo esc_attr( $address->city ); ?>" />
 			</div>
 
 			<div class="input-wrap">
-				<label><?php echo esc_html_x( 'Zip / Postal Code:', 'Zip / Postal code of address', 'easy-digital-downloads' ); ?></label>
-				<input type="text" name="edd_order_address[postal_code]" value="<?php echo esc_attr( $address->postal_code ); ?>" class="med-text" />
+				<label for="edd_order_address_postal_code"><?php echo esc_html_x( 'Zip / Postal Code:', 'Zip / Postal code of address', 'easy-digital-downloads' ); ?></label>
+				<input type="text" name="edd_order_address[postal_code]" id="edd_order_address_postal_code" value="<?php echo esc_attr( $address->postal_code ); ?>" class="med-text" />
 			</div>
 
 			<div class="input-wrap">
-				<label><?php echo esc_html_x( 'Country:', 'Address country', 'easy-digital-downloads' ); ?></label>
+				<label for="edd_order_address_country"><?php echo esc_html_x( 'Country:', 'Address country', 'easy-digital-downloads' ); ?></label>
 				<div id="edd-order-address-country-wrap">
 					<?php
 					echo EDD()->html->select( array(
@@ -343,7 +395,7 @@ function edd_order_details_addresses( $order ) {
 			</div>
 
 			<div class="input-wrap">
-				<label><?php echo _x( 'Region:', 'Region of address', 'easy-digital-downloads' ); ?></label>
+				<label for="edd_order_address_region"><?php echo esc_html_x( 'Region:', 'Region of address', 'easy-digital-downloads' ); ?></label>
 				<div id="edd-order-address-state-wrap">
 					<?php
 					$states = edd_get_shop_states( $address->country );
@@ -371,6 +423,7 @@ function edd_order_details_addresses( $order ) {
 			</div>
 
 			<input type="hidden" name="edd_order_address[address_id]" value="<?php echo esc_attr( $address->id ); ?>" />
+			<?php wp_nonce_field( 'edd_get_tax_rate_nonce', 'edd_get_tax_rate_nonce' ); ?>
 		</div>
 
 	</div><!-- /#edd-order-address -->
@@ -396,6 +449,47 @@ function edd_order_details_notes( $order ) {
 	<?php
 }
 
+/**
+ * Outputs the Order Details logs section.
+ *
+ * @since 3.0
+ *
+ * @param \EDD\Orders\Order $order
+ */
+function edd_order_details_logs( $order ) {
+?>
+
+	<div>
+		<?php
+		/**
+		 * Allows output before the list of logs.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param int $order_id ID of the current order.
+		 */
+		do_action( 'edd_view_order_details_logs_before', $order->id );
+		?>
+
+		<p><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=logs&payment=' . $order->id ); ?>"><?php esc_html_e( 'File Download Log for Order', 'easy-digital-downloads' ); ?></a></p>
+		<p><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=logs&customer=' . $order->customer_id ); ?>"><?php esc_html_e( 'Customer Download Log', 'easy-digital-downloads' ); ?></a></p>
+		<p><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . esc_attr( edd_get_payment_user_email( $order->id ) ) ); ?>"><?php esc_html_e( 'Customer Orders', 'easy-digital-downloads' ); ?></a></p>
+
+		<?php
+		/**
+		 * Allows further output after the list of logs.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param int $order_id ID of the current order.
+		 */
+		do_action( 'edd_view_order_details_logs_after', $order->id );
+		?>
+	</div>
+
+<?php
+}
+
 /** Main **********************************************************************/
 
 /**
@@ -405,175 +499,171 @@ function edd_order_details_notes( $order ) {
  *
  * @param object $order
  */
-function edd_order_details_items( $order ) {
+function edd_order_details_overview( $order ) {
+	$_items       = array();
+	$_adjustments = array();
 
-	// Load list table if not already loaded
-	if ( ! class_exists( '\\EDD\\Admin\\Order_Items_Table' ) ) {
-		require_once 'class-order-items-table.php';
+	if ( true !== edd_is_add_order_page() ) {
+		$items = edd_get_order_items( array(
+			'order_id' => $order->id,
+			'number'   => 999,
+		) );
+
+		foreach ( $items as $item ) {
+			$item_adjustments = array();
+
+			$adjustments = edd_get_order_adjustments( array(
+				'object_id'   => $item->id,
+				'number'      => 999,
+				'object_type' => 'order_item',
+				'type'        => array(
+					'discount',
+					'credit',
+					'fee',
+				),
+			) );
+
+			foreach ( $adjustments as $adjustment ) {
+				// @todo edd_get_order_adjustment_to_json()?
+				$item_adjustments[] = array(
+					'id'           => esc_html( $adjustment->id ),
+					'objectId'     => esc_html( $adjustment->object_id ),
+					'objectType'   => esc_html( $adjustment->object_type ),
+					'typeId'       => esc_html( $adjustment->type_id ),
+					'type'         => esc_html( $adjustment->type ),
+					'description'  => esc_html( $adjustment->description ),
+					'subtotal'     => esc_html( $adjustment->subtotal ),
+					'tax'          => esc_html( $adjustment->tax ),
+					'total'        => esc_html( $adjustment->total ),
+					'dateCreated'  => esc_html( $adjustment->date_created ),
+					'dateModified' => esc_html( $adjustment->date_modified ),
+					'uuid'         => esc_html( $adjustment->uuid ),
+				);
+			}
+
+			// @todo edd_get_order_item_to_json()?
+			$_items[] = array(
+				'id'           => esc_html( $item->id ),
+				'orderId'      => esc_html( $item->order_id ),
+				'productId'    => esc_html( $item->product_id ),
+				'productName'  => esc_html( $item->get_order_item_name() ),
+				'priceId'      => esc_html( $item->price_id ),
+				'cartIndex'    => esc_html( $item->cart_index ),
+				'type'         => esc_html( $item->type ),
+				'status'       => esc_html( $item->status ),
+				'quantity'     => esc_html( $item->quantity ),
+				'amount'       => esc_html( $item->amount ),
+				'subtotal'     => esc_html( $item->subtotal ),
+				'discount'     => esc_html( $item->discount ),
+				'tax'          => esc_html( $item->tax ),
+				'total'        => esc_html( $item->total ),
+				'dateCreated'  => esc_html( $item->date_created ),
+				'dateModified' => esc_html( $item->date_modified ),
+				'uuid'         => esc_html( $item->uuid ),
+
+				'adjustments'  => $item_adjustments,
+			);
+		}
+
+		$adjustments = edd_get_order_adjustments( array(
+			'object_id'   => $order->id,
+			'number'      => 999,
+			'object_type' => 'order',
+			'type'        => array(
+				'discount',
+				'credit',
+				'fee',
+			),
+		) );
+
+		foreach ( $adjustments as $adjustment ) {
+			// @todo edd_get_order_adjustment_to_json()?
+			$_adjustments[] = array(
+				'id'           => esc_html( $adjustment->id ),
+				'objectId'     => esc_html( $adjustment->object_id ),
+				'objectType'   => esc_html( $adjustment->object_type ),
+				'typeId'       => esc_html( $adjustment->type_id ),
+				'type'         => esc_html( $adjustment->type ),
+				'description'  => esc_html( $adjustment->description ),
+				'subtotal'     => esc_html( $adjustment->subtotal ),
+				'tax'          => esc_html( $adjustment->tax ),
+				'total'        => esc_html( $adjustment->total ),
+				'dateCreated'  => esc_html( $adjustment->date_created ),
+				'dateModified' => esc_html( $adjustment->date_modified ),
+				'uuid'         => esc_html( $adjustment->uuid ),
+			);
+		}
 	}
 
-	// Query for items
-	$order_items = new EDD\Admin\Order_Items_Table();
-	$order_items->prepare_items(); ?>
+	wp_localize_script(
+		'edd-admin-orders',
+		'eddAdminOrderOverview',
+		array(
+			'items'        => $_items,
+			'adjustments'  => $_adjustments,
+			'isAdding'     => true === edd_is_add_order_page(),
+			'hasQuantity'  => true === edd_item_quantities_enabled(),
+			'hasTax'       => true === edd_use_taxes()
+				? array(
+					'rate'    => 0,
+					'country' => '',
+					'region'  => '',
+				)
+				: 0,
+			'hasDiscounts' => true === edd_has_active_discounts(),
+			'order'        => array(
+				'status' => $order->status,
+			),
+			'nonces'       => array(
+				'edd_admin_order_get_item_amounts' => wp_create_nonce( 'edd_admin_order_get_item_amounts' ),
+			),
+		)
+	);
 
-	<div id="edd-order-items" class="postbox edd-edit-purchase-element">
-		<h3 class="hndle">
-			<span><?php _e( 'Order Items', 'easy-digital-downloads' ); ?></span>
-			<?php if ( edd_is_add_order_page() ) : ?>
-				<a href="#" class="edd-metabox-title-action"><?php _e( 'Add Item', 'easy-digital-downloads' ); ?></a>
-			<?php endif; ?>
-		</h3>
+	$templates = array(
+		'actions',
+		'totals',
+		'item',
+		'adjustment',
+		'adjustment-discount',
+		'no-items',
+		'copy-download-link',
+		'form-add-order-item',
+		'form-add-order-discount',
+		'form-add-order-adjustment',
+	);
 
-		<?php if ( edd_is_add_order_page() ) : ?>
-			<div class="edd-add-download-to-purchase" style="display: none;">
-				<ul>
-					<li class="download">
-						<span class="edd-order-details-label-mobile"><?php printf( esc_html_x( '%s To Add', 'order details select item to add - mobile', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></span>
-
-						<?php echo EDD()->html->product_dropdown( array(
-							'name'                 => 'edd-order-add-download-select',
-							'id'                   => 'edd-order-add-download-select',
-							'class'                => 'edd-order-add-download-select',
-							'chosen'               => true,
-							'variations'           => true,
-							'show_variations_only' => true,
-						) ); // WPCS: XSS ok. ?>
-
-						<?php if ( edd_item_quantities_enabled() ) : ?>
-							&times;
-							<input type="number" class="edd-add-order-quantity" value="1" step="1" min="1" name="quantity" />
-						<?php endif; ?>
-
-						<button type="button" class="button button-secondary edd-add-order-item-button"><?php esc_html_e( 'Add', 'easy-digital-downloads' ); ?></button>
-
-						<span class="spinner"></span>
-					</li>
-				</ul>
-
-				<input type="hidden" name="edd-payment-downloads-changed" id="edd-payment-downloads-changed" value="" />
-				<input type="hidden" name="edd-payment-removed" id="edd-payment-removed" value="{}" />
-				<input type="hidden" name="edd-order-download-is-overrideable" value="0" />
-
-				<?php if ( ! edd_item_quantities_enabled() ) : ?>
-					<input type="hidden" id="edd-order-download-quantity" name="edd-order-download-quantity" value="1" />
-				<?php endif; ?>
-
-				<?php if ( ! edd_use_taxes() ) : ?>
-					<input type="hidden" id="edd-order-download-tax" name="edd-order-download-tax" value="0" />
-				<?php endif; ?>
-			</div>
-		<?php endif; ?>
-
-		<div class="edd-order-children-wrapper <?php echo 'child-count-' . count( $order_items->items ); ?>">
-			<?php $order_items->display(); ?>
-		</div>
-	</div>
-
-	<?php do_action( 'edd_view_order_details_files_after', $order->id ); ?>
-
-	<?php
-}
-
-/**
- * Output the order details adjustments box
- *
- * @since 3.0
- *
- * @param object $order
- */
-function edd_order_details_adjustments( $order ) {
-
-	// Load list table if not already loaded
-	if ( ! class_exists( '\\EDD\\Admin\\Order_Adjustments_Table' ) ) {
-		require_once 'class-order-adjustments-table.php';
+	foreach ( $templates as $tmpl ) {
+		echo '<script type="text/html" id="tmpl-edd-admin-order-' . esc_attr( $tmpl ) . '">';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/views/tmpl-order-' . $tmpl . '.php';
+		echo '</script>';
 	}
+?>
 
-	// Query for adjustments
-	$order_adjustments = new EDD\Admin\Order_Adjustments_Table();
-	$order_adjustments->prepare_items(); ?>
+<div id="edd-order-overview" class="postbox edd-edit-purchase-element edd-order-overview">
+	<table id="edd-order-overview-summary" class="widefat wp-list-table edd-order-overview-summary">
+		<thead>
+			<tr>
+				<th class="column-name column-primary"><?php echo esc_html( edd_get_label_singular() ); ?></th>
+				<th class="column-amount"><?php esc_html_e( 'Unit Price', 'easy-digital-downloads' ); ?></th>
+				<?php if ( true === edd_item_quantities_enabled() ) : ?>
+				<th class="column-quantity"><?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?></th>
+				<?php endif; ?>
+				<th class="column-subtotal column-right"><?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></th>
+			</tr>
+		</thead>
+	</table>
 
-	<div id="edd-order-adjustments" class="postbox edd-edit-purchase-element">
-		<h3 class="hndle">
-			<span><?php esc_html_e( 'Order Adjustments', 'easy-digital-downloads' ); ?></span>
-
-			<?php if ( edd_is_add_order_page() ) : ?>
-				<a href="#" class="edd-metabox-title-action"><?php esc_html_e( 'Add Adjustment', 'easy-digital-downloads' ); ?></a>
-			<?php endif; ?>
-		</h3>
-
-		<?php if ( edd_is_add_order_page() ) : ?>
-			<div class="edd-add-adjustment-to-purchase" style="display: none;">
-				<ul>
-					<li class="adjustment">
-						<span class="edd-order-details-label-mobile"><?php echo esc_html_x( 'Adjustment To Add', 'order details select adjustment to add - mobile', 'easy-digital-downloads' ); ?></span>
-
-						<?php echo EDD()->html->select( array(
-							'name'             => 'edd-order-add-adjustment-select',
-							'id'               => 'edd-order-add-adjustment-select',
-							'class'            => 'edd-order-add-adjustment-select',
-							'options'          => array(
-								''         => '', // Empty  option needed to display placeholder.
-								'discount' => __( 'Discount', 'easy-digital-downloads' ),
-								'credit'   => __( 'Credit', 'easy-digital-downloads' ),
-							),
-							'placeholder'      => __( 'Choose an Adjustment Type', 'easy-digital-downloads' ),
-							'show_option_all'  => false,
-							'show_option_none' => false,
-							'chosen'           => true,
-						) ); // WPCS: XSS ok. ?>
-					</li>
-				</ul>
-
-				<ul>
-					<li class="discount" style="display: none;">
-						<?php
-						$d = edd_get_discounts( array(
-							'fields' => array( 'code', 'name' ),
-							'number' => 100,
-						) );
-
-						$discounts = array();
-
-						foreach ( $d as $discount_data ) {
-							$discounts[ $discount_data->code ] = esc_html( $discount_data->name );
-						}
-
-						echo EDD()->html->discount_dropdown( array(
-							'name'             => 'edd-order-add-discount-select',
-							'class'            => 'edd-order-add-discount-select',
-							'id'               => 'edd-order-add-discount-select',
-							'chosen'           => true,
-							'selected'         => false,
-							'show_option_all'  => false,
-							'show_option_none' => false,
-						) );  // WPCS: XSS ok.
-						?>
-					</li>
-				</ul>
-
-				<ul>
-					<li class="credit" style="display: none;">
-						<input type="text" class="edd-add-order-credit-description" value="" placeholder="Description" />
-						<input type="number" class="edd-add-order-credit-amount" value="" min="1" placeholder="Amount" />
-					</li>
-				</ul>
-
-				<ul>
-					<li class="add">
-						<button type="button" class="button button-secondary edd-add-order-adjustment-button"><?php esc_html_e( 'Add', 'easy-digital-downloads' ); ?></button>
-
-						<span class="spinner"></span>
-					</li>
-				</ul>
-			</div>
-		<?php endif; ?>
-
-		<div class="edd-order-children-wrapper <?php echo 'child-count-' . count( $order_adjustments->items ); ?>"">
-			<?php $order_adjustments->display(); ?>
-		</div>
+	<div id="edd-order-overview-actions" class="edd-order-overview-actions inside">
 	</div>
+</div>
 
 <?php
+
+	/**
+	 * @since unknown
+	 */
+	do_action( 'edd_view_order_details_files_after', $order->id );
 }
 
 /**
@@ -654,27 +744,27 @@ function edd_order_details_extras( $order = false ) {
 
 				<?php if ( ! edd_is_add_order_page() && ! empty( $order->id ) ) : ?>
 					<?php if ( ! empty( $order->gateway ) ) : ?>
-					<div class="edd-order-gateway edd-admin-box-inside">
-						<span class="label"><?php esc_html_e( 'Gateway', 'easy-digital-downloads' ); ?>:</span>
-						<?php echo edd_get_gateway_admin_label( $order->gateway ); ?>
+					<div class="edd-order-gateway edd-admin-box-inside edd-admin-box-inside--row">
+						<span class="label"><?php esc_html_e( 'Gateway', 'easy-digital-downloads' ); ?></span>
+						<span class="value"><?php echo edd_get_gateway_admin_label( $order->gateway ); ?></span>
 					</div>
 					<?php endif; ?>
 				<?php else : ?>
 					<div class="edd-order-gateway edd-admin-box-inside">
-						<span class="label"><?php esc_html_e( 'Gateway', 'easy-digital-downloads' ); ?>:</span>
+						<span class="label"><?php esc_html_e( 'Gateway', 'easy-digital-downloads' ); ?></span>
 						<?php echo $gateway_select; ?>
 					</div>
 				<?php endif; ?>
 
 				<div class="edd-order-payment-key edd-admin-box-inside">
-					<span class="label"><?php esc_html_e( 'Key', 'easy-digital-downloads' ); ?>:</span>
-					<input type="text" name="payment_key" <?php echo esc_attr( $readonly ); ?> value="<?php echo esc_attr( $order->payment_key ); ?>" />
+					<label for="edd_payment_key" class="label"><?php esc_html_e( 'Key', 'easy-digital-downloads' ); ?></label>
+					<input type="text" name="payment_key" id="edd_payment_key" <?php echo esc_attr( $readonly ); ?> value="<?php echo esc_attr( $order->payment_key ); ?>" />
 				</div>
 
 				<div class="edd-order-ip edd-admin-box-inside">
-					<span class="label"><?php esc_html_e( 'IP', 'easy-digital-downloads' ); ?>:</span>
+					<label for="edd_ip" class="label"><?php esc_html_e( 'IP', 'easy-digital-downloads' ); ?></label>
 					<?php if ( edd_is_add_order_page() ) : ?>
-						<input type="text" name="ip" value="<?php echo esc_attr( edd_get_ip() ); ?>" />
+						<input type="text" name="ip" id="edd_ip" value="<?php echo esc_attr( edd_get_ip() ); ?>" />
 					<?php else : ?>
 						<span><?php echo edd_payment_get_ip_address_url( $order->id ); // WPCS: XSS ok. ?></span>
 					<?php endif; ?>
@@ -682,31 +772,33 @@ function edd_order_details_extras( $order = false ) {
 
 				<?php if ( $transaction_id ) : ?>
 					<div class="edd-order-tx-id edd-admin-box-inside">
-						<span class="label"><?php esc_html_e( 'Transaction ID', 'easy-digital-downloads' ); ?>:</span>
+						<span class="label"><?php esc_html_e( 'Transaction ID', 'easy-digital-downloads' ); ?></span>
 						<span><?php echo $transaction_id; ?></span>
 					</div>
 				<?php endif; ?>
 
 				<?php if ( edd_is_add_order_page() ) : ?>
 					<div class="edd-order-tx-id edd-admin-box-inside">
-						<span class="label"><?php esc_html_e( 'Transaction ID', 'easy-digital-downloads' ); ?>:</span>
-						<input type="text" name="transaction_id" value="" />
+						<label for="edd_transaction_id" class="label"><?php esc_html_e( 'Transaction ID', 'easy-digital-downloads' ); ?></label>
+						<input type="text" name="transaction_id" id="edd_transaction_id" value="" />
 					</div>
 				<?php endif; ?>
 
 				<div class="edd-unlimited-downloads edd-admin-box-inside">
-					<span class="label"><?php esc_html_e( 'Downloads', 'easy-digital-downloads' ); ?>:</span>
-					<input type="checkbox" name="edd-unlimited-downloads" id="edd_unlimited_downloads" value="1"<?php checked( true, $unlimited, true ); ?>/>
-					<label class="description" for="edd_unlimited_downloads"><?php esc_html_e( 'Unlimited', 'easy-digital-downloads' ); ?></label>
-					<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Unlimited Downloads</strong>: checking this box will override all other file download limits for this purchase, granting the customer unliimited downloads of all files included on the purchase.', 'easy-digital-downloads' ); ?>"></span>
+					<label for="edd_unlimited_downloads" class="label label--has-tip label--has-checkbox">
+						<input type="checkbox" name="edd-unlimited-downloads" id="edd_unlimited_downloads" value="1"<?php checked( true, $unlimited, true ); ?>/>
+						<?php esc_html_e( 'Unlimited Downloads', 'easy-digital-downloads' ); ?>
+						<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Unlimited Downloads</strong>: checking this box will override all other file download limits for this purchase, granting the customer unliimited downloads of all files included on the purchase.', 'easy-digital-downloads' ); ?>"></span>
+					</label>
 				</div>
 
 				<?php if ( edd_is_add_order_page() ) : ?>
 					<div class="edd-send-purchase-receipt edd-admin-box-inside">
-						<span class="label"><?php esc_html_e( 'Receipt', 'easy-digital-downloads' ); ?>:</span>
-						<input type="checkbox" name="edd_order_send_receipt" id="edd-order-send-receipt" value="1" />
-						<label class="description" for="edd-order-send-receipt"><?php esc_html_e( 'Send Receipt', 'easy-digital-downloads' ); ?></label>
-						<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Send Receipt</strong>: checking this box will send the purchase receipt to the selected customer.', 'easy-digital-downloads' ); ?>"></span>
+						<label class="description label label--has-tip label--has-checkbox" for="edd-order-send-receipt">
+							<input type="checkbox" name="edd_order_send_receipt" id="edd-order-send-receipt" value="1" />
+							<?php esc_html_e( 'Send Receipt', 'easy-digital-downloads' ); ?>
+							<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Send Receipt</strong>: checking this box will send the purchase receipt to the selected customer.', 'easy-digital-downloads' ); ?>"></span>
+						</label>
 					</div>
 				<?php endif; ?>
 
@@ -716,37 +808,6 @@ function edd_order_details_extras( $order = false ) {
 	</div>
 
 <?php
-}
-
-/**
- * Output the order details logs box
- *
- * @since 3.0
- *
- * @param object $order
- */
-function edd_order_details_logs( $order ) {
-	?>
-
-	<div id="edd-order-logs" class="postbox edd-order-logs">
-		<h3 class="hndle"><span><?php esc_html_e( 'Logs', 'easy-digital-downloads' ); ?></span></h3>
-
-		<div class="inside">
-			<div class="edd-admin-box">
-				<div class="edd-admin-box-inside">
-					<ul>
-						<li><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=logs&payment=' . $order->id ); ?>"><?php esc_html_e( 'File Download Log for Order', 'easy-digital-downloads' ); ?></a></li>
-						<li><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=logs&customer=' . $order->customer_id ); ?>"><?php esc_html_e( 'Customer Download Log', 'easy-digital-downloads' ); ?></a></li>
-						<li><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . esc_attr( edd_get_payment_user_email( $order->id ) ) ); ?>"><?php esc_html_e( 'Customer Orders', 'easy-digital-downloads' ); ?></a></li>
-					</ul>
-				</div>
-
-				<?php do_action( 'edd_view_order_details_logs_inner', $order->id ); ?>
-			</div><!-- /.column-container -->
-		</div><!-- /.inside -->
-	</div><!-- /#edd-order-logs -->
-
-	<?php
 }
 
 /**
@@ -778,44 +839,76 @@ function edd_order_details_attributes( $order ) {
 		<div class="inside">
 			<div class="edd-order-update-box edd-admin-box">
 				<div class="edd-admin-box-inside">
-					<span class="label"><?php esc_html_e( 'Status:', 'easy-digital-downloads' ); ?></span>
-					<select name="edd-payment-status" class="edd-select-chosen <?php echo esc_attr( $rtl_class ); ?>">
+					<label for="edd_payment_status" class="label label--has-tip">
+						<?php
+						esc_html_e( 'Status', 'easy-digital-downloads' );
+
+						$status_help  = '<ul>';
+						$status_help .= '<li>' . __( '<strong>Pending</strong>: order is still processing or was abandoned by customer. Successful orders will be marked as Complete automatically once processing is finalized.', 'easy-digital-downloads' ) . '</li>';
+						$status_help .= '<li>' . __( '<strong>Complete</strong>: all processing is completed for this purchase.', 'easy-digital-downloads' ) . '</li>';
+						$status_help .= '<li>' . __( '<strong>Revoked</strong>: access to purchased items is disabled, perhaps due to policy violation or fraud.', 'easy-digital-downloads' ) . '</li>';
+						$status_help .= '<li>' . __( '<strong>Refunded</strong>: the purchase amount is returned to the customer and access to items is disabled.', 'easy-digital-downloads' ) . '</li>';
+						$status_help .= '<li>' . __( '<strong>Abandoned</strong>: the purchase attempt was not completed by the customer.', 'easy-digital-downloads' ) . '</li>';
+						$status_help .= '<li>' . __( '<strong>Failed</strong>: customer clicked Cancel before completing the purchase.', 'easy-digital-downloads' ) . '</li>';
+						$status_help .= '</ul>';
+						?>
+						<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo $status_help; // WPCS: XSS ok. ?>"></span>
+					</label>
+					<select name="edd-payment-status" id="edd_payment_status" class="edd-select-chosen <?php echo esc_attr( $rtl_class ); ?>">
 						<?php foreach ( edd_get_payment_statuses() as $key => $status ) : ?>
 							<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $order->status, $key, true ); ?>><?php echo esc_html( $status ); ?></option>
 						<?php endforeach; ?>
 					</select>
 
 					<?php
-					$status_help  = '<ul>';
-					$status_help .= '<li>' . __( '<strong>Pending</strong>: order is still processing or was abandoned by customer. Successful orders will be marked as Complete automatically once processing is finalized.', 'easy-digital-downloads' ) . '</li>';
-					$status_help .= '<li>' . __( '<strong>Complete</strong>: all processing is completed for this purchase.', 'easy-digital-downloads' ) . '</li>';
-					$status_help .= '<li>' . __( '<strong>Revoked</strong>: access to purchased items is disabled, perhaps due to policy violation or fraud.', 'easy-digital-downloads' ) . '</li>';
-					$status_help .= '<li>' . __( '<strong>Refunded</strong>: the purchase amount is returned to the customer and access to items is disabled.', 'easy-digital-downloads' ) . '</li>';
-					$status_help .= '<li>' . __( '<strong>Abandoned</strong>: the purchase attempt was not completed by the customer.', 'easy-digital-downloads' ) . '</li>';
-					$status_help .= '<li>' . __( '<strong>Failed</strong>: customer clicked Cancel before completing the purchase.', 'easy-digital-downloads' ) . '</li>';
-					$status_help .= '</ul>';
+					if ( ! edd_is_add_order_page() ) :
+						$trash_url = wp_nonce_url(
+							edd_get_admin_url( array(
+								'page'        => 'edd-payment-history',
+								'order_type'  => 'sale',
+								'edd-action'  => 'trash_order',
+								'purchase_id' => $order->id,
+							) ),
+							'edd_payment_nonce'
+						);
 					?>
-					<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo $status_help; // WPCS: XSS ok. ?>"></span>
+					<div style="margin-top: 8px;">
+						<a href="<?php echo esc_url( $trash_url ); ?>" class="edd-delete-payment edd-delete">
+							<?php esc_html_e( 'Move to Trash', 'easy-digital-downloads' ); ?>
+						</a>
+					</div>
+					<?php endif; ?>
 				</div>
 
 				<?php if ( ! edd_is_add_order_page() && edd_is_order_recoverable( $order->id ) && ! empty( $recovery_url ) ) : ?>
 					<div class="edd-admin-box-inside">
-						<span class="label"><?php esc_html_e( 'Recover', 'easy-digital-downloads' ); ?>:</span>
+						<span class="label label--has-tip">
+							<?php esc_html_e( 'Recover', 'easy-digital-downloads' ); ?>
+							<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_html_e( 'Pending and abandoned payments can be resumed by the customer, using this custom URL. Payments can be resumed only when they do not have a transaction ID from the gateway.', 'easy-digital-downloads' ); ?>"></span>
+						</span>
+
 						<input type="text" readonly="readonly" value="<?php echo esc_url( $recovery_url ); ?>"/>
-						<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_html_e( 'Pending and abandoned payments can be resumed by the customer, using this custom URL. Payments can be resumed only when they do not have a transaction ID from the gateway.', 'easy-digital-downloads' ); ?>"></span>
 					</div>
 				<?php endif; ?>
 
 				<div class="edd-admin-box-inside">
-					<span class="label"><?php esc_html_e( 'Date:', 'easy-digital-downloads' ); ?></span>
-					<input type="text" name="edd-payment-date" value="<?php echo esc_attr( $order_date->format( 'Y-m-d' ) ); ?>" class="medium-text edd_datepicker" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
+					<label for="edd-payment-date" class="label">
+						<?php esc_html_e( 'Date', 'easy-digital-downloads' ); ?>
+					</label>
+					<input type="text" id="edd-payment-date" name="edd-payment-date" value="<?php echo esc_attr( $order_date->format( 'Y-m-d' ) ); ?>" class="medium-text edd_datepicker" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
+
 				</div>
 
 				<div class="edd-admin-box-inside">
-					<span class="label"><?php echo esc_html( __( 'Time', 'easy-digital-downloads' ) . ' (' . edd_get_timezone_abbr() . ') :' ); ?></span>
+					<span class="label">
+						<?php echo esc_html( __( 'Time', 'easy-digital-downloads' ) . ' (' . edd_get_timezone_abbr() . ')' ); ?>
+					</span>
+
+					<label for="edd_payment_time_hour" class="screen-reader-text">Hour</label>
 					<?php
 					echo EDD()->html->select( array(
 						'name'             => 'edd-payment-time-hour',
+						'id'               => 'edd-payment-time-hour',
 						'options'          => edd_get_hour_values(),
 						'selected'         => $order_date->format( 'H' ),
 						'chosen'           => true,
@@ -825,9 +918,11 @@ function edd_order_details_attributes( $order ) {
 					) ); // WPCS: XSS ok.
 					?>
 					:
+					<label for="edd_payment_time_min" class="screen-reader-text">Minute</label>
 					<?php
 					echo EDD()->html->select( array(
 						'name'             => 'edd-payment-time-min',
+						'id'               => 'edd-payment-time-min',
 						'options'          => edd_get_minute_values(),
 						'selected'         => $order_date->format( 'i' ),
 						'chosen'           => true,
@@ -843,96 +938,6 @@ function edd_order_details_attributes( $order ) {
 			</div><!-- /.edd-admin-box -->
 		</div><!-- /.inside -->
 
-		<div class="edd-order-update-box edd-admin-box">
-			<?php do_action( 'edd_view_order_details_update_before', $order->id ); ?>
-
-			<div id="major-publishing-actions">
-				<?php if ( ! edd_is_add_order_page() ) : ?>
-				<div id="delete-action">
-					<a href="<?php echo wp_nonce_url( add_query_arg( array(
-						'edd-action'  => 'delete_payment',
-						'purchase_id' => $order->id,
-					), admin_url( 'edit.php?post_type=download&page=edd-payment-history' ) ), 'edd_payment_nonce' ) ?>"
-					   class="edd-delete-payment edd-delete"><?php esc_html_e( 'Delete Order', 'easy-digital-downloads' ); ?></a>
-				</div>
-				<?php endif; ?>
-
-				<div id="publishing-action">
-					<span class="spinner"></span>
-					<input type="submit" id="edd-order-submit" class="button button-primary right" value="<?php esc_attr_e( 'Save Order', 'easy-digital-downloads' ); ?>"/>
-				</div>
-				<div class="clear"></div>
-			</div>
-
-			<?php do_action( 'edd_view_order_details_update_after', $order->id ); ?>
-
-		</div>
-	</div>
-
-<?php
-}
-
-/**
- * Output the order details amounts box
- *
- * @since 3.0
- *
- * @param object $order
- */
-function edd_order_details_amounts( $order ) {
-?>
-
-	<div id="edd-order-amounts" class="postbox edd-order-data">
-		<h3 class="hndle"><span><?php esc_html_e( 'Order Amounts', 'easy-digital-downloads' ); ?></span></h3>
-
-		<div class="inside">
-			<div class="edd-order-update-box edd-admin-box">
-				<?php do_action( 'edd_view_order_details_totals_before', $order->id ); ?>
-
-				<div class="edd-order-subtotal edd-admin-box-inside">
-					<span class="label"><?php esc_html_e( 'Subtotal', 'easy-digital-downloads' ); ?>:</span><?php
-					echo esc_html( edd_currency_symbol( $order->currency ) );
-					?><span class="value"><?php echo esc_attr( edd_format_amount( $order->subtotal ) ); ?></span>
-				</div>
-
-				<div class="edd-order-discounts edd-admin-box-inside">
-					<span class="label"><?php esc_html_e( 'Discount', 'easy-digital-downloads' ); ?>:</span><?php
-					echo esc_html( edd_currency_symbol( $order->currency ) );
-					?><span class="value"><?php echo esc_attr( edd_format_amount( $order->discount ) ); ?></span>
-				</div>
-
-				<div class="edd-order-adjustments edd-admin-box-inside">
-					<span class="label"><?php esc_html_e( 'Adjustments', 'easy-digital-downloads' ); ?>:</span><?php
-					echo esc_html( edd_currency_symbol( $order->currency ) );
-					?><span class="value"><?php echo esc_attr( edd_format_amount( $order->discount ) ); ?></span>
-				</div>
-
-				<?php if ( edd_use_taxes() ) : ?>
-					<div class="edd-order-taxes edd-admin-box-inside">
-						<span class="label"><?php esc_html_e( 'Tax', 'easy-digital-downloads' ); ?>:</span><?php
-						echo esc_html( edd_currency_symbol( $order->currency ) );
-						?><span class="value"><?php echo esc_attr( edd_format_amount( $order->tax ) ); ?></span>
-					</div>
-				<?php endif; ?>
-
-				<div class="edd-order-total edd-admin-box-inside">
-					<span class="label"><?php esc_html_e( 'Total', 'easy-digital-downloads' ); ?>:</span><?php
-					echo esc_html( edd_currency_symbol( $order->currency ) );
-					?><span class="value"><?php echo esc_attr( edd_format_amount( $order->total ) ); ?></span>
-				</div>
-
-				<?php do_action( 'edd_view_order_details_totals_after', $order->id ); ?>
-			</div>
-		</div>
-
-		<?php if ( edd_is_add_order_page() && current_user_can( 'edit_shop_payments' ) ) : ?>
-		<div id="major-publishing-actions">
-			<div id="publishing-action">
-				<button type="button" class="edd-override button button-secondary" disabled><?php esc_html_e( 'Override Amounts', 'easy-digital-downloads' ); ?></button>
-			</div>
-			<div class="clear"></div>
-		</div>
-		<?php endif; ?>
 	</div>
 
 <?php
@@ -988,4 +993,87 @@ function edd_order_details_refunds( $order ) {
  */
 function edd_is_add_order_page() {
 	return isset( $_GET['view'] ) && 'add-order' === sanitize_key( $_GET['view'] ); // WPCS: CSRF ok.
+}
+
+/**
+ * Returns markup for an Order status badge.
+ *
+ * @since 3.0
+ *
+ * @param string $order_status Order status slug.
+ * @return string
+ */
+function edd_get_order_status_badge( $order_status ) {
+
+	switch( $order_status ) {
+		case 'refunded' :
+			$icon = '<span class="edd-admin-order-status-badge__icon dashicons dashicons-undo"></span>';
+			break;
+		case 'failed' :
+			$icon = '<span class="edd-admin-order-status-badge__icon dashicons dashicons-no-alt"></span>';
+			break;
+		case 'complete' :
+			$icon = '<span class="edd-admin-order-status-badge__icon dashicons dashicons-yes"></span>';
+			break;
+		default:
+			$icon = '';
+	}
+
+	/**
+	 * Filters the markup for the order status badge icon.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $icon Icon HTML markup.
+	 */
+	$icon = apply_filters( 'edd_get_order_status_badge_icon', $icon, $order_status );
+
+	ob_start();
+?>
+
+<span class="edd-admin-order-status-badge edd-admin-order-status-badge--<?php echo esc_attr( $order_status ); ?>">
+
+	<span class="edd-admin-order-status-badge__text">
+		<?php echo edd_get_payment_status_label( $order_status ); ?>
+	</span>
+	<span class="edd-admin-order-status-badge__icon">
+		<?php
+		echo wp_kses(
+			$icon,
+			array(
+				'span'    => array(
+					'class' => true,
+				),
+				'svg'     => array(
+					'class'       => true,
+					'xmlns'       => true,
+					'width'       => true,
+					'height'      => true,
+					'viewbox'     => true,
+					'aria-hidden' => true,
+					'role'        => true,
+					'focusable'   => true,
+				),
+				'path'    => array(
+					'fill'      => true,
+					'fill-rule' => true,
+					'd'         => true,
+					'transform' => true,
+				),
+				'polygon' => array(
+					'fill'      => true,
+					'fill-rule' => true,
+					'points'    => true,
+					'transform' => true,
+					'focusable' => true,
+				),
+			)
+		);
+		?>
+	</span>
+
+</span>
+
+<?php
+	return ob_get_clean();
 }
