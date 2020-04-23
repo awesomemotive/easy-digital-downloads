@@ -854,7 +854,6 @@ function edd_order_details_extras( $order = false ) {
 						<span class="label"><?php esc_html_e( 'Gateway', 'easy-digital-downloads' ); ?></span>
 						<?php echo $gateway_select; ?>
 					</div>
-					</div>
 				<?php endif; ?>
 
 				<div class="edd-admin-box-inside">
