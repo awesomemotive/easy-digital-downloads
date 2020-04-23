@@ -320,7 +320,7 @@ function edd_order_details_email( $order ) {
 				</div>
 				<?php endforeach; ?>
 
-				<p class="edd-form-group__help">
+				<p class="edd-form-group__help description">
 					<?php echo esc_html( $help ); ?>
 				</p>
 			</fieldset>
