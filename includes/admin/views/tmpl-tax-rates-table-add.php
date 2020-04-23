@@ -17,7 +17,7 @@
 
 	<th>
 		<label for="tax_rate_country" class="screen-reader-text"><?php esc_html_e( 'Country', 'easy-digital-downloads' ); ?></label>
-		<?php 
+		<?php
 		echo EDD()->html->select( array(
 			'options'          => edd_get_country_list(),
 			'id'               => 'tax_rate_country',
@@ -42,7 +42,7 @@
 	<th>
 		<label for="tax_rate_amount" class="screen-reader-text"><?php esc_html_e( 'Rate', 'easy-digital-downloads' ); ?></label>
 		<input type="number" step="0.0001" min="0.0" max="99" id="tax_rate_amount" />
-	</p>
+	</th>
 
 	<th class="edd-tax-rates-table-actions">
 		<button id="tax_rate_submit" class="button button-secondary"><?php esc_html_e( 'Add Rate', 'easy-digital-downloads' ); ?></button>

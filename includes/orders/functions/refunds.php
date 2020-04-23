@@ -50,7 +50,7 @@ function edd_is_order_refundable( $order_id = 0 ) {
 	}
 
 	// Refund dates may not have been set retroactively so we need to calculate it manually.
-	if ( '0000-00-00 00:00:00' === $order->date_refundable ) {
+	if ( empty( $order->date_refundable ) ) {
 		$refund_window = absint( edd_get_option( 'refund_window', 30 ) );
 
 		// Refund window is infinite.
