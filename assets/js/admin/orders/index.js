@@ -8,6 +8,14 @@ import { jQueryReady } from 'utils/jquery.js';
 
 jQueryReady( () => {
 
+	// Move `.update-nag` items below the top header.
+	//
+	// `.notice` items are properly moved, but WordPress core
+	// does not move `.update-nag`.
+	if ( 0 !== $( '.edit-post-editor-regions__header' ).length ) {
+		$( 'div.update-nag' ).insertAfter( $( '.edit-post-editor-regions__header' ) );
+	}
+
 	// "Validate" order form before submitting.
 	// @todo move somewhere else?
 	$( '#edd-add-order-form' ).on( 'submit', function() {
