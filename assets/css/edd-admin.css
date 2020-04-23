@@ -1776,10 +1776,6 @@ input[class*="edd-price-field"] {
 .edd_repeatable_product_wrapper td {
 	overflow: visible;
 }
-.edd-order-details-label-mobile {
-	display: none;
-}
-
 .edd-add-download-to-purchase,
 .edd-add-adjustment-to-purchase {
 	padding: 15px;

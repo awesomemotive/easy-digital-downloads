@@ -185,7 +185,7 @@ function edd_order_details_customer( $order ) {
 		<div class="column-container order-customer-info">
 			<div class="column-container change-customer">
 				<div class="edd-form-group">
-					<label for="customer_id" class="edd-form-group__label edd-order-details-label-mobile"><?php esc_html_e( 'Assign to an existing customer', 'easy-digital-downloads' ); ?></label>
+					<label for="customer_id" class="edd-form-group__label"><?php esc_html_e( 'Assign to an existing customer', 'easy-digital-downloads' ); ?></label>
 					<div class="edd-form-group__control">
 						<?php
 						echo EDD()->html->customer_dropdown(
@@ -591,7 +591,7 @@ function edd_order_details_items( $order ) {
 				<div class="edd-form-group">
 					<ul>
 						<li class="download">
-							<label for="edd_order_add_download_select" class="edd-form-group__label edd-order-details-label-mobile"><?php printf( esc_html_x( '%s To Add', 'order details select item to add - mobile', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
+							<label for="edd_order_add_download_select" class="edd-form-group__label"><?php printf( esc_html_x( '%s To Add', 'order details select item to add - mobile', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
 						<div class="edd-form-group__control">
 							<?php
 							echo EDD()->html->product_dropdown(
@@ -671,7 +671,7 @@ function edd_order_details_adjustments( $order ) {
 			<div class="edd-form-group">
 				<ul>
 					<li class="adjustment">
-						<label for="edd_order_add_adjustment_select" class="edd-form-group__label edd-order-details-label-mobile"><?php echo esc_html_x( 'Adjustment To Add', 'order details select adjustment to add - mobile', 'easy-digital-downloads' ); ?></label>
+						<label for="edd_order_add_adjustment_select" class="edd-form-group__label"><?php echo esc_html_x( 'Adjustment To Add', 'order details select adjustment to add - mobile', 'easy-digital-downloads' ); ?></label>
 					<div class="edd-form-group__control">
 						<?php
 						echo EDD()->html->select(
