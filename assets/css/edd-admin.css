@@ -713,6 +713,12 @@ table.edd-order-overview-summary {
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+#edd-order-overview-actions.inside > div {
+	display: flex;
+	align-items: center;
 }
 
 .edd-order-overview-actions .button {
@@ -746,6 +752,10 @@ table.edd-order-overview-summary {
 	.edd-order-overview-actions__locked {
 		margin-bottom: 12px;
 	}
+}
+
+.edd-order-overview-actions__refund .dashicons {
+	margin-right: 8px;
 }
 
 /** Dialog */
