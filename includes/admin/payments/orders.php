@@ -1001,11 +1001,13 @@ function edd_order_details_attributes( $order ) {
 				<?php endif; ?>
 
 				<div class="edd-admin-box-inside">
-					<label for="edd-payment-date" class="label">
-						<?php esc_html_e( 'Date', 'easy-digital-downloads' ); ?>
-					</label>
-					<input type="text" id="edd-payment-date" name="edd-payment-date" value="<?php echo esc_attr( $order_date->format( 'Y-m-d' ) ); ?>" class="edd_datepicker" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
-
+					<div class="edd-form-group">
+						<label for="edd-payment-date" class="edd-form-group__label"><?php esc_html_e( 'Date', 'easy-digital-downloads' ); ?>
+						</label>
+						<div class="edd-form-group__control">
+							<input type="text" id="edd-payment-date" class="edd-form-group__input" name="edd-payment-date" value="<?php echo esc_attr( $order_date->format( 'Y-m-d' ) ); ?>" class="edd_datepicker" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>"/>
+						</div>
+					</div>
 				</div>
 
 				<div class="edd-admin-box-inside">
