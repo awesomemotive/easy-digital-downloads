@@ -845,7 +845,7 @@ function edd_order_details_extras( $order = false ) {
 						<div class="edd-form-group">
 							<label for="edd_gateway" class="edd-form-group__label"><?php esc_html_e( 'Gateway', 'easy-digital-downloads' ); ?></label>
 							<div class="edd-form-group__control">
-								<input class="edd-form-group__input" id="edd_gateway"><?php echo edd_get_gateway_admin_label( $order->gateway ); ?>/>
+								<input class="edd-form-group__input" id="edd_gateway" value="<?php echo edd_get_gateway_admin_label( $order->gateway ); ?>"/>
 							</div>
 						</div>
 					</div>
