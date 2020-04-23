@@ -814,15 +814,6 @@ function edd_order_details_extras( $order = false ) {
 		foreach ( $known_gateways as $id => $data ) {
 			$gateways[ $id ] = esc_html( $data['admin_label'] );
 		}
-
-		$gateway_select = EDD()->html->select( array(
-			'name'             => 'gateway',
-			'options'          => $gateways,
-			'selected'         => edd_get_default_gateway(),
-			'chosen'           => true,
-			'show_option_none' => false,
-			'show_option_all'  => false,
-		) );
 	}
 
 	// Filter the transaction ID (here specifically for back-compat)
@@ -842,17 +833,29 @@ function edd_order_details_extras( $order = false ) {
 
 				<?php if ( ! edd_is_add_order_page() ) : ?>
 					<div class="edd-order-gateway edd-admin-box-inside edd-admin-box-inside--row">
-						<div class="edd-form-group">
-							<label for="edd_gateway" class="edd-form-group__label"><?php esc_html_e( 'Gateway', 'easy-digital-downloads' ); ?></label>
-							<div class="edd-form-group__control">
-								<input class="edd-form-group__input" id="edd_gateway" value="<?php echo edd_get_gateway_admin_label( $order->gateway ); ?>"/>
-							</div>
-						</div>
+						<span class="label"><?php esc_html_e( 'Gateway', 'easy-digital-downloads' ); ?></span>
+						<span class="value"><?php echo edd_get_gateway_admin_label( $order->gateway ); ?></span>
 					</div>
 				<?php else : ?>
 					<div class="edd-order-gateway edd-admin-box-inside">
-						<span class="label"><?php esc_html_e( 'Gateway', 'easy-digital-downloads' ); ?></span>
-						<?php echo $gateway_select; ?>
+						<div class="edd-form-group">
+							<label for="edd_gateway_select" class="edd-form-group__label"><?php esc_html_e( 'Gateway', 'easy-digital-downloads' ); ?></label>
+							<div class="edd-form-group__control">
+								<?php
+								echo EDD()->html->select(
+									array(
+										'name'             => 'gateway',
+										'class'            => 'edd-form-group__input',
+										'options'          => $gateways,
+										'selected'         => edd_get_default_gateway(),
+										'chosen'           => true,
+										'show_option_none' => false,
+										'show_option_all'  => false,
+									)
+								); // WPCS: XSS ok.
+								?>
+							</div>
+						</div>
 					</div>
 				<?php endif; ?>
 
