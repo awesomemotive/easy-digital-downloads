@@ -741,7 +741,7 @@ function edd_order_details_adjustments( $order ) {
 				<div class="edd-form-group">
 						<label for="edd_add_order_credit_amount" class="screen-reader-text"><?php echo esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></label>
 					<div class="edd-form-group__control">
-						<input type="text" class="edd-add-order-credit-amount" value="" id="edd_add_order_credit_amount" min="1" placeholder="<?php echo esc_attr( 'Amount', 'easy-digital-downloads' ); ?>" />
+						<input type="number" class="edd-add-order-credit-amount" value="" id="edd_add_order_credit_amount" min="1" placeholder="<?php echo esc_attr( 'Amount', 'easy-digital-downloads' ); ?>" />
 					</div>
 					</li>
 				</div>
