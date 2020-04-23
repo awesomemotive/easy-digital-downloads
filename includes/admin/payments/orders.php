@@ -302,7 +302,8 @@ function edd_order_details_email( $order ) {
 	$help = __( 'Send a new copy of the purchase receipt to the email address used for this order. If download URLs were included in the original receipt, new ones will be included.', 'easy-digital-downloads' );
 ?>
 
-	<div><?php
+	<div>
+		<?php
 		if ( ! empty( $customer->emails ) && count( (array) $customer->emails ) > 1 ) : ?>
 			<fieldset class="edd-form-group">
 				<legend class="edd-form-group__label">
@@ -311,7 +312,7 @@ function edd_order_details_email( $order ) {
 
 				<?php foreach ( $all_emails as $key => $email ) : ?>
 				<div class="edd-form-group__control is-radio">
-					<input autocomplete="off" id="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" class="edd-form-group__input" name="edd-order-resend-receipt-address" type="radio" value="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" <?php checked( true, ( 'primary' === $key ) ); ?> />
+					<input id="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" class="edd-form-group__input" name="edd-order-resend-receipt-address" type="radio" value="<?php echo rawurlencode( sanitize_email( $email ) ); ?>" <?php checked( true, ( 'primary' === $key ) ); ?> />
 
 					<label for="<?php echo rawurlencode( sanitize_email( $email ) ); ?>">
 						<?php echo esc_attr( $email ); ?>
