@@ -833,18 +833,21 @@ function edd_order_details_extras( $order = false ) {
 					</div>
 				</div>
 
-				<div class="edd-order-ip edd-admin-box-inside">
-					<div class="edd-form-group">
-						<label for="edd_ip" class="edd-form-group__label"><?php esc_html_e( 'IP', 'easy-digital-downloads' ); ?></label>
-					<div class="edd-form-group__control">
-						<?php if ( edd_is_add_order_page() ) : ?>
-							<input type="text" name="ip" id="edd_ip" class="edd-form-group__input" readonly value="<?php echo esc_attr( edd_get_ip() ); ?>" />
-						<?php else : ?>
-							<span><?php echo edd_payment_get_ip_address_url( $order->id ); // WPCS: XSS ok. ?></span>
-						<?php endif; ?>
+				<?php if ( edd_is_add_order_page() ) : ?>
+					<div class="edd-order-ip edd-admin-box-inside">
+						<div class="edd-form-group">
+							<label for="edd_ip" class="edd-form-group__label"><?php esc_html_e( 'IP', 'easy-digital-downloads' ); ?></label>
+							<div class="edd-form-group__control">
+								<input type="text" name="ip" id="edd_ip" class="edd-form-group__input" readonly value="<?php echo esc_attr( edd_get_ip() ); ?>" />
+							</div>
+						</div>
 					</div>
+				<?php else : ?>
+					<div class="edd-order-gateway edd-admin-box-inside edd-admin-box-inside--row">
+						<span class="label"><?php esc_html_e( 'IP', 'easy-digital-downloads' ); ?></span>
+						<span class="value"><?php echo edd_payment_get_ip_address_url( $order->id ); // WPCS: XSS ok. ?></span>
 					</div>
-				</div>
+				<?php endif; ?>
 
 				<?php if ( $transaction_id ) : ?>
 					<div class="edd-order-tx-id edd-admin-box-inside">
