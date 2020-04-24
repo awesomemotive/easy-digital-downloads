@@ -37,7 +37,7 @@ function edd_view_refund_page_content() {
 
 <div class="wrap edd-wrap">
 
-	<h1><?php printf( esc_html__( 'View Refund: %s', 'easy-digital-downloads' ), $refund->order_number ); ?></h1>
+	<h1><?php printf( esc_html__( 'Refund: %s', 'easy-digital-downloads' ), $refund->order_number ); ?></h1>
 
 	<?php
 	/**
