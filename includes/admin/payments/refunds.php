@@ -36,7 +36,7 @@ function edd_refund_details_notice( $refund ) {
 
 		<div class="edit-post-header__settings">
 			<a href="<?php echo esc_url( $order_url ); ?>" class="button button-secondary" autofocus>
-				<?php esc_html_e( 'View Full Order', 'easy-digital-downloads' ); ?>
+				<?php esc_html_e( 'View Order', 'easy-digital-downloads' ); ?>
 			</a>
 		</div>
 
