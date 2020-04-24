@@ -382,6 +382,10 @@ class EDD_Payment_History_Table extends List_Table {
 			'status'   => __( 'Status', 'easy-digital-downloads' ),
 		);
 
+		if ( 'refund' === $this->type ) {
+			unset( $columns['status'] );
+		}
+
 		/**
 		 * Filters the columns for Orders and Refunds table.
 		 *
@@ -509,7 +513,7 @@ class EDD_Payment_History_Table extends List_Table {
 		);
 
 		// Resend Receipt
-		if ( 'complete' === $order->status && ! empty( $order->email ) ) {
+		if ( 'sale' === $this->type && 'complete' === $order->status && ! empty( $order->email ) ) {
 			$row_actions['email_links'] = '<a href="' . esc_url( add_query_arg( array(
 					'edd-action'  => 'email_links',
 					'purchase_id' => $order->id
@@ -628,18 +632,22 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @return array $actions Bulk actions.
 	 */
 	public function get_bulk_actions() {
-		$action = array(
-			'set-status-complete'     => __( 'Mark Completed',   'easy-digital-downloads' ),
-			'set-status-pending'     => __( 'Mark Pending',     'easy-digital-downloads' ),
-			'set-status-processing'  => __( 'Mark Processing',  'easy-digital-downloads' ),
-			'set-status-refunded'    => __( 'Mark Refunded',    'easy-digital-downloads' ),
-			'set-status-revoked'     => __( 'Mark Revoked',     'easy-digital-downloads' ),
-			'set-status-failed'      => __( 'Mark Failed',      'easy-digital-downloads' ),
-			'set-status-abandoned'   => __( 'Mark Abandoned',   'easy-digital-downloads' ),
-			'set-status-preapproval' => __( 'Mark Preapproved', 'easy-digital-downloads' ),
-			'set-status-cancelled'   => __( 'Mark Cancelled',   'easy-digital-downloads' ),
-			'resend-receipt'         => __( 'Resend Receipts', 'easy-digital-downloads' ),
-		);
+		if ( 'refund' !== $this->type ) {
+			$action = array(
+				'set-status-complete'     => __( 'Mark Completed',   'easy-digital-downloads' ),
+				'set-status-pending'     => __( 'Mark Pending',     'easy-digital-downloads' ),
+				'set-status-processing'  => __( 'Mark Processing',  'easy-digital-downloads' ),
+				'set-status-refunded'    => __( 'Mark Refunded',    'easy-digital-downloads' ),
+				'set-status-revoked'     => __( 'Mark Revoked',     'easy-digital-downloads' ),
+				'set-status-failed'      => __( 'Mark Failed',      'easy-digital-downloads' ),
+				'set-status-abandoned'   => __( 'Mark Abandoned',   'easy-digital-downloads' ),
+				'set-status-preapproval' => __( 'Mark Preapproved', 'easy-digital-downloads' ),
+				'set-status-cancelled'   => __( 'Mark Cancelled',   'easy-digital-downloads' ),
+				'resend-receipt'         => __( 'Resend Receipts', 'easy-digital-downloads' ),
+			);
+		} else {
+			$action = array();
+		}
 
 		if ( 'trash' === $this->get_status() ) {
 			$action['restore'] = __( 'Restore', 'easy-digital-downloads' );
