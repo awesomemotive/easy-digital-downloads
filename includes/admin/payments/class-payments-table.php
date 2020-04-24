@@ -106,6 +106,11 @@ class EDD_Payment_History_Table extends List_Table {
 	 *            Display 'Advanced Filters'
 	 */
 	public function advanced_filters() {
+		// Hide when viewing Refunds.
+		if ( 'refund' === $this->type ) {
+			return;
+		}
+
 		edd_admin_filter_bar( 'orders' );
 	}
 
