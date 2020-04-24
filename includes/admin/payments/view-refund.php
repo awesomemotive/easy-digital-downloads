@@ -53,33 +53,6 @@ function edd_view_refund_page_content() {
 	<div id="poststuff">
 		<div id="edd-dashboard-widgets-wrap">
 			<div id="post-body" class="metabox-holder columns-2">
-				<div id="postbox-container-1" class="postbox-container">
-
-					<div id="side-sortables">
-						<?php
-						/**
-						 * Allows output before Refund sidebar content.
-						 *
-						 * @since 3.0
-						 *
-						 * @param $refund_id ID of the current Refund.
-						 */
-						do_action( 'edd_view_refund_details_sidebar_before', $refund->id );
-	
-						// Attributes
-						edd_refund_details_attributes( $refund );
-
-						/**
-						 * Allows further output after Refund sidebar content.
-						 *
-						 * @since 3.0
-						 *
-						 * @param $refund_id ID of the current Refund.
-						 */
-						do_action( 'edd_view_refund_details_sidebar_after', $refund->id );
-						?>
-					</div>
-				</div>
 
 				<div id="postbox-container-2" class="postbox-container">
 					<div id="normal-sortables">
@@ -107,6 +80,33 @@ function edd_view_refund_page_content() {
 						 * @param int $refund_id ID of the current Refund.
 						 */
 						do_action( 'edd_view_refund_details_main_after', $refund->id );
+						?>
+					</div>
+				</div>
+
+				<div id="postbox-container-1" class="postbox-container">
+					<div id="side-sortables">
+						<?php
+						/**
+						 * Allows output before Refund sidebar content.
+						 *
+						 * @since 3.0
+						 *
+						 * @param $refund_id ID of the current Refund.
+						 */
+						do_action( 'edd_view_refund_details_sidebar_before', $refund->id );
+	
+						// Attributes
+						edd_refund_details_attributes( $refund );
+
+						/**
+						 * Allows further output after Refund sidebar content.
+						 *
+						 * @since 3.0
+						 *
+						 * @param $refund_id ID of the current Refund.
+						 */
+						do_action( 'edd_view_refund_details_sidebar_after', $refund->id );
 						?>
 					</div>
 				</div>
