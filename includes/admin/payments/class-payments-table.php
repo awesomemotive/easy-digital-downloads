@@ -26,6 +26,15 @@ use EDD\Admin\List_Table;
 class EDD_Payment_History_Table extends List_Table {
 
 	/**
+	 * Determines the current Order type.
+	 *
+	 * @since 3.0
+	 *
+	 * @var string $type Order type
+	 */
+	protected $type;
+
+	/**
 	 * URL of this page.
 	 *
 	 * @var string
@@ -49,6 +58,16 @@ class EDD_Payment_History_Table extends List_Table {
 			'ajax'     => false
 		) );
 
+		// Use registered types
+		$types = array_keys( edd_get_order_types() );
+		if ( ! empty( $_GET['order_type'] ) && in_array( $_GET['order_type'], $types, true ) ) {
+			$this->type = sanitize_key( $_GET['order_type'] );
+
+		// Default to 'sale' if type is unrecognized
+		} else {
+			$this->type = 'sale';
+		}
+
 		$this->set_base_url();
 		$this->filter_bar_hooks();
 		$this->get_payment_counts();
@@ -62,21 +81,10 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @since 3.0
 	 */
 	private function set_base_url() {
-
-		// Use registered types
-		$types = array_keys( edd_get_order_types() );
-		if ( ! empty( $_GET['order_type'] ) && in_array( $_GET['order_type'], $types, true ) ) {
-			$type = sanitize_key( $_GET['order_type'] );
-
-		// Default to 'sale' if type is unrecognized
-		} else {
-			$type = 'sale';
-		}
-
 		// Carry the type over to the base URL
 		$this->base_url = edd_get_admin_url( array(
 			'page'       => 'edd-payment-history',
-			'order_type' => $type
+			'order_type' => $this->type
 		) );
 	}
 
@@ -219,7 +227,7 @@ class EDD_Payment_History_Table extends List_Table {
 
 			<div class="inside">
 				<fieldset>
-					<legend for="order-amount-filter-type"><?php esc_html_e( 'Amount is', 'easy-digital-downloads' ); ?></legend>
+					<legend for="order-amount-filter-type"><?php esc_html_e( 'Total is', 'easy-digital-downloads' ); ?></legend>
 					<?php
 					$options = array(
 						'=' => __( 'equal to', 'easy-digital-downloads' ),
@@ -364,14 +372,26 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @return array $columns Array of all the list table columns.
 	 */
 	public function get_columns() {
-		return apply_filters( 'edd_payments_table_columns', array(
+		$columns = array(
 			'cb'       => '<input type="checkbox" />', // Render a checkbox instead of text
 			'number'   => __( 'Number',    'easy-digital-downloads' ),
 			'customer' => __( 'Customer',  'easy-digital-downloads' ),
 			'gateway'  => __( 'Gateway',   'easy-digital-downloads' ),
-			'amount'   => __( 'Amount',    'easy-digital-downloads' ),
-			'date'     => __( 'Date', 'easy-digital-downloads' )
-		) );
+			'amount'   => __( 'Total',    'easy-digital-downloads' ),
+			'date'     => __( 'Date', 'easy-digital-downloads' ),
+			'status'   => __( 'Status', 'easy-digital-downloads' ),
+		);
+
+		/**
+		 * Filters the columns for Orders and Refunds table.
+		 *
+		 * @since unknown
+		 *
+		 * @param array $columns Table columns.
+		 */
+		$columns = apply_filters( 'edd_payments_table_columns', $columns );
+
+		return $columns;
 	}
 
 	/**
@@ -384,6 +404,7 @@ class EDD_Payment_History_Table extends List_Table {
 	public function get_sortable_columns() {
 		return apply_filters( 'edd_payments_table_sortable_columns', array(
 			'number'   => array( 'id',           true  ),
+			'status'   => array( 'status',       false ),
 			'customer' => array( 'customer_id',  false ),
 			'gateway'  => array( 'gateway',      false ),
 			'amount'   => array( 'total',        false ),
@@ -431,6 +452,9 @@ class EDD_Payment_History_Table extends List_Table {
 				}
 
 				break;
+			case 'status':
+				$value = edd_get_order_status_badge( $order->status );
+				break;
 			default:
 				$value = method_exists( $order, 'get_' . $column_name )
 					? call_user_func( array( $order, 'get_' . $column_name ) )
@@ -439,54 +463,6 @@ class EDD_Payment_History_Table extends List_Table {
 		}
 
 		return apply_filters( 'edd_payments_table_column', $value, $order->id, $column_name );
-	}
-
-	/**
-	 * Render the Email column.
-	 *
-	 * @since 1.4
-	 * @since 3.0 Updated to use the new EDD\Orders\Order class.
-	 *
-	 * @param EDD\Orders\Order $order Order object.
-	 * @return string Data shown in the Email column
-	 */
-	public function column_email( $order ) {
-
-		// Always include the "View" link
-		$row_actions = array();
-
-		// Add search term string back to base URL
-		$search_terms = isset( $_GET['s'] )
-			? trim( $_GET['s'] )
-			: '';
-
-		if ( ! empty( $search_terms ) ) {
-			$this->base_url = add_query_arg( 's', $search_terms, $this->base_url );
-		}
-
-		$email = $order->email;
-
-		// Resend
-		if ( 'complete' === $order->status && ! empty( $email ) ) {
-			$row_actions['email_links'] = '<a href="' . add_query_arg( array(
-				'edd-action'  => 'email_links',
-				'purchase_id' => $order->id
-			), $this->base_url ) . '">' . __( 'Resend Receipt', 'easy-digital-downloads' ) . '</a>';
-		}
-
-		// This exists for backwards compatibility purposes.
-		$payment     = edd_get_payment( $order->id );
-		$row_actions = apply_filters( 'edd_payment_row_actions', $row_actions, $payment );
-
-		if ( empty( $email ) ) {
-			$email = __( '(unknown)', 'easy-digital-downloads' );
-		}
-
-		// Concatenate the results
-		$value = $email . $this->row_actions( $row_actions );
-
-		// Filter & return
-		return apply_filters( 'edd_payments_table_column', $value, $order->id, 'email' );
 	}
 
 	/**
@@ -516,13 +492,7 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @return string Displays a checkbox.
 	 */
 	public function column_number( $order ) {
-		$state  = '';
 		$status = $this->get_status();
-
-		// State
-		if ( ( ! empty( $status ) && ( $order->status !== $status ) ) || ( empty( $status ) && ( 'complete' !== $order->status ) ) ) {
-			$state = ' &mdash; ' . edd_get_payment_status_label( $order->status );
-		}
 
 		// View URL
 		$view_url = edd_get_admin_url( array(
@@ -567,23 +537,36 @@ class EDD_Payment_History_Table extends List_Table {
 			$row_actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete', 'easy-digital-downloads' ) . '</a>';
 		}
 
-		// $payment exists for backwards compatibility purposes in the below filter.
-		$payment = edd_get_payment( $order->id );
+		if ( has_filter( 'edd_payment_row_actions' ) ) {
+			$payment = edd_get_payment( $order->id );
+
+			/**
+			 * Filters the row actions.
+			 *
+			 * @deprecated 3.0
+			 *
+			 * @param array             $row_actions
+			 * @param EDD_Payment|false $payment
+			 */
+			$row_actions = apply_filters_deprecated( 'edd_payment_row_actions', array( $row_actions, $payment ), '3.0', 'edd_order_row_actions' );
+		}
 
 		/**
 		 * Filters the row actions.
 		 *
-		 * @param array             $row_actions
-		 * @param EDD_Payment|false $payment
+		 * @param array            $row_actions Array of row actions.
+		 * @param EDD\Orders\Order $order       Order object.
+		 *
+		 * @since 3.0
 		 */
-		$row_actions = apply_filters( 'edd_payment_row_actions', $row_actions, $payment );
+		$row_actions = apply_filters( 'edd_order_row_actions', $row_actions, $order );
 
 		// Row actions
 		$actions = $this->row_actions( $row_actions );
 
 		// Primary link
 		$order_number = $order->type == 'sale' ? $order->get_number() : $order->order_number;
-		$link = '<strong><a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $order_number ) . '</a>' . esc_html( $state ) . '</strong>';
+		$link = '<a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $order_number ) . '</a>';
 
 		// Concatenate & return the results
 		return $link . $actions;
@@ -621,6 +604,18 @@ class EDD_Payment_History_Table extends List_Table {
 		} else {
 			$name = '&mdash;';
 		}
+
+		/**
+		 * Filters the output of the Email column in the Payments table.
+		 *
+		 * @since 1.4
+		 * @since 3.0 Run manually inside of the `customer` column for backwards compatibility.
+		 *
+		 * @param string $name Customer name.
+		 * @param int    $order_id ID of the Payment/Order.
+		 * @param string $column_name Name of the current column (email).
+		 */
+		$name = apply_filters( 'edd_payments_table_column', $name, $order->id, 'email' );
 
 		return $name;
 	}
@@ -734,6 +729,28 @@ class EDD_Payment_History_Table extends List_Table {
 
 		// Return items
 		return $items;
+	}
+
+	/**
+	 * Retrieves the Payments table views.
+	 *
+	 * @since 1.4
+	 *
+	 * @return array $views Available views.
+	 */
+	public function get_views() {
+		$views = parent::get_views();
+
+		/**
+		 * Filters the Payment table's views.
+		 *
+		 * @since 1.4
+		 *
+		 * @param array $views Payment table's views.
+		 */
+		$views = apply_filters( 'edd_payments_table_views', $views );
+
+		return $views;
 	}
 
 	/**

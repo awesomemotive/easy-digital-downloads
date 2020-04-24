@@ -36,7 +36,7 @@ function edd_is_order_refundable( $order_id = 0 ) {
 	}
 
 	// Only completed orders can be refunded.
-	if ( 'complete' !== $order->status ) {
+	if ( ! in_array( $order->status, array( 'complete', 'publish', 'partially_refunded' ), true ) ) {
 		return false;
 	}
 
@@ -50,7 +50,7 @@ function edd_is_order_refundable( $order_id = 0 ) {
 	}
 
 	// Refund dates may not have been set retroactively so we need to calculate it manually.
-	if ( '0000-00-00 00:00:00' === $order->date_refundable ) {
+	if ( empty( $order->date_refundable ) ) {
 		$refund_window = absint( edd_get_option( 'refund_window', 30 ) );
 
 		// Refund window is infinite.
@@ -75,17 +75,75 @@ function edd_is_order_refundable( $order_id = 0 ) {
 }
 
 /**
+ * Check order can be refunded via a capability override.
+ *
+ * @since 3.0
+ *
+ * @param int $order_id Order ID.
+ * @return bool True if refundable via capability override, false otherwise.
+ */
+function edd_is_order_refundable_by_override( $order_id = 0 ) {
+	// Bail if no order ID was passed.
+	if ( empty( $order_id ) ) {
+		return false;
+	}
+
+	$order = edd_get_order( $order_id );
+
+	// Bail if order was not found.
+	if ( ! $order ) {
+		return false;
+	}
+
+	// Allow certain capabilities to always provide refunds.
+	$caps = array( 'edit_shop_payments' );
+
+	/**
+	 * Filters the user capabilities that are required for overriding
+	 * refundability requirements.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $caps     List of capabilities that can override
+	 *                        refundability. Default `edit_shop_payments`.
+	 * @param int   $order_id ID of current Order being refunded.
+	 */
+	$caps = apply_filters( 'edd_is_order_refundable_by_override_caps', $caps, $order_id );
+
+	$can_override = false;
+
+	foreach ( $caps as $cap ) {
+		if ( true === current_user_can( $cap ) ) {
+			$can_override = true;
+			break;
+		}
+	}
+
+	/**
+	 * Filters the allowance of refunds on an Order.
+	 *
+	 * @since 3.0
+	 *
+	 * @param bool $can_override If the refundability can be overriden by
+	 *                           the current user.
+	 * @param int  $order_id     ID of current Order being refunded.
+	 */
+	$can_override = apply_filters( 'edd_is_order_refundable_by_override', $can_override, $order_id );
+
+	return $can_override;
+}
+
+/**
  * Refund entire order.
  *
  * @since 3.0
  *
  * @param int    $order_id    Order ID.
- * @param string $status      Optional. Refund status. Default `complete`.
  * @param array  $order_items Optional. Array of Order Item IDs to allow for a partial refund.
  *
  * @return int|false New order ID if successful, false otherwise.
  */
-function edd_refund_order( $order_id = 0, $status = 'complete', $order_items = array() ) {
+function edd_refund_order( $order_id = 0, $order_items = array() ) {
 	global $wpdb;
 
 	// Bail if no order ID was passed.
@@ -96,14 +154,6 @@ function edd_refund_order( $order_id = 0, $status = 'complete', $order_items = a
 	// Ensure the order ID is an integer.
 	$order_id = absint( $order_id );
 
-	// Sanitize status.
-	$status = strtolower( sanitize_text_field( $status ) );
-
-	// Status can only either be `complete` or `pending`.
-	if ( ! in_array( $status, array( 'pending', 'complete' ), true ) ) {
-		$status = 'complete'; // Default to `complete`.
-	}
-
 	// Fetch order.
 	$order = edd_get_order( $order_id );
 
@@ -111,7 +161,10 @@ function edd_refund_order( $order_id = 0, $status = 'complete', $order_items = a
 		return false;
 	}
 
-	if ( ! edd_is_order_refundable( $order_id ) ) {
+	if (
+		false === edd_is_order_refundable( $order_id ) &&
+		false === edd_is_order_refundable_by_override( $order->id )
+	) {
 		return false;
 	}
 
@@ -198,7 +251,7 @@ function edd_refund_order( $order_id = 0, $status = 'complete', $order_items = a
 	$order_data = array(
 		'parent'       => $order_id,
 		'order_number' => $number,
-		'status'       => $status,
+		'status'       => 'complete',
 		'type'         => 'refund',
 		'user_id'      => $order->user_id,
 		'customer_id'  => $order->customer_id,
@@ -289,11 +342,14 @@ function edd_refund_order( $order_id = 0, $status = 'complete', $order_items = a
 			break;
 		}
 	}
-	if ( 'complete' === $status && $all_refunded ) {
-		edd_update_order( $order_id, array(
-			'status' => 'refunded',
-		) );
-	}
+
+	$order_status = true === $all_refunded
+		? 'refunded'
+		: 'partially_refunded';
+
+	edd_update_order( $order_id, array(
+		'status' => $order_status,
+	) );
 
 	/**
 	 * Fires when an order has been refunded.

@@ -24,9 +24,15 @@ defined( 'ABSPATH' ) || exit;
 function edd_get_option( $key = '', $default = false ) {
 	global $edd_options;
 
-	$value = ! empty( $edd_options[ $key ] )
-		? $edd_options[ $key ]
-		: $default;
+	$value = $default;
+
+	if ( isset( $edd_options[ $key ] ) ) {
+		if ( is_numeric( $edd_options[ $key ] ) ) {
+			$value = $edd_options[ $key ];
+		} else {
+			$value = ! empty( $edd_options[ $key ] ) ? $edd_options[ $key ] : $default;
+		}
+	}
 
 	$value = apply_filters( 'edd_get_option', $value, $key, $default );
 
@@ -320,8 +326,6 @@ function edd_get_registered_settings() {
 						'name'        => __( 'Business Type', 'easy-digital-downloads' ),
 						'desc'        => __( 'Choose "Individual" if you do not have an official/legal business ID, or "Company" if a regisitered business entity exists.', 'easy-digital-downloads' ),
 						'type'        => 'select',
-						'chosen'      => true,
-						'std'         => $site_name,
 						'options'     => array(
 							'individual' => esc_html__( 'Individual', 'easy-digital-downloads' ),
 							'company'    => esc_html__( 'Company',    'easy-digital-downloads' )
@@ -459,7 +463,6 @@ function edd_get_registered_settings() {
 						'name'    => __( 'Currency Position', 'easy-digital-downloads' ),
 						'desc'    => __( 'Choose the location of the currency sign.', 'easy-digital-downloads' ),
 						'type'    => 'select',
-						'chosen'  => true,
 						'options' => array(
 							'before' => __( 'Before ($10)', 'easy-digital-downloads' ),
 							'after'  => __( 'After (10$)',  'easy-digital-downloads' )
@@ -512,6 +515,14 @@ function edd_get_registered_settings() {
 						'tooltip_title' => __( 'Refunds', 'easy-digital-downloads' ),
 						'tooltip_desc'  => __( 'As a shop owner, sometimes refunds are necessary. Use these settings to decide how refunds will work in your shop.', 'easy-digital-downloads' ),
 					),
+					'refundability' => array(
+						'id'      => 'refundability',
+						'name'    => __( 'Default Status', 'easy-digital-downloads' ),
+						'desc'    => __( 'Products without an explicit setting will default to this.', 'easy-digital-downloads' ),
+						'type'    => 'select',
+						'std'     => 'refundable',
+						'options' => edd_get_refundability_types(),
+					),
 					'refund_window' => array(
 						'id'   => 'refund_window',
 						'name' => __( 'Refund Window', 'easy-digital-downloads' ),
@@ -521,17 +532,8 @@ function edd_get_registered_settings() {
 						'size' => 'small',
 						'max'  => 3650, // Ten year maximum, because why explicitly support longer
 						'min'  => 0,
-						'step' => 1
+						'step' => 1,
 					),
-					'refundability' => array(
-						'id'      => 'refundability',
-						'name'    => __( 'Product Refundability', 'easy-digital-downloads' ),
-						'desc'    => __( 'By default, products without an explicit setting will default to this.', 'easy-digital-downloads' ),
-						'type'    => 'select',
-						'std'     => 'refundable',
-						'chosen'  => true,
-						'options' => edd_get_refundability_types()
-					)
 				),
 				'api' => array(
 					'api_settings' => array(
@@ -599,7 +601,6 @@ function edd_get_registered_settings() {
 						'name'    => __( 'Default Gateway', 'easy-digital-downloads' ),
 						'desc'    => __( 'Automatically select this gateway on checkout pages.<br>If empty, the first active gateway is selected instead.', 'easy-digital-downloads' ),
 						'type'    => 'gateway_select',
-						'chosen'  => true,
 						'options' => $gateways,
 					),
 					'accepted_cards' => array(
@@ -642,7 +643,6 @@ function edd_get_registered_settings() {
 						'name'    => __( 'Template', 'easy-digital-downloads' ),
 						'desc'    => __( 'Choose a template. Click "Save Changes" then "Preview Purchase Receipt" to see the new template.', 'easy-digital-downloads' ),
 						'type'    => 'select',
-						'chosen'  => true,
 						'options' => edd_get_email_templates(),
 					),
 					'email_logo' => array(
@@ -784,7 +784,6 @@ function edd_get_registered_settings() {
 						'name'          => __( 'Show in Checkout', 'easy-digital-downloads' ),
 						'desc'          => __( 'Should prices on the checkout page be shown with or without tax?', 'easy-digital-downloads' ),
 						'type'          => 'select',
-						'chosen'        => true,
 						'std'           => 'no',
 						'options'       => array(
 							'yes' => __( 'Including tax', 'easy-digital-downloads' ),
@@ -869,7 +868,6 @@ function edd_get_registered_settings() {
 						'name'    => __( 'Show Register / Login Form', 'easy-digital-downloads' ),
 						'desc'    => __( 'Display the registration and login forms on the checkout page for non-logged-in users.', 'easy-digital-downloads' ),
 						'type'    => 'select',
-						'chosen'  => true,
 						'std'     => 'none',
 						'options' => array(
 							'both'         => __( 'Registration and Login Forms', 'easy-digital-downloads' ),
@@ -899,7 +897,6 @@ function edd_get_registered_settings() {
 						'name'    => __( 'Default Button Style', 'easy-digital-downloads' ),
 						'desc'    => __( 'Choose the style you want to use for the buttons.', 'easy-digital-downloads' ),
 						'type'    => 'select',
-						'chosen'  => true,
 						'options' => edd_get_button_styles(),
 					),
 					'checkout_color' => array(
@@ -907,7 +904,6 @@ function edd_get_registered_settings() {
 						'name'    => __( 'Default Button Color', 'easy-digital-downloads' ),
 						'desc'    => __( 'Choose the color you want to use for the buttons.', 'easy-digital-downloads' ),
 						'type'    => 'color_select',
-						'chosen'  => true,
 						'options' => edd_get_button_colors(),
 						'std'     => 'blue'
 					),
@@ -953,7 +949,6 @@ function edd_get_registered_settings() {
 						'name'          => __( 'Download Method', 'easy-digital-downloads' ),
 						'desc'          => sprintf( __( 'Select the file download method. Note, not all methods work on all servers.', 'easy-digital-downloads' ), edd_get_label_singular() ),
 						'type'          => 'select',
-						'chosen'        => true,
 						'tooltip_title' => __( 'Download Method', 'easy-digital-downloads' ),
 						'tooltip_desc'  => __( 'Due to its consistency in multiple platforms and better file protection, \'forced\' is the default method. Because Easy Digital Downloads uses PHP to process the file with the \'forced\' method, larger files can cause problems with delivery, resulting in hitting the \'max execution time\' of the server. If users are getting 404 or 403 errors when trying to access their purchased files when using the \'forced\' method, changing to the \'redirect\' method can help resolve this.', 'easy-digital-downloads' ),
 						'options'       => array(
@@ -1154,7 +1149,7 @@ function edd_get_registered_settings() {
 
 		// Show a disabled "Default Rate" in "Tax Rates" if the value is not 0.
 		if ( false !== edd_get_option( 'tax_rate' ) ) {
-			$edd_settings['taxes']['rates'] = array_merge( 
+			$edd_settings['taxes']['rates'] = array_merge(
 				array(
 					'tax_rate' => array(
 						'id'            => 'tax_rate',
@@ -1201,7 +1196,7 @@ function edd_get_registered_settings() {
  *
  * @global array $edd_options Array of all the EDD Options
  *
- * @return string $input Sanitized value
+ * @return array $input Sanitized value
  */
 function edd_settings_sanitize( $input = array() ) {
 	global $edd_options;
@@ -1270,6 +1265,21 @@ function edd_settings_sanitize( $input = array() ) {
 						unset( $output[ $key ] );
 					}
 					break;
+				case 'number':
+					if ( array_key_exists( $key, $output ) && ! array_key_exists( $key, $input ) ) {
+						unset( $output[ $key ] );
+					}
+
+					$setting_details = edd_get_registered_setting_details( $tab, $section, $key );
+					$number_type = false !== strpos( $setting_details['step'], '.' ) ? 'floatval' : 'intval';
+					$minimum   = $number_type( $setting_details['min'] );
+					$maximum   = $number_type( $setting_details['max'] );
+					$new_value = $number_type( $input[ $key ] );
+
+					if ( $minimum > $new_value || $maximum < $new_value ) {
+						unset( $output[ $key ] );
+					}
+					break;
 				default:
 					if ( array_key_exists( $key, $input ) && empty( $input[ $key ] ) || ( array_key_exists( $key, $output ) && ! array_key_exists( $key, $input ) ) ) {
 						unset( $output[ $key ] );
@@ -1281,7 +1291,7 @@ function edd_settings_sanitize( $input = array() ) {
 		}
 	}
 
-	// Return output
+	// Return output.
 	return (array) $output;
 }
 
@@ -1328,6 +1338,28 @@ function edd_get_registered_settings_types( $filtered_tab = false, $filtered_sec
 	}
 
 	return $setting_types;
+}
+
+/**
+ * Allow getting a specific setting's details.
+ *
+ * @since 3.0
+ *
+ * @param string $filtered_tab      The tab the setting's section is in.
+ * @param string $filtered_section  The section the setting is located in.
+ * @param string $setting_key       The key associated with the setting.
+ *
+ * @return array
+ */
+function edd_get_registered_setting_details( $filtered_tab = '', $filtered_section = '', $setting_key = '' ) {
+	$settings        = edd_get_registered_settings();
+	$setting_details = array();
+
+	if ( isset( $settings[ $filtered_tab ][ $filtered_section][ $setting_key ] ) ) {
+		$setting_details = $settings[ $filtered_tab ][ $filtered_section][ $setting_key ];
+	}
+
+	return $setting_details;
 }
 
 /**
@@ -2188,7 +2220,7 @@ function edd_email_callback( $args ) {
 function edd_number_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
 
-	if ( $edd_option ) {
+	if ( is_numeric( $edd_option ) ) {
 		$value = $edd_option;
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';

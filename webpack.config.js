@@ -6,6 +6,7 @@ const defaultConfig = require( '@wordpress/scripts/config/webpack.config.js' );
 /**
  * External dependencies
  */
+const path = require( 'path' );
 const webpack = require( 'webpack' );
 const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
 const UglifyJS = require( 'uglify-es' );
@@ -39,6 +40,11 @@ const config = {
 			`${ __dirname }/assets/js`,
 			'node_modules',
 		],
+
+		// Alias faked packages. One day these may be published...
+		alias: {
+			'@easy-digital-downloads/currency': path.resolve( __dirname, 'assets/js/packages/currency/src/index.js' ),
+		},
 	},
 	entry: Object.assign(
 		// Dynamic entry points for individual admin pages.

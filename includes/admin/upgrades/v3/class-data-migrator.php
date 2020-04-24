@@ -347,7 +347,7 @@ class Data_Migrator {
 		$mode           = isset( $meta['_edd_payment_mode'][0] ) ? $meta['_edd_payment_mode'][0] : 'live';
 		$gateway        = isset( $meta['_edd_payment_gateway'][0] ) && ! empty( $meta['_edd_payment_gateway'][0] ) ? $meta['_edd_payment_gateway'][0] : 'manual';
 		$customer_id    = isset( $meta['_edd_payment_customer_id'][0] ) ? $meta['_edd_payment_customer_id'][0] : 0;
-		$date_completed = isset( $meta['_edd_completed_date'][0] ) ? $meta['_edd_completed_date'][0] : '0000-00-00 00:00:00';
+		$date_completed = isset( $meta['_edd_completed_date'][0] ) ? $meta['_edd_completed_date'][0] : null;
 		$purchase_key   = isset( $meta['_edd_payment_purchase_key'][0]) ? $meta['_edd_payment_purchase_key'][0] : false;
 		$purchase_email = isset( $meta['_edd_payment_user_email'][0] ) ? $meta['_edd_payment_user_email'][0] : $payment_meta['email'];
 
@@ -445,9 +445,9 @@ class Data_Migrator {
 		$non_completed_statuses = apply_filters( 'edd_30_noncomplete_statuses', array ( 'pending', 'cancelled', 'abandoned', 'processing' ) );
 		if ( ! in_array( $order_status, $non_completed_statuses ) ) {
 
-			if ( '0000-00-00 00:00:00' !== $date_completed ) {  // Update the data_completed to the UTC.
+			if ( ! empty( $date_completed ) ) {  // Update the data_completed to the UTC.
 				$date_completed = EDD()->utils->date( $date_completed, edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString();
-			} elseif ( '0000-00-00 00:00:00' === $date_completed ) { // Backfill a missing date_completed (for things like recurring payments).
+			} elseif ( is_null( $date_completed ) ) { // Backfill a missing date_completed (for things like recurring payments).
 				$date_completed = $date_created_gmt;
 			}
 
@@ -475,7 +475,7 @@ class Data_Migrator {
 			'ip'             => $ip,
 			'gateway'        => $gateway,
 			'mode'           => $mode,
-			'currency'       => $payment_meta['currency'],
+			'currency'       => ! empty( $payment_meta['currency'] ) ? $payment_meta['currency'] : edd_get_currency(),
 			'payment_key'    => $purchase_key,
 			'subtotal'       => $subtotal,
 			'tax'            => $tax,

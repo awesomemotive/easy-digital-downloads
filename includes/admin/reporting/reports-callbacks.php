@@ -26,6 +26,7 @@ function edd_overview_sales_earnings_chart() {
 	$dates        = Reports\get_dates_filter( 'objects' );
 	$day_by_day   = Reports\get_dates_filter_day_by_day();
 	$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
+	$column       = Reports\get_taxes_excluded_filter() ? 'total - tax' : 'total';
 
 	$sql_clauses = array(
 		'select'  => 'date_created AS date',
@@ -33,11 +34,25 @@ function edd_overview_sales_earnings_chart() {
 		'orderby' => 'DATE(date_created)',
 	);
 
+	$statuses = array( 'complete', 'publish', 'revoked', 'refunded', 'partially_refunded' );
+
+	/**
+	 * Filters Order statuses that should be included when calculating stats.
+	 *
+	 * @since 2.7
+	 *
+	 * @param array $statuses Order statuses to include when generating stats.
+	 */
+	$statuses = apply_filters( 'edd_payment_stats_post_statuses', $statuses );
+	$statuses = "'" . implode( "', '", $statuses ) . "'";
+
 	$results = $wpdb->get_results(
 		$wpdb->prepare(
-			"SELECT COUNT(id) AS sales, SUM(total) AS earnings, {$sql_clauses['select']}
+			"SELECT COUNT(id) AS sales, SUM({$column}) AS earnings, {$sql_clauses['select']}
  				 FROM {$wpdb->edd_orders} edd_o
  				 WHERE date_created >= %s AND date_created <= %s
+ 				 AND type = 'sale'
+ 				 AND status IN( {$statuses} )
 				 GROUP BY {$sql_clauses['groupby']}
 				 ORDER BY {$sql_clauses['orderby']} ASC",
 			$dates['start']->copy()->format( 'mysql' ),
@@ -70,21 +85,21 @@ function edd_overview_sales_earnings_chart() {
 				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 				if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
 					$sales[ $timestamp ][1]    = $result->sales;
-					$earnings[ $timestamp ][1] = edd_format_amount( $result->earnings );
+					$earnings[ $timestamp ][1] = $result->earnings;
 				}
 				// Add any sales/earnings that happened during this day.
 			} elseif ( $day_by_day ) {
 				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 				if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
 					$sales[ $timestamp ][1]    = $result->sales;
-					$earnings[ $timestamp ][1] = edd_format_amount( $result->earnings );
+					$earnings[ $timestamp ][1] = $result->earnings;
 				}
 				// Add any sales/earnings that happened during this month.
 			} else {
 				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 				if ( $date_of_db_value->format( 'Y-m' ) === $date_on_chart->format( 'Y-m' ) ) {
 					$sales[ $timestamp ][1]    = $result->sales;
-					$earnings[ $timestamp ][1] = edd_format_amount( $result->earnings );
+					$earnings[ $timestamp ][1] = $result->earnings;
 				}
 			}
 		}
@@ -117,6 +132,7 @@ function edd_overview_refunds_chart() {
 	$dates        = Reports\get_dates_filter( 'objects' );
 	$day_by_day   = Reports\get_dates_filter_day_by_day();
 	$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
+	$column       = Reports\get_taxes_excluded_filter() ? 'total - tax' : 'total';
 
 	$sql_clauses = array(
 		'select'  => 'date_created AS date',
@@ -126,7 +142,7 @@ function edd_overview_refunds_chart() {
 
 	$results = $wpdb->get_results(
 		$wpdb->prepare(
-			"SELECT COUNT(id) AS number, SUM(total) AS amount, {$sql_clauses['select']}
+			"SELECT COUNT(id) AS number, SUM({$column}) AS amount, {$sql_clauses['select']}
  				 FROM {$wpdb->edd_orders} edd_o
  				 WHERE status IN (%s, %s) AND date_created >= %s AND date_created <= %s AND type = 'refund'
 				 GROUP BY {$sql_clauses['groupby']}
@@ -162,22 +178,22 @@ function edd_overview_refunds_chart() {
 			if ( $hour_by_hour ) {
 				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 				if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
-					$number[ $timestamp ][1]    = $result->number;
-					$amount[ $timestamp ][1] = edd_format_amount( $result->amount );
+					$number[ $timestamp ][1] = $result->number;
+					$amount[ $timestamp ][1] = abs( $result->amount );
 				}
 				// Add any refunds that happened during this day.
 			} elseif ( $day_by_day ) {
 				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 				if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
-					$number[ $timestamp ][1]    = $result->number;
-					$amount[ $timestamp ][1] = edd_format_amount( $result->amount );
+					$number[ $timestamp ][1] = $result->number;
+					$amount[ $timestamp ][1] = abs( $result->amount );
 				}
 				// Add any refunds that happened during this month.
 			} else {
 				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 				if ( $date_of_db_value->format( 'Y-m' ) === $date_on_chart->format( 'Y-m' ) ) {
 					$number[ $timestamp ][1] = $result->number;
-					$amount[ $timestamp ][1] = edd_format_amount( $result->amount );
+					$amount[ $timestamp ][1] = abs( $result->amount );
 				}
 			}
 		}

@@ -134,8 +134,8 @@ function edd_active_tax_rates_query_clauses( $clauses ) {
 	$date = \Carbon\Carbon::now( edd_get_timezone_id() )->toDateTimeString();
 
 	$clauses['where'] .= "
-		AND ( start_date < '{$date}' OR start_date = '0000-00-00 00:00:00' )
-		AND ( end_date > '{$date}' OR end_date = '0000-00-00 00:00:00' )
+		AND ( start_date < '{$date}' OR start_date IS NULL )
+		AND ( end_date > '{$date}' OR end_date IS NULL )
 	";
 
 	return $clauses;
@@ -147,13 +147,16 @@ function edd_active_tax_rates_query_clauses( $clauses ) {
  * @since 1.3.3
  * @since 3.0 Refactored to work with custom tables and start and end dates.
  *            Renamed $state parameter to $region.
+ *            Added $fallback parameter to only get rate for passed Country and Region.
  *
- * @param string $country Country.
- * @param string $region  Region.
+ * @param string  $country Country.
+ * @param string  $region  Region.
+ * @param boolean $fallback Fall back to the current Customer's address information
+ *                          or server $_POST data. Default true.
  *
  * @return mixed|void
  */
-function edd_get_tax_rate( $country = '', $region = '' ) {
+function edd_get_tax_rate( $country = '', $region = '', $fallback = true ) {
 
 	// Default rate
 	$rate = (float) edd_get_option( 'tax_rate', 0 );
@@ -178,7 +181,7 @@ function edd_get_tax_rate( $country = '', $region = '' ) {
 		: '';
 
 	// Country
-	if ( empty( $country ) ) {
+	if ( empty( $country ) && true === $fallback ) {
 		if ( ! empty( $_POST['billing_country'] ) ) {
 			$country = $_POST['billing_country'];
 		} elseif ( is_user_logged_in() && ! empty( $user_address['country'] ) ) {
@@ -191,7 +194,7 @@ function edd_get_tax_rate( $country = '', $region = '' ) {
 	}
 
 	// Region
-	if ( empty( $region ) ) {
+	if ( empty( $region ) && true === $fallback ) {
 		if ( ! empty( $_POST['state'] ) ) {
 			$region = $_POST['state'];
 		} elseif ( ! empty( $_POST['card_state'] ) ) {
