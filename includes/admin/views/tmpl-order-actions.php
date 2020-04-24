@@ -9,11 +9,12 @@
  * @since       3.0
  */
 
-$is_refundable  = edd_is_order_refundable( $order->id );
-$is_override    = edd_is_order_refundable_by_override( $order->id );
-?>
+$is_refundable = edd_is_order_refundable( $order->id );
+$is_override   = edd_is_order_refundable_by_override( $order->id );
+$is_in_window  = edd_is_order_refund_window_passed( $order->id );
 
-<?php if ( true === edd_is_add_order_page() ) : ?>
+if ( true === edd_is_add_order_page() ) :
+?>
 	<button
 		id="add-adjustment"
 		class="button button-secondary"
@@ -43,14 +44,11 @@ $is_override    = edd_is_order_refundable_by_override( $order->id );
 		<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Issue a refund to adjust the net total for this order.', 'easy-digital-downloads' ); ?>"></span>
 	</div>
 
-	<?php if ( 'refunded' !== $order->status  ) : ?>
 	<div class="edd-order-overview-actions__refund">
-		<?php if ( false === $is_refundable ) : ?>
-			<?php if ( true === $is_override ) : ?>
-				<span class="edd-help-tip dashicons dashicons-unlock" title="<?php esc_attr_e( 'The refund window for this Order has passed; however, you have the ability to override this.', 'easy-digital-downloads' ); ?>"></span>
-			<?php else : ?>
-				<span class="edd-help-tip dashicons dashicons-lock" title="<?php esc_attr_e( 'The refund window for this Order has passed.', 'easy-digital-downloads' ); ?>"></span>
-			<?php endif; ?>
+		<?php if ( true === $is_refundable && true === $is_override && false === $is_in_window ) : ?>
+			<span class="edd-help-tip dashicons dashicons-unlock" title="<?php esc_attr_e( 'The refund window for this Order has passed; however, you have the ability to override this.', 'easy-digital-downloads' ); ?>"></span>
+		<?php elseif ( false === $is_refundable && false === $is_in_window ) : ?>
+			<span class="edd-help-tip dashicons dashicons-lock" title="<?php esc_attr_e( 'The refund window for this Order has passed.', 'easy-digital-downloads' ); ?>"></span>
 		<?php endif; ?>
 
 		<button
@@ -63,5 +61,4 @@ $is_override    = edd_is_order_refundable_by_override( $order->id );
 			<?php esc_html_e( 'Issue Refund', 'easy-digital-downloads' ); ?>
 		</button>
 	</div>
-	<?php endif; ?>
 <?php endif; ?>
