@@ -8,6 +8,7 @@ import { Overview } from './views/overview.js';
 import { OrderItems } from './collections/order-items.js';
 import { OrderItem } from './models/order-item.js';
 import { OrderAdjustments } from './collections/order-adjustments.js';
+import { OrderRefunds } from './collections/order-refunds.js';
 import { State } from './models/state.js';
 
 // Temporarily include old Refund flow.
@@ -26,17 +27,20 @@ jQueryReady( () => {
 
 	const {
 		isAdding,
+		isRefund,
 		hasTax,
 		hasQuantity,
 		hasDiscounts,
 		order,
 		items,
 		adjustments,
+		refunds,
 	} = window.eddAdminOrderOverview;
 
 	// Create and hydrate state.
 	const state = new State( {
 		isAdding: '1' === isAdding,
+		isRefund: '1' === isRefund,
 		hasTax: '0' === hasTax ? false : hasTax,
 		hasQuantity: '1' === hasQuantity,
 		hasDiscounts: '1' === hasDiscounts,
@@ -49,6 +53,9 @@ jQueryReady( () => {
 			state,
 		} ),
 		adjustments: new OrderAdjustments( null, {
+			state,
+		} ),
+		refunds: new OrderRefunds( null, {
 			state,
 		} ),
 	} );
@@ -81,6 +88,14 @@ jQueryReady( () => {
 			state,
 			...adjustment,
 		} )
+	} );
+
+	// Hydrate `OrderRefund`s.
+	refunds.forEach( ( refund ) => {
+		state.get( 'refunds' ).add( {
+			state,
+			...refund,
+		} );
 	} );
 
 	// ... finally render the Overview once all data is set.
