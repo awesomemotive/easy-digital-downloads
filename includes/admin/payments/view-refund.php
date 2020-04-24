@@ -69,9 +69,6 @@ function edd_view_refund_page_content() {
 						// Attributes
 						edd_refund_details_attributes( $refund );
 
-						// Amounts
-						edd_order_details_amounts( $refund );
-
 						/**
 						 * Allows further output after Refund sidebar content.
 						 *
