@@ -1817,7 +1817,7 @@ input[class*="edd-price-field"] {
 .edd-admin-box-inside {
 	border-bottom: 1px solid #f1f1f1;
 	clear: both;
-	padding: 12px 12px;
+	padding: 12px;
 	margin: 0;
 	word-wrap: break-word;
 }
