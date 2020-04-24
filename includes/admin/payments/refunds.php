@@ -33,17 +33,18 @@ function edd_refund_details_notice( $refund ) {
 
 <div class="edit-post-editor-regions__header">
 	<div class="edit-post-header notice-warning" style="border-left-width: 4px; border-left-style: solid;">
-		<div>
-			<span>
-				<?php esc_html_e( 'You are viewing a refund record.', 'easy-digital-downloads' ); ?>
-			</span>
-			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( 'A refund is a read-only record to help balance your store&#39;s books.', 'easy-digital-downloads' ); ?>"></span>
-		</div>
-		<div>
-			<a href="<?php echo esc_url( $order_url ); ?>" class="button button-secondary">
+
+		<div class="edit-post-header__settings">
+			<a href="<?php echo esc_url( $order_url ); ?>" class="button button-secondary" autofocus>
 				<?php esc_html_e( 'View Full Order', 'easy-digital-downloads' ); ?>
 			</a>
 		</div>
+
+		<div class="edit-post-header__toolbar">
+			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( 'A refund is a read-only record to help balance your store&#39;s books.', 'easy-digital-downloads' ); ?>"></span>&nbsp;
+			<?php esc_html_e( 'You are viewing a refund record.', 'easy-digital-downloads' ); ?>
+		</div>
+
 	</div>
 </div>
 
