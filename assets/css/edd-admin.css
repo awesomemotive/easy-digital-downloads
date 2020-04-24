@@ -1913,11 +1913,6 @@ input[class*="edd-price-field"] {
 	margin: 0;
 	padding: 0;
 }
-.edd-admin-box-inside .edd_datepicker,
-.edd-admin-box-inside input[type="text"] {
-	max-width: 130px;
-	width: 100%;
-}
 .edd-admin-box-inside span.label {
 	margin-right: 10px;
 }
