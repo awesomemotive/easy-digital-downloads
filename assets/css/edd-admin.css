@@ -567,6 +567,10 @@ table.edd-order-overview-summary {
 	table-layout: fixed;
 }
 
+table.edd-order-overview-summary--refund {
+	border-width: 0;
+}
+
 @media screen and (min-width: 782px) {
 
 	.edd-order-overview .column-right {
@@ -666,6 +670,10 @@ table.edd-order-overview-summary {
 	font-weight: 600;
 }
 
+.edd-order-overview-summary__totals-total td {
+	vertical-align: middle;
+}
+
 .edd-order-overview-summary__totals td small {
 	font-weight: normal;
 }
@@ -673,6 +681,10 @@ table.edd-order-overview-summary {
 .edd-order-overview-summary__totals .total {
 	color: #017d5c;
 	display: inline-block;
+}
+
+.edd-order-overview-summary__totals .total.is-negative {
+	color: #a00;
 }
 
 @media screen and (min-width: 782px) {
@@ -705,6 +717,19 @@ table.edd-order-overview-summary {
 .edd-order-overview-summary__totals .notice p {
 	font-weight: normal;
 	margin: 0.5em 0;
+}
+
+/** Refunds */
+.edd-order-overview-summary__refunds .column-primary {
+	font-weight: 600;
+}
+
+.edd-order-overview-summary__refunds td small {
+	font-weight: normal;
+}
+
+.edd-order-overview-summary__refunds tr:first-child td {
+	border-top: 1px solid #e5e5e5;
 }
 
 /** Actions */
