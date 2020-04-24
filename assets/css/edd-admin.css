@@ -1817,7 +1817,7 @@ input[class*="edd-price-field"] {
 .edd-admin-box-inside {
 	border-bottom: 1px solid #f1f1f1;
 	clear: both;
-	padding: 10px 12px;
+	padding: 12px 12px;
 	margin: 0;
 	word-wrap: break-word;
 }
@@ -3972,7 +3972,7 @@ div:not(#edd-item-tab-wrapper) + #edd-item-card-wrapper .item-section { /** [1] 
  *
  */
 .edd-form-group {
-	margin-bottom: 12px;
+	margin-bottom: 16px;
 }
 
 .edd-form-group:last-of-type {
