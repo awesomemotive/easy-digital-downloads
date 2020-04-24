@@ -502,6 +502,7 @@ function edd_order_details_logs( $order ) {
 function edd_order_details_overview( $order ) {
 	$_items       = array();
 	$_adjustments = array();
+	$_refunds     = array();
 
 	if ( true !== edd_is_add_order_page() ) {
 		$items = edd_get_order_items( array(
@@ -593,6 +594,19 @@ function edd_order_details_overview( $order ) {
 				'uuid'         => esc_html( $adjustment->uuid ),
 			);
 		}
+
+		$refunds = edd_get_order_refunds( $order->id );
+
+		foreach ( $refunds as $refund ) {
+			$_refunds[] = array(
+				'id'              => esc_html( $refund->id ),
+				'number'          => esc_html( $refund->order_number ),
+				'total'           => esc_html( $refund->total ),
+				'dateCreated'     => esc_html( $refund->date_created ),
+				'dateCreatedi18n' => esc_html( edd_date_i18n( $refund->date_created ) ),
+				'uuid'            => esc_html( $refund->uuid ),
+			);
+		}
 	}
 
 	wp_localize_script(
@@ -601,6 +615,7 @@ function edd_order_details_overview( $order ) {
 		array(
 			'items'        => $_items,
 			'adjustments'  => $_adjustments,
+			'refunds'      => $_refunds,
 			'isAdding'     => true === edd_is_add_order_page(),
 			'hasQuantity'  => true === edd_item_quantities_enabled(),
 			'hasTax'       => true === edd_use_taxes()
@@ -626,6 +641,7 @@ function edd_order_details_overview( $order ) {
 		'item',
 		'adjustment',
 		'adjustment-discount',
+		'refund',
 		'no-items',
 		'copy-download-link',
 		'form-add-order-item',

@@ -61,36 +61,85 @@ function edd_refund_details_notice( $refund ) {
  * @param EDD\Orders\Order $refund Current Refund.
  */
 function edd_refund_details_items( $refund ) {
+	$_items = array();
+	$items  = edd_get_order_items( array(
+		'order_id' => $refund->id,
+		'number'   => 999,
+	) );
 
-	// Load list table if not already loaded
-	if ( ! class_exists( '\\EDD\\Admin\\Order_Refund_Items_Table' ) ) {
-		require_once 'class-order-refund-items-table.php';
+	foreach ( $items as $item ) {
+		// @todo edd_get_order_item_to_json()?
+		$_items[] = array(
+			'id'           => esc_html( $item->id ),
+			'orderId'      => esc_html( $item->order_id ),
+			'productId'    => esc_html( $item->product_id ),
+			'productName'  => esc_html( $item->get_order_item_name() ),
+			'priceId'      => esc_html( $item->price_id ),
+			'cartIndex'    => esc_html( $item->cart_index ),
+			'type'         => esc_html( $item->type ),
+			'status'       => esc_html( $item->status ),
+			'quantity'     => esc_html( $item->quantity ),
+			'amount'       => esc_html( $item->amount ),
+			'subtotal'     => esc_html( $item->subtotal ),
+			'discount'     => esc_html( $item->discount ),
+			'tax'          => esc_html( $item->tax ),
+			'total'        => esc_html( $item->total ),
+			'dateCreated'  => esc_html( $item->date_created ),
+			'dateModified' => esc_html( $item->date_modified ),
+			'uuid'         => esc_html( $item->uuid ),
+		);
 	}
 
-	// Query for items
-	$refund_items = new EDD\Admin\Order_Refund_Items_Table();
-	$refund_items->prepare_items();
+	wp_localize_script(
+		'edd-admin-orders',
+		'eddAdminOrderOverview',
+		array(
+			'items'        => $_items,
+			'adjustments'  => array(),
+			'refunds'      => array(),
+			'isAdding'     => false,
+			'isRefund'     => true,
+			'hasQuantity'  => true === edd_item_quantities_enabled(),
+			'hasTax'       => true === edd_use_taxes()
+				? array(
+					'rate'    => 0,
+					'country' => '',
+					'region'  => '',
+				)
+				: 0,
+		)
+	);
+
+	$templates = array(
+		'totals',
+		'item',
+		'adjustment',
+		'adjustment-discount',
+	);
+
+	foreach ( $templates as $tmpl ) {
+		echo '<script type="text/html" id="tmpl-edd-admin-order-' . esc_attr( $tmpl ) . '">';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/views/tmpl-order-' . $tmpl . '.php';
+		echo '</script>';
+	}
 ?>
 
-<div id="edd-order-items" class="postbox edd-edit-purchase-element">
-	<h3 class="hndle">
-		<span><?php esc_html_e( 'Refunded Items', 'easy-digital-downloads' ); ?></span>
-	</h3>
-
-	<div class="edd-order-children-wrapper edd-order-refund-items <?php echo 'child-count-' . count( $refund_items->items ); ?>">
-		<?php $refund_items->display(); ?>
-	</div>
+<div id="edd-order-overview" class="postbox edd-edit-purchase-element edd-order-overview">
+	<table id="edd-order-overview-summary" class="widefat wp-list-table edd-order-overview-summary edd-order-overview-summary--refund">
+		<thead>
+			<tr>
+				<th class="column-name column-primary"><?php echo esc_html( edd_get_label_singular() ); ?></th>
+				<th class="column-amount"><?php esc_html_e( 'Unit Price', 'easy-digital-downloads' ); ?></th>
+				<?php if ( true === edd_item_quantities_enabled() ) : ?>
+				<th class="column-quantity"><?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?></th>
+				<?php endif; ?>
+				<th class="column-subtotal column-right"><?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></th>
+			</tr>
+		</thead>
+	</table>
 </div>
 
 <?php
-	/**
-	 * Allows
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param int $refund_ID ID of the current Refund.
-	 */
-	do_action( 'edd_view_order_details_files_after', $refund->id );
 }
 
 /**

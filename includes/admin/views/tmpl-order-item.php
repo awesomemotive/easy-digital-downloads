@@ -32,7 +32,7 @@ $view_url = add_query_arg(
 			>
 				{{{ data.productName }}}
 			</a>
-			<# if ( 'refunded' === data.status ) { #>
+			<# if ( false === data.state.isRefund && 'refunded' === data.status ) { #>
 				&mdash; <?php esc_html_e( 'Refunded', 'easy-digital-downloads' ); ?>
 			<# } #>
 
