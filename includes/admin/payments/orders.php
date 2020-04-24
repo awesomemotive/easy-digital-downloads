@@ -828,7 +828,7 @@ function edd_order_details_extras( $order = false ) {
 					<div class="edd-form-group">
 						<label for="edd_payment_key" class="edd-form-group__label"><?php esc_html_e( 'Key', 'easy-digital-downloads' ); ?></label>
 						<div class="edd-form-group__control">
-							<input type="text" name="payment_key" id="edd_payment_key" class="edd-form-group__input" <?php echo esc_attr( $readonly ); ?> value="<?php echo esc_attr( $order->payment_key ); ?>" />
+							<input type="text" name="payment_key" id="edd_payment_key" class="edd-form-group__input regular-text" <?php echo esc_attr( $readonly ); ?> value="<?php echo esc_attr( $order->payment_key ); ?>" />
 						</div>
 					</div>
 				</div>
