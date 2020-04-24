@@ -51,7 +51,7 @@ function edd_add_order_page_content() {
 		<?php edd_order_details_publish( $order ); ?>
 
 		<div class="wrap edd-wrap edd-clearfix">
-			<h1><?php esc_html_e( 'Add New Order', 'easy-digital-downloads' ); ?></h1>
+			<h1><?php esc_html_e( 'New Order', 'easy-digital-downloads' ); ?></h1>
 
 			<hr class="wp-header-end">
 
