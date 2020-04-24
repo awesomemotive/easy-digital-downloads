@@ -563,7 +563,7 @@ a.edd-delete:hover {
 
 /** Overview */
 table.edd-order-overview-summary {
-	border-width: 0 0 1px;
+	border-width: 0;
 	table-layout: fixed;
 }
 
@@ -709,11 +709,17 @@ table.edd-order-overview-summary {
 
 /** Actions */
 #edd-order-overview-actions.inside {
+	border-top: 1px solid #ccd0d4;
 	margin-top: 0;
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
 	justify-content: space-between;
+}
+
+#edd-order-overview-actions.inside:empty {
+	padding: 0;
+	border-top: 0;
 }
 
 #edd-order-overview-actions.inside > div {
