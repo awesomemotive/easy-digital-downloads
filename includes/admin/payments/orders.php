@@ -838,7 +838,7 @@ function edd_order_details_extras( $order = false ) {
 						<div class="edd-form-group">
 							<label for="edd_ip" class="edd-form-group__label"><?php esc_html_e( 'IP', 'easy-digital-downloads' ); ?></label>
 							<div class="edd-form-group__control">
-								<input type="text" name="ip" id="edd_ip" class="edd-form-group__input" readonly value="<?php echo esc_attr( edd_get_ip() ); ?>" />
+								<input type="text" name="ip" id="edd_ip" class="edd-form-group__input" value="<?php echo esc_attr( edd_get_ip() ); ?>" />
 							</div>
 						</div>
 					</div>
