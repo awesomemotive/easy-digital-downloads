@@ -161,7 +161,7 @@ class Stats {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_orders;
-		$this->query_vars['column']            = true === $this->query_vars['exclude_taxes'] ? 'subtotal' : 'total';
+		$this->query_vars['column']            = true === $this->query_vars['exclude_taxes'] ? 'total - tax' : 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
 
 		/*
@@ -814,7 +814,7 @@ class Stats {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_order_items;
-		$this->query_vars['column']            = true === $this->query_vars['exclude_taxes'] ? 'subtotal' : 'total';
+		$this->query_vars['column']            = true === $this->query_vars['exclude_taxes'] ? 'total - tax' : 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
 
 		// Run pre-query checks and maybe generate SQL.
@@ -873,7 +873,7 @@ class Stats {
 			} );
 		} else {
 			$result = null === $result[0]->total
-				? 0.00
+				? $this->maybe_format( 0.00 )
 				: $this->maybe_format( floatval( $result[0]->total ) );
 		}
 
@@ -1229,7 +1229,7 @@ class Stats {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_order_adjustments;
-		$this->query_vars['column']            = true === $this->query_vars['exclude_taxes'] ? 'subtotal' : 'total';
+		$this->query_vars['column']            = true === $this->query_vars['exclude_taxes'] ? 'total - tax' : 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
 
 		// Run pre-query checks and maybe generate SQL.
@@ -1439,7 +1439,7 @@ class Stats {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_orders;
-		$this->query_vars['column']            = true === $this->query_vars['exclude_taxes'] ? 'subtotal' : 'total';
+		$this->query_vars['column']            = true === $this->query_vars['exclude_taxes'] ? 'total - tax' : 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
 		$this->query_vars['function']          = 'COUNT';
 
@@ -2012,7 +2012,7 @@ class Stats {
 					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		} else {
 			$column = true === $this->query_vars['exclude_taxes']
-				? 'subtotal'
+				? 'total - tax'
 				: 'total';
 
 			$sql = "SELECT {$function} AS total
@@ -2235,7 +2235,7 @@ class Stats {
 			: 1;
 
 		$column = true === $this->query_vars['exclude_taxes']
-			? 'subtotal'
+			? 'total - tax'
 			: 'total';
 
 		$sql = "SELECT customer_id, SUM({$column}) AS total
@@ -2406,10 +2406,10 @@ class Stats {
 			? absint( $this->query_vars['number'] )
 			: 1;
 
-		$sql = "SELECT product_id, price_id, COUNT(id) AS total
+		$sql = "SELECT product_id, file_id, COUNT(id) AS total
 				FROM {$this->query_vars['table']}
 				WHERE 1=1 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
-				GROUP BY product_id, price_id
+				GROUP BY product_id
 				ORDER BY total DESC
 				LIMIT {$number}";
 
@@ -2419,7 +2419,7 @@ class Stats {
 
 			// Format resultant object.
 			$value->product_id = absint( $value->product_id );
-			$value->price_id   = absint( $value->price_id );
+			$value->file_id    = absint( $value->file_id );
 			$value->total      = absint( $value->total );
 
 			// Add instance of EDD_Download to resultant object.
@@ -2473,6 +2473,10 @@ class Stats {
 
 		$price_id = ! empty( $this->query_vars['price_id'] )
 			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
+			: '';
+
+		$file_id = ! empty( $this->query_vars['file_id'] )
+			? $this->get_db()->prepare( 'AND file_id = %d', absint( $this->query_vars['file_id'] ) )
 			: '';
 
 		$sql = "SELECT AVG(total) AS total
@@ -2719,7 +2723,7 @@ class Stats {
 	private function maybe_format( $data = null ) {
 
 		// Bail if nothing was passed.
-		if ( empty( $data ) || null === $data ) {
+		if ( null === $data ) {
 			return $data;
 		}
 
