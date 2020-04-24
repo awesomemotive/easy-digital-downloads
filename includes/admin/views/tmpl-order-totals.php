@@ -60,6 +60,7 @@
 				</p>
 				<p>
 					<button
+						type="button"
 						class="button button-secondary button-small update-amounts"
 						style="marign-left: 0;"
 					>

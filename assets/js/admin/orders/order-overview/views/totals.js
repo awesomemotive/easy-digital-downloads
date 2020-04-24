@@ -120,7 +120,9 @@ export const Totals = wp.Backbone.View.extend( {
 	 *
 	 * @since 3.0
 	 */
-	onUpdateAmounts() {
+	onUpdateAmounts( e ) {
+		e.preventDefault();
+
 		const { state } = this.options;
 
 		state.get( 'items' )
