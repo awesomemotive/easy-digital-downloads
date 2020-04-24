@@ -3616,6 +3616,10 @@ body.download_page_edd-reports {
 	background-color: #fcfcfc;
 }
 
+.edd-vertical-sections .section-nav:last-of-type {
+	margin-bottom: 24px;
+}
+
 #edd-item-tab-wrapper li a, /** [1] */
 #edd-item-tab-wrapper li > .edd-item-tab-label-wrap, /** [1] */
 .edd-vertical-sections .section-nav li a {
