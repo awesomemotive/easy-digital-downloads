@@ -1,7 +1,6 @@
 /**
  * Internal dependencies
  */
-import { jQueryReady } from 'utils/jquery.js';
 import { Overview } from './views/overview.js';
 import { OrderItems } from './collections/order-items.js';
 import { OrderItem } from './models/order-item.js';
