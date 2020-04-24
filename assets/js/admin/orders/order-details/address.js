@@ -1,8 +1,9 @@
-/* global $, ajaxurl */
+/* global $, ajaxurl, _ */
 
 /**
  * Internal dependencies
  */
+import OrderOverview from './../order-overview';
 import { getChosenVars } from 'utils/chosen.js';
 import { jQueryReady } from 'utils/jquery.js';
 
@@ -10,6 +11,88 @@ import { jQueryReady } from 'utils/jquery.js';
 let CUSTOMER_SEARCH_RESULTS = {};
 
 jQueryReady( () => {
+
+	/**
+	 * Adjusts Overview tax configuration when the Customer's address changes.
+	 *
+	 * @since 3.0
+	 */
+	( () => {
+		const { state: overviewState } = OrderOverview.options;
+
+		if ( false === overviewState.get( 'isAdding' ) ) {
+			return;
+		}
+
+		const countryInput = document.getElementById(
+			'edd_order_address_country'
+		);
+		const regionInput = document.getElementById(
+			'edd_order_address_region'
+		);
+
+		if ( ! ( countryInput && regionInput ) ) {
+			return;
+		}
+
+		/**
+		 * Retrieves a tax rate based on the currently selected Address.
+		 *
+		 * @since 3.0
+		 */
+		function getTaxRate() {
+			const country = $( '#edd_order_address_country' ).val();
+			const region = $( '#edd_order_address_region' ).val();
+
+			const nonce = document.getElementById( 'edd_get_tax_rate_nonce' )
+				.value;
+
+			wp.ajax.send( 'edd_get_tax_rate', {
+				data: {
+					nonce,
+					country,
+					region,
+				},
+				/**
+				 * Updates the Overview's tax configuration on successful retrieval.
+				 *
+				 * @since 3.0
+				 *
+				 * @param {Object} response AJAX response.
+				 */
+				success( response ) {
+					let { tax_rate: rate } = response;
+
+					// Make a percentage.
+					rate = rate * 100;
+
+					overviewState.set( 'hasTax', {
+						country,
+						region,
+						rate,
+					} );
+				},
+				/*
+				 * Updates the Overview's tax configuration on failed retrieval.
+				 *
+				 * @since 3.0
+				 */
+				error() {
+					overviewState.set( 'hasTax', false );
+				},
+			} );
+		}
+
+		// Update rate on Address change.
+		//
+		// Wait for Region field to be replaced when Country changes.
+		// Wait for typing when Regino field changes.
+		// jQuery listeners for Chosen compatibility.
+		$( '#edd_order_address_country' ).on( 'change', _.debounce( getTaxRate, 250 ) );
+
+		$( '#edd-order-address' ).on( 'change', '#edd_order_address_region', getTaxRate );
+		$( '#edd-order-address' ).on( 'keyup', '#edd_order_address_region', _.debounce( getTaxRate, 250 ) );
+	} )();
 
 	$( '.edd-payment-change-customer-input' ).on( 'change', function() {
 		const $this = $( this ),
