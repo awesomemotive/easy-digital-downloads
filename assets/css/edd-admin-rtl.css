@@ -7,22 +7,34 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
+/**
+ * Notes:
+ *
+ * [1] Backwards compatibility for vertical tabs < 3.0
+ */
+
 .edd-hidden {
 	display: none;
 }
 .edd-clearfix:after {
-	content: ".";
-	display: block;
-	height: 0;
-	text-indent: -9999px;
-	visibility: hidden;
+	content: "";
+	display: table;
+	clear: both;
 }
 .edd-wrap a {
 	text-decoration: none;
 }
+
+/**
+ * Tag specificity should not be needed, but cannot
+ * safely be removed for fear of breaking even more things.
+ */
+.wp-core-ui .edd-delete,
 a.edd-delete {
 	color: #a00;
 }
+
+.wp-core-ui .edd-delete:hover,
 a.edd-delete:hover {
 	color: #f00;
 }
@@ -178,6 +190,7 @@ a.edd-delete:hover {
 	font-family: dashicons;
 	font-size: 17px;
 	content: '\f228';
+	cursor: move;
 }
 
 .form-table .edd-sortable-list li label {
@@ -185,7 +198,6 @@ a.edd-delete:hover {
 	height: 28px;
 	padding: 0;
 	margin: 0;
-	cursor: move;
 }
 
 .edd-sortable-list .payment-icon {
@@ -340,6 +352,7 @@ a.edd-delete:hover {
 #edd-add-ons .edd-extension .wp-post-image {
 	width: 100%;
 	height: auto;
+	vertical-align: bottom;
 }
 
 /* Insert Download
@@ -407,6 +420,86 @@ a.edd-delete:hover {
 
 /* Add/View Order Styles
 -------------------------------------------------------------- */
+
+/** Mimic WordPress 5.0 block-editor header region styles. */
+.download_page_edd-payment-history .edit-post-editor-regions__header {
+	flex-shrink: 0;
+	height: auto;
+	border-bottom: 1px solid #e2e4e7;
+	z-index: 30;
+	position: -webkit-sticky;
+	position: sticky;
+	top: 32px;
+
+	/** EDD-specific */
+	margin-right: -20px;
+}
+
+@media screen and (max-width: 782px) {
+
+	.download_page_edd-payment-history .edit-post-editor-regions__header {
+		position: initial;
+		top: 46px;
+	}
+}
+
+.download_page_edd-payment-history .edit-post-header {
+	height: 56px;
+	padding: 4px 2px;
+	background: #fff;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+
+	/** EDD-specific */
+	max-width: 100%;
+	box-sizing: border-box;
+	padding-right: 20px;
+	padding-left: 20px;
+}
+
+@media screen and (max-width: 782px) {
+
+	.download_page_edd-payment-history .edit-post-header {
+		padding-right: 10px;
+		padding-left: 10px;
+	}
+}
+
+@media (min-width: 280px) {
+
+	.download_page_edd-payment-history .edit-post-header {
+		flex-wrap: nowrap;
+	}
+}
+
+.download_page_edd-payment-history .edit-post-header #publishing-action {
+	display: flex;
+	align-items: center;
+}
+
+.download_page_edd-payment-history .edit-post-header #publishing-action .spinner {
+	margin: 0 0 0 5px;
+}
+
+.download_page_edd-payment-history .edit-post-header .button-primary {
+	margin: 2px;
+	height: 34px;
+	line-height: 32px;
+	font-size: 13px;
+}
+
+#edd-order-items .hndle {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+#edd-order-items .hndle .edd-toggle {
+	font-weight: normal;
+}
+
 .edd-vertical-sections .new-customer strong {
 	width: 85px;
 	display: inline-block;
@@ -415,13 +508,331 @@ a.edd-delete:hover {
 	margin-left: 10px;
 }
 
+.edd-add-order-item td {
+	vertical-align: middle;
+}
+
+.edd-add-order-item input {
+	width: 80%;
+}
+
+.edd-add-order-item input[readonly] {
+	color: #555;
+	background: none;
+	border: 1px solid transparent;
+	box-shadow: none;
+}
+
+.order-customer-info .customer-details-wrap {
+	margin: 15px 0;
+	align-items: center;
+}
+
+.order-customer-info .customer-details-wrap .spinner {
+	margin: 0;
+}
+
+.order-customer-info .customer-details {
+	display: flex;
+	flex-direction: column;
+} 
+
+.order-customer-info .customer-details .customer-since {
+	color: #666;
+	display: block;
+	margin: 4px 0 6px;
+}
+
+.order-customer-info .customer-details > span {
+	margin-bottom: 5px;
+}
+
+.edd-order-add-download-select .spinner {
+	display: none;
+}
+
+/** Overview */
+table.edd-order-overview-summary {
+	border-width: 0 0 1px;
+	table-layout: fixed;
+}
+
+@media screen and (min-width: 782px) {
+
+	.edd-order-overview .column-right {
+		text-align: left;
+	}
+}
+
+.edd-ml-auto {
+	margin-right: auto !important;
+}
+
+@media screen and (min-width: 782px) {
+
+	.edd-ml-lg-auto {
+		margin-right: auto !important;
+	}
+}
+
+.edd-ml-auto + .edd-ml-auto {
+	margin-right: 10px !important;
+}
+
+/** Items */
+.edd-order-overview-summary__items > :nth-child(odd) {
+	background-color: #f9f9f9;
+}
+
+@media screen and (min-width: 782px) {
+
+	.edd-order-overview-summary__items tr:last-child th,
+	.edd-order-overview-summary__items tr:last-child td {
+		border-bottom: 1px solid #e5e5e5;
+	}
+}
+
+.edd-order-overview-summary th.column-name {
+	width: 42%;
+}
+
+@media screen and (max-width: 782px) {
+
+	.edd-order-overview-summary .row-actions > *,
+	.edd-order-overview-summary__items-name .row-actions {
+		display: block !important;
+	}
+
+	.edd-order-overview-summary .row-actions > *:not(:first-child):before {
+		display: none;
+	}
+}
+
+.edd-order-overview-summary th.column-quantity,
+.edd-order-overview-summary th.column-amount,
+.edd-order-overview-summary th.column-subtotal {
+	width: 16%;
+}
+
+.edd-order-overview-summary .row-actions > *:not(:first-child):before {
+	color: #999;
+	content: " | ";
+}
+
+.edd-order-overview-summary .row-actions .text {
+	color: #555;
+}
+
+.edd-order-overview-summary td.column-name {
+	display: flex;
+	align-items: center;
+}
+
+.edd-order-overview-summary .column-name .delete {
+	display: inline-block;
+	margin-left: 10px;
+	margin-right: -8px;
+	padding: 10px;
+	border-left: 1px solid #e5e5e5;
+	color: #a00;
+}
+
+.edd-order-overview-summary td.column-name .delete:hover {
+	color: #dc3232;
+}
+
+/** Adjustments */
+.edd-order-overview-summary__adjustments .column-primary {
+	font-weight: 600;
+}
+
+.edd-order-overview-summary__adjustments td small {
+	font-weight: normal;
+}
+
+/** Totals */
+.edd-order-overview-summary__totals .column-primary {
+	font-weight: 600;
+}
+
+.edd-order-overview-summary__totals td small {
+	font-weight: normal;
+}
+
+.edd-order-overview-summary__totals .total {
+	color: #017d5c;
+	display: inline-block;
+}
+
+@media screen and (min-width: 782px) {
+
+	.edd-order-overview-summary__totals .total {
+		font-size: 150%;
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
+}
+
+.edd-order-overview-summary__totals tr:last-child th,
+.edd-order-overview-summary__totals tr:last-child td:not(:first-of-type) {
+	border-top: 1px solid #e5e5e5;
+}
+
+.edd-order-overview-summary__adjustments th.column-name {
+	position: relative;
+}
+
+.edd-order-overview-summary__adjustments th.column-name .delete {
+	position: absolute;
+	right:  -40px;
+	top: 50%;
+	margin-top: -15px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.edd-order-overview-summary__totals .notice {
+	margin: -1px;
+}
+
+.edd-order-overview-summary__totals .notice p {
+	margin: 0.5em 0;
+}
+
+/** Actions */
+#edd-order-overview-actions.inside {
+	margin-top: 0;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.edd-order-overview-actions .button {
+	width: 100%;
+	margin-bottom: 12px;
+}
+
+.edd-order-overview-actions .button:last-of-type {
+	margin-bottom: 0;
+}
+
+@media screen and (min-width: 782px) {
+	.edd-order-overview-actions .button {
+		width: auto;
+		margin-right: 12px;
+		margin-bottom: 0;
+	}
+
+	.edd-order-overview-actions .button:first-of-type {
+		margin-right: auto;
+	}
+}
+
+.edd-order-overview-actions__locked {
+	font-style: italic;
+	opacity: 0.80;
+}
+
+@media screen and (max-width: 782px) {
+
+	.edd-order-overview-actions__locked {
+		margin-bottom: 12px;
+	}
+}
+
+/** Dialog */
+.download_page_edd-payment-history .ui-dialog,
+.download_page_edd-payment-history .ui-dialog-content {
+	overflow: visible;
+}
+
+.edd-order-overview-modal form > p {
+	margin-top: 0;
+}
+
+.edd-order-overview-modal fieldset legend,
+.edd-order-overview-modal form label {
+	display: block;
+	margin-bottom: 4px;
+}
+
+.edd-order-overview-modal fieldset {
+	margin-bottom: calc(1em - 3px);
+}
+
+.edd-order-overview-modal fieldset > p {
+	margin: 2px 0 3px;
+}
+
+.edd-order-overview-modal form .submit {
+	margin: 0 -16px -16px;
+	padding: 16px;
+	background: #fcfcfc;
+	border-top: 1px solid #dfdfdf;
+	display: flex;
+	align-items: center;
+}
+
+.edd-order-overview-modal form .submit .spinner {
+	margin: 0;
+}
+
+.edd-order-overview-add-item [for="auto-calculate"] {
+	display: flex;
+	align-items: center;
+}
+
+.edd-order-overview-add-item [for="auto-calculate"] input[type="checkbox"] {
+	margin-top: 0;
+}
+
+.edd-order-overview-add-item [for="auto-calculate"] .label {
+	line-height: 1.15;
+	margin-right: 8px;
+}
+
+.edd-order-overview-add-item [for="auto-calculate"] .label small {
+	margin-top: 4px;
+	display: block;
+	opacity: 0.75;
+}
+
+.edd-order-overview-add-item .notice {
+	margin: 0 0 1rem;
+}
+
+.edd-order-overview-add-adjustment #description,
+.edd-order-overview-add-discount select {
+	width: 100%;
+}
+
+.edd-order-overview-error {
+	font-style: italic;
+	color: #a00;
+	display: block;
+	margin: 4px 0;
+}
+
+.edd-order-copy-download-link textarea {
+	width: 100%;
+}
+
+.edd-order-resend-email-chooser legend {
+	font-weight: bold;
+	margin-bottom: 4px;
+}
+
+.edd-order-resend-email-chooser p {
+	margin: 4px 0;
+}
+
 /* Note Styles
 -------------------------------------------------------------- */
 
 .edd-notes .edd-note {
+	padding: 10px;
 	background-color: #ffffee;
-	border-right: 5px solid #cccc00;
-	box-shadow: 0 1px 1px 0 rgba( 0, 0, 0, 0.1 );
+	border: 1px solid #cccc00;
 	width: 100%;
 	position: relative;
 	margin-bottom: 10px;
@@ -433,39 +844,20 @@ a.edd-delete:hover {
 	opacity: 0.5;
 }
 
+.edd-notes .edd-note__header {
+	display: flex;
+	align-items: center;
+}
+
 .edd-add-note .spinner {
 	float: none;
 	display: inline-block;
 	margin: 0;
 }
 
-.edd-notes .edd-note div {
-	padding: 5px 10px;
-	margin: 0;
-}
-
-.edd-notes .edd-note .edd-note-author {
-	padding: 2px 0 2px 2px;
-	float: right;
-}
-
 .edd-notes .edd-note time {
-	float: right;
 	font-size: 11px;
-	line-height: 11px;
 	color: #aaa;
-	padding: 5px 0;
-	vertical-align: middle;
-}
-
-.edd-notes .edd-note p {
-	clear: both;
-	padding: 5px 0;
-	margin: 0;
-}
-
-.edd-notes .edd-note p a {
-	color: #000;
 }
 
 .edd-notes .edd-note .edd-note-author {
@@ -473,19 +865,18 @@ a.edd-delete:hover {
 }
 
 .edd-notes .edd-note .edd-delete-note {
-	position: absolute;
-	left: 0;
-	top: 0;
-	margin: 10px;
-	font-size: 10px;
-	line-height: 10px;
+	color: #a00;
+	font-weight: bold;
 	text-decoration: none;
-	color: #aaa;
-	z-index: 1;
+	margin-right: auto;
 }
 
 .edd-notes .edd-note .edd-delete-note:hover {
 	color: #888;
+}
+
+.edd-notes .edd-note p:last-child {
+	margin-bottom: 0;
 }
 
 .edd-notes .edd-no-notes {
@@ -546,13 +937,21 @@ textarea[name="edd-note"] {
 	height: 100px;
 }
 
+.edd-amount-type-wrapper {
+	position: relative;
+	display: inline-block;
+}
+
 .edd-amount-type-select-wrapper {
 	position: absolute;
 	width: 45px;
-	margin: 2px;
 	background: #fafafa;
 	opacity: 0.9;
-	overflow: hidden;
+	top: 1px;
+	right: 1px;
+	bottom: 1px;
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
 }
 
 .edd-amount-type-wrapper .edd-amount-type-select-wrapper:after {
@@ -571,18 +970,26 @@ textarea[name="edd-note"] {
 }
 
 .edd-amount-type-wrapper select {
+	line-height: 1;
+	text-align: center;
 	border: 0;
 	background: transparent;
-	height: 27px;
 	width: 45px;
-	padding: 0 9px 0 7px;
+	min-height: 0;
+	height: 100%;
 	margin: 0;
-	text-align: center;
+	padding-right: 8px;
 	border-left: 1px solid #ddd;
 	-webkit-appearance: none;
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
 	box-shadow: none;
 	position: relative;
 	z-index: 3;
+}
+
+.edd-amount-type-wrapper input {
+	margin: 0;
 }
 
 .edd-amount-type-wrapper #edd-amount {
@@ -651,7 +1058,14 @@ textarea[name="edd-note"] {
 .wp-list-table.orderitems .column-discount,
 .wp-list-table.orderitems .column-tax,
 .wp-list-table.orderitems .column-total,
-.wp-list-table.orderitems .column-subtotal {
+.wp-list-table.orderitems .column-subtotal,
+.wp-list-table.refunditems .column-status,
+.wp-list-table.refunditems .column-quantity,
+.wp-list-table.refunditems .column-amount,
+.wp-list-table.refunditems .column-discount,
+.wp-list-table.refunditems .column-tax,
+.wp-list-table.refunditems .column-total,
+.wp-list-table.refunditems .column-subtotal {
 	width: 17%;
 }
 
@@ -682,6 +1096,7 @@ textarea[name="edd-note"] {
 .wp-list-table.discounts .column-primary strong,
 .wp-list-table.orders .column-primary strong,
 .wp-list-table.orderitems .column-primary strong,
+.wp-list-table.refunditems .column-primary strong,
 .wp-list-table.orderadjustments .column-primary strong {
 	font-size: 14px;
 }
@@ -689,7 +1104,9 @@ textarea[name="edd-note"] {
 .wp-list-table.orders tr.refunded td,
 .wp-list-table.orders tr.refunded th,
 .wp-list-table.orderitems tr.refunded td,
-.wp-list-table.orderitems tr.refunded th {
+.wp-list-table.orderitems tr.refunded th,
+.wp-list-table.refunditems tr.refunded td,
+.wp-list-table.refunditems tr.refunded th{
 	background: #ffddee;
 }
 
@@ -936,10 +1353,6 @@ marquee {
 
 }
 
-.download_page_edd-payment-history .ui-dialog .ui-dialog-titlebar-close span {
-	margin-right: -8px;
-	margin-top: -8px;
-}
 #edd-download-link-textarea {
 	width: 100%;
 }
@@ -1337,9 +1750,6 @@ input[class*="edd-price-field"] {
 #edd-edit-order-form input.large-text {
 	width: 90%;
 }
-.edd-edit-purchase-element ul li.download {
-	width: 35%;
-}
 .edd-edit-purchase-element ul li.item_price {
 	width: 15%;
 }
@@ -1352,9 +1762,6 @@ input[class*="edd-price-field"] {
 .edd-edit-purchase-element ul li.price {
 	width: 20%;
 }
-.edd-admin-box .label {
-	font-weight: 600;
-}
 .edd-admin-box-inside {
 	border-bottom: 1px solid #f1f1f1;
 	clear: both;
@@ -1362,11 +1769,32 @@ input[class*="edd-price-field"] {
 	margin: 0;
 	word-wrap: break-word;
 }
+.edd-admin-box-inside--row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
 .edd-admin-box-inside > p {
 	margin: 8px 3px;
 }
 .edd-admin-box-inside .strong {
 	font-weight: 600;
+}
+.edd-admin-box div:not(.edd-admin-box-inside--row) .label {
+	display: block;
+	margin-bottom: 4px;
+	margin-left: 0;
+}
+.edd-admin-box .label--has-tip {
+	display: flex;
+	align-items: center;
+}
+.edd-admin-box .label--has-tip .edd-help-tip {
+	margin-top: 0;
+	font-size: 20px;
+}
+.edd-admin-box div:not(.edd-admin-box-inside--row) .label--has-checkbox {
+	margin-bottom: 0;
 }
 .edd-payment-fees .fee-label {
 	color: #666;
@@ -1374,6 +1802,35 @@ input[class*="edd-price-field"] {
 }
 .edd-admin-box .right {
 	float: left;
+}
+#edd-order-refunds-list {
+	padding-right: 25px;
+}
+#edd-refund-submit-button-wrapper .spinner {
+	float: none;
+	vertical-align: top;
+}
+#edd-submit-refund-status {
+	text-align: center;
+	font-size: 1.2em;
+	vertical-align: middle;
+}
+#edd-submit-refund-status .edd-submit-refund-message::before{
+	font-family: dashicons;
+	font-size: 1.5em;
+	vertical-align: middle;
+	color: #fff;
+	border-radius: 16px;
+	margin: 5px;
+}
+#edd-submit-refund-status .edd-submit-refund-message.success::before{
+	content: "\f147";
+	background-color: #339933;
+	padding-left: 1px;
+}
+#edd-submit-refund-status .edd-submit-refund-message.fail::before{
+	content: "\f335";
+	background-color: #993333;
 }
 #poststuff .edd-order-data .inside {
 	margin: 0;
@@ -1394,7 +1851,13 @@ input[class*="edd-price-field"] {
 	font-style: italic;
 	padding: 5px;
 }
-#edd-order-logs ul {
+#edd-refund-order-dialog #edd-refund-submit-subtotal td {
+	border-top: 2px solid #9c9c9c;
+}
+#edd-refund-order-dialog .edd-refund-submit-line-total td:first-child {
+	text-align: left;
+}
+#edd_general_logs p {
 	margin: 0;
 	padding: 0;
 }
@@ -1404,9 +1867,6 @@ input[class*="edd-price-field"] {
 	width: 100%;
 }
 .edd-admin-box-inside span.label {
-	display: inline-block;
-	width: 85px;
-	text-align: left;
 	margin-left: 10px;
 }
 #edd-order-resend-receipt .inside {
@@ -1414,6 +1874,17 @@ input[class*="edd-price-field"] {
 }
 #edd-order-resend-receipt .edd-order-resend-receipt-addresses {
 	margin-top: 10px;
+}
+.edd-order-resend-receipt-header {
+	font-size: 14px;
+	line-height: 1.4;
+}
+.edd-order-resend-receipt-addresses label {
+	display: block;
+	line-height: 1.75em;
+}
+.edd-order-resend-receipt-addresses label:last-child {
+	margin-bottom: 10px;
 }
 .edd-admin-box-inside:last-child {
 	border-bottom: 0;
@@ -1500,8 +1971,10 @@ input[class*="edd-price-field"] {
 	vertical-align: top;
 }
 .edd-edit-purchase-element ul {
-	font-size: 0;
 	margin: 0 0 15px;
+}
+.edd-edit-purchase-element ul:last-of-type {
+	margin-bottom: 0;
 }
 #edd-order-data .data span {
 	color: #666;
@@ -1552,8 +2025,8 @@ input[class*="edd-price-field"] {
 
 .edd-add-download-to-purchase,
 .edd-add-adjustment-to-purchase {
-	padding: 15px 15px 0;
-	border-bottom: 1px solid #e5e5e5;
+	padding: 15px;
+	border-top: 1px solid #e5e5e5;
 	background-color: #f5f5f5;
 }
 .edd-add-download-to-purchase .chosen-container,
@@ -1861,9 +2334,6 @@ body.download_page_edd-reports {
 #edd-dashboard-widgets-wrap .postbox h3 {
 	cursor: default;
 }
-.edd-graphs-date-options {
-	max-width: 130px !important; /* Chosen Override */
-}
 #edd-filters .filter-items .edd-date-range-options {
 	display: inline-block;
 	margin: 10px 0 10px 4px;
@@ -2027,6 +2497,73 @@ body.download_page_edd-reports {
 	width: 33.3%;
 }
 
+#edd_tax_rates {
+	margin: 1em 0 0;
+}
+
+[id*="edd-sendwp-"].button {
+	font-size: 16px;
+	height: auto;
+	padding: 8px 14px;
+	margin: 0 0 6px;
+}
+[id*="edd-sendwp-"].button .dashicons {
+	line-height: 29px;
+	margin-left: 8px;
+}
+[id*="edd-sendwp-"].button .edd-loading,
+[id*="edd-sendwp-"].button .edd-loading:after {
+	border-radius: 50%;
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+}
+[id*="edd-sendwp-"].button .edd-loading {
+	position: relative;
+	top: 3px;
+	margin-right: 4px;
+	box-shadow: 0 0 2px rgba(0,0,0,.2);
+}
+[id*="edd-sendwp-"].button .edd-loading {
+	-webkit-animation: edd-spinning 1.1s infinite linear;
+	animation: edd-spinning 1.1s infinite linear;
+	border-top: 2px solid rgba(255, 255, 255, 0.5);
+	border-left: 2px solid rgba(255, 255, 255, 0.5);
+	border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+	border-right: 2px solid #fff;
+	font-size: 14px;
+	filter: alpha(opacity=0);
+	-ms-transform: translateZ(0);
+	transform: translateZ(0);
+}
+#edd-sendwp-disconnect.button .edd-loading.dark {
+	border-top-color: rgba(0, 0, 0, 0.2);
+	border-left-color: rgba(0, 0, 0, 0.2);
+	border-bottom-color: rgba(0, 0, 0, 0.2);
+	border-right-color: #666;
+	box-shadow: none;
+}
+@-webkit-keyframes edd-spinning {
+	0% {
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	100% {
+		-webkit-transform: rotate(-360deg);
+		transform: rotate(-360deg);
+	}
+}
+@keyframes edd-spinning {
+	0% {
+		-webkit-transform: rotate(0deg);
+		transform: rotate(0deg);
+	}
+	100% {
+		-webkit-transform: rotate(-360deg);
+		transform: rotate(-360deg);
+	}
+}
+
 #edd-reports-tiles-wrap #dashboard-widgets .sortable-placeholder {
 	padding: 0;
 	margin: 0 0 20px 0;
@@ -2121,6 +2658,10 @@ body.download_page_edd-reports {
 	line-height: 1;
 	display: inline-block;
 	transition: all .2s ease-in-out;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	max-width: 80%;
 }
 
 #edd-reports-tiles-wrap .inside .tile-amount {
@@ -2341,8 +2882,8 @@ body.download_page_edd-reports {
 	width: 42px;
 	height: 24px;
 	background-color: #ccc;
-	-webkit-transition: .4s;
-	transition: .4s;
+	-webkit-transition: background 0.2s ease;
+	transition: background 0.2s ease;
 	border-radius: 34px;
 	box-shadow: none;
 	border: none;
@@ -2362,18 +2903,24 @@ body.download_page_edd-reports {
 	right: 3px;
 	bottom: 3px;
 	background-color: white;
-	-webkit-transition: .4s;
-	transition: .4s;
+	-webkit-transition: 0.1s transform ease;
+	transition: 0.1s transform ease;
 	border-radius: 50%;
 }
 
 .edd-toggle input[type="checkbox"]:checked {
-	background-color: #00a0d2;
+	background-color: #007cba;
 }
 
 .edd-toggle input[type="checkbox"]:active,
 .edd-toggle input[type="checkbox"]:focus {
-	outline: auto 3px -webkit-focus-ring-color;
+	outline: 0;
+	box-shadow: 0 0 0 1px #fff, 0 0 0 3px #7e8993;
+}
+
+.edd-toggle input[type="checkbox"]:checked:active,
+.edd-toggle input[type="checkbox"]:checked:focus {
+	box-shadow: 0 0 0 1px #fff, 0 0 0 3px #007cba;
 }
 
 .edd-toggle input[type="checkbox"]:checked:before {
@@ -2523,6 +3070,7 @@ body.download_page_edd-reports {
 }
 .edd-sections-wrap .edd-vertical-sections:not(.meta-box) .section-wrap > div {
 	min-height: 500px;
+	height: 100%;
 }
 .edd-sections-wrap .section-wrap .customer-section:not(:last-child) {
 	border-bottom: 1px solid #eee;
@@ -2530,7 +3078,7 @@ body.download_page_edd-reports {
 .edd-sections-wrap .section-wrap .customer-section table {
 	margin-bottom: 20px;
 }
-.edd-sections-wrap .section-wrap .section-content {
+.edd-sections-wrap .section-wrap {
 	border-right: 1px solid #e5e5e5;
 }
 .edd-sections-wrap .section-wrap .section-content > div {
@@ -2541,12 +3089,11 @@ body.download_page_edd-reports {
 }
 .edd-sections-wrap .section-wrap .avatar-wrap {
 	float: right;
-	padding-left: 20px;
+	padding-left: 10px;
 	text-align: center;
 }
 .edd-sections-wrap .section-wrap img.avatar {
 	border-radius: 5px;
-	margin-bottom: 10px;
 }
 .edd-sections-wrap .section-wrap .customer-id {
 	position: absolute;
@@ -2585,10 +3132,6 @@ body.download_page_edd-reports {
 	margin-top: -3px;
 	margin-left: 50px;
 	width: 202px;
-}
-.edd-sections-wrap .section-wrap .customer-info {
-	margin-bottom: 10px;
-	min-height: 185px;
 }
 .edd-sections-wrap .section-wrap .info-wrapper {
 	min-height: 125px;
@@ -2778,30 +3321,12 @@ body.download_page_edd-reports {
 	}
 }
 @media screen and ( max-width: 781px ) {
-	#edd-item-tab-wrapper,
+	#edd-item-tab-wrapper, /** [1] */
 	.edd-sections-wrap .section-wrap {
 		margin: 0;
 		width: 100%;
 	}
-	#edd-item-tab-wrapper-list {
-		background: #fff;
-		margin: 0;
-	}
-	#edd-item-tab-wrapper-list li,
-	#edd-item-tab-wrapper-list li.active {
-		float: right;
-		display: inline;
-		font-size: 14px;
-		box-sizing: border-box;
-		border-width: 0 0 1px 1px;
-		border-style: solid;
-		border-color: #e5e5e5;
-		width: 33.33333%;
-	}
-	#edd-item-tab-wrapper-list li:nth-child(3n+3) {
-		border-width: 0 0 1px 0;
-	}
-	#edd-item-tab-wrapper-list .dashicons {
+	#edd-item-tab-wrapper-list .dashicons { /** [1] */
 		font-size: 18px;
 	}
 	.edd-item-has-tabs  .edd-sections-wrap .section-wrap {
@@ -2992,35 +3517,39 @@ body.download_page_edd-reports {
 
 .edd-vertical-sections {
 	overflow: visible;
-	background: linear-gradient( -90deg, #f5f5f5 0%, #f5f5f5 20%, #fff 20%, #fff 100% );
+	display: block;
+	display: flex;
 }
 
-@media only screen and ( max-width: 782px ) {
-	.edd-vertical-sections {
-		background: linear-gradient( -90deg, #f5f5f5 0%, #f5f5f5 48px, #fff 48px, #fff 100% );
-	}
-}
-
+#edd-item-tab-wrapper, /** [1] */
 .edd-vertical-sections .section-nav {
 	position: relative;
 	float: right;
 	width: 20%;
 	line-height: 1em;
-	margin: 0 0 -1px -1px;
+	margin: 0 0 0 -1px;
 	padding: 0;
-	background-color: #fcfcfc;
+	background-color: #f5f5f5;
 	border-left: 1px solid #e5e5e5;
 	box-sizing: border-box;
 	max-width: 200px;
 }
 
+#edd-item-tab-wrapper-list { /** [1] */
+	margin: 0;
+}
+
+#edd-item-tab-wrapper li, /** [1] */
 .edd-vertical-sections .section-nav li {
 	display: block;
 	position: relative;
 	margin: 0;
 	padding: 0;
+	background-color: #fcfcfc;
 }
 
+#edd-item-tab-wrapper li a, /** [1] */
+#edd-item-tab-wrapper li > .edd-item-tab-label-wrap, /** [1] */
 .edd-vertical-sections .section-nav li a {
 	display: block;
 	margin: 0;
@@ -3029,6 +3558,23 @@ body.download_page_edd-reports {
 	text-decoration: none;
 	border-bottom: 1px solid #e5e5e5;
 	box-shadow: none;
+	position: relative;
+}
+
+.edd-vertical-sections .section-nav li[aria-selected="true"] a:after {
+	content: '';
+	width: 1px;
+	height: 100%;
+	background: #fff;
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	z-index: 3;
+}
+
+#edd-item-tab-wrapper li > .edd-item-tab-label-wrap { /** [1] */
+	background-color: #fff;
 }
 
 .edd-vertical-sections .section-nav li a > .dashicons,
@@ -3055,51 +3601,56 @@ body.download_page_edd-reports {
 	margin-left: -1px;
 }
 
+/* Fresh */
+.admin-color-fresh .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+	box-shadow: inset -5px 0 #0073aa;
+}
+
 /* Blue */
 .admin-color-blue .edd-vertical-sections .section-nav li[aria-selected="true"] a {
-	border-right: 5px solid #096484;
+	box-shadow: inset -5px 0 #096484;
 }
 
 /* Coffee */
 .admin-color-coffee .edd-vertical-sections .section-nav li[aria-selected="true"] a {
-	border-right: 5px solid #096484;
+	box-shadow: inset -5px 0 #096484;
 }
 
 /* Ectoplasm */
 .admin-color-ectoplasm .edd-vertical-sections .section-nav li[aria-selected="true"] a {
-	border-right: 5px solid #a3b745;
+	box-shadow: inset -5px 0 #a3b745;
 }
 
 /* Midnight */
 .admin-color-midnight .edd-vertical-sections .section-nav li[aria-selected="true"] a {
-	border-right: 5px solid #26292c;
+	box-shadow: inset -5px 0 #26292c;
 }
 
 /* Ocean */
 .admin-color-ocean .edd-vertical-sections .section-nav li[aria-selected="true"] a {
-	border-right: 5px solid #627c83;
+	box-shadow: inset -5px 0 #627c83;
 }
 
 /* Sunrise */
 .admin-color-sunrise .edd-vertical-sections .section-nav li[aria-selected="true"] a {
-	border-right: 5px solid #be3631;
+	box-shadow: inset -5px 0 #be3631;
 }
 
 /* Light */
 .admin-color-light .edd-vertical-sections .section-nav li[aria-selected="true"] a {
-	border-right: 5px solid #888;
+	box-shadow: inset -5px 0 #888;
 }
 
 /* bbPress Color Schemes */
 
 /* Evergreen */
 .admin-color-evergreen .edd-vertical-sections .section-nav li[aria-selected="true"] a {
-	border-right: 5px solid #36533f;
+	box-shadow: inset -5px 0 #36533f;
 }
 
 /* Mint */
 .admin-color-mint .edd-vertical-sections .section-nav li[aria-selected="true"] a {
-	border-right: 5px solid #4f6d59;
+	box-shadow: inset -5px 0 #4f6d59;
 }
 
 .edd-vertical-sections .section-nav li[aria-selected="true"] .dashicons {
@@ -3108,6 +3659,7 @@ body.download_page_edd-reports {
 
 @media only screen and ( max-width: 782px ) {
 
+	#edd-item-tab-wrapper, /** [1] */
 	.edd-vertical-sections .section-nav {
 		width: 48px;
 	}
@@ -3128,6 +3680,7 @@ body.download_page_edd-reports {
 		height: 24px;
 	}
 
+	#edd-item-tab-wrapper .edd-item-tab-label, /** [1] */
 	.section-nav li .label {
 		overflow: hidden;
 		position: absolute;
@@ -3140,12 +3693,33 @@ body.download_page_edd-reports {
 
 /* Content wrapper */
 
+#edd-item-card-wrapper, /** [1] */
 .edd-vertical-sections .section-wrap {
 	float: right;
 	width: 80%;
 }
 
+#edd-item-card-wrapper .item-section { /** [1] */
+	background: #fff;
+	overflow: hidden;
+	box-sizing: border-box;
+}
+
+div:not(#edd-item-tab-wrapper) + #edd-item-card-wrapper .item-section { /** [1] */
+	margin: 25px 0;
+	padding: 20px;
+	border: 1px solid #e5e5e5;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+#edd-item-tab-wrapper + #edd-item-card-wrapper { /** [1] */
+	padding: 20px;
+	border-right: 1px solid #e5e5e5;
+	box-sizing: border-box;
+}
+
 @media only screen and ( min-width: 1200px ) {
+	#edd-item-card-wrapper, /** [1] */
 	#edd-graphs-filter,
 	.edd-vertical-sections:not(.meta-box) .section-wrap {
 		width: calc( 100% - 200px );
@@ -3153,13 +3727,188 @@ body.download_page_edd-reports {
 }
 
 @media only screen and ( max-width: 782px ) {
+	#edd-item-card-wrapper, /** [1] */
 	#edd-graphs-filter,
 	.edd-vertical-sections .section-wrap {
 		width: calc( 100% - 48px );
 	}
 }
 
-.section-content {
-	border-right: 1px solid #e5e5e5;
-	min-height: 155px;
+#edd-debug-log .edd-inline-button {
+	margin-right: 5px;
+}
+
+/* Promotional element styles
+-------------------------------------------------------------- */
+
+/* Settings sidebar */
+.edd-settings-sidebar {
+	padding-top: 27px;
+}
+
+.edd-settings-sidebar-content {
+	background-color: #fff;
+	text-align: center;
+	border: 1px solid #ddd;
+	box-sizing: border-box;
+	max-width: 300px;
+}
+
+.edd-settings-sidebar-content p {
+	font-size: 14px;
+	line-height: 1.5;
+	margin-top: 0;
+}
+
+/* Settings sidebar header section */
+.edd-sidebar-header-section {
+	background-color: #35495c;
+	line-height: 1;
+	padding: 26px 20px 24px;
+	border-bottom: 3px dashed #fafafa;
+}
+
+/* Settings sidebar description section */
+.edd-sidebar-description-section {
+	background-color: #fafafa;
+	padding: 16px 20px;
+	border-bottom: 1px solid #ddd;
+}
+
+.edd-sidebar-description-section .edd-sidebar-description {
+	margin: 0;
+}
+
+/* Settings sidebar coupon section */
+.edd-sidebar-coupon-section {
+	font-size: 14px;
+	padding: 16px 20px;
+}
+
+.edd-sidebar-coupon-section label {
+	display: block;
+	line-height: 1.4;
+	margin-bottom: 6px;
+}
+
+.edd-sidebar-coupon-section label strong {
+	color: #253b51;
+	font-weight: 700;
+}
+
+.edd-sidebar-coupon-section input {
+	background: #f4f7fa;
+	font-size: 22px;
+	font-weight: 600;
+	text-align: center;
+	padding: 10px;
+	border: 2px dashed #2794da;
+	border-radius: 4px;
+	margin-bottom: 16px;
+	box-shadow: none;
+	width: 100%;
+}
+
+.edd-sidebar-coupon-section input:focus {
+	border: 2px dashed #2794da;
+	box-shadow: none;
+}
+
+.edd-settings-sidebar-content .edd-coupon-note {
+	color: #6c7883;
+	font-size: 13px;
+	font-style: italic;
+	margin: 0;
+}
+
+.edd-settings-sidebar-content .edd-coupon-note a {
+	color: #253b51;
+}
+
+.edd-settings-sidebar-content .edd-coupon-note a:hover {
+	text-decoration: none;
+}
+
+/* Settings sidebar footer section */
+.edd-sidebar-footer-section {
+	background-color: #fafafa;
+	padding: 16px 20px;
+	border-top: 1px solid #ddd;
+}
+
+.edd-sidebar-footer-section .edd-cta-button {
+	display: block;
+	background-color: #2794da;
+	color: #fff;
+	text-decoration: none;
+	font-size: 20px;
+	font-weight: 700;
+	text-transform: uppercase;
+	padding: 17px 10px;
+	border: none;
+	border-radius: 4px;
+	width: 100%;
+	box-sizing: border-box;
+	box-shadow: none;
+	transition: background-color .2s;
+}
+
+.edd-sidebar-footer-section .edd-cta-button:hover {
+	background-color: #2386c5;
+}
+
+/* Settings sidebar responsive behavior */
+@media all and ( min-width: 1080px ) {
+
+	.edd-has-sidebar .edd-settings-content {
+		float: right;
+		width: 67%;
+	}
+
+	.edd-has-sidebar .edd-settings-sidebar {
+		float: left;
+		width: 31%;
+	}
+}
+
+@media all and ( min-width: 1240px ) {
+
+	.edd-has-sidebar .edd-settings-content {
+		width: 74%;
+	}
+
+	.edd-has-sidebar .edd-settings-sidebar {
+		width: 23%;
+	}
+}
+
+/* Settings - Move sidebar below content only on Taxes tab */
+.taxes-tab .edd-has-sidebar .edd-settings-content,
+.taxes-tab .edd-has-sidebar .edd-settings-sidebar {
+	float: none;
+	width: 100%;
+}
+
+/* Extensions (add-ons) page promotional element */
+.bfcm-promo-img-container {
+	background-color: #35495c;
+	width: 100%;
+	height: 160px;
+}
+
+.bfcm-code {
+	color: #2794da;
+	font-weight: 700;
+}
+
+.sale-ends {
+	position: absolute;
+	bottom: 9px;
+	left: 14px;
+	display: inline-block;
+	color: #6c7883;
+	font-size: 12px;
+	text-align: left;
+	font-style: italic;
+	width: 150px;
 }

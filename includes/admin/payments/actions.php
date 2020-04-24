@@ -119,10 +119,6 @@ function edd_update_payment_details( $data = array() ) {
 	$new_total  = isset( $data['edd-payment-total']  ) ? edd_sanitize_amount( $data['edd-payment-total'] ) : $curr_total;
 	$tax        = isset( $data['edd-payment-tax']    ) ? edd_sanitize_amount( $data['edd-payment-tax']   ) : $curr_tax;
 
-	// Customer
-	$curr_customer_id = sanitize_text_field( $data['edd-current-customer'] );
-	$new_customer_id  = sanitize_text_field( $data['customer-id'] );
-
 	// Totals
 	$new_subtotal = 0.00;
 	$new_tax      = 0.00;
@@ -229,6 +225,9 @@ function edd_update_payment_details( $data = array() ) {
 
 	$order_update_args['date_created'] = $date;
 
+	// Customer
+	$curr_customer_id = sanitize_text_field( $data['current-customer-id'] );
+	$new_customer_id  = sanitize_text_field( $data['customer-id'] );
 	$customer_changed = false;
 
 	// Create a new customer.
@@ -276,7 +275,7 @@ function edd_update_payment_details( $data = array() ) {
 				edd_set_error( 'edd-payment-new-customer-fail', __( 'Error creating new customer', 'easy-digital-downloads' ) );
 			}
 		} else {
-			wp_die( sprintf( __( 'A customer with the email address %s already exists. Please go back and use the "Assign to another customer" link to assign this payment to them.', 'easy-digital-downloads' ), $email ) );
+			wp_die( sprintf( __( 'A customer with the email address %s already exists. Please go back and assign this payment to them.', 'easy-digital-downloads' ), $email ) );
 		}
 
 		$new_customer_id = $customer->id;
