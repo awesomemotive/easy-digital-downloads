@@ -590,6 +590,10 @@ table.edd-order-overview-summary {
 }
 
 /** Items */
+.edd-order-overview-summary__items-name {
+	align-self: flex-start;
+}
+
 .edd-order-overview-summary__items > :nth-child(odd) {
 	background-color: #f9f9f9;
 }
