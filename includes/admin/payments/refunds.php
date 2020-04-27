@@ -153,9 +153,9 @@ function edd_refund_details_notes( $refund ) {
 ?>
 
 <div id="edd-order-items" class="postbox edd-edit-purchase-element">
-	<h3 class="hndle">
-		<span><?php esc_html_e( 'Refund Notes', 'easy-digital-downloads' ); ?></span>
-	</h3>
+	<h2 class="hndle">
+		<?php esc_html_e( 'Refund Notes', 'easy-digital-downloads' ); ?>
+	</h2>
 
 	<div class="inside">
 		<?php edd_order_details_notes( $refund ); ?>
@@ -177,9 +177,9 @@ function edd_refund_details_attributes( $refund ) {
 ?>
 
 <div class="postbox">
-	<h3 class="hndle">
-		<span><?php esc_html_e( 'Refund Attributes', 'easy-digital-downloads' ); ?></span>
-	</h3>
+	<h2 class="hndle">
+		<?php esc_html_e( 'Refund Details', 'easy-digital-downloads' ); ?>
+	</h2>
 
 	<div class="inside">
 		<?php
