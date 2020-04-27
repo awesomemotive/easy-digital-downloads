@@ -20,6 +20,12 @@ jQueryReady( () => {
 	( () => {
 		const { state: overviewState } = OrderOverview.options;
 
+		// No taxs, do nothing.
+		if ( false === overviewState.get( 'hasTax' ) ) {
+			return;
+		}
+
+		// Adding, do nothing.
 		if ( false === overviewState.get( 'isAdding' ) ) {
 			return;
 		}
