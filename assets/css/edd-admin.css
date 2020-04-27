@@ -510,14 +510,6 @@ a.edd-delete:hover {
 	font-weight: normal;
 }
 
-.edd-vertical-sections .new-customer strong {
-	width: 85px;
-	display: inline-block;
-	white-space: nowrap;
-	text-align: right;
-	margin-right: 10px;
-}
-
 .edd-add-order-item td {
 	vertical-align: middle;
 }
@@ -1829,7 +1821,7 @@ input[class*="edd-price-field"] {
 .edd-admin-box-inside {
 	border-bottom: 1px solid #f1f1f1;
 	clear: both;
-	padding: 10px 12px;
+	padding: 12px;
 	margin: 0;
 	word-wrap: break-word;
 }
@@ -1925,11 +1917,6 @@ input[class*="edd-price-field"] {
 	margin: 0;
 	padding: 0;
 }
-.edd-admin-box-inside .edd_datepicker,
-.edd-admin-box-inside input[type="text"] {
-	max-width: 130px;
-	width: 100%;
-}
 .edd-admin-box-inside span.label {
 	margin-right: 10px;
 }
@@ -1975,27 +1962,6 @@ input[class*="edd-price-field"] {
 
 .order-data-address h3 {
 	margin: 0 0 10px 0;
-}
-
-.order-data-address .input-wrap {
-	display: block;
-	clear: both;
-	padding: 3px 0;
-}
-.order-data-address .input-wrap label {
-	width: 150px;
-	text-align: right;
-	margin-right: 5px;
-}
-.order-data-address .input-wrap label,
-.order-data-address .input-wrap > input {
-	display: inline-block;
-}
-
-.order-data-address .input-wrap input {
-	width: 50%;
-	height: 29px;
-	max-width: 300px;
 }
 
 .order-data-address #edd-order-address-state-wrap,
@@ -2083,10 +2049,6 @@ input[class*="edd-price-field"] {
 .edd_repeatable_product_wrapper td {
 	overflow: visible;
 }
-.edd-order-details-label-mobile {
-	display: none;
-}
-
 .edd-add-download-to-purchase,
 .edd-add-adjustment-to-purchase {
 	padding: 15px;
@@ -2137,11 +2099,6 @@ input[class*="edd-price-field"] {
 	.edd-edit-purchase-element .edd-purchased-download-actions {
 		padding-top: 10px;
 	}
-	.edd-order-details-label-mobile {
-		display: block;
-		font-weight: 500;
-		padding-bottom: 6px;
-	}
 }
 
 @media screen and ( max-width: 1024px ) {
@@ -2175,10 +2132,6 @@ input[class*="edd-price-field"] {
 	.edd-edit-purchase-element ul li.price {
 		width: 20%;
 		padding-bottom: 10px;
-	}
-	.edd-order-details-label-mobile {
-		font-size: 14px;
-		font-weight: 500;
 	}
 	.edd-price-currency,
 	.edd-payment-details-download-amount {
@@ -3984,4 +3937,79 @@ div:not(#edd-item-tab-wrapper) + #edd-item-card-wrapper .item-section { /** [1] 
 	text-align: right;
 	font-style: italic;
 	width: 150px;
+}
+
+/**
+ * Forms
+ * ---------------------------------------------------------- */
+
+/**
+ * Form Group
+ *
+ * <div class="edd-form-group">
+ *   <label class="edd-form-group__label">Label</label>
+ *   <div class="edd-form-group__control">
+ *   	<input type="text" class="edd-form-group__input" />
+ *   </div>
+ *   <p class="edd-form-group__help">Help</p>
+ * </div>
+ *
+ *
+ * <fieldset class="edd-form-group">
+ *   <legend class="edd-form-group__label">Label</label>
+ *
+ *   <div class="edd-form-group__control">
+ *   	<input type="radio" class="edd-form-group__input" />
+ *   	<label>Radio 1</label>
+ *   </div>
+ *
+ *   <div class="edd-form-group__control">
+ *   	<input type="radio" class="edd-form-group__input" />
+ *   	<label>Radio 2</label>
+ *   </div>
+ * </fieldset>
+ *
+ */
+.edd-form-group {
+	margin-bottom: 16px;
+}
+
+.edd-form-group:last-of-type {
+	margin-bottom: 0;
+}
+
+.edd-form-group__label {
+	display: block;
+	margin-bottom: 8px;
+	padding: 0;
+}
+
+.edd-form-group__control {
+	margin-bottom: 8px;
+}
+
+.edd-form-group__control.is-radio,
+.edd-form-group__control.is-check {
+	margin-top: 4px;
+}
+
+.edd-form-group__control:last-of-type {
+	margin-bottom: 0;
+}
+
+.edd-form-group__input {
+	max-width: 100%;
+}
+
+.edd-form-group__input[type="checkbox"],
+.edd-form-group__input[type="radio"] {
+	margin-top: 0;
+}
+
+.edd-form-group__help {
+	color: #666;
+	font-size: 13px;
+	font-style: italic;
+	line-height: initial;
+	margin: 8px 0 0;
 }
