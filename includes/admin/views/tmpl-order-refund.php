@@ -18,9 +18,20 @@ $view_url = edd_get_admin_url( array(
 <td></td>
 
 <td colspan="{{ data.config.colspan }}" class="column-primary">
-	<a href="<?php echo esc_url( $view_url ); ?>&id={{ data.id }}">
-		{{ data.number }}
-	</a>
+	<?php
+	echo wp_kses(
+		sprintf(
+			/* translators: %s Refund number, linked to Refund record. */
+			__( 'Refund: %s', 'easy-digitald-downloads' ),
+			'<a href="' . esc_url( $view_url ) . '&id={{ data.id }}">{{ data.number }}</a>'
+		),
+		array(
+			'a' => array(
+				'href' => true,
+			),
+		)
+	);
+	?>
 	<br />
 	<small>{{ data.dateCreated }}</small>
 </td>
