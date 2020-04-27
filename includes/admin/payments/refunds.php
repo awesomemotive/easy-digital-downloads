@@ -172,27 +172,41 @@ function edd_refund_details_notes( $refund ) {
  *
  * @param \EDD\Orders\Order $refund Current Refund.
  */
-function edd_refund_details_details( $refund ) {
+function edd_refund_details_attributes( $refund ) {
 	$refund_date = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $refund->date_created, 'utc', true ) );
+
+	$order_url = edd_get_admin_url(
+		array(
+			'id'        => $refund->parent,
+			'page'      => 'edd-payment-history',
+			'view'      => 'view-order-details',
+		)
+	);
+
+	$order = edd_get_order( $refund->parent );
 ?>
 
 <div class="postbox">
 	<h2 class="hndle">
-		<?php esc_html_e( 'Refund Details', 'easy-digital-downloads' ); ?>
+		<?php esc_html_e( 'Refund Attributes', 'easy-digital-downloads' ); ?>
 	</h2>
 
-	<div class="inside">
-		<?php
-		echo esc_html(
-			sprintf(
-				/* translators: %14s Refund date. %2$s Refund time. */
-				__( 'Refund issued on %1$s at %2$s (%3$s)', 'easy-digital-downloads' ),
-				$refund_date->format( get_option( 'date_format' ) ),
-				$refund_date->format( get_option( 'time_format' ) ),
-				edd_get_timezone_abbr()
-			)
-		);
-		?>
+	<div class="edd-admin-box-inside edd-admin-box-inside--row">
+		<span>
+			<?php esc_html_e( 'Created', 'easy-digital-downloads' ); ?>
+		</span>
+		<time datetime="<?php echo esc_attr( EDD()->utils->date( $refund->date_created, null, true )->toDateTimeString() ); ?>">
+			<?php echo edd_date_i18n( $refund->date_created, 'M. d, Y' ) . '<br />' . edd_date_i18n( strtotime( $refund->date_created ), 'H:i' ); ?> <?php echo esc_html( edd_get_timezone_abbr() ); ?>
+		</time>
+	</div>
+
+	<div class="edd-admin-box-inside edd-admin-box-inside--row">
+		<span>
+			<?php esc_html_e( 'Original Order', 'easy-digital-downloads' ); ?>
+		</span>
+		<span>
+			<a href="<?php echo esc_url( $order_url ); ?>"><?php echo esc_html( $order->number ); ?></a>
+		</span>
 	</div>
 </div>
 
