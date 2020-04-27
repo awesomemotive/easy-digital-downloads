@@ -135,38 +135,8 @@ class Payment extends Base {
 			_doing_it_wrong( __FUNCTION__, esc_html( $message ), 'EDD 3.0' );
 		}
 
-		$meta_keys = array(
-			'_edd_payment_purchase_key',
-			'_edd_payment_transaction_id',
-			'_edd_payment_meta',
-			'_edd_completed_date',
-			'_edd_payment_gateway',
-			'_edd_payment_user_id',
-			'_edd_payment_user_email',
-			'_edd_payment_user_ip',
-			'_edd_payment_mode',
-			'_edd_payment_tax_rate',
-			'_edd_payment_customer_id',
-			'_edd_payment_total',
-			'_edd_payment_tax',
-			'_edd_payment_number',
-			'_edd_sl_upgraded_payment_id', // EDD SL
-			'_edd_sl_is_renewal', // EDD SL
-			'_edds_stripe_customer_id', // EDD Stripe
-		);
-
-		/**
-		 * Allows the whitelisted post meta keys to be filtered. Extensions should add their meta key(s) to this
-		 * list if they want add/update/get post meta calls to be routed to order meta.
-		 *
-		 * @param array $meta_keys
-		 *
-		 * @since 3.0
-		 */
-		$meta_keys = apply_filters( 'edd_30_post_meta_key_whitelist', $meta_keys );
-
 		// Bail early of not a back-compat key
-		if ( ! in_array( $meta_key, $meta_keys, true ) ) {
+		if ( ! in_array( $meta_key, $this->get_meta_key_whitelist(), true ) ) {
 			return $value;
 		}
 
@@ -252,6 +222,38 @@ class Payment extends Base {
 	 */
 	public function update_post_metadata( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
 
+		// Bail early of not a back-compat key
+		if ( ! in_array( $meta_key, $this->get_meta_key_whitelist(), true ) ) {
+			return $check;
+		}
+
+		// Bail if payment does not exist
+		$payment = edd_get_payment( $object_id );
+		if ( empty( $payment ) ) {
+			return $check;
+		}
+
+		$check = $payment->update_meta( $meta_key, $meta_value );
+
+		if ( $this->show_notices ) {
+			_doing_it_wrong( 'add_post_meta()/update_post_meta()', 'All payment postmeta has been <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use <code>edd_add_order_meta()/edd_update_order_meta()()</code> instead.', 'EDD 3.0' );
+
+			if ( $this->show_backtrace ) {
+				$backtrace = debug_backtrace();
+				trigger_error( print_r( $backtrace, 1 ) );
+			}
+		}
+
+		return $check;
+	}
+
+	/**
+	 * Retrieves a list of whitelisted meta keys that we want to catch in get/update post meta calls.
+	 *
+	 * @since 3.0
+	 * @return array
+	 */
+	private function get_meta_key_whitelist() {
 		$meta_keys = array(
 			'_edd_payment_purchase_key',
 			'_edd_payment_transaction_id',
@@ -282,28 +284,6 @@ class Payment extends Base {
 		 */
 		$meta_keys = apply_filters( 'edd_30_post_meta_key_whitelist', $meta_keys );
 
-		// Bail early of not a back-compat key
-		if ( ! in_array( $meta_key, $meta_keys, true ) ) {
-			return $check;
-		}
-
-		// Bail if payment does not exist
-		$payment = edd_get_payment( $object_id );
-		if ( empty( $payment ) ) {
-			return $check;
-		}
-
-		$check = $payment->update_meta( $meta_key, $meta_value );
-
-		if ( $this->show_notices ) {
-			_doing_it_wrong( 'add_post_meta()/update_post_meta()', 'All payment postmeta has been <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use <code>edd_add_order_meta()/edd_update_order_meta()()</code> instead.', 'EDD 3.0' );
-
-			if ( $this->show_backtrace ) {
-				$backtrace = debug_backtrace();
-				trigger_error( print_r( $backtrace, 1 ) );
-			}
-		}
-
-		return $check;
+		return (array) $meta_keys;
 	}
 }
