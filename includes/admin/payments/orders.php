@@ -850,7 +850,7 @@ function edd_order_details_extras( $order = false ) {
 				<?php endif; ?>
 
 				<?php if ( $transaction_id ) : ?>
-					<div class="edd-order-tx-id edd-admin-box-inside">
+					<div class="edd-order-tx-id edd-admin-box-inside edd-admin-box-inside--row">
 						<span class="label"><?php esc_html_e( 'Transaction ID', 'easy-digital-downloads' ); ?></span>
 						<span><?php echo $transaction_id; ?></span>
 					</div>
