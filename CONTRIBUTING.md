@@ -81,5 +81,5 @@ By making a contribution to this project, I certify that:
 # Additional Resources
 * [EDD Developer's API](https://easydigitaldownloads.com/docs/developers-intro-to-easy-digital-downloads/)
 * [General GitHub Documentation](https://help.github.com/)
-* [GitHub Pull Request documentation](https://help.github.com/send-pull-requests/)
+* [GitHub Pull Request documentation](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests)
 * [PHPUnit Tests Guide](https://phpunit.de/manual/current/en/writing-tests-for-phpunit.html)

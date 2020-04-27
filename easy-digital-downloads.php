@@ -473,6 +473,8 @@ final class EDD_Requirements_Check {
 			? get_user_locale()
 			: get_locale();
 
+		unload_textdomain( 'easy-digital-downloads' );
+
 		/**
 		 * Defines the plugin language locale used in Easy Digital Downloads.
 		 *
