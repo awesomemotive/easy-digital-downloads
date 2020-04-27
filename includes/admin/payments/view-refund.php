@@ -96,8 +96,8 @@ function edd_view_refund_page_content() {
 						 */
 						do_action( 'edd_view_refund_details_sidebar_before', $refund->id );
 	
-						// Attributes
-						edd_refund_details_attributes( $refund );
+						// Details.
+						edd_refund_details_details( $refund );
 
 						/**
 						 * Allows further output after Refund sidebar content.

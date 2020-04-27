@@ -36,7 +36,7 @@ function edd_refund_details_notice( $refund ) {
 
 		<div class="edit-post-header__settings">
 			<a href="<?php echo esc_url( $order_url ); ?>" class="button button-secondary" autofocus>
-				<?php esc_html_e( 'View Order', 'easy-digital-downloads' ); ?>
+				<?php esc_html_e( 'View Original Order', 'easy-digital-downloads' ); ?>
 			</a>
 		</div>
 
@@ -166,13 +166,13 @@ function edd_refund_details_notes( $refund ) {
 }
 
 /**
- * Outputs Refund Attribuets box.
+ * Outputs "Refund Details" box.
  *
  * @since 3.0
  *
  * @param \EDD\Orders\Order $refund Current Refund.
  */
-function edd_refund_details_attributes( $refund ) {
+function edd_refund_details_details( $refund ) {
 	$refund_date = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $refund->date_created, 'utc', true ) );
 ?>
 
