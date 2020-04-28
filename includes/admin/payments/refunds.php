@@ -201,6 +201,18 @@ function edd_refund_details_attributes( $refund ) {
 		<?php esc_html_e( 'Refund Attributes', 'easy-digital-downloads' ); ?>
 	</h2>
 
+	<div class="edd-admin-box-inside">
+		<time datetime="<?php echo esc_attr( EDD()->utils->date( $refund->date_created, null, true )->toDateTimeString() ); ?>" style="line-height: normal">
+			<?php echo edd_date_i18n( $refund->date_created, 'M. d, Y' ) . '<br />' . edd_date_i18n( strtotime( $refund->date_created ), 'H:i' ); ?> <?php echo esc_html( edd_get_timezone_abbr() ); ?>
+		</time>
+
+		<br /><br />
+
+		<a href="<?php echo esc_url( $trash_url ); ?>" class="edd-delete-payment edd-delete">
+			<?php esc_html_e( 'Move to Trash', 'easy-digital-downloads' ); ?>
+		</a>
+	</div>
+
 	<div class="edd-admin-box-inside edd-admin-box-inside--row">
 		<div class="edd-form-group">
 			<span class="edd-form-group__label">
@@ -210,25 +222,6 @@ function edd_refund_details_attributes( $refund ) {
 				<a href="<?php echo esc_url( $order_url ); ?>"><?php echo esc_html( $order->number ); ?></a>
 			</div>
 		</div>
-	</div>
-
-	<div class="edd-admin-box-inside">
-		<div class="edd-form-group">
-			<span class="edd-form-group__label">
-				<?php esc_html_e( 'Created', 'easy-digital-downloads' ); ?>
-			</span>
-			<div class="edd-form-group__control">
-				<time datetime="<?php echo esc_attr( EDD()->utils->date( $refund->date_created, null, true )->toDateTimeString() ); ?>" style="line-height: normal">
-					<?php echo edd_date_i18n( $refund->date_created, 'M. d, Y' ) . '<br />' . edd_date_i18n( strtotime( $refund->date_created ), 'H:i' ); ?> <?php echo esc_html( edd_get_timezone_abbr() ); ?>
-				</time>
-			</div>
-		</div>
-	</div>
-
-	<div class="edd-admin-box-inside">
-		<a href="<?php echo esc_url( $trash_url ); ?>" class="edd-delete-payment edd-delete">
-			<?php esc_html_e( 'Move to Trash', 'easy-digital-downloads' ); ?>
-		</a>
 	</div>
 </div>
 
