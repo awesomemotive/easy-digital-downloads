@@ -39,6 +39,10 @@ if ( empty( $order ) ) {
 
 		<hr class="wp-header-end">
 
+		<div class="notice notice-error inline" id="edd-add-order-customer-error" style="display: none;">
+			<p><strong><?php esc_html_e( 'Error', 'easy-digital-downloads' ); ?>:</strong> <?php esc_html_e( 'Please select an existing customer or create a new customer.', 'easy-digital-downloads' ); ?></p>
+		</div>
+
 		<?php if ( 'refund' === $order->type ) : ?>
 			<div class="notice notice-info">
 				<p>
