@@ -234,3 +234,53 @@ function edd_refund_details_attributes( $refund ) {
 
 <?php
 }
+
+/**
+ * Outputs related Refunds.
+ *
+ * @since 3.0
+ *
+ * @param \EDD\Orders\Order $refund
+ */
+function edd_refund_details_related_refunds( $refund ) {
+	$refunds = array_filter(
+		edd_get_order_refunds( $refund->parent ),
+		function( $related_refund ) use ( $refund ) {
+			return $related_refund->id !== $refund->id;
+		}
+	);
+
+	if ( empty( $refunds ) ) {
+		return;
+	}
+?>
+
+<div class="postbox edd-order-data">
+	<h2 class="hndle">
+		<?php esc_html_e( 'Related Refunds', 'easy-digital-downloads' ); ?>
+	</h2>
+
+	<?php
+	foreach( $refunds as $refund ) :
+		$refund_url = edd_get_admin_url( array(
+			'page' => 'edd-payment-history',
+			'view' => 'view-refund-details',
+			'id'   => $refund->id
+		) );
+	?>
+		<div class="edd-admin-box-inside">
+			<div class="edd-form-group">
+				<a href="<?php echo esc_url( $refund_url ); ?>" class="edd-form-group__label">
+					<?php echo esc_html( $refund->number ); ?>
+				</a>
+				<div class="edd-form-group__control">
+					<time datetime="<?php echo esc_attr( EDD()->utils->date( $refund->date_created, null, true )->toDateTimeString() ); ?>" style="line-height: normal">
+						<?php echo edd_date_i18n( $refund->date_created, 'M. d, Y' ) . '<br />' . edd_date_i18n( strtotime( $refund->date_created ), 'H:i' ); ?> <?php echo esc_html( edd_get_timezone_abbr() ); ?>
+					</time>
+				</div>
+		</div>
+	<?php endforeach; ?>
+</div>
+
+<?php
+}

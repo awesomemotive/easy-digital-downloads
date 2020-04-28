@@ -99,6 +99,9 @@ function edd_view_refund_page_content() {
 						// Attributes.
 						edd_refund_details_attributes( $refund );
 
+						// Related Refunds.
+						edd_refund_details_related_refunds( $refund );
+
 						/**
 						 * Allows further output after Refund sidebar content.
 						 *
