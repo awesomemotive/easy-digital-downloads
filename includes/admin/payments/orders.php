@@ -42,8 +42,6 @@ function edd_order_details_publish( $order ) {
 						value="<?php echo esc_html( $action_name ); ?>"
 						<?php if ( ! edd_is_add_order_page() ) : ?>
 							autofocus
-						<?php else : ?>
-							disabled
 						<?php endif; ?>
 					/>
 				</div>
