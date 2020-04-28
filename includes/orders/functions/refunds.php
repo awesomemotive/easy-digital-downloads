@@ -55,7 +55,7 @@ function edd_is_order_refundable( $order_id = 0 ) {
 	}
 
 	// Outside of Refund window.
-	if ( false === edd_is_order_refund_window_passed( $order->id ) ) {
+	if ( true === edd_is_order_refund_window_passed( $order->id ) ) {
 		return false;
 	}
 
@@ -100,7 +100,7 @@ function edd_is_order_refund_window_passed( $order_id = 0 ) {
 		$date_refundable = \Carbon\Carbon::parse( $order->date_refundable, 'UTC' )->setTimezone( edd_get_timezone_id() );
 	}
 
-	return $date_refundable->isFuture();
+	return true === $date_refundable->isPast();
 }
 
 /**
