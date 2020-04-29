@@ -155,7 +155,7 @@ do_action( 'edd_payment_receipt_before_table', $payment, $edd_receipt_args );
 							<?php
 							echo esc_html( $item->product_name );
 
-							if ( 'complete' !== $item->status ) {
+							if ( 'refunded' == $item->status ) {
 								echo ' &ndash; ' . edd_get_status_label( $item->status );
 							}
 							?>
