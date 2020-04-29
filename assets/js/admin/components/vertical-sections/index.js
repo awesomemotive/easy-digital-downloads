@@ -15,22 +15,22 @@ jQuery( document ).ready( function( $ ) {
 		$( sectionSelector ).find( hash ).show();
 
 		// Set the aria-selected for section titles to be false
-		$( `${ sectionSelector } .section-title` ).attr( 'aria-selected', 'false' );
+		$( `${ sectionSelector } .section-title` ).attr( 'aria-selected', 'false' ).removeClass( 'section-title--is-active' );
 
 		// Set aria-selected true on the related link.
-		$( sectionSelector ).find( '.section-title a[href="' + hash + '"]' ).parents( '.section-title' ).attr( 'aria-selected', 'true' );
+		$( sectionSelector ).find( '.section-title a[href="' + hash + '"]' ).parents( '.section-title' ).attr( 'aria-selected', 'true' ).addClass( 'section-title--is-active' );
 
 	} else {
 		// Shows the first section's content.
 		$( `${ sectionSelector } .section-content:first-child` ).show();
 
 		// Makes the 'aria-selected' attribute true for the first section nav item.
-		$( `${ sectionSelector } .section-nav li:first-child` ).attr( 'aria-selected', 'true' );
+		$( `${ sectionSelector } .section-nav li:first-child` ).attr( 'aria-selected', 'true' ).addClass( 'section-title--is-active' );
 	}
 
 	// When a section nav item is clicked.
-		function( j ) {
 	$( `${ sectionSelector } .section-nav li a` ).on( 'click',
+		function( j ) {
 			// Prevent the default browser action when a link is clicked.
 			j.preventDefault();
 
