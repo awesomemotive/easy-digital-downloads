@@ -196,23 +196,21 @@ describe( 'Number', () => {
 		beforeEach( () => {
 			number = new NumberFormat( {
 				precision: 2,
-				decimalSeparator: ',',
-				thousandSeparator: '.',
+				decimalSeparator: '.',
+				thousandSeparator: ',',
 			} );
-		} );
-
-		it( 'should return a zero if non-number', () => {
-			expect( number.absint( '-20' ) ).toEqual( 0 );
 		} );
 
 		it( 'should return a positive number from a positive number', () => {
 			expect( number.absint( 5 ) ).toEqual( 5 );
 			expect( number.absint( 5.00 ) ).toEqual( 5.00 );
+			expect( number.absint( '5.00' ) ).toEqual( 5 );
 		} );
 
 		it( 'should return a positive number from a negative number', () => {
 			expect( number.absint( -5 ) ).toEqual( 5 );
 			expect( number.absint( -5.00 ) ).toEqual( 5.00 );
+			expect( number.absint( '-5.00' ) ).toEqual( 5 );
 		} );
 	} );
 } );

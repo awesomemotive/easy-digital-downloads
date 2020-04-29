@@ -97,18 +97,16 @@ export const NumberFormat = class NumberFormat {
 	 *
 	 * @since 3.0
 	 *
-	 * @param {number} number Number to make non-negative.
+	 * @param {*} number Number to unformat.
 	 * @return {number} A non-negative number.
 	 */
 	absint( number ) {
-		if ( 'number' !== typeof number ) {
-			return 0;
+		const unformatted = this.unformat( number );
+
+		if ( unformatted >= 0 ) {
+			return unformatted;
 		}
 
-		if ( number >= 0 ) {
-			return number;
-		}
-
-		return number * -1;
+		return unformatted * -1;
 	}
 };
