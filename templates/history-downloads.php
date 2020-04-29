@@ -1,4 +1,15 @@
-<?php if( ! empty( $_GET['edd-verify-success'] ) ) : ?>
+<?php
+/**
+ * Shortcode: Download History - [download_history]
+ *
+ * @package EDD
+ * @category Template
+ *
+ * @since 3.0 Uses new `edd_get_orders()` function and associated helpers.
+ *            Checks status on individual order items when determining download link visibility.
+ */
+
+if( ! empty( $_GET['edd-verify-success'] ) ) : ?>
 <p class="edd-account-verified edd_success">
 	<?php _e( 'Your account has been successfully verified!', 'easy-digital-downloads' ); ?>
 </p>

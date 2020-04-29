@@ -1,7 +1,14 @@
 <?php
 /**
- * This template is used to display the purchase summary with [edd_receipt]
+ * Shortcode: Receipt - [edd_receipt]
+ *
+ * @package EDD
+ * @category Template
+ *
+ * @since 3.0 Check status of order item when showing download link, instead of order itself.
+ *            Show "Refunded" next to any refunded order items.
  */
+
 global $edd_receipt_args;
 $order = edd_get_order( $edd_receipt_args['id'] );
 
