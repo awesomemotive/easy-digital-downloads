@@ -1,35 +1,36 @@
 jQuery( document ).ready( function( $ ) {
 
+	const sectionSelector = '.edd-vertical-sections.use-js';
 	// If the current screen doesn't have JS sections, return.
-	if ( 0 === $( '.edd-vertical-sections.use-js' ).length ) {
+	if ( 0 === $( sectionSelector ).length ) {
 		return;
 	}
 
 	// Hides the section content.
-	$( '.edd-vertical-sections.use-js .section-content' ).hide();
+	$( `${ sectionSelector } .section-content` ).hide();
 
-	var hash = window.location.hash;
+	const hash = window.location.hash;
 	if ( hash && hash.includes( 'edd_' ) ) {
 		// Show the section content related to the URL.
-		$( '.edd-vertical-sections.use-js' ).find( hash ).show();
+		$( sectionSelector ).find( hash ).show();
 
 		// Set the aria-selected for section titles to be false
-		$( '.edd-vertical-sections.use-js .section-title' ).attr( 'aria-selected', 'false' );
+		$( `${ sectionSelector } .section-title` ).attr( 'aria-selected', 'false' );
 
 		// Set aria-selected true on the related link.
-		$( '.edd-vertical-sections.use-js' ).find( '.section-title a[href="' + hash + '"]' ).parents( '.section-title' ).attr( 'aria-selected', 'true' );
+		$( sectionSelector ).find( '.section-title a[href="' + hash + '"]' ).parents( '.section-title' ).attr( 'aria-selected', 'true' );
 
 	} else {
 		// Shows the first section's content.
-		$( '.edd-vertical-sections.use-js .section-content:first-child' ).show();
+		$( `${ sectionSelector } .section-content:first-child` ).show();
 
 		// Makes the 'aria-selected' attribute true for the first section nav item.
-		$( '.edd-vertical-sections.use-js .section-nav li:first-child' ).attr( 'aria-selected', 'true' );
+		$( `${ sectionSelector } .section-nav li:first-child` ).attr( 'aria-selected', 'true' );
 	}
 
 	// When a section nav item is clicked.
-	$( '.edd-vertical-sections.use-js .section-nav li a' ).on( 'click',
 		function( j ) {
+	$( `${ sectionSelector } .section-nav li a` ).on( 'click',
 			// Prevent the default browser action when a link is clicked.
 			j.preventDefault();
 
