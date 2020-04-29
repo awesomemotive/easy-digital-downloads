@@ -152,7 +152,13 @@ do_action( 'edd_payment_receipt_before_table', $payment, $edd_receipt_args );
 						<?php $download_files = edd_get_download_files( $item->product_id, $item->price_id ); ?>
 
 						<div class="edd_purchase_receipt_product_name">
-							<?php echo esc_html( $item->product_name ); ?>
+							<?php
+							echo esc_html( $item->product_name );
+
+							if ( 'complete' !== $item->status ) {
+								echo ' &ndash; ' . edd_get_status_label( $item->status );
+							}
+							?>
 						</div>
 
 						<?php
