@@ -91,4 +91,24 @@ export const NumberFormat = class NumberFormat {
 
 		return isNaN( parsed ) ? 0 : parsed;
 	}
+
+	/**
+	 * Converts a value to a non-negative number.
+	 *
+	 * @since 3.0
+	 *
+	 * @param {number} number Number to make non-negative.
+	 * @return {number} A non-negative number.
+	 */
+	absint( number ) {
+		if ( 'number' !== typeof number ) {
+			return 0;
+		}
+
+		if ( number >= 0 ) {
+			return number;
+		}
+
+		return number * -1;
+	}
 };
