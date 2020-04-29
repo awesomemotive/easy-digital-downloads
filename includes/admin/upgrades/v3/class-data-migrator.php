@@ -611,7 +611,7 @@ class Data_Migrator {
 		);
 
 		// Remove all the core payment meta from the array, and...
-		$remaining_payment_meta = array_diff_key( $meta['_edd_payment_meta'], array_flip( $core_meta_keys ) );
+		$remaining_payment_meta = array_diff_key( $payment_meta, array_flip( $core_meta_keys ) );
 
 		// ..If we have extra payment meta, it needs to be migrated across.
 		if ( 0 < count( $remaining_payment_meta ) ) {
