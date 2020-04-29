@@ -11,9 +11,9 @@ $customer = edd_get_customer_by( 'user_id', get_current_user_id() );
 
 if ( ! empty( $customer ) ) {
 	$orders = edd_get_orders( array(
-			'customer_id' => $customer->id,
-			'number'      => 20,
-			'type'        => 'sale',
+		'customer_id' => $customer->id,
+		'number'      => 20,
+		'type'        => 'sale',
 	) );
 } else {
 	$orders = array();
