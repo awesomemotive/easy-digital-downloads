@@ -2576,6 +2576,8 @@ add_action( 'edd_reports_init', 'edd_register_export_report' );
  */
 function display_export_report() {
 	global $wpdb;
+
+	wp_enqueue_script( 'edd-admin-tools-export' );
     ?>
     <div id="edd-dashboard-widgets-wrap">
         <div class="metabox-holder">
