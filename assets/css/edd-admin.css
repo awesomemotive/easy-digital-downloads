@@ -3775,7 +3775,7 @@ body.download_page_edd-reports {
 	}
 
 	.edd-vertical-sections .section-nav li a {
-		text-align: center;
+		justify-content: center;
 	}
 	.edd-vertical-sections .section-nav li a .dashicons {
 		width: 24px;
