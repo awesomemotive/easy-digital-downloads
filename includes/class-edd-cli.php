@@ -1337,7 +1337,7 @@ class EDD_CLI extends WP_CLI_Command {
 			? true
 			: false;
 
-		$upgrade_completed = edd_has_upgrade_completed( 'migrate_payments' );
+		$upgrade_completed = edd_has_upgrade_completed( 'migrate_orders' );
 
 		if ( ! $force && $upgrade_completed ) {
 			WP_CLI::error( __( 'The payments custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
@@ -1399,10 +1399,10 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::line( __( 'Refund Records Created: ', 'easy-digital-downloads' ) . $refund_count );
 
 			edd_update_db_version();
-			edd_set_upgrade_complete( 'migrate_payments' );
+			edd_set_upgrade_complete( 'migrate_orders' );
 		} else {
 			WP_CLI::line( __( 'No payment records found.', 'easy-digital-downloads' ) );
-			edd_set_upgrade_complete( 'migrate_payments' );
+			edd_set_upgrade_complete( 'migrate_orders' );
 			edd_set_upgrade_complete( 'remove_legacy_payments' );
 		}
 	}
