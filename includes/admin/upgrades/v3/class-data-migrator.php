@@ -76,7 +76,7 @@ class Data_Migrator {
 	public static function customer_email_addresses( $data = null ) {
 
 		// Bail if no data passed.
-		if ( ! $data ) {
+		if ( ! isset( $data->edd_customer_id ) || ! isset( $data->meta_value ) ) {
 			return;
 		}
 
