@@ -21,7 +21,6 @@ defined( 'ABSPATH' ) || exit;
  * @return int|bool Order ID if successful, false otherwise.
  */
 function edd_add_manual_order( $args = array() ) {
-
 	// Bail if user cannot manage shop settings or no data was passed.
 	if ( empty( $args ) || ! current_user_can( 'manage_shop_settings' ) ) {
 		return false;
@@ -38,7 +37,7 @@ function edd_add_manual_order( $args = array() ) {
 	}
 
 	// Get now one time to avoid microsecond issues
-	$now = EDD()->utils->date( 'now' )->timestamp;
+	$now = EDD()->utils->date( 'now', null, true )->timestamp;
 
 	// Parse args.
 	$data = wp_parse_args( $args, array(
