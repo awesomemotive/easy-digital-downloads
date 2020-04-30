@@ -1180,77 +1180,85 @@ class EDD_CLI extends WP_CLI_Command {
 			? true
 			: false;
 
-		$upgrade_completed = edd_has_upgrade_completed( 'migrate_customer_data' );
+		$customer_addresses_complete = edd_has_upgrade_completed( 'migrate_customer_addresses' );
 
-		if ( ! $force && $upgrade_completed ) {
-			WP_CLI::error( __( 'The user addresses custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
-		}
+		if ( ! $force && $customer_addresses_complete ) {
+			WP_CLI::warning( __( 'The user addresses custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		} else {
 
-		// Create the tables if they do not exist.
-		$components = array(
-			array( 'order', 'table' ),
-			array( 'order', 'meta' ),
-			array( 'customer', 'table' ),
-			array( 'customer', 'meta' ),
-			array( 'customer_address', 'table' ),
-			array( 'customer_email_address', 'table' ),
-		);
+			// Create the tables if they do not exist.
+			$components = array(
+				array( 'order', 'table' ),
+				array( 'order', 'meta' ),
+				array( 'customer', 'table' ),
+				array( 'customer', 'meta' ),
+				array( 'customer_address', 'table' ),
+				array( 'customer_email_address', 'table' ),
+			);
 
-		foreach ( $components as $component ) {
-			/** @var EDD\Database\Tables\Base $table */
-			$table = edd_get_component_interface( $component[0], $component[1] );
+			foreach ( $components as $component ) {
+				/** @var EDD\Database\Tables\Base $table */
+				$table = edd_get_component_interface( $component[0], $component[1] );
 
-			if ( $table instanceof EDD\Database\Tables\Base && ! $table->exists() ) {
-				@$table->create();
-			}
-		}
-
-		// Migrate user addresses first.
-		$sql = "
-			SELECT *
-			FROM {$wpdb->usermeta}
-			WHERE meta_key = '_edd_user_address'
-		";
-		$results = $wpdb->get_results( $sql );
-		$total   = count( $results );
-
-		if ( ! empty( $total ) ) {
-			$progress = new \cli\progress\Bar( 'Migrating User Addresses', $total );
-
-			foreach ( $results as $result ) {
-				\EDD\Admin\Upgrades\v3\Data_Migrator::customer_addresses( $result );
-
-				$progress->tick();
+				if ( $table instanceof EDD\Database\Tables\Base && ! $table->exists() ) {
+					@$table->create();
+				}
 			}
 
-			$progress->finish();
+			// Migrate user addresses first.
+			$sql = "
+				SELECT *
+				FROM {$wpdb->usermeta}
+				WHERE meta_key = '_edd_user_address'
+			";
+			$results = $wpdb->get_results( $sql );
+			$total   = count( $results );
+
+			if ( ! empty( $total ) ) {
+				$progress = new \cli\progress\Bar( 'Migrating User Addresses', $total );
+
+				foreach ( $results as $result ) {
+					\EDD\Admin\Upgrades\v3\Data_Migrator::customer_addresses( $result );
+
+					$progress->tick();
+				}
+
+				$progress->finish();
+			}
+			edd_set_upgrade_complete( 'migrate_customer_addresses' );
 		}
 
-		// Migrate email addresses next.
-		$sql = "
-			SELECT *
-			FROM {$wpdb->edd_customermeta}
-			WHERE meta_key = 'additional_email'
-		";
-		$results = $wpdb->get_results( $sql );
-		$total   = count( $results );
+		$customer_email_addresses_complete = edd_has_upgrade_completed( 'migrate_customer_email_addresses' );
 
-		if ( ! empty( $total ) ) {
-			$progress = new \cli\progress\Bar( 'Migrating Email Addresses', $total );
+		if ( ! $force && $customer_email_addresses_complete ) {
+			WP_CLI::warning( __( 'The user email addresses custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		} else {
+			// Migrate email addresses next.
+			$sql = "
+				SELECT *
+				FROM {$wpdb->edd_customermeta}
+				WHERE meta_key = 'additional_email'
+			";
+			$results = $wpdb->get_results( $sql );
+			$total   = count( $results );
 
-			foreach ( $results as $result ) {
-				\EDD\Admin\Upgrades\v3\Data_Migrator::customer_email_addresses( $result );
+			if ( ! empty( $total ) ) {
+				$progress = new \cli\progress\Bar( 'Migrating Email Addresses', $total );
 
-				$progress->tick();
+				foreach ( $results as $result ) {
+					\EDD\Admin\Upgrades\v3\Data_Migrator::customer_email_addresses( $result );
+
+					$progress->tick();
+				}
+
+				$progress->finish();
 			}
-
-			$progress->finish();
+			edd_set_upgrade_complete( 'migrate_customer_email_addresses' );
 		}
 
 		WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
 
 		edd_update_db_version();
-		edd_set_upgrade_complete( 'migrate_customer_data' );
 	}
 
 	/**
