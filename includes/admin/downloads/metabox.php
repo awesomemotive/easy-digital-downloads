@@ -108,7 +108,6 @@ function edd_download_metabox_fields() {
  * @return void
  */
 function edd_download_meta_box_save( $post_id, $post ) {
-
 	if ( ! isset( $_POST['edd_download_meta_box_nonce'] ) || ! wp_verify_nonce( $_POST['edd_download_meta_box_nonce'], basename( __FILE__ ) ) ) {
 		return;
 	}
@@ -127,7 +126,6 @@ function edd_download_meta_box_save( $post_id, $post ) {
 
 	// The default fields that get saved
 	$fields = edd_download_metabox_fields();
-
 	foreach ( $fields as $field ) {
 		if ( '_edd_default_price_id' == $field && edd_has_variable_prices( $post_id ) ) {
 
@@ -138,8 +136,9 @@ function edd_download_meta_box_save( $post_id, $post ) {
 			}
 
 			update_post_meta( $post_id, $field, $new_default_price_id );
+		} elseif ( '_edd_product_type' === $field && '0' === $_POST[ $field ] ) {
+			delete_post_meta( $post_id, '_edd_product_type' );
 		} else {
-
 			if ( isset( $_POST[ $field ] ) ) {
 				$new = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
 				update_post_meta( $post_id, $field, $new );
@@ -147,7 +146,6 @@ function edd_download_meta_box_save( $post_id, $post ) {
 				delete_post_meta( $post_id, $field );
 			}
 		}
-
 	}
 
 	if ( edd_has_variable_prices( $post_id ) ) {
