@@ -137,6 +137,7 @@ function edd_download_meta_box_save( $post_id, $post ) {
 
 			update_post_meta( $post_id, $field, $new_default_price_id );
 		} elseif ( '_edd_product_type' === $field && '0' === $_POST[ $field ] ) {
+			// No value stored when product type is "default" ("0") for backwards compatibility.
 			delete_post_meta( $post_id, '_edd_product_type' );
 		} else {
 			if ( isset( $_POST[ $field ] ) ) {
