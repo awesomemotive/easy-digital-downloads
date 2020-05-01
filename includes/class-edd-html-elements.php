@@ -86,7 +86,7 @@ class EDD_HTML_Elements {
 				array(
 					'key'     => '_edd_product_type',
 					'value'   => 'bundle',
-					'compare' => 'NOT EXISTS',
+					'compare' => '!=',
 				),
 			);
 		}
