@@ -1359,7 +1359,6 @@ function edd_get_italian_states_list() {
 		'CA' => 'Cagliari',
 		'CL' => 'Caltanissetta',
 		'CB' => 'Campobasso',
-		'CI' => 'Caltanissetta',
 		'CE' => 'Caserta',
 		'CT' => 'Catania',
 		'CZ' => 'Catanzaro',
