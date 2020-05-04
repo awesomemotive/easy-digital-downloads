@@ -76,7 +76,7 @@ class Data_Migrator {
 	public static function customer_email_addresses( $data = null ) {
 
 		// Bail if no data passed.
-		if ( ! $data ) {
+		if ( ! isset( $data->edd_customer_id ) || ! isset( $data->meta_value ) ) {
 			return;
 		}
 
@@ -568,7 +568,7 @@ class Data_Migrator {
 		edd_maybe_add_customer_address( $customer_id, $customer_address_data );
 
 		// Maybe add email address to customer record
-		if ( ! empty( $customer ) && $customer instanceof EDD_Customer ) {
+		if ( ! empty( $customer ) && $customer instanceof \EDD_Customer ) {
 			$primary = ( $customer->email === $purchase_email );
 			$customer->add_email( $purchase_email, $primary );
 		}
