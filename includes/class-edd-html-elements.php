@@ -79,14 +79,19 @@ class EDD_HTML_Elements {
 			$product_args['post_status'] = array( 'publish' );
 		}
 
-		// Maybe disable bundles
+		// Maybe disable bundles.
 		if ( ! $args['bundles'] ) {
 			$product_args['meta_query'] = array(
-				'relation' => 'AND',
+				'relation' => 'OR',
 				array(
 					'key'     => '_edd_product_type',
 					'value'   => 'bundle',
 					'compare' => '!=',
+				),
+				array(
+					'key'     => '_edd_product_type',
+					'value'   => 'bundle',
+					'compare' => 'NOT EXISTS',
 				),
 			);
 		}
