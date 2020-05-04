@@ -275,7 +275,9 @@ function edd_order_details_customer( $order ) {
 	<?php
 
 	// The edd_payment_personal_details_list hook is left here for backwards compatibility
-	do_action( 'edd_payment_personal_details_list', $payment->get_meta(), $user_info );
+	if ( ! edd_is_add_order_page() && $payment instanceof EDD_Payment ) {
+		do_action( 'edd_payment_personal_details_list', $payment->get_meta(), $user_info );
+	}
 	do_action( 'edd_payment_view_details',          $order->id );
 }
 
