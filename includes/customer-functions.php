@@ -753,6 +753,15 @@ function edd_add_customer_email_address( $data ) {
 	if ( empty( $data['customer_id'] ) ) {
 		return false;
 	}
+	$email_addresses = edd_get_customer_email_addresses(
+		array(
+			'customer_id'   => $data['customer_id'],
+			'no_found_rows' => true,
+		)
+	);
+	if ( is_array( $email_addresses ) && in_array( $data['email'], array_column( $email_addresses, 'email' ), true ) ) {
+		return false;
+	}
 
 	// Instantiate a query object.
 	$customer_email_addresses = new EDD\Database\Queries\Customer_Email_Address();
