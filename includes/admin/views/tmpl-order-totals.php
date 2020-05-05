@@ -78,7 +78,7 @@
 
 <# } #>
 
-<tr class="is-expanded">
+<tr class="is-expanded edd-order-overview-summary__totals-total">
 	<td></td>
 	<td colspan="{{ data.config.colspan }}" class="column-primary">
 		<?php esc_html_e( 'Total', 'easy-digital-downloads' ); ?>
@@ -89,7 +89,7 @@
 		<# } #>
 	</td>
 	<td class="column-right" data-colname="<?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?>">
-		<span class="total">{{ data.totalCurrency }}</span>
+		<span class="total <# if ( data.total < 0 ) { #>is-negative<# } #>">{{ data.totalCurrency }}</span>
 	</td>
 </tr>
 
