@@ -240,6 +240,10 @@ class Data_Migrator {
 				'_edd_log_time'       => '',
 			) );
 
+			if ( empty( $post_meta['_edd_log_token'] ) ) {
+				$post_meta['_edd_log_token'] = 'public' === $post_meta['_edd_log_key'] ? 'public' : '';
+			}
+
 			$log_data = array(
 				'ip'            => $post_meta['_edd_log_request_ip'],
 				'user_id'       => $post_meta['_edd_log_user'],
