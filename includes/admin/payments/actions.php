@@ -117,7 +117,6 @@ function edd_update_payment_details( $data = array() ) {
 	// Customer
 	$curr_customer_id = sanitize_text_field( $data['current-customer-id'] );
 	$new_customer_id  = sanitize_text_field( $data['customer-id'] );
-	$customer_changed = false;
 
 	// Create a new customer.
 	if ( isset( $data['edd-new-customer'] ) && 1 === (int) $data['edd-new-customer'] ) {
@@ -157,9 +156,6 @@ function edd_update_payment_details( $data = array() ) {
 			}
 
 			if ( ! $customer->create( $customer_data ) ) {
-				// Failed to crete the new customer, assume the previous customer
-				$customer_changed = false;
-
 				$customer = new EDD_Customer( $curr_customer_id );
 				edd_set_error( 'edd-payment-new-customer-fail', __( 'Error creating new customer', 'easy-digital-downloads' ) );
 			}
@@ -167,16 +163,13 @@ function edd_update_payment_details( $data = array() ) {
 			wp_die( sprintf( __( 'A customer with the email address %s already exists. Please go back and assign this payment to them.', 'easy-digital-downloads' ), $email ) );
 		}
 
-		$new_customer_id = $customer->id;
 		$previous_customer = new EDD_Customer( $curr_customer_id );
-		$customer_changed = true;
 	} elseif ( $curr_customer_id !== $new_customer_id ) {
 		$customer = new EDD_Customer( $new_customer_id );
 		$email    = $customer->email;
 		$name     = $customer->name;
 
 		$previous_customer = new EDD_Customer( $curr_customer_id );
-		$customer_changed = true;
 	} else {
 		$customer = new EDD_Customer( $curr_customer_id );
 		$email    = $customer->email;
@@ -193,9 +186,8 @@ function edd_update_payment_details( $data = array() ) {
 		$last_name = implode( ' ', $names );
 	}
 
-	if ( $customer_changed ) {
-
-		// Remove the stats and payment from the previous customer and attach it to the new customer
+	// Remove the stats and payment from the previous customer and attach it to the new customer
+	if ( isset( $previous_customer ) ) {
 		$previous_customer->remove_payment( $order_id, false );
 		$customer->attach_payment( $order_id, false );
 
