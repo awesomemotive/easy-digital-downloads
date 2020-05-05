@@ -225,8 +225,6 @@ function edd_update_payment_details( $data = array() ) {
 	// Don't set the status in the update call (for back compat)
 	unset( $order_update_args['status'] );
 
-	do_action( 'edd_updated_edited_purchase', $order_id );
-
 	// Attempt to update the order
 	$updated = edd_update_order( $order_id, $order_update_args );
 
@@ -240,6 +238,8 @@ function edd_update_payment_details( $data = array() ) {
 	if ( $new_status !== $order->status ) {
 		edd_update_order_status( $order_id, $new_status );
 	}
+
+	do_action( 'edd_updated_edited_purchase', $order_id );
 
 	edd_redirect( edd_get_admin_url( array(
 		'page'        => 'edd-payment-history',
