@@ -453,7 +453,13 @@ function edd_trigger_trash_order( $data ) {
 
 		edd_trash_order( $payment_id );
 
-		edd_redirect( admin_url( '/edit.php?post_type=download&page=edd-payment-history&edd-message=order_trashed' ) );
+		$redirect = edd_get_admin_url( array(
+			'page'        => 'edd-payment-history',
+			'edd-message' => 'order_trashed',
+			'order_type'  => esc_attr( $data['order_type'] ),
+		) );
+
+		edd_redirect( esc_url_raw( $redirect ) );
 	}
 }
 add_action( 'edd_trash_order', 'edd_trigger_trash_order' );
@@ -477,7 +483,13 @@ function edd_trigger_restore_order( $data ) {
 
 		edd_restore_order( $payment_id );
 
-		edd_redirect( admin_url( '/edit.php?post_type=download&page=edd-payment-history&edd-message=order_restored' ) );
+		$redirect = edd_get_admin_url( array(
+			'page'        => 'edd-payment-history',
+			'edd-message' => 'order_restored',
+			'order_type'  => esc_attr( $data['order_type'] ),
+		) );
+
+		edd_redirect( esc_url_raw( $redirect ) );
 	}
 }
 add_action( 'edd_restore_order', 'edd_trigger_restore_order' );
@@ -680,7 +692,13 @@ function edd_ajax_process_refund_form() {
 			'success'    => true,
 			'refund_id'  => $refund_id,
 			'message'    => sprintf( __( 'Refund successfully processed.', 'easy-digital-downloads' ) ),
-			'refund_url' => admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $refund_id ),
+			'refund_url' => edd_get_admin_url(
+				array(
+					'page'      => 'edd-payment-history',
+					'view'      => 'view-refund-details',
+					'id'        => $refund_id,
+				)
+			)
 		);
 		wp_send_json( $return, 200 );
 	} else {

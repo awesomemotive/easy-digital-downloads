@@ -565,6 +565,7 @@ function edd_order_details_logs( $order ) {
 function edd_order_details_overview( $order ) {
 	$_items       = array();
 	$_adjustments = array();
+	$_refunds     = array();
 
 	if ( true !== edd_is_add_order_page() ) {
 		$items = edd_get_order_items( array(
@@ -656,6 +657,19 @@ function edd_order_details_overview( $order ) {
 				'uuid'         => esc_html( $adjustment->uuid ),
 			);
 		}
+
+		$refunds = edd_get_order_refunds( $order->id );
+
+		foreach ( $refunds as $refund ) {
+			$_refunds[] = array(
+				'id'              => esc_html( $refund->id ),
+				'number'          => esc_html( $refund->order_number ),
+				'total'           => esc_html( $refund->total ),
+				'dateCreated'     => esc_html( $refund->date_created ),
+				'dateCreatedi18n' => esc_html( edd_date_i18n( $refund->date_created ) ),
+				'uuid'            => esc_html( $refund->uuid ),
+			);
+		}
 	}
 
 	wp_localize_script(
@@ -664,6 +678,7 @@ function edd_order_details_overview( $order ) {
 		array(
 			'items'        => $_items,
 			'adjustments'  => $_adjustments,
+			'refunds'      => $_refunds,
 			'isAdding'     => true === edd_is_add_order_page(),
 			'hasQuantity'  => true === edd_item_quantities_enabled(),
 			'hasTax'       => true === edd_use_taxes()
@@ -689,6 +704,7 @@ function edd_order_details_overview( $order ) {
 		'item',
 		'adjustment',
 		'adjustment-discount',
+		'refund',
 		'no-items',
 		'copy-download-link',
 		'form-add-order-item',
@@ -1058,47 +1074,6 @@ function edd_order_details_attributes( $order ) {
 	</div>
 
 <?php
-}
-
-/**
- * Output the order details refunds box
- *
- * @since 3.0
- *
- * @param object $order
- */
-function edd_order_details_refunds( $order ) {
-	$refunds_db = new \EDD\Database\Queries\Order();
-
-	$refunds = $refunds_db->query( array( 'type' => 'refund', 'parent' => $order->id ) );
-	if ( empty( $refunds ) ) {
-		return;
-	}
-	?>
-
-	<div id="edd-order-refunds" class="postbox edd-order-data">
-		<h3 class="hndle"><span><?php esc_html_e( 'Related Refunds', 'easy-digital-downloads' ); ?></span></h3>
-
-		<div class="inside">
-			<?php do_action( 'edd_view_order_details_refunds_before', $order->id ); ?>
-			<ul id="edd-order-refunds-list">
-			<?php foreach( $refunds as $refund ) : ?>
-				<?php $order_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $refund->id ); ?>
-				<li>
-					<span class="howto"><?php echo date_i18n( get_option( 'date_format' ), strtotime( $refund->completed_date ) ); ?></span>
-					<a href="<?php echo esc_url( $order_url ); ?>">
-						<?php echo '#' . $refund->number ?>
-					</a>&nbsp;&ndash;&nbsp;
-					<span><?php echo edd_currency_filter( edd_format_amount( $refund->total ) ); ?>&nbsp;&ndash;&nbsp;</span>
-					<span><?php echo edd_get_status_label( $refund->status ); ?></span>
-				</li>
-			<?php endforeach; ?>
-			</ul>
-			<?php do_action( 'edd_view_order_details_refunds_after', $order->id ); ?>
-		</div>
-	</div>
-
-	<?php
 }
 
 /**

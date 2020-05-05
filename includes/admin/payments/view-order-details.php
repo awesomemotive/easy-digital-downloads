@@ -35,7 +35,7 @@ if ( empty( $order ) ) {
 	<?php edd_order_details_publish( $order ); ?>
 
 	<div class="wrap edd-wrap edd-clearfix">
-		<h1><?php printf( __( 'Edit Order: %s', 'easy-digital-downloads' ), $order->number ); ?></h1>
+		<h1><?php printf( __( 'Order: %s', 'easy-digital-downloads' ), $order->number ); ?></h1>
 
 		<hr class="wp-header-end">
 
@@ -96,9 +96,6 @@ if ( empty( $order ) ) {
 
 							// Attributes
 							edd_order_details_attributes( $order );
-
-							// Related Refunds
-							edd_order_details_refunds( $order );
 
 							// Extras
 							edd_order_details_extras( $order );
