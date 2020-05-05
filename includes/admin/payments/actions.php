@@ -112,117 +112,6 @@ function edd_update_payment_details( $data = array() ) {
 
 	// Address
 	$address = $data['edd_order_address'];
-
-	// Totals
-	$curr_total = edd_sanitize_amount( $order->total );
-	$curr_tax   = edd_sanitize_amount( $order->tax   );
-	$new_total  = isset( $data['edd-payment-total']  ) ? edd_sanitize_amount( $data['edd-payment-total'] ) : $curr_total;
-	$tax        = isset( $data['edd-payment-tax']    ) ? edd_sanitize_amount( $data['edd-payment-tax']   ) : $curr_tax;
-
-	// Totals
-	$new_subtotal = 0.00;
-	$new_tax      = 0.00;
-
-	// Setup purchased Downloads and price options
-	$updated_downloads = isset( $_POST['edd-payment-details-downloads'] )
-		? $_POST['edd-payment-details-downloads']
-		: false;
-
-	if ( ! empty( $updated_downloads ) && is_array( $updated_downloads ) ) {
-		foreach ( $updated_downloads as $cart_index => $download ) {
-
-			// Check if the item exists in the database.
-			$item_exists = (bool) 0 < absint( $download['order_item_id'] );
-
-			if ( $item_exists ) {
-				/** @var EDD\Orders\Order_Item $order_item */
-				$order_item = edd_get_order_item( absint( $download['order_item_id'] ) );
-
-				$quantity   = isset( $download['quantity']   ) ? absint( $download['quantity'] ) : 1;
-				$item_price = isset( $download['item_price'] ) ? $download['item_price']         : 0;
-				$item_tax   = isset( $download['item_tax']   ) ? $download['item_tax']           : 0;
-
-				// Format any items that have a currency.
-				$item_price = edd_format_amount( $item_price );
-				$item_tax   = edd_format_amount( $item_tax   );
-
-				// Increase running totals.
-				$new_subtotal += ( floatval( $item_price ) * $quantity ) - $order_item->discount;
-				$new_tax      += $item_tax;
-
-				$args = array(
-					'cart_index' => $cart_index,
-					'quantity'   => $quantity,
-					'amount'     => $item_price,
-					'subtotal'   => $item_price * $quantity,
-					'tax'        => $item_tax
-				);
-
-				edd_update_order_item( absint( $download['order_item_id'] ), $args );
-			} else {
-				if ( empty( $download['item_price'] ) ) {
-					$download['item_price'] = 0.00;
-				}
-
-				if ( empty( $download['item_tax'] ) ) {
-					$download['item_tax'] = 0.00;
-				}
-
-				$item_price  = $download['item_price'];
-				$download_id = absint( $download['id'] );
-				$quantity    = absint( $download['quantity'] ) > 0 ? absint( $download['quantity'] ) : 1;
-				$price_id    = 0;
-				$tax         = $download['item_tax'];
-
-				if ( edd_has_variable_prices( $download_id ) && isset( $download['price_id'] ) ) {
-					$price_id = absint( $download['price_id'] );
-				}
-
-				// Set some defaults
-				$args = array(
-					'order_id'     => $order_id,
-					'product_id'   => $download_id,
-					'product_name' => get_the_title( $download_id ),
-					'price_id'     => $price_id,
-					'cart_index'   => $cart_index,
-					'quantity'     => $quantity,
-					'amount'       => $item_price,
-					'subtotal'     => $item_price * $quantity,
-					'tax'          => $tax,
-					'total'        => ( $item_price * $quantity ) + $tax,
-				);
-
-				// Increase running totals.
-				$new_subtotal += floatval( $item_price ) * $quantity;
-				$new_tax      += $tax;
-
-				edd_add_order_item( $args );
-			}
-		}
-
-		$deleted_downloads = json_decode( stripcslashes( $data['edd-payment-removed'] ), true );
-
-		foreach ( $deleted_downloads as $deleted_download ) {
-			$deleted_download = $deleted_download[0];
-
-			if ( empty( $deleted_download['id'] ) ) {
-				continue;
-			}
-
-			/** @var EDD\Orders\Order_Item $order_item */
-			$order_item = edd_get_order_item( absint( $deleted_download['order_item_id'] ) );
-
-			$new_subtotal -= (float) $deleted_download['amount'] * $deleted_download['quantity'];
-			$new_tax      -= (float) $order_item->tax;
-
-			edd_delete_order_item( absint( $deleted_download['order_item_id'] ) );
-
-			do_action( 'edd_remove_download_from_payment', $order_id, $deleted_download['id'] );
-		}
-	}
-
-	do_action( 'edd_update_edited_purchase', $order_id );
-
 	$order_update_args['date_created'] = $date;
 
 	// Customer
@@ -322,11 +211,8 @@ function edd_update_payment_details( $data = array() ) {
 		$order_update_args['customer_id'] = $customer->id;
 	}
 
-	// Set new order values.
 	$order_update_args['user_id'] = $customer->user_id;
 	$order_update_args['email']   = $customer->email;
-	$order_update_args['tax']     = $new_tax;
-	$order_update_args['total']   = $new_total;
 
 	edd_update_order_address( absint( $address['address_id'] ), array(
 		'first_name'  => $first_name,
