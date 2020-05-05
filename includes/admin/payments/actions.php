@@ -110,8 +110,6 @@ function edd_update_payment_details( $data = array() ) {
 	$date = edd_get_utc_equivalent_date( EDD()->utils->date( $date . ' ' . $hour . ':' . $minute . ':00', edd_get_timezone_id(), false ) );
 	$date = $date->format( 'Y-m-d H:i:s' );
 
-	// Address
-	$address = $data['edd_order_address'];
 	$order_update_args['date_created'] = $date;
 
 	// Customer
@@ -166,24 +164,10 @@ function edd_update_payment_details( $data = array() ) {
 		$previous_customer = new EDD_Customer( $curr_customer_id );
 	} elseif ( $curr_customer_id !== $new_customer_id ) {
 		$customer = new EDD_Customer( $new_customer_id );
-		$email    = $customer->email;
-		$name     = $customer->name;
 
 		$previous_customer = new EDD_Customer( $curr_customer_id );
 	} else {
 		$customer = new EDD_Customer( $curr_customer_id );
-		$email    = $customer->email;
-		$name     = $customer->name;
-	}
-
-	// Setup first and last name from input values.
-	$names      = explode( ' ', $name );
-	$first_name = ! empty( $names[0] ) ? $names[0] : '';
-	$last_name  = '';
-
-	if ( ! empty( $names[1] ) ) {
-		unset( $names[0] );
-		$last_name = implode( ' ', $names );
 	}
 
 	// Remove the stats and payment from the previous customer and attach it to the new customer
@@ -206,6 +190,20 @@ function edd_update_payment_details( $data = array() ) {
 	$order_update_args['user_id'] = $customer->user_id;
 	$order_update_args['email']   = $customer->email;
 
+	// Address
+	$address = $data['edd_order_address'];
+
+	// Setup first and last name from input values.
+	$name       = $customer->name;
+	$names      = explode( ' ', $name );
+	$first_name = ! empty( $names[0] ) ? $names[0] : '';
+	$last_name  = '';
+
+	if ( ! empty( $names[1] ) ) {
+		unset( $names[0] );
+		$last_name = implode( ' ', $names );
+	}
+
 	edd_update_order_address( absint( $address['address_id'] ), array(
 		'first_name'  => $first_name,
 		'last_name'   => $last_name,
@@ -217,6 +215,7 @@ function edd_update_payment_details( $data = array() ) {
 		'country'     => $address['country'],
 	) );
 
+	// Unlimited downloads.
 	if ( 1 === (int) $unlimited ) {
 		edd_update_order_meta( $order_id, 'unlimited_downloads', $unlimited );
 	} else {
