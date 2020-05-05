@@ -229,18 +229,16 @@ function edd_update_payment_details( $data = array() ) {
 	// Attempt to update the order
 	$updated = edd_update_order( $order_id, $order_update_args );
 
+	// Bail if an error occurred
+	if ( false === $updated ) {
+		wp_die( __( 'Error updating order.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 400 ) );
+	}
+
 	// Check if the status has changed, if so, we need to invoke the pertinent
 	// status processing method (for back compat)
 	if ( $new_status !== $order->status ) {
 		edd_update_order_status( $order_id, $new_status );
 	}
-
-	// Bail if an error occurred
-	if ( false === $updated ) {
-		wp_die( __( 'Error Updating Payment', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 400 ) );
-	}
-
-	do_action( 'edd_updated_edited_purchase', $order_id );
 
 	edd_redirect( edd_get_admin_url( array(
 		'page'        => 'edd-payment-history',
