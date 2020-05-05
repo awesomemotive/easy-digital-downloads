@@ -231,21 +231,6 @@ function edd_update_payment_details( $data = array() ) {
 		edd_delete_order_meta( $order_id, 'unlimited_downloads' );
 	}
 
-	// Adjust total store earnings if the payment total has been changed
-	if ( $new_total !== $curr_total && ( 'complete' === $status || 'revoked' === $status ) ) {
-		if ( $new_total > $curr_total ) {
-
-			// Increase if our new total is higher
-			$difference = $new_total - $curr_total;
-			edd_increase_total_earnings( $difference );
-		} elseif ( $curr_total > $new_total ) {
-
-			// Decrease if our new total is lower
-			$difference = $curr_total - $new_total;
-			edd_decrease_total_earnings( $difference );
-		}
-	}
-
 	// Don't set the status in the update call (for back compat)
 	unset( $order_update_args['status'] );
 
