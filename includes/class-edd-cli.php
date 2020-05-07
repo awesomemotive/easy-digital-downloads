@@ -831,6 +831,7 @@ class EDD_CLI extends WP_CLI_Command {
 		$this->migrate_discounts( $args, $assoc_args );
 		$this->migrate_order_notes( $args, $assoc_args );
 		$this->migrate_customer_notes( $args, $assoc_args );
+		$this->remove_legacy_data( $args, $assoc_args );
 
 	}
 
@@ -896,26 +897,10 @@ class EDD_CLI extends WP_CLI_Command {
 			edd_update_db_version();
 			edd_set_upgrade_complete( 'migrate_discounts' );
 
-			WP_CLI::confirm( __( 'Remove legacy discount records?', 'easy-digital-downloads' ), array() );
-			WP_CLI::line( __( 'Removing old discount data.', 'easy-digital-downloads' ) );
-
-			$discount_ids = $wpdb->get_results( "SELECT ID FROM $wpdb->posts WHERE post_type = 'edd_discount'" );
-			$discount_ids = wp_list_pluck( $discount_ids, 'ID' );
-			$discount_ids = implode( ', ', $discount_ids );
-
-			$delete_posts_query = "DELETE FROM $wpdb->posts WHERE ID IN ({$discount_ids})";
-			$wpdb->query( $delete_posts_query );
-
-			$delete_postmeta_query = "DELETE FROM $wpdb->postmeta WHERE post_id IN ({$discount_ids})";
-			$wpdb->query( $delete_postmeta_query );
-
-			edd_set_upgrade_complete( 'remove_legacy_discounts' );
-
 		} else {
 
 			WP_CLI::line( __( 'No discount records found.', 'easy-digital-downloads' ) );
 			edd_set_upgrade_complete( 'migrate_discounts' );
-			edd_set_upgrade_complete( 'remove_legacy_discounts' );
 
 		}
 	}
@@ -998,25 +983,9 @@ class EDD_CLI extends WP_CLI_Command {
 
 			edd_update_db_version();
 			edd_set_upgrade_complete( 'migrate_logs' );
-
-			WP_CLI::confirm( __( 'Remove legacy logs?', 'easy-digital-downloads' ), array() );
-			WP_CLI::line( __( 'Removing old logs.', 'easy-digital-downloads' ) );
-
-			$log_ids = $wpdb->get_results( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_log'" );
-			$log_ids = wp_list_pluck( $log_ids, 'ID' );
-			$log_ids = implode( ', ', $log_ids );
-
-			$delete_query = "DELETE FROM {$wpdb->posts} WHERE post_type = 'edd_log'";
-			$wpdb->query( $delete_query );
-
-			$delete_postmeta_query = "DELETE FROM {$wpdb->posts} WHERE ID IN ({$log_ids})";
-			$wpdb->query( $delete_postmeta_query );
-
-			edd_set_upgrade_complete( 'remove_legacy_logs' );
 		} else {
 			WP_CLI::line( __( 'No log records found.', 'easy-digital-downloads' ) );
 			edd_set_upgrade_complete( 'migrate_logs' );
-			edd_set_upgrade_complete( 'remove_legacy_logs' );
 		}
 	}
 
@@ -1065,6 +1034,7 @@ class EDD_CLI extends WP_CLI_Command {
 			$progress = new \cli\progress\Bar( 'Migrating Notes', $total );
 
 			foreach ( $results as $result ) {
+				$result->object_id = $result->comment_post_ID;
 				\EDD\Admin\Upgrades\v3\Data_Migrator::order_notes( $result );
 
 				$progress->tick();
@@ -1080,25 +1050,9 @@ class EDD_CLI extends WP_CLI_Command {
 
 			edd_update_db_version();
 			edd_set_upgrade_complete( 'migrate_order_notes' );
-
-			WP_CLI::confirm( __( 'Remove legacy notes?', 'easy-digital-downloads' ), array() );
-			WP_CLI::line( __( 'Removing old notes.', 'easy-digital-downloads' ) );
-
-			$note_ids = $wpdb->get_results( "SELECT comment_ID FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note'" );
-			$note_ids = wp_list_pluck( $note_ids, 'comment_ID' );
-			$note_ids = implode( ', ', $note_ids );
-
-			$delete_query = "DELETE FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note'";
-			$wpdb->query( $delete_query );
-
-			$delete_postmeta_query = "DELETE FROM {$wpdb->commentmeta} WHERE comment_id IN ({$note_ids})";
-			$wpdb->query( $delete_postmeta_query );
-
-			edd_set_upgrade_complete( 'remove_legacy_notes' );
 		} else {
 			WP_CLI::line( __( 'No note records found.', 'easy-digital-downloads' ) );
 			edd_set_upgrade_complete( 'migrate_order_notes' );
-			edd_set_upgrade_complete( 'remove_legacy_notes' );
 		}
 	}
 
@@ -1404,6 +1358,89 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::line( __( 'No payment records found.', 'easy-digital-downloads' ) );
 			edd_set_upgrade_complete( 'migrate_payments' );
 			edd_set_upgrade_complete( 'remove_legacy_payments' );
+		}
+	}
+
+	/**
+	 * Removes legacy data from 2.9 and earlier that has been migrated to 3.0.
+	 *
+	 * ## OPTIONS
+	 *
+	 * --force=<boolean>: If the routine should be run even if the upgrade routine has been run already
+	 *
+	 * ## EXAMPLES
+	 *
+	 * wp edd remove_legacy_data
+	 * wp edd remove_legacy_data --force
+	 */
+	public function remove_legacy_data( $args, $assoc_args ) {
+		global $wpdb;
+
+		WP_CLI::confirm( __( 'Do you want to remove legacy data? This will permanently remove legacy discounts, logs, and order notes.', 'easy-digital-downloads' ) );
+
+		$force = isset( $assoc_args['force'] ) ? true : false;
+
+		/**
+		 * Discounts
+		 */
+		if ( ! $force && edd_has_upgrade_completed( 'remove_legacy_discounts' ) ) {
+			WP_CLI::warning( __( 'Legacy discounts have already been removed. To run this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		} else {
+			WP_CLI::line( __( 'Removing old discount data.', 'easy-digital-downloads' ) );
+
+			$discount_ids = $wpdb->get_results( "SELECT ID FROM $wpdb->posts WHERE post_type = 'edd_discount'" );
+			$discount_ids = wp_list_pluck( $discount_ids, 'ID' );
+			$discount_ids = implode( ', ', $discount_ids );
+
+			$delete_posts_query = "DELETE FROM $wpdb->posts WHERE ID IN ({$discount_ids})";
+			$wpdb->query( $delete_posts_query );
+
+			$delete_postmeta_query = "DELETE FROM $wpdb->postmeta WHERE post_id IN ({$discount_ids})";
+			$wpdb->query( $delete_postmeta_query );
+
+			edd_set_upgrade_complete( 'remove_legacy_discounts' );
+		}
+
+		/**
+		 * Logs
+		 */
+		if ( ! $force && edd_has_upgrade_completed( 'remove_legacy_logs' ) ) {
+			WP_CLI::warning( __( 'Legacy logs have already been removed. To run this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		} else {
+			WP_CLI::line( __( 'Removing old logs.', 'easy-digital-downloads' ) );
+
+			$log_ids = $wpdb->get_results( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_log'" );
+			$log_ids = wp_list_pluck( $log_ids, 'ID' );
+			$log_ids = implode( ', ', $log_ids );
+
+			$delete_query = "DELETE FROM {$wpdb->posts} WHERE post_type = 'edd_log'";
+			$wpdb->query( $delete_query );
+
+			$delete_postmeta_query = "DELETE FROM {$wpdb->posts} WHERE ID IN ({$log_ids})";
+			$wpdb->query( $delete_postmeta_query );
+
+			edd_set_upgrade_complete( 'remove_legacy_logs' );
+		}
+
+		/**
+		 * Order notes
+		 */
+		if ( ! $force && edd_has_upgrade_completed( 'remove_legacy_order_notes' ) ) {
+			WP_CLI::warning( __( 'Legacy order notes have already been removed. To run this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		} else {
+			WP_CLI::line( __( 'Removing old order notes.', 'easy-digital-downloads' ) );
+
+			$note_ids = $wpdb->get_results( "SELECT comment_ID FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note'" );
+			$note_ids = wp_list_pluck( $note_ids, 'comment_ID' );
+			$note_ids = implode( ', ', $note_ids );
+
+			$delete_query = "DELETE FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note'";
+			$wpdb->query( $delete_query );
+
+			$delete_postmeta_query = "DELETE FROM {$wpdb->commentmeta} WHERE comment_id IN ({$note_ids})";
+			$wpdb->query( $delete_postmeta_query );
+
+			edd_set_upgrade_complete( 'remove_legacy_order_notes' );
 		}
 	}
 

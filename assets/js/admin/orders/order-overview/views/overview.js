@@ -41,7 +41,9 @@ export const Overview = wp.Backbone.View.extend( {
 		this.views.add( new Summary( this.options ) );
 
 		// "Actions".
-		this.views.add( new Actions( this.options ) );
+		if ( document.getElementById( 'edd-order-overview-actions' ) ) {
+			this.views.add( new Actions( this.options ) );
+		}
 
 		return this;
 	},

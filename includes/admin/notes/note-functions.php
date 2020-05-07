@@ -123,14 +123,23 @@ function edd_admin_get_new_note_form( $object_id = 0, $object_type = '' ) {
 	ob_start();?>
 
 	<div class="edd-add-note">
-		<textarea name="edd-note" id="edd-note"></textarea>
+		<div class="edd-form-group">
+			<label class="edd-form-group__label screen-reader-text" for="edd-note">
+				<?php esc_html_e( 'Note', 'easy-digital-downloads' ); ?>
+			</label>
 
-		<p>
+			<div id="edd-form-group__control">
+				<textarea name="edd-note" id="edd-note" class="edd-form-group__input"></textarea>
+			</div>
+		</div>
+
+		<div class="edd-form-group">
 			<button type="button" id="edd-add-note" class="edd-note-submit button button-secondary left" data-object-id="<?php echo esc_attr( $object_id ); ?>" data-object-type="<?php echo esc_attr( $object_type ); ?>">
 				<?php _e( 'Add Note', 'easy-digital-downloads' ); ?>
 			</button>
 			<span class="spinner"></span>
-		</p>
+		</div>
+
 		<?php wp_nonce_field( 'edd_note', 'edd_note_nonce' ); ?>
 	</div>
 
