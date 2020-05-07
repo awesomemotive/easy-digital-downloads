@@ -105,7 +105,7 @@ a.edd-delete:hover {
 
 /* Coffee */
 .admin-color-coffee .edd-settings-sub-nav a.current {
-	border-bottom-color: #096484;
+	border-bottom-color: #c7a589;
 }
 
 /* Ectoplasm */
@@ -115,7 +115,7 @@ a.edd-delete:hover {
 
 /* Midnight */
 .admin-color-midnight .edd-settings-sub-nav a.current {
-	border-bottom-color: #26292c;
+	border-bottom-color: #e14d43;
 }
 
 /* Ocean */
@@ -510,14 +510,6 @@ a.edd-delete:hover {
 	font-weight: normal;
 }
 
-.edd-vertical-sections .new-customer strong {
-	width: 85px;
-	display: inline-block;
-	white-space: nowrap;
-	text-align: right;
-	margin-right: 10px;
-}
-
 .edd-add-order-item td {
 	vertical-align: middle;
 }
@@ -567,6 +559,10 @@ table.edd-order-overview-summary {
 	table-layout: fixed;
 }
 
+table.edd-order-overview-summary--refund {
+	border-width: 0;
+}
+
 @media screen and (min-width: 782px) {
 
 	.edd-order-overview .column-right {
@@ -590,6 +586,10 @@ table.edd-order-overview-summary {
 }
 
 /** Items */
+.edd-order-overview-summary__items-name {
+	align-self: flex-start;
+}
+
 .edd-order-overview-summary__items > :nth-child(odd) {
 	background-color: #f9f9f9;
 }
@@ -666,6 +666,10 @@ table.edd-order-overview-summary {
 	font-weight: 600;
 }
 
+.edd-order-overview-summary__totals-total td {
+	vertical-align: middle;
+}
+
 .edd-order-overview-summary__totals td small {
 	font-weight: normal;
 }
@@ -673,6 +677,10 @@ table.edd-order-overview-summary {
 .edd-order-overview-summary__totals .total {
 	color: #017d5c;
 	display: inline-block;
+}
+
+.edd-order-overview-summary__totals .total.is-negative {
+	color: #a00;
 }
 
 @media screen and (min-width: 782px) {
@@ -705,6 +713,19 @@ table.edd-order-overview-summary {
 .edd-order-overview-summary__totals .notice p {
 	font-weight: normal;
 	margin: 0.5em 0;
+}
+
+/** Refunds */
+.edd-order-overview-summary__refunds .column-primary {
+	font-weight: 600;
+}
+
+.edd-order-overview-summary__refunds td small {
+	font-weight: normal;
+}
+
+.edd-order-overview-summary__refunds tr:first-child td {
+	border-top: 1px solid #e5e5e5;
 }
 
 /** Actions */
@@ -1831,7 +1852,7 @@ input[class*="edd-price-field"] {
 .edd-admin-box-inside {
 	border-bottom: 1px solid #f1f1f1;
 	clear: both;
-	padding: 10px 12px;
+	padding: 12px;
 	margin: 0;
 	word-wrap: break-word;
 }
@@ -1927,11 +1948,6 @@ input[class*="edd-price-field"] {
 	margin: 0;
 	padding: 0;
 }
-.edd-admin-box-inside .edd_datepicker,
-.edd-admin-box-inside input[type="text"] {
-	max-width: 130px;
-	width: 100%;
-}
 .edd-admin-box-inside span.label {
 	margin-right: 10px;
 }
@@ -1977,27 +1993,6 @@ input[class*="edd-price-field"] {
 
 .order-data-address h3 {
 	margin: 0 0 10px 0;
-}
-
-.order-data-address .input-wrap {
-	display: block;
-	clear: both;
-	padding: 3px 0;
-}
-.order-data-address .input-wrap label {
-	width: 150px;
-	text-align: right;
-	margin-right: 5px;
-}
-.order-data-address .input-wrap label,
-.order-data-address .input-wrap > input {
-	display: inline-block;
-}
-
-.order-data-address .input-wrap input {
-	width: 50%;
-	height: 29px;
-	max-width: 300px;
 }
 
 .order-data-address #edd-order-address-state-wrap,
@@ -2085,10 +2080,6 @@ input[class*="edd-price-field"] {
 .edd_repeatable_product_wrapper td {
 	overflow: visible;
 }
-.edd-order-details-label-mobile {
-	display: none;
-}
-
 .edd-add-download-to-purchase,
 .edd-add-adjustment-to-purchase {
 	padding: 15px;
@@ -2139,11 +2130,6 @@ input[class*="edd-price-field"] {
 	.edd-edit-purchase-element .edd-purchased-download-actions {
 		padding-top: 10px;
 	}
-	.edd-order-details-label-mobile {
-		display: block;
-		font-weight: 500;
-		padding-bottom: 6px;
-	}
 }
 
 @media screen and ( max-width: 1024px ) {
@@ -2177,10 +2163,6 @@ input[class*="edd-price-field"] {
 	.edd-edit-purchase-element ul li.price {
 		width: 20%;
 		padding-bottom: 10px;
-	}
-	.edd-order-details-label-mobile {
-		font-size: 14px;
-		font-weight: 500;
 	}
 	.edd-price-currency,
 	.edd-payment-details-download-amount {
@@ -2410,6 +2392,7 @@ body.download_page_edd-reports {
 .download_page_edd-reports #edd-item-wrapper {
 	margin: 0;
 }
+#edd-dashboard-widgets-wrap .postbox h2,
 #edd-dashboard-widgets-wrap .postbox h3 {
 	cursor: default;
 }
@@ -3143,7 +3126,7 @@ body.download_page_edd-reports {
 	display: inline-block;
 	z-index: 2;
 }
-.edd-sections-wrap .edd-vertical-sections:not(.meta-box) .section-wrap > div {
+.js .edd-sections-wrap .edd-vertical-sections:not(.meta-box) .section-wrap > div {
 	min-height: 500px;
 	height: 100%;
 	overflow: hidden;
@@ -3599,7 +3582,6 @@ body.download_page_edd-reports {
 #edd-item-tab-wrapper, /** [1] */
 .edd-vertical-sections .section-nav {
 	position: relative;
-	float: left;
 	width: 20%;
 	line-height: 1em;
 	margin: 0 -1px 0 0;
@@ -3623,20 +3605,33 @@ body.download_page_edd-reports {
 	background-color: #fcfcfc;
 }
 
+.edd-vertical-sections .section-title:last-of-type {
+	margin-bottom: 24px;
+}
+
 #edd-item-tab-wrapper li a, /** [1] */
 #edd-item-tab-wrapper li > .edd-item-tab-label-wrap, /** [1] */
 .edd-vertical-sections .section-nav li a {
-	display: block;
+	display: flex;
 	margin: 0;
 	padding: 9px;
-	line-height: 20px !important;
 	text-decoration: none;
 	border-bottom: 1px solid #e5e5e5;
 	box-shadow: none;
 	position: relative;
+	align-items: center;
 }
 
-.edd-vertical-sections .section-nav li[aria-selected="true"] a:after {
+#edd-item-tab-wrapper li a:focus,
+#edd-item-tab-wrapper li a:hover,
+.edd-vertical-sections .section-nav li a:hover,
+.edd-vertical-sections .section-nav li a:focus {
+	box-shadow: inset 5px 0;
+	outline: 0;
+	transition: all .25s;
+}
+
+.edd-vertical-sections .section-nav .section-title--is-active a:after {
 	content: '';
 	width: 1px;
 	height: 100%;
@@ -3667,8 +3662,7 @@ body.download_page_edd-reports {
 	color: #888;
 }
 
-.edd-vertical-sections .section-nav li[aria-selected="true"] a {
-	position: relative;
+.edd-vertical-sections .section-nav .section-title--is-active a {
 	font-weight: bold;
 	color: #555;
 	background-color: #fff;
@@ -3676,59 +3670,89 @@ body.download_page_edd-reports {
 	margin-right: -1px;
 }
 
+.edd-vertical-sections.use-js .section-content,
+.no-js .edd-vertical-sections.use-js .section-nav,
+.no-js .edd-vertical-sections.use-js.edd-item-header-small {
+	display: none;
+}
+
+.no-js .edd-vertical-sections.use-js .section-content {
+	display: block;
+}
+
 /* Fresh */
-.admin-color-fresh .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+.admin-color-fresh .edd-vertical-sections .section-nav li a:hover,
+.admin-color-fresh .edd-vertical-sections .section-nav li a:focus,
+.admin-color-fresh .edd-vertical-sections .section-nav .section-title--is-active a {
 	box-shadow: inset 5px 0 #0073aa;
 }
 
 /* Blue */
-.admin-color-blue .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+.admin-color-blue .edd-vertical-sections .section-nav li a:hover,
+.admin-color-blue .edd-vertical-sections .section-nav li a:focus,
+.admin-color-blue .edd-vertical-sections .section-nav .section-title--is-active a {
 	box-shadow: inset 5px 0 #096484;
 }
 
 /* Coffee */
-.admin-color-coffee .edd-vertical-sections .section-nav li[aria-selected="true"] a {
-	box-shadow: inset 5px 0 #096484;
+.admin-color-coffee .edd-vertical-sections .section-nav li a:hover,
+.admin-color-coffee .edd-vertical-sections .section-nav li a:focus,
+.admin-color-coffee .edd-vertical-sections .section-nav .section-title--is-active a {
+	box-shadow: inset 5px 0 #c7a589;
 }
 
 /* Ectoplasm */
-.admin-color-ectoplasm .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+.admin-color-ectoplasm .edd-vertical-sections .section-nav li a:hover,
+.admin-color-ectoplasm .edd-vertical-sections .section-nav li a:focus,
+.admin-color-ectoplasm .edd-vertical-sections .section-nav .section-title--is-active a {
 	box-shadow: inset 5px 0 #a3b745;
 }
 
 /* Midnight */
-.admin-color-midnight .edd-vertical-sections .section-nav li[aria-selected="true"] a {
-	box-shadow: inset 5px 0 #26292c;
+.admin-color-midnight .edd-vertical-sections .section-nav li a:hover,
+.admin-color-midnight .edd-vertical-sections .section-nav li a:focus,
+.admin-color-midnight .edd-vertical-sections .section-nav .section-title--is-active a {
+	box-shadow: inset 5px 0 #e14d43;
 }
 
 /* Ocean */
-.admin-color-ocean .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+.admin-color-ocean .edd-vertical-sections .section-nav li a:hover,
+.admin-color-ocean .edd-vertical-sections .section-nav li a:focus,
+.admin-color-ocean .edd-vertical-sections .section-nav .section-title--is-active a {
 	box-shadow: inset 5px 0 #627c83;
 }
 
 /* Sunrise */
-.admin-color-sunrise .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+.admin-color-sunrise .edd-vertical-sections .section-nav li a:hover,
+.admin-color-sunrise .edd-vertical-sections .section-nav li a:focus,
+.admin-color-sunrise .edd-vertical-sections .section-nav .section-title--is-active a {
 	box-shadow: inset 5px 0 #be3631;
 }
 
 /* Light */
-.admin-color-light .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+.admin-color-light .edd-vertical-sections .section-nav li a:hover,
+.admin-color-light .edd-vertical-sections .section-nav li a:focus,
+.admin-color-light .edd-vertical-sections .section-nav .section-title--is-active a {
 	box-shadow: inset 5px 0 #888;
 }
 
 /* bbPress Color Schemes */
 
 /* Evergreen */
-.admin-color-evergreen .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+.admin-color-evergreen .edd-vertical-sections .section-nav li a:hover,
+.admin-color-evergreen .edd-vertical-sections .section-nav li a:focus,
+.admin-color-evergreen .edd-vertical-sections .section-nav .section-title--is-active a {
 	box-shadow: inset 5px 0 #36533f;
 }
 
 /* Mint */
-.admin-color-mint .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+.admin-color-mint .edd-vertical-sections .section-nav li a:hover,
+.admin-color-mint .edd-vertical-sections .section-nav li a:focus,
+.admin-color-mint .edd-vertical-sections .section-nav .section-title--is-active a {
 	box-shadow: inset 5px 0 #4f6d59;
 }
 
-.edd-vertical-sections .section-nav li[aria-selected="true"] .dashicons {
+.edd-vertical-sections .section-nav .section-title--is-active .dashicons {
 	color: #555;
 }
 
@@ -3740,7 +3764,7 @@ body.download_page_edd-reports {
 	}
 
 	.edd-vertical-sections .section-nav li a {
-		text-align: center;
+		justify-content: center;
 	}
 	.edd-vertical-sections .section-nav li a .dashicons {
 		width: 24px;
@@ -3770,7 +3794,6 @@ body.download_page_edd-reports {
 
 #edd-item-card-wrapper, /** [1] */
 .edd-vertical-sections .section-wrap {
-	float: left;
 	width: 80%;
 }
 
@@ -3986,4 +4009,79 @@ div:not(#edd-item-tab-wrapper) + #edd-item-card-wrapper .item-section { /** [1] 
 	text-align: right;
 	font-style: italic;
 	width: 150px;
+}
+
+/**
+ * Forms
+ * ---------------------------------------------------------- */
+
+/**
+ * Form Group
+ *
+ * <div class="edd-form-group">
+ *   <label class="edd-form-group__label">Label</label>
+ *   <div class="edd-form-group__control">
+ *   	<input type="text" class="edd-form-group__input" />
+ *   </div>
+ *   <p class="edd-form-group__help">Help</p>
+ * </div>
+ *
+ *
+ * <fieldset class="edd-form-group">
+ *   <legend class="edd-form-group__label">Label</label>
+ *
+ *   <div class="edd-form-group__control">
+ *   	<input type="radio" class="edd-form-group__input" />
+ *   	<label>Radio 1</label>
+ *   </div>
+ *
+ *   <div class="edd-form-group__control">
+ *   	<input type="radio" class="edd-form-group__input" />
+ *   	<label>Radio 2</label>
+ *   </div>
+ * </fieldset>
+ *
+ */
+.edd-form-group {
+	margin-bottom: 16px;
+}
+
+.edd-form-group:last-of-type {
+	margin-bottom: 0;
+}
+
+.edd-form-group__label {
+	display: block;
+	margin-bottom: 8px;
+	padding: 0;
+}
+
+.edd-form-group__control {
+	margin-bottom: 8px;
+}
+
+.edd-form-group__control.is-radio,
+.edd-form-group__control.is-check {
+	margin-top: 4px;
+}
+
+.edd-form-group__control:last-of-type {
+	margin-bottom: 0;
+}
+
+.edd-form-group__input {
+	max-width: 100%;
+}
+
+.edd-form-group__input[type="checkbox"],
+.edd-form-group__input[type="radio"] {
+	margin-top: 0;
+}
+
+.edd-form-group__help {
+	color: #666;
+	font-size: 13px;
+	font-style: italic;
+	line-height: initial;
+	margin: 8px 0 0;
 }
