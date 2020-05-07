@@ -749,8 +749,8 @@ function edd_get_customer_address_counts( $args = array() ) {
  */
 function edd_add_customer_email_address( $data ) {
 
-	// A customer ID must be supplied for every address inserted.
-	if ( empty( $data['customer_id'] ) ) {
+	// A customer ID and email must be supplied for every address inserted.
+	if ( empty( $data['customer_id'] ) || empty( $data['email'] ) ) {
 		return false;
 	}
 
