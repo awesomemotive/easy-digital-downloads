@@ -760,9 +760,8 @@ function edd_add_customer_email_address( $data ) {
 	// Check if the address already exists for this customer.
 	$existing_addresses = $customer_email_addresses->query(
 		array(
-			'customer_id'   => $data['customer_id'],
-			'no_found_rows' => true,
-			'email'         => $data['email'],
+			'customer_id' => $data['customer_id'],
+			'email'       => $data['email'],
 		)
 	);
 	if ( ! empty( $existing_addresses ) ) {
