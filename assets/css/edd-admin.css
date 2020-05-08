@@ -1852,6 +1852,8 @@ input[class*="edd-price-field"] {
 }
 .edd-admin-box-inside--row {
 	display: flex;
+	flex-wrap: wrap;
+	word-break: break-all;
 	justify-content: space-between;
 	align-items: center;
 }
