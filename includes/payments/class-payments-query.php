@@ -631,7 +631,9 @@ class EDD_Payments_Query extends EDD_Stats {
 			: 20;
 
 		if ( isset( $this->args['nopaging'] ) && true === $this->args['nopaging'] ) {
-			unset( $arguments['number'] );
+			// Setting to a really large number because we don't actually have a way to get all results.
+			// @todo Maybe trigger doing_it_wrong.
+			$arguments['number'] = 99999;
 		}
 
 		switch ( $this->args['orderby'] ) {
