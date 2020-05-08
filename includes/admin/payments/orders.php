@@ -808,7 +808,7 @@ function edd_order_details_extras( $order = false ) {
 					<div class="edd-send-purchase-receipt edd-admin-box-inside">
 						<label class="description label label--has-tip label--has-checkbox" for="edd-order-send-receipt">
 							<input type="checkbox" name="edd_order_send_receipt" id="edd-order-send-receipt" value="1" />
-							<?php esc_html_e( 'Send Receipt', 'easy-digital-downloads' ); ?>
+							<?php esc_html_e( 'Send Purchase Receipt', 'easy-digital-downloads' ); ?>
 							<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Send Receipt</strong>: checking this box will send the purchase receipt to the selected customer.', 'easy-digital-downloads' ); ?>"></span>
 						</label>
 					</div>
