@@ -425,7 +425,7 @@ function edd_order_details_addresses( $order ) {
 			<div class="edd-form-group">
 				<label for="edd_order_address_country" class="edd-form-group__label"><?php echo esc_html_x( 'Country:', 'Address country', 'easy-digital-downloads' ); ?></label>
 				<div class="edd-form-group__control">
-					<!-- <div id="edd-order-address-country-wrap"> -->
+					<div id="edd-order-address-country-wrap">
 					<?php
 					echo EDD()->html->select(
 						array(
@@ -446,13 +446,13 @@ function edd_order_details_addresses( $order ) {
 						)
 					); // WPCS: XSS ok.
 					?>
-				<!-- </div> -->
+					</div>
 				</div>
 			</div>
 
 			<div class="edd-form-group">
 				<label for="edd_order_address_region" class="edd-form-group__label"><?php echo esc_html_x( 'Region:', 'Region of address', 'easy-digital-downloads' ); ?></label>
-				<!-- <div id="edd-order-address-state-wrap"> -->
+				<div id="edd-order-address-state-wrap">
 				<div class="edd-form-group__control">
 					<?php
 					$states = edd_get_shop_states( $address->country );
@@ -481,7 +481,7 @@ function edd_order_details_addresses( $order ) {
 					}
 					?>
 				</div>
-				<!-- </div> -->
+				</div>
 			</div>
 
 			<input type="hidden" name="edd_order_address[address_id]" value="<?php echo esc_attr( $address->id ); ?>" />
