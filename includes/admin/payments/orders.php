@@ -34,7 +34,7 @@ function edd_order_details_publish( $order ) {
 
 			<div class="edit-post-header__settings">
 				<?php if ( edd_is_add_order_page() ) : ?>
-					<div class="edd-send-purchase-receipt edd-admin-box-inside">
+					<div class="edd-send-purchase-receipt">
 						<label class="description label label--has-tip label--has-checkbox" for="edd-order-send-receipt">
 							<input type="checkbox" name="edd_order_send_receipt" id="edd-order-send-receipt" value="1" />
 							<?php esc_html_e( 'Send Purchase Receipt', 'easy-digital-downloads' ); ?>
