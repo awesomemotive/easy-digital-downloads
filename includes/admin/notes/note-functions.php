@@ -75,9 +75,14 @@ function edd_admin_get_note_html( $note_id = 0 ) {
 
 	// User
 	$user_id = $note->user_id;
-	$author  = ! empty( $user_id )
-		? get_userdata( $user_id )->display_name
-		: edd_get_bot_name();
+	$author  = edd_get_bot_name();
+	if ( ! empty( $user_id ) ) {
+		$author      = sprintf( '%s #%s', __( 'User ID' ), $user_id );
+		$user_object = get_userdata( $user_id );
+		if ( $user_object ) {
+			$author = $user_object->display_name;
+		}
+	}
 
 	// URL to delete note
 	$delete_note_url = wp_nonce_url( add_query_arg( array(
