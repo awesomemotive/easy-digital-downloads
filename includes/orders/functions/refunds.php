@@ -519,6 +519,25 @@ function edd_refund_order_item( $order_item_id = 0 ) {
 }
 
 /**
+ * Queries for order refunds.
+ *
+ * @see \EDD\Database\Queries\Order::__construct()
+ *
+ * @since 3.0
+ *
+ * @param int $order_id Parent Order.
+ * @return \EDD\Orders\Order[] Array of `Order` objects.
+ */
+function edd_get_order_refunds( $order_id = 0 ) {
+	$order_refunds = new \EDD\Database\Queries\Order();
+
+	return $order_refunds->query( array(
+		'type'   => 'refund',
+		'parent' => $order_id,
+	) );
+}
+
+/**
  * Calculate order total. This method is used to calculate the total of an order
  * by also taking into account any refunds/partial refunds.
  *

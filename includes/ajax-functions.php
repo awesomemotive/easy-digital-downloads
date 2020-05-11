@@ -629,15 +629,20 @@ function edd_ajax_download_search() {
 		's'              => $new_search              // String
 	);
 
-	// Maybe exclude bundles
+	// Maybe exclude bundles.
 	if ( true === $no_bundles ) {
 		$args['meta_query'] = array(
-			'relation' => 'AND',
+			'relation' => 'OR',
 			array(
 				'key'     => '_edd_product_type',
 				'value'   => 'bundle',
-				'compare' => '!='
-			)
+				'compare' => '!=',
+			),
+			array(
+				'key'     => '_edd_product_type',
+				'value'   => 'bundle',
+				'compare' => 'NOT EXISTS',
+			),
 		);
 	}
 
@@ -1454,7 +1459,7 @@ function edd_admin_order_get_item_amounts() {
 		$product_requirements = array_filter( array_values( $product_requirements ) );
 
 		if (
-			! empty( $product_requirements ) && 
+			! empty( $product_requirements ) &&
 			( 'not_global' === $d->get_scope() ) &&
 			! in_array( $product_id, $product_requirements, true )
 		) {
@@ -1482,7 +1487,7 @@ function edd_admin_order_get_item_amounts() {
 
 	if ( true === $use_taxes && floatval( 0 ) !== floatval( $tax_rate ) ) {
 		$tax = edd_calculate_tax( floatval( $subtotal - $discount ), $country, $region );
-	} else { 
+	} else {
 		$tax = 0;
 	}
 
