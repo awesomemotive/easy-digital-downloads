@@ -3117,6 +3117,7 @@ body.download_page_edd-reports {
 }
 .edd-sections-wrap {
 	clear: both;
+	width: 100%;
 }
 .edd-sections-wrap .section-wrap {
 	background-color: #fff;
