@@ -907,7 +907,7 @@ function edd_order_details_extras( $order = false ) {
 
 							<label for="edd_unlimited_downloads">
 							<?php esc_html_e( 'Unlimited Downloads', 'easy-digital-downloads' ); ?></label>
-							<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Unlimited Downloads</strong>: checking this box will override all other file download limits for this purchase, granting the customer unliimited downloads of all files included on the purchase.', 'easy-digital-downloads' ); ?>"></span>
+							<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_html_e( 'Checking this box will override all other file download limits for this purchase, granting the customer unlimited downloads of all files included on the purchase.', 'easy-digital-downloads' ); ?>"></span>
 						</div>
 					</div>
 				</div>
