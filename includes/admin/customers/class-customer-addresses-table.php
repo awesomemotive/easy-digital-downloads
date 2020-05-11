@@ -66,9 +66,10 @@ class EDD_Customer_Addresses_Table extends List_Table {
 		switch ( $column_name ) {
 
 			case 'type' :
-				$value = ( 'primary' === $item['type'] )
-					? esc_html_e( 'Primary',   'easy-digital-downloads' )
-					: esc_html_e( 'Secondary', 'easy-digital-downloads' );
+				$value = ucfirst( $item['type'] );
+				if ( ! empty( $item['is_primary'] ) ) {
+					$value .= ' <span class="edd-chip">' . __( 'Primary', 'easy-digital-downloads' ) . '</span>';
+				}
 				break;
 
 			case 'date_created' :
