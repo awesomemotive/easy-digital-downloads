@@ -171,7 +171,6 @@ function edd_add_manual_order( $args = array() ) {
 		'discount'       => $order_discount,
 		'total'          => $order_total,
 		'date_created'   => $date,
-		'date_completed' => $completed,
 	) );
 
 	// Attach order to the customer record.
