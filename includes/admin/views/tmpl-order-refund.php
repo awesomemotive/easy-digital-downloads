@@ -22,7 +22,7 @@ $view_url = edd_get_admin_url( array(
 	echo wp_kses(
 		sprintf(
 			/* translators: %s Refund number, linked to Refund record. */
-			__( 'Refund: %s', 'easy-digitald-downloads' ),
+			__( 'Refund: %s', 'easy-digital-downloads' ),
 			'<a href="' . esc_url( $view_url ) . '&id={{ data.id }}">{{ data.number }}</a>'
 		),
 		array(
