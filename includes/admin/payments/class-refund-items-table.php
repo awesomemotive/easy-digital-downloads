@@ -459,9 +459,8 @@ class Refund_Items_Table extends List_Table {
 			</td>
 		</tr>
 		<tr id="edd-refund-submit-total" class="edd-refund-submit-line-total">
-			<td colspan="<?php echo $this->get_column_count() - 1; ?>"></td>
 
-			<td id="edd-refund-submit-button-wrapper">
+			<td id="edd-refund-submit-button-wrapper" colspan="<?php echo esc_attr( $this->get_column_count() ); ?>">
 				<button id="edd-submit-refund-submit" class="disabled button-primary"><?php esc_html_e( 'Submit Refund', 'easy-digital-downloads' ); ?></button>
 				<span class="spinner"></span>
 			</td>
