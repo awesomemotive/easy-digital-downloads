@@ -3101,6 +3101,7 @@ body.download_page_edd-reports {
 	box-shadow: 0 1px 1px rgba(0,0,0,0.04);
 	position: relative;
 	margin-top: 15px;
+	display: flex;
 }
 #edd-item-wrapper.full-width {
 	max-width: 100%;
@@ -3116,6 +3117,7 @@ body.download_page_edd-reports {
 }
 .edd-sections-wrap {
 	clear: both;
+	width: 100%;
 }
 .edd-sections-wrap .section-wrap {
 	background-color: #fff;
