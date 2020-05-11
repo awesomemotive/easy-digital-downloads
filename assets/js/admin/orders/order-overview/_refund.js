@@ -116,6 +116,10 @@ $(document.body).on('change', '#edd-refund-order-dialog #cb-select-all-1', funct
 
 // Process the refund form after the button is clicked.
 $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
+	e.preventDefault();
+	if ( $( this ).hasClass( 'disabled' ) ) {
+		return;
+	}
 	$('.edd-submit-refund-message').removeClass('success').removeClass('fail');
 	$(this).addClass('disabled');
 	$('#edd-refund-submit-button-wrapper .spinner').css('visibility', 'visible');
@@ -133,8 +137,6 @@ $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 			item_ids.push(item_id);
 		}
 	});
-
-	e.preventDefault();
 
 	var postData = {
 		action  : 'edd_process_refund_form',
