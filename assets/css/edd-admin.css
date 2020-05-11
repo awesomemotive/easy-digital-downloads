@@ -3136,7 +3136,7 @@ body.download_page_edd-reports {
 }
 
 .edd-sections-wrap .section-wrap .section-content > * {
-	margin: 20px;
+	padding: 20px;
 }
 
 .edd-sections-wrap .section-wrap .avatar-wrap {
@@ -3199,6 +3199,10 @@ body.download_page_edd-reports {
 	margin-right: 5px;
 	text-decoration: none;
 }
+.customer-info {
+	min-height: 185px;
+}
+
 .customer-info .customer-name {
 	font-size: 24px;
 	font-weight: 600;
@@ -3258,13 +3262,15 @@ body.download_page_edd-reports {
 }
 #edd-item-stats-wrapper {
 	margin: 0 auto;
-	min-height: 30px;
 	text-align: center;
+}
+#edd-item-stats-wrapper ul {
+	display: flex;
+	margin: 0;
 }
 #edd-item-stats-wrapper li {
 	font-size: 14px;
-	float: left;
-	vertical-align: middle;
+	margin-bottom: 0;
 	width: 50%;
 }
 #edd-item-stats-wrapper a {
