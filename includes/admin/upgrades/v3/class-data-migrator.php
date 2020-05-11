@@ -568,13 +568,23 @@ class Data_Migrator {
 		unset( $customer_address_data['first_name'] );
 		unset( $customer_address_data['last_name'] );
 
+		// If possible, set the order date as the address creation date.
+		$customer_address_data['date_created'] = $date_completed;
+
 		// Maybe add address to customer record.
 		edd_maybe_add_customer_address( $customer_id, $customer_address_data );
 
 		// Maybe add email address to customer record
 		if ( ! empty( $customer ) && $customer instanceof \EDD_Customer ) {
-			$primary = ( $customer->email === $purchase_email );
-			$customer->add_email( $purchase_email, $primary );
+			$type = ( $customer->email === $purchase_email ) ? 'primary' : 'secondary';
+			edd_add_customer_email_address(
+				array(
+					'customer_id'  => $customer_id,
+					'date_created' => $date_completed,
+					'email'        => $purchase_email,
+					'type'         => $type,
+				)
+			);
 		}
 
 		/** Migrate meta *********************************************/
