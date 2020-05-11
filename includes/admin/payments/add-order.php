@@ -51,15 +51,15 @@ function edd_add_order_page_content() {
 		<?php edd_order_details_publish( $order ); ?>
 
 		<div class="wrap edd-wrap edd-clearfix">
-			<h1><?php esc_html_e( 'Add New Order', 'easy-digital-downloads' ); ?></h1>
+			<h1><?php esc_html_e( 'New Order', 'easy-digital-downloads' ); ?></h1>
 
 			<hr class="wp-header-end">
 
-			<div class="notice notice-error" id="edd-add-order-customer-error" style="display: none;">
+			<div class="notice notice-error inline" id="edd-add-order-customer-error" style="display: none;">
 				<p><strong><?php esc_html_e( 'Error', 'easy-digital-downloads' ); ?>:</strong> <?php esc_html_e( 'Please select an existing customer or create a new customer.', 'easy-digital-downloads' ); ?></p>
 			</div>
 
-			<div class="notice notice-error" id="edd-add-order-no-items-error" style="display: none">
+			<div class="notice notice-error inline" id="edd-add-order-no-items-error" style="display: none">
 				<p><strong><?php esc_html_e( 'Error', 'easy-digital-downloads' ); ?>:</strong> <?php esc_html_e( 'Please add an item to this order.', 'easy-digital-downloads' ); ?></p>
 			</div>
 

@@ -21,7 +21,6 @@ defined( 'ABSPATH' ) || exit;
  * @return int|bool Order ID if successful, false otherwise.
  */
 function edd_add_manual_order( $args = array() ) {
-
 	// Bail if user cannot manage shop settings or no data was passed.
 	if ( empty( $args ) || ! current_user_can( 'manage_shop_settings' ) ) {
 		return false;
@@ -38,7 +37,7 @@ function edd_add_manual_order( $args = array() ) {
 	}
 
 	// Get now one time to avoid microsecond issues
-	$now = EDD()->utils->date( 'now' )->timestamp;
+	$now = EDD()->utils->date( 'now', null, true )->timestamp;
 
 	// Parse args.
 	$data = wp_parse_args( $args, array(
@@ -117,7 +116,28 @@ function edd_add_manual_order( $args = array() ) {
 	}
 
 	// Parse date.
-	$date = $data['edd-payment-date'] . ' ' . $data['edd-payment-time-hour'] . ':' . $data['edd-payment-time-min'];
+	$date = sanitize_text_field( $data['edd-payment-date'] );
+	$hour = sanitize_text_field( $data['edd-payment-time-hour'] );
+
+	// Restrict to our high and low.
+	if ( $hour > 23 ) {
+		$hour = 23;
+	} elseif ( $hour < 0 ) {
+		$hour = 00;
+	}
+
+	$minute = sanitize_text_field( $data['edd-payment-time-min'] );
+
+	// Restrict to our high and low.
+	if ( $minute > 59 ) {
+		$minute = 59;
+	} elseif ( $minute < 0 ) {
+		$minute = 00;
+	}
+
+	// The date is entered in the WP timezone. We need to convert it to UTC prior to saving now.
+	$date = edd_get_utc_equivalent_date( EDD()->utils->date( $date . ' ' . $hour . ':' . $minute . ':00', edd_get_timezone_id(), false ) );
+	$date = $date->format( 'Y-m-d H:i:s' );
 
 	// Get mode
 	$mode = edd_is_test_mode()
