@@ -824,6 +824,7 @@ class EDD_CLI extends WP_CLI_Command {
 		// Suspend the cache addition while we're migrating.
 		wp_suspend_cache_addition( true );
 
+		$this->maybe_install_v3_tables();
 		$this->migrate_payments( $args, $assoc_args );
 		$this->migrate_customer_data( $args, $assoc_args );
 		$this->migrate_logs( $args, $assoc_args );
@@ -833,6 +834,37 @@ class EDD_CLI extends WP_CLI_Command {
 		$this->migrate_customer_notes( $args, $assoc_args );
 		$this->remove_legacy_data( $args, $assoc_args );
 
+	}
+
+	/**
+	 * Installs any new 3.0 database tables that haven't yet been installed
+	 *
+	 * @access private
+	 * @since 3.0
+	 */
+	private function maybe_install_v3_tables() {
+		static $installed = false;
+
+		if ( $installed ) {
+			return;
+		}
+
+		foreach ( EDD()->components as $component ) {
+			// Install the main component table.
+			$table = $component->get_interface( 'table' );
+			if ( $table instanceof EDD\Database\Table && ! $table->exists() ) {
+				$table->install();
+			}
+
+			// Install the associated meta table, if there is one.
+			$meta = $component->get_interface( 'meta' );
+			if ( $meta instanceof EDD\Database\Table && ! $meta->exists() ) {
+				$meta->install();
+			}
+		}
+
+		// Only need to do this once.
+		$installed = true;
 	}
 
 	/**
@@ -850,6 +882,8 @@ class EDD_CLI extends WP_CLI_Command {
 	public function migrate_discounts( $args, $assoc_args ) {
 		global $wpdb;
 
+		$this->maybe_install_v3_tables();
+
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
 
 		$force = isset( $assoc_args['force'] )
@@ -860,16 +894,6 @@ class EDD_CLI extends WP_CLI_Command {
 
 		if ( ! $force && $upgrade_completed ) {
 			WP_CLI::error( __( 'The discounts custom database migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
-		}
-
-		$adjustments_db = edd_get_component_interface( 'adjustment', 'table' );
-		if ( ! $adjustments_db->exists() ) {
-			@$adjustments_db->create();
-		}
-
-		$discount_meta = edd_get_component_interface( 'adjustment', 'meta' );
-		if ( ! $discount_meta->exists() ) {
-			@$discount_meta->create();
 		}
 
 		$sql     = "SELECT * FROM {$wpdb->posts} WHERE post_type = 'edd_discount'";
@@ -920,6 +944,8 @@ class EDD_CLI extends WP_CLI_Command {
 	public function migrate_logs( $args, $assoc_args ) {
 		global $wpdb;
 
+		$this->maybe_install_v3_tables();
+
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
 
 		$force = isset( $assoc_args['force'] )
@@ -930,26 +956,6 @@ class EDD_CLI extends WP_CLI_Command {
 
 		if ( ! $force && $upgrade_completed ) {
 			WP_CLI::error( __( 'The logs custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
-		}
-
-		$logs_db = edd_get_component_interface( 'log', 'table' );
-		if ( ! $logs_db->exists() ) {
-			@$logs_db->create();
-		}
-
-		$log_meta_db = edd_get_component_interface( 'log', 'meta' );
-		if ( ! $log_meta_db->exists() ) {
-			@$log_meta_db->create();
-		}
-
-		$log_api_request_db = edd_get_component_interface( 'log_api_request', 'table' );
-		if ( ! $log_api_request_db->exists() ) {
-			@$log_api_request_db->create();
-		}
-
-		$log_file_download_db = edd_get_component_interface( 'log_file_download', 'table' );
-		if ( ! $log_file_download_db->exists() ) {
-			@$log_file_download_db->create();
 		}
 
 		$sql = "
@@ -1004,6 +1010,8 @@ class EDD_CLI extends WP_CLI_Command {
 	public function migrate_order_notes( $args, $assoc_args ) {
 		global $wpdb;
 
+		$this->maybe_install_v3_tables();
+
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
 
 		$force = isset( $assoc_args['force'] )
@@ -1014,16 +1022,6 @@ class EDD_CLI extends WP_CLI_Command {
 
 		if ( ! $force && $upgrade_completed ) {
 			WP_CLI::error( __( 'The notes custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
-		}
-
-		$notes_db = edd_get_component_interface( 'note', 'table' );
-		if ( ! $notes_db->exists() ) {
-			@$notes_db->create();
-		}
-
-		$note_meta_db = edd_get_component_interface( 'note', 'meta' );
-		if ( ! $note_meta_db->exists() ) {
-			@$note_meta_db->create();
 		}
 
 		$sql     = "SELECT * FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note' ORDER BY comment_ID ASC";
@@ -1071,6 +1069,8 @@ class EDD_CLI extends WP_CLI_Command {
 	public function migrate_customer_notes( $args, $assoc_args ) {
 		global $wpdb;
 
+		$this->maybe_install_v3_tables();
+
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
 
 		$force = isset( $assoc_args['force'] )
@@ -1081,11 +1081,6 @@ class EDD_CLI extends WP_CLI_Command {
 
 		if ( ! $force && $upgrade_completed ) {
 			WP_CLI::error( __( 'The notes custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
-		}
-
-		$customers_db = edd_get_component_interface( 'customer', 'table' );
-		if ( ! $customers_db->exists() ) {
-			@$customers_db->create();
 		}
 
 		$sql     = "SELECT * FROM {$wpdb->edd_customers}";
@@ -1128,6 +1123,8 @@ class EDD_CLI extends WP_CLI_Command {
 	public function migrate_customer_data( $args, $assoc_args ) {
 		global $wpdb;
 
+		$this->maybe_install_v3_tables();
+
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
 
 		$force = isset( $assoc_args['force'] )
@@ -1138,25 +1135,6 @@ class EDD_CLI extends WP_CLI_Command {
 
 		if ( ! $force && $upgrade_completed ) {
 			WP_CLI::error( __( 'The user addresses custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
-		}
-
-		// Create the tables if they do not exist.
-		$components = array(
-			array( 'order', 'table' ),
-			array( 'order', 'meta' ),
-			array( 'customer', 'table' ),
-			array( 'customer', 'meta' ),
-			array( 'customer_address', 'table' ),
-			array( 'customer_email_address', 'table' ),
-		);
-
-		foreach ( $components as $component ) {
-			/** @var EDD\Database\Tables\Base $table */
-			$table = edd_get_component_interface( $component[0], $component[1] );
-
-			if ( $table instanceof EDD\Database\Tables\Base && ! $table->exists() ) {
-				@$table->create();
-			}
 		}
 
 		// Migrate user addresses first.
@@ -1222,6 +1200,8 @@ class EDD_CLI extends WP_CLI_Command {
 	public function migrate_tax_rates( $args, $assoc_args ) {
 		global $wpdb;
 
+		$this->maybe_install_v3_tables();
+
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
 
 		$force = isset( $assoc_args['force'] )
@@ -1232,21 +1212,6 @@ class EDD_CLI extends WP_CLI_Command {
 
 		if ( ! $force && $upgrade_completed ) {
 			WP_CLI::error( __( 'The tax rates custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
-		}
-
-		// Create the tables if they do not exist.
-		$components = array(
-			array( 'adjustment', 'table' ),
-			array( 'adjustment', 'meta' ),
-		);
-
-		foreach ( $components as $component ) {
-			/** @var EDD\Database\Tables\Base $table */
-			$table = edd_get_component_interface( $component[0], $component[1] );
-
-			if ( $table instanceof EDD\Database\Tables\Base && ! $table->exists() ) {
-				@$table->create();
-			}
 		}
 
 		// Migrate user addresses first.
@@ -1285,6 +1250,8 @@ class EDD_CLI extends WP_CLI_Command {
 	public function migrate_payments( $args, $assoc_args ) {
 		global $wpdb;
 
+		$this->maybe_install_v3_tables();
+
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/class-data-migrator.php';
 
 		$force = isset( $assoc_args['force'] )
@@ -1295,25 +1262,6 @@ class EDD_CLI extends WP_CLI_Command {
 
 		if ( ! $force && $upgrade_completed ) {
 			WP_CLI::error( __( 'The payments custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
-		}
-
-		// Create the tables if they do not exist.
-		$components = array(
-			array( 'order', 'table' ),
-			array( 'order', 'meta' ),
-			array( 'order_item', 'table' ),
-			array( 'order_item', 'meta' ),
-			array( 'order_adjustment', 'table' ),
-			array( 'order_adjustment', 'meta' ),
-		);
-
-		foreach ( $components as $component ) {
-			/** @var EDD\Database\Tables\Base $table */
-			$table = edd_get_component_interface( $component[0], $component[1] );
-
-			if ( ! $table->exists() ) {
-				@$table->create();
-			}
 		}
 
 		$sql = "
