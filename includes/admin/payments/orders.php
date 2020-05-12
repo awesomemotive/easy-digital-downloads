@@ -729,8 +729,7 @@ function edd_order_details_overview( $order ) {
 		</thead>
 	</table>
 
-	<div id="edd-order-overview-actions" class="edd-order-overview-actions inside">
-	</div>
+	<div id="edd-order-overview-actions" class="edd-order-overview-actions inside"></div>
 </div>
 
 <?php

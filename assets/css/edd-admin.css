@@ -555,7 +555,7 @@ a.edd-delete:hover {
 
 /** Overview */
 table.edd-order-overview-summary {
-	border-width: 0 0 1px;
+	border-width: 0;
 	table-layout: fixed;
 }
 
@@ -730,11 +730,17 @@ table.edd-order-overview-summary--refund {
 
 /** Actions */
 #edd-order-overview-actions.inside {
+	border-top: 1px solid #ccd0d4;
 	margin-top: 0;
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
 	justify-content: space-between;
+}
+
+#edd-order-overview-actions.inside:empty {
+	padding: 0;
+	border-top: 0;
 }
 
 #edd-order-overview-actions.inside > div {
@@ -3101,6 +3107,7 @@ body.download_page_edd-reports {
 	box-shadow: 0 1px 1px rgba(0,0,0,0.04);
 	position: relative;
 	margin-top: 15px;
+	display: flex;
 }
 #edd-item-wrapper.full-width {
 	max-width: 100%;
@@ -3116,6 +3123,7 @@ body.download_page_edd-reports {
 }
 .edd-sections-wrap {
 	clear: both;
+	width: 100%;
 }
 .edd-sections-wrap .section-wrap {
 	background-color: #fff;
