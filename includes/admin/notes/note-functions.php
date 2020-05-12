@@ -77,7 +77,7 @@ function edd_admin_get_note_html( $note_id = 0 ) {
 	$user_id = $note->user_id;
 	$author  = edd_get_bot_name();
 	if ( ! empty( $user_id ) ) {
-		$author      = sprintf( '%s #%s', __( 'User ID' ), $user_id );
+		$author      = sprintf( '%s #%s', __( 'User ID', 'easy-digital-downloads' ), $user_id );
 		$user_object = get_userdata( $user_id );
 		if ( $user_object ) {
 			$author = ! empty( $user_object->display_name ) ? $user_object->display_name : $user_object->user_login;
