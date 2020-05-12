@@ -159,12 +159,9 @@ final class Customer_Addresses extends Table {
 			$result = $this->get_db()->query( "
 				ALTER TABLE {$this->table_name} ADD COLUMN `is_primary` tinyint SIGNED NOT NULL default '0' AFTER `customer_id`;
 			" );
-
-			if ( ! empty( $result ) ) {
-
-			}
 		}
 
+		return $this->is_success( $result );
 	}
 
 }

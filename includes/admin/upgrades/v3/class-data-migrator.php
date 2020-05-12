@@ -27,9 +27,10 @@ class Data_Migrator {
 	 *
 	 * @since 3.0
 	 *
-	 * @param object $data Data to migrate.
+	 * @param object $data       Data to migrate.
+	 * @param string $type       The type of address this is.
 	 */
-	public static function customer_addresses( $data = null ) {
+	public static function customer_addresses( $data = null, $type = 'billing' ) {
 
 		// Bail if no data passed.
 		if ( ! $data ) {
@@ -54,7 +55,7 @@ class Data_Migrator {
 		if ( $customer ) {
 			edd_add_customer_address( array(
 				'customer_id' => $customer->id,
-				'type'        => 'primary',
+				'type'        => $type,
 				'name'        => $customer->name,
 				'address'     => $address['line1'],
 				'address2'    => $address['line2'],
