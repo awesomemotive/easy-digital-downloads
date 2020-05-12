@@ -144,11 +144,6 @@ function edd_add_manual_order( $args = array() ) {
 		? 'test'
 		: 'live';
 
-	// Get completed date if publish
-	$completed = ( 'complete' === $data['edd-payment-status'] )
-		? $date
-		: '';
-
 	// Amounts
 	$order_subtotal = floatval( $data['subtotal'] );
 	$order_tax      = floatval( $data['tax'] );
@@ -171,7 +166,6 @@ function edd_add_manual_order( $args = array() ) {
 		'discount'       => $order_discount,
 		'total'          => $order_total,
 		'date_created'   => $date,
-		'date_completed' => $completed,
 	) );
 
 	// Attach order to the customer record.
