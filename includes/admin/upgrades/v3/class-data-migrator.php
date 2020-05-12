@@ -578,8 +578,10 @@ class Data_Migrator {
 		// Remove empty data.
 		$order_address_data = array_filter( $order_address_data );
 
-		// Add to edd_order_addresses table.
-		edd_add_order_address( $order_address_data );
+		if ( ! empty( $order_address_data ) ) {
+			// Add to edd_order_addresses table.
+			edd_add_order_address( $order_address_data );
+		}
 
 		// Maybe add the address to the edd_customer_addresses.
 		$customer_address_data = $order_address_data;
