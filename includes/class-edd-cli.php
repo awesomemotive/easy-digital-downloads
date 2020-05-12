@@ -983,8 +983,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 			WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
 			$new_count = edd_count_logs() + edd_count_file_download_logs() + edd_count_api_request_logs();
-			$old_count = $wpdb->get_col( "SELECT count(ID) FROM {$wpdb->posts} WHERE post_type = 'edd_log'", 0 );
-			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
+			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $total );
 			WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
 
 			edd_update_db_version();
