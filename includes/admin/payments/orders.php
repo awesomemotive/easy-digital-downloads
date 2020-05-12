@@ -424,8 +424,7 @@ function edd_order_details_addresses( $order ) {
 
 			<div class="edd-form-group">
 				<label for="edd_order_address_country" class="edd-form-group__label"><?php echo esc_html_x( 'Country:', 'Address country', 'easy-digital-downloads' ); ?></label>
-				<div class="edd-form-group__control">
-					<!-- <div id="edd-order-address-country-wrap"> -->
+				<div class="edd-form-group__control" id="edd-order-address-country-wrap">
 					<?php
 					echo EDD()->html->select(
 						array(
@@ -446,14 +445,12 @@ function edd_order_details_addresses( $order ) {
 						)
 					); // WPCS: XSS ok.
 					?>
-				<!-- </div> -->
 				</div>
 			</div>
 
 			<div class="edd-form-group">
 				<label for="edd_order_address_region" class="edd-form-group__label"><?php echo esc_html_x( 'Region:', 'Region of address', 'easy-digital-downloads' ); ?></label>
-				<!-- <div id="edd-order-address-state-wrap"> -->
-				<div class="edd-form-group__control">
+				<div class="edd-form-group__control" id="edd-order-address-state-wrap">
 					<?php
 					$states = edd_get_shop_states( $address->country );
 					if ( ! empty( $states ) ) {
@@ -481,7 +478,6 @@ function edd_order_details_addresses( $order ) {
 					}
 					?>
 				</div>
-				<!-- </div> -->
 			</div>
 
 			<input type="hidden" name="edd_order_address[address_id]" value="<?php echo esc_attr( $address->id ); ?>" />
@@ -733,8 +729,7 @@ function edd_order_details_overview( $order ) {
 		</thead>
 	</table>
 
-	<div id="edd-order-overview-actions" class="edd-order-overview-actions inside">
-	</div>
+	<div id="edd-order-overview-actions" class="edd-order-overview-actions inside"></div>
 </div>
 
 <?php
@@ -875,7 +870,7 @@ function edd_order_details_extras( $order = false ) {
 				<?php endif; ?>
 
 				<?php if ( edd_is_add_order_page() ) : ?>
-					<div class="edd-order-tx-id edd-admin-box-inside">
+					<div class="edd-order-tx-id edd-admin-box-inside edd-admin-box-inside--row">
 						<div class="edd-form-group">
 							<label for="edd_transaction_id" class="edd-form-group__label"><?php esc_html_e( 'Transaction ID', 'easy-digital-downloads' ); ?></label>
 							<div class="edd-form-group__control">
