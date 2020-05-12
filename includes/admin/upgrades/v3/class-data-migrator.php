@@ -589,8 +589,11 @@ class Data_Migrator {
 		unset( $customer_address_data['first_name'] );
 		unset( $customer_address_data['last_name'] );
 
-		// Maybe add address to customer record.
-		edd_maybe_add_customer_address( $customer_id, $customer_address_data );
+		// Maybe add address to customer record, if it is not empty.
+		$customer_address_data = array_filter( $customer_address_data );
+		if ( ! empty( $customer_address_data ) ) {
+			edd_maybe_add_customer_address( $customer_id, $customer_address_data );
+		}
 
 		// Maybe add email address to customer record
 		if ( ! empty( $customer ) && $customer instanceof \EDD_Customer ) {
