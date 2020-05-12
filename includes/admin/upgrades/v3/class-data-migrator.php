@@ -335,7 +335,7 @@ class Data_Migrator {
 		$meta = get_post_custom( $data->ID );
 
 		$payment_meta = maybe_unserialize( $meta['_edd_payment_meta'][0] );
-		$user_info    = maybe_unserialize( $payment_meta['user_info'] );
+		$user_info    = isset( $payment_meta['user_info'] ) ? maybe_unserialize( $payment_meta['user_info'] ) : array();
 
 		// Some old EDD data has the user info serialized, but starting with something other than a: so it can't be unserialized
 		$user_info = self::fix_possible_serialization( $user_info );
@@ -410,6 +410,19 @@ class Data_Migrator {
 				$discount += (float) isset( $cart_item['discount'] ) ? $cart_item['discount'] : 0;
 				$total    += (float) isset( $cart_item['price'] )    ? $cart_item['price']    : 0;
 			}
+
+		} else {
+
+			// As a backup, we can get some information from other meta keys.
+			if ( isset( $meta['_edd_payment_total'][0] ) ) {
+				$total = (float) $meta['_edd_payment_total'][0];
+			}
+
+			if ( isset( $meta['_edd_payment_tax'][0] ) ) {
+				$tax = (float) $meta['_edd_payment_tax'][0];
+			}
+
+			$subtotal = $total - $tax;
 
 		}
 
