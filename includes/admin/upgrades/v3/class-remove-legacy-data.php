@@ -44,12 +44,13 @@ class Remove_Legacy_Data extends Base {
 		// Delete meta on first step.
 		if ( 1 === $this->step ) {
 			$this->get_db()->query( $this->get_db()->prepare( "DELETE FROM {$this->get_db()->edd_customermeta} WHERE meta_key = %s", esc_sql( 'additional_email' ) ) );
+			$this->get_db()->query( $this->get_db()->prepare( "DELETE FROM {$this->get_db()->usermeta} WHERE meta_key = %s", esc_sql( '_edd_user_address' ) ) );
 		}
 
 		$results = $this->get_db()->get_col( $this->get_db()->prepare(
 			"SELECT id
 			 FROM {$this->get_db()->posts}
-			 WHERE post_type = %s OR post_type = %s OR post_type = %s 
+			 WHERE post_type = %s OR post_type = %s OR post_type = %s
 			 ORDER BY id ASC
 			 LIMIT %d, %d",
 			esc_sql( 'edd_payment' ), esc_sql( 'edd_discount' ), esc_sql( 'edd_log' ), $offset, $this->per_step
