@@ -80,7 +80,7 @@ function edd_admin_get_note_html( $note_id = 0 ) {
 		$author      = sprintf( '%s #%s', __( 'User ID' ), $user_id );
 		$user_object = get_userdata( $user_id );
 		if ( $user_object ) {
-			$author = $user_object->display_name;
+			$author = ! empty( $user_object->display_name ) ? $user_object->display_name : $user_object->user_login;
 		}
 	}
 
