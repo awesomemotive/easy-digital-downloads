@@ -52,6 +52,13 @@ class Data_Migrator {
 			'country' => '',
 		) );
 
+		$address = array_filter( $address );
+
+		// Do not migrate empty addresses.
+		if ( empty( $address ) ) {
+			return;
+		}
+
 		if ( $customer ) {
 			edd_add_customer_address( array(
 				'customer_id' => $customer->id,
