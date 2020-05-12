@@ -1367,11 +1367,13 @@ class EDD_CLI extends WP_CLI_Command {
 			$discount_ids = wp_list_pluck( $discount_ids, 'ID' );
 			$discount_ids = implode( ', ', $discount_ids );
 
-			$delete_posts_query = "DELETE FROM $wpdb->posts WHERE ID IN ({$discount_ids})";
-			$wpdb->query( $delete_posts_query );
+			if ( ! empty( $discount_ids ) ) {
+				$delete_posts_query = "DELETE FROM $wpdb->posts WHERE ID IN ({$discount_ids})";
+				$wpdb->query( $delete_posts_query );
 
-			$delete_postmeta_query = "DELETE FROM $wpdb->postmeta WHERE post_id IN ({$discount_ids})";
-			$wpdb->query( $delete_postmeta_query );
+				$delete_postmeta_query = "DELETE FROM $wpdb->postmeta WHERE post_id IN ({$discount_ids})";
+				$wpdb->query( $delete_postmeta_query );
+			}
 
 			edd_set_upgrade_complete( 'remove_legacy_discounts' );
 		}
@@ -1388,11 +1390,13 @@ class EDD_CLI extends WP_CLI_Command {
 			$log_ids = wp_list_pluck( $log_ids, 'ID' );
 			$log_ids = implode( ', ', $log_ids );
 
-			$delete_query = "DELETE FROM {$wpdb->posts} WHERE post_type = 'edd_log'";
-			$wpdb->query( $delete_query );
+			if ( ! empty( $log_ids ) ) {
+				$delete_query = "DELETE FROM {$wpdb->posts} WHERE post_type = 'edd_log'";
+				$wpdb->query( $delete_query );
 
-			$delete_postmeta_query = "DELETE FROM {$wpdb->posts} WHERE ID IN ({$log_ids})";
-			$wpdb->query( $delete_postmeta_query );
+				$delete_postmeta_query = "DELETE FROM {$wpdb->posts} WHERE ID IN ({$log_ids})";
+				$wpdb->query( $delete_postmeta_query );
+			}
 
 			edd_set_upgrade_complete( 'remove_legacy_logs' );
 		}
@@ -1409,11 +1413,13 @@ class EDD_CLI extends WP_CLI_Command {
 			$note_ids = wp_list_pluck( $note_ids, 'comment_ID' );
 			$note_ids = implode( ', ', $note_ids );
 
-			$delete_query = "DELETE FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note'";
-			$wpdb->query( $delete_query );
+			if ( ! empty( $note_ids ) ) {
+				$delete_query = "DELETE FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note'";
+				$wpdb->query( $delete_query );
 
-			$delete_postmeta_query = "DELETE FROM {$wpdb->commentmeta} WHERE comment_id IN ({$note_ids})";
-			$wpdb->query( $delete_postmeta_query );
+				$delete_postmeta_query = "DELETE FROM {$wpdb->commentmeta} WHERE comment_id IN ({$note_ids})";
+				$wpdb->query( $delete_postmeta_query );
+			}
 
 			edd_set_upgrade_complete( 'remove_legacy_order_notes' );
 		}
