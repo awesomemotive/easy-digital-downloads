@@ -52,17 +52,20 @@ class Data_Migrator {
 		) );
 
 		if ( $customer ) {
-			edd_add_customer_address( array(
-				'customer_id' => $customer->id,
-				'type'        => 'primary',
-				'name'        => $customer->name,
-				'address'     => $address['line1'],
-				'address2'    => $address['line2'],
-				'city'        => $address['city'],
-				'region'      => $address['state'],
-				'postal_code' => $address['zip'],
-				'country'     => $address['country'],
-			) );
+			edd_add_customer_address(
+				array(
+					'customer_id'  => $customer->id,
+					'type'         => 'primary',
+					'name'         => $customer->name,
+					'address'      => $address['line1'],
+					'address2'     => $address['line2'],
+					'city'         => $address['city'],
+					'region'       => $address['state'],
+					'postal_code'  => $address['zip'],
+					'country'      => $address['country'],
+					'date_created' => $customer->date_created,
+				)
+			);
 		}
 	}
 
@@ -80,12 +83,18 @@ class Data_Migrator {
 			return;
 		}
 
-		$customer_id = absint( $data->edd_customer_id );
+		$customer = edd_get_customer_by( 'user_id', absint( $data->edd_customer_id ) );
+		if ( ! $customer ) {
+			return;
+		}
 
-		edd_add_customer_email_address( array(
-			'customer_id' => $customer_id,
-			'email'       => $data->meta_value,
-		) );
+		edd_add_customer_email_address(
+			array(
+				'customer_id'  => $customer->id,
+				'email'        => $data->meta_value,
+				'date_created' => $customer->date_created,
+			)
+		);
 	}
 
 	/**
