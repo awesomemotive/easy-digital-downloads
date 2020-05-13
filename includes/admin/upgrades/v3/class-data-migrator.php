@@ -565,7 +565,6 @@ class Data_Migrator {
 			'state'   => '',
 		) );
 
-		$address_created    = ! empty( $date_completed ) ? $date_completed : $date_created_gmt;
 		$order_address_data = array(
 			'order_id'     => $order_id,
 			'name'         => trim( $user_info['first_name'] . ' ' . $user_info['last_name'] ),
@@ -575,7 +574,7 @@ class Data_Migrator {
 			'region'       => isset( $user_info['address']['state'] )   ? $user_info['address']['state']   : '',
 			'country'      => isset( $user_info['address']['country'] ) ? $user_info['address']['country'] : '',
 			'postal_code'  => isset( $user_info['address']['zip'] )     ? $user_info['address']['zip']     : '',
-			'date_created' => $address_created,
+			'date_created' => $date_created_gmt,
 		);
 
 		// Remove empty data.
@@ -593,7 +592,7 @@ class Data_Migrator {
 		unset( $customer_address_data['last_name'] );
 
 		// If possible, set the order date as the address creation date.
-		$customer_address_data['date_created'] = $address_created;
+		$customer_address_data['date_created'] = $date_created_gmt;
 
 		// Maybe add address to customer record.
 		edd_maybe_add_customer_address( $customer_id, $customer_address_data );
@@ -604,7 +603,7 @@ class Data_Migrator {
 			edd_add_customer_email_address(
 				array(
 					'customer_id'  => $customer_id,
-					'date_created' => $address_created,
+					'date_created' => $date_created_gmt,
 					'email'        => $purchase_email,
 					'type'         => $type,
 				)
