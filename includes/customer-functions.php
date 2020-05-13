@@ -623,6 +623,13 @@ function edd_maybe_add_customer_address( $customer_id = 0, $data = array() ) {
 		return false;
 	}
 
+	// Temporarily remove the name so we can see if the address is empty.
+	$name = $data['name'];
+	unset( $data['name'] );
+	if ( empty( $data ) ) {
+		return;
+	}
+	$data['name']        = $name;
 	$data['customer_id'] = $customer_id;
 
 	$c = edd_count_customer_addresses( $data );
