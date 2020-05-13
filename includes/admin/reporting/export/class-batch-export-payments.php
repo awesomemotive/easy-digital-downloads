@@ -109,8 +109,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			);
 		}
 
-
-		if ( 'any' === $args['status'] ) {
+		if ( 'all' === $args['status'] ) {
 			unset( $args['status'] );
 		}
 
