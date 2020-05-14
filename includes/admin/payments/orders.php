@@ -33,6 +33,21 @@ function edd_order_details_publish( $order ) {
 		<div class="edit-post-header">
 
 			<div class="edit-post-header__settings">
+				<?php if ( edd_is_add_order_page() ) : ?>
+					<div class="edd-send-purchase-receipt">
+						<div class="edd-form-group">
+							<div class="edd-form-group__control">
+								<input type="checkbox" name="edd_order_send_receipt" id="edd-order-send-receipt" class="edd-form-group__input" value="1" checked />
+
+								<label for="edd-order-send-receipt">
+								<?php esc_html_e( 'Send Purchase Receipt', 'easy-digital-downloads' ); ?>
+								</label>
+								<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Checking this box will email the purchase receipt to the selected customer.', 'easy-digital-downloads' ); ?>"></span>
+							</div>
+						</div>
+					</div>
+				<?php endif; ?>
+
 				<div id="publishing-action">
 					<span class="spinner"></span>
 					<input
@@ -275,7 +290,9 @@ function edd_order_details_customer( $order ) {
 	<?php
 
 	// The edd_payment_personal_details_list hook is left here for backwards compatibility
-	do_action( 'edd_payment_personal_details_list', $user_info );
+	if ( ! edd_is_add_order_page() && $payment instanceof EDD_Payment ) {
+		do_action( 'edd_payment_personal_details_list', $payment->get_meta(), $user_info );
+	}
 	do_action( 'edd_payment_view_details',          $order->id );
 }
 
@@ -422,8 +439,7 @@ function edd_order_details_addresses( $order ) {
 
 			<div class="edd-form-group">
 				<label for="edd_order_address_country" class="edd-form-group__label"><?php echo esc_html_x( 'Country:', 'Address country', 'easy-digital-downloads' ); ?></label>
-				<div class="edd-form-group__control">
-					<!-- <div id="edd-order-address-country-wrap"> -->
+				<div class="edd-form-group__control" id="edd-order-address-country-wrap">
 					<?php
 					echo EDD()->html->select(
 						array(
@@ -444,14 +460,12 @@ function edd_order_details_addresses( $order ) {
 						)
 					); // WPCS: XSS ok.
 					?>
-				<!-- </div> -->
 				</div>
 			</div>
 
 			<div class="edd-form-group">
 				<label for="edd_order_address_region" class="edd-form-group__label"><?php echo esc_html_x( 'Region:', 'Region of address', 'easy-digital-downloads' ); ?></label>
-				<!-- <div id="edd-order-address-state-wrap"> -->
-				<div class="edd-form-group__control">
+				<div class="edd-form-group__control" id="edd-order-address-state-wrap">
 					<?php
 					$states = edd_get_shop_states( $address->country );
 					if ( ! empty( $states ) ) {
@@ -479,7 +493,6 @@ function edd_order_details_addresses( $order ) {
 					}
 					?>
 				</div>
-				<!-- </div> -->
 			</div>
 
 			<input type="hidden" name="edd_order_address[address_id]" value="<?php echo esc_attr( $address->id ); ?>" />
@@ -563,6 +576,7 @@ function edd_order_details_logs( $order ) {
 function edd_order_details_overview( $order ) {
 	$_items       = array();
 	$_adjustments = array();
+	$_refunds     = array();
 
 	if ( true !== edd_is_add_order_page() ) {
 		$items = edd_get_order_items( array(
@@ -654,6 +668,19 @@ function edd_order_details_overview( $order ) {
 				'uuid'         => esc_html( $adjustment->uuid ),
 			);
 		}
+
+		$refunds = edd_get_order_refunds( $order->id );
+
+		foreach ( $refunds as $refund ) {
+			$_refunds[] = array(
+				'id'              => esc_html( $refund->id ),
+				'number'          => esc_html( $refund->order_number ),
+				'total'           => esc_html( $refund->total ),
+				'dateCreated'     => esc_html( $refund->date_created ),
+				'dateCreatedi18n' => esc_html( edd_date_i18n( $refund->date_created ) ),
+				'uuid'            => esc_html( $refund->uuid ),
+			);
+		}
 	}
 
 	wp_localize_script(
@@ -662,6 +689,7 @@ function edd_order_details_overview( $order ) {
 		array(
 			'items'        => $_items,
 			'adjustments'  => $_adjustments,
+			'refunds'      => $_refunds,
 			'isAdding'     => true === edd_is_add_order_page(),
 			'hasQuantity'  => true === edd_item_quantities_enabled(),
 			'hasTax'       => true === edd_use_taxes()
@@ -687,6 +715,7 @@ function edd_order_details_overview( $order ) {
 		'item',
 		'adjustment',
 		'adjustment-discount',
+		'refund',
 		'no-items',
 		'copy-download-link',
 		'form-add-order-item',
@@ -715,8 +744,7 @@ function edd_order_details_overview( $order ) {
 		</thead>
 	</table>
 
-	<div id="edd-order-overview-actions" class="edd-order-overview-actions inside">
-	</div>
+	<div id="edd-order-overview-actions" class="edd-order-overview-actions inside"></div>
 </div>
 
 <?php
@@ -857,7 +885,7 @@ function edd_order_details_extras( $order = false ) {
 				<?php endif; ?>
 
 				<?php if ( edd_is_add_order_page() ) : ?>
-					<div class="edd-order-tx-id edd-admin-box-inside">
+					<div class="edd-order-tx-id edd-admin-box-inside edd-admin-box-inside--row">
 						<div class="edd-form-group">
 							<label for="edd_transaction_id" class="edd-form-group__label"><?php esc_html_e( 'Transaction ID', 'easy-digital-downloads' ); ?></label>
 							<div class="edd-form-group__control">
@@ -874,25 +902,10 @@ function edd_order_details_extras( $order = false ) {
 
 							<label for="edd_unlimited_downloads">
 							<?php esc_html_e( 'Unlimited Downloads', 'easy-digital-downloads' ); ?></label>
-							<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Unlimited Downloads</strong>: checking this box will override all other file download limits for this purchase, granting the customer unliimited downloads of all files included on the purchase.', 'easy-digital-downloads' ); ?>"></span>
+							<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Checking this box will override all other file download limits for this purchase, granting the customer unlimited downloads of all files included on the purchase.', 'easy-digital-downloads' ); ?>"></span>
 						</div>
 					</div>
 				</div>
-
-				<?php if ( edd_is_add_order_page() ) : ?>
-					<div class="edd-send-purchase-receipt edd-admin-box-inside">
-						<div class="edd-form-group">
-							<div class="edd-form-group__control">
-								<input type="checkbox" name="edd_order_send_receipt" id="edd-order-send-receipt" class="edd-form-group__input" value="1" />
-
-								<label for="edd-order-send-receipt">
-								<?php esc_html_e( 'Send Receipt', 'easy-digital-downloads' ); ?>
-								</label>
-								<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Send Receipt</strong>: checking this box will send the purchase receipt to the selected customer.', 'easy-digital-downloads' ); ?>"></span>
-							</div>
-						</div>
-					</div>
-				<?php endif; ?>
 
 				<?php do_action( 'edd_view_order_details_payment_meta_after', $order->id ); ?>
 			</div>
@@ -1056,47 +1069,6 @@ function edd_order_details_attributes( $order ) {
 	</div>
 
 <?php
-}
-
-/**
- * Output the order details refunds box
- *
- * @since 3.0
- *
- * @param object $order
- */
-function edd_order_details_refunds( $order ) {
-	$refunds_db = new \EDD\Database\Queries\Order();
-
-	$refunds = $refunds_db->query( array( 'type' => 'refund', 'parent' => $order->id ) );
-	if ( empty( $refunds ) ) {
-		return;
-	}
-	?>
-
-	<div id="edd-order-refunds" class="postbox edd-order-data">
-		<h3 class="hndle"><span><?php esc_html_e( 'Related Refunds', 'easy-digital-downloads' ); ?></span></h3>
-
-		<div class="inside">
-			<?php do_action( 'edd_view_order_details_refunds_before', $order->id ); ?>
-			<ul id="edd-order-refunds-list">
-			<?php foreach( $refunds as $refund ) : ?>
-				<?php $order_url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $refund->id ); ?>
-				<li>
-					<span class="howto"><?php echo date_i18n( get_option( 'date_format' ), strtotime( $refund->completed_date ) ); ?></span>
-					<a href="<?php echo esc_url( $order_url ); ?>">
-						<?php echo '#' . $refund->number ?>
-					</a>&nbsp;&ndash;&nbsp;
-					<span><?php echo edd_currency_filter( edd_format_amount( $refund->total ) ); ?>&nbsp;&ndash;&nbsp;</span>
-					<span><?php echo edd_get_status_label( $refund->status ); ?></span>
-				</li>
-			<?php endforeach; ?>
-			</ul>
-			<?php do_action( 'edd_view_order_details_refunds_after', $order->id ); ?>
-		</div>
-	</div>
-
-	<?php
 }
 
 /**

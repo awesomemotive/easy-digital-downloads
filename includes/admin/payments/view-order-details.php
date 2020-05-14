@@ -35,9 +35,13 @@ if ( empty( $order ) ) {
 	<?php edd_order_details_publish( $order ); ?>
 
 	<div class="wrap edd-wrap edd-clearfix">
-		<h1><?php printf( __( 'Edit Order: %s', 'easy-digital-downloads' ), $order->number ); ?></h1>
+		<h1><?php printf( __( 'Order: %s', 'easy-digital-downloads' ), $order->number ); ?></h1>
 
 		<hr class="wp-header-end">
+
+		<div class="notice notice-error inline" id="edd-add-order-customer-error" style="display: none;">
+			<p><strong><?php esc_html_e( 'Error', 'easy-digital-downloads' ); ?>:</strong> <?php esc_html_e( 'Please select an existing customer or create a new customer.', 'easy-digital-downloads' ); ?></p>
+		</div>
 
 		<?php if ( 'refund' === $order->type ) : ?>
 			<div class="notice notice-info">
@@ -92,9 +96,6 @@ if ( empty( $order ) ) {
 
 							// Attributes
 							edd_order_details_attributes( $order );
-
-							// Related Refunds
-							edd_order_details_refunds( $order );
 
 							// Extras
 							edd_order_details_extras( $order );

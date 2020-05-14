@@ -1,9 +1,10 @@
 /**
  * Internal dependencies
  */
-import { Currency } from '@easy-digital-downloads/currency';
+import { Currency, NumberFormat } from '@easy-digital-downloads/currency';
 
 const currency = new Currency();
+const number = new NumberFormat();
 
 /**
  * Order totals
@@ -94,9 +95,9 @@ export const Totals = wp.Backbone.View.extend( {
 			total,
 			discount,
 
-			subtotalCurrency: currency.format( subtotal ),
-			taxCurrency: currency.format( tax ),
-			totalCurrency: currency.format( total ),
+			subtotalCurrency: currency.format( number.absint( subtotal ) ),
+			taxCurrency: currency.format( number.absint( tax ) ),
+			totalCurrency: currency.format( number.absint( total ) ),
 		};
 	},
 
@@ -120,7 +121,9 @@ export const Totals = wp.Backbone.View.extend( {
 	 *
 	 * @since 3.0
 	 */
-	onUpdateAmounts() {
+	onUpdateAmounts( e ) {
+		e.preventDefault();
+
 		const { state } = this.options;
 
 		state.get( 'items' )

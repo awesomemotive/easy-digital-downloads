@@ -13,7 +13,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Check order can be refunded and is within the refund window.
+ * Check order can be refunded.
  *
  * @since 3.0
  *
@@ -49,6 +49,41 @@ function edd_is_order_refundable( $order_id = 0 ) {
 		return false;
 	}
 
+	// Allow overrides.
+	if ( true === edd_is_order_refundable_by_override( $order->id ) ) {
+		return true;
+	}
+
+	// Outside of Refund window.
+	if ( true === edd_is_order_refund_window_passed( $order->id ) ) {
+		return false;
+	}
+
+	// If we have reached here, every other check holds so the order is refundable.
+	return true;
+}
+
+/**
+ * Check order is passed its refund window.
+ *
+ * @since 3.0
+ *
+ * @param int $order_id Order ID.
+ * @return bool True if in window, false otherwise.
+ */
+function edd_is_order_refund_window_passed( $order_id = 0 ) {
+	// Bail if no order ID was passed.
+	if ( empty( $order_id ) ) {
+		return false;
+	}
+
+	$order = edd_get_order( $order_id );
+
+	// Bail if order was not found.
+	if ( ! $order ) {
+		return false;
+	}
+
 	// Refund dates may not have been set retroactively so we need to calculate it manually.
 	if ( empty( $order->date_refundable ) ) {
 		$refund_window = absint( edd_get_option( 'refund_window', 30 ) );
@@ -65,13 +100,7 @@ function edd_is_order_refundable( $order_id = 0 ) {
 		$date_refundable = \Carbon\Carbon::parse( $order->date_refundable, 'UTC' )->setTimezone( edd_get_timezone_id() );
 	}
 
-	// Bail if we have passed the refund date.
-	if ( $date_refundable->isPast() ) {
-		return false;
-	}
-
-	// If we have reached here, every other check holds so the order is refundable.
-	return true;
+	return true === $date_refundable->isPast();
 }
 
 /**
@@ -160,11 +189,8 @@ function edd_refund_order( $order_id = 0, $order_items = array() ) {
 	if ( ! $order ) {
 		return false;
 	}
-
-	if (
-		false === edd_is_order_refundable( $order_id ) &&
-		false === edd_is_order_refundable_by_override( $order->id )
-	) {
+	
+	if ( false === edd_is_order_refundable( $order_id ) ) {
 		return false;
 	}
 
@@ -516,6 +542,25 @@ function edd_refund_order_item( $order_item_id = 0 ) {
 	}
 
 	return $new_order_id;
+}
+
+/**
+ * Queries for order refunds.
+ *
+ * @see \EDD\Database\Queries\Order::__construct()
+ *
+ * @since 3.0
+ *
+ * @param int $order_id Parent Order.
+ * @return \EDD\Orders\Order[] Array of `Order` objects.
+ */
+function edd_get_order_refunds( $order_id = 0 ) {
+	$order_refunds = new \EDD\Database\Queries\Order();
+
+	return $order_refunds->query( array(
+		'type'   => 'refund',
+		'parent' => $order_id,
+	) );
 }
 
 /**

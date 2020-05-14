@@ -1,10 +1,6 @@
 /* Chosen styles
 -------------------------------------------------------------- */
 
-.chosen-container.chosen-container-multi {
-	width: 100% !important;
-}
-
 .chosen-container {
 	font-size: 14px;
 }
@@ -250,7 +246,7 @@
 }
 
 .edd-select-chosen {
-	width: 100%;
+	width: 100% !important;
 	max-width: 300px;
 }
 
