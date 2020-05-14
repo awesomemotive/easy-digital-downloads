@@ -1359,7 +1359,7 @@ function edd_upgrade_render_v30_migration() {
 	}
 
 	$email_addresses = $wpdb->get_results( "SELECT meta_key FROM {$wpdb->edd_customermeta} WHERE meta_key = 'additional_email' LIMIT 1" );
-	$customer_email_addresses_complete = edd_has_upgrade_completed( 'migrate_customer_addresses' );
+	$customer_email_addresses_complete = edd_has_upgrade_completed( 'migrate_customer_email_addresses' );
 
 	if ( empty( $email_addresses ) ) {
 		edd_set_upgrade_complete( 'migrate_customer_email_addresses' );
