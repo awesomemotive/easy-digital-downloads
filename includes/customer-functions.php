@@ -626,6 +626,7 @@ function edd_maybe_add_customer_address( $customer_id = 0, $data = array() ) {
 	// Temporarily remove the name so we can see if the address is empty.
 	$name = $data['name'];
 	unset( $data['name'] );
+	$data = array_filter( $data );
 	if ( empty( $data ) ) {
 		return false;
 	}
