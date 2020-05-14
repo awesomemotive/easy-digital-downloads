@@ -175,7 +175,7 @@ function edd_get_customer( $customer_id = 0 ) {
  */
 function edd_get_customer_by( $field = '', $value = '' ) {
 	// For backwards compatibility in filters only.
-	$customers_db = new EDD_DB_Customers();
+	$customers_db = EDD()->customers;
 
 	/**
 	 * Filters the Customer before querying the database.
@@ -184,10 +184,10 @@ function edd_get_customer_by( $field = '', $value = '' ) {
 	 *
 	 * @since 2.9.23
 	 *
-	 * @param mixed|null       $customer         Customer to return instead. Default null to use default method.
-	 * @param string           $field            The field to retrieve by.
-	 * @param mixed            $value            The value to search by.
-	 * @param EDD_DB_Customers $edd_customers_db Customer database class.
+	 * @param mixed|null          $customer         Customer to return instead. Default null to use default method.
+	 * @param string              $field            The field to retrieve by.
+	 * @param mixed               $value            The value to search by.
+	 * @param EDD\Compat\Customer $edd_customers_db Customer database class. Deprecated in 3.0.
 	 */
 	$found = apply_filters( 'edd_pre_get_customer', null, $field, $value, $customers_db );
 
@@ -203,9 +203,9 @@ function edd_get_customer_by( $field = '', $value = '' ) {
 	 *
 	 * @since 2.9.23
 	 *
-	 * @param EDD_Customer|false $customer         Customer query result. False if no Customer is found.
-	 * @param array              $args             Arguments used to query the Customer.
-	 * @param EDD_DB_Customers   $edd_customers_db Customer database class.
+	 * @param EDD_Customer|false  $customer         Customer query result. False if no Customer is found.
+	 * @param array               $args             Arguments used to query the Customer.
+	 * @param EDD\Compat\Customer $edd_customers_db Customer database class. Deprecated in 3.0.
 	 */
 	$customer = apply_filters( "edd_get_customer_by_{$field}", $customer, $customers->query_vars, $customers_db );
 
