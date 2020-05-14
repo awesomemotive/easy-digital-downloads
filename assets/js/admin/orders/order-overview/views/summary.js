@@ -5,6 +5,7 @@
  */
 import { OrderItems } from './order-items.js';
 import { OrderAdjustments } from './order-adjustments.js';
+import { Refunds } from './order-refunds.js';
 import { Totals } from './totals.js';
 
 /**
@@ -34,6 +35,7 @@ export const Summary = wp.Backbone.View.extend( {
 		this.views.add( new OrderItems( this.options ) );
 		this.views.add( new OrderAdjustments( this.options ) );
 		this.views.add( new Totals( this.options ) );
+		this.views.add( new Refunds( this.options ) );
 
 		return this;
 	},

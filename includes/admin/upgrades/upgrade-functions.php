@@ -44,6 +44,12 @@ function edd_do_automatic_upgrades() {
 
 		edd_delete_option( 'show_agree_to_privacy_policy_on_checkout' );
 	}
+
+	// 3.0: deactivate Manual Purchases addon
+	if ( function_exists( 'edd_load_manual_purchases' ) ) {
+		deactivate_plugins( 'edd-manual-purchases/edd-manual-purchases.php' );
+		delete_option( 'edd_manual_purchases_license_active' );
+	}
 }
 add_action( 'admin_init', 'edd_do_automatic_upgrades' );
 

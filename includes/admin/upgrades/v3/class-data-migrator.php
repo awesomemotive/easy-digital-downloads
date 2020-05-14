@@ -76,7 +76,7 @@ class Data_Migrator {
 	public static function customer_email_addresses( $data = null ) {
 
 		// Bail if no data passed.
-		if ( ! $data ) {
+		if ( ! isset( $data->edd_customer_id ) || ! isset( $data->meta_value ) ) {
 			return;
 		}
 
@@ -240,6 +240,10 @@ class Data_Migrator {
 				'_edd_log_time'       => '',
 			) );
 
+			if ( empty( $post_meta['_edd_log_token'] ) ) {
+				$post_meta['_edd_log_token'] = 'public' === $post_meta['_edd_log_key'] ? 'public' : '';
+			}
+
 			$log_data = array(
 				'ip'            => $post_meta['_edd_log_request_ip'],
 				'user_id'       => $post_meta['_edd_log_user'],
@@ -331,7 +335,7 @@ class Data_Migrator {
 		$meta = get_post_custom( $data->ID );
 
 		$payment_meta = maybe_unserialize( $meta['_edd_payment_meta'][0] );
-		$user_info    = maybe_unserialize( $payment_meta['user_info'] );
+		$user_info    = isset( $payment_meta['user_info'] ) ? maybe_unserialize( $payment_meta['user_info'] ) : array();
 
 		// Some old EDD data has the user info serialized, but starting with something other than a: so it can't be unserialized
 		$user_info = self::fix_possible_serialization( $user_info );
@@ -406,6 +410,19 @@ class Data_Migrator {
 				$discount += (float) isset( $cart_item['discount'] ) ? $cart_item['discount'] : 0;
 				$total    += (float) isset( $cart_item['price'] )    ? $cart_item['price']    : 0;
 			}
+
+		} else {
+
+			// As a backup, we can get some information from other meta keys.
+			if ( isset( $meta['_edd_payment_total'][0] ) ) {
+				$total = (float) $meta['_edd_payment_total'][0];
+			}
+
+			if ( isset( $meta['_edd_payment_tax'][0] ) ) {
+				$tax = (float) $meta['_edd_payment_tax'][0];
+			}
+
+			$subtotal = $total - $tax;
 
 		}
 
@@ -568,7 +585,7 @@ class Data_Migrator {
 		edd_maybe_add_customer_address( $customer_id, $customer_address_data );
 
 		// Maybe add email address to customer record
-		if ( ! empty( $customer ) && $customer instanceof EDD_Customer ) {
+		if ( ! empty( $customer ) && $customer instanceof \EDD_Customer ) {
 			$primary = ( $customer->email === $purchase_email );
 			$customer->add_email( $purchase_email, $primary );
 		}
@@ -611,11 +628,13 @@ class Data_Migrator {
 		);
 
 		// Remove all the core payment meta from the array, and...
-		$remaining_payment_meta = array_diff_key( $meta['_edd_payment_meta'], array_flip( $core_meta_keys ) );
+		if ( is_array( $payment_meta ) ) {
+			$remaining_payment_meta = array_diff_key( $payment_meta, array_flip( $core_meta_keys ) );
 
-		// ..If we have extra payment meta, it needs to be migrated across.
-		if ( 0 < count( $remaining_payment_meta ) ) {
-			edd_add_order_meta( $order_id, 'payment_meta', $remaining_payment_meta );
+			// ..If we have extra payment meta, it needs to be migrated across.
+			if ( 0 < count( $remaining_payment_meta ) ) {
+				edd_add_order_meta( $order_id, 'payment_meta', $remaining_payment_meta );
+			}
 		}
 
 		/** Create order items ***************************************/

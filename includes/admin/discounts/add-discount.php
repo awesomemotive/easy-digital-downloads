@@ -91,6 +91,7 @@ $minutes      = edd_get_minute_values();
 							'selected'    => array(),
 							'multiple'    => true,
 							'chosen'      => true,
+							'variations'  => true,
 							'placeholder' => sprintf( esc_html__( 'Select %s', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) ),
 						) ); // WPCS: XSS ok. ?>
 						<div id="edd-discount-product-conditions" style="display:none;">
@@ -128,6 +129,7 @@ $minutes      = edd_get_minute_values();
 							'selected'    => array(),
 							'multiple'    => true,
 							'chosen'      => true,
+							'variations'  => true,
 							'placeholder' => sprintf( esc_html__( 'Select %s', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) ),
 						) ); // WPCS: XSS ok. ?>
 						<p class="description"><?php printf( esc_html__( '%s this discount cannot be applied to. Leave blank for none.', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) ); ?></p>

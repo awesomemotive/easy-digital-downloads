@@ -792,14 +792,26 @@ function edd_get_customer_address_counts( $args = array() ) {
  */
 function edd_add_customer_email_address( $data ) {
 
-	// A customer ID must be supplied for every address inserted.
-	if ( empty( $data['customer_id'] ) ) {
+	// A customer ID and email must be supplied for every address inserted.
+	if ( empty( $data['customer_id'] ) || empty( $data['email'] ) ) {
 		return false;
 	}
 
 	// Instantiate a query object.
 	$customer_email_addresses = new EDD\Database\Queries\Customer_Email_Address();
 
+	// Check if the address already exists for this customer.
+	$existing_addresses = $customer_email_addresses->query(
+		array(
+			'customer_id' => $data['customer_id'],
+			'email'       => $data['email'],
+		)
+	);
+	if ( ! empty( $existing_addresses ) ) {
+		return false;
+	}
+
+	// Add the email address to the customer.
 	return $customer_email_addresses->add_item( $data );
 }
 

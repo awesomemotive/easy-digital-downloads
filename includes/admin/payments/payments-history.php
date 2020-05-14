@@ -124,15 +124,21 @@ function edd_payment_history_page() {
 	// What are we viewing?
 	switch ( edd_get_payment_view() ) {
 
-		// Edit
+		// View Order
 		case 'view-order-details' :
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/view-order-details.php';
 			break;
 
-		// Add
+		// Add Order
 		case 'add-order' :
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/add-order.php';
 			edd_add_order_page_content();
+			break;
+
+		// View Refund
+		case 'view-refund-details' :
+			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/view-refund.php';
+			edd_view_refund_page_content();
 			break;
 
 		// List Table
