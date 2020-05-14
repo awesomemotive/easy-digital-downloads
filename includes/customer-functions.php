@@ -627,7 +627,7 @@ function edd_maybe_add_customer_address( $customer_id = 0, $data = array() ) {
 	$name = $data['name'];
 	unset( $data['name'] );
 	if ( empty( $data ) ) {
-		return;
+		return false;
 	}
 	$data['name']        = $name;
 	$data['customer_id'] = $customer_id;
