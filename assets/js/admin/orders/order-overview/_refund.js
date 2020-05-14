@@ -29,8 +29,10 @@ $(document.body).on('click', '.edd-refund-order', function (e) {
 					$(this).html( modal_content );
 				},
 				close: function( event, ui ) {
-					$(this).html( '' );
-					location.reload();
+					$( this ).html( '' );
+					if ( $( this ).hasClass( 'can-refund' ) ) {
+						location.reload();
+					}
 				}
 			});
 			return false;
@@ -91,9 +93,11 @@ $(document.body).on( 'change', '#edd-refund-order-dialog tbody .check-column inp
 	$('#edd-refund-submit-total-amount').data('refund-total', new_total ).text( new_total );
 
 	if ( can_refund ) {
-		$('#edd-submit-refund-submit').removeClass('disabled');
+		$( '#edd-submit-refund-submit' ).removeClass( 'disabled' );
+		$( '#edd-refund-order-dialog' ).addClass( 'can-refund' );
 	} else {
-		$('#edd-submit-refund-submit').addClass('disabled');
+		$( '#edd-submit-refund-submit' ).addClass( 'disabled' );
+		$( '#edd-refund-order-dialog' ).removeClass( 'can-refund' );
 	}
 
 	// Remove the readonly.
