@@ -60,7 +60,8 @@ $(document.body).on( 'change', '#edd-refund-order-dialog tbody .check-column inp
 
 	let new_subtotal = 0,
 		new_tax      = 0,
-		new_total    = 0;
+		new_total    = 0,
+		can_refund   = false;
 
 	// Set a readonly while we recalculate, to avoid race conditions in the browser.
 	all_checkboxes.prop('readonly', true);
@@ -78,6 +79,7 @@ $(document.body).on( 'change', '#edd-refund-order-dialog tbody .check-column inp
 		new_subtotal += item_amount;
 		new_tax      += item_tax;
 		new_total    += item_total;
+		can_refund    = true;
 	});
 
 	new_subtotal = parseFloat(new_subtotal).toFixed( edd_vars.currency_decimals );
@@ -88,7 +90,7 @@ $(document.body).on( 'change', '#edd-refund-order-dialog tbody .check-column inp
 	$('#edd-refund-submit-tax-amount').data('refund-tax', new_tax ).text( new_tax );
 	$('#edd-refund-submit-total-amount').data('refund-total', new_total ).text( new_total );
 
-	if ( new_total > 0 ) {
+	if ( can_refund ) {
 		$('#edd-submit-refund-submit').removeClass('disabled');
 	} else {
 		$('#edd-submit-refund-submit').addClass('disabled');
