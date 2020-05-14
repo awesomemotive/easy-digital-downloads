@@ -134,10 +134,13 @@ class EDD_Customer_Addresses_Table extends List_Table {
 			'view' => '<a href="' . esc_url( $customer_url ) . '">' . __( 'View', 'easy-digital-downloads' ) . '</a>'
 		);
 
-		// Non-primary email actions
-		if ( 'primary' !== $item_status ) {
-			$actions['delete'] = '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
-		}
+		$delete_url = wp_nonce_url( edd_get_admin_url( array(
+			'page'       => 'edd-customers',
+			'view'       => 'overview',
+			'id'         => urlencode( $item['id'] ),
+			'edd_action' => 'customer-remove-address'
+		) ), 'edd-remove-customer-address' );
+		$actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 
 		// State
 		if ( ( ! empty( $status ) && ( $status !== $item_status ) ) || ( $item_status !== 'active' ) ) {
