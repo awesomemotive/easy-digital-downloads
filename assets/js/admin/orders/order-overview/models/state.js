@@ -1,6 +1,11 @@
 /* global Backbone, _ */
 
 /**
+ * Internal dependencies
+ */
+import { Currency, NumberFormat } from '@easy-digital-downloads/currency';
+
+/**
  * State
  *
  * Leverages `Backbone.Model` and subsequently `Backbone.Events`
@@ -25,6 +30,10 @@ export const State = Backbone.Model.extend(
 			hasTax: false,
 			items: [],
 			adjustments: [],
+			formatters: {
+				currency: new Currency(),
+				number: new NumberFormat(),
+			},
 		},
 
 		/**
