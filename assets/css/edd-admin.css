@@ -1941,6 +1941,10 @@ input[class*="edd-price-field"] {
 #edd-refund-order-dialog .edd-refund-submit-line-total td:first-child {
 	text-align: right;
 }
+#edd-refund-order-dialog .edd-order-item__label {
+	font-weight: 600;
+	vertical-align: baseline;
+}
 #edd_general_logs p {
 	margin: 0;
 	padding: 0;

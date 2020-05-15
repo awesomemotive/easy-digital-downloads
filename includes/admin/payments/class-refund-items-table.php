@@ -200,7 +200,7 @@ class Refund_Items_Table extends List_Table {
 	 */
 	public function column_name( $order_item ) {
 		// Wrap order_item title in strong anchor
-		$order_item_title = '<strong>' . $order_item->get_order_item_name() . '</strong>';
+		$order_item_title = '<label for="edd-order-item-' . esc_attr( $order_item->id ) . '" class="edd-order-item__label">' . $order_item->get_order_item_name() . '</label>';
 
 		return $order_item_title;
 	}
@@ -217,7 +217,7 @@ class Refund_Items_Table extends List_Table {
 	public function column_cb( $order_item ) {
 		if ( 'refunded' !== $order_item->status ) {
 			return sprintf(
-				'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+				'<input type="checkbox" name="%1$s[]" value="%2$s" id="edd-order-item-%2$s" />',
 				/*$1%s*/
 				'order_item',
 				/*$2%s*/
