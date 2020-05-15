@@ -30,6 +30,7 @@ export const State = Backbone.Model.extend(
 			hasTax: false,
 			items: [],
 			adjustments: [],
+			refunds: [],
 			formatters: {
 				currency: new Currency(),
 				number: new NumberFormat(),
