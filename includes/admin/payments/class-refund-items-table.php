@@ -349,8 +349,6 @@ class Refund_Items_Table extends List_Table {
 	public function display() {
 		$singular = $this->_args['singular'];
 
-		$this->display_tablenav( 'top' );
-
 		$this->screen->render_screen_reader_content( 'heading_list' );
 		?>
 		<table class="wp-list-table <?php echo implode( ' ', $this->get_table_classes() ); ?>">
@@ -369,7 +367,6 @@ class Refund_Items_Table extends List_Table {
 
 		</table>
 		<?php
-		$this->display_tablenav( 'bottom' );
 	}
 
 	public function display_rows() {
