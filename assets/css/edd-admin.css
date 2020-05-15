@@ -1942,6 +1942,7 @@ input[class*="edd-price-field"] {
 	text-align: right;
 }
 #edd-refund-order-dialog .edd-order-item__label {
+	font-size: 14px;
 	font-weight: 600;
 	vertical-align: baseline;
 }
