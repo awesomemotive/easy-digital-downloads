@@ -59,6 +59,7 @@ function edd_get_dashboard_sales_widget_data() {
 		if ( 'total' === $range ) {
 			unset( $args['range'] );
 		}
+		remove_all_filters( 'edd_report_views' );
 		$stats          = new EDD\Stats( $args );
 		$data[ $range ] = array(
 			'earnings' => $stats->get_order_earnings(),
