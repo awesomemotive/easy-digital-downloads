@@ -60,7 +60,7 @@ $is_override    = edd_is_order_refundable_by_override( $order->id );
 				disabled
 			<?php endif; ?>
 		>
-			<?php esc_html_e( 'Issue Refund', 'easy-digital-downloads' ); ?>
+			<?php esc_html_e( 'Initialize Refund', 'easy-digital-downloads' ); ?>
 		</button>
 	</div>
 	<?php endif; ?>
