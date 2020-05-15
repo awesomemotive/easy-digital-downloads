@@ -94,6 +94,7 @@ class EDD_Payments_Query extends EDD_Stats {
 			'download'        => null,
 			'gateway'         => null,
 			'post__in'        => null,
+			'post__not_in'    => null,
 			'compare'         => null,
 			'country'         => null,
 			'region'          => null,
@@ -690,6 +691,10 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		if ( ! is_null( $this->args['post__in'] ) ) {
 			$arguments['id__in'] = $this->args['post__in'];
+		}
+
+		if ( ! is_null( $this->args['post__not_in'] ) ) {
+			$arguments['id__in'] = $this->args['post__not_in'];
 		}
 
 		if ( ! empty( $this->args['mode'] ) && 'all' !== $this->args['mode'] ) {
