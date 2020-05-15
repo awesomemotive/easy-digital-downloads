@@ -97,6 +97,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			'status'  => $this->status,
 			'order'   => 'ASC',
 			'orderby' => 'date',
+			'type'    => 'sale',
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
