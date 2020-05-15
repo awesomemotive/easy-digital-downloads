@@ -1845,7 +1845,8 @@ function edd_upgrade_render_v30_migration() {
 						<?php if ( ! $migration_complete ) : ?>
 							<p>
 								<input id="remove-legacy-data-confirm" name="remove-legacy-data-confirm" type="checkbox" value="1" />
-								<label for="remove-legacy-data-confirm">Confirm removal of legacy data.</label>
+								<label for="remove-legacy-data-confirm"><?php esc_html_e( 'Confirm removal of legacy data.', 'easy-digital-downloads' ); ?>
+								</label>
 							</p>
 
 							<span class="edd-migration allowed" style="<?php echo ! $migration_complete ? '' : 'display: none'; ?>">
