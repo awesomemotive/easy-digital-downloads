@@ -1937,6 +1937,7 @@ input[class*="edd-price-field"] {
 #edd-refund-order-dialog #edd-refund-submit-subtotal td {
 	border-top: 2px solid #9c9c9c;
 }
+#edd-refund-submit-button-wrapper,
 #edd-refund-order-dialog .edd-refund-submit-line-total td:first-child {
 	text-align: right;
 }

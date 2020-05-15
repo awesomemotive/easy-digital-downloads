@@ -367,6 +367,26 @@ class Refund_Items_Table extends List_Table {
 
 		</table>
 		<?php
+		$this->display_tablenav( 'bottom' );
+	}
+
+	/**
+	 * Adds custom submit button below the refund items table.
+	 *
+	 * @param string $which
+	 * @since 3.0
+	 */
+	protected function display_tablenav( $which ) {
+		if ( 'bottom' !== $which ) {
+			return;
+		}
+		echo '<div class="tablenav bottom">';
+		echo '<div id="edd-refund-submit-button-wrapper">';
+		echo '<span class="spinner"></span>';
+		printf( '<button id="edd-submit-refund-submit" class="disabled button-primary">%s</button>', esc_html__( 'Submit Refund', 'easy-digital-downloads' ) );
+		echo '</div>';
+		echo '<br class="clear">';
+		echo '</div>';
 	}
 
 	public function display_rows() {
@@ -453,13 +473,6 @@ class Refund_Items_Table extends List_Table {
 					?><span><?php echo $currency_symbol; ?></span><?php
 				}
 				?>
-			</td>
-		</tr>
-		<tr id="edd-refund-submit-total" class="edd-refund-submit-line-total">
-
-			<td id="edd-refund-submit-button-wrapper" colspan="<?php echo esc_attr( $this->get_column_count() ); ?>">
-				<button id="edd-submit-refund-submit" class="disabled button-primary"><?php esc_html_e( 'Submit Refund', 'easy-digital-downloads' ); ?></button>
-				<span class="spinner"></span>
 			</td>
 		</tr>
 		<?php
