@@ -481,7 +481,6 @@ function edd_ajax_generate_refund_form() {
 		<span class="edd-submit-refund-message"></span>
 		<a class="edd-submit-refund-url" href=""><?php _e( 'View Refund', 'easy-digital-downloads' ); ?></a>
 	</div>
-	<table id="edd-process-refund-form">
 	<?php
 	// Load list table if not already loaded
 	if ( ! class_exists( '\\EDD\\Admin\\Refund_Items_Table' ) ) {
