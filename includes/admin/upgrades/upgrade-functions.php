@@ -1425,14 +1425,14 @@ function edd_upgrade_render_v30_migration() {
 
 	<div id="edd-migration-ready" class="notice notice-success" style="display: none;">
 		<p>
-			<?php echo wp_kses( __( '<strong>Database Upgrade Complete:</strong> All database upgrades have been completed.', 'easy-digital-downloads' ), array( 'strong' => true ) ); ?>
+			<?php echo wp_kses( __( '<strong>Database Upgrade Complete:</strong> All database upgrades have been completed.', 'easy-digital-downloads' ), array( 'strong' => array() ) ); ?>
 			<br /><br />
 			<?php esc_html_e( 'You may now leave this page.', 'easy-digital-downloads' ); ?>
 		</p>
 	</div>
 
 	<div id="edd-migration-nav-warn" class="notice notice-info">
-		<p><?php echo wp_kses( __( '<strong>Important:</strong> Do not navigate away from this page until all upgrades complete.', 'easy-digital-downloads' ), array( 'strong' => true ) ); ?></p>
+		<p><?php echo wp_kses( __( '<strong>Important:</strong> Do not navigate away from this page until all upgrades complete.', 'easy-digital-downloads' ), array( 'strong' => array() ) ); ?></p>
 	</div>
 
 	<style>
@@ -1836,7 +1836,7 @@ function edd_upgrade_render_v30_migration() {
 				</h2>
 				<div class="inside migrate-customer-notes-control">
 					<p>
-						<?php echo wp_kses( __( '<strong>Important:</strong> This removes all legacy data. This action is not reversible. Please back up your database and ensure your store is operational before completing this step.', 'easy-digital-downloads' ), array( 'strong' => true ) ); ?>
+						<?php echo wp_kses( __( '<strong>Important:</strong> This removes all legacy data. This action is not reversible. Please back up your database and ensure your store is operational before completing this step.', 'easy-digital-downloads' ), array( 'strong' => array() ) ); ?>
 					</p>
 					<form method="post" id="edd-remove-legacy-data-form" class="edd-export-form edd-import-export-form">
 					<span class="step-instructions-wrapper">
