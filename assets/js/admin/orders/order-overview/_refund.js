@@ -151,7 +151,7 @@ $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 		refund_tax : refund_tax,
 		refund_total : refund_total,
 		order_id: $('input[name="edd_payment_id"]').val(),
-		nonce: $('#edd-process-refund-form #_wpnonce').val(),
+		nonce: $( '#edd_process_refund' ).val(),
 	};
 
 	$.ajax({

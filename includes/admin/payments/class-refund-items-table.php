@@ -349,7 +349,7 @@ class Refund_Items_Table extends List_Table {
 	public function display() {
 		$singular = $this->_args['singular'];
 
-		wp_nonce_field( 'bulk-' . $this->_args['plural'] );
+		wp_nonce_field( 'edd_process_refund', 'edd_process_refund' );
 		$this->screen->render_screen_reader_content( 'heading_list' );
 		?>
 		<table class="wp-list-table <?php echo implode( ' ', $this->get_table_classes() ); ?>">
