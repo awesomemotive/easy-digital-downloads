@@ -82,7 +82,6 @@ function edd_register_styles() {
 		$url = trailingslashit( edd_get_templates_url() ) . $file;
 	}
 
-	wp_register_style( 'jquery-ui-css', $url, array(), $version );
 	wp_register_style( 'edd-styles', $url, array(), $version, 'all' );
 }
 add_action( 'init', 'edd_register_styles' );
