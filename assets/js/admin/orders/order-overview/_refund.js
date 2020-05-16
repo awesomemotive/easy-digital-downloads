@@ -93,10 +93,10 @@ $(document.body).on( 'change', '#edd-refund-order-dialog tbody .check-column inp
 	$('#edd-refund-submit-total-amount').data('refund-total', new_total ).text( new_total );
 
 	if ( can_refund ) {
-		$( '#edd-submit-refund-submit' ).removeClass( 'disabled' );
+		$( '#edd-submit-refund-submit' ).attr( 'disabled', false );
 		$( '#edd-refund-order-dialog' ).addClass( 'can-refund' );
 	} else {
-		$( '#edd-submit-refund-submit' ).addClass( 'disabled' );
+		$( '#edd-submit-refund-submit' ).attr( 'disabled', true );
 		$( '#edd-refund-order-dialog' ).removeClass( 'can-refund' );
 	}
 
@@ -123,11 +123,8 @@ $(document.body).on('change', '#edd-refund-order-dialog #cb-select-all-1', funct
 // Process the refund form after the button is clicked.
 $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 	e.preventDefault();
-	if ( $( this ).hasClass( 'disabled' ) ) {
-		return;
-	}
 	$('.edd-submit-refund-message').removeClass('success').removeClass('fail');
-	$(this).addClass('disabled');
+	$( this ).attr( 'disabled', false );
 	$('#edd-refund-submit-button-wrapper .spinner').css('visibility', 'visible');
 	$('#edd-submit-refund-status').hide();
 	let item_ids = [],
@@ -175,7 +172,7 @@ $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 				url_target.hide();
 
 				$('#edd-submit-refund-status').show();
-				$('#edd-submit-refund-submit').removeClass('disabled');
+				$( '#edd-submit-refund-submit' ).attr( 'disabled', false );
 				$('#edd-submit-refund-button-wrapper .spinner').css('visibility', 'hidden');
 			}
 		}
@@ -189,7 +186,7 @@ $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 		url_target.hide();
 
 		$('#edd-submit-refund-status').show();
-		$('#edd-submit-refund-submit').removeClass('disabled');
+		$( '#edd-submit-refund-submit' ).attr( 'disabled', false );
 		$('#edd-submit-refund-button-wrapper .spinner').css('visibility', 'hidden');
 		return false;
 	});
