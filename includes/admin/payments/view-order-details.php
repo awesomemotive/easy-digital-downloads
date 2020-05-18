@@ -18,6 +18,11 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.6
  * @since 3.0 Updated to use the new EDD\Orders\Order object.
  */
+
+wp_enqueue_script( 'edd-admin-orders' );
+// Enqueued for backwards compatibility. Empty file.
+wp_enqueue_script( 'edd-admin-payments' );
+
 if ( ! isset( $_GET['id'] ) || ! is_numeric( $_GET['id'] ) ) {
 	wp_die( __( 'Order ID not supplied. Please try again', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ) );
 }
