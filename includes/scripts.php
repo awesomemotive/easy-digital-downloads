@@ -353,7 +353,6 @@ function edd_register_admin_styles() {
 
 	// Register styles
 	wp_register_style( 'jquery-chosen',         $css_dir . 'chosen'               . $css_suffix, array(), $version );
-	wp_register_style( 'jquery-ui-css',         $css_dir . 'jquery-ui-'           . $css_suffix, array(), $version );
 	wp_register_style( 'jquery-ui-fresh',       $css_dir . 'jquery-ui-fresh'      . $css_suffix, array(), $version );
 	wp_register_style( 'edd-admin',             $css_dir . 'edd-admin'            . $css_suffix, array(), $version );
 	wp_register_style( 'edd-admin-menu',        $css_dir . 'edd-admin-menu'       . $css_suffix, array(), $version );
