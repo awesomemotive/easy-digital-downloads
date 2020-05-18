@@ -684,7 +684,6 @@ function edd_order_details_overview( $order ) {
 	}
 
 	wp_localize_script(
-		'edd-admin-orders',
 		'eddAdminOrderOverview',
 		array(
 			'items'        => $_items,
