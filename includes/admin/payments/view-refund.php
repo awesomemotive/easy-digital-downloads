@@ -18,6 +18,11 @@ defined( 'ABSPATH' ) || exit;
  * @since 3.0
  */
 function edd_view_refund_page_content() {
+
+	wp_enqueue_script( 'edd-admin-orders' );
+	// Enqueued for backwards compatibility. Empty file.
+	wp_enqueue_script( 'edd-admin-payments' );
+
 	// @todo Avoid killing page ouput.
 	if ( ! isset( $_GET['id'] ) || ! is_numeric( $_GET['id'] ) ) {
 		wp_die( __( 'Refund ID not supplied. Please try again.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ) );
