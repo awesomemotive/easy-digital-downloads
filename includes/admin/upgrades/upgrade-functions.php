@@ -1560,7 +1560,7 @@ function edd_upgrade_render_v30_migration() {
 							</span>
 						<?php else: ?>
 							<input type="submit" disabled id="migrate-customer-addresses-submit" value="<?php esc_attr_e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
-							&mdash; <?php esc_html_e( 'Legacy data has already been removed, migration is not possible at this time.', 'easy-digital-downloads' ); ?>
+							&mdash; <?php esc_html_e( 'Legacy data has already been removed; migration is not possible at this time.', 'easy-digital-downloads' ); ?>
 						<?php endif; ?>
 
 						<input type="hidden" name="edd-export-class" value="EDD\Admin\Upgrades\v3\Customer_Addresses" />
