@@ -60,7 +60,7 @@ class Customer_Addresses extends Schema {
 			'unsigned'   => false,
 			'default'    => '0',
 			'sortable'   => true,
-			'searchable' => true,
+			'searchable' => false,
 		),
 
 		// type
