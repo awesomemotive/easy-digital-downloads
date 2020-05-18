@@ -2,9 +2,6 @@
  * Internal dependencies
  */
 import { OrderRefund } from './order-refund.js';
-import { Currency } from '@easy-digital-downloads/currency';
-
-const currency = new Currency();
 
 /**
  * Order refunds
