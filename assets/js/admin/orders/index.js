@@ -99,20 +99,22 @@ jQueryReady( () => {
 				}
 			} )
 
-			/**
-			 * Remove Customer notice when a Customer is set.
-			 *
-			 * @since 3.0
-			 *
-			 * @param {Object} event Input event.
-			 */
-			newCustomerEmailEl.addEventListener( 'input', ( event ) => {
-				const val = event.target.value;
+			if ( newCustomerEmailEl ) {
+				/**
+				 * Remove Customer notice when a Customer is set.
+				 *
+				 * @since 3.0
+				 *
+				 * @param {Object} event Input event.
+				 */
+				newCustomerEmailEl.addEventListener( 'input', ( event ) => {
+					const val = event.target.value;
 
-				if ( '' !== val ) {
-					noCustomerErrorEl.style.display = 'none';
-				}
-			} )
+					if ( '' !== val ) {
+						noCustomerErrorEl.style.display = 'none';
+					}
+				} );
+			}
 		} )();
 	}
 
