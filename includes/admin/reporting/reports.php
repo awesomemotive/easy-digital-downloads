@@ -876,8 +876,8 @@ function edd_register_downloads_report( $reports ) {
 								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
 							}
 
-							$sales[ $timestamp ][1]    = $result->sales;
-							$earnings[ $timestamp ][1] = floatval( $result->earnings );
+							$sales[ $timestamp ][1]    += $result->sales;
+							$earnings[ $timestamp ][1] += floatval( $result->earnings );
 						}
 
 						$sales    = array_values( $sales );
@@ -1509,8 +1509,8 @@ function edd_register_payment_gateways_report( $reports ) {
 								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
 							}
 
-							$sales[ $timestamp ][1] = $result->sales;
-							$earnings[ $timestamp ][1] = floatval( $result->earnings );
+							$sales[ $timestamp ][1]    += $result->sales;
+							$earnings[ $timestamp ][1] += floatval( $result->earnings );
 						}
 
 						$sales    = array_values( $sales );
@@ -1957,7 +1957,7 @@ function edd_register_file_downloads_report( $reports ) {
 								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
 							}
 
-							$file_downloads[ $timestamp ][1] = $result->total;
+							$file_downloads[ $timestamp ][1] += $result->total;
 						}
 
 						$file_downloads = array_values( $file_downloads );
@@ -2270,7 +2270,7 @@ function edd_register_discounts_report( $reports ) {
 									$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
 								}
 
-								$discount_usage[ $timestamp ][1] = $result->total;
+								$discount_usage[ $timestamp ][1] += $result->total;
 							}
 
 							$discount_usage = array_values( $discount_usage );
@@ -2514,7 +2514,7 @@ function edd_register_customer_report( $reports ) {
 								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
 							}
 
-							$customers[ $timestamp ][1] = $result->total;
+							$customers[ $timestamp ][1] += $result->total;
 						}
 
 						$customers = array_values( $customers );
