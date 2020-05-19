@@ -96,6 +96,7 @@ add_action( 'init', 'edd_register_styles' );
  */
 function edd_load_scripts() {
 	edd_enqueue_scripts();
+	edd_localize_scripts();
 }
 add_action( 'wp_enqueue_scripts', 'edd_load_scripts' );
 
@@ -204,7 +205,6 @@ function edd_localize_scripts() {
 		) ) );
 	}
 }
-add_action( 'wp_enqueue_scripts', 'edd_localize_scripts' );
 
 /**
  * Load head styles
