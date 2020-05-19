@@ -162,9 +162,10 @@ $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 				$('#edd-refund-order-dialog .tablenav').hide();
 
 				message_target.text(data.message).addClass('success');
-				url_target.attr('href', data.refund_url).show();
+				url_target.attr( 'href', data.refund_url ).show();
 
-				$('#edd-submit-refund-status').show();
+				$( '#edd-submit-refund-status' ).show();
+				url_target.focus();
 				$( '#edd-refund-order-dialog' ).addClass( 'did-refund' );
 			} else {
 				message_target.text(data.message).addClass('fail');
@@ -172,10 +173,10 @@ $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 
 				$('#edd-submit-refund-status').show();
 				$( '#edd-submit-refund-submit' ).attr( 'disabled', false );
-				$('#edd-submit-refund-button-wrapper .spinner').css('visibility', 'hidden');
+				$( '#edd-refund-submit-button-wrapper .spinner' ).css( 'visibility', 'hidden' );
 			}
 		}
-	}).fail(function (data) {
+	} ).fail( function ( data ) {
 		const message_target = $('.edd-submit-refund-message'),
 			url_target     = $('.edd-submit-refund-url'),
 			json           = data.responseJSON;
@@ -184,9 +185,9 @@ $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 		message_target.text(json.message).addClass('fail');
 		url_target.hide();
 
-		$('#edd-submit-refund-status').show();
+		$( '#edd-submit-refund-status' ).show();
 		$( '#edd-submit-refund-submit' ).attr( 'disabled', false );
-		$('#edd-submit-refund-button-wrapper .spinner').css('visibility', 'hidden');
+		$( '#edd-refund-submit-button-wrapper .spinner' ).css( 'visibility', 'hidden' );
 		return false;
 	});
 });
