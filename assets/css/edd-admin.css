@@ -2173,6 +2173,49 @@ input[class*="edd-price-field"] {
 	.order-data-column input[type="email"] {
 		padding: 6px 10px;
 	}
+
+	.refunditems tr {
+		display: flex;
+	}
+
+	.refunditems tr.refunditem {
+		flex-wrap: wrap;
+	}
+
+	.refunditems td {
+		flex: 1 0 2.5em;
+	}
+
+	.refunditems tr.refunditem td:not(.check-column) {
+		flex-basis: calc(100% - 60px);
+	}
+
+	.refunditems tr.refunditem td:not(.check-column):not(.column-name) {
+		flex-basis: 100px;
+		display: inline-flex;
+		justify-content: flex-start;
+	}
+
+	.refunditems th:not(.column-name),
+	.refunditems tr.refunditem td.column-name:before {
+		display: none !important;
+	}
+
+	.refunditems tr.refunditem td:not(.check-column):not(.column-name):before {
+		position: relative;
+		display: inline-block;
+		margin-right: 10px;
+		left: unset;
+		width: unset;
+	}
+
+	.wp-list-table.refunditems .column-name {
+		width: 100%;
+	}
+
+	.edd-refund-submit-line-total td:last-of-type {
+		flex: 0 0 120px;
+	}
 }
 
 @media screen and ( max-width: 600px ) {
