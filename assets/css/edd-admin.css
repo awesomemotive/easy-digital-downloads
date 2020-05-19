@@ -3340,6 +3340,14 @@ body.download_page_edd-reports {
 #edd-item-tables-wrapper .no-items {
 	text-align: left;
 }
+#edd-item-tables-wrapper .addresses tbody tr {
+	display: flex;
+	justify-content: flex-start;
+	flex-wrap: wrap;
+}
+#edd-item-tables-wrapper .addresses td:last-of-type {
+	display: none;
+}
 #edd-item-tables-wrapper .emails .add-customer-email-row td {
 	background-color: #f4f4f4;
 	border-top: 1px solid #e5e5e5;
