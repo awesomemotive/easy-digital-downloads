@@ -24,10 +24,6 @@ function edd_view_refund_page_content() {
 		wp_die( __( 'Refund ID not supplied. Please try again.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ) );
 	}
 
-	wp_enqueue_script( 'edd-admin-orders' );
-	// Enqueued for backwards compatibility. Empty file.
-	wp_enqueue_script( 'edd-admin-payments' );
-
 	$refund_id = absint( $_GET['id'] );
 	$refund    = edd_get_order( $refund_id );
 
@@ -38,7 +34,12 @@ function edd_view_refund_page_content() {
 	}
 ?>
 
-<?php edd_refund_details_notice( $refund ); ?>
+	<?php
+	edd_refund_details_notice( $refund );
+	wp_enqueue_script( 'edd-admin-orders' );
+	// Enqueued for backwards compatibility. Empty file.
+	wp_enqueue_script( 'edd-admin-payments' );
+	?>
 
 <div class="wrap edd-wrap">
 

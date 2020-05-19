@@ -23,17 +23,18 @@ if ( ! isset( $_GET['id'] ) || ! is_numeric( $_GET['id'] ) ) {
 	wp_die( __( 'Order ID not supplied. Please try again', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ) );
 }
 
-wp_enqueue_script( 'edd-admin-orders' );
-// Enqueued for backwards compatibility. Empty file.
-wp_enqueue_script( 'edd-admin-payments' );
-
 $order_id = absint( $_GET['id'] );
 $order    = edd_get_order( $order_id );
 
 // Check that the order exists in the database.
 if ( empty( $order ) ) {
 	wp_die( __( 'The specified ID does not belong to an order. Please try again', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ) );
-} ?>
+}
+
+wp_enqueue_script( 'edd-admin-orders' );
+// Enqueued for backwards compatibility. Empty file.
+wp_enqueue_script( 'edd-admin-payments' );
+?>
 
 <form id="edd-edit-order-form" method="post">
 
