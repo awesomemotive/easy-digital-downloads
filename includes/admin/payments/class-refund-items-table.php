@@ -389,7 +389,6 @@ class Refund_Items_Table extends List_Table {
 		echo '<span class="spinner"></span>';
 		printf( '<button id="edd-submit-refund-submit" class="button-primary" disabled>%s</button>', esc_html__( 'Submit Refund', 'easy-digital-downloads' ) );
 		echo '</div>';
-		echo '<br class="clear">';
 		echo '</div>';
 	}
 
