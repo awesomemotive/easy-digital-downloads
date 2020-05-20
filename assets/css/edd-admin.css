@@ -2652,9 +2652,11 @@ body.download_page_edd-reports {
 #edd-reports-tiles-wrap {
 	display: flex;
 	flex-wrap: wrap;
-	margin-left: -13px;
-	margin-right: -10px;
+	justify-content: center;
+	margin-left: 10px;
+	margin-right: 10px;
 	margin-bottom: -10px;
+	padding: 10px;
 }
 
 .edd-reports-tile {
