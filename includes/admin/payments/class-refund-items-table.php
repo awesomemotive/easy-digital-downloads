@@ -124,7 +124,7 @@ class Refund_Items_Table extends List_Table {
 	 * @return string Name of the primary column.
 	 */
 	protected function get_primary_column_name() {
-		return 'name';
+		return '';
 	}
 
 	/**
@@ -336,6 +336,7 @@ class Refund_Items_Table extends List_Table {
 		$classes = array_map( 'sanitize_html_class', array(
 			'order-' . $item->order_id,
 			$item->status,
+			'refunditem',
 		) );
 
 		// Turn into a string.

@@ -983,8 +983,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 			WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
 			$new_count = edd_count_logs() + edd_count_file_download_logs() + edd_count_api_request_logs();
-			$old_count = $wpdb->get_col( "SELECT count(ID) FROM {$wpdb->posts} WHERE post_type = 'edd_log'", 0 );
-			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
+			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $total );
 			WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
 
 			edd_update_db_version();
@@ -1131,58 +1130,85 @@ class EDD_CLI extends WP_CLI_Command {
 			? true
 			: false;
 
-		$upgrade_completed = edd_has_upgrade_completed( 'migrate_customer_data' );
+		$customer_addresses_complete = edd_has_upgrade_completed( 'migrate_customer_addresses' );
 
-		if ( ! $force && $upgrade_completed ) {
-			WP_CLI::error( __( 'The user addresses custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
-		}
+		if ( ! $force && $customer_addresses_complete ) {
+			WP_CLI::warning( __( 'The user addresses custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		} else {
 
-		// Migrate user addresses first.
-		$sql = "
-			SELECT *
-			FROM {$wpdb->usermeta}
-			WHERE meta_key = '_edd_user_address'
-		";
-		$results = $wpdb->get_results( $sql );
-		$total   = count( $results );
+			// Create the tables if they do not exist.
+			$components = array(
+				array( 'order', 'table' ),
+				array( 'order', 'meta' ),
+				array( 'customer', 'table' ),
+				array( 'customer', 'meta' ),
+				array( 'customer_address', 'table' ),
+				array( 'customer_email_address', 'table' ),
+			);
 
-		if ( ! empty( $total ) ) {
-			$progress = new \cli\progress\Bar( 'Migrating User Addresses', $total );
+			foreach ( $components as $component ) {
+				/** @var EDD\Database\Tables\Base $table */
+				$table = edd_get_component_interface( $component[0], $component[1] );
 
-			foreach ( $results as $result ) {
-				\EDD\Admin\Upgrades\v3\Data_Migrator::customer_addresses( $result );
-
-				$progress->tick();
+				if ( $table instanceof EDD\Database\Tables\Base && ! $table->exists() ) {
+					@$table->create();
+				}
 			}
 
-			$progress->finish();
+			// Migrate user addresses first.
+			$sql = "
+				SELECT *
+				FROM {$wpdb->usermeta}
+				WHERE meta_key = '_edd_user_address'
+			";
+			$results = $wpdb->get_results( $sql );
+			$total   = count( $results );
+
+			if ( ! empty( $total ) ) {
+				$progress = new \cli\progress\Bar( 'Migrating User Addresses', $total );
+
+				foreach ( $results as $result ) {
+					\EDD\Admin\Upgrades\v3\Data_Migrator::customer_addresses( $result );
+
+					$progress->tick();
+				}
+
+				$progress->finish();
+			}
+			edd_set_upgrade_complete( 'migrate_customer_addresses' );
 		}
 
-		// Migrate email addresses next.
-		$sql = "
-			SELECT *
-			FROM {$wpdb->edd_customermeta}
-			WHERE meta_key = 'additional_email'
-		";
-		$results = $wpdb->get_results( $sql );
-		$total   = count( $results );
+		$customer_email_addresses_complete = edd_has_upgrade_completed( 'migrate_customer_email_addresses' );
 
-		if ( ! empty( $total ) ) {
-			$progress = new \cli\progress\Bar( 'Migrating Email Addresses', $total );
+		if ( ! $force && $customer_email_addresses_complete ) {
+			WP_CLI::warning( __( 'The user email addresses custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		} else {
+			// Migrate email addresses next.
+			$sql = "
+				SELECT *
+				FROM {$wpdb->edd_customermeta}
+				WHERE meta_key = 'additional_email'
+			";
+			$results = $wpdb->get_results( $sql );
+			$total   = count( $results );
 
-			foreach ( $results as $result ) {
-				\EDD\Admin\Upgrades\v3\Data_Migrator::customer_email_addresses( $result );
+			if ( ! empty( $total ) ) {
+				$progress = new \cli\progress\Bar( 'Migrating Email Addresses', $total );
 
-				$progress->tick();
+				foreach ( $results as $result ) {
+					\EDD\Admin\Upgrades\v3\Data_Migrator::customer_email_addresses( $result );
+
+					$progress->tick();
+				}
+
+				$progress->finish();
 			}
-
-			$progress->finish();
+			edd_set_upgrade_complete( 'migrate_customer_email_addresses' );
 		}
 
 		WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
 
 		edd_update_db_version();
-		edd_set_upgrade_complete( 'migrate_customer_data' );
 	}
 
 	/**
@@ -1258,7 +1284,7 @@ class EDD_CLI extends WP_CLI_Command {
 			? true
 			: false;
 
-		$upgrade_completed = edd_has_upgrade_completed( 'migrate_payments' );
+		$upgrade_completed = edd_has_upgrade_completed( 'migrate_orders' );
 
 		if ( ! $force && $upgrade_completed ) {
 			WP_CLI::error( __( 'The payments custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
@@ -1301,10 +1327,10 @@ class EDD_CLI extends WP_CLI_Command {
 			WP_CLI::line( __( 'Refund Records Created: ', 'easy-digital-downloads' ) . $refund_count );
 
 			edd_update_db_version();
-			edd_set_upgrade_complete( 'migrate_payments' );
+			edd_set_upgrade_complete( 'migrate_orders' );
 		} else {
 			WP_CLI::line( __( 'No payment records found.', 'easy-digital-downloads' ) );
-			edd_set_upgrade_complete( 'migrate_payments' );
+			edd_set_upgrade_complete( 'migrate_orders' );
 			edd_set_upgrade_complete( 'remove_legacy_payments' );
 		}
 	}
@@ -1340,11 +1366,13 @@ class EDD_CLI extends WP_CLI_Command {
 			$discount_ids = wp_list_pluck( $discount_ids, 'ID' );
 			$discount_ids = implode( ', ', $discount_ids );
 
-			$delete_posts_query = "DELETE FROM $wpdb->posts WHERE ID IN ({$discount_ids})";
-			$wpdb->query( $delete_posts_query );
+			if ( ! empty( $discount_ids ) ) {
+				$delete_posts_query = "DELETE FROM $wpdb->posts WHERE ID IN ({$discount_ids})";
+				$wpdb->query( $delete_posts_query );
 
-			$delete_postmeta_query = "DELETE FROM $wpdb->postmeta WHERE post_id IN ({$discount_ids})";
-			$wpdb->query( $delete_postmeta_query );
+				$delete_postmeta_query = "DELETE FROM $wpdb->postmeta WHERE post_id IN ({$discount_ids})";
+				$wpdb->query( $delete_postmeta_query );
+			}
 
 			edd_set_upgrade_complete( 'remove_legacy_discounts' );
 		}
@@ -1361,11 +1389,13 @@ class EDD_CLI extends WP_CLI_Command {
 			$log_ids = wp_list_pluck( $log_ids, 'ID' );
 			$log_ids = implode( ', ', $log_ids );
 
-			$delete_query = "DELETE FROM {$wpdb->posts} WHERE post_type = 'edd_log'";
-			$wpdb->query( $delete_query );
+			if ( ! empty( $log_ids ) ) {
+				$delete_query = "DELETE FROM {$wpdb->posts} WHERE post_type = 'edd_log'";
+				$wpdb->query( $delete_query );
 
-			$delete_postmeta_query = "DELETE FROM {$wpdb->posts} WHERE ID IN ({$log_ids})";
-			$wpdb->query( $delete_postmeta_query );
+				$delete_postmeta_query = "DELETE FROM {$wpdb->posts} WHERE ID IN ({$log_ids})";
+				$wpdb->query( $delete_postmeta_query );
+			}
 
 			edd_set_upgrade_complete( 'remove_legacy_logs' );
 		}
@@ -1382,11 +1412,13 @@ class EDD_CLI extends WP_CLI_Command {
 			$note_ids = wp_list_pluck( $note_ids, 'comment_ID' );
 			$note_ids = implode( ', ', $note_ids );
 
-			$delete_query = "DELETE FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note'";
-			$wpdb->query( $delete_query );
+			if ( ! empty( $note_ids ) ) {
+				$delete_query = "DELETE FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note'";
+				$wpdb->query( $delete_query );
 
-			$delete_postmeta_query = "DELETE FROM {$wpdb->commentmeta} WHERE comment_id IN ({$note_ids})";
-			$wpdb->query( $delete_postmeta_query );
+				$delete_postmeta_query = "DELETE FROM {$wpdb->commentmeta} WHERE comment_id IN ({$note_ids})";
+				$wpdb->query( $delete_postmeta_query );
+			}
 
 			edd_set_upgrade_complete( 'remove_legacy_order_notes' );
 		}
