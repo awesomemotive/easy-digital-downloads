@@ -658,7 +658,7 @@ class EDD_Payment_History_Table extends List_Table {
 			$action['restore'] = __( 'Restore', 'easy-digital-downloads' );
 			$action['delete']  = __( 'Delete Permanently', 'easy-digital-downloads' );
 		} else {
-			$action['trash'] = __( 'Trash', 'easy-digital-downloads' );
+			$action['trash'] = __( 'Move to Trash', 'easy-digital-downloads' );
 		}
 
 		return apply_filters( 'edd_payments_table_bulk_actions', $action );
