@@ -85,6 +85,17 @@ export const OrderItem = Backbone.Model.extend( {
 	},
 
 	/**
+	 * Retrieves the Total for the order item.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return {number} Total amount.
+	 */
+	getTotal() {
+		return ( this.get( 'subtotal' ) - this.getDiscountAmount() ) + this.get( 'tax' );
+	},
+
+	/**
 	 * Retrieves amounts for the `OrderItem` based on other `OrderItem`s and `OrderAdjustment`s.
 	 *
 	 * @since 3.0
