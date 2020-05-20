@@ -2216,6 +2216,15 @@ input[class*="edd-price-field"] {
 	.edd-refund-submit-line-total td:last-of-type {
 		flex: 0 0 120px;
 	}
+
+	#edd-item-tables-wrapper .addresses tbody tr {
+		display: flex;
+		justify-content: flex-start;
+		flex-wrap: wrap;
+	}
+	#edd-item-tables-wrapper .addresses td:last-of-type {
+		display: none;
+	}
 }
 
 @media screen and ( max-width: 600px ) {
@@ -3340,14 +3349,6 @@ body.download_page_edd-reports {
 #edd-item-tables-wrapper .no-items {
 	text-align: left;
 }
-#edd-item-tables-wrapper .addresses tbody tr {
-	display: flex;
-	justify-content: flex-start;
-	flex-wrap: wrap;
-}
-#edd-item-tables-wrapper .addresses td:last-of-type {
-	display: none;
-}
 #edd-item-tables-wrapper .emails .add-customer-email-row td {
 	background-color: #f4f4f4;
 	border-top: 1px solid #e5e5e5;
@@ -3363,7 +3364,6 @@ body.download_page_edd-reports {
 #edd-item-tables-wrapper .notice-error {
 	background-color: #fff5f5;
 }
-
 #edd-item-notes-wrapper {
 	min-height: 50px;
 }
