@@ -107,10 +107,12 @@ class EDD_Sales_Log_Table extends EDD_Base_Log_List_Table {
 	 *
 	 * @since 3.0
 	 *
+	 * @param boolean $paginate
+	 *
 	 * @return array
 	 */
-	protected function get_query_args() {
-		$retval = parent::get_query_args();
+	protected function get_query_args( $paginate = true ) {
+		$retval = parent::get_query_args( $paginate );
 
 		$user = $this->get_filtered_user();
 
