@@ -415,18 +415,16 @@ class Refund_Items_Table extends List_Table {
 
 			<td>
 				<?php
-				if ( 'before' === $currency_position ) {
-					?><span><?php echo $currency_symbol; ?></span><?php
-				}
-
-				$subtotal = edd_format_amount( 0.00 );
-				?><span id="edd-refund-submit-subtotal-amount" data-refund-subtotal="<?php echo $subtotal; ?>">
-					<?php echo $subtotal; ?>
-				</span><?php
-
-				if ( 'after' === $currency_position ) {
-					?><span><?php echo $currency_symbol; ?></span><?php
-				}
+				$currency_symbol_output = sprintf( '<span>%s</span>', $currency_symbol );
+				$before                 = 'before' === $currency_position ? $currency_symbol_output : '';
+				$after                  = 'after' === $currency_position ? $currency_symbol_output : '';
+				$amount                 = edd_format_amount( 0.00 );
+				printf(
+					'%1$s<span id="edd-refund-submit-subtotal-amount" data-refund-subtotal="%2$s">%2$s</span>%3$s',
+					$before,
+					esc_attr( $amount ),
+					$after
+				);
 				?>
 			</td>
 		</tr>
@@ -439,18 +437,12 @@ class Refund_Items_Table extends List_Table {
 
 			<td>
 				<?php
-				if ( 'before' === $currency_position ) {
-					?><span><?php echo $currency_symbol; ?></span><?php
-				}
-
-				$tax = edd_format_amount( 0.00 );
-				?><span id="edd-refund-submit-tax-amount" data-refund-tax="<?php echo $tax; ?>">
-					<?php echo $tax; ?>
-				</span><?php
-
-				if ( 'after' === $currency_position ) {
-					?><span><?php echo $currency_symbol; ?></span><?php
-				}
+				printf(
+					'%1$s<span id="edd-refund-submit-tax-amount" data-refund-tax="%2$s">%2$s</span>%3$s',
+					$before,
+					esc_attr( $amount ),
+					$after
+				);
 				?>
 			</td>
 		</tr>
@@ -463,18 +455,12 @@ class Refund_Items_Table extends List_Table {
 
 			<td>
 				<?php
-				if ( 'before' === $currency_position ) {
-					?><span><?php echo $currency_symbol; ?></span><?php
-				}
-
-				$total = edd_format_amount( 0.00 );
-				?><span id="edd-refund-submit-total-amount" data-refund-total="<?php echo $total; ?>">
-					<?php echo $total; ?>
-				</span><?php
-
-				if ( 'after' === $currency_position ) {
-					?><span><?php echo $currency_symbol; ?></span><?php
-				}
+				printf(
+					'%1$s<span id="edd-refund-submit-total-amount" data-refund-total="%2$s">%2$s</span>%3$s',
+					$before,
+					esc_attr( $amount ),
+					$after
+				);
 				?>
 			</td>
 		</tr>
