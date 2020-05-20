@@ -901,6 +901,9 @@ class EDD_Payment_History_Table extends List_Table {
 		$this->items = $this->get_data();
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
+		if ( empty( $this->counts[ $status ] ) ) {
+			return;
+		}
 
 		$this->set_pagination_args( array(
 			'total_pages' => ceil( $this->counts[ $status ] / $this->per_page ),
