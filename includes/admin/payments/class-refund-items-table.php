@@ -420,7 +420,7 @@ class Refund_Items_Table extends List_Table {
 				$after                  = 'after' === $currency_position ? $currency_symbol_output : '';
 				$amount                 = edd_format_amount( 0.00 );
 				printf(
-					'%1$s<span id="edd-refund-submit-subtotal-amount" data-refund-subtotal="%2$s">%2$s</span>%3$s',
+					'%1$s<span id="edd-refund-submit-subtotal-amount">%2$s</span>%3$s',
 					$before,
 					esc_attr( $amount ),
 					$after
@@ -438,7 +438,7 @@ class Refund_Items_Table extends List_Table {
 			<td>
 				<?php
 				printf(
-					'%1$s<span id="edd-refund-submit-tax-amount" data-refund-tax="%2$s">%2$s</span>%3$s',
+					'%1$s<span id="edd-refund-submit-tax-amount">%2$s</span>%3$s',
 					$before,
 					esc_attr( $amount ),
 					$after
@@ -456,7 +456,7 @@ class Refund_Items_Table extends List_Table {
 			<td>
 				<?php
 				printf(
-					'%1$s<span id="edd-refund-submit-total-amount" data-refund-total="%2$s">%2$s</span>%3$s',
+					'%1$s<span id="edd-refund-submit-total-amount">%2$s</span>%3$s',
 					$before,
 					esc_attr( $amount ),
 					$after

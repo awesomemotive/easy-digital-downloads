@@ -88,9 +88,9 @@ $(document.body).on( 'change', '#edd-refund-order-dialog tbody .check-column inp
 	new_tax      = parseFloat(new_tax).toFixed( edd_vars.currency_decimals );
 	new_total    = parseFloat(new_total).toFixed( edd_vars.currency_decimals );
 
-	$('#edd-refund-submit-subtotal-amount').data('refund-subtotal', new_subtotal ).text( new_subtotal );
-	$('#edd-refund-submit-tax-amount').data('refund-tax', new_tax ).text( new_tax );
-	$('#edd-refund-submit-total-amount').data('refund-total', new_total ).text( new_total );
+	$( '#edd-refund-submit-subtotal-amount' ).text( new_subtotal );
+	$( '#edd-refund-submit-tax-amount' ).text( new_tax );
+	$( '#edd-refund-submit-total-amount' ).text( new_total );
 
 	if ( can_refund ) {
 		$( '#edd-submit-refund-submit' ).attr( 'disabled', false );
