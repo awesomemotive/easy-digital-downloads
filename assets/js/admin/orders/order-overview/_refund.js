@@ -125,10 +125,7 @@ $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 	$( this ).attr( 'disabled', false );
 	$('#edd-refund-submit-button-wrapper .spinner').css('visibility', 'visible');
 	$('#edd-submit-refund-status').hide();
-	let item_ids = [],
-		refund_subtotal = $('#edd-refund-submit-subtotal-amount').data('refund-subtotal'),
-		refund_tax      = $('#edd-refund-submit-tax-amount').data('refund-tax'),
-		refund_total    = $('#edd-refund-submit-total-amount').data('refund-total');
+	let item_ids = [];
 
 	// Get the Order Item IDs we're going to be refunding.
 	const item_checkboxes = $('#edd-refund-order-dialog tbody .check-column input[type="checkbox"]');
@@ -142,9 +139,6 @@ $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 	var postData = {
 		action  : 'edd_process_refund_form',
 		item_ids : item_ids,
-		refund_subtotal: refund_subtotal,
-		refund_tax : refund_tax,
-		refund_total : refund_total,
 		order_id: $('input[name="edd_payment_id"]').val(),
 		nonce: $( '#edd_process_refund' ).val(),
 	};
