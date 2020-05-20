@@ -364,7 +364,7 @@ class Manifest_Tests extends \EDD_UnitTestCase {
 						'position' => 'bottom',
 						'time'     => array(
 							'unit' => 'day',
-							'tooltipFormat' => 'LL',
+							'tooltipFormat' => 'MMM D',
 						),
 					),
 				),
