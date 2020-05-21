@@ -2576,7 +2576,6 @@ class Stats {
 		}
 
 		/** Parse country ****************************************************/
-
 		$country = isset( $this->query_vars['country'] )
 			? sanitize_text_field( $this->query_vars['country'] )
 			: '';
@@ -2600,6 +2599,7 @@ class Stats {
 				? ''
 				: $country_list[ $country ];
 		}
+
 		/** Parse state ******************************************************/
 
 		$state = isset( $this->query_vars['region'] )
