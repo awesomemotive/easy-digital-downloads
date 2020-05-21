@@ -49,6 +49,10 @@ $(document.body).on('click', '.edd-refund-order', function (e) {
 	});
 });
 
+$( document.body ).on( 'click', '.ui-widget-overlay', function ( e ) {
+	$( '#edd-refund-order-dialog' ).dialog( 'close' );
+} );
+
 // Handles including items in the refund.
 $(document.body).on( 'change', '#edd-refund-order-dialog tbody .check-column input[type="checkbox"]', function () {
 	let parent = $(this).parent().parent(),
