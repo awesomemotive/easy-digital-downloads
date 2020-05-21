@@ -690,12 +690,14 @@ function edd_register_downloads_report( $reports ) {
 			'label' => __( 'Sales by Variation', 'easy-digital-downloads' ) . $download_label,
 			'views' => array(
 				'chart' => array(
-					'data_callback' => function() use ( $download_data, $download, $dates ) {
+					'data_callback' => function() use ( $download_data, $download, $dates, $country, $region ) {
 						$stats = new EDD\Stats();
 						$sales = $stats->get_order_item_count( array(
 							'product_id' => absint( $download_data['download_id'] ),
 							'range'      => $dates['range'],
 							'grouped'    => true,
+							'country'    => $country,
+							'region'     => $region
 						) );
 
 						$prices = $download->get_prices();
@@ -741,12 +743,14 @@ function edd_register_downloads_report( $reports ) {
 			'label' => __( 'Earnings by Variation', 'easy-digital-downloads' ) . $download_label,
 			'views' => array(
 				'chart' => array(
-					'data_callback' => function() use ( $download_data, $prices, $dates ) {
+					'data_callback' => function() use ( $download_data, $prices, $dates, $country, $region ) {
 						$stats = new EDD\Stats();
 						$earnings = $stats->get_order_item_earnings( array(
 							'product_id' => absint( $download_data['download_id'] ),
 							'range'      => $dates['range'],
 							'grouped'    => true,
+							'country'    => $country,
+							'region'     => $region
 						) );
 
 						// Set all values to 0.
@@ -790,7 +794,7 @@ function edd_register_downloads_report( $reports ) {
 			'label' => __( 'Sales and Earnings', 'easy-digital-downloads' ) . esc_html( $download_label ),
 			'views' => array(
 				'chart' => array(
-					'data_callback' => function () use ( $download_data ) {
+					'data_callback' => function () use ( $download_data, $country, $region ) {
 						global $wpdb;
 
 						$dates        = Reports\get_dates_filter( 'objects' );
