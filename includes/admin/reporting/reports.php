@@ -177,12 +177,13 @@ function edd_reports_page() {
  */
 function edd_register_overview_report( $reports ) {
 	try {
-
 		// Variables to hold date filter values.
 		$options       = Reports\get_dates_filter_options();
 		$dates         = Reports\get_filter_value( 'dates' );
 		$exclude_taxes = Reports\get_taxes_excluded_filter();
-		$label         = $options[ $dates['range'] ];
+
+		$hbh   = Reports\get_dates_filter_hour_by_hour();
+		$label = $options[ $dates['range'] ] . ( $hbh ? ' (' . edd_get_timezone_abbr() . ')' : '' );
 
 		$reports->add_report( 'overview', array(
 			'label'     => __( 'Overview', 'easy-digital-downloads' ),
@@ -469,7 +470,9 @@ function edd_register_downloads_report( $reports ) {
 		$options       = Reports\get_dates_filter_options();
 		$dates         = Reports\get_filter_value( 'dates' );
 		$exclude_taxes = Reports\get_taxes_excluded_filter();
-		$label         = $options[ $dates['range'] ];
+
+		$hbh   = Reports\get_dates_filter_hour_by_hour();
+		$label = $options[ $dates['range'] ] . ( $hbh ? ' (' . edd_get_timezone_abbr() . ')' : '' );
 
 		$download_data = Reports\get_filter_value( 'products' );
 		$download_data = ! empty( $download_data ) && 'all' !== Reports\get_filter_value( 'products' )
@@ -940,7 +943,9 @@ function edd_register_refunds_report( $reports ) {
 		$options       = Reports\get_dates_filter_options();
 		$dates         = Reports\get_filter_value( 'dates' );
 		$exclude_taxes = Reports\get_taxes_excluded_filter();
-		$label         = $options[ $dates['range'] ];
+
+		$hbh   = Reports\get_dates_filter_hour_by_hour();
+		$label = $options[ $dates['range'] ] . ( $hbh ? ' (' . edd_get_timezone_abbr() . ')' : '' );
 
 		$reports->add_report( 'refunds', array(
 			'label'     => __( 'Refunds', 'easy-digital-downloads' ),
@@ -1154,7 +1159,9 @@ function edd_register_payment_gateways_report( $reports ) {
 		$exclude_taxes = Reports\get_taxes_excluded_filter();
 		$label         = $options[ $dates['range'] ];
 		$gateway       = Reports\get_filter_value( 'gateways' );
-		$label         = $options[ $dates['range'] ];
+
+		$hbh   = Reports\get_dates_filter_hour_by_hour();
+		$label = $options[ $dates['range'] ] . ( $hbh ? ' (' . edd_get_timezone_abbr() . ')' : '' );
 
 		$tiles = array(
 			'sales_per_gateway',
@@ -1572,7 +1579,9 @@ function edd_register_taxes_report( $reports ) {
 		$options       = Reports\get_dates_filter_options();
 		$dates         = Reports\get_filter_value( 'dates' );
 		$exclude_taxes = Reports\get_taxes_excluded_filter();
-		$label         = $options[ $dates['range'] ];
+
+		$hbh   = Reports\get_dates_filter_hour_by_hour();
+		$label = $options[ $dates['range'] ] . ( $hbh ? ' (' . edd_get_timezone_abbr() . ')' : '' );
 
 		$download_data = Reports\get_filter_value( 'products' );
 		$download_data = ! empty( $download_data ) && 'all' !== Reports\get_filter_value( 'products' )
@@ -1711,7 +1720,9 @@ function edd_register_file_downloads_report( $reports ) {
 		// Variables to hold date filter values.
 		$options = Reports\get_dates_filter_options();
 		$filter  = Reports\get_filter_value( 'dates' );
-		$label   = $options[ $filter['range'] ];
+
+		$hbh   = Reports\get_dates_filter_hour_by_hour();
+		$label = $options[ $filter['range'] ] . ( $hbh ? ' (' . edd_get_timezone_abbr() . ')' : '' );
 
 		$download_data = Reports\get_filter_value( 'products' );
 		$download_data = ! empty( $download_data ) && 'all' !== Reports\get_filter_value( 'products' )
@@ -2001,7 +2012,9 @@ function edd_register_discounts_report( $reports ) {
 		// Variables to hold date filter values.
 		$options = Reports\get_dates_filter_options();
 		$filter  = Reports\get_filter_value( 'dates' );
-		$label   = $options[ $filter['range'] ];
+
+		$hbh   = Reports\get_dates_filter_hour_by_hour();
+		$label = $options[ $filter['range'] ] . ( $hbh ? ' (' . edd_get_timezone_abbr() . ')' : '' );
 
 		$discount = Reports\get_filter_value( 'discounts' );
 		$discount = ! empty( $discount ) && 'all' !== $discount
@@ -2316,7 +2329,9 @@ function edd_register_customer_report( $reports ) {
 		$options       = Reports\get_dates_filter_options();
 		$dates         = Reports\get_filter_value( 'dates' );
 		$exclude_taxes = Reports\get_taxes_excluded_filter();
-		$label         = $options[ $dates['range'] ];
+
+		$hbh   = Reports\get_dates_filter_hour_by_hour();
+		$label = $options[ $dates['range'] ] . ( $hbh ? ' (' . edd_get_timezone_abbr() . ')' : '' );
 
 		$reports->add_report( 'customers', array(
 			'label'     => __( 'Customers', 'easy-digital-downloads' ),
