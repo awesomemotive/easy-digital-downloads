@@ -821,7 +821,7 @@ function edd_register_downloads_report( $reports ) {
 						$results = $wpdb->get_results( $wpdb->prepare(
 							"SELECT COUNT(total) AS sales, SUM(total) AS earnings, {$sql_clauses['select']}
 							FROM {$wpdb->edd_order_items} edd_oi
-							WHERE product_id = %d {$price_id} AND date_created >= %s AND date_created <= %s
+							WHERE product_id = %d {$price_id} AND date_created >= %s AND date_created <= %s AND status = 'complete'
 							GROUP BY {$sql_clauses['groupby']}
 							ORDER BY {$sql_clauses['orderby']} ASC",
 							$download_data['download_id'], $dates['start']->copy()->format( 'mysql' ), $dates['end']->copy()->format( 'mysql' ) ) );
