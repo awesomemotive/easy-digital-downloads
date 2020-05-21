@@ -47,7 +47,7 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 	 * @since 2.5
 	 * @global object $wpdb Used to query the database using the WordPress
 	 *   Database API
-	 * @return array $data The data for the CSV file
+	 * @return bool True if results were found, false if not.
 	 */
 	public function get_data() {
 
@@ -82,7 +82,7 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 			}
 
 			if ( $total < 0 ) {
-				$totals = 0;
+				$total = 0;
 			}
 
 			$total = round( $total, edd_currency_decimal_filter() );
