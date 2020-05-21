@@ -303,7 +303,9 @@ function edd_register_admin_scripts() {
 
 	// Individual admin pages.
 	$admin_pages = array(
-		'customers'    => array(),
+		'customers'    => array(
+			'edd-admin-tools-export'
+		),
 		'dashboard'    => array(),
 		'discounts'    => array(),
 		'downloads'    => array(
