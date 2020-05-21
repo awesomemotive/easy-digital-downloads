@@ -2581,7 +2581,7 @@ class Stats {
 
 		$country = isset( $this->query_vars['country'] )
 			? sanitize_text_field( $this->query_vars['country'] )
-			: edd_get_shop_country();
+			: '';
 
 		// Maybe convert country code to country name.
 		$country = in_array( $country, array_flip( $country_list ), true )
@@ -2603,7 +2603,7 @@ class Stats {
 
 		$state = isset( $this->query_vars['region'] )
 			? sanitize_text_field( $this->query_vars['region'] )
-			: edd_get_shop_state();
+			: '';
 
 		// Only parse state if one was passed.
 		if ( $state ) {
