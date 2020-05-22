@@ -1173,7 +1173,6 @@ function edd_render_disable_button( $post_id ) {
 				<?php
 				$args = array(
 					'name'     => '_edd_button_behavior',
-					'chosen'   => true,
 					'selected' => $behavior,
 					'options'  => array(
 						'add_to_cart' => __( 'Add to Cart', 'easy-digital-downloads' ),
