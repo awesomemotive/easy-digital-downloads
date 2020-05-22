@@ -2650,14 +2650,14 @@ body.download_page_edd-reports {
 }
 
 #edd-reports-tiles-wrap {
+	display: -ms-grid;
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-	grid-gap: 10px;
+	grid-gap: 20px;
 }
 
 .edd-reports-tile {
 	text-align: center;
-	margin: 0 10px 20px;
 	padding: 30px 10px;
 	display: flex;
 	flex-direction: column;
