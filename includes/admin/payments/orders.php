@@ -843,7 +843,6 @@ function edd_order_details_extras( $order = false ) {
 										'id'               => 'edd_gateway_select',
 										'options'          => $gateways,
 										'selected'         => edd_get_default_gateway(),
-										'chosen'           => true,
 										'show_option_none' => false,
 										'show_option_all'  => false,
 									)
@@ -926,10 +925,6 @@ function edd_order_details_extras( $order = false ) {
  */
 function edd_order_details_attributes( $order ) {
 
-	$rtl_class = is_rtl()
-		? ' chosen-rtl'
-		: '';
-
 	$recovery_url = edd_is_add_order_page()
 		? ''
 		: edd_get_payment( $order->id )->get_recovery_url();
@@ -963,7 +958,7 @@ function edd_order_details_attributes( $order ) {
 							<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo $status_help; // WPCS: XSS ok. ?>"></span>
 						</label>
 						<div class="edd-form-group__control">
-							<select name="edd-payment-status" id="edd_payment_status" class="edd-form-group__input edd-select-chosen <?php echo esc_attr( $rtl_class ); ?>">
+							<select name="edd-payment-status" id="edd_payment_status" class="edd-form-group__input">
 							<?php foreach ( edd_get_payment_statuses() as $key => $status ) : ?>
 								<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $order->status, $key, true ); ?>><?php echo esc_html( $status ); ?></option>
 							<?php endforeach; ?>
