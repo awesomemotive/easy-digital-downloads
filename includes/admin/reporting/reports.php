@@ -2695,7 +2695,6 @@ function display_export_report() {
 									'name'            => 'status',
 									'show_option_all' => __( 'All Statuses', 'easy-digital-downloads' ),
 									'selected'        => false,
-									'chosen'          => true,
 									'options'         => edd_get_payment_statuses(),
 								) );
 
@@ -2737,7 +2736,6 @@ function display_export_report() {
 									'name'            => 'status',
 									'show_option_all' => __( 'All Statuses', 'easy-digital-downloads' ),
 									'selected'        => false,
-									'chosen'          => true,
 									'options'         => edd_get_payment_statuses(),
 								) );
 
@@ -2807,7 +2805,6 @@ function display_export_report() {
 				                echo EDD()->html->select( array(
 					                'name'             => 'taxonomy',
 					                'options'          => $taxonomies,
-					                'chosen'           => true,
 					                'selected'         => false,
 					                'show_option_none' => false,
 					                'placeholder'      => __( 'Select a Taxonomy', 'easy-digital-downloads' ),
