@@ -1021,39 +1021,13 @@ function edd_order_details_attributes( $order ) {
 								<?php esc_html_e( 'Hour', 'easy-digital-downloads' ); ?>
 							</label>
 
-							<?php
-							echo EDD()->html->select(
-								array(
-									'name'             => 'edd-payment-time-hour',
-									'id'               => 'edd-payment-time-hour',
-									'options'          => edd_get_hour_values(),
-									'selected'         => $order_date->format( 'H' ),
-									'chosen'           => true,
-									'class'            => 'edd-time edd-form-group__input',
-									'show_option_none' => false,
-									'show_option_all'  => false,
-								)
-							); // WPCS: XSS ok.
-							?>
+							<input type="number" min="0" max="24" step="1" name="edd-payment-time-hour" id="edd-payment-time-hour" value="<?php echo esc_attr( $order_date->format( 'H' ) ); ?>" />
 							:
 
 							<label for="edd_payment_time_min" class="screen-reader-text">
 								<?php esc_html_e( 'Minute', 'easy-digital-downloads' ); ?>
 							</label>
-							<?php
-							echo EDD()->html->select(
-								array(
-									'name'             => 'edd-payment-time-min',
-									'id'               => 'edd-payment-time-min',
-									'options'          => edd_get_minute_values(),
-									'selected'         => $order_date->format( 'i' ),
-									'chosen'           => true,
-									'class'            => 'edd-time edd-form-group__input',
-									'show_option_none' => false,
-									'show_option_all'  => false,
-								)
-							); // WPCS: XSS ok.
-							?>
+							<input type="number" min="0" max="59" step="1" name="edd-payment-time-min" id="edd-payment-time-min" value="<?php echo esc_attr( $order_date->format( 'i' ) ); ?>" />
 						</div>
 					</fieldset>
 				</div>
