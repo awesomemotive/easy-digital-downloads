@@ -170,8 +170,14 @@ export const FormAddOrderItem = Dialog.extend( {
 			.getAmounts( {
 				country: state.getTaxCountry(),
 				region: state.getTaxRegion(),
-				items: state.get( 'items' ),
-				adjustments: state.get( 'adjustments' ),
+				products: state.get( 'items' ).map( ( item ) => ( {
+					id: item.get( 'productId' ),
+					quantity: item.get( 'quantity' ),
+					options: {
+						price_id: item.get( 'priceId' ),
+					}
+				} ) ),
+				discountIds: state.get( 'adjustments' ).pluck( 'typeId' ),
 			} )
 			.fail( ( { message: error } ) => {
 				// Clear fetching.
