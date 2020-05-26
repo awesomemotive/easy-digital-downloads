@@ -623,16 +623,17 @@ function edd_maybe_add_customer_address( $customer_id = 0, $data = array() ) {
 		return false;
 	}
 
-	// Temporarily remove the name so we can see if the address is empty.
-	$name = $data['name'];
+	// Temporarily remove the name and created date so we can see if the address is empty.
+	$name = isset( $data['name'] ) ? $data['name'] : '';
+	$date = isset( $data['date_created'] ) ? $data['date_created'] : '';
 	unset( $data['name'] );
+	unset( $data['date_created'] );
 	$data = array_filter( $data );
 	if ( empty( $data ) ) {
 		return false;
 	}
 	$data['name']        = $name;
 	$data['customer_id'] = $customer_id;
-	$data['type']        = 'billing';
 
 	// Instantiate a query object
 	$customer_addresses = new EDD\Database\Queries\Customer_Address();
@@ -642,6 +643,8 @@ function edd_maybe_add_customer_address( $customer_id = 0, $data = array() ) {
 	if ( ! empty( $address_exists ) ) {
 		return false;
 	}
+	$data['date_created'] = $date;
+	$data['type']         = 'billing';
 
 	// Add the new address to the customer record.
 	return $customer_addresses->add_item( $data );
