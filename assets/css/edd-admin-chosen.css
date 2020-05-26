@@ -246,8 +246,12 @@
 }
 
 .edd-select-chosen {
-	width: 100% !important;
+	width: 100%;
 	max-width: 300px;
+}
+
+.edd-select-chosen.edd-customer-select {
+	width: 100% !important;
 }
 
 .edd-select-chosen.edd-time {
