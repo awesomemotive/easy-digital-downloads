@@ -38,7 +38,7 @@ final class Order_Transactions extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 202002141;
+	protected $version = 202005261;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -50,6 +50,7 @@ final class Order_Transactions extends Table {
 	protected $upgrades = array(
 		'201807273' => 201807273,
 		'202002141' => 202002141,
+		'202005261' => 202005261,
 	);
 
 	/**
@@ -63,7 +64,7 @@ final class Order_Transactions extends Table {
 		$this->schema = "id bigint(20) unsigned NOT NULL auto_increment,
 			object_id bigint(20) unsigned NOT NULL default '0',
 			object_type varchar(20) NOT NULL default '',
-			transaction_id varchar(64) NOT NULL default '',
+			transaction_id varchar(256) NOT NULL default '',
 			gateway varchar(20) NOT NULL default '',
 			status varchar(20) NOT NULL default '',
 			total decimal(18,9) NOT NULL default '0',
@@ -122,6 +123,24 @@ final class Order_Transactions extends Table {
 
 		return $this->is_success( $result );
 
+	}
+
+	/**
+	 * Upgrade to version 202005261
+	 *  - Changed the column length from 64 to 256 in order to account for future updates to gateway data.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool
+	 */
+	protected function __202005261() {
+
+		// Increase the transaction_id column.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `transaction_id` varchar(256) NOT NULL default '';
+		" );
+
+		return $this->is_success( $result );
 	}
 
 }
