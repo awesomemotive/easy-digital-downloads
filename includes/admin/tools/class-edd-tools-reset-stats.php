@@ -84,7 +84,7 @@ class EDD_Tools_Reset_Stats extends EDD_Batch_Export {
 	 * @return float Percentage complete.
 	 */
 	public function get_percentage_complete() {
-		$items = $this->get_stored_data( 'edd_reset_tables_to_truncate', false );
+		$items = $this->get_stored_data( 'edd_reset_tables_to_truncate' );
 		$total = count( $items );
 
 		$percentage = 100;

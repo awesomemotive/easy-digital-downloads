@@ -31,6 +31,10 @@ function edd_view_refund_page_content() {
 	if ( empty( $refund ) || 'refund' !== $refund->type ) {
 		wp_die( __( 'The specified ID does not belong to an refund. Please try again.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ) );
 	}
+
+	wp_enqueue_script( 'edd-admin-orders' );
+	// Enqueued for backwards compatibility. Empty file.
+	wp_enqueue_script( 'edd-admin-payments' );
 ?>
 
 <?php edd_refund_details_notice( $refund ); ?>
@@ -95,7 +99,7 @@ function edd_view_refund_page_content() {
 						 * @param $refund_id ID of the current Refund.
 						 */
 						do_action( 'edd_view_refund_details_sidebar_before', $refund->id );
-	
+
 						// Attributes.
 						edd_refund_details_attributes( $refund );
 
