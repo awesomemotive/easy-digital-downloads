@@ -58,7 +58,7 @@ if ( true === edd_is_add_order_page() ) :
 				disabled
 			<?php endif; ?>
 		>
-			<?php esc_html_e( 'Issue Refund', 'easy-digital-downloads' ); ?>
+			<?php esc_html_e( 'Initialize Refund', 'easy-digital-downloads' ); ?>
 		</button>
 	</div>
 <?php endif; ?>
