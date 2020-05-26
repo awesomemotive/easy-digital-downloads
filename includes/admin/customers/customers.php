@@ -695,10 +695,17 @@ function edd_customers_view( $customer = null ) {
 			<tbody>
 			<?php if ( ! empty( $addresses ) ) :
 
-				foreach ( $addresses as $address ) : ?>
+				foreach ( $addresses as $address ) :
+					$delete_url = wp_nonce_url( edd_get_admin_url( array(
+							'page'       => 'edd-customers',
+							'view'       => 'overview',
+							'id'         => urlencode( $address->id ),
+							'edd_action' => 'customer-remove-address'
+					) ), 'edd-remove-customer-address' );
+					?>
 
 					<tr data-id="<?php echo esc_attr( $address->id ); ?>">
-						<td>
+						<td class="has-row-actions">
 							<?php
 							echo ! empty( $address->address )
 								? esc_html( $address->address )
@@ -708,6 +715,9 @@ function edd_customers_view( $customer = null ) {
 								? esc_html( $address->address2 )
 								: '';
 							?>
+							<div class="row-actions">
+								<span class="delete"><a href="<?php echo esc_url( $delete_url ); ?>"><?php esc_html_e( 'Delete', 'easy-digital-downloads' ); ?></a></span>
+							</div>
 						</td>
 						<td>
 							<?php
