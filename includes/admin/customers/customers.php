@@ -684,7 +684,7 @@ function edd_customers_view( $customer = null ) {
 		<table class="wp-list-table widefat striped addresses">
 			<thead>
 				<tr>
-					<th><?php esc_html_e( 'Address',     'easy-digital-downloads' ); ?></th>
+					<th class="column-primary"><?php esc_html_e( 'Address',     'easy-digital-downloads' ); ?></th>
 					<th><?php esc_html_e( 'City',        'easy-digital-downloads' ); ?></th>
 					<th><?php esc_html_e( 'Region',      'easy-digital-downloads' ); ?></th>
 					<th><?php esc_html_e( 'Postal Code', 'easy-digital-downloads' ); ?></th>
@@ -698,7 +698,7 @@ function edd_customers_view( $customer = null ) {
 				foreach ( $addresses as $address ) : ?>
 
 					<tr data-id="<?php echo esc_attr( $address->id ); ?>">
-						<td class="column-primary">
+						<td>
 							<?php
 							echo ! empty( $address->address )
 								? esc_html( $address->address )
@@ -762,8 +762,8 @@ function edd_customers_view( $customer = null ) {
 		<table class="wp-list-table widefat striped emails">
 			<thead>
 				<tr>
-					<th class="column-primary"><?php esc_html_e( 'Email',   'easy-digital-downloads' ); ?></th>
-					<th class="column-actions"><?php esc_html_e( 'Actions', 'easy-digital-downloads' ); ?></th>
+					<th><?php esc_html_e( 'Email',   'easy-digital-downloads' ); ?></th>
+					<th><?php esc_html_e( 'Actions', 'easy-digital-downloads' ); ?></th>
 				</tr>
 			</thead>
 			<tbody>

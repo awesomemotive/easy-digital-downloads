@@ -96,6 +96,7 @@ add_action( 'init', 'edd_register_styles' );
  */
 function edd_load_scripts() {
 	edd_enqueue_scripts();
+	edd_localize_scripts();
 }
 add_action( 'wp_enqueue_scripts', 'edd_load_scripts' );
 
@@ -204,7 +205,6 @@ function edd_localize_scripts() {
 		) ) );
 	}
 }
-add_action( 'wp_enqueue_scripts', 'edd_localize_scripts' );
 
 /**
  * Load head styles
@@ -303,7 +303,9 @@ function edd_register_admin_scripts() {
 
 	// Individual admin pages.
 	$admin_pages = array(
-		'customers'    => array(),
+		'customers'    => array(
+			'edd-admin-tools-export'
+		),
 		'dashboard'    => array(),
 		'discounts'    => array(),
 		'downloads'    => array(
@@ -353,6 +355,7 @@ function edd_register_admin_styles() {
 
 	// Register styles
 	wp_register_style( 'jquery-chosen',         $css_dir . 'chosen'               . $css_suffix, array(), $version );
+	wp_register_style( 'jquery-ui-css',         $css_dir . 'jquery-ui-fresh'      . $css_suffix, array(), $version );
 	wp_register_style( 'edd-admin',             $css_dir . 'edd-admin'            . $css_suffix, array(), $version );
 	wp_register_style( 'edd-admin-menu',        $css_dir . 'edd-admin-menu'       . $css_suffix, array(), $version );
 	wp_register_style( 'edd-admin-chosen',      $css_dir . 'edd-admin-chosen'     . $css_suffix, $deps,   $version );

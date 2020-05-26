@@ -1105,7 +1105,6 @@ textarea[name="edd-note"] {
 }
 
 .wp-list-table.addresses .column-type,
-.wp-list-table.emails .column-type,
 .wp-list-table.posts .column-download_category,
 .wp-list-table.posts .column-download_tag,
 .wp-list-table.posts .column-price {
@@ -1943,8 +1942,14 @@ input[class*="edd-price-field"] {
 #edd-refund-order-dialog #edd-refund-submit-subtotal td {
 	border-top: 2px solid #9c9c9c;
 }
+#edd-refund-submit-button-wrapper,
 #edd-refund-order-dialog .edd-refund-submit-line-total td:first-child {
 	text-align: right;
+}
+#edd-refund-order-dialog .edd-order-item__label {
+	font-size: 14px;
+	font-weight: 600;
+	vertical-align: baseline;
 }
 #edd_general_logs p {
 	margin: 0;
@@ -2172,6 +2177,58 @@ input[class*="edd-price-field"] {
 	}
 	.order-data-column input[type="email"] {
 		padding: 6px 10px;
+	}
+
+	.refunditems tr {
+		display: flex;
+	}
+
+	.refunditems tr.refunditem {
+		flex-wrap: wrap;
+	}
+
+	.refunditems td {
+		flex: 1 0 2.5em;
+	}
+
+	.refunditems tr.refunditem td:not(.check-column) {
+		flex-basis: calc(100% - 60px);
+	}
+
+	.refunditems tr.refunditem td:not(.check-column):not(.column-name) {
+		flex-basis: 100px;
+		display: inline-flex;
+		justify-content: flex-start;
+	}
+
+	.refunditems th:not(.column-name),
+	.refunditems tr.refunditem td.column-name:before {
+		display: none !important;
+	}
+
+	.refunditems tr.refunditem td:not(.check-column):not(.column-name):before {
+		position: relative;
+		display: inline-block;
+		margin-right: 10px;
+		left: unset;
+		width: unset;
+	}
+
+	.wp-list-table.refunditems .column-name {
+		width: 100%;
+	}
+
+	.edd-refund-submit-line-total td:last-of-type {
+		flex: 0 0 120px;
+	}
+
+	#edd-item-tables-wrapper .addresses tbody tr {
+		display: flex;
+		justify-content: flex-start;
+		flex-wrap: wrap;
+	}
+	#edd-item-tables-wrapper .addresses td:last-of-type {
+		display: none;
 	}
 }
 
@@ -3297,28 +3354,9 @@ body.download_page_edd-reports {
 #edd-item-tables-wrapper .no-items {
 	text-align: left;
 }
-#edd-item-tables-wrapper .column-actions {
-	width: 25%;
-}
-#edd-item-tables-wrapper .downloads tr > th:first-child,
-#edd-item-tables-wrapper .downloads tr > td:first-child,
-#edd-item-tables-wrapper .emails tr > th:first-child,
-#edd-item-tables-wrapper .emails tr > td:first-child  {
-	text-align: left;
-}
-#edd-item-tables-wrapper .downloads tr > td:only-child {
-	text-align: center;
-}
 #edd-item-tables-wrapper .emails .add-customer-email-row td {
 	background-color: #f4f4f4;
 	border-top: 1px solid #e5e5e5;
-}
-#edd-item-tables-wrapper .emails .primary-email-icon {
-	font-size: 14px;
-	line-height: 14px;
-	height: 14px;
-	width: 14px;
-	padding: 2px 0;
 }
 #edd-item-tables-wrapper .emails input {
 	vertical-align: middle;
@@ -3331,7 +3369,6 @@ body.download_page_edd-reports {
 #edd-item-tables-wrapper .notice-error {
 	background-color: #fff5f5;
 }
-
 #edd-item-notes-wrapper {
 	min-height: 50px;
 }
@@ -3401,10 +3438,6 @@ body.download_page_edd-reports {
 		border-top: 1px solid #e5e5e5;
 		border-left: 0;
 		margin-top: -1px;
-	}
-	#edd-item-tables-wrapper .wp-list-table tbody tr:not(.inline-edit-row):not(.no-items) td.column-primary ~ td:not(.check-column) {
-		display: block;
-		padding-left: 10px;
 	}
 }
 @media screen and ( max-width: 656px ) {
@@ -3813,7 +3846,7 @@ body.download_page_edd-reports {
 	box-sizing: border-box;
 }
 
-div:not(#edd-item-tab-wrapper) + #edd-item-card-wrapper .item-section { /** [1] */
+*:not(#edd-item-tab-wrapper) + #edd-item-card-wrapper .item-section { /** [1] */
 	margin: 25px 0;
 	padding: 20px;
 	border: 1px solid #e5e5e5;

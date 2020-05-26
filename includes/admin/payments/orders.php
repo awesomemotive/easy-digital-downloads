@@ -701,7 +701,9 @@ function edd_order_details_overview( $order ) {
 				: 0,
 			'hasDiscounts' => true === edd_has_active_discounts(),
 			'order'        => array(
-				'status' => $order->status,
+				'status'         => $order->status,
+				'currency'       => $order->currency,
+				'currencySymbol' => html_entity_decode( edd_currency_symbol( $order->currency ) ),
 			),
 			'nonces'       => array(
 				'edd_admin_order_get_item_amounts' => wp_create_nonce( 'edd_admin_order_get_item_amounts' ),
