@@ -550,11 +550,7 @@ function edd_remove_customer_address() {
 		wp_die( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ) );
 	}
 
-	if ( empty( $_GET['id'] ) || ! is_numeric( $_GET['id'] ) ) {
-		return;
-	}
-
-	if ( empty( $_GET['_wpnonce'] ) ) {
+	if ( empty( $_GET['id'] ) || ! is_numeric( $_GET['id'] ) || empty( $_GET['_wpnonce'] ) ) {
 		return;
 	}
 
