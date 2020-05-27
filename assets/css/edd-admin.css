@@ -2707,45 +2707,22 @@ body.download_page_edd-reports {
 }
 
 #edd-reports-tiles-wrap {
-	display: flex;
-	flex-wrap: wrap;
-	margin-left: 10px;
-	margin-right: 10px;
-	margin-bottom: -10px;
+	display: -ms-grid;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+	grid-gap: 20px;
 }
 
 .edd-reports-tile {
 	text-align: center;
-	margin: 0 10px 20px;
 	padding: 30px 10px;
 	display: flex;
-	flex: 0 1 calc(33% - 20px);
 	flex-direction: column;
 	justify-content: center;
 	border: 1px solid #e5e5e5;
 	background: #fafafa;
 	position: relative;
 	box-sizing: border-box;
-}
-
-@media only screen and (max-width: 782px) {
-
-	.edd-reports-tile {
-		flex-basis: calc(50% - 20px);
-	}
-}
-
-@media screen and (max-width: 600px) {
-
-	.edd-reports-tile {
-		flex-basis: 100%;
-		margin-left: 0;
-		margin-right: 0;
-	}
-}
-
-.edd-reports-tile--span-1-2 {
-	flex: 1 1 calc(50% - 20px);
 }
 
 .edd-reports-tile span.dashicons {
