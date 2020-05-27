@@ -757,6 +757,43 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	}
 
 	/**
+	 * Gets the number of completed purchases for a customer.
+	 *
+	 * @return int
+	 * @since 3.0
+	 */
+	public function get_purchase_count() {
+		return edd_count_orders(
+			array(
+				'customer_id' => $this->id,
+				'status'      => array( 'complete' ),
+			)
+		);
+	}
+
+	/**
+	 * Gets the lifetime purchase value for a customer.
+	 *
+	 * @return float
+	 * @since 3.0
+	 */
+	public function get_purchase_value() {
+		// Get order IDs
+		$totals = edd_get_orders(
+			array(
+				'customer_id'   => $this->id,
+				'number'        => 9999,
+				'status'        => array( 'complete', 'refunded', 'partially_refunded' ),
+				'fields'        => 'total',
+				'no_found_rows' => true,
+			)
+		);
+
+		// Sum the totals together to get the lifetime value
+		return array_sum( $totals );
+	}
+
+	/**
 	 * Recalculate stats for this customer.
 	 *
 	 * This replaces the older, less accurate increase/decrease methods.
@@ -766,28 +803,18 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	public function recalculate_stats() {
 
 		// Get total orders
-		$this->purchase_count = edd_count_orders( array(
-			'customer_id' => $this->id,
-			'status'      => 'complete'
-		) );
+		$this->purchase_count = $this->get_purchase_count();
 
-		// Get order IDs
-		$totals = edd_get_orders( array(
-			'customer_id'   => $this->id,
-			'number'        => $this->purchase_count,
-			'status'        => 'complete',
-			'fields'        => 'total',
-			'no_found_rows' => true
-		) );
-
-		// Sum the totals together to get the lifetime value
-		$this->purchase_value = array_sum( $totals );
+		// Get purchase value
+		$this->purchase_value = $this->get_purchase_value();
 
 		// Update the customer purchase count & value
-		return $this->update( array(
-			'purchase_count' => $this->purchase_count,
-			'purchase_value' => $this->purchase_value,
-		) );
+		return $this->update(
+			array(
+				'purchase_count' => $this->purchase_count,
+				'purchase_value' => $this->purchase_value,
+			)
+		);
 	}
 
 	/** Notes *****************************************************************/
