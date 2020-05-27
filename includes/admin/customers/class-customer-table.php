@@ -313,8 +313,8 @@ class EDD_Customer_Reports_Table extends List_Table {
 					'user_id'      => $customer->user_id,
 					'name'         => $customer->name,
 					'email'        => $customer->email,
-					'order_count'  => $customer->purchase_count,
-					'spent'        => $customer->purchase_value,
+					'order_count'  => $customer->get_purchase_count(),
+					'spent'        => $customer->get_purchase_value(),
 					'date_created' => $customer->date_created,
 				);
 			}
