@@ -623,28 +623,32 @@ function edd_maybe_add_customer_address( $customer_id = 0, $data = array() ) {
 		return false;
 	}
 
-	// Temporarily remove the name and created date so we can see if the address is empty.
-	$name = isset( $data['name'] ) ? $data['name'] : '';
-	$date = isset( $data['date_created'] ) ? $data['date_created'] : '';
-	unset( $data['name'] );
-	unset( $data['date_created'] );
-	$data = array_filter( $data );
-	if ( empty( $data ) ) {
+	// Set up an array with the address specific keys to check.
+	$empty_address    = array(
+		'address'     => '',
+		'address2'    => '',
+		'city'        => '',
+		'region'      => '',
+		'country'     => '',
+		'postal_code' => '',
+	);
+	$address_to_check = array_intersect_key( $data, $empty_address ) + $empty_address;
+	$address_to_check = array_filter( $address_to_check );
+	if ( empty( $address_to_check ) ) {
 		return false;
 	}
-	$data['name']        = $name;
-	$data['customer_id'] = $customer_id;
+	$address_to_check['customer_id'] = $customer_id;
 
 	// Instantiate a query object
 	$customer_addresses = new EDD\Database\Queries\Customer_Address();
 
 	// Check if this address is already assigned to the customer.
-	$address_exists = $customer_addresses->query( $data );
+	$address_exists = $customer_addresses->query( $address_to_check );
 	if ( ! empty( $address_exists ) ) {
 		return false;
 	}
-	$data['date_created'] = $date;
-	$data['type']         = 'billing';
+	$data['customer_id'] = $customer_id;
+	$data['type']        = 'billing';
 
 	// Add the new address to the customer record.
 	return $customer_addresses->add_item( $data );
