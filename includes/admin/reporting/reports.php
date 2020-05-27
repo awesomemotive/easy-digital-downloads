@@ -486,9 +486,6 @@ function edd_register_downloads_report( $reports ) {
 		$download       = edd_get_download();
 		$prices         = array();
 
-		$country = Reports\get_filter_value( 'countries' );
-		$region  = Reports\get_filter_value( 'regions' );
-
 		if ( $download_data ) {
 			$download = edd_get_download( $download_data['download_id'] );
 			$prices   = $download->get_prices();
@@ -499,30 +496,6 @@ function edd_register_downloads_report( $reports ) {
 				$download_label = esc_html( ' (' . $download->post_title . ': ' . $prices[0]['name'] . ')' );
 			} else {
 				$download_label = esc_html( ' (' . $download->post_title . ')' );
-			}
-
-			if ( ! empty( $download_label ) ) {
-				$location = '';
-
-				if ( ! empty( $country ) && 'all' !== $country ) {
-					$location = ' ' . __( 'for', 'easy-digital-downloads' ) . ' ';
-
-					if ( ! empty( $region ) && 'all' !== $region ) {
-						$location .= edd_get_state_name( $country, $region ) . ', ';
-					}
-
-					$location .= edd_get_country_name( $country );
-				}
-
-				$country = 'all' !== $country
-					? $country
-					: '';
-
-				$region = 'all' !== $region
-					? $region
-					: '';
-
-				$endpoint_label .= $location;
 			}
 		}
 
@@ -577,7 +550,7 @@ function edd_register_downloads_report( $reports ) {
 				'charts' => $charts,
 				'tables' => $tables,
 			),
-			'filters'  => array( 'products', 'countries', 'regions', 'taxes' )
+			'filters'   => array( 'products', 'taxes' ),
 		) );
 
 		$reports->register_endpoint( 'most_valuable_download', array(
@@ -640,14 +613,12 @@ function edd_register_downloads_report( $reports ) {
 			'label' => $endpoint_label,
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $download_data, $country, $region, $dates ) {
+					'data_callback' => function () use ( $download_data, $dates ) {
 						$stats = new EDD\Stats( array(
 							'product_id' => absint( $download_data['download_id'] ),
 							'price_id'   => absint( $download_data['price_id'] ),
 							'range'      => $dates['range'],
 							'output'     => 'formatted',
-							'country'    => $country,
-							'region'     => $region
 						) );
 
 						$earnings = $stats->get_order_item_earnings();
