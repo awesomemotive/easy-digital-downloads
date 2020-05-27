@@ -11,16 +11,6 @@
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
-
-// Hours & Minutes
-$start_hour   = '00';
-$start_minute = '00';
-$end_hour     = '23';
-$end_minute   = '59';
-$hours        = edd_get_hour_values();
-$minutes      = edd_get_minute_values();
-
-// Output
 ?>
 <div class="wrap">
 	<h1><?php esc_html_e( 'Add New Discount', 'easy-digital-downloads' ); ?></h1>
@@ -149,16 +139,16 @@ $minutes      = edd_get_minute_values();
 						<label class="screen-reader-text" for="start-date-hour">
 							<?php esc_html_e( 'Start Date Hour', 'easy-digital-downloads' ); ?>
 						</label>
-						<input type="number" min="0" max="24" step="1" name="start_date_hour" id="start-date-hour" value="<?php echo esc_attr( $start_hour ); ?>" />
+						<input type="number" min="0" max="24" step="1" name="start_date_hour" id="start-date-hour" placeholder="00" />
 						:
 
 						<label class="screen-reader-text" for="start-date-minute">
 							<?php esc_html_e( 'Start Date Minute', 'easy-digital-downloads' ); ?>
 						</label>
-						<input type="number" min="0" max="59" step="1" name="start_date_minute" id="start-date-minute" value="<?php echo esc_attr( $start_minute ); ?>" />
+						<input type="number" min="0" max="59" step="1" name="start_date_minute" id="start-date-minute" placeholder="00" />
 
 						<?php echo esc_html( ' (' . edd_get_timezone_abbr() . ')' ); ?>
-						<p class="description"><?php esc_html_e( 'Pick the date this discount will start on. Leave blank for no start date.', 'easy-digital-downloads' ); ?></p>
+						<p class="description"><?php esc_html_e( 'Pick the date and time this discount will start on. Leave blank for no start date.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
 
@@ -174,16 +164,16 @@ $minutes      = edd_get_minute_values();
 						<label class="screen-reader-text" for="end-date-hour">
 							<?php esc_html_e( 'Expiration Date Hour', 'easy-digital-downloads' ); ?>
 						</label>
-						<input type="number" min="0" max="24" step="1" name="end_date_hour" id="end-date-hour" value="<?php echo esc_attr( $end_hour ); ?>" />
+						<input type="number" min="0" max="24" step="1" name="end_date_hour" id="end-date-hour" placeholder="23" />
 						:
 
 						<label class="screen-reader-text" for="end-date-minute">
 							<?php esc_html_e( 'Expiration Date Minute', 'easy-digital-downloads' ); ?>
 						</label>
-						<input type="number" min="0" max="59" step="1" name="end_date_minute" id="end-date-minute" value="<?php echo esc_attr( $end_minute ); ?>" />
+						<input type="number" min="0" max="59" step="1" name="end_date_minute" id="end-date-minute" placeholder="59" />
 
 						<?php echo esc_html( ' (' . edd_get_timezone_abbr() . ')' ); ?>
-						<p class="description"><?php esc_html_e( 'Pick the date this discount will expire on. Leave blank to never expire.', 'easy-digital-downloads' ); ?></p>
+						<p class="description"><?php esc_html_e( 'Pick the date and time this discount will expire on. Leave blank to never expire.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>
 
