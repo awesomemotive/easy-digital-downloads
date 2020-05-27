@@ -21,7 +21,8 @@ $hours        = edd_get_hour_values();
 $minutes      = edd_get_minute_values();
 
 // Output
-?><div class="wrap">
+?>
+<div class="wrap">
 	<h1><?php esc_html_e( 'Add New Discount', 'easy-digital-downloads' ); ?></h1>
 
 	<hr class="wp-header-end">
