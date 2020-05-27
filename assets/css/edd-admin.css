@@ -2668,26 +2668,6 @@ body.download_page_edd-reports {
 	box-sizing: border-box;
 }
 
-@media only screen and (max-width: 782px) {
-
-	.edd-reports-tile {
-		flex-basis: calc(50% - 20px);
-	}
-}
-
-@media screen and (max-width: 600px) {
-
-	.edd-reports-tile {
-		flex-basis: 100%;
-		margin-left: 0;
-		margin-right: 0;
-	}
-}
-
-.edd-reports-tile--span-1-2 {
-	flex: 1 1 calc(50% - 20px);
-}
-
 .edd-reports-tile span.dashicons {
 	display: inline-block;
 	font-size: 30px;
