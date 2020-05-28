@@ -127,6 +127,11 @@ function edd_trash_order( $order_id ) {
 			}
 		}
 
+		// Update the customer records when an order is trashed.
+		if ( ! empty( $order->customer_id ) ) {
+			$customer = new EDD_Customer( $order->customer_id );
+			$customer->recalculate_stats();
+		}
 	}
 
 	return filter_var( $trashed, FILTER_VALIDATE_BOOLEAN );
