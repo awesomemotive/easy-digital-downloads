@@ -623,7 +623,10 @@ function edd_maybe_add_customer_address( $customer_id = 0, $data = array() ) {
 		return false;
 	}
 
-	// Set up an array with the address specific keys to check.
+	// Set the address type.
+	$data['type'] = 'billing';
+
+	// Set up an array with the whitelisted address keys.
 	$empty_address    = array(
 		'address'     => '',
 		'address2'    => '',
@@ -631,8 +634,9 @@ function edd_maybe_add_customer_address( $customer_id = 0, $data = array() ) {
 		'region'      => '',
 		'country'     => '',
 		'postal_code' => '',
+		'type'        => 'billing',
 	);
-	$address_to_check = array_intersect_key( $data, $empty_address ) + $empty_address;
+	$address_to_check = array_intersect_key( $data, $empty_address );
 	$address_to_check = array_filter( $address_to_check );
 	if ( empty( $address_to_check ) ) {
 		return false;
@@ -648,7 +652,6 @@ function edd_maybe_add_customer_address( $customer_id = 0, $data = array() ) {
 		return false;
 	}
 	$data['customer_id'] = $customer_id;
-	$data['type']        = 'billing';
 
 	// Add the new address to the customer record.
 	return $customer_addresses->add_item( $data );
