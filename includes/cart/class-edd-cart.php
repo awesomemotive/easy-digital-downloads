@@ -633,17 +633,57 @@ class EDD_Cart {
 	 * Get the discounted amount on a price
 	 *
 	 * @since 2.7
+	 * @since 3.0 Use `edd_get_item_discount_amount()` for calculations.
 	 *
 	 * @param array       $item     Cart item.
 	 * @param bool|string $discount False to use the cart discounts or a string to check with a discount code.
 	 * @return float The discounted amount
 	 */
 	public function get_item_discount_amount( $item = array(), $discount = false ) {
+		// Validate item.
+		if ( empty( $item ) || empty( $item['id'] ) ) {
+			return 0;
+		}
+
+		if ( ! isset( $item['quantity'] ) ) {
+			return 0;
+		}
+
+		if ( ! isset( $item['options'] ) ) {
+			$item['options'] = array();
+		}
+
 		$discounts = false === $discount
 			? $this->get_discounts()
 			: array( $discount );
 
-		return edd_get_item_discount_amount( $item, $discounts, $this->get_contents() );
+		$item_price      = $this->get_item_price( $item['id'], $item['options'] );
+		$discount_amount = edd_get_item_discount_amount( $item, $this->get_contents(), $discounts );
+
+		$discounted_amount = ( $item_price - $discount_amount );
+
+		/**
+		 * Filters the amount to be discounted from the original cart item amount.
+		 *
+		 * @since unknown
+		 *
+		 * @param float    $discounted_amount Amount to be discounted from the cart item amount.
+		 * @param string[] $discounts         Discount codes applied to the Cart.
+		 * @param array    $item              Cart item.
+		 * @param float    $item_price        Cart item price.
+		 */
+		$discounted_amount = apply_filters(
+			'edd_get_cart_item_discounted_amount',
+			$discounted_amount,
+			$discounts,
+			$item,
+			$item_price
+		);
+
+		// Recalculate using the legacy filter discounted amount.
+		$discount_amount = round( ( $item_price - $discounted_amount ), edd_currency_decimal_filter() );
+
+		return $discount_amount;
 	}
 
 	/**
