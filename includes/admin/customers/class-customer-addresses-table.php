@@ -31,8 +31,8 @@ class EDD_Customer_Addresses_Table extends List_Table {
 	 */
 	public function __construct() {
 		parent::__construct( array(
-			'singular' => __( 'Address',   'easy-digital-downloads' ),
-			'plural'   => __( 'Addresses', 'easy-digital-downloads' ),
+			'singular' => 'address',
+			'plural'   => 'addresses',
 			'ajax'     => false
 		) );
 
@@ -289,7 +289,7 @@ class EDD_Customer_Addresses_Table extends List_Table {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-customers' ) ) {
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-addresses' ) ) {
 			return;
 		}
 
