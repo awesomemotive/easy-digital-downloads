@@ -766,7 +766,8 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 		return edd_count_orders(
 			array(
 				'customer_id' => $this->id,
-				'status'      => array( 'complete' ),
+				'status'      => array( 'complete', 'partially_refunded' ),
+				'type'        => 'sale',
 			)
 		);
 	}
@@ -783,9 +784,10 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 			array(
 				'customer_id'   => $this->id,
 				'number'        => 9999,
-				'status'        => array( 'complete', 'refunded', 'partially_refunded' ),
+				'status'        => array( 'complete', 'partially_refunded' ),
 				'fields'        => 'total',
 				'no_found_rows' => true,
+				'type'          => 'sale',
 			)
 		);
 
