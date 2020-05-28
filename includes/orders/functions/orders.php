@@ -336,8 +336,14 @@ function edd_destroy_order( $order_id = 0 ) {
  */
 function edd_update_order( $order_id = 0, $data = array() ) {
 	$orders = new EDD\Database\Queries\Order();
+	$update = $orders->update_item( $order_id, $data );
 
-	return $orders->update_item( $order_id, $data );
+	if ( ! empty( $data['customer_id'] ) ) {
+		$customer = new EDD_Customer( $data['customer_id'] );
+		$customer->recalculate_stats();
+	}
+
+	return $update;
 }
 
 /**
