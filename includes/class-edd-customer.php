@@ -783,7 +783,7 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 		$totals = edd_get_orders(
 			array(
 				'customer_id'   => $this->id,
-				'number'        => 9999,
+				'number'        => $this->get_purchase_count(),
 				'status'        => array( 'complete', 'partially_refunded' ),
 				'fields'        => 'total',
 				'no_found_rows' => true,
