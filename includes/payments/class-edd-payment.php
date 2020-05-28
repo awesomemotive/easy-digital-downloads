@@ -2814,12 +2814,8 @@ class EDD_Payment {
 		if ( ! empty( $this->customer_id ) ) {
 			$customer = new EDD_Customer( $this->customer_id );
 
-			if ( true === $alter_customer_value ) {
-				$customer->decrease_value( $this->total );
-			}
-
-			if ( true === $alter_customer_purchase_count ) {
-				$customer->decrease_purchase_count();
+			if ( $alter_customer_value || $alter_customer_purchase_count ) {
+				$customer->recalculate_stats();
 			}
 		}
 	}
