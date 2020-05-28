@@ -1448,7 +1448,7 @@ function edd_admin_order_get_item_amounts() {
 			),
 		);
 
-		$discount_amount = edd_get_item_discount_amount( $item, array( $d ), $products );
+		$discount_amount = edd_get_item_discount_amount( $item, $products, array( $d ) );
 
 		$adjustments[] = array(
 			'objectType'  => 'order_item',
