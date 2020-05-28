@@ -587,8 +587,10 @@ function edd_count_customer_addresses( $args = array() ) {
 }
 
 /**
- * Maybe add a customer address. Used by `edd_build_order()` to maybe add
- * order addresses to the customer addresses table.
+ * Maybe add a customer address. Only unique addresses will be added. Used
+ * by `edd_build_order()` and `edd_add_manual_order()` to maybe add order
+ * addresses to the customer addresses table. Also used by the data migrator
+ * class when migrating orders from 2.9.
  *
  * @since 3.0
  *
