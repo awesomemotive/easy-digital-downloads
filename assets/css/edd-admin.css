@@ -1041,10 +1041,14 @@ textarea[name="edd-note"] {
 	width: 300px;
 }
 
+#edd-add-discount .edd-discount-datetime input,
+#edd-edit-discount .edd-discount-datetime input {
+	vertical-align: middle;
+}
+
 #edd-add-discount input[type="text"].edd_datepicker,
 #edd-edit-discount input[type="text"].edd_datepicker {
 	width: 183px;
-	vertical-align: middle;
 }
 
 #edd-edit-discount textarea {

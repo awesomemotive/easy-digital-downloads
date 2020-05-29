@@ -174,7 +174,7 @@ $minutes              = edd_get_minute_values();
 					<th scope="row" valign="top">
 						<label for="edd-start"><?php _e( 'Start date', 'easy-digital-downloads' ); ?></label>
 					</th>
-					<td>
+					<td class="edd-discount-datetime">
 						<input name="start_date" id="edd-start" type="text" value="<?php echo esc_attr( false !== $discount->start_date ? $start_date : '' ); ?>" class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" />
 
 						<label class="screen-reader-text" for="start-date-hour">
@@ -199,7 +199,7 @@ $minutes              = edd_get_minute_values();
 					<th scope="row" valign="top">
 						<label for="edd-expiration"><?php _e( 'Expiration date', 'easy-digital-downloads' ); ?></label>
 					</th>
-					<td>
+					<td class="edd-discount-datetime">
 						<input name="end_date" id="edd-expiration" type="text" value="<?php echo esc_attr( false !== $discount->end_date ? $end_date : '' ); ?>"  class="edd_datepicker" data-format="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" placeholder="<?php echo esc_attr( edd_get_date_picker_format() ); ?>" />
 
 						<label class="screen-reader-text" for="end-date-hour">
