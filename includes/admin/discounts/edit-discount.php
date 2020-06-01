@@ -205,7 +205,7 @@ $minutes              = edd_get_minute_values();
 						<label class="screen-reader-text" for="end-date-hour">
 							<?php esc_html_e( 'Expiration Date Hour', 'easy-digital-downloads' ); ?>
 						</label>
-						<input type="number" min="0" max="24" step="1" name="end_date_hour" id="end-date-hour" value="<?php echo esc_attr( false !== $discount->end_date ? $end_hour : '' ); ?>" placeholder="00" />
+						<input type="number" min="0" max="24" step="1" name="end_date_hour" id="end-date-hour" value="<?php echo esc_attr( false !== $discount->end_date ? $end_hour : '' ); ?>" placeholder="23" />
 						:
 
 						<label class="screen-reader-text" for="end-date-minute">
