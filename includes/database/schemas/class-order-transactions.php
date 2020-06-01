@@ -65,7 +65,7 @@ class Order_Transactions extends Schema {
 		array(
 			'name'       => 'transaction_id',
 			'type'       => 'varchar',
-			'length'     => '64',
+			'length'     => '256',
 			'cache_key'  => true
 		),
 
