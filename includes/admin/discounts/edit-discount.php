@@ -211,7 +211,7 @@ $minutes              = edd_get_minute_values();
 						<label class="screen-reader-text" for="end-date-minute">
 							<?php esc_html_e( 'Expiration Date Minute', 'easy-digital-downloads' ); ?>
 						</label>
-						<input type="number" min="0" max="59" step="1" name="end_date_minute" id="end-date-minute" value="<?php echo esc_attr( false !== $discount->end_date ? $end_minute : '' ); ?>" placeholder="00" />
+						<input type="number" min="0" max="59" step="1" name="end_date_minute" id="end-date-minute" value="<?php echo esc_attr( false !== $discount->end_date ? $end_minute : '' ); ?>" placeholder="59" />
 
 						<?php echo esc_html( ' (' . edd_get_timezone_abbr() . ')' ); ?>
 						<p class="description"><?php _e( 'Pick the date and time this discount will expire on. Leave blank to never expire.', 'easy-digital-downloads' ); ?></p>
