@@ -806,13 +806,13 @@ class EDD_Payment_History_Table extends List_Table {
 		}
 
 		$args = array(
-			'user'     => $user,
-			'customer' => $customer,
-			'status'   => $status,
-			'gateway'  => $gateway,
-			'mode'     => $mode,
-			'type'     => $type,
-			'search'   => $search,
+			'user'        => $user,
+			'customer_id' => $customer,
+			'status'      => $status,
+			'gateway'     => $gateway,
+			'mode'        => $mode,
+			'type'        => $type,
+			'search'      => $search,
 		);
 
 		// Search
