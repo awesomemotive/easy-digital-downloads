@@ -2312,9 +2312,7 @@ function edd_register_customer_report( $reports ) {
 				'tiles'  => array(
 					'lifetime_value_of_customer',
 					'average_customer_value',
-					// this line removes tile
 					'average_number_of_orders_per_customer',
-					'customer_average_age',
 					'most_valuable_customer',
 				),
 				'tables' => array(
@@ -2373,20 +2371,6 @@ function edd_register_customer_report( $reports ) {
 						return apply_filters( 'edd_reports_customers_average_order_count', $stats->get_customer_order_count( array(
 							'function' => 'AVG',
 						) ) );
-					},
-				),
-			),
-		) );
-
-		$reports->register_endpoint( 'customer_average_age', array(
-			'label' => __( 'Average Age', 'easy-digital-downloads' ),
-			'views' => array(
-				'tile' => array(
-					'data_callback' => function () {
-						global $wpdb;
-						$average_value = (int) $wpdb->get_var( "SELECT AVG(DATEDIFF(NOW(), date_created)) AS average FROM {$wpdb->edd_customers}" );
-
-						return apply_filters( 'edd_reports_customers_average_age', $average_value . ' ' . __( 'days', 'easy-digital-downloads' ) );
 					},
 				),
 			),
