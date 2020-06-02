@@ -538,9 +538,15 @@ function edd_ajax_get_states_field() {
 	// Maybe setup the new listbox.
 	if ( ! empty( $states ) ) {
 		$field_name = sanitize_text_field( $_POST['field_name'] );
+		$field_id   = sanitize_text_field( $_POST['field_id'] );
+
+		if ( empty( $field_id ) ) {
+			$field_id = $field_name;
+		}
+
 		$response   = EDD()->html->select( array(
 			'name'             => $field_name,
-			'id'               => $field_name,
+			'id'               => $field_id,
 			'class'            => $field_name . ' edd-select',
 			'options'          => $states,
 			'chosen'           => $chosen,
