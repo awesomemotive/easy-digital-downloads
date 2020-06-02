@@ -133,6 +133,7 @@ export const OrderItem = Backbone.Model.extend( {
 				country,
 				region,
 				products: _.uniq( [
+					...products,
 					{
 						id: productId,
 						quantity,
@@ -140,7 +141,6 @@ export const OrderItem = Backbone.Model.extend( {
 							price_id: priceId,
 						},
 					},
-					...products,
 				], function( { id, options: { price_id } } ) {
 					return `${ id }_${ price_id }`
 				} ),
