@@ -8,7 +8,18 @@ import { getChosenVars } from 'utils/chosen.js';
 import { jQueryReady } from 'utils/jquery.js';
 
 // Store customer search results to help prefill address data.
-let CUSTOMER_SEARCH_RESULTS = {};
+let CUSTOMER_SEARCH_RESULTS = {
+	addresses: {
+		'0': {
+			address: '',
+			address2: '',
+			city: '',
+			region: '',
+			postal_code: '',
+			country: '',
+		},
+	},
+};
 
 jQueryReady( () => {
 
@@ -112,22 +123,26 @@ jQueryReady( () => {
 			const { success, data } = response;
 
 			if ( ! success ) {
-				$( '.customer-address-select-wrap' ).html( '' ).hide();
+				$( '.customer-address-select-wrap' ).hide();
 
 				return;
 			}
 
 			// Store response for later use.
-			CUSTOMER_SEARCH_RESULTS = data;
+			CUSTOMER_SEARCH_RESULTS = {
+				...CUSTOMER_SEARCH_RESULTS,
+				...data,
+				addresses: {
+					...CUSTOMER_SEARCH_RESULTS.addresses,
+					...data.addresses,
+				},
+			};
 
 			if ( data.html ) {
-				$('.customer-address-select-wrap').html(data.html).show();
-				$('.customer-address-select-wrap select').each(function () {
-					const el = $(this);
-					el.chosen(getChosenVars(el));
-				});
+				$( '.customer-address-select-wrap' ).show();
+				$( '.customer-address-select-wrap .edd-form-group__control' ).html( data.html );
 			} else {
-				$( '.customer-address-select-wrap' ).html( '' ).hide();
+				$( '.customer-address-select-wrap' ).hide();
 			}
 		}, 'json' );
 
