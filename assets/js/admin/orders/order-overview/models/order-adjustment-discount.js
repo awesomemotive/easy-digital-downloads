@@ -48,6 +48,7 @@ export const OrderAdjustmentDiscount = OrderAdjustment.extend( {
 		}
 
 		const { models: items } = state.get( 'items' );
+		const { number } = state.get( 'formatters' );
 
 		items.forEach( ( item ) => {
 			const discount = item.get( 'adjustments' ).findWhere( {
@@ -55,7 +56,7 @@ export const OrderAdjustmentDiscount = OrderAdjustment.extend( {
 			} );
 
 			if ( undefined !== discount ) {
-				amount += +discount.get( 'subtotal' );
+				amount += +number.format( discount.get( 'subtotal' ) );
 			}
 		} );
 

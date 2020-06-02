@@ -1437,8 +1437,22 @@ function edd_admin_order_get_item_amounts() {
 	// There is not currently API support for `OrderItem`-level `OrderAdjustment`s.
 	$adjustments = array();
 
+	global $edd_flat_discount_total;
+	$edd_flat_discount_total = 0;
+
 	foreach ( $discounts as $discount_id ) {
 		$d = edd_get_discount( $discount_id );
+
+		// Retrieve total flat rate amount.
+		if ( 'flat' === $d->get_type() ) {
+			foreach ( $products as $product ) {
+				edd_get_item_discount_amount( $product, $products, array( $d ) );
+			}
+		}
+		
+		// Store total discount and reset global.
+		$total_discount = $edd_flat_discount_total;
+		$edd_flat_discount_total = 0;
 
 		$item = array(
 			'id'       => $download->id,
@@ -1449,6 +1463,16 @@ function edd_admin_order_get_item_amounts() {
 		);
 
 		$discount_amount = edd_get_item_discount_amount( $item, $products, array( $d ) );
+
+		if ( 'flat' === $d->get_type() && $item['id'] == end( $products )['id'] ) {
+			if ( $total_discount < $d->get_amount() ) {
+				$adjustment       = ( $d->get_amount() - $total_discount );
+				$discount_amount += $adjustment;
+			} else if ( $total_discount > $d->get_amount() ) {
+				$adjustment       = ( $total_discount - $d->get_amount() );
+				$discount_amount -= $adjustment;
+			}
+		}
 
 		$adjustments[] = array(
 			'objectType'  => 'order_item',
