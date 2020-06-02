@@ -473,7 +473,7 @@ function edd_order_details_addresses( $order ) {
 							array(
 								'options'          => $states,
 								'name'             => 'edd_order_address[region]',
-								'id'               => 'edd-order-address-region',
+								'id'               => 'edd_order_address_region',
 								'class'            => 'edd-order-address-region edd-form-group__input',
 								'selected'         => esc_attr( $address->region ),
 								'show_option_all'  => false,
