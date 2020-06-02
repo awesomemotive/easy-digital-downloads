@@ -94,6 +94,10 @@ export const State = Backbone.Model.extend(
 				}
 			} );
 
+			if ( subtotal < 0 ) {
+				return 0;
+			}
+
 			return subtotal;
 		},
 
@@ -141,7 +145,13 @@ export const State = Backbone.Model.extend(
 		 * @return {number} Order total.
 		 */
 		getTotal() {
-			return this.getSubtotal() + this.getTax();
+			const total = this.getSubtotal() + this.getTax();
+
+			if ( total < 0 ) {
+				return 0;
+			}
+
+			return total;
 		},
 
 		/**
