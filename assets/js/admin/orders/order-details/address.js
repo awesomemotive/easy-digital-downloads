@@ -143,12 +143,13 @@ jQueryReady( () => {
 	 * @param {string} fieldName the name of the field to use in response.
 	 * @return {$.promise} Region data response.
 	 */
-	function getStates( countryEl, fieldName ) {
+	function getStates( countryEl, fieldName, fieldId ) {
 		const data = {
 			action: 'edd_get_shop_states',
 			country: countryEl.val(),
 			nonce: countryEl.data( 'nonce' ),
 			field_name: fieldName,
+			field_id: fieldId,
 		};
 
 		return $.post( ajaxurl, data );
@@ -188,7 +189,12 @@ jQueryReady( () => {
 	 * @since 3.0
 	 */
 	function updateRegionFieldOnChange() {
-		getStates( $( this ), 'edd_order_address_region' ).done( replaceRegionField );
+		getStates(
+			$( this ),
+			'edd_order_address[region]',
+			'edd_order_address_region'
+		)
+			.done( replaceRegionField );
 	}
 
 	$( document.body ).on( 'change', '.customer-address-select-wrap .add-order-customer-address-select', function() {
@@ -212,10 +218,14 @@ jQueryReady( () => {
 			.trigger( 'chosen:updated' );
 
 		// Set Region.
-		getStates( $( '#edd-add-order-form select#edd_order_address_country' ), 'edd_order_address[region]' )
+		getStates(
+			$( '#edd_order_address_country' ),
+			'edd_order_address[region]',
+			'edd_order_address_region'
+		)
 			.done( replaceRegionField )
 			.done( ( response ) => {
-				$( '[name="edd_order_address[region]"]' )
+				$( '#edd_order_address_region' )
 					.val( address.region )
 					.trigger( 'change' )
 					.trigger( 'chosen:updated' );

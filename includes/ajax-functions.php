@@ -1233,8 +1233,8 @@ function edd_ajax_customer_addresses() {
 
 			// Fetch the select
 			if ( ! empty( $options ) ) {
-				$html  = '<select data-nonce="' . wp_create_nonce( 'edd-country-field-nonce' ) . '" data-placeholder="Select a previously used address" class="edd-select-chosen ' . esc_attr( $rtl_class ) . ' add-order-customer-address-select">';
-				$html .= '<option></option>';
+				$html  = '<select id="edd_customer_existing_addresses" data-nonce="' . wp_create_nonce( 'edd-country-field-nonce' ) . '" data-placeholder="Select a previously used address" class="edd-select-chosen ' . esc_attr( $rtl_class ) . ' add-order-customer-address-select">';
+				$html .= '<option data-key="0" value="0"></option>';
 				foreach ( $options as $key => $value ) {
 					$html .= '<option data-key="' . esc_attr( $key ) . '" value="' . esc_attr( $key ) . '">' . esc_attr( $value ). '</option>';
 				}
