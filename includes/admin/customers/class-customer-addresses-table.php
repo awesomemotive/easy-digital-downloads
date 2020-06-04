@@ -68,7 +68,7 @@ class EDD_Customer_Addresses_Table extends List_Table {
 			case 'type' :
 				$value = ucwords( edd_get_address_type_label( $item['type'] ) );
 				if ( ! empty( $item['is_primary'] ) ) {
-					$value .= ' <span class="edd-chip">git ' . __( 'Primary', 'easy-digital-downloads' ) . '</span>';
+					$value .= ' <span class="edd-chip">git ' . esc_html__( 'Primary', 'easy-digital-downloads' ) . '</span>';
 				}
 				break;
 
@@ -375,6 +375,7 @@ class EDD_Customer_Addresses_Table extends List_Table {
 					'country'       => $address->country,
 					'date_created'  => $address->date_created,
 					'date_modified' => $address->date_modified,
+					'is_primary'    => $address->is_primary,
 				);
 			}
 		}
