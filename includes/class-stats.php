@@ -2096,7 +2096,7 @@ class Stats {
 		$this->pre_query( $query );
 
 		// Only `COUNT` and `AVG` are accepted by this method.
-		$accepted_functions = array( 'COUNT', 'AVG(id)' );
+		$accepted_functions = array( 'COUNT', 'AVG' );
 
 		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
 			? $this->query_vars['function'] . "({$this->query_vars['column']})"
@@ -2114,7 +2114,7 @@ class Stats {
 			? $this->get_db()->prepare( 'AND email = %s', sanitize_email( $this->query_vars['email'] ) )
 			: '';
 
-		if ( 'AVG(id)' === $function ) {
+		if ( 'AVG' === $function ) {
 			$sql = "SELECT COUNT(id) / total_customers AS average
 					FROM {$this->query['table']}
 					CROSS JOIN (
