@@ -2099,8 +2099,8 @@ class Stats {
 		$accepted_functions = array( 'COUNT', 'AVG' );
 
 		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-			? $this->query_vars['function'] . "({$this->query_vars['column']})"
-			: 'COUNT(id)';
+			? strtoupper( $this->query_vars['function'] )
+			: '';
 
 		$user = isset( $this->query_vars['user_id'] )
 			? $this->get_db()->prepare( 'AND user_id = %d', absint( $this->query_vars['user_id'] ) )
@@ -2123,7 +2123,7 @@ class Stats {
 					) o
 					WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		} else {
-			$sql = "SELECT {$function}
+			$sql = "SELECT COUNT(id)
 					FROM {$this->query_vars['table']}
 					WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		}
