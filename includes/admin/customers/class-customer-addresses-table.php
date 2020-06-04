@@ -135,8 +135,8 @@ class EDD_Customer_Addresses_Table extends List_Table {
 			'view' => '<a href="' . esc_url( $customer_url ) . '">' . __( 'View', 'easy-digital-downloads' ) . '</a>'
 		);
 
-		// Non-primary email actions
-		if ( 'primary' !== $item_status ) {
+		// Non-primary address actions
+		if ( 'primary' !== $item['is_primary'] ) {
 			$actions['delete'] = '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 		}
 
