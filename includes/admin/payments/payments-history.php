@@ -117,10 +117,6 @@ function edd_get_payment_view() {
  */
 function edd_payment_history_page() {
 
-	wp_enqueue_script( 'edd-admin-orders' );
-	// Enqueued for backwards compatibility. Empty file.
-	wp_enqueue_script( 'edd-admin-payments' );
-
 	// What are we viewing?
 	switch ( edd_get_payment_view() ) {
 

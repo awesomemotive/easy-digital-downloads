@@ -60,17 +60,20 @@ class Data_Migrator {
 		}
 
 		if ( $customer ) {
-			edd_add_customer_address( array(
-				'customer_id' => $customer->id,
-				'type'        => $type,
-				'name'        => $customer->name,
-				'address'     => $address['line1'],
-				'address2'    => $address['line2'],
-				'city'        => $address['city'],
-				'region'      => $address['state'],
-				'postal_code' => $address['zip'],
-				'country'     => $address['country'],
-			) );
+			edd_add_customer_address(
+				array(
+					'customer_id'  => $customer->id,
+					'type'         => 'primary',
+					'name'         => $customer->name,
+					'address'      => $address['line1'],
+					'address2'     => $address['line2'],
+					'city'         => $address['city'],
+					'region'       => $address['state'],
+					'postal_code'  => $address['zip'],
+					'country'      => $address['country'],
+					'date_created' => $customer->date_created,
+				)
+			);
 		}
 	}
 
@@ -88,12 +91,18 @@ class Data_Migrator {
 			return;
 		}
 
-		$customer_id = absint( $data->edd_customer_id );
+		$customer = edd_get_customer_by( 'user_id', absint( $data->edd_customer_id ) );
+		if ( ! $customer ) {
+			return;
+		}
 
-		edd_add_customer_email_address( array(
-			'customer_id' => $customer_id,
-			'email'       => $data->meta_value,
-		) );
+		edd_add_customer_email_address(
+			array(
+				'customer_id'  => $customer->id,
+				'email'        => $data->meta_value,
+				'date_created' => $customer->date_created,
+			)
+		);
 	}
 
 	/**
@@ -565,14 +574,15 @@ class Data_Migrator {
 		) );
 
 		$order_address_data = array(
-			'order_id'    => $order_id,
-			'name'        => trim( $user_info['first_name'] . ' ' . $user_info['last_name'] ),
-			'address'     => isset( $user_info['address']['line1'] )   ? $user_info['address']['line1']   : '',
-			'address2'    => isset( $user_info['address']['line2'] )   ? $user_info['address']['line2']   : '',
-			'city'        => isset( $user_info['address']['city'] )    ? $user_info['address']['city']    : '',
-			'region'      => isset( $user_info['address']['state'] )   ? $user_info['address']['state']   : '',
-			'country'     => isset( $user_info['address']['country'] ) ? $user_info['address']['country'] : '',
-			'postal_code' => isset( $user_info['address']['zip'] )     ? $user_info['address']['zip']     : '',
+			'order_id'     => $order_id,
+			'name'         => trim( $user_info['first_name'] . ' ' . $user_info['last_name'] ),
+			'address'      => isset( $user_info['address']['line1'] )   ? $user_info['address']['line1']   : '',
+			'address2'     => isset( $user_info['address']['line2'] )   ? $user_info['address']['line2']   : '',
+			'city'         => isset( $user_info['address']['city'] )    ? $user_info['address']['city']    : '',
+			'region'       => isset( $user_info['address']['state'] )   ? $user_info['address']['state']   : '',
+			'country'      => isset( $user_info['address']['country'] ) ? $user_info['address']['country'] : '',
+			'postal_code'  => isset( $user_info['address']['zip'] )     ? $user_info['address']['zip']     : '',
+			'date_created' => $date_created_gmt,
 		);
 
 		// Remove empty data.
@@ -591,15 +601,23 @@ class Data_Migrator {
 		unset( $customer_address_data['first_name'] );
 		unset( $customer_address_data['last_name'] );
 
-		// Maybe add address to customer record, if it is not empty.
-		if ( ! empty( $customer_address_data ) ) {
-			edd_maybe_add_customer_address( $customer_id, $customer_address_data );
-		}
+		// If possible, set the order date as the address creation date.
+		$customer_address_data['date_created'] = $date_created_gmt;
+
+		// Maybe add address to customer record.
+		edd_maybe_add_customer_address( $customer_id, $customer_address_data );
 
 		// Maybe add email address to customer record
 		if ( ! empty( $customer ) && $customer instanceof \EDD_Customer ) {
-			$primary = ( $customer->email === $purchase_email );
-			$customer->add_email( $purchase_email, $primary );
+			$type = ( $customer->email === $purchase_email ) ? 'primary' : 'secondary';
+			edd_add_customer_email_address(
+				array(
+					'customer_id'  => $customer_id,
+					'date_created' => $date_created_gmt,
+					'email'        => $purchase_email,
+					'type'         => $type,
+				)
+			);
 		}
 
 		/** Migrate meta *********************************************/

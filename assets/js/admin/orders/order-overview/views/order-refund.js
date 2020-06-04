@@ -1,13 +1,6 @@
 /* global wp */
 
 /**
- * Internal dependencies
- */
-import { Currency } from '@easy-digital-downloads/currency';
-
-const currency = new Currency();
-
-/**
  * OrderRefund
  *
  * @since 3.0
@@ -44,6 +37,8 @@ export const OrderRefund = wp.Backbone.View.extend( {
 	prepare() {
 		const { model, options } = this;
 		const { state } = options;
+
+		const { currency } = state.get( 'formatters' );
 
 		// Determine column offset -- using cart quantities requires an extra column.
 		const colspan = true === state.get( 'hasQuantity' ) ? 2 : 1;

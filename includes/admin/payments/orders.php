@@ -33,6 +33,21 @@ function edd_order_details_publish( $order ) {
 		<div class="edit-post-header">
 
 			<div class="edit-post-header__settings">
+				<?php if ( edd_is_add_order_page() ) : ?>
+					<div class="edd-send-purchase-receipt">
+						<div class="edd-form-group">
+							<div class="edd-form-group__control">
+								<input type="checkbox" name="edd_order_send_receipt" id="edd-order-send-receipt" class="edd-form-group__input" value="1" checked />
+
+								<label for="edd-order-send-receipt">
+								<?php esc_html_e( 'Send Purchase Receipt', 'easy-digital-downloads' ); ?>
+								</label>
+								<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Checking this box will email the purchase receipt to the selected customer.', 'easy-digital-downloads' ); ?>"></span>
+							</div>
+						</div>
+					</div>
+				<?php endif; ?>
+
 				<div id="publishing-action">
 					<span class="spinner"></span>
 					<input
@@ -390,7 +405,9 @@ function edd_order_details_addresses( $order ) {
 		<div class="order-data-address">
 			<h3><?php esc_html_e( 'Billing Address', 'easy-digital-downloads' ); ?></h3>
 
-			<div class="customer-address-select-wrap">
+			<div class="customer-address-select-wrap edd-form-group" style="display: none; padding: 16px 0; border-bottom: 1px solid #ccd0d4;">
+				<label for="edd_customer_existing_addresses" class="edd-form-group__label"><?php esc_html_e( 'Existing Address:', 'easy-digital-downloads' ); ?></label>
+				<div class="edd-form-group__control"></div>
 			</div>
 
 			<div class="edd-form-group">
@@ -413,7 +430,6 @@ function edd_order_details_addresses( $order ) {
 					<input type="text" name="edd_order_address[city]" class="edd-form-group__input regular-text" id="edd_order_address_city" value="<?php echo esc_attr( $address->city ); ?>" />
 				</div>
 			</div>
-
 
 			<div class="edd-form-group">
 				<label for="edd_order_address_postal_code" class="edd-form-group__label"><?php echo esc_html_x( 'Zip / Postal Code:', 'Zip / Postal code of address', 'easy-digital-downloads' ); ?></label>
@@ -458,7 +474,7 @@ function edd_order_details_addresses( $order ) {
 							array(
 								'options'          => $states,
 								'name'             => 'edd_order_address[region]',
-								'id'               => 'edd-order-address-region',
+								'id'               => 'edd_order_address_region',
 								'class'            => 'edd-order-address-region edd-form-group__input',
 								'selected'         => esc_attr( $address->region ),
 								'show_option_all'  => false,
@@ -686,7 +702,9 @@ function edd_order_details_overview( $order ) {
 				: 0,
 			'hasDiscounts' => true === edd_has_active_discounts(),
 			'order'        => array(
-				'status' => $order->status,
+				'status'         => $order->status,
+				'currency'       => $order->currency,
+				'currencySymbol' => html_entity_decode( edd_currency_symbol( $order->currency ) ),
 			),
 			'nonces'       => array(
 				'edd_admin_order_get_item_amounts' => wp_create_nonce( 'edd_admin_order_get_item_amounts' ),
@@ -887,25 +905,10 @@ function edd_order_details_extras( $order = false ) {
 
 							<label for="edd_unlimited_downloads">
 							<?php esc_html_e( 'Unlimited Downloads', 'easy-digital-downloads' ); ?></label>
-							<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Unlimited Downloads</strong>: checking this box will override all other file download limits for this purchase, granting the customer unliimited downloads of all files included on the purchase.', 'easy-digital-downloads' ); ?>"></span>
+							<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Checking this box will override all other file download limits for this purchase, granting the customer unlimited downloads of all files included on the purchase.', 'easy-digital-downloads' ); ?>"></span>
 						</div>
 					</div>
 				</div>
-
-				<?php if ( edd_is_add_order_page() ) : ?>
-					<div class="edd-send-purchase-receipt edd-admin-box-inside">
-						<div class="edd-form-group">
-							<div class="edd-form-group__control">
-								<input type="checkbox" name="edd_order_send_receipt" id="edd-order-send-receipt" class="edd-form-group__input" value="1" />
-
-								<label for="edd-order-send-receipt">
-								<?php esc_html_e( 'Send Receipt', 'easy-digital-downloads' ); ?>
-								</label>
-								<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Send Receipt</strong>: checking this box will send the purchase receipt to the selected customer.', 'easy-digital-downloads' ); ?>"></span>
-							</div>
-						</div>
-					</div>
-				<?php endif; ?>
 
 				<?php do_action( 'edd_view_order_details_payment_meta_after', $order->id ); ?>
 			</div>

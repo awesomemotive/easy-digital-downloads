@@ -684,7 +684,7 @@ function edd_customers_view( $customer = null ) {
 		<table class="wp-list-table widefat striped addresses">
 			<thead>
 				<tr>
-					<th><?php esc_html_e( 'Address',     'easy-digital-downloads' ); ?></th>
+					<th class="column-primary"><?php esc_html_e( 'Address',     'easy-digital-downloads' ); ?></th>
 					<th><?php esc_html_e( 'City',        'easy-digital-downloads' ); ?></th>
 					<th><?php esc_html_e( 'Region',      'easy-digital-downloads' ); ?></th>
 					<th><?php esc_html_e( 'Postal Code', 'easy-digital-downloads' ); ?></th>
@@ -698,7 +698,7 @@ function edd_customers_view( $customer = null ) {
 				foreach ( $addresses as $address ) : ?>
 
 					<tr data-id="<?php echo esc_attr( $address->id ); ?>">
-						<td class="column-primary">
+						<td>
 							<?php
 							echo ! empty( $address->address )
 								? esc_html( $address->address )
@@ -767,8 +767,8 @@ function edd_customers_view( $customer = null ) {
 		<table class="wp-list-table widefat striped emails">
 			<thead>
 				<tr>
-					<th class="column-primary"><?php esc_html_e( 'Email',   'easy-digital-downloads' ); ?></th>
-					<th class="column-actions"><?php esc_html_e( 'Actions', 'easy-digital-downloads' ); ?></th>
+					<th><?php esc_html_e( 'Email',   'easy-digital-downloads' ); ?></th>
+					<th><?php esc_html_e( 'Actions', 'easy-digital-downloads' ); ?></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -893,7 +893,7 @@ function edd_customers_view( $customer = null ) {
 						<td class="column-primary"><strong><?php echo $link; ?></strong></td>
 						<td><?php echo edd_get_gateway_admin_label( $refund->gateway ); ?></td>
 						<td><?php echo edd_currency_filter( edd_format_amount( $refund->total ), $refund->currency ); ?></td>
-						<td><time datetime="<?php echo esc_attr( EDD()->utils->date( $refund->date_created, null, true )->toDateTimeString() ); ?>"><?php echo edd_date_i18n( EDD()->utils->date( $refund->date_created, null, true )->toDateTimeString(), 'M. d, Y' ) . '<br>' . edd_date_i18n( EDD()->utils->date( $refund->date_created, null, true )->toDateTimeString(), 'H:i' ); ?></time></td>
+						<td><time datetime="<?php echo esc_attr( EDD()->utils->date( $refund->date_created, null, true )->toDateTimeString() ); ?>"><?php echo edd_date_i18n( EDD()->utils->date( $refund->date_created, null, true )->toDateTimeString(), 'M. d, Y' ) . '<br>' . edd_date_i18n( EDD()->utils->date( $refund->date_created, null, true )->toDateTimeString(), 'H:i' ); ?> <?php echo esc_html( edd_get_timezone_abbr() ); ?></time></td>
 					</tr>
 
 				<?php endforeach;

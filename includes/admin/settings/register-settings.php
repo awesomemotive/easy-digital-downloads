@@ -1074,7 +1074,7 @@ function edd_get_registered_settings() {
 						'id'    => 'show_agree_to_terms',
 						'name'  => __( 'Agreement', 'easy-digital-downloads' ),
 						'check' => __( 'Check this box to show an "Agree to Terms" checkbox on checkout.', 'easy-digital-downloads' ),
-						'desc'  => __( 'Customers must agree to your privacy policy before purchasing.', 'easy-digital-downloads' ),
+						'desc'  => __( 'Customers must agree to your terms before purchasing.', 'easy-digital-downloads' ),
 						'type'  => 'checkbox_description',
 					),
 					'agree_label' => array(

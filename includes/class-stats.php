@@ -2576,34 +2576,35 @@ class Stats {
 		}
 
 		/** Parse country ****************************************************/
-
-		$country_list = array_filter( edd_get_country_list() );
-
 		$country = isset( $this->query_vars['country'] )
 			? sanitize_text_field( $this->query_vars['country'] )
-			: edd_get_shop_country();
+			: '';
 
-		// Maybe convert country code to country name.
-		$country = in_array( $country, array_flip( $country_list ), true )
-			? $country_list[ $country ]
-			: $country;
+		if ( $country ) {
+			$country_list = array_filter( edd_get_country_list() );
 
-		// Ensure a valid county has been passed.
-		$country = in_array( $country, $country_list, true )
-			? $country
-			: null;
+			// Maybe convert country code to country name.
+			$country = in_array( $country, array_flip( $country_list ), true )
+				? $country_list[ $country ]
+				: $country;
 
-		// Convert back to country code for SQL query.
-		$country_list                = array_flip( $country_list );
-		$this->query_vars['country'] = is_null( $country )
-			? ''
-			: $country_list[ $country ];
+			// Ensure a valid county has been passed.
+			$country = in_array( $country, $country_list, true )
+				? $country
+				: null;
+
+			// Convert back to country code for SQL query.
+			$country_list                = array_flip( $country_list );
+			$this->query_vars['country'] = is_null( $country )
+				? ''
+				: $country_list[ $country ];
+		}
 
 		/** Parse state ******************************************************/
 
 		$state = isset( $this->query_vars['region'] )
 			? sanitize_text_field( $this->query_vars['region'] )
-			: edd_get_shop_state();
+			: '';
 
 		// Only parse state if one was passed.
 		if ( $state ) {
