@@ -634,8 +634,6 @@ class EDD_Payment {
 					) );
 
 					edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $key );
-					edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
-					edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
 
 					$this->increase_fees( $fee['amount'] );
 				}
