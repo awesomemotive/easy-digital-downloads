@@ -68,7 +68,7 @@ class EDD_Customer_Addresses_Table extends List_Table {
 			case 'type' :
 				$value = ucwords( edd_get_address_type_label( $item['type'] ) );
 				if ( ! empty( $item['is_primary'] ) ) {
-					$value .= ' <span class="edd-chip">git ' . esc_html__( 'Primary', 'easy-digital-downloads' ) . '</span>';
+					$value .= '&nbsp;&nbsp;<span class="edd-chip">' . esc_html__( 'Primary', 'easy-digital-downloads' ) . '</span>';
 				}
 				break;
 
