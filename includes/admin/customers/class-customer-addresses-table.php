@@ -136,7 +136,7 @@ class EDD_Customer_Addresses_Table extends List_Table {
 		);
 
 		// Non-primary address actions
-		if ( 'primary' !== $item['is_primary'] ) {
+		if ( empty( $item['is_primary'] ) ) {
 			$actions['delete'] = '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 		}
 
