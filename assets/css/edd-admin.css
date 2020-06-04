@@ -4098,6 +4098,10 @@ body.download_page_edd-reports {
 	margin-top: 0;
 }
 
+select.edd-form-group__input {
+	max-width: 100%;
+}
+
 .edd-form-group__help {
 	color: #666;
 	font-size: 13px;
