@@ -2116,10 +2116,10 @@ class Stats {
 
 		if ( 'AVG' === $function ) {
 			$sql = "SELECT COUNT(id) / total_customers AS average
-					FROM {$this->query['table']}
+					FROM {$this->query_vars['table']}
 					CROSS JOIN (
 						SELECT COUNT(DISTINCT customer_id) AS total_customers
-						FROM {$this->query['table']}
+						FROM {$this->query_vars['table']}
 					) o
 					WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		} else {
