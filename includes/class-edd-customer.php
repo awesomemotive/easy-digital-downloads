@@ -1141,6 +1141,8 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 */
 	public function increase_purchase_count( $count = 1 ) {
 
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Customer::recalculate_stats()' );
+
 		// Make sure it's numeric and not negative
 		if ( ! is_numeric( $count ) || absint( $count ) !== $count ) {
 			return false;
@@ -1169,6 +1171,8 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 * @return mixed New purchase count if successful, false otherwise.
 	 */
 	public function decrease_purchase_count( $count = 1 ) {
+
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Customer::recalculate_stats()' );
 
 		// Make sure it's numeric and not negative
 		if ( ! is_numeric( $count ) || absint( $count ) !== $count ) {
@@ -1202,6 +1206,9 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 * @return mixed New lifetime value if successful, false otherwise.
 	 */
 	public function increase_value( $value = 0.00 ) {
+
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Customer::recalculate_stats()' );
+
 		$value     = floatval( apply_filters( 'edd_customer_increase_value', $value, $this ) );
 		$new_value = floatval( $this->purchase_value ) + $value;
 
@@ -1226,6 +1233,9 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 * @return mixed New lifetime value if successful, false otherwise.
 	 */
 	public function decrease_value( $value = 0.00 ) {
+
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Customer::recalculate_stats()' );
+
 		$value     = floatval( apply_filters( 'edd_customer_decrease_value', $value, $this ) );
 		$new_value = floatval( $this->purchase_value ) - $value;
 
