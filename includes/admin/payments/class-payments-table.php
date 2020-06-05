@@ -637,7 +637,7 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @return array $actions Bulk actions.
 	 */
 	public function get_bulk_actions() {
-		if ( 'refund' !== $this->type && 'trash' !== $this->get_status() ) {
+		if ( 'refund' !== $this->type ) {
 			$action = array(
 				'set-status-complete'     => __( 'Mark Completed',   'easy-digital-downloads' ),
 				'set-status-pending'     => __( 'Mark Pending',     'easy-digital-downloads' ),
@@ -656,7 +656,6 @@ class EDD_Payment_History_Table extends List_Table {
 
 		if ( 'trash' === $this->get_status() ) {
 			$action['restore'] = __( 'Restore', 'easy-digital-downloads' );
-			$action['delete']  = __( 'Delete Permanently', 'easy-digital-downloads' );
 		} else {
 			$action['trash'] = __( 'Move to Trash', 'easy-digital-downloads' );
 		}
