@@ -150,8 +150,9 @@ function edd_add_manual_order( $args = array() ) {
 	$order_discount = floatval( $data['discount'] );
 	$order_total    = floatval( $data['total'] );
 
-	$payment_key = strtolower( md5( $user['user_email'] . gmdate( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'edd', true ) ) );
-
+	$payment_key = strtolower( md5( $user['user_email'] . gmdate( 'Y-m-d H:i:s' ) . uniqid( 'edd', true ) ) );
+	var_dump($payment_key);
+	wp_die();
 	// Add the order ID
 	$order_id = edd_add_order(
 		array(
