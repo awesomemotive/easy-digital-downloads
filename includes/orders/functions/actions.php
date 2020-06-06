@@ -150,23 +150,27 @@ function edd_add_manual_order( $args = array() ) {
 	$order_discount = floatval( $data['discount'] );
 	$order_total    = floatval( $data['total'] );
 
+	$payment_key = strtolower( md5( $user['user_email'] . gmdate( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'edd', true ) ) );
+
 	// Add the order ID
-	$order_id = edd_add_order( array(
-		'status'         => 'pending', // Always insert as pending initially.
-		'user_id'        => $user_id,
-		'customer_id'    => $customer_id,
-		'email'          => $email,
-		'ip'             => sanitize_text_field( $data['ip'] ),
-		'gateway'        => sanitize_text_field( $data['gateway'] ),
-		'mode'           => $mode,
-		'currency'       => edd_get_currency(),
-		'payment_key'    => sanitize_text_field( $data['payment_key'] ),
-		'subtotal'       => $order_subtotal,
-		'tax'            => $order_tax,
-		'discount'       => $order_discount,
-		'total'          => $order_total,
-		'date_created'   => $date,
-	) );
+	$order_id = edd_add_order(
+		array(
+			'status'       => 'pending', // Always insert as pending initially.
+			'user_id'      => $user_id,
+			'customer_id'  => $customer_id,
+			'email'        => $email,
+			'ip'           => sanitize_text_field( $data['ip'] ),
+			'gateway'      => sanitize_text_field( $data['gateway'] ),
+			'mode'         => $mode,
+			'currency'     => edd_get_currency(),
+			'payment_key'  => $payment_key,
+			'subtotal'     => $order_subtotal,
+			'tax'          => $order_tax,
+			'discount'     => $order_discount,
+			'total'        => $order_total,
+			'date_created' => $date,
+		)
+	);
 
 	// Attach order to the customer record.
 	if ( ! empty( $customer ) ) {
