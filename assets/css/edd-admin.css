@@ -2479,7 +2479,6 @@ body.download_page_edd-reports {
 	margin: 0 0 20px;
 }
 
-.edd-reports-chart,
 .edd-reports-table {
 	margin-bottom: 20px;
 }
@@ -2808,13 +2807,17 @@ body.download_page_edd-reports {
 	color: #777;
 }
 
-.edd-reports-chart-pie,
-.edd-reports-chart-doughnut {
-	box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	float: left;
-	width: 50%;
+@media screen and ( min-width: 656px ) {
+	#edd-reports-charts-wrap {
+		display: -ms-grid;
+		display: grid;
+		grid-template-columns: repeat(2, minmax(200px, 50%));
+		grid-gap: 20px;
+	}
+
+	.edd-reports-chart-line {
+		grid-column: 1 / span 2;
+	}
 }
 
 #edd-chartjs-tooltip {
