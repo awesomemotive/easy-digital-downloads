@@ -8,7 +8,18 @@ import { getChosenVars } from 'utils/chosen.js';
 import { jQueryReady } from 'utils/jquery.js';
 
 // Store customer search results to help prefill address data.
-let CUSTOMER_SEARCH_RESULTS = {};
+let CUSTOMER_SEARCH_RESULTS = {
+	addresses: {
+		'0': {
+			address: '',
+			address2: '',
+			city: '',
+			region: '',
+			postal_code: '',
+			country: '',
+		},
+	},
+};
 
 jQueryReady( () => {
 
@@ -20,12 +31,12 @@ jQueryReady( () => {
 	( () => {
 		const { state: overviewState } = OrderOverview.options;
 
-		// No taxs, do nothing.
+		// No tax, do nothing.
 		if ( false === overviewState.get( 'hasTax' ) ) {
 			return;
 		}
 
-		// Adding, do nothing.
+		// Editing, do nothing.
 		if ( false === overviewState.get( 'isAdding' ) ) {
 			return;
 		}
@@ -112,22 +123,26 @@ jQueryReady( () => {
 			const { success, data } = response;
 
 			if ( ! success ) {
-				$( '.customer-address-select-wrap' ).html( '' ).hide();
+				$( '.customer-address-select-wrap' ).hide();
 
 				return;
 			}
 
 			// Store response for later use.
-			CUSTOMER_SEARCH_RESULTS = data;
+			CUSTOMER_SEARCH_RESULTS = {
+				...CUSTOMER_SEARCH_RESULTS,
+				...data,
+				addresses: {
+					...CUSTOMER_SEARCH_RESULTS.addresses,
+					...data.addresses,
+				},
+			};
 
 			if ( data.html ) {
-				$('.customer-address-select-wrap').html(data.html).show();
-				$('.customer-address-select-wrap select').each(function () {
-					const el = $(this);
-					el.chosen(getChosenVars(el));
-				});
+				$( '.customer-address-select-wrap' ).show();
+				$( '.customer-address-select-wrap .edd-form-group__control' ).html( data.html );
 			} else {
-				$( '.customer-address-select-wrap' ).html( '' ).hide();
+				$( '.customer-address-select-wrap' ).hide();
 			}
 		}, 'json' );
 
@@ -143,12 +158,13 @@ jQueryReady( () => {
 	 * @param {string} fieldName the name of the field to use in response.
 	 * @return {$.promise} Region data response.
 	 */
-	function getStates( countryEl, fieldName ) {
+	function getStates( countryEl, fieldName, fieldId ) {
 		const data = {
 			action: 'edd_get_shop_states',
 			country: countryEl.val(),
 			nonce: countryEl.data( 'nonce' ),
 			field_name: fieldName,
+			field_id: fieldId,
 		};
 
 		return $.post( ajaxurl, data );
@@ -164,21 +180,18 @@ jQueryReady( () => {
 	 * @param {string} regions Regions response.
 	 */
 	function replaceRegionField( regions ) {
-		const state_wrapper = $( '#edd-order-address-state-wrap select, #edd-order-address-state-wrap input' );
+		const state_wrapper = $( '#edd_order_address_region' );
 
-		// Remove any chosen containers here too
-		$( '#edd-order-address-state-wrap .chosen-container' ).remove();
+		$( '#edd_order_address_region_chosen' ).remove();
 
 		if ( 'nostates' === regions ) {
 			state_wrapper
 				.replaceWith( '<input type="text" name="edd_order_address[region]" id="edd_order_address_region" value="" class="wide-fat" style="max-width: none; width: 100%;" />' );
 		} else {
-			state_wrapper.replaceWith( regions );
+			state_wrapper
+				.replaceWith( regions );
 
-			$( '#edd-order-address-state-wrap select' ).each( function() {
-				const el = $( this );
-				el.chosen( getChosenVars( el ) );
-			} );
+			$( '#edd_order_address_region' ).chosen( getChosenVars( $( '#edd_order_address_region' ) ) );
 		}
 	}
 
@@ -188,7 +201,12 @@ jQueryReady( () => {
 	 * @since 3.0
 	 */
 	function updateRegionFieldOnChange() {
-		getStates( $( this ), 'edd_order_address_region' ).done( replaceRegionField );
+		getStates(
+			$( this ),
+			'edd_order_address[region]',
+			'edd_order_address_region'
+		)
+			.done( replaceRegionField );
 	}
 
 	$( document.body ).on( 'change', '.customer-address-select-wrap .add-order-customer-address-select', function() {
@@ -203,31 +221,35 @@ jQueryReady( () => {
 		$( '#edd-add-order-form input[name="edd_order_address[address_id]"]' ).val( val );
 
 		// Remove global `change` event handling to prevent loop.
-		$( '.edd-order-address-country' ).off( 'change', updateRegionFieldOnChange );
+		$( '#edd_order_address_country' ).off( 'change', updateRegionFieldOnChange );
 
 		// Set Country.
-		$( '#edd-add-order-form select#edd_order_address_country' )
+		$( '#edd_order_address_country' )
 			.val( address.country )
 			.trigger( 'change' )
 			.trigger( 'chosen:updated' );
 
 		// Set Region.
-		getStates( $( '#edd-add-order-form select#edd_order_address_country' ), 'edd_order_address[region]' )
+		getStates(
+			$( '#edd_order_address_country' ),
+			'edd_order_address[region]',
+			'edd_order_address_region'
+		)
 			.done( replaceRegionField )
 			.done( ( response ) => {
-				$( '[name="edd_order_address[region]"]' )
+				$( '#edd_order_address_region' )
 					.val( address.region )
 					.trigger( 'change' )
 					.trigger( 'chosen:updated' );
 			} );
 
 		// Add back global `change` event handling.
-		$( '.edd-order-address-country' ).on( 'change', updateRegionFieldOnChange );
+		$( '#edd_order_address_country' ).on( 'change', updateRegionFieldOnChange );
 
 		return false;
 	} );
 
 	// Country change.
-	$( '.edd-order-address-country' ).on( 'change', updateRegionFieldOnChange );
+	$( '#edd_order_address_country' ).on( 'change', updateRegionFieldOnChange );
 
 } );
