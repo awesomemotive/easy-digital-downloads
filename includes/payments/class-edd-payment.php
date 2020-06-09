@@ -2368,9 +2368,6 @@ class EDD_Payment {
 
 								edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
 
-								if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
-									edd_add_order_adjustment_meta( $adjustment_id, 'price_id', absint( $fee['price_id'] ) );
-								}
 							}
 						} else {
 							$adjustment_id = edd_get_order_adjustments( array(
@@ -2420,9 +2417,6 @@ class EDD_Payment {
 
 								edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
 
-								if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
-									edd_add_order_adjustment_meta( $adjustment_id, 'price_id', absint( $fee['price_id'] ) );
-								}
 							}
 						}
 					}
@@ -2511,10 +2505,6 @@ class EDD_Payment {
 									) );
 
 									edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
-
-									if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
-										edd_add_order_adjustment_meta( $adjustment_id, 'price_id', absint( $fee['price_id'] ) );
-									}
 
 									$new_tax += $tax;
 								}
