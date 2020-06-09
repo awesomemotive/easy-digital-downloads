@@ -1085,6 +1085,27 @@ class Data_Migrator {
 			? sanitize_text_field( $data['state'] )
 			: '';
 
+		// If the scope is 'country', look for other active rates that are country wide and set them as 'inactive'.
+		if ( 'country' === $scope ) {
+			$tax_rates = edd_get_adjustments(
+				array(
+					'type'        => 'tax_rate',
+					'status'      => 'active',
+					'scope'       => 'country',
+					'name'        => $data['country'],
+				)
+			);
+
+			if ( ! empty( $tax_rates ) ) {
+				foreach ( $tax_rates as $tax_rate ) {
+					edd_update_adjustment(
+						$tax_rate->id,
+						array( 'status' => 'inactive', )
+					);
+				}
+			}
+		}
+
 		$adjustment_data = array(
 			'name'        => $data['country'],
 			'status'      => 'active',
