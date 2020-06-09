@@ -133,7 +133,8 @@ function edd_process_purchase_form() {
 	$card_zip     = isset( $valid_data['cc_info']['card_zip'] )     ? $valid_data['cc_info']['card_zip']     : false;
 
 	// Set up the unique purchase key. If we are resuming a payment, we'll overwrite this with the existing key.
-	$purchase_key     = strtolower( md5( $user['user_email'] . date( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'edd', true ) ) );
+
+	$purchase_key     = edd_create_payment_key( $email );
 	$existing_payment = EDD()->session->get( 'edd_resume_payment' );
 
 	if ( ! empty( $existing_payment ) ) {
