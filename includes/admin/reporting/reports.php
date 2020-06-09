@@ -2311,9 +2311,8 @@ function edd_register_customer_report( $reports ) {
 			'endpoints' => array(
 				'tiles'  => array(
 					'lifetime_value_of_customer',
-					'average_customer_value',
 					'average_number_of_orders_per_customer',
-					'most_valuable_customer',
+					'average_customer_value',
 				),
 				'tables' => array(
 					'top_five_customers',
