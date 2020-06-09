@@ -152,6 +152,13 @@ final class Customer_Addresses extends Table {
 
 	}
 
+	/**
+	 * Upgrade to version 202004051
+	 * - Update the customer physical address table to have `is_primary`
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
 	protected function __202004051() {
 
 		$result = $this->column_exists( 'is_primary' );
