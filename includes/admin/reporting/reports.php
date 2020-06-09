@@ -2966,3 +2966,21 @@ function edd_add_screen_options_nonces() {
 	wp_nonce_field( 'meta-box-order',  'meta-box-order-nonce', false );
 }
 add_action( 'admin_footer', 'edd_add_screen_options_nonces' );
+
+/**
+ * This function adds a notice to the bottom of the Tax reports screen if a default tax rate is detected, stating
+ * that we cannot report on the default tax rate.
+ *
+ * @param $report
+ */
+function edd_tax_report_notice( $report ) {
+	if ( 'taxes' === $report->object_id && false !== edd_get_option( 'tax_rate' ) ) {
+		?>
+		<div>
+			<strong><?php _e( 'Notice', 'easy-digital-downloads' ); ?>: </strong>
+			<?php _e( 'Tax reports are only generated for taxes associated with a location. The legacy default tax rate is unable to be reported on.', 'easy-digital-downloads' ); ?>
+		</div>
+		<?php
+	}
+}
+add_action( 'edd_reports_page_bottom', 'edd_tax_report_notice', 10, 1 );
