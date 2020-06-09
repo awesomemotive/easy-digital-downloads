@@ -398,7 +398,7 @@ function edd_get_allowed_tags() {
  */
 function edd_get_address_type_label( $address_type = 'billing' ) {
 	$address_type_labels = array(
-		'billing' => __( 'billing', 'easy-digital-downloads' ),
+		'billing' => __( 'Billing', 'easy-digital-downloads' ),
 	);
 
 	$address_type_labels = apply_filters( 'edd_address_type_labels', $address_type_labels );
