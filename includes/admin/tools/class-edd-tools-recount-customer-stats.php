@@ -61,57 +61,8 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 		$customers = edd_get_customers( $args );
 
 		if ( $customers ) {
-
-			$allowed_payment_status = apply_filters( 'edd_recount_customer_payment_statuses', edd_get_payment_status_keys() );
-
 			foreach ( $customers as $customer ) {
-
-				$payment_ids = edd_get_orders( array(
-					'type'        => 'sale',
-					'customer_id' => $customer->id,
-					'status__in'  => $allowed_payment_status,
-					'number'      => 999,
-					'fields'      => 'id'
-				) );
-
-				$purchase_value = 0.00;
-				$purchase_count = 0;
-
-				if ( $payment_ids ) {
-
-					foreach ( $payment_ids as $payment_id ) {
-
-						$payment = edd_get_payment( $payment_id );
-
-						$should_process_payment = 'complete' == $payment->status || 'revoked' == $payment->status ? true : false;
-						$should_process_payment = apply_filters( 'edd_customer_recount_should_process_payment', $should_process_payment, $payment );
-
-						if( true === $should_process_payment ) {
-
-							if ( apply_filters( 'edd_customer_recount_sholud_increase_value', true, $payment ) ) {
-								$purchase_value += edd_get_payment_amount( $payment->ID );
-							}
-
-							if ( apply_filters( 'edd_customer_recount_sholud_increase_count', true, $payment ) ) {
-								$purchase_count++;
-							}
-
-						}
-					}
-
-				}
-
-				$payment_ids = implode( ',', $payment_ids );
-
-				$customer_update_data = array(
-					'purchase_count' => $purchase_count,
-					'purchase_value' => $purchase_value,
-					'payment_ids'    => $payment_ids,
-				);
-
-				$customer_instance = new EDD_Customer( $customer->id );
-				$customer_instance->update( $customer_update_data );
-
+				$customer->recalculate_stats();
 			}
 
 			return true;
