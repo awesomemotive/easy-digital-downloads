@@ -996,13 +996,13 @@ function edd_format_discount_rate( $type = '', $amount = '' ) {
  * @param array                    $item {
  *   Order Item data, matching Cart line item format.
  *
- *   @type string $id Download ID.
+ *   @type string $id       Download ID.
  *   @type array  $options {
  *     Download options.
  *
  *     @type string $price_id Download Price ID.
  *   }
- *   @type int $quantity Purchase quantity.
+ *   @type int    $quantity Purchase quantity.
  * }
  * @param array                    $items     All items (including item being calculated).
  * @param \EDD_Discount[]|string[] $discounts Discount to determine adjustment from.
@@ -1078,7 +1078,7 @@ function edd_get_item_discount_amount( $item, $items, $discounts ) {
 				if ( 'flat' === $discount->get_type() ) {
 					// In order to correctly record individual item amounts, global flat rate discounts
 					// are distributed across all items.
-          //
+					//
 					// The discount amount is divided by the number of items in the cart and then a
 					// portion is evenly applied to each item.
 					$items_amount = 0;
