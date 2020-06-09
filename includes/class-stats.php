@@ -816,6 +816,7 @@ class Stats {
 		$this->query_vars['table']             = $this->get_db()->edd_order_items;
 		$this->query_vars['column']            = true === $this->query_vars['exclude_taxes'] ? 'total - tax' : 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
+		$this->query_vars['status']            = array( 'complete' );
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
@@ -916,6 +917,7 @@ class Stats {
 		$this->query_vars['table']             = $this->get_db()->edd_order_items;
 		$this->query_vars['column']            = 'id';
 		$this->query_vars['date_query_column'] = 'date_created';
+		$this->query_vars['status']            = array( 'complete' );
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
