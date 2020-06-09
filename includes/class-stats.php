@@ -2086,7 +2086,6 @@ class Stats {
 	 * @return int Number of orders made by a customer.
 	 */
 	public function get_customer_order_count( $query = array() ) {
-
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_orders;
 		$this->query_vars['column']            = 'id';
@@ -2115,19 +2114,14 @@ class Stats {
 			: '';
 
 		if ( 'AVG' === $function ) {
-			$sql = "SELECT COUNT(id) / total_customers AS average
+			$sql = "SELECT COUNT(id) / COUNT(DISTINCT customer_id) AS average
 					FROM {$this->query_vars['table']}
-					CROSS JOIN (
-						SELECT COUNT(DISTINCT customer_id) AS total_customers
-						FROM {$this->query_vars['table']}
-					) o
 					WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		} else {
 			$sql = "SELECT COUNT(id)
 					FROM {$this->query_vars['table']}
 					WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		}
-
 		$result = $this->get_db()->get_var( $sql );
 
 		$total = null === $result
