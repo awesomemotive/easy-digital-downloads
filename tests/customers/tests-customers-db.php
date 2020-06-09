@@ -217,42 +217,4 @@ class Tests_Customers_DB extends \EDD_UnitTestCase {
 
 		$this->assertFalse( in_array( $payment_id, $payment_ids ) );
 	}
-	
-	public function test_legacy_increment_stats_purchase_value_should_return_10() {
-		EDD()->customers->increment_stats( self::$customers[0], 10 );
-
-		/** @var $customer \EDD_Customer */
-		$customer = edd_get_customer( self::$customers[0] );
-		
-		$this->assertSame( 10.0, $customer->purchase_value );
-	}
-
-	public function test_legacy_increment_stats_purchase_count_should_return_1() {
-		EDD()->customers->increment_stats( self::$customers[0], 10 );
-
-		/** @var $customer \EDD_Customer */
-		$customer = edd_get_customer( self::$customers[0] );
-
-		$this->assertSame( 1, $customer->purchase_count );
-	}
-
-	public function test_legacy_decrement_stats_purchase_value_should_return_90() {
-		EDD()->customers->increment_stats( self::$customers[0], 100 );
-		EDD()->customers->decrement_stats( self::$customers[0], 10 );
-
-		/** @var $customer \EDD_Customer */
-		$customer = edd_get_customer( self::$customers[0] );
-
-		$this->assertSame( 90.0, $customer->purchase_value );
-	}
-
-	public function test_legacy_decrement_stats_purchase_count_should_return_0() {
-		EDD()->customers->increment_stats( self::$customers[0], 10 );
-		EDD()->customers->decrement_stats( self::$customers[0], 10 );
-
-		/** @var $customer \EDD_Customer */
-		$customer = edd_get_customer( self::$customers[0] );
-
-		$this->assertSame( 0, $customer->purchase_count );
-	}
 }
