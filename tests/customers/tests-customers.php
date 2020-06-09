@@ -115,32 +115,6 @@ class Tests_Customers extends \EDD_UnitTestCase {
 		$this->assertFalse( in_array( self::$order, $order_ids ) );
 	}
 
-	public function test_increase_value_should_return_10() {
-		self::$customers[3]->increase_value( 10 );
-
-		$this->assertSame( 10.0, self::$customers[3]->purchase_value );
-	}
-
-	public function test_increase_purchase_count_should_return_1() {
-		self::$customers[3]->increase_purchase_count();
-
-		$this->assertSame( 1, self::$customers[3]->purchase_count );
-	}
-
-	public function test_decrease_value_should_return_90() {
-		self::$customers[4]->increase_value( 100 );
-		self::$customers[4]->decrease_value( 10 );
-
-		$this->assertSame( 90.0, self::$customers[4]->purchase_value );
-	}
-
-	public function test_decrease_purchase_count_should_return_0() {
-		self::$customers[3]->increase_purchase_count();
-		self::$customers[3]->decrease_purchase_count();
-
-		$this->assertSame( 0, self::$customers[1]->purchase_count );
-	}
-
 	public function test_add_customer_note_should_return_1() {
 		self::$customers[0]->add_note( 'Test Note' );
 		$this->assertSame( 1, self::$customers[0]->get_notes_count() );
