@@ -1293,3 +1293,62 @@ function edd_clone_order( $order_id = 0, $clone_relationships = false, $args = a
 
 	return $new_order_id;
 }
+
+/**
+ * Get the order status array keys that can be used to run reporting related to gross reporting.
+ *
+ * @since 3.0
+ *
+ * @return array An array of order status array keys that can be related to gross reporting.
+ */
+function edd_gross_order_statuses() {
+	$statuses = array(
+		'complete',
+		'refunded',
+		'partially_refunded',
+		'revoked',
+	);
+
+	/**
+	 * Statuses that affect gross order statistics.
+	 *
+	 * This filter allows extensions and developers to alter the statuses that can affect the reporting of gross
+	 * sales statistics.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $statuses {
+	 *     An array of order status array keys.
+	 *
+	 */
+	return apply_filters( 'edd_gross_order_statuses', $statuses );
+}
+
+/**
+ * Get the order status array keys that can be used to run reporting related to net reporting.
+ *
+ * @since 3.0
+ *
+ * @return array An array of order status array keys that can be related to net reporting.
+ */
+function edd_net_order_statuses() {
+	$statuses = array(
+		'complete',
+		'partially_refunded',
+		'revoked',
+	);
+
+	/**
+	 * Statuses that affect net order statistics.
+	 *
+	 * This filter allows extensions and developers to alter the statuses that can affect the reporting of net
+	 * sales statistics.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $statuses {
+	 *     An array of order status array keys.
+	 *
+	 */
+	return apply_filters( 'edd_net_order_statuses', $statuses );
+}
