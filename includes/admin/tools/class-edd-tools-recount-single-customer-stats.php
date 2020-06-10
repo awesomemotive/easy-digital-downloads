@@ -145,49 +145,16 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 	public function process_step() {
 
 		if ( ! $this->can_export() ) {
-			wp_die( __( 'You do not have permission to modify this data.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+			wp_die( esc_html__( 'You do not have permission to modify this data.', 'easy-digital-downloads' ), esc_html__( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		}
 
-		$had_data = $this->get_data();
+		$customer = new EDD_Customer( $this->customer_id );
+		$customer->recalculate_stats();
 
-		if( $had_data ) {
-			$this->done = false;
-			return true;
-		} else {
-			$customer         = new EDD_Customer( $this->customer_id );
-			$payment_ids      = $this->get_stored_data( 'edd_stats_found_payments_' . $customer->id, array() );
-			$this->delete_data( 'edd_stats_found_payments_' . $customer->id );
+		$this->done    = true;
+		$this->message = __( 'Customer stats successfully recounted.', 'easy-digital-downloads' );
 
-			$removed_payments = array_unique( $this->get_stored_data( 'edd_stats_missing_payments' . $customer->id, array() ) );
-
-			// Find non-existing payments (deleted) and total up the purchase count
-			$purchase_count   = 0;
-			foreach( $payment_ids as $key => $payment_id ) {
-				if ( in_array( $payment_id, $removed_payments ) ) {
-					unset( $payment_ids[ $key ] );
-					continue;
-				}
-
-				$payment = edd_get_payment( $payment_id );
-				if ( apply_filters( 'edd_customer_recount_sholud_increase_count', true, $payment ) ) {
-					$purchase_count++;
-				}
-			}
-
-			$this->delete_data( 'edd_stats_missing_payments' . $customer->id );
-
-			$pending_total = $this->get_stored_data( 'edd_stats_customer_pending_total' . $customer->id, 0 );
-			$this->delete_data( 'edd_stats_customer_pending_total' . $customer->id );
-			$this->delete_data( 'edd_recount_customer_stats_' . $customer->id );
-			$this->delete_data( 'edd_recount_customer_payments_' . $this->customer_id );
-
-			$payment_ids    = implode( ',', $payment_ids );
-			$customer->update( array( 'payment_ids' => $payment_ids, 'purchase_count' => $purchase_count, 'purchase_value' => $pending_total ) );
-
-			$this->done    = true;
-			$this->message = __( 'Customer stats successfully recounted.', 'easy-digital-downloads' );
-			return false;
-		}
+		return false;
 	}
 
 	public function headers() {
