@@ -1438,9 +1438,10 @@ function edd_admin_order_get_item_amounts() {
 	$adjustments = array();
 
 	global $edd_flat_discount_total;
-	$edd_flat_discount_total = 0;
 
 	foreach ( $discounts as $discount_id ) {
+		$edd_flat_discount_total = 0;
+
 		$d = edd_get_discount( $discount_id );
 
 		// Retrieve total flat rate amount.
@@ -1449,7 +1450,7 @@ function edd_admin_order_get_item_amounts() {
 				edd_get_item_discount_amount( $product, $products, array( $d ) );
 			}
 		}
-		
+
 		// Store total discount and reset global.
 		$total_discount = $edd_flat_discount_total;
 		$edd_flat_discount_total = 0;
