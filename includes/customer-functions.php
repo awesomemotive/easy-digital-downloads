@@ -636,7 +636,6 @@ function edd_maybe_add_customer_address( $customer_id = 0, $data = array() ) {
 		'region'      => '',
 		'country'     => '',
 		'postal_code' => '',
-		'type'        => 'billing',
 	);
 	$address_to_check = array_intersect_key( $data, $empty_address );
 	$address_to_check = array_filter( $address_to_check );
