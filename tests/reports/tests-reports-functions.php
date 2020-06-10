@@ -792,7 +792,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 
 	public function test_gross_order_status() {
 		$expected = array(
-			'completed',
+			'complete',
 			'refunded',
 			'partially_refunded',
 			'revoked',
@@ -803,7 +803,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 
 	public function test_net_order_status() {
 		$expected = array(
-			'completed',
+			'complete',
 			'partially_refunded',
 			'revoked',
 		);
