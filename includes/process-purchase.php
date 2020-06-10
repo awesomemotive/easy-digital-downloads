@@ -134,7 +134,7 @@ function edd_process_purchase_form() {
 
 	// Set up the unique purchase key. If we are resuming a payment, we'll overwrite this with the existing key.
 
-	$purchase_key     = edd_create_payment_key( $email );
+	$purchase_key     = edd_create_payment_key( $email, $auth_key );
 	$existing_payment = EDD()->session->get( 'edd_resume_payment' );
 
 	if ( ! empty( $existing_payment ) ) {
