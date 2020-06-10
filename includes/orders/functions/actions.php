@@ -15,9 +15,13 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Create unique payment key
  */
-function edd_create_payment_key() {
-		$payment_key = strtolower( md5( $email . gmdate( 'Y-m-d H:i:s' ) . uniqid( 'edd', true ) ) );
-		return $payment_key;
+function edd_create_payment_key( ...$args ) {
+	$payment_key = '';
+	foreach ( $args as $arg ) {
+		$payment_key += $arg;
+	}
+	$payment_key = strtolower( md5( $payment_key . gmdate( 'Y-m-d H:i:s' . uniqid( 'edd', true ) ) ) );
+	return $payment_key;
 }
 /**
  * Manually add an order.
