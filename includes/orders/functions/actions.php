@@ -13,17 +13,6 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Create unique payment key
- */
-function edd_create_payment_key( ...$args ) {
-	$payment_key = '';
-	foreach ( $args as $arg ) {
-		$payment_key += $arg;
-	}
-	$payment_key = strtolower( md5( $payment_key . gmdate( 'Y-m-d H:i:s' . uniqid( 'edd', true ) ) ) );
-	return $payment_key;
-}
-/**
  * Manually add an order.
  *
  * @since 3.0
@@ -172,7 +161,7 @@ function edd_add_manual_order( $args = array() ) {
 			'gateway'      => sanitize_text_field( $data['gateway'] ),
 			'mode'         => $mode,
 			'currency'     => edd_get_currency(),
-			'payment_key'  => edd_create_payment_key( $email ),
+			'payment_key'  => edd_generate_order_payment_key( $email ),
 			'subtotal'     => $order_subtotal,
 			'tax'          => $order_tax,
 			'discount'     => $order_discount,
