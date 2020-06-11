@@ -640,7 +640,7 @@ function edd_maybe_add_customer_address( $customer_id = 0, $data = array() ) {
 		return false;
 	}
 	$address_to_check['customer_id'] = $customer_id;
-	$address_to_check['type']        = 'billing';
+	$address_to_check['type']        = empty( $data['type'] ) ? 'billing' : $data['type'];
 
 	// Instantiate a query object
 	$customer_addresses = new EDD\Database\Queries\Customer_Address();
