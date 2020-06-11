@@ -2972,7 +2972,7 @@ add_action( 'admin_footer', 'edd_add_screen_options_nonces' );
  * that we cannot report on the default tax rate.
  *
  * @since 3.0
- * @param $report
+ * @param \EDD\Reports\Data\Report|\WP_Error $report The current report object, or WP_Error if invalid.
  */
 function edd_tax_report_notice( $report ) {
 	if ( 'taxes' === $report->object_id && false !== edd_get_option( 'tax_rate' ) ) {
