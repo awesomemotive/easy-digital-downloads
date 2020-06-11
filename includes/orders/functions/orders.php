@@ -1293,16 +1293,14 @@ function edd_clone_order( $order_id = 0, $clone_relationships = false, $args = a
 function edd_generate_order_payment_key( $key ) {
 	$auth_key    = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
 	$payment_key = strtolower( md5( $key . gmdate( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'edd', true ) ) );
-	return $payment_key;
+
+	/**
+	 * Filters the payment key
+	 *
+	 * @since 3.0
+	 * @param string $payment_key The value to be filtered
+	 * @param string $key Additional string used to help randomize key.
+	 * @return string
+	 */
+	return apply_filters( 'edd_generate_order_payment_key', $payment_key, $key );
 }
-
-/**
- * Filters the payment key
- *
- * @since 3.0
- * @param string $payment_key The value to be filtered
- * @param string $key Additional string used to help randomize key.
- * @return string
- */
-
-$payment_key = apply_filters( 'edd_generate_order_payment_key', $payment_key, $key );
