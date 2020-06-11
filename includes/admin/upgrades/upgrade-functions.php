@@ -1343,7 +1343,6 @@ function edd_upgrade_render_v30_migration() {
 	$orders_complete = edd_has_upgrade_completed( 'migrate_orders' );
 
 	if ( empty( $orders ) ) {
-		edd_set_upgrade_complete( 'migrate_orders' );
 		$orders_complete = true;
 	}
 
@@ -1354,7 +1353,6 @@ function edd_upgrade_render_v30_migration() {
 	$customer_addresses_complete = edd_has_upgrade_completed( 'migrate_customer_addresses' );
 
 	if ( empty( $addresses ) ) {
-		edd_set_upgrade_complete( 'migrate_customer_addresses' );
 		$customer_addresses_complete = true;
 	}
 
@@ -1362,7 +1360,6 @@ function edd_upgrade_render_v30_migration() {
 	$customer_email_addresses_complete = edd_has_upgrade_completed( 'migrate_customer_email_addresses' );
 
 	if ( empty( $email_addresses ) ) {
-		edd_set_upgrade_complete( 'migrate_customer_email_addresses' );
 		$customer_email_addresses_complete = true;
 	}
 
@@ -1378,7 +1375,6 @@ function edd_upgrade_render_v30_migration() {
 	$logs_complete = edd_has_upgrade_completed( 'migrate_logs' );
 
 	if ( empty( $logs ) ) {
-		edd_set_upgrade_complete( 'migrate_logs' );
 		$logs_complete = true;
 	}
 
@@ -1387,7 +1383,6 @@ function edd_upgrade_render_v30_migration() {
 	$tax_rates_complete = edd_has_upgrade_completed( 'migrate_tax_rates' );
 
 	if ( empty( $tax_rates ) ) {
-		edd_set_upgrade_complete( 'migrate_tax_rates' );
 		$tax_rates_complete = true;
 	}
 
@@ -1396,7 +1391,6 @@ function edd_upgrade_render_v30_migration() {
 	$discounts_complete = edd_has_upgrade_completed( 'migrate_discounts' );
 
 	if ( empty( $discounts ) ) {
-		edd_set_upgrade_complete( 'migrate_discounts' );
 		$discounts_complete = true;
 	}
 
@@ -1406,7 +1400,6 @@ function edd_upgrade_render_v30_migration() {
 	$order_notes_removal_complete = edd_has_upgrade_completed( 'remove_legacy_order_notes' );
 
 	if ( empty( $order_notes ) ) {
-		edd_set_upgrade_complete( 'migrate_order_notes' );
 		$order_notes_complete = true;
 	}
 
@@ -1416,7 +1409,6 @@ function edd_upgrade_render_v30_migration() {
 	$customer_notes_removal_complete = edd_has_upgrade_completed( 'remove_legacy_customer_notes' );
 
 	if ( empty( $customer_notes ) ) {
-		edd_set_upgrade_complete( 'migrate_customer_notes' );
 		$customer_notes_complete = true;
 	}
 
