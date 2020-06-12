@@ -1406,28 +1406,24 @@ function edd_upgrade_render_v30_migration() {
 	<script>
 		jQuery( function($) {
 			$(document).ready(function () {
-				$(document).on("DOMNodeInserted", function (e) {
-					var element = e.target;
 
-					if (element.id === 'edd-batch-success') {
-						element = $(element);
+				function processNext( current ) {
+					current.find( '.edd-migration.allowed input' ).prop( 'disabled', true );
+					current.find('.dashicons.dashicons-yes').show();
 
-						element.parent().prev().find('.edd-migration.allowed').hide();
-						element.parent().prev().find('.edd-migration.unavailable').show();
-						var element_wrapper = element.parents().eq(4);
-						element_wrapper.find('.dashicons.dashicons-yes').show();
+					var auto_start_next_step = true;
 
-						var auto_start_next_step = true;
+					if ( current.find('.edd-new-count') ) {
+						var new_count = current.find('.edd-new-count').text(),
+							old_count = current.find('.edd-old-count').text();
 
-						if (element.find('.edd-new-count')) {
-							var new_count = element.find('.edd-new-count').text(),
-								old_count = element.find('.edd-old-count').text();
+						auto_start_next_step = new_count === old_count;
+					}
 
-							auto_start_next_step = new_count === old_count;
-						}
+					var next_step_wrapper = current.next();
 
-						var next_step_wrapper = element_wrapper.next();
-						if (next_step_wrapper.find('.postbox').length) {
+					if ( next_step_wrapper.hasClass( 'metabox-holder' ) ) {
+						if ( next_step_wrapper.find( '.edd-migration.allowed' ).length ) {
 							next_step_wrapper.find('.edd-migration.allowed').show();
 							next_step_wrapper.find('.edd-migration.unavailable').hide();
 
@@ -1435,9 +1431,19 @@ function edd_upgrade_render_v30_migration() {
 								next_step_wrapper.find('.edd-export-form:not(#edd-remove-legacy-data-form)').submit();
 							}
 						} else {
-							$('#edd-migration-nav-warn').hide();
-							$('#edd-migration-ready').slideDown();
+							processNext( next_step_wrapper );
 						}
+					} else {
+						$('#edd-migration-nav-warn').hide();
+						$('#edd-migration-ready').slideDown();
+					}
+				}
+
+				$(document).on("DOMNodeInserted", function (e) {
+					var element = e.target;
+
+					if ( element.id === 'edd-batch-success' ) {
+						processNext( $( element ).parents().eq(4) );
 					}
 				});
 
