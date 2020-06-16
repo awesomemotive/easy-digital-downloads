@@ -908,7 +908,7 @@ class Data_Migrator {
 						'type_id'       => 0,
 						'type'          => 'tax_rate',
 						'total'         => $tax_rate,
-						'date_created'  => $date_created_gmt,
+						'date_created'  => $data->post_modified_gmt,
 						'date_modified' => $data->post_modified_gmt,
 					)
 				);
@@ -994,15 +994,19 @@ class Data_Migrator {
 				);
 
 				if ( ! empty( $refund_id ) ) {
-					edd_add_order_adjustment( array(
-						'object_id'   => $refund_id,
-						'object_type' => 'order',
-						'type_id'     => $discount->id,
-						'type'        => 'discount',
-						'description' => $discount,
-						'subtotal'    => edd_negate_amount($subtotal - $discount->get_discounted_amount( $subtotal ) ),
-						'total'       => edd_negate_amount( $subtotal - $discount->get_discounted_amount( $subtotal ) ),
-					) );
+					edd_add_order_adjustment(
+						array(
+							'object_id'     => $refund_id,
+							'object_type'   => 'order',
+							'type_id'       => $discount->id,
+							'type'          => 'discount',
+							'description'   => $discount,
+							'subtotal'      => edd_negate_amount( $subtotal - $discount->get_discounted_amount( $subtotal ) ),
+							'total'         => edd_negate_amount( $subtotal - $discount->get_discounted_amount( $subtotal ) ),
+							'date_created'  => $data->post_modified_gmt,
+							'date_modified' => $data->post_modified_gmt,
+						)
+					);
 				}
 			}
 		}
