@@ -1051,7 +1051,6 @@ function edd_customer_tools_view( $customer ) {
 					<input type="hidden" name="edd-export-class" data-type="recount-single-customer-stats" value="EDD_Tools_Recount_Single_Customer_Stats" />
 					<input type="hidden" name="customer_id" value="<?php echo $customer->id; ?>" />
 					<input type="submit" id="recount-stats-submit" value="<?php _e( 'Recount Stats', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
-					<span class="spinner"></span>
 				</span>
 			</form>
 		</div>
