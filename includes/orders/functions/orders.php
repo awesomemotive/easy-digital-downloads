@@ -947,11 +947,6 @@ function edd_build_order( $order_data = array() ) {
 					$adjustment_id = edd_add_order_adjustment( $adjustment_data );
 
 					edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
-					edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
-
-					if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
-						edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
-					}
 				}
 			}
 
@@ -1028,10 +1023,6 @@ function edd_build_order( $order_data = array() ) {
 			$adjustment_id = edd_add_order_adjustment( $args );
 
 			edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $key );
-
-			if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
-				edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
-			}
 
 			$total_fees += (float) $fee['amount'];
 			$total_tax  += $tax;
@@ -1287,4 +1278,26 @@ function edd_clone_order( $order_id = 0, $clone_relationships = false, $args = a
 	}
 
 	return $new_order_id;
+}
+
+/**
+ * Generate unique payment key for orders.
+ *
+ * @since 3.0
+ * @param string $key Additional string used to help randomize key.
+ * @return string
+ */
+function edd_generate_order_payment_key( $key ) {
+	$auth_key    = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
+	$payment_key = strtolower( md5( $key . gmdate( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'edd', true ) ) );
+
+	/**
+	 * Filters the payment key
+	 *
+	 * @since 3.0
+	 * @param string $payment_key The value to be filtered
+	 * @param string $key Additional string used to help randomize key.
+	 * @return string
+	 */
+	return apply_filters( 'edd_generate_order_payment_key', $payment_key, $key );
 }
