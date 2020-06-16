@@ -947,11 +947,6 @@ function edd_build_order( $order_data = array() ) {
 					$adjustment_id = edd_add_order_adjustment( $adjustment_data );
 
 					edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
-					edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
-
-					if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
-						edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
-					}
 				}
 			}
 
@@ -1022,10 +1017,6 @@ function edd_build_order( $order_data = array() ) {
 			$adjustment_id = edd_add_order_adjustment( $args );
 
 			edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $key );
-
-			if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
-				edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
-			}
 
 			$total_fees += (float) $fee['amount'];
 			$total_tax  += $tax;
