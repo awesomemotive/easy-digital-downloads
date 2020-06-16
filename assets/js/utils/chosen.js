@@ -29,5 +29,8 @@ export const getChosenVars = ( el ) => {
 		delete inputVars.disable_search_threshold;
 	}
 
-	return inputVars;
+	return {
+		...inputVars,
+		width: el.css( 'width' ),
+	};
 }
