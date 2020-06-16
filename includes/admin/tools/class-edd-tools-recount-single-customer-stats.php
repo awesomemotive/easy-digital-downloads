@@ -110,11 +110,14 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 			wp_die( esc_html__( 'You do not have permission to modify this data.', 'easy-digital-downloads' ), esc_html__( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		}
 
-		$customer = new EDD_Customer( $this->customer_id );
-		$customer->recalculate_stats();
+		$had_data = $this->get_data();
 
+		if ( ! $had_data ) {
+			$this->done = false;
+			return true;
+		}
 		$this->done    = true;
-		$this->message = __( 'Customer stats successfully recounted.', 'easy-digital-downloads' );
+		$this->message = esc_html__( 'Customer stats successfully recounted.', 'easy-digital-downloads' );
 
 		return false;
 	}
