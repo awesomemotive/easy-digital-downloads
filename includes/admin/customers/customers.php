@@ -600,7 +600,7 @@ function edd_customers_view( $customer = null ) {
 			<li>
 				<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history&customer=' . $customer->id ); ?>">
 					<span class="dashicons dashicons-cart"></span>
-					<?php printf( _n( '%d Completed Sale', '%d Completed Sales', $customer->purchase_count, 'easy-digital-downloads' ), esc_html( $customer->purchase_count ) ); ?>
+					<?php printf( _n( '%s Completed Sale', '%s Completed Sales', $customer->purchase_count, 'easy-digital-downloads' ), esc_html( number_format_i18n( $customer->purchase_count, 0 ) ) ); ?>
 				</a>
 			</li>
 			<li>

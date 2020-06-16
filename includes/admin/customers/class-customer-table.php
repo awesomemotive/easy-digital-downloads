@@ -81,7 +81,7 @@ class EDD_Customer_Reports_Table extends List_Table {
 					'page'     => 'edd-payment-history',
 					'customer' => $item['id']
 				) );
-				$value = '<a href="' . esc_url( $url ) . '">' . esc_html( $item['order_count'] ) . '</a>';
+				$value = '<a href="' . esc_url( $url ) . '">' . esc_html( number_format_i18n( $item['order_count'] ) ) . '</a>';
 				break;
 
 			case 'spent' :
