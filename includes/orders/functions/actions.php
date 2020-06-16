@@ -80,7 +80,7 @@ function edd_add_manual_order( $args = array() ) {
 			: '';
 
 		// Combine
-		$name = $first_name . ' ' . $last_name;
+		$name = trim( $first_name . ' ' . $last_name );
 
 		// Sanitize the email address
 		$email = isset( $data['edd-new-customer-email'] )
