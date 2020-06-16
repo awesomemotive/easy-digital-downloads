@@ -961,27 +961,33 @@ function edd_build_order( $order_data = array() ) {
 					? $order_data['user_info']['address']['country']
 					: false;
 
-				$state = ! empty( $order_data['user_info']['address']['state'] )
+				$region = ! empty( $order_data['user_info']['address']['state'] )
 					? $order_data['user_info']['address']['state']
 					: false;
 
-				$zip = ! empty( $order_data['user_info']['address']['zip'] )
-					? $order_data['user_info']['address']['zip']
-					: false;
+				$tax_rate = edd_get_tax_rate_object(
+					array(
+						'country' => $country,
+						'region'  => $region,
+					)
+				);
 
-				$tax_rate = isset( $item['tax_rate'] )
-					? floatval( $item['tax_rate'] )
-					: edd_get_cart_tax_rate( $country, $state, $zip );
-
-				if ( 0 < $tax_rate ) {
-
+				if ( $tax_rate ) {
+					$description = $tax_rate->name;
+					if ( ! empty( $tax_rate->description ) ) {
+						$description = $tax_rate->description;
+					}
 					// Always store tax rate, even if empty.
-					edd_add_order_adjustment( array(
-						'object_id'   => $order_item_id,
-						'object_type' => 'order_item',
-						'type'        => 'tax_rate',
-						'total'       => $tax_rate,
-					) );
+					edd_add_order_adjustment(
+						array(
+							'object_id'   => $order_item_id,
+							'object_type' => 'order_item',
+							'type'        => 'tax_rate',
+							'total'       => $tax_rate->amount,
+							'type_id'     => $tax_rate->id,
+							'description' => $description,
+						)
+					);
 				}
 			}
 
