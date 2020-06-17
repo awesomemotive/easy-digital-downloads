@@ -64,6 +64,7 @@ function edd_add_manual_order( $args = array() ) {
 	$customer_id = 0;
 	$user_id     = 0;
 	$email       = '';
+	$name        = '';
 
 	// Create a new customer record.
 	if ( isset( $data['edd-new-customer'] ) && 1 === absint( $data['edd-new-customer'] ) ) {
@@ -79,7 +80,7 @@ function edd_add_manual_order( $args = array() ) {
 			: '';
 
 		// Combine
-		$name = $first_name . ' ' . $last_name;
+		$name = trim( $first_name . ' ' . $last_name );
 
 		// Sanitize the email address
 		$email = isset( $data['edd-new-customer-email'] )
@@ -103,6 +104,7 @@ function edd_add_manual_order( $args = array() ) {
 		if ( $customer ) {
 			$email   = $customer->email;
 			$user_id = $customer->user_id;
+			$name    = $customer->name;
 		}
 	}
 
@@ -181,6 +183,7 @@ function edd_add_manual_order( $args = array() ) {
 
 		// Parse args
 		$address = wp_parse_args( $data['edd_order_address'], array(
+			'name'        => $name,
 			'address'     => '',
 			'address2'    => '',
 			'city'        => '',

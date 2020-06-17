@@ -703,7 +703,7 @@ function edd_build_order( $order_data = array() ) {
 		if ( empty( $order_data['user_info']['first_name'] ) && empty( $order_data['user_info']['last_name'] ) ) {
 			$name = $order_args['email'];
 		} else {
-			$name = $order_data['user_info']['first_name'] . ' ' . $order_data['user_info']['last_name'];
+			$name = trim( $order_data['user_info']['first_name'] . ' ' . $order_data['user_info']['last_name'] );
 		}
 
 		$customer->create( array(
