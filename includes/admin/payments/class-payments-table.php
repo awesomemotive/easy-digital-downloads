@@ -544,6 +544,8 @@ class EDD_Payment_History_Table extends List_Table {
 				'purchase_id' => $order->id,
 			), $this->base_url ), 'edd_payment_nonce' );
 			$row_actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete Permanently', 'easy-digital-downloads' ) . '</a>';
+
+			unset( $row_actions['view'] );
 		}
 
 		if ( has_filter( 'edd_payment_row_actions' ) ) {
@@ -574,8 +576,8 @@ class EDD_Payment_History_Table extends List_Table {
 		$actions = $this->row_actions( $row_actions );
 
 		// Primary link
-		$order_number = $order->type == 'sale' ? $order->get_number() : $order->order_number;
-		$link = '<a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $order_number ) . '</a>';
+		$order_number = 'sale' === $order->type ? $order->get_number() : $order->order_number;
+		$link         = edd_is_order_restorable( $order->id ) ? '<span class="row-title">' . esc_html( $order_number ) . '</span>' : '<a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $order_number ) . '</a>';
 
 		// Concatenate & return the results
 		return $link . $actions;
