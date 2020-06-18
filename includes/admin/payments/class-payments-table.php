@@ -656,6 +656,8 @@ class EDD_Payment_History_Table extends List_Table {
 
 		if ( 'trash' === $this->get_status() ) {
 			$action['restore'] = __( 'Restore', 'easy-digital-downloads' );
+
+			unset( $action['resend-receipt'] );
 		} else {
 			$action['trash'] = __( 'Move to Trash', 'easy-digital-downloads' );
 		}
