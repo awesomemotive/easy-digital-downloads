@@ -1274,8 +1274,17 @@ function edd_get_cart_discounts_html( $discounts = false ) {
 	$html = '';
 
 	foreach ( $discounts as $discount ) {
-		$discount_id = edd_get_discount_id_by_code( $discount );
-		$rate        = edd_format_discount_rate( edd_get_discount_type( $discount_id ), edd_get_discount_amount( $discount_id ) );
+		$discount_id     = edd_get_discount_id_by_code( $discount );
+		$discount_amount = 0;
+		$items           = EDD()->cart->get_contents();
+
+		if ( is_array( $items ) && ! empty( $items ) ) {
+			foreach ( $items as $key => $item ) {
+				$discount_amount += edd_get_item_discount_amount( $item, $items, array( $discount ) );
+			}
+		}
+
+		$rate = edd_format_discount_rate( edd_get_discount_type( $discount_id ), $discount_amount );
 
 		$remove_url  = add_query_arg(
 			array(
