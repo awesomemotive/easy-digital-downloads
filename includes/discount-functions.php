@@ -1104,13 +1104,13 @@ function edd_get_item_discount_amount( $item, $items, $discounts ) {
 						$adjustment       = ( $discount->get_amount() - $edd_flat_discount_total );
 						$discount_amount += $adjustment;
 					}
+
+					if ( $discount_amount > $item_amount ) {
+						$discount_amount = $item_amount;
+					}
 				} else {
 					$discount_amount += ( $item_amount - $discount->get_discounted_amount( $item_amount ) );
 				}
-			}
-
-			if ( $discount_amount < 0 ) {
-				$discount_amount = 0;
 			}
 		}
 	}
