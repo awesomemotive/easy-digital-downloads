@@ -543,7 +543,7 @@ class EDD_Payment_History_Table extends List_Table {
 				'edd-action'  => 'delete_order',
 				'purchase_id' => $order->id,
 			), $this->base_url ), 'edd_payment_nonce' );
-			$row_actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete', 'easy-digital-downloads' ) . '</a>';
+			$row_actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete Permanently', 'easy-digital-downloads' ) . '</a>';
 		}
 
 		if ( has_filter( 'edd_payment_row_actions' ) ) {
