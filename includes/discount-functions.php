@@ -910,7 +910,7 @@ function edd_is_discount_valid( $code = '', $user = '', $set_error = true ) {
 function edd_get_discount_id_by_code( $code = '' ) {
 	$discount = edd_get_discount_by_code( $code );
 
-	return is_object( $discount ) ? $discount->id : false;
+	return ( $discount instanceof EDD_Discount ) ? $discount->id : false;
 }
 
 /**
