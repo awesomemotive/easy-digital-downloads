@@ -1050,10 +1050,9 @@ function edd_build_order( $order_data = array() ) {
 
 			if ( $discount ) {
 				$discount_amount = 0;
+				$items           = $order_data['cart_details'];
 
-				if ( is_array( $order_data['cart_details'] ) && ! empty( $order_data['cart_details'] ) ) {
-					$items = $order_data['cart_details'];
-
+				if ( is_array( $items ) && ! empty( $items ) ) {
 					foreach ( $items as $key => $item ) {
 						$discount_amount += edd_get_item_discount_amount( $item, $items, array( $discount ) );
 					}
