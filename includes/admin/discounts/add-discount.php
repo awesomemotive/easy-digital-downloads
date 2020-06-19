@@ -67,13 +67,12 @@ $minutes      = edd_get_minute_values();
 					</th>
 					<td>
 						<span class="edd-amount-type-wrapper">
-							<span class="edd-amount-type-select-wrapper">
-								<select name="amount_type" id="edd-amount-type">
-									<option value="percent"><?php esc_html_e( '%', 'easy-digital-downloads' ); ?></option>
-									<option value="flat"><?php esc_html_e( '$', 'easy-digital-downloads' ); ?></option>
-								</select>
-							</span>
 							<input type="text" required="required" class="edd-price-field" id="edd-amount" name="amount" value="" placeholder="<?php esc_html_e( '10.00', 'easy-digital-downloads' ); ?>"/>
+							<label for="edd-amount-type" class="screen-reader-text"><?php esc_html_e( 'Amount Type', 'easy-digital-downloads' ); ?></label>
+							<select name="amount_type" id="edd-amount-type">
+								<option value="percent">%</option>
+								<option value="flat"><?php echo esc_html( edd_currency_symbol() ); ?></option>
+							</select>
 						</span>
 						<p class="description"><?php esc_html_e( 'The amount as a percentage or flat rate. Cannot be left blank.', 'easy-digital-downloads' ); ?></p>
 					</td>
@@ -92,6 +91,7 @@ $minutes      = edd_get_minute_values();
 							'selected'    => array(),
 							'multiple'    => true,
 							'chosen'      => true,
+							'variations'  => true,
 							'placeholder' => sprintf( esc_html__( 'Select %s', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) ),
 						) ); // WPCS: XSS ok. ?>
 						<div id="edd-discount-product-conditions" style="display:none;">
@@ -129,6 +129,7 @@ $minutes      = edd_get_minute_values();
 							'selected'    => array(),
 							'multiple'    => true,
 							'chosen'      => true,
+							'variations'  => true,
 							'placeholder' => sprintf( esc_html__( 'Select %s', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) ),
 						) ); // WPCS: XSS ok. ?>
 						<p class="description"><?php printf( esc_html__( '%s this discount cannot be applied to. Leave blank for none.', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) ); ?></p>

@@ -587,8 +587,10 @@ function edd_count_customer_addresses( $args = array() ) {
 }
 
 /**
- * Maybe add a customer address. Used by `edd_build_order()` to maybe add
- * order addresses to the customer addresses table.
+ * Maybe add a customer address. Only unique addresses will be added. Used
+ * by `edd_build_order()` and `edd_add_manual_order()` to maybe add order
+ * addresses to the customer addresses table. Also used by the data migrator
+ * class when migrating orders from 2.9.
  *
  * @since 3.0
  *
@@ -623,17 +625,38 @@ function edd_maybe_add_customer_address( $customer_id = 0, $data = array() ) {
 		return false;
 	}
 
+	// Set the address type.
+	$data['type'] = 'billing';
+
+	// Set up an array with the whitelisted address keys.
+	$empty_address    = array(
+		'address'     => '',
+		'address2'    => '',
+		'city'        => '',
+		'region'      => '',
+		'country'     => '',
+		'postal_code' => '',
+		'type'        => 'billing',
+	);
+	$address_to_check = array_intersect_key( $data, $empty_address );
+	$address_to_check = array_filter( $address_to_check );
+	if ( empty( $address_to_check ) ) {
+		return false;
+	}
+	$address_to_check['customer_id'] = $customer_id;
+
+	// Instantiate a query object
+	$customer_addresses = new EDD\Database\Queries\Customer_Address();
+
+	// Check if this address is already assigned to the customer.
+	$address_exists = $customer_addresses->query( $address_to_check );
+	if ( ! empty( $address_exists ) ) {
+		return false;
+	}
 	$data['customer_id'] = $customer_id;
 
-	$c = edd_count_customer_addresses( $data );
-
-	// Add to the table if an address does not exist.
-	if ( 0 === $c ) {
-		$data['type'] = 'billing';
-		return edd_add_customer_address( $data );
-	}
-
-	return false;
+	// Add the new address to the customer record.
+	return $customer_addresses->add_item( $data );
 }
 
 /**
@@ -749,14 +772,26 @@ function edd_get_customer_address_counts( $args = array() ) {
  */
 function edd_add_customer_email_address( $data ) {
 
-	// A customer ID must be supplied for every address inserted.
-	if ( empty( $data['customer_id'] ) ) {
+	// A customer ID and email must be supplied for every address inserted.
+	if ( empty( $data['customer_id'] ) || empty( $data['email'] ) ) {
 		return false;
 	}
 
 	// Instantiate a query object.
 	$customer_email_addresses = new EDD\Database\Queries\Customer_Email_Address();
 
+	// Check if the address already exists for this customer.
+	$existing_addresses = $customer_email_addresses->query(
+		array(
+			'customer_id' => $data['customer_id'],
+			'email'       => $data['email'],
+		)
+	);
+	if ( ! empty( $existing_addresses ) ) {
+		return false;
+	}
+
+	// Add the email address to the customer.
 	return $customer_email_addresses->add_item( $data );
 }
 

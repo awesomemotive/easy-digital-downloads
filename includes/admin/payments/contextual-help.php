@@ -22,7 +22,13 @@ defined( 'ABSPATH' ) || exit;
 function edd_payments_contextual_help() {
 	$screen = get_current_screen();
 
+	// Only show on main "Orders" screen.
 	if ( 'download_page_edd-payment-history' !== $screen->id ) {
+		return;
+	}
+
+	// Do not show on Add or View Order/Refund.
+	if ( isset( $_GET['view'] ) ) {
 		return;
 	}
 

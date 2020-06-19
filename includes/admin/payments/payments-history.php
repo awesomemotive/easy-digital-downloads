@@ -117,29 +117,29 @@ function edd_get_payment_view() {
  */
 function edd_payment_history_page() {
 
-	// Enqueue Admin Orders
-	wp_enqueue_script( 'edd-admin-orders' );
-
 	// What are we viewing?
 	switch ( edd_get_payment_view() ) {
 
-		// Edit
+		// View Order
 		case 'view-order-details' :
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/view-order-details.php';
-			wp_enqueue_script( 'edd-admin-payments' );
 			break;
 
-		// Add
+		// Add Order
 		case 'add-order' :
 			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/add-order.php';
-			wp_enqueue_script( 'edd-admin-payments' );
 			edd_add_order_page_content();
+			break;
+
+		// View Refund
+		case 'view-refund-details' :
+			require_once EDD_PLUGIN_DIR . 'includes/admin/payments/view-refund.php';
+			edd_view_refund_page_content();
 			break;
 
 		// List Table
 		case 'list' :
 		default :
-			wp_enqueue_script( 'edd-admin-payments' );
 			edd_order_list_table_content();
 			break;
 	}
@@ -152,7 +152,6 @@ function edd_payment_history_page() {
  */
 function edd_order_list_table_content() {
 	require_once EDD_PLUGIN_DIR . 'includes/admin/payments/class-payments-table.php';
-	require_once EDD_PLUGIN_DIR . 'includes/admin/payments/class-order-items-table.php';
 	$orders_table = new EDD_Payment_History_Table();
 	$orders_table->prepare_items();
 

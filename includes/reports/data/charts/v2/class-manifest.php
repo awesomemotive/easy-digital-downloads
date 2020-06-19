@@ -413,6 +413,20 @@ class Manifest implements Error_Logger {
 				),
 			);
 		} else {
+			$day_by_day   = Reports\get_dates_filter_day_by_day();
+			$hour_by_hour = Reports\get_dates_filter_hour_by_hour();
+
+			$time_unit = 'month';
+			$time_format = 'MMM YYYY';
+
+			if ( $day_by_day ) {
+				$time_unit   = 'day';
+				$time_format = 'MMM D';
+			} else if ( $hour_by_hour ) {
+				$time_unit   = 'hour';
+				$time_format = 'h:mm A';
+			}
+
 			$defaults = array(
 				'responsive' => true,
 				'hoverMode'  => 'index',
@@ -431,8 +445,8 @@ class Manifest implements Error_Logger {
 							),
 							'position' => 'bottom',
 							'time'     => array(
-								'unit'          => 'day',
-								'tooltipFormat' => Reports\get_dates_filter_hour_by_hour() ? 'LLL' : 'LL',
+								'unit'          => $time_unit,
+								'tooltipFormat' => $time_format,
 							),
 						),
 					),
