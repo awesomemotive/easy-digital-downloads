@@ -108,7 +108,6 @@ function edd_download_metabox_fields() {
  * @return void
  */
 function edd_download_meta_box_save( $post_id, $post ) {
-
 	if ( ! isset( $_POST['edd_download_meta_box_nonce'] ) || ! wp_verify_nonce( $_POST['edd_download_meta_box_nonce'], basename( __FILE__ ) ) ) {
 		return;
 	}
@@ -127,7 +126,6 @@ function edd_download_meta_box_save( $post_id, $post ) {
 
 	// The default fields that get saved
 	$fields = edd_download_metabox_fields();
-
 	foreach ( $fields as $field ) {
 		if ( '_edd_default_price_id' == $field && edd_has_variable_prices( $post_id ) ) {
 
@@ -138,9 +136,10 @@ function edd_download_meta_box_save( $post_id, $post ) {
 			}
 
 			update_post_meta( $post_id, $field, $new_default_price_id );
-
+		} elseif ( '_edd_product_type' === $field && '0' === $_POST[ $field ] ) {
+			// No value stored when product type is "default" ("0") for backwards compatibility.
+			delete_post_meta( $post_id, '_edd_product_type' );
 		} else {
-
 			if ( isset( $_POST[ $field ] ) ) {
 				$new = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
 				update_post_meta( $post_id, $field, $new );
@@ -148,7 +147,6 @@ function edd_download_meta_box_save( $post_id, $post ) {
 				delete_post_meta( $post_id, $field );
 			}
 		}
-
 	}
 
 	if ( edd_has_variable_prices( $post_id ) ) {
@@ -930,32 +928,49 @@ function edd_render_refund_row( $post_id ) {
 	$global_ability    = edd_get_option( 'refundability', 'refundable' );
 	$refundability     = isset( $types[ $global_ability ] ) ? $types[ $global_ability ] : __( 'Unknown', 'easy-digital-downloads' );
 	$global_window     = edd_get_option( 'refund_window', 30 );
-	$edd_refundability = edd_get_download_refundability( $post_id );
 	$edd_refund_window = edd_get_download_refund_window( $post_id ); ?>
 
 	<div class="edd-product-options-wrapper">
-		<label for="edd_refundability"><strong><?php esc_html_e( 'Refundability', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Refundability</strong>: Allow or disallow refunds for this specific product. When allowed, the refund window will be used on all future purchases.', 'easy-digital-downloads' ); ?>"></span></strong></label>
-		<p><?php echo EDD()->html->select( array(
-			'name'     => '_edd_refundability',
-			'id'       => 'edd_refundability',
-			'options'  => $types,
-			'selected' => $edd_refundability,
-			'chosen'   => true,
+		<p>
+			<strong>
+				<?php esc_html_e( 'Refunds', 'easy-digital-downloads' ); ?>
+				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo wp_kses( __( '<strong>Refundable</strong>: Allow or disallow refunds for this specific product. When allowed, the refund window will be used on all future purchases.<br /><strong>Refund Window</strong>: Limit the number of days this product can be refunded after purchasing.', 'easy-digital-downloads' ), array( 'strong' => true, 'br' => true ) ); ?>"></span>
+			</strong>
+		</p>
 
-			'show_option_all'  => false,
-			'show_option_none' => '&mdash; ' . __( 'Use default', 'easy-digital-downloads' ) . ' &mdash;'
-		) ); ?></p>
 		<p>
-			<?php printf( __( 'Overrides default: %s', 'easy-digital-downloads' ), $refundability ); ?>
+			<label for="_edd_refundability" class="label--block">
+				<?php esc_html_e( 'Refund Status', 'easy-digital-downloads' ); ?>
+			</label>
+			<?php echo EDD()->html->select( array(
+				'name'             => '_edd_refundability',
+				'options'          => array_merge(
+					// Manually define a "none" option to set a blank value, vs. -1.
+					array(
+						'' => sprintf(
+							/** translators: Default refund status */
+							esc_html_x( 'Default (%1$s)', 'Download refund status', 'easy-digital-downloads' ),
+							ucwords( $refundability )
+						),
+					),
+					$types
+				),
+				// Use the direct meta value to avoid falling back to default.
+				'selected'         => get_post_meta( $post_id, '_edd_refundability', true ),
+				'show_option_all'  => '',
+				'show_option_none' => '',
+			) ); ?>
 		</p>
-	</div>
-	<div class="edd-product-options-wrapper">
-		<label for="edd_refund_window"><strong><?php _e( 'Refund Window', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Refund Window</strong>: Limit the number of days this product can be refunded after purchasing.', 'easy-digital-downloads' ); ?>"></span></strong></label>
+
 		<p>
-			<input id="edd_refund_window" class="small-text" name="_edd_refund_window" type="number" min="0" max="3650" step="1" value="<?php echo esc_attr( $edd_refund_window ); ?>" placeholder="<?php echo absint( $global_window ); ?>" />
-			<?php esc_html_e( 'Days', 'easy-digital-downloads' ); ?>
+			<label for="_edd_refund_window" class="label--block">
+				<?php esc_html_e( 'Refund Window', 'easy-digital-downloads' ); ?>
+			</label>
+			<input class="small-text" id="_edd_refund_window" name="_edd_refund_window" type="number" min="0" max="3650" step="1" value="<?php echo esc_attr( $edd_refund_window ); ?>" placeholder="<?php echo absint( $global_window ); ?>" />
+			<?php echo esc_html( _x( 'Days', 'refund window interval', 'easy-digital-downloads' ) ); ?>
 		</p>
-		<p>
+
+		<p class="description">
 			<?php _e( 'Leave blank to use global setting. Enter <code>0</code> for unlimited', 'easy-digital-downloads' ); ?>
 		</p>
 	</div>
