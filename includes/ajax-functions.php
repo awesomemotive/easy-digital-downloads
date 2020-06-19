@@ -1453,7 +1453,6 @@ function edd_admin_order_get_item_amounts() {
 
 		// Store total discount and reset global.
 		$total_discount = $edd_flat_discount_total;
-		$edd_flat_discount_total = 0;
 
 		$item = array(
 			'id'       => $download->id,
@@ -1465,7 +1464,11 @@ function edd_admin_order_get_item_amounts() {
 
 		$discount_amount = edd_get_item_discount_amount( $item, $products, array( $d ) );
 
-		if ( 'flat' === $d->get_type() && $item['id'] == end( $products )['id'] ) {
+		if (
+			0 !== $discount_amount &&
+			'flat' === $d->get_type() &&
+			$item['id'] == end( $products )['id']
+		) {
 			if ( $total_discount < $d->get_amount() ) {
 				$adjustment       = ( $d->get_amount() - $total_discount );
 				$discount_amount += $adjustment;
