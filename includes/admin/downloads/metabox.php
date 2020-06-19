@@ -926,7 +926,7 @@ function edd_render_refund_row( $post_id ) {
 
 	$types             = edd_get_refundability_types();
 	$global_ability    = edd_get_option( 'refundability', 'refundable' );
-	$refundability     = isset( $types[ $global_ability ] ) ? $types[ $global_ability ] : __( 'Unknown', 'easy-digital-downloads' );
+	$refundability     = edd_get_download_refundability( $post_id );
 	$global_window     = edd_get_option( 'refund_window', 30 );
 	$edd_refund_window = edd_get_download_refund_window( $post_id ); ?>
 
@@ -939,16 +939,17 @@ function edd_render_refund_row( $post_id ) {
 		</p>
 
 		<p>
-			<label for="_edd_refundability" class="label--block">
+			<label for="edd_refundability" class="label--block">
 				<?php esc_html_e( 'Refund Status', 'easy-digital-downloads' ); ?>
 			</label>
 			<?php echo EDD()->html->select( array(
 				'name'             => '_edd_refundability',
+				'id'               => 'edd_refundability',
 				'options'          => array_merge(
 					// Manually define a "none" option to set a blank value, vs. -1.
 					array(
 						'' => sprintf(
-							/** translators: Default refund status */
+							/* translators: Default refund status */
 							esc_html_x( 'Default (%1$s)', 'Download refund status', 'easy-digital-downloads' ),
 							ucwords( $refundability )
 						),
@@ -958,7 +959,7 @@ function edd_render_refund_row( $post_id ) {
 				// Use the direct meta value to avoid falling back to default.
 				'selected'         => get_post_meta( $post_id, '_edd_refundability', true ),
 				'show_option_all'  => '',
-				'show_option_none' => '',
+				'show_option_none' => false,
 			) ); ?>
 		</p>
 
