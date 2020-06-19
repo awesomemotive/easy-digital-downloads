@@ -1175,35 +1175,30 @@ function edd_render_disable_button( $post_id ) {
 					'name'    => '_edd_hide_purchase_link',
 					'current' => $hide_button
 				) ); ?>
-				<?php _e( 'Hide purchase button', 'easy-digital-downloads' ); ?>
+				<?php esc_html_e( 'Hide purchase button', 'easy-digital-downloads' ); ?>
 			</label>
 		</p>
+		<?php if ( ! empty( $supports_buy_now ) ) { ?>
 		<p>
-			<label>
+			<label for="edd_button_behavior" class="label--block">
+			<?php esc_html_e( 'Purchase button behavior', 'easy-digital-downloads' ); ?>
+			</label>
 				<?php
 				$args = array(
-					'name'     => '_edd_button_behavior',
-					'chosen'   => true,
-					'selected' => $behavior,
-					'options'  => array(
+					'name'             => '_edd_button_behavior',
+					'id'               => 'edd_button_behavior',
+					'selected'         => $behavior,
+					'options'          => array(
 						'add_to_cart' => __( 'Add to Cart', 'easy-digital-downloads' ),
-						'direct'      => __( 'Buy Now',     'easy-digital-downloads' )
+						'direct'      => __( 'Buy Now', 'easy-digital-downloads' ),
 					),
 					'show_option_all'  => null,
-					'show_option_none' => null
+					'show_option_none' => null,
 				);
-
-				if ( empty( $supports_buy_now ) ) {
-					$args['disabled'] = true;
-					$args['readonly'] = true;
-				}
-
-				echo EDD()->html->select( $args ); ?>
-			</label>
+				echo EDD()->html->select( $args );
+				?>
 		</p>
-		<p>
-			<?php _e( 'Purchase button behavior', 'easy-digital-downloads' ); ?>
-		</p>
+		<?php } ?>
 	</div>
 
 <?php
