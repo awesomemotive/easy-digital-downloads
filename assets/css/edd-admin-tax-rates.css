@@ -2,6 +2,19 @@
 	margin: 1em 0 0;
 }
 
+#edd-admin-tax-rates table {
+	border-collapse: collapse;
+}
+
+#edd-admin-tax-rates .tablenav.top {
+	display: flex;
+	justify-content: space-between;
+}
+
+#edd-admin-tax-rates .edd-admin-tax-rates__tablenav--left {
+	display: inline-flex;
+}
+
 #edd-admin-tax-rates th:not(.check-column) {
 	padding: 15px 10px;
 	width: unset;
@@ -20,15 +33,10 @@
 	padding: 12px 8px 10px 8px;
 }
 
-#edd-admin-tax-rates .edd-tax-rates-table-country {
-	padding-left: 12px;
-}
-
 .edd-tax-rate-table-add th select,
 .edd-tax-rate-table-add th input[type="text"],
 .edd-tax-rate-table-add th input[type="number"] {
 	width: 100%;
-	height: 28px;
 	margin: 0;
 	padding: 4px;
 }
@@ -55,11 +63,6 @@
 #edd-admin-tax-rates .edd-tax-rate-row--inactive td {
 	color: #999;
 	background-color: #f9f9f9;
-}
-
-#edd-admin-tax-rates .edd-admin-tax-rates-table-hide {
-	float: right;
-	margin-right: 10px;
 }
 
 #edd-admin-tax-rates .edd-tax-rate-table-add {
@@ -113,5 +116,19 @@
 		clip-path: unset;
 		margin: 0 0 12px;
 		position: relative;
+	}
+}
+
+@media screen and (max-width: 782px) {
+	#edd-admin-tax-rates .tablenav.top {
+		flex-wrap: wrap;
+	}
+
+	#edd-admin-tax-rates .edd-admin-tax-rates__tablenav--left {
+		margin-bottom: 16px;
+	}
+
+	#edd-admin-tax-rates .edd-admin-tax-rates__tablenav--left select {
+		margin-right: 6px;
 	}
 }
