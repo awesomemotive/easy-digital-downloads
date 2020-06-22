@@ -11,7 +11,7 @@
 	width: 100% !important;
 }
 
-#edd-admin-tax-rates tbody tr:not(:last-of-type) td {
+#edd-admin-tax-rates tbody tr:not(:last-of-type) {
 	border-bottom: 1px solid #eee;
 }
 
