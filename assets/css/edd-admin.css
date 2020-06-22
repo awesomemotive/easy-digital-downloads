@@ -4063,6 +4063,10 @@ body.download_page_edd-reports {
 	margin-bottom: 16px;
 }
 
+.edd-repeatable-row-standard-fields .edd-form-group {
+	margin-bottom: 0;
+}
+
 .edd-form-group:last-of-type {
 	margin-bottom: 0;
 }
