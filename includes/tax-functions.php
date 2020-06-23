@@ -442,15 +442,6 @@ function edd_get_tax_rate_object( $args ) {
 		OBJECT
 	);
 
-	// Save processing if only one tax rate is returned.
-	if ( 1 === count( $tax_rates ) ) {
-		$tax_rate = $tax_rates[0];
-
-		if ( $tax_rate->name === $args['country'] && $tax_rate->description === $args['region'] ) {
-			return $tax_rate;
-		}
-	}
-
 	if ( ! empty( $tax_rates ) ) {
 		foreach ( $tax_rates as $tax_rate ) {
 
