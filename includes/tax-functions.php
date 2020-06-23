@@ -415,7 +415,12 @@ function edd_download_is_tax_exclusive( $download_id = 0 ) {
  * Gets the tax rate object from the database for a given country / region.
  * Used in `edd_get_tax_rate`, `edd_build_order`, `edd_add_manual_order`.
  *
- * @param array $args
+ * @param array $args {
+ *     Country and, optionally, region to get the tax rate for.
+ *
+ *     @type string $country Required - country to check.
+ *     @type string $region  Optional - check a specific region within the country.
+ * }
  * @return object|boolean
  *
  * @since 3.0
