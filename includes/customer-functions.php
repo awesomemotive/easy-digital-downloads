@@ -625,10 +625,7 @@ function edd_maybe_add_customer_address( $customer_id = 0, $data = array() ) {
 		return false;
 	}
 
-	// Set the address type.
-	$data['type'] = 'billing';
-
-	// Set up an array with the whitelisted address keys.
+	// Set up an array with empty address keys. If all of these are empty in $data, the address should not be added.
 	$empty_address    = array(
 		'address'     => '',
 		'address2'    => '',
@@ -636,7 +633,6 @@ function edd_maybe_add_customer_address( $customer_id = 0, $data = array() ) {
 		'region'      => '',
 		'country'     => '',
 		'postal_code' => '',
-		'type'        => 'billing',
 	);
 	$address_to_check = array_intersect_key( $data, $empty_address );
 	$address_to_check = array_filter( $address_to_check );
@@ -644,6 +640,7 @@ function edd_maybe_add_customer_address( $customer_id = 0, $data = array() ) {
 		return false;
 	}
 	$address_to_check['customer_id'] = $customer_id;
+	$address_to_check['type']        = empty( $data['type'] ) ? 'billing' : $data['type'];
 
 	// Instantiate a query object
 	$customer_addresses = new EDD\Database\Queries\Customer_Address();
