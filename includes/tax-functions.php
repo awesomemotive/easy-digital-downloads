@@ -442,25 +442,26 @@ function edd_get_tax_rate_for_location( $args ) {
 		OBJECT
 	);
 
-	if ( ! empty( $tax_rates ) ) {
-		foreach ( $tax_rates as $tax_rate ) {
+	if ( empty( $tax_rates ) ) {
+		return $rate;
+	}
 
-			// Countrywide tax rate.
-			if ( 'country' === $tax_rate->scope ) {
-				$rate = $tax_rate;
+	foreach ( $tax_rates as $tax_rate ) {
 
-			// Regional tax rate.
-			} else {
-				if ( empty( $tax_rate->description ) || strtolower( $args['region'] ) !== strtolower( $tax_rate->description ) ) {
-					continue;
-				}
-
-				$regional_rate = $tax_rate->amount;
-
-				if ( ( 0 !== $regional_rate || ! empty( $regional_rate ) ) && '' !== $regional_rate ) {
-					$rate = $tax_rate;
-				}
+		// Regional tax rate.
+		if ( ! empty( $args['region'] ) && ! empty( $tax_rate->description ) ) {
+			if ( strtolower( $args['region'] ) !== strtolower( $tax_rate->description ) ) {
+				continue;
 			}
+
+			$regional_rate = $tax_rate->amount;
+
+			if ( ! empty( $regional_rate ) ) {
+				return $tax_rate;
+			}
+		} else {
+			// Countrywide tax rate.
+			$rate = $tax_rate;
 		}
 	}
 
