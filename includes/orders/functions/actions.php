@@ -304,7 +304,7 @@ function edd_add_manual_order( $args = array() ) {
 						? $data['edd_order_address']['region']
 						: false;
 
-					$tax_rate = edd_get_tax_rate_object(
+					$tax_rate = edd_get_tax_rate_for_location(
 						array(
 							'country' => $country,
 							'region'  => $region,

@@ -960,7 +960,7 @@ function edd_build_order( $order_data = array() ) {
 					? $order_data['user_info']['address']['state']
 					: false;
 
-				$tax_rate = edd_get_tax_rate_object(
+				$tax_rate = edd_get_tax_rate_for_location(
 					array(
 						'country' => $country,
 						'region'  => $region,
