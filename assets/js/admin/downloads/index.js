@@ -93,7 +93,9 @@ var EDD_Download_Configuration = {
 
 		clone.find( 'label' ).each( function () {
 			var labelFor = $( this ).attr( 'for' );
-			$( this ).attr( 'for', labelFor.replace( /(\d+)/, parseInt( key ) ) );
+			if ( labelFor ) {
+				$( this ).attr( 'for', labelFor.replace( /(\d+)/, parseInt( key ) ) );
+			}
 		} );
 
 		// Remove Chosen elements
