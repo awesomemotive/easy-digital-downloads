@@ -215,6 +215,24 @@ function edd_add_manual_order( $args = array() ) {
 		$data['downloads'] = array_values( $data['downloads'] );
 
 		$downloads = array_reverse( $data['downloads'] );
+		$tax_rate  = false;
+		// If taxes are enabled, get the tax rate for the order location.
+		if ( edd_use_taxes() ) {
+			$country = ! empty( $data['edd_order_address']['country'] )
+				? $data['edd_order_address']['country']
+				: false;
+
+			$region = ! empty( $data['edd_order_address']['region'] )
+				? $data['edd_order_address']['region']
+				: false;
+
+			$tax_rate = edd_get_tax_rate_for_location(
+				array(
+					'country' => $country,
+					'region'  => $region,
+				)
+			);
+		}
 
 		foreach ( $downloads as $cart_key => $download ) {
 			$d = edd_get_download( absint( $download['id'] ) );
@@ -295,39 +313,22 @@ function edd_add_manual_order( $args = array() ) {
 				}
 
 				// Maybe store order tax.
-				if ( edd_use_taxes() ) {
-					$country = ! empty( $data['edd_order_address']['country'] )
-						? $data['edd_order_address']['country']
-						: false;
-
-					$region = ! empty( $data['edd_order_address']['region'] )
-						? $data['edd_order_address']['region']
-						: false;
-
-					$tax_rate = edd_get_tax_rate_for_location(
+				if ( $tax_rate ) {
+					$description = $tax_rate->name;
+					if ( ! empty( $tax_rate->description ) ) {
+						$description = $tax_rate->description;
+					}
+					// Always store tax rate, even if empty.
+					edd_add_order_adjustment(
 						array(
-							'country' => $country,
-							'region'  => $region,
+							'object_id'   => $order_item_id,
+							'object_type' => 'order_item',
+							'type'        => 'tax_rate',
+							'total'       => $tax_rate->amount,
+							'type_id'     => $tax_rate->id,
+							'description' => $description,
 						)
 					);
-
-					if ( $tax_rate ) {
-						$description = $tax_rate->name;
-						if ( ! empty( $tax_rate->description ) ) {
-							$description = $tax_rate->description;
-						}
-						// Always store tax rate, even if empty.
-						edd_add_order_adjustment(
-							array(
-								'object_id'   => $order_item_id,
-								'object_type' => 'order_item',
-								'type'        => 'tax_rate',
-								'total'       => $tax_rate->amount,
-								'type_id'     => $tax_rate->id,
-								'description' => $description,
-							)
-						);
-					}
 				}
 
 				// Increase the earnings for this download.
