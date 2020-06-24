@@ -2311,10 +2311,8 @@ function edd_register_customer_report( $reports ) {
 			'endpoints' => array(
 				'tiles'  => array(
 					'lifetime_value_of_customer',
-					'average_customer_value',
 					'average_number_of_orders_per_customer',
-					'customer_average_age',
-					'most_valuable_customer',
+					'average_customer_value',
 				),
 				'tables' => array(
 					'top_five_customers',
@@ -2372,20 +2370,6 @@ function edd_register_customer_report( $reports ) {
 						return apply_filters( 'edd_reports_customers_average_order_count', $stats->get_customer_order_count( array(
 							'function' => 'AVG',
 						) ) );
-					},
-				),
-			),
-		) );
-
-		$reports->register_endpoint( 'customer_average_age', array(
-			'label' => __( 'Average Age', 'easy-digital-downloads' ),
-			'views' => array(
-				'tile' => array(
-					'data_callback' => function () {
-						global $wpdb;
-						$average_value = (int) $wpdb->get_var( "SELECT AVG(DATEDIFF(NOW(), date_created)) AS average FROM {$wpdb->edd_customers}" );
-
-						return apply_filters( 'edd_reports_customers_average_age', $average_value . ' ' . __( 'days', 'easy-digital-downloads' ) );
 					},
 				),
 			),
@@ -2966,3 +2950,22 @@ function edd_add_screen_options_nonces() {
 	wp_nonce_field( 'meta-box-order',  'meta-box-order-nonce', false );
 }
 add_action( 'admin_footer', 'edd_add_screen_options_nonces' );
+
+/**
+ * This function adds a notice to the bottom of the Tax reports screen if a default tax rate is detected, stating
+ * that we cannot report on the default tax rate.
+ *
+ * @since 3.0
+ * @param \EDD\Reports\Data\Report|\WP_Error $report The current report object, or WP_Error if invalid.
+ */
+function edd_tax_report_notice( $report ) {
+	if ( 'taxes' === $report->object_id && false !== edd_get_option( 'tax_rate' ) ) {
+		?>
+		<p class="description">
+			<strong><?php esc_html_e( 'Notice', 'easy-digital-downloads' ); ?>: </strong>
+			<?php esc_html_e( 'Tax reports are only generated for taxes associated with a location. The legacy default tax rate is unable to be reported on.', 'easy-digital-downloads' ); ?>
+		</p>
+		<?php
+	}
+}
+add_action( 'edd_reports_page_bottom', 'edd_tax_report_notice', 10, 1 );

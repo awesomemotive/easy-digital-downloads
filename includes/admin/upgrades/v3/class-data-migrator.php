@@ -840,24 +840,6 @@ class Data_Migrator {
 							$refund_adjustment_id = edd_add_order_adjustment( $refund_adjustment_args );
 							edd_add_order_adjustment_meta( $refund_adjustment_id, 'fee_id', $fee_id );
 						}
-
-						// Maybe store download ID.
-						if ( isset( $fee['download_id'] ) && ! empty( $fee['download_id'] ) ) {
-							edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
-
-							if ( ! empty( $refund_adjustment_id ) ) {
-								edd_add_order_adjustment_meta( $refund_adjustment_id, 'download_id', $fee['download_id'] );
-							}
-						}
-
-						// Maybe store price ID.
-						if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
-							edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
-
-							if ( ! empty( $refund_adjustment_id ) ) {
-								edd_add_order_adjustment_meta( $refund_adjustment_id, 'price_id', $fee['price_id'] );
-							}
-						}
 					}
 				}
 			}
@@ -975,24 +957,6 @@ class Data_Migrator {
 					$refund_adjustment_args['total']    = edd_negate_amount( floatval( $fee['amount'] ) + $tax );
 
 					$refund_adjustment_id = edd_add_order_adjustment( $refund_adjustment_args );
-				}
-
-				// Maybe store download ID.
-				if ( isset( $fee['download_id'] ) && ! empty( $fee['download_id'] ) ) {
-					edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
-
-					if ( ! empty( $refund_adjustment_id ) ) {
-						edd_add_order_adjustment_meta( $refund_adjustment_id, 'download_id', $fee['download_id'] );
-					}
-				}
-
-				// Maybe store price ID.
-				if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
-					edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
-
-					if ( ! empty( $refund_adjustment_id ) ) {
-						edd_add_order_adjustment_meta( $refund_adjustment_id, 'price_id', $fee['price_id'] );
-					}
 				}
 			}
 		}
