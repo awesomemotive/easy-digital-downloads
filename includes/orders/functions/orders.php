@@ -982,7 +982,7 @@ function edd_build_order( $order_data = array() ) {
 						'object_id'   => $order_item_id,
 						'object_type' => 'order_item',
 						'type'        => 'tax_rate',
-						'total'       => $tax_rate->amount,
+						'total'       => number_format( $tax_rate->amount, 4 ),
 						'type_id'     => $tax_rate->id,
 						'description' => $description,
 					)
