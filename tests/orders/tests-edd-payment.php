@@ -683,14 +683,15 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 	}
 
 	public function test_refund_affecting_stats() {
+
+		$customer          = new \EDD_Customer( $this->payment->customer_id );
+		$customer_sales    = $customer->purchase_count;
+		$customer_earnings = $customer->purchase_value;
+
 		$this->payment->status = 'complete';
 		$this->payment->save();
 
-		$customer = new \EDD_Customer( $this->payment->customer_id );
 		$download = new \EDD_Download( $this->payment->downloads[0]['id'] );
-
-		$customer_sales    = $customer->purchase_count;
-		$customer_earnings = $customer->purchase_value;
 
 		$download_sales    = $download->sales;
 		$download_earnings = $download->earnings;
@@ -699,9 +700,9 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$store_sales    = edd_get_total_sales();
 
 		$this->payment->refund();
+		$customer->recalculate_stats();
 		wp_cache_flush();
 
-		$customer = new \EDD_Customer( $this->payment->customer_id );
 		$download = new \EDD_Download( $this->payment->downloads[0]['id'] );
 
 		$this->assertEquals( $customer_earnings - $this->payment->total, $customer->purchase_value );
