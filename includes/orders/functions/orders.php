@@ -1344,12 +1344,8 @@ function edd_get_net_order_statuses() {
 	return apply_filters( 'edd_net_order_statuses', $statuses );
 }
 
-<<<<<<< HEAD
-/** Generate unique payment key for orders.
-=======
 /**
  * Generate unique payment key for orders.
->>>>>>> release/3.0
  *
  * @since 3.0
  * @param string $key Additional string used to help randomize key.
