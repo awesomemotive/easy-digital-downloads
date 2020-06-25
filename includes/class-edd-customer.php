@@ -777,7 +777,7 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 			array(
 				'customer_id'   => $this->id,
 				'number'        => 99999,
-				'status'        => edd_get_net_order_statuses(),
+				'status'        => edd_get_gross_order_statuses(),
 				'fields'        => 'total',
 				'no_found_rows' => true,
 				'type'          => array( 'sale', 'refund' ),
