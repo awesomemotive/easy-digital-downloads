@@ -798,7 +798,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'revoked',
 		);
 
-		$this->assertSame( $expected, edd_gross_order_statuses() );
+		$this->assertSame( $expected, edd_get_gross_order_statuses() );
 	}
 
 	public function test_net_order_status() {
@@ -808,7 +808,7 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 			'revoked',
 		);
 
-		$this->assertSame( $expected, edd_net_order_statuses() );
+		$this->assertSame( $expected, edd_get_net_order_statuses() );
 	}
 
 	/**

@@ -1292,7 +1292,7 @@ function edd_clone_order( $order_id = 0, $clone_relationships = false, $args = a
  *
  * @return array An array of order status array keys that can be related to gross reporting.
  */
-function edd_gross_order_statuses() {
+function edd_get_gross_order_statuses() {
 	$statuses = array(
 		'complete',
 		'refunded',
@@ -1322,7 +1322,7 @@ function edd_gross_order_statuses() {
  *
  * @return array An array of order status array keys that can be related to net reporting.
  */
-function edd_net_order_statuses() {
+function edd_get_net_order_statuses() {
 	$statuses = array(
 		'complete',
 		'partially_refunded',
@@ -1344,7 +1344,12 @@ function edd_net_order_statuses() {
 	return apply_filters( 'edd_net_order_statuses', $statuses );
 }
 
+<<<<<<< HEAD
 /** Generate unique payment key for orders.
+=======
+/**
+ * Generate unique payment key for orders.
+>>>>>>> release/3.0
  *
  * @since 3.0
  * @param string $key Additional string used to help randomize key.
