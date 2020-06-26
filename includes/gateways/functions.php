@@ -202,10 +202,6 @@ function edd_get_gateway_checkout_label( $gateway ) {
 	$gateways = edd_get_payment_gateways();
 	$label    = isset( $gateways[ $gateway ] ) ? $gateways[ $gateway ]['checkout_label'] : $gateway;
 
-	if ( 'manual' === $gateway ) {
-		$label = __( 'Free Purchase', 'easy-digital-downloads' );
-	}
-
 	return apply_filters( 'edd_gateway_checkout_label', $label, $gateway );
 }
 
