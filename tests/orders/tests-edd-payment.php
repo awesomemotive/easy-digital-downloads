@@ -684,12 +684,12 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 
 	public function test_refund_affecting_stats() {
 
+		$this->payment->status = 'complete';
+		$this->payment->save();
+
 		$customer          = new \EDD_Customer( $this->payment->customer_id );
 		$customer_sales    = $customer->purchase_count;
 		$customer_earnings = $customer->purchase_value;
-
-		$this->payment->status = 'complete';
-		$this->payment->save();
 
 		$download = new \EDD_Download( $this->payment->downloads[0]['id'] );
 
