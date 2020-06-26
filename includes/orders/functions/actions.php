@@ -324,7 +324,7 @@ function edd_add_manual_order( $args = array() ) {
 							'object_id'   => $order_item_id,
 							'object_type' => 'order_item',
 							'type'        => 'tax_rate',
-							'total'       => number_format( $tax_rate->amount, 4 ),
+							'total'       => $tax_rate->amount,
 							'type_id'     => $tax_rate->id,
 							'description' => $description,
 						)
