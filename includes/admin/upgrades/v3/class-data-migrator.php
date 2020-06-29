@@ -485,6 +485,10 @@ class Data_Migrator {
 			$parent = $wpdb->get_var( $wpdb->prepare( "SELECT edd_order_id FROM {$wpdb->edd_ordermeta} WHERE meta_key = %s AND meta_value = %d", esc_sql( 'legacy_order_id' ), $data->ID ) );
 		}
 
+		if ( 'manual_purchases' === $gateway && isset( $meta['_edd_payment_total'][0] ) ) {
+			$total = $meta['_edd_payment_total'][0];
+		}
+
 		// Build the order data before inserting.
 		$order_data = array(
 			'id'             => $data->ID,
