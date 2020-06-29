@@ -191,10 +191,6 @@ function edd_get_gateway_admin_label( $gateway ) {
 		? absint( $_GET['id'] )
 		: false;
 
-	if ( 'manual_purchases' === $gateway ) {
-		$label = __( 'Manual Payment', 'easy-digital-downloads' );
-	}
-
 	if ( 'manual' === $gateway && $payment ) {
 		if ( ! edd_get_payment_amount( $payment ) ) {
 			$label = __( 'Free Purchase', 'easy-digital-downloads' );
@@ -215,10 +211,6 @@ function edd_get_gateway_admin_label( $gateway ) {
 function edd_get_gateway_checkout_label( $gateway ) {
 	$gateways = edd_get_payment_gateways();
 	$label    = isset( $gateways[ $gateway ] ) ? $gateways[ $gateway ]['checkout_label'] : $gateway;
-
-	if ( 'manual_purchases' === $gateway ) {
-		$label = __( 'Manual Payment', 'easy-digital-downloads' );
-	}
 
 	if ( 'manual' === $gateway ) {
 		$label = __( 'Free Purchase', 'easy-digital-downloads' );
