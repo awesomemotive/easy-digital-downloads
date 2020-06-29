@@ -1,4 +1,4 @@
-/* global edd_vars */
+/* global jQuery, edd_vars */
 
 export const chosenVars = {
 	disable_search_threshold: 13,
@@ -17,6 +17,10 @@ export const chosenVars = {
  * @return {Object} Variables for Chosen.
  */
 export const getChosenVars = ( el ) => {
+	if ( ! el instanceof jQuery ) {
+		el = jQuery( el );
+	}
+
 	let inputVars = chosenVars;
 
 	// Ensure <select data-search-type="download"> or similar can use search always.
@@ -25,5 +29,8 @@ export const getChosenVars = ( el ) => {
 		delete inputVars.disable_search_threshold;
 	}
 
-	return inputVars;
+	return {
+		...inputVars,
+		width: el.css( 'width' ),
+	};
 }
