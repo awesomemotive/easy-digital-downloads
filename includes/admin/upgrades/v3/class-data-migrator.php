@@ -486,7 +486,8 @@ class Data_Migrator {
 		}
 
 		if ( 'manual_purchases' === $gateway && isset( $meta['_edd_payment_total'][0] ) ) {
-			$total = $meta['_edd_payment_total'][0];
+			$gateway = 'manual';
+			$total   = $meta['_edd_payment_total'][0];
 		}
 
 		// Build the order data before inserting.
