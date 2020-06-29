@@ -303,7 +303,7 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 		}
 
 		/*
-		 * Only non-primary email addresses can be deleted, so we're building up a whitelist using the provided
+		 * Only non-primary email addresses can be deleted, so we're building up a safelist using the provided
 		 * IDs. Each ID will be matched against this prior to deletion.
 		 */
 		$non_primary_address_ids = edd_get_customer_email_addresses( array(
