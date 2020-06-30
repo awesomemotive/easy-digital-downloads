@@ -1349,10 +1349,8 @@ function edd_upgrade_render_v30_migration() {
 	$order_removal_complete = edd_has_upgrade_completed( 'remove_legacy_orders' );
 
 	/** Customer Data Migration **********************************************/
-	$addresses = $wpdb->get_results( "SELECT umeta_id FROM {$wpdb->usermeta} WHERE meta_key = '_edd_user_address' LIMIT 1" );
 	$customer_addresses_complete = edd_has_upgrade_completed( 'migrate_customer_addresses' );
 
-	$email_addresses = $wpdb->get_results( "SELECT meta_key FROM {$wpdb->edd_customermeta} WHERE meta_key = 'additional_email' LIMIT 1" );
 	$customer_email_addresses_complete = edd_has_upgrade_completed( 'migrate_customer_email_addresses' );
 
 	/** Logs Migration *******************************************************/
@@ -1367,20 +1365,16 @@ function edd_upgrade_render_v30_migration() {
 	$logs_complete = edd_has_upgrade_completed( 'migrate_logs' );
 
 	/** Tax Rates Migration **************************************************/
-	$tax_rates = get_option( 'edd_tax_rates', array() );
 	$tax_rates_complete = edd_has_upgrade_completed( 'migrate_tax_rates' );
 
 	/** Discounts Migration **************************************************/
-	$discounts          = $wpdb->get_var( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_discount' LIMIT 1" );
 	$discounts_complete = edd_has_upgrade_completed( 'migrate_discounts' );
 
 	/** Order Notes Migration ************************************************/
-	$order_notes                  = $wpdb->get_var( "SELECT * FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note' LIMIT 1" );
 	$order_notes_complete         = edd_has_upgrade_completed( 'migrate_order_notes' );
 	$order_notes_removal_complete = edd_has_upgrade_completed( 'remove_legacy_order_notes' );
 
 	/** Customer Notes Migration *********************************************/
-	$customer_notes                  = $wpdb->get_var( "SHOW COLUMNS FROM {$wpdb->edd_customers} LIKE 'notes'" );
 	$customer_notes_complete         = edd_has_upgrade_completed( 'migrate_customer_notes' );
 	$customer_notes_removal_complete = edd_has_upgrade_completed( 'remove_legacy_customer_notes' );
 
