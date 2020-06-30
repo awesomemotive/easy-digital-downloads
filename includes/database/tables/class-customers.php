@@ -38,7 +38,7 @@ final class Customers extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 202002141;
+	protected $version = 202006101;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -54,6 +54,7 @@ final class Customers extends Table {
 		'201807273' => 201807273,
 		'201810091' => 201810091,
 		'202002141' => 202002141,
+		'202006101' => 202006101,
 	);
 
 	/**
@@ -97,12 +98,16 @@ final class Customers extends Table {
 		if ( false !== get_option( $this->table_prefix . 'edd_customers_db_version', false ) ) {
 			delete_option( $this->table_prefix . 'edd_customers_db_version' );
 
+			// Modify existing columns.
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `email` varchar(100) NOT NULL default ''" );
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `name` varchar(255) NOT NULL default ''" );
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `user_id` bigint(20) unsigned NOT NULL default '0'" );
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `purchase_value` decimal(18,9) NOT NULL default '0'" );
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `purchase_count` bigint(20) unsigned NOT NULL default '0'" );
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `date_created` datetime NOT NULL default CURRENT_TIMESTAMP" );
+
+			// Remove unneeded columns.
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} DROP `payment_ids`" );
 
 			if ( ! $this->column_exists( 'status' ) ) {
 				$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `status` varchar(20) NOT NULL default 'active' AFTER `name`;" );
@@ -244,6 +249,27 @@ final class Customers extends Table {
 
 		return $this->is_success( $result );
 
+	}
+
+	/**
+	 * Upgrade to version 202006101
+	 * - Remove the payment_ids column if it still exists.
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	protected function __202006101() {
+
+		$result = true;
+
+		// Remove the column.
+		if ( $this->column_exists( 'payment_ids' ) ) {
+			$result = $this->get_db()->query( "
+				ALTER TABLE {$this->table_name} DROP `payment_ids`
+			" );
+		}
+
+		return $this->is_success( $result );
 	}
 
 }
