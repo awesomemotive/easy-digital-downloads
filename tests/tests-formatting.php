@@ -120,10 +120,10 @@ class Tests_Formatting extends EDD_UnitTestCase {
 	}
 
 	public function test_address_type_label_unregistered() {
-		$this->assertSame( 'Shipping', edd_get_address_type_label( 'shipping' ) );
+		$this->assertSame( 'shipping', edd_get_address_type_label( 'shipping' ) );
 	}
 
 	public function test_address_type_label_unregistered_two_words() {
-		$this->assertSame( 'Test Type', edd_get_address_type_label( 'test type' ) );
+		$this->assertSame( 'test type', edd_get_address_type_label( 'test type' ) );
 	}
 }

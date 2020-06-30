@@ -66,7 +66,7 @@ class EDD_Customer_Addresses_Table extends List_Table {
 		switch ( $column_name ) {
 
 			case 'type' :
-				$value = ucwords( edd_get_address_type_label( $item['type'] ) );
+				$value = edd_get_address_type_label( $item['type'] );
 				if ( ! empty( $item['is_primary'] ) ) {
 					$value .= '&nbsp;&nbsp;<span class="edd-chip">' . esc_html__( 'Primary', 'easy-digital-downloads' ) . '</span>';
 				}

@@ -420,6 +420,6 @@ function edd_get_address_type_label( $address_type = 'billing' ) {
 	// Fallback to just applying an upper case to any words not in the filter.
 	return array_key_exists( $address_type, $address_type_labels ) ?
 		$address_type_labels[ $address_type ] :
-		ucwords( $address_type );
+		$address_type;
 
 }
