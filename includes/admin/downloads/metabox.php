@@ -844,8 +844,9 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 	</div>
 
 	<div class="edd-repeatable-row-standard-fields<?php echo $variable_class; ?>">
-		<div class="edd-file-name">
-			<label for="edd_download_files-<?php echo esc_attr( $key ); ?>-name" class="edd-repeatable-row-setting-label"><?php esc_html_e( 'File Name', 'easy-digital-downloads' ); ?></label>
+		<div class="edd-form-group edd-file-name">
+			<label for="edd_download_files-<?php echo esc_attr( $key ); ?>-name" class="edd-form-group__label edd-repeatable-row-setting-label"><?php esc_html_e( 'File Name', 'easy-digital-downloads' ); ?></label>
+			<div class="edd-form-group__control">
 			<input type="hidden" name="edd_download_files[<?php echo absint( $key ); ?>][attachment_id]" class="edd_repeatable_attachment_id_field" value="<?php echo esc_attr( absint( $args['attachment_id'] ) ); ?>"/>
 			<input type="hidden" name="edd_download_files[<?php echo absint( $key ); ?>][thumbnail_size]" class="edd_repeatable_thumbnail_size_field" value="<?php echo esc_attr( $args['thumbnail_size'] ); ?>"/>
 			<?php echo EDD()->html->text( array(
@@ -855,11 +856,12 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 				'placeholder' => __( 'My Neat File', 'easy-digital-downloads' ),
 				'class'       => 'edd_repeatable_name_field large-text',
 			) ); ?>
+			</div>
 		</div>
 
-		<div class="edd-file-url">
-			<label for="edd_download_files-<?php echo esc_attr( $key ); ?>-file" class="edd-repeatable-row-setting-label"><?php esc_html_e( 'File URL', 'easy-digital-downloads' ); ?></label>
-			<div class="edd_repeatable_upload_field_container">
+		<div class="edd-form-group edd-file-url">
+			<label for="edd_download_files-<?php echo esc_attr( $key ); ?>-file" class="edd-form-group__label edd-repeatable-row-setting-label"><?php esc_html_e( 'File URL', 'easy-digital-downloads' ); ?></label>
+			<div class="edd-form-group__control edd_repeatable_upload_field_container">
 				<?php echo EDD()->html->text( array(
 					'name'        => 'edd_download_files[' . $key . '][file]',
 					'id'          => 'edd_download_files-' . $key . '-file',
@@ -877,10 +879,10 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 			</div>
 		</div>
 
-		<div class="edd-file-assignment pricing"<?php echo $variable_display; ?>>
+		<div class="edd-form-group edd-file-assignment pricing"<?php echo $variable_display; ?>>
 
-			<label for="edd_download_files_<?php echo esc_attr( $key ); ?>_condition" class="edd-repeatable-row-setting-label"><?php esc_html_e( 'Price Assignment', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Price Assignment</strong>: With variable pricing enabled, you can choose to allow certain price variations access to specific files, or allow all price variations to access a file.', 'easy-digital-downloads' ); ?>"></span></label>
-
+			<label for="edd_download_files_<?php echo esc_attr( $key ); ?>_condition" class="edd-form-group__label edd-repeatable-row-setting-label"><?php esc_html_e( 'Price Assignment', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Price Assignment</strong>: With variable pricing enabled, you can choose to allow certain price variations access to specific files, or allow all price variations to access a file.', 'easy-digital-downloads' ); ?>"></span></label>
+			<div class="edd-form-group__control">
 			<?php
 				$options = array();
 
@@ -899,6 +901,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 					'show_option_none' => false
 				) );
 			?>
+			</div>
 		</div>
 
 		<?php do_action( 'edd_download_file_table_row', $post_id, $key, $args ); ?>
