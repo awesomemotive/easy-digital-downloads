@@ -27,9 +27,10 @@ class Data_Migrator {
 	 *
 	 * @since 3.0
 	 *
-	 * @param object $data Data to migrate.
+	 * @param object $data       Data to migrate.
+	 * @param string $type       The type of address this is.
 	 */
-	public static function customer_addresses( $data = null ) {
+	public static function customer_addresses( $data = null, $type = 'billing' ) {
 
 		// Bail if no data passed.
 		if ( ! $data ) {
@@ -50,6 +51,13 @@ class Data_Migrator {
 			'zip'     => '',
 			'country' => '',
 		) );
+
+		$address = array_filter( $address );
+
+		// Do not migrate empty addresses.
+		if ( empty( $address ) ) {
+			return;
+		}
 
 		if ( $customer ) {
 			edd_add_customer_address(
@@ -580,8 +588,10 @@ class Data_Migrator {
 		// Remove empty data.
 		$order_address_data = array_filter( $order_address_data );
 
-		// Add to edd_order_addresses table.
-		edd_add_order_address( $order_address_data );
+		if ( ! empty( $order_address_data ) ) {
+			// Add to edd_order_addresses table.
+			edd_add_order_address( $order_address_data );
+		}
 
 		// Maybe add the address to the edd_customer_addresses.
 		$customer_address_data = $order_address_data;
