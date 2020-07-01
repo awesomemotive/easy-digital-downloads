@@ -1703,24 +1703,21 @@ label.edd_prices_shipping { /* remove once Simple Shipping markup is improved */
 .edd_repeatable_upload_field {
 	padding-right: 32px;
 }
-.edd_upload_file a span {
-	height: 26px;
-	width: 26px;
-	line-height: 26px;
-	vertical-align: middle;
-	text-align: center;
-}
-.edd_upload_file a {
+.edd_upload_file button {
 	background: #f9f9f9;
+	border: none;
 	border-left: 1px solid #e5e5e5;
 	display: block;
 	padding: 0;
 	position: absolute;
-	height: 26px;
+	height: calc(100% - 4px);
 	width: 26px;
 	overflow: hidden;
 	top: 2px;
-	right: 0;
+	right: 2px;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
 }
 textarea#edd-payment-note {
 	width: 100%;
