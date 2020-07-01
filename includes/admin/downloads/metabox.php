@@ -612,8 +612,9 @@ function edd_render_products_field( $post_id ) {
 										<span class="edd-product-file-reorder edd-draghandle-anchor dashicons dashicons-move"  title="<?php printf( __( 'Click and drag to re-order bundled %s', 'easy-digital-downloads' ), edd_get_label_plural() ); ?>"></span>
 										<input type="hidden" name="edd_bundled_products[<?php echo $index; ?>][index]" class="edd_repeatable_index" value="<?php echo $index; ?>"/>
 									</div>
-									<div class="edd-bundled-product-item">
-										<label for="edd_bundled_products_<?php echo esc_attr( $index ); ?>" class="edd-repeatable-row-setting-label"><?php printf( __( 'Select %s:', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
+									<div class="edd-form-group edd-bundled-product-item">
+										<label for="edd_bundled_products_<?php echo esc_attr( $index ); ?>" class="edd-form-group__label edd-repeatable-row-setting-label"><?php printf( esc_html__( 'Select %s:', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
+										<div class="edd-form-group__control">
 										<?php
 										echo EDD()->html->product_dropdown( array(
 											'name'                 => '_edd_bundled_products[]',
@@ -626,9 +627,11 @@ function edd_render_products_field( $post_id ) {
 											'show_variations_only' => true,
 										) );
 										?>
+										</div>
 									</div>
-									<div class="edd-bundled-product-price-assignment pricing" style="<?php echo $variable_display; ?>">
-										<span class="edd-repeatable-row-setting-label"><?php _e( 'Price assignment:', 'easy-digital-downloads' ); ?></span>
+									<div class="edd-form-group edd-bundled-product-price-assignment pricing" style="<?php echo $variable_display; ?>">
+										<label class="edd-form-group__label edd-repeatable-row-setting-label" for="edd_bundled_products_conditions_<?php echo esc_attr( $index ); ?>"><?php esc_html_e( 'Price assignment:', 'easy-digital-downloads' ); ?></label>
+										<div class="edd-form-group__control">
 										<?php
 											$options = array();
 
@@ -645,16 +648,18 @@ function edd_render_products_field( $post_id ) {
 
 											echo EDD()->html->select( array(
 												'name'             => '_edd_bundled_products_conditions['. $index .']',
+												'id'               => 'edd_bundled_products_conditions_'. esc_attr( $index ),
 												'class'            => 'edd_repeatable_condition_field',
 												'options'          => $options,
 												'show_option_none' => false,
 												'selected'         => $selected
 											) );
 										?>
+										</div>
 									</div>
-									<span class="edd-bundled-product-actions">
+									<div class="edd-bundled-product-actions">
 										<a class="edd-remove-row edd-delete" data-type="file"><?php printf( __( 'Remove', 'easy-digital-downloads' ), $index ); ?><span class="screen-reader-text"><?php printf( __( 'Remove bundle option %s', 'easy-digital-downloads' ), $index ); ?></span></a>
-									</span>
+									</div>
 									<?php do_action( 'edd_download_products_table_row', $post_id ); ?>
 								</div>
 							</div>
@@ -673,8 +678,9 @@ function edd_render_products_field( $post_id ) {
 									<span class="edd-product-file-reorder edd-draghandle-anchor dashicons dashicons-move" title="<?php printf( __( 'Click and drag to re-order bundled %s', 'easy-digital-downloads' ), edd_get_label_plural() ); ?>"></span>
 									<input type="hidden" name="edd_bundled_products[1][index]" class="edd_repeatable_index" value="1"/>
 								</div>
-								<div class="edd-bundled-product-item">
-									<span class="edd-repeatable-row-setting-label"><?php printf( __( 'Select %s:', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></span>
+								<div class="edd-form-group edd-bundled-product-item">
+									<label class="edd-form-group__label edd-repeatable-row-setting-label" for="edd_bundled_products_1"><?php printf( esc_html__( 'Select %s:', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
+									<div class="edd-form-group__control">
 									<?php
 									echo EDD()->html->product_dropdown( array(
 										'name'                 => '_edd_bundled_products[]',
@@ -686,9 +692,11 @@ function edd_render_products_field( $post_id ) {
 										'show_variations_only' => true,
 									) );
 									?>
+									</div>
 								</div>
-								<div class="edd-bundled-product-price-assignment pricing" style="<?php echo $variable_display; ?>">
-									<span class="edd-repeatable-row-setting-label"><?php _e( 'Price assignment:', 'easy-digital-downloads' ); ?></span>
+								<div class="edd-form-group edd-bundled-product-price-assignment pricing" style="<?php echo $variable_display; ?>">
+									<label class="edd-form-group__label edd-repeatable-row-setting-label" for="edd_bundled_products_conditions_1"><?php esc_html_e( 'Price assignment:', 'easy-digital-downloads' ); ?></label>
+									<div class="edd-form-group__control">
 									<?php
 										$options = array();
 
@@ -702,16 +710,18 @@ function edd_render_products_field( $post_id ) {
 
 										echo EDD()->html->select( array(
 											'name'             => '_edd_bundled_products_conditions[1]',
+											'id'               => 'edd_bundled_products_conditions_1',
 											'class'            => 'edd_repeatable_condition_field',
 											'options'          => $options,
 											'show_option_none' => false,
 											'selected'         => null,
 										) );
 									?>
+									</div>
 								</div>
-								<span class="edd-bundled-product-actions">
+								<div class="edd-bundled-product-actions">
 									<a class="edd-remove-row edd-delete" data-type="file" ><?php printf( __( 'Remove', 'easy-digital-downloads' ) ); ?><span class="screen-reader-text"><?php __( 'Remove bundle option 1', 'easy-digital-downloads' ); ?></span></a>
-								</span>
+								</div>
 								<?php do_action( 'edd_download_products_table_row', $post_id ); ?>
 							</div>
 						</div>
