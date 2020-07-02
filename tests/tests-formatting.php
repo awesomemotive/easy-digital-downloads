@@ -110,4 +110,20 @@ class Tests_Formatting extends EDD_UnitTestCase {
 
 		$this->assertSame( 0, edd_currency_decimal_filter( 2, 'JPY' ) );
 	}
+
+	public function test_address_type_label_billing() {
+		$this->assertSame( 'Billing', edd_get_address_type_label( 'billing' ) );
+	}
+
+	public function test_address_type_label_default() {
+		$this->assertSame( 'Billing', edd_get_address_type_label() );
+	}
+
+	public function test_address_type_label_unregistered() {
+		$this->assertSame( 'shipping', edd_get_address_type_label( 'shipping' ) );
+	}
+
+	public function test_address_type_label_unregistered_two_words() {
+		$this->assertSame( 'test type', edd_get_address_type_label( 'test type' ) );
+	}
 }

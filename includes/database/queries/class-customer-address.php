@@ -110,6 +110,9 @@ class Customer_Address extends Query {
 	 *     @type int          $customer_id          A customer ID to only return that object. Default empty.
 	 *     @type array        $customer_id__in      Array of customer IDs to include. Default empty.
 	 *     @type array        $customer_id__not_in  Array of customer IDs to exclude. Default empty.
+	 *     @type int          $is_primary           Search for primary or non-primary addresses
+	 *     @type array        $is_primary__in       Array of 0 and/or 1 to get primary and/or non-primary.
+	 *     @type array        $is_primary__not_in   Array of 0 and/or 1 to avoid getting addresses of primary designation.
 	 *     @type string       $type                 Limit results to those affiliated with a given type. Default empty.
 	 *     @type array        $type__in             Array of types to include affiliated orders for. Default empty.
 	 *     @type array        $type__not_in         Array of types to exclude affiliated orders for. Default empty.

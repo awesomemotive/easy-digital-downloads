@@ -887,7 +887,7 @@ function default_display_tiles_group( $report ) {
 
 	<div id="edd-reports-tiles-wrap" class="edd-report-wrap">
 		<?php
-		foreach ( $tiles as $endpoint_id => $tile ) : 
+		foreach ( $tiles as $endpoint_id => $tile ) :
 			$tile->display();
 		endforeach;
 		?>
@@ -1041,7 +1041,7 @@ function display_taxes_filter() {
 		return;
 	}
 
-	$taxes         = get_filter_value( 'taxes' ); 
+	$taxes         = get_filter_value( 'taxes' );
 	$exclude_taxes = isset( $taxes['exclude_taxes'] ) && true == $taxes['exclude_taxes'];
 ?>
 	<span class="edd-graph-filter-options graph-option-section">

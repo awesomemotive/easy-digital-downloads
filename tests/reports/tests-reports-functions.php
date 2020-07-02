@@ -790,6 +790,27 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		$this->assertEqualSetsWithIndex( $expected, get_filter_value( 'dates' ) );
 	}
 
+	public function test_gross_order_status() {
+		$expected = array(
+			'complete',
+			'refunded',
+			'partially_refunded',
+			'revoked',
+		);
+
+		$this->assertSame( $expected, edd_get_gross_order_statuses() );
+	}
+
+	public function test_net_order_status() {
+		$expected = array(
+			'complete',
+			'partially_refunded',
+			'revoked',
+		);
+
+		$this->assertSame( $expected, edd_get_net_order_statuses() );
+	}
+
 	/**
 	 * Strips the seconds from start and end datetime strings to guard against slow tests.
 	 *
