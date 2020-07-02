@@ -262,6 +262,10 @@ function edd_add_customer_email( $args = array() ) {
 		}
 	}
 
+	if ( ! isset( $customer_id ) ) {
+		$customer_id = isset( $args['customer_id'] ) ? $args['customer_id'] : false;
+	}
+
 	do_action( 'edd_post_add_customer_email', $customer_id, $args );
 
 	if ( edd_doing_ajax() ) {
