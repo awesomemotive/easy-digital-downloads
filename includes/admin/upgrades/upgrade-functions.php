@@ -1339,22 +1339,10 @@ function edd_upgrade_render_v30_migration() {
 	$migration_complete = edd_has_upgrade_completed( 'v30_data_migration' );
 
 	/** Tax Rates Migration **************************************************/
-	$tax_rates          = get_option( 'edd_tax_rates', array() );
 	$tax_rates_complete = edd_has_upgrade_completed( 'migrate_tax_rates' );
 
-	if ( empty( $tax_rates ) ) {
-		edd_set_upgrade_complete( 'migrate_tax_rates' );
-		$tax_rates_complete = true;
-	}
-
 	/** Discounts Migration **************************************************/
-	$discounts          = $wpdb->get_var( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_discount' LIMIT 1" );
 	$discounts_complete = edd_has_upgrade_completed( 'migrate_discounts' );
-
-	if ( empty( $discounts ) ) {
-		edd_set_upgrade_complete( 'migrate_discounts' );
-		$discounts_complete = true;
-	}
 
 	/** Orders Migration *****************************************************/
 	$orders          = $wpdb->get_var( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_payment' LIMIT 1" );
@@ -1381,12 +1369,6 @@ function edd_upgrade_render_v30_migration() {
 								 GROUP BY p.ID
 								 LIMIT 1" );
 	$logs_complete = edd_has_upgrade_completed( 'migrate_logs' );
-
-	/** Tax Rates Migration **************************************************/
-	$tax_rates_complete = edd_has_upgrade_completed( 'migrate_tax_rates' );
-
-	/** Discounts Migration **************************************************/
-	$discounts_complete = edd_has_upgrade_completed( 'migrate_discounts' );
 
 	/** Order Notes Migration ************************************************/
 	$order_notes_complete         = edd_has_upgrade_completed( 'migrate_order_notes' );
