@@ -1349,10 +1349,8 @@ function edd_upgrade_render_v30_migration() {
 	$order_removal_complete = edd_has_upgrade_completed( 'remove_legacy_orders' );
 
 	/** Customer Data Migration **********************************************/
-	$addresses = $wpdb->get_results( "SELECT umeta_id FROM {$wpdb->usermeta} WHERE meta_key = '_edd_user_address' LIMIT 1" );
 	$customer_addresses_complete = edd_has_upgrade_completed( 'migrate_customer_addresses' );
 
-	$email_addresses = $wpdb->get_results( "SELECT meta_key FROM {$wpdb->edd_customermeta} WHERE meta_key = 'additional_email' LIMIT 1" );
 	$customer_email_addresses_complete = edd_has_upgrade_completed( 'migrate_customer_email_addresses' );
 
 	/** Logs Migration *******************************************************/
@@ -1367,20 +1365,16 @@ function edd_upgrade_render_v30_migration() {
 	$logs_complete = edd_has_upgrade_completed( 'migrate_logs' );
 
 	/** Tax Rates Migration **************************************************/
-	$tax_rates = get_option( 'edd_tax_rates', array() );
 	$tax_rates_complete = edd_has_upgrade_completed( 'migrate_tax_rates' );
 
 	/** Discounts Migration **************************************************/
-	$discounts          = $wpdb->get_var( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_discount' LIMIT 1" );
 	$discounts_complete = edd_has_upgrade_completed( 'migrate_discounts' );
 
 	/** Order Notes Migration ************************************************/
-	$order_notes                  = $wpdb->get_var( "SELECT * FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note' LIMIT 1" );
 	$order_notes_complete         = edd_has_upgrade_completed( 'migrate_order_notes' );
 	$order_notes_removal_complete = edd_has_upgrade_completed( 'remove_legacy_order_notes' );
 
 	/** Customer Notes Migration *********************************************/
-	$customer_notes                  = $wpdb->get_var( "SHOW COLUMNS FROM {$wpdb->edd_customers} LIKE 'notes'" );
 	$customer_notes_complete         = edd_has_upgrade_completed( 'migrate_customer_notes' );
 	$customer_notes_removal_complete = edd_has_upgrade_completed( 'remove_legacy_customer_notes' );
 
@@ -1401,38 +1395,32 @@ function edd_upgrade_render_v30_migration() {
 
 	<style>
 		.dashicons.dashicons-yes { display: none; color: rgb(0, 128, 0); vertical-align: middle; }
-		.message.copmlete { display: none; }
+		.message.complete { display: none; }
 	</style>
 	<?php if ( ! $migration_complete ) : ?>
 	<script>
 		jQuery( function($) {
 			$(document).ready(function () {
-				$(document).on("DOMNodeInserted", function (e) {
-					var element = e.target;
 
-					if (element.id === 'edd-batch-success') {
-						element = $(element);
+				function processNext( current ) {
+					current.find( '.edd-migration.allowed input' ).prop( 'disabled', true ).removeClass('button-primary').addClass('button-secondary');
+					current.find('.dashicons.dashicons-yes').show();
+					current.find('.message.initial').hide();
+					current.find('.message.complete').show();
 
-						var target_wrapper = element.parent().prev();
-						target_wrapper.find('.edd-migration.allowed').hide();
-						target_wrapper.find('.edd-migration.unavailable').show();
-						target_wrapper.find('.message.initial').hide();
-						target_wrapper.find('.message.complete').show();
+					var auto_start_next_step = true;
 
-						var element_wrapper = element.parents().eq(4);
-						element_wrapper.find('.dashicons.dashicons-yes').show();
+					if ( current.find('.edd-new-count') ) {
+						var new_count = current.find('.edd-new-count').text(),
+							old_count = current.find('.edd-old-count').text();
 
-						var auto_start_next_step = true;
+						auto_start_next_step = new_count === old_count;
+					}
 
-						if (element.find('.edd-new-count')) {
-							var new_count = element.find('.edd-new-count').text(),
-								old_count = element.find('.edd-old-count').text();
+					var next_step_wrapper = current.next();
 
-							auto_start_next_step = new_count === old_count;
-						}
-
-						var next_step_wrapper = element_wrapper.next();
-						if (next_step_wrapper.find('.postbox').length) {
+					if ( next_step_wrapper.hasClass( 'metabox-holder' ) ) {
+						if ( next_step_wrapper.find( '.edd-migration.allowed' ).length ) {
 							next_step_wrapper.find('.edd-migration.allowed').show();
 							next_step_wrapper.find('.edd-migration.unavailable').hide();
 
@@ -1440,9 +1428,19 @@ function edd_upgrade_render_v30_migration() {
 								next_step_wrapper.find('.edd-export-form:not(#edd-remove-legacy-data-form)').submit();
 							}
 						} else {
-							$('#edd-migration-nav-warn').hide();
-							$('#edd-migration-ready').slideDown();
+							processNext( next_step_wrapper );
 						}
+					} else {
+						$('#edd-migration-nav-warn').hide();
+						$('#edd-migration-ready').slideDown();
+					}
+				}
+
+				$(document).on("DOMNodeInserted", function (e) {
+					var element = e.target;
+
+					if ( element.id === 'edd-batch-success' ) {
+						processNext( $( element ).parents().eq(4) );
 					}
 				});
 
@@ -1566,7 +1564,7 @@ function edd_upgrade_render_v30_migration() {
 						<span class="edd-migration unavailable" style="<?php echo ! $migration_complete ? '' : 'display: none'; ?>">
 							<input type="submit" disabled id="migrate-customer-email-addresses-submit" value="<?php esc_attr_e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 							&mdash;
-								 <span class="message initial"><?php esc_html_e( 'Please complete the previous steps before updating customer addresses.', 'easy-digital-downloads' ); ?></span>
+								 <span class="message initial"><?php esc_html_e( 'Please complete the previous steps before updating customer email addresses.', 'easy-digital-downloads' ); ?></span>
 								 <span class="message complete"><?php esc_html_e( 'Data migration complete.', 'easy-digital-downloads' ); ?></span>						</span>
 					<?php else: ?>
 						<input type="submit" disabled id="migrate-customer-email-addresses-submit" value="<?php esc_attr_e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
@@ -1606,7 +1604,7 @@ function edd_upgrade_render_v30_migration() {
 						<span class="edd-migration unavailable" style="<?php echo ! $migration_complete ? '' : 'display: none'; ?>">
 							<input type="submit" disabled id="migrate-logs-submit" value="<?php esc_attr_e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 							&mdash;
-								 <span class="message initial"><?php esc_html_e( 'Please complete the previous steps before updating customer addresses.', 'easy-digital-downloads' ); ?></span>
+								 <span class="message initial"><?php esc_html_e( 'Please complete the previous steps before updating the logs.', 'easy-digital-downloads' ); ?></span>
 								 <span class="message complete"><?php esc_html_e( 'Data migration complete.', 'easy-digital-downloads' ); ?></span>						</span>
 					<?php else: ?>
 						<input type="submit" disabled id="migrate-logs-submit" value="<?php esc_attr_e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
@@ -1646,7 +1644,7 @@ function edd_upgrade_render_v30_migration() {
 						<span class="edd-migration unavailable" style="<?php echo ! $migration_complete ? '' : 'display: none'; ?>">
 							<input type="submit" disabled id="migrate-tax-rates-submit" value="<?php esc_attr_e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 							&mdash;
-								 <span class="message initial"><?php esc_html_e( 'Please complete the previous steps before updating customer addresses.', 'easy-digital-downloads' ); ?></span>
+								 <span class="message initial"><?php esc_html_e( 'Please complete the previous steps before updating tax rates.', 'easy-digital-downloads' ); ?></span>
 								 <span class="message complete"><?php esc_html_e( 'Data migration complete.', 'easy-digital-downloads' ); ?></span>						</span>
 					<?php else: ?>
 						<input type="submit" disabled id="migrate-tax-rates-submit" value="<?php esc_attr_e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
@@ -1686,7 +1684,7 @@ function edd_upgrade_render_v30_migration() {
 						<span class="edd-migration unavailable" style="<?php echo ! $migration_complete ? '' : 'display: none'; ?>">
 							<input type="submit" disabled id="migrate-discounts-submit" value="<?php esc_attr_e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 							&mdash;
-								 <span class="message initial"><?php esc_html_e( 'Please complete the previous steps before updating customer addresses.', 'easy-digital-downloads' ); ?></span>
+								 <span class="message initial"><?php esc_html_e( 'Please complete the previous steps before updating discounts.', 'easy-digital-downloads' ); ?></span>
 								 <span class="message complete"><?php esc_html_e( 'Data migration complete.', 'easy-digital-downloads' ); ?></span>						</span>
 					<?php else: ?>
 						<input type="submit" disabled id="migrate-discounts-submit" value="<?php esc_attr_e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
@@ -1725,7 +1723,7 @@ function edd_upgrade_render_v30_migration() {
 						<span class="edd-migration unavailable" style="<?php echo ! $migration_complete ? '' : 'display: none'; ?>">
 							<input type="submit" disabled id="migrate-order-notes-submit" value="<?php esc_attr_e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 							&mdash;
-								 <span class="message initial"><?php esc_html_e( 'Please complete the previous steps before updating customer addresses.', 'easy-digital-downloads' ); ?></span>
+								 <span class="message initial"><?php esc_html_e( 'Please complete the previous steps before updating notes.', 'easy-digital-downloads' ); ?></span>
 								 <span class="message complete"><?php esc_html_e( 'Data migration complete.', 'easy-digital-downloads' ); ?></span>						</span>
 					<?php else: ?>
 						<input type="submit" disabled id="migrate-order-notes-submit" value="<?php esc_attr_e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
@@ -1765,7 +1763,7 @@ function edd_upgrade_render_v30_migration() {
 						<span class="edd-migration unavailable" style="<?php echo ! $migration_complete ? '' : 'display: none'; ?>">
 							<input type="submit" disabled id="migrate-customer-notes-submit" value="<?php esc_attr_e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
 							&mdash;
-								 <span class="message initial"><?php esc_html_e( 'Please complete the previous steps before updating customer addresses.', 'easy-digital-downloads' ); ?></span>
+								 <span class="message initial"><?php esc_html_e( 'Please complete the previous steps before updating customer notes.', 'easy-digital-downloads' ); ?></span>
 								 <span class="message complete"><?php esc_html_e( 'Data migration complete.', 'easy-digital-downloads' ); ?></span>						</span>
 					<?php else: ?>
 						<input type="submit" disabled id="migrate-customer-notes-submit" value="<?php esc_attr_e( 'Upgrade Database', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
