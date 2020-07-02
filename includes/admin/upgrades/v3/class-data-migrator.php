@@ -27,9 +27,10 @@ class Data_Migrator {
 	 *
 	 * @since 3.0
 	 *
-	 * @param object $data Data to migrate.
+	 * @param object $data       Data to migrate.
+	 * @param string $type       The type of address this is.
 	 */
-	public static function customer_addresses( $data = null ) {
+	public static function customer_addresses( $data = null, $type = 'billing' ) {
 
 		// Bail if no data passed.
 		if ( ! $data ) {
@@ -50,6 +51,13 @@ class Data_Migrator {
 			'zip'     => '',
 			'country' => '',
 		) );
+
+		$address = array_filter( $address );
+
+		// Do not migrate empty addresses.
+		if ( empty( $address ) ) {
+			return;
+		}
 
 		if ( $customer ) {
 			edd_add_customer_address(
@@ -580,8 +588,10 @@ class Data_Migrator {
 		// Remove empty data.
 		$order_address_data = array_filter( $order_address_data );
 
-		// Add to edd_order_addresses table.
-		edd_add_order_address( $order_address_data );
+		if ( ! empty( $order_address_data ) ) {
+			// Add to edd_order_addresses table.
+			edd_add_order_address( $order_address_data );
+		}
 
 		// Maybe add the address to the edd_customer_addresses.
 		$customer_address_data = $order_address_data;
@@ -830,24 +840,6 @@ class Data_Migrator {
 							$refund_adjustment_id = edd_add_order_adjustment( $refund_adjustment_args );
 							edd_add_order_adjustment_meta( $refund_adjustment_id, 'fee_id', $fee_id );
 						}
-
-						// Maybe store download ID.
-						if ( isset( $fee['download_id'] ) && ! empty( $fee['download_id'] ) ) {
-							edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
-
-							if ( ! empty( $refund_adjustment_id ) ) {
-								edd_add_order_adjustment_meta( $refund_adjustment_id, 'download_id', $fee['download_id'] );
-							}
-						}
-
-						// Maybe store price ID.
-						if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
-							edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
-
-							if ( ! empty( $refund_adjustment_id ) ) {
-								edd_add_order_adjustment_meta( $refund_adjustment_id, 'price_id', $fee['price_id'] );
-							}
-						}
 					}
 				}
 			}
@@ -966,24 +958,6 @@ class Data_Migrator {
 
 					$refund_adjustment_id = edd_add_order_adjustment( $refund_adjustment_args );
 				}
-
-				// Maybe store download ID.
-				if ( isset( $fee['download_id'] ) && ! empty( $fee['download_id'] ) ) {
-					edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
-
-					if ( ! empty( $refund_adjustment_id ) ) {
-						edd_add_order_adjustment_meta( $refund_adjustment_id, 'download_id', $fee['download_id'] );
-					}
-				}
-
-				// Maybe store price ID.
-				if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
-					edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
-
-					if ( ! empty( $refund_adjustment_id ) ) {
-						edd_add_order_adjustment_meta( $refund_adjustment_id, 'price_id', $fee['price_id'] );
-					}
-				}
 			}
 		}
 
@@ -1084,6 +1058,27 @@ class Data_Migrator {
 		$region = isset( $data['state'] )
 			? sanitize_text_field( $data['state'] )
 			: '';
+
+		// If the scope is 'country', look for other active rates that are country wide and set them as 'inactive'.
+		if ( 'country' === $scope ) {
+			$tax_rates = edd_get_adjustments(
+				array(
+					'type'        => 'tax_rate',
+					'status'      => 'active',
+					'scope'       => 'country',
+					'name'        => $data['country'],
+				)
+			);
+
+			if ( ! empty( $tax_rates ) ) {
+				foreach ( $tax_rates as $tax_rate ) {
+					edd_update_adjustment(
+						$tax_rate->id,
+						array( 'status' => 'inactive', )
+					);
+				}
+			}
+		}
 
 		$adjustment_data = array(
 			'name'        => $data['country'],
