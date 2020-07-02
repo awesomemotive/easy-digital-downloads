@@ -387,3 +387,39 @@ function edd_get_allowed_tags() {
 		),
 	) );
 }
+
+/**
+ * Return a translatable and display ready string for an address type.
+ *
+ * @since 3.0
+ * @param string $address_type The type of address to get the display label for.
+ *
+ * @return string              The translatable string for the display type, in lowercase.
+ */
+function edd_get_address_type_label( $address_type = 'billing' ) {
+
+	// Core default address types and their labels.
+	$address_type_labels = array(
+		'billing' => __( 'Billing', 'easy-digital-downloads' ),
+	);
+
+	/**
+	 * Physical address type labels.
+	 *
+	 * A key/value array of billing types found in the 'type' column of the customer address table, and their translatable
+	 * strings for output.
+	 *
+	 * @since 3.0
+	 * @param array $address_type_labels
+	 *     Array of the address type labels, in key/value form. The key should match the database entry for the
+	 *         wp_edd_customer_addresses table in the 'type' column. The value of each array entry should be a translatable
+	 *         string for output in the UI.
+	 */
+	$address_type_labels = apply_filters( 'edd_address_type_labels', $address_type_labels );
+
+	// Fallback to just applying an upper case to any words not in the filter.
+	return array_key_exists( $address_type, $address_type_labels ) ?
+		$address_type_labels[ $address_type ] :
+		$address_type;
+
+}
