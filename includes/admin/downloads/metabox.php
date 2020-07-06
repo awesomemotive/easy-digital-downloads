@@ -758,8 +758,6 @@ function edd_render_files_field( $post_id = 0 ) {
 	$display = $type == 'bundle' ? ' style="display:none;"' : ''; ?>
 
 	<div id="edd_download_files"<?php echo $display; ?>>
-		<input type="hidden" id="edd_download_files" class="edd_repeatable_upload_name_field" value=""/>
-
 		<div id="edd_file_fields_default" class="edd_meta_table_wrap">
 			<div class="widefat edd_repeatable_table">
 
