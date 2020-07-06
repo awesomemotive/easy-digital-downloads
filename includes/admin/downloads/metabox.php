@@ -591,7 +591,7 @@ function edd_render_products_field( $post_id ) {
 	$prices           = $download->get_prices(); ?>
 
 	<div id="edd_products"<?php echo $display; ?>>
-		<div id="edd_file_fields_<?php echo esc_attr( $type ); ?>" class="edd_meta_table_wrap">
+		<div id="edd_file_fields_bundle" class="edd_meta_table_wrap">
 			<div class="widefat edd_repeatable_table">
 
 				<?php do_action( 'edd_download_products_table_head', $post_id ); ?>
@@ -760,7 +760,7 @@ function edd_render_files_field( $post_id = 0 ) {
 	<div id="edd_download_files"<?php echo $display; ?>>
 		<input type="hidden" id="edd_download_files" class="edd_repeatable_upload_name_field" value=""/>
 
-		<div id="edd_file_fields_<?php echo esc_attr( $type ); ?>" class="edd_meta_table_wrap">
+		<div id="edd_file_fields_default" class="edd_meta_table_wrap">
 			<div class="widefat edd_repeatable_table">
 
 				<div class="edd-file-fields edd-repeatables-wrap">
