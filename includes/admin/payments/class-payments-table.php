@@ -366,6 +366,14 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @since 3.0
 	 */
 	public function no_items() {
+		if ( ! edd_has_upgrade_completed( 'migrate_orders' ) ) {
+			global $wpdb;
+			$orders = $wpdb->get_var( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_payment' LIMIT 1" );
+			if ( ! empty( $orders ) ) {
+				esc_html_e( 'Easy Digital Downloads needs to upgrade the database. Orders will be available when that has completed.', 'easy-digital-downloads' );
+				return;
+			}
+		}
 		esc_html_e( 'No orders found.', 'easy-digital-downloads' );
 	}
 
