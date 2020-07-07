@@ -37,7 +37,15 @@ add_action('wp_dashboard_setup', 'edd_register_dashboard_widgets', 10 );
  * @since 1.2.2
  * @return void
  */
-function edd_dashboard_sales_widget( ) {
+function edd_dashboard_sales_widget() {
+	if ( ! edd_has_upgrade_completed( 'migrate_orders' ) ) {
+		global $wpdb;
+		$orders = $wpdb->get_var( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_payment' LIMIT 1" );
+		if ( ! empty( $orders ) ) {
+			printf( '<p>%s</p>', esc_html__( 'Easy Digital Downloads needs to upgrade the database. This summary will be available when that has completed.', 'easy-digital-downloads' ) );
+			return;
+		}
+	}
 	wp_enqueue_script( 'edd-admin-dashboard' );
 	echo '<p><img src=" ' . esc_attr( set_url_scheme( EDD_PLUGIN_URL . 'assets/images/loading.gif', 'relative' ) ) . '"/></p>';
 }
