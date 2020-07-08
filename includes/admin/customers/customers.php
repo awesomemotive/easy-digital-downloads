@@ -773,7 +773,7 @@ function edd_customers_view( $customer = null ) {
 		<table class="wp-list-table widefat striped emails">
 			<thead>
 				<tr>
-					<th><?php esc_html_e( 'Email',   'easy-digital-downloads' ); ?></th>
+					<th class="column-primary"><?php esc_html_e( 'Email', 'easy-digital-downloads' ); ?></th>
 					<th><?php esc_html_e( 'Date Added', 'easy-digital-downloads' ); ?></th>
 				</tr>
 			</thead>
@@ -783,7 +783,7 @@ function edd_customers_view( $customer = null ) {
 				foreach ( $all_emails as $key => $email ) : ?>
 
 					<tr data-key="<?php echo esc_attr( $key ); ?>">
-						<td class="column-actions">
+						<td class="column-primary">
 							<span><?php echo esc_html( $email->email ); ?></span>
 
 							<?php if ( 'primary' === $email->type ) : ?>
@@ -791,7 +791,13 @@ function edd_customers_view( $customer = null ) {
 							<?php else : ?>
 								<div class="row-actions">
 									<?php
-									$base_url    = admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . urlencode( $customer->id ) );
+									$base_url    = edd_get_admin_url(
+										array(
+											'page' => 'edd-customers',
+											'view' => 'overview',
+											'id'   => urlencode( $customer->id ),
+										)
+									);
 									$promote_url = wp_nonce_url( add_query_arg( array( 'email' => rawurlencode( $email->email ), 'edd_action' => 'customer-primary-email' ), $base_url ), 'edd-set-customer-primary-email' );
 									$remove_url  = wp_nonce_url( add_query_arg( array( 'email' => rawurlencode( $email->email ), 'edd_action' => 'customer-remove-email'  ), $base_url ), 'edd-remove-customer-email' );
 									?>
@@ -809,18 +815,25 @@ function edd_customers_view( $customer = null ) {
 				<?php endforeach; ?>
 
 				<tr class="add-customer-email-row">
-					<td class="add-customer-email-td">
+					<td colspan="2">
 						<div class="add-customer-email-wrapper">
 							<input type="hidden" name="customer-id" value="<?php echo esc_attr( $customer->id ); ?>" />
 							<?php wp_nonce_field( 'edd-add-customer-email', 'add_email_nonce', false, true ); ?>
-							<label class="screen-reader-text" for="edd-additional-email"><?php esc_html_e( 'Email Address', 'easy-digital-downloads' ); ?></label>
-							<input type="email" name="additional-email" id="edd-additional-email" value="" placeholder="<?php esc_html_e( 'Email Address', 'easy-digital-downloads' ); ?>" />&nbsp;
-							<input type="checkbox" name="make-additional-primary" value="1" id="make-additional-primary" />&nbsp;<label for="make-additional-primary"><?php esc_html_e( 'Make Primary', 'easy-digital-downloads' ); ?></label>
+							<div class="edd-form-group">
+								<label class="edd-form-group__label screen-reader-text" for="edd-additional-email"><?php esc_html_e( 'Email Address', 'easy-digital-downloads' ); ?></label>
+								<div class="edd-form-group__control">
+									<input type="email" name="additional-email" id="edd-additional-email" value="" placeholder="<?php esc_html_e( 'Email Address', 'easy-digital-downloads' ); ?>" />
+								</div>
+							</div>
+							<div class="edd-form-group edd-make-email-primary">
+								<div class="edd-form-group__control">
+									<input type="checkbox" name="make-additional-primary" value="1" id="make-additional-primary" />
+									<label for="make-additional-primary"><?php esc_html_e( 'Make Primary', 'easy-digital-downloads' ); ?></label>
+								</div>
+							</div>
+							<span class="spinner"></span>
+							<button class="button-secondary edd-add-customer-email" id="add-customer-email"><?php esc_html_e( 'Add Email', 'easy-digital-downloads' ); ?></button>
 						</div>
-					</td>
-					<td>
-						<button class="button-secondary edd-add-customer-email" id="add-customer-email" style="margin: 6px 0;"><?php esc_html_e( 'Add Email', 'easy-digital-downloads' ); ?></button>
-						<span class="spinner"></span>
 					</td>
 				</tr>
 
