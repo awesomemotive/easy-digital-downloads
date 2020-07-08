@@ -2225,7 +2225,7 @@ input[class*="edd-price-field"] {
 	#edd-item-tables-wrapper .addresses tbody tr {
 		display: grid;
 	}
-	#edd-item-tables-wrapper .addresses tbody td {
+	#edd-item-tables-wrapper .addresses tbody td:not(.no-items) {
 		padding-left: 35%;
 	}
 }

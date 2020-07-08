@@ -756,7 +756,7 @@ function edd_customers_view( $customer = null ) {
 			<?php else : ?>
 
 				<tr>
-					<td colspan="6"><?php esc_html_e( 'No addresses found.', 'easy-digital-downloads' ); ?></td>
+					<td class="no-items" colspan="6"><?php esc_html_e( 'No addresses found.', 'easy-digital-downloads' ); ?></td>
 				</tr>
 
 			<?php endif; ?>
