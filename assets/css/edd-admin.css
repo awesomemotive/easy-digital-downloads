@@ -2223,12 +2223,10 @@ input[class*="edd-price-field"] {
 	}
 
 	#edd-item-tables-wrapper .addresses tbody tr {
-		display: flex;
-		justify-content: flex-start;
-		flex-wrap: wrap;
+		display: grid;
 	}
-	#edd-item-tables-wrapper .addresses td:last-of-type {
-		display: none;
+	#edd-item-tables-wrapper .addresses tbody td {
+		padding-left: 35%;
 	}
 }
 
