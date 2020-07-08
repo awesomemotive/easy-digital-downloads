@@ -701,7 +701,7 @@ function edd_customers_view( $customer = null ) {
 					?>
 
 					<tr data-id="<?php echo esc_attr( $address->id ); ?>">
-						<td class="has-row-actions">
+						<td data-colname="<?php esc_attr_e( 'Address', 'easy-digital-downlaods' ); ?>">
 							<?php
 							echo ! empty( $address->address )
 								? esc_html( $address->address )
@@ -711,43 +711,43 @@ function edd_customers_view( $customer = null ) {
 								? esc_html( $address->address2 )
 								: '';
 							?>
-							<div class="row-actions">
-								<span class="delete"><a href="<?php echo esc_url( $delete_url ); ?>"><?php esc_html_e( 'Delete', 'easy-digital-downloads' ); ?></a></span>
-							</div>
 						</td>
-						<td>
+						<td data-colname="<?php esc_attr_e( 'City', 'easy-digital-downloads' ); ?>">
 							<?php
 							echo ! empty( $address->city )
-								? esc_html( $address->city )
+								? esc_attr( $address->city )
 								: '&mdash;';
 							?>
 						</td>
-						<td>
+						<td data-colname="<?php esc_attr_e( 'Region', 'easy-digital-downloads' ); ?>">
 							<?php
 							echo ! empty( $address->region )
-								? edd_get_state_name( esc_attr( $address->country ), $address->region )
+								? esc_attr( edd_get_state_name( $address->country, $address->region ) )
 								: '&mdash;';
 							?>
 						</td>
-						<td>
+						<td data-colname="<?php esc_attr_e( 'Postal Code', 'easy-digital-downloads' ); ?>">
 							<?php
 							echo ! empty( $address->postal_code )
 								? esc_html( $address->postal_code )
 								: '&mdash;';
 							?>
 						</td>
-						<td>
+						<td data-colname="<?php esc_attr_e( 'Country', 'easy-digital-downloads' ); ?>">
 							<?php
 							echo ! empty( $address->country )
-								? edd_get_country_name( $address->country )
+								? esc_attr( edd_get_country_name( $address->country ) )
 								: '&mdash;';
 							?>
 						</td>
-						<td>
+						<td class="has-row-actions" data-colname="<?php esc_attr_e( 'First Used', 'easy-digital-downloads' ); ?>">
 							<time datetime="<?php echo esc_attr( EDD()->utils->date( $address->date_created, null, true )->toDateTimeString() ); ?>"><?php echo edd_date_i18n( EDD()->utils->date( $address->date_created, null, true )->toDateTimeString(), 'M. d, Y' ) . '<br>' . edd_date_i18n( strtotime( $address->date_created ), 'H:i' ) . ' ' . edd_get_timezone_abbr(); ?></time>
 							<?php if ( ! empty( $address->is_primary ) ) : ?>
 								<span class="edd-chip"><?php esc_html_e( 'Primary', 'easy-digital-downloads' ); ?></span>
 							<?php endif; ?>
+							<div class="row-actions">
+								<span class="delete"><a href="<?php echo esc_url( $delete_url ); ?>"><?php esc_html_e( 'Delete', 'easy-digital-downloads' ); ?></a></span>
+							</div>
 						</td>
 					</tr>
 
