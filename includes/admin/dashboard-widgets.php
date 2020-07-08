@@ -42,7 +42,19 @@ function edd_dashboard_sales_widget() {
 		global $wpdb;
 		$orders = $wpdb->get_var( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_payment' LIMIT 1" );
 		if ( ! empty( $orders ) ) {
-			printf( '<p>%s</p>', esc_html__( 'Easy Digital Downloads needs to upgrade the database. This summary will be available when that has completed.', 'easy-digital-downloads' ) );
+			$url = add_query_arg(
+				array(
+					'page'        => 'edd-upgrades',
+					'edd-upgrade' => 'v30_migration',
+				),
+				admin_url( 'index.php' )
+			);
+			printf(
+				'<p>%1$s <a href="%2$s">%3$s</a></p>',
+				esc_html__( 'Easy Digital Downloads needs to upgrade the database. This summary will be available when that has completed.', 'easy-digital-downloads' ),
+				esc_url( $url ),
+				esc_html__( 'Begin the upgrade.', 'easy-digital-downloads' )
+			);
 			return;
 		}
 	}
