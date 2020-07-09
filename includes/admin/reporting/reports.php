@@ -2602,7 +2602,8 @@ function display_export_report() {
 									'name'        => 'download_id',
 									'id'          => 'edd_orders_export_download',
 									'chosen'      => true,
-									'placeholder' => __( 'All Downloads', 'easy-digital-downloads' ),
+									/* translators: the plural post type label */
+									'placeholder' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
 								) );
 
 				                echo EDD()->html->customer_dropdown( array(
@@ -2774,7 +2775,8 @@ function display_export_report() {
 									'name'        => 'download',
 									'id'          => 'edd_customer_export_download',
 									'chosen'      => true,
-									'placeholder' => __( 'All Downloads', 'easy-digital-downloads' ),
+									/* translators: the plural post type label */
+									'placeholder' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
 				                ) );
 
 				                wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
@@ -2829,7 +2831,8 @@ function display_export_report() {
 										'name'        => 'download_id',
 										'id'          => 'edd_download_export_download',
 										'chosen'      => true,
-										'placeholder' => __( 'All Downloads', 'easy-digital-downloads' ),
+										/* translators: the plural post type label */
+										'placeholder' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
 									)
 								); ?>
 								<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
@@ -2880,7 +2883,8 @@ function display_export_report() {
 										'name'        => 'download_id',
 										'id'          => 'edd_file_download_export_download',
 										'chosen'      => true,
-										'placeholder' => __( 'All Downloads', 'easy-digital-downloads' ),
+										/* translators: the plural post type label */
+										'placeholder' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
 									)
 								); ?>
 								<span class="edd-from-to-wrapper">
