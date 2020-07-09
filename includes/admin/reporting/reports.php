@@ -2606,12 +2606,13 @@ function display_export_report() {
 									'placeholder' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
 								) );
 
-				                echo EDD()->html->customer_dropdown( array(
-					                'name'          => 'customer_id',
-					                'id'            => 'edd_order_export_customer',
-					                'chosen'        => true,
-					                'none_selected' => '',
-				                ) );
+								echo EDD()->html->customer_dropdown( array(
+									'name'          => 'customer_id',
+									'id'            => 'edd_order_export_customer',
+									'chosen'        => true,
+									'none_selected' => '',
+									'placeholder'   => __( 'All Customers', 'easy-digital-downloads' ),
+								) );
 
 				                wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 
@@ -2698,27 +2699,27 @@ function display_export_report() {
 									'options'         => edd_get_payment_statuses(),
 								) );
 
-		                        echo EDD()->html->select( array(
-			                        'name'             => 'country',
-			                        'id'               => 'edd_reports_filter_countries',
-			                        'options'          => edd_get_country_list(),
-			                        'chosen'           => true,
-			                        'selected'         => false,
-			                        'show_option_none' => false,
-			                        'placeholder'      => __( 'Choose a Country', 'easy-digital-downloads' ),
-			                        'show_option_all'  => __( 'All Countries', 'easy-digital-downloads' ),
-		                        ) );
+								echo EDD()->html->select( array(
+									'name'             => 'country',
+									'id'               => 'edd_reports_filter_countries',
+									'options'          => edd_get_country_list(),
+									'chosen'           => true,
+									'selected'         => false,
+									'show_option_none' => false,
+									'placeholder'      => __( 'All Countries', 'easy-digital-downloads' ),
+									'show_option_all'  => false,
+								) );
 
-		                        echo EDD()->html->select( array(
-			                        'name'             => 'region',
-			                        'id'               => 'edd_reports_filter_regions',
-			                        'options'          => edd_get_shop_states(),
-			                        'chosen'           => true,
-			                        'selected'         => false,
-			                        'show_option_none' => false,
-			                        'placeholder'      => __( 'Choose a Region', 'easy-digital-downloads' ),
-			                        'show_option_all'  => __( 'All Regions', 'easy-digital-downloads' ),
-		                        ) );
+								echo EDD()->html->select( array(
+									'name'             => 'region',
+									'id'               => 'edd_reports_filter_regions',
+									'options'          => edd_get_shop_states(),
+									'chosen'           => true,
+									'selected'         => false,
+									'show_option_none' => false,
+									'placeholder'      => __( 'All Regions', 'easy-digital-downloads' ),
+									'show_option_all'  => false,
+								) );
 
 		                        wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
 								?>
