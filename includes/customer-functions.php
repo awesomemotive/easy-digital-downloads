@@ -217,9 +217,9 @@ function edd_get_customers( $args = array() ) {
 		'number' => 30
 	) );
 
-	if ( -1 == $args['number'] ) {
+	if ( -1 == $r['number'] ) {
 		_doing_it_wrong( __FUNCTION__, esc_html__( 'Do not use -1 to retrieve all results.', 'easy-digital-downloads' ), '3.0' );
-		$args['number'] = 9999999;
+		$r['number'] = 9999999;
 	}
 
 	// Instantiate a query object
