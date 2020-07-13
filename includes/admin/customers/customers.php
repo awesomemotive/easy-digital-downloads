@@ -715,14 +715,14 @@ function edd_customers_view( $customer = null ) {
 						<td data-colname="<?php esc_attr_e( 'City', 'easy-digital-downloads' ); ?>">
 							<?php
 							echo ! empty( $address->city )
-								? esc_attr( $address->city )
+								? esc_html( $address->city )
 								: '&mdash;';
 							?>
 						</td>
 						<td data-colname="<?php esc_attr_e( 'Region', 'easy-digital-downloads' ); ?>">
 							<?php
 							echo ! empty( $address->region )
-								? esc_attr( edd_get_state_name( $address->country, $address->region ) )
+								? esc_html( edd_get_state_name( $address->country, $address->region ) )
 								: '&mdash;';
 							?>
 						</td>
@@ -736,7 +736,7 @@ function edd_customers_view( $customer = null ) {
 						<td data-colname="<?php esc_attr_e( 'Country', 'easy-digital-downloads' ); ?>">
 							<?php
 							echo ! empty( $address->country )
-								? esc_attr( edd_get_country_name( $address->country ) )
+								? esc_html( edd_get_country_name( $address->country ) )
 								: '&mdash;';
 							?>
 						</td>
