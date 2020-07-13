@@ -963,10 +963,6 @@ function edd_build_order( $order_data = array() ) {
 						'total'       => $fee['amount'],
 					);
 
-					if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
-						$adjustment_data['tax'] = 0.00;
-					}
-
 					// Add the adjustment.
 					$adjustment_id = edd_add_order_adjustment( $adjustment_data );
 
