@@ -663,13 +663,13 @@ class EDD_Notices {
 				case 'address-removed' :
 					$this->add_notice( array(
 						'id'      => 'edd-customer-address-removed',
-						'message' => __( 'Customer address removed', 'easy-digital-downloads')
+						'message' => __( 'Customer address deleted.', 'easy-digital-downloads')
 					) );
 					break;
 				case 'address-remove-failed' :
 					$this->add_notice( array(
 						'id'      => 'edd-customer-address-remove-failed',
-						'message' => __( 'Failed to remove customer address', 'easy-digital-downloads'),
+						'message' => __( 'Failed to delete customer address.', 'easy-digital-downloads'),
 						'class'   => 'error'
 					) );
 					break;
