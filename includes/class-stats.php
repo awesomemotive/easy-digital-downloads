@@ -385,7 +385,7 @@ class Stats {
 				FROM {$this->query_vars['table']}
 				WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				GROUP BY day
-				ORDER BY day DESC
+				ORDER BY total DESC
 				LIMIT 1";
 
 		$result = $this->get_db()->get_row( $sql );
