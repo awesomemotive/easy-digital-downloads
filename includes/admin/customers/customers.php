@@ -791,19 +791,34 @@ function edd_customers_view( $customer = null ) {
 							<?php else : ?>
 								<div class="row-actions">
 									<?php
-									$base_url    = edd_get_admin_url(
+									$base_url     = edd_get_admin_url(
 										array(
 											'page' => 'edd-customers',
 											'view' => 'overview',
 											'id'   => urlencode( $customer->id ),
 										)
 									);
-									$promote_url = wp_nonce_url( add_query_arg( array( 'email' => rawurlencode( $email->email ), 'edd_action' => 'customer-primary-email' ), $base_url ), 'edd-set-customer-primary-email' );
-									$remove_url  = wp_nonce_url( add_query_arg( array( 'email' => rawurlencode( $email->email ), 'edd_action' => 'customer-remove-email'  ), $base_url ), 'edd-remove-customer-email' );
+									$actions      = array(
+										'promote' => array(
+											'url'   => wp_nonce_url( add_query_arg( array( 'email' => rawurlencode( $email->email ), 'edd_action' => 'customer-primary-email' ), $base_url ), 'edd-set-customer-primary-email' ),
+											'label' => __( 'Make Primary', 'easy-digital-downloads' ),
+										),
+										'delete'  => array(
+											'url'   => wp_nonce_url( add_query_arg( array( 'email' => rawurlencode( $email->email ), 'edd_action' => 'customer-remove-email'  ), $base_url ), 'edd-remove-customer-email' ),
+											'label' => __( 'Delete', 'easy-digital-downloads' ),
+										),
+									);
+									$action_links = array();
+									foreach ( $actions as $action => $args ) {
+										$action_links[] = sprintf(
+											'<span class="%s"><a href="%s">%s</a></span>',
+											esc_attr( $action ),
+											esc_url( $args['url'] ),
+											esc_html( $args['label'] )
+										);
+									}
+									echo wp_kses( implode( ' | ', $action_links ), edd_get_allowed_tags() );
 									?>
-									<a href="<?php echo esc_url( $promote_url ); ?>"><?php esc_html_e( 'Make Primary', 'easy-digital-downloads' ); ?></a>
-									&nbsp;|&nbsp;
-									<span class="delete"><a href="<?php echo esc_url( $remove_url ); ?>"><?php esc_html_e( 'Delete', 'easy-digital-downloads' ); ?></a></span>
 								</div>
 							<?php endif; ?>
 						</td>
