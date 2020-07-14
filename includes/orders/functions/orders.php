@@ -949,10 +949,8 @@ function edd_build_order( $order_data = array() ) {
 			// Store order item fees as adjustments.
 			if ( isset( $item['fees'] ) && ! empty( $item['fees'] ) ) {
 				foreach ( $item['fees'] as $fee_id => $fee ) {
-					$tax = ( isset( $fee['no_tax'] ) && false === $fee['no_tax'] && ! empty( $tax_rate->amount ) ) || ( $fee['amount'] < 0 && ! empty( $tax_rate->amount ) )
-						? floatval( floatval( $fee['amount'] ) - ( floatval( $fee['amount'] ) / ( 1 + $tax_rate->amount ) ) )
-						: 0.00;
 
+					$tax             = EDD()->fees->get_calculated_tax( $fee, $tax_rate->amount );
 					$adjustment_data = array(
 						'object_id'   => $order_item_id,
 						'object_type' => 'order_item',
@@ -1006,9 +1004,7 @@ function edd_build_order( $order_data = array() ) {
 
 			add_filter( 'edd_prices_include_tax', '__return_false' );
 
-			$tax = ( isset( $fee['no_tax'] ) && false === $fee['no_tax'] ) || $fee['amount'] < 0
-				? floatval( edd_calculate_tax( $fee['amount'] ) )
-				: 0.00;
+			$tax = EDD()->fees->get_calculated_tax( $fee, $tax_rate->amount );
 
 			remove_filter( 'edd_prices_include_tax', '__return_false' );
 

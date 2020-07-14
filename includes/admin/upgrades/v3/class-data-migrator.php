@@ -808,9 +808,7 @@ class Data_Migrator {
 							? (float) $meta['_edd_payment_tax_rate'][0]
 							: 0.00;
 
-						$tax = ( isset( $fee['no_tax'] ) && false === $fee['no_tax'] && ! empty( $tax_rate ) ) || ( $fee['amount'] < 0 && ! empty( $tax_rate ) )
-							? floatval( floatval( $fee['amount'] ) - ( floatval( $fee['amount'] ) / ( 1 + $tax_rate ) ) )
-							: 0.00;
+						$tax = EDD()->fees->get_calculated_tax( $fee, $tax_rate );
 
 						// Add the adjustment.
 						$adjustment_args = array(
@@ -931,9 +929,7 @@ class Data_Migrator {
 				$refund_adjustment_id = 0;
 
 				// Reverse engineer the tax calculation.
-				$tax = ( isset( $fee['no_tax'] ) && false === $fee['no_tax'] && ! empty( $tax_rate ) ) || ( $fee['amount'] < 0 && ! empty( $tax_rate ) )
-					? floatval( floatval( $fee['amount'] ) - ( floatval( $fee['amount'] ) / ( 1 + $tax_rate ) ) )
-					: 0.00;
+				$tax = EDD()->fees->get_calculated_tax( $fee, $tax_rate );
 
 				// Add the adjustment.
 				$adjustment_args = array(
