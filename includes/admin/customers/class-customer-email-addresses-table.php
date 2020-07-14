@@ -138,7 +138,7 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 				'email'      => rawurlencode( $email ),
 				'edd_action' => 'customer-remove-email'
 			) ), 'edd-remove-customer-email' );
-			$actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
+			$actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete', 'easy-digital-downloads' ) . '</a>';
 		}
 
 		// State

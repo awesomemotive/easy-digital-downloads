@@ -132,7 +132,7 @@ class EDD_Customer_Addresses_Table extends List_Table {
 
 		// Actions
 		$actions  = array(
-			'view' => '<a href="' . esc_url( $customer_url ) . '">' . __( 'View', 'easy-digital-downloads' ) . '</a>'
+			'view' => '<a href="' . esc_url( $customer_url ) . '">' . esc_html__( 'View', 'easy-digital-downloads' ) . '</a>'
 		);
 
 		if ( empty( $item['is_primary'] ) ) {
@@ -142,7 +142,7 @@ class EDD_Customer_Addresses_Table extends List_Table {
 				'id'         => urlencode( $item['id'] ),
 				'edd_action' => 'customer-remove-address'
 			) ), 'edd-remove-customer-address' );
-			$actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
+			$actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete', 'easy-digital-downloads' ) . '</a>';
 		}
 
 		// State
