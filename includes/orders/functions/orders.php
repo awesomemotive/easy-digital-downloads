@@ -957,9 +957,9 @@ function edd_build_order( $order_data = array() ) {
 						'type_id'     => $fee['id'],
 						'type'        => 'fee',
 						'description' => $fee['label'],
-						'subtotal'    => $fee['amount'],
+						'subtotal'    => floatval( $fee['amount'] ),
 						'tax'         => $tax,
-						'total'       => $fee['amount'],
+						'total'       => floatval( $fee['amount'] ) + $tax,
 					);
 
 					// Add the adjustment.
