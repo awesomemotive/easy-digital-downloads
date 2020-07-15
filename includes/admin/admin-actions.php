@@ -175,16 +175,17 @@ function edd_display_product_tabs() {
 	$tabs = array(
 		'products' => array(
 			'name' => edd_get_label_plural(),
-			'url'  => admin_url( 'edit.php?post_type=download' ),
-		)
+			'url'  => edd_get_admin_url(),
+		),
 	);
 
 	// Get taxonomies
 	$taxonomies = get_object_taxonomies( 'download', 'objects' );
 	foreach ( $taxonomies as $tax => $details ) {
 		$tabs[ $tax ] = array(
-			'name' => $details->labels->menu_name,
-			'url'  => add_query_arg( array(
+			'name'  => $details->labels->menu_name,
+			'label' => $details->label,
+			'url'   => add_query_arg( array(
 				'taxonomy'  => $tax,
 				'post_type' => 'download'
 			), admin_url( 'edit-tags.php' ) )
@@ -204,8 +205,11 @@ function edd_display_product_tabs() {
 	}
 
 	// Start a buffer
-	ob_start() ?>
-
+	ob_start();
+	if ( 'products' !== $active_tab ) {
+		echo '<h1 class="edd-taxonomy__heading">' . esc_html( $tabs[ $active_tab ]['label'] ) . '</h1>';
+	}
+	?>
 	<div class="clear"></div>
 	<h2 class="nav-tab-wrapper edd-nav-tab-wrapper edd-tab-clear">
 		<?php
