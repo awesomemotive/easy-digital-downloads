@@ -35,11 +35,11 @@ function edd_tools_page() {
 	}
 ?>
 
-    <div class="wrap">
-        <h1><?php _e( 'Tools', 'easy-digital-downloads' ); ?></h1>
+	<div class="wrap">
+		<h1><?php esc_html_e( 'Tools', 'easy-digital-downloads' ); ?></h1>
 		<hr class="wp-header-end">
 
-        <h2 class="nav-tab-wrapper edd-nav-tab-wrapper"><?php
+		<nav class="nav-tab-wrapper edd-nav-tab-wrapper" aria-label="<?php esc_attr_e( 'Secondary menu', 'easy-digital-downloads' ); ?>"><?php
 
 			foreach ( $tabs as $tab_id => $tab_name ) {
 
@@ -59,7 +59,7 @@ function edd_tools_page() {
 				echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . esc_attr( $active ) . '">' . esc_html( $tab_name ) . '</a>';
 			}
 
-		?></h2>
+		?></nav>
 
         <div class="metabox-holder">
 			<?php
