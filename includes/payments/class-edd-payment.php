@@ -625,7 +625,7 @@ class EDD_Payment {
 					$adjustment_id = edd_add_order_adjustment( array(
 						'object_id'   => $this->ID,
 						'object_type' => 'order',
-						'type_id'     => $fee['id'],
+						'type_id'     => $key,
 						'type'        => 'fee',
 						'description' => $fee['label'],
 						'subtotal'    => floatval( $fee['amount'] ),
@@ -2359,7 +2359,7 @@ class EDD_Payment {
 								$adjustment_id = edd_add_order_adjustment( array(
 									'object_id'   => $order_item_id,
 									'object_type' => 'order_item',
-									'type_id'     => $fee['id'],
+									'type_id'     => $fee_id,
 									'type'        => 'fee',
 									'description' => $fee['label'],
 									'subtotal'    => floatval( $fee['amount'] ),
@@ -2409,7 +2409,7 @@ class EDD_Payment {
 								$adjustment_id = edd_add_order_adjustment( array(
 									'object_id'   => $this->ID,
 									'object_type' => 'order',
-									'type_id'     => $fee['id'],
+									'type_id'     => $fee_id,
 									'type'        => 'fee',
 									'description' => $fee['label'],
 									'subtotal'    => floatval( $fee['amount'] ),
@@ -2499,7 +2499,7 @@ class EDD_Payment {
 									$adjustment_id = edd_add_order_adjustment( array(
 										'object_id'   => $order_item_id,
 										'object_type' => 'order_item',
-										'type_id'     => $fee['id'],
+										'type_id'     => $fee_id,
 										'type'        => 'fee',
 										'description' => $fee['label'],
 										'subtotal'    => floatval( $fee['amount'] ),

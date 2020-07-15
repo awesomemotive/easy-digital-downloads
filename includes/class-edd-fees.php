@@ -101,6 +101,9 @@ class EDD_Fees {
 		// Determine the key
 		$key = empty( $args['id'] ) ? sanitize_key( $args['label'] ) : sanitize_key( $args['id'] );
 
+		// Remove the unneeded id key
+		unset( $args['id'] );
+
 		// Sanitize the amount
 		$args['amount'] = edd_sanitize_amount( $args['amount'] );
 
