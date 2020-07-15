@@ -950,7 +950,8 @@ function edd_build_order( $order_data = array() ) {
 			if ( isset( $item['fees'] ) && ! empty( $item['fees'] ) ) {
 				foreach ( $item['fees'] as $fee_id => $fee ) {
 
-					$tax             = EDD()->fees->get_calculated_tax( $fee, $tax_rate->amount );
+					$tax_rate_amount = empty( $tax_rate->amount ) ? false : $tax_rate->amount;
+					$tax             = EDD()->fees->get_calculated_tax( $fee, $tax_rate_amount );
 					$adjustment_data = array(
 						'object_id'   => $order_item_id,
 						'object_type' => 'order_item',
@@ -1005,7 +1006,8 @@ function edd_build_order( $order_data = array() ) {
 
 			add_filter( 'edd_prices_include_tax', '__return_false' );
 
-			$tax = EDD()->fees->get_calculated_tax( $fee, $tax_rate->amount );
+			$tax_rate_amount = empty( $tax_rate->amount ) ? false : $tax_rate->amount;
+			$tax             = EDD()->fees->get_calculated_tax( $fee, $tax_rate_amount );
 
 			remove_filter( 'edd_prices_include_tax', '__return_false' );
 
