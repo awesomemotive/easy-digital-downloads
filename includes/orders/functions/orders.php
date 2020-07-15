@@ -955,7 +955,7 @@ function edd_build_order( $order_data = array() ) {
 					$adjustment_data = array(
 						'object_id'   => $order_item_id,
 						'object_type' => 'order_item',
-						'type_id'     => $fee['id'],
+						'type_id'     => $fee_id,
 						'type'        => 'fee',
 						'description' => $fee['label'],
 						'subtotal'    => floatval( $fee['amount'] ),
@@ -1002,7 +1002,7 @@ function edd_build_order( $order_data = array() ) {
 
 	// Process fees.
 	if ( ! empty( $fees ) ) {
-		foreach ( $fees as $key => $fee ) {
+		foreach ( $fees as $fee_id => $fee ) {
 
 			add_filter( 'edd_prices_include_tax', '__return_false' );
 
@@ -1014,7 +1014,7 @@ function edd_build_order( $order_data = array() ) {
 			$args = array(
 				'object_id'   => $order_id,
 				'object_type' => 'order',
-				'type_id'     => $fee['id'],
+				'type_id'     => $fee_id,
 				'type'        => 'fee',
 				'description' => $fee['label'],
 				'subtotal'    => floatval( $fee['amount'] ),
@@ -1025,7 +1025,7 @@ function edd_build_order( $order_data = array() ) {
 			// Add the adjustment.
 			$adjustment_id = edd_add_order_adjustment( $args );
 
-			edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $key );
+			edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
 
 			$total_fees += (float) $fee['amount'];
 			$total_tax  += $tax;
