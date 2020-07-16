@@ -39,8 +39,9 @@ function edd_adjustments_page() {
 	// Start the output buffer
 	ob_start(); ?>
 
-    <div class="wrap">
-        <h1 class="wp-heading-inline"><?php _e( 'Adjustments', 'easy-digital-downloads' ); ?></h1>
+	<div class="wrap">
+		<h1 class="wp-heading-inline"><?php esc_html_e( 'Adjustments', 'easy-digital-downloads' ); ?></h1>
+		<a href="<?php echo esc_url( $add_new_url ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'easy-digital-downloads' ); ?></a>
 
 		<hr class="wp-header-end">
 
@@ -69,13 +70,11 @@ function edd_adjustments_page() {
 				<a href="<?php echo esc_url( $tab_url ); ?>" class="nav-tab<?php echo $active; ?>"><?php echo esc_html( $tab_name ); ?></a>
 
 			<?php endforeach; ?>
-
-			<a href="<?php echo esc_url( $add_new_url ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'easy-digital-downloads' ); ?></a>
         </h2>
 		<br>
 
 		<?php do_action( 'edd_adjustments_page_' . $active_tab ); ?>
-    </div><!-- .wrap -->
+	</div><!-- .wrap -->
 
 	<?php
 
