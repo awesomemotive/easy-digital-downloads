@@ -1332,6 +1332,13 @@ textarea[name="edd-note"] {
 
 .edit-php.post-type-download .wrap > .page-title-action {
 	display: none;
+.no-js.edit-tags-php.post-type-download .wp-heading-inline {
+	position: absolute;
+	top: 0;
+}
+
+.no-js.edit-tags-php.post-type-download .nav-tab-wrapper {
+	margin-top: 50px;
 }
 
 .edit-tags-php.post-type-download .wrap .nav-tab-wrapper .page-title-action,

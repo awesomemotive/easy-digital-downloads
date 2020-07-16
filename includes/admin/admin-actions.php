@@ -69,9 +69,7 @@ function edd_taxonomies_tabs() {
 	}
 
 	// Output the tabs
-	?><div class="wrap edd-tab-wrap"><?php
 	edd_display_product_tabs();
-	?></div><?php
 }
 add_action( 'admin_notices', 'edd_taxonomies_tabs', 10, 1 );
 
@@ -206,7 +204,6 @@ function edd_display_product_tabs() {
 	// Start a buffer
 	ob_start();
 	?>
-	<div class="clear"></div>
 	<h2 class="nav-tab-wrapper edd-nav-tab-wrapper edd-tab-clear">
 		<?php
 
