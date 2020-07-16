@@ -1330,8 +1330,6 @@ textarea[name="edd-note"] {
 	margin: 9px 20px -9px 2px;
 }
 
-.edit-php.post-type-download .wrap > .page-title-action {
-	display: none;
 .no-js.edit-tags-php.post-type-download .wp-heading-inline {
 	position: absolute;
 	top: 0;
