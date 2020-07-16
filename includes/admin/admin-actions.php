@@ -216,10 +216,6 @@ function edd_display_product_tabs() {
 			echo esc_html( $tab['name'] );
 			echo '</a>';
 		} ?>
-
-		<a href="<?php echo admin_url( 'post-new.php?post_type=download' ); ?>" class="page-title-action">
-			<?php _e( 'Add New', 'easy-digital-downloads' ); ?>
-		</a>
 	</h2>
 	<br />
 
