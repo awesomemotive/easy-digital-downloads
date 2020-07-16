@@ -44,7 +44,7 @@ function edd_adjustments_page() {
 		<a href="<?php echo esc_url( $add_new_url ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'easy-digital-downloads' ); ?></a>
 
 		<hr class="wp-header-end">
-
+		<?php if ( 1 < count( $all_tabs ) ) : ?>
         <h2 class="nav-tab-wrapper edd-nav-tab-wrapper">
 			<?php
 
@@ -72,6 +72,7 @@ function edd_adjustments_page() {
 			<?php endforeach; ?>
         </h2>
 		<br>
+		<?php endif; ?>
 
 		<?php do_action( 'edd_adjustments_page_' . $active_tab ); ?>
 	</div><!-- .wrap -->
