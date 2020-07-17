@@ -66,12 +66,12 @@ class Order_Adjustments extends Schema {
 		// type_id
 		array(
 			'name'       => 'type_id',
-			'type'       => 'bigint',
-			'length'     => '20',
+			'type'       => 'varchar',
+			'length'     => '32',
 			'unsigned'   => true,
 			'default'    => '0',
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
 		),
 
 		// type
