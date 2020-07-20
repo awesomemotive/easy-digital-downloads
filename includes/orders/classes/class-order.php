@@ -439,7 +439,7 @@ class Order extends Rows\Order {
 		}
 
 		// Bail if no adjustments.
-		if ( empty( $this->adjustments ) && empty( $this->items ) ) {
+		if ( empty( $this->adjustments ) ) {
 			return $fees;
 		}
 
