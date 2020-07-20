@@ -1004,10 +1004,6 @@ function edd_build_order( $order_data = array() ) {
 	if ( ! empty( $fees ) ) {
 		foreach ( $fees as $fee_id => $fee ) {
 
-			if ( ! empty( $fee['download_id'] ) ) {
-				continue;
-			}
-
 			add_filter( 'edd_prices_include_tax', '__return_false' );
 
 			$tax_rate_amount = empty( $tax_rate->amount ) ? false : $tax_rate->amount;
