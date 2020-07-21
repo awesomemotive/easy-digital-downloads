@@ -208,7 +208,7 @@ function edd_get_tax_rate( $country = '', $region = '', $fallback = true ) {
 			: $region;
 	}
 
-	$tax_rate = edd_get_tax_rate_for_location(
+	$tax_rate = edd_get_tax_rate_by_location(
 		array(
 			'country' => $country,
 			'region'  => $region,
@@ -427,7 +427,7 @@ function edd_download_is_tax_exclusive( $download_id = 0 ) {
  *
  * @since 3.0
  */
-function edd_get_tax_rate_for_location( $args ) {
+function edd_get_tax_rate_by_location( $args ) {
 
 	$rate = false;
 	if ( empty( $args['country'] ) ) {
