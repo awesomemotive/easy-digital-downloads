@@ -701,7 +701,7 @@ function edd_customers_view( $customer = null ) {
 					?>
 
 					<tr data-id="<?php echo esc_attr( $address->id ); ?>">
-						<td data-colname="<?php esc_attr_e( 'Address', 'easy-digital-downlaods' ); ?>">
+						<td data-colname="<?php esc_attr_e( 'Address', 'easy-digital-downloads' ); ?>">
 							<?php
 							echo ! empty( $address->address )
 								? esc_html( $address->address )
