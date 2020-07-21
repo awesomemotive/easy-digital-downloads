@@ -317,7 +317,10 @@ function edd_add_manual_order( $args = array() ) {
 
 				// Maybe store order tax.
 				if ( $tax_rate ) {
+					// Set the description to the tax rate country.
 					$description = $tax_rate->name;
+
+					// If the tax rate region is set, use that instead of the country.
 					if ( ! empty( $tax_rate->description ) ) {
 						$description = $tax_rate->description;
 					}
