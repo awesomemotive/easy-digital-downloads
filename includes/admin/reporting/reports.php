@@ -2649,12 +2649,12 @@ function display_export_report() {
 								?></span><?php
 
 								echo EDD()->html->select( array(
-									'id'              => 'edd-orders-export-status',
-									'name'            => 'status',
-									'show_option_all' => __( 'All Statuses', 'easy-digital-downloads' ),
-									'selected'        => false,
-									'chosen'          => true,
-									'options'         => edd_get_payment_statuses(),
+									'id'               => 'edd-orders-export-status',
+									'name'             => 'status',
+									'show_option_all'  => __( 'All Statuses', 'easy-digital-downloads' ),
+									'show_option_none' => false,
+									'selected'         => false,
+									'options'          => edd_get_payment_statuses(),
 								) );
 
 								wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
@@ -2691,12 +2691,12 @@ function display_export_report() {
 								?></span><?php
 
 								echo EDD()->html->select( array(
-									'id'              => 'edd-taxed-orders-export-status',
-									'name'            => 'status',
-									'show_option_all' => __( 'All Statuses', 'easy-digital-downloads' ),
-									'selected'        => false,
-									'chosen'          => true,
-									'options'         => edd_get_payment_statuses(),
+									'id'               => 'edd-taxed-orders-export-status',
+									'name'             => 'status',
+									'show_option_all'  => __( 'All Statuses', 'easy-digital-downloads' ),
+									'show_option_none' => false,
+									'selected'         => false,
+									'options'          => edd_get_payment_statuses(),
 								) );
 
 								echo EDD()->html->select( array(
