@@ -13,9 +13,7 @@
 
 <tr class="edd-tax-rate-table-add">
 
-	<th>&nbsp;</th>
-
-	<th>
+	<th colspan="2">
 		<label for="tax_rate_country" class="screen-reader-text"><?php esc_html_e( 'Country', 'easy-digital-downloads' ); ?></label>
 		<?php
 		echo EDD()->html->select( array(
@@ -32,8 +30,8 @@
 	<th>
 		<label for="tax_rate_region" class="screen-reader-text"><?php esc_html_e( 'Region', 'easy-digital-downloads' ); ?></label>
 
-		<label style="margin: 5px 0; display: block;">
-			<input type="checkbox" checked style="margin-left: 0;" /> Apply to whole country
+		<label>
+			<input type="checkbox" checked /> Apply to whole country
 		</label>
 
 		<div id="tax_rate_region_wrapper"></div>

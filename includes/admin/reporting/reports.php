@@ -486,9 +486,6 @@ function edd_register_downloads_report( $reports ) {
 		$download       = edd_get_download();
 		$prices         = array();
 
-		$country = Reports\get_filter_value( 'countries' );
-		$region  = Reports\get_filter_value( 'regions' );
-
 		if ( $download_data ) {
 			$download = edd_get_download( $download_data['download_id'] );
 			$prices   = $download->get_prices();
@@ -499,30 +496,6 @@ function edd_register_downloads_report( $reports ) {
 				$download_label = esc_html( ' (' . $download->post_title . ': ' . $prices[0]['name'] . ')' );
 			} else {
 				$download_label = esc_html( ' (' . $download->post_title . ')' );
-			}
-
-			if ( ! empty( $download_label ) ) {
-				$location = '';
-
-				if ( ! empty( $country ) && 'all' !== $country ) {
-					$location = ' ' . __( 'for', 'easy-digital-downloads' ) . ' ';
-
-					if ( ! empty( $region ) && 'all' !== $region ) {
-						$location .= edd_get_state_name( $country, $region ) . ', ';
-					}
-
-					$location .= edd_get_country_name( $country );
-				}
-
-				$country = 'all' !== $country
-					? $country
-					: '';
-
-				$region = 'all' !== $region
-					? $region
-					: '';
-
-				$endpoint_label .= $location;
 			}
 		}
 
@@ -577,7 +550,7 @@ function edd_register_downloads_report( $reports ) {
 				'charts' => $charts,
 				'tables' => $tables,
 			),
-			'filters'  => array( 'products', 'countries', 'regions', 'taxes' )
+			'filters'   => array( 'products', 'taxes' ),
 		) );
 
 		$reports->register_endpoint( 'most_valuable_download', array(
@@ -640,14 +613,12 @@ function edd_register_downloads_report( $reports ) {
 			'label' => $endpoint_label,
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $download_data, $country, $region, $dates ) {
+					'data_callback' => function () use ( $download_data, $dates ) {
 						$stats = new EDD\Stats( array(
 							'product_id' => absint( $download_data['download_id'] ),
 							'price_id'   => absint( $download_data['price_id'] ),
 							'range'      => $dates['range'],
 							'output'     => 'formatted',
-							'country'    => $country,
-							'region'     => $region
 						) );
 
 						$earnings = $stats->get_order_item_earnings();
@@ -824,7 +795,7 @@ function edd_register_downloads_report( $reports ) {
 						$results = $wpdb->get_results( $wpdb->prepare(
 							"SELECT COUNT(total) AS sales, SUM(total) AS earnings, {$sql_clauses['select']}
 							FROM {$wpdb->edd_order_items} edd_oi
-							WHERE product_id = %d {$price_id} AND date_created >= %s AND date_created <= %s
+							WHERE product_id = %d {$price_id} AND date_created >= %s AND date_created <= %s AND status = 'complete'
 							GROUP BY {$sql_clauses['groupby']}
 							ORDER BY {$sql_clauses['orderby']} ASC",
 							$download_data['download_id'], $dates['start']->copy()->format( 'mysql' ), $dates['end']->copy()->format( 'mysql' ) ) );
@@ -879,8 +850,8 @@ function edd_register_downloads_report( $reports ) {
 								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
 							}
 
-							$sales[ $timestamp ][1]    = $result->sales;
-							$earnings[ $timestamp ][1] = floatval( $result->earnings );
+							$sales[ $timestamp ][1]    += $result->sales;
+							$earnings[ $timestamp ][1] += floatval( $result->earnings );
 						}
 
 						$sales    = array_values( $sales );
@@ -1516,8 +1487,8 @@ function edd_register_payment_gateways_report( $reports ) {
 								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
 							}
 
-							$sales[ $timestamp ][1] = $result->sales;
-							$earnings[ $timestamp ][1] = floatval( $result->earnings );
+							$sales[ $timestamp ][1]    += $result->sales;
+							$earnings[ $timestamp ][1] += floatval( $result->earnings );
 						}
 
 						$sales    = array_values( $sales );
@@ -1968,7 +1939,7 @@ function edd_register_file_downloads_report( $reports ) {
 								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
 							}
 
-							$file_downloads[ $timestamp ][1] = $result->total;
+							$file_downloads[ $timestamp ][1] += $result->total;
 						}
 
 						$file_downloads = array_values( $file_downloads );
@@ -2283,7 +2254,7 @@ function edd_register_discounts_report( $reports ) {
 									$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
 								}
 
-								$discount_usage[ $timestamp ][1] = $result->total;
+								$discount_usage[ $timestamp ][1] += $result->total;
 							}
 
 							$discount_usage = array_values( $discount_usage );
@@ -2340,10 +2311,8 @@ function edd_register_customer_report( $reports ) {
 			'endpoints' => array(
 				'tiles'  => array(
 					'lifetime_value_of_customer',
-					'average_customer_value',
 					'average_number_of_orders_per_customer',
-					'customer_average_age',
-					'most_valuable_customer',
+					'average_customer_value',
 				),
 				'tables' => array(
 					'top_five_customers',
@@ -2401,20 +2370,6 @@ function edd_register_customer_report( $reports ) {
 						return apply_filters( 'edd_reports_customers_average_order_count', $stats->get_customer_order_count( array(
 							'function' => 'AVG',
 						) ) );
-					},
-				),
-			),
-		) );
-
-		$reports->register_endpoint( 'customer_average_age', array(
-			'label' => __( 'Average Age', 'easy-digital-downloads' ),
-			'views' => array(
-				'tile' => array(
-					'data_callback' => function () {
-						global $wpdb;
-						$average_value = (int) $wpdb->get_var( "SELECT AVG(DATEDIFF(NOW(), date_created)) AS average FROM {$wpdb->edd_customers}" );
-
-						return apply_filters( 'edd_reports_customers_average_age', $average_value . ' ' . __( 'days', 'easy-digital-downloads' ) );
 					},
 				),
 			),
@@ -2529,7 +2484,7 @@ function edd_register_customer_report( $reports ) {
 								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
 							}
 
-							$customers[ $timestamp ][1] = $result->total;
+							$customers[ $timestamp ][1] += $result->total;
 						}
 
 						$customers = array_values( $customers );
@@ -2995,3 +2950,22 @@ function edd_add_screen_options_nonces() {
 	wp_nonce_field( 'meta-box-order',  'meta-box-order-nonce', false );
 }
 add_action( 'admin_footer', 'edd_add_screen_options_nonces' );
+
+/**
+ * This function adds a notice to the bottom of the Tax reports screen if a default tax rate is detected, stating
+ * that we cannot report on the default tax rate.
+ *
+ * @since 3.0
+ * @param \EDD\Reports\Data\Report|\WP_Error $report The current report object, or WP_Error if invalid.
+ */
+function edd_tax_report_notice( $report ) {
+	if ( 'taxes' === $report->object_id && false !== edd_get_option( 'tax_rate' ) ) {
+		?>
+		<p class="description">
+			<strong><?php esc_html_e( 'Notice', 'easy-digital-downloads' ); ?>: </strong>
+			<?php esc_html_e( 'Tax reports are only generated for taxes associated with a location. The legacy default tax rate is unable to be reported on.', 'easy-digital-downloads' ); ?>
+		</p>
+		<?php
+	}
+}
+add_action( 'edd_reports_page_bottom', 'edd_tax_report_notice', 10, 1 );

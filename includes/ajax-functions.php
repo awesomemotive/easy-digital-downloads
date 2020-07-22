@@ -537,10 +537,17 @@ function edd_ajax_get_states_field() {
 
 	// Maybe setup the new listbox.
 	if ( ! empty( $states ) ) {
-		$field_name = sanitize_text_field( $_POST['field_name'] );
+		$field_name = isset( $_POST['field_name'] )
+			? sanitize_text_field( $_POST['field_name'] )
+			: 'edd-state-select';
+
+		$field_id = isset( $_POST['field_id'] )
+			? sanitize_text_field( $_POST['field_id'] )
+			: $field_name;
+
 		$response   = EDD()->html->select( array(
 			'name'             => $field_name,
-			'id'               => $field_name,
+			'id'               => $field_id,
 			'class'            => $field_name . ' edd-select',
 			'options'          => $states,
 			'chosen'           => $chosen,
@@ -1188,10 +1195,6 @@ function edd_ajax_customer_addresses() {
 
 	if ( $customer ) {
 
-		$rtl_class = is_rtl()
-			? ' chosen-rtl'
-			: '';
-
 		// Fetch customer addresses.
 		$addresses = $customer->get_addresses();
 
@@ -1227,8 +1230,8 @@ function edd_ajax_customer_addresses() {
 
 			// Fetch the select
 			if ( ! empty( $options ) ) {
-				$html  = '<select data-nonce="' . wp_create_nonce( 'edd-country-field-nonce' ) . '" data-placeholder="Select a previously used address" class="edd-select-chosen ' . esc_attr( $rtl_class ) . ' add-order-customer-address-select">';
-				$html .= '<option></option>';
+				$html  = '<select id="edd_customer_existing_addresses" data-nonce="' . wp_create_nonce( 'edd-country-field-nonce' ) . '" data-placeholder="Select a previously used address" class="add-order-customer-address-select edd-form-group__input">';
+				$html .= '<option data-key="0" value="0"></option>';
 				foreach ( $options as $key => $value ) {
 					$html .= '<option data-key="' . esc_attr( $key ) . '" value="' . esc_attr( $key ) . '">' . esc_attr( $value ). '</option>';
 				}
@@ -1491,10 +1494,11 @@ function edd_admin_order_get_item_amounts() {
 		$discount += $discount_amount;
 	}
 
-	$use_taxes = edd_use_taxes();
-	$tax_rate  = edd_get_tax_rate( $country, $region, $fallback = false );
-
-	if ( true === $use_taxes && floatval( 0 ) !== floatval( $tax_rate ) ) {
+	if (
+		true === edd_use_taxes() &&
+		false === edd_download_is_tax_exclusive( $product_id )
+	) {
+		$tax_rate = edd_get_tax_rate( $country, $region, $fallback = false );
 		$tax = edd_calculate_tax( floatval( $subtotal - $discount ), $country, $region );
 	} else {
 		$tax = 0;
