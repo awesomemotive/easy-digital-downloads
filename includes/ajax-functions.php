@@ -1447,6 +1447,7 @@ function edd_admin_order_get_item_amounts() {
 		// Retrieve total flat rate amount.
 		if ( 'flat' === $d->get_type() ) {
 			foreach ( $products as $product ) {
+				// This incremements the `$edd_flat_discount_total` global.
 				edd_get_item_discount_amount( $product, $products, array( $d ) );
 			}
 		}
