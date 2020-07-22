@@ -703,7 +703,7 @@ function edd_build_order( $order_data = array() ) {
 		if ( empty( $order_data['user_info']['first_name'] ) && empty( $order_data['user_info']['last_name'] ) ) {
 			$name = $order_args['email'];
 		} else {
-			$name = $order_data['user_info']['first_name'] . ' ' . $order_data['user_info']['last_name'];
+			$name = trim( $order_data['user_info']['first_name'] . ' ' . $order_data['user_info']['last_name'] );
 		}
 
 		$customer->create( array(
@@ -947,11 +947,6 @@ function edd_build_order( $order_data = array() ) {
 					$adjustment_id = edd_add_order_adjustment( $adjustment_data );
 
 					edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
-					edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
-
-					if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
-						edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
-					}
 				}
 			}
 
@@ -1022,10 +1017,6 @@ function edd_build_order( $order_data = array() ) {
 			$adjustment_id = edd_add_order_adjustment( $args );
 
 			edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $key );
-
-			if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
-				edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
-			}
 
 			$total_fees += (float) $fee['amount'];
 			$total_tax  += $tax;
@@ -1288,4 +1279,85 @@ function edd_clone_order( $order_id = 0, $clone_relationships = false, $args = a
 	}
 
 	return $new_order_id;
+}
+
+/**
+ * Get the order status array keys that can be used to run reporting related to gross reporting.
+ *
+ * @since 3.0
+ *
+ * @return array An array of order status array keys that can be related to gross reporting.
+ */
+function edd_get_gross_order_statuses() {
+	$statuses = array(
+		'complete',
+		'refunded',
+		'partially_refunded',
+		'revoked',
+	);
+
+	/**
+	 * Statuses that affect gross order statistics.
+	 *
+	 * This filter allows extensions and developers to alter the statuses that can affect the reporting of gross
+	 * sales statistics.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $statuses {
+	 *     An array of order status array keys.
+	 *
+	 */
+	return apply_filters( 'edd_gross_order_statuses', $statuses );
+}
+
+/**
+ * Get the order status array keys that can be used to run reporting related to net reporting.
+ *
+ * @since 3.0
+ *
+ * @return array An array of order status array keys that can be related to net reporting.
+ */
+function edd_get_net_order_statuses() {
+	$statuses = array(
+		'complete',
+		'partially_refunded',
+		'revoked',
+	);
+
+	/**
+	 * Statuses that affect net order statistics.
+	 *
+	 * This filter allows extensions and developers to alter the statuses that can affect the reporting of net
+	 * sales statistics.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $statuses {
+	 *     An array of order status array keys.
+	 *
+	 */
+	return apply_filters( 'edd_net_order_statuses', $statuses );
+}
+
+/**
+ * Generate unique payment key for orders.
+ *
+ * @since 3.0
+ * @param string $key Additional string used to help randomize key.
+ * @return string
+ */
+function edd_generate_order_payment_key( $key ) {
+	$auth_key    = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
+	$payment_key = strtolower( md5( $key . gmdate( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'edd', true ) ) );
+
+	/**
+	 * Filters the payment key
+	 *
+	 * @since 3.0
+	 * @param string $payment_key The value to be filtered
+	 * @param string $key Additional string used to help randomize key.
+	 * @return string
+	 */
+	return apply_filters( 'edd_generate_order_payment_key', $payment_key, $key );
 }
