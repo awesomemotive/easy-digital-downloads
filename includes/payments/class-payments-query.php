@@ -621,6 +621,7 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		if ( isset( $this->initial_args['number'] ) ) {
 			if ( -1 == $this->initial_args['number'] ) {
+				_doing_it_wrong( __FUNCTION__, esc_html__( 'Do not use -1 to retrieve all results.', 'easy-digital-downloads' ), '3.0' );
 				$this->args['nopaging'] = true;
 			} else {
 				$arguments['number'] = $this->initial_args['number'];
@@ -633,8 +634,7 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		if ( isset( $this->args['nopaging'] ) && true === $this->args['nopaging'] ) {
 			// Setting to a really large number because we don't actually have a way to get all results.
-			// @todo Maybe trigger doing_it_wrong.
-			$arguments['number'] = 99999;
+			$arguments['number'] = 9999999;
 		}
 
 		switch ( $this->args['orderby'] ) {

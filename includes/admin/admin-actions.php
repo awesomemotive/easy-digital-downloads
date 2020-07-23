@@ -204,19 +204,24 @@ function edd_display_product_tabs() {
 	// Start a buffer
 	ob_start();
 	?>
-	<h2 class="nav-tab-wrapper edd-nav-tab-wrapper edd-tab-clear">
+
+	<nav class="nav-tab-wrapper wp-clearfix" aria-label="<?php esc_attr_e( 'Secondary menu', 'easy-digital-downloads' ); ?>">
 		<?php
 
 		foreach ( $tabs as $tab_id => $tab ) {
-			$active = ( $active_tab === $tab_id )
-				? ' nav-tab-active'
-				: '';
-
-			echo '<a href="' . esc_url( $tab['url'] ) . '" class="nav-tab' . esc_attr( $active ) . '">';
-			echo esc_html( $tab['name'] );
-			echo '</a>';
+			$class = 'nav-tab';
+			if ( $active_tab === $tab_id ) {
+				$class .= ' nav-tab-active';
+			}
+			printf(
+				'<a href="%s" class="%s">%s</a>',
+				esc_url( $tab['url'] ),
+				esc_attr( $class ),
+				esc_html( $tab['name'] )
+			);
 		} ?>
-	</h2>
+
+	</nav>
 	<br />
 
 	<?php
