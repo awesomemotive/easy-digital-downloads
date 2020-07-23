@@ -881,7 +881,8 @@ function edd_process_profile_editor_updates( $data ) {
 		// Update the primary address.
 		$customer_address_id = edd_get_customer_addresses( array(
 			'customer_id' => $customer->id,
-			'type'        => 'primary',
+			'type'        => 'billing',
+			'is_primary'  => 1,
 			'number'      => 1,
 			'fields'      => 'ids'
 		) );
@@ -904,7 +905,7 @@ function edd_process_profile_editor_updates( $data ) {
 		} else {
 			edd_add_customer_address( array(
 				'customer_id' => $customer->id,
-				'type'        => 'primary',
+				'type'        => 'billing',
 				'address'     => $address['line1'],
 				'address2'    => $address['line2'],
 				'city'        => $address['city'],

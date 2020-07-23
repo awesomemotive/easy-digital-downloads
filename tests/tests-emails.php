@@ -277,7 +277,7 @@ class Tests_Emails extends EDD_UnitTestCase {
 	}
 
 	public function test_email_tags_payment_method() {
-		$this->assertEquals( 'Free Purchase', edd_email_tag_payment_method( self::$payment_id ) );
+		$this->assertEquals( 'Store Gateway', edd_email_tag_payment_method( self::$payment_id ) );
 	}
 
 	public function test_email_tags_site_name() {

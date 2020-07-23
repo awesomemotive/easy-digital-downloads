@@ -322,7 +322,7 @@ function edd_update_old_payments_with_totals( $data ) {
 
 	$payments = edd_get_payments( array(
 		'offset' => 0,
-		'number' => -1,
+		'number' => 9999999,
 		'mode'   => 'all',
 	) );
 
@@ -358,7 +358,7 @@ function edd_mark_abandoned_orders() {
 
 	$args = array(
 		'status' => 'pending',
-		'number' => -1,
+		'number' => 9999999,
 		'output' => 'edd_payments',
 	);
 
