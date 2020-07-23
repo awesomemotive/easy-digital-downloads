@@ -45,7 +45,8 @@ function edd_adjustments_page() {
 
 		<hr class="wp-header-end">
 		<?php if ( 1 < count( $all_tabs ) ) : ?>
-        <h2 class="nav-tab-wrapper edd-nav-tab-wrapper">
+
+		<nav class="nav-tab-wrapper edd-nav-tab-wrapper" aria-label="<?php esc_attr_e( 'Secondary menu', 'easy-digital-downloads' ); ?>">
 			<?php
 
 			// Loop through all tabs
@@ -70,7 +71,8 @@ function edd_adjustments_page() {
 				<a href="<?php echo esc_url( $tab_url ); ?>" class="nav-tab<?php echo $active; ?>"><?php echo esc_html( $tab_name ); ?></a>
 
 			<?php endforeach; ?>
-        </h2>
+
+			</nav>
 		<br>
 		<?php endif; ?>
 
