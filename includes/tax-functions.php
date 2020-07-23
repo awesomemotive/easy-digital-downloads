@@ -423,7 +423,7 @@ function edd_download_is_tax_exclusive( $download_id = 0 ) {
  *     @type string $country Required - country to check.
  *     @type string $region  Optional - check a specific region within the country.
  * }
- * @return object|boolean
+ * @return \EDD\Database\Rows\Adjustment|false
  *
  * @since 3.0
  */
