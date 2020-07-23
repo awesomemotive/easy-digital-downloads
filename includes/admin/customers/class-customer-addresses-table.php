@@ -66,9 +66,10 @@ class EDD_Customer_Addresses_Table extends List_Table {
 		switch ( $column_name ) {
 
 			case 'type' :
-				$value = ( 'primary' === $item['type'] )
-					? esc_html_e( 'Primary',   'easy-digital-downloads' )
-					: esc_html_e( 'Secondary', 'easy-digital-downloads' );
+				$value = edd_get_address_type_label( $item['type'] );
+				if ( ! empty( $item['is_primary'] ) ) {
+					$value .= '&nbsp;&nbsp;<span class="edd-chip">' . esc_html__( 'Primary', 'easy-digital-downloads' ) . '</span>';
+				}
 				break;
 
 			case 'date_created' :
@@ -134,8 +135,8 @@ class EDD_Customer_Addresses_Table extends List_Table {
 			'view' => '<a href="' . esc_url( $customer_url ) . '">' . __( 'View', 'easy-digital-downloads' ) . '</a>'
 		);
 
-		// Non-primary email actions
-		if ( 'primary' !== $item_status ) {
+		// Non-primary address actions
+		if ( empty( $item['is_primary'] ) ) {
 			$actions['delete'] = '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
 		}
 
@@ -374,6 +375,7 @@ class EDD_Customer_Addresses_Table extends List_Table {
 					'country'       => $address->country,
 					'date_created'  => $address->date_created,
 					'date_modified' => $address->date_modified,
+					'is_primary'    => $address->is_primary,
 				);
 			}
 		}

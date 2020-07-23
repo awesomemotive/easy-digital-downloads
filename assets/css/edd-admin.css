@@ -1334,10 +1334,6 @@ textarea[name="edd-note"] {
 	margin: .10px 20px -12px 2px;
 }
 
-h2.nav-tab-wrapper.edd-tab-clear {
-	margin: -19px 0 0 0;
-}
-
 .edit-tags-php.post-type-download .wrap > .wp-heading-inline,
 .edit-php.post-type-download .wrap .wp-heading-inline,
 .download_page_edd-payment-history .wrap .wp-heading-inline,
@@ -3105,11 +3101,6 @@ body.download_page_edd-reports {
 }
 
 @media screen and ( max-width: 782px ) {
-
-	.post-type-download .nav-tab-wrapper a {
-		font-size: 70%;
-		padding: 2px 4px;
-	}
 	.license-lifetime-notice,
 	.license-expiration-date-notice,
 	.license-null {

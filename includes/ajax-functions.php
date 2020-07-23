@@ -1485,10 +1485,11 @@ function edd_admin_order_get_item_amounts() {
 		$discount += $discount_amount;
 	}
 
-	$use_taxes = edd_use_taxes();
-	$tax_rate  = edd_get_tax_rate( $country, $region, $fallback = false );
-
-	if ( true === $use_taxes && floatval( 0 ) !== floatval( $tax_rate ) ) {
+	if (
+		true === edd_use_taxes() &&
+		false === edd_download_is_tax_exclusive( $product_id )
+	) {
+		$tax_rate = edd_get_tax_rate( $country, $region, $fallback = false );
 		$tax = edd_calculate_tax( floatval( $subtotal - $discount ), $country, $region );
 	} else {
 		$tax = 0;

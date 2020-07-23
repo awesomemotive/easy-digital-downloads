@@ -134,7 +134,7 @@ class EDD_Customers_Export extends EDD_Export {
 
 			// Export all customers
 			$customers = edd_get_customers( array(
-				'limit' => -1
+				'limit' => 9999999,
 			) );
 
 			$i = 0;
