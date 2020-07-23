@@ -637,13 +637,13 @@ class EDD_Notices {
 				case 'email-removed' :
 					$this->add_notice( array(
 						'id'      => 'edd-customer-email-removed',
-						'message' => __( 'Customer email removed.', 'easy-digital-downloads' ),
+						'message' => __( 'Customer email deleted.', 'easy-digital-downloads' ),
 					) );
 					break;
 				case 'email-remove-failed' :
 					$this->add_notice( array(
 						'id'      => 'edd-customer-email-remove-failed',
-						'message' => __( 'Failed to remove customer email.', 'easy-digital-downloads' ),
+						'message' => __( 'Failed to delete customer email.', 'easy-digital-downloads' ),
 						'class'   => 'error',
 					) );
 					break;
