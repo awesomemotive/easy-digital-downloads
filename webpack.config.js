@@ -78,10 +78,6 @@ const config = {
 		// handle to exist continue to be enqueued.
 		new CopyWebpackPlugin( [
 			{
-				from: './node_modules/chosen-js/chosen.jquery.min.js',
-				to: 'assets/js/vendor/jquery.chosen.min.js',
-			},
-			{
 				from: './node_modules/chart.js/dist/Chart.min.js',
 				to: 'assets/js/vendor/chartjs.min.js',
 			},
