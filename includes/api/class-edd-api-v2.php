@@ -455,6 +455,15 @@ class EDD_API_V2 extends EDD_API_V1 {
 				$sales['sales'][ $i ]['discounts'] = ( ! empty( $discount_values ) ? $discount_values : null );;
 				$sales['sales'][ $i ]['products']  = $cart_items;
 
+				/**
+				 * Filters the data for a single sale in the Recent Sales API response.
+				 *
+				 * @since 2.9.24
+				 *
+				 * @param array       $data    The sale data.
+				 * @param EDD_Payment $payment The `EDD_Payment` instance.
+				 * @param EDD_API_V2  $api     The `EDD_API_V2` instance.
+				 */
 				$sales['sales'][ $i ] = apply_filters( 'edd_api_sales_payment_data', $sales['sales'][ $i ], $payment, $this );
 
 				$i++;
