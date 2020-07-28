@@ -50,6 +50,21 @@ function edd_add_order_address( $data ) {
 		return false;
 	}
 
+	// Set up an array with empty address keys. If all of these are empty in $data, the address should not be added.
+	$empty_address    = array(
+		'address'     => '',
+		'address2'    => '',
+		'city'        => '',
+		'region'      => '',
+		'country'     => '',
+		'postal_code' => '',
+	);
+	$address_to_check = array_intersect_key( $data, $empty_address );
+	$address_to_check = array_filter( $address_to_check );
+	if ( empty( $address_to_check ) ) {
+		return false;
+	}
+
 	// Instantiate a query object
 	$order_addresses = new EDD\Database\Queries\Order_Address();
 

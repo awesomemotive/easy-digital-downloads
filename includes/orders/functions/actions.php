@@ -229,7 +229,7 @@ function edd_add_manual_order( $args = array() ) {
 				? $data['edd_order_address']['region']
 				: false;
 
-			$tax_rate = edd_get_tax_rate_for_location(
+			$tax_rate = edd_get_tax_rate_by_location(
 				array(
 					'country' => $country,
 					'region'  => $region,
@@ -318,7 +318,10 @@ function edd_add_manual_order( $args = array() ) {
 
 				// Maybe store order tax.
 				if ( $tax_rate ) {
+					// Set the description to the tax rate country.
 					$description = $tax_rate->name;
+
+					// If the tax rate region is set, use that instead of the country.
 					if ( ! empty( $tax_rate->description ) ) {
 						$description = $tax_rate->description;
 					}

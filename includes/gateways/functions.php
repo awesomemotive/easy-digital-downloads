@@ -56,8 +56,8 @@ function edd_get_payment_gateways() {
 				'supports'       => array( 'buy_now' )
 			),
 			'manual' => array(
-				'admin_label'    => __( 'Test Payment', 'easy-digital-downloads' ),
-				'checkout_label' => __( 'Test Payment', 'easy-digital-downloads' )
+				'admin_label'    => __( 'Store Gateway', 'easy-digital-downloads' ),
+				'checkout_label' => __( 'Store Gateway', 'easy-digital-downloads' ),
 			),
 		);
 	}
@@ -187,16 +187,6 @@ function edd_get_gateway_admin_label( $gateway ) {
 		? $gateways[ $gateway ]['admin_label']
 		: ucwords( $gateway );
 
-	$payment = isset( $_GET['id'] )
-		? absint( $_GET['id'] )
-		: false;
-
-	if ( 'manual' === $gateway && $payment ) {
-		if ( ! edd_get_payment_amount( $payment ) ) {
-			$label = __( 'Free Purchase', 'easy-digital-downloads' );
-		}
-	}
-
 	return apply_filters( 'edd_gateway_admin_label', $label, $gateway );
 }
 
@@ -211,10 +201,6 @@ function edd_get_gateway_admin_label( $gateway ) {
 function edd_get_gateway_checkout_label( $gateway ) {
 	$gateways = edd_get_payment_gateways();
 	$label    = isset( $gateways[ $gateway ] ) ? $gateways[ $gateway ]['checkout_label'] : $gateway;
-
-	if ( 'manual' === $gateway ) {
-		$label = __( 'Free Purchase', 'easy-digital-downloads' );
-	}
 
 	return apply_filters( 'edd_gateway_checkout_label', $label, $gateway );
 }

@@ -288,7 +288,7 @@ function _edd_anonymize_customer( $customer_id = 0 ) {
 	$payments = edd_get_payments( array(
 		'customer' => $customer->id,
 		'output'   => 'payments',
-		'number'   => -1,
+		'number'   => 9999999,
 	) );
 
 	foreach ( $payments as $payment ) {
