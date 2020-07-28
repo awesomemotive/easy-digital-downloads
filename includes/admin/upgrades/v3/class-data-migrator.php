@@ -901,25 +901,32 @@ class Data_Migrator {
 			? (float) $meta['_edd_payment_tax_rate'][0]
 			: 0.00;
 
-
 		if ( ! empty( $tax_rate ) ) {
 			// Tax rate is no longer stored in meta.
-			edd_add_order_adjustment( array(
-				'object_id'   => $order_id,
-				'object_type' => 'order',
-				'type_id'     => 0,
-				'type'        => 'tax_rate',
-				'total'       => $tax_rate,
-			) );
+			edd_add_order_adjustment(
+				array(
+					'object_id'     => $order_id,
+					'object_type'   => 'order',
+					'type_id'       => 0,
+					'type'          => 'tax_rate',
+					'total'         => $tax_rate,
+					'date_created'  => $date_created_gmt,
+					'date_modified' => $data->post_modified_gmt,
+				)
+			);
 
 			if ( ! empty( $refund_id ) ) {
-				edd_add_order_adjustment( array(
-					'object_id'   => $refund_id,
-					'object_type' => 'order',
-					'type_id'     => 0,
-					'type'        => 'tax_rate',
-					'total'       => $tax_rate,
-				) );
+				edd_add_order_adjustment(
+					array(
+						'object_id'     => $refund_id,
+						'object_type'   => 'order',
+						'type_id'       => 0,
+						'type'          => 'tax_rate',
+						'total'         => $tax_rate,
+						'date_created'  => $data->post_modified_gmt,
+						'date_modified' => $data->post_modified_gmt,
+					)
+				);
 			}
 		}
 
@@ -935,13 +942,15 @@ class Data_Migrator {
 
 				// Add the adjustment.
 				$adjustment_args = array(
-					'object_id'   => $order_id,
-					'object_type' => 'order',
-					'type'        => 'fee',
-					'description' => $fee['label'],
-					'subtotal'    => floatval( $fee['amount'] ),
-					'tax'         => $tax,
-					'total'       => floatval( $fee['amount'] ) + $tax,
+					'object_id'     => $order_id,
+					'object_type'   => 'order',
+					'type'          => 'fee',
+					'description'   => $fee['label'],
+					'subtotal'      => floatval( $fee['amount'] ),
+					'tax'           => $tax,
+					'total'         => floatval( $fee['amount'] ) + $tax,
+					'date_created'  => $date_created_gmt,
+					'date_modified' => $data->post_modified_gmt,
 				);
 
 				$adjustment_id = edd_add_order_adjustment( $adjustment_args );
@@ -985,26 +994,34 @@ class Data_Migrator {
 					continue;
 				}
 
-				edd_add_order_adjustment( array(
-					'object_id'   => $order_id,
-					'object_type' => 'order',
-					'type_id'     => $discount->id,
-					'type'        => 'discount',
-					'description' => $discount,
-					'subtotal'    => $subtotal - $discount->get_discounted_amount( $subtotal ),
-					'total'       => $subtotal - $discount->get_discounted_amount( $subtotal ),
-				) );
+				edd_add_order_adjustment(
+					array(
+						'object_id'     => $order_id,
+						'object_type'   => 'order',
+						'type_id'       => $discount->id,
+						'type'          => 'discount',
+						'description'   => $discount,
+						'subtotal'      => $subtotal - $discount->get_discounted_amount( $subtotal ),
+						'total'         => $subtotal - $discount->get_discounted_amount( $subtotal ),
+						'date_created'  => $date_created_gmt,
+						'date_modified' => $data->post_modified_gmt,
+					)
+				);
 
 				if ( ! empty( $refund_id ) ) {
-					edd_add_order_adjustment( array(
-						'object_id'   => $refund_id,
-						'object_type' => 'order',
-						'type_id'     => $discount->id,
-						'type'        => 'discount',
-						'description' => $discount,
-						'subtotal'    => edd_negate_amount($subtotal - $discount->get_discounted_amount( $subtotal ) ),
-						'total'       => edd_negate_amount( $subtotal - $discount->get_discounted_amount( $subtotal ) ),
-					) );
+					edd_add_order_adjustment(
+						array(
+							'object_id'     => $refund_id,
+							'object_type'   => 'order',
+							'type_id'       => $discount->id,
+							'type'          => 'discount',
+							'description'   => $discount,
+							'subtotal'      => edd_negate_amount( $subtotal - $discount->get_discounted_amount( $subtotal ) ),
+							'total'         => edd_negate_amount( $subtotal - $discount->get_discounted_amount( $subtotal ) ),
+							'date_created'  => $data->post_modified_gmt,
+							'date_modified' => $data->post_modified_gmt,
+						)
+					);
 				}
 			}
 		}
