@@ -48,7 +48,7 @@
 
 .chosen-container-multi .chosen-choices,
 .chosen-container-single .chosen-single {
-	border-radius: 3px;
+	border-radius: 4px;
 	border-color: #7e8993;
 }
 
@@ -134,6 +134,7 @@
 
 .chosen-container .chosen-results li.highlighted {
 	background-image: none;
+	border-radius: 4px;
 	color: #fff;
 }
 
@@ -197,7 +198,6 @@ body.admin-color-fresh .chosen-container .chosen-drop {
 }
 body.admin-color-fresh .chosen-container .chosen-results li.highlighted {
 	background-color: #007cba;
-	border-radius: 4px;
 }
 
 /* Blue */
