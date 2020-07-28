@@ -102,11 +102,6 @@
 	box-shadow: inset 0 1px 2px rgba( 0, 0, 0, 0.07 );
 }
 
-.chosen-container-multi.chosen-with-drop .chosen-choices,
-.chosen-container-active.chosen-with-drop .chosen-single {
-	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-}
-
 .chosen-container .chosen-drop {
 	position: absolute;
 	top: 100%;
