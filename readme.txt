@@ -14,7 +14,7 @@ Sell your digital products the simple way. Easily build an online store complete
 
 == Description ==
 
-Easy Digital Downloads is a complete eCommerce solution for selling digital products on WordPress. Learn more at [Easy Digital Downloads.com](https://easydigitaldownloads.com/?utm_source=home&utm_medium=description_tab&utm_content=home&utm_campaign=readme).
+Easy Digital Downloads is a complete eCommerce solution for selling digital products on WordPress. Learn more at [EasyDigitalDownloads.com](https://easydigitaldownloads.com/?utm_source=home&utm_medium=description_tab&utm_content=home&utm_campaign=readme).
 
 = Sell effortlessly =
 
