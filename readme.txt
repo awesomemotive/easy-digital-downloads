@@ -43,7 +43,7 @@ Here are some of the features supported out-of-the-box:
 
 = Localized for your language =
 
-Easy Digital Downloads has been translated into more than two dozen languages and new translation are being added all the time, letting you have a natural, native experience, regardless of where you live. If your language is not available, we welcome translation contributions! See our [FAQ](http://docs.easydigitaldownloads.com/article/1082-what-spoken-languages-does-easy-digital-downloads-support?utm_source=docs&utm_medium=description_tab&utm_content=languages&utm_campaign=readme).
+Easy Digital Downloads has been translated into more than two dozen languages and new translations are being added all the time, letting you have a natural, native experience, regardless of where you live. If your language is not available, we welcome translation contributions! See our [FAQ](http://docs.easydigitaldownloads.com/article/1082-what-spoken-languages-does-easy-digital-downloads-support?utm_source=docs&utm_medium=description_tab&utm_content=languages&utm_campaign=readme).
 
 = Support for many payment gateways, including Stripe and PayPal =
 
