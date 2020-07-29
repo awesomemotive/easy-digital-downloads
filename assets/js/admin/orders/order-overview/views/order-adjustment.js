@@ -64,7 +64,7 @@ export const OrderAdjustment = Base.extend( {
 		const { model, options } = this;
 		const { state } = this.options;
 
-		const { currency } = state.get( 'formatters' );
+		const { currency, number } = state.get( 'formatters' );
 
 		// Determine column offset -- using cart quantities requires an extra column.
 		const colspan = true === state.get( 'hasQuantity' ) ? 2 : 1;
@@ -89,7 +89,7 @@ export const OrderAdjustment = Base.extend( {
 			total: model.getAmount(),
 			subtotal: model.getAmount(),
 			orderItem: orderItem ? orderItem.toJSON() : false,
-			totalCurrency: currency.format( model.getAmount() ),
+			totalCurrency: currency.format( number.absint( model.getAmount() ) * -1 ),
 		};
 	},
 
