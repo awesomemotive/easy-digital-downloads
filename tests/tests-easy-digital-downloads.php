@@ -177,7 +177,7 @@ class Tests_EDD extends EDD_UnitTestCase {
 			array( EDD_PLUGIN_DIR . 'assets/js/edd-admin.js' ),
 			array( EDD_PLUGIN_DIR . 'assets/js/edd-ajax.js' ),
 			array( EDD_PLUGIN_DIR . 'assets/js/edd-checkout-global.js' ),
-			array( EDD_PLUGIN_DIR . 'assets/js/vendor/jquery.chosen.min.js' ),
+			array( EDD_PLUGIN_DIR . 'assets/js/vendor/chosen.jquery.min.js' ),
 			array( EDD_PLUGIN_DIR . 'assets/js/vendor/jquery.creditcardvalidator.min.js' ),
 			array( EDD_PLUGIN_DIR . 'assets/js/vendor/jquery.flot.min.js' ),
 
