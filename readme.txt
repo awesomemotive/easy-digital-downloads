@@ -68,7 +68,7 @@ Payment gateways supported through free or premium extensions:
 * BitPay
 * Coinbase
 
-> What can I say? Stripe is my go-to payment processor and without this add-on I don't know what I would do. Connect EDD to your Stripe account in seconds and you're done! Having a simple toggle in to test mode is also a valuable development tool. This is another one of my go-to EDD extensions.
+> What can I say? Stripe is my go-to payment processor and without this add-on I don't know what I would do. Connect EDD to your Stripe account in seconds and you're done! Having a simple test mode toggle is also a valuable development tool. This is another one of my go-to EDD extensions.
 > Matt Whiteley - Whiteley Designs
 
 See our [payment gateways category](https://easydigitaldownloads.com/downloads/category/gateways/?utm_source=extensions&utm_medium=description_tab&utm_content=gateways&utm_campaign=readme) in the extensions catalogue for a complete list of supported merchant processors. There are also a large number of additional payment gateways developed and supported by [3rd party developers](https://easydigitaldownloads.com/3rd-party-extensions/#gateways).
