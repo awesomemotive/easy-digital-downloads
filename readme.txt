@@ -54,7 +54,7 @@ Payment gateways supported in the core, free plugin:
 * PayPal Standard
 * Amazon Payments
 
-Payment gateways supported through free or premium extension:
+Payment gateways supported through free or premium extensions:
 
 * Stripe
 * PayPal Pro
