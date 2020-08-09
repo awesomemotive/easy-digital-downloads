@@ -233,8 +233,10 @@ jQuery(document).ready(function ($) {
 
 					$('span.edd-cart-quantity').each(function() {
 						$(this).text(response.cart_quantity);
-						$(document.body).trigger('edd_quantity_updated', [ response.cart_quantity ]);
 					});
+
+					// Trigger the cart quantity
+					$(document.body).trigger('edd_quantity_updated', [ response.cart_quantity ]);
 
 					// Show the "number of items in cart" message
 					if ( $('.edd-cart-number-of-items').css('display') == 'none') {
