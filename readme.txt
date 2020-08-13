@@ -111,6 +111,10 @@ The Easy Digital Downloads API makes it possible for developers to make customiz
 > As a developer, Easy Digital Downloads is very pleasant to work with since you can absolutely extend anything available within EDD.
 > Yudhistira Mauris - WP House
 
+= Get help =
+
+Easy Digital Downloads is backed by top-notch technical support from our globally distributed full-time support team. We also have an [extensive documentation site available](https://docs.easydigitaldownloads.com/?utm_medium=readme&utm_source=wporg&utm_campaign=lite-plugin&utm_content=docs&utm_term=description). If you’re looking for faster support via email, we encourage you to [purchase an Easy Digital Downloads pass](https://easydigitaldownloads.com/pricing/?utm_medium=readme&utm_source=wporg&utm_campaign=lite-plugin&utm_content=upgrade&utm_term=description) or premium extension.
+
 = Meet the team =
 
 Easy Digital Downloads is built by [Sandhills Development](https://sandhillsdev.com/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=sandhills&utm_term=description). We make [popular WordPress plugins](https://sandhillsdev.com/projects/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=popular&utm_term=description) used by hundreds of thousands of people just like you. [Get to know us here](https://sandhillsdev.com/about/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=about&utm_term=description)!
