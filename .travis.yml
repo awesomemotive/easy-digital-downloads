@@ -67,7 +67,7 @@ matrix:
       env: WP_VERSION=4.5.16 WP_MULTISITE=0
     - php: 7.3
       env: WP_VERSION=4.4.17 WP_MULTISITE=0
-    - php: 7.3
+    - php: 7.4
       env: WP_VERSION=4.9.10 WP_MULTISITE=0
     - php: 7.4
       env: WP_VERSION=4.8.9 WP_MULTISITE=0
