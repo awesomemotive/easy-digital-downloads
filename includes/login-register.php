@@ -31,6 +31,12 @@ function edd_login_form( $redirect = '' ) {
 
 	ob_start();
 
+	if ( ! empty( edd_get_errors() ) ) {
+		if ( array_key_exists( 'edd_invalid_login', edd_get_errors() ) ) {
+				status_header( 401 );
+		}
+	}
+
 	edd_get_template_part( 'shortcode', 'login' );
 
 	return apply_filters( 'edd_login_form', ob_get_clean() );
@@ -64,49 +70,39 @@ function edd_register_form( $redirect = '' ) {
  * Process Login Form
  *
  * @since 1.0
+ * @since 2.9.24 No longer does validation which would prevent bruteforce detection plugins to be able to integrate.
+ *
  * @param array $data Data sent from the login form
  * @return void
 */
 function edd_process_login_form( $data ) {
+
 	if ( wp_verify_nonce( $data['edd_login_nonce'], 'edd-login-nonce' ) ) {
-		$user_data = get_user_by( 'login', $data['edd_user_login'] );
-		if ( ! $user_data ) {
-			$user_data = get_user_by( 'email', $data['edd_user_login'] );
-		}
-		if ( $user_data ) {
-			$user_ID = $user_data->ID;
-			$user_email = $user_data->user_email;
 
-			if ( wp_check_password( $data['edd_user_pass'], $user_data->user_pass, $user_data->ID ) ) {
+			$user = edd_log_user_in( 0, $data['edd_user_login'], $data['edd_user_pass'], $data['rememberme'] );
 
-				if ( isset( $data['rememberme'] ) ) {
-					$data['rememberme'] = true;
-				} else {
-					$data['rememberme'] = false;
-				}
-
-				edd_log_user_in( $user_data->ID, $data['edd_user_login'], $data['edd_user_pass'], $data['rememberme'] );
-			} else {
-				edd_set_error( 'password_incorrect', __( 'The password you entered is incorrect', 'easy-digital-downloads' ) );
+			if ( ! $user instanceof WP_User ) {
+					edd_set_error( 'edd_invalid_login', __( 'Invalid username or password.', 'easy-digital-downloads' ) );
 			}
-		} else {
-			edd_set_error( 'username_incorrect', __( 'The username you entered does not exist', 'easy-digital-downloads' ) );
-		}
-		// Check for errors and redirect if none present
-		$errors = edd_get_errors();
-		if ( ! $errors ) {
-			$redirect = apply_filters( 'edd_login_redirect', $data['edd_redirect'], $user_ID );
-			wp_redirect( $redirect );
-			edd_die();
-		}
+
+			// Check for errors and redirect if none present
+			$errors = edd_get_errors();
+			if ( ! $errors ) {
+					$redirect = apply_filters( 'edd_login_redirect', $data['edd_redirect'], $user_ID );
+					wp_redirect( $redirect );
+					edd_die();
+			}
 	}
 }
 add_action( 'edd_user_login', 'edd_process_login_form' );
+
 
 /**
  * Log User In
  *
  * @since 1.0
+ * @since 2.9.24 Uses the wp_signon function instead of all the additional checks which can bypass hooks in core.
+ *
  * @param int $user_id User ID
  * @param string $user_login Username
  * @param string $user_pass Password
@@ -114,13 +110,18 @@ add_action( 'edd_user_login', 'edd_process_login_form' );
  * @return void
 */
 function edd_log_user_in( $user_id, $user_login, $user_pass, $remember = false ) {
-	if ( $user_id < 1 )
-		return;
 
-	wp_set_auth_cookie( $user_id, $remember );
-	wp_set_current_user( $user_id, $user_login );
-	do_action( 'wp_login', $user_login, get_userdata( $user_id ) );
+	$credentials = array(
+			'user_login'    => $user_login,
+			'user_password' => $user_pass,
+			'remember'      => $remember,
+	);
+
+	$user = wp_signon( $credentials );
 	do_action( 'edd_log_user_in', $user_id, $user_login, $user_pass );
+
+	return $user;
+
 }
 
 
