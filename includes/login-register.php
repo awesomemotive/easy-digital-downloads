@@ -31,8 +31,9 @@ function edd_login_form( $redirect = '' ) {
 
 	ob_start();
 
-	if ( ! empty( edd_get_errors() ) ) {
-		if ( array_key_exists( 'edd_invalid_login', edd_get_errors() ) ) {
+	$errors = edd_get_errors();
+	if ( ! empty( $errors ) ) {
+		if ( array_key_exists( 'edd_invalid_login', $errors ) ) {
 				status_header( 401 );
 		}
 	}
@@ -79,7 +80,9 @@ function edd_process_login_form( $data ) {
 
 	if ( wp_verify_nonce( $data['edd_login_nonce'], 'edd-login-nonce' ) ) {
 
-			$user = edd_log_user_in( 0, $data['edd_user_login'], $data['edd_user_pass'], $data['rememberme'] );
+			$rememberme = isset( $data['rememberme'] ) ? (bool) $data['rememberme'] : false;
+
+			$user = edd_log_user_in( 0, $data['edd_user_login'], $data['edd_user_pass'], $rememberme );
 
 			if ( ! $user instanceof WP_User ) {
 					edd_set_error( 'edd_invalid_login', __( 'Invalid username or password.', 'easy-digital-downloads' ) );
@@ -88,7 +91,7 @@ function edd_process_login_form( $data ) {
 			// Check for errors and redirect if none present
 			$errors = edd_get_errors();
 			if ( ! $errors ) {
-					$redirect = apply_filters( 'edd_login_redirect', $data['edd_redirect'], $user_ID );
+					$redirect = apply_filters( 'edd_login_redirect', $data['edd_redirect'], 0 );
 					wp_redirect( $redirect );
 					edd_die();
 			}
