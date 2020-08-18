@@ -232,6 +232,11 @@ a.edd-delete:hover {
 	z-index: 9999 !important;
 }
 
+@media screen and (max-width: 782px) {
+	#edd-filters .filter-items > span:not(.edd-date-range-options) {
+		margin-bottom: 6px 6px 6px 0;
+	}
+}
 /* =Payment Icon Styling
 -------------------------------------------------------------- */
 
