@@ -234,7 +234,7 @@ a.edd-delete:hover {
 
 @media screen and (max-width: 782px) {
 	#edd-filters .filter-items > span:not(.edd-date-range-options) {
-		margin-bottom: 6px 6px 6px 0;
+		margin: 6px 6px 6px 0;
 	}
 }
 /* =Payment Icon Styling
