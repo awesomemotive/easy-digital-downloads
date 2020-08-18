@@ -124,9 +124,9 @@ add_action( 'edd_user_login', 'edd_process_login_form' );
 function edd_log_user_in( $user_id, $user_login, $user_pass, $remember = false ) {
 
 	$credentials = array(
-			'user_login'    => $user_login,
-			'user_password' => $user_pass,
-			'remember'      => $remember,
+		'user_login'    => $user_login,
+		'user_password' => $user_pass,
+		'remember'      => $remember,
 	);
 
 	$user = wp_signon( $credentials );
