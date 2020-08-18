@@ -9,8 +9,28 @@
  * @since       1.0
  */
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * While loading the template, see if an error was set for a filed login attempt and set the proper
+ * HTTP status code if there was a failed login attempt.
+ *
+ * @since 2.9.24
+ *
+ * @return void
+ */
+function edd_login_error_check() {
+	$errors = edd_get_errors();
+	if ( ! empty( $errors ) ) {
+		if ( array_key_exists( 'edd_invalid_login', $errors ) ) {
+			status_header( 401 );
+		}
+	}
+}
+add_action( 'template_redirect', 'edd_login_error_check', 10 );
 
 /**
  * Login Form
@@ -30,13 +50,6 @@ function edd_login_form( $redirect = '' ) {
 	$edd_login_redirect = $redirect;
 
 	ob_start();
-
-	$errors = edd_get_errors();
-	if ( ! empty( $errors ) ) {
-		if ( array_key_exists( 'edd_invalid_login', $errors ) ) {
-				status_header( 401 );
-		}
-	}
 
 	edd_get_template_part( 'shortcode', 'login' );
 
@@ -84,10 +97,6 @@ function edd_process_login_form( $data ) {
 
 			$user = edd_log_user_in( 0, $data['edd_user_login'], $data['edd_user_pass'], $rememberme );
 
-			if ( ! $user instanceof WP_User ) {
-					edd_set_error( 'edd_invalid_login', __( 'Invalid username or password.', 'easy-digital-downloads' ) );
-			}
-
 			// Check for errors and redirect if none present
 			$errors = edd_get_errors();
 			if ( ! $errors ) {
@@ -121,6 +130,18 @@ function edd_log_user_in( $user_id, $user_login, $user_pass, $remember = false )
 	);
 
 	$user = wp_signon( $credentials );
+
+	if ( ! $user instanceof WP_User ) {
+		edd_set_error(
+			'edd_invalid_login',
+			sprintf(
+				__( 'Invalid username or password. %sReset Password%s', 'easy-digital-downloads' ),
+				'<a href="' . wp_lostpassword_url( edd_get_checkout_uri() ) . '">',
+				'</a>'
+			)
+		);
+	}
+
 	do_action( 'edd_log_user_in', $user_id, $user_login, $user_pass );
 
 	return $user;
