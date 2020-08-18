@@ -135,7 +135,8 @@ function edd_log_user_in( $user_id, $user_login, $user_pass, $remember = false )
 		edd_set_error(
 			'edd_invalid_login',
 			sprintf(
-				__( 'Invalid username or password. %sReset Password%s', 'easy-digital-downloads' ),
+				/* translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate. */
+				__( 'Invalid username or password. %1$sReset Password%2$s', 'easy-digital-downloads' ),
 				'<a href="' . wp_lostpassword_url( edd_get_checkout_uri() ) . '">',
 				'</a>'
 			)
