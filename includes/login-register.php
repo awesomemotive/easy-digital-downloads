@@ -92,7 +92,7 @@ function edd_register_form( $redirect = '' ) {
 function edd_process_login_form( $data ) {
 
 	if ( ! empty( $data['edd_login_nonce'] ) && wp_verify_nonce( $data['edd_login_nonce'], 'edd-login-nonce' ) ) {
-		$rememberme = isset( $data['rememberme'] ) ? (bool) $data['rememberme'] : false;
+		$rememberme = isset( $data['rememberme'] );
 
 		$user = edd_log_user_in( 0, $data['edd_user_login'], $data['edd_user_pass'], $rememberme );
 
