@@ -91,19 +91,18 @@ function edd_register_form( $redirect = '' ) {
 */
 function edd_process_login_form( $data ) {
 
-	if ( wp_verify_nonce( $data['edd_login_nonce'], 'edd-login-nonce' ) ) {
+	if ( ! empty( $data['edd_login_nonce'] ) && wp_verify_nonce( $data['edd_login_nonce'], 'edd-login-nonce' ) ) {
+		$rememberme = isset( $data['rememberme'] ) ? (bool) $data['rememberme'] : false;
 
-			$rememberme = isset( $data['rememberme'] ) ? (bool) $data['rememberme'] : false;
+		$user = edd_log_user_in( 0, $data['edd_user_login'], $data['edd_user_pass'], $rememberme );
 
-			$user = edd_log_user_in( 0, $data['edd_user_login'], $data['edd_user_pass'], $rememberme );
-
-			// Check for errors and redirect if none present
-			$errors = edd_get_errors();
-			if ( ! $errors ) {
-					$redirect = apply_filters( 'edd_login_redirect', $data['edd_redirect'], 0 );
-					wp_redirect( $redirect );
-					edd_die();
-			}
+		// Check for errors and redirect if none present
+		$errors = edd_get_errors();
+		if ( ! $errors ) {
+				$redirect = apply_filters( 'edd_login_redirect', $data['edd_redirect'], 0 );
+				wp_redirect( $redirect );
+				edd_die();
+		}
 	}
 }
 add_action( 'edd_user_login', 'edd_process_login_form' );
