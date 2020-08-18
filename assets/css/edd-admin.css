@@ -62,19 +62,21 @@ a.edd-delete:hover {
 	outline: auto 5px -webkit-focus-ring-color;
 	border-color: #eee;
 	box-shadow: none;
+	position: relative;
 }
 
 .edd-from-to-wrapper input[name="start"],
 .edd-from-to-wrapper input[name="start-date"],
 .edd-from-to-wrapper input[name="filter_from"] {
 	border-right-color: #eee;
+	border-radius: 4px 0 0 4px;
 }
 
 .edd-from-to-wrapper input[name="end"],
 .edd-from-to-wrapper input[name="end-date"],
 .edd-from-to-wrapper input[name="filter_to"] {
-	border-left-color: #eee;
 	margin-left: -1px;
+	border-radius: 0 4px 4px 0;
 }
 
 .edd-settings-sub-nav {
@@ -1250,7 +1252,6 @@ textarea[name="edd-note"] {
 #edd-filters input[type="text"].edd_datepicker,
 #edd-filters input[type="number"] {
 	max-width: 100px;
-	padding: 5px;
 }
 
 #edd-filters input[type="number"],
