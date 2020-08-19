@@ -99,9 +99,9 @@ function edd_process_login_form( $data ) {
 		// Check for errors and redirect if none present
 		$errors = edd_get_errors();
 		if ( ! $errors ) {
-				$redirect = apply_filters( 'edd_login_redirect', $data['edd_redirect'], 0 );
-				wp_redirect( $redirect );
-				edd_die();
+			$redirect = apply_filters( 'edd_login_redirect', $data['edd_redirect'], 0 );
+			wp_redirect( $redirect );
+			edd_die();
 		}
 	}
 }
