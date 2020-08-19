@@ -903,6 +903,37 @@ function edd_get_registered_settings() {
 						'type' => 'rich_editor',
 					),
 				),
+				'integrations'     => array(
+					'edd-recaptcha-setting-group' => array(
+						'id'   =>'edd-recaptcha-setting-group',
+						'name' => __( '<span class="sub-header">reCAPTCHA</span>', 'easy-digital-downloads' ),
+						'type' => 'header',
+					),
+					'edd-recaptcha-public-key' => array(
+						'id' => 'edd-recaptcha-public-key',
+						'type' => 'text',
+						'name' => __( 'Site key', 'easy-digital-downloads' ),
+						'desc' => __( 'Create your reCAPTCHA keys ', 'easy-digital-downloads' ) . '<a href="https://www.google.com/recaptcha/admin#list" target="_blank">'. __( 'here', 'easy-digital-downloads' ) . '</a>.',
+					),
+					'edd-recaptcha-private-key' => array(
+						'id' => 'edd-recaptcha-private-key',
+						'type' => 'text',
+						'name' => __( 'Secret key', 'easy-digital-downloads' ),
+						'desc' => __( 'Create your reCAPTCHA keys ', 'easy-digital-downloads' ) . '<a href="https://www.google.com/recaptcha/admin#list" target="_blank">'. __( 'here', 'easy-digital-downloads' ) . '</a>.',
+					),
+					'edd-login-captcha' => array(
+						'id'=> 'edd-login-captcha',
+						'type' => 'checkbox',
+						'name' => __( 'Login', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this box to require reCAPTCHA check for Login Shortcode.', 'easy-digital-downloads' ),
+					),
+					'edd-register-captcha' => array(
+						'id'=> 'edd-register-captcha',
+						'type' => 'checkbox',
+						'name' => __( 'Registration', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this box to require reCAPTCHA check for Registration Shortcode.', 'easy-digital-downloads' ),
+					),
+				),
 			)
 		),
 		'privacy' => apply_filters( 'edd_settings_privacy',
@@ -1443,6 +1474,7 @@ function edd_get_registered_settings_sections() {
 			'file_downloads'     => __( 'File Downloads', 'easy-digital-downloads' ),
 			'accounting'         => __( 'Accounting', 'easy-digital-downloads' ),
 			'site_terms'         => __( 'Terms of Agreement', 'easy-digital-downloads' ),
+			'integrations'       => __( 'Integrations', 'easy-digital-downloads' ),
 		) ),
 		'privacy'    => apply_filters( 'edd_settings_section_privacy', array(
 			'general'      => __( 'General', 'easy-digital-downloads' ),

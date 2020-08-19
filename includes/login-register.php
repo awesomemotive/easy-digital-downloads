@@ -73,6 +73,7 @@ function edd_process_login_form( $data ) {
 		if ( ! $user_data ) {
 			$user_data = get_user_by( 'email', $data['edd_user_login'] );
 		}
+		do_action( 'edd_process_login_form' );
 		if ( $user_data ) {
 			$user_ID = $user_data->ID;
 			$user_email = $user_data->user_email;
@@ -84,8 +85,10 @@ function edd_process_login_form( $data ) {
 				} else {
 					$data['rememberme'] = false;
 				}
-
-				edd_log_user_in( $user_data->ID, $data['edd_user_login'], $data['edd_user_pass'], $data['rememberme'] );
+				$errors = edd_get_errors();
+				if ( ! $errors ) {
+					edd_log_user_in( $user_data->ID, $data['edd_user_login'], $data['edd_user_pass'], $data['rememberme'] );
+				}
 			} else {
 				edd_set_error( 'password_incorrect', __( 'The password you entered is incorrect', 'easy-digital-downloads' ) );
 			}
@@ -197,3 +200,105 @@ function edd_process_register_form( $data ) {
 	}
 }
 add_action( 'edd_user_register', 'edd_process_register_form' );
+
+/**
+ * Print reCAPTCHA on Login and Register Form
+ *
+ * @since 2.9.17
+ * @return string
+*/
+function edd_login_register_form_fields_before_submit(){
+		
+		$public_key = edd_get_option( 'edd-recaptcha-public-key' );
+		$prefix   = is_ssl() ? "https" : "http";
+
+		$url      = $prefix . '://www.google.com/recaptcha/api.js';
+		 ?>
+
+		<div class="efm-fields">
+
+			<?php wp_enqueue_script( 'recaptcha', $url ); ?>
+
+			<div class="g-recaptcha" data-sitekey="<?php echo $public_key; ?>"></div>
+			<noscript>
+			  <div style="width: 302px; height: 422px;">
+				<div style="width: 302px; height: 422px; position: relative;">
+				  <div style="width: 302px; height: 422px; position: absolute;">
+					<iframe src="https://www.google.com/recaptcha/api/fallback?k=<?php echo $public_key; ?>"
+							frameborder="0" scrolling="no"
+							style="width: 302px; height:422px; border-style: none;">
+					</iframe>
+				  </div>
+				  <div style="width: 300px; height: 60px; border-style: none;
+							  bottom: 12px; left: 25px; margin: 0px; padding: 0px; right: 25px;
+							  background: #f9f9f9; border: 1px solid #c1c1c1; border-radius: 3px;">
+					<textarea id="g-recaptcha-response" name="g-recaptcha-response"
+							  class="g-recaptcha-response"
+							  style="width: 250px; height: 40px; border: 1px solid #c1c1c1;
+									 margin: 10px 25px; padding: 0px; resize: none;" >
+					</textarea>
+				  </div>
+				</div>
+			  </div>
+			</noscript>
+		</div>
+		<?php
+}
+
+$is_edd_login_captcha = edd_get_option( 'edd-login-captcha' );
+$is_edd_register_captcha = edd_get_option( 'edd-register-captcha' );
+
+if($is_edd_login_captcha){
+	add_action('edd_login_fields_before_submit', 'edd_login_register_form_fields_before_submit');	
+}
+if($is_edd_register_captcha){
+	add_action('edd_register_form_fields_before_submit', 'edd_login_register_form_fields_before_submit');	
+}
+
+
+
+
+/**
+ * Validating reCAPTCHA on Login and Register Form
+ *
+ * @since 2.9.17
+ * @return void
+*/
+function edd_validate_recaptcha_login_register_form(){
+	
+	if( empty( $_POST['g-recaptcha-response'] ) ) {
+		edd_set_error( 'empty_recaptcha', __( 'Please fill out recaptcha', 'easy-digital-downloads' ) );
+	}else{
+		$recap_challenge = isset( $_POST[ 'g-recaptcha-response' ] ) ? $_POST[ 'g-recaptcha-response' ] : '';
+
+		
+		$private_key = edd_get_option( 'edd-recaptcha-private-key' );
+
+		try {
+
+			$url      = 'https://www.google.com/recaptcha/api/siteverify';
+
+			$data     = array( 'secret' => $private_key, 'response' => $recap_challenge, 'remoteip' => $_SERVER['REMOTE_ADDR'] );
+
+			$options  = array( 'http' => array( 'header' => "Content-type: application/x-www-form-urlencoded\r\n", 'method' => 'POST', 'content' => http_build_query( $data ) ) );
+
+			$context  = stream_context_create( $options );
+
+			$result   = file_get_contents( $url, false, $context );
+
+			if ( json_decode( $result )->success == false ) {
+				edd_set_error( 'invalid_recaptcha', __( 'reCAPTCHA validation failed', 'easy-digital-downloads' ) );
+			}
+
+		}
+
+		catch ( Exception $e ) {
+
+			edd_set_error( 'invalid_recaptcha', __( 'reCAPTCHA validation failed', 'easy-digital-downloads' ) );
+
+		}
+	}
+}
+
+add_action('edd_process_register_form', 'edd_validate_recaptcha_login_register_form');
+add_action('edd_process_login_form', 'edd_validate_recaptcha_login_register_form');
