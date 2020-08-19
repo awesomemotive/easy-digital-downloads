@@ -664,65 +664,34 @@ function edd_purchase_form_validate_new_user() {
  */
 function edd_purchase_form_validate_user_login() {
 
-	// Start an array to collect valid user data
+	// Start an array to collect valid user data.
 	$valid_user_data = array(
-		// Assume there will be errors
-		'user_id' => -1
+		'user_id' => -1, // Assume there will be errors.
 	);
 
-	// Username
-	if ( empty( $_POST['edd_user_login'] ) && edd_no_guest_checkout() ) {
+	$user_login = ! empty( $_POST['edd_user_login'] ) ? sanitize_text_field( $_POST['edd_user_login'] ) : '';
+	$user_pass  = ! empty( $_POST['edd_user_pass'] ) ? sanitize_text_field( $_POST['edd_user_pass'] ) : '';
+
+	// Username.
+	if ( empty( $user_login ) && edd_no_guest_checkout() ) {
 		edd_set_error( 'must_log_in', __( 'You must log in or register to complete your purchase', 'easy-digital-downloads' ) );
 		return $valid_user_data;
 	}
 
-	$login_or_email = strip_tags( $_POST['edd_user_login'] );
+	$user = edd_log_user_in( 0, $user_login, $user_pass, false );
 
-	if ( is_email( $login_or_email ) ) {
-		// Get the user by email
-		$user_data = get_user_by( 'email', $login_or_email );
+	if ( ! $user instanceof WP_User ) {
+		return $valid_user_data;
 	} else {
-		// Get the user by login
-		$user_data = get_user_by( 'login', $login_or_email );
-	}
-
-	// Check if user exists
-	if ( $user_data ) {
-		// Get password
-		$user_pass = isset( $_POST["edd_user_pass"] ) ? $_POST["edd_user_pass"] : false;
-
-		// Check user_pass
-		if ( $user_pass ) {
-			// Check if password is valid
-			if ( ! wp_check_password( $user_pass, $user_data->user_pass, $user_data->ID ) ) {
-				// Incorrect password
-				edd_set_error(
-					'password_incorrect',
-					sprintf(
-						__( 'The password you entered is incorrect. %sReset Password%s', 'easy-digital-downloads' ),
-						'<a href="' . wp_lostpassword_url( edd_get_checkout_uri() ) . '">',
-						'</a>'
-					)
-				);
-				// All is correct
-			} else {
-				// Repopulate the valid user data array
-				$valid_user_data = array(
-					'user_id' => $user_data->ID,
-					'user_login' => $user_data->user_login,
-					'user_email' => $user_data->user_email,
-					'user_first' => $user_data->first_name,
-					'user_last' => $user_data->last_name,
-					'user_pass' => $user_pass,
-				);
-			}
-		} else {
-			// Empty password
-			edd_set_error( 'password_empty', __( 'Enter a password', 'easy-digital-downloads' ) );
-		}
-	} else {
-		// no username
-		edd_set_error( 'username_incorrect', __( 'The username you entered does not exist', 'easy-digital-downloads' ) );
+		// Re-populate the valid user data array.
+		$valid_user_data = array(
+			'user_id' => $user->ID,
+			'user_login' => $user->user_login,
+			'user_email' => $user->user_email,
+			'user_first' => $user->first_name,
+			'user_last' => $user->last_name,
+			'user_pass' => $user_pass,
+		);
 	}
 
 	return $valid_user_data;
