@@ -77,21 +77,6 @@ a.edd-delete:hover {
 	position: relative;
 }
 
-.edd-from-to-wrapper input[name="start"]:focus,
-.edd-from-to-wrapper input[name="start-date"]:focus,
-.edd-from-to-wrapper input[name="filter_from"]:focus {
-	border-top-right-radius: 0;
-	border-bottom-right-radius: 0;
-}
-
-.edd-from-to-wrapper input[name="end"]:focus,
-.edd-from-to-wrapper input[name="end-date"]:focus,
-.edd-from-to-wrapper input[name="filter_to"]:focus {
-	margin-left: -1px;
-	border-top-left-radius: 0;
-	border-bottom-left-radius: 0;
-}
-
 .edd-settings-sub-nav {
 	margin: 0 0px 10px 0;
 	width: 100%;
