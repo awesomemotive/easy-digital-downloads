@@ -60,14 +60,16 @@ a.edd-delete:hover {
 .edd-from-to-wrapper input[name="start"],
 .edd-from-to-wrapper input[name="start-date"],
 .edd-from-to-wrapper input[name="filter_from"] {
-	border-radius: 4px 0 0 4px;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
 }
 
 .edd-from-to-wrapper input[name="end"],
 .edd-from-to-wrapper input[name="end-date"],
 .edd-from-to-wrapper input[name="filter_to"] {
 	margin-left: -1px;
-	border-radius: 0 4px 4px 0;
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
 }
 
 .edd-from-to-wrapper input:focus {
@@ -78,7 +80,16 @@ a.edd-delete:hover {
 .edd-from-to-wrapper input[name="start"]:focus,
 .edd-from-to-wrapper input[name="start-date"]:focus,
 .edd-from-to-wrapper input[name="filter_from"]:focus {
-	border-radius: 4px 0 0 4px;
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+.edd-from-to-wrapper input[name="end"]:focus,
+.edd-from-to-wrapper input[name="end-date"]:focus,
+.edd-from-to-wrapper input[name="filter_to"]:focus {
+	margin-left: -1px;
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
 }
 
 .edd-settings-sub-nav {
