@@ -80,8 +80,8 @@ a.edd-delete:hover {
 .edd-from-to-wrapper input[name="start"]:focus,
 .edd-from-to-wrapper input[name="start-date"]:focus,
 .edd-from-to-wrapper input[name="filter_from"]:focus {
-	border-top-left-radius: 0;
-	border-bottom-left-radius: 0;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
 }
 
 .edd-from-to-wrapper input[name="end"]:focus,
