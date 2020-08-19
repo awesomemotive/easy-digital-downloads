@@ -92,11 +92,19 @@ function edd_register_form( $redirect = '' ) {
 function edd_process_login_form( $data ) {
 
 	if ( ! empty( $data['edd_login_nonce'] ) && wp_verify_nonce( $data['edd_login_nonce'], 'edd-login-nonce' ) ) {
+		$login      = isset( $data['edd_user_login'] ) ? $data['edd_user_login'] : '';
+		$pass       = isset( $data['edd_user_pass'] ) ? $data['edd_user_pass'] : '';
 		$rememberme = isset( $data['rememberme'] );
 
-		$user = edd_log_user_in( 0, $data['edd_user_login'], $data['edd_user_pass'], $rememberme );
+		$user = edd_log_user_in( 0, $login, $pass, $rememberme );
 
-		// Check for errors and redirect if none present
+		// Wipe these variables so they aren't anywhere in the submitted format any longer.
+		$login = null;
+		$pass  = null;
+		$data['edd_user_login'] = null;
+		$data['edd_user_pass']  = null;
+
+		// Check for errors and redirect if none present.
 		$errors = edd_get_errors();
 		if ( ! $errors ) {
 			$redirect = apply_filters( 'edd_login_redirect', $data['edd_redirect'], 0 );
