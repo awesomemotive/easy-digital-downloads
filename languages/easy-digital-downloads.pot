@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 2.9.23\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2020-04-20 18:58:41+00:00\n"
+"POT-Creation-Date: 2020-08-19 18:30:36+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -7064,41 +7064,39 @@ msgstr ""
 msgid "Purchase History"
 msgstr ""
 
-#: includes/login-register.php:90
-msgid "The password you entered is incorrect"
+#: includes/login-register.php:146
+#. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor
+#. tag, do not translate.
+msgid "Invalid username or password. %1$sReset Password%2$s"
 msgstr ""
 
-#: includes/login-register.php:93 includes/process-purchase.php:725
-msgid "The username you entered does not exist"
-msgstr ""
-
-#: includes/login-register.php:147 includes/login-register.php:155
+#: includes/login-register.php:180 includes/login-register.php:188
 #: includes/process-purchase.php:602
 msgid "Invalid username"
 msgstr ""
 
-#: includes/login-register.php:151 includes/process-purchase.php:595
+#: includes/login-register.php:184 includes/process-purchase.php:595
 msgid "Username already taken"
 msgstr ""
 
-#: includes/login-register.php:159
+#: includes/login-register.php:192
 msgid "Email address already taken"
 msgstr ""
 
-#: includes/login-register.php:163 includes/process-purchase.php:542
-#: includes/process-purchase.php:618 includes/process-purchase.php:758
+#: includes/login-register.php:196 includes/process-purchase.php:542
+#: includes/process-purchase.php:618 includes/process-purchase.php:727
 msgid "Invalid email"
 msgstr ""
 
-#: includes/login-register.php:167
+#: includes/login-register.php:200
 msgid "Invalid payment email"
 msgstr ""
 
-#: includes/login-register.php:171
+#: includes/login-register.php:204
 msgid "Please enter a password"
 msgstr ""
 
-#: includes/login-register.php:175
+#: includes/login-register.php:208
 msgid "Passwords do not match"
 msgstr ""
 
@@ -7885,7 +7883,7 @@ msgstr ""
 msgid "Please enter billing state / province"
 msgstr ""
 
-#: includes/process-purchase.php:547 includes/process-purchase.php:870
+#: includes/process-purchase.php:547 includes/process-purchase.php:839
 msgid "The user information is invalid"
 msgstr ""
 
@@ -7903,7 +7901,7 @@ msgid ""
 "purchase."
 msgstr ""
 
-#: includes/process-purchase.php:631 includes/process-purchase.php:766
+#: includes/process-purchase.php:631 includes/process-purchase.php:735
 msgid "Enter an email"
 msgstr ""
 
@@ -7911,7 +7909,7 @@ msgstr ""
 msgid "Passwords don't match"
 msgstr ""
 
-#: includes/process-purchase.php:648 includes/process-purchase.php:721
+#: includes/process-purchase.php:648
 msgid "Enter a password"
 msgstr ""
 
@@ -7919,27 +7917,23 @@ msgstr ""
 msgid "Enter the password confirmation"
 msgstr ""
 
-#: includes/process-purchase.php:675
+#: includes/process-purchase.php:677
 msgid "You must log in or register to complete your purchase"
 msgstr ""
 
-#: includes/process-purchase.php:702
-msgid "The password you entered is incorrect. %sReset Password%s"
-msgstr ""
-
-#: includes/process-purchase.php:747
+#: includes/process-purchase.php:716
 msgid "You must be logged into an account to purchase"
 msgstr ""
 
-#: includes/process-purchase.php:934
+#: includes/process-purchase.php:903
 msgid "The zip / postal code you entered for your billing address is invalid"
 msgstr ""
 
-#: includes/process-purchase.php:1183
+#: includes/process-purchase.php:1152
 msgid "An internal error has occurred, please try again or contact support."
 msgstr ""
 
-#: includes/process-purchase.php:1219
+#: includes/process-purchase.php:1188
 msgid "There was an error completing your purchase. Please try again."
 msgstr ""
 
