@@ -60,7 +60,6 @@ a.edd-delete:hover {
 .edd-from-to-wrapper input[name="start"],
 .edd-from-to-wrapper input[name="start-date"],
 .edd-from-to-wrapper input[name="filter_from"] {
-	border-right-color: #eee;
 	border-radius: 4px 0 0 4px;
 }
 
@@ -236,7 +235,7 @@ a.edd-delete:hover {
 }
 
 @media screen and (max-width: 782px) {
-	#edd-filters .filter-items > span:not(.edd-date-range-options) {
+	#edd-filters .filter-items {
 		margin: 6px 6px 6px 0;
 	}
 }
