@@ -1236,7 +1236,6 @@ textarea[name="edd-note"] {
 #edd-filters .filter-items > span:not(.edd-date-range-options) {
 	display: inline-block;
 	margin-right: 6px;
-	/* max-width: 200px; */
 }
 
 #edd-filters .filter-items > #edd-date-filters {
@@ -1251,7 +1250,7 @@ textarea[name="edd-note"] {
 	margin-top: -30px;
 	margin-left: 2px;
 }
-/* Removed by Robin -- first selector only*/
+
 #edd-filters input[type="text"].edd_datepicker,
 #edd-filters input[type="number"] {
 	max-width: 105px;
@@ -2451,26 +2450,21 @@ body.download_page_edd-reports {
 .download_page_edd-reports #edd-item-wrapper {
 	margin: 0;
 }
+
 #edd-dashboard-widgets-wrap .postbox h2,
 #edd-dashboard-widgets-wrap .postbox h3 {
 	cursor: default;
 }
+
 #edd-filters .filter-items .edd-date-range-options {
-	/* Removed by Robin */
 	display: inline-block;
 	margin: 10px 4px 10px 0;
-	/* width: 200px; */
 }
 
 .edd-date-range-options .edd_datepicker {
-	width: 100px;
+	width: 105px;
 }
-.edd-date-range-options span span {
-	/* Removed by Robin */
-	/* float: left;
-	line-height: 29px;
-	height: 29px; */
-}
+
 .edd-report-wrap {
 	clear: both;
 }
