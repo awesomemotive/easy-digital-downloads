@@ -182,8 +182,8 @@ function edd_process_download() {
 		if ( ! edd_is_func_disabled( 'set_time_limit' ) ) {
 			@set_time_limit(0);
 		}
-		if ( function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() && version_compare( phpversion(), '5.4', '<' ) ) {
-			set_magic_quotes_runtime(0);
+		if ( version_compare( phpversion(), '5.4', '<' ) && function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() ) {
+			set_magic_quotes_runtime( 0 );
 		}
 
 		// If we're using an attachment ID to get the file, even by path, we can ignore this check.
