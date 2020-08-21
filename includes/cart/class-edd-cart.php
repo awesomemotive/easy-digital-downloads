@@ -421,7 +421,7 @@ class EDD_Cart {
 					'options'      => array(
 						'price_id' => preg_replace( '/[^0-9\.-]/', '', $price )
 					),
-					'quantity'     => $quantity[ $key ],
+					'quantity'     => is_array( $quantity ) && isset( $quantity[ $key ] ) ? $quantity[ $key ] : $quantity,
 				);
 			}
 		} else {

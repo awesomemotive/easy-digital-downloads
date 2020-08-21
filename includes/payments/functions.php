@@ -1276,8 +1276,8 @@ function edd_get_next_payment_number() {
  */
 function edd_remove_payment_prefix_postfix( $number ) {
 
-	$prefix  = edd_get_option( 'sequential_prefix' );
-	$postfix = edd_get_option( 'sequential_postfix' );
+	$prefix  = (string) edd_get_option( 'sequential_prefix' );
+	$postfix = (string) edd_get_option( 'sequential_postfix' );
 
 	// Remove prefix
 	$number = preg_replace( '/' . $prefix . '/', '', $number, 1 );

@@ -71,7 +71,7 @@ jQuery(document).ready(function ($) {
 						$('.edd-cart').each( function() {
 
 							var cart_wrapper = $(this).parent();
-							if ( cart_wrapper ) {
+							if ( cart_wrapper.length ) {
 								cart_wrapper.addClass('cart-empty')
 								cart_wrapper.removeClass('cart-not-empty');
 							}
@@ -213,7 +213,7 @@ jQuery(document).ready(function ($) {
 						$(response.cart_item).insertBefore(target);
 
 						var cart_wrapper = $(this).parent();
-						if ( cart_wrapper ) {
+						if ( cart_wrapper.length ) {
 							cart_wrapper.addClass('cart-not-empty')
 							cart_wrapper.removeClass('cart-empty');
 						}
@@ -343,7 +343,7 @@ jQuery(document).ready(function ($) {
 	});
 
 	// Load the fields for the selected payment method
-	$('select#edd-gateway, input.edd-gateway').change( function (e) {
+	$(document).on('change', 'select#edd-gateway, input.edd-gateway', function (e) {
 
 		var payment_mode = $('#edd-gateway option:selected, input.edd-gateway:checked').val();
 

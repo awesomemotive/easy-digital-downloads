@@ -1,13 +1,13 @@
 === Easy Digital Downloads - Simple Ecommerce for Selling Digital Files ===
 Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
-Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze
+Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze, littlerchicken, lisacee
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: ecommerce, sell, checkout, payments, stripe
 Requires at least: 4.4
-Tested up to: 5.4
+Tested up to: 5.5
 Requires PHP: 5.3
-Stable Tag: 2.9.23
+Stable Tag: 2.9.24
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products the simple way. Easily build an online store complete with a cart system, checkout forms, reports, coupons, and more!
@@ -249,6 +249,15 @@ For most stores, we recommend using the Stripe Payment Gateway.
 9. Checkout screen
 
 == Changelog ==
+= 2.9.24, August 21, 2020 =
+* Security Fix: Prevent users with 'view_shop_reports' capability from running an arbitrary class execution with the exports tool.
+* Fix: Removing downloads from the view order details screen caused a JavaScript error on WordPress 5.5+.
+* Fix: Improve PHP 7.3 and 7.4 support.
+* Fix: W3 Validation was failing due to duplicate id attributes.
+* Fix: Some checkout customizations were not possible due to using .change() instead of .on().
+* New: EDD Login forms now support plugins that limit failed login attempts.
+* New: Failed login attempts on the EDD Login form now return proper HTTP status codes, when possible.
+
 = 2.9.23, April 20, 2020 =
 * Fix: There was a performance issue that caused file download logs to be queried when they did not need to be.
 * Fix: When using PHP 7.3+, a notice could be thrown related to a non-well formed numeric value.
