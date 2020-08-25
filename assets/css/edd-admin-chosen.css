@@ -319,6 +319,23 @@ body.admin-color-light .chosen-container .chosen-results li.highlighted {
 	background-color: #04a4cc;
 }
 
+/* Modern */
+body.admin-color-modern .chosen-container-active .chosen-single,
+body.admin-color-modern .chosen-container-active .chosen-choices,
+body.admin-color-modern .chosen-with-drop.chosen-dropup .chosen-drop {
+	border-color: #3858e9;
+	box-shadow: 0 0 0 1px #3858e9;
+}
+body.admin-color-modern .chosen-with-drop.chosen-dropup .chosen-single,
+body.admin-color-modern .chosen-container-active.chosen-dropup .chosen-choices,
+body.admin-color-modern .chosen-container .chosen-drop {
+	border-color: #3858e9;
+	box-shadow: 0 1px 0 1px #3858e9;
+}
+body.admin-color-modern .chosen-container .chosen-results li.highlighted {
+	background-color: #3858e9;
+}
+
 /* bbPress Color Schemes
 -------------------------------------------------------------- */
 
