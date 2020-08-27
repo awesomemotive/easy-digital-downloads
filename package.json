@@ -20,6 +20,6 @@
     "npm": "^6.14.6"
   },
   "scripts": {
-    "build": "bash bin/include-stripe.sh && grunt build"
+    "build": "bash bin/update-stripe.sh && grunt build"
   }
 }
