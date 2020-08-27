@@ -11,7 +11,6 @@ npm install && npm run build
 
 # Edit bootstrap function name to avoid collision.
 sed -i '' 's/edd_stripe/edd_stripe_core/g' edd-stripe.php
-sed -i '' 's/, 10/, 20/g' edd-stripe.php
 
 # Clean up files for distribution.
 # @todo Maybe use git archive? However composer.json would
