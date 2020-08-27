@@ -20,7 +20,7 @@ rm -rf node_modules
 rm -rf tests
 rm -rf bin
 rm -rf languages
-rm -rf pro
+rm -rf includes/pro
 rm -rf .git
 rm -rf .github
 rm .gitattributes
