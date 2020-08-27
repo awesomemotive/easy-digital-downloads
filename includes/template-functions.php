@@ -213,7 +213,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 		<input type="hidden" name="download_id" value="<?php echo esc_attr( $download->ID ); ?>">
 		<?php if ( $variable_pricing && isset( $price_id ) && isset( $prices[$price_id] ) ): ?>
-			<input type="hidden" name="edd_options[price_id][]" id="edd_price_option_<?php echo $download->ID; ?>_1" class="edd_price_option_<?php echo $download->ID; ?>" value="<?php echo $price_id; ?>">
+			<input type="hidden" name="edd_options[price_id][]" id="edd_price_option_<?php echo esc_attr( $download->ID ); ?>_<?php echo esc_attr( $price_id ); ?>" class="edd_price_option_<?php echo esc_attr( $download->ID ); ?>" value="<?php echo esc_attr( $price_id ); ?>">
 		<?php endif; ?>
 		<?php if( ! empty( $args['direct'] ) && ! $download->is_free( $args['price_id'] ) ) { ?>
 			<input type="hidden" name="edd_action" class="edd_action_input" value="straight_to_gateway">
@@ -279,7 +279,7 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 	), $download_id );
 
 	// Sanitize those class names and form them into a string
-	$css_classes_string = implode( array_map( 'sanitize_html_class', $css_classes_array ), ' ' );
+	$css_classes_string = implode( ' ', array_map( 'sanitize_html_class', $css_classes_array ) );
 
 	if ( edd_item_in_cart( $download_id ) && ! edd_single_price_option_mode( $download_id ) ) {
 		return;

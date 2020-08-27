@@ -453,11 +453,11 @@ jQuery(document).ready(function ($) {
 					var quantity    = $('input[name="edd-payment-details-downloads['+key+'][quantity]"]').val();
 					var amount      = $('input[name="edd-payment-details-downloads['+key+'][amount]"]').val();
 
-					if ( $('input[name="edd-payment-details-downloads['+key+'][tax]"]') ) {
+					if ( $('input[name="edd-payment-details-downloads['+key+'][tax]"]').length ) {
 						var fees = $('input[name="edd-payment-details-downloads['+key+'][tax]"]').val();
 					}
 
-					if ( $('input[name="edd-payment-details-downloads['+key+'][fees]"]') ) {
+					if ( $('input[name="edd-payment-details-downloads['+key+'][fees]"]').length ) {
 						var fees = $.parseJSON( $('input[name="edd-payment-details-downloads['+key+'][fees]"]').val() );
 					}
 
