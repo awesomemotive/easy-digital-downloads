@@ -5,6 +5,7 @@
   "devDependencies": {
     "grunt": "^1.0.4",
     "grunt-checktextdomain": "^1.0.1",
+    "grunt-cli": "^1.3.2",
     "grunt-contrib-clean": "^1.1.0",
     "grunt-contrib-compress": "^1.5.0",
     "grunt-contrib-copy": "^1.0.0",
@@ -17,5 +18,8 @@
   },
   "dependencies": {
     "npm": "^6.14.6"
+  },
+  "scripts": {
+    "build": "bash bin/include-stripe.sh && grunt build"
   }
 }

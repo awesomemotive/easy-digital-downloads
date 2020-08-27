@@ -23,7 +23,7 @@ Easy-Digital-Downloads.iml
 *.pydevproject
 .project
 .metadata
-build/
+/build
 tmp/
 tests/clover.xml
 
