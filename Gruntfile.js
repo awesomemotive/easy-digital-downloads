@@ -51,6 +51,7 @@ module.exports = function(grunt) {
 		checktextdomain: {
 			options:{
 				text_domain: 'easy-digital-downloads',
+				correct_domain: true,
 				keywords: [
 					'__:1,2d',
 					'_e:1,2d',
