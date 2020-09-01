@@ -27,9 +27,10 @@ class Data_Migrator {
 	 *
 	 * @since 3.0
 	 *
-	 * @param object $data Data to migrate.
+	 * @param object $data       Data to migrate.
+	 * @param string $type       The type of address this is.
 	 */
-	public static function customer_addresses( $data = null ) {
+	public static function customer_addresses( $data = null, $type = 'billing' ) {
 
 		// Bail if no data passed.
 		if ( ! $data ) {
@@ -50,6 +51,13 @@ class Data_Migrator {
 			'zip'     => '',
 			'country' => '',
 		) );
+
+		$address = array_filter( $address );
+
+		// Do not migrate empty addresses.
+		if ( empty( $address ) ) {
+			return;
+		}
 
 		if ( $customer ) {
 			edd_add_customer_address(
@@ -485,6 +493,11 @@ class Data_Migrator {
 			$parent = $wpdb->get_var( $wpdb->prepare( "SELECT edd_order_id FROM {$wpdb->edd_ordermeta} WHERE meta_key = %s AND meta_value = %d", esc_sql( 'legacy_order_id' ), $data->ID ) );
 		}
 
+		if ( 'manual_purchases' === $gateway && isset( $meta['_edd_payment_total'][0] ) ) {
+			$gateway = 'manual';
+			$total   = $meta['_edd_payment_total'][0];
+		}
+
 		// Build the order data before inserting.
 		$order_data = array(
 			'id'             => $data->ID,
@@ -580,8 +593,10 @@ class Data_Migrator {
 		// Remove empty data.
 		$order_address_data = array_filter( $order_address_data );
 
-		// Add to edd_order_addresses table.
-		edd_add_order_address( $order_address_data );
+		if ( ! empty( $order_address_data ) ) {
+			// Add to edd_order_addresses table.
+			edd_add_order_address( $order_address_data );
+		}
 
 		// Maybe add the address to the edd_customer_addresses.
 		$customer_address_data = $order_address_data;
@@ -886,25 +901,32 @@ class Data_Migrator {
 			? (float) $meta['_edd_payment_tax_rate'][0]
 			: 0.00;
 
-
 		if ( ! empty( $tax_rate ) ) {
 			// Tax rate is no longer stored in meta.
-			edd_add_order_adjustment( array(
-				'object_id'   => $order_id,
-				'object_type' => 'order',
-				'type_id'     => 0,
-				'type'        => 'tax_rate',
-				'total'       => $tax_rate,
-			) );
+			edd_add_order_adjustment(
+				array(
+					'object_id'     => $order_id,
+					'object_type'   => 'order',
+					'type_id'       => 0,
+					'type'          => 'tax_rate',
+					'total'         => $tax_rate,
+					'date_created'  => $date_created_gmt,
+					'date_modified' => $data->post_modified_gmt,
+				)
+			);
 
 			if ( ! empty( $refund_id ) ) {
-				edd_add_order_adjustment( array(
-					'object_id'   => $refund_id,
-					'object_type' => 'order',
-					'type_id'     => 0,
-					'type'        => 'tax_rate',
-					'total'       => $tax_rate,
-				) );
+				edd_add_order_adjustment(
+					array(
+						'object_id'     => $refund_id,
+						'object_type'   => 'order',
+						'type_id'       => 0,
+						'type'          => 'tax_rate',
+						'total'         => $tax_rate,
+						'date_created'  => $data->post_modified_gmt,
+						'date_modified' => $data->post_modified_gmt,
+					)
+				);
 			}
 		}
 
@@ -920,13 +942,15 @@ class Data_Migrator {
 
 				// Add the adjustment.
 				$adjustment_args = array(
-					'object_id'   => $order_id,
-					'object_type' => 'order',
-					'type'        => 'fee',
-					'description' => $fee['label'],
-					'subtotal'    => floatval( $fee['amount'] ),
-					'tax'         => $tax,
-					'total'       => floatval( $fee['amount'] ) + $tax,
+					'object_id'     => $order_id,
+					'object_type'   => 'order',
+					'type'          => 'fee',
+					'description'   => $fee['label'],
+					'subtotal'      => floatval( $fee['amount'] ),
+					'tax'           => $tax,
+					'total'         => floatval( $fee['amount'] ) + $tax,
+					'date_created'  => $date_created_gmt,
+					'date_modified' => $data->post_modified_gmt,
 				);
 
 				$adjustment_id = edd_add_order_adjustment( $adjustment_args );
@@ -970,26 +994,34 @@ class Data_Migrator {
 					continue;
 				}
 
-				edd_add_order_adjustment( array(
-					'object_id'   => $order_id,
-					'object_type' => 'order',
-					'type_id'     => $discount->id,
-					'type'        => 'discount',
-					'description' => $discount,
-					'subtotal'    => $subtotal - $discount->get_discounted_amount( $subtotal ),
-					'total'       => $subtotal - $discount->get_discounted_amount( $subtotal ),
-				) );
+				edd_add_order_adjustment(
+					array(
+						'object_id'     => $order_id,
+						'object_type'   => 'order',
+						'type_id'       => $discount->id,
+						'type'          => 'discount',
+						'description'   => $discount,
+						'subtotal'      => $subtotal - $discount->get_discounted_amount( $subtotal ),
+						'total'         => $subtotal - $discount->get_discounted_amount( $subtotal ),
+						'date_created'  => $date_created_gmt,
+						'date_modified' => $data->post_modified_gmt,
+					)
+				);
 
 				if ( ! empty( $refund_id ) ) {
-					edd_add_order_adjustment( array(
-						'object_id'   => $refund_id,
-						'object_type' => 'order',
-						'type_id'     => $discount->id,
-						'type'        => 'discount',
-						'description' => $discount,
-						'subtotal'    => edd_negate_amount($subtotal - $discount->get_discounted_amount( $subtotal ) ),
-						'total'       => edd_negate_amount( $subtotal - $discount->get_discounted_amount( $subtotal ) ),
-					) );
+					edd_add_order_adjustment(
+						array(
+							'object_id'     => $refund_id,
+							'object_type'   => 'order',
+							'type_id'       => $discount->id,
+							'type'          => 'discount',
+							'description'   => $discount,
+							'subtotal'      => edd_negate_amount( $subtotal - $discount->get_discounted_amount( $subtotal ) ),
+							'total'         => edd_negate_amount( $subtotal - $discount->get_discounted_amount( $subtotal ) ),
+							'date_created'  => $data->post_modified_gmt,
+							'date_modified' => $data->post_modified_gmt,
+						)
+					);
 				}
 			}
 		}
