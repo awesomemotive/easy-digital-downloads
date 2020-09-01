@@ -342,14 +342,12 @@ function edd_render_price_field( $post_id ) {
 
 	<div id="edd_variable_price_fields" class="edd_pricing_fields" <?php echo $variable_display; ?>>
 		<input type="hidden" id="edd_variable_prices" class="edd_variable_prices_name_field" value=""/>
-		<p>
 			<div class="edd-form-group">
 				<div class="edd-form-group__control">
 					<?php echo EDD()->html->checkbox( array( 'name' => '_edd_price_options_mode', 'current' => $single_option_mode, 'class' => 'edd-form-group__input', ) ); ?>
 					<label for="_edd_price_options_mode"><?php echo esc_html( apply_filters( 'edd_multi_option_purchase_text', __( 'Enable multi-option purchase mode. Allows multiple price options to be added to your cart at once', 'easy-digital-downloads' ) ) ); ?></label>
 				</div>
 			</div>
-		</p>
 		<div id="edd_price_fields" class="edd_meta_table_wrap">
 			<div class="widefat edd_repeatable_table">
 
@@ -558,29 +556,27 @@ function edd_render_product_type_field( $post_id = 0 ) {
 
 	$types = edd_get_download_types();
 	$type  = edd_get_download_type( $post_id );
-?>
-	<p>
-		<div class="edd-form-group">
-			<label for="_edd_product_type" class="edd-form-group__label"><?php echo apply_filters( 'edd_product_type_options_heading', __( 'Product Type Options:', 'easy-digital-downloads' ) ); ?></label>
-			<div class="edd-form-group__control">
-				<?php echo EDD()->html->select(
-					array(
-						'options'          => $types,
-						'name'             => '_edd_product_type',
-						'id'               => '_edd_product_type',
-						'selected'         => $type,
-						'show_option_all'  => false,
-						'show_option_none' => false,
-						'class'            => 'edd-form-group__input',
-					)
-				);
-				?>
-				<span class="description"><?php esc_html_e( 'Select a product type', 'easy-digital-downloads' ); ?></span>
-				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Product Type</strong>: Sell this item as a single product, or use the Bundle type to sell a collection of products.', 'easy-digital-downloads' ); ?>"></span>
-			</div>
+	?>
+	<div class="edd-form-group">
+		<label for="_edd_product_type" class="edd-form-group__label"><?php echo apply_filters( 'edd_product_type_options_heading', __( 'Product Type Options:', 'easy-digital-downloads' ) ); ?></label>
+		<div class="edd-form-group__control">
+			<?php echo EDD()->html->select(
+				array(
+					'options'          => $types,
+					'name'             => '_edd_product_type',
+					'id'               => '_edd_product_type',
+					'selected'         => $type,
+					'show_option_all'  => false,
+					'show_option_none' => false,
+					'class'            => 'edd-form-group__input',
+				)
+			);
+			?>
+			<span class="description"><?php esc_html_e( 'Select a product type', 'easy-digital-downloads' ); ?></span>
+			<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Product Type</strong>: Sell this item as a single product, or use the Bundle type to sell a collection of products.', 'easy-digital-downloads' ); ?>"></span>
 		</div>
-	</p>
-<?php
+	</div>
+	<?php
 }
 add_action( 'edd_meta_box_files_fields', 'edd_render_product_type_field', 10 );
 
