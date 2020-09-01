@@ -878,7 +878,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 				) ); ?>
 
 				<span class="edd_upload_file">
-					<button data-uploader-title="<?php esc_html_e( 'Select Files', 'easy-digital-downloads' ); ?>" data-uploader-button-text="<?php esc_attr_e( 'Select', 'easy-digital-downloads' ); ?>" class="edd_upload_file_button" onclick="return false;">
+					<button data-uploader-title="<?php esc_attr_e( 'Select Files', 'easy-digital-downloads' ); ?>" data-uploader-button-text="<?php esc_attr_e( 'Select', 'easy-digital-downloads' ); ?>" class="edd_upload_file_button" onclick="return false;">
 						<span class="dashicons dashicons-admin-links"></span>
 						<span class="screen-reader-text"><?php esc_html_e( 'Select Files', 'easy-digital-downloads' ); ?></span>
 				</button>
