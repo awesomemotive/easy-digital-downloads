@@ -475,13 +475,19 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 			?>
 
 			<div class="edd-form-group__control edd-price-input-group">
-				<?php if ( $currency_position == 'before' ) : ?>
-					<span><?php echo edd_currency_filter( '' ); ?></span>
-					<?php echo EDD()->html->text( $price_args ); ?>
-				<?php else : ?>
-					<?php echo EDD()->html->text( $price_args ); ?>
-					<?php echo edd_currency_filter( '' ); ?>
-				<?php endif; ?>
+				<?php
+				if ( 'before' === $currency_position ) {
+					?>
+					<span class="edd-amount-control__currency is-before"><?php echo esc_html( edd_currency_filter( '' ) ); ?></span>
+					<?php
+					echo EDD()->html->text( $price_args );
+				} else {
+					echo EDD()->html->text( $price_args );
+					?>
+					<span class="edd-amount-control__currency is-after"><?php echo esc_html( edd_currency_filter( '' ) ); ?></span>
+					<?php
+				}
+				?>
 			</div>
 		</div>
 
