@@ -86,7 +86,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 	 * @param string $text Label for the search box
 	 * @param string $input_id ID of the search box
 	 *
-	 * @return svoid
+	 * @return void
 	 */
 	public function search_box( $text, $input_id ) {
 		if ( empty( $_REQUEST['s'] ) && !$this->has_items() )
