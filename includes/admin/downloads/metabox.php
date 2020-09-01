@@ -563,15 +563,19 @@ function edd_render_product_type_field( $post_id = 0 ) {
 		<div class="edd-form-group">
 			<label for="_edd_product_type" class="edd-form-group__label"><?php echo apply_filters( 'edd_product_type_options_heading', __( 'Product Type Options:', 'easy-digital-downloads' ) ); ?></label>
 			<div class="edd-form-group__control">
-				<?php echo EDD()->html->select( array(
-					'options'          => $types,
-					'name'             => '_edd_product_type',
-					'id'               => '_edd_product_type',
-					'selected'         => $type,
-					'show_option_all'  => false,
-					'show_option_none' => false,
-				) ); ?>
-				<span class="description"><?php _e( 'Select a product type', 'easy-digital-downloads' ); ?></span>
+				<?php echo EDD()->html->select(
+					array(
+						'options'          => $types,
+						'name'             => '_edd_product_type',
+						'id'               => '_edd_product_type',
+						'selected'         => $type,
+						'show_option_all'  => false,
+						'show_option_none' => false,
+						'class'            => 'edd-form-group__input',
+					)
+				);
+				?>
+				<span class="description"><?php esc_html_e( 'Select a product type', 'easy-digital-downloads' ); ?></span>
 				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Product Type</strong>: Sell this item as a single product, or use the Bundle type to sell a collection of products.', 'easy-digital-downloads' ); ?>"></span>
 			</div>
 		</div>
@@ -622,16 +626,19 @@ function edd_render_products_field( $post_id ) {
 										<label for="edd_bundled_products_<?php echo esc_attr( $index ); ?>" class="edd-form-group__label edd-repeatable-row-setting-label"><?php printf( esc_html__( 'Select %s:', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></label>
 										<div class="edd-form-group__control">
 										<?php
-										echo EDD()->html->product_dropdown( array(
-											'name'                 => '_edd_bundled_products[]',
-											'id'                   => 'edd_bundled_products_' . $index,
-											'selected'             => $product,
-											'multiple'             => false,
-											'chosen'               => true,
-											'bundles'              => false,
-											'variations'           => true,
-											'show_variations_only' => true,
-										) );
+										echo EDD()->html->product_dropdown(
+											array(
+												'name'                 => '_edd_bundled_products[]',
+												'id'                   => 'edd_bundled_products_' . esc_attr( $index ),
+												'selected'             => $product,
+												'multiple'             => false,
+												'chosen'               => true,
+												'bundles'              => false,
+												'variations'           => true,
+												'show_variations_only' => true,
+												'class'                => 'edd-form-group__input',
+											)
+										);
 										?>
 										</div>
 									</div>
