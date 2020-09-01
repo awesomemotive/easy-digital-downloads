@@ -51,30 +51,30 @@ a.edd-delete:hover {
 }
 
 .edd-from-to-wrapper input {
-	width: 100px;
+	width: 105px;
 	margin: 0;
 	position: relative;
 	z-index: 1;
 }
 
-.edd-from-to-wrapper input:focus {
-	z-index: 2;
-	outline: auto 5px -webkit-focus-ring-color;
-	border-color: #eee;
-	box-shadow: none;
-}
-
 .edd-from-to-wrapper input[name="start"],
 .edd-from-to-wrapper input[name="start-date"],
 .edd-from-to-wrapper input[name="filter_from"] {
-	border-right-color: #eee;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
 }
 
 .edd-from-to-wrapper input[name="end"],
 .edd-from-to-wrapper input[name="end-date"],
 .edd-from-to-wrapper input[name="filter_to"] {
-	border-left-color: #eee;
 	margin-left: -1px;
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+.edd-from-to-wrapper input:focus {
+	z-index: 2;
+	position: relative;
 }
 
 .edd-settings-sub-nav {
@@ -230,6 +230,11 @@ a.edd-delete:hover {
 	z-index: 9999 !important;
 }
 
+@media screen and (max-width: 782px) {
+	#edd-filters .filter-items {
+		margin: 6px 6px 6px 0;
+	}
+}
 /* =Payment Icon Styling
 -------------------------------------------------------------- */
 
@@ -1231,7 +1236,6 @@ textarea[name="edd-note"] {
 #edd-filters .filter-items > span:not(.edd-date-range-options) {
 	display: inline-block;
 	margin-right: 6px;
-	max-width: 200px;
 }
 
 #edd-filters .filter-items > #edd-date-filters {
@@ -1249,8 +1253,7 @@ textarea[name="edd-note"] {
 
 #edd-filters input[type="text"].edd_datepicker,
 #edd-filters input[type="number"] {
-	max-width: 100px;
-	padding: 5px;
+	max-width: 105px;
 }
 
 #edd-filters input[type="number"],
@@ -2440,25 +2443,21 @@ body.download_page_edd-reports {
 .download_page_edd-reports #edd-item-wrapper {
 	margin: 0;
 }
+
 #edd-dashboard-widgets-wrap .postbox h2,
 #edd-dashboard-widgets-wrap .postbox h3 {
 	cursor: default;
 }
+
 #edd-filters .filter-items .edd-date-range-options {
 	display: inline-block;
 	margin: 10px 4px 10px 0;
-	width: 200px;
 }
 
 .edd-date-range-options .edd_datepicker {
-	width: 100px;
+	width: 105px;
 }
 
-.edd-date-range-options span span {
-	float: left;
-	line-height: 29px;
-	height: 29px;
-}
 .edd-report-wrap {
 	clear: both;
 }
@@ -3478,7 +3477,6 @@ body.download_page_edd-reports {
 	}
 
 	#edd-filters span {
-		display: block;
 		margin: 2px 0;
 	}
 
