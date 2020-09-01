@@ -26,7 +26,7 @@ function edd_customers_page_primary_nav( $active_tab = '' ) {
 
 	ob_start();?>
 
-	<h2 class="nav-tab-wrapper edd-nav-tab-wrapper">
+	<nav class="nav-tab-wrapper edd-nav-tab-wrapper" aria-label="<?php esc_attr_e( 'Secondary menu', 'easy-digital-downloads' ); ?>">
 		<?php
 
 		// Get the pages
@@ -54,7 +54,7 @@ function edd_customers_page_primary_nav( $active_tab = '' ) {
 		}
 		?>
 		<!--<a href="<?php echo esc_url( $add_new_url ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'easy-digital-downloads' ); ?></a>-->
-	</h2>
+	</nav>
 
 	<?php
 
@@ -737,7 +737,12 @@ function edd_customers_view( $customer = null ) {
 								: '&mdash;';
 							?>
 						</td>
-						<td><time datetime="<?php echo esc_attr( EDD()->utils->date( $address->date_created, null, true )->toDateTimeString() ); ?>"><?php echo edd_date_i18n( EDD()->utils->date( $address->date_created, null, true )->toDateTimeString(), 'M. d, Y' ) . '<br>' . edd_date_i18n( strtotime( $address->date_created ), 'H:i' ) . ' ' . edd_get_timezone_abbr(); ?></time></td>
+						<td>
+							<time datetime="<?php echo esc_attr( EDD()->utils->date( $address->date_created, null, true )->toDateTimeString() ); ?>"><?php echo edd_date_i18n( EDD()->utils->date( $address->date_created, null, true )->toDateTimeString(), 'M. d, Y' ) . ' ' . edd_date_i18n( strtotime( $address->date_created ), 'H:i' ) . ' ' . edd_get_timezone_abbr(); ?></time>
+							<?php if ( ! empty( $address->is_primary ) ) : ?>
+								<span class="edd-chip"><?php esc_html_e( 'Primary', 'easy-digital-downloads' ); ?></span>
+							<?php endif; ?>
+						</td>
 					</tr>
 
 				<?php endforeach; ?>

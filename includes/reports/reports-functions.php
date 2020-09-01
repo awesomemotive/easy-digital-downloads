@@ -1278,65 +1278,6 @@ function filter_items( $report = false ) {
 }
 add_action( 'edd_admin_filter_bar_reports', 'EDD\Reports\filter_items' );
 
-/**
- * Get the order status array keys that can be used to run reporting related to gross reporting.
- *
- * @since 3.0
- *
- * @return array An array of order status array keys that can be related to gross reporting.
- */
-function edd_gross_order_statuses() {
-	$statuses = array(
-		'completed',
-		'refunded',
-		'partially_refunded',
-		'revoked',
-	);
-
-	/**
-	 * Statuses that affect gross order statistics.
-	 *
-	 * This filter allows extensions and developers to alter the statuses that can affect the reporting of gross
-	 * sales statistics.
-	 *
-	 * @since 3.0
-	 *
-	 * @param array $statuses {
-	 *     An array of order status array keys.
-	 *
-	 */
-	return apply_filters( 'edd_gross_order_statuses', $statuses );
-}
-
-/**
- * Get the order status array keys that can be used to run reporting related to net reporting.
- *
- * @since 3.0
- *
- * @return array An array of order status array keys that can be related to net reporting.
- */
-function edd_net_order_statuses() {
-	$statuses = array(
-		'completed',
-		'partially_refunded',
-		'revoked',
-	);
-
-	/**
-	 * Statuses that affect net order statistics.
-	 *
-	 * This filter allows extensions and developers to alter the statuses that can affect the reporting of net
-	 * sales statistics.
-	 *
-	 * @since 3.0
-	 *
-	 * @param array $statuses {
-	 *     An array of order status array keys.
-	 *
-	 */
-	return apply_filters( 'edd_net_order_statuses', $statuses );
-}
-
 /** Compat ********************************************************************/
 
 /**

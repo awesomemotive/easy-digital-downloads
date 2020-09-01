@@ -2266,7 +2266,7 @@ class EDD_Payment {
 
 					$user_info = wp_parse_args( $user_info, $defaults );
 
-					if ( null !== $this->order ) {
+					if ( null !== $this->order && $this->order->get_address()->id ) {
 						$order_address = $this->order->get_address();
 
 						edd_update_order_address( $order_address->id, array(

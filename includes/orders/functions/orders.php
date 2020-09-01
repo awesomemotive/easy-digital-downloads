@@ -786,6 +786,26 @@ function edd_build_order( $order_data = array() ) {
 	$decimal_filter = edd_currency_decimal_filter();
 
 	if ( is_array( $order_data['cart_details'] ) && ! empty( $order_data['cart_details'] ) ) {
+
+		$tax_rate = false;
+		// If taxes are enabled, get the tax rate for the order location.
+		if ( edd_use_taxes() ) {
+			$country = ! empty( $order_data['user_info']['address']['country'] )
+				? $order_data['user_info']['address']['country']
+				: false;
+
+			$region = ! empty( $order_data['user_info']['address']['state'] )
+				? $order_data['user_info']['address']['state']
+				: false;
+
+			$tax_rate = edd_get_tax_rate_by_location(
+				array(
+					'country' => $country,
+					'region'  => $region,
+				)
+			);
+		}
+
 		foreach ( $order_data['cart_details'] as $key => $item ) {
 
 			// First, we need to check that what is being added is a valid download.
@@ -929,6 +949,9 @@ function edd_build_order( $order_data = array() ) {
 			// Store order item fees as adjustments.
 			if ( isset( $item['fees'] ) && ! empty( $item['fees'] ) ) {
 				foreach ( $item['fees'] as $fee_id => $fee ) {
+					$tax = ( isset( $fee['no_tax'] ) && false === $fee['no_tax'] && ! empty( $tax_rate->amount ) ) || ( $fee['amount'] < 0 && ! empty( $tax_rate->amount ) )
+						? floatval( floatval( $fee['amount'] ) - ( floatval( $fee['amount'] ) / ( 1 + $tax_rate->amount ) ) )
+						: 0.00;
 
 					$adjustment_data = array(
 						'object_id'   => $order_item_id,
@@ -936,12 +959,9 @@ function edd_build_order( $order_data = array() ) {
 						'type'        => 'fee',
 						'description' => $fee['label'],
 						'subtotal'    => $fee['amount'],
+						'tax'         => $tax,
 						'total'       => $fee['amount'],
 					);
-
-					if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
-						$adjustment_data['tax'] = 0.00;
-					}
 
 					// Add the adjustment.
 					$adjustment_id = edd_add_order_adjustment( $adjustment_data );
@@ -951,33 +971,22 @@ function edd_build_order( $order_data = array() ) {
 			}
 
 			// Maybe store order tax.
-			if ( edd_use_taxes() ) {
-				$country = ! empty( $order_data['user_info']['address']['country'] )
-					? $order_data['user_info']['address']['country']
-					: false;
-
-				$state = ! empty( $order_data['user_info']['address']['state'] )
-					? $order_data['user_info']['address']['state']
-					: false;
-
-				$zip = ! empty( $order_data['user_info']['address']['zip'] )
-					? $order_data['user_info']['address']['zip']
-					: false;
-
-				$tax_rate = isset( $item['tax_rate'] )
-					? floatval( $item['tax_rate'] )
-					: edd_get_cart_tax_rate( $country, $state, $zip );
-
-				if ( 0 < $tax_rate ) {
-
-					// Always store tax rate, even if empty.
-					edd_add_order_adjustment( array(
+			if ( $tax_rate ) {
+				$description = $tax_rate->name;
+				if ( ! empty( $tax_rate->description ) ) {
+					$description = $tax_rate->description;
+				}
+				// Always store tax rate, even if empty.
+				edd_add_order_adjustment(
+					array(
 						'object_id'   => $order_item_id,
 						'object_type' => 'order_item',
 						'type'        => 'tax_rate',
-						'total'       => $tax_rate,
-					) );
-				}
+						'total'       => $tax_rate->amount,
+						'type_id'     => $tax_rate->id,
+						'description' => $description,
+					)
+				);
 			}
 
 			$subtotal       += (float) $order_item_args['subtotal'];
@@ -1272,6 +1281,65 @@ function edd_clone_order( $order_id = 0, $clone_relationships = false, $args = a
 	}
 
 	return $new_order_id;
+}
+
+/**
+ * Get the order status array keys that can be used to run reporting related to gross reporting.
+ *
+ * @since 3.0
+ *
+ * @return array An array of order status array keys that can be related to gross reporting.
+ */
+function edd_get_gross_order_statuses() {
+	$statuses = array(
+		'complete',
+		'refunded',
+		'partially_refunded',
+		'revoked',
+	);
+
+	/**
+	 * Statuses that affect gross order statistics.
+	 *
+	 * This filter allows extensions and developers to alter the statuses that can affect the reporting of gross
+	 * sales statistics.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $statuses {
+	 *     An array of order status array keys.
+	 *
+	 */
+	return apply_filters( 'edd_gross_order_statuses', $statuses );
+}
+
+/**
+ * Get the order status array keys that can be used to run reporting related to net reporting.
+ *
+ * @since 3.0
+ *
+ * @return array An array of order status array keys that can be related to net reporting.
+ */
+function edd_get_net_order_statuses() {
+	$statuses = array(
+		'complete',
+		'partially_refunded',
+		'revoked',
+	);
+
+	/**
+	 * Statuses that affect net order statistics.
+	 *
+	 * This filter allows extensions and developers to alter the statuses that can affect the reporting of net
+	 * sales statistics.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $statuses {
+	 *     An array of order status array keys.
+	 *
+	 */
+	return apply_filters( 'edd_net_order_statuses', $statuses );
 }
 
 /**

@@ -792,23 +792,23 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 
 	public function test_gross_order_status() {
 		$expected = array(
-			'completed',
+			'complete',
 			'refunded',
 			'partially_refunded',
 			'revoked',
 		);
 
-		$this->assertSame( $expected, edd_gross_order_statuses() );
+		$this->assertSame( $expected, edd_get_gross_order_statuses() );
 	}
 
 	public function test_net_order_status() {
 		$expected = array(
-			'completed',
+			'complete',
 			'partially_refunded',
 			'revoked',
 		);
 
-		$this->assertSame( $expected, edd_net_order_statuses() );
+		$this->assertSame( $expected, edd_get_net_order_statuses() );
 	}
 
 	/**

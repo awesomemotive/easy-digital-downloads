@@ -345,7 +345,7 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 			if ( intval( $previous_user_id ) !== intval( $this->user_id ) ) {
 
 				// Update some payment meta if we need to
-				$order_ids = edd_get_orders( array( 'customer_id' => $this->id, 'number' => 9999 ) );
+				$order_ids = edd_get_orders( array( 'customer_id' => $this->id, 'number' => 9999999 ) );
 
 				foreach ( $order_ids as $order_id ) {
 					edd_update_order( $order_id, array( 'user_id' => $this->user_id ) );

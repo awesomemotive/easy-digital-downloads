@@ -658,10 +658,6 @@ function edd_orders_list_table_process_bulk_actions() {
 			case 'resend-receipt':
 				edd_email_purchase_receipt( $id, false );
 				break;
-
-			case 'delete':
-				edd_destroy_order( $id );
-				break;
 		}
 
 		do_action( 'edd_payments_table_do_bulk_action', $id, $action );

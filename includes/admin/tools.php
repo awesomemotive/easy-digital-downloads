@@ -35,38 +35,45 @@ function edd_tools_page() {
 	}
 ?>
 
-    <div class="wrap">
-        <h1><?php _e( 'Tools', 'easy-digital-downloads' ); ?></h1>
+	<div class="wrap">
+		<h1><?php esc_html_e( 'Tools', 'easy-digital-downloads' ); ?></h1>
 		<hr class="wp-header-end">
 
-        <h2 class="nav-tab-wrapper edd-nav-tab-wrapper"><?php
+		<nav class="nav-tab-wrapper edd-nav-tab-wrapper" aria-label="<?php esc_attr_e( 'Secondary menu', 'easy-digital-downloads' ); ?>">
+		<?php
 
-			foreach ( $tabs as $tab_id => $tab_name ) {
+		foreach ( $tabs as $tab_id => $tab_name ) {
 
-				$tab_url = edd_get_admin_url( array(
+			$tab_url = edd_get_admin_url(
+				array(
 					'page' => 'edd-tools',
-					'tab'  => $tab_id
-				) );
+					'tab'  => $tab_id,
+				)
+			);
 
-				$tab_url = remove_query_arg( array(
+			$tab_url = remove_query_arg(
+				array(
 					'edd-message',
-				), $tab_url );
+				),
+				$tab_url
+			);
 
-				$active = ( $active_tab === $tab_id )
-					? ' nav-tab-active'
-					: '';
+			$active = ( $active_tab === $tab_id )
+				? ' nav-tab-active'
+				: '';
 
-				echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . esc_attr( $active ) . '">' . esc_html( $tab_name ) . '</a>';
-			}
+			echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . esc_attr( $active ) . '">' . esc_html( $tab_name ) . '</a>';
+		}
 
-		?></h2>
+		?>
+		</nav>
 
-        <div class="metabox-holder">
+		<div class="metabox-holder">
 			<?php
 			do_action( 'edd_tools_tab_' . $active_tab );
 			?>
-        </div><!-- .metabox-holder -->
-    </div><!-- .wrap -->
+		</div><!-- .metabox-holder -->
+	</div><!-- .wrap -->
 
 	<?php
 }
