@@ -1216,7 +1216,7 @@ function edd_render_disable_button( $post_id ) {
 		<?php if ( ! empty( $supports_buy_now ) ) { ?>
 		<p>
 			<label for="edd_button_behavior" class="label--block">
-			<?php esc_html_e( 'Purchase button behavior', 'easy-digital-downloads' ); ?>
+				<?php esc_html_e( 'Purchase button behavior', 'easy-digital-downloads' ); ?>
 			</label>
 				<?php
 				$args = array(
