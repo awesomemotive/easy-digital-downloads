@@ -1072,18 +1072,23 @@ function edd_render_down_tax_options( $post_id = 0 ) {
 
 	$exclusive = edd_download_is_tax_exclusive( $post_id ); ?>
 
-	<div class="edd-product-options-wrapper">
+	<div class="edd-form-group edd-product-options-wrapper">
 		<div class="edd-product-options__title"><?php esc_html_e( 'Taxability', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Taxability</strong>: When taxes are enabled, all products are taxable by default. Check this box to mark this product as non-taxable.', 'easy-digital-downloads' ); ?>"></span></div>
-		<label>
-			<?php echo EDD()->html->checkbox( array(
-				'name'    => '_edd_download_tax_exclusive',
-				'current' => $exclusive
-			) ); ?>
-			<?php _e( 'This product is non-taxable', 'easy-digital-downloads' ); ?>
-		</label>
+		<div class="edd-form-group__control">
+			<?php echo EDD()->html->checkbox(
+				array(
+					'name'    => '_edd_download_tax_exclusive',
+					'id'      => '_edd_download_tax_exclusive',
+					'current' => $exclusive,
+					'class'   => 'edd-form-group__input',
+				)
+			); ?>
+			<label for="_edd_download_tax_exclusive" class="edd-form-group__label">
+				<?php esc_html_e( 'This product is non-taxable', 'easy-digital-downloads' ); ?>
+			</label>
+		</div>
 	</div>
-
-<?php
+	<?php
 }
 add_action( 'edd_meta_box_settings_fields', 'edd_render_down_tax_options', 30 );
 
