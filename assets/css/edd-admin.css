@@ -1333,20 +1333,13 @@ textarea[name="edd-note"] {
 	margin: 9px 20px -9px 2px;
 }
 
-.edd-tab-wrap {
-	margin: .10px 20px -12px 2px;
+.no-js.edit-tags-php.post-type-download .wp-heading-inline {
+	position: absolute;
+	top: 0;
 }
 
-.edit-tags-php.post-type-download .wrap > .wp-heading-inline,
-.edit-php.post-type-download .wrap .wp-heading-inline,
-.download_page_edd-payment-history .wrap .wp-heading-inline,
-.download_page_edd-customers .wrap .wp-heading-inline,
-.download_page_edd-discounts .wrap .wp-heading-inline,
-.edit-tags-php.post-type-download .wrap > .subtitle,
-.edit-php.post-type-download .wrap > .subtitle,
-.edit-php.post-type-download .wrap > .page-title-action,
-.download_page_edd-addons .wrap > .page-title-action {
-	display: none;
+.no-js.edit-tags-php.post-type-download .nav-tab-wrapper {
+	margin-top: 50px;
 }
 
 .edit-tags-php.post-type-download .wrap .nav-tab-wrapper .page-title-action,

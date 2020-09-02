@@ -22,8 +22,6 @@ defined( 'ABSPATH' ) || exit;
  */
 function edd_orders_page_primary_nav( $active_tab = '' ) {
 
-	$add_new_url = add_query_arg( array( 'view' => 'add-order' ), edd_get_admin_url( array( 'page' => 'edd-payment-history' ) ) );
-
 	ob_start();?>
 
 	<nav class="nav-tab-wrapper edd-nav-tab-wrapper" aria-label="<?php esc_attr_e( 'Secondary menu', 'easy-digital-downloads' ); ?>">
@@ -53,7 +51,6 @@ function edd_orders_page_primary_nav( $active_tab = '' ) {
 			echo '</a>';
 		}
 		?>
-		<a href="<?php echo esc_url( $add_new_url ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'easy-digital-downloads' ); ?></a>
 	</nav>
 
 	<?php
@@ -160,6 +157,16 @@ function edd_order_list_table_content() {
 
 	<div class="wrap">
 		<h1 class="wp-heading-inline"><?php esc_html_e( 'Orders', 'easy-digital-downloads' ); ?></h1>
+		<?php
+		if ( 'sale' === $active_tab ) {
+			$add_new_url = add_query_arg( array( 'view' => 'add-order' ), edd_get_admin_url( array( 'page' => 'edd-payment-history' ) ) );
+			printf(
+				'<a href="%s" class="page-title-action">%s</a>',
+				esc_url( $add_new_url ),
+				esc_html__( 'Add New', 'easy-digital-downloads' )
+			);
+		}
+		?>
 		<hr class="wp-header-end">
 
 		<?php edd_orders_page_primary_nav( $active_tab ); ?>
