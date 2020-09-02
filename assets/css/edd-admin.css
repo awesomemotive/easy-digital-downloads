@@ -4037,6 +4037,11 @@ body.download_page_edd-reports {
 	margin-top: 0;
 }
 
+.edd-form-group__input[type="checkbox"] + label,
+.edd-form-group__input[type="radio"] + label {
+	display: unset;
+}
+
 select.edd-form-group__input {
 	max-width: 100%;
 }

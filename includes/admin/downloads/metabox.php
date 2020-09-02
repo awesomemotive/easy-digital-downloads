@@ -1206,17 +1206,25 @@ function edd_render_disable_button( $post_id ) {
 	$no_buy_now_support_tooltip = __( '<strong>Purchase button behavior</strong>: Add to Cart buttons follow a traditional eCommerce flow. Buy Now buttons are only available for stores that have a single supported gateway active and that do not use taxes.', 'easy-digital-downloads' );
 	?>
 
-	<div class="edd-product-options-wrapper">
-		<div class="edd-product-options__title"><?php _e( 'Button Options', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Hide purchase button</strong>: By default, the purchase buttons will be displayed at the bottom of the download, when disabled you will need to use the Purchase link shortcode below to output the ability to buy the product where you prefer.', 'easy-digital-downloads' ); echo '<br><br>'; echo ! empty( $supports_buy_now ) ? $buy_now_support_tooltip : $no_buy_now_support_tooltip; ?>"></span></div>
-			<label>
-				<?php echo EDD()->html->checkbox( array(
+	<div class="edd-form-group edd-product-options-wrapper">
+		<div class="edd-product-options__title"><?php esc_html_e( 'Button Options', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Hide purchase button</strong>: By default, the purchase buttons will be displayed at the bottom of the download, when disabled you will need to use the Purchase link shortcode below to output the ability to buy the product where you prefer.', 'easy-digital-downloads' ); echo '<br><br>'; echo ! empty( $supports_buy_now ) ? $buy_now_support_tooltip : $no_buy_now_support_tooltip; ?>"></span></div>
+		<div class="edd-form-group__control">
+			<?php echo EDD()->html->checkbox(
+				array(
 					'name'    => '_edd_hide_purchase_link',
-					'current' => $hide_button
-				) ); ?>
+					'id'      => '_edd_hide_purchase_link',
+					'current' => $hide_button,
+					'class'   => 'edd-form-group__input',
+				)
+			);
+			?>
+			<label class="edd-form-group__label" for="_edd_hide_purchase_link">
 				<?php esc_html_e( 'Hide purchase button', 'easy-digital-downloads' ); ?>
 			</label>
+		</div>
 		<?php if ( ! empty( $supports_buy_now ) ) { ?>
-			<label for="edd_button_behavior" class="label--block">
+			<div class="edd-form-group__control">
+			<label for="edd_button_behavior" class="edd-form-group__label">
 				<?php esc_html_e( 'Purchase button behavior', 'easy-digital-downloads' ); ?>
 			</label>
 				<?php
@@ -1230,9 +1238,14 @@ function edd_render_disable_button( $post_id ) {
 					),
 					'show_option_all'  => null,
 					'show_option_none' => null,
+					'class'            => 'edd-form-group__input',
 				);
 				echo EDD()->html->select( $args );
-		} ?>
+				?>
+			</div>;
+			<?php
+		}
+		?>
 	</div>
 
 <?php
