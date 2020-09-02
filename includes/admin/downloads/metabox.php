@@ -1251,7 +1251,7 @@ function edd_render_disable_button( $post_id ) {
 				);
 				echo EDD()->html->select( $args );
 				?>
-			</div>;
+			</div>
 			<?php
 		}
 		?>
