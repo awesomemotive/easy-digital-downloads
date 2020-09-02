@@ -1258,11 +1258,15 @@ function edd_render_product_notes_meta_box() {
  */
 function edd_render_product_notes_field( $post_id ) {
 	$product_notes = edd_get_product_notes( $post_id );
-?>
-	<label for="edd_product_notes_field" class="screen-reader-text"><?php esc_html_e( 'Download Instructions', 'easy-digital-downloads' ); ?></label>
-	<textarea rows="1" cols="40" class="large-textarea" name="edd_product_notes" id="edd_product_notes_field"><?php echo esc_textarea( $product_notes ); ?></textarea>
-	<p><?php printf( __( 'Special instructions for this %s. These will be added to the purchase receipt, and may be used by some extensions or themes.', 'easy-digital-downloads' ), strtolower( edd_get_label_singular() ) ); ?></p>
-<?php
+	?>
+	<div class="edd-form-group">
+		<div class="edd-form-group__control">
+			<label for="edd_product_notes_field" class="edd-form-group__label screen-reader-text"><?php esc_html_e( 'Download Instructions', 'easy-digital-downloads' ); ?></label>
+			<textarea rows="1" cols="40" class="edd-form-group__input large-textarea" name="edd_product_notes" id="edd_product_notes_field"><?php echo esc_textarea( $product_notes ); ?></textarea>
+		</div>
+		<p><?php printf( esc_html__( 'Special instructions for this %s. These will be added to the purchase receipt, and may be used by some extensions or themes.', 'easy-digital-downloads' ), edd_get_label_singular() ); ?></p>
+	</div>
+	<?php
 }
 add_action( 'edd_product_notes_meta_box_fields', 'edd_render_product_notes_field' );
 
