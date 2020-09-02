@@ -962,17 +962,16 @@ function edd_render_refund_row( $post_id ) {
 	$global_window     = edd_get_option( 'refund_window', 30 );
 	$edd_refund_window = edd_get_download_refund_window( $post_id ); ?>
 
-	<div class="edd-product-options-wrapper">
+	<div class="edd-form-group edd-product-options-wrapper">
 		<div class="edd-product-options__title">
 				<?php esc_html_e( 'Refunds', 'easy-digital-downloads' ); ?>
 				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo wp_kses( __( '<strong>Refundable</strong>: Allow or disallow refunds for this specific product. When allowed, the refund window will be used on all future purchases.<br /><strong>Refund Window</strong>: Limit the number of days this product can be refunded after purchasing.', 'easy-digital-downloads' ), array( 'strong' => true, 'br' => true ) ); ?>"></span>
 		</div>
 
-		<div class="edd-form-group">
+		<div class="edd-form-group__control">
 			<label for="edd_refundability" class="edd-form-group__label">
 				<?php esc_html_e( 'Refund Status', 'easy-digital-downloads' ); ?>
 			</label>
-			<div class="edd-form-group__control">
 			<?php echo EDD()->html->select( array(
 				'name'             => '_edd_refundability',
 				'id'               => 'edd_refundability',
@@ -993,21 +992,18 @@ function edd_render_refund_row( $post_id ) {
 				'show_option_all'  => '',
 				'show_option_none' => false,
 			) ); ?>
-			</div>
 		</div>
 
-		<div class="edd-form-group">
+		<div class="edd-form-group__control">
 			<label for="_edd_refund_window" class="edd-form-group__label">
 				<?php esc_html_e( 'Refund Window', 'easy-digital-downloads' ); ?>
 			</label>
-			<div class="edd-form-group__control">
-				<input class="small-text" id="_edd_refund_window" name="_edd_refund_window" type="number" min="0" max="3650" step="1" value="<?php echo esc_attr( $edd_refund_window ); ?>" placeholder="<?php echo absint( $global_window ); ?>" />
-				<?php echo esc_html( _x( 'Days', 'refund window interval', 'easy-digital-downloads' ) ); ?>
-			</div>
-			<p class="description">
-				<?php _e( 'Leave blank to use global setting. Enter <code>0</code> for unlimited', 'easy-digital-downloads' ); ?>
-			</p>
+			<input class="small-text" id="_edd_refund_window" name="_edd_refund_window" type="number" min="0" max="3650" step="1" value="<?php echo esc_attr( $edd_refund_window ); ?>" placeholder="<?php echo absint( $global_window ); ?>" />
+			<?php echo esc_html( _x( 'Days', 'refund window interval', 'easy-digital-downloads' ) ); ?>
 		</div>
+		<p class="edd-form-group__help description">
+			<?php _e( 'Leave blank to use global setting. Enter <code>0</code> for unlimited', 'easy-digital-downloads' ); ?>
+		</p>
 	</div>
 <?php
 }
