@@ -1027,12 +1027,14 @@ function edd_render_download_limit_row( $post_id ) {
 	$edd_download_limit = edd_get_file_download_limit( $post_id );
 	$display = 'bundle' == edd_get_download_type( $post_id ) ? ' style="display: none;"' : '';
 ?>
-	<div class="edd-product-settings-wrapper" id="edd_download_limit_wrap"<?php echo $display; ?>>
-		<label class="edd-product-options__title" for="edd_download_limit">
-			<?php esc_html_e( 'File Download Limit', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>File Download Limit</strong>: Limit the number of times a customer who purchased this product can access their download links.', 'easy-digital-downloads' ); ?>"></span>
-		</label>
-		<input class="edd-form-group__input small-text" name="_edd_download_limit" id="edd_download_limit" type="number" min="0" max="5000" step="1" value="<?php echo esc_attr ( $edd_download_limit ); ?>" />
-		<p class="description">
+	<div class="edd-form-group edd-product-options-wrapper" id="edd_download_limit_wrap"<?php echo $display; ?>>
+		<div class="edd-form-group__control">
+			<label class="edd-form-group__label edd-product-options__title" for="edd_download_limit">
+				<?php esc_html_e( 'File Download Limit', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>File Download Limit</strong>: Limit the number of times a customer who purchased this product can access their download links.', 'easy-digital-downloads' ); ?>"></span>
+			</label>
+			<input class="edd-form-group__input small-text" name="_edd_download_limit" id="edd_download_limit" type="number" min="0" max="5000" step="1" value="<?php echo esc_attr ( $edd_download_limit ); ?>" />
+		</div>
+		<p class="edd-form-group__help description">
 			<?php _e( 'Leave blank to use global setting. Enter <code>0</code> for unlimited', 'easy-digital-downloads' ); ?>
 		</p>
 	</div>
