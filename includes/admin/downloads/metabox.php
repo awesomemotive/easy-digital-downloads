@@ -1150,13 +1150,15 @@ function edd_render_meta_box_shortcode() {
 	$color         = ( $color == 'inherit' ) ? '' : $color;
 	$shortcode     = '[purchase_link id="' . absint( get_the_ID() ) . '" text="' . esc_html( $purchase_text ) . '" style="' . $style . '" color="' . esc_attr( $color ) . '"]'; ?>
 
-	<div class="edd-product-options-wrapper">
-		<label class="edd-product-options__title" for="edd-purchase-shortcode">
-			<?php esc_html_e( 'Purchase Shortcode', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Purchase Shortcode</strong>: Use this shortcode to output a purchase link for this product in the location of your choosing.', 'easy-digital-downloads' ); ?>"></span>
-		</label>
-		<input type="text" id="edd-purchase-shortcode" readonly="readonly" value="<?php echo htmlentities( $shortcode ); ?>">
+	<div class="edd-form-group edd-product-options-wrapper">
+		<div class="edd-form-group__control">
+			<label class="edd-form-group__label edd-product-options__title" for="edd-purchase-shortcode">
+				<?php esc_html_e( 'Purchase Shortcode', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Purchase Shortcode</strong>: Use this shortcode to output a purchase link for this product in the location of your choosing.', 'easy-digital-downloads' ); ?>"></span>
+			</label>
+			<input type="text" id="edd-purchase-shortcode" class="edd-form-group__input" readonly value="<?php echo htmlentities( $shortcode ); ?>">
+		</div>
 	</div>
-<?php
+	<?php
 }
 add_action( 'edd_meta_box_settings_fields', 'edd_render_meta_box_shortcode', 35 );
 
