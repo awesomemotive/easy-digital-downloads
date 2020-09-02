@@ -718,7 +718,7 @@ function edd_render_products_field( $post_id ) {
 										echo EDD()->html->select( array(
 											'name'             => '_edd_bundled_products_conditions[1]',
 											'id'               => 'edd_bundled_products_conditions_1',
-											'class'            => 'edd_repeatable_condition_field',
+											'class'            => 'edd-form-group__input edd_repeatable_condition_field',
 											'options'          => $options,
 											'show_option_none' => false,
 											'selected'         => null,
@@ -859,7 +859,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 				'id'          => 'edd_download_files-' . $key . '-name',
 				'value'       => $args['name'],
 				'placeholder' => __( 'My Neat File', 'easy-digital-downloads' ),
-				'class'       => 'edd_repeatable_name_field large-text',
+				'class'       => 'edd-form-group__input edd_repeatable_name_field large-text',
 			) ); ?>
 			</div>
 		</div>
@@ -872,7 +872,7 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 					'id'          => 'edd_download_files-' . $key . '-file',
 					'value'       => $args['file'],
 					'placeholder' => __( 'Enter, upload, choose from Media Library', 'easy-digital-downloads' ),
-					'class'       => 'edd_repeatable_upload_field edd_upload_field large-text',
+					'class'       => 'edd-form-group__input edd_repeatable_upload_field edd_upload_field large-text',
 				) ); ?>
 
 				<span class="edd_upload_file">
@@ -900,10 +900,10 @@ function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
 				echo EDD()->html->select( array(
 					'name'             => 'edd_download_files[' . $key . '][condition]',
 					'id'               => 'edd_download_files-' . $key . '-condition',
-					'class'            => 'edd_repeatable_condition_field',
+					'class'            => 'edd-form-group__input edd_repeatable_condition_field',
 					'options'          => $options,
 					'selected'         => $args['condition'],
-					'show_option_none' => false
+					'show_option_none' => false,
 				) );
 			?>
 			</div>
@@ -976,6 +976,7 @@ function edd_render_refund_row( $post_id ) {
 			<?php echo EDD()->html->select( array(
 				'name'             => '_edd_refundability',
 				'id'               => 'edd_refundability',
+				'class'            => 'edd-form-group__input',
 				'options'          => array_merge(
 					// Manually define a "none" option to set a blank value, vs. -1.
 					array(
@@ -1034,7 +1035,7 @@ function edd_render_download_limit_row( $post_id ) {
 		<label class="edd-product-options__title" for="edd_download_limit">
 			<?php esc_html_e( 'File Download Limit', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>File Download Limit</strong>: Limit the number of times a customer who purchased this product can access their download links.', 'easy-digital-downloads' ); ?>"></span>
 		</label>
-		<input class="small-text" name="_edd_download_limit" id="edd_download_limit" type="number" min="0" max="5000" step="1" value="<?php echo esc_attr ( $edd_download_limit ); ?>" />
+		<input class="edd-form-group__input small-text" name="_edd_download_limit" id="edd_download_limit" type="number" min="0" max="5000" step="1" value="<?php echo esc_attr ( $edd_download_limit ); ?>" />
 		<p class="description">
 			<?php _e( 'Leave blank to use global setting. Enter <code>0</code> for unlimited', 'easy-digital-downloads' ); ?>
 		</p>
@@ -1113,6 +1114,7 @@ function edd_render_download_quantity_option( $post_id = 0 ) {
 				array(
 					'name'    => '_edd_quantities_disabled',
 					'current' => $disabled,
+					'class'   => 'edd-form-group__input',
 				)
 			);
 			?>
