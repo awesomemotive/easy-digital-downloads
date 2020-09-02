@@ -1169,16 +1169,22 @@ function edd_render_accounting_options( $post_id ) {
 
 	$edd_sku = get_post_meta( $post_id, 'edd_sku', true ); ?>
 
-	<div class="edd-product-options-wrapper">
-		<div class="edd-product-options__title"><?php _e( 'Accounting Options', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>SKU</strong>: If a SKU is entered for this product, it will be shown on the purchase receipt and exported purchase histories.', 'easy-digital-downloads' ); ?>"></span></div>
-		<label>
-			<?php echo EDD()->html->text( array(
-				'name'  => 'edd_sku',
-				'value' => $edd_sku,
-				'class' => 'small-text'
-			) ); ?>
-			<?php echo sprintf( __( 'Enter an SKU for this %s.', 'easy-digital-downloads' ), strtolower( edd_get_label_singular() ) ); ?>
-		</label>
+	<div class="edd-form-group edd-product-options-wrapper">
+		<div class="edd-product-options__title"><?php esc_html_e( 'Accounting Options', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>SKU</strong>: If an SKU is entered for this product, it will be shown on the purchase receipt and exported purchase histories.', 'easy-digital-downloads' ); ?>"></span></div>
+		<div class="edd-form-group__control">
+			<label class="edd-form-group__label" for="edd_sku">
+				<?php esc_html_e( 'Enter an SKU for this product.', 'easy-digital-downloads' ); ?>
+			</label>
+			<?php echo EDD()->html->text(
+				array(
+					'name'  => 'edd_sku',
+					'id'    => 'edd_sku',
+					'value' => $edd_sku,
+					'class' => 'edd-form-group__input small-text',
+				)
+			);
+			?>
+		</div>
 	</div>
 <?php
 }
