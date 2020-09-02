@@ -998,7 +998,7 @@ function edd_render_refund_row( $post_id ) {
 			<label for="_edd_refund_window" class="edd-form-group__label">
 				<?php esc_html_e( 'Refund Window', 'easy-digital-downloads' ); ?>
 			</label>
-			<input class="small-text" id="_edd_refund_window" name="_edd_refund_window" type="number" min="0" max="3650" step="1" value="<?php echo esc_attr( $edd_refund_window ); ?>" placeholder="<?php echo absint( $global_window ); ?>" />
+			<input class="edd-form-group__input small-text" id="_edd_refund_window" name="_edd_refund_window" type="number" min="0" max="3650" step="1" value="<?php echo esc_attr( $edd_refund_window ); ?>" placeholder="<?php echo absint( $global_window ); ?>" />
 			<?php echo esc_html( _x( 'Days', 'refund window interval', 'easy-digital-downloads' ) ); ?>
 		</div>
 		<p class="edd-form-group__help description">
