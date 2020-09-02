@@ -69,9 +69,7 @@ function edd_taxonomies_tabs() {
 	}
 
 	// Output the tabs
-	?><div class="wrap edd-tab-wrap"><?php
 	edd_display_product_tabs();
-	?></div><?php
 }
 add_action( 'admin_notices', 'edd_taxonomies_tabs', 10, 1 );
 
@@ -175,8 +173,8 @@ function edd_display_product_tabs() {
 	$tabs = array(
 		'products' => array(
 			'name' => edd_get_label_plural(),
-			'url'  => admin_url( 'edit.php?post_type=download' ),
-		)
+			'url'  => edd_get_admin_url(),
+		),
 	);
 
 	// Get taxonomies
@@ -204,9 +202,9 @@ function edd_display_product_tabs() {
 	}
 
 	// Start a buffer
-	ob_start() ?>
+	ob_start();
+	?>
 
-	<div class="clear"></div>
 	<nav class="nav-tab-wrapper wp-clearfix" aria-label="<?php esc_attr_e( 'Secondary menu', 'easy-digital-downloads' ); ?>">
 		<?php
 
@@ -223,9 +221,6 @@ function edd_display_product_tabs() {
 			);
 		} ?>
 
-		<a href="<?php echo esc_url( edd_get_admin_url() ); ?>" class="page-title-action">
-			<?php esc_html_e( 'Add New', 'easy-digital-downloads' ); ?>
-		</a>
 	</nav>
 	<br />
 
