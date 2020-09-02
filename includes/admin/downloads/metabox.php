@@ -1108,19 +1108,23 @@ function edd_render_download_quantity_option( $post_id = 0 ) {
 
 	$disabled = edd_download_quantities_disabled( $post_id ); ?>
 
-	<div class="edd-product-options-wrapper">
+	<div class="edd-form-group edd-product-options-wrapper">
 		<div class="edd-product-options__title"><?php esc_html_e( 'Item Quantities', 'easy-digital-downloads' ); ?><span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php _e( '<strong>Item Quantities</strong>: if disabled, customers will not be provided an option to change the number they wish to purchase.', 'easy-digital-downloads' ); ?>"></span></div>
-		<label>
-			<?php echo EDD()->html->checkbox(
+		<div class="edd-form-group__control">
+			<?php
+			echo EDD()->html->checkbox(
 				array(
 					'name'    => '_edd_quantities_disabled',
+					'id'      => '_edd_quantities_disabled',
 					'current' => $disabled,
 					'class'   => 'edd-form-group__input',
 				)
 			);
 			?>
-			<?php esc_html_e( 'Disable quantity input for this product', 'easy-digital-downloads' ); ?>
-		</label>
+			<label for="_edd_quantities_disabled" class="edd-form-group__label">
+				<?php esc_html_e( 'Disable quantity input for this product', 'easy-digital-downloads' ); ?>
+			</label>
+		</div>
 	</div>
 
 <?php
