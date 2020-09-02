@@ -148,9 +148,12 @@ function edd_log_user_in( $user_id, $user_login, $user_pass, $remember = false )
 				'</a>'
 			)
 		);
-	}
+	} else {
+		// Since wp_signon doesn't set the current user, we need to do this.
+		wp_set_current_user( $user->ID );
 
-	do_action( 'edd_log_user_in', $user_id, $user_login, $user_pass );
+		do_action( 'edd_log_user_in', $user_id, $user_login, $user_pass );
+	}
 
 	return $user;
 

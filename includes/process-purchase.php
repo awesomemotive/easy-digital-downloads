@@ -800,13 +800,15 @@ function edd_register_and_login_new_user( $user_data = array() ) {
 	do_action( 'edd_insert_user', $user_id, $user_data );
 
 	// Login new user.
-	edd_log_user_in( $user_id, $user_data['user_login'], $user_data['user_pass'] );
+	$user = edd_log_user_in( $user_id, $user_data['user_login'], $user_data['user_pass'] );
 
-	// Since wp_signon doesn't set the current user, we need to do this.
-	wp_set_current_user( $user_id );
+	// If we have errors after trying to use wp_signon, return -1.
+	if ( edd_get_errors() ) {
+		return -1;
+	}
 
 	// Return user id.
-	return $user_id;
+	return $user->ID;
 }
 
 /**
