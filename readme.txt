@@ -7,7 +7,7 @@ Tags: ecommerce, sell, checkout, payments, stripe
 Requires at least: 4.4
 Tested up to: 5.5
 Requires PHP: 5.3
-Stable Tag: 2.9.24
+Stable Tag: 2.9.25
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products the simple way. Easily build an online store complete with a cart system, checkout forms, reports, coupons, and more!
@@ -253,6 +253,9 @@ For most stores, we recommend using the Stripe Payment Gateway.
 9. Checkout screen
 
 == Changelog ==
+= 2.9.25, September 3, 2020 =
+* Fix: Using the registration form on checkout with guest checkout disabled, could result in errors when attempting to purchase.
+
 = 2.9.24, August 21, 2020 =
 * Security Fix: Prevent users with 'view_shop_reports' capability from running an arbitrary class execution with the exports tool.
 * Fix: Removing downloads from the view order details screen caused a JavaScript error on WordPress 5.5+.
