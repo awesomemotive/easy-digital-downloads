@@ -2598,18 +2598,21 @@ function display_export_report() {
 
 								?></span><?php
 
-				                echo EDD()->html->product_dropdown( array(
-					                'name'   => 'download_id',
-					                'id'     => 'edd_orders_export_download',
-					                'chosen' => true,
-				                ) );
+								echo EDD()->html->product_dropdown( array(
+									'name'        => 'download_id',
+									'id'          => 'edd_orders_export_download',
+									'chosen'      => true,
+									/* translators: the plural post type label */
+									'placeholder' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
+								) );
 
-				                echo EDD()->html->customer_dropdown( array(
-					                'name'          => 'customer_id',
-					                'id'            => 'edd_order_export_customer',
-					                'chosen'        => true,
-					                'none_selected' => '',
-				                ) );
+								echo EDD()->html->customer_dropdown( array(
+									'name'          => 'customer_id',
+									'id'            => 'edd_order_export_customer',
+									'chosen'        => true,
+									'none_selected' => '',
+									'placeholder'   => __( 'All Customers', 'easy-digital-downloads' ),
+								) );
 
 				                wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 
@@ -2646,12 +2649,12 @@ function display_export_report() {
 								?></span><?php
 
 								echo EDD()->html->select( array(
-									'id'              => 'edd-orders-export-status',
-									'name'            => 'status',
-									'show_option_all' => __( 'All Statuses', 'easy-digital-downloads' ),
-									'selected'        => false,
-									'chosen'          => true,
-									'options'         => edd_get_payment_statuses(),
+									'id'               => 'edd-orders-export-status',
+									'name'             => 'status',
+									'show_option_all'  => __( 'All Statuses', 'easy-digital-downloads' ),
+									'show_option_none' => false,
+									'selected'         => false,
+									'options'          => edd_get_payment_statuses(),
 								) );
 
 								wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
@@ -2688,35 +2691,35 @@ function display_export_report() {
 								?></span><?php
 
 								echo EDD()->html->select( array(
-									'id'              => 'edd-taxed-orders-export-status',
-									'name'            => 'status',
-									'show_option_all' => __( 'All Statuses', 'easy-digital-downloads' ),
-									'selected'        => false,
-									'chosen'          => true,
-									'options'         => edd_get_payment_statuses(),
+									'id'               => 'edd-taxed-orders-export-status',
+									'name'             => 'status',
+									'show_option_all'  => __( 'All Statuses', 'easy-digital-downloads' ),
+									'show_option_none' => false,
+									'selected'         => false,
+									'options'          => edd_get_payment_statuses(),
 								) );
 
-		                        echo EDD()->html->select( array(
-			                        'name'             => 'country',
-			                        'id'               => 'edd_reports_filter_countries',
-			                        'options'          => edd_get_country_list(),
-			                        'chosen'           => true,
-			                        'selected'         => false,
-			                        'show_option_none' => false,
-			                        'placeholder'      => __( 'Choose a Country', 'easy-digital-downloads' ),
-			                        'show_option_all'  => __( 'All Countries', 'easy-digital-downloads' ),
-		                        ) );
+								echo EDD()->html->select( array(
+									'name'             => 'country',
+									'id'               => 'edd_reports_filter_countries',
+									'options'          => edd_get_country_list(),
+									'chosen'           => true,
+									'selected'         => false,
+									'show_option_none' => false,
+									'placeholder'      => __( 'All Countries', 'easy-digital-downloads' ),
+									'show_option_all'  => false,
+								) );
 
-		                        echo EDD()->html->select( array(
-			                        'name'             => 'region',
-			                        'id'               => 'edd_reports_filter_regions',
-			                        'options'          => edd_get_shop_states(),
-			                        'chosen'           => true,
-			                        'selected'         => false,
-			                        'show_option_none' => false,
-			                        'placeholder'      => __( 'Choose a Region', 'easy-digital-downloads' ),
-			                        'show_option_all'  => __( 'All Regions', 'easy-digital-downloads' ),
-		                        ) );
+								echo EDD()->html->select( array(
+									'name'             => 'region',
+									'id'               => 'edd_reports_filter_regions',
+									'options'          => edd_get_shop_states(),
+									'chosen'           => true,
+									'selected'         => false,
+									'show_option_none' => false,
+									'placeholder'      => __( 'All Regions', 'easy-digital-downloads' ),
+									'show_option_all'  => false,
+								) );
 
 		                        wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
 								?>
@@ -2759,20 +2762,20 @@ function display_export_report() {
 					                }
 				                }
 
-				                echo EDD()->html->select( array(
-					                'name'             => 'taxonomy',
-					                'options'          => $taxonomies,
-					                'chosen'           => true,
-					                'selected'         => false,
-					                'show_option_none' => false,
-					                'placeholder'      => __( 'Select a Taxonomy', 'easy-digital-downloads' ),
-					                'show_option_all'  => __( 'All Taxonomies', 'easy-digital-downloads' ),
-				                ) );
+								echo EDD()->html->select( array(
+									'name'             => 'taxonomy',
+									'options'          => $taxonomies,
+									'selected'         => false,
+									'show_option_none' => false,
+									'show_option_all'  => __( 'All Taxonomies', 'easy-digital-downloads' ),
+								) );
 
 				                echo EDD()->html->product_dropdown( array(
-					                'name'   => 'download',
-					                'id'     => 'edd_customer_export_download',
-					                'chosen' => true,
+									'name'        => 'download',
+									'id'          => 'edd_customer_export_download',
+									'chosen'      => true,
+									/* translators: the plural post type label */
+									'placeholder' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
 				                ) );
 
 				                wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
@@ -2820,9 +2823,17 @@ function display_export_report() {
                     <div class="postbox edd-export-downloads">
                         <h3 class="hndle"><span><?php esc_html_e( sprintf( __( 'Export %s','easy-digital-downloads' ), edd_get_label_plural() ) ); ?></span></h3>
                         <div class="inside">
-                            <p><?php esc_html_e( sprintf( __( 'Download a CSV of %1$s. To download a CSV for all %1$s, leave "Choose a %2$s" as it is.', 'easy-digital-downloads' ), edd_get_label_plural( true ), edd_get_label_singular() ) ); ?></p>
+							<p><?php esc_html_e( sprintf( __( 'Download a CSV of %1$s.', 'easy-digital-downloads' ), edd_get_label_plural( true ) ) ); ?></p>
                             <form id="edd-export-file-downloads" class="edd-export-form edd-import-export-form" method="post">
-								<?php echo EDD()->html->product_dropdown( array( 'name' => 'download_id', 'id' => 'edd_download_export_download', 'chosen' => true ) ); ?>
+								<?php echo EDD()->html->product_dropdown(
+									array(
+										'name'        => 'download_id',
+										'id'          => 'edd_download_export_download',
+										'chosen'      => true,
+										/* translators: the plural post type label */
+										'placeholder' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
+									)
+								); ?>
 								<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
                                 <input type="hidden" name="edd-export-class" value="EDD_Batch_Downloads_Export"/>
                                 <input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
@@ -2864,9 +2875,17 @@ function display_export_report() {
                     <div class="postbox edd-export-download-history">
                         <h3 class="hndle"><span><?php esc_html_e('Export File Download Logs','easy-digital-downloads' ); ?></span></h3>
                         <div class="inside">
-                            <p><?php esc_html_e( 'Download a CSV of file downloads. To download a CSV for all file downloads, leave "Choose a Download" as it is.', 'easy-digital-downloads' ); ?></p>
+                            <p><?php esc_html_e( 'Download a CSV of file download logs.', 'easy-digital-downloads' ); ?></p>
                             <form id="edd-export-file-downloads" class="edd-export-form edd-import-export-form" method="post">
-								<?php echo EDD()->html->product_dropdown( array( 'name' => 'download_id', 'id' => 'edd_file_download_export_download', 'chosen' => true ) ); ?>
+								<?php echo EDD()->html->product_dropdown(
+									array(
+										'name'        => 'download_id',
+										'id'          => 'edd_file_download_export_download',
+										'chosen'      => true,
+										/* translators: the plural post type label */
+										'placeholder' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
+									)
+								); ?>
 								<span class="edd-from-to-wrapper">
 									<?php
 
