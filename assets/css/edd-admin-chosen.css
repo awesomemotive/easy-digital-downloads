@@ -23,14 +23,6 @@
 	border: none;
 }
 
-.chosen-container-single .chosen-search input[type=text]:before {
-	display: block;
-	width: 20px;
-	height: 20px;
-	font-family: dashicons;
-	content: '\f140';
-}
-
 .chosen-container-single .chosen-search:after {
 	display: block;
 	position: absolute;
