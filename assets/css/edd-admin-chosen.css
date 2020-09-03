@@ -75,6 +75,7 @@
 	height: unset;
 	margin: 0;
 	padding: 3px 10px;
+	width: 100% !important;
 }
 
 .chosen-container-single .chosen-single div {
