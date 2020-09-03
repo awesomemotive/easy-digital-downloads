@@ -148,9 +148,12 @@ function edd_log_user_in( $user_id, $user_login, $user_pass, $remember = false )
 				'</a>'
 			)
 		);
-	}
+	} else {
+		// Since wp_signon doesn't set the current user, we need to do this.
+		wp_set_current_user( $user->ID );
 
-	do_action( 'edd_log_user_in', $user_id, $user_login, $user_pass );
+		do_action( 'edd_log_user_in', $user_id, $user_login, $user_pass );
+	}
 
 	return $user;
 
@@ -166,64 +169,66 @@ function edd_log_user_in( $user_id, $user_login, $user_pass, $remember = false )
 */
 function edd_process_register_form( $data ) {
 
-	if( is_user_logged_in() ) {
+	if ( is_user_logged_in() ) {
 		return;
 	}
 
-	if( empty( $_POST['edd_register_submit'] ) ) {
+	if ( empty( $_POST['edd_register_submit'] ) ) {
 		return;
 	}
 
 	do_action( 'edd_pre_process_register_form' );
 
-	if( empty( $data['edd_user_login'] ) ) {
+	if ( empty( $data['edd_user_login'] ) ) {
 		edd_set_error( 'empty_username', __( 'Invalid username', 'easy-digital-downloads' ) );
 	}
 
-	if( username_exists( $data['edd_user_login'] ) ) {
+	if ( username_exists( $data['edd_user_login'] ) ) {
 		edd_set_error( 'username_unavailable', __( 'Username already taken', 'easy-digital-downloads' ) );
 	}
 
-	if( ! validate_username( $data['edd_user_login'] ) ) {
+	if ( ! validate_username( $data['edd_user_login'] ) ) {
 		edd_set_error( 'username_invalid', __( 'Invalid username', 'easy-digital-downloads' ) );
 	}
 
-	if( email_exists( $data['edd_user_email'] ) ) {
+	if ( email_exists( $data['edd_user_email'] ) ) {
 		edd_set_error( 'email_unavailable', __( 'Email address already taken', 'easy-digital-downloads' ) );
 	}
 
-	if( empty( $data['edd_user_email'] ) || ! is_email( $data['edd_user_email'] ) ) {
+	if ( empty( $data['edd_user_email'] ) || ! is_email( $data['edd_user_email'] ) ) {
 		edd_set_error( 'email_invalid', __( 'Invalid email', 'easy-digital-downloads' ) );
 	}
 
-	if( ! empty( $data['edd_payment_email'] ) && $data['edd_payment_email'] != $data['edd_user_email'] && ! is_email( $data['edd_payment_email'] ) ) {
+	if ( ! empty( $data['edd_payment_email'] ) && $data['edd_payment_email'] != $data['edd_user_email'] && ! is_email( $data['edd_payment_email'] ) ) {
 		edd_set_error( 'payment_email_invalid', __( 'Invalid payment email', 'easy-digital-downloads' ) );
 	}
 
-	if( empty( $_POST['edd_user_pass'] ) ) {
+	if ( empty( $_POST['edd_user_pass'] ) ) {
 		edd_set_error( 'empty_password', __( 'Please enter a password', 'easy-digital-downloads' ) );
 	}
 
-	if( ( ! empty( $_POST['edd_user_pass'] ) && empty( $_POST['edd_user_pass2'] ) ) || ( $_POST['edd_user_pass'] !== $_POST['edd_user_pass2'] ) ) {
+	if ( ( ! empty( $_POST['edd_user_pass'] ) && empty( $_POST['edd_user_pass2'] ) ) || ( $_POST['edd_user_pass'] !== $_POST['edd_user_pass2'] ) ) {
 		edd_set_error( 'password_mismatch', __( 'Passwords do not match', 'easy-digital-downloads' ) );
 	}
 
 	do_action( 'edd_process_register_form' );
 
-	// Check for errors and redirect if none present
+	// Check for errors and redirect if none present.
 	$errors = edd_get_errors();
 
-	if (  empty( $errors ) ) {
+	if ( empty( $errors ) ) {
 
 		$redirect = apply_filters( 'edd_register_redirect', $data['edd_redirect'] );
 
-		edd_register_and_login_new_user( array(
-			'user_login'      => $data['edd_user_login'],
-			'user_pass'       => $data['edd_user_pass'],
-			'user_email'      => $data['edd_user_email'],
-			'user_registered' => date( 'Y-m-d H:i:s' ),
-			'role'            => get_option( 'default_role' )
-		) );
+		edd_register_and_login_new_user(
+			array(
+				'user_login'      => $data['edd_user_login'],
+				'user_pass'       => $data['edd_user_pass'],
+				'user_email'      => $data['edd_user_email'],
+				'user_registered' => date( 'Y-m-d H:i:s' ),
+				'role'            => get_option( 'default_role' ),
+			)
+		);
 
 		wp_redirect( $redirect );
 		edd_die();
