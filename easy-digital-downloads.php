@@ -5,7 +5,7 @@
  * Description: The easiest way to sell digital products with WordPress.
  * Author: Sandhills Development, LLC
  * Author URI: https://sandhillsdev.com
- * Version: 2.9.24
+ * Version: 2.9.25
  * Text Domain: easy-digital-downloads
  * Domain Path: languages
  *
@@ -25,7 +25,7 @@
  * @package EDD
  * @category Core
  * @author Pippin Williamson
- * @version 2.9.24
+ * @version 2.9.25
  */
 
 // Exit if accessed directly.
@@ -206,7 +206,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '2.9.24' );
+			define( 'EDD_VERSION', '2.9.25' );
 		}
 
 		// Plugin Folder Path.
