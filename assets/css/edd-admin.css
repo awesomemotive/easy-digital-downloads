@@ -1048,6 +1048,7 @@ textarea[name="edd-note"] {
 
 #edd-add-discount input[type="text"].edd_datepicker,
 #edd-edit-discount input[type="text"].edd_datepicker {
+	display: inline-block;
 	width: 183px;
 	vertical-align: middle;
 }
@@ -1064,6 +1065,7 @@ textarea[name="edd-note"] {
 .edd-amount-type-wrapper select {
 	border-top-left-radius: 0;
 	border-bottom-left-radius: 0;
+	width: auto !important;
 }
 
 .edd-amount-type-wrapper #edd-amount {
