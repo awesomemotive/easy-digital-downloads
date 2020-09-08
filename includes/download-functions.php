@@ -966,11 +966,11 @@ function edd_is_file_at_download_limit( $download_id = 0, $payment_id = 0, $file
 	/**
 	 * Filters whether or not a file is at its download limit.
 	 *
-	 * @property bool      $ret
-	 * @property int       $download_id
-	 * @property int       $payment_id
-	 * @property int       $file_id
-	 * @property int|false $price_id
+	 * @param bool      $ret
+	 * @param int       $download_id
+	 * @param int       $payment_id
+	 * @param int       $file_id
+	 * @param int|false $price_id
 	 *
 	 * @since 2.10 Added `$price_id` parameter.
 	 */
