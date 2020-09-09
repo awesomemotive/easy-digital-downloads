@@ -912,7 +912,7 @@ function edd_set_file_download_limit_override( $download_id = 0, $payment_id = 0
  * @param int $download_id Download ID
  * @param int $payment_id Payment ID
  * @param int $file_id File ID
- * @param int $price_id Price ID
+ * @param int|false $price_id Price ID
  * @return bool True if at limit, false otherwise
  */
 function edd_is_file_at_download_limit( $download_id = 0, $payment_id = 0, $file_id = 0, $price_id = false ) {
@@ -963,7 +963,18 @@ function edd_is_file_at_download_limit( $download_id = 0, $payment_id = 0, $file
 		}
 	}
 
-	return (bool) apply_filters( 'edd_is_file_at_download_limit', $ret, $download_id, $payment_id, $file_id );
+	/**
+	 * Filters whether or not a file is at its download limit.
+	 *
+	 * @param bool      $ret
+	 * @param int       $download_id
+	 * @param int       $payment_id
+	 * @param int       $file_id
+	 * @param int|false $price_id
+	 *
+	 * @since 2.10 Added `$price_id` parameter.
+	 */
+	return (bool) apply_filters( 'edd_is_file_at_download_limit', $ret, $download_id, $payment_id, $file_id, $price_id );
 }
 
 /**
