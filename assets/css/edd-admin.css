@@ -2350,9 +2350,6 @@ body.download_page_edd-reports {
 #edd-dashboard-widgets-wrap .metabox-holder {
 	padding-top: 0;
 }
-.edd-reports-wrapper .postbox {
-	margin-bottom: 0;
-}
 
 /* .edd-reports-wrapper form .edd-from-to-wrapper,
 .edd-reports-wrapper form .edd-select,
@@ -2443,6 +2440,19 @@ div.postbox {
 	grid-template-rows: 1fr;
 }
 
+.edd-reports-wrapper .postbox {
+	margin-bottom: 0;
+}
+#edd-export-earnings select.edd-select {
+	width: 45%;
+}
+
+span input.button-secondary {
+	height: 40px;
+	/* color red to show impact on other buttons throught */
+	color: red !important;
+}
+
 @media screen and ( min-width: 768px ) {
 	div#post-body-content {
 		display: grid;
@@ -2452,7 +2462,15 @@ div.postbox {
 		border: 1px solid red;
 	}
 	div.postbox {
-		height: 250px;
+		height: 350px;
+	}
+	#edd-export-earnings select.edd-select {
+		width: 40%;
+	}
+	span input.button-secondary {
+		height: 30px;
+		/* color red to show impact on other buttons throught */
+		color: red !important;
 	}
 	
 }
@@ -4086,3 +4104,4 @@ select.edd-form-group__input {
 	line-height: initial;
 	margin: 8px 0 0;
 }
+
