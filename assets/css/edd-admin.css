@@ -2439,7 +2439,11 @@ div#post-body-content {
 	border: 1px solid green;
 }
 
-@media screen and ( min-width: 782px ) {
+div.postbox {
+	grid-template-rows: 1fr;
+}
+
+@media screen and ( min-width: 768px ) {
 	div#post-body-content {
 		display: grid;
 		display: -ms-grid;
@@ -2447,6 +2451,10 @@ div#post-body-content {
 		grid-gap: 20px;
 		border: 1px solid red;
 	}
+	div.postbox {
+		height: 250px;
+	}
+	
 }
 
 .edd-import-export-form {
