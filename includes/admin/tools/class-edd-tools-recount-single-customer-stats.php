@@ -47,7 +47,7 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 	 * @since 2.5
 	 * @global object $wpdb Used to query the database using the WordPress
 	 *   Database API
-	 * @return array $data The data for the CSV file
+	 * @return bool True if data was found, false if not.
 	 */
 	public function get_data() {
 
@@ -63,8 +63,8 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 
 			$found_payment_ids = $this->get_stored_data( 'edd_stats_found_payments_' . $customer->id, array() );
 
-			foreach ( $step_items as $payment ) {
-				$payment = get_post( $payment->ID );
+			foreach ( $step_items as $payment_id ) {
+				$payment = edd_get_payment( $payment_id );
 
 				if ( is_null( $payment ) || is_wp_error( $payment ) || 'edd_payment' !== $payment->post_type ) {
 
@@ -168,7 +168,7 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 					continue;
 				}
 
-				$payment = get_post( $payment_id );
+				$payment = edd_get_payment( $payment_id );
 				if ( apply_filters( 'edd_customer_recount_sholud_increase_count', true, $payment ) ) {
 					$purchase_count++;
 				}
@@ -222,33 +222,15 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 			$customer = new EDD_Customer( $this->customer_id );
 			$customer->update( array( 'purchase_value' => edd_format_amount( 0 ), 'purchase_count' => 0 ) );
 
-			$attached_payment_ids = explode( ',', $customer->payment_ids );
+			$payment_ids = edd_get_orders( array(
+				'type'        => 'sale',
+				'customer_id' => $customer->id,
+				'status__in'  => $allowed_payment_status,
+				'number'      => 999,
+				'fields'      => 'id'
+			) );
 
-			$attached_args = array(
-				'post__in' => $attached_payment_ids,
-				'number'   => -1,
-				'status'   => $allowed_payment_status,
-			);
-
-			$attached_payments = edd_get_payments( $attached_args );
-
-			$unattached_args = array(
-				'post__not_in' => $attached_payment_ids,
-				'number'       => -1,
-				'status'       => $allowed_payment_status,
-				'meta_query'   => array(
-					array(
-						'key'   => '_edd_payment_user_email',
-						'value' => $customer->email,
-					)
-				),
-			);
-
-			$unattached_payments = edd_get_payments( $unattached_args );
-
-			$payments = array_merge( $attached_payments, $unattached_payments );
-
-			$this->store_data( 'edd_recount_customer_payments_' . $customer->id, $payments );
+			$this->store_data( 'edd_recount_customer_payments_' . $customer->id, $payment_ids );
 		}
 	}
 
@@ -267,7 +249,7 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 			return $default;
 		}
 
-		$maybe_json = json_decode( $value );
+		$maybe_json = json_decode( $value, true );
 		if ( ! is_null( $maybe_json ) && ! is_numeric( $value ) ) {
 			$value = $maybe_json;
 		}

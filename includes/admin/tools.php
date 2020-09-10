@@ -35,38 +35,45 @@ function edd_tools_page() {
 	}
 ?>
 
-    <div class="wrap">
-        <h1><?php _e( 'Tools', 'easy-digital-downloads' ); ?></h1>
+	<div class="wrap">
+		<h1><?php esc_html_e( 'Tools', 'easy-digital-downloads' ); ?></h1>
 		<hr class="wp-header-end">
 
-        <h2 class="nav-tab-wrapper edd-nav-tab-wrapper"><?php
+		<nav class="nav-tab-wrapper edd-nav-tab-wrapper" aria-label="<?php esc_attr_e( 'Secondary menu', 'easy-digital-downloads' ); ?>">
+		<?php
 
-			foreach ( $tabs as $tab_id => $tab_name ) {
+		foreach ( $tabs as $tab_id => $tab_name ) {
 
-				$tab_url = edd_get_admin_url( array(
+			$tab_url = edd_get_admin_url(
+				array(
 					'page' => 'edd-tools',
-					'tab'  => $tab_id
-				) );
+					'tab'  => $tab_id,
+				)
+			);
 
-				$tab_url = remove_query_arg( array(
+			$tab_url = remove_query_arg(
+				array(
 					'edd-message',
-				), $tab_url );
+				),
+				$tab_url
+			);
 
-				$active = ( $active_tab === $tab_id )
-					? ' nav-tab-active'
-					: '';
+			$active = ( $active_tab === $tab_id )
+				? ' nav-tab-active'
+				: '';
 
-				echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . esc_attr( $active ) . '">' . esc_html( $tab_name ) . '</a>';
-			}
+			echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . esc_attr( $active ) . '">' . esc_html( $tab_name ) . '</a>';
+		}
 
-		?></h2>
+		?>
+		</nav>
 
-        <div class="metabox-holder">
+		<div class="metabox-holder">
 			<?php
 			do_action( 'edd_tools_tab_' . $active_tab );
 			?>
-        </div><!-- .metabox-holder -->
-    </div><!-- .wrap -->
+		</div><!-- .metabox-holder -->
+	</div><!-- .wrap -->
 
 	<?php
 }
@@ -103,42 +110,6 @@ function edd_get_tools_tabs() {
 
 	// Filter & return
 	return apply_filters( 'edd_tools_tabs', $tabs );
-}
-
-/**
- * Display the ban emails tab
- *
- * @since 2.0
- */
-function edd_tools_banned_emails_display() {
-	if ( ! current_user_can( 'manage_shop_settings' ) ) {
-		return;
-	}
-
-	do_action( 'edd_tools_banned_emails_before' );
-	?>
-    <div class="postbox">
-        <h3><span><?php _e( 'Banned Emails', 'easy-digital-downloads' ); ?></span></h3>
-        <div class="inside">
-            <p><?php _e( 'Emails placed in the box below will not be allowed to make purchases.', 'easy-digital-downloads' ); ?></p>
-            <form method="post"
-                  action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=general' ); ?>">
-                <p>
-                    <textarea name="banned_emails" rows="10"
-                              class="large-text"><?php echo implode( "\n", edd_get_banned_emails() ); ?></textarea>
-                    <span class="description"><?php _e( 'Enter emails and/or domains (starting with "@") and/or TLDs (starting with ".") to disallow, one per line.', 'easy-digital-downloads' ); ?></span>
-                </p>
-                <p>
-                    <input type="hidden" name="edd_action" value="save_banned_emails"/>
-					<?php wp_nonce_field( 'edd_banned_emails_nonce', 'edd_banned_emails_nonce' ); ?>
-					<?php submit_button( __( 'Save', 'easy-digital-downloads' ), 'secondary', 'submit', false ); ?>
-                </p>
-            </form>
-        </div><!-- .inside -->
-    </div><!-- .postbox -->
-	<?php
-	do_action( 'edd_tools_banned_emails_after' );
-	do_action( 'edd_tools_after' );
 }
 
 /**

@@ -42,15 +42,26 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 	public $per_step = 30;
 
 	/**
+	 * ID of the download we're recounting stats for
+	 * @var int|false
+	 */
+	protected $download_id = false;
+
+	/**
+	 * Array or order IDs found from the query
+	 * @var array
+	 */
+	protected $_log_ids_debug = array();
+
+	/**
 	 * Get the Export Data
 	 *
 	 * @since 2.5
 	 * @global object $wpdb Used to query the database using the WordPress
 	 *   Database API
-	 * @return array $data The data for the CSV file
+	 * @return bool
 	 */
 	public function get_data() {
-		global $wpdb;
 
 		$accepted_statuses  = apply_filters( 'edd_recount_accepted_statuses', array( 'complete', 'revoked' ) );
 
@@ -68,62 +79,39 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 			$this->store_data( 'edd_temp_recount_download_stats', $totals );
 		}
 
-		$args = apply_filters( 'edd_recount_download_stats_args', array(
-			'post_parent'    => $this->download_id,
-			'post_type'      => 'edd_log',
-			'posts_per_page' => $this->per_step,
-			'post_status'    => 'publish',
-			'paged'          => $this->step,
-			'log_type'       => 'sale',
-			'fields'         => 'ids',
-		) );
+		$deprecated_args = edd_apply_filters_deprecated( 'edd_recount_download_stats_args', array(
+			array(
+				'post_parent'    => $this->download_id,
+				'post_type'      => 'edd_log',
+				'posts_per_page' => $this->per_step,
+				'post_status'    => 'publish',
+				'paged'          => $this->step,
+				'log_type'       => 'sale',
+				'fields'         => 'ids',
+			)
+		), '3.0' );
 
-		$edd_logs = EDD()->debug_log;
-		$log_ids  = $edd_logs->get_connected_logs( $args, 'sale' );
+		$new_args = array(
+			'status__in' => $accepted_statuses,
+			'number'     => $deprecated_args['posts_per_page'],
+			'offset'     => ( $deprecated_args['paged'] * $deprecated_args['posts_per_page'] ) - $deprecated_args['posts_per_page']
+		);
+
+		if ( ! empty( $this->download_id ) && is_numeric( $this->download_id ) ) {
+			$new_args['product_id'] = absint( $this->download_id );
+		}
+
+		$order_items = edd_get_order_items( $new_args );
+
 		$this->_log_ids_debug = array();
 
-		if ( $log_ids ) {
-			$log_ids     = implode( ',', $log_ids );
-			$payment_ids = $wpdb->get_col( "SELECT meta_value FROM $wpdb->postmeta WHERE meta_key='_edd_log_payment_id' AND post_id IN ($log_ids)" );
-			unset( $log_ids );
+		if ( $order_items ) {
+			foreach ( $order_items as $order_item ) {
 
-			$payment_ids = implode( ',', $payment_ids );
-			$payments = $wpdb->get_results( "SELECT ID, post_status FROM $wpdb->posts WHERE ID IN (" . $payment_ids . ")" );
-			unset( $payment_ids );
+				$this->_log_ids_debug[] = $order_item->order_id;
 
-			foreach ( $payments as $payment ) {
-
-				if ( ! in_array( $payment->post_status, $accepted_statuses ) ) {
-					continue;
-				}
-
-				$items = edd_get_payment_meta_cart_details( $payment->ID );
-
-				foreach ( $items as $item ) {
-
-					if ( $item['id'] != $this->download_id ) {
-						continue;
-					}
-
-					$this->_log_ids_debug[] = $payment->ID;
-
-					$amount = $item['price'];
-
-					if ( ! empty( $item['fees'] ) ) {
-						foreach( $item['fees'] as $fee ) {
-							// Only let negative fees affect earnings
-							if ( $fee['amount'] > 0 ) {
-								continue;
-							}
-
-							$amount += $fee['amount'];
-						}
-					}
-
-					$totals['sales']++;
-					$totals['earnings'] += $amount;
-
-				}
+				$totals['sales']++;
+				$totals['earnings'] += $order_item->total;
 
 			}
 
@@ -147,7 +135,6 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 	 * @return int
 	 */
 	public function get_percentage_complete() {
-		global $wpdb;
 
 		if ( $this->step == 1 ) {
 			$this->delete_data( 'edd_recount_total_' . $this->download_id );
@@ -157,36 +144,26 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 		$total   = $this->get_stored_data( 'edd_recount_total_' . $this->download_id );
 
 		if ( false === $total ) {
-			$total = 0;
-			$args  = apply_filters( 'edd_recount_download_stats_total_args', array(
-				'post_parent'    => $this->download_id,
-				'post_type'      => 'edd_log',
-				'post_status'    => 'publish',
-				'log_type'       => 'sale',
-				'fields'         => 'ids',
-				'nopaging'       => true,
-			) );
+			$deprecated_args = edd_apply_filters_deprecated( 'edd_recount_download_stats_total_args', array(
+				array(
+					'post_parent'    => $this->download_id,
+					'post_type'      => 'edd_log',
+					'post_status'    => 'publish',
+					'log_type'       => 'sale',
+					'fields'         => 'ids',
+					'nopaging'       => true,
+				)
+			), '3.0' );
 
-			$edd_logs = EDD()->debug_log;
-			$log_ids  = $edd_logs->get_connected_logs( $args, 'sale' );
+			$new_args = array(
+				'status__in' => $accepted_statuses,
+			);
 
-			if ( $log_ids ) {
-				$log_ids     = implode( ',', $log_ids );
-				$payment_ids = $wpdb->get_col( "SELECT meta_value FROM $wpdb->postmeta WHERE meta_key='_edd_log_payment_id' AND post_id IN ($log_ids)" );
-				unset( $log_ids );
-
-				$payment_ids = implode( ',', $payment_ids );
-				$payments = $wpdb->get_results( "SELECT ID, post_status FROM $wpdb->posts WHERE ID IN (" . $payment_ids . ")" );
-				unset( $payment_ids );
-
-				foreach ( $payments as $payment ) {
-					if ( in_array( $payment->status, $accepted_statuses ) ) {
-						continue;
-					}
-
-					$total++;
-				}
+			if ( ! empty( $deprecated_args['post_parent'] ) && is_numeric( $deprecated_args['post_parent'] ) ) {
+				$new_args['product_id'] = absint( $deprecated_args['post_parent'] );
 			}
+
+			$total = edd_count_order_items( $new_args );
 
 			$this->store_data( 'edd_recount_total_' . $this->download_id, $total );
 		}

@@ -28,11 +28,13 @@ class Order_Sections extends Sections {
 	public function display() {
 		$use_js = ! empty( $this->use_js )
 			? ' use-js'
-			: ''; ?>
+			: '';
+		$role   = $this->use_js ? 'tablist' : 'menu';
+		?>
 
 		<div class="edd-sections-wrap edd-order-sections-wrapper">
 			<div class="edd-vertical-sections meta-box <?php echo $use_js; ?>">
-				<ul class="section-nav">
+				<ul class="section-nav" role="<?php echo esc_attr( $role ); ?>">
 					<?php echo $this->get_all_section_links(); ?>
 				</ul>
 

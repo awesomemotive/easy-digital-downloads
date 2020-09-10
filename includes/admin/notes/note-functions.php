@@ -75,9 +75,15 @@ function edd_admin_get_note_html( $note_id = 0 ) {
 
 	// User
 	$user_id = $note->user_id;
-	$author  = ! empty( $user_id )
-		? get_userdata( $user_id )->display_name
-		: edd_get_bot_name();
+	$author  = edd_get_bot_name();
+	if ( ! empty( $user_id ) ) {
+		/* translators: user ID */
+		$author      = sprintf( __( 'User ID #%s', 'easy-digital-downloads' ), $user_id );
+		$user_object = get_userdata( $user_id );
+		if ( $user_object ) {
+			$author = ! empty( $user_object->display_name ) ? $user_object->display_name : $user_object->user_login;
+		}
+	}
 
 	// URL to delete note
 	$delete_note_url = wp_nonce_url( add_query_arg( array(
@@ -90,14 +96,15 @@ function edd_admin_get_note_html( $note_id = 0 ) {
 	?>
 
 	<div class="edd-note" id="edd-note-<?php echo esc_attr( $note->id ); ?>">
-		<div>
+		<div class="edd-note__header">
 			<strong class="edd-note-author"><?php echo esc_html( $author ); ?></strong>
 			<time datetime="<?php echo esc_attr( EDD()->utils->date( $note->date_created, null, true )->toDateTimeString() ); ?>"><?php echo edd_date_i18n( $note->date_created, 'datetime' ); ?></time>
-			<p><?php echo make_clickable( $note->content ); ?></p>
 			<a href="<?php echo esc_url( $delete_note_url ); ?>#edd-notes" class="edd-delete-note" data-note-id="<?php echo esc_attr( $note->id ); ?>" data-object-id="<?php echo esc_attr( $note->object_id ); ?>" data-object-type="<?php echo esc_attr( $note->object_type ); ?>">
-				<?php esc_html_e( 'Delete', 'easy-digital-downloads' ); ?>
+				<?php echo esc_html_x( '&times;', 'Delete note', 'easy-digital-downloads' ); ?>
 			</a>
 		</div>
+
+		<?php echo wpautop( make_clickable( $note->content ) ); ?>
 	</div>
 
 	<?php
@@ -122,14 +129,23 @@ function edd_admin_get_new_note_form( $object_id = 0, $object_type = '' ) {
 	ob_start();?>
 
 	<div class="edd-add-note">
-		<textarea name="edd-note" id="edd-note"></textarea>
+		<div class="edd-form-group">
+			<label class="edd-form-group__label screen-reader-text" for="edd-note">
+				<?php esc_html_e( 'Note', 'easy-digital-downloads' ); ?>
+			</label>
 
-		<p>
+			<div id="edd-form-group__control">
+				<textarea name="edd-note" id="edd-note" class="edd-form-group__input"></textarea>
+			</div>
+		</div>
+
+		<div class="edd-form-group">
 			<button type="button" id="edd-add-note" class="edd-note-submit button button-secondary left" data-object-id="<?php echo esc_attr( $object_id ); ?>" data-object-type="<?php echo esc_attr( $object_type ); ?>">
 				<?php _e( 'Add Note', 'easy-digital-downloads' ); ?>
 			</button>
 			<span class="spinner"></span>
-		</p>
+		</div>
+
 		<?php wp_nonce_field( 'edd_note', 'edd_note_nonce' ); ?>
 	</div>
 

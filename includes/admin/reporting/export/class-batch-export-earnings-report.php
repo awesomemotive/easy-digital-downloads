@@ -279,7 +279,7 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 		foreach ( $totals as $row ) {
 			$total_data[ $row['status'] ] = array(
 				'count'  => $row['count'],
-				'amount' => edd_format_amount( $row['total'] )
+				'amount' => floatval( $row['total'] )
 			);
 		}
 

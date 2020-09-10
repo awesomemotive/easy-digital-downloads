@@ -39,8 +39,8 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 
 	$order = edd_get_order( $order_id );
 
-	$completed_date = '0000-00-00 00:00:00' === $order->date_completed
-		? ''
+	$completed_date = empty( $order->date_completed )
+		? null
 		: $order->date_completed;
 
 	$customer_id = $order->customer_id;
@@ -85,16 +85,32 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 						);
 					}
 
+					$item_options = array(
+						'quantity' => $item->quantity,
+						'price_id' => $item->price_id,
+					);
+
+					/*
+					 * For backwards compatibility from pre-3.0: add in order item meta prefixed with `_option_`.
+					 * While saving, we've migrated these values to order item meta, but people may still be looking
+					 * for them in this cart details array, so we need to fill them back in.
+					 */
+					$order_item_meta = edd_get_order_item_meta( $item->id );
+					if ( ! empty( $order_item_meta ) ) {
+						foreach ( $order_item_meta as $item_meta_key => $item_meta_value ) {
+							if ( '_option_' === substr( $item_meta_key, 0, 8 ) && isset( $item_meta_value[0] ) ) {
+								$item_options[ str_replace( '_option_', '', $item_meta_key ) ] = $item_meta_value[0];
+							}
+						}
+					}
+
 					$cart_details = array(
 						'name'        => $item->product_name,
 						'id'          => $item->product_id,
 						'item_number' => array(
 							'id'       => $item->product_id,
 							'quantity' => $item->quantity,
-							'options'  => array(
-								'quantity' => $item->quantity,
-								'price_id' => $item->price_id,
-							),
+							'options'  => $item_options,
 						),
 						'item_price'  => $item->amount,
 						'quantity'    => $item->quantity,
@@ -148,7 +164,7 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 	}
 
 	// Ensure this action only runs once ever
-	if ( empty( $completed_date ) || '0000-00-00 00:00:00' === $completed_date ) {
+	if ( empty( $completed_date ) ) {
 		$date = EDD()->utils->date()->format( 'mysql' );
 
 		$date_refundable = edd_get_refund_date( $date );
@@ -306,7 +322,7 @@ function edd_update_old_payments_with_totals( $data ) {
 
 	$payments = edd_get_payments( array(
 		'offset' => 0,
-		'number' => -1,
+		'number' => 9999999,
 		'mode'   => 'all',
 	) );
 
@@ -342,7 +358,7 @@ function edd_mark_abandoned_orders() {
 
 	$args = array(
 		'status' => 'pending',
-		'number' => -1,
+		'number' => 9999999,
 		'output' => 'edd_payments',
 	);
 

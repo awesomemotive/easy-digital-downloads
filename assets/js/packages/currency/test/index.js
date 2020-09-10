@@ -189,4 +189,28 @@ describe( 'Number', () => {
 			expect( number.unformat( 'abc' ) ).toEqual( 0 );
 		} );
 	} );
+
+	describe( 'absint', () => {
+		let number;
+
+		beforeEach( () => {
+			number = new NumberFormat( {
+				precision: 2,
+				decimalSeparator: '.',
+				thousandSeparator: ',',
+			} );
+		} );
+
+		it( 'should return a positive number from a positive number', () => {
+			expect( number.absint( 5 ) ).toEqual( 5 );
+			expect( number.absint( 5.00 ) ).toEqual( 5.00 );
+			expect( number.absint( '5.00' ) ).toEqual( 5 );
+		} );
+
+		it( 'should return a positive number from a negative number', () => {
+			expect( number.absint( -5 ) ).toEqual( 5 );
+			expect( number.absint( -5.00 ) ).toEqual( 5.00 );
+			expect( number.absint( '-5.00' ) ).toEqual( 5 );
+		} );
+	} );
 } );

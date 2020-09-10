@@ -537,10 +537,17 @@ function edd_ajax_get_states_field() {
 
 	// Maybe setup the new listbox.
 	if ( ! empty( $states ) ) {
-		$field_name = sanitize_text_field( $_POST['field_name'] );
+		$field_name = isset( $_POST['field_name'] )
+			? sanitize_text_field( $_POST['field_name'] )
+			: 'edd-state-select';
+
+		$field_id = isset( $_POST['field_id'] )
+			? sanitize_text_field( $_POST['field_id'] )
+			: $field_name;
+
 		$response   = EDD()->html->select( array(
 			'name'             => $field_name,
-			'id'               => $field_name,
+			'id'               => $field_id,
 			'class'            => $field_name . ' edd-select',
 			'options'          => $states,
 			'chosen'           => $chosen,
@@ -629,15 +636,20 @@ function edd_ajax_download_search() {
 		's'              => $new_search              // String
 	);
 
-	// Maybe exclude bundles
+	// Maybe exclude bundles.
 	if ( true === $no_bundles ) {
 		$args['meta_query'] = array(
-			'relation' => 'AND',
+			'relation' => 'OR',
 			array(
 				'key'     => '_edd_product_type',
 				'value'   => 'bundle',
-				'compare' => '!='
-			)
+				'compare' => '!=',
+			),
+			array(
+				'key'     => '_edd_product_type',
+				'value'   => 'bundle',
+				'compare' => 'NOT EXISTS',
+			),
 		);
 	}
 
@@ -1183,10 +1195,6 @@ function edd_ajax_customer_addresses() {
 
 	if ( $customer ) {
 
-		$rtl_class = is_rtl()
-			? ' chosen-rtl'
-			: '';
-
 		// Fetch customer addresses.
 		$addresses = $customer->get_addresses();
 
@@ -1222,8 +1230,8 @@ function edd_ajax_customer_addresses() {
 
 			// Fetch the select
 			if ( ! empty( $options ) ) {
-				$html  = '<select data-nonce="' . wp_create_nonce( 'edd-country-field-nonce' ) . '" data-placeholder="Select a previously used address" class="edd-select-chosen ' . esc_attr( $rtl_class ) . ' add-order-customer-address-select">';
-				$html .= '<option></option>';
+				$html  = '<select id="edd_customer_existing_addresses" data-nonce="' . wp_create_nonce( 'edd-country-field-nonce' ) . '" data-placeholder="Select a previously used address" class="add-order-customer-address-select edd-form-group__input">';
+				$html .= '<option data-key="0" value="0"></option>';
 				foreach ( $options as $key => $value ) {
 					$html .= '<option data-key="' . esc_attr( $key ) . '" value="' . esc_attr( $key ) . '">' . esc_attr( $value ). '</option>';
 				}
@@ -1239,11 +1247,64 @@ function edd_ajax_customer_addresses() {
 add_action( 'wp_ajax_edd_customer_addresses', 'edd_ajax_customer_addresses' );
 
 /**
- * Recalculate taxes when adding a new order and the country/region field is changed.
+ * Returns details about a Customer.
  *
  * @since 3.0
  */
-function edd_ajax_add_order_recalculate_taxes() {
+function edd_ajax_customer_details() {
+	// Bail if user cannot manage shop settings.
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		return wp_send_json_error();
+	}
+
+	// Set up parameters.
+	$nonce = isset( $_POST['nonce'] )
+		? sanitize_text_field( $_POST['nonce'] )
+		: '';
+
+	$customer_id = isset( $_POST['customer_id'] )
+		? absint( $_POST['customer_id'] )
+		: 0;
+
+	// Bail if missing any data.
+	if ( empty( $nonce ) || empty( $customer_id ) ) {
+		return wp_send_json_error();
+	}
+
+	// Bail if nonce verification failed.
+	if ( ! wp_verify_nonce( $nonce, 'edd_customer_details_nonce' ) ) {
+		return wp_send_json_error();
+	}
+
+	// Fetch customer.
+	$customer = edd_get_customer( $customer_id );
+
+	if ( ! $customer ) {
+		return wp_send_json_error();
+	}
+
+	$response = array(
+		'id'                => esc_html( $customer->id ),
+		'name'              => esc_html( $customer->name ),
+		'email'             => esc_html( $customer->email ),
+		'avatar'            => get_avatar( $customer->email, 50 ),
+		'date_created'      => esc_html( $customer->date_created ),
+		'date_created_i18n' => esc_html( edd_date_i18n( $customer->date_created ) ),
+		'_links'            => array(
+			'self' => esc_url_raw( admin_url( 'edit.php?post_type=download&page=edd-customers&view=overview&id=' . $customer->id ) ),
+		),
+	);
+
+	return wp_send_json_success( $response );
+}
+add_action( 'wp_ajax_edd_customer_details', 'edd_ajax_customer_details' );
+
+/**
+ * Recalculates taxes when adding a new order and the country/region field is changed.
+ *
+ * @since 3.0
+ */
+function edd_ajax_get_tax_rate() {
 
 	// Bail if user cannot manage shop settings.
 	if ( ! current_user_can( 'manage_shop_settings' ) ) {
@@ -1269,17 +1330,178 @@ function edd_ajax_add_order_recalculate_taxes() {
 	}
 
 	// Bail if nonce verification failed.
-	if ( ! wp_verify_nonce( $nonce, 'edd_add_order_nonce' ) ) {
+	if ( ! wp_verify_nonce( $nonce, 'edd_get_tax_rate_nonce' ) ) {
 		return wp_send_json_error();
 	}
 
 	$response = array();
 
-	$rate = edd_get_tax_rate( $country, $region );
+	$rate = edd_get_tax_rate( $country, $region, $fallback = false );
 
 	$response['tax_rate'] = $rate;
 	$response['prices_include_tax'] = (bool) edd_prices_include_tax();
 
 	return wp_send_json_success( $response );
 }
-add_action( 'wp_ajax_edd_add_order_recalculate_taxes', 'edd_ajax_add_order_recalculate_taxes' );
+add_action( 'wp_ajax_edd_get_tax_rate', 'edd_ajax_get_tax_rate' );
+
+/**
+ * Retrieves a potential Order Item's amounts.
+ *
+ * @since 3.0
+ */
+function edd_admin_order_get_item_amounts() {
+	// Set up parameters.
+	$nonce = isset( $_POST['nonce'] )
+		? sanitize_text_field( $_POST['nonce'] )
+		: '';
+
+	// Bail if missing any data.
+	if ( empty( $nonce ) ) {
+		return wp_send_json_error( array(
+			'message' => esc_html__( 'Unable to verify action. Please refresh the page and try again.', 'easy-digital-downloads' ),
+		) );
+	}
+
+	// Bail if nonce verification failed.
+	if ( ! wp_verify_nonce( $nonce, 'edd_admin_order_get_item_amounts' ) ) {
+		return wp_send_json_error( array(
+			'message' => esc_html__( 'Unable to verify action. Please refresh the page and try again.', 'easy-digital-downloads' ),
+		) );
+	}
+
+	$is_adjusting_manually = isset( $_POST['_isAdjustingManually'] ) && false !== $_POST['_isAdjustingManually'];
+
+	$product_id = isset( $_POST['productId'] )
+		? intval( sanitize_text_field( $_POST['productId'] ) )
+		: 0;
+
+	$price_id = isset( $_POST['priceId'] )
+		? intval( sanitize_text_field( $_POST['priceId'] ) )
+		: 0;
+
+	$quantity = isset( $_POST['quantity'] )
+		? intval( sanitize_text_field( $_POST['quantity'] ) )
+		: 0;
+
+	$country = isset( $_POST['country'] )
+		? sanitize_text_field( $_POST['country'] )
+		: '';
+
+	$region = isset( $_POST['region'] )
+		? sanitize_text_field( $_POST['region'] )
+		: '';
+
+	$product_ids = isset( $_POST['productIds'] )
+		? array_unique( array_map( 'intval', $_POST['productIds'] ) )
+		: array();
+
+	$discounts = isset( $_POST['discounts'] )
+		? array_unique( array_map( 'intval', $_POST['discounts'] ) )
+		: array();
+
+	$download = edd_get_download( $product_id );
+
+	// Bail if no Download is found.
+	if ( ! $download ) {
+		return wp_send_json_error( array(
+			'message' => esc_html__( 'Unable to find download. Please refresh the page and try again.', 'easy-digital-downloads' ),
+		) );
+	}
+
+	// Use base Amount if sent.
+	if ( isset( $_POST['amount'] ) && '0' !== $_POST['amount'] ) {
+		$amount = edd_sanitize_amount( sanitize_text_field( $_POST['amount'] ) );
+
+	// Determine amount from Download record.
+	} else {
+		if ( ! $download->has_variable_prices() ) {
+			$amount = floatval( $download->get_price() );
+		} else {
+			$prices = $download->get_prices();
+
+			if ( isset( $prices[ $price_id ] ) ) {
+				$price  = $prices[ $price_id ];
+				$amount = floatval( $price['amount'] );
+			}
+		}
+	}
+
+	// Use base Subtotal if sent.
+	if ( isset( $_POST['subtotal'] ) && '0' !== $_POST['subtotal'] ) {
+		$subtotal = edd_sanitize_amount( sanitize_text_field( $_POST['subtotal'] ) );
+	} else {
+		$subtotal = $amount * $quantity;
+	}
+
+	$discount = 0;
+
+	// Track how much of each Discount is applied to an `OrderItem`.
+	// There is not currently API support for `OrderItem`-level `OrderAdjustment`s.
+	$adjustments = array();
+
+	foreach ( $discounts as $discount_id ) {
+		$d = edd_get_discount( $discount_id );
+
+		if ( empty( $d ) ) {
+			continue;
+		}
+
+		// Validate Discount against current Order Items.
+		$valid = edd_validate_discount( $d->id, $product_ids );
+
+		if ( false === $valid ) {
+			continue;
+		}
+
+		// Apply Discount to affected Order Items.
+		// @todo Helper function somewhere?
+		$product_requirements = $d->get_product_reqs();
+		$product_requirements = array_map( 'absint', $product_requirements );
+		asort( $product_requirements );
+		$product_requirements = array_filter( array_values( $product_requirements ) );
+
+		if (
+			! empty( $product_requirements ) &&
+			( 'not_global' === $d->get_scope() ) &&
+			! in_array( $product_id, $product_requirements, true )
+		) {
+			continue;
+		}
+
+		// Find the discounted amount.
+		$discounted_amount = $d->get_discounted_amount( $subtotal );
+		$discount_amount   = ( $subtotal - $discounted_amount );
+
+		$adjustments[] = array(
+			'objectType'  => 'order_item',
+			'type'        => 'discount',
+			'typeId'      => $d->id,
+			'description' => $d->code,
+			'subtotal'    => $discount_amount,
+			'total'       => $discount_amount,
+		);
+
+		$discount += $discount_amount;
+	}
+
+	if (
+		true === edd_use_taxes() &&
+		false === edd_download_is_tax_exclusive( $product_id )
+	) {
+		$tax_rate = edd_get_tax_rate( $country, $region, $fallback = false );
+		$tax = edd_calculate_tax( floatval( $subtotal - $discount ), $country, $region );
+	} else {
+		$tax = 0;
+	}
+
+	wp_send_json_success( array(
+		'amount'      => $amount,
+		'subtotal'    => $subtotal,
+		'discount'    => $discount,
+		'tax'         => $tax,
+		'total'       => $subtotal + $tax,
+		'adjustments' => $adjustments,
+	) );
+}
+add_action( 'wp_ajax_edd-admin-order-get-item-amounts', 'edd_admin_order_get_item_amounts' );

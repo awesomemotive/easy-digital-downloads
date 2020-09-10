@@ -130,7 +130,7 @@ function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
 	}
 
 	// Fetch the order IDs
-	$number = apply_filters( 'edd_users_purchased_products_payments', 9999 );
+	$number = apply_filters( 'edd_users_purchased_products_payments', 9999999 );
 
 	$order_ids = edd_get_orders( array(
 		'customer_id' => $customer->id,
@@ -188,8 +188,6 @@ function edd_has_user_purchased( $user_id = 0, $downloads = array(), $variable_p
 	 */
 	do_action( 'edd_has_user_purchased_before', $user_id, $downloads, $variable_price_id );
 
-	$return = false;
-
 	if ( ! is_array( $downloads ) ) {
 		$downloads = array( $downloads );
 	}
@@ -199,7 +197,7 @@ function edd_has_user_purchased( $user_id = 0, $downloads = array(), $variable_p
 		return false;
 	}
 
-	$number = $wpdb->prepare( '%d', apply_filters( 'edd_users_purchased_products_payments', 9999 ) );
+	$number = apply_filters( 'edd_users_purchased_products_payments', 9999999 );
 
 	$where_id   = "'" . implode( "', '", $wpdb->_escape( $downloads ) ) . "'";
 	$product_id = "oi.product_id IN ({$where_id})";
@@ -209,13 +207,16 @@ function edd_has_user_purchased( $user_id = 0, $downloads = array(), $variable_p
 		: '';
 
 	// Perform a direct database query as it is more efficient.
-	$sql = "
+	$sql = $wpdb->prepare("
 		SELECT COUNT(o.id) AS count
 		FROM {$wpdb->edd_orders} o
 		INNER JOIN {$wpdb->edd_order_items} oi ON o.id = oi.order_id
 		WHERE {$product_id} {$price_id}
-		LIMIT {$number}
-	";
+		AND user_id = %d
+		LIMIT %d",
+		absint( $user_id ),
+		$number
+	);
 
 	$result = (int) $wpdb->get_var( $sql );
 

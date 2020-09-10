@@ -48,6 +48,30 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::edd_is_order_refund_window_passed
+	 */
+	public function test_is_order_refund_window_passed_return_true() {
+		$order = parent::edd()->order->create_and_get( array(
+			'date_refundable' => '2000-01-01 00:00:00',
+		) );
+
+		$this->assertTrue( edd_is_order_refund_window_passed( $order->id ) );
+	}
+
+	/**
+	 * @covers ::edd_is_order_refundable_by_override
+	 */
+	public function test_is_order_refundable_by_override_return_true() {
+		$order = parent::edd()->order->create_and_get( array(
+			'date_refundable' => '2000-01-01 00:00:00',
+		) );
+
+		add_filter( 'edd_is_order_refundable_by_override', '__return_true' );
+
+		$this->assertTrue( edd_is_order_refundable_by_override( $order->id ) );
+	}
+
+	/**
 	 * @covers ::edd_get_order_total
 	 */
 	public function test_get_order_total_should_be_120() {

@@ -91,4 +91,22 @@ export const NumberFormat = class NumberFormat {
 
 		return isNaN( parsed ) ? 0 : parsed;
 	}
+
+	/**
+	 * Converts a value to a non-negative number.
+	 *
+	 * @since 3.0
+	 *
+	 * @param {*} number Number to unformat.
+	 * @return {number} A non-negative number.
+	 */
+	absint( number ) {
+		const unformatted = this.unformat( number );
+
+		if ( unformatted >= 0 ) {
+			return unformatted;
+		}
+
+		return unformatted * -1;
+	}
 };
