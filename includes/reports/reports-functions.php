@@ -460,22 +460,20 @@ function clear_filter( $filter ) {
 function get_dates_filter_options() {
 	static $options = null;
 
-	$timezone_abbreviation = edd_get_timezone_abbr();
-
 	if ( is_null( $options ) ) {
 		$options = array(
-			'other'        => __( 'Custom', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'today'        => __( 'Today', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'yesterday'    => __( 'Yesterday', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'this_week'    => __( 'This Week', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'last_week'    => __( 'Last Week', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'last_30_days' => __( 'Last 30 Days', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'this_month'   => __( 'This Month', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'last_month'   => __( 'Last Month', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'this_quarter' => __( 'This Quarter', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'last_quarter' => __( 'Last Quarter', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'this_year'    => __( 'This Year', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'last_year'    => __( 'Last Year', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
+			'other'        => __( 'Custom', 'easy-digital-downloads' ),
+			'today'        => __( 'Today', 'easy-digital-downloads' ),
+			'yesterday'    => __( 'Yesterday', 'easy-digital-downloads' ),
+			'this_week'    => __( 'This Week', 'easy-digital-downloads' ),
+			'last_week'    => __( 'Last Week', 'easy-digital-downloads' ),
+			'last_30_days' => __( 'Last 30 Days', 'easy-digital-downloads' ),
+			'this_month'   => __( 'This Month', 'easy-digital-downloads' ),
+			'last_month'   => __( 'Last Month', 'easy-digital-downloads' ),
+			'this_quarter' => __( 'This Quarter', 'easy-digital-downloads' ),
+			'last_quarter' => __( 'Last Quarter', 'easy-digital-downloads' ),
+			'this_year'    => __( 'This Year', 'easy-digital-downloads' ),
+			'last_year'    => __( 'Last Year', 'easy-digital-downloads' ),
 		);
 	}
 
@@ -545,12 +543,13 @@ function get_dates_filter( $values = 'strings', $timezone = null ) {
  *
  * @param string          $range Optional. Range value to generate start and end dates for against `$date`.
  *                               Default is the current range as derived from the session.
+ * @param string          $date  Date string converted to `\EDD\Utils\Date` to anchor calculations to.
  * @return \EDD\Utils\Date[] Array of start and end date objects.
  */
-function parse_dates_for_range( $range = null ) {
+function parse_dates_for_range( $range = null, $date = 'now' ) {
 
 	// Set the time ranges in the user's timezone, so they ultimately see them in their own timezone.
-	$date = EDD()->utils->date( 'now', edd_get_timezone_id(), false );
+	$date = EDD()->utils->date( $date, edd_get_timezone_id(), false );
 
 	if ( null === $range || ! array_key_exists( $range, get_dates_filter_options() ) ) {
 		$range = get_dates_filter_range();
@@ -567,8 +566,8 @@ function parse_dates_for_range( $range = null ) {
 
 		case 'last_month':
 			$dates = array(
-				'start' => $date->copy()->subMonth( 1 )->startOfMonth(),
-				'end'   => $date->copy()->subMonth( 1 )->endOfMonth(),
+				'start' => $date->copy()->subMonthNoOverflow( 1 )->startOfMonth(),
+				'end'   => $date->copy()->subMonthNoOverflow( 1 )->endOfMonth(),
 			);
 			break;
 
@@ -740,12 +739,8 @@ function get_dates_filter_day_by_day() {
 	switch ( $dates['range'] ) {
 		case 'today':
 		case 'yesterday':
-			$day_by_day = true;
-			break;
 		case 'last_quarter':
 		case 'this_quarter':
-			$day_by_day = true;
-			break;
 		case 'this_year':
 		case 'last_year':
 			$day_by_day = false;
@@ -823,59 +818,55 @@ function default_display_report( $report ) {
  * }
  * @return void Meta box display callbacks only echo output.
  */
-function default_display_tile( $report = null, $tile = array() ) {
+function default_display_tile( $endpoint, $data, $args ) {
+	echo '<span class="tile-label">' . esc_html( $endpoint->get_label() ) .'</span>';
 
-	// Bail if tile has no args
-	if ( ! isset( $tile['args'] ) ) {
-		return;
-	}
-
-	if ( empty( $tile['args']['data'] ) ) {
+	if ( empty( $data ) ) {
 		echo '<span class="tile-no-data tile-value">&mdash;</span>';
 	} else {
-		switch ( $tile['args']['display_args']['type'] ) {
+		switch ( $args['type'] ) {
 			case 'number':
-				echo '<span class="tile-number tile-value">' . edd_format_amount( $tile['args']['data'] ) . '</span>';
+				echo '<span class="tile-number tile-value">' . edd_format_amount( $data ) . '</span>';
 				break;
 
 			case 'split-number':
 				printf( '<span class="tile-amount tile-value">%1$d / %2$d</span>',
-					edd_format_amount( $tile['args']['data']['first_value'] ),
-					edd_format_amount( $tile['args']['data']['second_value'] )
+					edd_format_amount( $data['first_value'] ),
+					edd_format_amount( $data['second_value'] )
 				);
 				break;
 
 			case 'split-amount':
 				printf( '<span class="tile-amount tile-value">%1$d / %2$d</span>',
-					edd_currency_filter( edd_format_amount( $tile['args']['data']['first_value'] ) ),
-					edd_currency_filter( edd_format_amount( $tile['args']['data']['second_value'] ) )
+					edd_currency_filter( edd_format_amount( $data['first_value'] ) ),
+					edd_currency_filter( edd_format_amount( $data['second_value'] ) )
 				);
 				break;
 
 			case 'relative':
-				$direction = ( ! empty( $tile['args']['data']['direction'] ) && in_array( $tile['args']['data']['direction'], array( 'up', 'down' ), true ) )
-					? '-' . sanitize_key( $tile['args']['data']['direction'] )
+				$direction = ( ! empty( $data['direction'] ) && in_array( $data['direction'], array( 'up', 'down' ), true ) )
+					? '-' . sanitize_key( $data['direction'] )
 					: '';
-				echo '<span class="tile-change' . esc_attr( $direction ) . ' tile-value">' . edd_format_amount( $tile['args']['data']['value'] ) . '</span>';
+				echo '<span class="tile-change' . esc_attr( $direction ) . ' tile-value">' . edd_format_amount( $data['value'] ) . '</span>';
 				break;
 
 			case 'amount':
-				echo '<span class="tile-amount tile-value">' . edd_currency_filter( edd_format_amount( $tile['args']['data'] ) ) . '</span>';
+				echo '<span class="tile-amount tile-value">' . edd_currency_filter( edd_format_amount( $data ) ) . '</span>';
 				break;
 
 			case 'url':
-				echo '<span class="tile-url tile-value">' . esc_url( $tile['args']['data'] ) . '</span>';
+				echo '<span class="tile-url tile-value">' . esc_url( $data ) . '</span>';
 				break;
 
 			default:
 				$tags = wp_kses_allowed_html( 'post' );
-				echo '<span class="tile-value tile-default">' . wp_kses( $tile['args']['data'], $tags ) . '</span>';
+				echo '<span class="tile-value tile-default">' . wp_kses( $data, $tags ) . '</span>';
 				break;
 		}
 	}
 
-	if ( ! empty( $tile['args']['display_args']['comparison_label'] ) ) {
-		echo '<span class="tile-compare">' . esc_attr( $tile['args']['display_args']['comparison_label'] ) . '</span>';
+	if ( ! empty( $args['comparison_label'] ) ) {
+		echo '<span class="tile-compare">' . esc_attr( $args['comparison_label'] ) . '</span>';
 	}
 }
 
@@ -889,23 +880,17 @@ function default_display_tile( $report = null, $tile = array() ) {
 function default_display_tiles_group( $report ) {
 	if ( ! $report->has_endpoints( 'tiles' ) ) {
 		return;
-	} ?>
+	}
+
+	$tiles = $report->get_endpoints( 'tiles' );
+?>
 
 	<div id="edd-reports-tiles-wrap" class="edd-report-wrap">
-		<div id="dashboard-widgets" class="metabox-holder">
-			<div class="postbox-container">
-				<?php do_meta_boxes( 'download_page_edd-reports', 'primary', $report ); ?>
-			</div>
-
-			<div class="postbox-container">
-				<?php do_meta_boxes( 'download_page_edd-reports', 'secondary', $report ); ?>
-			</div>
-
-			<div class="postbox-container">
-				<?php do_meta_boxes( 'download_page_edd-reports', 'tertiary', $report ); ?>
-			</div>
-		</div>
-		<div class="clear"></div>
+		<?php
+		foreach ( $tiles as $endpoint_id => $tile ) :
+			$tile->display();
+		endforeach;
+		?>
 	</div>
 
 	<?php
@@ -993,7 +978,6 @@ function display_dates_filter() {
 		'name'             => 'range',
 		'class'            => 'edd-graphs-date-options',
 		'options'          => $options,
-		'chosen'           => true,
 		'variations'       => false,
 		'show_option_all'  => false,
 		'show_option_none' => false,
@@ -1057,7 +1041,7 @@ function display_taxes_filter() {
 		return;
 	}
 
-	$taxes         = get_filter_value( 'taxes' ); 
+	$taxes         = get_filter_value( 'taxes' );
 	$exclude_taxes = isset( $taxes['exclude_taxes'] ) && true == $taxes['exclude_taxes'];
 ?>
 	<span class="edd-graph-filter-options graph-option-section">

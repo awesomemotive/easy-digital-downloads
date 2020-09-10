@@ -23,34 +23,34 @@ defined( 'ABSPATH' ) || exit;
  *     The `date_created` and `date_modified` parameters do not need to be passed.
  *     They will be automatically populated if empty.
  *
- *     @type int    $parent          ID of the parent order. Default 0.
- *     @type string $order_number    Order number, if enabled. Default empty.
- *     @type string $status          Order status. Default `pending`.
- *     @type string $type            Order type. Default `sale`.
- *     @type int    $user_id         WordPress user ID linked to the customer of
- *                                   the order. Default 0.
- *     @type int    $customer_id     ID of the customer of the order. Default 0.
- *     @type string $email           Email address used for the order. Default empty.
- *     @type string $ip              IP address of the client at checkout. Default empty.
- *     @type string $gateway         Gateway used to process the order. Default empty.
- *     @type string $mode            Store mode when order was placed. Default empty.
- *     @type string $currency        Currency used for the order. Default empty.
- *     @type string $payment_key     Payment key generated for the order. Default empty.
- *     @type float  $subtotal        Order subtotal. Default 0.
- *     @type float  $discount        Discount applied to the order. Default 0.
- *     @type float  $tax             Tax applied to the order. Default 0.
- *     @type float  $total           Order total. Default 0.
- *     @type string $date_created    Optional. Automatically calculated on add/edit.
- *                                   The date & time the order was inserted.
- *                                   Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified   Optional. Automatically calculated on add/edit.
- *                                   The date & time the order was last modified.
- *                                   Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_completed  The date & time the order's status was
- *                                   changed to `complete`. Format: YYYY-MM-DD HH:MM:SS.
- *                                   Default empty.
- *     @type string $date_refundable The date & time an order can be refunded until.
- *                                   Format: YYYY-MM-DD HH:MM:SS.
+ *     @type int    $parent               ID of the parent order. Default 0.
+ *     @type string $order_number         Order number, if enabled. Default empty.
+ *     @type string $status               Order status. Default `pending`.
+ *     @type string $type                 Order type. Default `sale`.
+ *     @type int    $user_id              WordPress user ID linked to the customer of
+ *                                        the order. Default 0.
+ *     @type int    $customer_id          ID of the customer of the order. Default 0.
+ *     @type string $email                Email address used for the order. Default empty.
+ *     @type string $ip                   IP address of the client at checkout. Default empty.
+ *     @type string $gateway              Gateway used to process the order. Default empty.
+ *     @type string $mode                 Store mode when order was placed. Default empty.
+ *     @type string $currency             Currency used for the order. Default empty.
+ *     @type string $payment_key          Payment key generated for the order. Default empty.
+ *     @type float  $subtotal             Order subtotal. Default 0.
+ *     @type float  $discount             Discount applied to the order. Default 0.
+ *     @type float  $tax                  Tax applied to the order. Default 0.
+ *     @type float  $total                Order total. Default 0.
+ *     @type string $date_created         Optional. Automatically calculated on add/edit.
+ *                                        The date & time the order was inserted.
+ *                                        Format: YYYY-MM-DD HH:MM:SS. Default empty.
+ *     @type string $date_modified        Optional. Automatically calculated on add/edit.
+ *                                        The date & time the order was last modified.
+ *                                        Format: YYYY-MM-DD HH:MM:SS. Default empty.
+ *     @type string|null $date_completed  The date & time the order's status was
+ *                                        changed to `complete`. Format: YYYY-MM-DD HH:MM:SS.
+ *                                        Default null.
+ *     @type string|null $date_refundable The date & time an order can be refunded until.
+ *                                        Format: YYYY-MM-DD HH:MM:SS.
  * }
  * @return int|false ID of newly created order, false on error.
  */
@@ -302,34 +302,34 @@ function edd_destroy_order( $order_id = 0 ) {
  * @param array $data {
  *     Array of order data. Default empty.
  *
- *     @type int    $parent          ID of the parent order. Default 0.
- *     @type string $order_number    Order number, if enabled. Default empty.
- *     @type string $status          Order status. Default `pending`.
- *     @type string $type            Order type. Default `sale`.
- *     @type int    $user_id         WordPress user ID linked to the customer of
- *                                   the order. Default 0.
- *     @type int    $customer_id     ID of the customer of the order. Default 0.
- *     @type string $email           Email address used for the order. Default empty.
- *     @type string $ip              IP address of the client at checkout. Default empty.
- *     @type string $gateway         Gateway used to process the order. Default empty.
- *     @type string $mode            Store mode when order was placed. Default empty.
- *     @type string $currency        Currency used for the order. Default empty.
- *     @type string $payment_key     Payment key generated for the order. Default empty.
- *     @type float  $subtotal        Order subtotal. Default 0.
- *     @type float  $discount        Discount applied to the order. Default 0.
- *     @type float  $tax             Tax applied to the order. Default 0.
- *     @type float  $total           Order total. Default 0.
- *     @type string $date_created    Optional. Automatically calculated on add/edit.
- *                                   The date & time the order was inserted.
- *                                   Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified   Optional. Automatically calculated on add/edit.
- *                                   The date & time the order was last modified.
- *                                   Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_completed  The date & time the order's status was
- *                                   changed to `complete`. Format: YYYY-MM-DD HH:MM:SS.
- *                                   Default empty.
- *     @type string $date_refundable The date & time an order can be refunded until.
- *                                   Format: YYYY-MM-DD HH:MM:SS.
+ *     @type int    $parent               ID of the parent order. Default 0.
+ *     @type string $order_number         Order number, if enabled. Default empty.
+ *     @type string $status               Order status. Default `pending`.
+ *     @type string $type                 Order type. Default `sale`.
+ *     @type int    $user_id              WordPress user ID linked to the customer of
+ *                                        the order. Default 0.
+ *     @type int    $customer_id          ID of the customer of the order. Default 0.
+ *     @type string $email                Email address used for the order. Default empty.
+ *     @type string $ip                   IP address of the client at checkout. Default empty.
+ *     @type string $gateway              Gateway used to process the order. Default empty.
+ *     @type string $mode                 Store mode when order was placed. Default empty.
+ *     @type string $currency             Currency used for the order. Default empty.
+ *     @type string $payment_key          Payment key generated for the order. Default empty.
+ *     @type float  $subtotal             Order subtotal. Default 0.
+ *     @type float  $discount             Discount applied to the order. Default 0.
+ *     @type float  $tax                  Tax applied to the order. Default 0.
+ *     @type float  $total                Order total. Default 0.
+ *     @type string $date_created         Optional. Automatically calculated on add/edit.
+ *                                        The date & time the order was inserted.
+ *                                        Format: YYYY-MM-DD HH:MM:SS. Default empty.
+ *     @type string $date_modified        Optional. Automatically calculated on add/edit.
+ *                                        The date & time the order was last modified.
+ *                                        Format: YYYY-MM-DD HH:MM:SS. Default empty.
+ *     @type string|null $date_completed  The date & time the order's status was
+ *                                        changed to `complete`. Format: YYYY-MM-DD HH:MM:SS.
+ *                                        Default empty.
+ *     @type string|null $date_refundable The date & time an order can be refunded until.
+ *                                        Format: YYYY-MM-DD HH:MM:SS.
  * }
  *
  * @return bool Whether or not the order was updated.
@@ -703,7 +703,7 @@ function edd_build_order( $order_data = array() ) {
 		if ( empty( $order_data['user_info']['first_name'] ) && empty( $order_data['user_info']['last_name'] ) ) {
 			$name = $order_args['email'];
 		} else {
-			$name = $order_data['user_info']['first_name'] . ' ' . $order_data['user_info']['last_name'];
+			$name = trim( $order_data['user_info']['first_name'] . ' ' . $order_data['user_info']['last_name'] );
 		}
 
 		$customer->create( array(
@@ -786,6 +786,26 @@ function edd_build_order( $order_data = array() ) {
 	$decimal_filter = edd_currency_decimal_filter();
 
 	if ( is_array( $order_data['cart_details'] ) && ! empty( $order_data['cart_details'] ) ) {
+
+		$tax_rate = false;
+		// If taxes are enabled, get the tax rate for the order location.
+		if ( edd_use_taxes() ) {
+			$country = ! empty( $order_data['user_info']['address']['country'] )
+				? $order_data['user_info']['address']['country']
+				: false;
+
+			$region = ! empty( $order_data['user_info']['address']['state'] )
+				? $order_data['user_info']['address']['state']
+				: false;
+
+			$tax_rate = edd_get_tax_rate_by_location(
+				array(
+					'country' => $country,
+					'region'  => $region,
+				)
+			);
+		}
+
 		foreach ( $order_data['cart_details'] as $key => $item ) {
 
 			// First, we need to check that what is being added is a valid download.
@@ -929,6 +949,9 @@ function edd_build_order( $order_data = array() ) {
 			// Store order item fees as adjustments.
 			if ( isset( $item['fees'] ) && ! empty( $item['fees'] ) ) {
 				foreach ( $item['fees'] as $fee_id => $fee ) {
+					$tax = ( isset( $fee['no_tax'] ) && false === $fee['no_tax'] && ! empty( $tax_rate->amount ) ) || ( $fee['amount'] < 0 && ! empty( $tax_rate->amount ) )
+						? floatval( floatval( $fee['amount'] ) - ( floatval( $fee['amount'] ) / ( 1 + $tax_rate->amount ) ) )
+						: 0.00;
 
 					$adjustment_data = array(
 						'object_id'   => $order_item_id,
@@ -936,53 +959,34 @@ function edd_build_order( $order_data = array() ) {
 						'type'        => 'fee',
 						'description' => $fee['label'],
 						'subtotal'    => $fee['amount'],
+						'tax'         => $tax,
 						'total'       => $fee['amount'],
 					);
-
-					if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
-						$adjustment_data['tax'] = 0.00;
-					}
 
 					// Add the adjustment.
 					$adjustment_id = edd_add_order_adjustment( $adjustment_data );
 
 					edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
-					edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
-
-					if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
-						edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
-					}
 				}
 			}
 
 			// Maybe store order tax.
-			if ( edd_use_taxes() ) {
-				$country = ! empty( $order_data['user_info']['address']['country'] )
-					? $order_data['user_info']['address']['country']
-					: false;
-
-				$state = ! empty( $order_data['user_info']['address']['state'] )
-					? $order_data['user_info']['address']['state']
-					: false;
-
-				$zip = ! empty( $order_data['user_info']['address']['zip'] )
-					? $order_data['user_info']['address']['zip']
-					: false;
-
-				$tax_rate = isset( $item['tax_rate'] )
-					? floatval( $item['tax_rate'] )
-					: edd_get_cart_tax_rate( $country, $state, $zip );
-
-				if ( 0 < $tax_rate ) {
-
-					// Always store tax rate, even if empty.
-					edd_add_order_adjustment( array(
+			if ( $tax_rate ) {
+				$description = $tax_rate->name;
+				if ( ! empty( $tax_rate->description ) ) {
+					$description = $tax_rate->description;
+				}
+				// Always store tax rate, even if empty.
+				edd_add_order_adjustment(
+					array(
 						'object_id'   => $order_item_id,
 						'object_type' => 'order_item',
 						'type'        => 'tax_rate',
-						'total'       => $tax_rate,
-					) );
-				}
+						'total'       => $tax_rate->amount,
+						'type_id'     => $tax_rate->id,
+						'description' => $description,
+					)
+				);
 			}
 
 			$subtotal       += (float) $order_item_args['subtotal'];
@@ -1022,10 +1026,6 @@ function edd_build_order( $order_data = array() ) {
 			$adjustment_id = edd_add_order_adjustment( $args );
 
 			edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $key );
-
-			if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
-				edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
-			}
 
 			$total_fees += (float) $fee['amount'];
 			$total_tax  += $tax;
@@ -1281,4 +1281,85 @@ function edd_clone_order( $order_id = 0, $clone_relationships = false, $args = a
 	}
 
 	return $new_order_id;
+}
+
+/**
+ * Get the order status array keys that can be used to run reporting related to gross reporting.
+ *
+ * @since 3.0
+ *
+ * @return array An array of order status array keys that can be related to gross reporting.
+ */
+function edd_get_gross_order_statuses() {
+	$statuses = array(
+		'complete',
+		'refunded',
+		'partially_refunded',
+		'revoked',
+	);
+
+	/**
+	 * Statuses that affect gross order statistics.
+	 *
+	 * This filter allows extensions and developers to alter the statuses that can affect the reporting of gross
+	 * sales statistics.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $statuses {
+	 *     An array of order status array keys.
+	 *
+	 */
+	return apply_filters( 'edd_gross_order_statuses', $statuses );
+}
+
+/**
+ * Get the order status array keys that can be used to run reporting related to net reporting.
+ *
+ * @since 3.0
+ *
+ * @return array An array of order status array keys that can be related to net reporting.
+ */
+function edd_get_net_order_statuses() {
+	$statuses = array(
+		'complete',
+		'partially_refunded',
+		'revoked',
+	);
+
+	/**
+	 * Statuses that affect net order statistics.
+	 *
+	 * This filter allows extensions and developers to alter the statuses that can affect the reporting of net
+	 * sales statistics.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $statuses {
+	 *     An array of order status array keys.
+	 *
+	 */
+	return apply_filters( 'edd_net_order_statuses', $statuses );
+}
+
+/**
+ * Generate unique payment key for orders.
+ *
+ * @since 3.0
+ * @param string $key Additional string used to help randomize key.
+ * @return string
+ */
+function edd_generate_order_payment_key( $key ) {
+	$auth_key    = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
+	$payment_key = strtolower( md5( $key . gmdate( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'edd', true ) ) );
+
+	/**
+	 * Filters the payment key
+	 *
+	 * @since 3.0
+	 * @param string $payment_key The value to be filtered
+	 * @param string $key Additional string used to help randomize key.
+	 * @return string
+	 */
+	return apply_filters( 'edd_generate_order_payment_key', $payment_key, $key );
 }

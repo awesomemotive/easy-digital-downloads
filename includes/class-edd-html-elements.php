@@ -79,10 +79,15 @@ class EDD_HTML_Elements {
 			$product_args['post_status'] = array( 'publish' );
 		}
 
-		// Maybe disable bundles
+		// Maybe disable bundles.
 		if ( ! $args['bundles'] ) {
 			$product_args['meta_query'] = array(
-				'relation' => 'AND',
+				'relation' => 'OR',
+				array(
+					'key'     => '_edd_product_type',
+					'value'   => 'bundle',
+					'compare' => '!=',
+				),
 				array(
 					'key'     => '_edd_product_type',
 					'value'   => 'bundle',
@@ -126,15 +131,26 @@ class EDD_HTML_Elements {
 			foreach ( $products as $product ) {
 				$has_variations = edd_has_variable_prices( $product->ID );
 
+				// If a product has no variations, just add it to the list and continue.
+				if ( ! $has_variations ) {
+					$title                             = esc_html( $product->post_title );
+					$options[ absint( $product->ID ) ] = $title;
+
+					continue;
+				}
+
+				// The product does have variations. Add the top level product to the list
+				// if not showing variations, or not showing variations only.
 				if ( false === $args['variations'] || ! $args['show_variations_only'] ) {
 					$title = esc_html( $product->post_title );
-					if ( $has_variations && ! $args['show_variations_only'] ) {
+					if ( ! $args['show_variations_only'] ) {
 						$title .= ' (' . __( 'All Price Options', 'easy-digital-downloads' ) . ')';
 					}
 					$options[ absint( $product->ID ) ] = $title;
 				}
 
-				if ( $args['variations'] && $has_variations ) {
+				// If showing variations, add them to the list.
+				if ( $args['variations'] ) {
 					$prices = edd_get_variable_prices( $product->ID );
 					foreach ( $prices as $key => $value ) {
 						$name = ! empty( $value['name'] ) ? $value['name'] : '';

@@ -905,11 +905,12 @@ function edd_is_discount_valid( $code = '', $user = '', $set_error = true ) {
  * @since 3.0 Updated to call edd_get_discount_by_code()
  *
  * @param string $code Discount code.
- * @return int Discount ID.
+ * @return int|bool Discount ID, or false if discount does not exist.
  */
 function edd_get_discount_id_by_code( $code = '' ) {
 	$discount = edd_get_discount_by_code( $code );
-	return $discount->id;
+
+	return ( $discount instanceof EDD_Discount ) ? $discount->id : false;
 }
 
 /**
@@ -1358,35 +1359,22 @@ function edd_validate_discount( $discount_id = 0, $download_ids = array() ) {
 	asort( $excluded_products );
 	$excluded_products = array_filter( array_values( $excluded_products ) );
 
-	if ( ! $is_valid && ! empty( $product_requirements ) ) {
-		switch ( $discount->get_product_condition() ) {
-			case 'all':
-				foreach ( $product_requirements as $download_id ) {
-					if ( empty( $download_id ) ) {
-						continue;
-					}
+	if ( ! empty( $product_requirements ) ) {
+		foreach ( $product_requirements as $download_id ) {
+			if ( empty( $download_id ) ) {
+				continue;
+			}
 
-					$download_id = absint( $download_id );
+			$download_id  = absint( $download_id );
+			$has_download = in_array( $download_id, $download_ids, true );
 
-					if ( ! in_array( $download_id, $download_ids, true ) ) {
-						$is_valid = false;
-						break;
-					}
-				}
-
-				break;
-			default:
-				foreach ( $product_requirements as $download_id ) {
-					if ( empty( $download_id ) ) {
-						continue;
-					}
-
-					if ( in_array( $download_id, $download_ids, true ) ) {
-						return true;
-					}
-				}
-
-				break;
+			switch ( $discount->get_product_condition() ) {
+				case 'all':
+					$is_valid = false !== $has_download;
+					break;
+				default:
+					$is_valid = $has_download;
+			}
 		}
 	} else {
 		$is_valid = true;
@@ -1394,9 +1382,14 @@ function edd_validate_discount( $discount_id = 0, $download_ids = array() ) {
 
 	if ( ! empty( $excluded_products ) ) {
 		foreach ( $excluded_products as $download_id ) {
-			if ( in_array( $download_id, $download_ids, true ) ) {
-				$is_valid = false;
+			if ( empty( $download_id ) ) {
+				continue;
 			}
+
+			$download_id  = absint( $download_id );
+			$has_download = in_array( $download_id, $download_ids, true );
+
+			$is_valid = false === $has_download;
 		}
 	}
 

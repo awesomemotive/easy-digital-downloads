@@ -325,22 +325,19 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 * @group edd_dates
 	 */
 	public function test_get_dates_filter_options_should_match_defaults() {
-
-		$timezone_abbreviation = 'GMT+0000';;
-
 		$expected = array(
-			'other'        => __( 'Custom', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'today'        => __( 'Today', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'yesterday'    => __( 'Yesterday', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'this_week'    => __( 'This Week', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'last_week'    => __( 'Last Week', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'last_30_days' => __( 'Last 30 Days', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'this_month'   => __( 'This Month', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'last_month'   => __( 'Last Month', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'this_quarter' => __( 'This Quarter', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'last_quarter' => __( 'Last Quarter', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'this_year'    => __( 'This Year', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'last_year'    => __( 'Last Year', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
+			'other'        => __( 'Custom', 'easy-digital-downloads' ),
+			'today'        => __( 'Today', 'easy-digital-downloads' ),
+			'yesterday'    => __( 'Yesterday', 'easy-digital-downloads' ),
+			'this_week'    => __( 'This Week', 'easy-digital-downloads' ),
+			'last_week'    => __( 'Last Week', 'easy-digital-downloads' ),
+			'last_30_days' => __( 'Last 30 Days', 'easy-digital-downloads' ),
+			'this_month'   => __( 'This Month', 'easy-digital-downloads' ),
+			'last_month'   => __( 'Last Month', 'easy-digital-downloads' ),
+			'this_quarter' => __( 'This Quarter', 'easy-digital-downloads' ),
+			'last_quarter' => __( 'Last Quarter', 'easy-digital-downloads' ),
+			'this_year'    => __( 'This Year', 'easy-digital-downloads' ),
+			'last_year'    => __( 'Last Year', 'easy-digital-downloads' ),
 		);
 
 		$this->assertEqualSetsWithIndex( $expected, get_dates_filter_options() );
@@ -408,8 +405,8 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 	 */
 	public function test_parse_dates_for_range_with_last_month_range_should_return_those_dates() {
 		$expected = array(
-			'start' => self::$date->copy()->subMonth( 1 )->startOfMonth()->toDateTimeString(),
-			'end'   => self::$date->copy()->subMonth( 1 )->endOfMonth()->toDateTimeString(),
+			'start' => self::$date->copy()->subMonthNoOverflow( 1 )->startOfMonth()->toDateTimeString(),
+			'end'   => self::$date->copy()->subMonthNoOverflow( 1 )->endOfMonth()->toDateTimeString(),
 			'range' => 'last_month',
 		);
 
@@ -418,6 +415,28 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		// Explicitly strip seconds in case the test is slow.
 		$expected = $this->strip_seconds( $expected );
 		$result   = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
+
+		$this->assertEqualSetsWithIndex( $expected, $result );
+	}
+
+	/**
+	 * @covers \EDD\Reports\parse_dates_for_range()
+	 * @group edd_dates
+	 */
+	public function test_parse_dates_for_range_with_overflow_last_month_range_should_return_those_dates() {
+		$overflow_day  = '2020-03-30 00:00:00';
+		$overflow_date = EDD()->utils->date( $overflow_day );
+
+		$expected = array(
+			'start' => ( new \DateTime( '2020-02-01 00:00:00' ) )->format( 'Y-m-d H:i' ),
+			'end'   => ( new \DateTime( '2020-02-29 23:59:59' ) )->format( 'Y-m-d H:i' ),
+			'range' => 'last_month',
+		);
+
+		$result = parse_dates_for_range( 'last_month', $overflow_day );
+
+		// Explicitly strip seconds in case the test is slow.
+		$result = $this->strip_seconds( $this->objects_to_date_strings( $result ) );
 
 		$this->assertEqualSetsWithIndex( $expected, $result );
 	}
@@ -769,6 +788,27 @@ class Reports_Functions_Tests extends \EDD_UnitTestCase {
 		);
 
 		$this->assertEqualSetsWithIndex( $expected, get_filter_value( 'dates' ) );
+	}
+
+	public function test_gross_order_status() {
+		$expected = array(
+			'complete',
+			'refunded',
+			'partially_refunded',
+			'revoked',
+		);
+
+		$this->assertSame( $expected, edd_get_gross_order_statuses() );
+	}
+
+	public function test_net_order_status() {
+		$expected = array(
+			'complete',
+			'partially_refunded',
+			'revoked',
+		);
+
+		$this->assertSame( $expected, edd_get_net_order_statuses() );
 	}
 
 	/**
