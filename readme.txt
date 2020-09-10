@@ -73,6 +73,8 @@ Payment gateways supported through free or premium extensions:
 
 See our [payment gateways category](https://easydigitaldownloads.com/downloads/category/gateways/?utm_source=extensions&utm_medium=description_tab&utm_content=gateways&utm_campaign=readme) in the extensions catalogue for a complete list of supported merchant processors. There are also a large number of additional payment gateways developed and supported by [3rd party developers](https://easydigitaldownloads.com/3rd-party-extensions/#gateways).
 
+Easy Digital Downloads is also a Stripe verified partner. The Stripe partner program recognizes applications which meet their strict quality requirements and allows us to provide even better services to our customers.
+
 = Take your store further with extensions =
 
 With add-on plugins from our [extensions catalogue](https://easydigitaldownloads.com/downloads/?utm_source=extensions&utm_medium=description_tab&utm_content=extensions&utm_campaign=readme) you can super-charge your digital store. Some of our extension highlights include:
