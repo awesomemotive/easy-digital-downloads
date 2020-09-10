@@ -2430,12 +2430,25 @@ body.download_page_edd-reports {
 .edd-reports-table {
 	margin-bottom: 20px;
 }
-div#post-body-content {
+
+/* div#post-body-content {
 	display: grid;
+	display: -ms-grid;
 	grid-template-columns: 1fr 1fr;
 	grid-gap: 20px;
 	border: 1px solid red;
+} */
+
+@media screen and ( min-width: 782px ) {
+	div#post-body-content {
+		display: grid;
+		display: -ms-grid;
+		grid-template-columns: 1fr 1fr;
+		grid-gap: 20px;
+		border: 1px solid red;
+	}
 }
+
 .edd-import-export-form {
 	position: relative;
 }
