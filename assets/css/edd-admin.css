@@ -2176,12 +2176,10 @@ input[class*="edd-price-field"] {
 	}
 
 	#edd-item-tables-wrapper .addresses tbody tr {
-		display: flex;
-		justify-content: flex-start;
-		flex-wrap: wrap;
+		display: grid;
 	}
-	#edd-item-tables-wrapper .addresses td:last-of-type {
-		display: none;
+	#edd-item-tables-wrapper .addresses tbody td:not(.no-items) {
+		padding-left: 35%;
 	}
 }
 
@@ -3274,17 +3272,27 @@ body.download_page_edd-reports {
 #edd-item-tables-wrapper .no-items {
 	text-align: left;
 }
-#edd-item-tables-wrapper .emails .add-customer-email-row td {
+#edd-item-tables-wrapper .emails .add-customer-email-row {
 	background-color: #f4f4f4;
 	border-top: 1px solid #e5e5e5;
 }
-#edd-item-tables-wrapper .emails input {
-	vertical-align: middle;
-	margin: 6px 0;
+#edd-item-tables-wrapper .add-customer-email-wrapper {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	margin: 12px 0;
+}
+#edd-item-tables-wrapper .edd-form-group {
+	margin-bottom: 0;
+}
+#edd-item-tables-wrapper .edd-make-email-primary {
+	flex-grow: 1;
+	margin-left: 12px;
 }
 #edd-item-tables-wrapper .emails .spinner {
 	float: none;
-	margin: 10px 0 0 0;
+	margin: 0 10px;
+	align-self: center;
 }
 #edd-item-tables-wrapper .notice-error {
 	background-color: #fff5f5;
@@ -3331,9 +3339,6 @@ body.download_page_edd-reports {
 	padding-right: 20px;
 	margin-left: -20px;
 	margin-right: -20px;
-}
-.edd-sections-wrap .section-wrap .add-customer-email-wrapper > #add-customer-email {
-	vertical-align: middle;
 }
 
 @media screen and ( max-width: 810px ) and ( min-width: 656px ) {
@@ -3396,6 +3401,13 @@ body.download_page_edd-reports {
 	}
 	.edd-sections-wrap .section-wrap .customer-id {
 		display: none;
+	}
+	#edd-item-tables-wrapper .emails td.column-primary {
+		padding-right: 10px;
+		width: 100% !important;
+	}
+	#edd-item-tables-wrapper .edd-form-group {
+		margin: 0 0 16px 0;
 	}
 }
 @media screen and ( max-width: 480px ) {
