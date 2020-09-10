@@ -31,8 +31,8 @@ class EDD_Customer_Addresses_Table extends List_Table {
 	 */
 	public function __construct() {
 		parent::__construct( array(
-			'singular' => __( 'Address',   'easy-digital-downloads' ),
-			'plural'   => __( 'Addresses', 'easy-digital-downloads' ),
+			'singular' => 'address',
+			'plural'   => 'addresses',
 			'ajax'     => false
 		) );
 
@@ -132,12 +132,17 @@ class EDD_Customer_Addresses_Table extends List_Table {
 
 		// Actions
 		$actions  = array(
-			'view' => '<a href="' . esc_url( $customer_url ) . '">' . __( 'View', 'easy-digital-downloads' ) . '</a>'
+			'view' => '<a href="' . esc_url( $customer_url ) . '">' . esc_html__( 'View', 'easy-digital-downloads' ) . '</a>'
 		);
 
-		// Non-primary address actions
 		if ( empty( $item['is_primary'] ) ) {
-			$actions['delete'] = '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
+			$delete_url = wp_nonce_url( edd_get_admin_url( array(
+				'page'       => 'edd-customers',
+				'view'       => 'overview',
+				'id'         => urlencode( $item['id'] ),
+				'edd_action' => 'customer-remove-address'
+			) ), 'edd-remove-customer-address' );
+			$actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete', 'easy-digital-downloads' ) . '</a>';
 		}
 
 		// State
@@ -287,7 +292,7 @@ class EDD_Customer_Addresses_Table extends List_Table {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-customers' ) ) {
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-addresses' ) ) {
 			return;
 		}
 
