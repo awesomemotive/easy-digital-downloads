@@ -484,12 +484,13 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @return string Displays a checkbox.
 	 */
 	public function column_cb( $order ) {
+		$order_number = 'sale' === $order->type ? $order->get_number() : $order->order_number;
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" id="%1$s-%2$s" value="%2$s" /><label for="%1$s-%2$s" class="screen-reader-text">%3$s</label>',
 			'order',
 			$order->id,
 			/* translators: the order number */
-			sprintf( __( 'Select %s', 'easy-digital-downloads' ), $order->get_number() )
+			sprintf( __( 'Select %s', 'easy-digital-downloads' ), $order_number )
 		);
 	}
 
