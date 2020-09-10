@@ -2431,13 +2431,13 @@ body.download_page_edd-reports {
 	margin-bottom: 20px;
 }
 
-/* div#post-body-content {
+div#post-body-content {
 	display: grid;
 	display: -ms-grid;
-	grid-template-columns: 1fr 1fr;
+	grid-template-columns: 1fr;
 	grid-gap: 20px;
-	border: 1px solid red;
-} */
+	border: 1px solid green;
+}
 
 @media screen and ( min-width: 782px ) {
 	div#post-body-content {
