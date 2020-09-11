@@ -2433,6 +2433,7 @@ div#post-body-content {
 	display: -ms-grid;
 	grid-template-columns: 1fr;
 	grid-gap: 20px;
+	/* color green to show impact on other divs throughout */
 	border: 1px solid green;
 }
 
@@ -2449,8 +2450,23 @@ div.postbox {
 
 span input.button-secondary {
 	height: 40px;
-	/* color red to show impact on other buttons throught */
+	/* color red to show impact on other buttons throughout */
 	color: red !important;
+}
+
+#edd-order-export-start,
+#edd-order-export-end,
+#edd-orders-export-start,
+#edd-orders-export-end,
+#edd-taxed-orders-export-start,
+#edd-taxed-orders-export-end,
+#edd-api-requests-export-start,
+#edd-api-requests-export-end,
+#edd-file-download-export-start,
+#edd-file-download-export-end {
+	/* color purple to show impact on other to-from throughout */
+	border-color: purple;
+	width: 48%;
 }
 
 @media screen and ( min-width: 768px ) {
