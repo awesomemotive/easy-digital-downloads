@@ -224,9 +224,9 @@ class Refund_Items_Table extends List_Table {
 				/*$1%s*/
 				'order_item',
 				/*$2%s*/
-				$order_item->id,
+				esc_attr( $order_item->id ),
 				/* translators: product name */
-				sprintf( __( 'Select %s', 'easy-digital-downloads' ), $order_item->product_name )
+				esc_html( sprintf( __( 'Select %s', 'easy-digital-downloads' ), $order_item->product_name ) )
 			);
 		}
 	}
