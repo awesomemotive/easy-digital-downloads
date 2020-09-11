@@ -220,7 +220,7 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 			/*$1%s*/ esc_attr( 'customer' ),
 			/*$2%s*/ esc_attr( $item['id'] ),
 			/* translators: customer email */
-			sprintf( __( 'Select %s', 'easy-digital-downloads' ), $item['email'] ),
+			esc_html( sprintf( __( 'Select %s', 'easy-digital-downloads' ), $item['email'] ) ),
 			/*$4%s*/ esc_attr( $title ),
 			/*$5%s*/ $primary_attributes
 		);

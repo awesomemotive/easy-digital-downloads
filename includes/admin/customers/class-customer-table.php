@@ -164,9 +164,9 @@ class EDD_Customer_Reports_Table extends List_Table {
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" id="%1$s-%2$s" value="%2$s" /><label for="%1$s-%2$s" class="screen-reader-text">%3$s</label>',
 			/*$1%s*/ 'customer',
-			/*$2%s*/ $item['id'],
+			/*$2%s*/ esc_attr( $item['id'] ),
 			/* translators: customer name or email */
-			sprintf( __( 'Select %s', 'easy-digital-downloads' ), $name )
+			esc_html( sprintf( __( 'Select %s', 'easy-digital-downloads' ), $name ) )
 		);
 	}
 
