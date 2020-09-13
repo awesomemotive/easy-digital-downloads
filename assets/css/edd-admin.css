@@ -2433,6 +2433,7 @@ div#post-body-content {
 	display: -ms-grid;
 	grid-template-columns: 1fr;
 	grid-gap: 20px;
+	max-width: 1000px;
 }
 
 div.postbox {
@@ -2445,12 +2446,11 @@ div.postbox {
 #edd-export-earnings select.edd-select {
 	width: 45%;
 }
-
+/* 
 span input.button-secondary {
 	height: 40px;
-	/* color red to show impact on other buttons throughout */
 	color: red !important;
-}
+} */
 
 #edd-order-export-start,
 #edd-order-export-end,
@@ -2466,7 +2466,6 @@ span input.button-secondary {
 }
 
 .edd-export-sales-earnings {
-	border: 1px solid blue;
 	grid-template-columns: 1fr;
 }
 
@@ -2484,13 +2483,8 @@ span input.button-secondary {
 	#edd-file-download-export-end {
 		width: 45%;
 	}
-
-	/* find more specific selector */
-	.edd-reports-wrapper .postbox .edd-select {
-		border: 1px solid green !important;
-		max-width: 90%;
-	}
 }
+
 @media screen and ( min-width: 768px ) {
 	div#post-body-content {
 		display: grid;
@@ -2504,11 +2498,6 @@ span input.button-secondary {
 	}
 	#edd-export-earnings select.edd-select {
 		width: 40%;
-	}
-	span input.button-secondary {
-		height: 30px;
-		/* why are only some buttons in spans? */
-		color: red !important;
 	}
 	
 }
