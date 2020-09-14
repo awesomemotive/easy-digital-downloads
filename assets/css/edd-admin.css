@@ -2461,35 +2461,32 @@ span input.button-secondary {
 	grid-template-columns: 1fr;
 }
 
-@media screen and ( max-width: 480px ) {
-	.edd-from-to-wrapper {
-		margin-right: 0;
-	}
-	/* I hate using max-width here, somehow to work with flex? */
-	#edd-order-export-start,
-	#edd-order-export-end,
-	#edd-orders-export-start,
-	#edd-orders-export-end,
-	#edd-taxed-orders-export-start,
-	#edd-taxed-orders-export-end,
-	#edd-api-requests-export-start,
-	#edd-api-requests-export-end,
-	#edd-file-download-export-start,
-	#edd-file-download-export-end {
-		width: 50%;
-		margin-right: 0px;
-	}
+.edd-from-to-wrapper {
+	margin-right: 0;
+}
 
-	.edd-import-export-form:not(#edd-export-earnings) {
-		/* border: 1px solid blue; */
-		display: flex;
-		flex-direction: column;
-	}
+#edd-order-export-start,
+#edd-order-export-end,
+#edd-orders-export-start,
+#edd-orders-export-end,
+#edd-taxed-orders-export-start,
+#edd-taxed-orders-export-end,
+#edd-api-requests-export-start,
+#edd-api-requests-export-end,
+#edd-file-download-export-start,
+#edd-file-download-export-end {
+	width: 50%;
+	margin-right: 0px;
+}
 
-	.edd-reports-wrapper .postbox .edd-select {
-		max-width: inherit;
-	}
+.edd-import-export-form:not(#edd-export-earnings) {
+	display: flex;
+	flex-direction: column;
+}
 
+.edd-reports-wrapper .postbox .edd-select {
+	max-width: inherit;
+	margin-right: 0;
 }
 
 @media screen and ( min-width: 768px ) {
@@ -2501,7 +2498,7 @@ span input.button-secondary {
 	}
 
 	div.postbox {
-		height: 350px;
+		/* height: 350px; */
 	}
 	#edd-export-earnings select.edd-select {
 		width: 40%;
