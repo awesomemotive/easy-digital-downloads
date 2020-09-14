@@ -2351,14 +2351,6 @@ body.download_page_edd-reports {
 	padding-top: 0;
 }
 
-/* .edd-reports-wrapper form .edd-from-to-wrapper,
-.edd-reports-wrapper form .edd-select,
-.edd-reports-wrapper form .edd-label,
-.edd-reports-wrapper form input.button {
-	vertical-align: middle;
-	float: left;
-} */
-
 .edd-reports-wrapper form .edd-label {
 	height: 29px;
 	line-height: 29px;
@@ -2470,7 +2462,10 @@ span input.button-secondary {
 }
 
 @media screen and ( max-width: 480px ) {
-	/* I hate using max-width here, somehow to work with grid? */
+	.edd-from-to-wrapper {
+		margin-right: 0;
+	}
+	/* I hate using max-width here, somehow to work with flex? */
 	#edd-order-export-start,
 	#edd-order-export-end,
 	#edd-orders-export-start,
@@ -2481,8 +2476,20 @@ span input.button-secondary {
 	#edd-api-requests-export-end,
 	#edd-file-download-export-start,
 	#edd-file-download-export-end {
-		width: 45%;
+		width: 50%;
+		margin-right: 0px;
 	}
+
+	.edd-import-export-form:not(#edd-export-earnings) {
+		/* border: 1px solid blue; */
+		display: flex;
+		flex-direction: column;
+	}
+
+	.edd-reports-wrapper .postbox .edd-select {
+		max-width: inherit;
+	}
+
 }
 
 @media screen and ( min-width: 768px ) {
