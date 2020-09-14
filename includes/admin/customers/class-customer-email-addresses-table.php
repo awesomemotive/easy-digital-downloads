@@ -206,7 +206,7 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD_Customer $item Customer object.
+	 * @param array $item
 	 *
 	 * @return string Displays a checkbox
 	 */
@@ -216,11 +216,13 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 		$title              = $is_primary ? __( 'Primary email addresses cannot be deleted.', 'easy-digital-downloads' ) : '';
 
 		return sprintf(
-			'<input type="checkbox" name="%1$s[]" value="%2$s" title="%3$s"%4$s />',
-			/*$1%s*/ 'customer',
+			'<input type="checkbox" name="%1$s[]" id="%1$s-%2$s" value="%2$s" title="%4$s"%5$s /><label for="%1$s-%2$s" class="screen-reader-text">%3$s</label>',
+			/*$1%s*/ esc_attr( 'customer' ),
 			/*$2%s*/ esc_attr( $item['id'] ),
-			/*$3%s*/ esc_attr( $title ),
-			/*$4%s*/ $primary_attributes
+			/* translators: customer email */
+			esc_html( sprintf( __( 'Select %s', 'easy-digital-downloads' ), $item['email'] ) ),
+			/*$4%s*/ esc_attr( $title ),
+			/*$5%s*/ $primary_attributes
 		);
 	}
 
