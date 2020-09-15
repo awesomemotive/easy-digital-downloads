@@ -2562,7 +2562,7 @@ function display_export_report() {
                             <form id="edd-export-earnings" class="edd-export-form edd-import-export-form" method="post">
 								<?php echo EDD()->html->month_dropdown( 'start_month' ); ?>
 								<?php echo EDD()->html->year_dropdown( 'start_year' ); ?>
-								<span class="edd-label"><?php echo _x( 'to', 'Date one to date two', 'easy-digital-downloads' ); ?></span>
+								<span class="edd-label" id="to-label"><?php echo _x( 'to', 'Date one to date two', 'easy-digital-downloads' ); ?></span>
 								<?php echo EDD()->html->month_dropdown( 'end_month' ); ?>
 								<?php echo EDD()->html->year_dropdown( 'end_year' ); ?>
 								<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>

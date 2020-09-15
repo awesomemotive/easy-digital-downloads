@@ -2439,11 +2439,11 @@ div.postbox {
 	width: 45%;
 }
 
-span input.button-secondary,
+/* span input.button-secondary,
 input.button-secondary {
 	height: 40px;
 	color: red !important;
-}
+} */
 
 /* #edd-order-export-start,
 #edd-order-export-end,
@@ -2485,6 +2485,10 @@ span.edd-from-to-wrapper {
 	margin-right: 0px;
 }
 
+/* To do: center on own row */
+#to-label {
+	color: red;
+}
 .edd-import-export-form:not( #edd-export-earnings ) {
 	display: flex;
 	flex-direction: column;
