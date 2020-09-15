@@ -220,11 +220,13 @@ class Refund_Items_Table extends List_Table {
 	public function column_cb( $order_item ) {
 		if ( 'refunded' !== $order_item->status ) {
 			return sprintf(
-				'<input type="checkbox" name="%1$s[]" value="%2$s" id="edd-order-item-%2$s" />',
+				'<input type="checkbox" name="%1$s[]" id="%1$s-%2$s" value="%2$s" /><label for="%1$s-%2$s" class="screen-reader-text">%3$s</label>',
 				/*$1%s*/
 				'order_item',
 				/*$2%s*/
-				$order_item->id
+				esc_attr( $order_item->id ),
+				/* translators: product name */
+				esc_html( sprintf( __( 'Select %s', 'easy-digital-downloads' ), $order_item->product_name ) )
 			);
 		}
 	}
