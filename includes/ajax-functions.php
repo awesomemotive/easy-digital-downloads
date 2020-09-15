@@ -1392,8 +1392,8 @@ function edd_admin_order_get_item_amounts() {
 		? sanitize_text_field( $_POST['region'] )
 		: '';
 
-	$product_ids = isset( $_POST['productIds'] )
-		? array_unique( array_map( 'intval', $_POST['productIds'] ) )
+	$products = isset( $_POST['products'] )
+		? $_POST['products']
 		: array();
 
 	$discounts = isset( $_POST['discounts'] )
@@ -1440,38 +1440,47 @@ function edd_admin_order_get_item_amounts() {
 	// There is not currently API support for `OrderItem`-level `OrderAdjustment`s.
 	$adjustments = array();
 
+	global $edd_flat_discount_total;
+
 	foreach ( $discounts as $discount_id ) {
+		$edd_flat_discount_total = 0;
+
 		$d = edd_get_discount( $discount_id );
 
-		if ( empty( $d ) ) {
-			continue;
+		// Retrieve total flat rate amount.
+		if ( 'flat' === $d->get_type() ) {
+			foreach ( $products as $product ) {
+				// This incremements the `$edd_flat_discount_total` global.
+				edd_get_item_discount_amount( $product, $products, array( $d ) );
+			}
 		}
 
-		// Validate Discount against current Order Items.
-		$valid = edd_validate_discount( $d->id, $product_ids );
+		// Store total discount and reset global.
+		$total_discount = $edd_flat_discount_total;
 
-		if ( false === $valid ) {
-			continue;
-		}
+		$item = array(
+			'id'       => $download->id,
+			'quantity' => $quantity,
+			'options'  => array(
+				'price_id' => $price_id,
+			),
+		);
 
-		// Apply Discount to affected Order Items.
-		// @todo Helper function somewhere?
-		$product_requirements = $d->get_product_reqs();
-		$product_requirements = array_map( 'absint', $product_requirements );
-		asort( $product_requirements );
-		$product_requirements = array_filter( array_values( $product_requirements ) );
+		$discount_amount = edd_get_item_discount_amount( $item, $products, array( $d ) );
 
 		if (
-			! empty( $product_requirements ) &&
-			( 'not_global' === $d->get_scope() ) &&
-			! in_array( $product_id, $product_requirements, true )
+			0 !== $discount_amount &&
+			'flat' === $d->get_type() &&
+			$item['id'] == end( $products )['id']
 		) {
-			continue;
+			if ( $total_discount < $d->get_amount() ) {
+				$adjustment       = ( $d->get_amount() - $total_discount );
+				$discount_amount += $adjustment;
+			} else if ( $total_discount > $d->get_amount() ) {
+				$adjustment       = ( $total_discount - $d->get_amount() );
+				$discount_amount -= $adjustment;
+			}
 		}
-
-		// Find the discounted amount.
-		$discounted_amount = $d->get_discounted_amount( $subtotal );
-		$discount_amount   = ( $subtotal - $discounted_amount );
 
 		$adjustments[] = array(
 			'objectType'  => 'order_item',
