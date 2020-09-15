@@ -37,10 +37,6 @@ $view_url = add_query_arg(
 			<# } #>
 
 			<div class="row-actions">
-				<# if ( data.discount > 0 ) { #>
-				<span class="text"><strong><?php esc_html_e( 'Discount:', 'easy-digital-downloads' ); ?></strong> {{ data.discountCurrency }}</span>
-				<# } #>
-
 				<# if ( false !== data.state.hasTax ) { #>
 				<span class="text">
 					<strong><?php esc_html_e( 'Tax:', 'easy-digital-downloads' ); ?></strong>
