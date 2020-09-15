@@ -2780,8 +2780,10 @@ function display_export_report() {
 
 				                wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
 				                ?>
-                                <input type="hidden" name="edd-export-class" value="EDD_Batch_Customers_Export"/>
-                                <input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								<input type="hidden" name="edd-export-class" value="EDD_Batch_Customers_Export"/>
+								<span>
+									<input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								</span>
                             </form>
                         </div>
                     </div>
@@ -2835,8 +2837,10 @@ function display_export_report() {
 									)
 								); ?>
 								<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
-                                <input type="hidden" name="edd-export-class" value="EDD_Batch_Downloads_Export"/>
-                                <input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								<input type="hidden" name="edd-export-class" value="EDD_Batch_Downloads_Export"/>
+								<span>
+									<input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								</span>
                             </form>
                         </div>
                     </div>
@@ -2866,8 +2870,10 @@ function display_export_report() {
 				                wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
 
 								?>
-                                <input type="hidden" name="edd-export-class" value="EDD_Batch_API_Requests_Export"/>
-                                <input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								<input type="hidden" name="edd-export-class" value="EDD_Batch_API_Requests_Export"/>
+								<span>
+									<input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								</span>
                             </form>
                         </div>
                     </div>
@@ -2906,8 +2912,10 @@ function display_export_report() {
 								wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
 
 								?>
-                                <input type="hidden" name="edd-export-class" value="EDD_Batch_File_Downloads_Export"/>
-                                <input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								<input type="hidden" name="edd-export-class" value="EDD_Batch_File_Downloads_Export"/>
+								<span>
+									<input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								</span>
                             </form>
                         </div>
                     </div>
