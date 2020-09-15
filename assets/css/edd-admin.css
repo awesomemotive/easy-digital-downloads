@@ -2436,28 +2436,8 @@ div.postbox {
 	margin-bottom: 0;
 }
 #edd-export-earnings select.edd-select {
-	width: 45%;
+	width: 49%;
 }
-
-/* span input.button-secondary,
-input.button-secondary {
-	height: 40px;
-	color: red !important;
-} */
-
-/* #edd-order-export-start,
-#edd-order-export-end,
-#edd-orders-export-start,
-#edd-orders-export-end,
-#edd-taxed-orders-export-start,
-#edd-taxed-orders-export-end,
-#edd-api-requests-export-start,
-#edd-api-requests-export-end,
-#edd-file-download-export-start,
-#edd-file-download-export-end {
-	margin-bottom: 15px;
-	border: 1px solid blue;
-} */
 
 span.edd-from-to-wrapper {
 	margin-bottom: 15px;
@@ -2485,13 +2465,19 @@ span.edd-from-to-wrapper {
 	margin-right: 0px;
 }
 
-/* To do: center on own row */
-#to-label {
-	color: red;
-}
-.edd-import-export-form:not( #edd-export-earnings ) {
+.edd-import-export-form {
 	display: flex;
 	flex-direction: column;
+	flex-wrap: wrap;
+}
+
+div.to-and-from-container {
+	height: 50px;
+}
+/* To do: center on own row */
+#to-label {
+	line-height: normal;
+	align-self: center;
 }
 
 .edd-reports-wrapper .postbox .edd-select {
@@ -2508,7 +2494,7 @@ span.edd-from-to-wrapper {
 	}
 
 	div.postbox {
-		/* height: 350px; */
+		/* height: 355px; */
 	}
 
 	#edd-export-earnings select.edd-select {
