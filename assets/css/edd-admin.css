@@ -2420,7 +2420,7 @@ body.download_page_edd-reports {
 	margin-bottom: 20px;
 }
 
-div#post-body-content {
+div.edd-reports-export {
 	display: grid;
 	display: -ms-grid;
 	grid-template-columns: 1fr;
@@ -2488,7 +2488,7 @@ span.edd-label.edd-export-to-label {
 }
 
 @media screen and ( min-width: 768px ) {
-	div#post-body-content {
+	div.edd-reports-export {
 		display: grid;
 		display: -ms-grid;
 		grid-template-columns: 1fr 1fr;

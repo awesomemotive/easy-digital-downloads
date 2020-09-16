@@ -2552,7 +2552,7 @@ function display_export_report() {
     <div id="edd-dashboard-widgets-wrap">
         <div class="metabox-holder">
             <div id="post-body">
-                <div id="post-body-content">
+                <div id="post-body-content" class="edd-reports-export">
 					<?php do_action( 'edd_reports_tab_export_content_top' ); ?>
 
                     <div class="postbox edd-export-earnings-report">
