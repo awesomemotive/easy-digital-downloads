@@ -259,15 +259,18 @@ function edd_get_formatted_tax_rate( $country = false, $state = false ) {
  *
  * @since 1.3.3
  * @since 3.0 Renamed $state parameter to $region.
+ *            Added $fallback parameter.
  *
  * @param float  $amount  Amount.
  * @param string $country Country. Default base country.
  * @param string $region  Region. Default base region.
+ * @param boolean $fallback Fall back to the current Customer's address information
+ *                          or server $_POST data. Default true.
  *
  * @return float $tax Taxed amount.
  */
-function edd_calculate_tax( $amount = 0.00, $country = '', $region = '' ) {
-	$rate = edd_get_tax_rate( $country, $region );
+function edd_calculate_tax( $amount = 0.00, $country = '', $region = '', $fallback = true ) {
+	$rate = edd_get_tax_rate( $country, $region, $fallback );
 	$tax  = 0.00;
 
 	if ( edd_use_taxes() && $amount > 0 ) {

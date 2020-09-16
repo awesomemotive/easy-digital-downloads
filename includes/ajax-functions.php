@@ -1498,8 +1498,7 @@ function edd_admin_order_get_item_amounts() {
 		true === edd_use_taxes() &&
 		false === edd_download_is_tax_exclusive( $product_id )
 	) {
-		$tax_rate = edd_get_tax_rate( $country, $region, $fallback = false );
-		$tax = edd_calculate_tax( floatval( $subtotal - $discount ), $country, $region );
+		$tax = edd_calculate_tax( floatval( $subtotal - $discount ), $country, $region, false );
 	} else {
 		$tax = 0;
 	}
