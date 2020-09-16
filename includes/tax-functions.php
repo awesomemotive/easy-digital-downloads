@@ -151,8 +151,9 @@ function edd_active_tax_rates_query_clauses( $clauses ) {
  *
  * @param string  $country Country.
  * @param string  $region  Region.
- * @param boolean $fallback Fall back to the current Customer's address information
- *                          or server $_POST data. Default true.
+ * @param boolean $fallback Fall back to (in order): server $_POST data, the current Customer's
+ *                          address information, then your store's Business Country setting.
+ *                          Default true.
  *
  * @return mixed|void
  */
@@ -264,8 +265,9 @@ function edd_get_formatted_tax_rate( $country = false, $state = false ) {
  * @param float  $amount  Amount.
  * @param string $country Country. Default base country.
  * @param string $region  Region. Default base region.
- * @param boolean $fallback Fall back to the current Customer's address information
- *                          or server $_POST data. Default true.
+ * @param boolean $fallback Fall back to (in order): server $_POST data, the current Customer's
+ *                          address information, then your store's Business Country setting.
+ *                          Default true.
  *
  * @return float $tax Taxed amount.
  */
