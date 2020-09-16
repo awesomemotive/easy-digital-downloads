@@ -2428,7 +2428,7 @@ div.edd-reports-export {
 	max-width: 1000px;
 }
 
-.postbox [class^="edd-export"] {
+.edd-reports-export [class^="edd-export"] {
 	grid-template-rows: 1fr;
 	max-width: 400px;
 }
