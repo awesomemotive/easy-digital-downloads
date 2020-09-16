@@ -2474,7 +2474,7 @@ span.edd-from-to-wrapper {
 div.to-and-from-container {
 	height: 50px;
 }
-/* To do: center on own row */
+
 #to-label {
 	line-height: normal;
 	align-self: center;
@@ -2498,7 +2498,8 @@ div.to-and-from-container {
 	}
 
 	#edd-export-earnings select.edd-select {
-		width: 40%;
+		width: 49%;
+		margin: 0px;
 	}
 	
 }
