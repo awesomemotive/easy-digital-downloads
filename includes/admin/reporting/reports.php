@@ -2565,7 +2565,7 @@ function display_export_report() {
 									<?php echo EDD()->html->year_dropdown( 'start_year' ); ?>
 								</div>
 
-								<span class="edd-label" id="to-label"><?php echo _x( '-- to --', 'Date one to date two', 'easy-digital-downloads' ); ?></span>
+								<span class="edd-label edd-export-to-label"><?php echo _x( '-- to --', 'Date one to date two', 'easy-digital-downloads' ); ?></span>
 
 								<div class="to-and-from-container">
 									<?php echo EDD()->html->month_dropdown( 'end_month' ); ?>

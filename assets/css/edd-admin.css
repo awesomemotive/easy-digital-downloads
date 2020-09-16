@@ -2476,7 +2476,7 @@ div.to-and-from-container {
 	height: 50px;
 }
 
-#to-label {
+span.edd-label.edd-export-to-label {
 	line-height: normal;
 	align-self: center;
 	margin-top: -7px;
