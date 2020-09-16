@@ -2428,8 +2428,9 @@ div#post-body-content {
 	max-width: 1000px;
 }
 
-div.postbox {
+.postbox [class^="edd-export"] {
 	grid-template-rows: 1fr;
+	max-width: 400px;
 }
 
 .edd-reports-wrapper .postbox {
@@ -2478,6 +2479,7 @@ div.to-and-from-container {
 #to-label {
 	line-height: normal;
 	align-self: center;
+	margin-top: -7px;
 }
 
 .edd-reports-wrapper .postbox .edd-select {
