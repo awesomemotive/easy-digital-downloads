@@ -90,6 +90,7 @@ export const Totals = wp.Backbone.View.extend( {
 			discount,
 
 			subtotalCurrency: currency.format( number.absint( subtotal ) ),
+			discountCurrency: currency.format( number.absint( discount ) ),
 			taxCurrency: currency.format( number.absint( tax ) ),
 			totalCurrency: currency.format( number.absint( total ) ),
 		};
