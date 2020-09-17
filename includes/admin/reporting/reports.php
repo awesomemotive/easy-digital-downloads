@@ -2592,12 +2592,14 @@ function display_export_report() {
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-order-export-start',
+										'class'       => 'edd-export-start',
 										'name'        => 'start',
 										'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
 									) );
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-order-export-end',
+										'class'       => 'edd-export-end',
 										'name'        => 'end',
 										'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
 									) );
@@ -2642,12 +2644,14 @@ function display_export_report() {
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-orders-export-start',
+										'class'       => 'edd-export-start',
 										'name'        => 'start',
 										'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
 									) );
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-orders-export-end',
+										'class'       => 'edd-export-end',
 										'name'        => 'end',
 										'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
 									) );
@@ -2684,12 +2688,14 @@ function display_export_report() {
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-taxed-orders-export-start',
+										'class'       => 'edd-export-start',
 										'name'        => 'start',
 										'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' )
 									) );
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-taxed-orders-export-end',
+										'class'       => 'edd-export-end',
 										'name'        => 'end',
 										'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' )
 									) );
@@ -2804,12 +2810,14 @@ function display_export_report() {
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-taxed-orders-export-start',
+										'class'       => 'edd-export-start',
 										'name'        => 'start',
 										'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' )
 									) );
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-taxed-orders-export-end',
+										'class'       => 'edd-export-end',
 										'name'        => 'end',
 										'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' )
 									) );
@@ -2861,12 +2869,14 @@ function display_export_report() {
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-api-requests-export-start',
+										'class'       => 'edd-export-start',
 										'name'        => 'start',
 										'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' )
 									) );
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-api-requests-export-end',
+										'class'       => 'edd-export-end',
 										'name'        => 'end',
 										'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' )
 									) );
@@ -2903,12 +2913,14 @@ function display_export_report() {
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-file-download-export-start',
+										'class'       => 'edd-export-start',
 										'name'        => 'start',
 										'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' )
 									) );
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-file-download-export-end',
+										'class'       => 'edd-export-end',
 										'name'        => 'end',
 										'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' )
 									) );
