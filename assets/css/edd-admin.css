@@ -2440,10 +2440,6 @@ div.edd-reports-export {
 	width: 49%;
 }
 
-span.edd-from-to-wrapper {
-	margin-bottom: 15px;
-}
-
 .edd-export-sales-earnings {
 	grid-template-columns: 1fr;
 }
@@ -2456,6 +2452,7 @@ input.edd-export-start,
 input.edd-export-end {
 	width: 50%;
 	margin-right: 0px;
+	margin-bottom: 15px;
 }
 
 .edd-import-export-form {
@@ -2485,10 +2482,6 @@ span.edd-label.edd-export-to-label {
 		display: -ms-grid;
 		grid-template-columns: 1fr 1fr;
 		grid-gap: 20px;
-	}
-
-	div.postbox {
-		/* height: 355px; */
 	}
 
 	#edd-export-earnings select.edd-select {
