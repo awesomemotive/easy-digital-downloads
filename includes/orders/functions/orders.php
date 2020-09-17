@@ -1049,7 +1049,14 @@ function edd_build_order( $order_data = array() ) {
 			$discount = edd_get_discount_by( 'code', $discount );
 
 			if ( $discount ) {
-				$discounted_amount = $subtotal - $discount->get_discounted_amount( $subtotal );
+				$discount_amount = 0;
+				$items           = $order_data['cart_details'];
+
+				if ( is_array( $items ) && ! empty( $items ) ) {
+					foreach ( $items as $key => $item ) {
+						$discount_amount += edd_get_item_discount_amount( $item, $items, array( $discount ) );
+					}
+				}
 
 				edd_add_order_adjustment( array(
 					'object_id'   => $order_id,
@@ -1057,8 +1064,8 @@ function edd_build_order( $order_data = array() ) {
 					'type_id'     => $discount->id,
 					'type'        => 'discount',
 					'description' => $discount->code,
-					'subtotal'    => $discounted_amount,
-					'total'       => $discounted_amount,
+					'subtotal'    => $discount_amount,
+					'total'       => $discount_amount,
 				) );
 
 			}

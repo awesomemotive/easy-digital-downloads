@@ -705,6 +705,10 @@ function edd_order_details_overview( $order ) {
 				'status'         => $order->status,
 				'currency'       => $order->currency,
 				'currencySymbol' => html_entity_decode( edd_currency_symbol( $order->currency ) ),
+				'subtotal'       => $order->subtotal,
+				'discount'       => $order->discount,
+				'tax'            => $order->tax,
+				'total'          => $order->total,
 			),
 			'nonces'       => array(
 				'edd_admin_order_get_item_amounts' => wp_create_nonce( 'edd_admin_order_get_item_amounts' ),
