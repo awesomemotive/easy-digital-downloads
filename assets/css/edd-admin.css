@@ -2436,9 +2436,6 @@ div.edd-reports-export {
 .edd-reports-wrapper .postbox {
 	margin-bottom: 0;
 }
-#edd-export-earnings select.edd-select {
-	width: 49%;
-}
 
 .edd-export-sales-earnings {
 	grid-template-columns: 1fr;
@@ -2461,14 +2458,16 @@ input.edd-export-end {
 	flex-wrap: wrap;
 }
 
-div.to-and-from-container {
-	height: 50px;
+div.edd-to-and-from-container {
+	display: grid;
+	display: -ms-grid;
+    grid-template-columns: 1fr 1fr;
+	grid-gap: 8px;
 }
 
 span.edd-label.edd-export-to-label {
 	line-height: normal;
 	align-self: center;
-	margin-top: -7px;
 }
 
 .edd-reports-wrapper .postbox .edd-select {
@@ -2477,16 +2476,12 @@ span.edd-label.edd-export-to-label {
 }
 
 @media screen and ( min-width: 768px ) {
+
 	div.edd-reports-export {
 		display: grid;
 		display: -ms-grid;
 		grid-template-columns: 1fr 1fr;
 		grid-gap: 20px;
-	}
-
-	#edd-export-earnings select.edd-select {
-		width: 49%;
-		margin: 0px;
 	}
 	
 }
