@@ -2560,14 +2560,14 @@ function display_export_report() {
                         <div class="inside">
                             <p><?php esc_html_e( 'Download a CSV giving a detailed look into earnings over time.', 'easy-digital-downloads' ); ?></p>
                             <form id="edd-export-earnings" class="edd-export-form edd-import-export-form" method="post">
-								<div class="to-and-from-container">
+								<div class="edd-to-and-from-container">
 									<?php echo EDD()->html->month_dropdown( 'start_month' ); ?>
 									<?php echo EDD()->html->year_dropdown( 'start_year' ); ?>
 								</div>
 
 								<span class="edd-label edd-export-to-label"><?php echo _x( '-- to --', 'Date one to date two', 'easy-digital-downloads' ); ?></span>
 
-								<div class="to-and-from-container">
+								<div class="edd-to-and-from-container">
 									<?php echo EDD()->html->month_dropdown( 'end_month' ); ?>
 									<?php echo EDD()->html->year_dropdown( 'end_year' ); ?>
 								</div>
