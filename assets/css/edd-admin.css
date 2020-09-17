@@ -2452,16 +2452,8 @@ span.edd-from-to-wrapper {
 	margin-right: 0;
 }
 
-#edd-order-export-start,
-#edd-order-export-end,
-#edd-orders-export-start,
-#edd-orders-export-end,
-#edd-taxed-orders-export-start,
-#edd-taxed-orders-export-end,
-#edd-api-requests-export-start,
-#edd-api-requests-export-end,
-#edd-file-download-export-start,
-#edd-file-download-export-end {
+input.edd-export-start,
+input.edd-export-end {
 	width: 50%;
 	margin-right: 0px;
 }
