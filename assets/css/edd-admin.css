@@ -2471,7 +2471,7 @@ span.edd-label.edd-export-to-label {
 }
 
 .edd-reports-wrapper .postbox .edd-select {
-	max-width: inherit;
+	max-width: 100%;
 	margin-right: 0;
 }
 
