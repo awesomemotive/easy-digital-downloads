@@ -2347,15 +2347,13 @@ body.download_page_edd-reports {
 .edd-reports-wrapper .postbox h3 {
 	font-size: 1.3em
 }
+
 #edd-dashboard-widgets-wrap .metabox-holder {
 	padding-top: 0;
 }
 
 .edd-reports-wrapper form .edd-label {
-	height: 29px;
-	line-height: 29px;
-	vertical-align: middle;
-	margin-right: 4px;
+	margin-bottom: 16px;
 }
 
 .edd-reports-wrapper .postbox .edd-select {
