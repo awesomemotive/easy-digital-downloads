@@ -35,3 +35,6 @@ vendor
 
 # Temporary files
 *~
+
+# Stripe
+includes/gateways/stripe
