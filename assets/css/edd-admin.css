@@ -2425,7 +2425,6 @@ div.edd-reports-export {
 	display: -ms-grid;
 	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 	grid-gap: 20px;
-	max-width: 1000px;
 }
 
 .edd-reports-wrapper .postbox {
