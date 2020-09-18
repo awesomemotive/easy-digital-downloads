@@ -2423,14 +2423,9 @@ body.download_page_edd-reports {
 div.edd-reports-export {
 	display: grid;
 	display: -ms-grid;
-	grid-template-columns: 1fr;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 	grid-gap: 20px;
 	max-width: 1000px;
-}
-
-.edd-reports-export [class^="edd-export"] {
-	grid-template-rows: 1fr;
-	max-width: 400px;
 }
 
 .edd-reports-wrapper .postbox {
@@ -2473,14 +2468,6 @@ span.edd-label.edd-export-to-label {
 .edd-reports-wrapper .postbox .edd-select {
 	max-width: 100%;
 	margin-right: 0;
-}
-
-@media screen and ( min-width: 768px ) {
-
-	div.edd-reports-export {
-		grid-template-columns: 1fr 1fr;
-	}
-	
 }
 
 .edd-import-export-form {
