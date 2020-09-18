@@ -2478,10 +2478,7 @@ span.edd-label.edd-export-to-label {
 @media screen and ( min-width: 768px ) {
 
 	div.edd-reports-export {
-		display: grid;
-		display: -ms-grid;
 		grid-template-columns: 1fr 1fr;
-		grid-gap: 20px;
 	}
 	
 }
