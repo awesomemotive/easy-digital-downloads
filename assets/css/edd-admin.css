@@ -2428,16 +2428,19 @@ div.edd-reports-export {
 .edd-export-sales-earnings {
 	grid-template-columns: 1fr;
 }
-
-[class^="edd-export"] .edd-from-to-wrapper {
+.edd-reports-export .edd-from-to-wrapper {
 	display: flex;
 	margin-right: 0;
 	margin-bottom: 16px;
 	width: 100%;
 }
 
-.download_page_edd-reports .inside input[type="text"] {
+.edd-reports-export .edd-from-to-wrapper input {
 	width: 100%;
+}
+
+.edd-reports-export .edd-from-to-wrapper span {
+    flex-grow: 1;
 }
 
 .edd-import-export-form {
@@ -2449,7 +2452,7 @@ div.edd-reports-export {
 div.edd-to-and-from-container {
 	display: grid;
 	display: -ms-grid;
-    grid-template-columns: 1fr 1fr;
+	grid-template-columns: 1fr 1fr;
 	grid-gap: 8px;
 }
 
