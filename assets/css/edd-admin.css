@@ -2430,14 +2430,14 @@ div.edd-reports-export {
 }
 
 [class^="edd-export"] .edd-from-to-wrapper {
+	display: flex;
 	margin-right: 0;
+	margin-bottom: 16px;
+	width: 100%;
 }
 
-input.edd-export-start,
-input.edd-export-end {
-	width: 50%;
-	margin-right: 0px;
-	margin-bottom: 15px;
+.download_page_edd-reports .inside input[type="text"] {
+	width: 100%;
 }
 
 .edd-import-export-form {
