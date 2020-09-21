@@ -137,7 +137,10 @@ function edd_log_user_in( $user_id, $user_login, $user_pass, $remember = false )
 	);
 
 	$user     = wp_signon( $credentials );
-	$redirect = $_SERVER['HTTP_REFERER'];
+	$redirect = wp_get_referer();
+	if ( empty( $redirect ) ) {
+		$redirect = edd_get_checkout_uri();
+	}
 
 	if ( ! $user instanceof WP_User ) {
 		edd_set_error(
