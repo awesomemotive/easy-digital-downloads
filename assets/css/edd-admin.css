@@ -2429,7 +2429,7 @@ div.edd-reports-export {
 	grid-template-columns: 1fr;
 }
 
-.edd-from-to-wrapper {
+[class^="edd-export"] .edd-from-to-wrapper {
 	margin-right: 0;
 }
 
