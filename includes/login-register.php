@@ -181,14 +181,17 @@ add_filter( 'wp_login_errors', 'edd_login_register_error_message', 10, 2 );
  * @return void
  */
 function edd_login_register_error_message( $errors, $redirect ) {
-	if ( 'confirm' === filter_input( INPUT_GET, 'edd_reset_password', FILTER_SANITIZE_STRING ) ) {
+	$action_is_confirm   = 'confirm' === filter_input( INPUT_GET, 'checkemail', FILTER_SANITIZE_STRING );
+	$edd_action_is_reset = 'confirm' === filter_input( INPUT_GET, 'edd_reset_password', FILTER_SANITIZE_STRING );
+	$redirect_url        = filter_input( INPUT_GET, 'edd_redirect', FILTER_SANITIZE_URL );
+	if ( $action_is_confirm && $edd_action_is_reset ) {
 		$errors->remove( 'confirm' );
 		$errors->add(
 			'confirm',
 			sprintf(
 				/* translators: %s: Link to the referring page. */
 				__( 'Check your email for the confirmation link, then <a href="%s">return to what you were doing</a>.', 'easy-digital-downloads' ),
-				filter_input( INPUT_GET, 'edd_redirect', FILTER_SANITIZE_URL )
+				$redirect_url
 			),
 			'message'
 		);
