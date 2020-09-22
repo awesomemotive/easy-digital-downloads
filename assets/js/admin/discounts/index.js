@@ -17,6 +17,6 @@ jQueryReady( () => {
 	 * Show/hide conditions based on input value.
 	 */
 	products.change( function() {
-		$( '#edd-discount-product-conditions' ).toggle( products.val() );
+			$( '#edd-discount-product-conditions' ).show( products.val() );
 	} );
 } );
