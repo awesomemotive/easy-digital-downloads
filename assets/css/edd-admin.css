@@ -2467,33 +2467,43 @@ span.edd-label.edd-export-to-label {
 .edd-import-export-form {
 	position: relative;
 }
+
 .edd-import-export-form .edd-progress {
 	background: #ddd;
-	position: absolute;
-	bottom: 15px;
-	width: 95%;
 	height: 15px;
+	flex-basis: 100%;
 }
+
 .edd-import-export-form .edd-progress div {
 	background: #ccc;
 	height: 100%;
 	width: 0;
 }
+
 .edd-import-export-form .notice-wrap {
 	background-color: #f4f4f4;
 	border-style: solid;
 	border-width: 1px 0;
 	border-color: #eae9e9;
-	padding: 12px 12px 4px;
+	padding: 12px;
 	overflow: auto;
 	margin: 20px -12px -23px;
 	position: relative;
 	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
+
 .edd-import-export-form .notice-wrap .spinner {
-	margin: 4px 10px 8px;
-	float: right;
+	margin: 0 0 0 12px;
+	order: 2;
 }
+
+.notice-wrap div.notice {
+	margin: 0;
+}
+
 .admin-color-fresh .edd-import-export-form .edd-progress div {
 	background: #0073aa;
 }
