@@ -137,7 +137,7 @@ function edd_log_user_in( $user_id, $user_login, $user_pass, $remember = false )
 	);
 
 	$user = wp_signon( $credentials );
-	$url  = wp_get_referer();
+	$url  = wp_get_raw_referer();
 	if ( empty( $url ) ) {
 		$url = edd_get_checkout_uri();
 	}
@@ -145,7 +145,7 @@ function edd_log_user_in( $user_id, $user_login, $user_pass, $remember = false )
 		array(
 			'checkemail'         => 'confirm',
 			'edd_reset_password' => 'confirm',
-			'edd_redirect'       => $url,
+			'edd_redirect'       => esc_url_raw( $url ),
 		),
 		wp_login_url()
 	);
