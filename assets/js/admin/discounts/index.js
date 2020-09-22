@@ -8,7 +8,6 @@ import { jQueryReady } from 'utils/jquery.js';
  */
 jQueryReady( () => {
 	const products = $( '#edd_products' );
-
 	if ( ! products ) {
 		return;
 	}
@@ -17,6 +16,6 @@ jQueryReady( () => {
 	 * Show/hide conditions based on input value.
 	 */
 	products.change( function() {
-			$( '#edd-discount-product-conditions' ).show( products.val() );
+		$( '#edd-discount-product-conditions' ).show( products.val() );
 	} );
 } );
