@@ -147,7 +147,7 @@ function edd_log_user_in( $user_id, $user_login, $user_pass, $remember = false )
 			'edd_reset_password' => 'confirm',
 			'edd_redirect'       => $url,
 		),
-		'wp-login.php'
+		wp_login_url()
 	);
 
 	if ( ! $user instanceof WP_User ) {
