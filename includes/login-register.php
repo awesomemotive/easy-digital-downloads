@@ -136,11 +136,19 @@ function edd_log_user_in( $user_id, $user_login, $user_pass, $remember = false )
 		'remember'      => $remember,
 	);
 
-	$user     = wp_signon( $credentials );
-	$redirect = wp_get_referer();
-	if ( empty( $redirect ) ) {
-		$redirect = edd_get_checkout_uri();
+	$user = wp_signon( $credentials );
+	$url  = wp_get_referer();
+	if ( empty( $url ) ) {
+		$url = edd_get_checkout_uri();
 	}
+	$redirect = add_query_arg(
+		array(
+			'checkemail'         => 'confirm',
+			'edd_reset_password' => 'confirm',
+			'edd_redirect'       => $url,
+		),
+		'wp-login.php'
+	);
 
 	if ( ! $user instanceof WP_User ) {
 		edd_set_error(
@@ -163,6 +171,31 @@ function edd_log_user_in( $user_id, $user_login, $user_pass, $remember = false )
 
 }
 
+add_filter( 'wp_login_errors', 'edd_login_register_error_message', 10, 2 );
+/**
+ * Changes the WordPress login confirmation message when using EDD's reset password link.
+ *
+ * @since 2.10
+ * @param object \WP_Error $errors
+ * @param string $redirect
+ * @return void
+ */
+function edd_login_register_error_message( $errors, $redirect ) {
+	if ( 'confirm' === filter_input( INPUT_GET, 'edd_reset_password', FILTER_SANITIZE_STRING ) ) {
+		$errors->remove( 'confirm' );
+		$errors->add(
+			'confirm',
+			sprintf(
+				/* translators: %s: Link to the referring page. */
+				__( 'Check your email for the confirmation link, then <a href="%s">return to what you were doing</a>.', 'easy-digital-downloads' ),
+				filter_input( INPUT_GET, 'edd_redirect', FILTER_SANITIZE_URL )
+			),
+			'message'
+		);
+	}
+
+	return $errors;
+}
 
 /**
  * Process Register Form
