@@ -45,7 +45,7 @@ class EDD_Customer_Query extends EDD\Database\Queries\Customer {
 	 *                                        or 'meta_value_num', `$meta_key` must also be provided.
 	 *                                        To sort by a specific `$meta_query` clause, use that
 	 *                                        clause's array key. Accepts 'id', 'user_id', 'name',
-	 *                                        'email', 'payment_ids', 'purchase_value', 'purchase_count',
+	 *                                        'email', 'purchase_value', 'purchase_count',
 	 *                                        'notes', 'date_created', 'meta_value', 'meta_value_num',
 	 *                                        the value of `$meta_key`, and the array keys of `$meta_query`.
 	 *                                        Also accepts false, an empty array, or 'none' to disable the
