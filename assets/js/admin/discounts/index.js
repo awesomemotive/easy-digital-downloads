@@ -16,6 +16,10 @@ jQueryReady( () => {
 	 * Show/hide conditions based on input value.
 	 */
 	products.change( function() {
-		$( '#edd-discount-product-conditions' ).show( products.val() );
+		if (products.val() !== null) {
+			$( '#edd-discount-product-conditions' ).show( products.val() );
+		} else if (products.val() === null ) {
+			$( '#edd-discount-product-conditions' ).hide( products.val() );
+		}
 	} );
 } );
