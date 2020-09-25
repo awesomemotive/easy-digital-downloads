@@ -2498,6 +2498,16 @@ span.edd-label.edd-export-to-label {
 .notice-wrap div.notice {
 	margin: 0;
 }
+div.edd-reports-export button[type="submit"] {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.edd-reports-export button .spinner {
+	display: none;
+	margin: 0 0 0 12px;
+}
 
 .admin-color-fresh .edd-import-export-form .edd-progress div {
 	background: #0073aa;
