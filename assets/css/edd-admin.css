@@ -2495,11 +2495,6 @@ span.edd-label.edd-export-to-label {
 	align-items: center;
 }
 
-.edd-import-export-form .notice-wrap .spinner {
-	margin: 0 0 0 12px;
-	order: 2;
-}
-
 .notice-wrap div.notice {
 	margin: 0;
 }

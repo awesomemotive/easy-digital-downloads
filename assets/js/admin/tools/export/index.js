@@ -24,7 +24,7 @@ const EDD_Export = {
 
 			submitButton.addClass( 'button-disabled' );
 			form.find( '.notice-wrap' ).remove();
-			form.append( '<div class="notice-wrap"><span class="spinner is-active"></span><div class="edd-progress"><div></div></div></div>' );
+			form.append( '<div class="notice-wrap"><div class="edd-progress"><div></div></div></div>' );
 
 			// start the process
 			self.process_step( 1, data, self );
