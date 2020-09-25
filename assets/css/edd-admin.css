@@ -2453,7 +2453,7 @@ div.edd-to-and-from-container {
 	grid-gap: 8px;
 }
 
-span.edd-label.edd-export-to-label {
+span.edd-to-and-from--seperator {
 	line-height: normal;
 	align-self: center;
 	margin-bottom: 16px;
