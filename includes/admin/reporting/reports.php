@@ -2573,10 +2573,7 @@ function display_export_report() {
 								</div>
 								<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
                                 <input type="hidden" name="edd-export-class" value="EDD_Batch_Earnings_Report_Export"/>
-                                <span>
-									<input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
-									<span class="spinner"></span>
-								</span>
+								<button type="submit" class="button-secondary"><?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?><span class="spinner"></span></button>
                             </form>
                         </div>
                     </div>
@@ -2625,11 +2622,7 @@ function display_export_report() {
 				                wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 
                                 <input type="hidden" name="edd-export-class" value="EDD_Batch_Sales_And_Earnings_Export"/>
-
-                                <span>
-									<input type="submit" value="<?php esc_html_e( 'Export', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
-									<span class="spinner"></span>
-								</span>
+								<button type="submit" class="button-secondary"><?php esc_html_e( 'Export', 'easy-digital-downloads' ); ?><span class="spinner"></span></button>
                             </form>
                         </div>
                     </div>
@@ -2670,10 +2663,7 @@ function display_export_report() {
 								wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
 								?>
                                 <input type="hidden" name="edd-export-class" value="EDD_Batch_Payments_Export"/>
-                                <span>
-									<input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
-									<span class="spinner"></span>
-								</span>
+								<button type="submit" class="button-secondary"><?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?><span class="spinner"></span></button>
                             </form>
                         </div>
                     </div>
@@ -2736,10 +2726,7 @@ function display_export_report() {
 		                        wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
 								?>
                                 <input type="hidden" name="edd-export-class" value="EDD_Batch_Taxed_Orders_Export"/>
-                                <span>
-									<input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
-									<span class="spinner"></span>
-								</span>
+								<button type="submit" class="button-secondary"><?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?><span class="spinner"></span></button>
                             </form>
                         </div>
                     </div>
@@ -2793,9 +2780,7 @@ function display_export_report() {
 				                wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
 				                ?>
 								<input type="hidden" name="edd-export-class" value="EDD_Batch_Customers_Export"/>
-								<span>
-									<input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
-								</span>
+								<button type="submit" class="button-secondary"><?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?><span class="spinner"></span></button>
                             </form>
                         </div>
                     </div>
@@ -2828,10 +2813,7 @@ function display_export_report() {
 
 								?>
                                 <input type="hidden" name="edd-export-class" value="EDD_Batch_Taxed_Customers_Export"/>
-                                <span>
-									<input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
-									<span class="spinner"></span>
-								</span>
+								<button type="submit" class="button-secondary"><?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?><span class="spinner"></span></button>
                             </form>
                         </div>
                     </div>
@@ -2852,9 +2834,7 @@ function display_export_report() {
 								); ?>
 								<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 								<input type="hidden" name="edd-export-class" value="EDD_Batch_Downloads_Export"/>
-								<span>
-									<input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
-								</span>
+								<button type="submit" class="button-secondary"><?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?><span class="spinner"></span></button>
                             </form>
                         </div>
                     </div>
@@ -2887,9 +2867,7 @@ function display_export_report() {
 
 								?>
 								<input type="hidden" name="edd-export-class" value="EDD_Batch_API_Requests_Export"/>
-								<span>
-									<input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
-								</span>
+								<button type="submit" class="button-secondary"><?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?><span class="spinner"></span></button>
                             </form>
                         </div>
                     </div>
@@ -2931,9 +2909,7 @@ function display_export_report() {
 
 								?>
 								<input type="hidden" name="edd-export-class" value="EDD_Batch_File_Downloads_Export"/>
-								<span>
-									<input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
-								</span>
+								<button type="submit" class="button-secondary"><?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?><span class="spinner"></span></button>
                             </form>
                         </div>
                     </div>
