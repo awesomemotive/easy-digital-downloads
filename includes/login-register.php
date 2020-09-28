@@ -176,9 +176,13 @@ function edd_login_register_error_message( $errors, $redirect ) {
 		$errors->remove( 'confirm' );
 		$errors->add(
 			'confirm',
-			sprintf(
-				/* translators: %s: Link to the referring page. */
-				__( 'Check your email for the confirmation link, then <a href="%s">return to what you were doing</a>.', 'easy-digital-downloads' ),
+			apply_filters(
+				'edd_login_register_error_message',
+				sprintf(
+					/* translators: %s: Link to the referring page. */
+					__( 'Follow the instructions in the confirmation email you just received, then <a href="%s">return to what you were doing</a>.', 'easy-digital-downloads' ),
+					$redirect_url
+				),
 				$redirect_url
 			),
 			'message'
