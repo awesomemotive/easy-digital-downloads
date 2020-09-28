@@ -2504,11 +2504,6 @@ div.edd-reports-export button[type="submit"] {
 	align-items: center;
 }
 
-.edd-reports-export button .spinner {
-	display: none;
-	margin: 0 0 0 12px;
-}
-
 .admin-color-fresh .edd-import-export-form .edd-progress div {
 	background: #0073aa;
 }
