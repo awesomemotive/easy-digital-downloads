@@ -137,18 +137,6 @@ function edd_log_user_in( $user_id, $user_login, $user_pass, $remember = false )
 	);
 
 	$user = wp_signon( $credentials );
-	$url  = wp_get_raw_referer();
-	if ( empty( $url ) ) {
-		$url = edd_get_checkout_uri();
-	}
-	$redirect = add_query_arg(
-		array(
-			'checkemail'         => 'confirm',
-			'edd_reset_password' => 'confirm',
-			'edd_redirect'       => esc_url_raw( $url ),
-		),
-		wp_login_url()
-	);
 
 	if ( ! $user instanceof WP_User ) {
 		edd_set_error(
@@ -156,7 +144,7 @@ function edd_log_user_in( $user_id, $user_login, $user_pass, $remember = false )
 			sprintf(
 				/* translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor tag, do not translate. */
 				__( 'Invalid username or password. %1$sReset Password%2$s', 'easy-digital-downloads' ),
-				'<a href="' . esc_url( wp_lostpassword_url( $redirect ) ) . '">',
+				'<a href="' . esc_url( edd_get_lostpassword_url() ) . '">',
 				'</a>'
 			)
 		);
@@ -198,6 +186,30 @@ function edd_login_register_error_message( $errors, $redirect ) {
 	}
 
 	return $errors;
+}
+
+/**
+ * Gets the lost password URL, customized for EDD. Using this allows the password
+ * reset form to redirect to the login screen with the EDD custom confirmation message.
+ *
+ * @since 2.10
+ * @return string
+ */
+function edd_get_lostpassword_url() {
+	$url = wp_get_raw_referer();
+	if ( empty( $url ) ) {
+		$url = edd_get_checkout_uri();
+	}
+	$redirect = add_query_arg(
+		array(
+			'checkemail'         => 'confirm',
+			'edd_reset_password' => 'confirm',
+			'edd_redirect'       => esc_url_raw( $url ),
+		),
+		wp_login_url()
+	);
+
+	return wp_lostpassword_url( $redirect );
 }
 
 /**
