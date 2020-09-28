@@ -189,7 +189,7 @@ function edd_refund_order( $order_id = 0, $order_items = array() ) {
 	if ( ! $order ) {
 		return false;
 	}
-	
+
 	if ( false === edd_is_order_refundable( $order_id ) ) {
 		return false;
 	}
@@ -373,9 +373,13 @@ function edd_refund_order( $order_id = 0, $order_items = array() ) {
 		? 'refunded'
 		: 'partially_refunded';
 
-	edd_update_order( $order_id, array(
-		'status' => $order_status,
-	) );
+	edd_update_order(
+		$order_id,
+		array(
+			'status'      => $order_status,
+			'customer_id' => $order->customer_id,
+		)
+	);
 
 	/**
 	 * Fires when an order has been refunded.
