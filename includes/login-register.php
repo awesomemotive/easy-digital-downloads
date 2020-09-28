@@ -172,7 +172,7 @@ function edd_login_register_error_message( $errors, $redirect ) {
 	$action_is_confirm   = 'confirm' === filter_input( INPUT_GET, 'checkemail', FILTER_SANITIZE_STRING );
 	$edd_action_is_reset = 'confirm' === filter_input( INPUT_GET, 'edd_reset_password', FILTER_SANITIZE_STRING );
 	$redirect_url        = filter_input( INPUT_GET, 'edd_redirect', FILTER_SANITIZE_URL );
-	if ( $action_is_confirm && $edd_action_is_reset ) {
+	if ( $action_is_confirm && $edd_action_is_reset && $redirect_url ) {
 		$errors->remove( 'confirm' );
 		$errors->add(
 			'confirm',
@@ -181,7 +181,7 @@ function edd_login_register_error_message( $errors, $redirect ) {
 				sprintf(
 					/* translators: %s: Link to the referring page. */
 					__( 'Follow the instructions in the confirmation email you just received, then <a href="%s">return to what you were doing</a>.', 'easy-digital-downloads' ),
-					$redirect_url
+					esc_url( $redirect_url )
 				),
 				$redirect_url
 			),
