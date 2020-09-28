@@ -162,8 +162,9 @@ function edd_tools_recount_stats_display() {
 						?>
 					</span>
 
-					<input type="submit" id="recount-stats-submit"
-						   value="<?php _e( 'Submit', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+					<button type="submit" id="recount-stats-submit" class="button button-secondary">
+						<?php esc_html_e( 'Submit', 'easy-digital-downloads' ); ?>
+					</button>
 
 					<br/>
 

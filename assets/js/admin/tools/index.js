@@ -42,7 +42,7 @@ const EDD_Tools = {
 
 			// Reset the form
 			export_form.find( '.notice-wrap' ).remove();
-			submit_button.removeClass( 'button-disabled' ).attr( 'disabled', false );
+			submit_button.attr( 'disabled', false ).removeClass( 'updated-message' );
 			products.hide();
 			$( '.edd-recount-stats-descriptions span' ).hide();
 
@@ -54,7 +54,7 @@ const EDD_Tools = {
 				const notice_wrap = export_form.find( '.notice-wrap' );
 				notice_wrap.html( '<div class="notice notice-warning"><p><input type="checkbox" id="confirm-reset" name="confirm_reset_store" value="1" /> <label for="confirm-reset">' + edd_vars.reset_stats_warn + '</label></p></div>' );
 
-				$( '#recount-stats-submit' ).addClass( 'button-disabled' ).attr( 'disabled', 'disabled' );
+				$( '#recount-stats-submit' ).attr( 'disabled', true );
 			} else {
 				products.hide();
 				products.val( 0 );
@@ -66,9 +66,9 @@ const EDD_Tools = {
 		$( document.body ).on( 'change', '#confirm-reset', function() {
 			const checked = $( this ).is( ':checked' );
 			if ( checked ) {
-				$( '#recount-stats-submit' ).removeClass( 'button-disabled' ).removeAttr( 'disabled' );
+				$( '#recount-stats-submit' ).attr( 'disabled', false );
 			} else {
-				$( '#recount-stats-submit' ).addClass( 'button-disabled' ).attr( 'disabled', 'disabled' );
+				$( '#recount-stats-submit' ).attr( 'disabled', true );
 			}
 		} );
 
@@ -109,7 +109,7 @@ const EDD_Tools = {
 			}
 
 			if ( has_errors ) {
-				export_form.find( '.button-disabled' ).removeClass( 'button-disabled' );
+				export_form.find( 'button:disabled' ).attr( 'disabled', false ).removeClass( 'updated-message' );
 				return false;
 			}
 		} );
