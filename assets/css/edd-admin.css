@@ -2498,11 +2498,6 @@ span.edd-to-and-from--separator {
 .notice-wrap div.notice {
 	margin: 0;
 }
-div.edd-reports-export button[type="submit"] {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
 
 .admin-color-fresh .edd-import-export-form .edd-progress div {
 	background: #0073aa;
