@@ -77,7 +77,7 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 
 			foreach ( $payments as $payment ) {
 
-				$total += edd_get_payment_amount( $payment );
+				$total += edd_get_payment_amount( $payment->ID );
 
 			}
 
