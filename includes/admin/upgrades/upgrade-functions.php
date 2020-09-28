@@ -1403,7 +1403,7 @@ function edd_upgrade_render_v30_migration() {
 			$(document).ready(function () {
 
 				function processNext( current ) {
-					current.find( '.edd-migration.allowed input' ).prop( 'disabled', true );
+					current.find( '.edd-migration.allowed button' ).prop( 'disabled', true );
 					current.find('.dashicons.dashicons-yes').show();
 					current.find('.message.initial').hide();
 					current.find('.message.complete').show();
