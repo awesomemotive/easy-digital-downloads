@@ -2033,7 +2033,7 @@ class Query extends Base {
 	 * @since 1.0.0
 	 *
 	 * @param string $method select|insert|update|delete
-	 * @param mixed  $item   Object|Array of keys/values to reduce
+	 * @param array|object  $item   Object|Array of keys/values to reduce
 	 *
 	 * @return mixed Object|Array without keys the current user does not have caps for
 	 */
