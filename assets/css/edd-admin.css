@@ -2440,7 +2440,7 @@ div.edd-reports-export {
     flex-grow: 1;
 }
 
-.edd-import-export-form {
+.edd-reports-export .edd-import-export-form {
 	display: flex;
 	flex-direction: column;
 	flex-wrap: wrap;
