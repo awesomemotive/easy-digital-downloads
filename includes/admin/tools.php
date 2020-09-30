@@ -69,6 +69,7 @@ function edd_tools_page() {
 		</nav>
 
 		<div class="metabox-holder">
+
 			<?php
 			do_action( 'edd_tools_tab_' . $active_tab );
 			?>
@@ -440,37 +441,37 @@ function edd_tools_import_export_display() {
 	do_action( 'edd_tools_import_export_before' );
 	?>
 
-    <div class="postbox edd-import-payment-history">
-        <h3><span><?php _e( 'Import Payment History', 'easy-digital-downloads' ); ?></span></h3>
-        <div class="inside">
-            <p><?php _e( 'Import a CSV file of payment records.', 'easy-digital-downloads' ); ?></p>
-            <form id="edd-import-payments" class="edd-import-form edd-import-export-form"
-                  action="<?php echo esc_url( add_query_arg( 'edd_action', 'upload_import_file', admin_url() ) ); ?>"
-                  method="post" enctype="multipart/form-data">
+	<div class="postbox edd-import-payment-history">
+		<h3><span><?php esc_html_e( 'Import Payment History', 'easy-digital-downloads' ); ?></span></h3>
+		<div class="inside">
+			<p><?php esc_html_e( 'Import a CSV file of payment records.', 'easy-digital-downloads' ); ?></p>
+			<form id="edd-import-payments" class="edd-import-form edd-import-export-form"
+					action="<?php echo esc_url( add_query_arg( 'edd_action', 'upload_import_file', admin_url() ) ); ?>"
+					method="post" enctype="multipart/form-data">
 
-                <div class="edd-import-file-wrap">
+				<div class="edd-import-file-wrap">
 					<?php wp_nonce_field( 'edd_ajax_import', 'edd_ajax_import' ); ?>
-                    <input type="hidden" name="edd-import-class" value="EDD_Batch_Payments_Import"/>
-                    <p>
-                        <input name="edd-import-file" id="edd-payments-import-file" type="file"/>
-                    </p>
-                    <span>
-						<input type="submit" value="<?php _e( 'Import CSV', 'easy-digital-downloads' ); ?>"
-                               class="button-secondary"/>
+					<input type="hidden" name="edd-import-class" value="EDD_Batch_Payments_Import"/>
+					<p>
+						<input name="edd-import-file" id="edd-payments-import-file" type="file"/>
+					</p>
+					<span>
+						<input type="submit" value="<?php esc_html_e( 'Import CSV', 'easy-digital-downloads' ); ?>"
+								class="button-secondary"/>
 						<span class="spinner"></span>
 					</span>
-                </div>
+				</div>
 
-                <div class="edd-import-options" id="edd-import-payments-options" style="display:none;">
+				<div class="edd-import-options" id="edd-import-payments-options" style="display:none;">
 
-                    <p>
+					<p>
 						<?php
 						printf(
 							__( 'Each column loaded from the CSV needs to be mapped to a payment field. Select the column that should be mapped to each field below. Any columns not needed can be ignored. See <a href="%s" target="_blank">this guide</a> for assistance with importing payment records.', 'easy-digital-downloads' ),
 							'http://docs.easydigitaldownloads.com/category/1337-importexport'
 						);
 						?>
-                    </p>
+					</p>
 
                     <table class="widefat edd_repeatable_table striped" width="100%" cellpadding="0" cellspacing="0">
                         <thead>
@@ -737,45 +738,45 @@ function edd_tools_import_export_display() {
                         </tr>
                         </tbody>
                     </table>
-                    <p class="submit">
-                        <button class="edd-import-proceed button-primary"><?php _e( 'Process Import', 'easy-digital-downloads' ); ?></button>
-                    </p>
-                </div>
-            </form>
-        </div><!-- .inside -->
-    </div><!-- .postbox -->
+					<p class="submit">
+						<button class="edd-import-proceed button-primary"><?php esc_html_e( 'Process Import', 'easy-digital-downloads' ); ?></button>
+					</p>
+				</div>
+			</form>
+		</div><!-- .inside -->
+	</div><!-- .postbox -->
 
-    <div class="postbox edd-import-payment-history">
-        <h3><span><?php _e( 'Import Download Products', 'easy-digital-downloads' ); ?></span></h3>
-        <div class="inside">
-            <p><?php _e( 'Import a CSV file of products.', 'easy-digital-downloads' ); ?></p>
-            <form id="edd-import-downloads" class="edd-import-form edd-import-export-form"
-                  action="<?php echo esc_url( add_query_arg( 'edd_action', 'upload_import_file', admin_url() ) ); ?>"
-                  method="post" enctype="multipart/form-data">
+	<div class="postbox">
+		<h3><span><?php esc_html_e( 'Import Download Products', 'easy-digital-downloads' ); ?></span></h3>
+		<div class="inside">
+			<p><?php esc_html_e( 'Import a CSV file of products.', 'easy-digital-downloads' ); ?></p>
+			<form id="edd-import-downloads" class="edd-import-form edd-import-export-form"
+					action="<?php echo esc_url( add_query_arg( 'edd_action', 'upload_import_file', admin_url() ) ); ?>"
+					method="post" enctype="multipart/form-data">
 
-                <div class="edd-import-file-wrap">
+				<div class="edd-import-file-wrap">
 					<?php wp_nonce_field( 'edd_ajax_import', 'edd_ajax_import' ); ?>
-                    <input type="hidden" name="edd-import-class" value="EDD_Batch_Downloads_Import"/>
-                    <p>
-                        <input name="edd-import-file" id="edd-downloads-import-file" type="file"/>
-                    </p>
-                    <span>
-						<input type="submit" value="<?php _e( 'Import CSV', 'easy-digital-downloads' ); ?>"
-                               class="button-secondary"/>
+					<input type="hidden" name="edd-import-class" value="EDD_Batch_Downloads_Import"/>
+					<p>
+						<input name="edd-import-file" id="edd-downloads-import-file" type="file"/>
+					</p>
+					<span>
+						<input type="submit" value="<?php esc_html_e( 'Import CSV', 'easy-digital-downloads' ); ?>"
+								class="button-secondary"/>
 						<span class="spinner"></span>
 					</span>
-                </div>
+				</div>
 
-                <div class="edd-import-options" id="edd-import-downloads-options" style="display:none;">
+				<div class="edd-import-options" id="edd-import-downloads-options" style="display:none;">
 
-                    <p>
+					<p>
 						<?php
 						printf(
 							__( 'Each column loaded from the CSV needs to be mapped to a Download product field. Select the column that should be mapped to each field below. Any columns not needed can be ignored. See <a href="%s" target="_blank">this guide</a> for assistance with importing Download products.', 'easy-digital-downloads' ),
 							'http://docs.easydigitaldownloads.com/category/1337-importexport'
 						);
 						?>
-                    </p>
+					</p>
 
                     <table class="widefat edd_repeatable_table striped" width="100%" cellpadding="0" cellspacing="0">
                         <thead>
@@ -952,29 +953,29 @@ function edd_tools_import_export_display() {
                         </tr>
                         </tbody>
                     </table>
-                    <p class="submit">
-                        <button class="edd-import-proceed button-primary"><?php _e( 'Process Import', 'easy-digital-downloads' ); ?></button>
-                    </p>
-                </div>
-            </form>
-        </div><!-- .inside -->
-    </div><!-- .postbox -->
+					<p class="submit">
+						<button class="edd-import-proceed button-primary"><?php _e( 'Process Import', 'easy-digital-downloads' ); ?></button>
+					</p>
+				</div>
+			</form>
+		</div><!-- .inside -->
+	</div><!-- .postbox -->
 
-    <div class="postbox">
-        <h3><span><?php _e( 'Export Settings', 'easy-digital-downloads' ); ?></span></h3>
-        <div class="inside">
-            <p><?php _e( 'Export the Easy Digital Downloads settings for this site as a .json file. This allows you to easily import the configuration into another site.', 'easy-digital-downloads' ); ?></p>
-            <p><?php printf( __( 'To export shop data (purchases, customers, etc), visit the <a href="%s">Reports</a> page.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-reports&tab=export' ) ); ?></p>
-            <form method="post"
-                  action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=import_export' ); ?>">
-                <p><input type="hidden" name="edd_action" value="export_settings"/></p>
-                <p>
+	<div class="postbox">
+		<h3><span><?php esc_html_e( 'Export Settings', 'easy-digital-downloads' ); ?></span></h3>
+		<div class="inside">
+			<p><?php esc_html_e( 'Export the Easy Digital Downloads settings for this site as a .json file. This allows you to easily import the configuration into another site.', 'easy-digital-downloads' ); ?></p>
+			<p><?php printf( __( 'To export shop data (purchases, customers, etc), visit the <a href="%s">Reports</a> page.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-reports&tab=export' ) ); ?></p>
+			<form method="post"
+					action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=import_export' ); ?>">
+				<p><input type="hidden" name="edd_action" value="export_settings"/></p>
+				<p>
 					<?php wp_nonce_field( 'edd_export_nonce', 'edd_export_nonce' ); ?>
 					<?php submit_button( __( 'Export', 'easy-digital-downloads' ), 'secondary', 'submit', false ); ?>
-                </p>
-            </form>
-        </div><!-- .inside -->
-    </div><!-- .postbox -->
+				</p>
+			</form>
+		</div><!-- .inside -->
+	</div><!-- .postbox -->
 
     <div class="postbox">
         <h3><span><?php _e( 'Import Settings', 'easy-digital-downloads' ); ?></span></h3>
