@@ -2414,7 +2414,7 @@ body.download_page_edd-reports {
 	margin-bottom: 20px;
 }
 
-div.edd-reports-export {
+.edd-admin--has-grid {
 	display: grid;
 	display: -ms-grid;
 	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -2425,22 +2425,22 @@ div.edd-reports-export {
 	margin-bottom: 0;
 }
 
-.edd-reports-export .edd-from-to-wrapper {
+.edd-admin--has-grid .edd-from-to-wrapper {
 	display: flex;
 	margin-right: 0;
 	margin-bottom: 16px;
 	width: 100%;
 }
 
-.edd-reports-export .edd-from-to-wrapper input {
+.edd-admin--has-grid .edd-from-to-wrapper input {
 	width: 100%;
 }
 
-.edd-reports-export .edd-from-to-wrapper span {
+.edd-admin--has-grid .edd-from-to-wrapper span {
     flex-grow: 1;
 }
 
-.edd-reports-export .edd-import-export-form {
+.edd-admin--has-grid .edd-import-export-form {
 	display: flex;
 	flex-direction: column;
 	flex-wrap: wrap;
@@ -2460,7 +2460,7 @@ span.edd-to-and-from--separator {
 	margin-bottom: 16px;
 }
 
-.edd-reports-wrapper .edd-reports-export .postbox .edd-select {
+.edd-reports-wrapper .edd-admin--has-grid .postbox .edd-select {
 	max-width: 100%;
 	margin-right: 0;
 }
