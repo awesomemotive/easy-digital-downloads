@@ -1,12 +1,12 @@
 <?php
 /**
- * Base Schema Column Class.
+ * Base Custom Database Table Column Class.
  *
- * @package     EDD
- * @subpackage  Database\Schemas
- * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       3.0
+ * @package     Database
+ * @subpackage  Column
+ * @copyright   Copyright (c) 2020
+ * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0.0
  */
 namespace EDD\Database;
 
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Base class used for each column for a custom table.
  *
- * @since 3.0
+ * @since 1.0.0
  *
  * @see Column::__construct() for accepted arguments.
  */
@@ -25,37 +25,34 @@ class Column extends Base {
 	/** Table Attributes ******************************************************/
 
 	/**
-	 * Name for the database column
+	 * Name for the database column.
 	 *
 	 * Required. Must contain lowercase alphabetical characters only. Use of any
 	 * other character (number, ascii, unicode, emoji, etc...) will result in
 	 * fatal application errors.
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var string
+	 * @since 1.0.0
+	 * @var   string
 	 */
 	public $name = '';
 
 	/**
-	 * Type of database column
+	 * Type of database column.
 	 *
 	 * See: https://dev.mysql.com/doc/en/data-types.html
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var string
+	 * @since 1.0.0
+	 * @var   string
 	 */
 	public $type = '';
 
 	/**
-	 * Length of database column
+	 * Length of database column.
 	 *
 	 * See: https://dev.mysql.com/doc/en/storage-requirements.html
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var string
+	 * @since 1.0.0
+	 * @var   string
 	 */
 	public $length = false;
 
@@ -64,9 +61,8 @@ class Column extends Base {
 	 *
 	 * See: https://dev.mysql.com/doc/en/numeric-type-overview.html
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var bool
+	 * @since 1.0.0
+	 * @var   bool
 	 */
 	public $unsigned = true;
 
@@ -75,9 +71,8 @@ class Column extends Base {
 	 *
 	 * See: https://dev.mysql.com/doc/en/numeric-type-overview.html
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var bool
+	 * @since 1.0.0
+	 * @var   bool
 	 */
 	public $zerofill = false;
 
@@ -86,9 +81,8 @@ class Column extends Base {
 	 *
 	 * See: https://dev.mysql.com/doc/en/binary-varbinary.html
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var bool
+	 * @since 1.0.0
+	 * @var   bool
 	 */
 	public $binary = false;
 
@@ -97,20 +91,18 @@ class Column extends Base {
 	 *
 	 * See: https://dev.mysql.com/doc/en/data-type-defaults.html
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var bool
+	 * @since 1.0.0
+	 * @var   bool
 	 */
 	public $allow_null = false;
 
 	/**
-	 * Typically empty/null, or date value
+	 * Typically empty/null, or date value.
 	 *
 	 * See: https://dev.mysql.com/doc/en/data-type-defaults.html
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var string
+	 * @since 1.0.0
+	 * @var   string
 	 */
 	public $default = '';
 
@@ -119,9 +111,8 @@ class Column extends Base {
 	 *
 	 * See: https://dev.mysql.com/doc/en/data-type-defaults.html
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var string
+	 * @since 1.0.0
+	 * @var   string
 	 */
 	public $extra = '';
 
@@ -134,9 +125,8 @@ class Column extends Base {
 	 *
 	 * See: https://dev.mysql.com/doc/mysql/en/charset-column.html
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var string
+	 * @since 1.0.0
+	 * @var   string
 	 */
 	public $encoding = '';
 
@@ -149,9 +139,8 @@ class Column extends Base {
 	 *
 	 * See: https://dev.mysql.com/doc/mysql/en/charset-column.html
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var string
+	 * @since 1.0.0
+	 * @var   string
 	 */
 	public $collation = '';
 
@@ -161,9 +150,8 @@ class Column extends Base {
 	 * By default, columns do not have comments. This is unused by any other
 	 * relative code, but you can include less than 1024 characters here.
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var string
+	 * @since 1.0.0
+	 * @var   string
 	 */
 	public $comment = '';
 
@@ -176,9 +164,8 @@ class Column extends Base {
 	 * class for several critical functions, including (but not limited to) the
 	 * cache key, meta-key relationships, auto-incrementing, etc...
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var bool
+	 * @since 1.0.0
+	 * @var   bool
 	 */
 	public $primary = false;
 
@@ -189,9 +176,8 @@ class Column extends Base {
 	 * This is used by the Query class to set its value automatically to the
 	 * current datetime value immediately before insert.
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var bool
+	 * @since 1.0.0
+	 * @var   bool
 	 */
 	public $created = false;
 
@@ -202,9 +188,8 @@ class Column extends Base {
 	 * This is used by the Query class to update its value automatically to the
 	 * current datetime value immediately before insert|update.
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var bool
+	 * @since 1.0.0
+	 * @var   bool
 	 */
 	public $modified = false;
 
@@ -215,9 +200,8 @@ class Column extends Base {
 	 * generate a unique string that can be used to identify a row in a database
 	 * table, typically in such a way that is unrelated to the row data itself.
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var bool
+	 * @since 1.0.0
+	 * @var   bool
 	 */
 	public $uuid = false;
 
@@ -230,9 +214,8 @@ class Column extends Base {
 	 * manually to `%s|%d|%f` only if you are doing something weird, or are
 	 * explicitly storing numeric values in text-based column types.
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var string
+	 * @since 1.0.0
+	 * @var   string
 	 */
 	public $pattern = '';
 
@@ -245,22 +228,20 @@ class Column extends Base {
 	 * Avoid setting to `true` on large blobs of text, unless you've optimized
 	 * your database server to accommodate these kinds of queries.
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var bool
+	 * @since 1.0.0
+	 * @var   bool
 	 */
 	public $searchable = false;
 
 	/**
-	 * Is this column a date (that uses WP_Date_Query?)
+	 * Is this column a date?
 	 *
 	 * By default, columns do not support date queries. When `true`, the Query
 	 * class will accept complex statements to help narrow results down to
 	 * specific periods of time for values in this column.
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var bool
+	 * @since 1.0.0
+	 * @var   bool
 	 */
 	public $date_query = false;
 
@@ -274,9 +255,8 @@ class Column extends Base {
 	 * You can safely turn this on for most numeric columns, indexed columns,
 	 * and text columns with intentionally limited lengths.
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var bool
+	 * @since 1.0.0
+	 * @var   bool
 	 */
 	public $sortable = false;
 
@@ -288,9 +268,8 @@ class Column extends Base {
 	 *
 	 * Consider setting this to `false` for longer text columns.
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var bool
+	 * @since 1.0.0
+	 * @var   bool
 	 */
 	public $in = true;
 
@@ -303,9 +282,8 @@ class Column extends Base {
 	 *
 	 * Consider setting this to `false` for longer text columns.
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var bool
+	 * @since 1.0.0
+	 * @var   bool
 	 */
 	public $not_in = true;
 
@@ -320,9 +298,8 @@ class Column extends Base {
 	 *
 	 * Use in conjunction with a database index for speedy queries.
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var string
+	 * @since 1.0.0
+	 * @var   string
 	 */
 	public $cache_key = false;
 
@@ -337,9 +314,8 @@ class Column extends Base {
 	 *
 	 * The Query class is responsible for triggering the event action.
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var bool
+	 * @since 1.0.0
+	 * @var   bool
 	 */
 	public $transition = false;
 
@@ -352,9 +328,8 @@ class Column extends Base {
 	 * is. You can set this to a callback function of your choice to override
 	 * the default validation behavior.
 	 *
-	 * @since 3.0.0
-	 * @access public
-	 * @var string
+	 * @since 1.0.0
+	 * @var   string
 	 */
 	public $validate = '';
 
@@ -364,9 +339,8 @@ class Column extends Base {
 	 * These are used by the Query class to allow and disallow CRUD access to
 	 * column data, typically based on roles or capabilities.
 	 *
-	 * @since 3.0.0
-	 * @access public
-	 * @var array
+	 * @since 1.0.0
+	 * @var   array
 	 */
 	public $caps = array();
 
@@ -374,11 +348,10 @@ class Column extends Base {
 	 * Array of possible aliases this column can be referred to as.
 	 *
 	 * These are used by the Query class to allow for columns to be renamed
-	 * without requiring complex architectural backwards compatability support.
+	 * without requiring complex architectural backwards compatibility support.
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var array
+	 * @since 1.0.0
+	 * @var   array
 	 */
 	public $aliases = array();
 
@@ -389,9 +362,8 @@ class Column extends Base {
 	 * These are typically unenforced foreign keys, and are used by the Query
 	 * class to help prime related items.
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var array
+	 * @since 1.0.0
+	 * @var   array
 	 */
 	public $relationships = array();
 
@@ -400,36 +372,35 @@ class Column extends Base {
 	/**
 	 * Sets up the order query, based on the query vars passed.
 	 *
-	 * @since 3.0
-	 * @access public
+	 * @since 1.0.0
 	 *
 	 * @param string|array $args {
 	 *     Optional. Array or query string of order query parameters. Default empty.
 	 *
 	 *     @type string   $name           Name of database column
 	 *     @type string   $type           Type of database column
-	 *     @type integer  $length         Length of database column
-	 *     @type boolean  $unsigned       Is integer unsigned?
-	 *     @type boolean  $zerofill       Is integer filled with zeroes?
-	 *     @type boolean  $binary         Is data in a binary format?
-	 *     @type boolean  $allow_null     Is null an allowed value?
+	 *     @type int      $length         Length of database column
+	 *     @type bool     $unsigned       Is integer unsigned?
+	 *     @type bool     $zerofill       Is integer filled with zeroes?
+	 *     @type bool     $binary         Is data in a binary format?
+	 *     @type bool     $allow_null     Is null an allowed value?
 	 *     @type mixed    $default        Typically empty/null, or date value
 	 *     @type string   $extra          auto_increment, etc...
 	 *     @type string   $encoding       Typically inherited from wpdb
 	 *     @type string   $collation      Typically inherited from wpdb
 	 *     @type string   $comment        Typically empty
-	 *     @type boolean  $pattern        What is the string-replace pattern?
-	 *     @type boolean  $primary        Is this the primary column?
-	 *     @type boolean  $created        Is this the column used as a created date?
-	 *     @type boolean  $modified       Is this the column used as a modified date?
-	 *     @type boolean  $uuid           Is this the column used as a universally unique identifier?
-	 *     @type boolean  $searchable     Is this column searchable?
-	 *     @type boolean  $sortable       Is this column used in orderby?
-	 *     @type boolean  $date_query     Is this column a datetime?
-	 *     @type boolean  $in             Is __in supported?
-	 *     @type boolean  $not_in         Is __not_in supported?
-	 *     @type boolean  $cache_key      Is this column queried independently?
-	 *     @type boolean  $transition     Does this column transition between changes?
+	 *     @type bool     $pattern        What is the string-replace pattern?
+	 *     @type bool     $primary        Is this the primary column?
+	 *     @type bool     $created        Is this the column used as a created date?
+	 *     @type bool     $modified       Is this the column used as a modified date?
+	 *     @type bool     $uuid           Is this the column used as a universally unique identifier?
+	 *     @type bool     $searchable     Is this column searchable?
+	 *     @type bool     $sortable       Is this column used in orderby?
+	 *     @type bool     $date_query     Is this column a datetime?
+	 *     @type bool     $in             Is __in supported?
+	 *     @type bool     $not_in         Is __not_in supported?
+	 *     @type bool     $cache_key      Is this column queried independently?
+	 *     @type bool     $transition     Does this column transition between changes?
 	 *     @type string   $validate       A callback function used to validate on save.
 	 *     @type array    $caps           Array of capabilities to check.
 	 *     @type array    $aliases        Array of possible column name aliases.
@@ -452,9 +423,8 @@ class Column extends Base {
 	/**
 	 * Parse column arguments
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @param array $args
+	 * @since 1.0.0
+	 * @param array $args Default empty array.
 	 * @return array
 	 */
 	private function parse_args( $args = array() ) {
@@ -520,9 +490,8 @@ class Column extends Base {
 	/**
 	 * Validate arguments after they are parsed.
 	 *
-	 * @since 3.0
-	 * @access private
-	 * @param array $args
+	 * @since 1.0.0
+	 * @param array $args Default empty array.
 	 * @return array
 	 */
 	private function validate_args( $args = array() ) {
@@ -536,7 +505,7 @@ class Column extends Base {
 			'zerofill'      => 'wp_validate_boolean',
 			'binary'        => 'wp_validate_boolean',
 			'allow_null'    => 'wp_validate_boolean',
-			'default'       => array( $this, 'sanitize_default' ),
+			'default'       => 'wp_kses_data',
 			'extra'         => 'wp_kses_data',
 			'encoding'      => 'wp_kses_data',
 			'collation'     => 'wp_kses_data',
@@ -585,9 +554,8 @@ class Column extends Base {
 	/**
 	 * Force column arguments for special column types
 	 *
-	 * @since 3.0
-	 *
-	 * @param array $args
+	 * @since 1.0.0
+	 * @param array $args Default empty array.
 	 * @return array
 	 */
 	private function special_args( $args = array() ) {
@@ -616,9 +584,8 @@ class Column extends Base {
 	/**
 	 * Return if a column type is numeric or not.
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @return boolean
+	 * @since 1.0.0
+	 * @return bool
 	 */
 	public function is_numeric() {
 		return $this->is_type( array(
@@ -634,9 +601,9 @@ class Column extends Base {
 	/**
 	 * Return if this column is of a certain type.
 	 *
-	 * @since 3.0
-	 * @param mixed $type The type to check. Accepts an array.
-	 * @return boolean True if of type, False if not
+	 * @since 1.0.0
+	 * @param mixed $type Default empty string. The type to check. Also accepts an array.
+	 * @return bool True if of type, False if not
 	 */
 	private function is_type( $type = '' ) {
 
@@ -657,8 +624,8 @@ class Column extends Base {
 	/**
 	 * Sanitize capabilities array
 	 *
-	 * @since 3.0
-	 * @param array $caps
+	 * @since 1.0.0
+	 * @param array $caps Default empty array.
 	 * @return array
 	 */
 	private function sanitize_capabilities( $caps = array() ) {
@@ -673,8 +640,8 @@ class Column extends Base {
 	/**
 	 * Sanitize aliases array using `sanitize_key()`
 	 *
-	 * @since 3.0.0
-	 * @param array $aliases
+	 * @since 1.0.0
+	 * @param array $aliases Default empty array.
 	 * @return array
 	 */
 	private function sanitize_aliases( $aliases = array() ) {
@@ -684,8 +651,9 @@ class Column extends Base {
 	/**
 	 * Sanitize relationships array
 	 *
-	 * @since 3.0.0
-	 * @param array $relationships
+	 * @todo
+	 * @since 1.0.0
+	 * @param array $relationships Default empty array.
 	 * @return array
 	 */
 	private function sanitize_relationships( $relationships = array() ) {
@@ -693,21 +661,9 @@ class Column extends Base {
 	}
 
 	/**
-	 * Sanitize the default column value
-	 *
-	 * @param string $default
-	 *
-	 * @since 3.0
-	 * @return string|null
-	 */
-	private function sanitize_default( $default = '' ) {
-		return is_null( $default ) ? null : wp_kses_data( $default );
-	}
-
-	/**
 	 * Sanitize the pattern
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 * @param mixed $pattern
 	 * @return string
 	 */
@@ -730,8 +686,8 @@ class Column extends Base {
 	/**
 	 * Sanitize the validation callback
 	 *
-	 * @since 3.0
-	 * @param string $callback A callable PHP function name or method
+	 * @since 1.0.0
+	 * @param string $callback Default empty string. A callable PHP function name or method
 	 * @return string The most appropriate callback function for the value
 	 */
 	private function sanitize_validation( $callback = '' ) {
@@ -745,17 +701,17 @@ class Column extends Base {
 		if ( true === $this->uuid ) {
 			$callback = array( $this, 'validate_uuid' );
 
-		// Intval fallback
-		} elseif ( $this->is_type( array( 'tinyint', 'int' ) ) ) {
-			$callback = 'intval';
+		// Datetime fallback
+		} elseif ( $this->is_type( 'datetime' ) ) {
+			$callback = array( $this, 'validate_datetime' );
 
 		// Decimal fallback
 		} elseif ( $this->is_type( 'decimal' ) ) {
 			$callback = array( $this, 'validate_decimal' );
 
-		// Datetime fallback
-		} elseif ( $this->is_type( 'datetime' ) ) {
-			$callback = array( $this, 'validate_datetime' );
+		// Intval fallback
+		} elseif ( $this->is_numeric() ) {
+			$callback = 'intval';
 		}
 
 		// Return the callback
@@ -767,19 +723,24 @@ class Column extends Base {
 	/**
 	 * Fallback to validate a datetime value if no other is set.
 	 *
-	 * @since 3.0
-	 * @param string $value A datetime value that needs validating
+	 * This assumes NO_ZERO_DATES is off or overridden.
+	 *
+	 * If MySQL drops support for zero dates, this method will need to be
+	 * updated to support different default values based on the environment.
+	 *
+	 * @since 1.0.0
+	 * @param string $value Default '0000-00-00 00:00:00'. A datetime value that needs validating
 	 * @return string A valid datetime value
 	 */
 	public function validate_datetime( $value = '0000-00-00 00:00:00' ) {
 
-		// Fallback for empty values
+		// Handle "empty" values
 		if ( empty( $value ) || ( '0000-00-00 00:00:00' === $value ) ) {
-			$value = ! empty( $this->default ) || ( is_null( $this->default ) && $this->allow_null )
+			$value = ! empty( $this->default )
 				? $this->default
-				: '';
+				: '0000-00-00 00:00:00';
 
-		// Fallback if PHP date function exists
+		// Convert to MySQL datetime format via date() && strtotime
 		} elseif ( function_exists( 'date' ) ) {
 			$value = date( 'Y-m-d H:i:s', strtotime( $value ) );
 		}
@@ -799,11 +760,9 @@ class Column extends Base {
 	 * Uses number_format() which does rounding to the last decimal if your
 	 * value is longer than specified.
 	 *
-	 * @since 3.0
-	 *
+	 * @since 1.0.0
 	 * @param mixed $value    Default empty string. The decimal value to validate
 	 * @param int   $decimals Default 9. The number of decimal points to accept
-	 *
 	 * @return float
 	 */
 	public function validate_decimal( $value = 0, $decimals = 9 ) {
@@ -837,7 +796,7 @@ class Column extends Base {
 	}
 
 	/**
-	 * Validate a UUID
+	 * Validate a UUID.
 	 *
 	 * This uses the v4 algorithm to generate a UUID that is used to uniquely
 	 * and universally identify a given database row without any direct
@@ -845,22 +804,23 @@ class Column extends Base {
 	 *
 	 * From http://php.net/manual/en/function.uniqid.php#94959
 	 *
-	 * @since 3.0
-	 * @param string $uuid The UUID value (empty on insert, string on update)
+	 * @since 1.0.0
+	 * @param string $value The UUID value (empty on insert, string on update)
 	 * @return string Generated UUID.
 	 */
-	public function validate_uuid( $uuid = '' ) {
-
-		// Bail if not empty (UUIDs should never change once they are set)
-		if ( ! empty( $uuid ) ) {
-			return $uuid;
-		}
+	public function validate_uuid( $value = '' ) {
 
 		// Default URN UUID prefix
 		$prefix = 'urn:uuid:';
 
+		// Bail if not empty and correctly prefixed
+		// (UUIDs should _never_ change once they are set)
+		if ( ! empty( $value ) && ( 0 === strpos( $value, $prefix ) ) ) {
+			return $value;
+		}
+
 		// Put the pieces together
-		$uuid = sprintf( "{$prefix}%04x%04x-%04x-%04x-%04x-%04x%04x%04x",
+		$value = sprintf( "{$prefix}%04x%04x-%04x-%04x-%04x-%04x%04x%04x",
 
 			// 32 bits for "time_low"
 			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
@@ -882,16 +842,18 @@ class Column extends Base {
 		);
 
 		// Return the new UUID
-		return $uuid;
+		return $value;
 	}
+
+	/** Table Helpers *********************************************************/
 
 	/**
 	 * Return a string representation of what this column's properties look like
-	 * in a MySQL
+	 * in a MySQL.
 	 *
-	 * @since 3.0
-	 *
-	 * return string
+	 * @todo
+	 * @since 1.0.0
+	 * @return string
 	 */
 	public function get_create_string() {
 
