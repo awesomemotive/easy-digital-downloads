@@ -2444,6 +2444,7 @@ div.edd-reports-export {
 	display: flex;
 	flex-direction: column;
 	flex-wrap: wrap;
+	position: relative;
 }
 
 div.edd-to-and-from-container {
@@ -2462,10 +2463,6 @@ span.edd-to-and-from--separator {
 .edd-reports-wrapper .edd-reports-export .postbox .edd-select {
 	max-width: 100%;
 	margin-right: 0;
-}
-
-.edd-import-export-form {
-	position: relative;
 }
 
 .edd-import-export-form .edd-progress {
