@@ -1971,7 +1971,7 @@ class Query extends Base {
 	 * @since 1.0.0
 	 *
 	 * @param array $item
-	 * @return mixed False on error, Array of validated values on success
+	 * @return array|false False on error, Array of validated values on success
 	 */
 	private function validate_item( $item = array() ) {
 
