@@ -437,7 +437,10 @@ function edd_tools_import_export_display() {
 	if ( ! current_user_can( 'manage_shop_settings' ) ) {
 		return;
 	}
+	?>
+	<div class="edd-admin--has-grid">
 
+	<?php
 	do_action( 'edd_tools_import_export_before' );
 	?>
 
@@ -993,9 +996,14 @@ function edd_tools_import_export_display() {
                 </p>
             </form>
         </div><!-- .inside -->
-    </div><!-- .postbox -->
+	</div><!-- .postbox -->
+
 	<?php
 	do_action( 'edd_tools_import_export_after' );
+	?>
+	</div><!-- edd-admin--has-grid -->
+
+	<?php
 }
 add_action( 'edd_tools_tab_import_export', 'edd_tools_import_export_display' );
 
