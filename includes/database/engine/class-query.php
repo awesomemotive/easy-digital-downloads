@@ -665,7 +665,7 @@ class Query extends Base {
 	 *
 	 * @param array $args See Queries\Meta
 	 *
-	 * @return Meta
+	 * @return Queries\Meta
 	 */
 	private function get_meta_query( $args = array() ) {
 		return new Queries\Meta( $args );
