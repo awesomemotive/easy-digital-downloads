@@ -114,7 +114,10 @@ function edd_update_note( $note_id = 0, $data = array() ) {
  * @return EDD\Notes\Note Note object if successful, false otherwise.
  */
 function edd_get_note( $note_id = 0 ) {
-	return edd_get_note_by( 'id', $note_id );
+	$notes = new EDD\Database\Queries\Note();
+
+	// Return note
+	return $notes->get_item( $note_id );
 }
 
 /**
