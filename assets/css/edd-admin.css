@@ -2467,12 +2467,14 @@ span.edd-to-and-from--separator {
 
 .edd-import-export-form .edd-progress {
 	background: #ddd;
+	border-radius: 15px;
 	height: 15px;
 	flex-basis: 100%;
 }
 
 .edd-import-export-form .edd-progress div {
 	background: #ccc;
+	border-radius: 15px;
 	height: 100%;
 	width: 0;
 }
