@@ -1510,7 +1510,7 @@ class Query extends Base {
 		 * @since 1.0.0
 		 *
 		 * @param array  $retval An array of items.
-		 * @param object &$this  Current instance of Query, passed by reference.
+		 * @param Query &$this  Current instance of Query, passed by reference.
 		 */
 		$retval = (array) apply_filters_ref_array( $this->apply_prefix( "the_{$this->item_name_plural}" ), array( $retval, &$this ) );
 
