@@ -678,7 +678,7 @@ class Query extends Base {
 	 *
 	 * @param array $args See Queries\Compare
 	 *
-	 * @return Compare
+	 * @return Queries\Compare
 	 */
 	private function get_compare_query( $args = array() ) {
 		return new Queries\Compare( $args );
