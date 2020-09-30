@@ -2181,7 +2181,7 @@ class Query extends Base {
 	 * @param string $meta_key
 	 * @param string $meta_value
 	 * @param string $unique
-	 * @return mixed
+	 * @return int|false
 	 */
 	protected function add_item_meta( $item_id = 0, $meta_key = '', $meta_value = '', $unique = false ) {
 
