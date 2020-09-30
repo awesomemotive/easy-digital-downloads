@@ -2347,33 +2347,16 @@ body.download_page_edd-reports {
 .edd-reports-wrapper .postbox h3 {
 	font-size: 1.3em
 }
+
 #edd-dashboard-widgets-wrap .metabox-holder {
 	padding-top: 0;
-}
-.edd-reports-wrapper .postbox {
-	border: none;
-	box-shadow: none;
-}
-
-.edd-reports-wrapper form .edd-from-to-wrapper,
-.edd-reports-wrapper form .edd-select,
-.edd-reports-wrapper form .edd-label,
-.edd-reports-wrapper form input.button {
-	vertical-align: middle;
-	float: left;
-}
-
-.edd-reports-wrapper form .edd-label {
-	height: 29px;
-	line-height: 29px;
-	vertical-align: middle;
-	margin-right: 4px;
 }
 
 .edd-reports-wrapper .postbox .edd-select {
 	max-width: 200px;
 	vertical-align: baseline;
 	margin-right: 4px;
+	margin-bottom: 16px;
 }
 
 .download_page_edd-reports #edd-filters {
@@ -2429,6 +2412,56 @@ body.download_page_edd-reports {
 .edd-reports-chart,
 .edd-reports-table {
 	margin-bottom: 20px;
+}
+
+.edd-admin--has-grid {
+	display: grid;
+	display: -ms-grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	grid-gap: 20px;
+}
+
+.edd-reports-wrapper .postbox {
+	margin-bottom: 0;
+}
+
+.edd-admin--has-grid .edd-from-to-wrapper {
+	display: flex;
+	margin-right: 0;
+	margin-bottom: 16px;
+	width: 100%;
+}
+
+.edd-admin--has-grid .edd-from-to-wrapper input {
+	width: 100%;
+}
+
+.edd-admin--has-grid .edd-from-to-wrapper span {
+    flex-grow: 1;
+}
+
+.edd-admin--has-grid .edd-import-export-form {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+}
+
+div.edd-to-and-from-container {
+	display: grid;
+	display: -ms-grid;
+	grid-template-columns: 1fr 1fr;
+	grid-gap: 8px;
+}
+
+span.edd-to-and-from--separator {
+	line-height: normal;
+	align-self: center;
+	margin-bottom: 16px;
+}
+
+.edd-reports-wrapper .edd-admin--has-grid .postbox .edd-select {
+	max-width: 100%;
+	margin-right: 0;
 }
 
 .edd-import-export-form {
