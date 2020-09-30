@@ -2035,7 +2035,7 @@ class Query extends Base {
 	 * @param string $method select|insert|update|delete
 	 * @param array|object  $item   Object|Array of keys/values to reduce
 	 *
-	 * @return mixed Object|Array without keys the current user does not have caps for
+	 * @return array|object Object|Array without keys the current user does not have caps for
 	 */
 	private function reduce_item( $method = 'update', $item = array() ) {
 
