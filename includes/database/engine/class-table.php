@@ -854,7 +854,7 @@ abstract class Table extends Base {
 	private function delete_db_version() {
 		$this->db_version = $this->is_global()
 			? delete_network_option( get_main_network_id(), $this->db_version_key )
-			:         delete_option(                        $this->db_version_key, false );
+			:         delete_option(                        $this->db_version_key );
 	}
 
 	/**
