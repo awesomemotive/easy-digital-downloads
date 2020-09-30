@@ -2211,7 +2211,7 @@ class Query extends Base {
 	 * @param int     $item_id
 	 * @param string  $meta_key
 	 * @param bool    $single
-	 * @return mixed
+	 * @return mixed Single metadata value, or array of values
 	 */
 	protected function get_item_meta( $item_id = 0, $meta_key = '', $single = false ) {
 
