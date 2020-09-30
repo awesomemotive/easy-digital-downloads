@@ -2273,7 +2273,7 @@ class Query extends Base {
 	 * @param string $meta_key
 	 * @param string $meta_value
 	 * @param string $delete_all
-	 * @return mixed
+	 * @return bool True on successful delete, false on failure.
 	 */
 	protected function delete_item_meta( $item_id = 0, $meta_key = '', $meta_value = '', $delete_all = false ) {
 
