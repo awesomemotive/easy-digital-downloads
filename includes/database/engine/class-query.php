@@ -1633,7 +1633,7 @@ class Query extends Base {
 	 *
 	 * @param string     $column_name  Name of database column
 	 * @param int|string $column_value Value to query for
-	 * @return mixed False if empty/error, Object if successful
+	 * @return object|false False if empty/error, Object if successful
 	 */
 	public function get_item_by( $column_name = '', $column_value = '' ) {
 
