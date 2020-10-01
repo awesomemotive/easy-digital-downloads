@@ -812,7 +812,7 @@ function edd_add_customer_email_address( $data ) {
  * @return int|false `1` if the customer email address was deleted successfully,
  *                   false on error.
  */
-function edd_delete_customer_email_address( $customer_email_address_id = 0 ) {
+function edd_delete_customer_email_address( $customer_email_address_id ) {
 	$customer_email_addresses = new EDD\Database\Queries\Customer_Email_Address();
 
 	return $customer_email_addresses->delete_item( $customer_email_address_id );
