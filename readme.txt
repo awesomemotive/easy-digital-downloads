@@ -34,7 +34,7 @@ Do you prefer an eCommerce solution which is simple and intuitive or one which i
 
 Here are some of the features supported out-of-the-box:
 
-- **Frontend shopping cart** - Customers can browse your product catalogue, add items to their cart, and checkout when they are ready. Or they can bypass the cart using Buy Now buttons.
+- **Frontend shopping cart** - Customers can browse your product catalogue, add items to their cart, and checkout when they are ready. Or they can bypass the cart using Buy Now 		buttons.
 - **Flexible and clean checkout form** - Buyers can complete their purchase with ease, directly on your site's checkout page.
 - **Complete customer management** - View and manage detailed records of all customers and their purchase history.
 - **Detailed eCommerce reports** - Keep track of your earnings, refunds, sales, and more.
@@ -110,7 +110,6 @@ The Easy Digital Downloads API makes it possible for developers to make customiz
 - Extending native features
 - Creating new product page templates
 - Integrating with other plugins and web applications
-
 ...and much much more!
 
 > As a developer, Easy Digital Downloads is very pleasant to work with since you can absolutely extend anything available within EDD.
@@ -133,8 +132,8 @@ Easy Digital Downloads is built by [Sandhills Development](https://sandhillsdev.
 
 Check out some of our popular posts for actionable advice for running your business and selling digital files on the web.
 
-- [The 12 Most Popular Digital Products You Can Sell Online](https://easydigitaldownloads.com/blog/the-12-most-popular-digital-products-you-can-sell-online/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
-- [The Reality of Refunds for Digital Products](https://easydigitaldownloads.com/blog/the-reality-of-refunds-for-digital-products/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=refunds&utm_term=description)
+- [The 12 Most Popular Digital Products You Can Sell Online](https://easydigitaldownloads.com/blog/the-12-most-popular-digital-products-you-can-sell-online/?			u  	  utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
+- [The Reality of Refunds for Digital Products](https://easydigitaldownloads.com/blog/the-reality-of-refunds-for-digital-products/?  utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=refunds&utm_term=description)
 - [How to Successfully Launch Your Digital Product](https://easydigitaldownloads.com/blog/how-to-successfully-launch-your-digital-product/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=launch&utm_term=description)
 - [Protecting Your Digital Products](https://easydigitaldownloads.com/blog/protecting-your-digital-products/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=protecting&utm_term=description)
 - [The Top Ten Benefits of Selling Digital Products](https://easydigitaldownloads.com/blog/top-10-benefits-selling-digital-products/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=benefits&utm_term=description)
@@ -149,10 +148,10 @@ Development for this plugin happens in a public GitHub repository to better faci
 
 If Easy Digital Downloads doesn’t quite fit your needs, take a look at some of our other projects.
 
-- [WP Simple Pay](https://wpsimplepay.com/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) – A lightweight Stripe payments plugin
-- [AffiliateWP](https://affiliatewp.com/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) – A full-featured affiliate marketing solution
-- [Sugar Calendar](https://sugarcalendar.com?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) – WordPress event management made simple
-- [Restrict Content Pro](https://restrictcontentpro.com/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) – A powerful membership plugin for WordPress
+- [WP Simple Pay](https://wpsimplepay.com/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) – A lightweight Stripe 		payments plugin
+- [AffiliateWP](https://affiliatewp.com/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) – A full-featured affiliate 		marketing solution
+- [Sugar Calendar](https://sugarcalendar.com?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) – WordPress event 				management made simple
+- [Restrict Content Pro](https://restrictcontentpro.com/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) – A 					powerful membership plugin for WordPress
 
 == Installation ==
 
