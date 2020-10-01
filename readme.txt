@@ -5,9 +5,9 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: ecommerce, sell, checkout, payments, stripe
 Requires at least: 4.4
-Tested up to: 5.5
+Tested up to: 5.5.1
 Requires PHP: 5.3
-Stable Tag: 2.9.25
+Stable Tag: 2.9.26
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products the simple way. Easily build an online store complete with a cart system, checkout forms, reports, coupons, and more!
@@ -253,6 +253,10 @@ For most stores, we recommend using the Stripe Payment Gateway.
 9. Checkout screen
 
 == Changelog ==
+= 2.9.26, October 1, 2020 =
+* Fix: Installation of the Jilt extension was allowed for non-super admins on multisite installs.
+* Dev: Improved DocBloc for edd_has_user_purchased() function.
+
 = 2.9.25, September 3, 2020 =
 * Fix: Using the registration form on checkout with guest checkout disabled, could result in errors when attempting to purchase.
 
