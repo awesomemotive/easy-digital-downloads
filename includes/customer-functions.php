@@ -856,7 +856,7 @@ function edd_update_customer_email_address( $customer_email_address_id, $data = 
  * @return \EDD\Customers\Customer_Email_Address|false Customer_Email_Address if
  *                                                     successful, false otherwise.
  */
-function edd_get_customer_email_address( $customer_email_address_id = 0 ) {
+function edd_get_customer_email_address( $customer_email_address_id ) {
 	$customer_email_addresses = new EDD\Database\Queries\Customer_Email_Address();
 
 	// Return customer email address
