@@ -841,7 +841,7 @@ function edd_delete_customer_email_address( $customer_email_address_id ) {
  *
  * @return int|false Number of rows updated if successful, false otherwise.
  */
-function edd_update_customer_email_address( $customer_email_address_id = 0, $data = array() ) {
+function edd_update_customer_email_address( $customer_email_address_id, $data = array() ) {
 	$customer_email_addresses = new EDD\Database\Queries\Customer_Email_Address();
 
 	return $customer_email_addresses->update_item( $customer_email_address_id, $data );
