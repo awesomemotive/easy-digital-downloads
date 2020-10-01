@@ -505,7 +505,7 @@ class Column extends Base {
 			'zerofill'      => 'wp_validate_boolean',
 			'binary'        => 'wp_validate_boolean',
 			'allow_null'    => 'wp_validate_boolean',
-			'default'       => 'wp_kses_data',
+			'default'       => array( $this, 'sanitize_default' ),
 			'extra'         => 'wp_kses_data',
 			'encoding'      => 'wp_kses_data',
 			'collation'     => 'wp_kses_data',
@@ -658,6 +658,19 @@ class Column extends Base {
 	 */
 	private function sanitize_relationships( $relationships = array() ) {
 		return array_filter( $relationships );
+	}
+
+	/**
+	 * Sanitize the default value
+	 *
+	 * @since 1.0.0
+	 * @param string $default
+	 * @return string|null
+	 */
+	private function sanitize_default( $default = '' ) {
+		return is_null( $default )
+			? null
+			: wp_kses_data( $default );
 	}
 
 	/**
