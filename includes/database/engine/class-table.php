@@ -65,14 +65,6 @@ abstract class Table extends Base {
 	protected $global = false;
 
 	/**
-	 * Passed directly into register_activation_hook()
-	 *
-	 * @since 1.0.0
-	 * @var   string
-	 */
-	protected $file = '';
-
-	/**
 	 * Database version key (saved in _options or _sitemeta)
 	 *
 	 * @since 1.0.0
@@ -336,7 +328,7 @@ abstract class Table extends Base {
 
 		// Bail if no database interface is available
 		if ( empty( $db ) ) {
-			return;
+			return false;
 		}
 
 		// Query statement
@@ -363,7 +355,7 @@ abstract class Table extends Base {
 
 		// Bail if no database interface is available
 		if ( empty( $db ) ) {
-			return;
+			return false;
 		}
 
 		// Query statement
@@ -379,7 +371,7 @@ abstract class Table extends Base {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return mixed
+	 * @return bool
 	 */
 	public function drop() {
 
@@ -388,7 +380,7 @@ abstract class Table extends Base {
 
 		// Bail if no database interface is available
 		if ( empty( $db ) ) {
-			return;
+			return false;
 		}
 
 		// Query statement
@@ -404,7 +396,7 @@ abstract class Table extends Base {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return mixed
+	 * @return bool
 	 */
 	public function truncate() {
 
@@ -413,7 +405,7 @@ abstract class Table extends Base {
 
 		// Bail if no database interface is available
 		if ( empty( $db ) ) {
-			return;
+			return false;
 		}
 
 		// Query statement
@@ -429,7 +421,7 @@ abstract class Table extends Base {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return mixed
+	 * @return bool
 	 */
 	public function delete_all() {
 
@@ -438,7 +430,7 @@ abstract class Table extends Base {
 
 		// Bail if no database interface is available
 		if ( empty( $db ) ) {
-			return;
+			return false;
 		}
 
 		// Query statement
@@ -458,7 +450,7 @@ abstract class Table extends Base {
 	 *
 	 * @param string $new_table_name The name of the new table, without prefix
 	 *
-	 * @return mixed
+	 * @return bool
 	 */
 	public function _clone( $new_table_name = '' ) {
 
@@ -467,7 +459,7 @@ abstract class Table extends Base {
 
 		// Bail if no database interface is available
 		if ( empty( $db ) ) {
-			return;
+			return false;
 		}
 
 		// Sanitize the new table name
@@ -475,7 +467,7 @@ abstract class Table extends Base {
 
 		// Bail if new table name is invalid
 		if ( empty( $table_name ) ) {
-			return;
+			return false;
 		}
 
 		// Query statement
@@ -490,13 +482,13 @@ abstract class Table extends Base {
 	/**
 	 * Copy the contents of this table to a new table.
 	 *
-	 * Pair with _clone().
+	 * Pair with clone().
 	 *
 	 * @since 1.1.0
 	 *
 	 * @param string $new_table_name The name of the new table, without prefix
 	 *
-	 * @return mixed
+	 * @return bool
 	 */
 	public function copy( $new_table_name = '' ) {
 
@@ -505,7 +497,7 @@ abstract class Table extends Base {
 
 		// Bail if no database interface is available
 		if ( empty( $db ) ) {
-			return;
+			return false;
 		}
 
 		// Sanitize the new table name
@@ -513,7 +505,7 @@ abstract class Table extends Base {
 
 		// Bail if new table name is invalid
 		if ( empty( $table_name ) ) {
-			return;
+			return false;
 		}
 
 		// Query statement
@@ -530,7 +522,7 @@ abstract class Table extends Base {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return mixed
+	 * @return int
 	 */
 	public function count() {
 
@@ -539,7 +531,7 @@ abstract class Table extends Base {
 
 		// Bail if no database interface is available
 		if ( empty( $db ) ) {
-			return;
+			return 0;
 		}
 
 		// Query statement
@@ -547,7 +539,7 @@ abstract class Table extends Base {
 		$count = $db->get_var( $query );
 
 		// Query success/fail
-		return $count;
+		return intval( $count );
 	}
 
 	/**
@@ -566,7 +558,7 @@ abstract class Table extends Base {
 
 		// Bail if no database interface is available
 		if ( empty( $db ) ) {
-			return;
+			return false;
 		}
 
 		// Query statement
@@ -596,7 +588,7 @@ abstract class Table extends Base {
 
 		// Bail if no database interface is available
 		if ( empty( $db ) ) {
-			return;
+			return false;
 		}
 
 		// Query statement
@@ -616,7 +608,7 @@ abstract class Table extends Base {
 	 *
 	 * @since 1.0.0
 	 *
-	 * return bool
+	 * @return bool
 	 */
 	public function upgrade() {
 
@@ -746,12 +738,22 @@ abstract class Table extends Base {
 			return;
 		}
 
+		// Separator
+		$glue = '_';
+
 		// Setup the prefixed name
-		$this->prefixed_name = $this->apply_prefix( $this->name );
+		$this->prefixed_name = $this->apply_prefix( $this->name, $glue );
 
 		// Maybe create database key
 		if ( empty( $this->db_version_key ) ) {
-			$this->db_version_key = "wpdb_{$this->prefixed_name}_version";
+			$this->db_version_key = implode(
+				$glue,
+				array(
+					sanitize_key( $this->db_global ),
+					$this->prefixed_name,
+					'version'
+				)
+			);
 		}
 	}
 
@@ -844,6 +846,28 @@ abstract class Table extends Base {
 		$this->db_version = $this->is_global()
 			? get_network_option( get_main_network_id(), $this->db_version_key, false )
 			:         get_option(                        $this->db_version_key, false );
+
+ 		/**
+ 		 * If the DB version is higher than the stated version and is 12 digits
+		 * long, we need to update it to our new, shorter format of 9 digits.
+ 		 *
+ 		 * This is only for 3.0 beta testers, and can be removed in 3.0.1 or above.
+ 		 *
+ 		 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/7579
+ 		 */
+ 		if ( version_compare( $this->db_version, $this->version, '<=' ) || ( 12 !== strlen( $this->db_version ) ) ) {
+ 			return;
+ 		}
+
+ 		// Parse the new version number from the existing. Converting from
+		// {YYYY}{mm}{dd}{xxxx} to {YYYY}{mm}{dd}{x}
+ 		$date             = substr( $this->db_version, 0, 8 );
+ 		$increment        = substr( $this->db_version, 8, 4 );
+
+		// Trims off the three prefixed zeros.
+ 		$this->db_version = intval( $date . intval( $increment ) );
+
+ 		$this->set_db_version( $this->db_version );
 	}
 
 	/**
@@ -863,9 +887,6 @@ abstract class Table extends Base {
 	 * @since 1.0.0
 	 */
 	private function add_hooks() {
-
-		// Activation hook
-		register_activation_hook( $this->file, array( $this, 'maybe_upgrade' ) );
 
 		// Add table to the global database object
 		add_action( 'switch_blog', array( $this, 'switch_blog'   ) );
