@@ -729,16 +729,16 @@ class Column extends Base {
 	 * updated to support different default values based on the environment.
 	 *
 	 * @since 1.0.0
-	 * @param string $value Default '0000-00-00 00:00:00'. A datetime value that needs validating
+	 * @param string $value Default ''. A datetime value that needs validating
 	 * @return string A valid datetime value
 	 */
-	public function validate_datetime( $value = '0000-00-00 00:00:00' ) {
+	public function validate_datetime( $value = '' ) {
 
 		// Handle "empty" values
 		if ( empty( $value ) || ( '0000-00-00 00:00:00' === $value ) ) {
-			$value = ! empty( $this->default )
+			$value = ! empty( $this->default ) || ( ( true === $this->allow_null ) && is_null( $this->default ) )
 				? $this->default
-				: '0000-00-00 00:00:00';
+				: '';
 
 		// Convert to MySQL datetime format via date() && strtotime
 		} elseif ( function_exists( 'date' ) ) {

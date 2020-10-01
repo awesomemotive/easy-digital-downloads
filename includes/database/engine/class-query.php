@@ -295,6 +295,7 @@ class Query extends Base {
 	 *
 	 *     @type string       $fields            Site fields to return. Accepts 'ids' (returns an array of item IDs)
 	 *                                           or empty (returns an array of complete item objects). Default empty.
+	 *                                           To do a date query against a field, append the field name with _query
 	 *     @type bool         $count             Whether to return a item count (true) or array of item objects.
 	 *                                           Default false.
 	 *     @type int          $number            Limit number of items to retrieve. Use 0 for no limit.
@@ -802,7 +803,7 @@ class Query extends Base {
 	 *
 	 * @param string $column_name  Name of database column
 	 * @param string $column_value Value to query for
-	 * @return mixed False if empty/error, Object if successful
+	 * @return object|false False if empty/error, Object if successful
 	 */
 	private function get_item_raw( $column_name = '', $column_value = '' ) {
 
@@ -954,8 +955,8 @@ class Query extends Base {
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param array  $pieces A compacted array of item query clauses.
-		 * @param object &$this  Current instance passed by reference.
+		 * @param array $pieces A compacted array of item query clauses.
+		 * @param Query &$this  Current instance passed by reference.
 		 */
 		$clauses = (array) apply_filters_ref_array( $this->apply_prefix( "{$this->item_name_plural}_query_clauses" ), array( $query, &$this ) );
 
@@ -1510,7 +1511,7 @@ class Query extends Base {
 		 * @since 1.0.0
 		 *
 		 * @param array  $retval An array of items.
-		 * @param Query &$this  Current instance of Query, passed by reference.
+		 * @param object &$this  Current instance of Query, passed by reference.
 		 */
 		$retval = (array) apply_filters_ref_array( $this->apply_prefix( "the_{$this->item_name_plural}" ), array( $retval, &$this ) );
 
@@ -1604,7 +1605,7 @@ class Query extends Base {
 	 * @since 1.0.0
 	 *
 	 * @param int|array|object $item_id The ID of the item
-	 * @return mixed False if empty/error, Object if successful
+	 * @return object|false False if empty/error, Object if successful
 	 */
 	public function get_item( $item_id = 0 ) {
 
@@ -2032,10 +2033,10 @@ class Query extends Base {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $method select|insert|update|delete
-	 * @param array|object  $item   Object|Array of keys/values to reduce
+	 * @param string       $method select|insert|update|delete
+	 * @param array|object $item   Object|Array of keys/values to reduce
 	 *
-	 * @return array|object Object|Array without keys the current user does not have caps for
+	 * @return mixed Object|Array without keys the current user does not have caps for
 	 */
 	private function reduce_item( $method = 'update', $item = array() ) {
 
@@ -2181,7 +2182,7 @@ class Query extends Base {
 	 * @param string $meta_key
 	 * @param string $meta_value
 	 * @param string $unique
-	 * @return int|false
+	 * @return int|false The meta ID on success, false on failure.
 	 */
 	protected function add_item_meta( $item_id = 0, $meta_key = '', $meta_value = '', $unique = false ) {
 
@@ -2242,7 +2243,7 @@ class Query extends Base {
 	 * @param string $meta_key
 	 * @param string $meta_value
 	 * @param string $prev_value
-	 * @return mixed
+	 * @return bool True on successful update, false on failure.
 	 */
 	protected function update_item_meta( $item_id = 0, $meta_key = '', $meta_value = '', $prev_value = '' ) {
 
