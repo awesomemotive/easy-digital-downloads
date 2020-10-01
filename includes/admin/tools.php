@@ -974,28 +974,28 @@ function edd_tools_import_export_display() {
 				<p><input type="hidden" name="edd_action" value="export_settings"/></p>
 				<p>
 					<?php wp_nonce_field( 'edd_export_nonce', 'edd_export_nonce' ); ?>
-					<?php submit_button( __( 'Export', 'easy-digital-downloads' ), 'secondary', 'submit', false ); ?>
+					<input type="submit" value="<?php esc_html_e( 'Export', 'easy-digital-downloads' );?>" class="button-secondary" />
 				</p>
 			</form>
 		</div><!-- .inside -->
 	</div><!-- .postbox -->
 
-    <div class="postbox">
-        <h3><span><?php _e( 'Import Settings', 'easy-digital-downloads' ); ?></span></h3>
-        <div class="inside">
-            <p><?php _e( 'Import the Easy Digital Downloads settings from a .json file. This file can be obtained by exporting the settings on another site using the form above.', 'easy-digital-downloads' ); ?></p>
-            <form method="post" enctype="multipart/form-data"
-                  action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=import_export' ); ?>">
-                <p>
-                    <input type="file" name="import_file"/>
-                </p>
-                <p>
-                    <input type="hidden" name="edd_action" value="import_settings"/>
+	<div class="postbox">
+		<h3><span><?php _e( 'Import Settings', 'easy-digital-downloads' ); ?></span></h3>
+		<div class="inside">
+			<p><?php _e( 'Import the Easy Digital Downloads settings from a .json file. This file can be obtained by exporting the settings on another site using the form above.', 'easy-digital-downloads' ); ?></p>
+			<form method="post" enctype="multipart/form-data"
+					action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-tools&tab=import_export' ); ?>">
+				<p>
+					<input type="file" name="import_file"/>
+				</p>
+				<p>
+					<input type="hidden" name="edd_action" value="import_settings"/>
 					<?php wp_nonce_field( 'edd_import_nonce', 'edd_import_nonce' ); ?>
-					<?php submit_button( __( 'Import', 'easy-digital-downloads' ), 'secondary', 'submit', false ); ?>
-                </p>
-            </form>
-        </div><!-- .inside -->
+					<input type="submit" value="<?php esc_html_e( 'Import', 'easy-digital-downloads' );?>" class="button-secondary" />
+				</p>
+			</form>
+		</div><!-- .inside -->
 	</div><!-- .postbox -->
 
 	<?php
