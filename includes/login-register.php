@@ -212,7 +212,12 @@ function edd_get_lostpassword_url() {
 		}
 	}
 	if ( empty( $url ) ) {
-		$url = edd_get_checkout_uri();
+		$login_redirect_page = edd_get_option( 'login_redirect_page', '' );
+		if ( ! empty( $login_redirect_page ) ) {
+			$url = get_permalink( $login_redirect_page );
+		} else {
+			$url = edd_get_checkout_uri();
+		}
 	}
 	$url      = wp_validate_redirect( $url );
 	$redirect = add_query_arg(
