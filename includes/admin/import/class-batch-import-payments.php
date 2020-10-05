@@ -42,6 +42,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 			'date'              => '',
 			'status'            => '',
 			'email'             => '',
+			'name'              => '',
 			'first_name'        => '',
 			'last_name'         => '',
 			'edd_customer_id'   => '',
@@ -174,16 +175,23 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 		}
 
-		if( ! empty( $this->field_mapping['first_name'] ) && ! empty( $row[ $this->field_mapping['first_name'] ] ) ) {
+		if ( ! empty( $this->field_mapping['name'] ) && ! empty( $row[ $this->field_mapping['name'] ] ) ) {
 
-			$payment->first_name = sanitize_text_field( $row[ $this->field_mapping['first_name'] ] );
+			$payment->name = sanitize_text_field( $row[ $this->field_mapping['name'] ] );
 
-		}
+		} else {
 
-		if( ! empty( $this->field_mapping['last_name'] ) && ! empty( $row[ $this->field_mapping['last_name'] ] ) ) {
+			if ( ! empty( $this->field_mapping['first_name'] ) && ! empty( $row[ $this->field_mapping['first_name'] ] ) ) {
 
-			$payment->last_name = sanitize_text_field( $row[ $this->field_mapping['last_name'] ] );
+				$payment->first_name = sanitize_text_field( $row[ $this->field_mapping['first_name'] ] );
 
+			}
+
+			if ( ! empty( $this->field_mapping['last_name'] ) && ! empty( $row[ $this->field_mapping['last_name'] ] ) ) {
+
+				$payment->last_name = sanitize_text_field( $row[ $this->field_mapping['last_name'] ] );
+
+			}
 		}
 
 		if( ! empty( $this->field_mapping['user_id'] ) && ! empty( $row[ $this->field_mapping['user_id'] ] ) ) {
@@ -453,25 +461,35 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 				}
 			}
 
-			$first_name = '';
-			$last_name  = '';
+			$name = '';
 
-			if( ! empty( $this->field_mapping['first_name'] ) && ! empty( $row[ $this->field_mapping['first_name'] ] ) ) {
+			if ( ! empty( $this->field_mapping['name'] ) && ! empty( $row[ $this->field_mapping['name'] ] ) ) {
 
-				$first_name = sanitize_text_field( $row[ $this->field_mapping['first_name'] ] );
+				$name = sanitize_text_field( $row[ $this->field_mapping['name'] ] );
 
+			} else {
+				$first_name = '';
+				$last_name  = '';
+				if ( ! empty( $this->field_mapping['first_name'] ) && ! empty( $row[ $this->field_mapping['first_name'] ] ) ) {
+
+					$first_name = sanitize_text_field( $row[ $this->field_mapping['first_name'] ] );
+
+				}
+
+				if ( ! empty( $this->field_mapping['last_name'] ) && ! empty( $row[ $this->field_mapping['last_name'] ] ) ) {
+
+					$last_name = sanitize_text_field( $row[ $this->field_mapping['last_name'] ] );
+
+				}
+				$name = $first_name . ' ' . $last_name;
 			}
 
-			if( ! empty( $this->field_mapping['last_name'] ) && ! empty( $row[ $this->field_mapping['last_name'] ] ) ) {
-
-				$last_name = sanitize_text_field( $row[ $this->field_mapping['last_name'] ] );
-
-			}
-
-			$customer->create( array(
-				'name'  => $first_name . ' ' . $last_name,
-				'email' => $email
-			) );
+			$customer->create(
+				array(
+					'name'  => $name,
+					'email' => $email,
+				)
+			);
 
 			if( ! empty( $canonical_id ) && (int) $canonical_id !== (int) $customer->id ) {
 				$customer->update_meta( '_canonical_import_id', $canonical_id );
