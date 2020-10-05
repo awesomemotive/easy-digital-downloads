@@ -500,6 +500,16 @@ function edd_tools_import_export_display() {
                             </td>
                             <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
                         </tr>
+						<tr>
+							<td><?php esc_html_e( 'Name', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[name]" class="edd-import-csv-column"
+										data-field="Name">
+									<option value=""><?php esc_html_e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php esc_html_e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
                         <tr>
                             <td><?php _e( 'First Name', 'easy-digital-downloads' ); ?></td>
                             <td>
