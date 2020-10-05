@@ -440,10 +440,10 @@ function edd_tools_import_export_display() {
 	do_action( 'edd_tools_import_export_before' );
 	?>
 
-    <div class="postbox edd-import-payment-history">
-        <h3><span><?php _e( 'Import Payment History', 'easy-digital-downloads' ); ?></span></h3>
-        <div class="inside">
-            <p><?php _e( 'Import a CSV file of payment records.', 'easy-digital-downloads' ); ?></p>
+	<div class="postbox edd-import-payment-history">
+		<h3><span><?php esc_html_e( 'Import Orders', 'easy-digital-downloads' ); ?></span></h3>
+		<div class="inside">
+			<p><?php esc_html_e( 'Import a CSV file of orders.', 'easy-digital-downloads' ); ?></p>
             <form id="edd-import-payments" class="edd-import-form edd-import-export-form"
                   action="<?php echo esc_url( add_query_arg( 'edd_action', 'upload_import_file', admin_url() ) ); ?>"
                   method="post" enctype="multipart/form-data">
