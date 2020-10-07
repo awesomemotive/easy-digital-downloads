@@ -31,6 +31,7 @@
 		"moment": "2.22.2"
 	},
 	"devDependencies": {
+		"@wordpress/base-styles": "3.1.0",
 		"@wordpress/dom": "2.15.0",
 		"@wordpress/postcss-plugins-preset": "1.5.0",
 		"@wordpress/scripts": "12.3.0",
