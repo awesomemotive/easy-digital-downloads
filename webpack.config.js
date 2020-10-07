@@ -7,6 +7,7 @@ const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
 const UglifyJS = require( 'uglify-es' );
 const FixStyleOnlyEntriesPlugin = require( 'webpack-fix-style-only-entries' );
 const MiniCSSExtractPlugin = require( 'mini-css-extract-plugin' );
+const WebpackRTLPlugin = require( 'webpack-rtl-plugin' );
 
 /**
  * WordPress dependencies
@@ -83,7 +84,11 @@ const config = {
 	plugins: [
 		new MiniCSSExtractPlugin( {
 			esModule: false,
-			filename: 'assets/css/[name].css',
+			moduleFilename: ( chunk ) =>
+				`assets/css/${ chunk.name.replace( '-style', '' ) }.min.css`
+		} ),
+		new WebpackRTLPlugin( {
+			filename: [ /(\.min\.css)/i, '-rtl$1' ],
 		} ),
 		new FixStyleOnlyEntriesPlugin(),
 		new webpack.ProvidePlugin( {
@@ -94,6 +99,13 @@ const config = {
 		// handle to exist continue to be enqueued.
 		new CopyWebpackPlugin( {
 			patterns: [
+				// Styles.
+				{
+					from: 'assets/css/vendor',
+					to: 'assets/css',
+				},
+
+				// Scripts.
 				{
 					from: './node_modules/chart.js/dist/Chart.min.js',
 					to: 'assets/js/vendor/chartjs.min.js',

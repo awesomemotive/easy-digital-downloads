@@ -46,14 +46,15 @@
 		"load-grunt-tasks": "^3.5.2",
 		"locutus": "^2.0.11",
 		"makepot": "^0.3.0",
-		"mini-css-extract-plugin": "0.12.0",
+		"mini-css-extract-plugin": "0.9.0",
 		"postcss-rtl": "^1.7.3",
 		"uglify-es": "3.3.9",
 		"uglifyjs-webpack-plugin": "2.2.0",
 		"uuid-random": "1.3.0",
 		"webpack": "4.44.2",
 		"webpack-cli": "3.3.12",
-		"webpack-fix-style-only-entries": "0.5.1"
+		"webpack-fix-style-only-entries": "0.5.1",
+		"webpack-rtl-plugin": "^2.0.0"
 	},
 	"scripts": {
 		"build": "wp-scripts build --webpack-no-externals && grunt build",
