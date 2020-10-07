@@ -36,7 +36,6 @@ const minifyJs = ( content ) => {
 // Webpack configuration.
 const config = {
 	...defaultConfig,
-	devtool: 'source-map',
 	resolve: {
 		...defaultConfig.resolve,
 		modules: [

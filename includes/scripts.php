@@ -348,8 +348,7 @@ add_action( 'admin_init', 'edd_register_admin_scripts' );
  */
 function edd_register_admin_styles() {
 	$css_dir     = EDD_PLUGIN_URL . 'assets/css/';
-	$css_suffix  = is_rtl() ? '-rtl' : '';
-	$css_suffix .= edd_doing_script_debug() ? '.css' : '.min.css';
+	$css_suffix  = is_rtl() ? '-rtl.min.css' : '.min.css';
 	$version     = edd_admin_get_script_version();
 	$deps        = array( 'edd-admin' );
 
