@@ -1,6 +1,6 @@
 
 .chosen-container .chosen-results {
-	color: #444;
+	color: $wp-text;
 	position: relative;
 	overflow-x: hidden;
 	overflow-y: auto;
@@ -12,5 +12,5 @@
 .chosen-container .chosen-results li.highlighted {
 	background-image: none;
 	border-radius: 4px;
-	color: #fff;
+	color: $white;
 }
