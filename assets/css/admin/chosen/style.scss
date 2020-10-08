@@ -1,6 +1,12 @@
 /* Chosen styles
 -------------------------------------------------------------- */
 
+@import "~@wordpress/base-styles/colors";
+@import "~@wordpress/base-styles/variables";
+@import "~@wordpress/base-styles/mixins";
+@import "~@wordpress/base-styles/breakpoints";
+@import "~@wordpress/base-styles/animations";
+
 @import 'base';
 @import 'single';
 @import 'multi';
