@@ -43,7 +43,7 @@
 }
 
 
-@media screen and (max-width: 782px) {
+@media screen and (max-width: $break-medium) {
 	.chosen-container-single .chosen-single,
 	.chosen-container-single.chosen-container-active.chosen-with-drop .chosen-single {
 		font-size: 16px;
