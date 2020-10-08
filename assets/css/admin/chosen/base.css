@@ -1,0 +1,43 @@
+.chosen-container {
+	font-size: 14px;
+}
+
+.chosen-container-multi .search-field,
+.chosen-container-single .chosen-single,
+.chosen-container-active.chosen-with-drop .chosen-single {
+	background: #fff url(data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M5%206l5%205%205-5%202%201-7%207-7-7%202-1z%22%20fill%3D%22%23555%22%2F%3E%3C%2Fsvg%3E) no-repeat right 5px top 55%;
+	background-size: 16px 16px;
+	border: 1px solid #7e8993;
+	box-shadow: 0 0 0 transparent;
+	color: #32373c;
+}
+
+.chosen-container-multi .chosen-choices,
+.chosen-container-single .chosen-single {
+	border-radius: 4px;
+	border-color: #7e8993;
+}
+
+.chosen-container-multi.chosen-with-drop .chosen-choices,
+.chosen-container-active.chosen-with-drop .chosen-single {
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.chosen-container-single.chosen-container-active.chosen-with-drop.chosen-dropup .chosen-single,
+.chosen-container-multi.chosen-container-active.chosen-dropup .chosen-choices {
+	border-radius: 0 0 4px 4px;
+	border-width: 0 1px 0 1px;
+	z-index: 1011;
+}
+
+.chosen-container .chosen-drop {
+	position: absolute;
+	top: 100%;
+	z-index: 1010;
+	width: 100%;
+	border-radius: 0 0 4px 4px;
+	border-width: 0 1px 0 1px;
+	border-color: transparent;
+	background: #fff;
+	outline: 2px solid transparent;
+}
