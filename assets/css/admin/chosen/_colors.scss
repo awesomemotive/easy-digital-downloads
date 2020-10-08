@@ -1,190 +1,33 @@
 
 /* WordPress Color Schemes */
 
-body.admin-color-fresh .chosen-container-active .chosen-single,
-body.admin-color-fresh .chosen-container-active .chosen-choices,
-body.admin-color-fresh .chosen-with-drop.chosen-dropup .chosen-drop {
-	border-color: #007cba;
-	box-shadow: 0 0 0 1px #007cba;
+:root {
+	@include admin-scheme(#007cba);
 }
-body.admin-color-fresh .chosen-with-drop.chosen-dropup .chosen-single,
-body.admin-color-fresh .chosen-container-active.chosen-dropup .chosen-choices,
-body.admin-color-fresh .chosen-container .chosen-drop {
-	border-color: #007cba;
-	box-shadow: 0 1px 0 1px #007cba;
-}
-body.admin-color-fresh .chosen-container .chosen-results li.highlighted {
-	background-color: #007cba;
+@include wordpress-admin-schemes();
+
+body.admin-color-evergreen {
+	@include admin-scheme(#36533f);
 }
 
-/* Blue */
-body.admin-color-blue .chosen-container-active .chosen-single,
-body.admin-color-blue .chosen-container-active .chosen-choices,
-body.admin-color-blue .chosen-with-drop.chosen-dropup .chosen-drop {
-	border-color: #096484;
-	box-shadow: 0 0 0 1px #096484;
-}
-body.admin-color-blue .chosen-with-drop.chosen-dropup .chosen-single,
-body.admin-color-blue .chosen-container-active.chosen-dropup .chosen-choices,
-body.admin-color-blue .chosen-container .chosen-drop {
-	border-color: #096484;
-	box-shadow: 0 1px 0 1px #096484;
-}
-body.admin-color-blue .chosen-container .chosen-results li.highlighted {
-	background-color: #007cba;
+body.admin-color-mint {
+	@include admin-scheme(#4f6d59);
 }
 
-/* Coffee */
-body.admin-color-coffee .chosen-container-active .chosen-single,
-body.admin-color-coffee .chosen-container-active .chosen-choices,
-body.admin-color-coffee .chosen-with-drop.chosen-dropup .chosen-drop {
-	border-color: #c7a589;
-	box-shadow: 0 0 0 1px #c7a589;
-}
-body.admin-color-coffee .chosen-with-drop.chosen-dropup .chosen-single,
-body.admin-color-coffee .chosen-container-active.chosen-dropup .chosen-choices,
-body.admin-color-coffee .chosen-container .chosen-drop {
-	border-color: #c7a589;
-	box-shadow: 0 1px 0 1px #c7a589;
-}
-body.admin-color-coffee .chosen-container .chosen-results li.highlighted {
-	background-color: #c7a589;
+.chosen-container.chosen-container-active .chosen-single,
+.chosen-container.chosen-container-active .chosen-choices,
+.chosen-with-drop.chosen-dropup .chosen-drop {
+	border-color: var(--wp-admin-theme-color);
+	box-shadow: 0 0 0 1px var(--wp-admin-theme-color);
 }
 
-/* Ectoplasm */
-body.admin-color-ectoplasm .chosen-container-active .chosen-single,
-body.admin-color-ectoplasm .chosen-container-active .chosen-choices,
-body.admin-color-ectoplasm .chosen-with-drop.chosen-dropup .chosen-drop {
-	border-color: #a3b745;
-	box-shadow: 0 0 0 1px #a3b745;
-}
-body.admin-color-ectoplasm .chosen-with-drop.chosen-dropup .chosen-single,
-body.admin-color-ectoplasm .chosen-container-active.chosen-dropup .chosen-choices,
-body.admin-color-ectoplasm .chosen-container .chosen-drop {
-	border-color: #a3b745;
-	box-shadow: 0 1px 0 1px #a3b745;
-}
-body.admin-color-ectoplasm .chosen-container .chosen-results li.highlighted {
-	background-color: #a3b745;
+.chosen-with-drop.chosen-dropup .chosen-single,
+.chosen-container-active.chosen-dropup .chosen-choices,
+.chosen-container .chosen-drop {
+	border-color: var(--wp-admin-theme-color);
+	box-shadow: 0 1px 0 1px var(--wp-admin-theme-color);
 }
 
-/* Midnight */
-body.admin-color-midnight .chosen-container-active .chosen-single,
-body.admin-color-midnight .chosen-container-active .chosen-choices,
-body.admin-color-midnight .chosen-with-drop.chosen-dropup .chosen-drop {
-	border-color: #e14d43;
-	box-shadow: 0 0 0 1px #e14d43;
-}
-body.admin-color-midnight .chosen-with-drop.chosen-dropup .chosen-single,
-body.admin-color-midnight .chosen-container-active.chosen-dropup .chosen-choices,
-body.admin-color-midnight .chosen-container .chosen-drop {
-	border-color: #e14d43;
-	box-shadow: 0 1px 0 1px #e14d43;
-}
-body.admin-color-midnight .chosen-container .chosen-results li.highlighted {
-	background-color: #e14d43;
-}
-
-/* Ocean */
-body.admin-color-ocean .chosen-container-active .chosen-single,
-body.admin-color-ocean .chosen-container-active .chosen-choices,
-body.admin-color-ocean .chosen-with-drop.chosen-dropup .chosen-drop {
-	border-color: #9ebaa0;
-	box-shadow: 0 0 0 1px #9ebaa0;
-}
-body.admin-color-ocean .chosen-with-drop.chosen-dropup .chosen-single,
-body.admin-color-ocean .chosen-container-active.chosen-dropup .chosen-choices,
-body.admin-color-ocean .chosen-container .chosen-drop {
-	border-color: #9ebaa0;
-	box-shadow: 0 1px 0 1px #9ebaa0;
-}
-body.admin-color-ocean .chosen-container .chosen-results li.highlighted {
-	background-color: #9ebaa0;
-}
-
-/* Sunrise */
-body.admin-color-sunrise .chosen-container-active .chosen-single,
-body.admin-color-sunrise .chosen-container-active .chosen-choices,
-body.admin-color-sunrise .chosen-with-drop.chosen-dropup .chosen-drop {
-	border-color: #dd823b;
-	box-shadow: 0 0 0 1px #dd823b;
-}
-body.admin-color-sunrise .chosen-with-drop.chosen-dropup .chosen-single,
-body.admin-color-sunrise .chosen-container-active.chosen-dropup .chosen-choices,
-body.admin-color-sunrise .chosen-container .chosen-drop {
-	border-color: #dd823b;
-	box-shadow: 0 1px 0 1px #dd823b;
-}
-body.admin-color-sunrise .chosen-container .chosen-results li.highlighted {
-	background-color: #dd823b;
-}
-
-/* Light */
-body.admin-color-light .chosen-container-active .chosen-single,
-body.admin-color-light .chosen-container-active .chosen-choices,
-body.admin-color-light .chosen-with-drop.chosen-dropup .chosen-drop {
-	border-color: #04a4cc;
-	box-shadow: 0 0 0 1px #04a4cc;
-}
-body.admin-color-light .chosen-with-drop.chosen-dropup .chosen-single,
-body.admin-color-light .chosen-container-active.chosen-dropup .chosen-choices,
-body.admin-color-light .chosen-container .chosen-drop {
-	border-color: #04a4cc;
-	box-shadow: 0 1px 0 1px #04a4cc;
-}
-body.admin-color-light .chosen-container .chosen-results li.highlighted {
-	background-color: #04a4cc;
-}
-
-/* Modern */
-body.admin-color-modern .chosen-container-active .chosen-single,
-body.admin-color-modern .chosen-container-active .chosen-choices,
-body.admin-color-modern .chosen-with-drop.chosen-dropup .chosen-drop {
-	border-color: #3858e9;
-	box-shadow: 0 0 0 1px #3858e9;
-}
-body.admin-color-modern .chosen-with-drop.chosen-dropup .chosen-single,
-body.admin-color-modern .chosen-container-active.chosen-dropup .chosen-choices,
-body.admin-color-modern .chosen-container .chosen-drop {
-	border-color: #3858e9;
-	box-shadow: 0 1px 0 1px #3858e9;
-}
-body.admin-color-modern .chosen-container .chosen-results li.highlighted {
-	background-color: #3858e9;
-}
-
-/* bbPress Color Schemes
--------------------------------------------------------------- */
-
-/* Evergreen */
-body.admin-color-evergreen .chosen-container-active .chosen-single,
-body.admin-color-evergreen .chosen-container-active .chosen-choices,
-body.admin-color-evergreen .chosen-with-drop.chosen-dropup .chosen-drop {
-	box-shadow: 0 0 0 1px #36533f;
-}
-body.admin-color-evergreen .chosen-with-drop.chosen-dropup .chosen-single,
-body.admin-color-evergreen .chosen-container-active.chosen-dropup .chosen-choices,
-body.admin-color-evergreen .chosen-container .chosen-drop {
-	border-color: #36533f;
-	box-shadow: 0 1px 0 1px #36533f;
-}
-body.admin-color-evergreen .chosen-container .chosen-results li.highlighted {
-	background-color: #36533f;
-}
-
-/* Mint */
-body.admin-color-mint .chosen-container-active .chosen-single,
-body.admin-color-mint .chosen-container-active .chosen-choices,
-body.admin-color-mint .chosen-with-drop.chosen-dropup .chosen-drop {
-	border-color: #4f6d59;
-	box-shadow: 0 0 0 1px #4f6d59;
-}
-body.admin-color-mint .chosen-with-drop.chosen-dropup .chosen-single,
-body.admin-color-mint .chosen-container-active.chosen-dropup .chosen-choices,
-body.admin-color-mint .chosen-container .chosen-drop {
-	border-color: #4f6d59;
-	box-shadow: 0 1px 0 1px #4f6d59;
-}
-body.admin-color-mint .chosen-container .chosen-results li.highlighted {
-	background-color: #4f6d59;
+.chosen-container .chosen-results li.highlighted {
+	background-color: var(--wp-admin-theme-color);
 }
