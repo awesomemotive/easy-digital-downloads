@@ -12,7 +12,7 @@
 	max-width: 55px;
 }
 
-@media screen and (max-width: 782px) {
+@media screen and (max-width: $break-medium) {
 	.edd-select-chosen.edd-time {
 		width: 70px;
 		max-width: 70px;
