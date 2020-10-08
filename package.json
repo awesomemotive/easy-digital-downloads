@@ -62,7 +62,7 @@
 		"dev": "cross-env NODE_ENV=production wp-scripts start --webpack-no-externals",
 		"check-engines": "wp-scripts check-engines",
 		"check-licenses": "wp-scripts check-licenses --production",
-		"lint:css": "wp-scripts lint-style",
+		"lint:css": "wp-scripts lint-style 'assets/css/admin/**/*.scss' --fix",
 		"lint:js": "wp-scripts lint-js ./assets/js/ ",
 		"lint:js--fix": "wp-scripts lint-js ./assets/js --fix",
 		"lint:pkg-json": "wp-scripts lint-pkg-json",
