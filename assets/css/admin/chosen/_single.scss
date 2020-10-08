@@ -22,7 +22,7 @@
 }
 
 .chosen-container-single .chosen-default {
-	color: #32373c;
+	color: $wp-input-text;
 }
 
 .chosen-container-active .chosen-single {
@@ -36,7 +36,7 @@
 	width: 100% !important;
 	height: auto;
 	outline: 0;
-	border: 1px solid #7e8993;
+	border: 1px solid $wp-input-border;
 	border-radius: 4px;
 	line-height: normal;
 	box-shadow: inset 0 1px 2px rgba( 0, 0, 0, 0.07 );
