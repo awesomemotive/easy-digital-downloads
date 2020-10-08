@@ -1,0 +1,27 @@
+.chosen-container-multi .search-field {
+	border: none;
+}
+
+.chosen-container-multi.chosen-with-drop .chosen-choices {
+	border-bottom-color: transparent;
+}
+
+.chosen-container-multi .chosen-choices li.search-field {
+	min-width: 100px !important;
+	width: 100%;
+}
+
+.chosen-container-multi .chosen-choices li.search-field input[type=text] {
+	color: #32373c;
+	font-family: unset;
+	height: unset;
+	margin: 0;
+	padding: 3px 10px;
+	width: 100% !important;
+}
+
+.chosen-container-multi .spinner {
+	position: absolute;
+	top: 4px;
+	right: -4px;
+}
