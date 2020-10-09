@@ -2,16 +2,7 @@
 /* WordPress Color Schemes */
 
 :root {
-	@include admin-scheme(#007cba);
-}
-@include wordpress-admin-schemes();
-
-body.admin-color-evergreen {
-	@include admin-scheme(#36533f);
-}
-
-body.admin-color-mint {
-	@include admin-scheme(#4f6d59);
+	@include edd-admin-colors();
 }
 
 .chosen-container.chosen-container-active .chosen-single,
