@@ -5,9 +5,9 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: ecommerce, sell, checkout, payments, stripe
 Requires at least: 4.4
-Tested up to: 5.5
+Tested up to: 5.5.1
 Requires PHP: 5.3
-Stable Tag: 2.9.25
+Stable Tag: 2.9.26
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products the simple way. Easily build an online store complete with a cart system, checkout forms, reports, coupons, and more!
@@ -21,6 +21,7 @@ Easy Digital Downloads is a complete eCommerce solution for selling digital prod
 Whether it is [software](https://easydigitaldownloads.com/blog/selling-software/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description), [documents](https://easydigitaldownloads.com/blog/selling-documents/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description), [photos](https://easydigitaldownloads.com/blog/selling-photographs/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description), [ebooks](https://easydigitaldownloads.com/blog/selling-ebooks/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description), [songs](https://easydigitaldownloads.com/blog/selling-audio-and-music/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description), [graphics](https://easydigitaldownloads.com/blog/selling-graphics-and-digital-artwork/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description), [videos](https://easydigitaldownloads.com/blog/selling-videos/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description), or any other type of media file, Easy Digital Downloads provides a complete system for effortlessly selling your digital products.
 
 > Easy Digital Downloads is an invaluable tool that I use throughout my business and for my clients. I love its simplicity yet powerful features and library of useful extensions. EDD stands out as one of the only affordable options for scaling a business centered around providing digital ecommerce sites to its clients.
+
 > Mark Hunter - Mark of Approval
 
 = All the eCommerce features you need =
@@ -28,6 +29,7 @@ Whether it is [software](https://easydigitaldownloads.com/blog/selling-software/
 Do you prefer an eCommerce solution which is simple and intuitive or one which is rich in features? Too often that tradeoff is one online sellers need to make. Fortunately, Easy Digital Downloads manages to be easy enough for eCommerce beginners to configure without sacrificing any important functionality.
 
 > EDD gives me a solid platform out of the box, with the flexibility of being able to customize anything I want or need to. The best of both worlds!
+
 > Brian Hogg – SellingPlugins.com
 
 Here are some of the features supported out-of-the-box:
@@ -69,9 +71,12 @@ Payment gateways supported through free or premium extensions:
 * Coinbase
 
 > What can I say? Stripe is my go-to payment processor and without this add-on I don't know what I would do. Connect EDD to your Stripe account in seconds and you're done! Having a simple test mode toggle is also a valuable development tool. This is another one of my go-to EDD extensions.
+
 > Matt Whiteley - Whiteley Designs
 
 See our [payment gateways category](https://easydigitaldownloads.com/downloads/category/gateways/?utm_source=extensions&utm_medium=description_tab&utm_content=gateways&utm_campaign=readme) in the extensions catalogue for a complete list of supported merchant processors. There are also a large number of additional payment gateways developed and supported by [3rd party developers](https://easydigitaldownloads.com/3rd-party-extensions/#gateways).
+
+Easy Digital Downloads is a verified member of the [Stripe partner program](https://stripe.com/accept-payments/easy-digital-downloads). This program recognizes software that meets Stripe's strict quality requirements and provides users of Easy Digital Downloads and Stripe with the confidence they need to trust us both with their payment integrations.
 
 = Take your store further with extensions =
 
@@ -109,6 +114,7 @@ The Easy Digital Downloads API makes it possible for developers to make customiz
 ...and much much more!
 
 > As a developer, Easy Digital Downloads is very pleasant to work with since you can absolutely extend anything available within EDD.
+
 > Yudhistira Mauris - WP House
 
 = Get help =
@@ -120,6 +126,7 @@ Easy Digital Downloads is backed by top-notch technical support from our globall
 Easy Digital Downloads is built by [Sandhills Development](https://sandhillsdev.com/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=sandhills&utm_term=description). We make [popular WordPress plugins](https://sandhillsdev.com/projects/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=popular&utm_term=description) used by hundreds of thousands of people just like you. [Get to know us here](https://sandhillsdev.com/about/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=about&utm_term=description)!
 
 > EDD has been a long standing, rock-solid e-commerce solution for WordPress. The team lives and breathes WordPress, understands the platform, and is embedded in the community.
+
 > Joe Casabona - Creator Courses
 
 = From our blog =
@@ -253,6 +260,10 @@ For most stores, we recommend using the Stripe Payment Gateway.
 9. Checkout screen
 
 == Changelog ==
+= 2.9.26, October 1, 2020 =
+* Fix: Installation of the Jilt extension was allowed for non-super admins on multisite installs.
+* Dev: Improved DocBloc for edd_has_user_purchased() function.
+
 = 2.9.25, September 3, 2020 =
 * Fix: Using the registration form on checkout with guest checkout disabled, could result in errors when attempting to purchase.
 
