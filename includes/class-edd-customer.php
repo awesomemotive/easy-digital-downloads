@@ -1098,7 +1098,7 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 		if ( ! $is_primary ) {
 			return $address;
 		}
-		if ( is_array( $address ) && ! empty( $address ) ) {
+		if ( is_array( $address ) && ! empty( $address[0] ) ) {
 			return $address[0];
 		}
 
