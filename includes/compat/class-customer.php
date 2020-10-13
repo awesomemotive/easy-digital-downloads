@@ -253,11 +253,13 @@ class Customer extends Base {
 		}
 
 		// Fetch saved primary address.
-		$addresses = edd_get_customer_addresses( array(
-			'number'      => 1,
-			'type'        => 'primary',
-			'customer_id' => $object_id,
-		) );
+		$addresses = edd_get_customer_addresses(
+			array(
+				'number'      => 1,
+				'is_primary'  => true,
+				'customer_id' => $object_id,
+			)
+		);
 
 		// Defaults.
 		$defaults = array(
@@ -274,28 +276,34 @@ class Customer extends Base {
 		if ( is_array( $addresses ) && ! empty( $addresses ) ) {
 			$customer_address = $addresses[0];
 
-			edd_update_customer_address( $customer_address->id, array(
-				'address'     => $address['line1'],
-				'address2'    => $address['line2'],
-				'city'        => $address['city'],
-				'region'      => $address['state'],
-				'postal_code' => $address['zip'],
-				'country'     => $address['country'],
-			) );
-		} else {
-			$customer = edd_get_customer_by( 'user_id', absint( $object_id ) );
-
-			if ( $customer ) {
-				edd_add_customer_address( array(
-					'customer_id' => $customer->id,
-					'type'        => 'primary',
+			edd_update_customer_address(
+				$customer_address->id,
+				array(
 					'address'     => $address['line1'],
 					'address2'    => $address['line2'],
 					'city'        => $address['city'],
 					'region'      => $address['state'],
 					'postal_code' => $address['zip'],
 					'country'     => $address['country'],
-				) );
+				)
+			);
+		} else {
+			$customer = edd_get_customer_by( 'user_id', absint( $object_id ) );
+
+			if ( $customer ) {
+				edd_add_customer_address(
+					array(
+						'customer_id' => $customer->id,
+						'type'        => 'primary',
+						'address'     => $address['line1'],
+						'address2'    => $address['line2'],
+						'city'        => $address['city'],
+						'region'      => $address['state'],
+						'postal_code' => $address['zip'],
+						'country'     => $address['country'],
+						'is_primary'  => true,
+					)
+				);
 			}
 		}
 
