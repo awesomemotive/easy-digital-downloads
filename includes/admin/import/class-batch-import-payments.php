@@ -461,24 +461,22 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 				}
 			}
 
-			$name = '';
-
 			if ( ! empty( $this->field_mapping['name'] ) && ! empty( $row[ $this->field_mapping['name'] ] ) ) {
 
-				$name = sanitize_text_field( $row[ $this->field_mapping['name'] ] );
+				$name = $row[ $this->field_mapping['name'] ];
 
 			} else {
 				$first_name = '';
 				$last_name  = '';
 				if ( ! empty( $this->field_mapping['first_name'] ) && ! empty( $row[ $this->field_mapping['first_name'] ] ) ) {
 
-					$first_name = sanitize_text_field( $row[ $this->field_mapping['first_name'] ] );
+					$first_name = $row[ $this->field_mapping['first_name'] ];
 
 				}
 
 				if ( ! empty( $this->field_mapping['last_name'] ) && ! empty( $row[ $this->field_mapping['last_name'] ] ) ) {
 
-					$last_name = sanitize_text_field( $row[ $this->field_mapping['last_name'] ] );
+					$last_name = $row[ $this->field_mapping['last_name'] ];
 
 				}
 				$name = $first_name . ' ' . $last_name;
@@ -486,8 +484,8 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 			$customer->create(
 				array(
-					'name'  => $name,
-					'email' => $email,
+					'name'  => sanitize_text_field( $name ),
+					'email' => empty( $email ) ? '' : $email,
 				)
 			);
 
