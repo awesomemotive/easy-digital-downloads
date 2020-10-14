@@ -162,8 +162,9 @@ function edd_tools_recount_stats_display() {
 						?>
 					</span>
 
-					<input type="submit" id="recount-stats-submit"
-						   value="<?php _e( 'Submit', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+					<button type="submit" id="recount-stats-submit" class="button button-secondary">
+						<?php esc_html_e( 'Submit', 'easy-digital-downloads' ); ?>
+					</button>
 
 					<br/>
 
@@ -738,7 +739,7 @@ function edd_tools_import_export_display() {
                         </tbody>
                     </table>
                     <p class="submit">
-                        <button class="edd-import-proceed button-primary"><?php _e( 'Process Import', 'easy-digital-downloads' ); ?></button>
+						<button class="button edd-import-proceed button-primary"><?php esc_html_e( 'Process Import', 'easy-digital-downloads' ); ?></button>
                     </p>
                 </div>
             </form>
@@ -953,7 +954,7 @@ function edd_tools_import_export_display() {
                         </tbody>
                     </table>
                     <p class="submit">
-                        <button class="edd-import-proceed button-primary"><?php _e( 'Process Import', 'easy-digital-downloads' ); ?></button>
+						<button class="button edd-import-proceed button-primary"><?php esc_html_e( 'Process Import', 'easy-digital-downloads' ); ?></button>
                     </p>
                 </div>
             </form>
