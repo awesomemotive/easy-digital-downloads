@@ -895,6 +895,14 @@ class Tests_Payment_Class extends EDD_UnitTestCase {
 		$payment = new EDD_Payment( $payment->ID );
 		$this->assertEquals( 2, $payment->cart_details[0]['tax'] );
 		$this->assertEquals( 2, $payment->tax );
+
+		$payment = new EDD_Payment( $payment->ID );
+		$payment->modify_cart_item( 0, array( 'tax' => 0 ) );
+		$payment->save();
+
+		$payment = new EDD_Payment( $payment->ID );
+		$this->assertEquals( 0, $payment->cart_details[0]['tax'] );
+		$this->assertEquals( 0, $payment->tax );
 	}
 
 	public function modify_cart_item_no_changes() {
