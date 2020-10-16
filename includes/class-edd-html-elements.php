@@ -510,6 +510,7 @@ class EDD_HTML_Elements {
 
 		$output = $this->select( array(
 			'name'             => $name,
+			'id'               => $name,
 			'selected'         => $selected,
 			'options'          => $options,
 			'show_option_all'  => false,
@@ -541,6 +542,7 @@ class EDD_HTML_Elements {
 
 		$output = $this->select( array(
 			'name'             => $name,
+			'id'               => $name,
 			'selected'         => $selected,
 			'options'          => $options,
 			'show_option_all'  => false,
