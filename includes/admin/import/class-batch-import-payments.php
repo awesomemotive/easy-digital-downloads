@@ -494,7 +494,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 			}
 		}
 
-		if( $email && $email != $customer->email ) {
+		if ( ! empty( $email ) && $email !== $customer->email ) {
 			$customer->add_email( $email );
 		}
 
