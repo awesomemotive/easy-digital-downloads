@@ -63,7 +63,7 @@ class Data_Migrator {
 			edd_add_customer_address(
 				array(
 					'customer_id'  => $customer->id,
-					'type'         => 'primary',
+					'is_primary'   => true,
 					'name'         => $customer->name,
 					'address'      => $address['line1'],
 					'address2'     => $address['line2'],
