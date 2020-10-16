@@ -2608,22 +2608,29 @@ function display_export_report() {
 
 									?>
 							</div>
+							<label for="edd_orders_export_download" class="screen-reader-text">All Downloads or Select Download</label>
 								<?php
-								echo EDD()->html->product_dropdown( array(
-									'name'        => 'download_id',
-									'id'          => 'edd_orders_export_download',
-									'chosen'      => true,
-									/* translators: the plural post type label */
-									'placeholder' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
-								) );
-
-								echo EDD()->html->customer_dropdown( array(
-									'name'          => 'customer_id',
-									'id'            => 'edd_order_export_customer',
-									'chosen'        => true,
-									'none_selected' => '',
-									'placeholder'   => __( 'All Customers', 'easy-digital-downloads' ),
-								) );
+								echo EDD()->html->product_dropdown(
+									array(
+										'name'        => 'download_id',
+										'id'          => 'edd_orders_export_download',
+										'chosen'      => true,
+										/* translators: the plural post type label */
+										'placeholder' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
+									)
+								);
+								?>
+							<label for="edd_order_export_customer" class="screen-reader-text">All Customers or Select Customer</label>
+							<?php
+								echo EDD()->html->customer_dropdown(
+									array(
+										'name'          => 'customer_id',
+										'id'            => 'edd_order_export_customer',
+										'chosen'        => true,
+										'none_selected' => '',
+										'placeholder'   => __( 'All Customers', 'easy-digital-downloads' ),
+									)
+								);
 
 								wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 
@@ -2662,18 +2669,21 @@ function display_export_report() {
 									);
 									?>
 							</div>
-							<?php
-							echo EDD()->html->select( array(
-								'id'               => 'edd-orders-export-status',
-								'name'             => 'status',
-								'show_option_all'  => __( 'All Statuses', 'easy-digital-downloads' ),
-								'show_option_none' => false,
-								'selected'         => false,
-								'options'          => edd_get_payment_statuses(),
-							) );
+							<label for="edd_orders_export_status" class="screen-reader-text">All Statuses or Select Status</label>
+								<?php
+									echo EDD()->html->select(
+										array(
+											'id'               => 'edd-orders-export-status',
+											'name'             => 'status',
+											'show_option_all'  => __( 'All Statuses', 'easy-digital-downloads' ),
+											'show_option_none' => false,
+											'selected'         => false,
+											'options'          => edd_get_payment_statuses(),
+										)
+									);
 
-							wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
-							?>
+								wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
+								?>
 							<input type="hidden" name="edd-export-class" value="EDD_Batch_Payments_Export"/>
 							<button type="submit" class="button button-secondary"><?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?></button>
 						</form>
@@ -2709,41 +2719,51 @@ function display_export_report() {
 									);
 									?>
 							</div>
-							<?php
+							<label for="edd_taxed_orders_export_status" class="screen-reader-text">All Statuses or Select Status</label>
+								<?php
+								echo EDD()->html->select(
+									array(
+										'id'               => 'edd-taxed-orders-export-status',
+										'name'             => 'status',
+										'show_option_all'  => __( 'All Statuses', 'easy-digital-downloads' ),
+										'show_option_none' => false,
+										'selected'         => false,
+										'options'          => edd_get_payment_statuses(),
+									)
+								);
+								?>
+							<label for="edd_reports_filter_taxed_countries" class="screen-reader-text">All Countries or Select Country</label>
+								<?php
+								echo EDD()->html->select(
+									array(
+										'name'             => 'country',
+										'id'               => 'edd_reports_filter_taxed_countries',
+										'options'          => edd_get_country_list(),
+										'chosen'           => true,
+										'selected'         => false,
+										'show_option_none' => false,
+										'placeholder'      => __( 'All Countries', 'easy-digital-downloads' ),
+										'show_option_all'  => false,
+									)
+								);
+								?>
+							<label for="edd_reports_filter_regions" class="screen-reader-text">All Regions or Select Region</label>
+								<?php
+								echo EDD()->html->select(
+									array(
+										'name'             => 'region',
+										'id'               => 'edd_reports_filter_regions',
+										'options'          => edd_get_shop_states(),
+										'chosen'           => true,
+										'selected'         => false,
+										'show_option_none' => false,
+										'placeholder'      => __( 'All Regions', 'easy-digital-downloads' ),
+										'show_option_all'  => false,
+									)
+								);
 
-							echo EDD()->html->select( array(
-								'id'               => 'edd-taxed-orders-export-status',
-								'name'             => 'status',
-								'show_option_all'  => __( 'All Statuses', 'easy-digital-downloads' ),
-								'show_option_none' => false,
-								'selected'         => false,
-								'options'          => edd_get_payment_statuses(),
-							) );
-
-							echo EDD()->html->select( array(
-								'name'             => 'country',
-								'id'               => 'edd_reports_filter_countries',
-								'options'          => edd_get_country_list(),
-								'chosen'           => true,
-								'selected'         => false,
-								'show_option_none' => false,
-								'placeholder'      => __( 'All Countries', 'easy-digital-downloads' ),
-								'show_option_all'  => false,
-							) );
-
-							echo EDD()->html->select( array(
-								'name'             => 'region',
-								'id'               => 'edd_reports_filter_regions',
-								'options'          => edd_get_shop_states(),
-								'chosen'           => true,
-								'selected'         => false,
-								'show_option_none' => false,
-								'placeholder'      => __( 'All Regions', 'easy-digital-downloads' ),
-								'show_option_all'  => false,
-							) );
-
-							wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
-							?>
+								wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
+								?>
 							<input type="hidden" name="edd-export-class" value="EDD_Batch_Taxed_Orders_Export"/>
 							<button type="submit" class="button button-secondary"><?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?></button>
 						</form>
@@ -2751,7 +2771,7 @@ function display_export_report() {
 				</div>
 
 				<div class="postbox edd-export-customers">
-					<h2 class="hndle"><span><?php esc_html_e( 'Export Customers','easy-digital-downloads' ); ?></span></h2>
+					<h2 class="hndle"><span><?php esc_html_e( 'Export Customers', 'easy-digital-downloads' ); ?></span></h2>
 					<div class="inside">
 						<p><?php printf( esc_html__( 'Download a CSV of customers. Select a taxonomy to see all the customers who purchased %s in that taxonomy.', 'easy-digital-downloads' ), edd_get_label_plural( true ) ); ?></p>
 						<form id="edd-export-customers" class="edd-export-form edd-import-export-form" method="post">
@@ -2779,25 +2799,34 @@ function display_export_report() {
 									$taxonomies[ absint( $r->term_id ) ] = $t->labels->singular_name . ': ' . esc_html( $r->name );
 								}
 							}
-
-							echo EDD()->html->select( array(
-								'name'             => 'taxonomy',
-								'options'          => $taxonomies,
-								'selected'         => false,
-								'show_option_none' => false,
-								'show_option_all'  => __( 'All Taxonomies', 'easy-digital-downloads' ),
-							) );
-
-							echo EDD()->html->product_dropdown( array(
-								'name'        => 'download',
-								'id'          => 'edd_customer_export_download',
-								'chosen'      => true,
-								/* translators: the plural post type label */
-								'placeholder' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
-							) );
-
-							wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
 							?>
+							<label for="taxonomy" class="screen-reader-text">All Taxonomies or Select Taxonomy</label>
+								<?php
+								echo EDD()->html->select(
+									array(
+										'name'             => 'taxonomy',
+										'id'               => 'taxonomy',
+										'options'          => $taxonomies,
+										'selected'         => false,
+										'show_option_none' => false,
+										'show_option_all'  => __( 'All Taxonomies', 'easy-digital-downloads' ),
+									)
+								);
+								?>
+							<label for="edd_customer_export_download" class="screen-reader-text">All Downloads or Select Download</label>
+								<?php
+								echo EDD()->html->product_dropdown(
+									array(
+										'name'        => 'download',
+										'id'          => 'edd_customer_export_download',
+										'chosen'      => true,
+										/* translators: the plural post type label */
+										'placeholder' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
+									)
+								);
+
+								wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
+								?>
 							<input type="hidden" name="edd-export-class" value="EDD_Batch_Customers_Export"/>
 							<button type="submit" class="button button-secondary"><?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?></button>
 						</form>
@@ -2844,10 +2873,11 @@ function display_export_report() {
 				</div>
 
 				<div class="postbox edd-export-downloads">
-					<h2 class="hndle"><span><?php esc_html_e( sprintf( __( 'Export %s','easy-digital-downloads' ), edd_get_label_plural() ) ); ?></span></h2>
+					<h2 class="hndle"><span><?php esc_html_e( sprintf( __( 'Export %s', 'easy-digital-downloads' ), edd_get_label_plural() ) ); ?></span></h2>
 					<div class="inside">
 						<p><?php esc_html_e( sprintf( __( 'Download a CSV of %1$s.', 'easy-digital-downloads' ), edd_get_label_plural( true ) ) ); ?></p>
 						<form id="edd-export-file-downloads" class="edd-export-form edd-import-export-form" method="post">
+						<label for="edd_download_export_download" class="screen-reader-text">All Downloads or Select Download</label>
 							<?php echo EDD()->html->product_dropdown(
 								array(
 									'name'        => 'download_id',
@@ -2856,7 +2886,8 @@ function display_export_report() {
 									/* translators: the plural post type label */
 									'placeholder' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
 								)
-							); ?>
+							);
+							?>
 							<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 							<input type="hidden" name="edd-export-class" value="EDD_Batch_Downloads_Export"/>
 							<button type="submit" class="button button-secondary"><?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?></button>
@@ -2905,10 +2936,11 @@ function display_export_report() {
 				</div>
 
 				<div class="postbox edd-export-download-history">
-					<h2 class="hndle"><span><?php esc_html_e('Export File Download Logs','easy-digital-downloads' ); ?></span></h2>
+					<h2 class="hndle"><span><?php esc_html_e( 'Export File Download Logs', 'easy-digital-downloads' ); ?></span></h2>
 					<div class="inside">
 						<p><?php esc_html_e( 'Download a CSV of file download logs.', 'easy-digital-downloads' ); ?></p>
 						<form id="edd-export-file-downloads" class="edd-export-form edd-import-export-form" method="post">
+						<label for="edd_file_download_export_download" class="screen-reader-text">All Downloads or Select Download</label>
 							<?php echo EDD()->html->product_dropdown(
 								array(
 									'name'        => 'download_id',
@@ -2917,7 +2949,8 @@ function display_export_report() {
 									/* translators: the plural post type label */
 									'placeholder' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
 								)
-							); ?>
+							);
+							?>
 							<div class="edd-from-to-wrapper">
 								<label for="edd-file-download-export-start" class="screen-reader-text">Export File Download Logs Start Date</label>
 								<?php
