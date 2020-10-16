@@ -294,7 +294,6 @@ class Customer extends Base {
 				edd_add_customer_address(
 					array(
 						'customer_id' => $customer->id,
-						'type'        => 'primary',
 						'address'     => $address['line1'],
 						'address2'    => $address['line2'],
 						'city'        => $address['city'],
