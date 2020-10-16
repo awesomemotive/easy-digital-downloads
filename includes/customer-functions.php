@@ -701,7 +701,7 @@ function edd_maybe_update_customer_primary_address( $customer_id = 0, $data = ar
 	$address_ids = edd_get_customer_addresses( array(
 		'fields'      => 'ids',
 		'customer_id' => $customer_id,
-		'type'        => 'primary',
+		'is_primary'  => true,
 		'number'      => 1,
 	) );
 
@@ -712,8 +712,9 @@ function edd_maybe_update_customer_primary_address( $customer_id = 0, $data = ar
 
 	// Add primary address.
 	} else {
-		$data['type'] = 'primary';
-		$address_id = edd_add_customer_address( $data );
+		$data['customer_id'] = $customer_id;
+		$data['is_primary']  = true;
+		$address_id          = edd_add_customer_address( $data );
 	}
 
 	return $address_id;
