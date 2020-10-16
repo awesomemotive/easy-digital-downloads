@@ -20,8 +20,9 @@ $view_url = add_query_arg(
 <td class="has-row-actions column-primary">
 	<div class="removable">
 		<# if ( true === data.state.isAdding ) { #>
-		<button class="button-link delete" aria-label="removeItem">
-			<span class="dashicons dashicons-no"></span>
+		<label for="remove-item" class="screen-reader-text">__( Remove Item )</label>
+		<button class="button-link delete" aria-label="remove item">
+			<span class="dashicons dashicons-no" id="remove-item"></span>
 		</button>
 		<# } #>
 
