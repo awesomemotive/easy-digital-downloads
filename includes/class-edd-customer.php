@@ -1084,7 +1084,7 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 *
 	 * @param boolean $is_primary Whether the address is the primary address. Default true.
 	 *
-	 * @return array|\EDD\Customers\Customer_Address Object if primary address requested, array otherwise.
+	 * @return array|\EDD\Customers\Customer_Address|null Object if primary address requested, array otherwise. Null if no result for primary address.
 	 */
 	public function get_address( $is_primary = true ) {
 		$args = array(
