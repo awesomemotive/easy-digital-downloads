@@ -2561,18 +2561,18 @@ function display_export_report() {
 						<p><?php esc_html_e( 'Download a CSV giving a detailed look into earnings over time.', 'easy-digital-downloads' ); ?></p>
 						<form id="edd-export-earnings" class="edd-export-form edd-import-export-form" method="post">
 							<div class="edd-to-and-from-container">
-							<label for="start_month" class="screen-reader-text">Start Month</label>
+							<label for="start_month" class="screen-reader-text">__( Start Month )</label>
 								<?php echo EDD()->html->month_dropdown( 'start_month' ); ?>
-							<label for="start_year" class="screen-reader-text">Start Year</label>
+							<label for="start_year" class="screen-reader-text">__( Start Year )</label>
 								<?php echo EDD()->html->year_dropdown( 'start_year' ); ?>
 							</div>
 
 							<span class="edd-to-and-from--separator"><?php echo _x( '&mdash; to &mdash;', 'Date one to date two', 'easy-digital-downloads' ); ?></span>
 
 							<div class="edd-to-and-from-container">
-							<label for="end_month" class="screen-reader-text">End Month</label>
+							<label for="end_month" class="screen-reader-text">__( End Month )</label>
 								<?php echo EDD()->html->month_dropdown( 'end_month' ); ?>
-							<label for="end_year" class="screen-reader-text">End Year</label>
+							<label for="end_year" class="screen-reader-text">__( End Year )</label>
 								<?php echo EDD()->html->year_dropdown( 'end_year' ); ?>
 							</div>
 							<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
@@ -2588,7 +2588,7 @@ function display_export_report() {
 						<p><?php esc_html_e( 'Download a CSV of all sales or earnings on a day-by-day basis.', 'easy-digital-downloads' ); ?></p>
 						<form id="edd-export-sales-earnings" class="edd-export-form edd-import-export-form" method="post">
 							<div class="edd-from-to-wrapper">
-								<label for="edd-order-export-start" class="screen-reader-text">Export Sales and Earnings Start Date</label>
+								<label for="edd-order-export-start" class="screen-reader-text">__( Export Sales and Earnings Start Date )</label>
 									<?php
 									echo EDD()->html->date_field(
 										array(
@@ -2599,7 +2599,7 @@ function display_export_report() {
 										)
 									);
 									?>
-								<label for="edd-order-export-end" class="screen-reader-text">Export Sales and Earnings End Date</label>
+								<label for="edd-order-export-end" class="screen-reader-text">__( Export Sales and Earnings End Date )</label>
 									<?php
 									echo EDD()->html->date_field(
 										array(
@@ -2612,7 +2612,7 @@ function display_export_report() {
 
 									?>
 							</div>
-							<label for="edd_orders_export_download" class="screen-reader-text">All Downloads or Select Download</label>
+							<label for="edd_orders_export_download" class="screen-reader-text">__( All Downloads or Select Download )</label>
 								<?php
 								echo EDD()->html->product_dropdown(
 									array(
@@ -2624,7 +2624,7 @@ function display_export_report() {
 									)
 								);
 								?>
-							<label for="edd_order_export_customer" class="screen-reader-text">All Customers or Select Customer</label>
+							<label for="edd_order_export_customer" class="screen-reader-text">__( All Customers or Select Customer )</label>
 							<?php
 								echo EDD()->html->customer_dropdown(
 									array(
@@ -2650,7 +2650,7 @@ function display_export_report() {
 						<p><?php esc_html_e( 'Download a CSV of all orders.', 'easy-digital-downloads' ); ?></p>
 						<form id="edd-export-orders" class="edd-export-form edd-import-export-form" method="post">
 							<div class="edd-from-to-wrapper">
-								<label for="edd-orders-export-start" class="screen-reader-text">Export Orders Start Date</label>
+								<label for="edd-orders-export-start" class="screen-reader-text">__( Export Orders Start Date )</label>
 									<?php
 									echo EDD()->html->date_field(
 										array(
@@ -2661,7 +2661,7 @@ function display_export_report() {
 										)
 									);
 									?>
-								<label for="edd-orders-export-end" class="screen-reader-text">Export Orders End Date</label>
+								<label for="edd-orders-export-end" class="screen-reader-text">__( Export Orders End Date )</label>
 									<?php
 									echo EDD()->html->date_field(
 										array(
@@ -2673,7 +2673,7 @@ function display_export_report() {
 									);
 									?>
 							</div>
-							<label for="edd_orders_export_status" class="screen-reader-text">All Statuses or Select Status</label>
+							<label for="edd_orders_export_status" class="screen-reader-text">__( All Statuses or Select Status )</label>
 								<?php
 									echo EDD()->html->select(
 										array(
@@ -2700,7 +2700,7 @@ function display_export_report() {
 						<p><?php esc_html_e( 'Download a CSV of all orders, taxed by Country and/or Region.', 'easy-digital-downloads' ); ?></p>
 						<form id="edd-export-taxed-orders" class="edd-export-form edd-import-export-form" method="post">
 							<div class="edd-from-to-wrapper">
-								<label for="edd-taxed-orders-export-start" class="screen-reader-text">Export Taxed Orders Start Date</label>
+								<label for="edd-taxed-orders-export-start" class="screen-reader-text">__( Export Taxed Orders Start Date )</label>
 									<?php
 									echo EDD()->html->date_field(
 										array(
@@ -2711,7 +2711,7 @@ function display_export_report() {
 										)
 									);
 									?>
-								<label for="edd-taxed-orders-export-end" class="screen-reader-text">Export Taxed Orders End Date</label>
+								<label for="edd-taxed-orders-export-end" class="screen-reader-text">__( Export Taxed Orders End Date )</label>
 									<?php
 									echo EDD()->html->date_field(
 										array(
@@ -2723,7 +2723,7 @@ function display_export_report() {
 									);
 									?>
 							</div>
-							<label for="edd_taxed_orders_export_status" class="screen-reader-text">All Statuses or Select Status</label>
+							<label for="edd_taxed_orders_export_status" class="screen-reader-text">__( All Statuses or Select Status )</label>
 								<?php
 								echo EDD()->html->select(
 									array(
@@ -2736,7 +2736,7 @@ function display_export_report() {
 									)
 								);
 								?>
-							<label for="edd_reports_filter_taxed_countries" class="screen-reader-text">All Countries or Select Country</label>
+							<label for="edd_reports_filter_taxed_countries" class="screen-reader-text">__( All Countries or Select Country )</label>
 								<?php
 								echo EDD()->html->select(
 									array(
@@ -2751,7 +2751,7 @@ function display_export_report() {
 									)
 								);
 								?>
-							<label for="edd_reports_filter_regions" class="screen-reader-text">All Regions or Select Region</label>
+							<label for="edd_reports_filter_regions" class="screen-reader-text">__( All Regions or Select Region )</label>
 								<?php
 								echo EDD()->html->select(
 									array(
@@ -2804,7 +2804,7 @@ function display_export_report() {
 								}
 							}
 							?>
-							<label for="taxonomy" class="screen-reader-text">All Taxonomies or Select Taxonomy</label>
+							<label for="taxonomy" class="screen-reader-text">__( All Taxonomies or Select Taxonomy )</label>
 								<?php
 								echo EDD()->html->select(
 									array(
@@ -2817,7 +2817,7 @@ function display_export_report() {
 									)
 								);
 								?>
-							<label for="edd_customer_export_download" class="screen-reader-text">All Downloads or Select Download</label>
+							<label for="edd_customer_export_download" class="screen-reader-text">__( All Downloads or Select Download )</label>
 								<?php
 								echo EDD()->html->product_dropdown(
 									array(
@@ -2843,7 +2843,7 @@ function display_export_report() {
 						<p><?php esc_html_e( 'Download a CSV of all customers that were taxed.', 'easy-digital-downloads' ); ?></p>
 						<form id="edd-export-taxed-customers" class="edd-export-form edd-import-export-form" method="post">
 							<div class="edd-from-to-wrapper">
-							<label for="edd-taxed-customers-export-start" class="screen-reader-text">Export Taxed Customers Start Date</label>
+							<label for="edd-taxed-customers-export-start" class="screen-reader-text">__( Export Taxed Customers Start Date )</label>
 								<?php
 									echo EDD()->html->date_field(
 										array(
@@ -2854,7 +2854,7 @@ function display_export_report() {
 										)
 									);
 								?>
-							<label for="edd-taxed-customers-export-end" class="screen-reader-text">Export Taxed Customers End Date</label>
+							<label for="edd-taxed-customers-export-end" class="screen-reader-text">__( Export Taxed Customers End Date )</label>
 								<?php
 								echo EDD()->html->date_field(
 									array(
@@ -2881,7 +2881,7 @@ function display_export_report() {
 					<div class="inside">
 						<p><?php esc_html_e( sprintf( __( 'Download a CSV of %1$s.', 'easy-digital-downloads' ), edd_get_label_plural( true ) ) ); ?></p>
 						<form id="edd-export-file-downloads" class="edd-export-form edd-import-export-form" method="post">
-						<label for="edd_download_export_download" class="screen-reader-text">All Downloads or Select Download</label>
+						<label for="edd_download_export_download" class="screen-reader-text">__( All Downloads or Select Download )</label>
 							<?php echo EDD()->html->product_dropdown(
 								array(
 									'name'        => 'download_id',
@@ -2905,7 +2905,7 @@ function display_export_report() {
 						<p><?php esc_html_e( 'Download a CSV of API request logs.', 'easy-digital-downloads' ); ?></p>
 						<form id="edd-export-api-requests" class="edd-export-form edd-import-export-form" method="post">
 							<div class="edd-from-to-wrapper">
-							<label for="edd-api-requests-export-start" class="screen-reader-text">Export API Request Logs Start Date</label>
+							<label for="edd-api-requests-export-start" class="screen-reader-text">__( Export API Request Logs Start Date )</label>
 								<?php
 								echo EDD()->html->date_field(
 									array(
@@ -2916,7 +2916,7 @@ function display_export_report() {
 									)
 								);
 								?>
-							<label for="edd-api-requests-export-end" class="screen-reader-text">Export API Request Logs End Date</label>
+							<label for="edd-api-requests-export-end" class="screen-reader-text">__( Export API Request Logs End Date )</label>
 								<?php
 								echo EDD()->html->date_field(
 									array(
@@ -2944,7 +2944,7 @@ function display_export_report() {
 					<div class="inside">
 						<p><?php esc_html_e( 'Download a CSV of file download logs.', 'easy-digital-downloads' ); ?></p>
 						<form id="edd-export-file-downloads" class="edd-export-form edd-import-export-form" method="post">
-						<label for="edd_file_download_export_download" class="screen-reader-text">All Downloads or Select Download</label>
+						<label for="edd_file_download_export_download" class="screen-reader-text">__( All Downloads or Select Download )</label>
 							<?php echo EDD()->html->product_dropdown(
 								array(
 									'name'        => 'download_id',
@@ -2956,7 +2956,7 @@ function display_export_report() {
 							);
 							?>
 							<div class="edd-from-to-wrapper">
-								<label for="edd-file-download-export-start" class="screen-reader-text">Export File Download Logs Start Date</label>
+								<label for="edd-file-download-export-start" class="screen-reader-text">__( Export File Download Logs Start Date )</label>
 								<?php
 								echo EDD()->html->date_field(
 									array(
@@ -2967,7 +2967,7 @@ function display_export_report() {
 									)
 								);
 								?>
-								<label for="edd-file-download-export-end" class="screen-reader-text">Export File Download Logs End Date</label>
+								<label for="edd-file-download-export-end" class="screen-reader-text">__( Export File Download Logs End Date )</label>
 									<?php
 									echo EDD()->html->date_field(
 										array(
