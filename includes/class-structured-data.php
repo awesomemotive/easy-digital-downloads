@@ -147,15 +147,27 @@ class Structured_Data {
 		$data = array(
 			'@type'       => 'Product',
 			'name'        => $download->post_title,
-			'description' => $download->post_excerpt,
 			'url'         => get_permalink( $download->ID ),
 			'brand'       => array(
 				'@type' => 'Thing',
 				'name'  => get_bloginfo( 'name' ),
 			),
-			'image'       => wp_get_attachment_image_url( get_post_thumbnail_id( $download->ID ) ),
-			'sku'         => $download->get_sku(),
+			'sku'         => '-' === $download->get_sku()
+				? $download->ID
+				: $download->get_sku(),
 		);
+
+		// Add image if it exists.
+		$image_url = wp_get_attachment_image_url( get_post_thumbnail_id( $download->ID ) );
+
+		if ( false !== $image_url ) {
+			$data['image'] = esc_url( $image_url );
+		}
+
+		// Add description if it is not blank.
+		if ( '' !== $download->post_excerpt ) {
+			$data['description'] = $download->post_excerpt;
+		}
 
 		if ( $download->has_variable_prices() ) {
 			$variable_prices = $download->get_prices();
@@ -167,7 +179,7 @@ class Structured_Data {
 					'@type'           => 'Offer',
 					'price'           => $price['amount'],
 					'priceCurrency'   => edd_get_currency(),
-					'priceValidUntil' => null,
+					'priceValidUntil' => date( 'c', time() + YEAR_IN_SECONDS ),
 					'itemOffered'     => $data['name'] . ' - ' . $price['name'],
 					'url'             => $data['url'],
 					'availability'    => 'http://schema.org/InStock',

@@ -634,8 +634,6 @@ class EDD_Payment {
 					) );
 
 					edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $key );
-					edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
-					edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
 
 					$this->increase_fees( $fee['amount'] );
 				}
@@ -961,23 +959,6 @@ class EDD_Payment {
 				}
 			}
 
-			if ( ! $this->in_process() ) {
-				$customer = new EDD_Customer( $this->customer_id );
-
-				$total_change = $total_increase - $total_decrease;
-
-				if ( $total_change < 0 ) {
-					$total_change = - ( $total_change );
-					// Decrease the customer's purchase stats
-					$customer->decrease_value( $total_change );
-					edd_decrease_total_earnings( $total_change );
-				} elseif ( $total_change > 0 ) {
-					// Increase the customer's purchase stats
-					$customer->increase_value( $total_change );
-					edd_increase_total_earnings( $total_change );
-				}
-			}
-
 			$discount = 0.00;
 
 			foreach ( $this->cart_details as $item ) {
@@ -1108,6 +1089,9 @@ class EDD_Payment {
 			 */
 			do_action( 'edd_payment_saved', $this->ID, $this );
 		}
+
+		$customer = new EDD_Customer( $this->customer_id );
+		$customer->recalculate_stats();
 
 		/**
 		 * Update the payment in the object cache
@@ -2268,7 +2252,7 @@ class EDD_Payment {
 
 					$user_info = wp_parse_args( $user_info, $defaults );
 
-					if ( null !== $this->order ) {
+					if ( null !== $this->order && $this->order->get_address()->id ) {
 						$order_address = $this->order->get_address();
 
 						edd_update_order_address( $order_address->id, array(
@@ -2370,9 +2354,6 @@ class EDD_Payment {
 
 								edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
 
-								if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
-									edd_add_order_adjustment_meta( $adjustment_id, 'price_id', absint( $fee['price_id'] ) );
-								}
 							}
 						} else {
 							$adjustment_id = edd_get_order_adjustments( array(
@@ -2422,9 +2403,6 @@ class EDD_Payment {
 
 								edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
 
-								if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
-									edd_add_order_adjustment_meta( $adjustment_id, 'price_id', absint( $fee['price_id'] ) );
-								}
 							}
 						}
 					}
@@ -2514,10 +2492,6 @@ class EDD_Payment {
 
 									edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
 
-									if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
-										edd_add_order_adjustment_meta( $adjustment_id, 'price_id', absint( $fee['price_id'] ) );
-									}
-
 									$new_tax += $tax;
 								}
 							}
@@ -2534,7 +2508,7 @@ class EDD_Payment {
 				return edd_update_order_meta( $this->ID, 'payment_meta', $meta_value );
 			case '_edd_completed_date':
 				$meta_value = empty( $meta_value )
-					? '0000-00-00 00:00:00'
+					? null
 					: $meta_value;
 
 				edd_update_order( $this->ID, array(
@@ -2828,12 +2802,8 @@ class EDD_Payment {
 		if ( ! empty( $this->customer_id ) ) {
 			$customer = new EDD_Customer( $this->customer_id );
 
-			if ( true === $alter_customer_value ) {
-				$customer->decrease_value( $this->total );
-			}
-
-			if ( true === $alter_customer_purchase_count ) {
-				$customer->decrease_purchase_count();
+			if ( ! empty( $alter_customer_value || $alter_customer_purchase_count ) ) {
+				$customer->recalculate_stats();
 			}
 		}
 	}
@@ -3257,16 +3227,32 @@ class EDD_Payment {
 				}
 			}
 
+			$item_options = array(
+				'quantity' => $item->quantity,
+				'price_id' => $item->price_id,
+			);
+
+			/*
+			 * For backwards compatibility from pre-3.0: add in order item meta prefixed with `_option_`.
+			 * While saving, we've migrated these values to order item meta, but people may still be looking
+			 * for them in this cart details array, so we need to fill them back in.
+			 */
+			$order_item_meta = edd_get_order_item_meta( $item->id );
+			if ( ! empty( $order_item_meta ) ) {
+				foreach ( $order_item_meta as $item_meta_key => $item_meta_value ) {
+					if ( '_option_' === substr( $item_meta_key, 0, 8 ) && isset( $item_meta_value[0] ) ) {
+						$item_options[ str_replace( '_option_', '', $item_meta_key ) ] = $item_meta_value[0];
+					}
+				}
+			}
+
 			$cart_details[ $item->cart_index ] = array(
 				'name'        => $item->product_name,
 				'id'          => $item->product_id,
 				'item_number' => array(
 					'id'         => $item->product_id,
 					'quantity'   => $item->quantity,
-					'options'    => array(
-						'quantity' => $item->quantity,
-						'price_id' => $item->price_id,
-					),
+					'options'    => $item_options,
 				),
 				'item_price' => $item->amount,
 				'quantity'   => $item->quantity,
@@ -3353,7 +3339,7 @@ class EDD_Payment {
 	 * @return string Date payment was completed.
 	 */
 	private function get_completed_date() {
-		if ( '0000-00-00 00:00:00' === $this->completed_date ) {
+		if ( is_null( $this->completed_date ) ) {
 			$date = false;
 		} else {
 			$date = $this->completed_date;

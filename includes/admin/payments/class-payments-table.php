@@ -26,6 +26,15 @@ use EDD\Admin\List_Table;
 class EDD_Payment_History_Table extends List_Table {
 
 	/**
+	 * Determines the current Order type.
+	 *
+	 * @since 3.0
+	 *
+	 * @var string $type Order type
+	 */
+	protected $type;
+
+	/**
 	 * URL of this page.
 	 *
 	 * @var string
@@ -49,6 +58,16 @@ class EDD_Payment_History_Table extends List_Table {
 			'ajax'     => false
 		) );
 
+		// Use registered types
+		$types = array_keys( edd_get_order_types() );
+		if ( ! empty( $_GET['order_type'] ) && in_array( $_GET['order_type'], $types, true ) ) {
+			$this->type = sanitize_key( $_GET['order_type'] );
+
+		// Default to 'sale' if type is unrecognized
+		} else {
+			$this->type = 'sale';
+		}
+
 		$this->set_base_url();
 		$this->filter_bar_hooks();
 		$this->get_payment_counts();
@@ -62,21 +81,10 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @since 3.0
 	 */
 	private function set_base_url() {
-
-		// Use registered types
-		$types = array_keys( edd_get_order_types() );
-		if ( ! empty( $_GET['order_type'] ) && in_array( $_GET['order_type'], $types, true ) ) {
-			$type = sanitize_key( $_GET['order_type'] );
-
-		// Default to 'sale' if type is unrecognized
-		} else {
-			$type = 'sale';
-		}
-
 		// Carry the type over to the base URL
 		$this->base_url = edd_get_admin_url( array(
 			'page'       => 'edd-payment-history',
-			'order_type' => $type
+			'order_type' => $this->type
 		) );
 	}
 
@@ -98,6 +106,11 @@ class EDD_Payment_History_Table extends List_Table {
 	 *            Display 'Advanced Filters'
 	 */
 	public function advanced_filters() {
+		// Hide when viewing Refunds.
+		if ( 'refund' === $this->type ) {
+			return;
+		}
+
 		edd_admin_filter_bar( 'orders' );
 	}
 
@@ -219,7 +232,7 @@ class EDD_Payment_History_Table extends List_Table {
 
 			<div class="inside">
 				<fieldset>
-					<legend for="order-amount-filter-type"><?php esc_html_e( 'Amount is', 'easy-digital-downloads' ); ?></legend>
+					<legend for="order-amount-filter-type"><?php esc_html_e( 'Total is', 'easy-digital-downloads' ); ?></legend>
 					<?php
 					$options = array(
 						'=' => __( 'equal to', 'easy-digital-downloads' ),
@@ -364,14 +377,30 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @return array $columns Array of all the list table columns.
 	 */
 	public function get_columns() {
-		return apply_filters( 'edd_payments_table_columns', array(
+		$columns = array(
 			'cb'       => '<input type="checkbox" />', // Render a checkbox instead of text
 			'number'   => __( 'Number',    'easy-digital-downloads' ),
 			'customer' => __( 'Customer',  'easy-digital-downloads' ),
 			'gateway'  => __( 'Gateway',   'easy-digital-downloads' ),
-			'amount'   => __( 'Amount',    'easy-digital-downloads' ),
-			'date'     => __( 'Date', 'easy-digital-downloads' )
-		) );
+			'amount'   => __( 'Total',    'easy-digital-downloads' ),
+			'date'     => __( 'Date', 'easy-digital-downloads' ),
+			'status'   => __( 'Status', 'easy-digital-downloads' ),
+		);
+
+		if ( 'refund' === $this->type ) {
+			unset( $columns['status'] );
+		}
+
+		/**
+		 * Filters the columns for Orders and Refunds table.
+		 *
+		 * @since unknown
+		 *
+		 * @param array $columns Table columns.
+		 */
+		$columns = apply_filters( 'edd_payments_table_columns', $columns );
+
+		return $columns;
 	}
 
 	/**
@@ -384,6 +413,7 @@ class EDD_Payment_History_Table extends List_Table {
 	public function get_sortable_columns() {
 		return apply_filters( 'edd_payments_table_sortable_columns', array(
 			'number'   => array( 'id',           true  ),
+			'status'   => array( 'status',       false ),
 			'customer' => array( 'customer_id',  false ),
 			'gateway'  => array( 'gateway',      false ),
 			'amount'   => array( 'total',        false ),
@@ -431,6 +461,9 @@ class EDD_Payment_History_Table extends List_Table {
 				}
 
 				break;
+			case 'status':
+				$value = edd_get_order_status_badge( $order->status );
+				break;
 			default:
 				$value = method_exists( $order, 'get_' . $column_name )
 					? call_user_func( array( $order, 'get_' . $column_name ) )
@@ -451,10 +484,13 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @return string Displays a checkbox.
 	 */
 	public function column_cb( $order ) {
+		$order_number = 'sale' === $order->type ? $order->get_number() : $order->order_number;
 		return sprintf(
-			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+			'<input type="checkbox" name="%1$s[]" id="%1$s-%2$s" value="%2$s" /><label for="%1$s-%2$s" class="screen-reader-text">%3$s</label>',
 			'order',
-			$order->id
+			esc_attr( $order->id ),
+			/* translators: the order number */
+			esc_html( sprintf( __( 'Select %s', 'easy-digital-downloads' ), $order_number ) )
 		);
 	}
 
@@ -468,18 +504,14 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @return string Displays a checkbox.
 	 */
 	public function column_number( $order ) {
-		$state  = '';
 		$status = $this->get_status();
-
-		// State
-		if ( ( ! empty( $status ) && ( $order->status !== $status ) ) || ( empty( $status ) && ( 'complete' !== $order->status ) ) ) {
-			$state = ' &mdash; ' . edd_get_payment_status_label( $order->status );
-		}
 
 		// View URL
 		$view_url = edd_get_admin_url( array(
 			'page' => 'edd-payment-history',
-			'view' => 'view-order-details',
+			'view' => 'sale' === $order->type
+				? 'view-order-details'
+				: 'view-refund-details',
 			'id'   => $order->id,
 		) );
 
@@ -489,7 +521,7 @@ class EDD_Payment_History_Table extends List_Table {
 		);
 
 		// Resend Receipt
-		if ( 'complete' === $order->status && ! empty( $order->email ) ) {
+		if ( 'sale' === $this->type && 'complete' === $order->status && ! empty( $order->email ) ) {
 			$row_actions['email_links'] = '<a href="' . esc_url( add_query_arg( array(
 					'edd-action'  => 'email_links',
 					'purchase_id' => $order->id
@@ -514,7 +546,9 @@ class EDD_Payment_History_Table extends List_Table {
 				'edd-action'  => 'delete_order',
 				'purchase_id' => $order->id,
 			), $this->base_url ), 'edd_payment_nonce' );
-			$row_actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete', 'easy-digital-downloads' ) . '</a>';
+			$row_actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete Permanently', 'easy-digital-downloads' ) . '</a>';
+
+			unset( $row_actions['view'] );
 		}
 
 		if ( has_filter( 'edd_payment_row_actions' ) ) {
@@ -545,8 +579,8 @@ class EDD_Payment_History_Table extends List_Table {
 		$actions = $this->row_actions( $row_actions );
 
 		// Primary link
-		$order_number = $order->type == 'sale' ? $order->get_number() : $order->order_number;
-		$link = '<strong><a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $order_number ) . '</a>' . esc_html( $state ) . '</strong>';
+		$order_number = 'sale' === $order->type ? $order->get_number() : $order->order_number;
+		$link         = edd_is_order_restorable( $order->id ) ? '<span class="row-title">' . esc_html( $order_number ) . '</span>' : '<a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $order_number ) . '</a>';
 
 		// Concatenate & return the results
 		return $link . $actions;
@@ -608,23 +642,29 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @return array $actions Bulk actions.
 	 */
 	public function get_bulk_actions() {
-		$action = array(
-			'set-status-complete'     => __( 'Mark Completed',   'easy-digital-downloads' ),
-			'set-status-pending'     => __( 'Mark Pending',     'easy-digital-downloads' ),
-			'set-status-processing'  => __( 'Mark Processing',  'easy-digital-downloads' ),
-			'set-status-refunded'    => __( 'Mark Refunded',    'easy-digital-downloads' ),
-			'set-status-revoked'     => __( 'Mark Revoked',     'easy-digital-downloads' ),
-			'set-status-failed'      => __( 'Mark Failed',      'easy-digital-downloads' ),
-			'set-status-abandoned'   => __( 'Mark Abandoned',   'easy-digital-downloads' ),
-			'set-status-preapproval' => __( 'Mark Preapproved', 'easy-digital-downloads' ),
-			'set-status-cancelled'   => __( 'Mark Cancelled',   'easy-digital-downloads' ),
-			'resend-receipt'         => __( 'Resend Receipts', 'easy-digital-downloads' ),
-		);
+		if ( 'refund' !== $this->type ) {
+			$action = array(
+				'set-status-complete'     => __( 'Mark Completed',   'easy-digital-downloads' ),
+				'set-status-pending'     => __( 'Mark Pending',     'easy-digital-downloads' ),
+				'set-status-processing'  => __( 'Mark Processing',  'easy-digital-downloads' ),
+				'set-status-refunded'    => __( 'Mark Refunded',    'easy-digital-downloads' ),
+				'set-status-revoked'     => __( 'Mark Revoked',     'easy-digital-downloads' ),
+				'set-status-failed'      => __( 'Mark Failed',      'easy-digital-downloads' ),
+				'set-status-abandoned'   => __( 'Mark Abandoned',   'easy-digital-downloads' ),
+				'set-status-preapproval' => __( 'Mark Preapproved', 'easy-digital-downloads' ),
+				'set-status-cancelled'   => __( 'Mark Cancelled',   'easy-digital-downloads' ),
+				'resend-receipt'         => __( 'Resend Receipts', 'easy-digital-downloads' ),
+			);
+		} else {
+			$action = array();
+		}
 
 		if ( 'trash' === $this->get_status() ) {
-			$action['restore'] = __( 'Restore', 'easy-digital-downloads' );
+			$action = array(
+				'restore' => __( 'Restore', 'easy-digital-downloads' ),
+			);
 		} else {
-			$action['trash'] = __( 'Trash', 'easy-digital-downloads' );
+			$action['trash'] = __( 'Move to Trash', 'easy-digital-downloads' );
 		}
 
 		return apply_filters( 'edd_payments_table_bulk_actions', $action );
@@ -772,13 +812,13 @@ class EDD_Payment_History_Table extends List_Table {
 		}
 
 		$args = array(
-			'user'     => $user,
-			'customer' => $customer,
-			'status'   => $status,
-			'gateway'  => $gateway,
-			'mode'     => $mode,
-			'type'     => $type,
-			'search'   => $search,
+			'user'        => $user,
+			'customer_id' => $customer,
+			'status'      => $status,
+			'gateway'     => $gateway,
+			'mode'        => $mode,
+			'type'        => $type,
+			'search'      => $search,
 		);
 
 		// Search
@@ -867,6 +907,9 @@ class EDD_Payment_History_Table extends List_Table {
 		$this->items = $this->get_data();
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
+		if ( empty( $this->counts[ $status ] ) ) {
+			return;
+		}
 
 		$this->set_pagination_args( array(
 			'total_pages' => ceil( $this->counts[ $status ] / $this->per_page ),

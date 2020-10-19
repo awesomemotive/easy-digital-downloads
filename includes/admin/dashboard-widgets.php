@@ -43,6 +43,35 @@ function edd_dashboard_sales_widget( ) {
 }
 
 /**
+ * Gets the sales earnings/count data for the dashboard widget.
+ *
+ * @since 3.0.0
+ * @return array
+ */
+function edd_get_dashboard_sales_widget_data() {
+	$data   = array();
+	$ranges = array( 'this_month', 'last_month', 'today', 'total' );
+	foreach ( $ranges as $range ) {
+		$args = array(
+			'range'  => $range,
+			'output' => 'formatted',
+		);
+		if ( 'total' === $range ) {
+			unset( $args['range'] );
+		}
+		// Remove filters so that deprecation notices are not unnecessarily logged outside of reports.
+		remove_all_filters( 'edd_report_views' );
+		$stats          = new EDD\Stats( $args );
+		$data[ $range ] = array(
+			'earnings' => $stats->get_order_earnings(),
+			'count'    => $stats->get_order_count(),
+		);
+	}
+
+	return $data;
+}
+
+/**
  * Loads the dashboard sales widget via ajax
  *
  * @since 2.1
@@ -54,46 +83,40 @@ function edd_load_dashboard_sales_widget( ) {
 		die();
 	}
 
-	$stats = new EDD_Payment_Stats; ?>
+	$stats = new EDD_Payment_Stats();
+	$data  = edd_get_dashboard_sales_widget_data(); ?>
 	<div class="edd_dashboard_widget">
 		<div class="table table_left table_current_month">
 			<table>
 				<thead>
 					<tr>
-						<td colspan="2"><?php _e( 'Current Month', 'easy-digital-downloads' ) ?></td>
+						<td colspan="2"><?php esc_html_e( 'Current Month', 'easy-digital-downloads' ); ?></td>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td class="first t monthly_earnings"><?php _e( 'Earnings', 'easy-digital-downloads' ); ?></td>
-						<td class="b b-earnings"><?php echo edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'this_month' ) ) ); ?></td>
+						<td class="first t monthly_earnings"><?php esc_html_e( 'Earnings', 'easy-digital-downloads' ); ?></td>
+						<td class="b b-earnings"><?php echo esc_html( $data['this_month']['earnings'] ); ?></td>
 					</tr>
-					<tr>
-						<?php $monthly_sales = $stats->get_sales( 0, 'this_month', false, array( 'complete', 'revoked' ) ); ?>
-						<td class="first t monthly_sales"><?php echo _n( 'Sale', 'Sales', $monthly_sales, 'easy-digital-downloads' ); ?></td>
-						<td class="b b-sales"><?php echo edd_format_amount( $monthly_sales, false ); ?></td>
+						<td class="first t monthly_sales"><?php echo esc_html( _n( 'Sale', 'Sales', $data['this_month']['count'], 'easy-digital-downloads' ) ); ?></td>
+						<td class="b b-sales"><?php echo esc_html( $data['this_month']['count'] ); ?></td>
 					</tr>
 				</tbody>
 			</table>
 			<table>
 				<thead>
 					<tr>
-						<td colspan="2"><?php _e( 'Last Month', 'easy-digital-downloads' ) ?></td>
+						<td colspan="2"><?php esc_html_e( 'Last Month', 'easy-digital-downloads' ); ?></td>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td class="first t earnings"><?php echo __( 'Earnings', 'easy-digital-downloads' ); ?></td>
-						<td class="b b-last-month-earnings"><?php echo edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'last_month' ) ) ); ?></td>
+						<td class="first t earnings"><?php esc_html_e( 'Earnings', 'easy-digital-downloads' ); ?></td>
+						<td class="b b-last-month-earnings"><?php echo esc_html( $data['last_month']['earnings'] ); ?></td>
 					</tr>
 					<tr>
-						<td class="first t sales">
-							<?php $last_month_sales = $stats->get_sales( 0, 'last_month', false, array( 'complete', 'revoked' ) ); ?>
-							<?php echo _n( 'Sale', 'Sales', edd_format_amount( $last_month_sales, false ), 'easy-digital-downloads' ); ?>
-						</td>
-						<td class="b b-last-month-sales">
-							<?php echo $last_month_sales; ?>
-						</td>
+						<td class="first t sales"><?php echo esc_html( _n( 'Sale', 'Sales', $data['last_month']['count'], 'easy-digital-downloads' ) ); ?></td>
+						<td class="b b-last-month-sales"><?php echo esc_html( $data['last_month']['count'] ); ?></td>
 					</tr>
 				</tbody>
 			</table>
@@ -103,26 +126,20 @@ function edd_load_dashboard_sales_widget( ) {
 				<thead>
 					<tr>
 						<td colspan="2">
-							<?php _e( 'Today', 'easy-digital-downloads' ); ?>
+							<?php esc_html_e( 'Today', 'easy-digital-downloads' ); ?>
 						</td>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td class="t sales"><?php _e( 'Earnings', 'easy-digital-downloads' ); ?></td>
+						<td class="t sales"><?php esc_html_e( 'Earnings', 'easy-digital-downloads' ); ?></td>
 						<td class="last b b-earnings">
-							<?php $earnings_today = $stats->get_earnings( 0, 'today', false ); ?>
-							<?php echo edd_currency_filter( edd_format_amount( $earnings_today ) ); ?>
+							<?php echo esc_html( $data['today']['earnings'] ); ?>
 						</td>
 					</tr>
-					<tr>
-						<td class="t sales">
-							<?php _e( 'Sales', 'easy-digital-downloads' ); ?>
-						</td>
-						<td class="last b b-sales">
-							<?php $sales_today = $stats->get_sales( 0, 'today', false, array( 'complete', 'revoked' ) ); ?>
-							<?php echo edd_format_amount( $sales_today, false ); ?>
-						</td>
+					<tr class="t sales">
+						<td class="t sales"><?php echo esc_html( _n( 'Sale', 'Sales', $data['today']['count'], 'easy-digital-downloads' ) ); ?></td>
+						<td class="last b b-sales"><?php echo esc_html( $data['today']['count'] ); ?></td>
 					</tr>
 				</tbody>
 			</table>
@@ -131,17 +148,17 @@ function edd_load_dashboard_sales_widget( ) {
 			<table>
 				<thead>
 					<tr>
-						<td colspan="2"><?php _e( 'Totals', 'easy-digital-downloads' ) ?></td>
+						<td colspan="2"><?php esc_html_e( 'Totals', 'easy-digital-downloads' ); ?></td>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td class="t earnings"><?php _e( 'Total Earnings', 'easy-digital-downloads' ); ?></td>
-						<td class="last b b-earnings"><?php echo edd_currency_filter( edd_format_amount( edd_get_total_earnings() ) ); ?></td>
+						<td class="t earnings"><?php esc_html_e( 'Total Earnings', 'easy-digital-downloads' ); ?></td>
+						<td class="last b b-earnings"><?php echo esc_html( $data['total']['earnings'] ); ?></td>
 					</tr>
 					<tr>
-						<td class="t sales"><?php _e( 'Total Sales', 'easy-digital-downloads' ); ?></td>
-						<td class="last b b-sales"><?php echo edd_format_amount( edd_get_total_sales(), false ); ?></td>
+						<td class="t sales"><?php echo esc_html( _n( 'Sale', 'Sales', $data['total']['count'], 'easy-digital-downloads' ) ); ?></td>
+						<td class="last b b-sales"><?php echo esc_html( $data['total']['count'] ); ?></td>
 					</tr>
 				</tbody>
 			</table>
@@ -152,42 +169,54 @@ function edd_load_dashboard_sales_widget( ) {
 		$payments = edd_get_payments( array( 'number' => 5, 'status' => 'complete' ) );
 
 		if ( $payments ) { ?>
-		<div class="table recent_purchases">
-			<table>
-				<thead>
-					<tr>
-						<td colspan="2">
-							<?php _e( 'Recent Purchases', 'easy-digital-downloads' ); ?>
-							<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>">&nbsp;&ndash;&nbsp;<?php _e( 'View All', 'easy-digital-downloads' ); ?></a>
-						</td>
-					</tr>
-				</thead>
-				<tbody>
-					<?php
-					foreach ( $payments as $payment ) { ?>
-						<tr>
-							<td class="edd_order_label">
-								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>">
-									<?php echo get_the_title( $payment->ID ) ?>
-									&mdash; <?php echo $payment->email ?>
-								</a>
-								<?php if ( ! empty( $payment->user_id ) && ( $payment->user_id > 0 ) ) {
-									$user = get_user_by( 'id', $payment->user_id );
-									if ( $user ) {
-										echo "(" . $user->data->user_login . ")";
-									}
-								} ?>
-							</td>
-							<td class="edd_order_price">
-								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>">
-									<span class="edd_price_label"><?php echo edd_currency_filter( edd_format_amount( $payment->total ), edd_get_payment_currency_code( $payment->ID ) ); ?></span>
-								</a>
-							</td>
-						</tr>
+		<div class="table recent_orders">
+			<h3><?php esc_html_e( 'Recent Orders', 'easy-digital-downloads' ); ?></h3>
+			<ul>
+			<?php
+			foreach ( $payments as $payment ) {
+				$link = edd_get_admin_url(
+					array(
+						'page' => 'edd-payment-history',
+						'view' => 'view-order-details',
+						'id'   => urlencode( $payment->ID ),
+					),
+					admin_url( 'edit.php' )
+				);
+				?>
+				<li class="edd_order_label">
+					<a href="<?php echo esc_url( $link ); ?>">
 						<?php
-					} // End foreach ?>
-				</tbody>
-			</table>
+						$customer      = edd_get_customer( $payment->customer_id );
+						$customer_name = ! empty( $customer->name ) ? $customer->name : __( 'No Name', 'easy-digital-downloads' );
+						$item_count    = edd_count_order_items( array( 'order_id' => $payment->ID ) );
+						echo wp_kses_post(
+							sprintf(
+								/* translators: 1. customer name; 2. number of items purchased; 3. order total */
+								_n(
+									'%1$s purchased %2$s item for <strong>%3$s</strong>',
+									'%1$s purchased %2$s items for <strong>%3$s</strong>',
+									$item_count,
+									'easy-digital-downloads'
+								),
+								$customer_name,
+								$item_count,
+								edd_currency_filter( edd_format_amount( edd_get_order_total( $payment->ID ) ) )
+							)
+						);
+						?>
+					</a>
+					<br /><?php echo esc_html( edd_date_i18n( $payment->date ) ); ?>
+				</li>
+				<?php } // End foreach ?>
+		</ul>
+			<?php
+			$all_orders_link = edd_get_admin_url(
+				array(
+					'page' => 'edd-payment-history',
+				)
+			);
+			?>
+		<a href="<?php echo esc_url( $all_orders_link ); ?>" class="button-secondary"><?php esc_html_e( 'View All Orders', 'easy-digital-downloads' ); ?></a>
 		</div>
 		<?php } // End if ?>
 		<?php do_action( 'edd_sales_summary_widget_after_purchases', $payments ); ?>

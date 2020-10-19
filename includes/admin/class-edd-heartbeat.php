@@ -44,26 +44,20 @@ class EDD_Heartbeat {
 	 */
 	public static function heartbeat_received( $response, $data ) {
 
-		if( ! current_user_can( 'view_shop_reports' ) ) {
+		if ( ! current_user_can( 'view_shop_reports' ) ) {
 			return $response; // Only modify heartbeat if current user can view show reports
 		}
 
 		// Make sure we only run our query if the edd_heartbeat key is present
-		if( ( isset( $data['edd_heartbeat'] ) ) && ( $data['edd_heartbeat'] == 'dashboard_summary' ) ) {
+		if ( ( isset( $data['edd_heartbeat'] ) ) && ( 'dashboard_summary' === $data['edd_heartbeat'] ) ) {
 
-			// Instantiate the stats class
-			$stats = new EDD_Payment_Stats;
-
-			$earnings = edd_get_total_earnings();
-
-			// Send back the number of complete payments
-			$response['edd-total-payments'] = edd_format_amount( edd_get_total_sales(), false );
-			$response['edd-total-earnings'] = html_entity_decode( edd_currency_filter( edd_format_amount( $earnings ) ), ENT_COMPAT, 'UTF-8' );
-			$response['edd-payments-month'] = edd_format_amount( $stats->get_sales( 0, 'this_month', false, array( 'complete', 'revoked' ) ), false );
-			$response['edd-earnings-month'] = html_entity_decode( edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'this_month' ) ) ), ENT_COMPAT, 'UTF-8' );
-			$response['edd-payments-today'] = edd_format_amount( $stats->get_sales( 0, 'today', false, array( 'complete', 'revoked' ) ), false );
-			$response['edd-earnings-today'] = html_entity_decode( edd_currency_filter( edd_format_amount( $stats->get_earnings( 0, 'today' ) ) ), ENT_COMPAT, 'UTF-8' );
-
+			$stats                          = edd_get_dashboard_sales_widget_data();
+			$response['edd-total-payments'] = $stats['total']['count'];
+			$response['edd-total-earnings'] = html_entity_decode( $stats['total']['earnings'] );
+			$response['edd-payments-month'] = $stats['this_month']['count'];
+			$response['edd-earnings-month'] = html_entity_decode( $stats['this_month']['earnings'] );
+			$response['edd-payments-today'] = $stats['today']['count'];
+			$response['edd-earnings-today'] = html_entity_decode( $stats['today']['earnings'] );
 		}
 
 		return $response;

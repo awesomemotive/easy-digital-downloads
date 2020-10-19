@@ -1,7 +1,14 @@
 <?php
 /**
- * This template is used to display the purchase summary with [edd_receipt]
+ * Shortcode: Receipt - [edd_receipt]
+ *
+ * @package EDD
+ * @category Template
+ *
+ * @since 3.0 Check status of order item when showing download link, instead of order itself.
+ *            Show "Refunded" next to any refunded order items.
  */
+
 global $edd_receipt_args;
 $order = edd_get_order( $edd_receipt_args['id'] );
 
@@ -152,7 +159,13 @@ do_action( 'edd_payment_receipt_before_table', $payment, $edd_receipt_args );
 						<?php $download_files = edd_get_download_files( $item->product_id, $item->price_id ); ?>
 
 						<div class="edd_purchase_receipt_product_name">
-							<?php echo esc_html( $item->product_name ); ?>
+							<?php
+							echo esc_html( $item->product_name );
+
+							if ( 'refunded' == $item->status ) {
+								echo ' &ndash; ' . edd_get_status_label( $item->status );
+							}
+							?>
 						</div>
 
 						<?php
@@ -161,7 +174,7 @@ do_action( 'edd_payment_receipt_before_table', $payment, $edd_receipt_args );
 							<div class="edd_purchase_receipt_product_notes"><?php echo wp_kses_post( wpautop( $notes ) ); ?></div>
 						<?php endif; ?>
 
-						<?php if ( edd_is_payment_complete( $order->id ) && edd_receipt_show_download_files( $item->product_id, $edd_receipt_args, $cart[ $item->cart_index ] ) ) : ?>
+						<?php if ( 'complete' === $item->status && edd_receipt_show_download_files( $item->product_id, $edd_receipt_args, $cart[ $item->cart_index ] ) ) : ?>
 						<ul class="edd_purchase_receipt_files">
 							<?php
 							if ( ! empty( $download_files ) && is_array( $download_files ) ) :
