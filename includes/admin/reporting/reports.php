@@ -2617,7 +2617,7 @@ function display_export_report() {
 								echo EDD()->html->product_dropdown(
 									array(
 										'name'        => 'download_id',
-										'id'          => 'edd-orders-export-download',
+										'id'          => 'edd_orders_export_download',
 										'chosen'      => true,
 										/* translators: the plural post type label */
 										'placeholder' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
@@ -2629,7 +2629,7 @@ function display_export_report() {
 								echo EDD()->html->customer_dropdown(
 									array(
 										'name'          => 'customer_id',
-										'id'            => 'edd-order-export-customer',
+										'id'            => 'edd_order_export_customer',
 										'chosen'        => true,
 										'none_selected' => '',
 										'placeholder'   => __( 'All Customers', 'easy-digital-downloads' ),
@@ -2677,7 +2677,7 @@ function display_export_report() {
 								<?php
 									echo EDD()->html->select(
 										array(
-											'id'               => 'edd-orders-export-status',
+											'id'               => 'edd_orders_export_status',
 											'name'             => 'status',
 											'show_option_all'  => __( 'All Statuses', 'easy-digital-downloads' ),
 											'show_option_none' => false,
@@ -2741,7 +2741,7 @@ function display_export_report() {
 								echo EDD()->html->select(
 									array(
 										'name'             => 'country',
-										'id'               => 'edd-reports-filter-taxed-countries',
+										'id'               => 'edd_reports_filter_taxed_countries',
 										'options'          => edd_get_country_list(),
 										'chosen'           => true,
 										'selected'         => false,
@@ -2756,7 +2756,7 @@ function display_export_report() {
 								echo EDD()->html->select(
 									array(
 										'name'             => 'region',
-										'id'               => 'edd-reports-filter-regions',
+										'id'               => 'edd_reports_filter_regions',
 										'options'          => edd_get_shop_states(),
 										'chosen'           => true,
 										'selected'         => false,
@@ -2804,12 +2804,12 @@ function display_export_report() {
 								}
 							}
 							?>
-							<label for="taxonomy" class="screen-reader-text"><?php esc_html_e( 'All Taxonomies or Select Taxonomy', 'easy-digital-downloads' ); ?></label>
+							<label for="taxonomy" class="screen-reader-text"><?php esc_html_e( 'Select Taxonomy', 'easy-digital-downloads' ); ?></label>
 								<?php
 								echo EDD()->html->select(
 									array(
 										'name'             => 'taxonomy',
-										'id'               => 'taxonomy',
+										'id'               => 'edd_export_taxonomy',
 										'options'          => $taxonomies,
 										'selected'         => false,
 										'show_option_none' => false,
@@ -2817,12 +2817,12 @@ function display_export_report() {
 									)
 								);
 								?>
-							<label for="edd_customer_export_download" class="screen-reader-text"><?php esc_html_e( 'All Downloads or Select Download', 'easy-digital-downloads' ); ?></label>
+							<label for="edd_customer_export_download" class="screen-reader-text"><?php esc_html_e( 'Select Download', 'easy-digital-downloads' ); ?></label>
 								<?php
 								echo EDD()->html->product_dropdown(
 									array(
 										'name'        => 'download',
-										'id'          => 'edd-customer-export-download',
+										'id'          => 'edd_customer_export_download',
 										'chosen'      => true,
 										/* translators: the plural post type label */
 										'placeholder' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
@@ -2885,7 +2885,7 @@ function display_export_report() {
 							<?php echo EDD()->html->product_dropdown(
 								array(
 									'name'        => 'download_id',
-									'id'          => 'edd-download-export-download',
+									'id'          => 'edd_download_export_download',
 									'chosen'      => true,
 									/* translators: the plural post type label */
 									'placeholder' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
@@ -2948,7 +2948,7 @@ function display_export_report() {
 							<?php echo EDD()->html->product_dropdown(
 								array(
 									'name'        => 'download_id',
-									'id'          => 'edd-file-download-export-download',
+									'id'          => 'edd_file_download_export_download',
 									'chosen'      => true,
 									/* translators: the plural post type label */
 									'placeholder' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
@@ -2960,7 +2960,7 @@ function display_export_report() {
 								<?php
 								echo EDD()->html->date_field(
 									array(
-										'id'          => 'edd-file-download-export-start',
+										'id'          => 'edd_file_download_export_start',
 										'class'       => 'edd-export-start',
 										'name'        => 'start',
 										'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' )
