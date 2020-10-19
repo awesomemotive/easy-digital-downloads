@@ -2727,7 +2727,7 @@ function display_export_report() {
 								<?php
 								echo EDD()->html->select(
 									array(
-										'id'               => 'edd-taxed-orders-export-status',
+										'id'               => 'edd_taxed_orders_export_status',
 										'name'             => 'status',
 										'show_option_all'  => __( 'All Statuses', 'easy-digital-downloads' ),
 										'show_option_none' => false,
