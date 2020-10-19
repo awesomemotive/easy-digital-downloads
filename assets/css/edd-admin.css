@@ -2344,11 +2344,8 @@ body.download_page_edd-reports {
 	right: 6px;
 }
 
-.edd-reports-wrapper .postbox h2 {
-	font-size: 1.3em
-}
-
 /* Keeping this rule for Software Licensing Reports */
+.edd-reports-wrapper .postbox h2,
 .edd-reports-wrapper .postbox h3 {
 	font-size: 1.3em
 }
