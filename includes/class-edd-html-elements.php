@@ -749,7 +749,7 @@ class EDD_HTML_Elements {
 			}
 		}
 
-		$output = '<span id="edd-' . esc_attr( $args['name'] ) . '-wrap">';
+		$output = '<span class="edd-' . esc_attr( $args['name'] ) . '-wrap">';
 		if ( ! empty( $args['label'] ) ) {
 			$output .= '<label class="edd-label" for="' . esc_attr( $args['id'] ) . '">' . esc_html( $args['label'] ) . '</label>';
 		}
