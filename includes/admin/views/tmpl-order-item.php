@@ -20,9 +20,9 @@ $view_url = add_query_arg(
 <td class="has-row-actions column-primary">
 	<div class="removable">
 		<# if ( true === data.state.isAdding ) { #>
-		<button class="button-link delete" aria-label="remove item">
+		<button class="button-link delete" >
 			<span class="dashicons dashicons-no" id="remove-item"></span>
-			<span class="screen-reader-text"><?php esc_html_e( 'Remove Item', 'easy-digital-downloads' ); ?></span>
+			<span class="screen-reader-text"><?php printf( __( 'Remove %s', 'easy-digital-downloads' ), '{{{ data.productName }}}' ); ?></span>
 		</button>
 		<# } #>
 
