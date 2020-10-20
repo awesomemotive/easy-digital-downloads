@@ -1,4 +1,4 @@
-=== Easy Digital Downloads - Simple Ecommerce for Selling Digital Files ===
+=== Easy Digital  Downloads - Simple Ecommerce for Sellin g Digital Files ===
 Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze, littlerchicken, lisacee
@@ -9,6 +9,7 @@ Tested up to: 5.5.1
 Requires PHP: 5.3
 Stable Tag: 2.9.26
 License: GNU Version 2 or Any Later Version
+
 
 Sell your digital products the simple way. Easily build an online store complete with a cart system, checkout forms, reports, coupons, and more!
 
