@@ -262,6 +262,10 @@ function edd_add_customer_email( $args = array() ) {
 		}
 	}
 
+	if ( ! isset( $customer_id ) ) {
+		$customer_id = isset( $args['customer_id'] ) ? $args['customer_id'] : false;
+	}
+
 	do_action( 'edd_post_add_customer_email', $customer_id, $args );
 
 	if ( edd_doing_ajax() ) {
@@ -538,3 +542,42 @@ function edd_include_single_customer_recount_tool_batch_processer( $class ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/tools/class-edd-tools-recount-single-customer-stats.php';
 	}
 }
+
+/**
+ * Removes a customer address
+ *
+ * @since  3.0
+ * @return void
+ */
+function edd_remove_customer_address() {
+	if ( ! is_admin() || ! current_user_can( edd_get_edit_customers_role() ) ) {
+		wp_die( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ) );
+	}
+
+	if ( empty( $_GET['id'] ) || ! is_numeric( $_GET['id'] ) || empty( $_GET['_wpnonce'] ) ) {
+		return;
+	}
+
+	if ( ! wp_verify_nonce( $_GET['_wpnonce'], 'edd-remove-customer-address' ) ) {
+		wp_die( __( 'Nonce verification failed', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
+	$address = edd_fetch_customer_address( absint( $_GET['id'] ) );
+	$removed = $address instanceof EDD\Customers\Customer_Address ? edd_delete_customer_address( absint( $_GET['id'] ) ) : false;
+
+	$url = edd_get_admin_url( array(
+		'page'        => 'edd-customers',
+		'view'        => 'overview',
+		'id'          => urlencode( $address->customer_id ),
+		'edd-message' => 'address-removed'
+	) );
+
+	if ( $removed ) {
+		$url = add_query_arg( 'edd-message', 'address-removed', $url );
+	} else {
+		$url = add_query_arg( 'edd-message', 'address-remove-failed', $url );
+	}
+
+	edd_redirect( $url );
+}
+add_action( 'edd_customer-remove-address', 'edd_remove_customer_address', 10 );

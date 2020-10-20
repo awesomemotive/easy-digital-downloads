@@ -31,8 +31,8 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 	 */
 	public function __construct() {
 		parent::__construct( array(
-			'singular' => __( 'Email',  'easy-digital-downloads' ),
-			'plural'   => __( 'Emails', 'easy-digital-downloads' ),
+			'singular' => 'email',
+			'plural'   => 'emails',
 			'ajax'     => false
 		) );
 
@@ -75,8 +75,8 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 
 			case 'type' :
 				$value = ( 'primary' === $item['type'] )
-					? esc_html_e( 'Primary',   'easy-digital-downloads' )
-					: esc_html_e( 'Secondary', 'easy-digital-downloads' );
+					? esc_html__( 'Primary',   'easy-digital-downloads' )
+					: esc_html__( 'Secondary', 'easy-digital-downloads' );
 				break;
 
 			case 'date_created' :
@@ -130,8 +130,15 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 		);
 
 		// Non-primary email actions
-		if ( 'primary' !== $item_status ) {
-			$actions['delete'] = '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
+		if ( empty( $item['type'] ) || 'primary' !== $item['type'] ) {
+			$delete_url = wp_nonce_url( edd_get_admin_url( array(
+				'page'       => 'edd-customers',
+				'view'       => 'overview',
+				'id'         => urlencode( $customer_id ),
+				'email'      => rawurlencode( $email ),
+				'edd_action' => 'customer-remove-email'
+			) ), 'edd-remove-customer-email' );
+			$actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete', 'easy-digital-downloads' ) . '</a>';
 		}
 
 		// State
@@ -199,15 +206,23 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD_Customer $item Customer object.
+	 * @param array $item
 	 *
 	 * @return string Displays a checkbox
 	 */
 	public function column_cb( $item ) {
+		$is_primary         = ! empty( $item['type'] ) && 'primary' === $item['type'];
+		$primary_attributes = $is_primary ? ' disabled' : '';
+		$title              = $is_primary ? __( 'Primary email addresses cannot be deleted.', 'easy-digital-downloads' ) : '';
+
 		return sprintf(
-			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
-			/*$1%s*/ 'customer',
-			/*$2%s*/ $item['id']
+			'<input type="checkbox" name="%1$s[]" id="%1$s-%2$s" value="%2$s" title="%4$s"%5$s /><label for="%1$s-%2$s" class="screen-reader-text">%3$s</label>',
+			/*$1%s*/ esc_attr( 'customer' ),
+			/*$2%s*/ esc_attr( $item['id'] ),
+			/* translators: customer email */
+			esc_html( sprintf( __( 'Select %s', 'easy-digital-downloads' ), $item['email'] ) ),
+			/*$4%s*/ esc_attr( $title ),
+			/*$5%s*/ $primary_attributes
 		);
 	}
 
@@ -277,7 +292,7 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-customers' ) ) {
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-emails' ) ) {
 			return;
 		}
 
@@ -289,10 +304,22 @@ class EDD_Customer_Email_Addresses_Table extends List_Table {
 			$ids = array( $ids );
 		}
 
+		/*
+		 * Only non-primary email addresses can be deleted, so we're building up a safelist using the provided
+		 * IDs. Each ID will be matched against this prior to deletion.
+		 */
+		$non_primary_address_ids = edd_get_customer_email_addresses( array(
+			'id__in'       => $ids,
+			'type__not_in' => array( 'primary' ),
+			'fields'       => 'id'
+		) );
+
 		foreach ( $ids as $id ) {
 			switch ( $this->current_action() ) {
 				case 'delete' :
-					edd_delete_customer_email_address( $id );
+					if ( in_array( $id, $non_primary_address_ids ) ) {
+						edd_delete_customer_email_address( $id );
+					}
 					break;
 			}
 		}

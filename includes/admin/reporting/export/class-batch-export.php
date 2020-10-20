@@ -285,7 +285,7 @@ class EDD_Batch_Export extends EDD_Export {
 
 		echo $file;
 
-		edd_die();
+		die();
 	}
 
 	/*

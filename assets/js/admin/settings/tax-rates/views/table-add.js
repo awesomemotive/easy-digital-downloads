@@ -23,6 +23,7 @@ const TableAdd = wp.Backbone.View.extend( {
 	// Watch events.
 	events: {
 		'click button': 'addTaxRate',
+		'keypress': 'maybeAddTaxRate',
 
 		'change #tax_rate_country': 'setCountry',
 
@@ -124,6 +125,22 @@ const TableAdd = wp.Backbone.View.extend( {
 	 */
 	setAmount: function( event ) {
 		this.model.set( 'amount', event.target.value );
+	},
+
+	/**
+	 * Monitors keyepress for "Enter" key.
+	 *
+	 * We cannot use the `submit` event because we cannot nest <form>
+	 * elements inside the settings API.
+	 *
+	 * @param {Object} event Keypress event.
+	 */
+	maybeAddTaxRate: function( event ) {
+		if ( 13 !== event.keyCode ) {
+			return;
+		}
+
+		this.addTaxRate( event );
 	},
 
 	/**

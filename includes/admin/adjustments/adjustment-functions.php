@@ -39,12 +39,14 @@ function edd_adjustments_page() {
 	// Start the output buffer
 	ob_start(); ?>
 
-    <div class="wrap">
-        <h1 class="wp-heading-inline"><?php _e( 'Adjustments', 'easy-digital-downloads' ); ?></h1>
+	<div class="wrap">
+		<h1 class="wp-heading-inline"><?php esc_html_e( 'Adjustments', 'easy-digital-downloads' ); ?></h1>
+		<a href="<?php echo esc_url( $add_new_url ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'easy-digital-downloads' ); ?></a>
 
 		<hr class="wp-header-end">
+		<?php if ( 1 < count( $all_tabs ) ) : ?>
 
-        <h2 class="nav-tab-wrapper edd-nav-tab-wrapper">
+		<nav class="nav-tab-wrapper edd-nav-tab-wrapper" aria-label="<?php esc_attr_e( 'Secondary menu', 'easy-digital-downloads' ); ?>">
 			<?php
 
 			// Loop through all tabs
@@ -70,12 +72,12 @@ function edd_adjustments_page() {
 
 			<?php endforeach; ?>
 
-			<a href="<?php echo esc_url( $add_new_url ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'easy-digital-downloads' ); ?></a>
-        </h2>
+			</nav>
 		<br>
+		<?php endif; ?>
 
 		<?php do_action( 'edd_adjustments_page_' . $active_tab ); ?>
-    </div><!-- .wrap -->
+	</div><!-- .wrap -->
 
 	<?php
 

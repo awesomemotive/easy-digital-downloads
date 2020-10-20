@@ -126,14 +126,13 @@ function edd_process_purchase_form() {
 
 	edd_maybe_update_customer_primary_address( $customer->id, $address );
 
-	$auth_key = defined( 'AUTH_KEY' ) ? AUTH_KEY : '';
-
 	$card_country = isset( $valid_data['cc_info']['card_country'] ) ? $valid_data['cc_info']['card_country'] : false;
 	$card_state   = isset( $valid_data['cc_info']['card_state'] )   ? $valid_data['cc_info']['card_state']   : false;
 	$card_zip     = isset( $valid_data['cc_info']['card_zip'] )     ? $valid_data['cc_info']['card_zip']     : false;
 
 	// Set up the unique purchase key. If we are resuming a payment, we'll overwrite this with the existing key.
-	$purchase_key     = strtolower( md5( $user['user_email'] . date( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'edd', true ) ) );
+
+	$purchase_key     = edd_generate_order_payment_key( $user['user_email'] );
 	$existing_payment = EDD()->session->get( 'edd_resume_payment' );
 
 	if ( ! empty( $existing_payment ) ) {

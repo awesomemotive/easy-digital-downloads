@@ -23,7 +23,7 @@ function edd_options_page_primary_nav( $active_tab = '' ) {
 
 	ob_start();?>
 
-	<h2 class="nav-tab-wrapper edd-nav-tab-wrapper edd-settings-nav">
+	<nav class="nav-tab-wrapper edd-nav-tab-wrapper edd-settings-nav" aria-label="<?php esc_attr_e( 'Secondary menu', 'easy-digital-downloads' ); ?>">
 		<?php
 
 		foreach ( $tabs as $tab_id => $tab_name ) {
@@ -44,7 +44,7 @@ function edd_options_page_primary_nav( $active_tab = '' ) {
 			echo '</a>';
 		}
 		?>
-	</h2>
+	</nav>
 
 	<?php
 
