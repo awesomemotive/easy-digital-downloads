@@ -2673,7 +2673,7 @@ function display_export_report() {
 									);
 									?>
 							</div>
-							<label for="edd_orders_export_status" class="screen-reader-text"><?php esc_html_e( 'All Statuses or Select Status', 'easy-digital-downloads' ); ?></label>
+							<label for="edd_orders_export_status" class="screen-reader-text"><?php esc_html_e( 'Select Status', 'easy-digital-downloads' ); ?></label>
 								<?php
 									echo EDD()->html->select(
 										array(
@@ -2723,7 +2723,7 @@ function display_export_report() {
 									);
 									?>
 							</div>
-							<label for="edd_taxed_orders_export_status" class="screen-reader-text"><?php esc_html_e( 'All Statuses or Select Status', 'easy-digital-downloads' ); ?></label>
+							<label for="edd_taxed_orders_export_status" class="screen-reader-text"><?php esc_html_e( 'Select Status', 'easy-digital-downloads' ); ?></label>
 								<?php
 								echo EDD()->html->select(
 									array(
