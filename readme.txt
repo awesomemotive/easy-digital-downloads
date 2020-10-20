@@ -11,13 +11,11 @@ Stable Tag: 2.9.26
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products the simple way. Easily build an online store complete with a cart system, checkout forms, reports, coupons, and more!
-
 == Description ==
 
 Easy Digital Downloads is a complete eCommerce solution for selling digital products on WordPress. Learn more at [EasyDigitalDownloads.com](https://easydigitaldownloads.com/?utm_source=home&utm_medium=description_tab&utm_content=home&utm_campaign=readme).
 
 = Sell effortlessly =
-
 Whether it is [software](https://easydigitaldownloads.com/blog/selling-software/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description), [documents](https://easydigitaldownloads.com/blog/selling-documents/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description), [photos](https://easydigitaldownloads.com/blog/selling-photographs/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description), [ebooks](https://easydigitaldownloads.com/blog/selling-ebooks/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description), [songs](https://easydigitaldownloads.com/blog/selling-audio-and-music/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description), [graphics](https://easydigitaldownloads.com/blog/selling-graphics-and-digital-artwork/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description), [videos](https://easydigitaldownloads.com/blog/selling-videos/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description), or any other type of media file, Easy Digital Downloads provides a complete system for effortlessly selling your digital products.
 
 > Easy Digital Downloads is an invaluable tool that I use throughout my business and for my clients. I love its simplicity yet powerful features and library of useful extensions. EDD stands out as one of the only affordable options for scaling a business centered around providing digital ecommerce sites to its clients.
@@ -31,7 +29,6 @@ Do you prefer an eCommerce solution which is simple and intuitive or one which i
 > EDD gives me a solid platform out of the box, with the flexibility of being able to customize anything I want or need to. The best of both worlds!
 
 > Brian Hogg – SellingPlugins.com
-
 Here are some of the features supported out-of-the-box:
 
 - **Frontend shopping cart** - Customers can browse your product catalogue, add items to their cart, and checkout when they are ready. Or they can bypass the cart using Buy Now buttons.
@@ -79,7 +76,6 @@ See our [payment gateways category](https://easydigitaldownloads.com/downloads/c
 Easy Digital Downloads is a verified member of the [Stripe partner program](https://stripe.com/accept-payments/easy-digital-downloads). This program recognizes software that meets Stripe's strict quality requirements and provides users of Easy Digital Downloads and Stripe with the confidence they need to trust us both with their payment integrations.
 
 = Take your store further with extensions =
-
 With add-on plugins from our [extensions catalogue](https://easydigitaldownloads.com/downloads/?utm_source=extensions&utm_medium=description_tab&utm_content=extensions&utm_campaign=readme) you can super-charge your digital store. Some of our extension highlights include:
 
 * [Software Licensing](https://easydigitaldownloads.com/downloads/software-licensing/?utm_source=extension&utm_medium=description_tab&utm_content=software-licensing&utm_campaign=readme) provides a complete solution for selling software license keys and distributing software updates to customers
