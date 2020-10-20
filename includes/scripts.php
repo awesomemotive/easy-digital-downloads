@@ -292,7 +292,7 @@ function edd_register_admin_scripts() {
 	$admin_deps = array( 'jquery', 'jquery-form', 'underscore' );
 
 	// Register scripts
-	wp_register_script( 'jquery-chosen',                   $js_dir . 'vendor/jquery.chosen.min.js',          array( 'jquery' ), $version );
+	wp_register_script( 'jquery-chosen',                   $js_dir . 'vendor/chosen.jquery.min.js',          array( 'jquery' ), $version );
 	wp_register_script( 'edd-jquery-flot',                 $js_dir . 'vendor/jquery.flot.min.js',            array( 'jquery' ), $version );
 	wp_register_script( 'edd-moment-js',                   $js_dir . 'vendor/moment.min.js',                 array(), $version );
 	wp_register_script( 'edd-chart-js',                    $js_dir . 'vendor/chartjs.min.js',                array( 'edd-moment-js' ), $version );
@@ -303,7 +303,9 @@ function edd_register_admin_scripts() {
 
 	// Individual admin pages.
 	$admin_pages = array(
-		'customers'    => array(),
+		'customers'    => array(
+			'edd-admin-tools-export'
+		),
 		'dashboard'    => array(),
 		'discounts'    => array(),
 		'downloads'    => array(

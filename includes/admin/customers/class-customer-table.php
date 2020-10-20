@@ -81,7 +81,7 @@ class EDD_Customer_Reports_Table extends List_Table {
 					'page'     => 'edd-payment-history',
 					'customer' => $item['id']
 				) );
-				$value = '<a href="' . esc_url( $url ) . '">' . esc_html( $item['order_count'] ) . '</a>';
+				$value = '<a href="' . esc_url( $url ) . '">' . esc_html( number_format_i18n( $item['order_count'] ) ) . '</a>';
 				break;
 
 			case 'spent' :
@@ -154,15 +154,19 @@ class EDD_Customer_Reports_Table extends List_Table {
 	 *
 	 * @since 3.0
 	 *
-	 * @param EDD_Customer $item Customer object.
+	 * @param array $item Customer data.
 	 *
 	 * @return string Displays a checkbox
 	 */
 	public function column_cb( $item ) {
+		$name = empty( $item['name'] ) ? $item['email'] : $item['name'];
+
 		return sprintf(
-			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+			'<input type="checkbox" name="%1$s[]" id="%1$s-%2$s" value="%2$s" /><label for="%1$s-%2$s" class="screen-reader-text">%3$s</label>',
 			/*$1%s*/ 'customer',
-			/*$2%s*/ $item['id']
+			/*$2%s*/ esc_attr( $item['id'] ),
+			/* translators: customer name or email */
+			esc_html( sprintf( __( 'Select %s', 'easy-digital-downloads' ), $name ) )
 		);
 	}
 

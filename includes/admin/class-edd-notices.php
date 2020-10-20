@@ -619,45 +619,58 @@ class EDD_Notices {
 				case 'customer-deleted' :
 					$this->add_notice( array(
 						'id'      => 'edd-customer-deleted',
-						'message' => __( 'Customer successfully deleted', 'easy-digital-downloads' )
+						'message' => __( 'Customer successfully deleted.', 'easy-digital-downloads' ),
 					) );
 					break;
 				case 'user-verified' :
 					$this->add_notice( array(
 						'id'      => 'edd-user-verified',
-						'message' => __( 'User successfully verified', 'easy-digital-downloads' )
+						'message' => __( 'User successfully verified.', 'easy-digital-downloads' ),
 					) );
 					break;
 				case 'email-added' :
 					$this->add_notice( array(
 						'id'      => 'edd-customer-email-added',
-						'message' => __( 'Customer email added', 'easy-digital-downloads' )
+						'message' => __( 'Customer email added.', 'easy-digital-downloads' ),
 					) );
 					break;
 				case 'email-removed' :
 					$this->add_notice( array(
 						'id'      => 'edd-customer-email-removed',
-						'message' => __( 'Customer email removed', 'easy-digital-downloads')
+						'message' => __( 'Customer email deleted.', 'easy-digital-downloads' ),
 					) );
 					break;
 				case 'email-remove-failed' :
 					$this->add_notice( array(
 						'id'      => 'edd-customer-email-remove-failed',
-						'message' => __( 'Failed to remove customer email', 'easy-digital-downloads'),
-						'class'   => 'error'
+						'message' => __( 'Failed to delete customer email.', 'easy-digital-downloads' ),
+						'class'   => 'error',
 					) );
 					break;
 				case 'primary-email-updated' :
 					$this->add_notice( array(
 						'id'      => 'eddedd-customer-primary-email-updated',
-						'message' => __( 'Primary email updated for customer', 'easy-digital-downloads')
+						'message' => __( 'Primary email updated for customer.', 'easy-digital-downloads' )
 					) );
 					break;
 				case 'primary-email-failed' :
 					$this->add_notice( array(
 						'id'      => 'edd-customer-primary-email-failed',
-						'message' => __( 'Failed to set primary email', 'easy-digital-downloads'),
-						'class'   => 'error'
+						'message' => __( 'Failed to set primary email.', 'easy-digital-downloads' ),
+						'class'   => 'error',
+					) );
+					break;
+				case 'address-removed' :
+					$this->add_notice( array(
+						'id'      => 'edd-customer-address-removed',
+						'message' => __( 'Customer address deleted.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'address-remove-failed' :
+					$this->add_notice( array(
+						'id'      => 'edd-customer-address-remove-failed',
+						'message' => __( 'Failed to delete customer address.', 'easy-digital-downloads' ),
+						'class'   => 'error',
 					) );
 					break;
 			}

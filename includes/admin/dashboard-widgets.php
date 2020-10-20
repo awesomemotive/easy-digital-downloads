@@ -59,6 +59,8 @@ function edd_get_dashboard_sales_widget_data() {
 		if ( 'total' === $range ) {
 			unset( $args['range'] );
 		}
+		// Remove filters so that deprecation notices are not unnecessarily logged outside of reports.
+		remove_all_filters( 'edd_report_views' );
 		$stats          = new EDD\Stats( $args );
 		$data[ $range ] = array(
 			'earnings' => $stats->get_order_earnings(),
