@@ -688,7 +688,11 @@ table.edd-order-overview-summary--refund {
 	color: #a00;
 }
 
-@media screen and (min-width: 782px) {
+@media screen and (min-width: 783px) {
+
+	.edd-order-overview-summary__adjustments .removable .delete {
+		margin-left: -40px;
+	}
 
 	.edd-order-overview-summary__totals .total {
 		font-size: 150%;
@@ -700,15 +704,6 @@ table.edd-order-overview-summary--refund {
 .edd-order-overview-summary__totals tr:last-child th,
 .edd-order-overview-summary__totals tr:last-child td:not(:first-of-type) {
 	border-top: 1px solid #e5e5e5;
-}
-
-.edd-order-overview-summary__adjustments .removable .delete {
-	position: absolute;
-	left:  -40px;
-	top: 50%;
-	margin-top: -15px;
-	padding-top: 5px;
-	padding-bottom: 5px;
 }
 
 .edd-order-overview-summary__totals .notice {
