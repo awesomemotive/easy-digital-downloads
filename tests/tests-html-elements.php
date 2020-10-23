@@ -135,7 +135,7 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 	 */
 	public function test_year_dropdown() {
 		$current_year = date( 'Y' );
-		$expected     = '<select name="year" id="name" class="edd-select " data-placeholder="">';
+		$expected     = '<select name="year" id="year" class="edd-select " data-placeholder="">';
 		$i            = 5;
 
 		while ( $i >= 0 ) {
@@ -161,7 +161,7 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 		$start_year = $current_year - $years_before;
 		$end_year   = $current_year + $years_after;
 
-		$expected = '<select name="year" id="name" class="edd-select " data-placeholder="">';
+		$expected = '<select name="year" id="year" class="edd-select " data-placeholder="">';
 
 		while ( $start_year <= $end_year ) {
 			$selected = (int) $start_year === (int) $current_year
