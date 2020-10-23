@@ -345,7 +345,7 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 			if ( intval( $previous_user_id ) !== intval( $this->user_id ) ) {
 
 				// Update some payment meta if we need to
-				$order_ids = edd_get_orders( array( 'customer_id' => $this->id, 'number' => 9999 ) );
+				$order_ids = edd_get_orders( array( 'customer_id' => $this->id, 'number' => 9999999 ) );
 
 				foreach ( $order_ids as $order_id ) {
 					edd_update_order( $order_id, array( 'user_id' => $this->user_id ) );
@@ -764,30 +764,36 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 * @since 3.0
 	 */
 	public function recalculate_stats() {
-
-		// Get total orders
-		$this->purchase_count = edd_count_orders( array(
-			'customer_id' => $this->id,
-			'status'      => 'complete'
-		) );
+		$this->purchase_count = edd_count_orders(
+			array(
+				'customer_id' => $this->id,
+				'status'      => edd_get_net_order_statuses(),
+				'type'        => 'sale',
+			)
+		);
 
 		// Get order IDs
-		$totals = edd_get_orders( array(
-			'customer_id'   => $this->id,
-			'number'        => $this->purchase_count,
-			'status'        => 'complete',
-			'fields'        => 'total',
-			'no_found_rows' => true
-		) );
+		$totals = edd_get_orders(
+			array(
+				'customer_id'   => $this->id,
+				'number'        => 99999,
+				'status'        => edd_get_gross_order_statuses(),
+				'fields'        => 'total',
+				'no_found_rows' => true,
+				'type'          => array( 'sale', 'refund' ),
+			)
+		);
 
 		// Sum the totals together to get the lifetime value
 		$this->purchase_value = array_sum( $totals );
 
 		// Update the customer purchase count & value
-		return $this->update( array(
-			'purchase_count' => $this->purchase_count,
-			'purchase_value' => $this->purchase_value,
-		) );
+		return $this->update(
+			array(
+				'purchase_count' => $this->purchase_count,
+				'purchase_value' => $this->purchase_value,
+			)
+		);
 	}
 
 	/** Notes *****************************************************************/
@@ -1135,6 +1141,8 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 */
 	public function increase_purchase_count( $count = 1 ) {
 
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Customer::recalculate_stats()' );
+
 		// Make sure it's numeric and not negative
 		if ( ! is_numeric( $count ) || absint( $count ) !== $count ) {
 			return false;
@@ -1163,6 +1171,8 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 * @return mixed New purchase count if successful, false otherwise.
 	 */
 	public function decrease_purchase_count( $count = 1 ) {
+
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Customer::recalculate_stats()' );
 
 		// Make sure it's numeric and not negative
 		if ( ! is_numeric( $count ) || absint( $count ) !== $count ) {
@@ -1196,6 +1206,9 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 * @return mixed New lifetime value if successful, false otherwise.
 	 */
 	public function increase_value( $value = 0.00 ) {
+
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Customer::recalculate_stats()' );
+
 		$value     = floatval( apply_filters( 'edd_customer_increase_value', $value, $this ) );
 		$new_value = floatval( $this->purchase_value ) + $value;
 
@@ -1220,6 +1233,9 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 * @return mixed New lifetime value if successful, false otherwise.
 	 */
 	public function decrease_value( $value = 0.00 ) {
+
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Customer::recalculate_stats()' );
+
 		$value     = floatval( apply_filters( 'edd_customer_decrease_value', $value, $this ) );
 		$new_value = floatval( $this->purchase_value ) - $value;
 

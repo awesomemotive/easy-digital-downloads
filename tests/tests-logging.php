@@ -142,7 +142,7 @@ class Tests_Logging extends EDD_UnitTestCase {
 
 		$expected = array(
 			'object_id'   => '0',
-			'object_type' => '',
+			'object_type' => null,
 			'user_id'     => '0',
 			'type'        => '',
 			'title'       => 'Test log with null object type and no ID',

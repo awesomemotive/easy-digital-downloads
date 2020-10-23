@@ -124,6 +124,7 @@ $minutes              = edd_get_minute_values();
 							'selected'    => $product_requirements,
 							'multiple'    => true,
 							'chosen'      => true,
+							'variations'  => true,
 							'placeholder' => sprintf( __( 'Select %s', 'easy-digital-downloads' ), edd_get_label_plural() )
 						) ); ?>
                         <div id="edd-discount-product-conditions"<?php echo $condition_display; ?>>
@@ -161,6 +162,7 @@ $minutes              = edd_get_minute_values();
                             'selected'    => $excluded_products,
                             'multiple'    => true,
                             'chosen'      => true,
+                            'variations'  => true,
                             'placeholder' => sprintf( __( 'Select %s', 'easy-digital-downloads' ), edd_get_label_plural() )
                         ) ); ?>
                         <p class="description"><?php printf( __( '%s this discount cannot be applied to. Leave blank for none.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></p>
