@@ -2957,7 +2957,7 @@ function display_export_report() {
 								<?php
 								echo EDD()->html->date_field(
 									array(
-										'id'          => 'edd_file_download_export_start',
+										'id'          => 'edd-file-download-export-start',
 										'class'       => 'edd-export-start',
 										'name'        => 'start',
 										'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' )
