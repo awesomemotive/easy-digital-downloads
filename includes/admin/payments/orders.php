@@ -405,7 +405,9 @@ function edd_order_details_addresses( $order ) {
 		<div class="order-data-address">
 			<h3><?php esc_html_e( 'Billing Address', 'easy-digital-downloads' ); ?></h3>
 
-			<div class="customer-address-select-wrap">
+			<div class="customer-address-select-wrap edd-form-group" style="display: none; padding: 16px 0; border-bottom: 1px solid #ccd0d4;">
+				<label for="edd_customer_existing_addresses" class="edd-form-group__label"><?php esc_html_e( 'Existing Address:', 'easy-digital-downloads' ); ?></label>
+				<div class="edd-form-group__control"></div>
 			</div>
 
 			<div class="edd-form-group">
@@ -428,7 +430,6 @@ function edd_order_details_addresses( $order ) {
 					<input type="text" name="edd_order_address[city]" class="edd-form-group__input regular-text" id="edd_order_address_city" value="<?php echo esc_attr( $address->city ); ?>" />
 				</div>
 			</div>
-
 
 			<div class="edd-form-group">
 				<label for="edd_order_address_postal_code" class="edd-form-group__label"><?php echo esc_html_x( 'Zip / Postal Code:', 'Zip / Postal code of address', 'easy-digital-downloads' ); ?></label>
@@ -473,7 +474,7 @@ function edd_order_details_addresses( $order ) {
 							array(
 								'options'          => $states,
 								'name'             => 'edd_order_address[region]',
-								'id'               => 'edd-order-address-region',
+								'id'               => 'edd_order_address_region',
 								'class'            => 'edd-order-address-region edd-form-group__input',
 								'selected'         => esc_attr( $address->region ),
 								'show_option_all'  => false,
@@ -704,6 +705,10 @@ function edd_order_details_overview( $order ) {
 				'status'         => $order->status,
 				'currency'       => $order->currency,
 				'currencySymbol' => html_entity_decode( edd_currency_symbol( $order->currency ) ),
+				'subtotal'       => $order->subtotal,
+				'discount'       => $order->discount,
+				'tax'            => $order->tax,
+				'total'          => $order->total,
 			),
 			'nonces'       => array(
 				'edd_admin_order_get_item_amounts' => wp_create_nonce( 'edd_admin_order_get_item_amounts' ),
@@ -768,9 +773,9 @@ function edd_order_details_sections( $order ) {
 ?>
 
 	<div id="edd-customer-details" class="postbox">
-		<h3 class="hndle">
+		<h2 class="hndle">
 			<span><?php esc_html_e( 'Order Details', 'easy-digital-downloads' ); ?></span>
-		</h3>
+		</h2>
 		<?php edd_order_sections( $order ); ?>
 	</div>
 
@@ -816,9 +821,9 @@ function edd_order_details_extras( $order = false ) {
 	} ?>
 
 	<div id="edd-order-extras" class="postbox edd-order-data">
-		<h3 class="hndle">
+		<h2 class="hndle">
 			<span><?php esc_html_e( 'Order Extras', 'easy-digital-downloads' ); ?></span>
-		</h3>
+		</h2>
 
 		<div class="inside">
 			<div class="edd-admin-box">
@@ -934,9 +939,9 @@ function edd_order_details_attributes( $order ) {
 	?>
 
 	<div id="edd-order-update" class="postbox edd-order-data">
-		<h3 class="hndle">
+		<h2 class="hndle">
 			<span><?php esc_html_e( 'Order Attributes', 'easy-digital-downloads' ); ?></span>
-		</h3>
+		</h2>
 
 		<div class="inside">
 			<div class="edd-order-update-box edd-admin-box">

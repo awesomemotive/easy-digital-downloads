@@ -825,11 +825,11 @@ class EDD_CLI extends WP_CLI_Command {
 		wp_suspend_cache_addition( true );
 
 		$this->maybe_install_v3_tables();
+		$this->migrate_tax_rates( $args, $assoc_args );
+		$this->migrate_discounts( $args, $assoc_args );
 		$this->migrate_payments( $args, $assoc_args );
 		$this->migrate_customer_data( $args, $assoc_args );
 		$this->migrate_logs( $args, $assoc_args );
-		$this->migrate_tax_rates( $args, $assoc_args );
-		$this->migrate_discounts( $args, $assoc_args );
 		$this->migrate_order_notes( $args, $assoc_args );
 		$this->migrate_customer_notes( $args, $assoc_args );
 		$this->remove_legacy_data( $args, $assoc_args );
@@ -1168,13 +1168,28 @@ class EDD_CLI extends WP_CLI_Command {
 				$progress = new \cli\progress\Bar( 'Migrating User Addresses', $total );
 
 				foreach ( $results as $result ) {
-					\EDD\Admin\Upgrades\v3\Data_Migrator::customer_addresses( $result );
+					\EDD\Admin\Upgrades\v3\Data_Migrator::customer_addresses( $result, 'billing' );
 
 					$progress->tick();
 				}
 
 				$progress->finish();
 			}
+
+			// Now update the most recent billing address entries for customers as the primary address.
+			$sql = "
+				UPDATE {$wpdb->edd_customer_addresses} ca
+				SET ca.is_primary = 1
+				WHERE ca.id IN (
+					SELECT MAX(ca2.id)
+					FROM ( SELECT * FROM {$wpdb->edd_customer_addresses} ) ca2
+					WHERE ca2.type = 'billing'
+					GROUP BY ca2.customer_id
+				)
+			";
+
+			@$wpdb->query( $sql );
+
 			edd_set_upgrade_complete( 'migrate_customer_addresses' );
 		}
 

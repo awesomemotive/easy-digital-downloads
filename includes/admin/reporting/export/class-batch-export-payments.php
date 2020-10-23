@@ -38,12 +38,11 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 	 */
 	public function csv_cols() {
 		$cols = array(
-			'id'           => __( 'Payment ID',   'easy-digital-downloads' ), // unaltered payment ID (use for querying)
-			'seq_id'       => __( 'Payment Number',   'easy-digital-downloads' ), // sequential payment ID
+			'id'           => __( 'Payment ID', 'easy-digital-downloads' ), // unaltered payment ID (use for querying)
+			'seq_id'       => __( 'Payment Number', 'easy-digital-downloads' ), // sequential payment ID
 			'email'        => __( 'Email', 'easy-digital-downloads' ),
 			'customer_id'  => __( 'Customer ID', 'easy-digital-downloads' ),
-			'first'        => __( 'First Name', 'easy-digital-downloads' ),
-			'last'         => __( 'Last Name', 'easy-digital-downloads' ),
+			'name'         => __( 'Customer Name', 'easy-digital-downloads' ),
 			'address1'     => __( 'Address', 'easy-digital-downloads' ),
 			'address2'     => __( 'Address (Line 2)', 'easy-digital-downloads' ),
 			'city'         => __( 'City', 'easy-digital-downloads' ),
@@ -123,6 +122,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			$address      = $order->get_address();
 			$total        = $order->total;
 			$user_id      = $order->id && $order->id != - 1 ? $order->id : $order->email;
+			$customer     = edd_get_customer( $order->customer_id );
 			$products     = '';
 			$products_raw = '';
 			$skus         = '';
@@ -195,8 +195,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 				'seq_id'       => $order->get_number(),
 				'email'        => $order->email,
 				'customer_id'  => $order->customer_id,
-				'first'        => isset( $address->first_name ) ? $address->first_name : '',
-				'last'         => isset( $address->last_name ) ? $address->last_name : '',
+				'name'         => ! empty( $customer->name ) ? $customer->name : '',
 				'address1'     => isset( $address->address ) ? $address->address : '',
 				'address2'     => isset( $address->address2 ) ? $address->address2 : '',
 				'city'         => isset( $address->city ) ? $address->city : '',
