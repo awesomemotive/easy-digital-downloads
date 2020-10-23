@@ -884,6 +884,10 @@ class EDD_Payment {
 							/** @var EDD_Discount $discount_obj */
 							$discount_obj = edd_get_discount_by( 'code', $discount );
 
+							if ( false === $discount_obj ) {
+								continue;
+							}
+
 							edd_add_order_adjustment( array(
 								'object_id'   => $this->ID,
 								'object_type' => 'order',
