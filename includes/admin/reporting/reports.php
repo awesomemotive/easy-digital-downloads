@@ -485,18 +485,17 @@ function edd_register_downloads_report( $reports ) {
 		// Mock downloads and prices in case they cannot be found later.
 		$download       = edd_get_download();
 		$prices         = array();
-
+		$download_label = '';
 		if ( $download_data ) {
 			$download = edd_get_download( $download_data['download_id'] );
-			$prices   = $download->get_prices();
-
 			if ( $download_data['price_id'] ) {
-				$prices = array_values( wp_filter_object_list( $download->get_prices(), array( 'index' => absint( $download_data['price_id'] ) ) ) );
-
-				$download_label = esc_html( ' (' . $download->post_title . ': ' . $prices[0]['name'] . ')' );
-			} else {
-				$download_label = esc_html( ' (' . $download->post_title . ')' );
+				$args       = array( 'price_id' => $download_data['price_id'] );
+				$price_name = edd_get_price_name( $download->ID, $args );
+				if ( $price_name ) {
+					$download->post_title .= ': ' . $price_name;
+				}
 			}
+			$download_label = esc_html( ' (' . $download->post_title . ')' );
 		}
 
 		$tiles = array_filter( array(
@@ -1560,17 +1559,16 @@ function edd_register_taxes_report( $reports ) {
 			: false;
 
 		$download_label = '';
-
 		if ( $download_data ) {
 			$download = edd_get_download( $download_data['download_id'] );
-
 			if ( $download_data['price_id'] ) {
-				$prices = array_values( wp_filter_object_list( $download->get_prices(), array( 'index' => absint( $download_data['price_id'] ) ) ) );
-
-				$download_label = esc_html( ' (' . $download->post_title . ': ' . $prices[0]['name'] . ')' );
-			} else {
-				$download_label = esc_html( ' (' . $download->post_title . ')' );
+				$args       = array( 'price_id' => $download_data['price_id'] );
+				$price_name = edd_get_price_name( $download->ID, $args );
+				if ( $price_name ) {
+					$download->post_title .= ': ' . $price_name;
+				}
 			}
+			$download_label = esc_html( ' (' . $download->post_title . ')' );
 		}
 
 		$country = Reports\get_filter_value( 'countries' );
@@ -1701,17 +1699,16 @@ function edd_register_file_downloads_report( $reports ) {
 			: false;
 
 		$download_label = '';
-
 		if ( $download_data ) {
 			$download = edd_get_download( $download_data['download_id'] );
-
 			if ( $download_data['price_id'] ) {
-				$prices = array_values( wp_filter_object_list( $download->get_prices(), array( 'index' => absint( $download_data['price_id'] ) ) ) );
-
-				$download_label = esc_html( ' (' . $download->post_title . ': ' . $prices[0]['name'] . ')' );
-			} else {
-				$download_label = esc_html( ' (' . $download->post_title . ')' );
+				$args       = array( 'price_id' => $download_data['price_id'] );
+				$price_name = edd_get_price_name( $download->ID, $args );
+				if ( $price_name ) {
+					$download->post_title .= ': ' . $price_name;
+				}
 			}
+			$download_label = esc_html( ' (' . $download->post_title . ')' );
 		}
 
 		$tiles = array_filter( array(
