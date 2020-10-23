@@ -1,3 +1,5 @@
+/* global eddAdminOrderOverview */
+
 /**
  * Internal dependencies
  */
@@ -29,6 +31,7 @@ export const Dialog = Base.extend( {
 			classes: {
 				'ui-dialog': 'edd-dialog',
 			},
+			closeText: eddAdminOrderOverview.i18n.closeText,
 			width: '350px',
 			modal: true,
 			resizable: false,
