@@ -2198,6 +2198,10 @@ class EDD_Payment {
 							/** @var EDD_Discount $discount */
 							$discount = edd_get_discount_by( 'code', $discount );
 
+							if ( false === $discount ) {
+								continue;
+							}
+
 							$adjustments = $this->order->adjustments;
 
 							$found_discount = array_filter( $adjustments, function( $adjustment ) use ( $discount ) {
@@ -2216,9 +2220,12 @@ class EDD_Payment {
 									'amount' => $this->subtotal - $discount->get_discounted_amount( $this->subtotal ),
 								) );
 
+								continue;
+							}
+
 							// Add the discount as an adjustment.
-							} else {
-								edd_add_order_adjustment( array(
+							edd_add_order_adjustment(
+								array(
 									'object_id'   => $this->ID,
 									'object_type' => 'order',
 									'type_id'     => $discount->id,
@@ -2226,8 +2233,8 @@ class EDD_Payment {
 									'description' => $discount->code,
 									'subtotal'    => $this->subtotal - $discount->get_discounted_amount( $this->subtotal ),
 									'total'       => $this->subtotal - $discount->get_discounted_amount( $this->subtotal ),
-								) );
-							}
+								)
+							);
 						}
 					}
 
