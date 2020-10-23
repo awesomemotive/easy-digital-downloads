@@ -691,7 +691,7 @@ table.edd-order-overview-summary--refund {
 @media screen and (min-width: 783px) {
 
 	.edd-order-overview-summary__adjustments .removable .delete {
-		margin-left: -40px;
+		margin-left: -50px;
 	}
 
 	.edd-order-overview-summary__totals .total {
