@@ -791,6 +791,10 @@ table.edd-order-overview-summary--refund {
 }
 
 /** Dialog */
+.edd-dialog .ui-button-icon-only {
+	font-size: 0;
+}
+
 .download_page_edd-payment-history .ui-dialog,
 .download_page_edd-payment-history .ui-dialog-content {
 	overflow: visible;

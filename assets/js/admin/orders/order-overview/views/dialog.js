@@ -26,6 +26,9 @@ export const Dialog = Base.extend( {
 				my: 'top center',
 				at: 'center center-25%',
 			},
+			classes: {
+				'ui-dialog': 'edd-dialog',
+			},
 			width: '350px',
 			modal: true,
 			resizable: false,
