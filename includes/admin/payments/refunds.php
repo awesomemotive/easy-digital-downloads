@@ -115,9 +115,6 @@ function edd_refund_details_items( $refund ) {
 				'tax'            => $refund->tax,
 				'total'          => $refund->total,
 			),
-			'i18n'         => array(
-				'closeText' => esc_html__( 'Close!', 'easy-digital-downloads' ),
-			),
 		)
 	);
 
