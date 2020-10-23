@@ -43,12 +43,13 @@ function edd_customers_page_primary_nav( $active_tab = '' ) {
 				)
 			);
 
-			$active  = $active_tab === $tab_id
-				? ' nav-tab-active'
-				: '';
+			$class = 'nav-tab';
+			if ( $active_tab === $tab_id ) {
+				$class .= ' nav-tab-active';
+			}
 
 			// Link
-			echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . $active . '">'; // WPCS: XSS ok.
+			echo '<a href="' . esc_url( $tab_url ) . '" class="' . esc_attr( $class ) . '">'; // WPCS: XSS ok.
 				echo esc_html( $tab_name );
 			echo '</a>';
 		}
