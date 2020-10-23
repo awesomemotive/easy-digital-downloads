@@ -1059,17 +1059,21 @@ function edd_build_order( $order_data = array() ) {
 		foreach ( $discounts as $discount ) {
 			$discount = edd_get_discount_by( 'code', $discount );
 
-			if ( $discount ) {
-				$discount_amount = 0;
-				$items           = $order_data['cart_details'];
+			if ( false === $discount ) {
+				continue;
+			}
 
-				if ( is_array( $items ) && ! empty( $items ) ) {
-					foreach ( $items as $key => $item ) {
-						$discount_amount += edd_get_item_discount_amount( $item, $items, array( $discount ) );
-					}
+			$discount_amount = 0;
+			$items           = $order_data['cart_details'];
+
+			if ( is_array( $items ) && ! empty( $items ) ) {
+				foreach ( $items as $key => $item ) {
+					$discount_amount += edd_get_item_discount_amount( $item, $items, array( $discount ) );
 				}
+			}
 
-				edd_add_order_adjustment( array(
+			edd_add_order_adjustment(
+				array(
 					'object_id'   => $order_id,
 					'object_type' => 'order',
 					'type_id'     => $discount->id,
@@ -1077,9 +1081,8 @@ function edd_build_order( $order_data = array() ) {
 					'description' => $discount->code,
 					'subtotal'    => $discount_amount,
 					'total'       => $discount_amount,
-				) );
-
-			}
+				)
+			);
 		}
 	}
 
