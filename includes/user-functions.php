@@ -130,7 +130,7 @@ function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
 	}
 
 	// Fetch the order IDs
-	$number = apply_filters( 'edd_users_purchased_products_payments', 9999 );
+	$number = apply_filters( 'edd_users_purchased_products_payments', 9999999 );
 
 	$order_ids = edd_get_orders( array(
 		'customer_id' => $customer->id,
@@ -197,7 +197,7 @@ function edd_has_user_purchased( $user_id = 0, $downloads = array(), $variable_p
 		return false;
 	}
 
-	$number = apply_filters( 'edd_users_purchased_products_payments', 9999 );
+	$number = apply_filters( 'edd_users_purchased_products_payments', 9999999 );
 
 	$where_id   = "'" . implode( "', '", $wpdb->_escape( $downloads ) ) . "'";
 	$product_id = "oi.product_id IN ({$where_id})";

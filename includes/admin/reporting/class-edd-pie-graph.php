@@ -103,7 +103,7 @@ class EDD_Pie_Graph extends EDD_Graph {
 	 * @since 2.4
 	 */
 	public function load_additional_scripts() {
-		wp_enqueue_script( 'jquery-flot-pie', EDD_PLUGIN_URL . 'assets/js/vendor/jquery.flot.pie.min.js' );
+		wp_enqueue_script( 'edd-jquery-flot-pie', EDD_PLUGIN_URL . 'assets/js/vendor/jquery.flot.pie.min.js' );
 	}
 
 	/**

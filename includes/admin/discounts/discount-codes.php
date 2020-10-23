@@ -26,6 +26,7 @@ function edd_discounts_page() {
 
 	// Edit
 	if ( ! empty( $_GET['edd-action'] ) && ( 'edit_discount' === $_GET['edd-action'] ) ) {
+		wp_enqueue_script( 'edd-admin-notes' );
 		require_once EDD_PLUGIN_DIR . 'includes/admin/discounts/edit-discount.php';
 
 	// Add

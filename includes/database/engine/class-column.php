@@ -536,7 +536,7 @@ class Column extends Base {
 			'zerofill'      => 'wp_validate_boolean',
 			'binary'        => 'wp_validate_boolean',
 			'allow_null'    => 'wp_validate_boolean',
-			'default'       => 'wp_kses_data',
+			'default'       => array( $this, 'sanitize_default' ),
 			'extra'         => 'wp_kses_data',
 			'encoding'      => 'wp_kses_data',
 			'collation'     => 'wp_kses_data',
@@ -693,6 +693,18 @@ class Column extends Base {
 	}
 
 	/**
+	 * Sanitize the default column value
+	 *
+	 * @param string $default
+	 *
+	 * @since 3.0
+	 * @return string|null
+	 */
+	private function sanitize_default( $default = '' ) {
+		return is_null( $default ) ? null : wp_kses_data( $default );
+	}
+
+	/**
 	 * Sanitize the pattern
 	 *
 	 * @since 3.0
@@ -763,9 +775,9 @@ class Column extends Base {
 
 		// Fallback for empty values
 		if ( empty( $value ) || ( '0000-00-00 00:00:00' === $value ) ) {
-			$value = ! empty( $this->default )
+			$value = ! empty( $this->default ) || ( is_null( $this->default ) && $this->allow_null )
 				? $this->default
-				: '0000-00-00 00:00:00';
+				: '';
 
 		// Fallback if PHP date function exists
 		} elseif ( function_exists( 'date' ) ) {

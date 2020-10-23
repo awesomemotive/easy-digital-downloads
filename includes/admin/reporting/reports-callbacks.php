@@ -84,22 +84,22 @@ function edd_overview_sales_earnings_chart() {
 			if ( $hour_by_hour ) {
 				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 				if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
-					$sales[ $timestamp ][1]    = $result->sales;
-					$earnings[ $timestamp ][1] = $result->earnings;
+					$sales[ $timestamp ][1]    += $result->sales;
+					$earnings[ $timestamp ][1] += $result->earnings;
 				}
 				// Add any sales/earnings that happened during this day.
 			} elseif ( $day_by_day ) {
 				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 				if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
-					$sales[ $timestamp ][1]    = $result->sales;
-					$earnings[ $timestamp ][1] = $result->earnings;
+					$sales[ $timestamp ][1]    += $result->sales;
+					$earnings[ $timestamp ][1] += $result->earnings;
 				}
 				// Add any sales/earnings that happened during this month.
 			} else {
 				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 				if ( $date_of_db_value->format( 'Y-m' ) === $date_on_chart->format( 'Y-m' ) ) {
-					$sales[ $timestamp ][1]    = $result->sales;
-					$earnings[ $timestamp ][1] = $result->earnings;
+					$sales[ $timestamp ][1]    += $result->sales;
+					$earnings[ $timestamp ][1] += $result->earnings;
 				}
 			}
 		}
@@ -178,22 +178,22 @@ function edd_overview_refunds_chart() {
 			if ( $hour_by_hour ) {
 				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 				if ( $date_of_db_value->format( 'Y-m-d H' ) === $date_on_chart->format( 'Y-m-d H' ) ) {
-					$number[ $timestamp ][1] = $result->number;
-					$amount[ $timestamp ][1] = abs( $result->amount );
+					$number[ $timestamp ][1] += $result->number;
+					$amount[ $timestamp ][1] += abs( $result->amount );
 				}
 				// Add any refunds that happened during this day.
 			} elseif ( $day_by_day ) {
 				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 				if ( $date_of_db_value->format( 'Y-m-d' ) === $date_on_chart->format( 'Y-m-d' ) ) {
-					$number[ $timestamp ][1] = $result->number;
-					$amount[ $timestamp ][1] = abs( $result->amount );
+					$number[ $timestamp ][1] += $result->number;
+					$amount[ $timestamp ][1] += abs( $result->amount );
 				}
 				// Add any refunds that happened during this month.
 			} else {
 				// If the date of this db value matches the date on this line graph/chart, set the y axis value for the chart to the number in the DB result.
 				if ( $date_of_db_value->format( 'Y-m' ) === $date_on_chart->format( 'Y-m' ) ) {
-					$number[ $timestamp ][1] = $result->number;
-					$amount[ $timestamp ][1] = abs( $result->amount );
+					$number[ $timestamp ][1] += $result->number;
+					$amount[ $timestamp ][1] += abs( $result->amount );
 				}
 			}
 		}

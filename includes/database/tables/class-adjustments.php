@@ -38,7 +38,7 @@ final class Adjustments extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 201906031;
+	protected $version = 202002121;
 
 	/**
 	 * Array of upgrade versions and methods.
@@ -51,6 +51,7 @@ final class Adjustments extends Table {
 		'201806142' => 201806142,
 		'201807273' => 201807273,
 		'201906031' => 201906031,
+		'202002121' => 202002121,
 	);
 
 	/**
@@ -74,10 +75,10 @@ final class Adjustments extends Table {
 			use_count bigint(20) unsigned NOT NULL default '0',
 			once_per_customer int(1) NOT NULL default '0',
 			min_charge_amount decimal(18,9) NOT NULL default '0',
-			start_date datetime NOT NULL default '0000-00-00 00:00:00',
-			end_date datetime NOT NULL default '0000-00-00 00:00:00',
-			date_created datetime NOT NULL default '0000-00-00 00:00:00',
-			date_modified datetime NOT NULL default '0000-00-00 00:00:00',
+			start_date datetime default null,
+			end_date datetime default null,
+			date_created datetime NOT NULL default CURRENT_TIMESTAMP,
+			date_modified datetime NOT NULL default CURRENT_TIMESTAMP,
 			uuid varchar(100) NOT NULL default '',
 			PRIMARY KEY (id),
 			KEY code_status_type_scope_amount (code(50),status(20),type(20),scope(20),amount_type(20)),
@@ -251,5 +252,46 @@ final class Adjustments extends Table {
 		} else {
 			return $this->is_success( true );
 		}
+	}
+
+	/**
+	 * Upgrade to version 202002121
+	 *  - Change default value to `null` for columns `start_date` and `end_date`.
+	 *  - Change default value to `CURRENT_TIMESTAMP` for columns `date_created` and `date_modified`.
+	 *
+	 * @return bool
+	 */
+	protected function __202002121() {
+
+		// Update `start_date`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `start_date` datetime default null;
+		" );
+
+		if ( $this->is_success( $result ) ) {
+			$this->get_db()->query( "UPDATE {$this->table_name} SET `start_date` = NULL WHERE `start_date` = '0000-00-00 00:00:00'" );
+		}
+
+		// Update `end_date`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `end_date` datetime default null;
+		" );
+
+		if ( $this->is_success( $result ) ) {
+			$this->get_db()->query( "UPDATE {$this->table_name} SET `end_date` = NULL WHERE `end_date` = '0000-00-00 00:00:00'" );
+		}
+
+		// Update `date_created`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_created` datetime NOT NULL default CURRENT_TIMESTAMP;
+		" );
+
+		// Update `date_modified`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_modified` datetime NOT NULL default CURRENT_TIMESTAMP;
+		" );
+
+		return $this->is_success( $result );
+
 	}
 }
