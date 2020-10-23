@@ -2057,6 +2057,9 @@ function edd_gateways_callback( $args ) {
 			$html .= '<label>';
 			$html .= '<input name="edd_settings[' . esc_attr( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="' . $class . '" type="checkbox" value="1" data-gateway-key="' . edd_sanitize_key( $key ) . '" ' . checked( '1', $enabled, false ) . '/>&nbsp;';
 			$html .= esc_html( $option['admin_label'] );
+			if ( 'manual' === $key ) {
+				$html .= '<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong>' . esc_html__( 'Store Gateway', 'easy-digital-downloads' ) . '</strong>: ' . esc_html__( 'This is an internal payment gateway which can be used for manually added orders or test purchases. No money is actually processed.', 'easy-digital-downloads' ) . '"></span>';
+			}
 			$html .= '</label>';
 			$html .= '</li>';
 		}

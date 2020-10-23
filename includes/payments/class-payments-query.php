@@ -94,6 +94,7 @@ class EDD_Payments_Query extends EDD_Stats {
 			'download'        => null,
 			'gateway'         => null,
 			'post__in'        => null,
+			'post__not_in'    => null,
 			'compare'         => null,
 			'country'         => null,
 			'region'          => null,
@@ -568,13 +569,22 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		// Meta key and value
-		if ( isset( $this->initial_args['meta_key'] ) && isset( $this->initial_args['meta_value'] ) ) {
-			$arguments['meta_query'] = array(
-				array(
-					'key'   => $this->initial_args['meta_key'],
-					'value' => $this->initial_args['meta_value'],
-				),
+		if ( isset( $this->initial_args['meta_key'] ) ) {
+			$meta_query = array(
+				'key' => $this->initial_args['meta_key']
 			);
+
+			if ( isset( $this->initial_args['meta_value'] ) ) {
+				$meta_query['value'] = $this->initial_args['meta_value'];
+			}
+
+			$arguments['meta_query'] = array( $meta_query );
+		}
+
+		foreach ( array( 'year', 'month', 'week', 'day', 'hour', 'minute', 'second' ) as $date_interval ) {
+			if ( isset( $this->initial_args[ $date_interval ] ) ) {
+				$arguments['date_created_query'][ $date_interval ] = $this->initial_args[ $date_interval ];
+			}
 		}
 
 		if ( $this->args['start_date'] ) {
@@ -609,12 +619,22 @@ class EDD_Payments_Query extends EDD_Stats {
 			$arguments['date_created_query']['inclusive'] = true;
 		}
 
+		if ( isset( $this->initial_args['number'] ) ) {
+			if ( -1 == $this->initial_args['number'] ) {
+				_doing_it_wrong( __FUNCTION__, esc_html__( 'Do not use -1 to retrieve all results.', 'easy-digital-downloads' ), '3.0' );
+				$this->args['nopaging'] = true;
+			} else {
+				$arguments['number'] = $this->initial_args['number'];
+			}
+		}
+
 		$arguments['number'] = isset( $this->args['posts_per_page'] )
 			? $this->args['posts_per_page']
 			: 20;
 
 		if ( isset( $this->args['nopaging'] ) && true === $this->args['nopaging'] ) {
-			unset( $arguments['number'] );
+			// Setting to a really large number because we don't actually have a way to get all results.
+			$arguments['number'] = 9999999;
 		}
 
 		switch ( $this->args['orderby'] ) {
@@ -671,6 +691,10 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		if ( ! is_null( $this->args['post__in'] ) ) {
 			$arguments['id__in'] = $this->args['post__in'];
+		}
+
+		if ( ! is_null( $this->args['post__not_in'] ) ) {
+			$arguments['id__in'] = $this->args['post__not_in'];
 		}
 
 		if ( ! empty( $this->args['mode'] ) && 'all' !== $this->args['mode'] ) {

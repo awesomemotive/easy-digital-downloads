@@ -634,8 +634,6 @@ class EDD_Payment {
 					) );
 
 					edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $key );
-					edd_add_order_adjustment_meta( $adjustment_id, 'download_id', $fee['download_id'] );
-					edd_add_order_adjustment_meta( $adjustment_id, 'price_id', $fee['price_id'] );
 
 					$this->increase_fees( $fee['amount'] );
 				}
@@ -961,23 +959,6 @@ class EDD_Payment {
 				}
 			}
 
-			if ( ! $this->in_process() ) {
-				$customer = new EDD_Customer( $this->customer_id );
-
-				$total_change = $total_increase - $total_decrease;
-
-				if ( $total_change < 0 ) {
-					$total_change = - ( $total_change );
-					// Decrease the customer's purchase stats
-					$customer->decrease_value( $total_change );
-					edd_decrease_total_earnings( $total_change );
-				} elseif ( $total_change > 0 ) {
-					// Increase the customer's purchase stats
-					$customer->increase_value( $total_change );
-					edd_increase_total_earnings( $total_change );
-				}
-			}
-
 			$discount = 0.00;
 
 			foreach ( $this->cart_details as $item ) {
@@ -1108,6 +1089,9 @@ class EDD_Payment {
 			 */
 			do_action( 'edd_payment_saved', $this->ID, $this );
 		}
+
+		$customer = new EDD_Customer( $this->customer_id );
+		$customer->recalculate_stats();
 
 		/**
 		 * Update the payment in the object cache
@@ -2268,7 +2252,7 @@ class EDD_Payment {
 
 					$user_info = wp_parse_args( $user_info, $defaults );
 
-					if ( null !== $this->order ) {
+					if ( null !== $this->order && $this->order->get_address()->id ) {
 						$order_address = $this->order->get_address();
 
 						edd_update_order_address( $order_address->id, array(
@@ -2370,9 +2354,6 @@ class EDD_Payment {
 
 								edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
 
-								if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
-									edd_add_order_adjustment_meta( $adjustment_id, 'price_id', absint( $fee['price_id'] ) );
-								}
 							}
 						} else {
 							$adjustment_id = edd_get_order_adjustments( array(
@@ -2422,9 +2403,6 @@ class EDD_Payment {
 
 								edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
 
-								if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
-									edd_add_order_adjustment_meta( $adjustment_id, 'price_id', absint( $fee['price_id'] ) );
-								}
 							}
 						}
 					}
@@ -2513,10 +2491,6 @@ class EDD_Payment {
 									) );
 
 									edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
-
-									if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
-										edd_add_order_adjustment_meta( $adjustment_id, 'price_id', absint( $fee['price_id'] ) );
-									}
 
 									$new_tax += $tax;
 								}
@@ -2828,12 +2802,8 @@ class EDD_Payment {
 		if ( ! empty( $this->customer_id ) ) {
 			$customer = new EDD_Customer( $this->customer_id );
 
-			if ( true === $alter_customer_value ) {
-				$customer->decrease_value( $this->total );
-			}
-
-			if ( true === $alter_customer_purchase_count ) {
-				$customer->decrease_purchase_count();
+			if ( ! empty( $alter_customer_value || $alter_customer_purchase_count ) ) {
+				$customer->recalculate_stats();
 			}
 		}
 	}
