@@ -536,7 +536,7 @@ class EDD_HTML_Elements {
 		$selected = empty( $selected ) ? date( 'n' ) : $selected;
 
 		while ( $month <= 12 ) {
-			$options[ absint( $month ) ] = edd_month_num_to_name( $month );
+			$options[ absint( $month ) ] = edd_month_num_to_name( $month, true );
 			$month ++;
 		}
 
