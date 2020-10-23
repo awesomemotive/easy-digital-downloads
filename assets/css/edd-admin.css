@@ -3516,7 +3516,7 @@ span.edd-to-and-from--separator {
 	#system-info-textarea,
 	#edd-add-discount input[type="text"],
 	#edd-edit-discount input[type="text"],
-	#edd-filters input:not([type='radio']),
+	#edd-filters > input:not([type="radio"]),
 	#edd-filters select,
 	#edd-filters a {
 		width: 100%;
