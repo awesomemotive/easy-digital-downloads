@@ -532,28 +532,13 @@ function edd_get_currency_name( $code = 'USD' ) {
  * @since 1.0
  *
  * @param integer $n The number of the month.
+ * @param bool    $return_long_name Optional. Return full name of month if true. Default false.
  * @return string Short month name
  */
-function edd_month_num_to_name( $n ) {
+function edd_month_num_to_name( $n, $return_long_name = false ) {
 	$timestamp = mktime( 0, 0, 0, $n, 1, 2005 );
 
-	return date_i18n( 'M', $timestamp );
-}
-
-/**
- * Month Num To Long Name
- *
- * Takes a month number and returns the name full name of it.
- *
- * @since 3.0
- *
- * @param integer $n The number of the month.
- * @return string Long month name
- */
-function edd_month_num_to_long_name( $n ) {
-	$timestamp = mktime( 0, 0, 0, $n, 1, 2005 );
-
-	return date_i18n( 'F', $timestamp );
+	return ! $return_long_name ? date_i18n( 'M', $timestamp ) : date_i18n( 'F', $timestamp );
 }
 
 /**
