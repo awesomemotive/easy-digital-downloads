@@ -39,7 +39,7 @@ function edd_customers_page_primary_nav( $active_tab = '' ) {
 			$tab_url = edd_get_admin_url(
 				array(
 					'page'      => 'edd-customers',
-					'page_type' => esc_attr( $tab_id ),
+					'page_type' => urlencode( $tab_id ),
 				)
 			);
 
