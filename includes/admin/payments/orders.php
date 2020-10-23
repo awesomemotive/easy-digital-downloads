@@ -773,9 +773,9 @@ function edd_order_details_sections( $order ) {
 ?>
 
 	<div id="edd-customer-details" class="postbox">
-		<h3 class="hndle">
+		<h2 class="hndle">
 			<span><?php esc_html_e( 'Order Details', 'easy-digital-downloads' ); ?></span>
-		</h3>
+		</h2>
 		<?php edd_order_sections( $order ); ?>
 	</div>
 
@@ -821,9 +821,9 @@ function edd_order_details_extras( $order = false ) {
 	} ?>
 
 	<div id="edd-order-extras" class="postbox edd-order-data">
-		<h3 class="hndle">
+		<h2 class="hndle">
 			<span><?php esc_html_e( 'Order Extras', 'easy-digital-downloads' ); ?></span>
-		</h3>
+		</h2>
 
 		<div class="inside">
 			<div class="edd-admin-box">
@@ -944,9 +944,9 @@ function edd_order_details_attributes( $order ) {
 	?>
 
 	<div id="edd-order-update" class="postbox edd-order-data">
-		<h3 class="hndle">
+		<h2 class="hndle">
 			<span><?php esc_html_e( 'Order Attributes', 'easy-digital-downloads' ); ?></span>
-		</h3>
+		</h2>
 
 		<div class="inside">
 			<div class="edd-order-update-box edd-admin-box">
