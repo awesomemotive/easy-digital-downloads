@@ -184,7 +184,6 @@ class EDD_Payment_History_Table extends List_Table {
 					'name'             => 'mode',
 					'id'               => 'mode',
 					'selected'         => $mode,
-					'chosen'           => true,
 					'show_option_all'  => false,
 					'show_option_none' => false
 				) ); ?>
@@ -219,7 +218,6 @@ class EDD_Payment_History_Table extends List_Table {
 					'name'             => 'gateway',
 					'id'               => 'gateway',
 					'selected'         => $gateway,
-					'chosen'           => true,
 					'show_option_all'  => false,
 					'show_option_none' => false
 				) ); ?>
