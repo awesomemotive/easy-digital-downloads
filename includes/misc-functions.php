@@ -536,9 +536,10 @@ function edd_get_currency_name( $code = 'USD' ) {
  * @return string Short month name
  */
 function edd_month_num_to_name( $n, $return_long_name = false ) {
-	$timestamp = mktime( 0, 0, 0, $n, 1, 2005 );
+	$timestamp   = mktime( 0, 0, 0, $n, 1, 2005 );
+	$date_format = $return_long_name ? 'F' : 'M';
 
-	return ! $return_long_name ? date_i18n( 'M', $timestamp ) : date_i18n( 'F', $timestamp );
+	return date_i18n( $date_format, $timestamp );
 }
 
 /**
