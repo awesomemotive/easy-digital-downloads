@@ -655,7 +655,21 @@ function edd_maybe_add_customer_address( $customer_id = 0, $data = array() ) {
 	if ( ! empty( $address_exists ) ) {
 		return false;
 	}
+	$previous_primary_address = edd_get_customer_addresses(
+		array(
+			'fields'      => 'ids',
+			'customer_id' => $customer_id,
+			'is_primary'  => true,
+			'number'      => 1,
+		)
+	);
+
+	// Primary address exists, so update it.
+	if ( ! empty( $previous_primary_address ) ) {
+		edd_update_customer_address( $previous_primary_address[0], array( 'is_primary' => false ) );
+	}
 	$data['customer_id'] = $customer_id;
+	$data['is_primary']  = true;
 
 	// Add the new address to the customer record.
 	return $customer_addresses->add_item( $data );
