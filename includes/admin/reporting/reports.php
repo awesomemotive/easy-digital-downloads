@@ -2758,13 +2758,13 @@ function display_export_report() {
 					                }
 				                }
 
-								echo EDD()->html->select( array(
-									'name'             => 'taxonomy',
-									'options'          => $taxonomies,
-									'selected'         => false,
-									'show_option_none' => false,
-									'show_option_all'  => __( 'All Taxonomies', 'easy-digital-downloads' ),
-								) );
+											echo EDD()->html->select( array(
+												'name'             => 'taxonomy',
+												'options'          => $taxonomies,
+												'selected'         => false,
+												'show_option_none' => false,
+												'show_option_all'  => __( 'All Taxonomies', 'easy-digital-downloads' ),
+											) );
 
 				                echo EDD()->html->product_dropdown( array(
 									'name'        => 'download',

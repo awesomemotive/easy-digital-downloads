@@ -1104,7 +1104,6 @@ function display_gateways_filter() {
 	$select = EDD()->html->select( array(
 		'name'             => 'gateways',
 		'options'          => $gateways,
-		'chosen'           => true,
 		'selected'         => empty( $gateway ) ? 0 : $gateway,
 		'show_option_none' => false,
 	) ); ?>
