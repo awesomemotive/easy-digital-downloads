@@ -77,7 +77,7 @@ class Query extends Base {
 	 * @since 1.0.0
 	 * @var   string
 	 */
-	protected $table_schema = __NAMESPACE__ . '\\Schema';
+	protected $table_schema = '\\EDD\\Database\\Schema';
 
 	/** Item ******************************************************************/
 
@@ -113,7 +113,7 @@ class Query extends Base {
 	 * @since 1.0.0
 	 * @var   mixed
 	 */
-	protected $item_shape = __NAMESPACE__ . '\\Row';
+	protected $item_shape = '\\EDD\\Database\\Row';
 
 	/** Cache *****************************************************************/
 
