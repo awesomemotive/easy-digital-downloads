@@ -162,8 +162,9 @@ function edd_tools_recount_stats_display() {
 						?>
 					</span>
 
-					<input type="submit" id="recount-stats-submit"
-						   value="<?php _e( 'Submit', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+					<button type="submit" id="recount-stats-submit" class="button button-secondary">
+						<?php esc_html_e( 'Submit', 'easy-digital-downloads' ); ?>
+					</button>
 
 					<br/>
 
@@ -440,10 +441,10 @@ function edd_tools_import_export_display() {
 	do_action( 'edd_tools_import_export_before' );
 	?>
 
-    <div class="postbox edd-import-payment-history">
-        <h3><span><?php _e( 'Import Payment History', 'easy-digital-downloads' ); ?></span></h3>
-        <div class="inside">
-            <p><?php _e( 'Import a CSV file of payment records.', 'easy-digital-downloads' ); ?></p>
+	<div class="postbox edd-import-payment-history">
+		<h3><span><?php esc_html_e( 'Import Orders', 'easy-digital-downloads' ); ?></span></h3>
+		<div class="inside">
+			<p><?php esc_html_e( 'Import a CSV file of orders.', 'easy-digital-downloads' ); ?></p>
             <form id="edd-import-payments" class="edd-import-form edd-import-export-form"
                   action="<?php echo esc_url( add_query_arg( 'edd_action', 'upload_import_file', admin_url() ) ); ?>"
                   method="post" enctype="multipart/form-data">
@@ -466,8 +467,8 @@ function edd_tools_import_export_display() {
                     <p>
 						<?php
 						printf(
-							__( 'Each column loaded from the CSV needs to be mapped to a payment field. Select the column that should be mapped to each field below. Any columns not needed can be ignored. See <a href="%s" target="_blank">this guide</a> for assistance with importing payment records.', 'easy-digital-downloads' ),
-							'http://docs.easydigitaldownloads.com/category/1337-importexport'
+							__( 'Each column loaded from the CSV needs to be mapped to an order field. Select the column that should be mapped to each field below. Any columns not needed can be ignored. See <a href="%s" target="_blank">this guide</a> for assistance with importing payment records.', 'easy-digital-downloads' ),
+							'https://docs.easydigitaldownloads.com/category/1337-importexport'
 						);
 						?>
                     </p>
@@ -500,6 +501,16 @@ function edd_tools_import_export_display() {
                             </td>
                             <td class="edd-import-preview-field"><?php _e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
                         </tr>
+						<tr>
+							<td><?php esc_html_e( 'Name', 'easy-digital-downloads' ); ?></td>
+							<td>
+								<select name="edd-import-field[name]" class="edd-import-csv-column"
+										data-field="Name">
+									<option value=""><?php esc_html_e( '- Ignore this field -', 'easy-digital-downloads' ); ?></option>
+								</select>
+							</td>
+							<td class="edd-import-preview-field"><?php esc_html_e( '- select field to preview data -', 'easy-digital-downloads' ); ?></td>
+						</tr>
                         <tr>
                             <td><?php _e( 'First Name', 'easy-digital-downloads' ); ?></td>
                             <td>
@@ -738,7 +749,7 @@ function edd_tools_import_export_display() {
                         </tbody>
                     </table>
                     <p class="submit">
-                        <button class="edd-import-proceed button-primary"><?php _e( 'Process Import', 'easy-digital-downloads' ); ?></button>
+						<button class="button edd-import-proceed button-primary"><?php esc_html_e( 'Process Import', 'easy-digital-downloads' ); ?></button>
                     </p>
                 </div>
             </form>
@@ -953,7 +964,7 @@ function edd_tools_import_export_display() {
                         </tbody>
                     </table>
                     <p class="submit">
-                        <button class="edd-import-proceed button-primary"><?php _e( 'Process Import', 'easy-digital-downloads' ); ?></button>
+						<button class="button edd-import-proceed button-primary"><?php esc_html_e( 'Process Import', 'easy-digital-downloads' ); ?></button>
                     </p>
                 </div>
             </form>
