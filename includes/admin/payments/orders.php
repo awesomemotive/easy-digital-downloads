@@ -773,9 +773,9 @@ function edd_order_details_sections( $order ) {
 ?>
 
 	<div id="edd-customer-details" class="postbox">
-		<h3 class="hndle">
+		<h2 class="hndle">
 			<span><?php esc_html_e( 'Order Details', 'easy-digital-downloads' ); ?></span>
-		</h3>
+		</h2>
 		<?php edd_order_sections( $order ); ?>
 	</div>
 
@@ -821,9 +821,9 @@ function edd_order_details_extras( $order = false ) {
 	} ?>
 
 	<div id="edd-order-extras" class="postbox edd-order-data">
-		<h3 class="hndle">
+		<h2 class="hndle">
 			<span><?php esc_html_e( 'Order Extras', 'easy-digital-downloads' ); ?></span>
-		</h3>
+		</h2>
 
 		<div class="inside">
 			<div class="edd-admin-box">
@@ -848,7 +848,6 @@ function edd_order_details_extras( $order = false ) {
 										'id'               => 'edd_gateway_select',
 										'options'          => $gateways,
 										'selected'         => edd_get_default_gateway(),
-										'chosen'           => true,
 										'show_option_none' => false,
 										'show_option_all'  => false,
 									)
@@ -931,10 +930,6 @@ function edd_order_details_extras( $order = false ) {
  */
 function edd_order_details_attributes( $order ) {
 
-	$rtl_class = is_rtl()
-		? ' chosen-rtl'
-		: '';
-
 	$recovery_url = edd_is_add_order_page()
 		? ''
 		: edd_get_payment( $order->id )->get_recovery_url();
@@ -944,9 +939,9 @@ function edd_order_details_attributes( $order ) {
 	?>
 
 	<div id="edd-order-update" class="postbox edd-order-data">
-		<h3 class="hndle">
+		<h2 class="hndle">
 			<span><?php esc_html_e( 'Order Attributes', 'easy-digital-downloads' ); ?></span>
-		</h3>
+		</h2>
 
 		<div class="inside">
 			<div class="edd-order-update-box edd-admin-box">
@@ -968,7 +963,7 @@ function edd_order_details_attributes( $order ) {
 							<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo $status_help; // WPCS: XSS ok. ?>"></span>
 						</label>
 						<div class="edd-form-group__control">
-							<select name="edd-payment-status" id="edd_payment_status" class="edd-form-group__input edd-select-chosen <?php echo esc_attr( $rtl_class ); ?>">
+							<select name="edd-payment-status" id="edd_payment_status" class="edd-form-group__input">
 							<?php foreach ( edd_get_payment_statuses() as $key => $status ) : ?>
 								<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $order->status, $key, true ); ?>><?php echo esc_html( $status ); ?></option>
 							<?php endforeach; ?>
@@ -1027,43 +1022,16 @@ function edd_order_details_attributes( $order ) {
 						</legend>
 
 						<div class="edd-form-group__control">
-							<label for="edd_payment_time_hour" class="screen-reader-text">
+							<label for="edd-payment-time-hour" class="screen-reader-text">
 								<?php esc_html_e( 'Hour', 'easy-digital-downloads' ); ?>
 							</label>
-
-							<?php
-							echo EDD()->html->select(
-								array(
-									'name'             => 'edd-payment-time-hour',
-									'id'               => 'edd-payment-time-hour',
-									'options'          => edd_get_hour_values(),
-									'selected'         => $order_date->format( 'H' ),
-									'chosen'           => true,
-									'class'            => 'edd-time edd-form-group__input',
-									'show_option_none' => false,
-									'show_option_all'  => false,
-								)
-							); // WPCS: XSS ok.
-							?>
+							<input type="number" min="0" max="24" step="1" name="edd-payment-time-hour" id="edd-payment-time-hour" value="<?php echo esc_attr( $order_date->format( 'H' ) ); ?>" />
 							:
 
-							<label for="edd_payment_time_min" class="screen-reader-text">
+							<label for="edd-payment-time-min" class="screen-reader-text">
 								<?php esc_html_e( 'Minute', 'easy-digital-downloads' ); ?>
 							</label>
-							<?php
-							echo EDD()->html->select(
-								array(
-									'name'             => 'edd-payment-time-min',
-									'id'               => 'edd-payment-time-min',
-									'options'          => edd_get_minute_values(),
-									'selected'         => $order_date->format( 'i' ),
-									'chosen'           => true,
-									'class'            => 'edd-time edd-form-group__input',
-									'show_option_none' => false,
-									'show_option_all'  => false,
-								)
-							); // WPCS: XSS ok.
-							?>
+							<input type="number" min="0" max="59" step="1" name="edd-payment-time-min" id="edd-payment-time-min" value="<?php echo esc_attr( $order_date->format( 'i' ) ); ?>" />
 						</div>
 					</fieldset>
 				</div>

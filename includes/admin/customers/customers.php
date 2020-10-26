@@ -36,19 +36,20 @@ function edd_customers_page_primary_nav( $active_tab = '' ) {
 		foreach ( $tabs as $tab_id => $tab_name ) {
 
 			// Remove
-			$tab_url = add_query_arg( array(
-				'settings-updated' => false,
-				'page_type'        => $tab_id
-			) );
+			$tab_url = edd_get_admin_url(
+				array(
+					'page'      => 'edd-customers',
+					'page_type' => urlencode( $tab_id ),
+				)
+			);
 
-			// Remove the section from the tabs so we always end up at the main section
-			$tab_url = remove_query_arg( 'section', $tab_url );
-			$active  = $active_tab === $tab_id
-				? ' nav-tab-active'
-				: '';
+			$class = 'nav-tab';
+			if ( $active_tab === $tab_id ) {
+				$class .= ' nav-tab-active';
+			}
 
 			// Link
-			echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . $active . '">'; // WPCS: XSS ok.
+			echo '<a href="' . esc_url( $tab_url ) . '" class="' . esc_attr( $class ) . '">'; // WPCS: XSS ok.
 				echo esc_html( $tab_name );
 			echo '</a>';
 		}
