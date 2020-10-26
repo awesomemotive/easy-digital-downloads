@@ -885,6 +885,16 @@ class EDD_Payment {
 							$discount_obj = edd_get_discount_by( 'code', $discount );
 
 							if ( false === $discount_obj ) {
+								edd_add_order_adjustment(
+									array(
+										'object_id'   => $this->ID,
+										'object_type' => 'order',
+										'type'        => 'fee',
+										'description' => $discount,
+										'subtotal'    => - floatval( $this->total - $cart_subtotal - $this->tax ),
+										'total'       => - floatval( $this->total - $cart_subtotal - $this->tax ),
+									)
+								);
 								continue;
 							}
 
