@@ -2561,7 +2561,7 @@ function display_export_report() {
 							<label for="start_month" class="screen-reader-text"><?php esc_html_e( 'Start Month', 'easy-digital-downloads' ); ?></label>
 								<?php echo EDD()->html->month_dropdown( 'start_month' ); ?>
 							<label for="start_year" class="screen-reader-text"><?php esc_html_e( 'Start Year', 'easy-digital-downloads' ); ?></label>
-								<?php echo EDD()->html->year_dropdown( 'start_year', 'edd-export-earnings' ); ?>
+								<?php echo EDD()->html->year_dropdown( 'start_year' ); ?>
 							</div>
 
 							<span class="edd-to-and-from--separator"><?php echo _x( '&mdash; to &mdash;', 'Date one to date two', 'easy-digital-downloads' ); ?></span>
@@ -2570,7 +2570,7 @@ function display_export_report() {
 							<label for="end_month" class="screen-reader-text"><?php esc_html_e( 'End Month', 'easy-digital-downloads' ); ?></label>
 								<?php echo EDD()->html->month_dropdown( 'end_month' ); ?>
 							<label for="end_year" class="screen-reader-text"><?php esc_html_e( 'End Year', 'easy-digital-downloads' ); ?></label>
-								<?php echo EDD()->html->year_dropdown( 'end_year', 'edd-export-earnings' ); ?>
+								<?php echo EDD()->html->year_dropdown( 'end_year' ); ?>
 							</div>
 							<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 							<input type="hidden" name="edd-export-class" value="EDD_Batch_Earnings_Report_Export"/>
