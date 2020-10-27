@@ -2557,21 +2557,27 @@ function display_export_report() {
 					<div class="inside">
 						<p><?php esc_html_e( 'Download a CSV giving a detailed look into earnings over time.', 'easy-digital-downloads' ); ?></p>
 						<form id="edd-export-earnings" class="edd-export-form edd-import-export-form" method="post">
-							<div class="edd-to-and-from-container">
-							<label for="edd_export_earnings_start_month" class="screen-reader-text"><?php esc_html_e( 'Start Month', 'easy-digital-downloads' ); ?></label>
-								<?php echo EDD()->html->month_dropdown( 'edd_export_earnings', 'start_month' ); ?>
-							<label for="edd_export_earnings_start_year" class="screen-reader-text"><?php esc_html_e( 'Start Year', 'easy-digital-downloads' ); ?></label>
-								<?php echo EDD()->html->year_dropdown( 'edd_export_earnings', 'start_year' ); ?>
-							</div>
+							<fieldset class="edd-to-and-from-container">
+							<legend class="screen-reader-text">
+								<?php esc_html_e( 'Start Month and Year for Export Earnings Report', 'easy-digital-downloads' ); ?>
+							</legend>
+								<label for="edd_export_earnings_start_month" class="screen-reader-text"><?php esc_html_e( 'Start Month', 'easy-digital-downloads' ); ?></label>
+									<?php echo EDD()->html->month_dropdown( 'edd_export_earnings', 'start_month' ); ?>
+								<label for="edd_export_earnings_start_year" class="screen-reader-text"><?php esc_html_e( 'Start Year', 'easy-digital-downloads' ); ?></label>
+									<?php echo EDD()->html->year_dropdown( 'edd_export_earnings', 'start_year' ); ?>
+							</fieldset>
 
 							<span class="edd-to-and-from--separator"><?php echo _x( '&mdash; to &mdash;', 'Date one to date two', 'easy-digital-downloads' ); ?></span>
 
-							<div class="edd-to-and-from-container">
-							<label for="edd_export_earnings_end_month" class="screen-reader-text"><?php esc_html_e( 'End Month', 'easy-digital-downloads' ); ?></label>
-								<?php echo EDD()->html->month_dropdown( 'edd_export_earnings', 'end_month' ); ?>
-							<label for="edd_export_earnings_end_year" class="screen-reader-text"><?php esc_html_e( 'End Year', 'easy-digital-downloads' ); ?></label>
-								<?php echo EDD()->html->year_dropdown( 'edd_export_earnings', 'end_year' ); ?>
-							</div>
+							<fieldset class="edd-to-and-from-container">
+							<legend class="screen-reader-text">
+								<?php esc_html_e( 'End Month and Year for Export Earnings Report', 'easy-digital-downloads' ); ?>
+							</legend>
+								<label for="edd_export_earnings_end_month" class="screen-reader-text"><?php esc_html_e( 'End Month', 'easy-digital-downloads' ); ?></label>
+									<?php echo EDD()->html->month_dropdown( 'edd_export_earnings', 'end_month' ); ?>
+								<label for="edd_export_earnings_end_year" class="screen-reader-text"><?php esc_html_e( 'End Year', 'easy-digital-downloads' ); ?></label>
+									<?php echo EDD()->html->year_dropdown( 'edd_export_earnings', 'end_year' ); ?>
+							</fieldset>
 							<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 							<input type="hidden" name="edd-export-class" value="EDD_Batch_Earnings_Report_Export"/>
 							<button type="submit" class="button button-secondary"><?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?></button>
