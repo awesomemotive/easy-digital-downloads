@@ -496,7 +496,7 @@ class EDD_HTML_Elements {
 	 *
 	 * @return string $output Year dropdown
 	 */
-	public function year_dropdown( $name = 'year', $selected = 0, $years_before = 5, $years_after = 0 ) {
+	public function year_dropdown( $form = 'form', $name = 'year', $selected = 0, $years_before = 5, $years_after = 0 ) {
 		$current    = date( 'Y' );
 		$start_year = $current - absint( $years_before );
 		$end_year   = $current + absint( $years_after );
@@ -508,14 +508,16 @@ class EDD_HTML_Elements {
 			$start_year ++;
 		}
 
-		$output = $this->select( array(
-			'name'             => $name,
-			'id'               => $name,
-			'selected'         => $selected,
-			'options'          => $options,
-			'show_option_all'  => false,
-			'show_option_none' => false,
-		) );
+		$output = $this->select(
+			array(
+				'name'             => $name,
+				'id'               => $form . '_' . $name,
+				'selected'         => $selected,
+				'options'          => $options,
+				'show_option_all'  => false,
+				'show_option_none' => false,
+			)
+		);
 
 		return $output;
 	}
@@ -530,7 +532,7 @@ class EDD_HTML_Elements {
 	 *
 	 * @return string $output Month dropdown
 	 */
-	public function month_dropdown( $name = 'month', $selected = 0 ) {
+	public function month_dropdown( $form = 'form', $name = 'month', $selected = 0 ) {
 		$month    = 1;
 		$options  = array();
 		$selected = empty( $selected ) ? date( 'n' ) : $selected;
@@ -540,14 +542,16 @@ class EDD_HTML_Elements {
 			$month ++;
 		}
 
-		$output = $this->select( array(
-			'name'             => $name,
-			'id'               => $name,
-			'selected'         => $selected,
-			'options'          => $options,
-			'show_option_all'  => false,
-			'show_option_none' => false,
-		) );
+		$output = $this->select(
+			array(
+				'name'             => $name,
+				'id'               => $form . '_' . $name,
+				'selected'         => $selected,
+				'options'          => $options,
+				'show_option_all'  => false,
+				'show_option_none' => false,
+			)
+		);
 
 		return $output;
 	}
