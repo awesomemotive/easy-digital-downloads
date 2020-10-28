@@ -2657,7 +2657,7 @@ function display_export_report() {
 						<form id="edd-export-orders" class="edd-export-form edd-import-export-form" method="post">
 							<fieldset class="edd-from-to-wrapper">
 							<legend class="screen-reader-text">
-								<?php esc_html_e( 'Export Orders Dates', 'easy-digital-downloads' ); ?>
+								<?php esc_html_e( 'Export Order Dates', 'easy-digital-downloads' ); ?>
 							</legend>
 								<label for="edd-orders-export-start" class="screen-reader-text"><?php esc_html_e( 'Set start date', 'easy-digital-downloads' ); ?></label>
 									<?php
@@ -2710,7 +2710,7 @@ function display_export_report() {
 						<form id="edd-export-taxed-orders" class="edd-export-form edd-import-export-form" method="post">
 							<fieldset class="edd-from-to-wrapper">
 							<legend class="screen-reader-text">
-								<?php esc_html_e( 'Export Taxed Orders Dates', 'easy-digital-downloads' ); ?>
+								<?php esc_html_e( 'Export Taxed Order Dates', 'easy-digital-downloads' ); ?>
 							</legend>
 								<label for="edd-taxed-orders-export-start" class="screen-reader-text"><?php esc_html_e( 'Set start date', 'easy-digital-downloads' ); ?></label>
 									<?php
@@ -2856,7 +2856,7 @@ function display_export_report() {
 						<form id="edd-export-taxed-customers" class="edd-export-form edd-import-export-form" method="post">
 							<fieldset class="edd-from-to-wrapper">
 							<legend class="screen-reader-text">
-								<?php esc_html_e( 'Export Taxed Customers Dates', 'easy-digital-downloads' ); ?></legend>
+								<?php esc_html_e( 'Export Taxed Customer Dates', 'easy-digital-downloads' ); ?></legend>
 							<label for="edd-taxed-customers-export-start" class="screen-reader-text"><?php esc_html_e( 'Set start date', 'easy-digital-downloads' ); ?></label>
 								<?php
 									echo EDD()->html->date_field(
@@ -2920,7 +2920,7 @@ function display_export_report() {
 						<form id="edd-export-api-requests" class="edd-export-form edd-import-export-form" method="post">
 							<fieldset class="edd-from-to-wrapper">
 							<legend class="screen-reader-text">
-								<?php esc_html_e( 'Export API Request Logs Dates', 'easy-digital-downloads' ); ?>
+								<?php esc_html_e( 'Export API Request Log Dates', 'easy-digital-downloads' ); ?>
 							</legend>
 								<label for="edd-api-requests-export-start" class="screen-reader-text"><?php esc_html_e( 'Set start date', 'easy-digital-downloads' ); ?></label>
 									<?php
@@ -2974,7 +2974,7 @@ function display_export_report() {
 							?>
 							<fieldset class="edd-from-to-wrapper">
 							<legend class="screen-reader-text">
-								<?php esc_html_e( 'Export File Download Logs Dates', 'easy-digital-downloads' ); ?>
+								<?php esc_html_e( 'Export File Download Log Dates', 'easy-digital-downloads' ); ?>
 							</legend>
 								<label for="edd-file-download-export-start" class="screen-reader-text"><?php esc_html_e( 'Set start date', 'easy-digital-downloads' ); ?></label>
 								<?php
