@@ -155,7 +155,7 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @since 1.8
 	 * @since 3.0 Updated to use the new query classes and custom tables.
 	 *
-	 * @return EDD_Payment[]|EDD\Orders\Order[]
+	 * @return EDD_Payment[]|EDD\Orders\Order[]|int
 	 */
 	public function get_payments() {
 
@@ -194,6 +194,10 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		$this->items = edd_get_orders( $this->args );
+
+		if ( ! empty( $this->args['count'] ) && is_numeric( $this->items ) ) {
+			return intval( $this->items );
+		}
 
 		if ( $should_output_order_objects ) {
 			return $this->items;

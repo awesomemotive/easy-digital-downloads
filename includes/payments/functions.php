@@ -66,7 +66,7 @@ function edd_get_payment( $payment_or_txn_id = null, $by_txn = false ) {
  * @since 1.8 Refactored to be a wrapper for EDD_Payments_Query.
  *
  * @param array $args Arguments passed to get payments.
- * @return EDD_Payment[] $payments Payments retrieved from the database.
+ * @return EDD_Payment[]|int $payments Payments retrieved from the database.
  */
 function edd_get_payments( $args = array() ) {
 	$args     = apply_filters( 'edd_get_payments_args', $args );

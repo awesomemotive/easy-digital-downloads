@@ -10,8 +10,6 @@
  */
 namespace EDD\Reports;
 
-use DateTimeZone, DateTime, edd_get_timezone_abbr, edd_get_utc_equivalent_date;
-
 //
 // Endpoint and report helpers.
 //
