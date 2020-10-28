@@ -653,64 +653,19 @@ function edd_maybe_add_customer_address( $customer_id = 0, $data = array() ) {
 	// Check if this address is already assigned to the customer.
 	$address_exists = $customer_addresses->query( $address_to_check );
 	if ( ! empty( $address_exists ) ) {
-		edd_maybe_update_customer_primary_address( $address_exists[0] );
+		if ( 'billing' === $address_to_check['type'] ) {
+			$customer_addresses->update_item( $address_exists[0], array( 'is_primary' => true ) );
+		}
 		return false;
 	}
 
 	$data['customer_id'] = $customer_id;
+	if ( 'billing' === $address_to_check['type'] ) {
+		$data['is_primary'] = true;
+	}
 
 	// Add the new address to the customer record.
-	$new_address = $customer_addresses->add_item( $data );
-	edd_maybe_update_customer_primary_address( $customer_addresses->get_item( $new_address ) );
-
-	return $new_address;
-}
-
-/**
- * @since 3.0
- *
- * @param int   $customer_id Customer ID.
- * @param array $address object \EDD\Customers\Customer_Address {
- *     Array of customer address data. Default empty.
- *
- *     @type string  $type          Address type. Default `billing`.
- *     @type boolean $is_primary    Whether this is the primary address or not.
- *     @type string  $status        Address status, if used or not. Default `active`.
- *     @type string  $address       First line of address. Default empty.
- *     @type string  $address2      Second line of address. Default empty.
- *     @type string  $city          City. Default empty.
- *     @type string  $region        Region. See `edd_get_shop_states()` for
- *                                  accepted values. Default empty.
- *     @type string  $postal_code   Postal code. Default empty.
- *     @type string  $country       Country. See `edd_get_country_list()` for
- *                                  accepted values. Default empty.
- *     @type string  $date_created  Optional. Automatically calculated on add/edit.
- *                                  The date & time the address was inserted.
- *                                  Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string  $date_modified Optional. Automatically calculated on add/edit.
- *                                  The date & time the address was last modified.
- *                                  Format: YYYY-MM-DD HH:MM:SS. Default empty.
- * }
- */
-function edd_maybe_update_customer_primary_address( $address ) {
-	if ( empty( $address ) || $address->is_primary || 'billing' !== $address->type ) {
-		return false;
-	}
-
-	$previous_primary_address = edd_get_customer_addresses(
-		array(
-			'fields'      => 'ids',
-			'customer_id' => $address->customer_id,
-			'is_primary'  => true,
-			'number'      => 1,
-		)
-	);
-
-	// Primary address exists, so update it.
-	if ( isset( $previous_primary_address[0] ) ) {
-		edd_update_customer_address( $previous_primary_address[0], array( 'is_primary' => false ) );
-	}
-	return edd_update_customer_address( $address, array( 'is_primary' => true ) );
+	return $customer_addresses->add_item( $data );
 }
 
 /**
