@@ -707,7 +707,7 @@ function edd_maybe_update_customer_primary_address( $address ) {
 	);
 
 	// Primary address exists, so update it.
-	if ( ! empty( $previous_primary_address ) ) {
+	if ( isset( $previous_primary_address[0] ) ) {
 		edd_update_customer_address( $previous_primary_address[0], array( 'is_primary' => false ) );
 	}
 	return edd_update_customer_address( $address, array( 'is_primary' => true ) );
