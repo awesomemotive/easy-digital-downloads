@@ -489,14 +489,14 @@ class EDD_HTML_Elements {
 	 *
 	 * @since 1.5.2
 	 *
-	 * @param string $name         Name attribute of the dropdown
-	 * @param int    $selected     Year to select automatically
-	 * @param int    $years_before Number of years before the current year the dropdown should start with
-	 * @param int    $years_after  Number of years after the current year the dropdown should finish at
-	 *
+	 * @param string $name         Name attribute of the dropdown.
+	 * @param int    $selected     Year to select automatically.
+	 * @param int    $years_before Number of years before the current year the dropdown should start with.
+	 * @param int    $years_after  Number of years after the current year the dropdown should finish at.
+	 * @param string $id A unique identifier for the field.
 	 * @return string $output Year dropdown
 	 */
-	public function year_dropdown( $form = 'form', $name = 'year', $selected = 0, $years_before = 5, $years_after = 0 ) {
+	public function year_dropdown( $name = 'year', $selected = 0, $years_before = 5, $years_after = 0, $id = 'edd-year-dropdown' ) {
 		$current    = date( 'Y' );
 		$start_year = $current - absint( $years_before );
 		$end_year   = $current + absint( $years_after );
@@ -511,7 +511,7 @@ class EDD_HTML_Elements {
 		$output = $this->select(
 			array(
 				'name'             => $name,
-				'id'               => $form . '_' . $name,
+				'id'               => $id . '_' . $name,
 				'selected'         => $selected,
 				'options'          => $options,
 				'show_option_all'  => false,
@@ -527,12 +527,12 @@ class EDD_HTML_Elements {
 	 *
 	 * @since 1.5.2
 	 *
-	 * @param string $name     Name attribute of the dropdown
-	 * @param int    $selected Month to select automatically
-	 *
+	 * @param string $name     Name attribute of the dropdown.
+	 * @param int    $selected Month to select automatically.
+	 * @param string $id A unique identifier for the field.
 	 * @return string $output Month dropdown
 	 */
-	public function month_dropdown( $form = 'form', $name = 'month', $selected = 0 ) {
+	public function month_dropdown( $name = 'month', $selected = 0, $id = 'edd-month-dropdown' ) {
 		$month    = 1;
 		$options  = array();
 		$selected = empty( $selected ) ? date( 'n' ) : $selected;
@@ -545,7 +545,7 @@ class EDD_HTML_Elements {
 		$output = $this->select(
 			array(
 				'name'             => $name,
-				'id'               => $form . '_' . $name,
+				'id'               => $id . '_' . $name,
 				'selected'         => $selected,
 				'options'          => $options,
 				'show_option_all'  => false,

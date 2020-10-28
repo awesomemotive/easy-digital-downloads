@@ -2562,9 +2562,9 @@ function display_export_report() {
 								<?php esc_html_e( 'Start Month and Year for Export Earnings Report', 'easy-digital-downloads' ); ?>
 							</legend>
 								<label for="edd_export_earnings_start_month" class="screen-reader-text"><?php esc_html_e( 'Start Month', 'easy-digital-downloads' ); ?></label>
-									<?php echo EDD()->html->month_dropdown( 'edd_export_earnings', 'start_month' ); ?>
+									<?php echo EDD()->html->month_dropdown( 'start_month', 0, 'edd_export_earnings' ); ?>
 								<label for="edd_export_earnings_start_year" class="screen-reader-text"><?php esc_html_e( 'Start Year', 'easy-digital-downloads' ); ?></label>
-									<?php echo EDD()->html->year_dropdown( 'edd_export_earnings', 'start_year' ); ?>
+									<?php echo EDD()->html->year_dropdown( 'start_year', 0, 5, 0, 'edd_export_earnings' ); ?>
 							</fieldset>
 
 							<span class="edd-to-and-from--separator"><?php echo _x( '&mdash; to &mdash;', 'Date one to date two', 'easy-digital-downloads' ); ?></span>
@@ -2574,9 +2574,9 @@ function display_export_report() {
 								<?php esc_html_e( 'End Month and Year for Export Earnings Report', 'easy-digital-downloads' ); ?>
 							</legend>
 								<label for="edd_export_earnings_end_month" class="screen-reader-text"><?php esc_html_e( 'End Month', 'easy-digital-downloads' ); ?></label>
-									<?php echo EDD()->html->month_dropdown( 'edd_export_earnings', 'end_month' ); ?>
+									<?php echo EDD()->html->month_dropdown( 'end_month', 0, 'edd_export_earnings' ); ?>
 								<label for="edd_export_earnings_end_year" class="screen-reader-text"><?php esc_html_e( 'End Year', 'easy-digital-downloads' ); ?></label>
-									<?php echo EDD()->html->year_dropdown( 'edd_export_earnings', 'end_year' ); ?>
+									<?php echo EDD()->html->year_dropdown( 'end_year', 0, 5, 0, 'edd_export_earnings' ); ?>
 							</fieldset>
 							<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 							<input type="hidden" name="edd-export-class" value="EDD_Batch_Earnings_Report_Export"/>
