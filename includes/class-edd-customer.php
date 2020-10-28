@@ -1092,7 +1092,9 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 			'is_primary'  => $is_primary,
 		);
 		if ( $is_primary ) {
-			$args['number'] = 1;
+			$args['number']  = 1;
+			$args['orderby'] = 'date_created';
+			$args['order']   = 'desc';
 		}
 		$address = edd_get_customer_addresses( $args );
 		if ( ! $is_primary ) {
