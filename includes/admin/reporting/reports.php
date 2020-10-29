@@ -2630,7 +2630,7 @@ function display_export_report() {
 									)
 								);
 								?>
-							<label for="edd_order_export_customer" class="screen-reader-text"><?php esc_html_e( 'All Customers or Select Customer', 'easy-digital-downloads' ); ?></label>
+							<label for="edd_order_export_customer" class="screen-reader-text"><?php esc_html_e( 'Select Customer', 'easy-digital-downloads' ); ?></label>
 							<?php
 								echo EDD()->html->customer_dropdown(
 									array(
@@ -2748,7 +2748,7 @@ function display_export_report() {
 									)
 								);
 								?>
-							<label for="edd_reports_filter_taxed_countries" class="screen-reader-text"><?php esc_html_e( 'All Countries or Select Country', 'easy-digital-downloads' ); ?></label>
+							<label for="edd_reports_filter_taxed_countries" class="screen-reader-text"><?php esc_html_e( 'Select Country', 'easy-digital-downloads' ); ?></label>
 								<?php
 								echo EDD()->html->select(
 									array(
@@ -2763,7 +2763,7 @@ function display_export_report() {
 									)
 								);
 								?>
-							<label for="edd_reports_filter_regions" class="screen-reader-text"><?php esc_html_e( 'All Regions or Select Region', 'easy-digital-downloads' ); ?></label>
+							<label for="edd_reports_filter_regions" class="screen-reader-text"><?php esc_html_e( 'Select Region', 'easy-digital-downloads' ); ?></label>
 								<?php
 								echo EDD()->html->select(
 									array(
