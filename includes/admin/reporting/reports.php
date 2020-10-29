@@ -2600,7 +2600,7 @@ function display_export_report() {
 										array(
 											'id'          => 'edd-order-export-start',
 											'class'       => 'edd-export-start',
-											'name'        => 'start',
+											'name'        => 'order-export-start',
 											'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
 										)
 									);
@@ -2611,7 +2611,7 @@ function display_export_report() {
 										array(
 											'id'          => 'edd-order-export-end',
 											'class'       => 'edd-export-end',
-											'name'        => 'end',
+											'name'        => 'order-export-end',
 											'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
 										)
 									);
@@ -2665,7 +2665,7 @@ function display_export_report() {
 										array(
 											'id'          => 'edd-orders-export-start',
 											'class'       => 'edd-export-start',
-											'name'        => 'start',
+											'name'        => 'orders-export-start',
 											'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
 										)
 									);
@@ -2676,7 +2676,7 @@ function display_export_report() {
 										array(
 											'id'          => 'edd-orders-export-end',
 											'class'       => 'edd-export-end',
-											'name'        => 'end',
+											'name'        => 'orders-export-end',
 											'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
 										)
 									);
@@ -2718,7 +2718,7 @@ function display_export_report() {
 										array(
 											'id'          => 'edd-taxed-orders-export-start',
 											'class'       => 'edd-export-start',
-											'name'        => 'start',
+											'name'        => 'taxed-orders-export-start',
 											'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' )
 										)
 									);
@@ -2729,7 +2729,7 @@ function display_export_report() {
 										array(
 											'id'          => 'edd-taxed-orders-export-end',
 											'class'       => 'edd-export-end',
-											'name'        => 'end',
+											'name'        => 'taxed-orders-export-end',
 											'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' )
 										)
 									);
@@ -2863,7 +2863,7 @@ function display_export_report() {
 										array(
 											'id'          => 'edd-taxed-customers-export-start',
 											'class'       => 'edd-export-start',
-											'name'        => 'start',
+											'name'        => 'taxed-orders-export-start',
 											'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' )
 										)
 									);
@@ -2874,7 +2874,7 @@ function display_export_report() {
 									array(
 										'id'          => 'edd-taxed-customers-export-end',
 										'class'       => 'edd-export-end',
-										'name'        => 'end',
+										'name'        => 'taxed-orders-export-end',
 										'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' )
 									)
 								);
@@ -2928,7 +2928,7 @@ function display_export_report() {
 										array(
 											'id'          => 'edd-api-requests-export-start',
 											'class'       => 'edd-export-start',
-											'name'        => 'start',
+											'name'        => 'api-requests-export-start',
 											'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' )
 										)
 									);
@@ -2939,7 +2939,7 @@ function display_export_report() {
 										array(
 											'id'          => 'edd-api-requests-export-end',
 											'class'       => 'edd-export-end',
-											'name'        => 'end',
+											'name'        => 'api-requests-export-end',
 											'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' )
 										)
 									);
@@ -2982,7 +2982,7 @@ function display_export_report() {
 									array(
 										'id'          => 'edd-file-download-export-start',
 										'class'       => 'edd-export-start',
-										'name'        => 'start',
+										'name'        => 'file-download-export-start',
 										'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' )
 									)
 								);
@@ -2993,7 +2993,7 @@ function display_export_report() {
 										array(
 											'id'          => 'edd-file-download-export-end',
 											'class'       => 'edd-export-end',
-											'name'        => 'end',
+											'name'        => 'file-download-export-end',
 											'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' )
 										)
 									);
