@@ -57,14 +57,14 @@ a.edd-delete:hover {
 	z-index: 1;
 }
 
-.edd-from-to-wrapper input[name="start"],
+.edd-from-to-wrapper input[name*="export-start"],
 .edd-from-to-wrapper input[name="start-date"],
 .edd-from-to-wrapper input[name="filter_from"] {
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
 }
 
-.edd-from-to-wrapper input[name="end"],
+.edd-from-to-wrapper input[name*="export-end"],
 .edd-from-to-wrapper input[name="end-date"],
 .edd-from-to-wrapper input[name="filter_to"] {
 	margin-left: -1px;
