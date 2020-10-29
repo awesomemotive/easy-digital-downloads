@@ -496,7 +496,7 @@ class EDD_HTML_Elements {
 	 * @param string $id A unique identifier for the field.
 	 * @return string $output Year dropdown
 	 */
-	public function year_dropdown( $name = 'year', $selected = 0, $years_before = 5, $years_after = 0, $id = 'edd-year-dropdown' ) {
+	public function year_dropdown( $name = 'year', $selected = 0, $years_before = 5, $years_after = 0, $id = 'edd_year_select' ) {
 		$current    = date( 'Y' );
 		$start_year = $current - absint( $years_before );
 		$end_year   = $current + absint( $years_after );
@@ -532,7 +532,7 @@ class EDD_HTML_Elements {
 	 * @param string $id A unique identifier for the field.
 	 * @return string $output Month dropdown
 	 */
-	public function month_dropdown( $name = 'month', $selected = 0, $id = 'edd-month-dropdown' ) {
+	public function month_dropdown( $name = 'month', $selected = 0, $id = 'edd_month_select' ) {
 		$month    = 1;
 		$options  = array();
 		$selected = empty( $selected ) ? date( 'n' ) : $selected;
