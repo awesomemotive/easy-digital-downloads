@@ -1,3 +1,5 @@
+/* global eddAdminOrderOverview */
+
 // Loads the modal when the refund button is clicked.
 $(document.body).on('click', '.edd-refund-order', function (e) {
 	e.preventDefault();
@@ -25,6 +27,10 @@ $(document.body).on('click', '.edd-refund-order', function (e) {
 				modal    : true,
 				resizable: false,
 				draggable: false,
+				classes: {
+					'ui-dialog': 'edd-dialog',
+				},
+				closeText: eddAdminOrderOverview.i18n.closeText,
 				open: function( event, ui ) {
 					$(this).html( modal_content );
 				},
