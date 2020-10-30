@@ -527,18 +527,20 @@ class EDD_HTML_Elements {
 	 *
 	 * @since 1.5.2
 	 *
-	 * @param string $name     Name attribute of the dropdown.
-	 * @param int    $selected Month to select automatically.
-	 * @param string $id A unique identifier for the field.
+	 * @param string  $name     Name attribute of the dropdown.
+	 * @param int     $selected Month to select automatically.
+	 * @param string  $id A unique identifier for the field.
+	 * @param boolean $return_long_name Whether to use the long name for the month.
+	 *
 	 * @return string $output Month dropdown
 	 */
-	public function month_dropdown( $name = 'month', $selected = 0, $id = 'edd_month_select' ) {
+	public function month_dropdown( $name = 'month', $selected = 0, $id = 'edd_month_select', $return_long_name = false ) {
 		$month    = 1;
 		$options  = array();
 		$selected = empty( $selected ) ? date( 'n' ) : $selected;
 
 		while ( $month <= 12 ) {
-			$options[ absint( $month ) ] = edd_month_num_to_name( $month, true );
+			$options[ absint( $month ) ] = edd_month_num_to_name( $month, $return_long_name );
 			$month ++;
 		}
 
