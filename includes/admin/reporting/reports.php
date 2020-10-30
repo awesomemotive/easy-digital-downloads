@@ -2863,7 +2863,7 @@ function display_export_report() {
 										array(
 											'id'          => 'edd-taxed-customers-export-start',
 											'class'       => 'edd-export-start',
-											'name'        => 'taxed-orders-export-start',
+											'name'        => 'taxed-customers-export-start',
 											'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' )
 										)
 									);
@@ -2874,7 +2874,7 @@ function display_export_report() {
 									array(
 										'id'          => 'edd-taxed-customers-export-end',
 										'class'       => 'edd-export-end',
-										'name'        => 'taxed-orders-export-end',
+										'name'        => 'taxed-customers-export-end',
 										'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' )
 									)
 								);
