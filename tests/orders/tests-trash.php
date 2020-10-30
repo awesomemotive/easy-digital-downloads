@@ -125,8 +125,4 @@ class Trash_Tests extends \EDD_UnitTestCase {
 		$this->assertSame( 'trash', $refunds[0]->status );
 	}
 
-	public function test_restore_order_with_refunds() {
-
-	}
-
 }

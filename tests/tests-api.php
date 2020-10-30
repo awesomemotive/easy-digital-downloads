@@ -169,6 +169,8 @@ class Tests_API extends EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
+		wp_set_current_user( self::$user_id );
+
 		add_filter( 'edd_api_output_format', function() {
 			return 'override';
 		} );
@@ -186,6 +188,9 @@ class Tests_API extends EDD_UnitTestCase {
 
 	public function tearDown() {
 		parent::tearDown();
+
+		// Revoke key to ensure `update_key()` will generate a new one.
+		EDD()->api->revoke_api_key( self::$user_id );
 
 		self::$api->flush_api_output();
 	}
@@ -253,12 +258,14 @@ class Tests_API extends EDD_UnitTestCase {
 
 		try {
 			self::$api->process_query();
-			$this->assertEquals( 'v1', self::$api->get_queried_version() );
+		} catch ( WPDieException $e ) {}
+		$this->assertEquals( 'v1', self::$api->get_queried_version() );
 
+		try {
 			$wp_query->query_vars['edd-api'] = 'v2/sales';
 			self::$api->process_query();
-			$this->assertEquals( 'v2', self::$api->get_queried_version() );
 		} catch ( WPDieException $e ) {}
+		$this->assertEquals( 'v2', self::$api->get_queried_version() );
 	}
 
 	public function test_get_products() {
@@ -421,30 +428,33 @@ class Tests_API extends EDD_UnitTestCase {
 
 		try {
 			self::$api->process_query();
-			$out = self::$api->get_output();
-
-			$this->assertArrayHasKey( 'error', $out );
-			$this->assertEquals( 'You must specify both a token and API key!', $out['error'] );
 		} catch ( WPDieException $e ) {}
+
+		$out = self::$api->get_output();
+
+		$this->assertArrayHasKey( 'error', $out );
+		$this->assertEquals( 'You must specify both a token and API key!', $out['error'] );
 	}
 
 	public function test_invalid_auth() {
+
 		global $wp_query;
 
 		$_POST['edd_set_api_key'] = 1;
 		EDD()->api->update_key( self::$user_id );
 
-		$wp_query->query_vars['key']     = get_user_meta( self::$user_id, 'edd_user_public_key', true );
+		$wp_query->query_vars['key']     = self::$api->get_user_public_key( self::$user_id );
 		$wp_query->query_vars['token']   = 'bad-token-val';
 		$wp_query->query_vars['edd-api'] = 'sales';
 
 		try {
 			self::$api->process_query();
-			$out = self::$api->get_output();
-
-			$this->assertArrayHasKey( 'error', $out );
-			$this->assertEquals( 'Your request could not be authenticated!', $out['error'] );
 		} catch ( WPDieException $e ) {}
+
+		$out = self::$api->get_output();
+
+		$this->assertArrayHasKey( 'error', $out );
+		$this->assertEquals( 'Your request could not be authenticated!', $out['error'] );
 	}
 
 	public function test_invalid_key() {
@@ -459,11 +469,12 @@ class Tests_API extends EDD_UnitTestCase {
 
 		try {
 			self::$api->process_query();
-			$out = self::$api->get_output();
-
-			$this->assertArrayHasKey( 'error', $out );
-			$this->assertEquals( 'Invalid API key!', $out['error'] );
 		} catch ( WPDieException $e ) {}
+
+		$out = self::$api->get_output();
+
+		$this->assertArrayHasKey( 'error', $out );
+		$this->assertEquals( 'Invalid API key!', $out['error'] );
 	}
 
 	public function test_info() {
@@ -496,58 +507,59 @@ class Tests_API extends EDD_UnitTestCase {
 
 		try {
 			self::$api->process_query();
-			$out = self::$api->get_output();
-
-			$this->assertArrayHasKey( 'info', $out['products'][0] );
-			$this->assertArrayHasKey( 'id', $out['products'][0]['info'] );
-			$this->assertArrayHasKey( 'slug', $out['products'][0]['info'] );
-			$this->assertEquals( 'test-download', $out['products'][0]['info']['slug'] );
-			$this->assertArrayHasKey( 'title', $out['products'][0]['info'] );
-			$this->assertEquals( 'Test Download', $out['products'][0]['info']['title'] );
-			$this->assertArrayHasKey( 'create_date', $out['products'][0]['info'] );
-			$this->assertArrayHasKey( 'modified_date', $out['products'][0]['info'] );
-			$this->assertArrayHasKey( 'status', $out['products'][0]['info'] );
-			$this->assertEquals( 'publish', $out['products'][0]['info']['status'] );
-			$this->assertArrayHasKey( 'link', $out['products'][0]['info'] );
-			$this->assertArrayHasKey( 'content', $out['products'][0]['info'] );
-			$this->assertEquals( self::$post->post_content, $out['products'][0]['info']['content'] );
-			$this->assertArrayHasKey( 'thumbnail', $out['products'][0]['info'] );
-
-			$this->assertArrayHasKey( 'stats', $out['products'][0] );
-			$this->assertArrayHasKey( 'total', $out['products'][0]['stats'] );
-			$this->assertArrayHasKey( 'sales', $out['products'][0]['stats']['total'] );
-			$this->assertEquals( 60, $out['products'][0]['stats']['total']['sales'] );
-			$this->assertArrayHasKey( 'earnings', $out['products'][0]['stats']['total'] );
-			$this->assertEquals( 229.43, $out['products'][0]['stats']['total']['earnings'] );
-			$this->assertArrayHasKey( 'monthly_average', $out['products'][0]['stats'] );
-			$this->assertArrayHasKey( 'sales', $out['products'][0]['stats']['monthly_average'] );
-			$this->assertEquals( 60, $out['products'][0]['stats']['monthly_average']['sales'] );
-			$this->assertArrayHasKey( 'earnings', $out['products'][0]['stats']['monthly_average'] );
-			$this->assertEquals( 229.43, $out['products'][0]['stats']['monthly_average']['earnings'] );
-
-			$this->assertArrayHasKey( 'pricing', $out['products'][0] );
-			$this->assertArrayHasKey( 'simple', $out['products'][0]['pricing'] );
-			$this->assertEquals( 20, $out['products'][0]['pricing']['simple'] );
-			$this->assertArrayHasKey( 'advanced', $out['products'][0]['pricing'] );
-			$this->assertEquals( 100, $out['products'][0]['pricing']['advanced'] );
-
-			$this->assertArrayHasKey( 'files', $out['products'][0] );
-			$this->assertArrayHasKey( 'name', $out['products'][0]['files'][0] );
-			$this->assertArrayHasKey( 'file', $out['products'][0]['files'][0] );
-			$this->assertArrayHasKey( 'condition', $out['products'][0]['files'][0] );
-			$this->assertArrayHasKey( 'name', $out['products'][0]['files'][1] );
-			$this->assertArrayHasKey( 'file', $out['products'][0]['files'][1] );
-			$this->assertArrayHasKey( 'condition', $out['products'][0]['files'][1] );
-			$this->assertEquals( 'File 1', $out['products'][0]['files'][0]['name'] );
-			$this->assertEquals( 'http://localhost/file1.jpg', $out['products'][0]['files'][0]['file'] );
-			$this->assertEquals( 0, $out['products'][0]['files'][0]['condition'] );
-			$this->assertEquals( 'File 2', $out['products'][0]['files'][1]['name'] );
-			$this->assertEquals( 'http://localhost/file2.jpg', $out['products'][0]['files'][1]['file'] );
-			$this->assertEquals( 'all', $out['products'][0]['files'][1]['condition'] );
-
-			$this->assertArrayHasKey( 'notes', $out['products'][0] );
-			$this->assertEquals( 'Purchase Notes', $out['products'][0]['notes'] );
 		} catch ( WPDieException $e ) {}
+
+		$out = self::$api->get_output();
+
+		$this->assertArrayHasKey( 'info', $out['products'][0] );
+		$this->assertArrayHasKey( 'id', $out['products'][0]['info'] );
+		$this->assertArrayHasKey( 'slug', $out['products'][0]['info'] );
+		$this->assertEquals( 'test-download', $out['products'][0]['info']['slug'] );
+		$this->assertArrayHasKey( 'title', $out['products'][0]['info'] );
+		$this->assertEquals( 'Test Download', $out['products'][0]['info']['title'] );
+		$this->assertArrayHasKey( 'create_date', $out['products'][0]['info'] );
+		$this->assertArrayHasKey( 'modified_date', $out['products'][0]['info'] );
+		$this->assertArrayHasKey( 'status', $out['products'][0]['info'] );
+		$this->assertEquals( 'publish', $out['products'][0]['info']['status'] );
+		$this->assertArrayHasKey( 'link', $out['products'][0]['info'] );
+		$this->assertArrayHasKey( 'content', $out['products'][0]['info'] );
+		$this->assertEquals( self::$post->post_content, $out['products'][0]['info']['content'] );
+		$this->assertArrayHasKey( 'thumbnail', $out['products'][0]['info'] );
+
+		$this->assertArrayHasKey( 'stats', $out['products'][0] );
+		$this->assertArrayHasKey( 'total', $out['products'][0]['stats'] );
+		$this->assertArrayHasKey( 'sales', $out['products'][0]['stats']['total'] );
+		$this->assertEquals( 60, $out['products'][0]['stats']['total']['sales'] );
+		$this->assertArrayHasKey( 'earnings', $out['products'][0]['stats']['total'] );
+		$this->assertEquals( 229.43, $out['products'][0]['stats']['total']['earnings'] );
+		$this->assertArrayHasKey( 'monthly_average', $out['products'][0]['stats'] );
+		$this->assertArrayHasKey( 'sales', $out['products'][0]['stats']['monthly_average'] );
+		$this->assertEquals( 60, $out['products'][0]['stats']['monthly_average']['sales'] );
+		$this->assertArrayHasKey( 'earnings', $out['products'][0]['stats']['monthly_average'] );
+		$this->assertEquals( 229.43, $out['products'][0]['stats']['monthly_average']['earnings'] );
+
+		$this->assertArrayHasKey( 'pricing', $out['products'][0] );
+		$this->assertArrayHasKey( 'simple', $out['products'][0]['pricing'] );
+		$this->assertEquals( 20, $out['products'][0]['pricing']['simple'] );
+		$this->assertArrayHasKey( 'advanced', $out['products'][0]['pricing'] );
+		$this->assertEquals( 100, $out['products'][0]['pricing']['advanced'] );
+
+		$this->assertArrayHasKey( 'files', $out['products'][0] );
+		$this->assertArrayHasKey( 'name', $out['products'][0]['files'][0] );
+		$this->assertArrayHasKey( 'file', $out['products'][0]['files'][0] );
+		$this->assertArrayHasKey( 'condition', $out['products'][0]['files'][0] );
+		$this->assertArrayHasKey( 'name', $out['products'][0]['files'][1] );
+		$this->assertArrayHasKey( 'file', $out['products'][0]['files'][1] );
+		$this->assertArrayHasKey( 'condition', $out['products'][0]['files'][1] );
+		$this->assertEquals( 'File 1', $out['products'][0]['files'][0]['name'] );
+		$this->assertEquals( 'http://localhost/file1.jpg', $out['products'][0]['files'][0]['file'] );
+		$this->assertEquals( 0, $out['products'][0]['files'][0]['condition'] );
+		$this->assertEquals( 'File 2', $out['products'][0]['files'][1]['name'] );
+		$this->assertEquals( 'http://localhost/file2.jpg', $out['products'][0]['files'][1]['file'] );
+		$this->assertEquals( 'all', $out['products'][0]['files'][1]['condition'] );
+
+		$this->assertArrayHasKey( 'notes', $out['products'][0] );
+		$this->assertEquals( 'Purchase Notes', $out['products'][0]['notes'] );
 	}
 
 }
