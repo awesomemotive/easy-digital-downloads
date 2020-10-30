@@ -713,6 +713,9 @@ function edd_order_details_overview( $order ) {
 			'nonces'       => array(
 				'edd_admin_order_get_item_amounts' => wp_create_nonce( 'edd_admin_order_get_item_amounts' ),
 			),
+			'i18n'         => array(
+				'closeText' => esc_html__( 'Close', 'easy-digital-downloads' ),
+			),
 		)
 	);
 

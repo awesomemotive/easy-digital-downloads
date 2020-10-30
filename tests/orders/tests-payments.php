@@ -91,6 +91,14 @@ class Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 0, count( $out ) );
 	}
 
+	public function test_payments_query_count_payments() {
+		$payments = new \EDD_Payments_Query( array( 'count' => true ) );
+		$count    = $payments->get_payments();
+
+		$this->assertTrue( is_numeric( $count ) );
+		$this->assertEquals( 1, $count );
+	}
+
 	public function test_edd_get_payment_by() {
 		$payment = edd_get_payment_by( 'id', self::$payment->ID );
 		$this->assertObjectHasAttribute( 'ID', $payment );
