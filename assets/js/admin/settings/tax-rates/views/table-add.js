@@ -55,11 +55,14 @@ const TableAdd = wp.Backbone.View.extend( {
 	 * Render. Only overwritten so we can reinit chosen once cleared.
 	 */
 	render: function() {
-		this.$el.html( this.template() );
+		wp.Backbone.View.prototype.render.apply( this, arguments );
+
 		this.$el.find( 'select' ).each( function() {
 			const el = $( this );
 			el.chosen( getChosenVars( el ) );
 		} );
+
+		return this;
 	},
 
 	/**

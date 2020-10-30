@@ -10,8 +10,6 @@
  */
 namespace EDD\Reports;
 
-use DateTimeZone, DateTime, edd_get_timezone_abbr, edd_get_utc_equivalent_date;
-
 //
 // Endpoint and report helpers.
 //
@@ -938,24 +936,24 @@ function default_display_charts_group( $report ) {
 		return;
 	}
 
+	?>
+	<div id="edd-reports-charts-wrap" class="edd-report-wrap">
+	<?php
+
 	$charts = $report->get_endpoints( 'charts' );
 
 	foreach ( $charts as $endpoint_id => $chart ) {
-?>
+		?>
+		<div class="edd-reports-chart edd-reports-chart-<?php echo esc_attr( $chart->get_type() ); ?>" id="edd-reports-table-<?php echo esc_attr( $endpoint_id ); ?>">
+			<h3><?php echo esc_html( $chart->get_label() ); ?></h3>
 
-	<div id="edd-reports-charts-wrap" class="edd-report-wrap">
-
-			<div class="edd-reports-chart edd-reports-chart-<?php echo esc_attr( $chart->get_type() ); ?>" id="edd-reports-table-<?php echo esc_attr( $endpoint_id ); ?>">
-				<h3><?php echo esc_html( $chart->get_label() ); ?></h3>
-
-				<?php $chart->display(); ?>
-			</div>
-
-			<div class="clear"></div>
-
-	</div>
-<?php
+			<?php $chart->display(); ?>
+		</div>
+		<?php
 	}
+	?>
+	</div>
+	<?php
 }
 
 /**
@@ -1104,7 +1102,6 @@ function display_gateways_filter() {
 	$select = EDD()->html->select( array(
 		'name'             => 'gateways',
 		'options'          => $gateways,
-		'chosen'           => true,
 		'selected'         => empty( $gateway ) ? 0 : $gateway,
 		'show_option_none' => false,
 	) ); ?>

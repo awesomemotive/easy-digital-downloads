@@ -1233,9 +1233,9 @@ function edd_render_disable_button( $post_id ) {
 		</div>
 		<?php if ( ! empty( $supports_buy_now ) ) { ?>
 			<div class="edd-form-group__control">
-			<label for="edd_button_behavior" class="edd-form-group__label">
-				<?php esc_html_e( 'Purchase button behavior', 'easy-digital-downloads' ); ?>
-			</label>
+				<label for="edd_button_behavior" class="edd-form-group__label">
+					<?php esc_html_e( 'Purchase button behavior', 'easy-digital-downloads' ); ?>
+				</label>
 				<?php
 				$args = array(
 					'name'             => '_edd_button_behavior',
