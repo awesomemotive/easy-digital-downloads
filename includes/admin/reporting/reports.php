@@ -2562,7 +2562,7 @@ function display_export_report() {
 								<?php esc_html_e( 'Export Earnings Start', 'easy-digital-downloads' ); ?>
 							</legend>
 								<label for="edd_export_earnings_start_month" class="screen-reader-text"><?php esc_html_e( 'Select start month', 'easy-digital-downloads' ); ?></label>
-									<?php echo EDD()->html->month_dropdown( 'start_month', 0, 'edd_export_earnings' ); ?>
+									<?php echo EDD()->html->month_dropdown( 'start_month', 0, 'edd_export_earnings', true ); ?>
 								<label for="edd_export_earnings_start_year" class="screen-reader-text"><?php esc_html_e( 'Select start year', 'easy-digital-downloads' ); ?></label>
 									<?php echo EDD()->html->year_dropdown( 'start_year', 0, 5, 0, 'edd_export_earnings' ); ?>
 							</fieldset>
@@ -2574,7 +2574,7 @@ function display_export_report() {
 								<?php esc_html_e( 'Export Earnings End', 'easy-digital-downloads' ); ?>
 							</legend>
 								<label for="edd_export_earnings_end_month" class="screen-reader-text"><?php esc_html_e( 'Select end month', 'easy-digital-downloads' ); ?></label>
-									<?php echo EDD()->html->month_dropdown( 'end_month', 0, 'edd_export_earnings' ); ?>
+									<?php echo EDD()->html->month_dropdown( 'end_month', 0, 'edd_export_earnings', true ); ?>
 								<label for="edd_export_earnings_end_year" class="screen-reader-text"><?php esc_html_e( 'Select end year', 'easy-digital-downloads' ); ?></label>
 									<?php echo EDD()->html->year_dropdown( 'end_year', 0, 5, 0, 'edd_export_earnings' ); ?>
 							</fieldset>
