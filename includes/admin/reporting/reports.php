@@ -2556,7 +2556,7 @@ function display_export_report() {
 					<h2 class="hndle"><span><?php esc_html_e( 'Export Earnings Report', 'easy-digital-downloads' ); ?></span></h2>
 					<div class="inside">
 						<p><?php esc_html_e( 'Download a CSV giving a detailed look into earnings over time.', 'easy-digital-downloads' ); ?></p>
-						<form id="edd-export-earnings" class="edd-export-form edd-import-export-form" method="post">
+						<form id="edd-export-earnings-report" class="edd-export-form edd-import-export-form" method="post">
 							<fieldset class="edd-to-and-from-container">
 							<legend class="screen-reader-text">
 								<?php esc_html_e( 'Export Earnings Start', 'easy-digital-downloads' ); ?>
@@ -2618,7 +2618,7 @@ function display_export_report() {
 
 									?>
 							</fieldset>
-							<label for="edd_orders_export_download" class="screen-reader-text"><?php esc_html_e( 'All Downloads or Select Download', 'easy-digital-downloads' ); ?></label>
+							<label for="edd_orders_export_download" class="screen-reader-text"><?php esc_html_e( 'Select Download', 'easy-digital-downloads' ); ?></label>
 								<?php
 								echo EDD()->html->product_dropdown(
 									array(
@@ -2894,8 +2894,8 @@ function display_export_report() {
 					<h2 class="hndle"><span><?php esc_html_e( sprintf( __( 'Export %s', 'easy-digital-downloads' ), edd_get_label_plural() ) ); ?></span></h2>
 					<div class="inside">
 						<p><?php esc_html_e( sprintf( __( 'Download a CSV of %1$s.', 'easy-digital-downloads' ), edd_get_label_plural( true ) ) ); ?></p>
-						<form id="edd-export-file-downloads" class="edd-export-form edd-import-export-form" method="post">
-						<label for="edd_download_export_download" class="screen-reader-text"><?php esc_html_e( 'All Downloads or Select Download', 'easy-digital-downloads' ); ?></label>
+						<form id="edd-export-downloads" class="edd-export-form edd-import-export-form" method="post">
+						<label for="edd_download_export_download" class="screen-reader-text"><?php esc_html_e( 'Select Download', 'easy-digital-downloads' ); ?></label>
 							<?php echo EDD()->html->product_dropdown(
 								array(
 									'name'        => 'download_id',
@@ -2960,8 +2960,8 @@ function display_export_report() {
 					<h2 class="hndle"><span><?php esc_html_e( 'Export File Download Logs', 'easy-digital-downloads' ); ?></span></h2>
 					<div class="inside">
 						<p><?php esc_html_e( 'Download a CSV of file download logs.', 'easy-digital-downloads' ); ?></p>
-						<form id="edd-export-file-downloads" class="edd-export-form edd-import-export-form" method="post">
-							<label for="edd_file_download_export_download" class="screen-reader-text"><?php esc_html_e( 'All Downloads or Select Download', 'easy-digital-downloads' ); ?></label>
+						<form id="edd-export-download-history" class="edd-export-form edd-import-export-form" method="post">
+							<label for="edd_file_download_export_download" class="screen-reader-text"><?php esc_html_e( 'Select Download', 'easy-digital-downloads' ); ?></label>
 								<?php echo EDD()->html->product_dropdown(
 									array(
 										'name'        => 'download_id',
