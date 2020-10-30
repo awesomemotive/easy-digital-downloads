@@ -293,9 +293,9 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertArrayHasKey( 'earnings', $out['products'][0]['stats']['monthly_average'] );
 
 		$this->assertEquals( '60', $out['products'][0]['stats']['total']['sales'] );
-		$this->assertEquals( '229.43', $out['products'][0]['stats']['total']['earnings'] );
+		$this->assertEquals( '229.430000', $out['products'][0]['stats']['total']['earnings'] );
 		$this->assertEquals( '60', $out['products'][0]['stats']['monthly_average']['sales'] );
-		$this->assertEquals( '229.43', $out['products'][0]['stats']['monthly_average']['earnings'] );
+		$this->assertEquals( '229.430000', $out['products'][0]['stats']['monthly_average']['earnings'] );
 	}
 
 	public function test_get_products_pricing() {
@@ -304,8 +304,8 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertArrayHasKey( 'simple', $out['products'][0]['pricing'] );
 		$this->assertArrayHasKey( 'advanced', $out['products'][0]['pricing'] );
 
-		$this->assertEquals( '20', $out['products'][0]['pricing']['simple'] );
-		$this->assertEquals( '100', $out['products'][0]['pricing']['advanced'] );
+		$this->assertEquals( '20.00', $out['products'][0]['pricing']['simple'] );
+		$this->assertEquals( '100.00', $out['products'][0]['pricing']['advanced'] );
 	}
 
 	public function test_get_products_files() {

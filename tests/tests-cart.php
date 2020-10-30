@@ -714,7 +714,7 @@ class Test_Cart extends EDD_UnitTestCase {
 		);
 		EDD()->fees->add_fee( $fee );
 
-		$this->assertEquals( "1", EDD()->cart->get_tax() );
+		$this->assertEquals( 1.00, EDD()->cart->get_tax() );
 
 		edd_update_option( 'enable_taxes', false );
 	}
