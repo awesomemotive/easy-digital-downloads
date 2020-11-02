@@ -171,7 +171,7 @@ add_filter( 'wp_login_errors', 'edd_login_register_error_message', 10, 2 );
 function edd_login_register_error_message( $errors, $redirect ) {
 	$action_is_confirm   = ! empty( $_GET['checkemail'] ) && 'confirm' === sanitize_text_field( $_GET['checkemail'] );
 	$edd_action_is_reset = ! empty( $_GET['edd_reset_password'] ) && 'confirm' === sanitize_text_field( $_GET['checkemail'] );
-	$redirect_url        = ! empty( $_GET['edd_redirect'] ) ? esc_url( $_GET['edd_redirect'] ) : false;
+	$redirect_url        = ! empty( $_GET['edd_redirect'] ) ? $_GET['edd_redirect'] : false;
 	if ( $action_is_confirm && $edd_action_is_reset && $redirect_url ) {
 		$errors->remove( 'confirm' );
 		$errors->add(
