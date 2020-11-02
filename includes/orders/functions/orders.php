@@ -127,6 +127,11 @@ function edd_trash_order( $order_id ) {
 			}
 		}
 
+		// Update the customer records when an order is trashed.
+		if ( ! empty( $order->customer_id ) ) {
+			$customer = new EDD_Customer( $order->customer_id );
+			$customer->recalculate_stats();
+		}
 	}
 
 	return filter_var( $trashed, FILTER_VALIDATE_BOOLEAN );
@@ -336,8 +341,14 @@ function edd_destroy_order( $order_id = 0 ) {
  */
 function edd_update_order( $order_id = 0, $data = array() ) {
 	$orders = new EDD\Database\Queries\Order();
+	$update = $orders->update_item( $order_id, $data );
 
-	return $orders->update_item( $order_id, $data );
+	if ( ! empty( $data['customer_id'] ) ) {
+		$customer = new EDD_Customer( $data['customer_id'] );
+		$customer->recalculate_stats();
+	}
+
+	return $update;
 }
 
 /**
@@ -786,6 +797,26 @@ function edd_build_order( $order_data = array() ) {
 	$decimal_filter = edd_currency_decimal_filter();
 
 	if ( is_array( $order_data['cart_details'] ) && ! empty( $order_data['cart_details'] ) ) {
+
+		$tax_rate = false;
+		// If taxes are enabled, get the tax rate for the order location.
+		if ( edd_use_taxes() ) {
+			$country = ! empty( $order_data['user_info']['address']['country'] )
+				? $order_data['user_info']['address']['country']
+				: false;
+
+			$region = ! empty( $order_data['user_info']['address']['state'] )
+				? $order_data['user_info']['address']['state']
+				: false;
+
+			$tax_rate = edd_get_tax_rate_by_location(
+				array(
+					'country' => $country,
+					'region'  => $region,
+				)
+			);
+		}
+
 		foreach ( $order_data['cart_details'] as $key => $item ) {
 
 			// First, we need to check that what is being added is a valid download.
@@ -929,6 +960,9 @@ function edd_build_order( $order_data = array() ) {
 			// Store order item fees as adjustments.
 			if ( isset( $item['fees'] ) && ! empty( $item['fees'] ) ) {
 				foreach ( $item['fees'] as $fee_id => $fee ) {
+					$tax = ( isset( $fee['no_tax'] ) && false === $fee['no_tax'] && ! empty( $tax_rate->amount ) ) || ( $fee['amount'] < 0 && ! empty( $tax_rate->amount ) )
+						? floatval( floatval( $fee['amount'] ) - ( floatval( $fee['amount'] ) / ( 1 + $tax_rate->amount ) ) )
+						: 0.00;
 
 					$adjustment_data = array(
 						'object_id'   => $order_item_id,
@@ -936,12 +970,9 @@ function edd_build_order( $order_data = array() ) {
 						'type'        => 'fee',
 						'description' => $fee['label'],
 						'subtotal'    => $fee['amount'],
+						'tax'         => $tax,
 						'total'       => $fee['amount'],
 					);
-
-					if ( isset( $fee['no_tax'] ) && ( true === $fee['no_tax'] ) ) {
-						$adjustment_data['tax'] = 0.00;
-					}
 
 					// Add the adjustment.
 					$adjustment_id = edd_add_order_adjustment( $adjustment_data );
@@ -951,33 +982,22 @@ function edd_build_order( $order_data = array() ) {
 			}
 
 			// Maybe store order tax.
-			if ( edd_use_taxes() ) {
-				$country = ! empty( $order_data['user_info']['address']['country'] )
-					? $order_data['user_info']['address']['country']
-					: false;
-
-				$state = ! empty( $order_data['user_info']['address']['state'] )
-					? $order_data['user_info']['address']['state']
-					: false;
-
-				$zip = ! empty( $order_data['user_info']['address']['zip'] )
-					? $order_data['user_info']['address']['zip']
-					: false;
-
-				$tax_rate = isset( $item['tax_rate'] )
-					? floatval( $item['tax_rate'] )
-					: edd_get_cart_tax_rate( $country, $state, $zip );
-
-				if ( 0 < $tax_rate ) {
-
-					// Always store tax rate, even if empty.
-					edd_add_order_adjustment( array(
+			if ( $tax_rate ) {
+				$description = $tax_rate->name;
+				if ( ! empty( $tax_rate->description ) ) {
+					$description = $tax_rate->description;
+				}
+				// Always store tax rate, even if empty.
+				edd_add_order_adjustment(
+					array(
 						'object_id'   => $order_item_id,
 						'object_type' => 'order_item',
 						'type'        => 'tax_rate',
-						'total'       => $tax_rate,
-					) );
-				}
+						'total'       => $tax_rate->amount,
+						'type_id'     => $tax_rate->id,
+						'description' => $description,
+					)
+				);
 			}
 
 			$subtotal       += (float) $order_item_args['subtotal'];
@@ -1040,7 +1060,14 @@ function edd_build_order( $order_data = array() ) {
 			$discount = edd_get_discount_by( 'code', $discount );
 
 			if ( $discount ) {
-				$discounted_amount = $subtotal - $discount->get_discounted_amount( $subtotal );
+				$discount_amount = 0;
+				$items           = $order_data['cart_details'];
+
+				if ( is_array( $items ) && ! empty( $items ) ) {
+					foreach ( $items as $key => $item ) {
+						$discount_amount += edd_get_item_discount_amount( $item, $items, array( $discount ) );
+					}
+				}
 
 				edd_add_order_adjustment( array(
 					'object_id'   => $order_id,
@@ -1048,8 +1075,8 @@ function edd_build_order( $order_data = array() ) {
 					'type_id'     => $discount->id,
 					'type'        => 'discount',
 					'description' => $discount->code,
-					'subtotal'    => $discounted_amount,
-					'total'       => $discounted_amount,
+					'subtotal'    => $discount_amount,
+					'total'       => $discount_amount,
 				) );
 
 			}

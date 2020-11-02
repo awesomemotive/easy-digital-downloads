@@ -52,49 +52,8 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 	public function get_data() {
 
 		$customer = new EDD_Customer( $this->customer_id );
-		$payments = $this->get_stored_data( 'edd_recount_customer_payments_' . $customer->id, array() );
-
-		$offset     = ( $this->step - 1 ) * $this->per_step;
-		$step_items = array_slice( $payments, $offset, $this->per_step );
-
-		if ( count( $step_items ) > 0 ) {
-			$pending_total = (float) $this->get_stored_data( 'edd_stats_customer_pending_total' . $customer->id, 0 );
-			$step_total    = 0;
-
-			$found_payment_ids = $this->get_stored_data( 'edd_stats_found_payments_' . $customer->id, array() );
-
-			foreach ( $step_items as $payment_id ) {
-				$payment = edd_get_payment( $payment_id );
-
-				if ( is_null( $payment ) || is_wp_error( $payment ) || 'edd_payment' !== $payment->post_type ) {
-
-					$missing_payments   = $this->get_stored_data( 'edd_stats_missing_payments' . $customer->id, array() );
-					$missing_payments[] = $payment->ID;
-					$this->store_data( 'edd_stats_missing_payments' . $customer->id, $missing_payments );
-
-					continue;
-				}
-
-				$should_process_payment = 'complete' == $payment->status || 'revoked' == $payment->status ? true : false;
-				$should_process_payment = apply_filters( 'edd_customer_recount_should_process_payment', $should_process_payment, $payment );
-
-				if( true === $should_process_payment ) {
-
-					$found_payment_ids[] = $payment->ID;
-
-					if ( apply_filters( 'edd_customer_recount_sholud_increase_value', true, $payment ) ) {
-						$payment_amount      = edd_get_payment_amount( $payment->ID );
-						$step_total         += $payment_amount;
-					}
-
-				}
-
-			}
-
-			$updated_total = $pending_total + $step_total;
-			$this->store_data( 'edd_stats_customer_pending_total' . $customer->id, $updated_total );
-			$this->store_data( 'edd_stats_found_payments_' . $customer->id, $found_payment_ids );
-
+		if ( $customer ) {
+			$customer->recalculate_stats();
 			return true;
 		}
 
@@ -110,16 +69,19 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 	 */
 	public function get_percentage_complete() {
 
-		$payments = $this->get_stored_data( 'edd_recount_customer_payments_' . $this->customer_id, array() );
-		$total       = count( $payments );
+		$total = edd_count_orders(
+			array(
+				'customer_id' => $this->customer_id,
+			)
+		);
 
 		$percentage = 100;
 
-		if( $total > 0 ) {
+		if ( $total > 0 ) {
 			$percentage = ( ( $this->per_step * $this->step ) / $total ) * 100;
 		}
 
-		if( $percentage > 100 ) {
+		if ( $percentage > 100 ) {
 			$percentage = 100;
 		}
 
@@ -145,49 +107,19 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 	public function process_step() {
 
 		if ( ! $this->can_export() ) {
-			wp_die( __( 'You do not have permission to modify this data.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+			wp_die( esc_html__( 'You do not have permission to modify this data.', 'easy-digital-downloads' ), esc_html__( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		}
 
 		$had_data = $this->get_data();
 
-		if( $had_data ) {
+		if ( ! $had_data ) {
 			$this->done = false;
 			return true;
-		} else {
-			$customer         = new EDD_Customer( $this->customer_id );
-			$payment_ids      = $this->get_stored_data( 'edd_stats_found_payments_' . $customer->id, array() );
-			$this->delete_data( 'edd_stats_found_payments_' . $customer->id );
-
-			$removed_payments = array_unique( $this->get_stored_data( 'edd_stats_missing_payments' . $customer->id, array() ) );
-
-			// Find non-existing payments (deleted) and total up the purchase count
-			$purchase_count   = 0;
-			foreach( $payment_ids as $key => $payment_id ) {
-				if ( in_array( $payment_id, $removed_payments ) ) {
-					unset( $payment_ids[ $key ] );
-					continue;
-				}
-
-				$payment = edd_get_payment( $payment_id );
-				if ( apply_filters( 'edd_customer_recount_sholud_increase_count', true, $payment ) ) {
-					$purchase_count++;
-				}
-			}
-
-			$this->delete_data( 'edd_stats_missing_payments' . $customer->id );
-
-			$pending_total = $this->get_stored_data( 'edd_stats_customer_pending_total' . $customer->id, 0 );
-			$this->delete_data( 'edd_stats_customer_pending_total' . $customer->id );
-			$this->delete_data( 'edd_recount_customer_stats_' . $customer->id );
-			$this->delete_data( 'edd_recount_customer_payments_' . $this->customer_id );
-
-			$payment_ids    = implode( ',', $payment_ids );
-			$customer->update( array( 'payment_ids' => $payment_ids, 'purchase_count' => $purchase_count, 'purchase_value' => $pending_total ) );
-
-			$this->done    = true;
-			$this->message = __( 'Customer stats successfully recounted.', 'easy-digital-downloads' );
-			return false;
 		}
+		$this->done    = true;
+		$this->message = esc_html__( 'Customer stats successfully recounted.', 'easy-digital-downloads' );
+
+		return false;
 	}
 
 	public function headers() {
@@ -207,92 +139,4 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 
 		edd_die();
 	}
-
-	/**
-	 * Zero out the data on step one
-	 *
-	 * @since 2.5
-	 * @return void
-	 */
-	public function pre_fetch() {
-		if ( $this->step === 1 ) {
-			$allowed_payment_status = apply_filters( 'edd_recount_customer_payment_statuses', edd_get_payment_status_keys() );
-
-			// Before we start, let's zero out the customer's data
-			$customer = new EDD_Customer( $this->customer_id );
-			$customer->update( array( 'purchase_value' => edd_format_amount( 0 ), 'purchase_count' => 0 ) );
-
-			$payment_ids = edd_get_orders( array(
-				'type'        => 'sale',
-				'customer_id' => $customer->id,
-				'status__in'  => $allowed_payment_status,
-				'number'      => 999,
-				'fields'      => 'id'
-			) );
-
-			$this->store_data( 'edd_recount_customer_payments_' . $customer->id, $payment_ids );
-		}
-	}
-
-	/**
-	 * Given a key, get the information from the Database Directly
-	 *
-	 * @since  2.5
-	 * @param  string $key The option_name
-	 * @return mixed       Returns the data from the database
-	 */
-	private function get_stored_data( $key, $default = false ) {
-		global $wpdb;
-		$value = $wpdb->get_var( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = '%s'", $key ) );
-
-		if ( empty( $value ) ) {
-			return $default;
-		}
-
-		$maybe_json = json_decode( $value, true );
-		if ( ! is_null( $maybe_json ) && ! is_numeric( $value ) ) {
-			$value = $maybe_json;
-		}
-
-		return $value;
-	}
-
-	/**
-	 * Give a key, store the value
-	 *
-	 * @since  2.5
-	 * @param  string $key   The option_name
-	 * @param  mixed  $value  The value to store
-	 * @return void
-	 */
-	private function store_data( $key, $value ) {
-		global $wpdb;
-
-		$value = is_array( $value ) ? wp_json_encode( $value ) : esc_attr( $value );
-
-		$data = array(
-			'option_name'  => $key,
-			'option_value' => $value,
-			'autoload'     => 'no',
-		);
-
-		$formats = array(
-			'%s', '%s', '%s',
-		);
-
-		$wpdb->replace( $wpdb->options, $data, $formats );
-	}
-
-	/**
-	 * Delete an option
-	 *
-	 * @since  2.5
-	 * @param  string $key The option_name to delete
-	 * @return void
-	 */
-	private function delete_data( $key ) {
-		global $wpdb;
-		$wpdb->delete( $wpdb->options, array( 'option_name' => $key ) );
-	}
-
 }

@@ -184,7 +184,6 @@ class EDD_Payment_History_Table extends List_Table {
 					'name'             => 'mode',
 					'id'               => 'mode',
 					'selected'         => $mode,
-					'chosen'           => true,
 					'show_option_all'  => false,
 					'show_option_none' => false
 				) ); ?>
@@ -219,7 +218,6 @@ class EDD_Payment_History_Table extends List_Table {
 					'name'             => 'gateway',
 					'id'               => 'gateway',
 					'selected'         => $gateway,
-					'chosen'           => true,
 					'show_option_all'  => false,
 					'show_option_none' => false
 				) ); ?>
@@ -366,6 +364,14 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @since 3.0
 	 */
 	public function no_items() {
+		if ( ! edd_has_upgrade_completed( 'migrate_orders' ) ) {
+			global $wpdb;
+			$orders = $wpdb->get_var( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_payment' LIMIT 1" );
+			if ( ! empty( $orders ) ) {
+				esc_html_e( 'Easy Digital Downloads needs to upgrade the database. Orders will be available when that has completed.', 'easy-digital-downloads' );
+				return;
+			}
+		}
 		esc_html_e( 'No orders found.', 'easy-digital-downloads' );
 	}
 
@@ -484,10 +490,13 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @return string Displays a checkbox.
 	 */
 	public function column_cb( $order ) {
+		$order_number = 'sale' === $order->type ? $order->get_number() : $order->order_number;
 		return sprintf(
-			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+			'<input type="checkbox" name="%1$s[]" id="%1$s-%2$s" value="%2$s" /><label for="%1$s-%2$s" class="screen-reader-text">%3$s</label>',
 			'order',
-			$order->id
+			esc_attr( $order->id ),
+			/* translators: the order number */
+			esc_html( sprintf( __( 'Select %s', 'easy-digital-downloads' ), $order_number ) )
 		);
 	}
 

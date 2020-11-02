@@ -984,6 +984,141 @@ function edd_format_discount_rate( $type = '', $amount = '' ) {
 		: edd_format_amount( $amount ) . '%';
 }
 
+/**
+ * Retrieves a discount amount for an item.
+ *
+ * Calculates an amount based on the context of other items.
+ *
+ * @since 3.0
+ *
+ * @global float $edd_flat_discount_total Track flat rate discount total for penny adjustments.
+ * @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/2757
+ *
+ * @param array                    $item {
+ *   Order Item data, matching Cart line item format.
+ *
+ *   @type string $id       Download ID.
+ *   @type array  $options {
+ *     Download options.
+ *
+ *     @type string $price_id Download Price ID.
+ *   }
+ *   @type int    $quantity Purchase quantity.
+ * }
+ * @param array                    $items     All items (including item being calculated).
+ * @param \EDD_Discount[]|string[] $discounts Discount to determine adjustment from.
+ *                                            A discount code can be passed as a string.
+ * @return float Discount amount. 0 if Discount is invalid or no Discount is applied.
+ */
+function edd_get_item_discount_amount( $item, $items, $discounts ) {
+	global $edd_flat_discount_total;
+	
+	// Validate item.
+	if ( empty( $item ) || empty( $item['id'] ) ) {
+		return 0;
+	}
+
+	if ( ! isset( $item['quantity'] ) ) {
+		return 0;
+	}
+
+	if ( ! isset( $item['options'] ) ) {
+		$item['options'] = array();
+	}
+
+	// Validate and normalize Discounts.
+	$discounts = array_map(
+		function( $discount ) {
+			// Convert a Discount code to a Discount object.
+			if ( is_string( $discount ) ) {
+				$discount = edd_get_discount_by_code( $discount );
+			}
+
+			if ( ! $discount instanceof \EDD_Discount ) {
+				return false;
+			}
+
+			return $discount;
+		},
+		$discounts
+	);
+
+	$discounts = array_filter( $discounts );
+
+	// Determine the price of the item.
+	if ( edd_has_variable_prices( $item['id'] ) ) {
+		// Mimics the original behavior of `\EDD_Cart::get_item_amount()` that
+		// does not fallback to the first Price ID if none is provided.
+		if ( ! isset( $item['options']['price_id'] ) ) {
+			return 0;
+		}
+
+		$item_unit_price = edd_get_price_option_amount( $item['id'], $item['options']['price_id'] );
+	} else {
+		$item_unit_price = edd_get_download_price( $item['id'] );
+	}
+
+	$item_amount     = ( $item_unit_price * $item['quantity'] );
+	$discount_amount = 0;
+
+	foreach ( $discounts as $discount ) {
+		$reqs              = $discount->get_product_reqs();
+		$excluded_products = $discount->get_excluded_products();
+
+		// Make sure requirements are set and that this discount shouldn't apply to the whole cart.
+		if ( ! empty( $reqs ) && 'global' !== $discount->get_scope() ) {
+			// This is a product(s) specific discount.
+			foreach ( $reqs as $download_id ) {
+				if ( $download_id == $item['id'] && ! in_array( $item['id'], $excluded_products ) ) {
+					$discount_amount += ( $item_amount - $discount->get_discounted_amount( $item_amount ) );
+				}
+			}
+		} else {
+			// This is a global cart discount.
+			if ( ! in_array( $item['id'], $excluded_products ) ) {
+				if ( 'flat' === $discount->get_type() ) {
+					// In order to correctly record individual item amounts, global flat rate discounts
+					// are distributed across all items.
+					//
+					// The discount amount is divided by the number of items in the cart and then a
+					// portion is evenly applied to each item.
+					$items_amount = 0;
+
+					foreach ( $items as $i ) {
+						if ( ! in_array( $i['id'], $excluded_products ) ) {
+							if ( edd_has_variable_prices( $i['id'] ) ) {
+								$i_amount = edd_get_price_option_amount( $i['id'], $i['options']['price_id'] );
+							} else {
+								$i_amount = edd_get_download_price( $i['id'] );
+							}
+
+							$items_amount += ( $i_amount * $i['quantity'] );
+						}
+					}
+
+					$subtotal_percent = ! empty( $items_amount ) ? ( $item_amount / $items_amount ) : 0;
+					$discount_amount += ( $discount->get_amount() * $subtotal_percent );
+
+					$edd_flat_discount_total += round( $discount_amount, edd_currency_decimal_filter() );
+
+					if ( $item['id'] === end( $items )['id'] && $edd_flat_discount_total < $discount->get_amount() ) {
+						$adjustment       = ( $discount->get_amount() - $edd_flat_discount_total );
+						$discount_amount += $adjustment;
+					}
+
+					if ( $discount_amount > $item_amount ) {
+						$discount_amount = $item_amount;
+					}
+				} else {
+					$discount_amount += ( $item_amount - $discount->get_discounted_amount( $item_amount ) );
+				}
+			}
+		}
+	}
+
+	return $discount_amount;
+}
+
 /** Cart **********************************************************************/
 
 /**
@@ -1140,8 +1275,17 @@ function edd_get_cart_discounts_html( $discounts = false ) {
 	$html = '';
 
 	foreach ( $discounts as $discount ) {
-		$discount_id = edd_get_discount_id_by_code( $discount );
-		$rate        = edd_format_discount_rate( edd_get_discount_type( $discount_id ), edd_get_discount_amount( $discount_id ) );
+		$discount_id     = edd_get_discount_id_by_code( $discount );
+		$discount_amount = 0;
+		$items           = EDD()->cart->get_contents();
+
+		if ( is_array( $items ) && ! empty( $items ) ) {
+			foreach ( $items as $key => $item ) {
+				$discount_amount += edd_get_item_discount_amount( $item, $items, array( $discount ) );
+			}
+		}
+
+		$rate = edd_format_discount_rate( edd_get_discount_type( $discount_id ), $discount_amount );
 
 		$remove_url  = add_query_arg(
 			array(

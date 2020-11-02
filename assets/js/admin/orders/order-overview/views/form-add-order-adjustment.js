@@ -162,9 +162,9 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 	 * @param {Object} e Change event
 	 */
 	onChangeAmount( e ) {
-		const { preventDefault, target } = e;
+		const { target } = e;
 
-		preventDefault();
+		e.preventDefault();
 
 		const amountManual = target.value;
 		const amountNumber = number.unformat( amountManual );

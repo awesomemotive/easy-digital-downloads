@@ -1,12 +1,12 @@
 <?php
 /**
- * Base Custom Database Table Class.
+ * Base Custom Database Class.
  *
- * @package     EDD
- * @subpackage  Database
- * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
- * @license     http://opensource.org/licenses/gpl-3.0.0.php GNU Public License
- * @since       3.0
+ * @package     Database
+ * @subpackage  Base
+ * @copyright   Copyright (c) 2020
+ * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0.0
  */
 namespace EDD\Database;
 
@@ -17,19 +17,34 @@ defined( 'ABSPATH' ) || exit;
  * The base class that all other database base classes extend.
  *
  * This class attempts to provide some universal immutability to all other
- * database interfaces, starting with a magic getter, but likely expanding into
- * a magic call handler and others.
+ * classes that extend it, starting with a magic getter, but likely expanding
+ * into a magic call handler and others.
  *
- * @since 3.0
+ * @since 1.0.0
  */
 class Base {
+
+	/**
+	 * The name of the PHP global that contains the primary database interface.
+	 *
+	 * For example, WordPress traditionally uses 'wpdb', but other applications
+	 * may use something else, or you may be doing something really cool that
+	 * requires a custom interface.
+	 *
+	 * A future version of this utility may abstract this out entirely, so
+	 * custom calls to the get_db() should be avoided if at all possible.
+	 *
+	 * @since 1.0.0
+	 * @var   string
+	 */
+	protected $db_global = 'wpdb';
 
 	/** Global Properties *****************************************************/
 
 	/**
 	 * Global prefix used for tables/hooks/cache-groups/etc...
 	 *
-	 * @since 3.0.0
+	 * @since 1.0.0
 	 * @var   string
 	 */
 	protected $prefix = 'edd';
@@ -37,7 +52,7 @@ class Base {
 	/**
 	 * The last database error, if any.
 	 *
-	 * @since 3.0.0
+	 * @since 1.0.0
 	 * @var   mixed
 	 */
 	protected $last_error = false;
@@ -47,7 +62,7 @@ class Base {
 	/**
 	 * Magic isset'ter for immutability.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 *
 	 * @param string $key
 	 * @return mixed
@@ -78,7 +93,7 @@ class Base {
 	/**
 	 * Magic getter for immutability.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 *
 	 * @param string $key
 	 * @return mixed
@@ -109,7 +124,7 @@ class Base {
 	/**
 	 * Converts the given object to an array.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 *
 	 * @return array Array version of the given object.
 	 */
@@ -122,7 +137,7 @@ class Base {
 	/**
 	 * Maybe append the prefix to string.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 *
 	 * @param string $string
 	 * @param string $sep
@@ -144,7 +159,7 @@ class Base {
 	 * - No accents
 	 * - No trailing underscores
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 *
 	 * @param string $string
 	 * @param string $sep
@@ -188,7 +203,7 @@ class Base {
 	 * - No double underscores
 	 * - No trailing underscores
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 *
 	 * @param string $name The name of the database table
 	 *
@@ -231,7 +246,7 @@ class Base {
 	/**
 	 * Set class variables from arguments.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 * @param array $args
 	 */
 	protected function set_vars( $args = array() ) {
@@ -257,7 +272,7 @@ class Base {
 	 *
 	 * See: https://core.trac.wordpress.org/ticket/31556
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 *
 	 * @return \wpdb Database interface, or False if not set
 	 */
@@ -266,9 +281,9 @@ class Base {
 		// Default database return value (might change)
 		$retval = false;
 
-		// Look for the WordPress global database interface
-		if ( isset( $GLOBALS['wpdb'] ) ) {
-			$retval = $GLOBALS['wpdb'];
+		// Look for a commonly used global database interface
+		if ( isset( $GLOBALS[ $this->db_global ] ) ) {
+			$retval = $GLOBALS[ $this->db_global ];
 		}
 
 		/*
@@ -282,8 +297,10 @@ class Base {
 		 *
 		 * If you are here because this method is returning false for you, that
 		 * means the database table is being invoked too early in the lifecycle
-		 * of the application. In WordPress, that means before the $wpdb global
-		 * is created; in other environments, you will need to adjust accordingly.
+		 * of the application.
+		 *
+		 * In WordPress, that means before the $wpdb global is created; in other
+		 * environments, you will need to adjust accordingly.
 		 */
 
 		// Return the database interface
@@ -291,12 +308,12 @@ class Base {
 	}
 
 	/**
-	 * Check if an operation succeeded
+	 * Check if an operation succeeded.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 *
 	 * @param mixed $result
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function is_success( $result = false ) {
 
