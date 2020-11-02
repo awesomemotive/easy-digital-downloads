@@ -160,35 +160,5 @@ class Customer_Address extends Query {
 	 */
 	public function __construct( $query = array() ) {
 		parent::__construct( $query );
-		add_action( 'edd_transition_customer_address_type', array( $this, 'demote_primary_addresses' ), 10, 3 );
-	}
-
-	/**
-	 * When a new primary address is added to the database, any other primary addresses should be demoted.
-	 *
-	 * @param string $old_value
-	 * @param string $new_value
-	 * @param int $item_id
-	 * @return void
-	 */
-	public function demote_primary_addresses( $old_value, $new_value, $item_id ) {
-		$address = $this->get_item( $item_id );
-		if ( ! $address->is_primary ) {
-			return;
-		}
-		$previous_primary_addresses = $this->query(
-			array(
-				'id__not_in'  => array( $item_id ),
-				'fields'      => 'ids',
-				'customer_id' => $address->customer_id,
-				'is_primary'  => true,
-			)
-		);
-		if ( empty( $previous_primary_addresses ) ) {
-			return;
-		}
-		foreach ( $previous_primary_addresses as $previous ) {
-			$this->update_item( $previous, array( 'is_primary' => false ) );
-		}
 	}
 }
