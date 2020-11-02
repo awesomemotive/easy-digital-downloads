@@ -1107,7 +1107,8 @@ function edd_tools_import_export_process_import() {
 
 	edd_redirect( edd_get_admin_url( array(
 		'page'        => 'edd-tools',
-		'edd-message' => 'settings-imported'
+		'edd-message' => 'settings-imported',
+		'tab'         => 'import_export',
 	) ) );
 }
 add_action( 'edd_import_settings', 'edd_tools_import_export_process_import' );
