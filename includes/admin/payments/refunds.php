@@ -90,7 +90,8 @@ function edd_refund_details_items( $refund ) {
 		);
 	}
 
-	$adjustments = edd_get_order_adjustments( array(
+	$_adjustments = array();
+	$adjustments  = edd_get_order_adjustments( array(
 		'object_id'   => $refund->id,
 		'number'      => 999,
 		'object_type' => 'order',
