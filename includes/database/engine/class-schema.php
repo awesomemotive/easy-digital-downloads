@@ -1,12 +1,12 @@
 <?php
 /**
- * Base Schema Class.
+ * Base Custom Database Table Schema Class.
  *
- * @package     EDD
- * @subpackage  Database\Schemas
- * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       3.0
+ * @package     Database
+ * @subpackage  Schema
+ * @copyright   Copyright (c) 2020
+ * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0.0
  */
 namespace EDD\Database;
 
@@ -14,38 +14,28 @@ namespace EDD\Database;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * A base WordPress database table class, which facilitates the creation of
- * and schema changes to individual database tables.
+ * A base database table schema class, which houses the collection of columns
+ * that a table is made out of.
  *
  * This class is intended to be extended for each unique database table,
- * including global multisite tables and users tables.
+ * including global tables for multisite, and users tables.
  *
- * It exists to make managing database tables in WordPress as easy as possible.
- *
- * Extending this class comes with several automatic benefits:
- * - Activation hook makes it great for plugins
- * - Tables store their versions in the database independently
- * - Tables upgrade via independent upgrade abstract methods
- * - Multisite friendly - site tables switch on "switch_blog" action
- *
- * @since 3.0
+ * @since 1.0.0
  */
 class Schema extends Base {
 
 	/**
-	 * Array of database column objects to turn into Column
+	 * Array of database column objects to turn into Column.
 	 *
-	 * @since 3.0
-	 * @access public
-	 * @var array
+	 * @since 1.0.0
+	 * @var   array
 	 */
 	protected $columns = array();
 
 	/**
-	 * Invoke new column objects based on array of column data
+	 * Invoke new column objects based on array of column data.
 	 *
-	 * @since 3.0
-	 * @access public
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 
@@ -69,11 +59,11 @@ class Schema extends Base {
 	}
 
 	/**
-	 * Return the schema in string form
+	 * Return the schema in string form.
 	 *
-	 * @since 3.0
-	 * @access protected
-	 * @return string
+	 * @since 1.0.0
+	 *
+	 * @return string Calls get_create_string() on every column.
 	 */
 	protected function to_string() {
 

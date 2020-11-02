@@ -625,10 +625,7 @@ function edd_customers_view( $customer = null ) {
 
 				<?php endif;
 
-			} elseif ( empty( $last_payment_date ) ) {
-				esc_html_e( 'No terms agreement found.', 'easy-digital-downloads' );
-
-			} else {
+			} elseif ( ! empty( $last_payment_date && edd_get_option( 'show_agree_to_terms' ) ) ) {
 				echo esc_html( edd_date_i18n( $last_payment_date, get_option( 'date_format' ) . ' H:i:s' ) . ' ' . edd_get_timezone_abbr() );
 
 				esc_html_e( ' &mdash; Agreed to Terms', 'easy-digital-downloads' );
@@ -637,11 +634,15 @@ function edd_customers_view( $customer = null ) {
 				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong><?php esc_html_e( 'Estimated Privacy Policy Date', 'easy-digital-downloads' ); ?></strong><br /><?php esc_html_e( 'This customer made a purchase prior to agreement dates being logged, this is the date of their last purchase. If your site was displaying the agreement checkbox at that time, this is our best estimate as to when they last agreed to your terms.', 'easy-digital-downloads' ); ?>"></span>
 
 				<?php
-			} ?>
+			} else {
+				esc_html_e( 'No terms agreement found.', 'easy-digital-downloads' );
+			}
+			?>
 		</p>
 
 		<p class="customer-privacy-policy-date info-item">
-			<?php if ( ! empty( $privacy_timestamp ) ) {
+			<?php
+			if ( ! empty( $privacy_timestamp ) ) {
 				echo esc_html( edd_date_i18n( $privacy_timestamp, get_option( 'date_format' ) . ' H:i:s' ) . ' ' . edd_get_timezone_abbr() );
 
 				esc_html_e( ' &mdash; Agreed to Privacy Policy', 'easy-digital-downloads' );
@@ -652,10 +653,8 @@ function edd_customers_view( $customer = null ) {
 
 				<?php endif;
 
-			} elseif ( empty( $last_payment_date ) ) {
-				esc_html_e( 'No privacy policy agreement found.', 'easy-digital-downloads' );
+			} elseif ( ! empty( $last_payment_date ) && edd_get_option( 'show_agree_to_privacy_policy' ) ) {
 
-			} else {
 				echo esc_html( edd_date_i18n( $last_payment_date, get_option( 'date_format' ) . ' H:i:s' ) . ' ' . edd_get_timezone_abbr() );
 
 				esc_html_e( ' &mdash; Agreed to Privacy Policy', 'easy-digital-downloads' );
@@ -664,7 +663,10 @@ function edd_customers_view( $customer = null ) {
 				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong><?php esc_html_e( 'Estimated Privacy Policy Date', 'easy-digital-downloads' ); ?></strong><br /><?php esc_html_e( 'This customer made a purchase prior to privacy policy dates being logged, this is the date of their last purchase. If your site was displaying the privacy policy checkbox at that time, this is our best estimate as to when they last agreed to your privacy policy.', 'easy-digital-downloads' ); ?>"></span>
 
 				<?php
-			} ?>
+			} else {
+				esc_html_e( 'No privacy policy agreement found.', 'easy-digital-downloads' );
+			}
+			?>
 		</p>
 	</div>
 
