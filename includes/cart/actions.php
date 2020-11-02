@@ -64,7 +64,7 @@ add_action( 'template_redirect', 'edd_process_cart_endpoints', 100 );
  * @param $data
  */
 function edd_process_add_to_cart( $data ) {
-	$download_id = absint( $data['download_id'] );
+	$download_id = ! empty( $data['download_id'] ) ? absint( $data['download_id'] ) : false;
 	$options     = isset( $data['edd_options'] ) ? $data['edd_options'] : array();
 
 	if ( ! empty( $data['edd_download_quantity'] ) ) {
@@ -77,7 +77,9 @@ function edd_process_add_to_cart( $data ) {
 		}
 	}
 
-	$cart        = edd_add_to_cart( $download_id, $options );
+	if ( ! empty( $download_id ) ) {
+		edd_add_to_cart( $download_id, $options );
+	}
 
 	if ( edd_straight_to_checkout() && ! edd_is_checkout() ) {
 		$query_args 	= remove_query_arg( array( 'edd_action', 'download_id', 'edd_options' ) );
