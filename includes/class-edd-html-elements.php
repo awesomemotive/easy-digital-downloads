@@ -493,7 +493,7 @@ class EDD_HTML_Elements {
 	 * @param int    $selected     Year to select automatically.
 	 * @param int    $years_before Number of years before the current year the dropdown should start with.
 	 * @param int    $years_after  Number of years after the current year the dropdown should finish at.
-	 * @param string $id A unique identifier for the field.
+	 * @param string $id           A unique identifier for the field.
 	 * @return string $output Year dropdown
 	 */
 	public function year_dropdown( $name = 'year', $selected = 0, $years_before = 5, $years_after = 0, $id = 'edd_year_select' ) {
@@ -527,9 +527,9 @@ class EDD_HTML_Elements {
 	 *
 	 * @since 1.5.2
 	 *
-	 * @param string  $name     Name attribute of the dropdown.
-	 * @param int     $selected Month to select automatically.
-	 * @param string  $id A unique identifier for the field.
+	 * @param string  $name             Name attribute of the dropdown.
+	 * @param int     $selected         Month to select automatically.
+	 * @param string  $id               A unique identifier for the field.
 	 * @param boolean $return_long_name Whether to use the long name for the month.
 	 *
 	 * @return string $output Month dropdown
