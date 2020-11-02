@@ -211,15 +211,7 @@ function edd_get_lostpassword_url() {
 			$url = wp_unslash( $_SERVER['HTTP_REFERER'] );
 		}
 	}
-	if ( empty( $url ) ) {
-		$login_redirect_page = edd_get_option( 'login_redirect_page', '' );
-		if ( ! empty( $login_redirect_page ) ) {
-			$url = get_permalink( $login_redirect_page );
-		} else {
-			$url = edd_get_checkout_uri();
-		}
-	}
-	$url      = wp_validate_redirect( $url );
+	$url      = wp_validate_redirect( $url, edd_get_checkout_uri() );
 	$redirect = add_query_arg(
 		array(
 			'checkemail'         => 'confirm',
