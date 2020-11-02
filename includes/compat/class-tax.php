@@ -70,6 +70,9 @@ class Tax extends Base {
 		$value = (array) $value;
 
 		foreach ( $value as $tax_rate ) {
+			if ( empty( $tax_rate ) ) {
+				continue;
+			}
 			$scope = isset( $tax_rate['global'] )
 				? 'country'
 				: 'region';

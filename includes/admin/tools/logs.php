@@ -230,17 +230,13 @@ function edd_log_views() {
  * @since 3.0
  */
 function edd_old_logs_filter_bar_items() {
-	$rtl_class = is_rtl()
-		? ' chosen-rtl'
-		: '';
-
 	$views        = edd_log_default_views();
 	$current_view = isset( $_GET['view'] ) && array_key_exists( $_GET['view'], edd_log_default_views() )
 		? sanitize_text_field( $_GET['view'] )
 		: 'file_downloads'; ?>
 
 	<span id="edd-type-filter">
-		<select id="edd-logs-view" name="view" class="edd-select-chosen <?php echo esc_attr( $rtl_class ); ?>">
+		<select id="edd-logs-view" name="view">
 			<?php foreach ( $views as $view_id => $label ) : ?>
 				<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo esc_html( $label ); ?></option>
 			<?php endforeach; ?>

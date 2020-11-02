@@ -139,6 +139,10 @@ function edd_refund_details_items( $refund ) {
 			'order'        => array(
 				'currency'       => $refund->currency,
 				'currencySymbol' => html_entity_decode( edd_currency_symbol( $refund->currency ) ),
+				'subtotal'       => $refund->subtotal,
+				'discount'       => $refund->discount,
+				'tax'            => $refund->tax,
+				'total'          => $refund->total,
 			),
 		)
 	);

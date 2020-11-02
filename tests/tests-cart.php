@@ -15,6 +15,13 @@ class Test_Cart extends EDD_UnitTestCase {
 	protected static $download;
 
 	/**
+	 * Secondary Download fixture.
+	 *
+	 * @var EDD_Download
+	 */
+	protected static $download_2;
+
+	/**
 	 * Discount fixture.
 	 *
 	 * @var EDD_Discount
@@ -89,6 +96,58 @@ class Test_Cart extends EDD_UnitTestCase {
 
 		self::$download = edd_get_download( $post_id );
 
+		// Create a second Download.
+		$post_id = static::factory()->post->create( array(
+			'post_title'  => 'Test Download 2',
+			'post_type'   => 'download',
+			'post_status' => 'publish',
+		) );
+
+		$_variable_pricing = array(
+			array(
+				'name'   => 'Simple',
+				'amount' => 25,
+			),
+			array(
+				'name'   => 'Advanced',
+				'amount' => 115,
+			),
+		);
+
+		$_download_files = array(
+			array(
+				'name'      => 'File 1',
+				'file'      => 'http://localhost/file1.jpg',
+				'condition' => 0,
+			),
+			array(
+				'name'      => 'File 2',
+				'file'      => 'http://localhost/file2.jpg',
+				'condition' => 'all',
+			),
+		);
+
+		$meta = array(
+			'edd_price'                      => '0.00',
+			'_variable_pricing'              => 1,
+			'_edd_price_options_mode'        => 'on',
+			'edd_variable_prices'            => array_values( $_variable_pricing ),
+			'edd_download_files'             => array_values( $_download_files ),
+			'_edd_download_limit'            => 20,
+			'_edd_hide_purchase_link'        => 1,
+			'edd_product_notes'              => 'Purchase Notes',
+			'_edd_product_type'              => 'default',
+			'_edd_download_earnings'         => 129.43,
+			'_edd_download_sales'            => 59,
+			'_edd_download_limit_override_1' => 1,
+		);
+
+		foreach ( $meta as $key => $value ) {
+			update_post_meta( $post_id, $key, $value );
+		}
+
+		self::$download_2 = edd_get_download( $post_id );
+
 		self::$discount = static::edd()->discount->create_and_get( array(
 			'name'              => '20 Percent Off',
 			'code'              => '20OFF',
@@ -98,6 +157,20 @@ class Test_Cart extends EDD_UnitTestCase {
 			'use_count'         => 54,
 			'max_uses'          => 10,
 			'min_cart_price'    => 128,
+			'product_condition' => 'all',
+			'start_date'        => '2010-12-12 00:00:00',
+			'end_date'          => '2050-12-31 23:59:59',
+		) );
+
+		self::$discount = static::edd()->discount->create_and_get( array(
+			'name'              => '8 Flat',
+			'code'              => '8FLAT',
+			'status'            => 'active',
+			'type'              => 'flat',
+			'amount'            => '8.73',
+			'use_count'         => 12,
+			'max_uses'          => 100,
+			'min_cart_price'    => 0,
 			'product_condition' => 'all',
 			'start_date'        => '2010-12-12 00:00:00',
 			'end_date'          => '2050-12-31 23:59:59',
@@ -333,6 +406,29 @@ class Test_Cart extends EDD_UnitTestCase {
 		$this->assertEquals( 4, edd_get_cart_item_discount_amount( $cart_item_args ) );
 
 		edd_unset_cart_discount( '20OFF' );
+
+		// Test Flat rate discounts split across multiple items.
+		edd_set_cart_discount( '8FLAT' );
+
+		edd_add_to_cart( self::$download_2->ID, $options );
+
+		$this->assertEquals( 3.88, edd_get_cart_item_discount_amount( array(
+			'id'       => self::$download->ID,
+			'quantity' => 1,
+			'options'  => array(
+				'price_id' => 0,
+			),
+		) ) );
+
+		$this->assertEquals( 4.85, edd_get_cart_item_discount_amount( array(
+			'id'       => self::$download_2->ID,
+			'quantity' => 1,
+			'options'  => array(
+				'price_id' => 0,
+			),
+		) ) );
+
+		edd_unset_cart_discount( '8FLAT' );
 	}
 
 	public function test_cart_quantity() {
@@ -618,7 +714,7 @@ class Test_Cart extends EDD_UnitTestCase {
 		);
 		EDD()->fees->add_fee( $fee );
 
-		$this->assertEquals( "1", EDD()->cart->get_tax() );
+		$this->assertEquals( 1.00, EDD()->cart->get_tax() );
 
 		edd_update_option( 'enable_taxes', false );
 	}
