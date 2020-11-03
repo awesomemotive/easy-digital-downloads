@@ -127,6 +127,11 @@ function edd_trash_order( $order_id ) {
 			}
 		}
 
+		// Update the customer records when an order is trashed.
+		if ( ! empty( $order->customer_id ) ) {
+			$customer = new EDD_Customer( $order->customer_id );
+			$customer->recalculate_stats();
+		}
 	}
 
 	return filter_var( $trashed, FILTER_VALIDATE_BOOLEAN );
@@ -336,8 +341,14 @@ function edd_destroy_order( $order_id = 0 ) {
  */
 function edd_update_order( $order_id = 0, $data = array() ) {
 	$orders = new EDD\Database\Queries\Order();
+	$update = $orders->update_item( $order_id, $data );
 
-	return $orders->update_item( $order_id, $data );
+	if ( ! empty( $data['customer_id'] ) ) {
+		$customer = new EDD_Customer( $data['customer_id'] );
+		$customer->recalculate_stats();
+	}
+
+	return $update;
 }
 
 /**
@@ -1052,7 +1063,14 @@ function edd_build_order( $order_data = array() ) {
 			$discount = edd_get_discount_by( 'code', $discount );
 
 			if ( $discount ) {
-				$discounted_amount = $subtotal - $discount->get_discounted_amount( $subtotal );
+				$discount_amount = 0;
+				$items           = $order_data['cart_details'];
+
+				if ( is_array( $items ) && ! empty( $items ) ) {
+					foreach ( $items as $key => $item ) {
+						$discount_amount += edd_get_item_discount_amount( $item, $items, array( $discount ) );
+					}
+				}
 
 				edd_add_order_adjustment( array(
 					'object_id'   => $order_id,
@@ -1060,8 +1078,8 @@ function edd_build_order( $order_data = array() ) {
 					'type_id'     => $discount->id,
 					'type'        => 'discount',
 					'description' => $discount->code,
-					'subtotal'    => $discounted_amount,
-					'total'       => $discounted_amount,
+					'subtotal'    => $discount_amount,
+					'total'       => $discount_amount,
 				) );
 
 			}

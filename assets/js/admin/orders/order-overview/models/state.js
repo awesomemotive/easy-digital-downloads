@@ -71,30 +71,51 @@ export const State = Backbone.Model.extend(
 		 * @return {number} Order subtotal.
 		 */
 		getSubtotal() {
-			let subtotal = 0;
-
 			const { models: items } = this.get( 'items' );
+
+			// Use stored value if the record has already been created.
+			if ( false === this.get( 'isAdding' ) ) {
+				// Use the `discount` column for each OrderItem. OrderAdjustments do
+				// not store the per-item discount amount.
+				//
+				// Used when viewing a Refund to find the actual amount refunded per item.
+				//
+				// A $50.00 OrderItem that has a $12.50 discount applied by splitting two
+				// flat rate discounts of $5 and $10 would incorrectly try to apply $15.00
+				// discount if the attached OrderAdjustments were summed.
+				return items.reduce(
+					( amount, item ) => {
+						return amount += ( item.get( 'subtotal' ) - item.get( 'discount' ) );
+					},
+					0
+				);
+			}
+
+			// Add all subtotals.
+			const subtotal = items.reduce(
+				( amount, item ) => {
+					return amount += +item.get( 'subtotal' );
+				},
+				0
+			);
+
 			const { models: adjustments } = this.get( 'adjustments' );
 
-			// Add all item subtotals.
-			_.each( items, ( item ) => {
-				subtotal += +item.get( 'subtotal' );
-			} );
-
 			// Add or substract all adjustment subtotals.
-			_.each( adjustments, ( adjustment ) => {
-				if (
-					[ 'discount', 'credit' ].includes(
-						adjustment.get( 'type' )
-					)
-				) {
-					subtotal -= +adjustment.getAmount();
-				} else {
-					subtotal += +adjustment.getAmount();
-				}
-			} );
-
-			return subtotal;
+			return adjustments.reduce(
+				( amount, adjustment ) => {
+					if (
+						[ 'discount', 'credit' ].includes(
+							adjustment.get( 'type' )
+						)
+					) {
+						return amount -= +adjustment.getAmount();
+					} else {
+						return amount += +adjustment.getAmount();
+					}
+				},
+				subtotal
+			);
 		},
 
 		/**
@@ -105,14 +126,19 @@ export const State = Backbone.Model.extend(
 		 * @return {number} Order discount.
 		 */
 		getDiscount() {
-			let discount = 0;
+			// Use stored value if the record has already been created.
+			if ( false === this.get( 'isAdding' ) ) {
+				return this.get( 'order' ).discount;
+			}
+
 			const adjustments = this.get( 'adjustments' ).getByType( 'discount' );
 
-			adjustments.forEach( ( adjustment ) => {
-				return discount += +adjustment.getAmount();
-			} );
-
-			return discount;
+			return adjustments.reduce(
+				( amount, adjustment ) => {
+					return amount += +adjustment.getAmount();
+				},
+				0
+			);
 		},
 
 		/**
@@ -123,14 +149,19 @@ export const State = Backbone.Model.extend(
 		 * @return {number} Order tax.
 		 */
 		getTax() {
-			let tax = 0;
+			// Use stored value if the record has already been created.
+			if ( false === this.get( 'isAdding' ) ) {
+				return this.get( 'order' ).tax;
+			}
 
-			// Add all item taxes.
-			_.each( this.get( 'items' ).models, ( item ) => {
-				return ( tax += +item.get( 'tax' ) );
-			} );
+			const items = this.get( 'items' ).models;
 
-			return tax;
+			return items.reduce(
+				( amount, item ) => {
+					return amount += +item.get( 'tax' );
+				},
+				0
+			);
 		},
 
 		/**
@@ -141,6 +172,11 @@ export const State = Backbone.Model.extend(
 		 * @return {number} Order total.
 		 */
 		getTotal() {
+			// Use stored value if the record has already been created.
+			if ( false === this.get( 'isAdding' ) ) {
+				return this.get( 'order' ).total;
+			}
+
 			return this.getSubtotal() + this.getTax();
 		},
 

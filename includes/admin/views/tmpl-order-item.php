@@ -20,8 +20,9 @@ $view_url = add_query_arg(
 <td class="has-row-actions column-primary">
 	<div class="removable">
 		<# if ( true === data.state.isAdding ) { #>
-		<button class="button-link delete">
-			<span class="dashicons dashicons-no"></span>
+		<button class="button-link delete" >
+			<span class="dashicons dashicons-no" id="remove-item"></span>
+			<span class="screen-reader-text"><?php printf( __( 'Remove %s', 'easy-digital-downloads' ), '{{{ data.productName }}}' ); ?></span>
 		</button>
 		<# } #>
 
@@ -37,10 +38,6 @@ $view_url = add_query_arg(
 			<# } #>
 
 			<div class="row-actions">
-				<# if ( data.discount > 0 ) { #>
-				<span class="text"><strong><?php esc_html_e( 'Discount:', 'easy-digital-downloads' ); ?></strong> {{ data.discountCurrency }}</span>
-				<# } #>
-
 				<# if ( false !== data.state.hasTax ) { #>
 				<span class="text">
 					<strong><?php esc_html_e( 'Tax:', 'easy-digital-downloads' ); ?></strong>
