@@ -31,6 +31,12 @@ if ( empty( $order ) ) {
 	wp_die( __( 'The specified ID does not belong to an order. Please try again', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ) );
 }
 
+if ( 'refund' === $order->type ) {
+	require_once EDD_PLUGIN_DIR . 'includes/admin/payments/view-refund.php';
+	edd_view_refund_page_content();
+	return;
+}
+
 wp_enqueue_script( 'edd-admin-orders' );
 // Enqueued for backwards compatibility. Empty file.
 wp_enqueue_script( 'edd-admin-payments' );
