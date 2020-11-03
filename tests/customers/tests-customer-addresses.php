@@ -720,4 +720,64 @@ class Customer_Address_Tests extends \EDD_UnitTestCase {
 
 		$this->assertCount( 0, $transactions );
 	}
+
+	/**
+	 * @covers ::edd_demote_customer_primary_addresses
+	 */
+	public function test_adding_new_primary_customer_address_demotes_previous_primary() {
+		$old_primary_address = parent::edd()->customer_address->create_and_get( array(
+			'is_primary' => true
+		) );
+
+		$this->assertEquals( '1', $old_primary_address->is_primary );
+
+		$number_primary_addresses = edd_count_customer_addresses( array(
+			'is_primary'  => true,
+			'customer_id' => $old_primary_address->customer_id
+		) );
+
+		$this->assertEquals( 1, $number_primary_addresses );
+
+		// Add another primary address. Old one should be demoeted.
+		$new_primary_address = parent::edd()->customer_address->create_and_get( array(
+			'is_primary'  => true,
+			'customer_id' => $old_primary_address->customer_id
+		) );
+
+		$this->assertEquals( '1', $new_primary_address->is_primary );
+
+		$number_primary_addresses = edd_count_customer_addresses( array(
+			'is_primary'  => true,
+			'customer_id' => $new_primary_address->customer_id
+		) );
+
+		$this->assertEquals( 1, $number_primary_addresses );
+
+		// Re-fetch old address to ensure it's been demoted.
+		$old_primary_address = parent::edd()->customer_address->get_object_by_id( $old_primary_address->id );
+		$this->assertEquals( '0', $old_primary_address->is_primary );
+	}
+
+	/**
+	 * @covers ::edd_demote_customer_primary_addresses
+	 */
+	public function test_adding_new_non_primary_customer_address_doesnt_demote_primary() {
+		$primary_address = parent::edd()->customer_address->create_and_get( array(
+			'is_primary' => true
+		) );
+
+		$this->assertEquals( '1', $primary_address->is_primary );
+
+		// Add another, non-primary address.
+		$non_primary_address = parent::edd()->customer_address->create_and_get( array(
+			'is_primary'  => false,
+			'customer_id' => $primary_address->customer_id
+		) );
+
+		$this->assertEquals( '0', $non_primary_address->is_primary );
+
+		// Ensure primary address is still a primary.
+		$primary_address = parent::edd()->customer_address->get_object_by_id( $primary_address->id );
+		$this->assertEquals( '1', $primary_address->is_primary );
+	}
 }
