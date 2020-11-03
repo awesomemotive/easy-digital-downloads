@@ -2,8 +2,7 @@
 /**
  * Customer Actions.
  *
- * This file contains all of the first class functions for interacting with a
- * customer or its related meta data.
+ * Hooks that are triggered when customer-based actions occur.
  *
  * @package     EDD
  * @subpackage  Actions
