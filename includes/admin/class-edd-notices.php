@@ -137,6 +137,10 @@ class EDD_Notices {
 						break;
 					case 'discount_invalid_code':
 						$notices['error']['edd-discount-invalid-code'] = __( 'The discount code entered is invalid; only alphanumeric characters are allowed, please try again.', 'easy-digital-downloads' );
+						break;
+					case 'discount_invalid_amount' :
+						$notices['error']['edd-discount-invalid-amount'] = __( 'The discount amount must be a valid percentage or numeric flat amount. Please try again.', 'easy-digital-downloads' );
+						break;
 				}
 			}
 
