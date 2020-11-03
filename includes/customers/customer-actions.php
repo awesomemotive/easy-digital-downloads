@@ -15,9 +15,9 @@
 /**
  * When a new primary address is added to the database, any other primary addresses should be demoted.
  *
- * @param string $old_value
- * @param string $new_value
- * @param int $item_id
+ * @param string $old_value The previous value of `is_primary`.
+ * @param string $new_value The new value of `is_primary`.
+ * @param int $item_id      The address ID in the edd_customer_addresses table.
  * @return void
  */
 function edd_demote_customer_primary_addresses( $old_value, $new_value, $item_id ) {
