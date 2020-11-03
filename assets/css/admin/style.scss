@@ -694,7 +694,11 @@ table.edd-order-overview-summary--refund {
 	color: #a00;
 }
 
-@media screen and (min-width: 782px) {
+@media screen and (min-width: 783px) {
+
+	.edd-order-overview-summary__adjustments .removable .delete {
+		margin-left: -50px;
+	}
 
 	.edd-order-overview-summary__totals .total {
 		font-size: 150%;
@@ -706,15 +710,6 @@ table.edd-order-overview-summary--refund {
 .edd-order-overview-summary__totals tr:last-child th,
 .edd-order-overview-summary__totals tr:last-child td:not(:first-of-type) {
 	border-top: 1px solid #e5e5e5;
-}
-
-.edd-order-overview-summary__adjustments .removable .delete {
-	position: absolute;
-	left:  -40px;
-	top: 50%;
-	margin-top: -15px;
-	padding-top: 5px;
-	padding-bottom: 5px;
 }
 
 .edd-order-overview-summary__totals .notice {
@@ -797,6 +792,10 @@ table.edd-order-overview-summary--refund {
 }
 
 /** Dialog */
+.edd-dialog .ui-button-icon-only {
+	font-size: 0;
+}
+
 .download_page_edd-payment-history .ui-dialog,
 .download_page_edd-payment-history .ui-dialog-content {
 	overflow: visible;
@@ -1052,11 +1051,15 @@ textarea[name="edd-note"] {
 	width: 300px;
 }
 
+#edd-add-discount .edd-discount-datetime input,
+#edd-edit-discount .edd-discount-datetime input {
+	vertical-align: middle;
+}
+
 #edd-add-discount input[type="text"].edd_datepicker,
 #edd-edit-discount input[type="text"].edd_datepicker {
 	display: inline-block;
 	width: 183px;
-	vertical-align: middle;
 }
 
 #edd-edit-discount textarea {
@@ -2353,39 +2356,21 @@ body.download_page_edd-reports {
 .edd-reports-wrapper .postbox h3 {
 	font-size: 1.3em
 }
+
 #edd-dashboard-widgets-wrap .metabox-holder {
 	padding-top: 0;
-}
-.edd-reports-wrapper .postbox {
-	border: none;
-	box-shadow: none;
-}
-
-.edd-reports-wrapper form .edd-from-to-wrapper,
-.edd-reports-wrapper form .edd-select,
-.edd-reports-wrapper form .edd-label,
-.edd-reports-wrapper form input.button {
-	vertical-align: middle;
-	float: left;
-}
-
-.edd-reports-wrapper form .edd-label {
-	height: 29px;
-	line-height: 29px;
-	vertical-align: middle;
-	margin-right: 4px;
 }
 
 .edd-reports-wrapper .postbox .edd-select {
 	max-width: 200px;
 	vertical-align: baseline;
 	margin-right: 4px;
+	margin-bottom: 16px;
 }
 
 .download_page_edd-reports #edd-filters {
 	margin-bottom: -1px;
 	box-shadow: none;
-	z-index: 3;
 	justify-content: space-between;
 	display: flex;
 	flex-wrap: wrap;
@@ -2437,36 +2422,96 @@ body.download_page_edd-reports {
 	margin-bottom: 20px;
 }
 
-.edd-import-export-form {
+.edd-admin--has-grid {
+	display: grid;
+	display: -ms-grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	grid-gap: 20px;
+}
+
+.edd-admin--has-grid .postbox {
+	margin-bottom: 0;
+}
+
+.edd-admin--has-grid .edd-from-to-wrapper {
+	display: flex;
+	margin-right: 0;
+	margin-bottom: 16px;
+	width: 100%;
+}
+
+.edd-admin--has-grid .edd-from-to-wrapper input {
+	width: 100%;
+}
+
+.edd-admin--has-grid .edd-from-to-wrapper span {
+    flex-grow: 1;
+}
+
+.edd-admin--has-grid form {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
 	position: relative;
 }
+
+div.edd-to-and-from-container {
+	display: grid;
+	display: -ms-grid;
+	grid-template-columns: 1fr 1fr;
+	grid-gap: 8px;
+}
+
+span.edd-to-and-from--separator {
+	line-height: normal;
+	align-self: center;
+	margin-bottom: 16px;
+}
+
+.edd-admin--has-grid .postbox .edd-select {
+	max-width: 100%;
+	margin-right: 0;
+}
+
+.edd-admin--has-grid .button.updating-message:before,
+.edd-admin--has-grid .button.updated-message:before {
+	vertical-align: text-bottom;
+	margin: 0 5px 0 0;
+}
+
 .edd-import-export-form .edd-progress {
 	background: #ddd;
-	position: absolute;
-	bottom: 15px;
-	width: 95%;
+	border-radius: 15px;
 	height: 15px;
+	flex-basis: 100%;
 }
+
 .edd-import-export-form .edd-progress div {
 	background: #ccc;
+	border-radius: 15px;
 	height: 100%;
 	width: 0;
 }
+
 .edd-import-export-form .notice-wrap {
 	background-color: #f4f4f4;
 	border-style: solid;
 	border-width: 1px 0;
 	border-color: #eae9e9;
-	padding: 12px 12px 4px;
+	padding: 12px;
 	overflow: auto;
 	margin: 20px -12px -23px;
 	position: relative;
 	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
-.edd-import-export-form .notice-wrap .spinner {
-	margin: 4px 10px 8px;
-	float: right;
+
+.notice-wrap div.notice {
+	margin: 0;
 }
+
 .admin-color-fresh .edd-import-export-form .edd-progress div {
 	background: #0073aa;
 }
@@ -2761,13 +2806,21 @@ body.download_page_edd-reports {
 	color: #777;
 }
 
-.edd-reports-chart-pie,
-.edd-reports-chart-doughnut {
-	box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	float: left;
-	width: 50%;
+@media screen and ( min-width: 600px ) {
+	#edd-reports-charts-wrap {
+		display: -ms-grid;
+		display: grid;
+		grid-template-columns: repeat(2, minmax(200px, 50%));
+		grid-gap: 20px;
+	}
+
+	.edd-reports-chart {
+		margin-bottom: 0;
+	}
+
+	.edd-reports-chart-line {
+		grid-column: 1 / span 2;
+	}
 }
 
 #edd-chartjs-tooltip {
@@ -3451,7 +3504,6 @@ body.download_page_edd-reports {
 		margin: 2px 0;
 	}
 
-	#edd-filters a,
 	.download_page_edd-reports .button {
 		text-align: center;
 	}
@@ -3475,13 +3527,7 @@ body.download_page_edd-reports {
 	.download_page_edd-reports .inside input[type="text"],
 	.download_page_edd-reports .inside select,
 	.download_page_edd-reports .inside input[type="submit"],
-	.download_page_edd-reports .inside .button,
-	#system-info-textarea,
-	#edd-add-discount input[type="text"],
-	#edd-edit-discount input[type="text"],
-	#edd-filters input:not([type='radio']),
-	#edd-filters select,
-	#edd-filters a {
+	.download_page_edd-reports .inside .button {
 		width: 100%;
 	}
 
