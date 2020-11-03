@@ -41,7 +41,7 @@ function edd_demote_customer_primary_addresses( $old_value, $new_value, $item_id
 		return;
 	}
 	foreach ( $previous_primary_addresses as $previous ) {
-		$customer_addresses->update_item( $previous, array( 'is_primary' => false ) );
+		edd_update_customer_address( $previous, array( 'is_primary' => false ) );
 	}
 }
 add_action( 'edd_transition_customer_address_is_primary', 'edd_demote_customer_primary_addresses', 10, 3 );
