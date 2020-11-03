@@ -66,11 +66,11 @@ const config = {
 
 		// Admin styles.
 		'edd-admin-style': './assets/css/admin/style.scss',
-		'edd-admin-chosen-style': './assets/css/admin/chosen.scss',
+		'edd-admin-chosen-style': './assets/css/admin/chosen/style.scss',
 		'edd-admin-datepicker-style': './assets/css/admin/datepicker.scss',
 		'edd-admin-email-tags-style': './assets/css/admin/email-tags.scss',
 		'edd-admin-menu-style': './assets/css/admin/menu.scss',
-		'edd-admin-tax-rates-style': './assets/css/admin/tax-rates.scss',
+		'edd-admin-tax-rates-style': './assets/css/admin/tax-rates/style.scss',
 	},
 	output: {
 		filename: 'assets/js/[name].js',
