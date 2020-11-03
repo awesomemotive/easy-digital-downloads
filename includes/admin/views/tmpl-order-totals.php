@@ -10,6 +10,18 @@
  */
 ?>
 
+<# if ( false !== data.state.isRefund ) { #>
+	<tr class="is-expanded">
+		<td></td>
+		<td colspan="{{ data.config.colspan }}" class="column-primary">
+			<?php esc_html_e( 'Discount', 'easy-digital-downloads' ); ?>
+		</td>
+		<td class="column-right" data-colname="<?php esc_attr_e( 'Discount', 'easy-digital-downloads' ); ?>">
+			&ndash;{{ data.discountCurrency }}
+		</td>
+	</tr>
+<# } #>
+
 <tr class="is-expanded">
 	<td></td>
 	<td colspan="{{ data.config.colspan }}" class="column-primary">
