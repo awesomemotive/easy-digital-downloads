@@ -55,20 +55,6 @@ wp_enqueue_script( 'edd-admin-payments' );
 			<p><strong><?php esc_html_e( 'Error', 'easy-digital-downloads' ); ?>:</strong> <?php esc_html_e( 'Please select an existing customer or create a new customer.', 'easy-digital-downloads' ); ?></p>
 		</div>
 
-		<?php if ( 'refund' === $order->type ) : ?>
-			<div class="notice notice-info">
-				<p>
-					<?php
-					printf(
-						__( 'You are viewing a refund order. To view the original order, %sclick here%s.', 'easy-digital-downloads' ),
-						'<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $order->parent ) . '">',
-						'</a>'
-					);
-					?>
-				</p>
-			</div>
-		<?php endif; ?>
-
 		<?php do_action( 'edd_view_order_details_before', $order->id ); ?>
 
 		<?php do_action( 'edd_view_order_details_form_top', $order->id ); ?>
