@@ -101,6 +101,9 @@ class Tests_Scripts extends EDD_UnitTestCase {
 		edd_register_styles();
 
 		$this->go_to( '/' );
+
+		$this->assertTrue( wp_style_is( 'edd-styles', 'registered' ) );
+
 		unset( $_SERVER['HTTPS'] );
 	}
 

@@ -16,7 +16,7 @@ class Tests_Formatting extends EDD_UnitTestCase {
 
 	public function test_sanitize_amount() {
 
-		$this->assertEquals( '0', edd_sanitize_amount( '' ) );
+		$this->assertEquals( 0.00, edd_sanitize_amount( '' ) );
 		$this->assertEquals( '20000.20', edd_sanitize_amount( '20,000.20' ) );
 		$this->assertEquals( '22000.20', edd_sanitize_amount( '22 000.20' ) );
 		$this->assertEquals( '20.20', edd_sanitize_amount( '20.2' ) );

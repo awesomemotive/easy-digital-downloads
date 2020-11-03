@@ -3147,7 +3147,7 @@ class EDD_Payment {
 			$user_info['address'] = array(
 				'line1'   => $order_address->address,
 				'line2'   => $order_address->address2,
-				'city'    => $order_address->address,
+				'city'    => $order_address->city,
 				'state'   => $order_address->region,
 				'country' => $country,
 				'zip'     => $order_address->postal_code,
