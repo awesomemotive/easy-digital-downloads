@@ -29,7 +29,8 @@ function edd_process_batch_export_download() {
 
 	if ( class_exists( $_REQUEST['class'] ) && 'EDD_Batch_Export' === get_parent_class( $_REQUEST['class'] ) ) {
 		$export = new $_REQUEST['class']();
-	$export->export();}
+		$export->export();
+	}
 }
 add_action( 'edd_download_batch_export', 'edd_process_batch_export_download' );
 
