@@ -2,11 +2,11 @@
 /**
  * Base Custom Database Table Class.
  *
- * @package     EDD
- * @subpackage  Database\Tables
- * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       3.0
+ * @package     Database
+ * @subpackage  Table
+ * @copyright   Copyright (c) 2020
+ * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0.0
  */
 namespace EDD\Database;
 
@@ -14,13 +14,13 @@ namespace EDD\Database;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * A base WordPress database table class, which facilitates the creation of
- * and schema changes to individual database tables.
+ * A base database table class, which facilitates the creation of (and schema
+ * changes to) individual database tables.
  *
  * This class is intended to be extended for each unique database table,
- * including global multisite tables and users tables.
+ * including global tables for multisite, and users tables.
  *
- * It exists to make managing database tables in WordPress as easy as possible.
+ * It exists to make managing database tables as easy as possible.
  *
  * Extending this class comes with several automatic benefits:
  * - Activation hook makes it great for plugins
@@ -28,107 +28,112 @@ defined( 'ABSPATH' ) || exit;
  * - Tables upgrade via independent upgrade abstract methods
  * - Multisite friendly - site tables switch on "switch_blog" action
  *
- * @since 3.0
+ * @since 1.0.0
  */
 abstract class Table extends Base {
 
 	/**
-	 * @var string Table name, without the global table prefix
+	 * Table name, without the global table prefix.
+	 *
+	 * @since 1.0.0
+	 * @var   string
 	 */
 	protected $name = '';
 
 	/**
-	 * @var string Optional description.
+	 * Optional description.
+	 *
+	 * @since 1.0.0
+	 * @var   string
 	 */
 	protected $description = '';
 
 	/**
-	 * @var mixed Database version
+	 * Database version.
+	 *
+	 * @since 1.0.0
+	 * @var   mixed
 	 */
 	protected $version = '';
 
 	/**
-	 * @var boolean Is this table for a site, or global
+	 * Is this table for a site, or global.
+	 *
+	 * @since 1.0.0
+	 * @var   bool
 	 */
 	protected $global = false;
 
 	/**
-	 * @var string Passed directly into register_activation_hook()
-	 */
-	protected $file = EDD_PLUGIN_FILE;
-
-	/**
-	 * @var string Database version key (saved in _options or _sitemeta)
+	 * Database version key (saved in _options or _sitemeta)
+	 *
+	 * @since 1.0.0
+	 * @var   string
 	 */
 	protected $db_version_key = '';
 
 	/**
-	 * @var mixed Current database version
+	 * Current database version.
+	 *
+	 * @since 1.0.0
+	 * @var   mixed
 	 */
 	protected $db_version = 0;
 
 	/**
-	 * @var string Table prefix, including the site prefix
+	 * Table prefix, including the site prefix.
+	 *
+	 * @since 1.0.0
+	 * @var   string
 	 */
 	protected $table_prefix = '';
 
 	/**
-	 * @var string Table name
+	 * Table name.
+	 *
+	 * @since 1.0.0
+	 * @var  string
 	 */
 	protected $table_name = '';
 
 	/**
-	 * @var string Table name, prefixed from the base
+	 * Table name, prefixed from the base.
+	 *
+	 * @since 1.0.0
+	 * @var   string
 	 */
 	protected $prefixed_name = '';
 
 	/**
-	 * @var string Table schema
+	 * Table schema.
+	 *
+	 * @since 1.0.0
+	 * @var   string
 	 */
 	protected $schema = '';
 
 	/**
-	 * @var string Database character-set & collation for table
+	 * Database character-set & collation for table.
+	 *
+	 * @since 1.0.0
+	 * @var   string
 	 */
 	protected $charset_collation = '';
 
 	/**
-	 * @var array Key => value array of versions => methods
+	 * Key => value array of versions => methods.
+	 *
+	 * @since 1.0.0
+	 * @var   array
 	 */
 	protected $upgrades = array();
-
-	/** Interfaces ************************************************************/
-
-	/**
-	 * Array of interface objects instantiated during init
-	 *
-	 * @since 3.0
-	 *
-	 * @var array
-	 */
-	private $interfaces = array();
-
-	/**
-	 * Array of interface keys
-	 *
-	 * @since 3.0
-	 *
-	 * @var array
-	 */
-	private $interface_keys = array(
-		'schema' => false,
-		'table'  => false,
-		'query'  => false,
-		'object' => false,
-		'meta'   => false
-	);
 
 	/** Methods ***************************************************************/
 
 	/**
 	 * Hook into queries, admin screens, and more!
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 */
 	public function __construct() {
 
@@ -146,7 +151,7 @@ abstract class Table extends Base {
 		// Set the database schema
 		$this->set_schema();
 
-		// Add hooks to WordPress actions
+		// Add hooks
 		$this->add_hooks();
 
 		// Maybe force upgrade if testing
@@ -158,9 +163,9 @@ abstract class Table extends Base {
 	/** Abstract **************************************************************/
 
 	/**
-	 * Setup the database table
+	 * Setup this database table.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 */
 	protected abstract function set_schema();
 
@@ -171,7 +176,7 @@ abstract class Table extends Base {
 	 *
 	 * Hooked to the "switch_blog" action.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 *
 	 * @param int $site_id The site being switched to
 	 */
@@ -193,7 +198,7 @@ abstract class Table extends Base {
 	 *
 	 * Hooked to the `admin_init` action.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 */
 	public function maybe_upgrade() {
 
@@ -220,11 +225,11 @@ abstract class Table extends Base {
 	/**
 	 * Return whether this table needs an upgrade.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 *
 	 * @param mixed $version Database version to check if upgrade is needed
 	 *
-	 * @return boolean True if table needs upgrading. False if not.
+	 * @return bool True if table needs upgrading. False if not.
 	 */
 	public function needs_upgrade( $version = false ) {
 
@@ -248,9 +253,9 @@ abstract class Table extends Base {
 	/**
 	 * Return whether this table can be upgraded.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 *
-	 * @return boolean True if table can be upgraded. False if not.
+	 * @return bool True if table can be upgraded. False if not.
 	 */
 	public function is_upgradeable() {
 
@@ -269,7 +274,7 @@ abstract class Table extends Base {
 	 * This is public method for accessing a private variable so that it cannot
 	 * be externally modified.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 *
 	 * @return string
 	 */
@@ -282,7 +287,7 @@ abstract class Table extends Base {
 	/**
 	 * Install a database table by creating the table and setting the version.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 */
 	public function install() {
 		$created = $this->create();
@@ -296,7 +301,7 @@ abstract class Table extends Base {
 	/**
 	 * Destroy a database table by dropping the table and deleting the version.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 */
 	public function uninstall() {
 		$dropped = $this->drop();
@@ -310,11 +315,11 @@ abstract class Table extends Base {
 	/** Public Management *****************************************************/
 
 	/**
-	 * Check if table already exists
+	 * Check if table already exists.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 *
-	 * @return bool|void
+	 * @return bool
 	 */
 	public function exists() {
 
@@ -323,7 +328,7 @@ abstract class Table extends Base {
 
 		// Bail if no database interface is available
 		if ( empty( $db ) ) {
-			return;
+			return false;
 		}
 
 		// Query statement
@@ -337,38 +342,11 @@ abstract class Table extends Base {
 	}
 
 	/**
-	 * Check if table already exists
+	 * Create the table.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 *
-	 * @return bool|void
-	 */
-	public function column_exists( $name = '' ) {
-
-		// Get the database interface
-		$db = $this->get_db();
-
-		// Bail if no database interface is available
-		if ( empty( $db ) ) {
-			return;
-		}
-
-		// Query statement
-		$query    = "SHOW COLUMNS FROM {$this->table_name} LIKE %s";
-		$like     = $db->esc_like( $name );
-		$prepared = $db->prepare( $query, $like );
-		$result   = $db->query( $prepared );
-
-		// Does the table exist?
-		return $this->is_success( $result );
-	}
-
-	/**
-	 * Create the table
-	 *
-	 * @since 3.0
-	 *
-	 * @return bool|void
+	 * @return bool
 	 */
 	public function create() {
 
@@ -377,7 +355,7 @@ abstract class Table extends Base {
 
 		// Bail if no database interface is available
 		if ( empty( $db ) ) {
-			return;
+			return false;
 		}
 
 		// Query statement
@@ -389,11 +367,11 @@ abstract class Table extends Base {
 	}
 
 	/**
-	 * Drop the database table
+	 * Drop the database table.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 *
-	 * @return bool|void
+	 * @return bool
 	 */
 	public function drop() {
 
@@ -402,23 +380,23 @@ abstract class Table extends Base {
 
 		// Bail if no database interface is available
 		if ( empty( $db ) ) {
-			return;
+			return false;
 		}
 
 		// Query statement
 		$query  = "DROP TABLE {$this->table_name}";
 		$result = $db->query( $query );
 
-		// Query success/fail
+		// Did the table get dropped?
 		return $this->is_success( $result );
 	}
 
 	/**
-	 * Truncate the database table
+	 * Truncate the database table.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 *
-	 * @return bool|void
+	 * @return bool
 	 */
 	public function truncate() {
 
@@ -427,23 +405,23 @@ abstract class Table extends Base {
 
 		// Bail if no database interface is available
 		if ( empty( $db ) ) {
-			return;
+			return false;
 		}
 
 		// Query statement
 		$query  = "TRUNCATE TABLE {$this->table_name}";
 		$result = $db->query( $query );
 
-		// Query success/fail
+		// Did the table get truncated?
 		return $this->is_success( $result );
 	}
 
 	/**
-	 * Delete all items from the database table
+	 * Delete all items from the database table.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 *
-	 * @return int|void Number of items deleted.
+	 * @return bool
 	 */
 	public function delete_all() {
 
@@ -452,23 +430,99 @@ abstract class Table extends Base {
 
 		// Bail if no database interface is available
 		if ( empty( $db ) ) {
-			return;
+			return false;
 		}
 
 		// Query statement
 		$query   = "DELETE FROM {$this->table_name}";
 		$deleted = $db->query( $query );
 
-		// Query success/fail
+		// Did the table get emptied?
 		return $deleted;
 	}
 
 	/**
-	 * Count the number of items in the database table
+	 * Clone this database table.
 	 *
-	 * @since 3.0
+	 * Pair with copy().
 	 *
-	 * @return void|int
+	 * @since 1.1.0
+	 *
+	 * @param string $new_table_name The name of the new table, without prefix
+	 *
+	 * @return bool
+	 */
+	public function _clone( $new_table_name = '' ) {
+
+		// Get the database interface
+		$db = $this->get_db();
+
+		// Bail if no database interface is available
+		if ( empty( $db ) ) {
+			return false;
+		}
+
+		// Sanitize the new table name
+		$table_name = $this->sanitize_table_name( $new_table_name );
+
+		// Bail if new table name is invalid
+		if ( empty( $table_name ) ) {
+			return false;
+		}
+
+		// Query statement
+		$table  = $this->apply_prefix( $table_name );
+		$query  = "CREATE TABLE {$table} LIKE {$this->table_name}";
+		$result = $db->query( $query );
+
+		// Did the table get cloned?
+		return $this->is_success( $result );
+	}
+
+	/**
+	 * Copy the contents of this table to a new table.
+	 *
+	 * Pair with clone().
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $new_table_name The name of the new table, without prefix
+	 *
+	 * @return bool
+	 */
+	public function copy( $new_table_name = '' ) {
+
+		// Get the database interface
+		$db = $this->get_db();
+
+		// Bail if no database interface is available
+		if ( empty( $db ) ) {
+			return false;
+		}
+
+		// Sanitize the new table name
+		$table_name = $this->sanitize_table_name( $new_table_name );
+
+		// Bail if new table name is invalid
+		if ( empty( $table_name ) ) {
+			return false;
+		}
+
+		// Query statement
+		$table  = $this->apply_prefix( $table_name );
+		$query  = "INSERT INTO {$table} SELECT * FROM {$this->table_name}";
+		$result = $db->query( $query );
+
+		// Did the table get copied?
+		return $this->is_success( $result );
+	}
+
+	/**
+	 * Count the number of items in the database table.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return int
 	 */
 	public function count() {
 
@@ -477,7 +531,7 @@ abstract class Table extends Base {
 
 		// Bail if no database interface is available
 		if ( empty( $db ) ) {
-			return;
+			return 0;
 		}
 
 		// Query statement
@@ -485,74 +539,100 @@ abstract class Table extends Base {
 		$count = $db->get_var( $query );
 
 		// Query success/fail
-		return $count;
+		return intval( $count );
 	}
 
-	/** Auto-Increment ********************************************************/
-
 	/**
-	 * Set the auto_increment value of the database table
+	 * Check if column already exists.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 *
-	 * @param int $number
+	 * @param string $name Value
 	 *
-	 * @return bool|void
+	 * @return bool
 	 */
-	public function set_auto_increment( $number = 1 ) {
+	public function column_exists( $name = '' ) {
 
 		// Get the database interface
 		$db = $this->get_db();
 
 		// Bail if no database interface is available
 		if ( empty( $db ) ) {
-			return;
+			return false;
 		}
-
-		// Number cannot be less than 1
-		if ( ! is_numeric( $number ) || ( $number <= 0 ) ) {
-			$number = 1;
-		}
-
-		// Format the number
-		$number = absint( $number );
 
 		// Query statement
-		$query  = "ALTER TABLE {$this->table_name} AUTO_INCREMENT={$number}";
-		$result = $db->query( $query );
+		$query    = "SHOW COLUMNS FROM {$this->table_name} LIKE %s";
+		$like     = $db->esc_like( $name );
+		$prepared = $db->prepare( $query, $like );
+		$result   = $db->query( $prepared );
 
-		// Query success/fail
+		// Does the column exist?
+		return $this->is_success( $result );
+	}
+
+	/**
+	 * Check if index already exists.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $name   Value
+	 * @param string $column Column name
+	 *
+	 * @return bool
+	 */
+	public function index_exists( $name = '', $column = 'Key_name' ) {
+
+		// Get the database interface
+		$db = $this->get_db();
+
+		// Bail if no database interface is available
+		if ( empty( $db ) ) {
+			return false;
+		}
+
+		// Query statement
+		$query    = "SHOW INDEXES FROM {$this->table_name} WHERE %s LIKE %s";
+		$like     = $db->esc_like( $name );
+		$prepared = $db->prepare( $query, $column, $like );
+		$result   = $db->query( $prepared );
+
+		// Does the index exist?
 		return $this->is_success( $result );
 	}
 
 	/** Upgrades **************************************************************/
 
 	/**
-	 * Upgrade the database table
+	 * Upgrade this database table.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 *
-	 * return boolean
+	 * @return bool
 	 */
 	public function upgrade() {
-		$result = false;
 
-		// Remove all upgrades that have already been completed
-		$upgrades = array_filter( (array) $this->upgrades, function( $value ) {
-			return version_compare( $value, $this->db_version, '>' );
-		} );
+		// Get pending upgrades
+		$upgrades = $this->get_pending_upgrades();
 
-		// Bail if no upgrades or database version is missing
-		if ( empty( $upgrades ) || empty( $this->db_version ) ) {
+		// Bail if no upgrades
+		if ( empty( $upgrades ) ) {
 			$this->set_db_version();
+
+			// Return, without failure
 			return true;
 		}
 
-		// Try to do all known upgrades
-		foreach ( $upgrades as $version => $method ) {
-			$result = $this->upgrade_to( $version, $method );
+		// Default result
+		$result = false;
 
-			// Bail if an error occurs, to avoid skipping ahead
+		// Try to do the upgrades
+		foreach ( $upgrades as $version => $callback ) {
+
+			// Do the upgrade
+			$result = $this->upgrade_to( $version, $callback );
+
+			// Bail if an error occurs, to avoid skipping upgrades
 			if ( ! $this->is_success( $result ) ) {
 				return false;
 			}
@@ -563,31 +643,59 @@ abstract class Table extends Base {
 	}
 
 	/**
-	 * Upgrade to a specific database version
+	 * Return array of upgrades that still need to run.
 	 *
-	 * @since 3.0
+	 * @since 1.1.0
 	 *
-	 * @param mixed  $version Database version to check if upgrade is needed
-	 * @param string $method
-	 *
-	 * @return boolean
+	 * @return array Array of upgrade callbacks, keyed by their db version.
 	 */
-	public function upgrade_to( $version = '', $method = '' ) {
+	public function get_pending_upgrades() {
+
+		// Default return value
+		$upgrades = array();
+
+		// Bail if no upgrades, or no database version to compare to
+		if ( empty( $this->upgrades ) || empty( $this->db_version ) ) {
+			return $upgrades;
+		}
+
+		// Loop through all upgrades, and pick out the ones that need doing
+		foreach ( $this->upgrades as $version => $callback ) {
+			if ( true === version_compare( $version, $this->db_version, '>' ) ) {
+				$upgrades[ $version ] = $callback;
+			}
+		}
+
+		// Return
+		return $upgrades;
+	}
+
+	/**
+	 * Upgrade to a specific database version.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param mixed  $version  Database version to check if upgrade is needed
+	 * @param string $callback Callback function or class method to call
+	 *
+	 * @return bool
+	 */
+	public function upgrade_to( $version = '', $callback = '' ) {
 
 		// Bail if no upgrade is needed
 		if ( ! $this->needs_upgrade( $version ) ) {
 			return false;
 		}
 
-		// Allow self-named upgrade methods
-		if ( empty( $method ) ) {
-			$method = $version;
+		// Allow self-named upgrade callbacks
+		if ( empty( $callback ) ) {
+			$callback = $version;
 		}
 
-		// Is the method callable?
-		$callable = $this->get_callable( $method );
+		// Is the callback... callable?
+		$callable = $this->get_callable( $callback );
 
-		// Bail if no callable upgrade method was found
+		// Bail if no callable upgrade was found
 		if ( empty( $callable ) ) {
 			return false;
 		}
@@ -611,9 +719,9 @@ abstract class Table extends Base {
 	/** Private ***************************************************************/
 
 	/**
-	 * Setup the necessary table variables
+	 * Setup the necessary table variables.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 */
 	private function setup() {
 
@@ -630,22 +738,32 @@ abstract class Table extends Base {
 			return;
 		}
 
+		// Separator
+		$glue = '_';
+
 		// Setup the prefixed name
-		$this->prefixed_name = $this->apply_prefix( $this->name );
+		$this->prefixed_name = $this->apply_prefix( $this->name, $glue );
 
 		// Maybe create database key
 		if ( empty( $this->db_version_key ) ) {
-			$this->db_version_key = "wpdb_{$this->prefixed_name}_version";
+			$this->db_version_key = implode(
+				$glue,
+				array(
+					sanitize_key( $this->db_global ),
+					$this->prefixed_name,
+					'version'
+				)
+			);
 		}
 	}
 
 	/**
-	 * Set this table up in the database interface, usually the $wpdb global.
+	 * Set this table up in the database interface.
 	 *
-	 * This must be done directly because WordPress does not have a mechanism
-	 * for manipulating them safely
+	 * This must be done directly because the database interface does not
+	 * have a common mechanism for manipulating them safely.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 */
 	private function set_db_interface() {
 
@@ -697,9 +815,9 @@ abstract class Table extends Base {
 	}
 
 	/**
-	 * Set the database version for the table
+	 * Set the database version for the table.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 *
 	 * @param mixed $version Database version to set when upgrading/creating
 	 */
@@ -720,39 +838,42 @@ abstract class Table extends Base {
 	}
 
 	/**
-	 * Get the table version from the database
+	 * Get the table version from the database.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 */
 	private function get_db_version() {
 		$this->db_version = $this->is_global()
 			? get_network_option( get_main_network_id(), $this->db_version_key, false )
 			:         get_option(                        $this->db_version_key, false );
 
-		/**
-		 * If the DB version is higher than the stated version and is 12 digits long, we need to update it to our
-		 * new, shorter format of 9 digits.
-		 *
-		 * This is only for 3.0 beta testers, and can be removed in 3.0.1 or above.
-		 *
-		 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/7579
-		 */
-		if ( version_compare( $this->db_version, $this->version, '<=' ) || 12 !== strlen( $this->db_version ) ) {
-			return;
-		}
+ 		/**
+ 		 * If the DB version is higher than the stated version and is 12 digits
+		 * long, we need to update it to our new, shorter format of 9 digits.
+ 		 *
+ 		 * This is only for 3.0 beta testers, and can be removed in 3.0.1 or above.
+ 		 *
+ 		 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/7579
+ 		 */
+ 		if ( version_compare( $this->db_version, $this->version, '<=' ) || ( 12 !== strlen( $this->db_version ) ) ) {
+ 			return;
+ 		}
 
-		// Parse the new version number from the existing. Converting from {YYYY}{mm}{dd}{xxxx} to {YYYY}{mm}{dd}{x}
-		$date             = substr( $this->db_version, 0, 8 );
-		$increment        = substr( $this->db_version, 8, 4 );
-		$this->db_version = intval( $date . intval( $increment ) ); // Trims off the three prefixed zeros.
+ 		// Parse the new version number from the existing. Converting from
+		// {YYYY}{mm}{dd}{xxxx} to {YYYY}{mm}{dd}{x}
+ 		$date             = substr( $this->db_version, 0, 8 );
+ 		$increment        = substr( $this->db_version, 8, 4 );
 
-		$this->set_db_version( $this->db_version );
+		// Trims off the three prefixed zeros.
+ 		$this->db_version = intval( $date . intval( $increment ) );
+
+ 		$this->set_db_version( $this->db_version );
 	}
 
 	/**
-	 * Delete the table version from the database
+	 * Delete the table version from the database.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 */
 	private function delete_db_version() {
 		$this->db_version = $this->is_global()
@@ -761,14 +882,11 @@ abstract class Table extends Base {
 	}
 
 	/**
-	 * Add class hooks to WordPress actions
+	 * Add class hooks to the parent application actions.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 */
 	private function add_hooks() {
-
-		// Activation hook
-		register_activation_hook( $this->file, array( $this, 'maybe_upgrade' ) );
 
 		// Add table to the global database object
 		add_action( 'switch_blog', array( $this, 'switch_blog'   ) );
@@ -780,7 +898,7 @@ abstract class Table extends Base {
 	 *
 	 * This is primarily used to skip 'admin_init' and force-install tables.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 *
 	 * @return bool
 	 */
@@ -797,9 +915,9 @@ abstract class Table extends Base {
 	}
 
 	/**
-	 * Check if table is global
+	 * Check if table is global.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 *
 	 * @return bool
 	 */
@@ -808,33 +926,36 @@ abstract class Table extends Base {
 	}
 
 	/**
-	 * Try to get a callable upgrade method, with some magic to avoid needing to
+	 * Try to get a callable upgrade, with some magic to avoid needing to
 	 * do this dance repeatedly inside subclasses.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 *
-	 * @param string $method
-	 * @return boolean
+	 * @param string $callback
+	 *
+	 * @return mixed Callable string, or false if not callable
 	 */
-	private function get_callable( $method = '' ) {
-		$callable = $method;
+	private function get_callable( $callback = '' ) {
+
+		// Default return value
+		$callable = $callback;
 
 		// Look for global function
 		if ( ! is_callable( $callable ) ) {
-			$callable = array( $this, $method );
 
-			// Look for local class method
+			// Fallback to local class method
+			$callable = array( $this, $callback );
 			if ( ! is_callable( $callable ) ) {
-				$callable = array( $this, "__{$method}" );
 
-				// Look for method prefixed with "__"
+				// Fallback to class method prefixed with "__"
+				$callable = array( $this, "__{$callback}" );
 				if ( ! is_callable( $callable ) ) {
 					$callable = false;
 				}
 			}
 		}
 
-		// Return callable, if any
+		// Return callable string, or false if not callable
 		return $callable;
 	}
 }

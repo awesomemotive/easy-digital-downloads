@@ -14,7 +14,7 @@ const EDD_Export = {
 			e.preventDefault();
 
 			const form = $( this ),
-				submitButton = form.find( 'input[type="submit"]' ).first();
+				submitButton = form.find( 'button[type="submit"]' ).first();
 
 			if ( submitButton.hasClass( 'button-disabled' ) || submitButton.is( ':disabled' ) ) {
 				return;
@@ -22,9 +22,12 @@ const EDD_Export = {
 
 			const data = form.serialize();
 
-			submitButton.addClass( 'button-disabled' );
+			if ( submitButton.hasClass( 'button-primary' ) ) {
+				submitButton.removeClass( 'button-primary' ).addClass( 'button-secondary' );
+			}
+			submitButton.attr( 'disabled', true ).addClass( 'updating-message' );
 			form.find( '.notice-wrap' ).remove();
-			form.append( '<div class="notice-wrap"><span class="spinner is-active"></span><div class="edd-progress"><div></div></div></div>' );
+			form.append( '<div class="notice-wrap"><div class="edd-progress"><div></div></div></div>' );
 
 			// start the process
 			self.process_step( 1, data, self );
@@ -47,7 +50,8 @@ const EDD_Export = {
 					const export_form = $( '.edd-export-form' ).find( '.edd-progress' ).parent().parent();
 					const notice_wrap = export_form.find( '.notice-wrap' );
 
-					export_form.find( '.button-disabled' ).removeClass( 'button-disabled' );
+					export_form.find( 'button' ).attr( 'disabled', false ).removeClass( 'updating-message' ).addClass( 'updated-message' );
+					export_form.find( 'button .spinner' ).hide().css( 'visibility', 'visible' );
 
 					if ( response.error ) {
 						const error_message = response.message;

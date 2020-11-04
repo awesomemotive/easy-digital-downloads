@@ -633,21 +633,19 @@ class EDD_Cart {
 	 * Get the discounted amount on a price
 	 *
 	 * @since 2.7
+	 * @since 3.0 Use `edd_get_item_discount_amount()` for calculations.
 	 *
 	 * @param array       $item     Cart item.
 	 * @param bool|string $discount False to use the cart discounts or a string to check with a discount code.
 	 * @return float The discounted amount
 	 */
 	public function get_item_discount_amount( $item = array(), $discount = false ) {
-		global $edd_is_last_cart_item, $edd_flat_discount_total;
-
-		// If we're not meeting the requirements of the $item array, return or set them
+		// Validate item.
 		if ( empty( $item ) || empty( $item['id'] ) ) {
 			return 0;
 		}
 
-		// Quantity is a requirement of the cart options array to determine the discounted price
-		if ( empty( $item['quantity'] ) ) {
+		if ( ! isset( $item['quantity'] ) ) {
 			return 0;
 		}
 
@@ -655,82 +653,37 @@ class EDD_Cart {
 			$item['options'] = array();
 		}
 
-		$amount           = 0;
-		$price            = $this->get_item_price( $item['id'], $item['options'] );
-		$discounted_price = $price;
+		$discounts = false === $discount
+			? $this->get_discounts()
+			: array( $discount );
 
-		$discounts = false === $discount ? $this->get_discounts() : array( $discount );
+		$item_price      = $this->get_item_price( $item['id'], $item['options'] );
+		$discount_amount = edd_get_item_discount_amount( $item, $this->get_contents(), $discounts );
 
-		// If discounts exist, only apply them to non-free cart items
-		if ( ! empty( $discounts ) && 0.00 != $price ) {
-			foreach ( $discounts as $discount ) {
-				$code_id = edd_get_discount_id_by_code( $discount );
+		$discounted_amount = ( $item_price - $discount_amount );
 
-				// Check discount exists
-				if( ! $code_id ) {
-					continue;
-				}
+		/**
+		 * Filters the amount to be discounted from the original cart item amount.
+		 *
+		 * @since unknown
+		 *
+		 * @param float    $discounted_amount Amount to be discounted from the cart item amount.
+		 * @param string[] $discounts         Discount codes applied to the Cart.
+		 * @param array    $item              Cart item.
+		 * @param float    $item_price        Cart item price.
+		 */
+		$discounted_amount = apply_filters(
+			'edd_get_cart_item_discounted_amount',
+			$discounted_amount,
+			$discounts,
+			$item,
+			$item_price
+		);
 
-				$reqs              = edd_get_discount_product_reqs( $code_id );
-				$excluded_products = edd_get_discount_excluded_products( $code_id );
+		// Recalculate using the legacy filter discounted amount.
+		$discount_amount = round( ( $item_price - $discounted_amount ), edd_currency_decimal_filter() );
 
-				// Make sure requirements are set and that this discount shouldn't apply to the whole cart
-				if ( ! empty( $reqs ) && edd_is_discount_not_global( $code_id ) ) {
-					// This is a product(s) specific discount
-					foreach ( $reqs as $download_id ) {
-						if ( $download_id == $item['id'] && ! in_array( $item['id'], $excluded_products ) ) {
-							$discounted_price -= $price - edd_get_discounted_amount( $discount, $price );
-						}
-					}
-				} else {
-					// This is a global cart discount
-					if( ! in_array( $item['id'], $excluded_products ) ) {
-						if( 'flat' === edd_get_discount_type( $code_id ) ) {
-							/* *
-							 * In order to correctly record individual item amounts, global flat rate discounts
-							 * are distributed across all cart items. The discount amount is divided by the number
-							 * of items in the cart and then a portion is evenly applied to each cart item
-							 */
-							$items_subtotal    = 0.00;
-							$cart_items        = $this->get_contents();
-							foreach ( $cart_items as $cart_item ) {
-								if ( ! in_array( $cart_item['id'], $excluded_products ) ) {
-									$item_price      = $this->get_item_price( $cart_item['id'], $cart_item['options'] );
-									$items_subtotal += $item_price * $cart_item['quantity'];
-								}
-							}
-
-							$item_subtotal     = ( $price * $item['quantity'] );
-							$subtotal_percent  = ! empty( $items_subtotal ) ? ( $item_subtotal / $items_subtotal ) : 0;
-							$code_amount       = edd_get_discount_amount( $code_id );
-							$discounted_amount = $code_amount * $subtotal_percent;
-							$discounted_price -= $discounted_amount;
-
-							$edd_flat_discount_total += round( $discounted_amount, edd_currency_decimal_filter() );
-
-							if ( $edd_is_last_cart_item && $edd_flat_discount_total < $code_amount ) {
-								$adjustment = $code_amount - $edd_flat_discount_total;
-								$discounted_price -= $adjustment;
-							}
-						} else {
-							$discounted_price -= $price - edd_get_discounted_amount( $discount, $price );
-						}
-					}
-				}
-
-				if ( $discounted_price < 0 ) {
-					$discounted_price = 0;
-				}
-			}
-
-			$amount = round( ( $price - apply_filters( 'edd_get_cart_item_discounted_amount', $discounted_price, $discounts, $item, $price ) ), edd_currency_decimal_filter() );
-
-			if ( 'flat' !== edd_get_discount_type( $code_id ) ) {
-				$amount = $amount * $item['quantity'];
-			}
-		}
-
-		return $amount;
+		return $discount_amount;
 	}
 
 	/**

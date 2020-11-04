@@ -109,7 +109,7 @@ class EDD_Batch_Sales_And_Earnings_Export extends EDD_Batch_Export {
 					? EDD()->utils->date( $this->start )->subSeconds( $offset )->format( 'mysql' )
 					: EDD()->utils->date( $this->start )->addSeconds( $offset )->format( 'mysql' );
 
-				$date_query_sql .= $wpdb->prepare( 'date_created >= %s', $this->start );
+				$date_query_sql .= $wpdb->prepare( "{$wpdb->edd_orders}.date_created >= %s", $this->start );
 			}
 
 			// Join dates with `AND` if start and end date set.
@@ -124,7 +124,7 @@ class EDD_Batch_Sales_And_Earnings_Export extends EDD_Batch_Export {
 			}
 
 			if ( ! empty( $this->end ) ) {
-				$date_query_sql .= $wpdb->prepare( 'date_created <= %s', $this->end );
+				$date_query_sql .= $wpdb->prepare( "{$wpdb->edd_orders}.date_created <= %s", $this->end );
 			}
 		}
 

@@ -260,6 +260,11 @@ function edd_get_customers( $args = array() ) {
 		'number' => 30
 	) );
 
+	if ( -1 == $r['number'] ) {
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Do not use -1 to retrieve all results.', 'easy-digital-downloads' ), '3.0' );
+		$r['number'] = 9999999;
+	}
+
 	// Instantiate a query object
 	$customers = new EDD\Database\Queries\Customer();
 
@@ -630,8 +635,10 @@ function edd_count_customer_addresses( $args = array() ) {
 }
 
 /**
- * Maybe add a customer address. Used by `edd_build_order()` to maybe add
- * order addresses to the customer addresses table.
+ * Maybe add a customer address. Only unique addresses will be added. Used
+ * by `edd_build_order()` and `edd_add_manual_order()` to maybe add order
+ * addresses to the customer addresses table. Also used by the data migrator
+ * class when migrating orders from 2.9.
  *
  * @since 3.0
  *
@@ -666,17 +673,35 @@ function edd_maybe_add_customer_address( $customer_id = 0, $data = array() ) {
 		return false;
 	}
 
+	// Set up an array with empty address keys. If all of these are empty in $data, the address should not be added.
+	$empty_address    = array(
+		'address'     => '',
+		'address2'    => '',
+		'city'        => '',
+		'region'      => '',
+		'country'     => '',
+		'postal_code' => '',
+	);
+	$address_to_check = array_intersect_key( $data, $empty_address );
+	$address_to_check = array_filter( $address_to_check );
+	if ( empty( $address_to_check ) ) {
+		return false;
+	}
+	$address_to_check['customer_id'] = $customer_id;
+	$address_to_check['type']        = empty( $data['type'] ) ? 'billing' : $data['type'];
+
+	// Instantiate a query object
+	$customer_addresses = new EDD\Database\Queries\Customer_Address();
+
+	// Check if this address is already assigned to the customer.
+	$address_exists = $customer_addresses->query( $address_to_check );
+	if ( ! empty( $address_exists ) ) {
+		return false;
+	}
 	$data['customer_id'] = $customer_id;
 
-	$c = edd_count_customer_addresses( $data );
-
-	// Add to the table if an address does not exist.
-	if ( 0 === $c ) {
-		$data['type'] = 'billing';
-		return edd_add_customer_address( $data );
-	}
-
-	return false;
+	// Add the new address to the customer record.
+	return $customer_addresses->add_item( $data );
 }
 
 /**

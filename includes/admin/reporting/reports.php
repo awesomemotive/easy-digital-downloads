@@ -177,12 +177,13 @@ function edd_reports_page() {
  */
 function edd_register_overview_report( $reports ) {
 	try {
-
 		// Variables to hold date filter values.
 		$options       = Reports\get_dates_filter_options();
 		$dates         = Reports\get_filter_value( 'dates' );
 		$exclude_taxes = Reports\get_taxes_excluded_filter();
-		$label         = $options[ $dates['range'] ];
+
+		$hbh   = Reports\get_dates_filter_hour_by_hour();
+		$label = $options[ $dates['range'] ] . ( $hbh ? ' (' . edd_get_timezone_abbr() . ')' : '' );
 
 		$reports->add_report( 'overview', array(
 			'label'     => __( 'Overview', 'easy-digital-downloads' ),
@@ -469,7 +470,9 @@ function edd_register_downloads_report( $reports ) {
 		$options       = Reports\get_dates_filter_options();
 		$dates         = Reports\get_filter_value( 'dates' );
 		$exclude_taxes = Reports\get_taxes_excluded_filter();
-		$label         = $options[ $dates['range'] ];
+
+		$hbh   = Reports\get_dates_filter_hour_by_hour();
+		$label = $options[ $dates['range'] ] . ( $hbh ? ' (' . edd_get_timezone_abbr() . ')' : '' );
 
 		$download_data = Reports\get_filter_value( 'products' );
 		$download_data = ! empty( $download_data ) && 'all' !== Reports\get_filter_value( 'products' )
@@ -482,45 +485,17 @@ function edd_register_downloads_report( $reports ) {
 		// Mock downloads and prices in case they cannot be found later.
 		$download       = edd_get_download();
 		$prices         = array();
-
-		$country = Reports\get_filter_value( 'countries' );
-		$region  = Reports\get_filter_value( 'regions' );
-
+		$download_label = '';
 		if ( $download_data ) {
 			$download = edd_get_download( $download_data['download_id'] );
-			$prices   = $download->get_prices();
-
 			if ( $download_data['price_id'] ) {
-				$prices = array_values( wp_filter_object_list( $download->get_prices(), array( 'index' => absint( $download_data['price_id'] ) ) ) );
-
-				$download_label = esc_html( ' (' . $download->post_title . ': ' . $prices[0]['name'] . ')' );
-			} else {
-				$download_label = esc_html( ' (' . $download->post_title . ')' );
-			}
-
-			if ( ! empty( $download_label ) ) {
-				$location = '';
-
-				if ( ! empty( $country ) && 'all' !== $country ) {
-					$location = ' ' . __( 'for', 'easy-digital-downloads' ) . ' ';
-
-					if ( ! empty( $region ) && 'all' !== $region ) {
-						$location .= edd_get_state_name( $country, $region ) . ', ';
-					}
-
-					$location .= edd_get_country_name( $country );
+				$args       = array( 'price_id' => $download_data['price_id'] );
+				$price_name = edd_get_price_name( $download->ID, $args );
+				if ( $price_name ) {
+					$download->post_title .= ': ' . $price_name;
 				}
-
-				$country = 'all' !== $country
-					? $country
-					: '';
-
-				$region = 'all' !== $region
-					? $region
-					: '';
-
-				$endpoint_label .= $location;
 			}
+			$download_label = esc_html( ' (' . $download->post_title . ')' );
 		}
 
 		$tiles = array_filter( array(
@@ -574,7 +549,7 @@ function edd_register_downloads_report( $reports ) {
 				'charts' => $charts,
 				'tables' => $tables,
 			),
-			'filters'  => array( 'products', 'countries', 'regions', 'taxes' )
+			'filters'   => array( 'products', 'taxes' ),
 		) );
 
 		$reports->register_endpoint( 'most_valuable_download', array(
@@ -637,14 +612,12 @@ function edd_register_downloads_report( $reports ) {
 			'label' => $endpoint_label,
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $download_data, $country, $region, $dates ) {
+					'data_callback' => function () use ( $download_data, $dates ) {
 						$stats = new EDD\Stats( array(
 							'product_id' => absint( $download_data['download_id'] ),
 							'price_id'   => absint( $download_data['price_id'] ),
 							'range'      => $dates['range'],
 							'output'     => 'formatted',
-							'country'    => $country,
-							'region'     => $region
 						) );
 
 						$earnings = $stats->get_order_item_earnings();
@@ -821,7 +794,7 @@ function edd_register_downloads_report( $reports ) {
 						$results = $wpdb->get_results( $wpdb->prepare(
 							"SELECT COUNT(total) AS sales, SUM(total) AS earnings, {$sql_clauses['select']}
 							FROM {$wpdb->edd_order_items} edd_oi
-							WHERE product_id = %d {$price_id} AND date_created >= %s AND date_created <= %s
+							WHERE product_id = %d {$price_id} AND date_created >= %s AND date_created <= %s AND status = 'complete'
 							GROUP BY {$sql_clauses['groupby']}
 							ORDER BY {$sql_clauses['orderby']} ASC",
 							$download_data['download_id'], $dates['start']->copy()->format( 'mysql' ), $dates['end']->copy()->format( 'mysql' ) ) );
@@ -876,8 +849,8 @@ function edd_register_downloads_report( $reports ) {
 								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
 							}
 
-							$sales[ $timestamp ][1]    = $result->sales;
-							$earnings[ $timestamp ][1] = floatval( $result->earnings );
+							$sales[ $timestamp ][1]    += $result->sales;
+							$earnings[ $timestamp ][1] += floatval( $result->earnings );
 						}
 
 						$sales    = array_values( $sales );
@@ -940,7 +913,9 @@ function edd_register_refunds_report( $reports ) {
 		$options       = Reports\get_dates_filter_options();
 		$dates         = Reports\get_filter_value( 'dates' );
 		$exclude_taxes = Reports\get_taxes_excluded_filter();
-		$label         = $options[ $dates['range'] ];
+
+		$hbh   = Reports\get_dates_filter_hour_by_hour();
+		$label = $options[ $dates['range'] ] . ( $hbh ? ' (' . edd_get_timezone_abbr() . ')' : '' );
 
 		$reports->add_report( 'refunds', array(
 			'label'     => __( 'Refunds', 'easy-digital-downloads' ),
@@ -1154,7 +1129,9 @@ function edd_register_payment_gateways_report( $reports ) {
 		$exclude_taxes = Reports\get_taxes_excluded_filter();
 		$label         = $options[ $dates['range'] ];
 		$gateway       = Reports\get_filter_value( 'gateways' );
-		$label         = $options[ $dates['range'] ];
+
+		$hbh   = Reports\get_dates_filter_hour_by_hour();
+		$label = $options[ $dates['range'] ] . ( $hbh ? ' (' . edd_get_timezone_abbr() . ')' : '' );
 
 		$tiles = array(
 			'sales_per_gateway',
@@ -1509,8 +1486,8 @@ function edd_register_payment_gateways_report( $reports ) {
 								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
 							}
 
-							$sales[ $timestamp ][1] = $result->sales;
-							$earnings[ $timestamp ][1] = floatval( $result->earnings );
+							$sales[ $timestamp ][1]    += $result->sales;
+							$earnings[ $timestamp ][1] += floatval( $result->earnings );
 						}
 
 						$sales    = array_values( $sales );
@@ -1572,7 +1549,9 @@ function edd_register_taxes_report( $reports ) {
 		$options       = Reports\get_dates_filter_options();
 		$dates         = Reports\get_filter_value( 'dates' );
 		$exclude_taxes = Reports\get_taxes_excluded_filter();
-		$label         = $options[ $dates['range'] ];
+
+		$hbh   = Reports\get_dates_filter_hour_by_hour();
+		$label = $options[ $dates['range'] ] . ( $hbh ? ' (' . edd_get_timezone_abbr() . ')' : '' );
 
 		$download_data = Reports\get_filter_value( 'products' );
 		$download_data = ! empty( $download_data ) && 'all' !== Reports\get_filter_value( 'products' )
@@ -1580,17 +1559,16 @@ function edd_register_taxes_report( $reports ) {
 			: false;
 
 		$download_label = '';
-
 		if ( $download_data ) {
 			$download = edd_get_download( $download_data['download_id'] );
-
 			if ( $download_data['price_id'] ) {
-				$prices = array_values( wp_filter_object_list( $download->get_prices(), array( 'index' => absint( $download_data['price_id'] ) ) ) );
-
-				$download_label = esc_html( ' (' . $download->post_title . ': ' . $prices[0]['name'] . ')' );
-			} else {
-				$download_label = esc_html( ' (' . $download->post_title . ')' );
+				$args       = array( 'price_id' => $download_data['price_id'] );
+				$price_name = edd_get_price_name( $download->ID, $args );
+				if ( $price_name ) {
+					$download->post_title .= ': ' . $price_name;
+				}
 			}
+			$download_label = esc_html( ' (' . $download->post_title . ')' );
 		}
 
 		$country = Reports\get_filter_value( 'countries' );
@@ -1711,7 +1689,9 @@ function edd_register_file_downloads_report( $reports ) {
 		// Variables to hold date filter values.
 		$options = Reports\get_dates_filter_options();
 		$filter  = Reports\get_filter_value( 'dates' );
-		$label   = $options[ $filter['range'] ];
+
+		$hbh   = Reports\get_dates_filter_hour_by_hour();
+		$label = $options[ $filter['range'] ] . ( $hbh ? ' (' . edd_get_timezone_abbr() . ')' : '' );
 
 		$download_data = Reports\get_filter_value( 'products' );
 		$download_data = ! empty( $download_data ) && 'all' !== Reports\get_filter_value( 'products' )
@@ -1719,17 +1699,16 @@ function edd_register_file_downloads_report( $reports ) {
 			: false;
 
 		$download_label = '';
-
 		if ( $download_data ) {
 			$download = edd_get_download( $download_data['download_id'] );
-
 			if ( $download_data['price_id'] ) {
-				$prices = array_values( wp_filter_object_list( $download->get_prices(), array( 'index' => absint( $download_data['price_id'] ) ) ) );
-
-				$download_label = esc_html( ' (' . $download->post_title . ': ' . $prices[0]['name'] . ')' );
-			} else {
-				$download_label = esc_html( ' (' . $download->post_title . ')' );
+				$args       = array( 'price_id' => $download_data['price_id'] );
+				$price_name = edd_get_price_name( $download->ID, $args );
+				if ( $price_name ) {
+					$download->post_title .= ': ' . $price_name;
+				}
 			}
+			$download_label = esc_html( ' (' . $download->post_title . ')' );
 		}
 
 		$tiles = array_filter( array(
@@ -1957,7 +1936,7 @@ function edd_register_file_downloads_report( $reports ) {
 								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
 							}
 
-							$file_downloads[ $timestamp ][1] = $result->total;
+							$file_downloads[ $timestamp ][1] += $result->total;
 						}
 
 						$file_downloads = array_values( $file_downloads );
@@ -2001,7 +1980,9 @@ function edd_register_discounts_report( $reports ) {
 		// Variables to hold date filter values.
 		$options = Reports\get_dates_filter_options();
 		$filter  = Reports\get_filter_value( 'dates' );
-		$label   = $options[ $filter['range'] ];
+
+		$hbh   = Reports\get_dates_filter_hour_by_hour();
+		$label = $options[ $filter['range'] ] . ( $hbh ? ' (' . edd_get_timezone_abbr() . ')' : '' );
 
 		$discount = Reports\get_filter_value( 'discounts' );
 		$discount = ! empty( $discount ) && 'all' !== $discount
@@ -2270,7 +2251,7 @@ function edd_register_discounts_report( $reports ) {
 									$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
 								}
 
-								$discount_usage[ $timestamp ][1] = $result->total;
+								$discount_usage[ $timestamp ][1] += $result->total;
 							}
 
 							$discount_usage = array_values( $discount_usage );
@@ -2316,7 +2297,9 @@ function edd_register_customer_report( $reports ) {
 		$options       = Reports\get_dates_filter_options();
 		$dates         = Reports\get_filter_value( 'dates' );
 		$exclude_taxes = Reports\get_taxes_excluded_filter();
-		$label         = $options[ $dates['range'] ];
+
+		$hbh   = Reports\get_dates_filter_hour_by_hour();
+		$label = $options[ $dates['range'] ] . ( $hbh ? ' (' . edd_get_timezone_abbr() . ')' : '' );
 
 		$reports->add_report( 'customers', array(
 			'label'     => __( 'Customers', 'easy-digital-downloads' ),
@@ -2325,10 +2308,8 @@ function edd_register_customer_report( $reports ) {
 			'endpoints' => array(
 				'tiles'  => array(
 					'lifetime_value_of_customer',
-					'average_customer_value',
 					'average_number_of_orders_per_customer',
-					'customer_average_age',
-					'most_valuable_customer',
+					'average_customer_value',
 				),
 				'tables' => array(
 					'top_five_customers',
@@ -2386,20 +2367,6 @@ function edd_register_customer_report( $reports ) {
 						return apply_filters( 'edd_reports_customers_average_order_count', $stats->get_customer_order_count( array(
 							'function' => 'AVG',
 						) ) );
-					},
-				),
-			),
-		) );
-
-		$reports->register_endpoint( 'customer_average_age', array(
-			'label' => __( 'Average Age', 'easy-digital-downloads' ),
-			'views' => array(
-				'tile' => array(
-					'data_callback' => function () {
-						global $wpdb;
-						$average_value = (int) $wpdb->get_var( "SELECT AVG(DATEDIFF(NOW(), date_created)) AS average FROM {$wpdb->edd_customers}" );
-
-						return apply_filters( 'edd_reports_customers_average_age', $average_value . ' ' . __( 'days', 'easy-digital-downloads' ) );
 					},
 				),
 			),
@@ -2514,7 +2481,7 @@ function edd_register_customer_report( $reports ) {
 								$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
 							}
 
-							$customers[ $timestamp ][1] = $result->total;
+							$customers[ $timestamp ][1] += $result->total;
 						}
 
 						$customers = array_values( $customers );
@@ -2582,7 +2549,7 @@ function display_export_report() {
     <div id="edd-dashboard-widgets-wrap">
         <div class="metabox-holder">
             <div id="post-body">
-                <div id="post-body-content">
+                <div id="post-body-content" class="edd-reports-export edd-admin--has-grid">
 					<?php do_action( 'edd_reports_tab_export_content_top' ); ?>
 
                     <div class="postbox edd-export-earnings-report">
@@ -2590,17 +2557,20 @@ function display_export_report() {
                         <div class="inside">
                             <p><?php esc_html_e( 'Download a CSV giving a detailed look into earnings over time.', 'easy-digital-downloads' ); ?></p>
                             <form id="edd-export-earnings" class="edd-export-form edd-import-export-form" method="post">
-								<?php echo EDD()->html->month_dropdown( 'start_month' ); ?>
-								<?php echo EDD()->html->year_dropdown( 'start_year' ); ?>
-								<span class="edd-label"><?php echo _x( 'to', 'Date one to date two', 'easy-digital-downloads' ); ?></span>
-								<?php echo EDD()->html->month_dropdown( 'end_month' ); ?>
-								<?php echo EDD()->html->year_dropdown( 'end_year' ); ?>
+								<div class="edd-to-and-from-container">
+									<?php echo EDD()->html->month_dropdown( 'start_month' ); ?>
+									<?php echo EDD()->html->year_dropdown( 'start_year' ); ?>
+								</div>
+
+								<span class="edd-to-and-from--separator"><?php echo _x( '&mdash; to &mdash;', 'Date one to date two', 'easy-digital-downloads' ); ?></span>
+
+								<div class="edd-to-and-from-container">
+									<?php echo EDD()->html->month_dropdown( 'end_month' ); ?>
+									<?php echo EDD()->html->year_dropdown( 'end_year' ); ?>
+								</div>
 								<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
                                 <input type="hidden" name="edd-export-class" value="EDD_Batch_Earnings_Report_Export"/>
-                                <span>
-									<input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
-									<span class="spinner"></span>
-								</span>
+								<button type="submit" class="button button-secondary"><?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?></button>
                             </form>
                         </div>
                     </div>
@@ -2611,44 +2581,45 @@ function display_export_report() {
                             <p><?php esc_html_e( 'Download a CSV of all sales or earnings on a day-by-day basis.', 'easy-digital-downloads' ); ?></p>
 
                             <form id="edd-export-sales-earnings" class="edd-export-form edd-import-export-form" method="post">
-								<span class="edd-from-to-wrapper">
+								<div class="edd-from-to-wrapper">
 									<?php
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-order-export-start',
+										'class'       => 'edd-export-start',
 										'name'        => 'start',
 										'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
 									) );
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-order-export-end',
+										'class'       => 'edd-export-end',
 										'name'        => 'end',
 										'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
 									) );
 
-								?></span><?php
+								?></div><?php
 
-				                echo EDD()->html->product_dropdown( array(
-					                'name'   => 'download_id',
-					                'id'     => 'edd_orders_export_download',
-					                'chosen' => true,
-				                ) );
+								echo EDD()->html->product_dropdown( array(
+									'name'        => 'download_id',
+									'id'          => 'edd_orders_export_download',
+									'chosen'      => true,
+									/* translators: the plural post type label */
+									'placeholder' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
+								) );
 
-				                echo EDD()->html->customer_dropdown( array(
-					                'name'          => 'customer_id',
-					                'id'            => 'edd_order_export_customer',
-					                'chosen'        => true,
-					                'none_selected' => '',
-				                ) );
+								echo EDD()->html->customer_dropdown( array(
+									'name'          => 'customer_id',
+									'id'            => 'edd_order_export_customer',
+									'chosen'        => true,
+									'none_selected' => '',
+									'placeholder'   => __( 'All Customers', 'easy-digital-downloads' ),
+								) );
 
 				                wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
 
                                 <input type="hidden" name="edd-export-class" value="EDD_Batch_Sales_And_Earnings_Export"/>
-
-                                <span>
-									<input type="submit" value="<?php esc_html_e( 'Export', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
-									<span class="spinner"></span>
-								</span>
+								<button type="submit" class="button button-secondary"><?php esc_html_e( 'Export', 'easy-digital-downloads' ); ?></button>
                             </form>
                         </div>
                     </div>
@@ -2658,39 +2629,38 @@ function display_export_report() {
                         <div class="inside">
                             <p><?php esc_html_e( 'Download a CSV of all orders.', 'easy-digital-downloads' ); ?></p>
                             <form id="edd-export-orders" class="edd-export-form edd-import-export-form" method="post">
-								<span class="edd-from-to-wrapper">
+								<div class="edd-from-to-wrapper">
 									<?php
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-orders-export-start',
+										'class'       => 'edd-export-start',
 										'name'        => 'start',
 										'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' ),
 									) );
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-orders-export-end',
+										'class'       => 'edd-export-end',
 										'name'        => 'end',
 										'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' ),
 									) );
 
-								?></span><?php
+								?></div><?php
 
 								echo EDD()->html->select( array(
-									'id'              => 'edd-orders-export-status',
-									'name'            => 'status',
-									'show_option_all' => __( 'All Statuses', 'easy-digital-downloads' ),
-									'selected'        => false,
-									'chosen'          => true,
-									'options'         => edd_get_payment_statuses(),
+									'id'               => 'edd-orders-export-status',
+									'name'             => 'status',
+									'show_option_all'  => __( 'All Statuses', 'easy-digital-downloads' ),
+									'show_option_none' => false,
+									'selected'         => false,
+									'options'          => edd_get_payment_statuses(),
 								) );
 
 								wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
 								?>
                                 <input type="hidden" name="edd-export-class" value="EDD_Batch_Payments_Export"/>
-                                <span>
-									<input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
-									<span class="spinner"></span>
-								</span>
+								<button type="submit" class="button button-secondary"><?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?></button>
                             </form>
                         </div>
                     </div>
@@ -2700,61 +2670,60 @@ function display_export_report() {
                         <div class="inside">
                             <p><?php esc_html_e( 'Download a CSV of all orders, taxed by Country and/or Region.', 'easy-digital-downloads' ); ?></p>
                             <form id="edd-export-taxed-orders" class="edd-export-form edd-import-export-form" method="post">
-								<span class="edd-from-to-wrapper">
+								<div class="edd-from-to-wrapper">
 									<?php
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-taxed-orders-export-start',
+										'class'       => 'edd-export-start',
 										'name'        => 'start',
 										'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' )
 									) );
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-taxed-orders-export-end',
+										'class'       => 'edd-export-end',
 										'name'        => 'end',
 										'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' )
 									) );
 
-								?></span><?php
+								?></div><?php
 
 								echo EDD()->html->select( array(
-									'id'              => 'edd-taxed-orders-export-status',
-									'name'            => 'status',
-									'show_option_all' => __( 'All Statuses', 'easy-digital-downloads' ),
-									'selected'        => false,
-									'chosen'          => true,
-									'options'         => edd_get_payment_statuses(),
+									'id'               => 'edd-taxed-orders-export-status',
+									'name'             => 'status',
+									'show_option_all'  => __( 'All Statuses', 'easy-digital-downloads' ),
+									'show_option_none' => false,
+									'selected'         => false,
+									'options'          => edd_get_payment_statuses(),
 								) );
 
-		                        echo EDD()->html->select( array(
-			                        'name'             => 'country',
-			                        'id'               => 'edd_reports_filter_countries',
-			                        'options'          => edd_get_country_list(),
-			                        'chosen'           => true,
-			                        'selected'         => false,
-			                        'show_option_none' => false,
-			                        'placeholder'      => __( 'Choose a Country', 'easy-digital-downloads' ),
-			                        'show_option_all'  => __( 'All Countries', 'easy-digital-downloads' ),
-		                        ) );
+								echo EDD()->html->select( array(
+									'name'             => 'country',
+									'id'               => 'edd_reports_filter_countries',
+									'options'          => edd_get_country_list(),
+									'chosen'           => true,
+									'selected'         => false,
+									'show_option_none' => false,
+									'placeholder'      => __( 'All Countries', 'easy-digital-downloads' ),
+									'show_option_all'  => false,
+								) );
 
-		                        echo EDD()->html->select( array(
-			                        'name'             => 'region',
-			                        'id'               => 'edd_reports_filter_regions',
-			                        'options'          => edd_get_shop_states(),
-			                        'chosen'           => true,
-			                        'selected'         => false,
-			                        'show_option_none' => false,
-			                        'placeholder'      => __( 'Choose a Region', 'easy-digital-downloads' ),
-			                        'show_option_all'  => __( 'All Regions', 'easy-digital-downloads' ),
-		                        ) );
+								echo EDD()->html->select( array(
+									'name'             => 'region',
+									'id'               => 'edd_reports_filter_regions',
+									'options'          => edd_get_shop_states(),
+									'chosen'           => true,
+									'selected'         => false,
+									'show_option_none' => false,
+									'placeholder'      => __( 'All Regions', 'easy-digital-downloads' ),
+									'show_option_all'  => false,
+								) );
 
 		                        wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
 								?>
                                 <input type="hidden" name="edd-export-class" value="EDD_Batch_Taxed_Orders_Export"/>
-                                <span>
-									<input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
-									<span class="spinner"></span>
-								</span>
+								<button type="submit" class="button button-secondary"><?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?></button>
                             </form>
                         </div>
                     </div>
@@ -2789,26 +2758,26 @@ function display_export_report() {
 					                }
 				                }
 
-				                echo EDD()->html->select( array(
-					                'name'             => 'taxonomy',
-					                'options'          => $taxonomies,
-					                'chosen'           => true,
-					                'selected'         => false,
-					                'show_option_none' => false,
-					                'placeholder'      => __( 'Select a Taxonomy', 'easy-digital-downloads' ),
-					                'show_option_all'  => __( 'All Taxonomies', 'easy-digital-downloads' ),
-				                ) );
+											echo EDD()->html->select( array(
+												'name'             => 'taxonomy',
+												'options'          => $taxonomies,
+												'selected'         => false,
+												'show_option_none' => false,
+												'show_option_all'  => __( 'All Taxonomies', 'easy-digital-downloads' ),
+											) );
 
 				                echo EDD()->html->product_dropdown( array(
-					                'name'   => 'download',
-					                'id'     => 'edd_customer_export_download',
-					                'chosen' => true,
+									'name'        => 'download',
+									'id'          => 'edd_customer_export_download',
+									'chosen'      => true,
+									/* translators: the plural post type label */
+									'placeholder' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
 				                ) );
 
 				                wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
 				                ?>
-                                <input type="hidden" name="edd-export-class" value="EDD_Batch_Customers_Export"/>
-                                <input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								<input type="hidden" name="edd-export-class" value="EDD_Batch_Customers_Export"/>
+								<button type="submit" class="button button-secondary"><?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?></button>
                             </form>
                         </div>
                     </div>
@@ -2818,31 +2787,30 @@ function display_export_report() {
                         <div class="inside">
                             <p><?php esc_html_e( 'Download a CSV of all customers that were taxed.', 'easy-digital-downloads' ); ?></p>
                             <form id="edd-export-taxed-customers" class="edd-export-form edd-import-export-form" method="post">
-								<span class="edd-from-to-wrapper">
+								<div class="edd-from-to-wrapper">
 									<?php
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-taxed-orders-export-start',
+										'class'       => 'edd-export-start',
 										'name'        => 'start',
 										'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' )
 									) );
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-taxed-orders-export-end',
+										'class'       => 'edd-export-end',
 										'name'        => 'end',
 										'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' )
 									) );
 
-								?></span><?php
+								?></div><?php
 
 				                wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
 
 								?>
                                 <input type="hidden" name="edd-export-class" value="EDD_Batch_Taxed_Customers_Export"/>
-                                <span>
-									<input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
-									<span class="spinner"></span>
-								</span>
+								<button type="submit" class="button button-secondary"><?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?></button>
                             </form>
                         </div>
                     </div>
@@ -2850,12 +2818,20 @@ function display_export_report() {
                     <div class="postbox edd-export-downloads">
                         <h3 class="hndle"><span><?php esc_html_e( sprintf( __( 'Export %s','easy-digital-downloads' ), edd_get_label_plural() ) ); ?></span></h3>
                         <div class="inside">
-                            <p><?php esc_html_e( sprintf( __( 'Download a CSV of %1$s. To download a CSV for all %1$s, leave "Choose a %2$s" as it is.', 'easy-digital-downloads' ), edd_get_label_plural( true ), edd_get_label_singular() ) ); ?></p>
+							<p><?php esc_html_e( sprintf( __( 'Download a CSV of %1$s.', 'easy-digital-downloads' ), edd_get_label_plural( true ) ) ); ?></p>
                             <form id="edd-export-file-downloads" class="edd-export-form edd-import-export-form" method="post">
-								<?php echo EDD()->html->product_dropdown( array( 'name' => 'download_id', 'id' => 'edd_download_export_download', 'chosen' => true ) ); ?>
+								<?php echo EDD()->html->product_dropdown(
+									array(
+										'name'        => 'download_id',
+										'id'          => 'edd_download_export_download',
+										'chosen'      => true,
+										/* translators: the plural post type label */
+										'placeholder' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
+									)
+								); ?>
 								<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
-                                <input type="hidden" name="edd-export-class" value="EDD_Batch_Downloads_Export"/>
-                                <input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								<input type="hidden" name="edd-export-class" value="EDD_Batch_Downloads_Export"/>
+								<button type="submit" class="button button-secondary"><?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?></button>
                             </form>
                         </div>
                     </div>
@@ -2865,28 +2841,30 @@ function display_export_report() {
                         <div class="inside">
                             <p><?php esc_html_e( 'Download a CSV of API request logs.', 'easy-digital-downloads' ); ?></p>
                             <form id="edd-export-api-requests" class="edd-export-form edd-import-export-form" method="post">
-								<span class="edd-from-to-wrapper">
+								<div class="edd-from-to-wrapper">
 					                <?php
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-api-requests-export-start',
+										'class'       => 'edd-export-start',
 										'name'        => 'start',
 										'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' )
 									) );
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-api-requests-export-end',
+										'class'       => 'edd-export-end',
 										'name'        => 'end',
 										'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' )
 									) );
 
-								?></span><?php
+								?></div><?php
 
 				                wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
 
 								?>
-                                <input type="hidden" name="edd-export-class" value="EDD_Batch_API_Requests_Export"/>
-                                <input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								<input type="hidden" name="edd-export-class" value="EDD_Batch_API_Requests_Export"/>
+								<button type="submit" class="button button-secondary"><?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?></button>
                             </form>
                         </div>
                     </div>
@@ -2894,31 +2872,41 @@ function display_export_report() {
                     <div class="postbox edd-export-download-history">
                         <h3 class="hndle"><span><?php esc_html_e('Export File Download Logs','easy-digital-downloads' ); ?></span></h3>
                         <div class="inside">
-                            <p><?php esc_html_e( 'Download a CSV of file downloads. To download a CSV for all file downloads, leave "Choose a Download" as it is.', 'easy-digital-downloads' ); ?></p>
+                            <p><?php esc_html_e( 'Download a CSV of file download logs.', 'easy-digital-downloads' ); ?></p>
                             <form id="edd-export-file-downloads" class="edd-export-form edd-import-export-form" method="post">
-								<?php echo EDD()->html->product_dropdown( array( 'name' => 'download_id', 'id' => 'edd_file_download_export_download', 'chosen' => true ) ); ?>
-								<span class="edd-from-to-wrapper">
+								<?php echo EDD()->html->product_dropdown(
+									array(
+										'name'        => 'download_id',
+										'id'          => 'edd_file_download_export_download',
+										'chosen'      => true,
+										/* translators: the plural post type label */
+										'placeholder' => sprintf( __( 'All %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
+									)
+								); ?>
+								<div class="edd-from-to-wrapper">
 									<?php
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-file-download-export-start',
+										'class'       => 'edd-export-start',
 										'name'        => 'start',
 										'placeholder' => _x( 'From', 'date filter', 'easy-digital-downloads' )
 									) );
 
 									echo EDD()->html->date_field( array(
 										'id'          => 'edd-file-download-export-end',
+										'class'       => 'edd-export-end',
 										'name'        => 'end',
 										'placeholder' => _x( 'To', 'date filter', 'easy-digital-downloads' )
 									) );
 
-								?></span><?php
+								?></div><?php
 
 								wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' );
 
 								?>
-                                <input type="hidden" name="edd-export-class" value="EDD_Batch_File_Downloads_Export"/>
-                                <input type="submit" value="<?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?>" class="button-secondary"/>
+								<input type="hidden" name="edd-export-class" value="EDD_Batch_File_Downloads_Export"/>
+								<button type="submit" class="button button-secondary"><?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?></button>
                             </form>
                         </div>
                     </div>
@@ -2980,3 +2968,22 @@ function edd_add_screen_options_nonces() {
 	wp_nonce_field( 'meta-box-order',  'meta-box-order-nonce', false );
 }
 add_action( 'admin_footer', 'edd_add_screen_options_nonces' );
+
+/**
+ * This function adds a notice to the bottom of the Tax reports screen if a default tax rate is detected, stating
+ * that we cannot report on the default tax rate.
+ *
+ * @since 3.0
+ * @param \EDD\Reports\Data\Report|\WP_Error $report The current report object, or WP_Error if invalid.
+ */
+function edd_tax_report_notice( $report ) {
+	if ( 'taxes' === $report->object_id && false !== edd_get_option( 'tax_rate' ) ) {
+		?>
+		<p class="description">
+			<strong><?php esc_html_e( 'Notice', 'easy-digital-downloads' ); ?>: </strong>
+			<?php esc_html_e( 'Tax reports are only generated for taxes associated with a location. The legacy default tax rate is unable to be reported on.', 'easy-digital-downloads' ); ?>
+		</p>
+		<?php
+	}
+}
+add_action( 'edd_reports_page_bottom', 'edd_tax_report_notice', 10, 1 );

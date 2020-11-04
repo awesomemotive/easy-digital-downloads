@@ -21,6 +21,10 @@ use EDD\Database\Rows\Order as Order;
  */
 function edd_add_order_page_content() {
 
+	wp_enqueue_script( 'edd-admin-orders' );
+	// Enqueued for backwards compatibility. Empty file.
+	wp_enqueue_script( 'edd-admin-payments' );
+
 	// Create empty order object to pass to callback functions.
 	$order = new Order( array(
 		'id'              => 0,
