@@ -118,7 +118,10 @@ function edd_update_api_request_log( $api_request_log_id = 0, $data = array() ) 
  *                                         false otherwise.
  */
 function edd_get_api_request_log( $api_request_log_id = 0 ) {
-	return edd_get_api_request_log_by( 'id', $api_request_log_id );
+	$api_request_logs = new EDD\Database\Queries\Log_Api_Request();
+
+	// Return API Request Log.
+	return $api_request_logs->get_item( $api_request_log_id );
 }
 
 /**
