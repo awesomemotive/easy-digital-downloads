@@ -164,7 +164,7 @@ function edd_process_download() {
 
 		edd_set_time_limit( false );
 
-		if ( function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() && version_compare( phpversion(), '5.4', '<' ) ) {
+		if ( version_compare( phpversion(), '5.4', '<' ) && function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() ) {
 			set_magic_quotes_runtime( 0 );
 		}
 
