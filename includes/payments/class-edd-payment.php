@@ -1441,7 +1441,7 @@ class EDD_Payment {
 		if ( $modified_download['tax'] > $current_args['tax'] ) {
 			$this->increase_tax( $modified_download['tax'] - $current_args['tax'] );
 		} else {
-			$this->increase_tax( $current_args['tax'] - $modified_download['tax'] );
+			$this->decrease_tax( $current_args['tax'] - $modified_download['tax'] );
 		}
 
 		return true;
