@@ -475,8 +475,6 @@ final class EDD_Requirements_Check {
 
 		unload_textdomain( 'easy-digital-downloads' );
 
-		unload_textdomain( 'easy-digital-downloads' );
-
 		/**
 		 * Defines the plugin language locale used in Easy Digital Downloads.
 		 *
