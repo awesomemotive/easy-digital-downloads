@@ -738,7 +738,7 @@ class Customer_Address_Tests extends \EDD_UnitTestCase {
 
 		$this->assertEquals( 1, $number_primary_addresses );
 
-		// Add another primary address. Old one should be demoeted.
+		// Add another primary address. Old one should be demoted.
 		$new_primary_address = parent::edd()->customer_address->create_and_get( array(
 			'is_primary'  => true,
 			'customer_id' => $old_primary_address->customer_id
