@@ -160,7 +160,10 @@ function edd_update_customer( $customer_id = 0, $data = array() ) {
  * @return EDD_Customer|false Customer object if successful, false otherwise.
  */
 function edd_get_customer( $customer_id = 0 ) {
-	return edd_get_customer_by( 'id', $customer_id );
+	$customers = new EDD\Database\Queries\Customer();
+
+	// Return customer.
+	return $customers->get_item( $customer_id );
 }
 
 /**
@@ -427,7 +430,10 @@ function edd_delete_customer_meta_by_key( $meta_key ) {
  * @return EDD\Customers\Customer_Address Customer address object.
  */
 function edd_fetch_customer_address( $customer_address_id = 0 ) {
-	return edd_get_customer_address_by( 'id', $customer_address_id );
+	$customer_addresses = new EDD\Database\Queries\Customer_Address();
+
+	// Return customer address.
+	return $customer_addresses->get_item( $customer_address_id );
 }
 
 /**
@@ -537,7 +543,7 @@ function edd_update_customer_address( $customer_address_id = 0, $data = array() 
 function edd_get_customer_address_by( $field = '', $value = '' ) {
 	$customer_addresses = new EDD\Database\Queries\Customer_Address();
 
-	// Return order address
+	// Return customer address
 	return $customer_addresses->get_item_by( $field, $value );
 }
 
@@ -562,7 +568,7 @@ function edd_get_customer_addresses( $args = array() ) {
 	// Instantiate a query object
 	$customer_addresses = new EDD\Database\Queries\Customer_Address();
 
-	// Return orders
+	// Return addresses
 	return $customer_addresses->query( $r );
 }
 
@@ -806,13 +812,7 @@ function edd_add_customer_email_address( $data ) {
  * @return int|false `1` if the customer email address was deleted successfully,
  *                   false on error.
  */
-function edd_delete_customer_email_address( $customer_email_address_id = 0 ) {
-
-	// Bail if a customer email address ID is not passed.
-	if ( empty( $customer_email_address_id ) ) {
-		return false;
-	}
-
+function edd_delete_customer_email_address( $customer_email_address_id ) {
 	$customer_email_addresses = new EDD\Database\Queries\Customer_Email_Address();
 
 	return $customer_email_addresses->delete_item( $customer_email_address_id );
@@ -841,13 +841,7 @@ function edd_delete_customer_email_address( $customer_email_address_id = 0 ) {
  *
  * @return int|false Number of rows updated if successful, false otherwise.
  */
-function edd_update_customer_email_address( $customer_email_address_id = 0, $data = array() ) {
-
-	// Bail if a customer address ID is not passed.
-	if ( empty( $customer_email_address_id ) ) {
-		return false;
-	}
-
+function edd_update_customer_email_address( $customer_email_address_id, $data = array() ) {
 	$customer_email_addresses = new EDD\Database\Queries\Customer_Email_Address();
 
 	return $customer_email_addresses->update_item( $customer_email_address_id, $data );
@@ -862,14 +856,11 @@ function edd_update_customer_email_address( $customer_email_address_id = 0, $dat
  * @return \EDD\Customers\Customer_Email_Address|false Customer_Email_Address if
  *                                                     successful, false otherwise.
  */
-function edd_get_customer_email_address( $customer_email_address_id = 0 ) {
+function edd_get_customer_email_address( $customer_email_address_id ) {
+	$customer_email_addresses = new EDD\Database\Queries\Customer_Email_Address();
 
-	// Bail if a customer email address ID is not passed.
-	if ( empty( $customer_email_address_id ) ) {
-		return false;
-	}
-
-	return edd_get_customer_email_address_by( 'id', $customer_email_address_id );
+	// Return customer email address
+	return $customer_email_addresses->get_item( $customer_email_address_id );
 }
 
 /**
