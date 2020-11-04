@@ -100,10 +100,6 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 		if ( $order_items ) {
 			foreach ( $order_items as $order_item ) {
 
-				$payment = new EDD_Payment( $payment->ID );
-
-				$payment = new EDD_Payment( $payment->ID );
-
 				// Prevent payments that have all ready been retrieved from a previous sales log from counting again.
 				if ( in_array( $order_item->id, $processed_payments ) ) {
 					continue;
