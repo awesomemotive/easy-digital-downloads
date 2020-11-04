@@ -38,7 +38,7 @@ final class Order_Adjustments extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 202002171;
+	protected $version = 202002141;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -51,7 +51,6 @@ final class Order_Adjustments extends Table {
 		'201807071' => 201807071,
 		'201807273' => 201807273,
 		'202002141' => 202002141,
-		'202007171' => 202007171,
 	);
 
 	/**
@@ -65,7 +64,7 @@ final class Order_Adjustments extends Table {
 		$this->schema = "id bigint(20) unsigned NOT NULL auto_increment,
 		object_id bigint(20) unsigned NOT NULL default '0',
 		object_type varchar(20) DEFAULT NULL,
-		type_id varchar(32) DEFAULT NULL,
+		type_id bigint(20) unsigned NOT NULL default '0',
 		type varchar(20) DEFAULT NULL,
 		description varchar(100) DEFAULT NULL,
 		subtotal decimal(18,9) NOT NULL default '0',
@@ -146,20 +145,4 @@ final class Order_Adjustments extends Table {
 
 	}
 
-	/**
-	 * Upgrade to version 202002171
-	 *  - Change default value to `NULL` for `type_id` column and change to varchar.
-	 *
-	 * @since 3.0
-	 * @return bool
-	 */
-	protected function __202007171() {
-
-		// Update `type_id`.
-		$result = $this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY COLUMN `type_id` varchar(32) default NULL;
-		" );
-
-		return $this->is_success( $result );
-	}
 }
