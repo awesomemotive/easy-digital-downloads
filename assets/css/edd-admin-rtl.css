@@ -51,30 +51,30 @@ a.edd-delete:hover {
 }
 
 .edd-from-to-wrapper input {
-	width: 100px;
+	width: 105px;
 	margin: 0;
 	position: relative;
 	z-index: 1;
 }
 
-.edd-from-to-wrapper input:focus {
-	z-index: 2;
-	outline: auto 5px -webkit-focus-ring-color;
-	border-color: #eee;
-	box-shadow: none;
-}
-
 .edd-from-to-wrapper input[name="start"],
 .edd-from-to-wrapper input[name="start-date"],
 .edd-from-to-wrapper input[name="filter_from"] {
-	border-left-color: #eee;
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
 }
 
 .edd-from-to-wrapper input[name="end"],
 .edd-from-to-wrapper input[name="end-date"],
 .edd-from-to-wrapper input[name="filter_to"] {
-	border-right-color: #eee;
 	margin-right: -1px;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+.edd-from-to-wrapper input:focus {
+	z-index: 2;
+	position: relative;
 }
 
 .edd-settings-sub-nav {
@@ -230,6 +230,11 @@ a.edd-delete:hover {
 	z-index: 9999 !important;
 }
 
+@media screen and (max-width: 782px) {
+	#edd-filters .filter-items {
+		margin: 6px 0 6px 6px;
+	}
+}
 /* =Payment Icon Styling
 -------------------------------------------------------------- */
 
@@ -683,7 +688,11 @@ table.edd-order-overview-summary--refund {
 	color: #a00;
 }
 
-@media screen and (min-width: 782px) {
+@media screen and (min-width: 783px) {
+
+	.edd-order-overview-summary__adjustments .removable .delete {
+		margin-right: -50px;
+	}
 
 	.edd-order-overview-summary__totals .total {
 		font-size: 150%;
@@ -695,15 +704,6 @@ table.edd-order-overview-summary--refund {
 .edd-order-overview-summary__totals tr:last-child th,
 .edd-order-overview-summary__totals tr:last-child td:not(:first-of-type) {
 	border-top: 1px solid #e5e5e5;
-}
-
-.edd-order-overview-summary__adjustments .removable .delete {
-	position: absolute;
-	right:  -40px;
-	top: 50%;
-	margin-top: -15px;
-	padding-top: 5px;
-	padding-bottom: 5px;
 }
 
 .edd-order-overview-summary__totals .notice {
@@ -786,6 +786,10 @@ table.edd-order-overview-summary--refund {
 }
 
 /** Dialog */
+.edd-dialog .ui-button-icon-only {
+	font-size: 0;
+}
+
 .download_page_edd-payment-history .ui-dialog,
 .download_page_edd-payment-history .ui-dialog-content {
 	overflow: visible;
@@ -1041,10 +1045,15 @@ textarea[name="edd-note"] {
 	width: 300px;
 }
 
+#edd-add-discount .edd-discount-datetime input,
+#edd-edit-discount .edd-discount-datetime input {
+	vertical-align: middle;
+}
+
 #edd-add-discount input[type="text"].edd_datepicker,
 #edd-edit-discount input[type="text"].edd_datepicker {
+	display: inline-block;
 	width: 183px;
-	vertical-align: middle;
 }
 
 #edd-edit-discount textarea {
@@ -1059,6 +1068,7 @@ textarea[name="edd-note"] {
 .edd-amount-type-wrapper select {
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
+	width: auto !important;
 }
 
 .edd-amount-type-wrapper #edd-amount {
@@ -1105,7 +1115,6 @@ textarea[name="edd-note"] {
 }
 
 .wp-list-table.addresses .column-type,
-.wp-list-table.emails .column-type,
 .wp-list-table.posts .column-download_category,
 .wp-list-table.posts .column-download_tag,
 .wp-list-table.posts .column-price {
@@ -1232,7 +1241,6 @@ textarea[name="edd-note"] {
 #edd-filters .filter-items > span:not(.edd-date-range-options) {
 	display: inline-block;
 	margin-left: 6px;
-	max-width: 200px;
 }
 
 #edd-filters .filter-items > #edd-date-filters {
@@ -1250,8 +1258,7 @@ textarea[name="edd-note"] {
 
 #edd-filters input[type="text"].edd_datepicker,
 #edd-filters input[type="number"] {
-	max-width: 100px;
-	padding: 5px;
+	max-width: 105px;
 }
 
 #edd-filters input[type="number"],
@@ -1331,24 +1338,13 @@ textarea[name="edd-note"] {
 	margin: 9px 2px -9px 20px;
 }
 
-.edd-tab-wrap {
-	margin: .10px 2px -12px 20px;
+.no-js.edit-tags-php.post-type-download .wp-heading-inline {
+	position: absolute;
+	top: 0;
 }
 
-h2.nav-tab-wrapper.edd-tab-clear {
-	margin: -19px 0 0 0;
-}
-
-.edit-tags-php.post-type-download .wrap > .wp-heading-inline,
-.edit-php.post-type-download .wrap .wp-heading-inline,
-.download_page_edd-payment-history .wrap .wp-heading-inline,
-.download_page_edd-customers .wrap .wp-heading-inline,
-.download_page_edd-discounts .wrap .wp-heading-inline,
-.edit-tags-php.post-type-download .wrap > .subtitle,
-.edit-php.post-type-download .wrap > .subtitle,
-.edit-php.post-type-download .wrap > .page-title-action,
-.download_page_edd-addons .wrap > .page-title-action {
-	display: none;
+.no-js.edit-tags-php.post-type-download .nav-tab-wrapper {
+	margin-top: 50px;
 }
 
 .edit-tags-php.post-type-download .wrap .nav-tab-wrapper .page-title-action,
@@ -1361,19 +1357,23 @@ h2.nav-tab-wrapper.edd-tab-clear {
 	line-height: 24px;
 }
 
+#edd_product_settings .edd-product-options__title,
 #edd_product_settings .inside strong {
 	border-top: 1px solid #eee;
 	border-bottom: 1px solid #eee;
 	background-color: #f9f9f9;
 	display: block;
-	margin: 0 -12px 0;
+	font-weight: 600;
+	margin: 12px -12px;
 	padding: 8px 12px;
 }
 
+#edd_product_settings .edd-product-settings-wrapper:first-of-type .edd-product-options__title,
 #edd_product_settings .inside div:first-child strong {
-	margin-top: -14px;
+	margin-top: -8px;
 }
 
+#edd_product_settings .edd-product-options__title .edd-help-tip,
 #edd_product_settings .inside strong .edd-help-tip {
 	float: left;
 	font-size: 20px;
@@ -1384,11 +1384,6 @@ h2.nav-tab-wrapper.edd-tab-clear {
 	display: block;
 	margin: 0 0 4px;
 }
-
-#edd_product_settings p.description {
-	margin: -0.5rem 0 0;
-}
-
 
 /* Payment History Styles
 -------------------------------------------------------------- */
@@ -1583,6 +1578,21 @@ marquee {
 	border-width: 0 1px 1px;
 	border-style: solid;
 	border-color: #e5e5e5;
+	display: flex;
+	justify-content: space-between;
+}
+.edd-repeatable-row-standard-fields .edd-form-group,
+.edd-bundled-product-row .edd-form-group {
+	margin-bottom: 0;
+	display: inline-flex;
+	flex-direction: column;
+	flex-grow: 1;
+	justify-content: space-between;
+}
+
+.edd-repeatable-row-standard-fields .edd-form-group:not(:first-of-type),
+.edd-bundled-product-row .edd-form-group:not(:first-of-type) {
+	margin-right: 18px;
 }
 .edd-repeatable-row-setting-label {
 	display: block;
@@ -1591,45 +1601,6 @@ marquee {
 .edd-repeatable-row-setting-label .edd-help-tip {
 	display: inline-block;
 	margin-right: 4px;
-}
-.edd-option-name,
-.edd-option-price,
-.edd_repeatable_default,
-.edd-file-name,
-.edd-file-url,
-.edd-file-assignment,
-.edd-bundled-product-row .edd-bundled-product-item-reorder,
-.edd-bundled-product-row .edd-bundled-product-item,
-.edd-bundled-product-row .edd-bundled-product-price-assignment,
-.edd-bundled-product-row .edd-bundled-product-actions {
-	display: inline-block;
-	vertical-align: top;
-}
-.edd-option-name {
-	width: 45%;
-	margin-left: 5%;
-}
-.edd-option-price {
-	min-width: 100px;
-}
-.edd_repeatable_default {
-	text-align: center;
-	min-width: 80px;
-}
-.edd-file-name {
-	width: 25%;
-	margin-left: 3%;
-}
-.edd-file-url {
-	position: relative;
-	width: 69%;
-}
-.edd-repeatable-row-standard-fields.has-variable-pricing .edd-file-url {
-	width: 45%;
-	margin-left: 3%;
-}
-.edd-file-assignment {
-	width: 20%;
 }
 .edd-custom-price-option-sections-wrap {
 	display: none;
@@ -1672,7 +1643,6 @@ label.edd_prices_shipping { /* remove once Simple Shipping markup is improved */
 }
 .edd-bundled-product-row .edd-bundled-product-item-reorder {
 	min-width: 30px;
-	margin-left: 8px;
 }
 .edd-bundled-product-row .edd-bundled-product-item-reorder .edd-product-file-reorder {
 	font-size: 20px;
@@ -1680,19 +1650,9 @@ label.edd_prices_shipping { /* remove once Simple Shipping markup is improved */
 	padding: 16px 4px 0;
 	cursor: move;
 }
-.edd-bundled-product-row .edd-bundled-product-item {
-	width: 60%;
-	margin-left: 3%;
-}
-.edd-bundled-product-row.has-variable-pricing .edd-bundled-product-item {
-	width: 47%;
-}
-.edd-bundled-product-row .edd-bundled-product-price-assignment {
-	width: 23%;
-	margin-left: 3%;
-}
 .edd-bundled-product-row .edd-bundled-product-actions {
-	float: left;
+	margin-right: 24px;
+	align-self: center;
 }
 .edd_repeatable_upload_wrapper .edd_repeatable_upload_field_container {
 	position: relative;
@@ -1704,24 +1664,21 @@ label.edd_prices_shipping { /* remove once Simple Shipping markup is improved */
 .edd_repeatable_upload_field {
 	padding-left: 32px;
 }
-.edd_upload_file a span {
-	height: 26px;
-	width: 26px;
-	line-height: 26px;
-	vertical-align: middle;
-	text-align: center;
-}
-.edd_upload_file a {
+.edd_upload_file button {
 	background: #f9f9f9;
+	border: none;
 	border-right: 1px solid #e5e5e5;
 	display: block;
 	padding: 0;
 	position: absolute;
-	height: 26px;
+	height: calc(100% - 4px);
 	width: 26px;
 	overflow: hidden;
 	top: 2px;
-	left: 0;
+	left: 2px;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
 }
 textarea#edd-payment-note {
 	width: 100%;
@@ -1735,8 +1692,6 @@ textarea#edd-payment-note {
 	color: #666;
 }
 input[class*="edd-price-field"] {
-	padding: 3px 5px;
-	width: 80%;
 	max-width: 125px;
 }
 [class*="item_"] [class*="edd-payment-details-download-"][type="number"].small-text,
@@ -1943,8 +1898,14 @@ input[class*="edd-price-field"] {
 #edd-refund-order-dialog #edd-refund-submit-subtotal td {
 	border-top: 2px solid #9c9c9c;
 }
+#edd-refund-submit-button-wrapper,
 #edd-refund-order-dialog .edd-refund-submit-line-total td:first-child {
 	text-align: left;
+}
+#edd-refund-order-dialog .edd-order-item__label {
+	font-size: 14px;
+	font-weight: 600;
+	vertical-align: baseline;
 }
 #edd_general_logs p {
 	margin: 0;
@@ -2173,6 +2134,56 @@ input[class*="edd-price-field"] {
 	.order-data-column input[type="email"] {
 		padding: 6px 10px;
 	}
+
+	.refunditems tr {
+		display: flex;
+	}
+
+	.refunditems tr.refunditem {
+		flex-wrap: wrap;
+	}
+
+	.refunditems td {
+		flex: 1 0 2.5em;
+	}
+
+	.refunditems tr.refunditem td:not(.check-column) {
+		flex-basis: calc(100% - 60px);
+	}
+
+	.refunditems tr.refunditem td:not(.check-column):not(.column-name) {
+		flex-basis: 100px;
+		display: inline-flex;
+		justify-content: flex-start;
+	}
+
+	.refunditems th:not(.column-name),
+	.refunditems tr.refunditem td.column-name:before {
+		display: none !important;
+	}
+
+	.refunditems tr.refunditem td:not(.check-column):not(.column-name):before {
+		position: relative;
+		display: inline-block;
+		margin-left: 10px;
+		right: unset;
+		width: unset;
+	}
+
+	.wp-list-table.refunditems .column-name {
+		width: 100%;
+	}
+
+	.edd-refund-submit-line-total td:last-of-type {
+		flex: 0 0 120px;
+	}
+
+	#edd-item-tables-wrapper .addresses tbody tr {
+		display: grid;
+	}
+	#edd-item-tables-wrapper .addresses tbody td:not(.no-items) {
+		padding-right: 35%;
+	}
 }
 
 @media screen and ( max-width: 600px ) {
@@ -2339,39 +2350,21 @@ body.download_page_edd-reports {
 .edd-reports-wrapper .postbox h3 {
 	font-size: 1.3em
 }
+
 #edd-dashboard-widgets-wrap .metabox-holder {
 	padding-top: 0;
-}
-.edd-reports-wrapper .postbox {
-	border: none;
-	box-shadow: none;
-}
-
-.edd-reports-wrapper form .edd-from-to-wrapper,
-.edd-reports-wrapper form .edd-select,
-.edd-reports-wrapper form .edd-label,
-.edd-reports-wrapper form input.button {
-	vertical-align: middle;
-	float: right;
-}
-
-.edd-reports-wrapper form .edd-label {
-	height: 29px;
-	line-height: 29px;
-	vertical-align: middle;
-	margin-left: 4px;
 }
 
 .edd-reports-wrapper .postbox .edd-select {
 	max-width: 200px;
 	vertical-align: baseline;
 	margin-left: 4px;
+	margin-bottom: 16px;
 }
 
 .download_page_edd-reports #edd-filters {
 	margin-bottom: -1px;
 	box-shadow: none;
-	z-index: 3;
 	justify-content: space-between;
 	display: flex;
 	flex-wrap: wrap;
@@ -2394,25 +2387,21 @@ body.download_page_edd-reports {
 .download_page_edd-reports #edd-item-wrapper {
 	margin: 0;
 }
+
 #edd-dashboard-widgets-wrap .postbox h2,
 #edd-dashboard-widgets-wrap .postbox h3 {
 	cursor: default;
 }
+
 #edd-filters .filter-items .edd-date-range-options {
 	display: inline-block;
 	margin: 10px 0 10px 4px;
-	width: 200px;
 }
 
 .edd-date-range-options .edd_datepicker {
-	width: 100px;
+	width: 105px;
 }
 
-.edd-date-range-options span span {
-	float: right;
-	line-height: 29px;
-	height: 29px;
-}
 .edd-report-wrap {
 	clear: both;
 }
@@ -2427,36 +2416,96 @@ body.download_page_edd-reports {
 	margin-bottom: 20px;
 }
 
-.edd-import-export-form {
+.edd-admin--has-grid {
+	display: grid;
+	display: -ms-grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	grid-gap: 20px;
+}
+
+.edd-admin--has-grid .postbox {
+	margin-bottom: 0;
+}
+
+.edd-admin--has-grid .edd-from-to-wrapper {
+	display: flex;
+	margin-left: 0;
+	margin-bottom: 16px;
+	width: 100%;
+}
+
+.edd-admin--has-grid .edd-from-to-wrapper input {
+	width: 100%;
+}
+
+.edd-admin--has-grid .edd-from-to-wrapper span {
+    flex-grow: 1;
+}
+
+.edd-admin--has-grid form {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
 	position: relative;
 }
+
+div.edd-to-and-from-container {
+	display: grid;
+	display: -ms-grid;
+	grid-template-columns: 1fr 1fr;
+	grid-gap: 8px;
+}
+
+span.edd-to-and-from--separator {
+	line-height: normal;
+	align-self: center;
+	margin-bottom: 16px;
+}
+
+.edd-admin--has-grid .postbox .edd-select {
+	max-width: 100%;
+	margin-left: 0;
+}
+
+.edd-admin--has-grid .button.updating-message:before,
+.edd-admin--has-grid .button.updated-message:before {
+	vertical-align: text-bottom;
+	margin: 0 0 0 5px;
+}
+
 .edd-import-export-form .edd-progress {
 	background: #ddd;
-	position: absolute;
-	bottom: 15px;
-	width: 95%;
+	border-radius: 15px;
 	height: 15px;
+	flex-basis: 100%;
 }
+
 .edd-import-export-form .edd-progress div {
 	background: #ccc;
+	border-radius: 15px;
 	height: 100%;
 	width: 0;
 }
+
 .edd-import-export-form .notice-wrap {
 	background-color: #f4f4f4;
 	border-style: solid;
 	border-width: 1px 0;
 	border-color: #eae9e9;
-	padding: 12px 12px 4px;
+	padding: 12px;
 	overflow: auto;
 	margin: 20px -12px -23px;
 	position: relative;
 	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
-.edd-import-export-form .notice-wrap .spinner {
-	margin: 4px 10px 8px;
-	float: left;
+
+.notice-wrap div.notice {
+	margin: 0;
 }
+
 .admin-color-fresh .edd-import-export-form .edd-progress div {
 	background: #0073aa;
 }
@@ -2660,45 +2709,22 @@ body.download_page_edd-reports {
 }
 
 #edd-reports-tiles-wrap {
-	display: flex;
-	flex-wrap: wrap;
-	margin-right: 10px;
-	margin-left: 10px;
-	margin-bottom: -10px;
+	display: -ms-grid;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+	grid-gap: 20px;
 }
 
 .edd-reports-tile {
 	text-align: center;
-	margin: 0 10px 20px;
 	padding: 30px 10px;
 	display: flex;
-	flex: 0 1 calc(33% - 20px);
 	flex-direction: column;
 	justify-content: center;
 	border: 1px solid #e5e5e5;
 	background: #fafafa;
 	position: relative;
 	box-sizing: border-box;
-}
-
-@media only screen and (max-width: 782px) {
-
-	.edd-reports-tile {
-		flex-basis: calc(50% - 20px);
-	}
-}
-
-@media screen and (max-width: 600px) {
-
-	.edd-reports-tile {
-		flex-basis: 100%;
-		margin-right: 0;
-		margin-left: 0;
-	}
-}
-
-.edd-reports-tile--span-1-2 {
-	flex: 1 1 calc(50% - 20px);
 }
 
 .edd-reports-tile span.dashicons {
@@ -2784,13 +2810,21 @@ body.download_page_edd-reports {
 	color: #777;
 }
 
-.edd-reports-chart-pie,
-.edd-reports-chart-doughnut {
-	box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	float: right;
-	width: 50%;
+@media screen and ( min-width: 600px ) {
+	#edd-reports-charts-wrap {
+		display: -ms-grid;
+		display: grid;
+		grid-template-columns: repeat(2, minmax(200px, 50%));
+		grid-gap: 20px;
+	}
+
+	.edd-reports-chart {
+		margin-bottom: 0;
+	}
+
+	.edd-reports-chart-line {
+		grid-column: 1 / span 2;
+	}
 }
 
 #edd-chartjs-tooltip {
@@ -3081,11 +3115,6 @@ body.download_page_edd-reports {
 }
 
 @media screen and ( max-width: 782px ) {
-
-	.post-type-download .nav-tab-wrapper a {
-		font-size: 70%;
-		padding: 2px 4px;
-	}
 	.license-lifetime-notice,
 	.license-expiration-date-notice,
 	.license-null {
@@ -3143,7 +3172,6 @@ body.download_page_edd-reports {
 .js .edd-sections-wrap .edd-vertical-sections:not(.meta-box) .section-wrap > div {
 	min-height: 500px;
 	height: 100%;
-	overflow: hidden;
 }
 .edd-sections-wrap .section-wrap .customer-section:not(:last-child) {
 	border-bottom: 1px solid #eee;
@@ -3307,41 +3335,31 @@ body.download_page_edd-reports {
 #edd-item-tables-wrapper .no-items {
 	text-align: right;
 }
-#edd-item-tables-wrapper .column-actions {
-	width: 25%;
-}
-#edd-item-tables-wrapper .downloads tr > th:first-child,
-#edd-item-tables-wrapper .downloads tr > td:first-child,
-#edd-item-tables-wrapper .emails tr > th:first-child,
-#edd-item-tables-wrapper .emails tr > td:first-child  {
-	text-align: right;
-}
-#edd-item-tables-wrapper .downloads tr > td:only-child {
-	text-align: center;
-}
-#edd-item-tables-wrapper .emails .add-customer-email-row td {
+#edd-item-tables-wrapper .emails .add-customer-email-row {
 	background-color: #f4f4f4;
 	border-top: 1px solid #e5e5e5;
 }
-#edd-item-tables-wrapper .emails .primary-email-icon {
-	font-size: 14px;
-	line-height: 14px;
-	height: 14px;
-	width: 14px;
-	padding: 2px 0;
+#edd-item-tables-wrapper .add-customer-email-wrapper {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	margin: 12px 0;
 }
-#edd-item-tables-wrapper .emails input {
-	vertical-align: middle;
-	margin: 6px 0;
+#edd-item-tables-wrapper .edd-form-group {
+	margin-bottom: 0;
+}
+#edd-item-tables-wrapper .edd-make-email-primary {
+	flex-grow: 1;
+	margin-right: 12px;
 }
 #edd-item-tables-wrapper .emails .spinner {
 	float: none;
-	margin: 10px 0 0 0;
+	margin: 0 10px;
+	align-self: center;
 }
 #edd-item-tables-wrapper .notice-error {
 	background-color: #fff5f5;
 }
-
 #edd-item-notes-wrapper {
 	min-height: 50px;
 }
@@ -3385,9 +3403,6 @@ body.download_page_edd-reports {
 	margin-right: -20px;
 	margin-left: -20px;
 }
-.edd-sections-wrap .section-wrap .add-customer-email-wrapper > #add-customer-email {
-	vertical-align: middle;
-}
 
 @media screen and ( max-width: 810px ) and ( min-width: 656px ) {
 	.customer-info .customer-name {
@@ -3411,10 +3426,6 @@ body.download_page_edd-reports {
 		border-top: 1px solid #e5e5e5;
 		border-right: 0;
 		margin-top: -1px;
-	}
-	#edd-item-tables-wrapper .wp-list-table tbody tr:not(.inline-edit-row):not(.no-items) td.column-primary ~ td:not(.check-column) {
-		display: block;
-		padding-right: 10px;
 	}
 }
 @media screen and ( max-width: 656px ) {
@@ -3454,6 +3465,13 @@ body.download_page_edd-reports {
 	.edd-sections-wrap .section-wrap .customer-id {
 		display: none;
 	}
+	#edd-item-tables-wrapper .emails td.column-primary {
+		padding-left: 10px;
+		width: 100% !important;
+	}
+	#edd-item-tables-wrapper .edd-form-group {
+		margin: 0 0 16px 0;
+	}
 }
 @media screen and ( max-width: 480px ) {
 	#edd-item-tab-wrapper-list li {
@@ -3473,33 +3491,23 @@ body.download_page_edd-reports {
 	.edd-repeatable-row-title {
 		padding-bottom: 0;
 	}
-	.edd-option-name,
-	.edd-option-price,
-	.edd_repeatable_default,
-	.edd-bundled-product-item-reorder,
-	.edd-bundled-product-row .edd-bundled-product-item,
-	.edd-bundled-product-row .edd-bundled-product-price-assignment,
-	.edd-file-name,
-	.edd-file-url,
-	.edd-file-assignment {
-		float: none;
-		text-align: right;
-		width: 100% !important;
-		margin: 10px 0;
+	.edd-repeatable-row-standard-fields,
+	.edd-bundled-product-row {
+		flex-wrap: wrap;
 	}
-	.edd-bundled-product-row .edd-bundled-product-actions {
-		float: none;
+	.edd-repeatable-row-standard-fields .edd-form-group,
+	.edd-bundled-product-row .edd-form-group {
+		margin-right: 0 !important;
+		margin-bottom: 24px;
 	}
 	.edd-bundled-product-row .edd-bundled-product-item-reorder .edd-product-file-reorder {
 		padding: 0;
 	}
 
 	#edd-filters span {
-		display: block;
 		margin: 2px 0;
 	}
 
-	#edd-filters a,
 	.download_page_edd-reports .button {
 		text-align: center;
 	}
@@ -3523,13 +3531,7 @@ body.download_page_edd-reports {
 	.download_page_edd-reports .inside input[type="text"],
 	.download_page_edd-reports .inside select,
 	.download_page_edd-reports .inside input[type="submit"],
-	.download_page_edd-reports .inside .button,
-	#system-info-textarea,
-	#edd-add-discount input[type="text"],
-	#edd-edit-discount input[type="text"],
-	#edd-filters input:not([type='radio']),
-	#edd-filters select,
-	#edd-filters a {
+	.download_page_edd-reports .inside .button {
 		width: 100%;
 	}
 
@@ -3823,7 +3825,7 @@ body.download_page_edd-reports {
 	box-sizing: border-box;
 }
 
-div:not(#edd-item-tab-wrapper) + #edd-item-card-wrapper .item-section { /** [1] */
+*:not(#edd-item-tab-wrapper) + #edd-item-card-wrapper .item-section { /** [1] */
 	margin: 25px 0;
 	padding: 20px;
 	border: 1px solid #e5e5e5;
@@ -4096,6 +4098,15 @@ div:not(#edd-item-tab-wrapper) + #edd-item-card-wrapper .item-section { /** [1] 
 .edd-form-group__input[type="checkbox"],
 .edd-form-group__input[type="radio"] {
 	margin-top: 0;
+}
+
+.edd-form-group__input[type="checkbox"] + label,
+.edd-form-group__input[type="radio"] + label {
+	display: unset;
+}
+
+select.edd-form-group__input {
+	max-width: 100%;
 }
 
 .edd-form-group__help {
