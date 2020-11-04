@@ -32,9 +32,14 @@ if ( empty( $order ) ) {
 }
 
 if ( 'refund' === $order->type ) {
-	require_once EDD_PLUGIN_DIR . 'includes/admin/payments/view-refund.php';
-	edd_view_refund_page_content();
-	return;
+	$refund_link = edd_get_admin_url(
+		array(
+			'page' => 'edd-payment-history',
+			'view' => 'view-refund-details',
+			'id'   => $order->id,
+		)
+	);
+	wp_die( sprintf( __( 'The specified ID is for a refund, not an order. Please <a href="%s">access the refund directly</a>.', 'easy-digital-downloads' ), esc_url( $refund_link ) ), __( 'Error', 'easy-digital-downloads' ) );
 }
 
 wp_enqueue_script( 'edd-admin-orders' );
