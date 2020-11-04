@@ -384,7 +384,7 @@ add_action( 'wp_ajax_edd_sendwp_disconnect', 'edd_sendwp_disconnect' );
  */
 function edd_jilt_remote_install_handler() {
 
-	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+	if ( ! current_user_can( 'manage_shop_settings' ) || ! current_user_can( 'install_plugins' ) ) {
 		wp_send_json_error(
 			array(
 				'error' => __( 'You do not have permission to do this.', 'easy-digital-downloads' ),
