@@ -585,7 +585,9 @@ class Data_Migrator {
 			'address2'     => isset( $user_info['address']['line2'] )   ? $user_info['address']['line2']   : '',
 			'city'         => isset( $user_info['address']['city'] )    ? $user_info['address']['city']    : '',
 			'region'       => isset( $user_info['address']['state'] )   ? $user_info['address']['state']   : '',
-			'country'      => isset( $user_info['address']['country'] ) ? $user_info['address']['country'] : '',
+			'country'      => isset( $user_info['address']['country'] ) && array_key_exists( strtoupper( $user_info['address']['country'] ), edd_get_country_list() )
+				? $user_info['address']['country']
+				: '',
 			'postal_code'  => isset( $user_info['address']['zip'] )     ? $user_info['address']['zip']     : '',
 			'date_created' => $date_created_gmt,
 		);
