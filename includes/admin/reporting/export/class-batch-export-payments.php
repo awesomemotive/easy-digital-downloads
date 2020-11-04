@@ -38,12 +38,11 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 	 */
 	public function csv_cols() {
 		$cols = array(
-			'id'           => __( 'Payment ID',   'easy-digital-downloads' ), // unaltered payment ID (use for querying)
-			'seq_id'       => __( 'Payment Number',   'easy-digital-downloads' ), // sequential payment ID
+			'id'           => __( 'Payment ID', 'easy-digital-downloads' ), // unaltered payment ID (use for querying)
+			'seq_id'       => __( 'Payment Number', 'easy-digital-downloads' ), // sequential payment ID
 			'email'        => __( 'Email', 'easy-digital-downloads' ),
 			'customer_id'  => __( 'Customer ID', 'easy-digital-downloads' ),
-			'first'        => __( 'First Name', 'easy-digital-downloads' ),
-			'last'         => __( 'Last Name', 'easy-digital-downloads' ),
+			'name'         => __( 'Customer Name', 'easy-digital-downloads' ),
 			'address1'     => __( 'Address', 'easy-digital-downloads' ),
 			'address2'     => __( 'Address (Line 2)', 'easy-digital-downloads' ),
 			'city'         => __( 'City', 'easy-digital-downloads' ),
@@ -97,6 +96,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			'status'  => $this->status,
 			'order'   => 'ASC',
 			'orderby' => 'date',
+			'type'    => 'sale',
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
@@ -109,8 +109,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			);
 		}
 
-
-		if ( 'any' === $args['status'] ) {
+		if ( 'all' === $args['status'] ) {
 			unset( $args['status'] );
 		}
 
@@ -120,10 +119,10 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			/** @var EDD\Orders\Order $order */
 
 			$items        = $order->get_items();
-			$user_info    = $order->get_user_info();
-			$address      = $order->get_customer_address();
+			$address      = $order->get_address();
 			$total        = $order->total;
-			$user_id      = $order->id && $order->id != - 1 ? $order->id : $user_info['email'];
+			$user_id      = $order->id && $order->id != - 1 ? $order->id : $order->email;
+			$customer     = edd_get_customer( $order->customer_id );
 			$products     = '';
 			$products_raw = '';
 			$skus         = '';
@@ -196,14 +195,13 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 				'seq_id'       => $order->get_number(),
 				'email'        => $order->email,
 				'customer_id'  => $order->customer_id,
-				'first'        => isset( $user_info['first_name'] ) ? $user_info['first_name'] : '',
-				'last'         => isset( $user_info['last_name'] ) ? $user_info['last_name'] : '',
-				'address1'     => isset( $address['line1'] ) ? $address['line1'] : '',
-				'address2'     => isset( $address['line2'] ) ? $address['line2'] : '',
-				'city'         => isset( $address['city'] ) ? $address['city'] : '',
-				'state'        => isset( $address['state'] ) ? $address['state'] : '',
-				'country'      => isset( $address['country'] ) ? $address['country'] : '',
-				'zip'          => isset( $address['zip'] ) ? $address['zip'] : '',
+				'name'         => ! empty( $customer->name ) ? $customer->name : '',
+				'address1'     => isset( $address->address ) ? $address->address : '',
+				'address2'     => isset( $address->address2 ) ? $address->address2 : '',
+				'city'         => isset( $address->city ) ? $address->city : '',
+				'state'        => isset( $address->region ) ? $address->region : '',
+				'country'      => isset( $address->country ) ? $address->country : '',
+				'zip'          => isset( $address->postal_code ) ? $address->postal_code : '',
 				'products'     => $products,
 				'products_raw' => $products_raw,
 				'skus'         => $skus,
@@ -219,8 +217,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 				'ip'           => $order->ip,
 				'mode'         => $order->mode,
 				'status'       => $order->status,
-				'country_name' => isset( $user_info['address']['country'] ) ? edd_get_country_name( $user_info['address']['country'] ) : '',
-        'state_name'   => isset( $user_info['address']['state'] )   ? edd_get_state_name( $user_info['address']['country'], $user_info['address']['state'] ) : '',
+				'country_name' => isset( $address->country ) ? edd_get_country_name( $address->country ) : '',
+				'state_name'   => isset( $address->country ) && isset( $address->region ) ? edd_get_state_name( $address->country, $address->region ) : '',
 			);
 		}
 

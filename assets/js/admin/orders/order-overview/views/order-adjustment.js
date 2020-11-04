@@ -4,9 +4,6 @@
  * Internal dependencies
  */
 import { Base } from './base.js';
-import { Currency } from '@easy-digital-downloads/currency';
-
-const currency = new Currency();
 
 /**
  * OrderAdjustment
@@ -66,6 +63,8 @@ export const OrderAdjustment = Base.extend( {
 	prepare() {
 		const { model, options } = this;
 		const { state } = this.options;
+
+		const { currency } = state.get( 'formatters' );
 
 		// Determine column offset -- using cart quantities requires an extra column.
 		const colspan = true === state.get( 'hasQuantity' ) ? 2 : 1;

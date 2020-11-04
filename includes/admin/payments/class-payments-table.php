@@ -184,7 +184,6 @@ class EDD_Payment_History_Table extends List_Table {
 					'name'             => 'mode',
 					'id'               => 'mode',
 					'selected'         => $mode,
-					'chosen'           => true,
 					'show_option_all'  => false,
 					'show_option_none' => false
 				) ); ?>
@@ -219,7 +218,6 @@ class EDD_Payment_History_Table extends List_Table {
 					'name'             => 'gateway',
 					'id'               => 'gateway',
 					'selected'         => $gateway,
-					'chosen'           => true,
 					'show_option_all'  => false,
 					'show_option_none' => false
 				) ); ?>
@@ -366,6 +364,14 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @since 3.0
 	 */
 	public function no_items() {
+		if ( ! edd_has_upgrade_completed( 'migrate_orders' ) ) {
+			global $wpdb;
+			$orders = $wpdb->get_var( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_payment' LIMIT 1" );
+			if ( ! empty( $orders ) ) {
+				esc_html_e( 'Easy Digital Downloads needs to upgrade the database. Orders will be available when that has completed.', 'easy-digital-downloads' );
+				return;
+			}
+		}
 		esc_html_e( 'No orders found.', 'easy-digital-downloads' );
 	}
 
@@ -484,10 +490,13 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @return string Displays a checkbox.
 	 */
 	public function column_cb( $order ) {
+		$order_number = 'sale' === $order->type ? $order->get_number() : $order->order_number;
 		return sprintf(
-			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+			'<input type="checkbox" name="%1$s[]" id="%1$s-%2$s" value="%2$s" /><label for="%1$s-%2$s" class="screen-reader-text">%3$s</label>',
 			'order',
-			$order->id
+			esc_attr( $order->id ),
+			/* translators: the order number */
+			esc_html( sprintf( __( 'Select %s', 'easy-digital-downloads' ), $order_number ) )
 		);
 	}
 
@@ -543,7 +552,9 @@ class EDD_Payment_History_Table extends List_Table {
 				'edd-action'  => 'delete_order',
 				'purchase_id' => $order->id,
 			), $this->base_url ), 'edd_payment_nonce' );
-			$row_actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete', 'easy-digital-downloads' ) . '</a>';
+			$row_actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete Permanently', 'easy-digital-downloads' ) . '</a>';
+
+			unset( $row_actions['view'] );
 		}
 
 		if ( has_filter( 'edd_payment_row_actions' ) ) {
@@ -574,8 +585,8 @@ class EDD_Payment_History_Table extends List_Table {
 		$actions = $this->row_actions( $row_actions );
 
 		// Primary link
-		$order_number = $order->type == 'sale' ? $order->get_number() : $order->order_number;
-		$link = '<a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $order_number ) . '</a>';
+		$order_number = 'sale' === $order->type ? $order->get_number() : $order->order_number;
+		$link         = edd_is_order_restorable( $order->id ) ? '<span class="row-title">' . esc_html( $order_number ) . '</span>' : '<a class="row-title" href="' . esc_url( $view_url ) . '">' . esc_html( $order_number ) . '</a>';
 
 		// Concatenate & return the results
 		return $link . $actions;
@@ -655,9 +666,11 @@ class EDD_Payment_History_Table extends List_Table {
 		}
 
 		if ( 'trash' === $this->get_status() ) {
-			$action['restore'] = __( 'Restore', 'easy-digital-downloads' );
+			$action = array(
+				'restore' => __( 'Restore', 'easy-digital-downloads' ),
+			);
 		} else {
-			$action['trash'] = __( 'Trash', 'easy-digital-downloads' );
+			$action['trash'] = __( 'Move to Trash', 'easy-digital-downloads' );
 		}
 
 		return apply_filters( 'edd_payments_table_bulk_actions', $action );
@@ -805,13 +818,13 @@ class EDD_Payment_History_Table extends List_Table {
 		}
 
 		$args = array(
-			'user'     => $user,
-			'customer' => $customer,
-			'status'   => $status,
-			'gateway'  => $gateway,
-			'mode'     => $mode,
-			'type'     => $type,
-			'search'   => $search,
+			'user'        => $user,
+			'customer_id' => $customer,
+			'status'      => $status,
+			'gateway'     => $gateway,
+			'mode'        => $mode,
+			'type'        => $type,
+			'search'      => $search,
 		);
 
 		// Search
@@ -900,6 +913,9 @@ class EDD_Payment_History_Table extends List_Table {
 		$this->items = $this->get_data();
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
+		if ( empty( $this->counts[ $status ] ) ) {
+			return;
+		}
 
 		$this->set_pagination_args( array(
 			'total_pages' => ceil( $this->counts[ $status ] / $this->per_page ),

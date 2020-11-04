@@ -481,7 +481,6 @@ function edd_ajax_generate_refund_form() {
 		<span class="edd-submit-refund-message"></span>
 		<a class="edd-submit-refund-url" href=""><?php _e( 'View Refund', 'easy-digital-downloads' ); ?></a>
 	</div>
-	<table id="edd-process-refund-form">
 	<?php
 	// Load list table if not already loaded
 	if ( ! class_exists( '\\EDD\\Admin\\Refund_Items_Table' ) ) {
@@ -536,10 +535,10 @@ function edd_ajax_process_refund_form() {
 
 	// Verify the nonce.
 	$nonce = ! empty( $_POST['nonce'] ) ? sanitize_text_field( $_POST['nonce'] ) : false;
-	if ( empty( $nonce) || ! wp_verify_nonce( $nonce, 'bulk-refunditems' ) ) {
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'edd_process_refund' ) ) {
 		$return = array(
-			'success'    => false,
-			'message'    => sprintf( __( 'Nonce validation failed when submitting refund.', 'easy-digital-downloads' ) ),
+			'success' => false,
+			'message' => __( 'Nonce validation failed when submitting refund.', 'easy-digital-downloads' ),
 		);
 
 		wp_send_json( $return, 401 );

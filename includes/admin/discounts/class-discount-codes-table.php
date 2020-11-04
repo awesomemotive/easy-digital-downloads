@@ -250,13 +250,13 @@ class EDD_Discount_Codes_Table extends List_Table {
 	 * @return string Checkbox HTML.
 	 */
 	public function column_cb( $discount ) {
-		return 0 < $discount->use_count
-			? '<input type="checkbox" title="' . esc_html__( 'This discount code cannot be deleted as it has already been used.', 'easy-digital-downloads' ) . '" disabled="disabled" />'
-			: sprintf(
-				'<input type="checkbox" name="%1$s[]" value="%2$s" />',
-				/*$1%s*/ 'discount',
-				/*$2%s*/ $discount->id
-			);
+		return sprintf(
+			'<input type="checkbox" name="%1$s[]" id="%1$s-%2$s" value="%2$s" /><label for="%1$s-%2$s" class="screen-reader-text">%3$s</label>',
+			/*$1%s*/ 'discount',
+			/*$2%s*/ esc_attr( $discount->id ),
+			/* translators: discount name */
+			esc_html( sprintf( __( 'Select %s', 'easy-digital-downloads' ), $discount->name ) )
+		);
 	}
 
 	/**

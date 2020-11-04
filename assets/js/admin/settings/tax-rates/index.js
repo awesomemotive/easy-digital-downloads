@@ -6,11 +6,12 @@
 import TaxRate from './models/tax-rate.js';
 import TaxRates from './collections/tax-rates.js';
 import Manager from './views/manager.js';
+import { jQueryReady } from 'utils/jquery.js';
 
 /**
  * DOM ready.
  */
-document.addEventListener( 'DOMContentLoaded', () => {
+jQueryReady( () => {
 	// Show notice if taxes are not enabled.
 	const noticeEl = document.getElementById( 'edd-tax-disabled-notice' );
 
