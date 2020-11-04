@@ -110,10 +110,8 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 
 				$this->_log_ids_debug[] = $order_item->order_id;
 
-				}
-
-					$totals['sales']++;
-					$totals['earnings'] += $order_item->total;
+				$totals['sales']++;
+				$totals['earnings'] += $order_item->total;
 
 			}
 

@@ -2717,7 +2717,7 @@ function edd_jilt_callback( $args ) {
 
 		<?php endif; ?>
 
-	<?php else : ?>
+	<?php elseif( current_user_can( 'install_plugins' ) ) : ?>
 
 		<p>
 			<button id="edd-jilt-connect" class="button button-primary">

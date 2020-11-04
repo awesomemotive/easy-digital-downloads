@@ -1,11 +1,11 @@
 === Easy Digital Downloads - Simple Ecommerce for Selling Digital Files ===
 Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
-Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze
+Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze, littlerchicken, lisacee
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: ecommerce, sell, checkout, payments, stripe
 Requires at least: 4.6
-Tested up to: 5.4
+Tested up to: 5.5.1
 Requires PHP: 5.3
 Stable Tag: 3.0
 License: GNU Version 2 or Any Later Version
@@ -14,7 +14,7 @@ Sell your digital products the simple way. Easily build an online store complete
 
 == Description ==
 
-Easy Digital Downloads is a complete eCommerce solution for selling digital products on WordPress. Learn more at [Easy Digital Downloads.com](https://easydigitaldownloads.com/?utm_source=home&utm_medium=description_tab&utm_content=home&utm_campaign=readme).
+Easy Digital Downloads is a complete eCommerce solution for selling digital products on WordPress. Learn more at [EasyDigitalDownloads.com](https://easydigitaldownloads.com/?utm_source=home&utm_medium=description_tab&utm_content=home&utm_campaign=readme).
 
 = Sell effortlessly =
 
@@ -43,7 +43,7 @@ Here are some of the features supported out-of-the-box:
 
 = Localized for your language =
 
-Easy Digital Downloads has been translated into more than two dozen languages and new translation are being added all the time, letting you have a natural, native experience, regardless of where you live. If your language is not available, we welcome translation contributions! See our [FAQ](http://docs.easydigitaldownloads.com/article/1082-what-spoken-languages-does-easy-digital-downloads-support?utm_source=docs&utm_medium=description_tab&utm_content=languages&utm_campaign=readme).
+Easy Digital Downloads has been translated into more than two dozen languages and new translations are being added all the time, letting you have a natural, native experience, regardless of where you live. If your language is not available, we welcome translation contributions! See our [FAQ](http://docs.easydigitaldownloads.com/article/1082-what-spoken-languages-does-easy-digital-downloads-support?utm_source=docs&utm_medium=description_tab&utm_content=languages&utm_campaign=readme).
 
 = Support for many payment gateways, including Stripe and PayPal =
 
@@ -54,7 +54,7 @@ Payment gateways supported in the core, free plugin:
 * PayPal Standard
 * Amazon Payments
 
-Payment gateways supported through free or premium extension:
+Payment gateways supported through free or premium extensions:
 
 * Stripe
 * PayPal Pro
@@ -68,10 +68,13 @@ Payment gateways supported through free or premium extension:
 * BitPay
 * Coinbase
 
-> What can I say? Stripe is my go-to payment processor and without this add-on I don't know what I would do. Connect EDD to your Stripe account in seconds and you're done! Having a simple toggle in to test mode is also a valuable development tool. This is another one of my go-to EDD extensions.
+> What can I say? Stripe is my go-to payment processor and without this add-on I don't know what I would do. Connect EDD to your Stripe account in seconds and you're done! Having a simple test mode toggle is also a valuable development tool. This is another one of my go-to EDD extensions.
+
 > Matt Whiteley - Whiteley Designs
 
 See our [payment gateways category](https://easydigitaldownloads.com/downloads/category/gateways/?utm_source=extensions&utm_medium=description_tab&utm_content=gateways&utm_campaign=readme) in the extensions catalogue for a complete list of supported merchant processors. There are also a large number of additional payment gateways developed and supported by [3rd party developers](https://easydigitaldownloads.com/3rd-party-extensions/#gateways).
+
+Easy Digital Downloads is a verified member of the [Stripe partner program](https://stripe.com/accept-payments/easy-digital-downloads). This program recognizes software that meets Stripe's strict quality requirements and provides users of Easy Digital Downloads and Stripe with the confidence they need to trust us both with their payment integrations.
 
 = Take your store further with extensions =
 
@@ -109,13 +112,19 @@ The Easy Digital Downloads API makes it possible for developers to make customiz
 ...and much much more!
 
 > As a developer, Easy Digital Downloads is very pleasant to work with since you can absolutely extend anything available within EDD.
+
 > Yudhistira Mauris - WP House
+
+= Get help =
+
+Easy Digital Downloads is backed by top-notch technical support from our globally distributed full-time support team. We also have an [extensive documentation site available](https://docs.easydigitaldownloads.com/?utm_medium=readme&utm_source=wporg&utm_campaign=lite-plugin&utm_content=docs&utm_term=description). If you’re looking for faster support via email, we encourage you to [purchase an Easy Digital Downloads pass](https://easydigitaldownloads.com/pricing/?utm_medium=readme&utm_source=wporg&utm_campaign=lite-plugin&utm_content=upgrade&utm_term=description) or premium extension.
 
 = Meet the team =
 
 Easy Digital Downloads is built by [Sandhills Development](https://sandhillsdev.com/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=sandhills&utm_term=description). We make [popular WordPress plugins](https://sandhillsdev.com/projects/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=popular&utm_term=description) used by hundreds of thousands of people just like you. [Get to know us here](https://sandhillsdev.com/about/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=about&utm_term=description)!
 
 > EDD has been a long standing, rock-solid e-commerce solution for WordPress. The team lives and breathes WordPress, understands the platform, and is embedded in the community.
+
 > Joe Casabona - Creator Courses
 
 = From our blog =
@@ -138,10 +147,10 @@ Development for this plugin happens in a public GitHub repository to better faci
 
 If Easy Digital Downloads doesn’t quite fit your needs, take a look at some of our other projects.
 
-- [WP Simple Pay](https://wpsimplepay.com/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) – Sell digital products with WordPress
+- [WP Simple Pay](https://wpsimplepay.com/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) – A lightweight Stripe payments plugin
 - [AffiliateWP](https://affiliatewp.com/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) – A full-featured affiliate marketing solution
 - [Sugar Calendar](https://sugarcalendar.com?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) – WordPress event management made simple
-- [Restrict Content Pro](https://restrictcontentpro.com/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) – A lightweight Stripe payments plugin
+- [Restrict Content Pro](https://restrictcontentpro.com/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) – A powerful membership plugin for WordPress
 
 == Installation ==
 
@@ -249,6 +258,22 @@ For most stores, we recommend using the Stripe Payment Gateway.
 9. Checkout screen
 
 == Changelog ==
+= 2.9.26, October 1, 2020 =
+* Fix: Installation of the Jilt extension was allowed for non-super admins on multisite installs.
+* Dev: Improved DocBloc for edd_has_user_purchased() function.
+
+= 2.9.25, September 3, 2020 =
+* Fix: Using the registration form on checkout with guest checkout disabled, could result in errors when attempting to purchase.
+
+= 2.9.24, August 21, 2020 =
+* Security Fix: Prevent users with 'view_shop_reports' capability from running an arbitrary class execution with the exports tool.
+* Fix: Removing downloads from the view order details screen caused a JavaScript error on WordPress 5.5+.
+* Fix: Improve PHP 7.3 and 7.4 support.
+* Fix: W3 Validation was failing due to duplicate id attributes.
+* Fix: Some checkout customizations were not possible due to using .change() instead of .on().
+* New: EDD Login forms now support plugins that limit failed login attempts.
+* New: Failed login attempts on the EDD Login form now return proper HTTP status codes, when possible.
+
 = 2.9.23, April 20, 2020 =
 * Fix: There was a performance issue that caused file download logs to be queried when they did not need to be.
 * Fix: When using PHP 7.3+, a notice could be thrown related to a non-well formed numeric value.

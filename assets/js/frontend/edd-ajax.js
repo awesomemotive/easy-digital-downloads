@@ -74,7 +74,7 @@ jQuery( document ).ready( function( $ ) {
 						$( '.cart_item.edd_subtotal,.edd-cart-number-of-items,.cart_item.edd_checkout,.cart_item.edd_cart_tax,.cart_item.edd_total' ).hide();
 						$( '.edd-cart' ).each( function() {
 							const cart_wrapper = $( this ).parent();
-							if ( cart_wrapper ) {
+							if ( cart_wrapper.length ) {
 								cart_wrapper.addClass( 'cart-empty' );
 								cart_wrapper.removeClass( 'cart-not-empty' );
 							}
@@ -209,7 +209,7 @@ jQuery( document ).ready( function( $ ) {
 						$( response.cart_item ).insertBefore( target );
 
 						const cart_wrapper = $( this ).parent();
-						if ( cart_wrapper ) {
+						if ( cart_wrapper.length ) {
 							cart_wrapper.addClass( 'cart-not-empty' );
 							cart_wrapper.removeClass( 'cart-empty' );
 						}
@@ -334,7 +334,7 @@ jQuery( document ).ready( function( $ ) {
 	} );
 
 	// Load the fields for the selected payment method
-	$( 'select#edd-gateway, input.edd-gateway' ).change( function( e ) {
+	$(document).on('change', 'select#edd-gateway, input.edd-gateway', function (e) {
 		const payment_mode = $( '#edd-gateway option:selected, input.edd-gateway:checked' ).val();
 
 		if ( payment_mode === '0' ) {
