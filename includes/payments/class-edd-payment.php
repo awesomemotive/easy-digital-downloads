@@ -893,8 +893,8 @@ class EDD_Payment {
 										'object_type' => 'order',
 										'type'        => 'fee',
 										'description' => $discount,
-										'subtotal'    => - floatval( $this->total - $cart_subtotal - $this->tax ),
-										'total'       => - floatval( $this->total - $cart_subtotal - $this->tax ),
+										'subtotal'    => floatval( $this->total - $cart_subtotal - $this->tax ),
+										'total'       => floatval( $this->total - $cart_subtotal - $this->tax ),
 									)
 								);
 								continue;
