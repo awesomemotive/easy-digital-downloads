@@ -658,7 +658,9 @@ class EDD_Payment {
 			);
 
 			foreach ( $order_meta as $key => $value ) {
-				edd_add_order_meta( $order_id, $key, $value );
+				if ( ! empty( $value ) ) {
+					edd_add_order_meta( $order_id, $key, $value );
+				}
 			}
 
 			$this->new = true;
