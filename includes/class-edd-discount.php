@@ -1875,18 +1875,17 @@ class EDD_Discount {
 	 * @return float $discounted_price Amount after discount.
 	 */
 	public function get_discounted_amount( $base_price ) {
-		// Start off setting the amount as the base price.
-		$amount = $base_price;
+		$base_price = floatval( $base_price );
 
 		if ( 'flat' == $this->type ) {
-			$amount = $base_price - $this->amount;
+			$amount = $base_price - floatval( $this->amount );
 
 			if ( $amount < 0 ) {
 				$amount = 0;
 			}
 		} else {
 			// Percentage discount
-			$amount = $base_price - ( $base_price * ( $this->amount / 100 ) );
+			$amount = $base_price - ( $base_price * ( floatval( $this->amount ) / 100 ) );
 		}
 
 		/**
