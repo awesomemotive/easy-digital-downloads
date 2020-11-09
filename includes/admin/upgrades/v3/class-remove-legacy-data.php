@@ -20,6 +20,17 @@ defined( 'ABSPATH' ) || exit;
 class Remove_Legacy_Data extends Base {
 
 	/**
+	 * Sets the number of items to pull on each step.
+	 *
+	 * This is 50 in base, but we're cutting it in half here because we delete 25 from posts and 25 from comments
+	 * on each step. Together combined that's 50.
+	 *
+	 * @since 3.0
+	 * @var   int
+	 */
+	public $per_step = 25;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param int $step Step.
@@ -47,6 +58,7 @@ class Remove_Legacy_Data extends Base {
 			$this->get_db()->query( $this->get_db()->prepare( "DELETE FROM {$this->get_db()->usermeta} WHERE meta_key = %s", esc_sql( '_edd_user_address' ) ) );
 		}
 
+		// First delete custom post types.
 		$results = $this->get_db()->get_col( $this->get_db()->prepare(
 			"SELECT id
 			 FROM {$this->get_db()->posts}
@@ -56,15 +68,34 @@ class Remove_Legacy_Data extends Base {
 			esc_sql( 'edd_payment' ), esc_sql( 'edd_discount' ), esc_sql( 'edd_log' ), $offset, $this->per_step
 		), 0 );
 
+		$data_was_deleted = false;
+
 		if ( ! empty( $results ) ) {
 			foreach ( $results as $result ) {
 				wp_delete_post( $result, true );
 			}
 
-			return true;
+			$data_was_deleted = true;
 		}
 
-		return false;
+		// Then delete order notes, stored in comments.
+		$results = $this->get_db()->get_col( $this->get_db()->prepare(
+			"SELECT comment_ID
+			FROM {$this->get_db()->comments}
+			WHERE comment_type = %s
+			ORDER BY comment_ID ASC
+			LIMIT %d, %d",
+			'edd_payment_note', $offset, $this->per_step
+		) );
+		if ( ! empty( $results ) ) {
+			foreach( $results as $result ) {
+				wp_delete_comment( $result, true );
+			}
+
+			$data_was_deleted = true;
+		}
+
+		return $data_was_deleted;
 	}
 
 	/**
@@ -75,6 +106,7 @@ class Remove_Legacy_Data extends Base {
 	 * @return float Percentage.
 	 */
 	public function get_percentage_complete() {
+		// Get post type total.
 		$total = $this->get_db()->get_var( $this->get_db()->prepare(
 			"SELECT COUNT(id) AS count
 			 FROM {$this->get_db()->posts}
@@ -85,6 +117,21 @@ class Remove_Legacy_Data extends Base {
 		if ( empty( $total ) ) {
 			$total = 0;
 		}
+
+		// Get order note total.
+		$order_note_total = $this->get_db()->get_var( $this->get_db()->prepare(
+			"SELECT COUNT(comment_ID) AS count
+			FROM {$this->get_db()->comments}
+			WHERE comment_type = %s",
+			'edd_payment_note'
+		) );
+
+		if ( empty( $order_note_total ) ) {
+			$order_note_total = 0;
+		}
+
+		// Combine the two.
+		$total += $order_note_total;
 
 		$percentage = 100;
 
