@@ -48,10 +48,10 @@ defined( 'ABSPATH' ) || exit;
  *                                     for adjustment to be valid. Default 0.
  *     @type string $product_condition Product condition that needs to hold for
  *                                     adjustment to be valid. Default empty.
- *     @type string $start_date        The date & time the adjustment is valid from.
- *                                     Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $end_date          The date & time the adjustment is valid to.
- *                                     Format: YYYY-MM-DD HH:MM:SS. Default empty.
+ *     @type string|null $start_date   The date & time the adjustment is valid from.
+ *                                     Format: YYYY-MM-DD HH:MM:SS. Default null.
+ *     @type string|null $end_date     The date & time the adjustment is valid to.
+ *                                     Format: YYYY-MM-DD HH:MM:SS. Default null.
  *     @type string $date_created      Optional. Automatically calculated on add/edit.
  *                                     The date & time the adjustment was inserted.
  *                                     Format: YYYY-MM-DD HH:MM:SS. Default empty.
@@ -115,9 +115,9 @@ function edd_delete_adjustment( $adjustment_id = 0 ) {
  *                                     for adjustment to be valid. Default 0.
  *     @type string $product_condition Product condition that needs to hold for
  *                                     adjustment to be valid. Default empty.
- *     @type string $start_date        The date & time the adjustment is valid from.
+ *     @type string|null $start_date   The date & time the adjustment is valid from.
  *                                     Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $end_date          The date & time the adjustment is valid to.
+ *     @type string|null $end_date     The date & time the adjustment is valid to.
  *                                     Format: YYYY-MM-DD HH:MM:SS. Default empty.
  *     @type string $date_created      Optional. Automatically calculated on add/edit.
  *                                     The date & time the adjustment was inserted.
@@ -145,7 +145,10 @@ function edd_update_adjustment( $adjustment_id = 0, $data = array() ) {
  *                                          false otherwise.
  */
 function edd_get_adjustment( $adjustment_id = 0 ) {
-	return edd_get_adjustment_by( 'id', $adjustment_id );
+	$adjustments = new EDD\Database\Queries\Adjustment();
+
+	// Return adjustment
+	return $adjustments->get_item( $adjustment_id );
 }
 
 /**

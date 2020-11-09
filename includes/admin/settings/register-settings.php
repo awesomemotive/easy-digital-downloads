@@ -24,9 +24,15 @@ defined( 'ABSPATH' ) || exit;
 function edd_get_option( $key = '', $default = false ) {
 	global $edd_options;
 
-	$value = ! empty( $edd_options[ $key ] )
-		? $edd_options[ $key ]
-		: $default;
+	$value = $default;
+
+	if ( isset( $edd_options[ $key ] ) ) {
+		if ( is_numeric( $edd_options[ $key ] ) ) {
+			$value = $edd_options[ $key ];
+		} else {
+			$value = ! empty( $edd_options[ $key ] ) ? $edd_options[ $key ] : $default;
+		}
+	}
 
 	$value = apply_filters( 'edd_get_option', $value, $key, $default );
 
@@ -509,6 +515,14 @@ function edd_get_registered_settings() {
 						'tooltip_title' => __( 'Refunds', 'easy-digital-downloads' ),
 						'tooltip_desc'  => __( 'As a shop owner, sometimes refunds are necessary. Use these settings to decide how refunds will work in your shop.', 'easy-digital-downloads' ),
 					),
+					'refundability' => array(
+						'id'      => 'refundability',
+						'name'    => __( 'Default Status', 'easy-digital-downloads' ),
+						'desc'    => __( 'Products without an explicit setting will default to this.', 'easy-digital-downloads' ),
+						'type'    => 'select',
+						'std'     => 'refundable',
+						'options' => edd_get_refundability_types(),
+					),
 					'refund_window' => array(
 						'id'   => 'refund_window',
 						'name' => __( 'Refund Window', 'easy-digital-downloads' ),
@@ -518,16 +532,8 @@ function edd_get_registered_settings() {
 						'size' => 'small',
 						'max'  => 3650, // Ten year maximum, because why explicitly support longer
 						'min'  => 0,
-						'step' => 1
+						'step' => 1,
 					),
-					'refundability' => array(
-						'id'      => 'refundability',
-						'name'    => __( 'Product Refundability', 'easy-digital-downloads' ),
-						'desc'    => __( 'By default, products without an explicit setting will default to this.', 'easy-digital-downloads' ),
-						'type'    => 'select',
-						'std'     => 'refundable',
-						'options' => edd_get_refundability_types()
-					)
 				),
 				'api' => array(
 					'api_settings' => array(
@@ -1068,7 +1074,7 @@ function edd_get_registered_settings() {
 						'id'    => 'show_agree_to_terms',
 						'name'  => __( 'Agreement', 'easy-digital-downloads' ),
 						'check' => __( 'Check this box to show an "Agree to Terms" checkbox on checkout.', 'easy-digital-downloads' ),
-						'desc'  => __( 'Customers must agree to your privacy policy before purchasing.', 'easy-digital-downloads' ),
+						'desc'  => __( 'Customers must agree to your terms before purchasing.', 'easy-digital-downloads' ),
 						'type'  => 'checkbox_description',
 					),
 					'agree_label' => array(
@@ -1143,7 +1149,7 @@ function edd_get_registered_settings() {
 
 		// Show a disabled "Default Rate" in "Tax Rates" if the value is not 0.
 		if ( false !== edd_get_option( 'tax_rate' ) ) {
-			$edd_settings['taxes']['rates'] = array_merge( 
+			$edd_settings['taxes']['rates'] = array_merge(
 				array(
 					'tax_rate' => array(
 						'id'            => 'tax_rate',
@@ -1190,7 +1196,7 @@ function edd_get_registered_settings() {
  *
  * @global array $edd_options Array of all the EDD Options
  *
- * @return string $input Sanitized value
+ * @return array $input Sanitized value
  */
 function edd_settings_sanitize( $input = array() ) {
 	global $edd_options;
@@ -1259,6 +1265,21 @@ function edd_settings_sanitize( $input = array() ) {
 						unset( $output[ $key ] );
 					}
 					break;
+				case 'number':
+					if ( array_key_exists( $key, $output ) && ! array_key_exists( $key, $input ) ) {
+						unset( $output[ $key ] );
+					}
+
+					$setting_details = edd_get_registered_setting_details( $tab, $section, $key );
+					$number_type = false !== strpos( $setting_details['step'], '.' ) ? 'floatval' : 'intval';
+					$minimum   = $number_type( $setting_details['min'] );
+					$maximum   = $number_type( $setting_details['max'] );
+					$new_value = $number_type( $input[ $key ] );
+
+					if ( $minimum > $new_value || $maximum < $new_value ) {
+						unset( $output[ $key ] );
+					}
+					break;
 				default:
 					if ( array_key_exists( $key, $input ) && empty( $input[ $key ] ) || ( array_key_exists( $key, $output ) && ! array_key_exists( $key, $input ) ) ) {
 						unset( $output[ $key ] );
@@ -1270,7 +1291,7 @@ function edd_settings_sanitize( $input = array() ) {
 		}
 	}
 
-	// Return output
+	// Return output.
 	return (array) $output;
 }
 
@@ -1317,6 +1338,28 @@ function edd_get_registered_settings_types( $filtered_tab = false, $filtered_sec
 	}
 
 	return $setting_types;
+}
+
+/**
+ * Allow getting a specific setting's details.
+ *
+ * @since 3.0
+ *
+ * @param string $filtered_tab      The tab the setting's section is in.
+ * @param string $filtered_section  The section the setting is located in.
+ * @param string $setting_key       The key associated with the setting.
+ *
+ * @return array
+ */
+function edd_get_registered_setting_details( $filtered_tab = '', $filtered_section = '', $setting_key = '' ) {
+	$settings        = edd_get_registered_settings();
+	$setting_details = array();
+
+	if ( isset( $settings[ $filtered_tab ][ $filtered_section][ $setting_key ] ) ) {
+		$setting_details = $settings[ $filtered_tab ][ $filtered_section][ $setting_key ];
+	}
+
+	return $setting_details;
 }
 
 /**
@@ -2014,6 +2057,9 @@ function edd_gateways_callback( $args ) {
 			$html .= '<label>';
 			$html .= '<input name="edd_settings[' . esc_attr( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . '][' . edd_sanitize_key( $key ) . ']" class="' . $class . '" type="checkbox" value="1" data-gateway-key="' . edd_sanitize_key( $key ) . '" ' . checked( '1', $enabled, false ) . '/>&nbsp;';
 			$html .= esc_html( $option['admin_label'] );
+			if ( 'manual' === $key ) {
+				$html .= '<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong>' . esc_html__( 'Store Gateway', 'easy-digital-downloads' ) . '</strong>: ' . esc_html__( 'This is an internal payment gateway which can be used for manually added orders or test purchases. No money is actually processed.', 'easy-digital-downloads' ) . '"></span>';
+			}
 			$html .= '</label>';
 			$html .= '</li>';
 		}
@@ -2177,7 +2223,7 @@ function edd_email_callback( $args ) {
 function edd_number_callback( $args ) {
 	$edd_option = edd_get_option( $args['id'] );
 
-	if ( $edd_option ) {
+	if ( is_numeric( $edd_option ) ) {
 		$value = $edd_option;
 	} else {
 		$value = isset( $args['std'] ) ? $args['std'] : '';

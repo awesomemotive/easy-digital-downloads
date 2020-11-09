@@ -66,7 +66,7 @@ function edd_get_payment( $payment_or_txn_id = null, $by_txn = false ) {
  * @since 1.8 Refactored to be a wrapper for EDD_Payments_Query.
  *
  * @param array $args Arguments passed to get payments.
- * @return EDD_Payment[] $payments Payments retrieved from the database.
+ * @return EDD_Payment[]|int $payments Payments retrieved from the database.
  */
 function edd_get_payments( $args = array() ) {
 	$args     = apply_filters( 'edd_get_payments_args', $args );
@@ -189,13 +189,6 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
 
 		// Clear the This Month earnings (this_monththis_month is NOT a typo)
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
-
-		if ( $customer && $customer->id && $update_customer ) {
-
-			// Decrement the stats for the customer
-			$customer->decrease_purchase_count();
-			$customer->decrease_value( $amount );
-		}
 	}
 
 	do_action( 'edd_payment_delete', $payment_id );
@@ -220,6 +213,10 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
 				edd_delete_file_download_log( $log->id );
 			}
 		}
+	}
+
+	if ( $customer && $customer->id && $update_customer ) {
+		$customer->recalculate_stats();
 	}
 
 	do_action( 'edd_payment_deleted', $payment_id );

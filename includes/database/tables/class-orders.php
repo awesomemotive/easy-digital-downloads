@@ -38,7 +38,7 @@ final class Orders extends Table {
 	 * @since  3.0
 	 * @var    int
 	 */
-	protected $version = 201901111;
+	protected $version = 202002141;
 
 	/**
 	 * Array of upgrade versions and methods.
@@ -53,6 +53,7 @@ final class Orders extends Table {
 		'201808141' => 201808141,
 		'201808151' => 201808151,
 		'201901111' => 201901111,
+		'202002141' => 202002141,
 	);
 
 	/**
@@ -80,10 +81,10 @@ final class Orders extends Table {
 			discount decimal(18,9) NOT NULL default '0',
 			tax decimal(18,9) NOT NULL default '0',
 			total decimal(18,9) NOT NULL default '0',
-			date_created datetime NOT NULL default '0000-00-00 00:00:00',
-			date_modified datetime NOT NULL default '0000-00-00 00:00:00',
-			date_completed datetime NOT NULL default '0000-00-00 00:00:00',
-			date_refundable datetime NOT NULL default '0000-00-00 00:00:00',
+			date_created datetime NOT NULL default CURRENT_TIMESTAMP,
+			date_modified datetime NOT NULL default CURRENT_TIMESTAMP,
+			date_completed datetime default null,
+			date_refundable datetime default null,
 			uuid varchar(100) NOT NULL default '',
 			PRIMARY KEY (id),
 			KEY order_number (order_number({$max_index_length})),
@@ -231,5 +232,47 @@ final class Orders extends Table {
 		" );
 
 		return $this->is_success( true );
+	}
+
+	/**
+	 * Upgrade to version 202002141
+	 *  - Change default value to `CURRENT_TIMESTAMP` for columns `date_created` and `date_modified`.
+	 *  - Change default value to `null` for columns `date_completed` and `date_refundable`.
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	protected function __202002141() {
+
+		// Update `date_created`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_created` datetime NOT NULL default CURRENT_TIMESTAMP;
+		" );
+
+		// Update `date_modified`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_modified` datetime NOT NULL default CURRENT_TIMESTAMP;
+		" );
+
+		// Update `date_completed`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_completed` datetime default null;
+		" );
+
+		if ( $this->is_success( $result ) ) {
+			$this->get_db()->query( "UPDATE {$this->table_name} SET `date_completed` = NULL WHERE `date_completed` = '0000-00-00 00:00:00'" );
+		}
+
+		// Update `date_refundable`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `date_refundable` datetime default null;
+		" );
+
+		if ( $this->is_success( $result ) ) {
+			$this->get_db()->query( "UPDATE {$this->table_name} SET `date_refundable` = NULL WHERE `date_refundable` = '0000-00-00 00:00:00'" );
+		}
+
+		return $this->is_success( $result );
+
 	}
 }

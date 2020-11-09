@@ -880,10 +880,48 @@ function edd_process_signed_download_url( $args ) {
 	$args['email']       = edd_get_payment_meta( $order_parts[0], '_edd_payment_user_email', true );
 	$args['key']         = edd_get_payment_meta( $order_parts[0], '_edd_payment_purchase_key', true );
 
-	$payment = new EDD_Payment( $args['payment'] );
-	$args['has_access']  = 'complete' === $payment->status ? true : false;
+	// Access is granted if there's at least one `complete` order item that matches the order + download + price ID.
+	$args['has_access'] = edd_order_grants_access_to_download_files( array(
+		'order_id'   => $args['payment'],
+		'product_id' => $args['download'],
+		'price_id'   => ! empty( $args['price_id'] ) ? $args['price_id'] : ''
+	) );
 
 	return $args;
+}
+
+/**
+ * Determines whether or not a given order grants access to download files associated with a given
+ * product ID and price ID combination. Returns true if there's at least one `complete` order item
+ * matching the requirements.
+ *
+ * @param array $args
+ *
+ * @since 3.0
+ * @return bool
+ */
+function edd_order_grants_access_to_download_files( $args ) {
+	$args = wp_parse_args( $args, array(
+		'order_id'   => 0,
+		'product_id' => 0,
+		'price_id'   => ''
+	) );
+
+	// Order and product IDs are required.
+	if ( empty( $args['order_id'] ) || empty( $args['product_id'] ) ) {
+		return false;
+	}
+
+	$args = array(
+		'order_id'   => $args['order_id'],
+		'product_id' => $args['product_id'],
+		'price_id'   => $args['price_id'],
+		'status'     => 'complete'
+	);
+
+	$order_items = edd_count_order_items( array_filter( $args ) );
+
+	return $order_items > 0;
 }
 
 /**
