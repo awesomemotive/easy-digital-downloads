@@ -1,3 +1,5 @@
+/* global eddAdminOrderOverview */
+
 // Loads the modal when the refund button is clicked.
 $(document.body).on('click', '.edd-refund-order', function (e) {
 	e.preventDefault();
@@ -25,12 +27,18 @@ $(document.body).on('click', '.edd-refund-order', function (e) {
 				modal    : true,
 				resizable: false,
 				draggable: false,
+				classes: {
+					'ui-dialog': 'edd-dialog',
+				},
+				closeText: eddAdminOrderOverview.i18n.closeText,
 				open: function( event, ui ) {
 					$(this).html( modal_content );
 				},
 				close: function( event, ui ) {
-					$(this).html( '' );
-					location.reload();
+					$( this ).html( '' );
+					if ( $( this ).hasClass( 'did-refund' ) ) {
+						location.reload();
+					}
 				}
 			});
 			return false;
@@ -47,6 +55,10 @@ $(document.body).on('click', '.edd-refund-order', function (e) {
 	});
 });
 
+$( document.body ).on( 'click', '.ui-widget-overlay', function ( e ) {
+	$( '#edd-refund-order-dialog' ).dialog( 'close' );
+} );
+
 // Handles including items in the refund.
 $(document.body).on( 'change', '#edd-refund-order-dialog tbody .check-column input[type="checkbox"]', function () {
 	let parent = $(this).parent().parent(),
@@ -60,7 +72,8 @@ $(document.body).on( 'change', '#edd-refund-order-dialog tbody .check-column inp
 
 	let new_subtotal = 0,
 		new_tax      = 0,
-		new_total    = 0;
+		new_total    = 0,
+		can_refund   = false;
 
 	// Set a readonly while we recalculate, to avoid race conditions in the browser.
 	all_checkboxes.prop('readonly', true);
@@ -78,20 +91,21 @@ $(document.body).on( 'change', '#edd-refund-order-dialog tbody .check-column inp
 		new_subtotal += item_amount;
 		new_tax      += item_tax;
 		new_total    += item_total;
+		can_refund    = true;
 	});
 
 	new_subtotal = parseFloat(new_subtotal).toFixed( edd_vars.currency_decimals );
 	new_tax      = parseFloat(new_tax).toFixed( edd_vars.currency_decimals );
 	new_total    = parseFloat(new_total).toFixed( edd_vars.currency_decimals );
 
-	$('#edd-refund-submit-subtotal-amount').data('refund-subtotal', new_subtotal ).text( new_subtotal );
-	$('#edd-refund-submit-tax-amount').data('refund-tax', new_tax ).text( new_tax );
-	$('#edd-refund-submit-total-amount').data('refund-total', new_total ).text( new_total );
+	$( '#edd-refund-submit-subtotal-amount' ).text( new_subtotal );
+	$( '#edd-refund-submit-tax-amount' ).text( new_tax );
+	$( '#edd-refund-submit-total-amount' ).text( new_total );
 
-	if ( new_total > 0 ) {
-		$('#edd-submit-refund-submit').removeClass('disabled');
+	if ( can_refund ) {
+		$( '#edd-submit-refund-submit' ).attr( 'disabled', false );
 	} else {
-		$('#edd-submit-refund-submit').addClass('disabled');
+		$( '#edd-submit-refund-submit' ).attr( 'disabled', true );
 	}
 
 	// Remove the readonly.
@@ -116,14 +130,12 @@ $(document.body).on('change', '#edd-refund-order-dialog #cb-select-all-1', funct
 
 // Process the refund form after the button is clicked.
 $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
+	e.preventDefault();
 	$('.edd-submit-refund-message').removeClass('success').removeClass('fail');
-	$(this).addClass('disabled');
+	$( this ).attr( 'disabled', false );
 	$('#edd-refund-submit-button-wrapper .spinner').css('visibility', 'visible');
 	$('#edd-submit-refund-status').hide();
-	let item_ids = [],
-		refund_subtotal = $('#edd-refund-submit-subtotal-amount').data('refund-subtotal'),
-		refund_tax      = $('#edd-refund-submit-tax-amount').data('refund-tax'),
-		refund_total    = $('#edd-refund-submit-total-amount').data('refund-total');
+	let item_ids = [];
 
 	// Get the Order Item IDs we're going to be refunding.
 	const item_checkboxes = $('#edd-refund-order-dialog tbody .check-column input[type="checkbox"]');
@@ -134,16 +146,11 @@ $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 		}
 	});
 
-	e.preventDefault();
-
 	var postData = {
 		action  : 'edd_process_refund_form',
 		item_ids : item_ids,
-		refund_subtotal: refund_subtotal,
-		refund_tax : refund_tax,
-		refund_total : refund_total,
 		order_id: $('input[name="edd_payment_id"]').val(),
-		nonce: $('#edd-process-refund-form #_wpnonce').val(),
+		nonce: $( '#edd_process_refund' ).val(),
 	};
 
 	$.ajax({
@@ -159,19 +166,21 @@ $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 				$('#edd-refund-order-dialog .tablenav').hide();
 
 				message_target.text(data.message).addClass('success');
-				url_target.attr('href', data.refund_url).show();
+				url_target.attr( 'href', data.refund_url ).show();
 
-				$('#edd-submit-refund-status').show();
+				$( '#edd-submit-refund-status' ).show();
+				url_target.focus();
+				$( '#edd-refund-order-dialog' ).addClass( 'did-refund' );
 			} else {
 				message_target.text(data.message).addClass('fail');
 				url_target.hide();
 
 				$('#edd-submit-refund-status').show();
-				$('#edd-submit-refund-submit').removeClass('disabled');
-				$('#edd-submit-refund-button-wrapper .spinner').css('visibility', 'hidden');
+				$( '#edd-submit-refund-submit' ).attr( 'disabled', false );
+				$( '#edd-refund-submit-button-wrapper .spinner' ).css( 'visibility', 'hidden' );
 			}
 		}
-	}).fail(function (data) {
+	} ).fail( function ( data ) {
 		const message_target = $('.edd-submit-refund-message'),
 			url_target     = $('.edd-submit-refund-url'),
 			json           = data.responseJSON;
@@ -180,9 +189,9 @@ $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 		message_target.text(json.message).addClass('fail');
 		url_target.hide();
 
-		$('#edd-submit-refund-status').show();
-		$('#edd-submit-refund-submit').removeClass('disabled');
-		$('#edd-submit-refund-button-wrapper .spinner').css('visibility', 'hidden');
+		$( '#edd-submit-refund-status' ).show();
+		$( '#edd-submit-refund-submit' ).attr( 'disabled', false );
+		$( '#edd-refund-submit-button-wrapper .spinner' ).css( 'visibility', 'hidden' );
 		return false;
 	});
 });

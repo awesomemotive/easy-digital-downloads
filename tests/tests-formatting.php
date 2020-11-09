@@ -16,7 +16,7 @@ class Tests_Formatting extends EDD_UnitTestCase {
 
 	public function test_sanitize_amount() {
 
-		$this->assertEquals( '0', edd_sanitize_amount( '' ) );
+		$this->assertEquals( 0.00, edd_sanitize_amount( '' ) );
 		$this->assertEquals( '20000.20', edd_sanitize_amount( '20,000.20' ) );
 		$this->assertEquals( '22000.20', edd_sanitize_amount( '22 000.20' ) );
 		$this->assertEquals( '20.20', edd_sanitize_amount( '20.2' ) );
@@ -109,5 +109,21 @@ class Tests_Formatting extends EDD_UnitTestCase {
 		$this->assertSame( 0, edd_currency_decimal_filter( 2, 'HUF' ) );
 
 		$this->assertSame( 0, edd_currency_decimal_filter( 2, 'JPY' ) );
+	}
+
+	public function test_address_type_label_billing() {
+		$this->assertSame( 'Billing', edd_get_address_type_label( 'billing' ) );
+	}
+
+	public function test_address_type_label_default() {
+		$this->assertSame( 'Billing', edd_get_address_type_label() );
+	}
+
+	public function test_address_type_label_unregistered() {
+		$this->assertSame( 'shipping', edd_get_address_type_label( 'shipping' ) );
+	}
+
+	public function test_address_type_label_unregistered_two_words() {
+		$this->assertSame( 'test type', edd_get_address_type_label( 'test type' ) );
 	}
 }

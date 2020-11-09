@@ -96,6 +96,7 @@ add_action( 'init', 'edd_register_styles' );
  */
 function edd_load_scripts() {
 	edd_enqueue_scripts();
+	edd_localize_scripts();
 }
 add_action( 'wp_enqueue_scripts', 'edd_load_scripts' );
 
@@ -204,7 +205,6 @@ function edd_localize_scripts() {
 		) ) );
 	}
 }
-add_action( 'wp_enqueue_scripts', 'edd_localize_scripts' );
 
 /**
  * Load head styles
@@ -292,7 +292,7 @@ function edd_register_admin_scripts() {
 	$admin_deps = array( 'jquery', 'jquery-form', 'underscore' );
 
 	// Register scripts
-	wp_register_script( 'jquery-chosen',                   $js_dir . 'vendor/jquery.chosen.min.js',          array( 'jquery' ), $version );
+	wp_register_script( 'jquery-chosen',                   $js_dir . 'vendor/chosen.jquery.min.js',          array( 'jquery' ), $version );
 	wp_register_script( 'edd-jquery-flot',                 $js_dir . 'vendor/jquery.flot.min.js',            array( 'jquery' ), $version );
 	wp_register_script( 'edd-moment-js',                   $js_dir . 'vendor/moment.min.js',                 array(), $version );
 	wp_register_script( 'edd-chart-js',                    $js_dir . 'vendor/chartjs.min.js',                array( 'edd-moment-js' ), $version );
@@ -303,7 +303,9 @@ function edd_register_admin_scripts() {
 
 	// Individual admin pages.
 	$admin_pages = array(
-		'customers'    => array(),
+		'customers'    => array(
+			'edd-admin-tools-export'
+		),
 		'dashboard'    => array(),
 		'discounts'    => array(),
 		'downloads'    => array(
@@ -353,6 +355,7 @@ function edd_register_admin_styles() {
 
 	// Register styles
 	wp_register_style( 'jquery-chosen',         $css_dir . 'chosen'               . $css_suffix, array(), $version );
+	wp_register_style( 'jquery-ui-css',         $css_dir . 'jquery-ui-fresh'      . $css_suffix, array(), $version );
 	wp_register_style( 'edd-admin',             $css_dir . 'edd-admin'            . $css_suffix, array(), $version );
 	wp_register_style( 'edd-admin-menu',        $css_dir . 'edd-admin-menu'       . $css_suffix, array(), $version );
 	wp_register_style( 'edd-admin-chosen',      $css_dir . 'edd-admin-chosen'     . $css_suffix, $deps,   $version );

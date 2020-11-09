@@ -145,7 +145,10 @@ function edd_update_adjustment( $adjustment_id = 0, $data = array() ) {
  *                                          false otherwise.
  */
 function edd_get_adjustment( $adjustment_id = 0 ) {
-	return edd_get_adjustment_by( 'id', $adjustment_id );
+	$adjustments = new EDD\Database\Queries\Adjustment();
+
+	// Return adjustment
+	return $adjustments->get_item( $adjustment_id );
 }
 
 /**

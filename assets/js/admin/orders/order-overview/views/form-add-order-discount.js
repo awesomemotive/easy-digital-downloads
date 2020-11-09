@@ -97,14 +97,10 @@ export const FormAddOrderDiscount = Dialog.extend( {
 	 * @param {Object} e Change event.
 	 */
 	onChangeDiscount( e ) {
-		const {
-			preventDefault,
-			target: { selectedIndex, options },
-		} = e;
-
+		const { target: { selectedIndex, options } } = e;
 		const { model } = this;
 
-		preventDefault();
+		e.preventDefault();
 
 		const discount = options[ selectedIndex ];
 		const adjustment = discount.dataset;

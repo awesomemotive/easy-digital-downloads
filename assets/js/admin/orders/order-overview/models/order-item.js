@@ -85,6 +85,17 @@ export const OrderItem = Backbone.Model.extend( {
 	},
 
 	/**
+	 * Retrieves the Total for the order item.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return {number} Total amount.
+	 */
+	getTotal() {
+		return ( this.get( 'subtotal' ) - this.getDiscountAmount() ) + this.get( 'tax' );
+	},
+
+	/**
 	 * Retrieves amounts for the `OrderItem` based on other `OrderItem`s and `OrderAdjustment`s.
 	 *
 	 * @since 3.0
@@ -92,14 +103,14 @@ export const OrderItem = Backbone.Model.extend( {
 	 * @param {Object} args Arguments to pass as data in the XHR request.
 	 * @param {string} args.country Country code to determine tax rate.
 	 * @param {string} args.region Region to determine tax rate.
-	 * @param {Array} args.productIds List of current products added to the order.
+	 * @param {Array} args.products List of current products added to the order.
 	 * @param {Array} args.discountIds List of `OrderAdjustmentDiscount`s to calculate amounts against.
 	 * @return {$.promise} A jQuery promise that represents the request.
 	 */
 	getAmounts( {
 		country = '',
 		region = '',
-		productIds = [],
+		products = [],
 		discountIds = [],
 	} ) {
 		const {
@@ -121,7 +132,18 @@ export const OrderItem = Backbone.Model.extend( {
 				subtotal,
 				country,
 				region,
-				productIds: _.uniq( [ productId, ...productIds ] ),
+				products: _.uniq( [
+					...products,
+					{
+						id: productId,
+						quantity,
+						options: {
+							price_id: priceId,
+						},
+					},
+				], function( { id, options: { price_id } } ) {
+					return `${ id }_${ price_id }`
+				} ),
 				discounts: _.uniq( discountIds ),
 			},
 		} );

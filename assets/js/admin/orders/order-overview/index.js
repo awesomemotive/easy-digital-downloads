@@ -1,6 +1,7 @@
 /**
  * Internal dependencies
  */
+import { Currency, NumberFormat } from '@easy-digital-downloads/currency';
 import { Overview } from './views/overview.js';
 import { OrderItems } from './collections/order-items.js';
 import { OrderItem } from './models/order-item.js';
@@ -30,6 +31,11 @@ let overview;
 		refunds,
 	} = window.eddAdminOrderOverview;
 
+	const currencyFormatter = new Currency( {
+		currency: order.currency,
+		currencySymbol: order.currencySymbol,
+	} );
+
 	// Create and hydrate state.
 	const state = new State( {
 		isAdding: '1' === isAdding,
@@ -37,6 +43,11 @@ let overview;
 		hasTax: '0' === hasTax ? false : hasTax,
 		hasQuantity: '1' === hasQuantity,
 		hasDiscounts: '1' === hasDiscounts,
+		formatters: {
+			currency: currencyFormatter,
+			// Backbone doesn't merge nested defaults.
+			number: new NumberFormat(),
+		},
 		order,
 	} );
 
