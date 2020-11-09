@@ -62,7 +62,7 @@ class Remove_Legacy_Data extends Base {
 		$results = $this->get_db()->get_col( $this->get_db()->prepare(
 			"SELECT id
 			 FROM {$this->get_db()->posts}
-			 WHERE post_type = %s OR post_type = %s OR post_type = %s
+			 WHERE post_type IN(%s, %s, %s)
 			 ORDER BY id ASC
 			 LIMIT %d, %d",
 			esc_sql( 'edd_payment' ), esc_sql( 'edd_discount' ), esc_sql( 'edd_log' ), $offset, $this->per_step
@@ -110,7 +110,7 @@ class Remove_Legacy_Data extends Base {
 		$total = $this->get_db()->get_var( $this->get_db()->prepare(
 			"SELECT COUNT(id) AS count
 			 FROM {$this->get_db()->posts}
-			 WHERE post_type = %s OR post_type = %s OR post_type = %s",
+			 WHERE post_type IN(%s, %s, %s)",
 			esc_sql( 'edd_payment' ), esc_sql( 'edd_discount' ), esc_sql( 'edd_log' )
 		) );
 
