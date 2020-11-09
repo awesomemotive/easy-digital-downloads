@@ -36,7 +36,7 @@ if ( 'refund' === $order->type ) {
 		array(
 			'page' => 'edd-payment-history',
 			'view' => 'view-refund-details',
-			'id'   => $order->id,
+			'id'   => urlencode( $order->id ),
 		)
 	);
 	wp_die( sprintf( __( 'The specified ID is for a refund, not an order. Please <a href="%s">access the refund directly</a>.', 'easy-digital-downloads' ), esc_url( $refund_link ) ), __( 'Error', 'easy-digital-downloads' ) );
