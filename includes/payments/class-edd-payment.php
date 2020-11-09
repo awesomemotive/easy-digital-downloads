@@ -2224,22 +2224,20 @@ class EDD_Payment {
 								edd_update_order_adjustment( $found_discount->id, array(
 									'amount' => $this->subtotal - $discount->get_discounted_amount( $this->subtotal ),
 								) );
-
-								continue;
+							} else {
+								// Add the discount as an adjustment.
+								edd_add_order_adjustment(
+									array(
+										'object_id'   => $this->ID,
+										'object_type' => 'order',
+										'type_id'     => $discount->id,
+										'type'        => 'discount',
+										'description' => $discount->code,
+										'subtotal'    => $this->subtotal - $discount->get_discounted_amount( $this->subtotal ),
+										'total'       => $this->subtotal - $discount->get_discounted_amount( $this->subtotal ),
+									)
+								);
 							}
-
-							// Add the discount as an adjustment.
-							edd_add_order_adjustment(
-								array(
-									'object_id'   => $this->ID,
-									'object_type' => 'order',
-									'type_id'     => $discount->id,
-									'type'        => 'discount',
-									'description' => $discount->code,
-									'subtotal'    => $this->subtotal - $discount->get_discounted_amount( $this->subtotal ),
-									'total'       => $this->subtotal - $discount->get_discounted_amount( $this->subtotal ),
-								)
-							);
 						}
 					}
 
