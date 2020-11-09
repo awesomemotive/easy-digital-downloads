@@ -885,30 +885,23 @@ class EDD_Payment {
 						foreach ( $this->discounts as $discount ) {
 							/** @var EDD_Discount $discount_obj */
 							$discount_obj = edd_get_discount_by( 'code', $discount );
-
-							if ( false === $discount_obj ) {
-								edd_add_order_adjustment(
-									array(
-										'object_id'   => $this->ID,
-										'object_type' => 'order',
-										'type'        => 'fee',
-										'description' => $discount,
-										'subtotal'    => floatval( $this->total - $cart_subtotal - $this->tax ),
-										'total'       => floatval( $this->total - $cart_subtotal - $this->tax ),
-									)
-								);
-								continue;
-							}
-
-							edd_add_order_adjustment( array(
+							$args         = array(
 								'object_id'   => $this->ID,
 								'object_type' => 'order',
-								'type_id'     => $discount_obj->id,
-								'type'        => 'discount',
 								'description' => $discount,
-								'subtotal'    => floatval( $cart_subtotal - $discount_obj->get_discounted_amount( $cart_subtotal ) ),
-								'total'       => floatval( $cart_subtotal - $discount_obj->get_discounted_amount( $cart_subtotal ) ),
-							) );
+							);
+
+							if ( false === $discount_obj ) {
+								$args['type']     = 'fee';
+								$args['subtotal'] = floatval( $this->total - $cart_subtotal - $this->tax );
+								$args['total']    = floatval( $this->total - $cart_subtotal - $this->tax );
+							} else {
+								$args['type_id']  = $discount_obj->id;
+								$args['type']     = 'discount';
+								$args['subtotal'] = floatval( $cart_subtotal - $discount_obj->get_discounted_amount( $cart_subtotal ) );
+								$args['total']    = floatval( $cart_subtotal - $discount_obj->get_discounted_amount( $cart_subtotal ) );
+							}
+							edd_add_order_adjustment( $args );
 						}
 
 						$this->user_info['discount'] = implode( ',', $this->discounts );
