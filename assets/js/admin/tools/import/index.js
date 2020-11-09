@@ -21,7 +21,7 @@ var EDD_Import = {
 
 	before_submit: function( arr, form, options ) {
 		form.find( '.notice-wrap' ).remove();
-		form.append( '<div class="notice-wrap"><span class="spinner is-active"></span><div class="edd-progress"><div></div></div></div>' );
+		form.append( '<div class="notice-wrap"><div class="edd-progress"><div></div></div></div>' );
 
 		//check whether client browser fully supports all File API
 		if ( window.File && window.FileReader && window.FileList && window.Blob ) {
@@ -32,7 +32,7 @@ var EDD_Import = {
 			const import_form = $( '.edd-import-form' ).find( '.edd-progress' ).parent().parent();
 			const notice_wrap = import_form.find( '.notice-wrap' );
 
-			import_form.find( '.button-disabled' ).removeClass( 'button-disabled' );
+			import_form.find( '.button:disabled' ).attr( 'disabled', false );
 
 			//Error for older unsupported browsers that doesn't support HTML5 File API
 			notice_wrap.html( '<div class="update error"><p>' + edd_vars.unsupported_browser + '</p></div>' );
@@ -91,7 +91,8 @@ var EDD_Import = {
 			$( document.body ).on( 'click', '.edd-import-proceed', function( e ) {
 				e.preventDefault();
 
-				form.append( '<div class="notice-wrap"><span class="spinner is-active"></span><div class="edd-progress"><div></div></div></div>' );
+				form.find( '.edd-import-proceed.button-primary' ).addClass( 'updating-message' );
+				form.append( '<div class="notice-wrap"><div class="edd-progress"><div></div></div></div>' );
 
 				response.data.mapping = form.serialize();
 
@@ -109,7 +110,7 @@ var EDD_Import = {
 		const import_form = $( '.edd-import-form' ).find( '.edd-progress' ).parent().parent();
 		const notice_wrap = import_form.find( '.notice-wrap' );
 
-		import_form.find( '.button-disabled' ).removeClass( 'button-disabled' );
+		import_form.find( '.button:disabled' ).attr( 'disabled', false );
 
 		if ( response.data.error ) {
 			notice_wrap.html( '<div class="update error"><p>' + response.data.error + '</p></div>' );
@@ -138,7 +139,7 @@ var EDD_Import = {
 					const import_form = $( '.edd-import-form' ).find( '.edd-progress' ).parent().parent();
 					const notice_wrap = import_form.find( '.notice-wrap' );
 
-					import_form.find( '.button-disabled' ).removeClass( 'button-disabled' );
+					import_form.find( '.button:disabled' ).attr( 'disabled', false );
 
 					if ( response.data.error ) {
 						notice_wrap.html( '<div class="update error"><p>' + response.data.error + '</p></div>' );

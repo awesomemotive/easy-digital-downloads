@@ -1010,7 +1010,16 @@ class EDD_API {
 			$field = 'email';
 		}
 
-		$customer_query = edd_get_customers( array( 'number' => $per_page, 'offset' => $offset, $field => $customer ) );
+		$args = array(
+			'number' => $per_page,
+			'offset' => $offset
+		);
+
+		if ( ! is_null( $customer ) ) {
+			$args[ $field ] = $customer;
+		}
+
+		$customer_query = edd_get_customers( $args );
 		$customer_count = 0;
 
 		if ( $customer_query ) {

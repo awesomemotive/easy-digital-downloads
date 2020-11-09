@@ -31,8 +31,8 @@ class EDD_Customer_Addresses_Table extends List_Table {
 	 */
 	public function __construct() {
 		parent::__construct( array(
-			'singular' => __( 'Address',   'easy-digital-downloads' ),
-			'plural'   => __( 'Addresses', 'easy-digital-downloads' ),
+			'singular' => 'address',
+			'plural'   => 'addresses',
 			'ajax'     => false
 		) );
 
@@ -66,13 +66,14 @@ class EDD_Customer_Addresses_Table extends List_Table {
 		switch ( $column_name ) {
 
 			case 'type' :
-				$value = ( 'primary' === $item['type'] )
-					? esc_html_e( 'Primary',   'easy-digital-downloads' )
-					: esc_html_e( 'Secondary', 'easy-digital-downloads' );
+				$value = edd_get_address_type_label( $item['type'] );
+				if ( ! empty( $item['is_primary'] ) ) {
+					$value .= '&nbsp;&nbsp;<span class="edd-chip">' . esc_html__( 'Primary', 'easy-digital-downloads' ) . '</span>';
+				}
 				break;
 
 			case 'date_created' :
-				$value = '<time datetime="' . esc_attr( $item['date_created'] ) . '">' . edd_date_i18n( $item['date_created'], 'M. d, Y' ) . '<br>' . edd_date_i18n( $item['date_created'], 'H:i' ) . '</time>';
+				$value = '<time datetime="' . esc_attr( $item['date_created'] ) . '">' . edd_date_i18n( $item['date_created'], 'M. d, Y' ) . '<br>' . edd_date_i18n( $item['date_created'], 'H:i' ) . ' ' . edd_get_timezone_abbr() . '</time>';
 				break;
 
 			default:
@@ -131,12 +132,17 @@ class EDD_Customer_Addresses_Table extends List_Table {
 
 		// Actions
 		$actions  = array(
-			'view' => '<a href="' . esc_url( $customer_url ) . '">' . __( 'View', 'easy-digital-downloads' ) . '</a>'
+			'view' => '<a href="' . esc_url( $customer_url ) . '">' . esc_html__( 'View', 'easy-digital-downloads' ) . '</a>'
 		);
 
-		// Non-primary email actions
-		if ( 'primary' !== $item_status ) {
-			$actions['delete'] = '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-customers&view=delete&id=' . $item['id'] ) . '">' . __( 'Delete', 'easy-digital-downloads' ) . '</a>';
+		if ( empty( $item['is_primary'] ) ) {
+			$delete_url = wp_nonce_url( edd_get_admin_url( array(
+				'page'       => 'edd-customers',
+				'view'       => 'overview',
+				'id'         => urlencode( $item['id'] ),
+				'edd_action' => 'customer-remove-address'
+			) ), 'edd-remove-customer-address' );
+			$actions['delete'] = '<a href="' . esc_url( $delete_url ) . '">' . esc_html__( 'Delete', 'easy-digital-downloads' ) . '</a>';
 		}
 
 		// State
@@ -204,15 +210,19 @@ class EDD_Customer_Addresses_Table extends List_Table {
 	 * @access public
 	 * @since 3.0
 	 *
-	 * @param EDD_Customer $item Customer object.
+	 * @param array Address
 	 *
 	 * @return string Displays a checkbox
 	 */
 	public function column_cb( $item ) {
+		$customer = edd_get_customer_by( 'id', $item['customer_id'] );
+		$name     = isset( $customer->name ) ? $customer->name : $customer->email;
 		return sprintf(
-			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+			'<input type="checkbox" name="%1$s[]" id="%1$s-%2$s" value="%2$s" /><label for="%1$s-%2$s" class="screen-reader-text">%3$s</label>',
 			/*$1%s*/ 'customer',
-			/*$2%s*/ $item['id']
+			/*$2%s*/ esc_attr( $item['id'] ),
+			/* translators: customer name or email */
+			esc_html( sprintf( __( 'Select %s', 'easy-digital-downloads' ), $name ) )
 		);
 	}
 
@@ -286,7 +296,7 @@ class EDD_Customer_Addresses_Table extends List_Table {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-customers' ) ) {
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-addresses' ) ) {
 			return;
 		}
 
@@ -374,6 +384,7 @@ class EDD_Customer_Addresses_Table extends List_Table {
 					'country'       => $address->country,
 					'date_created'  => $address->date_created,
 					'date_modified' => $address->date_modified,
+					'is_primary'    => $address->is_primary,
 				);
 			}
 		}

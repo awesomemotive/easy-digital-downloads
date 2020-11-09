@@ -64,6 +64,7 @@ function edd_add_manual_order( $args = array() ) {
 	$customer_id = 0;
 	$user_id     = 0;
 	$email       = '';
+	$name        = '';
 
 	// Create a new customer record.
 	if ( isset( $data['edd-new-customer'] ) && 1 === absint( $data['edd-new-customer'] ) ) {
@@ -79,7 +80,7 @@ function edd_add_manual_order( $args = array() ) {
 			: '';
 
 		// Combine
-		$name = $first_name . ' ' . $last_name;
+		$name = trim( $first_name . ' ' . $last_name );
 
 		// Sanitize the email address
 		$email = isset( $data['edd-new-customer-email'] )
@@ -103,6 +104,7 @@ function edd_add_manual_order( $args = array() ) {
 		if ( $customer ) {
 			$email   = $customer->email;
 			$user_id = $customer->user_id;
+			$name    = $customer->name;
 		}
 	}
 
@@ -151,22 +153,24 @@ function edd_add_manual_order( $args = array() ) {
 	$order_total    = floatval( $data['total'] );
 
 	// Add the order ID
-	$order_id = edd_add_order( array(
-		'status'         => 'pending', // Always insert as pending initially.
-		'user_id'        => $user_id,
-		'customer_id'    => $customer_id,
-		'email'          => $email,
-		'ip'             => sanitize_text_field( $data['ip'] ),
-		'gateway'        => sanitize_text_field( $data['gateway'] ),
-		'mode'           => $mode,
-		'currency'       => edd_get_currency(),
-		'payment_key'    => sanitize_text_field( $data['payment_key'] ),
-		'subtotal'       => $order_subtotal,
-		'tax'            => $order_tax,
-		'discount'       => $order_discount,
-		'total'          => $order_total,
-		'date_created'   => $date,
-	) );
+	$order_id = edd_add_order(
+		array(
+			'status'       => 'pending', // Always insert as pending initially.
+			'user_id'      => $user_id,
+			'customer_id'  => $customer_id,
+			'email'        => $email,
+			'ip'           => sanitize_text_field( $data['ip'] ),
+			'gateway'      => sanitize_text_field( $data['gateway'] ),
+			'mode'         => $mode,
+			'currency'     => edd_get_currency(),
+			'payment_key'  => $data['payment_key'] ? sanitize_text_field( $data['payment_key'] ) : edd_generate_order_payment_key( $email ),
+			'subtotal'     => $order_subtotal,
+			'tax'          => $order_tax,
+			'discount'     => $order_discount,
+			'total'        => $order_total,
+			'date_created' => $date,
+		)
+	);
 
 	// Attach order to the customer record.
 	if ( ! empty( $customer ) ) {
@@ -179,6 +183,7 @@ function edd_add_manual_order( $args = array() ) {
 
 		// Parse args
 		$address = wp_parse_args( $data['edd_order_address'], array(
+			'name'        => $name,
 			'address'     => '',
 			'address2'    => '',
 			'city'        => '',
@@ -213,6 +218,24 @@ function edd_add_manual_order( $args = array() ) {
 		$data['downloads'] = array_values( $data['downloads'] );
 
 		$downloads = array_reverse( $data['downloads'] );
+		$tax_rate  = false;
+		// If taxes are enabled, get the tax rate for the order location.
+		if ( edd_use_taxes() ) {
+			$country = ! empty( $data['edd_order_address']['country'] )
+				? $data['edd_order_address']['country']
+				: false;
+
+			$region = ! empty( $data['edd_order_address']['region'] )
+				? $data['edd_order_address']['region']
+				: false;
+
+			$tax_rate = edd_get_tax_rate_by_location(
+				array(
+					'country' => $country,
+					'region'  => $region,
+				)
+			);
+		}
 
 		foreach ( $downloads as $cart_key => $download ) {
 			$d = edd_get_download( absint( $download['id'] ) );
@@ -290,6 +313,28 @@ function edd_add_manual_order( $args = array() ) {
 							'total'       => floatval( $order_item_adjustment['total'] ),
 						) );
 					}
+				}
+
+				// Maybe store order tax.
+				if ( $tax_rate ) {
+					// Set the description to the tax rate country.
+					$description = $tax_rate->name;
+
+					// If the tax rate region is set, use that instead of the country.
+					if ( ! empty( $tax_rate->description ) ) {
+						$description = $tax_rate->description;
+					}
+					// Always store tax rate, even if empty.
+					edd_add_order_adjustment(
+						array(
+							'object_id'   => $order_item_id,
+							'object_type' => 'order_item',
+							'type'        => 'tax_rate',
+							'total'       => $tax_rate->amount,
+							'type_id'     => $tax_rate->id,
+							'description' => $description,
+						)
+					);
 				}
 
 				// Increase the earnings for this download.

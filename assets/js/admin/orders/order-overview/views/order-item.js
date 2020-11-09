@@ -3,10 +3,6 @@
  */
 import { Base } from './base.js';
 import { CopyDownloadLink } from './copy-download-link.js';
-import { Currency, NumberFormat } from '@easy-digital-downloads/currency';
-
-const currency = new Currency();
-const number = new NumberFormat();
 
 /**
  * OrderItem
@@ -59,7 +55,10 @@ export const OrderItem = Base.extend( {
 	 * @return {Object} The data for this view.
 	 */
 	prepare() {
-		const { model } = this;
+		const { model, options } = this;
+		const { state } = options;
+
+		const { currency, number } = state.get( 'formatters' );
 
 		const discountAmount = model.getDiscountAmount();
 		const isAdjustingManually = model.get( '_isAdjustingManually' );
@@ -71,7 +70,7 @@ export const OrderItem = Base.extend( {
 			amountCurrency: currency.format( number.absint( model.get( 'amount' ) ) ),
 			subtotalCurrency: currency.format( number.absint( model.get( 'subtotal' ) ) ),
 			taxCurrency: currency.format( number.absint( model.get( 'tax' ) ) ),
-			discountCurrency: currency.format( number.absint( discountAmount ) ),
+			total: model.getTotal(),
 
 			config: {
 				isAdjustingManually,

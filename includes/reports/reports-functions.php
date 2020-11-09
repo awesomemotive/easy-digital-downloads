@@ -10,8 +10,6 @@
  */
 namespace EDD\Reports;
 
-use DateTimeZone, DateTime, edd_get_timezone_abbr, edd_get_utc_equivalent_date;
-
 //
 // Endpoint and report helpers.
 //
@@ -460,22 +458,20 @@ function clear_filter( $filter ) {
 function get_dates_filter_options() {
 	static $options = null;
 
-	$timezone_abbreviation = edd_get_timezone_abbr();
-
 	if ( is_null( $options ) ) {
 		$options = array(
-			'other'        => __( 'Custom', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'today'        => __( 'Today', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'yesterday'    => __( 'Yesterday', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'this_week'    => __( 'This Week', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'last_week'    => __( 'Last Week', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'last_30_days' => __( 'Last 30 Days', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'this_month'   => __( 'This Month', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'last_month'   => __( 'Last Month', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'this_quarter' => __( 'This Quarter', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'last_quarter' => __( 'Last Quarter', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'this_year'    => __( 'This Year', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
-			'last_year'    => __( 'Last Year', 'easy-digital-downloads' ) . ' (' . $timezone_abbreviation . ')',
+			'other'        => __( 'Custom', 'easy-digital-downloads' ),
+			'today'        => __( 'Today', 'easy-digital-downloads' ),
+			'yesterday'    => __( 'Yesterday', 'easy-digital-downloads' ),
+			'this_week'    => __( 'This Week', 'easy-digital-downloads' ),
+			'last_week'    => __( 'Last Week', 'easy-digital-downloads' ),
+			'last_30_days' => __( 'Last 30 Days', 'easy-digital-downloads' ),
+			'this_month'   => __( 'This Month', 'easy-digital-downloads' ),
+			'last_month'   => __( 'Last Month', 'easy-digital-downloads' ),
+			'this_quarter' => __( 'This Quarter', 'easy-digital-downloads' ),
+			'last_quarter' => __( 'Last Quarter', 'easy-digital-downloads' ),
+			'this_year'    => __( 'This Year', 'easy-digital-downloads' ),
+			'last_year'    => __( 'Last Year', 'easy-digital-downloads' ),
 		);
 	}
 
@@ -741,12 +737,8 @@ function get_dates_filter_day_by_day() {
 	switch ( $dates['range'] ) {
 		case 'today':
 		case 'yesterday':
-			$day_by_day = true;
-			break;
 		case 'last_quarter':
 		case 'this_quarter':
-			$day_by_day = true;
-			break;
 		case 'this_year':
 		case 'last_year':
 			$day_by_day = false;
@@ -893,7 +885,7 @@ function default_display_tiles_group( $report ) {
 
 	<div id="edd-reports-tiles-wrap" class="edd-report-wrap">
 		<?php
-		foreach ( $tiles as $endpoint_id => $tile ) : 
+		foreach ( $tiles as $endpoint_id => $tile ) :
 			$tile->display();
 		endforeach;
 		?>
@@ -944,24 +936,24 @@ function default_display_charts_group( $report ) {
 		return;
 	}
 
+	?>
+	<div id="edd-reports-charts-wrap" class="edd-report-wrap">
+	<?php
+
 	$charts = $report->get_endpoints( 'charts' );
 
 	foreach ( $charts as $endpoint_id => $chart ) {
-?>
+		?>
+		<div class="edd-reports-chart edd-reports-chart-<?php echo esc_attr( $chart->get_type() ); ?>" id="edd-reports-table-<?php echo esc_attr( $endpoint_id ); ?>">
+			<h3><?php echo esc_html( $chart->get_label() ); ?></h3>
 
-	<div id="edd-reports-charts-wrap" class="edd-report-wrap">
-
-			<div class="edd-reports-chart edd-reports-chart-<?php echo esc_attr( $chart->get_type() ); ?>" id="edd-reports-table-<?php echo esc_attr( $endpoint_id ); ?>">
-				<h3><?php echo esc_html( $chart->get_label() ); ?></h3>
-
-				<?php $chart->display(); ?>
-			</div>
-
-			<div class="clear"></div>
-
-	</div>
-<?php
+			<?php $chart->display(); ?>
+		</div>
+		<?php
 	}
+	?>
+	</div>
+	<?php
 }
 
 /**
@@ -984,7 +976,6 @@ function display_dates_filter() {
 		'name'             => 'range',
 		'class'            => 'edd-graphs-date-options',
 		'options'          => $options,
-		'chosen'           => true,
 		'variations'       => false,
 		'show_option_all'  => false,
 		'show_option_none' => false,
@@ -1048,7 +1039,7 @@ function display_taxes_filter() {
 		return;
 	}
 
-	$taxes         = get_filter_value( 'taxes' ); 
+	$taxes         = get_filter_value( 'taxes' );
 	$exclude_taxes = isset( $taxes['exclude_taxes'] ) && true == $taxes['exclude_taxes'];
 ?>
 	<span class="edd-graph-filter-options graph-option-section">
@@ -1111,7 +1102,6 @@ function display_gateways_filter() {
 	$select = EDD()->html->select( array(
 		'name'             => 'gateways',
 		'options'          => $gateways,
-		'chosen'           => true,
 		'selected'         => empty( $gateway ) ? 0 : $gateway,
 		'show_option_none' => false,
 	) ); ?>

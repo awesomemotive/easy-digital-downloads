@@ -124,7 +124,7 @@ class Refund_Items_Table extends List_Table {
 	 * @return string Name of the primary column.
 	 */
 	protected function get_primary_column_name() {
-		return 'name';
+		return '';
 	}
 
 	/**
@@ -201,6 +201,9 @@ class Refund_Items_Table extends List_Table {
 	public function column_name( $order_item ) {
 		// Wrap order_item title in strong anchor
 		$order_item_title = '<strong>' . $order_item->get_order_item_name() . '</strong>';
+		if ( 'refunded' !== $order_item->status ) {
+			$order_item_title = '<label for="edd-order-item-' . esc_attr( $order_item->id ) . '" class="edd-order-item__label">' . $order_item->get_order_item_name() . '</label>';
+		}
 
 		return $order_item_title;
 	}
@@ -217,11 +220,13 @@ class Refund_Items_Table extends List_Table {
 	public function column_cb( $order_item ) {
 		if ( 'refunded' !== $order_item->status ) {
 			return sprintf(
-				'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+				'<input type="checkbox" name="%1$s[]" id="%1$s-%2$s" value="%2$s" /><label for="%1$s-%2$s" class="screen-reader-text">%3$s</label>',
 				/*$1%s*/
 				'order_item',
 				/*$2%s*/
-				$order_item->id
+				esc_attr( $order_item->id ),
+				/* translators: product name */
+				esc_html( sprintf( __( 'Select %s', 'easy-digital-downloads' ), $order_item->product_name ) )
 			);
 		}
 	}
@@ -333,6 +338,7 @@ class Refund_Items_Table extends List_Table {
 		$classes = array_map( 'sanitize_html_class', array(
 			'order-' . $item->order_id,
 			$item->status,
+			'refunditem',
 		) );
 
 		// Turn into a string.
@@ -349,8 +355,7 @@ class Refund_Items_Table extends List_Table {
 	public function display() {
 		$singular = $this->_args['singular'];
 
-		$this->display_tablenav( 'top' );
-
+		wp_nonce_field( 'edd_process_refund', 'edd_process_refund' );
 		$this->screen->render_screen_reader_content( 'heading_list' );
 		?>
 		<table class="wp-list-table <?php echo implode( ' ', $this->get_table_classes() ); ?>">
@@ -370,6 +375,24 @@ class Refund_Items_Table extends List_Table {
 		</table>
 		<?php
 		$this->display_tablenav( 'bottom' );
+	}
+
+	/**
+	 * Adds custom submit button below the refund items table.
+	 *
+	 * @param string $which
+	 * @since 3.0
+	 */
+	protected function display_tablenav( $which ) {
+		if ( 'bottom' !== $which ) {
+			return;
+		}
+		echo '<div class="tablenav bottom">';
+		echo '<div id="edd-refund-submit-button-wrapper">';
+		echo '<span class="spinner"></span>';
+		printf( '<button id="edd-submit-refund-submit" class="button-primary" disabled>%s</button>', esc_html__( 'Submit Refund', 'easy-digital-downloads' ) );
+		echo '</div>';
+		echo '</div>';
 	}
 
 	public function display_rows() {
@@ -395,18 +418,16 @@ class Refund_Items_Table extends List_Table {
 
 			<td>
 				<?php
-				if ( 'before' === $currency_position ) {
-					?><span><?php echo $currency_symbol; ?></span><?php
-				}
-
-				$subtotal = edd_format_amount( 0.00 );
-				?><span id="edd-refund-submit-subtotal-amount" data-refund-subtotal="<?php echo $subtotal; ?>">
-					<?php echo $subtotal; ?>
-				</span><?php
-
-				if ( 'after' === $currency_position ) {
-					?><span><?php echo $currency_symbol; ?></span><?php
-				}
+				$currency_symbol_output = sprintf( '<span>%s</span>', $currency_symbol );
+				$before                 = 'before' === $currency_position ? $currency_symbol_output : '';
+				$after                  = 'after' === $currency_position ? $currency_symbol_output : '';
+				$amount                 = edd_format_amount( 0.00 );
+				printf(
+					'%1$s<span id="edd-refund-submit-subtotal-amount">%2$s</span>%3$s',
+					$before,
+					esc_attr( $amount ),
+					$after
+				);
 				?>
 			</td>
 		</tr>
@@ -419,18 +440,12 @@ class Refund_Items_Table extends List_Table {
 
 			<td>
 				<?php
-				if ( 'before' === $currency_position ) {
-					?><span><?php echo $currency_symbol; ?></span><?php
-				}
-
-				$tax = edd_format_amount( 0.00 );
-				?><span id="edd-refund-submit-tax-amount" data-refund-tax="<?php echo $tax; ?>">
-					<?php echo $tax; ?>
-				</span><?php
-
-				if ( 'after' === $currency_position ) {
-					?><span><?php echo $currency_symbol; ?></span><?php
-				}
+				printf(
+					'%1$s<span id="edd-refund-submit-tax-amount">%2$s</span>%3$s',
+					$before,
+					esc_attr( $amount ),
+					$after
+				);
 				?>
 			</td>
 		</tr>
@@ -443,27 +458,13 @@ class Refund_Items_Table extends List_Table {
 
 			<td>
 				<?php
-				if ( 'before' === $currency_position ) {
-					?><span><?php echo $currency_symbol; ?></span><?php
-				}
-
-				$total = edd_format_amount( 0.00 );
-				?><span id="edd-refund-submit-total-amount" data-refund-total="<?php echo $total; ?>">
-					<?php echo $total; ?>
-				</span><?php
-
-				if ( 'after' === $currency_position ) {
-					?><span><?php echo $currency_symbol; ?></span><?php
-				}
+				printf(
+					'%1$s<span id="edd-refund-submit-total-amount">%2$s</span>%3$s',
+					$before,
+					esc_attr( $amount ),
+					$after
+				);
 				?>
-			</td>
-		</tr>
-		<tr id="edd-refund-submit-total" class="edd-refund-submit-line-total">
-			<td colspan="<?php echo $this->get_column_count() - 1; ?>"></td>
-
-			<td id="edd-refund-submit-button-wrapper">
-				<a id="edd-submit-refund-submit" class="disabled button-primary"><?php _e( 'Submit Refund', 'easy-digital-downloads' ); ?></a>
-				<span class="spinner"></span>
 			</td>
 		</tr>
 		<?php

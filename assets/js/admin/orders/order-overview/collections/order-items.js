@@ -74,24 +74,25 @@ export const OrderItems = Backbone.Collection.extend( {
 	 *
 	 * @since 3.0
 	 *
-	 * @param {Object} args Configuration to calculate individual `OrderItem` amounts against.
-	 * @param {string} args.country Country code to determine tax rate.
-	 * @param {string} args.region Region to determine tax rate.
-	 * @param {Array} args.productIds List of current products added to the Order.
-	 * @param {Array} args.discountIds List of `OrderAdjustmentDiscount`s to calculate amounts against.
 	 * @return {$.promise} A jQuery promise representing zero or more requests.
 	 */
-	updateAmounts( args ) {
+	updateAmounts() {
 		const { options } = this;
 		const { state } = options;
 
 		const items = state.get( 'items' );
 		const adjustments = state.get( 'adjustments' );
 
-		const defaults = {
+		const args = {
 			country: state.getTaxCountry(),
 			region: state.getTaxRegion(),
-			productIds: items.pluck( 'productId' ),
+			products: items.map( ( item ) => ( {
+				id: item.get( 'productId' ),
+				quantity: item.get( 'quantity' ),
+				options: {
+					price_id: item.get( 'priceId' ),
+				}
+			} ) ),
 			discountIds: adjustments.pluck( 'typeId' ),
 		};
 
@@ -100,10 +101,7 @@ export const OrderItems = Backbone.Collection.extend( {
 
 		// Find each `OrderItem`'s amounts.
 		items.models.forEach( ( item ) => {
-			const getItemAmounts = item.getAmounts( {
-				...defaults,
-				...args,
-			} );
+			const getItemAmounts = item.getAmounts( args );
 
 			getItemAmounts
 				// Update `OrderItem`-level Adjustments.
