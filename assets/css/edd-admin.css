@@ -1236,17 +1236,8 @@ textarea[name="edd-note"] {
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
+	gap: 6px;
 }
-
-#edd-filters .filter-items > span:not(.edd-date-range-options) {
-	display: inline-block;
-	margin-right: 6px;
-}
-
-#edd-filters .filter-items > #edd-date-filters {
-	vertical-align: middle;
-}
-
 #edd-filters > p {
 	color: #777;
 }
@@ -2371,9 +2362,6 @@ body.download_page_edd-reports {
 }
 
 .download_page_edd-reports #edd-filters .filter-items {
-	display: flex;
-	align-items: center;
-	flex-wrap: wrap;
 	flex: 1 1 75%;
 }
 
