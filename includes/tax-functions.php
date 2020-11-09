@@ -134,8 +134,8 @@ function edd_active_tax_rates_query_clauses( $clauses ) {
 	$date = \Carbon\Carbon::now( edd_get_timezone_id() )->toDateTimeString();
 
 	$clauses['where'] .= "
-		AND ( start_date < '{$date}' OR start_date = '0000-00-00 00:00:00' )
-		AND ( end_date > '{$date}' OR end_date = '0000-00-00 00:00:00' )
+		AND ( start_date < '{$date}' OR start_date IS NULL )
+		AND ( end_date > '{$date}' OR end_date IS NULL )
 	";
 
 	return $clauses;
@@ -147,13 +147,17 @@ function edd_active_tax_rates_query_clauses( $clauses ) {
  * @since 1.3.3
  * @since 3.0 Refactored to work with custom tables and start and end dates.
  *            Renamed $state parameter to $region.
+ *            Added $fallback parameter to only get rate for passed Country and Region.
  *
- * @param string $country Country.
- * @param string $region  Region.
+ * @param string  $country Country.
+ * @param string  $region  Region.
+ * @param boolean $fallback Fall back to (in order): server $_POST data, the current Customer's
+ *                          address information, then your store's Business Country setting.
+ *                          Default true.
  *
  * @return mixed|void
  */
-function edd_get_tax_rate( $country = '', $region = '' ) {
+function edd_get_tax_rate( $country = '', $region = '', $fallback = true ) {
 
 	// Default rate
 	$rate = (float) edd_get_option( 'tax_rate', 0 );
@@ -178,7 +182,7 @@ function edd_get_tax_rate( $country = '', $region = '' ) {
 		: '';
 
 	// Country
-	if ( empty( $country ) ) {
+	if ( empty( $country ) && true === $fallback ) {
 		if ( ! empty( $_POST['billing_country'] ) ) {
 			$country = $_POST['billing_country'];
 		} elseif ( is_user_logged_in() && ! empty( $user_address['country'] ) ) {
@@ -191,7 +195,7 @@ function edd_get_tax_rate( $country = '', $region = '' ) {
 	}
 
 	// Region
-	if ( empty( $region ) ) {
+	if ( empty( $region ) && true === $fallback ) {
 		if ( ! empty( $_POST['state'] ) ) {
 			$region = $_POST['state'];
 		} elseif ( ! empty( $_POST['card_state'] ) ) {
@@ -205,46 +209,14 @@ function edd_get_tax_rate( $country = '', $region = '' ) {
 			: $region;
 	}
 
-	// Attempt to determine the applicable tax rate.
-	if ( ! empty( $country ) ) {
-
-		// Fetch all the tax rates from the database.
-		// The region is not passed in deliberately in order to check for country-wide tax rates.
-		$tax_rates = edd_get_tax_rates( array(
-			'name'   => $country,
-			'status' => 'active',
-		), OBJECT );
-
-		// Save processing if only one tax rate is returned.
-		if ( 1 === count( $tax_rates ) ) {
-			$tax_rate = $tax_rates[0];
-
-			if ( $tax_rate->name === $country && $tax_rate->description === $region ) {
-				$rate = number_format( $tax_rate->amount, 4 );
-			}
-		}
-
-		if ( ! empty( $tax_rates ) ) {
-			foreach ( $tax_rates as $tax_rate ) {
-
-				// Countrywide tax rate.
-				if ( 'country' === $tax_rate->scope ) {
-					$rate = number_format( $tax_rate->amount, 4 );
-
-				// Regional tax rate.
-				} else {
-					if ( empty( $tax_rate->description ) || strtolower( $region ) !== strtolower( $tax_rate->description ) ) {
-						continue;
-					}
-
-					$regional_rate = $tax_rate->amount;
-
-					if ( ( 0 !== $regional_rate || ! empty( $regional_rate ) ) && '' !== $regional_rate ) {
-						$rate = number_format( $regional_rate, 4 );
-					}
-				}
-			}
-		}
+	$tax_rate = edd_get_tax_rate_by_location(
+		array(
+			'country' => $country,
+			'region'  => $region,
+		)
+	);
+	if ( $tax_rate ) {
+		$rate = $tax_rate->amount;
 	}
 
 	// Convert to a number we can use
@@ -288,15 +260,19 @@ function edd_get_formatted_tax_rate( $country = false, $state = false ) {
  *
  * @since 1.3.3
  * @since 3.0 Renamed $state parameter to $region.
+ *            Added $fallback parameter.
  *
  * @param float  $amount  Amount.
  * @param string $country Country. Default base country.
  * @param string $region  Region. Default base region.
+ * @param boolean $fallback Fall back to (in order): server $_POST data, the current Customer's
+ *                          address information, then your store's Business Country setting.
+ *                          Default true.
  *
  * @return float $tax Taxed amount.
  */
-function edd_calculate_tax( $amount = 0.00, $country = '', $region = '' ) {
-	$rate = edd_get_tax_rate( $country, $region );
+function edd_calculate_tax( $amount = 0.00, $country = '', $region = '', $fallback = true ) {
+	$rate = edd_get_tax_rate( $country, $region, $fallback );
 	$tax  = 0.00;
 
 	if ( edd_use_taxes() && $amount > 0 ) {
@@ -438,4 +414,63 @@ function edd_download_is_tax_exclusive( $download_id = 0 ) {
 	$ret = (bool) get_post_meta( $download_id, '_edd_download_tax_exclusive', true );
 
 	return (Bool) apply_filters( 'edd_download_is_tax_exclusive', $ret, $download_id );
+}
+
+/**
+ * Gets the tax rate object from the database for a given country / region.
+ * Used in `edd_get_tax_rate`, `edd_build_order`, `edd_add_manual_order`.
+ * If a regional tax rate is found, it will be returned immediately,
+ * so rates with a scope of `country` may be overridden by a more specific rate.
+ *
+ * @param array $args {
+ *     Country and, optionally, region to get the tax rate for.
+ *
+ *     @type string $country Required - country to check.
+ *     @type string $region  Optional - check a specific region within the country.
+ * }
+ * @return \EDD\Database\Rows\Adjustment|false
+ *
+ * @since 3.0
+ */
+function edd_get_tax_rate_by_location( $args ) {
+
+	$rate = false;
+	if ( empty( $args['country'] ) ) {
+		return $rate;
+	}
+
+	// Fetch all the tax rates from the database.
+	// The region is not passed in deliberately in order to check for country-wide tax rates.
+	$tax_rates = edd_get_tax_rates(
+		array(
+			'name'   => $args['country'],
+			'status' => 'active',
+		),
+		OBJECT
+	);
+
+	if ( empty( $tax_rates ) ) {
+		return $rate;
+	}
+
+	foreach ( $tax_rates as $tax_rate ) {
+
+		// Regional tax rate.
+		if ( ! empty( $args['region'] ) && ! empty( $tax_rate->description ) ) {
+			if ( strtolower( $args['region'] ) !== strtolower( $tax_rate->description ) ) {
+				continue;
+			}
+
+			$regional_rate = $tax_rate->amount;
+
+			if ( ! empty( $regional_rate ) ) {
+				return $tax_rate;
+			}
+		} elseif ( 'country' === $tax_rate->scope ) {
+			// Countrywide tax rate.
+			$rate = $tax_rate;
+		}
+	}
+
+	return $rate;
 }

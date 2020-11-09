@@ -11,16 +11,16 @@
  */
 ?>
 
-<td class="edd-tax-rates-table-checkbox">
+<th class="edd-tax-rates-table-checkbox check-column">
 	<input type="checkbox" <# if ( data.selected ) { #>checked<# } #> />
-</td>
+</th>
 
-<td>
+<td class="edd-tax-rates-table-country" data-colname="<?php esc_attr_e( 'Country', 'easy-digital-downloads' ); ?>">
 	{{ data.country }}
 	<input type="hidden" name="tax_rates[{{ data.id }}][country]" value="{{ data.country }}" />
 </td>
 
-<td>
+<td data-colname="<?php esc_attr_e( 'Region', 'easy-digital-downloads' ); ?>">
 	<# if ( data.global ) { #>
 	&mdash;
 	<input type="hidden" name="tax_rates[{{ data.id }}][global]" value="{{ data.global }}" />
@@ -30,12 +30,12 @@
 	<# } #>
 </td>
 
-<td>
+<td data-colname="<?php esc_attr_e( 'Rate', 'easy-digital-downloads' ); ?>">
 	{{ data.formattedAmount }}
 	<input type="hidden" name="tax_rates[{{ data.id }}][rate]" value="{{ data.amount }}" />
 </td>
 
-<td class="edd-tax-rates-table-actions">
+<td class="edd-tax-rates-table-actions" data-colname="<?php esc_attr_e( 'Actions', 'easy-digital-downloads' ); ?>">
 	<# if ( data.unsaved ) { #>
 		<button class="button-link remove" data-cid="{{ data.id }}"><?php esc_html_e( 'Remove', 'easy-digital-downloads' ); ?></button>
 	<# } else if ( 'active' === data.status ) { #>

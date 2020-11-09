@@ -408,6 +408,9 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-row.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-table.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-date.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-compare.php';
 
 		// Database Schemas
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-adjustments.php';
@@ -464,7 +467,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-item-meta.php';
 
 		// Database Table Query Interfaces
-		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-compare.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-adjustment.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-customer.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-customer-email-address.php';
@@ -724,6 +726,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/import/import-actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/import/import-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/actions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/refunds.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/orders.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/class-order-sections.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/payments/payments-history.php';
@@ -743,6 +746,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/tools/tools-actions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/admin-deprecated-functions.php';
 	}
 
 	/**

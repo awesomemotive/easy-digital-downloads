@@ -47,7 +47,7 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 	 * @since 2.5
 	 * @global object $wpdb Used to query the database using the WordPress
 	 *   Database API
-	 * @return array $data The data for the CSV file
+	 * @return bool True if results were found for this batch, false if not.
 	 */
 	public function get_data() {
 
@@ -61,77 +61,8 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 		$customers = edd_get_customers( $args );
 
 		if ( $customers ) {
-
-			$allowed_payment_status = apply_filters( 'edd_recount_customer_payment_statuses', edd_get_payment_status_keys() );
-
 			foreach ( $customers as $customer ) {
-
-				$attached_payment_ids = explode( ',', $customer->payment_ids );
-
-				$attached_args = array(
-					'post__in' => $attached_payment_ids,
-					'number'   => -1,
-					'status'   => $allowed_payment_status,
-				);
-
-				$attached_payments = edd_get_payments( $attached_args );
-
-				$unattached_args = array(
-					'post__not_in' => $attached_payment_ids,
-					'number'       => -1,
-					'status'       => $allowed_payment_status,
-					'meta_query'   => array(
-						array(
-							'key'     => '_edd_payment_user_email',
-							'value'   => $customer->email,
-							'compare' => '=',
-						)
-					),
-				);
-
-				$unattached_payments = edd_get_payments( $unattached_args );
-
-				$payments = array_merge( $attached_payments, $unattached_payments );
-
-				$purchase_value = 0.00;
-				$purchase_count = 0;
-				$payment_ids    = array();
-
-				if( $payments ) {
-
-					foreach ( $payments as $payment ) {
-
-						$should_process_payment = 'complete' == $payment->status || 'revoked' == $payment->status ? true : false;
-						$should_process_payment = apply_filters( 'edd_customer_recount_should_process_payment', $should_process_payment, $payment );
-
-						if( true === $should_process_payment ) {
-
-							if ( apply_filters( 'edd_customer_recount_sholud_increase_value', true, $payment ) ) {
-								$purchase_value += edd_get_payment_amount( $payment->ID );
-							}
-
-							if ( apply_filters( 'edd_customer_recount_sholud_increase_count', true, $payment ) ) {
-								$purchase_count++;
-							}
-
-						}
-
-						$payment_ids[] = $payment->ID;
-					}
-
-				}
-
-				$payment_ids = implode( ',', $payment_ids );
-
-				$customer_update_data = array(
-					'purchase_count' => $purchase_count,
-					'purchase_value' => $purchase_value,
-					'payment_ids'    => $payment_ids,
-				);
-
-				$customer_instance = new EDD_Customer( $customer->id );
-				$customer_instance->update( $customer_update_data );
-
+				$customer->recalculate_stats();
 			}
 
 			return true;
@@ -149,15 +80,7 @@ class EDD_Tools_Recount_Customer_Stats extends EDD_Batch_Export {
 	 */
 	public function get_percentage_complete() {
 
-		$args = array(
-			'number'       => -1,
-			'orderby'      => 'id',
-			'order'        => 'DESC',
-		);
-
-		$customers = edd_get_customers( $args );
-		$total     = count( $customers );
-
+		$total      = edd_count_customers();
 		$percentage = 100;
 
 		if( $total > 0 ) {

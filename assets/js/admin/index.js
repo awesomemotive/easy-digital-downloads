@@ -8,3 +8,4 @@ import './components/vertical-sections';
 import './components/sortable-list';
 import './components/user-search';
 import './components/advanced-filters';
+import './components/taxonomies';

@@ -119,7 +119,10 @@ function edd_update_file_download_log( $file_download_log_id = 0, $data = array(
  * @return \EDD\Logs\Log|false Log object if successful, false otherwise.
  */
 function edd_get_file_download_log( $file_download_log_id = 0 ) {
-	return edd_get_file_download_log_by( 'id', $file_download_log_id );
+	$file_download_logs = new EDD\Database\Queries\Log_File_Download();
+
+	// Return file download log
+	return $file_download_logs->get_item( $file_download_log_id );
 }
 
 /**

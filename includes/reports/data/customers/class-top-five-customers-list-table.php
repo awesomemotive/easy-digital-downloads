@@ -69,7 +69,7 @@ class Top_Five_Customers_List_Table extends \EDD_Customer_Reports_Table {
 
 			// @todo DRY with Most_Valuable_Customers_List_Table
 
-			$column = Reports\get_taxes_excluded_filter() ? 'subtotal' : 'total';
+			$column = Reports\get_taxes_excluded_filter() ? 'total - tax' : 'total';
 
 			$sql = "SELECT customer_id, COUNT(id) AS order_count, SUM({$column}) AS total_spent
 					FROM {$wpdb->edd_orders}

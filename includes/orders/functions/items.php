@@ -127,7 +127,10 @@ function edd_update_order_item( $order_item_id = 0, $data = array() ) {
  *                                     otherwise.
  */
 function edd_get_order_item( $order_item_id = 0 ) {
-	return edd_get_order_item_by( 'id', $order_item_id );
+	$order_items = new EDD\Database\Queries\Order_Item();
+
+	// Return order item
+	return $order_items->get_item( $order_item_id );
 }
 
 /**
@@ -144,7 +147,7 @@ function edd_get_order_item( $order_item_id = 0 ) {
 function edd_get_order_item_by( $field = '', $value = '' ) {
 	$order_items = new EDD\Database\Queries\Order_Item();
 
-	// Return order items
+	// Return order item
 	return $order_items->get_item_by( $field, $value );
 }
 

@@ -91,6 +91,13 @@ var EDD_Download_Configuration = {
 			$( this ).find( 'option:eq(0)' ).prop( 'selected', 'selected' );
 		} );
 
+		clone.find( 'label' ).each( function () {
+			var labelFor = $( this ).attr( 'for' );
+			if ( labelFor ) {
+				$( this ).attr( 'for', labelFor.replace( /(\d+)/, parseInt( key ) ) );
+			}
+		} );
+
 		// Remove Chosen elements
 		clone.find( '.search-choice' ).remove();
 		clone.find( '.chosen-container' ).remove();
