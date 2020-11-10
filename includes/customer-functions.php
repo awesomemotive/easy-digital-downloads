@@ -177,10 +177,53 @@ function edd_get_customer( $customer_id = 0 ) {
  * @return EDD_Customer|false Customer object if successful, false otherwise.
  */
 function edd_get_customer_by( $field = '', $value = '' ) {
-	$customers = new EDD\Database\Queries\Customer();
+	// For backwards compatibility in filters only.
+	$customers_db = EDD()->customers;
 
-	// Return customer.
-	return $customers->get_item_by( $field, $value );
+	/**
+	 * Filters the Customer before querying the database.
+	 *
+	 * Return a non-null value to bypass the default query and return early.
+	 *
+	 * @since 2.9.23
+	 *
+	 * @param mixed|null          $customer         Customer to return instead. Default null to use default method.
+	 * @param string              $field            The field to retrieve by.
+	 * @param mixed               $value            The value to search by.
+	 * @param EDD\Compat\Customer $edd_customers_db Customer database class. Deprecated in 3.0.
+	 */
+	$found = apply_filters( 'edd_pre_get_customer', null, $field, $value, $customers_db );
+
+	if ( null !== $found ) {
+		return $found;
+	}
+
+	$customers = new EDD\Database\Queries\Customer();
+	$customer  = $customers->get_item_by( $field, $value );
+
+	/**
+	 * Filters the single Customer retrieved from the database based on field.
+	 *
+	 * @since 2.9.23
+	 *
+	 * @param EDD_Customer|false  $customer         Customer query result. False if no Customer is found.
+	 * @param array               $args             Arguments used to query the Customer.
+	 * @param EDD\Compat\Customer $edd_customers_db Customer database class. Deprecated in 3.0.
+	 */
+	$customer = apply_filters( "edd_get_customer_by_{$field}", $customer, $customers->query_vars, $customers_db );
+
+	/**
+	 * Filters the single Customer retrieved from the database.
+	 *
+	 * @since 2.9.23
+	 *
+	 * @param EDD_Customer|false $customer         Customer query result. False if no Customer is found.
+	 * @param array              $args             Arguments used to query the Customer.
+	 * @param EDD_DB_Customers   $edd_customers_db Customer database class.
+	 */
+	$customer = apply_filters( 'edd_get_customer', $customer, $customers->query_vars, $customers_db );
+
+	return $customer;
 }
 
 /**
