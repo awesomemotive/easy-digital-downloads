@@ -50,8 +50,6 @@ class Remove_Legacy_Data extends Base {
 	 * @return bool True if data was migrated, false otherwise.
 	 */
 	public function get_data() {
-		$offset = ( $this->step - 1 ) * $this->per_step;
-
 		// Delete meta on first step.
 		if ( 1 === $this->step ) {
 			$this->get_db()->query( $this->get_db()->prepare( "DELETE FROM {$this->get_db()->edd_customermeta} WHERE meta_key = %s", esc_sql( 'additional_email' ) ) );
@@ -64,8 +62,8 @@ class Remove_Legacy_Data extends Base {
 			 FROM {$this->get_db()->posts}
 			 WHERE post_type IN(%s, %s, %s)
 			 ORDER BY id ASC
-			 LIMIT %d, %d",
-			esc_sql( 'edd_payment' ), esc_sql( 'edd_discount' ), esc_sql( 'edd_log' ), $offset, $this->per_step
+			 LIMIT %d",
+			esc_sql( 'edd_payment' ), esc_sql( 'edd_discount' ), esc_sql( 'edd_log' ), $this->per_step
 		), 0 );
 
 		$data_was_deleted = false;
@@ -84,8 +82,8 @@ class Remove_Legacy_Data extends Base {
 			FROM {$this->get_db()->comments}
 			WHERE comment_type = %s
 			ORDER BY comment_ID ASC
-			LIMIT %d, %d",
-			'edd_payment_note', $offset, $this->per_step
+			LIMIT %d",
+			'edd_payment_note', $this->per_step
 		) );
 		if ( ! empty( $results ) ) {
 			foreach( $results as $result ) {
