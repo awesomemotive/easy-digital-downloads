@@ -213,7 +213,7 @@ function edd_get_purchase_link( $args = array() ) {
 
 		<input type="hidden" name="download_id" value="<?php echo esc_attr( $download->ID ); ?>">
 		<?php if ( $variable_pricing && isset( $price_id ) && isset( $prices[$price_id] ) ): ?>
-			<input type="hidden" name="edd_options[price_id][]" id="edd_price_option_<?php echo $download->ID; ?>_1" class="edd_price_option_<?php echo $download->ID; ?>" value="<?php echo $price_id; ?>">
+			<input type="hidden" name="edd_options[price_id][]" id="edd_price_option_<?php echo esc_attr( $download->ID ); ?>_<?php echo esc_attr( $price_id ); ?>" class="edd_price_option_<?php echo esc_attr( $download->ID ); ?>" value="<?php echo esc_attr( $price_id ); ?>">
 		<?php endif; ?>
 		<?php if( ! empty( $args['direct'] ) && ! $download->is_free( $args['price_id'] ) ) { ?>
 			<input type="hidden" name="edd_action" class="edd_action_input" value="straight_to_gateway">
@@ -414,7 +414,7 @@ add_action( 'edd_after_price_option', 'edd_variable_price_quantity_field', 10, 3
 function edd_before_download_content( $content ) {
 	global $post;
 
-	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() && !post_password_required() ) {
+	if ( $post && $post instanceof WP_Post && 'download' === $post->post_type && is_singular( 'download' ) && is_main_query() && ! post_password_required() ) {
 		ob_start();
 		do_action( 'edd_before_download_content', $post->ID );
 		$content = ob_get_clean() . $content;

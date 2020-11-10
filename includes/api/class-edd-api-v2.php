@@ -389,6 +389,8 @@ class EDD_API_V2 extends EDD_API_V1 {
 				$user_info    = $payment->user_info;
 
 				$sales['sales'][ $i ]['ID']             = $payment->number;
+				$sales['sales'][ $i ]['mode']           = $payment->mode;
+				$sales['sales'][ $i ]['status']         = $payment->status;
 				$sales['sales'][ $i ]['transaction_id'] = ( ! empty( $payment->transaction_id ) ) ? $payment->transaction_id : null;
 				$sales['sales'][ $i ]['key']            = $payment->key;
 				$sales['sales'][ $i ]['subtotal']       = $payment->subtotal;
@@ -396,6 +398,8 @@ class EDD_API_V2 extends EDD_API_V1 {
 				$sales['sales'][ $i ]['fees']           = ( ! empty( $payment->fees ) ? $payment->fees : null );
 				$sales['sales'][ $i ]['total']          = $payment->total;
 				$sales['sales'][ $i ]['gateway']        = $payment->gateway;
+				$sales['sales'][ $i ]['customer_id']    = $payment->customer_id;
+				$sales['sales'][ $i ]['user_id']        = $payment->user_id;
 				$sales['sales'][ $i ]['email']          = $payment->email;
 				$sales['sales'][ $i ]['date']           = $payment->date;
 
