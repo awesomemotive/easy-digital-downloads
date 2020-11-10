@@ -2116,8 +2116,6 @@ class EDD_Payment {
 				if ( is_array( $bad_meta ) ) {
 					$meta = array_merge( $meta, $bad_meta );
 				}
-
-				edd_update_order_meta( $this->ID, 'payment_meta', $meta );
 			}
 		}
 
