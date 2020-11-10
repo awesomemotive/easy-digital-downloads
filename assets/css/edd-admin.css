@@ -46,10 +46,6 @@ a.edd-delete:hover {
 	height: 29px;
 }
 
-.edd-from-to-wrapper {
-	margin-right: 4px;
-}
-
 .edd-from-to-wrapper input {
 	width: 105px;
 	margin: 0;
@@ -2383,7 +2379,7 @@ body.download_page_edd-reports {
 
 #edd-filters .filter-items .edd-date-range-options {
 	display: inline-block;
-	margin: 10px 4px 10px 0;
+	margin: 10px 0;
 }
 
 .edd-date-range-options .edd_datepicker {
@@ -2417,7 +2413,6 @@ body.download_page_edd-reports {
 
 .edd-admin--has-grid .edd-from-to-wrapper {
 	display: flex;
-	margin-right: 0;
 	margin-bottom: 16px;
 	width: 100%;
 }
