@@ -99,6 +99,9 @@ class Remove_Legacy_Data extends Base {
 	/**
 	 * Calculate the percentage completed.
 	 *
+	 * Because we're *deleting* records as we go, this percentage will not be accurate because we don't track
+	 * exactly how many we've deleted. So this percentage is really just best guess.
+	 *
 	 * @since 3.0
 	 *
 	 * @return float Percentage.
@@ -131,10 +134,14 @@ class Remove_Legacy_Data extends Base {
 		// Combine the two.
 		$total += $order_note_total;
 
+		// Estimate how many we've already done to improve the percentage.
+		$number_done = $this->per_step * $this->step;
+		$total      += $number_done;
+
 		$percentage = 100;
 
 		if ( $total > 0 ) {
-			$percentage = ( ( $this->per_step * $this->step ) / $total ) * 100;
+			$percentage = ( $number_done / $total ) * 100;
 		}
 
 		if ( $percentage > 100 ) {
