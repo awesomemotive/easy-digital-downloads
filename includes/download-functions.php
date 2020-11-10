@@ -1219,6 +1219,7 @@ function edd_set_file_download_limit_override( $download_id = 0, $order_id = 0 )
 	update_post_meta( $download_id, '_edd_download_limit_override_' . $order_id, $override );
 }
 
+
 /**
  * Checks if a file is at its download limit
  *
@@ -1251,29 +1252,31 @@ function edd_is_file_at_download_limit( $download_id = 0, $order_id = 0, $file_i
 	$price_id    = absint( $price_id );
 
 	// Default to false.
-	$ret = false;
+	$ret            = false;
+	$download_limit = edd_get_file_download_limit( $download_id );
 
-	// Retrieve the file download count.
-	$download_count = edd_count_file_download_logs( array(
-		'product_id' => $download_id,
-		'file_id'    => $file_id,
-		'order_id'   => $order_id,
-		'price_id'   => $price_id,
-	) );
+	if ( ! empty( $download_limit ) ) {
+		$unlimited_purchase = edd_payment_has_unlimited_downloads( $order_id );
 
-	$download_limit     = edd_get_file_download_limit( $download_id );
-	$unlimited_purchase = edd_payment_has_unlimited_downloads( $order_id );
+		if ( empty( $unlimited_purchase ) ) {
+			// Retrieve the file download count.
+			$download_count = edd_count_file_download_logs( array(
+				'product_id' => $download_id,
+				'file_id'    => $file_id,
+				'order_id'   => $order_id,
+				'price_id'   => $price_id,
+			) );
 
-	if ( ! empty( $download_limit ) && empty( $unlimited_purchase ) ) {
-		if ( $download_count >= $download_limit ) {
-			$ret = true;
+			if ( $download_count >= $download_limit ) {
+				$ret = true;
 
-			// Check to make sure the limit isn't overwritten.
-			// A limit is overwritten when purchase receipt is resent.
-			$limit_override = edd_get_file_download_limit_override( $download_id, $order_id );
+				// Check to make sure the limit isn't overwritten.
+				// A limit is overwritten when purchase receipt is resent.
+				$limit_override = edd_get_file_download_limit_override( $download_id, $order_id );
 
-			if ( ! empty( $limit_override ) && $download_count < $limit_override ) {
-				$ret = false;
+				if ( ! empty( $limit_override ) && $download_count < $limit_override ) {
+					$ret = false;
+				}
 			}
 		}
 	}

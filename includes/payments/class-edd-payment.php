@@ -1491,6 +1491,7 @@ class EDD_Payment {
 			: 0.00;
 
 		$new_subtotal                       = floatval( $merged_item['item_price'] ) * $merged_item['quantity'];
+		$merged_item['tax']                 = edd_sanitize_amount( $merged_item['tax'] );
 		$merged_item['price']               = edd_prices_include_tax() ? $new_subtotal - $discount : $new_subtotal + $merged_item['tax'] - $discount;
 		$this->cart_details[ $cart_index ]  = $merged_item;
 
