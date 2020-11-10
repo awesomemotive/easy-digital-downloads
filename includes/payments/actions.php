@@ -125,19 +125,8 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 				}
 			}
 
-			$increase_earnings = $item->total;
-
-			$fees = $order->get_fees();
-			foreach ( $fees as $fee ) {
-				if ( $fee->total > 0 ) {
-					continue;
-				}
-
-				$increase_earnings += $fee->total;
-			}
-
 			// Increase the earnings for this download ID
-			edd_increase_earnings( $item->product_id, $increase_earnings );
+			edd_increase_earnings( $item->product_id, $item->total );
 			edd_increase_purchase_count( $item->product_id, $item->quantity );
 		}
 

@@ -531,13 +531,15 @@ function edd_get_currency_name( $code = 'USD' ) {
  *
  * @since 1.0
  *
- * @param integer $n
+ * @param integer $n The number of the month.
+ * @param bool    $return_long_name Optional. Return full name of month if true. Default false.
  * @return string Short month name
  */
-function edd_month_num_to_name( $n ) {
-	$timestamp = mktime( 0, 0, 0, $n, 1, 2005 );
+function edd_month_num_to_name( $n, $return_long_name = false ) {
+	$timestamp   = mktime( 0, 0, 0, $n, 1, 2005 );
+	$date_format = $return_long_name ? 'F' : 'M';
 
-	return date_i18n( "M", $timestamp );
+	return date_i18n( $date_format, $timestamp );
 }
 
 /**
