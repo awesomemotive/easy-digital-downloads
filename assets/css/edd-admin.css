@@ -57,15 +57,13 @@ a.edd-delete:hover {
 	z-index: 1;
 }
 
-.edd-from-to-wrapper input[name="start"],
-.edd-from-to-wrapper input[name="start-date"],
+.edd-from-to-wrapper input[name*="start"],
 .edd-from-to-wrapper input[name="filter_from"] {
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
 }
 
-.edd-from-to-wrapper input[name="end"],
-.edd-from-to-wrapper input[name="end-date"],
+.edd-from-to-wrapper input[name*="end"],
 .edd-from-to-wrapper input[name="filter_to"] {
 	margin-left: -1px;
 	border-top-left-radius: 0;
@@ -2347,6 +2345,8 @@ body.download_page_edd-reports {
 	right: 6px;
 }
 
+/* Keeping this rule for Software Licensing Reports */
+.edd-reports-wrapper .postbox h2,
 .edd-reports-wrapper .postbox h3 {
 	font-size: 1.3em
 }
@@ -2449,7 +2449,7 @@ body.download_page_edd-reports {
 	position: relative;
 }
 
-div.edd-to-and-from-container {
+fieldset.edd-to-and-from-container {
 	display: grid;
 	display: -ms-grid;
 	grid-template-columns: 1fr 1fr;
