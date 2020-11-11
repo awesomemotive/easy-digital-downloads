@@ -42,6 +42,14 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 	public $per_step = 10;
 
 	/**
+	 * The data to return to the script.
+	 *
+	 * @since 3.0
+	 * @var array
+	 */
+	public $data = array();
+
+	/**
 	 * Get the Export Data
 	 *
 	 * @since 2.5
@@ -54,6 +62,10 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 		$customer = new EDD_Customer( $this->customer_id );
 		if ( $customer ) {
 			$customer->recalculate_stats();
+			$this->data = array(
+				'purchase_count' => (int) $customer->purchase_count,
+				'purchase_value' => esc_html( edd_currency_filter( edd_format_amount( $customer->purchase_value ) ) ),
+			);
 			return true;
 		}
 

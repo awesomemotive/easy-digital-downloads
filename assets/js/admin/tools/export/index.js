@@ -59,6 +59,11 @@ const EDD_Export = {
 					} else if ( response.success ) {
 						const success_message = response.message;
 						notice_wrap.html( '<div id="edd-batch-success" class="updated notice"><p>' + success_message + '</p></div>' );
+						if ( response.data ) {
+							$.each( response.data, function ( key, value ) {
+								$( '.edd_' + key ).empty().append( value );
+							} );
+						}
 					} else {
 						notice_wrap.remove();
 						window.location = response.url;
