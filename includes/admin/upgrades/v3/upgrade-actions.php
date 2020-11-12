@@ -26,9 +26,7 @@ function edd_process_v3_upgrade() {
 	$all_upgrades = edd_get_v30_upgrades();
 	$upgrade_keys = array_keys( $all_upgrades );
 
-	$upgrade_key = ! empty( $_POST['upgrade_key'] ) && array_key_exists( $_POST['upgrade_key'], $all_upgrades )
-		? $_POST['upgrade_key']
-		: reset( $upgrade_keys ); // First item in list.
+	$upgrade_key = ! empty( $_POST['upgrade_key'] ) ? $_POST['upgrade_key'] : reset( $upgrade_keys ); // First item in list.
 
 	if ( ! array_key_exists( $upgrade_key, $all_upgrades ) ) {
 		wp_send_json_error( __( 'This is not a valid 3.0 upgrade.', 'easy-digital-downloads' ) );
