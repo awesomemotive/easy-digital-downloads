@@ -83,12 +83,11 @@ function edd_do_ajax_export() {
 		$message = ! empty( $export->message )
 			? $export->message
 			: __( 'Batch Processing Complete', 'easy-digital-downloads' );
-		$data    = empty( $export->data ) ? array() : $export->data;
 
 		echo wp_json_encode( array(
 			'success' => true,
 			'message' => $message,
-			'data'    => $data,
+			'data'    => $export->result_data,
 		) );
 
 		exit;
