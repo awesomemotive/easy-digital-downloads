@@ -24,6 +24,7 @@ const adminPages = [
 	'payments',
 	'settings',
 	'tools',
+	'upgrades',
 ];
 
 const minifyJs = ( content ) => {

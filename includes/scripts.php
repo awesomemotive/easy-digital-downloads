@@ -328,6 +328,7 @@ function edd_register_admin_scripts() {
 		'tools'        => array(
 			'edd-admin-tools-export'
 		),
+		'upgrades'     => array()
 	);
 
 	foreach ( $admin_pages as $page => $deps ) {
@@ -407,6 +408,7 @@ function edd_enqueue_admin_scripts( $hook = '' ) {
 	// Upgrades Page
 	if ( 'edd-admin-upgrades' === $hook ) {
 		wp_enqueue_script( 'edd-admin-tools-export' );
+		wp_enqueue_script( 'edd-admin-upgrades' );
 	}
 
 }
