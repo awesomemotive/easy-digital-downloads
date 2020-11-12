@@ -69,9 +69,18 @@ class Order_Adjustments extends Schema {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0',
+			'default'    => null,
 			'searchable' => true,
-			'sortable'   => true
+			'sortable'   => true,
+		),
+
+		array(
+			'name'       => 'type_key',
+			'type'       => 'varchar',
+			'length'     => '32',
+			'default'    => '',
+			'searchable' => true,
+			'sortable'   => true,
 		),
 
 		// type
