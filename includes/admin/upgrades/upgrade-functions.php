@@ -1441,7 +1441,7 @@ function edd_upgrade_render_v30_migration() {
 			</label>
 		</p>
 		<input type="hidden" name="_wpnonce" value="<?php echo esc_attr( wp_create_nonce( 'edd_process_v3_upgrade' ) ); ?>">
-		<button type="submit" id="edd-v3-migration-button" class="button button-primary disabled" disabled="disabled">
+		<button type="submit" id="edd-v3-migration-button" class="button button-primary disabled" disabled>
 			<?php esc_html_e( 'Upgrade Easy Digital Downloads', 'easy-digital-downloads' ); ?>
 		</button>
 	</form>
