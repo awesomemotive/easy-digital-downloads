@@ -600,6 +600,7 @@ function edd_customers_view( $customer = null ) {
 					<?php
 					printf(
 						_n(
+							/* translators: the customer's lifetime number of sales */
 							'%s Completed Sale',
 							'%s Completed Sales',
 							$customer->purchase_count,
@@ -616,7 +617,20 @@ function edd_customers_view( $customer = null ) {
 			</li>
 			<li>
 				<span class="dashicons dashicons-chart-area"></span>
-				<?php echo '<span class="edd_purchase_value">' . esc_html( edd_currency_filter( edd_format_amount( $customer->purchase_value ) ) ) . '</span>'; ?> <?php esc_html_e( 'Lifetime Value', 'easy-digital-downloads' ); ?>
+				<?php
+				printf(
+					/* translators: the customer's lifetime value */
+					esc_html__(
+						'%s Lifetime Value',
+						'easy-digital-downloads'
+					),
+					(
+						'<span class="edd_purchase_value">' .
+						esc_html( edd_currency_filter( edd_format_amount( $customer->purchase_value ) ) ) .
+						'</span>'
+					)
+				);
+				?>
 			</li>
 			<?php do_action( 'edd_customer_stats_list', $customer ); ?>
 		</ul>
