@@ -1425,18 +1425,18 @@ function edd_upgrade_render_v30_migration() {
 
 	<p>
 		<!-- @todo wording -->
-		<?php esc_html_e( 'Easy Digital Downloads needs to perform upgrades to your WordPress database. This operation is irreversible and permanent.', 'easy-digital-downloads' ); ?>
+		<?php esc_html_e( 'Easy Digital Downloads needs to perform upgrades to your WordPress database. Your store data will be migrated to custom database tables to improve performance and efficiency. This process may take a while.', 'easy-digital-downloads' ); ?>
 		<strong><?php esc_html_e( 'Please create a full back up of your website before proceeding.', 'easy-digital-downloads' ); ?></strong>
 	</p>
 
-	<form id="edd-v3-migration" method="POST">
+	<form id="edd-v3-migration" class="edd-v3-migration" method="POST">
 		<p>
 			<label for="edd-v3-migration-confirmation">
-				<input type="checkbox" id="edd-v3-migration-confirmation" name="backup_confirmation" value="1">
+				<input type="checkbox" id="edd-v3-migration-confirmation" class="edd-v3-migration-confirmation" name="backup_confirmation" value="1">
 				<?php esc_html_e( 'I have secured a backup of my website data.', 'easy-digital-downloads' ); ?>
 			</label>
 		</p>
-		<?php wp_nonce_field( 'edd_process_v3_upgrade' ); ?>
+		<input type="hidden" name="_wpnonce" value="<?php echo esc_attr( wp_create_nonce( 'edd_process_v3_upgrade' ) ); ?>">
 		<button type="submit" id="edd-v3-migration-button" class="button button-primary disabled" disabled="disabled">
 			<?php esc_html_e( 'Upgrade Easy Digital Downloads', 'easy-digital-downloads' ); ?>
 		</button>
@@ -1456,7 +1456,7 @@ function edd_upgrade_render_v30_migration() {
 					continue;
 				}
 				?>
-				<li id="edd-v3-migration-<?php echo esc_attr( sanitize_html_class( $upgrade_key ) ); ?>">
+				<li id="edd-v3-migration-<?php echo esc_attr( sanitize_html_class( $upgrade_key ) ); ?>" data-upgrade="<?php echo esc_attr( $upgrade_key ); ?>">
 					<span class="edd-migration-status">
 						<?php
 						if ( true === $upgrade_statuses[ $upgrade_key ] ) {
@@ -1475,9 +1475,44 @@ function edd_upgrade_render_v30_migration() {
 					<span class="edd-migration-name">
 						<?php echo esc_html( $upgrade_details['name'] ); ?>
 					</span>
+					<span class="edd-migration-percentage edd-hidden">
+						&ndash;
+						<span class="edd-migration-percentage-value">0</span>%
+					</span>
 				</li>
 			<?php endforeach; ?>
 		</ul>
+	</div>
+
+	<div id="edd-v3-migration-complete" class="edd-hidden">
+		<p>
+			<?php esc_html_e( 'The data migration has been successfully completed. You may now leave this page or proceed to remove legacy data below.', 'easy-digital-downloads' ); ?>
+		</p>
+	</div>
+
+	<div id="edd-v3-remove-legacy-data" class="edd-hidden">
+		<h2><?php esc_html_e( 'Remove Legacy Data', 'easy-digital-downloads' ); ?></h2>
+		<p>
+			<?php echo wp_kses( __( '<strong>Important:</strong> This removes all legacy data. This is an optional step that is not reversible. Please back up your database and ensure your store is operational before completing this step.', 'easy-digital-downloads' ), array( 'strong' => array() ) ); ?>
+		</p>
+		<form class="edd-v3-migration" method="POST">
+			<p>
+				<label for="edd-v3-remove-legacy-data-confirmation">
+					<input type="checkbox" id="edd-v3-remove-legacy-data-confirmation" class="edd-v3-migration-confirmation" name="backup_confirmation" value="1">
+					<?php esc_html_e( 'I have confirmed my store is operational and I have a backup of my website data.', 'easy-digital-downloads' ); ?>
+				</label>
+			</p>
+			<input type="hidden" name="_wpnonce" value="<?php echo esc_attr( wp_create_nonce( 'edd_process_v3_upgrade' ) ); ?>">
+			<input type="hidden" name="upgrade_key" value="v30_legacy_data_removed">
+			<button type="submit" class="button button-primary disabled" disabled="disabled">
+				<?php esc_html_e( 'Permanently Remove Legacy Data', 'easy-digital-downloads' ); ?>
+			</button>
+		</form>
+		<div id="edd-v3-legacy-data-removal-complete" class="edd-hidden">
+			<p>
+				<?php esc_html_e( 'Legacy data has been successfully removed. You may now leave this page.', 'easy-digital-downloads' ); ?>
+			</p>
+		</div>
 	</div>
 	<?php
 }
