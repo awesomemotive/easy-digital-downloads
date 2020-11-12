@@ -819,7 +819,7 @@ class Data_Migrator {
 						$adjustment_args = array(
 							'object_id'   => $order_item_id,
 							'object_type' => 'order_item',
-							'type_id'     => $fee_id,
+							'type_key'    => $fee_id,
 							'type'        => 'fee',
 							'description' => $fee['label'],
 							'subtotal'    => floatval( $fee['amount'] ),
@@ -941,7 +941,7 @@ class Data_Migrator {
 				$adjustment_args = array(
 					'object_id'     => $order_id,
 					'object_type'   => 'order',
-					'type_id'       => $fee_id,
+					'type_key'      => $fee_id,
 					'type'          => 'fee',
 					'description'   => $fee['label'],
 					'subtotal'      => floatval( $fee['amount'] ),
