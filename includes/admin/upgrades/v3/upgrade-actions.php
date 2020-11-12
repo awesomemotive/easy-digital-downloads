@@ -21,8 +21,6 @@ defined( 'ABSPATH' ) || exit;
  * @return void
  */
 function edd_process_v3_upgrade() {
-	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export.php';
-
 	check_ajax_referer( 'edd_process_v3_upgrade' );
 
 	$all_upgrades = edd_get_v30_upgrades();
