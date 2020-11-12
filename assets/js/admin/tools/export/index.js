@@ -61,7 +61,7 @@ const EDD_Export = {
 						notice_wrap.html( '<div id="edd-batch-success" class="updated notice"><p>' + success_message + '</p></div>' );
 						if ( response.data ) {
 							$.each( response.data, function ( key, value ) {
-								$( '.edd_' + key ).empty().append( value );
+								$( '.edd_' + key ).html( value );
 							} );
 						}
 					} else {
