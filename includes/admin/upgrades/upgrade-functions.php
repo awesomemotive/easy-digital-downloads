@@ -1429,6 +1429,10 @@ function edd_upgrade_render_v30_migration() {
 		<strong><?php esc_html_e( 'Please create a full back up of your website before proceeding.', 'easy-digital-downloads' ); ?></strong>
 	</p>
 
+	<p>
+		<?php printf( esc_html__( 'This migration can also be run via WP-CLI with the following command: %s', 'easy-digital-downloads' ), '<code>wp edd v30_migration</code>' ); ?>
+	</p>
+
 	<form id="edd-v3-migration" class="edd-v3-migration" method="POST">
 		<p>
 			<label for="edd-v3-migration-confirmation">
@@ -1448,7 +1452,7 @@ function edd_upgrade_render_v30_migration() {
 	 * and only revealed via JavaScript after the process has started.
 	 */
 	?>
-	<div id="edd-migration-progress" <?php echo count( array_filter( $upgrade_statuses ) ) ? '' : 'class=""'; ?>> <!-- @todo add `edd-hidden` class -->
+	<div id="edd-migration-progress" <?php echo count( array_filter( $upgrade_statuses ) ) ? '' : 'class="edd-hidden"'; ?>>
 		<ul>
 			<?php foreach ( $upgrades as $upgrade_key => $upgrade_details ) :
 				// We skip the one to remove legacy data. We'll handle that separately later.
@@ -1493,7 +1497,7 @@ function edd_upgrade_render_v30_migration() {
 	<div id="edd-v3-remove-legacy-data" class="edd-hidden">
 		<h2><?php esc_html_e( 'Remove Legacy Data', 'easy-digital-downloads' ); ?></h2>
 		<p>
-			<?php echo wp_kses( __( '<strong>Important:</strong> This removes all legacy data. This is an optional step that is not reversible. Please back up your database and ensure your store is operational before completing this step.', 'easy-digital-downloads' ), array( 'strong' => array() ) ); ?>
+			<?php echo wp_kses( __( '<strong>Important:</strong> This removes all legacy data from where it was previously stored in custom post types and post meta. This is an optional step that is not reversible. Please back up your database and ensure your store is operational before completing this step.', 'easy-digital-downloads' ), array( 'strong' => array() ) ); ?>
 		</p>
 		<form class="edd-v3-migration" method="POST">
 			<p>

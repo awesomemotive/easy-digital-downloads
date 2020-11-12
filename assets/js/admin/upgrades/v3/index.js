@@ -40,8 +40,9 @@ const EDD_v3_Upgrades = {
 			// Disable checkbox.
 			migrationForm.find( 'input' ).prop( 'disabled', true );
 
-			// If this is the main migration, mark the first non-complete item as in progress.
+			// If this is the main migration, reveal the steps & mark the first non-complete item as in progress.
 			if ( 'edd-v3-migration' === migrationForm.attr( 'id' ) ) {
+				$( '#edd-migration-progress' ).removeClass( 'edd-hidden' );
 				const firstNonCompleteUpgrade = $( '#edd-migration-progress li:not(.edd-upgrade-complete)' );
 				if ( firstNonCompleteUpgrade.length ) {
 					EDD_v3_Upgrades.markUpgradeInProgress( firstNonCompleteUpgrade.data( 'upgrade' ) );
