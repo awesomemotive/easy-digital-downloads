@@ -599,8 +599,8 @@ function edd_customers_view( $customer = null ) {
 					<span class="dashicons dashicons-cart"></span>
 					<?php
 					printf(
+						/* translators: the customer's lifetime number of sales */
 						_n(
-							/* translators: the customer's lifetime number of sales */
 							'%s Completed Sale',
 							'%s Completed Sales',
 							$customer->purchase_count,
