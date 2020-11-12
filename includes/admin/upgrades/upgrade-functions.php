@@ -1508,7 +1508,7 @@ function edd_upgrade_render_v30_migration() {
 			</p>
 			<input type="hidden" name="_wpnonce" value="<?php echo esc_attr( wp_create_nonce( 'edd_process_v3_upgrade' ) ); ?>">
 			<input type="hidden" name="upgrade_key" value="v30_legacy_data_removed">
-			<button type="submit" class="button button-primary disabled" disabled="disabled">
+			<button type="submit" class="button button-primary disabled" disabled>
 				<?php esc_html_e( 'Permanently Remove Legacy Data', 'easy-digital-downloads' ); ?>
 			</button>
 		</form>
