@@ -1426,7 +1426,7 @@ function edd_upgrade_render_v30_migration() {
 	<p>
 		<!-- @todo wording -->
 		<?php esc_html_e( 'Easy Digital Downloads needs to perform upgrades to your WordPress database. Your store data will be migrated to custom database tables to improve performance and efficiency. This process may take a while.', 'easy-digital-downloads' ); ?>
-		<strong><?php esc_html_e( 'Please create a full back up of your website before proceeding.', 'easy-digital-downloads' ); ?></strong>
+		<strong><?php esc_html_e( 'Please create a full backup of your website before proceeding.', 'easy-digital-downloads' ); ?></strong>
 	</p>
 
 	<p>
