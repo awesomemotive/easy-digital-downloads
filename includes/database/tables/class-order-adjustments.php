@@ -169,9 +169,9 @@ final class Order_Adjustments extends Table {
 				ALTER TABLE {$this->table_name} ADD COLUMN `type_key` varchar(32) default NULL AFTER `type_id`;
 			" );
 		}
-		
+
 		// Change `type_id` with `0` value to `null` to support new default.
-		$this->get_db()->query( "UPDATE {$this->table_name} SET type_id = null WHERE type_id = 0;" )
+		$this->get_db()->query( "UPDATE {$this->table_name} SET type_id = null WHERE type_id = 0;" );
 
 		return $this->is_success( $result );
 	}
