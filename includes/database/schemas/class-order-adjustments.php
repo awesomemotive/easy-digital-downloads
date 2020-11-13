@@ -72,6 +72,7 @@ class Order_Adjustments extends Schema {
 			'default'    => null,
 			'searchable' => true,
 			'sortable'   => true,
+			'allow_null' => true,
 		),
 
 		array(
