@@ -2966,11 +2966,10 @@ class EDD_Payment {
 		$fees = array();
 
 		foreach ( $this->order->get_fees() as $order_fee ) {
-			$fee_id   = edd_get_order_adjustment_meta( $order_fee->id, 'fee_id', true );
 			$price_id = edd_get_order_adjustment_meta( $order_fee->id, 'price_id', true );
 			$no_tax   = (bool) 0.00 === $order_fee->tax;
 
-			$fees[ $fee_id ] = array(
+			$fees[ $order_fee->type_key ] = array(
 				'amount'   => $order_fee->subtotal,
 				'label'    => $order_fee->description,
 				'no_tax'   => $no_tax,
@@ -2986,12 +2985,11 @@ class EDD_Payment {
 			foreach ( $item->get_fees() as $item_fee ) {
 				/** @var EDD\Orders\Order_Adjustment $item_fee */
 
-				$fee_id      = edd_get_order_adjustment_meta( $item_fee->id, 'fee_id', true );
 				$download_id = edd_get_order_adjustment_meta( $item_fee->id, 'download_id', true );
 				$price_id    = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
 				$no_tax      = (bool) 0.00 === $item_fee->tax;
 
-				$fees[ $fee_id ] = array(
+				$fees[ $item_fee->type_key ] = array(
 					'amount'   => $item_fee->subtotal,
 					'label'    => $item_fee->description,
 					'no_tax'   => $no_tax,
@@ -3200,17 +3198,17 @@ class EDD_Payment {
 			foreach ( $item->fees as $key => $item_fee ) {
 				/** @var EDD\Orders\Order_Adjustment $item_fee */
 
-				$fee_id = edd_get_order_adjustment_meta( $item_fee->id, 'fee_id', true );
 				$download_id = edd_get_order_adjustment_meta( $item_fee->id, 'download_id', true );
-				$price_id = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
-				$no_tax = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
+				$price_id    = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
+				$no_tax      = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
+				// todo: should $no_tax be changed to (bool) 0.00 === $item_fee->tax;?
 
-				$item_fees[ $fee_id ] = array(
-					'amount'      => $item_fee->amount,
-					'label'       => $item_fee->description,
-					'no_tax'      => $no_tax ? $no_tax : false,
-					'type'        => 'fee',
-					'price_id'    => $price_id ? $price_id : null,
+				$item_fees[ $item_fee->type_key ] = array(
+					'amount'   => $item_fee->amount,
+					'label'    => $item_fee->description,
+					'no_tax'   => $no_tax ? $no_tax : false,
+					'type'     => 'fee',
+					'price_id' => $price_id ? $price_id : null,
 				);
 
 				if ( $download_id ) {
