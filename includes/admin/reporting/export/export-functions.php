@@ -87,6 +87,7 @@ function edd_do_ajax_export() {
 		echo wp_json_encode( array(
 			'success' => true,
 			'message' => $message,
+			'data'    => $export->result_data,
 		) );
 
 		exit;

@@ -111,7 +111,7 @@ var EDD_Download_Configuration = {
 			e.preventDefault();
 
 			const button = $( this ),
-				row = button.parent().prev().children( '.edd_repeatable_row:last-child' ),
+				row = button.closest( '.edd_repeatable_table' ).find( '.edd_repeatable_row' ).last(),
 				clone = EDD_Download_Configuration.clone_repeatable( row );
 
 			clone.insertAfter( row ).find( 'input, textarea, select' ).filter( ':visible' ).eq( 0 ).focus();

@@ -1262,7 +1262,7 @@ function filter_items( $report = false ) {
 	} ?>
 
 	<span class="edd-graph-filter-submit graph-option-section">
-		<input type="submit" class="button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
+		<input type="submit" class="button button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
 		<input type="hidden" name="edd_action" value="filter_reports" />
 		<input type="hidden" name="edd_redirect" value="<?php echo esc_url( $action ); ?>">
 		<input type="hidden" name="report_id" value="<?php echo esc_attr( $report_id ); ?>">

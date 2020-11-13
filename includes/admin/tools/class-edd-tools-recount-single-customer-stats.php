@@ -54,6 +54,10 @@ class EDD_Tools_Recount_Single_Customer_Stats extends EDD_Batch_Export {
 		$customer = new EDD_Customer( $this->customer_id );
 		if ( $customer ) {
 			$customer->recalculate_stats();
+			$this->result_data = array(
+				'purchase_count' => (int) $customer->purchase_count,
+				'purchase_value' => esc_html( edd_currency_filter( edd_format_amount( $customer->purchase_value ) ) ),
+			);
 			return true;
 		}
 
