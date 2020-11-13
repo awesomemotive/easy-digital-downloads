@@ -1406,6 +1406,25 @@ function edd_upgrade_render_v30_migration() {
 
 	$migration_complete = $number_complete === count( $upgrades );
 
+	/*
+	 * Determine if legacy data can be removed.
+	 * It can be if all upgrades except legacy data have been completed.
+	 */
+	$can_remove_legacy_data = array_key_exists( 'v30_legacy_data_removed', $upgrade_statuses ) && $upgrade_statuses[ 'v30_legacy_data_removed' ] !== true;
+	if ( $can_remove_legacy_data ) {
+		foreach( $upgrade_statuses as $upgrade_key => $status ) {
+			if ( 'v30_legacy_data_removed' === $upgrade_key ) {
+				continue;
+			}
+
+			// If there's at least one upgrade still unfinished, we can't remove legacy data.
+			if ( true !== $status ) {
+				$can_remove_legacy_data = false;
+				break;
+			}
+		}
+	}
+
 	if ( $migration_complete ) {
 		?>
 		<div id="edd-migration-ready" class="notice notice-success">
@@ -1430,9 +1449,12 @@ function edd_upgrade_render_v30_migration() {
 	</p>
 
 	<p>
-		<?php printf( esc_html__( 'This migration can also be run via WP-CLI with the following command: %s', 'easy-digital-downloads' ), '<code>wp edd v30_migration</code>' ); ?>
+		<?php printf( esc_html__( 'This migration can also be run via WP-CLI with the following command: %s This is the recommended method for large sites.', 'easy-digital-downloads' ), '<code>wp edd v30_migration</code>' ); ?>
 	</p>
 
+	<?php
+	// Only show the migration form if there are still upgrades to do.
+	if ( ! $can_remove_legacy_data ) : ?>
 	<form id="edd-v3-migration" class="edd-v3-migration" method="POST">
 		<p>
 			<label for="edd-v3-migration-confirmation">
@@ -1444,9 +1466,10 @@ function edd_upgrade_render_v30_migration() {
 		<button type="submit" id="edd-v3-migration-button" class="button button-primary disabled" disabled="disabled">
 			<?php esc_html_e( 'Upgrade Easy Digital Downloads', 'easy-digital-downloads' ); ?>
 		</button>
+		<div class="edd-v3-migration-error edd-hidden"></div>
 	</form>
+	<?php endif
 
-	<?php
 	/*
 	 * Progress is only shown immediately if the upgrade is in progress. Otherwise it's hidden by default
 	 * and only revealed via JavaScript after the process has started.
@@ -1488,13 +1511,13 @@ function edd_upgrade_render_v30_migration() {
 		</ul>
 	</div>
 
-	<div id="edd-v3-migration-complete" class="edd-hidden">
+	<div id="edd-v3-migration-complete" <?php echo ! $can_remove_legacy_data ? 'class="edd-hidden"' : ''; ?>>
 		<p>
 			<?php esc_html_e( 'The data migration has been successfully completed. You may now leave this page or proceed to remove legacy data below.', 'easy-digital-downloads' ); ?>
 		</p>
 	</div>
 
-	<div id="edd-v3-remove-legacy-data" class="edd-hidden">
+	<div id="edd-v3-remove-legacy-data" <?php echo ! $can_remove_legacy_data ? 'class="edd-hidden"' : ''; ?>>
 		<h2><?php esc_html_e( 'Remove Legacy Data', 'easy-digital-downloads' ); ?></h2>
 		<p>
 			<?php echo wp_kses( __( '<strong>Important:</strong> This removes all legacy data from where it was previously stored in custom post types and post meta. This is an optional step that is not reversible. Please back up your database and ensure your store is operational before completing this step.', 'easy-digital-downloads' ), array( 'strong' => array() ) ); ?>
@@ -1511,12 +1534,19 @@ function edd_upgrade_render_v30_migration() {
 			<button type="submit" class="button button-primary disabled" disabled="disabled">
 				<?php esc_html_e( 'Permanently Remove Legacy Data', 'easy-digital-downloads' ); ?>
 			</button>
+			<!-- @todo align better with button -->
+			<span id="edd-v3-migration-v30_legacy_data_removed">
+				<span class="edd-migration-percentage edd-hidden">
+					<span class="edd-migration-percentage-value">0</span>%
+				</span>
+			</span>
 		</form>
 		<div id="edd-v3-legacy-data-removal-complete" class="edd-hidden">
 			<p>
 				<?php esc_html_e( 'Legacy data has been successfully removed. You may now leave this page.', 'easy-digital-downloads' ); ?>
 			</p>
 		</div>
+		<div class="edd-v3-migration-error edd-hidden"></div>
 	</div>
 	<?php
 }

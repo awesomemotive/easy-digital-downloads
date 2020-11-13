@@ -26,10 +26,14 @@ function edd_process_v3_upgrade() {
 	$all_upgrades = edd_get_v30_upgrades();
 	$upgrade_keys = array_keys( $all_upgrades );
 
-	$upgrade_key = ! empty( $_POST['upgrade_key'] ) ? $_POST['upgrade_key'] : reset( $upgrade_keys ); // First item in list.
+	// Use supplied upgrade key if available, otherwise the first item in the list.
+	$upgrade_key = ! empty( $_POST['upgrade_key'] ) && 'false' !== $_POST['upgrade_key'] ? $_POST['upgrade_key'] : false;
+	if ( empty( $upgrade_key ) ) {
+		$upgrade_key = reset( $upgrade_keys );
+	}
 
 	if ( ! array_key_exists( $upgrade_key, $all_upgrades ) ) {
-		wp_send_json_error( __( 'This is not a valid 3.0 upgrade.', 'easy-digital-downloads' ) );
+		wp_send_json_error( sprintf( __( '"%s" is not a valid 3.0 upgrade.', 'easy-digital-downloads' ), $upgrade_key ) );
 	}
 
 	$step = ! empty( $_POST['step'] ) ? absint( $_POST['step'] ) : 1;
@@ -51,7 +55,7 @@ function edd_process_v3_upgrade() {
 		wp_send_json_error( __( 'Error loading migration class.', 'easy-digital-downloads' ) );
 	}
 
-	error_log( $class_name );                                                                                                                                                                                                                                                                                                                                                                                                                   // @todo remove                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     // @t remove
+	error_log( $class_name );
 
 	/** @var \EDD_Batch_Export $export */
 	$export = new $class_name( $step );
@@ -60,10 +64,10 @@ function edd_process_v3_upgrade() {
 		wp_die( -1, 403, array( 'response' => 403 ) );
 	}
 
-	//$was_processed       = $export->process_step();                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    // @todo remove
-	$was_processed       = false; // @todo remove                                                                                                                                                                                                                                                                                                                                                                                                       // @todo remove
-	$percentage_complete = $export->get_percentage_complete();
-	$percentage_complete = 100; // @todo remove
+	$was_processed       = $export->process_step();
+	//$was_processed       = false; // @todo remove
+	$percentage_complete = round( $export->get_percentage_complete(), 2 );
+	//$percentage_complete = 100; // @todo remove
 
 	// Build some shared args.
 	$response_args = array(

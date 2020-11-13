@@ -44,8 +44,8 @@ const EDD_v3_Upgrades = {
 			if ( 'edd-v3-migration' === migrationForm.attr( 'id' ) ) {
 				$( '#edd-migration-progress' ).removeClass( 'edd-hidden' );
 				const firstNonCompleteUpgrade = $( '#edd-migration-progress li:not(.edd-upgrade-complete)' );
-				if ( firstNonCompleteUpgrade.length ) {
-					EDD_v3_Upgrades.markUpgradeInProgress( firstNonCompleteUpgrade.data( 'upgrade' ) );
+				if ( firstNonCompleteUpgrade.length && ! upgradeKey ) {
+					upgradeKey = firstNonCompleteUpgrade.data( 'upgrade' );
 				}
 			}
 
@@ -61,11 +61,22 @@ const EDD_v3_Upgrades = {
 			step: step
 		}
 
+		EDD_v3_Upgrades.clearErrors();
+
+		if ( upgrade_key ) {
+			EDD_v3_Upgrades.markUpgradeInProgress( upgrade_key );
+		}
+
 		$.ajax( {
 			type: 'POST',
 			data: data,
 			url: ajaxurl,
 			success: function( response ) {
+				if ( ! response.success ) {
+					EDD_v3_Upgrades.showError( upgrade_key, response.data );
+					return;
+				}
+
 				if ( response.data.upgrade_completed ) {
 					EDD_v3_Upgrades.markUpgradeComplete( response.data.upgrade_processed );
 
@@ -80,17 +91,12 @@ const EDD_v3_Upgrades = {
 					EDD_v3_Upgrades.updateUpgradePercentage( response.data.upgrade_processed, response.data.percentage );
 				}
 
-				if ( response.data.next_upgrade && 'v30_legacy_data_removed' === response.data.next_upgrade ) {
+				if ( response.data.next_upgrade && 'v30_legacy_data_removed' === response.data.next_upgrade && 'v30_legacy_data_removed' !== response.data.upgrade_processed ) {
 					EDD_v3_Upgrades.inProgress = false;
 
 					// Legacy data removal is next, which we do not start automatically.
 					EDD_v3_Upgrades.showLegacyDataRemoval();
 				} else if ( response.data.next_upgrade ) {
-					// If this is a different upgrade, mark the next one as in process.
-					if ( response.data.next_upgrade !== response.data.upgrade_processed ) {
-						EDD_v3_Upgrades.markUpgradeInProgress( response.data.next_upgrade );
-					}
-
 					// Start the next upgrade (or continuation of current) automatically.
 					EDD_v3_Upgrades.processStep( response.data.next_upgrade, response.data.next_step, response.data.nonce );
 				} else {
@@ -103,6 +109,28 @@ const EDD_v3_Upgrades = {
 		} )
 	},
 
+	clearErrors: function() {
+		$( '.edd-v3-migration-error' ).addClass( 'edd-hidden' ).html( '' );
+	},
+
+	showError: function( upgradeKey, message ) {
+		let container = $( '#edd-v3-migration' );
+		if ( 'v30_legacy_data_removed' === upgradeKey ) {
+			container = $( '#edd-v3-remove-legacy-data' );
+		}
+		const errorWrapper = container.find( '.edd-v3-migration-error' );
+
+		errorWrapper.html( '<p>' + message + '</p>' ).removeClass( 'edd-hidden' );
+
+		// Stop processing and allow form resubmission.
+		EDD_v3_Upgrades.inProgress = false;
+		container.find( 'input' ).prop( 'disabled', false );
+		container.find( 'button' )
+			.prop( 'disabled', false )
+			.addClass( 'button-primary' )
+			.removeClass( 'button-secondary disabled updating-message' );
+	},
+
 	markUpgradeInProgress: function( upgradeKey ) {
 		const upgradeRow = $( '#edd-v3-migration-' + upgradeKey );
 		if ( ! upgradeRow.length ) {
@@ -110,11 +138,9 @@ const EDD_v3_Upgrades = {
 		}
 
 		const statusIcon = upgradeRow.find( '.dashicons' );
-		if ( ! statusIcon.length ) {
-			return;
+		if ( statusIcon.length ) {
+			statusIcon.removeClass( 'dashicons-ellipsis' ).addClass( 'dashicons-update' );
 		}
-
-		statusIcon.removeClass( 'dashicons-ellipsis' ).addClass( 'dashicons-update' );
 
 		upgradeRow.find( '.edd-migration-percentage' ).removeClass( 'edd-hidden' );
 	},
