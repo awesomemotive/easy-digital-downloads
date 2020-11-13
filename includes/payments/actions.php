@@ -70,12 +70,12 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 					foreach ( $item->get_fees() as $key => $item_fee ) {
 						/** @var EDD\Orders\Order_Adjustment $item_fee */
 
-						$fee_id      = edd_get_order_adjustment_meta( $item_fee->id, 'fee_id', true );
 						$download_id = edd_get_order_adjustment_meta( $item_fee->id, 'download_id', true );
 						$price_id    = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
 						$no_tax      = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
+						// todo: should $no_tax be changed to (bool) 0.00 === $item_fee->tax;?
 
-						$item_fees[ $fee_id ] = array(
+						$item_fees[ $item_fee->type_key ] = array(
 							'amount'      => $item_fee->amount,
 							'label'       => $item_fee->description,
 							'no_tax'      => $no_tax ? $no_tax : false,
