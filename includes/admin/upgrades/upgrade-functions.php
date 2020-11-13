@@ -1445,7 +1445,7 @@ function edd_upgrade_render_v30_migration() {
 	<p>
 		<!-- @todo wording -->
 		<?php esc_html_e( 'Easy Digital Downloads needs to perform upgrades to your WordPress database. Your store data will be migrated to custom database tables to improve performance and efficiency. This process may take a while.', 'easy-digital-downloads' ); ?>
-		<strong><?php esc_html_e( 'Please create a full back up of your website before proceeding.', 'easy-digital-downloads' ); ?></strong>
+		<strong><?php esc_html_e( 'Please create a full backup of your website before proceeding.', 'easy-digital-downloads' ); ?></strong>
 	</p>
 
 	<p>
@@ -1463,7 +1463,7 @@ function edd_upgrade_render_v30_migration() {
 			</label>
 		</p>
 		<input type="hidden" name="_wpnonce" value="<?php echo esc_attr( wp_create_nonce( 'edd_process_v3_upgrade' ) ); ?>">
-		<button type="submit" id="edd-v3-migration-button" class="button button-primary disabled" disabled="disabled">
+		<button type="submit" id="edd-v3-migration-button" class="button button-primary disabled" disabled>
 			<?php esc_html_e( 'Upgrade Easy Digital Downloads', 'easy-digital-downloads' ); ?>
 		</button>
 		<div class="edd-v3-migration-error edd-hidden"></div>
@@ -1531,7 +1531,7 @@ function edd_upgrade_render_v30_migration() {
 			</p>
 			<input type="hidden" name="_wpnonce" value="<?php echo esc_attr( wp_create_nonce( 'edd_process_v3_upgrade' ) ); ?>">
 			<input type="hidden" name="upgrade_key" value="v30_legacy_data_removed">
-			<button type="submit" class="button button-primary disabled" disabled="disabled">
+			<button type="submit" class="button button-primary disabled" disabled>
 				<?php esc_html_e( 'Permanently Remove Legacy Data', 'easy-digital-downloads' ); ?>
 			</button>
 			<!-- @todo align better with button -->
