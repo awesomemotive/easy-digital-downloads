@@ -90,12 +90,42 @@ function edd_refund_details_items( $refund ) {
 		);
 	}
 
+	$_adjustments = array();
+	$adjustments  = edd_get_order_adjustments( array(
+		'object_id'   => $refund->id,
+		'number'      => 999,
+		'object_type' => 'order',
+		'type'        => array(
+			'discount',
+			'credit',
+			'fee',
+		),
+	) );
+
+	foreach ( $adjustments as $adjustment ) {
+		// @todo edd_get_order_adjustment_to_json()?
+		$_adjustments[] = array(
+			'id'           => esc_html( $adjustment->id ),
+			'objectId'     => esc_html( $adjustment->object_id ),
+			'objectType'   => esc_html( $adjustment->object_type ),
+			'typeId'       => esc_html( $adjustment->type_id ),
+			'type'         => esc_html( $adjustment->type ),
+			'description'  => esc_html( $adjustment->description ),
+			'subtotal'     => esc_html( $adjustment->subtotal ),
+			'tax'          => esc_html( $adjustment->tax ),
+			'total'        => esc_html( $adjustment->total ),
+			'dateCreated'  => esc_html( $adjustment->date_created ),
+			'dateModified' => esc_html( $adjustment->date_modified ),
+			'uuid'         => esc_html( $adjustment->uuid ),
+		);
+	}
+
 	wp_localize_script(
 		'edd-admin-orders',
 		'eddAdminOrderOverview',
 		array(
 			'items'        => $_items,
-			'adjustments'  => array(),
+			'adjustments'  => $_adjustments,
 			'refunds'      => array(),
 			'isAdding'     => false,
 			'isRefund'     => true,

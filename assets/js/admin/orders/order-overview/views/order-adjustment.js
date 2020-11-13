@@ -64,7 +64,7 @@ export const OrderAdjustment = Base.extend( {
 		const { model, options } = this;
 		const { state } = this.options;
 
-		const { currency } = state.get( 'formatters' );
+		const { currency, number } = state.get( 'formatters' );
 
 		// Determine column offset -- using cart quantities requires an extra column.
 		const colspan = true === state.get( 'hasQuantity' ) ? 2 : 1;
@@ -79,6 +79,13 @@ export const OrderAdjustment = Base.extend( {
 			} ) );
 		}
 
+		// Always show Discounts and Fees as negative values.
+		let total = number.absint( model.getAmount() );
+
+		if ( 'fee' !== model.get( 'type' ) ) {
+			total = total * -1;
+		}
+
 		return {
 			...Base.prototype.prepare.apply( this, arguments ),
 
@@ -89,7 +96,7 @@ export const OrderAdjustment = Base.extend( {
 			total: model.getAmount(),
 			subtotal: model.getAmount(),
 			orderItem: orderItem ? orderItem.toJSON() : false,
-			totalCurrency: currency.format( model.getAmount() ),
+			totalCurrency: currency.format( total ),
 		};
 	},
 
