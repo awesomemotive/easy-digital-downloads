@@ -38,7 +38,7 @@ final class Order_Adjustments extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 202011120;
+	protected $version = 202011121;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -51,7 +51,7 @@ final class Order_Adjustments extends Table {
 		'201807071' => 201807071,
 		'201807273' => 201807273,
 		'202002141' => 202002141,
-		'202011120' => 202011120,
+		'202011121' => 202011121,
 	);
 
 	/**
@@ -148,14 +148,14 @@ final class Order_Adjustments extends Table {
 	}
 
 	/**
-	 * Upgrade to version 202011120
+	 * Upgrade to version 202011121
 	 *  - Change default value to `NULL` for `type_id` column.
 	 *  - Add `type_key` column.
 	 *
 	 * @since 3.0
 	 * @return bool
 	 */
-	protected function __202011120() {
+	protected function __202011121() {
 
 		// Update `type_id`.
 		$result = $this->get_db()->query( "
