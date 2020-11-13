@@ -66,7 +66,7 @@ final class Order_Adjustments extends Table {
 		object_id bigint(20) unsigned NOT NULL default '0',
 		object_type varchar(20) DEFAULT NULL,
 		type_id bigint(20) unsigned DEFAULT NULL,
-		type_key varchar(32) DEFAULT NULL,
+		type_key varchar(255) DEFAULT NULL,
 		type varchar(20) DEFAULT NULL,
 		description varchar(100) DEFAULT NULL,
 		subtotal decimal(18,9) NOT NULL default '0',
@@ -166,7 +166,7 @@ final class Order_Adjustments extends Table {
 		$column_exists = $this->column_exists( 'type_key' );
 		if ( false === $column_exists ) {
 			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `type_key` varchar(32) default NULL AFTER `type_id`;
+				ALTER TABLE {$this->table_name} ADD COLUMN `type_key` varchar(255) default NULL AFTER `type_id`;
 			" );
 		}
 
