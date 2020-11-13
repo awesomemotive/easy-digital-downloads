@@ -633,8 +633,6 @@ class EDD_Payment {
 						'total'       => floatval( $fee['amount'] ) + $tax,
 					) );
 
-					edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $key );
-
 					$this->increase_fees( $fee['amount'] );
 				}
 			}
@@ -2352,9 +2350,6 @@ class EDD_Payment {
 									'tax'         => $tax,
 									'total'       => floatval( $fee['amount'] ) + $tax
 								) );
-
-								edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
-
 							}
 						} else {
 							$adjustment_id = edd_get_order_adjustments( array(
@@ -2402,9 +2397,6 @@ class EDD_Payment {
 									'tax'         => $tax,
 									'total'       => floatval( $fee['amount'] ) + $tax
 								) );
-
-								edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
-
 							}
 						}
 					}
@@ -2492,8 +2484,6 @@ class EDD_Payment {
 										'tax'         => $tax,
 										'total'       => floatval( $fee['amount'] ) + $tax,
 									) );
-
-									edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
 
 									$new_tax += $tax;
 								}
