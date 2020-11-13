@@ -950,7 +950,7 @@ function edd_customers_view( $customer = null ) {
 					// View URL
 					$view_url = edd_get_admin_url( array(
 						'page' => 'edd-payment-history',
-						'view' => 'view-order-details',
+						'view' => 'view-refund-details',
 						'id'   => $refund->id,
 					) );
 
