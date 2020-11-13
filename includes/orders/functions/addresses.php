@@ -131,7 +131,10 @@ function edd_update_order_address( $order_address_id = 0, $data = array() ) {
  *                                         otherwise.
  */
 function edd_get_order_address( $order_address_id = 0 ) {
-	return edd_get_order_address_by( 'id', $order_address_id );
+	$order_addresses = new EDD\Database\Queries\Order_Address();
+
+	// Return order address
+	return $order_addresses->get_item( $order_address_id );
 }
 
 /**
@@ -200,4 +203,3 @@ function edd_count_order_addresses( $args = array() ) {
 	// Return count(s)
 	return absint( $order_addresses->found_items );
 }
-

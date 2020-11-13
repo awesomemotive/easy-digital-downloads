@@ -127,7 +127,10 @@ function edd_update_log( $log_id = 0, $data = array() ) {
  * @return EDD\Logs\Log|false Log object if successful, false otherwise.
  */
 function edd_get_log( $log_id = 0 ) {
-	return edd_get_log_by( 'id', $log_id );
+	$logs = new EDD\Database\Queries\Log();
+
+	// Return log
+	return $logs->get_item( $log_id );
 }
 
 /**
