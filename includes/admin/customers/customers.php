@@ -840,7 +840,7 @@ function edd_customers_view( $customer = null ) {
 							<div class="edd-form-group">
 								<label class="edd-form-group__label screen-reader-text" for="edd-additional-email"><?php esc_html_e( 'Email Address', 'easy-digital-downloads' ); ?></label>
 								<div class="edd-form-group__control">
-									<input type="email" name="additional-email" id="edd-additional-email" value="" placeholder="<?php esc_attr_e( 'Email Address', 'easy-digital-downloads' ); ?>" />
+									<input type="email" name="additional-email" id="edd-additional-email" class="edd-form-group__input regular-text" value="" placeholder="<?php esc_attr_e( 'Email Address', 'easy-digital-downloads' ); ?>" />
 								</div>
 							</div>
 							<div class="edd-form-group edd-make-email-primary">
