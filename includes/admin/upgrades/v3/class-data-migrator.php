@@ -829,20 +829,15 @@ class Data_Migrator {
 
 						$adjustment_id = edd_add_order_adjustment( $adjustment_args );
 
-						// Fee ID.
-						edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
-
 						// If we refunded the main order, the fees also need to be added to the refund order type we created.
 						if ( ! empty( $refund_id ) ) {
-							$refund_adjustment_args = $adjustment_args;
+							$refund_adjustment_args              = $adjustment_args;
 							$refund_adjustment_args['object_id'] = $refund_order_item_id;
 							$refund_adjustment_args['subtotal']  = edd_negate_amount( floatval( $fee['amount'] ) );
 							$refund_adjustment_args['tax']       = edd_negate_amount( $tax );
 							$refund_adjustment_args['total']     = edd_negate_amount( floatval( $fee['amount'] ) + $tax );
 
-
 							$refund_adjustment_id = edd_add_order_adjustment( $refund_adjustment_args );
-							edd_add_order_adjustment_meta( $refund_adjustment_id, 'fee_id', $fee_id );
 						}
 					}
 				}
@@ -952,9 +947,6 @@ class Data_Migrator {
 				);
 
 				$adjustment_id = edd_add_order_adjustment( $adjustment_args );
-
-				// Fee ID.
-				edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
 
 				if ( ! empty( $refund_id ) ) {
 

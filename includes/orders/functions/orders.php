@@ -979,8 +979,6 @@ function edd_build_order( $order_data = array() ) {
 
 					// Add the adjustment.
 					$adjustment_id = edd_add_order_adjustment( $adjustment_data );
-
-					edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
 				}
 			}
 
@@ -1038,8 +1036,6 @@ function edd_build_order( $order_data = array() ) {
 
 			// Add the adjustment.
 			$adjustment_id = edd_add_order_adjustment( $args );
-
-			edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
 
 			$total_fees += (float) $fee['amount'];
 			$total_tax  += $tax;
