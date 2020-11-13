@@ -425,6 +425,7 @@ class Order extends Rows\Order {
 				'object_type'   => 'order',
 				'no_found_rows' => true,
 				'order'         => 'ASC',
+				'type'          => 'fee',
 			) );
 		}
 
@@ -446,12 +447,7 @@ class Order extends Rows\Order {
 		// Fetch the fees that applied to the entire order.
 		foreach ( $this->adjustments as $adjustment ) {
 			/** @var Order_Adjustment $adjustment */
-
-			if ( 'fee' === $adjustment->type ) {
-				$fee_id = edd_get_order_adjustment_meta( $adjustment->id, 'fee_id', true );
-
-				$fees[ $fee_id ] = $adjustment;
-			}
+			$fees[ $adjustment->type_key ] = $adjustment;
 		}
 
 		// Fetch the fees that applied to specific items in the order.
@@ -460,10 +456,7 @@ class Order extends Rows\Order {
 
 			foreach ( $item->get_fees() as $fee ) {
 				/** @var Order_Adjustment $fee */
-
-				$fee_id = edd_get_order_adjustment_meta( $fee->id, 'fee_id', true );
-
-				$fees[ $fee_id ] = $fee;
+				$fees[ $fee->type_key ] = $fee;
 			}
 		}
 
