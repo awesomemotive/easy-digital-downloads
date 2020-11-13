@@ -31,6 +31,17 @@ if ( empty( $order ) ) {
 	wp_die( __( 'The specified ID does not belong to an order. Please try again', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ) );
 }
 
+if ( 'refund' === $order->type ) {
+	$refund_link = edd_get_admin_url(
+		array(
+			'page' => 'edd-payment-history',
+			'view' => 'view-refund-details',
+			'id'   => urlencode( $order->id ),
+		)
+	);
+	wp_die( sprintf( __( 'The specified ID is for a refund, not an order. Please <a href="%s">access the refund directly</a>.', 'easy-digital-downloads' ), esc_url( $refund_link ) ), __( 'Error', 'easy-digital-downloads' ) );
+}
+
 wp_enqueue_script( 'edd-admin-orders' );
 // Enqueued for backwards compatibility. Empty file.
 wp_enqueue_script( 'edd-admin-payments' );
@@ -48,20 +59,6 @@ wp_enqueue_script( 'edd-admin-payments' );
 		<div class="notice notice-error inline" id="edd-add-order-customer-error" style="display: none;">
 			<p><strong><?php esc_html_e( 'Error', 'easy-digital-downloads' ); ?>:</strong> <?php esc_html_e( 'Please select an existing customer or create a new customer.', 'easy-digital-downloads' ); ?></p>
 		</div>
-
-		<?php if ( 'refund' === $order->type ) : ?>
-			<div class="notice notice-info">
-				<p>
-					<?php
-					printf(
-						__( 'You are viewing a refund order. To view the original order, %sclick here%s.', 'easy-digital-downloads' ),
-						'<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $order->parent ) . '">',
-						'</a>'
-					);
-					?>
-				</p>
-			</div>
-		<?php endif; ?>
 
 		<?php do_action( 'edd_view_order_details_before', $order->id ); ?>
 

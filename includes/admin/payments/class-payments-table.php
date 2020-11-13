@@ -226,7 +226,7 @@ class EDD_Payment_History_Table extends List_Table {
 		<?php endif; ?>
 
 		<span id="edd-advanced-filters" class="<?php echo esc_attr( $maybe_show_filters ); ?>">
-			<input type="button" class="edd-advanced-filters-button button-secondary" value="<?php esc_html_e( 'More', 'easy-digital-downloads' ); ?>"/>
+			<input type="button" class="button edd-advanced-filters-button button-secondary" value="<?php esc_html_e( 'More', 'easy-digital-downloads' ); ?>"/>
 
 			<div class="inside">
 				<fieldset>
@@ -297,7 +297,7 @@ class EDD_Payment_History_Table extends List_Table {
 		</span>
 
 		<span id="edd-after-core-filters">
-			<input type="submit" class="button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
+			<input type="submit" class="button button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
 
 			<?php if ( ! empty( $start_date ) || ! empty( $end_date ) || ! empty( $order_total_filter_type ) || ( 'all' !== $gateway ) ) : ?>
 				<a href="<?php echo esc_url( $clear_url ); ?>" class="button-secondary">
