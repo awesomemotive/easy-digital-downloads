@@ -447,7 +447,9 @@ class Order extends Rows\Order {
 		// Fetch the fees that applied to the entire order.
 		foreach ( $this->adjustments as $adjustment ) {
 			/** @var Order_Adjustment $adjustment */
-			$fees[ $adjustment->type_key ] = $adjustment;
+
+			$id          = empty( $adjustment->type_key ) ? $adjustment->id : $adjustment->$type_key;
+			$fees[ $id ] = $adjustment;
 		}
 
 		// Fetch the fees that applied to specific items in the order.
@@ -456,7 +458,9 @@ class Order extends Rows\Order {
 
 			foreach ( $item->get_fees() as $fee ) {
 				/** @var Order_Adjustment $fee */
-				$fees[ $fee->type_key ] = $fee;
+
+				$id          = empty( $fee->type_key ) ? $fee->id : $fee->$type_key;
+				$fees[ $id ] = $fee;
 			}
 		}
 
