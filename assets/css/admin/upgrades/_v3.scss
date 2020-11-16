@@ -1,0 +1,15 @@
+#edd-migration-progress {
+	.dashicons-yes {
+		color: green;
+	}
+	.dashicons-update:before {
+		animation: rotation 2s infinite linear;
+		display: block;
+	}
+}
+
+#edd-v3-migration-remove-legacy-data-submit-wrap {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}

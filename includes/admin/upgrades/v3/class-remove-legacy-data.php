@@ -39,7 +39,7 @@ class Remove_Legacy_Data extends Base {
 		parent::__construct( $step );
 
 		$this->completed_message = __( 'Legacy data removed successfully.', 'easy-digital-downloads' );
-		$this->upgrade           = 'v30_data_migration';
+		$this->upgrade           = 'v30_legacy_data_removed';
 	}
 
 	/**
