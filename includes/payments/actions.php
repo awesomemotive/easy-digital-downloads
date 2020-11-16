@@ -72,10 +72,10 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 
 						$download_id = edd_get_order_adjustment_meta( $item_fee->id, 'download_id', true );
 						$price_id    = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
-						$no_tax      = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
-						// todo: should $no_tax be changed to (bool) 0.00 === $item_fee->tax;?
+						$no_tax      = (bool) 0.00 === $item_fee->tax;
+						$id          = empty( $item_fee->type_key ) ? $item_fee->id : $item_fee->type_key;
 
-						$item_fees[ $item_fee->type_key ] = array(
+						$item_fees[ $id ] = array(
 							'amount'      => $item_fee->amount,
 							'label'       => $item_fee->description,
 							'no_tax'      => $no_tax ? $no_tax : false,
