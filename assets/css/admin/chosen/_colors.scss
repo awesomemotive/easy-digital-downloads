@@ -1,0 +1,24 @@
+
+/* WordPress Color Schemes */
+
+:root {
+	@include edd-admin-colors();
+}
+
+.chosen-container.chosen-container-active .chosen-single,
+.chosen-container.chosen-container-active .chosen-choices,
+.chosen-with-drop.chosen-dropup .chosen-drop {
+	border-color: var(--wp-admin-theme-color);
+	box-shadow: 0 0 0 1px var(--wp-admin-theme-color);
+}
+
+.chosen-with-drop.chosen-dropup .chosen-single,
+.chosen-container-active.chosen-dropup .chosen-choices,
+.chosen-container .chosen-drop {
+	border-color: var(--wp-admin-theme-color);
+	box-shadow: 0 1px 0 1px var(--wp-admin-theme-color);
+}
+
+.chosen-container .chosen-results li.highlighted {
+	background-color: var(--wp-admin-theme-color);
+}
