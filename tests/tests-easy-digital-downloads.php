@@ -159,9 +159,9 @@ class Tests_EDD extends EDD_UnitTestCase {
 	 */
 	public function _test_includes_assets_dp() {
 		return array(
-			array( EDD_PLUGIN_DIR . 'assets/css/chosen.css' ),
 			array( EDD_PLUGIN_DIR . 'assets/css/chosen.min.css' ),
-			array( EDD_PLUGIN_DIR . 'assets/css/edd-admin.css' ),
+			array( EDD_PLUGIN_DIR . 'assets/css/edd-admin-chosen.min.css' ),
+			array( EDD_PLUGIN_DIR . 'assets/css/edd-admin.min.css' ),
 			array( EDD_PLUGIN_DIR . 'assets/images/edd-cpt-2x.png' ),
 			array( EDD_PLUGIN_DIR . 'assets/images/edd-cpt.png' ),
 			array( EDD_PLUGIN_DIR . 'assets/images/edd-icon-2x.png' ),
