@@ -107,7 +107,12 @@ function edd_process_login_form( $data ) {
 		// Check for errors and redirect if none present.
 		$errors = edd_get_errors();
 		if ( ! $errors ) {
-			apply_filters( 'edd_login_redirect', wp_safe_redirect( esc_url_raw( $data['edd_redirect'] ) ), 0 );
+			$default_redirect_url = esc_url_raw( $data['edd_redirect'] );
+			if ( has_filter( 'edd_login_redirect' ) ) {
+				wp_redirect( apply_filters( 'edd_login_redirect', $default_redirect_url ) );
+			} else {
+				wp_safe_redirect( $default_redirect_url );
+			}
 			edd_die();
 		}
 	}
