@@ -1449,7 +1449,7 @@ function edd_upgrade_render_v30_migration() {
 	</p>
 
 	<p>
-		<?php printf( esc_html__( 'This migration can also be run via WP-CLI with the following command: %s This is the recommended method for large sites.', 'easy-digital-downloads' ), '<code>wp edd v30_migration</code>' ); ?>
+		<?php printf( esc_html__( 'This migration can also be run via WP-CLI with the following command: %s. This is the recommended method for large sites.', 'easy-digital-downloads' ), '<code>wp edd v30_migration</code>' ); ?>
 	</p>
 
 	<?php
