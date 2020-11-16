@@ -1531,15 +1531,18 @@ function edd_upgrade_render_v30_migration() {
 			</p>
 			<input type="hidden" name="_wpnonce" value="<?php echo esc_attr( wp_create_nonce( 'edd_process_v3_upgrade' ) ); ?>">
 			<input type="hidden" name="upgrade_key" value="v30_legacy_data_removed">
-			<button type="submit" class="button button-primary disabled" disabled>
-				<?php esc_html_e( 'Permanently Remove Legacy Data', 'easy-digital-downloads' ); ?>
-			</button>
-			<!-- @todo align better with button -->
-			<span id="edd-v3-migration-v30_legacy_data_removed">
-				<span class="edd-migration-percentage edd-hidden">
-					<span class="edd-migration-percentage-value">0</span>%
+
+			<div id="edd-v3-migration-remove-legacy-data-submit-wrap">
+				<button type="submit" class="button button-primary disabled" disabled>
+					<?php esc_html_e( 'Permanently Remove Legacy Data', 'easy-digital-downloads' ); ?>
+				</button>
+				<!-- @todo align better with button -->
+				<span id="edd-v3-migration-v30_legacy_data_removed">
+					<span class="edd-migration-percentage edd-hidden">
+						<span class="edd-migration-percentage-value">0</span>%
+					</span>
 				</span>
-			</span>
+			</div>
 		</form>
 		<div id="edd-v3-legacy-data-removal-complete" class="edd-hidden">
 			<p>
