@@ -24,6 +24,14 @@ function edd_process_v3_upgrade() {
 	check_ajax_referer( 'edd_process_v3_upgrade' );
 
 	$all_upgrades = edd_get_v30_upgrades();
+
+	// Filter out completed upgrades.
+	foreach ( $all_upgrades as $upgrade_key => $upgrade_details ) {
+		if ( edd_has_upgrade_completed( $upgrade_key ) ) {
+			unset( $all_upgrades[ $upgrade_key ] );
+		}
+	}
+
 	$upgrade_keys = array_keys( $all_upgrades );
 
 	// Use supplied upgrade key if available, otherwise the first item in the list.
@@ -64,7 +72,7 @@ function edd_process_v3_upgrade() {
 		wp_die( -1, 403, array( 'response' => 403 ) );
 	}
 
-	$was_processed       = $export->process_step();
+	$was_processed = $export->process_step();
 	//$was_processed       = false; // @todo remove
 	$percentage_complete = round( $export->get_percentage_complete(), 2 );
 	//$percentage_complete = 100; // @todo remove

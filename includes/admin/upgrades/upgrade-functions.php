@@ -1483,7 +1483,7 @@ function edd_upgrade_render_v30_migration() {
 					continue;
 				}
 				?>
-				<li id="edd-v3-migration-<?php echo esc_attr( sanitize_html_class( $upgrade_key ) ); ?>" data-upgrade="<?php echo esc_attr( $upgrade_key ); ?>">
+				<li id="edd-v3-migration-<?php echo esc_attr( sanitize_html_class( $upgrade_key ) ); ?>" <?php echo true === $upgrade_statuses[ $upgrade_key ] ? 'class="edd-upgrade-complete"' : ''; ?> data-upgrade="<?php echo esc_attr( $upgrade_key ); ?>">
 					<span class="edd-migration-status">
 						<?php
 						if ( true === $upgrade_statuses[ $upgrade_key ] ) {
