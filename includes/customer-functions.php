@@ -647,14 +647,11 @@ function edd_maybe_add_customer_address( $customer_id = 0, $data = array() ) {
 	$address_to_check['customer_id'] = $customer_id;
 	$address_to_check['type']        = empty( $data['type'] ) ? 'billing' : $data['type'];
 
-	// Instantiate a query object
-	$customer_addresses = new EDD\Database\Queries\Customer_Address();
-
 	// Check if this address is already assigned to the customer.
-	$address_exists = $customer_addresses->query( $address_to_check );
+	$address_exists = edd_get_customer_addresses( $address_to_check );
 	if ( ! empty( $address_exists ) ) {
 		if ( 'billing' === $address_to_check['type'] ) {
-			$customer_addresses->update_item( $address_exists[0], array( 'is_primary' => true ) );
+			edd_update_customer_address( $address_exists[0], array( 'is_primary' => true ) );
 		}
 		return false;
 	}
@@ -665,7 +662,7 @@ function edd_maybe_add_customer_address( $customer_id = 0, $data = array() ) {
 	}
 
 	// Add the new address to the customer record.
-	return $customer_addresses->add_item( $data );
+	return edd_add_customer_address( $data );
 }
 
 /**

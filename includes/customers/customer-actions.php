@@ -23,9 +23,8 @@ function edd_demote_customer_primary_addresses( $old_value, $new_value, $item_id
 	if ( ! $new_value ) {
 		return;
 	}
-	$customer_addresses         = new EDD\Database\Queries\Customer_Address();
-	$address                    = $customer_addresses->get_item( $item_id );
-	$previous_primary_addresses = $customer_addresses->query(
+	$address                    = edd_fetch_customer_address( $item_id );
+	$previous_primary_addresses = edd_get_customer_addresses(
 		array(
 			'id__not_in'  => array( $item_id ),
 			'fields'      => 'ids',
