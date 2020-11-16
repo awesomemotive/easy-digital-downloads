@@ -273,7 +273,7 @@ class Customer extends Base {
 
 		$address = wp_parse_args( (array) $meta_value, $defaults );
 
-		if ( is_array( $addresses ) && ! empty( $addresses ) ) {
+		if ( is_array( $addresses ) && ! empty( $addresses[0] ) ) {
 			$customer_address = $addresses[0];
 
 			edd_update_customer_address(
