@@ -109,7 +109,14 @@ function edd_process_login_form( $data ) {
 		if ( ! $errors ) {
 			$default_redirect_url = esc_url_raw( $data['edd_redirect'] );
 			if ( has_filter( 'edd_login_redirect' ) ) {
-				wp_redirect( apply_filters( 'edd_login_redirect', $default_redirect_url ) );
+				/**
+				 * Filters the redirect URL for EDD.
+				 *
+				 * @since 1.0
+				 * @param string $default_redirect_url  the URL to which to redirect
+				 * @param int                           deprecated as of 2.9.24; used to be user ID
+				 */
+				wp_redirect( apply_filters( 'edd_login_redirect', $default_redirect_url, 0 ) );
 			} else {
 				wp_safe_redirect( $default_redirect_url );
 			}
