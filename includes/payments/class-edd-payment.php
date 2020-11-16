@@ -2311,13 +2311,7 @@ class EDD_Payment {
 								'object_type' => 'order_item',
 								'type'        => 'fee',
 								'fields'      => 'ids',
-								'meta_query'  => array(
-									array(
-										'key'     => 'fee_id',
-										'value'   => $fee_id,
-										'compare' => '=',
-									),
-								),
+								'type_key'    => $fee_id,
 							) );
 
 							if ( is_array( $adjustment_id ) && ! empty( $adjustment_id ) ) {
@@ -2358,13 +2352,7 @@ class EDD_Payment {
 								'object_type' => 'order',
 								'type'        => 'fee',
 								'fields'      => 'ids',
-								'meta_query'  => array(
-									array(
-										'key'     => 'fee_id',
-										'value'   => $fee_id,
-										'compare' => '=',
-									),
-								),
+								'type_key'    => $fee_id,
 							) );
 
 							if ( is_array( $adjustment_id ) && ! empty( $adjustment_id ) ) {
