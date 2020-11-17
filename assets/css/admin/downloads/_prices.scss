@@ -25,13 +25,6 @@
 			display: flex;
 			gap: 12px;
 			margin-bottom: 6px;
-
-			.edd-form-group {
-				display: inline-flex;
-				flex-direction: column;
-				justify-content: flex-end;
-				margin-bottom: 0;
-			}
 		}
 
 		&:last-child {
