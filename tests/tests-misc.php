@@ -531,6 +531,13 @@ class Test_Misc extends EDD_UnitTestCase {
 		$this->assertEquals( 'Jan', edd_month_num_to_name( 1 ) );
 	}
 
+	/**
+	 * @covers ::edd_month_num_to_name()
+	 */
+	public function test_month_num_to_long_name() {
+		$this->assertEquals( 'January', edd_month_num_to_name( 1, true ) );
+	}
+
 	public function test_get_php_arg_separator_output() {
 		$this->assertEquals( '&', edd_get_php_arg_separator_output() );
 	}

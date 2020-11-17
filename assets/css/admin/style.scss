@@ -7,6 +7,12 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  */
 
+@import "~@wordpress/base-styles/colors";
+@import "~@wordpress/base-styles/variables";
+@import "~@wordpress/base-styles/mixins";
+@import "~@wordpress/base-styles/breakpoints";
+@import "~@wordpress/base-styles/animations";
+
 /**
  * Notes:
  *
@@ -46,10 +52,6 @@ a.edd-delete:hover {
 	height: 29px;
 }
 
-.edd-from-to-wrapper {
-	margin-right: 4px;
-}
-
 .edd-from-to-wrapper input {
 	width: 105px;
 	margin: 0;
@@ -57,15 +59,13 @@ a.edd-delete:hover {
 	z-index: 1;
 }
 
-.edd-from-to-wrapper input[name="start"],
-.edd-from-to-wrapper input[name="start-date"],
+.edd-from-to-wrapper input[name*="start"],
 .edd-from-to-wrapper input[name="filter_from"] {
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
 }
 
-.edd-from-to-wrapper input[name="end"],
-.edd-from-to-wrapper input[name="end-date"],
+.edd-from-to-wrapper input[name*="end"],
 .edd-from-to-wrapper input[name="filter_to"] {
 	margin-left: -1px;
 	border-top-left-radius: 0;
@@ -1236,17 +1236,8 @@ textarea[name="edd-note"] {
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
+	gap: 6px;
 }
-
-#edd-filters .filter-items > span:not(.edd-date-range-options) {
-	display: inline-block;
-	margin-right: 6px;
-}
-
-#edd-filters .filter-items > #edd-date-filters {
-	vertical-align: middle;
-}
-
 #edd-filters > p {
 	color: #777;
 }
@@ -2347,6 +2338,8 @@ body.download_page_edd-reports {
 	right: 6px;
 }
 
+/* Keeping this rule for Software Licensing Reports */
+.edd-reports-wrapper .postbox h2,
 .edd-reports-wrapper .postbox h3 {
 	font-size: 1.3em
 }
@@ -2371,9 +2364,6 @@ body.download_page_edd-reports {
 }
 
 .download_page_edd-reports #edd-filters .filter-items {
-	display: flex;
-	align-items: center;
-	flex-wrap: wrap;
 	flex: 1 1 75%;
 }
 
@@ -2395,7 +2385,7 @@ body.download_page_edd-reports {
 
 #edd-filters .filter-items .edd-date-range-options {
 	display: inline-block;
-	margin: 10px 4px 10px 0;
+	margin: 10px 0;
 }
 
 .edd-date-range-options .edd_datepicker {
@@ -2429,7 +2419,6 @@ body.download_page_edd-reports {
 
 .edd-admin--has-grid .edd-from-to-wrapper {
 	display: flex;
-	margin-right: 0;
 	margin-bottom: 16px;
 	width: 100%;
 }
@@ -2449,7 +2438,7 @@ body.download_page_edd-reports {
 	position: relative;
 }
 
-div.edd-to-and-from-container {
+fieldset.edd-to-and-from-container {
 	display: grid;
 	display: -ms-grid;
 	grid-template-columns: 1fr 1fr;
@@ -2619,30 +2608,36 @@ span.edd-to-and-from--separator {
 	margin: 1em 0 0;
 }
 
-[id*="edd-sendwp-"].button {
+[id*="edd-sendwp-"].button,
+[id*="edd-jilt-"].button {
 	font-size: 16px;
 	height: auto;
 	padding: 8px 14px;
-	margin: 0 0 6px;
+	margin: 6px 0 0;
 }
-[id*="edd-sendwp-"].button .dashicons {
+[id*="edd-sendwp-"].button .dashicons,
+[id*="edd-jilt-"].button .dashicons {
 	line-height: 29px;
 	margin-right: 8px;
 }
 [id*="edd-sendwp-"].button .edd-loading,
-[id*="edd-sendwp-"].button .edd-loading:after {
+[id*="edd-sendwp-"].button .edd-loading:after,
+[id*="edd-jilt-"].button .edd-loading,
+[id*="edd-jilt-"].button .edd-loading:after {
 	border-radius: 50%;
 	display: inline-block;
 	width: 14px;
 	height: 14px;
 }
-[id*="edd-sendwp-"].button .edd-loading {
+[id*="edd-sendwp-"].button .edd-loading,
+[id*="edd-jilt-"].button .edd-loading {
 	position: relative;
 	top: 3px;
 	margin-left: 4px;
 	box-shadow: 0 0 2px rgba(0,0,0,.2);
 }
-[id*="edd-sendwp-"].button .edd-loading {
+[id*="edd-sendwp-"].button .edd-loading,
+[id*="edd-jilt-"].button .edd-loading {
 	-webkit-animation: edd-spinning 1.1s infinite linear;
 	animation: edd-spinning 1.1s infinite linear;
 	border-top: 2px solid rgba(255, 255, 255, 0.5);
@@ -2654,12 +2649,16 @@ span.edd-to-and-from--separator {
 	-ms-transform: translateZ(0);
 	transform: translateZ(0);
 }
-#edd-sendwp-disconnect.button .edd-loading.dark {
+#edd-sendwp-disconnect.button .edd-loading.dark,
+#edd-jilt-disconnect.button .edd-loading.dark {
 	border-top-color: rgba(0, 0, 0, 0.2);
 	border-right-color: rgba(0, 0, 0, 0.2);
 	border-bottom-color: rgba(0, 0, 0, 0.2);
 	border-left-color: #666;
 	box-shadow: none;
+}
+.jilt-notice {
+	position: relative;
 }
 @-webkit-keyframes edd-spinning {
 	0% {

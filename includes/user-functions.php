@@ -168,7 +168,7 @@ function edd_get_users_purchased_products( $user = 0, $status = 'complete' ) {
  * @since 3.0 Refactored to be more efficient.
  *
  * @param int   $user_id   User ID.
- * @param array $downloads Download IDs to check against.
+ * @param array|int $downloads Download IDs to check against.
  * @param int $variable_price_id - the variable price ID to check for
  *
  * @return bool True if purchased, false otherwise.

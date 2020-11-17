@@ -585,7 +585,9 @@ class Data_Migrator {
 			'address2'     => isset( $user_info['address']['line2'] )   ? $user_info['address']['line2']   : '',
 			'city'         => isset( $user_info['address']['city'] )    ? $user_info['address']['city']    : '',
 			'region'       => isset( $user_info['address']['state'] )   ? $user_info['address']['state']   : '',
-			'country'      => isset( $user_info['address']['country'] ) ? $user_info['address']['country'] : '',
+			'country'      => isset( $user_info['address']['country'] ) && array_key_exists( strtoupper( $user_info['address']['country'] ), edd_get_country_list() )
+				? $user_info['address']['country']
+				: '',
 			'postal_code'  => isset( $user_info['address']['zip'] )     ? $user_info['address']['zip']     : '',
 			'date_created' => $date_created_gmt,
 		);
@@ -990,7 +992,7 @@ class Data_Migrator {
 						'object_type'   => 'order',
 						'type_id'       => $discount->id,
 						'type'          => 'discount',
-						'description'   => $discount,
+						'description'   => $discount->code,
 						'subtotal'      => $subtotal - $discount->get_discounted_amount( $subtotal ),
 						'total'         => $subtotal - $discount->get_discounted_amount( $subtotal ),
 						'date_created'  => $date_created_gmt,
@@ -1005,7 +1007,7 @@ class Data_Migrator {
 							'object_type'   => 'order',
 							'type_id'       => $discount->id,
 							'type'          => 'discount',
-							'description'   => $discount,
+							'description'   => $discount->code,
 							'subtotal'      => edd_negate_amount( $subtotal - $discount->get_discounted_amount( $subtotal ) ),
 							'total'         => edd_negate_amount( $subtotal - $discount->get_discounted_amount( $subtotal ) ),
 							'date_created'  => $data->post_modified_gmt,

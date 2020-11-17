@@ -1437,6 +1437,49 @@ class EDD_CLI extends WP_CLI_Command {
 
 			edd_set_upgrade_complete( 'remove_legacy_order_notes' );
 		}
+
+		/**
+		 * Customer emails
+		 */
+		if ( ! $force && edd_has_upgrade_completed( 'remove_legacy_customer_emails' ) ) {
+			WP_CLI::warning( __( 'Legacy customer emails have already been removed. To run this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		} else {
+			WP_CLI::line( __( 'Removing old customer emails.', 'easy-digital-downloads' ) );
+
+			$wpdb->query( "DELETE FROM {$wpdb->edd_customermeta} WHERE meta_key = 'additional_email'" );
+
+			edd_set_upgrade_complete( 'remove_legacy_customer_emails' );
+		}
+
+		/**
+		 * Customer addresses
+		 */
+		if ( ! $force && edd_has_upgrade_completed( 'remove_legacy_customer_addresses' ) ) {
+			WP_CLI::warning( __( 'Legacy customer addresses have already been removed. To run this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		} else {
+			WP_CLI::line( __( 'Removing old customer addresses.', 'easy-digital-downloads' ) );
+
+			$wpdb->query( "DELETE FROM {$wpdb->usermeta} WHERE meta_key = '_edd_user_address'" );
+
+			edd_set_upgrade_complete( 'remove_legacy_customer_addresses' );
+		}
+
+		/**
+		 * Orders
+		 */
+		if ( ! $force && edd_has_upgrade_completed( 'remove_legacy_orders' ) ) {
+			WP_CLI::warning( __( 'Legacy orders have already been removed. To run this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+		} else {
+			WP_CLI::line( __( 'Removing old orders.', 'easy-digital-downloads' ) );
+
+			$wpdb->query(
+				"DELETE orders, order_meta FROM {$wpdb->posts} orders
+				LEFT JOIN {$wpdb->postmeta} order_meta ON( orders.ID = order_meta.post_id )
+				WHERE orders.post_type = 'edd_payment'"
+			);
+
+			edd_set_upgrade_complete( 'remove_legacy_orders' );
+		}
 	}
 
 	/*

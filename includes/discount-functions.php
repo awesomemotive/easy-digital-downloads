@@ -123,7 +123,10 @@ function edd_delete_discount( $discount_id = 0 ) {
  * @return \EDD_Discount|bool EDD_Discount object or false if not found.
  */
 function edd_get_discount( $discount_id = 0 ) {
-	return edd_get_discount_by( 'id', $discount_id );
+	$discounts = new EDD\Compat\Discount_Query();
+
+	// Return discount
+	return $discounts->get_item( $discount_id );
 }
 
 /**
@@ -154,7 +157,7 @@ function edd_get_discount_by_code( $code = '' ) {
 function edd_get_discount_by( $field = '', $value = '' ) {
 	$discounts = new EDD\Compat\Discount_Query();
 
-	// Return item
+	// Return discount
 	return $discounts->get_item_by( $field, $value );
 }
 
@@ -1012,7 +1015,7 @@ function edd_format_discount_rate( $type = '', $amount = '' ) {
  */
 function edd_get_item_discount_amount( $item, $items, $discounts ) {
 	global $edd_flat_discount_total;
-	
+
 	// Validate item.
 	if ( empty( $item ) || empty( $item['id'] ) ) {
 		return 0;
