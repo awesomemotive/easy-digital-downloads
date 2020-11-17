@@ -360,7 +360,10 @@ function edd_update_order( $order_id = 0, $data = array() ) {
  * @return EDD\Orders\Order|false Order object if successful, false otherwise.
  */
 function edd_get_order( $order_id = 0 ) {
-	return edd_get_order_by( 'id', $order_id );
+	$orders = new EDD\Database\Queries\Order();
+
+	// Return order
+	return $orders->get_item( $order_id );
 }
 
 /**

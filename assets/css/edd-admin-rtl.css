@@ -51,30 +51,28 @@ a.edd-delete:hover {
 }
 
 .edd-from-to-wrapper input {
-	width: 100px;
+	width: 105px;
 	margin: 0;
 	position: relative;
 	z-index: 1;
 }
 
+.edd-from-to-wrapper input[name*="start"],
+.edd-from-to-wrapper input[name="filter_from"] {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
+
+.edd-from-to-wrapper input[name*="end"],
+.edd-from-to-wrapper input[name="filter_to"] {
+	margin-right: -1px;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
 .edd-from-to-wrapper input:focus {
 	z-index: 2;
-	outline: auto 5px -webkit-focus-ring-color;
-	border-color: #eee;
-	box-shadow: none;
-}
-
-.edd-from-to-wrapper input[name="start"],
-.edd-from-to-wrapper input[name="start-date"],
-.edd-from-to-wrapper input[name="filter_from"] {
-	border-left-color: #eee;
-}
-
-.edd-from-to-wrapper input[name="end"],
-.edd-from-to-wrapper input[name="end-date"],
-.edd-from-to-wrapper input[name="filter_to"] {
-	border-right-color: #eee;
-	margin-right: -1px;
+	position: relative;
 }
 
 .edd-settings-sub-nav {
@@ -105,7 +103,7 @@ a.edd-delete:hover {
 
 /* Coffee */
 .admin-color-coffee .edd-settings-sub-nav a.current {
-	border-bottom-color: #096484;
+	border-bottom-color: #c7a589;
 }
 
 /* Ectoplasm */
@@ -115,7 +113,7 @@ a.edd-delete:hover {
 
 /* Midnight */
 .admin-color-midnight .edd-settings-sub-nav a.current {
-	border-bottom-color: #26292c;
+	border-bottom-color: #e14d43;
 }
 
 /* Ocean */
@@ -230,6 +228,11 @@ a.edd-delete:hover {
 	z-index: 9999 !important;
 }
 
+@media screen and (max-width: 782px) {
+	#edd-filters .filter-items {
+		margin: 6px 0 6px 6px;
+	}
+}
 /* =Payment Icon Styling
 -------------------------------------------------------------- */
 
@@ -474,7 +477,17 @@ a.edd-delete:hover {
 	}
 }
 
-.download_page_edd-payment-history .edit-post-header #publishing-action {
+.download_page_edd-payment-history .edit-post-header .edit-post-header__toolbar {
+	order: 0;
+}
+
+.download_page_edd-payment-history .edit-post-header .edit-post-header__settings {
+	order: 1;
+}
+
+.download_page_edd-payment-history .edit-post-header #publishing-action,
+.download_page_edd-payment-history .edit-post-header .edit-post-header__toolbar,
+.download_page_edd-payment-history .edit-post-header .edit-post-header__settings {
 	display: flex;
 	align-items: center;
 }
@@ -498,14 +511,6 @@ a.edd-delete:hover {
 
 #edd-order-items .hndle .edd-toggle {
 	font-weight: normal;
-}
-
-.edd-vertical-sections .new-customer strong {
-	width: 85px;
-	display: inline-block;
-	white-space: nowrap;
-	text-align: left;
-	margin-left: 10px;
 }
 
 .edd-add-order-item td {
@@ -535,7 +540,7 @@ a.edd-delete:hover {
 .order-customer-info .customer-details {
 	display: flex;
 	flex-direction: column;
-} 
+}
 
 .order-customer-info .customer-details .customer-since {
 	color: #666;
@@ -553,8 +558,12 @@ a.edd-delete:hover {
 
 /** Overview */
 table.edd-order-overview-summary {
-	border-width: 0 0 1px;
+	border-width: 0;
 	table-layout: fixed;
+}
+
+table.edd-order-overview-summary--refund {
+	border-width: 0;
 }
 
 @media screen and (min-width: 782px) {
@@ -580,6 +589,10 @@ table.edd-order-overview-summary {
 }
 
 /** Items */
+.edd-order-overview-summary__items-name {
+	align-self: flex-start;
+}
+
 .edd-order-overview-summary__items > :nth-child(odd) {
 	background-color: #f9f9f9;
 }
@@ -623,12 +636,13 @@ table.edd-order-overview-summary {
 	color: #555;
 }
 
-.edd-order-overview-summary td.column-name {
+.edd-order-overview-summary .removable {
 	display: flex;
 	align-items: center;
+	position: relative;
 }
 
-.edd-order-overview-summary .column-name .delete {
+.edd-order-overview-summary .removable .delete {
 	display: inline-block;
 	margin-left: 10px;
 	margin-right: -8px;
@@ -637,7 +651,7 @@ table.edd-order-overview-summary {
 	color: #a00;
 }
 
-.edd-order-overview-summary td.column-name .delete:hover {
+.edd-order-overview-summary .removable .delete:hover {
 	color: #dc3232;
 }
 
@@ -655,6 +669,10 @@ table.edd-order-overview-summary {
 	font-weight: 600;
 }
 
+.edd-order-overview-summary__totals-total td {
+	vertical-align: middle;
+}
+
 .edd-order-overview-summary__totals td small {
 	font-weight: normal;
 }
@@ -664,7 +682,15 @@ table.edd-order-overview-summary {
 	display: inline-block;
 }
 
-@media screen and (min-width: 782px) {
+.edd-order-overview-summary__totals .total.is-negative {
+	color: #a00;
+}
+
+@media screen and (min-width: 783px) {
+
+	.edd-order-overview-summary__adjustments .removable .delete {
+		margin-right: -50px;
+	}
 
 	.edd-order-overview-summary__totals .total {
 		font-size: 150%;
@@ -678,33 +704,46 @@ table.edd-order-overview-summary {
 	border-top: 1px solid #e5e5e5;
 }
 
-.edd-order-overview-summary__adjustments th.column-name {
-	position: relative;
-}
-
-.edd-order-overview-summary__adjustments th.column-name .delete {
-	position: absolute;
-	right:  -40px;
-	top: 50%;
-	margin-top: -15px;
-	padding-top: 5px;
-	padding-bottom: 5px;
-}
-
 .edd-order-overview-summary__totals .notice {
 	margin: -1px;
 }
 
 .edd-order-overview-summary__totals .notice p {
+	font-weight: normal;
 	margin: 0.5em 0;
+}
+
+/** Refunds */
+.edd-order-overview-summary__refunds .column-primary {
+	font-weight: 600;
+}
+
+.edd-order-overview-summary__refunds td small {
+	font-weight: normal;
+}
+
+.edd-order-overview-summary__refunds tr:first-child td {
+	border-top: 1px solid #e5e5e5;
 }
 
 /** Actions */
 #edd-order-overview-actions.inside {
+	border-top: 1px solid #ccd0d4;
 	margin-top: 0;
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+#edd-order-overview-actions.inside:empty {
+	padding: 0;
+	border-top: 0;
+}
+
+#edd-order-overview-actions.inside > div {
+	display: flex;
+	align-items: center;
 }
 
 .edd-order-overview-actions .button {
@@ -740,7 +779,15 @@ table.edd-order-overview-summary {
 	}
 }
 
+.edd-order-overview-actions__refund .dashicons {
+	margin-left: 8px;
+}
+
 /** Dialog */
+.edd-dialog .ui-button-icon-only {
+	font-size: 0;
+}
+
 .download_page_edd-payment-history .ui-dialog,
 .download_page_edd-payment-history .ui-dialog-content {
 	overflow: visible;
@@ -815,6 +862,75 @@ table.edd-order-overview-summary {
 
 .edd-order-copy-download-link textarea {
 	width: 100%;
+}
+
+/** Columns */
+.wp-list-table.orders .column-number .row-title {
+	display:  block;
+}
+
+.wp-list-table.orders .column-status,
+.wp-list-table.orders .column-date {
+	width: 15%;
+}
+
+/** Status labels */
+.edd-admin-order-status-badge {
+	padding: 2px 7px;
+	border-radius: 4px;
+	background: #ececec;
+	display: inline-flex;
+	align-items: center;
+}
+
+.edd-admin-order-status-badge__text {
+}
+
+.edd-admin-order-status-badge__icon {
+	opacity: 0.80;
+	margin: 0 2px 0 -2px;
+}
+
+.edd-admin-order-status-badge--refunded {
+}
+
+	.edd-admin-order-status-badge--refunded .edd-admin-order-status-badge__icon {
+		font-size: 16px;
+		width: 16px;
+		height: 16px;
+	}
+
+.edd-admin-order-status-badge--failed {
+	color: #ac3d3d;
+	background: #ffd6d6;
+}
+
+	.edd-admin-order-status-badge--failed .edd-admin-order-status-badge__icon {
+		margin-right: 0;
+		margin-top: -1px;
+	}
+
+.edd-admin-order-status-badge--complete {
+	color: #017d5c;
+	background: #e5f5f0;
+}
+
+	.edd-admin-order-status-badge--complete .edd-admin-order-status-badge__icon {
+		margin-right: 0px;
+	}
+
+.edd-admin-order-status-badge--pending {
+	color: #7d6e01;
+	background: #f5f2e5;
+}
+
+.edd-admin-order-status-badge--processing {
+	color: #015a7d;
+	background: #e5f1f5;
+}
+
+.wp-list-table.orderitems .refunded .edd-admin-order-status-badge {
+	margin-right: 10px;
 }
 
 .edd-order-resend-email-chooser legend {
@@ -927,10 +1043,15 @@ textarea[name="edd-note"] {
 	width: 300px;
 }
 
+#edd-add-discount .edd-discount-datetime input,
+#edd-edit-discount .edd-discount-datetime input {
+	vertical-align: middle;
+}
+
 #edd-add-discount input[type="text"].edd_datepicker,
 #edd-edit-discount input[type="text"].edd_datepicker {
+	display: inline-block;
 	width: 183px;
-	vertical-align: middle;
 }
 
 #edd-edit-discount textarea {
@@ -939,64 +1060,26 @@ textarea[name="edd-note"] {
 
 .edd-amount-type-wrapper {
 	position: relative;
-	display: inline-block;
-}
-
-.edd-amount-type-select-wrapper {
-	position: absolute;
-	width: 45px;
-	background: #fafafa;
-	opacity: 0.9;
-	top: 1px;
-	right: 1px;
-	bottom: 1px;
-	border-top-right-radius: 4px;
-	border-bottom-right-radius: 4px;
-}
-
-.edd-amount-type-wrapper .edd-amount-type-select-wrapper:after {
-	display: block;
-	width: 17px;
-	height: 17px;
-	position: absolute;
-	left: 2px;
-	top: 3px;
-	font-family: dashicons;
-	font-size: 15px;
-	content: '\f140';
-	color: #555;
-	margin-top: 1px;
-	z-index: 2;
+	display: flex;
 }
 
 .edd-amount-type-wrapper select {
-	line-height: 1;
-	text-align: center;
-	border: 0;
-	background: transparent;
-	width: 45px;
-	min-height: 0;
-	height: 100%;
-	margin: 0;
-	padding-right: 8px;
-	border-left: 1px solid #ddd;
-	-webkit-appearance: none;
-	border-top-left-radius: 0;
-	border-bottom-left-radius: 0;
-	box-shadow: none;
-	position: relative;
-	z-index: 3;
-}
-
-.edd-amount-type-wrapper input {
-	margin: 0;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+	width: auto !important;
 }
 
 .edd-amount-type-wrapper #edd-amount {
-	height: 29px;
-	padding: 3px 52px 3px 5px;
-	width: 80%;
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+	margin-left: -2px;
+	padding: 0 8px;
+	width: unset;
 	max-width: 125px;
+}
+
+.edd-amount-type-wrapper input:focus {
+	z-index: 2;
 }
 
 /* List Tables
@@ -1020,8 +1103,6 @@ textarea[name="edd-note"] {
 .wp-list-table.discounts .column-amount,
 .wp-list-table.discounts .column-status,
 .wp-list-table.addresses .column-type,
-.wp-list-table.orders .column-amount,
-.wp-list-table.orders .column-status,
 .wp-list-table.posts .column-earnings {
 	width: 11%;
 }
@@ -1032,7 +1113,6 @@ textarea[name="edd-note"] {
 }
 
 .wp-list-table.addresses .column-type,
-.wp-list-table.emails .column-type,
 .wp-list-table.posts .column-download_category,
 .wp-list-table.posts .column-download_tag,
 .wp-list-table.posts .column-price {
@@ -1046,8 +1126,7 @@ textarea[name="edd-note"] {
 .wp-list-table.downloads .column-date,
 .wp-list-table.downloads .column-customer,
 .wp-list-table.addresses .column-date_created,
-.wp-list-table.emails .column-date_created,
-.wp-list-table.orders .column-date {
+.wp-list-table.emails .column-date_created {
 	width: 14%;
 }
 
@@ -1074,6 +1153,7 @@ textarea[name="edd-note"] {
 	width: 18%;
 }
 
+.wp-list-table.orders .column-number,
 .wp-list-table.addresses .column-customer,
 .wp-list-table.emails .column-customer,
 .wp-list-table.customers .column-email {
@@ -1101,13 +1181,10 @@ textarea[name="edd-note"] {
 	font-size: 14px;
 }
 
-.wp-list-table.orders tr.refunded td,
-.wp-list-table.orders tr.refunded th,
-.wp-list-table.orderitems tr.refunded td,
-.wp-list-table.orderitems tr.refunded th,
-.wp-list-table.refunditems tr.refunded td,
-.wp-list-table.refunditems tr.refunded th{
-	background: #ffddee;
+.wp-list-table.orderadjustments .column-desc,
+.wp-list-table.orderitems .column-name,
+.wp-list-table.refunditems .column-name {
+	width: 30%;
 }
 
 .wp-list-table.emails .column-customer .avatar,
@@ -1149,12 +1226,19 @@ textarea[name="edd-note"] {
 
 .download_page_edd-reports #edd-filters {
 	margin-top: 8px;
+	padding-bottom: 0;
+}
+
+#edd-filters .filter-items {
+	margin: 10px 0;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
 }
 
 #edd-filters .filter-items > span:not(.edd-date-range-options) {
 	display: inline-block;
-	margin: 10px 0 10px 4px;
-	max-width: 200px;
+	margin-left: 6px;
 }
 
 #edd-filters .filter-items > #edd-date-filters {
@@ -1172,8 +1256,7 @@ textarea[name="edd-note"] {
 
 #edd-filters input[type="text"].edd_datepicker,
 #edd-filters input[type="number"] {
-	max-width: 100px;
-	padding: 5px;
+	max-width: 105px;
 }
 
 #edd-filters input[type="number"],
@@ -1253,24 +1336,13 @@ textarea[name="edd-note"] {
 	margin: 9px 2px -9px 20px;
 }
 
-.edd-tab-wrap {
-	margin: .10px 2px -12px 20px;
+.no-js.edit-tags-php.post-type-download .wp-heading-inline {
+	position: absolute;
+	top: 0;
 }
 
-h2.nav-tab-wrapper.edd-tab-clear {
-	margin: -19px 0 0 0;
-}
-
-.edit-tags-php.post-type-download .wrap > .wp-heading-inline,
-.edit-php.post-type-download .wrap .wp-heading-inline,
-.download_page_edd-payment-history .wrap .wp-heading-inline,
-.download_page_edd-customers .wrap .wp-heading-inline,
-.download_page_edd-discounts .wrap .wp-heading-inline,
-.edit-tags-php.post-type-download .wrap > .subtitle,
-.edit-php.post-type-download .wrap > .subtitle,
-.edit-php.post-type-download .wrap > .page-title-action,
-.download_page_edd-addons .wrap > .page-title-action {
-	display: none;
+.no-js.edit-tags-php.post-type-download .nav-tab-wrapper {
+	margin-top: 50px;
 }
 
 .edit-tags-php.post-type-download .wrap .nav-tab-wrapper .page-title-action,
@@ -1283,25 +1355,33 @@ h2.nav-tab-wrapper.edd-tab-clear {
 	line-height: 24px;
 }
 
+#edd_product_settings .edd-product-options__title,
 #edd_product_settings .inside strong {
 	border-top: 1px solid #eee;
 	border-bottom: 1px solid #eee;
 	background-color: #f9f9f9;
 	display: block;
-	margin: 0 -12px 0;
+	font-weight: 600;
+	margin: 12px -12px;
 	padding: 8px 12px;
 }
 
+#edd_product_settings .edd-product-settings-wrapper:first-of-type .edd-product-options__title,
 #edd_product_settings .inside div:first-child strong {
-	margin-top: -14px;
+	margin-top: -8px;
 }
 
+#edd_product_settings .edd-product-options__title .edd-help-tip,
 #edd_product_settings .inside strong .edd-help-tip {
 	float: left;
 	font-size: 20px;
 	line-height: 1.3;
 }
 
+#edd_product_settings .label--block {
+	display: block;
+	margin: 0 0 4px;
+}
 
 /* Payment History Styles
 -------------------------------------------------------------- */
@@ -1496,6 +1576,21 @@ marquee {
 	border-width: 0 1px 1px;
 	border-style: solid;
 	border-color: #e5e5e5;
+	display: flex;
+	justify-content: space-between;
+}
+.edd-repeatable-row-standard-fields .edd-form-group,
+.edd-bundled-product-row .edd-form-group {
+	margin-bottom: 0;
+	display: inline-flex;
+	flex-direction: column;
+	flex-grow: 1;
+	justify-content: space-between;
+}
+
+.edd-repeatable-row-standard-fields .edd-form-group:not(:first-of-type),
+.edd-bundled-product-row .edd-form-group:not(:first-of-type) {
+	margin-right: 18px;
 }
 .edd-repeatable-row-setting-label {
 	display: block;
@@ -1504,45 +1599,6 @@ marquee {
 .edd-repeatable-row-setting-label .edd-help-tip {
 	display: inline-block;
 	margin-right: 4px;
-}
-.edd-option-name,
-.edd-option-price,
-.edd_repeatable_default,
-.edd-file-name,
-.edd-file-url,
-.edd-file-assignment,
-.edd-bundled-product-row .edd-bundled-product-item-reorder,
-.edd-bundled-product-row .edd-bundled-product-item,
-.edd-bundled-product-row .edd-bundled-product-price-assignment,
-.edd-bundled-product-row .edd-bundled-product-actions {
-	display: inline-block;
-	vertical-align: top;
-}
-.edd-option-name {
-	width: 45%;
-	margin-left: 5%;
-}
-.edd-option-price {
-	min-width: 100px;
-}
-.edd_repeatable_default {
-	text-align: center;
-	min-width: 80px;
-}
-.edd-file-name {
-	width: 25%;
-	margin-left: 3%;
-}
-.edd-file-url {
-	position: relative;
-	width: 69%;
-}
-.edd-repeatable-row-standard-fields.has-variable-pricing .edd-file-url {
-	width: 45%;
-	margin-left: 3%;
-}
-.edd-file-assignment {
-	width: 20%;
 }
 .edd-custom-price-option-sections-wrap {
 	display: none;
@@ -1585,7 +1641,6 @@ label.edd_prices_shipping { /* remove once Simple Shipping markup is improved */
 }
 .edd-bundled-product-row .edd-bundled-product-item-reorder {
 	min-width: 30px;
-	margin-left: 8px;
 }
 .edd-bundled-product-row .edd-bundled-product-item-reorder .edd-product-file-reorder {
 	font-size: 20px;
@@ -1593,19 +1648,9 @@ label.edd_prices_shipping { /* remove once Simple Shipping markup is improved */
 	padding: 16px 4px 0;
 	cursor: move;
 }
-.edd-bundled-product-row .edd-bundled-product-item {
-	width: 60%;
-	margin-left: 3%;
-}
-.edd-bundled-product-row.has-variable-pricing .edd-bundled-product-item {
-	width: 47%;
-}
-.edd-bundled-product-row .edd-bundled-product-price-assignment {
-	width: 23%;
-	margin-left: 3%;
-}
 .edd-bundled-product-row .edd-bundled-product-actions {
-	float: left;
+	margin-right: 24px;
+	align-self: center;
 }
 .edd_repeatable_upload_wrapper .edd_repeatable_upload_field_container {
 	position: relative;
@@ -1617,24 +1662,21 @@ label.edd_prices_shipping { /* remove once Simple Shipping markup is improved */
 .edd_repeatable_upload_field {
 	padding-left: 32px;
 }
-.edd_upload_file a span {
-	height: 26px;
-	width: 26px;
-	line-height: 26px;
-	vertical-align: middle;
-	text-align: center;
-}
-.edd_upload_file a {
+.edd_upload_file button {
 	background: #f9f9f9;
+	border: none;
 	border-right: 1px solid #e5e5e5;
 	display: block;
 	padding: 0;
 	position: absolute;
-	height: 26px;
+	height: calc(100% - 4px);
 	width: 26px;
 	overflow: hidden;
 	top: 2px;
-	left: 0;
+	left: 2px;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
 }
 textarea#edd-payment-note {
 	width: 100%;
@@ -1648,8 +1690,6 @@ textarea#edd-payment-note {
 	color: #666;
 }
 input[class*="edd-price-field"] {
-	padding: 3px 5px;
-	width: 80%;
 	max-width: 125px;
 }
 [class*="item_"] [class*="edd-payment-details-download-"][type="number"].small-text,
@@ -1765,12 +1805,14 @@ input[class*="edd-price-field"] {
 .edd-admin-box-inside {
 	border-bottom: 1px solid #f1f1f1;
 	clear: both;
-	padding: 10px 12px;
+	padding: 12px;
 	margin: 0;
 	word-wrap: break-word;
 }
 .edd-admin-box-inside--row {
 	display: flex;
+	flex-wrap: wrap;
+	word-break: break-all;
 	justify-content: space-between;
 	align-items: center;
 }
@@ -1854,17 +1896,18 @@ input[class*="edd-price-field"] {
 #edd-refund-order-dialog #edd-refund-submit-subtotal td {
 	border-top: 2px solid #9c9c9c;
 }
+#edd-refund-submit-button-wrapper,
 #edd-refund-order-dialog .edd-refund-submit-line-total td:first-child {
 	text-align: left;
+}
+#edd-refund-order-dialog .edd-order-item__label {
+	font-size: 14px;
+	font-weight: 600;
+	vertical-align: baseline;
 }
 #edd_general_logs p {
 	margin: 0;
 	padding: 0;
-}
-.edd-admin-box-inside .edd_datepicker,
-.edd-admin-box-inside input[type="text"] {
-	max-width: 130px;
-	width: 100%;
 }
 .edd-admin-box-inside span.label {
 	margin-left: 10px;
@@ -1911,27 +1954,6 @@ input[class*="edd-price-field"] {
 
 .order-data-address h3 {
 	margin: 0 0 10px 0;
-}
-
-.order-data-address .input-wrap {
-	display: block;
-	clear: both;
-	padding: 3px 0;
-}
-.order-data-address .input-wrap label {
-	width: 150px;
-	text-align: left;
-	margin-left: 5px;
-}
-.order-data-address .input-wrap label,
-.order-data-address .input-wrap > input {
-	display: inline-block;
-}
-
-.order-data-address .input-wrap input {
-	width: 50%;
-	height: 29px;
-	max-width: 300px;
 }
 
 .order-data-address #edd-order-address-state-wrap,
@@ -2019,10 +2041,6 @@ input[class*="edd-price-field"] {
 .edd_repeatable_product_wrapper td {
 	overflow: visible;
 }
-.edd-order-details-label-mobile {
-	display: none;
-}
-
 .edd-add-download-to-purchase,
 .edd-add-adjustment-to-purchase {
 	padding: 15px;
@@ -2073,11 +2091,6 @@ input[class*="edd-price-field"] {
 	.edd-edit-purchase-element .edd-purchased-download-actions {
 		padding-top: 10px;
 	}
-	.edd-order-details-label-mobile {
-		display: block;
-		font-weight: 500;
-		padding-bottom: 6px;
-	}
 }
 
 @media screen and ( max-width: 1024px ) {
@@ -2112,16 +2125,62 @@ input[class*="edd-price-field"] {
 		width: 20%;
 		padding-bottom: 10px;
 	}
-	.edd-order-details-label-mobile {
-		font-size: 14px;
-		font-weight: 500;
-	}
 	.edd-price-currency,
 	.edd-payment-details-download-amount {
 		font-size: 16px;
 	}
 	.order-data-column input[type="email"] {
 		padding: 6px 10px;
+	}
+
+	.refunditems tr {
+		display: flex;
+	}
+
+	.refunditems tr.refunditem {
+		flex-wrap: wrap;
+	}
+
+	.refunditems td {
+		flex: 1 0 2.5em;
+	}
+
+	.refunditems tr.refunditem td:not(.check-column) {
+		flex-basis: calc(100% - 60px);
+	}
+
+	.refunditems tr.refunditem td:not(.check-column):not(.column-name) {
+		flex-basis: 100px;
+		display: inline-flex;
+		justify-content: flex-start;
+	}
+
+	.refunditems th:not(.column-name),
+	.refunditems tr.refunditem td.column-name:before {
+		display: none !important;
+	}
+
+	.refunditems tr.refunditem td:not(.check-column):not(.column-name):before {
+		position: relative;
+		display: inline-block;
+		margin-left: 10px;
+		right: unset;
+		width: unset;
+	}
+
+	.wp-list-table.refunditems .column-name {
+		width: 100%;
+	}
+
+	.edd-refund-submit-line-total td:last-of-type {
+		flex: 0 0 120px;
+	}
+
+	#edd-item-tables-wrapper .addresses tbody tr {
+		display: grid;
+	}
+	#edd-item-tables-wrapper .addresses tbody td:not(.no-items) {
+		padding-right: 35%;
 	}
 }
 
@@ -2269,18 +2328,14 @@ body.download_page_edd-reports {
 }
 
 .edd-chip {
-	font-size: 7px;
-	text-transform: uppercase;
+	font-size: 10px;
 	font-weight: bold;
-	line-height: 8px;
-	vertical-align: middle;
-	padding: 2px 3px 3px 2px;
-	margin: -1px 2px 0 0;
+	text-transform: uppercase;
+	line-height: 1;
+	padding: 3px;
 	border-radius: 3px;
 	color: #fff;
-	background-color: #bbb;
-	border: 1px solid #999;
-	opacity: 0.8;
+	background-color: #444;
 }
 
 .edd-vertical-sections .edd-legacy-label {
@@ -2290,65 +2345,63 @@ body.download_page_edd-reports {
 	left: 6px;
 }
 
+/* Keeping this rule for Software Licensing Reports */
+.edd-reports-wrapper .postbox h2,
 .edd-reports-wrapper .postbox h3 {
 	font-size: 1.3em
 }
+
 #edd-dashboard-widgets-wrap .metabox-holder {
 	padding-top: 0;
-}
-.edd-reports-wrapper .postbox {
-	border: none;
-	box-shadow: none;
-}
-
-.edd-reports-wrapper form .edd-from-to-wrapper,
-.edd-reports-wrapper form .edd-select,
-.edd-reports-wrapper form .edd-label,
-.edd-reports-wrapper form input.button {
-	vertical-align: middle;
-	float: right;
-}
-
-.edd-reports-wrapper form .edd-label {
-	height: 29px;
-	line-height: 29px;
-	vertical-align: middle;
-	margin-left: 4px;
 }
 
 .edd-reports-wrapper .postbox .edd-select {
 	max-width: 200px;
 	vertical-align: baseline;
 	margin-left: 4px;
+	margin-bottom: 16px;
 }
 
 .download_page_edd-reports #edd-filters {
-	margin-bottom: -5px;
+	margin-bottom: -1px;
+	box-shadow: none;
+	justify-content: space-between;
+	display: flex;
+	flex-wrap: wrap;
 }
+
 .download_page_edd-reports #edd-filters .filter-items {
-	float: none;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	flex: 1 1 75%;
 }
+
+@media screen and ( max-width: 782px ) {
+
+	.download_page_edd-reports #edd-filters .filter-items {
+		flex-basis: 100%;
+	}
+}
+
 .download_page_edd-reports #edd-item-wrapper {
 	margin: 0;
 }
+
+#edd-dashboard-widgets-wrap .postbox h2,
 #edd-dashboard-widgets-wrap .postbox h3 {
 	cursor: default;
 }
+
 #edd-filters .filter-items .edd-date-range-options {
 	display: inline-block;
 	margin: 10px 0 10px 4px;
-	width: 200px;
 }
 
 .edd-date-range-options .edd_datepicker {
-	width: 100px;
+	width: 105px;
 }
 
-.edd-date-range-options span span {
-	float: right;
-	line-height: 29px;
-	height: 29px;
-}
 .edd-report-wrap {
 	clear: both;
 }
@@ -2363,36 +2416,96 @@ body.download_page_edd-reports {
 	margin-bottom: 20px;
 }
 
-.edd-import-export-form {
+.edd-admin--has-grid {
+	display: grid;
+	display: -ms-grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	grid-gap: 20px;
+}
+
+.edd-admin--has-grid .postbox {
+	margin-bottom: 0;
+}
+
+.edd-admin--has-grid .edd-from-to-wrapper {
+	display: flex;
+	margin-left: 0;
+	margin-bottom: 16px;
+	width: 100%;
+}
+
+.edd-admin--has-grid .edd-from-to-wrapper input {
+	width: 100%;
+}
+
+.edd-admin--has-grid .edd-from-to-wrapper span {
+    flex-grow: 1;
+}
+
+.edd-admin--has-grid form {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
 	position: relative;
 }
+
+fieldset.edd-to-and-from-container {
+	display: grid;
+	display: -ms-grid;
+	grid-template-columns: 1fr 1fr;
+	grid-gap: 8px;
+}
+
+span.edd-to-and-from--separator {
+	line-height: normal;
+	align-self: center;
+	margin-bottom: 16px;
+}
+
+.edd-admin--has-grid .postbox .edd-select {
+	max-width: 100%;
+	margin-left: 0;
+}
+
+.edd-admin--has-grid .button.updating-message:before,
+.edd-admin--has-grid .button.updated-message:before {
+	vertical-align: text-bottom;
+	margin: 0 0 0 5px;
+}
+
 .edd-import-export-form .edd-progress {
 	background: #ddd;
-	position: absolute;
-	bottom: 15px;
-	width: 95%;
+	border-radius: 15px;
 	height: 15px;
+	flex-basis: 100%;
 }
+
 .edd-import-export-form .edd-progress div {
 	background: #ccc;
+	border-radius: 15px;
 	height: 100%;
 	width: 0;
 }
+
 .edd-import-export-form .notice-wrap {
 	background-color: #f4f4f4;
 	border-style: solid;
 	border-width: 1px 0;
 	border-color: #eae9e9;
-	padding: 12px 12px 4px;
+	padding: 12px;
 	overflow: auto;
 	margin: 20px -12px -23px;
 	position: relative;
 	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
-.edd-import-export-form .notice-wrap .spinner {
-	margin: 4px 10px 8px;
-	float: left;
+
+.notice-wrap div.notice {
+	margin: 0;
 }
+
 .admin-color-fresh .edd-import-export-form .edd-progress div {
 	background: #0073aa;
 }
@@ -2497,34 +2610,45 @@ body.download_page_edd-reports {
 	width: 33.3%;
 }
 
+/** Hide legacy report empty navigations */
+.download_page_edd-reports .section-content .tablenav.top {
+	display: none;
+}
+
 #edd_tax_rates {
 	margin: 1em 0 0;
 }
 
-[id*="edd-sendwp-"].button {
+[id*="edd-sendwp-"].button,
+[id*="edd-jilt-"].button {
 	font-size: 16px;
 	height: auto;
 	padding: 8px 14px;
-	margin: 0 0 6px;
+	margin: 6px 0 0;
 }
-[id*="edd-sendwp-"].button .dashicons {
+[id*="edd-sendwp-"].button .dashicons,
+[id*="edd-jilt-"].button .dashicons {
 	line-height: 29px;
 	margin-left: 8px;
 }
 [id*="edd-sendwp-"].button .edd-loading,
-[id*="edd-sendwp-"].button .edd-loading:after {
+[id*="edd-sendwp-"].button .edd-loading:after,
+[id*="edd-jilt-"].button .edd-loading,
+[id*="edd-jilt-"].button .edd-loading:after {
 	border-radius: 50%;
 	display: inline-block;
 	width: 14px;
 	height: 14px;
 }
-[id*="edd-sendwp-"].button .edd-loading {
+[id*="edd-sendwp-"].button .edd-loading,
+[id*="edd-jilt-"].button .edd-loading {
 	position: relative;
 	top: 3px;
 	margin-right: 4px;
 	box-shadow: 0 0 2px rgba(0,0,0,.2);
 }
-[id*="edd-sendwp-"].button .edd-loading {
+[id*="edd-sendwp-"].button .edd-loading,
+[id*="edd-jilt-"].button .edd-loading {
 	-webkit-animation: edd-spinning 1.1s infinite linear;
 	animation: edd-spinning 1.1s infinite linear;
 	border-top: 2px solid rgba(255, 255, 255, 0.5);
@@ -2536,12 +2660,16 @@ body.download_page_edd-reports {
 	-ms-transform: translateZ(0);
 	transform: translateZ(0);
 }
-#edd-sendwp-disconnect.button .edd-loading.dark {
+#edd-sendwp-disconnect.button .edd-loading.dark,
+#edd-jilt-disconnect.button .edd-loading.dark {
 	border-top-color: rgba(0, 0, 0, 0.2);
 	border-left-color: rgba(0, 0, 0, 0.2);
 	border-bottom-color: rgba(0, 0, 0, 0.2);
 	border-right-color: #666;
 	box-shadow: none;
+}
+.jilt-notice {
+	position: relative;
 }
 @-webkit-keyframes edd-spinning {
 	0% {
@@ -2580,64 +2708,26 @@ body.download_page_edd-reports {
 	margin-left: 0;
 }
 
-#edd-reports-tiles-wrap .postbox {
-	border: none;
-	box-shadow: none;
-	overflow: hidden;
-	background: transparent;
-}
-#edd-reports-tiles-wrap .postbox,
-#edd-reports-tiles-wrap .metabox-holder .empty-container {
-	height: 110px;
-	min-width: 0;
-	border: none;
+#edd-reports-tiles-wrap {
+	display: -ms-grid;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+	grid-gap: 20px;
 }
 
-#edd-reports-tiles-wrap .metabox-holder .empty-container:after {
-	content: none;
-}
-
-#edd-reports-tiles-wrap .postbox button {
-	display: none;
-}
-
-#edd-reports-tiles-wrap h2.hndle {
+.edd-reports-tile {
 	text-align: center;
-	text-transform: uppercase;
-	font-size: 11px;
-	font-weight: normal;
-	color: #888;
-	border-bottom: none;
-	padding: 0;
-	position: absolute;
-	z-index: 2;
-	top: 0;
-	right: 0;
-	width: 100%;
-	height: 100%;
-}
-
-#edd-reports-tiles-wrap h2.hndle span {
-	position: relative;
-	top: 65px;
-}
-#edd-reports-tiles-wrap .postbox .inside {
-	text-align: center;
-	vertical-align: middle;
-	position: relative;
-	box-sizing: border-box;
-	padding: 0;
-	margin: 0;
-	height: 100%;
+	padding: 30px 10px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
 	border: 1px solid #e5e5e5;
 	background: #fafafa;
+	position: relative;
+	box-sizing: border-box;
 }
 
-#edd-reports-tiles-wrap .inside span {
-	display: block;
-}
-
-#edd-reports-tiles-wrap .inside span.dashicons {
+.edd-reports-tile span.dashicons {
 	display: inline-block;
 	font-size: 30px;
 	line-height: 20px;
@@ -2650,40 +2740,54 @@ body.download_page_edd-reports {
 	color: #999;
 }
 
-#edd-reports-tiles-wrap .inside .tile-value {
-	margin-top: 27px;
-	padding: 5px;
+.edd-reports-tile .tile-label {
+	text-align: center;
+	text-transform: uppercase;
+	font-size: 11px;
+	font-weight: normal;
+	color: #888;
+	order: 2;
+	margin-top: 3px;
+}
+
+.edd-reports-tile .tile-value {
+	order: 1;
 	color: #333;
 	font-size: 2em;
 	line-height: 1;
-	display: inline-block;
 	transition: all .2s ease-in-out;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	max-width: 80%;
 }
 
-#edd-reports-tiles-wrap .inside .tile-amount {
+.edd-reports-tile:hover {
+	border: 1px solid #aaa;
+}
+
+.edd-reports-tile:hover .tile-value:not(.tile-no-data) {
+	transform: scale(1.05);
+}
+
+.edd-reports-tile .tile-amount {
 	color: rgb(39,148,218);
 }
-#edd-reports-tiles-wrap .inside .tile-number {
+
+.edd-reports-tile .tile-number {
 	color: rgb(153,102,255);
 }
-#edd-reports-tiles-wrap .inside .tile-amount,
-#edd-reports-tiles-wrap .inside .tile-number {
+
+.edd-reports-tile .tile-amount,
+.edd-reports-tile .tile-number {
 	color: #fff;
 }
 
-#edd-reports-tiles-wrap .inside .tile-value.tile-no-data {
+.edd-reports-tile .tile-value.tile-no-data {
 	color: #ddd;
 }
 
-#edd-reports-tiles-wrap .inside .tile-value.tile-url {
+.edd-reports-tile .tile-value.tile-url {
 	font-size: 1.5em;
 }
 
-#edd-reports-tiles-wrap .inside .tile-compare {
+.edd-reports-tile .tile-compare {
 	position: absolute;
 	left: 0;
 	bottom: 0;
@@ -2700,27 +2804,27 @@ body.download_page_edd-reports {
 	margin: 0 0 -1px -1px;
 }
 
-#edd-reports-tiles-wrap .postbox:hover .inside {
-	border: 1px solid #aaa;
-}
-
-#edd-reports-tiles-wrap .postbox:hover .tile-value:not(.tile-no-data) {
-	transform: scale(1.05);
-}
-
-#edd-reports-tiles-wrap .postbox:hover .tile-compare {
+.edd-reports-tile:hover .tile-compare {
 	border-right: 1px solid #bbb;
 	border-top: 1px solid #bbb;
 	color: #777;
 }
 
-.edd-reports-chart-pie,
-.edd-reports-chart-doughnut {
-	box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	float: right;
-	width: 50%;
+@media screen and ( min-width: 600px ) {
+	#edd-reports-charts-wrap {
+		display: -ms-grid;
+		display: grid;
+		grid-template-columns: repeat(2, minmax(200px, 50%));
+		grid-gap: 20px;
+	}
+
+	.edd-reports-chart {
+		margin-bottom: 0;
+	}
+
+	.edd-reports-chart-line {
+		grid-column: 1 / span 2;
+	}
 }
 
 #edd-chartjs-tooltip {
@@ -3011,11 +3115,6 @@ body.download_page_edd-reports {
 }
 
 @media screen and ( max-width: 782px ) {
-
-	.post-type-download .nav-tab-wrapper a {
-		font-size: 70%;
-		padding: 2px 4px;
-	}
 	.license-lifetime-notice,
 	.license-expiration-date-notice,
 	.license-null {
@@ -3047,6 +3146,7 @@ body.download_page_edd-reports {
 	box-shadow: 0 1px 1px rgba(0,0,0,0.04);
 	position: relative;
 	margin-top: 15px;
+	display: flex;
 }
 #edd-item-wrapper.full-width {
 	max-width: 100%;
@@ -3062,13 +3162,14 @@ body.download_page_edd-reports {
 }
 .edd-sections-wrap {
 	clear: both;
+	width: 100%;
 }
 .edd-sections-wrap .section-wrap {
 	background-color: #fff;
 	display: inline-block;
 	z-index: 2;
 }
-.edd-sections-wrap .edd-vertical-sections:not(.meta-box) .section-wrap > div {
+.js .edd-sections-wrap .edd-vertical-sections:not(.meta-box) .section-wrap > div {
 	min-height: 500px;
 	height: 100%;
 }
@@ -3081,12 +3182,11 @@ body.download_page_edd-reports {
 .edd-sections-wrap .section-wrap {
 	border-right: 1px solid #e5e5e5;
 }
-.edd-sections-wrap .section-wrap .section-content > div {
-	padding: 0px 20px 5px;
-}
-.edd-sections-wrap .section-wrap .section-content > div:not(.tablenav):first-child {
+
+.edd-sections-wrap .section-wrap .section-content > * {
 	padding: 20px;
 }
+
 .edd-sections-wrap .section-wrap .avatar-wrap {
 	float: right;
 	padding-left: 10px;
@@ -3147,6 +3247,10 @@ body.download_page_edd-reports {
 	margin-left: 5px;
 	text-decoration: none;
 }
+.customer-info {
+	min-height: 185px;
+}
+
 .customer-info .customer-name {
 	font-size: 24px;
 	font-weight: 600;
@@ -3206,13 +3310,15 @@ body.download_page_edd-reports {
 }
 #edd-item-stats-wrapper {
 	margin: 0 auto;
-	min-height: 30px;
 	text-align: center;
+}
+#edd-item-stats-wrapper ul {
+	display: flex;
+	margin: 0;
 }
 #edd-item-stats-wrapper li {
 	font-size: 14px;
-	float: right;
-	vertical-align: middle;
+	margin-bottom: 0;
 	width: 50%;
 }
 #edd-item-stats-wrapper a {
@@ -3229,41 +3335,31 @@ body.download_page_edd-reports {
 #edd-item-tables-wrapper .no-items {
 	text-align: right;
 }
-#edd-item-tables-wrapper .column-actions {
-	width: 25%;
-}
-#edd-item-tables-wrapper .downloads tr > th:first-child,
-#edd-item-tables-wrapper .downloads tr > td:first-child,
-#edd-item-tables-wrapper .emails tr > th:first-child,
-#edd-item-tables-wrapper .emails tr > td:first-child  {
-	text-align: right;
-}
-#edd-item-tables-wrapper .downloads tr > td:only-child {
-	text-align: center;
-}
-#edd-item-tables-wrapper .emails .add-customer-email-row td {
+#edd-item-tables-wrapper .emails .add-customer-email-row {
 	background-color: #f4f4f4;
 	border-top: 1px solid #e5e5e5;
 }
-#edd-item-tables-wrapper .emails .primary-email-icon {
-	font-size: 14px;
-	line-height: 14px;
-	height: 14px;
-	width: 14px;
-	padding: 2px 0;
+#edd-item-tables-wrapper .add-customer-email-wrapper {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	margin: 12px 0;
 }
-#edd-item-tables-wrapper .emails input {
-	vertical-align: middle;
-	margin: 6px 0;
+#edd-item-tables-wrapper .edd-form-group {
+	margin-bottom: 0;
+}
+#edd-item-tables-wrapper .edd-make-email-primary {
+	flex-grow: 1;
+	margin-right: 12px;
 }
 #edd-item-tables-wrapper .emails .spinner {
 	float: none;
-	margin: 10px 0 0 0;
+	margin: 0 10px;
+	align-self: center;
 }
 #edd-item-tables-wrapper .notice-error {
 	background-color: #fff5f5;
 }
-
 #edd-item-notes-wrapper {
 	min-height: 50px;
 }
@@ -3307,9 +3403,6 @@ body.download_page_edd-reports {
 	margin-right: -20px;
 	margin-left: -20px;
 }
-.edd-sections-wrap .section-wrap .add-customer-email-wrapper > #add-customer-email {
-	vertical-align: middle;
-}
 
 @media screen and ( max-width: 810px ) and ( min-width: 656px ) {
 	.customer-info .customer-name {
@@ -3333,10 +3426,6 @@ body.download_page_edd-reports {
 		border-top: 1px solid #e5e5e5;
 		border-right: 0;
 		margin-top: -1px;
-	}
-	#edd-item-tables-wrapper .wp-list-table tbody tr:not(.inline-edit-row):not(.no-items) td.column-primary ~ td:not(.check-column) {
-		display: block;
-		padding-right: 10px;
 	}
 }
 @media screen and ( max-width: 656px ) {
@@ -3376,6 +3465,13 @@ body.download_page_edd-reports {
 	.edd-sections-wrap .section-wrap .customer-id {
 		display: none;
 	}
+	#edd-item-tables-wrapper .emails td.column-primary {
+		padding-left: 10px;
+		width: 100% !important;
+	}
+	#edd-item-tables-wrapper .edd-form-group {
+		margin: 0 0 16px 0;
+	}
 }
 @media screen and ( max-width: 480px ) {
 	#edd-item-tab-wrapper-list li {
@@ -3395,33 +3491,23 @@ body.download_page_edd-reports {
 	.edd-repeatable-row-title {
 		padding-bottom: 0;
 	}
-	.edd-option-name,
-	.edd-option-price,
-	.edd_repeatable_default,
-	.edd-bundled-product-item-reorder,
-	.edd-bundled-product-row .edd-bundled-product-item,
-	.edd-bundled-product-row .edd-bundled-product-price-assignment,
-	.edd-file-name,
-	.edd-file-url,
-	.edd-file-assignment {
-		float: none;
-		text-align: right;
-		width: 100% !important;
-		margin: 10px 0;
+	.edd-repeatable-row-standard-fields,
+	.edd-bundled-product-row {
+		flex-wrap: wrap;
 	}
-	.edd-bundled-product-row .edd-bundled-product-actions {
-		float: none;
+	.edd-repeatable-row-standard-fields .edd-form-group,
+	.edd-bundled-product-row .edd-form-group {
+		margin-right: 0 !important;
+		margin-bottom: 24px;
 	}
 	.edd-bundled-product-row .edd-bundled-product-item-reorder .edd-product-file-reorder {
 		padding: 0;
 	}
 
 	#edd-filters span {
-		display: block;
 		margin: 2px 0;
 	}
 
-	#edd-filters a,
 	.download_page_edd-reports .button {
 		text-align: center;
 	}
@@ -3445,13 +3531,7 @@ body.download_page_edd-reports {
 	.download_page_edd-reports .inside input[type="text"],
 	.download_page_edd-reports .inside select,
 	.download_page_edd-reports .inside input[type="submit"],
-	.download_page_edd-reports .inside .button,
-	#system-info-textarea,
-	#edd-add-discount input[type="text"],
-	#edd-edit-discount input[type="text"],
-	#edd-filters input:not([type='radio']),
-	#edd-filters select,
-	#edd-filters a {
+	.download_page_edd-reports .inside .button {
 		width: 100%;
 	}
 
@@ -3524,7 +3604,6 @@ body.download_page_edd-reports {
 #edd-item-tab-wrapper, /** [1] */
 .edd-vertical-sections .section-nav {
 	position: relative;
-	float: right;
 	width: 20%;
 	line-height: 1em;
 	margin: 0 0 0 -1px;
@@ -3548,20 +3627,33 @@ body.download_page_edd-reports {
 	background-color: #fcfcfc;
 }
 
+.edd-vertical-sections .section-title:last-of-type {
+	margin-bottom: 24px;
+}
+
 #edd-item-tab-wrapper li a, /** [1] */
 #edd-item-tab-wrapper li > .edd-item-tab-label-wrap, /** [1] */
 .edd-vertical-sections .section-nav li a {
-	display: block;
+	display: flex;
 	margin: 0;
 	padding: 9px;
-	line-height: 20px !important;
 	text-decoration: none;
 	border-bottom: 1px solid #e5e5e5;
 	box-shadow: none;
 	position: relative;
+	align-items: center;
 }
 
-.edd-vertical-sections .section-nav li[aria-selected="true"] a:after {
+#edd-item-tab-wrapper li a:focus,
+#edd-item-tab-wrapper li a:hover,
+.edd-vertical-sections .section-nav li a:hover,
+.edd-vertical-sections .section-nav li a:focus {
+	box-shadow: inset -5px 0;
+	outline: 0;
+	transition: all .25s;
+}
+
+.edd-vertical-sections .section-nav .section-title--is-active a:after {
 	content: '';
 	width: 1px;
 	height: 100%;
@@ -3592,8 +3684,7 @@ body.download_page_edd-reports {
 	color: #888;
 }
 
-.edd-vertical-sections .section-nav li[aria-selected="true"] a {
-	position: relative;
+.edd-vertical-sections .section-nav .section-title--is-active a {
 	font-weight: bold;
 	color: #555;
 	background-color: #fff;
@@ -3601,59 +3692,89 @@ body.download_page_edd-reports {
 	margin-left: -1px;
 }
 
+.edd-vertical-sections.use-js .section-content,
+.no-js .edd-vertical-sections.use-js .section-nav,
+.no-js .edd-vertical-sections.use-js.edd-item-header-small {
+	display: none;
+}
+
+.no-js .edd-vertical-sections.use-js .section-content {
+	display: block;
+}
+
 /* Fresh */
-.admin-color-fresh .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+.admin-color-fresh .edd-vertical-sections .section-nav li a:hover,
+.admin-color-fresh .edd-vertical-sections .section-nav li a:focus,
+.admin-color-fresh .edd-vertical-sections .section-nav .section-title--is-active a {
 	box-shadow: inset -5px 0 #0073aa;
 }
 
 /* Blue */
-.admin-color-blue .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+.admin-color-blue .edd-vertical-sections .section-nav li a:hover,
+.admin-color-blue .edd-vertical-sections .section-nav li a:focus,
+.admin-color-blue .edd-vertical-sections .section-nav .section-title--is-active a {
 	box-shadow: inset -5px 0 #096484;
 }
 
 /* Coffee */
-.admin-color-coffee .edd-vertical-sections .section-nav li[aria-selected="true"] a {
-	box-shadow: inset -5px 0 #096484;
+.admin-color-coffee .edd-vertical-sections .section-nav li a:hover,
+.admin-color-coffee .edd-vertical-sections .section-nav li a:focus,
+.admin-color-coffee .edd-vertical-sections .section-nav .section-title--is-active a {
+	box-shadow: inset -5px 0 #c7a589;
 }
 
 /* Ectoplasm */
-.admin-color-ectoplasm .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+.admin-color-ectoplasm .edd-vertical-sections .section-nav li a:hover,
+.admin-color-ectoplasm .edd-vertical-sections .section-nav li a:focus,
+.admin-color-ectoplasm .edd-vertical-sections .section-nav .section-title--is-active a {
 	box-shadow: inset -5px 0 #a3b745;
 }
 
 /* Midnight */
-.admin-color-midnight .edd-vertical-sections .section-nav li[aria-selected="true"] a {
-	box-shadow: inset -5px 0 #26292c;
+.admin-color-midnight .edd-vertical-sections .section-nav li a:hover,
+.admin-color-midnight .edd-vertical-sections .section-nav li a:focus,
+.admin-color-midnight .edd-vertical-sections .section-nav .section-title--is-active a {
+	box-shadow: inset -5px 0 #e14d43;
 }
 
 /* Ocean */
-.admin-color-ocean .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+.admin-color-ocean .edd-vertical-sections .section-nav li a:hover,
+.admin-color-ocean .edd-vertical-sections .section-nav li a:focus,
+.admin-color-ocean .edd-vertical-sections .section-nav .section-title--is-active a {
 	box-shadow: inset -5px 0 #627c83;
 }
 
 /* Sunrise */
-.admin-color-sunrise .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+.admin-color-sunrise .edd-vertical-sections .section-nav li a:hover,
+.admin-color-sunrise .edd-vertical-sections .section-nav li a:focus,
+.admin-color-sunrise .edd-vertical-sections .section-nav .section-title--is-active a {
 	box-shadow: inset -5px 0 #be3631;
 }
 
 /* Light */
-.admin-color-light .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+.admin-color-light .edd-vertical-sections .section-nav li a:hover,
+.admin-color-light .edd-vertical-sections .section-nav li a:focus,
+.admin-color-light .edd-vertical-sections .section-nav .section-title--is-active a {
 	box-shadow: inset -5px 0 #888;
 }
 
 /* bbPress Color Schemes */
 
 /* Evergreen */
-.admin-color-evergreen .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+.admin-color-evergreen .edd-vertical-sections .section-nav li a:hover,
+.admin-color-evergreen .edd-vertical-sections .section-nav li a:focus,
+.admin-color-evergreen .edd-vertical-sections .section-nav .section-title--is-active a {
 	box-shadow: inset -5px 0 #36533f;
 }
 
 /* Mint */
-.admin-color-mint .edd-vertical-sections .section-nav li[aria-selected="true"] a {
+.admin-color-mint .edd-vertical-sections .section-nav li a:hover,
+.admin-color-mint .edd-vertical-sections .section-nav li a:focus,
+.admin-color-mint .edd-vertical-sections .section-nav .section-title--is-active a {
 	box-shadow: inset -5px 0 #4f6d59;
 }
 
-.edd-vertical-sections .section-nav li[aria-selected="true"] .dashicons {
+.edd-vertical-sections .section-nav .section-title--is-active .dashicons {
 	color: #555;
 }
 
@@ -3665,7 +3786,7 @@ body.download_page_edd-reports {
 	}
 
 	.edd-vertical-sections .section-nav li a {
-		text-align: center;
+		justify-content: center;
 	}
 	.edd-vertical-sections .section-nav li a .dashicons {
 		width: 24px;
@@ -3695,7 +3816,6 @@ body.download_page_edd-reports {
 
 #edd-item-card-wrapper, /** [1] */
 .edd-vertical-sections .section-wrap {
-	float: right;
 	width: 80%;
 }
 
@@ -3705,7 +3825,7 @@ body.download_page_edd-reports {
 	box-sizing: border-box;
 }
 
-div:not(#edd-item-tab-wrapper) + #edd-item-card-wrapper .item-section { /** [1] */
+*:not(#edd-item-tab-wrapper) + #edd-item-card-wrapper .item-section { /** [1] */
 	margin: 25px 0;
 	padding: 20px;
 	border: 1px solid #e5e5e5;
@@ -3911,4 +4031,88 @@ div:not(#edd-item-tab-wrapper) + #edd-item-card-wrapper .item-section { /** [1] 
 	text-align: left;
 	font-style: italic;
 	width: 150px;
+}
+
+/**
+ * Forms
+ * ---------------------------------------------------------- */
+
+/**
+ * Form Group
+ *
+ * <div class="edd-form-group">
+ *   <label class="edd-form-group__label">Label</label>
+ *   <div class="edd-form-group__control">
+ *   	<input type="text" class="edd-form-group__input" />
+ *   </div>
+ *   <p class="edd-form-group__help">Help</p>
+ * </div>
+ *
+ *
+ * <fieldset class="edd-form-group">
+ *   <legend class="edd-form-group__label">Label</label>
+ *
+ *   <div class="edd-form-group__control">
+ *   	<input type="radio" class="edd-form-group__input" />
+ *   	<label>Radio 1</label>
+ *   </div>
+ *
+ *   <div class="edd-form-group__control">
+ *   	<input type="radio" class="edd-form-group__input" />
+ *   	<label>Radio 2</label>
+ *   </div>
+ * </fieldset>
+ *
+ */
+.edd-form-group {
+	margin-bottom: 16px;
+}
+
+.edd-form-group:last-of-type {
+	margin-bottom: 0;
+}
+
+.edd-form-group__label {
+	display: block;
+	margin-bottom: 8px;
+	padding: 0;
+}
+
+.edd-form-group__control {
+	margin-bottom: 8px;
+}
+
+.edd-form-group__control.is-radio,
+.edd-form-group__control.is-check {
+	margin-top: 4px;
+}
+
+.edd-form-group__control:last-of-type {
+	margin-bottom: 0;
+}
+
+.edd-form-group__input {
+	max-width: 100%;
+}
+
+.edd-form-group__input[type="checkbox"],
+.edd-form-group__input[type="radio"] {
+	margin-top: 0;
+}
+
+.edd-form-group__input[type="checkbox"] + label,
+.edd-form-group__input[type="radio"] + label {
+	display: unset;
+}
+
+select.edd-form-group__input {
+	max-width: 100%;
+}
+
+.edd-form-group__help {
+	color: #666;
+	font-size: 13px;
+	font-style: italic;
+	line-height: initial;
+	margin: 8px 0 0;
 }

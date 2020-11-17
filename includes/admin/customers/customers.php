@@ -597,12 +597,40 @@ function edd_customers_view( $customer = null ) {
 			<li>
 				<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history&customer=' . $customer->id ); ?>">
 					<span class="dashicons dashicons-cart"></span>
-					<?php printf( _n( '%s Completed Sale', '%s Completed Sales', $customer->purchase_count, 'easy-digital-downloads' ), esc_html( number_format_i18n( $customer->purchase_count, 0 ) ) ); ?>
+					<?php
+					printf(
+						/* translators: the customer's lifetime number of sales */
+						_n(
+							'%s Completed Sale',
+							'%s Completed Sales',
+							$customer->purchase_count,
+							'easy-digital-downloads'
+						),
+						(
+							'<span class="edd_purchase_count">' .
+							esc_html( number_format_i18n( $customer->purchase_count, 0 ) ) .
+							'</span>'
+						)
+					);
+					?>
 				</a>
 			</li>
 			<li>
 				<span class="dashicons dashicons-chart-area"></span>
-				<?php echo esc_html( edd_currency_filter( edd_format_amount( $customer->purchase_value ) ) ); ?> <?php esc_html_e( 'Lifetime Value', 'easy-digital-downloads' ); ?>
+				<?php
+				printf(
+					/* translators: the customer's lifetime value */
+					esc_html__(
+						'%s Lifetime Value',
+						'easy-digital-downloads'
+					),
+					(
+						'<span class="edd_purchase_value">' .
+						esc_html( edd_currency_filter( edd_format_amount( $customer->purchase_value ) ) ) .
+						'</span>'
+					)
+				);
+				?>
 			</li>
 			<?php do_action( 'edd_customer_stats_list', $customer ); ?>
 		</ul>
@@ -840,7 +868,7 @@ function edd_customers_view( $customer = null ) {
 							<div class="edd-form-group">
 								<label class="edd-form-group__label screen-reader-text" for="edd-additional-email"><?php esc_html_e( 'Email Address', 'easy-digital-downloads' ); ?></label>
 								<div class="edd-form-group__control">
-									<input type="email" name="additional-email" id="edd-additional-email" value="" placeholder="<?php esc_attr_e( 'Email Address', 'easy-digital-downloads' ); ?>" />
+									<input type="email" name="additional-email" id="edd-additional-email" class="edd-form-group__input regular-text" value="" placeholder="<?php esc_attr_e( 'Email Address', 'easy-digital-downloads' ); ?>" />
 								</div>
 							</div>
 							<div class="edd-form-group edd-make-email-primary">
@@ -922,7 +950,7 @@ function edd_customers_view( $customer = null ) {
 					// View URL
 					$view_url = edd_get_admin_url( array(
 						'page' => 'edd-payment-history',
-						'view' => 'view-order-details',
+						'view' => 'view-refund-details',
 						'id'   => $refund->id,
 					) );
 
