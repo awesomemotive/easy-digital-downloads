@@ -32,3 +32,11 @@
 		}
 	}
 }
+
+.toggle-custom-price-option-section {
+	color: #777;
+
+	&:hover {
+		color: $wp-text;
+	}
+}

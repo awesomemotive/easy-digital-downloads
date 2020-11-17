@@ -13,7 +13,11 @@
 @import "~@wordpress/base-styles/breakpoints";
 @import "~@wordpress/base-styles/animations";
 
-@import "downloads/style.scss";
+@import "../variables/colors";
+@import "../variables/mixins";
+
+@import "downloads/style";
+@import "forms/style";
 
 /**
  * Notes:
@@ -1501,12 +1505,7 @@ marquee {
 	cursor: pointer;
 	vertical-align: middle;
 }
-.edd-repeatable-row-actions .toggle-custom-price-option-section {
-	color: #777;
-}
-.edd-repeatable-row-actions .toggle-custom-price-option-section:hover {
-	color: #444;
-}
+
 .edd-repeatable-row-header,
 .edd-bundle-products-header {
 	clear: both;
@@ -1576,7 +1575,7 @@ marquee {
 	gap: 18px;
 }
 
-.edd-custom-price-option-section-content .edd-form-group,
+/* @todo: remove these when .edd-form-row has been fully implemented */
 .edd-repeatable-row-standard-fields .edd-form-group,
 .edd-bundled-product-row .edd-form-group {
 	margin-bottom: 0;

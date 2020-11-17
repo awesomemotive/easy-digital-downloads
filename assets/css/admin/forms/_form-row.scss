@@ -1,0 +1,12 @@
+.edd-form-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+
+	.is-column {
+		display: inline-flex;
+		flex-direction: column;
+		justify-content: flex-end;
+		margin-bottom: 0;
+	}
+}
