@@ -154,13 +154,13 @@ function edd_edit_customer( $args = array() ) {
 
 	// Update customer
 	if ( $customer->update( $customer_data ) ) {
-		$current_address        = $customer->get_address( 'primary' );
+		$current_address        = $customer->get_address();
 		$address['customer_id'] = $customer->id;
 
 		if ( $current_address ) {
 			edd_update_customer_address( $current_address->id, $address );
 		} else {
-			$address['type'] = 'primary';
+			$address['is_primary'] = true;
 			edd_add_customer_address( $address );
 		}
 
