@@ -422,7 +422,7 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 	ob_end_clean();
 
 	ob_start();
-	if ( has_action( 'edd_download_price_table_row' ) ) {
+	if ( -1 !== has_action( 'edd_download_price_table_row', 'edd_hijack_edd_download_price_table_head' ) ) {
 		do_action_deprecated( 'edd_download_price_table_row', array( $post_id, $key, $args ), '2.8', 'edd_download_price_option_row' );
 	}
 	$show_advanced = ob_get_clean();
