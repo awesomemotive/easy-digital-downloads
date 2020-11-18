@@ -3,10 +3,13 @@
 	flex-wrap: wrap;
 	gap: 12px;
 
-	.is-column {
+	&__column {
 		display: inline-flex;
 		flex-direction: column;
 		justify-content: flex-end;
-		margin-bottom: 0;
+
+		&.edd-form-group {
+			margin-bottom: 0;
+		}
 	}
 }
