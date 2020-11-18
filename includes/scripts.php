@@ -405,7 +405,7 @@ function edd_enqueue_admin_scripts( $hook = '' ) {
 	}
 
 	// Upgrades Page
-	if ( 'edd-admin-upgrades' === $hook ) {
+	if ( in_array( $hook, array( 'edd-admin-upgrades', 'download_page_edd-tools' ) ) ) {
 		wp_enqueue_script( 'edd-admin-tools-export' );
 		wp_enqueue_script( 'edd-admin-upgrades' );
 	}
