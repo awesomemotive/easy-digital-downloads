@@ -321,11 +321,12 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 				'object_id'   => $this->payment->ID,
 				'object_type' => 'order',
 				'type'        => 'fee',
+				'order'       => 'ASC',
 			)
 		);
 
 		$this->assertEquals( 2, count( $fees ) );
-		$fee = $fees[2];
+		$fee = $fees[1];
 		$this->assertEquals( 'Test Fee 2', $fee->description );
 	}
 
