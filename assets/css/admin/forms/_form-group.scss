@@ -1,0 +1,10 @@
+.edd-form-group {
+	&__control--is-inline {
+		display: inline-flex;
+		align-items: flex-end;
+
+		.edd-form-group__control {
+			margin-bottom: 0;
+		}
+	}
+}
