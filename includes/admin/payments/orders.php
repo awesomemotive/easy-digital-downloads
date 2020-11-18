@@ -349,7 +349,7 @@ function edd_order_details_email( $order ) {
 				</label>
 
 				<div class="edd-form-group__control">
-					<input readonly type="email" id="<?php echo esc_attr( $order->email ); ?>" class="edd-form-group__input" value="<?php echo esc_attr( $order->email ); ?>" />
+					<input readonly type="email" id="<?php echo esc_attr( $order->email ); ?>" class="edd-form-group__input regular-text" value="<?php echo esc_attr( $order->email ); ?>" />
 				</div>
 
 				<p class="edd-form-group__help description">
