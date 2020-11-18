@@ -1517,11 +1517,42 @@ function edd_upgrade_render_v30_migration() {
 		</p>
 	</div>
 
-	<div id="edd-v3-remove-legacy-data" <?php echo ! $can_remove_legacy_data ? 'class="edd-hidden"' : ''; ?>>
-		<h2><?php esc_html_e( 'Remove Legacy Data', 'easy-digital-downloads' ); ?></h2>
+	<?php
+	/**
+	 * Display the form for removing legacy data.
+	 */
+	edd_v3_remove_legacy_data_form( ! $can_remove_legacy_data );
+}
+
+/**
+ * Renders the form for removing legacy data.
+ *
+ * @param bool $hide_wrapper_initially Whether or not to hide the wrapper on initial load.
+ *
+ * @since 3.0
+ */
+function edd_v3_remove_legacy_data_form( $hide_wrapper_initially = false ) {
+	$is_tools_page = ! empty( $_GET['page'] ) && 'edd-tools' === $_GET['page'];
+	$classes       = $hide_wrapper_initially ? array( 'edd-hidden' ) : array();
+	?>
+	<div id="edd-v3-remove-legacy-data"<?php echo ! empty( $classes ) ? 'class="' . esc_attr( implode( ' ', $classes ) ) . '"' : ''; ?>>
+		<?php if ( ! $is_tools_page ) : ?>
+			<h2><?php esc_html_e( 'Remove Legacy Data', 'easy-digital-downloads' ); ?></h2>
+		<?php endif; ?>
 		<p>
 			<?php echo wp_kses( __( '<strong>Important:</strong> This removes all legacy data from where it was previously stored in custom post types and post meta. This is an optional step that is not reversible. Please back up your database and ensure your store is operational before completing this step.', 'easy-digital-downloads' ), array( 'strong' => array() ) ); ?>
 		</p>
+		<?php if ( ! $is_tools_page ) : ?>
+		<p>
+			<?php
+			printf(
+				esc_html__( 'You can return to complete this step later by navigating to %sDownloads &raquo; Tools%s.', 'easy-digital-downloads' ),
+				'<a href="' . esc_url( edd_get_admin_url( array( 'page' => 'edd-tools' ) ) ) . '">',
+				'</a>'
+			);
+			?>
+		</p>
+		<?php endif; ?>
 		<form class="edd-v3-migration" method="POST">
 			<p>
 				<label for="edd-v3-remove-legacy-data-confirmation">
@@ -1536,12 +1567,11 @@ function edd_upgrade_render_v30_migration() {
 				<button type="submit" class="button button-primary disabled" disabled>
 					<?php esc_html_e( 'Permanently Remove Legacy Data', 'easy-digital-downloads' ); ?>
 				</button>
-				<!-- @todo align better with button -->
 				<span id="edd-v3-migration-v30_legacy_data_removed">
-					<span class="edd-migration-percentage edd-hidden">
-						<span class="edd-migration-percentage-value">0</span>%
+						<span class="edd-migration-percentage edd-hidden">
+							<span class="edd-migration-percentage-value">0</span>%
+						</span>
 					</span>
-				</span>
 			</div>
 		</form>
 		<div id="edd-v3-legacy-data-removal-complete" class="edd-hidden">
@@ -1553,6 +1583,39 @@ function edd_upgrade_render_v30_migration() {
 	</div>
 	<?php
 }
+
+/**
+ * Adds the Remove Legacy Data form to the Tools page.
+ *
+ * @since 3.0
+ * @return void
+ */
+function edd_v3_remove_legacy_data_tool() {
+	// Tool not available if they've already done it.
+	if ( edd_has_upgrade_completed( 'v30_legacy_data_removed' ) ) {
+		return;
+	}
+
+	$v3_upgrades = edd_get_v30_upgrades();
+	unset( $v3_upgrades['v30_legacy_data_removed'] );
+	$v3_upgrades = array_keys( $v3_upgrades );
+
+	// If even one upgrade hasn't completed, they cannot delete legacy data.
+	foreach( $v3_upgrades as $v3_upgrade ) {
+		if ( ! edd_has_upgrade_completed( $v3_upgrade ) ) {
+			return;
+		}
+	}
+	?>
+	<div class="postbox">
+		<h3><span><?php esc_html_e( 'Remove Legacy Data', 'easy-digital-downloads' ); ?></span></h3>
+
+		<div class="inside">
+			<?php edd_v3_remove_legacy_data_form(); ?>
+		</div>
+	<?php
+}
+add_action( 'edd_tools_recount_stats_after', 'edd_v3_remove_legacy_data_tool' );
 
 /**
  * Register batch processors for upgrade routines for EDD 3.0.
