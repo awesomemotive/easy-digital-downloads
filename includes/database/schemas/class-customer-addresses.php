@@ -61,6 +61,7 @@ class Customer_Addresses extends Schema {
 			'default'    => '0',
 			'sortable'   => true,
 			'searchable' => false,
+			'transition' => true,
 		),
 
 		// type
