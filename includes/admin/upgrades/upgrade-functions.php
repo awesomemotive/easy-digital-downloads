@@ -1438,7 +1438,7 @@ function edd_upgrade_render_v30_migration() {
 		return;
 	}
 	?>
-	<div id="edd-migration-nav-warn" class="notice notice-info">
+	<div id="edd-migration-nav-warn" class="notice notice-warning">
 		<p><?php echo wp_kses( __( '<strong>Important:</strong> Do not navigate away from this page until all upgrades have completed.', 'easy-digital-downloads' ), array( 'strong' => array() ) ); ?></p>
 	</div>
 
