@@ -425,7 +425,6 @@ class Order extends Rows\Order {
 				'object_type'   => 'order',
 				'no_found_rows' => true,
 				'order'         => 'ASC',
-				'type'          => 'fee',
 			) );
 		}
 
@@ -448,12 +447,14 @@ class Order extends Rows\Order {
 		foreach ( $this->adjustments as $adjustment ) {
 			/** @var Order_Adjustment $adjustment */
 
-			$id = is_null( $adjustment->type_key ) ? $adjustment->id : $adjustment->type_key;
-			if ( array_key_exists( $id, $fees ) ) {
-				$id .= '_2';
-			}
+			if ( 'fee' === $adjustment->type ) {
+				$id = is_null( $adjustment->type_key ) ? $adjustment->id : $adjustment->type_key;
+				if ( array_key_exists( $id, $fees ) ) {
+					$id .= '_2';
+				}
 
-			$fees[ $id ] = $adjustment;
+				$fees[ $id ] = $adjustment;
+			}
 		}
 
 		// Fetch the fees that applied to specific items in the order.
