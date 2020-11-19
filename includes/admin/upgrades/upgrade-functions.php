@@ -1545,7 +1545,7 @@ function edd_v3_remove_legacy_data_form( $hide_wrapper_initially = false ) {
 		<p>
 			<?php
 			printf(
-				esc_html__( 'You can return to complete this step later by navigating to %sDownloads &raquo; Tools%s.', 'easy-digital-downloads' ),
+				esc_html__( 'You can complete this step later by navigating to %sDownloads &raquo; Tools%s.', 'easy-digital-downloads' ),
 				'<a href="' . esc_url( edd_get_admin_url( array( 'page' => 'edd-tools' ) ) ) . '">',
 				'</a>'
 			);
