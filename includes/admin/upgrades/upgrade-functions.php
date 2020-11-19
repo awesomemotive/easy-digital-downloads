@@ -1492,7 +1492,7 @@ function edd_upgrade_render_v30_migration() {
 							<?php
 						} else {
 							?>
-							<span class="dashicons dashicons-ellipsis"></span>
+							<span class="dashicons dashicons-minus"></span>
 							<span class="screen-reader-text"><?php esc_html_e( 'Upgrade pending', 'easy-digital-downloads' ); ?></span>
 							<?php
 						}
