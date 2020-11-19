@@ -139,7 +139,7 @@ const EDD_v3_Upgrades = {
 
 		const statusIcon = upgradeRow.find( '.dashicons' );
 		if ( statusIcon.length ) {
-			statusIcon.removeClass( 'dashicons-ellipsis' ).addClass( 'dashicons-update' );
+			statusIcon.removeClass( 'dashicons-minus' ).addClass( 'dashicons-update' );
 		}
 
 		upgradeRow.find( '.edd-migration-percentage' ).removeClass( 'edd-hidden' );
@@ -164,7 +164,7 @@ const EDD_v3_Upgrades = {
 
 		const statusIcon = upgradeRow.find( '.dashicons' );
 		if ( statusIcon.length ) {
-			statusIcon.removeClass( 'dashicons-ellipsis dashicons-update' ).addClass( 'dashicons-yes' );
+			statusIcon.removeClass( 'dashicons-minus dashicons-update' ).addClass( 'dashicons-yes' );
 		}
 
 		// Update percentage to 100%;
