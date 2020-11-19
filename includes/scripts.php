@@ -519,6 +519,10 @@ function edd_localize_admin_scripts() {
 		'software_licensing_settings' => __( 'Software Licensing Settings', 'easy-digital-downloads' ),
 		'recurring_payments_settings' => __( 'Recurring Payments Settings', 'easy-digital-downloads' ),
 	) );
+
+	wp_localize_script( 'edd-admin-upgrades', 'edd_admin_upgrade_vars', array(
+		'migration_complete' => esc_html__( 'Migration complete', 'easy-digital-downloads' )
+	) );
 }
 add_action( 'admin_enqueue_scripts', 'edd_localize_admin_scripts' );
 
