@@ -417,7 +417,7 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 	// Output buffer so that the headers run, so we can log them and use them later
 	ob_start();
 	if ( has_action( 'edd_download_price_table_head' ) ) {
-		do_action_deprecated( 'edd_download_price_table_head', array( $post_id ), '2.8', 'edd_download_price_option_row' );
+		do_action_deprecated( 'edd_download_price_table_head', array( $post_id ), '2.10', 'edd_download_price_option_row' );
 	}
 	ob_end_clean();
 
@@ -425,7 +425,7 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 	$found_fields = isset( $wp_filter['edd_download_price_table_row'] ) ? $wp_filter['edd_download_price_table_row'] : false;
 	if ( ! empty( $found_fields->callbacks ) ) {
 		if ( 1 !== count( $found_fields->callbacks ) ) {
-			do_action_deprecated( 'edd_download_price_table_row', array( $post_id, $key, $args ), '2.8', 'edd_download_price_option_row' );
+			do_action_deprecated( 'edd_download_price_table_row', array( $post_id, $key, $args ), '2.10', 'edd_download_price_option_row' );
 		} else {
 			do_action( 'edd_download_price_table_row', $post_id, $key, $args );
 		}
