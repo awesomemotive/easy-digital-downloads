@@ -1574,7 +1574,7 @@ function edd_v3_remove_legacy_data_form( $hide_wrapper_initially = false ) {
 					</span>
 			</div>
 		</form>
-		<div id="edd-v3-legacy-data-removal-complete" class="edd-hidden">
+		<div id="edd-v3-legacy-data-removal-complete" class="edd-hidden notice inline notice-success">
 			<p>
 				<?php esc_html_e( 'Legacy data has been successfully removed. You may now leave this page.', 'easy-digital-downloads' ); ?>
 			</p>
