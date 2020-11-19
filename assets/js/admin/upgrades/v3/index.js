@@ -167,6 +167,11 @@ const EDD_v3_Upgrades = {
 			statusIcon.removeClass( 'dashicons-minus dashicons-update' ).addClass( 'dashicons-yes' );
 		}
 
+		const statusLabel = upgradeRow.find( '.edd-migration-status .screen-reader-text' );
+		if ( statusLabel.length ) {
+			statusLabel.text( edd_admin_upgrade_vars.migration_complete );
+		}
+
 		// Update percentage to 100%;
 		upgradeRow.find( '.edd-migration-percentage-value' ).text( 100 );
 	},

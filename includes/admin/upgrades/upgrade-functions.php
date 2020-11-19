@@ -1488,12 +1488,12 @@ function edd_upgrade_render_v30_migration() {
 						if ( true === $upgrade_statuses[ $upgrade_key ] ) {
 							?>
 							<span class="dashicons dashicons-yes"></span>
-							<span class="screen-reader-text"><?php esc_html_e( 'Upgrade complete', 'easy-digital-downloads' ); ?></span>
+							<span class="screen-reader-text"><?php esc_html_e( 'Migration complete', 'easy-digital-downloads' ); ?></span>
 							<?php
 						} else {
 							?>
 							<span class="dashicons dashicons-minus"></span>
-							<span class="screen-reader-text"><?php esc_html_e( 'Upgrade pending', 'easy-digital-downloads' ); ?></span>
+							<span class="screen-reader-text"><?php esc_html_e( 'Migration pending', 'easy-digital-downloads' ); ?></span>
 							<?php
 						}
 						?>
@@ -1510,7 +1510,7 @@ function edd_upgrade_render_v30_migration() {
 		</ul>
 	</div>
 
-	<div id="edd-v3-migration-complete" <?php echo ! $can_remove_legacy_data ? 'class="edd-hidden"' : ''; ?>>
+	<div id="edd-v3-migration-complete" class="notice inline notice-success<?php echo ! $can_remove_legacy_data ? ' edd-hidden' : ''; ?>">
 		<p>
 			<?php esc_html_e( 'The data migration has been successfully completed. You may now leave this page or proceed to remove legacy data below.', 'easy-digital-downloads' ); ?>
 		</p>
@@ -1539,7 +1539,7 @@ function edd_v3_remove_legacy_data_form( $hide_wrapper_initially = false ) {
 			<h2><?php esc_html_e( 'Remove Legacy Data', 'easy-digital-downloads' ); ?></h2>
 		<?php endif; ?>
 		<p>
-			<?php echo wp_kses( __( '<strong>Important:</strong> This removes all legacy data from where it was previously stored in custom post types and post meta. This is an optional step that is not reversible. Please back up your database and ensure your store is operational before completing this step.', 'easy-digital-downloads' ), array( 'strong' => array() ) ); ?>
+			<?php echo wp_kses( __( '<strong>Important:</strong> This removes all legacy data from where it was previously stored in custom post types and post meta. This is an optional step that is <strong><em>not reversible</em></strong>. Please back up your database and ensure your store is operational before completing this step.', 'easy-digital-downloads' ), array( 'strong' => array() ) ); ?>
 		</p>
 		<?php if ( ! $is_tools_page ) : ?>
 		<p>
