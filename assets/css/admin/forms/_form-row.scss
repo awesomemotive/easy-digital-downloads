@@ -3,15 +3,6 @@
 	flex-wrap: wrap;
 	gap: 12px;
 
-	&__row {
-		display: inline-flex;
-		align-items: flex-end;
-
-		.edd-form-group__control {
-			margin-bottom: 0;
-		}
-	}
-
 	&__column {
 		display: inline-flex;
 		flex-direction: column;
