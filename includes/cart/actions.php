@@ -161,10 +161,12 @@ add_action( 'edd_purchase_collection', 'edd_process_collection_purchase' );
  */
 function edd_process_cart_update( $data ) {
 
-	foreach( $data['edd-cart-downloads'] as $key => $cart_download_id ) {
-		$options  = json_decode( stripslashes( $data['edd-cart-download-' . $key . '-options'] ), true );
-		$quantity = absint( $data['edd-cart-download-' . $key . '-quantity'] );
-		edd_set_cart_item_quantity( $cart_download_id, $quantity, $options );
+	if ( ! empty( $data['edd-cart-downloads'] ) && is_array( $data['edd-cart-downloads'] ) ) {
+		foreach ( $data['edd-cart-downloads'] as $key => $cart_download_id ) {
+			$options  = json_decode( stripslashes( $data[ 'edd-cart-download-' . $key . '-options' ] ), true );
+			$quantity = absint( $data[ 'edd-cart-download-' . $key . '-quantity' ] );
+			edd_set_cart_item_quantity( $cart_download_id, $quantity, $options );
+		}
 	}
 
 }
