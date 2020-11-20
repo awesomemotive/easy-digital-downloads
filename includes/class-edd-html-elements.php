@@ -230,7 +230,7 @@ class EDD_HTML_Elements {
 			'multiple'         => $args['multiple'],
 			'placeholder'      => $args['placeholder'],
 			'show_option_all'  => isset( $args['show_option_all'] ) ? $args['show_option_all'] : false,
-			'show_option_none' => false,
+			'show_option_none' => isset( $args['show_option_none'] ) ? $args['show_option_none'] : false,
 			'data'             => $args['data'],
 		) );
 
