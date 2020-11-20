@@ -111,11 +111,11 @@ function edd_process_login_form( $data ) {
 			if ( has_filter( 'edd_login_redirect' ) ) {
 				$user_id = $user instanceof WP_User ? $user->ID : false;
 				/**
-				 * Filters the redirect URL for EDD.
+				 * Filters the URL to which users are redirected to after logging in.
 				 *
 				 * @since 1.0
-				 * @param string $default_redirect_url  the URL to which to redirect
-				 * @param int|bool                      user ID or false, if no ID is available
+				 * @param string $default_redirect_url The URL to which to redirect after logging in.
+				 * @param int|false                    User ID. false if no ID is available.
 				 */
 				wp_redirect( apply_filters( 'edd_login_redirect', $default_redirect_url, $user_id ) );
 			} else {
