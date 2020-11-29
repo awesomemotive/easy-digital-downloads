@@ -1441,7 +1441,7 @@ class EDD_Discount {
 		if ( $this->start ) {
 			$start_date = strtotime( $this->start );
 
-			if ( $start_date < time() ) {
+			if ( $start_date < current_time( 'timestamp' ) ) {
 				// Discount has pased the start date
 				$return = true;
 			} elseif( $set_error ) {
@@ -1480,7 +1480,7 @@ class EDD_Discount {
 
 		$expiration = strtotime( $this->expiration );
 
-		if ( $expiration < time() ) {
+		if ( $expiration < current_time( 'timestamp' ) ) {
 			if ( $update ) {
 				$this->update_status( 'inactive' );
 				$this->update_meta( 'status', 'expired' );
