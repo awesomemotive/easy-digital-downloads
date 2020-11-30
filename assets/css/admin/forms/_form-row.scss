@@ -1,0 +1,15 @@
+.edd-form-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+
+	&__column {
+		display: inline-flex;
+		flex-direction: column;
+		justify-content: flex-end;
+
+		&.edd-form-group {
+			margin-bottom: 0;
+		}
+	}
+}
