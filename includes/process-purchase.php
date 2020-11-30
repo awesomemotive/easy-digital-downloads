@@ -124,8 +124,6 @@ function edd_process_purchase_form() {
 		'postal_code' => $address['zip'],
 	);
 
-	edd_maybe_update_customer_primary_address( $customer->id, $address );
-
 	$card_country = isset( $valid_data['cc_info']['card_country'] ) ? $valid_data['cc_info']['card_country'] : false;
 	$card_state   = isset( $valid_data['cc_info']['card_state'] )   ? $valid_data['cc_info']['card_state']   : false;
 	$card_zip     = isset( $valid_data['cc_info']['card_zip'] )     ? $valid_data['cc_info']['card_zip']     : false;

@@ -58,7 +58,6 @@ const config = {
 
 		// Static admin pages.
 		'edd-admin': './assets/js/admin',
-		'edd-admin-backwards-compatibility': './assets/js/admin/backwards-compatibility.js',
 		'edd-admin-tax-rates': './assets/js/admin/settings/tax-rates',
 		'edd-admin-email-tags': './assets/js/admin/settings/email-tags',
 		'edd-ajax': './assets/js/frontend/edd-ajax.js',
