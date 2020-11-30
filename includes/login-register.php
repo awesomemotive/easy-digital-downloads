@@ -200,8 +200,7 @@ function edd_login_register_error_message( $errors, $redirect ) {
  * @return string
  */
 function edd_get_lostpassword_url() {
-	$url      = edd_get_current_page_url();
-	$url      = wp_validate_redirect( $url, edd_get_checkout_uri() );
+	$url      = wp_validate_redirect( edd_get_current_page_url(), edd_get_checkout_uri() );
 	$redirect = add_query_arg(
 		array(
 			'checkemail'         => 'confirm',
