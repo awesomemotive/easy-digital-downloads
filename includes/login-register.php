@@ -107,8 +107,20 @@ function edd_process_login_form( $data ) {
 		// Check for errors and redirect if none present.
 		$errors = edd_get_errors();
 		if ( ! $errors ) {
-			$redirect = apply_filters( 'edd_login_redirect', $data['edd_redirect'], 0 );
-			wp_redirect( $redirect );
+			$default_redirect_url = esc_url_raw( $data['edd_redirect'] );
+			if ( has_filter( 'edd_login_redirect' ) ) {
+				$user_id = $user instanceof WP_User ? $user->ID : false;
+				/**
+				 * Filters the URL to which users are redirected to after logging in.
+				 *
+				 * @since 1.0
+				 * @param string $default_redirect_url The URL to which to redirect after logging in.
+				 * @param int|false                    User ID. false if no ID is available.
+				 */
+				wp_redirect( apply_filters( 'edd_login_redirect', $default_redirect_url, $user_id ) );
+			} else {
+				wp_safe_redirect( $default_redirect_url );
+			}
 			edd_die();
 		}
 	}
