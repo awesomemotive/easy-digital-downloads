@@ -350,7 +350,7 @@ class EDD_HTML_Elements {
 					$user = get_userdata( $selected_user );
 
 					if ( $user ) {
-						$options[ absint( $args['selected'] ) ] = esc_html( $user->display_name );
+						$options[ absint( $user->ID ) ] = esc_html( $user->display_name );
 					}
 				}
 			}
