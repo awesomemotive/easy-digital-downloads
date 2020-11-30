@@ -200,17 +200,7 @@ function edd_login_register_error_message( $errors, $redirect ) {
  * @return string
  */
 function edd_get_lostpassword_url() {
-	$url = false;
-	// `wp_get_raw_referer` was added in WP 4.5; this check is required as we still support 4.4.
-	if ( function_exists( 'wp_get_raw_referer' ) ) {
-		$url = wp_get_raw_referer();
-	} else {
-		if ( ! empty( $_REQUEST['_wp_http_referer'] ) ) {
-			$url = wp_unslash( $_REQUEST['_wp_http_referer'] );
-		} elseif ( ! empty( $_SERVER['HTTP_REFERER'] ) ) {
-			$url = wp_unslash( $_SERVER['HTTP_REFERER'] );
-		}
-	}
+	$url      = edd_get_current_page_url();
 	$url      = wp_validate_redirect( $url, edd_get_checkout_uri() );
 	$redirect = add_query_arg(
 		array(
