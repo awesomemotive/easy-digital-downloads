@@ -420,12 +420,7 @@ class Order extends Rows\Order {
 
 		// Ensure adjustments exist.
 		if ( null === $this->adjustments ) {
-			$this->adjustments = edd_get_order_adjustments( array(
-				'object_id'     => $this->id,
-				'object_type'   => 'order',
-				'no_found_rows' => true,
-				'order'         => 'ASC',
-			) );
+			$this->adjustments = $this->get_adjustments();
 		}
 
 		// Ensure items exist.
