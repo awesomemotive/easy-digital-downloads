@@ -423,16 +423,6 @@ class Order extends Rows\Order {
 			$this->adjustments = $this->get_adjustments();
 		}
 
-		// Ensure items exist.
-		if ( null === $this->items ) {
-			$this->items = edd_get_order_items( array(
-				'order_id'      => $this->id,
-				'orderby'       => 'cart_index',
-				'order'         => 'ASC',
-				'no_found_rows' => true,
-			) );
-		}
-
 		// Bail if no adjustments.
 		if ( empty( $this->adjustments ) ) {
 			return $fees;
@@ -450,6 +440,11 @@ class Order extends Rows\Order {
 
 				$fees[ $id ] = $adjustment;
 			}
+		}
+
+		// Ensure items exist.
+		if ( null === $this->items ) {
+			$this->items = $this->get_items();
 		}
 
 		// Fetch the fees that applied to specific items in the order.
