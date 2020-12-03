@@ -1436,7 +1436,7 @@ function edd_upgrade_render_v30_migration() {
 		</div>
 
 		<p>
-			<a href="<?php echo esc_url( admin_url() ); ?>" class="button button-primary">Return to the dashboard</a>
+			<a href="<?php echo esc_url( admin_url() ); ?>" class="button button-primary"><?php esc_html_e( 'Return to the dashboard', 'easy-digital-downloads' ); ?></a>
 		</p>
 		<?php
 		return;
