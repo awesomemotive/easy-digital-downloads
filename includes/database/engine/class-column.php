@@ -724,7 +724,7 @@ class Column extends Base {
 
 		// Intval fallback
 		} elseif ( $this->is_numeric() ) {
-			$callback = 'intval';
+			$callback = array( $this, 'validate_integer' );
 		}
 
 		// Return the callback
@@ -776,9 +776,14 @@ class Column extends Base {
 	 * @since 1.0.0
 	 * @param mixed $value    Default empty string. The decimal value to validate
 	 * @param int   $decimals Default 9. The number of decimal points to accept
-	 * @return float
+	 * @return float|null
 	 */
 	public function validate_decimal( $value = 0, $decimals = 9 ) {
+
+		// If the value is null and null values are supported, return that straight away.
+		if ( is_null( $value ) && $this->allow_null ) {
+			return null;
+		}
 
 		// Protect against non-numeric values
 		if ( ! is_numeric( $value ) ) {
@@ -806,6 +811,24 @@ class Column extends Base {
 
 		// Return
 		return $retval;
+	}
+
+	/**
+	 * Validate an integer
+	 *
+	 * @param mixed $value Integer to validate.
+	 *
+	 * @return int|null
+	 */
+	public function validate_integer( $value = 0 ) {
+
+		// If the value is null and null values are supported, return that straight away.
+		if ( is_null( $value ) && $this->allow_null ) {
+			return null;
+		}
+
+		return intval( $value );
+
 	}
 
 	/**
