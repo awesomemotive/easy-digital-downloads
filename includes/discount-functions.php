@@ -1288,7 +1288,7 @@ function edd_get_cart_discounts_html( $discounts = false ) {
 			}
 		}
 
-		$rate = edd_format_discount_rate( edd_get_discount_type( $discount_id ), $discount_amount );
+		$rate = edd_format_discount_rate( edd_get_discount_type( $discount_id ), edd_get_discount_amount( $discount_id ) );
 
 		$remove_url  = add_query_arg(
 			array(
