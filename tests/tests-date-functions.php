@@ -134,8 +134,8 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 		$this->assertEquals( date( 'n' ), $dates['m_start'] );
 		$this->assertEquals( date( 'Y' ), $dates['year'] );
 		$this->assertEquals( 1, $dates['day_end'] );
-		$this->assertEquals( date( 'n' ) + 1, $dates['m_end'] );
-		$this->assertEquals( date( 'Y' ), $dates['year_end'] );
+		$this->assertEquals( date( 'n', strtotime( '+1 month' ) ), $dates['m_end'] );
+		$this->assertEquals( date( 'Y', strtotime( '+1 month' ) ), $dates['year_end'] );
 	}
 
 	/**
@@ -153,8 +153,18 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 		$this->assertEquals( $auk_date->format( 'n' ), $dates['m_start'] );
 		$this->assertEquals( $auk_date->format( 'Y' ), $dates['year'] );
 		$this->assertEquals( 1, $dates['day_end'] );
-		$this->assertEquals( $auk_date->format( 'n' ) + 1, $dates['m_end'] );
-		$this->assertEquals( $auk_date->format( 'Y' ), $dates['year_end'] );
+
+		$expected_end_month = $auk_date->format( 'n' ) + 1;
+		$expected_end_year  = $auk_date->format( 'Y' );
+
+		if ( $expected_end_month > 12 ) {
+			$roll_over_months = $expected_end_month - 12;
+			$expected_end_month = $roll_over_months;
+			$expected_end_year++;
+		}
+
+		$this->assertEquals( $expected_end_month, $dates['m_end'] );
+		$this->assertEquals( $expected_end_year, $dates['year_end'] );
 	}
 
 	/**
@@ -170,8 +180,8 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 		$this->assertEquals( date( 'n' ), $dates['m_start'] );
 		$this->assertEquals( date( 'Y' ), $dates['year'] );
 		$this->assertEquals( 1, $dates['day_end'] );
-		$this->assertEquals( date( 'n' ) + 1, $dates['m_end'] );
-		$this->assertEquals( date( 'Y' ), $dates['year_end'] );
+		$this->assertEquals( date( 'n', strtotime( '+1 month' ) ), $dates['m_end'] );
+		$this->assertEquals( date( 'Y', strtotime( '+1 month' ) ), $dates['year_end'] );
 	}
 
 	/**
@@ -187,8 +197,8 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 		$this->assertEquals( date( 'n' ), $dates['m_start'] );
 		$this->assertEquals( date( 'Y' ), $dates['year'] );
 		$this->assertEquals( 1, $dates['day_end'] );
-		$this->assertEquals( date( 'n' ) + 1, $dates['m_end'] );
-		$this->assertEquals( date( 'Y' ), $dates['year_end'] );
+		$this->assertEquals( date( 'n', strtotime( '+1 month' ) ), $dates['m_end'] );
+		$this->assertEquals( date( 'Y', strtotime( '+1 month' ) ), $dates['year_end'] );
 	}
 
 	/**
@@ -205,7 +215,7 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 		$this->assertEquals( date( 'n', $current_time ), $dates['m_start'] );
 		$this->assertEquals( date( 'Y', $current_time ), $dates['year'] );
 		$this->assertEquals( 1, $dates['day_end'] );
-		$this->assertEquals( date( 'n', $current_time ) + 1, $dates['m_end'] );
-		$this->assertEquals( date( 'Y', $current_time ), $dates['year_end'] );
+		$this->assertEquals( date( 'n', strtotime( '+1 month' ) ), $dates['m_end'] );
+		$this->assertEquals( date( 'Y', strtotime( '+1 month' ) ), $dates['year_end'] );
 	}
 }
