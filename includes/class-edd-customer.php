@@ -1082,29 +1082,29 @@ class EDD_Customer extends \EDD\Database\Rows\Customer {
 	 *
 	 * @since 3.0
 	 *
-	 * @param string $type Address type. Default primary.
+	 * @param boolean $is_primary Whether the address is the primary address. Default true.
 	 *
-	 * @return array|\EDD\Customers\Customer_Address Object if primary address requested, array otherwise.
+	 * @return array|\EDD\Customers\Customer_Address|null Object if primary address requested, array otherwise. Null if no result for primary address.
 	 */
-	public function get_address( $type = 'primary' ) {
-		if ( 'primary' === $type ) {
-			$address = edd_get_customer_addresses( array(
-				'number'      => 1,
-				'type'        => 'primary',
-				'customer_id' => $this->id,
-			) );
-
-			if ( is_array( $address ) && ! empty( $address ) ) {
-				return $address[0];
-			} else {
-				return null;
-			}
-		} else {
-			return edd_get_customer_addresses( array(
-				'customer_id' => $this->id,
-				'type'        => $type,
-			) );
+	public function get_address( $is_primary = true ) {
+		$args = array(
+			'customer_id' => $this->id,
+			'is_primary'  => $is_primary,
+		);
+		if ( $is_primary ) {
+			$args['number']  = 1;
+			$args['orderby'] = 'date_created';
+			$args['order']   = 'desc';
 		}
+		$address = edd_get_customer_addresses( $args );
+		if ( ! $is_primary ) {
+			return $address;
+		}
+		if ( is_array( $address ) && ! empty( $address[0] ) ) {
+			return $address[0];
+		}
+
+		return null;
 	}
 
 	/**

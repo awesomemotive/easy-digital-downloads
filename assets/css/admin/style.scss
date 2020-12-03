@@ -13,6 +13,12 @@
 @import "~@wordpress/base-styles/breakpoints";
 @import "~@wordpress/base-styles/animations";
 
+@import "../variables/colors";
+@import "../variables/mixins";
+
+@import "downloads/style";
+@import "forms/style";
+
 @import "upgrades/v3";
 
 /**
@@ -1501,12 +1507,7 @@ marquee {
 	cursor: pointer;
 	vertical-align: middle;
 }
-.edd-repeatable-row-actions .toggle-custom-price-option-section {
-	color: #777;
-}
-.edd-repeatable-row-actions .toggle-custom-price-option-section:hover {
-	color: #444;
-}
+
 .edd-repeatable-row-header,
 .edd-bundle-products-header {
 	clear: both;
@@ -1573,7 +1574,10 @@ marquee {
 	border-color: #e5e5e5;
 	display: flex;
 	justify-content: space-between;
+	gap: 18px;
 }
+
+/* @todo: remove these when .edd-form-row has been fully implemented */
 .edd-repeatable-row-standard-fields .edd-form-group,
 .edd-bundled-product-row .edd-form-group {
 	margin-bottom: 0;
@@ -1583,10 +1587,6 @@ marquee {
 	justify-content: space-between;
 }
 
-.edd-repeatable-row-standard-fields .edd-form-group:not(:first-of-type),
-.edd-bundled-product-row .edd-form-group:not(:first-of-type) {
-	margin-left: 18px;
-}
 .edd-repeatable-row-setting-label {
 	display: block;
 	margin-bottom: 4px;
@@ -1595,41 +1595,7 @@ marquee {
 	display: inline-block;
 	margin-left: 4px;
 }
-.edd-custom-price-option-sections-wrap {
-	display: none;
-	border-width: 0 1px 1px;
-	border-style: solid;
-	border-color: #e5e5e5;
-	box-sizing: border-box;
-	width: 100%;
-}
-.edd-custom-price-option-section {
-	display: block;
-	padding: 10px 8px;
-	border-bottom: 1px solid rgba( 222, 222, 222, 0.3 );
-}
-.edd-custom-price-option-section:last-child {
-	border-bottom: none;
-}
-label.edd_prices_shipping { /* remove once Simple Shipping markup is improved */
-	display: none !important;
-}
-.edd-custom-price-option-section-title {
-	display: block;
-	font-size: 14px;
-	font-weight: 600;
-	padding: 0 0 10px;
-}
-.edd-custom-price-option-section > *:not(.edd-custom-price-option-section-title) {
-	display: inline-block;
-	padding-right: 20px;
-	vertical-align: top;
-	margin-bottom: 4px;
-}
-.edd-custom-price-option-section > *:not(.edd-custom-price-option-section-title) label {
-	display: block;
-	margin-bottom: 2px;
-}
+
 .edd-bundle-products-header {
 	font-weight: 600;
 	padding: 8px;
