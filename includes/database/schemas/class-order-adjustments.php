@@ -75,16 +75,6 @@ class Order_Adjustments extends Schema {
 			'allow_null' => true,
 		),
 
-		array(
-			'name'       => 'type_key',
-			'type'       => 'varchar',
-			'length'     => '255',
-			'default'    => null,
-			'allow_null' => true,
-			'searchable' => true,
-			'sortable'   => true,
-		),
-
 		// type
 		array(
 			'name'       => 'type',
@@ -94,6 +84,17 @@ class Order_Adjustments extends Schema {
 			'searchable' => true,
 			'sortable'   => true,
 			'transition' => true
+		),
+
+		// type key
+		array(
+			'name'       => 'type_key',
+			'type'       => 'varchar',
+			'length'     => '255',
+			'default'    => null,
+			'allow_null' => true,
+			'searchable' => true,
+			'sortable'   => true,
 		),
 
 		// description
