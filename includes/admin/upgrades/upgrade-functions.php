@@ -1434,6 +1434,10 @@ function edd_upgrade_render_v30_migration() {
 				<?php esc_html_e( 'You may now leave this page.', 'easy-digital-downloads' ); ?>
 			</p>
 		</div>
+
+		<p>
+			<a href="<?php echo esc_url( admin_url() ); ?>" class="button button-primary">Return to the dashboard</a>
+		</p>
 		<?php
 		return;
 	}
