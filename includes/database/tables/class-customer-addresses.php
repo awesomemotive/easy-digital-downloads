@@ -78,7 +78,7 @@ final class Customer_Addresses extends Table {
 			date_modified datetime NOT NULL default CURRENT_TIMESTAMP,
 			uuid varchar(100) NOT NULL default '',
 			PRIMARY KEY (id),
-			KEY customer (customer_id),
+			KEY customer_is_primary (customer_id, is_primary),
 			KEY type (type(20)),
 			KEY status (status(20)),
 			KEY date_created (date_created)";
