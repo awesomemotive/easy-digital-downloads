@@ -15,18 +15,5 @@ services:
             MYSQL_ALLOW_EMPTY_PASSWORD: true
         networks:
             - wpsite
-    # Wordpress
-    wordpress:
-        depends_on:
-            - db
-        image: wordpress:latest
-        ports:
-            - '8000:80'
-        restart: always
-        volumes: ['./:/var/www/html']
-        environment:
-            WORDPRESS_DB_HOST: db:3306
-            WORDPRESS_DB_USER: wordpress
-            WORDPRESS_DB_PASSWORD: wordpress
-        networks:
-            - wpsite
+    php:
+        image: library/php:7.2-fpm
