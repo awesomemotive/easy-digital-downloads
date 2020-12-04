@@ -1,19 +1,27 @@
-version: '3'
+version: '2.1'
 
 services:
-    # Database
-    db:
-        image: mysql:5.7
+    wordpress:
         volumes:
-            - db_data:/var/lib/mysql
+            - ./:/wordpress/src
+            - ./tests:/wordpress/tests
+        build:
+            context: .
+            args:
+                WORDPRESS_DB_PASSWORD: pass
+                PHP_IMAGE_TAG: $PHP_IMAGE_TAG
+                WORDPRESS_VERSION: $WORDPRESS_VERSION
+        depends_on:
+            mysql:
+                condition: service_healthy
+
+    mysql:
+        image: mariadb:latest
         restart: always
+        healthcheck:
+            test: "/usr/bin/mysql --user=root --password=pass --execute \"SHOW DATABASES;\""
+            interval: 3s
+            timeout: 1s
+            retries: 5
         environment:
-            MYSQL_ROOT_PASSWORD: wordpress
-            MYSQL_DATABASE: wordpress_test
-            MYSQL_USER: wordpress
-            MYSQL_PASSWORD: wordpress
-            MYSQL_ALLOW_EMPTY_PASSWORD: true
-        networks:
-            - wpsite
-    php:
-        image: library/php:7.2-fpm
+            MYSQL_ROOT_PASSWORD: pass
