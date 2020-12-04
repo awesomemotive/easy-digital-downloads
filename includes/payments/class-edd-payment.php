@@ -4,6 +4,8 @@
  *
  * This class is for working with payments in EDD.
  *
+ * @todo Need to sort out tax rate handling.
+ *
  * @package     EDD
  * @subpackage  Payments
  * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC

@@ -498,6 +498,53 @@ class Data_Migrator {
 			$total   = $meta['_edd_payment_total'][0];
 		}
 
+		// Build up the order address data. Actual insertion happens later, but we need this now to figure out the tax rate.
+		$order_address_data = array(
+			'name'         => trim( $user_info['first_name'] . ' ' . $user_info['last_name'] ),
+			'address'      => isset( $user_info['address']['line1'] )   ? $user_info['address']['line1']   : '',
+			'address2'     => isset( $user_info['address']['line2'] )   ? $user_info['address']['line2']   : '',
+			'city'         => isset( $user_info['address']['city'] )    ? $user_info['address']['city']    : '',
+			'region'       => isset( $user_info['address']['state'] )   ? $user_info['address']['state']   : '',
+			'country'      => isset( $user_info['address']['country'] ) && array_key_exists( strtoupper( $user_info['address']['country'] ), edd_get_country_list() )
+				? $user_info['address']['country']
+				: '',
+			'postal_code'  => isset( $user_info['address']['zip'] )     ? $user_info['address']['zip']     : '',
+			'date_created' => $date_created_gmt,
+		);
+
+		// Remove empty data.
+		$order_address_data = array_filter( $order_address_data );
+
+		$tax_rate_id = null;
+		$tax_rate = isset( $meta['_edd_payment_tax_rate'][0] )
+			? (float) $meta['_edd_payment_tax_rate'][0]
+			: 0.00;
+
+		$set_tax_rate_meta = false;
+
+		if ( ! empty( $tax_rate ) && ! empty( $order_address_data['country'] ) ) {
+			// Fetch the actual tax rate object for the order region & country.
+			$tax_rate_object = edd_get_tax_rate_by_location( array(
+				'country' => $order_address_data['country'],
+				'region'  => $order_address_data['region']
+			) );
+
+			/*
+			 * Note: $tax_rate is stored as a decimal (e.g. `0.2`) whereas Adjustments are stored as `20.00`.
+			 * That's why we're multiplying by 100 in the comparison.
+			 */
+			if ( ! empty( $tax_rate_object->id ) && $tax_rate_object->amount == ( $tax_rate * 100 ) ) {
+				$tax_rate_id = $tax_rate_object->id;
+			}
+		}
+
+		/*
+		 * If we cannot find a matching Adjustment object, we should save this in order meta so it isn't lost.
+		 */
+		if ( ! empty( $tax_rate ) && empty( $tax_rate_id ) ) {
+			$set_tax_rate_meta = true;
+		}
+
 		// Build the order data before inserting.
 		$order_data = array(
 			'id'             => $data->ID,
@@ -516,6 +563,7 @@ class Data_Migrator {
 			'mode'           => $mode,
 			'currency'       => ! empty( $payment_meta['currency'] ) ? $payment_meta['currency'] : edd_get_currency(),
 			'payment_key'    => $purchase_key,
+			'taxs_rate_id'   => $tax_rate_id,
 			'subtotal'       => $subtotal,
 			'tax'            => $tax,
 			'discount'       => $discount,
@@ -523,6 +571,14 @@ class Data_Migrator {
 		);
 
 		$order_id = edd_add_order( $order_data );
+
+		// Save an un-matched tax rate in order meta.
+		if ( $set_tax_rate_meta ) {
+			if ( $tax_rate < 1 ) {
+				$tax_rate = $tax_rate * 100;
+			}
+			edd_add_order_meta( $order_id, 'tax_rate', $tax_rate );
+		}
 
 		// Do not pass the original order ID into other arrays
 		unset( $order_data['id'] );
@@ -578,25 +634,9 @@ class Data_Migrator {
 			'state'   => '',
 		) );
 
-		$order_address_data = array(
-			'order_id'     => $order_id,
-			'name'         => trim( $user_info['first_name'] . ' ' . $user_info['last_name'] ),
-			'address'      => isset( $user_info['address']['line1'] )   ? $user_info['address']['line1']   : '',
-			'address2'     => isset( $user_info['address']['line2'] )   ? $user_info['address']['line2']   : '',
-			'city'         => isset( $user_info['address']['city'] )    ? $user_info['address']['city']    : '',
-			'region'       => isset( $user_info['address']['state'] )   ? $user_info['address']['state']   : '',
-			'country'      => isset( $user_info['address']['country'] ) && array_key_exists( strtoupper( $user_info['address']['country'] ), edd_get_country_list() )
-				? $user_info['address']['country']
-				: '',
-			'postal_code'  => isset( $user_info['address']['zip'] )     ? $user_info['address']['zip']     : '',
-			'date_created' => $date_created_gmt,
-		);
-
-		// Remove empty data.
-		$order_address_data = array_filter( $order_address_data );
-
 		if ( ! empty( $order_address_data ) ) {
 			// Add to edd_order_addresses table.
+			$order_address_data['order_id'] = $order_id;
 			edd_add_order_address( $order_address_data );
 		}
 
@@ -898,39 +938,6 @@ class Data_Migrator {
 		}
 
 		/** Create order adjustments *********************************/
-
-		$tax_rate = isset( $meta['_edd_payment_tax_rate'][0] )
-			? (float) $meta['_edd_payment_tax_rate'][0]
-			: 0.00;
-
-		if ( ! empty( $tax_rate ) ) {
-			// Tax rate is no longer stored in meta.
-			edd_add_order_adjustment(
-				array(
-					'object_id'     => $order_id,
-					'object_type'   => 'order',
-					'type_id'       => 0,
-					'type'          => 'tax_rate',
-					'total'         => $tax_rate,
-					'date_created'  => $date_created_gmt,
-					'date_modified' => $data->post_modified_gmt,
-				)
-			);
-
-			if ( ! empty( $refund_id ) ) {
-				edd_add_order_adjustment(
-					array(
-						'object_id'     => $refund_id,
-						'object_type'   => 'order',
-						'type_id'       => 0,
-						'type'          => 'tax_rate',
-						'total'         => $tax_rate,
-						'date_created'  => $data->post_modified_gmt,
-						'date_modified' => $data->post_modified_gmt,
-					)
-				);
-			}
-		}
 
 		if ( isset( $payment_meta['fees'] ) && ! empty( $payment_meta['fees'] ) ) {
 			foreach ( $payment_meta['fees'] as $fee_id => $fee ) {
