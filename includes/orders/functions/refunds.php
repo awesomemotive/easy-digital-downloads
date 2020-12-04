@@ -287,6 +287,7 @@ function edd_refund_order( $order_id = 0, $order_items = array() ) {
 		'mode'         => $order->mode,
 		'currency'     => $order->currency,
 		'payment_key'  => strtolower( md5( uniqid() ) ),
+		'tax_rate_id'  => $order->tax_rate_id,
 		'subtotal'     => edd_negate_amount( $subtotal ),
 		'discount'     => edd_negate_amount( $discount ),
 		'tax'          => edd_negate_amount( $tax ),
@@ -530,10 +531,6 @@ function edd_refund_order_item( $order_item_id = 0 ) {
 	/** Insert adjustments ****************************************************/
 
 	foreach ( $order_item->adjustments as $adjustment ) {
-		if ( 'tax_rate' === $adjustment->type ) {
-			continue;
-		}
-
 		edd_add_order_adjustment( array(
 			'object_type' => 'order_item',
 			'object_id'   => $new_order_item_id,
