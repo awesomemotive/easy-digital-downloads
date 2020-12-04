@@ -12,6 +12,7 @@ services:
             MYSQL_DATABASE: wordpress_test
             MYSQL_USER: wordpress
             MYSQL_PASSWORD: wordpress
+            MYSQL_ALLOW_EMPTY_PASSWORD: true
         networks:
             - wpsite
     # Wordpress
