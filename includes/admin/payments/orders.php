@@ -442,13 +442,12 @@ function edd_order_details_addresses( $order ) {
 				<label for="edd_order_address_country" class="edd-form-group__label"><?php echo esc_html_x( 'Country:', 'Address country', 'easy-digital-downloads' ); ?></label>
 				<div class="edd-form-group__control" id="edd-order-address-country-wrap">
 					<?php
-					echo EDD()->html->select(
+					echo EDD()->html->country_select(
 						array(
 							'options'          => edd_get_country_list(),
 							'name'             => 'edd_order_address[country]',
 							'id'               => 'edd-order-address-country',
 							'class'            => 'edd-order-address-country edd-form-group__input',
-							'selected'         => esc_attr( $address->country ),
 							'show_option_all'  => false,
 							'show_option_none' => false,
 							'chosen'           => true,
@@ -458,7 +457,8 @@ function edd_order_details_addresses( $order ) {
 								'search-type'        => 'no_ajax',
 								'search-placeholder' => esc_html__( 'Search Countries', 'easy-digital-downloads' ),
 							),
-						)
+						),
+						$address->country
 					); // WPCS: XSS ok.
 					?>
 				</div>
@@ -470,13 +470,11 @@ function edd_order_details_addresses( $order ) {
 					<?php
 					$states = edd_get_shop_states( $address->country );
 					if ( ! empty( $states ) ) {
-						echo EDD()->html->select(
+						echo EDD()->html->region_select(
 							array(
-								'options'          => $states,
 								'name'             => 'edd_order_address[region]',
 								'id'               => 'edd_order_address_region',
 								'class'            => 'edd-order-address-region edd-form-group__input',
-								'selected'         => esc_attr( $address->region ),
 								'show_option_all'  => false,
 								'show_option_none' => false,
 								'chosen'           => true,
@@ -485,7 +483,9 @@ function edd_order_details_addresses( $order ) {
 									'search-type'        => 'no_ajax',
 									'search-placeholder' => esc_html__( 'Search Regions', 'easy-digital-downloads' ),
 								),
-							)
+							),
+							$address->country,
+							$address->region
 						); // WPCS: XSS ok.
 					} else {
 						?>
