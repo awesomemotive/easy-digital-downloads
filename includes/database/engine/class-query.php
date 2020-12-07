@@ -359,7 +359,7 @@ class Query extends Base {
 	 *
 	 * @since 1.0.0
 	 */
-	private function set_last_changed() {
+	protected function set_last_changed() {
 		$this->last_changed = microtime();
 	}
 
@@ -370,7 +370,7 @@ class Query extends Base {
 	 *
 	 * @since 1.0.0
 	 */
-	private function set_alias() {
+	protected function set_alias() {
 		if ( empty( $this->table_alias ) ) {
 			$this->table_alias = $this->first_letters( $this->table_name );
 		}
@@ -384,7 +384,7 @@ class Query extends Base {
 	 *
 	 * @since 1.0.0
 	 */
-	private function set_prefix() {
+	protected function set_prefix() {
 		$this->table_name  = $this->apply_prefix( $this->table_name       );
 		$this->table_alias = $this->apply_prefix( $this->table_alias      );
 		$this->cache_group = $this->apply_prefix( $this->cache_group, '-' );
@@ -395,7 +395,7 @@ class Query extends Base {
 	 *
 	 * @since 1.0.0
 	 */
-	private function set_columns() {
+	protected function set_columns() {
 
 		// Bail if no table schema
 		if ( ! class_exists( $this->table_schema ) ) {
@@ -416,7 +416,7 @@ class Query extends Base {
 	 *
 	 * @since 1.0.0
 	 */
-	private function set_item_shape() {
+	protected function set_item_shape() {
 		if ( empty( $this->item_shape ) || ! class_exists( $this->item_shape ) ) {
 			$this->item_shape = __NAMESPACE__ . '\\Row';
 		}
@@ -495,7 +495,7 @@ class Query extends Base {
 	 *
 	 * @param array $clauses
 	 */
-	private function set_request_clauses( $clauses = array() ) {
+	protected function set_request_clauses( $clauses = array() ) {
 
 		// Found rows
 		$found_rows = empty( $this->query_vars['no_found_rows'] )
@@ -551,7 +551,7 @@ class Query extends Base {
 	 *
 	 * @since 1.0.0
 	 */
-	private function set_request() {
+	protected function set_request() {
 		$filtered      = array_filter( $this->request_clauses );
 		$clauses       = array_map( 'trim', $filtered );
 		$this->request = implode( ' ', $clauses );
@@ -563,7 +563,7 @@ class Query extends Base {
 	 * @since 1.0.0
 	 * @param array $item_ids
 	 */
-	private function set_items( $item_ids = array() ) {
+	protected function set_items( $item_ids = array() ) {
 
 		// Bail if counting, to avoid shaping items
 		if ( ! empty( $this->query_vars['count'] ) ) {
@@ -589,7 +589,7 @@ class Query extends Base {
 	 *
 	 * @param  array $item_ids Optional array of item IDs
 	 */
-	private function set_found_items( $item_ids = array() ) {
+	protected function set_found_items( $item_ids = array() ) {
 
 		// Items were not found
 		if ( empty( $item_ids ) ) {
@@ -707,7 +707,7 @@ class Query extends Base {
 	 *
 	 * @return string
 	 */
-	private function get_current_time() {
+	protected function get_current_time() {
 		return gmdate( "Y-m-d\TH:i:s\Z" );
 	}
 
@@ -718,7 +718,7 @@ class Query extends Base {
 	 *
 	 * @return string
 	 */
-	private function get_table_name() {
+	protected function get_table_name() {
 		return $this->get_db()->{$this->table_name};
 	}
 
@@ -729,7 +729,7 @@ class Query extends Base {
 	 *
 	 * @return array
 	 */
-	private function get_column_names() {
+	protected function get_column_names() {
 		return array_flip( $this->get_columns( array(), 'and', 'name' ) );
 	}
 
@@ -740,7 +740,7 @@ class Query extends Base {
 	 *
 	 * @return string Default "id", Primary column name if not empty
 	 */
-	private function get_primary_column_name() {
+	protected function get_primary_column_name() {
 		return $this->get_column_field( array( 'primary' => true ), 'name', 'id' );
 	}
 
@@ -751,7 +751,7 @@ class Query extends Base {
 	 *
 	 * @return mixed Column object, or false
 	 */
-	private function get_column_field( $args = array(), $field = '', $default = false ) {
+	protected function get_column_field( $args = array(), $field = '', $default = false ) {
 
 		// Get column
 		$column = $this->get_column_by( $args );
@@ -769,7 +769,7 @@ class Query extends Base {
 	 *
 	 * @return mixed Column object, or false
 	 */
-	private function get_column_by( $args = array() ) {
+	protected function get_column_by( $args = array() ) {
 
 		// Filter columns
 		$filter = $this->get_columns( $args );
@@ -785,7 +785,7 @@ class Query extends Base {
 	 *
 	 * @since 1.0.0
 	 */
-	private function get_columns( $args = array(), $operator = 'and', $field = false ) {
+	protected function get_columns( $args = array(), $operator = 'and', $field = false ) {
 
 		// Filter columns
 		$filter = wp_filter_object_list( $this->columns, $args, $operator, $field );
@@ -805,7 +805,7 @@ class Query extends Base {
 	 * @param string $column_value Value to query for
 	 * @return object|false False if empty/error, Object if successful
 	 */
-	private function get_item_raw( $column_name = '', $column_value = '' ) {
+	protected function get_item_raw( $column_name = '', $column_value = '' ) {
 
 		// Bail if no name or value
 		if ( empty( $column_name ) || empty( $column_value ) ) {
@@ -839,7 +839,7 @@ class Query extends Base {
 	 *
 	 * @return array|int List of items, or number of items when 'count' is passed as a query var.
 	 */
-	private function get_items() {
+	protected function get_items() {
 
 		/**
 		 * Fires before object items are retrieved.
@@ -908,7 +908,7 @@ class Query extends Base {
 	 *
 	 * @return int|array A single count of item IDs if a count query. An array of item IDs if a full query.
 	 */
-	private function get_item_ids() {
+	protected function get_item_ids() {
 
 		// Setup primary column, and parse the where clause
 		$this->parse_where();
@@ -991,7 +991,7 @@ class Query extends Base {
 	 * @param string $order
 	 * @return string
 	 */
-	private function get_order_by( $order = '' ) {
+	protected function get_order_by( $order = '' ) {
 
 		// Default orderby primary column
 		$orderby = "{$this->parse_orderby()} {$order}";
@@ -1073,7 +1073,7 @@ class Query extends Base {
 	 * @param array  $columns Columns to search.
 	 * @return string Search SQL.
 	 */
-	private function get_search_sql( $string = '', $columns = array() ) {
+	protected function get_search_sql( $string = '', $columns = array() ) {
 
 		// Array or String
 		$like = ( false !== strpos( $string, '*' ) )
