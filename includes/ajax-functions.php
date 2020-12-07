@@ -545,7 +545,7 @@ function edd_ajax_get_states_field() {
 			? sanitize_text_field( $_POST['field_id'] )
 			: $field_name;
 
-		$response   = EDD()->html->select( array(
+		$response   = EDD()->html->region_select( array(
 			'name'             => $field_name,
 			'id'               => $field_id,
 			'class'            => $field_name . ' edd-select',
