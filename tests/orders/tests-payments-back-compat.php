@@ -161,6 +161,28 @@ class Payment_Back_Compat_Tests extends \EDD_UnitTestCase {
 		$this->assertSame( $expected, $actual );
 	}
 
+	public function test_tax_rate_converted_to_decimal_when_querying_post_meta() {
+		// Create an adjustment.
+		$adjustment_id = edd_add_adjustment( array(
+			'name'        => 'GB',
+			'status'      => 'active',
+			'type'        => 'tax_rate',
+			'scope'       => 'country',
+			'amount_type' => 'percent',
+			'amount'      => 20
+		) );
+
+		// Create an order.
+		$order = parent::edd()->order->create_and_get( array(
+			'tax_rate_id' => $adjustment_id,
+			'tax'         => 2
+		) );
+
+		$this->setExpectedIncorrectUsage( 'get_post_meta()' );
+
+		$this->assertEquals( 0.2, get_post_meta( $order->id, '_edd_payment_tax_rate', true ) );
+	}
+
 	/**
 	 * @covers ::get_post_metadata
 	 */

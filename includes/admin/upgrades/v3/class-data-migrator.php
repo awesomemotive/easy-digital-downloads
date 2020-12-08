@@ -520,6 +520,14 @@ class Data_Migrator {
 			? (float) $meta['_edd_payment_tax_rate'][0]
 			: 0.00;
 
+		/*
+		 * Previously tax rates were stored as a decimal (e.g. `0.2`) but they're now stored as a percentage
+		 * (e.g. `20`). So we need to convert.
+		 */
+		if ( $tax_rate < 1 ) {
+			$tax_rate = $tax_rate * 100;
+		}
+
 		$set_tax_rate_meta = false;
 
 		if ( ! empty( $tax_rate ) && ! empty( $order_address_data['country'] ) ) {
@@ -529,11 +537,7 @@ class Data_Migrator {
 				'region'  => $order_address_data['region']
 			) );
 
-			/*
-			 * Note: $tax_rate is stored as a decimal (e.g. `0.2`) whereas Adjustments are stored as `20.00`.
-			 * That's why we're multiplying by 100 in the comparison.
-			 */
-			if ( ! empty( $tax_rate_object->id ) && $tax_rate_object->amount == ( $tax_rate * 100 ) ) {
+			if ( ! empty( $tax_rate_object->id ) && $tax_rate_object->amount == $tax_rate ) {
 				$tax_rate_id = $tax_rate_object->id;
 			}
 		}
@@ -574,9 +578,6 @@ class Data_Migrator {
 
 		// Save an un-matched tax rate in order meta.
 		if ( $set_tax_rate_meta ) {
-			if ( $tax_rate < 1 ) {
-				$tax_rate = $tax_rate * 100;
-			}
 			edd_add_order_meta( $order_id, 'tax_rate', $tax_rate );
 		}
 

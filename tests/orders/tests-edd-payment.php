@@ -860,6 +860,47 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 
 	}
 
+	/**
+	 * Ensures that setting a dynamic tax rate to a payment saves that in order meta and can be retrieved.
+	 *
+	 * This is testing backwards compatibility, when in 2.x you could set a tax rate without a referencing
+	 * ID. We need to ensure this is accessible in 3.x when using an order object.
+	 */
+	public function test_setting_dynamic_tax_rate_saves_rate_in_order_meta() {
+		$payment = $this->payment;
+		$payment->tax_rate = 0.2;
+
+		$tax_amount = $payment->total * 0.2;
+		$payment->increase_tax( $tax_amount );
+		$payment->save();
+
+		// Now fetch the order equivalent.
+		$order = edd_get_order( $payment->ID );
+
+		$this->assertEquals( 20, $order->get_tax_rate() );
+		$this->assertEquals( $tax_amount, $order->tax );
+
+		$this->assertEquals( 20, edd_get_order_meta( $payment->ID, 'tax_rate', true ) );
+	}
+
+	/**
+	 * In 2.x, tax rates are stored as decimals. In 3.x they are stored as percentages. When using
+	 * EDD_Payment you should always get a decimal back.
+	 */
+	public function test_get_tax_rate_returns_decimal() {
+		$payment = new \EDD_Payment();
+		$payment->tax_rate = 0.2;
+		$payment->total    = 10;
+
+		$tax_amount = $payment->total * 0.2;
+		$payment->increase_tax( $tax_amount );
+		$payment->save();
+
+		// Fetch a new payment object.
+		$payment = edd_get_payment( $payment->ID );
+		$this->assertEquals( 0.2, $payment->tax_rate );
+	}
+
 	/* Helpers ***************************************************************/
 
 	public function alter_payment_meta( $meta, $payment_data ) {

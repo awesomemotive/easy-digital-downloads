@@ -10,8 +10,8 @@
  */
 namespace EDD\Orders;
 
-use EDD\Adjustments\Adjustment;
 use EDD\Database\Rows as Rows;
+use EDD\Database\Rows\Adjustment;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -531,8 +531,16 @@ class Order extends Rows\Order {
 
 		// Get rates from adjustments
 		$tax_rate_object = $this->get_tax_rate_object();
-		if ( $tax_rate_object instanceof Adjustment ) {
-			$rate = $this->tax_rate->amount;
+		if ( is_object( $tax_rate_object ) && isset( $tax_rate_object->amount ) ) {
+			$rate = $tax_rate_object->amount;
+		}
+
+		/*
+		 * If we have a tax_amount, but no rate, check in order meta. This is where legacy rates are stored
+		 * if they cannot be resolved to an actual adjustment object.
+		 */
+		if ( empty( $rate ) && $this->tax > 0 ) {
+			$rate = edd_get_order_meta( $this->id, 'tax_rate', true );
 		}
 
 		return floatval( $rate );
