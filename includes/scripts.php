@@ -327,6 +327,7 @@ function edd_register_admin_scripts() {
 		'tools'        => array(
 			'edd-admin-tools-export'
 		),
+		'upgrades'     => array()
 	);
 
 	foreach ( $admin_pages as $page => $deps ) {
@@ -403,8 +404,9 @@ function edd_enqueue_admin_scripts( $hook = '' ) {
 	}
 
 	// Upgrades Page
-	if ( 'edd-admin-upgrades' === $hook ) {
+	if ( in_array( $hook, array( 'edd-admin-upgrades', 'download_page_edd-tools' ) ) ) {
 		wp_enqueue_script( 'edd-admin-tools-export' );
+		wp_enqueue_script( 'edd-admin-upgrades' );
 	}
 
 }
@@ -502,6 +504,10 @@ function edd_localize_admin_scripts() {
 		'taxes_enabled'               => edd_use_taxes(),
 		'taxes_included'              => edd_use_taxes() && edd_prices_include_tax(),
 		'new_media_ui'                => apply_filters( 'edd_use_35_media_ui', 1 )
+	) );
+
+	wp_localize_script( 'edd-admin-upgrades', 'edd_admin_upgrade_vars', array(
+			'migration_complete' => esc_html__( 'Migration complete', 'easy-digital-downloads' )
 	) );
 }
 add_action( 'admin_enqueue_scripts', 'edd_localize_admin_scripts' );
