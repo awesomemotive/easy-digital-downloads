@@ -668,9 +668,24 @@ class Column extends Base {
 	 * @return string|null
 	 */
 	private function sanitize_default( $default = '' ) {
-		return is_null( $default )
-			? null
-			: wp_kses_data( $default );
+
+		// Null
+		if ( ( true === $this->allow_null ) && is_null( $default ) ) {
+			return null;
+
+			// String
+		} elseif ( is_string( $default ) ) {
+			return wp_kses_data( $default );
+
+			// Integer
+		} elseif ( $this->is_numeric( $default ) ) {
+			return (int) $default;
+		}
+
+		// @todo datetime, decimal, and other column types
+
+		// Unknown, so return the default's default
+		return '';
 	}
 
 	/**
@@ -724,7 +739,7 @@ class Column extends Base {
 
 		// Intval fallback
 		} elseif ( $this->is_numeric() ) {
-			$callback = array( $this, 'validate_integer' );
+			$callback = 'intval';
 		}
 
 		// Return the callback
@@ -749,7 +764,7 @@ class Column extends Base {
 
 		// Handle "empty" values
 		if ( empty( $value ) || ( '0000-00-00 00:00:00' === $value ) ) {
-			$value = ! empty( $this->default ) || ( ( true === $this->allow_null ) && is_null( $this->default ) )
+			$value = ! empty( $this->default )
 				? $this->default
 				: '';
 
@@ -776,14 +791,9 @@ class Column extends Base {
 	 * @since 1.0.0
 	 * @param mixed $value    Default empty string. The decimal value to validate
 	 * @param int   $decimals Default 9. The number of decimal points to accept
-	 * @return float|null
+	 * @return float
 	 */
 	public function validate_decimal( $value = 0, $decimals = 9 ) {
-
-		// If the value is null and null values are supported, return that straight away.
-		if ( is_null( $value ) && $this->allow_null ) {
-			return null;
-		}
 
 		// Protect against non-numeric values
 		if ( ! is_numeric( $value ) ) {
@@ -811,24 +821,6 @@ class Column extends Base {
 
 		// Return
 		return $retval;
-	}
-
-	/**
-	 * Validate an integer
-	 *
-	 * @param mixed $value Integer to validate.
-	 *
-	 * @return int|null
-	 */
-	public function validate_integer( $value = 0 ) {
-
-		// If the value is null and null values are supported, return that straight away.
-		if ( is_null( $value ) && $this->allow_null ) {
-			return null;
-		}
-
-		return intval( $value );
-
 	}
 
 	/**
