@@ -2,7 +2,7 @@ version: "3"
 
 services:
     wordpress:
-        image: "wordpress:${WP_VERSION:-5.2.1}-php${PHP_VERSION:-7.3}-apache"
+        image: "wordpress:${WP_VERSION:-5.5.3}-php${PHP_VERSION:-7.3}-apache"
         environment:
             VIRTUAL_HOST: "${DOCKER_DEV_DOMAIN:-project.test}"
             WORDPRESS_DB_HOST: "mysql"
