@@ -1,10 +1,8 @@
-version: "2"
+version: "3"
 
 services:
     wordpress_phpunit:
-        build: "."
-        environment:
-            PHPUNIT_DB_HOST: "mysql_phpunit"
+        image: "chriszarate/wordpress-phpunit:6.0.6"
         volumes:
             - ".:/app"
             - "testsuite:/tmp"

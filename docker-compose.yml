@@ -1,0 +1,57 @@
+version: "3"
+
+services:
+    wordpress:
+        image: "wordpress:${WP_VERSION:-5.2.1}-php${PHP_VERSION:-7.3}-apache"
+        environment:
+            VIRTUAL_HOST: "${DOCKER_DEV_DOMAIN:-project.test}"
+            WORDPRESS_DB_HOST: "mysql"
+            WORDPRESS_DB_NAME: "wordpress"
+            WORDPRESS_DB_PASSWORD: ""
+            WORDPRESS_DB_USER: "root"
+        depends_on:
+            - "mysql"
+        networks:
+            - "front"
+            - "back"
+        volumes:
+            - "wp:/var/www/html:rw"
+            - ".:/var/www/html/wp-content/plugins/my-plugin:ro"
+    wp-cli:
+        image: "wordpress:cli-${WP_CLI_VERSION:-2.2.0}-php${PHP_VERSION:-7.3}"
+        environment:
+            - APACHE_RUN_USER="www-data"
+            - APACHE_RUN_GROUP="www-data"
+        depends_on:
+            - "mysql"
+        networks:
+            - "back"
+        volumes:
+            - "wp:/var/www/html:rw"
+            - "./bin/install-wp.sh:/usr/local/bin/install-wp:ro"
+            - ".:/var/www/html/wp-content/plugins/my-plugin:ro"
+    mysql:
+        image: "mariadb:10.2"
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+            MYSQL_DATABASE: "wordpress"
+            MYSQL_ROOT_PASSWORD: ""
+        networks:
+            - "back"
+    proxy:
+        image: "jwilder/nginx-proxy:alpine"
+        ports:
+            - "80:80"
+        networks:
+            front:
+                aliases:
+                    - "${DOCKER_DEV_DOMAIN:-project.test}"
+        volumes:
+            - "/var/run/docker.sock:/tmp/docker.sock:ro"
+
+networks:
+    front: {}
+    back: {}
+
+volumes:
+    wp: {}
