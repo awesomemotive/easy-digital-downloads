@@ -2752,8 +2752,10 @@ function display_export_report() {
 								<?php
 								echo EDD()->html->country_select(
 									array(
-										'id'          => 'edd_reports_filter_taxed_countries',
-										'placeholder' => __( 'All Countries', 'easy-digital-downloads' ),
+										'name'            => 'country',
+										'id'              => 'edd_reports_filter_taxed_countries',
+										'selected'        => false,
+										'show_option_all' => false,
 									)
 								);
 								?>

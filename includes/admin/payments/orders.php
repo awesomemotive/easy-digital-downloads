@@ -444,15 +444,11 @@ function edd_order_details_addresses( $order ) {
 					<?php
 					echo EDD()->html->country_select(
 						array(
-							'options'          => edd_get_country_list(),
-							'name'             => 'edd_order_address[country]',
-							'id'               => 'edd-order-address-country',
-							'class'            => 'edd-order-address-country edd-form-group__input',
-							'show_option_all'  => false,
-							'show_option_none' => false,
-							'chosen'           => true,
-							'placeholder'      => esc_html__( 'Select a country', 'easy-digital-downloads' ),
-							'data'             => array(
+							'name'            => 'edd_order_address[country]',
+							'id'              => 'edd-order-address-country',
+							'class'           => 'edd-order-address-country edd-form-group__input',
+							'show_option_all' => false,
+							'data'            => array(
 								'nonce'              => wp_create_nonce( 'edd-country-field-nonce' ),
 								'search-type'        => 'no_ajax',
 								'search-placeholder' => esc_html__( 'Search Countries', 'easy-digital-downloads' ),
@@ -475,10 +471,6 @@ function edd_order_details_addresses( $order ) {
 								'name'             => 'edd_order_address[region]',
 								'id'               => 'edd_order_address_region',
 								'class'            => 'edd-order-address-region edd-form-group__input',
-								'show_option_all'  => false,
-								'show_option_none' => false,
-								'chosen'           => true,
-								'placeholder'      => esc_html__( 'Select a region', 'easy-digital-downloads' ),
 								'data'             => array(
 									'search-type'        => 'no_ajax',
 									'search-placeholder' => esc_html__( 'Search Regions', 'easy-digital-downloads' ),

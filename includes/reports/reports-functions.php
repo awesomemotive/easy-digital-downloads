@@ -1128,13 +1128,9 @@ function display_region_filter() {
 	// Get the select
 	$select = EDD()->html->region_select(
 		array(
-			'name'             => 'regions',
-			'id'               => 'edd_reports_filter_regions',
-			'class'            => 'edd_regions_filter',
-			'options'          => $regions,
-			'chosen'           => true,
-			'show_option_none' => false,
-			'show_option_all'  => __( 'All Regions', 'easy-digital-downloads' ),
+			'name'    => 'regions',
+			'id'      => 'edd_reports_filter_regions',
+			'options' => $regions,
 		),
 		$country,
 		$region
@@ -1162,13 +1158,9 @@ function display_country_filter() {
 	// Get the select
 	$select = EDD()->html->country_select(
 		array(
-			'name'             => 'countries',
-			'id'               => 'edd_reports_filter_countries',
-			'class'            => 'edd_countries_filter',
-			'options'          => $countries,
-			'chosen'           => true,
-			'show_option_none' => false,
-			'show_option_all'  => __( 'All Countries', 'easy-digital-downloads' ),
+			'name'    => 'countries',
+			'id'      => 'edd_reports_filter_countries',
+			'options' => $countries,
 		),
 		$country
 	);

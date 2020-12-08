@@ -545,16 +545,16 @@ function edd_ajax_get_states_field() {
 			? sanitize_text_field( $_POST['field_id'] )
 			: $field_name;
 
-		$response   = EDD()->html->region_select( array(
-			'name'             => $field_name,
-			'id'               => $field_id,
-			'class'            => $field_name . ' edd-select',
-			'options'          => $states,
-			'chosen'           => $chosen,
-			'placeholder'      => __( 'Select a region', 'easy-digital-downloads' ),
-			'show_option_all'  => false,
-			'show_option_none' => false,
-		) );
+		$response = EDD()->html->region_select(
+			array(
+				'name'            => $field_name,
+				'id'              => $field_id,
+				'class'           => $field_name . ' edd-select',
+				'options'         => $states,
+				'chosen'          => $chosen,
+				'show_option_all' => false,
+			)
+		);
 	} else {
 		$response = 'nostates';
 	}
