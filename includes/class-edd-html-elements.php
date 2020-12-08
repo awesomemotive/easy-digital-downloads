@@ -567,9 +567,6 @@ class EDD_HTML_Elements {
 	 * @return string
 	 */
 	public function country_select( $args = array(), $country = '' ) {
-		if ( ! $country ) {
-			$country = edd_get_shop_country();
-		}
 		$args = wp_parse_args(
 			$args,
 			array(
@@ -577,7 +574,7 @@ class EDD_HTML_Elements {
 				'class'            => 'edd_countries_filter',
 				'options'          => edd_get_country_list(),
 				'chosen'           => true,
-				'selected'         => '',
+				'selected'         => $country,
 				'show_option_none' => false,
 				'placeholder'      => __( 'Choose a Country', 'easy-digital-downloads' ),
 				'show_option_all'  => __( 'All Countries', 'easy-digital-downloads' ),
@@ -606,9 +603,6 @@ class EDD_HTML_Elements {
 	public function region_select( $args = array(), $country = '', $region = '' ) {
 		if ( ! $country ) {
 			$country = edd_get_shop_country();
-		}
-		if ( $country && ! $region ) {
-			$region = edd_get_shop_state();
 		}
 		$args = wp_parse_args(
 			$args,
