@@ -17,19 +17,6 @@ services:
         volumes:
             - "wp:/var/www/html:rw"
             - ".:/var/www/html/wp-content/plugins/my-plugin:ro"
-    wp-cli:
-        image: "wordpress:cli-${WP_CLI_VERSION:-2.2.0}-php${PHP_VERSION:-7.3}"
-        environment:
-            - APACHE_RUN_USER="www-data"
-            - APACHE_RUN_GROUP="www-data"
-        depends_on:
-            - "mysql"
-        networks:
-            - "back"
-        volumes:
-            - "wp:/var/www/html:rw"
-            - "./bin/install-wp.sh:/usr/local/bin/install-wp:ro"
-            - ".:/var/www/html/wp-content/plugins/my-plugin:ro"
     mysql:
         image: "mariadb:10.2"
         environment:
