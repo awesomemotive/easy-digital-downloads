@@ -1,27 +1,19 @@
-version: '2.1'
+version: "2"
 
 services:
-    wordpress:
-        volumes:
-            - ./:/wordpress/src
-            - ./tests:/wordpress/tests
-        build:
-            context: .
-            args:
-                WORDPRESS_DB_PASSWORD: pass
-                PHP_IMAGE_TAG: $PHP_IMAGE_TAG
-                WORDPRESS_VERSION: $WORDPRESS_VERSION
-        depends_on:
-            mysql:
-                condition: service_healthy
-
-    mysql:
-        image: mariadb:latest
-        restart: always
-        healthcheck:
-            test: "/usr/bin/mysql --user=root --password=pass --execute \"SHOW DATABASES;\""
-            interval: 3s
-            timeout: 1s
-            retries: 5
+    wordpress_phpunit:
+        build: "."
         environment:
-            MYSQL_ROOT_PASSWORD: pass
+            PHPUNIT_DB_HOST: "mysql_phpunit"
+        volumes:
+            - ".:/app"
+            - "testsuite:/tmp"
+    mysql_phpunit:
+        image: "mariadb:10.2"
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+            MYSQL_DATABASE: "wordpress_test"
+            MYSQL_ROOT_PASSWORD: ""
+
+volumes:
+    testsuite: {}
