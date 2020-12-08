@@ -427,7 +427,7 @@ class Query extends Base {
 	 *
 	 * @since 1.0.0
 	 */
-	private function set_query_var_defaults() {
+	protected function set_query_var_defaults() {
 
 		// Default query variable value
 		$this->query_var_default_value = function_exists( 'random_bytes' )
