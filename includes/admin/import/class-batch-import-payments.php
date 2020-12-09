@@ -397,6 +397,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 	private function set_customer( $row ) {
 
 		global $wpdb;
+		$customer = false;
 
 		if( ! empty( $this->field_mapping['email'] ) && ! empty( $row[ $this->field_mapping['email'] ] ) ) {
 
