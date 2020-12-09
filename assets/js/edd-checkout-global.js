@@ -184,9 +184,11 @@ window.EDD_Checkout = (function($) {
 
 						} else {
 
-							if (!inputs.is('.card-address-2')) {
-								inputs.attr('required','required');
-							}
+							inputs.each( function ( input ) {
+								if ( !$( input ).hasClass( '.card-address-2' ) ) {
+									$( input ).prop( 'required', true );
+								}
+							} );
 							$('#edd_cc_fields,#edd_cc_address').slideDown();
 
 						}
