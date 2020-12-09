@@ -668,9 +668,24 @@ class Column extends Base {
 	 * @return string|null
 	 */
 	private function sanitize_default( $default = '' ) {
-		return is_null( $default )
-			? null
-			: wp_kses_data( $default );
+
+		// Null
+		if ( ( true === $this->allow_null ) && is_null( $default ) ) {
+			return null;
+
+			// String
+		} elseif ( is_string( $default ) ) {
+			return wp_kses_data( $default );
+
+			// Integer
+		} elseif ( $this->is_numeric( $default ) ) {
+			return (int) $default;
+		}
+
+		// @todo datetime, decimal, and other column types
+
+		// Unknown, so return the default's default
+		return '';
 	}
 
 	/**
@@ -749,7 +764,7 @@ class Column extends Base {
 
 		// Handle "empty" values
 		if ( empty( $value ) || ( '0000-00-00 00:00:00' === $value ) ) {
-			$value = ! empty( $this->default ) || ( ( true === $this->allow_null ) && is_null( $this->default ) )
+			$value = ! empty( $this->default )
 				? $this->default
 				: '';
 
