@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 3.0.0-beta-1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2020-12-08 18:19:58+00:00\n"
+"POT-Creation-Date: 2020-12-09 15:10:36+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2314,7 +2314,7 @@ msgstr ""
 msgid "Products (Raw)"
 msgstr ""
 
-#: includes/admin/import/class-batch-import-payments.php:623
+#: includes/admin/import/class-batch-import-payments.php:624
 msgid "payments"
 msgstr ""
 
@@ -2632,6 +2632,7 @@ msgstr ""
 #: includes/admin/views/tmpl-order-adjustment-discount.php:32
 #: includes/admin/views/tmpl-order-form-add-order-discount.php:22
 #: includes/ajax-functions.php:1110 includes/checkout/template.php:769
+#: includes/discount-functions.php:1278
 msgid "Discount"
 msgstr ""
 
@@ -6501,6 +6502,7 @@ msgid "Initialize Refund"
 msgstr ""
 
 #: includes/admin/views/tmpl-order-adjustment-discount.php:27
+#: includes/discount-functions.php:1314
 msgid "Remove discount"
 msgstr ""
 
@@ -9218,41 +9220,41 @@ msgstr ""
 msgid "Invoices"
 msgstr ""
 
-#: includes/payments/actions.php:245
+#: includes/payments/actions.php:248
 msgid "After payment actions processed."
 msgstr ""
 
-#: includes/payments/actions.php:268
+#: includes/payments/actions.php:271
 msgid "Status changed from %s to %s"
 msgstr ""
 
-#: includes/payments/actions.php:509 includes/payments/actions.php:570
+#: includes/payments/actions.php:512 includes/payments/actions.php:573
 msgid "Error resuming payment."
 msgstr ""
 
-#: includes/payments/actions.php:513
+#: includes/payments/actions.php:516
 msgid "Payment recovery triggered URL"
 msgstr ""
 
-#: includes/payments/actions.php:591 includes/payments/actions.php:625
+#: includes/payments/actions.php:594 includes/payments/actions.php:628
 msgid "To complete this payment, please login to your account."
 msgstr ""
 
-#: includes/payments/actions.php:593
+#: includes/payments/actions.php:596
 msgid "Lost Password"
 msgstr ""
 
-#: includes/payments/actions.php:594 templates/shortcode-login.php:33
+#: includes/payments/actions.php:597 templates/shortcode-login.php:33
 msgid "Lost Password?"
 msgstr ""
 
-#: includes/payments/class-edd-payment.php:1920
+#: includes/payments/class-edd-payment.php:1927
 msgid ""
 "Array key \"post_status\" is no longer a supported attribute for the "
 "\"edd_update_payment_status_fields\" filter. Please use \"status\" instead."
 msgstr ""
 
-#: includes/payments/class-edd-payment.php:1982
+#: includes/payments/class-edd-payment.php:1989
 msgid ""
 "The \"publish\" payment status has been replaced with \"complete\". Please "
 "check for both when listening for status changes."
