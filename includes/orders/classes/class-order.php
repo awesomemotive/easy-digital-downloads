@@ -413,22 +413,7 @@ class Order extends Rows\Order {
 
 		// Ensure adjustments exist.
 		if ( null === $this->adjustments ) {
-			$this->adjustments = edd_get_order_adjustments( array(
-				'object_id'     => $this->id,
-				'object_type'   => 'order',
-				'no_found_rows' => true,
-				'order'         => 'ASC',
-			) );
-		}
-
-		// Ensure items exist.
-		if ( null === $this->items ) {
-			$this->items = edd_get_order_items( array(
-				'order_id'      => $this->id,
-				'orderby'       => 'cart_index',
-				'order'         => 'ASC',
-				'no_found_rows' => true,
-			) );
+			$this->adjustments = $this->get_adjustments();
 		}
 
 		// Bail if no adjustments.
@@ -441,10 +426,18 @@ class Order extends Rows\Order {
 			/** @var Order_Adjustment $adjustment */
 
 			if ( 'fee' === $adjustment->type ) {
-				$fee_id = edd_get_order_adjustment_meta( $adjustment->id, 'fee_id', true );
+				$id = is_null( $adjustment->type_key ) ? $adjustment->id : $adjustment->type_key;
+				if ( array_key_exists( $id, $fees ) ) {
+					$id .= '_2';
+				}
 
-				$fees[ $fee_id ] = $adjustment;
+				$fees[ $id ] = $adjustment;
 			}
+		}
+
+		// Ensure items exist.
+		if ( null === $this->items ) {
+			$this->items = $this->get_items();
 		}
 
 		// Fetch the fees that applied to specific items in the order.
@@ -454,9 +447,12 @@ class Order extends Rows\Order {
 			foreach ( $item->get_fees() as $fee ) {
 				/** @var Order_Adjustment $fee */
 
-				$fee_id = edd_get_order_adjustment_meta( $fee->id, 'fee_id', true );
+				$id = is_null( $fee->type_key ) ? $fee->id : $fee->type_key;
+				if ( array_key_exists( $id, $fees ) ) {
+					$id .= '_2';
+				}
 
-				$fees[ $fee_id ] = $fee;
+				$fees[ $id ] = $fee;
 			}
 		}
 

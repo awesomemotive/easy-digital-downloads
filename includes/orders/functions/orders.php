@@ -969,24 +969,22 @@ function edd_build_order( $order_data = array() ) {
 			// Store order item fees as adjustments.
 			if ( isset( $item['fees'] ) && ! empty( $item['fees'] ) ) {
 				foreach ( $item['fees'] as $fee_id => $fee ) {
-					$tax = ( isset( $fee['no_tax'] ) && false === $fee['no_tax'] && ! empty( $tax_rate->amount ) ) || ( $fee['amount'] < 0 && ! empty( $tax_rate->amount ) )
-						? floatval( floatval( $fee['amount'] ) - ( floatval( $fee['amount'] ) / ( 1 + $tax_rate->amount ) ) )
-						: 0.00;
 
+					$tax_rate_amount = empty( $tax_rate->amount ) ? false : $tax_rate->amount;
+					$tax             = EDD()->fees->get_calculated_tax( $fee, $tax_rate_amount );
 					$adjustment_data = array(
 						'object_id'   => $order_item_id,
 						'object_type' => 'order_item',
+						'type_key'    => $fee_id,
 						'type'        => 'fee',
 						'description' => $fee['label'],
-						'subtotal'    => $fee['amount'],
+						'subtotal'    => floatval( $fee['amount'] ),
 						'tax'         => $tax,
-						'total'       => $fee['amount'],
+						'total'       => floatval( $fee['amount'] ) + $tax,
 					);
 
 					// Add the adjustment.
 					$adjustment_id = edd_add_order_adjustment( $adjustment_data );
-
-					edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
 				}
 			}
 
@@ -1003,19 +1001,19 @@ function edd_build_order( $order_data = array() ) {
 
 	// Process fees.
 	if ( ! empty( $fees ) ) {
-		foreach ( $fees as $key => $fee ) {
+		foreach ( $fees as $fee_id => $fee ) {
 
 			add_filter( 'edd_prices_include_tax', '__return_false' );
 
-			$tax = ( isset( $fee['no_tax'] ) && false === $fee['no_tax'] ) || $fee['amount'] < 0
-				? floatval( edd_calculate_tax( $fee['amount'] ) )
-				: 0.00;
+			$tax_rate_amount = empty( $tax_rate->amount ) ? false : $tax_rate->amount;
+			$tax             = EDD()->fees->get_calculated_tax( $fee, $tax_rate_amount );
 
 			remove_filter( 'edd_prices_include_tax', '__return_false' );
 
 			$args = array(
 				'object_id'   => $order_id,
 				'object_type' => 'order',
+				'type_key'    => $fee_id,
 				'type'        => 'fee',
 				'description' => $fee['label'],
 				'subtotal'    => floatval( $fee['amount'] ),
@@ -1025,8 +1023,6 @@ function edd_build_order( $order_data = array() ) {
 
 			// Add the adjustment.
 			$adjustment_id = edd_add_order_adjustment( $args );
-
-			edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $key );
 
 			$total_fees += (float) $fee['amount'];
 			$total_tax  += $tax;
@@ -1049,17 +1045,21 @@ function edd_build_order( $order_data = array() ) {
 		foreach ( $discounts as $discount ) {
 			$discount = edd_get_discount_by( 'code', $discount );
 
-			if ( $discount ) {
-				$discount_amount = 0;
-				$items           = $order_data['cart_details'];
+			if ( false === $discount ) {
+				continue;
+			}
 
-				if ( is_array( $items ) && ! empty( $items ) ) {
-					foreach ( $items as $key => $item ) {
-						$discount_amount += edd_get_item_discount_amount( $item, $items, array( $discount ) );
-					}
+			$discount_amount = 0;
+			$items           = $order_data['cart_details'];
+
+			if ( is_array( $items ) && ! empty( $items ) ) {
+				foreach ( $items as $key => $item ) {
+					$discount_amount += edd_get_item_discount_amount( $item, $items, array( $discount ) );
 				}
+			}
 
-				edd_add_order_adjustment( array(
+			edd_add_order_adjustment(
+				array(
 					'object_id'   => $order_id,
 					'object_type' => 'order',
 					'type_id'     => $discount->id,
@@ -1067,9 +1067,8 @@ function edd_build_order( $order_data = array() ) {
 					'description' => $discount->code,
 					'subtotal'    => $discount_amount,
 					'total'       => $discount_amount,
-				) );
-
-			}
+				)
+			);
 		}
 	}
 
