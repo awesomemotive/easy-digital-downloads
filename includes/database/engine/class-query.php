@@ -1984,21 +1984,25 @@ class Query extends Base {
 		// Loop through item attributes
 		foreach ( $item as $key => $value ) {
 
-			// Only allow null if column allows null
-			if ( is_null( $value ) && $this->get_column_field( array( 'name' => $key ), 'allow_null' ) ) {
-				$value = null;
-
 			// Strip slashes from all strings
-			} elseif ( is_string( $value ) ) {
+			if ( is_string( $value ) ) {
 				$value = stripslashes( $value );
 			}
 
-			// Get callback for column
-			$callback = $this->get_column_field( array( 'name' => $key ), 'validate' );
+			// Get column
+			$column = $this->get_column_by( array( 'name' => $key ) );
 
-			// Attempt to validate
-			if ( ! empty( $callback ) && is_callable( $callback ) ) {
-				$validated = call_user_func( $callback, $value );
+			// Null value is special for all item keys
+			if ( is_null( $value ) ) {
+
+				// Bail if null is not allowed
+				if ( false === $column->allow_null ) {
+					return false;
+				}
+
+				// Attempt to validate
+			} elseif ( ! empty( $column->validate ) && is_callable( $column->validate ) ) {
+				$validated = call_user_func( $column->validate, $value );
 
 				// Bail if error
 				if ( is_wp_error( $validated ) ) {

@@ -316,14 +316,18 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 'Test Fee 2', $this->payment->fees[1]['label'] );
 
 		// Test that it saves to the DB
-		$payment_meta = edd_get_payment_meta( $this->payment->ID, '_edd_payment_meta', true );
-
-		$this->assertArrayHasKey( 'fees', $payment_meta );
-
-		$fees = $payment_meta['fees'];
+		$fees = edd_get_order_adjustments(
+			array(
+				'object_id'   => $this->payment->ID,
+				'object_type' => 'order',
+				'type'        => 'fee',
+				'order'       => 'ASC',
+			)
+		);
 
 		$this->assertEquals( 2, count( $fees ) );
-		$this->assertEquals( 'Test Fee 2', $fees[2]['label'] );
+		$fee = $fees[1];
+		$this->assertEquals( 'Test Fee 2', $fee->description );
 	}
 
 	public function test_payment_remove_fee_by_index() {
