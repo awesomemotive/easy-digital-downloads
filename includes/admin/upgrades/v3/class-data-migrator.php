@@ -856,14 +856,13 @@ class Data_Migrator {
 							? (float) $meta['_edd_payment_tax_rate'][0]
 							: 0.00;
 
-						$tax = ( isset( $fee['no_tax'] ) && false === $fee['no_tax'] && ! empty( $tax_rate ) ) || ( $fee['amount'] < 0 && ! empty( $tax_rate ) )
-							? floatval( floatval( $fee['amount'] ) - ( floatval( $fee['amount'] ) / ( 1 + $tax_rate ) ) )
-							: 0.00;
+						$tax = EDD()->fees->get_calculated_tax( $fee, $tax_rate );
 
 						// Add the adjustment.
 						$adjustment_args = array(
 							'object_id'   => $order_item_id,
 							'object_type' => 'order_item',
+							'type_key'    => $fee_id,
 							'type'        => 'fee',
 							'description' => $fee['label'],
 							'subtotal'    => floatval( $fee['amount'] ),
@@ -873,20 +872,15 @@ class Data_Migrator {
 
 						$adjustment_id = edd_add_order_adjustment( $adjustment_args );
 
-						// Fee ID.
-						edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
-
 						// If we refunded the main order, the fees also need to be added to the refund order type we created.
 						if ( ! empty( $refund_id ) ) {
-							$refund_adjustment_args = $adjustment_args;
+							$refund_adjustment_args              = $adjustment_args;
 							$refund_adjustment_args['object_id'] = $refund_order_item_id;
 							$refund_adjustment_args['subtotal']  = edd_negate_amount( floatval( $fee['amount'] ) );
 							$refund_adjustment_args['tax']       = edd_negate_amount( $tax );
 							$refund_adjustment_args['total']     = edd_negate_amount( floatval( $fee['amount'] ) + $tax );
 
-
 							$refund_adjustment_id = edd_add_order_adjustment( $refund_adjustment_args );
-							edd_add_order_adjustment_meta( $refund_adjustment_id, 'fee_id', $fee_id );
 						}
 					}
 				}
@@ -946,14 +940,13 @@ class Data_Migrator {
 				$refund_adjustment_id = 0;
 
 				// Reverse engineer the tax calculation.
-				$tax = ( isset( $fee['no_tax'] ) && false === $fee['no_tax'] && ! empty( $tax_rate ) ) || ( $fee['amount'] < 0 && ! empty( $tax_rate ) )
-					? floatval( floatval( $fee['amount'] ) - ( floatval( $fee['amount'] ) / ( 1 + $tax_rate ) ) )
-					: 0.00;
+				$tax = EDD()->fees->get_calculated_tax( $fee, $tax_rate );
 
 				// Add the adjustment.
 				$adjustment_args = array(
 					'object_id'     => $order_id,
 					'object_type'   => 'order',
+					'type_key'      => $fee_id,
 					'type'          => 'fee',
 					'description'   => $fee['label'],
 					'subtotal'      => floatval( $fee['amount'] ),
@@ -964,9 +957,6 @@ class Data_Migrator {
 				);
 
 				$adjustment_id = edd_add_order_adjustment( $adjustment_args );
-
-				// Fee ID.
-				edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
 
 				if ( ! empty( $refund_id ) ) {
 

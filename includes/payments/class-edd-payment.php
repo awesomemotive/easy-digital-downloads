@@ -625,15 +625,13 @@ class EDD_Payment {
 					$adjustment_id = edd_add_order_adjustment( array(
 						'object_id'   => $this->ID,
 						'object_type' => 'order',
-						'type_id'     => '',
+						'type_key'    => $key,
 						'type'        => 'fee',
 						'description' => $fee['label'],
 						'subtotal'    => floatval( $fee['amount'] ),
 						'tax'         => $tax,
 						'total'       => floatval( $fee['amount'] ) + $tax,
 					) );
-
-					edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $key );
 
 					$this->increase_fees( $fee['amount'] );
 				}
@@ -662,7 +660,9 @@ class EDD_Payment {
 			);
 
 			foreach ( $order_meta as $key => $value ) {
-				edd_add_order_meta( $order_id, $key, $value );
+				if ( ! empty( $value ) ) {
+					edd_add_order_meta( $order_id, $key, $value );
+				}
 			}
 
 			$this->new = true;
@@ -887,16 +887,23 @@ class EDD_Payment {
 						foreach ( $this->discounts as $discount ) {
 							/** @var EDD_Discount $discount_obj */
 							$discount_obj = edd_get_discount_by( 'code', $discount );
-
-							edd_add_order_adjustment( array(
+							$args         = array(
 								'object_id'   => $this->ID,
 								'object_type' => 'order',
-								'type_id'     => $discount_obj->id,
-								'type'        => 'discount',
 								'description' => $discount,
-								'subtotal'    => floatval( $cart_subtotal - $discount_obj->get_discounted_amount( $cart_subtotal ) ),
-								'total'       => floatval( $cart_subtotal - $discount_obj->get_discounted_amount( $cart_subtotal ) ),
-							) );
+							);
+
+							if ( false === $discount_obj ) {
+								$args['type']     = 'fee';
+								$args['subtotal'] = floatval( $this->total - $cart_subtotal - $this->tax );
+								$args['total']    = floatval( $this->total - $cart_subtotal - $this->tax );
+							} else {
+								$args['type_id']  = $discount_obj->id;
+								$args['type']     = 'discount';
+								$args['subtotal'] = floatval( $cart_subtotal - $discount_obj->get_discounted_amount( $cart_subtotal ) );
+								$args['total']    = floatval( $cart_subtotal - $discount_obj->get_discounted_amount( $cart_subtotal ) );
+							}
+							edd_add_order_adjustment( $args );
 						}
 
 						$this->user_info['discount'] = implode( ',', $this->discounts );
@@ -2198,6 +2205,10 @@ class EDD_Payment {
 							/** @var EDD_Discount $discount */
 							$discount = edd_get_discount_by( 'code', $discount );
 
+							if ( false === $discount ) {
+								continue;
+							}
+
 							$adjustments = $this->order->adjustments;
 
 							$found_discount = array_filter( $adjustments, function( $adjustment ) use ( $discount ) {
@@ -2215,18 +2226,19 @@ class EDD_Payment {
 								edd_update_order_adjustment( $found_discount->id, array(
 									'amount' => $this->subtotal - $discount->get_discounted_amount( $this->subtotal ),
 								) );
-
-							// Add the discount as an adjustment.
 							} else {
-								edd_add_order_adjustment( array(
-									'object_id'   => $this->ID,
-									'object_type' => 'order',
-									'type_id'     => $discount->id,
-									'type'        => 'discount',
-									'description' => $discount->code,
-									'subtotal'    => $this->subtotal - $discount->get_discounted_amount( $this->subtotal ),
-									'total'       => $this->subtotal - $discount->get_discounted_amount( $this->subtotal ),
-								) );
+								// Add the discount as an adjustment.
+								edd_add_order_adjustment(
+									array(
+										'object_id'   => $this->ID,
+										'object_type' => 'order',
+										'type_id'     => $discount->id,
+										'type'        => 'discount',
+										'description' => $discount->code,
+										'subtotal'    => $this->subtotal - $discount->get_discounted_amount( $this->subtotal ),
+										'total'       => $this->subtotal - $discount->get_discounted_amount( $this->subtotal ),
+									)
+								);
 							}
 						}
 					}
@@ -2317,13 +2329,7 @@ class EDD_Payment {
 								'object_type' => 'order_item',
 								'type'        => 'fee',
 								'fields'      => 'ids',
-								'meta_query'  => array(
-									array(
-										'key'     => 'fee_id',
-										'value'   => $fee_id,
-										'compare' => '=',
-									),
-								),
+								'type_key'    => $fee_id,
 							) );
 
 							if ( is_array( $adjustment_id ) && ! empty( $adjustment_id ) ) {
@@ -2349,15 +2355,13 @@ class EDD_Payment {
 								$adjustment_id = edd_add_order_adjustment( array(
 									'object_id'   => $order_item_id,
 									'object_type' => 'order_item',
+									'type_key'    => $fee_id,
 									'type'        => 'fee',
 									'description' => $fee['label'],
 									'subtotal'    => floatval( $fee['amount'] ),
 									'tax'         => $tax,
 									'total'       => floatval( $fee['amount'] ) + $tax
 								) );
-
-								edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
-
 							}
 						} else {
 							$adjustment_id = edd_get_order_adjustments( array(
@@ -2366,13 +2370,7 @@ class EDD_Payment {
 								'object_type' => 'order',
 								'type'        => 'fee',
 								'fields'      => 'ids',
-								'meta_query'  => array(
-									array(
-										'key'     => 'fee_id',
-										'value'   => $fee_id,
-										'compare' => '=',
-									),
-								),
+								'type_key'    => $fee_id,
 							) );
 
 							if ( is_array( $adjustment_id ) && ! empty( $adjustment_id ) ) {
@@ -2398,15 +2396,13 @@ class EDD_Payment {
 								$adjustment_id = edd_add_order_adjustment( array(
 									'object_id'   => $this->ID,
 									'object_type' => 'order',
+									'type_key'    => $fee_id,
 									'type'        => 'fee',
 									'description' => $fee['label'],
 									'subtotal'    => floatval( $fee['amount'] ),
 									'tax'         => $tax,
 									'total'       => floatval( $fee['amount'] ) + $tax
 								) );
-
-								edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
-
 							}
 						}
 					}
@@ -2487,14 +2483,13 @@ class EDD_Payment {
 									$adjustment_id = edd_add_order_adjustment( array(
 										'object_id'   => $order_item_id,
 										'object_type' => 'order_item',
+										'type_key'    => $fee_id,
 										'type'        => 'fee',
 										'description' => $fee['label'],
 										'subtotal'    => floatval( $fee['amount'] ),
 										'tax'         => $tax,
 										'total'       => floatval( $fee['amount'] ) + $tax,
 									) );
-
-									edd_add_order_adjustment_meta( $adjustment_id, 'fee_id', $fee_id );
 
 									$new_tax += $tax;
 								}
@@ -2984,16 +2979,19 @@ class EDD_Payment {
 		$fees = array();
 
 		foreach ( $this->order->get_fees() as $order_fee ) {
-			$fee_id   = edd_get_order_adjustment_meta( $order_fee->id, 'fee_id', true );
 			$price_id = edd_get_order_adjustment_meta( $order_fee->id, 'price_id', true );
 			$no_tax   = (bool) 0.00 === $order_fee->tax;
+			$id       = is_null( $order_fee->type_key ) ? $order_fee->id : $order_fee->type_key;
+			if ( array_key_exists( $id, $fees ) ) {
+				$id .= '_2';
+			}
 
-			$fees[ $fee_id ] = array(
-				'amount'   => $order_fee->subtotal,
-				'label'    => $order_fee->description,
-				'no_tax'   => $no_tax,
-				'type'     => 'fee',
-				'price_id' => $price_id ? $price_id : null,
+			$fees[ $id ] = array(
+				'amount'      => $order_fee->subtotal,
+				'label'       => $order_fee->description,
+				'no_tax'      => $no_tax,
+				'type'        => 'fee',
+				'price_id'    => $price_id ? $price_id : null,
 				'download_id' => 0,
 			);
 		}
@@ -3004,23 +3002,25 @@ class EDD_Payment {
 			foreach ( $item->get_fees() as $item_fee ) {
 				/** @var EDD\Orders\Order_Adjustment $item_fee */
 
-				$fee_id      = edd_get_order_adjustment_meta( $item_fee->id, 'fee_id', true );
 				$download_id = edd_get_order_adjustment_meta( $item_fee->id, 'download_id', true );
 				$price_id    = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
 				$no_tax      = (bool) 0.00 === $item_fee->tax;
+				$id          = is_null( $item_fee->type_key ) ? $item_fee->id : $item_fee->type_key;
+				if ( array_key_exists( $id, $fees ) ) {
+					$id .= '_2';
+				}
 
-				$fees[ $fee_id ] = array(
-					'amount'   => $item_fee->subtotal,
-					'label'    => $item_fee->description,
-					'no_tax'   => $no_tax,
-					'type'     => 'fee',
-					'price_id' => $price_id ? $price_id : null,
+				$fees[ $id ] = array(
+					'amount'      => $item_fee->subtotal,
+					'label'       => $item_fee->description,
+					'no_tax'      => $no_tax,
+					'type'        => 'fee',
+					'price_id'    => $price_id ? $price_id : null,
+					'download_id' => 0,
 				);
 
 				if ( $download_id ) {
-					$fees[ $fee_id ]['download_id'] = $download_id;
-				} else {
-					$fees[ $fee_id ]['download_id'] = 0;
+					$fees[ $id ]['download_id'] = $download_id;
 				}
 			}
 		}
@@ -3214,27 +3214,28 @@ class EDD_Payment {
 
 			$item_fees = array();
 
-
 			foreach ( $item->fees as $key => $item_fee ) {
 				/** @var EDD\Orders\Order_Adjustment $item_fee */
 
-				$fee_id = edd_get_order_adjustment_meta( $item_fee->id, 'fee_id', true );
 				$download_id = edd_get_order_adjustment_meta( $item_fee->id, 'download_id', true );
-				$price_id = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
-				$no_tax = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
+				$price_id    = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
+				$no_tax      = (bool) 0.00 === $item_fee->tax;
+				$id          = is_null( $item_fee->type_key ) ? $item_fee->id : $item_fee->type_key;
+				if ( array_key_exists( $id, $item_fees ) ) {
+					$id .= '_2';
+				}
 
-				$item_fees[ $fee_id ] = array(
+				$item_fees[ $id ] = array(
 					'amount'      => $item_fee->amount,
 					'label'       => $item_fee->description,
 					'no_tax'      => $no_tax ? $no_tax : false,
 					'type'        => 'fee',
 					'price_id'    => $price_id ? $price_id : null,
+					'download_id' => 0,
 				);
 
 				if ( $download_id ) {
-					$item_fees[ $fee_id ]['download_id'] = $download_id;
-				} else {
-					$item_fees[ $fee_id ]['download_id'] = 0;
+					$item_fees[ $id ]['download_id'] = $download_id;
 				}
 			}
 
