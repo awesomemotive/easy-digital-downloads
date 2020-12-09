@@ -1990,8 +1990,7 @@ class Query extends Base {
 			}
 
 			// Get column
-			$column   = $this->get_column_by( array( 'name' => $key ) );
-			$callback = $this->get_column_field( array( 'name' => $key ), 'validate' );
+			$column = $this->get_column_by( array( 'name' => $key ) );
 
 			// Null value is special for all item keys
 			if ( is_null( $value ) ) {
@@ -2002,8 +2001,8 @@ class Query extends Base {
 				}
 
 				// Attempt to validate
-			} elseif ( ! empty( $callback ) && is_callable( $callback ) ) {
-				$validated = call_user_func( $callback, $value );
+			} elseif ( ! empty( $column->validate ) && is_callable( $column->validate ) ) {
+				$validated = call_user_func( $column->validate, $value );
 
 				// Bail if error
 				if ( is_wp_error( $validated ) ) {
