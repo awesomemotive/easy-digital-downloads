@@ -142,10 +142,6 @@ class EDD_Payment_History_Table extends List_Table {
 		$advanced_filters_applied = (bool) ! empty( $order_total_filter_amount ) || ! empty( $country ) || ! empty( $region );
 		$advanced_filters_applied = apply_filters( 'edd_orders_table_advanced_filters_applied', $advanced_filters_applied );
 
-		$maybe_show_filters = ( true === $advanced_filters_applied )
-			? 'open'
-			: '';
-
 		// No modes
 		if ( empty( $all_modes ) ) {
 			$modes = array();
@@ -225,7 +221,7 @@ class EDD_Payment_History_Table extends List_Table {
 
 		<?php endif; ?>
 
-		<span id="edd-advanced-filters" class="<?php echo esc_attr( $maybe_show_filters ); ?>">
+		<span id="edd-advanced-filters">
 			<input type="button" class="button edd-advanced-filters-button button-secondary" value="<?php esc_html_e( 'More', 'easy-digital-downloads' ); ?>"/>
 
 			<div class="inside">
