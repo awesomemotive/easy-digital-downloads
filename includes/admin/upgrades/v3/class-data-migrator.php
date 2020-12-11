@@ -498,7 +498,32 @@ class Data_Migrator {
 			$total   = $meta['_edd_payment_total'][0];
 		}
 
-		// Build up the order address data. Actual insertion happens later, but we need this now to figure out the tax rate.
+		/*
+		 * Build up the order address data. Actual insertion happens later, but we need this now to figure out the tax rate.
+		 */
+
+		// First & last name.
+		$user_info['first_name'] = ! empty( $user_info['first_name'] )
+			? $user_info['first_name']
+			: '';
+		$user_info['last_name']  = ! empty( $user_info['last_name'] )
+			? $user_info['last_name']
+			: '';
+
+		// Add order address.
+		$user_info['address'] = ! empty( $user_info['address'] )
+			? $user_info['address']
+			: array();
+
+		$user_info['address'] = wp_parse_args( $user_info['address'], array(
+			'line1'   => '',
+			'line2'   => '',
+			'city'    => '',
+			'zip'     => '',
+			'country' => '',
+			'state'   => '',
+		) );
+
 		$order_address_data = array(
 			'name'         => trim( $user_info['first_name'] . ' ' . $user_info['last_name'] ),
 			'address'      => isset( $user_info['address']['line1'] )   ? $user_info['address']['line1']   : '',
@@ -612,28 +637,6 @@ class Data_Migrator {
 			$refund_id = edd_add_order( $refund_data );
 
 		}
-
-		// First & last name.
-		$user_info['first_name'] = ! empty( $user_info['first_name'] )
-			? $user_info['first_name']
-			: '';
-		$user_info['last_name']  = ! empty( $user_info['last_name'] )
-			? $user_info['last_name']
-			: '';
-
-		// Add order address.
-		$user_info['address'] = ! empty( $user_info['address'] )
-			? $user_info['address']
-			: array();
-
-		$user_info['address'] = wp_parse_args( $user_info['address'], array(
-			'line1'   => '',
-			'line2'   => '',
-			'city'    => '',
-			'zip'     => '',
-			'country' => '',
-			'state'   => '',
-		) );
 
 		if ( ! empty( $order_address_data ) ) {
 			// Add to edd_order_addresses table.
