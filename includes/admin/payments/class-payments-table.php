@@ -229,9 +229,9 @@ class EDD_Payment_History_Table extends List_Table {
 					<legend for="order-amount-filter-type"><?php esc_html_e( 'Total is', 'easy-digital-downloads' ); ?></legend>
 					<?php
 					$options = array(
-						'=' => __( 'equal to', 'easy-digital-downloads' ),
-						'>' => __( 'greater than', 'easy-digital-downloads' ),
-						'<' => __( 'less than', 'easy-digital-downloads' ),
+						'eq' => __( 'equal to', 'easy-digital-downloads' ),
+						'gt' => __( 'greater than', 'easy-digital-downloads' ),
+						'lt' => __( 'less than', 'easy-digital-downloads' ),
 					);
 
 					echo EDD()->html->select( array(
@@ -857,10 +857,21 @@ class EDD_Payment_History_Table extends List_Table {
 		// Maybe filter by order amount.
 		if ( isset( $_GET['order-amount-filter-type'] ) && isset( $_GET['order-amount-filter-value'] ) ) {
 			if ( ! is_null( $_GET['order-amount-filter-value'] ) && '' !== $_GET['order-amount-filter-value'] ) {
-				$filter_type   = sanitize_text_field( $_GET['order-amount-filter-type'] );
 				$filter_amount = floatval( sanitize_text_field( $_GET['order-amount-filter-value'] ) );
 
-				$args['compare'] = array(
+				switch( $_GET['order-amount-filter-type'] ) {
+					case 'lt' :
+						$filter_type = '<';
+						break;
+					case 'gt' :
+						$filter_type = '>';
+						break;
+					default :
+						$filter_type = '=';
+						break;
+				}
+
+				$args['compare_query'] = array(
 					array(
 						'key'     => 'total',
 						'value'   => $filter_amount,
