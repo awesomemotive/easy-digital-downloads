@@ -1,8 +1,8 @@
 steps:
     - label: 'PHP: 5.3 | WP: 4.4.23 | Multisite: No'
       env:
-          TEST_WP_VERSION: 4.4.23
           TEST_PHP_VERSION: 5.3
+          TEST_WP_VERSION: 4.4.23
           WP_MULTISITE: 0
           TEST_INPLACE: 1
       plugins:
