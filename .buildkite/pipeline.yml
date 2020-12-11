@@ -10,6 +10,9 @@ steps:
               config: docker-compose-phpunit.yml
               propagate-uid-gid: true
               run: wordpress
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
     - label: 'PHP: 5.4 | WP: 4.5.22 | Multisite: No'
       plugins:
           docker-compose#v3.7.0:
