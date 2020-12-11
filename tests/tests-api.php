@@ -195,10 +195,6 @@ class Tests_API extends EDD_UnitTestCase {
 		EDD_Helper_Payment::delete_payment( $this->_payment_id );
 	}
 
-	public function test_test_for_failure_on_purpose() {
-		$this->assertTrue( false );
-	}
-
 	public function test_endpoints() {
 		$this->assertEquals( 'edd-api', $this->_rewrite->endpoints[0][1] );
 	}
