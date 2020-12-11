@@ -4,7 +4,7 @@ steps:
           TEST_WP_VERSION: 4.4.23
           TEST_PHP_VERSION: "5.3"
           WP_MULTISITE: 0
-          TEST_INPLACE: 1
+          TEST_INPLACE: 0
       plugins:
           docker-compose#v3.7.0:
               config: docker-compose-phpunit.yml
