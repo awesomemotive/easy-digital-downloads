@@ -1,15 +1,967 @@
 steps:
-    - label: 'PHP: 5.3 | WP: 4.4.23 | Multisite: No'
-      env:
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.3'
           TEST_WP_VERSION: 4.4.23
-          TEST_PHP_VERSION: "5.3"
-          WP_MULTISITE: 0
-          TEST_INPLACE: 0
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.3 | WP: 4.4.23 | Multisite: No'
       plugins:
           docker-compose#v3.7.0:
               config: docker-compose-phpunit.yml
-              propagate-uid-gid: true
-              run: wordpress
               env:
                   - WP_MULTISITE
                   - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.3'
+          TEST_WP_VERSION: 4.5.22
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.3 | WP: 4.5.22 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.3'
+          TEST_WP_VERSION: 4.6.19
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.3 | WP: 4.6.19 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.3'
+          TEST_WP_VERSION: 4.7.18
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.3 | WP: 4.7.18 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.4'
+          TEST_WP_VERSION: 4.4.23
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.4 | WP: 4.4.23 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.4'
+          TEST_WP_VERSION: 4.5.22
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.4 | WP: 4.5.22 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.4'
+          TEST_WP_VERSION: 4.6.19
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.4 | WP: 4.6.19 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.4'
+          TEST_WP_VERSION: 4.7.18
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.4 | WP: 4.7.18 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.4'
+          TEST_WP_VERSION: 4.8.14
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.4 | WP: 4.8.14 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.4'
+          TEST_WP_VERSION: 4.9.15
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.4 | WP: 4.9.15 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.5'
+          TEST_WP_VERSION: 4.4.23
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.5 | WP: 4.4.23 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.5'
+          TEST_WP_VERSION: 4.5.22
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.5 | WP: 4.5.22 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.5'
+          TEST_WP_VERSION: 4.6.19
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.5 | WP: 4.6.19 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.5'
+          TEST_WP_VERSION: 4.7.18
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.5 | WP: 4.7.18 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.5'
+          TEST_WP_VERSION: 4.8.14
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.5 | WP: 4.8.14 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.5'
+          TEST_WP_VERSION: 4.9.15
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.5 | WP: 4.9.15 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.6'
+          TEST_WP_VERSION: 4.4.23
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.6 | WP: 4.4.23 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.6'
+          TEST_WP_VERSION: 4.5.22
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.6 | WP: 4.5.22 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.6'
+          TEST_WP_VERSION: 4.6.19
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.6 | WP: 4.6.19 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.6'
+          TEST_WP_VERSION: 4.7.18
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.6 | WP: 4.7.18 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.6'
+          TEST_WP_VERSION: 4.8.14
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.6 | WP: 4.8.14 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.6'
+          TEST_WP_VERSION: 4.9.15
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.6 | WP: 4.9.15 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.6'
+          TEST_WP_VERSION: 5.0.10
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.6 | WP: 5.0.10 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.6'
+          TEST_WP_VERSION: 5.1.6
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.6 | WP: 5.1.6 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.6'
+          TEST_WP_VERSION: 5.2.7
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.6 | WP: 5.2.7 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.6'
+          TEST_WP_VERSION: 5.3.4
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.6 | WP: 5.3.4 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.6'
+          TEST_WP_VERSION: 5.4.2
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.6 | WP: 5.4.2 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.6'
+          TEST_WP_VERSION: latest
+          WP_MULTISITE: '0'
+      label: 'PHP: 5.6 | WP: latest | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '5.6'
+          TEST_WP_VERSION: latest
+          WP_MULTISITE: '1'
+      label: 'PHP: 5.6 | WP: latest | Multisite: Yes'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.0'
+          TEST_WP_VERSION: 4.4.23
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.0 | WP: 4.4.23 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.0'
+          TEST_WP_VERSION: 4.5.22
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.0 | WP: 4.5.22 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.0'
+          TEST_WP_VERSION: 4.6.19
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.0 | WP: 4.6.19 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.0'
+          TEST_WP_VERSION: 4.7.18
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.0 | WP: 4.7.18 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.0'
+          TEST_WP_VERSION: 4.8.14
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.0 | WP: 4.8.14 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.0'
+          TEST_WP_VERSION: 4.9.15
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.0 | WP: 4.9.15 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.0'
+          TEST_WP_VERSION: 5.0.10
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.0 | WP: 5.0.10 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.0'
+          TEST_WP_VERSION: 5.1.6
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.0 | WP: 5.1.6 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.0'
+          TEST_WP_VERSION: 5.2.7
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.0 | WP: 5.2.7 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.0'
+          TEST_WP_VERSION: 5.3.4
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.0 | WP: 5.3.4 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.0'
+          TEST_WP_VERSION: 5.4.2
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.0 | WP: 5.4.2 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.0'
+          TEST_WP_VERSION: latest
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.0 | WP: latest | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.1'
+          TEST_WP_VERSION: 4.7.18
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.1 | WP: 4.7.18 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.1'
+          TEST_WP_VERSION: 4.8.14
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.1 | WP: 4.8.14 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.1'
+          TEST_WP_VERSION: 4.9.15
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.1 | WP: 4.9.15 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.1'
+          TEST_WP_VERSION: 5.0.10
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.1 | WP: 5.0.10 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.1'
+          TEST_WP_VERSION: 5.1.6
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.1 | WP: 5.1.6 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.1'
+          TEST_WP_VERSION: 5.2.7
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.1 | WP: 5.2.7 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.1'
+          TEST_WP_VERSION: 5.3.4
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.1 | WP: 5.3.4 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.1'
+          TEST_WP_VERSION: 5.4.2
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.1 | WP: 5.4.2 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.1'
+          TEST_WP_VERSION: latest
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.1 | WP: latest | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.2'
+          TEST_WP_VERSION: 4.6.19
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.2 | WP: 4.6.19 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.2'
+          TEST_WP_VERSION: 4.7.18
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.2 | WP: 4.7.18 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.2'
+          TEST_WP_VERSION: 4.8.14
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.2 | WP: 4.8.14 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.2'
+          TEST_WP_VERSION: 4.9.15
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.2 | WP: 4.9.15 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.2'
+          TEST_WP_VERSION: 5.0.10
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.2 | WP: 5.0.10 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.2'
+          TEST_WP_VERSION: 5.1.6
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.2 | WP: 5.1.6 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.2'
+          TEST_WP_VERSION: 5.2.7
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.2 | WP: 5.2.7 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.2'
+          TEST_WP_VERSION: 5.3.4
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.2 | WP: 5.3.4 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.2'
+          TEST_WP_VERSION: 5.4.2
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.2 | WP: 5.4.2 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.2'
+          TEST_WP_VERSION: latest
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.2 | WP: latest | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.3'
+          TEST_WP_VERSION: 5.0.10
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.3 | WP: 5.0.10 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.3'
+          TEST_WP_VERSION: 5.1.6
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.3 | WP: 5.1.6 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.3'
+          TEST_WP_VERSION: 5.2.7
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.3 | WP: 5.2.7 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.3'
+          TEST_WP_VERSION: 5.3.4
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.3 | WP: 5.3.4 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.3'
+          TEST_WP_VERSION: 5.4.2
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.3 | WP: 5.4.2 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.3'
+          TEST_WP_VERSION: latest
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.3 | WP: latest | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.4'
+          TEST_WP_VERSION: 5.3.4
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.4 | WP: 5.3.4 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.4'
+          TEST_WP_VERSION: 5.4.2
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.4 | WP: 5.4.2 | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
+    - env:
+          TEST_INPLACE: '0'
+          TEST_PHP_VERSION: '7.4'
+          TEST_WP_VERSION: latest
+          WP_MULTISITE: '0'
+      label: 'PHP: 7.4 | WP: latest | Multisite: No'
+      plugins:
+          docker-compose#v3.7.0:
+              config: docker-compose-phpunit.yml
+              env:
+                  - WP_MULTISITE
+                  - TEST_INPLACE
+              propagate-uid-gid: true
+              run: wordpress
