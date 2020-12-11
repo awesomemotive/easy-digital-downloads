@@ -567,7 +567,7 @@ class Data_Migrator {
 			'mode'           => $mode,
 			'currency'       => ! empty( $payment_meta['currency'] ) ? $payment_meta['currency'] : edd_get_currency(),
 			'payment_key'    => $purchase_key,
-			'taxs_rate_id'   => $tax_rate_id,
+			'tax_rate_id'   => $tax_rate_id,
 			'subtotal'       => $subtotal,
 			'tax'            => $tax,
 			'discount'       => $discount,
