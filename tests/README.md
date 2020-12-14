@@ -11,28 +11,12 @@ Requirements:
 - Docker (19.03.13 or newer)
 - Docker Compose (1.25.5 or newer)
 
-The configuration for these are located in the following files:
-`./docker-compose.yml`, `./docker-compose.phpunit.yml`, `Dockerfile`
-
-### 1) Start the Containers
-This step should only need to be run once (or after a system reboot). You may also need to run it again if you change the Environment variables to test other PHP or WordPress Versions.
+To run the tests, use the following command:
 ```
-$ docker-compose -f docker-compose.yml -f docker-compose.phpunit.yml up -d
+bin/run-tests-local.sh -p 7.4 -w latest
 ```
 
-The `up` command starts the container for the Database and PHP/App server, downloading any images necessary to build the containers.
-
-### 2) Setup the test environment
-```
-docker-compose -f docker-compose.phpunit.yml run --rm wordpress_phpunit /app/bin/install-wp-tests.sh wordpress_test root '' mysql_phpunit latest true
-```
-
-This command sends the command `/app/bin/install-wp-tests.sh wordpress_test root '' mysql_phpunit latest true` to the `wordpress_phpunit` container, to prepair the test run by downloading any WordPress core files and setting up the database.
-
-### 3) Run the test suite
-```
-docker-compose -f docker-compose.phpunit.yml run --rm wordpress_phpunit phpunit
-```
+The flags `-p` and `-w` control the PHP and WordPress versions for the tests, respectively.
 
 This command sends the `phpunit` command to the `wordpress_phpunit` container.
 
