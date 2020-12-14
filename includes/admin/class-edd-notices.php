@@ -601,7 +601,7 @@ class EDD_Notices {
 				case 'payment_deleted' :
 					$this->add_notice( array(
 						'id'      => 'edd-payment-deleted',
-						'message' => __( 'The payment has been deleted.', 'easy-digital-downloads' )
+						'message' => __( 'The order has been deleted.', 'easy-digital-downloads' )
 					) );
 					break;
 				case 'email_sent' :
