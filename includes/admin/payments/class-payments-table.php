@@ -813,7 +813,7 @@ class EDD_Payment_History_Table extends List_Table {
 			$mode = null;
 		}
 
-		$args = array(
+		$args = array_filter( array(
 			'user'        => $user,
 			'customer_id' => $customer,
 			'status'      => $status,
@@ -821,7 +821,7 @@ class EDD_Payment_History_Table extends List_Table {
 			'mode'        => $mode,
 			'type'        => $type,
 			'search'      => $search,
-		);
+		) );
 
 		// Search
 		if ( is_string( $search ) && ( false !== strpos( $search, 'txn:' ) ) ) {
