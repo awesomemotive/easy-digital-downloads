@@ -57,8 +57,7 @@ class Logs_File_Downloads extends Schema {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0',
-			'searchable' => true
+			'default'    => '0'
 		),
 
 		// order_id
@@ -85,8 +84,7 @@ class Logs_File_Downloads extends Schema {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0',
-			'searchable' => true
+			'default'    => '0'
 		),
 
 		// ip

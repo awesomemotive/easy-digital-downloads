@@ -60,7 +60,6 @@ class Customer_Addresses extends Schema {
 			'unsigned'   => false,
 			'default'    => '0',
 			'sortable'   => true,
-			'searchable' => false,
 			'transition' => true,
 		),
 
@@ -70,7 +69,6 @@ class Customer_Addresses extends Schema {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => 'billing',
-			'searchable' => false,
 			'sortable'   => true,
 			'transition' => true
 		),
@@ -81,7 +79,6 @@ class Customer_Addresses extends Schema {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => 'active',
-			'searchable' => false,
 			'sortable'   => true,
 			'transition' => true
 		),
