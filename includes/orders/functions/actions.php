@@ -18,12 +18,12 @@ defined( 'ABSPATH' ) || exit;
  * @since 3.0
  *
  * @param array $args Order form data.
- * @return int|bool Order ID if successful, false otherwise.
+ * @return void
  */
 function edd_add_manual_order( $args = array() ) {
 	// Bail if user cannot manage shop settings or no data was passed.
 	if ( empty( $args ) || ! current_user_can( 'manage_shop_settings' ) ) {
-		return false;
+		return;
 	}
 
 	// Set up parameters.
@@ -33,7 +33,7 @@ function edd_add_manual_order( $args = array() ) {
 
 	// Bail if nonce fails.
 	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'edd_add_order_nonce' ) ) {
-		return false;
+		return;
 	}
 
 	// Get now one time to avoid microsecond issues
@@ -442,9 +442,10 @@ function edd_add_manual_order( $args = array() ) {
 
 	// Redirect to `Edit Order` page.
 	edd_redirect( edd_get_admin_url( array(
-		'page' => 'edd-payment-history',
-		'view' => 'view-order-details',
-		'id'   => $order_id,
+		'page'        => 'edd-payment-history',
+		'view'        => 'view-order-details',
+		'id'          => urlencode( $order_id ),
+		'edd-message' => 'order_added',
 	) ) );
 }
 add_action( 'edd_add_order', 'edd_add_manual_order' );
