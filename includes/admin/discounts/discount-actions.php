@@ -98,7 +98,7 @@ function edd_admin_add_discount( $data = array() ) {
 		$end_date_hour   = isset( $data['end_date_hour'] ) && (int) $data['end_date_hour'] >= 0 && (int) $data['end_date_hour'] <= 23
 			? intval( $data['end_date_hour'] )
 			: '23';
-		$end_date_minute = isset( $data['end_date_hour'] ) && (int) $data['end_date_minute'] >= 0 && (int) $data['end_date_minute'] <= 59
+		$end_date_minute = isset( $data['end_date_minute'] ) && (int) $data['end_date_minute'] >= 0 && (int) $data['end_date_minute'] <= 59
 			? intval( $data['end_date_minute'] )
 			: '59';
 
