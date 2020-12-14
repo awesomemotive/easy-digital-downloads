@@ -3,13 +3,13 @@ steps:
     command: "/bin/true"
     plugins:
       - docker#v3.7.0:
-          image: "public.ecr.aws.q7y6e9n2/unit-test-images/php:5.3"
+          image: "public.ecr.aws/q7y6e9n2/unit-test-images/php:5.3"
 
   - label: "Pull PHP 5.4"
     command: "/bin/true"
     plugins:
       - docker#v3.7.0:
-          image: "public.ecr.aws.q7y6e9n2/unit-test-images/php:5.4"
+          image: "public.ecr.aws/q7y6e9n2/unit-test-images/php:5.4"
 
   - wait
 
@@ -17,13 +17,13 @@ steps:
     command: "/bin/true"
     plugins:
       - docker#v3.7.0:
-          image: "public.ecr.aws.q7y6e9n2/unit-test-images/php:5.5"
+          image: "public.ecr.aws/q7y6e9n2/unit-test-images/php:5.5"
 
   - label: "Pull PHP 5.6"
     command: "/bin/true"
     plugins:
       - docker#v3.7.0:
-          image: "public.ecr.aws.q7y6e9n2/unit-test-images/php:5.6"
+          image: "public.ecr.aws/q7y6e9n2/unit-test-images/php:5.6"
 
   - wait
 
@@ -31,13 +31,13 @@ steps:
     command: "/bin/true"
     plugins:
       - docker#v3.7.0:
-          image: "public.ecr.aws.q7y6e9n2/unit-test-images/php:7.0"
+          image: "public.ecr.aws/q7y6e9n2/unit-test-images/php:7.0"
 
   - label: "Pull PHP 7.1"
     command: "/bin/true"
     plugins:
       - docker#v3.7.0:
-          image: "public.ecr.aws.q7y6e9n2/unit-test-images/php:7.1"
+          image: "public.ecr.aws/q7y6e9n2/unit-test-images/php:7.1"
 
   - wait
 
@@ -45,13 +45,13 @@ steps:
     command: "/bin/true"
     plugins:
       - docker#v3.7.0:
-          image: "public.ecr.aws.q7y6e9n2/unit-test-images/php:7.2"
+          image: "public.ecr.aws/q7y6e9n2/unit-test-images/php:7.2"
 
   - label: "Pull PHP 7.3"
     command: "/bin/true"
     plugins:
       - docker#v3.7.0:
-          image: "public.ecr.aws.q7y6e9n2/unit-test-images/php:7.3"
+          image: "public.ecr.aws/q7y6e9n2/unit-test-images/php:7.3"
 
   - wait
 
@@ -59,7 +59,7 @@ steps:
     command: "/bin/true"
     plugins:
       - docker#v3.7.0:
-          image: "public.ecr.aws.q7y6e9n2/unit-test-images/php:7.4"
+          image: "public.ecr.aws/q7y6e9n2/unit-test-images/php:7.4"
 
   - label: "Pull MariaDB"
     command: "/bin/true"
