@@ -254,12 +254,6 @@ function edd_load_admin_scripts( $hook ) {
 	wp_enqueue_style( 'wp-color-picker' );
 	wp_enqueue_script( 'wp-color-picker' );
 
-	wp_register_style( 'colorbox', $css_dir . 'colorbox' . $suffix . '.css', array(), '1.3.20' );
-	wp_enqueue_style( 'colorbox' );
-
-	wp_register_script( 'colorbox', $js_dir . 'jquery.colorbox-min.js', array( 'jquery' ), '1.3.20' );
-	wp_enqueue_script( 'colorbox' );
-
 	//call for media manager
 	wp_enqueue_media();
 
