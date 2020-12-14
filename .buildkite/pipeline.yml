@@ -1,71 +1,71 @@
 steps:
   - label: "Pull PHP 5.3"
-    command: "/bin/true"
-    plugins:
-      - docker#v3.7.0:
-          image: "public.ecr.aws/q7y6e9n2/unit-test-images/php:5.3"
+    command: "docker pull public.ecr.aws/q7y6e9n2/unit-test-images/php:5.3"
+    retry:
+      automatic: true
+      limit: 3
 
   - label: "Pull PHP 5.4"
-    command: "/bin/true"
-    plugins:
-      - docker#v3.7.0:
-          image: "public.ecr.aws/q7y6e9n2/unit-test-images/php:5.4"
+    command: "docker pull public.ecr.aws/q7y6e9n2/unit-test-images/php:5.4"
+    retry:
+      automatic: true
+      limit: 3
 
   - wait
 
   - label: "Pull PHP 5.5"
-    command: "/bin/true"
-    plugins:
-      - docker#v3.7.0:
-          image: "public.ecr.aws/q7y6e9n2/unit-test-images/php:5.5"
+    command: "docker pull public.ecr.aws/q7y6e9n2/unit-test-images/php:5.5"
+    retry:
+      automatic: true
+      limit: 3
 
   - label: "Pull PHP 5.6"
-    command: "/bin/true"
-    plugins:
-      - docker#v3.7.0:
-          image: "public.ecr.aws/q7y6e9n2/unit-test-images/php:5.6"
+    command: "docker pull public.ecr.aws/q7y6e9n2/unit-test-images/php:5.6"
+    retry:
+      automatic: true
+      limit: 3
 
   - wait
 
   - label: "Pull PHP 7.0"
-    command: "/bin/true"
-    plugins:
-      - docker#v3.7.0:
-          image: "public.ecr.aws/q7y6e9n2/unit-test-images/php:7.0"
+    command: "docker pull public.ecr.aws/q7y6e9n2/unit-test-images/php:7.0"
+    retry:
+      automatic: true
+      limit: 3
 
   - label: "Pull PHP 7.1"
-    command: "/bin/true"
-    plugins:
-      - docker#v3.7.0:
-          image: "public.ecr.aws/q7y6e9n2/unit-test-images/php:7.1"
+    command: "docker pull public.ecr.aws/q7y6e9n2/unit-test-images/php:7.1"
+    retry:
+      automatic: true
+      limit: 3
 
   - wait
 
   - label: "Pull PHP 7.2"
-    command: "/bin/true"
-    plugins:
-      - docker#v3.7.0:
-          image: "public.ecr.aws/q7y6e9n2/unit-test-images/php:7.2"
+    command: "docker pull public.ecr.aws/q7y6e9n2/unit-test-images/php:7.2"
+    retry:
+      automatic: true
+      limit: 3
 
   - label: "Pull PHP 7.3"
-    command: "/bin/true"
-    plugins:
-      - docker#v3.7.0:
-          image: "public.ecr.aws/q7y6e9n2/unit-test-images/php:7.3"
+    command: "docker pull public.ecr.aws/q7y6e9n2/unit-test-images/php:7.3"
+    retry:
+      automatic: true
+      limit: 3
 
   - wait
 
   - label: "Pull PHP 7.4"
-    command: "/bin/true"
-    plugins:
-      - docker#v3.7.0:
-          image: "public.ecr.aws/q7y6e9n2/unit-test-images/php:7.4"
+    command: "docker pull public.ecr.aws/q7y6e9n2/unit-test-images/php:7.4"
+    retry:
+      automatic: true
+      limit: 3
 
   - label: "Pull MariaDB"
-    command: "/bin/true"
-    plugins:
-      - docker#v3.7.0:
-          image: "mariadb:10.2"
+    command: "docker pull public.ecr.aws/q7y6e9n2/unit-test-images/mariadb:10.2"
+    retry:
+      automatic: true
+      limit: 3
 
   - wait
 
