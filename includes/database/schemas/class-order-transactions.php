@@ -66,7 +66,8 @@ class Order_Transactions extends Schema {
 			'name'       => 'transaction_id',
 			'type'       => 'varchar',
 			'length'     => '256',
-			'cache_key'  => true
+			'cache_key'  => true,
+			'searchable' => true
 		),
 
 		// gateway
@@ -83,7 +84,6 @@ class Order_Transactions extends Schema {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => 'pending',
-			'searchable' => true,
 			'sortable'   => true,
 			'transition' => true
 		),
