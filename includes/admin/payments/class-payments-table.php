@@ -142,10 +142,6 @@ class EDD_Payment_History_Table extends List_Table {
 		$advanced_filters_applied = (bool) ! empty( $order_total_filter_amount ) || ! empty( $country ) || ! empty( $region );
 		$advanced_filters_applied = apply_filters( 'edd_orders_table_advanced_filters_applied', $advanced_filters_applied );
 
-		$maybe_show_filters = ( true === $advanced_filters_applied )
-			? 'open'
-			: '';
-
 		// No modes
 		if ( empty( $all_modes ) ) {
 			$modes = array();
@@ -225,7 +221,7 @@ class EDD_Payment_History_Table extends List_Table {
 
 		<?php endif; ?>
 
-		<span id="edd-advanced-filters" class="<?php echo esc_attr( $maybe_show_filters ); ?>">
+		<span id="edd-advanced-filters">
 			<input type="button" class="button edd-advanced-filters-button button-secondary" value="<?php esc_html_e( 'More', 'easy-digital-downloads' ); ?>"/>
 
 			<div class="inside">
@@ -233,9 +229,9 @@ class EDD_Payment_History_Table extends List_Table {
 					<legend for="order-amount-filter-type"><?php esc_html_e( 'Total is', 'easy-digital-downloads' ); ?></legend>
 					<?php
 					$options = array(
-						'=' => __( 'equal to', 'easy-digital-downloads' ),
-						'>' => __( 'greater than', 'easy-digital-downloads' ),
-						'<' => __( 'less than', 'easy-digital-downloads' ),
+						'eq' => __( 'equal to', 'easy-digital-downloads' ),
+						'gt' => __( 'greater than', 'easy-digital-downloads' ),
+						'lt' => __( 'less than', 'easy-digital-downloads' ),
 					);
 
 					echo EDD()->html->select( array(
@@ -807,7 +803,7 @@ class EDD_Payment_History_Table extends List_Table {
 			$mode = null;
 		}
 
-		$args = array(
+		$args = array_filter( array(
 			'user'        => $user,
 			'customer_id' => $customer,
 			'status'      => $status,
@@ -815,7 +811,7 @@ class EDD_Payment_History_Table extends List_Table {
 			'mode'        => $mode,
 			'type'        => $type,
 			'search'      => $search,
-		);
+		) );
 
 		// Search
 		if ( is_string( $search ) && ( false !== strpos( $search, 'txn:' ) ) ) {
@@ -851,10 +847,21 @@ class EDD_Payment_History_Table extends List_Table {
 		// Maybe filter by order amount.
 		if ( isset( $_GET['order-amount-filter-type'] ) && isset( $_GET['order-amount-filter-value'] ) ) {
 			if ( ! is_null( $_GET['order-amount-filter-value'] ) && '' !== $_GET['order-amount-filter-value'] ) {
-				$filter_type   = sanitize_text_field( $_GET['order-amount-filter-type'] );
 				$filter_amount = floatval( sanitize_text_field( $_GET['order-amount-filter-value'] ) );
 
-				$args['compare'] = array(
+				switch( $_GET['order-amount-filter-type'] ) {
+					case 'lt' :
+						$filter_type = '<';
+						break;
+					case 'gt' :
+						$filter_type = '>';
+						break;
+					default :
+						$filter_type = '=';
+						break;
+				}
+
+				$args['compare_query'] = array(
 					array(
 						'key'     => 'total',
 						'value'   => $filter_amount,
