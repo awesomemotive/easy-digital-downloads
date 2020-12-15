@@ -610,12 +610,6 @@ class EDD_Notices {
 						'message' => __( 'The purchase receipt has been resent.', 'easy-digital-downloads' )
 					) );
 					break;
-				case 'refreshed-reports' :
-					$this->add_notice( array(
-						'id'      => 'edd-refreshed-reports',
-						'message' => __( 'The reports have been refreshed.', 'easy-digital-downloads' )
-					) );
-					break;
 				case 'payment-note-deleted' :
 					$this->add_notice( array(
 						'id'      => 'edd-note-deleted',
