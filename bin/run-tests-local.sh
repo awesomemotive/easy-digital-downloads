@@ -1,37 +1,69 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-set -e
+set -eo pipefail
 
-if [[ $# -lt 3 ]]; then
-	echo "usage: $0 <db-name> <db-user> <db-pass> [db-host] [wp-version] [force download]"
-	exit 1
+OPTS=$(getopt -a --options w:p:imh --longoptions wp:,php:,multisite,in-place,help --name "$0" -- "$@") || exit 1
+eval set -- "$OPTS"
+
+show_help() {
+  printf -- 'Usage: %s --php|-p PHP_VERSION --wp|-w WP_VERSION [OPTIONS]\n\n' "$0";
+
+  echo "Options:";
+  printf -- '-i, --in-place\t\tDoes tests in-place without copying the repo to another dir and nuking composer files. This is faster but will add composer.lock/vendor dirs to your checkout. (Default: no)\n';
+  printf -- '-m, --multisite\t\tRun tests as multisite?\n';
+  printf -- '-p, --php\t\tSets the PHP version to test with (Required)\n';
+  printf -- '-w, --wp\t\tSets WP version to test against (Required)\n';
+  printf -- '-h, --help\t\tShow help.\n';
+}
+
+while true; do
+  case "$1" in
+    --in-place|-i )
+        TEST_INPLACE=1
+        shift
+        ;;
+    --multisite|-m )
+        TEST_WP_MULTISITE="1"
+        shift
+        ;;
+    --php|-p )
+        export TEST_PHP_VERSION="$2"
+        shift 2
+        ;;
+    --wp|-w )
+        export TEST_WP_VERSION="$2"
+        shift 2
+        ;;
+    --help|-h )
+        show_help
+        exit 0
+        shift
+        ;;
+    --)
+        shift
+        break
+        ;;
+    *)
+        show_help
+        exit 1
+        ;;
+  esac
+done
+
+if [[ -z "${TEST_PHP_VERSION}" ]] || [[ -z "${TEST_WP_VERSION}" ]]; then
+	show_help;
+	exit 1;
 fi
 
-DB_NAME="$1"
-DB_USER="$2"
-DB_PASS="$3"
-DB_HOST="${4-localhost}"
-WP_VERSION="${5-latest}"
-FORCE="${6-false}"
+# Default WP_MULTISITE to 0
+export WP_MULTISITE="${TEST_WP_MULTISITE:-0}"
+# Default TEST_INPLACE to 0
+export TEST_INPLACE="${TEST_INPLACE:-0}"
 
-bin/install-wp-tests.sh "${DB_NAME}" "${DB_USER}" "${DB_PASS}" "${DB_HOST}" "${WP_VERSION}" "${FORCE}"
+# Create a random project name
+export COMPOSE_PROJECT_NAME="$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)"
 
-# Default to copying the repo elsewhere
-if [[ "${TEST_INPLACE:-x}" == "x" ]] || [[ "${TEST_INPLACE}" == "0" ]]; then
-	REPO_DIR="/tmp/$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)"
-	echo "Copying repo to ${REPO_DIR} to and deleting composer files..."
-	mkdir "${REPO_DIR}"
-	cp -R . "${REPO_DIR}"
-	cd "${REPO_DIR}"
-	if [[ -d vendor ]]; then
-		rm -rf vendor
-	fi
-	if [[ -f composer.lock ]]; then
-		rm composer.lock
-	fi
-else
-	echo "Running inplace..."
-fi
-
-composer --no-cache install
-vendor/bin/phpunit
+# Do this to make sure we cleanup
+set +e
+docker-compose -f docker-compose-phpunit.yml run -e "TEST_INPLACE=${TEST_INPLACE}" --rm --user $(id -u):$(id -g) wordpress
+docker-compose -f docker-compose-phpunit.yml down --remove-orphans
