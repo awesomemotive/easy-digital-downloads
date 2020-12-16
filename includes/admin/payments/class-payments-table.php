@@ -649,7 +649,6 @@ class EDD_Payment_History_Table extends List_Table {
 				'set-status-complete'     => __( 'Mark Completed',   'easy-digital-downloads' ),
 				'set-status-pending'     => __( 'Mark Pending',     'easy-digital-downloads' ),
 				'set-status-processing'  => __( 'Mark Processing',  'easy-digital-downloads' ),
-				'set-status-refunded'    => __( 'Mark Refunded',    'easy-digital-downloads' ),
 				'set-status-revoked'     => __( 'Mark Revoked',     'easy-digital-downloads' ),
 				'set-status-failed'      => __( 'Mark Failed',      'easy-digital-downloads' ),
 				'set-status-abandoned'   => __( 'Mark Abandoned',   'easy-digital-downloads' ),
