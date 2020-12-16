@@ -187,7 +187,7 @@ window.EDD_Checkout = (function($) {
 							inputs.each( function () {
 								var $input = $( this );
 								if ( ! $input.is( '.card-name, .card-address, .card-address-2' ) ) {
-									$( this ).prop( 'required', true );
+									$input.prop( 'required', true );
 								}
 							} );
 							$('#edd_cc_fields,#edd_cc_address').slideDown();
