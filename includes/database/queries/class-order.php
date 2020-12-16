@@ -276,6 +276,10 @@ class Order extends Query {
 	 */
 	public function query_by_country( $clauses ) {
 
+		if ( empty( $this->query_vars['country'] ) || 'all' === $this->query_vars['country'] ) {
+			return $clauses;
+		}
+
 		global $wpdb;
 
 		$primary_alias  = $this->table_alias;
@@ -290,34 +294,30 @@ class Order extends Query {
 			$where_clause = '';
 		}
 
-		// Filter by the order address's country.
-		if ( ! empty( $this->query_vars['country'] ) && 'all' !== $this->query_vars['country'] ) {
-			// Filter by the order address's region (state/province/etc)..
-			if ( ! empty( $this->query_vars['region'] ) && 'all' !== $this->query_vars['region'] ) {
+		// Filter by the order address's region (state/province/etc)..
+		if ( ! empty( $this->query_vars['region'] ) && 'all' !== $this->query_vars['region'] ) {
+			$location_join = $wpdb->prepare(
+				" LEFT JOIN {$order_addresses_query->table_name} {$join_alias} ON {$primary_alias}.{$primary_column} = {$join_alias}.order_id WHERE {$join_alias}.country = %s AND {$join_alias}.region = %s {$where_clause}",
+				$this->query_vars['country'],
+				$this->query_vars['region']
+			);
+
+			// Add the region to the query var defaults.
+			$this->query_var_defaults['region'] = $this->query_vars['region'];
+
+			// Filter only by the country, not by region.
+		} else {
 				$location_join = $wpdb->prepare(
-					" LEFT JOIN {$order_addresses_query->table_name} {$join_alias} ON {$primary_alias}.{$primary_column} = {$join_alias}.order_id WHERE {$join_alias}.country = %s AND {$join_alias}.region = %s {$where_clause}",
-					$this->query_vars['country'],
-					$this->query_vars['region']
+					" LEFT JOIN {$order_addresses_query->table_name} {$join_alias} ON {$primary_alias}.{$primary_column} = {$join_alias}.order_id WHERE {$join_alias}.country = %s {$where_clause}",
+					$this->query_vars['country']
 				);
 
-				// Add the region to the query var defaults.
-				$this->query_var_defaults['region'] = $this->query_vars['region'];
-
-				// Filter only by the country, not by region.
-			} else {
-					$location_join = $wpdb->prepare(
-						" LEFT JOIN {$order_addresses_query->table_name} {$join_alias} ON {$primary_alias}.{$primary_column} = {$join_alias}.order_id WHERE {$join_alias}.country = %s {$where_clause}",
-						$this->query_vars['country']
-					);
-
-					// Add the country to the query var defaults.
-					$this->query_var_defaults['country'] = $this->query_vars['country'];
-			}
-
-			// Add the customized join to the query.
-			$clauses['join'] .= ' ' . $location_join;
-
+				// Add the country to the query var defaults.
+				$this->query_var_defaults['country'] = $this->query_vars['country'];
 		}
+
+		// Add the customized join to the query.
+		$clauses['join'] .= ' ' . $location_join;
 
 		// We have added the wheres to the join calls so we don't need it to be here anymore.
 		unset( $clauses['where'] );

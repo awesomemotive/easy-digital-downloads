@@ -80,11 +80,11 @@ function edd_admin_add_discount( $data = array() ) {
 	// Start date.
 	if ( ! empty( $data['start_date'] ) ) {
 		$start_date        = sanitize_text_field( $data['start_date'] );
-		$start_date_hour   = (int) $data['start_date_hour'] >= 0 && (int) $data['start_date_hour'] <= 23
-			? sanitize_text_field( $data['start_date_hour'] )
+		$start_date_hour   = isset( $data['start_date_hour'] ) && (int) $data['start_date_hour'] >= 0 && (int) $data['start_date_hour'] <= 23
+			? intval( $data['start_date_hour'] )
 			: '00';
-		$start_date_minute = (int) $data['start_date_minute'] >= 0 && (int) $data['start_date_minute'] <= 59
-			? sanitize_text_field( $data['start_date_minute'] )
+		$start_date_minute = isset( $data['start_date_minute'] ) && (int) $data['start_date_minute'] >= 0 && (int) $data['start_date_minute'] <= 59
+			? intval( $data['start_date_minute'] )
 			: '00';
 
 		// The start date is entered in the user's WP timezone. We need to convert it to UTC prior to saving now.
@@ -95,11 +95,11 @@ function edd_admin_add_discount( $data = array() ) {
 	// End date.
 	if ( ! empty( $data['end_date'] ) ) {
 		$end_date        = sanitize_text_field( $data['end_date'] );
-		$end_date_hour   = (int) $data['end_date_hour'] >= 0 && (int) $data['end_date_hour'] <= 23
-			? sanitize_text_field( $data['end_date_hour'] )
+		$end_date_hour   = isset( $data['end_date_hour'] ) && (int) $data['end_date_hour'] >= 0 && (int) $data['end_date_hour'] <= 23
+			? intval( $data['end_date_hour'] )
 			: '23';
-		$end_date_minute = (int) $data['end_date_minute'] >= 0 && (int) $data['end_date_minute'] <= 59
-			? sanitize_text_field( $data['end_date_minute'] )
+		$end_date_minute = isset( $data['end_date_minute'] ) && (int) $data['end_date_minute'] >= 0 && (int) $data['end_date_minute'] <= 59
+			? intval( $data['end_date_minute'] )
 			: '59';
 
 		// The end date is entered in the user's WP timezone. We need to convert it to UTC prior to saving now.
@@ -204,35 +204,35 @@ function edd_admin_edit_discount( $data = array() ) {
 	// Start date.
 	if ( ! empty( $data['start_date'] ) ) {
 		$start_date        = sanitize_text_field( $data['start_date'] );
-		$start_date_hour   = (int) $data['start_date_hour'] >= 0 && (int) $data['start_date_hour'] <= 23
-			? sanitize_text_field( $data['start_date_hour'] )
+		$start_date_hour   = isset( $data['start_date_hour'] ) && (int) $data['start_date_hour'] >= 0 && (int) $data['start_date_hour'] <= 23
+			? intval( $data['start_date_hour'] )
 			: '00';
-		$start_date_minute = (int) $data['start_date_minute'] >= 0 && (int) $data['start_date_minute'] <= 59
-			? sanitize_text_field( $data['start_date_minute'] )
+		$start_date_minute = isset( $data['start_date_minute'] ) && (int) $data['start_date_minute'] >= 0 && (int) $data['start_date_minute'] <= 59
+			? intval( $data['start_date_minute'] )
 			: '00';
 
 		// The start date is entered in the user's WP timezone. We need to convert it to UTC prior to saving now.
 		$date                 = edd_get_utc_equivalent_date( EDD()->utils->date( $start_date . ' ' . $start_date_hour . ':' . $start_date_minute . ':00', edd_get_timezone_id(), false ) );
 		$to_update['start_date'] = $date->format( 'Y-m-d H:i:s' );
 	} else {
-		$to_update['start_date'] = '0000-00-00 00:00:00';
+		$to_update['start_date'] = null;
 	}
 
 	// End date.
 	if ( ! empty( $data['end_date'] ) ) {
 		$end_date        = sanitize_text_field( $data['end_date'] );
-		$end_date_hour   = (int) $data['end_date_hour'] >= 0 && (int) $data['end_date_hour'] <= 23
-			? sanitize_text_field( $data['end_date_hour'] )
+		$end_date_hour   = isset( $data['end_date_hour'] ) && (int) $data['end_date_hour'] >= 0 && (int) $data['end_date_hour'] <= 23
+			? intval( $data['end_date_hour'] )
 			: '23';
-		$end_date_minute = (int) $data['end_date_minute'] >= 0 && (int) $data['end_date_minute'] <= 59
-			? sanitize_text_field( $data['end_date_minute'] )
+		$end_date_minute = isset( $data['end_date_minute'] ) && (int) $data['end_date_minute'] >= 0 && (int) $data['end_date_minute'] <= 59
+			? intval( $data['end_date_minute'] )
 			: '59';
 
 		// The end date is entered in the user's WP timezone. We need to convert it to UTC prior to saving now.
 		$date               = edd_get_utc_equivalent_date( EDD()->utils->date( $end_date . ' ' . $end_date_hour . ':' . $end_date_minute . ':00', edd_get_timezone_id(), false ) );
 		$to_update['end_date'] = $date->format( 'Y-m-d H:i:s' );
 	} else {
-		$to_update['end_date'] = '0000-00-00 00:00:00';
+		$to_update['end_date'] = null;
 	}
 
 	// Known & accepted core discount meta

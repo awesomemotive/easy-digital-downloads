@@ -631,10 +631,6 @@ function edd_orders_list_table_process_bulk_actions() {
 				edd_update_payment_status( $id, 'processing' );
 				break;
 
-			case 'set-status-refunded':
-				edd_update_payment_status( $id, 'refunded' );
-				break;
-
 			case 'set-status-revoked':
 				edd_update_payment_status( $id, 'revoked' );
 				break;
