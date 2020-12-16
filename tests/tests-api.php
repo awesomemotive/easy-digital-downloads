@@ -545,4 +545,29 @@ class Tests_API extends EDD_UnitTestCase {
 		$this->assertEquals( 'Purchase Notes', $out['products'][0]['notes'] );
 	}
 
+	/**
+	 * Ensures the correct discount amount is included in the recent sales endpoint.
+	 *
+	 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/8246
+	 *
+	 * @covers EDD_API_V2::get_recent_sales
+	 * @covers EDD_Cart::get_item_discount_amount
+	 */
+	public function test_recent_sales_contains_correct_discount_amount() {
+		// Create a 20% off discount code with code `20OFF`.
+		EDD_Helper_Discount::create_simple_percent_discount();
+
+		// Update the payment information.
+		$payment                    = edd_get_payment( $this->_payment_id );
+		$payment->discounted_amount = 20;
+		$payment->total             = 80;
+		$payment->discounts         = '20OFF';
+		$payment->save();
+
+		$api_v2       = new EDD_API_V2();
+		$sales_output = $api_v2->get_recent_sales();
+
+		$this->assertEquals( 20, $sales_output['sales'][0]['discounts']['20OFF'] );
+	}
+
 }
