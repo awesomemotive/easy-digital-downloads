@@ -1570,8 +1570,8 @@ function edd_get_status_label( $status = '' ) {
  *
  * @since 3.0
  *
- * @param array  $counts
- * @param string $groupby
+ * @param EDD\Database\Query $counts
+ * @param string             $groupby
  * @return array
  */
 function edd_format_counts( $counts = array(), $groupby = '' ) {
