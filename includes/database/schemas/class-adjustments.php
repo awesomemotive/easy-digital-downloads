@@ -48,7 +48,6 @@ final class Adjustments extends Schema {
 			'length'     => '20',
 			'unsigned'   => true,
 			'default'    => '0',
-			'searchable' => true,
 			'sortable'   => true,
 			'transition' => true
 		),
@@ -77,7 +76,6 @@ final class Adjustments extends Schema {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => 'draft',
-			'searchable' => true,
 			'sortable'   => true,
 			'transition' => true
 		),
@@ -117,8 +115,7 @@ final class Adjustments extends Schema {
 			'name'       => 'amount',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0',
-			'searchable' => true
+			'default'    => '0'
 		),
 
 		// description
@@ -170,7 +167,6 @@ final class Adjustments extends Schema {
 			'default'    => null,
 			'allow_null' => true,
 			'date_query' => true,
-			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -181,7 +177,6 @@ final class Adjustments extends Schema {
 			'default'    => null,
 			'allow_null' => true,
 			'date_query' => true,
-			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -192,7 +187,6 @@ final class Adjustments extends Schema {
 			'default'    => '', // Defaults to current time in query class
 			'created'    => true,
 			'date_query' => true,
-			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -203,7 +197,6 @@ final class Adjustments extends Schema {
 			'default'    => '', // Defaults to current time in query class
 			'modified'   => true,
 			'date_query' => true,
-			'searchable' => true,
 			'sortable'   => true
 		),
 

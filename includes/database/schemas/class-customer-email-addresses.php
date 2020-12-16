@@ -59,7 +59,6 @@ class Customer_Email_Addresses extends Schema {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => 'secondary',
-			'searchable' => false,
 			'sortable'   => true,
 			'transition' => true
 		),
@@ -70,7 +69,6 @@ class Customer_Email_Addresses extends Schema {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => 'active',
-			'searchable' => false,
 			'sortable'   => true,
 			'transition' => true
 		),
