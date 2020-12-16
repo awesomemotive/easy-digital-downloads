@@ -63,8 +63,6 @@ function edd_process_v3_upgrade() {
 		wp_send_json_error( __( 'Error loading migration class.', 'easy-digital-downloads' ) );
 	}
 
-	error_log( $class_name );
-
 	/** @var \EDD_Batch_Export $export */
 	$export = new $class_name( $step );
 
