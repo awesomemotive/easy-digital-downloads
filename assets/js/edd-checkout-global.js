@@ -185,7 +185,8 @@ window.EDD_Checkout = (function($) {
 						} else {
 
 							inputs.each( function () {
-								if ( ! $( this ).hasClass( '.card-address-2' ) ) {
+								var $input = $( this );
+								if ( ! $input.is( '.card-name, .card-address, .card-address-2' ) ) {
 									$( this ).prop( 'required', true );
 								}
 							} );
