@@ -2880,7 +2880,7 @@ class EDD_Payment {
 	 * @return float Tax rate for the payment.
 	 */
 	private function setup_tax_rate() {
-		$tax_rate = $this->get_meta( 'tax_rate', true );
+		$tax_rate = $this->order->get_tax_rate();
 
 		if ( ! empty( $tax_rate ) && $tax_rate > 1 ) {
 			$tax_rate = $tax_rate / 100;
