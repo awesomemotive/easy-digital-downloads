@@ -30,7 +30,7 @@
 			<br />
 			<small>
 				<# if ( false !== data.state.hasTax.rate && '' !== data.state.hasTax.country ) { #>
-					{{ data.state.hasTax.country}}<# if ( '' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate.toFixed( 2 ) }}%
+					{{ data.state.hasTax.country}}<# if ( '' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate }}%
 				<# } #>
 			</small>
 			<# } #>
@@ -53,7 +53,7 @@
 					echo esc_html(
 						sprintf(
 							__( 'The tax rate has been updated to %1$s. Existing automatically calculated amounts have not been updated.', 'easy-digital-downloads' ),
-							'{{ data.state.hasTax.rate.toFixed( 2 ) }}%'
+							'{{ data.state.hasTax.rate }}%'
 						)
 					);
 					?>
