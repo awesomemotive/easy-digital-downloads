@@ -685,7 +685,13 @@ function edd_order_details_overview( $order ) {
 	}
 
 	$has_tax = 0;
-	if ( $order->tax_rate_id ) {
+	if ( edd_is_add_order_page() && edd_use_taxes() ) {
+		$has_tax = array(
+			'rate'    => 0,
+			'country' => '',
+			'region'  => '',
+		);
+	} elseif ( $order->tax_rate_id ) {
 		$tax_rate_object = edd_get_adjustment( $order->tax_rate_id );
 		if ( $tax_rate_object ) {
 			$has_tax = array(
