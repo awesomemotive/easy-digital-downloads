@@ -684,6 +684,18 @@ function edd_order_details_overview( $order ) {
 		}
 	}
 
+	$has_tax = 0;
+	if ( $order->tax_rate_id ) {
+		$tax_rate_object = edd_get_adjustment( $order->tax_rate_id );
+		if ( $tax_rate_object ) {
+			$has_tax = array(
+				'rate'    => floatval( $tax_rate_object->amount ),
+				'country' => $tax_rate_object->name,
+				'region'  => $tax_rate_object->description,
+			);
+		}
+	}
+
 	wp_localize_script(
 		'edd-admin-orders',
 		'eddAdminOrderOverview',
@@ -693,13 +705,7 @@ function edd_order_details_overview( $order ) {
 			'refunds'      => $_refunds,
 			'isAdding'     => true === edd_is_add_order_page(),
 			'hasQuantity'  => true === edd_item_quantities_enabled(),
-			'hasTax'       => true === edd_use_taxes()
-				? array(
-					'rate'    => 0,
-					'country' => '',
-					'region'  => '',
-				)
-				: 0,
+			'hasTax'       => $has_tax,
 			'hasDiscounts' => true === edd_has_active_discounts(),
 			'order'        => array(
 				'status'         => $order->status,
