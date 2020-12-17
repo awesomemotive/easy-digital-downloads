@@ -684,21 +684,26 @@ function edd_order_details_overview( $order ) {
 		}
 	}
 
-	$has_tax = 0;
+	$has_tax  = 0;
+	$tax_rate = $order->get_tax_rate();
 	if ( edd_is_add_order_page() && edd_use_taxes() ) {
 		$has_tax = array(
 			'rate'    => 0,
 			'country' => '',
 			'region'  => '',
 		);
-	} elseif ( $order->tax_rate_id ) {
-		$tax_rate_object = edd_get_adjustment( $order->tax_rate_id );
-		if ( $tax_rate_object ) {
-			$has_tax = array(
-				'rate'    => floatval( $tax_rate_object->amount ),
-				'country' => $tax_rate_object->name,
-				'region'  => $tax_rate_object->description,
-			);
+	} elseif ( $tax_rate ) {
+		$has_tax = array(
+			'rate'    => $tax_rate,
+			'country' => '',
+			'region'  => '',
+		);
+		if ( $order->tax_rate_id ) {
+			$tax_rate_object = edd_get_adjustment( $order->tax_rate_id );
+			if ( $tax_rate_object ) {
+				$has_tax['country'] = $tax_rate_object->name;
+				$has_tax['region']  = $tax_rate_object->description;
+			}
 		}
 	}
 

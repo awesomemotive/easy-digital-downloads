@@ -20,7 +20,7 @@
 	</td>
 </tr>
 
-<# if ( false !== data.state.hasTax ) { #>
+<# if ( false !== data.state.order.tax ) { #>
 
 	<tr class="is-expanded">
 		<td></td>
@@ -30,7 +30,9 @@
 			<br />
 			<small>
 				<# if ( false !== data.state.hasTax.rate && '' !== data.state.hasTax.country ) { #>
-					{{ data.state.hasTax.country}}<# if ( '' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate }}%
+					{{ data.state.hasTax.country }}<# if ( '' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate }}%
+				<# } else if ( false !== data.state.hasTax.rate ) { #>
+					{{ data.state.hasTax.rate }}%
 				<# } #>
 			</small>
 			<# } #>
