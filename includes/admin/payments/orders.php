@@ -699,7 +699,7 @@ function edd_order_details_overview( $order ) {
 			'region'  => '',
 		);
 		if ( $order->tax_rate_id ) {
-			$tax_rate_object = edd_get_adjustment( $order->tax_rate_id );
+			$tax_rate_object = $order->get_tax_rate_object();
 			if ( $tax_rate_object ) {
 				$has_tax['country'] = $tax_rate_object->name;
 				$has_tax['region']  = $tax_rate_object->description;
