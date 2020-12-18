@@ -95,7 +95,7 @@ jQueryReady( () => {
 				 * @since 3.0
 				 */
 				error() {
-					overviewState.set( 'hasTax', false );
+					overviewState.set( 'hasTax', 'none' );
 				},
 			} );
 		}
