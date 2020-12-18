@@ -1126,16 +1126,16 @@ function display_region_filter() {
 	$regions = array_filter( $regions );
 
 	// Get the select
-	$select = EDD()->html->select( array(
-		'name'             => 'regions',
-		'id'               => 'edd_reports_filter_regions',
-		'class'            => 'edd_regions_filter',
-		'options'          => $regions,
-		'chosen'           => true,
-		'selected'         => empty( $region ) ? 0 : $region,
-		'show_option_none' => false,
-		'show_option_all'  => __( 'All Regions', 'easy-digital-downloads' ),
-	) ); ?>
+	$select = EDD()->html->region_select(
+		array(
+			'name'    => 'regions',
+			'id'      => 'edd_reports_filter_regions',
+			'options' => $regions,
+		),
+		$country,
+		$region
+	);
+	?>
 
 	<span class="edd-graph-filter-options graph-option-section"><?php
 	echo $select;
@@ -1156,19 +1156,15 @@ function display_country_filter() {
 	$countries = array_filter( $countries );
 
 	// Get the select
-	$select = EDD()->html->select( array(
-		'name'             => 'countries',
-		'id'               => 'edd_reports_filter_countries',
-		'class'            => 'edd_countries_filter',
-		'options'          => $countries,
-		'chosen'           => true,
-		'selected'         => empty( $country ) ? 0 : $country,
-		'show_option_none' => false,
-		'show_option_all'  => __( 'All Countries', 'easy-digital-downloads' ),
-		'data'             => array(
-			'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
+	$select = EDD()->html->country_select(
+		array(
+			'name'    => 'countries',
+			'id'      => 'edd_reports_filter_countries',
+			'options' => $countries,
 		),
-	) ); ?>
+		$country
+	);
+	?>
 
 	<span class="edd-graph-filter-options graph-option-section"><?php
 	echo $select;
