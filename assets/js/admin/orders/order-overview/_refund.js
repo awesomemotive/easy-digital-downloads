@@ -59,74 +59,96 @@ $( document.body ).on( 'click', '.ui-widget-overlay', function ( e ) {
 	$( '#edd-refund-order-dialog' ).dialog( 'close' );
 } );
 
-// Handles including items in the refund.
-$(document.body).on( 'change', '#edd-refund-order-dialog tbody .check-column input[type="checkbox"]', function () {
-	let parent = $(this).parent().parent(),
-		all_checkboxes = $('#edd-refund-order-dialog tbody .check-column input[type="checkbox"]');
+// Handles quantity changes, which includes items in the refund.
+$( document.body ).on( 'change', '#edd-refund-order-dialog .edd-order-item-refund-input', function () {
+	let parent = $( this ).parent().parent(),
+		quantityField = parent.find( '.edd-order-item-refund-quantity' ),
+		quantity = parseInt( quantityField.val() );
 
-	if ( $(this).is(':checked') ) {
-		parent.addClass('refunded');
+	if ( quantity > 0 ) {
+		parent.addClass( 'refunded' );
 	} else {
-		parent.removeClass('refunded');
+		parent.removeClass( 'refunded' );
 	}
 
-	let new_subtotal = 0,
-		new_tax      = 0,
-		new_total    = 0,
-		can_refund   = false;
+	// Only auto calculate subtotal / tax if we've adjusted the quantity.
+	if ( $( this ).hasClass( 'edd-order-item-refund-quantity' ) ) {
+		let subtotalField = parent.find( '.edd-order-item-refund-subtotal' ),
+			taxField = parent.find( '.edd-order-item-refund-tax' ),
+			originalSubtotal = parseFloat( subtotalField.data( 'original' ) ),
+			originalTax = parseFloat( taxField.data( 'original' ) ),
+			originalQuantity = parseInt( quantityField.attr( 'max' ) ),
+			calculatedSubtotal = ( originalSubtotal / originalQuantity ) * quantity,
+			calculatedTax = ( originalTax / originalQuantity ) * quantity;
+
+		// Guess the subtotal and tax for the selected quantity.
+		subtotalField.val( parseFloat( calculatedSubtotal ).toFixed( edd_vars.currency_decimals ) );
+		taxField.val( parseFloat( calculatedTax ).toFixed( edd_vars.currency_decimals ) );
+	}
+
+	recalculateRefundTotal();
+} );
+
+/**
+ * Calculates all the final refund values.
+ */
+function recalculateRefundTotal() {
+	let newSubtotal   = 0,
+		newTax        = 0,
+		newTotal      = 0,
+		canRefund     = false,
+		allInputBoxes = $( '#edd-refund-order-dialog .edd-order-item-refund-input' );
 
 	// Set a readonly while we recalculate, to avoid race conditions in the browser.
-	all_checkboxes.prop('readonly', true);
-	$('#edd-refund-submit-button-wrapper .spinner').css('visibility', 'visible');
+	allInputBoxes.prop( 'readonly', true );
+	$( '#edd-refund-submit-button-wrapper .spinner' ).css( 'visibility', 'visible' );
 
-	$('#edd-refund-order-dialog tbody .check-column input[type="checkbox"]:checked').each( function() {
-		let item_parent = $(this).parent().parent();
+	// Loop over all order items.
+	$( '#edd-refund-order-dialog .edd-order-item-refund-quantity' ).each( function() {
+		let thisItemQuantity = parseInt( $( this ).val() );
+
+		if ( ! thisItemQuantity ) {
+			return;
+		}
+
+		let thisItemParent = $( this ).parent().parent();
 
 		// Values for this item.
-		let item_amount   = parseFloat( item_parent.find('span[data-amount]').data('amount') ),
-			item_tax      = parseFloat( item_parent.find('span[data-tax]').data('tax') ),
-			item_total    = parseFloat( item_parent.find('span[data-total]').data('total') ),
-			item_quantity = parseInt( item_parent.find('.column-quantity').text() );
+		let thisItemSubtotal = 0,
+			thisItemTax      = 0,
+			thisItemTotal    = 0;
 
-		new_subtotal += item_amount;
-		new_tax      += item_tax;
-		new_total    += item_total;
-		can_refund    = true;
-	});
+		if ( thisItemQuantity ) {
+			thisItemSubtotal = parseFloat( thisItemParent.find( '.edd-order-item-refund-subtotal' ).val() ),
+			thisItemTax      = parseFloat( thisItemParent.find( '.edd-order-item-refund-tax' ).val() ),
+			thisItemTotal    = parseFloat( thisItemSubtotal + thisItemTax );
+		}
 
-	new_subtotal = parseFloat(new_subtotal).toFixed( edd_vars.currency_decimals );
-	new_tax      = parseFloat(new_tax).toFixed( edd_vars.currency_decimals );
-	new_total    = parseFloat(new_total).toFixed( edd_vars.currency_decimals );
+		thisItemParent.find( '.column-total span' ).text( thisItemTotal.toFixed( edd_vars.currency_decimals ) );
 
-	$( '#edd-refund-submit-subtotal-amount' ).text( new_subtotal );
-	$( '#edd-refund-submit-tax-amount' ).text( new_tax );
-	$( '#edd-refund-submit-total-amount' ).text( new_total );
+		newSubtotal += thisItemSubtotal;
+		newTax      += thisItemTax;
+		newTotal    += thisItemTotal;
+	} );
 
-	if ( can_refund ) {
-		$( '#edd-submit-refund-submit' ).attr( 'disabled', false );
-	} else {
-		$( '#edd-submit-refund-submit' ).attr( 'disabled', true );
+	newSubtotal = parseFloat( newSubtotal ).toFixed( edd_vars.currency_decimals );
+	newTax      = parseFloat( newTax ).toFixed( edd_vars.currency_decimals );
+	newTotal    = parseFloat( newTotal ).toFixed( edd_vars.currency_decimals );
+
+	if ( newTotal > 0 ) {
+		canRefund = true;
 	}
+
+	$( '#edd-refund-submit-subtotal-amount' ).text( newSubtotal );
+	$( '#edd-refund-submit-tax-amount' ).text( newTax );
+	$( '#edd-refund-submit-total-amount' ).text( newTotal );
+
+	$( '#edd-submit-refund-submit' ).attr( 'disabled', ! canRefund );
 
 	// Remove the readonly.
-	all_checkboxes.prop('readonly', false);
-	$('#edd-refund-submit-button-wrapper .spinner').css('visibility', 'hidden');
-
-});
-
-// Listen for the bulk action checkbox, since WP doesn't trigger a change on sub-items.
-$(document.body).on('change', '#edd-refund-order-dialog #cb-select-all-1', function() {
-	let item_checkboxes = $('#edd-refund-order-dialog tbody .check-column input[type="checkbox"]');
-	if ( $(this).is(':checked')) {
-		item_checkboxes.each(function() {
-			$(this).prop('checked', true).trigger('change');
-		});
-	} else {
-		item_checkboxes.each(function() {
-			$(this).prop('checked', false).trigger('change');
-		});
-	}
-});
+	allInputBoxes.prop( 'readonly', false );
+	$( '#edd-refund-submit-button-wrapper .spinner' ).css( 'visibility', 'hidden' );
+}
 
 // Process the refund form after the button is clicked.
 $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
