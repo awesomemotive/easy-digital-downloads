@@ -448,8 +448,8 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 			} elseif ( edd_is_insertable_admin_page() ) {
 				$found = true;
 
-			// Mislinked EDD settings screen
-			} elseif ( 'admin.php' === $pagenow && 'edd-settings' === $page ) {
+			// The EDD settings screen (fallback if mislinked)
+			} elseif ( 'edd-settings' === $page ) {
 				$found = true;
 			}
 			break;
