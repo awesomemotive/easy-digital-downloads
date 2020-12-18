@@ -30,6 +30,8 @@ function edd_options_page_primary_nav( $active_tab = '' ) {
 			$tab_url = add_query_arg(
 				array(
 					'settings-updated' => false,
+					'post_type'        => 'download',
+					'page'             => 'edd-settings',
 					'tab'              => $tab_id,
 				),
 				edd_get_admin_base_url()
