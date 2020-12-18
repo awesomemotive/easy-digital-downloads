@@ -154,9 +154,14 @@ export const State = Backbone.Model.extend(
 				return this.get( 'order' ).tax;
 			}
 
-			const rate = this.get( 'hasTax' ).rate;
+			const items = this.get( 'items' ).models;
 
-			return rate ? ( rate / 100 ) * this.getSubtotal() : 0;
+			return items.reduce(
+				( amount, item ) => {
+					return amount += +item.get( 'tax' );
+				},
+				0
+			);
 		},
 
 		/**
