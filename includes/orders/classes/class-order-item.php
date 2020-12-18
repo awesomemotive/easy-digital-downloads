@@ -172,6 +172,17 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	protected $adjustments = null;
 
 	/**
+	 * Refunded order items for this item.
+	 *
+	 * When this item has been refunded, matching order item records are created and associated with the
+	 * refund record. These are those order items.
+	 *
+	 * @since 3.0
+	 * @var null|Order_Item[]|false
+	 */
+	protected $refunded_items = null;
+
+	/**
 	 * Magic getter for immutability.
 	 *
 	 * @since 3.0
@@ -241,5 +252,34 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	 */
 	public function get_order_item_name() {
 		return $this->product_name;
+	}
+
+	/**
+	 * Retrieves order item records that were refunded from this original order item.
+	 *
+	 * @since 3.0
+	 *
+	 * @return Order_Item[]|false
+	 */
+	public function get_refunded_items() {
+		if ( null !== $this->refunded_items ) {
+			return $this->refunded_items;
+		}
+
+		$refund_ids = edd_get_orders( array(
+			'type'   => 'refund',
+			'parent' => $this->order_id,
+			'fields' => 'id'
+		) );
+
+		if ( empty( $refund_ids ) ) {
+			return false;
+		}
+
+		return edd_get_order_items( array(
+			'order_id__in' => $refund_ids,
+			'product_id'   => $this->product_id,
+			'price_id'     => $this->price_id
+		) );
 	}
 }

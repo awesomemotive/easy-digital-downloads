@@ -69,18 +69,14 @@ class Refund_Items_Table extends List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'cb'       => '<input type="checkbox" />',
 			'name'     => __( 'Product', 'easy-digital-downloads' ),
-			'amount'   => __( 'Amount', 'easy-digital-downloads' ),
+			'amount'   => __( 'Unit Price', 'easy-digital-downloads' ),
 		);
 
 		// Maybe add quantity column.
-		if ( edd_item_quantities_enabled() ) {
-			$columns['quantity'] = __( 'Quantity', 'easy-digital-downloads' );
-		}
+		$columns['quantity'] = __( 'Quantity', 'easy-digital-downloads' );
 
-		// Add discount column after quantity.
-		$columns['discount'] = __( 'Discount', 'easy-digital-downloads' );
+		$columns['subtotal'] = __( 'Subtotal', 'easy-digital-downloads' );
 
 		// Maybe add tax column.
 		if ( edd_use_taxes() ) {
@@ -140,11 +136,75 @@ class Refund_Items_Table extends List_Table {
 	public function column_default( $order_item, $column_name ) {
 		switch ( $column_name ) {
 			case 'amount':
-			case 'discount':
-			case 'tax':
-			case 'subtotal':
-			case 'total':
 				return $this->format_currency( $order_item, $column_name );
+
+			case 'total' :
+				return $this->format_currency( $order_item, $column_name, 0 );
+
+			case 'quantity' :
+				// Find the quantities that have been refunded so far.
+				$number_refunded = 0;
+				$refunded_items  = $order_item->get_refunded_items();
+				if ( ! empty( $refunded_items ) ) {
+					foreach( $refunded_items as $refunded_item ) {
+						$number_refunded += edd_negate_int( $refunded_item->quantity );
+					}
+				}
+				ob_start();
+				?>
+				<label for="edd-order-item-quantity-<?php echo esc_attr( $order_item->id ); ?>" class="screen-reader-text">
+					<?php esc_html_e( 'Quantity to refund', 'easy-digital-downloads' ); ?>
+				</label>
+				<input type="number" id="edd-order-item-quantity-<?php echo esc_attr( $order_item->id ); ?>" class="edd-order-item-refund-quantity edd-order-item-refund-input" name="refund_order_item[<?php echo esc_attr( $order_item->id ); ?>][quantity]" value="0" min="0" max="<?php echo esc_attr( $order_item->quantity - $number_refunded ); ?>" step="1"<?php echo 'refunded' === $order_item->status ? ' disabled' : ''; ?> />
+				<?php
+				return ob_get_clean();
+
+			case 'subtotal' :
+			case 'tax' :
+				$currency_pos = edd_get_option( 'currency_position', 'before' );
+
+				// Calculate the amount that's already been refunded.
+				$amount_refunded = 0;
+				$refunded_items  = $order_item->get_refunded_items();
+				if ( ! empty( $refunded_items ) ) {
+					foreach( $refunded_items as $refunded_item ) {
+						$amount_refunded += edd_negate_amount( $refunded_item->{$column_name} );
+					}
+				}
+				$amount_remaining = $order_item->{$column_name} - $amount_refunded;
+				ob_start();
+				?>
+				<label for="edd-order-item-refund-<?php echo esc_attr( $column_name ); ?>" class="screen-reader-text">
+					<?php
+					if ( 'subtotal' === $column_name ) {
+						_e( 'Amount to refund, excluding tax', 'easy-digital-downloads' );
+					} else {
+						_e( 'Amount of tax to refund', 'easy-digital-downloads' );
+					}
+					?>
+				</label>
+				<?php
+				if ( 'before' === $currency_pos ) {
+					echo esc_html( $this->get_currency_symbol( $order_item->order_id ) );
+				}
+				?>
+				<input type="text" id="edd-order-item-refund-<?php echo esc_attr( $column_name ); ?>" class="edd-order-item-refund-<?php echo esc_attr( $column_name ); ?> edd-order-item-refund-input" name="refund_order_item[<?php echo esc_attr( $order_item->id ); ?>][<?php echo esc_attr( $column_name ); ?>]" value="<?php echo esc_attr( edd_sanitize_amount( 0 ) ); ?>" data-original="<?php echo esc_attr( $order_item->{$column_name} ); ?>" data-max="<?php echo esc_attr( $amount_remaining ); ?>" <?php echo 'refunded' === $order_item->status ? ' disabled' : ''; ?> />
+				<?php
+				if ( 'after' === $currency_pos ) {
+					echo esc_html( $this->get_currency_symbol( $order_item->order_id ) );
+				}
+				?>
+				<br>
+				<small class="edd-order-item-refund-max-amount">
+					<?php
+					echo _x( 'Max:', 'Maximum input amount', 'easy-digital-downloads' ) . '&nbsp;';
+
+					echo $this->format_currency( $order_item, $column_name, $amount_remaining );
+					?>
+				</small>
+				<?php
+				return ob_get_clean();
+
 			default:
 				return property_exists( $order_item, $column_name )
 					? $order_item->{$column_name}
@@ -157,19 +217,14 @@ class Refund_Items_Table extends List_Table {
 	 *
 	 * @since 3.0
 	 *
-	 * @param \EDD\Orders\Order_Item $order_item  Data for the order_item code.
-	 * @param string                 $column_name String to
+	 * @param \EDD\Orders\Order_Item $order_item      Data for the order_item code.
+	 * @param string                 $column_name     String to
+	 * @param false|float            $amount_override Amount override, in case it's not in the order item.
 	 *
 	 * @return string Formatted amount.
 	 */
-	private function format_currency( $order_item, $column_name ) {
-		static $symbol = null;
-
-		if ( is_null( $symbol ) ) {
-			$currency = edd_get_order( $order_item->order_id )->currency;
-			$symbol   = edd_currency_symbol( $currency );
-		}
-
+	private function format_currency( $order_item, $column_name, $amount_override = false ) {
+		$symbol       = $this->get_currency_symbol( $order_item->order_id );
 		$currency_pos = edd_get_option( 'currency_position', 'before' );
 
 		$formatted_amount = '';
@@ -178,8 +233,10 @@ class Refund_Items_Table extends List_Table {
 			$formatted_amount .= $symbol;
 		}
 
-		$formatted_amount .= '<span data-' . $column_name . '="' . edd_sanitize_amount( $order_item->{$column_name} ) . '">' .
-		                     edd_format_amount( $order_item->{$column_name} ) .
+		$amount = false !== $amount_override ? $amount_override : $order_item->{$column_name};
+
+		$formatted_amount .= '<span data-' . $column_name . '="' . edd_sanitize_amount( $amount ) . '">' .
+		                     edd_format_amount( $amount ) .
 		                     '</span>';
 
 		if ( 'after' === $currency_pos ) {
@@ -187,6 +244,27 @@ class Refund_Items_Table extends List_Table {
 		}
 
 		return $formatted_amount;
+	}
+
+	/**
+	 * Retrieves the currency symbol for a given order item.
+	 *
+	 * @param int $order_id
+	 *
+	 * @return string|null
+	 */
+	private function get_currency_symbol( $order_id ) {
+		static $symbol = null;
+
+		if ( is_null( $symbol ) ) {
+			$order = edd_get_order( $order_id );
+
+			if ( $order ) {
+				$symbol = edd_currency_symbol( $order->currency );
+			}
+		}
+
+		return $symbol;
 	}
 
 	/**
@@ -200,35 +278,7 @@ class Refund_Items_Table extends List_Table {
 	 */
 	public function column_name( $order_item ) {
 		// Wrap order_item title in strong anchor
-		$order_item_title = '<strong>' . $order_item->get_order_item_name() . '</strong>';
-		if ( 'refunded' !== $order_item->status ) {
-			$order_item_title = '<label for="edd-order-item-' . esc_attr( $order_item->id ) . '" class="edd-order-item__label">' . $order_item->get_order_item_name() . '</label>';
-		}
-
-		return $order_item_title;
-	}
-
-	/**
-	 * Render the checkbox column
-	 *
-	 * @since 3.0
-	 *
-	 * @param \EDD\Orders\Order_Item $order_item Order Item object.
-	 *
-	 * @return string Displays a checkbox
-	 */
-	public function column_cb( $order_item ) {
-		if ( 'refunded' !== $order_item->status ) {
-			return sprintf(
-				'<input type="checkbox" name="%1$s[]" id="%1$s-%2$s" value="%2$s" /><label for="%1$s-%2$s" class="screen-reader-text">%3$s</label>',
-				/*$1%s*/
-				'order_item',
-				/*$2%s*/
-				esc_attr( $order_item->id ),
-				/* translators: product name */
-				esc_html( sprintf( __( 'Select %s', 'easy-digital-downloads' ), $order_item->product_name ) )
-			);
-		}
+		return '<strong>' . $order_item->get_order_item_name() . '</strong>';
 	}
 
 	/**
