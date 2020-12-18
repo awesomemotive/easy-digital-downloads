@@ -684,7 +684,7 @@ function edd_order_details_overview( $order ) {
 		}
 	}
 
-	$has_tax  = 0;
+	$has_tax  = 'none';
 	$tax_rate = $order->id ? $order->get_tax_rate() : false;
 	if ( edd_is_add_order_page() && edd_use_taxes() ) {
 		$has_tax = array(

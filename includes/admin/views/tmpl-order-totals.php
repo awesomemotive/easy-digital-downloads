@@ -20,7 +20,7 @@
 	</td>
 </tr>
 
-<# if ( false !== data.state.hasTax ) { #>
+<# if ( 'none' !== data.state.hasTax ) { #>
 
 	<tr class="is-expanded">
 		<td></td>

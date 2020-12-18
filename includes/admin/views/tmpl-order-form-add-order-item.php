@@ -140,7 +140,7 @@ if ( ! empty( $recent_downloads ) ) {
 				/>
 				<span class="label">
 					<?php esc_html_e( 'Automatically calculate amounts', 'easy-digital-downloads' ); ?>
-					<# if ( false !== data.state.hasTax && '' !== data.state.hasTax.country ) { #>
+					<# if ( 'none' !== data.state.hasTax && '' !== data.state.hasTax.country ) { #>
 					<br />
 					<small>
 						<?php
@@ -155,7 +155,7 @@ if ( ! empty( $recent_downloads ) ) {
 			</label>
 		</p>
 
-		<# if ( false !== data.state.hasTax && '' === data.state.hasTax.country && false === data.state.isAdjustingManually ) { #>
+		<# if ( 'none' !== data.state.hasTax && '' === data.state.hasTax.country && false === data.state.isAdjustingManually ) { #>
 			<div class="notice notice-warning">
 				<p>
 					<strong><?php esc_html_e( 'No tax rate has been set.', 'easy-digital-downloads' ); ?></strong><br />
@@ -190,7 +190,7 @@ if ( ! empty( $recent_downloads ) ) {
 				</span>
 			</p>
 
-			<# if ( false !== data.state.hasTax ) { #>
+			<# if ( 'none' !== data.state.hasTax ) { #>
 				<p>
 					<label for="tax">
 						<?php esc_html_e( 'Tax', 'easy-digital-downloads' ); ?>
