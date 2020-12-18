@@ -685,7 +685,7 @@ function edd_order_details_overview( $order ) {
 	}
 
 	$has_tax  = 0;
-	$tax_rate = $order->get_tax_rate();
+	$tax_rate = $order->id ? $order->get_tax_rate() : false;
 	if ( edd_is_add_order_page() && edd_use_taxes() ) {
 		$has_tax = array(
 			'rate'    => 0,
