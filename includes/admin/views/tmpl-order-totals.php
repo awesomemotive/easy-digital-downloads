@@ -20,13 +20,12 @@
 	</td>
 </tr>
 
-<# if ( false !== data.state.order.tax ) { #>
+<# if ( false !== data.state.hasTax ) { #>
 
 	<tr class="is-expanded">
 		<td></td>
 		<td colspan="{{ data.config.colspan }}" class="column-primary">
 			<?php esc_html_e( 'Tax', 'easy-digital-downloads' ); ?>
-			<# if ( false !== data.state.hasTax ) { #>
 			<br />
 			<small>
 				<# if ( false !== data.state.hasTax.rate && '' !== data.state.hasTax.country ) { #>
@@ -35,7 +34,6 @@
 					{{ data.state.hasTax.rate }}%
 				<# } #>
 			</small>
-			<# } #>
 		</td>
 		<td class="column-right" data-colname="<?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?>">
 			{{ data.taxCurrency }}
