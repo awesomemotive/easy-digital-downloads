@@ -250,29 +250,19 @@ class EDD_Payment_History_Table extends List_Table {
 				<fieldset>
 					<legend><?php esc_html_e( 'Country & Region', 'easy-digital-downloads' ); ?></legend>
 					<?php
-					echo EDD()->html->select( array(
-						'name'             => 'order-country-filter-value',
-						'class'            => 'edd_countries_filter',
-						'options'          => edd_get_country_list(),
-						'chosen'           => true,
-						'selected'         => $country,
-						'show_option_none' => false,
-						'placeholder'      => __( 'Choose a Country', 'easy-digital-downloads' ),
-						'show_option_all'  => __( 'All Countries', 'easy-digital-downloads' ),
-						'data'             => array(
-							'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
-						)
-					) );
-					echo EDD()->html->select( array(
-						'name'             => 'order-region-filter-value',
-						'class'            => 'edd_regions_filter',
-						'options'          => edd_get_shop_states( $country ),
-						'chosen'           => true,
-						'selected'         => $region,
-						'show_option_none' => false,
-						'placeholder'      => __( 'Choose a Region', 'easy-digital-downloads' ),
-						'show_option_all'  => __( 'All Regions', 'easy-digital-downloads' ),
-					) );
+					echo EDD()->html->country_select(
+						array(
+							'name' => 'order-country-filter-value',
+						),
+						esc_html( $country )
+					);
+					echo EDD()->html->region_select(
+						array(
+							'name' => 'order-region-filter-value',
+						),
+						esc_html( $country ),
+						esc_html( $region )
+					);
 				?>
 				</fieldset>
 

@@ -16,13 +16,9 @@
 	<th colspan="2">
 		<label for="tax_rate_country" class="screen-reader-text"><?php esc_html_e( 'Country', 'easy-digital-downloads' ); ?></label>
 		<?php
-		echo EDD()->html->select( array(
-			'options'          => edd_get_country_list(),
-			'id'               => 'tax_rate_country',
-			'show_option_all'  => false,
-			'show_option_none' => false,
-			'chosen'           => true,
-			'placeholder'      => __( 'Choose a country', 'easy-digital-downloads' ),
+		echo EDD()->html->country_select( array(
+			'id'              => 'tax_rate_country',
+			'show_option_all' => false,
 		) );
 		?>
 	</th>
@@ -31,7 +27,7 @@
 		<label for="tax_rate_region" class="screen-reader-text"><?php esc_html_e( 'Region', 'easy-digital-downloads' ); ?></label>
 
 		<label>
-			<input type="checkbox" checked /> Apply to whole country
+			<input type="checkbox" checked /><?php esc_html_e( 'Apply to whole country', 'easy-digital-downloads' ); ?>
 		</label>
 
 		<div id="tax_rate_region_wrapper"></div>

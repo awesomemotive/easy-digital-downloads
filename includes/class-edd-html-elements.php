@@ -559,6 +559,73 @@ class EDD_HTML_Elements {
 	}
 
 	/**
+	 * Gets the countries dropdown.
+	 *
+	 * @since  3.0
+	 * @param  array  $args    The array of parameters passed to the method
+	 * @param  string $country The selected country
+	 * @return string
+	 */
+	public function country_select( $args = array(), $country = '' ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'name'             => 'edd_countries',
+				'class'            => 'edd_countries_filter',
+				'options'          => edd_get_country_list(),
+				'chosen'           => true,
+				'selected'         => $country,
+				'show_option_none' => false,
+				'placeholder'      => __( 'Choose a Country', 'easy-digital-downloads' ),
+				'show_option_all'  => __( 'All Countries', 'easy-digital-downloads' ),
+				'data'             => array(
+					'nonce' => wp_create_nonce( 'edd-country-field-nonce' ),
+				),
+			)
+		);
+
+		if ( false === strpos( $args['class'], 'edd_countries_filter' ) ) {
+			$args['class'] .= ' edd_countries_filter';
+		}
+
+		return $this->select( $args );
+	}
+
+	/**
+	 * Gets the regions dropdown.
+	 *
+	 * @since  3.0
+	 * @param  array  $args     The array of parameters passed to the method
+	 * @param  string $country  The country from which to populate the regions
+	 * @param  string $region   The selected region
+	 * @return string
+	 */
+	public function region_select( $args = array(), $country = '', $region = '' ) {
+		if ( ! $country ) {
+			$country = edd_get_shop_country();
+		}
+		$args = wp_parse_args(
+			$args,
+			array(
+				'name'             => 'edd_regions',
+				'class'            => 'edd_regions_filter',
+				'options'          => edd_get_shop_states( $country ),
+				'chosen'           => true,
+				'selected'         => $region,
+				'show_option_none' => false,
+				'placeholder'      => __( 'Choose a Region', 'easy-digital-downloads' ),
+				'show_option_all'  => __( 'All Regions', 'easy-digital-downloads' ),
+			)
+		);
+
+		if ( false === strpos( $args['class'], 'edd_regions_filter' ) ) {
+			$args['class'] .= ' edd_regions_filter';
+		}
+
+		return $this->select( $args );
+	}
+
+	/**
 	 * Renders an HTML Dropdown
 	 *
 	 * @since 1.6
