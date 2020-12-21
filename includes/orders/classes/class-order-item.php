@@ -302,19 +302,20 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 
 		$refunded_items = $this->get_refunded_items();
 
-		// If there have been no refunds, bail.
-		if ( empty( $refunded_items ) ) {
-			return $maximums;
+		if ( ! empty( $refunded_items ) ) {
+			foreach ( $refunded_items as $refunded_item ) {
+				$maximums['quantity'] += $refunded_item->quantity;
+
+				// We're adding numbers here, because `$refund_item` has negative amounts already.
+				$maximums['subtotal'] += $refunded_item->subtotal;
+				$maximums['tax']      += $refunded_item->tax;
+				$maximums['total']    += $refunded_item->total;
+			}
 		}
 
-		foreach( $refunded_items as $refunded_item ) {
-			$maximums['quantity'] += $refunded_item->quantity;
-
-			// We're adding numbers here, because `$refund_item` has negative amounts already.
-			$maximums['subtotal'] += $refunded_item->subtotal;
-			$maximums['tax']      += $refunded_item->tax;
-			$maximums['total']    += $refunded_item->total;
-		}
+		$maximums['subtotal'] = number_format( $maximums['subtotal'], edd_currency_decimal_filter() );
+		$maximums['tax']      = number_format( $maximums['tax'], edd_currency_decimal_filter() );
+		$maximums['total']    = number_format( $maximums['total'], edd_currency_decimal_filter() );
 
 		return $maximums;
 	}

@@ -142,13 +142,12 @@ class Refund_Items_Table extends List_Table {
 				return $this->format_currency( $order_item, $column_name, 0 );
 
 			case 'quantity' :
-				$refundable_amounts = $order_item->get_refundable_amounts();
 				ob_start();
 				?>
 				<label for="edd-order-item-quantity-<?php echo esc_attr( $order_item->id ); ?>" class="screen-reader-text">
 					<?php esc_html_e( 'Quantity to refund', 'easy-digital-downloads' ); ?>
 				</label>
-				<input type="number" id="edd-order-item-quantity-<?php echo esc_attr( $order_item->id ); ?>" class="edd-order-item-refund-quantity edd-order-item-refund-input" name="refund_order_item[<?php echo esc_attr( $order_item->id ); ?>][quantity]" value="0" min="0" max="<?php echo esc_attr( $refundable_amounts['quantity'] ); ?>" step="1" data-original="<?php echo esc_attr( $order_item->quantity ); ?>"<?php echo 'refunded' === $order_item->status ? ' disabled' : ''; ?> />
+				<input type="number" id="edd-order-item-quantity-<?php echo esc_attr( $order_item->id ); ?>" class="edd-order-item-refund-quantity edd-order-item-refund-input" name="refund_order_item[<?php echo esc_attr( $order_item->id ); ?>][quantity]" value="0" min="0" max="<?php echo esc_attr( $order_item->quantity ); ?>" step="1""<?php echo 'refunded' === $order_item->status ? ' disabled' : ''; ?> />
 				<?php
 				return ob_get_clean();
 
@@ -159,6 +158,16 @@ class Refund_Items_Table extends List_Table {
 				// Maximum amounts that can be refunded.
 				$refundable_amounts = $order_item->get_refundable_amounts();
 				$amount_remaining   = array_key_exists( $column_name, $refundable_amounts ) ? $refundable_amounts[ $column_name ] : $order_item->{$column_name};
+
+				/*
+				 * Original amount.
+				 * For subtotals, we actually do subtotal minus discounts for simplicity so that the end user
+				 * doesn't have to juggle that.
+				 */
+				$original_amount = $order_item->{$column_name};
+				if ( 'subtotal' === $column_name ) {
+					$original_amount -= $order_item->discount;
+				}
 				ob_start();
 				?>
 				<label for="edd-order-item-refund-<?php echo esc_attr( $column_name ); ?>" class="screen-reader-text">
@@ -175,7 +184,7 @@ class Refund_Items_Table extends List_Table {
 					echo esc_html( $this->get_currency_symbol( $order_item->order_id ) );
 				}
 				?>
-				<input type="text" id="edd-order-item-refund-<?php echo esc_attr( $column_name ); ?>" class="edd-order-item-refund-<?php echo esc_attr( $column_name ); ?> edd-order-item-refund-input" name="refund_order_item[<?php echo esc_attr( $order_item->id ); ?>][<?php echo esc_attr( $column_name ); ?>]" value="<?php echo esc_attr( edd_sanitize_amount( 0 ) ); ?>" data-original="<?php echo esc_attr( $order_item->{$column_name} ); ?>" data-max="<?php echo esc_attr( $amount_remaining ); ?>" <?php echo 'refunded' === $order_item->status ? ' disabled' : ''; ?> />
+				<input type="text" id="edd-order-item-refund-<?php echo esc_attr( $column_name ); ?>" class="edd-order-item-refund-<?php echo esc_attr( $column_name ); ?> edd-order-item-refund-input" name="refund_order_item[<?php echo esc_attr( $order_item->id ); ?>][<?php echo esc_attr( $column_name ); ?>]" value="<?php echo esc_attr( edd_sanitize_amount( 0 ) ); ?>" data-original="<?php echo esc_attr( $original_amount ); ?>" data-max="<?php echo esc_attr( $amount_remaining ); ?>" <?php echo 'refunded' === $order_item->status ? ' disabled' : ''; ?> />
 				<?php
 				if ( 'after' === $currency_pos ) {
 					echo esc_html( $this->get_currency_symbol( $order_item->order_id ) );
@@ -438,7 +447,7 @@ class Refund_Items_Table extends List_Table {
 		foreach ( $this->items as $item ) {
 
 			if ( is_null( $currency_symbol ) ) {
-				$currency = edd_get_order( $item->order_id )->currency;
+				$currency          = edd_get_order( $item->order_id )->currency;
 				$currency_symbol   = edd_currency_symbol( $currency );
 				$currency_position = edd_get_option( 'currency_position', 'before' );
 			}

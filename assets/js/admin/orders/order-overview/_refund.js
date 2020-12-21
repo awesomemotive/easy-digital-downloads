@@ -77,9 +77,17 @@ $( document.body ).on( 'change', '#edd-refund-order-dialog .edd-order-item-refun
 			taxField = parent.find( '.edd-order-item-refund-tax' ),
 			originalSubtotal = parseFloat( subtotalField.data( 'original' ) ),
 			originalTax = parseFloat( taxField.data( 'original' ) ),
-			originalQuantity = parseInt( quantityField.data( 'original' ) ),
+			originalQuantity = parseInt( quantityField.attr( 'max' ) ),
 			calculatedSubtotal = ( originalSubtotal / originalQuantity ) * quantity,
 			calculatedTax = ( originalTax / originalQuantity ) * quantity;
+
+		// Make sure totals don't go over maximums.
+		if ( calculatedSubtotal > parseFloat( subtotalField.data( 'max' ) ) ) {
+			calculatedSubtotal = subtotalField.data( 'max' );
+		}
+		if ( calculatedTax > parseFloat( taxField.data( 'max' ) ) ) {
+			calculatedTax = taxField.data( 'max' );
+		}
 
 		// Guess the subtotal and tax for the selected quantity.
 		subtotalField.val( parseFloat( calculatedSubtotal ).toFixed( edd_vars.currency_decimals ) );
