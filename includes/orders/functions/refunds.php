@@ -275,9 +275,8 @@ function edd_refund_order( $order_id, $order_items = array() ) {
 			$maximum_refund_amounts = $item->get_refundable_amounts();
 
 			// The refund amount for each order item cannot exceed the original amount minus what's already been refunded.
-			if ( isset( $keyed_order_items[ $item->id ]['quantity'] ) && $keyed_order_items[ $item->id ]['quantity'] > $maximum_refund_amounts['quantity'] ) {
-				return new WP_Error( 'invalid_refund_quantity', sprintf( __( 'The maximum refund quantity for order item #%d is %d.', 'easy-digital-downloads' ), $item->id, $maximum_refund_amounts['quantity'] ) );
-			}
+
+			// Note: quantity is not checked because you might process multiple partial refunds for the same order item.
 
 			$refund_subtotal = isset( $keyed_order_items[ $item->id ]['subtotal'] )
 				? $keyed_order_items[ $item->id ]['subtotal']
@@ -310,6 +309,12 @@ function edd_refund_order( $order_id, $order_items = array() ) {
 		$subtotal = $order->subtotal;
 		$tax      = $order->tax;
 		$total    = $order->total;
+	}
+
+	// Overall refund total cannot be over total refundable amount.
+	$order_total = edd_get_order_total( $order_id );
+	if ( $total > $order_total ) {
+		return new WP_Error( 'invalid_refund_amount', sprintf( __( 'The maximum refund amount is %s.', 'easy-digital-downloads' ), edd_currency_filter( $order_total ) ) );
 	}
 
 	/** Insert order **********************************************************/
@@ -379,16 +384,8 @@ function edd_refund_order( $order_id, $order_items = array() ) {
 
 	// Update order status to `refunded` once refund is complete and if all items are marked as refunded.
 	$all_refunded = true;
-	$order_items = edd_get_order_items( array(
-		'order_id' => $order_id,
-		'number'   => 999,
-	) );
-
-	foreach ( $order_items as $order_item ) {
-		if ( 'refunded' !== $order_item->status ) {
-			$all_refunded = false;
-			break;
-		}
+	if ( edd_get_order_total() > 0 ) {
+		$all_refunded = false;
 	}
 
 	$order_status = true === $all_refunded
