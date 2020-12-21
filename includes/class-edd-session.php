@@ -364,6 +364,10 @@ class EDD_Session {
 				$start_session = false;
 			}
 
+			// Do not start a session during the loopback request.
+			if ( false !== strpos( $uri, 'wp-site-health/v1/tests/loopback-requests' ) ) {
+				$start_session = false;
+			}
 		}
 
 		return apply_filters( 'edd_start_session', $start_session );
