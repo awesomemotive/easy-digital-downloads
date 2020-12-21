@@ -142,20 +142,13 @@ class Refund_Items_Table extends List_Table {
 				return $this->format_currency( $order_item, $column_name, 0 );
 
 			case 'quantity' :
-				// Find the quantities that have been refunded so far.
-				$number_refunded = 0;
-				$refunded_items  = $order_item->get_refunded_items();
-				if ( ! empty( $refunded_items ) ) {
-					foreach( $refunded_items as $refunded_item ) {
-						$number_refunded += edd_negate_int( $refunded_item->quantity );
-					}
-				}
+				$refundable_amounts = $order_item->get_refundable_amounts();
 				ob_start();
 				?>
 				<label for="edd-order-item-quantity-<?php echo esc_attr( $order_item->id ); ?>" class="screen-reader-text">
 					<?php esc_html_e( 'Quantity to refund', 'easy-digital-downloads' ); ?>
 				</label>
-				<input type="number" id="edd-order-item-quantity-<?php echo esc_attr( $order_item->id ); ?>" class="edd-order-item-refund-quantity edd-order-item-refund-input" name="refund_order_item[<?php echo esc_attr( $order_item->id ); ?>][quantity]" value="0" min="0" max="<?php echo esc_attr( $order_item->quantity - $number_refunded ); ?>" step="1"<?php echo 'refunded' === $order_item->status ? ' disabled' : ''; ?> />
+				<input type="number" id="edd-order-item-quantity-<?php echo esc_attr( $order_item->id ); ?>" class="edd-order-item-refund-quantity edd-order-item-refund-input" name="refund_order_item[<?php echo esc_attr( $order_item->id ); ?>][quantity]" value="0" min="0" max="<?php echo esc_attr( $refundable_amounts['quantity'] ); ?>" step="1" data-original="<?php echo esc_attr( $order_item->quantity ); ?>"<?php echo 'refunded' === $order_item->status ? ' disabled' : ''; ?> />
 				<?php
 				return ob_get_clean();
 
@@ -163,15 +156,9 @@ class Refund_Items_Table extends List_Table {
 			case 'tax' :
 				$currency_pos = edd_get_option( 'currency_position', 'before' );
 
-				// Calculate the amount that's already been refunded.
-				$amount_refunded = 0;
-				$refunded_items  = $order_item->get_refunded_items();
-				if ( ! empty( $refunded_items ) ) {
-					foreach( $refunded_items as $refunded_item ) {
-						$amount_refunded += edd_negate_amount( $refunded_item->{$column_name} );
-					}
-				}
-				$amount_remaining = $order_item->{$column_name} - $amount_refunded;
+				// Maximum amounts that can be refunded.
+				$refundable_amounts = $order_item->get_refundable_amounts();
+				$amount_remaining   = array_key_exists( $column_name, $refundable_amounts ) ? $refundable_amounts[ $column_name ] : $order_item->{$column_name};
 				ob_start();
 				?>
 				<label for="edd-order-item-refund-<?php echo esc_attr( $column_name ); ?>" class="screen-reader-text">

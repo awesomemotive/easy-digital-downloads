@@ -77,7 +77,7 @@ $( document.body ).on( 'change', '#edd-refund-order-dialog .edd-order-item-refun
 			taxField = parent.find( '.edd-order-item-refund-tax' ),
 			originalSubtotal = parseFloat( subtotalField.data( 'original' ) ),
 			originalTax = parseFloat( taxField.data( 'original' ) ),
-			originalQuantity = parseInt( quantityField.attr( 'max' ) ),
+			originalQuantity = parseInt( quantityField.data( 'original' ) ),
 			calculatedSubtotal = ( originalSubtotal / originalQuantity ) * quantity,
 			calculatedTax = ( originalTax / originalQuantity ) * quantity;
 
@@ -157,44 +157,36 @@ $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 	$( this ).attr( 'disabled', false );
 	$('#edd-refund-submit-button-wrapper .spinner').css('visibility', 'visible');
 	$('#edd-submit-refund-status').hide();
-	let item_ids = [];
 
-	// Get the Order Item IDs we're going to be refunding.
-	const item_checkboxes = $('#edd-refund-order-dialog tbody .check-column input[type="checkbox"]');
-	item_checkboxes.each(function() {
-		if ( $(this).is(':checked') ) {
-			let item_id = $(this).parent().parent().data('order-item');
-			item_ids.push(item_id);
-		}
-	});
+	const refundForm = $( '#edd-submit-refund-form' );
+	const refundData = refundForm.serialize();
 
 	var postData = {
-		action  : 'edd_process_refund_form',
-		item_ids : item_ids,
-		order_id: $('input[name="edd_payment_id"]').val(),
-		nonce: $( '#edd_process_refund' ).val(),
+		action: 'edd_process_refund_form',
+		data: refundData,
+		order_id: $('input[name="edd_payment_id"]').val()
 	};
 
 	$.ajax({
 		type   : 'POST',
 		data   : postData,
 		url    : ajaxurl,
-		success: function success(data) {
+		success: function success(response) {
 			const message_target = $('.edd-submit-refund-message'),
 				url_target     = $('.edd-submit-refund-url');
 
-			if ( data.success ) {
+			if ( response.success ) {
 				$('#edd-refund-order-dialog table').hide();
 				$('#edd-refund-order-dialog .tablenav').hide();
 
-				message_target.text(data.message).addClass('success');
-				url_target.attr( 'href', data.refund_url ).show();
+				message_target.text(response.data.message).addClass('success');
+				url_target.attr( 'href', response.data.refund_url ).show();
 
 				$( '#edd-submit-refund-status' ).show();
 				url_target.focus();
 				$( '#edd-refund-order-dialog' ).addClass( 'did-refund' );
 			} else {
-				message_target.text(data.message).addClass('fail');
+				message_target.html(response.data).addClass('fail');
 				url_target.hide();
 
 				$('#edd-submit-refund-status').show();
