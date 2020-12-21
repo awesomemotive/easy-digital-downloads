@@ -74,8 +74,14 @@ class Refund_Items_Table extends List_Table {
 			'amount'   => __( 'Amount', 'easy-digital-downloads' ),
 		);
 
+		$data       = $this->get_data();
+		$quantities = 0;
+		foreach ( $data as $item ) {
+			$quantities += (int) $item->quantity;
+		}
+
 		// Maybe add quantity column.
-		if ( edd_item_quantities_enabled() ) {
+		if ( edd_item_quantities_enabled() || $quantities > count( $data ) ) {
 			$columns['quantity'] = __( 'Quantity', 'easy-digital-downloads' );
 		}
 
