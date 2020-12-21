@@ -188,6 +188,7 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	 * @since 3.0
 	 *
 	 * @param string $key
+	 *
 	 * @return mixed
 	 */
 	public function __get( $key = '' ) {
@@ -281,5 +282,40 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 			'product_id'   => $this->product_id,
 			'price_id'     => $this->price_id
 		) );
+	}
+
+	/**
+	 * The maximum amounts that can be refunded. This starts with the original order item amounts, subtracts
+	 * discounts, and subtracts what's already been refunded.
+	 *
+	 * @since 3.0
+	 *
+	 * @return array
+	 */
+	public function get_refundable_amounts() {
+		$maximums = array(
+			'quantity' => $this->quantity,
+			'subtotal' => $this->subtotal - $this->discount,
+			'tax'      => $this->tax,
+			'total'    => $this->total
+		);
+
+		$refunded_items = $this->get_refunded_items();
+
+		// If there have been no refunds, bail.
+		if ( empty( $refunded_items ) ) {
+			return $maximums;
+		}
+
+		foreach( $refunded_items as $refunded_item ) {
+			$maximums['quantity'] += $refunded_item->quantity;
+
+			// We're adding numbers here, because `$refund_item` has negative amounts already.
+			$maximums['subtotal'] += $refunded_item->subtotal;
+			$maximums['tax']      += $refunded_item->tax;
+			$maximums['total']    += $refunded_item->total;
+		}
+
+		return $maximums;
 	}
 }
