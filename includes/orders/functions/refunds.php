@@ -420,22 +420,17 @@ function edd_refund_order( $order_id, $order_items = array() ) {
  * @since 3.0
  *
  * @param int $order_item_id Order Item ID.
- * @return int|false New order ID if successful, false otherwise.
+ * @return int|WP_Error New order ID if successful, WP_Error on failure otherwise.
  */
-function edd_refund_order_item( $order_item_id = 0 ) {
+function edd_refund_order_item( $order_item_id ) {
 	global $wpdb;
-
-	// Bail if no order item ID was passed.
-	if ( empty( $order_item_id ) ) {
-		return false;
-	}
 
 	// Fetch order item.
 	$order_item = edd_get_order_item( $order_item_id );
 
 	// Bail if order item was not found.
 	if ( ! $order_item ) {
-		return false;
+		return new WP_Error( 'invalid_order_item', __( 'Order item not found.', 'easy-digital-downloads' ) );
 	}
 
 	// Fetch order.
@@ -443,7 +438,7 @@ function edd_refund_order_item( $order_item_id = 0 ) {
 
 	// Bail if order has been revoked.
 	if ( 'revoked' === $order_item->status ) {
-		return false;
+		return new WP_Error( 'order_item_revoked', __( 'This order item has been revoked and cannot be refunded.', 'easy-digital-downloads' ) );
 	}
 
 	/**
@@ -457,7 +452,7 @@ function edd_refund_order_item( $order_item_id = 0 ) {
 
 	// Bail if refund is blocked.
 	if ( true !== $should_refund ) {
-		return false;
+		return new WP_Error( 'refund_not_allowed', __( 'Refunds are not allowed on this order item.', 'easy-digital-downloads' ) );
 	}
 
 	/** Generate new order number *********************************************/
