@@ -61,13 +61,15 @@ function edd_refund_details_notice( $refund ) {
  * @param EDD\Orders\Order $refund Current Refund.
  */
 function edd_refund_details_items( $refund ) {
-	$_items = array();
-	$items  = edd_get_order_items( array(
+	$_items   = array();
+	$quantity = 0;
+	$items    = edd_get_order_items( array(
 		'order_id' => $refund->id,
 		'number'   => 999,
 	) );
 
 	foreach ( $items as $item ) {
+		$quantity += absint( $item->quantity );
 		// @todo edd_get_order_item_to_json()?
 		$_items[] = array(
 			'id'           => esc_html( $item->id ),
@@ -129,7 +131,7 @@ function edd_refund_details_items( $refund ) {
 			'refunds'      => array(),
 			'isAdding'     => false,
 			'isRefund'     => true,
-			'hasQuantity'  => true === edd_item_quantities_enabled(),
+			'hasQuantity'  => edd_item_quantities_enabled() || $quantity > count( $_items ),
 			'hasTax'       => true === edd_use_taxes()
 				? array(
 					'rate'    => 0,
@@ -168,7 +170,7 @@ function edd_refund_details_items( $refund ) {
 			<tr>
 				<th class="column-name column-primary"><?php echo esc_html( edd_get_label_singular() ); ?></th>
 				<th class="column-amount"><?php esc_html_e( 'Unit Price', 'easy-digital-downloads' ); ?></th>
-				<?php if ( true === edd_item_quantities_enabled() ) : ?>
+				<?php if ( edd_item_quantities_enabled() || $quantity > count( $_items ) ) : ?>
 				<th class="column-quantity"><?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?></th>
 				<?php endif; ?>
 				<th class="column-subtotal column-right"><?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></th>
