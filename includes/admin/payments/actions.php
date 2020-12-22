@@ -573,7 +573,7 @@ function edd_ajax_process_refund_form() {
 		);
 		wp_send_json_success( $return, 200 );
 	} else {
-		wp_send_json_error( __( 'Unable to process refund.', 'easy-digital-downloads' ), 200 );
+		wp_send_json_error( __( 'Unable to process refund.', 'easy-digital-downloads' ), 401 );
 	}
 }
 add_action( 'wp_ajax_edd_process_refund_form', 'edd_ajax_process_refund_form' );
