@@ -126,7 +126,11 @@ class Tests_Process_Download extends EDD_UnitTestCase {
 		// Refund the order item for product ID 2.
 		foreach ( self::$order->get_items() as $item ) {
 			if ( 2 == $item->product_id ) {
-				edd_refund_order( $item->order_id, array( $item->id ) );
+				edd_refund_order( $item->order_id, array(
+					'order_item_id' => $item->id,
+					'subtotal'      => $item->subtotal,
+					'tax'           => $item->tax
+				) );
 			}
 		}
 
