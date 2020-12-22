@@ -160,14 +160,7 @@ class Tests_Process_Download extends EDD_UnitTestCase {
 	 */
 	public function test_fully_refunded_order_should_return_false() {
 		// Refund all items.
-		$item_ids = array();
-		foreach ( self::$order->get_items() as $item ) {
-			if ( 'refunded' !== $item->status ) {
-				$item_ids[] = $item->id;
-			}
-		}
-
-		edd_refund_order( self::$order->id, $item_ids );
+		edd_refund_order( self::$order->id );
 
 		// Fetch original order.
 		$order = edd_get_order( self::$order->id );
