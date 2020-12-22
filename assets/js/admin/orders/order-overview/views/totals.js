@@ -62,8 +62,8 @@ export const Totals = wp.Backbone.View.extend( {
 
 		const { currency, number } = state.get( 'formatters' );
 
-		// Determine column offset -- using cart quantities requires an extra column.
-		const colspan = true === state.get( 'hasQuantity' ) ? 2 : 1;
+		// Determine column offset.
+		const colspan = 2;
 
 		const subtotal = state.getSubtotal();
 		const tax = state.getTax();

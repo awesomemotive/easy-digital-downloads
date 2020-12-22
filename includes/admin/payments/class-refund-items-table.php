@@ -72,21 +72,9 @@ class Refund_Items_Table extends List_Table {
 			'cb'       => '<input type="checkbox" />',
 			'name'     => __( 'Product', 'easy-digital-downloads' ),
 			'amount'   => __( 'Amount', 'easy-digital-downloads' ),
+			'quantity' => __( 'Quantity', 'easy-digital-downloads' ),
+			'discount' => __( 'Discount', 'easy-digital-downloads' ),
 		);
-
-		$data       = $this->get_data();
-		$quantities = 0;
-		foreach ( $data as $item ) {
-			$quantities += (int) $item->quantity;
-		}
-
-		// Maybe add quantity column.
-		if ( edd_item_quantities_enabled() || $quantities > count( $data ) ) {
-			$columns['quantity'] = __( 'Quantity', 'easy-digital-downloads' );
-		}
-
-		// Add discount column after quantity.
-		$columns['discount'] = __( 'Discount', 'easy-digital-downloads' );
 
 		// Maybe add tax column.
 		if ( edd_use_taxes() ) {
