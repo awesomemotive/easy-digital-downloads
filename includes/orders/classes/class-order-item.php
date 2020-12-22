@@ -294,7 +294,6 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	 */
 	public function get_refundable_amounts() {
 		$maximums = array(
-			'quantity' => $this->quantity,
 			'subtotal' => $this->subtotal - $this->discount,
 			'tax'      => $this->tax,
 			'total'    => $this->total
@@ -304,8 +303,6 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 
 		if ( ! empty( $refunded_items ) ) {
 			foreach ( $refunded_items as $refunded_item ) {
-				$maximums['quantity'] += $refunded_item->quantity;
-
 				// We're adding numbers here, because `$refund_item` has negative amounts already.
 				$maximums['subtotal'] += $refunded_item->subtotal;
 				$maximums['tax']      += $refunded_item->tax;
