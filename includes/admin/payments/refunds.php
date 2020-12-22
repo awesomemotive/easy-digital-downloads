@@ -61,8 +61,8 @@ function edd_refund_details_notice( $refund ) {
  * @param EDD\Orders\Order $refund Current Refund.
  */
 function edd_refund_details_items( $refund ) {
-	$_items   = array();
-	$items    = edd_get_order_items( array(
+	$_items = array();
+	$items  = edd_get_order_items( array(
 		'order_id' => $refund->id,
 		'number'   => 999,
 	) );
