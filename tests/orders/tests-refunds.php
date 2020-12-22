@@ -157,6 +157,85 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers ::edd_refund_order
+	 */
+	public function test_refund_order_returns_wp_error_if_refund_amount_exceeds_max() {
+		$order = edd_get_order( self::$orders[1] );
+
+		$to_refund = array();
+
+		foreach( $order->items as $order_item ) {
+			$to_refund[] = array(
+				'order_item_id' => $order_item->id,
+				'subtotal'      => $order_item->subtotal * 2,
+				'tax'           => $order_item->tax
+			);
+		}
+
+		$refund_id = edd_refund_order( $order->id, $to_refund );
+
+		$this->assertInstanceOf( 'WP_Error', $refund_id );
+
+		$this->assertEquals( 'invalid_refund_amount', $refund_id->get_error_code() );
+	}
+
+	/**
+	 * @covers ::edd_refund_order
+	 * @covers ::edd_get_order_total
+	 */
+	public function test_partially_refund_order() {
+		$order = edd_get_order( self::$orders[1] );
+
+		$to_refund = array();
+
+		foreach( $order->items as $order_item ) {
+			// Only refund half the subtotal / tax for the order item. This creates a partial refund.
+			$to_refund[] = array(
+				'order_item_id' => $order_item->id,
+				'subtotal'      => ( $order_item->subtotal - $order_item->discount ) / 2,
+				'tax'           => $order_item->tax / 2
+			);
+		}
+
+		$refund_id = edd_refund_order( $order->id, $to_refund );
+
+		$this->assertGreaterThan( 0, $refund_id );
+
+		// Fetch original order.
+		$o = edd_get_order( $order->id );
+
+		// Check a valid Order object was returned.
+		$this->assertInstanceOf( 'EDD\Orders\Order', $o );
+
+		// Verify status.
+		$this->assertSame( 'partially_refunded', $o->status );
+
+		// Verify type.
+		$this->assertSame( 'sale', $o->type );
+
+		// Verify original total.
+		$this->assertEquals( 120.0, floatval( $o->total ) );
+
+		// Verify total minus refunded amount.
+		$this->assertEquals( 60.0, edd_get_order_total( $o->id ) );
+
+		// Fetch refunded order.
+		$r = edd_get_order( $refund_id );
+
+		// Check a valid Order object was returned.
+		$this->assertInstanceOf( 'EDD\Orders\Order', $r );
+
+		// Verify status.
+		$this->assertSame( 'complete', $r->status );
+
+		// Verify type.
+		$this->assertSame( 'refund', $r->type );
+
+		// Verify total.
+		$this->assertEquals( -60.0, floatval( $r->total ) );
+	}
+
+	/**
 	 * @covers ::edd_apply_order_credit
 	 */
 	public function test_apply_order_credit() {
