@@ -36,8 +36,8 @@ export const NoOrderItems = wp.Backbone.View.extend( {
 		const { model, options } = this;
 		const { state } = this.options;
 
-		// Determine column offset -- using cart quantities requires an extra column.
-		const colspan = true === state.get( 'hasQuantity' ) ? 4 : 3;
+		// Determine column offset.
+		const colspan = 4;
 
 		return {
 			...Base.prototype.prepare.apply( this, arguments ),

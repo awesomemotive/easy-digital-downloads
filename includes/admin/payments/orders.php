@@ -570,7 +570,6 @@ function edd_order_details_overview( $order ) {
 	$_items       = array();
 	$_adjustments = array();
 	$_refunds     = array();
-	$quantity     = 0;
 
 	if ( true !== edd_is_add_order_page() ) {
 		$items = edd_get_order_items( array(
@@ -580,7 +579,6 @@ function edd_order_details_overview( $order ) {
 
 		foreach ( $items as $item ) {
 			$item_adjustments = array();
-			$quantity        += $item->quantity;
 
 			$adjustments = edd_get_order_adjustments( array(
 				'object_id'   => $item->id,
@@ -678,6 +676,11 @@ function edd_order_details_overview( $order ) {
 		}
 	}
 
+	$has_quantity = true;
+	if ( edd_is_add_order_page() && ! edd_item_quantities_enabled() ) {
+		$has_quantity = false;
+	}
+
 	wp_localize_script(
 		'edd-admin-orders',
 		'eddAdminOrderOverview',
@@ -686,7 +689,7 @@ function edd_order_details_overview( $order ) {
 			'adjustments'  => $_adjustments,
 			'refunds'      => $_refunds,
 			'isAdding'     => true === edd_is_add_order_page(),
-			'hasQuantity'  => edd_item_quantities_enabled() || $quantity > count( $_items ),
+			'hasQuantity'  => $has_quantity,
 			'hasTax'       => true === edd_use_taxes()
 				? array(
 					'rate'    => 0,
@@ -740,9 +743,7 @@ function edd_order_details_overview( $order ) {
 			<tr>
 				<th class="column-name column-primary"><?php echo esc_html( edd_get_label_singular() ); ?></th>
 				<th class="column-amount"><?php esc_html_e( 'Unit Price', 'easy-digital-downloads' ); ?></th>
-				<?php if ( edd_item_quantities_enabled() || $quantity > count( $_items ) ) : ?>
 				<th class="column-quantity"><?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?></th>
-				<?php endif; ?>
 				<th class="column-subtotal column-right"><?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></th>
 			</tr>
 		</thead>
