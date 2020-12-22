@@ -185,10 +185,6 @@ class EDD_SL_Plugin_Updater {
 					$version_info->icons = $this->convert_object_to_array( $version_info->icons );
 				}
 
-				if ( isset( $version_info->icons ) && ! is_array( $version_info->icons ) ) {
-					$version_info->icons = $this->convert_object_to_array( $version_info->icons );
-				}
-
 				if ( isset( $version_info->contributors ) && ! is_array( $version_info->contributors ) ) {
 					$version_info->contributors = $this->convert_object_to_array( $version_info->contributors );
 				}
