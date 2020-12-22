@@ -170,7 +170,7 @@ class Refund_Items_Table extends List_Table {
 				}
 				ob_start();
 				?>
-				<label for="edd-order-item-refund-<?php echo esc_attr( $column_name ); ?>" class="screen-reader-text">
+				<label for="edd-order-item-<?php echo esc_attr( $order_item->id ); ?>-refund-<?php echo esc_attr( $column_name ); ?>" class="screen-reader-text">
 					<?php
 					if ( 'subtotal' === $column_name ) {
 						_e( 'Amount to refund, excluding tax', 'easy-digital-downloads' );
@@ -184,7 +184,7 @@ class Refund_Items_Table extends List_Table {
 					echo esc_html( $this->get_currency_symbol( $order_item->order_id ) );
 				}
 				?>
-				<input type="text" id="edd-order-item-refund-<?php echo esc_attr( $column_name ); ?>" class="edd-order-item-refund-<?php echo esc_attr( $column_name ); ?> edd-order-item-refund-input" name="refund_order_item[<?php echo esc_attr( $order_item->id ); ?>][<?php echo esc_attr( $column_name ); ?>]" value="<?php echo esc_attr( edd_sanitize_amount( 0 ) ); ?>" data-original="<?php echo esc_attr( $original_amount ); ?>" data-max="<?php echo esc_attr( $amount_remaining ); ?>" <?php echo 'refunded' === $order_item->status ? ' disabled' : ''; ?> />
+				<input type="text" id="edd-order-item-<?php echo esc_attr( $order_item->id ); ?>-refund-<?php echo esc_attr( $column_name ); ?>" class="edd-order-item-refund-<?php echo esc_attr( $column_name ); ?> edd-order-item-refund-input" name="refund_order_item[<?php echo esc_attr( $order_item->id ); ?>][<?php echo esc_attr( $column_name ); ?>]" value="<?php echo esc_attr( edd_sanitize_amount( 0 ) ); ?>" data-original="<?php echo esc_attr( $original_amount ); ?>" data-max="<?php echo esc_attr( $amount_remaining ); ?>" <?php echo 'refunded' === $order_item->status ? ' disabled' : ''; ?> />
 				<?php
 				if ( 'after' === $currency_pos ) {
 					echo esc_html( $this->get_currency_symbol( $order_item->order_id ) );
