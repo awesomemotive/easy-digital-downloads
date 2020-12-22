@@ -384,7 +384,7 @@ function edd_refund_order( $order_id, $order_items = array() ) {
 
 	// Update order status to `refunded` once refund is complete and if all items are marked as refunded.
 	$all_refunded = true;
-	if ( edd_get_order_total() > 0 ) {
+	if ( edd_get_order_total( $order_id ) > 0 ) {
 		$all_refunded = false;
 	}
 
@@ -591,13 +591,8 @@ function edd_get_order_refunds( $order_id = 0 ) {
  * @param int $order_id Order ID.
  * @return float $total Order total.
  */
-function edd_get_order_total( $order_id = 0 ) {
+function edd_get_order_total( $order_id ) {
 	global $wpdb;
-
-	// Bail if no order ID was passed.
-	if ( empty( $order_id ) ) {
-		return 0;
-	}
 
 	$query   = "SELECT SUM(total) FROM {$wpdb->edd_orders} WHERE id = %d OR parent = %d";
 	$prepare = $wpdb->prepare( $query, $order_id, $order_id );
