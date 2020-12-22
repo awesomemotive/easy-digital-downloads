@@ -236,57 +236,6 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::edd_apply_order_discount
-	 */
-	public function test_apply_order_discount() {
-		$discount_id = self::edd()->discount->create( array(
-			'name'   => '$5 Off',
-			'code'   => '5OFF',
-			'status' => 'active',
-			'type'   => 'flat',
-			'scope'  => 'global',
-			'amount' => 5,
-		) );
-
-		$refunded_order = edd_apply_order_discount( self::$orders[3], $discount_id );
-
-		// Fetch refunded order.
-		$o = edd_get_order( $refunded_order );
-
-		// Check a valid Order object was returned.
-		$this->assertInstanceOf( 'EDD\Orders\Order', $o );
-
-		// Verify status.
-		$this->assertSame( 'partially_refunded', $o->status );
-
-		// Verify type.
-		$this->assertSame( 'refund', $o->type );
-
-		// Verify discount.
-		$this->assertSame( 5.0, floatval( $o->discount ) );
-
-		// Verify total.
-		$this->assertSame( -5.0, floatval( $o->total ) );
-
-		// Verify adjustments
-		$this->assertCount( 1, $o->adjustments );
-
-		$a = $o->adjustments[0];
-
-		// Verify type.
-		$this->assertSame( 'discount', $a->type );
-
-		// Verify subtotal.
-		$this->assertSame( 5.0, floatval( $a->subtotal ) );
-
-		// Verify total.
-		$this->assertSame( 5.0, floatval( $a->total ) );
-
-		// Verify order total.
-		$this->assertSame( 115.0, edd_get_order_total( self::$orders[3] ) );
-	}
-
-	/**
 	 * @covers ::edd_get_refundability_types
 	 */
 	public function test_get_refundability_types() {
