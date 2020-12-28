@@ -4,7 +4,6 @@
  * Description: The easiest way to sell digital products with WordPress.
  * Version: 1.0
  * Domain Path: languages
- *
  */
 
 // Exit if accessed directly.
