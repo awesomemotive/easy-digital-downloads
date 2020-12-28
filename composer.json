@@ -1,7 +1,7 @@
 {
   "name": "upsell/wpi-cart",
   "description": "WPI Cart",
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
   "license": "GPL-2.0-or-later",
   "require": {
   }
