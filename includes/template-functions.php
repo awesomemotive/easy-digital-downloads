@@ -10,6 +10,9 @@
  */
 
 // Exit if accessed directly
+use bpmj\wpidea\Data_Layers;
+use bpmj\wpidea\View_Hooks;
+
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
@@ -23,7 +26,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 
 function edd_append_purchase_link( $download_id ) {
-	if ( ! get_post_meta( $download_id, '_edd_hide_purchase_link', true ) ) {
+    $is_purchase_button_hidden = get_post_meta( $download_id, 'purchase_button_hidden', true );
+
+	if ( ! get_post_meta( $download_id, '_edd_hide_purchase_link', true ) &&  'on' !== $is_purchase_button_hidden ) {
 		echo edd_get_purchase_link( array( 'download_id' => $download_id ) );
 	}
 }
@@ -172,20 +177,20 @@ function edd_get_purchase_link( $args = array() ) {
 			<?php
 			$class = implode( ' ', array( $args['style'], $args['color'], trim( $args['class'] ) ) );
 
-			if ( ! edd_is_ajax_disabled() ) {
+			if ( ! edd_is_ajax_disabled() ) { ?>
 
-				echo '<a href="#" class="edd-add-to-cart ' . esc_attr( $class ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $data_price . ' ' . $button_display . '><span class="edd-add-to-cart-label">' . $args['text'] . '</span> <span class="edd-loading"><i class="edd-icon-spinner edd-icon-spin"></i></span></a>';
+				 <a <?php View_Hooks::run(View_Hooks::RENDER_INLINE_ELEMENTS_IN_ADD_TO_CART_HYPERLINK, $download->ID); ?>  href="#" class="edd-add-to-cart <?= esc_attr( $class ) ?>" data-action="edd_add_to_cart" data-download-id="<?= esc_attr( $download->ID ) ?>" <?= $data_variable ?> <?= $type ?> <?= $data_price ?> <?= $button_display ?>><span class="edd-add-to-cart-label"><?= $args['text'] ?></span> <span class="edd-loading"><i class="edd-icon-spinner edd-icon-spin"></i></span></a>
 
-			}
+			<?php }
 
 			echo '<input type="submit" class="edd-add-to-cart edd-no-js ' . esc_attr( $class ) . '" name="edd_purchase_download" value="' . esc_attr( $args['text'] ) . '" data-action="edd_add_to_cart" data-download-id="' . esc_attr( $download->ID ) . '" ' . $data_variable . ' ' . $type . ' ' . $button_display . '/>';
 			echo '<a href="' . esc_url( edd_get_checkout_uri() ) . '" class="edd_go_to_checkout ' . esc_attr( $class ) . '" ' . $checkout_display . '>' . __( 'Checkout', 'easy-digital-downloads' ) . '</a>';
 			?>
 
 			<?php if ( ! edd_is_ajax_disabled() ) : ?>
-				<span class="edd-cart-ajax-alert">
+				<span class="edd-cart-ajax-alert" aria-live="assertive">
 					<span class="edd-cart-added-alert" style="display: none;">
-						<?php echo '<i class="edd-icon-ok"></i> ' . __( 'Added to cart', 'easy-digital-downloads' ); ?>
+						<?php echo '<i class="edd-icon-ok" aria-hidden="true"></i> ' . __( 'Added to cart', 'easy-digital-downloads' ); ?>
 					</span>
 				</span>
 			<?php endif; ?>
@@ -529,10 +534,7 @@ function edd_get_purchase_download_links( $payment_id = 0 ) {
 				foreach ( $files as $filekey => $file ) {
 					$links .= '<div class="edd_download_link_file">';
 						$links .= '<a href="' . esc_url( edd_get_download_file_url( $payment_key, $email, $filekey, $download['id'], $price_id ) ) . '">';
-							if ( isset( $file['name'] ) )
-								$links .= esc_html( $file['name'] );
-							else
-								$links .= esc_html( $file['file'] );
+						$links .= edd_get_file_name( $file );
 						$links .= '</a>';
 					$links .= '</div>';
 				}
@@ -818,17 +820,6 @@ function edd_checkout_meta_tags() {
 	echo '<meta name="robots" content="noindex,nofollow" />' . "\n";
 }
 add_action( 'wp_head', 'edd_checkout_meta_tags' );
-
-/**
- * Adds EDD Version to the <head> tag
- *
- * @since 1.4.2
- * @return void
-*/
-function edd_version_in_header(){
-	echo '<meta name="generator" content="Easy Digital Downloads v' . EDD_VERSION . '" />' . "\n";
-}
-add_action( 'wp_head', 'edd_version_in_header' );
 
 /**
  * Determines if we're currently on the Purchase History page.

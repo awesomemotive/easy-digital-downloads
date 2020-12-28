@@ -84,7 +84,9 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 				break;
 
 			case 'user_id' :
-				$user = ! empty( $item['user_id'] ) ? $item['user_id'] : edd_get_payment_user_email( $item['payment_id'] );
+				$email = edd_get_payment_user_email( $item['payment_id'] );
+				$email = apply_filters( 'lms_filter_sensitive__customer_email', $email, $item['user_id'], $email );
+				$user = ! empty( $item['user_id'] ) ? $item['user_id'] : $email;
 				$return = '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $user ) ) . '">' . $item['user_name'] . '</a>';
 				break;
 
@@ -321,6 +323,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 				if ( get_post( $payment_id ) ) {
 
 					$user_info  = edd_get_payment_meta_user_info( $payment_id );
+					$user_id  = edd_get_payment_user_id( $payment_id );
 					$cart_items = edd_get_payment_meta_cart_details( $payment_id );
 					$amount     = 0;
 
@@ -335,6 +338,8 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 
 						}
 
+						$user_name = apply_filters( 'lms_filter_sensitive__customer_name', $user_info['first_name'] . ' ' . $user_info['last_name'], $user_id, $user_info['email'] ); 
+
 						$logs_data[] = array(
 							'ID'         => $log->ID,
 							'payment_id' => $payment_id,
@@ -342,7 +347,7 @@ class EDD_Sales_Log_Table extends WP_List_Table {
 							'item_price' => isset( $item['item_price'] ) ? $item['item_price'] : $item['price'],
 							'amount'     => $amount,
 							'user_id'    => $user_info['id'],
-							'user_name'  => $user_info['first_name'] . ' ' . $user_info['last_name'],
+							'user_name'  => $user_name,
 							'date'       => get_post_field( 'post_date', $payment_id ),
 							'quantity'   => $item['quantity'],
 							// Keep track of the currency. Vital to produce the correct report

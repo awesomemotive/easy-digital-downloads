@@ -328,10 +328,34 @@ jQuery(document).ready(function ($) {
 	});
 
 	// Auto load first payment gateway
-	if( edd_scripts.is_checkout == '1' && $('select#edd-gateway, input.edd-gateway').length ) {
-		setTimeout( function() {
-			edd_load_gateway( edd_scripts.default_gateway );
-		}, 200);
+	// Auto load first payment gateway
+	if( edd_scripts.is_checkout == '1' ) {
+
+		var chosen_gateway = false;
+		var ajax_needed    = false;
+
+		if ( $('select#edd-gateway, input.edd-gateway').length ) {
+			chosen_gateway = $("meta[name='edd-chosen-gateway']").attr('content');
+			ajax_needed    = true;
+		}
+
+		if( ! chosen_gateway ) {
+			chosen_gateway = edd_scripts.default_gateway;
+		}
+
+		if ( ajax_needed ) {
+
+			// If we need to ajax in a gateway form, send the requests for the POST.
+			setTimeout( function() {
+				edd_load_gateway( chosen_gateway );
+			}, 20);
+
+		} else {
+
+			// The form is already on page, just trigger that the gateway is loaded so further action can be taken.
+			$('body').trigger('edd_gateway_loaded', [ chosen_gateway ]);
+
+		}
 	}
 
 	$(document).on('click', '#edd_purchase_form #edd_purchase_submit input[type=submit]', function(e) {
@@ -347,6 +371,8 @@ jQuery(document).ready(function ($) {
 		var complete_purchase_val = $(this).val();
 
 		$(this).val(edd_global_vars.purchase_loading);
+                
+                $(this).prop( 'disabled', true );          
 
 		$(this).after('<span class="edd-cart-ajax"><i class="edd-icon-spinner edd-icon-spin"></i></span>');
 
@@ -361,11 +387,11 @@ jQuery(document).ready(function ($) {
 				$('.edd_errors').remove();
 				$('.edd-error').hide();
 				$('#edd_purchase_submit').before(data);
+                                $('#edd-purchase-button').prop( 'disabled', false );
 			}
 		});
 
 	});
-
 });
 
 function edd_load_gateway( payment_mode ) {
@@ -388,6 +414,7 @@ function edd_load_gateway( payment_mode ) {
 		function(response){
 			jQuery('#edd_purchase_form_wrap').html(response);
 			jQuery('.edd-no-js').hide();
+                        jQuery('body').trigger('edd_gateway_loaded', [ payment_mode ]);
 		}
 	);
 

@@ -365,7 +365,7 @@ final class EDD_Payment {
 	}
 
 	/**
-	 * Magic ISSET function, which allows empty checks on protected elemetns
+	 * Magic ISSET function, which allows empty checks on protected elements
 	 *
 	 * @since  2.5
 	 * @param  string  $name The attribute to get
@@ -435,6 +435,7 @@ final class EDD_Payment {
 		// Currency Based
 		$this->total           = $this->setup_total();
 		$this->tax             = $this->setup_tax();
+		$this->fees_total      = $this->setup_fees_total();
 		$this->subtotal        = $this->setup_subtotal();
 		$this->currency        = $this->setup_currency();
 
@@ -470,7 +471,7 @@ final class EDD_Payment {
 	 * Create the base of a payment.
 	 *
 	 * @since  2.5
-	 * @return int|bool Fale on failure, the payment ID on success.
+	 * @return int|bool False on failure, the payment ID on success.
 	 */
 	private function insert_payment() {
 
@@ -539,7 +540,7 @@ final class EDD_Payment {
 			$customer = new stdClass;
 
 			if ( did_action( 'edd_pre_process_purchase' ) && is_user_logged_in() ) {
-				$customer  = new EDD_customer( get_current_user_id(), true );
+				$customer  = new EDD_Customer( get_current_user_id(), true );
 			}
 
 			if ( empty( $customer->id ) ) {
@@ -864,7 +865,7 @@ final class EDD_Payment {
 	 * @param int   $download_id The download to add
 	 * @param array $args Other arguments to pass to the function
 	 * @param array $options List of download options
-	 * @return void
+	 * @return bool True when successful, false otherwise
 	 */
 	public function add_download( $download_id = 0, $args = array(), $options = array() ) {
 		$download = new EDD_Download( $download_id );
@@ -878,7 +879,7 @@ final class EDD_Payment {
 		$defaults = array(
 			'quantity'    => 1,
 			'price_id'    => false,
-			'item_price'  => 0.00,
+			'item_price'  => false,
 			'discount'    => 0,
 			'tax'         => 0.00,
 			'fees'        => array(),
@@ -887,7 +888,7 @@ final class EDD_Payment {
 		$args = wp_parse_args( apply_filters( 'edd_payment_add_download_args', $args, $download->ID ), $defaults );
 
 		// Allow overriding the price
-		if( $args['item_price'] ) {
+		if( false !== $args['item_price'] ) {
 			$item_price = $args['item_price'];
 		} else {
 			// Deal with variable pricing
@@ -1005,13 +1006,13 @@ final class EDD_Payment {
 
 		foreach ( $this->downloads as $key => $item ) {
 
-			if ( $download_id != $item['id'] ) {
+			if ( (int) $download_id !== (int) $item['id'] ) {
 				continue;
 			}
 
 			if ( false !== $args['price_id'] ) {
 
-				if ( isset( $item['options']['price_id'] ) && $args['price_id'] != $item['options']['price_id'] ) {
+				if ( isset( $item['options']['price_id'] ) && (int) $args['price_id'] !== (int) $item['options']['price_id'] ) {
 					continue;
 				}
 
@@ -1028,7 +1029,7 @@ final class EDD_Payment {
 					}
 
 					// If this item has a price ID, make sure it matches the cart indexed item's price ID before removing
-					if ( isset( $item['options']['price_id'] ) && $item['options']['price_id'] != $cart_item['item_number']['options']['price_id'] ) {
+					if ( isset( $item['options']['price_id'] ) && (int) $item['options']['price_id'] !== (int) $cart_item['item_number']['options']['price_id'] ) {
 						continue;
 					}
 
@@ -1063,13 +1064,13 @@ final class EDD_Payment {
 				}
 
 				if ( false !== $args['price_id'] ) {
-					if ( isset( $item['item_number']['options']['price_id'] ) && $args['price_id'] != $item['item_number']['options']['price_id'] ) {
+					if ( isset( $item['item_number']['options']['price_id'] ) && (int) $args['price_id'] !== (int) $item['item_number']['options']['price_id'] ) {
 						continue;
 					}
 				}
 
 				if ( false !== $args['item_price'] ) {
-					if ( isset( $item['item_price'] ) && $args['item_price'] != $item['item_price'] ) {
+					if ( isset( $item['item_price'] ) && (float) $args['item_price'] != (float) $item['item_price'] ) {
 						continue;
 					}
 				}
@@ -1086,7 +1087,7 @@ final class EDD_Payment {
 				return false; // Invalid cart index passed.
 			}
 
-			if ( $this->cart_details[ $cart_index ]['id'] !== $download_id ) {
+			if ( (int) $this->cart_details[ $cart_index ]['id'] !== (int) $download_id ) {
 				return false; // We still need the proper Download ID to be sure.
 			}
 
@@ -1103,7 +1104,7 @@ final class EDD_Payment {
 			$tax          = $this->cart_details[ $found_cart_key ]['tax'];
 			$discount     = ! empty( $this->cart_details[ $found_cart_key ]['discount'] ) ? $this->cart_details[ $found_cart_key ]['discount'] : 0;
 
-			// The total reduction quals the number removed * the item_price
+			// The total reduction equals the number removed * the item_price
 			$total_reduced = round( $item_price * $args['quantity'], edd_currency_decimal_filter() );
 			$tax_reduced   = round( ( $tax / $orig_quantity ) * $args['quantity'], edd_currency_decimal_filter() );
 
@@ -1147,6 +1148,7 @@ final class EDD_Payment {
 	 *
 	 * @since  2.5
 	 * @param  array $args Array of arguments for the fee to add
+	 * @param bool $global
 	 * @return bool If the fee was added
 	 */
 	public function add_fee( $args, $global = true ) {
@@ -1445,6 +1447,9 @@ final class EDD_Payment {
 				case 'failed':
 					$this->process_failure();
 					break;
+				case 'pending':
+					$this->process_pending();
+					break;
 			}
 
 			do_action( 'edd_update_payment_status', $this->ID, $status, $old_status );
@@ -1482,6 +1487,10 @@ final class EDD_Payment {
 		$meta = get_post_meta( $this->ID, $meta_key, $single );
 
 		if ( $meta_key === '_edd_payment_meta' ) {
+			
+			if ( empty( $meta ) ) {
+				$meta = array();
+			}
 
 			// Payment meta was simplified in EDD v1.5, so these are here for backwards compatibility
 			if ( empty( $meta['key'] ) ) {
@@ -1550,8 +1559,6 @@ final class EDD_Payment {
 	 * @return void
 	 */
 	private function process_refund() {
-		global $edd_logs;
-
 		$process_refund = true;
 
 		// If the payment was not in publish or revoked status, don't decrement stats as they were never incremented
@@ -1568,42 +1575,12 @@ final class EDD_Payment {
 
 		do_action( 'edd_pre_refund_payment', $this );
 
-		edd_undo_purchase( false, $this->ID );
+		$decrease_store_earnings = apply_filters( 'edd_decrease_store_earnings_on_refund', true, $this );
+		$decrease_customer_value = apply_filters( 'edd_decrease_customer_value_on_refund', true, $this );
+		$decrease_purchase_count = apply_filters( 'edd_decrease_customer_purchase_count_on_refund', true, $this );
 
-		// Decrease store earnings
-		$maybe_decrease_store_earnings = apply_filters( 'edd_decrease_store_earnings_on_refund', true, $this );
-		if ( true === $maybe_decrease_store_earnings ) {
-			edd_decrease_total_earnings( $this->total );
-		}
-
-		// Decrement the stats for the customer
-		if ( ! empty( $this->customer_id ) ) {
-
-			$customer = new EDD_Customer( $this->customer_id );
-
-			$maybe_decrease_value = apply_filters( 'edd_decrease_customer_value_on_refund', true, $this );
-			if ( true === $maybe_decrease_value ) {
-				$customer->decrease_value( $this->total );
-			}
-
-			$maybe_decrease_purchase_count = apply_filters( 'edd_decrease_customer_purchase_count_on_refund', true, $this );
-			if ( true === $maybe_decrease_purchase_count ) {
-				$customer->decrease_purchase_count();
-			}
-
-		}
-
-		// Remove related sale log entries
-		$edd_logs->delete_logs(
-			null,
-			'sale',
-			array(
-				array(
-					'key'   => '_edd_log_payment_id',
-					'value' => $this->ID,
-				),
-			)
-		);
+		$this->maybe_alter_stats( $decrease_store_earnings, $decrease_customer_value, $decrease_purchase_count );
+		$this->delete_sales_logs();
 
 		// Clear the This Month earnings (this_monththis_month is NOT a typo)
 		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
@@ -1635,6 +1612,98 @@ final class EDD_Payment {
 	}
 
 	/**
+	 * Process when a payment moves to pending
+	 *
+	 * @since  2.5.10
+	 * @return void
+	 */
+	private function process_pending() {
+		$process_pending = true;
+
+		// If the payment was not in publish or revoked status, don't decrement stats as they were never incremented
+		if ( ( 'publish' != $this->old_status && 'revoked' != $this->old_status ) || 'pending' != $this->status ) {
+			$process_pending = false;
+		}
+
+		// Allow extensions to filter for their own payment types, Example: Recurring Payments
+		$process_pending = apply_filters( 'edd_should_process_pending', $process_pending, $this );
+
+		if ( false === $process_pending ) {
+			return;
+		}
+
+		$decrease_store_earnings = apply_filters( 'edd_decrease_store_earnings_on_pending', true, $this );
+		$decrease_customer_value = apply_filters( 'edd_decrease_customer_value_on_pending', true, $this );
+		$decrease_purchase_count = apply_filters( 'edd_decrease_customer_purchase_count_on_pending', true, $this );
+
+		$this->maybe_alter_stats( $decrease_store_earnings, $decrease_customer_value, $decrease_purchase_count );
+		$this->delete_sales_logs();
+
+		$this->completed_date = false;
+		$this->update_meta( '_edd_completed_date', '' );
+
+		// Clear the This Month earnings (this_monththis_month is NOT a typo)
+		delete_transient( md5( 'edd_earnings_this_monththis_month' ) );
+	}
+
+	/**
+	 * Used during the process of moving to refunded or pending, to decrement stats
+	 *
+	 * @since  2.5.10
+	 * @param  bool   $alter_store_earnings          If the method should alter the store earnings
+	 * @param  bool   $alter_customer_value          If the method should reduce the customer value
+	 * @param  bool   $alter_customer_purchase_count If the method should reduce the customer's purchase count
+	 * @return void
+	 */
+	private function maybe_alter_stats( $alter_store_earnings, $alter_customer_value, $alter_customer_purchase_count ) {
+
+		edd_undo_purchase( false, $this->ID );
+
+		// Decrease store earnings
+		if ( true === $alter_store_earnings ) {
+			edd_decrease_total_earnings( $this->total );
+		}
+
+		// Decrement the stats for the customer
+		if ( ! empty( $this->customer_id ) ) {
+
+			$customer = new EDD_Customer( $this->customer_id );
+
+			if ( true === $alter_customer_value ) {
+				$customer->decrease_value( $this->total );
+			}
+
+			if ( true === $alter_customer_purchase_count ) {
+				$customer->decrease_purchase_count();
+			}
+
+		}
+
+	}
+
+	/**
+	 * Delete sales logs for this purchase
+	 *
+	 * @since  2.5.10
+	 * @return void
+	 */
+	private function delete_sales_logs() {
+		global $edd_logs;
+
+		// Remove related sale log entries
+		$edd_logs->delete_logs(
+			null,
+			'sale',
+			array(
+				array(
+					'key'   => '_edd_log_payment_id',
+					'value' => $this->ID,
+				),
+			)
+		);
+	}
+
+	/**
 	 * Setup functions only, these are not to be used by developers.
 	 * These functions exist only to allow the setup routine to be backwards compatible with our old
 	 * helper functions.
@@ -1661,6 +1730,12 @@ final class EDD_Payment {
 		return $date;
 	}
 
+	/**
+	 * Setup the payment mode
+	 *
+	 * @since  2.5
+	 * @return string The payment mode
+	 */
 	private function setup_mode() {
 		return $this->get_meta( '_edd_payment_mode' );
 	}
@@ -1703,6 +1778,26 @@ final class EDD_Payment {
 		}
 
 		return $tax;
+
+	}
+
+	/**
+	 * Setup the payment fees
+	 *
+	 * @since  2.5.10
+	 * @return float The fees total for the payment
+	 */
+	private function setup_fees_total() {
+		$fees_total = (float) 0.00;
+
+		$payment_fees = isset( $this->payment_meta['fees'] ) ? $this->payment_meta['fees'] : array();
+		if ( ! empty( $payment_fees ) ) {
+			foreach ( $payment_fees as $fee ) {
+				$fees_total += (float) $fee['amount'];
+			}
+		}
+
+		return $fees_total;
 
 	}
 
@@ -1792,7 +1887,7 @@ final class EDD_Payment {
 	private function setup_transaction_id() {
 		$transaction_id = $this->get_meta( '_edd_payment_transaction_id', true );
 
-		if ( empty( $transaction_id ) ) {
+		if ( empty( $transaction_id ) || (int) $transaction_id === (int) $this->ID ) {
 
 			$gateway        = $this->gateway;
 			$transaction_id = apply_filters( 'edd_get_payment_transaction_id-' . $gateway, $this->ID );
@@ -1866,6 +1961,56 @@ final class EDD_Payment {
 
 		$user_info    = isset( $this->payment_meta['user_info'] ) ? maybe_unserialize( $this->payment_meta['user_info'] ) : array();
 		$user_info    = wp_parse_args( $user_info, $defaults );
+        
+        // Ensure email index is in the old user info array
+		if( empty( $user_info['email'] ) ) {
+			$user_info['email'] = $this->email;
+		}
+
+		if ( empty( $user_info ) ) {
+			// Get the customer, but only if it's been created
+			$customer = new EDD_Customer( $this->customer_id );
+
+			if ( $customer->id > 0 ) {
+				$name = explode( ' ', $customer->name, 2 );
+				$user_info = array(
+					'first_name' => $name[0],
+					'last_name'  => $name[1],
+					'email'      => $customer->email,
+					'discount'   => 'none',
+				);
+			}
+		} else {
+			// Get the customer, but only if it's been created
+			$customer = new EDD_Customer( $this->customer_id );
+			if ( $customer->id > 0 ) {
+				foreach ( $user_info as $key => $value ) {
+					if ( ! empty( $value ) ) {
+						continue;
+					}
+
+					switch( $key ) {
+						case 'first_name':
+							$name = explode( ' ', $customer->name, 2 );
+
+							$user_info[ $key ] = $name[0];
+							break;
+
+						case 'last_name':
+							$name      = explode( ' ', $customer->name, 2 );
+							$last_name = ! empty( $name[1] ) ? $name[1] : '';
+
+							$user_info[ $key ] = $last_name;
+							break;
+
+						case 'email':
+							$user_info[ $key ] = $customer->email;
+							break;
+					}
+				}
+
+			}
+		}
 
 		return $user_info;
 	}
@@ -2132,7 +2277,7 @@ final class EDD_Payment {
 	 * Retrieve unlimited file downloads status
 	 *
 	 * @since  2.5.1
-	 * @return bool Is unlimted
+	 * @return bool Is unlimited
 	 */
 	private function get_unlimited() {
 		return apply_filters( 'edd_payment_unlimited_downloads', $this->unlimited, $this->ID, $this );

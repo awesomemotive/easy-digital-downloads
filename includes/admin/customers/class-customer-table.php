@@ -122,9 +122,14 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 		switch ( $column_name ) {
 
 			case 'num_purchases' :
-				$value = '<a href="' .
-					admin_url( '/edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item['email'] )
-				) . '">' . esc_html( $item['num_purchases'] ) . '</a>';
+				$hide_sensitive = apply_filters( 'lms_filter_sensitive__disallow_edit', false );
+				if( $hide_sensitive ){
+					$value = esc_html( $item['num_purchases'] );
+				} else {
+					$value = '<a href="' .
+						admin_url( '/edit.php?post_type=download&page=edd-payment-history&user=' . urlencode( $item['email'] )
+					) . '">' . esc_html( $item['num_purchases'] ) . '</a>';
+				}
 				break;
 
 			case 'amount_spent' :
@@ -272,11 +277,14 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 
 				$user_id = ! empty( $customer->user_id ) ? intval( $customer->user_id ) : 0;
 
+				$customer_name = apply_filters( 'lms_filter_sensitive__customer_name', $customer->name, $customer->user_id, $customer->email );
+				$customer_email = apply_filters( 'lms_filter_sensitive__customer_email', $customer->email, $customer->user_id, $customer->email );
+
 				$data[] = array(
 					'id'            => $customer->id,
 					'user_id'       => $user_id,
-					'name'          => $customer->name,
-					'email'         => $customer->email,
+					'name'          => $customer_name,
+					'email'         => $customer_email,
 					'num_purchases' => $customer->purchase_count,
 					'amount_spent'  => $customer->purchase_value,
 					'date_created'  => $customer->date_created,

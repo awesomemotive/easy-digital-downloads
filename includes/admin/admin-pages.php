@@ -34,10 +34,8 @@ function edd_add_options_link() {
 
 	$customer_view_role     = apply_filters( 'edd_view_customers_role', 'view_shop_reports' );
 
-	$edd_payments_page      = add_submenu_page( 'edit.php?post_type=download', $edd_payment->labels->name, $edd_payment->labels->menu_name, 'edit_shop_payments', 'edd-payment-history', 'edd_payment_history_page' );
 	$edd_customers_page     = add_submenu_page( 'edit.php?post_type=download', __( 'Customers', 'easy-digital-downloads' ), __( 'Customers', 'easy-digital-downloads' ), $customer_view_role, 'edd-customers', 'edd_customers_page' );
 	$edd_discounts_page     = add_submenu_page( 'edit.php?post_type=download', __( 'Discount Codes', 'easy-digital-downloads' ), __( 'Discount Codes', 'easy-digital-downloads' ), 'manage_shop_discounts', 'edd-discounts', 'edd_discounts_page' );
-	$edd_reports_page       = add_submenu_page( 'edit.php?post_type=download', __( 'Earnings and Sales Reports', 'easy-digital-downloads' ), __( 'Reports', 'easy-digital-downloads' ), 'view_shop_reports', 'edd-reports', 'edd_reports_page' );
 	$edd_settings_page      = add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Download Settings', 'easy-digital-downloads' ), __( 'Settings', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-settings', 'edd_options_page' );
 	$edd_tools_page         = add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Download Info and Tools', 'easy-digital-downloads' ), __( 'Tools', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-tools', 'edd_tools_page' );
 	$edd_add_ons_page       = add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Download Extensions', 'easy-digital-downloads' ), __( 'Extensions', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-addons', 'edd_add_ons_page' );

@@ -62,21 +62,29 @@ function edd_get_discounts( $args = array() ) {
  * @since 1.0
  * @return bool
  */
-function edd_has_active_discounts() {
-	$has_active = false;
-
-	$discounts  = edd_get_discounts();
-
-	if ( $discounts) {
-		foreach ( $discounts as $discount ) {
-			if ( edd_is_discount_active( $discount->ID ) ) {
-				$has_active = true;
-				break;
-			}
-		}
-	}
-	return $has_active;
-}
+function edd_has_active_discounts() { 
+	$discounts = edd_get_discounts( 
+		array( 
+			'post_status' => 'active',  
+			'posts_per_page' => 100,  
+			'fields' => 'ids' 
+   		) 
+    ); 
+   
+	// When there are no discounts found anymore there are no active ones. 
+	if ( ! is_array( $discounts ) || array() === $discounts ) { 
+		return false; 
+	} 
+   
+	foreach ( $discounts as $discount ) { 
+		// If we catch an active one, we can quit and return true. 
+		if ( edd_is_discount_active( $discount, false ) ) { 
+			return true; 
+		} 
+	} 
+   
+	return false; 
+  } 
 
 
 /**
@@ -194,7 +202,7 @@ function edd_get_discount_by( $field = '', $value = '' ) {
  * @since 1.0
  * @param string $details
  * @param int $discount_id
- * @return bool Whether or not discount code was created
+ * @return int The discount ID of the discount code, or WP_Error on failure.
  */
 function edd_store_discount( $details, $discount_id = null ) {
 
@@ -286,13 +294,34 @@ function edd_store_discount( $details, $discount_id = null ) {
 		$discount_id = wp_insert_post( array(
 			'post_type'   => 'edd_discount',
 			'post_title'  => $meta['name'],
-			'post_status' => 'active'
+			'post_status' => $meta['status']
 		) );
 
 		foreach( $meta as $key => $value ) {
 			update_post_meta( $discount_id, '_edd_discount_' . $key, $value );
 		}
 
+		/**
+		 * Fires after the discount code is inserted.
+		 *
+		 * @param array $meta {
+		 *     The discount details.
+		 *
+		 *     @type string $code              The discount code.
+		 *     @type string $name              The name of the discount.
+		 *     @type string $status            The discount status. Defaults to active.
+		 *     @type int    $uses              The current number of uses.
+		 *     @type int    $max_uses          The max number of uses.
+		 *     @type string $start             The start date.
+		 *     @type int    $min_price         The minimum price required to use the discount code.
+		 *     @type array  $product_reqs      The product IDs required to use the discount code.
+		 *     @type string $product_condition The conditions in which a product(s) must meet to use the discount code.
+		 *     @type array  $excluded_products Product IDs excluded from this discount code.
+		 *     @type bool   $is_not_global     If the discount code is not globally applied to all products. Defaults to false.
+		 *     @type bool   $is_single_use     If the code cannot be used more than once per customer. Defaults to false.
+		 * }
+		 * @param int $discount_id The ID of the discount that was inserted.
+		 */
 		do_action( 'edd_post_insert_discount', $meta, $discount_id );
 
 		// Discount code created
@@ -990,6 +1019,11 @@ function edd_get_discounted_amount( $code, $base_price ) {
 function edd_increase_discount_usage( $code ) {
 
 	$id   = edd_get_discount_id_by_code( $code );
+
+	if ( false === $id ) {
+		return false;
+	}
+
 	$uses = edd_get_discount_uses( $id );
 
 	if ( $uses ) {
@@ -1018,6 +1052,11 @@ function edd_increase_discount_usage( $code ) {
 function edd_decrease_discount_usage( $code ) {
 
 	$id   = edd_get_discount_id_by_code( $code );
+
+	if ( false === $id ) {
+		return false;
+	}
+
 	$uses = edd_get_discount_uses( $id );
 
 	if ( $uses ) {

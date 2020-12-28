@@ -307,7 +307,7 @@ function edd_get_registered_settings() {
 						'name' => __( 'Allow Usage Tracking?', 'easy-digital-downloads' ),
 						'desc' => sprintf(
 							__( 'Allow Easy Digital Downloads to anonymously track how this plugin is used and help us make the plugin better. Opt-in to tracking and our newsletter and immediately be emailed a 20&#37; discount to the EDD shop, valid towards the <a href="%s" target="_blank">purchase of extensions</a>. No sensitive data is tracked.', 'easy-digital-downloads' ),
-							'https://easydigitaldownloads.com/extensions?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
+							'https://easydigitaldownloads.com/downloads/?utm_source=' . substr( md5( get_bloginfo( 'name' ) ), 0, 10 ) . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking'
 						),
 						'type' => 'checkbox',
 					),
@@ -343,7 +343,7 @@ function edd_get_registered_settings() {
 						'desc' => __( 'The symbol (usually , or .) to separate thousands', 'easy-digital-downloads' ),
 						'type' => 'text',
 						'size' => 'small',
-						'std'  => ',',
+						'std'  => '',
 					),
 					'decimal_separator' => array(
 						'id'   => 'decimal_separator',
@@ -911,6 +911,11 @@ function edd_settings_sanitize( $input = array() ) {
 	if ( 'main' === $section )  {
 		// Check for extensions that aren't using new sections
 		$input = apply_filters( 'edd_settings_' . $tab . '_sanitize', $input );
+
+		// Check for an override on the section for when main is empty
+		if ( ! empty( $_POST['edd_section_override'] ) ) {
+			$section = sanitize_text_field( $_POST['edd_section_override'] );
+		}
 	}
 
 	// Loop through each setting being saved and pass it through a sanitization filter
@@ -994,11 +999,6 @@ function edd_settings_sanitize_misc_accounting( $input ) {
 
 	if( ! current_user_can( 'manage_shop_settings' ) ) {
 		return $input;
-	}
-
-	if( edd_get_file_download_method() != $input['download_method'] || ! edd_htaccess_exists() ) {
-		// Force the .htaccess files to be updated if the Download method was changed.
-		edd_create_protection_files( true, $input['download_method'] );
 	}
 
 	if( ! empty( $input['enable_sequential'] ) && ! edd_get_option( 'enable_sequential' ) ) {
@@ -2033,3 +2033,20 @@ function edd_set_settings_cap() {
 	return 'manage_shop_settings';
 }
 add_filter( 'option_page_capability_edd_settings', 'edd_set_settings_cap' );
+
+/**
+ * Sanitize HTML Class Names
+ *
+ * @since 2.6.11
+ * @param  string|array $class HTML Class Name(s)
+ * @return string $class
+ */
+function edd_sanitize_html_class( $class = '' ) {
+	if ( is_string( $class ) ) {
+		$class = sanitize_html_class( $class );
+	} else if ( is_array( $class ) ) {
+		$class = array_values( array_map( 'sanitize_html_class', $class ) );
+		$class = implode( ' ', array_unique( $class ) );
+	}
+	return $class;
+}

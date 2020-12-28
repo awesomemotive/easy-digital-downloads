@@ -81,6 +81,12 @@ class EDD_Welcome {
 			'edd-credits',
 			array( $this, 'credits_screen' )
 		);
+
+		// Now remove them from the menus so plugins that allow customizing the admin menu don't show them
+		remove_submenu_page( 'index.php', 'edd-about' );
+		remove_submenu_page( 'index.php', 'edd-changelog' );
+		remove_submenu_page( 'index.php', 'edd-getting-started' );
+		remove_submenu_page( 'index.php', 'edd-credits' );
 	}
 
 	/**
@@ -91,11 +97,6 @@ class EDD_Welcome {
 	 * @return void
 	 */
 	public function admin_head() {
-		remove_submenu_page( 'index.php', 'edd-about' );
-		remove_submenu_page( 'index.php', 'edd-changelog' );
-		remove_submenu_page( 'index.php', 'edd-getting-started' );
-		remove_submenu_page( 'index.php', 'edd-credits' );
-
 		?>
 		<style type="text/css" media="screen">
 			/*<![CDATA[*/
@@ -381,11 +382,11 @@ class EDD_Welcome {
 				<div class="feature-section two-col">
 					<div class="col">
 						<h4><?php _e( 'Phenomenal Support','easy-digital-downloads' );?></h4>
-						<p><?php _e( 'We do our best to provide the best support we can. If you encounter a problem or have a question, simply open a ticket using our <a href="https://easydigitaldownloads.com/support">support form</a>.', 'easy-digital-downloads' );?></p>
+						<p><?php _e( 'We do our best to provide the best support we can. If you encounter a problem or have a question, simply open a ticket using our <a href="https://easydigitaldownloads.com/support/?utm_source=plugin-welcome-page&utm_medium=support-link&utm_term=support&utm_campaign=EDDWelcomeSupport">support form</a>.', 'easy-digital-downloads' );?></p>
 					</div>
 					<div class="col">
 						<h4><?php _e( 'Need Even Faster Support?', 'easy-digital-downloads' );?></h4>
-						<p><?php _e( 'Our <a href="https://easydigitaldownloads.com/support/pricing/">Priority Support</a> system is there for customers that need faster and/or more in-depth assistance.', 'easy-digital-downloads' );?></p>
+						<p><?php _e( 'Our <a href="https://easydigitaldownloads.com/support/pricing/?utm_source=plugin-welcome-page&utm_medium=support-link&utm_term=priority-support&utm_campaign=EDDWelcomeSupport">Priority Support</a> system is there for customers that need faster and/or more in-depth assistance.', 'easy-digital-downloads' );?></p>
 					</div>
 				</div>
 			</div>
@@ -413,7 +414,7 @@ class EDD_Welcome {
 					</div>
 					<div class="col">
 						<h4><?php _e( 'Visit the Extension Store', 'easy-digital-downloads' );?></h4>
-						<p><?php _e( '<a href="https://easydigitaldownloads.com/downloads" target="_blank">The Extensions store</a> has a list of all available extensions, including convenient category filters so you can find exactly what you are looking for.', 'easy-digital-downloads' );?></p>
+						<p><?php _e( '<a href="https://easydigitaldownloads.com/downloads/?utm_source=plugin-welcome-page&utm_medium=extensions-link&utm_term=extensions&utm_campaign=EDDWelcomeExtensions" target="_blank">The Extensions store</a> has a list of all available extensions, including convenient category filters so you can find exactly what you are looking for.', 'easy-digital-downloads' );?></p>
 					</div>
 				</div>
 			</div>

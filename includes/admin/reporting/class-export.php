@@ -53,7 +53,7 @@ class EDD_Export {
 
 		nocache_headers();
 		header( 'Content-Type: text/csv; charset=utf-8' );
-		header( 'Content-Disposition: attachment; filename=edd-export-' . $this->export_type . '-' . date( 'm-d-Y' ) . '.csv' );
+		header( 'Content-Disposition: attachment; filename=export-' . $this->export_type . '-' . date( 'm-d-Y' ) . '.csv' );
 		header( "Expires: 0" );
 	}
 

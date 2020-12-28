@@ -40,7 +40,7 @@ class EDD_HTML_Elements {
 			'chosen'      => false,
 			'number'      => 30,
 			'bundles'     => true,
-			'placeholder' => sprintf( __( 'Select a %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
+			'placeholder' => sprintf( __( 'Choose a %s', 'easy-digital-downloads' ), edd_get_label_singular() ),
 			'data'        => array( 'search-type' => 'download' ),
 		);
 
@@ -65,17 +65,13 @@ class EDD_HTML_Elements {
 			);
 		}
 
-		$products = get_posts( $product_args );
-
-		$options = array();
-
+		$products   = get_posts( $product_args );
+		$options    = array();
+		$options[0] = '';
 		if ( $products ) {
-			$options[0] = sprintf( __( 'Select a %s', 'easy-digital-downloads' ), edd_get_label_singular() );
 			foreach ( $products as $product ) {
 				$options[ absint( $product->ID ) ] = esc_html( $product->post_title );
 			}
-		} else {
-			$options[0] = __( 'No products found', 'easy-digital-downloads' );
 		}
 
 		// This ensures that any selected products are included in the drop down
@@ -145,7 +141,10 @@ class EDD_HTML_Elements {
 		if ( $customers ) {
 			$options[0] = __( 'No customer attached', 'easy-digital-downloads' );
 			foreach ( $customers as $customer ) {
-				$options[ absint( $customer->id ) ] = esc_html( $customer->name . ' (' . $customer->email . ')' );
+				$name = apply_filters( 'lms_filter_sensitive__customer_name', $customer->name, $customer->user_id, $customer->email );
+				$email = apply_filters( 'lms_filter_sensitive__customer_email', $customer->email, $customer->user_id, $customer->email );
+
+				$options[ absint( $customer->id ) ] = esc_html( $name . ' (' . $email . ')' );
 			}
 		} else {
 			$options[0] = __( 'No customers found', 'easy-digital-downloads' );
@@ -160,8 +159,10 @@ class EDD_HTML_Elements {
 				$customer = new EDD_Customer( $args['selected'] );
 
 				if( $customer ) {
+					$name = apply_filters( 'lms_filter_sensitive__customer_name', $customer->name, $customer->user_id, $customer->email );
+					$email = apply_filters( 'lms_filter_sensitive__customer_email', $customer->email, $customer->user_id, $customer->email );
 
-					$options[ absint( $args['selected'] ) ] = esc_html( $customer->name . ' (' . $customer->email . ')' );
+					$options[ absint( $args['selected'] ) ] = esc_html( $name . ' (' . $email . ')' );
 
 				}
 
@@ -182,6 +183,66 @@ class EDD_HTML_Elements {
 			'data'             => $args['data'],
 		) );
 
+		return $output;
+	}
+
+	/**
+	 * Renders an HTML Dropdown of all the Users
+	 *
+	 * @since 2.6.9
+	 * @param array $args
+	 * @return string $output User dropdown
+	 */
+	public function user_dropdown( $args = array() ) {
+		$defaults = array(
+			'name'        => 'users',
+			'id'          => 'users',
+			'class'       => '',
+			'multiple'    => false,
+			'selected'    => 0,
+			'chosen'      => true,
+			'placeholder' => __( 'Select a User', 'easy-digital-downloads' ),
+			'number'      => 30,
+			'data'        => array(
+				'search-type'        => 'user',
+				'search-placeholder' => __( 'Type to search all Users', 'easy-digital-downloads' ),
+			),
+		);
+		$args = wp_parse_args( $args, $defaults );
+		$user_args = array(
+			'number' => $args['number'],
+		);
+		$users   = get_users( $user_args );
+		$options = array();
+		if ( $users ) {
+			foreach ( $users as $user ) {
+				$options[ $user->ID ] = esc_html( $user->display_name );
+			}
+		} else {
+			$options[0] = __( 'No users found', 'easy-digital-downloads' );
+		}
+		// If a selected user has been specified, we need to ensure it's in the initial list of user displayed
+		if( ! empty( $args['selected'] ) ) {
+			if( ! array_key_exists( $args['selected'], $options ) ) {
+				$user = get_userdata( $args['selected'] );
+				if( $user ) {
+					$options[ absint( $args['selected'] ) ] = esc_html( $user->display_name );
+				}
+			}
+		}
+		$output = $this->select( array(
+			'name'             => $args['name'],
+			'selected'         => $args['selected'],
+			'id'               => $args['id'],
+			'class'            => $args['class'] . ' edd-user-select',
+			'options'          => $options,
+			'multiple'         => $args['multiple'],
+			'placeholder'      => $args['placeholder'],
+			'chosen'           => $args['chosen'],
+			'show_option_all'  => false,
+			'show_option_none' => false,
+			'data'             => $args['data'],
+		) );
 		return $output;
 	}
 
@@ -217,7 +278,7 @@ class EDD_HTML_Elements {
 			'selected'         => $selected,
 			'options'          => $options,
 			'show_option_all'  => false,
-			'show_option_none' => false,
+			'show_option_none' => __( 'Select a discount', 'easy-digital-downloads' ),
 		) );
 
 		return $output;
@@ -487,7 +548,9 @@ class EDD_HTML_Elements {
 
 		$output = '<span id="edd-' . edd_sanitize_key( $args['name'] ) . '-wrap">';
 
-			$output .= '<label class="edd-label" for="' . edd_sanitize_key( $args['id'] ) . '">' . esc_html( $args['label'] ) . '</label>';
+			if( !empty($args['label'])) {
+				$output .= '<label class="edd-label" for="' . edd_sanitize_key( $args['id'] ) . '">' . esc_html( $args['label'] ) . '</label>';
+			}
 
 			if ( ! empty( $args['desc'] ) ) {
 				$output .= '<span class="edd-description">' . esc_html( $args['desc'] ) . '</span>';

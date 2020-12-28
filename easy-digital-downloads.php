@@ -1,31 +1,10 @@
 <?php
 /**
- * Plugin Name: Easy Digital Downloads
- * Plugin URI: https://easydigitaldownloads.com
- * Description: Serve Digital Downloads Through WordPress.
- * Author: Pippin Williamson and Company
- * Author URI: https://easydigitaldownloads.com
- * Version: 2.5.7
- * Text Domain: easy-digital-downloads
+ * Plugin Name: WPI Cart (based on Easy Digital Downloads)
+ * Description: The easiest way to sell digital products with WordPress.
+ * Version: 1.0
  * Domain Path: languages
  *
- * Easy Digital Downloads is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * any later version.
- *
- * Easy Digital Downloads is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with Easy Digital Downloads. If not, see <http://www.gnu.org/licenses/>.
- *
- * @package EDD
- * @category Core
- * @author Pippin Williamson
- * @version 2.5.7
  */
 
 // Exit if accessed directly.
@@ -114,6 +93,14 @@ final class Easy_Digital_Downloads {
 	public $customers;
 
 	/**
+	 * EDD Customer meta DB Object.
+	 *
+	 * @var object|EDD_DB_Customer_Meta
+	 * @since 2.6
+	 */
+	public $customer_meta;
+
+	/**
 	 * Main Easy_Digital_Downloads Instance.
 	 *
 	 * Insures that only one instance of Easy_Digital_Downloads exists in memory at any one
@@ -144,6 +131,7 @@ final class Easy_Digital_Downloads {
 			self::$instance->emails     = new EDD_Emails();
 			self::$instance->email_tags = new EDD_Email_Template_Tags();
 			self::$instance->customers  = new EDD_DB_Customers();
+			self::$instance->customer_meta = new EDD_DB_Customer_Meta();
 		}
 		return self::$instance;
 	}
@@ -186,7 +174,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '2.5.7' );
+			define( 'EDD_VERSION', '2.5.18' );
 		}
 
 		// Plugin Folder Path.
@@ -237,6 +225,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-customers.php';
+		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-customer-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-download.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cache-helper.php';
@@ -246,7 +235,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-cron.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-fees.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-html-elements.php';
-		require_once EDD_PLUGIN_DIR . 'includes/class-edd-license-handler.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-logging.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-session.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-stats.php';

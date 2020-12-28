@@ -98,7 +98,7 @@ window.EDD_Checkout = (function($) {
 					withCredentials: true
 				},
 				success: function (response) {
-					if( 'nostates' == response ) {
+					if( 'nostates' == $.trim(response) ) {
 						var text_field = '<input type="text" name="card_state" class="cart-state edd-input required" value=""/>';
 						$form.find('input[name="card_state"], select[name="card_state"]').replaceWith( text_field );
 					} else {
@@ -227,13 +227,17 @@ window.EDD_Checkout = (function($) {
 
 						recalculate_taxes();
 
+						var inputs = $('#edd_cc_fields .edd-input, #edd_cc_fields .edd-select,#edd_cc_address .edd-input, #edd_cc_address .edd-select,#edd_payment_mode_select .edd-input, #edd_payment_mode_select .edd-select');
+
 						if( '0.00' == discount_response.total_plain ) {
 
 							$('#edd_cc_fields,#edd_cc_address,#edd_payment_mode_select').slideUp();
+							inputs.removeAttr('required');
 							$('input[name="edd-gateway"]').val( 'manual' );
 
 						} else {
 
+							inputs.attr('required','required');
 							$('#edd_cc_fields,#edd_cc_address').slideDown();
 
 						}

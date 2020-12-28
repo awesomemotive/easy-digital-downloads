@@ -42,6 +42,9 @@ function edd_setup_edd_post_types() {
 		'set_featured_image'    => __( 'Set %1$s Image', 'easy-digital-downloads' ),
 		'remove_featured_image' => __( 'Remove %1$s Image', 'easy-digital-downloads' ),
 		'use_featured_image'    => __( 'Use as %1$s Image', 'easy-digital-downloads' ),
+		'filter_items_list'     => __( 'Filter %2$s list', 'easy-digital-downloads' ),
+		'items_list_navigation' => __( '%2$s list navigation', 'easy-digital-downloads' ),
+		'items_list'            => __( '%2$s list', 'easy-digital-downloads' ),
 	) );
 
 	foreach ( $download_labels as $key => $value ) {
@@ -60,6 +63,7 @@ function edd_setup_edd_post_types() {
 		'map_meta_cap'       => true,
 		'has_archive'        => $archives,
 		'hierarchical'       => false,
+		'show_in_rest'       => true,
 		'supports'           => apply_filters( 'edd_download_supports', array( 'title', 'editor', 'thumbnail', 'excerpt', 'revisions', 'author' ) ),
 	);
 	register_post_type( 'download', apply_filters( 'edd_download_post_type_args', $download_args ) );

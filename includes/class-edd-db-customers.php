@@ -35,8 +35,7 @@ class EDD_DB_Customers extends EDD_DB  {
 		$this->primary_key = 'id';
 		$this->version     = '1.0';
 
-		add_action( 'profile_update', array( $this, 'update_customer_email_on_user_update' ), 10, 2 );
-
+        add_action('profile_update', [$this, 'update_customer_email_on_user_update'], 10, 2);
 	}
 
 	/**

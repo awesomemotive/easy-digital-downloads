@@ -92,7 +92,9 @@ function edd_email_preview_template_tags( $message ) {
 	$message = str_replace( '{payment_id}', $payment_id, $message );
 	$message = str_replace( '{receipt_link}', sprintf( __( '%1$sView it in your browser.%2$s', 'easy-digital-downloads' ), '<a href="' . esc_url( add_query_arg( array ( 'payment_key' => $receipt_id, 'edd_action' => 'view_receipt' ), home_url() ) ) . '">', '</a>' ), $message );
 
-	return wpautop( apply_filters( 'edd_email_preview_template_tags', $message ) );
+	$message = apply_filters( 'edd_email_preview_template_tags', $message );
+
+	return apply_filters( 'edd_email_template_wpautop', true ) ? wpautop( $message ) : $message;
 }
 
 /**
@@ -109,7 +111,7 @@ function edd_email_template_preview() {
 	ob_start();
 	?>
 	<a href="<?php echo esc_url( add_query_arg( array( 'edd_action' => 'preview_email' ), home_url() ) ); ?>" class="button-secondary" target="_blank" title="<?php _e( 'Purchase Receipt Preview', 'easy-digital-downloads' ); ?> "><?php _e( 'Preview Purchase Receipt', 'easy-digital-downloads' ); ?></a>
-	<a href="<?php echo wp_nonce_url( add_query_arg( array( 'edd_action' => 'send_test_email' ) ), 'edd-test-email' ); ?>" title="<?php _e( 'This will send a demo purchase receipt to the emails listed below.', 'easy-digital-downloads' ); ?>" class="button-secondary"><?php _e( 'Send Test Email', 'easy-digital-downloads' ); ?></a>
+	<a href="<?php echo wp_nonce_url( add_query_arg( array( 'edd_action' => 'send_test_email' ) ), 'edd-test-email' ); ?>" class="button-secondary"><?php _e( 'Send Test Email', 'easy-digital-downloads' ); ?></a>
 	<?php
 	echo ob_get_clean();
 }
@@ -162,7 +164,7 @@ function edd_get_email_body_content( $payment_id = 0, $payment_data = array() ) 
 	$email = edd_get_option( 'purchase_receipt', false );
 	$email = $email ? stripslashes( $email ) : $default_email_body;
 
-	$email_body = wpautop( $email );
+	$email_body = apply_filters( 'edd_email_template_wpautop', true ) ? wpautop( $email ) : $email;
 
 	$email_body = apply_filters( 'edd_purchase_receipt_' . EDD()->emails->get_template(), $email_body, $payment_id, $payment_data );
 
@@ -212,8 +214,8 @@ function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data 
 	$default_email_body = __( 'Hello', 'easy-digital-downloads' ) . "\n\n" . sprintf( __( 'A %s purchase has been made', 'easy-digital-downloads' ), edd_get_label_plural() ) . ".\n\n";
 	$default_email_body .= sprintf( __( '%s sold:', 'easy-digital-downloads' ), edd_get_label_plural() ) . "\n\n";
 	$default_email_body .= $download_list . "\n\n";
-	$default_email_body .= __( 'Purchased by: ', 'easy-digital-downloads' ) . " " . html_entity_decode( $name, ENT_COMPAT, 'UTF-8' ) . "\n";
-	$default_email_body .= __( 'Amount: ', 'easy-digital-downloads' ) . " " . html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ) ), ENT_COMPAT, 'UTF-8' ) . "\n";
+	$default_email_body .= __( 'Purchased by: ', 'easy-digital-downloads' ) . " " . html_entity_decode( $name, ENT_COMPAT, 'UTF-8' ) . "\n\n";
+	$default_email_body .= __( 'Amount: ', 'easy-digital-downloads' ) . " " . html_entity_decode( edd_currency_filter( edd_format_amount( edd_get_payment_amount( $payment_id ) ) ), ENT_COMPAT, 'UTF-8' ) . "\n\n";
 	$default_email_body .= __( 'Payment Method: ', 'easy-digital-downloads' ) . " " . $gateway . "\n\n";
 	$default_email_body .= __( 'Thank you', 'easy-digital-downloads' );
 
@@ -223,7 +225,9 @@ function edd_get_sale_notification_body_content( $payment_id = 0, $payment_data 
 	//$email_body = edd_email_template_tags( $email, $payment_data, $payment_id, true );
 	$email_body = edd_do_email_tags( $email, $payment_id );
 
-	return apply_filters( 'edd_sale_notification', wpautop( $email_body ), $payment_id, $payment_data );
+	$email_body = apply_filters( 'edd_email_template_wpautop', true ) ? wpautop( $email_body ) : $email_body;
+
+	return apply_filters( 'edd_sale_notification', $email_body, $payment_id, $payment_data );
 }
 
 /**

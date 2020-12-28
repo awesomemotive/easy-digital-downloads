@@ -120,16 +120,26 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 	 * @return string Column Name
 	 */
 	public function column_default( $item, $column_name ) {
-		switch ( $column_name ) {
-			case 'download' :
-				return '<a href="' . add_query_arg( 'download', $item[ $column_name ] ) . '" >' . get_the_title( $item[ $column_name ] ) . '</a>';
-			case 'user_id' :
-				return $item[ $column_name ] ? '<a href="' . add_query_arg( 'user', $item[ $column_name ] ) . '">' . $item['user_name'] . '</a>' : $item['user_name'];
-			case 'payment_id' :
-				return $item['payment_id'] !== false ? '<a href="' . admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $item['payment_id'] ) . '">' . edd_get_payment_number( $item['payment_id'] ) . '</a>' : '';
-			default:
-				return $item[ $column_name ];
-		}
+        $base_url = remove_query_arg( 'paged' );
+        switch ( $column_name ) {
+            case 'download':
+                $download      = new EDD_Download( $item[ $column_name ] );
+                $column_value  = $download->get_name();
+
+                if ( false !== $item['price_id'] ) {
+                    $column_value .= ' &mdash; ' . edd_get_price_option_name( $download->ID, $item['price_id'] );
+                }
+
+                return '<a href="' . esc_url( add_query_arg( 'download', $download->ID, $base_url ) ) . '" >' . $column_value . '</a>';
+            case 'user_id':
+                return '<a href="' . esc_url( add_query_arg( 'user', $item[ $column_name ], $base_url ) ) . '">' . $item['user_name'] . '</a>';
+            case 'payment_id':
+                return false !== $item['payment_id'] ? '<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . esc_attr( $item['payment_id'] ) ) ) . '">' . edd_get_payment_number( $item['payment_id'] ) . '</a>' : '';
+            case 'ip':
+                return '<a href="' . esc_url( 'https://ipinfo.io/' . $item['ip'] ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $item['ip'] ) . '</a>';
+            default:
+                return $item[ $column_name ];
+        }
 	}
 
 	/**
@@ -402,13 +412,21 @@ class EDD_File_Downloads_Log_Table extends WP_List_Table {
 				$file_id   = $file_id !== false ? $file_id : 0;
 				$file_name = isset( $files[ $file_id ]['name'] ) ? $files[ $file_id ]['name'] : null;
 
+				$user_id = $user_id ? $user_id : edd_get_payment_user_id( $payment_id );
+				
+				// filter sensitive data
+				$ip 			= apply_filters( 'lms_filter_sensitive__customer_ip',  $ip, $user_id, $user_info['email'] );
+				$user_email 	= isset( $user_info['email'] ) ? apply_filters( 'lms_filter_sensitive__customer_name', $user_info['email'], $user_id, $user_info['email'] ) : null;
+				$user_name 		= isset( $user_info['email'] ) ? $user_info['email'] : ( isset( $user_info['name'] ) ? $user_info['name'] : '' );
+				$user_name 		= apply_filters( 'lms_filter_sensitive__customer_name', $user_name, $user_id, $user_info['email']);
+
 				if ( ( $this->file_search && strpos( strtolower( $file_name ), strtolower( $this->get_search() ) ) !== false ) || ! $this->file_search ) {
 					$logs_data[] = array(
 						'ID'         => $log->ID,
 						'download'   => $log->post_parent,
 						'payment_id' => $payment_id,
-						'user_id'    => $user_id ? $user_id : ( isset( $user_info['email'] ) ? $user_info['email'] : null ),
-						'user_name'  => isset( $user_info['email'] ) ? $user_info['email'] : ( isset( $user_info['name'] ) ? $user_info['name'] : '' ),
+						'user_id'    => $user_id ? $user_id : ( isset( $user_email ) ? $user_email : null ),
+						'user_name'  => $user_name,
 						'file'       => $file_name,
 						'ip'         => $ip,
 						'date'       => $log->post_date,

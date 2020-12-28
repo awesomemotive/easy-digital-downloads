@@ -162,20 +162,34 @@ function edd_string_is_image_url( $str ) {
  */
 function edd_get_ip() {
 
-	$ip = '127.0.0.1';
+    $ip = false;
 
-	if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
-		//check ip from share internet
-		$ip = $_SERVER['HTTP_CLIENT_IP'];
-	} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
-		//to check ip is pass from proxy
-		$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-	} elseif( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
-		$ip = $_SERVER['REMOTE_ADDR'];
-	}
-	return apply_filters( 'edd_get_ip', $ip );
+    if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
+        // Check ip from share internet.
+        $ip = filter_var( wp_unslash( $_SERVER['HTTP_CLIENT_IP'] ), FILTER_VALIDATE_IP );
+    } elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+
+        // To check ip is pass from proxy.
+        // Can include more than 1 ip, first is the public one.
+
+        // WPCS: sanitization ok.
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        $ips = explode( ',', wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) );
+        if ( is_array( $ips ) ) {
+            $ip = filter_var( $ips[0], FILTER_VALIDATE_IP );
+        }
+    } elseif ( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
+        $ip = filter_var( wp_unslash( $_SERVER['REMOTE_ADDR'] ), FILTER_VALIDATE_IP );
+    }
+
+    $ip = false !== $ip ? $ip : '127.0.0.1';
+
+    // Fix potential CSV returned from $_SERVER variables.
+    $ip_array = explode( ',', $ip );
+    $ip_array = array_map( 'trim', $ip_array );
+
+    return apply_filters( 'edd_get_ip', $ip_array[0] );
 }
-
 
 /**
  * Get user host
@@ -186,36 +200,42 @@ function edd_get_ip() {
  * @return mixed string $host if detected, false otherwise
  */
 function edd_get_host() {
-	$host = false;
+    $host = false;
 
-	if( defined( 'WPE_APIKEY' ) ) {
-		$host = 'WP Engine';
-	} elseif( defined( 'PAGELYBIN' ) ) {
-		$host = 'Pagely';
-	} elseif( DB_HOST == 'localhost:/tmp/mysql5.sock' ) {
-		$host = 'ICDSoft';
-	} elseif( DB_HOST == 'mysqlv5' ) {
-		$host = 'NetworkSolutions';
-	} elseif( strpos( DB_HOST, 'ipagemysql.com' ) !== false ) {
-		$host = 'iPage';
-	} elseif( strpos( DB_HOST, 'ipowermysql.com' ) !== false ) {
-		$host = 'IPower';
-	} elseif( strpos( DB_HOST, '.gridserver.com' ) !== false ) {
-		$host = 'MediaTemple Grid';
-	} elseif( strpos( DB_HOST, '.pair.com' ) !== false ) {
-		$host = 'pair Networks';
-	} elseif( strpos( DB_HOST, '.stabletransit.com' ) !== false ) {
-		$host = 'Rackspace Cloud';
-	} elseif( strpos( DB_HOST, '.sysfix.eu' ) !== false ) {
-		$host = 'SysFix.eu Power Hosting';
-	} elseif( strpos( $_SERVER['SERVER_NAME'], 'Flywheel' ) !== false ) {
-		$host = 'Flywheel';
-	} else {
-		// Adding a general fallback for data gathering
-		$host = 'DBH: ' . DB_HOST . ', SRV: ' . $_SERVER['SERVER_NAME'];
-	}
+    if( defined( 'WPE_APIKEY' ) ) {
+        $host = 'WP Engine';
+    } elseif( defined( 'PAGELYBIN' ) ) {
+        $host = 'Pagely';
+    } elseif( DB_HOST == 'localhost:/tmp/mysql5.sock' ) {
+        $host = 'ICDSoft';
+    } elseif( DB_HOST == 'mysqlv5' ) {
+        $host = 'NetworkSolutions';
+    } elseif( strpos( DB_HOST, 'ipagemysql.com' ) !== false ) {
+        $host = 'iPage';
+    } elseif( strpos( DB_HOST, 'ipowermysql.com' ) !== false ) {
+        $host = 'IPower';
+    } elseif( strpos( DB_HOST, '.gridserver.com' ) !== false ) {
+        $host = 'MediaTemple Grid';
+    } elseif( strpos( DB_HOST, '.pair.com' ) !== false ) {
+        $host = 'pair Networks';
+    } elseif( strpos( DB_HOST, '.stabletransit.com' ) !== false ) {
+        $host = 'Rackspace Cloud';
+    } elseif( strpos( DB_HOST, '.sysfix.eu' ) !== false ) {
+        $host = 'SysFix.eu Power Hosting';
+    } elseif( isset( $_SERVER['SERVER_NAME'] ) && strpos( sanitize_text_field( wp_unslash( $_SERVER['SERVER_NAME'] ) ), 'Flywheel' ) !== false ) {
+        $host = 'Flywheel';
+    } else {
+        $server_name = '';
 
-	return $host;
+        // Adding a general fallback for data gathering.
+        if ( isset( $_SERVER['SERVER_NAME'] ) ) {
+            $server_name = sanitize_text_field( wp_unslash( $_SERVER['SERVER_NAME'] ) );
+        }
+
+        $host = 'DBH: ' . DB_HOST . ', SRV: ' . $server_name;
+    }
+
+    return $host;
 }
 
 
@@ -275,10 +295,10 @@ function edd_is_host( $host = false ) {
 				if( strpos( DB_HOST, '.sysfix.eu' ) !== false )
 					$return = true;
 				break;
-			case 'flywheel':
-				if( strpos( $_SERVER['SERVER_NAME'], 'Flywheel' ) !== false )
-					$return = true;
-				break;
+            case 'flywheel':
+                if ( isset( $_SERVER['SERVER_NAME'] ) && strpos( sanitize_text_field( wp_unslash( $_SERVER['SERVER_NAME'] ) ), 'Flywheel' ) !== false )
+                    $return = true;
+                break;
 			default:
 				$return = false;
 		}
@@ -496,7 +516,7 @@ function edd_add_cache_busting( $url = '' ) {
  *   trigger or false to not trigger error.
  *
  * @param string  $function    The function that was called
- * @param string  $version     The version of WordPress that deprecated the function
+ * @param string  $version     The version of EDD that deprecated the function
  * @param string  $replacement Optional. The function that should have been called
  * @param array   $backtrace   Optional. Contains stack backtrace of deprecated function
  */
@@ -903,4 +923,18 @@ function edd_can_view_receipt( $payment_key = '' ) {
 	}
 
 	return (bool) apply_filters( 'edd_can_view_receipt', $return, $payment_key );
+}
+
+/**
+ * Is Debug Mode
+ *
+ * @since 2.8.7
+ * @return bool $ret True if debug mode is enabled, false otherwise
+ */
+function edd_is_debug_mode() {
+	$ret = edd_get_option( 'debug_mode', false );
+	if( defined( 'EDD_DEBUG_MODE' ) && EDD_DEBUG_MODE ) {
+		$ret = true;
+	}
+	return (bool) apply_filters( 'edd_is_debug_mode', $ret );
 }

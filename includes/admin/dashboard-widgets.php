@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_register_dashboard_widgets() {
 	if ( current_user_can( apply_filters( 'edd_dashboard_stats_cap', 'view_shop_reports' ) ) ) {
-		wp_add_dashboard_widget( 'edd_dashboard_sales', __('Easy Digital Downloads Sales Summary','easy-digital-downloads' ), 'edd_dashboard_sales_widget' );
+		wp_add_dashboard_widget( 'edd_dashboard_sales', __('Sales Summary','easy-digital-downloads' ), 'edd_dashboard_sales_widget' );
 	}
 }
 add_action('wp_dashboard_setup', 'edd_register_dashboard_widgets', 10 );
@@ -70,7 +70,7 @@ function edd_load_dashboard_sales_widget( ) {
 					<tr>
 						<?php $monthly_sales = $stats->get_sales( 0, 'this_month', false, array( 'publish', 'revoked' ) ); ?>
 						<td class="first t monthly_sales"><?php echo _n( 'Sale', 'Sales', $monthly_sales, 'easy-digital-downloads' ); ?></td>
-						<td class="b b-sales"><?php echo $monthly_sales; ?></td>
+						<td class="b b-sales"><?php echo edd_format_amount( $monthly_sales, false ); ?></td>
 					</tr>
 				</tbody>
 			</table>
@@ -88,7 +88,7 @@ function edd_load_dashboard_sales_widget( ) {
 					<tr>
 						<td class="first t sales">
 							<?php $last_month_sales = $stats->get_sales( 0, 'last_month', false, array( 'publish', 'revoked' ) ); ?>
-							<?php echo _n( 'Sale', 'Sales', $last_month_sales, 'easy-digital-downloads' ); ?>
+							<?php echo _n( 'Sale', 'Sales', edd_format_amount( $last_month_sales, false ), 'easy-digital-downloads' ); ?>
 						</td>
 						<td class="b b-last-month-sales">
 							<?php echo $last_month_sales; ?>
@@ -162,28 +162,38 @@ function edd_load_dashboard_sales_widget( ) {
 					<tr>
 						<td colspan="2">
 							<?php _e( 'Recent Purchases', 'easy-digital-downloads' ); ?>
-							<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>">&nbsp;&ndash;&nbsp;<?php _e( 'View All', 'easy-digital-downloads' ); ?></a>
+							<a href="<?php echo admin_url( 'admin.php?page=wp-idea-payment-history' ); ?>">&nbsp;&ndash;&nbsp;<?php _e( 'View All', 'easy-digital-downloads' ); ?></a>
 						</td>
 					</tr>
 				</thead>
 				<tbody>
 					<?php
 					foreach ( $payments as $payment ) { ?>
+						<?php
+							$user_id = $payment->user_info['id'];
+							$user_email = $payment->user_info['email'];
+
+							$email = apply_filters( 'lms_filter_sensitive__customer_email', $user_email, $user_id, $user_email );
+							$name = apply_filters( 'lms_filter_sensitive__customer_name', get_the_title( $payment->ID ), $user_id, $user_email );
+						?>
 						<tr>
 							<td class="edd_order_label">
-								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>" title="<?php printf( __( 'Purchase Details for Payment #%s', 'easy-digital-downloads' ), $payment->ID ); ?> ">
-									<?php echo get_the_title( $payment->ID ) ?>
-									&mdash; <?php echo $payment->user_info['email'] ?>
+								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'admin.php?page=wp-idea-payment-history&view=order-details' ) ); ?>" title="<?php printf( __( 'Purchase Details for Payment #%s', 'easy-digital-downloads' ), $payment->ID ); ?> ">
+									<?php echo $name ?>
+									&mdash; <?php echo $email ?>
 								</a>
-								<?php if ( $payment->user_info['id'] > 0 ) {
-									$user = get_user_by( 'id', $payment->user_info['id'] );
+								<?php if ( $user_id > 0 ) {
+									$user = get_user_by( 'id', $user_id );
 									if ( $user ) {
-										echo "(" . $user->data->user_login . ")";
+										$login = $user->data->user_login;
+										$login = apply_filters( 'lms_filter_sensitive__customer_login', $login, $user_id, $user_email );
+										
+										echo "(" . $login . ")";
 									}
 								} ?>
 							</td>
 							<td class="edd_order_price">
-								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details' ) ); ?>" title="<?php printf( __( 'Purchase Details for Payment #%s', 'easy-digital-downloads' ), $payment->ID ); ?> ">
+								<a href="<?php echo add_query_arg( 'id', $payment->ID, admin_url( 'admin.php?page=wp-idea-payment-history&view=order-details' ) ); ?>" title="<?php printf( __( 'Purchase Details for Payment #%s', 'easy-digital-downloads' ), $payment->ID ); ?> ">
 									<span class="edd_price_label"><?php echo edd_currency_filter( edd_format_amount( $payment->total ), edd_get_payment_currency_code( $payment->ID ) ); ?></span>
 								</a>
 							</td>

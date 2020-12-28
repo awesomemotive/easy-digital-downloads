@@ -90,4 +90,8 @@ if( edd_get_option( 'uninstall_on_delete' ) ) {
 	wp_clear_scheduled_hook( 'edd_daily_scheduled_events' );
 	wp_clear_scheduled_hook( 'edd_daily_cron' );
 	wp_clear_scheduled_hook( 'edd_weekly_cron' );
+
+	// Remove any transients we've left behind
+	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '_transient_edd_%'" );
+	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '_transient_timeout_edd_%'" );
 }

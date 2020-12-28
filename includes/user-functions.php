@@ -450,6 +450,10 @@ function edd_get_customer_address( $user_id = 0 ) {
 	}
 
 	$address = get_user_meta( $user_id, '_edd_user_address', true );
+	
+	if ( ! $address || ! is_array( $address ) || empty( $address ) ) {
+		$address = array();
+	}
 
 	if( ! isset( $address['line1'] ) )
 		$address['line1'] = '';
@@ -477,6 +481,8 @@ function edd_get_customer_address( $user_id = 0 ) {
  *
  * @access 		public
  * @since 		1.8.8
+ * @param int   $user_id
+ * @param array $user_data
  * @return 		void
  */
 function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
@@ -485,18 +491,31 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 		return;
 	}
 
-	$blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
-	$message  = sprintf( __( 'New user registration on your site %s:' ), $blogname ) . "\r\n\r\n";
-	$message .= sprintf( __( 'Username: %s'), $user_data['user_login'] ) . "\r\n\r\n";
-	$message .= sprintf( __( 'E-mail: %s'), $user_data['user_email'] ) . "\r\n";
+	$emails     = new EDD_Emails;
+	$from_name  = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );
+	$from_email = edd_get_option( 'from_email', get_bloginfo( 'admin_email' ) );
 
-	@wp_mail( get_option( 'admin_email' ), sprintf( __('[%s] New User Registration' ), $blogname ), $message );
+	$emails->__set( 'from_name', $from_name );
+	$emails->__set( 'from_email', $from_email );
 
-	$message  = sprintf( __( 'Username: %s' ), $user_data['user_login'] ) . "\r\n";
-	$message .= sprintf( __( 'Password: %s' ), __( '[Password entered at checkout]', 'easy-digital-downloads' ) ) . "\r\n";
-	$message .= wp_login_url() . "\r\n";
+	$admin_subject  = sprintf( __('[%s] New User Registration', 'easy-digital-downloads' ), $from_name );
+	$admin_heading  = __( 'New user registration', 'easy-digital-downloads' );
+	$admin_message  = sprintf( __( 'Username: %s', 'easy-digital-downloads'), $user_data['user_login'] ) . "\r\n\r\n";
+	$admin_message .= sprintf( __( 'E-mail: %s', 'easy-digital-downloads'), $user_data['user_email'] ) . "\r\n";
 
-	wp_mail( $user_data['user_email'], sprintf( __( '[%s] Your username and password' ), $blogname ), $message );
+	$emails->__set( 'heading', $admin_heading );
+
+	$emails->send( get_option( 'admin_email' ), $admin_subject, $admin_message );
+
+	$user_subject  = sprintf( __( '[%s] Your username and password', 'easy-digital-downloads' ), $from_name );
+	$user_heading  = __( 'Your account info', 'easy-digital-downloads' );
+	$user_message  = sprintf( __( 'Username: %s', 'easy-digital-downloads' ), $user_data['user_login'] ) . "\r\n";
+	$user_message .= sprintf( __( 'Password: %s' ), __( '[Password entered at checkout]', 'easy-digital-downloads' ) ) . "\r\n";
+	$user_message .= '<a href="' . wp_login_url() . '"> ' . esc_attr__( 'Click Here to Log In', 'easy-digital-downloads' ) . ' &raquo;</a>' . "\r\n";
+
+	$emails->__set( 'heading', $user_heading );
+
+	$emails->send( $user_data['user_email'], $user_subject, $user_message );
 
 }
 add_action( 'edd_insert_user', 'edd_new_user_notification', 10, 2 );
@@ -642,7 +661,6 @@ function edd_send_user_verification_email( $user_id = 0 ) {
 		return;
 	}
 
-	$verify_url = edd_get_user_verification_url( $user_id );
 	$name       = $user_data->display_name;
 	$url        = edd_get_user_verification_url( $user_id );
 	$from_name  = edd_get_option( 'from_name', wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES ) );

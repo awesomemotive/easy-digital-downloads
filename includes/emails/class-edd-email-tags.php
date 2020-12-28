@@ -208,7 +208,7 @@ function edd_get_emails_tags_list() {
 	$email_tags = edd_get_email_tags();
 
 	// Check
-	if ( count( $email_tags ) > 0 ) {
+	if ( is_array( $email_tags ) && count( $email_tags ) > 0 ) {
 
 		// Loop
 		foreach ( $email_tags as $email_tag ) {
@@ -451,11 +451,11 @@ function edd_email_tag_download_list( $payment_id ) {
 						if ( $show_links ) {
 							$download_list .= '<div>';
 							$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $bundle_item, $price_id );
-							$download_list .= '<a href="' . esc_url( $file_url ) . '">' . $file['name'] . '</a>';
+							$download_list .= '<a href="' . esc_url( $file_url ) . '">' . edd_get_file_name( $file ) . '</a>';
 							$download_list .= '</div>';
 						} else {
 							$download_list .= '<div>';
-							$download_list .= $file['name'];
+							$download_list .= edd_get_file_name( $file );
 							$download_list .= '</div>';
 						}
 					}
@@ -559,9 +559,9 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 					foreach ( $files as $filekey => $file ) {
 						if( $show_links ) {
 							$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $bundle_item, $price_id );
-							$download_list .= $file['name'] . ': ' . $file_url . "\n";
+							$download_list .= edd_get_file_name( $file ) . ': ' . $file_url . "\n";
 						} else {
-							$download_list .= $file['name'] . "\n";
+							$download_list .= edd_get_file_name( $file ) . "\n";
 						}
 					}
 				}
@@ -834,12 +834,22 @@ function edd_email_tag_sitename( $payment_id ) {
  * Email template tag: receipt_link
  * Adds a link so users can view their receipt directly on your website if they are unable to view it in the browser correctly
  *
- * @param $int payment_id
+ * @param $payment_id int
  *
  * @return string receipt_link
  */
 function edd_email_tag_receipt_link( $payment_id ) {
-	return sprintf( __( '%1$sView it in your browser.%2$s', 'easy-digital-downloads' ), '<a href="' . esc_url( add_query_arg( array( 'payment_key' => edd_get_payment_key( $payment_id ), 'edd_action' => 'view_receipt' ), home_url() ) ) . '">', '</a>' );
+	$receipt_url = esc_url( add_query_arg( array(
+		'payment_key' => edd_get_payment_key( $payment_id ),
+		'edd_action'  => 'view_receipt'
+	), home_url() ) );
+	$formatted   = sprintf( __( '%1$sView it in your browser %2$s', 'edd' ), '<a href="' . $receipt_url . '">', '&raquo;</a>' );
+
+	if ( edd_get_option( 'email_template' ) !== 'none' ) {
+		return $formatted;
+	} else {
+		return $receipt_url;
+	}
 }
 
 /**

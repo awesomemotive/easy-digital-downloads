@@ -396,24 +396,25 @@ function edd_default_cc_address_fields() {
 				<?php } ?>
 			</label>
 			<span class="edd-description"><?php _e( 'The state or province for your billing address.', 'easy-digital-downloads' ); ?></span>
-            <?php
-            $selected_state = edd_get_shop_state();
-            $states         = edd_get_shop_states( $selected_country );
+			<?php
+			$selected_state = edd_get_shop_state();
+			$states         = edd_get_shop_states( $selected_country );
 
-            if( ! empty( $customer['address']['state'] ) ) {
+			if( ! empty( $customer['address']['state'] ) ) {
 				$selected_state = $customer['address']['state'];
 			}
 
-            if( ! empty( $states ) ) : ?>
-            <select name="card_state" id="card_state" class="card_state edd-select<?php if( edd_field_is_required( 'card_state' ) ) { echo ' required'; } ?>">
-                <?php
-                    foreach( $states as $state_code => $state ) {
-                        echo '<option value="' . $state_code . '"' . selected( $state_code, $selected_state, false ) . '>' . $state . '</option>';
-                    }
-                ?>
-            </select>
-        	<?php else : ?>
-			<input type="text" size="6" name="card_state" id="card_state" class="card_state edd-input" placeholder="<?php _e( 'State / Province', 'easy-digital-downloads' ); ?>"/>
+			if( ! empty( $states ) ) : ?>
+			<select name="card_state" id="card_state" class="card_state edd-select<?php if( edd_field_is_required( 'card_state' ) ) { echo ' required'; } ?>">
+				<?php
+					foreach( $states as $state_code => $state ) {
+						echo '<option value="' . $state_code . '"' . selected( $state_code, $selected_state, false ) . '>' . $state . '</option>';
+					}
+				?>
+			</select>
+			<?php else : ?>
+			<?php $customer_state = ! empty( $customer['address']['state'] ) ? $customer['address']['state'] : ''; ?>
+			<input type="text" size="6" name="card_state" id="card_state" class="card_state edd-input" value="<?php echo esc_attr( $customer_state ); ?>" placeholder="<?php _e( 'State / Province', 'easy-digital-downloads' ); ?>"/>
 			<?php endif; ?>
 		</p>
 		<?php do_action( 'edd_cc_billing_bottom' ); ?>
@@ -589,10 +590,13 @@ function edd_payment_mode_select() {
 
 				foreach ( $gateways as $gateway_id => $gateway ) :
 
+					$label = apply_filters( 'edd_gateway_checkout_label_' . $gateway_id, $gateway['checkout_label'] );
 					$checked = checked( $gateway_id, edd_get_default_gateway(), false );
 					$checked_class = $checked ? ' edd-gateway-option-selected' : '';
-					echo '<label for="edd-gateway-' . esc_attr( $gateway_id ) . '" class="edd-gateway-option' . $checked_class . '" id="edd-gateway-option-' . esc_attr( $gateway_id ) . '">';
-						echo '<input type="radio" name="payment-mode" class="edd-gateway" id="edd-gateway-' . esc_attr( $gateway_id ) . '" value="' . esc_attr( $gateway_id ) . '"' . $checked . '>' . esc_html( $gateway['checkout_label'] );
+					$nonce = ' data-' . esc_attr( $gateway_id ) . '-nonce="' . wp_create_nonce( 'edd-gateway-selected-' . esc_attr( $gateway_id ) ) .'"';
+					
+					echo '<label for="edd-gateway-' . esc_attr( $gateway_id ) . '" class="edd-gateway-option' . $checked_class . '" id="edd-gateway-option-' . esc_attr( $gateway_id ) . '">';						
+					echo '<input type="radio" name="payment-mode" class="edd-gateway" id="edd-gateway-' . esc_attr( $gateway_id ) . '" value="' . esc_attr( $gateway_id ) . '"' . $checked . $nonce . '>' . esc_html( $label );
 					echo '</label>';
 				endforeach;
 
@@ -799,7 +803,7 @@ function edd_checkout_submit() {
 		<?php do_action( 'edd_purchase_form_after_submit' ); ?>
 
 		<?php if ( edd_is_ajax_disabled() ) { ?>
-			<p class="edd-cancel"><a href="javascript:history.go(-1)"><?php _e( 'Go back', 'easy-digital-downloads' ); ?></a></p>
+			<p class="edd-cancel"><a href="<?php echo edd_get_checkout_uri(); ?>"><?php _e( 'Go back', 'easy-digital-downloads' ); ?></a></p>
 		<?php } ?>
 	</fieldset>
 <?php
@@ -890,6 +894,7 @@ function edd_checkout_hidden_fields() {
 	<?php } ?>
 	<input type="hidden" name="edd_action" value="purchase"/>
 	<input type="hidden" name="edd-gateway" value="<?php echo edd_get_chosen_gateway(); ?>" />
+	<?php wp_nonce_field( 'edd-process-checkout', 'edd-process-checkout-nonce', false, true ); ?>
 <?php
 }
 

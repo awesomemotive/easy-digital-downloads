@@ -96,7 +96,7 @@ class EDD_Customer {
 	 */
 	public function __construct( $_id_or_email = false, $by_user_id = false ) {
 
-		$this->db = new EDD_DB_Customers;
+        $this->db = EDD()->customers;
 
 		if ( false === $_id_or_email || ( is_numeric( $_id_or_email ) && (int) $_id_or_email !== absint( $_id_or_email ) ) ) {
 			return false;
@@ -205,6 +205,11 @@ class EDD_Customer {
 			$args['payment_ids'] = implode( ',', array_unique( array_values( $args['payment_ids'] ) ) );
 		}
 
+		/**
+		 * Fires before a customer is created
+		 *
+		 * @param array $args Contains customer information such as payment ID, name, and email.
+		 */
 		do_action( 'edd_customer_pre_create', $args );
 
 		$created = false;
@@ -221,6 +226,12 @@ class EDD_Customer {
 			$created = $this->id;
 		}
 
+		/**
+		 * Fires after a customer is created
+		 *
+		 * @param int   $created If created successfully, the customer ID.  Defaults to false.
+		 * @param array $args Contains customer information such as payment ID, name, and email.
+		 */
 		do_action( 'edd_customer_post_create', $created, $args );
 
 		return $created;
@@ -638,6 +649,57 @@ class EDD_Customer {
 		}
 
 		return $data;
+	}
+	
+		/**
+	 * Retrieve customer meta field for a customer.
+	 *
+	 * @param   string $meta_key      The meta key to retrieve.
+	 * @param   bool   $single        Whether to return a single value.
+	 * @return  mixed                 Will be an array if $single is false. Will be value of meta data field if $single is true.
+	 *
+	 * @since   2.6
+	 */
+	public function get_meta( $meta_key = '', $single = true ) {
+		return EDD()->customer_meta->get_meta( $this->id, $meta_key, $single );
+	}
+	/**
+	 * Add meta data field to a customer.
+	 *
+	 * @param   string $meta_key      Metadata name.
+	 * @param   mixed  $meta_value    Metadata value.
+	 * @param   bool   $unique        Optional, default is false. Whether the same key should not be added.
+	 * @return  bool                  False for failure. True for success.
+	 *
+	 * @since   2.6
+	 */
+	public function add_meta( $meta_key = '', $meta_value, $unique = false ) {
+		return EDD()->customer_meta->add_meta( $this->id, $meta_key, $meta_value, $unique );
+	}
+	/**
+	 * Update customer meta field based on customer ID.
+	 *
+	 * @param   string $meta_key      Metadata key.
+	 * @param   mixed  $meta_value    Metadata value.
+	 * @param   mixed  $prev_value    Optional. Previous value to check before removing.
+	 * @return  bool                  False on failure, true if success.
+	 *
+	 * @since   2.6
+	 */
+	public function update_meta( $meta_key = '', $meta_value, $prev_value = '' ) {
+		return EDD()->customer_meta->update_meta( $this->id, $meta_key, $meta_value, $prev_value );
+	}
+	/**
+	 * Remove metadata matching criteria from a customer.
+	 *
+	 * @param   string $meta_key      Metadata name.
+	 * @param   mixed  $meta_value    Optional. Metadata value.
+	 * @return  bool                  False for failure. True for success.
+	 *
+	 * @since   2.6
+	 */
+	public function delete_meta( $meta_key = '', $meta_value = '' ) {
+		return EDD()->customer_meta->delete_meta( $this->id, $meta_key, $meta_value );
 	}
 
 }

@@ -9,6 +9,8 @@
  * @since       1.2
 */
 
+use bpmj\wpidea\wolverine\system\System;
+
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
@@ -23,8 +25,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_sanitize_amount( $amount ) {
 	$is_negative   = false;
-	$thousands_sep = edd_get_option( 'thousands_separator', ',' );
+	$thousands_sep = edd_get_option( 'thousands_separator', '' );
 	$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
+
+	if ( System::isDecimalPointComma() )
+	    $amount = str_replace( ',', '.', $amount );
 
 	// Sanitize the amount
 	if ( $decimal_sep == ',' && false !== ( $found = strpos( $amount, $decimal_sep ) ) ) {
@@ -81,7 +86,7 @@ function edd_sanitize_amount( $amount ) {
  * @return string $amount Newly formatted amount or Price Not Available
  */
 function edd_format_amount( $amount, $decimals = true ) {
-	$thousands_sep = edd_get_option( 'thousands_separator', ',' );
+	$thousands_sep = edd_get_option( 'thousands_separator', '' );
 	$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
 
 	// Format the amount

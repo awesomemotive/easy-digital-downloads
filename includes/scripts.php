@@ -46,10 +46,11 @@ function edd_load_scripts() {
 		wp_localize_script( 'edd-checkout-global', 'edd_global_vars', apply_filters( 'edd_global_checkout_script_vars', array(
 			'ajaxurl'            => edd_get_ajax_url(),
 			'checkout_nonce'     => wp_create_nonce( 'edd_checkout_nonce' ),
+			'checkout_error_anchor' => '#edd_purchase_submit',
 			'currency_sign'      => edd_currency_filter(''),
 			'currency_pos'       => edd_get_option( 'currency_position', 'before' ),
 			'decimal_separator'  => edd_get_option( 'decimal_separator', '.' ),
-			'thousands_separator'=> edd_get_option( 'thousands_separator', ',' ),
+			'thousands_separator'=> edd_get_option( 'thousands_separator', '' ),
 			'no_gateway'         => __( 'Please select a payment method', 'easy-digital-downloads' ),
 			'no_discount'        => __( 'Please enter a discount code', 'easy-digital-downloads' ), // Blank discount code message
 			'enter_discount'     => __( 'Enter discount', 'easy-digital-downloads' ),
@@ -215,6 +216,7 @@ function edd_load_admin_scripts( $hook ) {
 		'batch_export_no_class'   => __( 'You must choose a method.', 'easy-digital-downloads' ),
 		'batch_export_no_reqs'    => __( 'Required fields not completed.', 'easy-digital-downloads' ),
 		'reset_stats_warn'        => __( 'Are you sure you want to reset your store? This process is <strong><em>not reversible</em></strong>. Please be sure you have a recent backup.', 'easy-digital-downloads' ),
+		'search_placeholder'      => sprintf( __( 'Type to search all %s', 'easy-digital-downloads' ), edd_get_label_plural() )
 	));
 
 	wp_enqueue_style( 'wp-color-picker' );

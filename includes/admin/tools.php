@@ -11,6 +11,8 @@
  */
 
 // Exit if accessed directly
+use bpmj\wpidea\API_V2;
+
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
@@ -238,7 +240,7 @@ function edd_tools_api_keys_display() {
 	<?php printf(
 		__( 'These API keys allow you to use the <a href="%s">EDD REST API</a> to retrieve store data in JSON or XML for external applications or devices, such as the <a href="%s">EDD mobile app</a>.', 'easy-digital-downloads' ),
 		'http://docs.easydigitaldownloads.com/article/544-edd-api-reference/',
-		'https://easydigitaldownloads.com/downloads/ios-sales-earnings-tracker/'
+		'https://easydigitaldownloads.com/downloads/ios-sales-earnings-tracker/?utm_source=plugin-tools-page&utm_medium=api_keys_tab&utm_term=ios-app&utm_campaign=EDDMobileApp'
 	); ?>
 	</p>
 <?php
@@ -565,7 +567,7 @@ function edd_tools_sysinfo_get() {
 	$return .= 'Currency Code:            ' . edd_get_currency() . "\n";
 	$return .= 'Currency Position:        ' . edd_get_option( 'currency_position', 'before' ) . "\n";
 	$return .= 'Decimal Separator:        ' . edd_get_option( 'decimal_separator', '.' ) . "\n";
-	$return .= 'Thousands Separator:      ' . edd_get_option( 'thousands_separator', ',' ) . "\n";
+	$return .= 'Thousands Separator:      ' . edd_get_option( 'thousands_separator', '' ) . "\n";
 	$return .= 'Upgrades Completed:       ' . implode( ',', edd_get_completed_upgrades() ) . "\n";
 
 	$return  = apply_filters( 'edd_sysinfo_after_edd_config', $return );

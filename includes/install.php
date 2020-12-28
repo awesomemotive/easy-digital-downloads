@@ -158,7 +158,7 @@ function edd_run_install() {
 
 			foreach ( $settings as $option ) {
 
-				if( 'checkbox' == $option['type'] && ! empty( $option['std'] ) ) {
+				if( ! empty( $option['type'] ) && 'checkbox' == $option['type'] && ! empty( $option['std'] ) ) {
 					$options[ $option['id'] ] = '1';
 				}
 
@@ -186,6 +186,7 @@ function edd_run_install() {
 
 	// Create the customers database
 	@EDD()->customers->create_table();
+	@EDD()->customer_meta->create_table();
 
 	// Check for PHP Session support, and enable if available
 	EDD()->session->use_php_sessions();
@@ -332,4 +333,8 @@ function edd_install_roles_on_network() {
 	}
 
 }
-add_action( 'admin_init', 'edd_install_roles_on_network' );
+
+/**
+ * DISABLED: EDD roles are being removed later anyway (@see includes\class-caps.php)
+ */
+// add_action( 'admin_init', 'edd_install_roles_on_network' );

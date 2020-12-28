@@ -13,37 +13,6 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Reports Page
- *
- * Renders the reports page contents.
- *
- * @since 1.0
- * @return void
-*/
-function edd_reports_page() {
-	$current_page = admin_url( 'edit.php?post_type=download&page=edd-reports' );
-	$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'reports';
-	?>
-	<div class="wrap">
-		<h1 class="nav-tab-wrapper">
-			<a href="<?php echo add_query_arg( array( 'tab' => 'reports', 'settings-updated' => false ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'reports' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Reports', 'easy-digital-downloads' ); ?></a>
-			<?php if ( current_user_can( 'export_shop_reports' ) ) { ?>
-				<a href="<?php echo add_query_arg( array( 'tab' => 'export', 'settings-updated' => false ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'export' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Export', 'easy-digital-downloads' ); ?></a>
-			<?php } ?>
-			<a href="<?php echo add_query_arg( array( 'tab' => 'logs', 'settings-updated' => false ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'logs' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Logs', 'easy-digital-downloads' ); ?></a>
-			<?php do_action( 'edd_reports_tabs' ); ?>
-		</h1>
-
-		<?php
-		do_action( 'edd_reports_page_top' );
-		do_action( 'edd_reports_tab_' . $active_tab );
-		do_action( 'edd_reports_page_bottom' );
-		?>
-	</div><!-- .wrap -->
-	<?php
-}
-
-/**
  * Default Report Views
  *
  * @since 1.4

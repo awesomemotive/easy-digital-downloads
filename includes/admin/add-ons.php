@@ -29,7 +29,7 @@ function edd_add_ons_page() {
 		<h1>
 			<?php _e( 'Extensions for Easy Digital Downloads', 'easy-digital-downloads' ); ?>
 			<span>
-				&nbsp;&nbsp;<a href="http://easydigitaldownloads.com/extensions/?utm_source=plugin-addons-page&utm_medium=plugin&utm_campaign=EDD%20Addons%20Page&utm_content=All%20Extensions" class="button-primary" title="<?php _e( 'Browse All Extensions', 'easy-digital-downloads' ); ?>" target="_blank"><?php _e( 'Browse All Extensions', 'easy-digital-downloads' ); ?></a>
+				&nbsp;&nbsp;<a href="https://easydigitaldownloads.com/downloads/?utm_source=plugin-addons-page&utm_medium=plugin&utm_campaign=EDDAddonsPage&utm_content=All%20Extensions" class="button-primary" title="<?php _e( 'Browse All Extensions', 'easy-digital-downloads' ); ?>" target="_blank"><?php _e( 'Browse All Extensions', 'easy-digital-downloads' ); ?></a>
 			</span>
 		</h1>
 		<p><?php _e( 'These extensions <em><strong>add functionality</strong></em> to your Easy Digital Downloads powered store.', 'easy-digital-downloads' ); ?></p>
@@ -55,7 +55,7 @@ function edd_add_ons_page() {
 			<?php echo edd_add_ons_get_feed( $active_tab ); ?>
 			<div class="clear"></div>
 			<div class="edd-add-ons-footer">
-				<a href="http://easydigitaldownloads.com/extensions/?utm_source=plugin-addons-page&utm_medium=plugin&utm_campaign=EDD%20Addons%20Page&utm_content=All%20Extensions" class="button-primary" title="<?php _e( 'Browse All Extensions', 'easy-digital-downloads' ); ?>" target="_blank"><?php _e( 'Browse All Extensions', 'easy-digital-downloads' ); ?></a>
+				<a href="https://easydigitaldownloads.com/downloads/?utm_source=plugin-addons-page&utm_medium=plugin&utm_campaign=EDDAddonsPage&utm_content=All%20Extensions" class="button-primary" title="<?php _e( 'Browse All Extensions', 'easy-digital-downloads' ); ?>" target="_blank"><?php _e( 'Browse All Extensions', 'easy-digital-downloads' ); ?></a>
 			</div>
 		</div><!-- #tab_container-->
 	</div>

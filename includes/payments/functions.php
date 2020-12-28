@@ -13,6 +13,47 @@
 if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
+ * Retrieves an instance of EDD_Payment for a specified ID.
+ *
+ * @since 2.7
+ *
+ * @param mixed int|EDD_Payment|WP_Post $payment Payment ID, EDD_Payment object or WP_Post object.
+ * @param bool                          $by_txn  Is the ID supplied as the first parameter
+ * @return EDD_Payment|false false|object EDD_Payment if a valid payment ID, false otherwise.
+ */
+function edd_get_payment( $payment_or_txn_id = null, $by_txn = false ) {
+	global $wpdb;
+	if ( $payment_or_txn_id instanceof WP_Post || $payment_or_txn_id instanceof EDD_Payment ) {
+		$payment_id = $payment_or_txn_id->ID;
+	} elseif ( $by_txn ) {
+		if ( empty( $payment_or_txn_id ) ) {
+			return false;
+		}
+		$query      = $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_edd_payment_transaction_id' AND meta_value = '%s'", $payment_or_txn_id );
+		$payment_id = $wpdb->get_var( $query );
+		if ( empty( $payment_id ) ) {
+			return false;
+		}
+	} else {
+		$payment_id = $payment_or_txn_id;
+	}
+	if ( empty( $payment_id ) ) {
+		return false;
+	}
+	$cache_key = md5( 'edd_payment' . $payment_id );
+	$payment   = wp_cache_get( $cache_key, 'payments' );
+	if ( false === $payment ) {
+		$payment = new EDD_Payment( $payment_id );
+		if ( empty( $payment->ID ) || ( ! $by_txn && (int) $payment->ID !== (int) $payment_id ) ) {
+			return false;
+		} else {
+			wp_cache_set( $cache_key, $payment, 'payments' );
+		}
+	}
+	return $payment;
+}
+
+/**
  * Get Payments
  *
  * Retrieve payments from the database.
@@ -111,7 +152,7 @@ function edd_get_payment_by( $field = '', $value = '' ) {
  * Insert Payment
  *
  * @since 1.0
- * @param array $payment_data
+ * @param array $payment_data Payment date to process
  * @return int|bool Payment ID if payment is inserted, false otherwise
  */
 function edd_insert_payment( $payment_data = array() ) {
@@ -248,8 +289,6 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
 		}
 	}
 
-	do_action( 'edd_payment_delete', $payment_id );
-
 	if( $customer->id && $update_customer ) {
 
 		// Remove the payment ID from the customer
@@ -284,8 +323,6 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
 			)
 		);
 	}
-
-	do_action( 'edd_payment_deleted', $payment_id );
 }
 
 /**
@@ -362,7 +399,7 @@ function edd_undo_purchase( $download_id = false, $payment_id ) {
  * Returns the total number of payments recorded.
  *
  * @since 1.0
- * @param array $args
+ * @param array $args List of arguments to base the payments count on
  * @return array $count Number of payments sorted by payment status
  */
 function edd_count_payments( $args = array() ) {
@@ -413,9 +450,12 @@ function edd_count_payments( $args = array() ) {
 
 
 			$join = "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
-			$where .= "
-				AND m.meta_key = '{$field}'
-				AND m.meta_value = '{$args['s']}'";
+			$where .= $wpdb->prepare( "
+				AND m.meta_key = %s
+				AND m.meta_value = %s",
+				$field,
+				$args['s']
+			);
 
 		} elseif ( '#' == substr( $args['s'], 0, 1 ) ) {
 
@@ -426,14 +466,16 @@ function edd_count_payments( $args = array() ) {
 			$join   = "LEFT JOIN $wpdb->postmeta m ON m.meta_key = '_edd_log_payment_id' AND m.post_id = p.ID ";
 			$join  .= "INNER JOIN $wpdb->posts p2 ON m.meta_value = p2.ID ";
 			$where  = "WHERE p.post_type = 'edd_log' ";
-			$where .= "AND p.post_parent = {$search} ";
+			$where .= $wpdb->prepare( "AND p.post_parent = %d} ", $search );
 
 		} elseif ( is_numeric( $args['s'] ) ) {
 
 			$join = "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
-			$where .= "
+			$where .= $wpdb->prepare( "
 				AND m.meta_key = '_edd_payment_user_id'
-				AND m.meta_value = '{$args['s']}'";
+				AND m.meta_value = %d",
+				$args['s']
+			);
 
 		} elseif ( 0 === strpos( $args['s'], 'discount:' ) ) {
 
@@ -441,12 +483,17 @@ function edd_count_payments( $args = array() ) {
 			$search = 'discount.*' . $search;
 
 			$join   = "LEFT JOIN $wpdb->postmeta m ON (p.ID = m.post_id)";
-			$where .= "
+			$where .= $wpdb->prepare( "
 				AND m.meta_key = '_edd_payment_meta'
-				AND m.meta_value REGEXP '$search'";
+				AND m.meta_value REGEXP %s",
+				$search
+			);
 
 		} else {
-			$where .= "AND ((p.post_title LIKE '%{$args['s']}%') OR (p.post_content LIKE '%{$args['s']}%'))";
+			$search = $wpdb->esc_like( $args['s'] );
+			$search = '%' . $search . '%';
+
+			$where .= $wpdb->prepare( "AND ((p.post_title LIKE %s) OR (p.post_content LIKE %s))", $search, $search );
 		}
 
 	}
@@ -473,7 +520,7 @@ function edd_count_payments( $args = array() ) {
 
 		}
 
-		// Fixes an issue with the payments list table counts when no end date is specified (partiy with stats class)
+		// Fixes an issue with the payments list table counts when no end date is specified (partly with stats class)
 		if ( empty( $args['end-date'] ) ) {
 			$args['end-date'] = $args['start-date'];
 		}
@@ -566,7 +613,7 @@ function edd_check_for_existing_payment( $payment_id ) {
  *
  * @since 1.0
  *
- * @param WP_Post $payment
+ * @param WP_Post $payment Payment post object
  * @param bool   $return_label Whether to return the payment status or not
  *
  * @return bool|mixed if payment status exists, false otherwise
@@ -899,7 +946,7 @@ function edd_get_payment_meta( $payment_id = 0, $meta_key = '_edd_payment_meta',
  * Update the meta for a payment
  * @param  integer $payment_id Payment ID
  * @param  string  $meta_key   Meta key to update
- * @param  string  $meta_value Value to udpate to
+ * @param  string  $meta_value Value to update to
  * @param  string  $prev_value Previous value
  * @return mixed               Meta ID if successful, false if unsuccessful
  */
@@ -1009,7 +1056,7 @@ function edd_get_payment_user_email( $payment_id ) {
  *
  * @since  2.4.4
  * @param  int $payment_id The payment ID
- * @return bool            If the payment is associted with a user (false) or not (true)
+ * @return bool            If the payment is associated with a user (false) or not (true)
  */
 function edd_is_guest_payment( $payment_id ) {
 	$payment_user_id  = edd_get_payment_user_id( $payment_id );
@@ -1268,12 +1315,14 @@ function edd_payment_amount( $payment_id = 0 ) {
 	$amount = edd_get_payment_amount( $payment_id );
 	return edd_currency_filter( edd_format_amount( $amount ), edd_get_payment_currency_code( $payment_id ) );
 }
+
 /**
  * Get the amount associated with a payment
  *
  * @access public
  * @since 1.2
  * @param int $payment_id Payment ID
+ * @return float Payment amount
  */
 function edd_get_payment_amount( $payment_id ) {
 	$payment = new EDD_Payment( $payment_id );
@@ -1383,7 +1432,7 @@ function edd_get_payment_fees( $payment_id = 0, $type = 'all' ) {
  * Retrieves the transaction ID for the given payment
  *
  * @since  2.1
- * @param int payment_id Payment ID
+ * @param int $payment_id Payment ID
  * @return string The Transaction ID
  */
 function edd_get_payment_transaction_id( $payment_id = 0 ) {
@@ -1395,8 +1444,9 @@ function edd_get_payment_transaction_id( $payment_id = 0 ) {
  * Sets a Transaction ID in post meta for the given Payment ID
  *
  * @since  2.1
- * @param int payment_id Payment ID
- * @param string transaction_id The transaciton ID from the gateway
+ * @param int $payment_id Payment ID
+ * @param string $transaction_id The transaction ID from the gateway
+ * @return mixed Meta ID if successful, false if unsuccessful
  */
 function edd_set_payment_transaction_id( $payment_id = 0, $transaction_id = '' ) {
 
@@ -1464,9 +1514,12 @@ function edd_get_payment_notes( $payment_id = 0, $search = '' ) {
 	}
 
 	remove_action( 'pre_get_comments', 'edd_hide_payment_notes', 10 );
-	remove_filter( 'comments_clauses', 'edd_hide_payment_notes_pre_41', 10, 2 );
+	remove_filter( 'comments_clauses', 'edd_hide_payment_notes_pre_41', 10 );
 
-	$notes = get_comments( array( 'post_id' => $payment_id, 'order' => 'ASC', 'search' => $search ) );
+	/**
+	 * wp-idea - zmiana w kodzie EDD 2.5.17 - dodanie parametru 'orderby'
+	 */
+	$notes = get_comments( array( 'post_id' => $payment_id, 'order' => 'ASC', 'search' => $search, 'orderby' => 'comment_ID' ) );
 
 	add_action( 'pre_get_comments', 'edd_hide_payment_notes', 10 );
 	add_filter( 'comments_clauses', 'edd_hide_payment_notes_pre_41', 10, 2 );
@@ -1549,6 +1602,8 @@ function edd_get_payment_note_html( $note, $payment_id = 0 ) {
 	} else {
 		$user = __( 'EDD Bot', 'easy-digital-downloads' );
 	}
+	
+	$user = apply_filters( 'edd_get_payment_note_user', $user );
 
 	$date_format = get_option( 'date_format' ) . ', ' . get_option( 'time_format' );
 

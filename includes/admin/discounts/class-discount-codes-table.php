@@ -210,7 +210,7 @@ class EDD_Discount_Codes_Table extends WP_List_Table {
 		$discount     = get_post( $item['ID'] );
 		$row_actions  = array();
 
-		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'edd-action' => 'edit_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
+		$row_actions['edit'] = '<a href="' . add_query_arg( array( 'edd-action' => '    edit_discount', 'discount' => $discount->ID ) ) . '">' . __( 'Edit', 'easy-digital-downloads' ) . '</a>';
 
 		if( strtolower( $item['status'] ) == 'active' ) {
 			$row_actions['deactivate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array( 'edd-action' => 'deactivate_discount', 'discount' => $discount->ID ) ), 'edd_discount_nonce' ) ) . '">' . __( 'Deactivate', 'easy-digital-downloads' ) . '</a>';
