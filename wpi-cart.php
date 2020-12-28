@@ -10,18 +10,18 @@
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if ( ! class_exists( 'Easy_Digital_Downloads' ) ) :
+if ( ! class_exists( 'WPI_Cart' ) ) :
 
 /**
- * Main Easy_Digital_Downloads Class.
+ * Main WPI_Cart Class.
  *
  * @since 1.4
  */
-final class Easy_Digital_Downloads {
+final class WPI_Cart {
 	/** Singleton *************************************************************/
 
 	/**
-	 * @var Easy_Digital_Downloads The one true Easy_Digital_Downloads
+	 * @var WPI_Cart The one true WPI_Cart
 	 * @since 1.4
 	 */
 	private static $instance;
@@ -101,23 +101,23 @@ final class Easy_Digital_Downloads {
 	public $customer_meta;
 
 	/**
-	 * Main Easy_Digital_Downloads Instance.
+	 * Main WPI_Cart Instance.
 	 *
-	 * Insures that only one instance of Easy_Digital_Downloads exists in memory at any one
+	 * Insures that only one instance of WPI_Cart exists in memory at any one
 	 * time. Also prevents needing to define globals all over the place.
 	 *
 	 * @since 1.4
 	 * @static
 	 * @staticvar array $instance
-	 * @uses Easy_Digital_Downloads::setup_constants() Setup the constants needed.
-	 * @uses Easy_Digital_Downloads::includes() Include the required files.
-	 * @uses Easy_Digital_Downloads::load_textdomain() load the language files.
+	 * @uses WPI_Cart::setup_constants() Setup the constants needed.
+	 * @uses WPI_Cart::includes() Include the required files.
+	 * @uses WPI_Cart::load_textdomain() load the language files.
 	 * @see EDD()
-	 * @return object|Easy_Digital_Downloads The one true Easy_Digital_Downloads
+	 * @return object|WPI_Cart The one true WPI_Cart
 	 */
 	public static function instance() {
-		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof Easy_Digital_Downloads ) ) {
-			self::$instance = new Easy_Digital_Downloads;
+		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof WPI_Cart ) ) {
+			self::$instance = new WPI_Cart;
 			self::$instance->setup_constants();
 
 			add_action( 'plugins_loaded', array( self::$instance, 'load_textdomain' ) );
@@ -310,7 +310,6 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/plugins.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/welcome.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-heartbeat.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/tools/tools-actions.php';
 		} else {
@@ -408,9 +407,9 @@ endif; // End if class_exists check.
 
 
 /**
- * The main function for that returns Easy_Digital_Downloads
+ * The main function for that returns WPI_Cart
  *
- * The main function responsible for returning the one true Easy_Digital_Downloads
+ * The main function responsible for returning the one true WPI_Cart
  * Instance to functions everywhere.
  *
  * Use this function like you would a global variable, except without needing
@@ -419,10 +418,10 @@ endif; // End if class_exists check.
  * Example: <?php $edd = EDD(); ?>
  *
  * @since 1.4
-* @return object|Easy_Digital_Downloads The one true Easy_Digital_Downloads Instance.
+* @return object|WPI_Cart The one true WPI_Cart Instance.
  */
 function EDD() {
-	return Easy_Digital_Downloads::instance();
+	return WPI_Cart::instance();
 }
 
 // Get EDD Running.
