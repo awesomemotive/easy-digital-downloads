@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: WPI Cart (based on Easy Digital Downloads)
+ * Plugin Name: WPI Cart (based on Easy Digital Downloads 2.5.17)
  * Description: The easiest way to sell digital products with WordPress.
  * Version: 1.0
  * Domain Path: languages
@@ -11,17 +11,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( ! class_exists( 'WPI_Cart' ) ) :
 
-/**
- * Main WPI_Cart Class.
- *
- * @since 1.4
- */
 final class WPI_Cart {
-	/** Singleton *************************************************************/
-
 	/**
 	 * @var WPI_Cart The one true WPI_Cart
-	 * @since 1.4
 	 */
 	private static $instance;
 
@@ -29,7 +21,6 @@ final class WPI_Cart {
 	 * EDD Roles Object.
 	 *
 	 * @var object|EDD_Roles
-	 * @since 1.5
 	 */
 	public $roles;
 
@@ -37,7 +28,6 @@ final class WPI_Cart {
 	 * EDD Cart Fees Object.
 	 *
 	 * @var object|EDD_Fees
-	 * @since 1.5
 	 */
 	public $fees;
 
@@ -45,7 +35,6 @@ final class WPI_Cart {
 	 * EDD API Object.
 	 *
 	 * @var object|EDD_API
-	 * @since 1.5
 	 */
 	public $api;
 
@@ -55,7 +44,6 @@ final class WPI_Cart {
 	 * This holds cart items, purchase sessions, and anything else stored in the session.
 	 *
 	 * @var object|EDD_Session
-	 * @since 1.5
 	 */
 	public $session;
 
@@ -63,7 +51,6 @@ final class WPI_Cart {
 	 * EDD HTML Element Helper Object.
 	 *
 	 * @var object|EDD_HTML_Elements
-	 * @since 1.5
 	 */
 	public $html;
 
@@ -71,7 +58,6 @@ final class WPI_Cart {
 	 * EDD Emails Object.
 	 *
 	 * @var object|EDD_Emails
-	 * @since 2.1
 	 */
 	public $emails;
 
@@ -79,7 +65,6 @@ final class WPI_Cart {
 	 * EDD Email Template Tags Object.
 	 *
 	 * @var object|EDD_Email_Template_Tags
-	 * @since 1.9
 	 */
 	public $email_tags;
 
@@ -87,7 +72,6 @@ final class WPI_Cart {
 	 * EDD Customers DB Object.
 	 *
 	 * @var object|EDD_DB_Customers
-	 * @since 2.1
 	 */
 	public $customers;
 
@@ -95,7 +79,6 @@ final class WPI_Cart {
 	 * EDD Customer meta DB Object.
 	 *
 	 * @var object|EDD_DB_Customer_Meta
-	 * @since 2.6
 	 */
 	public $customer_meta;
 
@@ -105,7 +88,6 @@ final class WPI_Cart {
 	 * Insures that only one instance of WPI_Cart exists in memory at any one
 	 * time. Also prevents needing to define globals all over the place.
 	 *
-	 * @since 1.4
 	 * @static
 	 * @staticvar array $instance
 	 * @uses WPI_Cart::setup_constants() Setup the constants needed.
@@ -141,7 +123,6 @@ final class WPI_Cart {
 	 * The whole idea of the singleton design pattern is that there is a single
 	 * object therefore, we don't want the object to be cloned.
 	 *
-	 * @since 1.6
 	 * @access protected
 	 * @return void
 	 */
@@ -153,7 +134,6 @@ final class WPI_Cart {
 	/**
 	 * Disable unserializing of the class.
 	 *
-	 * @since 1.6
 	 * @access protected
 	 * @return void
 	 */
@@ -166,14 +146,13 @@ final class WPI_Cart {
 	 * Setup plugin constants.
 	 *
 	 * @access private
-	 * @since 1.4
 	 * @return void
 	 */
 	private function setup_constants() {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '2.5.18' );
+			define( 'EDD_VERSION', '2.5.17' );
 		}
 
 		// Plugin Folder Path.
@@ -201,7 +180,6 @@ final class WPI_Cart {
 	 * Include required files.
 	 *
 	 * @access private
-	 * @since 1.4
 	 * @return void
 	 */
 	private function includes() {
@@ -324,28 +302,9 @@ final class WPI_Cart {
 	 * Loads the plugin language files.
 	 *
 	 * @access public
-	 * @since 1.4
 	 * @return void
 	 */
 	public function load_textdomain() {
-
-		/*
-		 * Due to the introduction of language packs through translate.wordpress.org, loading our textdomain is complex.
-		 *
-		 * In v2.4.6, our textdomain changed from "edd" to "easy-digital-downloads".
-		 *
-		 * To support existing translation files from before the change, we must look for translation files in several places and under several names.
-		 *
-		 * - wp-content/languages/plugins/easy-digital-downloads (introduced with language packs)
-		 * - wp-content/languages/edd/ (custom folder we have supported since 1.4)
-		 * - wp-content/plugins/easy-digital-downloads/languages/
-		 *
-		 * In wp-content/languages/edd/ we must look for "easy-digital-downloads-{lang}_{country}.mo"
-		 * In wp-content/languages/edd/ we must look for "edd-{lang}_{country}.mo" as that was the old file naming convention
-		 * In wp-content/languages/plugins/easy-digital-downloads/ we only need to look for "easy-digital-downloads-{lang}_{country}.mo" as that is the new structure
-		 * In wp-content/plugins/easy-digital-downloads/languages/, we must look for both naming conventions. This is done by filtering "load_textdomain_mofile"
-		 *
-		 */
 
 		add_filter( 'load_textdomain_mofile', array( $this, 'load_old_textdomain' ), 10, 2 );
 
@@ -402,7 +361,7 @@ final class WPI_Cart {
 
 }
 
-endif; // End if class_exists check.
+endif;
 
 
 /**
@@ -416,7 +375,6 @@ endif; // End if class_exists check.
  *
  * Example: <?php $edd = EDD(); ?>
  *
- * @since 1.4
 * @return object|WPI_Cart The one true WPI_Cart Instance.
  */
 function EDD() {
