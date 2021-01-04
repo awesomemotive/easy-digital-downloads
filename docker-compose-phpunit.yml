@@ -1,0 +1,17 @@
+---
+version: "3.7"
+services:
+    wordpress:
+        image: public.ecr.aws/q7y6e9n2/unit-test-images/php:${TEST_PHP_VERSION}
+        depends_on:
+            - mysql
+        volumes:
+            - .:/app
+        working_dir: /app
+        command: [ "bin/run-tests-internal-only.sh", "wordpress_test", "root", "", "mysql", "${TEST_WP_VERSION}" ]
+    mysql:
+        image: mariadb:10.2
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+            MYSQL_DATABASE: "wordpress_test"
+            MYSQL_ROOT_PASSWORD: ""
