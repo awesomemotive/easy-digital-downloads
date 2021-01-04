@@ -27,10 +27,15 @@ function edd_options_page_primary_nav( $active_tab = '' ) {
 		<?php
 
 		foreach ( $tabs as $tab_id => $tab_name ) {
-			$tab_url = add_query_arg( array(
-				'settings-updated' => false,
-				'tab'              => $tab_id,
-			) );
+			$tab_url = add_query_arg(
+				array(
+					'settings-updated' => false,
+					'post_type'        => 'download',
+					'page'             => 'edd-settings',
+					'tab'              => $tab_id,
+				),
+				edd_get_admin_base_url()
+			);
 
 			// Remove the section from the tabs so we always end up at the main section
 			$tab_url = remove_query_arg( 'section', $tab_url );
@@ -77,12 +82,15 @@ function edd_options_page_secondary_nav( $active_tab = '', $section = '', $secti
 	foreach ( $sections as $section_id => $section_name ) {
 
 		// Tab & Section
-		$tab_url = add_query_arg( array(
-			'post_type' => 'download',
-			'page'      => 'edd-settings',
-			'tab'       => $active_tab,
-			'section'   => $section_id
-		) );
+		$tab_url = add_query_arg(
+			array(
+				'post_type' => 'download',
+				'page'      => 'edd-settings',
+				'tab'       => $active_tab,
+				'section'   => $section_id,
+			),
+			edd_get_admin_base_url()
+		);
 
 		// Settings not updated
 		$tab_url = remove_query_arg( 'settings-updated', $tab_url );
