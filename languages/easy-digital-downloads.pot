@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.9.24\n"
+"Project-Id-Version: Easy Digital Downloads 2.9.26\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2020-08-21 22:14:00+00:00\n"
+"POT-Creation-Date: 2020-10-02 06:35:46+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5608,7 +5608,7 @@ msgstr ""
 msgid "Enter a coupon code if you have one."
 msgstr ""
 
-#: includes/checkout/template.php:754 includes/process-purchase.php:386
+#: includes/checkout/template.php:754 includes/process-purchase.php:389
 #: includes/scripts.php:67
 msgid "Enter discount"
 msgstr ""
@@ -7070,33 +7070,33 @@ msgstr ""
 msgid "Invalid username or password. %1$sReset Password%2$s"
 msgstr ""
 
-#: includes/login-register.php:180 includes/login-register.php:188
-#: includes/process-purchase.php:602
+#: includes/login-register.php:183 includes/login-register.php:191
+#: includes/process-purchase.php:609
 msgid "Invalid username"
 msgstr ""
 
-#: includes/login-register.php:184 includes/process-purchase.php:595
+#: includes/login-register.php:187 includes/process-purchase.php:602
 msgid "Username already taken"
 msgstr ""
 
-#: includes/login-register.php:192
+#: includes/login-register.php:195
 msgid "Email address already taken"
 msgstr ""
 
-#: includes/login-register.php:196 includes/process-purchase.php:542
-#: includes/process-purchase.php:618 includes/process-purchase.php:727
+#: includes/login-register.php:199 includes/process-purchase.php:545
+#: includes/process-purchase.php:625 includes/process-purchase.php:734
 msgid "Invalid email"
 msgstr ""
 
-#: includes/login-register.php:200
+#: includes/login-register.php:203
 msgid "Invalid payment email"
 msgstr ""
 
-#: includes/login-register.php:204
+#: includes/login-register.php:207
 msgid "Please enter a password"
 msgstr ""
 
-#: includes/login-register.php:208
+#: includes/login-register.php:211
 msgid "Passwords do not match"
 msgstr ""
 
@@ -7827,11 +7827,11 @@ msgstr ""
 msgid "Error processing purchase. Please reload the page and try again."
 msgstr ""
 
-#: includes/process-purchase.php:211
+#: includes/process-purchase.php:212
 msgid "The email address %s is already in use."
 msgstr ""
 
-#: includes/process-purchase.php:233
+#: includes/process-purchase.php:234
 msgid ""
 "Missing nonce when processing login during checkout. Please read the "
 "following for more information: "
@@ -7839,101 +7839,101 @@ msgid ""
 "ajax-requests-in-easy-digital-downloads-2-9-4"
 msgstr ""
 
-#: includes/process-purchase.php:239
+#: includes/process-purchase.php:240
 msgid "Error processing login. Nonce failed."
 msgstr ""
 
-#: includes/process-purchase.php:353
+#: includes/process-purchase.php:356
 msgid "The selected payment gateway is not enabled"
 msgstr ""
 
-#: includes/process-purchase.php:413
+#: includes/process-purchase.php:416
 msgid "One or more of the discounts you entered is invalid"
 msgstr ""
 
-#: includes/process-purchase.php:430
+#: includes/process-purchase.php:433
 msgid "You must agree to the terms of use"
 msgstr ""
 
-#: includes/process-purchase.php:444
+#: includes/process-purchase.php:447
 msgid "You must agree to the privacy policy"
 msgstr ""
 
-#: includes/process-purchase.php:459
+#: includes/process-purchase.php:462
 msgid "Please enter a valid email address"
 msgstr ""
 
-#: includes/process-purchase.php:463
+#: includes/process-purchase.php:466
 msgid "Please enter your first name"
 msgstr ""
 
-#: includes/process-purchase.php:473
+#: includes/process-purchase.php:476
 msgid "Please enter your zip / postal code"
 msgstr ""
 
-#: includes/process-purchase.php:477
+#: includes/process-purchase.php:480
 msgid "Please enter your billing city"
 msgstr ""
 
-#: includes/process-purchase.php:481
+#: includes/process-purchase.php:484
 msgid "Please select your billing country"
 msgstr ""
 
-#: includes/process-purchase.php:485
+#: includes/process-purchase.php:488
 msgid "Please enter billing state / province"
 msgstr ""
 
-#: includes/process-purchase.php:547 includes/process-purchase.php:839
+#: includes/process-purchase.php:550 includes/process-purchase.php:866
 msgid "The user information is invalid"
 msgstr ""
 
-#: includes/process-purchase.php:600
+#: includes/process-purchase.php:607
 msgid "Invalid username. Only lowercase letters (a-z) and numbers are allowed"
 msgstr ""
 
-#: includes/process-purchase.php:610
+#: includes/process-purchase.php:617
 msgid "You must register or login to complete your purchase"
 msgstr ""
 
-#: includes/process-purchase.php:623
+#: includes/process-purchase.php:630
 msgid ""
 "Email already used. Login or use a different email to complete your "
 "purchase."
 msgstr ""
 
-#: includes/process-purchase.php:631 includes/process-purchase.php:735
+#: includes/process-purchase.php:638 includes/process-purchase.php:742
 msgid "Enter an email"
 msgstr ""
 
-#: includes/process-purchase.php:639
+#: includes/process-purchase.php:646
 msgid "Passwords don't match"
 msgstr ""
 
-#: includes/process-purchase.php:648
+#: includes/process-purchase.php:655
 msgid "Enter a password"
 msgstr ""
 
-#: includes/process-purchase.php:651
+#: includes/process-purchase.php:658
 msgid "Enter the password confirmation"
 msgstr ""
 
-#: includes/process-purchase.php:677
+#: includes/process-purchase.php:684
 msgid "You must log in or register to complete your purchase"
 msgstr ""
 
-#: includes/process-purchase.php:716
+#: includes/process-purchase.php:723
 msgid "You must be logged into an account to purchase"
 msgstr ""
 
-#: includes/process-purchase.php:903
+#: includes/process-purchase.php:930
 msgid "The zip / postal code you entered for your billing address is invalid"
 msgstr ""
 
-#: includes/process-purchase.php:1152
+#: includes/process-purchase.php:1179
 msgid "An internal error has occurred, please try again or contact support."
 msgstr ""
 
-#: includes/process-purchase.php:1188
+#: includes/process-purchase.php:1215
 msgid "There was an error completing your purchase. Please try again."
 msgstr ""
 

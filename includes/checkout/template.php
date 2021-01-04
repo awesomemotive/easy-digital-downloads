@@ -676,7 +676,7 @@ function edd_show_payment_icons() {
 
 		if( edd_string_is_image_url( $key ) ) {
 
-			echo '<img class="payment-icon" src="' . esc_url( $key ) . '"/>';
+			echo '<img class="payment-icon" src="' . esc_url( $key ) . '" alt="' . esc_attr( $card ) . '"/>';
 
 		} else {
 
@@ -706,7 +706,7 @@ function edd_show_payment_icons() {
 
 			}
 
-			echo '<img class="payment-icon" src="' . esc_url( $image ) . '"/>';
+			echo '<img class="payment-icon" src="' . esc_url( $image ) . '" alt="' . esc_attr( $card ) . '"/>';
 		}
 
 	}

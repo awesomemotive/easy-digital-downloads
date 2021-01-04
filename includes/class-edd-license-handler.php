@@ -112,7 +112,7 @@ class EDD_License {
 		//add_action( 'admin_init', array( $this, 'weekly_license_check' ) );
 
 		// Updater
-		add_action( 'admin_init', array( $this, 'auto_updater' ), 0 );
+		add_action( 'init', array( $this, 'auto_updater' ) );
 
 		// Display notices to admins
 		add_action( 'admin_notices', array( $this, 'notices' ) );
@@ -130,6 +130,12 @@ class EDD_License {
 	 * @return  void
 	 */
 	public function auto_updater() {
+
+		$doing_cron = defined( 'DOING_CRON' ) && DOING_CRON;
+		if ( ! current_user_can( 'manage_options' ) && ! $doing_cron ) {
+			return;
+		}
+
 		$betas = edd_get_option( 'enabled_betas', array() );
 
 		$args = array(

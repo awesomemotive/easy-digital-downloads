@@ -64,7 +64,7 @@ add_action( 'template_redirect', 'edd_process_cart_endpoints', 100 );
  * @param $data
  */
 function edd_process_add_to_cart( $data ) {
-	$download_id = absint( $data['download_id'] );
+	$download_id = ! empty( $data['download_id'] ) ? absint( $data['download_id'] ) : false;
 	$options     = isset( $data['edd_options'] ) ? $data['edd_options'] : array();
 
 	if ( ! empty( $data['edd_download_quantity'] ) ) {
@@ -77,7 +77,9 @@ function edd_process_add_to_cart( $data ) {
 		}
 	}
 
-	$cart        = edd_add_to_cart( $download_id, $options );
+	if ( ! empty( $download_id ) ) {
+		edd_add_to_cart( $download_id, $options );
+	}
 
 	if ( edd_straight_to_checkout() && ! edd_is_checkout() ) {
 		$query_args 	= remove_query_arg( array( 'edd_action', 'download_id', 'edd_options' ) );
@@ -159,10 +161,12 @@ add_action( 'edd_purchase_collection', 'edd_process_collection_purchase' );
  */
 function edd_process_cart_update( $data ) {
 
-	foreach( $data['edd-cart-downloads'] as $key => $cart_download_id ) {
-		$options  = json_decode( stripslashes( $data['edd-cart-download-' . $key . '-options'] ), true );
-		$quantity = absint( $data['edd-cart-download-' . $key . '-quantity'] );
-		edd_set_cart_item_quantity( $cart_download_id, $quantity, $options );
+	if ( ! empty( $data['edd-cart-downloads'] ) && is_array( $data['edd-cart-downloads'] ) ) {
+		foreach ( $data['edd-cart-downloads'] as $key => $cart_download_id ) {
+			$options  = json_decode( stripslashes( $data[ 'edd-cart-download-' . $key . '-options' ] ), true );
+			$quantity = absint( $data[ 'edd-cart-download-' . $key . '-quantity' ] );
+			edd_set_cart_item_quantity( $cart_download_id, $quantity, $options );
+		}
 	}
 
 }

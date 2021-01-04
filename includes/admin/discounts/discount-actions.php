@@ -45,6 +45,11 @@ function edd_add_discount( $data ) {
 		edd_die();
 	}
 
+	if ( ! is_numeric( $data['amount'] ) ) {
+		wp_redirect( add_query_arg( 'edd-message', 'discount_invalid_amount' ) );
+		edd_die();
+	}
+
 	foreach ( $data as $key => $value ) {
 
 		if ( $key === 'products' || $key === 'excluded-products' ) {
@@ -110,6 +115,11 @@ function edd_edit_discount( $data ) {
 
 	if( ! current_user_can( 'manage_shop_discounts' ) ) {
 		wp_die( __( 'You do not have permission to edit discount codes', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
+	if ( empty( $data['amount'] ) || ! is_numeric( $data['amount'] ) ) {
+		wp_redirect( add_query_arg( 'edd-message', 'discount_invalid_amount' ) );
+		edd_die();
 	}
 
 	// Setup the discount code details
