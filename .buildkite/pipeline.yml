@@ -50,7 +50,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 5.6 | WP: 4.9.15 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -69,7 +69,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 5.6 | WP: 5.0.10 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -88,7 +88,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 5.6 | WP: 5.1.6 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -107,7 +107,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 5.6 | WP: 5.2.7 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -126,7 +126,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 5.6 | WP: 5.3.4 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -145,7 +145,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 5.6 | WP: 5.4.2 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -164,7 +164,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 5.6 | WP: 5.5.3 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -183,7 +183,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 5.6 | WP: latest | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -202,7 +202,7 @@ steps:
       WP_MULTISITE: "1"
     label: 'PHP: 5.6 | WP: latest | Multisite: Yes'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -221,7 +221,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.0 | WP: 4.9.15 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -240,7 +240,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.0 | WP: 5.0.10 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -259,7 +259,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.0 | WP: 5.1.6 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -278,7 +278,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.0 | WP: 5.2.7 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -297,7 +297,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.0 | WP: 5.3.4 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -316,7 +316,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.0 | WP: 5.4.2 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -335,7 +335,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.0 | WP: 5.5.3 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -354,7 +354,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.0 | WP: latest | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -373,7 +373,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.1 | WP: 4.9.15 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -392,7 +392,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.1 | WP: 5.0.10 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -411,7 +411,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.1 | WP: 5.1.6 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -430,7 +430,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.1 | WP: 5.2.7 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -449,7 +449,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.1 | WP: 5.3.4 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -468,7 +468,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.1 | WP: 5.4.2 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -487,7 +487,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.1 | WP: 5.5.3 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -506,7 +506,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.1 | WP: latest | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -525,7 +525,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.2 | WP: 4.9.15 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -544,7 +544,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.2 | WP: 5.0.10 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -563,7 +563,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.2 | WP: 5.1.6 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -582,7 +582,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.2 | WP: 5.2.7 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -601,7 +601,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.2 | WP: 5.3.4 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -620,7 +620,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.2 | WP: 5.4.2 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -639,7 +639,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.2 | WP: 5.5.3 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -658,7 +658,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.2 | WP: latest | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -677,7 +677,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.3 | WP: 5.0.10 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -696,7 +696,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.3 | WP: 5.1.6 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -715,7 +715,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.3 | WP: 5.2.7 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -734,7 +734,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.3 | WP: 5.3.4 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -753,7 +753,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.3 | WP: 5.4.2 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -772,7 +772,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.3 | WP: 5.5.3 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -791,7 +791,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.3 | WP: latest | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -810,7 +810,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.4 | WP: 5.3.4 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -829,7 +829,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.4 | WP: 5.4.2 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -848,7 +848,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.4 | WP: 5.5.3 | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
@@ -867,7 +867,7 @@ steps:
       WP_MULTISITE: "0"
     label: 'PHP: 7.4 | WP: latest | Multisite: No'
     retry:
-      automattic:
+      automatic:
         - exit_status: 2
           limit: 2
     plugins:
