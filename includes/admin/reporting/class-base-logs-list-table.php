@@ -346,7 +346,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 			if ( filter_var( $search, FILTER_VALIDATE_IP ) ) {
 				$retval['ip'] = $search;
 			} elseif ( is_email( $search ) ) {
-				$customer = edd_get_customer( $search );
+				$customer = edd_get_customer_by( 'email', $search );
 				if ( ! empty( $customer->id ) ) {
 					$retval['customer_id'] = $customer->id;
 				}

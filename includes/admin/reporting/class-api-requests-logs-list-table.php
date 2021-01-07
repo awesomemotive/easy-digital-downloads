@@ -111,61 +111,6 @@ class EDD_API_Request_Log_Table extends EDD_Base_Log_List_Table {
 	}
 
 	/**
-	 * Gets the meta query for the log query
-	 *
-	 * This is used to return log entries that match our search query
-	 *
-	 * @since 1.5
-	 * @return array $meta_query
-	 */
-	function get_meta_query() {
-		$meta_query = array();
-
-		$search = $this->get_search();
-
-		if ( $search ) {
-			if ( filter_var( $search, FILTER_VALIDATE_IP ) ) {
-				// This is an IP address search
-				$key = '_edd_log_request_ip';
-			} else if ( is_email( $search ) ) {
-				// This is an email search
-				$userdata = get_user_by( 'email', $search );
-
-				if( $userdata ) {
-					$search = $userdata->ID;
-				}
-
-				$key = '_edd_log_user';
-			} elseif( strlen( $search ) == 32 ) {
-				// Look for an API key
-				$key = '_edd_log_key';
-			} elseif( stristr( $search, 'token:' ) ) {
-				// Look for an API token
-				$search = str_ireplace( 'token:', '', $search );
-				$key = '_edd_log_token';
-			} else {
-				// This is (probably) a user ID search
-				$userdata = get_userdata( $search );
-
-				if( $userdata ) {
-					$search = $userdata->ID;
-				}
-
-				$key = '_edd_log_user';
-			}
-
-			// Setup the meta query
-			$meta_query[] = array(
-				'key'     => $key,
-				'value'   => $search,
-				'compare' => '=',
-			);
-		}
-
-		return $meta_query;
-	}
-
-	/**
 	 * Gets the log entries for the current view
 	 *
 	 * @since 1.5
