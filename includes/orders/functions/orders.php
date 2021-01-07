@@ -36,6 +36,7 @@ defined( 'ABSPATH' ) || exit;
  *     @type string $mode                 Store mode when order was placed. Default empty.
  *     @type string $currency             Currency used for the order. Default empty.
  *     @type string $payment_key          Payment key generated for the order. Default empty.
+ *     @type int|null $tax_rate_id        ID of the tax rate Adjustment associated with the order. Default null.
  *     @type float  $subtotal             Order subtotal. Default 0.
  *     @type float  $discount             Discount applied to the order. Default 0.
  *     @type float  $tax                  Tax applied to the order. Default 0.
@@ -320,6 +321,7 @@ function edd_destroy_order( $order_id = 0 ) {
  *     @type string $mode                 Store mode when order was placed. Default empty.
  *     @type string $currency             Currency used for the order. Default empty.
  *     @type string $payment_key          Payment key generated for the order. Default empty.
+ *     @type int|float $tax_rate_id       ID of the tax rate Adjustment associated with the order. Default empty.
  *     @type float  $subtotal             Order subtotal. Default 0.
  *     @type float  $discount             Discount applied to the order. Default 0.
  *     @type float  $tax                  Tax applied to the order. Default 0.
@@ -736,6 +738,31 @@ function edd_build_order( $order_data = array() ) {
 
 	$order_args['customer_id'] = $customer->id;
 
+	$country = ! empty( $order_data['user_info']['address']['country'] )
+		? $order_data['user_info']['address']['country']
+		: false;
+
+	$region = ! empty( $order_data['user_info']['address']['state'] )
+		? $order_data['user_info']['address']['state']
+		: false;
+
+	// If taxes are enabled, get the tax rate for the order location.
+	$tax_rate = false;
+	if ( edd_use_taxes() ) {
+		$tax_rate = edd_get_tax_rate_by_location(
+			array(
+				'country' => $country,
+				'region'  => $region,
+			)
+		);
+
+		if ( ! empty( $tax_rate->id ) ) {
+			$order_args['tax_rate_id'] = $tax_rate->id;
+		}
+
+		// If no tax rate is found, then we'll save a percentage rate in order meta later.
+	}
+
 	/** Insert order **********************************************************/
 
 	// Add order into the edd_orders table.
@@ -800,25 +827,6 @@ function edd_build_order( $order_data = array() ) {
 	$decimal_filter = edd_currency_decimal_filter();
 
 	if ( is_array( $order_data['cart_details'] ) && ! empty( $order_data['cart_details'] ) ) {
-
-		$tax_rate = false;
-		// If taxes are enabled, get the tax rate for the order location.
-		if ( edd_use_taxes() ) {
-			$country = ! empty( $order_data['user_info']['address']['country'] )
-				? $order_data['user_info']['address']['country']
-				: false;
-
-			$region = ! empty( $order_data['user_info']['address']['state'] )
-				? $order_data['user_info']['address']['state']
-				: false;
-
-			$tax_rate = edd_get_tax_rate_by_location(
-				array(
-					'country' => $country,
-					'region'  => $region,
-				)
-			);
-		}
 
 		foreach ( $order_data['cart_details'] as $key => $item ) {
 
@@ -982,25 +990,6 @@ function edd_build_order( $order_data = array() ) {
 				}
 			}
 
-			// Maybe store order tax.
-			if ( $tax_rate ) {
-				$description = $tax_rate->name;
-				if ( ! empty( $tax_rate->description ) ) {
-					$description = $tax_rate->description;
-				}
-				// Always store tax rate, even if empty.
-				edd_add_order_adjustment(
-					array(
-						'object_id'   => $order_item_id,
-						'object_type' => 'order_item',
-						'type'        => 'tax_rate',
-						'total'       => $tax_rate->amount,
-						'type_id'     => $tax_rate->id,
-						'description' => $description,
-					)
-				);
-			}
-
 			$subtotal       += (float) $order_item_args['subtotal'];
 			$total_tax      += (float) $order_item_args['tax'];
 			$total_discount += (float) $order_item_args['discount'];
@@ -1091,6 +1080,18 @@ function edd_build_order( $order_data = array() ) {
 		- $total_discount // Total of all discounts
 		+ $total_tax      // Total of all taxes
 		+ $total_fees;    // Total of all fees
+
+	// If we have tax, but no tax rate, manually save the percentage.
+	if ( empty( $order_args['tax_rate_id'] ) && $total_tax > 0 ) {
+		$cart_tax_rate_percentage = edd_get_cart_tax_rate( $country, $region );
+		if ( ! empty( $cart_tax_rate_percentage ) ) {
+			if ( $cart_tax_rate_percentage > 0 && $cart_tax_rate_percentage < 1 ) {
+				$cart_tax_rate_percentage = $cart_tax_rate_percentage * 100;
+			}
+
+			edd_update_order_meta( $order_id, 'tax_rate', $cart_tax_rate_percentage );
+		}
+	}
 
 	// Setup order number.
 	if ( edd_get_option( 'enable_sequential' ) ) {

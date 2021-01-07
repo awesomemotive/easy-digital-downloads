@@ -10,6 +10,8 @@
  */
 
 // Exit if accessed directly
+use EDD\Adjustments\Adjustment;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -152,6 +154,25 @@ function edd_add_manual_order( $args = array() ) {
 	$order_discount = floatval( $data['discount'] );
 	$order_total    = floatval( $data['total'] );
 
+	$tax_rate  = false;
+	// If taxes are enabled, get the tax rate for the order location.
+	if ( edd_use_taxes() ) {
+		$country = ! empty( $data['edd_order_address']['country'] )
+			? $data['edd_order_address']['country']
+			: false;
+
+		$region = ! empty( $data['edd_order_address']['region'] )
+			? $data['edd_order_address']['region']
+			: false;
+
+		$tax_rate = edd_get_tax_rate_by_location(
+			array(
+				'country' => $country,
+				'region'  => $region,
+			)
+		);
+	}
+
 	// Add the order ID
 	$order_id = edd_add_order(
 		array(
@@ -164,6 +185,7 @@ function edd_add_manual_order( $args = array() ) {
 			'mode'         => $mode,
 			'currency'     => edd_get_currency(),
 			'payment_key'  => $data['payment_key'] ? sanitize_text_field( $data['payment_key'] ) : edd_generate_order_payment_key( $email ),
+			'tax_rate_id'  => ! empty( $tax_rate->id ) ? $tax_rate->id : null,
 			'subtotal'     => $order_subtotal,
 			'tax'          => $order_tax,
 			'discount'     => $order_discount,
@@ -218,24 +240,6 @@ function edd_add_manual_order( $args = array() ) {
 		$data['downloads'] = array_values( $data['downloads'] );
 
 		$downloads = array_reverse( $data['downloads'] );
-		$tax_rate  = false;
-		// If taxes are enabled, get the tax rate for the order location.
-		if ( edd_use_taxes() ) {
-			$country = ! empty( $data['edd_order_address']['country'] )
-				? $data['edd_order_address']['country']
-				: false;
-
-			$region = ! empty( $data['edd_order_address']['region'] )
-				? $data['edd_order_address']['region']
-				: false;
-
-			$tax_rate = edd_get_tax_rate_by_location(
-				array(
-					'country' => $country,
-					'region'  => $region,
-				)
-			);
-		}
 
 		foreach ( $downloads as $cart_key => $download ) {
 			$d = edd_get_download( absint( $download['id'] ) );
@@ -315,28 +319,6 @@ function edd_add_manual_order( $args = array() ) {
 					}
 				}
 
-				// Maybe store order tax.
-				if ( $tax_rate ) {
-					// Set the description to the tax rate country.
-					$description = $tax_rate->name;
-
-					// If the tax rate region is set, use that instead of the country.
-					if ( ! empty( $tax_rate->description ) ) {
-						$description = $tax_rate->description;
-					}
-					// Always store tax rate, even if empty.
-					edd_add_order_adjustment(
-						array(
-							'object_id'   => $order_item_id,
-							'object_type' => 'order_item',
-							'type'        => 'tax_rate',
-							'total'       => $tax_rate->amount,
-							'type_id'     => $tax_rate->id,
-							'description' => $description,
-						)
-					);
-				}
-
 				// Increase the earnings for this download.
 				edd_increase_earnings( absint( $download['id'] ), $total );
 				edd_increase_purchase_count( absint( $download['id'] ), $quantity );
@@ -345,8 +327,6 @@ function edd_add_manual_order( $args = array() ) {
 	}
 
 	/** Insert adjustments ****************************************************/
-
-	$adjustments = array();
 
 	// Adjustments.
 	if ( isset( $data['adjustments'] ) ) {
