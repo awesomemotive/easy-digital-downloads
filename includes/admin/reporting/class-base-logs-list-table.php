@@ -348,13 +348,23 @@ class EDD_Base_Log_List_Table extends List_Table {
 			} elseif ( is_email( $search ) ) {
 				$customer = edd_get_customer_by( 'email', $search );
 				if ( ! empty( $customer->id ) ) {
+					/*
+					 * File logs users customer_id but API logs use user_id, so we're setting
+					 * both to be compatible with both.
+					 */
 					$retval['customer_id'] = $customer->id;
+					$retval['user_id']     = $customer->user_id;
 				}
 			} elseif ( is_numeric( $search ) ) {
 				$customer = edd_get_customer( $search );
 
 				if ( ! empty( $customer->id ) ) {
+					/*
+					 * File logs users customer_id but API logs use user_id, so we're setting
+					 * both to be compatible with both.
+					 */
 					$retval['customer_id'] = $customer->id;
+					$retval['user_id']     = $customer->user_id;
 				} else {
 					$this->file_search = true;
 				}
