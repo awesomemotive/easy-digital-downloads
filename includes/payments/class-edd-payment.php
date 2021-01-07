@@ -651,8 +651,12 @@ class EDD_Payment {
 
 			$this->update_meta( '_edd_payment_meta', $this->payment_meta );
 
+			$tax_rate = $this->tax_rate;
+			if ( ! empty( $tax_rate ) && $this->tax_rate > 0 && $this->tax_rate < 1 ) {
+				$tax_rate = $tax_rate * 100;
+			}
 			$order_meta = array(
-				'tax_rate' => $this->tax_rate,
+				'tax_rate' => $tax_rate,
 			);
 
 			foreach ( $order_meta as $key => $value ) {
@@ -925,7 +929,8 @@ class EDD_Payment {
 						break;
 
 					case 'tax_rate':
-						$this->update_meta( '_edd_payment_tax_rate', $this->tax_rate );
+						$tax_rate = $this->tax_rate > 1 ? $this->tax_rate : ( $this->tax_rate * 100 );
+						$this->update_meta( '_edd_payment_tax_rate', $tax_rate );
 						break;
 
 					case 'number':
@@ -2542,7 +2547,8 @@ class EDD_Payment {
 				) );
 				return true;
 			case '_edd_payment_tax_rate':
-				edd_update_order_meta( $this->ID, 'tax_rate', $meta_value, $prev_value );
+				$tax_rate = $meta_value > 0 ? $meta_value : ( $meta_value * 100 );
+				edd_update_order_meta( $this->ID, 'tax_rate', $tax_rate, $prev_value );
 				return true;
 			case '_edd_payment_customer_id':
 				edd_update_order( $this->ID, array(
@@ -2874,7 +2880,13 @@ class EDD_Payment {
 	 * @return float Tax rate for the payment.
 	 */
 	private function setup_tax_rate() {
-		return $this->get_meta( 'tax_rate', true );
+		$tax_rate = $this->order->get_tax_rate();
+
+		if ( ! empty( $tax_rate ) && $tax_rate > 1 ) {
+			$tax_rate = $tax_rate / 100;
+		}
+
+		return $tax_rate;
 	}
 
 	/**

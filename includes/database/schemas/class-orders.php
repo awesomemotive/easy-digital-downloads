@@ -149,6 +149,17 @@ class Orders extends Schema {
 			'length'     => '64'
 		),
 
+		// tax_rate_id
+		array(
+			'name'       => 'tax_rate_id',
+			'type'       => 'bigint',
+			'length'     => '20',
+			'unsigned'   => true,
+			'default'    => null,
+			'allow_null' => true,
+			'sortable'   => true
+		),
+
 		// subtotal
 		array(
 			'name'       => 'subtotal',

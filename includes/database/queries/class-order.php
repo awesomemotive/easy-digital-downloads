@@ -137,6 +137,9 @@ class Order extends Query {
 	 *     @type string       $payment_key          Limit results to those affiliated with a given payment key. Default empty.
 	 *     @type array        $payment_key__in      Array of payment keys to include affiliated orders for. Default empty.
 	 *     @type array        $payment_key__not_in  Array of payment keys to exclude affiliated orders for. Default empty.
+	 *     @type int          $tax_rate_id          A tax rate ID to filter by. Default empty.
+	 *     @type array        $tax_rate_id__in      Array of tax rate IDs to filter by. Default empty.
+	 *     @type array        $tax_rate_id__not_in  Array of tax rate IDs to exclude orders for. Default empty.
 	 *     @type array        $date_query           Query all datetime columns together. See WP_Date_Query.
 	 *     @type array        $date_created_query   Date query clauses to limit orders by. See WP_Date_Query.
 	 *                                              Default null.
