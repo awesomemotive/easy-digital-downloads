@@ -436,7 +436,7 @@ class Refund_Items_Table extends List_Table {
 		<?php
 		$order = $this->get_order();
 		if ( $order && $order->get_tax_rate() ) :
-			?>
+		?>
 		<tr id="edd-refund-submit-tax" class="edd-refund-submit-line-total">
 			<td colspan="<?php echo $this->get_column_count() - 1; ?>">
 				<?php _e( 'Refund Tax Total', 'easy-digital-downloads' ); ?>
