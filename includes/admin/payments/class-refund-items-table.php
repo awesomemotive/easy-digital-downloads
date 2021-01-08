@@ -83,7 +83,8 @@ class Refund_Items_Table extends List_Table {
 		$columns['discount'] = __( 'Discount', 'easy-digital-downloads' );
 
 		// Maybe add tax column.
-		if ( edd_use_taxes() ) {
+		$order = $this->get_order();
+		if ( $order && $order->get_tax_rate() ) {
 			$columns['tax'] = __( 'Tax', 'easy-digital-downloads' );
 		}
 
@@ -281,8 +282,8 @@ class Refund_Items_Table extends List_Table {
 		if ( ! edd_is_add_order_page() ) {
 
 			// Check for an order ID
-			$order_id = ! empty( $_GET['id'] )
-				? absint( $_GET['id'] ) // WPCS: CSRF ok.
+			$order_id = ! empty( $_POST['order_id'] )
+				? absint( $_POST['order_id'] ) // WPCS: CSRF ok.
 				: 0;
 
 			// Get counts
@@ -432,7 +433,10 @@ class Refund_Items_Table extends List_Table {
 			</td>
 		</tr>
 
-		<?php if ( edd_use_taxes() ) : ?>
+		<?php
+		$order = $this->get_order();
+		if ( $order && $order->get_tax_rate() ) :
+		?>
 		<tr id="edd-refund-submit-tax" class="edd-refund-submit-line-total">
 			<td colspan="<?php echo $this->get_column_count() - 1; ?>">
 				<?php _e( 'Refund Tax Total', 'easy-digital-downloads' ); ?>
@@ -468,5 +472,19 @@ class Refund_Items_Table extends List_Table {
 			</td>
 		</tr>
 		<?php
+	}
+
+	/**
+	 * Gets the order object.
+	 *
+	 * @since 3.0
+	 * @return boolean|\EDD_Order
+	 */
+	private function get_order() {
+		$order_id = ! empty( $_POST['order_id'] )
+			? absint( $_POST['order_id'] ) // WPCS: CSRF ok.
+			: 0;
+
+		return edd_get_order( $order_id );
 	}
 }
