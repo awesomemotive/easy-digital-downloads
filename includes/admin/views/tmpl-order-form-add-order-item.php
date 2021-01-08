@@ -140,13 +140,13 @@ if ( ! empty( $recent_downloads ) ) {
 				/>
 				<span class="label">
 					<?php esc_html_e( 'Automatically calculate amounts', 'easy-digital-downloads' ); ?>
-					<# if ( false !== data.state.hasTax && '' !== data.state.hasTax.country ) { #>
+					<# if ( 'none' !== data.state.hasTax && '' !== data.state.hasTax.country ) { #>
 					<br />
 					<small>
 						<?php
 						printf(
 							esc_html__( 'Tax Rate: %s', 'easy-digital-downloads' ),
-							'{{ data.state.hasTax.country}}<# if ( \'\' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate.toFixed( 2 ) }}%'
+							'{{ data.state.hasTax.country}}<# if ( \'\' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate }}%'
 						); // WPCS: XSS okay.
 						?>
 					</small>
@@ -155,7 +155,7 @@ if ( ! empty( $recent_downloads ) ) {
 			</label>
 		</p>
 
-		<# if ( false !== data.state.hasTax && '' === data.state.hasTax.country && false === data.state.isAdjustingManually ) { #>
+		<# if ( 'none' !== data.state.hasTax && '' === data.state.hasTax.country && false === data.state.isAdjustingManually ) { #>
 			<div class="notice notice-warning">
 				<p>
 					<strong><?php esc_html_e( 'No tax rate has been set.', 'easy-digital-downloads' ); ?></strong><br />
@@ -190,7 +190,7 @@ if ( ! empty( $recent_downloads ) ) {
 				</span>
 			</p>
 
-			<# if ( false !== data.state.hasTax ) { #>
+			<# if ( 'none' !== data.state.hasTax ) { #>
 				<p>
 					<label for="tax">
 						<?php esc_html_e( 'Tax', 'easy-digital-downloads' ); ?>
@@ -198,7 +198,7 @@ if ( ! empty( $recent_downloads ) ) {
 							<?php
 							printf(
 								esc_html_x( '(%s)', 'add order item tax rate', 'easy-digital-downloads' ),
-								'{{ data.state.hasTax.country}}<# if ( \'\' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate.toFixed( 2 ) }}%'
+								'{{ data.state.hasTax.country}}<# if ( \'\' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate }}%'
 							); // WPCS: XSS okay.
 							?>
 						<# } #>

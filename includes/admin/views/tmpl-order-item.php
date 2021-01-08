@@ -38,7 +38,7 @@ $view_url = add_query_arg(
 			<# } #>
 
 			<div class="row-actions">
-				<# if ( false !== data.state.hasTax ) { #>
+				<# if ( 'none' !== data.state.hasTax ) { #>
 				<span class="text">
 					<strong><?php esc_html_e( 'Tax:', 'easy-digital-downloads' ); ?></strong>
 					{{ data.taxCurrency }}

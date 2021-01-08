@@ -120,6 +120,25 @@ function edd_refund_details_items( $refund ) {
 		);
 	}
 
+	$has_tax  = 'none';
+	$tax_rate = $refund->id ? $refund->get_tax_rate() : false;
+	$location = array(
+		'rate'    => $tax_rate,
+		'country' => '',
+		'region'  => '',
+	);
+	if ( $tax_rate ) {
+		$has_tax         = $location;
+		$has_tax['rate'] = $tax_rate;
+		if ( $refund->tax_rate_id ) {
+			$tax_rate_object = $refund->get_tax_rate_object();
+			if ( $tax_rate_object ) {
+				$has_tax['country'] = $tax_rate_object->name;
+				$has_tax['region']  = $tax_rate_object->description;
+			}
+		}
+	}
+
 	wp_localize_script(
 		'edd-admin-orders',
 		'eddAdminOrderOverview',
@@ -130,13 +149,7 @@ function edd_refund_details_items( $refund ) {
 			'isAdding'     => false,
 			'isRefund'     => true,
 			'hasQuantity'  => true === edd_item_quantities_enabled(),
-			'hasTax'       => true === edd_use_taxes()
-				? array(
-					'rate'    => 0,
-					'country' => '',
-					'region'  => '',
-				)
-				: 0,
+			'hasTax'       => $has_tax,
 			'order'        => array(
 				'currency'       => $refund->currency,
 				'currencySymbol' => html_entity_decode( edd_currency_symbol( $refund->currency ) ),
