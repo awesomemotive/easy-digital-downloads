@@ -9,3 +9,4 @@ import './components/sortable-list';
 import './components/user-search';
 import './components/advanced-filters';
 import './components/taxonomies';
+import './components/location';

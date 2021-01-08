@@ -2750,31 +2750,21 @@ function display_export_report() {
 								?>
 							<label for="edd_reports_filter_taxed_countries" class="screen-reader-text"><?php esc_html_e( 'Select Country', 'easy-digital-downloads' ); ?></label>
 								<?php
-								echo EDD()->html->select(
+								echo EDD()->html->country_select(
 									array(
-										'name'             => 'country',
-										'id'               => 'edd_reports_filter_taxed_countries',
-										'options'          => edd_get_country_list(),
-										'chosen'           => true,
-										'selected'         => false,
-										'show_option_none' => false,
-										'placeholder'      => __( 'All Countries', 'easy-digital-downloads' ),
-										'show_option_all'  => false,
+										'name'            => 'country',
+										'id'              => 'edd_reports_filter_taxed_countries',
+										'selected'        => false,
+										'show_option_all' => false,
 									)
 								);
 								?>
 							<label for="edd_reports_filter_regions" class="screen-reader-text"><?php esc_html_e( 'Select Region', 'easy-digital-downloads' ); ?></label>
 								<?php
-								echo EDD()->html->select(
+								echo EDD()->html->region_select(
 									array(
-										'name'             => 'region',
-										'id'               => 'edd_reports_filter_regions',
-										'options'          => edd_get_shop_states(),
-										'chosen'           => true,
-										'selected'         => false,
-										'show_option_none' => false,
-										'placeholder'      => __( 'All Regions', 'easy-digital-downloads' ),
-										'show_option_all'  => false,
+										'id'          => 'edd_reports_filter_regions',
+										'placeholder' => __( 'All Regions', 'easy-digital-downloads' ),
 									)
 								);
 
