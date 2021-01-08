@@ -58,7 +58,6 @@ class Order_Addresses extends Schema {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => 'billing',
-			'searchable' => false,
 			'sortable'   => true,
 			'transition' => true,
 		),

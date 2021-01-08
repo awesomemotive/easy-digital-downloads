@@ -77,7 +77,6 @@ class Customers extends Schema {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => 'active',
-			'searchable' => true,
 			'sortable'   => true,
 			'transition' => true
 		),
@@ -88,8 +87,7 @@ class Customers extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
-			'sortable'   => true,
-			'searchable' => true
+			'sortable'   => true
 		),
 
 		// purchase_count
