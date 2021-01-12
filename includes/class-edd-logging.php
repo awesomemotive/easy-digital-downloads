@@ -217,15 +217,15 @@ class EDD_Logging {
 
 			// Use the right log fetching function based on the type of log this is.
 			if ( 'edd_add_api_request_log' === $insert_method ) {
-				$log = edd_get_file_download_log( $log_id );
+				$add_meta = 'edd_add_api_request_log_meta';
 			} elseif ( 'edd_add_file_download_log' === $insert_method ) {
-				$log = edd_get_file_download_log( $log_id );
+				$add_meta = 'edd_add_file_download_log_meta';
 			} else {
-				$log = edd_get_log( $log_id );
+				$add_meta = 'edd_add_log_meta';
 			}
 
 			foreach ( (array) $log_meta as $key => $meta ) {
-				$log->add_meta( sanitize_key( $key ), $meta );
+				$add_meta( $log_id, sanitize_key( $key ), $meta );
 			}
 		}
 
@@ -337,7 +337,7 @@ class EDD_Logging {
 			$log = edd_get_log( $log_id );
 
 			foreach ( (array) $log_meta as $key => $meta ) {
-				$log->update_meta( sanitize_key( $key ), $meta );
+				edd_update_log_meta( $log_id, sanitize_key( $key ), $meta );
 			}
 		}
 
