@@ -8,6 +8,7 @@
  * Version: 3.0.0-beta-1
  * Text Domain: easy-digital-downloads
  * Domain Path: languages
+ * Requires PHP: 5.6
  *
  * Easy Digital Downloads is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
