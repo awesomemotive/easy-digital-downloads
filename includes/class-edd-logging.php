@@ -269,6 +269,7 @@ class EDD_Logging {
 
 		// Used to dynamically dispatch the method call to insert() to the correct class.
 		$update_method = 'edd_update_log';
+		$meta_update   = 'edd_update_log_meta';
 
 		$type = $args['log_type'];
 		if ( ! empty( $type ) ) {
@@ -283,7 +284,8 @@ class EDD_Logging {
 		);
 
 		if ( 'api_request' === $data['type'] ) {
-			$legacy = array(
+			$meta_update = 'edd_update_api_request_log_meta';
+			$legacy      = array(
 				'user'         => 'user_id',
 				'key'          => 'api_key',
 				'token'        => 'token',
@@ -302,7 +304,8 @@ class EDD_Logging {
 				}
 			}
 		} elseif ( 'file_download' === $data['type'] ) {
-			$legacy = array(
+			$meta_update = 'edd_update_file_download_log_meta';
+			$legacy      = array(
 				'file_id'    => 'file_id',
 				'payment_id' => 'payment_id',
 				'price_id'   => 'price_id',
@@ -334,10 +337,8 @@ class EDD_Logging {
 
 		// Set log meta, if any
 		if ( 'edd_update_log' === $update_method && ! empty( $log_meta ) ) {
-			$log = edd_get_log( $log_id );
-
 			foreach ( (array) $log_meta as $key => $meta ) {
-				edd_update_log_meta( $log_id, sanitize_key( $key ), $meta );
+				$meta_update( $log_id, sanitize_key( $key ), $meta );
 			}
 		}
 
