@@ -108,7 +108,7 @@ class EDD_Notices {
 		 * @since 2.10
 		 */
 		if ( version_compare( PHP_VERSION, '5.6', '<' ) && ! get_user_meta( get_current_user_id(), '_edd_upgrade_php_dismissed', true ) ) {
-			echo '<div class="notice notice-warning is-dismissible">';
+			echo '<div class="notice notice-warning is-dismissible edd-notice">';
 			printf(
 				'<h2>%s</h2>',
 				esc_html__( 'Get Ready for Easy Digital Downloads 3.0', 'easy-digital-downloads' )
