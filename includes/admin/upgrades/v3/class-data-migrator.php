@@ -422,10 +422,10 @@ class Data_Migrator {
 
 			// Loop through the items in the purchase to build the totals.
 			foreach ( $cart_details as $cart_item ) {
-				$subtotal += (float) isset( $cart_item['subtotal'] ) ? $cart_item['subtotal'] : 0;
-				$tax      += (float) isset( $cart_item['tax'] )      ? $cart_item['tax']      : 0;
-				$discount += (float) isset( $cart_item['discount'] ) ? $cart_item['discount'] : 0;
-				$total    += (float) isset( $cart_item['price'] )    ? $cart_item['price']    : 0;
+				$subtotal += isset( $cart_item['subtotal'] ) ? (float) $cart_item['subtotal'] : 0;
+				$tax      += isset( $cart_item['tax'] )      ? (float) $cart_item['tax']      : 0;
+				$discount += isset( $cart_item['discount'] ) ? (float) $cart_item['discount'] : 0;
+				$total    += isset( $cart_item['price'] )    ? (float) $cart_item['price']    : 0;
 			}
 
 		} else {
