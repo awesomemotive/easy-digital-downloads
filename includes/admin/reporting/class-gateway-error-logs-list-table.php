@@ -54,7 +54,7 @@ class EDD_Gateway_Error_Log_Table extends EDD_Base_Log_List_Table {
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
 			case 'error' :
-				return get_the_title( $item['ID'] ) ? get_the_title( $item['ID'] ) : __( 'Payment Error', 'easy-digital-downloads' );
+				return $item['error'];
 			default:
 				return $item[ $column_name ];
 		}
@@ -73,7 +73,7 @@ class EDD_Gateway_Error_Log_Table extends EDD_Base_Log_List_Table {
 		<div id="log-message-<?php echo $item['ID']; ?>" style="display:none;">
 			<?php
 
-			$log_message = get_post_field( 'post_content', $item['ID'] );
+			$log_message = $item['content'];
 			$serialized  = strpos( $log_message, '{"' );
 
 			// Check to see if the log message contains serialized information
@@ -132,9 +132,10 @@ class EDD_Gateway_Error_Log_Table extends EDD_Base_Log_List_Table {
 				$logs_data[] = array(
 					'ID'         => $log->id,
 					'payment_id' => $log->object_id,
-					'error'      => 'error',
+					'error'      => $log->title ? $log->title : __( 'Payment Error', 'easy-digital-downloads' ),
 					'gateway'    => edd_get_payment_gateway( $log->object_id ),
 					'date'       => $log->date_created,
+					'content'    => $log->content,
 				);
 			}
 		}
