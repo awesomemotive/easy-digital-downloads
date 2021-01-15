@@ -254,7 +254,6 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 
 	$type   = edd_single_price_option_mode( $download_id ) ? 'checkbox' : 'radio';
 	$mode   = edd_single_price_option_mode( $download_id ) ? 'multi' : 'single';
-	$schema = edd_add_schema_microdata() ? ' itemprop="offers" itemscope itemtype="http://schema.org/Offer"' : '';
 
 	if ( edd_item_in_cart( $download_id ) && ! edd_single_price_option_mode( $download_id ) ) {
 		return;
@@ -267,10 +266,10 @@ function edd_purchase_variable_pricing( $download_id = 0, $args = array() ) {
 			if ( $prices ) :
 				$checked_key = isset( $_GET['price_option'] ) ? absint( $_GET['price_option'] ) : edd_get_default_variable_price( $download_id );
 				foreach ( $prices as $key => $price ) :
-					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . '"' . $schema . '>';
+					echo '<li id="edd_price_option_' . $download_id . '_' . sanitize_key( $price['name'] ) . '">';
 						echo '<label for="'	. esc_attr( 'edd_price_option_' . $download_id . '_' . $key ) . '">';
 							echo '<input type="' . $type . '" ' . checked( apply_filters( 'edd_price_option_checked', $checked_key, $download_id, $key ), $key, false ) . ' name="edd_options[price_id][]" id="' . esc_attr( 'edd_price_option_' . $download_id . '_' . $key ) . '" class="' . esc_attr( 'edd_price_option_' . $download_id ) . '" value="' . esc_attr( $key ) . '" data-price="' . edd_get_price_option_amount( $download_id, $key ) .'"/>&nbsp;';
-							echo '<span class="edd_price_option_name" itemprop="description">' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price" itemprop="price">' . edd_currency_filter( edd_format_amount( $price['amount'] ) ) . '</span>';
+							echo '<span class="edd_price_option_name">' . esc_html( $price['name'] ) . '</span><span class="edd_price_option_sep">&nbsp;&ndash;&nbsp;</span><span class="edd_price_option_price">' . edd_currency_filter( edd_format_amount( $price['amount'] ) ) . '</span>';
 						echo '</label>';
 						do_action( 'edd_after_price_option', $key, $price, $download_id );
 					echo '</li>';
@@ -687,117 +686,6 @@ function edd_get_theme_template_paths() {
 function edd_get_theme_template_dir_name() {
 	return trailingslashit( apply_filters( 'edd_templates_dir', 'edd_templates' ) );
 }
-
-/**
- * Should we add schema.org microdata?
- *
- * @since 1.7
- * @return bool
- */
-function edd_add_schema_microdata() {
-	// Don't modify anything until after wp_head() is called
-	$ret = (bool)did_action( 'wp_head' );
-	return apply_filters( 'edd_add_schema_microdata', $ret );
-}
-
-/**
- * Add Microdata to download titles
- *
- * @since 1.5
- * @author Sunny Ratilal
- * @param string $title Post Title
- * @param int $id Post ID
- * @return string $title New title
- */
-function edd_microdata_title( $title, $id = 0 ) {
-	global $post;
-
-	if( ! edd_add_schema_microdata() || ! is_object( $post ) ) {
-		return $title;
-	}
-
-	if ( $post->ID == $id && is_singular( 'download' ) && 'download' == get_post_type( intval( $id ) ) ) {
-		$title = '<span itemprop="name">' . $title . '</span>';
-	}
-
-	return $title;
-}
-add_filter( 'the_title', 'edd_microdata_title', 10, 2 );
-
-/**
- * Start Microdata to wrapper download
- *
- * @since 2.3
- * @author Chris Klosowski
- *
- * @return void
- */
-function edd_microdata_wrapper_open( $query ) {
-	global $post;
-
-	static $microdata_open = NULL;
-
-	if( ! edd_add_schema_microdata() || true === $microdata_open || ! is_object( $query ) ) {
-		return;
-	}
-
-	if ( $query && ! empty( $query->query['post_type'] ) && $query->query['post_type'] == 'download' && is_singular( 'download' ) && $query->is_main_query() ) {
-		$microdata_open = true;
-		echo '<span itemscope itemtype="http://schema.org/Product">';
-	}
-
-}
-add_action( 'loop_start', 'edd_microdata_wrapper_open', 10 );
-
-/**
- * End Microdata to wrapper download
- *
- * @since 2.3
- * @author Chris Klosowski
- *
- * @return void
- */
-function edd_microdata_wrapper_close() {
-	global $post;
-
-	static $microdata_close = NULL;
-
-	if( ! edd_add_schema_microdata() || true === $microdata_close || ! is_object( $post ) ) {
-		return;
-	}
-
-	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
-		$microdata_close = true;
-		echo '</span>';
-	}
-}
-add_action( 'loop_end', 'edd_microdata_wrapper_close', 10 );
-
-/**
- * Add Microdata to download description
- *
- * @since 1.5
- * @author Sunny Ratilal
- *
- * @param $content
- * @return mixed|void New title
- */
-function edd_microdata_description( $content ) {
-	global $post;
-
-	static $microdata_description = NULL;
-
-	if( ! edd_add_schema_microdata() || true === $microdata_description || ! is_object( $post ) ) {
-		return $content;
-	}
-
-	if ( $post && $post->post_type == 'download' && is_singular( 'download' ) && is_main_query() ) {
-		$microdata_description = true;
-		$content = apply_filters( 'edd_microdata_wrapper', '<div itemprop="description">' . $content . '</div>' );
-	}
-	return $content;
-}
-add_filter( 'the_content', 'edd_microdata_description', 10 );
 
 /**
  * Add no-index and no-follow to EDD checkout and purchase confirmation pages
