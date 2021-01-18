@@ -420,8 +420,7 @@ function _edd_anonymize_payment( $order_id = 0 ) {
 
 			// Anonymize the line 1 and line 2 of the address. City, state, zip, and country are possibly needed for taxes.
 			$order_address_data = array(
-				'first_name' => '',
-				'last_name'  => '',
+				'name'       => '',
 				'address'    => '',
 				'address2'   => '',
 			);

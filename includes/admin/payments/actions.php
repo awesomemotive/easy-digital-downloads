@@ -193,20 +193,8 @@ function edd_update_payment_details( $data = array() ) {
 	// Address
 	$address = $data['edd_order_address'];
 
-	// Setup first and last name from input values.
-	$name       = $customer->name;
-	$names      = explode( ' ', $name );
-	$first_name = ! empty( $names[0] ) ? $names[0] : '';
-	$last_name  = '';
-
-	if ( ! empty( $names[1] ) ) {
-		unset( $names[0] );
-		$last_name = implode( ' ', $names );
-	}
-
 	edd_update_order_address( absint( $address['address_id'] ), array(
-		'first_name'  => $first_name,
-		'last_name'   => $last_name,
+		'name'        => $customer->name,
 		'address'     => $address['address'],
 		'address2'    => $address['address2'],
 		'city'        => $address['city'],
