@@ -107,7 +107,7 @@ class EDD_Notices {
 		 * Notice for users running PHP < 5.6.
 		 * @since 2.10
 		 */
-		if ( version_compare( PHP_VERSION, '5.6', '<' ) && ! get_user_meta( get_current_user_id(), '_edd_upgrade_php_dismissed', true ) && current_user_can( 'manage_shop_settings' ) ) {
+		if ( version_compare( PHP_VERSION, '5.6', '<' ) && ! get_user_meta( get_current_user_id(), '_edd_upgrade_php_56_dismissed', true ) && current_user_can( 'manage_shop_settings' ) ) {
 			echo '<div class="notice notice-warning is-dismissible edd-notice">';
 			printf(
 				'<h2>%s</h2>',
@@ -158,7 +158,7 @@ class EDD_Notices {
 						add_query_arg(
 							array(
 								'edd_action' => 'dismiss_notices',
-								'edd_notice' => 'upgrade_php',
+								'edd_notice' => 'upgrade_php_56',
 							)
 						)
 					),
