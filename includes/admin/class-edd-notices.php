@@ -111,7 +111,7 @@ class EDD_Notices {
 			echo '<div class="notice notice-warning is-dismissible edd-notice">';
 			printf(
 				'<h2>%s</h2>',
-				esc_html__( 'Get Ready for Easy Digital Downloads 3.0', 'easy-digital-downloads' )
+				esc_html__( 'Upgrade PHP to Prepare for Easy Digital Downloads 3.0', 'easy-digital-downloads' )
 			);
 			echo wp_kses_post(
 				sprintf(
