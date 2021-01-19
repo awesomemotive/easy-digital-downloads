@@ -208,7 +208,7 @@ function edd_process_paypal_ipn() {
 		$listener->use_curl = false;
 	}
 
-    $to_email = apply_filters( 'bpmj_eddcm_to_email', get_option( 'admin_email' ) );
+    $to_email = apply_filters( 'wpi_admin_notices_email', get_option( 'admin_email' ) );
 
 	try {
 		$listener->requirePostMethod();
