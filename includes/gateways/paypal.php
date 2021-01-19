@@ -207,12 +207,14 @@ function edd_process_paypal_ipn() {
 	if( isset( $edd_options['paypal_disable_curl'] ) ) {
 		$listener->use_curl = false;
 	}
-	
+
+    $to_email = apply_filters( 'bpmj_eddcm_to_email', get_option( 'admin_email' ) );
+
 	try {
 		$listener->requirePostMethod();
 		$verified = $listener->processIpn();
 	} catch( Exception $e ) {
-		wp_mail( get_bloginfo('admin_email'), 'IPN Error', $e->getMessage() );
+        wp_mail( $to_email, 'IPN Error', $e->getMessage() );
 		exit(0);
 	}
 
@@ -264,7 +266,7 @@ function edd_process_paypal_ipn() {
 		}
 
 	} else {
-		wp_mail( get_bloginfo('admin_email'), __( 'Invalid IPN', 'edd' ), $listener->getTextReport() );
+        wp_mail( $to_email, __( 'Invalid IPN', 'edd' ), $listener->getTextReport() );
 	}
 }
 add_action( 'edd_verify_paypal_ipn', 'edd_process_paypal_ipn' );

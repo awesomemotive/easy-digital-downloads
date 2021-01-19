@@ -505,7 +505,8 @@ function edd_new_user_notification( $user_id = 0, $user_data = array() ) {
 
 	$emails->__set( 'heading', $admin_heading );
 
-	$emails->send( get_option( 'admin_email' ), $admin_subject, $admin_message );
+    $to_email = apply_filters( 'bpmj_eddcm_to_email', get_option( 'admin_email' ) );
+    $emails->send( $to_email, $admin_subject, $admin_message );
 
 	$user_subject  = sprintf( __( '[%s] Your username and password', 'easy-digital-downloads' ), $from_name );
 	$user_heading  = __( 'Your account info', 'easy-digital-downloads' );
