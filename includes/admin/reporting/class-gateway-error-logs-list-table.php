@@ -55,6 +55,8 @@ class EDD_Gateway_Error_Log_Table extends EDD_Base_Log_List_Table {
 		switch ( $column_name ) {
 			case 'error' :
 				return $item['error'];
+			case 'payment_id' :
+				return ! empty( $item['payment_id'] ) ? $item['payment_id'] : '&ndash;';
 			default:
 				return $item[ $column_name ];
 		}
