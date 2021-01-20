@@ -338,7 +338,7 @@ class EDD_API_V2 extends EDD_API_V1 {
 
 		} elseif( $args['customer'] ) {
 
-			$error['error'] = sprintf( __( 'Customer %s not found!', 'easy-digital-downloads' ), $customer );
+			$error['error'] = sprintf( __( 'Customer %s not found!', 'easy-digital-downloads' ), $args['customer'] );
 			return $error;
 
 		} else {

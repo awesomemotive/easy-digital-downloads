@@ -534,7 +534,7 @@ function edd_recovery_force_login_fields() {
 			<div class="edd-alert edd-alert-info">
 				<p><?php _e( 'To complete this payment, please login to your account.', 'easy-digital-downloads' ); ?></p>
 				<p>
-					<a href="<?php echo wp_lostpassword_url(); ?>" title="<?php _e( 'Lost Password', 'easy-digital-downloads' ); ?>">
+					<a href="<?php echo esc_url( edd_get_lostpassword_url() ); ?>" title="<?php esc_attr_e( 'Lost Password', 'easy-digital-downloads' ); ?>">
 						<?php _e( 'Lost Password?', 'easy-digital-downloads' ); ?>
 					</a>
 				</p>
