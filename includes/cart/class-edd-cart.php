@@ -639,6 +639,14 @@ class EDD_Cart {
 
 		if ( ! isset( $item['options'] ) ) {
 			$item['options'] = array();
+
+			/*
+			 * Support for variable pricing when calling `edd_get_cart_item_discount_amount()`
+			 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/8246
+			 */
+			if ( isset( $item['item_number']['options'] ) ) {
+				$item['options'] = $item['item_number']['options'];
+			}
 		}
 
 		$amount           = 0;
