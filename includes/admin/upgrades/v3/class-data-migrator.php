@@ -238,7 +238,8 @@ class Data_Migrator {
 				'date_modified' => $data->post_modified_gmt,
 			);
 
-			edd_add_file_download_log( $log_data );
+			$new_log_id        = edd_add_file_download_log( $log_data );
+			$add_meta_function = 'edd_add_file_download_log_meta';
 		} elseif ( 'api_request' === $data->slug ) {
 			$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d", absint( $data->ID ) ) );
 
@@ -274,9 +275,11 @@ class Data_Migrator {
 				'date_modified' => $data->post_modified_gmt,
 			);
 
-			edd_add_api_request_log( $log_data );
+			$new_log_id        = edd_add_api_request_log( $log_data );
+			$add_meta_function = 'edd_add_api_request_log_meta';
 		} else {
-			$post = \WP_Post::get_instance( $data->ID );
+			$post      = \WP_Post::get_instance( $data->ID );
+			$post_meta = get_post_custom( $data->ID );
 
 			$log_data = array(
 				'object_id'     => $post->post_parent,
@@ -288,19 +291,23 @@ class Data_Migrator {
 				'date_modified' => $data->post_modified_gmt,
 			);
 
-			$meta            = get_post_custom( $data->ID );
-			$meta_to_migrate = array();
+			$new_log_id        = edd_add_log( $log_data );
+			$add_meta_function = 'edd_add_log_meta';
+		}
 
-			foreach ( $meta as $key => $value ) {
-				$meta_to_migrate[ $key ] = maybe_unserialize( $value[0] );
-			}
+		if ( ! is_callable( $add_meta_function ) ) {
+			return;
+		}
 
-			$new_log_id = edd_add_log( $log_data );
+		$meta_to_migrate = array();
 
-			if ( ! empty( $meta_to_migrate ) ) {
-				foreach ( $meta_to_migrate as $key => $value ) {
-					edd_add_log_meta( $new_log_id, $key, $value );
-				}
+		foreach ( $post_meta as $key => $value ) {
+			$meta_to_migrate[ $key ] = maybe_unserialize( $value[0] );
+		}
+
+		if ( ! empty( $meta_to_migrate ) ) {
+			foreach ( $meta_to_migrate as $key => $value ) {
+				$add_meta_function( $new_log_id, $key, $value );
 			}
 		}
 	}
