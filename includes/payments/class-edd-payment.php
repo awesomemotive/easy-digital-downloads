@@ -512,11 +512,11 @@ class EDD_Payment {
 		$this->customer_id     = $this->order->customer_id;
 		$this->user_id         = $this->setup_user_id();
 		$this->email           = $this->setup_email();
-		$this->address         = $this->setup_address();
 		$this->discounts       = $this->setup_discounts();
 		$this->user_info       = $this->setup_user_info();
 		$this->first_name      = $this->user_info['first_name'];
 		$this->last_name       = $this->user_info['last_name'];
+		$this->address         = $this->setup_address();
 
 		// Other Identifiers
 		$this->key             = $this->order->payment_key;
@@ -2267,13 +2267,13 @@ class EDD_Payment {
 					}
 
 					$user_info = wp_parse_args( $user_info, $defaults );
+					$name      = $user_info['first_name'] . ' ' . $user_info['last_name'];
 
 					if ( null !== $this->order && $this->order->get_address()->id ) {
 						$order_address = $this->order->get_address();
 
 						edd_update_order_address( $order_address->id, array(
-							'first_name'  => $user_info['first_name'],
-							'last_name'   => $user_info['last_name'],
+							'name'        => $name,
 							'address'     => $user_info['address']['line1'],
 							'address2'    => $user_info['address']['line2'],
 							'city'        => $user_info['address']['city'],
@@ -2284,8 +2284,7 @@ class EDD_Payment {
 					} else {
 						edd_add_order_address( array(
 							'order_id'    => $this->ID,
-							'first_name'  => $user_info['first_name'],
-							'last_name'   => $user_info['last_name'],
+							'name'        => $name,
 							'address'     => $user_info['address']['line1'],
 							'address2'    => $user_info['address']['line2'],
 							'city'        => $user_info['address']['city'],
