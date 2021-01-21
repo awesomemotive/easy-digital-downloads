@@ -238,6 +238,13 @@ class Data_Migrator {
 				'date_modified' => $data->post_modified_gmt,
 			);
 
+			$meta_to_remove    = array(
+				'_edd_log_file_id',
+				'_edd_log_payment_id',
+				'_edd_log_price_id',
+				'_edd_log_customer_id',
+				'_edd_log_ip',
+			);
 			$new_log_id        = edd_add_file_download_log( $log_data );
 			$add_meta_function = 'edd_add_file_download_log_meta';
 		} elseif ( 'api_request' === $data->slug ) {
@@ -275,6 +282,14 @@ class Data_Migrator {
 				'date_modified' => $data->post_modified_gmt,
 			);
 
+			$meta_to_remove    = array(
+				'_edd_log_request_ip',
+				'_edd_log_user',
+				'_edd_log_key',
+				'_edd_log_token',
+				'_edd_log_version',
+				'_edd_log_time',
+			);
 			$new_log_id        = edd_add_api_request_log( $log_data );
 			$add_meta_function = 'edd_add_api_request_log_meta';
 		} else {
@@ -291,6 +306,7 @@ class Data_Migrator {
 				'date_modified' => $data->post_modified_gmt,
 			);
 
+			$meta_to_remove    = array();
 			$new_log_id        = edd_add_log( $log_data );
 			$add_meta_function = 'edd_add_log_meta';
 		}
@@ -307,7 +323,9 @@ class Data_Migrator {
 
 		if ( ! empty( $meta_to_migrate ) ) {
 			foreach ( $meta_to_migrate as $key => $value ) {
-				$add_meta_function( $new_log_id, $key, $value );
+				if ( ! in_array( $key, $meta_to_remove, true ) ) {
+					$add_meta_function( $new_log_id, $key, $value );
+				}
 			}
 		}
 	}
