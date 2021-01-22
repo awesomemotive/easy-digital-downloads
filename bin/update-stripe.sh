@@ -9,10 +9,6 @@ cd includes/gateways/stripe
 composer install --no-dev
 npm install && npm run build
 
-# Edit bootstrap function name to avoid collision.
-sed -i '' 's/edd_stripe_bootstrap/edd_stripe_core_bootstrap/g' edd-stripe.php
-sed -i '' '$ d' edd-stripe.php
-
 # Clean up files for distribution.
 # @todo Maybe use git archive? However composer.json would
 # need to be removed from .gitattributes export-ignore
