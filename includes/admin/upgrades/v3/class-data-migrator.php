@@ -218,6 +218,7 @@ class Data_Migrator {
 			return;
 		}
 
+		$meta_to_migrate = array();
 		if ( 'file_download' === $data->slug ) {
 			$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d", absint( $data->ID ) ) );
 
@@ -245,6 +246,7 @@ class Data_Migrator {
 				'_edd_log_customer_id',
 				'_edd_log_ip',
 			);
+			$meta_to_migrate   = $post_meta;
 			$new_log_id        = edd_add_file_download_log( $log_data );
 			$add_meta_function = 'edd_add_file_download_log_meta';
 		} elseif ( 'api_request' === $data->slug ) {
@@ -256,14 +258,17 @@ class Data_Migrator {
 				$post_meta[ $meta_item->meta_key ] = maybe_unserialize( $meta_item->meta_value );
 			}
 
-			$post_meta = wp_parse_args( $post_meta, array(
-				'_edd_log_request_ip' => '',
-				'_edd_log_user'       => 0,
-				'_edd_log_key'        => 'public',
-				'_edd_log_token'      => 'public',
-				'_edd_log_version'    => '',
-				'_edd_log_time'       => '',
-			) );
+			$post_meta = wp_parse_args(
+				$post_meta,
+				array(
+					'_edd_log_request_ip' => '',
+					'_edd_log_user'       => 0,
+					'_edd_log_key'        => 'public',
+					'_edd_log_token'      => 'public',
+					'_edd_log_version'    => '',
+					'_edd_log_time'       => '',
+				)
+			);
 
 			if ( empty( $post_meta['_edd_log_token'] ) ) {
 				$post_meta['_edd_log_token'] = 'public' === $post_meta['_edd_log_key'] ? 'public' : '';
@@ -290,6 +295,7 @@ class Data_Migrator {
 				'_edd_log_version',
 				'_edd_log_time',
 			);
+			$meta_to_migrate   = $post_meta;
 			$new_log_id        = edd_add_api_request_log( $log_data );
 			$add_meta_function = 'edd_add_api_request_log_meta';
 		} else {
@@ -306,26 +312,23 @@ class Data_Migrator {
 				'date_modified' => $data->post_modified_gmt,
 			);
 
-			$meta_to_remove    = array();
+			$meta_to_remove = array(
+				'_edit_lock',
+			);
+			foreach ( $post_meta as $key => $value ) {
+				$meta_to_migrate[ $key ] = maybe_unserialize( $value[0] );
+			}
 			$new_log_id        = edd_add_log( $log_data );
 			$add_meta_function = 'edd_add_log_meta';
 		}
 
-		if ( ! is_callable( $add_meta_function ) ) {
+		if ( ! is_callable( $add_meta_function ) || empty( $meta_to_migrate ) ) {
 			return;
 		}
 
-		$meta_to_migrate = array();
-
-		foreach ( $post_meta as $key => $value ) {
-			$meta_to_migrate[ $key ] = maybe_unserialize( $value[0] );
-		}
-
-		if ( ! empty( $meta_to_migrate ) ) {
-			foreach ( $meta_to_migrate as $key => $value ) {
-				if ( ! in_array( $key, $meta_to_remove, true ) ) {
-					$add_meta_function( $new_log_id, $key, $value );
-				}
+		foreach ( $meta_to_migrate as $key => $value ) {
+			if ( ! in_array( $key, $meta_to_remove, true ) ) {
+				$add_meta_function( $new_log_id, $key, $value );
 			}
 		}
 	}
