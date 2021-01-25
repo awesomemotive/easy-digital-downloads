@@ -299,11 +299,10 @@ class Data_Migrator {
 			$new_log_id        = edd_add_api_request_log( $log_data );
 			$add_meta_function = 'edd_add_api_request_log_meta';
 		} else {
-			$post      = \WP_Post::get_instance( $data->ID );
 			$post_meta = get_post_custom( $data->ID );
 
 			$log_data = array(
-				'object_id'     => $post->post_parent,
+				'object_id'     => $data->post_parent,
 				'object_type'   => 'download',
 				'type'          => $data->slug,
 				'title'         => $data->post_title,
