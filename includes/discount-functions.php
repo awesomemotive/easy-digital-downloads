@@ -1076,13 +1076,13 @@ function edd_get_item_discount_amount( $item, $items, $discounts ) {
 		if ( ! empty( $reqs ) && 'global' !== $discount->get_scope() ) {
 			// This is a product(s) specific discount.
 			foreach ( $reqs as $download_id ) {
-				if ( $download_id == $item_id_for_discount_check && ! in_array( $item_id_for_discount_check, $excluded_products ) ) {
+				if ( ( $download_id == $item['id'] && ! in_array( $item['id'], $excluded_products ) ) || ( $download_id == $item_id_for_discount_check && ! in_array( $item_id_for_discount_check, $excluded_products ) ) ) {
 					$discount_amount += ( $item_amount - $discount->get_discounted_amount( $item_amount ) );
 				}
 			}
 		} else {
 			// This is a global cart discount.
-			if ( ! in_array( $item_id_for_discount_check, $excluded_products ) ) {
+			if ( ! in_array( $item_id_for_discount_check, $excluded_products ) || ! in_array( $item['id'], $excluded_products ) ) {
 				if ( 'flat' === $discount->get_type() ) {
 					// In order to correctly record individual item amounts, global flat rate discounts
 					// are distributed across all items.
