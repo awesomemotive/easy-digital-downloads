@@ -1032,7 +1032,7 @@ class EDD_Discount extends Adjustment {
 				if ( isset( $args['excluded_products'] ) ) {
 					if ( is_array( $args['excluded_products'] ) ) {
 						foreach ( $args['excluded_products'] as $product ) {
-							edd_add_adjustment_meta( $this->id, 'excluded_product', absint( $product ) );
+							edd_add_adjustment_meta( $this->id, 'excluded_product', esc_attr( $product ) );
 						}
 					}
 				}
@@ -1040,7 +1040,7 @@ class EDD_Discount extends Adjustment {
 				if ( isset( $args['product_reqs'] ) ) {
 					if ( is_array( $args['product_reqs'] ) ) {
 						foreach ( $args['product_reqs'] as $product ) {
-							edd_add_adjustment_meta( $this->id, 'product_requirement', absint( $product ) );
+							edd_add_adjustment_meta( $this->id, 'product_requirement', esc_attr( $product ) );
 						}
 					}
 				}
@@ -1130,7 +1130,7 @@ class EDD_Discount extends Adjustment {
 
 				// Now add each newly excluded product
 				foreach ( $args['excluded_products'] as $product ) {
-					$this->add_meta( 'excluded_product', absint( $product ) );
+					$this->add_meta( 'excluded_product', esc_attr( $product ) );
 				}
 			} else {
 				$this->delete_meta( 'excluded_product' );
@@ -1145,7 +1145,7 @@ class EDD_Discount extends Adjustment {
 
 				// Now add each newly required product
 				foreach ( $args['product_reqs'] as $product ) {
-					$this->add_meta( 'product_requirement', absint( $product ) );
+					$this->add_meta( 'product_requirement', esc_attr( $product ) );
 				}
 			} else {
 				$this->delete_meta( 'product_requirement' );
@@ -1401,12 +1401,12 @@ class EDD_Discount extends Adjustment {
 		 */
 
 		// First absint the items, then sort, and reset the array keys
-		$product_reqs = array_map( 'absint', $product_reqs );
+		$product_reqs = array_map( 'esc_attr', $product_reqs );
 		asort( $product_reqs );
 		$product_reqs = array_filter( array_values( $product_reqs ) );
 
 
-		$excluded_ps = array_map( 'absint', $excluded_ps );
+		$excluded_ps = array_map( 'esc_attr', $excluded_ps );
 		asort( $excluded_ps );
 		$excluded_ps = array_filter( array_values( $excluded_ps ) );
 
