@@ -223,6 +223,7 @@ class Log extends Base {
 			'_edd_key_ip',
 			'_edd_log_payment_id',
 			'_edd_log_price_id',
+			'_edd_log_customer_id',
 		);
 
 		if ( ! in_array( $meta_key, $meta_keys, true ) ) {
@@ -241,6 +242,7 @@ class Log extends Base {
 			case '_edd_key_ip':
 			case '_edd_log_payment_id':
 			case '_edd_log_price_id':
+			case '_edd_log_customer_id':
 				$key = str_replace( '_edd_log_', '', $meta_key );
 
 				switch ( $key ) {
@@ -251,11 +253,16 @@ class Log extends Base {
 						$key = 'api_key';
 						break;
 					case 'user':
-						$key = 'user_id';
+						$key = 'customer_id';
+
 						break;
 				}
 
 				$value = $file_download_log->{$key};
+				if ( 'user' === $meta_key ) {
+					$customer = new EDD_Customer( $value );
+					$value    = $customer ? $customer->user_id : 0;
+				}
 				break;
 		}
 
@@ -295,6 +302,7 @@ class Log extends Base {
 			'_edd_key_ip',
 			'_edd_log_payment_id',
 			'_edd_log_price_id',
+			'_edd_log_customer_id',
 		);
 
 		if ( ! in_array( $meta_key, $meta_keys, true ) ) {
@@ -313,6 +321,7 @@ class Log extends Base {
 			case '_edd_key_ip':
 			case '_edd_log_payment_id':
 			case '_edd_log_price_id':
+			case '_edd_log_customer_id';
 				$key = str_replace( '_edd_log_', '', $meta_key );
 
 				$check = edd_update_file_download_log( $object_id, array(
@@ -329,6 +338,20 @@ class Log extends Base {
 					edd_update_file_download_log( $object_id, array(
 						'user_id' => $user_id
 					) );
+				}
+				break;
+
+			case '_edd_log_customer_id':
+				$customer_id = isset( $meta_value['id'] )
+					? absint( $meta_value['id'] )
+					: 0;
+
+				if ( $customer_id ) {
+					edd_update_file_download_log(
+						$object_id, array(
+							'customer_id' => $customer_id,
+						)
+					);
 				}
 				break;
 		}
