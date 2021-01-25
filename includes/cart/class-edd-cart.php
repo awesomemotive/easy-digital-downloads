@@ -717,11 +717,16 @@ class EDD_Cart {
 	 * @since 2.7
 	 *
 	 * @param int   $download_id Download ID of the item to check.
- 	 * @param array $options
+	 * @param array $options
 	 * @return bool
 	 */
 	public function is_item_in_cart( $download_id = 0, $options = array() ) {
-		$cart = $this->get_contents();
+		$cart      = $this->get_contents();
+		$variation = explode( '_', $download_id );
+		if ( ! empty( $variation[1] ) ) {
+			$download_id         = absint( $variation[0] );
+			$options['price_id'] = absint( $variation[1] );
+		}
 
 		$ret = false;
 
