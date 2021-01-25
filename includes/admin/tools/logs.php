@@ -41,8 +41,8 @@ function edd_logs_view_setup( $type = '' ) {
  *
  * @since 3.0
  *
- * @param object $logs_table List table class to work with
- * @param string $tag        Type of log to view
+ * @param EDD_Base_Log_List_Table $logs_table List table class to work with
+ * @param string                  $tag        Type of log to view
  */
 function edd_logs_view_page( $logs_table, $tag = '' ) {
 	$tag = sanitize_key( $tag );
