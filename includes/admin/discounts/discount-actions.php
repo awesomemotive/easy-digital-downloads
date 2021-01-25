@@ -108,8 +108,8 @@ function edd_admin_add_discount( $data = array() ) {
 	}
 
 	// Meta values.
-	$to_add['product_reqs']      = isset( $data['product_reqs'] ) ? array_unique( array_map( 'esc_attr', $data['product_reqs'] ) ) : '';
-	$to_add['excluded_products'] = isset( $data['excluded_products'] ) ? array_unique( array_map( 'esc_attr', $data['excluded_products'] ) ) : '';
+	$to_add['product_reqs']      = isset( $data['product_reqs'] ) ? array_unique( array_map( 'sanitize_text_field', $data['product_reqs'] ) ) : '';
+	$to_add['excluded_products'] = isset( $data['excluded_products'] ) ? array_unique( array_map( 'sanitize_text_field', $data['excluded_products'] ) ) : '';
 
 	$to_add = array_filter( $to_add );
 
@@ -236,8 +236,8 @@ function edd_admin_edit_discount( $data = array() ) {
 	}
 
 	// Known & accepted core discount meta
-	$to_update['product_reqs']      = isset( $data['product_reqs'] ) ? array_unique( array_map( 'esc_attr', $data['product_reqs'] ) ) : '';
-	$to_update['excluded_products'] = isset( $data['excluded_products'] ) ? array_unique( array_map( 'esc_attr', $data['excluded_products'] ) ) : '';
+	$to_update['product_reqs']      = isset( $data['product_reqs'] ) ? array_unique( array_map( 'sanitize_text_field', $data['product_reqs'] ) ) : '';
+	$to_update['excluded_products'] = isset( $data['excluded_products'] ) ? array_unique( array_map( 'sanitize_text_field', $data['excluded_products'] ) ) : '';
 
 	// "Once per customer" checkbox.
 	$to_update['once_per_customer'] = isset( $data['once_per_customer'] )
