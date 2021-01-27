@@ -263,7 +263,7 @@ class Log extends Base {
 				}
 
 				if ( 'user_id' === $meta_key ) {
-					$customer = new \EDD_Customer( $value );
+					$customer = new \EDD_Customer( $file_download_log->customer_id );
 					$value    = ! empty( $customer->user_id ) ? $customer->user_id : 0;
 				}
 				break;
