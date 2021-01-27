@@ -253,21 +253,24 @@ class Log extends Base {
 						$key = 'api_key';
 						break;
 					case 'user':
-						$key = 'customer_id';
+						$key = 'user_id';
 
 						break;
 				}
 
-				$value = $file_download_log->{$key};
-				if ( 'user' === $meta_key ) {
-					$customer = new EDD_Customer( $value );
-					$value    = $customer ? $customer->user_id : 0;
+				if ( isset( $file_download_log->{$key} ) ) {
+					$value = $file_download_log->{$key};
+				}
+
+				if ( 'user_id' === $meta_key ) {
+					$customer = new \EDD_Customer( $value );
+					$value    = ! empty( $customer->user_id ) ? $customer->user_id : 0;
 				}
 				break;
 		}
 
 		if ( $this->show_notices ) {
-			_doing_it_wrong( 'get_post_meta()', 'All log postmeta has been <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use <code>edd_get_api_request_log()</code> instead.', 'EDD 3.0' );
+			_doing_it_wrong( 'get_post_meta()', __( 'All log postmeta has been <strong>deprecated</strong> since Easy Digital Downloads 3.0! Use <code>edd_get_api_request_log()</code> instead.', 'easy-digital-downloads' ), 'EDD 3.0' );
 
 			if ( $this->show_backtrace ) {
 				$backtrace = debug_backtrace();
