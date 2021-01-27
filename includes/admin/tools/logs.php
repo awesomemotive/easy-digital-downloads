@@ -216,7 +216,7 @@ function edd_log_views() {
 	<!-- EDD 3.0 Hack -->
 	</div></div>
 	<form method="get" class="edd-old-log-filters" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>">
-		<?php edd_admin_filter_bar( 'old-logs' ); ?>
+		<?php edd_admin_filter_bar( 'old_logs' ); ?>
 	</form>
 	<div class="tablenav top"><div>
 	<!-- EDD 3.0 Hack -->
