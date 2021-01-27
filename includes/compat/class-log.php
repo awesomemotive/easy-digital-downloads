@@ -343,20 +343,6 @@ class Log extends Base {
 					) );
 				}
 				break;
-
-			case '_edd_log_customer_id':
-				$customer_id = isset( $meta_value['id'] )
-					? absint( $meta_value['id'] )
-					: 0;
-
-				if ( $customer_id ) {
-					edd_update_file_download_log(
-						$object_id, array(
-							'customer_id' => $customer_id,
-						)
-					);
-				}
-				break;
 		}
 
 		return $check;
