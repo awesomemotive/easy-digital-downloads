@@ -141,7 +141,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 *
 	 * @since 3.0
      *
-	 * @return string Start date to filter by
+	 * @return string End date to filter by
 	 */
 	public function get_filtered_end_date() {
 		return sanitize_text_field( $this->get_request_var( 'end-date', null ) );
@@ -336,7 +336,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 		$retval = array(
 			'product_id'  => $this->get_filtered_download(),
 			'customer_id' => $this->get_filtered_customer(),
-			'payment_id'  => $this->get_filtered_payment(),
+			'order_id'    => $this->get_filtered_payment(),
 			'meta_query'  => $this->get_meta_query(),
 		);
 
