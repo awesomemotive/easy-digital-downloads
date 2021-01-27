@@ -254,7 +254,9 @@ class Log extends Base {
 						break;
 					case 'user':
 						$key = 'user_id';
-
+						break;
+					case 'payment_id':
+						$key = 'order_id';
 						break;
 				}
 
@@ -326,6 +328,10 @@ class Log extends Base {
 			case '_edd_log_price_id':
 			case '_edd_log_customer_id':
 				$key = str_replace( '_edd_log_', '', $meta_key );
+
+				if ( 'payment_id' === $key ) {
+					$key = 'order_id';
+				}
 
 				$check = edd_update_file_download_log( $object_id, array(
 					$key => $meta_value,
