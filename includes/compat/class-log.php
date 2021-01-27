@@ -220,7 +220,7 @@ class Log extends Base {
 			'_edd_log_user_info',
 			'_edd_log_user_id',
 			'_edd_log_file_id',
-			'_edd_key_ip',
+			'_edd_log_ip',
 			'_edd_log_payment_id',
 			'_edd_log_price_id',
 			'_edd_log_customer_id',
@@ -239,7 +239,7 @@ class Log extends Base {
 		switch ( $meta_key ) {
 			case '_edd_log_user_id':
 			case '_edd_log_file_id':
-			case '_edd_key_ip':
+			case '_edd_log_ip':
 			case '_edd_log_payment_id':
 			case '_edd_log_price_id':
 			case '_edd_log_customer_id':
@@ -302,7 +302,7 @@ class Log extends Base {
 			'_edd_log_user_info',
 			'_edd_log_user_id',
 			'_edd_log_file_id',
-			'_edd_key_ip',
+			'_edd_log_ip',
 			'_edd_log_payment_id',
 			'_edd_log_price_id',
 			'_edd_log_customer_id',
