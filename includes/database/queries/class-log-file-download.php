@@ -62,7 +62,7 @@ class Log_File_Download extends Query {
 	 * @access public
 	 * @var string
 	 */
-	protected $item_name = 'log';
+	protected $item_name = 'logs_file_download';
 
 	/**
 	 * Plural version for a group of items.
@@ -71,7 +71,7 @@ class Log_File_Download extends Query {
 	 * @access public
 	 * @var string
 	 */
-	protected $item_name_plural = 'logs';
+	protected $item_name_plural = 'logs_file_downloads';
 
 	/**
 	 * Callback function for turning IDs into objects

@@ -398,6 +398,8 @@ class EDD_Base_Log_List_Table extends List_Table {
 			}
 		}
 
+		$retval = array_filter( $retval );
+
 		// Return query arguments
 		return ( true === $paginate )
 			? $this->parse_pagination_args( $retval )

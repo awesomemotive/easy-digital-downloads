@@ -63,7 +63,7 @@ class Log_Api_Request extends Query {
 	 * @access public
 	 * @var string
 	 */
-	protected $item_name = 'log';
+	protected $item_name = 'logs_api_request';
 
 	/**
 	 * Plural version for a group of items.
@@ -72,7 +72,7 @@ class Log_Api_Request extends Query {
 	 * @access public
 	 * @var string
 	 */
-	protected $item_name_plural = 'logs';
+	protected $item_name_plural = 'logs_api_requests';
 
 	/**
 	 * Callback function for turning IDs into objects
