@@ -23,6 +23,13 @@ use EDD\Admin\List_Table;
 class EDD_Base_Log_List_Table extends List_Table {
 
 	/**
+	 * Log type
+	 *
+	 * @var string
+	 */
+	protected $log_type = 'logs';
+
+	/**
 	 * Get things started
 	 *
 	 * @since 3.0
@@ -355,6 +362,12 @@ class EDD_Base_Log_List_Table extends List_Table {
 					$retval['customer_id'] = $customer->id;
 					$retval['user_id']     = $customer->user_id;
 				}
+			} elseif ( 'api_requests' === $this->log_type && 32 === strlen( $search ) ) {
+				// Look for an API key
+				$retval['api_key'] = $search;
+			} elseif ( 'api_requests' === $this->log_type && stristr( $search, 'token:' ) ) {
+				// Look for an API token
+				$retval['token'] = str_ireplace( 'token:', '', $search );
 			} elseif ( is_numeric( $search ) ) {
 				$customer = edd_get_customer( $search );
 
@@ -365,11 +378,15 @@ class EDD_Base_Log_List_Table extends List_Table {
 					 */
 					$retval['customer_id'] = $customer->id;
 					$retval['user_id']     = $customer->user_id;
-				} else {
-					$this->file_search = true;
+				} elseif ( 'file_downloads' === $this->log_type ) {
+					$retval['product_id'] = $search;
 				}
 			} else {
-				$retval['file_id'] = $search;
+				if ( 'file_downloads' === $this->log_type ) {
+					$this->file_search = true;
+				} else {
+					$retval['search'] = $search;
+				}
 			}
 		}
 

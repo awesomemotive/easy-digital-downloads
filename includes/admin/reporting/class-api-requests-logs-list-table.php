@@ -21,6 +21,13 @@ defined( 'ABSPATH' ) || exit;
 class EDD_API_Request_Log_Table extends EDD_Base_Log_List_Table {
 
 	/**
+	 * Log type
+	 *
+	 * @var string
+	 */
+	protected $log_type = 'api_requests';
+
+	/**
 	 * Get things started
 	 *
 	 * @since 1.5
