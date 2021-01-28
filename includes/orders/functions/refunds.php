@@ -13,6 +13,25 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Returns an array of order statuses that support refunds.
+ *
+ * @since 3.0
+ * @return array
+ */
+function edd_get_refundable_order_statuses() {
+	$refundable_order_statuses = array( 'complete', 'publish', 'partially_refunded' );
+
+	/**
+	 * Filters the order statuses that are allowed to be refunded.
+	 *
+	 * @param array $refundable_order_statuses
+	 *
+	 * @since 3.0
+	 */
+	return (array) apply_filters( 'edd_refundable_order_statuses', $refundable_order_statuses );
+}
+
+/**
  * Check order can be refunded.
  *
  * @since 3.0
@@ -35,8 +54,8 @@ function edd_is_order_refundable( $order_id = 0 ) {
 		return false;
 	}
 
-	// Only completed orders can be refunded.
-	if ( ! in_array( $order->status, array( 'complete', 'publish', 'partially_refunded' ), true ) ) {
+	// Only orders with a supported status can be refunded.
+	if ( ! in_array( $order->status, edd_get_refundable_order_statuses(), true ) ) {
 		return false;
 	}
 
