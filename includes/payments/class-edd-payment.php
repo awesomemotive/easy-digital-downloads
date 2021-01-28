@@ -2842,11 +2842,7 @@ class EDD_Payment {
 			return false; // This payment was never completed
 		}
 
-		$date = ( $date = $order->date_completed )
-			? $date
-			: $order->date_created;
-
-		return $date;
+		return $order->date_completed ? $order->date_completed : '';
 	}
 
 	/**
