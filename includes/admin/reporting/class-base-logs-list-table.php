@@ -358,12 +358,18 @@ class EDD_Base_Log_List_Table extends List_Table {
 					$user = get_user_by( 'email', $search );
 					if ( ! empty( $user->ID ) ) {
 						$retval['user_id'] = $user->ID;
+					} else {
+						// This is a fallback to help ensure an invalid email will produce zero results.
+						$retval['search'] = $search;
 					}
 				} else {
 					// All other logs are linked to customers.
 					$customer = edd_get_customer_by( 'email', $search );
 					if ( ! empty( $customer->id ) ) {
 						$retval['customer_id'] = $customer->id;
+					} else {
+						// This is a fallback to help ensure an invalid email will produce zero results.
+						$retval['search'] = $search;
 					}
 				}
 			} elseif ( 'api_requests' === $this->log_type && 32 === strlen( $search ) ) {
@@ -378,6 +384,8 @@ class EDD_Base_Log_List_Table extends List_Table {
 					$user = get_user_by( 'email', $search );
 					if ( ! empty( $user->ID ) ) {
 						$retval['user_id'] = $user->ID;
+					} else {
+						$retval['search'] = $search;
 					}
 				} else {
 					// All other logs are linked to customers.
@@ -386,6 +394,8 @@ class EDD_Base_Log_List_Table extends List_Table {
 						$retval['customer_id'] = $customer->id;
 					} elseif ( 'file_downloads' === $this->log_type ) {
 						$retval['product_id'] = $search;
+					} else {
+						$retval['search'] = $search;
 					}
 				}
 			} else {
