@@ -337,18 +337,6 @@ class Log extends Base {
 					$key => $meta_value,
 				) );
 				break;
-			case '_edd_log_user_info':
-
-				$user_id = isset( $meta_value['id'] )
-					? absint( $meta_value['id'] )
-					: 0;
-
-				if ( $user_id ) {
-					edd_update_file_download_log( $object_id, array(
-						'user_id' => $user_id
-					) );
-				}
-				break;
 		}
 
 		return $check;
