@@ -353,14 +353,18 @@ class EDD_Base_Log_List_Table extends List_Table {
 			if ( filter_var( $search, FILTER_VALIDATE_IP ) ) {
 				$retval['ip'] = $search;
 			} elseif ( is_email( $search ) ) {
-				$customer = edd_get_customer_by( 'email', $search );
-				if ( ! empty( $customer->id ) ) {
-					/*
-					 * File logs users customer_id but API logs use user_id, so we're setting
-					 * both to be compatible with both.
-					 */
-					$retval['customer_id'] = $customer->id;
-					$retval['user_id']     = $customer->user_id;
+				if ( 'api_requests' === $this->log_type ) {
+					// API requests are linked to user accounts, so we're checking user data here.
+					$user = get_user_by( 'email', $search );
+					if ( ! empty( $user->ID ) ) {
+						$retval['user_id'] = $user->ID;
+					}
+				} else {
+					// All other logs are linked to customers.
+					$customer = edd_get_customer_by( 'email', $search );
+					if ( ! empty( $customer->id ) ) {
+						$retval['customer_id'] = $customer->id;
+					}
 				}
 			} elseif ( 'api_requests' === $this->log_type && 32 === strlen( $search ) ) {
 				// Look for an API key
@@ -369,17 +373,20 @@ class EDD_Base_Log_List_Table extends List_Table {
 				// Look for an API token
 				$retval['token'] = str_ireplace( 'token:', '', $search );
 			} elseif ( is_numeric( $search ) ) {
-				$customer = edd_get_customer( $search );
-
-				if ( ! empty( $customer->id ) ) {
-					/*
-					 * File logs users customer_id but API logs use user_id, so we're setting
-					 * both to be compatible with both.
-					 */
-					$retval['customer_id'] = $customer->id;
-					$retval['user_id']     = $customer->user_id;
-				} elseif ( 'file_downloads' === $this->log_type ) {
-					$retval['product_id'] = $search;
+				if ( 'api_requests' === $this->log_type ) {
+					// API requests are linked to user accounts, so we're checking user data here.
+					$user = get_user_by( 'email', $search );
+					if ( ! empty( $user->ID ) ) {
+						$retval['user_id'] = $user->ID;
+					}
+				} else {
+					// All other logs are linked to customers.
+					$customer = edd_get_customer( $search );
+					if ( ! empty( $customer->id ) ) {
+						$retval['customer_id'] = $customer->id;
+					} elseif ( 'file_downloads' === $this->log_type ) {
+						$retval['product_id'] = $search;
+					}
 				}
 			} else {
 				if ( 'file_downloads' === $this->log_type ) {
