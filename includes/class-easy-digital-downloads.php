@@ -367,7 +367,7 @@ final class Easy_Digital_Downloads {
 	 * @since 3.0
 	 */
 	private function setup_application() {
-		edd_setup_components();
+		add_action( 'plugins_loaded', 'edd_setup_components', 100 );
 
 		$GLOBALS['edd_options'] = edd_get_settings();
 
