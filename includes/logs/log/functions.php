@@ -9,9 +9,9 @@
  * @since       3.0
  */
 
-// Exit if accessed directly
 use EDD\Logs\Log;
 
+// Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
 /**

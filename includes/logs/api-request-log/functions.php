@@ -9,9 +9,9 @@
  * @since       3.0
  */
 
-// Exit if accessed directly.
 use EDD\Logs\Api_Request_Log;
 
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 
