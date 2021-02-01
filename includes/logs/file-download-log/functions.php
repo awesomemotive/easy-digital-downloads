@@ -9,9 +9,9 @@
  * @since       3.0
  */
 
-// Exit if accessed directly.
 use EDD\Logs\File_Download_Log;
 
+// Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
