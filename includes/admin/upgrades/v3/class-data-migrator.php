@@ -1085,8 +1085,14 @@ class Data_Migrator {
 			edd_add_order_meta( $order_id, $meta_key, $meta_value );
 		}
 
-		// Now that we're done, let's run a hook here so we can allow extensions to make any necessary changes
-		do_action( 'edd_30_migrate_order', $order_id, $data->ID );
+		/**
+		 * Now that we're done, let's run a hook here so we can allow extensions to make any necessary changes.
+		 *
+		 * @since 3.0
+		 * @param int   $order_id The order ID.
+		 * @param array $meta     The original post meta for the payment.
+		 */
+		do_action( 'edd_30_migrate_order', $order_id, $meta );
 	}
 
 	/**
