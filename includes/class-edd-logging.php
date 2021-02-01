@@ -524,8 +524,8 @@ class EDD_Logging {
 
 		// Back-compat for post_parent.
 		if ( ! empty( $r['post_parent'] ) ) {
-			if ( ! empty( $r['log_type'] ) ) {
-				$r['post_parent'] = $r['product_id'];
+			if ( ! empty( $r['log_type'] && 'file_download' === $r['log_type'] ) ) {
+				$r['product_id'] = $r['post_parent'];
 			} else {
 				$r['object_id'] = $r['post_parent'];
 			}
