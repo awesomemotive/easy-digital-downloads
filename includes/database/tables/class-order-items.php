@@ -38,7 +38,7 @@ final class Order_Items extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 202002141;
+	protected $version = 202102010;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -52,6 +52,7 @@ final class Order_Items extends Table {
 		'201807273' => 201807273,
 		'201906241' => 201906241,
 		'202002141' => 202002141,
+		'202102010' => 202102010,
 	);
 
 	/**
@@ -69,7 +70,7 @@ final class Order_Items extends Table {
 			price_id bigint(20) unsigned NOT NULL default '0',
 			cart_index bigint(20) unsigned NOT NULL default '0',
 			type varchar(20) NOT NULL default 'download',
-			status varchar(20) NOT NULL default '',
+			status varchar(20) NOT NULL default 'pending',
 			quantity int signed NOT NULL default '0',
 			amount decimal(18,9) NOT NULL default '0',
 			subtotal decimal(18,9) NOT NULL default '0',
@@ -181,6 +182,21 @@ final class Order_Items extends Table {
 
 		return $this->is_success( $result );
 
+	}
+
+	/**
+	 * Upgrade to version 202102010.
+	 *  - Change default value for `status` column to 'pending'.
+	 *
+	 * @return void
+	 */
+	protected function __202102010() {
+		// Update `status`.
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `status` varchar(20) NOT NULL default 'pending';
+		" );
+
+		return $this->is_success( $result );
 	}
 
 }
