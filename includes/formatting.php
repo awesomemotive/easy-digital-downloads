@@ -9,8 +9,6 @@
  * @since       1.2
 */
 
-use bpmj\wpidea\wolverine\system\System;
-
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
@@ -28,8 +26,7 @@ function edd_sanitize_amount( $amount ) {
 	$thousands_sep = edd_get_option( 'thousands_separator', '' );
 	$decimal_sep   = edd_get_option( 'decimal_separator', '.' );
 
-	if ( System::isDecimalPointComma() )
-	    $amount = str_replace( ',', '.', $amount );
+    $amount = apply_filters( 'edd_sanitize_amount_amount', $amount );
 
 	// Sanitize the amount
 	if ( $decimal_sep == ',' && false !== ( $found = strpos( $amount, $decimal_sep ) ) ) {
