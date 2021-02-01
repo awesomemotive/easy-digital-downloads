@@ -188,7 +188,7 @@ final class Order_Items extends Table {
 	 * Upgrade to version 202102010.
 	 *  - Change default value for `status` column to 'pending'.
 	 *
-	 * @return void
+	 * @return bool
 	 */
 	protected function __202102010() {
 		// Update `status`.
