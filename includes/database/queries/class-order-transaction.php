@@ -102,27 +102,27 @@ class Order_Transaction extends Query {
 	 * @access public
 	 *
 	 * @param string|array $query {
-	 *     Optional. Array or query string of order query parameters. Default empty.
+	 *     Optional. Array or query string of query parameters. Default empty.
 	 *
-	 *     @type int          $id                     An order item ID to only return that order transaction. Default empty.
-	 *     @type array        $id__in                 Array of order item IDs to include. Default empty.
-	 *     @type array        $id__not_in             Array of order item IDs to exclude. Default empty.
+	 *     @type int          $id                     An ID to only return that order transaction. Default empty.
+	 *     @type array        $id__in                 Array of order transaction IDs to include. Default empty.
+	 *     @type array        $id__not_in             Array of order transaction IDs to exclude. Default empty.
 	 *     @type string       $object_id              An object ID to only return those objects. Default empty.
 	 *     @type array        $object_id__in          Array of object IDs to include. Default empty.
 	 *     @type array        $object_id__not_in      Array of IDs object to exclude. Default empty.
-	 *     @type string       $object_type            An object type to only return that transaction. Default empty.
+	 *     @type string       $object_type            An object type to only return that type. Default empty.
 	 *     @type array        $object_type__in        Array of object types to include. Default empty.
 	 *     @type array        $object_type__not_in    Array of object types to exclude. Default empty.
 	 *     @type string       $transaction_id         A transaction ID to only return that transaction. Default empty.
 	 *     @type array        $transaction_id__in     Array of transaction IDs to include. Default empty.
 	 *     @type array        $transaction_id__not_in Array of transaction IDs to exclude. Default empty.
-	 *     @type string       $type                   An order types to only return that order. Default empty.
-	 *     @type array        $type__in               Array of order types to include. Default empty.
-	 *     @type array        $type__not_in           Array of order types to exclude. Default empty.
-	 *     @type string       $status                 An order statuses to only return that order. Default empty.
-	 *     @type array        $status__in             Array of order statuses to include. Default empty.
-	 *     @type array        $status__not_in         Array of order statuses to exclude. Default empty.
-	 *     @type string       $total                  Limit results to those affiliated with a given total. Default empty.
+	 *     @type string       $gateway                A gateway to filter by. Default empty.
+	 *     @type array        $gateway__in            Array of gateways to include. Default empty.
+	 *     @type array        $gateway__not_in        Array of gateways to exclude. Default empty.
+	 *     @type string       $status                 A status to only return that status. Default empty.
+	 *     @type array        $status__in             Array of statuses to include. Default empty.
+	 *     @type array        $status__not_in         Array of statuses to exclude. Default empty.
+	 *     @type float        $total                  Limit results to those affiliated with a given total. Default empty.
 	 *     @type array        $total__in              Array of totals to include affiliated order items for. Default empty.
 	 *     @type array        $total__not_in          Array of totals to exclude affiliated order items for. Default empty.
 	 *     @type array        $date_query             Query all datetime columns together. See WP_Date_Query.
@@ -130,18 +130,17 @@ class Order_Transaction extends Query {
 	 *                                                Default null.
 	 *     @type array        $date_modified_query    Date query clauses to limit by. See WP_Date_Query.
 	 *                                                Default null.
-	 *     @type bool         $count                  Whether to return a order count (true) or array of order objects.
+	 *     @type bool         $count                  Whether to return an item count (true) or array of item objects.
 	 *                                                Default false.
 	 *     @type string       $fields                 Item fields to return. Accepts any column known names
 	 *                                                or empty (returns an array of complete order transactions objects).
 	 *                                                Default empty.
 	 *     @type int          $number                 Limit number of order transactions to retrieve. Default 100.
-	 *     @type int          $offset                 Number of order items to offset the query. Used to build LIMIT clause.
+	 *     @type int          $offset                 Number of items to offset the query. Used to build LIMIT clause.
 	 *                                                Default 0.
 	 *     @type bool         $no_found_rows          Whether to disable the `SQL_CALC_FOUND_ROWS` query. Default true.
 	 *     @type string|array $orderby                Accepts 'id', 'object_id', 'object_type', 'transaction_id', 'gateway',
-	 *                                                'total', 'id__in', 'object_id__in', 'object_type__in',
-	 *                                                'transaction_id__in', 'gateway__in', 'total__in'.
+	 *                                                'status', 'total', 'date_created', 'date_modified'.
 	 *                                                Also accepts false, an empty array, or 'none' to disable `ORDER BY` clause.
 	 *                                                Default 'id'.
 	 *     @type string       $order                  How to order results. Accepts 'ASC', 'DESC'. Default 'DESC'.
