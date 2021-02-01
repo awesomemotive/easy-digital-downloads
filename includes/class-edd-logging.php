@@ -522,9 +522,13 @@ class EDD_Logging {
 			$r['type'] = $r['log_type'];
 		}
 
-		// Back-compat for post_parent
+		// Back-compat for post_parent.
 		if ( ! empty( $r['post_parent'] ) ) {
-			$r['object_id'] = $r['post_parent'];
+			if ( ! empty( $r['log_type'] ) ) {
+				$r['post_parent'] = $r['product_id'];
+			} else {
+				$r['object_id'] = $r['post_parent'];
+			}
 		}
 
 		// Back compat for posts_per_page
