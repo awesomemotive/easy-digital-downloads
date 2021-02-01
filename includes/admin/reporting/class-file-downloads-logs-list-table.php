@@ -10,6 +10,8 @@
  * @since       3.0 Updated to use the custom tables.
  */
 
+use EDD\File_Download_Logs\File_Download_Log\File_Download_Log;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -20,6 +22,13 @@ defined( 'ABSPATH' ) || exit;
  * @since 3.0 Updated to use the custom tables and new query classes.
  */
 class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
+
+	/**
+	 * Log type
+	 *
+	 * @var string
+	 */
+	protected $log_type = 'file_downloads';
 
 	/**
 	 * Are we searching for files?
@@ -120,13 +129,16 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 
 		if ( $logs ) {
 			foreach ( $logs as $log ) {
-				/** @var $log EDD\Logs\File_Download_Log */
+				/** @var $log File_Download_Log */
 
-				$meta        = get_post_custom( $log->order_id );
-				$customer_id = (int) isset( $meta['_edd_log_customer_id'] )
-					? $meta['_edd_log_customer_id'][0]
-					: edd_get_payment_customer_id( $log->order_id );
+				$customer_id = ! empty( $log->customer_id ) ? (int) $log->customer_id : edd_get_payment_customer_id( $log->order_id );
+				$customer    = ! empty( $customer_id ) ? edd_get_customer( $customer_id ) : false;
 
+				/*
+				 * Get the files associated with this download and store them in a property to prevent
+				 * multiple queries for the same download.
+				 * This is needed for backwards compatibility in the `edd_log_file_download_download_files` filter.
+				 */
 				if ( ! array_key_exists( $log->product_id, $this->queried_files ) ) {
 					$files = get_post_meta( $log->product_id, 'edd_download_files', true );
 					$this->queried_files[ $log->product_id ] = $files;
@@ -134,32 +146,45 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 					$files = $this->queried_files[ $log->product_id ];
 				}
 
-				// For backwards compatibility purposes
-				$customer = edd_get_customer( $log->user_id );
+				/*
+				 * User info is needed for backwards compatibility in the `edd_log_file_download_download_files` filter.
+				 */
+				$user = ! empty( $customer->user_id ) ? get_userdata( $customer->user_id ) : false;
 
 				$user_info = ! empty( $user )
 					? array(
-						'id'    => $customer->ID,
-						'email' => $customer->user_email,
-						'name'  => $customer->display_name,
+						'id'    => $user->ID,
+						'email' => $user->user_email,
+						'name'  => $user->display_name,
 					)
 					: array();
 
 				$meta = array(
 					'_edd_log_user_info'  => $user_info,
-					'_edd_log_user_id'    => $log->user_id,
+					'_edd_log_user_id'    => ! empty( $customer->user_id ) ? $customer->user_id : false,
 					'_edd_log_file_id'    => $log->file_id,
-					'_edd_log_ip'         => $log->id,
+					'_edd_log_ip'         => $log->ip,
 					'_edd_log_payment_id' => $log->order_id,
 					'_edd_log_price_id'   => $log->price_id,
 				);
 
-				// Filter the download files
+				/**
+				 * Filters the array of all files linked to the product.
+				 *
+				 * @param array             $files Files linked to the product.
+				 * @param File_Download_Log $log   Log record from the database.
+				 * @param array             $meta  What used to be the meta array in EDD 2.9 and lower.
+				 */
 				$files = apply_filters( 'edd_log_file_download_download_files', $files, $log, $meta );
 
 				$file_id = $log->file_id;
 
-				// Filter the $file_id
+				/**
+				 * Filters the ID of the file that was actually downloaded from this log.
+				 *
+				 * @param int               $file_id
+				 * @param File_Download_Log $log
+				 */
 				$file_id = apply_filters( 'edd_log_file_download_file_id', $file_id, $log );
 
 				$file_name = isset( $files[ $file_id ]['name'] )
