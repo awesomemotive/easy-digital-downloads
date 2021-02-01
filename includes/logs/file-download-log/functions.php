@@ -10,6 +10,8 @@
  */
 
 // Exit if accessed directly.
+use EDD\Logs\File_Download_Log;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -116,7 +118,7 @@ function edd_update_file_download_log( $file_download_log_id = 0, $data = array(
  * @since 3.0
  *
  * @param int $file_download_log_id Log ID.
- * @return \EDD\Logs\Log|false Log object if successful, false otherwise.
+ * @return File_Download_Log|false Log object if successful, false otherwise.
  */
 function edd_get_file_download_log( $file_download_log_id = 0 ) {
 	$file_download_logs = new EDD\Database\Queries\Log_File_Download();
@@ -133,7 +135,7 @@ function edd_get_file_download_log( $file_download_log_id = 0 ) {
  * @param string $field Database table field.
  * @param string $value Value of the row.
  *
- * @return \EDD\Logs\Log|false Log object if successful, false otherwise.
+ * @return File_Download_Log|false Log object if successful, false otherwise.
  */
 function edd_get_file_download_log_by( $field = '', $value = '' ) {
 	$file_download_logs = new EDD\Database\Queries\Log_File_Download();
@@ -151,7 +153,7 @@ function edd_get_file_download_log_by( $field = '', $value = '' ) {
  *
  * @param array $args Arguments. See `EDD\Database\Queries\Log_File_Download`
  *                    for accepted arguments.
- * @return \EDD\Logs\File_Download_Log[] Array of `File_Download_Log` objects.
+ * @return File_Download_Log[] Array of `File_Download_Log` objects.
  */
 function edd_get_file_download_logs( $args = array() ) {
 
