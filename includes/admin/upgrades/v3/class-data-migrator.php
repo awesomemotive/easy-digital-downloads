@@ -1091,7 +1091,7 @@ class Data_Migrator {
 		 * @since 3.0
 		 * @param int   $order_id     The order ID.
 		 * @param array $payment_meta The `_edd_payment_meta` value for the original payment.
-		 * @param array $meta         The original post meta for the payment.
+		 * @param array $meta         All post meta associated with the payment.
 		 */
 		do_action( 'edd_30_migrate_order', $order_id, $payment_meta, $meta );
 	}
