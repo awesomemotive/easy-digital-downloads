@@ -106,7 +106,7 @@ class Order_Items extends Schema {
 			'name'       => 'status',
 			'type'       => 'varchar',
 			'length'     => '20',
-			'default'    => 'inherit',
+			'default'    => 'pending',
 			'sortable'   => true,
 			'transition' => true
 		),
