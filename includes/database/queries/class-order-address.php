@@ -104,7 +104,7 @@ class Order_Address extends Query {
 	 * @param string|array $query {
 	 *     Optional. Array or query string of query parameters. Default empty.
 	 *
-	 *     @type int          $id                   An customer ID to only return that order address. Default empty.
+	 *     @type int          $id                   An address ID to only return that order address. Default empty.
 	 *     @type array        $id__in               Array of order address IDs to include. Default empty.
 	 *     @type array        $id__not_in           Array of order address IDs to exclude. Default empty.
 	 *     @type int          $order_id             A order ID to only return that order. Default empty.
