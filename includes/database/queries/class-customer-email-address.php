@@ -104,7 +104,7 @@ class Customer_Email_Address extends Query {
 	 * @param string|array $query {
 	 *     Optional. Array or query string of customer query parameters. Default empty.
 	 *
-	 *     @type int          $id                   An customer ID to only return that email address. Default empty.
+	 *     @type int          $id                   An email address ID to only return that email address. Default empty.
 	 *     @type array        $id__in               Array of email IDs to include. Default empty.
 	 *     @type array        $id__not_in           Array of email IDs to exclude. Default empty.
 	 *     @type int          $customer_id          A customer ID to only return that customer. Default empty.
@@ -124,7 +124,7 @@ class Customer_Email_Address extends Query {
 	 *                                              Default null.
 	 *     @type array        $date_modified_query  Date query clauses to limit by. See WP_Date_Query.
 	 *                                              Default null.
-	 *     @type bool         $count                Whether to return a customer count (true) or array of customer objects.
+	 *     @type bool         $count                Whether to return an item count (true) or array of item objects.
 	 *                                              Default false.
 	 *     @type string       $fields               Item fields to return. Accepts any column known names
 	 *                                              or empty (returns an array of complete customer objects). Default empty.
