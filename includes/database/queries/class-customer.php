@@ -113,7 +113,7 @@ class Customer extends Query {
 	 *     @type string       $email                Limit results to those affiliated with a given email. Default empty.
 	 *     @type array        $email__in            Array of email to include affiliated orders for. Default empty.
 	 *     @type array        $email__not_in        Array of email to exclude affiliated orders for. Default empty.
-	 *     @type string       $status               A statuses to only return that status. Default empty.
+	 *     @type string       $status               A status to only return that status. Default empty.
 	 *     @type array        $status__in           Array of order statuses to include. Default empty.
 	 *     @type array        $status__not_in       Array of order statuses to exclude. Default empty.
 	 *     @type float        $purchase_value       A purchase value. Default empty.
