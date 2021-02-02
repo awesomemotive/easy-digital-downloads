@@ -416,11 +416,6 @@ class Order extends Rows\Order {
 			$this->adjustments = $this->get_adjustments();
 		}
 
-		// Bail if no adjustments.
-		if ( empty( $this->adjustments ) ) {
-			return $fees;
-		}
-
 		// Fetch the fees that applied to the entire order.
 		foreach ( $this->adjustments as $adjustment ) {
 			/** @var Order_Adjustment $adjustment */
