@@ -15,7 +15,7 @@
     "load-grunt-tasks": "^3.5.2",
     "makepot": "^0.3.0"
   },
-  "dependencies": {
-    "npm": "^6.14.6"
+  "engines": {
+    "npm": ">=6.9.0"
   }
 }
