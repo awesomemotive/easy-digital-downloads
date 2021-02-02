@@ -726,7 +726,6 @@ class Data_Migrator {
 			'key',
 			'email',
 			'date',
-			'user_info',
 			'downloads',
 			'cart_details',
 			'currency',
@@ -734,6 +733,20 @@ class Data_Migrator {
 			'subtotal',
 			'tax',
 		);
+
+		// Remove core keys from `user_info`.
+		$remaining_user_info = false;
+		if ( ! empty( $user_info ) ) {
+			$core_user_info      = array( 'id', 'email', 'first_name', 'last_name', 'discount', 'address' );
+			$remaining_user_info = array_diff_key( $user_info, array_flip( $core_user_info ) );
+		}
+
+		// If an extension has added data to `user_info`, migrate it.
+		if ( $remaining_user_info ) {
+			$payment_meta['user_info'] = $remaining_user_info;
+		} else {
+			$core_meta_keys[] = 'user_info';
+		}
 
 		// Remove all the core payment meta from the array, and...
 		if ( is_array( $payment_meta ) ) {
