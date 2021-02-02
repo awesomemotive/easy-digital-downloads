@@ -987,6 +987,9 @@ function edd_build_order( $order_data = array() ) {
 
 					// Add the adjustment.
 					$adjustment_id = edd_add_order_adjustment( $adjustment_data );
+
+					$total_fees += $adjustment_data['subtotal'];
+					$total_tax  += $adjustment_data['tax'];
 				}
 			}
 
