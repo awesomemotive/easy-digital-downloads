@@ -737,7 +737,7 @@ class Data_Migrator {
 		// Remove core keys from `user_info`.
 		$remaining_user_info = false;
 		if ( ! empty( $user_info ) ) {
-			$core_user_info      = array( 'id', 'email', 'first_name', 'last_name', 'discount', 'address' );
+			$core_user_info      = array( 'id', 'email', 'first_name', 'last_name', 'discount', 'address', 'user_id' );
 			$remaining_user_info = array_diff_key( $user_info, array_flip( $core_user_info ) );
 		}
 
