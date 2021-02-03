@@ -10,7 +10,7 @@
  * @since       3.0 Updated to use the custom tables.
  */
 
-use EDD\File_Download_Logs\File_Download_Log\File_Download_Log;
+use EDD\Logs\File_Download_Log;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;

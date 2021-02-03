@@ -104,9 +104,9 @@ class Customer_Address extends Query {
 	 * @param string|array $query {
 	 *     Optional. Array or query string of customer query parameters. Default empty.
 	 *
-	 *     @type int          $id                   An customer ID to only return that customer. Default empty.
-	 *     @type array        $id__in               Array of customer IDs to include. Default empty.
-	 *     @type array        $id__not_in           Array of customer IDs to exclude. Default empty.
+	 *     @type int          $id                   An address ID to only return that address. Default empty.
+	 *     @type array        $id__in               Array of address IDs to include. Default empty.
+	 *     @type array        $id__not_in           Array of address IDs to exclude. Default empty.
 	 *     @type int          $customer_id          A customer ID to only return that object. Default empty.
 	 *     @type array        $customer_id__in      Array of customer IDs to include. Default empty.
 	 *     @type array        $customer_id__not_in  Array of customer IDs to exclude. Default empty.
@@ -114,27 +114,30 @@ class Customer_Address extends Query {
 	 *     @type array        $is_primary__in       Array of 0 and/or 1 to get primary and/or non-primary.
 	 *     @type array        $is_primary__not_in   Array of 0 and/or 1 to avoid getting addresses of primary designation.
 	 *     @type string       $type                 Limit results to those affiliated with a given type. Default empty.
-	 *     @type array        $type__in             Array of types to include affiliated orders for. Default empty.
-	 *     @type array        $type__not_in         Array of types to exclude affiliated orders for. Default empty.
+	 *     @type array        $type__in             Array of types to include affiliated addresses for. Default empty.
+	 *     @type array        $type__not_in         Array of types to exclude affiliated addresses for. Default empty.
 	 *     @type string       $status               An address statuses to only return that address. Default empty.
 	 *     @type array        $status__in           Array of address statuses to include. Default empty.
 	 *     @type array        $status__not_in       Array of address statuses to exclude. Default empty.
-	 *     @type string       $address              An address to only return that address. Default empty.
+	 *     @type string       $name                 A name to only return addresses with that name. Default empty.
+	 *     @type array        $name__in             An array of names to include. Default empty.
+	 *     @type array        $name__not_in         An array of names to exclude. Default empty.
+	 *     @type string       $address              An address line 1 to only return that address. Default empty.
 	 *     @type array        $address__in          Array of addresses to include. Default empty.
 	 *     @type array        $address__not_in      Array of addresses to exclude. Default empty.
-	 *     @type string       $address2             An address to only return that address. Default empty.
+	 *     @type string       $address2             An address line 2 to only return that address. Default empty.
 	 *     @type array        $address2__in         Array of addresses to include. Default empty.
 	 *     @type array        $address2__not_in     Array of addresses to exclude. Default empty.
 	 *     @type string       $city                 A city to only return that address. Default empty.
 	 *     @type array        $city__in             Array of cities to include. Default empty.
 	 *     @type array        $city__not_in         Array of cities to exclude. Default empty.
-	 *     @type string       $region               A region to only return that address. Default empty.
+	 *     @type string       $region               A region to only return that region. Default empty.
 	 *     @type array        $region__in           Array of regions to include. Default empty.
 	 *     @type array        $region__not_in       Array of regions to exclude. Default empty.
-	 *     @type string       $postal_code          A postal code to only return that address. Default empty.
+	 *     @type string       $postal_code          A postal code to only return that post code. Default empty.
 	 *     @type array        $postal_code__in      Array of postal codes to include. Default empty.
 	 *     @type array        $postal_code__not_in  Array of postal codes to exclude. Default empty.
-	 *     @type string       $country              A country to only return that address. Default empty.
+	 *     @type string       $country              A country to only return that country. Default empty.
 	 *     @type array        $country__in          Array of countries to include. Default empty.
 	 *     @type array        $country__not_in      Array of countries to exclude. Default empty.
 	 *     @type array        $date_query           Query all datetime columns together. See WP_Date_Query.
@@ -150,7 +153,9 @@ class Customer_Address extends Query {
 	 *     @type int          $offset               Number of customers to offset the query. Used to build LIMIT clause.
 	 *                                              Default 0.
 	 *     @type bool         $no_found_rows        Whether to disable the `SQL_CALC_FOUND_ROWS` query. Default true.
-	 *     @type string|array $orderby              Accepts 'id', 'date_created', 'start_date', 'end_date'.
+	 *     @type string|array $orderby              Accepts 'id', 'is_primary', 'type', 'status', 'name',
+	 *                                              'address', 'address2', 'city', 'region', 'postal_code',
+	 *                                              'country', 'date_created', 'date_modified'.
 	 *                                              Also accepts false, an empty array, or 'none' to disable `ORDER BY` clause.
 	 *                                              Default 'id'.
 	 *     @type string       $order                How to order results. Accepts 'ASC', 'DESC'. Default 'DESC'.
