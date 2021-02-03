@@ -105,27 +105,27 @@ class Log_Api_Request extends Query {
 	 * @param string|array $query {
 	 *     Optional. Array or query string of query parameters. Default empty.
 	 *
-	 *     @type int          $id                   An log ID to only return that order. Default empty.
+	 *     @type int          $id                   An log ID to only return that log. Default empty.
 	 *     @type array        $id__in               Array of log IDs to include. Default empty.
 	 *     @type array        $id__not_in           Array of log IDs to exclude. Default empty.
 	 *     @type string       $user_id              A user ID to only return those users. Default empty.
 	 *     @type array        $user_id__in          Array of user IDs to include. Default empty.
 	 *     @type array        $user_id__not_in      Array of user IDs to exclude. Default empty.
-	 *     @type string       $api_key              An API key to only return that type. Default empty.
+	 *     @type string       $api_key              An API key to only return that key. Default empty.
 	 *     @type array        $api_key__in          Array of API keys to include. Default empty.
 	 *     @type array        $api_key__not_in      Array of API keys to exclude. Default empty.
-	 *     @type string       $token                A token to only return that type. Default empty.
+	 *     @type string       $token                A token to only return that token. Default empty.
 	 *     @type array        $token__in            Array of tokens to include. Default empty.
 	 *     @type array        $token__not_in        Array of tokens to exclude. Default empty.
-	 *     @type string       $version              A version to only return that type. Default empty.
+	 *     @type string       $version              A version to only return that version. Default empty.
 	 *     @type array        $version__in          Array of versions to include. Default empty.
 	 *     @type array        $version__not_in      Array of versions to exclude. Default empty.
-	 *     @type array        $request              Request to search by. Default empty.
-	 *     @type array        $error                Error to search by. Default empty.
-	 *     @type string       $ip                   An IP to only return that type. Default empty.
+	 *     @type string       $request              Request to search by. Default empty.
+	 *     @type string       $error                Error to search by. Default empty.
+	 *     @type string       $ip                   An IP to only return that IP address. Default empty.
 	 *     @type array        $ip__in               Array of IPs to include. Default empty.
 	 *     @type array        $ip__not_in           Array of IPs to exclude. Default empty.
-	 *     @type string       $time                 A time to only return that type. Default empty.
+	 *     @type string       $time                 A time to only return that time. Default empty.
 	 *     @type array        $time__in             Array of times to include. Default empty.
 	 *     @type array        $time__not_in         Array of times to exclude. Default empty.
 	 *     @type array        $date_query           Query all datetime columns together. See WP_Date_Query.
@@ -141,8 +141,8 @@ class Log_Api_Request extends Query {
 	 *     @type int          $offset               Number of logs to offset the query. Used to build LIMIT clause.
 	 *                                              Default 0.
 	 *     @type bool         $no_found_rows        Whether to disable the `SQL_CALC_FOUND_ROWS` query. Default true.
-	 *     @type string|array $orderby              Accepts 'id', 'object_id', 'object_type', 'user_id', 'date_created',
-	 *                                              'user_id__in', 'object_id__in', 'object_type__in'.
+	 *     @type string|array $orderby              Accepts 'id', 'user_id', 'api_key', 'token', 'version', 'ip',
+	 *                                              'time', 'date_created', and 'date_modified'.
 	 *                                              Also accepts false, an empty array, or 'none' to disable `ORDER BY` clause.
 	 *                                              Default 'id'.
 	 *     @type string       $order                How to order results. Accepts 'ASC', 'DESC'. Default 'DESC'.
