@@ -586,7 +586,7 @@ class Data_Migrator {
 			// Fetch the actual tax rate object for the order region & country.
 			$tax_rate_object = edd_get_tax_rate_by_location( array(
 				'country' => $order_address_data['country'],
-				'region'  => $order_address_data['region']
+				'region'  => ! empty( $order_address_data['region'] ) ? $order_address_data['region'] : ''
 			) );
 
 			if ( ! empty( $tax_rate_object->id ) && $tax_rate_object->amount == $tax_rate ) {
