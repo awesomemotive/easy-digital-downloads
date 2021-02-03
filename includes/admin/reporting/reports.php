@@ -488,6 +488,7 @@ function edd_register_downloads_report( $reports ) {
 		$download_label = '';
 		if ( $download_data ) {
 			$download = edd_get_download( $download_data['download_id'] );
+			$prices   = $download->get_prices();
 			if ( $download_data['price_id'] ) {
 				$args       = array( 'price_id' => $download_data['price_id'] );
 				$price_name = edd_get_price_name( $download->ID, $args );
@@ -660,15 +661,13 @@ function edd_register_downloads_report( $reports ) {
 			'label' => __( 'Sales by Variation', 'easy-digital-downloads' ) . $download_label,
 			'views' => array(
 				'chart' => array(
-					'data_callback' => function() use ( $download_data, $download, $dates ) {
+					'data_callback' => function() use ( $download_data, $download, $dates, $prices ) {
 						$stats = new EDD\Stats();
 						$sales = $stats->get_order_item_count( array(
 							'product_id' => absint( $download_data['download_id'] ),
 							'range'      => $dates['range'],
 							'grouped'    => true,
 						) );
-
-						$prices = $download->get_prices();
 
 						// Set all values to 0.
 						foreach ( $prices as $key => $price ) {
