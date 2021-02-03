@@ -3161,7 +3161,7 @@ class EDD_Payment {
 		}
 
 		// Check for old `user_info` meta which may still exist.
-		$old_meta = $this->get_meta( 'payment_meta' );
+		$old_meta = edd_get_order_meta( $this->ID, 'payment_meta', true );
 		if ( ! empty( $old_meta['user_info'] ) ) {
 			$user_info = array_merge( $user_info, $old_meta['user_info'] );
 		}
