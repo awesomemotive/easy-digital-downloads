@@ -740,6 +740,7 @@ function edd_register_downloads_report( $reports ) {
 						'datasets'         => array(
 							'earnings' => array(
 								'label'           => __( 'Earnings', 'easy-digital-downloads' ),
+								'type'            => 'currency',
 								'backgroundColor' => array(
 									'rgb(133,175,91)',
 									'rgb(9,149,199)',

@@ -3,7 +3,7 @@
 /**
  * Internal dependencies.
  */
-import { toolTipBaseConfig } from './utils';
+import { toolTipBaseConfig, getLabelWithTypeCondition } from './utils';
 
 /**
  * Render a line chart.
@@ -38,6 +38,8 @@ export const tooltipConfig = ( config ) => ( {
 		 * @param {Object} d
 		 */
 		label: function( t, d ) {
+			const { options: { datasets } } = config;
+			const datasetConfig = datasets[ Object.keys( datasets )[ t.datasetIndex ] ];
 			const dataset = d.datasets[ t.datasetIndex ];
 
 			const total = dataset.data.reduce( function( previousValue, currentValue, currentIndex, array ) {
@@ -45,9 +47,10 @@ export const tooltipConfig = ( config ) => ( {
 			} );
 
 			const currentValue = dataset.data[ t.index ];
+			const label = getLabelWithTypeCondition( dataset.data[ t.index ], datasetConfig );
 			const precentage = Math.floor( ( ( currentValue / total ) * 100 ) + 0.5 );
 
-			return `${ d.labels[ t.index ] }: ${ currentValue } (${ precentage }%)`;
+			return `${ d.labels[ t.index ] }: ${ label } (${ precentage }%)`;
 		},
 	},
 } );
