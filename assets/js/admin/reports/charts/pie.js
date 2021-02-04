@@ -47,7 +47,7 @@ export const tooltipConfig = ( config ) => ( {
 			} );
 
 			const currentValue = dataset.data[ t.index ];
-			const label = getLabelWithTypeCondition( dataset.data[ t.index ], datasetConfig );
+			const label = getLabelWithTypeCondition( currentValue, datasetConfig );
 			const precentage = Math.floor( ( ( currentValue / total ) * 100 ) + 0.5 );
 
 			return `${ d.labels[ t.index ] }: ${ label } (${ precentage }%)`;
