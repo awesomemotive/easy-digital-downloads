@@ -185,7 +185,7 @@ function edd_currency_filter( $price = '', $currency = '' ) {
 
 	// Default vars
 	$position = edd_get_option( 'currency_position', 'before' );
-	$negative = $price < 0;
+	$negative = is_numeric( $price ) && $price < 0;
 
 	// Remove proceeding "-" -
 	if ( true === $negative ) {
