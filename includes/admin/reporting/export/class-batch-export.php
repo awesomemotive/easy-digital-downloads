@@ -99,6 +99,14 @@ class EDD_Batch_Export extends EDD_Export {
 	public $is_empty = false;
 
 	/**
+	 * The data to return to the script.
+	 *
+	 * @since 3.0
+	 * @var array
+	 */
+	public $result_data = array();
+
+	/**
 	 * Get things started
 	 *
 	 * @param $_step int The step to process

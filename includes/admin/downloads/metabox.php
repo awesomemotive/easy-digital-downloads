@@ -419,12 +419,6 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 	do_action( 'edd_download_price_table_row', $post_id, $key, $args );
 	$show_advanced = ob_get_clean();
 ?>
-	<?php
-	// If we need to show the legacy form fields, load the backwards compatibility layer of the JavaScript as well.
-	if ( $show_advanced ) {
-		wp_enqueue_script( 'edd-admin-scripts-compatibility' );
-	}
-	?>
 	<div class="edd-repeatable-row-header edd-draghandle-anchor">
 		<span class="edd-repeatable-row-title" title="<?php _e( 'Click and drag to re-order price options', 'easy-digital-downloads' ); ?>">
 			<?php printf( __( 'Price ID: %s', 'easy-digital-downloads' ), '<span class="edd_price_id">' . $key . '</span>' ); ?>
@@ -1233,9 +1227,9 @@ function edd_render_disable_button( $post_id ) {
 		</div>
 		<?php if ( ! empty( $supports_buy_now ) ) { ?>
 			<div class="edd-form-group__control">
-			<label for="edd_button_behavior" class="edd-form-group__label">
-				<?php esc_html_e( 'Purchase button behavior', 'easy-digital-downloads' ); ?>
-			</label>
+				<label for="edd_button_behavior" class="edd-form-group__label">
+					<?php esc_html_e( 'Purchase button behavior', 'easy-digital-downloads' ); ?>
+				</label>
 				<?php
 				$args = array(
 					'name'             => '_edd_button_behavior',

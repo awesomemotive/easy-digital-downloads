@@ -27,10 +27,15 @@ function edd_options_page_primary_nav( $active_tab = '' ) {
 		<?php
 
 		foreach ( $tabs as $tab_id => $tab_name ) {
-			$tab_url = add_query_arg( array(
-				'settings-updated' => false,
-				'tab'              => $tab_id,
-			) );
+			$tab_url = add_query_arg(
+				array(
+					'settings-updated' => false,
+					'post_type'        => 'download',
+					'page'             => 'edd-settings',
+					'tab'              => $tab_id,
+				),
+				edd_get_admin_base_url()
+			);
 
 			// Remove the section from the tabs so we always end up at the main section
 			$tab_url = remove_query_arg( 'section', $tab_url );
@@ -77,12 +82,15 @@ function edd_options_page_secondary_nav( $active_tab = '', $section = '', $secti
 	foreach ( $sections as $section_id => $section_name ) {
 
 		// Tab & Section
-		$tab_url = add_query_arg( array(
-			'post_type' => 'download',
-			'page'      => 'edd-settings',
-			'tab'       => $active_tab,
-			'section'   => $section_id
-		) );
+		$tab_url = add_query_arg(
+			array(
+				'post_type' => 'download',
+				'page'      => 'edd-settings',
+				'tab'       => $active_tab,
+				'section'   => $section_id,
+			),
+			edd_get_admin_base_url()
+		);
 
 		// Settings not updated
 		$tab_url = remove_query_arg( 'settings-updated', $tab_url );
@@ -185,7 +193,7 @@ function edd_options_sidebar() {
 	$active_section = array_key_exists( $active_section, edd_get_settings_tab_sections( $active_tab ) ) ? $active_section : 'main';
 
 	// The coupon code we're promoting
-	$coupon_code = 'BCFM2019';
+	$coupon_code = 'BFCM2019';
 
 	// Build the main URL for the promotion
 	$args = array(
@@ -199,7 +207,7 @@ function edd_options_sidebar() {
 	<div class="edd-settings-sidebar">
 		<div class="edd-settings-sidebar-content">
 			<div class="edd-sidebar-header-section">
-				<img class="edd-bcfm-header" src="<?php echo esc_url( EDD_PLUGIN_URL . 'assets/images/promo/bfcm-header.svg' ); ?>">
+				<img class="edd-bfcm-header" src="<?php echo esc_url( EDD_PLUGIN_URL . 'assets/images/promo/bfcm-header.svg' ); ?>">
 			</div>
 			<div class="edd-sidebar-description-section">
 				<p class="edd-sidebar-description"><?php _e( 'Save 25% on all Easy Digital Downloads purchases <strong>this week</strong>, including renewals and upgrades!', 'easy-digital-downloads' ); ?></p>

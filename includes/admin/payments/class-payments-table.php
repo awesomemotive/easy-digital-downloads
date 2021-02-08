@@ -142,10 +142,6 @@ class EDD_Payment_History_Table extends List_Table {
 		$advanced_filters_applied = (bool) ! empty( $order_total_filter_amount ) || ! empty( $country ) || ! empty( $region );
 		$advanced_filters_applied = apply_filters( 'edd_orders_table_advanced_filters_applied', $advanced_filters_applied );
 
-		$maybe_show_filters = ( true === $advanced_filters_applied )
-			? 'open'
-			: '';
-
 		// No modes
 		if ( empty( $all_modes ) ) {
 			$modes = array();
@@ -184,7 +180,6 @@ class EDD_Payment_History_Table extends List_Table {
 					'name'             => 'mode',
 					'id'               => 'mode',
 					'selected'         => $mode,
-					'chosen'           => true,
 					'show_option_all'  => false,
 					'show_option_none' => false
 				) ); ?>
@@ -219,7 +214,6 @@ class EDD_Payment_History_Table extends List_Table {
 					'name'             => 'gateway',
 					'id'               => 'gateway',
 					'selected'         => $gateway,
-					'chosen'           => true,
 					'show_option_all'  => false,
 					'show_option_none' => false
 				) ); ?>
@@ -227,17 +221,17 @@ class EDD_Payment_History_Table extends List_Table {
 
 		<?php endif; ?>
 
-		<span id="edd-advanced-filters" class="<?php echo esc_attr( $maybe_show_filters ); ?>">
-			<input type="button" class="edd-advanced-filters-button button-secondary" value="<?php esc_html_e( 'More', 'easy-digital-downloads' ); ?>"/>
+		<span id="edd-advanced-filters">
+			<input type="button" class="button edd-advanced-filters-button button-secondary" value="<?php esc_html_e( 'More', 'easy-digital-downloads' ); ?>"/>
 
 			<div class="inside">
 				<fieldset>
 					<legend for="order-amount-filter-type"><?php esc_html_e( 'Total is', 'easy-digital-downloads' ); ?></legend>
 					<?php
 					$options = array(
-						'=' => __( 'equal to', 'easy-digital-downloads' ),
-						'>' => __( 'greater than', 'easy-digital-downloads' ),
-						'<' => __( 'less than', 'easy-digital-downloads' ),
+						'eq' => __( 'equal to', 'easy-digital-downloads' ),
+						'gt' => __( 'greater than', 'easy-digital-downloads' ),
+						'lt' => __( 'less than', 'easy-digital-downloads' ),
 					);
 
 					echo EDD()->html->select( array(
@@ -256,29 +250,19 @@ class EDD_Payment_History_Table extends List_Table {
 				<fieldset>
 					<legend><?php esc_html_e( 'Country & Region', 'easy-digital-downloads' ); ?></legend>
 					<?php
-					echo EDD()->html->select( array(
-						'name'             => 'order-country-filter-value',
-						'class'            => 'edd_countries_filter',
-						'options'          => edd_get_country_list(),
-						'chosen'           => true,
-						'selected'         => $country,
-						'show_option_none' => false,
-						'placeholder'      => __( 'Choose a Country', 'easy-digital-downloads' ),
-						'show_option_all'  => __( 'All Countries', 'easy-digital-downloads' ),
-						'data'             => array(
-							'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
-						)
-					) );
-					echo EDD()->html->select( array(
-						'name'             => 'order-region-filter-value',
-						'class'            => 'edd_regions_filter',
-						'options'          => edd_get_shop_states( $country ),
-						'chosen'           => true,
-						'selected'         => $region,
-						'show_option_none' => false,
-						'placeholder'      => __( 'Choose a Region', 'easy-digital-downloads' ),
-						'show_option_all'  => __( 'All Regions', 'easy-digital-downloads' ),
-					) );
+					echo EDD()->html->country_select(
+						array(
+							'name' => 'order-country-filter-value',
+						),
+						esc_html( $country )
+					);
+					echo EDD()->html->region_select(
+						array(
+							'name' => 'order-region-filter-value',
+						),
+						esc_html( $country ),
+						esc_html( $region )
+					);
 				?>
 				</fieldset>
 
@@ -299,7 +283,7 @@ class EDD_Payment_History_Table extends List_Table {
 		</span>
 
 		<span id="edd-after-core-filters">
-			<input type="submit" class="button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
+			<input type="submit" class="button button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
 
 			<?php if ( ! empty( $start_date ) || ! empty( $end_date ) || ! empty( $order_total_filter_type ) || ( 'all' !== $gateway ) ) : ?>
 				<a href="<?php echo esc_url( $clear_url ); ?>" class="button-secondary">
@@ -366,6 +350,14 @@ class EDD_Payment_History_Table extends List_Table {
 	 * @since 3.0
 	 */
 	public function no_items() {
+		if ( ! edd_has_upgrade_completed( 'migrate_orders' ) ) {
+			global $wpdb;
+			$orders = $wpdb->get_var( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'edd_payment' LIMIT 1" );
+			if ( ! empty( $orders ) ) {
+				esc_html_e( 'Easy Digital Downloads needs to upgrade the database. Orders will be available when that has completed.', 'easy-digital-downloads' );
+				return;
+			}
+		}
 		esc_html_e( 'No orders found.', 'easy-digital-downloads' );
 	}
 
@@ -647,7 +639,6 @@ class EDD_Payment_History_Table extends List_Table {
 				'set-status-complete'     => __( 'Mark Completed',   'easy-digital-downloads' ),
 				'set-status-pending'     => __( 'Mark Pending',     'easy-digital-downloads' ),
 				'set-status-processing'  => __( 'Mark Processing',  'easy-digital-downloads' ),
-				'set-status-refunded'    => __( 'Mark Refunded',    'easy-digital-downloads' ),
 				'set-status-revoked'     => __( 'Mark Revoked',     'easy-digital-downloads' ),
 				'set-status-failed'      => __( 'Mark Failed',      'easy-digital-downloads' ),
 				'set-status-abandoned'   => __( 'Mark Abandoned',   'easy-digital-downloads' ),
@@ -811,15 +802,15 @@ class EDD_Payment_History_Table extends List_Table {
 			$mode = null;
 		}
 
-		$args = array(
-			'user'        => $user,
+		$args = array_filter( array(
+			'user_id'     => $user,
 			'customer_id' => $customer,
 			'status'      => $status,
 			'gateway'     => $gateway,
 			'mode'        => $mode,
 			'type'        => $type,
 			'search'      => $search,
-		);
+		) );
 
 		// Search
 		if ( is_string( $search ) && ( false !== strpos( $search, 'txn:' ) ) ) {
@@ -855,10 +846,21 @@ class EDD_Payment_History_Table extends List_Table {
 		// Maybe filter by order amount.
 		if ( isset( $_GET['order-amount-filter-type'] ) && isset( $_GET['order-amount-filter-value'] ) ) {
 			if ( ! is_null( $_GET['order-amount-filter-value'] ) && '' !== $_GET['order-amount-filter-value'] ) {
-				$filter_type   = sanitize_text_field( $_GET['order-amount-filter-type'] );
 				$filter_amount = floatval( sanitize_text_field( $_GET['order-amount-filter-value'] ) );
 
-				$args['compare'] = array(
+				switch( $_GET['order-amount-filter-type'] ) {
+					case 'lt' :
+						$filter_type = '<';
+						break;
+					case 'gt' :
+						$filter_type = '>';
+						break;
+					default :
+						$filter_type = '=';
+						break;
+				}
+
+				$args['compare_query'] = array(
 					array(
 						'key'     => 'total',
 						'value'   => $filter_amount,

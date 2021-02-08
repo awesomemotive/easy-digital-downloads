@@ -9,6 +9,8 @@
  * @since       3.0
  */
 
+use EDD\Logs\Log;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -124,10 +126,13 @@ function edd_update_log( $log_id = 0, $data = array() ) {
  * @since 3.0
  *
  * @param int $log_id Log ID.
- * @return EDD\Logs\Log|false Log object if successful, false otherwise.
+ * @return Log|false Log object if successful, false otherwise.
  */
 function edd_get_log( $log_id = 0 ) {
-	return edd_get_log_by( 'id', $log_id );
+	$logs = new EDD\Database\Queries\Log();
+
+	// Return log
+	return $logs->get_item( $log_id );
 }
 
 /**
@@ -138,7 +143,7 @@ function edd_get_log( $log_id = 0 ) {
  * @param string $field Database table field.
  * @param string $value Value of the row.
  *
- * @return EDD\Logs\Log|false Log object if successful, false otherwise.
+ * @return Log|false Log object if successful, false otherwise.
  */
 function edd_get_log_by( $field = '', $value = '' ) {
 	$logs = new EDD\Database\Queries\Log();
@@ -156,7 +161,7 @@ function edd_get_log_by( $field = '', $value = '' ) {
  *
  * @param array $args Arguments. See `EDD\Database\Queries\Log` for
  *                    accepted arguments.
- * @return \EDD\Logs\Log[] Array of `Log` objects.
+ * @return Log[] Array of `Log` objects.
  */
 function edd_get_logs( $args = array() ) {
 

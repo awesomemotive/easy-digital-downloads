@@ -24,6 +24,7 @@ $view_url = edd_get_admin_url(
 		<# if ( true === data.state.isAdding ) { #>
 		<button class="button-link delete">
 			<span class="dashicons dashicons-no"></span>
+			<span class="screen-reader-text"><?php printf( __( 'Remove discount', 'easy-digital-downloads' ) ); ?></span>
 		</button>
 		<# } #>
 
@@ -38,7 +39,7 @@ $view_url = edd_get_admin_url(
 </td>
 
 <td class="column-right" data-colname="<?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?>">
-	&ndash;{{ data.totalCurrency }}
+	{{ data.totalCurrency }}
 </td>
 
 <input type="hidden" value="{{ data.typeId }}" name="discounts[{{ data.id }}][type_id]" />

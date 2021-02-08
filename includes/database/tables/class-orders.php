@@ -38,7 +38,7 @@ final class Orders extends Table {
 	 * @since  3.0
 	 * @var    int
 	 */
-	protected $version = 202002141;
+	protected $version = 202012041;
 
 	/**
 	 * Array of upgrade versions and methods.
@@ -54,6 +54,7 @@ final class Orders extends Table {
 		'201808151' => 201808151,
 		'201901111' => 201901111,
 		'202002141' => 202002141,
+		'202012041' => 202012041
 	);
 
 	/**
@@ -77,6 +78,7 @@ final class Orders extends Table {
 			mode varchar(20) NOT NULL default '',
 			currency varchar(20) NOT NULL default '',
 			payment_key varchar(64) NOT NULL default '',
+			tax_rate_id bigint(20) DEFAULT NULL,
 			subtotal decimal(18,9) NOT NULL default '0',
 			discount decimal(18,9) NOT NULL default '0',
 			tax decimal(18,9) NOT NULL default '0',
@@ -274,5 +276,27 @@ final class Orders extends Table {
 
 		return $this->is_success( $result );
 
+	}
+
+	/**
+	 * Upgrade to version 202012041
+	 * 	- Add column `tax_rate_id`
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	protected function __202012041() {
+		// Look for column
+		$result = $this->column_exists( 'tax_rate_id' );
+
+		// Maybe add column
+		if ( false === $result ) {
+			$result = $this->get_db()->query( "
+				ALTER TABLE {$this->table_name} ADD COLUMN tax_rate_id bigint(20) DEFAULT NULL AFTER payment_key;
+			" );
+		}
+
+		// Return success/fail.
+		return $this->is_success( $result );
 	}
 }

@@ -274,6 +274,7 @@ This table's data is intended to be immutable.
 | object_type | This typically indicates the EDD custom table that the object_id value can be found within, and to which row within that table this row relates. For example, the orders table (indicated by the word "order") or the order_items table (indicated by the word "order_item"). |
 | type_id | This value indicates the row ID in the adjustments table from which this order adjustment originated. For example, if this value is "25", go to the adjustments table and look at the row with the ID "25" to see the corresponding adjustment. |
 | type | A string which indicates the type of adjustment this is. Typically this is something like "fee", "tax_rate", or "discount". |
+| type_key | The fees API allows for customizing the array key value for a given fee. This can be a string or numeric. This "fee ID" is stored as the type_key, as it represents the fee's key in the 2.x array. |
 | description  | A description of the order adjustment. |
 | subtotal  | If the amount type for this row is a percentage, the value in this column is intentionally unused. Otherwise, it stores the monetary amount of this adjustment before tax. For example, if you have a $10 shipping fee with a 10% tax rate, $10 is stored in this column. |
 | tax  | If the object_type for this row is a percentage, the value in this column is intentionally unused. Otherwise, it stores the monetary amount of the tax on this adjustment. For example, if you have a $10 shipping fee, the tax on the $10 is stored in this column. |

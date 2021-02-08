@@ -39,7 +39,6 @@ class Logs_Api_Requests extends Schema {
 			'unsigned'   => true,
 			'extra'      => 'auto_increment',
 			'primary'    => true,
-			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -50,7 +49,6 @@ class Logs_Api_Requests extends Schema {
 			'length'     => '20',
 			'unsigned'   => true,
 			'default'    => '0',
-			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -80,7 +78,6 @@ class Logs_Api_Requests extends Schema {
 			'type'       => 'varchar',
 			'length'     => '32',
 			'default'    => '',
-			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -120,7 +117,6 @@ class Logs_Api_Requests extends Schema {
 			'type'       => 'varchar',
 			'length'     => '60',
 			'default'    => '',
-			'searchable' => true,
 			'sortable'   => true
 		),
 

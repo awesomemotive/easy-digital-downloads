@@ -86,7 +86,7 @@ do_action( 'edd_payment_receipt_before_table', $payment, $edd_receipt_args );
 					<li>
 						<span class="edd_fee_label"><?php echo esc_html( $fee->description ); ?></span>
 						<span class="edd_fee_sep">&nbsp;&ndash;&nbsp;</span>
-						<span class="edd_fee_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( $fee->total ) ) ); ?></span>
+						<span class="edd_fee_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( $fee->subtotal ) ) ); ?></span>
 					</li>
 				<?php endforeach; ?>
 				</ul>
@@ -94,7 +94,7 @@ do_action( 'edd_payment_receipt_before_table', $payment, $edd_receipt_args );
 		</tr>
 		<?php endif; ?>
 
-		<?php if ( filter_var( $edd_receipt_args['discount'], FILTER_VALIDATE_BOOLEAN ) && isset( $user['discount'] ) && 'none' !== $user['discount'] ) : ?>
+		<?php if ( filter_var( $edd_receipt_args['discount'], FILTER_VALIDATE_BOOLEAN ) && ! empty( $user['discount'] ) && 'none' !== $user['discount'] ) : ?>
 			<tr>
 				<td><strong><?php esc_html_e( 'Discount(s)', 'easy-digital-downloads' ); ?>:</strong></td>
 				<td><?php echo esc_html( $user['discount'] ); ?></td>

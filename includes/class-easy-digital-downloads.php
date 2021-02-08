@@ -367,7 +367,7 @@ final class Easy_Digital_Downloads {
 	 * @since 3.0
 	 */
 	private function setup_application() {
-		edd_setup_components();
+		add_action( 'plugins_loaded', 'edd_setup_components', 100 );
 
 		$GLOBALS['edd_options'] = edd_get_settings();
 
@@ -408,6 +408,9 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-row.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-table.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-meta.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-date.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/engine/class-compare.php';
 
 		// Database Schemas
 		require_once EDD_PLUGIN_DIR . 'includes/database/schemas/class-adjustments.php';
@@ -464,7 +467,6 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/database/tables/class-order-item-meta.php';
 
 		// Database Table Query Interfaces
-		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-compare.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-adjustment.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-customer.php';
 		require_once EDD_PLUGIN_DIR . 'includes/database/queries/class-customer-email-address.php';
@@ -677,6 +679,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/discount-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/download-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/customer-functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/customers/customer-actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/privacy-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/user-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/query-filters.php';
@@ -743,6 +746,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/plugins.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/upgrade-actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/tools/tools-actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/admin-deprecated-functions.php';
 	}

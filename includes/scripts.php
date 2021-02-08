@@ -299,7 +299,6 @@ function edd_register_admin_scripts() {
 	wp_register_script( 'edd-admin-scripts',               $js_dir . 'edd-admin.js',                         $admin_deps, $version );
 	wp_register_script( 'edd-admin-tax-rates',             $js_dir . 'edd-admin-tax-rates.js',               array( 'wp-backbone', 'jquery-chosen' ), $version, true );
 	wp_register_script( 'edd-admin-email-tags',            $js_dir . 'edd-admin-email-tags.js',              array( 'thickbox', 'wp-util' ), $version );
-	wp_register_script( 'edd-admin-scripts-compatibility', $js_dir . 'edd-admin-backwards-compatibility.js', array( 'jquery', 'edd-admin-scripts' ), $version );
 
 	// Individual admin pages.
 	$admin_pages = array(
@@ -328,6 +327,7 @@ function edd_register_admin_scripts() {
 		'tools'        => array(
 			'edd-admin-tools-export'
 		),
+		'upgrades'     => array()
 	);
 
 	foreach ( $admin_pages as $page => $deps ) {
@@ -348,8 +348,7 @@ add_action( 'admin_init', 'edd_register_admin_scripts' );
  */
 function edd_register_admin_styles() {
 	$css_dir     = EDD_PLUGIN_URL . 'assets/css/';
-	$css_suffix  = is_rtl() ? '-rtl' : '';
-	$css_suffix .= edd_doing_script_debug() ? '.css' : '.min.css';
+	$css_suffix  = is_rtl() ? '-rtl.min.css' : '.min.css';
 	$version     = edd_admin_get_script_version();
 	$deps        = array( 'edd-admin' );
 
@@ -405,8 +404,9 @@ function edd_enqueue_admin_scripts( $hook = '' ) {
 	}
 
 	// Upgrades Page
-	if ( 'edd-admin-upgrades' === $hook ) {
+	if ( in_array( $hook, array( 'edd-admin-upgrades', 'download_page_edd-tools' ) ) ) {
 		wp_enqueue_script( 'edd-admin-tools-export' );
+		wp_enqueue_script( 'edd-admin-upgrades' );
 	}
 
 }
@@ -506,17 +506,8 @@ function edd_localize_admin_scripts() {
 		'new_media_ui'                => apply_filters( 'edd_use_35_media_ui', 1 )
 	) );
 
-	/*
-	 * This bit of JavaScript is to facilitate #2704, in order to not break backwards compatibility with the old Variable Price Rows
-	 * while we transition to an entire new markup. They should not be relied on for long-term usage.
-	 *
-	 * @see https://github.com/easydigitaldownloads/easy-digital-downloads/issues/2704
-	 */
-	wp_localize_script( 'edd-admin-scripts-compatibility', 'edd_backcompat_vars', array(
-		'purchase_limit_settings'     => __( 'Purchase Limit Settings',     'easy-digital-downloads' ),
-		'simple_shipping_settings'    => __( 'Simple Shipping Settings',    'easy-digital-downloads' ),
-		'software_licensing_settings' => __( 'Software Licensing Settings', 'easy-digital-downloads' ),
-		'recurring_payments_settings' => __( 'Recurring Payments Settings', 'easy-digital-downloads' ),
+	wp_localize_script( 'edd-admin-upgrades', 'edd_admin_upgrade_vars', array(
+			'migration_complete' => esc_html__( 'Migration complete', 'easy-digital-downloads' )
 	) );
 }
 add_action( 'admin_enqueue_scripts', 'edd_localize_admin_scripts' );

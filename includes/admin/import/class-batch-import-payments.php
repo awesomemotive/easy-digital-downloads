@@ -42,9 +42,10 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 			'date'              => '',
 			'status'            => '',
 			'email'             => '',
+			'name'              => '',
 			'first_name'        => '',
 			'last_name'         => '',
-			'customer_id'       => '',
+			'edd_customer_id'   => '',
 			'user_id'           => '',
 			'discounts'         => '',
 			'key'               => '',
@@ -174,16 +175,23 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 		}
 
-		if( ! empty( $this->field_mapping['first_name'] ) && ! empty( $row[ $this->field_mapping['first_name'] ] ) ) {
+		if ( ! empty( $this->field_mapping['name'] ) && ! empty( $row[ $this->field_mapping['name'] ] ) ) {
 
-			$payment->first_name = sanitize_text_field( $row[ $this->field_mapping['first_name'] ] );
+			$payment->name = sanitize_text_field( $row[ $this->field_mapping['name'] ] );
 
-		}
+		} else {
 
-		if( ! empty( $this->field_mapping['last_name'] ) && ! empty( $row[ $this->field_mapping['last_name'] ] ) ) {
+			if ( ! empty( $this->field_mapping['first_name'] ) && ! empty( $row[ $this->field_mapping['first_name'] ] ) ) {
 
-			$payment->last_name = sanitize_text_field( $row[ $this->field_mapping['last_name'] ] );
+				$payment->first_name = sanitize_text_field( $row[ $this->field_mapping['first_name'] ] );
 
+			}
+
+			if ( ! empty( $this->field_mapping['last_name'] ) && ! empty( $row[ $this->field_mapping['last_name'] ] ) ) {
+
+				$payment->last_name = sanitize_text_field( $row[ $this->field_mapping['last_name'] ] );
+
+			}
 		}
 
 		if( ! empty( $this->field_mapping['user_id'] ) && ! empty( $row[ $this->field_mapping['user_id'] ] ) ) {
@@ -389,6 +397,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 	private function set_customer( $row ) {
 
 		global $wpdb;
+		$customer = false;
 
 		if( ! empty( $this->field_mapping['email'] ) && ! empty( $row[ $this->field_mapping['email'] ] ) ) {
 
@@ -397,10 +406,10 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 		}
 
 		// Look for a customer from the canonical source, if any
-		if( ! empty( $this->field_mapping['customer_id'] ) && ! empty( $row[ $this->field_mapping['customer_id'] ] ) ) {
+		if( ! empty( $this->field_mapping['edd_customer_id'] ) && ! empty( $row[ $this->field_mapping['edd_customer_id'] ] ) ) {
 
-			$canonical_id = absint( $row[ $this->field_mapping['customer_id'] ] );
-			$mapped_id    = $wpdb->get_var( $wpdb->prepare( "SELECT customer_id FROM $wpdb->customermeta WHERE meta_key = '_canonical_import_id' AND meta_value = %d LIMIT 1", $canonical_id ) );
+			$canonical_id = absint( $row[ $this->field_mapping['edd_customer_id'] ] );
+			$mapped_id    = $wpdb->get_var( $wpdb->prepare( "SELECT edd_customer_id FROM $wpdb->edd_customermeta WHERE meta_key = '_canonical_import_id' AND meta_value = %d LIMIT 1", $canonical_id ) );
 
 		}
 
@@ -413,10 +422,9 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 		if( empty( $mapped_id ) || ! $customer->id > 0 ) {
 
 			// Look for a customer based on provided ID, if any
+			if ( ! empty( $this->field_mapping['edd_customer_id'] ) && ! empty( $row[ $this->field_mapping['edd_customer_id'] ] ) ) {
 
-			if( ! empty( $this->field_mapping['customer_id'] ) && ! empty( $row[ $this->field_mapping['customer_id'] ] ) ) {
-
-				$customer_id = absint( $row[ $this->field_mapping['customer_id'] ] );
+				$customer_id = absint( $row[ $this->field_mapping['edd_customer_id'] ] );
 
 				$customer_by_id = new EDD_Customer( $customer_id );
 
@@ -436,7 +444,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 				$customer = $customer_by_email;
 
-			} else if ( ! empty( $customer_by_id ) ) {
+			} elseif ( ! empty( $customer_by_id ) ) {
 
 				$customer = $customer_by_id;
 
@@ -447,42 +455,47 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 			}
 
 			// Make sure we found a customer. Create one if not.
-			if( empty( $customer->id ) ) {
+			if ( empty( $customer->id ) ) {
 
 				if ( ! $customer instanceof EDD_Customer ) {
-					$customer = new EDD_Customer;
+					$customer = new EDD_Customer();
 				}
-
-				$first_name = '';
-				$last_name  = '';
-
-				if( ! empty( $this->field_mapping['first_name'] ) && ! empty( $row[ $this->field_mapping['first_name'] ] ) ) {
-
-					$first_name = sanitize_text_field( $row[ $this->field_mapping['first_name'] ] );
-
-				}
-
-				if( ! empty( $this->field_mapping['last_name'] ) && ! empty( $row[ $this->field_mapping['last_name'] ] ) ) {
-
-					$last_name = sanitize_text_field( $row[ $this->field_mapping['last_name'] ] );
-
-				}
-
-				$customer->create( array(
-					'name'  => $first_name . ' ' . $last_name,
-					'email' => $email
-				) );
-
-				if( ! empty( $canonical_id ) && (int) $canonical_id !== (int) $customer->id ) {
-					$customer->update_meta( '_canonical_import_id', $canonical_id );
-				}
-
 			}
 
+			if ( ! empty( $this->field_mapping['name'] ) && ! empty( $row[ $this->field_mapping['name'] ] ) ) {
 
+				$name = $row[ $this->field_mapping['name'] ];
+
+			} else {
+				$first_name = '';
+				$last_name  = '';
+				if ( ! empty( $this->field_mapping['first_name'] ) && ! empty( $row[ $this->field_mapping['first_name'] ] ) ) {
+
+					$first_name = $row[ $this->field_mapping['first_name'] ];
+
+				}
+
+				if ( ! empty( $this->field_mapping['last_name'] ) && ! empty( $row[ $this->field_mapping['last_name'] ] ) ) {
+
+					$last_name = $row[ $this->field_mapping['last_name'] ];
+
+				}
+				$name = $first_name . ' ' . $last_name;
+			}
+
+			$customer->create(
+				array(
+					'name'  => sanitize_text_field( $name ),
+					'email' => empty( $email ) ? '' : $email,
+				)
+			);
+
+			if( ! empty( $canonical_id ) && (int) $canonical_id !== (int) $customer->id ) {
+				$customer->update_meta( '_canonical_import_id', $canonical_id );
+			}
 		}
 
-		if( $email && $email != $customer->email ) {
+		if ( ! empty( $email ) && $email !== $customer->email ) {
 			$customer->add_email( $email );
 		}
 
@@ -548,7 +561,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 					$price = trim( substr( $d[1], 0, strpos( $d[1], '{' ) ) );
 
 				} else {
-					
+
 					$price = trim( $d[1] );
 				}
 

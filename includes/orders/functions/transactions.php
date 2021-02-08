@@ -122,7 +122,10 @@ function edd_update_order_transaction( $order_transaction_id = 0, $data = array(
  *                                            false otherwise.
  */
 function edd_get_order_transaction( $order_transaction_id = 0 ) {
-	return edd_get_order_transaction_by( 'id', $order_transaction_id );
+	$order_transactions = new EDD\Database\Queries\Order_Transaction();
+
+	// Return order transaction.
+	return $order_transactions->get_item( $order_transaction_id );
 }
 
 /**

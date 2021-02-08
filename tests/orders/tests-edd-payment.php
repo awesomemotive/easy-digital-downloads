@@ -316,14 +316,18 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 'Test Fee 2', $this->payment->fees[1]['label'] );
 
 		// Test that it saves to the DB
-		$payment_meta = edd_get_payment_meta( $this->payment->ID, '_edd_payment_meta', true );
-
-		$this->assertArrayHasKey( 'fees', $payment_meta );
-
-		$fees = $payment_meta['fees'];
+		$fees = edd_get_order_adjustments(
+			array(
+				'object_id'   => $this->payment->ID,
+				'object_type' => 'order',
+				'type'        => 'fee',
+				'order'       => 'ASC',
+			)
+		);
 
 		$this->assertEquals( 2, count( $fees ) );
-		$this->assertEquals( 'Test Fee 2', $fees[2]['label'] );
+		$fee = $fees[1];
+		$this->assertEquals( 'Test Fee 2', $fee->description );
 	}
 
 	public function test_payment_remove_fee_by_index() {
@@ -858,6 +862,47 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 0, $payment->cart_details[2]['item_number']['options']['price_id'] );
 		$this->assertEquals( 10, $payment->cart_details[2]['item_price'] );
 
+	}
+
+	/**
+	 * Ensures that setting a dynamic tax rate to a payment saves that in order meta and can be retrieved.
+	 *
+	 * This is testing backwards compatibility, when in 2.x you could set a tax rate without a referencing
+	 * ID. We need to ensure this is accessible in 3.x when using an order object.
+	 */
+	public function test_setting_dynamic_tax_rate_saves_rate_in_order_meta() {
+		$payment = $this->payment;
+		$payment->tax_rate = 0.2;
+
+		$tax_amount = $payment->total * 0.2;
+		$payment->increase_tax( $tax_amount );
+		$payment->save();
+
+		// Now fetch the order equivalent.
+		$order = edd_get_order( $payment->ID );
+
+		$this->assertEquals( 20, $order->get_tax_rate() );
+		$this->assertEquals( $tax_amount, $order->tax );
+
+		$this->assertEquals( 20, edd_get_order_meta( $payment->ID, 'tax_rate', true ) );
+	}
+
+	/**
+	 * In 2.x, tax rates are stored as decimals. In 3.x they are stored as percentages. When using
+	 * EDD_Payment you should always get a decimal back.
+	 */
+	public function test_get_tax_rate_returns_decimal() {
+		$payment = new \EDD_Payment();
+		$payment->tax_rate = 0.2;
+		$payment->total    = 10;
+
+		$tax_amount = $payment->total * 0.2;
+		$payment->increase_tax( $tax_amount );
+		$payment->save();
+
+		// Fetch a new payment object.
+		$payment = edd_get_payment( $payment->ID );
+		$this->assertEquals( 0.2, $payment->tax_rate );
 	}
 
 	/* Helpers ***************************************************************/

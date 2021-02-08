@@ -36,19 +36,20 @@ function edd_customers_page_primary_nav( $active_tab = '' ) {
 		foreach ( $tabs as $tab_id => $tab_name ) {
 
 			// Remove
-			$tab_url = add_query_arg( array(
-				'settings-updated' => false,
-				'page_type'        => $tab_id
-			) );
+			$tab_url = edd_get_admin_url(
+				array(
+					'page'      => 'edd-customers',
+					'page_type' => urlencode( $tab_id ),
+				)
+			);
 
-			// Remove the section from the tabs so we always end up at the main section
-			$tab_url = remove_query_arg( 'section', $tab_url );
-			$active  = $active_tab === $tab_id
-				? ' nav-tab-active'
-				: '';
+			$class = 'nav-tab';
+			if ( $active_tab === $tab_id ) {
+				$class .= ' nav-tab-active';
+			}
 
 			// Link
-			echo '<a href="' . esc_url( $tab_url ) . '" class="nav-tab' . $active . '">'; // WPCS: XSS ok.
+			echo '<a href="' . esc_url( $tab_url ) . '" class="' . esc_attr( $class ) . '">'; // WPCS: XSS ok.
 				echo esc_html( $tab_name );
 			echo '</a>';
 		}
@@ -596,12 +597,40 @@ function edd_customers_view( $customer = null ) {
 			<li>
 				<a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history&customer=' . $customer->id ); ?>">
 					<span class="dashicons dashicons-cart"></span>
-					<?php printf( _n( '%s Completed Sale', '%s Completed Sales', $customer->purchase_count, 'easy-digital-downloads' ), esc_html( number_format_i18n( $customer->purchase_count, 0 ) ) ); ?>
+					<?php
+					printf(
+						/* translators: the customer's lifetime number of sales */
+						_n(
+							'%s Completed Sale',
+							'%s Completed Sales',
+							$customer->purchase_count,
+							'easy-digital-downloads'
+						),
+						(
+							'<span class="edd_purchase_count">' .
+							esc_html( number_format_i18n( $customer->purchase_count, 0 ) ) .
+							'</span>'
+						)
+					);
+					?>
 				</a>
 			</li>
 			<li>
 				<span class="dashicons dashicons-chart-area"></span>
-				<?php echo esc_html( edd_currency_filter( edd_format_amount( $customer->purchase_value ) ) ); ?> <?php esc_html_e( 'Lifetime Value', 'easy-digital-downloads' ); ?>
+				<?php
+				printf(
+					/* translators: the customer's lifetime value */
+					esc_html__(
+						'%s Lifetime Value',
+						'easy-digital-downloads'
+					),
+					(
+						'<span class="edd_purchase_value">' .
+						esc_html( edd_currency_filter( edd_format_amount( $customer->purchase_value ) ) ) .
+						'</span>'
+					)
+				);
+				?>
 			</li>
 			<?php do_action( 'edd_customer_stats_list', $customer ); ?>
 		</ul>
@@ -624,10 +653,7 @@ function edd_customers_view( $customer = null ) {
 
 				<?php endif;
 
-			} elseif ( empty( $last_payment_date ) ) {
-				esc_html_e( 'No terms agreement found.', 'easy-digital-downloads' );
-
-			} else {
+			} elseif ( ! empty( $last_payment_date && edd_get_option( 'show_agree_to_terms' ) ) ) {
 				echo esc_html( edd_date_i18n( $last_payment_date, get_option( 'date_format' ) . ' H:i:s' ) . ' ' . edd_get_timezone_abbr() );
 
 				esc_html_e( ' &mdash; Agreed to Terms', 'easy-digital-downloads' );
@@ -636,11 +662,15 @@ function edd_customers_view( $customer = null ) {
 				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong><?php esc_html_e( 'Estimated Privacy Policy Date', 'easy-digital-downloads' ); ?></strong><br /><?php esc_html_e( 'This customer made a purchase prior to agreement dates being logged, this is the date of their last purchase. If your site was displaying the agreement checkbox at that time, this is our best estimate as to when they last agreed to your terms.', 'easy-digital-downloads' ); ?>"></span>
 
 				<?php
-			} ?>
+			} else {
+				esc_html_e( 'No terms agreement found.', 'easy-digital-downloads' );
+			}
+			?>
 		</p>
 
 		<p class="customer-privacy-policy-date info-item">
-			<?php if ( ! empty( $privacy_timestamp ) ) {
+			<?php
+			if ( ! empty( $privacy_timestamp ) ) {
 				echo esc_html( edd_date_i18n( $privacy_timestamp, get_option( 'date_format' ) . ' H:i:s' ) . ' ' . edd_get_timezone_abbr() );
 
 				esc_html_e( ' &mdash; Agreed to Privacy Policy', 'easy-digital-downloads' );
@@ -651,10 +681,8 @@ function edd_customers_view( $customer = null ) {
 
 				<?php endif;
 
-			} elseif ( empty( $last_payment_date ) ) {
-				esc_html_e( 'No privacy policy agreement found.', 'easy-digital-downloads' );
+			} elseif ( ! empty( $last_payment_date ) && edd_get_option( 'show_agree_to_privacy_policy' ) ) {
 
-			} else {
 				echo esc_html( edd_date_i18n( $last_payment_date, get_option( 'date_format' ) . ' H:i:s' ) . ' ' . edd_get_timezone_abbr() );
 
 				esc_html_e( ' &mdash; Agreed to Privacy Policy', 'easy-digital-downloads' );
@@ -663,7 +691,10 @@ function edd_customers_view( $customer = null ) {
 				<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<strong><?php esc_html_e( 'Estimated Privacy Policy Date', 'easy-digital-downloads' ); ?></strong><br /><?php esc_html_e( 'This customer made a purchase prior to privacy policy dates being logged, this is the date of their last purchase. If your site was displaying the privacy policy checkbox at that time, this is our best estimate as to when they last agreed to your privacy policy.', 'easy-digital-downloads' ); ?>"></span>
 
 				<?php
-			} ?>
+			} else {
+				esc_html_e( 'No privacy policy agreement found.', 'easy-digital-downloads' );
+			}
+			?>
 		</p>
 	</div>
 
@@ -837,7 +868,7 @@ function edd_customers_view( $customer = null ) {
 							<div class="edd-form-group">
 								<label class="edd-form-group__label screen-reader-text" for="edd-additional-email"><?php esc_html_e( 'Email Address', 'easy-digital-downloads' ); ?></label>
 								<div class="edd-form-group__control">
-									<input type="email" name="additional-email" id="edd-additional-email" value="" placeholder="<?php esc_attr_e( 'Email Address', 'easy-digital-downloads' ); ?>" />
+									<input type="email" name="additional-email" id="edd-additional-email" class="edd-form-group__input regular-text" value="" placeholder="<?php esc_attr_e( 'Email Address', 'easy-digital-downloads' ); ?>" />
 								</div>
 							</div>
 							<div class="edd-form-group edd-make-email-primary">
@@ -919,7 +950,7 @@ function edd_customers_view( $customer = null ) {
 					// View URL
 					$view_url = edd_get_admin_url( array(
 						'page' => 'edd-payment-history',
-						'view' => 'view-order-details',
+						'view' => 'view-refund-details',
 						'id'   => $refund->id,
 					) );
 

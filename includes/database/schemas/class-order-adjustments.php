@@ -49,7 +49,6 @@ class Order_Adjustments extends Schema {
 			'length'     => '20',
 			'unsigned'   => true,
 			'default'    => '0',
-			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -59,7 +58,6 @@ class Order_Adjustments extends Schema {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => '',
-			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -69,9 +67,9 @@ class Order_Adjustments extends Schema {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0',
-			'searchable' => true,
-			'sortable'   => true
+			'default'    => null,
+			'sortable'   => true,
+			'allow_null' => true,
 		),
 
 		// type
@@ -80,9 +78,18 @@ class Order_Adjustments extends Schema {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => '',
-			'searchable' => true,
 			'sortable'   => true,
 			'transition' => true
+		),
+
+		// type key
+		array(
+			'name'       => 'type_key',
+			'type'       => 'varchar',
+			'length'     => '255',
+			'default'    => null,
+			'allow_null' => true,
+			'sortable'   => true,
 		),
 
 		// description
@@ -101,7 +108,6 @@ class Order_Adjustments extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
-			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -111,7 +117,6 @@ class Order_Adjustments extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
-			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -121,7 +126,6 @@ class Order_Adjustments extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
-			'searchable' => true,
 			'sortable'   => true
 		),
 

@@ -48,7 +48,8 @@ class Logs_File_Downloads extends Schema {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true
 		),
 
 		// file_id
@@ -58,7 +59,7 @@ class Logs_File_Downloads extends Schema {
 			'length'     => '20',
 			'unsigned'   => true,
 			'default'    => '0',
-			'searchable' => true
+			'sortable'   => true
 		),
 
 		// order_id
@@ -67,7 +68,8 @@ class Logs_File_Downloads extends Schema {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true
 		),
 
 		// price_id
@@ -86,7 +88,7 @@ class Logs_File_Downloads extends Schema {
 			'length'     => '20',
 			'unsigned'   => true,
 			'default'    => '0',
-			'searchable' => true
+			'sortable'   => true
 		),
 
 		// ip

@@ -10,18 +10,6 @@
  */
 ?>
 
-<# if ( false !== data.state.isRefund ) { #>
-	<tr class="is-expanded">
-		<td></td>
-		<td colspan="{{ data.config.colspan }}" class="column-primary">
-			<?php esc_html_e( 'Discount', 'easy-digital-downloads' ); ?>
-		</td>
-		<td class="column-right" data-colname="<?php esc_attr_e( 'Discount', 'easy-digital-downloads' ); ?>">
-			&ndash;{{ data.discountCurrency }}
-		</td>
-	</tr>
-<# } #>
-
 <tr class="is-expanded">
 	<td></td>
 	<td colspan="{{ data.config.colspan }}" class="column-primary">
@@ -32,20 +20,20 @@
 	</td>
 </tr>
 
-<# if ( false !== data.state.hasTax ) { #>
+<# if ( 'none' !== data.state.hasTax ) { #>
 
 	<tr class="is-expanded">
 		<td></td>
 		<td colspan="{{ data.config.colspan }}" class="column-primary">
 			<?php esc_html_e( 'Tax', 'easy-digital-downloads' ); ?>
-			<# if ( false !== data.state.hasTax ) { #>
 			<br />
 			<small>
 				<# if ( false !== data.state.hasTax.rate && '' !== data.state.hasTax.country ) { #>
-					{{ data.state.hasTax.country}}<# if ( '' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate.toFixed( 2 ) }}%
+					{{ data.state.hasTax.country }}<# if ( '' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate }}%
+				<# } else if ( false !== data.state.hasTax.rate ) { #>
+					{{ data.state.hasTax.rate }}%
 				<# } #>
 			</small>
-			<# } #>
 		</td>
 		<td class="column-right" data-colname="<?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?>">
 			{{ data.taxCurrency }}
@@ -62,10 +50,10 @@
 			>
 				<p>
 					<?php
-					echo esc_html( 
+					echo esc_html(
 						sprintf(
 							__( 'The tax rate has been updated to %1$s. Existing automatically calculated amounts have not been updated.', 'easy-digital-downloads' ),
-							'{{ data.state.hasTax.rate.toFixed( 2 ) }}%'
+							'{{ data.state.hasTax.rate }}%'
 						)
 					);
 					?>

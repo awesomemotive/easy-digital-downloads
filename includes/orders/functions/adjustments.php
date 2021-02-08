@@ -129,7 +129,10 @@ function edd_update_order_adjustment( $order_adjustment_id = 0, $data = array() 
  *                                           false otherwise.
  */
 function edd_get_order_adjustment( $order_adjustment_id = 0 ) {
-	return edd_get_order_adjustment_by( 'id', $order_adjustment_id );
+	$order_adjustments = new EDD\Database\Queries\Order_Adjustment();
+
+	// Return order adjustment
+	return $order_adjustments->get_item( $order_adjustment_id );
 }
 
 /**
@@ -146,7 +149,7 @@ function edd_get_order_adjustment( $order_adjustment_id = 0 ) {
 function edd_get_order_adjustment_by( $field = '', $value = '' ) {
 	$order_adjustments = new EDD\Database\Queries\Order_Adjustment();
 
-	// Return note
+	// Return order adjustment
 	return $order_adjustments->get_item_by( $field, $value );
 }
 

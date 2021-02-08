@@ -1,12 +1,12 @@
 <?php
 /**
- * Base Database Row Class.
+ * Base Custom Database Table Row Class.
  *
- * @package     EDD
- * @subpackage  Database\Rows
- * @copyright   Copyright (c) 2018, Easy Digital Downloads, LLC
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       3.0
+ * @package     Database
+ * @subpackage  Row
+ * @copyright   Copyright (c) 2020
+ * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       1.0.0
  */
 namespace EDD\Database;
 
@@ -24,14 +24,14 @@ defined( 'ABSPATH' ) || exit;
  * formatted differently, this class will make sure old values are still
  * supported and new values do not conflict.
  *
- * @since 3.0
+ * @since 1.0.0
  */
 class Row extends Base {
 
 	/**
-	 * Construct a database object
+	 * Construct a database object.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 *
 	 * @param mixed Null by default, Array/Object if not
 	 */
@@ -42,9 +42,9 @@ class Row extends Base {
 	}
 
 	/**
-	 * Initialize class properties based on data array
+	 * Initialize class properties based on data array.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 *
 	 * @param array $data
 	 */
@@ -55,9 +55,9 @@ class Row extends Base {
 	/**
 	 * Determines whether the current row exists.
 	 *
-	 * @since 3.0
+	 * @since 1.0.0
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public function exists() {
 		return ! empty( $this->id );

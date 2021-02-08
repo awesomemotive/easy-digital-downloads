@@ -1,0 +1,10 @@
+@mixin edd-admin-colors() {
+	@include admin-scheme(#007cba);
+	@include wordpress-admin-schemes();
+
+	@each $slug, $color in $buddypress-colors {
+		body.admin-color-#{$slug} {
+			@include admin-scheme($color);
+		}
+	}
+}

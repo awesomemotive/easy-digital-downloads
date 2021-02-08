@@ -66,7 +66,7 @@ function edd_get_payment( $payment_or_txn_id = null, $by_txn = false ) {
  * @since 1.8 Refactored to be a wrapper for EDD_Payments_Query.
  *
  * @param array $args Arguments passed to get payments.
- * @return EDD_Payment[] $payments Payments retrieved from the database.
+ * @return EDD_Payment[]|int $payments Payments retrieved from the database.
  */
 function edd_get_payments( $args = array() ) {
 	$args     = apply_filters( 'edd_get_payments_args', $args );
@@ -1262,8 +1262,8 @@ function edd_get_next_payment_number() {
  * @return string  The new order number without prefix and postfix.
  */
 function edd_remove_payment_prefix_postfix( $number ) {
-	$prefix  = edd_get_option( 'sequential_prefix' );
-	$postfix = edd_get_option( 'sequential_postfix' );
+	$prefix  = (string) edd_get_option( 'sequential_prefix' );
+	$postfix = (string) edd_get_option( 'sequential_postfix' );
 
 	// Remove prefix
 	$number = preg_replace( '/' . $prefix . '/', '', $number, 1 );
