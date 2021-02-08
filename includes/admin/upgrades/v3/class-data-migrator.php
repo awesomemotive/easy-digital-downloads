@@ -586,7 +586,7 @@ class Data_Migrator {
 			// Fetch the actual tax rate object for the order region & country.
 			$tax_rate_object = edd_get_tax_rate_by_location( array(
 				'country' => $order_address_data['country'],
-				'region'  => $order_address_data['region']
+				'region'  => ! empty( $order_address_data['region'] ) ? $order_address_data['region'] : ''
 			) );
 
 			if ( ! empty( $tax_rate_object->id ) && $tax_rate_object->amount == $tax_rate ) {
@@ -726,7 +726,6 @@ class Data_Migrator {
 			'key',
 			'email',
 			'date',
-			'user_info',
 			'downloads',
 			'cart_details',
 			'currency',
@@ -734,6 +733,28 @@ class Data_Migrator {
 			'subtotal',
 			'tax',
 		);
+
+		// Remove core keys from `user_info`.
+		$remaining_user_info = false;
+		if ( ! empty( $user_info ) ) {
+			/**
+			 * Array keys which are part of the core `user_info` in payment meta which are not needed as part of the order meta.
+			 * Extensions can add their keys to this filter if they use the `user_info` array to store data and have
+			 * established a migration process to keep the data intact with the new order tables.
+			 *
+			 * @since 3.0
+			 * @param array The array of user info keys.
+			 */
+			$core_user_info      = apply_filters( 'edd_30_core_user_info', array( 'id', 'email', 'first_name', 'last_name', 'discount', 'address', 'user_id' ) );
+			$remaining_user_info = array_diff_key( $user_info, array_flip( $core_user_info ) );
+		}
+
+		// If an extension has added data to `user_info`, migrate it.
+		if ( $remaining_user_info ) {
+			$payment_meta['user_info'] = $remaining_user_info;
+		} else {
+			$core_meta_keys[] = 'user_info';
+		}
 
 		// Remove all the core payment meta from the array, and...
 		if ( is_array( $payment_meta ) ) {
@@ -1085,8 +1106,15 @@ class Data_Migrator {
 			edd_add_order_meta( $order_id, $meta_key, $meta_value );
 		}
 
-		// Now that we're done, let's run a hook here so we can allow extensions to make any necessary changes
-		do_action( 'edd_30_migrate_order', $order_id, $data->ID );
+		/**
+		 * Now that we're done, let's run a hook here so we can allow extensions to make any necessary changes.
+		 *
+		 * @since 3.0
+		 * @param int   $order_id     The order ID.
+		 * @param array $payment_meta The `_edd_payment_meta` value for the original payment.
+		 * @param array $meta         All post meta associated with the payment.
+		 */
+		do_action( 'edd_30_migrate_order', $order_id, $payment_meta, $meta );
 	}
 
 	/**

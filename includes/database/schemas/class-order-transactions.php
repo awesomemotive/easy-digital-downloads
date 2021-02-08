@@ -67,7 +67,8 @@ class Order_Transactions extends Schema {
 			'type'       => 'varchar',
 			'length'     => '256',
 			'cache_key'  => true,
-			'searchable' => true
+			'searchable' => true,
+			'sortable'   => true
 		),
 
 		// gateway
@@ -93,7 +94,8 @@ class Order_Transactions extends Schema {
 			'name'       => 'total',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true
 		),
 
 		// date_created

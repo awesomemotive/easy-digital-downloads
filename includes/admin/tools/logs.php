@@ -51,7 +51,7 @@ function edd_logs_view_page( $logs_table, $tag = '' ) {
 	<div class="wrap">
 		<?php
 		/**
-		 * Fires at the top of the File Downloads logs view.
+		 * Fires at the top of the logs view.
 		 *
 		 * @since 3.0
 		 */
@@ -65,13 +65,15 @@ function edd_logs_view_page( $logs_table, $tag = '' ) {
 			wp_nonce_field( -1, 'edd_filter', false );
 			$logs_table->views();
 			$logs_table->advanced_filters();
-			$logs_table->display();
 			?>
 		</form>
+		<?php
+		$logs_table->display();
+		?>
 
 		<?php
 		/**
-		 * Fires at the bottom of the File Downloads logs view.
+		 * Fires at the bottom of the logs view.
 		 *
 		 * @since 3.0
 		 */

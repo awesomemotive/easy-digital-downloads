@@ -271,7 +271,7 @@ class Sections {
 
 				// Callback or action
 				if ( ! empty( $section->callback ) ) {
-					if ( is_string( $section->callback ) && is_callable( $section->callback ) ) {
+					if ( is_callable( $section->callback ) ) {
 						call_user_func( $section->callback, $this->item );
 
 					} elseif ( is_array( $section->callback ) && is_callable( $section->callback[0] ) ) {
