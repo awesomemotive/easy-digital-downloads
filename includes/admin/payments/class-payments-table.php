@@ -803,7 +803,7 @@ class EDD_Payment_History_Table extends List_Table {
 		}
 
 		$args = array_filter( array(
-			'user'        => $user,
+			'user_id'     => $user,
 			'customer_id' => $customer,
 			'status'      => $status,
 			'gateway'     => $gateway,
