@@ -155,7 +155,7 @@ class EDD_Payments_Query extends EDD_Stats {
 	 * @since 1.8
 	 * @since 3.0 Updated to use the new query classes and custom tables.
 	 *
-	 * @return EDD_Payment[]|EDD\Orders\Order[]
+	 * @return EDD_Payment[]|EDD\Orders\Order[]|int
 	 */
 	public function get_payments() {
 
@@ -194,6 +194,10 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		$this->items = edd_get_orders( $this->args );
+
+		if ( ! empty( $this->args['count'] ) && is_numeric( $this->items ) ) {
+			return intval( $this->items );
+		}
 
 		if ( $should_output_order_objects ) {
 			return $this->items;
@@ -746,22 +750,24 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		if ( isset( $this->args['meta_query'] ) && is_array( $this->args['meta_query'] ) ) {
 			foreach ( $this->args['meta_query'] as $meta ) {
-				switch ( $meta['key'] ) {
-					case '_edd_payment_customer_id':
-						$arguments['customer_id'] = absint( $meta['value'] );
-						break;
+				if ( ! empty( $meta['key'] ) ) {
+					switch ( $meta['key'] ) {
+						case '_edd_payment_customer_id':
+							$arguments['customer_id'] = absint( $meta['value'] );
+							break;
 
-					case '_edd_payment_user_id':
-						$arguments['user_id'] = absint( $meta['value'] );
-						break;
+						case '_edd_payment_user_id':
+							$arguments['user_id'] = absint( $meta['value'] );
+							break;
 
-					case '_edd_payment_user_email':
-						$arguments['email'] = sanitize_email( $meta['value'] );
-						break;
+						case '_edd_payment_user_email':
+							$arguments['email'] = sanitize_email( $meta['value'] );
+							break;
 
-					case '_edd_payment_gateway':
-						$arguments['gateway'] = sanitize_text_field( $meta['value'] );
-						break;
+						case '_edd_payment_gateway':
+							$arguments['gateway'] = sanitize_text_field( $meta['value'] );
+							break;
+					}
 				}
 			}
 		}

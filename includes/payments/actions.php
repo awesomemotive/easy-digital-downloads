@@ -70,12 +70,15 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 					foreach ( $item->get_fees() as $key => $item_fee ) {
 						/** @var EDD\Orders\Order_Adjustment $item_fee */
 
-						$fee_id      = edd_get_order_adjustment_meta( $item_fee->id, 'fee_id', true );
 						$download_id = edd_get_order_adjustment_meta( $item_fee->id, 'download_id', true );
 						$price_id    = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
-						$no_tax      = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
+						$no_tax      = (bool) 0.00 === $item_fee->tax;
+						$id          = is_null( $item_fee->type_key ) ? $item_fee->id : $item_fee->type_key;
+						if ( array_key_exists( $id, $item_fees ) ) {
+							$id .= '_2';
+						}
 
-						$item_fees[ $fee_id ] = array(
+						$item_fees[ $id ] = array(
 							'amount'      => $item_fee->amount,
 							'label'       => $item_fee->description,
 							'no_tax'      => $no_tax ? $no_tax : false,
@@ -125,19 +128,8 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 				}
 			}
 
-			$increase_earnings = $item->total;
-
-			$fees = $order->get_fees();
-			foreach ( $fees as $fee ) {
-				if ( $fee->total > 0 ) {
-					continue;
-				}
-
-				$increase_earnings += $fee->total;
-			}
-
 			// Increase the earnings for this download ID
-			edd_increase_earnings( $item->product_id, $increase_earnings );
+			edd_increase_earnings( $item->product_id, $item->total );
 			edd_increase_purchase_count( $item->product_id, $item->quantity );
 		}
 

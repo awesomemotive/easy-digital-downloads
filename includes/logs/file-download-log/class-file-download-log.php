@@ -8,7 +8,7 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
-namespace EDD\File_Download_Logs\File_Download_Log;
+namespace EDD\Logs;
 
 use EDD\Base_Object;
 

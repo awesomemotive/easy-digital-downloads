@@ -61,6 +61,7 @@ class Logs extends Schema {
 			'default'    => '',
 			'sortable'   => true,
 			'cache_key'  => true,
+			'allow_null' => true
 		),
 
 		// user_id

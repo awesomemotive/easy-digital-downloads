@@ -1,0 +1,28 @@
+
+.edd-tax-rate-table-add {
+	th select,
+	th input[type="text"],
+	th input[type="number"] {
+		width: 100%;
+		margin: 0;
+		padding: 4px;
+	}
+
+	@media screen and (max-width: $break-medium) {
+		display: block;
+
+		th {
+			display: block;
+		}
+
+		.screen-reader-text {
+			display: block;
+			width: unset;
+			clip: unset;
+			height: unset;
+			clip-path: unset;
+			margin: 0 0 12px;
+			position: relative;
+		}
+	}
+}

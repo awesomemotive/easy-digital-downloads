@@ -3,11 +3,12 @@
  * Plugin Name: Easy Digital Downloads
  * Plugin URI: https://easydigitaldownloads.com
  * Description: The easiest way to sell digital products with WordPress.
- * Author: Easy Digital Downloads
- * Author URI: https://easydigitaldownloads.com
+ * Author: Sandhills Development, LLC
+ * Author URI: https://sandhillsdev.com
  * Version: 3.0.0-beta-1
  * Text Domain: easy-digital-downloads
  * Domain Path: languages
+ * Requires PHP: 5.6
  *
  * Easy Digital Downloads is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -63,7 +64,7 @@ final class EDD_Requirements_Check {
 
 		// PHP
 		'php' => array(
-			'minimum' => '5.3.0',
+			'minimum' => '5.6',
 			'name'    => 'PHP',
 			'exists'  => true,
 			'current' => false,
@@ -472,6 +473,8 @@ final class EDD_Requirements_Check {
 		$get_locale   = function_exists( 'get_user_locale' )
 			? get_user_locale()
 			: get_locale();
+
+		unload_textdomain( 'easy-digital-downloads' );
 
 		/**
 		 * Defines the plugin language locale used in Easy Digital Downloads.

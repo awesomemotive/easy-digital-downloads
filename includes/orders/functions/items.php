@@ -32,7 +32,7 @@ defined( 'ABSPATH' ) || exit;
  *     @type int    $cart_index     Position of the order item in the cart.
  *                                  Default 0.
  *     @type string $type           Order item type. Default `download`.
- *     @type string $status         Status of the order item. Default `inherit`.
+ *     @type string $status         Status of the order item. Default `pending`.
  *     @type int    $quantity       Quantity purchased of the order item. Default 0.
  *     @type float  $amount         Amount for the order item. Default 0.
  *     @type float  $subtotal       Subtotal of the order item. Default 0.
@@ -127,7 +127,10 @@ function edd_update_order_item( $order_item_id = 0, $data = array() ) {
  *                                     otherwise.
  */
 function edd_get_order_item( $order_item_id = 0 ) {
-	return edd_get_order_item_by( 'id', $order_item_id );
+	$order_items = new EDD\Database\Queries\Order_Item();
+
+	// Return order item
+	return $order_items->get_item( $order_item_id );
 }
 
 /**
@@ -144,7 +147,7 @@ function edd_get_order_item( $order_item_id = 0 ) {
 function edd_get_order_item_by( $field = '', $value = '' ) {
 	$order_items = new EDD\Database\Queries\Order_Item();
 
-	// Return order items
+	// Return order item
 	return $order_items->get_item_by( $field, $value );
 }
 

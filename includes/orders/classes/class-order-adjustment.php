@@ -18,17 +18,17 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  *
- * @property int    $id
- * @property int    $object_id
- * @property string $object_type
- * @property int    $type_id
- * @property string $type
- * @property string $description
- * @property float  $subtotal
- * @property float  $tax
- * @property float  $total
- * @property string $date_completed
- * @property string $date_modified
+ * @property int      $id
+ * @property int      $object_id
+ * @property string   $object_type
+ * @property int|null $type_id
+ * @property string   $type
+ * @property string   $description
+ * @property float    $subtotal
+ * @property float    $tax
+ * @property float    $total
+ * @property string   $date_completed
+ * @property string   $date_modified
  */
 class Order_Adjustment extends \EDD\Database\Rows\Order_Adjustment {
 
@@ -60,7 +60,7 @@ class Order_Adjustment extends \EDD\Database\Rows\Order_Adjustment {
 	 * Type ID.
 	 *
 	 * @since 3.0
-	 * @var   int
+	 * @var   int|null
 	 */
 	protected $type_id;
 

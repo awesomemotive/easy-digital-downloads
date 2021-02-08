@@ -41,8 +41,8 @@ function edd_logs_view_setup( $type = '' ) {
  *
  * @since 3.0
  *
- * @param object $logs_table List table class to work with
- * @param string $tag        Type of log to view
+ * @param EDD_Base_Log_List_Table $logs_table List table class to work with
+ * @param string                  $tag        Type of log to view
  */
 function edd_logs_view_page( $logs_table, $tag = '' ) {
 	$tag = sanitize_key( $tag );
@@ -216,7 +216,7 @@ function edd_log_views() {
 	<!-- EDD 3.0 Hack -->
 	</div></div>
 	<form method="get" class="edd-old-log-filters" action="<?php echo admin_url( 'edit.php?post_type=download&page=edd-payment-history' ); ?>">
-		<?php edd_admin_filter_bar( 'old-logs' ); ?>
+		<?php edd_admin_filter_bar( 'old_logs' ); ?>
 	</form>
 	<div class="tablenav top"><div>
 	<!-- EDD 3.0 Hack -->
@@ -230,17 +230,13 @@ function edd_log_views() {
  * @since 3.0
  */
 function edd_old_logs_filter_bar_items() {
-	$rtl_class = is_rtl()
-		? ' chosen-rtl'
-		: '';
-
 	$views        = edd_log_default_views();
 	$current_view = isset( $_GET['view'] ) && array_key_exists( $_GET['view'], edd_log_default_views() )
 		? sanitize_text_field( $_GET['view'] )
 		: 'file_downloads'; ?>
 
 	<span id="edd-type-filter">
-		<select id="edd-logs-view" name="view" class="edd-select-chosen <?php echo esc_attr( $rtl_class ); ?>">
+		<select id="edd-logs-view" name="view">
 			<?php foreach ( $views as $view_id => $label ) : ?>
 				<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo esc_html( $label ); ?></option>
 			<?php endforeach; ?>

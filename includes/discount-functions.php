@@ -123,7 +123,10 @@ function edd_delete_discount( $discount_id = 0 ) {
  * @return \EDD_Discount|bool EDD_Discount object or false if not found.
  */
 function edd_get_discount( $discount_id = 0 ) {
-	return edd_get_discount_by( 'id', $discount_id );
+	$discounts = new EDD\Compat\Discount_Query();
+
+	// Return discount
+	return $discounts->get_item( $discount_id );
 }
 
 /**
@@ -154,7 +157,7 @@ function edd_get_discount_by_code( $code = '' ) {
 function edd_get_discount_by( $field = '', $value = '' ) {
 	$discounts = new EDD\Compat\Discount_Query();
 
-	// Return item
+	// Return discount
 	return $discounts->get_item_by( $field, $value );
 }
 
@@ -1012,7 +1015,7 @@ function edd_format_discount_rate( $type = '', $amount = '' ) {
  */
 function edd_get_item_discount_amount( $item, $items, $discounts ) {
 	global $edd_flat_discount_total;
-	
+
 	// Validate item.
 	if ( empty( $item ) || empty( $item['id'] ) ) {
 		return 0;
@@ -1272,7 +1275,7 @@ function edd_get_cart_discounts_html( $discounts = false ) {
 		return;
 	}
 
-	$html = '';
+	$html = _n( 'Discount', 'Discounts', count( $discounts ), 'easy-digital-downloads' ) . ':&nbsp;';
 
 	foreach ( $discounts as $discount ) {
 		$discount_id     = edd_get_discount_id_by_code( $discount );
@@ -1285,7 +1288,8 @@ function edd_get_cart_discounts_html( $discounts = false ) {
 			}
 		}
 
-		$rate = edd_format_discount_rate( edd_get_discount_type( $discount_id ), $discount_amount );
+		$type = edd_get_discount_type( $discount_id );
+		$rate = edd_format_discount_rate( $type, edd_get_discount_amount( $discount_id ) );
 
 		$remove_url  = add_query_arg(
 			array(
@@ -1296,10 +1300,19 @@ function edd_get_cart_discounts_html( $discounts = false ) {
 			edd_get_checkout_uri()
 		);
 
-		$discount_html = '';
-		$discount_html .= "<span class=\"edd_discount\">\n";
-			$discount_html .= "<span class=\"edd_discount_rate\">$discount&nbsp;&ndash;&nbsp;$rate</span>\n";
-			$discount_html .= "<a href=\"$remove_url\" data-code=\"$discount\" class=\"edd_discount_remove\"></a>\n";
+		$discount_html   = '';
+		$discount_html  .= "<span class=\"edd_discount\">\n";
+		$discount_amount = edd_currency_filter( edd_format_amount( $discount_amount ) );
+		$discount_html  .= "<span class=\"edd_discount_total\">{$discount}&nbsp;&ndash;&nbsp;{$discount_amount}</span>\n";
+		if ( 'percent' === $type ) {
+			$discount_html .= "<span class=\"edd_discount_rate\">($rate)</span>\n";
+		}
+		$discount_html .= sprintf(
+			'<a href="%s" data-code="%s" class="edd_discount_remove"><span class="screen-reader-text"%s</span></a>',
+			esc_url( $remove_url ),
+			esc_attr( $discount ),
+			esc_attr__( 'Remove discount', 'easy-digital-downloads' )
+		);
 		$discount_html .= "</span>\n";
 
 		$html .= apply_filters( 'edd_get_cart_discount_html', $discount_html, $discount, $rate, $remove_url );

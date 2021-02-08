@@ -242,16 +242,16 @@ class Tests_Taxes extends EDD_UnitTestCase {
 	}
 
 	public function test_get_payment_tax() {
-		$this->assertEquals( '11.0', edd_get_payment_tax( self::$order->ID ) );
+		$this->assertEquals( 11.000000000, edd_get_payment_tax( self::$order->ID ), 2 );
 	}
 
 	public function test_payment_tax_updates() {
 		// Test backwards compat bug in issue/3324
-		$this->assertEquals( '11.0', self::$order->tax );
+		$this->assertEquals( 11.000000000, self::$order->tax );
 		$current_meta = edd_get_payment_meta( self::$order->id );
 
 		edd_update_payment_meta( self::$order->id, '_edd_payment_meta', $current_meta );
-		$this->assertEquals( '11.0', edd_get_payment_tax( self::$order->id ) );
+		$this->assertEquals( 11.000000000, edd_get_payment_tax( self::$order->id ) );
 
 		// Test that when we update _edd_payment_tax, we update the _edd_payment_meta
 		edd_update_payment_meta( self::$order->id, '_edd_payment_tax', 10 );

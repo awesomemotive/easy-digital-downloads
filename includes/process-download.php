@@ -164,7 +164,7 @@ function edd_process_download() {
 
 		edd_set_time_limit( false );
 
-		if ( function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() && version_compare( phpversion(), '5.4', '<' ) ) {
+		if ( version_compare( phpversion(), '5.4', '<' ) && function_exists( 'get_magic_quotes_runtime' ) && get_magic_quotes_runtime() ) {
 			set_magic_quotes_runtime( 0 );
 		}
 
@@ -912,12 +912,14 @@ function edd_order_grants_access_to_download_files( $args ) {
 		return false;
 	}
 
-	$order_items = edd_count_order_items( array(
+	$args = array(
 		'order_id'   => $args['order_id'],
 		'product_id' => $args['product_id'],
 		'price_id'   => $args['price_id'],
 		'status'     => 'complete'
-	) );
+	);
+
+	$order_items = edd_count_order_items( array_filter( $args ) );
 
 	return $order_items > 0;
 }

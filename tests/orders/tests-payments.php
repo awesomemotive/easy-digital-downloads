@@ -91,6 +91,14 @@ class Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 0, count( $out ) );
 	}
 
+	public function test_payments_query_count_payments() {
+		$payments = new \EDD_Payments_Query( array( 'count' => true ) );
+		$count    = $payments->get_payments();
+
+		$this->assertTrue( is_numeric( $count ) );
+		$this->assertEquals( 1, $count );
+	}
+
 	public function test_edd_get_payment_by() {
 		$payment = edd_get_payment_by( 'id', self::$payment->ID );
 		$this->assertObjectHasAttribute( 'ID', $payment );
@@ -204,7 +212,14 @@ class Payment_Tests extends \EDD_UnitTestCase {
 		$payment = new \EDD_Payment( self::$payment->ID );
 
 		$this->assertInternalType( 'string', $payment->completed_date );
-		$this->assertEquals( date( 'Y-m-d H:i' ), date( 'Y-m-d H:i', strtotime( $payment->completed_date ) ) );
+
+		$expected_date_range = array(
+			date( 'Y-m-d H:i', strtotime( "-1 second" ) ),
+			date( 'Y-m-d H:i' ),
+			date( 'Y-m-d H:i', strtotime( "+1 second" ) ),
+		);
+
+		$this->assertTrue( in_array( date( 'Y-m-d H:i', strtotime( $payment->completed_date ) ), $expected_date_range ) );
 	}
 
 	public function test_get_payment_completed_date_bc() {
@@ -212,7 +227,14 @@ class Payment_Tests extends \EDD_UnitTestCase {
 		$completed_date = edd_get_payment_completed_date( self::$payment->ID );
 
 		$this->assertInternalType( 'string', $completed_date );
-		$this->assertEquals( date( 'Y-m-d' ), date( 'Y-m-d', strtotime( $completed_date ) ) );
+
+		$expected_date_range = array(
+			date( 'Y-m-d H:i', strtotime( "-1 second" ) ),
+			date( 'Y-m-d H:i' ),
+			date( 'Y-m-d H:i', strtotime( "+1 second" ) ),
+		);
+
+		$this->assertTrue( in_array( date( 'Y-m-d H:i', strtotime( $completed_date ) ), $expected_date_range ) );
 	}
 
 	public function test_get_payment_number() {

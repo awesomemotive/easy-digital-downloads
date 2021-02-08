@@ -9,6 +9,8 @@
  * @since       3.0
  */
 
+use EDD\Logs\Api_Request_Log;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -114,11 +116,13 @@ function edd_update_api_request_log( $api_request_log_id = 0, $data = array() ) 
  * @since 3.0
  *
  * @param int $api_request_log_id API request log ID.
- * @return \EDD\Logs\Api_Request_Log|false Api_Request_Log object if successful,
- *                                         false otherwise.
+ * @return Api_Request_Log|false Api_Request_Log object if successful, false otherwise.
  */
 function edd_get_api_request_log( $api_request_log_id = 0 ) {
-	return edd_get_api_request_log_by( 'id', $api_request_log_id );
+	$api_request_logs = new EDD\Database\Queries\Log_Api_Request();
+
+	// Return API Request Log.
+	return $api_request_logs->get_item( $api_request_log_id );
 }
 
 /**
@@ -129,8 +133,7 @@ function edd_get_api_request_log( $api_request_log_id = 0 ) {
  * @param string $field Database table field.
  * @param string $value Value of the row.
  *
- * @return \EDD\Logs\Api_Request_Log|false Api_Request_Log object if successful,
- *                                         false otherwise.
+ * @return Api_Request_Log|false Api_Request_Log object if successful, false otherwise.
  */
 function edd_get_api_request_log_by( $field = '', $value = '' ) {
 	$api_request_logs = new EDD\Database\Queries\Log_Api_Request();
@@ -148,7 +151,7 @@ function edd_get_api_request_log_by( $field = '', $value = '' ) {
  *
  * @param array $args Arguments. See `EDD\Database\Queries\Log_Api_Request` for
  *                    accepted arguments.
- * @return \EDD\Logs\Api_Request_Log[] Array of `Api_Request_Log` objects.
+ * @return Api_Request_Log[] Array of `Api_Request_Log` objects.
  */
 function edd_get_api_request_logs( $args = array() ) {
 

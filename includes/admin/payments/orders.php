@@ -349,7 +349,7 @@ function edd_order_details_email( $order ) {
 				</label>
 
 				<div class="edd-form-group__control">
-					<input readonly type="email" id="<?php echo esc_attr( $order->email ); ?>" class="edd-form-group__input" value="<?php echo esc_attr( $order->email ); ?>" />
+					<input readonly type="email" id="<?php echo esc_attr( $order->email ); ?>" class="edd-form-group__input regular-text" value="<?php echo esc_attr( $order->email ); ?>" />
 				</div>
 
 				<p class="edd-form-group__help description">
@@ -442,23 +442,19 @@ function edd_order_details_addresses( $order ) {
 				<label for="edd_order_address_country" class="edd-form-group__label"><?php echo esc_html_x( 'Country:', 'Address country', 'easy-digital-downloads' ); ?></label>
 				<div class="edd-form-group__control" id="edd-order-address-country-wrap">
 					<?php
-					echo EDD()->html->select(
+					echo EDD()->html->country_select(
 						array(
-							'options'          => edd_get_country_list(),
-							'name'             => 'edd_order_address[country]',
-							'id'               => 'edd-order-address-country',
-							'class'            => 'edd-order-address-country edd-form-group__input',
-							'selected'         => esc_attr( $address->country ),
-							'show_option_all'  => false,
-							'show_option_none' => false,
-							'chosen'           => true,
-							'placeholder'      => esc_html__( 'Select a country', 'easy-digital-downloads' ),
-							'data'             => array(
+							'name'            => 'edd_order_address[country]',
+							'id'              => 'edd-order-address-country',
+							'class'           => 'edd-order-address-country edd-form-group__input',
+							'show_option_all' => false,
+							'data'            => array(
 								'nonce'              => wp_create_nonce( 'edd-country-field-nonce' ),
 								'search-type'        => 'no_ajax',
 								'search-placeholder' => esc_html__( 'Search Countries', 'easy-digital-downloads' ),
 							),
-						)
+						),
+						$address->country
 					); // WPCS: XSS ok.
 					?>
 				</div>
@@ -470,22 +466,18 @@ function edd_order_details_addresses( $order ) {
 					<?php
 					$states = edd_get_shop_states( $address->country );
 					if ( ! empty( $states ) ) {
-						echo EDD()->html->select(
+						echo EDD()->html->region_select(
 							array(
-								'options'          => $states,
 								'name'             => 'edd_order_address[region]',
 								'id'               => 'edd_order_address_region',
 								'class'            => 'edd-order-address-region edd-form-group__input',
-								'selected'         => esc_attr( $address->region ),
-								'show_option_all'  => false,
-								'show_option_none' => false,
-								'chosen'           => true,
-								'placeholder'      => esc_html__( 'Select a region', 'easy-digital-downloads' ),
 								'data'             => array(
 									'search-type'        => 'no_ajax',
 									'search-placeholder' => esc_html__( 'Search Regions', 'easy-digital-downloads' ),
 								),
-							)
+							),
+							$address->country,
+							$address->region
 						); // WPCS: XSS ok.
 					} else {
 						?>
@@ -684,6 +676,27 @@ function edd_order_details_overview( $order ) {
 		}
 	}
 
+	$has_tax  = 'none';
+	$tax_rate = $order->id ? $order->get_tax_rate() : false;
+	$location = array(
+		'rate'    => $tax_rate,
+		'country' => '',
+		'region'  => '',
+	);
+	if ( edd_is_add_order_page() && edd_use_taxes() ) {
+		$has_tax = $location;
+	} elseif ( $tax_rate ) {
+		$has_tax         = $location;
+		$has_tax['rate'] = $tax_rate;
+		if ( $order->tax_rate_id ) {
+			$tax_rate_object = $order->get_tax_rate_object();
+			if ( $tax_rate_object ) {
+				$has_tax['country'] = $tax_rate_object->name;
+				$has_tax['region']  = $tax_rate_object->description;
+			}
+		}
+	}
+
 	wp_localize_script(
 		'edd-admin-orders',
 		'eddAdminOrderOverview',
@@ -693,13 +706,7 @@ function edd_order_details_overview( $order ) {
 			'refunds'      => $_refunds,
 			'isAdding'     => true === edd_is_add_order_page(),
 			'hasQuantity'  => true === edd_item_quantities_enabled(),
-			'hasTax'       => true === edd_use_taxes()
-				? array(
-					'rate'    => 0,
-					'country' => '',
-					'region'  => '',
-				)
-				: 0,
+			'hasTax'       => $has_tax,
 			'hasDiscounts' => true === edd_has_active_discounts(),
 			'order'        => array(
 				'status'         => $order->status,
@@ -712,6 +719,9 @@ function edd_order_details_overview( $order ) {
 			),
 			'nonces'       => array(
 				'edd_admin_order_get_item_amounts' => wp_create_nonce( 'edd_admin_order_get_item_amounts' ),
+			),
+			'i18n'         => array(
+				'closeText' => esc_html__( 'Close', 'easy-digital-downloads' ),
 			),
 		)
 	);
@@ -773,9 +783,9 @@ function edd_order_details_sections( $order ) {
 ?>
 
 	<div id="edd-customer-details" class="postbox">
-		<h3 class="hndle">
+		<h2 class="hndle">
 			<span><?php esc_html_e( 'Order Details', 'easy-digital-downloads' ); ?></span>
-		</h3>
+		</h2>
 		<?php edd_order_sections( $order ); ?>
 	</div>
 
@@ -821,9 +831,9 @@ function edd_order_details_extras( $order = false ) {
 	} ?>
 
 	<div id="edd-order-extras" class="postbox edd-order-data">
-		<h3 class="hndle">
+		<h2 class="hndle">
 			<span><?php esc_html_e( 'Order Extras', 'easy-digital-downloads' ); ?></span>
-		</h3>
+		</h2>
 
 		<div class="inside">
 			<div class="edd-admin-box">
@@ -848,7 +858,6 @@ function edd_order_details_extras( $order = false ) {
 										'id'               => 'edd_gateway_select',
 										'options'          => $gateways,
 										'selected'         => edd_get_default_gateway(),
-										'chosen'           => true,
 										'show_option_none' => false,
 										'show_option_all'  => false,
 									)
@@ -931,10 +940,6 @@ function edd_order_details_extras( $order = false ) {
  */
 function edd_order_details_attributes( $order ) {
 
-	$rtl_class = is_rtl()
-		? ' chosen-rtl'
-		: '';
-
 	$recovery_url = edd_is_add_order_page()
 		? ''
 		: edd_get_payment( $order->id )->get_recovery_url();
@@ -944,9 +949,9 @@ function edd_order_details_attributes( $order ) {
 	?>
 
 	<div id="edd-order-update" class="postbox edd-order-data">
-		<h3 class="hndle">
+		<h2 class="hndle">
 			<span><?php esc_html_e( 'Order Attributes', 'easy-digital-downloads' ); ?></span>
-		</h3>
+		</h2>
 
 		<div class="inside">
 			<div class="edd-order-update-box edd-admin-box">
@@ -968,7 +973,7 @@ function edd_order_details_attributes( $order ) {
 							<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php echo $status_help; // WPCS: XSS ok. ?>"></span>
 						</label>
 						<div class="edd-form-group__control">
-							<select name="edd-payment-status" id="edd_payment_status" class="edd-form-group__input edd-select-chosen <?php echo esc_attr( $rtl_class ); ?>">
+							<select name="edd-payment-status" id="edd_payment_status" class="edd-form-group__input">
 							<?php foreach ( edd_get_payment_statuses() as $key => $status ) : ?>
 								<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $order->status, $key, true ); ?>><?php echo esc_html( $status ); ?></option>
 							<?php endforeach; ?>
@@ -1027,43 +1032,16 @@ function edd_order_details_attributes( $order ) {
 						</legend>
 
 						<div class="edd-form-group__control">
-							<label for="edd_payment_time_hour" class="screen-reader-text">
+							<label for="edd-payment-time-hour" class="screen-reader-text">
 								<?php esc_html_e( 'Hour', 'easy-digital-downloads' ); ?>
 							</label>
-
-							<?php
-							echo EDD()->html->select(
-								array(
-									'name'             => 'edd-payment-time-hour',
-									'id'               => 'edd-payment-time-hour',
-									'options'          => edd_get_hour_values(),
-									'selected'         => $order_date->format( 'H' ),
-									'chosen'           => true,
-									'class'            => 'edd-time edd-form-group__input',
-									'show_option_none' => false,
-									'show_option_all'  => false,
-								)
-							); // WPCS: XSS ok.
-							?>
+							<input type="number" min="0" max="24" step="1" name="edd-payment-time-hour" id="edd-payment-time-hour" value="<?php echo esc_attr( $order_date->format( 'H' ) ); ?>" />
 							:
 
-							<label for="edd_payment_time_min" class="screen-reader-text">
+							<label for="edd-payment-time-min" class="screen-reader-text">
 								<?php esc_html_e( 'Minute', 'easy-digital-downloads' ); ?>
 							</label>
-							<?php
-							echo EDD()->html->select(
-								array(
-									'name'             => 'edd-payment-time-min',
-									'id'               => 'edd-payment-time-min',
-									'options'          => edd_get_minute_values(),
-									'selected'         => $order_date->format( 'i' ),
-									'chosen'           => true,
-									'class'            => 'edd-time edd-form-group__input',
-									'show_option_none' => false,
-									'show_option_all'  => false,
-								)
-							); // WPCS: XSS ok.
-							?>
+							<input type="number" min="0" max="59" step="1" name="edd-payment-time-min" id="edd-payment-time-min" value="<?php echo esc_attr( $order_date->format( 'i' ) ); ?>" />
 						</div>
 					</fieldset>
 				</div>

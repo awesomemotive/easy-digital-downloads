@@ -10,8 +10,6 @@
  */
 namespace EDD\Reports;
 
-use DateTimeZone, DateTime, edd_get_timezone_abbr, edd_get_utc_equivalent_date;
-
 //
 // Endpoint and report helpers.
 //
@@ -938,24 +936,24 @@ function default_display_charts_group( $report ) {
 		return;
 	}
 
+	?>
+	<div id="edd-reports-charts-wrap" class="edd-report-wrap">
+	<?php
+
 	$charts = $report->get_endpoints( 'charts' );
 
 	foreach ( $charts as $endpoint_id => $chart ) {
-?>
+		?>
+		<div class="edd-reports-chart edd-reports-chart-<?php echo esc_attr( $chart->get_type() ); ?>" id="edd-reports-table-<?php echo esc_attr( $endpoint_id ); ?>">
+			<h3><?php echo esc_html( $chart->get_label() ); ?></h3>
 
-	<div id="edd-reports-charts-wrap" class="edd-report-wrap">
-
-			<div class="edd-reports-chart edd-reports-chart-<?php echo esc_attr( $chart->get_type() ); ?>" id="edd-reports-table-<?php echo esc_attr( $endpoint_id ); ?>">
-				<h3><?php echo esc_html( $chart->get_label() ); ?></h3>
-
-				<?php $chart->display(); ?>
-			</div>
-
-			<div class="clear"></div>
-
-	</div>
-<?php
+			<?php $chart->display(); ?>
+		</div>
+		<?php
 	}
+	?>
+	</div>
+	<?php
 }
 
 /**
@@ -1104,7 +1102,6 @@ function display_gateways_filter() {
 	$select = EDD()->html->select( array(
 		'name'             => 'gateways',
 		'options'          => $gateways,
-		'chosen'           => true,
 		'selected'         => empty( $gateway ) ? 0 : $gateway,
 		'show_option_none' => false,
 	) ); ?>
@@ -1129,16 +1126,16 @@ function display_region_filter() {
 	$regions = array_filter( $regions );
 
 	// Get the select
-	$select = EDD()->html->select( array(
-		'name'             => 'regions',
-		'id'               => 'edd_reports_filter_regions',
-		'class'            => 'edd_regions_filter',
-		'options'          => $regions,
-		'chosen'           => true,
-		'selected'         => empty( $region ) ? 0 : $region,
-		'show_option_none' => false,
-		'show_option_all'  => __( 'All Regions', 'easy-digital-downloads' ),
-	) ); ?>
+	$select = EDD()->html->region_select(
+		array(
+			'name'    => 'regions',
+			'id'      => 'edd_reports_filter_regions',
+			'options' => $regions,
+		),
+		$country,
+		$region
+	);
+	?>
 
 	<span class="edd-graph-filter-options graph-option-section"><?php
 	echo $select;
@@ -1159,19 +1156,15 @@ function display_country_filter() {
 	$countries = array_filter( $countries );
 
 	// Get the select
-	$select = EDD()->html->select( array(
-		'name'             => 'countries',
-		'id'               => 'edd_reports_filter_countries',
-		'class'            => 'edd_countries_filter',
-		'options'          => $countries,
-		'chosen'           => true,
-		'selected'         => empty( $country ) ? 0 : $country,
-		'show_option_none' => false,
-		'show_option_all'  => __( 'All Countries', 'easy-digital-downloads' ),
-		'data'             => array(
-			'nonce' => wp_create_nonce( 'edd-country-field-nonce' )
+	$select = EDD()->html->country_select(
+		array(
+			'name'    => 'countries',
+			'id'      => 'edd_reports_filter_countries',
+			'options' => $countries,
 		),
-	) ); ?>
+		$country
+	);
+	?>
 
 	<span class="edd-graph-filter-options graph-option-section"><?php
 	echo $select;
@@ -1265,7 +1258,7 @@ function filter_items( $report = false ) {
 	} ?>
 
 	<span class="edd-graph-filter-submit graph-option-section">
-		<input type="submit" class="button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
+		<input type="submit" class="button button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
 		<input type="hidden" name="edd_action" value="filter_reports" />
 		<input type="hidden" name="edd_redirect" value="<?php echo esc_url( $action ); ?>">
 		<input type="hidden" name="report_id" value="<?php echo esc_attr( $report_id ); ?>">

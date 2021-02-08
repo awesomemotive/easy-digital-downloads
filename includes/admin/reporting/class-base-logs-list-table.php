@@ -23,6 +23,13 @@ use EDD\Admin\List_Table;
 class EDD_Base_Log_List_Table extends List_Table {
 
 	/**
+	 * Log type
+	 *
+	 * @var string
+	 */
+	protected $log_type = 'logs';
+
+	/**
 	 * Get things started
 	 *
 	 * @since 3.0
@@ -141,7 +148,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 *
 	 * @since 3.0
      *
-	 * @return string Start date to filter by
+	 * @return string End date to filter by
 	 */
 	public function get_filtered_end_date() {
 		return sanitize_text_field( $this->get_request_var( 'end-date', null ) );
@@ -198,14 +205,10 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * @return void
 	 */
 	public function log_views() {
-		$rtl_class = is_rtl()
-			? ' chosen-rtl'
-			: '';
-
 		$views        = edd_log_default_views();
 		$current_view = $this->get_filtered_view(); ?>
 
-		<select id="edd-logs-view" name="view" class="edd-select-chosen <?php echo esc_attr( $rtl_class ); ?>">
+		<select id="edd-logs-view" name="view">
 			<?php foreach ( $views as $view_id => $label ) : ?>
 				<option value="<?php echo esc_attr( $view_id ); ?>" <?php selected( $view_id, $current_view ); ?>><?php echo esc_html( $label ); ?></option>
 			<?php endforeach; ?>
@@ -234,10 +237,6 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 * @return void
 	 */
 	public function downloads_filter() {
-		$rtl_class = is_rtl()
-			? ' chosen-rtl'
-			: '';
-
 		$downloads = get_posts( array(
 			'post_type'              => 'download',
 			'post_status'            => 'any',
@@ -250,7 +249,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 		) );
 
 		if ( $downloads ) {
-			echo '<select name="download" id="edd-log-download-filter" class="edd-select-chosen ' . esc_attr( $rtl_class ) . '">';
+			echo '<select name="download" id="edd-log-download-filter">';
 				echo '<option value="0">' . __( 'All Downloads', 'easy-digital-downloads' ) . '</option>';
 				foreach ( $downloads as $download ) {
 					echo '<option value="' . $download . '"' . selected( $download, $this->get_filtered_download() ) . '>' . esc_html( get_the_title( $download ) ) . '</option>';
@@ -344,7 +343,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 		$retval = array(
 			'product_id'  => $this->get_filtered_download(),
 			'customer_id' => $this->get_filtered_customer(),
-			'payment_id'  => $this->get_filtered_payment(),
+			'order_id'    => $this->get_filtered_payment(),
 			'meta_query'  => $this->get_meta_query(),
 		);
 
@@ -354,20 +353,57 @@ class EDD_Base_Log_List_Table extends List_Table {
 			if ( filter_var( $search, FILTER_VALIDATE_IP ) ) {
 				$retval['ip'] = $search;
 			} elseif ( is_email( $search ) ) {
-				$customer = edd_get_customer( $search );
-				if ( ! empty( $customer->id ) ) {
-					$retval['customer_id'] = $customer->id;
-				}
-			} elseif ( is_numeric( $search ) ) {
-				$customer = edd_get_customer( $search );
-
-				if ( ! empty( $customer->id ) ) {
-					$retval['customer_id'] = $customer->id;
+				if ( 'api_requests' === $this->log_type ) {
+					// API requests are linked to user accounts, so we're checking user data here.
+					$user = get_user_by( 'email', $search );
+					if ( ! empty( $user->ID ) ) {
+						$retval['user_id'] = $user->ID;
+					} else {
+						// This is a fallback to help ensure an invalid email will produce zero results.
+						$retval['search'] = $search;
+					}
 				} else {
-					$this->file_search = true;
+					// All other logs are linked to customers.
+					$customer = edd_get_customer_by( 'email', $search );
+					if ( ! empty( $customer->id ) ) {
+						$retval['customer_id'] = $customer->id;
+					} else {
+						// This is a fallback to help ensure an invalid email will produce zero results.
+						$retval['search'] = $search;
+					}
+				}
+			} elseif ( 'api_requests' === $this->log_type && 32 === strlen( $search ) ) {
+				// Look for an API key
+				$retval['api_key'] = $search;
+			} elseif ( 'api_requests' === $this->log_type && stristr( $search, 'token:' ) ) {
+				// Look for an API token
+				$retval['token'] = str_ireplace( 'token:', '', $search );
+			} elseif ( is_numeric( $search ) ) {
+				if ( 'api_requests' === $this->log_type ) {
+					// API requests are linked to user accounts, so we're checking user data here.
+					$user = get_user_by( 'email', $search );
+					if ( ! empty( $user->ID ) ) {
+						$retval['user_id'] = $user->ID;
+					} else {
+						$retval['search'] = $search;
+					}
+				} else {
+					// All other logs are linked to customers.
+					$customer = edd_get_customer( $search );
+					if ( ! empty( $customer->id ) ) {
+						$retval['customer_id'] = $customer->id;
+					} elseif ( 'file_downloads' === $this->log_type ) {
+						$retval['product_id'] = $search;
+					} else {
+						$retval['search'] = $search;
+					}
 				}
 			} else {
-				$retval['file_id'] = $search;
+				if ( 'file_downloads' === $this->log_type ) {
+					$this->file_search = true;
+				} else {
+					$retval['search'] = $search;
+				}
 			}
 		}
 
@@ -395,6 +431,8 @@ class EDD_Base_Log_List_Table extends List_Table {
 				);
 			}
 		}
+
+		$retval = array_filter( $retval );
 
 		// Return query arguments
 		return ( true === $paginate )
@@ -463,20 +501,6 @@ class EDD_Base_Log_List_Table extends List_Table {
 				<?php printf( esc_html__( 'Customer ID: %d', 'easy-digital-downloads' ), $customer ); ?>
 			</span>
 
-		<?php endif; ?>
-
-		<?php if ( has_action( 'edd_payment_advanced_filters_after_fields' ) ) : ?>
-		<span id="edd-advanced-filters">
-			<input type="button" class="edd-advanced-filters-button button-secondary" value="<?php esc_attr_e( 'More', 'easy-digital-downloads' ); ?>"/>
-
-			<div class="inside">
-				<span id="edd-after-core-filters">
-					<fieldset class="edd-add-on-filters">
-						<legend><?php esc_html_e( 'Extras', 'easy-digital-downloads' ); ?></legend>
-					</fieldset>
-				</span>
-			</div>
-		</span>
 		<?php endif; ?>
 
 		<input type="submit" class="button-secondary" value="<?php esc_attr_e( 'Filter', 'easy-digital-downloads' ); ?>"/>

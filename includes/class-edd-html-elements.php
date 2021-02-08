@@ -489,14 +489,14 @@ class EDD_HTML_Elements {
 	 *
 	 * @since 1.5.2
 	 *
-	 * @param string $name         Name attribute of the dropdown
-	 * @param int    $selected     Year to select automatically
-	 * @param int    $years_before Number of years before the current year the dropdown should start with
-	 * @param int    $years_after  Number of years after the current year the dropdown should finish at
-	 *
+	 * @param string $name         Name attribute of the dropdown.
+	 * @param int    $selected     Year to select automatically.
+	 * @param int    $years_before Number of years before the current year the dropdown should start with.
+	 * @param int    $years_after  Number of years after the current year the dropdown should finish at.
+	 * @param string $id           A unique identifier for the field.
 	 * @return string $output Year dropdown
 	 */
-	public function year_dropdown( $name = 'year', $selected = 0, $years_before = 5, $years_after = 0 ) {
+	public function year_dropdown( $name = 'year', $selected = 0, $years_before = 5, $years_after = 0, $id = 'edd_year_select' ) {
 		$current    = date( 'Y' );
 		$start_year = $current - absint( $years_before );
 		$end_year   = $current + absint( $years_after );
@@ -508,13 +508,16 @@ class EDD_HTML_Elements {
 			$start_year ++;
 		}
 
-		$output = $this->select( array(
-			'name'             => $name,
-			'selected'         => $selected,
-			'options'          => $options,
-			'show_option_all'  => false,
-			'show_option_none' => false,
-		) );
+		$output = $this->select(
+			array(
+				'name'             => $name,
+				'id'               => $id . '_' . $name,
+				'selected'         => $selected,
+				'options'          => $options,
+				'show_option_all'  => false,
+				'show_option_none' => false,
+			)
+		);
 
 		return $output;
 	}
@@ -524,30 +527,102 @@ class EDD_HTML_Elements {
 	 *
 	 * @since 1.5.2
 	 *
-	 * @param string $name     Name attribute of the dropdown
-	 * @param int    $selected Month to select automatically
+	 * @param string  $name             Name attribute of the dropdown.
+	 * @param int     $selected         Month to select automatically.
+	 * @param string  $id               A unique identifier for the field.
+	 * @param boolean $return_long_name Whether to use the long name for the month.
 	 *
 	 * @return string $output Month dropdown
 	 */
-	public function month_dropdown( $name = 'month', $selected = 0 ) {
+	public function month_dropdown( $name = 'month', $selected = 0, $id = 'edd_month_select', $return_long_name = false ) {
 		$month    = 1;
 		$options  = array();
 		$selected = empty( $selected ) ? date( 'n' ) : $selected;
 
 		while ( $month <= 12 ) {
-			$options[ absint( $month ) ] = edd_month_num_to_name( $month );
+			$options[ absint( $month ) ] = edd_month_num_to_name( $month, $return_long_name );
 			$month ++;
 		}
 
-		$output = $this->select( array(
-			'name'             => $name,
-			'selected'         => $selected,
-			'options'          => $options,
-			'show_option_all'  => false,
-			'show_option_none' => false,
-		) );
+		$output = $this->select(
+			array(
+				'name'             => $name,
+				'id'               => $id . '_' . $name,
+				'selected'         => $selected,
+				'options'          => $options,
+				'show_option_all'  => false,
+				'show_option_none' => false,
+			)
+		);
 
 		return $output;
+	}
+
+	/**
+	 * Gets the countries dropdown.
+	 *
+	 * @since  3.0
+	 * @param  array  $args    The array of parameters passed to the method
+	 * @param  string $country The selected country
+	 * @return string
+	 */
+	public function country_select( $args = array(), $country = '' ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'name'             => 'edd_countries',
+				'class'            => 'edd_countries_filter',
+				'options'          => edd_get_country_list(),
+				'chosen'           => true,
+				'selected'         => $country,
+				'show_option_none' => false,
+				'placeholder'      => __( 'Choose a Country', 'easy-digital-downloads' ),
+				'show_option_all'  => __( 'All Countries', 'easy-digital-downloads' ),
+				'data'             => array(
+					'nonce' => wp_create_nonce( 'edd-country-field-nonce' ),
+				),
+			)
+		);
+
+		if ( false === strpos( $args['class'], 'edd_countries_filter' ) ) {
+			$args['class'] .= ' edd_countries_filter';
+		}
+
+		return $this->select( $args );
+	}
+
+	/**
+	 * Gets the regions dropdown.
+	 *
+	 * @since  3.0
+	 * @param  array  $args     The array of parameters passed to the method
+	 * @param  string $country  The country from which to populate the regions
+	 * @param  string $region   The selected region
+	 * @return string
+	 */
+	public function region_select( $args = array(), $country = '', $region = '' ) {
+		if ( ! $country ) {
+			$country = edd_get_shop_country();
+		}
+		$args = wp_parse_args(
+			$args,
+			array(
+				'name'             => 'edd_regions',
+				'class'            => 'edd_regions_filter',
+				'options'          => edd_get_shop_states( $country ),
+				'chosen'           => true,
+				'selected'         => $region,
+				'show_option_none' => false,
+				'placeholder'      => __( 'Choose a Region', 'easy-digital-downloads' ),
+				'show_option_all'  => __( 'All Regions', 'easy-digital-downloads' ),
+			)
+		);
+
+		if ( false === strpos( $args['class'], 'edd_regions_filter' ) ) {
+			$args['class'] .= ' edd_regions_filter';
+		}
+
+		return $this->select( $args );
 	}
 
 	/**
