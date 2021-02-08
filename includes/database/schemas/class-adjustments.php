@@ -115,7 +115,8 @@ final class Adjustments extends Schema {
 			'name'       => 'amount',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true
 		),
 
 		// description

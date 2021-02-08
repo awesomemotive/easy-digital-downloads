@@ -104,31 +104,28 @@ class Log_File_Download extends Query {
 	 * @param string|array $query {
 	 *     Optional. Array or query string of query parameters. Default empty.
 	 *
-	 *     @type int          $id                   An log ID to only return that order. Default empty.
+	 *     @type int          $id                   An log ID to only return that log. Default empty.
 	 *     @type array        $id__in               Array of log IDs to include. Default empty.
 	 *     @type array        $id__not_in           Array of log IDs to exclude. Default empty.
-	 *     @type string       $product_id           A product ID to only return those users. Default empty.
+	 *     @type string       $product_id           A product ID to only return those products. Default empty.
 	 *     @type array        $product_id__in       Array of product IDs to include. Default empty.
 	 *     @type array        $product_id__not_in   Array of product IDs to exclude. Default empty.
-	 *     @type string       $file_id              A file ID to only return those users. Default empty.
+	 *     @type string       $file_id              A file ID to only return those files. Default empty.
 	 *     @type array        $file_id__in          Array of file IDs to include. Default empty.
 	 *     @type array        $file_id__not_in      Array of file IDs to exclude. Default empty.
-	 *     @type string       $payment_id           A payment ID to only return those users. Default empty.
-	 *     @type array        $payment_id__in       Array of payment IDs to include. Default empty.
-	 *     @type array        $payment_id__not_in   Array of payment IDs to exclude. Default empty.
-	 *     @type string       $price_id             A price ID to only return those users. Default empty.
+	 *     @type string       $order_id             An order ID to only return those orders. Default empty.
+	 *     @type array        $order_id__in         Array of order IDs to include. Default empty.
+	 *     @type array        $order_id__not_in     Array of order IDs to exclude. Default empty.
+	 *     @type string       $price_id             A price ID to only return those prices. Default empty.
 	 *     @type array        $price_id__in         Array of price IDs to include. Default empty.
 	 *     @type array        $price_id__not_in     Array of price IDs to exclude. Default empty.
-	 *     @type string       $customer_id          A customer ID to only return those users. Default empty.
+	 *     @type string       $customer_id          A customer ID to only return those customers. Default empty.
 	 *     @type array        $customer_id__in      Array of customer IDs to include. Default empty.
 	 *     @type array        $customer_id__not_in  Array of customer IDs to exclude. Default empty.
-	 *     @type string       $email                An email to only return that type. Default empty.
-	 *     @type array        $email__in            Array of emails to include. Default empty.
-	 *     @type array        $email__not_in        Array of emails to exclude. Default empty.
-	 *     @type string       $ip                   An IP to only return that type. Default empty.
+	 *     @type string       $ip                   An IP to only return that IP address. Default empty.
 	 *     @type array        $ip__in               Array of IPs to include. Default empty.
 	 *     @type array        $ip__not_in           Array of IPs to exclude. Default empty.
-	 *     @type string       $user_agent           A user agent to only return that type. Default empty.
+	 *     @type string       $user_agent           A user agent to only return that agent. Default empty.
 	 *     @type array        $user_agent__in       Array of user agents to include. Default empty.
 	 *     @type array        $user_agent__not_in   Array of user agents to exclude. Default empty.
 	 *     @type array        $date_query           Query all datetime columns together. See WP_Date_Query.
@@ -144,9 +141,9 @@ class Log_File_Download extends Query {
 	 *     @type int          $offset               Number of logs to offset the query. Used to build LIMIT clause.
 	 *                                              Default 0.
 	 *     @type bool         $no_found_rows        Whether to disable the `SQL_CALC_FOUND_ROWS` query. Default true.
-	 *     @type string|array $orderby              Accepts 'id', 'object_id', 'object_type', 'user_id', 'date_created',
-	 *                                              'user_id__in', 'object_id__in', 'object_type__in'.
-	 *                                              Also accepts false, an empty array, or 'none' to disable `ORDER BY` clause.
+	 *     @type string|array $orderby              Accepts 'id', 'product_id', 'file_id', 'order_id', 'customer_id',
+	 *                                              'ip', 'date_created', and 'date_modified'. Also accepts false,
+	 *                                              an empty array, or 'none' to disable `ORDER BY` clause.
 	 *                                              Default 'id'.
 	 *     @type string       $order                How to order results. Accepts 'ASC', 'DESC'. Default 'DESC'.
 	 *     @type string       $search               Search term(s) to retrieve matching logs for. Default empty.

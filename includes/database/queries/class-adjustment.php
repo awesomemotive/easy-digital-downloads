@@ -107,32 +107,36 @@ class Adjustment extends Query {
 	 *     @type int          $id                   A adjustment ID to only return that adjustment. Default empty.
 	 *     @type array        $id__in               Array of adjustment IDs to include. Default empty.
 	 *     @type array        $id__not_in           Array of adjustment IDs to exclude. Default empty.
+	 *     @type int          $parent               A parent adjustment ID to only return adjustments with
+	 *                                              that parent. Default empty.
+	 *     @type array        $parent_id__in        An array of parent IDs to include. Default empty.
+	 *     @type array        $parent_id__not_in    An array of parent IDs to exclude. Default empty.
 	 *     @type int          $code                 A adjustment code to only return that adjustment. Default empty.
 	 *     @type array        $code__in             Array of adjustment codes to include. Default empty.
 	 *     @type array        $code__not_in         Array of adjustment codes to exclude. Default empty.
-	 *     @type int          $status               A adjustment status to only return that adjustment. Default empty.
+	 *     @type int          $status               A adjustment status to only return that status. Default empty.
 	 *     @type array        $status__in           Array of adjustment statuses to include. Default empty.
 	 *     @type array        $status__not_in       Array of adjustment statuses to exclude. Default empty.
-	 *     @type int          $type                 A adjustment type to only return that adjustment. Default empty.
+	 *     @type int          $type                 A adjustment type to only return that type. Default empty.
 	 *     @type array        $type__in             Array of adjustment types to include. Default empty.
 	 *     @type array        $type__not_in         Array of adjustment types to exclude. Default empty.
-	 *     @type int          $scope                A adjustment scope to only return that adjustment. Default empty.
+	 *     @type int          $scope                A adjustment scope to only return that scope. Default empty.
 	 *     @type array        $scope__in            Array of adjustment scopes to include. Default empty.
 	 *     @type array        $scope__not_in        Array of adjustment scopes to exclude. Default empty.
-	 *     @type int          $amount_type          A adjustment amount type to only return that adjustment. Default empty.
+	 *     @type int          $amount_type          A adjustment amount type to only return that type. Default empty.
 	 *     @type array        $amount_type__in      Array of amount adjustment types to include. Default empty.
 	 *     @type array        $amount_type__not_in  Array of amount adjustment types to exclude. Default empty.
-	 *     @type int          $amount               A adjustment amount to only return that adjustment. Default empty.
+	 *     @type int|float    $amount               A adjustment amount to only return that amount. Default empty.
 	 *     @type array        $amount__in           Array of adjustment amounts to include. Default empty.
 	 *     @type array        $amount__not_in       Array of adjustment amounts to exclude. Default empty.
-	 *     @type int          $max_uses             A adjustment max_uses to only return that adjustment. Default empty.
+	 *     @type int          $max_uses             A adjustment max_uses to only return that amount. Default empty.
 	 *     @type array        $max_uses__in         Array of adjustment max_uses to include. Default empty.
 	 *     @type array        $max_uses__not_in     Array of adjustment max_uses to exclude. Default empty.
-	 *     @type int          $use_count            A adjustment use_count to only return that adjustment. Default empty.
+	 *     @type int          $use_count            A adjustment use_count to only return that count. Default empty.
 	 *     @type array        $use_count__in        Array of adjustment use_counts to include. Default empty.
 	 *     @type array        $use_count__not_in    Array of adjustment use_counts to exclude. Default empty.
-	 *     @type array        $once_per_customer    A true or false. Default empty.
-	 *     @type array        $min_cart_price       Minimum cart price. Default empty.
+	 *     @type int          $once_per_customer    '1' for true, '0' for false. Default empty.
+	 *     @type int|float    $min_charge_amount    Minimum charge amount. Default empty.
 	 *     @type array        $date_query           Query all datetime columns together. See WP_Date_Query.
 	 *     @type array        $date_created_query   Date query clauses to limit adjustments by. See WP_Date_Query.
 	 *                                              Default null.
@@ -150,7 +154,9 @@ class Adjustment extends Query {
 	 *     @type int          $offset               Number of adjustments to offset the query. Used to build LIMIT clause.
 	 *                                              Default 0.
 	 *     @type bool         $no_found_rows        Whether to disable the `SQL_CALC_FOUND_ROWS` query. Default true.
-	 *     @type string|array $orderby              Accepts 'id', 'date_created', 'start_date', 'end_date'.
+	 *     @type string|array $orderby              Accepts 'id', 'parent', 'name', 'code', 'status', 'type',
+	 *                                              'scope', 'amount_type', 'amount', 'start_date', 'end_date',
+	 *                                              'date_created', and 'date_modified'.
 	 *                                              Also accepts false, an empty array, or 'none' to disable `ORDER BY` clause.
 	 *                                              Default 'id'.
 	 *     @type string       $order                How to order results. Accepts 'ASC', 'DESC'. Default 'DESC'.
