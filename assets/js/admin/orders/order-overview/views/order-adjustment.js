@@ -71,7 +71,7 @@ export const OrderAdjustment = Base.extend( {
 
 		let orderItem;
 
-		if ( 'order_item' === model.get( 'object_type' ) ) {
+		if ( 'order_item' === model.get( 'objectType' ) ) {
 			orderItem = _.first( state.get( 'items' ).filter( ( item ) => {
 				return undefined !== item.get( 'adjustments' ).findWhere( {
 					objectId: item.get( 'id' ),
