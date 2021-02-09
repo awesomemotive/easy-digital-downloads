@@ -35,13 +35,15 @@ $view_url = edd_get_admin_url(
 				<?php esc_html_e( 'Order Fee', 'easy-digital-downloads' ); ?>
 			<# } #>
 
-			<# if ( '' !== data.description ) { #>
+			<# if ( '' !== data.description || false !== data.orderItem ) { #>
 				<br />
 				<small>
 					<# if ( false !== data.orderItem ) { #>
 						{{ data.orderItem.productName }}:&nbsp;
 					<# } #>
-					{{ data.description }}
+					<# if ( '' !== data.description ) { #>
+						{{ data.description }}
+					<# } #>
 				</small>
 			<# } #>
 		</div>
