@@ -319,45 +319,58 @@ class EDD_DB_Customers extends EDD_DB  {
 	/**
 	 * Updates the email address of a customer record when the email on a user is updated
 	 *
+	 * @param int     $user_id       User ID.
+	 * @param WP_User $old_user_data Object containing user's data prior to update.
+	 *
 	 * @since   2.4
+	 * @return  void
 	*/
-	public function update_customer_email_on_user_update( $user_id = 0, $old_user_data ) {
-
-		$customer = new EDD_Customer( $user_id, true );
-
-		if( ! $customer ) {
-			return false;
-		}
+	public function update_customer_email_on_user_update( $user_id, $old_user_data ) {
 
 		$user = get_userdata( $user_id );
 
-		if( ! empty( $user ) && $user->user_email !== $customer->email ) {
+		// Bail if the email address didn't actually change just now.
+		if ( empty( $user ) || $user->user_email === $old_user_data->user_email ) {
+			return;
+		}
 
-			if( ! $this->get_customer_by( 'email', $user->user_email ) ) {
+		$customer = new EDD_Customer( $user_id, true );
 
-				$success = $this->update( $customer->id, array( 'email' => $user->user_email ) );
+		if ( empty( $customer->id ) || $user->user_email === $customer->email ) {
+			return;
+		}
 
-				if( $success ) {
-					// Update some payment meta if we need to
-					$payments_array = explode( ',', $customer->payment_ids );
+		// Bail if we have another customer with this email address already.
+		if ( $this->get_customer_by( 'email', $user->user_email ) ) {
+			return;
+		}
 
-					if( ! empty( $payments_array ) ) {
+		$success = $this->update( $customer->id, array( 'email' => $user->user_email ) );
 
-						foreach ( $payments_array as $payment_id ) {
+		if ( ! $success ) {
+			return;
+		}
 
-							edd_update_payment_meta( $payment_id, 'email', $user->user_email );
+		// Update some payment meta if we need to
+		$payments_array = explode( ',', $customer->payment_ids );
 
-						}
+		if( ! empty( $payments_array ) ) {
 
-					}
+			foreach ( $payments_array as $payment_id ) {
 
-					do_action( 'edd_update_customer_email_on_user_update', $user, $customer );
-
-				}
+				edd_update_payment_meta( $payment_id, 'email', $user->user_email );
 
 			}
 
 		}
+
+		/**
+		 * Triggers after the customer has been successfully updated.
+		 *
+		 * @param WP_User      $user
+		 * @param EDD_Customer $customer
+		 */
+		do_action( 'edd_update_customer_email_on_user_update', $user, $customer );
 
 	}
 
