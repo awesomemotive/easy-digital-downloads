@@ -336,7 +336,7 @@ class EDD_DB_Customers extends EDD_DB  {
 
 		$customer = new EDD_Customer( $user_id, true );
 
-		if ( ! $customer || $user->user_email === $customer->email ) {
+		if ( empty( $customer->id ) || $user->user_email === $customer->email ) {
 			return;
 		}
 
