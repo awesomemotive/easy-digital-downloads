@@ -990,6 +990,10 @@ class Data_Migrator {
 				// Reset any conditional IDs to be safe.
 				$refund_adjustment_id = 0;
 
+				if ( ! empty( $fee['download_id'] ) ) {
+					continue;
+				}
+
 				// Reverse engineer the tax calculation.
 				$tax = EDD()->fees->get_calculated_tax( $fee, $tax_rate );
 
