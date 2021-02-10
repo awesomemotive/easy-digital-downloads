@@ -593,7 +593,7 @@ function edd_order_details_overview( $order ) {
 
 			foreach ( $adjustments as $adjustment ) {
 				// @todo edd_get_order_adjustment_to_json()?
-				$item_adjustments[] = array(
+				$adjustment_args = array(
 					'id'           => esc_html( $adjustment->id ),
 					'objectId'     => esc_html( $adjustment->object_id ),
 					'objectType'   => esc_html( $adjustment->object_type ),
@@ -607,6 +607,9 @@ function edd_order_details_overview( $order ) {
 					'dateModified' => esc_html( $adjustment->date_modified ),
 					'uuid'         => esc_html( $adjustment->uuid ),
 				);
+
+				$item_adjustments[] = $adjustment_args;
+				$_adjustments[]     = $adjustment_args;
 			}
 
 			// @todo edd_get_order_item_to_json()?
