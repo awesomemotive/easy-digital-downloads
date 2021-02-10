@@ -594,7 +594,7 @@ class EDD_Discount extends Adjustment {
 	 * @param string $value      New meta value to set.
 	 * @param string $prev_value Optional. Previous meta value.
 	 *
-	 * @return int|bool Meta ID if the key didn't exist, tru on successful update, false on failure.
+	 * @return int|bool Meta ID if the key didn't exist, true on successful update, false on failure.
 	 */
 	public function update_meta( $key, $value = '', $prev_value = '' ) {
 		$filter_key = '_edd_discount_' . $key;
