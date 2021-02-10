@@ -90,7 +90,7 @@ do_action( 'edd_payment_receipt_before_table', $payment, $edd_receipt_args );
 								if ( 'order_item' === $fee->object_type ) {
 									$order_item = edd_get_order_item( $fee->object_id );
 									if ( $order_item ) {
-										echo esc_html( $order_item->product_name ) . ':&nbsp;';
+										echo esc_html( $order_item->product_name ) . ':';
 									}
 								}
 								?>
