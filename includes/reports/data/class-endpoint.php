@@ -90,9 +90,9 @@ abstract class Endpoint extends Base_Object {
 
 		if ( is_callable( $callback ) ) {
 			call_user_func_array( $callback, array(
-				'endpoint' => $this,
-				'data'     => $this->get_data(),
-				'args'     => $this->get_display_args(),
+				$this, // Endpoint
+				$this->get_data(), // Data
+				$this->get_display_args(), // Args
 			) );
 		}
 	}
