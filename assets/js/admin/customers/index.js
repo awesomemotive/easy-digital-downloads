@@ -7,7 +7,6 @@ var EDD_Customer = {
 		customer_card_wrap_editable: $( '#edit-customer-info .editable' ),
 		customer_card_wrap_edit_item: $( '#edit-customer-info .edit-item' ),
 		user_id: $( 'input[name="customerinfo[user_id]"]' ),
-		state_input: $( ':input[name="customerinfo[region]"]' ),
 	},
 	init: function() {
 		this.edit_customer();
@@ -99,6 +98,7 @@ var EDD_Customer = {
 	change_country: function() {
 		$( 'select[name="customerinfo[country]"]' ).change( function() {
 			const select = $( this ),
+				state_input = $( ':input[name="customerinfo[region]"]' ),
 				data = {
 					action: 'edd_get_shop_states',
 					country: select.val(),
@@ -109,9 +109,9 @@ var EDD_Customer = {
 			$.post( ajaxurl, data, function( response ) {
 				console.log( response );
 				if ( 'nostates' === response ) {
-					EDD_Customer.vars.state_input.replaceWith( '<input type="text" name="' + data.field_name + '" value="" class="edd-edit-toggles medium-text"/>' );
+					state_input.replaceWith( '<input type="text" name="' + data.field_name + '" value="" class="edd-edit-toggles medium-text"/>' );
 				} else {
-					EDD_Customer.vars.state_input.replaceWith( response );
+					state_input.replaceWith( response );
 				}
 			} );
 
