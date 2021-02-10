@@ -2599,8 +2599,6 @@ class EDD_Payment {
 				}
 		}
 
-		$meta_key = str_replace( '_edd_payment_', '', $meta_key );
-
 		return edd_update_order_meta( $this->ID, $meta_key, $meta_value, $prev_value );
 	}
 
