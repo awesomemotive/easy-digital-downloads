@@ -143,7 +143,7 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 
 		// Sort by total earnings
 		usort( $sorted_data, function( $a, $b ) {
-			return $a->earnings < $b->earnings;
+			return ( $a->earnings < $b->earnings ) ? -1 : 1;
 		} );
 
 		return $sorted_data;
