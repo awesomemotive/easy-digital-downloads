@@ -48,10 +48,6 @@ final class Orders extends Table {
 	 * @var    array
 	 */
 	protected $upgrades = array(
-		'201806111' => 201806111,
-		'201807273' => 201807273,
-		'201808141' => 201808141,
-		'201808151' => 201808151,
 		'201901111' => 201901111,
 		'202002141' => 202002141,
 		'202012041' => 202012041
@@ -123,101 +119,6 @@ final class Orders extends Table {
 
 		return $created;
 
-	}
-
-	/**
-	 * Upgrade to version 201806111
-	 * - Add the `date_refundable` datetime column.
-	 *
-	 * @since 3.0
-	 *
-	 * @return boolean
-	 */
-	protected function __201806111() {
-
-		// Look for column
-		$result = $this->get_db()->query( "SHOW COLUMNS FROM {$this->table_name} LIKE 'date_refundable'" );
-
-		// Maybe add column
-		if ( ! $this->is_success( $result ) ) {
-			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `date_refundable` datetime DEFAULT '0000-00-00 00:00:00' AFTER `date_completed`;
-			" );
-		}
-
-		// Return success/fail
-		return $this->is_success( $result );
-	}
-
-	/**
-	 * Upgrade to version 201807271
-	 * - Add the `uuid` varchar column
-	 *
-	 * @since 3.0
-	 *
-	 * @return boolean
-	 */
-	protected function __201807273() {
-
-		// Look for column
-		$result = $this->column_exists( 'uuid' );
-
-		// Maybe add column
-		if ( false === $result ) {
-			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_refundable`;
-			" );
-		}
-
-		// Return success/fail.
-		return $this->is_success( $result );
-	}
-
-	/**
-	 * Upgrade to version 201808141
-	 * - Add the `type` column.
-	 *
-	 * @since 3.0
-	 *
-	 * @return boolean
-	 */
-	protected function __201808141() {
-
-		// Look for column
-		$result = $this->column_exists( 'type' );
-
-		// Maybe add column
-		if ( false === $result ) {
-			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `type` varchar(20) NOT NULL default 'sale' AFTER status;
-			" );
-		}
-
-		// Return success/fail.
-		return $this->is_success( $result );
-	}
-
-	/**
-	 * Upgrade to version 201808151
-	 * - Change the default value of the `type` column to `sale`.
-	 *
-	 * @since 3.0
-	 *
-	 * @return boolean
-	 */
-	protected function __201808151() {
-
-		// Alter the database
-		$this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY COLUMN `type` varchar(20) NOT NULL default 'sale';
-		" );
-
-		$this->get_db()->query( "
-			UPDATE {$this->table_name} SET `type` = 'sale';
-		" );
-
-		// Return success/fail.
-		return $this->is_success( true );
 	}
 
 	/**

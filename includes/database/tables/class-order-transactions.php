@@ -48,7 +48,6 @@ final class Order_Transactions extends Table {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201807273' => 201807273,
 		'202002141' => 202002141,
 		'202005261' => 202005261,
 	);
@@ -76,30 +75,6 @@ final class Order_Transactions extends Table {
 			KEY gateway (gateway(20)),
 			KEY status (status(20)),
 			KEY date_created (date_created)";
-	}
-
-	/**
-	 * Upgrade to version 201807273
-	 * - Add the `uuid` varchar column
-	 *
-	 * @since 3.0
-	 *
-	 * @return boolean
-	 */
-	protected function __201807273() {
-
-		// Look for column
-		$result = $this->column_exists( 'uuid' );
-
-		// Maybe add column
-		if ( false === $result ) {
-			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;
-			" );
-		}
-
-		// Return success/fail
-		return $this->is_success( $result );
 	}
 
 	/**
