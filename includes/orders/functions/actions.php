@@ -234,6 +234,15 @@ function edd_add_manual_order( $args = array() ) {
 
 	/** Insert order items ****************************************************/
 
+	// Any adjustments specific to an order item need to be added to the item.
+	foreach ( $data['adjustments'] as $key => $adjustment ) {
+		if ( 'order_item' === $adjustment['object_type'] ) {
+			$data['downloads'][ $adjustment['object_id'] ]['adjustments'][] = $adjustment;
+
+			unset( $data['adjustments'][ $key ] );
+		}
+	}
+
 	if ( ! empty( $data['downloads'] ) ) {
 
 		// Re-index downloads.
@@ -310,7 +319,7 @@ function edd_add_manual_order( $args = array() ) {
 
 						edd_add_order_adjustment( array(
 							'object_id'   => $order_item_id,
-							'object_type' => sanitize_text_field( $order_item_adjustment['object_type'] ),
+							'object_type' => 'order_item',
 							'type'        => sanitize_text_field( $order_item_adjustment['type'] ),
 							'description' => sanitize_text_field( $order_item_adjustment['description'] ),
 							'subtotal'    => floatval( $order_item_adjustment['subtotal'] ),
@@ -333,6 +342,10 @@ function edd_add_manual_order( $args = array() ) {
 		$adjustments = array_reverse( $data['adjustments'] );
 
 		foreach ( $adjustments as $adjustment ) {
+			if ( 'order_item' === $adjustment['object_type'] ) {
+				continue;
+			}
+
 			edd_add_order_adjustment( array(
 				'object_id'   => $order_id,
 				'object_type' => 'order',

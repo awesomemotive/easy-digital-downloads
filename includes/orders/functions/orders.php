@@ -987,6 +987,9 @@ function edd_build_order( $order_data = array() ) {
 
 					// Add the adjustment.
 					$adjustment_id = edd_add_order_adjustment( $adjustment_data );
+
+					$total_fees += $adjustment_data['subtotal'];
+					$total_tax  += $adjustment_data['tax'];
 				}
 			}
 
@@ -1004,6 +1007,14 @@ function edd_build_order( $order_data = array() ) {
 	// Process fees.
 	if ( ! empty( $fees ) ) {
 		foreach ( $fees as $fee_id => $fee ) {
+
+			/*
+			 * Skip if fee has a `download_id` assigned. If it does, it will have been added above when
+			 * inserting order items.
+			 */
+			if ( ! empty( $fee['download_id'] ) ) {
+				continue;
+			}
 
 			add_filter( 'edd_prices_include_tax', '__return_false' );
 
