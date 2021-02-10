@@ -1176,7 +1176,7 @@ class EDD_Discount extends Adjustment {
 
 		if ( isset( $args['product_reqs'] ) ) {
 			// Reset meta
-			edd_delete_adjustment_meta( $this->id, 'product_reqs' );
+			edd_delete_adjustment_meta( $this->id, 'product_requirement' );
 
 			if ( is_array( $args['product_reqs'] ) ) {
 				// Now add each newly required product
