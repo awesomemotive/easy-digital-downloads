@@ -572,6 +572,46 @@ class EDD_Discount extends Adjustment {
 	}
 
 	/**
+	 * Helper method to retrieve meta data associated with the discount.
+	 *
+	 * @since 2.7
+	 *
+	 * @param string $key    Meta key.
+	 * @param bool   $single Return single item or array.
+	 *
+	 * @return mixed
+	 */
+	public function get_meta( $key = '', $single = true ) {
+		return edd_get_adjustment_meta( $this->id, $key, $single );
+	}
+
+	/**
+	 * Helper method to update meta data associated with the discount.
+	 *
+	 * @since 2.7
+	 *
+	 * @param string $key        Meta key to update.
+	 * @param string $value      New meta value to set.
+	 * @param string $prev_value Optional. Previous meta value.
+	 *
+	 * @return int|bool Meta ID if the key didn't exist, tru on successful update, false on failure.
+	 */
+	public function update_meta( $key, $value = '', $prev_value = '' ) {
+		$filter_key = '_edd_discount_' . $key;
+
+		/**
+		 * Filters the meta value being updated.
+		 * The key is prefixed with `_edd_discount_` for 2.9 backwards compatibility.
+		 *
+		 * @param mixed $value Value being set.
+		 * @param int   $id    Discount ID.
+		 */
+		$value = apply_filters( 'edd_update_discount_meta_' . $filter_key, $value, $this->id );
+
+		return edd_update_adjustment_meta( $this->id, $key, $value, $prev_value );
+	}
+
+	/**
 	 * Retrieve the code used to apply the discount.
 	 *
 	 * @since 2.7
@@ -1123,32 +1163,26 @@ class EDD_Discount extends Adjustment {
 		}
 
 		if ( isset( $args['excluded_products'] ) ) {
+			// Reset meta
+			edd_delete_adjustment_meta( $this->id, 'excluded_product' );
+
 			if ( is_array( $args['excluded_products'] ) ) {
-
-				// Reset meta
-				$this->delete_meta( 'excluded_product' );
-
 				// Now add each newly excluded product
 				foreach ( $args['excluded_products'] as $product ) {
-					$this->add_meta( 'excluded_product', absint( $product ) );
+					edd_add_adjustment_meta( $this->id, 'excluded_product', absint( $product ) );
 				}
-			} else {
-				$this->delete_meta( 'excluded_product' );
 			}
 		}
 
 		if ( isset( $args['product_reqs'] ) ) {
+			// Reset meta
+			edd_delete_adjustment_meta( $this->id, 'product_reqs' );
+
 			if ( is_array( $args['product_reqs'] ) ) {
-
-				// Reset meta
-				$this->delete_meta( 'product_requirement' );
-
 				// Now add each newly required product
 				foreach ( $args['product_reqs'] as $product ) {
-					$this->add_meta( 'product_requirement', absint( $product ) );
+					edd_add_adjustment_meta( $this->id, 'product_requirement', absint( $product ) );
 				}
-			} else {
-				$this->delete_meta( 'product_requirement' );
 			}
 		}
 
