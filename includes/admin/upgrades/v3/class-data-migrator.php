@@ -304,6 +304,7 @@ class Data_Migrator {
 			$log_data = array(
 				'object_id'     => $data->post_parent,
 				'object_type'   => 'download',
+				'user_id'       => $data->post_author,
 				'type'          => $data->slug,
 				'title'         => $data->post_title,
 				'message'       => $data->post_content,
