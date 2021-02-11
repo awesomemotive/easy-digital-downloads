@@ -310,7 +310,7 @@ class Data_Migrator {
 				'user_id'       => ! empty( $meta_to_migrate['_edd_log_user'] ) ? $meta_to_migrate['_edd_log_user'] : $data->post_author,
 				'type'          => $data->slug,
 				'title'         => $data->post_title,
-				'message'       => $data->post_content,
+				'content'       => $data->post_content,
 				'date_created'  => $data->post_date_gmt,
 				'date_modified' => $data->post_modified_gmt,
 			);
