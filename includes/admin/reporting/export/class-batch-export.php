@@ -142,7 +142,9 @@ class EDD_Batch_Export extends EDD_Export {
 		if( $this->step < 2 ) {
 
 			// Make sure we start with a fresh file on step 1
-			@unlink( $this->file );
+			if ( file_exists( $this->file ) ) {
+				unlink( $this->file );
+			}
 			$this->print_csv_cols();
 		}
 
