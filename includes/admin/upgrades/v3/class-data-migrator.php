@@ -330,6 +330,9 @@ class Data_Migrator {
 
 		foreach ( $meta_to_migrate as $key => $value ) {
 			if ( ! in_array( $key, $meta_to_remove, true ) ) {
+				// Strip off `_edd_log_` prefix.
+				$key = str_replace( '_edd_log_', '', $key );
+
 				$add_meta_function( $new_log_id, $key, $value );
 			}
 		}
