@@ -146,6 +146,12 @@ class EDD_Logging {
 			'log_type'     => false,
 		) );
 
+		/**
+		 * Triggers just before a log is inserted.
+		 *
+		 * @param array $args     Log entry data.
+		 * @param array $log_meta Log meta data.
+		 */
 		do_action( 'edd_pre_insert_log', $args, $log_meta );
 
 		// Used to dynamically dispatch the method call to insert() to the correct class.
@@ -160,6 +166,7 @@ class EDD_Logging {
 			'object_type' => isset( $args['log_type'] )
 				? $args['log_type']
 				: null,
+			'user_id'     => ! empty( $args['post_author'] ) ? intval( $args['post_author'] ) : 0
 		);
 
 		$type = $args['log_type'];
@@ -176,15 +183,21 @@ class EDD_Logging {
 			$insert_method = 'edd_add_api_request_log';
 
 			$data = array(
-				'user_id' => $log_meta['user'],
-				'api_key' => $log_meta['key'],
-				'token'   => null === $log_meta['token'] ? 'public' : $log_meta['token'],
-				'version' => $log_meta['version'],
-				'request' => $args['post_excerpt'],
-				'error'   => $args['post_content'],
-				'ip'      => $log_meta['request_ip'],
-				'time'    => $log_meta['time'],
+				'user_id' => ! empty( $log_meta['user'] ) ? $log_meta['user'] : 0,
+				'api_key' => ! empty( $log_meta['key'] ) ? $log_meta['key'] : 'public',
+				'token'   => ! empty( $log_meta['token'] ) ? $log_meta['token'] : 'public',
+				'version' => ! empty( $log_meta['version'] ) ? $log_meta['version'] : '',
+				'request' => ! empty( $args['post_excerpt'] ) ? $args['post_excerpt'] : '',
+				'error'   => ! empty( $args['post_content'] ) ? $args['post_content'] : '',
+				'ip'      => ! empty( $log_meta['request_ip'] ) ? $log_meta['request_ip'] : '',
+				'time'    => ! empty( $log_meta['time'] ) ? $log_meta['time'] : '',
 			);
+
+			// Now unset the meta we've used up in the main data array.
+			$meta_to_unset = array( 'user', 'key', 'token', 'version', 'request_ip', 'time' );
+			foreach ( $meta_to_unset as $meta_key ) {
+				unset( $log_meta[ $meta_key ] );
+			}
 		} elseif ( 'file_download' === $args['log_type'] ) {
 			$insert_method = 'edd_add_file_download_log';
 
@@ -198,13 +211,19 @@ class EDD_Logging {
 
 			$data = array(
 				'product_id'  => $args['post_parent'],
-				'file_id'     => $log_meta['file_id'],
-				'order_id'    => $log_meta['order_id'],
-				'price_id'    => $log_meta['price_id'],
-				'customer_id' => $log_meta['customer_id'],
-				'ip'          => $log_meta['ip'],
+				'file_id'     => ! empty( $log_meta['file_id'] ) ? $log_meta['file_id'] : 0,
+				'order_id'    => ! empty( $log_meta['payment_id'] ) ? $log_meta['payment_id'] : 0,
+				'price_id'    => ! empty( $log_meta['price_id'] ) ? $log_meta['price_id'] : 0,
+				'customer_id' => ! empty( $log_meta['customer_id'] ) ? $log_meta['customer_id'] : 0,
+				'ip'          => ! empty( $log_meta['ip'] ) ? $log_meta['ip'] : '',
 				'user_agent'  => $user_agent,
 			);
+
+			// Now unset the meta we've used up in the main data array.
+			$meta_to_unset = array( 'file_id', 'payment_id', 'price_id', 'customer_id', 'ip' );
+			foreach ( $meta_to_unset as $meta_key ) {
+				unset( $log_meta[ $meta_key ] );
+			}
 		}
 
 		// Get the log ID if method is callable
@@ -231,6 +250,13 @@ class EDD_Logging {
 			}
 		}
 
+		/**
+		 * Triggers after a log has been inserted.
+		 *
+		 * @param int   $log_id   ID of the new log.
+		 * @param array $args     Log data.
+		 * @param array $log_meta Log meta data.
+		 */
 		do_action( 'edd_post_insert_log', $log_id, $args, $log_meta );
 
 		return $log_id;
