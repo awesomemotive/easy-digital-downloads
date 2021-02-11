@@ -544,8 +544,8 @@ class EDD_Logging {
 		);
 
 		if ( ! isset( $r['offset'] ) ) {
-			$r['offset'] = get_query_var( 'paged' ) > 1
-				? ( ( get_query_var( 'paged' ) - 1 ) * $r['number'] )
+			$r['offset'] = $r['paged'] > 1
+				? ( ( $r['paged'] - 1 ) * $r['number'] )
 				: 0;
 			unset( $r['paged'] );
 		}
