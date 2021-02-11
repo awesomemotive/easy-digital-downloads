@@ -698,7 +698,7 @@ class EDD_HTML_Elements {
 		if ( ! empty( $args['show_option_all'] ) ) {
 			if ( $args['multiple'] && ! empty( $args['selected'] ) ) {
 				$selected = selected( true, in_array( 0, $args['selected'] ), false );
-			} else {
+			} elseif ( isset( $args['selected'] ) && ! is_array( $args['selected'] ) ) {
 				$selected = selected( $args['selected'], 0, false );
 			}
 			$output .= '<option value="all"' . $selected . '>' . esc_html( $args['show_option_all'] ) . '</option>';
