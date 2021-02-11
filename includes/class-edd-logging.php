@@ -166,7 +166,11 @@ class EDD_Logging {
 			'object_type' => isset( $args['log_type'] )
 				? $args['log_type']
 				: null,
-			'user_id'     => ! empty( $args['post_author'] ) ? intval( $args['post_author'] ) : 0
+			/*
+			 * Fallback user ID is the current user, due to it previously being set to that by WordPress
+			 * core when setting post_author on the CPT.
+			 */
+			'user_id'     => ! empty( $log_meta['user'] ) ? $log_meta['user'] : get_current_user_id()
 		);
 
 		$type = $args['log_type'];
