@@ -182,6 +182,8 @@ class EDD_Logging {
 			$data['title'] = $args['post_title'];
 		}
 
+		$meta_to_unset = array( 'user' );
+
 		// Override $data and $insert_method based on the log type.
 		if ( 'api_request' === $args['log_type'] ) {
 			$insert_method = 'edd_add_api_request_log';
@@ -197,11 +199,7 @@ class EDD_Logging {
 				'time'    => ! empty( $log_meta['time'] ) ? $log_meta['time'] : '',
 			);
 
-			// Now unset the meta we've used up in the main data array.
 			$meta_to_unset = array( 'user', 'key', 'token', 'version', 'request_ip', 'time' );
-			foreach ( $meta_to_unset as $meta_key ) {
-				unset( $log_meta[ $meta_key ] );
-			}
 		} elseif ( 'file_download' === $args['log_type'] ) {
 			$insert_method = 'edd_add_file_download_log';
 
@@ -223,11 +221,12 @@ class EDD_Logging {
 				'user_agent'  => $user_agent,
 			);
 
-			// Now unset the meta we've used up in the main data array.
 			$meta_to_unset = array( 'file_id', 'payment_id', 'price_id', 'customer_id', 'ip' );
-			foreach ( $meta_to_unset as $meta_key ) {
-				unset( $log_meta[ $meta_key ] );
-			}
+		}
+
+		// Now unset the meta we've used up in the main data array.
+		foreach ( $meta_to_unset as $meta_key ) {
+			unset( $log_meta[ $meta_key ] );
 		}
 
 		// Get the log ID if method is callable
