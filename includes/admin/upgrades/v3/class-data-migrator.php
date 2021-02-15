@@ -300,23 +300,26 @@ class Data_Migrator {
 			$add_meta_function = 'edd_add_api_request_log_meta';
 		} else {
 			$post_meta = get_post_custom( $data->ID );
+			foreach ( $post_meta as $key => $value ) {
+				$meta_to_migrate[ $key ] = maybe_unserialize( $value[0] );
+			}
 
 			$log_data = array(
 				'object_id'     => $data->post_parent,
 				'object_type'   => 'download',
+				'user_id'       => ! empty( $meta_to_migrate['_edd_log_user'] ) ? $meta_to_migrate['_edd_log_user'] : $data->post_author,
 				'type'          => $data->slug,
 				'title'         => $data->post_title,
-				'message'       => $data->post_content,
+				'content'       => $data->post_content,
 				'date_created'  => $data->post_date_gmt,
 				'date_modified' => $data->post_modified_gmt,
 			);
 
 			$meta_to_remove = array(
 				'_edit_lock',
+				'_edd_log_user',
 			);
-			foreach ( $post_meta as $key => $value ) {
-				$meta_to_migrate[ $key ] = maybe_unserialize( $value[0] );
-			}
+
 			$new_log_id        = edd_add_log( $log_data );
 			$add_meta_function = 'edd_add_log_meta';
 		}
@@ -327,6 +330,9 @@ class Data_Migrator {
 
 		foreach ( $meta_to_migrate as $key => $value ) {
 			if ( ! in_array( $key, $meta_to_remove, true ) ) {
+				// Strip off `_edd_log_` prefix.
+				$key = str_replace( '_edd_log_', '', $key );
+
 				$add_meta_function( $new_log_id, $key, $value );
 			}
 		}
