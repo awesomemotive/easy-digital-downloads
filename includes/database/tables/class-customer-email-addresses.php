@@ -48,8 +48,6 @@ final class Customer_Email_Addresses extends Table {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201808141' => 201808141,
-		'201808171' => 201808171,
 		'202002141' => 202002141,
 	);
 
@@ -75,47 +73,6 @@ final class Customer_Email_Addresses extends Table {
 			KEY type (type(20)),
 			KEY status (status(20)),
 			KEY date_created (date_created)";
-	}
-
-	/**
-	 * Upgrade to version 201808141
-	 * - Add the `uuid` varchar column
-	 *
-	 * @since 3.0
-	 *
-	 * @return boolean
-	 */
-	protected function __201808141() {
-
-		// Look for column
-		$result = $this->column_exists( 'uuid' );
-
-		// Maybe add column
-		if ( false === $result ) {
-			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;
-			" );
-		}
-
-		// Return success/fail
-		return $this->is_success( $result );
-	}
-
-	/**
-	 * Upgrade to version 201808171
-	 * - Add the `email` varchar column
-	 *
-	 * @since 3.0
-	 *
-	 * @return boolean
-	 */
-	protected function __201808171() {
-
-		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY COLUMN `email` varchar(100) NOT NULL default ''" );
-		$result = $this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX email (email)" );
-
-		// Return success/fail
-		return $this->is_success( $result );
 	}
 
 	/**

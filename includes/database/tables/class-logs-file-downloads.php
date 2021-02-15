@@ -48,8 +48,6 @@ final class Logs_File_Downloads extends Table {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201806281' => 201806281,
-		'201807273' => 201807273,
 		'202002141' => 202002141,
 	);
 
@@ -76,51 +74,6 @@ final class Logs_File_Downloads extends Table {
 		KEY customer_id (customer_id),
 		KEY product_id (product_id),
 		KEY date_created (date_created)";
-	}
-
-	/**
-	 * Upgrade to version 201806281
-	 * - Rename  `download_id` column to `product_id`
-	 *
-	 * @since 3.0
-	 *
-	 * @return boolean
-	 */
-	protected function __201806281() {
-
-		// Alter the database with separate queries so indexes succeed
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE COLUMN download_id product_id bigint(20) unsigned NOT NULL default 0" );
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE COLUMN user_id customer_id bigint(20) unsigned NOT NULL default 0" );
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE COLUMN payment_id order_id bigint(20) unsigned NOT NULL default 0" );
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} DROP INDEX download_id" );
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX product_id (product_id)" );
-
-		// Return success/fail
-		return $this->is_success( true );
-	}
-
-	/**
-	 * Upgrade to version 201807273
-	 * - Add the `uuid` varchar column
-	 *
-	 * @since 3.0
-	 *
-	 * @return boolean
-	 */
-	protected function __201807273() {
-
-		// Look for column
-		$result = $this->column_exists( 'uuid' );
-
-		// Maybe add column
-		if ( false === $result ) {
-			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;
-			" );
-		}
-
-		// Return success/fail
-		return $this->is_success( $result );
 	}
 
 	/**

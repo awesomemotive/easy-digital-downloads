@@ -48,8 +48,6 @@ final class Order_Adjustments extends Table {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201807071' => 201807071,
-		'201807273' => 201807273,
 		'202002141' => 202002141,
 		'202011122' => 202011122,
 	);
@@ -78,50 +76,6 @@ final class Order_Adjustments extends Table {
 		PRIMARY KEY (id),
 		KEY object_id_type (object_id,object_type(20)),
 		KEY date_created (date_created)";
-	}
-
-	/**
-	 * Upgrade to version 201807071
-	 * - Add subtotal and tax columns.
-	 * - Rename amount column to total.
-	 *
-	 * @since 3.0
-	 *
-	 * @return bool
-	 */
-	protected function __201807071() {
-
-		// Alter the database.
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} CHANGE `amount` `total` decimal(18,9) NOT NULL default '0'" );
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `subtotal` decimal(18,9) NOT NULL default '0';" );
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `tax` decimal(18,9) NOT NULL default '0'" );
-
-		// Return success/fail.
-		return $this->is_success( true );
-	}
-
-	/**
-	 * Upgrade to version 201807273
-	 * - Add the `uuid` varchar column
-	 *
-	 * @since 3.0
-	 *
-	 * @return boolean
-	 */
-	protected function __201807273() {
-
-		// Look for column
-		$result = $this->column_exists( 'uuid' );
-
-		// Maybe add column
-		if ( false === $result ) {
-			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;
-			" );
-		}
-
-		// Return success/fail
-		return $this->is_success( $result );
 	}
 
 	/**
