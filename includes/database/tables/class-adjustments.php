@@ -38,7 +38,7 @@ final class Adjustments extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 202002121;
+	protected $version = 202102161;
 
 	/**
 	 * Array of upgrade versions and methods.
@@ -50,6 +50,7 @@ final class Adjustments extends Table {
 	protected $upgrades = array(
 		'201906031' => 201906031,
 		'202002121' => 202002121,
+		'202102161' => 202102161
 	);
 
 	/**
@@ -79,7 +80,8 @@ final class Adjustments extends Table {
 			date_modified datetime NOT NULL default CURRENT_TIMESTAMP,
 			uuid varchar(100) NOT NULL default '',
 			PRIMARY KEY (id),
-			KEY code_status_type_scope_amount (code(50),status(20),type(20),scope(20),amount_type(20)),
+			KEY status_type (status(20),type(20)),
+			KEY code (code),
 			KEY date_created (date_created),
 			KEY date_start_end (start_date,end_date)";
 	}
@@ -180,5 +182,25 @@ final class Adjustments extends Table {
 
 		return $this->is_success( $result );
 
+	}
+
+	/**
+	 * Upgrade to version 202102161
+	 * 	- Drop old `code_status_type_scope_amount` index
+	 * 	- Create new `status_type` index
+	 * 	- Create new `code` index
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	protected function __202102161() {
+		if ( $this->index_exists( 'code_status_type_scope_amount' ) ) {
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} DROP INDEX code_status_type_scope_amount" );
+		}
+
+		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX status_type (status(20),type(20))" );
+		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX code (code)" );
+
+		return true;
 	}
 }
