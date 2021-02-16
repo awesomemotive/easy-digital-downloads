@@ -344,16 +344,19 @@ function edd_customers_view( $customer = null ) {
 	$agreement_timestamps = $customer->get_meta( 'agree_to_terms_time',   false );
 	$privacy_timestamps   = $customer->get_meta( 'agree_to_privacy_time', false );
 
-	$last_payment = edd_get_payments( array(
-		'output'   => 'payments',
-		'post__in' => $customer->get_payment_ids(),
-		'orderby'  => 'date',
-		'number'   => 1
-	) );
+	$last_payment = edd_get_orders(
+		array(
+			'customer_id' => $customer->id,
+			'id__in'      => $customer->get_payment_ids(),
+			'orderby'     => 'date',
+			'order'       => 'DESC',
+			'number'      => 1,
+		)
+	);
 
 	if ( ! empty( $last_payment ) ) {
 		$last_payment      = reset( $last_payment );
-		$last_payment_date = strtotime( $last_payment->date );
+		$last_payment_date = strtotime( $last_payment->date_created );
 	} else {
 		$last_payment_date = '';
 	}
