@@ -587,8 +587,8 @@ function edd_customers_view( $customer = null ) {
 					</span>
 				</div>
 			</div>
-			<div class="edd-clearfix"></div>
 		</form>
+		<div class="edd-clearfix"></div>
 	</div>
 
 	<?php do_action( 'edd_customer_before_stats', $customer ); ?>
