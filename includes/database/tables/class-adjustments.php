@@ -80,7 +80,7 @@ final class Adjustments extends Table {
 			date_modified datetime NOT NULL default CURRENT_TIMESTAMP,
 			uuid varchar(100) NOT NULL default '',
 			PRIMARY KEY (id),
-			KEY status_type (status(20),type(20)),
+			KEY type_status (type(20), status(20)),
 			KEY code (code),
 			KEY date_created (date_created),
 			KEY date_start_end (start_date,end_date)";
@@ -198,7 +198,7 @@ final class Adjustments extends Table {
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} DROP INDEX code_status_type_scope_amount" );
 		}
 
-		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX status_type (status(20),type(20))" );
+		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX type_status (type(20), status(20))" );
 		$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX code (code)" );
 
 		return true;
