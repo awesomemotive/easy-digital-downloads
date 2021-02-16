@@ -38,7 +38,7 @@ final class Orders extends Table {
 	 * @since  3.0
 	 * @var    int
 	 */
-	protected $version = 202012041;
+	protected $version = 202102161;
 
 	/**
 	 * Array of upgrade versions and methods.
@@ -50,7 +50,8 @@ final class Orders extends Table {
 	protected $upgrades = array(
 		'201901111' => 201901111,
 		'202002141' => 202002141,
-		'202012041' => 202012041
+		'202012041' => 202012041,
+		'202102161' => 202102161
 	);
 
 	/**
@@ -86,7 +87,7 @@ final class Orders extends Table {
 			uuid varchar(100) NOT NULL default '',
 			PRIMARY KEY (id),
 			KEY order_number (order_number({$max_index_length})),
-			KEY status (status(20)),
+			KEY status_type (status, type),
 			KEY user_id (user_id),
 			KEY customer_id (customer_id),
 			KEY email (email(100)),
@@ -199,5 +200,25 @@ final class Orders extends Table {
 
 		// Return success/fail.
 		return $this->is_success( $result );
+	}
+
+	/**
+	 * Upgrade to version 202102161
+	 * 	- Drop `status` index
+	 * 	- Create new `status_type` index
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	protected function __202102161() {
+		if ( $this->index_exists( 'status' ) ) {
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} DROP INDEX status" );
+		}
+
+		if ( ! $this->index_exists( 'status_type' ) ) {
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX status_type (status, type)" );
+		}
+
+		return true;
 	}
 }
