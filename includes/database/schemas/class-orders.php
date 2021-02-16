@@ -38,8 +38,7 @@ class Orders extends Schema {
 			'unsigned'   => true,
 			'extra'      => 'auto_increment',
 			'primary'    => true,
-			'sortable'   => true,
-			'searchable' => true
+			'sortable'   => true
 		),
 
 		// parent
@@ -49,7 +48,6 @@ class Orders extends Schema {
 			'length'     => '20',
 			'unsigned'   => true,
 			'default'    => '0',
-			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -68,7 +66,6 @@ class Orders extends Schema {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => 'pending',
-			'searchable' => true,
 			'sortable'   => true,
 			'transition' => true
 		),
@@ -79,7 +76,6 @@ class Orders extends Schema {
 			'type'       => 'varchar',
 			'length'     => '20',
 			'default'    => 'sale',
-			'searchable' => true,
 			'sortable'   => true
 		),
 
@@ -193,7 +189,6 @@ class Orders extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
-			'searchable' => true,
 			'sortable'   => true
 		),
 
