@@ -1020,7 +1020,7 @@ class EDD_CLI extends WP_CLI_Command {
 		$upgrade_completed = edd_has_upgrade_completed( 'migrate_order_notes' );
 
 		if ( ! $force && $upgrade_completed ) {
-			WP_CLI::error( __( 'The notes custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+			WP_CLI::error( __( 'The order notes custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
 		}
 
 		$sql     = "SELECT * FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note' ORDER BY comment_ID ASC";
@@ -1039,7 +1039,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 			$progress->finish();
 
-			WP_CLI::line( __( 'Migration complete: Notes', 'easy-digital-downloads' ) );
+			WP_CLI::line( __( 'Migration complete: Order Notes', 'easy-digital-downloads' ) );
 			$new_count = edd_count_notes();
 			$old_count = $wpdb->get_col( "SELECT count(comment_ID) FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note'", 0 );
 			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
@@ -1079,7 +1079,7 @@ class EDD_CLI extends WP_CLI_Command {
 		$upgrade_completed = edd_has_upgrade_completed( 'migrate_customer_notes' );
 
 		if ( ! $force && $upgrade_completed ) {
-			WP_CLI::error( __( 'The notes custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+			WP_CLI::error( __( 'The customer notes custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
 		}
 
 		$sql     = "SELECT * FROM {$wpdb->edd_customers}";
