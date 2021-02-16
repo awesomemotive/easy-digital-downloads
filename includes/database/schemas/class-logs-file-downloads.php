@@ -101,7 +101,7 @@ class Logs_File_Downloads extends Schema {
 			'searchable' => true
 		),
 
-		// ip
+		// user_agent
 		array(
 			'name'       => 'user_agent',
 			'type'       => 'varchar',
