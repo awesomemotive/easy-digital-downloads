@@ -1132,3 +1132,59 @@ function edd_record_sale_in_log( $download_id, $payment_id, $price_id = false, $
 function edd_agree_to_terms_js() {
 	_edd_deprecated_function( __FUNCTION__, '3.0' );
 }
+
+add_action( 'edd_before_order_history', function( $orders ) {
+	if ( ! has_action( 'edd_before_purchase_history' ) ) {
+		return;
+	}
+
+	$payments  = array();
+
+	if ( ! empty( $orders ) ) {
+		$order_ids = wp_list_pluck( $orders, 'id' );
+		$payments  = edd_get_payments( array(
+			'id__in'  => $order_ids,
+			'orderby' => 'date',
+		) );
+	}
+
+	do_action( 'edd_before_purchase_history', $payments );
+} );
+
+add_action( 'edd_order_history_row_start', function( \EDD\Orders\Order $order ) {
+	if ( ! has_action( 'edd_purchase_history_row_start' ) ) {
+		return;
+	}
+
+	$payment = edd_get_payment( $order->id );
+
+	do_action( 'edd_purchase_history_row_start', $payment->ID, $payment->payment_meta );
+} );
+
+add_action( 'edd_order_history_row_end', function( \EDD\Orders\Order $order ) {
+	if ( ! has_action( 'edd_purchase_history_row_end' ) ) {
+		return;
+	}
+
+	$payment = edd_get_payment( $order->id );
+
+	do_action( 'edd_purchase_history_row_end', $payment->ID, $payment->payment_meta );
+} );
+
+add_action( 'edd_after_order_history', function( $orders ) {
+	if ( ! has_action( 'edd_after_purchase_history' ) ) {
+		return;
+	}
+
+	$payments  = array();
+
+	if ( ! empty( $orders ) ) {
+		$order_ids = wp_list_pluck( $orders, 'id' );
+		$payments  = edd_get_payments( array(
+				'id__in'  => $order_ids,
+				'orderby' => 'date',
+		) );
+	}
+
+	do_action( 'edd_after_purchase_history', $payments );
+} );

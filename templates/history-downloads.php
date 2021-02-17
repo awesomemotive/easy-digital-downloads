@@ -44,10 +44,6 @@ if ( $orders ) :
 			</tr>
 		</thead>
 		<?php foreach ( $orders as $order ) :
-			$downloads      = edd_get_payment_meta_cart_details( $order->id, true );
-			$purchase_data  = edd_get_payment_meta( $order->id );
-			$email          = edd_get_payment_user_email( $order->id );
-
 			foreach ( $order->get_items() as $key => $item ) :
 
 				// Skip over Bundles. Products included with a bundle will be displayed individually
@@ -81,7 +77,7 @@ if ( $orders ) :
 
 									foreach ( $download_files as $filekey => $file ) :
 
-										$download_url = edd_get_download_file_url( $purchase_data['key'], $email, $filekey, $item->product_id, $price_id );
+										$download_url = edd_get_download_file_url( $order->payment_key, $order->email, $filekey, $item->product_id, $price_id );
 										?>
 
 										<div class="edd_download_file">
@@ -90,7 +86,11 @@ if ( $orders ) :
 											</a>
 										</div>
 
-										<?php do_action( 'edd_download_history_files', $filekey, $file, $item->product_id, $order->id, $purchase_data );
+										<?php
+										if ( has_action( 'edd_download_history_files' ) ) {
+											$purchase_data  = edd_get_payment_meta( $order->id );
+											do_action( 'edd_download_history_files', $filekey, $file, $item->product_id, $order->id, $purchase_data );
+										}
 									endforeach;
 
 								else :
