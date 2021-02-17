@@ -282,12 +282,11 @@ function edd_trigger_destroy_order( $data ) {
 
 		$redirect_link = add_query_arg(
 			array(
-				'post_type'   => 'download',
 				'page'        => 'edd-payment-history',
 				'edd-message' => 'payment_deleted',
 				'status'      => 'trash',
 			),
-			admin_url( 'edit.php' ),
+			edd_get_admin_base_url(),
 		);
 		edd_redirect( $redirect_link );
 	}
