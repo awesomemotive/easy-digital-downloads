@@ -912,7 +912,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 			$progress->finish();
 
-			WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
+			WP_CLI::line( __( 'Migration complete: Discounts', 'easy-digital-downloads' ) );
 			$new_count = edd_get_discount_count();
 			$old_count = $wpdb->get_col( "SELECT count(ID) FROM $wpdb->posts WHERE post_type ='edd_discount'", 0 );
 			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
@@ -981,7 +981,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 			$progress->finish();
 
-			WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
+			WP_CLI::line( __( 'Migration complete: Logs', 'easy-digital-downloads' ) );
 			$new_count = edd_count_logs() + edd_count_file_download_logs() + edd_count_api_request_logs();
 			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $total );
 			WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
@@ -1020,7 +1020,7 @@ class EDD_CLI extends WP_CLI_Command {
 		$upgrade_completed = edd_has_upgrade_completed( 'migrate_order_notes' );
 
 		if ( ! $force && $upgrade_completed ) {
-			WP_CLI::error( __( 'The notes custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+			WP_CLI::error( __( 'The order notes custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
 		}
 
 		$sql     = "SELECT * FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note' ORDER BY comment_ID ASC";
@@ -1039,7 +1039,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 			$progress->finish();
 
-			WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
+			WP_CLI::line( __( 'Migration complete: Order Notes', 'easy-digital-downloads' ) );
 			$new_count = edd_count_notes();
 			$old_count = $wpdb->get_col( "SELECT count(comment_ID) FROM {$wpdb->comments} WHERE comment_type = 'edd_payment_note'", 0 );
 			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
@@ -1079,7 +1079,7 @@ class EDD_CLI extends WP_CLI_Command {
 		$upgrade_completed = edd_has_upgrade_completed( 'migrate_customer_notes' );
 
 		if ( ! $force && $upgrade_completed ) {
-			WP_CLI::error( __( 'The notes custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
+			WP_CLI::error( __( 'The customer notes custom table migration has already been run. To do this anyway, use the --force argument.', 'easy-digital-downloads' ) );
 		}
 
 		$sql     = "SELECT * FROM {$wpdb->edd_customers}";
@@ -1097,7 +1097,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 			$progress->finish();
 
-			WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
+			WP_CLI::line( __( 'Migration complete: Customer Notes', 'easy-digital-downloads' ) );
 
 			edd_update_db_version();
 			edd_set_upgrade_complete( 'migrate_customer_notes' );
@@ -1221,7 +1221,7 @@ class EDD_CLI extends WP_CLI_Command {
 			edd_set_upgrade_complete( 'migrate_customer_email_addresses' );
 		}
 
-		WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
+		WP_CLI::line( __( 'Migration complete: Email Addresses', 'easy-digital-downloads' ) );
 
 		edd_update_db_version();
 	}
@@ -1270,7 +1270,7 @@ class EDD_CLI extends WP_CLI_Command {
 			$progress->finish();
 		}
 
-		WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
+		WP_CLI::line( __( 'Migration complete: Tax Rates', 'easy-digital-downloads' ) );
 
 		edd_update_db_version();
 		edd_set_upgrade_complete( 'migrate_tax_rates' );
@@ -1332,7 +1332,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 			$progress->finish();
 
-			WP_CLI::line( __( 'Migration complete.', 'easy-digital-downloads' ) );
+			WP_CLI::line( __( 'Migration complete: Orders', 'easy-digital-downloads' ) );
 			$new_count = edd_count_orders( array( 'type' => 'sale' ) );
 			$old_count = $wpdb->get_col( "SELECT count(ID) FROM {$wpdb->posts} WHERE post_type = 'edd_payment'", 0 );
 			WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . $old_count[0] );
