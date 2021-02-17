@@ -252,7 +252,7 @@ function edd_trigger_destroy_order( $data ) {
 		$payment_id = absint( $data['purchase_id'] );
 
 		if ( ! current_user_can( 'delete_shop_payments', $payment_id ) ) {
-			wp_die( esc_html_e( 'You do not have permission to edit this order', 'easy-digital-downloads' ), esc_html_e( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+			wp_die( esc_html__( 'You do not have permission to edit this order.', 'easy-digital-downloads' ), esc_html__( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		}
 
 		edd_destroy_order( $payment_id );
