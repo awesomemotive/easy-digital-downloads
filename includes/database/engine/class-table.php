@@ -591,10 +591,12 @@ abstract class Table extends Base {
 			return false;
 		}
 
+		$column = esc_sql( $column );
+
 		// Query statement
-		$query    = "SHOW INDEXES FROM {$this->table_name} WHERE %s LIKE %s";
+		$query    = "SHOW INDEXES FROM {$this->table_name} WHERE {$column} LIKE %s";
 		$like     = $db->esc_like( $name );
-		$prepared = $db->prepare( $query, $column, $like );
+		$prepared = $db->prepare( $query, $like );
 		$result   = $db->query( $prepared );
 
 		// Does the index exist?
