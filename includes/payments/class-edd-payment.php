@@ -2311,17 +2311,13 @@ class EDD_Payment {
 				if ( isset( $meta_value['fees'] ) && ! empty( $meta_value['fees'] ) ) {
 					foreach ( $meta_value['fees'] as $fee_id => $fee ) {
 						if ( ! empty( $fee['download_id'] ) && 0 < $fee['download_id'] ) {
-							$query_args = array(
+							$order_item_id = edd_get_order_items( array(
 								'number'     => 1,
 								'order_id'   => $this->ID,
 								'product_id' => $fee['download_id'],
+								'price_id'   => isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ? intval( $fee['price_id'] ) : 0,
 								'fields'     => 'ids',
-							);
-
-							if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
-								$query_args['price_id'] = intval( $fee['price_id'] );
-							}
-							$order_item_id = edd_get_order_items( $query_args);
+							) );
 
 							if ( is_array( $order_item_id ) ) {
 								$order_item_id = (int) $order_item_id[0];
