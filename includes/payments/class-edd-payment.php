@@ -2311,12 +2311,17 @@ class EDD_Payment {
 				if ( isset( $meta_value['fees'] ) && ! empty( $meta_value['fees'] ) ) {
 					foreach ( $meta_value['fees'] as $fee_id => $fee ) {
 						if ( ! empty( $fee['download_id'] ) && 0 < $fee['download_id'] ) {
-							$order_item_id = edd_get_order_items( array(
+							$query_args = array(
 								'number'     => 1,
 								'order_id'   => $this->ID,
 								'product_id' => $fee['download_id'],
 								'fields'     => 'ids',
-							) );
+							);
+
+							if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
+								$query_args['price_id'] = intval( $fee['price_id'] );
+							}
+							$order_item_id = edd_get_order_items( $query_args);
 
 							if ( is_array( $order_item_id ) ) {
 								$order_item_id = (int) $order_item_id[0];
@@ -2338,10 +2343,6 @@ class EDD_Payment {
 									'description' => $fee['label'],
 									'subtotal'    => (float) $fee['amount'],
 								) );
-
-								if ( ! is_null( $fee['price_id'] ) ) {
-									edd_update_order_adjustment_meta( $adjustment_id, 'price_id', absint( $fee['price_id'] ) );
-								}
 							} else {
 								add_filter( 'edd_prices_include_tax', '__return_false' );
 
@@ -2379,10 +2380,6 @@ class EDD_Payment {
 									'description' => $fee['label'],
 									'subtotal'    => (float) $fee['amount'],
 								) );
-
-								if ( isset( $fee['price_id'] ) && ! is_null( $fee['price_id'] ) ) {
-									edd_update_order_adjustment_meta( $adjustment_id, 'price_id', absint( $fee['price_id'] ) );
-								}
 							} else {
 								add_filter( 'edd_prices_include_tax', '__return_false' );
 
@@ -2971,50 +2968,62 @@ class EDD_Payment {
 	private function setup_fees() {
 		$fees = array();
 
-		foreach ( $this->order->get_fees() as $order_fee ) {
-			$price_id = edd_get_order_adjustment_meta( $order_fee->id, 'price_id', true );
-			$no_tax   = (bool) 0.00 === $order_fee->tax;
-			$id       = is_null( $order_fee->type_key ) ? $order_fee->id : $order_fee->type_key;
-			if ( array_key_exists( $id, $fees ) ) {
-				$id .= '_2';
+		if ( $this->order->get_fees() ) {
+			/*
+			 * Build up an array of order item IDs with values set to their respective download/price IDs.
+			 * This is so we can easily get that information when configuring order item fees.
+			 */
+			$order_items = array();
+			foreach ( $this->order->get_items() as $order_item ) {
+				/**
+				 * @var \EDD\Orders\Order_Item $order_item
+				 */
+				$order_items[ intval( $order_item->id ) ] = array(
+					'download_id' => $order_item->product_id,
+					'price_id'    => $order_item->price_id
+				);
 			}
 
-			$fees[ $id ] = array(
-				'amount'      => $order_fee->subtotal,
-				'label'       => $order_fee->description,
-				'no_tax'      => $no_tax,
-				'type'        => 'fee',
-				'price_id'    => $price_id ? $price_id : null,
-				'download_id' => 0,
-			);
-		}
+			foreach ( $this->order->get_fees() as $order_fee ) {
+				/**
+				 * @var \EDD\Orders\Order_Adjustment $order_fee
+				 */
 
-		foreach ( $this->order->items as $item ) {
-			/** @var EDD\Orders\Order_Item $item */
+				$download_id = 0;
+				$price_id    = null;
 
-			foreach ( $item->get_fees() as $item_fee ) {
-				/** @var EDD\Orders\Order_Adjustment $item_fee */
+				if ( 'order_item' === $order_fee->object_type && array_key_exists( intval( $order_fee->object_id ), $order_items ) ) {
+					$download_id = $order_items[ intval( $order_fee->object_id ) ]['download_id'];
+					$price_id    = $order_items[ intval( $order_fee->object_id ) ]['price_id'];
+				}
 
-				$download_id = edd_get_order_adjustment_meta( $item_fee->id, 'download_id', true );
-				$price_id    = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
-				$no_tax      = (bool) 0.00 === $item_fee->tax;
-				$id          = is_null( $item_fee->type_key ) ? $item_fee->id : $item_fee->type_key;
+				$no_tax      = (bool) 0.00 === $order_fee->tax;
+				$id          = is_null( $order_fee->type_key ) ? $order_fee->id : $order_fee->type_key;
 				if ( array_key_exists( $id, $fees ) ) {
 					$id .= '_2';
 				}
 
+				if ( $id != $order_fee->type_key ) {
+					/*
+					 * We run an update here because if we don't, then we'll send back a key of `23_2` when in the
+					 * DB it's actually `null`, and if this value gets updated via the payment meta array, it
+					 * will actually add a brand *new* fee instead of updating the existing one.
+					 *
+					 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/8412
+					 */
+					edd_update_order_adjustment( $order_fee->id, array(
+						'type_key' => $id
+					) );
+				}
+
 				$fees[ $id ] = array(
-					'amount'      => $item_fee->subtotal,
-					'label'       => $item_fee->description,
+					'amount'      => $order_fee->subtotal,
+					'label'       => $order_fee->description,
 					'no_tax'      => $no_tax,
 					'type'        => 'fee',
-					'price_id'    => $price_id ? $price_id : null,
-					'download_id' => 0,
+					'price_id'    => $price_id,
+					'download_id' => $download_id,
 				);
-
-				if ( $download_id ) {
-					$fees[ $id ]['download_id'] = $download_id;
-				}
 			}
 		}
 
@@ -3216,8 +3225,8 @@ class EDD_Payment {
 			foreach ( $item->fees as $key => $item_fee ) {
 				/** @var EDD\Orders\Order_Adjustment $item_fee */
 
-				$download_id = edd_get_order_adjustment_meta( $item_fee->id, 'download_id', true );
-				$price_id    = edd_get_order_adjustment_meta( $item_fee->id, 'price_id', true );
+				$download_id = $item->product_id;
+				$price_id    = $item->price_id;
 				$no_tax      = (bool) 0.00 === $item_fee->tax;
 				$id          = is_null( $item_fee->type_key ) ? $item_fee->id : $item_fee->type_key;
 				if ( array_key_exists( $id, $item_fees ) ) {
