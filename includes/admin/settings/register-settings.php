@@ -1485,6 +1485,10 @@ function edd_settings_sanitize_taxes( $input ) {
 			'description' => $region,
 		);
 
+		if ( empty( $adjustment_data['name'] ) ) {
+			return;
+		}
+
 		$existing_adjustment = edd_get_adjustments( $adjustment_data );
 
 		if ( ! empty( $existing_adjustment ) ) {
