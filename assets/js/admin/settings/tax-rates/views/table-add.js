@@ -166,6 +166,12 @@ const TableAdd = wp.Backbone.View.extend( {
 			i18n,
 		} = eddTaxRates;
 
+		if ( ! this.model.get( 'country' ) ) {
+			alert( i18n.emptyCountry );
+
+			return;
+		}
+
 		if ( existingCountryWide.length > 0 ) {
 			alert( i18n.multipleCountryWide.replace( '%s', this.model.get( 'country' ) ) );
 
