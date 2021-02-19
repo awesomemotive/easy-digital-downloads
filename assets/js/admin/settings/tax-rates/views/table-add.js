@@ -178,6 +178,12 @@ const TableAdd = wp.Backbone.View.extend( {
 			return;
 		}
 
+		if ( this.model.get('amount') <= 0 ) {
+			alert( i18n.emptyTax );
+
+			return;
+		}
+
 		// Merge cid as ID to make this a unique model.
 		this.collection.add( _.extend(
 			this.model.attributes,
