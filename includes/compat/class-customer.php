@@ -181,17 +181,6 @@ class Customer extends Base {
 			return;
 		}
 
-		// Bail if no payment IDs to update
-		$payments_array = explode( ',', $customer->payment_ids );
-		if ( empty( $payments_array ) ) {
-			return;
-		}
-
-		// Loop through and update payment meta
-		foreach ( $payments_array as $payment_id ) {
-			edd_update_payment_meta( $payment_id, 'email', $user->user_email );
-		}
-
 		do_action( 'edd_update_customer_email_on_user_update', $user, $customer );
 	}
 
