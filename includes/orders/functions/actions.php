@@ -318,7 +318,7 @@ function edd_add_manual_order( $args = array() ) {
 						}
 
 						$type_key = ! empty( $order_item_adjustment['description'] )
-							? sanitize_text_field( sanitize_title( $order_item_adjustment['description'] ) )
+							? sanitize_text_field( strtolower( sanitize_title( $order_item_adjustment['description'] ) ) )
 							: $index;
 
 						edd_add_order_adjustment( array(
@@ -352,7 +352,7 @@ function edd_add_manual_order( $args = array() ) {
 			}
 
 			$type_key = ! empty( $adjustment['description'] )
-				? sanitize_text_field( sanitize_title( $adjustment['description'] ) )
+				? sanitize_text_field( strtolower( sanitize_title( $adjustment['description'] ) ) )
 				: $index;
 
 			edd_add_order_adjustment( array(
