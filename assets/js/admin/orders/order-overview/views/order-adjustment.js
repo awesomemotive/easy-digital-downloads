@@ -71,7 +71,7 @@ export const OrderAdjustment = Base.extend( {
 
 		let orderItem;
 
-		if ( 'order_item' === model.get( 'object_type' ) ) {
+		if ( 'order_item' === model.get( 'objectType' ) ) {
 			orderItem = _.first( state.get( 'items' ).filter( ( item ) => {
 				return undefined !== item.get( 'adjustments' ).findWhere( {
 					objectId: item.get( 'id' ),
@@ -81,9 +81,11 @@ export const OrderAdjustment = Base.extend( {
 
 		// Always show Discounts and Fees as negative values.
 		let total = number.absint( model.getAmount() );
+		let subtotal = number.absint( model.get( 'subtotal' ) );
 
 		if ( 'fee' !== model.get( 'type' ) ) {
 			total = total * -1;
+			subtotal = subtotal * -1;
 		}
 
 		return {
@@ -94,9 +96,10 @@ export const OrderAdjustment = Base.extend( {
 			},
 
 			total: model.getAmount(),
-			subtotal: model.getAmount(),
+			subtotal: model.get( 'subtotal' ),
 			orderItem: orderItem ? orderItem.toJSON() : false,
 			totalCurrency: currency.format( total ),
+			subtotalCurrency: currency.format( subtotal )
 		};
 	},
 

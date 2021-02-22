@@ -19,6 +19,7 @@ $currency_position  = edd_get_option( 'currency_position', 'before' );
 //
 $downloads        = array();
 $recent_downloads = get_posts( array(
+	'fields'         => 'ids',
 	'orderby'        => 'date',
 	'order'          => 'ASC',
 	'post_type'      => 'download',
@@ -32,26 +33,25 @@ $recent_downloads = get_posts( array(
 ) );
 
 if ( ! empty( $recent_downloads ) ) {
-	$items = wp_list_pluck( $recent_downloads, 'post_title', 'ID' );
 
-	foreach ( $items as $download_id => $download_title ) {
+	foreach ( $recent_downloads as $download_id ) {
 		$prices = edd_get_variable_prices( $download_id );
 
 		// Non-variable items.
 		if ( empty( $prices ) ) {
 			$downloads[] = array(
 				'id'   => $download_id,
-				'name' => $download_title,
+				'name' => edd_get_download_name( $download_id ),
 			);
 		// Variable items.
 		} else {
 			foreach ( $prices as $key => $value ) {
-				$name = ! empty( $value['name']  ) ? $value['name']  : '';
+				$name = edd_get_download_name( $download_id, $key );
 
 				if ( ! empty( $name ) ) {
 					$downloads[] = array(
 						'id'   => $download_id . '_' . $key,
-						'name' => esc_html( $download_title . ': ' . $name ),
+						'name' => esc_html( $name ),
 					);
 				}
 			}
@@ -140,13 +140,13 @@ if ( ! empty( $recent_downloads ) ) {
 				/>
 				<span class="label">
 					<?php esc_html_e( 'Automatically calculate amounts', 'easy-digital-downloads' ); ?>
-					<# if ( false !== data.state.hasTax && '' !== data.state.hasTax.country ) { #>
+					<# if ( 'none' !== data.state.hasTax && '' !== data.state.hasTax.country ) { #>
 					<br />
 					<small>
 						<?php
 						printf(
 							esc_html__( 'Tax Rate: %s', 'easy-digital-downloads' ),
-							'{{ data.state.hasTax.country}}<# if ( \'\' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate.toFixed( 2 ) }}%'
+							'{{ data.state.hasTax.country}}<# if ( \'\' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate }}%'
 						); // WPCS: XSS okay.
 						?>
 					</small>
@@ -155,7 +155,7 @@ if ( ! empty( $recent_downloads ) ) {
 			</label>
 		</p>
 
-		<# if ( false !== data.state.hasTax && '' === data.state.hasTax.country && false === data.state.isAdjustingManually ) { #>
+		<# if ( 'none' !== data.state.hasTax && '' === data.state.hasTax.country && false === data.state.isAdjustingManually ) { #>
 			<div class="notice notice-warning">
 				<p>
 					<strong><?php esc_html_e( 'No tax rate has been set.', 'easy-digital-downloads' ); ?></strong><br />
@@ -190,7 +190,7 @@ if ( ! empty( $recent_downloads ) ) {
 				</span>
 			</p>
 
-			<# if ( false !== data.state.hasTax ) { #>
+			<# if ( 'none' !== data.state.hasTax ) { #>
 				<p>
 					<label for="tax">
 						<?php esc_html_e( 'Tax', 'easy-digital-downloads' ); ?>
@@ -198,7 +198,7 @@ if ( ! empty( $recent_downloads ) ) {
 							<?php
 							printf(
 								esc_html_x( '(%s)', 'add order item tax rate', 'easy-digital-downloads' ),
-								'{{ data.state.hasTax.country}}<# if ( \'\' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate.toFixed( 2 ) }}%'
+								'{{ data.state.hasTax.country}}<# if ( \'\' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate }}%'
 							); // WPCS: XSS okay.
 							?>
 						<# } #>

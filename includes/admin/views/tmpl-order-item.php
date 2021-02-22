@@ -38,7 +38,7 @@ $view_url = add_query_arg(
 			<# } #>
 
 			<div class="row-actions">
-				<# if ( false !== data.state.hasTax ) { #>
+				<# if ( 'none' !== data.state.hasTax ) { #>
 				<span class="text">
 					<strong><?php esc_html_e( 'Tax:', 'easy-digital-downloads' ); ?></strong>
 					{{ data.taxCurrency }}
@@ -86,12 +86,3 @@ $view_url = add_query_arg(
 <input type="hidden" value="{{ data.tax }}" name="downloads[{{ data.id }}][tax]" />
 <input type="hidden" value="{{ data.subtotal }}" name="downloads[{{ data.id }}][subtotal]" />
 <input type="hidden" value="{{ data.total }}" name="downloads[{{ data.id }}][total]" />
-
-<# _.each ( data.adjustments, function( adjustment ) { #>
-	<input type="hidden" value="{{ adjustment.objectId }}" name="downloads[{{ data.id }}][adjustments][{{ adjustment.id }}][object_id]" />
-	<input type="hidden" value="{{ adjustment.objectType }}" name="downloads[{{ data.id }}][adjustments][{{ adjustment.id }}][object_type]" />
-	<input type="hidden" value="{{ adjustment.type }}" name="downloads[{{ data.id }}][adjustments][{{ adjustment.id }}][type]" />
-	<input type="hidden" value="{{ adjustment.description }}" name="downloads[{{ data.id }}][adjustments][{{ adjustment.id }}][description]" />
-	<input type="hidden" value="{{ adjustment.subtotal }}" name="downloads[{{ data.id }}][adjustments][{{ adjustment.id }}][subtotal]" />
-	<input type="hidden" value="{{ adjustment.total }}" name="downloads[{{ data.id }}][adjustments][{{ adjustment.id }}][total]" />
-<# } ); #>

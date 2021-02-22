@@ -201,10 +201,13 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 			orderItem.get( 'adjustments' ).add( model );
 			// Adding to the Collection doesn't bubble up a change event.
 			orderItem.trigger( 'change' );
+			model.set( 'objectType', 'order_item' );
+		} else {
+
+			// Add to `Order` level.
+			model.set( 'objectType', 'order' );
 		}
 
-		// Add to `Order` level.
-		model.set( 'objectType', 'order' );
 		adjustments.add( model );
 
 		// Stop listening to the model in this view.

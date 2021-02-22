@@ -221,30 +221,6 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	}
 
 	/**
-	 * Retrieve the tax rate for the order.
-	 *
-	 * @since 3.0
-	 *
-	 * @return float Tax rate.
-	 */
-	public function get_tax_rate() {
-		$rate = edd_get_order_adjustments( array(
-			'number'      => 1,
-			'object_id'   => $this->id,
-			'object_type' => 'order_item',
-			'type'        => 'tax_rate',
-		) );
-
-		if ( $rate ) {
-			$rate = $rate[0];
-
-			return $rate->amount * 100;
-		}
-
-		return 0.00;
-	}
-
-	/**
 	 * Get an order item name, including any price ID name appended to the end.
 	 *
 	 * @since 3.0

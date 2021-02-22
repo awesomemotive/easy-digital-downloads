@@ -62,24 +62,24 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 			$this->store_data( 'edd_temp_recount_earnings', $total );
 		}
 
-		$accepted_statuses  = apply_filters( 'edd_recount_accepted_statuses', array( 'complete', 'revoked' ) );
+		$accepted_statuses = apply_filters( 'edd_recount_accepted_statuses', edd_get_gross_order_statuses() );
 
-		$args = apply_filters( 'edd_recount_earnings_args', array(
-			'number' => $this->per_step,
-			'page'   => $this->step,
-			'status' => $accepted_statuses,
-			'fields' => 'ids'
-		) );
+		$args = apply_filters(
+			'edd_recount_earnings_args',
+			array(
+				'number'        => $this->per_step,
+				'offset'        => $this->per_step * ( $this->step - 1 ),
+				'status'        => $accepted_statuses,
+				'fields'        => 'total',
+				'no_found_rows' => true,
+				'type'          => array( 'sale', 'refund' ),
+			)
+		);
 
-		$payments = edd_get_payments( $args );
+		$orders = edd_get_orders( $args );
 
-		if ( ! empty( $payments ) ) {
-
-			foreach ( $payments as $payment ) {
-
-				$total += edd_get_payment_amount( $payment );
-
-			}
+		if ( ! empty( $orders ) ) {
+			$total += array_sum( $orders );
 
 			if ( $total < 0 ) {
 				$total = 0;
@@ -111,22 +111,26 @@ class EDD_Tools_Recount_Store_Earnings extends EDD_Batch_Export {
 		$total = $this->get_stored_data( 'edd_recount_earnings_total' );
 
 		if ( false === $total ) {
-			$args = apply_filters( 'edd_recount_earnings_total_args', array() );
-
-			$counts = edd_count_payments( $args );
-			$total  = absint( $counts->publish ) + absint( $counts->revoked );
-			$total  = apply_filters( 'edd_recount_store_earnings_total', $total );
+			$accepted_statuses = apply_filters( 'edd_recount_accepted_statuses', edd_get_gross_order_statuses() );
+			$args              = apply_filters(
+				'edd_recount_earnings_total_args',
+				array(
+					'status' => $accepted_statuses,
+					'type'   => array( 'sale', 'refund' ),
+				)
+			);
+			$total             = apply_filters( 'edd_recount_store_earnings_total', edd_count_orders( $args ) );
 
 			$this->store_data( 'edd_recount_earnings_total', $total );
 		}
 
 		$percentage = 100;
 
-		if( $total > 0 ) {
+		if ( $total > 0 ) {
 			$percentage = ( ( $this->per_step * $this->step ) / $total ) * 100;
 		}
 
-		if( $percentage > 100 ) {
+		if ( $percentage > 100 ) {
 			$percentage = 100;
 		}
 

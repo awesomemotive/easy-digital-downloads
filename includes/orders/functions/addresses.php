@@ -24,8 +24,7 @@ defined( 'ABSPATH' ) || exit;
  *     They will be automatically populated if empty.
  *
  *     @type int    $order_id      Order ID. Default `0`.
- *     @type string $first_name    Customer's first name. Default empty.
- *     @type string $last_name     Customer's last name. Default empty.
+ *     @type string $name          Customer's full name. Default empty.
  *     @type string $address       First line of address. Default empty.
  *     @type string $address2      Second line of address. Default empty.
  *     @type string $city          City. Default empty.
@@ -95,8 +94,7 @@ function edd_delete_order_address( $order_address_id = 0 ) {
  *     Array of order address data. Default empty.
  *
  *     @type int    $order_id      Order ID. Default `0`.
- *     @type string $first_name    Customer's first name. Default empty.
- *     @type string $last_name     Customer's last name. Default empty.
+ *     @type string $name          Customer's full name. Default empty.
  *     @type string $address       First line of address. Default empty.
  *     @type string $address2      Second line of address. Default empty.
  *     @type string $city          City. Default empty.

@@ -88,7 +88,8 @@ class Order_Items extends Schema {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true
 		),
 
 		// type
@@ -106,7 +107,7 @@ class Order_Items extends Schema {
 			'name'       => 'status',
 			'type'       => 'varchar',
 			'length'     => '20',
-			'default'    => 'inherit',
+			'default'    => 'pending',
 			'sortable'   => true,
 			'transition' => true
 		),
@@ -117,7 +118,8 @@ class Order_Items extends Schema {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true
 		),
 
 		// amount
@@ -125,7 +127,8 @@ class Order_Items extends Schema {
 			'name'       => 'amount',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true
 		),
 
 		// subtotal
@@ -133,7 +136,8 @@ class Order_Items extends Schema {
 			'name'       => 'subtotal',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true
 		),
 
 		// discount
@@ -141,7 +145,8 @@ class Order_Items extends Schema {
 			'name'       => 'discount',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true
 		),
 
 		// tax
@@ -149,7 +154,8 @@ class Order_Items extends Schema {
 			'name'       => 'tax',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true
 		),
 
 		// total
@@ -157,7 +163,8 @@ class Order_Items extends Schema {
 			'name'       => 'total',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true
 		),
 
 		// date_created

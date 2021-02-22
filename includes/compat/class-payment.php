@@ -177,6 +177,13 @@ class Payment extends Base {
 				break;
 			case '_edd_payment_tax_rate':
 				$value = $order->get_tax_rate();
+				/*
+				 * Tax rates are now stored as percentages (e.g. `20.00`) but previously they were stored as
+				 * decimals (e.g. `0.2`) so we convert it back to a decimal.
+				 */
+				if ( is_numeric( $value ) ) {
+					$value = $value / 100;
+				}
 				break;
 			case '_edd_payment_customer_id':
 				$value = $order->customer_id;

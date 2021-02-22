@@ -23,6 +23,13 @@ use EDD\Admin\List_Table;
 class EDD_Base_Log_List_Table extends List_Table {
 
 	/**
+	 * Log type
+	 *
+	 * @var string
+	 */
+	protected $log_type = 'logs';
+
+	/**
 	 * Get things started
 	 *
 	 * @since 3.0
@@ -141,7 +148,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 	 *
 	 * @since 3.0
      *
-	 * @return string Start date to filter by
+	 * @return string End date to filter by
 	 */
 	public function get_filtered_end_date() {
 		return sanitize_text_field( $this->get_request_var( 'end-date', null ) );
@@ -336,7 +343,7 @@ class EDD_Base_Log_List_Table extends List_Table {
 		$retval = array(
 			'product_id'  => $this->get_filtered_download(),
 			'customer_id' => $this->get_filtered_customer(),
-			'payment_id'  => $this->get_filtered_payment(),
+			'order_id'    => $this->get_filtered_payment(),
 			'meta_query'  => $this->get_meta_query(),
 		);
 
@@ -346,20 +353,57 @@ class EDD_Base_Log_List_Table extends List_Table {
 			if ( filter_var( $search, FILTER_VALIDATE_IP ) ) {
 				$retval['ip'] = $search;
 			} elseif ( is_email( $search ) ) {
-				$customer = edd_get_customer( $search );
-				if ( ! empty( $customer->id ) ) {
-					$retval['customer_id'] = $customer->id;
-				}
-			} elseif ( is_numeric( $search ) ) {
-				$customer = edd_get_customer( $search );
-
-				if ( ! empty( $customer->id ) ) {
-					$retval['customer_id'] = $customer->id;
+				if ( 'api_requests' === $this->log_type ) {
+					// API requests are linked to user accounts, so we're checking user data here.
+					$user = get_user_by( 'email', $search );
+					if ( ! empty( $user->ID ) ) {
+						$retval['user_id'] = $user->ID;
+					} else {
+						// This is a fallback to help ensure an invalid email will produce zero results.
+						$retval['search'] = $search;
+					}
 				} else {
-					$this->file_search = true;
+					// All other logs are linked to customers.
+					$customer = edd_get_customer_by( 'email', $search );
+					if ( ! empty( $customer->id ) ) {
+						$retval['customer_id'] = $customer->id;
+					} else {
+						// This is a fallback to help ensure an invalid email will produce zero results.
+						$retval['search'] = $search;
+					}
+				}
+			} elseif ( 'api_requests' === $this->log_type && 32 === strlen( $search ) ) {
+				// Look for an API key
+				$retval['api_key'] = $search;
+			} elseif ( 'api_requests' === $this->log_type && stristr( $search, 'token:' ) ) {
+				// Look for an API token
+				$retval['token'] = str_ireplace( 'token:', '', $search );
+			} elseif ( is_numeric( $search ) ) {
+				if ( 'api_requests' === $this->log_type ) {
+					// API requests are linked to user accounts, so we're checking user data here.
+					$user = get_user_by( 'email', $search );
+					if ( ! empty( $user->ID ) ) {
+						$retval['user_id'] = $user->ID;
+					} else {
+						$retval['search'] = $search;
+					}
+				} else {
+					// All other logs are linked to customers.
+					$customer = edd_get_customer( $search );
+					if ( ! empty( $customer->id ) ) {
+						$retval['customer_id'] = $customer->id;
+					} elseif ( 'file_downloads' === $this->log_type ) {
+						$retval['product_id'] = $search;
+					} else {
+						$retval['search'] = $search;
+					}
 				}
 			} else {
-				$retval['file_id'] = $search;
+				if ( 'file_downloads' === $this->log_type ) {
+					$this->file_search = true;
+				} else {
+					$retval['search'] = $search;
+				}
 			}
 		}
 
@@ -387,6 +431,8 @@ class EDD_Base_Log_List_Table extends List_Table {
 				);
 			}
 		}
+
+		$retval = array_filter( $retval );
 
 		// Return query arguments
 		return ( true === $paginate )

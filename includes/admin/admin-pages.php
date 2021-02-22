@@ -447,6 +447,10 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 			// Supported post types
 			} elseif ( edd_is_insertable_admin_page() ) {
 				$found = true;
+
+			// The EDD settings screen (fallback if mislinked)
+			} elseif ( 'edd-settings' === $page ) {
+				$found = true;
 			}
 			break;
 	}
