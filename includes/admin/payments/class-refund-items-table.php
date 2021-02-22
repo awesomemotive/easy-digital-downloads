@@ -148,7 +148,7 @@ class Refund_Items_Table extends List_Table {
 				<label for="edd-order-item-quantity-<?php echo esc_attr( $order_item->id ); ?>" class="screen-reader-text">
 					<?php esc_html_e( 'Quantity to refund', 'easy-digital-downloads' ); ?>
 				</label>
-				<input type="number" id="edd-order-item-quantity-<?php echo esc_attr( $order_item->id ); ?>" class="edd-order-item-refund-quantity edd-order-item-refund-input" name="refund_order_item[<?php echo esc_attr( $order_item->id ); ?>][quantity]" value="0" min="0" max="<?php echo esc_attr( $order_item->quantity ); ?>" step="1""<?php echo 'refunded' === $order_item->status ? ' disabled' : ''; ?> />
+				<input type="number" id="edd-order-item-quantity-<?php echo esc_attr( $order_item->id ); ?>" class="edd-order-item-refund-quantity edd-order-item-refund-input" name="refund_order_item[<?php echo esc_attr( $order_item->id ); ?>][quantity]" value="" placeholder="0" min="0" max="<?php echo esc_attr( $order_item->quantity ); ?>" step="1"<?php echo 'refunded' === $order_item->status ? ' disabled' : ''; ?> />
 				<?php
 				return ob_get_clean();
 
@@ -185,7 +185,7 @@ class Refund_Items_Table extends List_Table {
 					echo esc_html( $this->get_currency_symbol( $order_item->order_id ) );
 				}
 				?>
-				<input type="text" id="edd-order-item-<?php echo esc_attr( $order_item->id ); ?>-refund-<?php echo esc_attr( $column_name ); ?>" class="edd-order-item-refund-<?php echo esc_attr( $column_name ); ?> edd-order-item-refund-input" name="refund_order_item[<?php echo esc_attr( $order_item->id ); ?>][<?php echo esc_attr( $column_name ); ?>]" value="<?php echo esc_attr( edd_sanitize_amount( 0 ) ); ?>" data-original="<?php echo esc_attr( $original_amount ); ?>" data-max="<?php echo esc_attr( $amount_remaining ); ?>" <?php echo 'refunded' === $order_item->status ? ' disabled' : ''; ?> />
+				<input type="text" id="edd-order-item-<?php echo esc_attr( $order_item->id ); ?>-refund-<?php echo esc_attr( $column_name ); ?>" class="edd-order-item-refund-<?php echo esc_attr( $column_name ); ?> edd-order-item-refund-input" name="refund_order_item[<?php echo esc_attr( $order_item->id ); ?>][<?php echo esc_attr( $column_name ); ?>]" value="" placeholder="<?php echo esc_attr( edd_sanitize_amount( 0 ) ); ?>" data-original="<?php echo esc_attr( $original_amount ); ?>" data-max="<?php echo esc_attr( $amount_remaining ); ?>" data-disabled="<?php echo 'refunded' === $order_item->status ? '1' : ''; ?>" disabled />
 				<?php
 				if ( 'after' === $currency_pos ) {
 					echo esc_html( $this->get_currency_symbol( $order_item->order_id ) );
