@@ -1486,7 +1486,7 @@ function edd_settings_sanitize_taxes( $input ) {
 		);
 
 		if ( empty( $adjustment_data['name'] ) || $adjustment_data['amount'] <= 0 ) {
-			return;
+			continue;
 		}
 
 		$existing_adjustment = edd_get_adjustments( $adjustment_data );
@@ -2756,7 +2756,6 @@ function edd_tax_rates_callback( $args ) {
 		'i18n'  => array(
 			/* translators: Tax rate country code */
 			'multipleCountryWide' => esc_html__( 'Only one country-wide tax rate can be active at once. Please deactivate the existing %s country-wide rate before adding another.', 'easy-digital-downloads' ),
-
 			'emptyCountry'        => esc_html__( 'Please select a country.', 'easy-digital-downloads' ),
 			'emptyTax'            => esc_html__( 'Please enter a tax rate greater than 0.', 'easy-digital-downloads' ),
 		),
