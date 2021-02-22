@@ -76,7 +76,7 @@ $( document.body ).on( 'change', '#edd-refund-order-dialog .edd-order-item-refun
 		let subtotalField = parent.find( '.edd-order-item-refund-subtotal' ),
 			taxField = parent.find( '.edd-order-item-refund-tax' ),
 			originalSubtotal = parseFloat( subtotalField.data( 'original' ) ),
-			originalTax = parseFloat( taxField.data( 'original' ) ),
+			originalTax = taxField ? parseFloat( taxField.data( 'original' ) ) : 0,
 			originalQuantity = parseInt( quantityField.attr( 'max' ) ),
 			calculatedSubtotal = ( originalSubtotal / originalQuantity ) * quantity,
 			calculatedTax = ( originalTax / originalQuantity ) * quantity;
@@ -128,8 +128,11 @@ function recalculateRefundTotal() {
 
 		if ( thisItemQuantity ) {
 			thisItemSubtotal = parseFloat( thisItemParent.find( '.edd-order-item-refund-subtotal' ).val() ),
-			thisItemTax      = parseFloat( thisItemParent.find( '.edd-order-item-refund-tax' ).val() ),
 			thisItemTotal    = parseFloat( thisItemSubtotal + thisItemTax );
+
+			if ( thisItemParent.find( '.edd-order-item-refund-tax' ) ) {
+				thisItemTax = parseFloat( thisItemParent.find( '.edd-order-item-refund-tax' ).val() );
+			}
 		}
 
 		thisItemParent.find( '.column-total span' ).text( thisItemTotal.toFixed( edd_vars.currency_decimals ) );
