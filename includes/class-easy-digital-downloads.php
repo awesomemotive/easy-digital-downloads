@@ -284,7 +284,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '3.0.0-beta-1.0012' );
+			define( 'EDD_VERSION', '3.0-beta1' );
 		}
 
 		// Plugin Root File.
@@ -367,7 +367,7 @@ final class Easy_Digital_Downloads {
 	 * @since 3.0
 	 */
 	private function setup_application() {
-		edd_setup_components();
+		add_action( 'plugins_loaded', 'edd_setup_components', 100 );
 
 		$GLOBALS['edd_options'] = edd_get_settings();
 

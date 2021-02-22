@@ -94,7 +94,19 @@ install_test_suite() {
 		# set up testing suite
 		mkdir -p "$WP_TESTS_DIR"
 		svn co --quiet "https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/" "$WP_TESTS_DIR/includes"
+
+		if [[ ! -d "$WP_TESTS_DIR/includes" ]]; then
+			echo "Failed to clone Test Suite PHPUnit includes"
+			exit 2
+		fi
+
 		svn co --quiet "https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/data/" "$WP_TESTS_DIR/data"
+
+		if [[ ! -d "$WP_TESTS_DIR/data" ]]; then
+			echo "Failed to clone Test Suite PHPUnit data"
+			exit 2
+		fi
+
 	fi
 
 	cd $WP_TESTS_DIR

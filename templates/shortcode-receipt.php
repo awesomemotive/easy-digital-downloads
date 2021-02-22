@@ -84,8 +84,22 @@ do_action( 'edd_payment_receipt_before_table', $payment, $edd_receipt_args );
 				<ul class="edd_receipt_fees">
 				<?php foreach ( $order->get_fees() as $fee ) : ?>
 					<li>
-						<span class="edd_fee_label"><?php echo esc_html( $fee->description ); ?></span>
-						<span class="edd_fee_sep">&nbsp;&ndash;&nbsp;</span>
+						<?php if ( 'order_item' === $fee->object_type || ! empty( $fee->description ) ) : ?>
+							<span class="edd_fee_label">
+								<?php
+								if ( 'order_item' === $fee->object_type ) {
+									$order_item = edd_get_order_item( $fee->object_id );
+									if ( $order_item ) {
+										echo esc_html( $order_item->product_name ) . ':';
+									}
+								}
+								?>
+							<?php if ( ! empty( $fee->description ) ) : ?>
+								<?php echo esc_html( $fee->description ); ?>
+							<?php endif; ?>
+							</span>
+							<span class="edd_fee_sep">&nbsp;&ndash;&nbsp;</span>
+						<?php endif; ?>
 						<span class="edd_fee_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( $fee->subtotal ) ) ); ?></span>
 					</li>
 				<?php endforeach; ?>

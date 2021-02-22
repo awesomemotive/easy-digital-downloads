@@ -267,7 +267,8 @@ var EDD_Download_Configuration = {
 			// Create the media frame.
 			file_frame = wp.media.frames.file_frame = wp.media( {
 				title: button.data( 'uploader-title' ),
-				library: { type: 'image' },
+				frame: 'post',
+				state: 'insert',
 				button: { text: button.data( 'uploader-button-text' ) },
 				multiple: $( this ).data( 'multiple' ) === '0' ? false : true, // Set to true to allow multiple files to be selected
 			} );

@@ -800,18 +800,11 @@ class Order_Item_Tests extends \EDD_UnitTestCase {
 
 		$this->assertCount( 0, $order_items );
 	}
-	
+
 	/**
 	 * @covers ::get_fees
 	 */
 	public function test_get_fees_should_be_empty() {
 		$this->assertEmpty( edd_get_order_item( self::$order_items[0] )->get_fees() );
-	}
-
-	/**
-	 * @covers ::get_fees
-	 */
-	public function test_get_tax_rate_should_be_0() {
-		$this->assertSame( 0.00, edd_get_order_item( self::$order_items[0] )->get_tax_rate() );
 	}
 }

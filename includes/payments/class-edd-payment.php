@@ -512,11 +512,11 @@ class EDD_Payment {
 		$this->customer_id     = $this->order->customer_id;
 		$this->user_id         = $this->setup_user_id();
 		$this->email           = $this->setup_email();
-		$this->address         = $this->setup_address();
 		$this->discounts       = $this->setup_discounts();
 		$this->user_info       = $this->setup_user_info();
 		$this->first_name      = $this->user_info['first_name'];
 		$this->last_name       = $this->user_info['last_name'];
+		$this->address         = $this->setup_address();
 
 		// Other Identifiers
 		$this->key             = $this->order->payment_key;
@@ -651,8 +651,12 @@ class EDD_Payment {
 
 			$this->update_meta( '_edd_payment_meta', $this->payment_meta );
 
+			$tax_rate = $this->tax_rate;
+			if ( ! empty( $tax_rate ) && $this->tax_rate > 0 && $this->tax_rate < 1 ) {
+				$tax_rate = $tax_rate * 100;
+			}
 			$order_meta = array(
-				'tax_rate' => $this->tax_rate,
+				'tax_rate' => $tax_rate,
 			);
 
 			foreach ( $order_meta as $key => $value ) {
@@ -925,7 +929,8 @@ class EDD_Payment {
 						break;
 
 					case 'tax_rate':
-						$this->update_meta( '_edd_payment_tax_rate', $this->tax_rate );
+						$tax_rate = $this->tax_rate > 1 ? $this->tax_rate : ( $this->tax_rate * 100 );
+						$this->update_meta( '_edd_payment_tax_rate', $tax_rate );
 						break;
 
 					case 'number':
@@ -2262,13 +2267,13 @@ class EDD_Payment {
 					}
 
 					$user_info = wp_parse_args( $user_info, $defaults );
+					$name      = $user_info['first_name'] . ' ' . $user_info['last_name'];
 
 					if ( null !== $this->order && $this->order->get_address()->id ) {
 						$order_address = $this->order->get_address();
 
 						edd_update_order_address( $order_address->id, array(
-							'first_name'  => $user_info['first_name'],
-							'last_name'   => $user_info['last_name'],
+							'name'        => $name,
 							'address'     => $user_info['address']['line1'],
 							'address2'    => $user_info['address']['line2'],
 							'city'        => $user_info['address']['city'],
@@ -2279,8 +2284,7 @@ class EDD_Payment {
 					} else {
 						edd_add_order_address( array(
 							'order_id'    => $this->ID,
-							'first_name'  => $user_info['first_name'],
-							'last_name'   => $user_info['last_name'],
+							'name'        => $name,
 							'address'     => $user_info['address']['line1'],
 							'address2'    => $user_info['address']['line2'],
 							'city'        => $user_info['address']['city'],
@@ -2542,7 +2546,8 @@ class EDD_Payment {
 				) );
 				return true;
 			case '_edd_payment_tax_rate':
-				edd_update_order_meta( $this->ID, 'tax_rate', $meta_value, $prev_value );
+				$tax_rate = $meta_value > 0 ? $meta_value : ( $meta_value * 100 );
+				edd_update_order_meta( $this->ID, 'tax_rate', $tax_rate, $prev_value );
 				return true;
 			case '_edd_payment_customer_id':
 				edd_update_order( $this->ID, array(
@@ -2593,8 +2598,6 @@ class EDD_Payment {
 					) );
 				}
 		}
-
-		$meta_key = str_replace( '_edd_payment_', '', $meta_key );
 
 		return edd_update_order_meta( $this->ID, $meta_key, $meta_value, $prev_value );
 	}
@@ -2837,11 +2840,7 @@ class EDD_Payment {
 			return false; // This payment was never completed
 		}
 
-		$date = ( $date = $order->date_completed )
-			? $date
-			: $order->date_created;
-
-		return $date;
+		return $order->date_completed ? $order->date_completed : '';
 	}
 
 	/**
@@ -2874,7 +2873,13 @@ class EDD_Payment {
 	 * @return float Tax rate for the payment.
 	 */
 	private function setup_tax_rate() {
-		return $this->get_meta( 'tax_rate', true );
+		$tax_rate = $this->order->get_tax_rate();
+
+		if ( ! empty( $tax_rate ) && $tax_rate > 1 ) {
+			$tax_rate = $tax_rate / 100;
+		}
+
+		return $tax_rate;
 	}
 
 	/**
@@ -3151,6 +3156,12 @@ class EDD_Payment {
 				'country' => $country,
 				'zip'     => $order_address->postal_code,
 			);
+		}
+
+		// Check for old `user_info` meta which may still exist.
+		$old_meta = edd_get_order_meta( $this->ID, 'payment_meta', true );
+		if ( ! empty( $old_meta['user_info'] ) ) {
+			$user_info = array_merge( $user_info, $old_meta['user_info'] );
 		}
 
 		return $user_info;

@@ -193,20 +193,8 @@ function edd_update_payment_details( $data = array() ) {
 	// Address
 	$address = $data['edd_order_address'];
 
-	// Setup first and last name from input values.
-	$name       = $customer->name;
-	$names      = explode( ' ', $name );
-	$first_name = ! empty( $names[0] ) ? $names[0] : '';
-	$last_name  = '';
-
-	if ( ! empty( $names[1] ) ) {
-		unset( $names[0] );
-		$last_name = implode( ' ', $names );
-	}
-
 	edd_update_order_address( absint( $address['address_id'] ), array(
-		'first_name'  => $first_name,
-		'last_name'   => $last_name,
+		'name'        => $customer->name,
 		'address'     => $address['address'],
 		'address2'    => $address['address2'],
 		'city'        => $address['city'],
@@ -251,47 +239,33 @@ function edd_update_payment_details( $data = array() ) {
 add_action( 'edd_update_payment_details', 'edd_update_payment_details' );
 
 /**
- * Trigger a Purchase Deletion
- *
- * @since 1.3.4
- * @param array $data Arguments passed
- * @return void
- */
-function edd_trigger_purchase_delete( $data ) {
-	if ( wp_verify_nonce( $data['_wpnonce'], 'edd_payment_nonce' ) ) {
-
-		$payment_id = absint( $data['purchase_id'] );
-
-		if ( ! current_user_can( 'delete_shop_payments', $payment_id ) ) {
-			wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
-		}
-
-		edd_delete_purchase( $payment_id );
-
-		edd_redirect( admin_url( '/edit.php?post_type=download&page=edd-payment-history&edd-message=payment_deleted' ) );
-	}
-}
-add_action( 'edd_delete_payment', 'edd_trigger_purchase_delete' );
-
-/**
- * New in 3.0, destroys an order, and all it's data, and related data.
+ * New in 3.0, permanently destroys an order, and all its data, and related data.
  *
  * @since 3.0
  *
- * @param $data
+ * @param array $data Arguments passed.
  */
 function edd_trigger_destroy_order( $data ) {
+
 	if ( wp_verify_nonce( $data['_wpnonce'], 'edd_payment_nonce' ) ) {
 
 		$payment_id = absint( $data['purchase_id'] );
 
 		if ( ! current_user_can( 'delete_shop_payments', $payment_id ) ) {
-			wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+			wp_die( esc_html__( 'You do not have permission to edit this order.', 'easy-digital-downloads' ), esc_html__( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		}
 
 		edd_destroy_order( $payment_id );
 
-		edd_redirect( admin_url( '/edit.php?post_type=download&page=edd-payment-history&edd-message=payment_deleted' ) );
+		$redirect_link = add_query_arg(
+			array(
+				'page'        => 'edd-payment-history',
+				'edd-message' => 'payment_deleted',
+				'status'      => 'trash',
+			),
+			edd_get_admin_base_url(),
+		);
+		edd_redirect( $redirect_link );
 	}
 }
 add_action( 'edd_delete_order', 'edd_trigger_destroy_order' );

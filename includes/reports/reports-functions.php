@@ -1120,6 +1120,13 @@ function display_region_filter() {
 	$region  = get_filter_value( 'regions' );
 	$country = get_filter_value( 'countries' );
 
+	if ( empty( $region ) ) {
+		$region = '';
+	}
+	if ( empty( $country ) ) {
+		$country = '';
+	}
+
 	$regions = edd_get_shop_states( $country );
 
 	// Remove empty values.
@@ -1149,6 +1156,9 @@ function display_region_filter() {
  */
 function display_country_filter() {
 	$country = get_filter_value( 'countries' );
+	if ( empty( $country ) ) {
+		$country = '';
+	}
 
 	$countries = edd_get_country_list();
 
