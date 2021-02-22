@@ -178,7 +178,7 @@ const TableAdd = wp.Backbone.View.extend( {
 			return;
 		}
 
-		if ( this.model.get('amount') <= 0 ) {
+		if ( this.model.get( 'amount' ) <= 0 ) {
 			alert( i18n.emptyTax );
 
 			return;
