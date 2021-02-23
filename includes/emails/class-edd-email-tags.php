@@ -537,7 +537,7 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 
 				$download_list .= "\n";
 
-				$download_list .= apply_filters( 'edd_email_receipt_download_title', $title, $item, $price_id, $payment_id )  . "\n";
+				$download_list .= apply_filters( 'edd_email_receipt_download_title', $title, $item, $price_id, $payment_id )  . "\n" . "\n";
 			}
 
 			$files = edd_get_download_files( $item['id'], $price_id );
