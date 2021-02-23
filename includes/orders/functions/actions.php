@@ -310,17 +310,22 @@ function edd_add_manual_order( $args = array() ) {
 				if ( isset( $download['adjustments'] ) ) {
 					$order_item_adjustments = array_reverse( $download['adjustments'] );
 
-					foreach ( $order_item_adjustments as $order_item_adjustment ) {
+					foreach ( $order_item_adjustments as $index => $order_item_adjustment ) {
 
 						// Discounts are not tracked at the Order Item level.
 						if ( 'discount' === $order_item_adjustment['type'] ) {
 							continue;
 						}
 
+						$type_key = ! empty( $order_item_adjustment['description'] )
+							? sanitize_text_field( strtolower( sanitize_title( $order_item_adjustment['description'] ) ) )
+							: $index;
+
 						edd_add_order_adjustment( array(
 							'object_id'   => $order_item_id,
 							'object_type' => 'order_item',
 							'type'        => sanitize_text_field( $order_item_adjustment['type'] ),
+							'type_key'    => $type_key,
 							'description' => sanitize_text_field( $order_item_adjustment['description'] ),
 							'subtotal'    => floatval( $order_item_adjustment['subtotal'] ),
 							'total'       => floatval( $order_item_adjustment['total'] ),
@@ -341,15 +346,20 @@ function edd_add_manual_order( $args = array() ) {
 	if ( isset( $data['adjustments'] ) ) {
 		$adjustments = array_reverse( $data['adjustments'] );
 
-		foreach ( $adjustments as $adjustment ) {
+		foreach ( $adjustments as $index => $adjustment ) {
 			if ( 'order_item' === $adjustment['object_type'] ) {
 				continue;
 			}
+
+			$type_key = ! empty( $adjustment['description'] )
+				? sanitize_text_field( strtolower( sanitize_title( $adjustment['description'] ) ) )
+				: $index;
 
 			edd_add_order_adjustment( array(
 				'object_id'   => $order_id,
 				'object_type' => 'order',
 				'type'        => sanitize_text_field( $adjustment['type'] ),
+				'type_key'    => $type_key,
 				'description' => sanitize_text_field( $adjustment['description'] ),
 				'subtotal'    => floatval( $adjustment['subtotal'] ),
 				'total'       => floatval( $adjustment['total'] ),

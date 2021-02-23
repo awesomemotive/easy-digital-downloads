@@ -421,12 +421,7 @@ class Order extends Rows\Order {
 			/** @var Order_Adjustment $adjustment */
 
 			if ( 'fee' === $adjustment->type ) {
-				$id = is_null( $adjustment->type_key ) ? $adjustment->id : $adjustment->type_key;
-				if ( array_key_exists( $id, $fees ) ) {
-					$id .= '_2';
-				}
-
-				$fees[ $id ] = $adjustment;
+				$fees[] = $adjustment;
 			}
 		}
 
@@ -442,12 +437,7 @@ class Order extends Rows\Order {
 			foreach ( $item->get_fees() as $fee ) {
 				/** @var Order_Adjustment $fee */
 
-				$id = is_null( $fee->type_key ) ? $fee->id : $fee->type_key;
-				if ( array_key_exists( $id, $fees ) ) {
-					$id .= '_2';
-				}
-
-				$fees[ $id ] = $fee;
+				$fees[] = $fee;
 			}
 		}
 
