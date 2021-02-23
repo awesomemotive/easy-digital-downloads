@@ -40,3 +40,45 @@ function edd_demote_customer_primary_addresses( $old_value, $new_value, $item_id
 	}
 }
 add_action( 'edd_transition_customer_address_is_primary', 'edd_demote_customer_primary_addresses', 10, 3 );
+
+/**
+ * Updates the email address of a customer record when the email on a user is updated.
+ *
+ * @since 2.4.0
+ *
+ * @param int   $user_id User ID.
+ *
+ * @return bool False if customer does not exist for given user ID.
+ */
+function edd_update_customer_email_on_user_update( $user_id = 0 ) {
+
+	// Bail if no customer
+	$customer = edd_get_customer_by( 'user_id', $user_id );
+	if ( empty( $customer ) ) {
+		return false;
+	}
+
+	// Bail if no user
+	$user = get_userdata( $user_id );
+	if ( empty( $user ) || ( $user->user_email === $customer->email ) ) {
+		return;
+	}
+
+	// Bail if customer already has this email address
+	if ( edd_get_customer_by( 'email', $user->user_email ) ) {
+		return;
+	}
+
+	// Try to update the customer
+	$success = edd_update_customer( $customer->id, array(
+		'email' => $user->user_email
+	) );
+
+	// Bail on failure
+	if ( empty( $success ) ) {
+		return;
+	}
+
+	do_action( 'edd_update_customer_email_on_user_update', $user, $customer );
+}
+add_action( 'profile_update', 'edd_update_customer_email_on_user_update', 10 );

@@ -138,61 +138,6 @@ class Customer extends Base {
 		add_filter( 'get_user_metadata',    array( $this, 'get_user_meta'    ), 99, 4 );
 		add_filter( 'update_user_metadata', array( $this, 'update_user_meta' ), 99, 5 );
 		add_filter( 'add_user_metadata',    array( $this, 'update_user_meta' ), 99, 5 );
-
-		/** Actions **********************************************************/
-		add_action( 'profile_update', array( $this, 'update_customer_email_on_user_update' ), 10 );
-	}
-
-	/**
-	 * Updates the email address of a customer record when the email on a user is updated.
-	 *
-	 * @since 2.4.0
-	 *
-	 * @param int   $user_id User ID.
-	 *
-	 * @return bool False if customer does not exist for given user ID.
-	 */
-	public function update_customer_email_on_user_update( $user_id = 0 ) {
-
-		// Bail if no customer
-		$customer = edd_get_customer_by( 'user_id', $user_id );
-		if ( empty( $customer ) ) {
-			return false;
-		}
-
-		// Bail if no user
-		$user = get_userdata( $user_id );
-		if ( empty( $user ) || ( $user->user_email === $customer->email ) ) {
-			return;
-		}
-
-		// Bail if customer already has this email address
-		if ( edd_get_customer_by( 'email', $user->user_email ) ) {
-			return;
-		}
-
-		// Try to update the customer
-		$success = edd_update_customer( $customer->id, array(
-			'email' => $user->user_email
-		) );
-
-		// Bail on failure
-		if ( empty( $success ) ) {
-			return;
-		}
-
-		// Bail if no payment IDs to update
-		$payments_array = explode( ',', $customer->payment_ids );
-		if ( empty( $payments_array ) ) {
-			return;
-		}
-
-		// Loop through and update payment meta
-		foreach ( $payments_array as $payment_id ) {
-			edd_update_payment_meta( $payment_id, 'email', $user->user_email );
-		}
-
-		do_action( 'edd_update_customer_email_on_user_update', $user, $customer );
 	}
 
 	/**
