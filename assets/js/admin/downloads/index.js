@@ -288,7 +288,7 @@ var EDD_Download_Configuration = {
 			} );
 
 			// When an image is selected, run a callback.
-			file_frame.on( 'select', function() {
+			file_frame.on( 'insert', function() {
 				const selection = file_frame.state().get( 'selection' );
 				selection.each( function( attachment, index ) {
 					attachment = attachment.toJSON();
