@@ -2,7 +2,7 @@
 rm -rf includes/gateways/stripe
 
 # Initial clone
-git clone -b try/separate-pro git@github.com:easydigitaldownloads/edd-stripe includes/gateways/stripe
+git clone -b release/2.8.1 git@github.com:easydigitaldownloads/edd-stripe includes/gateways/stripe
 
 # Install dependencies
 cd includes/gateways/stripe
