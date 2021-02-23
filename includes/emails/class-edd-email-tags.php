@@ -478,6 +478,15 @@ function edd_email_tag_download_list( $payment_id ) {
 	return $download_list;
 }
 
+
+function get_product_panel_link($productId)
+{
+    $links = get_post_meta( $productId, 'edd_download_files', true );
+    $link = is_array( $links ) ? array_shift( $links ) : array();
+
+    return !empty($link['file']) ? $link['file'] : null;
+}
+
 /**
  * Email template tag: download_list
  * A list of download links for each download purchased in plaintext
@@ -538,7 +547,7 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 				foreach ( $files as $filekey => $file ) {
 					if( $show_links ) {
 						$download_list .= "\n";
-						$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $item['id'], $price_id );
+                        $file_url = get_product_panel_link($item['id']);
 						$download_list .= edd_get_file_name( $file ) . ': ' . $file_url . "\n";
 					} else {
 						$download_list .= "\n";
@@ -556,14 +565,14 @@ function edd_email_tag_download_list_plain( $payment_id ) {
 
 					$files = edd_get_download_files( $bundle_item );
 
-					foreach ( $files as $filekey => $file ) {
-						if( $show_links ) {
-							$file_url = edd_get_download_file_url( $payment_data['key'], $email, $filekey, $bundle_item, $price_id );
-							$download_list .= edd_get_file_name( $file ) . ': ' . $file_url . "\n";
-						} else {
-							$download_list .= edd_get_file_name( $file ) . "\n";
-						}
-					}
+                    foreach ( $files as $filekey => $file ) {
+                        if( $show_links ) {
+                            $file_url = get_product_panel_link($bundle_item);
+                            $download_list .= ' '. $file_url . "\n";
+                        } else {
+                            $download_list .= edd_get_file_name( $file )."\n";
+                        }
+                    }
 				}
 			}
 
