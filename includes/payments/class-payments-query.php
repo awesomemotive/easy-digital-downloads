@@ -223,7 +223,7 @@ class EDD_Payments_Query extends EDD_Stats {
 			return $posts;
 		}
 
-		if ( $should_output_order_objects ) {
+		if ( $should_output_order_objects || ! empty( $this->args['fields'] ) ) {
 			return $this->items;
 		}
 
@@ -850,6 +850,11 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		if ( isset( $this->args['date_refundable_query'] ) ) {
 			$arguments['date_refundable_query'] = $this->args['date_refundable_query'];
+		}
+
+		// Make sure `fields` is honored if set (eg. 'ids').
+		if ( ! empty( $this->args['fields'] ) ) {
+			$arguments['fields'] = $this->args['fields'];
 		}
 
 		$this->args = $arguments;
