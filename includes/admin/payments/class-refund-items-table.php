@@ -11,6 +11,8 @@
 namespace EDD\Admin;
 
 // Exit if accessed directly
+use EDD\Orders\Order;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -71,12 +73,9 @@ class Refund_Items_Table extends List_Table {
 		$columns = array(
 			'name'     => __( 'Product', 'easy-digital-downloads' ),
 			'amount'   => __( 'Unit Price', 'easy-digital-downloads' ),
+			'quantity' => __( 'Quantity', 'easy-digital-downloads' ),
+			'subtotal' => __( 'Subtotal', 'easy-digital-downloads' )
 		);
-
-		// Maybe add quantity column.
-		$columns['quantity'] = __( 'Quantity', 'easy-digital-downloads' );
-
-		$columns['subtotal'] = __( 'Subtotal', 'easy-digital-downloads' );
 
 		// Maybe add tax column.
 		$order = $this->get_order();
@@ -86,18 +85,6 @@ class Refund_Items_Table extends List_Table {
 
 		// Total at the end.
 		$columns['total'] = __( 'Total', 'easy-digital-downloads' );
-
-		// Remove checkbox & discount column if we're adding an order.
-		if ( edd_is_add_order_page() ) {
-			unset( $columns['cb'] );
-			unset( $columns['discount'] );
-
-			// Move pointer to the end of the array.
-			end( $columns );
-
-			// Add a `cb` column to display a remove icon when adding a new order.
-			$columns['cb'] = '';
-		}
 
 		// Return columns.
 		return $columns;
@@ -524,7 +511,7 @@ class Refund_Items_Table extends List_Table {
 	 * Gets the order object.
 	 *
 	 * @since 3.0
-	 * @return boolean|\EDD_Order
+	 * @return Order|false
 	 */
 	private function get_order() {
 		$order_id = ! empty( $_POST['order_id'] )
