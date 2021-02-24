@@ -573,7 +573,9 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		// Meta key and value
-		if ( isset( $this->initial_args['meta_key'] ) ) {
+		if ( isset( $this->initial_args['meta_query'] ) ) {
+			$arguments['meta_query'] = $this->initial_args['meta_query'];
+		} elseif ( isset( $this->initial_args['meta_key'] ) ) {
 			$meta_query = array(
 				'key' => $this->initial_args['meta_key']
 			);
