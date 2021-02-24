@@ -32,8 +32,8 @@ class Refund_Items_Table extends List_Table {
 	 */
 	public function __construct() {
 		parent::__construct( array(
-			'singular' => __( 'Refund Item',  'easy-digital-downloads' ),
-			'plural'   => __( 'Refund Items', 'easy-digital-downloads' ),
+			'singular' => 'refund item',
+			'plural'   => 'refund items',
 			'ajax'     => false,
 		) );
 
