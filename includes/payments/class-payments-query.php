@@ -199,7 +199,7 @@ class EDD_Payments_Query extends EDD_Stats {
 			return intval( $this->items );
 		}
 
-		if ( $should_output_order_objects ) {
+		if ( $should_output_order_objects || ! empty( $this->args['fields'] ) ) {
 			return $this->items;
 		}
 
@@ -221,10 +221,6 @@ class EDD_Payments_Query extends EDD_Stats {
 			}
 
 			return $posts;
-		}
-
-		if ( $should_output_order_objects || ! empty( $this->args['fields'] ) ) {
-			return $this->items;
 		}
 
 		foreach ( $this->items as $order ) {
