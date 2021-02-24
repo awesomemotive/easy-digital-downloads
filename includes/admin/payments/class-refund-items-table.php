@@ -31,8 +31,6 @@ class Refund_Items_Table extends List_Table {
 	 * @see   WP_List_Table::__construct()
 	 */
 	public function __construct() {
-		global $hook_suffix;
-
 		parent::__construct( array(
 			'singular' => __( 'Refund Item',  'easy-digital-downloads' ),
 			'plural'   => __( 'Refund Items', 'easy-digital-downloads' ),
@@ -108,7 +106,7 @@ class Refund_Items_Table extends List_Table {
 	 * @return string Name of the primary column.
 	 */
 	protected function get_primary_column_name() {
-		return '';
+		return 'name';
 	}
 
 	/**
@@ -130,12 +128,15 @@ class Refund_Items_Table extends List_Table {
 				return $this->format_currency( $order_item, $column_name, 0 );
 
 			case 'quantity' :
+				$refundable_amounts = $order_item->get_refundable_amounts();
+				$total_remaining    = array_key_exists( 'total', $refundable_amounts ) ? floatval( $refundable_amounts['total'] ) : 0.00;
+
 				ob_start();
 				?>
 				<label for="edd-order-item-quantity-<?php echo esc_attr( $order_item->id ); ?>" class="screen-reader-text">
 					<?php esc_html_e( 'Quantity to refund', 'easy-digital-downloads' ); ?>
 				</label>
-				<input type="number" id="edd-order-item-quantity-<?php echo esc_attr( $order_item->id ); ?>" class="edd-order-item-refund-quantity edd-order-item-refund-input" name="refund_order_item[<?php echo esc_attr( $order_item->id ); ?>][quantity]" value="" placeholder="0" min="0" max="<?php echo esc_attr( $order_item->quantity ); ?>" step="1"<?php echo 'refunded' === $order_item->status ? ' disabled' : ''; ?> />
+				<input type="number" id="edd-order-item-quantity-<?php echo esc_attr( $order_item->id ); ?>" class="edd-order-item-refund-quantity edd-order-item-refund-input" name="refund_order_item[<?php echo esc_attr( $order_item->id ); ?>][quantity]" value="" placeholder="0" min="0" max="<?php echo esc_attr( $order_item->quantity ); ?>" step="1"<?php echo 'refunded' === $order_item->status || $total_remaining <= 0 ? ' disabled' : ''; ?> />
 				<?php
 				return ob_get_clean();
 
@@ -235,6 +236,7 @@ class Refund_Items_Table extends List_Table {
 	 *
 	 * @param int $order_id
 	 *
+	 * @since 3.0
 	 * @return string|null
 	 */
 	private function get_currency_symbol( $order_id ) {
@@ -262,7 +264,7 @@ class Refund_Items_Table extends List_Table {
 	 */
 	public function column_name( $order_item ) {
 		// Wrap order_item title in strong anchor
-		return '<strong>' . $order_item->get_order_item_name() . '</strong>';
+		return '<span class="row-title">' . $order_item->get_order_item_name() . '</span>';
 	}
 
 	/**
@@ -431,17 +433,19 @@ class Refund_Items_Table extends List_Table {
 
 	public function display_rows() {
 		static $currency_symbol = null;
+		$order_id          = false;
+		$currency_position = edd_get_option( 'currency_position', 'before' );
 
 		foreach ( $this->items as $item ) {
 
-			if ( is_null( $currency_symbol ) ) {
-				$currency          = edd_get_order( $item->order_id )->currency;
-				$currency_symbol   = edd_currency_symbol( $currency );
-				$currency_position = edd_get_option( 'currency_position', 'before' );
+			if ( empty( $order_id ) ) {
+				$order_id = $item->order_id;
 			}
 
 			$this->single_row( $item );
 		}
+
+		$currency_symbol = $this->get_currency_symbol( $order_id );
 
 		// Now we need to add the columns for the totals.
 		?>
