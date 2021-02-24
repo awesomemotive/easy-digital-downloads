@@ -59,6 +59,33 @@ $( document.body ).on( 'click', '.ui-widget-overlay', function ( e ) {
 	$( '#edd-refund-order-dialog' ).dialog( 'close' );
 } );
 
+// Listen for the bulk action scheckbox, since WP doesn't trigger a change on sub-items.
+$( document.body ).on( 'change', '#edd-refund-order-dialog #cb-select-all-1', function () {
+	const itemCheckboxes = $( '.edd-order-item-refund-checkbox' );
+	const isChecked = $( this ).prop( 'checked' );
+
+	itemCheckboxes.each( function() {
+		$( this ).prop( 'checked', isChecked ).trigger( 'change' );
+	} );
+} );
+
+// Listen for individual checkbox changes.
+$( document.body ).on( 'change', '.edd-order-item-refund-checkbox', function () {
+	const parent = $( this ).parent().parent();
+	const quantityField = parent.find( '.edd-order-item-refund-quantity' );
+
+	if ( quantityField.length ) {
+		if ( $( this ).prop( 'checked' ) ) {
+			// Triggering a change on the quantity field handles enabling the inputs.
+			quantityField.trigger( 'change' );
+		} else {
+			// Disable inputs and recalculate total.
+			parent.find( '.edd-order-item-refund-input' ).prop( 'disabled', true );
+			recalculateRefundTotal();
+		}
+	}
+} );
+
 // Handles quantity changes, which includes items in the refund.
 $( document.body ).on( 'change', '#edd-refund-order-dialog .edd-order-item-refund-input', function () {
 	let parent = $( this ).parent().parent(),
@@ -75,6 +102,9 @@ $( document.body ).on( 'change', '#edd-refund-order-dialog .edd-order-item-refun
 	if ( $( this ).hasClass( 'edd-order-item-refund-quantity' ) ) {
 		// Enable/disable amount fields.
 		parent.find( '.edd-order-item-refund-input:not(.edd-order-item-refund-quantity)' ).prop( 'disabled', quantity === 0 );
+		if ( quantity > 0 ) {
+			quantityField.prop( 'disabled', false );
+		}
 
 		let subtotalField = parent.find( '.edd-order-item-refund-subtotal' ),
 			taxField = parent.find( '.edd-order-item-refund-tax' ),
@@ -118,28 +148,31 @@ function recalculateRefundTotal() {
 
 	// Loop over all order items.
 	$( '#edd-refund-order-dialog .edd-order-item-refund-quantity' ).each( function() {
-		let thisItemQuantity = parseInt( $( this ).val() );
+		const thisItemQuantity = parseInt( $( this ).val() );
 
 		if ( ! thisItemQuantity ) {
 			return;
 		}
 
-		let thisItemParent = $( this ).parent().parent();
+		const thisItemParent = $( this ).parent().parent();
+		const thisItemSelected = thisItemParent.find( '.edd-order-item-refund-checkbox' ).prop( 'checked' );
+
+		if ( ! thisItemSelected ) {
+			return;
+		}
 
 		// Values for this item.
 		let thisItemSubtotal = 0.00,
 			thisItemTax      = 0.00,
 			thisItemTotal    = 0.00;
 
-		if ( thisItemQuantity ) {
-			thisItemSubtotal = parseFloat( thisItemParent.find( '.edd-order-item-refund-subtotal' ).val() );
+		thisItemSubtotal = parseFloat( thisItemParent.find( '.edd-order-item-refund-subtotal' ).val() );
 
-			if ( thisItemParent.find( '.edd-order-item-refund-tax' ).length ) {
-				thisItemTax = parseFloat( thisItemParent.find( '.edd-order-item-refund-tax' ).val() );
-			}
-
-			thisItemTotal = parseFloat( thisItemSubtotal + thisItemTax );
+		if ( thisItemParent.find( '.edd-order-item-refund-tax' ).length ) {
+			thisItemTax = parseFloat( thisItemParent.find( '.edd-order-item-refund-tax' ).val() );
 		}
+
+		thisItemTotal = parseFloat( thisItemSubtotal + thisItemTax );
 
 		thisItemParent.find( '.column-total span' ).text( thisItemTotal.toFixed( edd_vars.currency_decimals ) );
 

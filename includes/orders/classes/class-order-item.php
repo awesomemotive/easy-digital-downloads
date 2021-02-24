@@ -286,9 +286,9 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 			}
 		}
 
-		$maximums['subtotal'] = round( $maximums['subtotal'], edd_currency_decimal_filter() );
-		$maximums['tax']      = round( $maximums['tax'], edd_currency_decimal_filter() );
-		$maximums['total']    = round( $maximums['total'], edd_currency_decimal_filter() );
+		$maximums['subtotal'] = number_format( $maximums['subtotal'], edd_currency_decimal_filter(), '.', '' );
+		$maximums['tax']      = number_format( $maximums['tax'], edd_currency_decimal_filter(), '.', '' );
+		$maximums['total']    = number_format( $maximums['total'], edd_currency_decimal_filter(), '.', '' );
 
 		return $maximums;
 	}
