@@ -854,9 +854,12 @@ class EDD_Payment {
 						break;
 
 					case 'user_id':
-						edd_update_order( $this->ID, array(
-							'$this->user_id' => $this->user_id,
-						) );
+						edd_update_order(
+							$this->ID,
+							array(
+								'user_id' => $this->user_id,
+							)
+						);
 
 						$this->user_info['id'] = $this->user_id;
 						break;
