@@ -1013,12 +1013,15 @@ function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files =
 					continue;
 
 				foreach ( $products as $product_id ) {
+
+                    $options = edd_has_variable_prices( $product_id ) ? ['price_id' =>  edd_get_default_variable_price( $product_id )] : [];
+
 					$cart_details[]   = array(
 						'id'          => $product_id,
 						'name'        => get_the_title( $product_id ),
 						'item_number' => array(
 							'id'      => $product_id,
-							'options' => array(),
+							'options' => $options,
 						),
 						'price'       => 0,
 						'subtotal'    => 0,
@@ -1602,7 +1605,7 @@ function edd_get_payment_note_html( $note, $payment_id = 0 ) {
 	} else {
 		$user = __( 'EDD Bot', 'easy-digital-downloads' );
 	}
-	
+
 	$user = apply_filters( 'edd_get_payment_note_user', $user );
 
 	$date_format = get_option( 'date_format' ) . ', ' . get_option( 'time_format' );
