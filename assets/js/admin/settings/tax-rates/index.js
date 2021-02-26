@@ -3,10 +3,9 @@
 /**
  * Internal dependencies.
  */
-import TaxRate from './models/tax-rate.js';
+import { jQueryReady } from '@easydigitaldownloads/utils';
 import TaxRates from './collections/tax-rates.js';
 import Manager from './views/manager.js';
-import { jQueryReady } from 'utils/jquery.js';
 
 /**
  * DOM ready.

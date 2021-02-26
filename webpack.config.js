@@ -37,13 +37,6 @@ const minifyJs = ( content ) => {
 // Webpack configuration.
 const config = {
 	...defaultConfig,
-	resolve: {
-		...defaultConfig.resolve,
-		modules: [
-			`${ __dirname }/assets/js`,
-			'node_modules',
-		],
-	},
 	entry: {
 		// Dynamic entry points for individual admin pages.
 		...adminPages.reduce( ( memo, path ) => {

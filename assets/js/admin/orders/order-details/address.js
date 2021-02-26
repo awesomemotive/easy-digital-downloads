@@ -3,9 +3,8 @@
 /**
  * Internal dependencies
  */
+import { jQueryReady, getChosenVars } from '@easydigitaldownloads/utils';
 import OrderOverview from './../order-overview';
-import { getChosenVars } from 'utils/chosen.js';
-import { jQueryReady } from 'utils/jquery.js';
 
 // Store customer search results to help prefill address data.
 let CUSTOMER_SEARCH_RESULTS = {

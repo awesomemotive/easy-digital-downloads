@@ -3,9 +3,9 @@
 /**
  * Internal dependencies.
  */
+import { getChosenVars } from '@easydigitaldownloads/utils';
 import TaxRate from './../models/tax-rate.js';
 import RegionField from './../views/region-field.js';
-import { getChosenVars } from 'utils/chosen.js';
 
 /**
  * Add a new rate "form".

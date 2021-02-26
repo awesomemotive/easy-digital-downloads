@@ -3,7 +3,7 @@
 /**
  * Internal dependencies.
  */
-import { getChosenVars } from 'utils/chosen.js';
+import { getChosenVars } from '@easydigitaldownloads/utils';
 
 jQuery( document ).ready( function( $ ) {
 

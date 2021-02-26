@@ -8,7 +8,7 @@ import { focus } from '@wordpress/dom';
 /**
  * Internal dependencies
  */
-import { getChosenVars } from 'utils/chosen.js';
+import { getChosenVars } from '@easydigitaldownloads/utils';
 
 // Set noconflict when using Lodash (@wordpress packages) and Underscores.
 // @todo Find a better place to set this up. Webpack?

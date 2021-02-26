@@ -3,7 +3,7 @@
 /**
  * Internal dependencies
  */
-import { jQueryReady } from 'utils/jquery.js';
+import { jQueryReady } from '@easydigitaldownloads/utils';
 
 jQueryReady( () => {
 	const emails_wrap = $( '.edd-order-resend-receipt-addresses' );

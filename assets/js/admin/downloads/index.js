@@ -1,8 +1,8 @@
 /**
  * Internal dependencies.
  */
-import { getChosenVars } from 'utils/chosen.js';
-import { edd_attach_tooltips } from 'admin/components/tooltips';
+import { getChosenVars } from '@easydigitaldownloads/utils';
+import { edd_attach_tooltips } from './../components/tooltips';
 import './bulk-edit.js';
 
 /**

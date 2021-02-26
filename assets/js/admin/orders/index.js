@@ -1,9 +1,9 @@
 /**
  * Internal dependencies
  */
+import { jQueryReady } from '@easydigitaldownloads/utils';
 import OrderOverview from './order-overview';
 import './order-details';
-import { jQueryReady } from 'utils/jquery.js';
 
 jQueryReady( () => {
 	// Order Overview.

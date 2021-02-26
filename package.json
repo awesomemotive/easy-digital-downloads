@@ -25,6 +25,7 @@
 	"dependencies": {
 		"@easydigitaldownloads/currency": "file:assets/js/packages/currency",
 		"@easydigitaldownloads/edd-backbone": "file:assets/js/packages/edd-backbone",
+		"@easydigitaldownloads/utils": "file:assets/js/packages/utils",
 		"chart.js": "2.7.2",
 		"flot": "0.8.0-alpha",
 		"jquery-creditcardvalidator": "1.0.0",

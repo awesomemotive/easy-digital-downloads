@@ -1,7 +1,7 @@
 /**
  * Internal dependencies
  */
-import { edd_attach_tooltips as setupTooltips } from 'admin/components/tooltips';
+import { edd_attach_tooltips as setupTooltips } from './../../../components/tooltips';
 import { FormAddOrderItem } from './form-add-order-item.js';
 import { FormAddOrderDiscount } from './form-add-order-discount.js';
 import { FormAddOrderAdjustment } from './form-add-order-adjustment.js';

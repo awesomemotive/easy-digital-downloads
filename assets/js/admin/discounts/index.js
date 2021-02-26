@@ -1,7 +1,7 @@
 /**
  * Internal dependencies.
  */
-import { jQueryReady } from 'utils/jquery.js';
+import { jQueryReady } from '@easydigitaldownloads/utils';
 
 /**
  * DOM ready.
