@@ -1,7 +1,7 @@
 /**
  * Internal dependencies
  */
-import { Currency, NumberFormat } from './../src';
+import { Currency, NumberFormat } from './../';
 
 global.edd_vars = {
 	currency: 'EUR',

@@ -43,12 +43,6 @@ const config = {
 			`${ __dirname }/assets/js`,
 			'node_modules',
 		],
-
-		// Alias faked packages. One day these may be published...
-		alias: {
-			...defaultConfig.resolve.alias,
-			'@easy-digital-downloads/currency': path.resolve( __dirname, 'assets/js/packages/currency/src/index.js' ),
-		},
 	},
 	entry: {
 		// Dynamic entry points for individual admin pages.
