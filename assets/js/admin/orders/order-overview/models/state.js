@@ -3,7 +3,7 @@
 /**
  * Internal dependencies
  */
-import { Currency, NumberFormat } from '@easy-digital-downloads/currency';
+import { Currency, NumberFormat } from '@easydigitaldownloads/currency';
 
 /**
  * State

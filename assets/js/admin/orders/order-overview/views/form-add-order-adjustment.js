@@ -9,7 +9,7 @@ import uuid from 'uuid-random';
 import { Base } from './base.js';
 import { Dialog } from './dialog.js';
 import { OrderAdjustment } from './../models/order-adjustment.js';
-import { NumberFormat } from '@easy-digital-downloads/currency';
+import { NumberFormat } from '@easydigitaldownloads/currency';
 
 const number = new NumberFormat();
 

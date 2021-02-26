@@ -11,7 +11,7 @@ import uuid from 'uuid-random';
 import { OrderAdjustments } from './../collections/order-adjustments.js';
 import { OrderAdjustmentDiscount } from './../models/order-adjustment-discount.js';
 import { OrderItem } from './../models/order-item.js';
-import { NumberFormat } from '@easy-digital-downloads/currency';
+import { NumberFormat } from '@easydigitaldownloads/currency';
 
 const number = new NumberFormat();
 

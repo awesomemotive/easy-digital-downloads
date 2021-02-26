@@ -1,7 +1,7 @@
 /**
  * Internal dependencies
  */
-import { Currency } from '@easy-digital-downloads/currency';
+import { Currency } from '@easydigitaldownloads/currency';
 
 /**
  * Determine if a pie graph.

@@ -1,7 +1,7 @@
 /**
  * Internal dependencies
  */
-import { Currency, NumberFormat } from '@easy-digital-downloads/currency';
+import { Currency, NumberFormat } from '@easydigitaldownloads/currency';
 import { Overview } from './views/overview.js';
 import { OrderItems } from './collections/order-items.js';
 import { OrderItem } from './models/order-item.js';
