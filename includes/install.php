@@ -299,9 +299,6 @@ function edd_install_pages() {
 	// We'll only update settings on change
 	$changed  = false;
 
-	// Check if the block editor exists as that changes the content to add.
-	$block_editor = function_exists( 'register_block_type' );
-
 	// Loop through all pages, fix or create any missing ones
 	foreach ( array_flip( $pages ) as $page ) {
 
@@ -330,13 +327,9 @@ function edd_install_pages() {
 
 			// Checkout
 			case 'purchase_page':
-				$content = '[download_checkout]';
-				if ( $block_editor ) {
-					$content = "<!-- wp:shortcode -->\n{$content}\n<!-- /wp:shortcode -->";
-				}
 				$page_attributes = array(
 					'post_title'     => __( 'Checkout', 'easy-digital-downloads' ),
-					'post_content'   => $content,
+					'post_content'   => "<!-- wp:shortcode -->\n[download_checkout]\n<!-- /wp:shortcode -->",
 					'post_status'    => 'publish',
 					'post_author'    => 1,
 					'post_parent'    => 0,
@@ -347,14 +340,10 @@ function edd_install_pages() {
 
 			// Success
 			case 'success_page':
-				$text    = __( 'Thank you for your purchase!', 'easy-digital-downloads' );
-				$content = $text . '[edd_receipt]';
-				if ( $block_editor ) {
-					$content = "<!-- wp:paragraph -->\n<p>{$text}</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:shortcode -->\n[edd_receipt]\n<!-- /wp:shortcode -->";
-				}
+				$text            = __( 'Thank you for your purchase!', 'easy-digital-downloads' );
 				$page_attributes = array(
 					'post_title'     => __( 'Purchase Confirmation', 'easy-digital-downloads' ),
-					'post_content'   => $content,
+					'post_content'   => "<!-- wp:paragraph -->\n<p>{$text}</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:shortcode -->\n[edd_receipt]\n<!-- /wp:shortcode -->",
 					'post_status'    => 'publish',
 					'post_author'    => 1,
 					'post_parent'    => $checkout,
@@ -365,13 +354,10 @@ function edd_install_pages() {
 
 			// Failure
 			case 'failure_page':
-				$content = __( 'Your transaction failed, please try again or contact site support.', 'easy-digital-downloads' );
-				if ( $block_editor ) {
-					$content = "<!-- wp:paragraph -->\n<p>{$content}</p>\n<!-- /wp:paragraph -->";
-				}
+				$text            = __( 'Your transaction failed, please try again or contact site support.', 'easy-digital-downloads' );
 				$page_attributes = array(
 					'post_title'     => __( 'Transaction Failed', 'easy-digital-downloads' ),
-					'post_content'   => $content,
+					'post_content'   => "<!-- wp:paragraph -->\n<p>{$text}</p>\n<!-- /wp:paragraph -->",
 					'post_status'    => 'publish',
 					'post_author'    => 1,
 					'post_type'      => 'page',
@@ -382,13 +368,9 @@ function edd_install_pages() {
 
 			// Purchase History
 			case 'purchase_history_page':
-				$content = '[purchase_history]';
-				if ( $block_editor ) {
-					$content = "<!-- wp:shortcode -->\n{$content}\n<!-- /wp:shortcode -->";
-				}
 				$page_attributes = array(
 					'post_title'     => __( 'Purchase History', 'easy-digital-downloads' ),
-					'post_content'   => $content,
+					'post_content'   => "<!-- wp:shortcode -->\n[purchase_history]\n<!-- /wp:shortcode -->",
 					'post_status'    => 'publish',
 					'post_author'    => 1,
 					'post_type'      => 'page',
