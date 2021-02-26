@@ -1,8 +1,7 @@
 /**
  * Internal dependencies
  */
-import { Base } from './base.js';
-import { Dialog } from './dialog.js';
+import { Base, Dialog } from '@easydigitaldownloads/edd-backbone';
 
 /**
  * "Copy Download Link" view

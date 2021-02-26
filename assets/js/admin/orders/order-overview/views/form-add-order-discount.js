@@ -8,8 +8,7 @@ import uuid from 'uuid-random';
 /**
  * Internal dependencies
  */
-import { Dialog } from './dialog.js';
-import { Base } from './base.js';
+import { Base, Dialog } from '@easydigitaldownloads/edd-backbone';
 import { OrderAdjustmentDiscount } from './../models/order-adjustment-discount.js';
 
 /**

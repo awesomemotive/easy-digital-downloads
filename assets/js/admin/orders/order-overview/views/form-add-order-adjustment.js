@@ -6,10 +6,9 @@ import uuid from 'uuid-random';
 /**
  * Internal dependencies
  */
-import { Base } from './base.js';
-import { Dialog } from './dialog.js';
-import { OrderAdjustment } from './../models/order-adjustment.js';
 import { NumberFormat } from '@easydigitaldownloads/currency';
+import { Base, Dialog } from '@easydigitaldownloads/edd-backbone';
+import { OrderAdjustment } from './../models/order-adjustment.js';
 
 const number = new NumberFormat();
 

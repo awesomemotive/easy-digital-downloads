@@ -1,7 +1,7 @@
 /**
  * Internal dependencies
  */
-import { Base } from './base.js';
+import { Base } from '@easydigitaldownloads/edd-backbone';
 
 /**
  * NoOrderItems

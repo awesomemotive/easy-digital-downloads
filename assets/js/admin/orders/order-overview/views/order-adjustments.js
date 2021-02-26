@@ -3,7 +3,6 @@
 /**
  * Internal dependencies
  */
-import { Base } from './base.js';
 import { OrderAdjustment } from './order-adjustment.js';
 
 /**

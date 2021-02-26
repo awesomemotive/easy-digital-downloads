@@ -28,7 +28,7 @@ window.lodash = _.noConflict();
  * @class Base
  * @augments wp.Backbone.View
  */
-export const Base = wp.Backbone.View.extend( {
+const Base = wp.Backbone.View.extend( {
 	/**
 	 * Defines base events to help maintain focus and caret position.
 	 *
@@ -256,3 +256,5 @@ export const Base = wp.Backbone.View.extend( {
 		} catch ( error ) {}
 	},
 } );
+
+export default Base;

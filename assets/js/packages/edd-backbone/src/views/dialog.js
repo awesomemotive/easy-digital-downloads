@@ -3,7 +3,7 @@
 /**
  * Internal dependencies
  */
-import { Base } from './base.js';
+import Base from './base.js';
 
 /**
  * "Dialog" view
@@ -13,7 +13,7 @@ import { Base } from './base.js';
  * @class Dialog
  * @augments Base
  */
-export const Dialog = Base.extend( {
+const Dialog = Base.extend( {
 	/**
 	 * "Dialog" view.
 	 *
@@ -77,3 +77,5 @@ export const Dialog = Base.extend( {
 		return this;
 	},
 } );
+
+export default Dialog;
