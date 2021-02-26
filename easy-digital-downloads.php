@@ -288,6 +288,13 @@ final class Easy_Digital_Downloads {
 		}
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal-standard.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/manual.php';
+
+		$stripe = EDD_PLUGIN_DIR . 'includes/gateways/stripe/edd-stripe.php';
+
+		if ( file_exists( $stripe ) ) {
+			require_once( $stripe );
+		}
+
 		require_once EDD_PLUGIN_DIR . 'includes/discount-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/payments/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/payments/actions.php';
