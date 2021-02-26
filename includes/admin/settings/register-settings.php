@@ -808,7 +808,6 @@ function edd_get_registered_settings() {
 					'tax_rates' => array(
 						'id'   => 'tax_rates',
 						'name' => '<strong>' . __( 'Regional Rates', 'easy-digital-downloads' ) . '</strong>',
-						'desc' => __( 'Configure rates for each region you wish to collect sales tax in.', 'easy-digital-downloads' ),
 						'type' => 'tax_rates',
 					),
 				)

@@ -1,12 +1,17 @@
 
 #edd-admin-tax-rates {
-	margin: 1em 0 0;
+
+	.tax-rates {
+		margin-top: 8px;
+	}
 
 	table {
 		border-collapse: collapse;
 	}
 
 	.tablenav.top {
+		margin-top: 0;
+		padding-top: 0;
 		display: flex;
 		justify-content: space-between;
 	}
@@ -16,7 +21,7 @@
 	}
 
 	th:not(.check-column) {
-		padding: 15px 10px;
+		padding: 8px 10px;
 		width: unset;
 	}
 
@@ -26,11 +31,6 @@
 
 	tbody tr:not(:last-of-type) {
 		border-bottom: 1px solid $gray-200;
-	}
-
-	tfoot.add-new th {
-		font-weight: normal;
-		padding: 12px 8px 10px 8px;
 	}
 
 	/**
@@ -54,10 +54,6 @@
 
 	.edd-tax-rate-row--inactive td {
 		color: $wp-inactive;
-		background-color: $wp-alternate;
-	}
-
-	.edd-tax-rate-table-add {
 		background-color: $wp-alternate;
 	}
 

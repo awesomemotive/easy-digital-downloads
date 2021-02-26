@@ -13,14 +13,16 @@
 
 <div class="tablenav top">
 
-	<div class="edd-admin-tax-rates__tablenav--left">
+	<div class="edd-admin-tax-rates__tablenav--left actions">
 		<select id="edd-admin-tax-rates-table-bulk-actions">
 			<option><?php esc_html_e( 'Bulk Actions', 'easy-digital-downloads' ); ?></option>
 			<option value="active"><?php esc_html_e( 'Activate', 'easy-digital-downloads' ); ?></option>
 			<option value="inactive"><?php esc_html_e( 'Deactivate', 'easy-digital-downloads' ); ?></option>
 		</select>
 
-		<button class="button edd-admin-tax-rates-table-filter"><?php esc_html_e( 'Apply', 'easy-digital-downloads' ); ?></button>
+		<button class="button edd-admin-tax-rates-table-filter">
+			<?php esc_html_e( 'Apply', 'easy-digital-downloads' ); ?>
+		</button>
 	</div>
 
 	<div class="edd-admin-tax-rates__tablenav--right">
