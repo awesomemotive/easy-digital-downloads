@@ -329,7 +329,7 @@ function edd_install_pages() {
 			case 'purchase_page':
 				$page_attributes = array(
 					'post_title'     => __( 'Checkout', 'easy-digital-downloads' ),
-					'post_content'   => "<!-- wp:shortcode -->\n[download_checkout]\n<!-- /wp:shortcode -->",
+					'post_content'   => "<!-- wp:shortcode -->[download_checkout]<!-- /wp:shortcode -->",
 					'post_status'    => 'publish',
 					'post_author'    => 1,
 					'post_parent'    => 0,
@@ -343,7 +343,7 @@ function edd_install_pages() {
 				$text            = __( 'Thank you for your purchase!', 'easy-digital-downloads' );
 				$page_attributes = array(
 					'post_title'     => __( 'Purchase Confirmation', 'easy-digital-downloads' ),
-					'post_content'   => "<!-- wp:paragraph -->\n<p>{$text}</p>\n<!-- /wp:paragraph -->\n\n<!-- wp:shortcode -->\n[edd_receipt]\n<!-- /wp:shortcode -->",
+					'post_content'   => "<!-- wp:paragraph --><p>{$text}</p><!-- /wp:paragraph --><!-- wp:shortcode -->[edd_receipt]<!-- /wp:shortcode -->",
 					'post_status'    => 'publish',
 					'post_author'    => 1,
 					'post_parent'    => $checkout,
@@ -357,7 +357,7 @@ function edd_install_pages() {
 				$text            = __( 'Your transaction failed, please try again or contact site support.', 'easy-digital-downloads' );
 				$page_attributes = array(
 					'post_title'     => __( 'Transaction Failed', 'easy-digital-downloads' ),
-					'post_content'   => "<!-- wp:paragraph -->\n<p>{$text}</p>\n<!-- /wp:paragraph -->",
+					'post_content'   => "<!-- wp:paragraph --><p>{$text}</p><!-- /wp:paragraph -->",
 					'post_status'    => 'publish',
 					'post_author'    => 1,
 					'post_type'      => 'page',
@@ -370,7 +370,7 @@ function edd_install_pages() {
 			case 'purchase_history_page':
 				$page_attributes = array(
 					'post_title'     => __( 'Purchase History', 'easy-digital-downloads' ),
-					'post_content'   => "<!-- wp:shortcode -->\n[purchase_history]\n<!-- /wp:shortcode -->",
+					'post_content'   => "<!-- wp:shortcode -->[purchase_history]<!-- /wp:shortcode -->",
 					'post_status'    => 'publish',
 					'post_author'    => 1,
 					'post_type'      => 'page',
