@@ -2881,7 +2881,7 @@ function display_export_report() {
 				</div>
 
 				<div class="postbox edd-export-downloads">
-					<h2 class="hndle"><span><?php esc_html_e( sprintf( __( 'Export %s', 'easy-digital-downloads' ), edd_get_label_plural() ) ); ?></span></h2>
+					<h2 class="hndle"><span><?php esc_html_e( sprintf( __( 'Export %s Products', 'easy-digital-downloads' ), edd_get_label_singular() ) ); ?></span></h2>
 					<div class="inside">
 						<p><?php esc_html_e( sprintf( __( 'Download a CSV of %1$s.', 'easy-digital-downloads' ), edd_get_label_plural( true ) ) ); ?></p>
 						<form id="edd-export-downloads" class="edd-export-form edd-import-export-form" method="post">
