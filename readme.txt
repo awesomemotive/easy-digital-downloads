@@ -5,7 +5,7 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: ecommerce, sell, checkout, payments, stripe
 Requires at least: 4.4
-Tested up to: 5.5.1
+Tested up to: 5.7
 Requires PHP: 5.3
 Stable Tag: 2.9.26
 License: GNU Version 2 or Any Later Version
