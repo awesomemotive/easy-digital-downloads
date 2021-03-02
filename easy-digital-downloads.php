@@ -74,7 +74,7 @@ final class EDD_Requirements_Check {
 
 		// WordPress
 		'wp' => array(
-			'minimum' => '4.7.0',
+			'minimum' => '4.9.0',
 			'name'    => 'WordPress',
 			'exists'  => true,
 			'current' => false,
