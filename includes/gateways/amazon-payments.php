@@ -41,6 +41,11 @@ final class EDD_Amazon_Payments {
 
 		// Run this separate so we can ditch as early as possible
 		$this->register();
+
+		if ( ! edd_is_gateway_active( $this->gateway_id ) ) {
+			return;
+		}
+
 		$this->config();
 		$this->includes();
 		$this->setup_client();
