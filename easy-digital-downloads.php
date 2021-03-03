@@ -470,19 +470,15 @@ final class EDD_Requirements_Check {
 		// Set filter for plugin's languages directory.
 		$edd_lang_dir = dirname( $this->base ) . '/languages/';
 		$edd_lang_dir = apply_filters( 'edd_languages_directory', $edd_lang_dir );
-		$get_locale   = function_exists( 'get_user_locale' )
-			? get_user_locale()
-			: get_locale();
 
 		unload_textdomain( 'easy-digital-downloads' );
 
 		/**
 		 * Defines the plugin language locale used in Easy Digital Downloads.
 		 *
-		 * @var $get_locale The locale to use. Uses get_user_locale()` in WordPress 4.7 or greater,
-		 *                  otherwise uses `get_locale()`.
+		 * @var $get_locale The locale to use.
 		 */
-		$locale = apply_filters( 'plugin_locale', $get_locale, 'easy-digital-downloads' );
+		$locale = apply_filters( 'plugin_locale', 'get_user_locale', 'easy-digital-downloads' );
 		$mofile = sprintf( '%1$s-%2$s.mo', 'easy-digital-downloads', $locale );
 
 		// Look for wp-content/languages/edd/easy-digital-downloads-{lang}_{country}.mo
