@@ -1285,12 +1285,8 @@ function edd_doing_ajax() {
  */
 function edd_doing_autosave() {
 
-	// Bail if not doing WordPress autosave
-	if ( function_exists( 'wp_doing_autosave' ) && wp_doing_autosave() ) {
-		return true;
-
-	// Bail if not doing WordPress autosave
-	} elseif ( defined( 'DOING_AUTOSAVE' ) && ( true === DOING_AUTOSAVE ) ) {
+	// Bail if doing WordPress autosave.
+	if ( defined( 'DOING_AUTOSAVE' ) && ( true === DOING_AUTOSAVE ) ) {
 		return true;
 	}
 
