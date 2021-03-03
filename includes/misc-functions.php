@@ -1264,12 +1264,8 @@ function edd_doing_cron() {
  */
 function edd_doing_ajax() {
 
-	// Bail if not doing WordPress AJAX (>4.8.0)
-	if ( function_exists( 'wp_doing_ajax' ) && wp_doing_ajax() ) {
-		return true;
-
-	// Bail if not doing WordPress AJAX (<4.8.0)
-	} elseif ( defined( 'DOING_AJAX' ) && ( true === DOING_AJAX ) ) {
+	// Bail if doing WordPress AJAX.
+	if ( wp_doing_ajax() ) {
 		return true;
 	}
 
