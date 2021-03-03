@@ -5,7 +5,7 @@
  */
 import TableMeta from './table-meta.js';
 import TableRows from './table-rows.js';
-import TableAdd from './table-add.js';
+import TableFooter from './table-footer.js';
 
 /**
  * Manage the tax rate rows in a table.
@@ -33,7 +33,7 @@ const Table = wp.Backbone.View.extend( {
 			collection: this.collection,
 		} ) );
 
-		this.views.add( new TableAdd( {
+		this.views.add( new TableFooter( {
 			collection: this.collection,
 		} ) );
 

@@ -9,6 +9,10 @@
 		border-collapse: collapse;
 	}
 
+	tfoot button {
+		font-weight: normal;
+	}
+
 	.tablenav.top {
 		margin-top: 0;
 		padding-top: 0;
@@ -23,6 +27,14 @@
 	th:not(.check-column) {
 		padding: 8px 10px;
 		width: unset;
+	}
+
+	td:not(.check-column) {
+		padding: 10px;
+	}
+
+	.edd-tax-rates-table-actions {
+		text-align: right;
 	}
 
 	.chosen-container {

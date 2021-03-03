@@ -2764,7 +2764,7 @@ function edd_tax_rates_callback( $args ) {
 		'meta',
 		'row',
 		'row-empty',
-		'add',
+		'footer',
 		'bulk-actions'
 	);
 
