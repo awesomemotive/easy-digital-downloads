@@ -478,7 +478,7 @@ final class EDD_Requirements_Check {
 		 *
 		 * @var $get_locale The locale to use.
 		 */
-		$locale = apply_filters( 'plugin_locale', 'get_user_locale', 'easy-digital-downloads' );
+		$locale = apply_filters( 'plugin_locale', get_user_locale(), 'easy-digital-downloads' );
 		$mofile = sprintf( '%1$s-%2$s.mo', 'easy-digital-downloads', $locale );
 
 		// Look for wp-content/languages/edd/easy-digital-downloads-{lang}_{country}.mo
