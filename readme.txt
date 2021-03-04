@@ -1,4 +1,4 @@
-=== Easy Digital Downloads - Simple Ecommerce for Selling Digital Files ===
+=== Easy Digital Downloads - Simple eCommerce for Selling Digital Files ===
 Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze, littlerchicken, lisacee
@@ -35,7 +35,8 @@ Do you prefer an eCommerce solution which is simple and intuitive or one which i
 Here are some of the features supported out-of-the-box:
 
 - **Frontend shopping cart** - Customers can browse your product catalogue, add items to their cart, and checkout when they are ready. Or they can bypass the cart using Buy Now buttons.
-- **Flexible and clean checkout form** - Buyers can complete their purchase with ease, directly on your site's checkout page.
+- **Flexible and clean checkout** - Buyers can complete their purchase with ease, directly on your site's checkout page.
+- **Highly customizable flexibility** - Accept credit card payments using Stripe(https://stripe.com/) as well as PayPal payments. Apple Pay and Google Pay are also included.
 - **Complete customer management** - View and manage detailed records of all customers and their purchase history.
 - **Detailed eCommerce reports** - Keep track of your earnings, refunds, sales, and more.
 - **Protect product files** - Prevent unauthorized visitors from accessing your product files without paying.
@@ -51,14 +52,15 @@ Easy Digital Downloads has been translated into more than two dozen languages an
 
 The internet has made it possible for anyone to sell their products to a world-wide audience. No matter where you live, Easy Digital Downloads can be your eCommerce solution. We offer integrations for the most common merchant processors and, through 3rd party extensions, support for many, many more as well.
 
-Payment gateways supported in the core, free plugin:
+Payment gateways supported in the free Easy Digital Downloads plugin:
 
+* Stripe **[new]**
 * PayPal Standard
 * Amazon Payments
 
 Payment gateways supported through free or premium extensions:
 
-* Stripe
+* Stripe Pro (reduced fees and preapproved payments functionality)
 * PayPal Pro
 * PayPal Express
 * PayPal Payments Advanced
@@ -70,7 +72,7 @@ Payment gateways supported through free or premium extensions:
 * BitPay
 * Coinbase
 
-> What can I say? Stripe is my go-to payment processor and without this add-on I don't know what I would do. Connect EDD to your Stripe account in seconds and you're done! Having a simple test mode toggle is also a valuable development tool. This is another one of my go-to EDD extensions.
+> What can I say? Stripe is my go-to payment processor and without this integration I don't know what I would do. Connect EDD to your Stripe account in seconds and you're done! Having a simple test mode toggle is also super valuable.
 
 > Matt Whiteley - Whiteley Designs
 
@@ -82,6 +84,7 @@ Easy Digital Downloads is a verified member of the [Stripe partner program](http
 
 With add-on plugins from our [extensions catalogue](https://easydigitaldownloads.com/downloads/?utm_source=extensions&utm_medium=description_tab&utm_content=extensions&utm_campaign=readme) you can super-charge your digital store. Some of our extension highlights include:
 
+* [Stripe Pro](https://easydigitaldownloads.com/downloads/stripe-gateway/?utm_source=extension&utm_medium=description_tab&utm_content=software-licensing&utm_campaign=readme) removes the additional 2% fee we charge as well as adds the ability to accept pre-approved payments (extension must be installed and activated to remove the additional 2% fee)
 * [Software Licensing](https://easydigitaldownloads.com/downloads/software-licensing/?utm_source=extension&utm_medium=description_tab&utm_content=software-licensing&utm_campaign=readme) provides a complete solution for selling software license keys and distributing software updates to customers
 * [Recurring Payments](https://easydigitaldownloads.com/downloads/recurring-payments/?utm_source=extension&utm_medium=description_tab&utm_content=recurring-payments&utm_campaign=readme) allows store owners to sell recurring subscriptions for digital products using payment gateways like Stripe and PayPal
 * [Frontend Submissions](https://easydigitaldownloads.com/downloads/frontend-submissions/?utm_source=extension&utm_medium=description_tab&utm_content=frontend-submissions&utm_campaign=readme) transforms your store into a full-featured multi-vendor marketplace
@@ -152,7 +155,6 @@ If Easy Digital Downloads doesn’t quite fit your needs, take a look at some of
 - [WP Simple Pay](https://wpsimplepay.com/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) – A lightweight Stripe payments plugin
 - [AffiliateWP](https://affiliatewp.com/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) – A full-featured affiliate marketing solution
 - [Sugar Calendar](https://sugarcalendar.com?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) – WordPress event management made simple
-- [Restrict Content Pro](https://restrictcontentpro.com/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) – A powerful membership plugin for WordPress
 
 == Installation ==
 
