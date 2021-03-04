@@ -52,7 +52,7 @@ class Customer extends Base {
 				return 'id';
 
 			case 'version' :
-				$table = edd_get_component_interface( 'customers', 'table' );
+				$table = edd_get_component_interface( 'customer', 'table' );
 
 				return $table instanceof Table ? $table->get_version() : false;
 			case 'meta_type' :
