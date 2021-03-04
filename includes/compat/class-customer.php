@@ -10,6 +10,8 @@
  */
 namespace EDD\Compat;
 
+use EDD\Database\Table;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -30,6 +32,41 @@ class Customer extends Base {
 	 * @var string
 	 */
 	protected $component = 'customer';
+
+	/**
+	 * Magic method to handle calls to properties that no longer exist.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $property Name of the property.
+	 *
+	 * @return mixed
+	 */
+	public function __get( $property ) {
+		switch( $property ) {
+			case 'table_name' :
+				global $wpdb;
+				return $wpdb->edd_customers;
+
+			case 'primary_key' :
+				return 'id';
+
+			case 'version' :
+				$table = edd_get_component_interface( 'customers', 'table' );
+
+				return $table instanceof Table ? $table->get_version() : false;
+			case 'meta_type' :
+				return 'customer';
+
+			case 'date_key' :
+				return 'date_created';
+
+			case 'cache_group' :
+				return 'customers';
+		}
+
+		return null;
+	}
 
 	/**
 	 * Magic method to handle calls to method that no longer exist.
