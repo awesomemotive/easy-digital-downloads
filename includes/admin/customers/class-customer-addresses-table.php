@@ -216,7 +216,7 @@ class EDD_Customer_Addresses_Table extends List_Table {
 	 */
 	public function column_cb( $item ) {
 		$customer = edd_get_customer_by( 'id', $item['customer_id'] );
-		$name     = isset( $customer->name ) ? $customer->name : 'Address ID:' . $item['id'];
+		$name     = isset( $customer->name ) ? $customer->name : 'Address ID: ' . $item['id'];
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" id="%1$s-%2$s" value="%2$s" /><label for="%1$s-%2$s" class="screen-reader-text">%3$s</label>',
 			/*$1%s*/ 'customer',
