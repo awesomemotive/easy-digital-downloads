@@ -216,15 +216,19 @@ class EDD_Customer_Addresses_Table extends List_Table {
 	 */
 	public function column_cb( $item ) {
 		$customer = edd_get_customer_by( 'id', $item['customer_id'] );
-		$name     = sprintf( __( 'Address ID: ' ) . $item['id'] );
+		$name     = sprintf(
+			/* translators: customer address id */
+			__( 'Address ID: %s', 'easy-digital-downloads' ),
+			$item['id']
+		);
 		if ( ! empty( $customer->name ) ) {
-			$name = $customer->name ? $customer->name : $customer->email;
+			$name = $customer->name;
 		}
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" id="%1$s-%2$s" value="%2$s" /><label for="%1$s-%2$s" class="screen-reader-text">%3$s</label>',
 			/*$1%s*/ 'customer',
 			/*$2%s*/ esc_attr( $item['id'] ),
-			/* translators: customer name, email or address id */
+			/* translators: customer name or address id */
 			esc_html( sprintf( __( 'Select %s', 'easy-digital-downloads' ), $name ) )
 		);
 	}
