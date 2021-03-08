@@ -36,7 +36,7 @@ Here are some of the features supported out-of-the-box:
 
 - **Frontend shopping cart** - Customers can browse your product catalogue, add items to their cart, and checkout when they are ready. Or they can bypass the cart using Buy Now buttons.
 - **Highly customizable and clean checkout** - Buyers can complete their purchase with ease, directly on your site's checkout page.
-- **Payment flexibility** - Accept credit card payments using Stripe(https://stripe.com/) as well as PayPal payments. Apple Pay and Google Pay are also included via Stripe's Payment Request Buttons.
+- **Payment flexibility** - Accept credit card payments using [Stripe](https://stripe.com/) as well as PayPal payments. Apple Pay and Google Pay are also included via Stripe's Payment Request Buttons.
 - **Complete customer management** - View and manage detailed records of all customers and their purchase history.
 - **Detailed eCommerce reports** - Keep track of your earnings, refunds, sales, and more.
 - **Protect product files** - Prevent unauthorized visitors from accessing your product files without paying.
