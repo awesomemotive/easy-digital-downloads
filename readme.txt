@@ -242,7 +242,9 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 6. Discount codes
 7. Earnings and sales reports
 8. Add to cart / purchase button
-9. Checkout screen
+9. Apple Pay purchase buttons
+10. Checkout screen
+11. Google Pay checkout
 
 == Changelog ==
 = 2.9.26, October 1, 2020 =
