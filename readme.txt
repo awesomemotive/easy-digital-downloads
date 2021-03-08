@@ -24,6 +24,8 @@ Whether it is [software](https://easydigitaldownloads.com/blog/selling-software/
 
 > Mark Hunter - Mark of Approval
 
+    No == Upgrade Notice == section was found
+
 = All the eCommerce features you need =
 
 Do you prefer an eCommerce solution which is simple and intuitive or one which is rich in features? Too often that tradeoff is one online sellers need to make. Fortunately, Easy Digital Downloads manages to be easy enough for eCommerce beginners to configure without sacrificing any important functionality.
@@ -36,7 +38,7 @@ Here are some of the features supported out-of-the-box:
 
 - **Frontend shopping cart** - Customers can browse your product catalogue, add items to their cart, and checkout when they are ready. Or they can bypass the cart using Buy Now buttons.
 - **Highly customizable and clean checkout** - Buyers can complete their purchase with ease, directly on your site's checkout page.
-- **Payment flexibility** - Accept credit card payments using Stripe(https://stripe.com/) as well as PayPal payments. Apple Pay and Google Pay are also included.
+- **Payment flexibility** - Accept credit card payments using Stripe(https://stripe.com/) as well as PayPal payments. Apple Pay and Google Pay are also included via Stripe's Payment Request Buttons.
 - **Complete customer management** - View and manage detailed records of all customers and their purchase history.
 - **Detailed eCommerce reports** - Keep track of your earnings, refunds, sales, and more.
 - **Protect product files** - Prevent unauthorized visitors from accessing your product files without paying.
@@ -72,7 +74,7 @@ Payment gateways supported through free or premium extensions:
 * BitPay
 * Coinbase
 
-> What can I say? Stripe is my go-to payment processor and without this integration I don't know what I would do. Connect EDD to your Stripe account in seconds and you're done! Having a simple test mode toggle is also super valuable.
+> What can I say? Stripe is my go-to payment processor and without this [integration] I don't know what I would do. Connect EDD to your Stripe account in seconds and you're done! Having a simple test mode toggle is also a valuable development tool.
 
 > Matt Whiteley - Whiteley Designs
 
