@@ -24,8 +24,6 @@ Whether it is [software](https://easydigitaldownloads.com/blog/selling-software/
 
 > Mark Hunter - Mark of Approval
 
-    No == Upgrade Notice == section was found
-
 = All the eCommerce features you need =
 
 Do you prefer an eCommerce solution which is simple and intuitive or one which is rich in features? Too often that tradeoff is one online sellers need to make. Fortunately, Easy Digital Downloads manages to be easy enough for eCommerce beginners to configure without sacrificing any important functionality.
