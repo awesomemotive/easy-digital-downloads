@@ -248,7 +248,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 
 == Changelog ==
 = 2.10.1, March 9, 2021 =
-* Fix: Removed incorrect inclusiong of license key field for the Stripe integration when the Stripe Pro Payment Gateway extension is not active.
+* Fix: Removed incorrect inclusion of license key field for the Stripe integration when the Stripe Pro Payment Gateway extension is not active.
 
 = 2.10, March 9, 2021 =
 * New: Accept credit cards, Apple Pay, Google Pay, and Microsoft Pay with the included Stripe Standard payment gateway. Read more about this feature here: https://easydigitaldownloads.com/edd-stripe-integration
