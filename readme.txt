@@ -7,7 +7,7 @@ Tags: ecommerce, sell, checkout, payments, stripe
 Requires at least: 4.4
 Tested up to: 5.7
 Requires PHP: 5.3
-Stable Tag: 2.9.26
+Stable Tag: 2.10
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products the simple way. Easily build an online store complete with a cart system, checkout forms, reports, coupons, and more!
@@ -242,9 +242,36 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 6. Discount codes
 7. Earnings and sales reports
 8. Add to cart / purchase button
-9. Checkout screen
+9. Apple Pay purchase buttons
+10. Checkout screen
+11. Google Pay checkout
 
 == Changelog ==
+= 2.10, March 9, 2021 =
+* New: Accept credit cards, Apple Pay, Google Pay, and Microsoft Pay with the included Stripe Standard payment gateway. Read more about this feature here: https://easydigitaldownloads.com/edd-stripe-integration
+* New: Updated bundled add-on updater class to the latest version.
+* New: Added a notice for users on older PHP versions about upcoming EOL for PHP 5.3, 5.4, and 5.5 support.
+* Fix: The select HTML helper improperly assumed the selected value was an array.
+* Fix: There was a memory leak when calling get_password_reset_key() caused by EDD's customers database class.
+* Fix: When adding items to the cart via AJAX, the presence of the download_id value was assumed, but not verified.
+* Fix: Imported CSV files were not being properly deleted after the import was completed.
+* Fix: The Colorbox JavaScript resources are no longer needed, but were still being enqueued.
+* Fix: Client-side validation of the discount field could cause unexpected issues with the checkout when applying a discount.
+* Fix: The discount amount was incorrect in the sales API endpoint when it was applied to a variably priced product.
+* Fix: When querying the customers API endpoint, it was possible for an undefined variable notice to be logged.
+* Fix: The password fields on the profile editor had incorrect attributes.
+* Fix: After a failed login, the reset password link always linked to the checkout page.
+* Fix: PayPal Standard: Negative fees were being applied twice.
+* Fix: Account for an undefined index of edd-cart-downloads.
+* Fix: The payment icons on checkout were missing alt tags.
+* Fix: The login process was not using wp_safe_redirect.
+* Fix: It was possible to save a non-numeric value for a discount.
+* Fix: The modify_cart_item() function did not allow for decreasing of the tax rate on an item.
+* Fix: Custom add to cart URLs with a malformed download_id value caused an undefined index notice.
+* Fix: When no customer exists for a query, the total_spent returns an undefined index notice.
+* Dev: When checking if a file download limit is reached, the price_id of the purchased download is now passed to the edd_is_file_at_download_limit filter.
+* Dev: The edd_download_price_table_head and edd_download_price_table_row actions have been formally deprecated.
+
 = 2.9.26, October 1, 2020 =
 * Fix: Installation of the Jilt extension was allowed for non-super admins on multisite installs.
 * Dev: Improved DocBloc for edd_has_user_purchased() function.
