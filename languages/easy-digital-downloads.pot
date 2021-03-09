@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.9.26\n"
+"Project-Id-Version: Easy Digital Downloads 2.10\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2021-02-26 16:39:44+00:00\n"
+"POT-Creation-Date: 2021-03-09 15:33:39+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -98,7 +98,7 @@ msgstr ""
 #: includes/error-tracking.php:40 includes/gateways/functions.php:221
 #: includes/gateways/manual.php:33 includes/gateways/paypal-standard.php:168
 #: includes/gateways/stripe/includes/admin/upgrade-functions.php:57
-#: includes/gateways/stripe/includes/payment-actions.php:1430
+#: includes/gateways/stripe/includes/payment-actions.php:1435
 #: includes/process-download.php:303 includes/process-download.php:894
 #: includes/query-filters.php:48 includes/user-functions.php:895
 #: includes/user-functions.php:920 includes/user-functions.php:973
@@ -7276,7 +7276,7 @@ msgid ""
 msgstr ""
 
 #: includes/gateways/stripe/includes/admin/notices.php:39
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:518
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:534
 #: includes/gateways/stripe/includes/payment-methods/payment-request/apple-pay.php:22
 msgid "Unable to locate registry"
 msgstr ""
@@ -7286,30 +7286,36 @@ msgid "Stripe-specific reports have been removed."
 msgstr ""
 
 #: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:197
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:462
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:524
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:478
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:540
 msgid "Connect with Stripe"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:204
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:207
+msgid ""
+"Connect with Stripe for pay as you go pricing: 2% per-transaction fee + "
+"Stripe fees."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:218
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor
 #. tag, do not translate.
 msgid "Have questions about connecting with Stripe? See the %1$sdocumentation%2$s."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:230
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:244
 msgid "Retrieving account information..."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:243
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:257
 msgid "Manage API keys manually"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:253
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:267
 msgid "Hide API keys"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:259
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:273
 msgid ""
 "Although you can add your API keys manually, we recommend using Stripe "
 "Connect: an easier and more secure way of connecting your Stripe account to "
@@ -7319,11 +7325,11 @@ msgid ""
 "just a few clicks."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:277
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:291
 msgid "Unable to retrieve account information."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:302
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:316
 #. translators: %1$s Stripe payment mode. %2$s Opening anchor tag for
 #. reconnecting to Stripe, do not translate. %3$s Opening anchor tag for
 #. disconnecting Stripe, do not translate. %4$s Closing anchor tag, do not
@@ -7333,56 +7339,56 @@ msgid ""
 "mode%4$s, or %3$sdisconnect this account%4$s."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:334
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:348
 #. translators: %1$s Opening bold tag, do not translate. %2$s Closing bold tag,
 #. do not translate.
 msgid "Webhooks cannot be configured for recurring purchases with this account."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:352
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:366
 #. translators: %1$s Opening anchor tag for disconnecting Stripe, do not
 #. translate. %2$s Closing anchor tag, do not translate.
 msgid "%1$sDisconnect this account%2$s."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:408
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:432
 msgid "Pay as you go pricing: 2% per-transaction fee + Stripe fees."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:428
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:444
 msgid "Administrator (Owner)"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:439
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:455
 msgid ""
 "The API keys provided do not match the Stripe Connect account associated "
 "with this installation. If you have manually modified these values after "
 "connecting your account, please reconnect below or update your API keys."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:465
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:481
 msgid ""
 "It is highly recommended to Connect with Stripe for easier setup and "
 "improved security."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:478
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:494
 #. translators: %1$s Stripe payment mode.
 msgid "Your manually managed %1$s mode API keys are valid."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:494
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:510
 #. translators: %1$s Stripe payment mode.
 msgid "Your manually managed %1$s mode API keys are invalid."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:534
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:550
 msgid ""
 "Start accepting payments with Stripe by connecting your account. Stripe "
 "Connect helps ensure easier setup and improved security."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:555
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:571
 #. translators: %s Test mode status. Enabled or disabled.
 msgid "\"Test Mode\" has been %s. Please verify your Stripe connection status."
 msgstr ""
@@ -7621,7 +7627,7 @@ msgstr ""
 #: includes/gateways/stripe/includes/card-actions.php:141
 #: includes/gateways/stripe/includes/card-actions.php:208
 #: includes/gateways/stripe/includes/card-actions.php:258
-#: includes/gateways/stripe/includes/card-actions.php:310
+#: includes/gateways/stripe/includes/card-actions.php:311
 msgid "This feature is not available at this time."
 msgstr ""
 
@@ -7645,35 +7651,35 @@ msgstr ""
 msgid "Card successfully set as default."
 msgstr ""
 
-#: includes/gateways/stripe/includes/card-actions.php:284
+#: includes/gateways/stripe/includes/card-actions.php:285
 msgid "Card successfully removed."
 msgstr ""
 
-#: includes/gateways/stripe/includes/card-actions.php:321
+#: includes/gateways/stripe/includes/card-actions.php:322
 msgid "Unable to update your account at this time, please try again later"
 msgstr ""
 
-#: includes/gateways/stripe/includes/card-actions.php:332
+#: includes/gateways/stripe/includes/card-actions.php:333
 msgid "Missing card ID."
 msgstr ""
 
-#: includes/gateways/stripe/includes/card-actions.php:341
+#: includes/gateways/stripe/includes/card-actions.php:342
 msgid "Error adding card."
 msgstr ""
 
-#: includes/gateways/stripe/includes/card-actions.php:350
+#: includes/gateways/stripe/includes/card-actions.php:351
 msgid "Unable to retrieve customer."
 msgstr ""
 
-#: includes/gateways/stripe/includes/card-actions.php:369
+#: includes/gateways/stripe/includes/card-actions.php:370
 msgid "Unable to create customer in Stripe."
 msgstr ""
 
-#: includes/gateways/stripe/includes/card-actions.php:397
+#: includes/gateways/stripe/includes/card-actions.php:398
 msgid "Card successfully added."
 msgstr ""
 
-#: includes/gateways/stripe/includes/class-edd-stripe.php:239
+#: includes/gateways/stripe/includes/class-edd-stripe.php:240
 #: includes/gateways/stripe/includes/template-functions.php:125
 msgid "Credit Card"
 msgstr ""
@@ -7851,56 +7857,56 @@ msgid ""
 "for more information: https://easydigitaldownloads.com/development/"
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-actions.php:336
-#: includes/gateways/stripe/includes/payment-actions.php:356
-#: includes/gateways/stripe/includes/payment-actions.php:374
-#: includes/gateways/stripe/includes/payment-actions.php:450
-#: includes/gateways/stripe/includes/payment-actions.php:532
-#: includes/gateways/stripe/includes/payment-actions.php:620
-#: includes/gateways/stripe/includes/payment-actions.php:707
-#: includes/gateways/stripe/includes/payment-actions.php:916
-#: includes/gateways/stripe/includes/payment-actions.php:1059
+#: includes/gateways/stripe/includes/payment-actions.php:341
+#: includes/gateways/stripe/includes/payment-actions.php:361
+#: includes/gateways/stripe/includes/payment-actions.php:379
+#: includes/gateways/stripe/includes/payment-actions.php:455
+#: includes/gateways/stripe/includes/payment-actions.php:537
+#: includes/gateways/stripe/includes/payment-actions.php:625
+#: includes/gateways/stripe/includes/payment-actions.php:712
+#: includes/gateways/stripe/includes/payment-actions.php:921
+#: includes/gateways/stripe/includes/payment-actions.php:1064
 msgid "Stripe Error"
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-actions.php:338
-#: includes/gateways/stripe/includes/payment-actions.php:358
+#: includes/gateways/stripe/includes/payment-actions.php:343
+#: includes/gateways/stripe/includes/payment-actions.php:363
 msgid "There was an error while processing a Stripe payment. Payment data: %s"
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-actions.php:416
-#: includes/gateways/stripe/includes/payment-actions.php:426
-#: includes/gateways/stripe/includes/payment-actions.php:485
-#: includes/gateways/stripe/includes/payment-actions.php:495
-#: includes/gateways/stripe/includes/payment-actions.php:566
-#: includes/gateways/stripe/includes/payment-actions.php:583
-#: includes/gateways/stripe/includes/payment-actions.php:654
-#: includes/gateways/stripe/includes/payment-actions.php:664
-#: includes/gateways/stripe/includes/payment-actions.php:742
-#: includes/gateways/stripe/includes/payment-actions.php:759
-#: includes/gateways/stripe/includes/payment-actions.php:771
-#: includes/gateways/stripe/includes/payment-actions.php:783
-#: includes/gateways/stripe/includes/payment-actions.php:800
-#: includes/gateways/stripe/includes/payment-actions.php:835
-#: includes/gateways/stripe/includes/payment-actions.php:950
-#: includes/gateways/stripe/includes/payment-actions.php:967
-#: includes/gateways/stripe/includes/payment-actions.php:977
-#: includes/gateways/stripe/includes/payment-actions.php:996
-#: includes/gateways/stripe/includes/payment-actions.php:1044
-#: includes/gateways/stripe/includes/payment-actions.php:1090
-#: includes/gateways/stripe/includes/payment-actions.php:1106
-#: includes/gateways/stripe/includes/payment-actions.php:1119
-#: includes/gateways/stripe/includes/payment-actions.php:1153
+#: includes/gateways/stripe/includes/payment-actions.php:421
+#: includes/gateways/stripe/includes/payment-actions.php:431
+#: includes/gateways/stripe/includes/payment-actions.php:490
+#: includes/gateways/stripe/includes/payment-actions.php:500
+#: includes/gateways/stripe/includes/payment-actions.php:571
+#: includes/gateways/stripe/includes/payment-actions.php:588
+#: includes/gateways/stripe/includes/payment-actions.php:659
+#: includes/gateways/stripe/includes/payment-actions.php:669
+#: includes/gateways/stripe/includes/payment-actions.php:747
+#: includes/gateways/stripe/includes/payment-actions.php:764
+#: includes/gateways/stripe/includes/payment-actions.php:776
+#: includes/gateways/stripe/includes/payment-actions.php:788
+#: includes/gateways/stripe/includes/payment-actions.php:805
+#: includes/gateways/stripe/includes/payment-actions.php:840
+#: includes/gateways/stripe/includes/payment-actions.php:955
+#: includes/gateways/stripe/includes/payment-actions.php:972
+#: includes/gateways/stripe/includes/payment-actions.php:982
+#: includes/gateways/stripe/includes/payment-actions.php:1001
+#: includes/gateways/stripe/includes/payment-actions.php:1049
+#: includes/gateways/stripe/includes/payment-actions.php:1095
+#: includes/gateways/stripe/includes/payment-actions.php:1111
+#: includes/gateways/stripe/includes/payment-actions.php:1124
+#: includes/gateways/stripe/includes/payment-actions.php:1158
 msgid ""
 "An error occurred, but your payment may have gone through. Please contact "
 "the site administrator."
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-actions.php:901
+#: includes/gateways/stripe/includes/payment-actions.php:906
 msgid "Unable to create payment."
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-actions.php:1424
+#: includes/gateways/stripe/includes/payment-actions.php:1429
 #. translators: %s Stripe Refund ID
 msgid "Charge refunded in Stripe. Refund ID %s"
 msgstr ""
@@ -9742,22 +9748,22 @@ msgctxt "no dropdown items"
 msgid "None"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:295
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:309
 msgctxt "Stripe Connect mode"
 msgid "test"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:296
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:310
 msgctxt "Stripe Connect mode"
 msgid "live"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:545
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:561
 msgctxt "gateway test mode status"
 msgid "enabled"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:546
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:562
 msgctxt "gateway test mode status"
 msgid "disabled"
 msgstr ""
