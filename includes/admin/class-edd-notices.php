@@ -152,7 +152,7 @@ class EDD_Notices {
 			echo wp_kses_post(
 				sprintf(
 					/* Translators: %1$s - Opening anchor tag, %2$s - The url to dismiss the ajax notice, %3$s - Complete the opening of the anchor tag, %4$s - Open span tag, %4$s - Close span tag */
-					__( '%1$s %2$s %3$s %4$s Dismiss this notice. %5$s', 'easy-digital-downloads' ),
+					__( '%1$s%2$s%3$s %4$s Dismiss this notice. %5$s', 'easy-digital-downloads' ),
 					'<a href="',
 					esc_url(
 						add_query_arg(
