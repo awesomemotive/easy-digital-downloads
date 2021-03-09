@@ -249,7 +249,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 == Changelog ==
 = 2.10, March 9, 2021 =
 * New: Accept credit cards, Apple Pay, Google Pay, and Microsoft Pay with the included Stripe Standard payment gateway. Read more about this feature here: https://easydigitaldownloads.com/edd-stripe-integration
-* New: Updated bundled add-on updater class to the latest version.
+* New: Updated bundled add-on updater class to the latest version (1.8.0).
 * New: Added a notice for users on older PHP versions about upcoming EOL for PHP 5.3, 5.4, and 5.5 support.
 * Fix: The select HTML helper improperly assumed the selected value was an array.
 * Fix: There was a memory leak when calling get_password_reset_key() caused by EDD's customers database class.
