@@ -289,12 +289,21 @@ function edd_process_paypal_purchase( $purchase_data ) {
 			}
 		}
 
+		$price_before_discount = $purchase_data['price'];
 		if ( $discounted_amount > '0' ) {
 			$paypal_args['discount_amount_cart'] = edd_sanitize_amount( $discounted_amount );
+
+			/*
+			 * Add the discounted amount back onto the price to get the "price before discount". We do this
+			 * to avoid double applying any discounts below.
+			 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/6837
+			 */
+			$price_before_discount += $paypal_args['discount_amount_cart'];
 		}
 
-		if( $paypal_sum > $purchase_data['price'] ) {
-			$difference = round( $paypal_sum - $purchase_data['price'], 2 );
+		// Check if there are any additional discounts we need to add that we haven't already accounted for.
+		if( $paypal_sum > $price_before_discount ) {
+			$difference = round( $paypal_sum - $price_before_discount, 2 );
 			if( ! isset( $paypal_args['discount_amount_cart'] ) ) {
 				$paypal_args['discount_amount_cart'] = 0;
 			}

@@ -51,6 +51,7 @@ module.exports = function(grunt) {
 		checktextdomain: {
 			options:{
 				text_domain: 'easy-digital-downloads',
+				correct_domain: true,
 				keywords: [
 					'__:1,2d',
 					'_e:1,2d',
@@ -155,9 +156,36 @@ module.exports = function(grunt) {
 			}
 		},
 
+		replace: {
+			stripe: {
+				options: {
+					patterns: [
+						{
+							match: /edd_stripe_bootstrap/g,
+							replacement: 'edd_stripe_core_bootstrap',
+							expression: true,
+						},
+						{
+							match: /remove_action(.*);/g,
+							replacement: '',
+							expression: true,
+						}
+					]
+				},
+				files: [
+					{
+						expand: true,
+						flatten: true,
+						src: [ 'includes/gateways/stripe/edd-stripe.php' ],
+						dest: 'includes/gateways/stripe'
+					}
+				]
+			}
+		}
+
 	});
 
 	// Build task(s).
-	grunt.registerTask( 'build', [ 'cssmin', 'uglify', 'force:checktextdomain', 'makepot', 'clean', 'copy', 'compress' ] );
+	grunt.registerTask( 'build', [ 'cssmin', 'uglify', 'force:checktextdomain', 'makepot', 'replace', 'clean', 'copy', 'compress' ] );
 
 };
