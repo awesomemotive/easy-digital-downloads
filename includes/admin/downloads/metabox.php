@@ -416,11 +416,20 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 	// Run our advanced settings now, so we know if we need to display the settings.
 	// Output buffer so that the headers run, so we can log them and use them later
 	ob_start();
-	do_action( 'edd_download_price_table_head', $post_id );
+	if ( has_action( 'edd_download_price_table_head' ) ) {
+		do_action_deprecated( 'edd_download_price_table_head', array( $post_id ), '2.10', 'edd_download_price_option_row' );
+	}
 	ob_end_clean();
 
 	ob_start();
-	do_action( 'edd_download_price_table_row', $post_id, $key, $args );
+	$found_fields = isset( $wp_filter['edd_download_price_table_row'] ) ? $wp_filter['edd_download_price_table_row'] : false;
+	if ( ! empty( $found_fields->callbacks ) ) {
+		if ( 1 !== count( $found_fields->callbacks ) ) {
+			do_action_deprecated( 'edd_download_price_table_row', array( $post_id, $key, $args ), '2.10', 'edd_download_price_option_row' );
+		} else {
+			do_action( 'edd_download_price_table_row', $post_id, $key, $args );
+		}
+	}
 	$show_advanced = ob_get_clean();
 ?>
 	<?php

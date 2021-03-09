@@ -103,6 +103,74 @@ class EDD_Notices {
 
 		}
 
+		/**
+		 * Notice for users running PHP < 5.6.
+		 * @since 2.10
+		 */
+		if ( version_compare( PHP_VERSION, '5.6', '<' ) && ! get_user_meta( get_current_user_id(), '_edd_upgrade_php_56_dismissed', true ) && current_user_can( 'manage_shop_settings' ) ) {
+			echo '<div class="notice notice-warning is-dismissible edd-notice">';
+			printf(
+				'<h2>%s</h2>',
+				esc_html__( 'Upgrade PHP to Prepare for Easy Digital Downloads 3.0', 'easy-digital-downloads' )
+			);
+			echo wp_kses_post(
+				sprintf(
+					/* translators:
+					%1$s Opening paragraph tag, do not translate.
+					%2$s Current PHP version
+					%3$s Opening strong tag, do not translate.
+					%4$s Closing strong tag, do not translate.
+					%5$s Opening anchor tag, do not translate.
+					%6$s Closing anchor tag, do not translate.
+					%7$s Closing paragraph tag, do not translate.
+					*/
+					__( '%1$sYour site is running an outdated version of PHP (%2$s), which requires an update. Easy Digital Downloads 3.0 will require %3$sPHP 5.6 or greater%4$s in order to keep your store online and selling. While 5.6 is the minimum version we will be supporting, we encourage you to update to the most recent version of PHP that your hosting provider offers. %5$sLearn more about updating PHP.%6$s%7$s', 'easy-digital-downloads' ),
+					'<p>',
+					PHP_VERSION,
+					'<strong>',
+					'</strong>',
+					'<a href="https://wordpress.org/support/update-php/" target="_blank" rel="noopener noreferrer">',
+					'</a>',
+					'</p>'
+				)
+			);
+			echo wp_kses_post(
+				sprintf(
+					/* translators:
+					%1$s Opening paragraph tag, do not translate.
+					%2$s Opening anchor tag, do not translate.
+					%3$s Closing anchor tag, do not translate.
+					%4$s Closing paragraph tag, do not translate.
+					*/
+					__( '%1$sMany web hosts can give you instructions on how/where to upgrade your version of PHP through their control panel, or may even be able to do it for you. If you need to change hosts, please see %2$sour hosting recommendations%3$s.', 'easy-digital-downloads' ),
+					'<p>',
+					'<a href="https://easydigitaldownloads.com/recommended-wordpress-hosting/" target="_blank" rel="noopener noreferrer">',
+					'</a>',
+					'</p>'
+				)
+			);
+			echo wp_kses_post(
+				sprintf(
+					/* Translators: %1$s - Opening anchor tag, %2$s - The url to dismiss the ajax notice, %3$s - Complete the opening of the anchor tag, %4$s - Open span tag, %4$s - Close span tag */
+					__( '%1$s%2$s%3$s %4$s Dismiss this notice. %5$s', 'easy-digital-downloads' ),
+					'<a href="',
+					esc_url(
+						add_query_arg(
+							array(
+								'edd_action' => 'dismiss_notices',
+								'edd_notice' => 'upgrade_php_56',
+							)
+						)
+					),
+					'" type="button" class="notice-dismiss">',
+					'<span class="screen-reader-text">',
+					'</span>
+					</a>'
+				)
+			);
+			echo '</div>';
+		}
+
 		/* Commented out per https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/3475
 		if( ! edd_test_ajax_works() && ! get_user_meta( get_current_user_id(), '_edd_admin_ajax_inaccessible_dismissed', true ) && current_user_can( 'manage_shop_settings' ) ) {
 			echo '<div class="error">';
@@ -137,6 +205,10 @@ class EDD_Notices {
 						break;
 					case 'discount_invalid_code':
 						$notices['error']['edd-discount-invalid-code'] = __( 'The discount code entered is invalid; only alphanumeric characters are allowed, please try again.', 'easy-digital-downloads' );
+						break;
+					case 'discount_invalid_amount' :
+						$notices['error']['edd-discount-invalid-amount'] = __( 'The discount amount must be a valid percentage or numeric flat amount. Please try again.', 'easy-digital-downloads' );
+						break;
 				}
 			}
 

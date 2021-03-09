@@ -339,21 +339,21 @@ class EDD_HTML_Elements {
 			$options[0] = __( 'No users found', 'easy-digital-downloads' );
 		}
 
+		$selected = $args['selected'];
+		if ( ! is_array( $selected ) ) {
+			$selected = array( $selected );
+		}
 		// If a selected user has been specified, we need to ensure it's in the initial list of user displayed
-		if( ! empty( $args['selected'] ) ) {
+		if ( ! empty( $selected ) ) {
+			foreach ( $selected as $selected_user ) {
+				if ( ! array_key_exists( $selected_user, $options ) ) {
+					$user = get_userdata( $selected_user );
 
-			if( ! array_key_exists( $args['selected'], $options ) ) {
-
-				$user = get_userdata( $args['selected'] );
-
-				if( $user ) {
-
-					$options[ absint( $args['selected'] ) ] = esc_html( $user->display_name );
-
+					if ( $user ) {
+						$options[ absint( $user->ID ) ] = esc_html( $user->display_name );
+					}
 				}
-
 			}
-
 		}
 
 		$output = $this->select( array(
@@ -573,7 +573,7 @@ class EDD_HTML_Elements {
 
 		if ( $args['show_option_all'] ) {
 			if ( $args['multiple'] && ! empty( $args['selected'] ) ) {
-				$selected = selected( true, in_array( 0, $args['selected'] ), false );
+				$selected = selected( true, in_array( 0, (array) $args['selected'] ), false );
 			} else {
 				$selected = selected( $args['selected'], 0, false );
 			}

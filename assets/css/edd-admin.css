@@ -17,7 +17,8 @@
 	text-indent: -9999px;
 	visibility: hidden;
 }
-.edd-wrap a {
+.edd-wrap a,
+.edd-notice .notice-dismiss {
 	text-decoration: none;
 }
 a.edd-delete {

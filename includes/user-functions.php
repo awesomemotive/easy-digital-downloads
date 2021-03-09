@@ -350,7 +350,7 @@ function edd_purchase_total_of_user( $user = null ) {
 
 	$stats = edd_get_purchase_stats_by_user( $user );
 
-	return $stats['total_spent'];
+	return isset( $stats['total_spent'] ) ? $stats['total_spent'] : 0.00;
 }
 
 /**

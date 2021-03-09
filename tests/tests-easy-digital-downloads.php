@@ -120,23 +120,9 @@ class Tests_EDD extends EDD_UnitTestCase {
         /** Check Assets Exist */
         $this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/chosen.css' );
         $this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/chosen.min.css' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/colorbox.css' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/edd-admin.css' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/jquery-ui-classic.css' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/css/jquery-ui-fresh.css' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/ie6/borderBottomCenter.png' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/ie6/borderBottomLeft.png' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/ie6/borderBottomRight.png' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/ie6/borderMiddleLeft.png' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/ie6/borderMiddleRight.png' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/ie6/borderTopCenter.png' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/ie6/borderTopLeft.png' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/ie6/borderTopRight.png' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/border.png' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/controls.png' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/loading.gif' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/loading_background.png' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/images/colorbox/overlay.png' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/icons/americanexpress.gif' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/icons/discover.gif' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'templates/images/icons/iphone.png' );
@@ -164,7 +150,6 @@ class Tests_EDD extends EDD_UnitTestCase {
         $this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/chosen.jquery.min.js' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/edd-ajax.js' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/edd-checkout-global.js' );
-		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/jquery.colorbox-min.js' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/jquery.creditCardValidator.js' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/jquery.flot.js' );
 		$this->assertFileExists( EDD_PLUGIN_DIR . 'assets/js/jquery.validate.min.js' );
