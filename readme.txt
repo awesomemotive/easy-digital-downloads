@@ -7,7 +7,7 @@ Tags: ecommerce, sell, checkout, payments, stripe
 Requires at least: 4.4
 Tested up to: 5.7
 Requires PHP: 5.3
-Stable Tag: 2.10
+Stable Tag: 2.10.1
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products the simple way. Easily build an online store complete with a cart system, checkout forms, reports, coupons, and more!
@@ -247,6 +247,9 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 11. Google Pay checkout
 
 == Changelog ==
+= 2.10.1, March 9, 2021 =
+* Fix: Removed incorrect inclusion of license key field for the Stripe integration when the Stripe Pro Payment Gateway extension is not active.
+
 = 2.10, March 9, 2021 =
 * New: Accept credit cards, Apple Pay, Google Pay, and Microsoft Pay with the included Stripe Standard payment gateway. Read more about this feature here: https://easydigitaldownloads.com/edd-stripe-integration
 * New: Updated bundled add-on updater class to the latest version (1.8.0).
