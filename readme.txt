@@ -144,7 +144,7 @@ Check out some of our popular posts for actionable advice for running your busin
 - [The Top Ten Benefits of Selling Digital Products](https://easydigitaldownloads.com/blog/top-10-benefits-selling-digital-products/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=benefits&utm_term=description)
 
 **[Subscribe to our newsletter](https://easydigitaldownloads.com/subscribe/?utm_medium=readme&utm_source=wporg&utm_campaign=lite-plugin&utm_content=subscribe&utm_term=description)** to get posts like these in your inbox as soon as they’re published.
-but
+
 = Contribute to Easy Digital Downloads =
 
 Development for this plugin happens in a public GitHub repository to better facilitate contributions from an active community of users, developers and designers. If you have a suggestion, bug report, patch, or pull request, please feel free to [contribute here](https://github.com/easydigitaldownloads/easy-digital-downloads) or to our [code snippet library](https://github.com/easydigitaldownloads/library).
@@ -250,23 +250,23 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 = 2.10, March 9, 2021 =
 * New: Accept credit cards, Apple Pay, Google Pay, and Microsoft Pay with the included Stripe Standard payment gateway. Read more about this feature here: https://easydigitaldownloads.com/edd-stripe-integration
 * New: Updated bundled add-on updater class to the latest version.
-* New: Added a notice for users on older PHP versions about upcoming EOL of PHP 5.2 and 5.3 support.
+* New: Added a notice for users on older PHP versions about upcoming EOL for PHP 5.3, 5.4, and 5.5 support.
 * Fix: The select HTML helper improperly assumed the selected value was an array.
-* Fix: There was a memory leak when calling geT_password_reset_key() caused by EDD's customers database class.
-* Fix: When adding items to the cart via AJAX, the presense of the download_id value was assumed, but not verified.
+* Fix: There was a memory leak when calling get_password_reset_key() caused by EDD's customers database class.
+* Fix: When adding items to the cart via AJAX, the presence of the download_id value was assumed, but not verified.
 * Fix: Imported CSV files were not being properly deleted after the import was completed.
 * Fix: The Colorbox JavaScript resources are no longer needed, but were still being enqueued.
 * Fix: Client-side validation of the discount field could cause unexpected issues with the checkout when applying a discount.
 * Fix: The discount amount was incorrect in the sales API endpoint when it was applied to a variably priced product.
-* Fix: Whe querying the customers API endpiont, it was possible for an undefined variable notice to be logged.
+* Fix: When querying the customers API endpoint, it was possible for an undefined variable notice to be logged.
 * Fix: The password fields on the profile editor had incorrect attributes.
 * Fix: After a failed login, the reset password link always linked to the checkout page.
 * Fix: PayPal Standard: Negative fees were being applied twice.
 * Fix: Account for an undefined index of edd-cart-downloads.
-* Fix: The payment icons on checkuot were missing alt tags.
+* Fix: The payment icons on checkout were missing alt tags.
 * Fix: The login process was not using wp_safe_redirect.
 * Fix: It was possible to save a non-numeric value for a discount.
-* Fix: The modify_cart_item() functino did not allow for decreasing of the tax rate on an item.
+* Fix: The modify_cart_item() function did not allow for decreasing of the tax rate on an item.
 * Fix: Custom add to cart URLs with a malformed download_id value caused an undefined index notice.
 * Fix: When no customer exists for a query, the total_spent returns an undefined index notice.
 * Dev: When checking if a file download limit is reached, the price_id of the purchased download is now passed to the edd_is_file_at_download_limit filter.
