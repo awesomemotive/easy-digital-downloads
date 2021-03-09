@@ -144,7 +144,7 @@ Check out some of our popular posts for actionable advice for running your busin
 - [The Top Ten Benefits of Selling Digital Products](https://easydigitaldownloads.com/blog/top-10-benefits-selling-digital-products/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=benefits&utm_term=description)
 
 **[Subscribe to our newsletter](https://easydigitaldownloads.com/subscribe/?utm_medium=readme&utm_source=wporg&utm_campaign=lite-plugin&utm_content=subscribe&utm_term=description)** to get posts like these in your inbox as soon as they’re published.
-but
+
 = Contribute to Easy Digital Downloads =
 
 Development for this plugin happens in a public GitHub repository to better facilitate contributions from an active community of users, developers and designers. If you have a suggestion, bug report, patch, or pull request, please feel free to [contribute here](https://github.com/easydigitaldownloads/easy-digital-downloads) or to our [code snippet library](https://github.com/easydigitaldownloads/library).
