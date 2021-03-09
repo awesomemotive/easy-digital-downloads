@@ -88,7 +88,7 @@ class EDD_Batch_Import {
 		$this->step  = $_step;
 		$this->file  = $_file;
 		$this->done  = false;
-		$this->csv   = $this->set_csv_file( $this->file );
+		$this->csv   = $this->get_csv_file( $this->file );
 		$this->total = count( $this->csv );
 		$this->init();
 
@@ -113,14 +113,14 @@ class EDD_Batch_Import {
 	}
 
 	/**
-	 * Set the CSV file path. This then also parses the CSV and populates that property.
+	 * Parses the CSV from the file and returns the data as an array.
 	 *
 	 * @since 3.0
 	 * @param string $file
 	 *
 	 * @return array
 	 */
-	public function set_csv_file( $file ) {
+	public function get_csv_file( $file ) {
 		$csv = array_map( 'str_getcsv', file( $this->file ) );
 		array_walk(
 			$csv,
