@@ -1,0 +1,27 @@
+.edd-mobile-link {
+	line-height: 32px;
+
+	a {
+		text-decoration: none;
+
+		&:before,
+		&:after {
+			display: inline-block;
+			-webkit-font-smoothing: antialiased;
+			font: normal 20px/30px "dashicons";
+			vertical-align: top;
+			margin: 1px 0 0 0;
+			padding: 0;
+		}
+
+		&:before {
+			content: "\f470";
+			color: $gray-700;
+			margin-right: -3px;
+		}
+
+		&:after {
+			content: "\f504";
+		}
+	}
+}
