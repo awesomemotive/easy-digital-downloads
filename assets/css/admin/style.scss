@@ -21,6 +21,8 @@
 
 @import "upgrades/v3";
 
+@import "reports/style";
+
 /**
  * Notes:
  *
@@ -238,11 +240,6 @@ a.edd-delete:hover {
 	z-index: 9999 !important;
 }
 
-@media screen and (max-width: 782px) {
-	#edd-filters .filter-items {
-		margin: 6px 6px 6px 0;
-	}
-}
 /* =Payment Icon Styling
 -------------------------------------------------------------- */
 
@@ -1226,110 +1223,6 @@ textarea[name="edd-note"] {
 	color: #999;
 }
 
-/* Filter Bar Styles
--------------------------------------------------------------- */
-
-#edd-filters {
-	padding: 0 10px;
-	margin: 0;
-}
-
-.download_page_edd-reports #edd-filters {
-	margin-top: 8px;
-	padding-bottom: 0;
-}
-
-#edd-filters .filter-items {
-	margin: 10px 0;
-	display: flex;
-	align-items: center;
-	flex-wrap: wrap;
-	gap: 6px;
-}
-#edd-filters > p {
-	color: #777;
-}
-
-.edd-old-log-filters {
-	margin-top: -30px;
-	margin-left: 2px;
-}
-
-#edd-filters input[type="text"].edd_datepicker,
-#edd-filters input[type="number"] {
-	max-width: 105px;
-}
-
-#edd-filters input[type="number"],
-#edd-filters .button-secondary {
-	vertical-align: middle;
-}
-
-#edd-filters #edd-advanced-filters {
-	position: relative;
-}
-
-#edd-filters #edd-advanced-filters .inside {
-	z-index: 99;
-	position: absolute;
-	top: 29px;
-	right: 0;
-	border: 1px solid #e5e5e5;
-	padding: 0;
-	background: #fafafa;
-	box-shadow: 0 3px 5px rgba(0,0,0,0.2);
-	min-width: 285px;
-	opacity: 0;
-	visibility: hidden;
-}
-
-#edd-filters #edd-advanced-filters fieldset {
-	display: block;
-	padding: 10px 15px 15px;
-	margin: 10px 0;
-}
-
-#edd-filters #edd-advanced-filters fieldset:not(:last-of-type) {
-	border-bottom: 1px solid #e5e5e5;
-}
-
-#edd-filters #edd-advanced-filters fieldset:last-of-type {
-	padding-bottom: 5px;
-}
-
-#edd-filters #edd-advanced-filters fieldset.edd-add-on-filters label,
-#edd-filters #edd-advanced-filters fieldset.edd-add-on-filters span,
-#edd-filters #edd-advanced-filters fieldset.edd-add-on-filters p,
-#edd-filters #edd-advanced-filters fieldset.edd-add-on-filters div {
-	display: block;
-	margin-bottom: 2px;
-}
-
-#edd-filters #edd-advanced-filters div.edd-select-chosen:not(:last-child) {
-	margin-bottom: 10px;
-}
-
-#edd-filters #edd-advanced-filters.open .edd-advanced-filters-button {
-	background: #eee;
-	border-color: #999;
-	box-shadow: inset 0 2px 5px -3px rgba( 0, 0, 0, 0.5 );
-	-webkit-transform: translateY(1px);
-	transform: translateY(1px);
-}
-
-#edd-filters #edd-advanced-filters.open .inside {
-	visibility: visible;
-	opacity: 1;
-    -webkit-transition: opacity 0.2s ease-in;
-       -moz-transition: opacity 0.2s ease-in;
-         -o-transition: opacity 0.2s ease-in;
-		    transition: opacity 0.2s ease-in;
-}
-
-#edd-filters .search-form {
-	margin: 9px 0;
-}
-
 /* Nav Tab Styles
 -------------------------------------------------------------- */
 
@@ -1399,31 +1292,6 @@ tr.status-refunded td {
 marquee {
 	padding: 0;
 	margin: 0;
-}
-.edd-mobile-link {
-	float: right;
-	line-height: 32px;
-	padding: 8px 0;
-}
-.edd-mobile-link a {
-	text-decoration: none;
-}
-.edd-mobile-link a:before,
-.edd-mobile-link a:after {
-	display: inline-block;
-	-webkit-font-smoothing: antialiased;
-	font: normal 20px/30px "dashicons";
-	vertical-align: top;
-	margin: 1px 0 0 0;
-	padding: 0;
-}
-.edd-mobile-link a:before {
-	content: "\f470";
-	color: #656a6f;
-	margin-right: -3px;
-}
-.edd-mobile-link a:after {
-	content: "\f504";
 }
 
 @media handheld, only screen and (max-width: 640px) {
@@ -2322,25 +2190,6 @@ body.download_page_edd-reports {
 	margin-bottom: 16px;
 }
 
-.download_page_edd-reports #edd-filters {
-	margin-bottom: -1px;
-	box-shadow: none;
-	justify-content: space-between;
-	display: flex;
-	flex-wrap: wrap;
-}
-
-.download_page_edd-reports #edd-filters .filter-items {
-	flex: 1 1 75%;
-}
-
-@media screen and ( max-width: 782px ) {
-
-	.download_page_edd-reports #edd-filters .filter-items {
-		flex-basis: 100%;
-	}
-}
-
 .download_page_edd-reports #edd-item-wrapper {
 	margin: 0;
 }
@@ -2348,11 +2197,6 @@ body.download_page_edd-reports {
 #edd-dashboard-widgets-wrap .postbox h2,
 #edd-dashboard-widgets-wrap .postbox h3 {
 	cursor: default;
-}
-
-#edd-filters .filter-items .edd-date-range-options {
-	display: inline-block;
-	margin: 10px 0;
 }
 
 .edd-date-range-options .edd_datepicker {
@@ -3097,7 +2941,7 @@ span.edd-to-and-from--separator {
 
 #edd-item-wrapper {
 	background: #fff;
-	border: 1px solid #e5e5e5;
+	border: 1px solid $wp-border;
 	-webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
 	box-shadow: 0 1px 1px rgba(0,0,0,0.04);
 	position: relative;
@@ -3458,10 +3302,6 @@ span.edd-to-and-from--separator {
 	}
 	.edd-bundled-product-row .edd-bundled-product-item-reorder .edd-product-file-reorder {
 		padding: 0;
-	}
-
-	#edd-filters span {
-		margin: 2px 0;
 	}
 
 	.download_page_edd-reports .button {
