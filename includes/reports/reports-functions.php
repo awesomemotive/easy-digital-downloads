@@ -1281,6 +1281,23 @@ function filter_items( $report = false ) {
 }
 add_action( 'edd_admin_filter_bar_reports', 'EDD\Reports\filter_items' );
 
+/**
+ * Renders the mobile link at the bottom of the payment history page
+ *
+ * @since 1.8.4
+ * @since 3.0 Updated filter to display link next to the reports filters.
+*/
+function mobile_link() {
+	?>
+	<span class="edd-mobile-link">
+		<a href="https://easydigitaldownloads.com/downloads/ios-app/?utm_source=payments&utm_medium=mobile-link&utm_campaign=admin" target="_blank">
+			<?php esc_html_e( 'Try the Sales/Earnings iOS App!', 'easy-digital-downloads' ); ?>
+		</a>
+	</span>
+	<?php
+}
+add_action( 'edd_after_admin_filter_bar_reports', 'EDD\Reports\mobile_link', 100 );
+
 /** Compat ********************************************************************/
 
 /**
