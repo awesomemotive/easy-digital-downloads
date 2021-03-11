@@ -119,6 +119,7 @@ class Report_Registry extends Reports\Registry implements Utils\Static_Registry 
 		$attributes = array_merge( $defaults, $attributes );
 
 		try {
+			// Filters can be empty.
 			$this->validate_attributes( $attributes, $report_id, array( 'filters' ) );
 		} catch ( \EDD_Exception $exception ) {
 			$error = true;
