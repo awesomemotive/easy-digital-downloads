@@ -466,7 +466,7 @@ function edd_localize_admin_scripts() {
 		'add_new_download'            => __( 'Add New Download', 'easy-digital-downloads' ),
 		'use_this_file'               => __( 'Use This File', 'easy-digital-downloads' ),
 		'quick_edit_warning'          => __( 'Sorry, not available for variable priced products.', 'easy-digital-downloads' ),
-		'delete_payment'              => __( 'Are you sure you want to delete this payment?', 'easy-digital-downloads' ),
+		'delete_order'              => __( 'Are you sure you want to delete this order?', 'easy-digital-downloads' ),
 		'delete_order_item'           => __( 'Are you sure you want to delete this item?', 'easy-digital-downloads' ),
 		'delete_order_adjustment'     => __( 'Are you sure you want to delete this adjustment?', 'easy-digital-downloads' ),
 		'delete_note'                 => __( 'Are you sure you want to delete this note?', 'easy-digital-downloads' ),
