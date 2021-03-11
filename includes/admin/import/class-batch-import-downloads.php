@@ -70,6 +70,9 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 
 		if( $offset > $this->total ) {
 			$this->done = true;
+
+			// Delete the uploaded CSV file.
+			unlink( $this->file );
 		}
 
 		if( ! $this->done && $this->csv->data ) {

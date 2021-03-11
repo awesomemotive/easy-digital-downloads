@@ -48,6 +48,11 @@ function edd_admin_add_discount( $data = array() ) {
 		edd_redirect( add_query_arg( 'edd-message', 'discount_invalid_code' ) );
 	}
 
+	if ( ! is_numeric( $data['amount'] ) ) {
+		wp_redirect( add_query_arg( 'edd-message', 'discount_invalid_amount' ) );
+		edd_die();
+	}
+
 	// Setup default discount values.
 	$to_add            = array();
 	$to_add['status']  = 'active';
@@ -174,6 +179,11 @@ function edd_admin_edit_discount( $data = array() ) {
 	// Bail if no discount
 	if ( empty( $discount ) || ( $discount->id <= 0 ) ) {
 		wp_die( __( 'Invalid discount', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
+	if ( empty( $data['amount'] ) || ! is_numeric( $data['amount'] ) ) {
+		wp_redirect( add_query_arg( 'edd-message', 'discount_invalid_amount' ) );
+		edd_die();
 	}
 
 	// Prepare update

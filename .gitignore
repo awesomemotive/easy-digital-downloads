@@ -23,7 +23,7 @@ Easy-Digital-Downloads.iml
 *.pydevproject
 .project
 .metadata
-build/
+/build
 tmp/
 tests/clover.xml
 
@@ -35,3 +35,6 @@ node_modules
 
 # Temporary files
 *~
+
+# Stripe
+includes/gateways/stripe
