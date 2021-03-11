@@ -575,7 +575,7 @@ class Tests_API extends EDD_UnitTestCase {
 		EDD_Helper_Discount::create_simple_percent_discount();
 
 		// Update the payment information.
-		$payment                    = edd_get_payment( $this->_payment_id );
+		$payment                    = edd_get_payment( self::$payment_id );
 		$payment->discounted_amount = 20;
 		$payment->total             = 80;
 		$payment->discounts         = '20OFF';
