@@ -356,11 +356,13 @@ class EDD_HTML_Elements {
 		}
 		// If a selected user has been specified, we need to ensure it's in the initial list of user displayed
 		if ( ! empty( $selected ) ) {
-foreach ( $selected as $selected_user ) {			if ( ! array_key_exists( $selected_user, $options ) ) {
-				$user = get_userdata( $selected_user );
+			foreach ( $selected as $selected_user ) {
+				if ( ! array_key_exists( $selected_user, $options ) ) {
+					$user = get_userdata( $selected_user );
 
-				if ( $user ) {
-					$options[ absint( $user->ID ) ] = esc_html( $user->display_name );}
+					if ( $user ) {
+						$options[ absint( $user->ID ) ] = esc_html( $user->display_name );
+					}
 				}
 			}
 		}
