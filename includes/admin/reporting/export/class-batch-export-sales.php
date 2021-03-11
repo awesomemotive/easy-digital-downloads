@@ -168,8 +168,8 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 	}
 
 	public function set_properties( $request ) {
-		$this->start       = isset( $request['start'] ) ? sanitize_text_field( $request['start'] ) : '';
-		$this->end         = isset( $request['end'] )   ? sanitize_text_field( $request['end'] ) . ' 23:59:59'  : '';
-		$this->download_id = isset( $request['download_id'] )   ? absint( $request['download_id'] )        : 0;
+		$this->start       = isset( $request['orders-export-start'] ) ? sanitize_text_field( $request['orders-export-start'] ) : '';
+		$this->end         = isset( $request['orders-export-end'] ) ? sanitize_text_field( $request['orders-export-end'] ) . ' 23:59:59' : '';
+		$this->download_id = isset( $request['download_id'] ) ? absint( $request['download_id'] ) : 0;
 	}
 }

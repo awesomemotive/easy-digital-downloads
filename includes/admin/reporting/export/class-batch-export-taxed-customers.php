@@ -166,8 +166,8 @@ class EDD_Batch_Taxed_Customers_Export extends EDD_Batch_Export {
 	 * @param array $request The form data passed into the batch processing.
 	 */
 	public function set_properties( $request ) {
-		$this->start = isset( $request['start'] ) ? sanitize_text_field( $request['start'] ) : '';
-		$this->end   = isset( $request['end'] ) ? sanitize_text_field( $request['end'] ) : '';
+		$this->start = isset( $request['taxed-customers-export-start'] ) ? sanitize_text_field( $request['taxed-customers-export-start'] ) : '';
+		$this->end   = isset( $request['taxed-customers-export-end'] ) ? sanitize_text_field( $request['taxed-customers-export-end'] ) : '';
 	}
 
 	/**

@@ -193,14 +193,6 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 	 * @param array $request Form data passed into the batch processing.
 	 */
 	public function set_properties( $request ) {
-		$this->start = isset( $request['start'] )
-			? sanitize_text_field( $request['start'] )
-			: '';
-
-		$this->end = isset( $request['end'] )
-			? sanitize_text_field( $request['end'] )
-			: '';
-
 		$this->taxonomy = isset( $request['taxonomy'] )
 			? absint( $request['taxonomy'] )
 			: null;

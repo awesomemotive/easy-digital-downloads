@@ -279,8 +279,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 	 * @param array $request The Form Data passed into the batch processing
 	 */
 	public function set_properties( $request ) {
-		$this->start  = isset( $request['start'] )  ? sanitize_text_field( $request['start'] )  : '';
-		$this->end    = isset( $request['end']  )   ? sanitize_text_field( $request['end']  )   : '';
+		$this->start  = isset( $request['orders-export-start'] ) ? sanitize_text_field( $request['orders-export-start'] ) : '';
+		$this->end    = isset( $request['orders-export-end'] ) ? sanitize_text_field( $request['orders-export-end'] ) : '';
 		$this->status = isset( $request['status'] ) ? sanitize_text_field( $request['status'] ) : 'complete';
 	}
 }

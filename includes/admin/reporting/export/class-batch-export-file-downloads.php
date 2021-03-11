@@ -163,8 +163,8 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 	}
 
 	public function set_properties( $request ) {
-		$this->start       = isset( $request['start'] )         ? sanitize_text_field( $request['start'] ) : '';
-		$this->end         = isset( $request['end']  )          ? sanitize_text_field( $request['end']  )  : '';
-		$this->download_id = isset( $request['download_id'] )   ? absint( $request['download_id'] )        : 0;
+		$this->start       = isset( $request['file-download-export-start'] ) ? sanitize_text_field( $request['file-download-export-start'] ) : '';
+		$this->end         = isset( $request['file-download-export-end'] ) ? sanitize_text_field( $request['file-download-export-end'] ) : '';
+		$this->download_id = isset( $request['download_id'] ) ? absint( $request['download_id'] ) : 0;
 	}
 }
