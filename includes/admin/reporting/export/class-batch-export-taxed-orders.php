@@ -280,8 +280,8 @@ class EDD_Batch_Taxed_Orders_Export extends EDD_Batch_Export {
 	 * @param array $request The form data passed into the batch processing.
 	 */
 	public function set_properties( $request ) {
-		$this->start   = isset( $request['start'] ) ? sanitize_text_field( $request['start'] ) : '';
-		$this->end     = isset( $request['end'] ) ? sanitize_text_field( $request['end'] ) : '';
+		$this->start   = isset( $request['taxed-orders-export-start'] ) ? sanitize_text_field( $request['taxed-orders-export-start'] ) : '';
+		$this->end     = isset( $request['taxed-orders-export-end'] ) ? sanitize_text_field( $request['taxed-orders-export-end'] ) : '';
 		$this->status  = isset( $request['status'] ) ? sanitize_text_field( $request['status'] ) : 'complete';
 		$this->country = isset( $request['country'] ) ? sanitize_text_field( $request['country'] ) : '';
 		$this->region  = isset( $request['region'] ) ? sanitize_text_field( $request['region'] ) : '';

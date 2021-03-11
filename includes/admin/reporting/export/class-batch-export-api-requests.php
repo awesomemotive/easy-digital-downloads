@@ -138,7 +138,7 @@ class EDD_Batch_API_Requests_Export extends EDD_Batch_Export {
 	}
 
 	public function set_properties( $request ) {
-		$this->start = isset( $request['start'] ) ? sanitize_text_field( $request['start'] ) : '';
-		$this->end   = isset( $request['end'] )   ? sanitize_text_field( $request['end'] )   : '';
+		$this->start = isset( $request['api-requests-export-start'] ) ? sanitize_text_field( $request['api-requests-export-start'] ) : '';
+		$this->end   = isset( $request['api-requests-export-end'] ) ? sanitize_text_field( $request['api-requests-export-end'] ) : '';
 	}
 }
