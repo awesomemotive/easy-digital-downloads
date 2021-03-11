@@ -37,7 +37,7 @@ class Tests_Query_Filters extends EDD_UnitTestCase {
 	public function test_edd_block_attachments_no_parent_bail() {
 
 		// Prepare test
-		$filename 		= '../assets/images/loading.gif';
+		$filename 		= EDD_PLUGIN_DIR . '/assets/images/loading.gif';
 		$filetype 		= wp_check_filetype( basename( $filename ), null );
 		$wp_upload_dir 	= wp_upload_dir();
 
@@ -78,7 +78,7 @@ class Tests_Query_Filters extends EDD_UnitTestCase {
 			'post_status' => 'publish'
 		) );
 
-		$filename       = '../assets/images/loading.gif';
+		$filename       = EDD_PLUGIN_DIR . '/assets/images/loading.gif';
 		$parent_post_id = $parent_post_id;
 		$filetype       = wp_check_filetype( basename( $filename ), null );
 		$wp_upload_dir  = wp_upload_dir();
@@ -140,7 +140,7 @@ class Tests_Query_Filters extends EDD_UnitTestCase {
 			update_post_meta( $parent_post_id, $key, $value );
 		}
 
-		$filename 			= '../assets/images/loading.gif';
+		$filename 			= EDD_PLUGIN_DIR . '/assets/images/loading.gif';
 		$parent_post_id 	= $parent_post_id;
 		$filetype 			= wp_check_filetype( basename( $filename ), null );
 		$wp_upload_dir 		= wp_upload_dir();
@@ -202,7 +202,7 @@ class Tests_Query_Filters extends EDD_UnitTestCase {
 			update_post_meta( $parent_post_id, $key, $value );
 		}
 
-		$filename 			= '../assets/images/loading.gif';
+		$filename 			= EDD_PLUGIN_DIR . '/assets/images/loading.gif';
 		$parent_post_id 	= $parent_post_id;
 		$filetype 			= wp_check_filetype( basename( $filename ), null );
 		$wp_upload_dir 		= wp_upload_dir();
