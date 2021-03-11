@@ -1210,7 +1210,7 @@ function filter_items( $report = false ) {
 	$report_id = $report->get_id();
 
 	// Bail if no report
-	if ( empty( $report_id ) || $report->has_errors() ) {
+	if ( empty( $report_id ) ) {
 		return;
 	}
 
