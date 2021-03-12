@@ -144,7 +144,7 @@ function edd_checkout_cart_columns() {
 
 	if ( ! empty( $wp_filter['edd_checkout_table_header_first'] ) ) {
 		$header_first_count = 0;
-		$callbacks = version_compare( $wp_version, '4.7', '>=' ) ? $wp_filter['edd_checkout_table_header_first']->callbacks : $wp_filter['edd_checkout_table_header_first'] ;
+		$callbacks          = $wp_filter['edd_checkout_table_header_first']->callbacks;
 
 		foreach ( $callbacks as $callback ) {
 			$header_first_count += count( $callback );
@@ -154,7 +154,7 @@ function edd_checkout_cart_columns() {
 
 	if ( ! empty( $wp_filter['edd_checkout_table_header_last'] ) ) {
 		$header_last_count = 0;
-		$callbacks = version_compare( $wp_version, '4.7', '>=' ) ? $wp_filter['edd_checkout_table_header_last']->callbacks : $wp_filter['edd_checkout_table_header_last'] ;
+		$callbacks         = $wp_filter['edd_checkout_table_header_first']->callbacks;
 
 		foreach ( $callbacks as $callback ) {
 			$header_last_count += count( $callback );
