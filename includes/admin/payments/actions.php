@@ -511,6 +511,7 @@ function edd_ajax_process_refund_form() {
 		wp_send_json_error( __( 'Nonce validation failed when submitting refund.', 'easy-digital-downloads' ), 401 );
 	}
 
+	// Collect selected order items.
 	$order_items = array();
 	if ( ! empty( $form_data['refund_order_item'] ) && is_array( $form_data['refund_order_item'] ) ) {
 		foreach( $form_data['refund_order_item'] as $order_item_id => $order_item ) {
@@ -522,14 +523,30 @@ function edd_ajax_process_refund_form() {
 			$order_items[] = array(
 				'order_item_id' => absint( $order_item_id ),
 				'quantity'      => intval( $order_item['quantity'] ),
-				'subtotal'      => floatval( $order_item['subtotal'] ),
-				'tax'           => ! empty( $order_item['tax'] ) ? floatval( $order_item['tax'] ) : 0.00
+				'subtotal'      => edd_sanitize_amount( $order_item['subtotal'] ),
+				'tax'           => ! empty( $order_item['tax'] ) ? edd_sanitize_amount( $order_item['tax'] ) : 0.00
 			);
 		}
 	}
 
+	// Collect selected fees.
+	$fees = array();
+	if ( ! empty( $form_data['order_adjustment'] ) && is_array( $form_data['order_adjustment'] ) ) {
+		foreach( $form_data['order_adjustment'] as $fee_id => $fee ) {
+			// If there's no quantity or subtotal - bail.
+			if ( empty( $fee['quantity'] ) || empty( $fee['subtotal'] ) ) {
+				$fees[] = array(
+					'fee_id'   => absint( $fee_id ),
+					'quantity' => intval( $fee['quantity'] ),
+					'subtotal' => floatval( edd_sanitize_amount( $fee['subtotal'] ) ),
+					'tax'      => ! empty( $fee['tax'] ) ? floatval( edd_sanitize_amount( $fee['tax'] ) ) : 0.00
+				);
+			}
+		}
+	}
+
 	$order_id  = absint( $_POST['order_id'] );
-	$refund_id = edd_refund_order( $order_id, $order_items );
+	$refund_id = edd_refund_order( $order_id, $order_items, $fees );
 
 	if ( is_wp_error( $refund_id ) ) {
 		wp_send_json_error( $refund_id->get_error_message() );
