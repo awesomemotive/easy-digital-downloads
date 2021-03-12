@@ -1529,7 +1529,7 @@ class EDD_Payment {
 		if ( (float) $modified_download['tax'] > (float) $current_args['tax'] ) {
 			$this->increase_tax( (float) $modified_download['tax'] - (float) $current_args['tax'] );
 		} else {
-			$this->increase_tax( (float) $current_args['tax'] - (float) $modified_download['tax'] );
+			$this->decrease_tax( (float) $current_args['tax'] - (float) $modified_download['tax'] );
 		}
 
 		/**
