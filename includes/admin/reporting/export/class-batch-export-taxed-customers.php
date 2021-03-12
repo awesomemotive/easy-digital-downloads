@@ -68,13 +68,7 @@ class EDD_Batch_Taxed_Customers_Export extends EDD_Batch_Export {
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
-			$args['date_query'] = array(
-				array(
-					'after'     => date( 'Y-m-d 00:00:00', strtotime( $this->start ) ),
-					'before'    => date( 'Y-m-d 23:59:59', strtotime( $this->end ) ),
-					'inclusive' => true,
-				),
-			);
+			$args['date_query'] = $this->get_date_query();
 		}
 
 		add_filter( 'edd_orders_query_clauses', array( $this, 'query_clauses' ), 10, 2 );
@@ -130,13 +124,7 @@ class EDD_Batch_Taxed_Customers_Export extends EDD_Batch_Export {
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
-			$args['date_query'] = array(
-				array(
-					'after'     => date( 'Y-m-d H:i:s', strtotime( $this->start ) ),
-					'before'    => date( 'Y-m-d H:i:s', strtotime( $this->end ) ),
-					'inclusive' => true,
-				),
-			);
+			$args['date_query'] = $this->get_date_query();
 		}
 
 		add_filter( 'edd_orders_query_clauses', array( $this, 'query_clauses' ), 10, 2 );
