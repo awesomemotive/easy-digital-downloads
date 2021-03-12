@@ -168,9 +168,9 @@ class Refund_Items_Table extends List_Table {
 				<label for="edd-order-item-<?php echo esc_attr( $order_item->id ); ?>-refund-<?php echo esc_attr( $column_name ); ?>" class="screen-reader-text">
 					<?php
 					if ( 'subtotal' === $column_name ) {
-						_e( 'Amount to refund, excluding tax', 'easy-digital-downloads' );
+						esc_html_e( 'Amount to refund, excluding tax', 'easy-digital-downloads' );
 					} else {
-						_e( 'Amount of tax to refund', 'easy-digital-downloads' );
+						esc_html_e( 'Amount of tax to refund', 'easy-digital-downloads' );
 					}
 					?>
 				</label>
@@ -279,13 +279,13 @@ class Refund_Items_Table extends List_Table {
 			}
 
 			return sprintf(
-					'<input type="checkbox" name="%1$s[]" id="%1$s-%2$s" class="edd-order-item-refund-checkbox" value="%2$s" /><label for="%1$s-%2$s" class="screen-reader-text">%3$s</label>' . $quantity_html,
-					/*$1%s*/
-					'order_item',
-					/*$2%s*/
-					esc_attr( $order_item->id ),
-					/* translators: product name */
-					esc_html( sprintf( __( 'Select %s', 'easy-digital-downloads' ), $order_item->product_name ) )
+				'<input type="checkbox" name="%1$s[]" id="%1$s-%2$s" class="edd-order-item-refund-checkbox" value="%2$s" /><label for="%1$s-%2$s" class="screen-reader-text">%3$s</label>' . $quantity_html,
+				/*$1%s*/
+				'order_item',
+				/*$2%s*/
+				esc_attr( $order_item->id ),
+				/* translators: product name */
+				esc_html( sprintf( __( 'Select %s', 'easy-digital-downloads' ), $order_item->product_name ) )
 			);
 		}
 	}
