@@ -68,13 +68,7 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
-			$args['date_query'] = array(
-				array(
-					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
-					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
-					'inclusive' => true,
-				),
-			);
+			$args['date_query'] = $this->get_date_query();
 		}
 
 		if ( 0 !== $this->download_id ) {
@@ -135,13 +129,7 @@ class EDD_Batch_File_Downloads_Export extends EDD_Batch_Export {
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
-			$args['date_query'] = array(
-				array(
-					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
-					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
-					'inclusive' => true,
-				)
-			);
+			$args['date_query'] = $this->get_date_query();
 		}
 
 		if ( 0 !== $this->download_id ) {

@@ -66,13 +66,7 @@ class EDD_Batch_API_Requests_Export extends EDD_Batch_Export {
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
-			$args['date_query'] = array(
-				array(
-					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
-					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
-					'inclusive' => true
-				)
-			);
+			$args['date_query'] = $this->get_date_query();
 		}
 
 		$logs = edd_get_api_request_logs( $args );
@@ -114,13 +108,7 @@ class EDD_Batch_API_Requests_Export extends EDD_Batch_Export {
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
-			$args['date_query'] = array(
-				array(
-					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
-					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
-					'inclusive' => true
-				)
-			);
+			$args['date_query'] = $this->get_date_query();
 		}
 
 		$total = edd_count_api_request_logs( $args );
