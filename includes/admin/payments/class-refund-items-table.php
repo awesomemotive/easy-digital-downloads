@@ -31,6 +31,8 @@ class Refund_Items_Table extends List_Table {
 	 * @see   WP_List_Table::__construct()
 	 */
 	public function __construct() {
+		global $hook_suffix;
+
 		parent::__construct( array(
 			'singular' => 'refund item',
 			'plural'   => 'refund items',
