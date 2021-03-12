@@ -199,7 +199,7 @@ class EDD_Payments_Query extends EDD_Stats {
 			return intval( $this->items );
 		}
 
-		if ( $should_output_order_objects ) {
+		if ( $should_output_order_objects || ! empty( $this->args['fields'] ) ) {
 			return $this->items;
 		}
 
@@ -221,10 +221,6 @@ class EDD_Payments_Query extends EDD_Stats {
 			}
 
 			return $posts;
-		}
-
-		if ( $should_output_order_objects ) {
-			return $this->items;
 		}
 
 		foreach ( $this->items as $order ) {
@@ -573,7 +569,9 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		// Meta key and value
-		if ( isset( $this->initial_args['meta_key'] ) ) {
+		if ( isset( $this->initial_args['meta_query'] ) ) {
+			$arguments['meta_query'] = $this->initial_args['meta_query'];
+		} elseif ( isset( $this->initial_args['meta_key'] ) ) {
 			$meta_query = array(
 				'key' => $this->initial_args['meta_key']
 			);
@@ -848,6 +846,11 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		if ( isset( $this->args['date_refundable_query'] ) ) {
 			$arguments['date_refundable_query'] = $this->args['date_refundable_query'];
+		}
+
+		// Make sure `fields` is honored if set (eg. 'ids').
+		if ( ! empty( $this->args['fields'] ) ) {
+			$arguments['fields'] = $this->args['fields'];
 		}
 
 		$this->args = $arguments;

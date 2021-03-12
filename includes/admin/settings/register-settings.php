@@ -569,8 +569,9 @@ function edd_get_registered_settings() {
 						'name'  => __( 'Usage Tracking', 'easy-digital-downloads' ),
 						'check' => __( 'Allow',          'easy-digital-downloads' ),
 						'desc'  => sprintf(
-							__( 'Help us make Easy Digital Downloads better by opting into anonymous usage tracking. <a href="%s" target="_blank">Here is what we track</a>.<br>If you opt-in here and to <a href="%s">our newsletter</a>, we will email you a discount code for our <a href="%s" target="_blank">extension shop</a>.', 'easy-digital-downloads' ),
-							esc_url( 'https://easydigitaldownloads.com/tracking/' ),
+							/* translators: %1$s Link to tracking information, do not translate. %2$s Link to EDD newsleter, do not translate. %3$s Link to EDD extensions, do not translate */
+							__( 'Help us make Easy Digital Downloads better by opting into anonymous usage tracking. <a href="%1$s" target="_blank">Here is what we track</a>.<br>If you opt-in here and to <a href="%2$s" target="_blank">our newsletter</a>, we will email you a discount code for our <a href="%3$s" target="_blank">extension shop</a>.', 'easy-digital-downloads' ),
+							esc_url( 'https://docs.easydigitaldownloads.com/article/1419-what-information-will-be-tracked-by-opting-into-usage-tracking' ),
 							esc_url( 'https://easydigitaldownloads.com/subscribe/?utm_source=' . $site_hash . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking' ),
 							esc_url( 'https://easydigitaldownloads.com/downloads/?utm_source=' . $site_hash . '&utm_medium=admin&utm_term=settings&utm_campaign=EDDUsageTracking' )
 						),
@@ -1473,6 +1474,10 @@ function edd_settings_sanitize_taxes( $input ) {
 			'amount'      => floatval( $tax_rate['rate'] ),
 			'description' => $region,
 		);
+
+		if ( empty( $adjustment_data['name'] ) || $adjustment_data['amount'] <= 0 ) {
+			continue;
+		}
 
 		$existing_adjustment = edd_get_adjustments( $adjustment_data );
 
@@ -2679,6 +2684,8 @@ function edd_tax_rates_callback( $args ) {
 		'i18n'  => array(
 			/* translators: Tax rate country code */
 			'multipleCountryWide' => esc_html__( 'Only one country-wide tax rate can be active at once. Please deactivate the existing %s country-wide rate before adding another.', 'easy-digital-downloads' ),
+			'emptyCountry'        => esc_html__( 'Please select a country.', 'easy-digital-downloads' ),
+			'emptyTax'            => esc_html__( 'Please enter a tax rate greater than 0.', 'easy-digital-downloads' ),
 		),
 	) );
 

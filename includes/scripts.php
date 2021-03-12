@@ -307,9 +307,7 @@ function edd_register_admin_scripts() {
 		),
 		'dashboard'    => array(),
 		'discounts'    => array(),
-		'downloads'    => array(
-			'inline-edit-post',
-		),
+		'downloads'    => array(),
 		'tools-export' => array(),
 		'tools-import' => array(),
 		'notes'        => array(),

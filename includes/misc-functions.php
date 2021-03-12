@@ -1243,12 +1243,8 @@ function edd_payment_get_ip_address_url( $order_id ) {
  */
 function edd_doing_cron() {
 
-	// Bail if not doing WordPress cron (>4.8.0)
-	if ( function_exists( 'wp_doing_cron' ) && wp_doing_cron() ) {
-		return true;
-
-	// Bail if not doing WordPress cron (<4.8.0)
-	} elseif ( defined( 'DOING_CRON' ) && ( true === DOING_CRON ) ) {
+	// Bail if doing WordPress cron.
+	if ( wp_doing_cron() ) {
 		return true;
 	}
 
@@ -1268,12 +1264,8 @@ function edd_doing_cron() {
  */
 function edd_doing_ajax() {
 
-	// Bail if not doing WordPress AJAX (>4.8.0)
-	if ( function_exists( 'wp_doing_ajax' ) && wp_doing_ajax() ) {
-		return true;
-
-	// Bail if not doing WordPress AJAX (<4.8.0)
-	} elseif ( defined( 'DOING_AJAX' ) && ( true === DOING_AJAX ) ) {
+	// Bail if doing WordPress AJAX.
+	if ( wp_doing_ajax() ) {
 		return true;
 	}
 
@@ -1293,12 +1285,8 @@ function edd_doing_ajax() {
  */
 function edd_doing_autosave() {
 
-	// Bail if not doing WordPress autosave
-	if ( function_exists( 'wp_doing_autosave' ) && wp_doing_autosave() ) {
-		return true;
-
-	// Bail if not doing WordPress autosave
-	} elseif ( defined( 'DOING_AUTOSAVE' ) && ( true === DOING_AUTOSAVE ) ) {
+	// Bail if doing WordPress autosave.
+	if ( defined( 'DOING_AUTOSAVE' ) && ( true === DOING_AUTOSAVE ) ) {
 		return true;
 	}
 
