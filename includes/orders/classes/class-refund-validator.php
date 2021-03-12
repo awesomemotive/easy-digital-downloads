@@ -213,6 +213,15 @@ class Refund_Validator {
 	public function validate_and_calculate_totals() {
 		$this->validate_order_item_amounts();
 		$this->validate_fee_amounts();
+
+		// Overall refund total cannot be over total refundable amount.
+		$order_total = edd_get_order_total( $this->order->id );
+		if ( $this->total > $order_total ) {
+			throw new \Exception( sprintf(
+				__( 'The maximum refund amount is %s.', 'easy-digital-downloads' ),
+				edd_currency_filter( $order_total )
+			) );
+		}
 	}
 
 	/**

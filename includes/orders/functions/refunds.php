@@ -9,6 +9,8 @@
  * @since       3.0
  */
 
+use EDD\Orders\Refund_Validator;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -280,16 +282,10 @@ function edd_refund_order( $order_id, $order_items = array(), $fees = array() ) 
 	/** Validate refund amounts *************************************************/
 
 	try {
-		$validator = new \EDD\Orders\Refund_Validator( $order, $order_items, $fees );
+		$validator = new Refund_Validator( $order, $order_items, $fees );
 		$validator->validate_and_calculate_totals();
 	} catch ( \Exception $e ) {
 		return new WP_Error( 'refund_validation_error', $e->getMessage() );
-	}
-
-	// Overall refund total cannot be over total refundable amount.
-	$order_total = edd_get_order_total( $order_id );
-	if ( $validator->total > $order_total ) {
-		return new WP_Error( 'invalid_refund_amount', sprintf( __( 'The maximum refund amount is %s.', 'easy-digital-downloads' ), edd_currency_filter( $order_total ) ) );
 	}
 
 	/** Insert order **********************************************************/
