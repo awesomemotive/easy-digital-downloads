@@ -5,7 +5,7 @@
  * This class should simplify the process of adding license information
  * to new EDD extensions.
  *
- * @version 3.0
+ * @version 1.1
  */
 
 // Exit if accessed directly
@@ -111,7 +111,7 @@ class EDD_License {
 		//add_action( 'admin_init', array( $this, 'weekly_license_check' ) );
 
 		// Updater
-		add_action( 'admin_init', array( $this, 'auto_updater' ), 0 );
+		add_action( 'init', array( $this, 'auto_updater' ) );
 
 		// Display notices to admins
 		add_action( 'admin_notices', array( $this, 'notices' ) );
@@ -129,7 +129,11 @@ class EDD_License {
 	 * @return  void
 	 */
 	public function auto_updater() {
-		edd_get_option( 'enabled_betas', array() );
+
+		$doing_cron = defined( 'DOING_CRON' ) && DOING_CRON;
+		if ( ! current_user_can( 'manage_options' ) && ! $doing_cron ) {
+			return;
+		}
 
 		$args = array(
 			'version'   => $this->version,

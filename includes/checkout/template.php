@@ -691,7 +691,7 @@ function edd_show_payment_icons() {
 
 	foreach ( $payment_methods as $key => $option ) {
 		if ( edd_string_is_image_url( $key ) ) {
-			echo '<img class="payment-icon" src="' . esc_url( $key ) . '"/>';
+			echo '<img class="payment-icon" src="' . esc_url( $key ) . '" alt="' . esc_attr( $option ) . '"/>';
 		} else {
 			$type = '';
 			$card = strtolower( str_replace( ' ', '', $option ) );
@@ -728,7 +728,7 @@ function edd_show_payment_icons() {
 			if ( 'svg' === $type ) {
 				echo $image;
 			} else {
-				echo '<img class="payment-icon" src="' . esc_url( $image ) . '"/>';
+				echo '<img class="payment-icon" src="' . esc_url( $image ) . '" alt="' . esc_attr( $option ) . '"/>';
 			}
 		}
 	}
