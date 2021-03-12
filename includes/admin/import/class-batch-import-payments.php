@@ -91,6 +91,9 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 			global $wpdb;
 			$sql = "DELETE FROM {$wpdb->prefix}edd_customermeta WHERE meta_key = '_canonical_import_id'";
 			$wpdb->query( $sql );
+
+			// Delete the uploaded CSV file.
+			unlink( $this->file );
 		}
 
 		if( ! $this->done && $this->csv->data ) {
