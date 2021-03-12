@@ -63,7 +63,7 @@ class EDD_Batch_Taxed_Customers_Export extends EDD_Batch_Export {
 			'offset'     => ( $this->step * 30 ) - 30,
 			'status__in' => array( 'complete', 'revoked' ),
 			'order'      => 'ASC',
-			'orderby'    => 'date',
+			'orderby'    => 'date_created',
 			'fields'     => 'customer_id',
 		);
 
