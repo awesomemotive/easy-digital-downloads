@@ -92,7 +92,7 @@ function edd_upgrades_screen() {
 			</div>
 			<script type="text/javascript">
 				setTimeout( function() {
-					document.location.href = '<?php echo esc_url( $redirect ); ?>';
+					document.location.href = '<?php echo esc_url_raw( $redirect ); ?>';
 				}, 250 );
 			</script>
 
@@ -124,7 +124,7 @@ function edd_upgrades_screen() {
 						jQuery( '#edd-upgrade-loader' ).hide();
 
 						setTimeout( function() {
-							document.location.href = '<?php echo esc_url( $redirect ); ?>';
+							document.location.href = '<?php echo esc_url_raw( $redirect ); ?>';
 						}, 250 );
 					});
 				});

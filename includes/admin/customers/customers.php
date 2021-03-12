@@ -341,21 +341,25 @@ function edd_render_customer_view( $view, $callbacks ) {
 function edd_customers_view( $customer = null ) {
 	$customer_edit_role = edd_get_edit_customers_role();
 
-	$agreement_timestamps = $customer->get_meta( 'agree_to_terms_time',   false );
+	$agreement_timestamps = $customer->get_meta( 'agree_to_terms_time', false );
+	$show_terms           = edd_get_option( 'show_agree_to_terms' );
 	$privacy_timestamps   = $customer->get_meta( 'agree_to_privacy_time', false );
+	$show_privacy         = edd_get_option( 'show_agree_to_privacy_policy' );
+	$last_payment_date    = '';
 
-	$last_payment = edd_get_payments( array(
-		'output'   => 'payments',
-		'post__in' => $customer->get_payment_ids(),
-		'orderby'  => 'date',
-		'number'   => 1
-	) );
-
-	if ( ! empty( $last_payment ) ) {
-		$last_payment      = reset( $last_payment );
-		$last_payment_date = strtotime( $last_payment->date );
-	} else {
-		$last_payment_date = '';
+	if ( ( empty( $agreement_timestamps ) && $show_terms ) || ( empty( $privacy_timestamps ) && $show_privacy ) ) {
+		$last_payment = edd_get_orders(
+			array(
+				'customer_id' => $customer->id,
+				'orderby'     => 'date',
+				'order'       => 'DESC',
+				'number'      => 1,
+			)
+		);
+		if ( ! empty( $last_payment ) ) {
+			$last_payment      = reset( $last_payment );
+			$last_payment_date = strtotime( $last_payment->date_created );
+		}
 	}
 
 	if ( is_array( $agreement_timestamps ) ) {
@@ -588,6 +592,7 @@ function edd_customers_view( $customer = null ) {
 				</div>
 			</div>
 		</form>
+		<div class="edd-clearfix"></div>
 	</div>
 
 	<?php do_action( 'edd_customer_before_stats', $customer ); ?>
@@ -653,7 +658,7 @@ function edd_customers_view( $customer = null ) {
 
 				<?php endif;
 
-			} elseif ( ! empty( $last_payment_date && edd_get_option( 'show_agree_to_terms' ) ) ) {
+			} elseif ( ! empty( $last_payment_date && $show_terms ) ) {
 				echo esc_html( edd_date_i18n( $last_payment_date, get_option( 'date_format' ) . ' H:i:s' ) . ' ' . edd_get_timezone_abbr() );
 
 				esc_html_e( ' &mdash; Agreed to Terms', 'easy-digital-downloads' );
@@ -681,7 +686,7 @@ function edd_customers_view( $customer = null ) {
 
 				<?php endif;
 
-			} elseif ( ! empty( $last_payment_date ) && edd_get_option( 'show_agree_to_privacy_policy' ) ) {
+			} elseif ( ! empty( $last_payment_date ) && $show_privacy ) {
 
 				echo esc_html( edd_date_i18n( $last_payment_date, get_option( 'date_format' ) . ' H:i:s' ) . ' ' . edd_get_timezone_abbr() );
 

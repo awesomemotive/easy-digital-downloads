@@ -214,9 +214,11 @@ class Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertInternalType( 'string', $payment->completed_date );
 
 		$expected_date_range = array(
+			date( 'Y-m-d H:i', strtotime( "-2 seconds" ) ),
 			date( 'Y-m-d H:i', strtotime( "-1 second" ) ),
 			date( 'Y-m-d H:i' ),
 			date( 'Y-m-d H:i', strtotime( "+1 second" ) ),
+			date( 'Y-m-d H:i', strtotime( "+2 seconds" ) ),
 		);
 
 		$this->assertTrue( in_array( date( 'Y-m-d H:i', strtotime( $payment->completed_date ) ), $expected_date_range ) );
@@ -229,9 +231,11 @@ class Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertInternalType( 'string', $completed_date );
 
 		$expected_date_range = array(
+			date( 'Y-m-d H:i', strtotime( "-2 seconds" ) ),
 			date( 'Y-m-d H:i', strtotime( "-1 second" ) ),
 			date( 'Y-m-d H:i' ),
 			date( 'Y-m-d H:i', strtotime( "+1 second" ) ),
+			date( 'Y-m-d H:i', strtotime( "+2 seconds" ) ),
 		);
 
 		$this->assertTrue( in_array( date( 'Y-m-d H:i', strtotime( $completed_date ) ), $expected_date_range ) );

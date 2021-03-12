@@ -563,7 +563,7 @@ function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
  * @param int $hour Hour
  * @return int $earnings Earnings
  */
-function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour = null, $include_taxes = true ) {
+function edd_get_earnings_by_date( $day, $month_num, $year = null, $hour = null, $include_taxes = true ) {
 	$backtrace = debug_backtrace();
 
 	_edd_deprecated_function( __FUNCTION__, '2.7', 'EDD_Payment_Stats()->get_earnings()', $backtrace );
@@ -1102,7 +1102,7 @@ function edd_override_edit_post_for_payment_link( $url = '', $post_id = 0, $cont
  * @param int    $price_id    Optional. Price ID.
  * @param string $sale_date   Optional. Date of the sale.
  */
-function edd_record_sale_in_log( $download_id = 0, $payment_id, $price_id = false, $sale_date = null ) {
+function edd_record_sale_in_log( $download_id, $payment_id, $price_id = false, $sale_date = null ) {
 	_edd_deprecated_function( __FUNCTION__, '3.0' );
 
 	$edd_logs = EDD()->debug_log;
