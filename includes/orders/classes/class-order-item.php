@@ -10,6 +10,8 @@
  */
 namespace EDD\Orders;
 
+use EDD\Refundable_Item;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -37,6 +39,8 @@ defined( 'ABSPATH' ) || exit;
  * @property Order_Adjustment[] $adjustments
  */
 class Order_Item extends \EDD\Database\Rows\Order_Item {
+
+	use Refundable_Item;
 
 	/**
 	 * Order Item ID.
@@ -172,17 +176,6 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	protected $adjustments = null;
 
 	/**
-	 * Refunded order items for this item.
-	 *
-	 * When this item has been refunded, matching order item records are created and associated with the
-	 * refund record. These are those order items.
-	 *
-	 * @since 3.0
-	 * @var null|Order_Item[]|false
-	 */
-	protected $refunded_items = null;
-
-	/**
 	 * Magic getter for immutability.
 	 *
 	 * @since 3.0
@@ -234,6 +227,9 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	/**
 	 * Retrieves order item records that were refunded from this original order item.
 	 *
+	 * @todo I can see a bug here if you have multiple order items for the same product (not using quantities).
+	 *       Might need to make a `parent_id` column that we can reference.
+	 *
 	 * @since 3.0
 	 *
 	 * @return Order_Item[]|false
@@ -258,38 +254,5 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 			'product_id'   => $this->product_id,
 			'price_id'     => $this->price_id
 		) );
-	}
-
-	/**
-	 * The maximum amounts that can be refunded. This starts with the original order item amounts, subtracts
-	 * discounts, and subtracts what's already been refunded.
-	 *
-	 * @since 3.0
-	 *
-	 * @return array
-	 */
-	public function get_refundable_amounts() {
-		$maximums = array(
-			'subtotal' => $this->subtotal - $this->discount,
-			'tax'      => $this->tax,
-			'total'    => $this->total
-		);
-
-		$refunded_items = $this->get_refunded_items();
-
-		if ( ! empty( $refunded_items ) ) {
-			foreach ( $refunded_items as $refunded_item ) {
-				// We're adding numbers here, because `$refund_item` has negative amounts already.
-				$maximums['subtotal'] += $refunded_item->subtotal;
-				$maximums['tax']      += $refunded_item->tax;
-				$maximums['total']    += $refunded_item->total;
-			}
-		}
-
-		$maximums['subtotal'] = number_format( $maximums['subtotal'], edd_currency_decimal_filter(), '.', '' );
-		$maximums['tax']      = number_format( $maximums['tax'], edd_currency_decimal_filter(), '.', '' );
-		$maximums['total']    = number_format( $maximums['total'], edd_currency_decimal_filter(), '.', '' );
-
-		return $maximums;
 	}
 }

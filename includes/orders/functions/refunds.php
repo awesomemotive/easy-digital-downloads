@@ -186,18 +186,27 @@ function edd_is_order_refundable_by_override( $order_id = 0 ) {
  *
  * @since 3.0
  *
- * @param int    $order_id    Order ID.
- * @param array  $order_items {
- *                            Optional. Array of Order Item IDs to allow for a partial refund.
- * @type int   $order_item_id Required. ID of the order item.
- * @type int   $quantity      Required. Quantity being refunded.
- * @type float $subtotal      Required. Amount to refund, excluding tax.
- * @type float $tax           Optional. Amount of tax to refund.
- *                }
+ * @param int   $order_id      Order ID.
+ * @param array $order_items   {
+ *                             Optional. Array of Order Item IDs to allow for a partial refund.
+ *
+ * @type int    $order_item_id Required. ID of the order item.
+ * @type int    $quantity      Required. Quantity being refunded.
+ * @type float  $subtotal      Required. Amount to refund, excluding tax.
+ * @type float  $tax           Optional. Amount of tax to refund.
+ * }
+ *
+ * @param array $fees          {
+ *                             Optional. Array of fees to refund.
+ *
+ * @type int    $fee_id        Required. ID of the order adjustment being refunded.
+ * @type float  $subtotal      Required. Amount to refund, excluding tax.
+ * @type float  $tax           Required. Amount of tax to refund.
+ * }
  *
  * @return int|WP_Error New order ID if successful, WP_Error on failure.
  */
-function edd_refund_order( $order_id, $order_items = array() ) {
+function edd_refund_order( $order_id, $order_items = array(), $fees = array() ) {
 	global $wpdb;
 
 	// Ensure the order ID is an integer.
@@ -268,71 +277,18 @@ function edd_refund_order( $order_id, $order_items = array() ) {
 		$number = $order->id . $refund_suffix . '1';
 	}
 
-	/** Validate refund amounts*************************************************/
+	/** Validate refund amounts *************************************************/
 
-	$keyed_order_items = array();
-	if ( is_array( $order_items ) && ! empty( $order_items ) ) {
-
-		// Reorder the `$order_items` array to use the order item ID as the key.
-		foreach( $order_items as $order_item ) {
-			if ( isset( $order_item['order_item_id'] ) ) {
-				$order_item['status'] = 'refunded'; // Assume fully refunded for now, we'll adjust later if partial.
-
-				$keyed_order_items[ intval( $order_item['order_item_id'] ) ] = $order_item;
-			}
-		}
-
-		$subtotal = 0;
-		$tax      = 0;
-		$total    = 0;
-
-		foreach ( $order->items as $item ) {
-			if ( ! array_key_exists( $item->id, $keyed_order_items ) ) {
-				continue;
-			}
-
-			$maximum_refund_amounts = $item->get_refundable_amounts();
-
-			// The refund amount for each order item cannot exceed the original amount minus what's already been refunded.
-
-			// Note: quantity is not checked because you might process multiple partial refunds for the same order item.
-
-			$refund_subtotal = isset( $keyed_order_items[ $item->id ]['subtotal'] )
-				? $keyed_order_items[ $item->id ]['subtotal']
-				: $item->subtotal;
-			if ( $refund_subtotal > $maximum_refund_amounts['subtotal'] ) {
-				return new WP_Error( 'invalid_refund_amount', sprintf( __( 'The maximum refund subtotal for order item #%d is %s.', 'easy-digital-downloads' ), $item->id, edd_currency_filter( $maximum_refund_amounts['subtotal'] ) ) );
-			}
-
-			$refund_tax = isset( $keyed_order_items[ $item->id ]['tax'] )
-				? $keyed_order_items[ $item->id ]['tax']
-				: $item->tax;
-			if ( $refund_tax > $maximum_refund_amounts['tax'] ) {
-				return new WP_Error( 'invalid_refund_amount', sprintf( __( 'The maximum refund tax amount for order item #%d is %s.', 'easy-digital-downloads' ), $item->id, edd_currency_filter( $maximum_refund_amounts['tax'] ) ) );
-			}
-
-			$refund_total = $refund_subtotal + $refund_tax;
-			if ( $refund_total > $maximum_refund_amounts['total'] ) {
-				return new WP_Error( 'invalid_refund_amount', sprintf( __( 'The maximum refund total for order item #%d is %s.', 'easy-digital-downloads' ), $item->id, edd_currency_filter( $maximum_refund_amounts['total'] ) ) );
-			} elseif ( $refund_total < $maximum_refund_amounts['total'] ) {
-				// Change to partially refunded status if we're not refunding the whole thing.
-				$keyed_order_items[ $item->id ]['status'] = 'partially_refunded';
-			}
-
-			$subtotal += $refund_subtotal;
-			$tax      += $refund_tax;
-			$total    += $refund_total;
-		}
-
-	} else {
-		$subtotal = $order->subtotal;
-		$tax      = $order->tax;
-		$total    = $order->total;
+	try {
+		$validator = new \EDD\Orders\Refund_Validator( $order, $order_items, $fees );
+		$validator->validate_and_calculate_totals();
+	} catch ( \Exception $e ) {
+		return new WP_Error( 'refund_validation_error', $e->getMessage() );
 	}
 
 	// Overall refund total cannot be over total refundable amount.
 	$order_total = edd_get_order_total( $order_id );
-	if ( $total > $order_total ) {
+	if ( $validator->total > $order_total ) {
 		return new WP_Error( 'invalid_refund_amount', sprintf( __( 'The maximum refund amount is %s.', 'easy-digital-downloads' ), edd_currency_filter( $order_total ) ) );
 	}
 
@@ -352,55 +308,50 @@ function edd_refund_order( $order_id, $order_items = array() ) {
 		'currency'     => $order->currency,
 		'payment_key'  => strtolower( md5( uniqid() ) ),
 		'tax_rate_id'  => $order->tax_rate_id,
-		'subtotal'     => edd_negate_amount( $subtotal ),
-		'tax'          => edd_negate_amount( $tax ),
-		'total'        => edd_negate_amount( $total ),
+		'subtotal'     => edd_negate_amount( $validator->subtotal ),
+		'tax'          => edd_negate_amount( $validator->tax ),
+		'total'        => edd_negate_amount( $validator->total ),
 	);
 
 	// Full refund is inserted first to allow for conditional checks to run later
 	// and update the order, but we need an INSERT to be executed to generate a
 	// new order ID.
-	$new_order_id = edd_add_order( $order_data );
+	$refund_id = edd_add_order( $order_data );
 
 	/** Insert order items ****************************************************/
 
-	foreach ( $order->items as $item ) {
+	foreach ( $validator->get_refunded_order_items() as $order_item ) {
+		$order_item['order_id'] = $refund_id;
 
-		// If the $keyed_order_items var is an array, and it's not empty, verify this item is one being refunded.
-		if ( is_array( $keyed_order_items ) && ! empty( $keyed_order_items ) && ! array_key_exists( $item->id, $keyed_order_items ) ) {
-			continue;
-		}
-
-		// Get values from `$keyed_order_items` if we can, otherwise fall back to defaults.
-		$status   = isset( $keyed_order_items[ $item->id ]['status'] ) ? $keyed_order_items[ $item->id ]['status'] : 'refunded';
-		$quantity = isset( $keyed_order_items[ $item->id ]['quantity'] ) ? intval( $keyed_order_items[ $item->id ]['quantity'] ) : $item->quantity;
-		$subtotal = isset( $keyed_order_items[ $item->id ]['subtotal'] ) ? $keyed_order_items[ $item->id ]['subtotal'] : $item->subtotal;
-		$tax      = isset( $keyed_order_items[ $item->id ]['tax'] ) ? $keyed_order_items[ $item->id ]['tax'] : $item->tax;
-
-		$order_item_id = edd_add_order_item( array(
-			'order_id'     => $new_order_id,
-			'product_id'   => $item->product_id,
-			'product_name' => $item->product_name,
-			'price_id'     => $item->price_id,
-			'cart_index'   => $item->cart_index,
-			'type'         => $item->type,
-			'status'       => $status,
-			'quantity'     => edd_negate_int( $quantity ),
-			'amount'       => edd_negate_amount( $item->amount ),
-			'subtotal'     => edd_negate_amount( $subtotal ),
-			'tax'          => edd_negate_amount( $tax ),
-			'total'        => edd_negate_amount( $subtotal + $tax ),
-		) );
-
-		// @todo Item adjustments.
+		edd_add_order_item( $order_item );
 
 		// Set the order item status on the original order.
-		edd_update_order_item( $item->id, array( 'status' => $status ) );
+		if ( ! empty( $order_item['original_item_id'] ) && ! empty( $order_item['status'] ) ) {
+			edd_update_order_item( $order_item['original_item_id'], array( 'status' => $order_item['status'] ) );
+		}
 	}
 
 	/** Insert order adjustments **********************************************/
 
-	// @todo
+	foreach( $validator->get_refunded_fees() as $fee ) {
+		if ( ! empty( $fee['object_type'] ) && 'order' === $fee['object_type'] ) {
+			$fee['object_id'] = $refund_id;
+		}
+
+		/*
+		 * Note: Order item adjustments retain their `object_id` link to the *original* order item -- not the
+		 * refunded order item. This isn't ideal, but it's because you could refund an order item fee without
+		 * refunding the associated item, in which case there would be no refunded order item to reference.
+		 * So we link back to the *original* order item in all cases to be consistent.
+		 */
+
+		edd_add_order_adjustment( $fee );
+
+		// Set the status on the original adjustment.
+		if ( ! empty( $fee['original_item_id'] ) && ! empty( $fee['status'] ) ) {
+			edd_update_order_adjustment( $fee['original_item_id'], array( 'status' => $fee['status'] ) );
+		}
+	}
 
 	// Update order status to `refunded` once refund is complete and if all items are marked as refunded.
 	$all_refunded = true;
@@ -412,26 +363,20 @@ function edd_refund_order( $order_id, $order_items = array() ) {
 		? 'refunded'
 		: 'partially_refunded';
 
-	edd_update_order(
-		$order_id,
-		array(
-			'status'      => $order_status,
-			'customer_id' => $order->customer_id,
-		)
-	);
+	edd_update_order( $order_id, array( 'status' => $order_status ) );
 
 	/**
 	 * Fires when an order has been refunded.
 	 *
 	 * @since 3.0
 	 *
-	 * @param int   $order_id     Order ID of the original order.
-	 * @param int   $new_order_id Order ID of the refunded order.
-	 * @param float $total        Amount refunded.
+	 * @param int  $order_id     Order ID of the original order.
+	 * @param int  $refund_id    ID of the new refund object.
+	 * @param bool $all_refunded Whether or not the entire order was refunded.
 	 */
-	do_action( 'edd_refund_order', $order_id, $new_order_id, floatval( $order->total ) );
+	do_action( 'edd_refund_order', $order_id, $refund_id, $all_refunded );
 
-	return $new_order_id;
+	return $refund_id;
 }
 
 /**
