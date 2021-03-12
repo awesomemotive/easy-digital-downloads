@@ -495,7 +495,7 @@ function edd_ajax_process_refund_form() {
 
 	// Verify the logged in user has permission to edit shop payments.
 	if ( ! current_user_can( 'edit_shop_payments' ) ) {
-		wp_send_json_error( __( 'Your account does not have permission to perform this action', 'easy-digital-downloads' ), 401 );
+		wp_send_json_error( __( 'Your account does not have permission to perform this action.', 'easy-digital-downloads' ), 401 );
 	}
 
 	if ( empty( $_POST['data'] ) || empty( $_POST['order_id'] ) ) {
