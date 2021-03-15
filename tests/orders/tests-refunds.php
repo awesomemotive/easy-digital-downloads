@@ -2,6 +2,7 @@
 namespace EDD\Orders;
 
 use Carbon\Carbon;
+use EDD\Utils\Exceptions\Invalid_Argument;
 
 /**
  * Refund Tests.
@@ -140,7 +141,8 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 			$to_refund[] = array(
 				'order_item_id' => $order_item->id,
 				'subtotal'      => $order_item->subtotal * 2,
-				'tax'           => $order_item->tax
+				'tax'           => $order_item->tax,
+				'total'         => $order_item->total * 2
 			);
 		}
 
@@ -230,5 +232,73 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 		$date = '2010-01-01 00:00:00';
 
 		$this->assertSame( Carbon::parse( $date )->addDays( 30 )->toDateTimeString(), edd_get_refund_date( $date ) );
+	}
+
+	/**
+	 * @covers \EDD\Orders\Refund_Validator::validate_and_calculate_totals
+	 * @covers \EDD\Orders\Refund_Validator::get_refunded_order_items
+	 * @throws \Exception
+	 */
+	public function test_refund_validator_all_returns_original_amounts() {
+		$order     = edd_get_order( self::$orders[1] );
+		$validator = new Refund_Validator( $order, 'all', 'all' );
+		$validator->validate_and_calculate_totals();
+
+		$this->assertEquals( ( $order->subtotal - $order->discount ), $validator->subtotal );
+		$this->assertEquals( $order->tax, $validator->tax );
+		$this->assertEquals( $order->total, $validator->total );
+
+		$order_item_ids  = wp_list_pluck( $order->items, 'id' );
+		$refund_item_ids = wp_list_pluck( $validator->get_refunded_order_items(), 'parent' );
+
+		sort( $refund_item_ids );
+		sort( $refund_item_ids );
+
+		$this->assertEquals( $order_item_ids, $refund_item_ids );
+	}
+
+	/**
+	 * An Invalid_Argument exception is thrown if the `order_item_id` argument is missing.
+	 *
+	 * @covers \EDD\Orders\Refund_Validator::validate_and_format_order_items
+	 */
+	public function test_refund_validator_throws_exception_missing_order_item_id() {
+		$order = edd_get_order( self::$orders[1] );
+
+		$this->expectException( Invalid_Argument::class );
+
+		$validator = new Refund_Validator( $order, array(
+			array(
+				'subtotal' => 100,
+				'tax'      => 20,
+				'total'    => 120
+			)
+		), 'all' );
+
+		$exception = $this->getExpectedException();
+		$this->assertContains( 'order_item_id', $exception->getMessage() );
+	}
+
+	/**
+	 * An Invalid_Argument exception is thrown if the `subtotal` argument is missing.
+	 *
+	 * @covers \EDD\Orders\Refund_Validator::validate_and_format_order_items
+	 * @covers \EDD\Orders\Refund_Validator::validate_required_fields
+	 */
+	public function test_refund_validator_throws_exception_missing_subtotal() {
+		$order = edd_get_order( self::$orders[1] );
+
+		$this->expectException( Invalid_Argument::class );
+
+		$validator = new Refund_Validator( $order, array(
+			array(
+				'order_item_id' => $order->items[0]->id,
+				'tax'           => $order->items[0]->tax,
+				'total'         => $order->items[0]->total
+			)
+		), 'all' );
+
+		$exception = $this->getExpectedException();
+		$this->assertContains( 'subtotal', $exception->getMessage() );
 	}
 }
