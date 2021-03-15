@@ -87,16 +87,6 @@ class Order_Adjustment extends \EDD\Database\Rows\Order_Adjustment {
 	protected $type;
 
 	/**
-	 * Type key.
-	 *
-	 * This is historically the "fee ID", or the key from the original fee array.
-	 *
-	 * @since 3.0
-	 * @var string|null
-	 */
-	protected $type_key;
-
-	/**
 	 * Description.
 	 *
 	 * @since 3.0
