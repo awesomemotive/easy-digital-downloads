@@ -105,6 +105,8 @@ class Refund_Validator {
 					throw Invalid_Argument::from( 'order_item_id', __METHOD__ );
 				}
 
+				$this->validate_required_fields( $order_item_data, __METHOD__ );
+
 				/*
 				 * For now we're going to assume the order item will be fully refunded. We'll adjust this later if it
 				 * ends up being a partial refund.
@@ -165,6 +167,8 @@ class Refund_Validator {
 					throw Invalid_Argument::from( 'fee_id', __METHOD__ );
 				}
 
+				$this->validate_required_fields( $fee_data, __METHOD__ );
+
 				/*
 				 * For now we're going to assume the fee will be fully refunded. We'll adjust this later if it
 				 * ends up being a partial refund.
@@ -198,6 +202,29 @@ class Refund_Validator {
 		}
 
 		return $fees_to_refund;
+	}
+
+	/**
+	 * Validates required fields for both order items and taxes.
+	 *
+	 * @param array  $input   Input to be validated.
+	 * @param string $context Context, for error message.
+	 *
+	 * @since 3.0
+	 * @throws Invalid_Argument
+	 */
+	private function validate_required_fields( $input, $context ) {
+		// subtotal and total are both required.
+		$required_fields = array( 'subtotal', 'total' );
+		if ( edd_use_taxes() ) {
+			$required_fields[] = 'tax';
+		}
+
+		foreach ( $required_fields as $required_field ) {
+			if ( ! isset( $input[ $required_field ] ) ) {
+				throw Invalid_Argument::from( $required_field, $context );
+			}
+		}
 	}
 
 	/**
