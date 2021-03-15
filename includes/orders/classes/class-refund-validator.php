@@ -383,7 +383,7 @@ class Refund_Validator {
 		$order_item_fees = array();
 
 		foreach ( $this->order_fees as $fee ) {
-			if ( array_key_exists( $fee->id, $this->order_items_to_refund ) ) {
+			if ( array_key_exists( $fee->id, $this->fees_to_refund ) ) {
 				$order_item_fees[] = $this->set_common_item_args( wp_parse_args( $this->order_items_to_refund[ $fee->id ], $fee->to_array() ) );
 			}
 		}
@@ -406,7 +406,7 @@ class Refund_Validator {
 		}
 
 		// Strip out the keys we don't want.
-		$keys_to_remove = array( 'id', 'order_id', 'date_created', 'date_modified', 'uuid' );
+		$keys_to_remove = array( 'id', 'order_id', 'discount', 'date_created', 'date_modified', 'uuid' );
 		$new_args = array_diff_key( $new_args, array_flip( $keys_to_remove ) );
 
 		// Status is always `complete`.

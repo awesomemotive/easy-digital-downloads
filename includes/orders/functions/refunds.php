@@ -344,11 +344,6 @@ function edd_refund_order( $order_id, $order_items = 'all', $fees = 'all' ) {
 		 */
 
 		edd_add_order_adjustment( $fee );
-
-		// Update the status on the original order adjustment.
-		if ( ! empty( $fee['parent'] ) && ! empty( $fee['original_item_status'] ) ) {
-			edd_update_order_adjustment( $fee['parent'], array( 'status' => $fee['original_item_status'] ) );
-		}
 	}
 
 	// Update order status to `refunded` once refund is complete and if all items are marked as refunded.
