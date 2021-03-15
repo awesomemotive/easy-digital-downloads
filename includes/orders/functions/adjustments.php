@@ -23,6 +23,9 @@ defined( 'ABSPATH' ) || exit;
  *     The `date_created` and `date_modified` parameters do not need to be passed.
  *     They will be automatically populated if empty.
  *
+ *     @type int    $parent        Parent ID. Only used when creating refunds to link
+ *                                 a refund order adjustment to the original order adjustment.
+ *                                 Default 0.
  *     @type int    $object_id     Object ID that the adjustment refers to. This would
  *                                 be an ID that corresponds to the object type
  *                                 specified. E.g. an object ID of 25 with object
