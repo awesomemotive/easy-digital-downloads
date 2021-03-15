@@ -94,6 +94,7 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 		$refunded_order = edd_refund_order( self::$orders[0] );
 
 		// Check that a new order ID was returned.
+		$this->assertNotInstanceOf( 'WP_Error', $refunded_order );
 		$this->assertGreaterThan( 0, $refunded_order );
 
 		// Fetch original order.
@@ -147,7 +148,8 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 
 		$this->assertInstanceOf( 'WP_Error', $refund_id );
 
-		$this->assertEquals( 'invalid_refund_amount', $refund_id->get_error_code() );
+		$this->assertEquals( 'refund_validation_error', $refund_id->get_error_code() );
+		$this->assertContains( 'The maximum refund subtotal', $refund_id->get_error_message() );
 	}
 
 	/**
@@ -164,7 +166,8 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 			$to_refund[] = array(
 				'order_item_id' => $order_item->id,
 				'subtotal'      => ( $order_item->subtotal - $order_item->discount ) / 2,
-				'tax'           => $order_item->tax / 2
+				'tax'           => $order_item->tax / 2,
+				'total'         => $order_item->total / 2
 			);
 		}
 
