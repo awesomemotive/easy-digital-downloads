@@ -529,26 +529,26 @@ function edd_ajax_process_refund_form() {
 		}
 	}
 
-	// Collect selected fees.
-	$fees = array();
+	// Collect selected adjustments.
+	$adjustments = array();
 	if ( ! empty( $form_data['refund_order_adjustment'] ) && is_array( $form_data['refund_order_adjustment'] ) ) {
-		foreach( $form_data['refund_order_adjustment'] as $fee_id => $fee ) {
+		foreach( $form_data['refund_order_adjustment'] as $adjustment_id => $adjustment ) {
 			// If there's no quantity or subtotal - bail.
-			if ( empty( $fee['quantity'] ) || empty( $fee['subtotal'] ) ) {
+			if ( empty( $adjustment['quantity'] ) || empty( $adjustment['subtotal'] ) ) {
 				continue;
 			}
 
-			$fees[] = array(
-				'fee_id'   => absint( $fee_id ),
-				'quantity' => intval( $fee['quantity'] ),
-				'subtotal' => floatval( edd_sanitize_amount( $fee['subtotal'] ) ),
-				'tax'      => ! empty( $fee['tax'] ) ? floatval( edd_sanitize_amount( $fee['tax'] ) ) : 0.00
+			$adjustments[] = array(
+				'adjustment_id' => absint( $adjustment_id ),
+				'quantity'      => intval( $adjustment['quantity'] ),
+				'subtotal'      => floatval( edd_sanitize_amount( $adjustment['subtotal'] ) ),
+				'tax'           => ! empty( $adjustment['tax'] ) ? floatval( edd_sanitize_amount( $adjustment['tax'] ) ) : 0.00
 			);
 		}
 	}
 
 	$order_id  = absint( $_POST['order_id'] );
-	$refund_id = edd_refund_order( $order_id, $order_items, $fees );
+	$refund_id = edd_refund_order( $order_id, $order_items, $adjustments );
 
 	if ( is_wp_error( $refund_id ) ) {
 		wp_send_json_error( $refund_id->get_error_message() );

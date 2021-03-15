@@ -23,11 +23,11 @@ class Refund_Validator {
 	protected $order;
 
 	/**
-	 * All fees associated with the original order. Includes both order-level and order-item-level.
+	 * All fees and credits associated with the original order. Includes both order-level and order-item-level.
 	 *
 	 * @var Order_Adjustment[]
 	 */
-	protected $order_fees;
+	protected $order_adjustments;
 
 	/**
 	 * Array of order item IDs and amounts to refund. If empty, then all items will be refunded.
@@ -37,28 +37,28 @@ class Refund_Validator {
 	protected $order_items_to_refund;
 
 	/**
-	 * Array of fee IDs and amounts to refund. If empty, then no fees are refunded.
+	 * Array of adjustment IDs and amounts to refund. If empty, then no adjustments are refunded.
 	 *
 	 * @var array
 	 */
-	protected $fees_to_refund;
+	protected $adjustments_to_refund;
 
 	/**
-	 * Final subtotal for the refund. Includes all selected order items and fees.
+	 * Final subtotal for the refund. Includes all selected order items and adjustments.
 	 *
 	 * @var float
 	 */
 	public $subtotal = 0.00;
 
 	/**
-	 * Final tax amount to refund. Includes all selected order items and fees.
+	 * Final tax amount to refund. Includes all selected order items and adjustments.
 	 *
 	 * @var float
 	 */
 	public $tax = 0.00;
 
 	/**
-	 * Final total for the refund (subtotal + tax). Includes all selected order items and fees.
+	 * Final total for the refund (subtotal + tax). Includes all selected order items and adjustments.
 	 *
 	 * @var float
 	 */
@@ -69,15 +69,35 @@ class Refund_Validator {
 	 *
 	 * @param Order        $order
 	 * @param array|string $order_items
-	 * @param array|string $fees
+	 * @param array|string $adjustments
 	 *
 	 * @throws \Exception
 	 */
-	public function __construct( Order $order, $order_items = 'all', $fees = 'all' ) {
+	public function __construct( Order $order, $order_items = 'all', $adjustments = 'all' ) {
 		$this->order                 = $order;
-		$this->order_fees            = $this->order->get_fees();
+		$this->order_adjustments     = $this->get_order_adjustments();
 		$this->order_items_to_refund = $this->validate_and_format_order_items( $order_items );
-		$this->fees_to_refund        = $this->validate_and_format_fees( $fees );
+		$this->adjustments_to_refund = $this->validate_and_format_adjustments( $adjustments );
+	}
+
+	/**
+	 * Returns all refund-eligible adjustments associated with the order.
+	 * Note that this doesn't exclude items that have already reached their refund max; it just
+	 * returns all objects that could possibly be refunded. (Essentially `discount` adjustments
+	 * are excluded.)
+	 *
+	 * @since 3.0
+	 * @return Order_Adjustment[]
+	 */
+	private function get_order_adjustments() {
+		$fees    = $this->order->get_fees();
+		$credits = edd_get_order_adjustments( array(
+			'object_id'   => $this->order->id,
+			'object_type' => 'order',
+			'type'        => 'credit'
+		) );
+
+		return array_merge( $fees, $credits );
 	}
 
 	/**
@@ -142,63 +162,63 @@ class Refund_Validator {
 	}
 
 	/**
-	 * Validates the supplied fees and does a little formatting.
-	 * If `all` is supplied, then all fees eligible for refund are included.
+	 * Validates the supplied adjustments and does a little formatting.
+	 * If `all` is supplied, then all adjustments eligible for refund are included.
 	 *
-	 * @param array|string $fees
+	 * @param array|string $adjustments
 	 *
 	 * @return array
 	 * @throws Invalid_Argument
 	 */
-	private function validate_and_format_fees( $fees ) {
-		$keyed_fees = array();
+	private function validate_and_format_adjustments( $adjustments ) {
+		$keyed_adjustments = array();
 
-		if ( 'all' === $fees ) {
-			$fees = $this->get_all_refundable_fees();
+		if ( 'all' === $adjustments ) {
+			$adjustments = $this->get_all_refundable_adjustments();
 		}
 
-		if ( ! empty( $fees ) && is_array( $fees ) ) {
-			$fee_ids = wp_list_pluck( $this->order_fees, 'id' );
+		if ( ! empty( $adjustments ) && is_array( $adjustments ) ) {
+			$adjustment_ids = wp_list_pluck( $this->order_adjustments, 'id' );
 
-			foreach ( $fees as $fee_data ) {
-				// fee_id must be supplied and in the list attached to the original order/items.
-				if ( empty( $fee_data['fee_id'] ) || ! in_array( $fee_data['fee_id'], $fee_ids ) ) {
-					throw Invalid_Argument::from( 'fee_id', __METHOD__ );
+			foreach ( $adjustments as $adjustment_data ) {
+				// adjustment_id must be supplied and in the list attached to the original order/items.
+				if ( empty( $adjustment_data['adjustment_id'] ) || ! in_array( $adjustment_data['adjustment_id'], $adjustment_ids ) ) {
+					throw Invalid_Argument::from( 'adjustment_id', __METHOD__ );
 				}
 
-				$this->validate_required_fields( $fee_data, __METHOD__ );
+				$this->validate_required_fields( $adjustment_data, __METHOD__ );
 
-				if ( ! isset( $fee_data['total'] ) ) {
-					$fee_data['total'] = $fee_data['subtotal'] + $fee_data['tax'];
+				if ( ! isset( $adjustment_data['total'] ) ) {
+					$adjustment_data['total'] = $adjustment_data['subtotal'] + $adjustment_data['tax'];
 				}
 
-				// Set the array key to be the fee ID for easier lookups as we go.
-				$keyed_fees[ intval( $fee_data['fee_id'] ) ] = $fee_data;
+				// Set the array key to be the adjustment ID for easier lookups as we go.
+				$keyed_adjustments[ intval( $adjustment_data['adjustment_id'] ) ] = $adjustment_data;
 			}
 		}
 
-		return $keyed_fees;
+		return $keyed_adjustments;
 	}
 
 	/**
-	 * Returns an array of all fees that can be refunded.
-	 * This is used if `all` is supplied for fees.
+	 * Returns an array of all adjustments that can be refunded.
+	 * This is used if `all` is supplied for adjustments.
 	 *
 	 * @since 3.0
 	 * @return array
 	 */
-	private function get_all_refundable_fees() {
-		$fees_to_refund = array();
+	private function get_all_refundable_adjustments() {
+		$adjustments_to_refund = array();
 
-		foreach ( $this->order_fees as $fee ) {
-			if ( 'refunded' !== $fee->status ) {
-				$fees_to_refund[] = array_merge( array(
-					'fee_id' => $fee->id
-				), $fee->get_refundable_amounts() );
+		foreach ( $this->order_adjustments as $adjustment ) {
+			if ( 'refunded' !== $adjustment->status ) {
+				$adjustments_to_refund[] = array_merge( array(
+					'adjustment_id' => $adjustment->id
+				), $adjustment->get_refundable_amounts() );
 			}
 		}
 
-		return $fees_to_refund;
+		return $adjustments_to_refund;
 	}
 
 	/**
@@ -231,7 +251,7 @@ class Refund_Validator {
 	 */
 	public function validate_and_calculate_totals() {
 		$this->validate_order_item_amounts();
-		$this->validate_fee_amounts();
+		$this->validate_adjustment_amounts();
 
 		// Refund amount cannot be 0
 		if ( $this->total <= 0 ) {
@@ -275,23 +295,23 @@ class Refund_Validator {
 	}
 
 	/**
-	 * Validates the fee amounts.
+	 * Validates the adjustment amounts.
 	 *
 	 * @throws \Exception
 	 */
-	private function validate_fee_amounts() {
-		foreach ( $this->order_fees as $fee ) {
-			if ( ! array_key_exists( $fee->id, $this->fees_to_refund ) ) {
+	private function validate_adjustment_amounts() {
+		foreach ( $this->order_adjustments as $adjustment ) {
+			if ( ! array_key_exists( $adjustment->id, $this->adjustments_to_refund ) ) {
 				continue;
 			}
 
-			$amount_to_refund = wp_parse_args( $this->fees_to_refund[ $fee->id ], array(
-				'subtotal' => $fee->subtotal,
-				'tax'      => $fee->tax,
-				'total'    => $fee->total
+			$amount_to_refund = wp_parse_args( $this->adjustments_to_refund[ $adjustment->id ], array(
+				'subtotal' => $adjustment->subtotal,
+				'tax'      => $adjustment->tax,
+				'total'    => $adjustment->total
 			) );
 
-			$this->fees_to_refund[ $fee->id ]['original_item_status'] = $this->validate_item_and_add_totals( $fee, $amount_to_refund );
+			$this->adjustments_to_refund[ $adjustment->id ]['original_item_status'] = $this->validate_item_and_add_totals( $adjustment, $amount_to_refund );
 		}
 	}
 
@@ -351,10 +371,10 @@ class Refund_Validator {
 						/*
 						 * Translators:
 						 * %1$s - type of amount being refunded (subtotal, tax, or total);
-						 * %1$s - fee description;
+						 * %1$s - adjustment description;
 						 * %3$s - maximum amount allowed for refund
 						 */
-						__( 'The maximum refund %s for the fee "%s" is %s.', 'easy-digital-downloads' ),
+						__( 'The maximum refund %s for the adjustment "%s" is %s.', 'easy-digital-downloads' ),
 						$column_name,
 						$original_item->description,
 						edd_currency_filter( $maximum_refundable_amounts[ $column_name ] )
@@ -366,6 +386,11 @@ class Refund_Validator {
 
 			if ( 'total' === $column_name && $attempted_amount < $maximum_refundable_amounts['total'] ) {
 				$item_status = 'partially_refunded';
+			}
+
+			// If this is an adjustment, and it's _credit_, negate the amount because credit _reduces_ the total.
+			if ( $original_item instanceof Order_Adjustment && 'credit' === $original_item->type ) {
+				$attempted_amount = edd_negate_amount( $attempted_amount );
 			}
 
 			$this->{$column_name} += $attempted_amount;
@@ -395,27 +420,27 @@ class Refund_Validator {
 	}
 
 	/**
-	 * Returns an array of all fees to refund.
+	 * Returns an array of all adjustments to refund.
 	 *
 	 * @since 3.0
 	 * @return array
 	 */
-	public function get_refunded_fees() {
-		$order_item_fees = array();
+	public function get_refunded_adjustments() {
+		$order_item_adjustments = array();
 
-		foreach ( $this->order_fees as $fee ) {
-			if ( array_key_exists( $fee->id, $this->fees_to_refund ) ) {
-				$defaults = $fee->to_array();
-				$args     = array_intersect_key( $this->fees_to_refund[ $fee->id ], $defaults );
-				$order_item_fees[] = $this->set_common_item_args( wp_parse_args( $args, $defaults ) );
+		foreach ( $this->order_adjustments as $adjustment ) {
+			if ( array_key_exists( $adjustment->id, $this->adjustments_to_refund ) ) {
+				$defaults          = $adjustment->to_array();
+				$args              = array_intersect_key( $this->adjustments_to_refund[ $adjustment->id ], $defaults );
+				$order_item_adjustments[] = $this->set_common_item_args( wp_parse_args( $args, $defaults ) );
 			}
 		}
 
-		return $order_item_fees;
+		return $order_item_adjustments;
 	}
 
 	/**
-	 * Sets common arguments for refunded order items and fees.
+	 * Sets common arguments for refunded order items and adjustments.
 	 *
 	 * @param array $new_args
 	 *
