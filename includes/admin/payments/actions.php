@@ -531,17 +531,19 @@ function edd_ajax_process_refund_form() {
 
 	// Collect selected fees.
 	$fees = array();
-	if ( ! empty( $form_data['order_adjustment'] ) && is_array( $form_data['order_adjustment'] ) ) {
-		foreach( $form_data['order_adjustment'] as $fee_id => $fee ) {
+	if ( ! empty( $form_data['refund_order_adjustment'] ) && is_array( $form_data['refund_order_adjustment'] ) ) {
+		foreach( $form_data['refund_order_adjustment'] as $fee_id => $fee ) {
 			// If there's no quantity or subtotal - bail.
 			if ( empty( $fee['quantity'] ) || empty( $fee['subtotal'] ) ) {
-				$fees[] = array(
-					'fee_id'   => absint( $fee_id ),
-					'quantity' => intval( $fee['quantity'] ),
-					'subtotal' => floatval( edd_sanitize_amount( $fee['subtotal'] ) ),
-					'tax'      => ! empty( $fee['tax'] ) ? floatval( edd_sanitize_amount( $fee['tax'] ) ) : 0.00
-				);
+				continue;
 			}
+
+			$fees[] = array(
+				'fee_id'   => absint( $fee_id ),
+				'quantity' => intval( $fee['quantity'] ),
+				'subtotal' => floatval( edd_sanitize_amount( $fee['subtotal'] ) ),
+				'tax'      => ! empty( $fee['tax'] ) ? floatval( edd_sanitize_amount( $fee['tax'] ) ) : 0.00
+			);
 		}
 	}
 
