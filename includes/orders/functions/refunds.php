@@ -321,9 +321,9 @@ function edd_refund_order( $order_id, $order_items = array(), $fees = array() ) 
 
 		edd_add_order_item( $order_item );
 
-		// Set the order item status on the original order.
-		if ( ! empty( $order_item['original_item_id'] ) && ! empty( $order_item['status'] ) ) {
-			edd_update_order_item( $order_item['original_item_id'], array( 'status' => $order_item['status'] ) );
+		// Update the status on the original order item.
+		if ( ! empty( $order_item['parent'] ) && ! empty( $order_item['original_item_status'] ) ) {
+			edd_update_order_item( $order_item['parent'], array( 'status' => $order_item['original_item_status'] ) );
 		}
 	}
 
@@ -343,9 +343,9 @@ function edd_refund_order( $order_id, $order_items = array(), $fees = array() ) 
 
 		edd_add_order_adjustment( $fee );
 
-		// Set the status on the original adjustment.
-		if ( ! empty( $fee['original_item_id'] ) && ! empty( $fee['status'] ) ) {
-			edd_update_order_adjustment( $fee['original_item_id'], array( 'status' => $fee['status'] ) );
+		// Update the status on the original order adjustment.
+		if ( ! empty( $fee['parent'] ) && ! empty( $fee['original_item_status'] ) ) {
+			edd_update_order_adjustment( $fee['parent'], array( 'status' => $fee['original_item_status'] ) );
 		}
 	}
 

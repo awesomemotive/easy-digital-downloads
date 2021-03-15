@@ -21,6 +21,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 3.0
  *
  * @property int    $id
+ * @property int    $parent
  * @property int    $order_id
  * @property int    $product_id
  * @property string $product_name
@@ -49,6 +50,15 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	 * @var   int
 	 */
 	protected $id;
+
+	/**
+	 * Parent ID. This is only used for order items attached to refunds. The ID references the
+	 * original order item that was refunded.
+	 *
+	 * @since 3.0
+	 * @var   int
+	 */
+	protected $parent;
 
 	/**
 	 * Order ID.
@@ -227,9 +237,6 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	/**
 	 * Retrieves order item records that were refunded from this original order item.
 	 *
-	 * @todo I can see a bug here if you have multiple order items for the same product (not using quantities).
-	 *       Might need to make a `parent_id` column that we can reference.
-	 *
 	 * @since 3.0
 	 *
 	 * @return Order_Item[]|false
@@ -239,20 +246,8 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 			return $this->refunded_items;
 		}
 
-		$refund_ids = edd_get_orders( array(
-			'type'   => 'refund',
-			'parent' => $this->order_id,
-			'fields' => 'id'
-		) );
-
-		if ( empty( $refund_ids ) ) {
-			return false;
-		}
-
 		return edd_get_order_items( array(
-			'order_id__in' => $refund_ids,
-			'product_id'   => $this->product_id,
-			'price_id'     => $this->price_id
+			'parent' => $this->id
 		) );
 	}
 }
