@@ -199,6 +199,7 @@ function edd_refund_details_items( $refund ) {
 	);
 
 	$templates = array(
+		'no-items',
 		'totals',
 		'item',
 		'adjustment',
