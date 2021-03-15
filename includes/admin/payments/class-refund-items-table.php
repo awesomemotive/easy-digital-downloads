@@ -159,7 +159,8 @@ class Refund_Items_Table extends List_Table {
 		if ( $item instanceof Order_Item ) {
 			$name = $item->get_order_item_name();
 		} elseif ( $item instanceof Order_Adjustment ) {
-			$name = ! empty( $item->description ) ? $item->description : __( 'Order Fee', 'easy-digital-downloads' );
+			$default = $item->type === 'credit' ? __( 'Order Credit', 'easy-digital-downloads' ) : __( 'Order Fee', 'easy-digital-downloads' );
+			$name    = ! empty( $item->description ) ? $item->description : $default;
 		}
 
 		return $name;
@@ -361,14 +362,7 @@ class Refund_Items_Table extends List_Table {
 	 * @return string Data shown in the Name column
 	 */
 	public function column_name( $item ) {
-		$name = '';
-		if ( $item instanceof Order_Item ) {
-			$name = $item->get_order_item_name();
-		} elseif ( $item instanceof Order_Adjustment ) {
-			$name = ! empty( $item->description ) ? $item->description : __( 'Order Fee', 'easy-digital-downloads' );
-		}
-
-		return '<span class="row-title">' . esc_html( $name ) . '</span>';
+		return '<span class="row-title">' . esc_html( $this->get_item_display_name( $item ) ) . '</span>';
 	}
 
 	/**
@@ -457,7 +451,14 @@ class Refund_Items_Table extends List_Table {
 		// Get order fees
 		$order_fees = $order->get_fees();
 
-		return array_merge( $order_items, $order_fees );
+		// Get order credits.
+		$credits = edd_get_order_adjustments( array(
+			'object_id'   => $order->id,
+			'object_type' => 'order',
+			'type'        => 'credit'
+		) );
+
+		return array_merge( $order_items, $order_fees, $credits );
 	}
 
 	/**

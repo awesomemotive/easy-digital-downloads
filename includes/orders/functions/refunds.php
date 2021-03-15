@@ -193,24 +193,24 @@ function edd_is_order_refundable_by_override( $order_id = 0 ) {
  *                             Optional. Either `all` as a string to refund all order items, or an array of
  *                             order item IDs, amounts, and quantities to refund.
  *
- * @type int    $order_item_id Required. ID of the order item.
- * @type int    $quantity      Required. Quantity being refunded.
- * @type float  $subtotal      Required. Amount to refund, excluding tax.
- * @type float  $tax           Optional. Amount of tax to refund.
+ * @type int           $order_item_id Required. ID of the order item.
+ * @type int           $quantity      Required. Quantity being refunded.
+ * @type float         $subtotal      Required. Amount to refund, excluding tax.
+ * @type float         $tax           Optional. Amount of tax to refund.
  * }
  *
- * @param array|string $fees          {
- *                             Optional. Either `all` as a string to refund all order fees, or an array of
- *                             fee IDs and amounts to refund.
+ * @param array|string $adjustments   {
+ *                             Optional. Either `all` as a string to refund all order adjustments, or an array of
+ *                             order adjustment IDs and amounts to refund.
  *
- * @type int    $fee_id        Required. ID of the order adjustment being refunded.
- * @type float  $subtotal      Required. Amount to refund, excluding tax.
- * @type float  $tax           Required. Amount of tax to refund.
+ * @type int           $adjustment_id Required. ID of the order adjustment being refunded.
+ * @type float         $subtotal      Required. Amount to refund, excluding tax.
+ * @type float         $tax           Required. Amount of tax to refund.
  * }
  *
  * @return int|WP_Error New order ID if successful, WP_Error on failure.
  */
-function edd_refund_order( $order_id, $order_items = 'all', $fees = 'all' ) {
+function edd_refund_order( $order_id, $order_items = 'all', $adjustments = 'all' ) {
 	global $wpdb;
 
 	// Ensure the order ID is an integer.
@@ -284,7 +284,7 @@ function edd_refund_order( $order_id, $order_items = 'all', $fees = 'all' ) {
 	/** Validate refund amounts *************************************************/
 
 	try {
-		$validator = new Refund_Validator( $order, $order_items, $fees );
+		$validator = new Refund_Validator( $order, $order_items, $adjustments );
 		$validator->validate_and_calculate_totals();
 	} catch( \EDD\Utils\Exceptions\Invalid_Argument $e ) {
 		return new WP_Error( 'refund_validation_error', __( 'Invalid argument. Please check your amounts and try again.', 'easy-digital-downloads' ) );
@@ -340,41 +340,41 @@ function edd_refund_order( $order_id, $order_items = 'all', $fees = 'all' ) {
 
 	/** Insert order adjustments **********************************************/
 
-	foreach( $validator->get_refunded_fees() as $fee ) {
-		if ( ! empty( $fee['object_type'] ) && 'order' === $fee['object_type'] ) {
-			$fee['object_id'] = $refund_id;
-		} elseif ( ! empty( $fee['object_type'] ) && 'order_item' === $fee['object_type'] ) {
+	foreach( $validator->get_refunded_adjustments() as $adjustment ) {
+		if ( ! empty( $adjustment['object_type'] ) && 'order' === $adjustment['object_type'] ) {
+			$adjustment['object_id'] = $refund_id;
+		} elseif ( ! empty( $adjustment['object_type'] ) && 'order_item' === $adjustment['object_type'] ) {
 			/*
 			 * At this point, `object_id` references an order item which is attached to the
 			 * original order record. We need to try to convert this to a _refund_ order item
 			 * instead.
 			 *
 			 * If we can't (such as, if the order item was never refunded), we'll have to
-			 * convert the fee to be an `order` object type instead. That's because we
+			 * convert the adjustment to be an `order` object type instead. That's because we
 			 * _have_ to reference a refund object of some kind.
 			 */
 			$should_convert = true;
-			if ( ! empty( $fee['object_id'] ) ) {
+			if ( ! empty( $adjustment['object_id'] ) ) {
 				/*
 				 * First check in our map, as it avoids DB queries.
 				 * We should hit this if the order item was refunded in this same transaction.
 				 */
-				if ( ! empty( $order_item_id_map[ $fee['object_id'] ] ) ) {
-					$fee['object_id'] = $order_item_id_map[ $fee['object_id'] ];
+				if ( ! empty( $order_item_id_map[ $adjustment['object_id'] ] ) ) {
+					$adjustment['object_id'] = $order_item_id_map[ $adjustment['object_id'] ];
 					$should_convert   = false;
 				} else {
 					// Otherwise we'll have to do a DB query, which would pick up previously refunded items.
-					$refund_order_item = edd_get_order_item_by( 'parent', $fee['object_id'] );
+					$refund_order_item = edd_get_order_item_by( 'parent', $adjustment['object_id'] );
 					if ( $refund_order_item instanceof \EDD\Orders\Order_Item ) {
-						$fee['object_id'] = $refund_order_item->id;
+						$adjustment['object_id'] = $refund_order_item->id;
 						$should_convert   = false;
 					}
 				}
 			}
 
 			if ( $should_convert ) {
-				$fee['object_type'] = 'order';
-				$fee['object_id']   = $refund_id;
+				$adjustment['object_type'] = 'order';
+				$adjustment['object_id']   = $refund_id;
 			}
 		}
 
@@ -385,7 +385,7 @@ function edd_refund_order( $order_id, $order_items = 'all', $fees = 'all' ) {
 		 * So we link back to the *original* order item in all cases to be consistent.
 		 */
 
-		edd_add_order_adjustment( $fee );
+		edd_add_order_adjustment( $adjustment );
 	}
 
 	// Update order status to `refunded` once refund is complete and if all items are marked as refunded.

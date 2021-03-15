@@ -155,8 +155,8 @@ class Order_Adjustment extends \EDD\Database\Rows\Order_Adjustment {
 			return $this->refunded_items;
 		}
 
-		// Only fees are supported at this time.
-		if ( 'fee' !== $this->type ) {
+		// Only fees and credits are supported.
+		if ( ! in_array( $this->type, array( 'fee', 'credit' ) ) ) {
 			return false;
 		}
 
