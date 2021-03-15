@@ -38,7 +38,7 @@ final class Order_Items extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 202102010;
+	protected $version = 202103151;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -51,6 +51,7 @@ final class Order_Items extends Table {
 		'201906241' => 201906241,
 		'202002141' => 202002141,
 		'202102010' => 202102010,
+		'202103151' => 202103151,
 	);
 
 	/**
@@ -62,6 +63,7 @@ final class Order_Items extends Table {
 	 */
 	protected function set_schema() {
 		$this->schema = "id bigint(20) unsigned NOT NULL auto_increment,
+			parent bigint(20) unsigned NOT NULL default '0',
 			order_id bigint(20) unsigned NOT NULL default '0',
 			product_id bigint(20) unsigned NOT NULL default '0',
 			product_name text NOT NULL default '',
@@ -80,7 +82,8 @@ final class Order_Items extends Table {
 			uuid varchar(100) NOT NULL default '',
 			PRIMARY KEY (id),
 			KEY order_product_price_id (order_id,product_id,price_id),
-			KEY type_status (type(20),status(20))";
+			KEY type_status (type(20),status(20)),
+			KEY parent (parent)";
 	}
 
 	/**
@@ -136,6 +139,33 @@ final class Order_Items extends Table {
 			ALTER TABLE {$this->table_name} MODIFY COLUMN `status` varchar(20) NOT NULL default 'pending';
 		" );
 
+		return $this->is_success( $result );
+	}
+
+	/**
+	 * Upgrade to version 202103151
+	 * 	- Add column `parent`
+	 * 	- Add index on `parent` column.
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	protected function __202103151() {
+		// Look for column
+		$result = $this->column_exists( 'parent' );
+
+		// Maybe add column
+		if ( false === $result ) {
+			$result = $this->get_db()->query( "
+				ALTER TABLE {$this->table_name} ADD COLUMN parent bigint(20) unsigned NOT NULL default '0' AFTER id;
+			" );
+		}
+
+		if ( ! $this->index_exists( 'parent' ) ) {
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX parent (parent)" );
+		}
+
+		// Return success/fail.
 		return $this->is_success( $result );
 	}
 

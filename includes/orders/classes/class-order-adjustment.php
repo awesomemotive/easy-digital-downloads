@@ -21,6 +21,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 3.0
  *
  * @property int      $id
+ * @property int      $parent
  * @property int      $object_id
  * @property string   $object_type
  * @property int|null $type_id
@@ -43,6 +44,15 @@ class Order_Adjustment extends \EDD\Database\Rows\Order_Adjustment {
 	 * @var   int
 	 */
 	protected $id;
+
+	/**
+	 * Parent ID. This is only used for order adjustments attached to refunds. The ID references the
+	 * original adjustment that was refunded.
+	 *
+	 * @since 3.0
+	 * @var   int
+	 */
+	protected $parent;
 
 	/**
 	 * Object ID.
@@ -146,8 +156,6 @@ class Order_Adjustment extends \EDD\Database\Rows\Order_Adjustment {
 	/**
 	 * Retrieves order adjustment records that were refunded from this original adjustment.
 	 *
-	 * @todo This is awful. `parent_id` column would help massively.
-	 *
 	 * @since 3.0
 	 *
 	 * @return Order_Adjustment[]|false
@@ -162,58 +170,8 @@ class Order_Adjustment extends \EDD\Database\Rows\Order_Adjustment {
 			return false;
 		}
 
-		/*
-		 * First we need to get the order ID this is linked to. That will allow us to find
-		 * matching refund records, which we can then use to find associated adjustments.
-		 */
-
-		$order_id = false;
-
-		if ( 'order' === $this->object_type ) {
-			$order_id = $this->object_id;
-		} else {
-			$order_item = edd_get_order_item( $this->object_id );
-			if ( ! empty( $order_item->order_id ) ) {
-				$order_id = $order_item->order_id;
-			}
-		}
-
-		if ( empty( $order_id ) ) {
-			return false;
-		}
-
-		$refund_ids = edd_get_orders( array(
-			'type'   => 'refund',
-			'parent' => $this->object_id,
-			'fields' => 'id'
+		return edd_get_order_adjustments( array(
+			'parent' => $this->id
 		) );
-
-		if ( empty( $refund_ids ) ) {
-			return false;
-		}
-
-		$query_args = array(
-			'object_type'   => $this->object_type,
-			'type'          => $this->type,
-			'type_key'      => $this->type_key
-		);
-
-		if ( 'order' === $this->object_type ) {
-			$query_args['object_id__in'] = $refund_ids;
-		} else {
-			// First we need to get IDs of all the order items.
-			$order_item_ids = edd_get_order_items( array(
-				'order_id__in' => $refund_ids,
-				'field'        => 'id'
-			) );
-
-			if ( empty( $order_item_ids ) ) {
-				return false;
-			}
-
-			$query_args['object_id__in'] = $order_item_ids;
-		}
-
-		return edd_get_order_adjustments( $query_args );
 	}
 }

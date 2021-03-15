@@ -42,13 +42,6 @@ class Refund_Validator {
 	protected $fees_to_refund;
 
 	/**
-	 * Object keys to exclude when we return final data arrays.
-	 *
-	 * @var string[]
-	 */
-	protected $excluded_keys = array( 'id', 'order_id', 'date_created', 'date_modified', 'uuid' );
-
-	/**
 	 * Final subtotal for the refund. Includes all selected order items and fees.
 	 *
 	 * @var float
@@ -368,13 +361,14 @@ class Refund_Validator {
 	 * @return array
 	 */
 	private function set_common_item_args( $new_args ) {
-		// Set original item ID from `id`.
+		// Set the `parent` to the original item ID.
 		if ( isset( $new_args['id'] ) ) {
-			$new_args['original_item_id'] = $new_args['id'];
+			$new_args['parent'] = $new_args['id'];
 		}
 
 		// Strip out the keys we don't want.
-		$new_args = array_diff_key( $new_args, array_flip( $this->excluded_keys ) );
+		$keys_to_remove = array( 'id', 'order_id', 'date_created', 'date_modified', 'uuid' );
+		$new_args = array_diff_key( $new_args, array_flip( $keys_to_remove ) );
 
 		// Status is always `complete`.
 		$new_args['status'] = 'complete';
