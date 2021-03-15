@@ -107,11 +107,9 @@ class Refund_Validator {
 
 				$this->validate_required_fields( $order_item_data, __METHOD__ );
 
-				/*
-				 * For now we're going to assume the order item will be fully refunded. We'll adjust this later if it
-				 * ends up being a partial refund.
-				 */
-				$order_item_data['status'] = 'refunded';
+				if ( ! isset( $order_item_data['total'] ) ) {
+					$order_item_data['total'] = $order_item_data['subtotal'] + $order_item_data['tax'];
+				}
 
 				// Set the array key to be the order item ID for easier lookups as we go.
 				$keyed_order_items[ intval( $order_item_data['order_item_id'] ) ] = $order_item_data;
@@ -134,7 +132,8 @@ class Refund_Validator {
 		foreach ( $this->order->items as $item ) {
 			if ( 'refunded' !== $item->status ) {
 				$order_items_to_refund[] = array_merge( array(
-					'order_item_id' => $item->id
+					'order_item_id' => $item->id,
+					'quantity'      => $item->quantity,
 				), $item->get_refundable_amounts() );
 			}
 		}
@@ -163,17 +162,15 @@ class Refund_Validator {
 
 			foreach ( $fees as $fee_data ) {
 				// fee_id must be supplied and in the list attached to the original order/items.
-				if ( empty( $fee_data['fee_id'] ) || ! array_key_exists( $fee_data['fee_id'], $fee_ids ) ) {
+				if ( empty( $fee_data['fee_id'] ) || ! in_array( $fee_data['fee_id'], $fee_ids ) ) {
 					throw Invalid_Argument::from( 'fee_id', __METHOD__ );
 				}
 
 				$this->validate_required_fields( $fee_data, __METHOD__ );
 
-				/*
-				 * For now we're going to assume the fee will be fully refunded. We'll adjust this later if it
-				 * ends up being a partial refund.
-				 */
-				$fee_data['status'] = 'refunded';
+				if ( ! isset( $fee_data['total'] ) ) {
+					$fee_data['total'] = $fee_data['subtotal'] + $fee_data['tax'];
+				}
 
 				// Set the array key to be the fee ID for easier lookups as we go.
 				$keyed_fees[ intval( $fee_data['fee_id'] ) ] = $fee_data;
@@ -215,7 +212,7 @@ class Refund_Validator {
 	 */
 	private function validate_required_fields( $input, $context ) {
 		// subtotal and total are both required.
-		$required_fields = array( 'subtotal', 'total' );
+		$required_fields = array( 'subtotal' );
 		if ( edd_use_taxes() ) {
 			$required_fields[] = 'tax';
 		}
@@ -336,13 +333,35 @@ class Refund_Validator {
 			}
 
 			if ( $attempted_amount > $maximum_refundable_amounts[ $column_name ] ) {
-				throw new Exception( sprintf(
-				/* Translators: %s - type of amount being refunded; %d - item ID number; %s - maximum amount allowed for refund. */
-					__( 'The maximum refund %s for item #%d is %s.', 'easy-digital-downloads' ),
-					$column_name,
-					$original_item->id,
-					edd_currency_filter( $maximum_refundable_amounts[ $column_name ] )
-				) );
+				if ( $original_item instanceof Order_Item ) {
+					$error_message = sprintf(
+						/*
+						 * Translators:
+						 * %1$s - type of amount being refunded (subtotal, tax, or total);
+						 * %1$s - product name;
+						 * %3$s - maximum amount allowed for refund
+						 */
+						__( 'The maximum refund %1$s for the product "%2$s" is %3$s.', 'easy-digital-downloads' ),
+						$column_name,
+						$original_item->product_name,
+						edd_currency_filter( $maximum_refundable_amounts[ $column_name ] )
+					);
+				} else {
+					$error_message = sprintf(
+						/*
+						 * Translators:
+						 * %1$s - type of amount being refunded (subtotal, tax, or total);
+						 * %1$s - fee description;
+						 * %3$s - maximum amount allowed for refund
+						 */
+						__( 'The maximum refund %s for the fee "%s" is %s.', 'easy-digital-downloads' ),
+						$column_name,
+						$original_item->description,
+						edd_currency_filter( $maximum_refundable_amounts[ $column_name ] )
+					);
+				}
+
+				throw new Exception( $error_message );
 			}
 
 			if ( 'total' === $column_name && $attempted_amount < $maximum_refundable_amounts['total'] ) {
@@ -366,7 +385,9 @@ class Refund_Validator {
 
 		foreach ( $this->order->items as $item ) {
 			if ( array_key_exists( $item->id, $this->order_items_to_refund ) ) {
-				$order_items[] = $this->set_common_item_args( wp_parse_args( $this->order_items_to_refund[ $item->id ], $item->to_array() ) );
+				$defaults = $item->to_array();
+				$args     = array_intersect_key( $this->order_items_to_refund[ $item->id ], $defaults );
+				$order_items[] = $this->set_common_item_args( wp_parse_args( $args, $defaults ) );
 			}
 		}
 
@@ -384,7 +405,9 @@ class Refund_Validator {
 
 		foreach ( $this->order_fees as $fee ) {
 			if ( array_key_exists( $fee->id, $this->fees_to_refund ) ) {
-				$order_item_fees[] = $this->set_common_item_args( wp_parse_args( $this->order_items_to_refund[ $fee->id ], $fee->to_array() ) );
+				$defaults = $fee->to_array();
+				$args     = array_intersect_key( $this->fees_to_refund[ $fee->id ], $defaults );
+				$order_item_fees[] = $this->set_common_item_args( wp_parse_args( $args, $defaults ) );
 			}
 		}
 
@@ -403,6 +426,16 @@ class Refund_Validator {
 		// Set the `parent` to the original item ID.
 		if ( isset( $new_args['id'] ) ) {
 			$new_args['parent'] = $new_args['id'];
+		}
+
+		// Negate amounts.
+		if ( array_key_exists( 'quantity', $new_args ) ) {
+			$new_args['quantity'] = edd_negate_int( $new_args['quantity'] );
+		}
+		foreach ( array( 'subtotal', 'tax', 'total' ) as $field_to_negate ) {
+			if ( array_key_exists( $field_to_negate, $new_args ) ) {
+				$new_args[ $field_to_negate ] = edd_negate_amount( $new_args[ $field_to_negate ] );
+			}
 		}
 
 		// Strip out the keys we don't want.

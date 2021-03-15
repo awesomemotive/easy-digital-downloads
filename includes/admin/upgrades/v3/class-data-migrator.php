@@ -935,6 +935,7 @@ class Data_Migrator {
 						if ( ! empty( $refund_id ) ) {
 							$refund_adjustment_args              = $adjustment_args;
 							$refund_adjustment_args['parent']    = $adjustment_id;
+							$refund_adjustment_args['object_id'] = $refund_order_item_id;
 							$refund_adjustment_args['subtotal']  = edd_negate_amount( floatval( $fee['amount'] ) );
 							$refund_adjustment_args['tax']       = edd_negate_amount( $tax );
 							$refund_adjustment_args['total']     = edd_negate_amount( floatval( $fee['amount'] ) + $tax );

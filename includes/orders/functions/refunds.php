@@ -286,6 +286,8 @@ function edd_refund_order( $order_id, $order_items = 'all', $fees = 'all' ) {
 	try {
 		$validator = new Refund_Validator( $order, $order_items, $fees );
 		$validator->validate_and_calculate_totals();
+	} catch( \EDD\Utils\Exceptions\Invalid_Argument $e ) {
+		return new WP_Error( 'refund_validation_error', __( 'Invalid argument. Please check your amounts and try again.', 'easy-digital-downloads' ) );
 	} catch ( \Exception $e ) {
 		return new WP_Error( 'refund_validation_error', $e->getMessage() );
 	}
@@ -318,10 +320,17 @@ function edd_refund_order( $order_id, $order_items = 'all', $fees = 'all' ) {
 
 	/** Insert order items ****************************************************/
 
+	// Maintain a mapping of old order item IDs => new for easier lookup when we do fees.
+	$order_item_id_map = array();
+
 	foreach ( $validator->get_refunded_order_items() as $order_item ) {
 		$order_item['order_id'] = $refund_id;
 
-		edd_add_order_item( $order_item );
+		$new_item_id = edd_add_order_item( $order_item );
+
+		if ( ! empty( $order_item['parent'] ) ) {
+			$order_item_id_map[ $order_item['parent'] ] = $new_item_id;
+		}
 
 		// Update the status on the original order item.
 		if ( ! empty( $order_item['parent'] ) && ! empty( $order_item['original_item_status'] ) ) {
@@ -334,6 +343,39 @@ function edd_refund_order( $order_id, $order_items = 'all', $fees = 'all' ) {
 	foreach( $validator->get_refunded_fees() as $fee ) {
 		if ( ! empty( $fee['object_type'] ) && 'order' === $fee['object_type'] ) {
 			$fee['object_id'] = $refund_id;
+		} elseif ( ! empty( $fee['object_type'] ) && 'order_item' === $fee['object_type'] ) {
+			/*
+			 * At this point, `object_id` references an order item which is attached to the
+			 * original order record. We need to try to convert this to a _refund_ order item
+			 * instead.
+			 *
+			 * If we can't (such as, if the order item was never refunded), we'll have to
+			 * convert the fee to be an `order` object type instead. That's because we
+			 * _have_ to reference a refund object of some kind.
+			 */
+			$should_convert = true;
+			if ( ! empty( $fee['object_id'] ) ) {
+				/*
+				 * First check in our map, as it avoids DB queries.
+				 * We should hit this if the order item was refunded in this same transaction.
+				 */
+				if ( ! empty( $order_item_id_map[ $fee['object_id'] ] ) ) {
+					$fee['object_id'] = $order_item_id_map[ $fee['object_id'] ];
+					$should_convert   = false;
+				} else {
+					// Otherwise we'll have to do a DB query, which would pick up previously refunded items.
+					$refund_order_item = edd_get_order_item_by( 'parent', $fee['object_id'] );
+					if ( $refund_order_item instanceof \EDD\Orders\Order_Item ) {
+						$fee['object_id'] = $refund_order_item->id;
+						$should_convert   = false;
+					}
+				}
+			}
+
+			if ( $should_convert ) {
+				$fee['object_type'] = 'order';
+				$fee['object_id']   = $refund_id;
+			}
 		}
 
 		/*
