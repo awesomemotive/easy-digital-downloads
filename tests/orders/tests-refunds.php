@@ -128,35 +128,6 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::edd_refund_order_item
-	 */
-	public function test_refund_order_item() {
-		$order_items = edd_get_order( self::$orders[1] )->items;
-
-		// Refund order item entirely.
-		$refunded_order = edd_refund_order_item( $order_items[0]->id );
-
-		// Fetch refunded order.
-		$o = edd_get_order( $refunded_order );
-
-		// Check a valid Order object was returned.
-		$this->assertInstanceOf( 'EDD\Orders\Order', $o );
-
-		// Verify status.
-		$this->assertSame( 'partially_refunded', $o->status );
-
-		// Verify type.
-		$this->assertSame( 'refund', $o->type );
-
-		// Verify total.
-		$this->assertSame( -120.0, floatval( $o->total ) );
-
-		$refunded_items = edd_get_order_items( $refunded_order );
-
-		$this->assertEquals( edd_negate_int( $order_items[0]->quantity ), $refunded_items[0]->quantity );
-	}
-
-	/**
 	 * @covers ::edd_refund_order
 	 */
 	public function test_refund_order_returns_wp_error_if_refund_amount_exceeds_max() {
