@@ -10,6 +10,8 @@
 
 namespace EDD\Orders;
 
+use EDD\Utils\Exception;
+use EDD\Utils\Exceptions\Invalid_Argument;
 
 class Refund_Validator {
 
@@ -85,7 +87,7 @@ class Refund_Validator {
 	 * @param array|string $order_items
 	 *
 	 * @return array
-	 * @throws \InvalidArgumentException
+	 * @throws Invalid_Argument
 	 */
 	private function validate_and_format_order_items( $order_items ) {
 		$keyed_order_items = array();
@@ -100,7 +102,7 @@ class Refund_Validator {
 			foreach ( $order_items as $order_item_data ) {
 				// order_item_id must be supplied and in the list attached to the original order.
 				if ( empty( $order_item_data['order_item_id'] ) || ! array_key_exists( $order_item_data['order_item_id'], $order_item_ids ) ) {
-					throw new \InvalidArgumentException( __( 'Invalid or missing order item ID.', 'easy-digital-downloads' ) );
+					throw Invalid_Argument::from( 'order_item_id', __METHOD__ );
 				}
 
 				/*
@@ -145,7 +147,7 @@ class Refund_Validator {
 	 * @param array|string $fees
 	 *
 	 * @return array
-	 * @throws \InvalidArgumentException
+	 * @throws Invalid_Argument
 	 */
 	private function validate_and_format_fees( $fees ) {
 		$keyed_fees = array();
@@ -160,7 +162,7 @@ class Refund_Validator {
 			foreach ( $fees as $fee_data ) {
 				// fee_id must be supplied and in the list attached to the original order/items.
 				if ( empty( $fee_data['fee_id'] ) || ! array_key_exists( $fee_data['fee_id'], $fee_ids ) ) {
-					throw new \InvalidArgumentException( __( 'Invalid or missing fee ID.', 'easy-digital-downloads' ) );
+					throw Invalid_Argument::from( 'fee_id', __METHOD__ );
 				}
 
 				/*
@@ -210,7 +212,7 @@ class Refund_Validator {
 		// Overall refund total cannot be over total refundable amount.
 		$order_total = edd_get_order_total( $this->order->id );
 		if ( $this->total > $order_total ) {
-			throw new \Exception( sprintf(
+			throw new Exception( sprintf(
 				__( 'The maximum refund amount is %s.', 'easy-digital-downloads' ),
 				edd_currency_filter( $order_total )
 			) );
@@ -271,7 +273,7 @@ class Refund_Validator {
 	 *
 	 * @return string Either `refunded` if this is a complete refund, or `partially_refunded` if it's a partial.
 	 *                This should be the new status for the original item.
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	private function validate_item_and_add_totals( $original_item, $amounts_to_refund ) {
 		$item_status = 'refunded';
@@ -281,7 +283,7 @@ class Refund_Validator {
 		foreach ( array( 'subtotal', 'tax', 'total' ) as $column_name ) {
 			// Hopefully this should never happen, but just in case!
 			if ( ! array_key_exists( $column_name, $maximum_refundable_amounts ) ) {
-				throw new \Exception( sprintf(
+				throw new Exception( sprintf(
 				/* Translators: %s is the type of amount being refunded (e.g. "subtotal" or "tax"). Not translatable at this time. */
 					__( 'An unexpected error occurred while validating the maximum %s amount.', 'easy-digital-downloads' ),
 					$column_name
@@ -297,7 +299,7 @@ class Refund_Validator {
 			}
 
 			if ( $attempted_amount > $maximum_refundable_amounts[ $column_name ] ) {
-				throw new \InvalidArgumentException( sprintf(
+				throw new Exception( sprintf(
 				/* Translators: %s - type of amount being refunded; %d - item ID number; %s - maximum amount allowed for refund. */
 					__( 'The maximum refund %s for item #%d is %s.', 'easy-digital-downloads' ),
 					$column_name,
