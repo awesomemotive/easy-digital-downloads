@@ -73,7 +73,7 @@ class Refund_Validator {
 	 *
 	 * @throws \Exception
 	 */
-	public function __construct( Order $order, $order_items = 'all', $fees = array() ) {
+	public function __construct( Order $order, $order_items = 'all', $fees = 'all' ) {
 		$this->order                 = $order;
 		$this->order_fees            = $this->order->get_fees();
 		$this->order_items_to_refund = $this->validate_and_format_order_items( $order_items );
@@ -101,7 +101,7 @@ class Refund_Validator {
 
 			foreach ( $order_items as $order_item_data ) {
 				// order_item_id must be supplied and in the list attached to the original order.
-				if ( empty( $order_item_data['order_item_id'] ) || ! array_key_exists( $order_item_data['order_item_id'], $order_item_ids ) ) {
+				if ( empty( $order_item_data['order_item_id'] ) || ! in_array( $order_item_data['order_item_id'], $order_item_ids ) ) {
 					throw Invalid_Argument::from( 'order_item_id', __METHOD__ );
 				}
 
@@ -209,10 +209,20 @@ class Refund_Validator {
 		$this->validate_order_item_amounts();
 		$this->validate_fee_amounts();
 
+		// Refund amount cannot be 0
+		if ( $this->total <= 0 ) {
+			throw new Exception( sprintf(
+				/* Translators: %s - 0.00 formatted in store currency */
+				__( 'The refund amount must be greater than %s.', 'easy-digital-downloads' ),
+				edd_currency_filter( 0.00 )
+			) );
+		}
+
 		// Overall refund total cannot be over total refundable amount.
 		$order_total = edd_get_order_total( $this->order->id );
 		if ( $this->total > $order_total ) {
 			throw new Exception( sprintf(
+				/* Translators: %s - maximum refund amount as formatted currency */
 				__( 'The maximum refund amount is %s.', 'easy-digital-downloads' ),
 				edd_currency_filter( $order_total )
 			) );

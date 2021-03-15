@@ -188,9 +188,10 @@ function edd_is_order_refundable_by_override( $order_id = 0 ) {
  *
  * @since 3.0
  *
- * @param int   $order_id      Order ID.
- * @param array $order_items   {
- *                             Optional. Array of Order Item IDs to allow for a partial refund.
+ * @param int          $order_id      Order ID.
+ * @param array|string $order_items   {
+ *                             Optional. Either `all` as a string to refund all order items, or an array of
+ *                             order item IDs, amounts, and quantities to refund.
  *
  * @type int    $order_item_id Required. ID of the order item.
  * @type int    $quantity      Required. Quantity being refunded.
@@ -198,8 +199,9 @@ function edd_is_order_refundable_by_override( $order_id = 0 ) {
  * @type float  $tax           Optional. Amount of tax to refund.
  * }
  *
- * @param array $fees          {
- *                             Optional. Array of fees to refund.
+ * @param array|string $fees          {
+ *                             Optional. Either `all` as a string to refund all order fees, or an array of
+ *                             fee IDs and amounts to refund.
  *
  * @type int    $fee_id        Required. ID of the order adjustment being refunded.
  * @type float  $subtotal      Required. Amount to refund, excluding tax.
@@ -208,7 +210,7 @@ function edd_is_order_refundable_by_override( $order_id = 0 ) {
  *
  * @return int|WP_Error New order ID if successful, WP_Error on failure.
  */
-function edd_refund_order( $order_id, $order_items = array(), $fees = array() ) {
+function edd_refund_order( $order_id, $order_items = 'all', $fees = 'all' ) {
 	global $wpdb;
 
 	// Ensure the order ID is an integer.
