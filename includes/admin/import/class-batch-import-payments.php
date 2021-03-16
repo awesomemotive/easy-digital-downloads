@@ -91,13 +91,16 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 			global $wpdb;
 			$sql = "DELETE FROM {$wpdb->prefix}edd_customermeta WHERE meta_key = '_canonical_import_id'";
 			$wpdb->query( $sql );
+
+			// Delete the uploaded CSV file.
+			unlink( $this->file );
 		}
 
-		if( ! $this->done && $this->csv->data ) {
+		if( ! $this->done && $this->csv ) {
 
 			$more = true;
 
-			foreach( $this->csv->data as $key => $row ) {
+			foreach( $this->csv as $key => $row ) {
 
 				// Skip all rows until we pass our offset
 				if( $key + 1 <= $offset ) {
@@ -591,7 +594,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 	 */
 	public function get_percentage_complete() {
 
-		$total = count( $this->csv->data );
+		$total = count( $this->csv );
 
 		if( $total > 0 ) {
 			$percentage = ( $this->step * $this->per_step / $total ) * 100;
