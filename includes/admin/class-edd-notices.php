@@ -469,6 +469,13 @@ class EDD_Notices {
 						'class'   => 'error'
 					) );
 					break;
+				case 'discount_invalid_amount' :
+					$this->add_notice( array(
+						'id'      => 'edd-discount-invalid-amount',
+						'message' => __( 'The discount amount must be a valid percentage or numeric flat amount. Please try again.', 'easy-digital-downloads' ),
+						'class'   => 'error'
+					) );
+					break;
 				case 'discount_deleted':
 					$this->add_notice( array(
 						'id'      => 'edd-discount-deleted',
