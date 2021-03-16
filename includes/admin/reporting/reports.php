@@ -2520,18 +2520,18 @@ add_action( 'edd_reports_init', 'edd_register_customer_report' );
  * @param \EDD\Reports\Data\Report_Registry $reports Report registry.
  */
 function edd_register_export_report( $reports ) {
-    try {
-	    $reports->add_report( 'export', array(
-		    'label'            => __( 'Export', 'easy-digital-downloads' ),
-		    'icon'             => 'migrate',
-		    'priority'         => 1000,
-		    'capability'       => 'export_shop_reports',
-		    'display_callback' => 'display_export_report',
+	try {
+		$reports->add_report( 'export', array(
+			'label'            => __( 'Export', 'easy-digital-downloads' ),
+			'icon'             => 'migrate',
+			'priority'         => 1000,
+			'capability'       => 'export_shop_reports',
+			'display_callback' => 'display_export_report',
 			'filters'          => false,
-	    ) );
-    } catch ( \EDD_Exception $exception ) {
-	    edd_debug_log_exception( $exception );
-    }
+		) );
+	} catch ( \EDD_Exception $exception ) {
+		edd_debug_log_exception( $exception );
+	}
 }
 add_action( 'edd_reports_init', 'edd_register_export_report' );
 /**
