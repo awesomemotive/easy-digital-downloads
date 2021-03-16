@@ -162,19 +162,24 @@ function recalculateRefundTotal() {
 		}
 
 		// Values for this item.
-		let thisItemSubtotal = 0.00,
-			thisItemTax      = 0.00,
-			thisItemTotal    = 0.00;
+		let thisItemTax = 0.00;
 
-		thisItemSubtotal = parseFloat( thisItemParent.find( '.edd-order-item-refund-subtotal' ).val() );
+		let thisItemSubtotal = parseFloat( thisItemParent.find( '.edd-order-item-refund-subtotal' ).val() );
 
 		if ( thisItemParent.find( '.edd-order-item-refund-tax' ).length ) {
 			thisItemTax = parseFloat( thisItemParent.find( '.edd-order-item-refund-tax' ).val() );
 		}
 
-		thisItemTotal = parseFloat( thisItemSubtotal + thisItemTax );
+		let thisItemTotal = parseFloat( thisItemSubtotal + thisItemTax );
 
 		thisItemParent.find( '.column-total span' ).text( thisItemTotal.toFixed( edd_vars.currency_decimals ) );
+
+		// Negate amounts if working with credit.
+		if ( thisItemParent.data( 'credit' ) ) {
+			thisItemSubtotal = thisItemSubtotal * -1;
+			thisItemTax      = thisItemTax * -1;
+			thisItemTotal    = thisItemTotal * -1;
+		}
 
 		newSubtotal += thisItemSubtotal;
 		newTax      += thisItemTax;
