@@ -189,9 +189,12 @@ window.EDD_Checkout = ( function( $ ) {
 							inputs.removeAttr( 'required' );
 							$( 'input[name="edd-gateway"]' ).val( 'manual' );
 						} else {
-							if ( ! inputs.is( '.card-address-2' ) ) {
-								inputs.attr( 'required', 'required' );
-							}
+							inputs.each( function () {
+								var $input = $( this );
+								if ( ! $input.is( '.card-name, .card-address, .card-address-2' ) ) {
+									$input.prop( 'required', true );
+								}
+							} );
 							$( '#edd_cc_fields,#edd_cc_address' ).slideDown();
 						}
 

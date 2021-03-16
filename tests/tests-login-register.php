@@ -72,12 +72,16 @@ class Tests_Login_Register extends EDD_UnitTestCase {
 	 * @since 2.2.3
 	 */
 	public function test_process_login_form_correct_login() {
-		edd_process_login_form( array(
-			'edd_login_nonce' => wp_create_nonce( 'edd-login-nonce' ),
-			'edd_user_login'  => 'admin@example.org',
-			'edd_user_pass'   => 'password',
-			'edd_redirect'    => '',
-		) );
+		try {
+			edd_process_login_form( array(
+				'edd_login_nonce' => wp_create_nonce( 'edd-login-nonce' ),
+				'edd_user_login'  => 'admin@example.org',
+				'edd_user_pass'   => 'password',
+				'edd_redirect'    => '',
+			) );
+		} catch ( WPDieException $e ) {
+
+		}
 
 		$this->assertEmpty( edd_get_errors() );
 	}
