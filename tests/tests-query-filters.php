@@ -37,7 +37,7 @@ class Tests_Query_Filters extends EDD_UnitTestCase {
 	public function test_edd_block_attachments_no_parent_bail() {
 
 		// Prepare test
-		$filename 		= EDD_PLUGIN_DIR . '/assets/images/loading.gif';
+		$filename 		= EDD_PLUGIN_DIR . 'assets/images/loading.gif';
 		$filetype 		= wp_check_filetype( basename( $filename ), null );
 		$wp_upload_dir 	= wp_upload_dir();
 
@@ -48,7 +48,7 @@ class Tests_Query_Filters extends EDD_UnitTestCase {
 			'post_content'   => '',
 			'post_status'    => 'inherit'
 		);
-		$attach_id = wp_insert_attachment( $attachment, $filename, 0 );
+		$attach_id = wp_insert_attachment( $attachment, basename( $filename ), 0 );
 		require_once( ABSPATH . 'wp-admin/includes/image.php' );
 		$attach_data = wp_generate_attachment_metadata( $attach_id, $filename );
 		wp_update_attachment_metadata( $attach_id, $attach_data );
@@ -78,7 +78,7 @@ class Tests_Query_Filters extends EDD_UnitTestCase {
 			'post_status' => 'publish'
 		) );
 
-		$filename       = EDD_PLUGIN_DIR . '/assets/images/loading.gif';
+		$filename       = EDD_PLUGIN_DIR . 'assets/images/loading.gif';
 		$parent_post_id = $parent_post_id;
 		$filetype       = wp_check_filetype( basename( $filename ), null );
 		$wp_upload_dir  = wp_upload_dir();
@@ -90,7 +90,7 @@ class Tests_Query_Filters extends EDD_UnitTestCase {
 			'post_content'   => '',
 			'post_status'    => 'inherit'
 		);
-		$attach_id = wp_insert_attachment( $attachment, $filename, $parent_post_id );
+		$attach_id = wp_insert_attachment( $attachment, basename( $filename ), $parent_post_id );
 		require_once( ABSPATH . 'wp-admin/includes/image.php' );
 		$attach_data = wp_generate_attachment_metadata( $attach_id, $filename );
 		wp_update_attachment_metadata( $attach_id, $attach_data );
@@ -140,7 +140,7 @@ class Tests_Query_Filters extends EDD_UnitTestCase {
 			update_post_meta( $parent_post_id, $key, $value );
 		}
 
-		$filename 			= EDD_PLUGIN_DIR . '/assets/images/loading.gif';
+		$filename 			= EDD_PLUGIN_DIR . 'assets/images/loading.gif';
 		$parent_post_id 	= $parent_post_id;
 		$filetype 			= wp_check_filetype( basename( $filename ), null );
 		$wp_upload_dir 		= wp_upload_dir();
@@ -202,7 +202,7 @@ class Tests_Query_Filters extends EDD_UnitTestCase {
 			update_post_meta( $parent_post_id, $key, $value );
 		}
 
-		$filename 			= EDD_PLUGIN_DIR . '/assets/images/loading.gif';
+		$filename 			= EDD_PLUGIN_DIR . 'assets/images/loading.gif';
 		$parent_post_id 	= $parent_post_id;
 		$filetype 			= wp_check_filetype( basename( $filename ), null );
 		$wp_upload_dir 		= wp_upload_dir();
@@ -214,7 +214,7 @@ class Tests_Query_Filters extends EDD_UnitTestCase {
 			'post_content'   => '',
 			'post_status'    => 'inherit'
 		);
-		$attach_id = wp_insert_attachment( $attachment, $filename, $parent_post_id );
+		$attach_id = wp_insert_attachment( $attachment, basename( $filename ), $parent_post_id );
 		require_once( ABSPATH . 'wp-admin/includes/image.php' );
 		$attach_data = wp_generate_attachment_metadata( $attach_id, $filename );
 		wp_update_attachment_metadata( $attach_id, $attach_data );
