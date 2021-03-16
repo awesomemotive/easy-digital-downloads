@@ -46,39 +46,42 @@ add_action( 'edd_transition_customer_address_is_primary', 'edd_demote_customer_p
  *
  * @since 2.4.0
  *
- * @param int   $user_id User ID.
+ * @param int     $user_id       User ID.
+ * @param WP_User $old_user_data Object containing user's data prior to update.
  *
- * @return bool False if customer does not exist for given user ID.
+ * @return void
  */
-function edd_update_customer_email_on_user_update( $user_id = 0 ) {
-
-	// Bail if no customer
-	$customer = edd_get_customer_by( 'user_id', $user_id );
-	if ( empty( $customer ) ) {
-		return false;
-	}
-
-	// Bail if no user
+function edd_update_customer_email_on_user_update( $user_id, $old_user_data ) {
 	$user = get_userdata( $user_id );
-	if ( empty( $user ) || ( $user->user_email === $customer->email ) ) {
+
+	// Bail if the email address didn't actually change just now.
+	if ( empty( $user ) || $user->user_email === $old_user_data->user_email ) {
 		return;
 	}
 
-	// Bail if customer already has this email address
+	$customer = edd_get_customer_by( 'user_id', $user_id );
+
+	if ( empty( $customer ) || $user->user_email === $customer->email ) {
+		return;
+	}
+
+	// Bail if we have another customer with this email address already.
 	if ( edd_get_customer_by( 'email', $user->user_email ) ) {
 		return;
 	}
 
-	// Try to update the customer
-	$success = edd_update_customer( $customer->id, array(
-		'email' => $user->user_email
-	) );
+	$success = edd_update_customer( $customer->id, array( 'email' => $user->user_email ) );
 
-	// Bail on failure
-	if ( empty( $success ) ) {
+	if ( ! $success ) {
 		return;
 	}
 
+	/**
+	 * Triggers after the customer has been successfully updated.
+	 *
+	 * @param WP_User      $user
+	 * @param EDD_Customer $customer
+	 */
 	do_action( 'edd_update_customer_email_on_user_update', $user, $customer );
 }
-add_action( 'profile_update', 'edd_update_customer_email_on_user_update', 10 );
+add_action( 'profile_update', 'edd_update_customer_email_on_user_update', 10, 2 );
