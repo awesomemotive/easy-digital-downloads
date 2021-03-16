@@ -410,8 +410,13 @@ class Refund_Validator {
 
 		foreach ( $this->order->items as $item ) {
 			if ( array_key_exists( $item->id, $this->order_items_to_refund ) ) {
-				$defaults = $item->to_array();
-				$args     = array_intersect_key( $this->order_items_to_refund[ $item->id ], $defaults );
+				$defaults = $allowed_keys = $item->to_array();
+
+				if ( array_key_exists( 'original_item_status', $this->order_items_to_refund[ $item->id ] ) ) {
+					$allowed_keys['original_item_status'] = $this->order_items_to_refund[ $item->id ]['original_item_status'];
+				}
+
+				$args          = array_intersect_key( $this->order_items_to_refund[ $item->id ], $allowed_keys );
 				$order_items[] = $this->set_common_item_args( wp_parse_args( $args, $defaults ) );
 			}
 		}
@@ -430,8 +435,13 @@ class Refund_Validator {
 
 		foreach ( $this->order_adjustments as $adjustment ) {
 			if ( array_key_exists( $adjustment->id, $this->adjustments_to_refund ) ) {
-				$defaults          = $adjustment->to_array();
-				$args              = array_intersect_key( $this->adjustments_to_refund[ $adjustment->id ], $defaults );
+				$defaults = $allowed_keys = $adjustment->to_array();
+
+				if ( array_key_exists( 'original_item_status', $this->adjustments_to_refund[ $adjustment->id ] ) ) {
+					$allowed_keys['original_item_status'] = $this->adjustments_to_refund[ $adjustment->id ]['original_item_status'];
+				}
+
+				$args                     = array_intersect_key( $this->adjustments_to_refund[ $adjustment->id ], $defaults );
 				$order_item_adjustments[] = $this->set_common_item_args( wp_parse_args( $args, $defaults ) );
 			}
 		}
