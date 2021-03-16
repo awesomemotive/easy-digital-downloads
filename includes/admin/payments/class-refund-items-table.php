@@ -495,12 +495,12 @@ class Refund_Items_Table extends List_Table {
 		// Turn into a string.
 		$class   = implode( ' ', $classes );
 		$item_id = $this->get_item_unique_id( $item );
-		?>
 
-		<tr id="order-item-<?php echo esc_attr( $item_id ); ?>" data-order-item="<?php echo esc_attr( $item->id ); ?>" class="<?php echo esc_html( $class ); ?>">
+		$is_credit = $item instanceof Order_Adjustment && 'credit' === $item->type;
+		?>
+		<tr id="order-item-<?php echo esc_attr( $item_id ); ?>" data-order-item="<?php echo esc_attr( $item->id ); ?>" <?php echo $is_credit ? 'data-credit="1"' : ''; ?> class="<?php echo esc_html( $class ); ?>">
 			<?php $this->single_row_columns( $item ); ?>
 		</tr>
-
 		<?php
 	}
 
