@@ -1,3 +1,7 @@
+import { NumberFormat } from '@easy-digital-downloads/currency';
+
+const number = new NumberFormat();
+
 /* global eddAdminOrderOverview */
 
 // Loads the modal when the refund button is clicked.
@@ -59,7 +63,9 @@ $( document.body ).on( 'click', '.ui-widget-overlay', function ( e ) {
 	$( '#edd-refund-order-dialog' ).dialog( 'close' );
 } );
 
-// Listen for the bulk action scheckbox, since WP doesn't trigger a change on sub-items.
+/**
+ * Listen for the bulk action scheckbox, since WP doesn't trigger a change on sub-items.
+ */
 $( document.body ).on( 'change', '#edd-refund-order-dialog #cb-select-all-1', function () {
 	const itemCheckboxes = $( '.edd-order-item-refund-checkbox' );
 	const isChecked = $( this ).prop( 'checked' );
@@ -69,7 +75,10 @@ $( document.body ).on( 'change', '#edd-refund-order-dialog #cb-select-all-1', fu
 	} );
 } );
 
-// Listen for individual checkbox changes.
+/**
+ * Listen for individual checkbox changes.
+ * When it does, trigger a quantity change.
+ */
 $( document.body ).on( 'change', '.edd-order-item-refund-checkbox', function () {
 	const parent = $( this ).parent().parent();
 	const quantityField = parent.find( '.edd-order-item-refund-quantity' );
@@ -86,7 +95,9 @@ $( document.body ).on( 'change', '.edd-order-item-refund-checkbox', function () 
 	}
 } );
 
-// Handles quantity changes, which includes items in the refund.
+/**
+ * Handles quantity changes, which includes items in the refund.
+ */
 $( document.body ).on( 'change', '#edd-refund-order-dialog .edd-order-item-refund-input', function () {
 	let parent = $( this ).parent().parent(),
 		quantityField = parent.find( '.edd-order-item-refund-quantity' ),
@@ -108,8 +119,8 @@ $( document.body ).on( 'change', '#edd-refund-order-dialog .edd-order-item-refun
 
 		let subtotalField = parent.find( '.edd-order-item-refund-subtotal' ),
 			taxField = parent.find( '.edd-order-item-refund-tax' ),
-			originalSubtotal = parseFloat( subtotalField.data( 'original' ) ),
-			originalTax = taxField.length ? parseFloat( taxField.data( 'original' ) ) : 0.00,
+			originalSubtotal = number.unformat( subtotalField.data( 'original' ) ),
+			originalTax = taxField.length ? number.unformat( taxField.data( 'original' ) ) : 0.00,
 			originalQuantity = parseInt( quantityField.attr( 'max' ) ),
 			calculatedSubtotal = ( originalSubtotal / originalQuantity ) * quantity,
 			calculatedTax = taxField.length ? ( originalTax / originalQuantity ) * quantity : 0.00;
@@ -123,9 +134,9 @@ $( document.body ).on( 'change', '#edd-refund-order-dialog .edd-order-item-refun
 		}
 
 		// Guess the subtotal and tax for the selected quantity.
-		subtotalField.val( parseFloat( calculatedSubtotal ).toFixed( edd_vars.currency_decimals ) );
+		subtotalField.val( number.format( calculatedSubtotal ) );
 		if ( taxField.length ) {
-			taxField.val( parseFloat( calculatedTax ).toFixed( edd_vars.currency_decimals ) );
+			taxField.val( number.format( calculatedTax ) );
 		}
 	}
 
@@ -164,15 +175,15 @@ function recalculateRefundTotal() {
 		// Values for this item.
 		let thisItemTax = 0.00;
 
-		let thisItemSubtotal = parseFloat( thisItemParent.find( '.edd-order-item-refund-subtotal' ).val() );
+		let thisItemSubtotal = number.unformat( thisItemParent.find( '.edd-order-item-refund-subtotal' ).val() );
 
 		if ( thisItemParent.find( '.edd-order-item-refund-tax' ).length ) {
-			thisItemTax = parseFloat( thisItemParent.find( '.edd-order-item-refund-tax' ).val() );
+			thisItemTax = number.unformat( thisItemParent.find( '.edd-order-item-refund-tax' ).val() );
 		}
 
-		let thisItemTotal = parseFloat( thisItemSubtotal + thisItemTax );
+		let thisItemTotal = thisItemSubtotal + thisItemTax;
 
-		thisItemParent.find( '.column-total span' ).text( thisItemTotal.toFixed( edd_vars.currency_decimals ) );
+		thisItemParent.find( '.column-total span' ).text( number.format( thisItemTotal ) );
 
 		// Negate amounts if working with credit.
 		if ( thisItemParent.data( 'credit' ) ) {
@@ -186,17 +197,13 @@ function recalculateRefundTotal() {
 		newTotal    += thisItemTotal;
 	} );
 
-	newSubtotal = parseFloat( newSubtotal ).toFixed( edd_vars.currency_decimals );
-	newTax      = parseFloat( newTax ).toFixed( edd_vars.currency_decimals );
-	newTotal    = parseFloat( newTotal ).toFixed( edd_vars.currency_decimals );
-
-	if ( newTotal > 0 ) {
+	if ( parseFloat( newTotal ) > 0 ) {
 		canRefund = true;
 	}
 
-	$( '#edd-refund-submit-subtotal-amount' ).text( newSubtotal );
-	$( '#edd-refund-submit-tax-amount' ).text( newTax );
-	$( '#edd-refund-submit-total-amount' ).text( newTotal );
+	$( '#edd-refund-submit-subtotal-amount' ).text( number.format( newSubtotal ) );
+	$( '#edd-refund-submit-tax-amount' ).text( number.format( newTax ) );
+	$( '#edd-refund-submit-total-amount' ).text( number.format( newTotal ) );
 
 	$( '#edd-submit-refund-submit' ).attr( 'disabled', ! canRefund );
 
@@ -205,7 +212,9 @@ function recalculateRefundTotal() {
 	$( '#edd-refund-submit-button-wrapper .spinner' ).css( 'visibility', 'hidden' );
 }
 
-// Process the refund form after the button is clicked.
+/**
+ * Process the refund form after the button is clicked.
+ */
 $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 	e.preventDefault();
 	$('.edd-submit-refund-message').removeClass('success').removeClass('fail');
