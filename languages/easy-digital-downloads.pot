@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 3.0-beta1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2021-03-12 09:22:02+00:00\n"
+"POT-Creation-Date: 2021-03-17 10:58:50+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -44,45 +44,45 @@ msgstr ""
 msgid "Easy Digital Download Requirements"
 msgstr ""
 
-#: includes/EDD_SL_Plugin_Updater.php:236
+#: includes/EDD_SL_Plugin_Updater.php:250
 msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s."
 msgstr ""
 
-#: includes/EDD_SL_Plugin_Updater.php:244
+#: includes/EDD_SL_Plugin_Updater.php:258
 msgid ""
 "There is a new version of %1$s available. %2$sView version %3$s details%4$s "
 "or %5$supdate now%6$s."
 msgstr ""
 
-#: includes/EDD_SL_Plugin_Updater.php:487
+#: includes/EDD_SL_Plugin_Updater.php:502
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: includes/EDD_SL_Plugin_Updater.php:487
+#: includes/EDD_SL_Plugin_Updater.php:502
 #: includes/admin/admin-deprecated-functions.php:67
 #: includes/admin/customers/customer-actions.php:301
 #: includes/admin/customers/customer-actions.php:342
 #: includes/admin/customers/customer-actions.php:512
 #: includes/admin/customers/customer-actions.php:562
 #: includes/admin/discounts/discount-actions.php:32
-#: includes/admin/discounts/discount-actions.php:162
 #: includes/admin/discounts/discount-actions.php:167
-#: includes/admin/discounts/discount-actions.php:176
-#: includes/admin/discounts/discount-actions.php:297
-#: includes/admin/discounts/discount-actions.php:302
+#: includes/admin/discounts/discount-actions.php:172
+#: includes/admin/discounts/discount-actions.php:181
 #: includes/admin/discounts/discount-actions.php:307
-#: includes/admin/discounts/discount-actions.php:336
-#: includes/admin/discounts/discount-actions.php:341
-#: includes/admin/discounts/discount-actions.php:369
-#: includes/admin/discounts/discount-actions.php:422
-#: includes/admin/discounts/discount-actions.php:473
-#: includes/admin/discounts/discount-actions.php:529
+#: includes/admin/discounts/discount-actions.php:312
+#: includes/admin/discounts/discount-actions.php:317
+#: includes/admin/discounts/discount-actions.php:346
+#: includes/admin/discounts/discount-actions.php:351
+#: includes/admin/discounts/discount-actions.php:379
+#: includes/admin/discounts/discount-actions.php:432
+#: includes/admin/discounts/discount-actions.php:483
+#: includes/admin/discounts/discount-actions.php:539
 #: includes/admin/discounts/edit-discount.php:17
 #: includes/admin/discounts/edit-discount.php:28
 #: includes/admin/downloads/dashboard-columns.php:179
 #: includes/admin/import/class-batch-import-downloads.php:65
 #: includes/admin/import/class-batch-import-payments.php:77
-#: includes/admin/import/class-batch-import.php:156
+#: includes/admin/import/class-batch-import.php:188
 #: includes/admin/payments/actions.php:72
 #: includes/admin/payments/actions.php:77
 #: includes/admin/payments/actions.php:221
@@ -121,17 +121,19 @@ msgstr ""
 #: includes/admin/upgrades/v3/class-base.php:117
 #: includes/api/class-edd-api.php:2007 includes/api/class-edd-api.php:2011
 #: includes/api/class-edd-api.php:2023 includes/api/class-edd-api.php:2025
-#: includes/cart/class-edd-cart.php:1396 includes/cart/class-edd-cart.php:1410
-#: includes/class-edd-license-handler.php:295
+#: includes/cart/class-edd-cart.php:1404 includes/cart/class-edd-cart.php:1418
+#: includes/class-edd-license-handler.php:299
 #: includes/deprecated-functions.php:488 includes/deprecated-functions.php:505
 #: includes/deprecated-functions.php:513 includes/deprecated-functions.php:915
-#: includes/download-functions.php:1627 includes/emails/actions.php:53
+#: includes/download-functions.php:1638 includes/emails/actions.php:53
 #: includes/emails/template.php:238 includes/error-tracking.php:39
 #: includes/gateways/functions.php:289 includes/gateways/manual.php:33
-#: includes/gateways/paypal-standard.php:163 includes/process-download.php:280
-#: includes/process-download.php:872 includes/query-filters.php:51
-#: includes/user-functions.php:882 includes/user-functions.php:907
-#: includes/user-functions.php:959
+#: includes/gateways/paypal-standard.php:163
+#: includes/gateways/stripe/includes/admin/upgrade-functions.php:57
+#: includes/gateways/stripe/includes/payment-actions.php:1435
+#: includes/process-download.php:280 includes/process-download.php:872
+#: includes/query-filters.php:51 includes/user-functions.php:882
+#: includes/user-functions.php:907 includes/user-functions.php:959
 msgid "Error"
 msgstr ""
 
@@ -459,122 +461,128 @@ msgid ""
 msgstr ""
 
 #: includes/admin/class-edd-notices.php:475
+msgid ""
+"The discount amount must be a valid percentage or numeric flat amount. "
+"Please try again."
+msgstr ""
+
+#: includes/admin/class-edd-notices.php:482
 msgid "Discount code deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:481
+#: includes/admin/class-edd-notices.php:488
 msgid "There was a problem deleting that discount code, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:488
+#: includes/admin/class-edd-notices.php:495
 msgid "Discount code activated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:494
+#: includes/admin/class-edd-notices.php:501
 msgid "There was a problem activating that discount code, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:501
+#: includes/admin/class-edd-notices.php:508
 msgid "Discount code deactivated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:507
+#: includes/admin/class-edd-notices.php:514
 msgid "There was a problem deactivating that discount code, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:520
+#: includes/admin/class-edd-notices.php:527
 msgid "The reports have been refreshed."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:532
+#: includes/admin/class-edd-notices.php:539
 msgid "The settings have been imported."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:538
+#: includes/admin/class-edd-notices.php:545
 msgid "API keys successfully generated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:544
+#: includes/admin/class-edd-notices.php:551
 msgid "The specified user already has API keys."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:551
+#: includes/admin/class-edd-notices.php:558
 msgid "API keys successfully regenerated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:557
+#: includes/admin/class-edd-notices.php:564
 msgid "API keys successfully revoked."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:563
+#: includes/admin/class-edd-notices.php:570
 msgid "SendWP has been successfully connected!"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:574
+#: includes/admin/class-edd-notices.php:581
 msgid "The note has been added successfully."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:580
+#: includes/admin/class-edd-notices.php:587
 msgid "The order has been updated successfully."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:586
+#: includes/admin/class-edd-notices.php:593
 msgid "Order successfully created."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:592
+#: includes/admin/class-edd-notices.php:599
 msgid "The order has been moved to the trash."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:598
+#: includes/admin/class-edd-notices.php:605
 msgid "The order has been restored."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:604
+#: includes/admin/class-edd-notices.php:611
 msgid "The order has been deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:610
+#: includes/admin/class-edd-notices.php:617
 msgid "The purchase receipt has been resent."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:616
+#: includes/admin/class-edd-notices.php:623
 msgid "The order note has been deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:628
+#: includes/admin/class-edd-notices.php:635
 msgid "Customer successfully deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:634
+#: includes/admin/class-edd-notices.php:641
 msgid "User successfully verified."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:640
+#: includes/admin/class-edd-notices.php:647
 msgid "Customer email added."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:646
+#: includes/admin/class-edd-notices.php:653
 msgid "Customer email deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:652
+#: includes/admin/class-edd-notices.php:659
 msgid "Failed to delete customer email."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:659
+#: includes/admin/class-edd-notices.php:666
 msgid "Primary email updated for customer."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:665
+#: includes/admin/class-edd-notices.php:672
 msgid "Failed to set primary email."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:672
+#: includes/admin/class-edd-notices.php:679
 msgid "Customer address deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:678
+#: includes/admin/class-edd-notices.php:685
 msgid "Failed to delete customer address."
 msgstr ""
 
@@ -625,6 +633,7 @@ msgstr ""
 #: includes/admin/discounts/class-discount-codes-table.php:228
 #: includes/admin/discounts/class-discount-codes-table.php:293
 #: includes/admin/settings/register-settings.php:293
+#: includes/gateways/stripe/includes/template-functions.php:441
 msgid "Delete"
 msgstr ""
 
@@ -658,7 +667,7 @@ msgstr ""
 #: includes/admin/discounts/edit-discount.php:126
 #: includes/admin/discounts/edit-discount.php:163
 #: includes/admin/payments/class-payments-table.php:485
-#: includes/admin/payments/class-refund-items-table.php:286
+#: includes/admin/payments/class-refund-items-table.php:355
 #. translators: customer name or address id
 #. translators: customer email
 #. translators: customer name or email
@@ -698,6 +707,8 @@ msgstr ""
 #: includes/admin/views/tmpl-tax-rates-table-add.php:17
 #: includes/admin/views/tmpl-tax-rates-table-meta.php:16
 #: includes/admin/views/tmpl-tax-rates-table-row.php:18
+#: includes/gateways/stripe/includes/template-functions.php:510
+#: includes/gateways/stripe/includes/template-functions.php:519
 #: templates/shortcode-profile-editor.php:162
 msgid "Country"
 msgstr ""
@@ -885,7 +896,7 @@ msgstr ""
 #: includes/admin/import/import-functions.php:113
 #: includes/admin/reporting/export/export-actions.php:24
 #: includes/api/class-edd-api.php:2007
-#: includes/class-edd-license-handler.php:295
+#: includes/class-edd-license-handler.php:299
 msgid "Nonce verification failed"
 msgstr ""
 
@@ -966,10 +977,14 @@ msgid "Edit Profile"
 msgstr ""
 
 #: includes/admin/customers/customers.php:479 includes/admin/thickbox.php:182
+#: includes/gateways/stripe/includes/admin/admin-filters.php:109
+#: includes/gateways/stripe/includes/template-functions.php:597
+#: includes/gateways/stripe/includes/template-functions.php:637
 msgid "Cancel"
 msgstr ""
 
 #: includes/admin/customers/customers.php:480
+#: includes/gateways/stripe/includes/template-functions.php:425
 msgid "Update"
 msgstr ""
 
@@ -992,6 +1007,7 @@ msgstr ""
 #: includes/admin/reporting/export/class-batch-export-payments.php:48
 #: includes/admin/reporting/export/class-batch-export-taxed-orders.php:49
 #: includes/admin/tools.php:712 includes/checkout/template.php:377
+#: includes/gateways/stripe/includes/template-functions.php:485
 #: templates/shortcode-profile-editor.php:152
 msgid "City"
 msgstr ""
@@ -1129,7 +1145,9 @@ msgstr ""
 
 #: includes/admin/customers/customers.php:874
 #: includes/admin/customers/customers.php:876
-#: includes/admin/payments/orders.php:348 includes/privacy-functions.php:773
+#: includes/admin/payments/orders.php:348
+#: includes/gateways/stripe/includes/payment-methods/buy-now/template.php:110
+#: includes/privacy-functions.php:773
 msgid "Email Address"
 msgstr ""
 
@@ -1168,9 +1186,11 @@ msgstr ""
 #: includes/admin/customers/customers.php:905
 #: includes/admin/customers/customers.php:948
 #: includes/admin/payments/class-payments-table.php:377
-#: includes/admin/payments/class-refund-items-table.php:92
+#: includes/admin/payments/class-refund-items-table.php:96
 #: includes/admin/tools.php:662 includes/admin/views/tmpl-order-refund.php:39
 #: includes/admin/views/tmpl-order-totals.php:84
+#: includes/gateways/stripe/includes/payment-methods/payment-request/functions.php:146
+#: includes/gateways/stripe/includes/payment-methods/payment-request/functions.php:192
 #: templates/checkout_cart.php:129
 msgid "Total"
 msgstr ""
@@ -1359,7 +1379,7 @@ msgstr ""
 #: includes/admin/discounts/class-discount-codes-table.php:74
 #: includes/admin/discounts/edit-discount.php:98
 #: includes/admin/payments/orders.php:762
-#: includes/admin/payments/refunds.php:187
+#: includes/admin/payments/refunds.php:225
 #: includes/admin/reporting/class-export-payments.php:69
 #: includes/admin/reporting/export/class-batch-export-payments.php:55
 #: includes/admin/reporting/export/class-batch-export-taxed-orders.php:56
@@ -1689,42 +1709,42 @@ msgid ""
 msgstr ""
 
 #: includes/admin/discounts/discount-actions.php:32
-#: includes/admin/discounts/discount-actions.php:374
+#: includes/admin/discounts/discount-actions.php:384
 msgid "You do not have permission to create discount codes"
 msgstr ""
 
-#: includes/admin/discounts/discount-actions.php:162
-#: includes/admin/discounts/discount-actions.php:341
+#: includes/admin/discounts/discount-actions.php:167
+#: includes/admin/discounts/discount-actions.php:351
 msgid "You do not have permission to edit discount codes"
 msgstr ""
 
-#: includes/admin/discounts/discount-actions.php:167
-#: includes/admin/discounts/discount-actions.php:307
+#: includes/admin/discounts/discount-actions.php:172
+#: includes/admin/discounts/discount-actions.php:317
 msgid "No discount ID supplied"
 msgstr ""
 
-#: includes/admin/discounts/discount-actions.php:176
+#: includes/admin/discounts/discount-actions.php:181
 msgid "Invalid discount"
 msgstr ""
 
-#: includes/admin/discounts/discount-actions.php:297
-#: includes/admin/discounts/discount-actions.php:336
-#: includes/admin/discounts/discount-actions.php:369
+#: includes/admin/discounts/discount-actions.php:307
+#: includes/admin/discounts/discount-actions.php:346
+#: includes/admin/discounts/discount-actions.php:379
 msgid "Trying to cheat or something?"
 msgstr ""
 
-#: includes/admin/discounts/discount-actions.php:302
+#: includes/admin/discounts/discount-actions.php:312
 msgid "You do not have permission to delete discount codes"
 msgstr ""
 
-#: includes/admin/discounts/discount-actions.php:422
-#: includes/admin/discounts/discount-actions.php:473
-#: includes/admin/discounts/discount-actions.php:529
+#: includes/admin/discounts/discount-actions.php:432
+#: includes/admin/discounts/discount-actions.php:483
+#: includes/admin/discounts/discount-actions.php:539
 msgid "You do not have permission to edit this discount."
 msgstr ""
 
 #: includes/admin/discounts/discount-codes.php:56
-#: includes/class-edd-html-elements.php:406 includes/post-types.php:123
+#: includes/class-edd-html-elements.php:412 includes/post-types.php:123
 msgid "Search Discounts"
 msgstr ""
 
@@ -1836,7 +1856,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/downloads/contextual-help.php:81
-#: includes/admin/downloads/metabox.php:1152
+#: includes/admin/downloads/metabox.php:1161
 msgid "Purchase Shortcode"
 msgstr ""
 
@@ -1879,7 +1899,7 @@ msgstr ""
 #: includes/admin/downloads/dashboard-columns.php:34
 #: includes/admin/downloads/dashboard-columns.php:297
 #: includes/admin/downloads/metabox.php:313
-#: includes/admin/downloads/metabox.php:456
+#: includes/admin/downloads/metabox.php:465
 #: includes/admin/reporting/export/class-batch-export-downloads.php:51
 #: includes/emails/tags.php:215
 #: includes/reports/data/downloads/class-top-selling-downloads-list-table.php:55
@@ -1977,148 +1997,149 @@ msgstr ""
 msgid "Add New Price"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:423
+#: includes/admin/downloads/metabox.php:432
 msgid "Click and drag to re-order price options"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:424
+#: includes/admin/downloads/metabox.php:433
 msgid "Price ID: %s"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:430 includes/scripts.php:495
+#: includes/admin/downloads/metabox.php:439 includes/scripts.php:495
 msgid "Show advanced settings"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:433
-#: includes/admin/downloads/metabox.php:662
-#: includes/admin/downloads/metabox.php:724
-#: includes/admin/downloads/metabox.php:840
+#: includes/admin/downloads/metabox.php:442
+#: includes/admin/downloads/metabox.php:671
+#: includes/admin/downloads/metabox.php:733
+#: includes/admin/downloads/metabox.php:849
 #: includes/admin/views/tmpl-tax-rates-table-row.php:40
 #: includes/scripts.php:490 templates/checkout_cart.php:57
 #: templates/checkout_cart.php:75 templates/shortcode-profile-editor.php:123
 msgid "Remove"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:433
+#: includes/admin/downloads/metabox.php:442
 msgid "Remove price option %s"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:443
-#: includes/admin/downloads/metabox.php:449
+#: includes/admin/downloads/metabox.php:452
+#: includes/admin/downloads/metabox.php:458
 msgid "Option Name"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:486 includes/download-functions.php:669
+#: includes/admin/downloads/metabox.php:495 includes/download-functions.php:669
+#: includes/gateways/stripe/includes/template-functions.php:404
 msgid "Default"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:488
+#: includes/admin/downloads/metabox.php:497
 msgid "Set ID %s as default price"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:553
+#: includes/admin/downloads/metabox.php:562
 msgid "Product Type Options:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:567
+#: includes/admin/downloads/metabox.php:576
 msgid "Select a product type"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:568
+#: includes/admin/downloads/metabox.php:577
 msgid ""
 "<strong>Product Type</strong>: Sell this item as a single product, or use "
 "the Bundle type to sell a collection of products."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:602
+#: includes/admin/downloads/metabox.php:611
 msgid "Bundled %s"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:610
-#: includes/admin/downloads/metabox.php:679
+#: includes/admin/downloads/metabox.php:619
+#: includes/admin/downloads/metabox.php:688
 msgid "Click and drag to re-order bundled %s"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:614
-#: includes/admin/downloads/metabox.php:683
+#: includes/admin/downloads/metabox.php:623
+#: includes/admin/downloads/metabox.php:692
 msgid "Select %s:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:634
-#: includes/admin/downloads/metabox.php:699
+#: includes/admin/downloads/metabox.php:643
+#: includes/admin/downloads/metabox.php:708
 msgid "Price assignment:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:662
+#: includes/admin/downloads/metabox.php:671
 msgid "Remove bundle option %s"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:673
+#: includes/admin/downloads/metabox.php:682
 msgid "Bundled %s:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:724
+#: includes/admin/downloads/metabox.php:733
 msgid "Remove bundle option 1"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:735
-#: includes/admin/downloads/metabox.php:796
+#: includes/admin/downloads/metabox.php:744
+#: includes/admin/downloads/metabox.php:805
 msgid "Add New File"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:834
+#: includes/admin/downloads/metabox.php:843
 msgid "Click and drag to re-order files"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:835
+#: includes/admin/downloads/metabox.php:844
 msgid "%1$s file ID: %2$s"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:840
+#: includes/admin/downloads/metabox.php:849
 msgid "Remove file %s"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:847
+#: includes/admin/downloads/metabox.php:856
 msgid "File Name"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:855
+#: includes/admin/downloads/metabox.php:864
 msgid "My Neat File"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:862
+#: includes/admin/downloads/metabox.php:871
 msgid "File URL"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:868
+#: includes/admin/downloads/metabox.php:877
 msgid "Enter, upload, choose from Media Library"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:873
-#: includes/admin/downloads/metabox.php:875
+#: includes/admin/downloads/metabox.php:882
+#: includes/admin/downloads/metabox.php:884
 msgid "Select Files"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:873
+#: includes/admin/downloads/metabox.php:882
 msgid "Select"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:883
+#: includes/admin/downloads/metabox.php:892
 msgid "Price Assignment"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:883
+#: includes/admin/downloads/metabox.php:892
 msgid ""
 "<strong>Price Assignment</strong>: With variable pricing enabled, you can "
 "choose to allow certain price variations access to specific files, or allow "
 "all price variations to access a file."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:930
+#: includes/admin/downloads/metabox.php:939
 msgid "Insert into %s"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:961
+#: includes/admin/downloads/metabox.php:970
 #: includes/admin/reporting/reports.php:290
 #: includes/admin/reporting/reports.php:921
 #: includes/admin/reporting/reports.php:1075
@@ -2130,7 +2151,7 @@ msgstr ""
 msgid "Refunds"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:962
+#: includes/admin/downloads/metabox.php:971
 msgid ""
 "<strong>Refundable</strong>: Allow or disallow refunds for this specific "
 "product. When allowed, the refund window will be used on all future "
@@ -2138,89 +2159,90 @@ msgid ""
 "this product can be refunded after purchasing."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:967
+#: includes/admin/downloads/metabox.php:976
 msgid "Refund Status"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:993
+#: includes/admin/downloads/metabox.php:1002
 #: includes/admin/settings/register-settings.php:528
 msgid "Refund Window"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:999
-#: includes/admin/downloads/metabox.php:1032
+#: includes/admin/downloads/metabox.php:1008
+#: includes/admin/downloads/metabox.php:1041
 msgid "Leave blank to use global setting. Enter <code>0</code> for unlimited"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1027
+#: includes/admin/downloads/metabox.php:1036
 #: includes/admin/reporting/export/class-batch-export-downloads.php:53
 #: includes/admin/settings/register-settings.php:979
 #: includes/admin/tools.php:936
 msgid "File Download Limit"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1027
+#: includes/admin/downloads/metabox.php:1036
 msgid ""
 "<strong>File Download Limit</strong>: Limit the number of times a customer "
 "who purchased this product can access their download links."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1072
+#: includes/admin/downloads/metabox.php:1081
 msgid "Taxability"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1072
+#: includes/admin/downloads/metabox.php:1081
 msgid ""
 "<strong>Taxability</strong>: When taxes are enabled, all products are "
 "taxable by default. Check this box to mark this product as non-taxable."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1083
+#: includes/admin/downloads/metabox.php:1092
 msgid "This product is non-taxable"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1108
+#: includes/admin/downloads/metabox.php:1117
 msgid "Item Quantities"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1108
+#: includes/admin/downloads/metabox.php:1117
 msgid ""
 "<strong>Item Quantities</strong>: if disabled, customers will not be "
 "provided an option to change the number they wish to purchase."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1121
+#: includes/admin/downloads/metabox.php:1130
 msgid "Disable quantity input for this product"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1143
+#: includes/admin/downloads/metabox.php:1152
 #: includes/admin/settings/register-settings.php:927
 #: includes/admin/thickbox.php:76 includes/checkout/template.php:1021
+#: includes/gateways/stripe/includes/payment-methods/buy-now/template.php:214
 #: includes/shortcodes.php:49 includes/template-functions.php:78
 msgid "Purchase"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1152
+#: includes/admin/downloads/metabox.php:1161
 msgid ""
 "<strong>Purchase Shortcode</strong>: Use this shortcode to output a "
 "purchase link for this product in the location of your choosing."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1176
+#: includes/admin/downloads/metabox.php:1185
 msgid "Accounting Options"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1176
+#: includes/admin/downloads/metabox.php:1185
 msgid ""
 "<strong>SKU</strong>: If an SKU is entered for this product, it will be "
 "shown on the purchase receipt and exported purchase histories."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1179
+#: includes/admin/downloads/metabox.php:1188
 msgid "Enter an SKU for this product."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1208
+#: includes/admin/downloads/metabox.php:1217
 msgid ""
 "<strong>Purchase button behavior</strong>: Add to Cart buttons follow a "
 "traditional eCommerce flow. A Buy Now button bypasses most of the process, "
@@ -2228,18 +2250,18 @@ msgid ""
 "up the process of buying the product."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1209
+#: includes/admin/downloads/metabox.php:1218
 msgid ""
 "<strong>Purchase button behavior</strong>: Add to Cart buttons follow a "
 "traditional eCommerce flow. Buy Now buttons are only available for stores "
 "that have a single supported gateway active and that do not use taxes."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1213
+#: includes/admin/downloads/metabox.php:1222
 msgid "Button Options"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1213
+#: includes/admin/downloads/metabox.php:1222
 msgid ""
 "<strong>Hide purchase button</strong>: By default, the purchase buttons "
 "will be displayed at the bottom of the download, when disabled you will "
@@ -2247,66 +2269,67 @@ msgid ""
 "the product where you prefer."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1225
+#: includes/admin/downloads/metabox.php:1234
 msgid "Hide purchase button"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1231
+#: includes/admin/downloads/metabox.php:1240
 msgid "Purchase button behavior"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1239
+#: includes/admin/downloads/metabox.php:1248
 #: includes/admin/settings/register-settings.php:941
 #: includes/admin/thickbox.php:125
 msgid "Add to Cart"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1240
-#: includes/admin/settings/register-settings.php:955 includes/shortcodes.php:47
-#: includes/template-functions.php:78
+#: includes/admin/downloads/metabox.php:1249
+#: includes/admin/settings/register-settings.php:955
+#: includes/gateways/stripe/includes/payment-methods/buy-now/template.php:47
+#: includes/shortcodes.php:47 includes/template-functions.php:78
 msgid "Buy Now"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1286
+#: includes/admin/downloads/metabox.php:1295
 msgid "Download Instructions"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1289
+#: includes/admin/downloads/metabox.php:1298
 msgid ""
 "Special instructions for this %s. These will be added to the purchase "
 "receipt, and may be used by some extensions or themes."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1315
+#: includes/admin/downloads/metabox.php:1324
 msgid "Sales:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1320
+#: includes/admin/downloads/metabox.php:1329
 msgid "Earnings:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1327
+#: includes/admin/downloads/metabox.php:1336
 msgid "View File Download Log"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1376
+#: includes/admin/downloads/metabox.php:1385
 msgid "Activate Reviews"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1402
+#: includes/admin/downloads/metabox.php:1411
 #. Translators: The %s represents the link to the Product Reviews extension.
 msgid ""
 "Would you like to enable reviews for this product? Check out our <a "
 "target=\"_blank\" href=\"%s\">Product Reviews</a> extension."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1410
+#: includes/admin/downloads/metabox.php:1419
 msgid ""
 "Act now and <strong>SAVE 25%</strong> on your purchase. Sale ends <em>23:59 "
 "PM December 6th CST</em>. Use code <code>BFCM2019</code> at checkout."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1443
+#: includes/admin/downloads/metabox.php:1452
 #. Translators: The %s represents the link to the pricing page on the Easy
 #. Digital Downloads website.
 msgid ""
@@ -2317,17 +2340,17 @@ msgstr ""
 
 #: includes/admin/import/class-batch-import-downloads.php:65
 #: includes/admin/import/class-batch-import-payments.php:77
-#: includes/admin/import/class-batch-import.php:156
+#: includes/admin/import/class-batch-import.php:188
 msgid "You do not have permission to import data."
 msgstr ""
 
-#: includes/admin/import/class-batch-import-payments.php:292
+#: includes/admin/import/class-batch-import-payments.php:295
 #: includes/admin/reporting/export/class-batch-export-payments.php:53
 #: includes/admin/reporting/export/class-batch-export-taxed-orders.php:54
 msgid "Products (Raw)"
 msgstr ""
 
-#: includes/admin/import/class-batch-import-payments.php:624
+#: includes/admin/import/class-batch-import-payments.php:627
 msgid "payments"
 msgstr ""
 
@@ -2407,6 +2430,7 @@ msgid "You must be logged in to perform this action."
 msgstr ""
 
 #: includes/admin/payments/actions.php:406
+#: includes/admin/payments/actions.php:498
 msgid "Your account does not have permission to perform this action."
 msgstr ""
 
@@ -2430,10 +2454,6 @@ msgstr ""
 msgid "View Refund"
 msgstr ""
 
-#: includes/admin/payments/actions.php:498
-msgid "Your account does not have permission to perform this action"
-msgstr ""
-
 #: includes/admin/payments/actions.php:502
 msgid "Missing form data or order ID."
 msgstr ""
@@ -2442,11 +2462,11 @@ msgstr ""
 msgid "Nonce validation failed when submitting refund."
 msgstr ""
 
-#: includes/admin/payments/actions.php:539
+#: includes/admin/payments/actions.php:558
 msgid "Refund successfully processed."
 msgstr ""
 
-#: includes/admin/payments/actions.php:550
+#: includes/admin/payments/actions.php:569
 msgid "Unable to process refund."
 msgstr ""
 
@@ -2606,27 +2626,27 @@ msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:658
 #: includes/admin/payments/orders.php:1001
-#: includes/admin/payments/refunds.php:263
+#: includes/admin/payments/refunds.php:301
 msgid "Move to Trash"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:73
+#: includes/admin/payments/class-refund-items-table.php:77
 #: includes/admin/reporting/class-export-download-history.php:62
 #: includes/admin/reporting/export/class-batch-export-file-downloads.php:47
 msgid "Product"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:74
+#: includes/admin/payments/class-refund-items-table.php:78
 #: includes/admin/payments/orders.php:758
-#: includes/admin/payments/refunds.php:183
+#: includes/admin/payments/refunds.php:221
 #: includes/admin/views/tmpl-order-form-add-order-item.php:175
 #: includes/admin/views/tmpl-order-item.php:65
 msgid "Unit Price"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:79
+#: includes/admin/payments/class-refund-items-table.php:83
 #: includes/admin/payments/orders.php:760
-#: includes/admin/payments/refunds.php:185
+#: includes/admin/payments/refunds.php:223
 #: includes/admin/reporting/export/class-batch-export-sales.php:46
 #: includes/admin/views/tmpl-order-form-add-order-item.php:110
 #: includes/admin/views/tmpl-order-item.php:71 includes/emails/tags.php:311
@@ -2634,14 +2654,14 @@ msgstr ""
 msgid "Quantity"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:83
+#: includes/admin/payments/class-refund-items-table.php:87
 #: includes/admin/tools.php:644 includes/admin/views/tmpl-order-totals.php:16
 #: includes/emails/tags.php:203 templates/checkout_cart.php:102
 #: templates/shortcode-receipt.php:127
 msgid "Subtotal"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:88
+#: includes/admin/payments/class-refund-items-table.php:92
 #: includes/admin/reporting/class-export-payments.php:70
 #: includes/admin/reporting/export/class-batch-export-payments.php:56
 #: includes/admin/reporting/export/class-batch-export-taxed-orders.php:57
@@ -2653,36 +2673,47 @@ msgstr ""
 msgid "Tax"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:141
+#: includes/admin/payments/class-refund-items-table.php:162
+#: includes/admin/views/tmpl-order-adjustment.php:33
+#: includes/ajax-functions.php:1142
+msgid "Order Credit"
+msgstr ""
+
+#: includes/admin/payments/class-refund-items-table.php:162
+#: includes/admin/views/tmpl-order-adjustment.php:35
+msgid "Order Fee"
+msgstr ""
+
+#: includes/admin/payments/class-refund-items-table.php:195
 msgid "Quantity to refund"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:169
+#: includes/admin/payments/class-refund-items-table.php:224
 msgid "Amount to refund, excluding tax"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:171
+#: includes/admin/payments/class-refund-items-table.php:226
 msgid "Amount of tax to refund"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:326
-msgid "No order items found."
+#: includes/admin/payments/class-refund-items-table.php:398
+msgid "No items found."
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:464
+#: includes/admin/payments/class-refund-items-table.php:568
 #: includes/admin/payments/view-order-details.php:130
 msgid "Submit Refund"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:489
+#: includes/admin/payments/class-refund-items-table.php:600
 msgid "Refund Subtotal"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:514
+#: includes/admin/payments/class-refund-items-table.php:625
 msgid "Refund Tax Total"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:532
+#: includes/admin/payments/class-refund-items-table.php:643
 msgid "Refund Total"
 msgstr ""
 
@@ -2980,6 +3011,7 @@ msgstr ""
 
 #: includes/admin/payments/orders.php:727
 #: includes/admin/views/tmpl-order-copy-download-link.php:35
+#: includes/gateways/stripe/includes/utils/modal.php:69
 msgid "Close"
 msgstr ""
 
@@ -3082,43 +3114,39 @@ msgstr ""
 msgid "Minute"
 msgstr ""
 
-#: includes/admin/payments/payments-history.php:203
-msgid "Try the Sales/Earnings iOS App!"
-msgstr ""
-
-#: includes/admin/payments/payments-history.php:237
+#: includes/admin/payments/payments-history.php:220
 msgid "Edit Order"
 msgstr ""
 
-#: includes/admin/payments/payments-history.php:242
+#: includes/admin/payments/payments-history.php:225
 msgid "Add New Order"
 msgstr ""
 
-#: includes/admin/payments/refunds.php:39
+#: includes/admin/payments/refunds.php:41
 msgid "View Original Order"
 msgstr ""
 
-#: includes/admin/payments/refunds.php:44
+#: includes/admin/payments/refunds.php:46
 msgid "A refund is a read-only record to help balance your store&#39;s books."
 msgstr ""
 
-#: includes/admin/payments/refunds.php:45
+#: includes/admin/payments/refunds.php:47
 msgid "You are viewing a refund record."
 msgstr ""
 
-#: includes/admin/payments/refunds.php:208
+#: includes/admin/payments/refunds.php:246
 msgid "Refund Notes"
 msgstr ""
 
-#: includes/admin/payments/refunds.php:252
+#: includes/admin/payments/refunds.php:290
 msgid "Refund Attributes"
 msgstr ""
 
-#: includes/admin/payments/refunds.php:270
+#: includes/admin/payments/refunds.php:308
 msgid "Original Order"
 msgstr ""
 
-#: includes/admin/payments/refunds.php:304
+#: includes/admin/payments/refunds.php:342
 msgid "Related Refunds"
 msgstr ""
 
@@ -3323,13 +3351,16 @@ msgstr ""
 #: includes/admin/reporting/class-export-payments.php:64
 #: includes/admin/reporting/export/class-batch-export-payments.php:49
 #: includes/admin/reporting/export/class-batch-export-taxed-orders.php:50
+#: includes/gateways/stripe/includes/template-functions.php:532
 msgid "State"
 msgstr ""
 
 #: includes/admin/reporting/class-export-payments.php:66
 #: includes/admin/reporting/export/class-batch-export-payments.php:51
 #: includes/admin/reporting/export/class-batch-export-taxed-orders.php:52
-#: includes/admin/tools.php:730 templates/shortcode-profile-editor.php:157
+#: includes/admin/tools.php:730
+#: includes/gateways/stripe/includes/template-functions.php:780
+#: templates/shortcode-profile-editor.php:157
 msgid "Zip / Postal Code"
 msgstr ""
 
@@ -4048,7 +4079,7 @@ msgid "Select Region"
 msgstr ""
 
 #: includes/admin/reporting/reports.php:2767
-#: includes/class-edd-html-elements.php:617
+#: includes/class-edd-html-elements.php:623
 msgid "All Regions"
 msgstr ""
 
@@ -4688,6 +4719,7 @@ msgid "SendWP Settings"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:633
+#: includes/gateways/stripe/includes/admin/settings.php:47
 msgid "Connection Status"
 msgstr ""
 
@@ -5490,8 +5522,10 @@ msgstr ""
 msgid "Main"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:1722 includes/install.php:331
-#: templates/widget-cart-checkout.php:6 templates/widget-cart-empty.php:7
+#: includes/admin/settings/register-settings.php:1722
+#: includes/gateways/stripe/includes/payment-methods/payment-request/admin/settings.php:77
+#: includes/install.php:331 templates/widget-cart-checkout.php:6
+#: templates/widget-cart-empty.php:7
 msgid "Checkout"
 msgstr ""
 
@@ -5956,10 +5990,12 @@ msgid "Purchased Product(s)"
 msgstr ""
 
 #: includes/admin/tools.php:692
+#: includes/gateways/stripe/includes/template-functions.php:457
 msgid "Address Line 1"
 msgstr ""
 
 #: includes/admin/tools.php:702
+#: includes/gateways/stripe/includes/template-functions.php:471
 msgid "Address Line 2"
 msgstr ""
 
@@ -6274,6 +6310,7 @@ msgstr ""
 #: includes/admin/upgrades/upgrade-functions.php:943
 #: includes/admin/upgrades/upgrade-functions.php:1063
 #: includes/admin/upgrades/upgrade-functions.php:1146
+#: includes/gateways/stripe/includes/admin/upgrade-functions.php:57
 msgid "You do not have permission to do shop upgrades"
 msgstr ""
 
@@ -6535,15 +6572,6 @@ msgstr ""
 msgid "Remove %s"
 msgstr ""
 
-#: includes/admin/views/tmpl-order-adjustment.php:33
-#: includes/ajax-functions.php:1142
-msgid "Order Credit"
-msgstr ""
-
-#: includes/admin/views/tmpl-order-adjustment.php:35
-msgid "Order Fee"
-msgstr ""
-
 #: includes/admin/views/tmpl-order-copy-download-link.php:18
 msgid "%s Links"
 msgstr ""
@@ -6676,7 +6704,7 @@ msgstr ""
 msgid "No rates found."
 msgstr ""
 
-#: includes/ajax-functions.php:136 includes/cart/actions.php:102
+#: includes/ajax-functions.php:136 includes/cart/actions.php:104
 msgid ""
 "Missing nonce when removing an item from the cart. Please read the "
 "following for more information: "
@@ -6823,36 +6851,37 @@ msgstr ""
 msgid "You do not have permission to %s API keys for this user"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:856
+#: includes/cart/class-edd-cart.php:864
 msgid "includes %s tax"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:858
+#: includes/cart/class-edd-cart.php:866
 msgid "excludes %s tax"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1362 includes/cart/class-edd-cart.php:1422
+#: includes/cart/class-edd-cart.php:1370 includes/cart/class-edd-cart.php:1430
 #: templates/shortcode-profile-editor.php:22
 msgid "Success"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1363
+#: includes/cart/class-edd-cart.php:1371
 msgid "Cart saved successfully. You can restore your cart using this URL:"
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1396 includes/cart/class-edd-cart.php:1410
+#: includes/cart/class-edd-cart.php:1404 includes/cart/class-edd-cart.php:1418
 msgid "Cart restoration failed. Invalid token."
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1404 includes/cart/class-edd-cart.php:1413
+#: includes/cart/class-edd-cart.php:1412 includes/cart/class-edd-cart.php:1421
 msgid "The cart cannot be restored. Invalid token."
 msgstr ""
 
-#: includes/cart/class-edd-cart.php:1422
+#: includes/cart/class-edd-cart.php:1430
 msgid "Cart restored successfully."
 msgstr ""
 
 #: includes/cart/template.php:120
+#: includes/gateways/stripe/includes/compat.php:216
 msgid "Your cart is empty."
 msgstr ""
 
@@ -6929,6 +6958,7 @@ msgid "The (typically) 16 digits on the front of your credit card."
 msgstr ""
 
 #: includes/checkout/template.php:260
+#: includes/gateways/stripe/includes/template-functions.php:158
 msgid "CVC"
 msgstr ""
 
@@ -6945,14 +6975,17 @@ msgid "Name on the card"
 msgstr ""
 
 #: includes/checkout/template.php:271
+#: includes/gateways/stripe/includes/template-functions.php:115
 msgid "The name printed on the front of your credit card."
 msgstr ""
 
 #: includes/checkout/template.php:272
+#: includes/gateways/stripe/includes/template-functions.php:116
 msgid "Card name"
 msgstr ""
 
 #: includes/checkout/template.php:277
+#: includes/gateways/stripe/includes/template-functions.php:554
 msgid "Expiration (MM/YY)"
 msgstr ""
 
@@ -7001,6 +7034,7 @@ msgid "Billing zip/Postal code"
 msgstr ""
 
 #: includes/checkout/template.php:386
+#: includes/gateways/stripe/includes/template-functions.php:779
 msgid "The zip or postal code for your billing address."
 msgstr ""
 
@@ -7013,6 +7047,7 @@ msgid "Billing country"
 msgstr ""
 
 #: includes/checkout/template.php:396
+#: includes/gateways/stripe/includes/template-functions.php:755
 msgid "The country for your billing address."
 msgstr ""
 
@@ -7144,6 +7179,7 @@ msgid "Go back"
 msgstr ""
 
 #: includes/checkout/template.php:976
+#: includes/gateways/stripe/includes/scripts.php:78
 msgid "Next"
 msgstr ""
 
@@ -7383,7 +7419,7 @@ msgstr ""
 msgid "  Product: %s - %s"
 msgstr ""
 
-#: includes/class-edd-cli.php:423 includes/class-edd-html-elements.php:438
+#: includes/class-edd-cli.php:423 includes/class-edd-html-elements.php:444
 #: includes/shortcodes.php:264
 msgid "No discounts found"
 msgstr ""
@@ -7652,7 +7688,9 @@ msgstr ""
 msgid "Draft"
 msgstr ""
 
-#: includes/class-edd-discount.php:676 includes/misc-functions.php:1536
+#: includes/class-edd-discount.php:676
+#: includes/gateways/stripe/includes/template-functions.php:326
+#: includes/misc-functions.php:1536
 msgid "Expired"
 msgstr ""
 
@@ -7712,48 +7750,48 @@ msgstr ""
 msgid "Search Users"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:401
+#: includes/class-edd-html-elements.php:407
 msgid "Choose a Discount"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:402 includes/post-types.php:121
+#: includes/class-edd-html-elements.php:408 includes/post-types.php:121
 msgid "All Discounts"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:579
+#: includes/class-edd-html-elements.php:585
 msgid "Choose a Country"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:580
+#: includes/class-edd-html-elements.php:586
 msgid "All Countries"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:616
+#: includes/class-edd-html-elements.php:622
 msgid "Choose a Region"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:926
+#: includes/class-edd-html-elements.php:932
 msgid "Enter Username"
 msgstr ""
 
-#: includes/class-edd-license-handler.php:165
+#: includes/class-edd-license-handler.php:169
 msgid "%1$s"
 msgstr ""
 
-#: includes/class-edd-license-handler.php:193
+#: includes/class-edd-license-handler.php:197
 msgid ""
 "Enter your extension license keys here to receive updates for purchased "
 "extensions. If your license key has expired, please <a href=\"%s\" "
 "target=\"_blank\">renew your license</a>."
 msgstr ""
 
-#: includes/class-edd-license-handler.php:408
+#: includes/class-edd-license-handler.php:412
 msgid ""
 "You have invalid or expired license keys for Easy Digital Downloads. <a "
 "href=\"%s\">Fix this</a>"
 msgstr ""
 
-#: includes/class-edd-license-handler.php:437
+#: includes/class-edd-license-handler.php:441
 msgid "Enter valid license key for automatic updates."
 msgstr ""
 
@@ -7900,8 +7938,8 @@ msgid "Improper date provided."
 msgstr ""
 
 #: includes/class-stats.php:221 includes/class-stats.php:329
-#: includes/class-stats.php:1745 includes/class-stats.php:1923
-#: includes/class-stats.php:2040 includes/class-stats.php:2341
+#: includes/class-stats.php:1748 includes/class-stats.php:1926
+#: includes/class-stats.php:2043 includes/class-stats.php:2344
 msgid "No Change"
 msgstr ""
 
@@ -8342,7 +8380,7 @@ msgstr ""
 msgid "Sorry but you have hit your download limit for this file."
 msgstr ""
 
-#: includes/deprecated-functions.php:505 includes/download-functions.php:1627
+#: includes/deprecated-functions.php:505 includes/download-functions.php:1638
 msgid "Sorry but your download link has expired."
 msgstr ""
 
@@ -8582,6 +8620,7 @@ msgid "Billing"
 msgstr ""
 
 #: includes/gateways/actions.php:37
+#: includes/gateways/stripe/includes/payment-methods/payment-request/checkout.php:316
 msgid ""
 "Missing nonce when loading the gateway fields. Please read the following "
 "for more information: "
@@ -8696,12 +8735,12 @@ msgstr ""
 
 #: includes/gateways/amazon-payments.php:1024
 #: includes/gateways/amazon-payments.php:1064
-#: includes/gateways/paypal-standard.php:473
-#: includes/gateways/paypal-standard.php:480
-#: includes/gateways/paypal-standard.php:570
-#: includes/gateways/paypal-standard.php:580
-#: includes/gateways/paypal-standard.php:653
+#: includes/gateways/paypal-standard.php:482
+#: includes/gateways/paypal-standard.php:489
+#: includes/gateways/paypal-standard.php:579
+#: includes/gateways/paypal-standard.php:589
 #: includes/gateways/paypal-standard.php:662
+#: includes/gateways/paypal-standard.php:671
 msgid "IPN Error"
 msgstr ""
 
@@ -8851,44 +8890,44 @@ msgstr ""
 msgid "Payment creation failed before sending buyer to PayPal. Payment data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:473
-#: includes/gateways/paypal-standard.php:480
+#: includes/gateways/paypal-standard.php:482
+#: includes/gateways/paypal-standard.php:489
 msgid "Invalid IPN verification response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:570
+#: includes/gateways/paypal-standard.php:579
 msgid "Invalid business email in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:573
+#: includes/gateways/paypal-standard.php:582
 msgid "Payment failed due to invalid PayPal business email."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:580
+#: includes/gateways/paypal-standard.php:589
 msgid "Invalid currency in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:583
+#: includes/gateways/paypal-standard.php:592
 msgid "Payment failed due to invalid currency in PayPal IPN."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:653
+#: includes/gateways/paypal-standard.php:662
 msgid "Invalid payment amount in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:656
+#: includes/gateways/paypal-standard.php:665
 msgid "Payment failed due to invalid amount in PayPal IPN."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:662
+#: includes/gateways/paypal-standard.php:671
 msgid "Invalid purchase key in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:664
+#: includes/gateways/paypal-standard.php:673
 msgid "Payment failed due to invalid purchase key in PayPal IPN."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:670
+#: includes/gateways/paypal-standard.php:679
 #: tests/helpers/class-helper-payment.php:131
 #: tests/helpers/class-helper-payment.php:234
 #: tests/helpers/class-helper-payment.php:342
@@ -8898,100 +8937,1113 @@ msgstr ""
 msgid "PayPal Transaction ID: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:684
+#: includes/gateways/paypal-standard.php:693
 msgid "Payment made via eCheck and will clear automatically in 5-8 days"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:691
+#: includes/gateways/paypal-standard.php:700
 msgid ""
 "Payment requires a confirmed customer address and must be accepted manually "
 "through PayPal"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:697
+#: includes/gateways/paypal-standard.php:706
 msgid ""
 "Payment must be accepted manually through PayPal due to international "
 "account regulations"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:703
+#: includes/gateways/paypal-standard.php:712
 msgid ""
 "Payment received in non-shop currency and must be accepted manually through "
 "PayPal"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:710
+#: includes/gateways/paypal-standard.php:719
 msgid ""
 "Payment is being reviewed by PayPal staff as high-risk or in possible "
 "violation of government regulations"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:716
+#: includes/gateways/paypal-standard.php:725
 msgid "Payment was sent to non-confirmed or non-registered email address."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:722
+#: includes/gateways/paypal-standard.php:731
 msgid "PayPal account must be upgraded before this payment can be accepted"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:728
+#: includes/gateways/paypal-standard.php:737
 msgid ""
 "PayPal account is not verified. Verify account in order to accept this "
 "payment"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:734
+#: includes/gateways/paypal-standard.php:743
 msgid ""
 "Payment is pending for unknown reasons. Contact PayPal support for "
 "assistance"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:787
+#: includes/gateways/paypal-standard.php:796
 msgid "Partial PayPal refund processed: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:792
+#: includes/gateways/paypal-standard.php:801
 msgid "PayPal Payment #%s Refunded for reason: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:793
+#: includes/gateways/paypal-standard.php:802
 msgid "PayPal Refund Transaction ID: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:1007
+#: includes/gateways/paypal-standard.php:1016
 msgid ""
 "Payment could not be verified while validating PayPal PDT. Missing payment "
 "total fields."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:1018
+#: includes/gateways/paypal-standard.php:1027
 msgid ""
 "Payment failed while validating PayPal PDT. Amount expected: %f. Amount "
 "Received: %f"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:1048
+#: includes/gateways/paypal-standard.php:1057
 msgid "Payment failed while validating PayPal PDT."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:1055
+#: includes/gateways/paypal-standard.php:1064
 msgid "PayPal PDT encountered an unexpected result, payment set to pending"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:1141
+#: includes/gateways/paypal-standard.php:1150
 msgid "Refund Payment in PayPal"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:1288
+#: includes/gateways/paypal-standard.php:1297
 msgid "PayPal refund failed for unknown reason."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:1298
+#: includes/gateways/paypal-standard.php:1307
 msgid "PayPal refund transaction ID: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:1302
+#: includes/gateways/paypal-standard.php:1311
 msgid "PayPal refund failed: %s"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/admin-actions.php:63
+msgid "Preapproval cancelled"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/admin-actions.php:80
+msgid "The preapproved payment was successfully charged."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/admin-actions.php:83
+msgid ""
+"The preapproved payment failed to be charged. View order details for "
+"further details."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/admin-actions.php:86
+msgid "The preapproved payment was successfully cancelled."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/admin-actions.php:91
+#. translators: %1$s Stripe Connect error message. %2$s Retry URL.
+msgid ""
+"There was an error connecting your Stripe account. Message: %1$s. Please <a "
+"href=\"%2$s\">try again</a>."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/admin-actions.php:122
+msgid "Used Existing Card:"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/admin-actions.php:123
+msgid "Yes"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/admin-filters.php:57
+#: includes/gateways/stripe/includes/gateway-filters.php:27
+msgid "Preapproved"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/admin-filters.php:58
+#: includes/gateways/stripe/includes/gateway-filters.php:28
+msgid "Preapproval Pending"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/admin-filters.php:59
+#: includes/gateways/stripe/includes/gateway-filters.php:29
+#: includes/misc-functions.php:1543
+msgid "Cancelled"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/admin-filters.php:106
+msgid "Process"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/class-notices-registry.php:92
+msgid "A message must be specified for each notice."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/notices/edd-recurring-requirement.php:18
+#: includes/gateways/stripe/includes/admin/notices/edd-requirement.php:18
+#: includes/gateways/stripe/includes/admin/notices/php-requirement.php:21
+msgid "Credit card payments with Stripe are currently disabled."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/notices/edd-recurring-requirement.php:26
+#. translators: %1$s Opening strong tag, do not translate. %2$s Closing strong
+#. tag, do not translate. %3$s Opening code tag, do not translate. %4$s Closing
+#. code tag, do not translate.
+msgid ""
+"To continue accepting credit card payments with Stripe please update "
+"%1$sEasy Digital Downloads - Recurring Payments%2$s to version %3$s2.10%4$s "
+"or higher."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/notices/edd-requirement.php:26
+#. translators: %1$s Opening strong tag, do not translate. %2$s Closing strong
+#. tag, do not translate. %3$s Opening code tag, do not translate. %4$s Closing
+#. code tag, do not translate.
+msgid ""
+"To continue accepting credit card payments with Stripe please update "
+"%1$sEasy Digital Downloads%2$s to version %3$s2.9%4$s or higher."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/notices/edd-stripe-core.php:28
+msgid "Accept credit card payments with Stripe"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/notices/edd-stripe-core.php:34
+#. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor
+#. tag, do not translate. %3$s Opening anchor tag, do not translate. %4$s
+#. Closing anchor tag, do not translate.
+msgid ""
+"Easy Digital Downloads now lets you accept credit card payments using "
+"Stripe, including Apple Pay and Google Pay support. %1$sEnable Stripe%2$s "
+"now or %3$slearn more%4$s about the benefits of using Stripe."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/notices/php-requirement.php:29
+#. translators: %1$s Future PHP version requirement. %2$s Current PHP version.
+#. %3$s Opening strong tag, do not translate. %4$s Closing strong tag, do not
+#. translate. %5$s Opening anchor tag, do not translate. %6$s Closing anchor
+#. tag, do not translate.
+msgid ""
+"Easy Digital Downloads Stripe Payment Gateway requires PHP version %1$s or "
+"higher. It looks like you're using version %2$s, which means you will need "
+"to %3$supgrade your version of PHP to allow the plugin to continue to "
+"function%4$s. Newer versions of PHP are both faster and more secure. The "
+"version you're using %5$sno longer receives security updates%6$s, which is "
+"another great reason to update."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/notices/php-requirement.php:51
+msgid "Read More"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/notices/php-requirement.php:65
+msgid "Which version should I upgrade to?"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/notices/php-requirement.php:73
+#. translators: %1$s Future PHP version requirement.
+msgid ""
+"In order to be compatible with future versions of the Stripe payment "
+"gateway, you should update your PHP version to at least %1$s; however we "
+"recommend using version <code>7.4</code> if possible to receive the full "
+"speed and security benefits provided to more modern and fully supported "
+"versions of PHP. However, some plugins may not be fully compatible with PHP "
+"<code>7.4</code>, so more testing may be required."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/notices/php-requirement.php:84
+#: includes/gateways/stripe/includes/admin/settings.php:307
+#: includes/gateways/stripe/includes/admin/settings.php:376
+msgid "Need help upgrading? Ask your web host!"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/notices/php-requirement.php:92
+#. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor
+#. tag, do not translate.
+msgid ""
+"Many web hosts can give you instructions on how/where to upgrade your "
+"version of PHP through their control panel, or may even be able to do it "
+"for you. %1$sRead more about updating PHP%2$s."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/notices.php:39
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:534
+#: includes/gateways/stripe/includes/payment-methods/payment-request/apple-pay.php:22
+msgid "Unable to locate registry"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/reporting/class-stripe-reports.php:22
+msgid "Stripe-specific reports have been removed."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:197
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:478
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:540
+msgid "Connect with Stripe"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:207
+msgid ""
+"Connect with Stripe for pay as you go pricing: 2% per-transaction fee + "
+"Stripe fees."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:218
+#. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor
+#. tag, do not translate.
+msgid "Have questions about connecting with Stripe? See the %1$sdocumentation%2$s."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:244
+msgid "Retrieving account information..."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:257
+msgid "Manage API keys manually"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:267
+msgid "Hide API keys"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:273
+msgid ""
+"Although you can add your API keys manually, we recommend using Stripe "
+"Connect: an easier and more secure way of connecting your Stripe account to "
+"your website. Stripe Connect prevents issues that can arise when copying "
+"and pasting account details from Stripe into your Easy Digital Downloads "
+"payment gateway settings. With Stripe Connect you'll be ready to go with "
+"just a few clicks."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:291
+msgid "Unable to retrieve account information."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:316
+#. translators: %1$s Stripe payment mode. %2$s Opening anchor tag for
+#. reconnecting to Stripe, do not translate. %3$s Opening anchor tag for
+#. disconnecting Stripe, do not translate. %4$s Closing anchor tag, do not
+#. translate.
+msgid ""
+"Your Stripe account is connected in %1$s mode. %2$sReconnect in %1$s "
+"mode%4$s, or %3$sdisconnect this account%4$s."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:348
+#. translators: %1$s Opening bold tag, do not translate. %2$s Closing bold tag,
+#. do not translate.
+msgid "Webhooks cannot be configured for recurring purchases with this account."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:366
+#. translators: %1$s Opening anchor tag for disconnecting Stripe, do not
+#. translate. %2$s Closing anchor tag, do not translate.
+msgid "%1$sDisconnect this account%2$s."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:432
+msgid "Pay as you go pricing: 2% per-transaction fee + Stripe fees."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:444
+msgid "Administrator (Owner)"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:455
+msgid ""
+"The API keys provided do not match the Stripe Connect account associated "
+"with this installation. If you have manually modified these values after "
+"connecting your account, please reconnect below or update your API keys."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:481
+msgid ""
+"It is highly recommended to Connect with Stripe for easier setup and "
+"improved security."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:494
+#. translators: %1$s Stripe payment mode.
+msgid "Your manually managed %1$s mode API keys are valid."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:510
+#. translators: %1$s Stripe payment mode.
+msgid "Your manually managed %1$s mode API keys are invalid."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:550
+msgid ""
+"Start accepting payments with Stripe by connecting your account. Stripe "
+"Connect helps ensure easier setup and improved security."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:571
+#. translators: %s Test mode status. Enabled or disabled.
+msgid "\"Test Mode\" has been %s. Please verify your Stripe connection status."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:9
+msgid "Stripe"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:35
+msgid "Unmet Requirements"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:54
+msgid "Test Publishable Key"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:55
+msgid "Enter your test publishable key, found in your Stripe Account Settings"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:62
+msgid "Test Secret Key"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:63
+msgid "Enter your test secret key, found in your Stripe Account Settings"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:70
+msgid "Live Publishable Key"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:71
+msgid "Enter your live publishable key, found in your Stripe Account Settings"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:78
+msgid "Live Secret Key"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:79
+msgid "Enter your live secret key, found in your Stripe Account Settings"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:87
+msgid "Webhooks"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:91
+#. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor
+#. tag, do not translate.
+msgid ""
+"In order for Stripe to function completely, you must configure your Stripe "
+"webhooks. Visit your %1$saccount dashboard%2$s to configure them. Please "
+"add a webhook endpoint for the URL below."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:97
+#. translators: %s Webhook URL. Do not translate.
+msgid "Webhook URL: %s"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:102
+#: includes/gateways/stripe/includes/payment-methods/payment-request/admin/settings.php:48
+#. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor
+#. tag, do not translate.
+#. translators: %1$s Opening anchor tag, do not translate. %2$s Opening anchor
+#. tag, do not translate.
+msgid "See our %1$sdocumentation%2$s for more information."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:109
+msgid "Billing Address Display"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:110
+msgid ""
+"Select how you would like to display the billing address fields on the "
+"checkout form. <p><strong>Notes</strong>:</p><p>If taxes are enabled, this "
+"option cannot be changed from \"Full address\".</p><p>If set to \"No "
+"address fields\", you <strong>must</strong> disable \"zip code "
+"verification\" in your Stripe account.</p>"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:113
+msgid "Full address"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:114
+msgid "Zip / Postal Code and Country only"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:115
+msgid "No address fields"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:121
+msgid "Statement Descriptor"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:122
+msgid ""
+"Choose how charges will appear on customer's credit card statements. "
+"<em>Max 22 characters</em>"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:127
+msgid "Show Previously Used Cards"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:128
+msgid ""
+"Provides logged in customers with a list of previous used payment methods "
+"for faster checkout."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:133
+msgid "Prepaid Cards"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:134
+msgid "Allow prepaid cards as valid payment method."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:139
+msgid "Split Credit Card Form"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:140
+msgid "Use separate card number, expiration, and CVC fields in payment forms."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:145
+msgid "Restrict Stripe Assets"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:146
+msgid ""
+"Only load Stripe.com hosted assets on pages that specifically utilize "
+"Stripe functionality."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:148
+msgid "Loading Javascript from Stripe"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:149
+msgid ""
+"Stripe advises that their Javascript library be loaded on every page to "
+"take advantage of their advanced fraud detection rules. If you are not "
+"concerned with this, enable this setting to only load the Javascript when "
+"necessary. Read more about Stripe's recommended setup here: "
+"https://stripe.com/docs/web/setup."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:156
+msgid "Stripe Checkout"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:161
+#. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor
+#. tag, do not translate.
+msgid ""
+"To ensure your website is compliant with the new %1$sStrong Customer "
+"Authentication%2$s (SCA) regulations, the legacy Stripe Checkout modal is "
+"no longer supported. Payments are still securely accepted through through "
+"Stripe on the standard Easy Digital Downloads checkout page. \"Buy Now\" "
+"buttons will also automatically redirect to the standard checkout page."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:183
+msgid ""
+"You have disabled the \"Test Mode\" option. Once you have saved your "
+"changes, please verify your Stripe connection, especially if you have not "
+"previously connected in with \"Test Mode\" disabled."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:289
+#: includes/gateways/stripe/includes/admin/settings.php:361
+#. translators: %1$s Future PHP version requirement. %2$s Current PHP version.
+#. %3$s Opening strong tag, do not translate. %4$s Closing strong tag, do not
+#. translate.
+#. translators: %1$s PHP version requirement. %2$s Current PHP version. %3$s
+#. Opening strong tag, do not translate. %4$s Closing strong tag, do not
+#. translate.
+msgid ""
+"Processing credit cards with Stripe requires PHP version %1$s or higher. It "
+"looks like you're using version %2$s, which means you will need to "
+"%3$supgrade your version of PHP before acceping credit card payments%4$s."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:313
+#: includes/gateways/stripe/includes/admin/settings.php:381
+#. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor
+#. tag, do not translate.
+msgid ""
+"Many web hosts can give you instructions on how/where to upgrade your "
+"version of PHP through their control panel, or may even be able to do it "
+"for you. If you need to change hosts, please see %1$sour hosting "
+"recommendations%2$s."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings.php:431
+#. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor
+#. tag, do not translate.
+msgid ""
+"There was an error getting your Stripe credentials. Please %1$stry "
+"again%2$s. If you continue to have this problem, please contact support."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/upgrade-functions.php:32
+#. translators: %s Upgrade link.
+msgid ""
+"Easy Digital Downloads - Stripe Gateway needs to upgrade the customers "
+"database; <a href=\"%s\">click here to start the upgrade</a>. <a href=\"#\" "
+"onClick=\"jQuery(this).parent().next('p').slideToggle()\">Learn more about "
+"this upgrade</a>"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/upgrade-functions.php:35
+msgid ""
+"<strong>About this upgrade:</strong><br />This upgrade will improve the "
+"reliability of associating purchase records with your existing customer "
+"records in Stripe by changing their Stripe Customer IDs to be stored "
+"locally on their EDD customer record, instead of their user record."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/upgrade-functions.php:37
+msgid ""
+"<strong>Advanced User?</strong><br />This upgrade can also be run via WPCLI "
+"with the following command:<br /><code>wp edd-stripe "
+"migrate_customer_ids</code>"
+msgstr ""
+
+#: includes/gateways/stripe/includes/card-actions.php:22
+#: includes/gateways/stripe/includes/card-actions.php:141
+#: includes/gateways/stripe/includes/card-actions.php:208
+#: includes/gateways/stripe/includes/card-actions.php:258
+#: includes/gateways/stripe/includes/card-actions.php:311
+msgid "This feature is not available at this time."
+msgstr ""
+
+#: includes/gateways/stripe/includes/card-actions.php:33
+#: includes/gateways/stripe/includes/card-actions.php:42
+#: includes/gateways/stripe/includes/card-actions.php:50
+#: includes/gateways/stripe/includes/card-actions.php:152
+#: includes/gateways/stripe/includes/card-actions.php:161
+#: includes/gateways/stripe/includes/card-actions.php:172
+#: includes/gateways/stripe/includes/card-actions.php:219
+#: includes/gateways/stripe/includes/card-actions.php:228
+#: includes/gateways/stripe/includes/card-actions.php:239
+msgid "Error updating card."
+msgstr ""
+
+#: includes/gateways/stripe/includes/card-actions.php:115
+msgid "Card successfully updated."
+msgstr ""
+
+#: includes/gateways/stripe/includes/card-actions.php:182
+msgid "Card successfully set as default."
+msgstr ""
+
+#: includes/gateways/stripe/includes/card-actions.php:285
+msgid "Card successfully removed."
+msgstr ""
+
+#: includes/gateways/stripe/includes/card-actions.php:322
+msgid "Unable to update your account at this time, please try again later"
+msgstr ""
+
+#: includes/gateways/stripe/includes/card-actions.php:333
+msgid "Missing card ID."
+msgstr ""
+
+#: includes/gateways/stripe/includes/card-actions.php:342
+msgid "Error adding card."
+msgstr ""
+
+#: includes/gateways/stripe/includes/card-actions.php:351
+msgid "Unable to retrieve customer."
+msgstr ""
+
+#: includes/gateways/stripe/includes/card-actions.php:370
+msgid "Unable to create customer in Stripe."
+msgstr ""
+
+#: includes/gateways/stripe/includes/card-actions.php:398
+msgid "Card successfully added."
+msgstr ""
+
+#: includes/gateways/stripe/includes/class-edd-stripe.php:240
+#: includes/gateways/stripe/includes/template-functions.php:125
+msgid "Credit Card"
+msgstr ""
+
+#: includes/gateways/stripe/includes/class-stripe-api.php:51
+msgid ""
+"Unable to process request: Unmet Stripe payment gateway requirements. "
+"Please contact the website administrator."
+msgstr ""
+
+#: includes/gateways/stripe/includes/class-stripe-api.php:69
+#. translators: %1$s Stripe API class name. %2$s Stripe API method name.
+msgid "Unable to call %1$s::%2$s"
+msgstr ""
+
+#: includes/gateways/stripe/includes/compat.php:116
+#: includes/process-purchase.php:569 includes/process-purchase.php:939
+msgid "The user information is invalid"
+msgstr ""
+
+#: includes/gateways/stripe/includes/compat.php:220
+#: includes/process-purchase.php:44
+msgid ""
+"Missing nonce when processing checkout. Please read the following for more "
+"information: "
+"https://easydigitaldownloads.com/development/2018/07/05/important-update-to-"
+"ajax-requests-in-easy-digital-downloads-2-9-4"
+msgstr ""
+
+#: includes/gateways/stripe/includes/compat.php:227
+#: includes/process-purchase.php:51
+msgid "Error processing purchase. Please reload the page and try again."
+msgstr ""
+
+#: includes/gateways/stripe/includes/emails.php:29
+msgid "Your Preapproved Payment Requires Action"
+msgstr ""
+
+#: includes/gateways/stripe/includes/emails.php:30
+msgid "Payment Requires Action"
+msgstr ""
+
+#: includes/gateways/stripe/includes/emails.php:32
+msgid "Dear {name},"
+msgstr ""
+
+#: includes/gateways/stripe/includes/emails.php:33
+msgid ""
+"Your preapproved payment requires further action before your purchase can "
+"be completed. Please click the link below to take finalize your purchase"
+msgstr ""
+
+#: includes/gateways/stripe/includes/gateway-actions.php:17
+#: includes/gateways/stripe/includes/gateway-actions.php:26
+#: includes/gateways/stripe/includes/gateway-actions.php:35
+#: includes/post-types.php:405
+#. translators: %s Payment status count
+msgid "Active <span class=\"count\">(%s)</span>"
+msgid_plural "Active <span class=\"count\">(%s)</span>"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/gateways/stripe/includes/gateway-actions.php:49
+msgid ""
+"Outputs a line stating what charges will appear as on customer's credit "
+"card statements."
+msgstr ""
+
+#: includes/gateways/stripe/includes/gateway-filters.php:72
+msgid "Please enter a name for the credit card."
+msgstr ""
+
+#: includes/gateways/stripe/includes/i18n.php:25
+msgid "The card number is not a valid credit card number."
+msgstr ""
+
+#: includes/gateways/stripe/includes/i18n.php:26
+msgid "The card's expiration month is invalid."
+msgstr ""
+
+#: includes/gateways/stripe/includes/i18n.php:27
+msgid "The card's expiration year is invalid."
+msgstr ""
+
+#: includes/gateways/stripe/includes/i18n.php:28
+msgid "The card's security code is invalid."
+msgstr ""
+
+#: includes/gateways/stripe/includes/i18n.php:29
+msgid "The card number is incorrect."
+msgstr ""
+
+#: includes/gateways/stripe/includes/i18n.php:30
+msgid "The card number is incomplete."
+msgstr ""
+
+#: includes/gateways/stripe/includes/i18n.php:31
+msgid "The card's security code is incomplete."
+msgstr ""
+
+#: includes/gateways/stripe/includes/i18n.php:32
+msgid "The card's expiration date is incomplete."
+msgstr ""
+
+#: includes/gateways/stripe/includes/i18n.php:33
+msgid "The card has expired."
+msgstr ""
+
+#: includes/gateways/stripe/includes/i18n.php:34
+msgid "The card's security code is incorrect."
+msgstr ""
+
+#: includes/gateways/stripe/includes/i18n.php:35
+msgid "The card's zip code failed validation."
+msgstr ""
+
+#: includes/gateways/stripe/includes/i18n.php:36
+msgid "The card's expiration year is in the past"
+msgstr ""
+
+#: includes/gateways/stripe/includes/i18n.php:37
+msgid "The card was declined."
+msgstr ""
+
+#: includes/gateways/stripe/includes/i18n.php:38
+msgid "An error occurred while processing the card."
+msgstr ""
+
+#: includes/gateways/stripe/includes/i18n.php:39
+msgid "Unable to process this payment, please try again or use alternative method."
+msgstr ""
+
+#: includes/gateways/stripe/includes/i18n.php:40
+msgid "Invalid email address, please correct and try again."
+msgstr ""
+
+#: includes/gateways/stripe/includes/integrations/wp-cli.php:49
+msgid ""
+"The Stripe customer ID migration has already been run. To do this anyway, "
+"use the --force argument."
+msgstr ""
+
+#: includes/gateways/stripe/includes/integrations/wp-cli.php:86
+msgid "Migration complete."
+msgstr ""
+
+#: includes/gateways/stripe/includes/integrations/wp-cli.php:88
+msgid "No user records were found that needed to be migrated."
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-actions.php:42
+#: includes/gateways/stripe/includes/template-functions.php:26
+msgid ""
+"We are unable to process your payment at this time, please try again later "
+"or contact support."
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-actions.php:63
+msgid "Unable to locate payment method. Please try again with a new payment method."
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-actions.php:81
+msgid ""
+"Prepaid cards are not a valid payment method. Please try again with a new "
+"payment method."
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-actions.php:99
+msgid "Unable to create customer. Please try again."
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-actions.php:218
+msgid ""
+"Charges are no longer directly created in Stripe. Please read the following "
+"for more information: https://easydigitaldownloads.com/development/"
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-actions.php:341
+#: includes/gateways/stripe/includes/payment-actions.php:361
+#: includes/gateways/stripe/includes/payment-actions.php:379
+#: includes/gateways/stripe/includes/payment-actions.php:455
+#: includes/gateways/stripe/includes/payment-actions.php:537
+#: includes/gateways/stripe/includes/payment-actions.php:625
+#: includes/gateways/stripe/includes/payment-actions.php:712
+#: includes/gateways/stripe/includes/payment-actions.php:921
+#: includes/gateways/stripe/includes/payment-actions.php:1064
+msgid "Stripe Error"
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-actions.php:343
+#: includes/gateways/stripe/includes/payment-actions.php:363
+msgid "There was an error while processing a Stripe payment. Payment data: %s"
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-actions.php:421
+#: includes/gateways/stripe/includes/payment-actions.php:431
+#: includes/gateways/stripe/includes/payment-actions.php:490
+#: includes/gateways/stripe/includes/payment-actions.php:500
+#: includes/gateways/stripe/includes/payment-actions.php:571
+#: includes/gateways/stripe/includes/payment-actions.php:588
+#: includes/gateways/stripe/includes/payment-actions.php:659
+#: includes/gateways/stripe/includes/payment-actions.php:669
+#: includes/gateways/stripe/includes/payment-actions.php:747
+#: includes/gateways/stripe/includes/payment-actions.php:764
+#: includes/gateways/stripe/includes/payment-actions.php:776
+#: includes/gateways/stripe/includes/payment-actions.php:788
+#: includes/gateways/stripe/includes/payment-actions.php:805
+#: includes/gateways/stripe/includes/payment-actions.php:840
+#: includes/gateways/stripe/includes/payment-actions.php:955
+#: includes/gateways/stripe/includes/payment-actions.php:972
+#: includes/gateways/stripe/includes/payment-actions.php:982
+#: includes/gateways/stripe/includes/payment-actions.php:1001
+#: includes/gateways/stripe/includes/payment-actions.php:1049
+#: includes/gateways/stripe/includes/payment-actions.php:1095
+#: includes/gateways/stripe/includes/payment-actions.php:1111
+#: includes/gateways/stripe/includes/payment-actions.php:1124
+#: includes/gateways/stripe/includes/payment-actions.php:1158
+msgid ""
+"An error occurred, but your payment may have gone through. Please contact "
+"the site administrator."
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-actions.php:906
+msgid "Unable to create payment."
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-actions.php:1429
+#. translators: %s Stripe Refund ID
+msgid "Charge refunded in Stripe. Refund ID %s"
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-methods/buy-now/ajax.php:19
+#: includes/gateways/stripe/includes/payment-methods/buy-now/ajax.php:32
+msgid "Unable to add item to cart."
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-methods/buy-now/checkout.php:81
+#: includes/gateways/stripe/includes/payment-methods/payment-request/checkout.php:269
+#: includes/process-purchase.php:471
+msgid "Please enter a valid email address"
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-methods/payment-request/admin/settings.php:31
+msgid "Apple Pay/Google Pay"
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-methods/payment-request/admin/settings.php:36
+#. translators: %1$s Opening anchor tag, do not translate. %2$s Opening anchor
+#. tag, do not translate. %3$s Closing anchor tag, do not translate.
+msgid ""
+"\"Express Checkout\" via Apple Pay, Google Pay, or Microsoft Pay digital "
+"wallets. By using Apple Pay, you agree to %1$sStripe%3$s and "
+"%2$sApple's%3$s terms of service."
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-methods/payment-request/admin/settings.php:42
+msgid "This feature is not available when taxes are enabled."
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-methods/payment-request/admin/settings.php:46
+msgid "Apple Pay is not available in Test Mode."
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-methods/payment-request/admin/settings.php:69
+msgid "Single %s"
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-methods/payment-request/admin/settings.php:74
+msgid "%s Archive (includes <code>[downloads]</code> shortcode)"
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-methods/payment-request/apple-pay.php:28
+msgid "Apple Pay domain verification error."
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-methods/payment-request/apple-pay.php:174
+msgid "Unable to create domain association folder in domain root."
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-methods/payment-request/apple-pay.php:181
+msgid "Unable to copy domain association file to domain .well-known directory."
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-methods/payment-request/apple-pay.php:268
+#. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor
+#. tag, do not translate.
+msgid "Please %1$smanually add your domain%2$s %3$s to use Apple Pay."
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-methods/payment-request/checkout.php:68
+msgid "Express Checkout (Apple Pay/Google Pay)"
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-methods/payment-request/checkout.php:69
+msgid "Express Checkout"
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-methods/payment-request/functions.php:161
+#: includes/gateways/stripe/includes/payment-methods/payment-request/functions.php:218
+msgid " × %d"
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-receipt.php:52
+msgid "To finalize your preapproved purchase, please confirm your payment method."
+msgstr ""
+
+#: includes/gateways/stripe/includes/scripts.php:83
+msgid ""
+"Stripe publishable key missing. Please enter your publishable key in "
+"Settings."
+msgstr ""
+
+#: includes/gateways/stripe/includes/scripts.php:84
+msgid "Please fill out all required fields to continue your purchase."
+msgstr ""
+
+#: includes/gateways/stripe/includes/scripts.php:85
+msgid "Please agree to the terms to complete your purchase."
+msgstr ""
+
+#: includes/gateways/stripe/includes/scripts.php:86
+msgid "Please agree to the privacy policy to complete your purchase."
+msgstr ""
+
+#: includes/gateways/stripe/includes/scripts.php:87
+msgid "Unable to complete your request. Please try again."
+msgstr ""
+
+#: includes/gateways/stripe/includes/scripts.php:140
+msgid "Refund Charge in Stripe"
+msgstr ""
+
+#: includes/gateways/stripe/includes/template-functions.php:39
+msgid "Credit Card Info"
+msgstr ""
+
+#: includes/gateways/stripe/includes/template-functions.php:65
+msgid "This is a secure SSL encrypted payment."
+msgstr ""
+
+#: includes/gateways/stripe/includes/template-functions.php:102
+msgid "Adding new payment methods is currently unavailable."
+msgstr ""
+
+#: includes/gateways/stripe/includes/template-functions.php:112
+msgid "Name on the Card"
+msgstr ""
+
+#: includes/gateways/stripe/includes/template-functions.php:123
+msgid "Credit Card Number"
+msgstr ""
+
+#: includes/gateways/stripe/includes/template-functions.php:149
+msgid "Expiration"
+msgstr ""
+
+#: includes/gateways/stripe/includes/template-functions.php:240
+#. translators: %1$s Card type. %2$s Card last 4.
+msgid "Update card billing address for %1$s •••• %2$s"
+msgstr ""
+
+#: includes/gateways/stripe/includes/template-functions.php:268
+msgid ""
+"We are unable to process your payment at this time, please try again later "
+"or contacts support."
+msgstr ""
+
+#: includes/gateways/stripe/includes/template-functions.php:301
+#: includes/gateways/stripe/includes/template-functions.php:390
+#. translators: %1$s Card type. %2$s Card last 4.
+msgid "%1$s •••• %2$s"
+msgstr ""
+
+#: includes/gateways/stripe/includes/template-functions.php:338
+#: includes/gateways/stripe/includes/template-functions.php:608
+msgid "Add New Card"
+msgstr ""
+
+#: includes/gateways/stripe/includes/template-functions.php:367
+msgid "Payment method management is currently unavailable."
+msgstr ""
+
+#: includes/gateways/stripe/includes/template-functions.php:380
+msgid "Manage Payment Methods"
+msgstr ""
+
+#: includes/gateways/stripe/includes/template-functions.php:409
+msgid "Expires"
+msgstr ""
+
+#: includes/gateways/stripe/includes/template-functions.php:431
+msgid "Set as Default"
+msgstr ""
+
+#: includes/gateways/stripe/includes/template-functions.php:449
+#: includes/gateways/stripe/includes/template-functions.php:747
+msgid "Billing Details"
+msgstr ""
+
+#: includes/gateways/stripe/includes/template-functions.php:499
+msgid "ZIP Code"
+msgstr ""
+
+#: includes/gateways/stripe/includes/template-functions.php:592
+#: includes/gateways/stripe/includes/template-functions.php:633
+msgid "Please Wait…"
+msgstr ""
+
+#: includes/gateways/stripe/includes/template-functions.php:593
+#: includes/gateways/stripe/includes/template-functions.php:594
+msgid "Update Card"
+msgstr ""
+
+#: includes/gateways/stripe/includes/template-functions.php:610
+msgid "Credit Card Details"
+msgstr ""
+
+#: includes/gateways/stripe/includes/template-functions.php:634
+#: includes/gateways/stripe/includes/template-functions.php:635
+msgid "Add new card"
+msgstr ""
+
+#: includes/gateways/stripe/includes/template-functions.php:750
+msgid "Billing Country"
+msgstr ""
+
+#: includes/gateways/stripe/includes/template-functions.php:774
+msgid "Billing Zip / Postal Code"
+msgstr ""
+
+#: includes/gateways/stripe/includes/template-functions.php:846
+#: includes/process-purchase.php:487
+msgid "Please enter your zip / postal code"
+msgstr ""
+
+#: includes/gateways/stripe/includes/template-functions.php:851
+#: includes/process-purchase.php:499
+msgid "Please select your billing country"
+msgstr ""
+
+#: includes/gateways/stripe/includes/webhooks.php:27
+msgid "Unable to find Event"
+msgstr ""
+
+#: includes/gateways/stripe/includes/webhooks.php:73
+#. Translators: The charge ID from Stripe that is being refunded.
+msgid "Charge %s has been fully refunded in Stripe."
+msgstr ""
+
+#: includes/gateways/stripe/includes/webhooks.php:78
+#. Translators: The charge ID from Stripe that is being partially refunded.
+msgid "Charge %s partially refunded in Stripe."
+msgstr ""
+
+#: includes/gateways/stripe/includes/webhooks.php:115
+#. translators: %s Stripe Radar review opening reason.
+msgid "Stripe Radar review opened with a reason of %s."
+msgstr ""
+
+#: includes/gateways/stripe/includes/webhooks.php:157
+#. translators: %s Stripe Radar review closing reason.
+msgid "Stripe Radar review closed with a reason of %s."
 msgstr ""
 
 #: includes/install.php:343
@@ -9006,39 +10058,46 @@ msgstr ""
 msgid "Purchase History"
 msgstr ""
 
-#: includes/login-register.php:143
+#: includes/login-register.php:156
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor
 #. tag, do not translate.
 msgid "Invalid username or password. %1$sReset Password%2$s"
 msgstr ""
 
-#: includes/login-register.php:180 includes/login-register.php:188
+#: includes/login-register.php:193
+#. translators: %s: Link to the referring page.
+msgid ""
+"Follow the instructions in the confirmation email you just received, then "
+"<a href=\"%s\">return to what you were doing</a>."
+msgstr ""
+
+#: includes/login-register.php:246 includes/login-register.php:254
 #: includes/process-purchase.php:654
 msgid "Invalid username"
 msgstr ""
 
-#: includes/login-register.php:184
+#: includes/login-register.php:250
 msgid "Username already taken"
 msgstr ""
 
-#: includes/login-register.php:192
+#: includes/login-register.php:258
 msgid "Email address already taken"
 msgstr ""
 
-#: includes/login-register.php:196 includes/process-purchase.php:564
+#: includes/login-register.php:262 includes/process-purchase.php:564
 #: includes/process-purchase.php:674 includes/process-purchase.php:794
 msgid "Invalid email"
 msgstr ""
 
-#: includes/login-register.php:200
+#: includes/login-register.php:266
 msgid "Invalid payment email"
 msgstr ""
 
-#: includes/login-register.php:204
+#: includes/login-register.php:270
 msgid "Please enter a password"
 msgstr ""
 
-#: includes/login-register.php:208 includes/process-purchase.php:702
+#: includes/login-register.php:274 includes/process-purchase.php:702
 msgid "Passwords do not match"
 msgstr ""
 
@@ -9249,10 +10308,6 @@ msgstr ""
 msgid "Deleted"
 msgstr ""
 
-#: includes/misc-functions.php:1543
-msgid "Cancelled"
-msgstr ""
-
 #: includes/misc-functions.php:1652
 msgid "Please define default parameters in the form of an array."
 msgstr ""
@@ -9261,48 +10316,52 @@ msgstr ""
 msgid "Please define an SVG icon filename."
 msgstr ""
 
+#: includes/orders/classes/class-refund-validator.php:260
+#. Translators: %s - 0.00 formatted in store currency
+msgid "The refund amount must be greater than %s."
+msgstr ""
+
+#: includes/orders/classes/class-refund-validator.php:270
+#. Translators: %s - maximum refund amount as formatted currency
+msgid "The maximum refund amount is %s."
+msgstr ""
+
+#: includes/orders/classes/class-refund-validator.php:342
+#. Translators: %s is the type of amount being refunded (e.g. "subtotal" or
+#. "tax"). Not translatable at this time.
+msgid "An unexpected error occurred while validating the maximum %s amount."
+msgstr ""
+
+#: includes/orders/classes/class-refund-validator.php:364
+#. Translators: %1$s - type of amount being refunded (subtotal, tax, or total);
+#. %1$s - product name; %3$s - maximum amount allowed for refund
+msgid "The maximum refund %1$s for the product \"%2$s\" is %3$s."
+msgstr ""
+
+#: includes/orders/classes/class-refund-validator.php:377
+#. Translators: %1$s - type of amount being refunded (subtotal, tax, or total);
+#. %1$s - adjustment description; %3$s - maximum amount allowed for refund
+msgid "The maximum refund %s for the adjustment \"%s\" is %s."
+msgstr ""
+
 #: includes/orders/functions/orders.php:641
 msgid "Payment recovery processed"
 msgstr ""
 
-#: includes/orders/functions/refunds.php:210
+#: includes/orders/functions/refunds.php:223
 msgid "Invalid order."
 msgstr ""
 
-#: includes/orders/functions/refunds.php:214
+#: includes/orders/functions/refunds.php:227
 msgid "Order not refundable."
 msgstr ""
 
-#: includes/orders/functions/refunds.php:228
+#: includes/orders/functions/refunds.php:241
 msgid "Refund not allowed on this order."
 msgstr ""
 
-#: includes/orders/functions/refunds.php:304
-msgid "The maximum refund subtotal for order item #%d is %s."
-msgstr ""
-
-#: includes/orders/functions/refunds.php:311
-msgid "The maximum refund tax amount for order item #%d is %s."
-msgstr ""
-
-#: includes/orders/functions/refunds.php:316
-msgid "The maximum refund total for order item #%d is %s."
-msgstr ""
-
-#: includes/orders/functions/refunds.php:336
-msgid "The maximum refund amount is %s."
-msgstr ""
-
-#: includes/orders/functions/refunds.php:453
-msgid "Order item not found."
-msgstr ""
-
-#: includes/orders/functions/refunds.php:461
-msgid "This order item has been revoked and cannot be refunded."
-msgstr ""
-
-#: includes/orders/functions/refunds.php:475
-msgid "Refunds are not allowed on this order item."
+#: includes/orders/functions/refunds.php:290
+msgid "Invalid argument. Please check your amounts and try again."
 msgstr ""
 
 #: includes/orders/functions/types.php:92
@@ -9590,12 +10649,6 @@ msgstr[1] ""
 #: includes/post-types.php:395
 msgid "Processing <span class=\"count\">(%s)</span>"
 msgid_plural "Processing <span class=\"count\">(%s)</span>"
-msgstr[0] ""
-msgstr[1] ""
-
-#: includes/post-types.php:405
-msgid "Active <span class=\"count\">(%s)</span>"
-msgid_plural "Active <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -9887,18 +10940,6 @@ msgstr ""
 msgid "Your cart is empty"
 msgstr ""
 
-#: includes/process-purchase.php:44
-msgid ""
-"Missing nonce when processing checkout. Please read the following for more "
-"information: "
-"https://easydigitaldownloads.com/development/2018/07/05/important-update-to-"
-"ajax-requests-in-easy-digital-downloads-2-9-4"
-msgstr ""
-
-#: includes/process-purchase.php:51
-msgid "Error processing purchase. Please reload the page and try again."
-msgstr ""
-
 #: includes/process-purchase.php:222
 msgid "The email address %s is already in use."
 msgstr ""
@@ -9931,32 +10972,16 @@ msgstr ""
 msgid "You must agree to the privacy policy"
 msgstr ""
 
-#: includes/process-purchase.php:471
-msgid "Please enter a valid email address"
-msgstr ""
-
 #: includes/process-purchase.php:475
 msgid "Please enter your first name"
-msgstr ""
-
-#: includes/process-purchase.php:487
-msgid "Please enter your zip / postal code"
 msgstr ""
 
 #: includes/process-purchase.php:493
 msgid "Please enter your billing city"
 msgstr ""
 
-#: includes/process-purchase.php:499
-msgid "Please select your billing country"
-msgstr ""
-
 #: includes/process-purchase.php:505
 msgid "Please enter billing state / region"
-msgstr ""
-
-#: includes/process-purchase.php:569 includes/process-purchase.php:939
-msgid "The user information is invalid"
 msgstr ""
 
 #: includes/process-purchase.php:648
@@ -10021,11 +11046,11 @@ msgstr ""
 msgid "You do not have permission to view this file."
 msgstr ""
 
-#: includes/refund-functions.php:26 tests/orders/tests-refunds.php:243
+#: includes/refund-functions.php:26 tests/orders/tests-refunds.php:219
 msgid "Refundable"
 msgstr ""
 
-#: includes/refund-functions.php:27 tests/orders/tests-refunds.php:244
+#: includes/refund-functions.php:27 tests/orders/tests-refunds.php:220
 msgid "Non-Refundable"
 msgstr ""
 
@@ -10112,6 +11137,10 @@ msgstr ""
 msgid "Last 30 Days"
 msgstr ""
 
+#: includes/reports/reports-functions.php:1294
+msgid "Try the Sales/Earnings iOS App!"
+msgstr ""
+
 #: includes/scripts.php:163
 msgid "Please select a payment method"
 msgstr ""
@@ -10157,7 +11186,7 @@ msgid "Sorry, not available for variable priced products."
 msgstr ""
 
 #: includes/scripts.php:469
-msgid "Are you sure you want to delete this payment?"
+msgid "Are you sure you want to delete this order?"
 msgstr ""
 
 #: includes/scripts.php:470
@@ -10756,13 +11785,13 @@ msgctxt "Delete Customer tab title"
 msgid "Delete"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:978
+#: includes/admin/downloads/metabox.php:987
 #. translators: Default refund status
 msgctxt "Download refund status"
 msgid "Default (%1$s)"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:996
+#: includes/admin/downloads/metabox.php:1005
 msgctxt "refund window interval"
 msgid "Days"
 msgstr ""
@@ -10798,7 +11827,7 @@ msgctxt "date filter"
 msgid "To"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:189
+#: includes/admin/payments/class-refund-items-table.php:249
 msgctxt "Maximum input amount"
 msgid "Max:"
 msgstr ""
@@ -10869,19 +11898,59 @@ msgctxt "error for when a discount is invalid based on its configuration"
 msgid "This discount is invalid."
 msgstr ""
 
-#: includes/class-edd-html-elements.php:480
+#: includes/class-edd-html-elements.php:486
 msgctxt "plural: Example: \"All Categories\""
 msgid "All %s"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:648
+#: includes/class-edd-html-elements.php:654
 msgctxt "all dropdown items"
 msgid "All"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:649
+#: includes/class-edd-html-elements.php:655
 msgctxt "no dropdown items"
 msgid "None"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:309
+msgctxt "Stripe Connect mode"
+msgid "test"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:310
+msgctxt "Stripe Connect mode"
+msgid "live"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:561
+msgctxt "gateway test mode status"
+msgid "enabled"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:562
+msgctxt "gateway test mode status"
+msgid "disabled"
+msgstr ""
+
+#: includes/gateways/stripe/includes/gateway-actions.php:11
+msgctxt "Pending preapproved payment"
+msgid "Preapproval Pending"
+msgstr ""
+
+#: includes/gateways/stripe/includes/gateway-actions.php:20
+msgctxt "Preapproved payment"
+msgid "Preapproved"
+msgstr ""
+
+#: includes/gateways/stripe/includes/gateway-actions.php:29
+msgctxt "Cancelled payment"
+msgid "Cancelled"
+msgstr ""
+
+#: includes/gateways/stripe/includes/payment-methods/payment-request/template.php:198
+msgctxt "payment request button divider"
+msgid "or"
 msgstr ""
 
 #: includes/post-types.php:38

@@ -29,7 +29,7 @@ if ( ! is_user_logged_in() ) :
 				<input id="edd_login_submit" type="submit" class="edd-submit" value="<?php _e( 'Log In', 'easy-digital-downloads' ); ?>"/>
 			</p>
 			<p class="edd-lost-password">
-				<a href="<?php echo wp_lostpassword_url(); ?>">
+				<a href="<?php echo esc_url( edd_get_lostpassword_url() ); ?>">
 					<?php _e( 'Lost Password?', 'easy-digital-downloads' ); ?>
 				</a>
 			</p>
