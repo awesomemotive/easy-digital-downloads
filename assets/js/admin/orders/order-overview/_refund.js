@@ -218,8 +218,7 @@ function recalculateRefundTotal() {
 $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 	e.preventDefault();
 	$('.edd-submit-refund-message').removeClass('success').removeClass('fail');
-	$( this ).attr( 'disabled', false );
-	$('#edd-refund-submit-button-wrapper .spinner').css('visibility', 'visible');
+	$( this ).attr( 'disabled', false ).addClass( 'updating-message' );
 	$('#edd-submit-refund-status').hide();
 
 	const refundForm = $( '#edd-submit-refund-form' );
@@ -254,8 +253,7 @@ $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 				url_target.hide();
 
 				$('#edd-submit-refund-status').show();
-				$( '#edd-submit-refund-submit' ).attr( 'disabled', false );
-				$( '#edd-refund-submit-button-wrapper .spinner' ).css( 'visibility', 'hidden' );
+				$( '#edd-submit-refund-submit' ).attr( 'disabled', false ).removeClass( 'updating-message' ).addClass( 'updated-message' );
 			}
 		}
 	} ).fail( function ( data ) {
@@ -268,8 +266,7 @@ $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 		url_target.hide();
 
 		$( '#edd-submit-refund-status' ).show();
-		$( '#edd-submit-refund-submit' ).attr( 'disabled', false );
-		$( '#edd-refund-submit-button-wrapper .spinner' ).css( 'visibility', 'hidden' );
+		$( '#edd-submit-refund-submit' ).attr( 'disabled', false ).removeClass( 'updating-message' ).addClass( 'updated-message' );
 		return false;
 	});
 });
