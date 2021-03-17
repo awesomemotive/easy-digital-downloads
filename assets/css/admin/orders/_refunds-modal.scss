@@ -19,9 +19,14 @@
 			padding-right: 1px;
 		}
 
-		&.fail::before {
-			content: "\f335";
-			background-color: $wp-red-50;
+		&.fail {
+			display: block;
+			margin-bottom: 16px;
+
+			&::before {
+				content: "\f335";
+				background-color: $wp-red-50;
+			}
 		}
 	}
 }
