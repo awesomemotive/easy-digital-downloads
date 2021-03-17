@@ -150,7 +150,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 	/**
 	 * @covers ::get_filters()
 	 */
-	public function test_get_filters_with_a_valid_non_dates_filter_should_still_include_dates() {
+	public function test_Report_get_filters_with_a_valid_non_dates_filter_should_not_include_dates() {
 		$report = new Report( array(
 			'id'         => 'foo',
 			'label'      => 'Foo',
@@ -159,7 +159,7 @@ class Report_Tests extends \EDD_UnitTestCase {
 			'filters'    => array( 'products' ),
 		) );
 
-		$this->assertContains( 'dates', $report->get_filters() );
+		$this->assertNotContains( 'dates', $report->get_filters() );
 	}
 
 	/**
