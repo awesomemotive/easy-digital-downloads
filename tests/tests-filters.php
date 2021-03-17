@@ -259,7 +259,7 @@ class Tests_Filters extends EDD_UnitTestCase {
 	public function test_edd_update_payment_status() {
 		global $wp_filter;
 		$this->assertArrayHasKey( 'edd_complete_purchase', $wp_filter['edd_update_payment_status'][100] );
-		$this->assertArrayHasKey( 'edd_record_status_change', $wp_filter['edd_update_payment_status'][100] );
+		$this->assertArrayHasKey( 'edd_record_order_status_change', $wp_filter['edd_update_payment_status'][100] );
 		$this->assertArrayHasKey( 'edd_clear_user_history_cache', $wp_filter['edd_update_payment_status'][10] );
 	}
 
