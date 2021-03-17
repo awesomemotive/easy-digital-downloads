@@ -278,7 +278,7 @@ add_filter( 'edd_download_price', 'edd_currency_filter', 20 );
  * @param string $amount_override a custom amount that over rides the 'edd_price' meta, used for variable prices
  * @return string - the price of the download
  */
-function edd_get_download_final_price( $download_id = 0, $user_purchase_info, $amount_override = null ) {
+function edd_get_download_final_price( $download_id, $user_purchase_info, $amount_override = null ) {
 	if ( is_null( $amount_override ) ) {
 		$original_price = get_post_meta( $download_id, 'edd_price', true );
 	} else {
