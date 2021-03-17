@@ -217,34 +217,41 @@ class Refund_Items_Table extends List_Table {
 				}
 				ob_start();
 				?>
-				<label for="edd-order-item-<?php echo esc_attr( $item_id ); ?>-refund-<?php echo esc_attr( $column_name ); ?>" class="screen-reader-text">
-					<?php
-					if ( 'subtotal' === $column_name ) {
-						esc_html_e( 'Amount to refund, excluding tax', 'easy-digital-downloads' );
-					} else {
-						esc_html_e( 'Amount of tax to refund', 'easy-digital-downloads' );
-					}
-					?>
-				</label>
-				<?php
-				if ( 'before' === $currency_pos ) {
-					echo esc_html( $this->get_currency_symbol( $item->order_id ) );
-				}
-				?>
-				<input type="text" id="edd-order-item-<?php echo esc_attr( $item_id ); ?>-refund-<?php echo esc_attr( $column_name ); ?>" class="edd-order-item-refund-<?php echo esc_attr( $column_name ); ?> edd-order-item-refund-input" name="refund_<?php echo esc_attr( $object_type ); ?>[<?php echo esc_attr( $item->id ); ?>][<?php echo esc_attr( $column_name ); ?>]" value="<?php echo esc_attr( edd_format_amount( $amount_remaining ) ); ?>" placeholder="<?php echo esc_attr( edd_format_amount( 0 ) ); ?>" data-original="<?php echo esc_attr( $original_amount ); ?>" data-max="<?php echo esc_attr( $amount_remaining ); ?>" disabled />
-				<?php
-				if ( 'after' === $currency_pos ) {
-					echo esc_html( $this->get_currency_symbol( $item->order_id ) );
-				}
-				?>
-				<br>
-				<small class="edd-order-item-refund-max-amount">
-					<?php
-					echo _x( 'Max:', 'Maximum input amount', 'easy-digital-downloads' ) . '&nbsp;';
+				<div class="edd-form-group">
+					<label for="edd-order-item-<?php echo esc_attr( $item_id ); ?>-refund-<?php echo esc_attr( $column_name ); ?>" class="screen-reader-text">
+						<?php
+						if ( 'subtotal' === $column_name ) {
+							esc_html_e( 'Amount to refund, excluding tax', 'easy-digital-downloads' );
+						} else {
+							esc_html_e( 'Amount of tax to refund', 'easy-digital-downloads' );
+						}
+						?>
+					</label>
+					<div class="edd-form-group__control">
+						<?php
+						if ( 'before' === $currency_pos ) {
+							echo '<span class="edd-amount-control__currency is-before">';
+							echo esc_html( $this->get_currency_symbol( $item->order_id ) );
+							echo '</span>';
+						}
+						?>
+						<input type="text" id="edd-order-item-<?php echo esc_attr( $item_id ); ?>-refund-<?php echo esc_attr( $column_name ); ?>" class="edd-order-item-refund-<?php echo esc_attr( $column_name ); ?> edd-order-item-refund-input" name="refund_<?php echo esc_attr( $object_type ); ?>[<?php echo esc_attr( $item->id ); ?>][<?php echo esc_attr( $column_name ); ?>]" value="<?php echo esc_attr( edd_format_amount( $amount_remaining ) ); ?>" placeholder="<?php echo esc_attr( edd_format_amount( 0 ) ); ?>" data-original="<?php echo esc_attr( $original_amount ); ?>" data-max="<?php echo esc_attr( $amount_remaining ); ?>" disabled />
+						<?php
+						if ( 'after' === $currency_pos ) {
+							echo '<span class="edd-amount-control__currency is-after">';
+							echo esc_html( $this->get_currency_symbol( $item->order_id ) );
+							echo '</span>';
+						}
+						?>
+					</div>
+					<small class="edd-order-item-refund-max-amount">
+						<?php
+						echo _x( 'Max:', 'Maximum input amount', 'easy-digital-downloads' ) . '&nbsp;';
 
-					echo $this->format_currency( $item, $column_name, $amount_remaining );
-					?>
-				</small>
+						echo $this->format_currency( $item, $column_name, $amount_remaining );
+						?>
+					</small>
+				</div>
 				<?php
 				return ob_get_clean();
 
