@@ -362,7 +362,9 @@ class Refund_Items_Table extends List_Table {
 	 * @return string Data shown in the Name column
 	 */
 	public function column_name( $item ) {
-		return '<span class="row-title">' . esc_html( $this->get_item_display_name( $item ) ) . '</span>';
+		$checkbox_id = 'refund_' . $this->get_object_type( $item ) . '-' . $item->id;
+
+		return '<label for="' . esc_attr( $checkbox_id ) . '" class="row-title">' . esc_html( $this->get_item_display_name( $item ) ) . '</label>';
 	}
 
 	/**
