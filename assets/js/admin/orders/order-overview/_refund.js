@@ -64,7 +64,7 @@ $( document.body ).on( 'click', '.ui-widget-overlay', function ( e ) {
 } );
 
 /**
- * Listen for the bulk action scheckbox, since WP doesn't trigger a change on sub-items.
+ * Listen for the bulk actions checkbox, since WP doesn't trigger a change on sub-items.
  */
 $( document.body ).on( 'change', '#edd-refund-order-dialog #cb-select-all-1', function () {
 	const itemCheckboxes = $( '.edd-order-item-refund-checkbox' );
