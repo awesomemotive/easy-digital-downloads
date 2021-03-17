@@ -1281,7 +1281,18 @@ function edd_is_file_at_download_limit( $download_id = 0, $order_id = 0, $file_i
 		}
 	}
 
-	return (bool) apply_filters( 'edd_is_file_at_download_limit', $ret, $download_id, $order_id, $file_id );
+	/**
+	 * Filters whether or not a file is at its download limit.
+	 *
+	 * @param bool $ret
+	 * @param int  $download_id
+	 * @param int  $payment_id
+	 * @param int  $file_id
+	 * @param int  $price_id
+	 *
+	 * @since 2.10 Added `$price_id` parameter.
+	 */
+	return (bool) apply_filters( 'edd_is_file_at_download_limit', $ret, $download_id, $order_id, $file_id, $price_id );
 }
 
 /**
