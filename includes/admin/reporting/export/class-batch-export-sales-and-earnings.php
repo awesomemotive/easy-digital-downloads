@@ -194,13 +194,7 @@ class EDD_Batch_Sales_And_Earnings_Export extends EDD_Batch_Export {
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
-			$args['date_query'] = array(
-				array(
-					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
-					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
-					'inclusive' => true
-				)
-			);
+			$args['date_query'] = $this->get_date_query();
 		}
 
 		$total = edd_count_orders( $args );
@@ -225,12 +219,12 @@ class EDD_Batch_Sales_And_Earnings_Export extends EDD_Batch_Export {
 	 * @param array $request Form data passed to the batch processor.
 	 */
 	public function set_properties( $request ) {
-		$this->start = isset( $request['start'] )
-			? sanitize_text_field( $request['start'] )
+		$this->start = isset( $request['order-export-start'] )
+			? sanitize_text_field( $request['order-export-start'] )
 			: '';
 
-		$this->end = isset( $request['end'] )
-			? sanitize_text_field( $request['end'] )
+		$this->end = isset( $request['order-export-end'] )
+			? sanitize_text_field( $request['order-export-end'] )
 			: '';
 
 		$this->download_id = isset( $request['download_id'] )
