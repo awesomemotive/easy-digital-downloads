@@ -600,18 +600,16 @@ class Refund_Items_Table extends List_Table {
 		// Now we need to add the columns for the totals.
 		?>
 		<tr id="edd-refund-submit-subtotal" class="edd-refund-submit-line-total">
-			<td colspan="<?php echo $this->get_column_count() - 1; ?>">
-				<?php _e( 'Refund Subtotal', 'easy-digital-downloads' ); ?>
-			</td>
+			<td colspan="<?php echo esc_attr( $this->get_column_count() ); ?>">
+				<span class="row-title edd-refund-submit-line-total-name"><?php esc_html_e( 'Refund Subtotal:', 'easy-digital-downloads' ); ?></span>
 
-			<td>
 				<?php
 				$currency_symbol_output = sprintf( '<span>%s</span>', $currency_symbol );
 				$before                 = 'before' === $currency_position ? $currency_symbol_output : '';
 				$after                  = 'after' === $currency_position ? $currency_symbol_output : '';
 				$amount                 = edd_format_amount( 0.00 );
 				printf(
-					'%1$s<span id="edd-refund-submit-subtotal-amount">%2$s</span>%3$s',
+					'<span class="edd-refund-submit-line-total-amount">%1$s<span id="edd-refund-submit-subtotal-amount">%2$s</span>%3$s</span>',
 					$before,
 					esc_attr( $amount ),
 					$after
@@ -623,16 +621,14 @@ class Refund_Items_Table extends List_Table {
 		<?php
 		$order = $this->get_order();
 		if ( $order && $order->get_tax_rate() ) :
-		?>
+			?>
 		<tr id="edd-refund-submit-tax" class="edd-refund-submit-line-total">
-			<td colspan="<?php echo $this->get_column_count() - 1; ?>">
-				<?php _e( 'Refund Tax Total', 'easy-digital-downloads' ); ?>
-			</td>
+			<td colspan="<?php echo esc_attr( $this->get_column_count() ); ?>">
+				<span class="row-title edd-refund-submit-line-total-name"><?php esc_html_e( 'Refund Tax Total:', 'easy-digital-downloads' ); ?></span>
 
-			<td>
 				<?php
 				printf(
-					'%1$s<span id="edd-refund-submit-tax-amount">%2$s</span>%3$s',
+					'<span class="edd-refund-submit-line-total-amount">%1$s<span id="edd-refund-submit-tax-amount">%2$s</span>%3$s</span>',
 					$before,
 					esc_attr( $amount ),
 					$after
@@ -643,14 +639,12 @@ class Refund_Items_Table extends List_Table {
 		<?php endif; ?>
 
 		<tr id="edd-refund-submit-total" class="edd-refund-submit-line-total">
-			<td colspan="<?php echo $this->get_column_count() - 1; ?>">
-				<?php _e( 'Refund Total', 'easy-digital-downloads' ); ?>
-			</td>
+			<td colspan="<?php echo esc_attr( $this->get_column_count() ); ?>">
+				<span class="row-title edd-refund-submit-line-total-name"><?php esc_html_e( 'Refund Total:', 'easy-digital-downloads' ); ?></span>
 
-			<td>
 				<?php
 				printf(
-					'%1$s<span id="edd-refund-submit-total-amount">%2$s</span>%3$s',
+					'<span class="edd-refund-submit-line-total-amount">%1$s<span id="edd-refund-submit-total-amount">%2$s</span>%3$s</span>',
 					$before,
 					esc_attr( $amount ),
 					$after

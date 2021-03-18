@@ -31,21 +31,19 @@
 	}
 }
 
-#edd-refund-order-dialog #edd-refund-submit-subtotal td {
-	border-top: 2px solid $wp-border;
-}
-
-#edd-refund-submit-button-wrapper,
-#edd-refund-order-dialog .edd-refund-submit-line-total td:first-child {
+#edd-refund-submit-button-wrapper {
 	text-align: right;
-}
-#edd-refund-order-dialog .edd-order-item__label {
-	font-size: 14px;
-	font-weight: 600;
-	vertical-align: baseline;
 }
 
 .refunditems {
+	.column-amount,
+	.column-subtotal,
+	.column-tax,
+	.column-discount,
+	.column-total {
+		width: 130px;
+	}
+
 	.edd-form-group__control {
 		display: flex;
 		align-items: center;
@@ -57,11 +55,28 @@
 		}
 	}
 
+	.edd-refund-submit-line-total td {
+		text-align: right;
+	}
+
+	.edd-refund-submit-line-total-amount {
+		display: inline-block;
+		text-align: left;
+		width: 130px;
+	}
+
+	#edd-refund-submit-subtotal td {
+		border-top: 2px solid $wp-border;
+	}
+
 	@media screen and ( max-width: 782px ) {
-		tr.edd-refund-submit-line-total {
-			clear: both;
-			display: flex;
-			width: 100%;
+		td.column-total {
+			margin-bottom: 16px;
+		}
+
+		.edd-refund-submit-line-total-amount {
+			padding-right: 16px;
+			width: unset;
 		}
 	}
 }
