@@ -314,4 +314,20 @@ class EDD_Batch_Export extends EDD_Export {
 	 */
 	public function pre_fetch() {}
 
+	/**
+	 * Gets the date query.
+	 *
+	 * @since 3.0
+	 * @return array
+	 */
+	protected function get_date_query() {
+		return array(
+			array(
+				'after'     => $this->start ? date( 'Y-m-d 00:00:00', strtotime( $this->start ) ) : '',
+				'before'    => $this->end ? date( 'Y-m-d 23:59:59', strtotime( $this->end ) ) : '',
+				'inclusive' => true,
+			),
+		);
+	}
+
 }
