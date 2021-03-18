@@ -256,8 +256,8 @@ add_action( 'edd_after_payment_scheduled_actions', 'edd_process_after_payment_ac
  * Record order status change
  *
  * @since 3.0
- * @param string $old_status the status of the order prior to being marked as "complete", probably "pending".
- * @param string $new_status the status of the order, probably "publish".
+ * @param string $old_status the status of the order prior to this change.
+ * @param string $new_status The new order status.
  * @param int    $order_id the ID number of the order.
  * @return void
  */
