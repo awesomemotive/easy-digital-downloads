@@ -58,7 +58,7 @@ final class Report extends Base_Object {
 	 * @since 3.0
 	 * @var   array
 	 */
-	private $filters = array( 'dates' );
+	private $filters = array();
 
 	/**
 	 * Represents the group to display the report under.
