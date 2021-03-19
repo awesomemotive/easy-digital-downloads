@@ -550,7 +550,7 @@ function edd_register_downloads_report( $reports ) {
 				'charts' => $charts,
 				'tables' => $tables,
 			),
-			'filters'   => array( 'products', 'taxes' ),
+			'filters'   => array( 'dates', 'products', 'taxes' ),
 		) );
 
 		$reports->register_endpoint( 'most_valuable_download', array(
@@ -935,7 +935,6 @@ function edd_register_refunds_report( $reports ) {
 					'refunds_chart',
 				),
 			),
-			'filters'   => array( 'taxes' ),
 		) );
 
 		$reports->register_endpoint( 'refund_count', array(
@@ -1169,7 +1168,7 @@ function edd_register_payment_gateways_report( $reports ) {
 				'tables' => $tables,
 				'charts' => $charts,
 			),
-			'filters'   => array( 'gateways', 'taxes' ),
+			'filters'   => array( 'dates', 'gateways', 'taxes' ),
 		) );
 
 		$reports->register_endpoint( 'sales_per_gateway', array(
@@ -1593,7 +1592,7 @@ function edd_register_taxes_report( $reports ) {
 				'tiles'  => $tiles,
 				'tables' => $tables,
 			),
-			'filters'   => array( 'products', 'countries', 'regions' ),
+			'filters'   => array( 'dates', 'products', 'countries', 'regions' ),
 		) );
 
 		$reports->register_endpoint( 'total_tax_collected', array(
@@ -1747,7 +1746,7 @@ function edd_register_file_downloads_report( $reports ) {
 				'tables' => $tables,
 				'charts' => $charts,
 			),
-			'filters'   => array( 'products' ),
+			'filters'   => array( 'dates', 'products' ),
 		) );
 
 		$reports->register_endpoint( 'number_of_file_downloads', array(
@@ -2031,7 +2030,7 @@ function edd_register_discounts_report( $reports ) {
 				'tables' => $tables,
 				'charts' => $charts,
 			),
-			'filters'   => array( 'discounts' ),
+			'filters'   => array( 'dates', 'discounts' ),
 		) );
 
 		$reports->register_endpoint( 'number_of_discounts_used', array(
@@ -2319,7 +2318,6 @@ function edd_register_customer_report( $reports ) {
 					'new_customers',
 				),
 			),
-			'filters'   => array( 'dates', 'taxes' ),
 		) );
 
 		$reports->register_endpoint( 'lifetime_value_of_customer', array(
@@ -2522,17 +2520,18 @@ add_action( 'edd_reports_init', 'edd_register_customer_report' );
  * @param \EDD\Reports\Data\Report_Registry $reports Report registry.
  */
 function edd_register_export_report( $reports ) {
-    try {
-	    $reports->add_report( 'export', array(
-		    'label'            => __( 'Export', 'easy-digital-downloads' ),
-		    'icon'             => 'migrate',
-		    'priority'         => 1000,
-		    'capability'       => 'export_shop_reports',
-		    'display_callback' => 'display_export_report',
-	    ) );
-    } catch ( \EDD_Exception $exception ) {
-	    edd_debug_log_exception( $exception );
-    }
+	try {
+		$reports->add_report( 'export', array(
+			'label'            => __( 'Export', 'easy-digital-downloads' ),
+			'icon'             => 'migrate',
+			'priority'         => 1000,
+			'capability'       => 'export_shop_reports',
+			'display_callback' => 'display_export_report',
+			'filters'          => false,
+		) );
+	} catch ( \EDD_Exception $exception ) {
+		edd_debug_log_exception( $exception );
+	}
 }
 add_action( 'edd_reports_init', 'edd_register_export_report' );
 /**

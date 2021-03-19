@@ -278,7 +278,7 @@ add_filter( 'edd_download_price', 'edd_currency_filter', 20 );
  * @param string $amount_override a custom amount that over rides the 'edd_price' meta, used for variable prices
  * @return string - the price of the download
  */
-function edd_get_download_final_price( $download_id = 0, $user_purchase_info, $amount_override = null ) {
+function edd_get_download_final_price( $download_id, $user_purchase_info, $amount_override = null ) {
 	if ( is_null( $amount_override ) ) {
 		$original_price = get_post_meta( $download_id, 'edd_price', true );
 	} else {
@@ -1281,7 +1281,18 @@ function edd_is_file_at_download_limit( $download_id = 0, $order_id = 0, $file_i
 		}
 	}
 
-	return (bool) apply_filters( 'edd_is_file_at_download_limit', $ret, $download_id, $order_id, $file_id );
+	/**
+	 * Filters whether or not a file is at its download limit.
+	 *
+	 * @param bool $ret
+	 * @param int  $download_id
+	 * @param int  $payment_id
+	 * @param int  $file_id
+	 * @param int  $price_id
+	 *
+	 * @since 2.10 Added `$price_id` parameter.
+	 */
+	return (bool) apply_filters( 'edd_is_file_at_download_limit', $ret, $download_id, $order_id, $file_id, $price_id );
 }
 
 /**

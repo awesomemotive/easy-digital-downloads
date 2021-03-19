@@ -253,26 +253,31 @@ function edd_process_after_payment_actions( $payment_id = 0, $force = false ) {
 add_action( 'edd_after_payment_scheduled_actions', 'edd_process_after_payment_actions', 10, 1 );
 
 /**
- * Record payment status change
+ * Record order status change
  *
- * @since 1.4.3
- * @param int $payment_id the ID number of the payment
- * @param string $new_status the status of the payment, probably "publish"
- * @param string $old_status the status of the payment prior to being marked as "complete", probably "pending"
+ * @since 3.0
+ * @param string $old_status the status of the order prior to this change.
+ * @param string $new_status The new order status.
+ * @param int    $order_id the ID number of the order.
  * @return void
  */
-function edd_record_status_change( $payment_id, $new_status, $old_status ) {
+function edd_record_order_status_change( $old_status, $new_status, $order_id ) {
 
-	// Get the list of statuses so that status in the payment note can be translated
+	// Get the list of statuses so that status in the payment note can be translated.
 	$stati      = edd_get_payment_statuses();
 	$old_status = isset( $stati[ $old_status ] ) ? $stati[ $old_status ] : $old_status;
 	$new_status = isset( $stati[ $new_status ] ) ? $stati[ $new_status ] : $new_status;
 
-	$status_change = sprintf( __( 'Status changed from %s to %s', 'easy-digital-downloads' ), $old_status, $new_status );
+	$status_change = sprintf(
+		/* translators: %1$s Old order status. %2$s New order status. */
+		__( 'Status changed from %1$s to %2$s', 'easy-digital-downloads' ),
+		$old_status,
+		$new_status
+	);
 
-	edd_insert_payment_note( $payment_id, $status_change );
+	edd_insert_payment_note( $order_id, $status_change );
 }
-add_action( 'edd_update_payment_status', 'edd_record_status_change', 100, 3 );
+add_action( 'edd_transition_order_status', 'edd_record_order_status_change', 100, 3 );
 
 /**
  * Flushes the current user's purchase history transient when a payment status
@@ -593,7 +598,7 @@ function edd_recovery_force_login_fields() {
 			<div class="edd-alert edd-alert-info">
 				<p><?php _e( 'To complete this payment, please login to your account.', 'easy-digital-downloads' ); ?></p>
 				<p>
-					<a href="<?php echo wp_lostpassword_url(); ?>" title="<?php _e( 'Lost Password', 'easy-digital-downloads' ); ?>">
+					<a href="<?php echo esc_url( edd_get_lostpassword_url() ); ?>" title="<?php esc_attr_e( 'Lost Password', 'easy-digital-downloads' ); ?>">
 						<?php _e( 'Lost Password?', 'easy-digital-downloads' ); ?>
 					</a>
 				</p>
