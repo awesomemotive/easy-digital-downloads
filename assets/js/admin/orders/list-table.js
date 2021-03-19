@@ -7,10 +7,11 @@ import { jQueryReady } from 'utils/jquery.js';
 
 jQueryReady( () => {
 
-	$( '.edd-advanced-filters-button' ).on( 'click', function( e ) {
-		e.preventDefault();
-
-		$( '#edd-advanced-filters' ).toggleClass( 'open' );
-	} );
+	$( '.download_page_edd-payment-history .row-actions .delete a' ).on( 'click', function() {
+		if( confirm( edd_vars.delete_payment ) ) {
+			return true;
+		}
+		return false;
+	});
 
 } );

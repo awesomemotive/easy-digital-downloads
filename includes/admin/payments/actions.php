@@ -263,7 +263,7 @@ function edd_trigger_destroy_order( $data ) {
 				'edd-message' => 'payment_deleted',
 				'status'      => 'trash',
 			),
-			edd_get_admin_base_url(),
+			edd_get_admin_base_url()
 		);
 		edd_redirect( $redirect_link );
 	}
