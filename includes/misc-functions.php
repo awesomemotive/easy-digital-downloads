@@ -1515,21 +1515,13 @@ function edd_negate_int( $value = 0 ) {
  * @return string Label for the status
  */
 function edd_get_status_label( $status = '' ) {
-	static $labels = null;
 
-	// Array of status labels
-	if ( null === $labels ) {
+	// If this is a payment label, fetch from `edd_get_payment_status_label()`.
+	if ( array_key_exists( $status, edd_get_payment_statuses() ) ) {
+		$status_label = edd_get_payment_status_label( $status );
+	} else {
+		// Otherwise, fetch from generic array. This covers all other non-payment statuses.
 		$labels = array(
-
-			// Payments
-			'processing'         => __( 'Processing', 'easy-digital-downloads' ),
-			'complete'           => __( 'Completed', 'easy-digital-downloads' ),
-			'refunded'           => __( 'Refunded', 'easy-digital-downloads' ),
-			'partially_refunded' => __( 'Partially Refunded', 'easy-digital-downloads' ),
-			'revoked'            => __( 'Revoked', 'easy-digital-downloads' ),
-			'failed'             => __( 'Failed', 'easy-digital-downloads' ),
-			'abandoned'          => __( 'Abandoned', 'easy-digital-downloads' ),
-
 			// Discounts
 			'active'             => __( 'Active', 'easy-digital-downloads' ),
 			'inactive'           => __( 'Inactive', 'easy-digital-downloads' ),
@@ -1542,15 +1534,22 @@ function edd_get_status_label( $status = '' ) {
 			'deleted'            => __( 'Deleted', 'easy-digital-downloads' ),
 			'cancelled'          => __( 'Cancelled', 'easy-digital-downloads' ),
 		);
+
+		// Return the label if set, or uppercase the first letter if not
+		$status_label = isset( $labels[ $status ] )
+				? $labels[ $status ]
+				: ucwords( $status );
 	}
 
-	// Return the label if set, or uppercase the first letter if not
-	$retval = isset( $labels[ $status ] )
-		? $labels[ $status ]
-		: ucwords( $status );
-
-	// Filter & return
-	return apply_filters( 'edd_get_status_label', $retval, $status );
+	/**
+	 * Filters the label for the provided status.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $status_label Status label.
+	 * @param string $status       Provided status key.
+	 */
+	return apply_filters( 'edd_get_status_label', $status_label, $status );
 }
 
 /**
