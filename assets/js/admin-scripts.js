@@ -1204,18 +1204,6 @@ jQuery(document).ready(function ($) {
 
 		emails : function() {
 
-			// Show the email template previews
-			var email_preview_wrap = $('#email-preview-wrap');
-			if( email_preview_wrap.length ) {
-				var emailPreview = $('#email-preview');
-				email_preview_wrap.colorbox({
-					inline: true,
-					href: emailPreview,
-					width: '80%',
-					height: 'auto'
-				});
-			}
-
 			$('#edd-sendwp-connect').on('click', function(e) {
 
 				e.preventDefault();

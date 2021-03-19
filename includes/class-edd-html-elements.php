@@ -573,7 +573,7 @@ class EDD_HTML_Elements {
 
 		if ( $args['show_option_all'] ) {
 			if ( $args['multiple'] && ! empty( $args['selected'] ) ) {
-				$selected = selected( true, in_array( 0, $args['selected'] ), false );
+				$selected = selected( true, in_array( 0, (array) $args['selected'] ), false );
 			} else {
 				$selected = selected( $args['selected'], 0, false );
 			}
