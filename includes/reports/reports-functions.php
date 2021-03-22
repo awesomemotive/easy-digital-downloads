@@ -348,7 +348,14 @@ function get_filters() {
 		)
 	);
 
-	return $filters;
+	/**
+	 * Filters the list of available report filters.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array[] $filters
+	 */
+	return apply_filters( 'edd_report_filters', $filters );
 }
 
 /**
