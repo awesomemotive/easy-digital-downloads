@@ -507,6 +507,17 @@ function edd_get_registered_settings() {
 							'desc'    => '',
 							'type'    => 'sendwp',
 					),
+					'recapture_header' => array(
+							'id'   => 'recapture_header',
+							'name' => '<strong>' . __( 'Recapture', 'easy-digital-downloads' ) . '</strong>',
+							'type' => 'header',
+					),
+					'recapture' => array(
+							'id'      => 'recapture',
+							'name'    => __( 'Abandoned cart recovery', 'easy-digital-downloads' ),
+							'desc'    => '',
+							'type'    => 'recapture',
+					),
 				),
 				'purchase_receipts' => array(
 					'purchase_receipt_email_settings' => array(
@@ -2199,6 +2210,66 @@ function edd_sendwp_callback($args) {
 		</p>
 
 		<?php
+	endif;
+
+	echo ob_get_clean();
+}
+
+/**
+ * Recaptuer Callback
+ *
+ * Renders Recapture Settings
+ *
+ * @since 2.10.2
+ * @param array $args Arguments passed by the setting
+ * @return void
+ */
+function edd_recapture_callback($args) {
+	$client_connected = false;
+
+	if ( class_exists( 'RecaptureEDD' ) ) {
+		$client_connected = RecaptureEDD::is_ready();
+	}
+
+	ob_start();
+
+	echo $args['desc'];
+
+	// Output the appropriate button and label based on connection status
+	if ( $client_connected ) :
+		$connection_comlpete = get_option('recapture_api_key');
+		?>
+		<div class="inline notice notice-<?php echo $connection_comlpete ? 'success' : 'warning'; ?>">
+			<p>
+				<?php _e( 'Recapture plugin activated.', 'easy-digital-downloads' ); ?>
+				<?php printf( __( '%sAccess your Recapture account%s.', 'easy-digital-downloads' ), '<a href="https://recapture.io/account" target="_blank" rel="noopener noreferrer">', '</a>' ); ?>
+			</p>
+
+			<?php if ( $connection_comlpete ) : ?>
+			<p>
+				<a id="edd-recapture-disconnect" class="button" href="<?php echo esc_html( admin_url( 'admin.php?page=recapture-confirm-disconnect' ) ); ?>"><?php _e( 'Disconnect Recapture', 'easy-digital-downloads' ); ?></a>
+			</p>
+			<?php else : ?>
+			<p>
+				<?php printf( __( 'Complete your connection to Recapture %shere%s.', 'easy-digital-downloads' ), '<a href="' . admin_url( 'admin.php?page=recapture' ) . '">', '</a>' ); ?>
+			</p>
+			<?php endif; ?>
+		</div>
+	<?php
+	else :
+		?>
+		<p>
+			<?php _e( 'We recommend Recapture for recovering lost revenue by automatically sending effective, targeted emails to customers who abandon their shopping cart.', 'easy-digital-downloads' ); ?>
+		</p>
+		<p>
+			<?php printf( __( '%sLearn More%s (Free trial available)' ), '<a href="https://recapture.io/abandoned-carts-easy-digital-downloads" taregt="_blank" rel="noopener noreferrer">', '</a>' ); ?>
+		</p>
+		<p>
+			<button type="button" id="edd-recapture-connect" class="button button-primary"><?php esc_html_e( 'Connect with Recapture', 'easy-digital-downloads' ); ?>
+			</button>
+		</p>
+
+	<?php
 	endif;
 
 	echo ob_get_clean();
