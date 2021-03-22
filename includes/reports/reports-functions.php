@@ -318,34 +318,38 @@ function get_filters() {
 	}
 
 	$filters = array(
-		'dates'     => array(
-			'label'            => __( 'Date', 'easy-digital-downloads' ),
-			'display_callback' => __NAMESPACE__ . '\\display_dates_filter'
-		),
-		'products'  => array(
-			'label'            => __( 'Products', 'easy-digital-downloads' ),
-			'display_callback' => __NAMESPACE__ . '\\display_products_filter'
-		),
-		'taxes'     => array(
-			'label'            => __( 'Exclude Taxes', 'easy-digital-downloads' ),
-			'display_callback' => __NAMESPACE__ . '\\display_taxes_filter'
-		),
-		'gateways'  => array(
-			'label'            => __( 'Gateways', 'easy-digital-downloads' ),
-			'display_callback' => __NAMESPACE__ . '\\display_gateways_filter'
-		),
-		'discounts' => array(
-			'label'            => __( 'Discounts', 'easy-digital-downloads' ),
-			'display_callback' => __NAMESPACE__ . '\\display_discounts_filter'
-		),
-		'regions'   => array(
-			'label'            => __( 'Regions', 'easy-digital-downloads' ),
-			'display_callback' => __NAMESPACE__ . '\\display_region_filter'
-		),
-		'countries' => array(
-			'label'            => __( 'Countries', 'easy-digital-downloads' ),
-			'display_callback' => __NAMESPACE__ . '\\display_country_filter'
-		)
+			'dates'              => array(
+					'label'            => __( 'Date', 'easy-digital-downloads' ),
+					'display_callback' => __NAMESPACE__ . '\\display_dates_filter'
+			),
+			'products'           => array(
+					'label'            => __( 'Products', 'easy-digital-downloads' ),
+					'display_callback' => __NAMESPACE__ . '\\display_products_filter'
+			),
+			'product_categories' => array(
+					'label'            => __( 'Product Categories', 'easy-digital-downloads' ),
+					'display_callback' => __NAMESPACE__ . '\\display_product_categories_filter'
+			),
+			'taxes'              => array(
+					'label'            => __( 'Exclude Taxes', 'easy-digital-downloads' ),
+					'display_callback' => __NAMESPACE__ . '\\display_taxes_filter'
+			),
+			'gateways'           => array(
+					'label'            => __( 'Gateways', 'easy-digital-downloads' ),
+					'display_callback' => __NAMESPACE__ . '\\display_gateways_filter'
+			),
+			'discounts'          => array(
+					'label'            => __( 'Discounts', 'easy-digital-downloads' ),
+					'display_callback' => __NAMESPACE__ . '\\display_discounts_filter'
+			),
+			'regions'            => array(
+					'label'            => __( 'Regions', 'easy-digital-downloads' ),
+					'display_callback' => __NAMESPACE__ . '\\display_region_filter'
+			),
+			'countries'          => array(
+					'label'            => __( 'Countries', 'easy-digital-downloads' ),
+					'display_callback' => __NAMESPACE__ . '\\display_country_filter'
+			)
 	);
 
 	/**
@@ -1034,6 +1038,19 @@ function display_products_filter() {
 	<span class="edd-graph-filter-options graph-option-section"><?php
 		echo $select;
 	?></span><?php
+}
+
+/**
+ * Handles display of the 'Products Dropdown' filter for reports.
+ *
+ * @since 3.0
+ */
+function display_product_categories_filter() {
+	?>
+	<span class="edd-graph-filter-optiosn graph-option-selection">
+		<?php echo EDD()->html->category_dropdown( 'edd_categories', get_filter_value( 'product_categories' ) ); ?>
+	</span>
+	<?php
 }
 
 /**
