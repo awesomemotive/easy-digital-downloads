@@ -2209,6 +2209,29 @@ function easy_digital_downloads_sendwp_disconnect() {
 	});
 }
 
+function easy_digital_downloads_sendwp_register_client(register_url, client_name, client_secret, client_redirect, partner_id) {
+
+	var form = document.createElement("form");
+	form.setAttribute("method", 'POST');
+	form.setAttribute("action", register_url);
+
+	function easy_digital_downloads_sendwp_append_form_input(name, value) {
+		var input = document.createElement("input");
+		input.setAttribute("type", "hidden");
+		input.setAttribute("name", name);
+		input.setAttribute("value", value);
+		form.appendChild(input);
+	}
+
+	easy_digital_downloads_sendwp_append_form_input('client_name', client_name);
+	easy_digital_downloads_sendwp_append_form_input('client_secret', client_secret);
+	easy_digital_downloads_sendwp_append_form_input('client_redirect', client_redirect);
+	easy_digital_downloads_sendwp_append_form_input('partner_id', partner_id);
+
+	document.body.appendChild(form);
+	form.submit();
+}
+
 function easy_digital_downloads_recapture_remote_install() {
 	var data = {
 		'action': 'edd_recapture_remote_install',
