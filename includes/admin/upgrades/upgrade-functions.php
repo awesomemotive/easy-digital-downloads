@@ -1616,6 +1616,7 @@ function edd_v3_remove_legacy_data_tool() {
 		<div class="inside">
 			<?php edd_v3_remove_legacy_data_form(); ?>
 		</div>
+	</div>
 	<?php
 }
 add_action( 'edd_tools_recount_stats_after', 'edd_v3_remove_legacy_data_tool' );
