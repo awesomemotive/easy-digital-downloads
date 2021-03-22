@@ -311,12 +311,6 @@ function parse_endpoint_views( $views ) {
  * @return array List of supported endpoint filters.
  */
 function get_filters() {
-	static $filters = null;
-
-	if ( is_array( $filters ) ) {
-		return $filters;
-	}
-
 	$filters = array(
 		'dates'              => array(
 			'label'            => __( 'Date', 'easy-digital-downloads' ),
