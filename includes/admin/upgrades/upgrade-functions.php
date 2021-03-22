@@ -223,23 +223,73 @@ function edd_show_upgrade_notices() {
 				: false;
 
 			if ( $has_orders ) {
-				printf(
-					'<div class="updated">' .
-					'<p>' .
-					__( 'Easy Digital Downloads needs to upgrade the database, click <a href="%s">here</a> to start the upgrade. <a href="#" onClick="jQuery(this).parent().next(\'p\').slideToggle()">Learn more about this upgrade</a>.', 'easy-digital-downloads' ) .
-					'</p>' .
-					'<p style="display: none;">' .
-					__( '<strong>About this upgrade:</strong><br />This is a <strong><em>mandatory</em></strong> update that will migrate all Easy Digital Downloads data to custom database tables. This upgrade will provide better performance and scalability.', 'easy-digital-downloads' ) .
-					'<br /><br />' .
-					__( '<strong>Please back up your database before starting this upgrade.</strong> This upgrade routine will make irreversible changes to the database.', 'easy-digital-downloads' ) .
-					'<br /><br />' .
-					__( '<strong>Advanced User?</strong><br />This upgrade can also be run via WP-CLI with the following command:<br /><code>wp edd v30_migration</code>', 'easy-digital-downloads' ) .
-					'<br /><br />' .
-					__( 'For large sites, this is the recommended method of upgrading.', 'easy-digital-downloads' ) .
-					'</p>' .
-					'</div>',
-					esc_url( admin_url( 'index.php?page=edd-upgrades&edd-upgrade=v30_migration' ) )
-				);
+				?>
+				<div class="updated">
+					<p>
+					<?php
+					printf(
+						__( 'Easy Digital Downloads needs to upgrade the database. %sLearn more about this upgrade%s.', 'easy-digital-downloads' ),
+						'<a href="#" onClick="jQuery(this).parent().next(\'div\').slideToggle()">',
+						'</a>'
+					);
+					?>
+					</p>
+					<div style="display: none;">
+						<h3>
+							<?php esc_html_e( 'About this upgrade:', 'easy-digital-downloads' ); ?>
+						</h3>
+						<p>
+						<?php
+						printf(
+							/* translators: 1. Opening strong/italics tag; do not translate. 2. Closing strong/italics tag; do not translate. */
+							esc_html__( 'This is a %1$smandatory%2$s update that will migrate all Easy Digital Downloads data to custom database tables. This upgrade will provide better performance and scalability.', 'easy-digital-downloads' ),
+							'<strong><em>',
+							'</em></strong>'
+						);
+						?>
+						</p>
+						<p>
+						<?php
+						printf(
+							/* translators: 1. Opening strong tag; do not translate. 2. Closing strong tag; do not translate. */
+							esc_html__( '%1$sPlease back up your database before starting this upgrade.%2$s This upgrade routine will make irreversible changes to the database.', 'easy-digital-downloads' ),
+							'<strong>',
+							'</strong>'
+						);
+						?>
+						</p>
+						<p>
+						<?php
+						printf(
+							/* translators: 1. Opening strong tag; do not translate. 2. Closing strong tag; do not translate. 3. Line break; do not translate. 4. CLI command example; do not translate. */
+							esc_html__( '%1$sAdvanced User?%2$s This upgrade can also be run via WP-CLI with the following command:%3$s%3$s%4$s', 'easy-digital-downloads' ),
+							'<strong>',
+							'</strong>',
+							'<br />',
+							'<code>wp edd v30_migration</code>'
+						);
+						?>
+						</p>
+						<p>
+						<?php
+						esc_html_e( 'For large sites, this is the recommended method of upgrading.', 'easy-digital-downloads' );
+						?>
+						</p>
+					</div>
+					<?php
+					$url = add_query_arg(
+						array(
+							'page'        => 'edd-upgrades',
+							'edd-upgrade' => 'v30_migration',
+						),
+						admin_url()
+					);
+					?>
+					<p>
+						<a class="button button-secondary" href="<?php echo esc_url( $url ); ?>"><?php esc_html_e( 'Begin the upgrade', 'easy-digital-downloads' ); ?></a>
+					</p>
+					</div>
+					<?php
 			}
 		}
 
