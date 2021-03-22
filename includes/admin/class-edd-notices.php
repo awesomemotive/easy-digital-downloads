@@ -569,6 +569,15 @@ class EDD_Notices {
 						'id'      => 'edd-sendwp-connected',
 						'message' => __( 'SendWP has been successfully connected!', 'easy-digital-downloads' )
 					) );
+
+				case 'test-purchase-email-sent':
+					$this->add_notice(
+						array(
+							'id'      => 'edd-test-purchase-receipt-sent',
+							'message' => __( 'The test email was sent successfully.', 'easy-digital-downloads' )
+						)
+					);
+					break;
 			}
 		}
 
