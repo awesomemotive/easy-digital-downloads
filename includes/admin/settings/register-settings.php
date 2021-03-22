@@ -453,17 +453,6 @@ function edd_get_registered_settings() {
 		'emails' => apply_filters('edd_settings_emails',
 			array(
 				'main' => array(
-					'sendwp_header' => array(
-						'id'   => 'sendwp_header',
-						'name' => '<strong>' . __( 'SendWP Settings', 'easy-digital-downloads' ) . '</strong>',
-						'type' => 'header',
-					),
-					'sendwp' => array(
-						'id'      => 'sendwp',
-						'name'    => __( 'Connection Status', 'easy-digital-downloads' ),
-						'desc'    => '<p>' . __( 'Looking for a reliable, affordable way to deliver important emails to your customers? Try <a href="https://sendwp.com" target="_blank" rel="noopener noreferrer">SendWP</a>.', 'easy-digital-downloads' ) . '</p><p>' . __( 'For more information on this paid service, see the <a href="https://docs.easydigitaldownloads.com/article/2143-sendwp-email-delivery" target="_blank" rel="noopener noreferrer">documentation</a>.', 'easy-digital-downloads' ) . '</p>',
-						'type'    => 'sendwp',
-					),
 					'email_header' => array(
 						'id'   => 'email_header',
 						'name' => '<strong>' . __( 'Email Configuration', 'easy-digital-downloads' ) . '</strong>',
@@ -507,11 +496,16 @@ function edd_get_registered_settings() {
 						'name' => '<strong>' . __( 'Advanced emails', 'easy-digital-downloads' ) . '</strong>',
 						'type' => 'header',
 					),
-					'jilt'                   => array(
-						'id'   => 'jilt',
-						'name' => __( 'Enhanced emails via Jilt', 'easy-digital-downloads' ),
-						'desc' => '<p>' . __( 'Create beautiful transactional, automated, and marketing emails using a drag-and-drop editor with <a href="https://jilt.com/?utm_source=edd-core&utm_medium=referral&utm_campaign=edd-enhanced-emails" target="_blank" rel="noopener noreferrer">Jilt</a>.', 'easy-digital-downloads' ) . '</p><p>' . __( 'Learn more about free and paid plans in the <a href="https://docs.easydigitaldownloads.com/article/2199-jilt-overview" target="_blank" rel="noopener noreferrer">documentation</a>.', 'easy-digital-downloads' ) . '</p>',
-						'type' => 'jilt',
+					'sendwp_header' => array(
+							'id'   => 'sendwp_header',
+							'name' => '<strong>' . __( 'SendWP', 'easy-digital-downloads' ) . '</strong>',
+							'type' => 'header',
+					),
+					'sendwp' => array(
+							'id'      => 'sendwp',
+							'name'    => __( 'Deliverability settings', 'easy-digital-downloads' ),
+							'desc'    => '',
+							'type'    => 'sendwp',
 					),
 				),
 				'purchase_receipts' => array(
@@ -2164,7 +2158,7 @@ function edd_sendwp_callback($args) {
 
 	// Connection status partial label based on the state of the SendWP email sending setting (Tools -> SendWP)
 	$connected    = sprintf(
-		__( '<a href="https://sendwp.com/account/" target="_blank" rel="noopener noreferrer">Click here</a> to visit your account.', 'easy-digital-downloads' )
+		__( '<a href="https://sendwp.com/account/" target="_blank" rel="noopener noreferrer">Access your SendWP account</a>.', 'easy-digital-downloads' )
 	);
 	$disconnected = sprintf(
 		__( '<em><strong>Note:</strong> Email sending is currently disabled. <a href="' . admin_url( '/tools.php?page=sendwp' ) . '">Click here</a> to enable it.</em>', 'easy-digital-downloads' )
@@ -2183,18 +2177,24 @@ function edd_sendwp_callback($args) {
 	// Output the appropriate button and label based on connection status
 	if( $client_connected ) :
 		?>
+		<div class="inline notice notice-success">
+			<p><?php _e( 'SendWP plugin activated.', 'easy-digital-downloads' ); ?> <?php echo $forwarding_enabled ? $connected : $disconnected ; ?></p>
 
-		<p>
-			<button id="edd-sendwp-disconnect" class="button"><?php _e( 'Disconnect SendWP', 'easy-digital-downloads' ); ?></button>
-		</p>
-		<p>Your site is connected to SendWP. <?php echo $forwarding_enabled ? $connected : $disconnected ; ?></p>
-
+			<p>
+				<button id="edd-sendwp-disconnect" class="button"><?php _e( 'Disconnect SendWP', 'easy-digital-downloads' ); ?></button>
+			</p>
+		</div>
 		<?php
 	else :
 		?>
-
 		<p>
-			<button type="button" id="edd-sendwp-connect" class="button button-primary"><?php esc_html_e( 'Connect SendWP', 'easy-digital-downloads' ); ?>
+			<?php _e( 'We recommend SendWP to ensure quick and reliable delivery of all emails sent from your store, such as purchase receipts, subscription renewal reminders, password resets, and more.', 'easy-digital-downloads' ); ?>
+		</p>
+		<p>
+			<?php printf( __( '%sLearn More%s (Free trial available)' ), '<a href="https://sendwp.com/" taregt="_blank" rel="noopener noreferrer">', '</a>' ); ?>
+		</p>
+		<p>
+			<button type="button" id="edd-sendwp-connect" class="button button-primary"><?php esc_html_e( 'Connect with SendWP', 'easy-digital-downloads' ); ?>
 			</button>
 		</p>
 
