@@ -1048,7 +1048,7 @@ function display_products_filter() {
 function display_product_categories_filter() {
 	?>
 	<span class="edd-graph-filter-optiosn graph-option-selection">
-		<?php echo EDD()->html->category_dropdown( 'edd_categories', get_filter_value( 'product_categories' ) ); ?>
+		<?php echo EDD()->html->category_dropdown( 'product_categories', get_filter_value( 'product_categories' ) ); ?>
 	</span>
 	<?php
 }
