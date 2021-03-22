@@ -284,6 +284,10 @@ function edd_email_tag_download_list( $payment_id ) {
 	$payment = new EDD_Payment( $payment_id );
 	$order   = edd_get_order( $payment_id );
 
+	if ( ! $order ) {
+		return '';
+	}
+
 	$payment_data  = $payment->get_meta();
 	$download_list = '<ul>';
 	$cart_items    = $payment->cart_details;

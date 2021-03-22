@@ -89,11 +89,11 @@ function edd_email_test_purchase_receipt() {
 	$subject     = wp_specialchars_decode( edd_do_email_tags( $subject, 0 ) );
 
 	$heading     = edd_get_option( 'purchase_heading', __( 'Purchase Receipt', 'easy-digital-downloads' ) );
-	$heading     = apply_filters( 'edd_purchase_heading', $heading, 0, array() );
+	$heading     = edd_email_preview_template_tags( apply_filters( 'edd_purchase_heading', $heading, 0, array() ) );
 
 	$attachments = apply_filters( 'edd_receipt_attachments', array(), 0, array() );
 
-	$message     = edd_do_email_tags( edd_get_email_body_content( 0, array() ), 0 );
+	$message     = edd_email_preview_template_tags( edd_get_email_body_content( 0, array() ), 0 );
 
 	$emails = EDD()->emails;
 	$emails->__set( 'from_name' , $from_name );
