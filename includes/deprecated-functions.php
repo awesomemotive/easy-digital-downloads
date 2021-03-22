@@ -731,3 +731,68 @@ function edd_get_paypal_page_style() {
 	$page_style = trim( edd_get_option( 'paypal_page_style', 'PayPal' ) );
 	return apply_filters( 'edd_paypal_page_style', $page_style );
 }
+
+/**
+ * Jilt Callback
+ *
+ * Renders Jilt Settings
+ *
+ * @deprecated 2.10.2
+ *
+ * @param array $args arguments passed by the setting.
+ * @return void
+ */
+function edd_jilt_callback( $args ) {
+
+	_edd_deprecated_function( __FUNCTION__, '2.10.2' );
+
+	$activated   = is_callable( 'edd_jilt' );
+	$connected   = $activated && edd_jilt()->get_integration()->is_jilt_connected();
+	$connect_url = $activated ? edd_jilt()->get_connect_url() : '';
+	$account_url = $connected ? edd_jilt()->get_integration()->get_jilt_app_url() : '';
+
+	echo wp_kses_post( $args['desc'] );
+
+	if ( $activated ) :
+		?>
+
+		<?php if ( $connected ) : ?>
+
+		<p>
+			<button id="edd-jilt-disconnect" class="button"><?php esc_html_e( 'Disconnect Jilt', 'easy-digital-downloads' ); ?></button>
+		</p>
+
+		<p>
+			<?php
+			wp_kses_post(
+					sprintf(
+					/* Translators: %1$s - <a> tag, %2$s - </a> tag */
+							__( '%1$sClick here%2$s to visit your Jilt dashboard', 'easy-digital-downloads' ),
+							'<a href="' . esc_url( $account_url ) . '" target="_blank">',
+							'</a>'
+					)
+			);
+			?>
+		</p>
+
+	<?php else : ?>
+
+		<p>
+			<a id="edd-jilt-connect" class="button button-primary" href="<?php echo esc_url( $connect_url ); ?>">
+				<?php esc_html_e( 'Connect to Jilt', 'easy-digital-downloads' ); ?>
+			</a>
+		</p>
+
+	<?php endif; ?>
+
+	<?php elseif( current_user_can( 'install_plugins' ) ) : ?>
+
+		<p>
+			<button id="edd-jilt-connect" class="button button-primary">
+				<?php esc_html_e( 'Install Jilt', 'easy-digital-downloads' ); ?>
+			</button>
+		</p>
+
+	<?php
+	endif;
+}

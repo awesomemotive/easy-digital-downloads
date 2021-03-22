@@ -1221,22 +1221,6 @@ jQuery(document).ready(function ($) {
 
 			});
 
-			$('#edd-jilt-connect').on('click', function(e) {
-
-				e.preventDefault();
-				$(this).html( edd_vars.wait + ' <span class="edd-loading"></span>' );
-				document.body.style.cursor = 'wait';
-				easy_digital_downloads_jilt_remote_install();
-			});
-
-			$('#edd-jilt-disconnect').on('click', function(e) {
-
-				e.preventDefault();
-				$(this).html( edd_vars.wait + ' <span class="edd-loading dark"></span>' );
-				document.body.style.cursor = 'wait';
-				easy_digital_downloads_jilt_disconnect();
-			});
-
 		},
 
 		misc : function() {
@@ -2237,64 +2221,4 @@ function easy_digital_downloads_sendwp_register_client(register_url, client_name
 
 	document.body.appendChild(form);
 	form.submit();
-}
-
-function easy_digital_downloads_jilt_remote_install() {
-
-	var data = {
-		'action': 'edd_jilt_remote_install',
-	};
-
-	jQuery.post( ajaxurl, data, function( response ) {
-
-		if( ! response.success ) {
-
-			if( confirm( response.data.error ) ) {
-				location.reload();
-				return;
-			}
-		}
-
-		easy_digital_downloads_jilt_connect();
-	});
-}
-
-function easy_digital_downloads_jilt_connect() {
-
-	var data = {
-		'action': 'edd_jilt_connect',
-	};
-
-	jQuery.post( ajaxurl, data, function( response ) {
-
-		if( ! response.success ) {
-
-			if( confirm( response.data.error ) ) {
-				location.reload();
-				return;
-			}
-		}
-
-		if ( response.data.connect_url !== '' ) {
-
-			location.assign( response.data.connect_url );
-			return;
-		}
-	});
-}
-
-function easy_digital_downloads_jilt_disconnect() {
-
-	var data = {
-		'action': 'edd_jilt_disconnect',
-	};
-
-	jQuery.post( ajaxurl, data, function( response ) {
-
-		if ( ! response.success ) {
-			confirm( response.data.error );
-		}
-
-		location.reload();
-	});
 }
