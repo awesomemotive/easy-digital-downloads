@@ -1132,3 +1132,28 @@ function edd_record_sale_in_log( $download_id, $payment_id, $price_id = false, $
 function edd_agree_to_terms_js() {
 	_edd_deprecated_function( __FUNCTION__, '3.0' );
 }
+
+/**
+ * Record payment status change
+ *
+ * @since 1.4.3
+ * @deprecated since 3.0
+ * @param int    $payment_id the ID number of the payment.
+ * @param string $new_status the status of the payment, probably "publish".
+ * @param string $old_status the status of the payment prior to being marked as "complete", probably "pending".
+ * @return void
+ */
+function edd_record_status_change( $payment_id, $new_status, $old_status ) {
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '3.0', 'edd_record_order_status_change', $backtrace );
+
+	// Get the list of statuses so that status in the payment note can be translated
+	$stati      = edd_get_payment_statuses();
+	$old_status = isset( $stati[ $old_status ] ) ? $stati[ $old_status ] : $old_status;
+	$new_status = isset( $stati[ $new_status ] ) ? $stati[ $new_status ] : $new_status;
+
+	$status_change = sprintf( __( 'Status changed from %s to %s', 'easy-digital-downloads' ), $old_status, $new_status );
+
+	edd_insert_payment_note( $payment_id, $status_change );
+}
