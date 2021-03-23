@@ -373,7 +373,7 @@ class Refund_Items_Table extends List_Table {
 		$display_name = esc_html( $this->get_item_display_name( $item ) );
 
 		if ( 'refunded' === $item->status ) {
-			return '<span class="row-title">' . $display_name . '</span>';
+			return '<span class="row-title">' . $display_name . '</span> &mdash; ' . esc_html__( 'Refunded', 'easy-digital-downloads' );
 		}
 
 		return '<label for="' . esc_attr( $checkbox_id ) . '" class="row-title">' . $display_name . '</label>';
