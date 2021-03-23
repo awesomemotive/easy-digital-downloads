@@ -2239,7 +2239,7 @@ function edd_recapture_callback($args) {
 	if ( $client_connected ) :
 		$connection_complete = get_option( 'recapture_api_key' );
 		?>
-		<div class="inline notice notice-<?php echo $connection_comlpete ? 'success' : 'warning'; ?>">
+		<div class="inline notice notice-<?php echo $connection_complete ? 'success' : 'warning'; ?>">
 			<p>
 				<?php _e( 'Recapture plugin activated.', 'easy-digital-downloads' ); ?>
 				<?php printf( __( '%sAccess your Recapture account%s.', 'easy-digital-downloads' ), '<a href="https://recapture.io/account" target="_blank" rel="noopener noreferrer">', '</a>' ); ?>
