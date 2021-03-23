@@ -32,7 +32,18 @@ function edd_get_payment_gateways() {
 		),
 	);
 
-	return apply_filters( 'edd_payment_gateways', $gateways );
+	$gateways = apply_filters( 'edd_payment_gateways', $gateways );
+
+	// Since Stripe is added via a filter still, move to the top.
+	if ( array_key_exists( 'stripe', $gateways ) ) {
+		$stripe_attributes = $gateways['stripe'];
+		unset( $gateways['stripe'] );
+
+		$gateways = array_merge( array( 'stripe' => $stripe_attributes ), $gateways );
+	}
+
+	return $gateways;
+
 }
 
 /**
