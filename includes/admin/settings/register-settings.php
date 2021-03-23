@@ -2202,7 +2202,7 @@ function edd_sendwp_callback($args) {
 			<?php _e( 'We recommend SendWP to ensure quick and reliable delivery of all emails sent from your store, such as purchase receipts, subscription renewal reminders, password resets, and more.', 'easy-digital-downloads' ); ?>
 		</p>
 		<p>
-			<?php printf( __( '%sLearn More%s (Free trial available)' ), '<a href="https://sendwp.com/" taregt="_blank" rel="noopener noreferrer">', '</a>' ); ?>
+			<?php printf( __( '%sLearn More%s (Free trial available)', 'easy-digital-downloads' ), '<a href="https://sendwp.com/" taregt="_blank" rel="noopener noreferrer">', '</a>' ); ?>
 		</p>
 		<p>
 			<button type="button" id="edd-sendwp-connect" class="button button-primary"><?php esc_html_e( 'Connect with SendWP', 'easy-digital-downloads' ); ?>
