@@ -198,62 +198,9 @@ class Refund_Items_Table extends List_Table {
 				<?php
 				return ob_get_clean();
 
-			case 'subtotal' :
-			case 'tax' :
-				$currency_pos = edd_get_option( 'currency_position', 'before' );
-
-				// Maximum amounts that can be refunded.
-				$refundable_amounts = $item->get_refundable_amounts();
-				$amount_remaining   = array_key_exists( $column_name, $refundable_amounts ) ? $refundable_amounts[ $column_name ] : $item->{$column_name};
-
-				/*
-				 * Original amount.
-				 * For subtotals, we actually do subtotal minus discounts for simplicity so that the end user
-				 * doesn't have to juggle that.
-				 */
-				$original_amount = $item->{$column_name};
-				if ( 'subtotal' === $column_name && ! empty( $item->discount ) ) {
-					$original_amount -= $item->discount;
-				}
-				ob_start();
-				?>
-				<div class="edd-form-group">
-					<label for="edd-order-item-<?php echo esc_attr( $item_id ); ?>-refund-<?php echo esc_attr( $column_name ); ?>" class="screen-reader-text">
-						<?php
-						if ( 'subtotal' === $column_name ) {
-							esc_html_e( 'Amount to refund, excluding tax', 'easy-digital-downloads' );
-						} else {
-							esc_html_e( 'Amount of tax to refund', 'easy-digital-downloads' );
-						}
-						?>
-					</label>
-					<div class="edd-form-group__control">
-						<?php
-						if ( 'before' === $currency_pos ) {
-							echo '<span class="edd-amount-control__currency is-before">';
-							echo esc_html( $this->get_currency_symbol( $item->order_id ) );
-							echo '</span>';
-						}
-						?>
-						<span class="edd-amount-control__input"><input type="text" id="edd-order-item-<?php echo esc_attr( $item_id ); ?>-refund-<?php echo esc_attr( $column_name ); ?>" class="edd-order-item-refund-<?php echo esc_attr( $column_name ); ?> edd-order-item-refund-input" name="refund_<?php echo esc_attr( $object_type ); ?>[<?php echo esc_attr( $item->id ); ?>][<?php echo esc_attr( $column_name ); ?>]" value="<?php echo esc_attr( edd_format_amount( $amount_remaining ) ); ?>" placeholder="<?php echo esc_attr( edd_format_amount( 0 ) ); ?>" data-original="<?php echo esc_attr( $original_amount ); ?>" data-max="<?php echo esc_attr( $amount_remaining ); ?>" disabled /></span>
-						<?php
-						if ( 'after' === $currency_pos ) {
-							echo '<span class="edd-amount-control__currency is-after">';
-							echo esc_html( $this->get_currency_symbol( $item->order_id ) );
-							echo '</span>';
-						}
-						?>
-					</div>
-					<small class="edd-order-item-refund-max-amount">
-						<?php
-						echo _x( 'Max:', 'Maximum input amount', 'easy-digital-downloads' ) . '&nbsp;';
-
-						echo $this->format_currency( $item, $column_name, $amount_remaining );
-						?>
-					</small>
-				</div>
-				<?php
-				return ob_get_clean();
+			case 'subtotal':
+			case 'tax':
+				return $this->get_adjustable_column( $item, $column_name, $item_id, $object_type );
 
 			default:
 				return property_exists( $item, $column_name )
@@ -299,6 +246,76 @@ class Refund_Items_Table extends List_Table {
 		}
 
 		return $formatted_amount;
+	}
+
+	/**
+	 * This private function returns the form input for refundable items,
+	 * or amounts for items which have already been refunded.
+	 *
+	 * @param Order_Item $item        The item object.
+	 * @param string     $column_name ID of the column being displayed.
+	 * @param string     $item_id     Unique ID of the order item for the refund modal.
+	 * @param string     $object_type The item type.
+	 * @return string
+	 */
+	private function get_adjustable_column( $item, $column_name, $item_id, $object_type ) {
+		$currency_pos = edd_get_option( 'currency_position', 'before' );
+
+		// Maximum amounts that can be refunded.
+		$refundable_amounts = $item->get_refundable_amounts();
+		$amount_remaining   = array_key_exists( $column_name, $refundable_amounts ) ? $refundable_amounts[ $column_name ] : $item->{$column_name};
+
+		/*
+		 * Original amount.
+		 * For subtotals, we actually do subtotal minus discounts for simplicity so that the end user
+		 * doesn't have to juggle that.
+		 */
+		$original_amount = $item->{$column_name};
+		if ( 'subtotal' === $column_name && ! empty( $item->discount ) ) {
+			$original_amount -= $item->discount;
+		}
+		if ( 'refunded' === $item->status ) {
+			return $this->format_currency( $item, $column_name, 0 );
+		}
+		ob_start();
+		?>
+		<div class="edd-form-group">
+			<label for="edd-order-item-<?php echo esc_attr( $item_id ); ?>-refund-<?php echo esc_attr( $column_name ); ?>" class="screen-reader-text">
+				<?php
+				if ( 'subtotal' === $column_name ) {
+					esc_html_e( 'Amount to refund, excluding tax', 'easy-digital-downloads' );
+				} else {
+					esc_html_e( 'Amount of tax to refund', 'easy-digital-downloads' );
+				}
+				?>
+			</label>
+			<div class="edd-form-group__control">
+				<?php
+				if ( 'before' === $currency_pos ) {
+					echo '<span class="edd-amount-control__currency is-before">';
+					echo esc_html( $this->get_currency_symbol( $item->order_id ) );
+					echo '</span>';
+				}
+				?>
+				<span class="edd-amount-control__input"><input type="text" id="edd-order-item-<?php echo esc_attr( $item_id ); ?>-refund-<?php echo esc_attr( $column_name ); ?>" class="edd-order-item-refund-<?php echo esc_attr( $column_name ); ?> edd-order-item-refund-input" name="refund_<?php echo esc_attr( $object_type ); ?>[<?php echo esc_attr( $item->id ); ?>][<?php echo esc_attr( $column_name ); ?>]" value="<?php echo esc_attr( edd_format_amount( $amount_remaining ) ); ?>" placeholder="<?php echo esc_attr( edd_format_amount( 0 ) ); ?>" data-original="<?php echo esc_attr( $original_amount ); ?>" data-max="<?php echo esc_attr( $amount_remaining ); ?>" disabled /></span>
+				<?php
+				if ( 'after' === $currency_pos ) {
+					echo '<span class="edd-amount-control__currency is-after">';
+					echo esc_html( $this->get_currency_symbol( $item->order_id ) );
+					echo '</span>';
+				}
+				?>
+			</div>
+			<small class="edd-order-item-refund-max-amount">
+				<?php
+				echo _x( 'Max:', 'Maximum input amount', 'easy-digital-downloads' ) . '&nbsp;';
+
+				echo $this->format_currency( $item, $column_name, $amount_remaining );
+				?>
+			</small>
+		</div>
+		<?php
+		return ob_get_clean();
 	}
 
 	/**
