@@ -2251,7 +2251,7 @@ function edd_recapture_callback($args) {
 			</p>
 			<?php else : ?>
 			<p>
-				<?php printf( __( 'Complete your connection to Recapture %shere%s.', 'easy-digital-downloads' ), '<a href="' . admin_url( 'admin.php?page=recapture' ) . '">', '</a>' ); ?>
+				<?php printf( __( '%sComplete your connection to Recapture%s', 'easy-digital-downloads' ), '<a href="' . admin_url( 'admin.php?page=recapture' ) . '">', '</a>' ); ?>
 			</p>
 			<?php endif; ?>
 		</div>
