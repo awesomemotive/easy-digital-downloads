@@ -2262,7 +2262,7 @@ function edd_recapture_callback($args) {
 			<?php _e( 'We recommend Recapture for recovering lost revenue by automatically sending effective, targeted emails to customers who abandon their shopping cart.', 'easy-digital-downloads' ); ?>
 		</p>
 		<p>
-			<?php printf( __( '%sLearn More%s (Free trial available)' ), '<a href="https://recapture.io/abandoned-carts-easy-digital-downloads" taregt="_blank" rel="noopener noreferrer">', '</a>' ); ?>
+			<?php printf( __( '%sLearn More%s (Free trial available)', 'easy-digital-downloads' ), '<a href="https://recapture.io/abandoned-carts-easy-digital-downloads" taregt="_blank" rel="noopener noreferrer">', '</a>' ); ?>
 		</p>
 		<p>
 			<button type="button" id="edd-recapture-connect" class="button button-primary"><?php esc_html_e( 'Connect with Recapture', 'easy-digital-downloads' ); ?>
