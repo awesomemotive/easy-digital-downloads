@@ -2245,7 +2245,7 @@ function edd_recapture_callback($args) {
 				<?php printf( __( '%sAccess your Recapture account%s.', 'easy-digital-downloads' ), '<a href="https://recapture.io/account" target="_blank" rel="noopener noreferrer">', '</a>' ); ?>
 			</p>
 
-			<?php if ( $connection_comlpete ) : ?>
+			<?php if ( $connection_complete ) : ?>
 			<p>
 				<a id="edd-recapture-disconnect" class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=recapture-confirm-disconnect' ) ); ?>"><?php esc_html_e( 'Disconnect Recapture', 'easy-digital-downloads' ); ?></a>
 			</p>
