@@ -41,7 +41,7 @@
 	.column-tax,
 	.column-discount,
 	.column-total {
-		width: 130px;
+		width: 100px;
 	}
 
 	.edd-form-group__control {
@@ -51,7 +51,6 @@
 
 		input {
 			max-width: 100px;
-			width: calc(100% - 12px);
 		}
 	}
 
@@ -61,8 +60,9 @@
 
 	.edd-refund-submit-line-total-amount {
 		display: inline-block;
+		margin-left: 20px;
 		text-align: left;
-		width: 130px;
+		width: 100px;
 	}
 
 	#edd-refund-submit-subtotal td {
