@@ -259,6 +259,11 @@ class Refund_Items_Table extends List_Table {
 	 * @return string
 	 */
 	private function get_adjustable_column( $item, $column_name, $item_id, $object_type ) {
+
+		if ( 'refunded' === $item->status ) {
+			return $this->format_currency( $item, $column_name, 0 );
+		}
+
 		$currency_pos = edd_get_option( 'currency_position', 'before' );
 
 		// Maximum amounts that can be refunded.
@@ -273,9 +278,6 @@ class Refund_Items_Table extends List_Table {
 		$original_amount = $item->{$column_name};
 		if ( 'subtotal' === $column_name && ! empty( $item->discount ) ) {
 			$original_amount -= $item->discount;
-		}
-		if ( 'refunded' === $item->status ) {
-			return $this->format_currency( $item, $column_name, 0 );
 		}
 		ob_start();
 		?>
