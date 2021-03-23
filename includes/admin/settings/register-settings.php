@@ -2247,7 +2247,7 @@ function edd_recapture_callback($args) {
 
 			<?php if ( $connection_comlpete ) : ?>
 			<p>
-				<a id="edd-recapture-disconnect" class="button" href="<?php echo esc_html( admin_url( 'admin.php?page=recapture-confirm-disconnect' ) ); ?>"><?php _e( 'Disconnect Recapture', 'easy-digital-downloads' ); ?></a>
+				<a id="edd-recapture-disconnect" class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=recapture-confirm-disconnect' ) ); ?>"><?php esc_html_e( 'Disconnect Recapture', 'easy-digital-downloads' ); ?></a>
 			</p>
 			<?php else : ?>
 			<p>
