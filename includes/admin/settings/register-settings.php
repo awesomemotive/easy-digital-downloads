@@ -2264,10 +2264,12 @@ function edd_recapture_callback($args) {
 		<p>
 			<?php printf( __( '%sLearn More%s (Free trial available)', 'easy-digital-downloads' ), '<a href="https://recapture.io/abandoned-carts-easy-digital-downloads" taregt="_blank" rel="noopener noreferrer">', '</a>' ); ?>
 		</p>
+		<?php if ( current_user_can( 'install_plugins' ) ) : ?>
 		<p>
 			<button type="button" id="edd-recapture-connect" class="button button-primary"><?php esc_html_e( 'Connect with Recapture', 'easy-digital-downloads' ); ?>
 			</button>
 		</p>
+		<?php endif; ?>
 
 	<?php
 	endif;
