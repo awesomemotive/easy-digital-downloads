@@ -320,6 +320,18 @@ function edd_is_host( $host = false ) {
 	return $return;
 }
 
+/**
+ * Honeypot validation to protect against bots.
+ *
+ * @since	2.8.10
+ * @param	array	$data	Form post data
+ * @return	void
+ */
+function edd_do_honeypot_check( $data )	{
+	if ( ! empty( $data['edd_honeypot'] ) )	{
+		wp_die( __( "Ha! I don't think so little honey bee. No bots allowed in this Honey Pot!", 'easy-digital-downloads' ) );
+	}
+}
 
 /**
  * Get Currencies

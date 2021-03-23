@@ -242,6 +242,8 @@ function edd_process_register_form( $data ) {
 		return;
 	}
 
+    edd_do_honeypot_check( $data );
+
 	do_action( 'edd_pre_process_register_form' );
 
 	if ( empty( $data['edd_user_login'] ) ) {
