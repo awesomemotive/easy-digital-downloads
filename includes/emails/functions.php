@@ -575,7 +575,7 @@ function edd_recapture_remote_install_handler () {
 
 	if ( ! current_user_can( 'manage_shop_settings' ) || ! current_user_can( 'install_plugins' ) ) {
 		wp_send_json_error( array(
-				'error' => __( 'You do not have permission to do this.', 'easy-digital-downloads' )
+			'error' => __( 'You do not have permission to do this.', 'easy-digital-downloads' )
 		) );
 	}
 
