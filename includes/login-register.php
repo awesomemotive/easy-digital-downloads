@@ -242,8 +242,6 @@ function edd_process_register_form( $data ) {
 		return;
 	}
 
-    edd_do_honeypot_check( $data );
-
 	do_action( 'edd_pre_process_register_form' );
 
 	if ( empty( $data['edd_user_login'] ) ) {
@@ -268,6 +266,10 @@ function edd_process_register_form( $data ) {
 
 	if ( ! empty( $data['edd_payment_email'] ) && $data['edd_payment_email'] != $data['edd_user_email'] && ! is_email( $data['edd_payment_email'] ) ) {
 		edd_set_error( 'payment_email_invalid', __( 'Invalid payment email', 'easy-digital-downloads' ) );
+	}
+
+	if ( isset( $data['edd_honeypot'] ) && ! empty( $data['edd_honeypot'] ) ) {
+		edd_set_error( 'invalid_form_data', __( 'Registration form validation failed', 'easy-digital-downloads' ) );
 	}
 
 	if ( empty( $_POST['edd_user_pass'] ) ) {
