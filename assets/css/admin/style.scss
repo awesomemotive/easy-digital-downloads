@@ -613,10 +613,6 @@ table.edd-order-overview-summary--refund {
 	}
 }
 
-.edd-order-overview-summary th.column-name {
-	width: 42%;
-}
-
 @media screen and (max-width: 782px) {
 
 	.edd-order-overview-summary .row-actions > *,
@@ -629,10 +625,8 @@ table.edd-order-overview-summary--refund {
 	}
 }
 
-.edd-order-overview-summary th.column-quantity,
-.edd-order-overview-summary th.column-amount,
-.edd-order-overview-summary th.column-subtotal {
-	width: 16%;
+.edd-order-overview-summary th:not(.column-primary) {
+	width: 200px;
 }
 
 .edd-order-overview-summary .row-actions > *:not(:first-child):before {
@@ -877,11 +871,6 @@ table.edd-order-overview-summary--refund {
 	display:  block;
 }
 
-.wp-list-table.orders .column-status,
-.wp-list-table.orders .column-date {
-	width: 15%;
-}
-
 /** Status labels */
 .edd-admin-order-status-badge {
 	padding: 2px 7px;
@@ -1093,91 +1082,6 @@ textarea[name="edd-note"] {
 /* List Tables
 -------------------------------------------------------------- */
 
-.wp-list-table.customers .column-id,
-.wp-list-table.downloads .column-primary {
-	width: 5%;
-}
-
-.wp-list-table.posts .column-sales,
-.wp-list-table.customers .column-order_count,
-.wp-list-table.discounts .column-use_count {
-	width: 10%;
-}
-
-.wp-list-table.customers .column-spent,
-.wp-list-table.customers .column-status,
-.wp-list-table.downloads .column-amount,
-.wp-list-table.downloads .column-status,
-.wp-list-table.discounts .column-amount,
-.wp-list-table.discounts .column-status,
-.wp-list-table.addresses .column-type,
-.wp-list-table.posts .column-earnings {
-	width: 11%;
-}
-
-.wp-list-table.addresses .column-region,
-.wp-list-table.addresses .column-country {
-	width: 10%;
-}
-
-.wp-list-table.addresses .column-type,
-.wp-list-table.posts .column-download_category,
-.wp-list-table.posts .column-download_tag,
-.wp-list-table.posts .column-price {
-	width: 13%
-}
-
-.wp-list-table.customers .column-date_created,
-.wp-list-table.discounts .column-code,
-.wp-list-table.discounts .column-start_date,
-.wp-list-table.discounts .column-end_date,
-.wp-list-table.downloads .column-date,
-.wp-list-table.downloads .column-customer,
-.wp-list-table.addresses .column-date_created,
-.wp-list-table.emails .column-date_created {
-	width: 14%;
-}
-
-.wp-list-table.orderadjustments .column-amount,
-.wp-list-table.orderitems .column-status,
-.wp-list-table.orderitems .column-quantity,
-.wp-list-table.orderitems .column-amount,
-.wp-list-table.orderitems .column-discount,
-.wp-list-table.orderitems .column-tax,
-.wp-list-table.orderitems .column-total,
-.wp-list-table.orderitems .column-subtotal,
-.wp-list-table.refunditems .column-status,
-.wp-list-table.refunditems .column-quantity,
-.wp-list-table.refunditems .column-amount,
-.wp-list-table.refunditems .column-discount,
-.wp-list-table.refunditems .column-tax,
-.wp-list-table.refunditems .column-total,
-.wp-list-table.refunditems .column-subtotal {
-	width: 17%;
-}
-
-.wp-list-table.orders .column-gateway,
-.wp-list-table.orders .column-customer {
-	width: 18%;
-}
-
-.wp-list-table.orders .column-number,
-.wp-list-table.addresses .column-customer,
-.wp-list-table.emails .column-customer,
-.wp-list-table.customers .column-email {
-	width: 20%;
-}
-
-.wp-list-table.apikeys .column-key,
-.wp-list-table.apikeys .column-token,
-.wp-list-table.apikeys .column-secret {
-	width: 25%;
-}
-
-.wp-list-table.orderadjustments .column-desc {
-	width: 34%;
-}
-
 .wp-list-table.customers .column-primary strong,
 .wp-list-table.emails .column-primary strong,
 .wp-list-table.addresses .column-primary strong,
@@ -1187,12 +1091,6 @@ textarea[name="edd-note"] {
 .wp-list-table.refunditems .column-primary strong,
 .wp-list-table.orderadjustments .column-primary strong {
 	font-size: 14px;
-}
-
-.wp-list-table.orderadjustments .column-desc,
-.wp-list-table.orderitems .column-name,
-.wp-list-table.refunditems .column-name {
-	width: 30%;
 }
 
 .wp-list-table.emails .column-customer .avatar,
