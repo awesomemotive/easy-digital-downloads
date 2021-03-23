@@ -2237,7 +2237,7 @@ function edd_recapture_callback($args) {
 
 	// Output the appropriate button and label based on connection status
 	if ( $client_connected ) :
-		$connection_comlpete = get_option('recapture_api_key');
+		$connection_complete = get_option( 'recapture_api_key' );
 		?>
 		<div class="inline notice notice-<?php echo $connection_comlpete ? 'success' : 'warning'; ?>">
 			<p>
