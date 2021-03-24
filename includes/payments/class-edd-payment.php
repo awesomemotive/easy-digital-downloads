@@ -772,6 +772,7 @@ final class EDD_Payment {
 						$args = array(
 							'ID'        => $this->ID,
 							'post_date' => $this->date,
+							'post_date_gmt' => get_gmt_from_date($this->date),
 							'edit_date' => true,
 						);
 
@@ -1487,7 +1488,7 @@ final class EDD_Payment {
 		$meta = get_post_meta( $this->ID, $meta_key, $single );
 
 		if ( $meta_key === '_edd_payment_meta' ) {
-			
+
 			if ( empty( $meta ) ) {
 				$meta = array();
 			}
@@ -1961,7 +1962,7 @@ final class EDD_Payment {
 
 		$user_info    = isset( $this->payment_meta['user_info'] ) ? maybe_unserialize( $this->payment_meta['user_info'] ) : array();
 		$user_info    = wp_parse_args( $user_info, $defaults );
-        
+
         // Ensure email index is in the old user info array
 		if( empty( $user_info['email'] ) ) {
 			$user_info['email'] = $this->email;
