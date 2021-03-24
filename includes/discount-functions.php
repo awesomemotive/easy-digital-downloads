@@ -1027,6 +1027,13 @@ function edd_get_item_discount_amount( $item, $items, $discounts ) {
 
 	if ( ! isset( $item['options'] ) ) {
 		$item['options'] = array();
+
+		/*
+		 * Support for variable pricing when the `item_number` key is set (cart details).
+		 */
+		if ( isset( $item['item_number']['options'] ) ) {
+			$item['options'] = $item['item_number']['options'];
+		}
 	}
 
 	// Validate and normalize Discounts.
