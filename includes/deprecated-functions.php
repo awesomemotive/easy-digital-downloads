@@ -765,12 +765,12 @@ function edd_jilt_callback( $args ) {
 		<p>
 			<?php
 			wp_kses_post(
-					sprintf(
-					/* Translators: %1$s - <a> tag, %2$s - </a> tag */
-							__( '%1$sClick here%2$s to visit your Jilt dashboard', 'easy-digital-downloads' ),
-							'<a href="' . esc_url( $account_url ) . '" target="_blank">',
-							'</a>'
-					)
+				sprintf(
+				/* Translators: %1$s - <a> tag, %2$s - </a> tag */
+					__( '%1$sClick here%2$s to visit your Jilt dashboard', 'easy-digital-downloads' ),
+					'<a href="' . esc_url( $account_url ) . '" target="_blank">',
+					'</a>'
+				)
 			);
 			?>
 		</p>
@@ -809,9 +809,9 @@ function edd_jilt_remote_install_handler() {
 
 	if ( ! current_user_can( 'manage_shop_settings' ) || ! current_user_can( 'install_plugins' ) ) {
 		wp_send_json_error(
-				array(
-						'error' => __( 'You do not have permission to do this.', 'easy-digital-downloads' ),
-				)
+			array(
+				'error' => __( 'You do not have permission to do this.', 'easy-digital-downloads' ),
+			)
 		);
 	}
 
@@ -826,18 +826,18 @@ function edd_jilt_remote_install_handler() {
 		* Use the WordPress Plugins API to get the plugin download link.
 		*/
 		$api = plugins_api(
-				'plugin_information',
-				array(
-						'slug' => 'jilt-for-edd',
-				)
+			'plugin_information',
+			array(
+				'slug' => 'jilt-for-edd',
+			)
 		);
 
 		if ( is_wp_error( $api ) ) {
 			wp_send_json_error(
-					array(
-							'error' => $api->get_error_message(),
-							'debug' => $api,
-					)
+				array(
+					'error' => $api->get_error_message(),
+					'debug' => $api,
+				)
 			);
 		}
 
@@ -848,10 +848,10 @@ function edd_jilt_remote_install_handler() {
 		$install  = $upgrader->install( $api->download_link );
 		if ( is_wp_error( $install ) ) {
 			wp_send_json_error(
-					array(
-							'error' => $install->get_error_message(),
-							'debug' => $api,
-					)
+				array(
+					'error' => $install->get_error_message(),
+					'debug' => $api,
+				)
 			);
 		}
 
@@ -867,9 +867,9 @@ function edd_jilt_remote_install_handler() {
 	*/
 	if ( ! class_exists( 'EDD_Jilt_Loader' ) ) {
 		wp_send_json_error(
-				array(
-						'error' => __( 'Something went wrong. Jilt was not installed correctly.', 'easy-digital-downloads' ),
-				)
+			array(
+				'error' => __( 'Something went wrong. Jilt was not installed correctly.', 'easy-digital-downloads' ),
+			)
 		);
 	}
 
@@ -888,17 +888,17 @@ function edd_jilt_connect_handler() {
 
 	if ( ! current_user_can( 'manage_shop_settings' ) ) {
 		wp_send_json_error(
-				array(
-						'error' => __( 'You do not have permission to do this.', 'easy-digital-downloads' ),
-				)
+			array(
+				'error' => __( 'You do not have permission to do this.', 'easy-digital-downloads' ),
+			)
 		);
 	}
 
 	if ( ! is_callable( 'edd_jilt' ) ) {
 		wp_send_json_error(
-				array(
-						'error' => __( 'Something went wrong. Jilt was not installed correctly.', 'easy-digital-downloads' ),
-				)
+			array(
+				'error' => __( 'Something went wrong. Jilt was not installed correctly.', 'easy-digital-downloads' ),
+			)
 		);
 	}
 
@@ -917,9 +917,9 @@ function edd_jilt_disconnect_handler() {
 
 	if ( ! current_user_can( 'manage_shop_settings' ) ) {
 		wp_send_json_error(
-				array(
-						'error' => __( 'You do not have permission to do this.', 'easy-digital-downloads' ),
-				)
+			array(
+				'error' => __( 'You do not have permission to do this.', 'easy-digital-downloads' ),
+			)
 		);
 	}
 
@@ -948,45 +948,45 @@ function maybe_add_jilt_notice_to_abandoned_payment( $payment_id ) {
 	_edd_deprecated_function( __FUNCTION__, '2.10.2' );
 
 	if ( ! is_callable( 'edd_jilt' )
-			&& ! is_plugin_active( 'recapture-for-edd/recapture.php' )
-			&& 'abandoned' === edd_get_payment_status( $payment_id )
-			&& ! get_user_meta( get_current_user_id(), '_edd_try_jilt_dismissed', true )
+		&& ! is_plugin_active( 'recapture-for-edd/recapture.php' )
+		&& 'abandoned' === edd_get_payment_status( $payment_id )
+		&& ! get_user_meta( get_current_user_id(), '_edd_try_jilt_dismissed', true )
 	) {
 		?>
 		<div class="notice notice-warning jilt-notice">
 			<p>
 				<?php
 				echo wp_kses_post(
-						sprintf(
+					sprintf(
 						/* Translators: %1$s - <strong> tag, %2$s - </strong> tag, %3$s - <a> tag, %4$s - </a> tag */
-								__( '%1$sRecover abandoned purchases like this one.%2$s %3$sTry Jilt for free%4$s.', 'easy-digital-downloads' ),
-								'<strong>',
-								'</strong>',
-								'<a href="https://easydigitaldownloads.com/downloads/jilt" target="_blank">',
-								'</a>'
-						)
+						__( '%1$sRecover abandoned purchases like this one.%2$s %3$sTry Jilt for free%4$s.', 'easy-digital-downloads' ),
+						'<strong>',
+						'</strong>',
+						'<a href="https://easydigitaldownloads.com/downloads/jilt" target="_blank">',
+						'</a>'
+					)
 				);
 				?>
 			</p>
 			<?php
 			echo wp_kses_post(
-					sprintf(
+				sprintf(
 					/* Translators: %1$s - Opening anchor tag, %2$s - The url to dismiss the ajax notice, %3$s - Complete the opening of the anchor tag, %4$s - Open span tag, %4$s - Close span tag */
-							__( '%1$s %2$s %3$s %4$s Dismiss this notice. %5$s', 'easy-digital-downloads' ),
-							'<a href="',
-							esc_url(
-									add_query_arg(
-											array(
-													'edd_action' => 'dismiss_notices',
-													'edd_notice' => 'try_jilt',
-											)
-									)
-							),
-							'" type="button" class="notice-dismiss">',
-							'<span class="screen-reader-text">',
-							'</span>
-					</a>'
-					)
+					__( '%1$s %2$s %3$s %4$s Dismiss this notice. %5$s', 'easy-digital-downloads' ),
+					'<a href="',
+					esc_url(
+						add_query_arg(
+							array(
+								'edd_action' => 'dismiss_notices',
+								'edd_notice' => 'try_jilt',
+							)
+						)
+					),
+					'" type="button" class="notice-dismiss">',
+					'<span class="screen-reader-text">',
+					'</span>
+				</a>'
+				)
 			);
 			?>
 		</div>
