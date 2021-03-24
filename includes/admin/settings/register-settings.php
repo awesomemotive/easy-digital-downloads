@@ -1586,15 +1586,18 @@ function edd_sanitize_html_class( $class = '' ) {
 
 
 /**
- * Save banned emails.
+ * Sanitizes banned emails.
  *
- * @since 2.0
+ * @since 3.0
  */
-function edd_sanitize_banned_emails( $value = '' ) {
+function edd_sanitize_banned_emails( $value, $key ) {
+	if ( 'banned_emails' !== $key ) {
+		return $value;
+	}
 
-	if ( ! empty( $_POST['banned_emails'] ) ) {
+	if ( ! empty( $value ) ) {
 		// Sanitize the input
-		$emails = array_map( 'trim', explode( "\n", $_POST['banned_emails'] ) );
+		$emails = array_map( 'trim', explode( "\n", $value ) );
 		$emails = array_unique( $emails );
 		$emails = array_map( 'sanitize_text_field', $emails );
 
@@ -1609,6 +1612,7 @@ function edd_sanitize_banned_emails( $value = '' ) {
 
 	return $emails;
 }
+add_filter( 'edd_settings_sanitize', 'edd_sanitize_banned_emails', 10, 2 );
 
 /**
  * Retrieve settings tabs
