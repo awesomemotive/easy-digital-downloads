@@ -491,11 +491,6 @@ function edd_get_registered_settings() {
 						'desc' => '',
 						'type' => 'hook',
 					),
-					'advanced_emails_header' => array(
-						'id'   => 'advanced_emails_header',
-						'name' => '<strong>' . __( 'Advanced emails', 'easy-digital-downloads' ) . '</strong>',
-						'type' => 'header',
-					),
 					'sendwp_header' => array(
 							'id'   => 'sendwp_header',
 							'name' => '<strong>' . __( 'SendWP', 'easy-digital-downloads' ) . '</strong>',
@@ -2199,10 +2194,7 @@ function edd_sendwp_callback($args) {
 	else :
 		?>
 		<p>
-			<?php _e( 'We recommend SendWP to ensure quick and reliable delivery of all emails sent from your store, such as purchase receipts, subscription renewal reminders, password resets, and more.', 'easy-digital-downloads' ); ?>
-		</p>
-		<p>
-			<?php printf( __( '%sLearn More%s (Free trial available)', 'easy-digital-downloads' ), '<a href="https://sendwp.com/" taregt="_blank" rel="noopener noreferrer">', '</a>' ); ?>
+			<?php _e( 'We recommend SendWP to ensure quick and reliable delivery of all emails sent from your store, such as purchase receipts, subscription renewal reminders, password resets, and more.', 'easy-digital-downloads' ); ?> <?php printf( __( '%sLearn more%s (Free trial available)', 'easy-digital-downloads' ), '<a href="https://sendwp.com/" target="_blank" rel="noopener noreferrer">', '</a>' ); ?>
 		</p>
 		<p>
 			<button type="button" id="edd-sendwp-connect" class="button button-primary"><?php esc_html_e( 'Connect with SendWP', 'easy-digital-downloads' ); ?>
@@ -2259,10 +2251,7 @@ function edd_recapture_callback($args) {
 	else :
 		?>
 		<p>
-			<?php _e( 'We recommend Recapture for recovering lost revenue by automatically sending effective, targeted emails to customers who abandon their shopping cart.', 'easy-digital-downloads' ); ?>
-		</p>
-		<p>
-			<?php printf( __( '%sLearn More%s (Free trial available)', 'easy-digital-downloads' ), '<a href="https://recapture.io/abandoned-carts-easy-digital-downloads" taregt="_blank" rel="noopener noreferrer">', '</a>' ); ?>
+			<?php _e( 'We recommend Recapture for recovering lost revenue by automatically sending effective, targeted emails to customers who abandon their shopping cart.', 'easy-digital-downloads' ); ?> <?php printf( __( '%sLearn more%s (Free trial available)', 'easy-digital-downloads' ), '<a href="https://recapture.io/abandoned-carts-easy-digital-downloads" target="_blank" rel="noopener noreferrer">', '</a>' ); ?>
 		</p>
 		<?php if ( current_user_can( 'install_plugins' ) ) : ?>
 		<p>
