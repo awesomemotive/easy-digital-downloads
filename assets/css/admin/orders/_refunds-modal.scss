@@ -36,6 +36,11 @@
 }
 
 .refunditems {
+	td,
+	th.check-column {
+		vertical-align: baseline;
+	}
+
 	.column-amount,
 	.column-subtotal,
 	.column-tax,
@@ -50,7 +55,7 @@
 		gap: 4px;
 
 		input {
-			max-width: 100px;
+			width: 100%;
 		}
 	}
 
