@@ -2208,7 +2208,7 @@ function edd_sendwp_callback($args) {
 }
 
 /**
- * Recaptuer Callback
+ * Recapture Callback
  *
  * Renders Recapture Settings
  *
