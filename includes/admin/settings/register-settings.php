@@ -500,8 +500,8 @@ function edd_get_registered_settings() {
 					),
 					'banned_emails' => array(
 						'id'    => 'banned_emails',
-						'name'  => __( 'Order Blocking', 'easy-digital-downloads' ),
-						'desc'  => __( 'One per line, enter: email addresses, domains (<code>@example.com</code>), or TLDs (<code>.gov</code>).', 'easy-digital-downloads' ),
+						'name'  => __( 'Banned Emails', 'easy-digital-downloads' ),
+						'desc'  => __( 'Emails placed in the box above will not be allowed to make purchases.', 'easy-digital-downloads' ) . '<br>' . __( 'One per line, enter: email addresses, domains (<code>@example.com</code>), or TLDs (<code>.gov</code>).', 'easy-digital-downloads' ),
 						'type'  => 'textarea',
 						'placeholder' => __( '@example.com', 'easy-digital-downloads' )
 					)
