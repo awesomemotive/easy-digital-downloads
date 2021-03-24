@@ -52,10 +52,23 @@
 	.edd-form-group__control {
 		display: flex;
 		align-items: center;
-		gap: 4px;
 
 		input {
+			background-color: transparent;
+			border: 0;
+			border-bottom: 1px solid;
+			border-radius: 0;
+			box-shadow: none;
+			text-align: right;
 			width: 100%;
+
+			&:disabled {
+				border-bottom: none;
+			}
+
+			&:focus {
+				border-bottom: 2px solid var(--wp-admin-theme-color-darker-10);
+			}
 		}
 	}
 
