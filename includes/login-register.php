@@ -269,7 +269,7 @@ function edd_process_register_form( $data ) {
 	}
 
 	if ( isset( $data['edd_honeypot'] ) && ! empty( $data['edd_honeypot'] ) ) {
-		edd_set_error( 'invalid_form_data', __( 'Registration form validation failed', 'easy-digital-downloads' ) );
+		edd_set_error( 'invalid_form_data', __( 'Registration form validation failed.', 'easy-digital-downloads' ) );
 	}
 
 	if ( empty( $_POST['edd_user_pass'] ) ) {
