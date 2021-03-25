@@ -54,7 +54,7 @@ class EDD_Emails {
 	 *
 	 * @since 2.1
 	 */
-	private $html = false;
+	private $html = true;
 
 	/**
 	 * The email template to use
