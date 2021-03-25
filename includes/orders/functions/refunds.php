@@ -340,7 +340,7 @@ function edd_refund_order( $order_id, $order_items = 'all', $adjustments = 'all'
 
 	/** Insert order adjustments **********************************************/
 
-	foreach( $validator->get_refunded_adjustments() as $adjustment ) {
+	foreach ( $validator->get_refunded_adjustments() as $adjustment ) {
 		if ( ! empty( $adjustment['object_type'] ) && 'order' === $adjustment['object_type'] ) {
 			$adjustment['object_id'] = $refund_id;
 		} elseif ( ! empty( $adjustment['object_type'] ) && 'order_item' === $adjustment['object_type'] ) {
