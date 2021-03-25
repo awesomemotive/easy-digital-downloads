@@ -253,7 +253,7 @@ $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 				url_target.hide();
 
 				$('#edd-submit-refund-status').show();
-				$( '#edd-submit-refund-submit' ).attr( 'disabled', false ).removeClass( 'updating-message' ).addClass( 'updated-message' );
+				$( '#edd-submit-refund-submit' ).attr( 'disabled', false ).removeClass( 'updating-message' );
 			}
 		}
 	} ).fail( function ( data ) {
