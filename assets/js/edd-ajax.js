@@ -1,6 +1,12 @@
-var edd_scripts;
-jQuery(document).ready(function ($) {
+var edd_scripts,
+	is_wpidea_loaded;
 
+jQuery(document).ready(function ($) {
+	if (typeof(wpidea) !== 'undefined') {
+		is_wpidea_loaded = true;
+	} else {
+		is_wpidea_loaded = false;
+	}
 	// Hide unneeded elements. These are things that are required in case JS breaks or isn't present
 	$('.edd-no-js').hide();
 	$('a.edd-add-to-cart').addClass('edd-has-js');
@@ -83,6 +89,11 @@ jQuery(document).ready(function ($) {
 
 		e.preventDefault();
 
+		if(!is_wpidea_loaded){
+			console.log('WP Idea not loaded!')
+			return
+		}
+
 		var $this = $(this), form = $this.closest('form');
 
 		// Disable button, preventing rapid additions to cart during ajax request
@@ -163,13 +174,13 @@ jQuery(document).ready(function ($) {
 			price_ids : item_price_ids,
 			post_data: $(form).serialize()
 		};
-		data[edd_scripts.nonce_name] = edd_scripts.nonce_value
+		data[wpidea.nonce_name] = wpidea.nonce_value
 
 		$.ajax({
 			type: "POST",
 			data: data,
 			dataType: "json",
-			url: edd_scripts.ajaxurl + '?wpi_route=payment/add_to_cart',
+			url: wpidea.urls.payment_add_to_cart,
 			xhrFields: {
 				withCredentials: true
 			},
@@ -363,6 +374,11 @@ jQuery(document).ready(function ($) {
 	}
 
 	$(document).on('click', '#edd_purchase_form #edd_purchase_submit input[type=submit]', function(e) {
+		if(!is_wpidea_loaded){
+			console.log('WP Idea not loaded!')
+			return
+		}
+
 		var eddPurchaseform = document.getElementById('edd_purchase_form');
 		if( typeof eddPurchaseform.checkValidity === "function" && false === eddPurchaseform.checkValidity() ) {
 			return;
@@ -375,10 +391,10 @@ jQuery(document).ready(function ($) {
 
 		var data = $('#edd_purchase_form').serialize();
 		data += '&edd_ajax=true'
-		data += '&'+edd_scripts.nonce_name+'='+edd_scripts.nonce_value
+		data += '&'+wpidea.nonce_name+'='+wpidea.nonce_value
 
 
-		$.post(edd_scripts.ajaxurl + '?wpi_route=payment/process_checkout', data, function(data) {
+		$.post(wpidea.urls.payment_process_checkout, data, function(data) {
 			if ( $.trim(data) == 'success' ) {
 				$('.edd_errors').remove();
 				$('.edd-error').hide();
@@ -398,21 +414,24 @@ jQuery(document).ready(function ($) {
 
 function edd_load_gateway( payment_mode ) {
 
+	if(!is_wpidea_loaded){
+		console.log('WP Idea not loaded!')
+		return
+	}
+
 	// Show the ajax loader
 	jQuery('.edd-cart-ajax').show();
 	jQuery('#edd_purchase_form_wrap').html('<img src="' + edd_scripts.ajax_loader + '"/>');
-
 	var data = {
-		edd_payment_mode: payment_mode
+		'edd_payment_mode': 'payment_mode'
 	};
-
-	data[edd_scripts.nonce_name] = edd_scripts.nonce_value
+	data[wpidea.nonce_name] = wpidea.nonce_value
 
 	jQuery.ajax({
 		type: "POST",
 		data: data,
 		dataType: "json",
-		url: edd_scripts.ajaxurl + '?wpi_route=payment/load_gateway&payment-mode='+payment_mode,
+		url: wpidea.urls.payment_load_gateway,
 		xhrFields: {
 			withCredentials: true
 		},
