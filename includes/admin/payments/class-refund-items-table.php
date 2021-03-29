@@ -358,7 +358,7 @@ class Refund_Items_Table extends List_Table {
 		$refundable_amounts = $item->get_refundable_amounts();
 		$total_remaining    = array_key_exists( 'total', $refundable_amounts ) ? floatval( $refundable_amounts['total'] ) : 0.00;
 
-		if ( 'refunded' !== $item->status && $total_remaining > 0 ) {
+		if ( 'refunded' !== $item->status && 0.00 != $total_remaining ) {
 			$quantity_html = '';
 			if ( ! edd_item_quantities_enabled() ) {
 				$quantity_html = '<input type="hidden" id="edd-order-item-quantity-' . esc_attr( $item_id ) . '" class="edd-order-item-refund-quantity edd-order-item-refund-input" name="refund_' . esc_attr( $object_type ) . '[' . esc_attr( $item->id ) . '][quantity]" value="' . esc_attr( $item_quantity ) . '" min="0" max="' . esc_attr( $item_quantity ) . '" />';
