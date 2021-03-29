@@ -500,8 +500,8 @@ function edd_get_registered_settings() {
 					),
 					'banned_emails' => array(
 						'id'    => 'banned_emails',
-						'name'  => __( 'Order Blocking', 'easy-digital-downloads' ),
-						'desc'  => __( 'One per line, enter: email addresses, domains (<code>@example.com</code>), or TLDs (<code>.gov</code>).', 'easy-digital-downloads' ),
+						'name'  => __( 'Banned Emails', 'easy-digital-downloads' ),
+						'desc'  => __( 'Emails placed in the box above will not be allowed to make purchases.', 'easy-digital-downloads' ) . '<br>' . __( 'One per line, enter: email addresses, domains (<code>@example.com</code>), or TLDs (<code>.gov</code>).', 'easy-digital-downloads' ),
 						'type'  => 'textarea',
 						'placeholder' => __( '@example.com', 'easy-digital-downloads' )
 					)
@@ -1586,15 +1586,18 @@ function edd_sanitize_html_class( $class = '' ) {
 
 
 /**
- * Save banned emails.
+ * Sanitizes banned emails.
  *
- * @since 2.0
+ * @since 3.0
  */
-function edd_sanitize_banned_emails( $value = '' ) {
+function edd_sanitize_banned_emails( $value, $key ) {
+	if ( 'banned_emails' !== $key ) {
+		return $value;
+	}
 
-	if ( ! empty( $_POST['banned_emails'] ) ) {
+	if ( ! empty( $value ) ) {
 		// Sanitize the input
-		$emails = array_map( 'trim', explode( "\n", $_POST['banned_emails'] ) );
+		$emails = array_map( 'trim', explode( "\n", $value ) );
 		$emails = array_unique( $emails );
 		$emails = array_map( 'sanitize_text_field', $emails );
 
@@ -1609,6 +1612,7 @@ function edd_sanitize_banned_emails( $value = '' ) {
 
 	return $emails;
 }
+add_filter( 'edd_settings_sanitize', 'edd_sanitize_banned_emails', 10, 2 );
 
 /**
  * Retrieve settings tabs

@@ -38,7 +38,7 @@ final class Orders extends Table {
 	 * @since  3.0
 	 * @var    int
 	 */
-	protected $version = 202102161;
+	protected $version = 202103261;
 
 	/**
 	 * Array of upgrade versions and methods.
@@ -51,7 +51,8 @@ final class Orders extends Table {
 		'201901111' => 201901111,
 		'202002141' => 202002141,
 		'202012041' => 202012041,
-		'202102161' => 202102161
+		'202102161' => 202102161,
+		'202103261' => 202103261,
 	);
 
 	/**
@@ -71,7 +72,7 @@ final class Orders extends Table {
 			customer_id bigint(20) unsigned NOT NULL default '0',
 			email varchar(100) NOT NULL default '',
 			ip varchar(60) NOT NULL default '',
-			gateway varchar(20) NOT NULL default '',
+			gateway varchar(100) NOT NULL default '',
 			mode varchar(20) NOT NULL default '',
 			currency varchar(20) NOT NULL default '',
 			payment_key varchar(64) NOT NULL default '',
@@ -220,5 +221,20 @@ final class Orders extends Table {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Upgrade to version 202103261
+	 *  - Change length of `gateway` column to `100`.
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	protected function __202103261() {
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `gateway` varchar(100) NOT NULL default '';
+		" );
+
+		return $this->is_success( $result );
 	}
 }
