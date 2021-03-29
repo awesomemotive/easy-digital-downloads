@@ -320,7 +320,6 @@ function edd_is_host( $host = false ) {
 	return $return;
 }
 
-
 /**
  * Get Currencies
  *

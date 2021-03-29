@@ -268,6 +268,10 @@ function edd_process_register_form( $data ) {
 		edd_set_error( 'payment_email_invalid', __( 'Invalid payment email', 'easy-digital-downloads' ) );
 	}
 
+	if ( isset( $data['edd_honeypot'] ) && ! empty( $data['edd_honeypot'] ) ) {
+		edd_set_error( 'invalid_form_data', __( 'Registration form validation failed.', 'easy-digital-downloads' ) );
+	}
+
 	if ( empty( $_POST['edd_user_pass'] ) ) {
 		edd_set_error( 'empty_password', __( 'Please enter a password', 'easy-digital-downloads' ) );
 	}
