@@ -1699,7 +1699,7 @@ add_filter( 'comment_feed_where', 'edd_hide_payment_notes_from_feeds', 10, 2 );
 function edd_remove_payment_notes_in_comment_counts( $stats, $post_id ) {
 	global $wpdb, $pagenow;
 
-	if( 'edit-comments.php' != $pagenow ) {
+	if( 'edit-comments.php' != $pagenow &&  'index.php' != $pagenow) {
 		return $stats;
 	}
 
