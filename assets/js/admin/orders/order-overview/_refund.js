@@ -155,7 +155,6 @@ function recalculateRefundTotal() {
 
 	// Set a readonly while we recalculate, to avoid race conditions in the browser.
 	allInputBoxes.prop( 'readonly', true );
-	$( '#edd-refund-submit-button-wrapper .spinner' ).css( 'visibility', 'visible' );
 
 	// Loop over all order items.
 	$( '#edd-refund-order-dialog .edd-order-item-refund-quantity' ).each( function() {
@@ -209,7 +208,6 @@ function recalculateRefundTotal() {
 
 	// Remove the readonly.
 	allInputBoxes.prop( 'readonly', false );
-	$( '#edd-refund-submit-button-wrapper .spinner' ).css( 'visibility', 'hidden' );
 }
 
 /**
