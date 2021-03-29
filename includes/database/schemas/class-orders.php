@@ -120,7 +120,7 @@ class Orders extends Schema {
 		array(
 			'name'       => 'gateway',
 			'type'       => 'varchar',
-			'length'     => '20',
+			'length'     => '100',
 			'sortable'   => true,
 		),
 
