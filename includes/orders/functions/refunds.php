@@ -353,26 +353,14 @@ function edd_refund_order( $order_id, $order_items = 'all', $adjustments = 'all'
 			 * convert the adjustment to be an `order` object type instead. That's because we
 			 * _have_ to reference a refund object of some kind.
 			 */
-			$should_convert = true;
-			if ( ! empty( $adjustment['object_id'] ) ) {
-				/*
-				 * First check in our map, as it avoids DB queries.
-				 * We should hit this if the order item was refunded in this same transaction.
-				 */
-				if ( ! empty( $order_item_id_map[ $adjustment['object_id'] ] ) ) {
-					$adjustment['object_id'] = $order_item_id_map[ $adjustment['object_id'] ];
-					$should_convert   = false;
-				} else {
-					// Otherwise we'll have to do a DB query, which would pick up previously refunded items.
-					$refund_order_item = edd_get_order_item_by( 'parent', $adjustment['object_id'] );
-					if ( $refund_order_item instanceof \EDD\Orders\Order_Item ) {
-						$adjustment['object_id'] = $refund_order_item->id;
-						$should_convert   = false;
-					}
-				}
+			$order_item_match_found = false;
+			if ( ! empty( $adjustment['object_id'] ) && ! empty( $order_item_id_map[ $adjustment['object_id'] ] ) ) {
+				// We don't need to convert to an `order` adjustment if we are also refunding the original order item.
+				$adjustment['object_id'] = $order_item_id_map[ $adjustment['object_id'] ];
+				$order_item_match_found          = true;
 			}
 
-			if ( $should_convert ) {
+			if ( ! $order_item_match_found ) {
 				$adjustment['object_type'] = 'order';
 				$adjustment['object_id']   = $refund_id;
 			}
