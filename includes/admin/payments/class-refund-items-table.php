@@ -399,21 +399,6 @@ class Refund_Items_Table extends List_Table {
 	}
 
 	/**
-	 * Render the status column
-	 *
-	 * @since 3.0
-	 *
-	 * @param Order_Item|Order_Adjustment $item Order Item or Order Adjustment object.
-	 *
-	 * @return string
-	 */
-	public function column_status( $item ) {
-		return ! empty( $item->status )
-			? ucwords( $item->status )
-			: '&mdash;';
-	}
-
-	/**
 	 * Message to be displayed when there are no items
 	 *
 	 * @since 3.0
