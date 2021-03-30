@@ -70,6 +70,10 @@
 				border-bottom: 2px solid var(--wp-admin-theme-color-darker-10);
 			}
 		}
+
+		.is-before + span > input {
+			text-align: left;
+		}
 	}
 
 	.edd-refund-submit-line-total td {
