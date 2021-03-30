@@ -347,10 +347,10 @@ function edd_sendwp_remote_install_handler () {
 	}
 
 	wp_send_json_success( array(
-		'partner_id' => 81,
-		'register_url' => sendwp_get_server_url() . '_/signup',
-		'client_name' => sendwp_get_client_name(),
-		'client_secret' => sendwp_get_client_secret(),
+		'partner_id'      => 81,
+		'register_url'    => sendwp_get_server_url() . '_/signup',
+		'client_name'     => sendwp_get_client_name(),
+		'client_secret'   => sendwp_get_client_secret(),
 		'client_redirect' => admin_url( '/edit.php?post_type=download&page=edd-settings&tab=emails&edd-message=sendwp-connected' ),
 	) );
 }
@@ -402,13 +402,13 @@ function edd_recapture_remote_install_handler () {
 		* Use the WordPress Plugins API to get the plugin download link.
 		*/
 		$api = plugins_api( 'plugin_information', array(
-				'slug' => 'recapture-for-edd',
+			'slug' => 'recapture-for-edd',
 		) );
 
 		if ( is_wp_error( $api ) ) {
 			wp_send_json_error( array(
-					'error' => $api->get_error_message(),
-					'debug' => $api
+				'error' => $api->get_error_message(),
+				'debug' => $api
 			) );
 		}
 
@@ -419,8 +419,8 @@ function edd_recapture_remote_install_handler () {
 		$install = $upgrader->install( $api->download_link );
 		if ( is_wp_error( $install ) ) {
 			wp_send_json_error( array(
-					'error' => $install->get_error_message(),
-					'debug' => $api
+				'error' => $install->get_error_message(),
+				'debug' => $api
 			) );
 		}
 
@@ -437,7 +437,7 @@ function edd_recapture_remote_install_handler () {
 	*/
 	if ( is_wp_error( $activated ) ) {
 		wp_send_json_error( array(
-				'error' => __( 'Something went wrong. Recapture for EDD was not installed correctly.', 'easy-digital-downloads' )
+			'error' => __( 'Something went wrong. Recapture for EDD was not installed correctly.', 'easy-digital-downloads' )
 		) );
 	}
 
@@ -455,44 +455,44 @@ add_action( 'wp_ajax_edd_recapture_remote_install', 'edd_recapture_remote_instal
 function maybe_add_recapture_notice_to_abandoned_payment( $payment_id ) {
 
 	if ( ! class_exists( 'Recapture' )
-			&& 'abandoned' === edd_get_payment_status( $payment_id )
-			&& ! get_user_meta( get_current_user_id(), '_edd_try_recapture_dismissed', true )
+		&& 'abandoned' === edd_get_payment_status( $payment_id )
+		&& ! get_user_meta( get_current_user_id(), '_edd_try_recapture_dismissed', true )
 	) {
 		?>
 		<div class="notice notice-warning recapture-notice">
 			<p>
 				<?php
 				echo wp_kses_post(
-						sprintf(
+					sprintf(
 						/* Translators: %1$s - <strong> tag, %2$s - </strong> tag, %3$s - <a> tag, %4$s - </a> tag */
-								__( '%1$sRecover abandoned purchases like this one.%2$s %3$sTry Recapture for free%4$s.', 'easy-digital-downloads' ),
-								'<strong>',
-								'</strong>',
-								'<a href="https://recapture.io/abandoned-carts-easy-digital-downloads" rel="noopener" target="_blank">',
-								'</a>'
-						)
+						__( '%1$sRecover abandoned purchases like this one.%2$s %3$sTry Recapture for free%4$s.', 'easy-digital-downloads' ),
+						'<strong>',
+						'</strong>',
+						'<a href="https://recapture.io/abandoned-carts-easy-digital-downloads" rel="noopener" target="_blank">',
+						'</a>'
+					)
 				);
 				?>
 			</p>
 			<?php
 			echo wp_kses_post(
-					sprintf(
+				sprintf(
 					/* Translators: %1$s - Opening anchor tag, %2$s - The url to dismiss the ajax notice, %3$s - Complete the opening of the anchor tag, %4$s - Open span tag, %4$s - Close span tag */
-							__( '%1$s %2$s %3$s %4$s Dismiss this notice. %5$s', 'easy-digital-downloads' ),
-							'<a href="',
-							esc_url(
-									add_query_arg(
-											array(
-													'edd_action' => 'dismiss_notices',
-													'edd_notice' => 'try_recapture',
-											)
-									)
-							),
-							'" type="button" class="notice-dismiss">',
-							'<span class="screen-reader-text">',
-							'</span>
+					__( '%1$s %2$s %3$s %4$s Dismiss this notice. %5$s', 'easy-digital-downloads' ),
+					'<a href="',
+					esc_url(
+						add_query_arg(
+							array(
+								'edd_action' => 'dismiss_notices',
+								'edd_notice' => 'try_recapture',
+							)
+						)
+					),
+					'" type="button" class="notice-dismiss">',
+					'<span class="screen-reader-text">',
+					'</span>
 					</a>'
-					)
+				)
 			);
 			?>
 		</div>
