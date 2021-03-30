@@ -491,27 +491,27 @@ function edd_get_registered_settings() {
 						'desc' => '',
 						'type' => 'hook',
 					),
-					'sendwp_header' => array(
-							'id'   => 'sendwp_header',
-							'name' => '<strong>' . __( 'SendWP', 'easy-digital-downloads' ) . '</strong>',
-							'type' => 'header',
+					'sendwp_header'    => array(
+						'id'   => 'sendwp_header',
+						'name' => '<strong>' . __( 'SendWP', 'easy-digital-downloads' ) . '</strong>',
+						'type' => 'header',
 					),
-					'sendwp' => array(
-							'id'      => 'sendwp',
-							'name'    => __( 'Deliverability settings', 'easy-digital-downloads' ),
-							'desc'    => '',
-							'type'    => 'sendwp',
+					'sendwp'           => array(
+						'id'   => 'sendwp',
+						'name' => __( 'Deliverability settings', 'easy-digital-downloads' ),
+						'desc' => '',
+						'type' => 'sendwp',
 					),
 					'recapture_header' => array(
-							'id'   => 'recapture_header',
-							'name' => '<strong>' . __( 'Recapture', 'easy-digital-downloads' ) . '</strong>',
-							'type' => 'header',
+						'id'   => 'recapture_header',
+						'name' => '<strong>' . __( 'Recapture', 'easy-digital-downloads' ) . '</strong>',
+						'type' => 'header',
 					),
-					'recapture' => array(
-							'id'      => 'recapture',
-							'name'    => __( 'Abandoned cart recovery', 'easy-digital-downloads' ),
-							'desc'    => '',
-							'type'    => 'recapture',
+					'recapture'        => array(
+						'id'   => 'recapture',
+						'name' => __( 'Abandoned cart recovery', 'easy-digital-downloads' ),
+						'desc' => '',
+						'type' => 'recapture',
 					),
 				),
 				'purchase_receipts' => array(
