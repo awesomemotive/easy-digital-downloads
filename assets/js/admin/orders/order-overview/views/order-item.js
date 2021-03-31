@@ -71,6 +71,7 @@ export const OrderItem = Base.extend( {
 			subtotalCurrency: currency.format( number.absint( model.get( 'subtotal' ) ) ),
 			taxCurrency: currency.format( number.absint( model.get( 'tax' ) ) ),
 			total: model.getTotal(),
+			statusLabel: model.get( 'statusLabel' ),
 
 			config: {
 				isAdjustingManually,
