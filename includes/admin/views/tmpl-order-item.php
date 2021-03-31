@@ -57,7 +57,7 @@ $view_url = add_query_arg(
 		</div>
 
 		<button type="button" class="toggle-row">
-			<span class="screen-reader-text">Show more details</span>
+			<span class="screen-reader-text"><?php esc_html_e( 'Show more details', 'easy-digital-downloads' ); ?></span>
 		</button>
 	</div>
 </td>
