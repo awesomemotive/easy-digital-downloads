@@ -77,8 +77,12 @@
 		}
 	}
 
-	.edd-refund-submit-line-total td {
-		text-align: right;
+	.edd-refund-submit-line-total {
+		background-color: $white !important;
+
+		td {
+			text-align: right;
+		}
 	}
 
 	.edd-refund-submit-line-total-amount {
