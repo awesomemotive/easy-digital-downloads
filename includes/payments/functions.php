@@ -561,7 +561,7 @@ function edd_get_payment_status( $order, $return_label = false ) {
 	} else {
 		$keys      = edd_get_payment_status_keys();
 		$found_key = array_search( strtolower( $status ), $keys );
-		$status    = array_key_exists( $found_key, $keys ) ? $keys[ $found_key ] : false;
+		$status    = $found_key && array_key_exists( $found_key, $keys ) ? $keys[ $found_key ] : false;
 	}
 
 	return ! empty( $status ) ? $status : false;
@@ -576,7 +576,8 @@ function edd_get_payment_status( $order, $return_label = false ) {
  * @return bool|mixed
  */
 function edd_get_payment_status_label( $status = '' ) {
-	$default  = ucwords( $status );
+	$default  = str_replace( '_', ' ', $status );
+	$default  = ucwords( $default );
 	$statuses = edd_get_payment_statuses();
 
 	if ( ! is_array( $statuses ) || empty( $statuses ) ) {

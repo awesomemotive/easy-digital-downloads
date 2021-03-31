@@ -1516,6 +1516,10 @@ function edd_negate_int( $value = 0 ) {
  */
 function edd_get_status_label( $status = '' ) {
 
+	// Set a default.
+	$status_label = str_replace( '_', ' ', $status );
+	$status_label = ucwords( $status_label );
+
 	// If this is a payment label, fetch from `edd_get_payment_status_label()`.
 	if ( array_key_exists( $status, edd_get_payment_statuses() ) ) {
 		$status_label = edd_get_payment_status_label( $status );
@@ -1536,9 +1540,9 @@ function edd_get_status_label( $status = '' ) {
 		);
 
 		// Return the label if set, or uppercase the first letter if not
-		$status_label = isset( $labels[ $status ] )
-				? $labels[ $status ]
-				: ucwords( $status );
+		if ( isset( $labels[ $status ] ) ) {
+			$status_label = $labels[ $status ];
+		}
 	}
 
 	/**
