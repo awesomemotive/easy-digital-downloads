@@ -7,7 +7,7 @@
  * @copyright   Copyright (c) 2015, Pippin Williamson
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
-*/
+ */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -17,16 +17,16 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @since 1.8.4
  * @return void
-*/
+ */
 function edd_payment_history_mobile_link() {
-	?>
-	<p class="edd-mobile-link">
-		<a href="https://easydigitaldownloads.com/downloads/ios-sales-earnings-tracker/?utm_source=payments&utm_medium=mobile-link&utm_campaign=admin" target="_blank">
-			<img src="<?php echo EDD_PLUGIN_URL . 'assets/images/icons/iphone.png'; ?>"/>
-			<?php _e( 'Get the EDD Sales / Earnings tracker for iOS', 'easy-digital-downloads' ); ?>
-		</a>
-	</p>
-	<?php
+    ?>
+    <p class="edd-mobile-link">
+        <a href="https://easydigitaldownloads.com/downloads/ios-sales-earnings-tracker/?utm_source=payments&utm_medium=mobile-link&utm_campaign=admin" target="_blank">
+            <img src="<?php echo EDD_PLUGIN_URL . 'assets/images/icons/iphone.png'; ?>"/>
+            <?php _e( 'Get the EDD Sales / Earnings tracker for iOS', 'easy-digital-downloads' ); ?>
+        </a>
+    </p>
+    <?php
 }
 add_action( 'edd_payments_page_bottom', 'edd_payment_history_mobile_link' );
 
@@ -40,26 +40,26 @@ add_action( 'edd_payments_page_bottom', 'edd_payment_history_mobile_link' );
  * @return string
  */
 function edd_view_order_details_title( $admin_title, $title ) {
-	if ( 'download_page_edd-payment-history' != get_current_screen()->base )
-		return $admin_title;
+    if ( 'download_page_edd-payment-history' != get_current_screen()->base )
+        return $admin_title;
 
-	if( ! isset( $_GET['edd-action'] ) )
-		return $admin_title;
+    if( ! isset( $_GET['edd-action'] ) )
+        return $admin_title;
 
-	switch( $_GET['edd-action'] ) :
+    switch( $_GET['edd-action'] ) :
 
-		case 'view-order-details' :
-			$title = __( 'View Order Details', 'easy-digital-downloads' ) . ' - ' . $admin_title;
-			break;
-		case 'edit-payment' :
-			$title = __( 'Edit Payment', 'easy-digital-downloads' ) . ' - ' . $admin_title;
-			break;
-		default:
-			$title = $admin_title;
-			break;
-	endswitch;
+        case 'view-order-details' :
+            $title = __( 'View Order Details', 'easy-digital-downloads' ) . ' - ' . $admin_title;
+            break;
+        case 'edit-payment' :
+            $title = __( 'Edit Payment', 'easy-digital-downloads' ) . ' - ' . $admin_title;
+            break;
+        default:
+            $title = $admin_title;
+            break;
+    endswitch;
 
-	return $title;
+    return $title;
 }
 add_filter( 'admin_title', 'edd_view_order_details_title', 10, 2 );
 
@@ -73,17 +73,17 @@ add_filter( 'admin_title', 'edd_view_order_details_title', 10, 2 );
  * @param $context
  * @return string
  */
-function edd_override_edit_post_for_payment_link( $url, $post_id = 0, $context ) {
+function edd_override_edit_post_for_payment_link( $url, $post_id, $context ) {
 
-	$post = get_post( $post_id );
-	if( ! $post )
-		return $url;
+    $post = get_post( $post_id );
+    if( ! $post )
+        return $url;
 
-	if( 'edd_payment' != $post->post_type )
-		return $url;
+    if( 'edd_payment' != $post->post_type )
+        return $url;
 
-	$url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $post_id );
+    $url = admin_url( 'edit.php?post_type=download&page=edd-payment-history&view=view-order-details&id=' . $post_id );
 
-	return $url;
+    return $url;
 }
 add_filter( 'get_edit_post_link', 'edd_override_edit_post_for_payment_link', 10, 3 );
