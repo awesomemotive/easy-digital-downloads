@@ -251,7 +251,7 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 		$order_item_ids  = wp_list_pluck( $order->items, 'id' );
 		$refund_item_ids = wp_list_pluck( $validator->get_refunded_order_items(), 'parent' );
 
-		sort( $refund_item_ids );
+		sort( $order_item_ids );
 		sort( $refund_item_ids );
 
 		$this->assertEquals( $order_item_ids, $refund_item_ids );
