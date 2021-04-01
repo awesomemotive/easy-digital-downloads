@@ -157,10 +157,16 @@ class Refund_Items_Table extends List_Table {
 	private function get_item_display_name( $item ) {
 		$name = '';
 		if ( $item instanceof Order_Item ) {
-			$name = $item->get_order_item_name();
-		} elseif ( $item instanceof Order_Adjustment ) {
-			$default = $item->type === 'credit' ? __( 'Order Credit', 'easy-digital-downloads' ) : __( 'Order Fee', 'easy-digital-downloads' );
-			$name    = ! empty( $item->description ) ? $item->description : $default;
+			return $item->get_order_item_name();
+		}
+		if ( $item instanceof Order_Adjustment ) {
+			$name = __( 'Order Fee', 'easy-digital-downloads' );
+			if ( 'credit' === $item->type ) {
+				$name = __( 'Order Credit', 'easy-digital-downloads' );
+			}
+			if ( ! empty( $item->description ) ) {
+				$name .= ': ' . $item->description;
+			}
 		}
 
 		return $name;
