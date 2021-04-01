@@ -510,7 +510,7 @@ function get_dates_filter_options() {
  * }
  */
 function get_dates_filter( $values = 'strings', $timezone = null ) {
-	$dates = parse_dates_for_range();
+	$dates = parse_dates_for_range( null, 'now', $timezone );
 
 	if ( 'strings' === $values ) {
 		if ( ! empty( $dates['start'] ) ) {
@@ -549,10 +549,12 @@ function get_dates_filter( $values = 'strings', $timezone = null ) {
  * @param string          $date  Date string converted to `\EDD\Utils\Date` to anchor calculations to.
  * @return \EDD\Utils\Date[] Array of start and end date objects.
  */
-function parse_dates_for_range( $range = null, $date = 'now' ) {
+function parse_dates_for_range( $range = null, $date = 'now', $timezone = null ) {
+
+	$timezone = ! empty( $timezone ) ? $timezone : edd_get_timezone_id();
 
 	// Set the time ranges in the user's timezone, so they ultimately see them in their own timezone.
-	$date = EDD()->utils->date( $date, edd_get_timezone_id(), false );
+	$date = EDD()->utils->date( $date, $timezone, false );
 
 	if ( null === $range || ! array_key_exists( $range, get_dates_filter_options() ) ) {
 		$range = get_dates_filter_range();
