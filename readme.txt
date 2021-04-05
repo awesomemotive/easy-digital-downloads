@@ -7,7 +7,7 @@ Tags: ecommerce, sell, checkout, payments, stripe
 Requires at least: 4.4
 Tested up to: 5.7
 Requires PHP: 5.3
-Stable Tag: 2.10.1
+Stable Tag: 2.10.2
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products the simple way. Easily build an online store complete with a cart system, checkout forms, reports, coupons, and more!
@@ -247,6 +247,18 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 11. Google Pay checkout
 
 == Changelog ==
+= 2.10.2, April 5, 2021 =
+Fix: Stripe - Some Stripe errors were not localized.
+Fix: Stripe - The pre-approval payment status was being registered when it was not supported.
+Fix: Stripe - Use of the array_key_first function was only available in PHP 7.3+.
+Fix: Registration form was not validating all fields.
+Fix: Batch Download importer was using GLOB_BRACE which is not available on all containerized platforms.
+Tweak: Re-Organized the gateway list in settings.
+Tweak: Adjust SendWP setting description.
+Tweak: Removed Jilt callout in Advanced Email settings.
+New: Inform store owners of Recapture for abandoned cart recovery.
+New: Add link to Termageddon for Terms of Agreement and Privacy Policy fields within Easy Digital Downloads settings.
+
 = 2.10.1, March 9, 2021 =
 * Fix: Removed incorrect inclusion of license key field for the Stripe integration when the Stripe Pro Payment Gateway extension is not active.
 
