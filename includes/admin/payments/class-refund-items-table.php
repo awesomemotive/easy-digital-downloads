@@ -73,9 +73,9 @@ class Refund_Items_Table extends List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'cb'       => '<input type="checkbox" />',
-			'name'     => __( 'Product', 'easy-digital-downloads' ),
-			'amount'   => __( 'Unit Price', 'easy-digital-downloads' )
+			'cb'     => '<input type="checkbox" />',
+			'name'   => __( 'Product', 'easy-digital-downloads' ),
+			'amount' => __( 'Unit Price', 'easy-digital-downloads' ),
 		);
 
 		// Maybe add quantity column.
@@ -465,7 +465,7 @@ class Refund_Items_Table extends List_Table {
 
 			// Get counts
 			$this->counts = edd_get_order_item_counts( array(
-				'order_id' => $order_id
+				'order_id' => $order_id,
 			) );
 		}
 	}
@@ -497,7 +497,7 @@ class Refund_Items_Table extends List_Table {
 		$credits = edd_get_order_adjustments( array(
 			'object_id'   => $order->id,
 			'object_type' => 'order',
-			'type'        => 'credit'
+			'type'        => 'credit',
 		) );
 
 		return array_merge( $order_items, $order_fees, $credits );
@@ -611,8 +611,8 @@ class Refund_Items_Table extends List_Table {
 	 */
 	public function display_rows() {
 		static $currency_symbol = null;
-		$order_id          = false;
-		$currency_position = edd_get_option( 'currency_position', 'before' );
+		$order_id               = false;
+		$currency_position      = edd_get_option( 'currency_position', 'before' );
 
 		foreach ( $this->items as $item ) {
 
@@ -638,9 +638,9 @@ class Refund_Items_Table extends List_Table {
 				$amount                 = edd_format_amount( 0.00 );
 				printf(
 					'<span class="edd-refund-submit-line-total-amount">%1$s<span id="edd-refund-submit-subtotal-amount">%2$s</span>%3$s</span>',
-					$before,
+					$before, // phpcs:ignore
 					esc_attr( $amount ),
-					$after
+					$after // phpcs:ignore
 				);
 				?>
 			</td>
@@ -657,9 +657,9 @@ class Refund_Items_Table extends List_Table {
 				<?php
 				printf(
 					'<span class="edd-refund-submit-line-total-amount">%1$s<span id="edd-refund-submit-tax-amount">%2$s</span>%3$s</span>',
-					$before,
+					$before, // phpcs:ignore
 					esc_attr( $amount ),
-					$after
+					$after // phpcs:ignore
 				);
 				?>
 			</td>
@@ -673,9 +673,9 @@ class Refund_Items_Table extends List_Table {
 				<?php
 				printf(
 					'<span class="edd-refund-submit-line-total-amount">%1$s<span id="edd-refund-submit-total-amount">%2$s</span>%3$s</span>',
-					$before,
+					$before, // phpcs:ignore
 					esc_attr( $amount ),
-					$after
+					$after // phpcs:ignore
 				);
 				?>
 			</td>
@@ -691,7 +691,7 @@ class Refund_Items_Table extends List_Table {
 	 */
 	private function get_order() {
 		$order_id = ! empty( $_POST['order_id'] )
-			? absint( $_POST['order_id'] ) // WPCS: CSRF ok.
+			? absint( $_POST['order_id'] ) // phpcs:ignore
 			: 0;
 
 		return ! empty( $order_id ) ? edd_get_order( $order_id ) : false;
