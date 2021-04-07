@@ -595,11 +595,11 @@ class Refund_Items_Table extends List_Table {
 		if ( 'bottom' !== $which ) {
 			return;
 		}
-		echo '<div class="tablenav bottom">';
-		echo '<div id="edd-refund-submit-button-wrapper">';
-		printf( '<button id="edd-submit-refund-submit" class="button button-primary" disabled>%s</button>', esc_html__( 'Submit Refund', 'easy-digital-downloads' ) );
-		echo '</div>';
-		echo '</div>';
+		?>
+		<div class="tablenav bottom">
+			<button id="edd-submit-refund-submit" class="button button-primary" disabled><?php esc_html_e( 'Submit Refund', 'easy-digital-downloads' ); ?></button>
+		</div>
+		<?php
 	}
 
 	/**
