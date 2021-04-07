@@ -194,7 +194,7 @@ class Refund_Items_Table extends List_Table {
 				return $this->format_currency( $item, $column_name, 0 );
 
 			case 'quantity':
-				return $this->get_quantity_column( $item, $column_name, $item_id );
+				return $this->get_quantity_column( $item, $column_name, $item_id, $object_type );
 
 			case 'subtotal':
 			case 'tax':
@@ -324,9 +324,10 @@ class Refund_Items_Table extends List_Table {
 	 * @param Order_Item|Order_Adjustment $item        Order item or adjustment object.
 	 * @param string                      $column_name The name of the column.
 	 * @param string                      $item_id     Unique ID of the order item for the refund modal.
+	 * @param string                      $object_type The item type.
 	 * @return string
 	 */
-	private function get_quantity_column( $item, $column_name, $item_id ) {
+	private function get_quantity_column( $item, $column_name, $item_id, $object_type ) {
 		$item_quantity      = $item instanceof Order_item ? $item->quantity : 1;
 		$refundable_amounts = $item->get_refundable_amounts();
 		if ( array_key_exists( $column_name, $refundable_amounts ) ) {
