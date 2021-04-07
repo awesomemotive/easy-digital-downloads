@@ -1,6 +1,12 @@
-var edd_scripts;
-jQuery(document).ready(function ($) {
+var edd_scripts,
+	is_wpidea_loaded;
 
+jQuery(document).ready(function ($) {
+	if (typeof(wpidea) !== 'undefined') {
+		is_wpidea_loaded = true;
+	} else {
+		is_wpidea_loaded = false;
+	}
 	// Hide unneeded elements. These are things that are required in case JS breaks or isn't present
 	$('.edd-no-js').hide();
 	$('a.edd-add-to-cart').addClass('edd-has-js');
@@ -16,7 +22,7 @@ jQuery(document).ready(function ($) {
 				cart_item: item
 			};
 
-		 $.ajax({
+		$.ajax({
 			type: "POST",
 			data: data,
 			dataType: "json",
@@ -83,6 +89,11 @@ jQuery(document).ready(function ($) {
 
 		e.preventDefault();
 
+		if(!is_wpidea_loaded){
+			console.log('WP Idea not loaded!');
+			return;
+		}
+
 		var $this = $(this), form = $this.closest('form');
 
 		// Disable button, preventing rapid additions to cart during ajax request
@@ -118,7 +129,7 @@ jQuery(document).ready(function ($) {
 				}
 			} else {
 				if( ! form.find('.edd_price_option_' + download + ':checked', form).length ) {
-					 // hide the spinner
+					// hide the spinner
 					$this.removeAttr( 'data-edd-loading' );
 					alert( edd_scripts.select_option );
 					return;
@@ -163,12 +174,13 @@ jQuery(document).ready(function ($) {
 			price_ids : item_price_ids,
 			post_data: $(form).serialize()
 		};
+		data[wpidea.nonce_name] = wpidea.nonce_value
 
 		$.ajax({
 			type: "POST",
 			data: data,
 			dataType: "json",
-			url: edd_scripts.ajaxurl,
+			url: wpidea.urls.payment_add_to_cart,
 			xhrFields: {
 				withCredentials: true
 			},
@@ -251,7 +263,10 @@ jQuery(document).ready(function ($) {
 					$('body').trigger('edd_cart_item_added', [ response ]);
 
 				}
-			}
+			},
+			error: function ( jqXHR, textStatus, errorThrown ) {
+				console.log('Error: ' + jqXHR.responseJSON.error_message)
+			},
 		}).fail(function (response) {
 			if ( window.console && window.console.log ) {
 				console.log( response );
@@ -359,24 +374,27 @@ jQuery(document).ready(function ($) {
 	}
 
 	$(document).on('click', '#edd_purchase_form #edd_purchase_submit input[type=submit]', function(e) {
-
-		var eddPurchaseform = document.getElementById('edd_purchase_form');
-
-		if( typeof eddPurchaseform.checkValidity === "function" && false === eddPurchaseform.checkValidity() ) {
+		if(!is_wpidea_loaded){
+			console.log('WP Idea not loaded!');
 			return;
 		}
 
+		var eddPurchaseform = document.getElementById('edd_purchase_form');
+		if( typeof eddPurchaseform.checkValidity === "function" && false === eddPurchaseform.checkValidity() ) {
+			return;
+		}
 		e.preventDefault();
-
 		var complete_purchase_val = $(this).val();
-
 		$(this).val(edd_global_vars.purchase_loading);
-                
-                $(this).prop( 'disabled', true );          
-
+		$(this).prop( 'disabled', true );
 		$(this).after('<span class="edd-cart-ajax"><i class="edd-icon-spinner edd-icon-spin"></i></span>');
 
-		$.post(edd_global_vars.ajaxurl, $('#edd_purchase_form').serialize() + '&action=edd_process_checkout&edd_ajax=true', function(data) {
+		var data = $('#edd_purchase_form').serialize();
+		data += '&edd_ajax=true';
+		data += '&'+wpidea.nonce_name+'='+wpidea.nonce_value;
+
+
+		$.post(wpidea.urls.payment_process_checkout, data, function(data) {
 			if ( $.trim(data) == 'success' ) {
 				$('.edd_errors').remove();
 				$('.edd-error').hide();
@@ -387,7 +405,7 @@ jQuery(document).ready(function ($) {
 				$('.edd_errors').remove();
 				$('.edd-error').hide();
 				$('#edd_purchase_submit').before(data);
-                                $('#edd-purchase-button').prop( 'disabled', false );
+				$('#edd-purchase-button').prop( 'disabled', false );
 			}
 		});
 
@@ -396,26 +414,34 @@ jQuery(document).ready(function ($) {
 
 function edd_load_gateway( payment_mode ) {
 
+	if(!is_wpidea_loaded){
+		console.log('WP Idea not loaded!');
+		return;
+	}
+
 	// Show the ajax loader
 	jQuery('.edd-cart-ajax').show();
 	jQuery('#edd_purchase_form_wrap').html('<img src="' + edd_scripts.ajax_loader + '"/>');
+	var data = {
+		'edd_payment_mode': 'payment_mode'
+	};
+	data[wpidea.nonce_name] = wpidea.nonce_value;
 
-	var url = edd_scripts.ajaxurl;
-
-	if ( url.indexOf( '?' ) > 0 ) {
-		url = url + '&';
-	} else {
-		url = url + '?';
-	}
-
-	url = url + 'payment-mode=' + payment_mode;
-
-	jQuery.post(url, { action: 'edd_load_gateway', edd_payment_mode: payment_mode },
-		function(response){
-			jQuery('#edd_purchase_form_wrap').html(response);
+	jQuery.ajax({
+		type: "POST",
+		data: data,
+		dataType: "json",
+		url: wpidea.urls.payment_load_gateway,
+		xhrFields: {
+			withCredentials: true
+		},
+		success: function (response) {
+			jQuery('#edd_purchase_form_wrap').html(response.form);
 			jQuery('.edd-no-js').hide();
-                        jQuery('body').trigger('edd_gateway_loaded', [ payment_mode ]);
-		}
-	);
-
+			jQuery('body').trigger('edd_gateway_loaded', [ payment_mode ]);
+		},
+		error: function ( jqXHR, textStatus, errorThrown ) {
+			console.log('Error: ' + jqXHR.responseJSON.error_message);
+		},
+	})
 }

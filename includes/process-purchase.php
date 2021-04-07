@@ -46,7 +46,7 @@ function edd_process_purchase_form() {
 
 	// Validate the user
 	$user = edd_get_purchase_form_user( $valid_data );
-	
+
 	// Let extensions validate fields after user is logged in if user has used login/registration form
 	do_action( 'edd_checkout_user_error_checks', $user, $valid_data, $_POST );
 
@@ -131,7 +131,7 @@ add_action( 'edd_purchase', 'edd_process_purchase_form' );
 add_action( 'wp_ajax_edd_process_checkout', 'edd_process_purchase_form' );
 add_action( 'wp_ajax_nopriv_edd_process_checkout', 'edd_process_purchase_form' );
 
-/**
+/**`
  * Process the checkout login form
  *
  * @access      private

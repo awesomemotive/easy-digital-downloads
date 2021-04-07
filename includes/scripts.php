@@ -70,7 +70,7 @@ function edd_load_scripts() {
 		wp_enqueue_script( 'edd-ajax' );
 
 		wp_localize_script( 'edd-ajax', 'edd_scripts', apply_filters( 'edd_ajax_script_vars', array(
-			'ajaxurl'                 => edd_get_ajax_url(),
+            'ajaxurl'                 => edd_get_ajax_url(),
 			'position_in_cart'        => isset( $position ) ? $position : -1,
 			'already_in_cart_message' => __('You have already added this item to your cart','easy-digital-downloads' ), // Item already in the cart message
 			'empty_cart_message'      => __('Your cart is empty','easy-digital-downloads' ), // Item already in the cart message
