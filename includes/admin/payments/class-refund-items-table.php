@@ -413,12 +413,13 @@ class Refund_Items_Table extends List_Table {
 	public function column_name( $item ) {
 		$checkbox_id  = 'refund_' . $this->get_object_type( $item ) . '-' . $item->id;
 		$display_name = esc_html( $this->get_item_display_name( $item ) );
+		$status_label = 'complete' !== $item->status ? ' &mdash; ' . edd_get_status_label( $item->status ) : '';
 
-		if ( in_array( $item->status, array( 'refunded', 'partially_refunded' ) ) ) {
-			return '<span class="row-title">' . $display_name . '</span> &mdash; ' . esc_html( edd_get_status_label( $item->status ) );
+		if ( 'refunded' === $item->status ) {
+			return '<span class="row-title">' . $display_name . '</span>' . esc_html( $status_label );
 		}
 
-		return '<label for="' . esc_attr( $checkbox_id ) . '" class="row-title">' . $display_name . '</label>';
+		return '<label for="' . esc_attr( $checkbox_id ) . '" class="row-title">' . $display_name . '</label>' . $status_label;
 	}
 
 	/**
