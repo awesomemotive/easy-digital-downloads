@@ -183,26 +183,18 @@ class Refund_Items_Table extends List_Table {
 	 * @return string Column name.
 	 */
 	public function column_default( $item, $column_name ) {
-		$object_type   = $this->get_object_type( $item );
-		$item_id       = $this->get_item_unique_id( $item );
-		$item_quantity = $item instanceof Order_item ? $item->quantity : 1;
+		$object_type = $this->get_object_type( $item );
+		$item_id     = $this->get_item_unique_id( $item );
 
 		switch ( $column_name ) {
 			case 'amount':
 				return $this->format_currency( $item, $column_name );
 
-			case 'total' :
+			case 'total':
 				return $this->format_currency( $item, $column_name, 0 );
 
-			case 'quantity' :
-				ob_start();
-				?>
-				<label for="edd-order-item-quantity-<?php echo esc_attr( $item_id ); ?>" class="screen-reader-text">
-					<?php esc_html_e( 'Quantity to refund', 'easy-digital-downloads' ); ?>
-				</label>
-				<input type="number" id="edd-order-item-quantity-<?php echo esc_attr( $item_id ); ?>" class="edd-order-item-refund-quantity edd-order-item-refund-input" name="refund_<?php echo esc_attr( $object_type ); ?>[<?php echo esc_attr( $item->id ); ?>][quantity]" value="<?php echo esc_attr( $item_quantity ); ?>" placeholder="0" min="0" max="<?php echo esc_attr( $item_quantity ); ?>" step="1" disabled />
-				<?php
-				return ob_get_clean();
+			case 'quantity':
+				return $this->get_quantity_column( $item, $column_name, $item_id );
 
 			case 'subtotal':
 			case 'tax':
@@ -243,9 +235,7 @@ class Refund_Items_Table extends List_Table {
 
 		$amount = false !== $amount_override ? $amount_override : $item->{$column_name};
 
-		$formatted_amount .= '<span data-' . $column_name . '="' . edd_sanitize_amount( $amount ) . '">' .
-		                     edd_format_amount( $amount ) .
-		                     '</span>';
+		$formatted_amount .= '<span data-' . $column_name . '="' . edd_sanitize_amount( $amount ) . '">' . edd_format_amount( $amount ) . '</span>';
 
 		if ( 'after' === $currency_pos ) {
 			$formatted_amount .= $symbol;
@@ -322,6 +312,32 @@ class Refund_Items_Table extends List_Table {
 				?>
 			</small>
 		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * Gets the quantity column content.
+	 *
+	 * @since 3.0
+	 *
+	 * @param Order_Item|Order_Adjustment $item        Order item or adjustment object.
+	 * @param string                      $column_name The name of the column.
+	 * @param string                      $item_id     Unique ID of the order item for the refund modal.
+	 * @return string
+	 */
+	private function get_quantity_column( $item, $column_name, $item_id ) {
+		$item_quantity      = $item instanceof Order_item ? $item->quantity : 1;
+		$refundable_amounts = $item->get_refundable_amounts();
+		if ( array_key_exists( $column_name, $refundable_amounts ) ) {
+			$item_quantity = $refundable_amounts[ $column_name ];
+		}
+		ob_start();
+		?>
+		<label for="edd-order-item-quantity-<?php echo esc_attr( $item_id ); ?>" class="screen-reader-text">
+			<?php esc_html_e( 'Quantity to refund', 'easy-digital-downloads' ); ?>
+		</label>
+		<input type="number" id="edd-order-item-quantity-<?php echo esc_attr( $item_id ); ?>" class="edd-order-item-refund-quantity edd-order-item-refund-input" name="refund_<?php echo esc_attr( $object_type ); ?>[<?php echo esc_attr( $item->id ); ?>][quantity]" value="<?php echo esc_attr( $item_quantity ); ?>" placeholder="0" min="0" max="<?php echo esc_attr( $item_quantity ); ?>" step="1" disabled />
 		<?php
 		return ob_get_clean();
 	}
