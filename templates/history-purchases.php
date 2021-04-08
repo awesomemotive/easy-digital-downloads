@@ -28,8 +28,17 @@ $orders = edd_get_orders(
 	)
 );
 if ( $orders ) :
-	$payments = edd_get_users_purchases( get_current_user_id(), 20, true, 'any' );
-	do_action( 'edd_before_purchase_history', $payments );
+	/**
+	 * Fires before the purchase history.
+	 *
+	 * @since 3.0
+	 * @param array $orders The array of the current user's orders.
+	 */
+	do_action( 'edd_before_orders_history', $orders );
+	if ( has_action( 'edd_before_purchase_history' ) ) {
+		$payments = edd_get_users_purchases( get_current_user_id(), 20, true, 'any' );
+		edd_do_action_deprecated( 'edd_before_purchase_history', array( $payments ), '3.0', 'edd_before_orders_history' );
+	}
 	?>
 	<table id="edd_user_history" class="edd-table">
 		<thead>
@@ -43,9 +52,22 @@ if ( $orders ) :
 			</tr>
 		</thead>
 		<?php foreach ( $orders as $order ) : ?>
-			<?php $payment = new EDD_Payment( $order->id ); ?>
+			<?php $order_meta = edd_get_order_meta( $order->id ); ?>
 			<tr class="edd_purchase_row">
-				<?php do_action( 'edd_purchase_history_row_start', $order->id, $payment->payment_meta ); ?>
+				<?php
+				/**
+				 * Fires at the beginning of the order history row.
+				 *
+				 * @since 3.0
+				 * @param \EDD\Orders\Order $order      The current order object.
+				 * @param array             $order_meta The current order metadata.
+				 */
+				do_action( 'edd_order_history_row_start', $order, $order_meta );
+				if ( has_action( 'edd_purchase_history_row_start' ) ) {
+					$payment = new EDD_Payment( $order->id );
+					edd_do_action_deprecated( 'edd_purchase_history_row_start', array( $payment, $payment->meta ), '3.0', 'edd_order_history_row_start' );
+				}
+				?>
 				<td class="edd_purchase_id">#<?php echo esc_html( $order->get_number() ); ?></td>
 				<td class="edd_purchase_date"><?php echo esc_html( edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString() ) ); ?></td>
 				<td class="edd_purchase_amount">
@@ -59,11 +81,33 @@ if ( $orders ) :
 					<?php if ( ! in_array( $order->status, array( 'complete' ), true ) ) : ?>
 						| <span class="edd_purchase_status <?php echo esc_attr( $order->status ); ?>"><?php echo esc_html( edd_get_status_label( $order->status ) ); ?></span>
 					<?php endif; ?>
-					<?php if ( $payment->is_recoverable() ) : ?>
-						&mdash; <a href="<?php echo esc_url( $payment->get_recovery_url() ); ?>"><?php esc_html_e( 'Complete Purchase', 'easy-digital-downloads' ); ?></a>
+					<?php if ( in_array( $order->status, array( 'pending', 'abandoned', 'failed' ), true ) ) : ?>
+						<?php
+						$url = add_query_arg(
+							array(
+								'edd_action' => 'recover_payment',
+								'payment_id' => $order->id,
+							),
+							edd_get_checkout_uri()
+						);
+						?>
+						&mdash; <a href="<?php echo esc_url( $url ); ?>"><?php esc_html_e( 'Complete Purchase', 'easy-digital-downloads' ); ?></a>
 					<?php endif; ?>
 				</td>
-				<?php do_action( 'edd_purchase_history_row_end', $order->id, $payment->payment_meta ); ?>
+				<?php
+				/**
+				 * Fires at the end of the order history row.
+				 *
+				 * @since 3.0
+				 * @param \EDD\Orders\Order $order      The current order object.
+				 * @param array             $order_meta The current order metadata.
+				 */
+				do_action( 'edd_order_history_row_end', $orders, $order_meta );
+				if ( has_action( 'edd_purchase_history_row_end' ) ) {
+					$payment = ! empty( $payment ) ? $payment : new EDD_Payment( $order->id );
+					edd_do_action_deprecated( 'edd_purchase_history_row_start', array( $payment, $payment->meta ), '3.0', 'edd_order_history_row_end' );
+				}
+				?>
 			</tr>
 		<?php endforeach; ?>
 	</table>
@@ -80,9 +124,19 @@ if ( $orders ) :
 			'total' => ceil( $count / 20 ), // 20 items per page
 		)
 	);
+	/**
+	 * Fires after the purchase history.
+	 *
+	 * @since 3.0
+	 * @param array $orders The array of the current user's orders.
+	 */
+	do_action( 'edd_after_orders_history', $orders );
+	if ( has_action( 'edd_after_purchase_history' ) ) {
+		$payments = ! empty( $payments ) ? $payments : edd_get_users_purchases( get_current_user_id(), 20, true, 'any' );
+		edd_do_action_deprecated( 'edd_after_purchase_history', array( $payments ), '3.0', 'edd_after_orders_history' );
+	}
+	wp_reset_postdata();
 	?>
-	<?php do_action( 'edd_after_purchase_history', $payments ); ?>
-	<?php wp_reset_postdata(); ?>
 <?php else : ?>
 	<p class="edd-no-purchases"><?php esc_html_e( 'You have not made any purchases', 'easy-digital-downloads' ); ?></p>
 	<?php
