@@ -468,8 +468,8 @@ label.edd_prices_shipping { /* remove once Simple Shipping markup is improved */
 	top: 3px;
 	right: 7px;
 }
-input[type="text"].edd_upload_field {
-	padding-right: 8em;
+.edd_upload_field {
+	padding-right: 8em !important;
 }
 textarea#edd-payment-note {
 	width: 100%;
