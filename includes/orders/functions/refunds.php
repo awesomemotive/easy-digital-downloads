@@ -357,7 +357,7 @@ function edd_refund_order( $order_id, $order_items = 'all', $adjustments = 'all'
 			if ( ! empty( $adjustment['object_id'] ) && ! empty( $order_item_id_map[ $adjustment['object_id'] ] ) ) {
 				// We don't need to convert to an `order` adjustment if we are also refunding the original order item.
 				$adjustment['object_id'] = $order_item_id_map[ $adjustment['object_id'] ];
-				$order_item_match_found          = true;
+				$order_item_match_found  = true;
 			}
 
 			if ( ! $order_item_match_found ) {
