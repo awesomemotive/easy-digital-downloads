@@ -638,15 +638,17 @@ function edd_get_payment_status_keys() {
 function edd_is_payment_complete( $order_id = 0 ) {
 	$order = edd_get_order( $order_id );
 
-	$ret = false;
+	$ret    = false;
+	$status = null;
 
 	if ( $order ) {
+		$status = $order->status;
 		if ( (int) $order_id === (int) $order->id && $order->is_complete() ) {
 			$ret = true;
 		}
 	}
 
-	return apply_filters( 'edd_is_payment_complete', $ret, $order_id, $order->status );
+	return apply_filters( 'edd_is_payment_complete', $ret, $order_id, $status );
 }
 
 /**
