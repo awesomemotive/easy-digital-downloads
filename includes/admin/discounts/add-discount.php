@@ -182,7 +182,7 @@ defined( 'ABSPATH' ) || exit;
 						<label for="edd-min-cart-amount"><?php esc_html_e( 'Minimum Amount', 'easy-digital-downloads' ); ?></label>
 					</th>
 					<td>
-						<input type="text" id="edd-min-cart-amount" name="min_cart_price" value="" placeholder="<?php esc_html_e( 'No minimum', 'easy-digital-downloads' ); ?>" />
+						<input type="text" id="edd-min-cart-amount" name="min_charge_amount" value="" placeholder="<?php esc_html_e( 'No minimum', 'easy-digital-downloads' ); ?>" />
 						<p class="description"><?php esc_html_e( 'The minimum subtotal of item prices in a cart before this discount may be applied.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>

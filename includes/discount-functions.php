@@ -623,7 +623,7 @@ function edd_get_discount_uses( $discount_id = 0 ) {
  * @return float $min_price Minimum purchase amount.
  */
 function edd_get_discount_min_price( $discount_id = 0 ) {
-	return edd_format_amount( edd_get_discount_field( $discount_id, 'min_cart_price' ) );
+	return edd_format_amount( edd_get_discount_field( $discount_id, 'min_charge_amount' ) );
 }
 
 /**
