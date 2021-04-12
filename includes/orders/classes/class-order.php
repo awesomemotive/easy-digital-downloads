@@ -520,7 +520,7 @@ class Order extends Rows\Order {
 		 * If we have a tax_amount, but no rate, check in order meta. This is where legacy rates are stored
 		 * if they cannot be resolved to an actual adjustment object.
 		 */
-		if ( empty( $rate ) && $this->tax > 0 ) {
+		if ( empty( $rate ) && abs( $this->tax ) > 0 ) {
 			$rate = edd_get_order_meta( $this->id, 'tax_rate', true );
 		}
 

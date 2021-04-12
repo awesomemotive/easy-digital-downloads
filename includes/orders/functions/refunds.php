@@ -318,6 +318,12 @@ function edd_refund_order( $order_id, $order_items = 'all', $adjustments = 'all'
 	// new order ID.
 	$refund_id = edd_add_order( $order_data );
 
+	// If we have tax, but no tax rate, manually save the percentage.
+	$tax_rate_meta = edd_get_order_meta( $order_id, 'tax_rate', true );
+	if ( $tax_rate_meta ) {
+		edd_update_order_meta( $refund_id, 'tax_rate', $tax_rate_meta );
+	}
+
 	/** Insert order items ****************************************************/
 
 	// Maintain a mapping of old order item IDs => new for easier lookup when we do fees.
