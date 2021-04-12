@@ -36,7 +36,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string $end_date
  * @property int $use_count
  * @property int $max_uses
- * @property float $min_cart_price
+ * @property float $min_charge_amount
  * @property bool $once_per_customer
  */
 class EDD_Discount extends Adjustment {
@@ -213,7 +213,7 @@ class EDD_Discount extends Adjustment {
 	 * @access protected
 	 * @var mixed int|float
 	 */
-	protected $min_cart_price = null;
+	protected $min_charge_amount = null;
 
 	/**
 	 * Is Single Use per customer?
@@ -340,7 +340,7 @@ class EDD_Discount extends Adjustment {
 					return $this->start_date;
 
 				case 'min_price':
-					return $this->min_cart_price;
+					return $this->min_charge_amount;
 
 				case 'use_once':
 				case 'is_single_use':
@@ -401,7 +401,7 @@ class EDD_Discount extends Adjustment {
 					$this->start_date = $value;
 					break;
 				case 'min_price':
-					$this->min_cart_price = $value;
+					$this->min_charge_amount = $value;
 					break;
 				case 'use_once':
 				case 'is_single_use':
@@ -531,7 +531,7 @@ class EDD_Discount extends Adjustment {
 					$this->{$key} = (int) $value;
 					break;
 				case 'min_charge_amount':
-					$this->min_cart_price = $value;
+					$this->min_charge_amount = $value;
 					break;
 				default:
 					if ( is_string( $value ) ) {
@@ -908,7 +908,7 @@ class EDD_Discount extends Adjustment {
 		 * @param float $min_price Minimum price.
 		 * @param int   $ID        Discount ID.
 		 */
-		return (float) apply_filters( 'edd_get_discount_min_price', $this->min_cart_price, $this->id );
+		return (float) apply_filters( 'edd_get_discount_min_price', $this->min_charge_amount, $this->id );
 	}
 
 	/**
@@ -1375,10 +1375,10 @@ class EDD_Discount extends Adjustment {
 
 		$cart_amount = edd_get_cart_discountable_subtotal( $this->id );
 
-		if ( (float) $cart_amount >= (float) $this->min_cart_price ) {
+		if ( (float) $cart_amount >= (float) $this->min_charge_amount ) {
 			$return = true;
 		} elseif ( $set_error ) {
-			edd_set_error( 'edd-discount-error', sprintf( __( 'Minimum order of %s not met.', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( $this->min_cart_price ) ) ) );
+			edd_set_error( 'edd-discount-error', sprintf( __( 'Minimum order of %s not met.', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( $this->min_charge_amount ) ) ) );
 		}
 
 		/**
