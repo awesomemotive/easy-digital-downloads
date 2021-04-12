@@ -9,23 +9,27 @@
  *            Checks status on individual order items when determining download link visibility.
  */
 
-if( ! empty( $_GET['edd-verify-success'] ) ) : ?>
-<p class="edd-account-verified edd_success">
-	<?php _e( 'Your account has been successfully verified!', 'easy-digital-downloads' ); ?>
-</p>
-<?php
+if ( ! empty( $_GET['edd-verify-success'] ) ) : ?>
+	<p class="edd-account-verified edd_success">
+		<?php esc_html_e( 'Your account has been successfully verified!', 'easy-digital-downloads' ); ?>
+	</p>
+	<?php
 endif;
 /**
  * This template is used to display the download history of the current user.
  */
 $customer = edd_get_customer_by( 'user_id', get_current_user_id() );
+$page     = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 0;
 
 if ( ! empty( $customer ) ) {
-	$orders = edd_get_orders( array(
-		'customer_id' => $customer->id,
-		'number'      => 20,
-		'type'        => 'sale',
-	) );
+	$orders = edd_get_orders(
+		array(
+			'customer_id' => $customer->id,
+			'number'      => 20,
+			'offset'      => $page ? 20 * ( intval( $page ) - 1 ) : 0,
+			'type'        => 'sale',
+		)
+	);
 } else {
 	$orders = array();
 }
@@ -36,18 +40,14 @@ if ( $orders ) :
 		<thead>
 			<tr class="edd_download_history_row">
 				<?php do_action( 'edd_download_history_header_start' ); ?>
-				<th class="edd_download_download_name"><?php _e( 'Download Name', 'easy-digital-downloads' ); ?></th>
+				<th class="edd_download_download_name"><?php esc_html_e( 'Download Name', 'easy-digital-downloads' ); ?></th>
 				<?php if ( ! edd_no_redownload() ) : ?>
-					<th class="edd_download_download_files"><?php _e( 'Files', 'easy-digital-downloads' ); ?></th>
+					<th class="edd_download_download_files"><?php esc_html_e( 'Files', 'easy-digital-downloads' ); ?></th>
 				<?php endif; //End if no redownload?>
 				<?php do_action( 'edd_download_history_header_end' ); ?>
 			</tr>
 		</thead>
 		<?php foreach ( $orders as $order ) :
-			$downloads      = edd_get_payment_meta_cart_details( $order->id, true );
-			$purchase_data  = edd_get_payment_meta( $order->id );
-			$email          = edd_get_payment_user_email( $order->id );
-
 			foreach ( $order->get_items() as $key => $item ) :
 
 				// Skip over Bundles. Products included with a bundle will be displayed individually
@@ -61,11 +61,6 @@ if ( $orders ) :
 					$price_id       = $item->price_id;
 					$download_files = edd_get_download_files( $item->product_id, $price_id );
 					$name           = $item->product_name;
-
-					// Retrieve and append the price option name
-					if ( ! empty( $price_id ) && 0 !== $price_id ) {
-						$name .= ' - ' . edd_get_price_option_name( $item->product_id, $price_id, $order->id );
-					}
 
 					do_action( 'edd_download_history_row_start', $order->id, $item->product_id );
 					?>
@@ -81,7 +76,7 @@ if ( $orders ) :
 
 									foreach ( $download_files as $filekey => $file ) :
 
-										$download_url = edd_get_download_file_url( $purchase_data['key'], $email, $filekey, $item->product_id, $price_id );
+										$download_url = edd_get_download_file_url( $order->payment_key, $order->email, $filekey, $item->product_id, $price_id );
 										?>
 
 										<div class="edd_download_file">
@@ -90,16 +85,26 @@ if ( $orders ) :
 											</a>
 										</div>
 
-										<?php do_action( 'edd_download_history_files', $filekey, $file, $item->product_id, $order->id, $purchase_data );
+										<?php
+										if ( has_action( 'edd_download_history_files' ) ) {
+											$purchase_data = edd_get_payment_meta( $order->id );
+											do_action( 'edd_download_history_files', $filekey, $file, $item->product_id, $order->id, $purchase_data );
+										}
 									endforeach;
 
 								else :
-									_e( 'No downloadable files found.', 'easy-digital-downloads' );
+									esc_html_e( 'No downloadable files found.', 'easy-digital-downloads' );
 								endif; // End if payment complete
 
 							else : ?>
 								<span class="edd_download_payment_status">
-									<?php printf( __( 'Payment status is %s', 'easy-digital-downloads' ), edd_get_status_label( $item->status ) ); ?>
+									<?php
+									printf(
+										/* translators: the order item's status. */
+										esc_html__( 'Status: %s', 'easy-digital-downloads' ),
+										esc_html( edd_get_status_label( $item->status ) )
+									);
+									?>
 								</span>
 								<?php
 							endif; // End if $download_files
@@ -116,14 +121,20 @@ if ( $orders ) :
 		?>
 	</table>
 	<?php
-		echo edd_pagination(
-			array(
-				'type'  => 'download_history',
-				'total' => ceil( edd_count_purchases_of_customer() / 20 ) // 20 items per page
-			)
-		);
+	$count = edd_count_orders(
+		array(
+			'user_id' => get_current_user_id(),
+			'type'    => 'sale',
+		)
+	);
+	echo edd_pagination(
+		array(
+			'type'  => 'download_history',
+			'total' => ceil( $count / 20 ), // 20 items per page
+		)
+	);
 	?>
 	<?php do_action( 'edd_after_download_history' ); ?>
 <?php else : ?>
-	<p class="edd-no-downloads"><?php _e( 'You have not purchased any downloads', 'easy-digital-downloads' ); ?></p>
+	<p class="edd-no-downloads"><?php esc_html_e( 'You have not purchased any downloads', 'easy-digital-downloads' ); ?></p>
 <?php endif; ?>
