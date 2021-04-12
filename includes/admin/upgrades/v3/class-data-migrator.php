@@ -130,9 +130,14 @@ class Data_Migrator {
 
 			if ( ! empty( $notes ) ) {
 				foreach ( $notes as $note ) {
-					$date = isset( $note[0] )
-						? EDD()->utils->date( $note[0], edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString()
-						: '';
+					try {
+						$date = isset( $note[0] )
+							? EDD()->utils->date( $note[0], edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString()
+							: '';
+					} catch ( \Exception $e ) {
+						// An empty date will be changed to current time in BerlinDB.
+						$date = '';
+					}
 
 					$note_content = isset( $note[1] )
 						? $note[1]
@@ -513,7 +518,11 @@ class Data_Migrator {
 		if ( ! in_array( $order_status, $non_completed_statuses ) ) {
 
 			if ( ! empty( $date_completed ) ) {  // Update the data_completed to the UTC.
-				$date_completed = EDD()->utils->date( $date_completed, edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString();
+				try {
+					$date_completed = EDD()->utils->date( $date_completed, edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString();
+				} catch ( \Exception $e ) {
+					$date_completed = $date_created_gmt;
+				}
 			} elseif ( is_null( $date_completed ) ) { // Backfill a missing date_completed (for things like recurring payments).
 				$date_completed = $date_created_gmt;
 			}
