@@ -350,6 +350,7 @@ class EDD_Discount extends Adjustment {
 				case 'uses':
 					return $this->use_count;
 
+				case 'not_global':
 				case 'is_not_global':
 					return 'global' === $this->scope ? false : true;
 			}
@@ -410,6 +411,7 @@ class EDD_Discount extends Adjustment {
 				case 'uses':
 					$this->use_count = $value;
 					break;
+				case 'not_global':
 				case 'is_not_global':
 					$this->scope = $value ? 'not_global' : 'global';
 					break;
@@ -1903,17 +1905,14 @@ class EDD_Discount extends Adjustment {
 		);
 
 		foreach ( $old as $old_key => $new_key ) {
-			if ( isset( $args[ $old_key ] ) ) {
-				if ( 'not_global' === $old_key ) {
-					$args[ $new_key ] = $args[ $old_key ]
-						? 'not_global'
-						: 'global';
-				} else {
-					$args[ $new_key ] = $args[ $old_key ];
-				}
-
-				unset( $args[ $old_key ] );
+			if ( 'not_global' === $old_key ) {
+				$args[ $new_key ] = ! empty( $args[ $old_key ] )
+					? 'not_global'
+					: 'global';
+			} elseif ( isset( $args[ $old_key ] ) ) {
+				$args[ $new_key ] = $args[ $old_key ];
 			}
+			unset( $args[ $old_key ] );
 		}
 
 		// Default status needs to be active for regression purposes.
