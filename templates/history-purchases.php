@@ -34,11 +34,7 @@ if ( $orders ) :
 	 * @since 3.0
 	 * @param array $orders The array of the current user's orders.
 	 */
-	do_action( 'edd_before_orders_history', $orders );
-	if ( has_action( 'edd_before_purchase_history' ) ) {
-		$payments = edd_get_users_purchases( get_current_user_id(), 20, true, 'any' );
-		edd_do_action_deprecated( 'edd_before_purchase_history', array( $payments ), '3.0', 'edd_before_orders_history' );
-	}
+	do_action( 'edd_before_order_history', $orders );
 	?>
 	<table id="edd_user_history" class="edd-table">
 		<thead>
@@ -52,21 +48,15 @@ if ( $orders ) :
 			</tr>
 		</thead>
 		<?php foreach ( $orders as $order ) : ?>
-			<?php $order_meta = edd_get_order_meta( $order->id ); ?>
 			<tr class="edd_purchase_row">
 				<?php
 				/**
 				 * Fires at the beginning of the order history row.
 				 *
 				 * @since 3.0
-				 * @param \EDD\Orders\Order $order      The current order object.
-				 * @param array             $order_meta The current order metadata.
+				 * @param \EDD\Orders\Order $order The current order object.
 				 */
-				do_action( 'edd_order_history_row_start', $order, $order_meta );
-				if ( has_action( 'edd_purchase_history_row_start' ) ) {
-					$payment = new EDD_Payment( $order->id );
-					edd_do_action_deprecated( 'edd_purchase_history_row_start', array( $payment, $payment->meta ), '3.0', 'edd_order_history_row_start' );
-				}
+				do_action( 'edd_order_history_row_start', $order );
 				?>
 				<td class="edd_purchase_id">#<?php echo esc_html( $order->get_number() ); ?></td>
 				<td class="edd_purchase_date"><?php echo esc_html( edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString() ) ); ?></td>
@@ -99,14 +89,9 @@ if ( $orders ) :
 				 * Fires at the end of the order history row.
 				 *
 				 * @since 3.0
-				 * @param \EDD\Orders\Order $order      The current order object.
-				 * @param array             $order_meta The current order metadata.
+				 * @param \EDD\Orders\Order $order The current order object.
 				 */
-				do_action( 'edd_order_history_row_end', $orders, $order_meta );
-				if ( has_action( 'edd_purchase_history_row_end' ) ) {
-					$payment = ! empty( $payment ) ? $payment : new EDD_Payment( $order->id );
-					edd_do_action_deprecated( 'edd_purchase_history_row_start', array( $payment, $payment->meta ), '3.0', 'edd_order_history_row_end' );
-				}
+				do_action( 'edd_order_history_row_end', $order );
 				?>
 			</tr>
 		<?php endforeach; ?>
@@ -130,11 +115,7 @@ if ( $orders ) :
 	 * @since 3.0
 	 * @param array $orders The array of the current user's orders.
 	 */
-	do_action( 'edd_after_orders_history', $orders );
-	if ( has_action( 'edd_after_purchase_history' ) ) {
-		$payments = ! empty( $payments ) ? $payments : edd_get_users_purchases( get_current_user_id(), 20, true, 'any' );
-		edd_do_action_deprecated( 'edd_after_purchase_history', array( $payments ), '3.0', 'edd_after_orders_history' );
-	}
+	do_action( 'edd_after_order_history', $orders );
 	wp_reset_postdata();
 	?>
 <?php else : ?>
