@@ -20,10 +20,12 @@ endif;
 if ( ! is_user_logged_in() ) {
 	return;
 }
+$page   = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 0;
 $orders = edd_get_orders(
 	array(
 		'user_id' => get_current_user_id(),
 		'number'  => 20,
+		'offset'  => $page ? 20 * ( intval( $page ) - 1 ) : 0,
 		'type'    => 'sale',
 	)
 );
