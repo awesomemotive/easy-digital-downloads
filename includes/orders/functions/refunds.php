@@ -403,6 +403,17 @@ function edd_refund_order( $order_id = 0, $order_items = array() ) {
 		)
 	);
 
+	if ( has_action( 'edd_pre_refund_payment' ) ) {
+		$payment = edd_get_payment( $order_id );
+		/**
+		 * Legacy pre-refund hook which fired after a payment status changed, but before store stats were updated.
+		 *
+		 * @deprecated 3.0
+		 * @param EDD_Payment $payment An EDD Payment object.
+		 */
+		edd_do_action_deprecated( 'edd_pre_refund_payment', array( $payment ), '3.0', 'edd_refund_order' );
+	}
+
 	/**
 	 * Fires when an order has been refunded.
 	 *
@@ -413,6 +424,17 @@ function edd_refund_order( $order_id = 0, $order_items = array() ) {
 	 * @param float $total        Amount refunded.
 	 */
 	do_action( 'edd_refund_order', $order_id, $new_order_id, floatval( $order->total ) );
+
+	if ( has_action( 'edd_post_refund_payment' ) ) {
+		$payment = edd_get_payment( $order_id );
+		/**
+		 * Legacy post-refund hook which fired after store stats were updated.
+		 *
+		 * @deprecated 3.0
+		 * @param EDD_Payment $payment An EDD Payment object.
+		 */
+		edd_do_action_deprecated( 'edd_post_refund_payment', array( $payment ), '3.0', 'edd_refund_order' );
+	}
 
 	return $new_order_id;
 }
