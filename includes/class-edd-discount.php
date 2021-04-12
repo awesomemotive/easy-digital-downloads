@@ -1895,16 +1895,16 @@ class EDD_Discount extends Adjustment {
 			'max'               => 'max_uses',
 			'start'             => 'start_date',
 			'expiration'        => 'end_date',
-			'min_price'         => 'min_cart_price',
+			'min_price'         => 'min_charge_amount',
+			'products'          => 'product_reqs',
 			'excluded-products' => 'excluded_products',
-			'is_not_global'     => 'scope',
-			'is_single_use'     => 'once_per_customer',
-			'min_cart_price'    => 'min_charge_amount',
+			'not_global'        => 'scope',
+			'use_once'          => 'once_per_customer',
 		);
 
 		foreach ( $old as $old_key => $new_key ) {
 			if ( isset( $args[ $old_key ] ) ) {
-				if ( 'is_not_global' === $old_key ) {
+				if ( 'not_global' === $old_key ) {
 					$args[ $new_key ] = $args[ $old_key ]
 						? 'not_global'
 						: 'global';
