@@ -288,10 +288,13 @@ function edd_install_pages() {
 	$pages_to_check = array_intersect_key( $current_options, $pages );
 
 	// Query for any existing pages
-	$posts = new WP_Query( array(
-		'include'   => array_values( $pages_to_check ),
-		'post_type' => 'page'
-	) );
+	$posts = new WP_Query(
+		array(
+			'include'   => array_values( $pages_to_check ),
+			'post_type' => 'page',
+			'fields'    => 'ids',
+		)
+	);
 
 	// Default value for checkout page
 	$checkout = 0;
@@ -302,16 +305,15 @@ function edd_install_pages() {
 	// Loop through all pages, fix or create any missing ones
 	foreach ( array_flip( $pages ) as $page ) {
 
+		$page_id = ! empty( $pages_to_check[ $page ] ) ? $pages_to_check[ $page ] : false;
+
 		// Checks if the page option exists
-		$page_object = empty( $missing_pages[ $page ] ) && ! empty( $posts->posts ) && ! empty( $pages_to_check[ $page ] )
-			? wp_filter_object_list( $posts->posts, array( 'ID' => $pages_to_check[ $page ] ) )
+		$page_object = ! array_key_exists( $page, $missing_pages ) && ! empty( $posts->posts ) && ! empty( $page_id )
+			? get_post( $page_id )
 			: array();
 
 		// Skip if page exists
 		if ( ! empty( $page_object ) ) {
-
-			// Get the first item in the array
-			$page_object = reset( $page_object );
 
 			// Set the checkout page
 			if ( 'purchase_page' === $page ) {
