@@ -50,7 +50,6 @@ trait Refundable_Item {
 			'subtotal' => $subtotal,
 			'tax'      => $this->tax,
 			'total'    => $this->total,
-			'quantity' => $this->quantity,
 		);
 
 		$refunded_items = $this->get_refunded_items();
@@ -61,9 +60,6 @@ trait Refundable_Item {
 				$maximums['subtotal'] += $refunded_item->subtotal;
 				$maximums['tax']      += $refunded_item->tax;
 				$maximums['total']    += $refunded_item->total;
-				if ( 0 !== ( $this->quantity + $refunded_item->quantity ) ) {
-					$maximums['quantity'] += $refunded_item->quantity;
-				}
 			}
 		}
 

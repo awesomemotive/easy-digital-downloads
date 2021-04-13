@@ -328,11 +328,7 @@ class Refund_Items_Table extends List_Table {
 	 * @return string
 	 */
 	private function get_quantity_column( $item, $column_name, $item_id, $object_type ) {
-		$item_quantity      = $item instanceof Order_item ? $item->quantity : 1;
-		$refundable_amounts = $item->get_refundable_amounts();
-		if ( array_key_exists( $column_name, $refundable_amounts ) ) {
-			$item_quantity = $refundable_amounts[ $column_name ];
-		}
+		$item_quantity = $item instanceof Order_item ? $item->quantity : 1;
 		ob_start();
 		?>
 		<label for="edd-order-item-quantity-<?php echo esc_attr( $item_id ); ?>" class="screen-reader-text">
