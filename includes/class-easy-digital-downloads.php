@@ -567,6 +567,9 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/class-edd-cli.php';
 		}
 
+		// Traits
+		require_once EDD_PLUGIN_DIR . 'includes/traits/trait-refundable-item.php';
+
 		// Adjustments
 		require_once EDD_PLUGIN_DIR . 'includes/adjustments/class-adjustment.php';
 		require_once EDD_PLUGIN_DIR . 'includes/adjustments/functions.php';
@@ -626,14 +629,13 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order-adjustment.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order-item.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order-transaction.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-refund-validator.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/types.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/orders.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/items.php';
-		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/credits.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/refunds.php';
-		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/discounts.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/addresses.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/adjustments.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/transactions.php';

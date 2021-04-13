@@ -490,8 +490,11 @@ class Stats {
 			? $query['status']
 			: array( 'refunded' );
 
-		// Ensure we only pick up records from refund objects and not the original sale.
-		$this->query_vars['where_sql'] .= " AND {$this->get_db()->edd_orders}.type = 'refund' ";
+		/*
+		 * The type should be `sale` because we're querying for fully refunded order items only.
+		 * That means we look in `type` = `sale` and `status` = `refunded`.
+		 */
+		$this->query_vars['where_sql'] .= " AND {$this->get_db()->edd_orders}.type = 'sale' ";
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
