@@ -622,6 +622,7 @@ function edd_order_details_overview( $order ) {
 				'cartIndex'    => esc_html( $item->cart_index ),
 				'type'         => esc_html( $item->type ),
 				'status'       => esc_html( $item->status ),
+				'statusLabel'  => esc_html( edd_get_status_label( $item->status ) ),
 				'quantity'     => esc_html( $item->quantity ),
 				'amount'       => esc_html( $item->amount ),
 				'subtotal'     => esc_html( $item->subtotal ),

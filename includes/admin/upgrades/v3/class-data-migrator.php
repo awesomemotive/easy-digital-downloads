@@ -130,9 +130,14 @@ class Data_Migrator {
 
 			if ( ! empty( $notes ) ) {
 				foreach ( $notes as $note ) {
-					$date = isset( $note[0] )
-						? EDD()->utils->date( $note[0], edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString()
-						: '';
+					try {
+						$date = isset( $note[0] )
+							? EDD()->utils->date( $note[0], edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString()
+							: '';
+					} catch ( \Exception $e ) {
+						// An empty date will be changed to current time in BerlinDB.
+						$date = '';
+					}
 
 					$note_content = isset( $note[1] )
 						? $note[1]
@@ -513,7 +518,11 @@ class Data_Migrator {
 		if ( ! in_array( $order_status, $non_completed_statuses ) ) {
 
 			if ( ! empty( $date_completed ) ) {  // Update the data_completed to the UTC.
-				$date_completed = EDD()->utils->date( $date_completed, edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString();
+				try {
+					$date_completed = EDD()->utils->date( $date_completed, edd_get_timezone_id() )->setTimezone( 'UTC' )->toDateTimeString();
+				} catch ( \Exception $e ) {
+					$date_completed = $date_created_gmt;
+				}
 			} elseif ( is_null( $date_completed ) ) { // Backfill a missing date_completed (for things like recurring payments).
 				$date_completed = $date_created_gmt;
 			}
@@ -832,8 +841,8 @@ class Data_Migrator {
 					'status'        => $order_status,
 					'quantity'      => $cart_item['quantity'],
 					'amount'        => (float) $cart_item['item_price'],
-					'subtotal'      => $cart_item['subtotal'],
-					'discount'      => $cart_item['discount'],
+					'subtotal'      => (float) $cart_item['subtotal'],
+					'discount'      => (float) $cart_item['discount'],
 					'tax'           => $cart_item['tax'],
 					'total'         => (float) $cart_item['price'],
 					'date_created'  => $date_created_gmt,
@@ -866,16 +875,18 @@ class Data_Migrator {
 					// Since the refund is a near copy of the original order, copy over the arguments.
 					$refund_item_args = $order_item_args;
 
+					$refund_item_args['parent']   = $order_item_id;
 					$refund_item_args['order_id'] = $refund_id;
-					$refund_item_args['status']   = 'refunded';
+					$refund_item_args['status']   = 'complete';
+
+					// Subtotal is actually set to subtotal - discount.
+					$refund_item_args['subtotal'] = $refund_item_args['subtotal'] - $refund_item_args['discount'];
 
 					// Negate the amounts
 					$refund_item_args['quantity'] = edd_negate_int( $cart_item['quantity'] );
-					$refund_item_args['amount']   = edd_negate_amount( (float) $cart_item['item_price'] );
-					$refund_item_args['subtotal'] = edd_negate_amount( $cart_item['subtotal'] );
-					$refund_item_args['discount'] = edd_negate_amount( $cart_item['discount'] );
-					$refund_item_args['tax']      = edd_negate_amount( $cart_item['tax'] );
-					$refund_item_args['total']    = edd_negate_amount( (float) $cart_item['price'] );
+					foreach( array( 'amount', 'subtotal', 'tax', 'total' ) as $field_to_negate ) {
+						$refund_item_args[ $field_to_negate ] = edd_negate_amount( $refund_item_args[ $field_to_negate ] );
+					}
 
 					// These are our best estimates since we did not store the refund date previously.
 					$refund_item_args['date_crated']   = $data->post_modified_gmt;
@@ -932,6 +943,7 @@ class Data_Migrator {
 						// If we refunded the main order, the fees also need to be added to the refund order type we created.
 						if ( ! empty( $refund_id ) ) {
 							$refund_adjustment_args              = $adjustment_args;
+							$refund_adjustment_args['parent']    = $adjustment_id;
 							$refund_adjustment_args['object_id'] = $refund_order_item_id;
 							$refund_adjustment_args['subtotal']  = edd_negate_amount( floatval( $fee['amount'] ) );
 							$refund_adjustment_args['tax']       = edd_negate_amount( $tax );
@@ -966,7 +978,7 @@ class Data_Migrator {
 					'date_modified' => $data->post_modified_gmt,
 				);
 
-				edd_add_order_item( $order_item_args );
+				$order_item_id = edd_add_order_item( $order_item_args );
 
 				// If the order was refunded, we also need to add these items to the refund order.
 				if ( ! empty( $refund_id ) ) {
@@ -974,6 +986,7 @@ class Data_Migrator {
 					// Since the refund is a near copy of the original order, copy over the arguments.
 					$refund_item_args = $order_item_args;
 
+					$refund_item_args['parent']   = $order_item_id;
 					$refund_item_args['order_id'] = $refund_id;
 					$refund_item_args['quantity'] = edd_negate_int( 1 );
 					$refund_item_args['amount']   = edd_negate_amount( (float) $payment_meta['amount'] );
@@ -1024,6 +1037,7 @@ class Data_Migrator {
 					// Since the refund is a near copy of the original order, copy over the arguments.
 					$refund_adjustment_args = $adjustment_args;
 
+					$refund_adjustment_args['parent']    = $adjustment_id;
 					$refund_adjustment_args['object_id'] = $refund_id;
 
 					// Negate the amounts.
@@ -1068,22 +1082,6 @@ class Data_Migrator {
 						'date_modified' => $data->post_modified_gmt,
 					)
 				);
-
-				if ( ! empty( $refund_id ) ) {
-					edd_add_order_adjustment(
-						array(
-							'object_id'     => $refund_id,
-							'object_type'   => 'order',
-							'type_id'       => $discount->id,
-							'type'          => 'discount',
-							'description'   => $discount->code,
-							'subtotal'      => edd_negate_amount( $subtotal - $discount->get_discounted_amount( $subtotal ) ),
-							'total'         => edd_negate_amount( $subtotal - $discount->get_discounted_amount( $subtotal ) ),
-							'date_created'  => $data->post_modified_gmt,
-							'date_modified' => $data->post_modified_gmt,
-						)
-					);
-				}
 			}
 		}
 
