@@ -28,6 +28,7 @@ export const OrderItem = Backbone.Model.extend( {
 		cartIndex: 0,
 		type: 'download',
 		status: '',
+		statusLabel: '',
 		quantity: 1,
 		amount: 0,
 		subtotal: 0,
