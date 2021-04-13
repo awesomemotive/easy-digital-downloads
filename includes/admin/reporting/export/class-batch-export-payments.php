@@ -180,7 +180,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 						}
 
 						/* Set up raw products column - Nothing but product names */
-						$products_raw .= html_entity_decode( get_the_title( $id ) ) . '|' . $price . '{' . $download_tax . '}';
+						$products_raw .= html_entity_decode( get_the_title( $id ) ) . '|' . edd_format_amount( $price ) . '{' . $download_tax . '}';
 
 						// if we have a Price ID, include it.
 						if ( false !== $download_price_id ) {
