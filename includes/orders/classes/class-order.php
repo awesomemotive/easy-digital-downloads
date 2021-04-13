@@ -595,4 +595,58 @@ class Order extends Rows\Order {
 	public function is_complete() {
 		return ( 'complete' === $this->status );
 	}
+
+	/**
+	 * Determines if this order is able to be resumed by the user.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool
+	 */
+	public function is_recoverable() {
+		$recoverable_statuses = edd_recoverable_order_statuses();
+		if ( in_array( $this->status, $recoverable_statuses, true ) && empty( $this->get_transaction_id() ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Returns the URL that a customer can use to resume an order, or false if it's not recoverable.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool|string
+	 */
+	public function get_recovery_url() {
+		if ( ! $this->is_recoverable() ) {
+			return false;
+		}
+
+		$recovery_url = add_query_arg(
+			array(
+				'edd_action' => 'recover_payment',
+				'payment_id' => $this->id,
+			),
+			edd_get_checkout_uri()
+		);
+
+		/**
+		 * Legacy recovery URL filter.
+		 *
+		 * @param \EDD_Payment $payment The EDD payment object.
+		 */
+		if ( has_filter( 'edd_payment_recovery_url' ) ) {
+			$recovery_url = apply_filters( 'edd_payment_recovery_url', $recovery_url, edd_get_payment( $this->id ) );
+		}
+
+		/**
+		 * The order recovery URL.
+		 *
+		 * @since 3.0
+		 * @param \EDD\Orders\Order $this The order object.
+		 */
+		return apply_filters( 'edd_order_recovery_url', $recovery_url, $this );
+	}
 }
