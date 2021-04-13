@@ -270,6 +270,7 @@ This table's data is intended to be immutable.
 | Table Column  | Table Column's Description |
 | ------------- | ------------- |
 | id | The unique id of the row, which auto increments.  |
+| parent | The ID of another order adjustment which is considered to be the parent of this adjustment. This is used for adjustments attached to refunds. The parent references the ID of the original order adjustment that was refunded. |
 | object_id | The ID of the row that this row adjusted the amount/cost of. This is typically an order (in the orders table) or an order_item (in the order_items table). The type of object is indicated in the object_type column. |
 | object_type | This typically indicates the EDD custom table that the object_id value can be found within, and to which row within that table this row relates. For example, the orders table (indicated by the word "order") or the order_items table (indicated by the word "order_item"). |
 | type_id | This value indicates the row ID in the adjustments table from which this order adjustment originated. For example, if this value is "25", go to the adjustments table and look at the row with the ID "25" to see the corresponding adjustment. |
@@ -305,6 +306,7 @@ This table's data is intended to be immutable.
 | Table Column  | Table Column's Description |
 | ------------- | ------------- |
 | id | The unique id of the row, which auto increments.  |
+| parent | The ID of another order item which is considered to be the parent of this item. This is used for order items attached to refunds. The parent references the ID of the original order item that was refunded. |
 | order_id | The ID of the order to which this item belongs. |
 | product_id | The ID of the product which was purchased. |
 | product_name | This is what the name of the product was at the time of this purchase. |
