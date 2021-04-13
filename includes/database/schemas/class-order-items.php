@@ -42,6 +42,16 @@ class Order_Items extends Schema {
 			'sortable'   => true
 		),
 
+		// parent
+		array(
+			'name'       => 'parent',
+			'type'       => 'bigint',
+			'length'     => '20',
+			'unsigned'   => true,
+			'default'    => '0',
+			'sortable'   => true
+		),
+
 		// order_id
 		array(
 			'name'       => 'order_id',
