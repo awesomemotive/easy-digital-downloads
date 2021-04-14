@@ -568,21 +568,21 @@ class Refund_Items_Table extends List_Table {
 			</tbody>
 
 		</table>
-		<div class="edd-after-submit-refund-table">
-		<?php
-		/**
-		 * Triggers after the table, but before the submit button.
-		 *
-		 * @param Order $order
-		 *
-		 * @since 3.0
-		 */
-		do_action( 'edd_after_submit_refund_table', $this->get_order() );
+		<div class="edd-submit-refund-actions">
+			<?php
+			/**
+			 * Triggers after the table, but before the submit button.
+			 *
+			 * @param Order $order
+			 *
+			 * @since 3.0
+			 */
+			do_action( 'edd_after_submit_refund_table', $this->get_order() );
+
+			$this->display_tablenav( 'bottom' );
 		?>
 		</div>
 		<?php
-
-		$this->display_tablenav( 'bottom' );
 	}
 
 	/**
