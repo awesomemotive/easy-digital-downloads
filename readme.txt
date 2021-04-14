@@ -7,7 +7,7 @@ Tags: ecommerce, sell, checkout, payments, stripe
 Requires at least: 4.4
 Tested up to: 5.7
 Requires PHP: 5.3
-Stable Tag: 2.10.2
+Stable Tag: 2.10.3
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products the simple way. Easily build an online store complete with a cart system, checkout forms, reports, coupons, and more!
@@ -247,6 +247,10 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 11. Google Pay checkout
 
 == Changelog ==
+= 2.10.3, April 14, 2021 =
+* Security Fix: Fix nonce logic when disconnecting from Stripe Connect.
+* Fix: Not enough padding on file upload field.
+
 = 2.10.2, April 5, 2021 =
 Fix: Stripe - Some Stripe errors were not localized.
 Fix: Stripe - The pre-approval payment status was being registered when it was not supported.

@@ -470,7 +470,7 @@ label.edd_prices_shipping { /* remove once Simple Shipping markup is improved */
 	right: 7px;
 }
 .edd_upload_field {
-	padding-right: 8em;
+	padding-right: 8em !important;
 }
 textarea#edd-payment-note {
 	width: 100%;
