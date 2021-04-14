@@ -105,3 +105,15 @@ $fixed-column-width: 80px;
 		}
 	}
 }
+
+.edd-after-submit-refund-table {
+	margin: 16px 0;
+
+	.did-refund & {
+		display: none;
+	}
+}
+
+.did-refund .edd-hide-on-success {
+	display: none;
+}
