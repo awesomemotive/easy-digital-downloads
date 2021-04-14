@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 2.10.2\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2021-04-05 17:49:03+00:00\n"
+"POT-Creation-Date: 2021-04-14 08:18:04+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -7302,7 +7302,7 @@ msgid ""
 msgstr ""
 
 #: includes/gateways/stripe/includes/admin/notices.php:39
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:534
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:539
 #: includes/gateways/stripe/includes/payment-methods/payment-request/apple-pay.php:22
 msgid "Unable to locate registry"
 msgstr ""
@@ -7311,37 +7311,37 @@ msgstr ""
 msgid "Stripe-specific reports have been removed."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:197
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:478
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:540
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:202
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:483
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:545
 msgid "Connect with Stripe"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:207
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:212
 msgid ""
 "Connect with Stripe for pay as you go pricing: 2% per-transaction fee + "
 "Stripe fees."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:218
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:223
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor
 #. tag, do not translate.
 msgid "Have questions about connecting with Stripe? See the %1$sdocumentation%2$s."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:244
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:249
 msgid "Retrieving account information..."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:257
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:262
 msgid "Manage API keys manually"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:267
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:272
 msgid "Hide API keys"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:273
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:278
 msgid ""
 "Although you can add your API keys manually, we recommend using Stripe "
 "Connect: an easier and more secure way of connecting your Stripe account to "
@@ -7351,11 +7351,11 @@ msgid ""
 "just a few clicks."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:291
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:296
 msgid "Unable to retrieve account information."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:316
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:321
 #. translators: %1$s Stripe payment mode. %2$s Opening anchor tag for
 #. reconnecting to Stripe, do not translate. %3$s Opening anchor tag for
 #. disconnecting Stripe, do not translate. %4$s Closing anchor tag, do not
@@ -7365,56 +7365,56 @@ msgid ""
 "mode%4$s, or %3$sdisconnect this account%4$s."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:348
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:353
 #. translators: %1$s Opening bold tag, do not translate. %2$s Closing bold tag,
 #. do not translate.
 msgid "Webhooks cannot be configured for recurring purchases with this account."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:366
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:371
 #. translators: %1$s Opening anchor tag for disconnecting Stripe, do not
 #. translate. %2$s Closing anchor tag, do not translate.
 msgid "%1$sDisconnect this account%2$s."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:432
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:437
 msgid "Pay as you go pricing: 2% per-transaction fee + Stripe fees."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:444
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:449
 msgid "Administrator (Owner)"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:455
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:460
 msgid ""
 "The API keys provided do not match the Stripe Connect account associated "
 "with this installation. If you have manually modified these values after "
 "connecting your account, please reconnect below or update your API keys."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:481
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:486
 msgid ""
 "It is highly recommended to Connect with Stripe for easier setup and "
 "improved security."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:494
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:499
 #. translators: %1$s Stripe payment mode.
 msgid "Your manually managed %1$s mode API keys are valid."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:510
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:515
 #. translators: %1$s Stripe payment mode.
 msgid "Your manually managed %1$s mode API keys are invalid."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:550
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:555
 msgid ""
 "Start accepting payments with Stripe by connecting your account. Stripe "
 "Connect helps ensure easier setup and improved security."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:571
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:576
 #. translators: %s Test mode status. Enabled or disabled.
 msgid "\"Test Mode\" has been %s. Please verify your Stripe connection status."
 msgstr ""
@@ -9782,22 +9782,22 @@ msgctxt "no dropdown items"
 msgid "None"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:309
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:314
 msgctxt "Stripe Connect mode"
 msgid "test"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:310
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:315
 msgctxt "Stripe Connect mode"
 msgid "live"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:561
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:566
 msgctxt "gateway test mode status"
 msgid "enabled"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:562
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:567
 msgctxt "gateway test mode status"
 msgid "disabled"
 msgstr ""
