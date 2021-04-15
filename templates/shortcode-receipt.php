@@ -23,8 +23,6 @@ if ( ! $order ) : ?>
 	return;
 endif;
 
-$meta    = edd_get_payment_meta( $order->id );
-
 /**
  * Allows additional output before displaying the receipt table.
  *
@@ -253,7 +251,16 @@ if ( filter_var( $edd_receipt_args['products'], FILTER_VALIDATE_BOOLEAN ) ) :
 											<a href="<?php echo esc_url( edd_get_download_file_url( $order->payment_key, $order->email, $filekey, $item->product_id, $item->price_id ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
 										</li>
 										<?php
-										do_action( 'edd_receipt_files', $filekey, $file, $item->product_id, $order->id, $meta );
+										/**
+										 * Fires at the end of the order receipt files list.
+										 *
+										 * @since 3.0
+										 * @param int   $filekey          Index of array of files returned by edd_get_download_files() that this download link is for.
+										 * @param array $file             The array of file information.
+										 * @param int   $item->product_id The product ID.
+										 * @param int   $order->id        The order ID.
+										 */
+										do_action( 'edd_order_receipt_files', $filekey, $file, $item->product_id, $order->id );
 									endforeach;
 								elseif ( edd_is_bundled_product( $item->product_id ) ) :
 									$bundled_products = edd_get_bundled_products( $item->product_id, $item->price_id );
@@ -274,7 +281,17 @@ if ( filter_var( $edd_receipt_args['products'], FILTER_VALIDATE_BOOLEAN ) ) :
 															<a href="<?php echo esc_url( edd_get_download_file_url( $order->payment_key, $order->email, $filekey, $bundle_item, $item->price_id ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
 														</li>
 														<?php
-														do_action( 'edd_receipt_bundle_files', $filekey, $file, $item->product_id, $bundle_item, $order->id, $meta );
+														/**
+														 * Fires at the end of the order receipt bundled files list.
+														 *
+														 * @since 3.0
+														 * @param int   $filekey          Index of array of files returned by edd_get_download_files() that this download link is for.
+														 * @param array $file             The array of file information.
+														 * @param int   $item->product_id The product ID.
+														 * @param array $bundle_item      The array of information about the bundled item.
+														 * @param int   $order->id        The order ID.
+														 */
+														do_action( 'edd_order_receipt_bundle_files', $filekey, $file, $item->product_id, $bundle_item, $order->id );
 													endforeach;
 												else :
 													echo '<li>' . esc_html__( 'No downloadable files found for this bundled item.', 'easy-digital-downloads' ) . '</li>';
@@ -293,8 +310,13 @@ if ( filter_var( $edd_receipt_args['products'], FILTER_VALIDATE_BOOLEAN ) ) :
 							<?php endif; ?>
 
 							<?php
-							// Allow extensions to extend the product cell
-							do_action( 'edd_purchase_receipt_after_files', $item->product_id, $order->id, $meta, $item->price_id );
+							/**
+							 * Allow extensions to extend the product cell.
+							 * @since 3.0
+							 * @param \EDD\Orders\Order_Item $item The current order item.
+							 * @param \EDD\Orders\Order $order     The current order object.
+							 */
+							do_action( 'edd_order_receipt_after_files', $item, $order );
 							?>
 						</td>
 						<?php if ( edd_use_skus() ) : ?>

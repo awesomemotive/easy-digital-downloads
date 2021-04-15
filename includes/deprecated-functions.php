@@ -1217,3 +1217,52 @@ add_action( 'edd_order_receipt_after_table', function( $order, $edd_receipt_args
 	$payment = edd_get_payment( $order->id );
 	do_action( 'edd_payment_receipt_after_table', $payment, $edd_receipt_args );
 }, 10, 2 );
+
+/**
+ * Fires after the order receipt files, if needed.
+ *
+ * @deprecated 3.0
+ * @param int   $filekey          Index of array of files returned by edd_get_download_files() that this download link is for.
+ * @param array $file             The array of file information.
+ * @param int   $item->product_id The product ID.
+ * @param int   $order->id        The order ID.
+ */
+add_action( 'edd_order_receipt_files', function( $filekey, $file, $product_id, $order_id ) {
+	if ( ! has_action( 'edd_receipt_files' ) ) {
+		return;
+	}
+	$meta = edd_get_payment_meta( $order_id );
+	do_action( 'edd_receipt_files', $filekey, $file, $product_id, $order_id, $meta );
+}, 10, 4 );
+
+/**
+ * Fires after the order receipt bundled items, if needed.
+ *
+ * @deprecated 3.0
+ * @param int   $filekey          Index of array of files returned by edd_get_download_files() that this download link is for.
+ * @param array $file             The array of file information.
+ * @param int   $item->product_id The product ID.
+ * @param array $bundle_item      The array of information about the bundled item.
+ * @param int   $order->id        The order ID.
+ */
+add_action( 'edd_order_receipt_bundle_files', function( $filekey, $file, $product_id, $bundle_item, $order_id ) {
+	if ( ! has_action( 'edd_receipt_bundle_files' ) ) {
+		return;
+	}
+	$meta = edd_get_payment_meta( $order_id );
+	do_action( 'edd_receipt_bundle_files', $filekey, $file, $product_id, $bundle_item, $order_id, $meta );
+}, 10, 5 );
+
+/**
+ * Fires at the end of the product cell.
+ * @deprecated 3.0
+ * @param \EDD\Orders\Order_Item $item The current order item.
+ * @param \EDD\Orders\Order $order     The current order object.
+ */
+add_action( 'edd_order_receipt_after_files', function( $item, $order ) {
+	if ( ! has_action( 'edd_purchase_receipt_after_files' ) ) {
+		return;
+	}
+	$meta = edd_get_payment_meta( $order_id );
+	do_action( 'edd_purchase_receipt_after_files', $item->product_id, $order->id, $meta, $item->price_id );
+}, 10, 2 );
