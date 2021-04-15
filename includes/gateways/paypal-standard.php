@@ -1257,8 +1257,10 @@ function edd_refund_paypal_purchase( $payment_id_or_object, $refund_object = nul
 		$body['REFUNDTYPE'] = 'Partial';
 		$body['AMT']        = abs( $refund_object->total );
 
+		/* Translators: %d - order ID number; %s - formatted refund amount */
 		edd_debug_log( sprintf( 'Processing partial PayPal refund for order #%d. Amount: %s.', $order->id, edd_currency_filter( $refund_object->total, $refund_object->currency ) ) );
 	} else {
+		/* Translators: %d - order ID number */
 		edd_debug_log( sprintf( 'Processing full PayPal refund for order #%d.', $order->id ) );
 	}
 
