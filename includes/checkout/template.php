@@ -1101,7 +1101,7 @@ function edd_receipt_show_download_files( $item_id, $receipt_args, $item = array
 
 	if ( has_filter( 'edd_receipt_show_download_files' ) ) {
 		$cart = array();
-		if ( ! empty( $item ) ) {
+		if ( ! empty( $item->order_id ) ) {
 			$order = edd_get_order_by( 'id', $item->order_id );
 			$cart  = edd_get_payment_meta_cart_details( $order->id, true );
 		}
