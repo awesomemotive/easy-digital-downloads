@@ -24,7 +24,6 @@ if ( ! $order ) : ?>
 endif;
 
 $meta    = edd_get_payment_meta( $order->id );
-$cart    = edd_get_payment_meta_cart_details( $order->id, true );
 
 /**
  * Allows additional output before displaying the receipt table.
@@ -244,7 +243,7 @@ if ( filter_var( $edd_receipt_args['products'], FILTER_VALIDATE_BOOLEAN ) ) :
 								<div class="edd_purchase_receipt_product_notes"><?php echo wp_kses_post( wpautop( $notes ) ); ?></div>
 							<?php endif; ?>
 
-							<?php if ( 'refunded' !== $item->status && edd_receipt_show_download_files( $item->product_id, $edd_receipt_args, $cart[ $item->cart_index ] ) ) : ?>
+							<?php if ( 'refunded' !== $item->status && edd_receipt_show_download_files( $item->product_id, $edd_receipt_args, $item ) ) : ?>
 							<ul class="edd_purchase_receipt_files">
 								<?php
 								if ( ! empty( $download_files ) && is_array( $download_files ) ) :
