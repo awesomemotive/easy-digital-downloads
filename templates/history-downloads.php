@@ -19,14 +19,14 @@ endif;
  * This template is used to display the download history of the current user.
  */
 $customer = edd_get_customer_by( 'user_id', get_current_user_id() );
-$page     = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 0;
+$page     = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
 
 if ( ! empty( $customer ) ) {
 	$orders = edd_get_orders(
 		array(
 			'customer_id' => $customer->id,
 			'number'      => 20,
-			'offset'      => $page ? 20 * ( intval( $page ) - 1 ) : 0,
+			'offset'      => 20 * ( intval( $page ) - 1 ),
 			'type'        => 'sale',
 		)
 	);
