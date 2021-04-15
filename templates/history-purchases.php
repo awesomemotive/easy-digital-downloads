@@ -118,7 +118,6 @@ if ( $orders ) :
 	 * @param array $orders The array of the current user's orders.
 	 */
 	do_action( 'edd_after_order_history', $orders );
-	wp_reset_postdata();
 	?>
 <?php else : ?>
 	<p class="edd-no-purchases"><?php esc_html_e( 'You have not made any purchases', 'easy-digital-downloads' ); ?></p>
