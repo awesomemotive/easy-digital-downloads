@@ -23,6 +23,9 @@ defined( 'ABSPATH' ) || exit;
  *     The `date_created` and `date_modified` parameters do not need to be passed.
  *     They will be automatically populated if empty.
  *
+ *     @type int    $parent         Parent ID. Only used when creating refunds to link
+ *                                  a refund order item to the original order item.
+ *                                  Default 0.
  *     @type int    $order_id       Order ID. Default 0.
  *     @type int    $product_id     Product ID of the order item purchased. ID
  *                                  refers to the download in the `wp_posts` table.

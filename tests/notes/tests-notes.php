@@ -54,7 +54,7 @@ class Tests_Notes extends Ajax_UnitTestCase {
 			'amount'            => '20',
 			'use_count'         => 54,
 			'max_uses'          => 10,
-			'min_cart_price'    => 128,
+			'min_charge_amount' => 128,
 			'product_condition' => 'all',
 			'start_date'        => '2010-12-12 00:00:00',
 			'end_date'          => '2050-12-31 23:59:59'
@@ -161,7 +161,7 @@ class Tests_Notes extends Ajax_UnitTestCase {
 		try {
 			$this->_handleAjax( 'edd_delete_note' );
 		} catch ( \WPAjaxDieStopException $e ) { }
-		
+
 		$this->assertSame( '-1', $e->getMessage() );
 	}
 

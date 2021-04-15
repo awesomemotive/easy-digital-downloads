@@ -2,6 +2,7 @@
 namespace EDD\Orders;
 
 use Carbon\Carbon;
+use EDD\Utils\Exceptions\Invalid_Argument;
 
 /**
  * Refund Tests.
@@ -94,6 +95,7 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 		$refunded_order = edd_refund_order( self::$orders[0] );
 
 		// Check that a new order ID was returned.
+		$this->assertNotInstanceOf( 'WP_Error', $refunded_order );
 		$this->assertGreaterThan( 0, $refunded_order );
 
 		// Fetch original order.
@@ -128,45 +130,55 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers ::edd_refund_order_item
+	 * @covers ::edd_refund_order
 	 */
-	public function test_refund_order_item() {
-		$order_items = edd_get_order( self::$orders[1] )->items;
+	public function test_refund_order_returns_wp_error_if_refund_amount_exceeds_max() {
+		$order = edd_get_order( self::$orders[1] );
 
-		// Refund order item entirely.
-		$refunded_order = edd_refund_order_item( $order_items[0]->id );
+		$to_refund = array();
 
-		// Fetch refunded order.
-		$o = edd_get_order( $refunded_order );
+		foreach( $order->items as $order_item ) {
+			$to_refund[] = array(
+				'order_item_id' => $order_item->id,
+				'subtotal'      => $order_item->subtotal * 2,
+				'tax'           => $order_item->tax,
+				'total'         => $order_item->total * 2
+			);
+		}
 
-		// Check a valid Order object was returned.
-		$this->assertInstanceOf( 'EDD\Orders\Order', $o );
+		$refund_id = edd_refund_order( $order->id, $to_refund );
 
-		// Verify status.
-		$this->assertSame( 'partially_refunded', $o->status );
+		$this->assertInstanceOf( 'WP_Error', $refund_id );
 
-		// Verify type.
-		$this->assertSame( 'refund', $o->type );
-
-		// Verify total.
-		$this->assertSame( -120.0, floatval( $o->total ) );
-
-		$refunded_items = edd_get_order_items( $refunded_order );
-
-		$this->assertEquals( edd_negate_int( $order_items[0]->quantity ), $refunded_items[0]->quantity );
+		$this->assertEquals( 'refund_validation_error', $refund_id->get_error_code() );
+		$this->assertContains( 'The maximum refund subtotal', $refund_id->get_error_message() );
 	}
 
 	/**
-	 * @covers ::edd_apply_order_credit
+	 * @covers ::edd_refund_order
+	 * @covers ::edd_get_order_total
 	 */
-	public function test_apply_order_credit() {
-		$refunded_order = edd_apply_order_credit( self::$orders[2], array(
-			'subtotal' => 20,
-			'total'    => 20,
-		) );
+	public function test_partially_refund_order() {
+		$order = edd_get_order( self::$orders[1] );
 
-		// Fetch refunded order.
-		$o = edd_get_order( $refunded_order );
+		$to_refund = array();
+
+		foreach( $order->items as $order_item ) {
+			// Only refund half the subtotal / tax for the order item. This creates a partial refund.
+			$to_refund[] = array(
+				'order_item_id' => $order_item->id,
+				'subtotal'      => ( $order_item->subtotal - $order_item->discount ) / 2,
+				'tax'           => $order_item->tax / 2,
+				'total'         => $order_item->total / 2
+			);
+		}
+
+		$refund_id = edd_refund_order( $order->id, $to_refund );
+
+		$this->assertGreaterThan( 0, $refund_id );
+
+		// Fetch original order.
+		$o = edd_get_order( $order->id );
 
 		// Check a valid Order object was returned.
 		$this->assertInstanceOf( 'EDD\Orders\Order', $o );
@@ -175,125 +187,28 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 		$this->assertSame( 'partially_refunded', $o->status );
 
 		// Verify type.
-		$this->assertSame( 'refund', $o->type );
+		$this->assertSame( 'sale', $o->type );
 
-		// Verify total.
-		$this->assertSame( -20.0, floatval( $o->total ) );
+		// Verify original total.
+		$this->assertEquals( 120.0, floatval( $o->total ) );
 
-		// Verify adjustments
-		$this->assertCount( 1, $o->adjustments );
-
-		$a = $o->adjustments;
-		$a = $a[0];
-
-		// Verify type.
-		$this->assertSame( 'credit', $a->type );
-
-		// Verify subtotal.
-		$this->assertSame( 20.0, floatval( $a->subtotal ) );
-
-		// Verify total.
-		$this->assertSame( 20.0, floatval( $a->total ) );
-
-		// Verify order total.
-		$this->assertSame( 100.0, edd_get_order_total( self::$orders[2] ) );
-	}
-
-	/**
-	 * @covers ::edd_apply_order_item_credit
-	 */
-	public function test_apply_order_item_credit() {
-		$o = edd_get_order( self::$orders[2] );
-		$i = $o->items;
-
-		$refunded_order = edd_apply_order_item_credit( $i[0]->id, array(
-			'subtotal' => 20,
-			'total'    => 20,
-		) );
+		// Verify total minus refunded amount.
+		$this->assertEquals( 60.0, edd_get_order_total( $o->id ) );
 
 		// Fetch refunded order.
-		$o = edd_get_order( $refunded_order );
+		$r = edd_get_order( $refund_id );
 
 		// Check a valid Order object was returned.
-		$this->assertInstanceOf( 'EDD\Orders\Order', $o );
+		$this->assertInstanceOf( 'EDD\Orders\Order', $r );
 
 		// Verify status.
-		$this->assertSame( 'partially_refunded', $o->status );
+		$this->assertSame( 'complete', $r->status );
 
 		// Verify type.
-		$this->assertSame( 'refund', $o->type );
+		$this->assertSame( 'refund', $r->type );
 
 		// Verify total.
-		$this->assertSame( -20.0, floatval( $o->total ) );
-
-		// Verify adjustments
-		$this->assertCount( 1, $o->items[0]->adjustments );
-
-		$a = $o->items[0]->adjustments;
-		$a = $a[0];
-
-		// Verify type.
-		$this->assertSame( 'credit', $a->type );
-
-		// Verify subtotal.
-		$this->assertSame( 20.0, floatval( $a->subtotal ) );
-
-		// Verify total.
-		$this->assertSame( 20.0, floatval( $a->total ) );
-
-		// Verify order total.
-		$this->assertSame( 100.0, edd_get_order_total( self::$orders[2] ) );
-	}
-
-	/**
-	 * @covers ::edd_apply_order_discount
-	 */
-	public function test_apply_order_discount() {
-		$discount_id = self::edd()->discount->create( array(
-			'name'   => '$5 Off',
-			'code'   => '5OFF',
-			'status' => 'active',
-			'type'   => 'flat',
-			'scope'  => 'global',
-			'amount' => 5,
-		) );
-
-		$refunded_order = edd_apply_order_discount( self::$orders[3], $discount_id );
-
-		// Fetch refunded order.
-		$o = edd_get_order( $refunded_order );
-
-		// Check a valid Order object was returned.
-		$this->assertInstanceOf( 'EDD\Orders\Order', $o );
-
-		// Verify status.
-		$this->assertSame( 'partially_refunded', $o->status );
-
-		// Verify type.
-		$this->assertSame( 'refund', $o->type );
-
-		// Verify discount.
-		$this->assertSame( 5.0, floatval( $o->discount ) );
-
-		// Verify total.
-		$this->assertSame( -5.0, floatval( $o->total ) );
-
-		// Verify adjustments
-		$this->assertCount( 1, $o->adjustments );
-
-		$a = $o->adjustments[0];
-
-		// Verify type.
-		$this->assertSame( 'discount', $a->type );
-
-		// Verify subtotal.
-		$this->assertSame( 5.0, floatval( $a->subtotal ) );
-
-		// Verify total.
-		$this->assertSame( 5.0, floatval( $a->total ) );
-
-		// Verify order total.
-		$this->assertSame( 115.0, edd_get_order_total( self::$orders[3] ) );
+		$this->assertEquals( -60.0, floatval( $r->total ) );
 	}
 
 	/**
@@ -317,5 +232,73 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 		$date = '2010-01-01 00:00:00';
 
 		$this->assertSame( Carbon::parse( $date )->addDays( 30 )->toDateTimeString(), edd_get_refund_date( $date ) );
+	}
+
+	/**
+	 * @covers \EDD\Orders\Refund_Validator::validate_and_calculate_totals
+	 * @covers \EDD\Orders\Refund_Validator::get_refunded_order_items
+	 * @throws \Exception
+	 */
+	public function test_refund_validator_all_returns_original_amounts() {
+		$order     = edd_get_order( self::$orders[1] );
+		$validator = new Refund_Validator( $order, 'all', 'all' );
+		$validator->validate_and_calculate_totals();
+
+		$this->assertEquals( ( $order->subtotal - $order->discount ), $validator->subtotal );
+		$this->assertEquals( $order->tax, $validator->tax );
+		$this->assertEquals( $order->total, $validator->total );
+
+		$order_item_ids  = wp_list_pluck( $order->items, 'id' );
+		$refund_item_ids = wp_list_pluck( $validator->get_refunded_order_items(), 'parent' );
+
+		sort( $order_item_ids );
+		sort( $refund_item_ids );
+
+		$this->assertEquals( $order_item_ids, $refund_item_ids );
+	}
+
+	/**
+	 * An Invalid_Argument exception is thrown if the `order_item_id` argument is missing.
+	 *
+	 * @covers \EDD\Orders\Refund_Validator::validate_and_format_order_items
+	 */
+	public function test_refund_validator_throws_exception_missing_order_item_id() {
+		$order = edd_get_order( self::$orders[1] );
+
+		$this->expectException( Invalid_Argument::class );
+
+		$validator = new Refund_Validator( $order, array(
+			array(
+				'subtotal' => 100,
+				'tax'      => 20,
+				'total'    => 120
+			)
+		), 'all' );
+
+		$exception = $this->getExpectedException();
+		$this->assertContains( 'order_item_id', $exception->getMessage() );
+	}
+
+	/**
+	 * An Invalid_Argument exception is thrown if the `subtotal` argument is missing.
+	 *
+	 * @covers \EDD\Orders\Refund_Validator::validate_and_format_order_items
+	 * @covers \EDD\Orders\Refund_Validator::validate_required_fields
+	 */
+	public function test_refund_validator_throws_exception_missing_subtotal() {
+		$order = edd_get_order( self::$orders[1] );
+
+		$this->expectException( Invalid_Argument::class );
+
+		$validator = new Refund_Validator( $order, array(
+			array(
+				'order_item_id' => $order->items[0]->id,
+				'tax'           => $order->items[0]->tax,
+				'total'         => $order->items[0]->total
+			)
+		), 'all' );
+
+		$exception = $this->getExpectedException();
+		$this->assertContains( 'subtotal', $exception->getMessage() );
 	}
 }

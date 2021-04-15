@@ -607,7 +607,7 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		if ( $this->args['end_date'] ) {
 			if ( is_numeric( $this->end_date ) ) {
-				$this->end_date = \Carbon\Carbon::createFromTimestamp( $this->start_date )->toDateTimeString();
+				$this->end_date = \Carbon\Carbon::createFromTimestamp( $this->end_date )->toDateTimeString();
 			}
 
 			$this->end_date = \Carbon\Carbon::parse( $this->end_date, edd_get_timezone_id() )->setTimezone( 'UTC' )->timestamp;
