@@ -1323,7 +1323,13 @@ function edd_refund_paypal_purchase( $payment_id_or_object, $refund_object = nul
 		edd_update_order_meta( $order->id, '_edd_paypal_refunded', true );
 
 		// Add a note to the original order, and, if provided, the new refund object.
-		$note_message = sprintf( __( 'PayPal refund transaction ID: %s', 'easy-digital-downloads' ), $body['REFUNDTRANSACTIONID'] );
+		if ( isset( $body['GROSSREFUNDAMT'] ) ) {
+			/* Translators: %1$s - amount refunded; %2$s - transaction ID. */
+			$note_message = sprintf( __( '%1$s refunded in PayPal. Transaction ID: %2$s', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( $body['GROSSREFUNDAMT'] ) ), esc_html( $body['REFUNDTRANSACTIONID'] ) );
+		} else {
+			/* Translators: %s - transaction ID. */
+			$note_message = sprintf( __( 'PayPal refund transaction ID: %s', 'easy-digital-downloads' ), esc_html( $body['REFUNDTRANSACTIONID'] ) );
+		}
 		$note_object_ids = array( $order->id );
 		if ( $refund_object instanceof Order ) {
 			$note_object_ids[] = $refund_object->id;
