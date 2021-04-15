@@ -1157,3 +1157,63 @@ function edd_record_status_change( $payment_id, $new_status, $old_status ) {
 
 	edd_insert_payment_note( $payment_id, $status_change );
 }
+
+/**
+ * Fires before the order receipt table, if needed.
+ *
+ * @deprecated 3.0
+ * @param \EDD\Orders\Order $order            The current order object.
+ * @param array             $edd_receipt_args The shortcode parameters for the receipt.
+ */
+add_action( 'edd_order_receipt_before_table', function( $order, $edd_receipt_args ) {
+	if ( ! has_action( 'edd_payment_receipt_before_table' ) ) {
+		return;
+	}
+	$payment = edd_get_payment( $order->id );
+	do_action( 'edd_payment_receipt_before_table', $payment, $edd_receipt_args );
+}, 10, 2 );
+
+/**
+ * Fires at the beginning of the order receipt `thead`, if needed.
+ *
+ * @deprecated 3.0
+ * @param \EDD\Orders\Order $order            The current order object.
+ * @param array             $edd_receipt_args The shortcode parameters for the receipt.
+ */
+add_action( 'edd_order_receipt_before', function( $order, $edd_receipt_args ) {
+	if ( ! has_action( 'edd_payment_receipt_before' ) ) {
+		return;
+	}
+	$payment = edd_get_payment( $order->id );
+	do_action( 'edd_payment_receipt_before', $payment, $edd_receipt_args );
+}, 10, 2 );
+
+/**
+ * Fires at the end of the order receipt `tbody`, if needed.
+ *
+ * @deprecated 3.0
+ * @param \EDD\Orders\Order $order            The current order object.
+ * @param array             $edd_receipt_args The shortcode parameters for the receipt.
+ */
+add_action( 'edd_order_receipt_after', function( $order, $edd_receipt_args ) {
+	if ( ! has_action( 'edd_payment_receipt_after' ) ) {
+		return;
+	}
+	$payment = edd_get_payment( $order->id );
+	do_action( 'edd_payment_receipt_after', $payment, $edd_receipt_args );
+}, 10, 2 );
+
+/**
+ * Fires after the order receipt table, if needed.
+ *
+ * @deprecated 3.0
+ * @param \EDD\Orders\Order $order            The current order object.
+ * @param array             $edd_receipt_args The shortcode parameters for the receipt.
+ */
+add_action( 'edd_order_receipt_after_table', function( $order, $edd_receipt_args ) {
+	if ( ! has_action( 'edd_payment_receipt_after_table' ) ) {
+		return;
+	}
+	$payment = edd_get_payment( $order->id );
+	do_action( 'edd_payment_receipt_after_table', $payment, $edd_receipt_args );
+}, 10, 2 );

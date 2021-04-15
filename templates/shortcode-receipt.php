@@ -23,7 +23,6 @@ if ( ! $order ) : ?>
 	return;
 endif;
 
-$payment = edd_get_payment( $order->id );
 $meta    = edd_get_payment_meta( $order->id );
 $cart    = edd_get_payment_meta_cart_details( $order->id, true );
 
@@ -35,11 +34,11 @@ $cart    = edd_get_payment_meta_cart_details( $order->id, true );
  * @param \EDD\Orders\Order $order          Current order.
  * @param array             $edd_receipt_args [edd_receipt] shortcode arguments.
  */
-do_action( 'edd_payment_receipt_before_table', $order, $edd_receipt_args );
+do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 ?>
 <table id="edd_purchase_receipt" class="edd-table">
 	<thead>
-		<?php do_action( 'edd_payment_receipt_before', $payment, $edd_receipt_args ); ?>
+		<?php do_action( 'edd_order_receipt_before', $order, $edd_receipt_args ); ?>
 
 		<?php if ( filter_var( $edd_receipt_args['payment_id'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
 		<tr>
@@ -153,13 +152,29 @@ do_action( 'edd_payment_receipt_before_table', $order, $edd_receipt_args );
 			</tr>
 		<?php endif; ?>
 
-		<?php do_action( 'edd_payment_receipt_after', $payment, $edd_receipt_args ); ?>
+		<?php
+		/**
+		 * Fires at the end of the order receipt `tbody`.
+		 *
+		 * @since 3.0
+		 * @param \EDD\Orders\Order $order          Current order.
+		 * @param array             $edd_receipt_args [edd_receipt] shortcode arguments.
+		 */
+		do_action( 'edd_order_receipt_after', $order, $edd_receipt_args );
+		?>
 	</tbody>
 </table>
 
-<?php do_action( 'edd_payment_receipt_after_table', $payment, $edd_receipt_args ); ?>
-
 <?php
+/**
+ * Fires after the order receipt table.
+ *
+ * @since 3.0
+ * @param \EDD\Orders\Order $order          Current order.
+ * @param array             $edd_receipt_args [edd_receipt] shortcode arguments.
+ */
+do_action( 'edd_order_receipt_after_table', $order, $edd_receipt_args );
+
 if ( filter_var( $edd_receipt_args['products'], FILTER_VALIDATE_BOOLEAN ) ) :
 	$order_items = $order->get_items();
 	if ( ! empty( $order_items ) ) :
