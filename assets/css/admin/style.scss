@@ -23,6 +23,8 @@
 
 @import "reports/style";
 
+@import "orders/style";
+
 /**
  * Notes:
  *
@@ -626,7 +628,7 @@ table.edd-order-overview-summary--refund {
 }
 
 .edd-order-overview-summary th:not(.column-primary) {
-	width: 200px;
+	width: 100px;
 }
 
 .edd-order-overview-summary .row-actions > *:not(:first-child):before {
@@ -1088,7 +1090,6 @@ textarea[name="edd-note"] {
 .wp-list-table.discounts .column-primary strong,
 .wp-list-table.orders .column-primary strong,
 .wp-list-table.orderitems .column-primary strong,
-.wp-list-table.refunditems .column-primary strong,
 .wp-list-table.orderadjustments .column-primary strong {
 	font-size: 14px;
 }
@@ -1575,32 +1576,7 @@ input[class*="edd-price-field"] {
 #edd-order-refunds-list {
 	padding-left: 25px;
 }
-#edd-refund-submit-button-wrapper .spinner {
-	float: none;
-	vertical-align: top;
-}
-#edd-submit-refund-status {
-	text-align: center;
-	font-size: 1.2em;
-	vertical-align: middle;
-}
-#edd-submit-refund-status .edd-submit-refund-message::before{
-	font-family: dashicons;
-	font-size: 1.5em;
-	vertical-align: middle;
-	color: #fff;
-	border-radius: 16px;
-	margin: 5px;
-}
-#edd-submit-refund-status .edd-submit-refund-message.success::before{
-	content: "\f147";
-	background-color: #339933;
-	padding-right: 1px;
-}
-#edd-submit-refund-status .edd-submit-refund-message.fail::before{
-	content: "\f335";
-	background-color: #993333;
-}
+
 #poststuff .edd-order-data .inside {
 	margin: 0;
 	padding: 0;
@@ -1620,18 +1596,7 @@ input[class*="edd-price-field"] {
 	font-style: italic;
 	padding: 5px;
 }
-#edd-refund-order-dialog #edd-refund-submit-subtotal td {
-	border-top: 2px solid #9c9c9c;
-}
-#edd-refund-submit-button-wrapper,
-#edd-refund-order-dialog .edd-refund-submit-line-total td:first-child {
-	text-align: right;
-}
-#edd-refund-order-dialog .edd-order-item__label {
-	font-size: 14px;
-	font-weight: 600;
-	vertical-align: baseline;
-}
+
 #edd_general_logs p {
 	margin: 0;
 	padding: 0;
@@ -1858,45 +1823,6 @@ input[class*="edd-price-field"] {
 	}
 	.order-data-column input[type="email"] {
 		padding: 6px 10px;
-	}
-
-	.refunditems tr {
-		display: flex;
-	}
-
-	.refunditems tr.refunditem {
-		flex-wrap: wrap;
-	}
-
-	.refunditems td {
-		flex: 1 0 2.5em;
-	}
-
-	.refunditems tr.refunditem td:not(.check-column) {
-		flex-basis: calc(100% - 60px);
-	}
-
-	.refunditems tr.refunditem td:not(.check-column):not(.column-name) {
-		flex-basis: 100px;
-		display: inline-flex;
-		justify-content: flex-start;
-	}
-
-	.refunditems th:not(.column-name),
-	.refunditems tr.refunditem td.column-name:before {
-		display: none !important;
-	}
-
-	.refunditems tr.refunditem td:not(.check-column):not(.column-name):before {
-		position: relative;
-		display: inline-block;
-		margin-right: 10px;
-		left: unset;
-		width: unset;
-	}
-
-	.wp-list-table.refunditems .column-name {
-		width: 100%;
 	}
 
 	.edd-refund-submit-line-total td:last-of-type {

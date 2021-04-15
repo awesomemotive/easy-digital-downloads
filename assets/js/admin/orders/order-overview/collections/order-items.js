@@ -81,7 +81,9 @@ export const OrderItems = Backbone.Collection.extend( {
 		const { state } = options;
 
 		const items = state.get( 'items' );
-		const adjustments = state.get( 'adjustments' );
+		const discounts = new Backbone.Collection(
+			state.get( 'adjustments' ).getByType( 'discount' )
+		);
 
 		const args = {
 			country: state.getTaxCountry(),
@@ -93,7 +95,7 @@ export const OrderItems = Backbone.Collection.extend( {
 					price_id: item.get( 'priceId' ),
 				}
 			} ) ),
-			discountIds: adjustments.pluck( 'typeId' ),
+			discountIds: discounts.pluck( 'typeId' ),
 		};
 
 		// Keep track of all jQuery Promises.

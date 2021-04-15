@@ -42,6 +42,16 @@ class Order_Adjustments extends Schema {
 			'sortable'   => true
 		),
 
+		// parent
+		array(
+			'name'       => 'parent',
+			'type'       => 'bigint',
+			'length'     => '20',
+			'unsigned'   => true,
+			'default'    => '0',
+			'sortable'   => true
+		),
+
 		// object_id
 		array(
 			'name'       => 'object_id',

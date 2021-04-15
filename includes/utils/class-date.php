@@ -28,6 +28,7 @@ final class Date extends \Carbon\Carbon {
 	 * Sets up the date.
 	 *
 	 * @since 3.0
+	 * @throws \Exception
 	 */
 	public function __construct( $time = 'now', \DateTimeZone $timezone = null ) {
 		if ( null === $timezone ) {

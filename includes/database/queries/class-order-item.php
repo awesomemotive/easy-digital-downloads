@@ -107,6 +107,9 @@ class Order_Item extends Query {
 	 *     @type int          $id                   An order item ID to only return that item. Default empty.
 	 *     @type array        $id__in               Array of order item IDs to include. Default empty.
 	 *     @type array        $id__not_in           Array of order item IDs to exclude. Default empty.
+	 *     @type int          $parent               A parent ID to only return items with that parent. Default empty.
+	 *     @type array        $parent__in           An array of parent IDs to include. Default empty.
+	 *     @type array        $parent__not_in       An array of parent IDs to exclude. Default empty.
 	 *     @type int          $order_id             An order ID to only return those order items. Default empty.
 	 *     @type array        $order_id__in         Array of order IDs to include. Default empty.
 	 *     @type array        $order_id__not_in     Array of order IDs to exclude. Default empty.
