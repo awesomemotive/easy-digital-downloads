@@ -1176,15 +1176,22 @@ function edd_paypal_maybe_refund_transaction( $order_id, $refund_id, $all_refund
 		return;
 	}
 
+	$order = edd_get_order( $order_id );
+	if ( empty( $order->gateway ) || 'paypal' !== $order->gateway ) {
+		return;
+	}
+
 	// Get our data out of the serialized string.
 	parse_str( $_POST['data'], $form_data );
 
 	if ( empty( $form_data['edd-paypal-refund'] ) ) {
-		return;
-	}
+		edd_add_note( array(
+			'object_id'   => $order_id,
+			'object_type' => 'order',
+			'user_id'     => is_admin() ? get_current_user_id() : 0,
+			'content'     => __( 'Transaction not refunded in PayPal, as checkbox was not selected.', 'easy-digital-downloads' )
+		) );
 
-	$order = edd_get_order( $order_id );
-	if ( empty( $order->gateway ) || 'paypal' !== $order->gateway ) {
 		return;
 	}
 
