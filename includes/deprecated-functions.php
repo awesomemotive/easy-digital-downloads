@@ -1162,6 +1162,9 @@ function edd_record_status_change( $payment_id, $new_status, $old_status ) {
  * Legacy pre-refund hook which fired after a payment status changed, but before store stats were updated.
  *
  * @deprecated 3.0
+ * @todo       Formally deprecate in EDD 3.1
+ * @link       https://github.com/easydigitaldownloads/easy-digital-downloads/issues/8574
+ *
  * @param int $order_id The original order id.
  */
 add_action( 'edd_refund_order', function( $order_id ) {
@@ -1174,6 +1177,9 @@ add_action( 'edd_refund_order', function( $order_id ) {
  * Legacy post-refund hook which fired after a payment status changed and store stats were updated.
  *
  * @deprecated 3.0
+ * @todo       Formally deprecate in EDD 3.1
+ * @link       https://github.com/easydigitaldownloads/easy-digital-downloads/issues/8574
+ *
  * @param int $order_id The original order id.
  */
 add_action( 'edd_refund_order', function( $order_id ) {
