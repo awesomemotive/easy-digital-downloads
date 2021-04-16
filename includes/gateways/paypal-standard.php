@@ -1241,10 +1241,10 @@ function edd_refund_paypal_purchase( $payment_id_or_object, $refund_object = nul
 
 	// Set PayPal API key credentials.
 	$credentials = array(
-		'api_endpoint'  => 'test' == $payment->mode ? 'https://api-3t.sandbox.paypal.com/nvp' : 'https://api-3t.paypal.com/nvp',
-		'api_username'  => edd_get_option( 'paypal_' . $payment->mode . '_api_username' ),
-		'api_password'  => edd_get_option( 'paypal_' . $payment->mode . '_api_password' ),
-		'api_signature' => edd_get_option( 'paypal_' . $payment->mode . '_api_signature' )
+		'api_endpoint'  => 'test' == $order->mode ? 'https://api-3t.sandbox.paypal.com/nvp' : 'https://api-3t.paypal.com/nvp',
+		'api_username'  => edd_get_option( 'paypal_' . $order->mode . '_api_username' ),
+		'api_password'  => edd_get_option( 'paypal_' . $order->mode . '_api_password' ),
+		'api_signature' => edd_get_option( 'paypal_' . $order->mode . '_api_signature' )
 	);
 
 	$credentials = apply_filters( 'edd_paypal_refund_api_credentials', $credentials, $payment );
@@ -1255,7 +1255,7 @@ function edd_refund_paypal_purchase( $payment_id_or_object, $refund_object = nul
 		'SIGNATURE'     => $credentials['api_signature'],
 		'VERSION'       => '124',
 		'METHOD'        => 'RefundTransaction',
-		'TRANSACTIONID' => $payment->transaction_id,
+		'TRANSACTIONID' => $order->get_transaction_id(),
 		'REFUNDTYPE'    => 'Full'
 	);
 
@@ -1356,9 +1356,12 @@ function edd_refund_paypal_purchase( $payment_id_or_object, $refund_object = nul
 		}
 
 	} else {
-
-		$payment->add_note( sprintf( __( 'PayPal refund failed: %s', 'easy-digital-downloads' ), $error_msg ) );
-
+		edd_add_note( array(
+			'object_id'   => $order->id,
+			'object_type' => 'order',
+			'user_id'     => is_admin() ? get_current_user_id() : 0,
+			'content'     => sprintf( __( 'PayPal refund failed: %s', 'easy-digital-downloads' ), $error_msg )
+		) );
 	}
 
 	// Run hook letting people know the payment has been refunded successfully.
