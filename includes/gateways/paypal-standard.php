@@ -1149,7 +1149,7 @@ function edd_paypal_refund_checkbox( Order $order ) {
 	<div class="edd-form-group edd-paypal-refund-transaction">
 		<div class="edd-form-group__control">
 			<input type="checkbox" id="edd-paypal-refund" name="edd-paypal-refund" class="edd-form-group__input" value="1">
-			<label for="edd-paypal-refund">
+			<label for="edd-paypal-refund" class="edd-form-group__label">
 				<?php esc_html_e( 'Refund transaction in PayPal', 'easy-digital-downloads' ); ?>
 			</label>
 		</div>
