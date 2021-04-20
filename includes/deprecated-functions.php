@@ -1266,3 +1266,100 @@ add_action( 'edd_order_receipt_after_files', function( $item, $order ) {
 	$meta = edd_get_payment_meta( $order_id );
 	do_action( 'edd_purchase_receipt_after_files', $item->product_id, $order->id, $meta, $item->price_id );
 }, 10, 2 );
+
+/**
+ * Shows checkbox to automatically refund payments made in PayPal.
+ *
+ * @deprecated 3.0 In favour of `edd_paypal_refund_checkbox()`
+ * @see edd_paypal_refund_checkbox()
+ *
+ * @since  2.6.0
+ *
+ * @param int $payment_id The current payment ID.
+ * @return void
+ */
+function edd_paypal_refund_admin_js( $payment_id = 0 ) {
+
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '3.0', 'edd_paypal_refund_checkbox', $backtrace );
+
+	// If not the proper gateway, return early.
+	if ( 'paypal' !== edd_get_payment_gateway( $payment_id ) ) {
+		return;
+	}
+
+	// If our credentials are not set, return early.
+	$key       = edd_get_payment_meta( $payment_id, '_edd_payment_mode', true );
+	$username  = edd_get_option( 'paypal_' . $key . '_api_username' );
+	$password  = edd_get_option( 'paypal_' . $key . '_api_password' );
+	$signature = edd_get_option( 'paypal_' . $key . '_api_signature' );
+
+	if ( empty( $username ) || empty( $password ) || empty( $signature ) ) {
+		return;
+	}
+
+	// Localize the refund checkbox label.
+	$label = __( 'Refund Payment in PayPal', 'easy-digital-downloads' );
+
+	?>
+	<script type="text/javascript">
+		jQuery(document).ready(function($) {
+			$('select[name=edd-payment-status]').change(function() {
+				if ( 'refunded' === $(this).val() ) {
+					$(this).parent().parent().append('<input type="checkbox" id="edd-paypal-refund" name="edd-paypal-refund" value="1" style="margin-top:0">');
+					$(this).parent().parent().append('<label for="edd-paypal-refund"><?php echo $label; ?></label>');
+				} else {
+					$('#edd-paypal-refund').remove();
+					$('label[for="edd-paypal-refund"]').remove();
+				}
+			});
+		});
+	</script>
+	<?php
+}
+
+/**
+ * Possibly refunds a payment made with PayPal Standard or PayPal Express.
+ *
+ * @deprecated 3.0 In favour of `edd_paypal_maybe_refund_transaction()`
+ * @see edd_paypal_maybe_refund_transaction()
+ *
+ * @since  2.6.0
+ *
+ * @param object|EDD_Payment $payment The current payment ID.
+ * @return void
+ */
+function edd_maybe_refund_paypal_purchase( EDD_Payment $payment ) {
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '3.0', 'edd_paypal_maybe_refund_transaction', $backtrace );
+
+	if ( ! current_user_can( 'edit_shop_payments', $payment->ID ) ) {
+		return;
+	}
+
+	if ( empty( $_POST['edd-paypal-refund'] ) ) {
+		return;
+	}
+
+	$processed = $payment->get_meta( '_edd_paypal_refunded', true );
+
+	// If the status is not set to "refunded", return early.
+	if ( 'complete' !== $payment->old_status && 'revoked' !== $payment->old_status ) {
+		return;
+	}
+
+	// If not PayPal/PayPal Express, return early.
+	if ( 'paypal' !== $payment->gateway ) {
+		return;
+	}
+
+	// If the payment has already been refunded in the past, return early.
+	if ( $processed ) {
+		return;
+	}
+
+	// Process the refund in PayPal.
+	edd_refund_paypal_purchase( $payment );
+}
