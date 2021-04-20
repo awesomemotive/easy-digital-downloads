@@ -553,6 +553,7 @@ final class Easy_Digital_Downloads {
 		if ( file_exists( EDD_PLUGIN_DIR . 'includes/deprecated-functions.php' ) ) {
 			require_once EDD_PLUGIN_DIR . 'includes/deprecated-functions.php';
 		}
+		require_once EDD_PLUGIN_DIR . 'includes/deprecated-hooks.php';
 	}
 
 	/**
