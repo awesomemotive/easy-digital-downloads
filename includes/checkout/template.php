@@ -1108,5 +1108,14 @@ function edd_receipt_show_download_files( $item_id, $receipt_args, $item = array
 		$ret = apply_filters( 'edd_receipt_show_download_files', $ret, $item_id, $receipt_args, $cart[ $item->cart_index ] );
 	}
 
+	/**
+	 * Modifies whether the receipt should show download files.
+	 *
+	 * @since 3.0
+	 * @param bool                   $ret          True if the download files should be shown.
+	 * @param int                    $item_id      The download ID.
+	 * @param array                  $receipt_args Args specified in the [edd_receipt] shortcode.
+	 * @param \EDD\Orders\Order_Item $item        The order item object.
+	 */
 	return apply_filters( 'edd_order_receipt_show_download_files', $ret, $item_id, $receipt_args, $item );
 }
