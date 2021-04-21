@@ -732,6 +732,7 @@ function edd_order_details_overview( $order ) {
 
 	$templates = array(
 		'actions',
+		'subtotal',
 		'totals',
 		'item',
 		'adjustment',
