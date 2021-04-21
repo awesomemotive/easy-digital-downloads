@@ -73,48 +73,11 @@ export const State = Backbone.Model.extend(
 		getSubtotal() {
 			const { models: items } = this.get( 'items' );
 
-			// Use stored value if the record has already been created.
-			if ( false === this.get( 'isAdding' ) ) {
-				// Use the `discount` column for each OrderItem. OrderAdjustments do
-				// not store the per-item discount amount.
-				//
-				// Used when viewing a Refund to find the actual amount refunded per item.
-				//
-				// A $50.00 OrderItem that has a $12.50 discount applied by splitting two
-				// flat rate discounts of $5 and $10 would incorrectly try to apply $15.00
-				// discount if the attached OrderAdjustments were summed.
-				return items.reduce(
-					( amount, item ) => {
-						return amount += ( item.get( 'subtotal' ) - item.get( 'discount' ) );
-					},
-					0
-				);
-			}
-
-			// Add all subtotals.
-			const subtotal = items.reduce(
+			return items.reduce(
 				( amount, item ) => {
 					return amount += +item.get( 'subtotal' );
 				},
 				0
-			);
-
-			const { models: adjustments } = this.get( 'adjustments' );
-
-			// Add or substract all adjustment subtotals.
-			return adjustments.reduce(
-				( amount, adjustment ) => {
-					if (
-						[ 'discount', 'credit' ].includes(
-							adjustment.get( 'type' )
-						)
-					) {
-						return amount -= +adjustment.getAmount();
-					} else {
-						return amount += +adjustment.getAmount();
-					}
-				},
-				subtotal
 			);
 		},
 
