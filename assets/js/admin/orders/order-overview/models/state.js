@@ -140,7 +140,7 @@ export const State = Backbone.Model.extend(
 				return this.get( 'order' ).total;
 			}
 
-			return this.getSubtotal() + this.getTax();
+			return ( this.getSubtotal() - this.getDiscount() ) + this.getTax();
 		},
 
 		/**
