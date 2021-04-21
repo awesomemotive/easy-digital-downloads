@@ -139,13 +139,13 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 			<tr>
 				<td><strong><?php esc_html_e( 'Subtotal', 'easy-digital-downloads' ); ?>:</strong></td>
 				<td>
-					<?php echo esc_html( edd_currency_filter( edd_format_amount( $order->subtotal ) ) ); ?>
+					<?php echo esc_html( edd_payment_subtotal( $order->id ) ); ?>
 				</td>
 			</tr>
 
 			<tr>
 				<td><strong><?php esc_html_e( 'Total Price', 'easy-digital-downloads' ); ?>:</strong></td>
-				<td><?php echo esc_html( edd_currency_filter( edd_format_amount( $order->total ) ) ); ?></td>
+				<td><?php echo esc_html( edd_payment_amount( $order->id ) ); ?></td>
 			</tr>
 		<?php endif; ?>
 
