@@ -144,7 +144,7 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 			</tr>
 
 			<tr>
-				<td><strong><?php esc_html_e( 'Total Price', 'easy-digital-downloads' ); ?>:</strong></td>
+				<td><strong><?php esc_html_e( 'Total', 'easy-digital-downloads' ); ?>:</strong></td>
 				<td><?php echo esc_html( edd_payment_amount( $order->id ) ); ?></td>
 			</tr>
 		<?php endif; ?>
