@@ -167,144 +167,146 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
  */
 do_action( 'edd_order_receipt_after_table', $order, $edd_receipt_args );
 
-if ( filter_var( $edd_receipt_args['products'], FILTER_VALIDATE_BOOLEAN ) ) :
-	$order_items = $order->get_items();
-	if ( ! empty( $order_items ) ) :
-		?>
+if ( ! filter_var( $edd_receipt_args['products'], FILTER_VALIDATE_BOOLEAN ) ) {
+	return;
+}
+$order_items = $order->get_items();
+if ( empty( $order_items ) ) {
+	return;
+}
+?>
 
-		<h3><?php echo esc_html( apply_filters( 'edd_payment_receipt_products_title', __( 'Products', 'easy-digital-downloads' ) ) ); ?></h3>
+<h3><?php echo esc_html( apply_filters( 'edd_payment_receipt_products_title', __( 'Products', 'easy-digital-downloads' ) ) ); ?></h3>
 
-		<table id="edd_purchase_receipt_products" class="edd-table">
-			<thead>
-				<th><?php esc_html_e( 'Name', 'easy-digital-downloads' ); ?></th>
-				<?php if ( edd_use_skus() ) { ?>
-					<th><?php esc_html_e( 'SKU', 'easy-digital-downloads' ); ?></th>
-				<?php } ?>
-				<?php if ( edd_item_quantities_enabled() ) : ?>
-					<th><?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?></th>
-				<?php endif; ?>
-				<th><?php esc_html_e( 'Price', 'easy-digital-downloads' ); ?></th>
-			</thead>
+<table id="edd_purchase_receipt_products" class="edd-table">
+	<thead>
+		<th><?php esc_html_e( 'Name', 'easy-digital-downloads' ); ?></th>
+		<?php if ( edd_use_skus() ) { ?>
+			<th><?php esc_html_e( 'SKU', 'easy-digital-downloads' ); ?></th>
+		<?php } ?>
+		<?php if ( edd_item_quantities_enabled() ) : ?>
+			<th><?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?></th>
+		<?php endif; ?>
+		<th><?php esc_html_e( 'Price', 'easy-digital-downloads' ); ?></th>
+	</thead>
 
-			<tbody>
-				<?php foreach ( $order_items as $key => $item ) : ?>
+	<tbody>
+		<?php foreach ( $order_items as $key => $item ) : ?>
+			<?php
+			// Skip this item if we can't view it.
+			if ( ! apply_filters( 'edd_user_can_view_receipt_item', true, $item ) ) {
+				continue;
+			}
+			?>
+
+			<tr>
+				<td>
+					<?php $download_files = edd_get_download_files( $item->product_id, $item->price_id ); ?>
+
+					<div class="edd_purchase_receipt_product_name">
+						<?php
+						echo esc_html( $item->product_name );
+
+						if ( ! empty( $item->status ) && 'complete' !== $item->status ) {
+							echo ' &ndash; ' . esc_html( edd_get_status_label( $item->status ) );
+						}
+						?>
+					</div>
 					<?php
-					// Skip this item if we can't view it.
-					if ( ! apply_filters( 'edd_user_can_view_receipt_item', true, $item ) ) {
-						continue;
-					}
-					?>
+					$notes = edd_get_product_notes( $item->product_id );
+					if ( ! empty( $notes ) ) : ?>
+						<div class="edd_purchase_receipt_product_notes"><?php echo wp_kses_post( wpautop( $notes ) ); ?></div>
+					<?php endif; ?>
 
-					<tr>
-						<td>
-							<?php $download_files = edd_get_download_files( $item->product_id, $item->price_id ); ?>
-
-							<div class="edd_purchase_receipt_product_name">
-								<?php
-								echo esc_html( $item->product_name );
-
-								if ( ! empty( $item->status ) && 'complete' !== $item->status ) {
-									echo ' &ndash; ' . esc_html( edd_get_status_label( $item->status ) );
-								}
+					<?php if ( 'refunded' !== $item->status && edd_receipt_show_download_files( $item->product_id, $edd_receipt_args, $item ) ) : ?>
+					<ul class="edd_purchase_receipt_files">
+						<?php
+						if ( ! empty( $download_files ) && is_array( $download_files ) ) :
+							foreach ( $download_files as $filekey => $file ) :
 								?>
-							</div>
-							<?php
-							$notes = edd_get_product_notes( $item->product_id );
-							if ( ! empty( $notes ) ) : ?>
-								<div class="edd_purchase_receipt_product_notes"><?php echo wp_kses_post( wpautop( $notes ) ); ?></div>
-							<?php endif; ?>
-
-							<?php if ( 'refunded' !== $item->status && edd_receipt_show_download_files( $item->product_id, $edd_receipt_args, $item ) ) : ?>
-							<ul class="edd_purchase_receipt_files">
+								<li class="edd_download_file">
+									<a href="<?php echo esc_url( edd_get_download_file_url( $order->payment_key, $order->email, $filekey, $item->product_id, $item->price_id ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
+								</li>
 								<?php
-								if ( ! empty( $download_files ) && is_array( $download_files ) ) :
-									foreach ( $download_files as $filekey => $file ) :
-										?>
-										<li class="edd_download_file">
-											<a href="<?php echo esc_url( edd_get_download_file_url( $order->payment_key, $order->email, $filekey, $item->product_id, $item->price_id ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
-										</li>
+								/**
+								 * Fires at the end of the order receipt files list.
+								 *
+								 * @since 3.0
+								 * @param int   $filekey          Index of array of files returned by edd_get_download_files() that this download link is for.
+								 * @param array $file             The array of file information.
+								 * @param int   $item->product_id The product ID.
+								 * @param int   $order->id        The order ID.
+								 */
+								do_action( 'edd_order_receipt_files', $filekey, $file, $item->product_id, $order->id );
+							endforeach;
+						elseif ( edd_is_bundled_product( $item->product_id ) ) :
+							$bundled_products = edd_get_bundled_products( $item->product_id, $item->price_id );
+
+							foreach ( $bundled_products as $bundle_item ) :
+								?>
+
+								<li class="edd_bundled_product">
+									<span class="edd_bundled_product_name"><?php echo esc_html( edd_get_bundle_item_title( $bundle_item ) ); ?></span>
+									<ul class="edd_bundled_product_files">
 										<?php
-										/**
-										 * Fires at the end of the order receipt files list.
-										 *
-										 * @since 3.0
-										 * @param int   $filekey          Index of array of files returned by edd_get_download_files() that this download link is for.
-										 * @param array $file             The array of file information.
-										 * @param int   $item->product_id The product ID.
-										 * @param int   $order->id        The order ID.
-										 */
-										do_action( 'edd_order_receipt_files', $filekey, $file, $item->product_id, $order->id );
-									endforeach;
-								elseif ( edd_is_bundled_product( $item->product_id ) ) :
-									$bundled_products = edd_get_bundled_products( $item->product_id, $item->price_id );
+										$download_files = edd_get_download_files( edd_get_bundle_item_id( $bundle_item ), edd_get_bundle_item_price_id( $bundle_item ) );
 
-									foreach ( $bundled_products as $bundle_item ) :
-										?>
-
-										<li class="edd_bundled_product">
-											<span class="edd_bundled_product_name"><?php echo esc_html( edd_get_bundle_item_title( $bundle_item ) ); ?></span>
-											<ul class="edd_bundled_product_files">
-												<?php
-												$download_files = edd_get_download_files( edd_get_bundle_item_id( $bundle_item ), edd_get_bundle_item_price_id( $bundle_item ) );
-
-												if ( $download_files && is_array( $download_files ) ) :
-													foreach ( $download_files as $filekey => $file ) :
-														?>
-														<li class="edd_download_file">
-															<a href="<?php echo esc_url( edd_get_download_file_url( $order->payment_key, $order->email, $filekey, $bundle_item, $item->price_id ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
-														</li>
-														<?php
-														/**
-														 * Fires at the end of the order receipt bundled files list.
-														 *
-														 * @since 3.0
-														 * @param int   $filekey          Index of array of files returned by edd_get_download_files() that this download link is for.
-														 * @param array $file             The array of file information.
-														 * @param int   $item->product_id The product ID.
-														 * @param array $bundle_item      The array of information about the bundled item.
-														 * @param int   $order->id        The order ID.
-														 */
-														do_action( 'edd_order_receipt_bundle_files', $filekey, $file, $item->product_id, $bundle_item, $order->id );
-													endforeach;
-												else :
-													echo '<li>' . esc_html__( 'No downloadable files found for this bundled item.', 'easy-digital-downloads' ) . '</li>';
-												endif;
+										if ( $download_files && is_array( $download_files ) ) :
+											foreach ( $download_files as $filekey => $file ) :
 												?>
-											</ul>
-										</li>
-										<?php
-									endforeach;
+												<li class="edd_download_file">
+													<a href="<?php echo esc_url( edd_get_download_file_url( $order->payment_key, $order->email, $filekey, $bundle_item, $item->price_id ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
+												</li>
+												<?php
+												/**
+												 * Fires at the end of the order receipt bundled files list.
+												 *
+												 * @since 3.0
+												 * @param int   $filekey          Index of array of files returned by edd_get_download_files() that this download link is for.
+												 * @param array $file             The array of file information.
+												 * @param int   $item->product_id The product ID.
+												 * @param array $bundle_item      The array of information about the bundled item.
+												 * @param int   $order->id        The order ID.
+												 */
+												do_action( 'edd_order_receipt_bundle_files', $filekey, $file, $item->product_id, $bundle_item, $order->id );
+											endforeach;
+										else :
+											echo '<li>' . esc_html__( 'No downloadable files found for this bundled item.', 'easy-digital-downloads' ) . '</li>';
+										endif;
+										?>
+									</ul>
+								</li>
+								<?php
+							endforeach;
 
-								else :
-									echo '<li>' . esc_html( apply_filters( 'edd_receipt_no_files_found_text', __( 'No downloadable files found.', 'easy-digital-downloads' ), $item->product_id ) ) . '</li>';
-								endif;
-								?>
-							</ul>
-							<?php endif; ?>
+						else :
+							echo '<li>' . esc_html( apply_filters( 'edd_receipt_no_files_found_text', __( 'No downloadable files found.', 'easy-digital-downloads' ), $item->product_id ) ) . '</li>';
+						endif;
+						?>
+					</ul>
+					<?php endif; ?>
 
-							<?php
-							/**
-							 * Allow extensions to extend the product cell.
-							 * @since 3.0
-							 * @param \EDD\Orders\Order_Item $item The current order item.
-							 * @param \EDD\Orders\Order $order     The current order object.
-							 */
-							do_action( 'edd_order_receipt_after_files', $item, $order );
-							?>
-						</td>
-						<?php if ( edd_use_skus() ) : ?>
-							<td><?php echo esc_html( edd_get_download_sku( $item->product_id ) ); ?></td>
-						<?php endif; ?>
-						<?php if ( edd_item_quantities_enabled() ) { ?>
-							<td><?php echo esc_html( $item->quantity ); ?></td>
-						<?php } ?>
-						<td>
-							<?php echo esc_html( edd_currency_filter( edd_format_amount( $item->total ) ) ); ?>
-						</td>
-					</tr>
-				<?php endforeach; ?>
-			</tbody>
+					<?php
+					/**
+					 * Allow extensions to extend the product cell.
+					 * @since 3.0
+					 * @param \EDD\Orders\Order_Item $item The current order item.
+					 * @param \EDD\Orders\Order $order     The current order object.
+					 */
+					do_action( 'edd_order_receipt_after_files', $item, $order );
+					?>
+				</td>
+				<?php if ( edd_use_skus() ) : ?>
+					<td><?php echo esc_html( edd_get_download_sku( $item->product_id ) ); ?></td>
+				<?php endif; ?>
+				<?php if ( edd_item_quantities_enabled() ) { ?>
+					<td><?php echo esc_html( $item->quantity ); ?></td>
+				<?php } ?>
+				<td>
+					<?php echo esc_html( edd_currency_filter( edd_format_amount( $item->total ) ) ); ?>
+				</td>
+			</tr>
+		<?php endforeach; ?>
+	</tbody>
 
-		</table>
-	<?php endif; ?>
-<?php endif; ?>
+</table>
