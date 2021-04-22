@@ -772,7 +772,7 @@ function edd_get_download_sales_stats( $download_id = 0 ) {
  *
  * @param int    $download_id Download ID.
  * @param int    $file_id     File ID.
- * @param array  $user_info   User information (Deprecated)
+ * @param array  $user_info   User information.
  * @param string $ip          User IP.
  * @param int    $order_id    Order ID.
  * @param int    $price_id    Optional. Price ID,
@@ -789,7 +789,7 @@ function edd_record_download_in_log( $download_id = 0, $file_id = 0, $user_info 
 
 	$user_agent = $browser->getBrowser() . ' ' . $browser->getVersion() . '/' . $browser->getPlatform();
 
-	edd_add_file_download_log( array(
+	$download_log = edd_add_file_download_log( array(
 		'product_id'  => absint( $download_id ),
 		'file_id'     => absint( $file_id ),
 		'order_id'    => absint( $order_id ),
@@ -798,6 +798,15 @@ function edd_record_download_in_log( $download_id = 0, $file_id = 0, $user_info 
 		'ip'          => sanitize_text_field( $ip ),
 		'user_agent'  => $user_agent,
 	) );
+
+	if ( ! empty( $user_info['id'] ) ) {
+		edd_add_file_download_log_meta(
+			$download_log,
+			'user_id',
+			absint( $user_info['id'] ),
+			true
+		);
+	}
 }
 
 /**
