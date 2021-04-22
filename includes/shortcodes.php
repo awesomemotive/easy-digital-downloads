@@ -669,7 +669,7 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	global $edd_receipt_args;
 
 	$edd_receipt_args = shortcode_atts( array(
-		'error'           => __( 'Sorry, trouble retrieving payment receipt.', 'easy-digital-downloads' ),
+		'error'           => __( 'Sorry, trouble retrieving order receipt.', 'easy-digital-downloads' ),
 		'price'           => true,
 		'discount'        => true,
 		'products'        => true,
