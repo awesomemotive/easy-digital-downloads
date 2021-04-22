@@ -71,6 +71,11 @@ export const State = Backbone.Model.extend(
 		 * @return {number} Order subtotal.
 		 */
 		getSubtotal() {
+			// Use stored value if the record has already been created.
+			if ( false === this.get( 'isAdding' ) ) {
+				return this.get( 'order' ).subtotal;
+			}
+
 			const { models: items } = this.get( 'items' );
 
 			return items.reduce(
