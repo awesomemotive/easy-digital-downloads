@@ -384,8 +384,9 @@ class Order extends Rows\Order {
 	public function get_discounts() {
 		$discounts = array();
 
-		if ( empty( $this->adjustments ) ) {
-			return $discounts;
+		// Ensure adjustments exist.
+		if ( null === $this->adjustments ) {
+			$this->adjustments = $this->get_adjustments();
 		}
 
 		foreach ( $this->adjustments as $adjustment ) {
