@@ -80,13 +80,7 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 			</tr>
 		<?php endif; ?>
 		<?php
-		$fees = edd_get_order_adjustments(
-			array(
-				'type'        => 'fee',
-				'object_type' => 'order',
-				'object_id'   => $order->id,
-			)
-		);
+		$fees = $order->get_fees();
 		if ( ! empty( $fees ) ) :
 			?>
 			<tr>
@@ -95,7 +89,7 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 					<ul class="edd_receipt_fees">
 					<?php
 					foreach ( $fees as $fee ) :
-						$label = __( 'Order Fee', 'easy-digital-downloads' );
+						$label = __( 'Fee', 'easy-digital-downloads' );
 						if ( ! empty( $fee->description ) ) {
 							$label .= ': ' . $fee->description;
 						}
@@ -199,13 +193,6 @@ if ( filter_var( $edd_receipt_args['products'], FILTER_VALIDATE_BOOLEAN ) ) :
 					if ( ! apply_filters( 'edd_user_can_view_receipt_item', true, $item ) ) {
 						continue;
 					}
-					$item_fees = edd_get_order_adjustments(
-						array(
-							'type'        => 'fee',
-							'object_type' => 'order_item',
-							'object_id'   => $item->id,
-						)
-					);
 					?>
 
 					<tr>
@@ -221,21 +208,6 @@ if ( filter_var( $edd_receipt_args['products'], FILTER_VALIDATE_BOOLEAN ) ) :
 								}
 								?>
 							</div>
-							<?php if ( $item_fees ) : ?>
-								<ul class="edd_purchase_receipt_order_item_fees">
-									<?php
-									foreach ( $item_fees as $item_fee ) :
-										$label = __( 'Fee', 'easy-digital-downloads' );
-										if ( ! empty( $item_fee->description ) ) {
-											$label .= ': ' . $item_fee->description;
-										}
-										?>
-										<li>
-											<span class="edd_fee_label"><?php echo esc_html( $label ); ?></span> &mdash; <span class="edd_fee_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( $item_fee->total ) ) ); ?></span>
-										</li>
-									<?php endforeach; ?>
-								</ul>
-							<?php endif; ?>
 							<?php
 							$notes = edd_get_product_notes( $item->product_id );
 							if ( ! empty( $notes ) ) : ?>
