@@ -82,11 +82,13 @@ class API {
 	/**
 	 * API constructor.
 	 *
-	 * @param string $mode
+	 * @param string $mode        Mode to connect in. Either `sandbox` or `live`.
+	 * @param array  $credentials Optional. Credentials to use for the connection. If omitted, saved store
+	 *                            credentials are used.
 	 *
 	 * @throws Authentication_Exception
 	 */
-	public function __construct( $mode = '' ) {
+	public function __construct( $mode = '', $credentials = array() ) {
 		// If mode is not provided, use the current store mode.
 		if ( empty( $mode ) ) {
 			$mode = edd_is_test_mode() ? self::MODE_SANDBOX : self::MODE_LIVE;
@@ -97,21 +99,25 @@ class API {
 		if ( self::MODE_SANDBOX === $mode ) {
 			$this->api_url = 'https://api-m.sandbox.paypal.com';
 
-			$credentials = array(
-				'client_id'      => edd_get_option( 'paypal_sandbox_client_id' ),
-				'client_secret'  => edd_get_option( 'paypal_sandbox_client_secret' ),
-				'merchant_email' => edd_get_option( 'paypal_sandbox_merchant_email' ),
-				'merchant_id'    => edd_get_option( 'paypal_sandbox_merchant_id' )
-			);
+			if ( empty( $credentials ) ) {
+				$credentials = array(
+					'client_id'      => edd_get_option( 'paypal_sandbox_client_id' ),
+					'client_secret'  => edd_get_option( 'paypal_sandbox_client_secret' ),
+					'merchant_email' => edd_get_option( 'paypal_sandbox_merchant_email' ),
+					'merchant_id'    => edd_get_option( 'paypal_sandbox_merchant_id' )
+				);
+			}
 		} else {
 			$this->api_url = 'https://api-m.paypal.com';
 
-			$credentials = array(
-				'client_id'      => edd_get_option( 'paypal_live_client_id' ),
-				'client_secret'  => edd_get_option( 'paypal_live_client_secret' ),
-				'merchant_email' => edd_get_option( 'paypal_live_merchant_email' ),
-				'merchant_id'    => edd_get_option( 'paypal_live_merchant_id' )
-			);
+			if ( empty( $credentials ) ) {
+				$credentials = array(
+					'client_id'      => edd_get_option( 'paypal_live_client_id' ),
+					'client_secret'  => edd_get_option( 'paypal_live_client_secret' ),
+					'merchant_email' => edd_get_option( 'paypal_live_merchant_email' ),
+					'merchant_id'    => edd_get_option( 'paypal_live_merchant_id' )
+				);
+			}
 		}
 
 		$this->set_credentials( $credentials );

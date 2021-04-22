@@ -74,5 +74,6 @@ require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/refunds.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/scripts.php';
 
 if ( is_admin() ) {
+	require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/admin/connect.php';
 	require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/admin/settings.php';
 }

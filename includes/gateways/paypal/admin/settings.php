@@ -42,6 +42,13 @@ function register_gateway_settings( $gateway_settings ) {
 			'name' => '<strong>' . __( 'PayPal Settings', 'easy-digital-downloads' ) . '</strong>',
 			'type' => 'header',
 		),
+		'paypal_connect_button'        => array(
+			'id'    => 'paypal_connect_button',
+			'name'  => __( 'Connection Status', 'easy-digital-downloads' ),
+			'desc'  => connect_settings_field(),
+			'type'  => 'descriptive_text',
+			'class' => 'edd-paypal-connect-row'
+		),
 		// @todo Connection stuff.
 		'paypal_sandbox_client_id'     => array(
 			'id'   => 'paypal_sandbox_client_id',
