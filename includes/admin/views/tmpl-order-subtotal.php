@@ -15,7 +15,7 @@
 	<td colspan="{{ data.config.colspan }}" class="column-primary">
 		<?php esc_html_e( 'Subtotal', 'easy-digital-downloads' ); ?>
 	</td>
-	<td class="column-right" data-colname="<?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?>">
+	<td class="column-right" data-colname="<?php esc_attr_e( 'Amount', 'easy-digital-downloads' ); ?>">
 		{{ data.subtotalCurrency }}
 	</td>
 </tr>
