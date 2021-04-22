@@ -1,19 +1,41 @@
 <?php
 /**
- * class-paypal-api.php
+ * PayPal REST API Wrapper
  *
- * @package   easy-digital-downloads
- * @copyright Copyright (c) 2021, Sandhills Development, LLC
- * @license   GPL2+
- * @since     2.11
+ * @package    easy-digital-downloads
+ * @subpackage Gateways\PayPal
+ * @copyright  Copyright (c) 2021, Sandhills Development, LLC
+ * @license    GPL2+
+ * @since      2.11
  */
 
 namespace EDD\PayPal;
 
+use EDD\PayPal\Exceptions\API_Exception;
+use EDD\PayPal\Exceptions\Authentication_Exception;
+
+/**
+ * Class API
+ *
+ * @property string $mode
+ * @property string $api_url
+ * @property string $client_id
+ * @property string $client_secret
+ * @property int    $last_response_code
+ *
+ * @package EDD\PayPal
+ */
 class API {
 
 	const MODE_SANDBOX = 'sandbox';
 	const MODE_LIVE = 'live';
+
+	/**
+	 * Mode to use for API requests
+	 *
+	 * @var string
+	 */
+	private $mode;
 
 	/**
 	 * Base API URL
@@ -23,9 +45,46 @@ class API {
 	private $api_url;
 
 	/**
+	 * Client ID
+	 *
+	 * @var string
+	 */
+	private $client_id;
+
+	/**
+	 * Client secret
+	 *
+	 * @var string
+	 */
+	private $client_secret;
+
+	/**
+	 * Merchant email address
+	 *
+	 * @var string
+	 */
+	private $merchant_email;
+
+	/**
+	 * Cache key to use for the token.
+	 *
+	 * @var string
+	 */
+	private $token_cache_key;
+
+	/**
+	 * Response code from the last API request.
+	 *
+	 * @var int
+	 */
+	private $last_response_code;
+
+	/**
 	 * API constructor.
 	 *
 	 * @param string $mode
+	 *
+	 * @throws Authentication_Exception
 	 */
 	public function __construct( $mode = '' ) {
 		// If mode is not provided, use the current store mode.
@@ -33,20 +92,185 @@ class API {
 			$mode = edd_is_test_mode() ? self::MODE_SANDBOX : self::MODE_LIVE;
 		}
 
+		$this->mode = $mode;
+
 		if ( self::MODE_SANDBOX === $mode ) {
 			$this->api_url = 'https://api-m.sandbox.paypal.com';
+
+			$credentials = array(
+				'client_id'      => edd_get_option( 'paypal_sandbox_client_id' ),
+				'client_secret'  => edd_get_option( 'paypal_sandbox_client_secret' ),
+				'merchant_email' => edd_get_option( 'paypal_sandbox_merchant_email' ),
+				'merchant_id'    => edd_get_option( 'paypal_sandbox_merchant_id' )
+			);
 		} else {
 			$this->api_url = 'https://api-m.paypal.com';
+
+			$credentials = array(
+				'client_id'      => edd_get_option( 'paypal_live_client_id' ),
+				'client_secret'  => edd_get_option( 'paypal_live_client_secret' ),
+				'merchant_email' => edd_get_option( 'paypal_live_merchant_email' ),
+				'merchant_id'    => edd_get_option( 'paypal_live_merchant_id' )
+			);
+		}
+
+		$this->set_credentials( $credentials );
+		$this->token_cache_key = 'edd_paypal_' . $this->mode . '_access_token';
+	}
+
+	/**
+	 * Magic getter
+	 *
+	 * @param string $property
+	 *
+	 * @since 2.10
+	 * @return mixed
+	 */
+	public function __get( $property ) {
+		return isset( $this->{$property} ) ? $this->{$property} : null;
+	}
+
+	/**
+	 * Sets the credentials to use for API requests.
+	 *
+	 * @param array $creds {
+	 *                     Credentials to set.
+	 *
+	 * @type string $client_id
+	 * @type string $client_secret
+	 * @type string $merchant_id
+	 * }
+	 *
+	 * @since 2.11
+	 * @throws Authentication_Exception
+	 */
+	public function set_credentials( $creds ) {
+		$creds = wp_parse_args( $creds, array(
+			'client_id'     => '',
+			'client_secret' => '',
+			'merchant_id'   => ''
+		) );
+
+		$required_creds = array( 'client_id', 'client_secret' );
+
+		foreach ( $required_creds as $cred_id => $cred_value ) {
+			if ( empty( $cred_value ) ) {
+				throw new Authentication_Exception( sprintf(
+				/* Translators: %s - The ID of the PayPal credential */
+					__( 'Missing PayPal credential: %s', 'easy-digital-downloads' ),
+					$cred_id
+				) );
+			}
+		}
+
+		foreach ( $creds as $cred_id => $cred_value ) {
+			$this->{$cred_id} = $cred_value;
 		}
 	}
 
-	private function get_bearer_token() {
-		$response = wp_remote_post( $this->api_url . 'v1/oauth2/token', array(
+	/**
+	 * Retrieves the access token. This checks cache first, and if the cached token isn't valid then
+	 * a new one is generated from the API.
+	 *
+	 * @since 2.11
+	 * @return Token
+	 * @throws API_Exception
+	 */
+	public function get_access_token() {
+		try {
+			$token = Token::from_json( (string) get_transient( $this->token_cache_key ) );
+
+			return ! $token->is_expired() ? $token : $this->generate_access_token();
+		} catch ( \RuntimeException $e ) {
+			return $this->generate_access_token();
+		}
+	}
+
+	/**
+	 * Generates a new access token and caches it.
+	 *
+	 * @since 2.11
+	 * @return Token
+	 * @throws API_Exception
+	 */
+	private function generate_access_token() {
+		edd_debug_log( 'PayPal - generating new access token.' );
+
+		$response = wp_remote_post( $this->api_url . '/v1/oauth2/token', array(
 			'headers' => array(
 				'Content-Type'  => 'application/x-www-form-urlencoded',
-				'Authorization' => sprintf( 'Basic %s', base64_encode( sprintf( '%s:%s', $this->client_id, $this->client_secret ) ) )
+				'Authorization' => sprintf( 'Basic %s', base64_encode( sprintf( '%s:%s', $this->client_id, $this->client_secret ) ) ),
+				'timeout'       => 15
+			),
+			'body'    => array(
+				'grant_type' => 'client_credentials'
 			)
 		) );
+
+		$body = json_decode( wp_remote_retrieve_body( $response ) );
+		$code = intval( wp_remote_retrieve_response_code( $response ) );
+
+		if ( is_wp_error( $response ) ) {
+			throw new API_Exception( $response->get_error_message(), $code );
+		}
+
+		if ( ! empty( $body->error_description ) ) {
+			throw new API_Exception( $body->error_description, $code );
+		}
+
+		if ( 200 !== $code ) {
+			throw new API_Exception( sprintf(
+			/* Translators: %d - HTTP response code. */
+				__( 'Unexpected response code: %d', 'easy-digital-downloads' ),
+				$code
+			), $code );
+		}
+
+		$token = new Token( $body );
+
+		set_transient( $this->token_cache_key, $token->to_json() );
+
+		return $token;
+	}
+
+	/**
+	 * Makes an API request.
+	 *
+	 * @param string $endpoint API endpoint.
+	 * @param array  $body     Array of data to send in the request.
+	 * @param array  $headers  Array of headers.
+	 * @param string $method   HTTP method.
+	 *
+	 * @since 2.11
+	 * @return mixed
+	 * @throws API_Exception
+	 */
+	public function make_request( $endpoint, $body = array(), $headers = array(), $method = 'POST' ) {
+		$headers = wp_parse_args( $headers, array(
+			'Content-Type'  => 'application/json',
+			'Authorization' => sprintf( 'Bearer %s', $this->get_access_token()->token() ),
+			// @todo `PayPal-Partner-Attribution-Id` ?
+		) );
+
+		$request_args = array(
+			'method'  => $method,
+			'timeout' => 15,
+			'headers' => $headers
+		);
+
+		if ( ! empty( $body ) ) {
+			$request_args['body'] = json_encode( $body );
+		}
+
+		$response = wp_remote_request( $this->api_url . '/' . $endpoint, $request_args );
+
+		if ( is_wp_error( $response ) ) {
+			throw new API_Exception( $response->get_error_message() );
+		}
+
+		$this->last_response_code = intval( wp_remote_retrieve_response_code( $response ) );
+
+		return json_decode( wp_remote_retrieve_body( $response ) );
 	}
 
 }

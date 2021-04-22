@@ -58,7 +58,7 @@ function edd_process_purchase_form() {
 	}
 
 	// Validate the user.
-	$user = edd_get_purchase_form_user( $valid_data );
+	$user = edd_get_purchase_form_user( $valid_data, $is_ajax );
 
 	// Let extensions validate fields after user is logged in if user has used login/registration form.
 	do_action( 'edd_checkout_user_error_checks', $user, $valid_data, $_POST );
@@ -820,10 +820,10 @@ function edd_register_and_login_new_user( $user_data = array() ) {
  * @param   array $valid_data The validated data from the checkout form validation.
  * @return  array
  */
-function edd_get_purchase_form_user( $valid_data = array() ) {
+function edd_get_purchase_form_user( $valid_data = array(), $is_ajax = null ) {
 	// Initialize user.
 	$user    = false;
-	$is_ajax = defined( 'DOING_AJAX' ) && DOING_AJAX;
+	$is_ajax = ( null === $is_ajax ) ? ( defined( 'DOING_AJAX' ) && DOING_AJAX ) : $is_ajax;
 
 	if ( $is_ajax ) {
 
