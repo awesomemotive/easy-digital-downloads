@@ -200,6 +200,7 @@ function edd_refund_details_items( $refund ) {
 
 	$templates = array(
 		'no-items',
+		'subtotal',
 		'totals',
 		'item',
 		'adjustment',
