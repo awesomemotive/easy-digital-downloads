@@ -71,6 +71,14 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 		</tr>
 		<?php endif; ?>
 
+		<?php if ( filter_var( $edd_receipt_args['price'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
+			<tr>
+				<td><strong><?php esc_html_e( 'Subtotal', 'easy-digital-downloads' ); ?>:</strong></td>
+				<td>
+					<?php echo esc_html( edd_payment_subtotal( $order->id ) ); ?>
+				</td>
+			</tr>
+		<?php endif; ?>
 		<?php
 		$fees = edd_get_order_adjustments(
 			array(
@@ -136,13 +144,6 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 		<?php endif; ?>
 
 		<?php if ( filter_var( $edd_receipt_args['price'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
-			<tr>
-				<td><strong><?php esc_html_e( 'Subtotal', 'easy-digital-downloads' ); ?>:</strong></td>
-				<td>
-					<?php echo esc_html( edd_payment_subtotal( $order->id ) ); ?>
-				</td>
-			</tr>
-
 			<tr>
 				<td><strong><?php esc_html_e( 'Total', 'easy-digital-downloads' ); ?>:</strong></td>
 				<td><?php echo esc_html( edd_payment_amount( $order->id ) ); ?></td>
