@@ -316,7 +316,7 @@ class Discount extends Base {
 							}
 						}
 
-						if ( 0 < count( $clauses['where'] ) ) {
+						if ( ! empty( $clauses['where'] ) && is_array( $clauses['where'] ) ) {
 							$sql_where .= ' AND ( ' . implode( ' ' . $relation . ' ', $clauses['where'] ) . ' )';
 						}
 					}
