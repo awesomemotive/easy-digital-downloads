@@ -1580,7 +1580,7 @@ class EDD_CLI extends WP_CLI_Command {
 
 			$file_id_key = array_rand( $download_ids_with_files[ $product_id ], 1 );
 			$file_key    = $download_ids_with_files[ $product_id ][ $file_id_key ];
-			edd_add_file_download_log( array(
+			$log_id      = edd_add_file_download_log( array(
 				'product_id'   => absint( $product_id ),
 				'file_id'      => absint( $file_key ),
 				'order_id'     => absint( $order_id ),
@@ -1590,7 +1590,14 @@ class EDD_CLI extends WP_CLI_Command {
 				'user_agent'   => 'EDD; WPCLI; download_logs;',
 				'date_created' => $order->date_completed,
 			) );
-			//edd_record_download_in_log( $product_id, $file_key, $user_info, edd_get_ip(), $order_id, $price_id );
+			if ( ! empty( $user_info['id'] ) ) {
+				edd_add_file_download_log_meta(
+					$log_id,
+					'user_id',
+					absint( $user_info['id'] ),
+					true
+				);
+			}
 
 			$progress->tick();
 			$i ++;
