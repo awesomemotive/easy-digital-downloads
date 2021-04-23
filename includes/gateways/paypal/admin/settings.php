@@ -49,7 +49,6 @@ function register_gateway_settings( $gateway_settings ) {
 			'type'  => 'descriptive_text',
 			'class' => 'edd-paypal-connect-row'
 		),
-		// @todo Connection stuff.
 		'paypal_sandbox_client_id'     => array(
 			'id'   => 'paypal_sandbox_client_id',
 			'name' => __( 'Test Client ID', 'easy-digital-downloads' ),

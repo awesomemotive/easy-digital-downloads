@@ -56,3 +56,19 @@ function paypal_standard_enabled( $mode = API::MODE_LIVE ) {
 	 */
 	return apply_filters( 'edd_paypal_standard_enabled', $enabled );
 }
+
+/**
+ * Returns the our partner merchant ID for a given mode.
+ *
+ * @param string $mode
+ *
+ * @since 2.11
+ * @return string
+ */
+function get_partner_merchant_id( $mode ) {
+	if ( API::MODE_LIVE === $mode ) {
+		return EDD_PAYPAL_MERCHANT_ID;
+	} else {
+		return EDD_PAYPAL_SANDBOX_MERCHANT_ID;
+	}
+}
