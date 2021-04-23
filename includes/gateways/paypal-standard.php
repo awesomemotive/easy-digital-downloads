@@ -45,9 +45,9 @@ add_filter( 'edd_settings_sections_gateways', 'edd_register_paypal_gateway_secti
  * @param  array $gateway_settings  Gateway tab settings
  * @return array                    Gateway tab settings with the PayPal Standard settings
  */
-function edd_register_paypal_gateway_settings( $paypal_settings ) {
+function edd_register_paypal_gateway_settings( $gateway_settings ) {
 	if ( ! \EDD\PayPal\paypal_standard_enabled() ) {
-		return $paypal_settings;
+		return $gateway_settings;
 	}
 
 	$paypal_settings = array (

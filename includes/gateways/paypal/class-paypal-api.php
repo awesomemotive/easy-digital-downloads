@@ -121,7 +121,6 @@ class API {
 		}
 
 		$this->set_credentials( $credentials );
-		$this->token_cache_key = 'edd_paypal_' . $this->mode . '_access_token';
 	}
 
 	/**
@@ -154,13 +153,14 @@ class API {
 		$creds = wp_parse_args( $creds, array(
 			'client_id'     => '',
 			'client_secret' => '',
-			'merchant_id'   => ''
+			'merchant_id'   => '',
+			'cache_key'     => 'edd_paypal_commerce_access_token'
 		) );
 
-		$required_creds = array( 'client_id', 'client_secret' );
+		$required_creds = array( 'client_id', 'client_secret', 'cache_key' );
 
-		foreach ( $required_creds as $cred_id => $cred_value ) {
-			if ( empty( $cred_value ) ) {
+		foreach ( $required_creds as $cred_id ) {
+			if ( empty( $creds[ $cred_id ] ) ) {
 				throw new Authentication_Exception( sprintf(
 				/* Translators: %s - The ID of the PayPal credential */
 					__( 'Missing PayPal credential: %s', 'easy-digital-downloads' ),
@@ -172,6 +172,8 @@ class API {
 		foreach ( $creds as $cred_id => $cred_value ) {
 			$this->{$cred_id} = $cred_value;
 		}
+
+		$this->token_cache_key = $creds['cache_key'] . '_' . $this->mode;
 	}
 
 	/**
@@ -234,7 +236,7 @@ class API {
 
 		$token = new Token( $body );
 
-		set_transient( $this->token_cache_key, $token->to_json() );
+		update_option( $this->token_cache_key, $token->to_json() );
 
 		return $token;
 	}

@@ -28,12 +28,13 @@ function connect_settings_field() {
 		 * Show Connect
 		 */
 		?>
-		<button id="edd-paypal-commerce-connect" class="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'edd_process_paypal_connect' ) ); ?>">
+		<button type="button" id="edd-paypal-commerce-connect" class="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'edd_process_paypal_connect' ) ); ?>">
 			<?php esc_html_e( 'Connect with PayPal', 'easy-digital-downloads' ); ?>
 		</button>
 		<a href="#" target="_blank" id="edd-paypal-commerce-link" class="edd-hidden" data-paypal-onboard-complete="eddPayPalOnboardingCallback" data-paypal-button="true">
 			<?php esc_html_e( 'Sign up for PayPal', 'easy-digital-downloads' ); ?>
 		</a>
+		<div id="edd-paypal-commerce-errors"></div>
 		<?php
 	} else {
 		/**
@@ -62,7 +63,10 @@ function process_connect() {
 	}
 
 	$response = wp_remote_post( EDD_PAYPAL_PARTNER_CONNECT_URL . 'signup-link', array(
-		'body' => json_encode( array(
+		'headers' => array(
+			'Content-Type' => 'application/json',
+		),
+		'body'    => json_encode( array(
 			'mode'       => edd_is_test_mode() ? 'sandbox' : 'live',
 			'return_url' => admin_url() // @todo
 		) )
@@ -77,9 +81,10 @@ function process_connect() {
 
 	if ( 200 !== intval( $code ) ) {
 		wp_send_json_error( sprintf(
-		/* Translators: %d - HTTP response code */
-			__( 'Unexpected response code: %d', 'easy-digital-downloads' ),
-			$code
+		/* Translators: %d - HTTP response code; %s - Response from the API */
+			__( 'Unexpected response code: %d. Error: %s', 'easy-digital-downloads' ),
+			$code,
+			json_encode( $body )
 		) );
 	}
 
@@ -107,12 +112,12 @@ function get_access_token() {
 	}
 
 	if ( empty( $_POST['auth_code'] ) || empty( $_POST['share_id'] ) ) {
-		wp_send_json_error( __( 'Missing PayPal authentication information.', 'easy-digital-downloads' ) );
+		wp_send_json_error( __( 'Missing PayPal authentication information. Please try again.', 'easy-digital-downloads' ) );
 	}
 
 	$partner_details = json_decode( get_option( 'edd_paypal_commerce_connect_details' ) );
 	if ( empty( $partner_details->nonce ) ) {
-		wp_send_json_error( __( 'Missing nonce.', 'easy-digital-downloads' ) );
+		wp_send_json_error( __( 'Missing nonce. Please refresh the page and try again.', 'easy-digital-downloads' ) );
 	}
 
 	$mode             = edd_is_test_mode() ? 'sandbox' : 'live';
@@ -122,10 +127,11 @@ function get_access_token() {
 	/*
 	 * First get a temporary access token from PayPal.
 	 */
-	$response = wp_remote_post( $api_url . 'v1/oath2/token', array(
+	$response = wp_remote_post( $api_url . 'v1/oauth2/token', array(
 		'headers' => array(
 			'Content-Type'  => 'application/x-www-form-urlencoded',
-			'Authorization' => sprintf( 'Basic %s', base64_encode( $_POST['share_id'] ) )
+			'Authorization' => sprintf( 'Basic %s', base64_encode( $_POST['share_id'] ) ),
+			'timeout'       => 15
 		),
 		'body'    => array(
 			'grant_type'    => 'authorization_code',
@@ -138,20 +144,26 @@ function get_access_token() {
 		wp_send_json_error( $response->get_error_message() );
 	}
 
+	$code = wp_remote_retrieve_response_code( $response );
 	$body = json_decode( wp_remote_retrieve_body( $response ) );
 
 	if ( empty( $body->access_token ) ) {
-		wp_send_json_error( __( 'Unexpected response from PayPal while generating token.', 'easy-digital-downloads' ) );
+		wp_send_json_error( sprintf(
+		/* Translators: %d - HTTP response code */
+			__( 'Unexpected response from PayPal while generating token. Response code: %d. Please try again.', 'easy-digital-downloads' ),
+			$code
+		) );
 	}
 
 	/*
 	 * Now we can use this access token to fetch the seller's credentials for all future
 	 * API requests.
 	 */
-	$response = wp_remote_get( $api_url . '/v1/customer/partners/' . urlencode( get_partner_merchant_id( $mode ) ) . '/merchant-integrations/credentials', array(
+	$response = wp_remote_get( $api_url . 'v1/customer/partners/' . urlencode( get_partner_merchant_id( $mode ) ) . '/merchant-integrations/credentials/', array(
 		'headers' => array(
 			'Authorization' => sprintf( 'Bearer %s', $body->access_token ),
 			'Content-Type'  => 'application/json',
+			'timeout'       => 15
 		)
 	) );
 
@@ -159,10 +171,15 @@ function get_access_token() {
 		wp_send_json_error( $response->get_error_message() );
 	}
 
+	$code = wp_remote_retrieve_response_code( $response );
 	$body = json_decode( wp_remote_retrieve_body( $response ) );
 
 	if ( empty( $body->client_id ) || empty( $body->client_secret ) ) {
-		wp_send_json_error( __( 'Unexpected response from PayPal.', 'easy-digital-downloads' ) );
+		wp_send_json_error( sprintf(
+		/* Translators: %d - HTTP response code */
+			__( 'Unexpected response from PayPal. Response code: %d. Please try again.', 'easy-digital-downloads' ),
+			$code
+		) );
 	}
 
 	edd_update_option( 'paypal_' . $mode . '_client_id', sanitize_text_field( $body->client_id ) );
