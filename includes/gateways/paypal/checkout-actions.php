@@ -50,16 +50,20 @@ add_filter( 'edd_checkout_button_purchase', __NAMESPACE__ . '\override_purchase_
  * @return void
  */
 function create_order( $purchase_data ) {
-	/**
-	 * If PayPal Standard is still enabled, bail and let that handle it.
-	 *
-	 * @see edd_process_paypal_purchase()
-	 */
-	if ( paypal_standard_enabled() ) {
-		return;
-	}
-
 	edd_debug_log( 'PayPal - create_order()' );
+
+	if ( ! has_rest_api_connection() ) {
+		edd_record_gateway_error(
+			__( 'PayPal Gateway Error', 'easy-digital-downloads' ),
+			__( 'Missing PayPal Commerce credentials.', 'easy-digital-downloads' )
+		);
+
+		$error_message = current_user_can( 'manage_options' )
+			? __( 'Please connect your PayPal account in the gateway settings.', 'easy-digital-downloads' )
+			: __( 'Unexpected authentication error. Please contact a site administrator.', 'easy-digital-downloads' );
+		edd_set_error( 'paypal-error', $error_message );
+		edd_send_back_to_checkout( '?payment-mode=paypal_checkout' );
+	}
 
 	try {
 		// Create pending payment in EDD.
