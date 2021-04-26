@@ -233,7 +233,7 @@ class Discount extends Base {
 			$meta_query = $query->get( 'meta_query' );
 
 			$clauses   = array();
-			$sql_where = 'WHERE 1=1';
+			$sql_where = "WHERE type = 'discount'";
 
 			$meta_key   = $query->get( 'meta_key',   false );
 			$meta_value = $query->get( 'meta_value', false );
