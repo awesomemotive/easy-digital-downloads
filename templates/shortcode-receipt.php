@@ -71,7 +71,7 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 		</tr>
 		<?php endif; ?>
 
-		<?php if ( filter_var( $edd_receipt_args['price'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
+		<?php if ( filter_var( $edd_receipt_args['price'], FILTER_VALIDATE_BOOLEAN ) && $order->subtotal > 0 ) : ?>
 			<tr>
 				<td><strong><?php esc_html_e( 'Subtotal', 'easy-digital-downloads' ); ?>:</strong></td>
 				<td>
