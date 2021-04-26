@@ -79,31 +79,6 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 				</td>
 			</tr>
 		<?php endif; ?>
-		<?php
-		$fees = $order->get_fees();
-		if ( ! empty( $fees ) ) :
-			?>
-			<tr>
-				<td><strong><?php esc_html_e( 'Fees', 'easy-digital-downloads' ); ?>:</strong></td>
-				<td>
-					<ul class="edd_receipt_fees">
-					<?php
-					foreach ( $fees as $fee ) :
-						$label = __( 'Fee', 'easy-digital-downloads' );
-						if ( ! empty( $fee->description ) ) {
-							$label .= ': ' . $fee->description;
-						}
-						?>
-						<li>
-							<span class="edd_fee_label"><?php echo esc_html( $label ); ?></span>
-							<span class="edd_fee_sep">&nbsp;&ndash;&nbsp;</span>
-							<span class="edd_fee_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( $fee->subtotal ) ) ); ?></span>
-						</li>
-					<?php endforeach; ?>
-					</ul>
-				</td>
-			</tr>
-		<?php endif; ?>
 
 		<?php
 		if ( filter_var( $edd_receipt_args['discount'], FILTER_VALIDATE_BOOLEAN ) ) :
@@ -128,6 +103,32 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 					?>
 				</tr>
 			<?php endif; ?>
+		<?php endif; ?>
+
+		<?php
+		$fees = $order->get_fees();
+		if ( ! empty( $fees ) ) :
+			?>
+			<tr>
+				<td><strong><?php esc_html_e( 'Fees', 'easy-digital-downloads' ); ?>:</strong></td>
+				<td>
+					<ul class="edd_receipt_fees">
+					<?php
+					foreach ( $fees as $fee ) :
+						$label = __( 'Fee', 'easy-digital-downloads' );
+						if ( ! empty( $fee->description ) ) {
+							$label .= ': ' . $fee->description;
+						}
+						?>
+						<li>
+							<span class="edd_fee_label"><?php echo esc_html( $label ); ?></span>
+							<span class="edd_fee_sep">&nbsp;&ndash;&nbsp;</span>
+							<span class="edd_fee_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( $fee->subtotal ) ) ); ?></span>
+						</li>
+					<?php endforeach; ?>
+					</ul>
+				</td>
+			</tr>
 		<?php endif; ?>
 
 		<?php if ( $order->tax > 0 ) : ?>
