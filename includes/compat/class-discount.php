@@ -269,7 +269,7 @@ class Discount extends Base {
 							 * products as these would be serialized under the old schema.
 							 */
 							if ( in_array( $query['key'], $columns, true ) && array_key_exists( 'value', $query ) ) {
-								$meta_compare = $query['compare'];
+								$meta_compare = ! empty( $query['compare'] ) ? $query['compare'] : '=';
 								$meta_compare = strtoupper( $meta_compare );
 
 								$meta_value = $query['value'];
@@ -316,7 +316,7 @@ class Discount extends Base {
 							}
 						}
 
-						if ( 0 < count( $clauses['where'] ) ) {
+						if ( ! empty( $clauses['where'] ) && is_array( $clauses['where'] ) ) {
 							$sql_where .= ' AND ( ' . implode( ' ' . $relation . ' ', $clauses['where'] ) . ' )';
 						}
 					}
