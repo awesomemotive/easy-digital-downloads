@@ -232,11 +232,11 @@ function capture_order() {
 	edd_debug_log( 'PayPal - capture_order()' );
 	try {
 		if ( empty( $_POST['paypal_order_id'] ) ) {
-		throw new Gateway_Exception(
-			__( 'An unexpected error occurred. Please try again.', 'easy-digital-downloads' ),
-			400,
-			__( 'Missing PayPal order ID during capture.', 'easy-digital-downloads' )
-		);
+			throw new Gateway_Exception(
+				__( 'An unexpected error occurred. Please try again.', 'easy-digital-downloads' ),
+				400,
+				__( 'Missing PayPal order ID during capture.', 'easy-digital-downloads' )
+			);
 		}
 
 		try {

@@ -84,7 +84,9 @@ var EDD_PayPal = {
 	initButtons( container, context ) {
 		EDD_PayPal.isMounted = true;
 
-		const spinner = ( 'checkout' === context ) ? document.getElementById( 'edd-paypal-spinner' ) : false; // @todo buy now
+		const form = ( 'checkout' === context ) ? document.getElementById( 'edd_purchase_form' ) : container.closest( '.edd_download_purchase_form' );
+		const errorWrapper = ( 'checkout' === context ) ? form.querySelector( '#edd-paypal-errors-wrap' ) : form.querySelector( '.edd-paypal-checkout-buy-now-error-wrapper' );
+		const spinner = ( 'checkout' === context ) ? document.getElementById( 'edd-paypal-spinner' ) : form.querySelector( '.edd-paypal-spinner' ); // @todo buy now
 
 		paypal.Buttons( {
 			createOrder: function ( data, actions ) {
@@ -94,8 +96,6 @@ var EDD_PayPal = {
 				spinner.style.display = 'block';
 
 				// Clear errors at the start of each attempt.
-				const form = ( 'checkout' === context ) ? document.getElementById( 'edd_purchase_form' ) : container.closest( '.edd_download_purchase_form' );
-				const errorWrapper = ( 'checkout' === context ) ? form.querySelector( '#edd-paypal-errors-wrap' ) : form.querySelector( '.edd-paypal-checkout-buy-now-error-wrapper' );
 				if ( errorWrapper ) {
 					errorWrapper.innerHTML = '';
 				}
@@ -200,6 +200,12 @@ jQuery( document ).ready( function( $ ) {
 		const errorNode = document.createElement( 'div' );
 		errorNode.classList.add( 'edd-paypal-checkout-buy-now-error-wrapper' );
 		wrapper.before( errorNode );
+
+		// Add spinner container.
+		const spinnerWrap = document.createElement( 'span' );
+		spinnerWrap.classList.add( 'edd-paypal-spinner', 'edd-loading-ajax', 'edd-loading' );
+		spinnerWrap.style.display = 'none';
+		wrapper.after( spinnerWrap );
 
 		// Initialize button.
 		EDD_PayPal.initButtons( wrapper, 'buy_now' );

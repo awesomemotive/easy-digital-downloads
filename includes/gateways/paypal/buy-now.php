@@ -21,6 +21,27 @@ function is_buy_now_enabled() {
 }
 
 /**
+ * Sets the gateway to `paypal_commerce` when building straight to gateway data.
+ * This is technically already set via `edd_build_straight_to_gateway_data()` but we want
+ * to make 100% sure we override PayPal Standard when PayPal Commerce is enabled.
+ *
+ * @param array $purchase_data
+ *
+ * @since 2.11
+ * @return array
+ */
+function straight_to_gateway_data( $purchase_data ) {
+	if ( is_buy_now_enabled() ) {
+		$_REQUEST['edd-gateway']  = 'paypal_commerce';
+		$purchase_data['gateway'] = 'paypal_commerce';
+	}
+
+	return $purchase_data;
+}
+
+add_filter( 'edd_straight_to_gateway_purchase_data', __NAMESPACE__ . '\straight_to_gateway_data' );
+
+/**
  * Adds the `edd-paypal-checkout-buy-now` class to qualified shortcodes.
  *
  * @param array $args
@@ -62,10 +83,17 @@ function maybe_add_purchase_link_class( $args ) {
 
 add_filter( 'edd_purchase_link_args', __NAMESPACE__ . '\maybe_add_purchase_link_class' );
 
+/**
+ * Registers PayPal Commerce JavaScript if using "direct" buy now links.
+ *
+ * @param int   $download_id ID of the download.
+ * @param array $args        Purchase link arguments.
+ *
+ * @since 2.11
+ */
 function maybe_enable_buy_now_js( $download_id, $args ) {
 	if ( ! empty( $args['direct'] ) && is_buy_now_enabled() ) {
 		register_js( true );
-		// @todo error container `edd-paypal-checkout-buy-now-error-wrapper`
 	}
 }
 
