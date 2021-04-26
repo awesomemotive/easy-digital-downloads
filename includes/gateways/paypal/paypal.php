@@ -39,11 +39,11 @@ if ( ! defined( 'EDD_PAYPAL_SANDBOX_PARTNER_ATTRIBUTION_ID' ) ) {
  * Partner merchant ID
  */
 if ( ! defined( 'EDD_PAYPAL_MERCHANT_ID' ) ) {
-	define( 'EDD_PAYPAL_MERCHANT_ID', '' );
+	define( 'EDD_PAYPAL_MERCHANT_ID', '8NYVREYC28TBQ' );
 }
 
 if ( ! defined( 'EDD_PAYPAL_SANDBOX_MERCHANT_ID' ) ) {
-	define( 'EDD_PAYPAL_SANDBOX_MERCHANT_ID', '' );
+	define( 'EDD_PAYPAL_SANDBOX_MERCHANT_ID', 'NUGJTUUBANR46' );
 }
 
 /**

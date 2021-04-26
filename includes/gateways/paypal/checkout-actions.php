@@ -32,14 +32,65 @@ add_action( 'edd_paypal_commerce_cc_form', '__return_false' );
  * @return string
  */
 function override_purchase_button( $button ) {
-	if ( 'paypal_commerce' === edd_get_chosen_gateway() && has_rest_api_connection() && edd_get_cart_total() ) {
-		$button = wp_nonce_field( 'edd_process_paypal', 'edd_process_paypal_nonce', true, false ) . '<div id="edd-paypal-container"></div>';
+	if ( 'paypal_commerce' === edd_get_chosen_gateway() && edd_get_cart_total() ) {
+		ob_start();
+		if ( has_rest_api_connection() ) {
+			wp_nonce_field( 'edd_process_paypal', 'edd_process_paypal_nonce' );
+			?>
+			<div id="edd-paypal-errors-wrap"></div>
+			<div id="edd-paypal-container"></div>
+			<div id="edd-paypal-spinner" style="display: none;">
+				<span class="edd-loading-ajax edd-loading"></span>
+			</div>
+			<?php
+		} else {
+			$error_message = current_user_can( 'manage_options' )
+				? __( 'Please connect your PayPal account in the gateway settings.', 'easy-digital-downloads' )
+				: __( 'Unexpected authentication error. Please contact a site administrator.', 'easy-digital-downloads' );
+			?>
+			<div class="edd_errors edd-alert edd-alert-error">
+				<p class="edd_error">
+					<?php echo esc_html( $error_message ); ?>
+				</p>
+			</div>
+			<?php
+		}
+
+		return ob_get_clean();
 	}
 
 	return $button;
 }
 
 add_filter( 'edd_checkout_button_purchase', __NAMESPACE__ . '\override_purchase_button', 10000 );
+
+/**
+ * Sends checkout error messages via AJAX.
+ *
+ * This overrides the normal error behaviour in `edd_process_purchase_form()` because we *always*
+ * want to send errors back via JSON.
+ *
+ * @param array $user       User data.
+ * @param array $valid_data Validated form data.
+ * @param array $posted     Raw $_POST data.
+ *
+ * @since 2.11
+ * @return void
+ */
+function send_ajax_errors( $user, $valid_data, $posted ) {
+	if ( empty( $valid_data['gateway'] ) || 'paypal_commerce' !== $valid_data['gateway'] ) {
+		return;
+	}
+
+	$errors = edd_get_errors();
+	if ( false === $valid_data || $errors ) {
+		edd_clear_errors();
+
+		wp_send_json_error( edd_build_errors_html( $errors ) );
+	}
+}
+
+add_action( 'edd_checkout_user_error_checks', __NAMESPACE__ . '\send_ajax_errors', 99999, 3 );
 
 /**
  * Creates a new order in PayPal and EDD.
@@ -168,15 +219,9 @@ function create_order( $purchase_data ) {
 
 		$e->record_gateway_error( $payment_id );
 
-		edd_set_error( 'paypal-error', $e->getMessage() );
-		ob_start();
-		edd_print_errors();
-		$error_html = ob_get_clean();
-
-		wp_send_json_error( array(
-			'error_message' => $e->getMessage(),
-			'error_html'    => $error_html
-		) );
+		wp_send_json_error( edd_build_errors_html( array(
+			'paypal-error' => $e->getMessage()
+		) ) );
 	}
 }
 
@@ -187,11 +232,11 @@ function capture_order() {
 	edd_debug_log( 'PayPal - capture_order()' );
 	try {
 		if ( empty( $_POST['paypal_order_id'] ) ) {
-			throw new Gateway_Exception(
-				__( 'An unexpected error occurred. Please try again.', 'easy-digital-downloads' ),
-				400,
-				__( 'Missing PayPal order ID during capture.', 'easy-digital-downloads' )
-			);
+		throw new Gateway_Exception(
+			__( 'An unexpected error occurred. Please try again.', 'easy-digital-downloads' ),
+			400,
+			__( 'Missing PayPal order ID during capture.', 'easy-digital-downloads' )
+		);
 		}
 
 		try {

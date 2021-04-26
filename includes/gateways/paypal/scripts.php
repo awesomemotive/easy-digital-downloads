@@ -56,6 +56,12 @@ function register_js( $force_load = false ) {
 	if ( edd_is_checkout() || $force_load ) {
 		wp_enqueue_script( 'sandhills-paypal-js-sdk' );
 		wp_enqueue_script( 'edd-paypal' );
+
+		wp_localize_script( 'edd-paypal', 'eddPayPalVars', array(
+			'defaultError' => edd_build_errors_html( array(
+				'paypal-error' => esc_html__( 'An unexpected error occurred. Please try again.', 'easy-digital-downloads' )
+			) )
+		) );
 	}
 }
 

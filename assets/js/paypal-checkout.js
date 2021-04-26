@@ -52,9 +52,14 @@ var EDD_PayPal = {
 	 * @param {string} errorHtml
 	 */
 	setErrorHtml( container, context, errorHtml ) {
+		// Format errors.
+
 		if ( 'checkout' === context && 'undefined' !== typeof edd_global_vars && edd_global_vars.checkout_error_anchor ) {
 			// Checkout errors.
-			jQuery( edd_global_vars.checkout_error_anchor ).before( errorHtml );
+			const errorWrapper = document.getElementById( 'edd-paypal-errors-wrap' );
+			if ( errorWrapper ) {
+				errorWrapper.innerHTML = errorHtml;
+			}
 		} else if ( 'buy_now' === context ) {
 			// Buy Now errors
 			const form = container.closest( '.edd_download_purchase_form' );
@@ -79,13 +84,18 @@ var EDD_PayPal = {
 	initButtons( container, context ) {
 		EDD_PayPal.isMounted = true;
 
+		const spinner = ( 'checkout' === context ) ? document.getElementById( 'edd-paypal-spinner' ) : false; // @todo buy now
+
 		paypal.Buttons( {
 			createOrder: function ( data, actions ) {
 				console.log( 'createOrder' );
 
+				// Show spinner.
+				spinner.style.display = 'block';
+
 				// Clear errors at the start of each attempt.
 				const form = ( 'checkout' === context ) ? document.getElementById( 'edd_purchase_form' ) : container.closest( '.edd_download_purchase_form' );
-				const errorWrapper = form.querySelector( '.edd-paypal-checkout-buy-now-error-wrapper' );
+				const errorWrapper = ( 'checkout' === context ) ? form.querySelector( '#edd-paypal-errors-wrap' ) : form.querySelector( '.edd-paypal-checkout-buy-now-error-wrapper' );
 				if ( errorWrapper ) {
 					errorWrapper.innerHTML = '';
 				}
@@ -101,7 +111,13 @@ var EDD_PayPal = {
 					if ( orderData.data && orderData.data.paypal_order_id ) {
 						return orderData.data.paypal_order_id;
 					} else {
-						const errorHtml = orderData.data.error_message ? orderData.data.error_message : orderData.data;
+						// Error message.
+						let errorHtml = eddPayPalVars.defaultError;
+						if ( orderData.data && 'string' === typeof orderData.data ) {
+							errorHtml = orderData.data;
+						} else if ( 'string' === typeof orderData ) {
+							errorHtml = orderData;
+						}
 
 						return new Promise( function( resolve, reject ) {
 							reject( new Error( errorHtml ) );
@@ -126,15 +142,24 @@ var EDD_PayPal = {
 					if ( responseData.success && responseData.data ) {
 						window.location = responseData.data;
 					} else {
-						const errorHtml = 'Generic error'; // @todo markup, il8n
+						// Hide spinner.
+						spinner.style.display = 'none';
+
+						const errorHtml = eddPayPalVars.defaultError;
 						EDD_PayPal.setErrorHtml( container, context, errorHtml );
 					}
 				} );
 			},
 			onError: function( error ) {
-				console.log( 'PayPal gateway error', error );
-				const errorHtml = error.err ? error.err : 'Generic error'; // @todo markup, il8n
+				// Hide spinner.
+				spinner.style.display = 'none';
+
+				error.name = '';
 				EDD_PayPal.setErrorHtml( container, context, error );
+			},
+			onCancel: function( data ) {
+				// Hide spinner.
+				spinner.style.display = 'none';
 			}
 		} ).render( container );
 	}

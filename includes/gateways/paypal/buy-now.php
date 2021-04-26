@@ -65,7 +65,7 @@ add_filter( 'edd_purchase_link_args', __NAMESPACE__ . '\maybe_add_purchase_link_
 function maybe_enable_buy_now_js( $download_id, $args ) {
 	if ( ! empty( $args['direct'] ) && is_buy_now_enabled() ) {
 		register_js( true );
-		// @todo error container
+		// @todo error container `edd-paypal-checkout-buy-now-error-wrapper`
 	}
 }
 
