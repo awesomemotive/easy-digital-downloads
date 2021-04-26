@@ -27,7 +27,7 @@ var EDD_PayPal = {
 			chosenGateway = edd_scripts.default_gateway;
 		}
 
-		return 'paypal' === chosenGateway;
+		return 'paypal_commerce' === chosenGateway;
 	},
 
 	/**
@@ -144,7 +144,7 @@ var EDD_PayPal = {
  * Initialize on checkout.
  */
 jQuery( document.body ).on( 'edd_gateway_loaded', function( e, gateway ) {
-	if ( 'paypal' !== gateway ) {
+	if ( 'paypal_commerce' !== gateway ) {
 		return;
 	}
 
