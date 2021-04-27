@@ -202,10 +202,16 @@ function create_order( $purchase_data ) {
 
 			edd_debug_log( sprintf( '-- Successful PayPal response. PayPal order ID: %d; EDD order ID: %d', esc_html( $response->id ), $payment_id ) );
 
-			// Send successfully created order ID back.
+			/*
+			 * Send successfully created order ID back.
+			 * We also send back a new nonce, for verification in the next step: `capture_order()`.
+			 * If the user was just logged into a new account, the previously sent nonce may have
+			 * become invalid.
+			 */
 			wp_send_json_success( array(
 				'paypal_order_id' => $response->id,
-				'edd_order_id'    => $payment_id
+				'edd_order_id'    => $payment_id,
+				'nonce'           => wp_create_nonce( 'edd_process_paypal' )
 			) );
 		} catch ( Authentication_Exception $e ) {
 			throw new Gateway_Exception( __( 'An authentication error occurred. Please try again.', 'easy-digital-downloads' ), $e->getCode(), $e->getMessage() );
@@ -227,10 +233,30 @@ function create_order( $purchase_data ) {
 
 add_action( 'edd_gateway_paypal_commerce', __NAMESPACE__ . '\create_order', 9 );
 
+/**
+ * Captures the order in PayPal
+ *
+ * @since 2.11
+ */
 function capture_order() {
-	// @todo nonce
 	edd_debug_log( 'PayPal - capture_order()' );
 	try {
+		if ( empty( $_POST['edd_process_paypal_nonce'] ) ) {
+			throw new Gateway_Exception(
+				__( 'A validation error occurred. Please try again.', 'easy-digital-downloads' ),
+				400,
+				__( 'Missing approval nonce.', 'easy-digital-downloads' )
+			);
+		}
+
+		if ( ! wp_verify_nonce( $_POST['edd_process_paypal_nonce'], 'edd_process_paypal' ) ) {
+			throw new Gateway_Exception(
+				__( 'A validation error occurred. Please try again.', 'easy-digital-downloads' ),
+				403,
+				__( 'Nonce validation failed.', 'easy-digital-downloads' )
+			);
+		}
+
 		if ( empty( $_POST['paypal_order_id'] ) ) {
 			throw new Gateway_Exception(
 				__( 'An unexpected error occurred. Please try again.', 'easy-digital-downloads' ),

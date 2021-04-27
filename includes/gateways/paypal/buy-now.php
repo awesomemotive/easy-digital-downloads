@@ -94,6 +94,9 @@ add_filter( 'edd_purchase_link_args', __NAMESPACE__ . '\maybe_add_purchase_link_
 function maybe_enable_buy_now_js( $download_id, $args ) {
 	if ( ! empty( $args['direct'] ) && is_buy_now_enabled() ) {
 		register_js( true );
+		?>
+		<input type="hidden" name="edd_process_paypal_nonce" value="<?php echo esc_attr( wp_create_nonce( 'edd_process_paypal' ) ); ?>">
+		<?php
 	}
 }
 

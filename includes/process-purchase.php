@@ -837,6 +837,9 @@ function edd_get_purchase_form_user( $valid_data = array(), $is_ajax = null ) {
 
 	} elseif ( true === $valid_data['need_new_user'] || true === $valid_data['need_user_login'] ) {
 
+		// This ensures $_COOKIE is available without a new HTTP request.
+		add_action( 'set_logged_in_cookie', 'edd_set_logged_in_cookie' );
+
 		// New user registration.
 		if ( true === $valid_data['need_new_user'] ) {
 
@@ -869,6 +872,8 @@ function edd_get_purchase_form_user( $valid_data = array(), $is_ajax = null ) {
 				edd_log_user_in( $user['user_id'], $user['user_login'], $user['user_pass'] );
 			}
 		}
+
+		remove_action( 'set_logged_in_cookie', 'edd_set_logged_in_cookie' );
 	}
 
 	// Check guest checkout.
@@ -912,6 +917,22 @@ function edd_get_purchase_form_user( $valid_data = array(), $is_ajax = null ) {
 
 	// Return valid user.
 	return $user;
+}
+
+/**
+ * Sets the $_COOKIE global when a logged in cookie is available.
+ *
+ * We need the global to be immediately available so calls to wp_create_nonce()
+ * within the same session will use the newly available data.
+ *
+ * @since 2.11
+ *
+ * @link https://wordpress.stackexchange.com/a/184055
+ *
+ * @param string $logged_in_cookie The logged-in cookie value.
+ */
+function edd_set_logged_in_cookie( $logged_in_cookie ) {
+	$_COOKIE[ LOGGED_IN_COOKIE ] = $logged_in_cookie;
 }
 
 /**
