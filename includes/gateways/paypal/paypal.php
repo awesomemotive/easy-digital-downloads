@@ -48,6 +48,7 @@ if ( ! defined( 'EDD_PAYPAL_SANDBOX_MERCHANT_ID' ) ) {
 
 /**
  * Partner client ID
+ * @todo I think we can remove this?
  */
 if ( ! defined( 'EDD_PAYPAL_PARTNER_CLIENT_ID' ) ) {
 	define( 'EDD_PAYPAL_PARTNER_CLIENT_ID', '' );

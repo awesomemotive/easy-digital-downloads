@@ -55,7 +55,7 @@ function register_gateway_settings( $gateway_settings ) {
 			'desc' => __( 'Enter your test client ID.', 'easy-digital-downloads' ),
 			'type' => 'text',
 			'size' => 'regular',
-			//'class' => 'edd-hidden edd-paypal-credentials-row' // @todo
+			'class' => 'edd-hidden'
 		),
 		'paypal_sandbox_client_secret' => array(
 			'id'   => 'paypal_sandbox_client_secret',
@@ -63,7 +63,7 @@ function register_gateway_settings( $gateway_settings ) {
 			'desc' => __( 'Enter your test client secret.', 'easy-digital-downloads' ),
 			'type' => 'password',
 			'size' => 'regular',
-			//'class' => 'edd-hidden edd-paypal-credentials-row' // @todo
+			'class' => 'edd-hidden'
 		),
 		'paypal_live_client_id'        => array(
 			'id'   => 'paypal_live_client_id',
@@ -71,7 +71,7 @@ function register_gateway_settings( $gateway_settings ) {
 			'desc' => __( 'Enter your live client ID.', 'easy-digital-downloads' ),
 			'type' => 'text',
 			'size' => 'regular',
-			//'class' => 'edd-hidden edd-paypal-credentials-row' // @todo
+			'class' => 'edd-hidden'
 		),
 		'paypal_live_client_secret'    => array(
 			'id'   => 'paypal_live_client_secret',
@@ -79,7 +79,7 @@ function register_gateway_settings( $gateway_settings ) {
 			'desc' => __( 'Enter your live client secret.', 'easy-digital-downloads' ),
 			'type' => 'password',
 			'size' => 'regular',
-			//'class' => 'edd-hidden edd-paypal-credentials-row' // @todo
+			'class' => 'edd-hidden'
 		),
 	);
 
