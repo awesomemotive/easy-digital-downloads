@@ -80,8 +80,6 @@ var EDD_PayPal = {
 	 *
 	 * @param {string|HTMLElement} container Element to render the buttons in.
 	 * @param {string} context   Context for the button. Either `checkout` or `buy_now`.
-	 *
-	 * @todo fetch/Promise polyfill needed
 	 */
 	initButtons( container, context ) {
 		EDD_PayPal.isMounted = true;

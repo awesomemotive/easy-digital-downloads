@@ -11,7 +11,6 @@
 namespace EDD\PayPal\Admin;
 
 use EDD\PayPal;
-use function EDD\PayPal\get_partner_merchant_id;
 
 if ( ! defined( 'EDD_PAYPAL_PARTNER_CONNECT_URL' ) ) {
 	// @todo
@@ -159,8 +158,8 @@ function get_access_token() {
 	 * Now we can use this access token to fetch the seller's credentials for all future
 	 * API requests.
 	 */
-	error_log($api_url . 'v1/customer/partners/' . urlencode( get_partner_merchant_id( $mode ) ) . '/merchant-integrations/credentials/');
-	$response = wp_remote_get( $api_url . 'v1/customer/partners/' . urlencode( get_partner_merchant_id( $mode ) ) . '/merchant-integrations/credentials/', array(
+	error_log($api_url . 'v1/customer/partners/' . urlencode( \EDD\PayPal\get_partner_merchant_id( $mode ) ) . '/merchant-integrations/credentials/');
+	$response = wp_remote_get( $api_url . 'v1/customer/partners/' . urlencode( \EDD\PayPal\get_partner_merchant_id( $mode ) ) . '/merchant-integrations/credentials/', array(
 		'headers' => array(
 			'Authorization' => sprintf( 'Bearer %s', $body->access_token ),
 			'Content-Type'  => 'application/json',

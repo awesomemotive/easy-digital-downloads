@@ -14,6 +14,40 @@ namespace EDD\PayPal;
 use EDD\PayPal\Exceptions\Authentication_Exception;
 
 /**
+ * Enqueues polyfills for Promise and Fetch.
+ *
+ * @since 2.11
+ */
+function maybe_enqueue_polyfills() {
+	/**
+	 * Filters whether or not IE11 polyfills should be loaded.
+	 * Note: This filter may have its default changed at any time, or may entirely
+	 * go away at one point.
+	 *
+	 * @since 2.11
+	 */
+	if ( ! apply_filters( 'edd_load_ie11_polyfills', true ) ) {
+		return;
+	}
+
+	wp_enqueue_script(
+		'promise-polyfill',
+		EDD_PLUGIN_URL . 'assets/js/promise-polyfill.min.js',
+		array(),
+		'8.2.0',
+		true
+	);
+
+	wp_enqueue_script(
+		'fetch-polyfill',
+		EDD_PLUGIN_URL . 'assets/js/fetch-polyfill.min.js',
+		array( 'promise-polyfill' ),
+		'3.6.0',
+		true
+	);
+}
+
+/**
  * Registers PayPal JavaScript
  *
  * @param bool $force_load
@@ -54,6 +88,8 @@ function register_js( $force_load = false ) {
 	);
 
 	if ( edd_is_checkout() || $force_load ) {
+		maybe_enqueue_polyfills();
+
 		wp_enqueue_script( 'sandhills-paypal-js-sdk' );
 		wp_enqueue_script( 'edd-paypal' );
 
