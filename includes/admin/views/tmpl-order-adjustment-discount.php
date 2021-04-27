@@ -39,7 +39,7 @@ $view_url = edd_get_admin_url(
 </td>
 
 <td class="column-right" data-colname="<?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?>">
-	{{ data.totalCurrency }}
+	&ndash;{{ data.totalCurrency }}
 </td>
 
 <input type="hidden" value="{{ data.typeId }}" name="discounts[{{ data.id }}][type_id]" />

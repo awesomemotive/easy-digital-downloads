@@ -62,4 +62,13 @@ export const OrderAdjustmentDiscount = OrderAdjustment.extend( {
 
 		return amount;
 	},
+
+	/**
+	 * Returns the `OrderAdjustment` total.
+	 *
+	 * @since 3.0
+	 */
+	getTotal() {
+		return this.getAmount();
+	},
 } );

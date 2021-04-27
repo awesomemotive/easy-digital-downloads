@@ -32,9 +32,23 @@ export const OrderAdjustment = Backbone.Model.extend( {
 	/**
 	 * Returns the `OrderAdjustment` amount.
 	 *
+	 * Separate from subtotal or total calculation so `OrderAdjustmentDiscount`
+	 * can be calculated independently.
+	 *
+	 * @see OrderAdjustmentDiscount.prototype.getAmount()
+	 *
 	 * @since 3.0
 	 */
 	getAmount() {
-		return this.get( 'total' );
+		return this.get( 'subtotal' );
+	},
+
+	/**
+	 * Returns the `OrderAdjustment` total.
+	 *
+	 * @since 3.0
+	 */
+	getTotal() {
+		return this.get( 'subtotal' ) + this.get( 'tax' );
 	},
 } );

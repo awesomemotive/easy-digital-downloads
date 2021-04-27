@@ -123,8 +123,9 @@ export const State = Backbone.Model.extend(
 			}
 
 			const items = this.get( 'items' ).models;
+			const adjustments = this.get( 'adjustments' ).getByType( 'fee' );
 
-			return items.reduce(
+			return [ ...items, ...adjustments ].reduce(
 				( amount, item ) => {
 					return amount += +item.get( 'tax' );
 				},
@@ -145,7 +146,25 @@ export const State = Backbone.Model.extend(
 				return this.get( 'order' ).total;
 			}
 
-			return ( this.getSubtotal() - this.getDiscount() ) + this.getTax();
+			// Calculate all adjustments that affect the total.
+			const { models: adjustments } = this.get( 'adjustments' );
+
+			const adjustedSubtotal = adjustments.reduce(
+				( amount, adjustment ) => {
+					if (
+						[ 'discount', 'credit' ].includes(
+							adjustment.get( 'type' )
+						)
+					) {
+						return amount -= +adjustment.getAmount();
+					} else {
+						return amount += +adjustment.get( 'subtotal' );
+					}
+				},
+				this.getSubtotal()
+			);
+
+			return adjustedSubtotal + this.getTax();
 		},
 
 		/**
