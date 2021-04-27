@@ -167,7 +167,6 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 
 		const { state } = this.options;
 		const hasTax = state.get( 'hasTax' );
-		console.log(this.model.get( 'isTaxed' ));
 
 		if (
 			true === this.model.get( 'isTaxed' ) &&
@@ -179,7 +178,6 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 				amountNumber * ( hasTax.rate / 100 )
 			);
 		}
-		console.log(taxNumber);
 
 		this.model.set( {
 			amountManual,
