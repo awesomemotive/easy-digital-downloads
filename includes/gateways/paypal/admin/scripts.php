@@ -19,6 +19,8 @@ function enqueue_connect_scripts() {
 	if ( edd_is_admin_page( 'settings' ) && edd_is_gateway_active( 'paypal_commerce' ) ) {
 		\EDD\PayPal\maybe_enqueue_polyfills();
 
+		// Use minified libraries if SCRIPT_DEBUG is turned off
+		$suffix    = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 		$subdomain = edd_is_test_mode() ? 'sandbox.' : '';
 
 		wp_enqueue_script(
@@ -31,7 +33,7 @@ function enqueue_connect_scripts() {
 
 		wp_enqueue_script(
 			'edd-paypal-connect',
-			EDD_PLUGIN_URL . 'assets/js/admin-paypal-connect.js', // @todo minify
+			EDD_PLUGIN_URL . 'assets/js/admin-paypal-connect' . $suffix . '.js',
 			array( 'jquery' ),
 			time(), // @todo EDD_VERSION
 			true
