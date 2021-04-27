@@ -87,20 +87,21 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 				$label = _n( 'Discount', 'Discounts', count( $discounts ), 'easy-digital-downloads' );
 				?>
 				<tr>
-					<td><strong><?php echo esc_html( $label ); ?>:</strong></td>
-					<?php
-					foreach ( $discounts as $discount ) {
-						$name   = $discount->description;
-						$amount = edd_currency_filter( edd_format_amount( edd_negate_amount( $discount->total ) ) );
-						if ( 'percent' === edd_get_discount_type( $discount->type_id ) ) {
-							$rate  = edd_format_discount_rate( 'percent', edd_get_discount_amount( $discount->type_id ) );
-							$name .= "&nbsp;({$rate})";
-						}
-						?>
-						<td><?php echo esc_html( $name . ': ' . $amount ); ?></td>
-						<?php
+					<td colspan="2"><strong><?php echo esc_html( $label ); ?>:</strong></td>
+				</tr>
+				<?php
+				foreach ( $discounts as $discount ) {
+					$name = $discount->description;
+					if ( 'percent' === edd_get_discount_type( $discount->type_id ) ) {
+						$rate  = edd_format_discount_rate( 'percent', edd_get_discount_amount( $discount->type_id ) );
+						$name .= "&nbsp;({$rate})";
 					}
 					?>
+					<td><?php echo esc_html( $name ); ?>:</td>
+					<td><?php echo esc_html( edd_currency_filter( edd_format_amount( edd_negate_amount( $discount->total ) ) ) ); ?></td>
+					<?php
+				}
+				?>
 				</tr>
 			<?php endif; ?>
 		<?php endif; ?>
@@ -110,24 +111,19 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 		if ( ! empty( $fees ) ) :
 			?>
 			<tr>
-				<td><strong><?php esc_html_e( 'Fees', 'easy-digital-downloads' ); ?>:</strong></td>
-				<td>
-					<ul class="edd_receipt_fees">
-					<?php
-					foreach ( $fees as $fee ) :
-						$label = __( 'Fee', 'easy-digital-downloads' );
-						if ( ! empty( $fee->description ) ) {
-							$label .= ': ' . $fee->description;
-						}
-						?>
-						<li>
-							<span class="edd_fee_label"><?php echo esc_html( $label ); ?></span>
-							<span class="edd_fee_sep">&nbsp;&ndash;&nbsp;</span>
-							<span class="edd_fee_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( $fee->subtotal ) ) ); ?></span>
-						</li>
-					<?php endforeach; ?>
-					</ul>
-				</td>
+				<td colspan="2"><strong><?php echo esc_html( _n( 'Fee', 'Fees', count( $fees ), 'easy-digital-downloads' ) ); ?>:</strong></td>
+			</tr>
+			<tr>
+				<?php
+				foreach ( $fees as $fee ) :
+					$label = __( 'Fee', 'easy-digital-downloads' );
+					if ( ! empty( $fee->description ) ) {
+						$label = $fee->description;
+					}
+					?>
+					<td><span class="edd_fee_label"><?php echo esc_html( $label ); ?></span></td>
+					<td><span class="edd_fee_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( $fee->subtotal ) ) ); ?></span></td>
+				<?php endforeach; ?>
 			</tr>
 		<?php endif; ?>
 
