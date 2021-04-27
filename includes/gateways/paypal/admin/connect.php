@@ -149,7 +149,7 @@ function get_and_save_credentials() {
 		wp_send_json_error( __( 'Missing nonce. Please refresh the page and try again.', 'easy-digital-downloads' ) );
 	}
 
-	$mode             = edd_is_test_mode() ? 'sandbox' : 'live';
+	$mode             = edd_is_test_mode() ? PayPal\API::MODE_SANDBOX : PayPal\API::MODE_LIVE;
 	$paypal_subdomain = edd_is_test_mode() ? '.sandbox' : '';
 	$api_url          = 'https://api-m' . $paypal_subdomain . '.paypal.com/';
 
@@ -216,6 +216,15 @@ function get_and_save_credentials() {
 
 	// We don't need the nonce anymore so we can delete that.
 	delete_option( 'edd_paypal_commerce_connect_details' );
+
+	/**
+	 * Triggers when an account is successfully connected to PayPal.
+	 *
+	 * @param string $mode The mode that the account was connected in. Either `sandbox` or `live`.
+	 *
+	 * @since 2.11
+	 */
+	do_action( 'edd_paypal_commerce_connected', $mode );
 
 	wp_send_json_success( esc_html__( 'Successfully connected.', 'easy-digital-downloads' ) );
 }

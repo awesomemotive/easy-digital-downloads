@@ -98,26 +98,15 @@ class API {
 
 		if ( self::MODE_SANDBOX === $mode ) {
 			$this->api_url = 'https://api-m.sandbox.paypal.com';
-
-			if ( empty( $credentials ) ) {
-				$credentials = array(
-					'client_id'      => edd_get_option( 'paypal_sandbox_client_id' ),
-					'client_secret'  => edd_get_option( 'paypal_sandbox_client_secret' ),
-					'merchant_email' => edd_get_option( 'paypal_sandbox_merchant_email' ),
-					'merchant_id'    => edd_get_option( 'paypal_sandbox_merchant_id' )
-				);
-			}
 		} else {
 			$this->api_url = 'https://api-m.paypal.com';
+		}
 
-			if ( empty( $credentials ) ) {
-				$credentials = array(
-					'client_id'      => edd_get_option( 'paypal_live_client_id' ),
-					'client_secret'  => edd_get_option( 'paypal_live_client_secret' ),
-					'merchant_email' => edd_get_option( 'paypal_live_merchant_email' ),
-					'merchant_id'    => edd_get_option( 'paypal_live_merchant_id' )
-				);
-			}
+		if ( empty( $credentials ) ) {
+			$credentials = array(
+				'client_id'     => edd_get_option( 'paypal_' . $this->mode . '_client_id' ),
+				'client_secret' => edd_get_option( 'paypal_' . $this->mode . '_client_secret' ),
+			);
 		}
 
 		$this->set_credentials( $credentials );
@@ -138,12 +127,14 @@ class API {
 	/**
 	 * Sets the credentials to use for API requests.
 	 *
-	 * @param array $creds {
-	 *                     Credentials to set.
+	 * @param array $creds         {
+	 *                             Credentials to set.
 	 *
-	 * @type string $client_id
-	 * @type string $client_secret
-	 * @type string $merchant_id
+	 * @type string $client_id     PayPal client ID.
+	 * @type string $client_secret PayPal client secret.
+	 * @type string $cache_key     Cache key used for storing the access token until it expires. Should be unique to
+	 *                             the set of credentials. The mode is automatically appended, so should not be
+	 *                             included manually.
 	 * }
 	 *
 	 * @since 2.11
@@ -153,7 +144,6 @@ class API {
 		$creds = wp_parse_args( $creds, array(
 			'client_id'     => '',
 			'client_secret' => '',
-			'merchant_id'   => '',
 			'cache_key'     => 'edd_paypal_commerce_access_token'
 		) );
 
@@ -173,7 +163,7 @@ class API {
 			$this->{$cred_id} = $cred_value;
 		}
 
-		$this->token_cache_key = $creds['cache_key'] . '_' . $this->mode;
+		$this->token_cache_key = sanitize_key( $creds['cache_key'] . '_' . $this->mode );
 	}
 
 	/**
