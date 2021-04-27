@@ -47,7 +47,11 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 		this.addEvents( {
 			'change #object_type': 'onChangeObjectType',
 			'change [name="type"]': 'onChangeType',
+
 			'keyup #amount': 'onChangeAmount',
+			'change #no-tax': 'onHasTaxToggle',
+			'click #set-address': 'onSetAddress',
+
 			'keyup #description': 'onChangeDescription',
 
 			'submit form': 'onAdd',
@@ -63,6 +67,7 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 			objectType: 'order',
 			type: 'fee',
 			amountManual: '',
+			isTaxed: true,
 
 			state,
 		} );
@@ -144,17 +149,6 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 	},
 
 	/**
-	 * Updates the `OrderAdjustment` when the Description changes.
-	 *
-	 * @since 3.0
-	 *
-	 * @param {Object} e Change event
-	 */
-	onChangeDescription( e ) {
-		this.model.set( 'description', e.target.value );
-	},
-
-	/**
 	 * Updates the `OrderAdjustment` when the Amount changes.
 	 *
 	 * @since 3.0
@@ -169,11 +163,87 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 		const amountManual = target.value;
 		const amountNumber = number.unformat( amountManual );
 
+		let taxNumber = 0;
+
+		const { state } = this.options;
+		const hasTax = state.get( 'hasTax' );
+		console.log(this.model.get( 'isTaxed' ));
+
+		if (
+			true === this.model.get( 'isTaxed' ) &&
+			'none' !== hasTax &&
+			'' !== hasTax.country &&
+			'' !== hasTax.rate
+		) {
+			taxNumber = number.unformat(
+				amountNumber * ( hasTax.rate / 100 )
+			);
+		}
+		console.log(taxNumber);
+
 		this.model.set( {
 			amountManual,
 			subtotal: amountNumber,
 			total: amountNumber,
+			tax: taxNumber,
 		} );
+	},
+
+	/**
+	 * Toggles if the fee should be taxed.
+	 *
+	 * @since 3.0
+	 *
+	 * @param {Object} e Change event.
+	 */
+	onHasTaxToggle( e ) {
+		e.preventDefault();
+
+		const checked = e.target.checked;
+		const args = {
+			isTaxed: checked,
+		}
+
+		// Reset tax amount if it should not be taxed.
+		if ( false === checked ) {
+			args.tax = 0;
+		}
+
+		this.model.set( args );
+	},
+
+	/**
+	 * Closes dialog and opens "Order Details - Address" section.
+	 *
+	 * @since 3.0
+	 *
+	 * @param {Object} e Click event.
+	 */
+	onSetAddress( e ) {
+		e.preventDefault();
+
+		this.closeDialog();
+
+		const button = $( '[href="#edd_general_address"]' );
+
+		if ( ! button ) {
+			return;
+		}
+
+		button.trigger( 'click' );
+
+		$( '#edd_order_address_country' ).trigger( 'focus' );
+	},
+
+	/**
+	 * Updates the `OrderAdjustment` when the Description changes.
+	 *
+	 * @since 3.0
+	 *
+	 * @param {Object} e Change event
+	 */
+	onChangeDescription( e ) {
+		this.model.set( 'description', e.target.value );
 	},
 
 	/**

@@ -674,6 +674,8 @@ table.edd-order-overview-summary--refund {
 	font-weight: 600;
 }
 
+.edd-order-overview-summary__subtotal td,
+.edd-order-overview-summary__adjustments td,
 .edd-order-overview-summary__totals-total td {
 	vertical-align: middle;
 }
@@ -849,6 +851,7 @@ table.edd-order-overview-summary--refund {
 	opacity: 0.75;
 }
 
+.edd-order-overview-add-adjustment .notice,
 .edd-order-overview-add-item .notice {
 	margin: 0 0 1rem;
 }

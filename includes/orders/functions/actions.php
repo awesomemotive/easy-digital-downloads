@@ -362,6 +362,7 @@ function edd_add_manual_order( $args = array() ) {
 				'type_key'    => $type_key,
 				'description' => sanitize_text_field( $adjustment['description'] ),
 				'subtotal'    => floatval( $adjustment['subtotal'] ),
+				'tax'         => floatval( $adjustment['tax'] ),
 				'total'       => floatval( $adjustment['total'] ),
 			) );
 		}

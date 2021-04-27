@@ -35,6 +35,7 @@ export const OrderAdjustments = wp.Backbone.View.extend( {
 		const adjustments = state.get( 'adjustments' );
 
 		// Listen for events.
+		this.listenTo( state, 'change:hasTax', this.render );
 		this.listenTo( items, 'change', this.render );
 		this.listenTo( adjustments, 'add', this.render );
 		this.listenTo( adjustments, 'remove', this.remove );
