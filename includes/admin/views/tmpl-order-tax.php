@@ -10,17 +10,18 @@
  */
 ?>
 
-<# if ( 'none' !== data.state.hasTax ) { #>
+<# if ( 'none' !== data.state.hasTax && false !== data.state.hasTax.rate ) { #>
 
 	<tr class="is-expanded">
 		<td></td>
 		<td colspan="{{ data.config.colspan }}" class="column-primary">
 			<# if ( false !== data.state.hasTax.rate && '' !== data.state.hasTax.country ) { #>
 				{{ data.state.hasTax.country }}<# if ( '' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate }}%
+				<br />
 			<# } else if ( false !== data.state.hasTax.rate ) { #>
 				{{ data.state.hasTax.rate }}%
+				<br />
 			<# } #>
-			<br />
 			<small>
 				<?php esc_html_e( 'Tax', 'easy-digital-downloads' ); ?>
 			</small>
