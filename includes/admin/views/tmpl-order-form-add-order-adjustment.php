@@ -130,6 +130,7 @@
 
 		<#
 		if (
+			'fee' === data.type &&
 			'none' !== data.state.hasTax &&
 			'' === data.state.hasTax.country
 		) {

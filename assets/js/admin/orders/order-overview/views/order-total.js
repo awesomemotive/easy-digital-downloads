@@ -1,12 +1,12 @@
 /**
- * Order subtotal
+ * Order total
  *
  * @since 3.0
  *
- * @class Subtotal
+ * @class OrderTotal
  * @augments wp.Backbone.View
  */
-export const OrderSubtotal = wp.Backbone.View.extend( {
+export const OrderTotal = wp.Backbone.View.extend( {
 	/**
 	 * @since 3.0
 	 */
@@ -15,25 +15,26 @@ export const OrderSubtotal = wp.Backbone.View.extend( {
 	/**
 	 * @since 3.0
 	 */
-	className: 'edd-order-overview-summary__subtotal',
+	className: 'edd-order-overview-summary__total',
 
 	/**
 	 * @since 3.0
 	 */
-	template: wp.template( 'edd-admin-order-subtotal' ),
+	template: wp.template( 'edd-admin-order-total' ),
 
 	/**
-	 * Order subtotal view.
+	 * Order tax view.
 	 *
 	 * @since 3.0
 	 *
-	 * @constructs OrderSubtotal
+	 * @constructs OrderTax
 	 * @augments wp.Backbone.View
 	 */
 	initialize() {
 		const { state } = this.options;
 
 		// Listen for events.
+		this.listenTo( state, 'change:hasTax', this.render );
 		this.listenTo( state.get( 'items' ), 'add remove change', this.render );
 		this.listenTo( state.get( 'adjustments' ), 'add remove', this.render );
 	},
@@ -51,18 +52,30 @@ export const OrderSubtotal = wp.Backbone.View.extend( {
 	prepare() {
 		const { state } = this.options;
 		const { currency, number } = state.get( 'formatters' );
+
+		// Determine column offset -- using cart quantities requires an extra column.
 		const colspan = true === state.get( 'hasQuantity' ) ? 2 : 1;
 
-		const subtotal = state.getSubtotal();
+		const total = state.getTotal();
+		const discount = state.getDiscount();
+		const hasManualAdjustment = undefined !== state.get( 'items' ).findWhere( {
+			_isAdjustingManually: true,
+		} );
 
 		return {
-			state: state.toJSON(),
+			state: {
+				...state.toJSON(),
+				hasManualAdjustment,
+			},
 			config: {
 				colspan,
 			},
 
-			subtotal,
-			subtotalCurrency: currency.format( number.absint( subtotal ) ),
+			total,
+			discount,
+
+			discountCurrency: currency.format( number.absint( discount ) ),
+			totalCurrency: currency.format( number.absint( total ) ),
 		};
 	},
 } );

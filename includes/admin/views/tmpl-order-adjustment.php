@@ -29,21 +29,23 @@ $view_url = edd_get_admin_url(
 		<# } #>
 
 		<div>
-			<# if ( 'credit' === data.type ) { #>
-				<?php esc_html_e( 'Order Credit', 'easy-digital-downloads' ); ?>
-			<# } else { #>
-				<?php esc_html_e( 'Order Fee', 'easy-digital-downloads' ); ?>
+			<# if ( false !== data.orderItem ) { #>
+				{{ data.orderItem.productName }}:&nbsp;
+			<# } #>
+			<# if ( '' !== data.description ) { #>
+				{{ data.description }}
 			<# } #>
 
 			<# if ( '' !== data.description || false !== data.orderItem ) { #>
 				<br />
 				<small>
-					<# if ( false !== data.orderItem ) { #>
-						{{ data.orderItem.productName }}:&nbsp;
-					<# } #>
-					<# if ( '' !== data.description ) { #>
-						{{ data.description }}
-					<# } #>
+			<# } #>
+				<# if ( 'credit' === data.type ) { #>
+					<?php esc_html_e( 'Order Credit', 'easy-digital-downloads' ); ?>
+				<# } else { #>
+					<?php esc_html_e( 'Order Fee', 'easy-digital-downloads' ); ?>
+				<# } #>
+			<# if ( '' !== data.description || false !== data.orderItem ) { #>
 				</small>
 			<# } #>
 		</div>
