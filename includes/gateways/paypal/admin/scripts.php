@@ -16,7 +16,7 @@ namespace EDD\PayPal\Admin;
  * @since 2.11
  */
 function enqueue_connect_scripts() {
-	if ( edd_is_admin_page( 'settings' ) && edd_is_gateway_active( 'paypal_commerce' ) ) {
+	if ( edd_is_admin_page( 'settings' ) && isset( $_GET['section'] ) && 'paypal_commerce' === $_GET['section'] ) {
 		\EDD\PayPal\maybe_enqueue_polyfills();
 
 		// Use minified libraries if SCRIPT_DEBUG is turned off

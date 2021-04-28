@@ -169,7 +169,7 @@ class API {
 	 */
 	public function get_access_token() {
 		try {
-			$token = Token::from_json( (string) get_transient( $this->token_cache_key ) );
+			$token = Token::from_json( (string) get_option( $this->token_cache_key ) );
 
 			return ! $token->is_expired() ? $token : $this->generate_access_token();
 		} catch ( \RuntimeException $e ) {
@@ -185,8 +185,6 @@ class API {
 	 * @throws API_Exception
 	 */
 	private function generate_access_token() {
-		edd_debug_log( 'PayPal - generating new access token.' );
-
 		$response = wp_remote_post( $this->api_url . '/v1/oauth2/token', array(
 			'headers' => array(
 				'Content-Type'  => 'application/x-www-form-urlencoded',

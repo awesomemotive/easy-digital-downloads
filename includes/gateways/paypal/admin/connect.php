@@ -13,8 +13,7 @@ namespace EDD\PayPal\Admin;
 use EDD\PayPal;
 
 if ( ! defined( 'EDD_PAYPAL_PARTNER_CONNECT_URL' ) ) {
-	// @todo
-	define( 'EDD_PAYPAL_PARTNER_CONNECT_URL', 'https://develop/edd/wp-json/paypal-connect/v1/' );
+	define( 'EDD_PAYPAL_PARTNER_CONNECT_URL', 'https://easydigitaldownloads.com/wp-json/paypal-connect/v1/' );
 }
 
 /**
