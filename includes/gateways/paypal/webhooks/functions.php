@@ -1,16 +1,17 @@
 <?php
 /**
- * Webhooks
+ * Webhook Functions
  *
  * @package    easy-digital-downloads
- * @subpackage Gateways\PayPal
+ * @subpackage Gateways\PayPal\Webhooks
  * @copyright  Copyright (c) 2021, Sandhills Development, LLC
  * @license    GPL2+
  * @since      2.11
  */
 
-namespace EDD\PayPal;
+namespace EDD\PayPal\Webhooks;
 
+use EDD\PayPal\API;
 use EDD\PayPal\Exceptions\API_Exception;
 use EDD\PayPal\Exceptions\Authentication_Exception;
 
@@ -24,6 +25,22 @@ function get_webhook_url() {
 	return add_query_arg( array(
 		'edd-listener' => 'paypal_commerce'
 	), home_url( 'index.php' ) );
+}
+
+/**
+ * Returns the ID of the webhook.
+ *
+ * @param string $mode API mode. Either `sandbox` or `live`. If omitted, current store mode is used.
+ *
+ * @since 2.11
+ * @return string|false
+ */
+function get_webhook_id( $mode = '' ) {
+	if ( empty( $mode ) ) {
+		$mode = edd_is_test_mode() ? API::MODE_SANDBOX : API::MODE_LIVE;
+	}
+
+	return get_option( sanitize_key( 'edd_paypal_commerce_webhook_id_' . $mode ) );
 }
 
 /**
@@ -134,7 +151,7 @@ function sync_webhook( $mode = '' ) {
 		$mode = edd_is_test_mode() ? API::MODE_SANDBOX : API::MODE_LIVE;
 	}
 
-	$webhook_id = get_option( sanitize_key( 'edd_paypal_commerce_webhook_id_' . $mode ) );
+	$webhook_id = get_webhook_id( $mode );
 	if ( empty( $webhook_id ) ) {
 		throw new \Exception( esc_html__( 'Webhook not configured.', 'easy-digital-downloads' ) );
 	}

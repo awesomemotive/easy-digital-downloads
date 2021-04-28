@@ -220,7 +220,7 @@ function get_and_save_credentials() {
 	$message = esc_html__( 'Successfully connected.', 'easy-digital-downloads' );
 
 	try {
-		PayPal\create_webhook( $mode );
+		PayPal\Webhooks\create_webhook( $mode );
 	} catch ( \Exception $e ) {
 		$message = esc_html__( 'Your account has been successfully connected, but an error occurred while creating a webhook.', 'easy-digital-downloads' );
 	}
@@ -301,13 +301,13 @@ function get_account_info() {
 			'<button type="button" class="button edd-paypal-connect-action" data-nonce="' . esc_attr( wp_create_nonce( 'edd_update_paypal_webhook' ) ) . '" data-action="edd_paypal_commerce_update_webhook">' . esc_html__( 'Sync Webhook', 'easy-digital-downloads' ) . '</button>'
 		);
 		try {
-			$webhook = PayPal\get_webhook_details( $mode );
+			$webhook = PayPal\Webhooks\get_webhook_details( $mode );
 			if ( empty( $webhook->id ) ) {
 				throw new \Exception();
 			}
 
 			// Now compare the events to make sure we have them all.
-			$expected_events = PayPal\get_webhook_events( $mode );
+			$expected_events = PayPal\Webhooks\get_webhook_events( $mode );
 			$actual_events   = array();
 
 			if ( ! empty( $webhook->event_types ) && is_array( $webhook->event_types ) ) {
@@ -426,7 +426,7 @@ function create_webhook() {
 	}
 
 	try {
-		PayPal\create_webhook();
+		PayPal\Webhooks\create_webhook();
 
 		wp_send_json_success();
 	} catch ( \Exception $e ) {
@@ -449,7 +449,7 @@ function update_webhook() {
 	}
 
 	try {
-		PayPal\sync_webhook();
+		PayPal\Webhooks\sync_webhook();
 
 		wp_send_json_success();
 	} catch ( \Exception $e ) {
