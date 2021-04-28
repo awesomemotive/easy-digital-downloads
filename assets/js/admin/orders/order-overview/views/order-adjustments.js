@@ -78,9 +78,14 @@ export const OrderAdjustments = wp.Backbone.View.extend( {
 	 */
 	remove( model ) {
 		let subview = null;
+		const views = this.views.get();
+
+		if ( ! views ) {
+			return;
+		}
 
 		// Find the Subview containing the model.
-		this.views.get().forEach( ( view ) => {
+		views.forEach( ( view ) => {
 			const { model: viewModel } = view;
 
 			if ( viewModel.id === model.id ) {
