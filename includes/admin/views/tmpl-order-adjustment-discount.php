@@ -29,10 +29,10 @@ $view_url = edd_get_admin_url(
 		<# } #>
 
 		<div>
-			<?php esc_html_e( 'Discount', 'easy-digital-downloads' ); ?>
+			<a href="<?php echo esc_url( $view_url ); ?>&discount={{ data.typeId }}">{{ data.description }}</a>
 			<br />
 			<small>
-				<a href="<?php echo esc_url( $view_url ); ?>&discount={{ data.typeId }}">{{ data.description }}</a>
+				<?php esc_html_e( 'Discount', 'easy-digital-downloads' ); ?>
 			</small>
 		</div>
 	</div>

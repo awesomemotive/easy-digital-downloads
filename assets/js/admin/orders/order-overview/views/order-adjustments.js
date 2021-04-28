@@ -3,7 +3,6 @@
 /**
  * Internal dependencies
  */
-import { Base } from './base.js';
 import { OrderAdjustment } from './order-adjustment.js';
 
 /**
@@ -11,7 +10,7 @@ import { OrderAdjustment } from './order-adjustment.js';
  *
  * @since 3.0
  *
- * @class Adjustments
+ * @class OrderAdjustments
  * @augments wp.Backbone.View
  */
 export const OrderAdjustments = wp.Backbone.View.extend( {
@@ -47,8 +46,7 @@ export const OrderAdjustments = wp.Backbone.View.extend( {
 	 * @since 3.0
 	 */
 	render() {
-		const { state } = this.options;
-		const { models: adjustments } = state.get( 'adjustments' );
+		const adjustments = this.getAdjustments();
 
 		this.views.remove();
 

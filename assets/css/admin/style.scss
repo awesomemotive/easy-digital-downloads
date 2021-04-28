@@ -670,26 +670,29 @@ table.edd-order-overview-summary--refund {
 
 /** Totals */
 .edd-order-overview-summary__subtotal .column-primary,
-.edd-order-overview-summary__totals .column-primary {
+.edd-order-overview-summary__tax tr:first-of-type .column-primary,
+.edd-order-overview-summary__total .column-primary {
 	font-weight: 600;
 }
 
 .edd-order-overview-summary__subtotal td,
 .edd-order-overview-summary__adjustments td,
-.edd-order-overview-summary__totals-total td {
+.edd-order-overview-summary__tax td,
+.edd-order-overview-summary__total td {
 	vertical-align: middle;
 }
 
-.edd-order-overview-summary__totals td small {
+.edd-order-overview-summary__tax td small,
+.edd-order-overview-summary__total td small {
 	font-weight: normal;
 }
 
-.edd-order-overview-summary__totals .total {
+.edd-order-overview-summary__total .total {
 	color: #017d5c;
 	display: inline-block;
 }
 
-.edd-order-overview-summary__totals .total.is-negative {
+.edd-order-overview-summary__total .total.is-negative {
 	color: #a00;
 }
 
@@ -699,23 +702,23 @@ table.edd-order-overview-summary--refund {
 		margin-left: -50px;
 	}
 
-	.edd-order-overview-summary__totals .total {
+	.edd-order-overview-summary__total .total {
 		font-size: 150%;
 		padding-top: 5px;
 		padding-bottom: 5px;
 	}
 }
 
-.edd-order-overview-summary__totals tr:last-child th,
-.edd-order-overview-summary__totals tr:last-child td:not(:first-of-type) {
+.edd-order-overview-summary__total tr:last-child th,
+.edd-order-overview-summary__total tr:last-child td:not(:first-of-type) {
 	border-top: 1px solid #e5e5e5;
 }
 
-.edd-order-overview-summary__totals .notice {
+.edd-order-overview-summary__total .notice {
 	margin: -1px;
 }
 
-.edd-order-overview-summary__totals .notice p {
+.edd-order-overview-summary__total .notice p {
 	font-weight: normal;
 	margin: 0.5em 0;
 }

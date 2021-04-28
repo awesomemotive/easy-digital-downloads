@@ -170,6 +170,7 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 
 		if (
 			true === this.model.get( 'isTaxed' ) &&
+			'fee' === this.model.get( 'type' ) &&
 			'none' !== hasTax &&
 			'' !== hasTax.country &&
 			'' !== hasTax.rate
