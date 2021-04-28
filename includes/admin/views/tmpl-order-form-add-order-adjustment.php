@@ -141,7 +141,7 @@
 					<?php esc_html_e( 'Tax rates are defined by the customer\'s billing address.', 'easy-digital-downloads' ); ?>
 				</p>
 				<p>
-					<button class="button" id="set-address">
+					<button class="button button-secondary" id="set-address">
 						<?php esc_html_e( 'Set an address', 'easy-digital-downloads' ); ?>
 					</button>
 				</p>
