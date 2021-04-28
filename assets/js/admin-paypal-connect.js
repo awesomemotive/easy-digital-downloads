@@ -34,18 +34,63 @@ jQuery( document ).ready( function ( $ ) {
 		} );
 	} );
 
-	const accountInfoEl = document.getElementById( 'edd-paypal-commerce-connect-wrap' );
-	if ( accountInfoEl ) {
-		$.post( ajaxurl, {
-			action: 'edd_paypal_commerce_get_account_info',
-			_ajax_nonce: accountInfoEl.getAttribute( 'data-nonce' )
-		}, function( response ) {
-			accountInfoEl.innerHTML = '<p>' + response.data + '</p>';
+	/**
+	 * Checks the PayPal connection & webhook status.
+	 */
+	function eddPayPalGetAccountStatus() {
+		const accountInfoEl = document.getElementById( 'edd-paypal-commerce-connect-wrap' );
+		if ( accountInfoEl ) {
+			$.post( ajaxurl, {
+				action: 'edd_paypal_commerce_get_account_info',
+				_ajax_nonce: accountInfoEl.getAttribute( 'data-nonce' )
+			}, function( response ) {
+				let newHtml = response.data.account_status + response.data.webhook_status;
 
-			const newClass = response.success ? 'notice-success' : 'notice-error';
-			accountInfoEl.classList.add( newClass );
-		} );
+				if ( response.data.actions && response.data.actions.length ) {
+					newHtml += '<p class="edd-paypal-connect-actions">' + response.data.actions.join() + '</p>';
+				}
+
+				accountInfoEl.innerHTML = newHtml;
+
+				const newClass = response.success && response.data.status ? 'notice-' + response.data.status : 'notice-error';
+				accountInfoEl.classList.add( newClass );
+			} );
+		}
 	}
+	eddPayPalGetAccountStatus();
+
+	/**
+	 * Create webhook
+	 */
+	$( document ).on( 'click', '.edd-paypal-connect-action', function ( e ) {
+		e.preventDefault();
+
+		const button = $( this );
+		button.prop( 'disabled', true );
+		button.addClass( 'updating-message' );
+
+		const errorWrap = button.closest( '.edd-paypal-actions-error-wrap' );
+		if ( errorWrap.length ) {
+			errorWrap.remove();
+		}
+
+		$.post( ajaxurl, {
+			action: button.data( 'action' ),
+			_ajax_nonce: button.data( 'nonce' )
+		}, function( response ) {
+			button.prop( 'disabled', false );
+			button.removeClass( 'updating-message' );
+
+			if ( response.success ) {
+				button.addClass( 'updated-message' );
+
+				// Refresh account status.
+				eddPayPalGetAccountStatus();
+			} else {
+				button.parent().after( '<div class="edd-paypal-actions-error-wrap">' + response.data + '</div>' );
+			}
+		} );
+	} );
 } );
 
 function eddPayPalOnboardingCallback( authCode, shareId ) {

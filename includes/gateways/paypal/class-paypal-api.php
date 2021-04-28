@@ -59,13 +59,6 @@ class API {
 	private $client_secret;
 
 	/**
-	 * Merchant email address
-	 *
-	 * @var string
-	 */
-	private $merchant_email;
-
-	/**
 	 * Cache key to use for the token.
 	 *
 	 * @var string

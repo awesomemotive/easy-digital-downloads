@@ -73,6 +73,7 @@ require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/functions.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/gateway-filters.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/refunds.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/scripts.php';
+require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/webhooks.php';
 
 if ( is_admin() ) {
 	require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/admin/connect.php';

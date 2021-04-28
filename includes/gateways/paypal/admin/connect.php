@@ -217,6 +217,14 @@ function get_and_save_credentials() {
 	// We don't need the nonce anymore so we can delete that.
 	delete_option( 'edd_paypal_commerce_connect_details' );
 
+	$message = esc_html__( 'Successfully connected.', 'easy-digital-downloads' );
+
+	try {
+		PayPal\create_webhook( $mode );
+	} catch ( \Exception $e ) {
+		$message = esc_html__( 'Your account has been successfully connected, but an error occurred while creating a webhook.', 'easy-digital-downloads' );
+	}
+
 	/**
 	 * Triggers when an account is successfully connected to PayPal.
 	 *
@@ -226,7 +234,7 @@ function get_and_save_credentials() {
 	 */
 	do_action( 'edd_paypal_commerce_connected', $mode );
 
-	wp_send_json_success( esc_html__( 'Successfully connected.', 'easy-digital-downloads' ) );
+	wp_send_json_success( $message );
 }
 
 add_action( 'wp_ajax_edd_paypal_commerce_get_access_token', __NAMESPACE__ . '\get_and_save_credentials' );
@@ -241,16 +249,23 @@ function get_account_info() {
 	check_ajax_referer( 'edd_paypal_account_information' );
 
 	if ( ! current_user_can( 'manage_shop_settings' ) ) {
-		wp_send_json_error( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ) );
+		wp_send_json_error( wpautop( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ) ) );
 	}
 
+	$mode = edd_is_test_mode() ? PayPal\API::MODE_SANDBOX : PayPal\API::MODE_LIVE;
+
 	try {
+		/**
+		 * First get account information.
+		 */
 		$api      = new PayPal\API();
 		$response = $api->make_request( 'v1/identity/oauth2/userinfo?schema=paypalv1.1', array(), array(), 'GET' );
 
 		if ( empty( $response->user_id ) ) {
-			wp_send_json_error( __( 'Unable to retrieve account information from PayPal. You may wish to try reconnecting.', 'easy-digital-downloads' ) );
+			wp_send_json_error( wpautop( __( 'Unable to retrieve account information from PayPal. You may wish to try reconnecting.', 'easy-digital-downloads' ) ) );
 		}
+
+		$status = 'success';
 
 		/**
 		 * Note: Despite the docs saying you'll get a full profile back, including name, email, etc.
@@ -262,25 +277,87 @@ function get_account_info() {
 		 */
 
 		/* Translators: %s - the connected mode, either `sandbox` or `live` */
-		$mode    = edd_is_test_mode() ? __( 'sandbox', 'easy-digital-downloads' ) : __( 'live', 'easy-digital-downloads' );
-		$message = sprintf( __( 'Your PayPal account is successfully connected in %s mode.', 'easy-digital-downloads' ), $mode );
+		$mode_string    = edd_is_test_mode() ? __( 'sandbox', 'easy-digital-downloads' ) : __( 'live', 'easy-digital-downloads' );
+		$account_status = sprintf( __( 'Your PayPal account is successfully connected in %s mode.', 'easy-digital-downloads' ), $mode_string );
 
 		if ( ! empty( $response->emails ) && is_array( $response->emails ) ) {
 			foreach ( $response->emails as $email ) {
 				if ( ! empty( $email->value ) && ! empty( $email->primary ) ) {
-					$message = sprintf(
+					$account_status = sprintf(
 					/* Translators: %1$s - PayPal account email; %2$s - the connected mode, either `sandbox` or `live` */
 						__( 'You are successfully connected to the account <strong>%1$s</strong> in %2$s mode.', 'easy-digital-downloads' ),
 						esc_html( $email->value ),
-						$mode
+						$mode_string
 					);
 				}
 			}
 		}
 
-		wp_send_json_success( $message );
+		/**
+		 * Now check the webhook connection.
+		 */
+		$webhook_status = wpautop( esc_html__( 'Webhook successfully configured for the following events:', 'easy-digital-downloads' ) );
+		$actions        = array(
+			'<button type="button" class="button edd-paypal-connect-action" data-nonce="' . esc_attr( wp_create_nonce( 'edd_update_paypal_webhook' ) ) . '" data-action="edd_paypal_commerce_update_webhook">' . esc_html__( 'Sync Webhook', 'easy-digital-downloads' ) . '</button>'
+		);
+		try {
+			$webhook = PayPal\get_webhook_details( $mode );
+			if ( empty( $webhook->id ) ) {
+				throw new \Exception();
+			}
+
+			// Now compare the events to make sure we have them all.
+			$expected_events = PayPal\get_webhook_events( $mode );
+			$actual_events   = array();
+
+			if ( ! empty( $webhook->event_types ) && is_array( $webhook->event_types ) ) {
+				foreach ( $webhook->event_types as $event_type ) {
+					if ( ! empty( $event_type->name ) && ! empty( $event_type->status ) && 'ENABLED' === strtoupper( $event_type->status ) ) {
+						$actual_events[] = $event_type->name;
+					}
+				}
+			}
+
+			$missing_events = array_diff( $expected_events, $actual_events );
+			$number_missing = count( $missing_events );
+			if ( $number_missing ) {
+				$status         = 'warning';
+				$webhook_status = wpautop( _n(
+					'<strong>Warning:</strong> Webhook is configured but is missing an event. Click "Sync Webhook" to correct this.',
+					'<strong>Warning:</strong> Webhook is configured but is missing events. Click "Sync Webhook" to correct this.',
+					$number_missing,
+					'easy-digital-downloads'
+				) );
+			}
+
+			ob_start();
+			?>
+			<ul class="edd-paypal-webhook-events">
+				<?php foreach ( $expected_events as $event_name ) : ?>
+					<li>
+						<span class="dashicons dashicons-<?php echo in_array( $event_name, $actual_events ) ? 'yes' : 'no'; ?>"></span>
+						<span class="edd-paypal-webhook-event-name"><?php echo esc_html( $event_name ); ?></span>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+			<?php
+			$webhook_status .= ob_get_clean();
+		} catch ( \Exception $e ) {
+			$status         = 'warning';
+			$webhook_status = wpautop( __( '<strong>Warning:</strong> Webhook not configured. Some actions may not be working properly.', 'easy-digital-downloads' ) );
+			$actions        = array(
+				'<button type="button" class="button edd-paypal-connect-action" data-nonce="' . esc_attr( wp_create_nonce( 'edd_create_paypal_webhook' ) ) . '" data-action="edd_paypal_commerce_create_webhook">' . esc_html__( 'Create Webhook', 'easy-digital-downloads' ) . '</button>'
+			);
+		}
+
+		wp_send_json_success( array(
+			'status'         => $status,
+			'account_status' => wpautop( $account_status ),
+			'webhook_status' => $webhook_status,
+			'actions'        => $actions
+		) );
 	} catch ( \Exception $e ) {
-		wp_send_json_error( $e->getMessage() );
+		wp_send_json_error( wpautop( $e->getMessage() ) );
 	}
 }
 
@@ -312,11 +389,11 @@ function get_disconnect_url() {
  */
 function process_disconnect() {
 	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_die( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+		wp_die( esc_html__( 'You do not have permission to perform this action.', 'easy-digital-downloads' ), esc_html__( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	if ( empty( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'edd_disconnect_paypal_commerce' ) ) {
-		wp_die( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+		wp_die( esc_html__( 'You do not have permission to perform this action.', 'easy-digital-downloads' ), esc_html__( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
 	$mode = edd_is_test_mode() ? 'sandbox' : 'live';
@@ -335,3 +412,49 @@ function process_disconnect() {
 }
 
 add_action( 'edd_disconnect_paypal_commerce', __NAMESPACE__ . '\process_disconnect' );
+
+/**
+ * AJAX callback for creating a webhook.
+ *
+ * @since 2.11
+ */
+function create_webhook() {
+	check_ajax_referer( 'edd_create_paypal_webhook' );
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_send_json_error( esc_html__( 'You do not have permission to perform this action.', 'easy-digital-downloads' ) );
+	}
+
+	try {
+		PayPal\create_webhook();
+
+		wp_send_json_success();
+	} catch ( \Exception $e ) {
+		wp_send_json_error( esc_html( $e->getMessage() ) );
+	}
+}
+
+add_action( 'wp_ajax_edd_paypal_commerce_create_webhook', __NAMESPACE__ . '\create_webhook' );
+
+/**
+ * AJAX callback for syncing a webhook. This is used to fix issues with missing events.
+ *
+ * @since 2.11
+ */
+function update_webhook() {
+	check_ajax_referer( 'edd_update_paypal_webhook' );
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_send_json_error( esc_html__( 'You do not have permission to perform this action.', 'easy-digital-downloads' ) );
+	}
+
+	try {
+		PayPal\sync_webhook();
+
+		wp_send_json_success();
+	} catch ( \Exception $e ) {
+		wp_send_json_error( esc_html( $e->getMessage() ) );
+	}
+}
+
+add_action( 'wp_ajax_edd_paypal_commerce_update_webhook', __NAMESPACE__ . '\update_webhook' );

@@ -12,7 +12,6 @@
 
 namespace EDD\PayPal\Exceptions;
 
-
 class Authentication_Exception extends \Exception {
 
 }
