@@ -446,6 +446,35 @@ class Order extends Rows\Order {
 	}
 
 	/**
+	 * Retrieve the credits applied to the order.
+	 * These exist only for manually added orders.
+	 *
+	 * @since 3.0
+	 *
+	 *@return Order_Adjustment[] Order credits.
+	 */
+	public function get_credits() {
+		// Default values
+		$credits = array();
+
+		// Ensure adjustments exist.
+		if ( null === $this->adjustments ) {
+			$this->adjustments = $this->get_adjustments();
+		}
+
+		// Fetch the fees that applied to the entire order.
+		foreach ( $this->adjustments as $adjustment ) {
+			/** @var Order_Adjustment $adjustment */
+
+			if ( 'credit' === $adjustment->type ) {
+				$credits[] = $adjustment;
+			}
+		}
+
+		return $credits;
+	}
+
+	/**
 	 * Retrieve the transaction ID associated with the order.
 	 *
 	 * @since 3.0
