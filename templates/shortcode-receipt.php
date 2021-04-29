@@ -135,6 +135,28 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 				<td><?php echo esc_html( edd_payment_tax( $order->id ) ); ?></td>
 			</tr>
 		<?php endif; ?>
+		<?php
+		$credits = $order->get_credits();
+		if ( $credits ) {
+			?>
+			<tr>
+				<td colspan="2"><strong><?php echo esc_html( _n( 'Credit', 'Credits', count( $credits ), 'easy-digital-downloads' ) ); ?>:</strong></td>
+			</tr>
+			<?php
+			foreach ( $credits as $credit ) {
+				$description = __( 'Credit', 'easy-digital-downloads' );
+				if ( ! empty( $credit->description ) ) {
+					$description .= ' &mdash; ' . $credit->description;
+				}
+				?>
+				<tr>
+					<td><?php echo esc_html( $description ); ?></td>
+					<td><?php echo esc_html( edd_currency_filter( edd_format_amount( edd_negate_amount( $credit->total ) ) ) ); ?></td>
+				</tr>
+				<?php
+			}
+		}
+		?>
 
 		<?php if ( filter_var( $edd_receipt_args['price'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
 			<tr>
