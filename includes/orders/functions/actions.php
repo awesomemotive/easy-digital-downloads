@@ -300,10 +300,10 @@ function edd_add_manual_order( $args = array() ) {
 				'status'       => 'complete',
 				'quantity'     => $quantity,
 				'amount'       => $amount,
-				'subtotal'     => $subtotal,
+				'subtotal'     => round( $subtotal, edd_currency_decimal_filter() ),
 				'discount'     => $discount,
-				'tax'          => $tax,
-				'total'        => $total,
+				'tax'          => round( $tax, edd_currency_decimal_filter() ),
+				'total'        => round( $total, edd_currency_decimal_filter() ),
 			) );
 
 			if ( false !== $order_item_id ) {
