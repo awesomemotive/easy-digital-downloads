@@ -1,6 +1,9 @@
 <?php
 /**
- * Webhook Event: PAYMENT.CAPTURE.REFUNDED
+ * Webhook Events:
+ *
+ * - PAYMENT.CAPTURE.REFUNDED - Merchant refunds a sale.
+ * - PAYMENT.CAPTURE.REVERSED - PayPal reverses a sale.
  *
  * @package    easy-digital-downloads
  * @subpackage Gateways\PayPal\Webhooks\Events

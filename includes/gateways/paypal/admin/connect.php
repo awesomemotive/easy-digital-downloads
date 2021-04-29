@@ -306,7 +306,7 @@ function get_account_info() {
 			}
 
 			// Now compare the events to make sure we have them all.
-			$expected_events = PayPal\Webhooks\get_webhook_events( $mode );
+			$expected_events = array_keys( PayPal\Webhooks\get_webhook_events( $mode ) );
 			$actual_events   = array();
 
 			if ( ! empty( $webhook->event_types ) && is_array( $webhook->event_types ) ) {

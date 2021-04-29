@@ -67,18 +67,44 @@ class Webhook_Handler {
 
 		edd_debug_log( sprintf( 'Payload: %s', json_encode( $this->event ) ) ); // @todo remove
 
-		$action_key = sanitize_key( strtolower( str_replace( '.', '_', $request->get_param( 'event_type' ) ) ) );
+		// We need to match this event to one of our handlers.
+		$events = get_webhook_events();
+		if ( ! array_key_exists( $request->get_param( 'event_type' ), $events ) ) {
+			edd_debug_log( 'PayPal Commerce Webhook - Exiting, event not registered.' );
+
+			return new \WP_REST_Response();
+		}
 
 		try {
+			$class_name = $events[ $request->get_param( 'event_type' ) ];
+
+			if ( ! class_exists( $class_name ) ) {
+				throw new \Exception( sprintf( 'Class %s doesn\'t exist for event type.', $class_name ), 500 );
+			}
+
 			/**
-			 * Triggers once the webhook has been verified.
+			 * Initialize the handler for this event.
+			 *
+			 * @var PayPal\Webhooks\Events\Webhook_Event $handler
+			 */
+			$handler = new $class_name( $request );
+
+			if ( ! method_exists( $handler, 'handle' ) ) {
+				throw new \Exception( sprintf( 'handle() method doesn\'t exist in class %s.', $class_name ), 500 );
+			}
+
+			$handler->handle();
+
+			$action_key = sanitize_key( strtolower( str_replace( '.', '_', $request->get_param( 'event_type' ) ) ) );
+			/**
+			 * Triggers once the handler has run successfully.
 			 * $action_key is a formatted version of the event type:
 			 *      - All lowercase
 			 *      - Full stops `.` replaced with underscores `_`
 			 *
-			 * If you hook into this action then throw an exception in your callback function if you want
-			 * the webhook to fail. Set the exception code to your desired HTTP response code.
-			 * Failed webhooks will be retried.
+			 * Note: This action hook exists so you can execute custom code *after* a handler has run.
+			 * If you're registering a custom event, please build a custom handler by extending
+			 * the `Webhook_Event` class and not via this hook.
 			 *
 			 * @param \WP_REST_Request $event
 			 *

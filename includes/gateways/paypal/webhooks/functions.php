@@ -46,6 +46,8 @@ function get_webhook_id( $mode = '' ) {
  *
  * @link  https://developer.paypal.com/docs/api-basics/notifications/webhooks/event-names/#sales
  *
+ * @todo  Would be nice to use the EDD 3.0 registry for this at some point.
+ *
  * @param string $mode Store mode. Either `sandbox` or `live`.
  *
  * @since 2.11
@@ -53,10 +55,10 @@ function get_webhook_id( $mode = '' ) {
  */
 function get_webhook_events( $mode = '' ) {
 	$events = array(
-		'PAYMENT.CAPTURE.COMPLETED',
-		'PAYMENT.CAPTURE.DENIED',
-		'PAYMENT.CAPTURE.REFUNDED', // Merchant refunds a sale.
-		'PAYMENT.CAPTURE.REVERSED', // PayPal reverses a sale.
+		'PAYMENT.CAPTURE.COMPLETED' => '\\EDD\\PayPal\\Webhooks\\Events\\Payment_Capture_Completed',
+		'PAYMENT.CAPTURE.DENIED'    => '\\EDD\\PayPal\\Webhooks\\Events\\Payment_Capture_Denied',
+		'PAYMENT.CAPTURE.REFUNDED'  => '\\EDD\\PayPal\\Webhooks\\Events\\Payment_Capture_Refunded',
+		'PAYMENT.CAPTURE.REVERSED'  => '\\EDD\\PayPal\\Webhooks\\Events\\Payment_Capture_Refunded',
 	);
 
 	/**
@@ -104,7 +106,7 @@ function create_webhook( $mode = '' ) {
 
 	$event_types = array();
 
-	foreach ( get_webhook_events( $mode ) as $event ) {
+	foreach ( array_keys( get_webhook_events( $mode ) ) as $event ) {
 		$event_types[] = array( 'name' => $event );
 	}
 
@@ -154,7 +156,7 @@ function sync_webhook( $mode = '' ) {
 	}
 
 	$event_types = array();
-	foreach ( get_webhook_events( $mode ) as $event ) {
+	foreach ( array_keys( get_webhook_events( $mode ) ) as $event ) {
 		$event_types[] = array( 'name' => $event );
 	}
 

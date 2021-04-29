@@ -40,6 +40,10 @@ class Payment_Capture_Completed extends Webhook_Event {
 			throw new \Exception( 'Missing amount value.', 200 );
 		}
 
+		if ( ! isset( $event->resource->amount->currency_code ) || strtoupper( $event->resource->amount->currency_code ) !== strtoupper( $payment->currency ) ) {
+			throw new \Exception( sprintf( 'Missing or invalid currency code. Expected: %s; PayPal: %s', $payment->currency, esc_html( $event->resource->amount->currency_code ) ), 200 );
+		}
+
 		$paypal_amount  = (float) $event->resource->amount->value;
 		$payment_amount = edd_get_payment_amount( $payment->ID );
 
