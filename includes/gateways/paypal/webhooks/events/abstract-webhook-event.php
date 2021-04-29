@@ -65,9 +65,38 @@ abstract class Webhook_Event {
 	abstract protected function process_event();
 
 	/**
-	 * Retrieves an EDD_Payment record from the event's resource link.
+	 * Retrieves an EDD_Payment record from a capture event.
 	 *
-	 * @param string $link_rel Link relation.
+	 * @since 2.11
+	 *
+	 * @return \EDD_Payment
+	 * @throws \Exception
+	 */
+	protected function get_payment_from_capture() {
+		if ( 'capture' !== $this->request->get_param( 'resource_type' ) ) {
+			throw new \Exception( sprintf( 'get_payment_from_capture() - Invalid resource type: %s', $this->request->get_param( 'resource_type' ) ) );
+		}
+
+		$payment = false;
+
+		if ( $this->request->get_param( 'custom_id' ) && is_numeric( $this->request->get_param( 'custom_id' ) ) ) {
+			$payment = edd_get_payment( $this->request->get_param( 'custom_id' ) );
+		}
+
+		if ( empty( $payment ) && $this->request->get_param( 'id' ) ) {
+			$payment_id = edd_get_purchase_id_by_transaction_id( $this->request->get_param( 'id' ) );
+			$payment    = $payment_id ? edd_get_payment( $payment_id ) : false;
+		}
+
+		if ( ! $payment instanceof \EDD_Payment ) {
+			throw new \Exception( 'get_payment_from_capture() - Failed to locate payment.' );
+		}
+
+		return $payment;
+	}
+
+	/**
+	 * Retrieves an EDD_Payment record from a refund event.
 	 *
 	 * @since 2.11
 	 *
@@ -76,13 +105,15 @@ abstract class Webhook_Event {
 	 * @throws \EDD\PayPal\Exceptions\Authentication_Exception
 	 * @throws \Exception
 	 */
-	protected function get_payment_from_resource_link( $link_rel = 'up' ) {
+	protected function get_payment_from_refund() {
+		edd_debug_log( sprintf( 'PayPal Commerce Webhook - get_payment_from_resource_link() - Resource type: %s; Resource ID: %s', $this->request->get_param( 'resource_type' ), $this->event->resource->id ) );
+
 		if ( empty( $this->event->resource->links ) || ! is_array( $this->event->resource->links ) ) {
 			throw new \Exception( 'Missing resources.', 200 );
 		}
 
-		$order_link = current( array_filter( $this->event->resource->links, function ( $link ) use ( $link_rel ) {
-			return ! empty( $link->rel ) && $link_rel === strtolower( $link->rel );
+		$order_link = current( array_filter( $this->event->resource->links, function ( $link ) {
+			return ! empty( $link->rel ) && 'up' === strtolower( $link->rel );
 		} ) );
 
 		if ( empty( $order_link->href ) ) {
@@ -111,11 +142,13 @@ abstract class Webhook_Event {
 		// First, try to find a payment record using `custom_id`, because that's better for performance.
 		$payment = false;
 		if ( ! empty( $response->custom_id ) ) {
+			edd_debug_log( sprintf( 'PayPal Commerce Webhook - get_payment_from_resource_link() - Fetching payment via custom_id %s', $response->custom_id ) );
 			$payment = edd_get_payment( $response->custom_id );
 		}
 
 		if ( empty( $payment ) ) {
 			// Otherwise, we'll retrieve it by transaction ID. This is SLOW though!
+			edd_debug_log( sprintf( 'PayPal Commerce Webhook - get_payment_from_resource_link() - Fetching payment via resource ID %s', $response->id ) );
 			$payment = edd_get_purchase_id_by_transaction_id( $response->id );
 		}
 

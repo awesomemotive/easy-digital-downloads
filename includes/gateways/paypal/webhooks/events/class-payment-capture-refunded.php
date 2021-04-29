@@ -25,7 +25,7 @@ class Payment_Capture_Refunded extends Webhook_Event {
 	 * @since 2.11
 	 */
 	protected function process_event() {
-		$payment = $this->get_payment_from_resource_link();
+		$payment = $this->get_payment_from_refund();
 
 		if ( 'refunded' === $payment->status ) {
 			edd_debug_log( 'PayPal Commerce - Exiting webhook, as payment status is already refunded.' );

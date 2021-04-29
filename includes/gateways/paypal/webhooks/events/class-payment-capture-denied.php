@@ -16,13 +16,12 @@ class Payment_Capture_Denied extends Webhook_Event {
 	/**
 	 * Processes the webhook event
 	 *
-	 * @throws \EDD\PayPal\Exceptions\API_Exception
-	 * @throws \EDD\PayPal\Exceptions\Authentication_Exception
-	 *
 	 * @since 2.11
+	 *
+	 * @throws \Exception
 	 */
 	protected function process_event() {
-		$payment = $this->get_payment_from_resource_link();
+		$payment = $this->get_payment_from_capture();
 
 		edd_update_payment_status( $payment->ID, 'failed' );
 

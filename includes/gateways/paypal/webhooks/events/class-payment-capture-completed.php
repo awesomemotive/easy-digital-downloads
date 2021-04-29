@@ -23,7 +23,7 @@ class Payment_Capture_Completed extends Webhook_Event {
 	 * @since 2.11
 	 */
 	protected function process_event() {
-		$payment = $this->get_payment_from_resource_link();
+		$payment = $this->get_payment_from_capture();
 
 		// Bail if the payment has already been completed.
 		if ( 'complete' === $payment->status ) {
