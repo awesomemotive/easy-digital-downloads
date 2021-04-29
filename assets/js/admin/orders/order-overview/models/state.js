@@ -122,12 +122,14 @@ export const State = Backbone.Model.extend(
 				return this.get( 'order' ).tax;
 			}
 
+			const { number } = this.get( 'formatters' );
 			const items = this.get( 'items' ).models;
 			const adjustments = this.get( 'adjustments' ).getByType( 'fee' );
 
 			return [ ...items, ...adjustments ].reduce(
 				( amount, item ) => {
-					return amount += +item.get( 'tax' );
+					// Perform early rounding of tax amounts to match storefront calculations.
+					return amount += +number.format( item.get( 'tax' ) );
 				},
 				0
 			);
