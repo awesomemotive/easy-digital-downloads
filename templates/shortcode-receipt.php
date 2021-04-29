@@ -115,18 +115,18 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 			<tr>
 				<td colspan="2"><strong><?php echo esc_html( _n( 'Fee', 'Fees', count( $fees ), 'easy-digital-downloads' ) ); ?>:</strong></td>
 			</tr>
-			<tr>
-				<?php
-				foreach ( $fees as $fee ) :
-					$label = __( 'Fee', 'easy-digital-downloads' );
-					if ( ! empty( $fee->description ) ) {
-						$label = $fee->description;
-					}
-					?>
+			<?php
+			foreach ( $fees as $fee ) :
+				$label = __( 'Fee', 'easy-digital-downloads' );
+				if ( ! empty( $fee->description ) ) {
+					$label = $fee->description;
+				}
+				?>
+				<tr>
 					<td><span class="edd_fee_label"><?php echo esc_html( $label ); ?></span></td>
 					<td><span class="edd_fee_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( $fee->subtotal ) ) ); ?></span></td>
-				<?php endforeach; ?>
-			</tr>
+				</tr>
+			<?php endforeach; ?>
 		<?php endif; ?>
 
 		<?php if ( $order->tax > 0 ) : ?>
