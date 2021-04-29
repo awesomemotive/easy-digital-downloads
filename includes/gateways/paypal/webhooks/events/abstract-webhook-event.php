@@ -38,24 +38,11 @@ abstract class Webhook_Event {
 
 	/**
 	 * Handles the webhook event.
+	 *
+	 * @throws \Exception
 	 */
 	public function handle() {
-		try {
-			$this->process_event();
-
-			wp_send_json_success( 'Success', 200 );
-		} catch ( Authentication_Exception $e ) {
-			edd_debug_log( 'PayPal Commerce - Exiting webhook due to authentication exception.', true );
-			wp_send_json_error( 'Authentication exception.', 403 );
-		} catch ( API_Exception $e ) {
-			edd_debug_log( sprintf( 'PayPal Commerce - Exiting webhook due to an API exception. Message: %s', $e->getMessage() ), true );
-			wp_send_json_error( 'API exception.', 500 );
-		} catch ( \Exception $e ) {
-			$response_code = $e->getCode() > 0 ? $e->getCode() : 500;
-
-			edd_debug_log( sprintf( 'PayPal Commerce - Exiting webhook due to a general exception. Message: %s', $e->getMessage() ), true );
-			wp_send_json_error( sprintf( 'Error: %s', $e->getMessage() ), $response_code );
-		}
+		$this->process_event();
 	}
 
 	/**

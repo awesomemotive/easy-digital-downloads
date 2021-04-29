@@ -22,9 +22,7 @@ use EDD\PayPal\Exceptions\Authentication_Exception;
  * @return string
  */
 function get_webhook_url() {
-	return add_query_arg( array(
-		'edd-listener' => 'paypal_commerce'
-	), home_url( 'index.php' ) );
+	return rest_url( Webhook_Handler::REST_NAMESPACE, Webhook_Handler::REST_ROUTE );
 }
 
 /**
