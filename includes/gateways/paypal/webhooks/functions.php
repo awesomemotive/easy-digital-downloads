@@ -22,7 +22,7 @@ use EDD\PayPal\Exceptions\Authentication_Exception;
  * @return string
  */
 function get_webhook_url() {
-	return rest_url( Webhook_Handler::REST_NAMESPACE, Webhook_Handler::REST_ROUTE );
+	return rest_url( Webhook_Handler::REST_NAMESPACE . '/' . Webhook_Handler::REST_ROUTE );
 }
 
 /**

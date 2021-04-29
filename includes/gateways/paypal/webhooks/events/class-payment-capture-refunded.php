@@ -27,7 +27,7 @@ class Payment_Capture_Refunded extends Webhook_Event {
 		if ( 'refunded' === $payment->status ) {
 			edd_debug_log( 'PayPal Commerce - Exiting webhook, as payment status is already refunded.' );
 
-			wp_send_json_success( 'Payment already refunded.', 200 );
+			return;
 		}
 
 		$payment_amount  = edd_get_payment_amount( $payment->ID );

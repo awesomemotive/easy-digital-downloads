@@ -18,7 +18,15 @@ use EDD\PayPal\Exceptions\Authentication_Exception;
 abstract class Webhook_Event {
 
 	/**
-	 * Webhook event object
+	 * API request
+	 *
+	 * @var \WP_REST_Request
+	 * @since 2.11
+	 */
+	protected $request;
+
+	/**
+	 * Data from the request.
 	 *
 	 * @var object
 	 * @since 2.11
@@ -28,12 +36,15 @@ abstract class Webhook_Event {
 	/**
 	 * Webhook_Event constructor.
 	 *
-	 * @param object $event
+	 * @param \WP_REST_Request $request
 	 *
 	 * @since 2.11
 	 */
-	public function __construct( $event ) {
-		$this->event = $event;
+	public function __construct( $request ) {
+		$this->request = $request;
+
+		// `get_params()` returns an array, but we want an object.
+		$this->event = json_decode( json_encode( $this->request->get_params() ) );
 	}
 
 	/**

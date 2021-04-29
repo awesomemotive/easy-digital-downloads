@@ -62,12 +62,12 @@ class Webhook_Handler {
 		edd_debug_log( sprintf(
 			'PayPal Commerce webhook endpoint loaded. Mode: %s; Event: %s',
 			( edd_is_test_mode() ? 'sandbox' : 'live' ),
-			$this->event->event_type
+			$request->get_param( 'event_type' )
 		) );
 
-		edd_debug_log( sprintf( 'Payload: %s; Request data: %s', json_encode( $this->event ), json_encode($request->get_body_params()) ) ); // @todo remove
+		edd_debug_log( sprintf( 'Payload: %s', json_encode( $this->event ) ) ); // @todo remove
 
-		$action_key = sanitize_key( strtolower( str_replace( '.', '_', $this->event->event_type ) ) );
+		$action_key = sanitize_key( strtolower( str_replace( '.', '_', $request->get_param( 'event_type' ) ) ) );
 
 		try {
 			/**
@@ -80,11 +80,11 @@ class Webhook_Handler {
 			 * the webhook to fail. Set the exception code to your desired HTTP response code.
 			 * Failed webhooks will be retried.
 			 *
-			 * @param object $event
+			 * @param \WP_REST_Request $event
 			 *
 			 * @since 2.11
 			 */
-			do_action( 'edd_paypal_webhook_event_' . $action_key, $this->event );
+			do_action( 'edd_paypal_webhook_event_' . $action_key, $request );
 
 			return new \WP_REST_Response( 'Success', 200 );
 		} catch ( PayPal\Exceptions\Authentication_Exception $e ) {

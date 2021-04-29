@@ -29,7 +29,7 @@ class Payment_Capture_Completed extends Webhook_Event {
 		if ( 'complete' === $payment->status ) {
 			edd_debug_log( 'PayPal Commerce - Exiting webhook, as payment is already complete.' );
 
-			wp_send_json_success();
+			return;
 		}
 
 		if ( empty( $this->event->resource->status ) || 'COMPLETED' !== strtoupper( $this->event->resource->status ) ) {
@@ -64,7 +64,5 @@ class Payment_Capture_Completed extends Webhook_Event {
 		}
 
 		edd_update_payment_status( $payment->ID, 'complete' );
-
-		wp_send_json_success( 'Order completed.' );
 	}
 }
