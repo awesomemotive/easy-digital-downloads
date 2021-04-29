@@ -97,8 +97,10 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 						$name .= "&nbsp;({$rate})";
 					}
 					?>
-					<td><?php echo esc_html( $name ); ?>:</td>
-					<td><?php echo esc_html( edd_currency_filter( edd_format_amount( edd_negate_amount( $discount->total ) ) ) ); ?></td>
+					<tr>
+						<td><?php echo esc_html( $name ); ?>:</td>
+						<td><?php echo esc_html( edd_currency_filter( edd_format_amount( edd_negate_amount( $discount->total ) ) ) ); ?></td>
+					</tr>
 					<?php
 				}
 				?>
