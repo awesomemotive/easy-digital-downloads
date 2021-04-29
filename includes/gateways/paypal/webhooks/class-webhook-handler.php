@@ -40,6 +40,9 @@ class Webhook_Handler {
 			die();
 		}
 
+		edd_debug_log( 'PayPal Commerce webhook successfully validated. Handing off to hook.' );
+		edd_debug_log( sprintf('Payload: %s', json_encode($this->event)) ); // @todo remove
+
 		$action_key = sanitize_key( strtolower( str_replace( '.', '_', $this->event->event_type ) ) );
 
 		try {
@@ -82,12 +85,22 @@ class Webhook_Handler {
 		$handler->handle_request();
 	}
 
+	/**
+	 * Validates the webhook
+	 *
+	 * @since 2.11
+	 * @throws PayPal\Exceptions\API_Exception
+	 */
 	private function validate_request() {
 		if ( ! PayPal\has_rest_api_connection() ) {
 			throw new \Exception( 'API credentials not set.' );
 		}
 
 		$this->event = json_decode( file_get_contents( 'php://input' ) );
+
+		if ( isset( $this->event->event_type ) ) {
+			edd_debug_log( sprintf( 'PayPal Commerce webhook event type: %s', $this->event->event_type ) );
+		}
 
 		Webhook_Validator::validate_from_request( $this->event );
 	}

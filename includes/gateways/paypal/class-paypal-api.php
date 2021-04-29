@@ -251,7 +251,10 @@ class API {
 			$request_args['body'] = json_encode( $body );
 		}
 
-		$response = wp_remote_request( $this->api_url . '/' . $endpoint, $request_args );
+		// In a few rare cases, we may be providing a full URL to `$endpoint` instead of just the path.
+		$api_url = ( 'https://' === substr( $endpoint, 0, 8 ) ) ? $endpoint : $this->api_url . '/' . $endpoint;
+
+		$response = wp_remote_request( $api_url, $request_args );
 
 		if ( is_wp_error( $response ) ) {
 			throw new API_Exception( $response->get_error_message() );

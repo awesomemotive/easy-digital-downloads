@@ -2,6 +2,8 @@
 /**
  * Webhook Validator
  *
+ * @link       https://developer.paypal.com/docs/api/webhooks/v1/#verify-webhook-signature_post
+ *
  * @package    easy-digital-downloads
  * @subpackage Gateways\PayPal\Webhooks
  * @copyright  Copyright (c) 2021, Sandhills Development, LLC
@@ -10,7 +12,6 @@
  */
 
 namespace EDD\PayPal\Webhooks;
-
 
 use EDD\PayPal\API;
 use EDD\PayPal\Exceptions\API_Exception;
@@ -33,6 +34,12 @@ class Webhook_Validator {
 	 */
 	private $event;
 
+	/**
+	 * Maps the incoming header key to the outgoing API request key.
+	 *
+	 * @var string[]
+	 * @since 2.11
+	 */
 	private $header_map = array(
 		'PAYPAL-AUTH-ALGO'         => 'auth_algo',
 		'PAYPAL-CERT-URL'          => 'cert_url',

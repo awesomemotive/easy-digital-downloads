@@ -353,6 +353,7 @@ function get_account_info() {
 			'status'         => $status,
 			'account_status' => wpautop( $account_status ),
 			'webhook_status' => $webhook_status,
+			'webhook_object' => isset( $webhook ) ? $webhook : null,
 			'actions'        => $actions
 		) );
 	} catch ( \Exception $e ) {

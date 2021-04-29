@@ -55,11 +55,10 @@ function get_webhook_id( $mode = '' ) {
  */
 function get_webhook_events( $mode = '' ) {
 	$events = array(
-		'PAYMENT.SALE.COMPLETED',
-		'PAYMENT.SALE.DENIED',
-		'PAYMENT.SALE.PENDING',
-		'PAYMENT.SALE.REFUNDED', // Merchant refunds a sale.
-		'PAYMENT.SALE.REVERSED', // PayPal reverses a sale.
+		'PAYMENT.CAPTURE.COMPLETED',
+		'PAYMENT.CAPTURE.DENIED',
+		'PAYMENT.CAPTURE.REFUNDED', // Merchant refunds a sale.
+		'PAYMENT.CAPTURE.REVERSED', // PayPal reverses a sale.
 	);
 
 	/**

@@ -200,7 +200,7 @@ function create_order( $purchase_data ) {
 				);
 			}
 
-			edd_debug_log( sprintf( '-- Successful PayPal response. PayPal order ID: %d; EDD order ID: %d', esc_html( $response->id ), $payment_id ) );
+			edd_debug_log( sprintf( '-- Successful PayPal response. PayPal order ID: %s; EDD order ID: %d', esc_html( $response->id ), $payment_id ) );
 
 			/*
 			 * Send successfully created order ID back.

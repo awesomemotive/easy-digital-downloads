@@ -11,15 +11,36 @@
 
 namespace EDD\PayPal\Webhooks;
 
-function sale_refunded( $event ) {
-	edd_debug_log( var_export( $event, true ), true ); // @todo remove
+use EDD\PayPal\Webhooks\Events\Payment_Capture_Completed;
+use EDD\PayPal\Webhooks\Events\Payment_Capture_Refunded;
+
+/**
+ * Process refund events.
+ *
+ * @param object $event
+ *
+ * @since 2.11
+ * @return void
+ */
+function capture_refunded( $event ) {
+	$event_handler = new Payment_Capture_Refunded( $event );
+	$event_handler->handle();
 }
 
-add_action( 'edd_paypal_webhook_event_payment_sale_refunded', __NAMESPACE__ . '\sale_refunded' );
-add_action( 'edd_paypal_webhook_event_payment_sale_reversed', __NAMESPACE__ . '\sale_refunded' );
+add_action( 'edd_paypal_webhook_event_payment_capture_refunded', __NAMESPACE__ . '\capture_refunded' );
+add_action( 'edd_paypal_webhook_event_payment_capture_reversed', __NAMESPACE__ . '\capture_refunded' );
 
-function sale_completed( $event ) {
-	edd_debug_log( var_export( $event, true ), true ); // @todo remove
+/**
+ * Process capture completed events.
+ *
+ * @param object $event
+ *
+ * @since 2.11
+ * @return void
+ */
+function capture_completed( $event ) {
+	$event_handler = new Payment_Capture_Completed( $event );
+	$event_handler->handle();
 }
 
-add_action( 'edd_paypal_webhook_event_payment_sale_completed', __NAMESPACE__ . '\sale_completed' );
+add_action( 'edd_paypal_webhook_event_payment_capture_completed', __NAMESPACE__ . '\capture_completed' );

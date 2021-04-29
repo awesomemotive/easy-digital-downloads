@@ -77,6 +77,8 @@ require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/webhooks/actions.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/webhooks/class-webhook-handler.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/webhooks/class-webhook-validator.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/webhooks/functions.php';
+require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/webhooks/events/abstract-webhook-event.php';
+require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/webhooks/events/class-payment-capture-refunded.php';
 
 if ( is_admin() ) {
 	require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/admin/connect.php';
