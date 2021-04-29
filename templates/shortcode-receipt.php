@@ -91,14 +91,14 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 				</tr>
 				<?php
 				foreach ( $discounts as $discount ) {
-					$name = $discount->description;
+					$label = $discount->description;
 					if ( 'percent' === edd_get_discount_type( $discount->type_id ) ) {
-						$rate  = edd_format_discount_rate( 'percent', edd_get_discount_amount( $discount->type_id ) );
-						$name .= "&nbsp;({$rate})";
+						$rate   = edd_format_discount_rate( 'percent', edd_get_discount_amount( $discount->type_id ) );
+						$label .= "&nbsp;({$rate})";
 					}
 					?>
 					<tr>
-						<td><?php echo esc_html( $name ); ?>:</td>
+						<td><?php echo esc_html( $label ); ?></td>
 						<td><?php echo esc_html( edd_currency_filter( edd_format_amount( edd_negate_amount( $discount->total ) ) ) ); ?></td>
 					</tr>
 					<?php
@@ -144,13 +144,13 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 			</tr>
 			<?php
 			foreach ( $credits as $credit ) {
-				$description = __( 'Credit', 'easy-digital-downloads' );
+				$label = __( 'Credit', 'easy-digital-downloads' );
 				if ( ! empty( $credit->description ) ) {
-					$description .= ' &mdash; ' . $credit->description;
+					$label = $credit->description;
 				}
 				?>
 				<tr>
-					<td><?php echo esc_html( $description ); ?></td>
+					<td><?php echo esc_html( $label ); ?></td>
 					<td><?php echo esc_html( edd_currency_filter( edd_format_amount( edd_negate_amount( $credit->total ) ) ) ); ?></td>
 				</tr>
 				<?php
