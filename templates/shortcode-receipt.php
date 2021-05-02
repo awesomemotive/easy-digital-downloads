@@ -48,7 +48,7 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 	<tbody>
 		<tr>
 			<td class="edd_receipt_payment_status"><strong><?php esc_html_e( 'Order Status', 'easy-digital-downloads' ); ?>:</strong></td>
-			<td class="edd_receipt_payment_status <?php echo esc_html( strtolower( $order->status ) ); ?>"><?php echo esc_html( edd_get_status_label( $order->status ) ); ?></td>
+			<td class="edd_receipt_payment_status <?php echo esc_attr( strtolower( $order->status ) ); ?>"><?php echo esc_html( edd_get_status_label( $order->status ) ); ?></td>
 		</tr>
 
 		<?php if ( filter_var( $edd_receipt_args['payment_key'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
@@ -71,34 +71,11 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 		</tr>
 		<?php endif; ?>
 
-		<?php
-		$fees = edd_get_order_adjustments(
-			array(
-				'type'        => 'fee',
-				'object_type' => 'order',
-				'object_id'   => $order->id,
-			)
-		);
-		if ( ! empty( $fees ) ) :
-			?>
+		<?php if ( filter_var( $edd_receipt_args['price'], FILTER_VALIDATE_BOOLEAN ) && $order->subtotal > 0 ) : ?>
 			<tr>
-				<td><strong><?php esc_html_e( 'Fees', 'easy-digital-downloads' ); ?>:</strong></td>
+				<td><strong><?php esc_html_e( 'Subtotal', 'easy-digital-downloads' ); ?>:</strong></td>
 				<td>
-					<ul class="edd_receipt_fees">
-					<?php
-					foreach ( $fees as $fee ) :
-						$label = __( 'Order Fee', 'easy-digital-downloads' );
-						if ( ! empty( $fee->description ) ) {
-							$label .= ': ' . $fee->description;
-						}
-						?>
-						<li>
-							<span class="edd_fee_label"><?php echo esc_html( $label ); ?></span>
-							<span class="edd_fee_sep">&nbsp;&ndash;&nbsp;</span>
-							<span class="edd_fee_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( $fee->subtotal ) ) ); ?></span>
-						</li>
-					<?php endforeach; ?>
-					</ul>
+					<?php echo esc_html( edd_payment_subtotal( $order->id ) ); ?>
 				</td>
 			</tr>
 		<?php endif; ?>
@@ -110,22 +87,46 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 				$label = _n( 'Discount', 'Discounts', count( $discounts ), 'easy-digital-downloads' );
 				?>
 				<tr>
-					<td><strong><?php echo esc_html( $label ); ?>:</strong></td>
-					<?php
-					foreach ( $discounts as $discount ) {
-						$name   = $discount->description;
-						$amount = edd_currency_filter( edd_format_amount( edd_negate_amount( $discount->total ) ) );
-						if ( 'percent' === edd_get_discount_type( $discount->type_id ) ) {
-							$rate  = edd_format_discount_rate( 'percent', edd_get_discount_amount( $discount->type_id ) );
-							$name .= "&nbsp;({$rate})";
-						}
-						?>
-						<td><?php echo esc_html( $name . ': ' . $amount ); ?></td>
-						<?php
+					<td colspan="2"><strong><?php echo esc_html( $label ); ?>:</strong></td>
+				</tr>
+				<?php
+				foreach ( $discounts as $discount ) {
+					$label = $discount->description;
+					if ( 'percent' === edd_get_discount_type( $discount->type_id ) ) {
+						$rate   = edd_format_discount_rate( 'percent', edd_get_discount_amount( $discount->type_id ) );
+						$label .= "&nbsp;({$rate})";
 					}
 					?>
+					<tr>
+						<td><?php echo esc_html( $label ); ?></td>
+						<td><?php echo esc_html( edd_currency_filter( edd_format_amount( edd_negate_amount( $discount->total ) ) ) ); ?></td>
+					</tr>
+					<?php
+				}
+				?>
 				</tr>
 			<?php endif; ?>
+		<?php endif; ?>
+
+		<?php
+		$fees = $order->get_fees();
+		if ( ! empty( $fees ) ) :
+			?>
+			<tr>
+				<td colspan="2"><strong><?php echo esc_html( _n( 'Fee', 'Fees', count( $fees ), 'easy-digital-downloads' ) ); ?>:</strong></td>
+			</tr>
+			<?php
+			foreach ( $fees as $fee ) :
+				$label = __( 'Fee', 'easy-digital-downloads' );
+				if ( ! empty( $fee->description ) ) {
+					$label = $fee->description;
+				}
+				?>
+				<tr>
+					<td><span class="edd_fee_label"><?php echo esc_html( $label ); ?></span></td>
+					<td><span class="edd_fee_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( $fee->subtotal ) ) ); ?></span></td>
+				</tr>
+			<?php endforeach; ?>
 		<?php endif; ?>
 
 		<?php if ( $order->tax > 0 ) : ?>
@@ -134,18 +135,33 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 				<td><?php echo esc_html( edd_payment_tax( $order->id ) ); ?></td>
 			</tr>
 		<?php endif; ?>
+		<?php
+		$credits = $order->get_credits();
+		if ( $credits ) {
+			?>
+			<tr>
+				<td colspan="2"><strong><?php echo esc_html( _n( 'Credit', 'Credits', count( $credits ), 'easy-digital-downloads' ) ); ?>:</strong></td>
+			</tr>
+			<?php
+			foreach ( $credits as $credit ) {
+				$label = __( 'Credit', 'easy-digital-downloads' );
+				if ( ! empty( $credit->description ) ) {
+					$label = $credit->description;
+				}
+				?>
+				<tr>
+					<td><?php echo esc_html( $label ); ?></td>
+					<td><?php echo esc_html( edd_currency_filter( edd_format_amount( edd_negate_amount( $credit->total ) ) ) ); ?></td>
+				</tr>
+				<?php
+			}
+		}
+		?>
 
 		<?php if ( filter_var( $edd_receipt_args['price'], FILTER_VALIDATE_BOOLEAN ) ) : ?>
 			<tr>
-				<td><strong><?php esc_html_e( 'Subtotal', 'easy-digital-downloads' ); ?>:</strong></td>
-				<td>
-					<?php echo esc_html( edd_currency_filter( edd_format_amount( $order->subtotal ) ) ); ?>
-				</td>
-			</tr>
-
-			<tr>
-				<td><strong><?php esc_html_e( 'Total Price', 'easy-digital-downloads' ); ?>:</strong></td>
-				<td><?php echo esc_html( edd_currency_filter( edd_format_amount( $order->total ) ) ); ?></td>
+				<td><strong><?php esc_html_e( 'Total', 'easy-digital-downloads' ); ?>:</strong></td>
+				<td><?php echo esc_html( edd_payment_amount( $order->id ) ); ?></td>
 			</tr>
 		<?php endif; ?>
 
@@ -172,166 +188,146 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
  */
 do_action( 'edd_order_receipt_after_table', $order, $edd_receipt_args );
 
-if ( filter_var( $edd_receipt_args['products'], FILTER_VALIDATE_BOOLEAN ) ) :
-	$order_items = $order->get_items();
-	if ( ! empty( $order_items ) ) :
-		?>
+if ( ! filter_var( $edd_receipt_args['products'], FILTER_VALIDATE_BOOLEAN ) ) {
+	return;
+}
+$order_items = $order->get_items();
+if ( empty( $order_items ) ) {
+	return;
+}
+?>
 
-		<h3><?php echo esc_html( apply_filters( 'edd_payment_receipt_products_title', __( 'Products', 'easy-digital-downloads' ) ) ); ?></h3>
+<h3><?php echo esc_html( apply_filters( 'edd_payment_receipt_products_title', __( 'Products', 'easy-digital-downloads' ) ) ); ?></h3>
 
-		<table id="edd_purchase_receipt_products" class="edd-table">
-			<thead>
-				<th><?php esc_html_e( 'Name', 'easy-digital-downloads' ); ?></th>
-				<?php if ( edd_use_skus() ) { ?>
-					<th><?php esc_html_e( 'SKU', 'easy-digital-downloads' ); ?></th>
-				<?php } ?>
-				<?php if ( edd_item_quantities_enabled() ) : ?>
-					<th><?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?></th>
-				<?php endif; ?>
-				<th><?php esc_html_e( 'Price', 'easy-digital-downloads' ); ?></th>
-			</thead>
+<table id="edd_purchase_receipt_products" class="edd-table">
+	<thead>
+		<th><?php esc_html_e( 'Name', 'easy-digital-downloads' ); ?></th>
+		<?php if ( edd_use_skus() ) { ?>
+			<th><?php esc_html_e( 'SKU', 'easy-digital-downloads' ); ?></th>
+		<?php } ?>
+		<?php if ( edd_item_quantities_enabled() ) : ?>
+			<th><?php esc_html_e( 'Quantity', 'easy-digital-downloads' ); ?></th>
+		<?php endif; ?>
+		<th><?php esc_html_e( 'Price', 'easy-digital-downloads' ); ?></th>
+	</thead>
 
-			<tbody>
-				<?php foreach ( $order_items as $key => $item ) : ?>
+	<tbody>
+		<?php foreach ( $order_items as $key => $item ) : ?>
+			<?php
+			// Skip this item if we can't view it.
+			if ( ! apply_filters( 'edd_user_can_view_receipt_item', true, $item ) ) {
+				continue;
+			}
+			?>
+
+			<tr>
+				<td>
+					<?php $download_files = edd_get_download_files( $item->product_id, $item->price_id ); ?>
+
+					<div class="edd_purchase_receipt_product_name">
+						<?php
+						echo esc_html( $item->product_name );
+
+						if ( ! empty( $item->status ) && 'complete' !== $item->status ) {
+							echo ' &ndash; ' . esc_html( edd_get_status_label( $item->status ) );
+						}
+						?>
+					</div>
 					<?php
-					// Skip this item if we can't view it.
-					if ( ! apply_filters( 'edd_user_can_view_receipt_item', true, $item ) ) {
-						continue;
-					}
-					$item_fees = edd_get_order_adjustments(
-						array(
-							'type'        => 'fee',
-							'object_type' => 'order_item',
-							'object_id'   => $item->id,
-						)
-					);
-					?>
+					$notes = edd_get_product_notes( $item->product_id );
+					if ( ! empty( $notes ) ) : ?>
+						<div class="edd_purchase_receipt_product_notes"><?php echo wp_kses_post( wpautop( $notes ) ); ?></div>
+					<?php endif; ?>
 
-					<tr>
-						<td>
-							<?php $download_files = edd_get_download_files( $item->product_id, $item->price_id ); ?>
-
-							<div class="edd_purchase_receipt_product_name">
-								<?php
-								echo esc_html( $item->product_name );
-
-								if ( ! empty( $item->status ) && 'complete' !== $item->status ) {
-									echo ' &ndash; ' . esc_html( edd_get_status_label( $item->status ) );
-								}
+					<?php if ( 'refunded' !== $item->status && edd_receipt_show_download_files( $item->product_id, $edd_receipt_args, $item ) ) : ?>
+					<ul class="edd_purchase_receipt_files">
+						<?php
+						if ( ! empty( $download_files ) && is_array( $download_files ) ) :
+							foreach ( $download_files as $filekey => $file ) :
 								?>
-							</div>
-							<?php if ( $item_fees ) : ?>
-								<ul class="edd_purchase_receipt_order_item_fees">
-									<?php
-									foreach ( $item_fees as $item_fee ) :
-										$label = __( 'Fee', 'easy-digital-downloads' );
-										if ( ! empty( $item_fee->description ) ) {
-											$label .= ': ' . $item_fee->description;
-										}
-										?>
-										<li>
-											<span class="edd_fee_label"><?php echo esc_html( $label ); ?></span> &mdash; <span class="edd_fee_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( $item_fee->total ) ) ); ?></span>
-										</li>
-									<?php endforeach; ?>
-								</ul>
-							<?php endif; ?>
-							<?php
-							$notes = edd_get_product_notes( $item->product_id );
-							if ( ! empty( $notes ) ) : ?>
-								<div class="edd_purchase_receipt_product_notes"><?php echo wp_kses_post( wpautop( $notes ) ); ?></div>
-							<?php endif; ?>
-
-							<?php if ( 'refunded' !== $item->status && edd_receipt_show_download_files( $item->product_id, $edd_receipt_args, $item ) ) : ?>
-							<ul class="edd_purchase_receipt_files">
+								<li class="edd_download_file">
+									<a href="<?php echo esc_url( edd_get_download_file_url( $order->payment_key, $order->email, $filekey, $item->product_id, $item->price_id ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
+								</li>
 								<?php
-								if ( ! empty( $download_files ) && is_array( $download_files ) ) :
-									foreach ( $download_files as $filekey => $file ) :
-										?>
-										<li class="edd_download_file">
-											<a href="<?php echo esc_url( edd_get_download_file_url( $order->payment_key, $order->email, $filekey, $item->product_id, $item->price_id ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
-										</li>
+								/**
+								 * Fires at the end of the order receipt files list.
+								 *
+								 * @since 3.0
+								 * @param int   $filekey          Index of array of files returned by edd_get_download_files() that this download link is for.
+								 * @param array $file             The array of file information.
+								 * @param int   $item->product_id The product ID.
+								 * @param int   $order->id        The order ID.
+								 */
+								do_action( 'edd_order_receipt_files', $filekey, $file, $item->product_id, $order->id );
+							endforeach;
+						elseif ( edd_is_bundled_product( $item->product_id ) ) :
+							$bundled_products = edd_get_bundled_products( $item->product_id, $item->price_id );
+
+							foreach ( $bundled_products as $bundle_item ) :
+								?>
+
+								<li class="edd_bundled_product">
+									<span class="edd_bundled_product_name"><?php echo esc_html( edd_get_bundle_item_title( $bundle_item ) ); ?></span>
+									<ul class="edd_bundled_product_files">
 										<?php
-										/**
-										 * Fires at the end of the order receipt files list.
-										 *
-										 * @since 3.0
-										 * @param int   $filekey          Index of array of files returned by edd_get_download_files() that this download link is for.
-										 * @param array $file             The array of file information.
-										 * @param int   $item->product_id The product ID.
-										 * @param int   $order->id        The order ID.
-										 */
-										do_action( 'edd_order_receipt_files', $filekey, $file, $item->product_id, $order->id );
-									endforeach;
-								elseif ( edd_is_bundled_product( $item->product_id ) ) :
-									$bundled_products = edd_get_bundled_products( $item->product_id, $item->price_id );
+										$download_files = edd_get_download_files( edd_get_bundle_item_id( $bundle_item ), edd_get_bundle_item_price_id( $bundle_item ) );
 
-									foreach ( $bundled_products as $bundle_item ) :
-										?>
-
-										<li class="edd_bundled_product">
-											<span class="edd_bundled_product_name"><?php echo esc_html( edd_get_bundle_item_title( $bundle_item ) ); ?></span>
-											<ul class="edd_bundled_product_files">
-												<?php
-												$download_files = edd_get_download_files( edd_get_bundle_item_id( $bundle_item ), edd_get_bundle_item_price_id( $bundle_item ) );
-
-												if ( $download_files && is_array( $download_files ) ) :
-													foreach ( $download_files as $filekey => $file ) :
-														?>
-														<li class="edd_download_file">
-															<a href="<?php echo esc_url( edd_get_download_file_url( $order->payment_key, $order->email, $filekey, $bundle_item, $item->price_id ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
-														</li>
-														<?php
-														/**
-														 * Fires at the end of the order receipt bundled files list.
-														 *
-														 * @since 3.0
-														 * @param int   $filekey          Index of array of files returned by edd_get_download_files() that this download link is for.
-														 * @param array $file             The array of file information.
-														 * @param int   $item->product_id The product ID.
-														 * @param array $bundle_item      The array of information about the bundled item.
-														 * @param int   $order->id        The order ID.
-														 */
-														do_action( 'edd_order_receipt_bundle_files', $filekey, $file, $item->product_id, $bundle_item, $order->id );
-													endforeach;
-												else :
-													echo '<li>' . esc_html__( 'No downloadable files found for this bundled item.', 'easy-digital-downloads' ) . '</li>';
-												endif;
+										if ( $download_files && is_array( $download_files ) ) :
+											foreach ( $download_files as $filekey => $file ) :
 												?>
-											</ul>
-										</li>
-										<?php
-									endforeach;
+												<li class="edd_download_file">
+													<a href="<?php echo esc_url( edd_get_download_file_url( $order->payment_key, $order->email, $filekey, $bundle_item, $item->price_id ) ); ?>" class="edd_download_file_link"><?php echo esc_html( edd_get_file_name( $file ) ); ?></a>
+												</li>
+												<?php
+												/**
+												 * Fires at the end of the order receipt bundled files list.
+												 *
+												 * @since 3.0
+												 * @param int   $filekey          Index of array of files returned by edd_get_download_files() that this download link is for.
+												 * @param array $file             The array of file information.
+												 * @param int   $item->product_id The product ID.
+												 * @param array $bundle_item      The array of information about the bundled item.
+												 * @param int   $order->id        The order ID.
+												 */
+												do_action( 'edd_order_receipt_bundle_files', $filekey, $file, $item->product_id, $bundle_item, $order->id );
+											endforeach;
+										else :
+											echo '<li>' . esc_html__( 'No downloadable files found for this bundled item.', 'easy-digital-downloads' ) . '</li>';
+										endif;
+										?>
+									</ul>
+								</li>
+								<?php
+							endforeach;
 
-								else :
-									echo '<li>' . esc_html( apply_filters( 'edd_receipt_no_files_found_text', __( 'No downloadable files found.', 'easy-digital-downloads' ), $item->product_id ) ) . '</li>';
-								endif;
-								?>
-							</ul>
-							<?php endif; ?>
+						else :
+							echo '<li>' . esc_html( apply_filters( 'edd_receipt_no_files_found_text', __( 'No downloadable files found.', 'easy-digital-downloads' ), $item->product_id ) ) . '</li>';
+						endif;
+						?>
+					</ul>
+					<?php endif; ?>
 
-							<?php
-							/**
-							 * Allow extensions to extend the product cell.
-							 * @since 3.0
-							 * @param \EDD\Orders\Order_Item $item The current order item.
-							 * @param \EDD\Orders\Order $order     The current order object.
-							 */
-							do_action( 'edd_order_receipt_after_files', $item, $order );
-							?>
-						</td>
-						<?php if ( edd_use_skus() ) : ?>
-							<td><?php echo esc_html( edd_get_download_sku( $item->product_id ) ); ?></td>
-						<?php endif; ?>
-						<?php if ( edd_item_quantities_enabled() ) { ?>
-							<td><?php echo esc_html( $item->quantity ); ?></td>
-						<?php } ?>
-						<td>
-							<?php echo esc_html( edd_currency_filter( edd_format_amount( $item->total ) ) ); ?>
-						</td>
-					</tr>
-				<?php endforeach; ?>
-			</tbody>
+					<?php
+					/**
+					 * Allow extensions to extend the product cell.
+					 * @since 3.0
+					 * @param \EDD\Orders\Order_Item $item The current order item.
+					 * @param \EDD\Orders\Order $order     The current order object.
+					 */
+					do_action( 'edd_order_receipt_after_files', $item, $order );
+					?>
+				</td>
+				<?php if ( edd_use_skus() ) : ?>
+					<td><?php echo esc_html( edd_get_download_sku( $item->product_id ) ); ?></td>
+				<?php endif; ?>
+				<?php if ( edd_item_quantities_enabled() ) { ?>
+					<td><?php echo esc_html( $item->quantity ); ?></td>
+				<?php } ?>
+				<td>
+					<?php echo esc_html( edd_currency_filter( edd_format_amount( $item->total ) ) ); ?>
+				</td>
+			</tr>
+		<?php endforeach; ?>
+	</tbody>
 
-		</table>
-	<?php endif; ?>
-<?php endif; ?>
+</table>

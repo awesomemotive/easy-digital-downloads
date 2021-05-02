@@ -1188,7 +1188,10 @@ function edd_can_view_receipt( $payment_key = '' ) {
 
 	global $edd_receipt_args;
 
-	$order                  = edd_get_order_by( 'payment_key', $payment_key );
+	$order = edd_get_order_by( 'payment_key', $payment_key );
+	if ( empty( $order->id ) ) {
+		return $return;
+	}
 	$edd_receipt_args['id'] = $order->id;
 
 	if ( is_user_logged_in() ) {
