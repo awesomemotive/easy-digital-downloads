@@ -1067,13 +1067,13 @@ add_filter( 'the_content', 'edd_filter_success_page_content', 99999 );
  *
  * @since 1.8.6
  *
- * @param  int   $item_id      Download ID.
- * @param  array $receipt_args Args specified in the [edd_receipt] shortcode.
- * @param  array $item         Cart item array.
+ * @param  int                          $item_id      Download ID.
+ * @param  array                        $receipt_args Args specified in the [edd_receipt] shortcode.
+ * @param  \EDD\Orders\Order_Item|array $order_item   Order item object or cart item array.
  *
  * @return bool True if files should be shown, false otherwise.
  */
-function edd_receipt_show_download_files( $item_id, $receipt_args, $item = array() ) {
+function edd_receipt_show_download_files( $item_id, $receipt_args, $order_item = array() ) {
 	$ret = true;
 
 	/*
@@ -1101,12 +1101,28 @@ function edd_receipt_show_download_files( $item_id, $receipt_args, $item = array
 
 	if ( has_filter( 'edd_receipt_show_download_files' ) ) {
 		$cart = array();
-		if ( ! empty( $item->order_id ) ) {
-			$order = edd_get_order_by( 'id', $item->order_id );
+		$item = $order_item;
+		if ( ! empty( $order_item->order_id ) ) {
+			$order = edd_get_order_by( 'id', $order_item->order_id );
 			$cart  = edd_get_payment_meta_cart_details( $order->id, true );
+			$item  = $cart[ $item->cart_index ];
 		}
-		$ret = apply_filters( 'edd_receipt_show_download_files', $ret, $item_id, $receipt_args, $cart[ $item->cart_index ] );
+		$ret = apply_filters( 'edd_receipt_show_download_files', $ret, $item_id, $receipt_args, $item );
 	}
 
-	return apply_filters( 'edd_order_receipt_show_download_files', $ret, $item_id, $receipt_args, $item );
+	// If the $order_item is an array, get the order item object instead.
+	if ( is_array( $order_item ) && ! empty( $order_item['id'] ) ) {
+		$order_item = edd_get_order_item( $order_item['id'] );
+	}
+
+	/**
+	 * Modifies whether the receipt should show download files.
+	 *
+	 * @since 3.0
+	 * @param bool                   $ret          True if the download files should be shown.
+	 * @param int                    $item_id      The download ID.
+	 * @param array                  $receipt_args Args specified in the [edd_receipt] shortcode.
+	 * @param \EDD\Orders\Order_Item $item        The order item object.
+	 */
+	return apply_filters( 'edd_order_receipt_show_download_files', $ret, $item_id, $receipt_args, $order_item );
 }
