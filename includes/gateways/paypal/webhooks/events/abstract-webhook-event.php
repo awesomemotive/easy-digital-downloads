@@ -79,12 +79,12 @@ abstract class Webhook_Event {
 
 		$payment = false;
 
-		if ( $this->request->get_param( 'custom_id' ) && is_numeric( $this->request->get_param( 'custom_id' ) ) ) {
-			$payment = edd_get_payment( $this->request->get_param( 'custom_id' ) );
+		if ( ! empty( $this->event->resource->id ) && is_int( $this->event->resource->id ) ) {
+			$payment = edd_get_payment( $this->event->resource->id );
 		}
 
-		if ( empty( $payment ) && $this->request->get_param( 'id' ) ) {
-			$payment_id = edd_get_purchase_id_by_transaction_id( $this->request->get_param( 'id' ) );
+		if ( empty( $payment ) && ! empty( $this->event->resource->id ) ) {
+			$payment_id = edd_get_purchase_id_by_transaction_id( $this->event->resource->id );
 			$payment    = $payment_id ? edd_get_payment( $payment_id ) : false;
 		}
 
