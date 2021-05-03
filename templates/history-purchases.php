@@ -30,13 +30,6 @@ $orders = edd_get_orders(
 	)
 );
 if ( $orders ) :
-	/**
-	 * Fires before the purchase history.
-	 *
-	 * @since 3.0
-	 * @param array $orders The array of the current user's orders.
-	 */
-	do_action( 'edd_before_order_history', $orders );
 	?>
 	<table id="edd_user_history" class="edd-table">
 		<thead>
@@ -51,15 +44,6 @@ if ( $orders ) :
 		</thead>
 		<?php foreach ( $orders as $order ) : ?>
 			<tr class="edd_purchase_row">
-				<?php
-				/**
-				 * Fires at the beginning of the order history row.
-				 *
-				 * @since 3.0
-				 * @param \EDD\Orders\Order $order The current order object.
-				 */
-				do_action( 'edd_order_history_row_start', $order );
-				?>
 				<td class="edd_purchase_id">#<?php echo esc_html( $order->get_number() ); ?></td>
 				<td class="edd_purchase_date"><?php echo esc_html( edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString() ) ); ?></td>
 				<td class="edd_purchase_amount">
@@ -86,15 +70,6 @@ if ( $orders ) :
 						&mdash; <a href="<?php echo esc_url( $url ); ?>"><?php esc_html_e( 'Complete Purchase', 'easy-digital-downloads' ); ?></a>
 					<?php endif; ?>
 				</td>
-				<?php
-				/**
-				 * Fires at the end of the order history row.
-				 *
-				 * @since 3.0
-				 * @param \EDD\Orders\Order $order The current order object.
-				 */
-				do_action( 'edd_order_history_row_end', $order );
-				?>
 			</tr>
 		<?php endforeach; ?>
 	</table>
@@ -111,13 +86,6 @@ if ( $orders ) :
 			'total' => ceil( $count / 20 ), // 20 items per page
 		)
 	);
-	/**
-	 * Fires after the purchase history.
-	 *
-	 * @since 3.0
-	 * @param array $orders The array of the current user's orders.
-	 */
-	do_action( 'edd_after_order_history', $orders );
 	?>
 <?php else : ?>
 	<p class="edd-no-purchases"><?php esc_html_e( 'You have not made any purchases', 'easy-digital-downloads' ); ?></p>
