@@ -79,8 +79,8 @@ abstract class Webhook_Event {
 
 		$payment = false;
 
-		if ( ! empty( $this->event->resource->id ) && is_int( $this->event->resource->id ) ) {
-			$payment = edd_get_payment( $this->event->resource->id );
+		if ( ! empty( $this->event->resource->custom_id ) && is_numeric( $this->event->resource->custom_id ) ) {
+			$payment = edd_get_payment( $this->event->resource->custom_id );
 		}
 
 		if ( empty( $payment ) && ! empty( $this->event->resource->id ) ) {
@@ -90,6 +90,14 @@ abstract class Webhook_Event {
 
 		if ( ! $payment instanceof \EDD_Payment ) {
 			throw new \Exception( 'get_payment_from_capture() - Failed to locate payment.' );
+		}
+
+		/*
+		 * Verify the transaction ID. This covers us in case we fetched the payment via `custom_id`, but
+		 * it wasn't actually an EDD-initiated payment.
+		 */
+		if ( $payment->transaction_id !== $this->event->resource->id ) {
+			throw new \Exception( sprintf( 'edd_get_payment_from_capture() - Transaction ID mismatch. Expected: %s; Actual: %s', $payment->transaction_id, $this->event->resource->id ) );
 		}
 
 		return $payment;
