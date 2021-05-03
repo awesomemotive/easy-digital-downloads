@@ -95,7 +95,9 @@ function create_webhook( $mode = '' ) {
 		$response = $api->make_request( 'v1/notifications/webhooks', array(), array(), 'GET' );
 		if ( ! empty( $response->webhooks ) && is_array( $response->webhooks ) ) {
 			foreach ( $response->webhooks as $webhook ) {
-				if ( ! empty( $webhook->url ) && $webhook_url === $webhook->url ) {
+				if ( ! empty( $webook->id ) && ! empty( $webhook->url ) && $webhook_url === $webhook->url ) {
+					update_option( sanitize_key( 'edd_paypal_commerce_webhook_id_' . $mode ), sanitize_text_field( $webhook->id ) );
+
 					return true;
 				}
 			}
