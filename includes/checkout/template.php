@@ -1100,7 +1100,6 @@ function edd_receipt_show_download_files( $item_id, $receipt_args, $order_item =
 	}
 
 	if ( has_filter( 'edd_receipt_show_download_files' ) ) {
-		$cart = array();
 		$item = $order_item;
 		if ( ! empty( $order_item->order_id ) ) {
 			$order = edd_get_order_by( 'id', $order_item->order_id );
@@ -1111,8 +1110,8 @@ function edd_receipt_show_download_files( $item_id, $receipt_args, $order_item =
 	}
 
 	// If the $order_item is an array, get the order item object instead.
-	if ( is_array( $order_item ) && ! empty( $order_item['id'] ) ) {
-		$order_item = edd_get_order_item( $order_item['id'] );
+	if ( is_array( $order_item ) && ! empty( $order_item['order_item_id'] ) ) {
+		$order_item = edd_get_order_item( $order_item['order_item_id'] );
 	}
 
 	/**
