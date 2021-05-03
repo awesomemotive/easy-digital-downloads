@@ -19,8 +19,8 @@ var EDD_PayPal = {
 	 * Determines whether or not the selected gateway is PayPal.
 	 * @returns {boolean}
 	 */
-	isPayPal() {
-		let chosenGateway = false;
+	isPayPal: function() {
+		var chosenGateway = false;
 		if ( jQuery('select#edd-gateway, input.edd-gateway').length ) {
 			chosenGateway = jQuery("meta[name='edd-chosen-gateway']").attr('content');
 		}
@@ -36,12 +36,12 @@ var EDD_PayPal = {
 	 * Refreshes the page when adding or removing a 100% discount.
 	 *
 	 * @param e
-	 * @param total
+	 * @param {object} data
 	 */
-	maybeRefreshPage( e, { total_plain: total } ) {
+	maybeRefreshPage: function( e, data ) {
 		if ( 0 === total && EDD_PayPal.isPayPal() ) {
 			window.location.reload();
-		} else if ( ! EDD_PayPal.isMounted && EDD_PayPal.isPayPal() && total > 0 ) {
+		} else if ( ! EDD_PayPal.isMounted && EDD_PayPal.isPayPal() && data.total_plain > 0 ) {
 			window.location.reload();
 		}
 	},
@@ -53,19 +53,19 @@ var EDD_PayPal = {
 	 * @param {string} context
 	 * @param {string} errorHtml
 	 */
-	setErrorHtml( container, context, errorHtml ) {
+	setErrorHtml: function( container, context, errorHtml ) {
 		// Format errors.
 
 		if ( 'checkout' === context && 'undefined' !== typeof edd_global_vars && edd_global_vars.checkout_error_anchor ) {
 			// Checkout errors.
-			const errorWrapper = document.getElementById( 'edd-paypal-errors-wrap' );
+			var errorWrapper = document.getElementById( 'edd-paypal-errors-wrap' );
 			if ( errorWrapper ) {
 				errorWrapper.innerHTML = errorHtml;
 			}
 		} else if ( 'buy_now' === context ) {
 			// Buy Now errors
-			const form = container.closest( '.edd_download_purchase_form' );
-			const errorWrapper = form ? form.querySelector( '.edd-paypal-checkout-buy-now-error-wrapper' ) : false;
+			var form = container.closest( '.edd_download_purchase_form' );
+			var errorWrapper = form ? form.querySelector( '.edd-paypal-checkout-buy-now-error-wrapper' ) : false;
 
 			if ( errorWrapper ) {
 				errorWrapper.innerHTML = errorHtml;
@@ -81,13 +81,13 @@ var EDD_PayPal = {
 	 * @param {string|HTMLElement} container Element to render the buttons in.
 	 * @param {string} context   Context for the button. Either `checkout` or `buy_now`.
 	 */
-	initButtons( container, context ) {
+	initButtons: function( container, context ) {
 		EDD_PayPal.isMounted = true;
 
-		const form = ( 'checkout' === context ) ? document.getElementById( 'edd_purchase_form' ) : container.closest( '.edd_download_purchase_form' );
-		const errorWrapper = ( 'checkout' === context ) ? form.querySelector( '#edd-paypal-errors-wrap' ) : form.querySelector( '.edd-paypal-checkout-buy-now-error-wrapper' );
-		const spinner = ( 'checkout' === context ) ? document.getElementById( 'edd-paypal-spinner' ) : form.querySelector( '.edd-paypal-spinner' );
-		const nonceEl = form.querySelector( 'input[name="edd_process_paypal_nonce"]' );
+		var form = ( 'checkout' === context ) ? document.getElementById( 'edd_purchase_form' ) : container.closest( '.edd_download_purchase_form' );
+		var errorWrapper = ( 'checkout' === context ) ? form.querySelector( '#edd-paypal-errors-wrap' ) : form.querySelector( '.edd-paypal-checkout-buy-now-error-wrapper' );
+		var spinner = ( 'checkout' === context ) ? document.getElementById( 'edd-paypal-spinner' ) : form.querySelector( '.edd-paypal-spinner' );
+		var nonceEl = form.querySelector( 'input[name="edd_process_paypal_nonce"]' );
 
 		paypal.Buttons( {
 			createOrder: function ( data, actions ) {
@@ -118,7 +118,7 @@ var EDD_PayPal = {
 						return orderData.data.paypal_order_id;
 					} else {
 						// Error message.
-						let errorHtml = eddPayPalVars.defaultError;
+						var errorHtml = eddPayPalVars.defaultError;
 						if ( orderData.data && 'string' === typeof orderData.data ) {
 							errorHtml = orderData.data;
 						} else if ( 'string' === typeof orderData ) {
@@ -133,7 +133,7 @@ var EDD_PayPal = {
 			},
 			onApprove: function( data, actions ) {
 				console.log( 'onApprove' );
-				const formData = new FormData();
+				var formData = new FormData();
 				formData.append( 'action', 'edd_capture_paypal_order' );
 				formData.append( 'paypal_order_id', data.orderID );
 				formData.append( 'edd_process_paypal_nonce', nonceEl.value );
@@ -151,7 +151,7 @@ var EDD_PayPal = {
 						// Hide spinner.
 						spinner.style.display = 'none';
 
-						const errorHtml = eddPayPalVars.defaultError;
+						var errorHtml = eddPayPalVars.defaultError;
 						EDD_PayPal.setErrorHtml( container, context, errorHtml );
 					}
 				} );
@@ -186,15 +186,15 @@ jQuery( document.body ).on( 'edd_gateway_loaded', function( e, gateway ) {
  * Initialize Buy Now buttons.
  */
 jQuery( document ).ready( function( $ ) {
-	const buyButtons = document.querySelectorAll( '.edd-paypal-checkout-buy-now' );
-	for ( let i = 0; i < buyButtons.length; i++ ) {
-		const element = buyButtons[ i ];
+	var buyButtons = document.querySelectorAll( '.edd-paypal-checkout-buy-now' );
+	for ( var i = 0; i < buyButtons.length; i++ ) {
+		var element = buyButtons[ i ];
 		// Skip if "Free Downloads" is enabled for this download.
 		if ( element.classList.contains( 'edd-free-download' ) ) {
 			return;
 		}
 
-		const wrapper = element.closest( '.edd_purchase_submit_wrapper' );
+		var wrapper = element.closest( '.edd_purchase_submit_wrapper' );
 		if ( ! wrapper ) {
 			return;
 		}
@@ -203,12 +203,12 @@ jQuery( document ).ready( function( $ ) {
 		wrapper.innerHTML = '';
 
 		// Add error container after the wrapper.
-		const errorNode = document.createElement( 'div' );
+		var errorNode = document.createElement( 'div' );
 		errorNode.classList.add( 'edd-paypal-checkout-buy-now-error-wrapper' );
 		wrapper.before( errorNode );
 
 		// Add spinner container.
-		const spinnerWrap = document.createElement( 'span' );
+		var spinnerWrap = document.createElement( 'span' );
 		spinnerWrap.classList.add( 'edd-paypal-spinner', 'edd-loading-ajax', 'edd-loading' );
 		spinnerWrap.style.display = 'none';
 		wrapper.after( spinnerWrap );

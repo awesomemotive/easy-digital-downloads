@@ -6,10 +6,10 @@ jQuery( document ).ready( function ( $ ) {
 		e.preventDefault();
 
 		// Clear errors.
-		const errorContainer = $( '#edd-paypal-commerce-errors' );
+		var errorContainer = $( '#edd-paypal-commerce-errors' );
 		errorContainer.empty().removeClass( 'notice notice-error' );
 
-		const button = document.getElementById( 'edd-paypal-commerce-connect' );
+		var button = document.getElementById( 'edd-paypal-commerce-connect' );
 		button.classList.add( 'updating-message' );
 		button.disabled = true;
 
@@ -27,7 +27,7 @@ jQuery( document ).ready( function ( $ ) {
 				return;
 			}
 
-			const paypalLinkEl = document.getElementById( 'edd-paypal-commerce-link' );
+			var paypalLinkEl = document.getElementById( 'edd-paypal-commerce-link' );
 			paypalLinkEl.href = response.data.signupLink + '&displayMode=minibrowser';
 
 			paypalLinkEl.click();
@@ -38,13 +38,13 @@ jQuery( document ).ready( function ( $ ) {
 	 * Checks the PayPal connection & webhook status.
 	 */
 	function eddPayPalGetAccountStatus() {
-		const accountInfoEl = document.getElementById( 'edd-paypal-commerce-connect-wrap' );
+		var accountInfoEl = document.getElementById( 'edd-paypal-commerce-connect-wrap' );
 		if ( accountInfoEl ) {
 			$.post( ajaxurl, {
 				action: 'edd_paypal_commerce_get_account_info',
 				_ajax_nonce: accountInfoEl.getAttribute( 'data-nonce' )
 			}, function( response ) {
-				let newHtml = response.data.account_status + response.data.webhook_status;
+				var newHtml = response.data.account_status + response.data.webhook_status;
 
 				if ( response.data.actions && response.data.actions.length ) {
 					newHtml += '<p class="edd-paypal-connect-actions">' + response.data.actions.join() + '</p>';
@@ -56,7 +56,7 @@ jQuery( document ).ready( function ( $ ) {
 				accountInfoEl.classList.remove( 'notice-success', 'notice-warning', 'notice-error' );
 
 				// Add new one.
-				const newClass = response.success && response.data.status ? 'notice-' + response.data.status : 'notice-error';
+				var newClass = response.success && response.data.status ? 'notice-' + response.data.status : 'notice-error';
 				accountInfoEl.classList.add( newClass );
 			} );
 		}
@@ -69,11 +69,11 @@ jQuery( document ).ready( function ( $ ) {
 	$( document ).on( 'click', '.edd-paypal-connect-action', function ( e ) {
 		e.preventDefault();
 
-		const button = $( this );
+		var button = $( this );
 		button.prop( 'disabled', true );
 		button.addClass( 'updating-message' );
 
-		const errorWrap = button.closest( '.edd-paypal-actions-error-wrap' );
+		var errorWrap = button.closest( '.edd-paypal-actions-error-wrap' );
 		if ( errorWrap.length ) {
 			errorWrap.remove();
 		}
@@ -98,8 +98,8 @@ jQuery( document ).ready( function ( $ ) {
 } );
 
 function eddPayPalOnboardingCallback( authCode, shareId ) {
-	const connectButton = document.getElementById( 'edd-paypal-commerce-connect' );
-	const errorContainer = document.getElementById( 'edd-paypal-commerce-errors' );
+	var connectButton = document.getElementById( 'edd-paypal-commerce-connect' );
+	var errorContainer = document.getElementById( 'edd-paypal-commerce-errors' );
 
 	jQuery.post( ajaxurl, {
 		action: 'edd_paypal_commerce_get_access_token',
