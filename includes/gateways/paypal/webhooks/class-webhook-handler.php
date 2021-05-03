@@ -67,15 +67,13 @@ class Webhook_Handler {
 
 		edd_debug_log( sprintf( 'Payload: %s', json_encode( $this->event ) ) ); // @todo remove
 
-		// We need to match this event to one of our handlers.
-		$events = get_webhook_events();
-		if ( ! array_key_exists( $request->get_param( 'event_type' ), $events ) ) {
-			edd_debug_log( 'PayPal Commerce Webhook - Exiting, event not registered.' );
-
-			return new \WP_REST_Response();
-		}
-
 		try {
+			// We need to match this event to one of our handlers.
+			$events = get_webhook_events();
+			if ( ! array_key_exists( $request->get_param( 'event_type' ), $events ) ) {
+				throw new \Exception( sprintf( 'Event not registered. Event: %s', esc_html( $request->get_param( 'event_type' ) ) ), 200 );
+			}
+
 			$class_name = $events[ $request->get_param( 'event_type' ) ];
 
 			if ( ! class_exists( $class_name ) ) {
@@ -92,6 +90,8 @@ class Webhook_Handler {
 			if ( ! method_exists( $handler, 'handle' ) ) {
 				throw new \Exception( sprintf( 'handle() method doesn\'t exist in class %s.', $class_name ), 500 );
 			}
+
+			edd_debug_log( sprintf( 'PayPal Commerce Webhook - Passing to handler %s', esc_html( $class_name ) ) );
 
 			$handler->handle();
 
@@ -145,14 +145,10 @@ class Webhook_Handler {
 
 		$this->event = json_decode( file_get_contents( 'php://input' ) );
 
-		if ( isset( $this->event->event_type ) ) {
-			edd_debug_log( sprintf( 'PayPal Commerce webhook event type: %s', $this->event->event_type ) );
-		}
-
 		try {
 			Webhook_Validator::validate_from_request( $this->event );
 
-			edd_debug_log( 'PayPal Commerce webhook successfully validated. Passing to handler.' );
+			edd_debug_log( 'PayPal Commerce webhook successfully validated.' );
 
 			return true;
 		} catch ( \Exception $e ) {
