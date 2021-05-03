@@ -288,7 +288,7 @@ class Tests_PayPal extends EDD_UnitTestCase {
 		) ) ) );
 
 		$this->expectException( 'Exception' );
-		$this->expectExceptionMessage( 'edd_get_payment_from_capture() - Transaction ID mismatch.' );
+		$this->expectExceptionMessage( 'get_payment_from_capture_object() - Transaction ID mismatch.' );
 
 		$event->handle();
 	}

@@ -77,27 +77,45 @@ abstract class Webhook_Event {
 			throw new \Exception( sprintf( 'get_payment_from_capture() - Invalid resource type: %s', $this->request->get_param( 'resource_type' ) ) );
 		}
 
-		$payment = false;
-
-		if ( ! empty( $this->event->resource->custom_id ) && is_numeric( $this->event->resource->custom_id ) ) {
-			$payment = edd_get_payment( $this->event->resource->custom_id );
+		if ( empty( $this->event->resource ) ) {
+			throw new \Exception( sprintf( 'get_payment_from_capture() - Missing event resource.' ) );
 		}
 
-		if ( empty( $payment ) && ! empty( $this->event->resource->id ) ) {
-			$payment_id = edd_get_purchase_id_by_transaction_id( $this->event->resource->id );
+		return $this->get_payment_from_capture_object( $this->event->resource );
+	}
+
+	/**
+	 * Retrieves an EDD_Payment record from a capture object.
+	 *
+	 * @param object $resource
+	 *
+	 * @since 2.11
+	 *
+	 * @return \EDD_Payment
+	 * @throws \Exception
+	 */
+	protected function get_payment_from_capture_object( $resource ) {
+		$payment = false;
+
+		if ( ! empty( $resource->custom_id ) && is_numeric( $resource->custom_id ) ) {
+			$payment = edd_get_payment( $resource->custom_id );
+		}
+
+		if ( empty( $payment ) && ! empty( $resource->id ) ) {
+			$payment_id = edd_get_purchase_id_by_transaction_id( $resource->id );
 			$payment    = $payment_id ? edd_get_payment( $payment_id ) : false;
 		}
 
 		if ( ! $payment instanceof \EDD_Payment ) {
-			throw new \Exception( 'get_payment_from_capture() - Failed to locate payment.' );
+			throw new \Exception( 'get_payment_from_capture_object() - Failed to locate payment.', 200 );
 		}
 
 		/*
 		 * Verify the transaction ID. This covers us in case we fetched the payment via `custom_id`, but
 		 * it wasn't actually an EDD-initiated payment.
 		 */
-		if ( $payment->transaction_id !== $this->event->resource->id ) {
-			throw new \Exception( sprintf( 'edd_get_payment_from_capture() - Transaction ID mismatch. Expected: %s; Actual: %s', $payment->transaction_id, $this->event->resource->id ) );
+		if ( $payment->transaction_id !== $resource->id ) {
+			throw new \Exception( sprintf( 'get_payment_from_capture_object() - Transaction ID mismatch. Expected: %s; Actual: %s', $payment->transaction_id, $resource->id ), 200 );
 		}
 
 		return $payment;
@@ -147,30 +165,7 @@ abstract class Webhook_Event {
 			throw new API_Exception( 'Missing order ID from API response.' );
 		}
 
-		// First, try to find a payment record using `custom_id`, because that's better for performance.
-		$payment = false;
-		if ( ! empty( $response->custom_id ) ) {
-			edd_debug_log( sprintf( 'PayPal Commerce Webhook - get_payment_from_resource_link() - Fetching payment via custom_id %s', $response->custom_id ) );
-			$payment = edd_get_payment( $response->custom_id );
-		}
-
-		if ( empty( $payment ) ) {
-			// Otherwise, we'll retrieve it by transaction ID. This is SLOW though!
-			edd_debug_log( sprintf( 'PayPal Commerce Webhook - get_payment_from_resource_link() - Fetching payment via resource ID %s', $response->id ) );
-			$payment = edd_get_purchase_id_by_transaction_id( $response->id );
-		}
-
-		if ( empty( $payment ) ) {
-			throw new \Exception( 'Failed to locate payment record.', 200 );
-		}
-
-		if ( $response->id !== $payment->transaction_id ) {
-			throw new \Exception( sprintf( 'Transaction ID mismatch. PayPal: %s; EDD: %s', $response->id, $payment->transaction_id ) );
-		}
-
-		edd_debug_log( sprintf( 'PayPal Commerce - Associated resource %s ID %s with EDD payment ID %d', $this->event->resource_type, $this->event->resource->id, $payment->ID ) );
-
-		return $payment;
+		return $this->get_payment_from_capture_object( $response );
 	}
 
 }
