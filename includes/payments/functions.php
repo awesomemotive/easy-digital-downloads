@@ -881,23 +881,24 @@ function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files =
 
 				foreach ( $products as $product_id ) {
 					$cart_details[] = array(
-						'id'          => $product_id,
-						'name'        => get_the_title( $product_id ),
-						'item_number' => array(
+						'id'            => $product_id,
+						'name'          => get_the_title( $product_id ),
+						'item_number'   => array(
 							'id'      => $product_id,
 							'options' => array(),
 						),
-						'price'       => 0,
-						'subtotal'    => 0,
-						'quantity'    => 1,
-						'tax'         => 0,
-						'in_bundle'   => 1,
-						'parent'      => array(
+						'price'         => 0,
+						'subtotal'      => 0,
+						'quantity'      => 1,
+						'tax'           => 0,
+						'in_bundle'     => 1,
+						'parent'        => array(
 							'id'      => $cart_item['id'],
 							'options' => isset( $cart_item['item_number']['options'] )
 								? $cart_item['item_number']['options']
 								: array(),
 						),
+						'order_item_id' => $cart_item['order_item_id'],
 					);
 				}
 			}
