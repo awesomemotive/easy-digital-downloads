@@ -159,3 +159,39 @@ add_action( 'edd_order_receipt_after_table', function( $order, $edd_receipt_args
 	do_action( 'edd_payment_receipt_after_table', $payment, $edd_receipt_args );
 }, 10, 2 );
 
+/**
+ * Fires before the purchase history.
+ *
+ * @deprecated 3.0
+ * @todo       Formally deprecate in EDD 3.1
+ * @param array $orders The array of the current user's orders.
+ */
+do_action( 'edd_before_order_history', $orders );
+
+/**
+ * Fires at the beginning of the order history row.
+ *
+ * @deprecated 3.0
+ * @todo       Formally deprecate in EDD 3.1
+ * @param \EDD\Orders\Order $order The current order object.
+ */
+do_action( 'edd_order_history_row_start', $order );
+
+/**
+ * Fires at the end of the order history row.
+ *
+ * @deprecated 3.0
+ * @todo       Formally deprecate in EDD 3.1
+ * @param \EDD\Orders\Order $order The current order object.
+ */
+do_action( 'edd_order_history_row_end', $order );
+
+/**
+ * Fires after the purchase history.
+ *
+ * @deprecated 3.0
+ * @todo       Formally deprecate in EDD 3.1
+ * @param array $orders The array of the current user's orders.
+ */
+do_action( 'edd_after_order_history', $orders );
+
