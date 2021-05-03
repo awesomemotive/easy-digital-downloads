@@ -26,7 +26,7 @@ class Payment_Capture_Completed extends Webhook_Event {
 		$payment = $this->get_payment_from_capture();
 
 		// Bail if the payment has already been completed.
-		if ( 'complete' === $payment->status ) {
+		if ( in_array( $payment->status, array( 'publish', 'complete' ) ) ) {
 			edd_debug_log( 'PayPal Commerce - Exiting webhook, as payment is already complete.' );
 
 			return;

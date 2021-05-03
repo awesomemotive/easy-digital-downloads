@@ -76,7 +76,7 @@ function maybe_refund_transaction( \EDD_Payment $payment ) {
 	}
 
 	// Payment status should be coming from "publish" or "revoked".
-	if ( 'publish' !== $payment->old_status && 'revoked' !== $payment->old_status ) {
+	if ( ! in_array( $payment->status, array( 'publish', 'complete', 'revoked' ) ) ) {
 		return;
 	}
 
