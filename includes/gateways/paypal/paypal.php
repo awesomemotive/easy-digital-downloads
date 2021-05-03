@@ -61,7 +61,6 @@ if ( ! defined( 'EDD_PAYPAL_SANDBOX_PARTNER_CLIENT_ID' ) ) {
 /**
  * Include PayPal gateway files
  */
-require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal-standard.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/exceptions/class-api-exception.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/exceptions/class-authentication-exception.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/exceptions/class-gateway-exception.php';

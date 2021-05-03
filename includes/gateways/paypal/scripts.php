@@ -86,7 +86,7 @@ function register_js( $force_load = false ) {
 			'jquery',
 			'edd-ajax'
 		),
-		time(), // @todo EDD_VERSION
+		EDD_VERSION,
 		true
 	);
 

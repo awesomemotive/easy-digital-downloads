@@ -35,7 +35,7 @@ function enqueue_connect_scripts() {
 			'edd-paypal-connect',
 			EDD_PLUGIN_URL . 'assets/js/admin-paypal-connect' . $suffix . '.js',
 			array( 'jquery' ),
-			time(), // @todo EDD_VERSION
+			EDD_VERSION,
 			true
 		);
 	}

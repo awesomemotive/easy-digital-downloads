@@ -29,7 +29,7 @@ function edd_get_payment_gateways() {
 		/**
 		 * PayPal Standard is available only if it was used prior to 2.11 and the store owner hasn't
 		 * yet been onboarded to PayPal Commerce.
-		 * @see \EDD\PayPal\\EDD\PayPal\maybe_remove_paypal_standard()
+		 * @see \EDD\PayPal\maybe_remove_paypal_standard()
 		 */
 		'paypal' => array(
 			'admin_label'    => __( 'PayPal Standard', 'easy-digital-downloads' ),
