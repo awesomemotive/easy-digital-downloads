@@ -82,24 +82,24 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 
 		<?php
 		if ( filter_var( $edd_receipt_args['discount'], FILTER_VALIDATE_BOOLEAN ) ) :
-			$discounts = $order->get_discounts();
-			if ( $discounts ) :
-				$label = _n( 'Discount', 'Discounts', count( $discounts ), 'easy-digital-downloads' );
+			$order_discounts = $order->get_discounts();
+			if ( $order_discounts ) :
+				$label = _n( 'Discount', 'Discounts', count( $order_discounts ), 'easy-digital-downloads' );
 				?>
 				<tr>
 					<td colspan="2"><strong><?php echo esc_html( $label ); ?>:</strong></td>
 				</tr>
 				<?php
-				foreach ( $discounts as $discount ) {
-					$label = $discount->description;
-					if ( 'percent' === edd_get_discount_type( $discount->type_id ) ) {
-						$rate   = edd_format_discount_rate( 'percent', edd_get_discount_amount( $discount->type_id ) );
+				foreach ( $order_discounts as $order_discount ) {
+					$label = $order_discount->description;
+					if ( 'percent' === edd_get_discount_type( $order_discount->type_id ) ) {
+						$rate   = edd_format_discount_rate( 'percent', edd_get_discount_amount( $order_discount->type_id ) );
 						$label .= "&nbsp;({$rate})";
 					}
 					?>
 					<tr>
 						<td><?php echo esc_html( $label ); ?></td>
-						<td><?php echo esc_html( edd_currency_filter( edd_format_amount( edd_negate_amount( $discount->total ) ) ) ); ?></td>
+						<td><?php echo esc_html( edd_currency_filter( edd_format_amount( edd_negate_amount( $order_discount->total ) ) ) ); ?></td>
 					</tr>
 					<?php
 				}
