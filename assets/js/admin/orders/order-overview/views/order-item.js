@@ -63,13 +63,16 @@ export const OrderItem = Base.extend( {
 		const discountAmount = model.getDiscountAmount();
 		const isAdjustingManually = model.get( '_isAdjustingManually' );
 
+		const tax = model.getTax();
+
 		return {
 			...Base.prototype.prepare.apply( this, arguments ),
 
 			discount: discountAmount,
 			amountCurrency: currency.format( number.absint( model.get( 'amount' ) ) ),
 			subtotalCurrency: currency.format( number.absint( model.get( 'subtotal' ) ) ),
-			taxCurrency: currency.format( number.absint( model.get( 'tax' ) ) ),
+			tax,
+			taxCurrency: currency.format( number.absint( tax ) ),
 			total: model.getTotal(),
 
 			config: {
