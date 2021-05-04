@@ -64,12 +64,12 @@ function maybe_add_purchase_link_class( $args ) {
 	// Don't add class if Recurring is enabled for this download.
 	if ( function_exists( 'edd_recurring' ) ) {
 		// Overall download is recurring.
-		if ( edd_recurring()::is_recurring( $args['download_id'] ) ) {
+		if ( edd_recurring()->is_recurring( $args['download_id'] ) ) {
 			return $args;
 		}
 
 		// Price ID is recurring.
-		if ( ! empty( $args['price_id'] ) && edd_recurring()::is_price_recurring( $args['download_id'], $args['price_id'] ) ) {
+		if ( ! empty( $args['price_id'] ) && edd_recurring()->is_price_recurring( $args['download_id'], $args['price_id'] ) ) {
 			return $args;
 		}
 	}
