@@ -251,6 +251,7 @@ class Tests_PayPal extends EDD_UnitTestCase {
 	}
 
 	/**
+	 * @expectedException \Exception
 	 * @covers \EDD\PayPal\Webhooks\Events\Payment_Capture_Completed::handle
 	 */
 	public function test_payment_capture_completed_with_mismatching_amount_throws_exception() {
@@ -258,13 +259,18 @@ class Tests_PayPal extends EDD_UnitTestCase {
 			'amount' => 100.00
 		) ) ) );
 
-		$this->expectException( 'Exception' );
-		$this->expectExceptionMessage( 'doesn\'t match payment amount' );
+		if ( method_exists( $this, 'expectException' ) ) {
+			$this->expectException( 'Exception' );
+		}
+		if ( method_exists( $this, 'expectExceptionMessage' ) ) {
+			$this->expectExceptionMessage( 'doesn\'t match payment amount' );
+		}
 
 		$event->handle();
 	}
 
 	/**
+	 * @expectedException \Exception
 	 * @covers \EDD\PayPal\Webhooks\Events\Payment_Capture_Completed::handle
 	 */
 	public function test_payment_capture_completed_with_mismatching_currency_throws_exception() {
@@ -272,13 +278,18 @@ class Tests_PayPal extends EDD_UnitTestCase {
 			'currency_code' => 'GBP'
 		) ) ) );
 
-		$this->expectException( 'Exception' );
-		$this->expectExceptionMessage( 'Missing or invalid currency code' );
+		if ( method_exists( $this, 'expectException' ) ) {
+			$this->expectException( 'Exception' );
+		}
+		if ( method_exists( $this, 'expectExceptionMessage' ) ) {
+			$this->expectExceptionMessage( 'Missing or invalid currency code' );
+		}
 
 		$event->handle();
 	}
 
 	/**
+	 * @expectedException \Exception
 	 * @covers \EDD\PayPal\Webhooks\Events\Payment_Capture_Completed::get_payment_from_capture
 	 * @throws \Exception
 	 */
@@ -287,8 +298,12 @@ class Tests_PayPal extends EDD_UnitTestCase {
 			'transaction_id' => 'wrong'
 		) ) ) );
 
-		$this->expectException( 'Exception' );
-		$this->expectExceptionMessage( 'get_payment_from_capture_object() - Transaction ID mismatch.' );
+		if ( method_exists( $this, 'expectException' ) ) {
+			$this->expectException( 'Exception' );
+		}
+		if ( method_exists( $this, 'expectExceptionMessage' ) ) {
+			$this->expectExceptionMessage( 'get_payment_from_capture_object() - Transaction ID mismatch.' );
+		}
 
 		$event->handle();
 	}
