@@ -112,8 +112,10 @@ function create_order( $purchase_data ) {
 		$error_message = current_user_can( 'manage_options' )
 			? __( 'Please connect your PayPal account in the gateway settings.', 'easy-digital-downloads' )
 			: __( 'Unexpected authentication error. Please contact a site administrator.', 'easy-digital-downloads' );
-		edd_set_error( 'paypal-error', $error_message );
-		edd_send_back_to_checkout( '?payment-mode=paypal_checkout' );
+
+		wp_send_json_error( edd_build_errors_html( array(
+			'paypal-error' => $error_message
+		) ) );
 	}
 
 	try {
