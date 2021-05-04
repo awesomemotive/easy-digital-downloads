@@ -91,7 +91,6 @@ export const OrderAdjustment = Backbone.Model.extend( {
 
 			const taxableAmount = adjustment.getAmount();
 			const taxAmount = number.unformat( taxableAmount * taxRate );
-			console.log(taxAmount);
 
 			adjustment.set( 'tax', taxAmount );
 		} );
