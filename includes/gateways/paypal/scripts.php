@@ -30,21 +30,28 @@ function maybe_enqueue_polyfills() {
 		return;
 	}
 
-	wp_enqueue_script(
-		'promise-polyfill',
-		EDD_PLUGIN_URL . 'assets/js/promise-polyfill.min.js',
-		array(),
-		'8.2.0',
-		true
-	);
+	global $wp_version;
+	if ( version_compare( $wp_version, '5.0', '>=' ) ) {
+		wp_enqueue_script( 'wp-polyfill-fetch' );
+		wp_enqueue_script( 'wp-polyfill-promise' );
+		wp_enqueue_script( 'wp-polyfill-formdata' );
+	} else {
+		wp_enqueue_script(
+			'promise-polyfill',
+			EDD_PLUGIN_URL . 'assets/js/promise-polyfill.min.js',
+			array(),
+			'8.2.0',
+			true
+		);
 
-	wp_enqueue_script(
-		'fetch-polyfill',
-		EDD_PLUGIN_URL . 'assets/js/fetch-polyfill.min.js',
-		array( 'promise-polyfill' ),
-		'3.6.0',
-		true
-	);
+		wp_enqueue_script(
+			'fetch-polyfill',
+			EDD_PLUGIN_URL . 'assets/js/fetch-polyfill.min.js',
+			array( 'promise-polyfill' ),
+			'3.6.0',
+			true
+		);
+	}
 }
 
 /**
