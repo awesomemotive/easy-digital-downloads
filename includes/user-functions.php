@@ -338,14 +338,11 @@ function edd_count_file_downloads_of_user( $user ) {
 		return edd_count_file_downloads_of_customer( $user );
 	}
 
+	$customer = edd_get_customer_by( 'user_id', $user );
+
 	return edd_count_file_download_logs(
 		array(
-			'meta_query' => array(
-				array(
-					'key'   => 'user_id',
-					'value' => $user,
-				),
-			),
+			'customer_id' => $customer->id,
 		)
 	);
 }
