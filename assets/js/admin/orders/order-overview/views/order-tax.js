@@ -67,6 +67,11 @@ export const OrderTax = wp.Backbone.View.extend( {
 		const tax = state.getTax();
 		const hasNewTaxRate = state.hasNewTaxRate();
 
+		const taxableItems = [
+			...state.get( 'items' ).models,
+			...state.get( 'adjustments' ).getByType( 'fee' ),
+		];
+
 		return {
 			state: {
 				...state.toJSON(),
@@ -78,6 +83,8 @@ export const OrderTax = wp.Backbone.View.extend( {
 
 			tax,
 			taxCurrency: currency.format( number.absint( tax ) ),
+
+			hasTaxableItems: taxableItems.length > 0,
 		};
 	},
 
@@ -106,6 +113,14 @@ export const OrderTax = wp.Backbone.View.extend( {
 
 		const { state } = this.options;
 
+		// Manually recalculate taxed fees.
+		state.get( 'adjustments' ).getByType( 'fee' ).forEach(
+			( fee ) => {
+				fee.updateTax();
+			}
+		);
+
+		// Request updated tax amounts for orders from the server.
 		state.get( 'items' )
 			.updateAmounts()
 			.done( () => {

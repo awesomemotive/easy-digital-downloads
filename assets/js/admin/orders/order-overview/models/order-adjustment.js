@@ -62,4 +62,38 @@ export const OrderAdjustment = Backbone.Model.extend( {
 	getTotal() {
 		return this.get( 'subtotal' ) + this.get( 'tax' );
 	},
+
+	/**
+	 * Recalculates the tax amount based on the current tax rate.
+	 *
+	 * @since 3.0.0
+	 */
+	updateTax() {
+		const state = this.get( 'state' );
+		const hasTax = state.get( 'hasTax' );
+
+		if (
+			'none' === hasTax ||
+			'' === hasTax.country ||
+			'' === hasTax.rate
+		) {
+			return;
+		}
+
+		const { number } = state.get( 'formatters' );
+		const taxRate = hasTax.rate / 100;
+		const adjustments = state.get( 'adjustments' ).getByType( 'fee' );
+
+		adjustments.forEach( ( adjustment ) => {
+			if ( false === adjustment.get( 'isTaxable' ) ) {
+				return;
+			}
+
+			const taxableAmount = adjustment.getAmount();
+			const taxAmount = number.unformat( taxableAmount * taxRate );
+			console.log(taxAmount);
+
+			adjustment.set( 'tax', taxAmount );
+		} );
+	}
 } );

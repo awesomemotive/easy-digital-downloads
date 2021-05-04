@@ -31,7 +31,7 @@
 		</td>
 	</tr>
 
-	<# if ( false !== data.state.hasNewTaxRate && data.state.items.length > 0 ) { #>
+	<# if ( false !== data.state.hasNewTaxRate && true === data.hasTaxableItems ) { #>
 	<tr class="is-expanded">
 		<td></td>
 		<td colspan="{{ data.config.colspan + 1 }}" style="padding: 0;" class="column-primary">
