@@ -798,15 +798,6 @@ function edd_record_download_in_log( $download_id = 0, $file_id = 0, $user_info 
 		'ip'          => sanitize_text_field( $ip ),
 		'user_agent'  => $user_agent,
 	) );
-
-	if ( ! empty( $user_info['id'] ) ) {
-		edd_add_file_download_log_meta(
-			$download_log,
-			'user_id',
-			absint( $user_info['id'] ),
-			true
-		);
-	}
 }
 
 /**

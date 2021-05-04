@@ -250,6 +250,7 @@ class Data_Migrator {
 				'_edd_log_price_id',
 				'_edd_log_customer_id',
 				'_edd_log_ip',
+				'_edd_log_user_id',
 			);
 			$meta_to_migrate   = $post_meta;
 			$new_log_id        = edd_add_file_download_log( $log_data );
