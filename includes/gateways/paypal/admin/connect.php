@@ -403,6 +403,14 @@ function process_disconnect() {
 		'paypal_' . $mode . '_client_secret'
 	);
 
+	try {
+		// Also delete the token cache key, to ensure we fetch a fresh one if they connect to a different account later.
+		$api                 = new PayPal\API();
+		$options_to_delete[] = $api->token_cache_key;
+	} catch ( \Exception $e ) {
+
+	}
+
 	foreach ( $options_to_delete as $option_name ) {
 		edd_delete_option( $option_name );
 	}

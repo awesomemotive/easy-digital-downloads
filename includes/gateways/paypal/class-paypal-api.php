@@ -21,6 +21,7 @@ use EDD\PayPal\Exceptions\Authentication_Exception;
  * @property string $api_url
  * @property string $client_id
  * @property string $client_secret
+ * @property string $token_cache_key
  * @property int    $last_response_code
  *
  * @package EDD\PayPal
