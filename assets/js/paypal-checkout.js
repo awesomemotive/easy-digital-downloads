@@ -84,57 +84,27 @@ var EDD_PayPal = {
 	initButtons: function( container, context ) {
 		EDD_PayPal.isMounted = true;
 
+		paypal.Buttons( EDD_PayPal.getButtonArgs( container, context ) ).render( container );
+	},
+
+	/**
+	 * Retrieves the arguments used to build the PayPal button.
+	 *
+	 * @param {string|HTMLElement} container Element to render the buttons in.
+	 * @param {string} context   Context for the button. Either `checkout` or `buy_now`.
+	 */
+	getButtonArgs: function ( container, context ) {
 		var form = ( 'checkout' === context ) ? document.getElementById( 'edd_purchase_form' ) : container.closest( '.edd_download_purchase_form' );
 		var errorWrapper = ( 'checkout' === context ) ? form.querySelector( '#edd-paypal-errors-wrap' ) : form.querySelector( '.edd-paypal-checkout-buy-now-error-wrapper' );
 		var spinner = ( 'checkout' === context ) ? document.getElementById( 'edd-paypal-spinner' ) : form.querySelector( '.edd-paypal-spinner' );
 		var nonceEl = form.querySelector( 'input[name="edd_process_paypal_nonce"]' );
+		var createFunc = ( 'capture' === eddPayPalVars.intent ) ? 'createOrder' : 'createSubscription';
 
-		paypal.Buttons( {
-			createOrder: function ( data, actions ) {
-				console.log( 'createOrder' );
-
-				// Show spinner.
-				spinner.style.display = 'block';
-
-				// Clear errors at the start of each attempt.
-				if ( errorWrapper ) {
-					errorWrapper.innerHTML = '';
-				}
-
-				// Submit the form via AJAX.
-				return fetch( edd_scripts.ajaxurl, {
-					method: 'POST',
-					body: new FormData( form )
-				} ).then( function( response ) {
-					return response.json();
-				} ).then( function( orderData ) {
-					console.log( 'createOrder data', orderData );
-					if ( orderData.data && orderData.data.paypal_order_id ) {
-						// Add the nonce to the form so we can validate it later.
-						if ( orderData.data.nonce ) {
-							nonceEl.value = orderData.data.nonce;
-						}
-
-						return orderData.data.paypal_order_id;
-					} else {
-						// Error message.
-						var errorHtml = eddPayPalVars.defaultError;
-						if ( orderData.data && 'string' === typeof orderData.data ) {
-							errorHtml = orderData.data;
-						} else if ( 'string' === typeof orderData ) {
-							errorHtml = orderData;
-						}
-
-						return new Promise( function( resolve, reject ) {
-							reject( new Error( errorHtml ) );
-						} );
-					}
-				} );
-			},
+		var buttonArgs = {
 			onApprove: function( data, actions ) {
-				console.log( 'onApprove' );
+				console.log( 'onApprove', data );
 				var formData = new FormData();
-				formData.append( 'action', 'edd_capture_paypal_order' );
+				formData.append( 'action', eddPayPalVars.approvalAction );
 				formData.append( 'paypal_order_id', data.orderID );
 				formData.append( 'edd_process_paypal_nonce', nonceEl.value );
 
@@ -167,7 +137,55 @@ var EDD_PayPal = {
 				// Hide spinner.
 				spinner.style.display = 'none';
 			}
-		} ).render( container );
+		};
+
+		/*
+		 * Add the `create` logic. This gets added to `createOrder` for one-time purchases
+		 * or `createSubscription` for recurring.
+		 */
+		buttonArgs[ createFunc ] = function ( data, actions ) {
+			console.log( 'create' );
+
+			// Show spinner.
+			spinner.style.display = 'block';
+
+			// Clear errors at the start of each attempt.
+			if ( errorWrapper ) {
+				errorWrapper.innerHTML = '';
+			}
+
+			// Submit the form via AJAX.
+			return fetch( edd_scripts.ajaxurl, {
+				method: 'POST',
+				body: new FormData( form )
+			} ).then( function( response ) {
+				return response.json();
+			} ).then( function( orderData ) {
+				console.log( 'createOrder data', orderData );
+				if ( orderData.data && orderData.data.paypal_order_id ) {
+					// Add the nonce to the form so we can validate it later.
+					if ( orderData.data.nonce ) {
+						nonceEl.value = orderData.data.nonce;
+					}
+
+					return orderData.data.paypal_order_id;
+				} else {
+					// Error message.
+					var errorHtml = eddPayPalVars.defaultError;
+					if ( orderData.data && 'string' === typeof orderData.data ) {
+						errorHtml = orderData.data;
+					} else if ( 'string' === typeof orderData ) {
+						errorHtml = orderData;
+					}
+
+					return new Promise( function( resolve, reject ) {
+						reject( new Error( errorHtml ) );
+					} );
+				}
+			} );
+		};
+
+		return buttonArgs;
 	}
 };
 

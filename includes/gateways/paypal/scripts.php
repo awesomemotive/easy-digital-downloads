@@ -69,13 +69,23 @@ function register_js( $force_load = false ) {
 	// Use minified libraries if SCRIPT_DEBUG is turned off
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
+	/**
+	 * Filters the query arguments added to the SDK URL.
+	 *
+	 * @link  https://developer.paypal.com/docs/checkout/reference/customize-sdk/#query-parameters
+	 *
+	 * @since 2.11
+	 */
+	$sdk_query_args = apply_filters( 'edd_paypal_js_sdk_query_args', array(
+		'client-id' => urlencode( $api->client_id ),
+		'locale'    => urlencode( get_locale() ),
+		'currency'  => urlencode( strtoupper( edd_get_currency() ) ),
+		'intent'    => 'capture'
+	) );
+
 	wp_register_script(
 		'sandhills-paypal-js-sdk',
-		add_query_arg( array(
-			'client-id' => urlencode( $api->client_id ),
-			'locale'    => urlencode( get_locale() ),
-			'currency'  => urlencode( strtoupper( edd_get_currency() ) )
-		), 'https://www.paypal.com/sdk/js' )
+		add_query_arg( $sdk_query_args, 'https://www.paypal.com/sdk/js' )
 	);
 
 	wp_register_script(
@@ -97,9 +107,16 @@ function register_js( $force_load = false ) {
 		wp_enqueue_script( 'edd-paypal' );
 
 		wp_localize_script( 'edd-paypal', 'eddPayPalVars', array(
-			'defaultError' => edd_build_errors_html( array(
+			/**
+			 * Filters the order approval handler.
+			 *
+			 * @since 2.11
+			 */
+			'approvalAction' => apply_filters( 'edd_paypal_on_approve_action', 'edd_capture_paypal_order' ),
+			'defaultError'   => edd_build_errors_html( array(
 				'paypal-error' => esc_html__( 'An unexpected error occurred. Please try again.', 'easy-digital-downloads' )
-			) )
+			) ),
+			'intent'         => ! empty( $sdk_query_args['intent'] ) ? $sdk_query_args['intent'] : 'capture',
 		) );
 	}
 }
