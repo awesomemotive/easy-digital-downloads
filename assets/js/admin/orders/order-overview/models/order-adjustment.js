@@ -44,6 +44,17 @@ export const OrderAdjustment = Backbone.Model.extend( {
 	},
 
 	/**
+	 * Retrieves the `OrderAdjustment` tax.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return {number} Total amount.
+	 */
+	getTax() {
+		return this.get( 'tax' );
+	},
+
+	/**
 	 * Returns the `OrderAdjustment` total.
 	 *
 	 * @since 3.0

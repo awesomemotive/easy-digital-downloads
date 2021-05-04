@@ -128,8 +128,7 @@ export const State = Backbone.Model.extend(
 
 			return [ ...items, ...adjustments ].reduce(
 				( amount, item ) => {
-					// Perform early rounding of tax amounts to match storefront calculations.
-					return amount += +number.format( item.get( 'tax' ) );
+					return amount += +item.getTax();
 				},
 				0
 			);
