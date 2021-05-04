@@ -98,15 +98,21 @@ var EDD_PayPal = {
 		var errorWrapper = ( 'checkout' === context ) ? form.querySelector( '#edd-paypal-errors-wrap' ) : form.querySelector( '.edd-paypal-checkout-buy-now-error-wrapper' );
 		var spinner = ( 'checkout' === context ) ? document.getElementById( 'edd-paypal-spinner' ) : form.querySelector( '.edd-paypal-spinner' );
 		var nonceEl = form.querySelector( 'input[name="edd_process_paypal_nonce"]' );
-		var createFunc = ( 'capture' === eddPayPalVars.intent ) ? 'createOrder' : 'createSubscription';
+		var createFunc = ( 'subscription' === eddPayPalVars.intent ) ? 'createSubscription' : 'createOrder';
 
 		var buttonArgs = {
 			onApprove: function( data, actions ) {
 				console.log( 'onApprove', data );
 				var formData = new FormData();
 				formData.append( 'action', eddPayPalVars.approvalAction );
-				formData.append( 'paypal_order_id', data.orderID );
 				formData.append( 'edd_process_paypal_nonce', nonceEl.value );
+
+				if ( data.orderID ) {
+					formData.append( 'paypal_order_id', data.orderID );
+				}
+				if ( data.subscriptionID ) {
+					formData.append( 'paypal_subscription_id', data.subscriptionID );
+				}
 
 				return fetch( edd_scripts.ajaxurl, {
 					method: 'POST',
