@@ -789,7 +789,7 @@ function edd_record_download_in_log( $download_id = 0, $file_id = 0, $user_info 
 
 	$user_agent = $browser->getBrowser() . ' ' . $browser->getVersion() . '/' . $browser->getPlatform();
 
-	$download_log = edd_add_file_download_log( array(
+	edd_add_file_download_log( array(
 		'product_id'  => absint( $download_id ),
 		'file_id'     => absint( $file_id ),
 		'order_id'    => absint( $order_id ),
