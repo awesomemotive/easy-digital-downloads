@@ -372,12 +372,12 @@ function edd_ajax_remove_discount() {
 
 		$return = array(
 			'total'     => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
-			'code'      => $_POST['code'],
+			'code'      => sanitize_text_field( $_POST['code'] ),
 			'discounts' => edd_get_cart_discounts(),
 			'html'      => edd_get_cart_discounts_html()
 		);
 
-		echo json_encode( $return );
+		wp_send_json( $return );
 	}
 	edd_die();
 }
