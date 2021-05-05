@@ -253,7 +253,7 @@ class Data_Migrator {
 				'_edd_log_user_id',
 			);
 			// If the log doesn't have a customer ID, but does have a user ID, keep the user ID as metadata.
-			if ( empty( $log_data['customer_id'] ) && ! empty( $post_meta['_edd_log_user_id'] ) && ! in_array( $post_meta['_edd_log_user_id'], array( 0, -1 ), true ) ) {
+			if ( empty( $log_data['customer_id'] ) && ! empty( $post_meta['_edd_log_user_id'] ) && ! in_array( $post_meta['_edd_log_user_id'], array( 0, -1, '-1' ), true ) ) {
 				$meta_to_remove = array_diff( $meta_to_remove, array( '_edd_log_user_id' ) );
 			}
 			$meta_to_migrate   = $post_meta;
