@@ -4,14 +4,15 @@
  * Internal dependencies
  */
 import { OrderItems } from './order-items.js';
-import { OrderAdjustments } from './order-adjustments.js';
-import { Refunds } from './order-refunds.js';
-import { Totals } from './totals.js';
+import { OrderSubtotal } from './order-subtotal.js';
+import { OrderDiscountsFees } from './order-discounts-fees.js';
+import { OrderTax } from './order-tax.js';
+import { OrderCredits } from './order-credits.js';
+import { OrderTotal } from './order-total.js';
+import { OrderRefunds } from './order-refunds.js';
 
 /**
  * Overview summary
- *
- * Contains Order Items and Item totals.
  *
  * @since 3.0
  *
@@ -33,9 +34,12 @@ export const Summary = wp.Backbone.View.extend( {
 	 */
 	render() {
 		this.views.add( new OrderItems( this.options ) );
-		this.views.add( new OrderAdjustments( this.options ) );
-		this.views.add( new Totals( this.options ) );
-		this.views.add( new Refunds( this.options ) );
+		this.views.add( new OrderSubtotal( this.options ) );
+		this.views.add( new OrderDiscountsFees( this.options ) );
+		this.views.add( new OrderTax( this.options ) );
+		this.views.add( new OrderCredits( this.options ) );
+		this.views.add( new OrderTotal( this.options ) );
+		this.views.add( new OrderRefunds( this.options ) );
 
 		return this;
 	},

@@ -3,7 +3,6 @@
 /**
  * Internal dependencies
  */
-import { Base } from './base.js';
 import { OrderAdjustment } from './order-adjustment.js';
 
 /**
@@ -11,7 +10,7 @@ import { OrderAdjustment } from './order-adjustment.js';
  *
  * @since 3.0
  *
- * @class Adjustments
+ * @class OrderAdjustments
  * @augments wp.Backbone.View
  */
 export const OrderAdjustments = wp.Backbone.View.extend( {
@@ -35,6 +34,7 @@ export const OrderAdjustments = wp.Backbone.View.extend( {
 		const adjustments = state.get( 'adjustments' );
 
 		// Listen for events.
+		this.listenTo( state, 'change:hasTax', this.render );
 		this.listenTo( items, 'change', this.render );
 		this.listenTo( adjustments, 'add', this.render );
 		this.listenTo( adjustments, 'remove', this.remove );
@@ -46,8 +46,7 @@ export const OrderAdjustments = wp.Backbone.View.extend( {
 	 * @since 3.0
 	 */
 	render() {
-		const { state } = this.options;
-		const { models: adjustments } = state.get( 'adjustments' );
+		const adjustments = this.getAdjustments();
 
 		this.views.remove();
 
@@ -79,9 +78,14 @@ export const OrderAdjustments = wp.Backbone.View.extend( {
 	 */
 	remove( model ) {
 		let subview = null;
+		const views = this.views.get();
+
+		if ( ! views ) {
+			return;
+		}
 
 		// Find the Subview containing the model.
-		this.views.get().forEach( ( view ) => {
+		views.forEach( ( view ) => {
 			const { model: viewModel } = view;
 
 			if ( viewModel.id === model.id ) {
