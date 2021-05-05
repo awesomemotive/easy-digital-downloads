@@ -140,7 +140,7 @@ function create_order( $purchase_data ) {
 				__( 'An unexpected error occurred. Please try again.', 'easy-digital-downloads' ),
 				500,
 				sprintf(
-					__( 'Payment creation failed before sending buyer to PayPal. Payment data: %s', 'easy-digital-downloads' ),
+					'Payment creation failed before sending buyer to PayPal. Payment data: %s',
 					json_encode( $payment_args )
 				)
 			);
@@ -198,7 +198,10 @@ function create_order( $purchase_data ) {
 				throw new Gateway_Exception(
 					__( 'An error occurred while communicating with PayPal. Please try again.', 'easy-digital-downloads' ),
 					$api->last_response_code,
-					json_encode( $response )
+					sprintf(
+						'Unexpected response when creating order: %s',
+						json_encode( $response )
+					)
 				);
 			}
 
@@ -247,7 +250,7 @@ function capture_order() {
 			throw new Gateway_Exception(
 				__( 'A validation error occurred. Please try again.', 'easy-digital-downloads' ),
 				400,
-				__( 'Missing approval nonce.', 'easy-digital-downloads' )
+				'Missing approval nonce.'
 			);
 		}
 
@@ -255,7 +258,7 @@ function capture_order() {
 			throw new Gateway_Exception(
 				__( 'A validation error occurred. Please try again.', 'easy-digital-downloads' ),
 				403,
-				__( 'Nonce validation failed.', 'easy-digital-downloads' )
+				'Nonce validation failed.'
 			);
 		}
 
@@ -263,7 +266,7 @@ function capture_order() {
 			throw new Gateway_Exception(
 				__( 'An unexpected error occurred. Please try again.', 'easy-digital-downloads' ),
 				400,
-				__( 'Missing PayPal order ID during capture.', 'easy-digital-downloads' )
+				'Missing PayPal order ID during capture.'
 			);
 		}
 
