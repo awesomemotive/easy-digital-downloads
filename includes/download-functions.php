@@ -772,7 +772,7 @@ function edd_get_download_sales_stats( $download_id = 0 ) {
  *
  * @param int    $download_id Download ID.
  * @param int    $file_id     File ID.
- * @param array  $user_info   User information.
+ * @param array  $user_info   User information (deprecated).
  * @param string $ip          User IP.
  * @param int    $order_id    Order ID.
  * @param int    $price_id    Optional. Price ID,
