@@ -20,7 +20,7 @@ if ( ! defined( 'EDD_PAYPAL_PARTNER_CONNECT_URL' ) ) {
  * Returns the content for the PayPal Commerce Connect fields.
  *
  * If the account is not yet connected, the user is shown a "Connect with PayPal" button.
- * If they are connected, their account details are show instead.
+ * If they are connected, their account details are shown instead.
  *
  * @since 2.11
  * @return string
