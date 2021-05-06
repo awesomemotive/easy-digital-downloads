@@ -300,10 +300,10 @@ function edd_add_manual_order( $args = array() ) {
 				'status'       => 'complete',
 				'quantity'     => $quantity,
 				'amount'       => $amount,
-				'subtotal'     => $subtotal,
+				'subtotal'     => round( $subtotal, edd_currency_decimal_filter() ),
 				'discount'     => $discount,
-				'tax'          => $tax,
-				'total'        => $total,
+				'tax'          => round( $tax, edd_currency_decimal_filter() ),
+				'total'        => round( $total, edd_currency_decimal_filter() ),
 			) );
 
 			if ( false !== $order_item_id ) {
@@ -328,6 +328,7 @@ function edd_add_manual_order( $args = array() ) {
 							'type_key'    => $type_key,
 							'description' => sanitize_text_field( $order_item_adjustment['description'] ),
 							'subtotal'    => floatval( $order_item_adjustment['subtotal'] ),
+							'tax'         => floatval( $order_item_adjustment['tax'] ),
 							'total'       => floatval( $order_item_adjustment['total'] ),
 						) );
 					}
@@ -362,6 +363,7 @@ function edd_add_manual_order( $args = array() ) {
 				'type_key'    => $type_key,
 				'description' => sanitize_text_field( $adjustment['description'] ),
 				'subtotal'    => floatval( $adjustment['subtotal'] ),
+				'tax'         => floatval( $adjustment['tax'] ),
 				'total'       => floatval( $adjustment['total'] ),
 			) );
 		}

@@ -1,12 +1,12 @@
 /**
- * Order totals
+ * Order total
  *
  * @since 3.0
  *
- * @class Totals
+ * @class OrderTotal
  * @augments wp.Backbone.View
  */
-export const Totals = wp.Backbone.View.extend( {
+export const OrderTotal = wp.Backbone.View.extend( {
 	/**
 	 * @since 3.0
 	 */
@@ -15,27 +15,19 @@ export const Totals = wp.Backbone.View.extend( {
 	/**
 	 * @since 3.0
 	 */
-	className: 'edd-order-overview-summary__totals',
+	className: 'edd-order-overview-summary__total',
 
 	/**
 	 * @since 3.0
 	 */
-	template: wp.template( 'edd-admin-order-totals' ),
+	template: wp.template( 'edd-admin-order-total' ),
 
 	/**
-	 * @since 3.0
-	 */
-	events: {
-		'click #notice-tax-change .notice-dismiss': 'onDismissTaxRateChange',
-		'click #notice-tax-change .update-amounts': 'onUpdateAmounts',
-	},
-
-	/**
-	 * Order totals view.
+	 * Order tax view.
 	 *
 	 * @since 3.0
 	 *
-	 * @constructs Totals
+	 * @constructs OrderTax
 	 * @augments wp.Backbone.View
 	 */
 	initialize() {
@@ -59,17 +51,13 @@ export const Totals = wp.Backbone.View.extend( {
 	 */
 	prepare() {
 		const { state } = this.options;
-
 		const { currency, number } = state.get( 'formatters' );
 
 		// Determine column offset -- using cart quantities requires an extra column.
 		const colspan = true === state.get( 'hasQuantity' ) ? 2 : 1;
 
-		const subtotal = state.getSubtotal();
-		const tax = state.getTax();
 		const total = state.getTotal();
 		const discount = state.getDiscount();
-		const hasNewTaxRate = state.hasNewTaxRate();
 		const hasManualAdjustment = undefined !== state.get( 'items' ).findWhere( {
 			_isAdjustingManually: true,
 		} );
@@ -77,54 +65,17 @@ export const Totals = wp.Backbone.View.extend( {
 		return {
 			state: {
 				...state.toJSON(),
-				hasNewTaxRate,
 				hasManualAdjustment,
 			},
 			config: {
 				colspan,
 			},
 
-			subtotal,
-			tax,
 			total,
 			discount,
 
-			subtotalCurrency: currency.format( number.absint( subtotal ) ),
 			discountCurrency: currency.format( number.absint( discount ) ),
-			taxCurrency: currency.format( number.absint( tax ) ),
 			totalCurrency: currency.format( number.absint( total ) ),
 		};
-	},
-
-	/**
-	 * Dismisses Tax Rate change notice.
-	 *
-	 * @since 3.0
-	 */
-	onDismissTaxRateChange() {
-		const { state } = this.options;
-		// Reset amount
-		state.set( 'hasTax', state.get( 'hasTax' ) );
-
-		// Manually trigger change because new and previous attributes
-		// are the same so Backbone will not.
-		state.trigger( 'change:hasTax' );
-	},
-
-	/**
-	 * Updates amounts for existing Order Items.
-	 *
-	 * @since 3.0
-	 */
-	onUpdateAmounts( e ) {
-		e.preventDefault();
-
-		const { state } = this.options;
-
-		state.get( 'items' )
-			.updateAmounts()
-			.done( ( response ) => {
-				this.onDismissTaxRateChange();
-			} );
 	},
 } );

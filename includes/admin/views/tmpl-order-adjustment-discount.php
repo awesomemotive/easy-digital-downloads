@@ -29,17 +29,17 @@ $view_url = edd_get_admin_url(
 		<# } #>
 
 		<div>
-			<?php esc_html_e( 'Discount', 'easy-digital-downloads' ); ?>
+			<a href="<?php echo esc_url( $view_url ); ?>&discount={{ data.typeId }}">{{ data.description }}</a>
 			<br />
 			<small>
-				<a href="<?php echo esc_url( $view_url ); ?>&discount={{ data.typeId }}">{{ data.description }}</a>
+				<?php esc_html_e( 'Discount', 'easy-digital-downloads' ); ?>
 			</small>
 		</div>
 	</div>
 </td>
 
 <td class="column-right" data-colname="<?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?>">
-	{{ data.totalCurrency }}
+	&ndash;{{ data.totalCurrency }}
 </td>
 
 <input type="hidden" value="{{ data.typeId }}" name="discounts[{{ data.id }}][type_id]" />

@@ -258,7 +258,7 @@ class Refund_Validator {
 			throw new Exception( sprintf(
 				/* Translators: %s - 0.00 formatted in store currency */
 				__( 'The refund amount must be greater than %s.', 'easy-digital-downloads' ),
-				edd_currency_filter( 0.00 )
+				edd_currency_filter( edd_format_amount( 0.00 ) )
 			) );
 		}
 
@@ -268,7 +268,7 @@ class Refund_Validator {
 			throw new Exception( sprintf(
 				/* Translators: %s - maximum refund amount as formatted currency */
 				__( 'The maximum refund amount is %s.', 'easy-digital-downloads' ),
-				edd_currency_filter( $order_total )
+				edd_currency_filter( edd_format_amount( $order_total ) )
 			) );
 		}
 	}
