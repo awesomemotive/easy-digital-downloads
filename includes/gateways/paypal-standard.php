@@ -87,7 +87,7 @@ function edd_register_paypal_gateway_settings( $gateway_settings ) {
 
 	$disable_ipn_desc = sprintf(
 		__( 'If you are unable to use Payment Data Transfer and payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases. See our <a href="%s" target="_blank">FAQ</a> for further information.', 'easy-digital-downloads' ),
-		'http://docs.easydigitaldownloads.com/article/190-payments-not-marked-as-complete'
+		'https://docs.easydigitaldownloads.com/article/190-payments-not-marked-as-complete'
 	);
 
 	$paypal_settings['disable_paypal_verification'] = array(
