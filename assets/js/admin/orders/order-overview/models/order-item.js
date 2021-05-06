@@ -86,6 +86,22 @@ export const OrderItem = Backbone.Model.extend( {
 	},
 
 	/**
+	 * Retrieves the rounded Tax for the order item.
+	 *
+	 * Rounded to match storefront checkout.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return {number} Total amount.
+	 */
+	getTax() {
+		const state = this.get( 'state' );
+		const { number } = state.get( 'formatters' );
+
+		return +number.format( this.get( 'tax' ) );
+	},
+
+	/**
 	 * Retrieves the Total for the order item.
 	 *
 	 * @since 3.0.0
@@ -93,7 +109,7 @@ export const OrderItem = Backbone.Model.extend( {
 	 * @return {number} Total amount.
 	 */
 	getTotal() {
-		return ( this.get( 'subtotal' ) - this.getDiscountAmount() ) + this.get( 'tax' );
+		return ( this.get( 'subtotal' ) - this.getDiscountAmount() ) + this.getTax();
 	},
 
 	/**
