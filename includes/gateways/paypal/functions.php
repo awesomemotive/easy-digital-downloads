@@ -58,7 +58,7 @@ function paypal_standard_enabled( $mode = API::MODE_LIVE ) {
 }
 
 /**
- * Returns the our partner merchant ID for a given mode.
+ * Returns the partner merchant ID for a given mode.
  *
  * @param string $mode
  *
