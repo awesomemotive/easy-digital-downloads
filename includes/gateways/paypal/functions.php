@@ -38,12 +38,16 @@ function has_rest_api_connection( $mode = '' ) {
  *
  * If PayPal Standard is enabled, then PayPal payments run through the legacy API.
  *
- * @param string $mode
+ * @param string $mode If omitted, current site mode is used.
  *
  * @since 2.11
  * @return bool
  */
-function paypal_standard_enabled( $mode = API::MODE_LIVE ) {
+function paypal_standard_enabled( $mode = '' ) {
+	if ( empty( $mode ) ) {
+		$mode = edd_is_test_mode() ? API::MODE_SANDBOX : API::MODE_LIVE;
+	}
+
 	$rest_connection = has_rest_api_connection( $mode );
 	$enabled         = ! $rest_connection && edd_get_option( 'paypal_email' );
 
