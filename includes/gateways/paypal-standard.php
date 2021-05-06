@@ -74,7 +74,7 @@ function edd_register_paypal_gateway_settings( $gateway_settings ) {
 
 	$pdt_desc = sprintf(
 		__( 'Enter your PayPal Identity Token in order to enable Payment Data Transfer (PDT). This allows payments to be verified without relying on the PayPal IPN. See our <a href="%s" target="_blank">documentation</a> for further information.', 'easy-digital-downloads' ),
-		'http://docs.easydigitaldownloads.com/article/918-paypal-standard'
+		'https://docs.easydigitaldownloads.com/article/918-paypal-standard'
 	);
 
 	$paypal_settings['paypal_identify_token'] = array(
