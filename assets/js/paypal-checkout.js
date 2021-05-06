@@ -121,8 +121,8 @@ var EDD_PayPal = {
 					return response.json();
 				} ).then( function( responseData ) {
 					console.log( 'onApprove response data', responseData );
-					if ( responseData.success && responseData.data ) {
-						window.location = responseData.data;
+					if ( responseData.success && responseData.data.redirect_url ) {
+						window.location = responseData.data.redirect_url;
 					} else {
 						// Hide spinner.
 						spinner.style.display = 'none';

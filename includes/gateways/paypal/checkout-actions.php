@@ -335,7 +335,7 @@ function capture_order() {
 				$payment->save();
 			}
 
-			wp_send_json_success( edd_get_success_page_uri() );
+			wp_send_json_success( array( 'redirect_url' => edd_get_success_page_uri() ) );
 		} catch ( Authentication_Exception $e ) {
 			throw new Gateway_Exception( __( 'An authentication error occurred. Please try again.', 'easy-digital-downloads' ), $e->getCode(), $e->getMessage() );
 		} catch ( API_Exception $e ) {
