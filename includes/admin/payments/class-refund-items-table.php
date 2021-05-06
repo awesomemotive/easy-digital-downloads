@@ -523,9 +523,11 @@ class Refund_Items_Table extends List_Table {
 	 */
 	public function single_row( $item ) {
 
+		$is_adjustment = $item instanceof Order_Adjustment;
+		$item_class    = $is_adjustment ? $item->object_id : $item->order_id;
 		// Status.
 		$classes = array_map( 'sanitize_html_class', array(
-			'order-' . $item->order_id,
+			'order-' . $item_class,
 			$item->status,
 			'refunditem',
 		) );
@@ -534,8 +536,7 @@ class Refund_Items_Table extends List_Table {
 		$class   = implode( ' ', $classes );
 		$item_id = $this->get_item_unique_id( $item );
 
-		$is_adjustment = $item instanceof Order_Adjustment;
-		$is_credit     = $is_adjustment && 'credit' === $item->type;
+		$is_credit = $is_adjustment && 'credit' === $item->type;
 		?>
 		<tr id="order-item-<?php echo esc_attr( $item_id ); ?>" <?php echo esc_attr( $is_adjustment ? 'data-order-item-adjustment' : 'data-order-item' ); ?>="<?php echo esc_attr( $item->id ); ?>" <?php echo $is_credit ? 'data-credit="1"' : ''; ?> class="<?php echo esc_html( $class ); ?>">
 			<?php $this->single_row_columns( $item ); ?>
