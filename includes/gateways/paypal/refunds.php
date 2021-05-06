@@ -76,7 +76,8 @@ function maybe_refund_transaction( \EDD_Payment $payment ) {
 	}
 
 	// Payment status should be coming from "publish" or "revoked".
-	if ( ! in_array( $payment->status, array( 'publish', 'complete', 'revoked' ) ) ) {
+	// @todo In 3.0 use `edd_get_refundable_order_statuses()`
+	if ( ! in_array( $payment->old_status, array( 'publish', 'complete', 'revoked', 'edd_subscription' ) ) ) {
 		return;
 	}
 
@@ -147,7 +148,7 @@ function refund_transaction( \EDD_Payment $payment ) {
 	if ( ! empty( $response->id ) ) {
 		$payment->add_note( sprintf(
 		/* Translators: %s - ID of the refund in PayPal */
-			__( 'PayPal refund transaction ID: %s', 'easy-digital-downloads' ),
+			__( 'Successfully refunded in PayPal. Refund transaction ID: %s', 'easy-digital-downloads' ),
 			esc_html( $response->id )
 		) );
 	}
