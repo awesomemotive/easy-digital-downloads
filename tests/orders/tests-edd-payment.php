@@ -911,6 +911,26 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 0.2, $payment->tax_rate );
 	}
 
+	public function test_receipt_show_download_files() {
+		$payment      = $this->payment;
+		$receipt_args = array(
+			'id' => $payment->ID,
+		);
+		$cart         = edd_get_payment_meta_cart_details( $payment->ID, true );
+		$cart_item    = reset( $cart );
+		$download_id  = $cart_item['id'];
+
+		// Test sending a payment item array to the filter, which will convert it to an \EDD\Orders\Order_Item object.
+		add_filter( 'edd_order_receipt_show_download_files', function( $ret, $item_id, $order_receipt_args, $order_item_object ) use ( $cart_item ) {
+			$this->assertTrue( $order_item_object->id === $cart_item['order_item_id'] );
+			$this->assertTrue( $order_item_object->product_id === $cart_item['id'] );
+			$this->assertTrue( (int) $order_item_object->product_id === (int) $item_id );
+
+			return $ret;
+		}, 10, 4 );
+		$this->assertTrue( edd_receipt_show_download_files( $download_id, $receipt_args, $cart_item ) );
+	}
+
 	/* Helpers ***************************************************************/
 
 	public function alter_payment_meta( $meta, $payment_data ) {
