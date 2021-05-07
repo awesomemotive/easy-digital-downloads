@@ -972,17 +972,19 @@ function edd_build_order( $order_data = array() ) {
 			if ( isset( $item['fees'] ) && ! empty( $item['fees'] ) ) {
 				foreach ( $item['fees'] as $fee_id => $fee ) {
 
-					$tax_rate_amount = empty( $tax_rate->amount ) ? false : $tax_rate->amount;
-					$tax             = EDD()->fees->get_calculated_tax( $fee, $tax_rate_amount );
-					$adjustment_data = array(
+					$adjustment_subtotal = floatval( $fee['amount'] );
+					$tax_rate_amount     = empty( $tax_rate->amount ) ? false : $tax_rate->amount;
+					$tax                 = EDD()->fees->get_calculated_tax( $fee, $tax_rate_amount );
+					$adjustment_total    = floatval( $fee['amount'] ) + $tax;
+					$adjustment_data     = array(
 						'object_id'   => $order_item_id,
 						'object_type' => 'order_item',
 						'type_key'    => $fee_id,
 						'type'        => 'fee',
 						'description' => $fee['label'],
-						'subtotal'    => floatval( $fee['amount'] ),
-						'tax'         => $tax,
-						'total'       => floatval( $fee['amount'] ) + $tax,
+						'subtotal'    => round( $adjustment_subtotal, $decimal_filter ),
+						'tax'         => round( $tax, $decimal_filter ),
+						'total'       => round( $adjustment_total, $decimal_filter ),
 					);
 
 					// Add the adjustment.
@@ -1018,8 +1020,10 @@ function edd_build_order( $order_data = array() ) {
 
 			add_filter( 'edd_prices_include_tax', '__return_false' );
 
+			$fee_subtotal    = floatval( $fee['amount'] );
 			$tax_rate_amount = empty( $tax_rate->amount ) ? false : $tax_rate->amount;
 			$tax             = EDD()->fees->get_calculated_tax( $fee, $tax_rate_amount );
+			$fee_total       = floatval( $fee['amount'] ) + $tax;
 
 			remove_filter( 'edd_prices_include_tax', '__return_false' );
 
@@ -1029,9 +1033,9 @@ function edd_build_order( $order_data = array() ) {
 				'type_key'    => $fee_id,
 				'type'        => 'fee',
 				'description' => $fee['label'],
-				'subtotal'    => floatval( $fee['amount'] ),
-				'tax'         => $tax,
-				'total'       => floatval( $fee['amount'] ) + $tax,
+				'subtotal'    => round( $fee_subtotal, $decimal_filter ),
+				'tax'         => round( $tax, $decimal_filter ),
+				'total'       => round( $fee_total, $decimal_filter ),
 			);
 
 			// Add the adjustment.
@@ -1078,8 +1082,8 @@ function edd_build_order( $order_data = array() ) {
 					'type_id'     => $discount->id,
 					'type'        => 'discount',
 					'description' => $discount->code,
-					'subtotal'    => $discount_amount,
-					'total'       => $discount_amount,
+					'subtotal'    => round( $discount_amount, $decimal_filter ),
+					'total'       => round( $discount_amount, $decimal_filter ),
 				)
 			);
 		}
@@ -1116,10 +1120,10 @@ function edd_build_order( $order_data = array() ) {
 	// Update the order with all of the newly computed values.
 	edd_update_order( $order_id, array(
 		'order_number' => $order_args['order_number'],
-		'subtotal'     => $subtotal,
-		'tax'          => $total_tax,
-		'discount'     => $total_discount,
-		'total'        => $order_total,
+		'subtotal'     => round( $subtotal, $decimal_filter ),
+		'tax'          => round( $total_tax, $decimal_filter ),
+		'discount'     => round( $total_discount, $decimal_filter ),
+		'total'        => round( $order_total, $decimal_filter ),
 	) );
 
 	if ( edd_get_option( 'show_agree_to_terms', false ) && ! empty( $_POST['edd_agree_to_terms'] ) ) { // WPCS: CSRF ok.
