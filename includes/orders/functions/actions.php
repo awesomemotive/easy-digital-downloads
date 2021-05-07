@@ -199,6 +199,18 @@ function edd_add_manual_order( $args = array() ) {
 		$customer->attach_payment( $order_id, false );
 	}
 
+	// If we have tax, but no tax rate, manually save the percentage.
+	if ( empty( $tax_rate->id ) && $order_tax > 0 ) {
+		$tax_rate_percentage = $data['tax_rate'];
+		if ( ! empty( $tax_rate_percentage ) ) {
+			if ( $tax_rate_percentage > 0 && $tax_rate_percentage < 1 ) {
+				$tax_rate_percentage = $tax_rate_percentage * 100;
+			}
+
+			edd_update_order_meta( $order_id, 'tax_rate', $tax_rate_percentage );
+		}
+	}
+
 	/** Insert order address **************************************************/
 
 	if ( isset( $data['edd_order_address'] ) ) {
