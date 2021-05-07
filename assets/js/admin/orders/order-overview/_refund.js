@@ -168,6 +168,7 @@ function recalculateRefundTotal() {
 		const thisItemSelected = thisItemParent.find( '.edd-order-item-refund-checkbox' ).prop( 'checked' );
 
 		if ( ! thisItemSelected ) {
+			thisItemParent.removeClass( 'refunded' );
 			return;
 		}
 
@@ -191,9 +192,13 @@ function recalculateRefundTotal() {
 			thisItemTotal    = thisItemTotal * -1;
 		}
 
-		newSubtotal += thisItemSubtotal;
-		newTax      += thisItemTax;
-		newTotal    += thisItemTotal;
+		// Only include order items in the subtotal.
+		if ( thisItemParent.data( 'orderItem' ) ) {
+			newSubtotal += thisItemSubtotal;
+		}
+
+		newTax += thisItemTax;
+		newTotal += thisItemTotal;
 	} );
 
 	if ( parseFloat( newTotal ) > 0 ) {
