@@ -470,7 +470,7 @@ label.edd_prices_shipping { /* remove once Simple Shipping markup is improved */
 	right: 7px;
 }
 .edd_upload_field {
-	padding-right: 8em;
+	padding-right: 8em !important;
 }
 textarea#edd-payment-note {
 	width: 100%;
@@ -1082,35 +1082,35 @@ td.edd_order_price {
 -------------------------------------------------------------- */
 
 [id*="edd-sendwp-"].button,
-[id*="edd-jilt-"].button {
+[id*="edd-recapture-"].button {
 	font-size: 16px;
 	height: auto;
 	padding: 8px 14px;
 	margin: 6px 0 0;
 }
 [id*="edd-sendwp-"].button .dashicons,
-[id*="edd-jilt-"].button .dashicons {
+[id*="edd-recapture-"].button .dashicons {
 	line-height: 29px;
 	margin-right: 8px;
 }
 [id*="edd-sendwp-"].button .edd-loading,
 [id*="edd-sendwp-"].button .edd-loading:after,
-[id*="edd-jilt-"].button .edd-loading,
-[id*="edd-jilt-"].button .edd-loading:after {
+[id*="edd-recapture-"].button .edd-loading,
+[id*="edd-recapture-"].button .edd-loading:after {
 	border-radius: 50%;
 	display: inline-block;
 	width: 14px;
 	height: 14px;
 }
 [id*="edd-sendwp-"].button .edd-loading,
-[id*="edd-jilt-"].button .edd-loading {
+[id*="edd-recapture-"].button .edd-loading {
 	position: relative;
 	top: 3px;
 	margin-left: 4px;
 	box-shadow: 0 0 2px rgba(0,0,0,.2);
 }
 [id*="edd-sendwp-"].button .edd-loading,
-[id*="edd-jilt-"].button .edd-loading {
+[id*="edd-recapture-"].button .edd-loading {
 	-webkit-animation: edd-spinning 1.1s infinite linear;
 	animation: edd-spinning 1.1s infinite linear;
 	border-top: 2px solid rgba(255, 255, 255, 0.5);
@@ -1123,14 +1123,14 @@ td.edd_order_price {
 	transform: translateZ(0);
 }
 #edd-sendwp-disconnect.button .edd-loading.dark,
-#edd-jilt-disconnect.button .edd-loading.dark {
+#edd-recapture-disconnect.button .edd-loading.dark {
 	border-top-color: rgba(0, 0, 0, 0.2);
 	border-right-color: rgba(0, 0, 0, 0.2);
 	border-bottom-color: rgba(0, 0, 0, 0.2);
 	border-left-color: #666;
 	box-shadow: none;
 }
-.jilt-notice {
+.recapture-notice {
 	position: relative;
 }
 @-webkit-keyframes edd-spinning {

@@ -453,17 +453,6 @@ function edd_get_registered_settings() {
 		'emails' => apply_filters('edd_settings_emails',
 			array(
 				'main' => array(
-					'sendwp_header' => array(
-						'id'   => 'sendwp_header',
-						'name' => '<strong>' . __( 'SendWP Settings', 'easy-digital-downloads' ) . '</strong>',
-						'type' => 'header',
-					),
-					'sendwp' => array(
-						'id'      => 'sendwp',
-						'name'    => __( 'Connection Status', 'easy-digital-downloads' ),
-						'desc'    => '<p>' . __( 'Looking for a reliable, affordable way to deliver important emails to your customers? Try <a href="https://sendwp.com" target="_blank" rel="noopener noreferrer">SendWP</a>.', 'easy-digital-downloads' ) . '</p><p>' . __( 'For more information on this paid service, see the <a href="https://docs.easydigitaldownloads.com/article/2143-sendwp-email-delivery" target="_blank" rel="noopener noreferrer">documentation</a>.', 'easy-digital-downloads' ) . '</p>',
-						'type'    => 'sendwp',
-					),
 					'email_header' => array(
 						'id'   => 'email_header',
 						'name' => '<strong>' . __( 'Email Configuration', 'easy-digital-downloads' ) . '</strong>',
@@ -502,16 +491,27 @@ function edd_get_registered_settings() {
 						'desc' => '',
 						'type' => 'hook',
 					),
-					'advanced_emails_header' => array(
-						'id'   => 'advanced_emails_header',
-						'name' => '<strong>' . __( 'Advanced emails', 'easy-digital-downloads' ) . '</strong>',
+					'sendwp_header'    => array(
+						'id'   => 'sendwp_header',
+						'name' => '<strong>' . __( 'SendWP', 'easy-digital-downloads' ) . '</strong>',
 						'type' => 'header',
 					),
-					'jilt'                   => array(
-						'id'   => 'jilt',
-						'name' => __( 'Enhanced emails via Jilt', 'easy-digital-downloads' ),
-						'desc' => '<p>' . __( 'Create beautiful transactional, automated, and marketing emails using a drag-and-drop editor with <a href="https://jilt.com/?utm_source=edd-core&utm_medium=referral&utm_campaign=edd-enhanced-emails" target="_blank" rel="noopener noreferrer">Jilt</a>.', 'easy-digital-downloads' ) . '</p><p>' . __( 'Learn more about free and paid plans in the <a href="https://docs.easydigitaldownloads.com/article/2199-jilt-overview" target="_blank" rel="noopener noreferrer">documentation</a>.', 'easy-digital-downloads' ) . '</p>',
-						'type' => 'jilt',
+					'sendwp'           => array(
+						'id'   => 'sendwp',
+						'name' => __( 'Deliverability settings', 'easy-digital-downloads' ),
+						'desc' => '',
+						'type' => 'sendwp',
+					),
+					'recapture_header' => array(
+						'id'   => 'recapture_header',
+						'name' => '<strong>' . __( 'Recapture', 'easy-digital-downloads' ) . '</strong>',
+						'type' => 'header',
+					),
+					'recapture'        => array(
+						'id'   => 'recapture',
+						'name' => __( 'Abandoned cart recovery', 'easy-digital-downloads' ),
+						'desc' => '',
+						'type' => 'recapture',
 					),
 				),
 				'purchase_receipts' => array(
@@ -886,7 +886,15 @@ function edd_get_registered_settings() {
 					'show_agree_to_terms' => array(
 						'id'   => 'show_agree_to_terms',
 						'name' => __( 'Agree to Terms', 'easy-digital-downloads' ),
-						'desc' => __( 'Check this to show an agree to terms on checkout that users must agree to before purchasing.', 'easy-digital-downloads' ),
+						'desc' =>
+								__( 'Check this to show an agree to terms on checkout that users must agree to before purchasing.', 'easy-digital-downloads' ) .
+								'<p>' .
+								sprintf(
+										__( 'Need help creating a Terms of Agreement? We recommend using %sTermageddon%s.', 'easy-digital-downloads' ),
+										'<a href="https://termageddon.com/i/easy-digital-downloads-edd-termageddon-promotion/" target="_blank" rel="noopener noreferrer">',
+										'</a>'
+								) .
+								'</p>',
 						'type' => 'checkbox',
 					),
 					'agree_label' => array(
@@ -924,7 +932,9 @@ function edd_get_registered_settings() {
 					'show_privacy_policy_on_checkout' => array(
 						'id'   => 'show_privacy_policy_on_checkout',
 						'name' => __( 'Show the Privacy Policy on checkout', 'easy-digital-downloads' ),
-						'desc' => __( 'Display your Privacy Policy on checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_attr( admin_url( 'privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) .'</a>.',
+						'desc' =>
+								__( 'Display your Privacy Policy on checkout.', 'easy-digital-downloads' ) . ' <a href="' . esc_attr( admin_url( 'privacy.php' ) ) . '">' . __( 'Set your Privacy Policy here', 'easy-digital-downloads' ) .'</a>.' .
+								'<p>' . sprintf( __( 'Need help creating a Privacy Policy? We recommend %sTermageddon%s.', 'easy-digital-downloads' ), '<a href="https://termageddon.com/i/easy-digital-downloads-edd-termageddon-promotion/" target="_blank" rel="noopener noreferrer">', '</a>' ) . '</p>',
 						'type' => 'checkbox',
 					),
 				),
@@ -2164,7 +2174,7 @@ function edd_sendwp_callback($args) {
 
 	// Connection status partial label based on the state of the SendWP email sending setting (Tools -> SendWP)
 	$connected    = sprintf(
-		__( '<a href="https://sendwp.com/account/" target="_blank" rel="noopener noreferrer">Click here</a> to visit your account.', 'easy-digital-downloads' )
+		__( '<a href="https://sendwp.com/account/" target="_blank" rel="noopener noreferrer">Access your SendWP account</a>.', 'easy-digital-downloads' )
 	);
 	$disconnected = sprintf(
 		__( '<em><strong>Note:</strong> Email sending is currently disabled. <a href="' . admin_url( '/tools.php?page=sendwp' ) . '">Click here</a> to enable it.</em>', 'easy-digital-downloads' )
@@ -2183,18 +2193,21 @@ function edd_sendwp_callback($args) {
 	// Output the appropriate button and label based on connection status
 	if( $client_connected ) :
 		?>
+		<div class="inline notice notice-success">
+			<p><?php _e( 'SendWP plugin activated.', 'easy-digital-downloads' ); ?> <?php echo $forwarding_enabled ? $connected : $disconnected ; ?></p>
 
-		<p>
-			<button id="edd-sendwp-disconnect" class="button"><?php _e( 'Disconnect SendWP', 'easy-digital-downloads' ); ?></button>
-		</p>
-		<p>Your site is connected to SendWP. <?php echo $forwarding_enabled ? $connected : $disconnected ; ?></p>
-
+			<p>
+				<button id="edd-sendwp-disconnect" class="button"><?php _e( 'Disconnect SendWP', 'easy-digital-downloads' ); ?></button>
+			</p>
+		</div>
 		<?php
 	else :
 		?>
-
 		<p>
-			<button type="button" id="edd-sendwp-connect" class="button button-primary"><?php esc_html_e( 'Connect SendWP', 'easy-digital-downloads' ); ?>
+			<?php _e( 'We recommend SendWP to ensure quick and reliable delivery of all emails sent from your store, such as purchase receipts, subscription renewal reminders, password resets, and more.', 'easy-digital-downloads' ); ?> <?php printf( __( '%sLearn more%s', 'easy-digital-downloads' ), '<a href="https://sendwp.com/" target="_blank" rel="noopener noreferrer">', '</a>' ); ?>
+		</p>
+		<p>
+			<button type="button" id="edd-sendwp-connect" class="button button-primary"><?php esc_html_e( 'Connect with SendWP', 'easy-digital-downloads' ); ?>
 			</button>
 		</p>
 
@@ -2205,65 +2218,62 @@ function edd_sendwp_callback($args) {
 }
 
 /**
- * Jilt Callback
+ * Recapture Callback
  *
- * Renders Jilt Settings
+ * Renders Recapture Settings
  *
- * @since n.n.n
- * @param array $args arguments passed by the setting.
+ * @since 2.10.2
+ * @param array $args Arguments passed by the setting
  * @return void
  */
-function edd_jilt_callback( $args ) {
+function edd_recapture_callback($args) {
+	$client_connected = false;
 
-	$activated   = is_callable( 'edd_jilt' );
-	$connected   = $activated && edd_jilt()->get_integration()->is_jilt_connected();
-	$connect_url = $activated ? edd_jilt()->get_connect_url() : '';
-	$account_url = $connected ? edd_jilt()->get_integration()->get_jilt_app_url() : '';
+	if ( class_exists( 'RecaptureEDD' ) ) {
+		$client_connected = RecaptureEDD::is_ready();
+	}
 
-	echo wp_kses_post( $args['desc'] );
+	ob_start();
 
-	if ( $activated ) :
+	echo $args['desc'];
+
+	// Output the appropriate button and label based on connection status
+	if ( $client_connected ) :
+		$connection_complete = get_option( 'recapture_api_key' );
 		?>
-
-		<?php if ( $connected ) : ?>
-
+		<div class="inline notice notice-<?php echo $connection_complete ? 'success' : 'warning'; ?>">
 			<p>
-				<button id="edd-jilt-disconnect" class="button"><?php esc_html_e( 'Disconnect Jilt', 'easy-digital-downloads' ); ?></button>
+				<?php _e( 'Recapture plugin activated.', 'easy-digital-downloads' ); ?>
+				<?php printf( __( '%sAccess your Recapture account%s.', 'easy-digital-downloads' ), '<a href="https://recapture.io/account" target="_blank" rel="noopener noreferrer">', '</a>' ); ?>
 			</p>
 
+			<?php if ( $connection_complete ) : ?>
 			<p>
-				<?php
-				wp_kses_post(
-					sprintf(
-						/* Translators: %1$s - <a> tag, %2$s - </a> tag */
-						__( '%1$sClick here%2$s to visit your Jilt dashboard', 'easy-digital-downloads' ),
-						'<a href="' . esc_url( $account_url ) . '" target="_blank">',
-						'</a>'
-					)
-				);
-				?>
+				<a id="edd-recapture-disconnect" class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=recapture-confirm-disconnect' ) ); ?>"><?php esc_html_e( 'Disconnect Recapture', 'easy-digital-downloads' ); ?></a>
 			</p>
-
-		<?php else : ?>
-
+			<?php else : ?>
 			<p>
-				<a id="edd-jilt-connect" class="button button-primary" href="<?php echo esc_url( $connect_url ); ?>">
-					<?php esc_html_e( 'Connect to Jilt', 'easy-digital-downloads' ); ?>
-				</a>
+				<?php printf( __( '%sComplete your connection to Recapture%s', 'easy-digital-downloads' ), '<a href="' . admin_url( 'admin.php?page=recapture' ) . '">', '</a>' ); ?>
 			</p>
-
-		<?php endif; ?>
-
-	<?php elseif( current_user_can( 'install_plugins' ) ) : ?>
-
+			<?php endif; ?>
+		</div>
+	<?php
+	else :
+		?>
 		<p>
-			<button id="edd-jilt-connect" class="button button-primary">
-				<?php esc_html_e( 'Install Jilt', 'easy-digital-downloads' ); ?>
+			<?php _e( 'We recommend Recapture for recovering lost revenue by automatically sending effective, targeted emails to customers who abandon their shopping cart.', 'easy-digital-downloads' ); ?> <?php printf( __( '%sLearn more%s (Free trial available)', 'easy-digital-downloads' ), '<a href="https://recapture.io/abandoned-carts-easy-digital-downloads" target="_blank" rel="noopener noreferrer">', '</a>' ); ?>
+		</p>
+		<?php if ( current_user_can( 'install_plugins' ) ) : ?>
+		<p>
+			<button type="button" id="edd-recapture-connect" class="button button-primary"><?php esc_html_e( 'Connect with Recapture', 'easy-digital-downloads' ); ?>
 			</button>
 		</p>
+		<?php endif; ?>
 
 	<?php
 	endif;
+
+	echo ob_get_clean();
 }
 
 /**
