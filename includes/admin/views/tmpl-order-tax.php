@@ -70,3 +70,4 @@
 <# } #>
 
 <input type="hidden" value="{{ data.tax }}" name="tax" />
+<input type="hidden" value="{{ data.state.hasTax.rate }}" name="tax_rate" />
