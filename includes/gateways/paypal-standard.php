@@ -1216,39 +1216,39 @@ function edd_refund_paypal_purchase( $payment ) {
 
 	// Set PayPal API key credentials.
 	$credentials = array(
-			'api_endpoint'  => 'test' == $payment->mode ? 'https://api-3t.sandbox.paypal.com/nvp' : 'https://api-3t.paypal.com/nvp',
-			'api_username'  => edd_get_option( 'paypal_' . $payment->mode . '_api_username' ),
-			'api_password'  => edd_get_option( 'paypal_' . $payment->mode . '_api_password' ),
-			'api_signature' => edd_get_option( 'paypal_' . $payment->mode . '_api_signature' )
+		'api_endpoint'  => 'test' == $payment->mode ? 'https://api-3t.sandbox.paypal.com/nvp' : 'https://api-3t.paypal.com/nvp',
+		'api_username'  => edd_get_option( 'paypal_' . $payment->mode . '_api_username' ),
+		'api_password'  => edd_get_option( 'paypal_' . $payment->mode . '_api_password' ),
+		'api_signature' => edd_get_option( 'paypal_' . $payment->mode . '_api_signature' )
 	);
 
 	$credentials = apply_filters( 'edd_paypal_refund_api_credentials', $credentials, $payment );
 
 	$body = array(
-			'USER' 			=> $credentials['api_username'],
-			'PWD'  			=> $credentials['api_password'],
-			'SIGNATURE' 	=> $credentials['api_signature'],
-			'VERSION'       => '124',
-			'METHOD'        => 'RefundTransaction',
-			'TRANSACTIONID' => $payment->transaction_id,
-			'REFUNDTYPE'    => 'Full'
+		'USER' 			=> $credentials['api_username'],
+		'PWD'  			=> $credentials['api_password'],
+		'SIGNATURE' 	=> $credentials['api_signature'],
+		'VERSION'       => '124',
+		'METHOD'        => 'RefundTransaction',
+		'TRANSACTIONID' => $payment->transaction_id,
+		'REFUNDTYPE'    => 'Full'
 	);
 
 	$body = apply_filters( 'edd_paypal_refund_body_args', $body, $payment );
 
 	// Prepare the headers of the refund request.
 	$headers = array(
-			'Content-Type'  => 'application/x-www-form-urlencoded',
-			'Cache-Control' => 'no-cache'
+		'Content-Type'  => 'application/x-www-form-urlencoded',
+		'Cache-Control' => 'no-cache'
 	);
 
 	$headers = apply_filters( 'edd_paypal_refund_header_args', $headers, $payment );
 
 	// Prepare args of the refund request.
 	$args = array(
-			'body' 	      => $body,
-			'headers'     => $headers,
-			'httpversion' => '1.1'
+		'body' 	      => $body,
+		'headers'     => $headers,
+		'httpversion' => '1.1'
 	);
 
 	$args = apply_filters( 'edd_paypal_refund_request_args', $args, $payment );
