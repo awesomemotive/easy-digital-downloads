@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.10.3\n"
+"Project-Id-Version: Easy Digital Downloads 2.10.4\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2021-05-03 10:07:21+00:00\n"
+"POT-Creation-Date: 2021-05-10 12:12:05+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -6960,8 +6960,8 @@ msgstr ""
 #: includes/gateways/paypal/admin/connect.php:251
 #: includes/gateways/paypal/admin/connect.php:392
 #: includes/gateways/paypal/admin/connect.php:396
-#: includes/gateways/paypal/admin/connect.php:425
-#: includes/gateways/paypal/admin/connect.php:448
+#: includes/gateways/paypal/admin/connect.php:433
+#: includes/gateways/paypal/admin/connect.php:456
 msgid "You do not have permission to perform this action."
 msgstr ""
 
@@ -7110,46 +7110,29 @@ msgstr ""
 msgid "Missing PayPal Commerce credentials."
 msgstr ""
 
-#: includes/gateways/paypal/checkout-actions.php:138
-#: includes/gateways/paypal/checkout-actions.php:262
-#: includes/gateways/paypal/scripts.php:101
+#: includes/gateways/paypal/checkout-actions.php:140
+#: includes/gateways/paypal/checkout-actions.php:267
+#: includes/gateways/paypal/scripts.php:124
 msgid "An unexpected error occurred. Please try again."
 msgstr ""
 
-#: includes/gateways/paypal/checkout-actions.php:141
-#: includes/gateways/paypal-standard.php:195
-msgid "Payment creation failed before sending buyer to PayPal. Payment data: %s"
-msgstr ""
-
-#: includes/gateways/paypal/checkout-actions.php:197
-#: includes/gateways/paypal/checkout-actions.php:219
-#: includes/gateways/paypal/checkout-actions.php:337
+#: includes/gateways/paypal/checkout-actions.php:199
+#: includes/gateways/paypal/checkout-actions.php:224
+#: includes/gateways/paypal/checkout-actions.php:342
 msgid "An error occurred while communicating with PayPal. Please try again."
 msgstr ""
 
-#: includes/gateways/paypal/checkout-actions.php:217
-#: includes/gateways/paypal/checkout-actions.php:335
+#: includes/gateways/paypal/checkout-actions.php:222
+#: includes/gateways/paypal/checkout-actions.php:340
 msgid "An authentication error occurred. Please try again."
 msgstr ""
 
-#: includes/gateways/paypal/checkout-actions.php:246
-#: includes/gateways/paypal/checkout-actions.php:254
+#: includes/gateways/paypal/checkout-actions.php:251
+#: includes/gateways/paypal/checkout-actions.php:259
 msgid "A validation error occurred. Please try again."
 msgstr ""
 
-#: includes/gateways/paypal/checkout-actions.php:248
-msgid "Missing approval nonce."
-msgstr ""
-
-#: includes/gateways/paypal/checkout-actions.php:256
-msgid "Nonce validation failed."
-msgstr ""
-
-#: includes/gateways/paypal/checkout-actions.php:264
-msgid "Missing PayPal order ID during capture."
-msgstr ""
-
-#: includes/gateways/paypal/checkout-actions.php:325
+#: includes/gateways/paypal/checkout-actions.php:330
 #: includes/gateways/paypal-standard.php:671
 #: tests/helpers/class-helper-payment.php:131
 #: tests/helpers/class-helper-payment.php:234
@@ -7162,12 +7145,12 @@ msgstr ""
 msgid "PayPal Transaction ID: %s"
 msgstr ""
 
-#: includes/gateways/paypal/class-paypal-api.php:149
+#: includes/gateways/paypal/class-paypal-api.php:150
 #. Translators: %s - The ID of the PayPal credential
 msgid "Missing PayPal credential: %s"
 msgstr ""
 
-#: includes/gateways/paypal/class-paypal-api.php:213
+#: includes/gateways/paypal/class-paypal-api.php:214
 #. Translators: %d - HTTP response code.
 msgid "Unexpected response code: %d"
 msgstr ""
@@ -7185,29 +7168,28 @@ msgstr ""
 msgid "Refund Transaction in PayPal"
 msgstr ""
 
-#: includes/gateways/paypal/refunds.php:94
+#: includes/gateways/paypal/refunds.php:95
 #. Translators: %s - The error message
 msgid "Failed to refund transaction in PayPal. Error Message: %s"
 msgstr ""
 
-#: includes/gateways/paypal/refunds.php:118
+#: includes/gateways/paypal/refunds.php:119
 msgid "Missing transaction ID."
 msgstr ""
 
-#: includes/gateways/paypal/refunds.php:130
+#: includes/gateways/paypal/refunds.php:131
 #. Translators: %d - The HTTP response code; %s - Full API response from PayPal
 msgid "Unexpected response code: %d. Response: %s"
 msgstr ""
 
-#: includes/gateways/paypal/refunds.php:139
+#: includes/gateways/paypal/refunds.php:140
 #. Translators: %s - API response from PayPal
 msgid "Missing or unexpected refund status. Response: %s"
 msgstr ""
 
-#: includes/gateways/paypal/refunds.php:150
-#: includes/gateways/paypal-standard.php:1298
+#: includes/gateways/paypal/refunds.php:151
 #. Translators: %s - ID of the refund in PayPal
-msgid "PayPal refund transaction ID: %s"
+msgid "Successfully refunded in PayPal. Refund transaction ID: %s"
 msgstr ""
 
 #: includes/gateways/paypal/webhooks/events/class-payment-capture-completed.php:52
@@ -7243,30 +7225,30 @@ msgstr ""
 msgid "Full refund processed in PayPal."
 msgstr ""
 
-#: includes/gateways/paypal/webhooks/functions.php:121
+#: includes/gateways/paypal/webhooks/functions.php:123
 #. Translators: %d - HTTP response code; %s - Full response from the API.
 msgid "Invalid response code %d while creating webhook. Response: %s"
 msgstr ""
 
-#: includes/gateways/paypal/webhooks/functions.php:128
+#: includes/gateways/paypal/webhooks/functions.php:130
 msgid "Unexpected response from PayPal."
 msgstr ""
 
-#: includes/gateways/paypal/webhooks/functions.php:155
+#: includes/gateways/paypal/webhooks/functions.php:157
 msgid "Webhook not configured."
 msgstr ""
 
-#: includes/gateways/paypal/webhooks/functions.php:181
+#: includes/gateways/paypal/webhooks/functions.php:183
 #. Translators: %d - HTTP response code; %s - Full response from the API.
 msgid "Invalid response code %d while syncing webhook. Response: %s"
 msgstr ""
 
-#: includes/gateways/paypal/webhooks/functions.php:216
+#: includes/gateways/paypal/webhooks/functions.php:218
 #. Translators: %d - HTTP response code.
 msgid "Invalid response code %d while retrieving webhook details."
 msgstr ""
 
-#: includes/gateways/paypal/webhooks/functions.php:222
+#: includes/gateways/paypal/webhooks/functions.php:224
 msgid "Unexpected response from PayPal when retrieving webhook details."
 msgstr ""
 
@@ -7371,6 +7353,10 @@ msgstr ""
 
 #: includes/gateways/paypal-standard.php:148
 msgid "Your PayPal test API signature."
+msgstr ""
+
+#: includes/gateways/paypal-standard.php:195
+msgid "Payment creation failed before sending buyer to PayPal. Payment data: %s"
 msgstr ""
 
 #: includes/gateways/paypal-standard.php:475
@@ -7496,6 +7482,10 @@ msgstr ""
 
 #: includes/gateways/paypal-standard.php:1288
 msgid "PayPal refund failed for unknown reason."
+msgstr ""
+
+#: includes/gateways/paypal-standard.php:1298
+msgid "PayPal refund transaction ID: %s"
 msgstr ""
 
 #: includes/gateways/paypal-standard.php:1302
