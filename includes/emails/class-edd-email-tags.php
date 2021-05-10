@@ -494,7 +494,7 @@ function edd_email_tag_download_list( $payment_id ) {
 	$needs_notes = array_filter( $needs_notes );
 	if ( ! empty( $needs_notes ) ) {
 		$download_list .= '<div>';
-		$download_list .= __( 'Additional information about your purchase.', 'easy-digital-downloads' );
+		$download_list .= __( 'Additional information about your purchase:', 'easy-digital-downloads' );
 
 		foreach ( $needs_notes as $note ) {
 			$download_list .= '<p>' . $note['item_name'] . "\n" . '<small>' . $note['item_notes'] . '</small></p>';
