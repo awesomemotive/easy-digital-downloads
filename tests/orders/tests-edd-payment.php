@@ -911,6 +911,14 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 0.2, $payment->tax_rate );
 	}
 
+	/**
+	 * This tests backwards compatibility in `edd_receipt_show_download_files()` when passing
+	 * an array as the third parameter instead of the new `Order_Item` object. This test
+	 * ensures that the function successfully converts that array to an order item object
+	 * to be passed through to the filter `edd_order_receipt_show_download_files`.
+	 *
+	 * @covers \edd_receipt_show_download_files()
+	 */
 	public function test_receipt_show_download_files() {
 		$payment      = $this->payment;
 		$receipt_args = array(
