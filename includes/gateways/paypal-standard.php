@@ -1225,9 +1225,9 @@ function edd_refund_paypal_purchase( $payment ) {
 	$credentials = apply_filters( 'edd_paypal_refund_api_credentials', $credentials, $payment );
 
 	$body = array(
-		'USER' 			=> $credentials['api_username'],
-		'PWD'  			=> $credentials['api_password'],
-		'SIGNATURE' 	=> $credentials['api_signature'],
+		'USER'          => $credentials['api_username'],
+		'PWD'           => $credentials['api_password'],
+		'SIGNATURE'     => $credentials['api_signature'],
 		'VERSION'       => '124',
 		'METHOD'        => 'RefundTransaction',
 		'TRANSACTIONID' => $payment->transaction_id,
