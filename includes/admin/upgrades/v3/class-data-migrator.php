@@ -752,6 +752,8 @@ class Data_Migrator {
 			'discount',
 			'subtotal',
 			'tax',
+			'amount',
+			'user_id',
 		);
 
 		// Remove core keys from `user_info`.
