@@ -1590,7 +1590,6 @@ class EDD_CLI extends WP_CLI_Command {
 				'user_agent'   => 'EDD; WPCLI; download_logs;',
 				'date_created' => $order->date_completed,
 			) );
-			//edd_record_download_in_log( $product_id, $file_key, $user_info, edd_get_ip(), $order_id, $price_id );
 
 			$progress->tick();
 			$i ++;
