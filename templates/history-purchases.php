@@ -58,18 +58,14 @@ if ( $orders ) :
 					<?php if ( ! in_array( $order->status, array( 'complete' ), true ) ) : ?>
 						| <span class="edd_purchase_status <?php echo esc_attr( $order->status ); ?>"><?php echo esc_html( edd_get_status_label( $order->status ) ); ?></span>
 					<?php endif; ?>
-					<?php if ( in_array( $order->status, array( 'pending', 'abandoned', 'failed' ), true ) ) : ?>
-						<?php
-						$url = add_query_arg(
-							array(
-								'edd_action' => 'recover_payment',
-								'payment_id' => urlencode( $order->id ),
-							),
-							edd_get_checkout_uri()
-						);
+					<?php
+					$recovery_url = $order->get_recovery_url();
+					if ( $recovery_url ) :
 						?>
-						&mdash; <a href="<?php echo esc_url( $url ); ?>"><?php esc_html_e( 'Complete Purchase', 'easy-digital-downloads' ); ?></a>
-					<?php endif; ?>
+						&mdash; <a href="<?php echo esc_url( $recovery_url ); ?>"><?php esc_html_e( 'Complete Purchase', 'easy-digital-downloads' ); ?></a>
+						<?php
+					endif;
+					?>
 				</td>
 				<?php do_action( 'edd_order_history_row_end', $order ); ?>
 			</tr>
