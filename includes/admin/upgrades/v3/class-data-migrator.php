@@ -244,13 +244,18 @@ class Data_Migrator {
 				'date_modified' => $data->post_modified_gmt,
 			);
 
-			$meta_to_remove    = array(
+			$meta_to_remove = array(
 				'_edd_log_file_id',
 				'_edd_log_payment_id',
 				'_edd_log_price_id',
 				'_edd_log_customer_id',
 				'_edd_log_ip',
+				'_edd_log_user_id',
 			);
+			// If the log doesn't have a customer ID, but does have a user ID, keep the user ID as metadata.
+			if ( empty( $log_data['customer_id'] ) && ! empty( $post_meta['_edd_log_user_id'] ) && ! in_array( $post_meta['_edd_log_user_id'], array( 0, -1 ) ) ) {
+				$meta_to_remove = array_diff( $meta_to_remove, array( '_edd_log_user_id' ) );
+			}
 			$meta_to_migrate   = $post_meta;
 			$new_log_id        = edd_add_file_download_log( $log_data );
 			$add_meta_function = 'edd_add_file_download_log_meta';

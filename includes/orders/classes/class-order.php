@@ -384,11 +384,7 @@ class Order extends Rows\Order {
 	public function get_discounts() {
 		$discounts = array();
 
-		if ( empty( $this->adjustments ) ) {
-			return $discounts;
-		}
-
-		foreach ( $this->adjustments as $adjustment ) {
+		foreach ( $this->get_adjustments() as $adjustment ) {
 			/** @var Order_Adjustment $adjustment */
 
 			if ( 'discount' === $adjustment->type ) {
@@ -411,13 +407,8 @@ class Order extends Rows\Order {
 		// Default values
 		$fees = array();
 
-		// Ensure adjustments exist.
-		if ( null === $this->adjustments ) {
-			$this->adjustments = $this->get_adjustments();
-		}
-
 		// Fetch the fees that applied to the entire order.
-		foreach ( $this->adjustments as $adjustment ) {
+		foreach ( $this->get_adjustments() as $adjustment ) {
 			/** @var Order_Adjustment $adjustment */
 
 			if ( 'fee' === $adjustment->type ) {
@@ -442,6 +433,30 @@ class Order extends Rows\Order {
 		}
 
 		return $fees;
+	}
+
+	/**
+	 * Retrieve the credits applied to the order.
+	 * These exist only for manually added orders.
+	 *
+	 * @since 3.0
+	 *
+	 *@return Order_Adjustment[] Order credits.
+	 */
+	public function get_credits() {
+		// Default values
+		$credits = array();
+
+		// Fetch the fees that applied to the entire order.
+		foreach ( $this->get_adjustments() as $adjustment ) {
+			/** @var Order_Adjustment $adjustment */
+
+			if ( 'credit' === $adjustment->type ) {
+				$credits[] = $adjustment;
+			}
+		}
+
+		return $credits;
 	}
 
 	/**
