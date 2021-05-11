@@ -290,7 +290,7 @@ export const FormAddOrderItem = Dialog.extend( {
 
 		button.trigger( 'click' );
 
-		$( '#edd_order_address_country' ).focus();
+		$( '#edd_order_address_country' ).trigger( 'focus' );
 	},
 
 	/**

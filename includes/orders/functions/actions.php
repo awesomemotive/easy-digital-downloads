@@ -186,10 +186,10 @@ function edd_add_manual_order( $args = array() ) {
 			'currency'     => edd_get_currency(),
 			'payment_key'  => $data['payment_key'] ? sanitize_text_field( $data['payment_key'] ) : edd_generate_order_payment_key( $email ),
 			'tax_rate_id'  => ! empty( $tax_rate->id ) ? $tax_rate->id : null,
-			'subtotal'     => $order_subtotal,
-			'tax'          => $order_tax,
-			'discount'     => $order_discount,
-			'total'        => $order_total,
+			'subtotal'     => round( $order_subtotal, edd_currency_decimal_filter() ),
+			'tax'          => round( $order_tax, edd_currency_decimal_filter() ),
+			'discount'     => round( $order_discount, edd_currency_decimal_filter() ),
+			'total'        => round( $order_total, edd_currency_decimal_filter() ),
 			'date_created' => $date,
 		)
 	);
@@ -197,6 +197,18 @@ function edd_add_manual_order( $args = array() ) {
 	// Attach order to the customer record.
 	if ( ! empty( $customer ) ) {
 		$customer->attach_payment( $order_id, false );
+	}
+
+	// If we have tax, but no tax rate, manually save the percentage.
+	if ( empty( $tax_rate->id ) && $order_tax > 0 ) {
+		$tax_rate_percentage = $data['tax_rate'];
+		if ( ! empty( $tax_rate_percentage ) ) {
+			if ( $tax_rate_percentage > 0 && $tax_rate_percentage < 1 ) {
+				$tax_rate_percentage = $tax_rate_percentage * 100;
+			}
+
+			edd_update_order_meta( $order_id, 'tax_rate', $tax_rate_percentage );
+		}
 	}
 
 	/** Insert order address **************************************************/
@@ -300,10 +312,10 @@ function edd_add_manual_order( $args = array() ) {
 				'status'       => 'complete',
 				'quantity'     => $quantity,
 				'amount'       => $amount,
-				'subtotal'     => $subtotal,
-				'discount'     => $discount,
-				'tax'          => $tax,
-				'total'        => $total,
+				'subtotal'     => round( $subtotal, edd_currency_decimal_filter() ),
+				'discount'     => round( $discount, edd_currency_decimal_filter() ),
+				'tax'          => round( $tax, edd_currency_decimal_filter() ),
+				'total'        => round( $total, edd_currency_decimal_filter() ),
 			) );
 
 			if ( false !== $order_item_id ) {
@@ -321,14 +333,19 @@ function edd_add_manual_order( $args = array() ) {
 							? sanitize_text_field( strtolower( sanitize_title( $order_item_adjustment['description'] ) ) )
 							: $index;
 
+							$order_item_adjustment_subtotal = floatval( $order_item_adjustment['subtotal'] );
+							$order_item_adjustment_tax      = floatval( $order_item_adjustment['tax'] );
+							$order_item_adjustment_total    = floatval( $order_item_adjustment['total'] );
+
 						edd_add_order_adjustment( array(
 							'object_id'   => $order_item_id,
 							'object_type' => 'order_item',
 							'type'        => sanitize_text_field( $order_item_adjustment['type'] ),
 							'type_key'    => $type_key,
 							'description' => sanitize_text_field( $order_item_adjustment['description'] ),
-							'subtotal'    => floatval( $order_item_adjustment['subtotal'] ),
-							'total'       => floatval( $order_item_adjustment['total'] ),
+							'subtotal'    => round( $order_item_adjustment_subtotal, edd_currency_decimal_filter() ),
+							'tax'         => round( $order_item_adjustment_tax, edd_currency_decimal_filter() ),
+							'total'       => round( $order_item_adjustment_total, edd_currency_decimal_filter() ),
 						) );
 					}
 				}
@@ -355,14 +372,19 @@ function edd_add_manual_order( $args = array() ) {
 				? sanitize_text_field( strtolower( sanitize_title( $adjustment['description'] ) ) )
 				: $index;
 
+			$adjustment_subtotal = floatval( $adjustment['subtotal'] );
+			$adjustment_tax      = floatval( $adjustment['tax'] );
+			$adjustment_total    = floatval( $adjustment['total'] );
+
 			edd_add_order_adjustment( array(
 				'object_id'   => $order_id,
 				'object_type' => 'order',
 				'type'        => sanitize_text_field( $adjustment['type'] ),
 				'type_key'    => $type_key,
 				'description' => sanitize_text_field( $adjustment['description'] ),
-				'subtotal'    => floatval( $adjustment['subtotal'] ),
-				'total'       => floatval( $adjustment['total'] ),
+				'subtotal'    => round( $adjustment_subtotal, edd_currency_decimal_filter() ),
+				'tax'         => round( $adjustment_tax, edd_currency_decimal_filter() ),
+				'total'       => round( $adjustment_total, edd_currency_decimal_filter() ),
 			) );
 		}
 	}
@@ -378,6 +400,9 @@ function edd_add_manual_order( $args = array() ) {
 				continue;
 			}
 
+			$discount_subtotal = floatval( $discount['subtotal'] );
+			$discount_total    = floatval( $discount['total'] );
+
 			// Store discount.
 			edd_add_order_adjustment( array(
 				'object_id'   => $order_id,
@@ -385,8 +410,8 @@ function edd_add_manual_order( $args = array() ) {
 				'type_id'     => intval( $discount['type_id'] ),
 				'type'        => 'discount',
 				'description' => sanitize_text_field( $discount['code'] ),
-				'subtotal'    => floatval( $discount['subtotal'] ),
-				'total'       => floatval( $discount['total'] ),
+				'subtotal'    => round( $discount_subtotal, edd_currency_decimal_filter() ),
+				'total'       => round( $discount_total, edd_currency_decimal_filter() ),
 			) );
 
 			// Increase discount usage.
@@ -402,7 +427,7 @@ function edd_add_manual_order( $args = array() ) {
 			'transaction_id' => sanitize_text_field( $data['transaction_id'] ),
 			'gateway'        => sanitize_text_field( $data['gateway'] ),
 			'status'         => 'complete',
-			'total'          => $order_total,
+			'total'          => round( $order_total, edd_currency_decimal_filter() ),
 		) );
 	}
 

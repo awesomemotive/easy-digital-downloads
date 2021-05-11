@@ -9,6 +9,8 @@ cd includes/gateways/stripe
 composer install --no-dev
 npm install && npm run build
 
+git rev-parse HEAD > ../.stripe-hash
+
 # Clean up files for distribution.
 # @todo Maybe use git archive? However composer.json would
 # need to be removed from .gitattributes export-ignore
