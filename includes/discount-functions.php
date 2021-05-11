@@ -15,7 +15,10 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Add a discount.
  *
- * @since 3.0
+ * @since 1.0
+ * @since 3.0 This function has been repurposed. Previously it was an internal admin callback for adding
+ *        a discount via the UI. It's now used as a public function for inserting a new discount
+ *        into the database.
  *
  * @param array $data Discount data.
  * @return int Discount ID.
