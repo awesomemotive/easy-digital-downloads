@@ -199,6 +199,9 @@ add_action( 'edd_order_history_row_start', function( \EDD\Orders\Order $order ) 
 	}
 
 	$payment = edd_get_payment( $order->id );
+	if ( ! $payment ) {
+		return;
+	}
 
 	do_action( 'edd_purchase_history_row_start', $payment->ID, $payment->payment_meta );
 } );
@@ -216,6 +219,9 @@ add_action( 'edd_order_history_row_end', function( \EDD\Orders\Order $order ) {
 	}
 
 	$payment = edd_get_payment( $order->id );
+	if ( ! $payment ) {
+		return;
+	}
 
 	do_action( 'edd_purchase_history_row_end', $payment->ID, $payment->payment_meta );
 } );
