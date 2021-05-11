@@ -1379,6 +1379,26 @@ function edd_get_net_order_statuses() {
 }
 
 /**
+ * Get the order status array keys which are considered recoverable.
+ *
+ * @since 3.0
+ * @return array An array of order status keys which are considered recoverable.
+ */
+function edd_recoverable_order_statuses() {
+	$statuses = array( 'pending', 'abandoned', 'failed' );
+	$statuses = apply_filters( 'edd_recoverable_payment_statuses', $statuses );
+
+	/**
+	 * Order statuses which are considered recoverable.
+	 *
+	 * @param $statuses {
+	 *        An array of order status array keys.
+	 * }
+	 */
+	return apply_filters( 'edd_recoverable_order_statuses', $statuses );
+}
+
+/**
  * Generate unique payment key for orders.
  *
  * @since 3.0
