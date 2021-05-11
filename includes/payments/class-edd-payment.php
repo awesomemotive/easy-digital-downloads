@@ -3266,23 +3266,23 @@ class EDD_Payment {
 			}
 
 			$cart_details[ $item->cart_index ] = array(
-				'name'        => $item->product_name,
-				'id'          => $item->product_id,
-				'item_number' => array(
-					'id'         => $item->product_id,
-					'quantity'   => $item->quantity,
-					'options'    => $item_options,
+				'name'          => $item->product_name,
+				'id'            => $item->product_id,
+				'item_number'   => array(
+					'id'       => $item->product_id,
+					'quantity' => $item->quantity,
+					'options'  => $item_options,
 				),
-				'item_price' => $item->amount,
-				'quantity'   => $item->quantity,
-				'discount'   => $item->discount,
-				'subtotal'   => $item->subtotal,
-				'tax'        => $item->tax,
-				'fees'       => $item_fees,
-				'price'      => $item->total,
+				'item_price'    => $item->amount,
+				'quantity'      => $item->quantity,
+				'discount'      => $item->discount,
+				'subtotal'      => $item->subtotal,
+				'tax'           => $item->tax,
+				'fees'          => $item_fees,
+				'price'         => $item->total,
+				'order_item_id' => $item->id,
 			);
 		}
-
 
 		return $cart_details;
 	}

@@ -669,7 +669,7 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 	global $edd_receipt_args;
 
 	$edd_receipt_args = shortcode_atts( array(
-		'error'           => __( 'Sorry, trouble retrieving payment receipt.', 'easy-digital-downloads' ),
+		'error'           => __( 'Sorry, trouble retrieving order receipt.', 'easy-digital-downloads' ),
 		'price'           => true,
 		'discount'        => true,
 		'products'        => true,
@@ -695,11 +695,11 @@ function edd_receipt_shortcode( $atts, $content = null ) {
 		return '<p class="edd-alert edd-alert-error">' . $edd_receipt_args['error'] . '</p>';
 	}
 
-	$payment_id    = edd_get_purchase_id_by_key( $payment_key );
+	$order         = edd_get_order_by( 'payment_key', $payment_key );
 	$user_can_view = edd_can_view_receipt( $payment_key );
 
 	// Key was provided, but user is logged out. Offer them the ability to login and view the receipt
-	if ( ! $user_can_view && ! empty( $payment_key ) && ! is_user_logged_in() && ! edd_is_guest_payment( $payment_id ) ) {
+	if ( ! $user_can_view && ! empty( $payment_key ) && ! is_user_logged_in() && ! edd_is_guest_payment( $order->id ) ) {
 		global $edd_login_redirect;
 		$edd_login_redirect = edd_get_current_page_url();
 
