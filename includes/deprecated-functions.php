@@ -1158,7 +1158,6 @@ function edd_record_status_change( $payment_id, $new_status, $old_status ) {
 	edd_insert_payment_note( $payment_id, $status_change );
 }
 
-
 /**
  * Shows checkbox to automatically refund payments made in PayPal.
  *
