@@ -1,5 +1,5 @@
 import { sendwpRemoteInstall, sendwpDisconnect } from './sendwp';
-import { jiltRemoteInstall, jiltDisconnect } from './jilt';
+import { recaptureRemoteInstall } from './recapture';
 
 /**
  * Settings screen JS
@@ -168,18 +168,11 @@ const EDD_Settings = {
 			sendwpDisconnect();
 		});
 
-		$('#edd-jilt-connect').on('click', function(e) {
+		$('#edd-recapture-connect').on('click', function(e) {
 			e.preventDefault();
 			$(this).html( edd_vars.wait + ' <span class="edd-loading"></span>' );
 			document.body.style.cursor = 'wait';
-			jiltRemoteInstall();
-		});
-
-		$('#edd-jilt-disconnect').on('click', function(e) {
-			e.preventDefault();
-			$(this).html( edd_vars.wait + ' <span class="edd-loading dark"></span>' );
-			document.body.style.cursor = 'wait';
-			jiltDisconnect();
+			recaptureRemoteInstall();
 		});
 	}
 };

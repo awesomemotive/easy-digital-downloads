@@ -8,10 +8,10 @@ import { OrderRefund } from './order-refund.js';
  *
  * @since 3.0
  *
- * @class Refunds
+ * @class OrderRefunds
  * @augments wp.Backbone.View
  */
-export const Refunds = wp.Backbone.View.extend( {
+export const OrderRefunds = wp.Backbone.View.extend( {
 	/**
 	 * @since 3.0
 	 */
