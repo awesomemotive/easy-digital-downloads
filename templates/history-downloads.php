@@ -121,18 +121,20 @@ if ( $orders ) :
 		?>
 	</table>
 	<?php
-	$count = edd_count_orders(
-		array(
-			'user_id' => get_current_user_id(),
-			'type'    => 'sale',
-		)
-	);
-	echo edd_pagination(
-		array(
-			'type'  => 'download_history',
-			'total' => ceil( $count / 20 ), // 20 items per page
-		)
-	);
+	if ( ! empty( $customer->id ) ) {
+		$count = edd_count_orders(
+			array(
+				'customer_id' => $customer->id,
+				'type'        => 'sale',
+			)
+		);
+		echo edd_pagination(
+			array(
+				'type'  => 'download_history',
+				'total' => ceil( $count / 20 ), // 20 items per page
+			)
+		);
+	}
 	?>
 	<?php do_action( 'edd_after_download_history' ); ?>
 <?php else : ?>
