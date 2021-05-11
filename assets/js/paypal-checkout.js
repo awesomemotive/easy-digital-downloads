@@ -39,7 +39,7 @@ var EDD_PayPal = {
 	 * @param {object} data
 	 */
 	maybeRefreshPage: function( e, data ) {
-		if ( 0 === data.total && EDD_PayPal.isPayPal() ) {
+		if ( 0 === data.total_plain && EDD_PayPal.isPayPal() ) {
 			window.location.reload();
 		} else if ( ! EDD_PayPal.isMounted && EDD_PayPal.isPayPal() && data.total_plain > 0 ) {
 			window.location.reload();
