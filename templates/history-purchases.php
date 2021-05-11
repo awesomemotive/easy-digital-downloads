@@ -90,6 +90,6 @@ if ( $orders ) :
 	);
 	?>
 <?php else : ?>
-	<p class="edd-no-purchases"><?php esc_html_e( 'You have not made any purchases', 'easy-digital-downloads' ); ?></p>
+	<p class="edd-no-purchases"><?php esc_html_e( 'You have not made any purchases.', 'easy-digital-downloads' ); ?></p>
 	<?php
 endif;
