@@ -44,6 +44,7 @@ if ( $orders ) :
 		</thead>
 		<?php foreach ( $orders as $order ) : ?>
 			<tr class="edd_purchase_row">
+				<?php do_action( 'edd_order_history_row_start', $order ); ?>
 				<td class="edd_purchase_id">#<?php echo esc_html( $order->get_number() ); ?></td>
 				<td class="edd_purchase_date"><?php echo esc_html( edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString() ) ); ?></td>
 				<td class="edd_purchase_amount">
@@ -70,6 +71,7 @@ if ( $orders ) :
 						&mdash; <a href="<?php echo esc_url( $url ); ?>"><?php esc_html_e( 'Complete Purchase', 'easy-digital-downloads' ); ?></a>
 					<?php endif; ?>
 				</td>
+				<?php do_action( 'edd_order_history_row_end', $order ); ?>
 			</tr>
 		<?php endforeach; ?>
 	</table>
