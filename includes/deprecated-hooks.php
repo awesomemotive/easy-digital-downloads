@@ -252,3 +252,21 @@ add_action( 'edd_after_order_history', function( $orders ) {
 
 	do_action( 'edd_after_purchase_history', $payments );
 } );
+
+/**
+ * Fires after the individual download file in the downloads history, if needed.
+ *
+ * @deprecated 3.0
+ * @todo       Formally deprecate in 3.1
+ * @param int                    $filekey Download file ID.
+ * @param array                  $file    Array of file information.
+ * @param \EDD\Orders\Order_Item $item    The order item object.
+ * @param \EDD\Orders\Order      $order   The order object.
+ */
+add_action( 'edd_download_history_download_file', function( $filekey, $file, $item, $order ) {
+	if ( ! has_action( 'edd_download_history_files' ) ) {
+		return;
+	}
+	$purchase_data = edd_get_payment_meta( $order->id );
+	do_action( 'edd_download_history_files', $filekey, $file, $item->product_id, $order->id, $purchase_data );
+}, 10, 4 );
