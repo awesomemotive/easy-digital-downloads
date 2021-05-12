@@ -86,10 +86,7 @@ if ( $orders ) :
 										</div>
 
 										<?php
-										if ( has_action( 'edd_download_history_files' ) ) {
-											$purchase_data = edd_get_payment_meta( $order->id );
-											do_action( 'edd_download_history_files', $filekey, $file, $item->product_id, $order->id, $purchase_data );
-										}
+										do_action( 'edd_download_history_download_file', $filekey, $file, $item, $order );
 									endforeach;
 
 								else :
