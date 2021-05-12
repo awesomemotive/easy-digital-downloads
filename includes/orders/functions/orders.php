@@ -1386,7 +1386,6 @@ function edd_get_net_order_statuses() {
  */
 function edd_recoverable_order_statuses() {
 	$statuses = array( 'pending', 'abandoned', 'failed' );
-	$statuses = apply_filters( 'edd_recoverable_payment_statuses', $statuses );
 
 	/**
 	 * Order statuses which are considered recoverable.
@@ -1395,7 +1394,7 @@ function edd_recoverable_order_statuses() {
 	 *        An array of order status array keys.
 	 * }
 	 */
-	return apply_filters( 'edd_recoverable_order_statuses', $statuses );
+	return apply_filters( 'edd_recoverable_payment_statuses', $statuses );
 }
 
 /**
