@@ -30,6 +30,7 @@ $orders = edd_get_orders(
 	)
 );
 if ( $orders ) :
+	do_action( 'edd_before_order_history', $orders );
 	?>
 	<table id="edd_user_history" class="edd-table">
 		<thead>
@@ -88,6 +89,7 @@ if ( $orders ) :
 			'total' => ceil( $count / 20 ), // 20 items per page
 		)
 	);
+	do_action( 'edd_after_order_history', $orders );
 	?>
 <?php else : ?>
 	<p class="edd-no-purchases"><?php esc_html_e( 'You have not made any purchases.', 'easy-digital-downloads' ); ?></p>
