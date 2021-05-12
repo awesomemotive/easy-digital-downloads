@@ -642,7 +642,7 @@ class Order extends Rows\Order {
 		$recovery_url = add_query_arg(
 			array(
 				'edd_action' => 'recover_payment',
-				'payment_id' => $this->id,
+				'payment_id' => urlencode( $this->id ),
 			),
 			edd_get_checkout_uri()
 		);
@@ -660,7 +660,8 @@ class Order extends Rows\Order {
 		 * The order recovery URL.
 		 *
 		 * @since 3.0
-		 * @param \EDD\Orders\Order $this The order object.
+		 * @param string            $recovery_url The order recovery URL.
+		 * @param \EDD\Orders\Order $this         The order object.
 		 */
 		return apply_filters( 'edd_order_recovery_url', $recovery_url, $this );
 	}
