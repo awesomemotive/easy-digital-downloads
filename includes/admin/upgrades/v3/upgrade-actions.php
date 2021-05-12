@@ -47,7 +47,6 @@ function edd_process_v3_upgrade() {
 	$step = ! empty( $_POST['step'] ) ? absint( $_POST['step'] ) : 1;
 
 	// If we have a step already saved, use that instead.
-	// This is commented out for now because some changes are required in the migration processes first.
 	$saved_step = get_option( sprintf( 'edd_v3_migration_%s_step', sanitize_key( $upgrade_key ) ) );
 	if ( ! empty( $saved_step ) ) {
 		$step = absint( $saved_step );
