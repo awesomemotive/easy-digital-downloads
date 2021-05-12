@@ -146,16 +146,30 @@ function create_order( $purchase_data ) {
 			);
 		}
 
+		$order_amount = array(
+			'currency_code' => edd_get_currency(),
+			'value'         => (string) $purchase_data['price']
+		);
+		if ( (float) $purchase_data['tax'] > 0 ) {
+			$order_amount['breakdown'] = array(
+				'item_total' => array(
+					'currency_code' => edd_get_currency(),
+					'value'         => (string) ( $purchase_data['price'] - $purchase_data['tax'] )
+				),
+				'tax_total'  => array(
+					'currency_code' => edd_get_currency(),
+					'value'         => (string) $purchase_data['tax']
+				)
+			);
+		}
+
 		$order_data = array(
 			'intent'              => 'CAPTURE',
 			'purchase_units'      => array(
 				array(
 					// @todo We could put the breakdown here (tax, discount, etc.)
 					'reference_id' => $payment_args['purchase_key'],
-					'amount'       => array(
-						'currency_code' => edd_get_currency(),
-						'value'         => (string) $purchase_data['price']
-					),
+					'amount'       => $order_amount,
 					'custom_id'    => $payment_id
 				)
 			),

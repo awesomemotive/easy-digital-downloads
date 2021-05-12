@@ -1,4 +1,4 @@
-/* global eddPayPalVars */
+/* global eddPayPalVars, edd_global_vars */
 
 var EDD_PayPal = {
 	isMounted: false,
