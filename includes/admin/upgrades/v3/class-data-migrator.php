@@ -91,7 +91,7 @@ class Data_Migrator {
 			return;
 		}
 
-		$customer = edd_get_customer_by( 'user_id', absint( $data->edd_customer_id ) );
+		$customer = edd_get_customer( absint( $data->edd_customer_id ) );
 		if ( ! $customer ) {
 			return;
 		}
@@ -752,6 +752,8 @@ class Data_Migrator {
 			'discount',
 			'subtotal',
 			'tax',
+			'amount',
+			'user_id',
 		);
 
 		// Remove core keys from `user_info`.
