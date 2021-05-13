@@ -231,13 +231,11 @@ class EDD_Session {
 	 * @return void
 	 */
 	public function set_cart_cookie( $set = true ) {
-		if( ! headers_sent() ) {
-			if( $set ) {
-				@setcookie( 'edd_items_in_cart', '1', time() + 30 * 60, COOKIEPATH, COOKIE_DOMAIN, false );
-			} else {
-				if ( isset($_COOKIE['edd_items_in_cart']) ) {
-					@setcookie( 'edd_items_in_cart', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN, false );
-				}
+		if ( ! headers_sent() ) {
+			if ( $set ) {
+				setcookie( 'edd_items_in_cart', '1', time() + 1800, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
+			} elseif ( isset( $_COOKIE['edd_items_in_cart'] ) ) {
+				setcookie( 'edd_items_in_cart', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
 			}
 		}
 	}
