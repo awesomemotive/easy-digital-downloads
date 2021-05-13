@@ -91,7 +91,7 @@ add_action( 'edd_order_receipt_after_files', function( $item, $order ) {
 	if ( ! has_action( 'edd_purchase_receipt_after_files' ) ) {
 		return;
 	}
-	$meta = edd_get_payment_meta( $order_id );
+	$meta = edd_get_payment_meta( $order->id );
 	do_action( 'edd_purchase_receipt_after_files', $item->product_id, $order->id, $meta, $item->price_id );
 }, 10, 2 );
 
@@ -159,3 +159,114 @@ add_action( 'edd_order_receipt_after_table', function( $order, $edd_receipt_args
 	do_action( 'edd_payment_receipt_after_table', $payment, $edd_receipt_args );
 }, 10, 2 );
 
+/**
+ * Fires the edd_before_purchase_history hook in the purchase history, if needed.
+ *
+ * @deprecated 3.0
+ * @todo       Formally deprecate in EDD 3.1
+ * @param \EDD\Orders\Order[] $orders The array of the current user's orders.
+ */
+add_action( 'edd_before_order_history', function( $orders ) {
+	if ( ! has_action( 'edd_before_purchase_history' ) ) {
+		return;
+	}
+
+	$payments = array();
+
+	if ( ! empty( $orders ) ) {
+		$order_ids = wp_list_pluck( $orders, 'id' );
+		$payments  = edd_get_payments(
+			array(
+				'id__in'  => $order_ids,
+				'orderby' => 'date',
+			)
+		);
+	}
+
+	do_action( 'edd_before_purchase_history', $payments );
+} );
+
+/**
+ * Fires at the beginning of the purchase history row, if needed.
+ *
+ * @deprecated 3.0
+ * @todo       Formally deprecate in EDD 3.1
+ * @param \EDD\Orders\Order $order The current order object.
+ */
+add_action( 'edd_order_history_row_start', function( \EDD\Orders\Order $order ) {
+	if ( ! has_action( 'edd_purchase_history_row_start' ) ) {
+		return;
+	}
+
+	$payment = edd_get_payment( $order->id );
+	if ( ! $payment ) {
+		return;
+	}
+
+	do_action( 'edd_purchase_history_row_start', $payment->ID, $payment->payment_meta );
+} );
+
+/**
+ * Fires at the end of the purchase history row, if needed.
+ *
+ * @deprecated 3.0
+ * @todo       Formally deprecate in EDD 3.1
+ * @param \EDD\Orders\Order $order The current order object.
+ */
+add_action( 'edd_order_history_row_end', function( \EDD\Orders\Order $order ) {
+	if ( ! has_action( 'edd_purchase_history_row_end' ) ) {
+		return;
+	}
+
+	$payment = edd_get_payment( $order->id );
+	if ( ! $payment ) {
+		return;
+	}
+
+	do_action( 'edd_purchase_history_row_end', $payment->ID, $payment->payment_meta );
+} );
+
+/**
+ * Fires the edd_after_purchase_history hook in the purchase history, if needed.
+ *
+ * @deprecated 3.0
+ * @todo       Formally deprecate in EDD 3.1
+ * @param \EDD\Orders\Order[] $orders The array of the current user's orders.
+ */
+add_action( 'edd_after_order_history', function( $orders ) {
+	if ( ! has_action( 'edd_after_purchase_history' ) ) {
+		return;
+	}
+
+	$payments = array();
+
+	if ( ! empty( $orders ) ) {
+		$order_ids = wp_list_pluck( $orders, 'id' );
+		$payments  = edd_get_payments(
+			array(
+				'id__in'  => $order_ids,
+				'orderby' => 'date',
+			)
+		);
+	}
+
+	do_action( 'edd_after_purchase_history', $payments );
+} );
+
+/**
+ * Fires after the individual download file in the downloads history, if needed.
+ *
+ * @deprecated 3.0
+ * @todo       Formally deprecate in 3.1
+ * @param int                    $filekey Download file ID.
+ * @param array                  $file    Array of file information.
+ * @param \EDD\Orders\Order_Item $item    The order item object.
+ * @param \EDD\Orders\Order      $order   The order object.
+ */
+add_action( 'edd_download_history_download_file', function( $filekey, $file, $item, $order ) {
+	if ( ! has_action( 'edd_download_history_files' ) ) {
+		return;
+	}
+	$purchase_data = edd_get_payment_meta( $order->id );
+	do_action( 'edd_download_history_files', $filekey, $file, $item->product_id, $order->id, $purchase_data );
+}, 10, 4 );
