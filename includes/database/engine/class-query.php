@@ -1291,7 +1291,9 @@ class Query extends Base {
 				}
 
 				// Remove " AND " from meta_query query where clause
-				$where['meta_query'] = preg_replace( $and, '', $clauses['where'] );
+				if ( ! empty( $clauses['where'] ) ) {
+					$where['meta_query'] = preg_replace( $and, '', $clauses['where'] );
+				}
 			}
 		}
 
