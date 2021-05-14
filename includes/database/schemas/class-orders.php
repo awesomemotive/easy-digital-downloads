@@ -162,7 +162,8 @@ class Orders extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
-			'sortable'   => true
+			'sortable'   => true,
+			'validate'   => 'edd_sanitize_amount'
 		),
 
 		// discount
@@ -171,7 +172,8 @@ class Orders extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
-			'sortable'   => true
+			'sortable'   => true,
+			'validate'   => 'edd_sanitize_amount'
 		),
 
 		// tax
@@ -180,7 +182,8 @@ class Orders extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
-			'sortable'   => true
+			'sortable'   => true,
+			'validate'   => 'edd_sanitize_amount'
 		),
 
 		// total
@@ -189,7 +192,8 @@ class Orders extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
-			'sortable'   => true
+			'sortable'   => true,
+			'validate'   => 'edd_sanitize_amount'
 		),
 
 		// date_created

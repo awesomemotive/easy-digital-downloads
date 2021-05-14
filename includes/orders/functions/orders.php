@@ -982,9 +982,9 @@ function edd_build_order( $order_data = array() ) {
 						'type_key'    => $fee_id,
 						'type'        => 'fee',
 						'description' => $fee['label'],
-						'subtotal'    => round( $adjustment_subtotal, $decimal_filter ),
-						'tax'         => round( $tax, $decimal_filter ),
-						'total'       => round( $adjustment_total, $decimal_filter ),
+						'subtotal'    => $adjustment_subtotal,
+						'tax'         => $tax,
+						'total'       => $adjustment_total,
 					);
 
 					// Add the adjustment.
@@ -1033,9 +1033,9 @@ function edd_build_order( $order_data = array() ) {
 				'type_key'    => $fee_id,
 				'type'        => 'fee',
 				'description' => $fee['label'],
-				'subtotal'    => round( $fee_subtotal, $decimal_filter ),
-				'tax'         => round( $tax, $decimal_filter ),
-				'total'       => round( $fee_total, $decimal_filter ),
+				'subtotal'    => $fee_subtotal,
+				'tax'         => $tax,
+				'total'       => $fee_total,
 			);
 
 			// Add the adjustment.
@@ -1082,8 +1082,8 @@ function edd_build_order( $order_data = array() ) {
 					'type_id'     => $discount->id,
 					'type'        => 'discount',
 					'description' => $discount->code,
-					'subtotal'    => round( $discount_amount, $decimal_filter ),
-					'total'       => round( $discount_amount, $decimal_filter ),
+					'subtotal'    => $discount_amount,
+					'total'       => $discount_amount,
 				)
 			);
 		}
@@ -1120,10 +1120,10 @@ function edd_build_order( $order_data = array() ) {
 	// Update the order with all of the newly computed values.
 	edd_update_order( $order_id, array(
 		'order_number' => $order_args['order_number'],
-		'subtotal'     => round( $subtotal, $decimal_filter ),
-		'tax'          => round( $total_tax, $decimal_filter ),
-		'discount'     => round( $total_discount, $decimal_filter ),
-		'total'        => round( $order_total, $decimal_filter ),
+		'subtotal'     => $subtotal,
+		'tax'          => $total_tax,
+		'discount'     => $total_discount,
+		'total'        => $order_total,
 	) );
 
 	if ( edd_get_option( 'show_agree_to_terms', false ) && ! empty( $_POST['edd_agree_to_terms'] ) ) { // WPCS: CSRF ok.
