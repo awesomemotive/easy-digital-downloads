@@ -746,24 +746,33 @@ class EDD_Payments_Query extends EDD_Stats {
 			$arguments['status'] = edd_get_payment_status_keys();
 		}
 
-		if ( isset( $this->args['meta_query'] ) && is_array( $this->args['meta_query'] ) ) {
-			foreach ( $this->args['meta_query'] as $meta ) {
+		if ( isset( $arguments['meta_query'] ) && is_array( $arguments['meta_query'] ) ) {
+			foreach ( $arguments['meta_query'] as $meta_index => $meta ) {
 				if ( ! empty( $meta['key'] ) ) {
 					switch ( $meta['key'] ) {
 						case '_edd_payment_customer_id':
 							$arguments['customer_id'] = absint( $meta['value'] );
+							unset( $arguments['meta_query'][ $meta_index ] );
 							break;
 
 						case '_edd_payment_user_id':
 							$arguments['user_id'] = absint( $meta['value'] );
+							unset( $arguments['meta_query'][ $meta_index ] );
 							break;
 
 						case '_edd_payment_user_email':
 							$arguments['email'] = sanitize_email( $meta['value'] );
+							unset( $arguments['meta_query'][ $meta_index ] );
 							break;
 
 						case '_edd_payment_gateway':
 							$arguments['gateway'] = sanitize_text_field( $meta['value'] );
+							unset( $arguments['meta_query'][ $meta_index ] );
+							break;
+
+						case '_edd_payment_purchase_key' :
+							$arguments['payment_key'] = sanitize_text_field( $meta['value'] );
+							unset( $arguments['meta_query'][ $meta_index ] );
 							break;
 					}
 				}
