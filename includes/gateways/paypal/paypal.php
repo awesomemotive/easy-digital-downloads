@@ -82,6 +82,7 @@ require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/webhooks/events/class-pa
 
 if ( is_admin() ) {
 	require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/admin/connect.php';
+	require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/admin/notices.php';
 	require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/admin/scripts.php';
 	require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/admin/settings.php';
 }

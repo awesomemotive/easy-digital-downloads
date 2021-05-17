@@ -89,7 +89,7 @@ function process_connect() {
 		),
 		'body'    => json_encode( array(
 			'mode'       => edd_is_test_mode() ? 'sandbox' : 'live',
-			'return_url' => admin_url() // @todo
+			'return_url' => admin_url()
 		) )
 	) );
 
