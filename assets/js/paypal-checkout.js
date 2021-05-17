@@ -102,7 +102,6 @@ var EDD_PayPal = {
 
 		var buttonArgs = {
 			onApprove: function( data, actions ) {
-				console.log( 'onApprove', data );
 				var formData = new FormData();
 				formData.append( 'action', eddPayPalVars.approvalAction );
 				formData.append( 'edd_process_paypal_nonce', nonceEl.value );
@@ -120,7 +119,6 @@ var EDD_PayPal = {
 				} ).then( function( response ) {
 					return response.json();
 				} ).then( function( responseData ) {
-					console.log( 'onApprove response data', responseData );
 					if ( responseData.success && responseData.data.redirect_url ) {
 						window.location = responseData.data.redirect_url;
 					} else {
@@ -146,12 +144,19 @@ var EDD_PayPal = {
 		};
 
 		/*
+		 * Add style if we have any
+		 *
+		 * @link https://developer.paypal.com/docs/checkout/integration-features/customize-button/
+		 */
+		if ( eddPayPalVars.style ) {
+			buttonArgs.style = eddPayPalVars.style;
+		}
+
+		/*
 		 * Add the `create` logic. This gets added to `createOrder` for one-time purchases
 		 * or `createSubscription` for recurring.
 		 */
 		buttonArgs[ createFunc ] = function ( data, actions ) {
-			console.log( 'create' );
-
 			// Show spinner.
 			spinner.style.display = 'block';
 
@@ -167,7 +172,6 @@ var EDD_PayPal = {
 			} ).then( function( response ) {
 				return response.json();
 			} ).then( function( orderData ) {
-				console.log( 'createOrder data', orderData );
 				if ( orderData.data && orderData.data.paypal_order_id ) {
 					// Add the nonce to the form so we can validate it later.
 					if ( orderData.data.nonce ) {

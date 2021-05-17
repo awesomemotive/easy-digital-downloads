@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 2.10.4\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2021-05-11 10:32:15+00:00\n"
+"POT-Creation-Date: 2021-05-17 09:19:21+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -97,8 +97,8 @@ msgstr ""
 #: includes/emails/actions.php:53 includes/emails/template.php:243
 #: includes/error-tracking.php:60 includes/gateways/functions.php:242
 #: includes/gateways/manual.php:33
-#: includes/gateways/paypal/admin/connect.php:392
-#: includes/gateways/paypal/admin/connect.php:396
+#: includes/gateways/paypal/admin/connect.php:402
+#: includes/gateways/paypal/admin/connect.php:406
 #: includes/gateways/paypal-standard.php:172
 #: includes/gateways/stripe/includes/admin/upgrade-functions.php:57
 #: includes/gateways/stripe/includes/payment-actions.php:1435
@@ -276,6 +276,7 @@ msgstr ""
 #: includes/admin/class-edd-notices.php:49
 #: includes/admin/class-edd-notices.php:70
 #: includes/admin/class-edd-notices.php:87
+#: includes/gateways/paypal/admin/notices.php:50
 msgid "Dismiss Notice"
 msgstr ""
 
@@ -6927,13 +6928,13 @@ msgid ""
 msgstr ""
 
 #: includes/gateways/paypal/admin/connect.php:30
-#: includes/gateways/paypal/admin/connect.php:279
+#: includes/gateways/paypal/admin/connect.php:280
 #. Translators: %s - the connected mode, either `sandbox` or `live`
 msgid "sandbox"
 msgstr ""
 
 #: includes/gateways/paypal/admin/connect.php:30
-#: includes/gateways/paypal/admin/connect.php:279
+#: includes/gateways/paypal/admin/connect.php:280
 msgid "live"
 msgstr ""
 
@@ -6956,12 +6957,12 @@ msgid "Disconnect from PayPal"
 msgstr ""
 
 #: includes/gateways/paypal/admin/connect.php:83
-#: includes/gateways/paypal/admin/connect.php:139
-#: includes/gateways/paypal/admin/connect.php:251
-#: includes/gateways/paypal/admin/connect.php:392
-#: includes/gateways/paypal/admin/connect.php:396
-#: includes/gateways/paypal/admin/connect.php:433
-#: includes/gateways/paypal/admin/connect.php:456
+#: includes/gateways/paypal/admin/connect.php:140
+#: includes/gateways/paypal/admin/connect.php:252
+#: includes/gateways/paypal/admin/connect.php:402
+#: includes/gateways/paypal/admin/connect.php:406
+#: includes/gateways/paypal/admin/connect.php:443
+#: includes/gateways/paypal/admin/connect.php:466
 msgid "You do not have permission to perform this action."
 msgstr ""
 
@@ -6974,47 +6975,47 @@ msgstr ""
 msgid "An unexpected error occurred."
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:143
+#: includes/gateways/paypal/admin/connect.php:144
 msgid "Missing PayPal authentication information. Please try again."
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:148
+#: includes/gateways/paypal/admin/connect.php:149
 msgid "Missing nonce. Please refresh the page and try again."
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:181
+#: includes/gateways/paypal/admin/connect.php:182
 #. Translators: %d - HTTP response code
 msgid ""
 "Unexpected response from PayPal while generating token. Response code: %d. "
 "Please try again."
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:208
+#: includes/gateways/paypal/admin/connect.php:209
 #. Translators: %d - HTTP response code
 msgid "Unexpected response from PayPal. Response code: %d. Please try again."
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:219
+#: includes/gateways/paypal/admin/connect.php:220
 msgid "Successfully connected."
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:224
+#: includes/gateways/paypal/admin/connect.php:225
 msgid ""
 "Your account has been successfully connected, but an error occurred while "
 "creating a webhook."
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:264
+#: includes/gateways/paypal/admin/connect.php:265
 msgid ""
 "Unable to retrieve account information from PayPal. You may wish to try "
 "reconnecting."
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:280
+#: includes/gateways/paypal/admin/connect.php:281
 msgid "Your PayPal account is successfully connected in %s mode."
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:287
+#: includes/gateways/paypal/admin/connect.php:288
 #. Translators: %1$s - PayPal account email; %2$s - the connected mode, either
 #. `sandbox` or `live`
 msgid ""
@@ -7022,15 +7023,22 @@ msgid ""
 "mode."
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:298
+#: includes/gateways/paypal/admin/connect.php:299
+#. Translators: %1$s opening anchor tag; %2$s closing anchor tag
+msgid ""
+"To start using PayPal, be sure to %1$senable it%2$s in the general gateway "
+"settings."
+msgstr ""
+
+#: includes/gateways/paypal/admin/connect.php:308
 msgid "Webhook successfully configured for the following events:"
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:300
+#: includes/gateways/paypal/admin/connect.php:310
 msgid "Sync Webhook"
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:324
+#: includes/gateways/paypal/admin/connect.php:334
 msgid ""
 "<strong>Warning:</strong> Webhook is configured but is missing an event. "
 "Click \"Sync Webhook\" to correct this."
@@ -7040,14 +7048,18 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/gateways/paypal/admin/connect.php:346
+#: includes/gateways/paypal/admin/connect.php:356
 msgid ""
 "<strong>Warning:</strong> Webhook not configured. Some actions may not be "
 "working properly."
 msgstr ""
 
-#: includes/gateways/paypal/admin/connect.php:348
+#: includes/gateways/paypal/admin/connect.php:358
 msgid "Create Webhook"
+msgstr ""
+
+#: includes/gateways/paypal/admin/notices.php:46
+msgid "Enable the new PayPal gateway for Easy Digital Downloads"
 msgstr ""
 
 #: includes/gateways/paypal/admin/settings.php:42
@@ -7111,28 +7123,28 @@ msgid "Missing PayPal Commerce credentials."
 msgstr ""
 
 #: includes/gateways/paypal/checkout-actions.php:140
-#: includes/gateways/paypal/checkout-actions.php:267
+#: includes/gateways/paypal/checkout-actions.php:281
 #: includes/gateways/paypal/scripts.php:124
 msgid "An unexpected error occurred. Please try again."
 msgstr ""
 
-#: includes/gateways/paypal/checkout-actions.php:199
-#: includes/gateways/paypal/checkout-actions.php:224
-#: includes/gateways/paypal/checkout-actions.php:342
+#: includes/gateways/paypal/checkout-actions.php:213
+#: includes/gateways/paypal/checkout-actions.php:238
+#: includes/gateways/paypal/checkout-actions.php:356
 msgid "An error occurred while communicating with PayPal. Please try again."
 msgstr ""
 
-#: includes/gateways/paypal/checkout-actions.php:222
-#: includes/gateways/paypal/checkout-actions.php:340
+#: includes/gateways/paypal/checkout-actions.php:236
+#: includes/gateways/paypal/checkout-actions.php:354
 msgid "An authentication error occurred. Please try again."
 msgstr ""
 
-#: includes/gateways/paypal/checkout-actions.php:251
-#: includes/gateways/paypal/checkout-actions.php:259
+#: includes/gateways/paypal/checkout-actions.php:265
+#: includes/gateways/paypal/checkout-actions.php:273
 msgid "A validation error occurred. Please try again."
 msgstr ""
 
-#: includes/gateways/paypal/checkout-actions.php:330
+#: includes/gateways/paypal/checkout-actions.php:344
 #: includes/gateways/paypal-standard.php:671
 #: tests/helpers/class-helper-payment.php:131
 #: tests/helpers/class-helper-payment.php:234

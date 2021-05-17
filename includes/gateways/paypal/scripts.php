@@ -113,7 +113,7 @@ function register_js( $force_load = false ) {
 		wp_enqueue_script( 'sandhills-paypal-js-sdk' );
 		wp_enqueue_script( 'edd-paypal' );
 
-		wp_localize_script( 'edd-paypal', 'eddPayPalVars', array(
+		$paypal_script_vars = array(
 			/**
 			 * Filters the order approval handler.
 			 *
@@ -124,7 +124,18 @@ function register_js( $force_load = false ) {
 				'paypal-error' => esc_html__( 'An unexpected error occurred. Please try again.', 'easy-digital-downloads' )
 			) ),
 			'intent'         => ! empty( $sdk_query_args['intent'] ) ? $sdk_query_args['intent'] : 'capture',
-		) );
+
+			/**
+			 * Filters the button styles.
+			 *
+			 * @since 2.11
+			 */
+			'style'          => apply_filters( 'edd_paypal_smart_button_style', array(
+				'label' => 'paypal'
+			) )
+		);
+
+		wp_localize_script( 'edd-paypal', 'eddPayPalVars', $paypal_script_vars );
 	}
 }
 
