@@ -88,12 +88,12 @@ function register_js( $force_load = false ) {
 		'locale'          => urlencode( get_locale() ),
 		'currency'        => urlencode( strtoupper( edd_get_currency() ) ),
 		'intent'          => 'capture',
-		'disable-funding' => 'card'
+		'disable-funding' => 'card,credit,bancontact,blik,eps,giropay,ideal,mercadopago,mybank,p24,sepa,sofort,venmo'
 	) );
 
 	wp_register_script(
 		'sandhills-paypal-js-sdk',
-		add_query_arg( $sdk_query_args, 'https://www.paypal.com/sdk/js' )
+		add_query_arg( array_filter( $sdk_query_args ), 'https://www.paypal.com/sdk/js' )
 	);
 
 	wp_register_script(
