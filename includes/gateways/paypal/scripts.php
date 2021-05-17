@@ -84,10 +84,11 @@ function register_js( $force_load = false ) {
 	 * @since 2.11
 	 */
 	$sdk_query_args = apply_filters( 'edd_paypal_js_sdk_query_args', array(
-		'client-id' => urlencode( $api->client_id ),
-		'locale'    => urlencode( get_locale() ),
-		'currency'  => urlencode( strtoupper( edd_get_currency() ) ),
-		'intent'    => 'capture'
+		'client-id'       => urlencode( $api->client_id ),
+		'locale'          => urlencode( get_locale() ),
+		'currency'        => urlencode( strtoupper( edd_get_currency() ) ),
+		'intent'          => 'capture',
+		'disable-funding' => 'card'
 	) );
 
 	wp_register_script(
