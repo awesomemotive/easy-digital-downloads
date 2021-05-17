@@ -33,11 +33,19 @@ add_action( 'admin_notices', function () {
 	}
 
 	$dismiss_url = add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'paypal_commerce' ) );
+	$setup_url = add_query_arg( array(
+		'post_type' => 'download',
+		'page'      => 'edd-settings',
+		'tab'       => 'gateways',
+		'section'   => 'paypal_commerce'
+	), admin_url( 'edit.php' ) );
+
+	// @todo Wording below.
 	?>
 	<div class="notice notice-info is-dismissible">
-		<h2><?php esc_html_e( 'Enable the new PayPal gateway' ); ?></h2>
+		<h2><?php esc_html_e( 'Enable the new PayPal gateway for Easy Digital Downloads' ); ?></h2>
 		<p>
-
+			<a href="<?php echo esc_url( $setup_url ); ?>">Set up the new PayPal gateway.</a>
 		</p>
 		<p><a href="<?php echo esc_url( $dismiss_url ); ?>"><?php esc_html_e( 'Dismiss Notice', 'easy-digital-downloads' ); ?></a></p>
 	</div>

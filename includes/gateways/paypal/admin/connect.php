@@ -115,6 +115,7 @@ function process_connect() {
 
 	/**
 	 * We need to store this temporarily so we can use the nonce again in the next request.
+	 *
 	 * @see get_access_token()
 	 */
 	update_option( 'edd_paypal_commerce_connect_details', json_encode( $body ) );
@@ -290,6 +291,15 @@ function get_account_info() {
 					);
 				}
 			}
+		}
+
+		if ( ! edd_is_gateway_active( 'paypal_commerce' ) ) {
+			$account_status .= ' ' . sprintf(
+				/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
+					__( 'To start using PayPal, be sure to %1$senable it%2$s in the general gateway settings.', 'easy-digital-downloads' ),
+					'<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways&section=main' ) ) . '">',
+					'</a>'
+				);
 		}
 
 		/**
