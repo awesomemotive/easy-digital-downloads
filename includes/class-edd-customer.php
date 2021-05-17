@@ -818,7 +818,7 @@ class EDD_Customer {
 	 *
 	 * @since   2.6
 	 */
-	public function add_meta( $meta_key = '', $meta_value, $unique = false ) {
+	public function add_meta( $meta_key, $meta_value, $unique = false ) {
 		return EDD()->customer_meta->add_meta( $this->id, $meta_key, $meta_value, $unique );
 	}
 
@@ -832,7 +832,7 @@ class EDD_Customer {
 	 *
 	 * @since   2.6
 	 */
-	public function update_meta( $meta_key = '', $meta_value, $prev_value = '' ) {
+	public function update_meta( $meta_key, $meta_value, $prev_value = '' ) {
 		return EDD()->customer_meta->update_meta( $this->id, $meta_key, $meta_value, $prev_value );
 	}
 
