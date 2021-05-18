@@ -40,12 +40,18 @@ add_action( 'admin_notices', function () {
 		'section'   => 'paypal_commerce'
 	), admin_url( 'edit.php' ) );
 
-	// @todo Wording below.
 	?>
 	<div class="notice notice-info is-dismissible">
 		<h2><?php esc_html_e( 'Enable the new PayPal gateway for Easy Digital Downloads' ); ?></h2>
 		<p>
-			<a href="<?php echo esc_url( $setup_url ); ?>">Set up the new PayPal gateway.</a>
+			<?php
+			printf(
+				/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
+				esc_html__( 'A new, improved PayPal experience is now available in Easy Digital Downloads. %1$sClick here to activate it.%2$s', 'easy-digital-downloads' ),
+				'<a href="' . esc_url( $setup_url ) . '">',
+				'</a>'
+			)
+			?>
 		</p>
 		<p><a href="<?php echo esc_url( $dismiss_url ); ?>"><?php esc_html_e( 'Dismiss Notice', 'easy-digital-downloads' ); ?></a></p>
 	</div>
