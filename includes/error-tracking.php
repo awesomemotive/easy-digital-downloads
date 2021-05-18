@@ -53,7 +53,7 @@ function edd_build_errors_html( $errors ) {
 		'edd_errors', 'edd-alert', 'edd-alert-error'
 	) );
 
-	if ( ! empty( $errors ) ) {
+	if ( ! empty( $errors ) && is_array( $errors ) ) {
 		$error_html .= '<div class="' . implode( ' ', $classes ) . '">';
 		// Loop error codes and display errors
 		foreach ( $errors as $error_id => $error ) {
