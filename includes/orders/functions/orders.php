@@ -524,7 +524,7 @@ function edd_is_order_recoverable( $order_id = 0 ) {
 		return false;
 	}
 
-	$recoverable_statuses = apply_filters( 'edd_recoverable_payment_statuses', array( 'pending', 'abandoned', 'failed' ) );
+	$recoverable_statuses = edd_recoverable_order_statuses();
 
 	$transaction_id = $order->get_transaction_id();
 
@@ -624,7 +624,7 @@ function edd_build_order( $order_data = array() ) {
 		$order = edd_get_order( $existing_order );
 
 		if ( $order ) {
-			$recoverable_statuses = apply_filters( 'edd_recoverable_payment_statuses', array( 'pending', 'abandoned', 'failed' ) );
+			$recoverable_statuses = edd_recoverable_order_statuses();
 
 			$transaction_id = $order->get_transaction_id();
 
@@ -1376,6 +1376,25 @@ function edd_get_net_order_statuses() {
 	 *
 	 */
 	return apply_filters( 'edd_net_order_statuses', $statuses );
+}
+
+/**
+ * Get the order status array keys which are considered recoverable.
+ *
+ * @since 3.0
+ * @return array An array of order status keys which are considered recoverable.
+ */
+function edd_recoverable_order_statuses() {
+	$statuses = array( 'pending', 'abandoned', 'failed' );
+
+	/**
+	 * Order statuses which are considered recoverable.
+	 *
+	 * @param $statuses {
+	 *        An array of order status array keys.
+	 * }
+	 */
+	return apply_filters( 'edd_recoverable_payment_statuses', $statuses );
 }
 
 /**

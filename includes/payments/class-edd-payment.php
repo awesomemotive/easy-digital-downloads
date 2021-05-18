@@ -2643,15 +2643,7 @@ class EDD_Payment {
 	 * @return bool
 	 */
 	public function is_recoverable() {
-		$recoverable = false;
-
-		$recoverable_statuses = apply_filters( 'edd_recoverable_payment_statuses', array( 'pending', 'abandoned', 'failed' ) );
-
-		if ( in_array( $this->status, $recoverable_statuses, true ) && empty( $this->transaction_id ) ) {
-			$recoverable = true;
-		}
-
-		return $recoverable;
+		return $this->order->is_recoverable();
 	}
 
 	/**
@@ -2662,16 +2654,7 @@ class EDD_Payment {
 	 * @return bool|string
 	 */
 	public function get_recovery_url() {
-		if ( ! $this->is_recoverable() ) {
-			return false;
-		}
-
-		$recovery_url = add_query_arg( array(
-			'edd_action' => 'recover_payment',
-			'payment_id' => $this->ID,
-		), edd_get_checkout_uri() );
-
-		return apply_filters( 'edd_payment_recovery_url', $recovery_url, $this );
+		return $this->order->get_recovery_url();
 	}
 
 	/**
