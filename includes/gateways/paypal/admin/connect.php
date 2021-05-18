@@ -38,7 +38,7 @@ function connect_settings_field() {
 		?>
 		<button type="button" id="edd-paypal-commerce-connect" class="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'edd_process_paypal_connect' ) ); ?>">
 			<?php
-			/* Translators: %s - the store mode, either `sandbox` or `test */
+			/* Translators: %s - the store mode, either `sandbox` or `live` */
 			printf( esc_html__( 'Connect with PayPal in %s mode', 'easy-digital-downloads' ), esc_html( $mode ) );
 			?>
 		</button>
