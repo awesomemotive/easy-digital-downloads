@@ -28,11 +28,7 @@ namespace EDD\PayPal;
  * @link https://developer.paypal.com/docs/api/reference/api-requests/#paypal-partner-attribution-id
  */
 if ( ! defined( 'EDD_PAYPAL_PARTNER_ATTRIBUTION_ID' ) ) {
-	define( 'EDD_PAYPAL_PARTNER_ATTRIBUTION_ID', '' );
-}
-
-if ( ! defined( 'EDD_PAYPAL_SANDBOX_PARTNER_ATTRIBUTION_ID' ) ) {
-	define( 'EDD_PAYPAL_SANDBOX_PARTNER_ATTRIBUTION_ID', '' );
+	define( 'EDD_PAYPAL_PARTNER_ATTRIBUTION_ID', 'EasyDigitalDownloadsLLC_PPFM_pcp' );
 }
 
 /**
