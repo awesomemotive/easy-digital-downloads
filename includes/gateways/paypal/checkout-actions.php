@@ -83,7 +83,7 @@ function send_ajax_errors( $user, $valid_data, $posted ) {
 	}
 
 	$errors = edd_get_errors();
-	if ( false === $valid_data || $errors ) {
+	if ( $errors ) {
 		edd_clear_errors();
 
 		wp_send_json_error( edd_build_errors_html( $errors ) );
