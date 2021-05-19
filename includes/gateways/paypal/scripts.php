@@ -33,7 +33,7 @@ function maybe_enqueue_polyfills() {
 	global $wp_version;
 	if ( version_compare( $wp_version, '5.0', '>=' ) ) {
 		wp_enqueue_script( 'wp-polyfill-promise' );
-		wp_enqueue_script( 'wp-polyfill-fetch' );
+		wp_enqueue_script( 'wp-polyfill-fetch', '', array( 'wp-polyfill-promise' ) );
 		wp_enqueue_script( 'wp-polyfill-formdata' );
 	} else {
 		wp_enqueue_script(
