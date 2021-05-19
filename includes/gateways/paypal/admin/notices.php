@@ -41,7 +41,7 @@ add_action( 'admin_notices', function () {
 	), admin_url( 'edit.php' ) );
 
 	?>
-	<div class="notice notice-info is-dismissible">
+	<div class="notice notice-info">
 		<h2><?php esc_html_e( 'Enable the new PayPal gateway for Easy Digital Downloads' ); ?></h2>
 		<p>
 			<?php
