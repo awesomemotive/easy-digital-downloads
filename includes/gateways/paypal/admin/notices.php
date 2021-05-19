@@ -44,16 +44,12 @@ add_action( 'admin_notices', function () {
 	<div class="notice notice-info">
 		<h2><?php esc_html_e( 'Enable the new PayPal gateway for Easy Digital Downloads' ); ?></h2>
 		<p>
-			<?php
-			printf(
-				/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
-				esc_html__( 'A new, improved PayPal experience is now available in Easy Digital Downloads. %1$sClick here to activate it.%2$s', 'easy-digital-downloads' ),
-				'<a href="' . esc_url( $setup_url ) . '">',
-				'</a>'
-			)
-			?>
+			<?php esc_html_e( 'A new, improved PayPal experience is now available in Easy Digital Downloads.', 'easy-digital-downloads' ) ?>
 		</p>
-		<p><a href="<?php echo esc_url( $dismiss_url ); ?>"><?php esc_html_e( 'Dismiss Notice', 'easy-digital-downloads' ); ?></a></p>
+		<p>
+			<a href="<?php echo esc_url( $setup_url ); ?>" class="button button-primary"><?php esc_html_e( 'Activate the New PayPal', 'easy-digital-downloads' ); ?></a>
+			<a href="<?php echo esc_url( $dismiss_url ); ?>" class="button"><?php esc_html_e( 'Dismiss Notice', 'easy-digital-downloads' ); ?></a>
+		</p>
 	</div>
 	<?php
 } );
