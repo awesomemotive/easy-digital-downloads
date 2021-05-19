@@ -264,7 +264,7 @@ class Refund_Validator {
 
 		// Overall refund total cannot be over total refundable amount.
 		$order_total = edd_get_order_total( $this->order->id );
-		if ( 1 === bccomp( $this->total, $order_total, 2 ) ) {
+		if ( $this->is_over_refund_amount( $this->total, $order_total ) ) {
 			throw new Exception( sprintf(
 				/* Translators: %s - maximum refund amount as formatted currency */
 				__( 'The maximum refund amount is %s.', 'easy-digital-downloads' ),
@@ -345,7 +345,7 @@ class Refund_Validator {
 			}
 
 			// This is our fallback.
-			$attempted_amount = isset( $original_item->{$column_name} ) ? $original_item->{$column_name} : 0.00;
+			$attempted_amount = isset( $original_item->{$column_name} ) ? floatval( $original_item->{$column_name} ) : 0.00;
 			$maximum_amount   = floatval( $maximum_refundable_amounts[ $column_name ] );
 
 			// Only order items are included in the subtotal.
@@ -355,10 +355,10 @@ class Refund_Validator {
 
 			// But grab from specified amounts if available. It should always be available.
 			if ( isset( $amounts_to_refund[ $column_name ] ) ) {
-				$attempted_amount = $amounts_to_refund[ $column_name ];
+				$attempted_amount = floatval( $amounts_to_refund[ $column_name ] );
 			}
 
-			if ( 1 === bccomp( $attempted_amount, $maximum_amount, 2 ) ) {
+			if ( $this->is_over_refund_amount( $attempted_amount, $maximum_amount ) ) {
 				if ( $original_item instanceof Order_Item ) {
 					$error_message = sprintf(
 						/*
@@ -489,5 +489,28 @@ class Refund_Validator {
 		return $new_args;
 	}
 
+	/**
+	 * Checks if the attempted refund amount is over the maximum allowed refund amount.
+	 * The calculation has to be done using a machine epsilon because when rational numbers
+	 * are converted to base 2, there is a small loss of precision.
+	 *
+	 * @see https://www.php.net/manual/en/language.types.float.php
+	 *
+	 * @since 3.0
+	 * @param float $attempted_amount The amount to refund.
+	 * @param float $maximum_amount   The maximum amount which can be refunded.
+	 * @return boolean
+	 */
+	private function is_over_refund_amount( $attempted_amount, $maximum_amount ) {
+		/**
+		 * The machine epsilon, or unit roundoff--the smallest acceptable difference in calculations.
+		 * See https://www.php.net/manual/en/language.types.float.php
+		 *
+		 * @var float
+		 */
+		$epsilon = 0.00000001;
+
+		return ( ( $attempted_amount - $maximum_amount ) / $maximum_amount ) > $epsilon;
+	}
 }
 
