@@ -44,10 +44,16 @@ jQuery( document ).ready( function ( $ ) {
 				action: 'edd_paypal_commerce_get_account_info',
 				_ajax_nonce: accountInfoEl.getAttribute( 'data-nonce' )
 			}, function( response ) {
-				var newHtml = response.data.account_status + response.data.webhook_status;
+				var newHtml = '<p>' + eddPayPalConnectVars.defaultError + '</p>';
 
-				if ( response.data.actions && response.data.actions.length ) {
-					newHtml += '<p class="edd-paypal-connect-actions">' + response.data.actions.join() + '</p>';
+				if ( response.success ) {
+					newHtml = response.data.account_status + response.data.webhook_status;
+
+					if ( response.data.actions && response.data.actions.length ) {
+						newHtml += '<p class="edd-paypal-connect-actions">' + response.data.actions.join() + '</p>';
+					}
+				} else if ( response.data && 'string' === typeof response.data ) {
+					newHtml = response.data;
 				}
 
 				accountInfoEl.innerHTML = newHtml;

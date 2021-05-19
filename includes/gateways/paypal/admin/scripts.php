@@ -38,6 +38,10 @@ function enqueue_connect_scripts() {
 			EDD_VERSION,
 			true
 		);
+
+		wp_localize_script( 'edd-paypal-connect', 'eddPayPalConnectVars', array(
+			'defaultError' => esc_html__( 'An unexpected error occurred. Please refresh the page and try again.', 'easy-digital-downloads' )
+		) );
 	}
 }
 
