@@ -1294,8 +1294,8 @@ function edd_settings_sanitize( $input = array() ) {
 
 					$setting_details = edd_get_registered_setting_details( $tab, $section, $key );
 					$number_type     = ! empty( $setting_details['step'] ) && false !== strpos( $setting_details['step'], '.' ) ? 'floatval' : 'intval';
-					$minimum         = ! empty( $setting_details['min'] ) ? $number_type( $setting_details['min'] ) : false;
-					$maximum         = ! empty( $setting_details['max'] ) ? $number_type( $setting_details['max'] ) : false;
+					$minimum         = isset( $setting_details['min'] ) ? $number_type( $setting_details['min'] ) : false;
+					$maximum         = isset( $setting_details['max'] ) ? $number_type( $setting_details['max'] ) : false;
 					$new_value       = $number_type( $input[ $key ] );
 
 					if ( ( false !== $minimum && $minimum > $new_value ) || ( false !== $maximum && $maximum < $new_value ) ) {
