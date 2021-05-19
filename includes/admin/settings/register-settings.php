@@ -1298,7 +1298,7 @@ function edd_settings_sanitize( $input = array() ) {
 					$maximum         = ! empty( $setting_details['max'] ) ? $number_type( $setting_details['max'] ) : false;
 					$new_value       = $number_type( $input[ $key ] );
 
-					if ( ( $minimum && $minimum > $new_value ) || ( $maximum && $maximum < $new_value ) ) {
+					if ( ( false !== $minimum && $minimum > $new_value ) || ( false !== $maximum && $maximum < $new_value ) ) {
 						unset( $output[ $key ] );
 					}
 					break;
