@@ -296,10 +296,10 @@ function get_account_info() {
 		if ( ! edd_is_gateway_active( 'paypal_commerce' ) ) {
 			$account_status .= ' ' . sprintf(
 				/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
-					__( 'To start using PayPal, be sure to %1$senable it%2$s in the general gateway settings.', 'easy-digital-downloads' ),
-					'<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways&section=main' ) ) . '">',
-					'</a>'
-				);
+				__( 'To start using PayPal, be sure to %1$senable it%2$s in the general gateway settings.', 'easy-digital-downloads' ),
+				'<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways&section=main' ) ) . '">',
+				'</a>'
+			);
 		}
 
 		/**
