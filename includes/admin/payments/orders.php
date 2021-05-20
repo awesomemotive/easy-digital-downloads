@@ -863,7 +863,7 @@ function edd_order_details_extras( $order = false ) {
 										'class'            => 'edd-form-group__input',
 										'id'               => 'edd_gateway_select',
 										'options'          => $gateways,
-										'selected'         => edd_get_default_gateway(),
+										'selected'         => 'manual',
 										'show_option_none' => false,
 										'show_option_all'  => false,
 									)
