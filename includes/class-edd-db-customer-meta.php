@@ -92,7 +92,7 @@ class EDD_DB_Customer_Meta extends EDD_DB {
 	 * @access  private
 	 * @since   2.6
 	 */
-	public function add_meta( $customer_id = 0, $meta_key = '', $meta_value, $unique = false ) {
+	public function add_meta( $customer_id, $meta_key, $meta_value, $unique = false ) {
 		$customer_id = $this->sanitize_customer_id( $customer_id );
 		if ( false === $customer_id ) {
 			return false;
@@ -120,7 +120,7 @@ class EDD_DB_Customer_Meta extends EDD_DB {
 	 * @access  private
 	 * @since   2.6
 	 */
-	public function update_meta( $customer_id = 0, $meta_key = '', $meta_value, $prev_value = '' ) {
+	public function update_meta( $customer_id, $meta_key, $meta_value, $prev_value = '' ) {
 		$customer_id = $this->sanitize_customer_id( $customer_id );
 		if ( false === $customer_id ) {
 			return false;

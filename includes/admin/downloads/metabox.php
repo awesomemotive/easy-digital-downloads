@@ -399,7 +399,7 @@ add_action( 'edd_meta_box_price_fields', 'edd_render_price_field', 10 );
  * @param array $args
  * @param       $post_id
  */
-function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
+function edd_render_price_row( $key, $args, $post_id, $index ) {
 	global $wp_filter;
 
 	$defaults = array(
@@ -813,7 +813,7 @@ add_action( 'edd_meta_box_files_fields', 'edd_render_files_field', 20 );
  * @param int $post_id Download (Post) ID
  * @return void
  */
-function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
+function edd_render_file_row( $key, $args, $post_id, $index ) {
 	$defaults = array(
 		'name'           => null,
 		'file'           => null,
