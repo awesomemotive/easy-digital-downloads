@@ -250,15 +250,15 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 = 2.10.5, May 20, 2021 =
 * Fix: Unexpected checkout fields may become required when they weren't before, after a discount code is applied.
 * Fix: Deprecation notices in PHP 8.
-New: Stripe - Added UGX to zero decimal currency list.
-Improvement: Stripe - The Express Checkout gateway option is now completely hidden until eligibility is confirmed, whereas before it was shown and then hidden if determined to be ineligible. This should remove the sudden "flash" of the gateway option disappearing.
-Improvement: Stripe - Express Checkout settings are now disabled if taxes are enabled for the store.
-Fix: Stripe - The "Buy Now" modal visible on the page if Buy Now is enabled but the Stripe gateway isn't active.
-Fix: Stripe - Incorrect get_current_user() function usage.
-Fix: Stripe - Express Checkout not using custom price (from the Custom Prices add-on).
-Fix: Stripe - Undefined variable $purchase_data when making purchase that only contains fees.
-Dev: Stripe - Update refund logic to use new refunds API in EDD 3.0.
-Dev: Stripe - Remove composer/installer version lock.
+* New: Stripe - Added UGX to zero decimal currency list.
+* Improvement: Stripe - The Express Checkout gateway option is now completely hidden until eligibility is confirmed, whereas before it was shown and then hidden if determined to be ineligible. This should remove the sudden "flash" of the gateway option disappearing.
+* Improvement: Stripe - Express Checkout settings are now disabled if taxes are enabled for the store.
+* Fix: Stripe - The "Buy Now" modal visible on the page if Buy Now is enabled but the Stripe gateway isn't active.
+* Fix: Stripe - Incorrect get_current_user() function usage.
+* Fix: Stripe - Express Checkout not using custom price (from the Custom Prices add-on).
+* Fix: Stripe - Undefined variable $purchase_data when making purchase that only contains fees.
+* Dev: Stripe - Update refund logic to use new refunds API in EDD 3.0.
+* Dev: Stripe - Remove composer/installer version lock.
 
 = 2.10.4, May 4, 2021 =
 * Security Fix: Reflected XSS.
