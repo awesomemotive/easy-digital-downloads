@@ -491,10 +491,6 @@ class Refund_Validator {
 
 	/**
 	 * Checks if the attempted refund amount is over the maximum allowed refund amount.
-	 * The calculation has to be done using a machine epsilon because when rational numbers
-	 * are converted to base 2, there is a small loss of precision.
-	 *
-	 * @see https://www.php.net/manual/en/language.types.float.php
 	 *
 	 * @since 3.0
 	 * @param float $attempted_amount The amount to refund.
@@ -502,15 +498,7 @@ class Refund_Validator {
 	 * @return boolean
 	 */
 	private function is_over_refund_amount( $attempted_amount, $maximum_amount ) {
-		/**
-		 * The machine epsilon, or unit roundoff--the smallest acceptable difference in calculations.
-		 * See https://www.php.net/manual/en/language.types.float.php
-		 *
-		 * @var float
-		 */
-		$epsilon = 0.00000001;
-
-		return ( ( $attempted_amount - $maximum_amount ) / $maximum_amount ) > $epsilon;
+		return edd_sanitize_amount( $attempted_amount ) > edd_sanitize_amount( $maximum_amount );
 	}
 }
 
