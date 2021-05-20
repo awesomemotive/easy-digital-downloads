@@ -345,8 +345,8 @@ class Refund_Validator {
 			}
 
 			// This is our fallback.
-			$attempted_amount = isset( $original_item->{$column_name} ) ? floatval( $original_item->{$column_name} ) : 0.00;
-			$maximum_amount   = floatval( $maximum_refundable_amounts[ $column_name ] );
+			$attempted_amount = isset( $original_item->{$column_name} ) ? $original_item->{$column_name} : 0.00;
+			$maximum_amount   = $maximum_refundable_amounts[ $column_name ];
 
 			// Only order items are included in the subtotal.
 			if ( ! $original_item instanceof Order_Item && 'subtotal' === $column_name ) {
@@ -355,7 +355,7 @@ class Refund_Validator {
 
 			// But grab from specified amounts if available. It should always be available.
 			if ( isset( $amounts_to_refund[ $column_name ] ) ) {
-				$attempted_amount = floatval( $amounts_to_refund[ $column_name ] );
+				$attempted_amount = $amounts_to_refund[ $column_name ];
 			}
 
 			if ( $this->is_over_refund_amount( $attempted_amount, $maximum_amount ) ) {
