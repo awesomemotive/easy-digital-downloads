@@ -388,11 +388,11 @@ function edd_delete_purchase( $payment_id = 0, $update_customer = true, $delete_
  * when refunding or deleting a purchase
  *
  * @since 1.0.8.1
- * @param int $download_id Download (Post) ID
+ * @param int $download_id Download (Post) ID. This should be passed as `false`.
  * @param int $payment_id Payment ID
  * @return void
  */
-function edd_undo_purchase( $download_id = false, $payment_id ) {
+function edd_undo_purchase( $download_id, $payment_id ) {
 
 	/**
 	 * In 2.5.7, a bug was found that $download_id was an incorrect usage. Passing it in
