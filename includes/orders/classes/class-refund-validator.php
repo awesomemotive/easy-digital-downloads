@@ -264,7 +264,7 @@ class Refund_Validator {
 
 		// Overall refund total cannot be over total refundable amount.
 		$order_total = edd_get_order_total( $this->order->id );
-		if ( $this->total > $order_total ) {
+		if ( $this->is_over_refund_amount( $this->total, $order_total ) ) {
 			throw new Exception( sprintf(
 				/* Translators: %s - maximum refund amount as formatted currency */
 				__( 'The maximum refund amount is %s.', 'easy-digital-downloads' ),
@@ -346,6 +346,7 @@ class Refund_Validator {
 
 			// This is our fallback.
 			$attempted_amount = isset( $original_item->{$column_name} ) ? $original_item->{$column_name} : 0.00;
+			$maximum_amount   = $maximum_refundable_amounts[ $column_name ];
 
 			// Only order items are included in the subtotal.
 			if ( ! $original_item instanceof Order_Item && 'subtotal' === $column_name ) {
@@ -357,7 +358,7 @@ class Refund_Validator {
 				$attempted_amount = $amounts_to_refund[ $column_name ];
 			}
 
-			if ( $attempted_amount > $maximum_refundable_amounts[ $column_name ] ) {
+			if ( $this->is_over_refund_amount( $attempted_amount, $maximum_amount ) ) {
 				if ( $original_item instanceof Order_Item ) {
 					$error_message = sprintf(
 						/*
@@ -488,5 +489,16 @@ class Refund_Validator {
 		return $new_args;
 	}
 
+	/**
+	 * Checks if the attempted refund amount is over the maximum allowed refund amount.
+	 *
+	 * @since 3.0
+	 * @param float $attempted_amount The amount to refund.
+	 * @param float $maximum_amount   The maximum amount which can be refunded.
+	 * @return boolean
+	 */
+	private function is_over_refund_amount( $attempted_amount, $maximum_amount ) {
+		return edd_sanitize_amount( $attempted_amount ) > edd_sanitize_amount( $maximum_amount );
+	}
 }
 
