@@ -221,7 +221,7 @@ function recalculateRefundTotal() {
 $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 	e.preventDefault();
 	$('.edd-submit-refund-message').removeClass('success').removeClass('fail');
-	$( this ).attr( 'disabled', true ).addClass( 'updating-message' );
+	$( this ).attr( 'disabled', true );
 	$('#edd-submit-refund-status').hide();
 
 	const refundForm = $( '#edd-submit-refund-form' );
@@ -253,7 +253,7 @@ $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 				url_target.hide();
 
 				$('#edd-submit-refund-status').show();
-				$( '#edd-submit-refund-submit' ).attr( 'disabled', false ).removeClass( 'updating-message' );
+				$( '#edd-submit-refund-submit' ).attr( 'disabled', false );
 			}
 		}
 	} ).fail( function ( data ) {
