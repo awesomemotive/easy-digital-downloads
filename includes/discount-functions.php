@@ -893,7 +893,7 @@ function edd_is_discount_used( $code = null, $user = '', $code_id = 0 ) {
 
 				if( is_array( $discounts ) ) {
 
-					if( in_array( strtolower( $code ), $discounts ) ) {
+					if( in_array( $code, $discounts ) ) {
 
 						edd_set_error( 'edd-discount-error', __( 'This discount has already been redeemed.', 'easy-digital-downloads' ) );
 						$return = true;
