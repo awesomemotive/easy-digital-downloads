@@ -215,7 +215,7 @@ class EDD_Notices {
 
 		// Checkout page is missing
 		$purchase_page = edd_get_option( 'purchase_page', '' );
-		if ( empty( $purchase_page ) || ( 'trash' === get_post_status( $purchase_page ) ) && ! edd_get_option( 'dismissed_notice_checkout' ) ) {
+		if ( empty( $purchase_page ) || ( 'trash' === get_post_status( $purchase_page ) ) ) {
 			$this->add_notice( array(
 				'id'             => 'edd-no-purchase-page',
 				'message'        => sprintf( __( 'No checkout page is configured. Set one in <a href="%s">Settings</a>.', 'easy-digital-downloads' ), admin_url( 'edit.php?post_type=download&page=edd-settings&tab=general&section=pages' ) ),
@@ -253,11 +253,6 @@ class EDD_Notices {
 
 		// Bail if uploads directory is protected
 		if ( edd_is_uploads_url_protected() ) {
-			return;
-		}
-
-		// Bail if already permanently dismissed
-		if ( edd_get_option( 'dismissed_notice_uploads', false ) ) {
 			return;
 		}
 
