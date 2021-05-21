@@ -170,7 +170,7 @@ class EDD_Notices {
 		}
 
 		// Dismiss notice
-		edd_update_option( $key, 1 );
+		update_user_meta( get_current_user_id(), "_edd_{$key}_dismissed", 1 );
 		edd_redirect( remove_query_arg( array( 'edd_action', 'edd_notice', '_wpnonce' ) ) );
 		exit;
 	}
