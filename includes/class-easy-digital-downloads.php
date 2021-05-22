@@ -497,6 +497,7 @@ final class Easy_Digital_Downloads {
 	 * @since 3.0
 	 */
 	private function include_utilities() {
+		require_once EDD_PLUGIN_DIR . 'includes/utils/class-currency.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-utilities.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-base-object.php';
 	}

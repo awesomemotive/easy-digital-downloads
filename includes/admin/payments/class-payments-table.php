@@ -13,6 +13,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use EDD\Admin\List_Table;
+use EDD\Utils\Currency;
 
 /**
  * EDD_Payment_History_Table Class
@@ -440,7 +441,7 @@ class EDD_Payment_History_Table extends List_Table {
 		$timezone_abbreviation = edd_get_timezone_abbr();
 		switch ( $column_name ) {
 			case 'amount':
-				$value = edd_currency_filter( edd_format_amount( $order->total ), $order->currency );
+				$value = Currency::format( $order->total, $order->currency );
 				break;
 			case 'date':
 				$value = '<time datetime="' . esc_attr( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString() ) . '">' . edd_date_i18n( $order->date_created, 'M. d, Y' ) . '<br>' . edd_date_i18n( strtotime( $order->date_created ), 'H:i' ) . ' ' . $timezone_abbreviation . '</time>';

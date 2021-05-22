@@ -99,7 +99,7 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 					?>
 					<tr>
 						<td><?php echo esc_html( $label ); ?></td>
-						<td><?php echo esc_html( edd_currency_filter( edd_format_amount( edd_negate_amount( $order_discount->total ) ) ) ); ?></td>
+						<td><?php echo esc_html( \EDD\Utils\Currency::display( edd_negate_amount( $order_discount->total ), $order->currency ) ); ?></td>
 					</tr>
 					<?php
 				}
@@ -124,7 +124,7 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 				?>
 				<tr>
 					<td><span class="edd_fee_label"><?php echo esc_html( $label ); ?></span></td>
-					<td><span class="edd_fee_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( $fee->subtotal ) ) ); ?></span></td>
+					<td><span class="edd_fee_amount"><?php echo esc_html( \EDD\Utils\Currency::display( $fee->subtotal, $order->currency ) ); ?></span></td>
 				</tr>
 			<?php endforeach; ?>
 		<?php endif; ?>
@@ -151,7 +151,7 @@ do_action( 'edd_order_receipt_before_table', $order, $edd_receipt_args );
 				?>
 				<tr>
 					<td><?php echo esc_html( $label ); ?></td>
-					<td><?php echo esc_html( edd_currency_filter( edd_format_amount( edd_negate_amount( $credit->total ) ) ) ); ?></td>
+					<td><?php echo esc_html( \EDD\Utils\Currency::display( edd_negate_amount( $credit->total ), $order->currency ) ); ?></td>
 				</tr>
 				<?php
 			}
@@ -324,7 +324,7 @@ if ( empty( $order_items ) ) {
 					<td><?php echo esc_html( $item->quantity ); ?></td>
 				<?php } ?>
 				<td>
-					<?php echo esc_html( edd_currency_filter( edd_format_amount( $item->total ) ) ); ?>
+					<?php echo esc_html( \EDD\Utils\Currency::display( $item->total, $order->currency ) ); ?>
 				</td>
 			</tr>
 		<?php endforeach; ?>
