@@ -11,6 +11,8 @@
  * @since       2.4
  */
 
+use EDD\Utils\Currency;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -52,8 +54,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 			'products'     => __( 'Products (Verbose)', 'easy-digital-downloads' ),
 			'products_raw' => __( 'Products (Raw)', 'easy-digital-downloads' ),
 			'skus'         => __( 'SKUs', 'easy-digital-downloads' ),
-			'amount'       => __( 'Amount', 'easy-digital-downloads' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')',
-			'tax'          => __( 'Tax', 'easy-digital-downloads' ) . ' (' . html_entity_decode( edd_currency_filter( '' ) ) . ')',
+			'amount'       => __( 'Amount', 'easy-digital-downloads' ),
+			'tax'          => __( 'Tax', 'easy-digital-downloads' ),
 			'discount'     => __( 'Discount Code', 'easy-digital-downloads' ),
 			'gateway'      => __( 'Payment Method', 'easy-digital-downloads' ),
 			'trans_id'     => __( 'Transaction ID', 'easy-digital-downloads' ),
@@ -199,8 +201,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 				'products'     => $products,
 				'products_raw' => $products_raw,
 				'skus'         => $skus,
-				'amount'       => html_entity_decode( edd_format_amount( $total ) ), // The non-discounted item price
-				'tax'          => html_entity_decode( edd_format_amount( $order->tax ) ),
+				'amount'       => html_entity_decode( Currency::format( $total, $order->currency ) ), // The non-discounted item price
+				'tax'          => html_entity_decode( Currency::format( $order->tax, $order->currency ) ),
 				'discount'     => $discounts,
 				'gateway'      => edd_get_gateway_admin_label( $order->gateway ),
 				'trans_id'     => $order->get_transaction_id(),

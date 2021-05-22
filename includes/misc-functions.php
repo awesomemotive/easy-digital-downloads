@@ -478,37 +478,7 @@ function edd_currency_symbol( $currency = '' ) {
 		$currency = edd_get_currency();
 	}
 
-	switch ( $currency ) :
-		case "GBP" :
-			$symbol = '&pound;';
-			break;
-		case "BRL" :
-			$symbol = 'R&#36;';
-			break;
-		case "EUR" :
-			$symbol = '&euro;';
-			break;
-		case "USD" :
-		case "AUD" :
-		case "NZD" :
-		case "CAD" :
-		case "HKD" :
-		case "MXN" :
-		case "SGD" :
-			$symbol = '&#36;';
-			break;
-		case "JPY" :
-			$symbol = '&yen;';
-			break;
-		case "AOA" :
-			$symbol = 'Kz';
-			break;
-		default :
-			$symbol = $currency;
-			break;
-	endswitch;
-
-	return apply_filters( 'edd_currency_symbol', $symbol, $currency );
+	return \EDD\Utils\Currency::symbol( $currency );
 }
 
 /**
