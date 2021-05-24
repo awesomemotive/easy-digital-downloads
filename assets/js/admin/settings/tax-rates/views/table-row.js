@@ -64,6 +64,20 @@ const TableRow = wp.Backbone.View.extend( {
 	activateRow: function( event ) {
 		event.preventDefault();
 
+		const { i18n } = eddTaxRates;
+		const existingCountryWide = this.collection.where( {
+			region: '',
+			country: this.model.get( 'country' ),
+			global: true,
+			status: 'active',
+		} );
+
+		if ( existingCountryWide.length > 0 ) {
+			alert( i18n.multipleCountryWide.replace( '%s', this.model.get( 'country' ) ) );
+
+			return;
+		}
+
 		this.model.set( 'status', 'active' );
 	},
 
