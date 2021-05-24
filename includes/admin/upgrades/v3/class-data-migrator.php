@@ -440,6 +440,9 @@ class Data_Migrator {
 		// Some old EDD data has the cart details serialized, but starting with something other than a: so it can't be unserialized
 		$cart_details = self::fix_possible_serialization( $cart_details );
 
+		// Update cart details for consistency, defaults.
+		$cart_details = self::maybe_update_cart_details( $cart_details );
+
 		// Account for possible double serialization of the cart_details
 		$cart_downloads = isset( $payment_meta['downloads'] ) ? maybe_unserialize( $payment_meta['downloads'] ) : array();
 
@@ -465,10 +468,10 @@ class Data_Migrator {
 
 			// Loop through the items in the purchase to build the totals.
 			foreach ( $cart_details as $cart_item ) {
-				$subtotal += isset( $cart_item['subtotal'] ) ? (float) $cart_item['subtotal'] : 0;
-				$tax      += isset( $cart_item['tax'] )      ? (float) $cart_item['tax']      : 0;
-				$discount += isset( $cart_item['discount'] ) ? (float) $cart_item['discount'] : 0;
-				$total    += isset( $cart_item['price'] )    ? (float) $cart_item['price']    : 0;
+				$subtotal += $cart_item['subtotal'];
+				$tax      += $cart_item['tax'];
+				$discount += $cart_item['discount'];
+				$total    += $cart_item['price'];
 			}
 
 		} else {
@@ -812,31 +815,6 @@ class Data_Migrator {
 						$product_name .= ' — ' . $option_name;
 					}
 				}
-
-				// Get item price.
-				$cart_item['item_price'] = isset( $cart_item['item_price'] )
-					? (float) $cart_item['item_price']
-					: (float) $cart_item['price'];
-
-				// Get quantity.
-				$cart_item['quantity'] = isset( $cart_item['quantity'] )
-					? $cart_item['quantity']
-					: 1;
-
-				// Get subtotal.
-				$cart_item['subtotal'] = isset( $cart_item['subtotal'] )
-					? (float) $cart_item['subtotal']
-					: (float) $cart_item['quantity'] * $cart_item['item_price'];
-
-				// Get discount.
-				$cart_item['discount'] = isset( $cart_item['discount'] )
-					? (float) $cart_item['discount']
-					: 0.00;
-
-				// Get tax.
-				$cart_item['tax'] = isset( $cart_item['tax'] )
-					? (float) $cart_item['tax']
-					: 0.00;
 
 				$order_item_args = array(
 					'order_id'      => $order_id,
@@ -1203,5 +1181,52 @@ class Data_Migrator {
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Updates the cart details for use in the migrator.
+	 *
+	 * @since 3.0
+	 * @param array|bool $cart_details The array of cart details.
+	 * @return array|bool
+	 */
+	private static function maybe_update_cart_details( $cart_details ) {
+		if ( ! is_array( $cart_details ) ) {
+			return $cart_details;
+		}
+		foreach ( $cart_details as &$cart_item ) {
+
+			// Get price.
+			$cart_item['price'] = isset( $cart_item['price'] )
+				? (float) $cart_item['price']
+				: 0.00;
+
+			// Get item price.
+			$cart_item['item_price'] = isset( $cart_item['item_price'] )
+				? (float) $cart_item['item_price']
+				: (float) $cart_item['price'];
+
+			// Get quantity.
+			$cart_item['quantity'] = isset( $cart_item['quantity'] )
+				? $cart_item['quantity']
+				: 1;
+
+			// Get subtotal.
+			$cart_item['subtotal'] = isset( $cart_item['subtotal'] )
+				? (float) $cart_item['subtotal']
+				: (float) $cart_item['quantity'] * $cart_item['item_price'];
+
+			// Get discount.
+			$cart_item['discount'] = isset( $cart_item['discount'] )
+				? (float) $cart_item['discount']
+				: 0.00;
+
+			// Get tax.
+			$cart_item['tax'] = isset( $cart_item['tax'] )
+				? (float) $cart_item['tax']
+				: 0.00;
+		}
+
+		return $cart_details;
 	}
 }
