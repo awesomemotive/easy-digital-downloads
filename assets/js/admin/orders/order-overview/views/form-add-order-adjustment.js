@@ -9,9 +9,6 @@ import uuid from 'uuid-random';
 import { Base } from './base.js';
 import { Dialog } from './dialog.js';
 import { OrderAdjustment } from './../models/order-adjustment.js';
-import { NumberFormat } from '@easy-digital-downloads/currency';
-
-const number = new NumberFormat();
 
 /**
  * FormAddOrderAdjustment
@@ -159,6 +156,8 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 		const { target } = e;
 
 		e.preventDefault();
+
+		const { number } = state.get( 'formatters' );
 
 		const amountManual = target.value;
 		const amountNumber = number.unformat( amountManual );
