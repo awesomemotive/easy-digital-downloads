@@ -119,6 +119,7 @@ const TableAdd = wp.Backbone.View.extend( {
 	 */
 	setGlobal: function( event ) {
 		this.model.set( 'global', event.target.checked );
+		this.model.set( 'region', '' );
 	},
 
 	/**
@@ -154,16 +155,7 @@ const TableAdd = wp.Backbone.View.extend( {
 	addTaxRate: function( event ) {
 		event.preventDefault();
 
-		const existingCountryWide = this.collection.where( {
-			region: '',
-			country: this.model.get( 'country' ),
-			global: true,
-			status: 'active',
-		} );
-
-		const {
-			i18n,
-		} = eddTaxRates;
+		const { i18n } = eddTaxRates;
 
 		if ( ! this.model.get( 'country' ) ) {
 			alert( i18n.emptyCountry );
@@ -171,8 +163,21 @@ const TableAdd = wp.Backbone.View.extend( {
 			return;
 		}
 
+		const existingCountryWide = this.collection.where( {
+			region: this.model.get( 'region' ),
+			country: this.model.get( 'country' ),
+			global: '' === this.model.get( 'region' ),
+			status: 'active',
+		} );
+
 		if ( existingCountryWide.length > 0 ) {
-			alert( i18n.multipleCountryWide.replace( '%s', this.model.get( 'country' ) ) );
+			const regionString = '' === this.model.get( 'region' )
+				? ''
+				: ': ' + this.model.get( 'region' );
+
+			const taxRateString = this.model.get( 'country' ) + regionString;
+
+			alert( i18n.multipleCountryWide.replace( '%s', taxRateString ) );
 
 			return;
 		}
