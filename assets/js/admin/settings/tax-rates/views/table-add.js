@@ -177,7 +177,7 @@ const TableAdd = wp.Backbone.View.extend( {
 
 			const taxRateString = this.model.get( 'country' ) + regionString;
 
-			alert( i18n.multipleCountryWide.replace( '%s', taxRateString ) );
+			alert( i18n.duplicateRate.replace( '%s', `"${ taxRateString }"` ) );
 
 			return;
 		}
