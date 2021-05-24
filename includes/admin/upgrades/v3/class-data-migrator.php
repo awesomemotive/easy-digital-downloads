@@ -617,11 +617,54 @@ class Data_Migrator {
 			}
 		}
 
+		// Get discounts.
+		$discounts      = array();
+		$discount_codes = ! empty( $user_info['discount'] )
+			? $user_info['discount']
+			: array();
+
+		if ( ! is_array( $discount_codes ) ) {
+			$discount_codes = explode( ',', $discount_codes );
+		}
+
+		$calculated_discount = 0;
+		if ( ! empty( $discount_codes ) && ( 'none' !== $discount_codes[0] ) ) {
+			foreach ( $discount_codes as $discount_code ) {
+
+				/** @var \EDD_Discount $discount */
+				$discount_object = edd_get_discount_by( 'code', $discount_code );
+
+				if ( false === $discount_object ) {
+					continue;
+				}
+				$discounted_amount = $discount_object->get_discounted_amount( $subtotal );
+
+				$discounts[] = array(
+					'object_type'   => 'order',
+					'type_id'       => $discount_object->id,
+					'type'          => 'discount',
+					'description'   => $discount_object->code,
+					'subtotal'      => $subtotal - $discounted_amount,
+					'total'         => $subtotal - $discounted_amount,
+					'date_created'  => $date_created_gmt,
+					'date_modified' => $data->post_modified_gmt,
+				);
+
+				$calculated_discount += $subtotal - $discounted_amount;
+			}
+		}
+
 		/*
 		 * If we cannot find a matching Adjustment object, we should save this in order meta so it isn't lost.
 		 */
 		if ( ! empty( $tax_rate ) && empty( $tax_rate_id ) ) {
 			$set_tax_rate_meta = true;
+		}
+
+		// If the cart calculations did not result in a discount applied, but a discount was calculated,
+		if ( empty( $discount ) && $calculated_discount ) {
+			$discount = $calculated_discount;
+			$total    = $total - $calculated_discount;
 		}
 
 		// Build the order data before inserting.
@@ -642,7 +685,7 @@ class Data_Migrator {
 			'mode'           => $mode,
 			'currency'       => ! empty( $payment_meta['currency'] ) ? $payment_meta['currency'] : edd_get_currency(),
 			'payment_key'    => $purchase_key,
-			'tax_rate_id'   => $tax_rate_id,
+			'tax_rate_id'    => $tax_rate_id,
 			'subtotal'       => $subtotal,
 			'tax'            => $tax,
 			'discount'       => $discount,
@@ -1035,38 +1078,11 @@ class Data_Migrator {
 			}
 		}
 
-		// Insert discounts.
-		$discounts = ! empty( $user_info['discount'] )
-			? $user_info['discount']
-			: array();
-
-		if ( ! is_array( $discounts ) ) {
-			$discounts = explode( ',', $discounts );
-		}
-
-		if ( ! empty( $discounts ) && ( 'none' !== $discounts[0] ) ) {
+		// Insert previously calculated discounts.
+		if ( ! empty( $discounts ) ) {
 			foreach ( $discounts as $discount ) {
-
-				/** @var \EDD_Discount $discount */
-				$discount = edd_get_discount_by( 'code', $discount );
-
-				if ( false === $discount ) {
-					continue;
-				}
-
-				edd_add_order_adjustment(
-					array(
-						'object_id'     => $order_id,
-						'object_type'   => 'order',
-						'type_id'       => $discount->id,
-						'type'          => 'discount',
-						'description'   => $discount->code,
-						'subtotal'      => $subtotal - $discount->get_discounted_amount( $subtotal ),
-						'total'         => $subtotal - $discount->get_discounted_amount( $subtotal ),
-						'date_created'  => $date_created_gmt,
-						'date_modified' => $data->post_modified_gmt,
-					)
-				);
+				$discount['object_id'] = $order_id;
+				edd_add_order_adjustment( $discount );
 			}
 		}
 
