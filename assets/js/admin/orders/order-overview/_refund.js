@@ -221,7 +221,8 @@ function recalculateRefundTotal() {
 $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 	e.preventDefault();
 	$('.edd-submit-refund-message').removeClass('success').removeClass('fail');
-	$( this ).attr( 'disabled', true );
+	$( this ).removeClass( 'button-primary' );
+	$( this ).attr( 'disabled', true ).addClass( 'updating-message' );
 	$('#edd-submit-refund-status').hide();
 
 	const refundForm = $( '#edd-submit-refund-form' );
