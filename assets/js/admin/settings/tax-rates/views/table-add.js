@@ -154,13 +154,12 @@ const TableAdd = wp.Backbone.View.extend( {
 	addTaxRate: function( event ) {
 		event.preventDefault();
 
-		const existingCountryWide = this.collection.filter( ( rate ) => (
-			'' === this.model.get( 'region' ) && (
-				this.model.get( 'country' ) === rate.get( 'country' ) &&
-				true === rate.get( 'global' ) &&
-				'active' === rate.get( 'status' )
-			)
-		) );
+		const existingCountryWide = this.collection.where( {
+			region: '',
+			country: this.model.get( 'country' ),
+			global: true,
+			status: 'active',
+		} );
 
 		const {
 			i18n,
