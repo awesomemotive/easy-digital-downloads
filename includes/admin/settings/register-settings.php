@@ -2772,9 +2772,9 @@ function edd_tax_rates_callback( $args ) {
 		'nonce' => wp_create_nonce( 'edd-country-field-nonce' ),
 		'i18n'  => array(
 			/* translators: Tax rate country code */
-			'multipleCountryWide' => esc_html__( 'Duplicate tax rates are not allowed. Please deactivate the existing "%s" tax rate before adding or activating another.', 'easy-digital-downloads' ),
-			'emptyCountry'        => esc_html__( 'Please select a country.', 'easy-digital-downloads' ),
-			'emptyTax'            => esc_html__( 'Please enter a tax rate greater than 0.', 'easy-digital-downloads' ),
+			'duplicateRate' => esc_html__( 'Duplicate tax rates are not allowed. Please deactivate the existing %s tax rate before adding or activating another.', 'easy-digital-downloads' ),
+			'emptyCountry'  => esc_html__( 'Please select a country.', 'easy-digital-downloads' ),
+			'emptyTax'      => esc_html__( 'Please enter a tax rate greater than 0.', 'easy-digital-downloads' ),
 		),
 	) );
 
