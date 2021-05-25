@@ -109,6 +109,12 @@ export const OrderItem = Backbone.Model.extend( {
 	 * @return {number} Total amount.
 	 */
 	getTotal() {
+		const state = this.get( 'state' );
+
+		if ( true === state.hasInclusiveTax() ) {
+			return this.get( 'subtotal' ) - this.getDiscountAmount();
+		}
+
 		return ( this.get( 'subtotal' ) - this.getDiscountAmount() ) + this.getTax();
 	},
 

@@ -60,6 +60,12 @@ export const OrderAdjustment = Backbone.Model.extend( {
 	 * @since 3.0
 	 */
 	getTotal() {
+		const state = this.get( 'state' );
+
+		if ( true === state.hasInclusiveTax() ) {
+			return this.get( 'subtotal' );
+		}
+
 		return this.get( 'subtotal' ) + this.get( 'tax' );
 	},
 

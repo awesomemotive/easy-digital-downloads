@@ -164,6 +164,10 @@ export const State = Backbone.Model.extend(
 				this.getSubtotal()
 			);
 
+			if ( true === this.hasInclusiveTax() ) {
+				return adjustedSubtotal;
+			}
+
 			return adjustedSubtotal + this.getTax();
 		},
 
@@ -185,5 +189,16 @@ export const State = Backbone.Model.extend(
 
 			return ! _.isEqual( hasTax, prevHasTax );
 		},
+
+		/**
+		 * Determines if the state has prices entered inclusive of tax.
+		 *
+		 * @since 3.0
+		 *
+		 * @returns {bool} True if prices are entered inclusive of tax.
+		 */
+		hasInclusiveTax() {
+			return this.get( 'hasTax' ).inclusive;
+		}
 	}
 );
