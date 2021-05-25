@@ -958,10 +958,6 @@ function edd_build_order( $order_data = array() ) {
 				unset( $item['item_number']['options']['quantity'] );
 
 				foreach ( $item['item_number']['options'] as $option_key => $value ) {
-					if ( is_array( $value ) ) {
-						$value = maybe_serialize( $value );
-					}
-
 					$option_key = '_option_' . sanitize_key( $option_key );
 
 					edd_add_order_item_meta( $order_item_id, $option_key, $value );
