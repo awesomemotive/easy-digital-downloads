@@ -157,6 +157,7 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 
 		e.preventDefault();
 
+		const { state } = this.options;
 		const { number } = state.get( 'formatters' );
 
 		const amountManual = target.value;
@@ -164,7 +165,6 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 
 		let taxNumber = 0;
 
-		const { state } = this.options;
 		const hasTax = state.get( 'hasTax' );
 
 		if (
@@ -174,16 +174,14 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 			'' !== hasTax.country &&
 			'' !== hasTax.rate
 		) {
-			taxNumber = number.unformat(
-				amountNumber * ( hasTax.rate / 100 )
-			);
+			taxNumber = amountNumber * ( hasTax.rate / 100 );
 		}
 
 		this.model.set( {
 			amountManual,
 			subtotal: amountNumber,
 			total: amountNumber,
-			tax: taxNumber,
+			tax: number.unformat( number.format( taxNumber ) ),
 		} );
 	},
 
