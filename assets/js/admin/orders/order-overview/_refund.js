@@ -253,7 +253,7 @@ $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 				url_target.hide();
 
 				$('#edd-submit-refund-status').show();
-				$( '#edd-submit-refund-submit' ).attr( 'disabled', false );
+				$( '#edd-submit-refund-submit' ).attr( 'disabled', false ).removeClass( 'updating-message' ).addClass( 'button-primary' );
 			}
 		}
 	} ).fail( function ( data ) {
@@ -266,7 +266,7 @@ $(document.body).on( 'click', '#edd-submit-refund-submit', function(e) {
 		url_target.hide();
 
 		$( '#edd-submit-refund-status' ).show();
-		$( '#edd-submit-refund-submit' ).attr( 'disabled', false ).removeClass( 'updating-message' );
+		$( '#edd-submit-refund-submit' ).attr( 'disabled', false ).removeClass( 'updating-message' ).addClass( 'button-primary' );
 		return false;
 	});
 });
