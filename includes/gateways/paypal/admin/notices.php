@@ -44,7 +44,13 @@ add_action( 'admin_notices', function () {
 	<div class="notice notice-info">
 		<h2><?php esc_html_e( 'Enable the new PayPal gateway for Easy Digital Downloads' ); ?></h2>
 		<p>
-			<?php esc_html_e( 'A new, improved PayPal experience is now available in Easy Digital Downloads.', 'easy-digital-downloads' ) ?>
+			<?php
+			echo wp_kses( sprintf(
+				/* Translators: %s documentation URL */
+				__( 'A new, improved PayPal experience is now available in Easy Digital Downloads. You can learn more about the new integration in <a href="%s" target="_blank">our documentation</a>.', 'easy-digital-downloads' ),
+				'https://docs.easydigitaldownloads.com/article/2410-paypal#migration'
+			), array( 'a' => array( 'href' => true, 'target' => true ) ) );
+			?>
 		</p>
 		<p>
 			<a href="<?php echo esc_url( $setup_url ); ?>" class="button button-primary"><?php esc_html_e( 'Activate the New PayPal', 'easy-digital-downloads' ); ?></a>

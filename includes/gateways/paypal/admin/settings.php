@@ -42,6 +42,12 @@ function register_gateway_settings( $gateway_settings ) {
 			'name' => '<strong>' . __( 'PayPal Settings', 'easy-digital-downloads' ) . '</strong>',
 			'type' => 'header',
 		),
+		'paypal_documentation'         => array(
+			'id'   => 'paypal_documentation',
+			'name' => __( 'Documentation', 'easy-digital-downloads' ),
+			'desc' => documentation_settings_field(),
+			'type' => 'descriptive_text'
+		),
 		'paypal_connect_button'        => array(
 			'id'    => 'paypal_connect_button',
 			'name'  => __( 'Connection Status', 'easy-digital-downloads' ),
@@ -50,8 +56,8 @@ function register_gateway_settings( $gateway_settings ) {
 			'class' => 'edd-paypal-connect-row'
 		),
 		'paypal_sandbox_client_id'     => array(
-			'id'   => 'paypal_sandbox_client_id',
-			'name' => __( 'Test Client ID', 'easy-digital-downloads' ),
+			'id'    => 'paypal_sandbox_client_id',
+			'name'  => __( 'Test Client ID', 'easy-digital-downloads' ),
 			'desc' => __( 'Enter your test client ID.', 'easy-digital-downloads' ),
 			'type' => 'text',
 			'size' => 'regular',
@@ -95,3 +101,24 @@ function register_gateway_settings( $gateway_settings ) {
 }
 
 add_filter( 'edd_settings_gateways', __NAMESPACE__ . '\register_gateway_settings', 1, 1 );
+
+/**
+ * Returns the content for the documentation settings.
+ *
+ * @since 2.11
+ * @return string
+ */
+function documentation_settings_field() {
+	ob_start();
+	?>
+	<p>
+		<?php
+		echo wp_kses( sprintf(
+			__( 'To learn more about the PayPal gateway, visit <a href="%s" target="_blank">our documentation</a>.', 'easy-digital-downloads' ),
+			'https://docs.easydigitaldownloads.com/article/2410-paypal'
+		), array( 'a' => array( 'href' => true, 'target' => true ) ) )
+		?>
+	</p>
+	<?php
+	return ob_get_clean();
+}
