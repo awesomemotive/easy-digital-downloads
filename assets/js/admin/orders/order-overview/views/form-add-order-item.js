@@ -304,6 +304,7 @@ export const FormAddOrderItem = Dialog.extend( {
 
 		const { model, options } = this;
 		const { state } = options;
+		const { number } = state.get( 'formatters' );
 
 		state.set( 'isFetching', true );
 
