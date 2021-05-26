@@ -209,17 +209,25 @@ class Order extends Query {
 			add_filter( 'edd_orders_query_clauses', array( $this, 'query_by_country' ) );
 		}
 
+		if ( ! empty( $query['product_id'] ) || ! empty( $query['product_price_id'] ) ) {
+			add_filter( 'edd_orders_query_clauses', array( $this, 'query_by_product' ) );
+		}
+
 		$result = parent::query( $query );
 
 		if ( ! empty( $query['country'] ) ) {
 			remove_filter( 'edd_orders_query_clauses', array( $this, 'query_by_country' ) );
 		}
 
+		if ( ! empty( $query['product_id'] ) || ! empty( $query['product_price_id'] ) ) {
+			remove_filter( 'edd_orders_query_clauses', array( $this, 'query_by_product' ) );
+		}
+
 		return $result;
 	}
 
 	/**
-	 * Filter the query clasue to add the country and region from the order addresses table.
+	 * Filter the query clause to add the country and region from the order addresses table.
 	 *
 	 * @since 3.0
 	 * @access public
@@ -240,16 +248,10 @@ class Order extends Query {
 		$order_addresses_query = new \EDD\Database\Queries\Order_Address();
 		$join_alias            = $order_addresses_query->table_alias;
 
-		if ( ! empty( $clauses['where'] ) ) {
-			$where_clause = ' AND ' . $clauses['where'];
-		} else {
-			$where_clause = '';
-		}
-
 		// Filter by the order address's region (state/province/etc)..
 		if ( ! empty( $this->query_vars['region'] ) && 'all' !== $this->query_vars['region'] ) {
 			$location_join = $wpdb->prepare(
-				" LEFT JOIN {$order_addresses_query->table_name} {$join_alias} ON {$primary_alias}.{$primary_column} = {$join_alias}.order_id WHERE {$join_alias}.country = %s AND {$join_alias}.region = %s {$where_clause}",
+				" INNER JOIN {$order_addresses_query->table_name} {$join_alias} ON ({$primary_alias}.{$primary_column} = {$join_alias}.order_id AND {$join_alias}.country = %s AND {$join_alias}.region = %s)",
 				$this->query_vars['country'],
 				$this->query_vars['region']
 			);
@@ -260,7 +262,7 @@ class Order extends Query {
 			// Filter only by the country, not by region.
 		} else {
 				$location_join = $wpdb->prepare(
-					" LEFT JOIN {$order_addresses_query->table_name} {$join_alias} ON {$primary_alias}.{$primary_column} = {$join_alias}.order_id WHERE {$join_alias}.country = %s {$where_clause}",
+					" INNER JOIN {$order_addresses_query->table_name} {$join_alias} ON ({$primary_alias}.{$primary_column} = {$join_alias}.order_id AND {$join_alias}.country = %s)",
 					$this->query_vars['country']
 				);
 
@@ -271,8 +273,44 @@ class Order extends Query {
 		// Add the customized join to the query.
 		$clauses['join'] .= ' ' . $location_join;
 
-		// We have added the wheres to the join calls so we don't need it to be here anymore.
-		unset( $clauses['where'] );
+		return $clauses;
+	}
+
+	/**
+	 * Filter the query clause to filter by product ID.
+	 *
+	 * @since 3.0
+	 * @access public
+	 *
+	 * @param string|array $clauses The clauses which will generate the final SQL query.
+	 */
+	public function query_by_product( $clauses ) {
+		if ( empty( $this->query_vars['product_id'] ) && empty( $this->query_vars['product_price_id'] ) ) {
+			return $clauses;
+		}
+
+		global $wpdb;
+
+		$primary_column = parent::get_primary_column_name();
+		$order_items_query = new Order_Item();
+
+		// Build up our conditions.
+		$conditions = array();
+		foreach ( array( 'product_id' => 'product_id', 'product_price_id' => 'price_id' ) as $query_var => $db_col ) {
+			if ( ! empty( $this->query_vars[ $query_var ] ) ) {
+				$conditions[] = $wpdb->prepare(
+					"AND {$order_items_query->table_alias}.{$db_col} = %d",
+					absint( $this->query_vars[ $query_var ] )
+				);
+			}
+		}
+
+		$conditions = implode( ' ', $conditions );
+
+		$clauses['join'] .= " INNER JOIN {$order_items_query->table_name} {$order_items_query->table_alias} ON(
+				{$this->table_alias}.{$primary_column} = {$order_items_query->table_alias}.order_id
+				{$conditions}
+			)";
 
 		return $clauses;
 	}
@@ -286,8 +324,10 @@ class Order extends Query {
 	protected function set_query_var_defaults() {
 		parent::set_query_var_defaults();
 
-		$this->query_var_defaults['country'] = false;
-		$this->query_var_defaults['region']  = false;
+		$this->query_var_defaults['country']            = false;
+		$this->query_var_defaults['region']             = false;
+		$this->query_var_defaults['product_id']         = false;
+		$this->query_var_defaults['product_product_id'] = false;
 	}
 
 }

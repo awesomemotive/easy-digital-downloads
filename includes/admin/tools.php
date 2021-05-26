@@ -1615,6 +1615,35 @@ function edd_tools_sysinfo_download() {
 add_action( 'edd_download_sysinfo', 'edd_tools_sysinfo_download' );
 
 /**
+ * Redirects requests to the old sales log to the orders page.
+ *
+ * @since 3.0
+ */
+function edd_redirect_sales_log() {
+	if ( edd_is_admin_page( 'tools', 'logs' ) && ! empty( $_GET['view'] ) && 'sales' === $_GET['view'] ) {
+		$query_args = array(
+			'page' => 'edd-payment-history'
+		);
+
+		$args_to_remap = array(
+			'download'   => 'product-id',
+			'start-date' => 'start-date',
+			'end-date'   => 'end-date'
+		);
+
+		foreach( $args_to_remap as $old_arg => $new_arg ) {
+			if ( ! empty( $_GET[ $old_arg ] ) ) {
+				$query_args[ $new_arg ] = urlencode( $_GET[ $old_arg ] );
+			}
+		}
+
+		wp_safe_redirect( esc_url_raw( add_query_arg( $query_args ), edd_get_admin_base_url() ) );
+		exit;
+	}
+}
+add_action( 'admin_init', 'edd_redirect_sales_log' );
+
+/**
  * Renders the Logs tab in the Tools screen.
  *
  * @since 3.0
