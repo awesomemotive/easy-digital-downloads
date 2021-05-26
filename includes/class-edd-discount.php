@@ -430,9 +430,15 @@ class EDD_Discount extends Adjustment {
 	 * @return mixed
 	 */
 	public function __call( $method, $args ) {
-		$property = str_replace( 'setup_', '', $method );
-		if ( ! method_exists( $this, $method ) && property_exists( $this, $property ) ) {
-			return $this->{$property( $args )};
+		$property = str_replace( array( 'setup_', 'get_' ), '', $method );
+		if ( ! method_exists( $this, $method ) ) {
+			// If a function exists for the determined property, use that.
+			if ( method_exists( $this, $property ) ) {
+				return call_user_func( array( $this, $property ), $args );
+			}
+
+			// Otherwise, use the property directly.
+			return $this->{$property};
 		}
 	}
 
