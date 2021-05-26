@@ -56,6 +56,30 @@ export const OrderItem = Backbone.Model.extend( {
 	},
 
 	/**
+	 * Returns the `OrderItem` subtotal amount.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return {number} Subtotal amount.
+	 */
+	getSubtotal() {
+		const state = this.get( 'state' );
+		const subtotal = this.get( 'subtotal' );
+
+		// Use stored value if the record has already been created.
+		if ( false === state.get( 'isAdding' ) ) {
+			return subtotal;
+		}
+
+		// Calculate subtotal.
+		if ( true === state.hasInclusiveTax() ) {
+			return subtotal - this.getTax();
+		}
+
+		return subtotal;
+	},
+
+	/**
 	 * Returns the Discount amount.
 	 *
 	 * If an Order is being added the amount is calculated based
