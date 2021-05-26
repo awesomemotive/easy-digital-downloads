@@ -172,6 +172,8 @@ class Order extends Query {
 	 *     @type bool         $update_cache          Whether to prime the cache for found orders. Default false.
 	 *     @type string       $country               Limit results to those affiliated with a given country. Default empty.
 	 *     @type string       $region                Limit results to those affiliated with a given region. Default empty.
+	 *     @type int          $product_id            Filter by product ID. Default empty.
+	 *     @type int          $product_price_id      Filter by product price ID. Default empty.
 	 * }
 	 */
 	public function __construct( $query = array() ) {
