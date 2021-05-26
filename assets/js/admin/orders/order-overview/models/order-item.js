@@ -96,9 +96,17 @@ export const OrderItem = Backbone.Model.extend( {
 	 */
 	getTax() {
 		const state = this.get( 'state' );
+		const tax = this.get( 'tax' );
+
+		// Use stored value if the record has already been created.
+		if ( false === state.get( 'isAdding' ) ) {
+			return tax;
+		}
+
+		// Calculate tax.
 		const { number } = state.get( 'formatters' );
 
-		return number.unformat( number.format( this.get( 'tax' ) ) );
+		return number.unformat( number.format( tax ) );
 	},
 
 	/**
@@ -111,6 +119,12 @@ export const OrderItem = Backbone.Model.extend( {
 	getTotal() {
 		const state = this.get( 'state' );
 
+		// Use stored value if the record has already been created.
+		if ( false === state.get( 'isAdding' ) ) {
+			return this.get( 'total' );
+		}
+
+		// Calculate total.
 		if ( true === state.hasInclusiveTax() ) {
 			return this.get( 'subtotal' ) - this.getDiscountAmount();
 		}
