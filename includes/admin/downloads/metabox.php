@@ -1318,11 +1318,17 @@ function edd_render_stats_meta_box() {
 	}
 
 	$earnings = edd_get_download_earnings_stats( $post_id );
-	$sales    = edd_get_download_sales_stats( $post_id ); ?>
+	$sales    = edd_get_download_sales_stats( $post_id );
+
+	$sales_url = add_query_arg( array(
+		'page'       => 'edd-payment-history',
+		'product-id' => urlencode( $post_id )
+	), edd_get_admin_base_url() );
+	?>
 
 	<p class="product-sales-stats">
 		<span class="label"><?php _e( 'Sales:', 'easy-digital-downloads' ); ?></span>
-		<span><a href="<?php echo admin_url( '/edit.php?page=edd-tools&view=sales&post_type=download&tab=logs&download=' . $post_id ); ?>"><?php echo $sales; ?></a></span>
+		<span><a href="<?php echo esc_url( $sales_url ); ?>"><?php echo $sales; ?></a></span>
 	</p>
 
 	<p class="product-earnings-stats">

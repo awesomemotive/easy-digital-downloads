@@ -88,6 +88,8 @@ function edd_logs_view_page( $logs_table, $tag = '' ) {
 /**
  * Sales Log View
  *
+ * @deprecated 3.0
+ *
  * @since 1.4
  * @uses EDD_Sales_Log_Table::prepare_items()
  * @uses EDD_Sales_Log_Table::display()
@@ -184,13 +186,13 @@ function edd_log_default_views() {
 	 * Filters the default logs views.
 	 *
 	 * @since 1.4
+	 * @since 3.0 Removed sales log.
 	 *
 	 * @param array $views Logs views. Each key/value pair represents the view slug
 	 *                     and label, respectively.
 	 */
 	return apply_filters( 'edd_log_views', array(
 		'file_downloads'  => __( 'File Downloads', 'easy-digital-downloads' ),
-		'sales' 		  => __( 'Sales',          'easy-digital-downloads' ),
 		'gateway_errors'  => __( 'Payment Errors', 'easy-digital-downloads' ),
 		'api_requests'    => __( 'API Requests',   'easy-digital-downloads' )
 	) );
