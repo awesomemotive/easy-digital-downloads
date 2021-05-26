@@ -60,12 +60,9 @@ export const OrderAdjustment = Backbone.Model.extend( {
 	 * @since 3.0
 	 */
 	getTotal() {
-		const state = this.get( 'state' );
-
-		if ( true === state.hasInclusiveTax() ) {
-			return this.get( 'subtotal' );
-		}
-
+		// Fees always have tax added.
+		// @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/2445#issuecomment-53215087
+		// @link https://github.com/easydigitaldownloads/easy-digital-downloads/blob/f97f4f6f5454921a2014dc1fa8f4caa5f550108c/includes/cart/class-edd-cart.php#L1306-L1311
 		return this.get( 'subtotal' ) + this.get( 'tax' );
 	},
 
