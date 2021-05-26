@@ -60,9 +60,11 @@ export const OrderItem = Backbone.Model.extend( {
 	 *
 	 * @since 3.0.0
 	 *
+	 * @param {bool} includeTax If taxes should be included when retrieving the subtotal.
+	 *                          This is needed in some scenarios with inclusive taxes.
 	 * @return {number} Subtotal amount.
 	 */
-	getSubtotal() {
+	getSubtotal( includeTax = false ) {
 		const state = this.get( 'state' );
 		const subtotal = this.get( 'subtotal' );
 
@@ -72,7 +74,7 @@ export const OrderItem = Backbone.Model.extend( {
 		}
 
 		// Calculate subtotal.
-		if ( true === state.hasInclusiveTax() ) {
+		if ( true === state.hasInclusiveTax() && false === includeTax ) {
 			return subtotal - this.getTax();
 		}
 
