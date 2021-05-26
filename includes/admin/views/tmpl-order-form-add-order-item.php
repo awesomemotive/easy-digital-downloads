@@ -175,7 +175,7 @@ if ( ! empty( $recent_downloads ) ) {
 				<label for="amount"><?php esc_html_e( 'Unit Price', 'easy-digital-downloads' ); ?></label>
 				<span class="edd-amount">
 					<?php if ( 'before' === $currency_position ) : ?>
-						<?php echo \EDD\Utils\Currency::symbol( edd_get_currency() ); ?>
+						<?php echo edd_currency_filter( '' ); ?>
 					<?php endif; ?>
 
 					<input
@@ -185,7 +185,7 @@ if ( ! empty( $recent_downloads ) ) {
 					/>
 
 					<?php if ( 'after' === $currency_position ) : ?>
-						<?php echo \EDD\Utils\Currency::symbol( edd_get_currency() ); ?>
+						<?php echo edd_currency_filter( '' ); ?>
 					<?php endif; ?>
 				</span>
 			</p>
@@ -205,7 +205,7 @@ if ( ! empty( $recent_downloads ) ) {
 					</label>
 					<span class="edd-amount">
 						<?php if ( 'before' === $currency_position ) : ?>
-							<?php echo \EDD\Utils\Currency::symbol( edd_get_currency() ); ?>
+							<?php echo edd_currency_filter( '' ); ?>
 						<?php endif; ?>
 
 						<input
@@ -215,7 +215,7 @@ if ( ! empty( $recent_downloads ) ) {
 						/>
 
 						<?php if ( 'after' === $currency_position ) : ?>
-							<?php echo \EDD\Utils\Currency::symbol( edd_get_currency() ); ?>
+							<?php echo edd_currency_filter( '' ); ?>
 						<?php endif; ?>
 					</span>
 				</p>
@@ -225,7 +225,7 @@ if ( ! empty( $recent_downloads ) ) {
 				<label for="subtotal"><?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?></label>
 				<span class="edd-amount">
 					<?php if ( 'before' === $currency_position ) : ?>
-						<?php echo \EDD\Utils\Currency::symbol( edd_get_currency() ); ?>
+						<?php echo edd_currency_filter( '' ); ?>
 					<?php endif; ?>
 
 					<input
@@ -235,7 +235,7 @@ if ( ! empty( $recent_downloads ) ) {
 					/>
 
 					<?php if ( 'after' === $currency_position ) : ?>
-						<?php echo \EDD\Utils\Currency::symbol( edd_get_currency() ); ?>
+						<?php echo edd_currency_filter( '' ); ?>
 					<?php endif; ?>
 				</span>
 			</p>

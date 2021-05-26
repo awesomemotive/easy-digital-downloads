@@ -343,6 +343,10 @@ function get_filters() {
 		'countries'          => array(
 			'label'            => __( 'Countries', 'easy-digital-downloads' ),
 			'display_callback' => __NAMESPACE__ . '\\display_country_filter'
+		),
+		'currencies'          => array(
+			'label'            => __( 'Currencies', 'easy-digital-downloads' ),
+			'display_callback' => __NAMESPACE__ . '\\display_currency_filter'
 		)
 	);
 
@@ -1197,6 +1201,54 @@ function display_country_filter() {
 	<span class="edd-graph-filter-options graph-option-section"><?php
 	echo $select;
 	?></span><?php
+}
+
+/**
+ * Handles the display of the 'Currency' filter for reports.
+ *
+ * @since 3.0
+ */
+function display_currency_filter() {
+	$currency = get_filter_value( 'currencies' );
+	if ( empty( $currency ) ) {
+		$currency = 'all';
+	}
+
+	$order_currencies = get_transient( 'edd_distinct_order_currencies' );
+	if ( false === $order_currencies ) {
+		global $wpdb;
+
+		$order_currencies = $wpdb->get_col(
+			"SELECT distinct currency FROM {$wpdb->edd_orders}"
+		);
+
+		set_transient( 'edd_distinct_order_currencies', $order_currencies, 3 * HOUR_IN_SECONDS );
+	}
+
+	if ( ! is_array( $order_currencies ) || 1 === count( $order_currencies ) ) {
+		return;
+	}
+
+	$all_currencies = array_intersect_key( edd_get_currencies(), array_flip( $order_currencies ) );
+	if ( array_key_exists( edd_get_currency(), $all_currencies ) ) {
+		$all_currencies = array_merge( array(
+			'convert' => sprintf( __( '%s - Converted', 'easy-digital-downloads' ), $all_currencies[ edd_get_currency() ] )
+		), $all_currencies );
+	}
+	?>
+	<span class="edd-graph-filter-options graph-option-section">
+		<?php
+		echo EDD()->html->select( array(
+			'name'             => 'currencies',
+			'id'               => 'edd_reports_filter_currencies',
+			'options'          => $all_currencies,
+			'selected'         => $currency,
+			'show_option_all'  => false,
+			'show_option_none' => false
+		) );
+		?>
+	</span>
+	<?php
 }
 
 /**

@@ -81,7 +81,7 @@
 			</label>
 			<span class="edd-amount">
 				<?php if ( 'before' === $currency_position ) : ?>
-					<?php echo \EDD\Utils\Currency::symbol( edd_get_currency() ); ?>
+					<?php echo edd_currency_filter( '' ); ?>
 				<?php endif; ?>
 
 				<input
@@ -92,7 +92,7 @@
 				/>
 
 				<?php if ( 'after' === $currency_position ) : ?>
-					<?php echo \EDD\Utils\Currency::symbol( edd_get_currency() ); ?>
+					<?php echo edd_currency_filter( '' ); ?>
 				<?php endif; ?>
 			</span>
 		</p>

@@ -11,8 +11,6 @@
  * @since       2.4
  */
 
-use EDD\Utils\Currency;
-
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -201,8 +199,8 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 				'products'     => $products,
 				'products_raw' => $products_raw,
 				'skus'         => $skus,
-				'amount'       => html_entity_decode( Currency::format( $total, $order->currency ) ), // The non-discounted item price
-				'tax'          => html_entity_decode( Currency::format( $order->tax, $order->currency ) ),
+				'amount'       => html_entity_decode( edd_format_amount( $total ) ), // The non-discounted item price
+				'tax'          => html_entity_decode( edd_format_amount( $order->tax ) ),
 				'discount'     => $discounts,
 				'gateway'      => edd_get_gateway_admin_label( $order->gateway ),
 				'trans_id'     => $order->get_transaction_id(),

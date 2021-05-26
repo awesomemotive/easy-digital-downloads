@@ -1298,7 +1298,11 @@ function edd_remove_payment_prefix_postfix( $number ) {
  * @return string $amount Fully formatted payment amount
  */
 function edd_payment_amount( $order_id = 0 ) {
-	return \EDD\Utils\Currency::display( edd_get_payment_amount( $order_id ), edd_get_payment_currency_code( $order_id ) );
+	$formatter = new \EDD\Currency\Money_Formatter( edd_get_payment_amount( $order_id ), new \EDD\Currency\Currency( edd_get_payment_currency_code( $order_id ) ) );
+
+	return $formatter->format_for_display()
+		->apply_symbol()
+		->amount;
 }
 
 /**

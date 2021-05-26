@@ -9,8 +9,6 @@
  * @since       1.0
  */
 
-use EDD\Utils\Currency;
-
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -323,13 +321,13 @@ function edd_render_price_field( $post_id ) {
 			);
 			if ( 'before' === $currency_position ) {
 				?>
-				<span class="edd-amount-control__currency is-before"><?php echo esc_html( Currency::symbol( edd_get_currency() ) ); ?></span>
+				<span class="edd-amount-control__currency is-before"><?php echo esc_html( edd_currency_filter( '' ) ); ?></span>
 				<?php
 				echo EDD()->html->text( $price_args );
 			} else {
 				echo EDD()->html->text( $price_args );
 				?>
-				<span class="edd-amount-control__currency is-after"><?php echo esc_html( Currency::symbol( edd_get_currency() ) ); ?></span>
+				<span class="edd-amount-control__currency is-after"><?php echo esc_html( edd_currency_filter( '' ) ); ?></span>
 				<?php
 			}
 
@@ -479,13 +477,13 @@ function edd_render_price_row( $key, $args, $post_id, $index ) {
 				<?php
 				if ( 'before' === $currency_position ) {
 					?>
-					<span class="edd-amount-control__currency is-before"><?php echo esc_html( Currency::symbol( edd_get_currency() ) ); ?></span>
+					<span class="edd-amount-control__currency is-before"><?php echo esc_html( edd_currency_filter( '' ) ); ?></span>
 					<?php
 					echo EDD()->html->text( $price_args );
 				} else {
 					echo EDD()->html->text( $price_args );
 					?>
-					<span class="edd-amount-control__currency is-after"><?php echo esc_html( Currency::symbol( edd_get_currency() ) ); ?></span>
+					<span class="edd-amount-control__currency is-after"><?php echo esc_html( edd_currency_filter( '' ) ); ?></span>
 					<?php
 				}
 				?>
@@ -1329,7 +1327,7 @@ function edd_render_stats_meta_box() {
 
 	<p class="product-earnings-stats">
 		<span class="label"><?php _e( 'Earnings:', 'easy-digital-downloads' ); ?></span>
-		<span><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-reports&view=downloads&download-id=' . $post_id ); ?>"><?php echo esc_html( Currency::display( $earnings, edd_get_currency() ) ); ?></a></span>
+		<span><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-reports&view=downloads&download-id=' . $post_id ); ?>"><?php echo esc_html( edd_currency_filter( edd_format_amount( $earnings ) ) ); ?></a></span>
 	</p>
 
 	<hr />
