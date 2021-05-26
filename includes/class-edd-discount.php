@@ -425,7 +425,7 @@ class EDD_Discount extends Adjustment {
 	 * Handle method dispatch dynamically.
 	 *
 	 * @param string $method Method name.
-	 * @param array $args Arguments to be passed to method.
+	 * @param array  $args   Arguments to be passed to method.
 	 *
 	 * @return mixed
 	 */
