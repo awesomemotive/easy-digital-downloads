@@ -123,9 +123,32 @@ export const State = Backbone.Model.extend(
 			}
 
 			const items = this.get( 'items' ).models;
+			const feesTax = this.getFeesTax();
+
+			return items.reduce(
+				( amount, item ) => {
+					return amount += +item.getTax();
+				},
+				feesTax
+			);
+		},
+
+		/**
+		 * Retrieves the Order tax amount for fees.
+		 *
+		 * @since 3.0
+		 *
+		 * @return {number} Order tax amount for fees.
+		 */
+		getFeesTax() {
+			// Use stored value if the record has already been created.
+			if ( false === this.get( 'isAdding' ) ) {
+				return this.get( 'order' ).tax;
+			}
+
 			const adjustments = this.get( 'adjustments' ).getByType( 'fee' );
 
-			return [ ...items, ...adjustments ].reduce(
+			return adjustments.reduce(
 				( amount, item ) => {
 					return amount += +item.getTax();
 				},
@@ -165,7 +188,10 @@ export const State = Backbone.Model.extend(
 			);
 
 			if ( true === this.hasInclusiveTax() ) {
-				return adjustedSubtotal;
+				// Fees always have tax added.
+				// @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/2445#issuecomment-53215087
+				// @link https://github.com/easydigitaldownloads/easy-digital-downloads/blob/f97f4f6f5454921a2014dc1fa8f4caa5f550108c/includes/cart/class-edd-cart.php#L1306-L1311
+				return adjustedSubtotal + this.getFeesTax();
 			}
 
 			return adjustedSubtotal + this.getTax();
