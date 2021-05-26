@@ -431,7 +431,7 @@ class EDD_Discount extends Adjustment {
 	 */
 	public function __call( $method, $args ) {
 		$property = str_replace( array( 'setup_', 'get_' ), '', $method );
-		if ( ! method_exists( $this, $method ) ) {
+		if ( ! method_exists( $this, $method ) && property_exists( $this, $property ) ) {
 			return $this->{$property};
 		}
 	}
