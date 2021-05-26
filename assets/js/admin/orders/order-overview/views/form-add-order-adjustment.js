@@ -148,7 +148,7 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 
 		if ( 'credit' === type ) {
 			this.model.set( 'objectId', 0 );
-			this.model.set( 'objectType', '' );
+			this.model.set( 'objectType', 'order' );
 		}
 	},
 
