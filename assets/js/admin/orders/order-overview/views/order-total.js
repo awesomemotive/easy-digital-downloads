@@ -74,8 +74,8 @@ export const OrderTotal = wp.Backbone.View.extend( {
 			total,
 			discount,
 
-			discountCurrency: currency.format( number.absint( discount ) ),
-			totalCurrency: currency.format( number.absint( total ) ),
+			discountCurrency: currency.format( discount ),
+			totalCurrency: currency.format( total ),
 		};
 	},
 } );

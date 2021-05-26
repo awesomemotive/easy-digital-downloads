@@ -79,8 +79,8 @@ export const OrderAdjustment = Base.extend( {
 			} ) );
 		}
 
-		const subtotal = number.absint( model.getAmount() );
-		const total = number.absint( model.getTotal() );
+		const subtotal = model.getAmount();
+		const total = model.getTotal();
 
 		return {
 			...Base.prototype.prepare.apply( this, arguments ),

@@ -46,18 +46,20 @@ export const NumberFormat = class NumberFormat {
 	 * @return {?string} A formatted string.
 	 */
 	format( number ) {
+		let toFormat = number;
+
 		if ( 'number' !== typeof number ) {
-			number = parseFloat( number );
+			toFormat = parseFloat( number );
 		}
 
-		if ( isNaN( number ) ) {
-			number = '0';
+		if ( isNaN( toFormat ) ) {
+			toFormat = 0;
 		}
 
 		const { precision, decimalSeparator, thousandSeparator } = this.config;
 
 		return numberFormatter(
-			number,
+			toFormat,
 			precision,
 			decimalSeparator,
 			thousandSeparator
