@@ -478,7 +478,9 @@ function edd_currency_symbol( $currency = '' ) {
 		$currency = edd_get_currency();
 	}
 
-	return \EDD\Utils\Currency::symbol( $currency );
+	$currency = new \EDD\Currency\Currency( $currency );
+
+	return $currency->symbol;
 }
 
 /**

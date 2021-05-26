@@ -9,8 +9,6 @@
  * @since       1.2
 */
 
-use EDD\Utils\Currency;
-
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -118,14 +116,16 @@ function edd_sanitize_amount( $amount = 0 ) {
  * @return string $amount Newly formatted amount or Price Not Available
  */
 function edd_format_amount( $amount = 0, $decimals = true ) {
-	return Currency::format( $amount, edd_get_currency(), $decimals );
+	$formatter = new \EDD\Currency\Money_Formatter( $amount, new \EDD\Currency\Currency( edd_get_currency() ) );
+
+	return $formatter->format_for_display( $decimals );
 }
 
 /**
  * Formats the currency display
  *
  * @since 1.0
- * @param string $price Price
+ * @param string $price Price. This should already be formatted.
  * @return string $currency Currencies displayed correctly
  */
 function edd_currency_filter( $price = '', $currency = '' ) {
@@ -135,11 +135,14 @@ function edd_currency_filter( $price = '', $currency = '' ) {
 		$currency = edd_get_currency();
 	}
 
+	$currency = new \EDD\Currency\Currency( $currency );
 	if ( '' === $price ) {
-		return Currency::symbol( $currency );
+		return $currency->symbol;
 	}
 
-	return Currency::apply_symbol( $price, $currency );
+	$formatter = new \EDD\Currency\Money_Formatter( $price, $currency );
+
+	return $formatter->apply_symbol();
 }
 
 /**

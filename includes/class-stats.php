@@ -104,6 +104,8 @@ class Stats {
 				'end'               => '',
 				'range'             => '',
 				'exclude_taxes'     => false,
+				'currency'          => false,
+				'currency_sql'      => '',
 				'status'            => array( 'complete', 'revoked' ),
 				'status_sql'        => '',
 				'type'              => array(),
@@ -124,6 +126,45 @@ class Stats {
 			);
 		}
 
+	}
+
+	/**
+	 * Builds a fully qualified amount column and function, given the currency settings,
+	 * tax settings, and accepted functions.
+	 *
+	 * @param array $args              {
+	 *                                 Optional arguments.
+	 *
+	 * @type string $column_prefix     Column prefix (table alias or name).
+	 * @type array  $accepted_function Accepted functions for this query.
+	 *                    }
+	 *
+	 * @return string Example: `SUM( total * rate )`
+	 */
+	private function get_amount_column_and_function( $args = array() ) {
+		$args = wp_parse_args( $args, array(
+			'column_prefix'      => '',
+			'accepted_functions' => array( 'SUM', 'AVG', 'COUNT' )
+		) );
+
+		$column = true === $this->query_vars['exclude_taxes'] ? 'total - tax' : 'total';
+
+		if ( ! empty( $args['column_prefix'] ) ) {
+			$column = $args['column_prefix'] . $column;
+		}
+
+		// Multiply by rate if currency conversion is enabled.
+		if ( 'convert' === $this->query_vars['currency'] ) {
+			$column .= ' * rate';
+		}
+
+		$function = "SUM({$column})";
+
+		if ( ! empty( $this->query_vars['function'] ) && ( empty( $args['accepted_functions'] ) || in_array( strtoupper( $this->query_vars['function'] ), $args['accepted_functions'], true ) ) ) {
+			$function = sprintf( '%s(%s)', $this->query_vars['function'], $column );
+		}
+
+		return $function;
 	}
 
 	/** Calculation Methods ***************************************************/
@@ -161,7 +202,6 @@ class Stats {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_orders;
-		$this->query_vars['column']            = true === $this->query_vars['exclude_taxes'] ? 'total - tax' : 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
 
 		/*
@@ -183,12 +223,9 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		// Only `COUNT` and `AVG` are accepted by this method.
-		$accepted_functions = array( 'SUM', 'AVG' );
-
-		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-			? $this->query_vars['function'] . "({$this->query_vars['column']})"
-			: "SUM({$this->query_vars['column']})";
+		$function = $this->get_amount_column_and_function( array(
+			'accepted_functions' => array( 'SUM', 'AVG' )
+		) );
 
 		if ( true === $this->query_vars['relative'] ) {
 			$relative_date_query_sql = $this->generate_relative_date_query_sql();
@@ -198,13 +235,13 @@ class Stats {
 					CROSS JOIN (
 						SELECT IFNULL({$function}, 0) AS relative
 						FROM {$this->query_vars['table']}
-						WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
+						WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
 					) o
-					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		} else {
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['date_query_sql']}";
 		}
 
 		$result = $this->get_db()->get_row( $sql );
@@ -221,8 +258,8 @@ class Stats {
 				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
 			} elseif ( floatval( 0 ) === $relative ) {
 				$total = 0 < $total
-					? '<span class="dashicons dashicons-arrow-up"></span> ' . edd_currency_filter( edd_format_amount( $total ) )
-					: '<span class="dashicons dashicons-arrow-down"></span> ' . edd_currency_filter( edd_format_amount( $total ) );
+					? '<span class="dashicons dashicons-arrow-up"></span> ' . $this->maybe_format( $total )
+					: '<span class="dashicons dashicons-arrow-down"></span> ' . $this->maybe_format( $total );
 			} else {
 				$percentage_change = ( $total - $relative ) / $relative * 100;
 
@@ -306,13 +343,13 @@ class Stats {
 					CROSS JOIN (
 						SELECT IFNULL(COUNT(id), 0) AS relative
 						FROM {$this->query_vars['table']}
-						WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
+						WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
 					) o
-					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		} else {
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		}
 
 		$result = $this->get_db()->get_row( $sql );
@@ -2043,8 +2080,8 @@ class Stats {
 				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
 			} elseif ( floatval( 0 ) === $relative ) {
 				$total = 0 < $total
-					? '<span class="dashicons dashicons-arrow-up"></span> ' . edd_currency_filter( edd_format_amount( $total ) )
-					: '<span class="dashicons dashicons-arrow-down"></span> ' . edd_currency_filter( edd_format_amount( $total ) );
+					? '<span class="dashicons dashicons-arrow-up"></span> ' . $this->maybe_format( $total )
+					: '<span class="dashicons dashicons-arrow-down"></span> ' . $this->maybe_format( $total );
 			} else {
 				$percentage_change = ( $total - $relative ) / $relative * 100;
 
@@ -2515,6 +2552,8 @@ class Stats {
 			'end'               => '',
 			'range'             => '',
 			'exclude_taxes'     => false,
+			'currency'          => false,
+			'currency_sql'      => '',
 			'status'            => array( 'complete', 'revoked' ),
 			'status_sql'        => '',
 			'type'              => array(),
@@ -2562,6 +2601,15 @@ class Stats {
 			if ( ! empty( $this->relative_date_ranges[ $this->query_vars['range'] ]['end'] ) ) {
 				$this->query_vars['relative_end'] = $this->relative_date_ranges[ $this->query_vars['range'] ]['end']->format( 'mysql' );
 			}
+		}
+
+		// Validate currency.
+		if ( empty( $this->query_vars['currency'] ) ) {
+			$this->query_vars['currency'] = false;
+		} elseif ( array_key_exists( strtoupper( $this->query_vars['currency'] ), edd_get_currencies() ) ) {
+			$this->query_vars['currency'] = strtoupper( $this->query_vars['currency'] );
+		} else {
+			$this->query_vars['currency'] = 'convert';
 		}
 
 		// Correctly format functions and column names.
@@ -2697,6 +2745,10 @@ class Stats {
 
 			$this->query_vars['type_sql'] = $this->get_db()->prepare( "AND {$this->query_vars['table']}.type IN ({$placeholders})", $this->query_vars['type'] );
 		}
+
+		if ( ! empty( $this->query_vars['currency'] ) && 'convert' !== strtolower( $this->query_vars['currency'] ) ) {
+			$this->query_vars['currency_sql'] = $this->get_db()->prepare( "AND {$this->query_vars['table']}.currency = %s", $this->query_vars['currency'] );
+		}
 	}
 
 	/**
@@ -2738,21 +2790,26 @@ class Stats {
 			return $data;
 		}
 
+		$currency = $this->query_vars['currency'];
+		if ( empty( $currency ) || 'convert' === strtolower( $currency ) ) {
+			$currency = edd_get_currency();
+		}
+
 		if ( is_object( $data ) ) {
 			foreach ( array_keys( get_object_vars( $data ) ) as $field ) {
 				if ( is_numeric( $data->{$field} ) ) {
-					$data->{$field} = edd_currency_filter( edd_format_amount( $data->{$field} ) );
+					$data->{$field} = edd_currency_filter( edd_format_amount( $data->{$field} ) ); // @todo currency aware
 				}
 			}
 		} elseif ( is_array( $data ) ) {
 			foreach ( array_keys( $data ) as $field ) {
 				if ( is_numeric( $data[ $field ] ) ) {
-					$data[ $field ] = edd_currency_filter( edd_format_amount( $data[ $field ] ) );
+					$data[ $field ] = edd_currency_filter( edd_format_amount( $data[ $field ] ) ); // @todo currency aware
 				}
 			}
 		} else {
 			if ( is_numeric( $data ) ) {
-				$data = edd_currency_filter( edd_format_amount( $data ) );
+				$data = edd_currency_filter( edd_format_amount( $data ) ); // @todo currency aware
 			}
 		}
 

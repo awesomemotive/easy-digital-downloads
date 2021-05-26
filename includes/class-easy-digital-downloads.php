@@ -497,7 +497,6 @@ final class Easy_Digital_Downloads {
 	 * @since 3.0
 	 */
 	private function include_utilities() {
-		require_once EDD_PLUGIN_DIR . 'includes/utils/class-currency.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-utilities.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-base-object.php';
 	}
@@ -593,6 +592,10 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/cart/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
+
+		// Currency
+		require_once EDD_PLUGIN_DIR . 'includes/currency/class-currency.php';
+		require_once EDD_PLUGIN_DIR . 'includes/currency/class-money-formatter.php';
 
 		// Gateways
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/actions.php';
