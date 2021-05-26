@@ -60,17 +60,17 @@ export const Currency = class Currency {
 	 * @param {number} number Number to format.
 	 * @return {?string} A formatted string.
 	 */
-	format( number ) {
+	format( number, absint = true ) {
 		const { currencySymbol, currencySymbolPosition } = this.config;
 
 		let formattedNumber = this.number.format( number );
-		const isNegative = formattedNumber < 0;
+		const isNegative = number < 0;
 		let currency = '';
 
 		// Turn a negative value positive so we can put &ndash; before
 		// currency symbol if needed.
-		if ( isNegative ) {
-			formattedNumber = this.number.format( formattedNumber * -1 );
+		if ( true === isNegative && true === absint ) {
+			formattedNumber = this.number.format( number * -1 );
 		}
 
 		switch ( currencySymbolPosition ) {
@@ -83,7 +83,7 @@ export const Currency = class Currency {
 		}
 
 		// Place negative symbol before currency symbol if needed.
-		if ( isNegative ) {
+		if ( true === isNegative && false === absint ) {
 			currency = `-${ currency }`;
 		}
 

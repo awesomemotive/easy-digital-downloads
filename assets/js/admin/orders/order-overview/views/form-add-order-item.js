@@ -9,9 +9,6 @@ import uuid from 'uuid-random';
 import { Base } from './base.js';
 import { Dialog } from './dialog.js';
 import { OrderItem } from './../models/order-item.js';
-import { NumberFormat } from '@easy-digital-downloads/currency';
-
-const number = new NumberFormat();
 
 /**
  * "Add Item" view
@@ -90,6 +87,7 @@ export const FormAddOrderItem = Dialog.extend( {
 	prepare() {
 		const { model, options } = this;
 		const { state } = options;
+		const { number } = state.get( 'formatters' );
 
 		const quantity = model.get( 'quantity' );
 
@@ -139,6 +137,7 @@ export const FormAddOrderItem = Dialog.extend( {
 
 		const { model, options } = this;
 		const { state } = options;
+		const { number } = state.get( 'formatters' );
 
 		// Find the selected Download.
 		const selected = selectOptions[ selectedIndex ];
@@ -305,6 +304,7 @@ export const FormAddOrderItem = Dialog.extend( {
 
 		const { model, options } = this;
 		const { state } = options;
+		const { number } = state.get( 'formatters' );
 
 		state.set( 'isFetching', true );
 

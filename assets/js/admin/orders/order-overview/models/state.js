@@ -122,7 +122,6 @@ export const State = Backbone.Model.extend(
 				return this.get( 'order' ).tax;
 			}
 
-			const { number } = this.get( 'formatters' );
 			const items = this.get( 'items' ).models;
 			const adjustments = this.get( 'adjustments' ).getByType( 'fee' );
 
