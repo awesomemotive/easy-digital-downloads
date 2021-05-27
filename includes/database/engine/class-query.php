@@ -1355,7 +1355,7 @@ class Query extends Base {
 		if ( empty( $fields ) && ! empty( $this->query_vars['count'] ) ) {
 
 			// Possible fields to group by
-			$groupby_names = $this->parse_groupby( $this->query_vars['groupby'], true );
+			$groupby_names = $this->parse_groupby( $this->query_vars['groupby'], $alias );
 			$groupby_names = ! empty( $groupby_names )
 				? "{$groupby_names}"
 				: '';
