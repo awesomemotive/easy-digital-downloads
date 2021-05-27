@@ -37,13 +37,7 @@ class EDD_Tools_Recount_All_Stats extends EDD_Tools_Recount_Download_Stats {
 	 */
 	public function get_percentage_complete() {
 		$percentage = 100;
-
-		$query = new WP_Query( array(
-			'post_status' => 'any',
-			'post_type'   => 'download',
-			'fields'      => 'ids'
-		) );
-		$total = $query->post_count;
+		$total      = array_sum( (array) wp_count_posts( 'download' ) );
 
 		if ( $total > 0 ) {
 			$percentage = ( ( $this->per_step * $this->step ) / $total ) * 100;
