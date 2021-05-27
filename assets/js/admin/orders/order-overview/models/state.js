@@ -191,7 +191,7 @@ export const State = Backbone.Model.extend(
 			);
 
 			if ( true === this.hasInclusiveTax() ) {
-				// Fees always have tax added.
+				// Fees always have tax added exclusively.
 				// @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/2445#issuecomment-53215087
 				// @link https://github.com/easydigitaldownloads/easy-digital-downloads/blob/f97f4f6f5454921a2014dc1fa8f4caa5f550108c/includes/cart/class-edd-cart.php#L1306-L1311
 				return adjustedSubtotal + this.getFeesTax();
