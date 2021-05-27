@@ -28,13 +28,13 @@ function edd_download_columns( $download_columns ) {
 
 	return apply_filters( 'edd_download_columns', array(
 		'cb'                => '<input type="checkbox"/>',
-		'title'             => __( 'Name',     'easy-digital-downloads' ),
+		'title'             => __( 'Name', 'easy-digital-downloads' ),
 		'download_category' => $category_labels['menu_name'],
 		'download_tag'      => $tag_labels['menu_name'],
-		'price'             => __( 'Price',    'easy-digital-downloads' ),
-		'sales'             => __( 'Sales',    'easy-digital-downloads' ),
-		'earnings'          => __( 'Earnings', 'easy-digital-downloads' ),
-		'date'              => __( 'Date',     'easy-digital-downloads' )
+		'price'             => __( 'Price', 'easy-digital-downloads' ),
+		'sales'             => __( 'Sales', 'easy-digital-downloads' ),
+		'earnings'          => __( 'Gross Revenue', 'easy-digital-downloads' ),
+		'date'              => __( 'Date', 'easy-digital-downloads' )
 	) );
 }
 add_filter( 'manage_edit-download_columns', 'edd_download_columns' );
