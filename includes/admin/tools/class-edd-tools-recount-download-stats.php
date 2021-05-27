@@ -102,10 +102,10 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 
 		$results = $wpdb->get_row(
 			"SELECT SUM(oi.total) AS revenue, COUNT(oi.id) AS sales
-					FROM {$wpdb->edd_order_items} oi
-					INNER JOIN {$wpdb->edd_orders} o ON(o.id = oi.order_id)
-					WHERE o.type = 'sale'
-					{$conditions}"
+				FROM {$wpdb->edd_order_items} oi
+				INNER JOIN {$wpdb->edd_orders} o ON(o.id = oi.order_id)
+				WHERE o.type = 'sale'
+				{$conditions}"
 		);
 
 		$sales    = ! empty( $results->sales ) ? intval( $results->sales ) : 0;
