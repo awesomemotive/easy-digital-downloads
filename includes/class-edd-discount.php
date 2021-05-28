@@ -430,7 +430,7 @@ class EDD_Discount extends Adjustment {
 	 * @return mixed
 	 */
 	public function __call( $method, $args ) {
-		$property = str_replace( array( 'setup_', 'get_' ), '', $method );
+		$property = strtolower( str_replace( array( 'setup_', 'get_' ), '', $method ) );
 		if ( ! method_exists( $this, $method ) && property_exists( $this, $property ) ) {
 			return $this->{$property};
 		}
