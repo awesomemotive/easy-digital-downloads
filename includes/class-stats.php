@@ -154,7 +154,7 @@ class Stats {
 		}
 
 		// Multiply by rate if currency conversion is enabled.
-		if ( 'convert' === $this->query_vars['currency'] ) {
+		if ( empty( $this->query_vars['currency'] ) || 'convert' === $this->query_vars['currency'] ) {
 			$column .= ' * rate';
 		}
 

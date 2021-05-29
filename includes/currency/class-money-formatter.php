@@ -105,7 +105,7 @@ class Money_Formatter {
 	 * Applies the currency prefix/suffix to the amount.
 	 *
 	 * @since 3.0
-	 * @return Money_Formatter
+	 * @return string
 	 */
 	public function apply_symbol() {
 		$amount      = $this->amount;
@@ -154,7 +154,7 @@ class Money_Formatter {
 			$formatted = '-' . $formatted;
 		}
 
-		return $this;
+		return $formatted;
 	}
 
 }

@@ -596,6 +596,7 @@ final class Easy_Digital_Downloads {
 		// Currency
 		require_once EDD_PLUGIN_DIR . 'includes/currency/class-currency.php';
 		require_once EDD_PLUGIN_DIR . 'includes/currency/class-money-formatter.php';
+		require_once EDD_PLUGIN_DIR . 'includes/currency/functions.php';
 
 		// Gateways
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/actions.php';

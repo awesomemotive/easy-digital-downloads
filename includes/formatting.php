@@ -118,7 +118,7 @@ function edd_sanitize_amount( $amount = 0 ) {
 function edd_format_amount( $amount = 0, $decimals = true ) {
 	$formatter = new \EDD\Currency\Money_Formatter( $amount, new \EDD\Currency\Currency( edd_get_currency() ) );
 
-	return $formatter->format_for_display( $decimals );
+	return $formatter->format_for_display( $decimals )->amount;
 }
 
 /**
