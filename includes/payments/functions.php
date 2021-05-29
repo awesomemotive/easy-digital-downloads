@@ -1301,8 +1301,7 @@ function edd_payment_amount( $order_id = 0 ) {
 	$formatter = new \EDD\Currency\Money_Formatter( edd_get_payment_amount( $order_id ), new \EDD\Currency\Currency( edd_get_payment_currency_code( $order_id ) ) );
 
 	return $formatter->format_for_display()
-		->apply_symbol()
-		->amount;
+		->apply_symbol();
 }
 
 /**
