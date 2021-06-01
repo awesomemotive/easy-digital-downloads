@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 2.10.5\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2021-05-20 14:33:41+00:00\n"
+"POT-Creation-Date: 2021-06-01 11:29:55+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -95,7 +95,7 @@ msgstr ""
 #: includes/deprecated-functions.php:517 includes/deprecated-functions.php:532
 #: includes/deprecated-functions.php:542 includes/download-functions.php:1277
 #: includes/emails/actions.php:53 includes/emails/template.php:243
-#: includes/error-tracking.php:60 includes/gateways/functions.php:242
+#: includes/error-tracking.php:60 includes/gateways/functions.php:243
 #: includes/gateways/manual.php:33
 #: includes/gateways/paypal/admin/connect.php:402
 #: includes/gateways/paypal/admin/connect.php:406
@@ -276,7 +276,7 @@ msgstr ""
 #: includes/admin/class-edd-notices.php:49
 #: includes/admin/class-edd-notices.php:70
 #: includes/admin/class-edd-notices.php:87
-#: includes/gateways/paypal/admin/notices.php:51
+#: includes/gateways/paypal/admin/notices.php:57
 msgid "Dismiss Notice"
 msgstr ""
 
@@ -6896,24 +6896,24 @@ msgid "Refund request failed in Amazon."
 msgstr ""
 
 #: includes/gateways/functions.php:25 includes/gateways/functions.php:26
-#: includes/gateways/functions.php:36
+#: includes/gateways/functions.php:37
 #: includes/gateways/paypal/admin/settings.php:22
 msgid "PayPal"
 msgstr ""
 
-#: includes/gateways/functions.php:35 includes/gateways/paypal-standard.php:34
+#: includes/gateways/functions.php:36 includes/gateways/paypal-standard.php:34
 msgid "PayPal Standard"
 msgstr ""
 
-#: includes/gateways/functions.php:40 includes/gateways/functions.php:41
+#: includes/gateways/functions.php:41 includes/gateways/functions.php:42
 msgid "Test Payment"
 msgstr ""
 
-#: includes/gateways/functions.php:141 includes/gateways/functions.php:160
+#: includes/gateways/functions.php:142 includes/gateways/functions.php:161
 msgid "Free Purchase"
 msgstr ""
 
-#: includes/gateways/functions.php:242
+#: includes/gateways/functions.php:243
 msgid "The requested price ID does not exist."
 msgstr ""
 
@@ -7062,13 +7062,15 @@ msgstr ""
 msgid "Enable the new PayPal gateway for Easy Digital Downloads"
 msgstr ""
 
-#: includes/gateways/paypal/admin/notices.php:47
+#: includes/gateways/paypal/admin/notices.php:50
+#. Translators: %s documentation URL
 msgid ""
 "A new, improved PayPal experience is now available in Easy Digital "
-"Downloads."
+"Downloads. You can learn more about the new integration in <a href=\"%s\" "
+"target=\"_blank\">our documentation</a>."
 msgstr ""
 
-#: includes/gateways/paypal/admin/notices.php:50
+#: includes/gateways/paypal/admin/notices.php:56
 msgid "Activate the New PayPal"
 msgstr ""
 
@@ -7081,40 +7083,50 @@ msgid "PayPal Settings"
 msgstr ""
 
 #: includes/gateways/paypal/admin/settings.php:47
+msgid "Documentation"
+msgstr ""
+
+#: includes/gateways/paypal/admin/settings.php:53
 #: includes/gateways/stripe/includes/admin/settings.php:47
 msgid "Connection Status"
 msgstr ""
 
-#: includes/gateways/paypal/admin/settings.php:54
+#: includes/gateways/paypal/admin/settings.php:60
 msgid "Test Client ID"
 msgstr ""
 
-#: includes/gateways/paypal/admin/settings.php:55
+#: includes/gateways/paypal/admin/settings.php:61
 msgid "Enter your test client ID."
 msgstr ""
 
-#: includes/gateways/paypal/admin/settings.php:62
+#: includes/gateways/paypal/admin/settings.php:68
 msgid "Test Client Secret"
 msgstr ""
 
-#: includes/gateways/paypal/admin/settings.php:63
+#: includes/gateways/paypal/admin/settings.php:69
 msgid "Enter your test client secret."
 msgstr ""
 
-#: includes/gateways/paypal/admin/settings.php:70
+#: includes/gateways/paypal/admin/settings.php:76
 msgid "Live Client ID"
 msgstr ""
 
-#: includes/gateways/paypal/admin/settings.php:71
+#: includes/gateways/paypal/admin/settings.php:77
 msgid "Enter your live client ID."
 msgstr ""
 
-#: includes/gateways/paypal/admin/settings.php:78
+#: includes/gateways/paypal/admin/settings.php:84
 msgid "Live Client Secret"
 msgstr ""
 
-#: includes/gateways/paypal/admin/settings.php:79
+#: includes/gateways/paypal/admin/settings.php:85
 msgid "Enter your live client secret."
+msgstr ""
+
+#: includes/gateways/paypal/admin/settings.php:117
+msgid ""
+"To learn more about the PayPal gateway, visit <a href=\"%s\" "
+"target=\"_blank\">our documentation</a>."
 msgstr ""
 
 #: includes/gateways/paypal/checkout-actions.php:48
@@ -7138,7 +7150,7 @@ msgstr ""
 
 #: includes/gateways/paypal/checkout-actions.php:140
 #: includes/gateways/paypal/checkout-actions.php:281
-#: includes/gateways/paypal/scripts.php:125
+#: includes/gateways/paypal/scripts.php:115
 msgid "An unexpected error occurred. Please try again."
 msgstr ""
 
@@ -7181,7 +7193,7 @@ msgstr ""
 msgid "Unexpected response code: %d"
 msgstr ""
 
-#: includes/gateways/paypal/class-token.php:36
+#: includes/gateways/paypal/class-token.php:35
 msgid "Invalid token."
 msgstr ""
 
@@ -7237,17 +7249,17 @@ msgstr ""
 msgid "PayPal transaction denied."
 msgstr ""
 
-#: includes/gateways/paypal/webhooks/events/class-payment-capture-refunded.php:42
+#: includes/gateways/paypal/webhooks/events/class-payment-capture-refunded.php:45
 #. Translators: %1$s - Amount refunded; %2$s - Original payment ID; %3$s -
 #. Refund transaction ID
 msgid "Amount: %1$s; Payment transaction ID: %2$s; Refund transaction ID: %3$s"
 msgstr ""
 
-#: includes/gateways/paypal/webhooks/events/class-payment-capture-refunded.php:50
+#: includes/gateways/paypal/webhooks/events/class-payment-capture-refunded.php:53
 msgid "Partial refund processed in PayPal."
 msgstr ""
 
-#: includes/gateways/paypal/webhooks/events/class-payment-capture-refunded.php:53
+#: includes/gateways/paypal/webhooks/events/class-payment-capture-refunded.php:56
 msgid "Full refund processed in PayPal."
 msgstr ""
 
