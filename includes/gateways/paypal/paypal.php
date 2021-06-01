@@ -43,18 +43,6 @@ if ( ! defined( 'EDD_PAYPAL_SANDBOX_MERCHANT_ID' ) ) {
 }
 
 /**
- * Partner client ID
- * @todo I think we can remove this?
- */
-if ( ! defined( 'EDD_PAYPAL_PARTNER_CLIENT_ID' ) ) {
-	define( 'EDD_PAYPAL_PARTNER_CLIENT_ID', '' );
-}
-
-if ( ! defined( 'EDD_PAYPAL_SANDBOX_PARTNER_CLIENT_ID' ) ) {
-	define( 'EDD_PAYPAL_SANDBOX_PARTNER_CLIENT_ID', '' );
-}
-
-/**
  * Include PayPal gateway files
  */
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/exceptions/class-api-exception.php';
