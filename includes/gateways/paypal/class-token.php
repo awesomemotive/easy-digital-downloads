@@ -8,8 +8,7 @@
  * @license    GPL2+
  */
 
-namespace EDD\PayPal;
-
+namespace EDD\Gateways\PayPal;
 
 class Token {
 

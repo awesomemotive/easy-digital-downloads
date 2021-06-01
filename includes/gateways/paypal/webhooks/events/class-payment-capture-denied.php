@@ -9,7 +9,7 @@
  * @since      2.11
  */
 
-namespace EDD\PayPal\Webhooks\Events;
+namespace EDD\Gateways\PayPal\Webhooks\Events;
 
 class Payment_Capture_Denied extends Webhook_Event {
 

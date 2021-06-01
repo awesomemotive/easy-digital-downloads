@@ -9,11 +9,11 @@
  * @since      2.11
  */
 
-namespace EDD\PayPal\Webhooks\Events;
+namespace EDD\Gateways\PayPal\Webhooks\Events;
 
-use EDD\PayPal\API;
-use EDD\PayPal\Exceptions\API_Exception;
-use EDD\PayPal\Exceptions\Authentication_Exception;
+use EDD\Gateways\PayPal\API;
+use EDD\Gateways\PayPal\Exceptions\API_Exception;
+use EDD\Gateways\PayPal\Exceptions\Authentication_Exception;
 
 abstract class Webhook_Event {
 
@@ -128,7 +128,7 @@ abstract class Webhook_Event {
 	 *
 	 * @return \EDD_Payment
 	 * @throws API_Exception
-	 * @throws \EDD\PayPal\Exceptions\Authentication_Exception
+	 * @throws Authentication_Exception
 	 * @throws \Exception
 	 */
 	protected function get_payment_from_refund() {

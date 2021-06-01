@@ -8,7 +8,7 @@
  * @since     2.11
  */
 
-namespace EDD\PayPal\Admin;
+namespace EDD\Gateways\PayPal\Admin;
 
 add_action( 'admin_notices', function () {
 	if ( ! current_user_can( 'manage_options' ) ) {

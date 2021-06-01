@@ -8,7 +8,7 @@
  * @license    GPL2+
  */
 
-namespace EDD\PayPal;
+namespace EDD\Gateways\PayPal;
 
 /**
  * Determines whether or not Buy Now is enabled for PayPal.

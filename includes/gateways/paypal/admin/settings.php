@@ -8,7 +8,7 @@
  * @since     2.11
  */
 
-namespace EDD\PayPal\Admin;
+namespace EDD\Gateways\PayPal\Admin;
 
 /**
  * Register the PayPal Standard gateway subsection

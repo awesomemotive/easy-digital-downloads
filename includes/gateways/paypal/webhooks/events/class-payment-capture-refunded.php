@@ -12,15 +12,18 @@
  * @since      2.11
  */
 
-namespace EDD\PayPal\Webhooks\Events;
+namespace EDD\Gateways\PayPal\Webhooks\Events;
+
+use EDD\Gateways\PayPal\Exceptions\API_Exception;
+use EDD\Gateways\PayPal\Exceptions\Authentication_Exception;
 
 class Payment_Capture_Refunded extends Webhook_Event {
 
 	/**
 	 * Processes the event.
 	 *
-	 * @throws \EDD\PayPal\Exceptions\API_Exception
-	 * @throws \EDD\PayPal\Exceptions\Authentication_Exception
+	 * @throws API_Exception
+	 * @throws Authentication_Exception
 	 *
 	 * @since 2.11
 	 */

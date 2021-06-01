@@ -10,7 +10,7 @@
  * @since     2.11
  */
 
-namespace EDD\PayPal\Exceptions;
+namespace EDD\Gateways\PayPal\Exceptions;
 
 class Authentication_Exception extends \Exception {
 

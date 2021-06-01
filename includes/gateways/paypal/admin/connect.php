@@ -8,9 +8,9 @@
  * @since     2.11
  */
 
-namespace EDD\PayPal\Admin;
+namespace EDD\Gateways\PayPal\Admin;
 
-use EDD\PayPal;
+use EDD\Gateways\PayPal;
 
 if ( ! defined( 'EDD_PAYPAL_PARTNER_CONNECT_URL' ) ) {
 	define( 'EDD_PAYPAL_PARTNER_CONNECT_URL', 'https://easydigitaldownloads.com/wp-json/paypal-connect/v1/' );
@@ -188,7 +188,7 @@ function get_and_save_credentials() {
 	 * Now we can use this access token to fetch the seller's credentials for all future
 	 * API requests.
 	 */
-	$response = wp_remote_get( $api_url . 'v1/customer/partners/' . urlencode( \EDD\PayPal\get_partner_merchant_id( $mode ) ) . '/merchant-integrations/credentials/', array(
+	$response = wp_remote_get( $api_url . 'v1/customer/partners/' . urlencode( \EDD\Gateways\PayPal\get_partner_merchant_id( $mode ) ) . '/merchant-integrations/credentials/', array(
 		'headers' => array(
 			'Authorization' => sprintf( 'Bearer %s', $body->access_token ),
 			'Content-Type'  => 'application/json',

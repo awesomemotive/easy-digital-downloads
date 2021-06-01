@@ -9,11 +9,11 @@
  * @since      2.11
  */
 
-namespace EDD\PayPal\Webhooks;
+namespace EDD\Gateways\PayPal\Webhooks;
 
-use EDD\PayPal\API;
-use EDD\PayPal\Exceptions\API_Exception;
-use EDD\PayPal\Exceptions\Authentication_Exception;
+use EDD\Gateways\PayPal\API;
+use EDD\Gateways\PayPal\Exceptions\API_Exception;
+use EDD\Gateways\PayPal\Exceptions\Authentication_Exception;
 
 /**
  * Returns the webhook URL.

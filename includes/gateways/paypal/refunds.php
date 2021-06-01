@@ -9,10 +9,10 @@
  * @since      2.11
  */
 
-namespace EDD\PayPal;
+namespace EDD\Gateways\PayPal;
 
-use EDD\PayPal\Exceptions\API_Exception;
-use EDD\PayPal\Exceptions\Authentication_Exception;
+use EDD\Gateways\PayPal\Exceptions\API_Exception;
+use EDD\Gateways\PayPal\Exceptions\Authentication_Exception;
 
 /**
  * Adds a "Refund in PayPal" checkbox when switching the payment's status to "Refunded".

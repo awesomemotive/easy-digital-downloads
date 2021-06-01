@@ -8,7 +8,7 @@
  * @since     2.11
  */
 
-namespace EDD\PayPal\Admin;
+namespace EDD\Gateways\PayPal\Admin;
 
 /**
  * Enqueue PayPal connect admin JS.
@@ -17,7 +17,7 @@ namespace EDD\PayPal\Admin;
  */
 function enqueue_connect_scripts() {
 	if ( edd_is_admin_page( 'settings' ) && isset( $_GET['section'] ) && 'paypal_commerce' === $_GET['section'] ) {
-		\EDD\PayPal\maybe_enqueue_polyfills();
+		\EDD\Gateways\PayPal\maybe_enqueue_polyfills();
 
 		// Use minified libraries if SCRIPT_DEBUG is turned off
 		$suffix    = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';

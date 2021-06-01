@@ -8,7 +8,7 @@
  * @license    GPL2+
  */
 
-namespace EDD\PayPal;
+namespace EDD\Gateways\PayPal;
 
 /**
  * Removes PayPal Standard from the list of available gateways while we're on the EDD Settings page.

@@ -9,15 +9,15 @@
  * @since      2.11
  */
 
-namespace EDD\PayPal\Webhooks\Events;
+namespace EDD\Gateways\PayPal\Webhooks\Events;
 
 class Payment_Capture_Completed extends Webhook_Event {
 
 	/**
 	 * Processes the event.
 	 *
-	 * @throws \EDD\PayPal\Exceptions\API_Exception
-	 * @throws \EDD\PayPal\Exceptions\Authentication_Exception
+	 * @throws \EDD\Gateways\PayPal\Exceptions\API_Exception
+	 * @throws \EDD\Gateways\PayPal\Exceptions\Authentication_Exception
 	 * @throws \Exception
 	 *
 	 * @since 2.11

@@ -11,10 +11,10 @@
  * @since      2.11
  */
 
-namespace EDD\PayPal\Webhooks;
+namespace EDD\Gateways\PayPal\Webhooks;
 
-use EDD\PayPal\API;
-use EDD\PayPal\Exceptions\API_Exception;
+use EDD\Gateways\PayPal\API;
+use EDD\Gateways\PayPal\Exceptions\API_Exception;
 
 class Webhook_Validator {
 

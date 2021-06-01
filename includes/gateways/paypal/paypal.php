@@ -20,7 +20,7 @@
  * @since      2.11
  */
 
-namespace EDD\PayPal;
+namespace EDD\Gateways\PayPal;
 
 /**
  * Partner attribution ID

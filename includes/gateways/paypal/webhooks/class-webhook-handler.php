@@ -9,9 +9,9 @@
  * @since      2.11
  */
 
-namespace EDD\PayPal\Webhooks;
+namespace EDD\Gateways\PayPal\Webhooks;
 
-use EDD\PayPal;
+use EDD\Gateways\PayPal;
 
 class Webhook_Handler {
 	/**

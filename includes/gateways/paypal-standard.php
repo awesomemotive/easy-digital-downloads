@@ -30,7 +30,7 @@ add_action( 'edd_paypal_cc_form', '__return_false' );
  * @return array                    Gateway subsections with PayPal Standard
  */
 function edd_register_paypal_gateway_section( $gateway_sections ) {
-	if ( \EDD\PayPal\paypal_standard_enabled() ) {
+	if ( \EDD\Gateways\PayPal\paypal_standard_enabled() ) {
 		$gateway_sections['paypal'] = __( 'PayPal Standard', 'easy-digital-downloads' );
 	}
 
@@ -46,7 +46,7 @@ add_filter( 'edd_settings_sections_gateways', 'edd_register_paypal_gateway_secti
  * @return array                    Gateway tab settings with the PayPal Standard settings
  */
 function edd_register_paypal_gateway_settings( $gateway_settings ) {
-	if ( ! \EDD\PayPal\paypal_standard_enabled() ) {
+	if ( ! \EDD\Gateways\PayPal\paypal_standard_enabled() ) {
 		return $gateway_settings;
 	}
 

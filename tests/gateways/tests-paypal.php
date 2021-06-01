@@ -10,10 +10,10 @@
 
 namespace EDD\Tests\Gateways;
 
-use EDD\PayPal\Webhooks\Events\Payment_Capture_Completed;
-use EDD\PayPal\Webhooks\Events\Payment_Capture_Denied;
-use EDD\PayPal\Webhooks\Events\Webhook_Event;
-use EDD\PayPal\Webhooks\Webhook_Handler;
+use EDD\Gateways\PayPal\Webhooks\Events\Payment_Capture_Completed;
+use EDD\Gateways\PayPal\Webhooks\Events\Payment_Capture_Denied;
+use EDD\Gateways\PayPal\Webhooks\Events\Webhook_Event;
+use EDD\Gateways\PayPal\Webhooks\Webhook_Handler;
 use EDD_UnitTestCase;
 use EDD_Payment;
 
@@ -233,7 +233,7 @@ class Tests_PayPal extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\PayPal\Webhooks\Events\Payment_Capture_Completed::process_event
+	 * @covers \EDD\Gateways\PayPal\Webhooks\Events\Payment_Capture_Completed::process_event
 	 */
 	public function test_payment_capture_completed_marks_payment_complete() {
 		// Status should be pending at first.
@@ -252,7 +252,7 @@ class Tests_PayPal extends EDD_UnitTestCase {
 
 	/**
 	 * @expectedException \Exception
-	 * @covers \EDD\PayPal\Webhooks\Events\Payment_Capture_Completed::handle
+	 * @covers \EDD\Gateways\PayPal\Webhooks\Events\Payment_Capture_Completed::handle
 	 */
 	public function test_payment_capture_completed_with_mismatching_amount_throws_exception() {
 		$event = new Payment_Capture_Completed( $this->build_rest_request( $this->get_payment_capture_completed_payload( array(
@@ -271,7 +271,7 @@ class Tests_PayPal extends EDD_UnitTestCase {
 
 	/**
 	 * @expectedException \Exception
-	 * @covers \EDD\PayPal\Webhooks\Events\Payment_Capture_Completed::handle
+	 * @covers \EDD\Gateways\PayPal\Webhooks\Events\Payment_Capture_Completed::handle
 	 */
 	public function test_payment_capture_completed_with_mismatching_currency_throws_exception() {
 		$event = new Payment_Capture_Completed( $this->build_rest_request( $this->get_payment_capture_completed_payload( array(
@@ -290,7 +290,7 @@ class Tests_PayPal extends EDD_UnitTestCase {
 
 	/**
 	 * @expectedException \Exception
-	 * @covers \EDD\PayPal\Webhooks\Events\Payment_Capture_Completed::get_payment_from_capture
+	 * @covers \EDD\Gateways\PayPal\Webhooks\Events\Payment_Capture_Completed::get_payment_from_capture
 	 * @throws \Exception
 	 */
 	public function test_payment_capture_completed_with_correct_custom_id_but_wrong_transaction_id_throws_exception() {
@@ -309,7 +309,7 @@ class Tests_PayPal extends EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\PayPal\Webhooks\Events\Payment_Capture_Denied::handle
+	 * @covers \EDD\Gateways\PayPal\Webhooks\Events\Payment_Capture_Denied::handle
 	 * @throws \Exception
 	 */
 	public function test_payment_capture_denied_marks_payment_failed() {
