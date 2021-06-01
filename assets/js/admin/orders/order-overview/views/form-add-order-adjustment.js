@@ -142,7 +142,14 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 	 * @param {Object} e Change event
 	 */
 	onChangeType( e ) {
-		this.model.set( 'type', e.target.value );
+		const type = e.target.value;
+
+		this.model.set( 'type', type );
+
+		if ( 'credit' === type ) {
+			this.model.set( 'objectId', 0 );
+			this.model.set( 'objectType', 'order' );
+		}
 	},
 
 	/**
