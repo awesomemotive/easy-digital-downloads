@@ -460,30 +460,54 @@ class Data_Migrator {
 		$discount = 0;
 		$total    = 0;
 
+		// Retrieve the tax amount from metadata if available.
+		$meta_tax = isset( $meta['_edd_payment_tax'] )
+			? $meta['_edd_payment_tax']
+			: false;
+
+		if ( false !== $meta_tax ) {
+			$meta_tax = maybe_unserialize( $meta_tax );
+
+			if ( is_array( $meta_tax ) ) {
+				$tax = (float) $meta_tax[0];
+			} else {
+				$tax = (float) $meta_tax;
+			}
+		}
+
+		// Retrieve the total amount from metadata if available.
+		$meta_total = isset( $meta['_edd_payment_total'] )
+			? $meta['_edd_payment_total']
+			: false;
+
+		if ( false !== $meta_total ) {
+			$meta_total = maybe_unserialize( $meta_total );
+
+			if ( is_array( $meta_total ) ) {
+				$total = (float) $meta_total[0];
+			} else {
+				$total = (float) $meta_total;
+			}
+		}
+
 		// In some cases (very few) there is no cart details...so we have to just avoid this part.
 		if ( ! empty( $cart_details ) && is_array( $cart_details ) ) {
 
 			// Loop through the items in the purchase to build the totals.
 			foreach ( $cart_details as $cart_item ) {
 				$subtotal += isset( $cart_item['subtotal'] ) ? (float) $cart_item['subtotal'] : 0;
-				$tax      += isset( $cart_item['tax'] )      ? (float) $cart_item['tax']      : 0;
 				$discount += isset( $cart_item['discount'] ) ? (float) $cart_item['discount'] : 0;
-				$total    += isset( $cart_item['price'] )    ? (float) $cart_item['price']    : 0;
-			}
 
+				if ( false === $meta_tax ) {
+					$tax += isset( $cart_item['tax'] ) ? (float) $cart_item['tax'] : 0;
+				}
+
+				if ( false === $meta_total ) {
+					$total += isset( $cart_item['price'] ) ? (float) $cart_item['price'] : 0;
+				}
+			}
 		} else {
-
-			// As a backup, we can get some information from other meta keys.
-			if ( isset( $meta['_edd_payment_total'][0] ) ) {
-				$total = (float) $meta['_edd_payment_total'][0];
-			}
-
-			if ( isset( $meta['_edd_payment_tax'][0] ) ) {
-				$tax = (float) $meta['_edd_payment_tax'][0];
-			}
-
 			$subtotal = $total - $tax;
-
 		}
 
 		// Account for a situation where the post_date_gmt is set to 0000-00-00 00:00:00
