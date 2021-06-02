@@ -77,7 +77,12 @@ function edd_render_download_columns( $column_name, $post_id ) {
 			break;
 		case 'sales':
 			if ( current_user_can( 'view_product_stats', $post_id ) ) {
-				echo '<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-tools&tab=logs&view=sales&download=' . $post_id ) ) . '">';
+				$sales_url = add_query_arg( array(
+					'page'       => 'edd-payment-history',
+					'product-id' => urlencode( $post_id )
+				), edd_get_admin_base_url() );
+
+				echo '<a href="' . esc_url( $sales_url ) . '">';
 					echo edd_get_download_sales_stats( $post_id );
 				echo '</a>';
 			} else {
