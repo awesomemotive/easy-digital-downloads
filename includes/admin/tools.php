@@ -1637,7 +1637,7 @@ function edd_redirect_sales_log() {
 			}
 		}
 
-		wp_safe_redirect( esc_url_raw( add_query_arg( $query_args ), edd_get_admin_base_url() ) );
+		wp_safe_redirect( esc_url_raw( add_query_arg( $query_args, edd_get_admin_base_url() ) ) );
 		exit;
 	}
 }
