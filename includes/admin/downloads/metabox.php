@@ -1326,8 +1326,8 @@ function edd_render_stats_meta_box() {
 	</p>
 
 	<p class="product-earnings-stats">
-		<span class="label"><?php _e( 'Earnings:', 'easy-digital-downloads' ); ?></span>
-		<span><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-reports&view=downloads&download-id=' . $post_id ); ?>"><?php echo esc_html( edd_currency_filter( edd_format_amount( $earnings ) ) ); ?></a></span>
+		<span class="label"><?php esc_html_e( 'Gross Revenue:', 'easy-digital-downloads' ); ?></span>
+		<span><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-reports&view=downloads&download-id=' . $post_id ); ?>"><?php echo edd_currency_filter( edd_format_amount( $earnings ) ); ?></a></span>
 	</p>
 
 	<hr />

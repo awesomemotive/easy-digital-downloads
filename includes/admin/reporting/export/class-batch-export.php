@@ -22,6 +22,13 @@ defined( 'ABSPATH' ) || exit;
 class EDD_Batch_Export extends EDD_Export {
 
 	/**
+	 * Whether or not we're done processing.
+	 *
+	 * @var bool
+	 */
+	public $done;
+
+	/**
 	 * The file the data is stored in
 	 *
 	 * @since 2.4

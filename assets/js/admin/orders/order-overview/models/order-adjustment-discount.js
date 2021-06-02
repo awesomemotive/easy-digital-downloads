@@ -56,7 +56,9 @@ export const OrderAdjustmentDiscount = OrderAdjustment.extend( {
 			} );
 
 			if ( undefined !== discount ) {
-				amount += +number.format( discount.get( 'subtotal' ) );
+				amount += number.unformat(
+					number.format( discount.get( 'subtotal' ) )
+				);
 			}
 		} );
 
