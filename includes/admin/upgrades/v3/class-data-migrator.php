@@ -455,10 +455,17 @@ class Data_Migrator {
 			return;
 		}
 
-		$subtotal = 0;
-		$tax      = 0;
-		$discount = 0;
-		$total    = 0;
+		$subtotal    = 0;
+		$order_tax   = 0;
+		$discount    = 0;
+		$order_total = 0;
+
+		// Track the total value of added fees in case the Order was initially migrated
+		// without _edd_payment_total or _edd_payment_tax and manual calculation was needed.
+		$order_fees_tax         = 0;
+		$order_fees_total       = 0;
+		$order_items_fees_tax   = 0;
+		$order_items_fees_total = 0;
 
 		// Retrieve the tax amount from metadata if available.
 		$meta_tax = isset( $meta['_edd_payment_tax'] )
@@ -466,13 +473,8 @@ class Data_Migrator {
 			: false;
 
 		if ( false !== $meta_tax ) {
-			$meta_tax = maybe_unserialize( $meta_tax );
-
-			if ( is_array( $meta_tax ) ) {
-				$tax = (float) $meta_tax[0];
-			} else {
-				$tax = (float) $meta_tax;
-			}
+			$meta_tax  = maybe_unserialize( $meta_tax );
+			$order_tax = (float) $meta_tax[0];
 		}
 
 		// Retrieve the total amount from metadata if available.
@@ -481,13 +483,8 @@ class Data_Migrator {
 			: false;
 
 		if ( false !== $meta_total ) {
-			$meta_total = maybe_unserialize( $meta_total );
-
-			if ( is_array( $meta_total ) ) {
-				$total = (float) $meta_total[0];
-			} else {
-				$total = (float) $meta_total;
-			}
+			$meta_total  = maybe_unserialize( $meta_total );
+			$order_total = (float) $meta_total[0];
 		}
 
 		// In some cases (very few) there is no cart details...so we have to just avoid this part.
@@ -495,19 +492,30 @@ class Data_Migrator {
 
 			// Loop through the items in the purchase to build the totals.
 			foreach ( $cart_details as $cart_item ) {
-				$subtotal += isset( $cart_item['subtotal'] ) ? (float) $cart_item['subtotal'] : 0;
 				$discount += isset( $cart_item['discount'] ) ? (float) $cart_item['discount'] : 0;
+				$subtotal += isset( $cart_item['subtotal'] ) ? (float) $cart_item['subtotal'] : 0;
 
+				// Add the cart line item tax amount if a total is not available on the order.
 				if ( false === $meta_tax ) {
-					$tax += isset( $cart_item['tax'] ) ? (float) $cart_item['tax'] : 0;
+					$order_tax += isset( $cart_item['tax'] ) ? (float) $cart_item['tax'] : 0;
 				}
 
+				// Add the cart line item price amount (includes tax, order item fee, _but not order item fee tax_)
+				// if a total is not available on the order.
 				if ( false === $meta_total ) {
-					$total += isset( $cart_item['price'] ) ? (float) $cart_item['price'] : 0;
+					$order_total += isset( $cart_item['price'] ) ? (float) $cart_item['price'] : 0;
 				}
 			}
+
+			// Cart details cannot be retrieved.
 		} else {
-			$subtotal = $total - $tax;
+
+			// We lose the discount amount at this point... it remains 0.
+
+			// Calculate the subtotal if we have a total and tax amount.
+			if ( false !== $meta_tax && false !== $meta_total ) {
+				$subtotal = $order_total - $order_tax;
+			}
 		}
 
 		// Account for a situation where the post_date_gmt is set to 0000-00-00 00:00:00
@@ -565,8 +573,8 @@ class Data_Migrator {
 		}
 
 		if ( 'manual_purchases' === $gateway && isset( $meta['_edd_payment_total'][0] ) ) {
-			$gateway = 'manual';
-			$total   = $meta['_edd_payment_total'][0];
+			$gateway     = 'manual';
+			$order_total = $meta['_edd_payment_total'][0];
 		}
 
 		/*
@@ -663,11 +671,11 @@ class Data_Migrator {
 			'mode'           => $mode,
 			'currency'       => ! empty( $payment_meta['currency'] ) ? $payment_meta['currency'] : edd_get_currency(),
 			'payment_key'    => $purchase_key,
-			'tax_rate_id'   => $tax_rate_id,
+			'tax_rate_id'    => $tax_rate_id,
 			'subtotal'       => $subtotal,
-			'tax'            => $tax,
+			'tax'            => $order_tax,
 			'discount'       => $discount,
-			'total'          => $total,
+			'total'          => $order_total,
 		);
 
 		$order_id = edd_add_order( $order_data );
@@ -696,9 +704,9 @@ class Data_Migrator {
 
 			// Negate the amounts
 			$refund_data['subtotal'] = edd_negate_amount( $subtotal );
-			$refund_data['tax']      = edd_negate_amount( $tax );
+			$refund_data['tax']      = edd_negate_amount( $order_tax );
 			$refund_data['discount'] = edd_negate_amount( $discount );
-			$refund_data['total']    = edd_negate_amount( $total );
+			$refund_data['total']    = edd_negate_amount( $order_total );
 
 
 			// These are the best guess at the date it was refunded since we didn't store that prior.
@@ -762,7 +770,7 @@ class Data_Migrator {
 				'transaction_id' => $transaction_id,
 				'gateway'        => $gateway,
 				'status'         => 'complete',
-				'total'          => $total,
+				'total'          => $order_total,
 				'date_created'   => $date_completed,
 				'date_modified'  => $date_completed,
 			) );
@@ -947,11 +955,11 @@ class Data_Migrator {
 						// Reset any conditional IDs to be safe.
 						$refund_adjustment_id = 0;
 
-						$tax_rate = isset( $meta['_edd_payment_tax_rate'][0] )
-							? (float) $meta['_edd_payment_tax_rate'][0]
-							: 0.00;
+						$tax   = EDD()->fees->get_calculated_tax( $fee, $tax_rate );
+						$total = floatval( $fee['amount'] ) + $tax;
 
-						$tax = EDD()->fees->get_calculated_tax( $fee, $tax_rate );
+						// Track order item fees tax to adjust order if needed.
+						$order_items_fees_tax += $tax;
 
 						// Add the adjustment.
 						$adjustment_args = array(
@@ -1040,8 +1048,11 @@ class Data_Migrator {
 					continue;
 				}
 
-				// Reverse engineer the tax calculation.
-				$tax = EDD()->fees->get_calculated_tax( $fee, $tax_rate );
+				$tax   = EDD()->fees->get_calculated_tax( $fee, $tax_rate );
+				$total = floatval( $fee['amount'] ) + $tax;
+
+				$order_fees_tax   += $tax;
+				$order_fees_total += $total;
 
 				// Add the adjustment.
 				$adjustment_args = array(
@@ -1052,7 +1063,7 @@ class Data_Migrator {
 					'description'   => $fee['label'],
 					'subtotal'      => floatval( $fee['amount'] ),
 					'tax'           => $tax,
-					'total'         => floatval( $fee['amount'] ) + $tax,
+					'total'         => $total,
 					'date_created'  => $date_created_gmt,
 					'date_modified' => $data->post_modified_gmt,
 				);
@@ -1075,6 +1086,22 @@ class Data_Migrator {
 					$refund_adjustment_id = edd_add_order_adjustment( $refund_adjustment_args );
 				}
 			}
+		}
+
+		// Add fee taxes (order and order item) if the order tax amount was previously manually calculated.
+		if ( false === $meta_tax ) {
+			edd_update_order( $order_id, array(
+				'tax' => $order_tax + $order_fees_tax + $order_items_fees_tax,
+			) );
+		}
+
+		// Add fee totals (order and order item) if the order tax amount was previously manually calculated.
+		// Order item fees were previously included in the total calculation. We must manually include
+		// order item fee tax amounts, and order fees total (subtotal + tax).
+		if ( false === $meta_total ) {
+			edd_update_order( $order_id, array(
+				'total' => $order_total + $order_fees_total + $order_items_fees_tax,
+			) );
 		}
 
 		// Insert discounts.
