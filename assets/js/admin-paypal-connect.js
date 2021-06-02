@@ -79,7 +79,7 @@ jQuery( document ).ready( function ( $ ) {
 		button.prop( 'disabled', true );
 		button.addClass( 'updating-message' );
 
-		var errorWrap = button.closest( '.edd-paypal-actions-error-wrap' );
+		var errorWrap = $( '#edd-paypal-commerce-connect-wrap' ).find( '.edd-paypal-actions-error-wrap' );
 		if ( errorWrap.length ) {
 			errorWrap.remove();
 		}
@@ -97,7 +97,7 @@ jQuery( document ).ready( function ( $ ) {
 				// Refresh account status.
 				eddPayPalGetAccountStatus();
 			} else {
-				button.parent().after( '<div class="edd-paypal-actions-error-wrap">' + response.data + '</div>' );
+				button.parent().after( '<p class="edd-paypal-actions-error-wrap">' + response.data + '</p>' );
 			}
 		} );
 	} );

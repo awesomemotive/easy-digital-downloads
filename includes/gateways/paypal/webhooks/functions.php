@@ -82,6 +82,10 @@ function get_webhook_events( $mode = '' ) {
  * @throws Authentication_Exception
  */
 function create_webhook( $mode = '' ) {
+	if ( ! is_ssl() ) {
+		throw new API_Exception( __( 'An SSL certificate is required to create a PayPal webhook.', 'easy-digital-downloads' ) );
+	}
+
 	if ( empty( $mode ) ) {
 		$mode = edd_is_test_mode() ? API::MODE_SANDBOX : API::MODE_LIVE;
 	}

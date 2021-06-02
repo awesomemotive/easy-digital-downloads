@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 2.10.5\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2021-06-01 11:29:55+00:00\n"
+"POT-Creation-Date: 2021-06-02 10:35:26+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -7129,6 +7129,13 @@ msgid ""
 "target=\"_blank\">our documentation</a>."
 msgstr ""
 
+#: includes/gateways/paypal/admin/settings.php:129
+msgid ""
+"PayPal requires an SSL certificate to accept payments. You can learn more "
+"about obtaining an SSL certificate in our <a href=\"%s\" "
+"target=\"_blank\">SSL setup article</a>."
+msgstr ""
+
 #: includes/gateways/paypal/checkout-actions.php:48
 #: includes/gateways/paypal/checkout-actions.php:113
 msgid "Please connect your PayPal account in the gateway settings."
@@ -7263,30 +7270,34 @@ msgstr ""
 msgid "Full refund processed in PayPal."
 msgstr ""
 
-#: includes/gateways/paypal/webhooks/functions.php:123
+#: includes/gateways/paypal/webhooks/functions.php:86
+msgid "An SSL certificate is required to create a PayPal webhook."
+msgstr ""
+
+#: includes/gateways/paypal/webhooks/functions.php:127
 #. Translators: %d - HTTP response code; %s - Full response from the API.
 msgid "Invalid response code %d while creating webhook. Response: %s"
 msgstr ""
 
-#: includes/gateways/paypal/webhooks/functions.php:130
+#: includes/gateways/paypal/webhooks/functions.php:134
 msgid "Unexpected response from PayPal."
 msgstr ""
 
-#: includes/gateways/paypal/webhooks/functions.php:157
+#: includes/gateways/paypal/webhooks/functions.php:161
 msgid "Webhook not configured."
 msgstr ""
 
-#: includes/gateways/paypal/webhooks/functions.php:183
+#: includes/gateways/paypal/webhooks/functions.php:187
 #. Translators: %d - HTTP response code; %s - Full response from the API.
 msgid "Invalid response code %d while syncing webhook. Response: %s"
 msgstr ""
 
-#: includes/gateways/paypal/webhooks/functions.php:218
+#: includes/gateways/paypal/webhooks/functions.php:222
 #. Translators: %d - HTTP response code.
 msgid "Invalid response code %d while retrieving webhook details."
 msgstr ""
 
-#: includes/gateways/paypal/webhooks/functions.php:224
+#: includes/gateways/paypal/webhooks/functions.php:228
 msgid "Unexpected response from PayPal when retrieving webhook details."
 msgstr ""
 

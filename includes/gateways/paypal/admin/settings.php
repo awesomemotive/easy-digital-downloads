@@ -120,5 +120,20 @@ function documentation_settings_field() {
 		?>
 	</p>
 	<?php
+	if ( ! is_ssl() ) {
+		?>
+		<div class="notice notice-warning inline">
+			<p>
+				<?php
+				echo wp_kses( sprintf(
+					__( 'PayPal requires an SSL certificate to accept payments. You can learn more about obtaining an SSL certificate in our <a href="%s" target="_blank">SSL setup article</a>.', 'easy-digital-downloads' ),
+					'https://docs.easydigitaldownloads.com/article/994-how-to-set-up-ssl'
+				), array( 'a' => array( 'href' => true, 'target' => true ) ) );
+				?>
+			</p>
+		</div>
+		<?php
+	}
+
 	return ob_get_clean();
 }
