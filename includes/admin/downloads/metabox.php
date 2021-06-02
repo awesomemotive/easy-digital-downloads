@@ -1328,7 +1328,7 @@ function edd_render_stats_meta_box() {
 
 	<p class="product-sales-stats">
 		<span class="label"><?php _e( 'Sales:', 'easy-digital-downloads' ); ?></span>
-		<span><a href="<?php echo esc_url( $sales_url ); ?>"><?php echo $sales; ?></a></span>
+		<span><a href="<?php echo esc_url( $sales_url ); ?>"><?php echo esc_html( $sales ); ?></a></span>
 	</p>
 
 	<p class="product-earnings-stats">
