@@ -157,7 +157,7 @@ class EDD_Batch_Payments_Export extends EDD_Batch_Export {
 					$products .= html_entity_decode( edd_get_price_option_name( $id, $item->price_id, $order->id ) ) . ' - ';
 				}
 
-				$products .= html_entity_decode( edd_currency_filter( edd_format_amount( $price ) ) );
+				$products .= html_entity_decode( edd_currency_filter( edd_format_amount( $price ), $order->currency ) );
 
 				if ( $key != ( count( $items ) -1 ) ) {
 					$products .= ' / ';
