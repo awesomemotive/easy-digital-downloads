@@ -1105,6 +1105,7 @@ class Data_Migrator {
 			'_edd_completed_date',
 			'_edd_payment_unlimited_downloads',
 			'_edd_payment_number',
+			'_edd_payment_transaction_id',
 		);
 
 		// Determine what main payment meta keys were from core and what were custom...
