@@ -465,10 +465,9 @@ class Data_Migrator {
 
 		// Track the total value of added fees in case the Order was initially migrated
 		// without _edd_payment_total or _edd_payment_tax and manual calculation was needed.
-		$order_fees_tax         = 0;
-		$order_fees_total       = 0;
-		$order_items_fees_tax   = 0;
-		$order_items_fees_total = 0;
+		$order_fees_tax       = 0;
+		$order_fees_total     = 0;
+		$order_items_fees_tax = 0;
 
 		// Retrieve the tax amount from metadata if available.
 		$meta_tax = isset( $meta['_edd_payment_tax'] )
