@@ -244,6 +244,7 @@ function edd_register_overview_report( $reports ) {
 					'data_callback' => function () use ( $exclude_taxes, $currency ) {
 						$stats = new EDD\Stats( array(
 							'output'        => 'formatted',
+							'function'      => 'COUNT',
 							'exclude_taxes' => $exclude_taxes,
 							'currency'      => $currency
 						) );
@@ -265,9 +266,11 @@ function edd_register_overview_report( $reports ) {
 						$stats = new EDD\Stats();
 						return apply_filters( 'edd_reports_overview_earnings', $stats->get_order_earnings( array(
 							'range'         => $dates['range'],
+							'function'      => 'SUM',
 							'exclude_taxes' => $exclude_taxes,
 							'currency'      => $currency,
 							'relative'      => true,
+							'output'        => 'formatted',
 						) ) );
 					},
 					'display_args'  => array(
@@ -281,11 +284,12 @@ function edd_register_overview_report( $reports ) {
 			'label' => __( 'Sales', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $dates ) {
+					'data_callback' => function () use ( $dates, $currency ) {
 						$stats = new EDD\Stats();
 						return apply_filters( 'edd_reports_overview_sales', $stats->get_order_count( array(
 							'range'    => $dates['range'],
 							'relative' => true,
+							'currency' => $currency
 						) ) );
 					},
 					'display_args'  => array(
@@ -396,11 +400,13 @@ function edd_register_overview_report( $reports ) {
 			'label' => __( 'Taxes', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $dates ) {
+					'data_callback' => function () use ( $dates, $currency ) {
 						$stats = new EDD\Stats();
 						return apply_filters( 'edd_reports_overview_taxes', $stats->get_tax( array(
 							'range'    => $dates['range'],
+							'function' => 'SUM',
 							'relative' => true,
+							'currency' => $currency
 						) ) );
 					},
 					'display_args'  => array(
@@ -414,10 +420,11 @@ function edd_register_overview_report( $reports ) {
 			'label' => __( 'Busiest Day', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $dates ) {
+					'data_callback' => function () use ( $dates, $currency ) {
 						$stats = new EDD\Stats();
 						return apply_filters( 'edd_reports_overview_busiest_day', $stats->get_busiest_day( array(
-							'range' => $dates['range'],
+							'range'    => $dates['range'],
+							'currency' => $currency
 						) ) );
 					},
 					'display_args'  => array(
@@ -481,7 +488,7 @@ function edd_register_downloads_report( $reports ) {
 		$options       = Reports\get_dates_filter_options();
 		$dates         = Reports\get_filter_value( 'dates' );
 		$exclude_taxes = Reports\get_taxes_excluded_filter();
-		$currency      = Reports\get_filter_value( 'currencies' );
+		$currency      = '';
 
 		$hbh   = Reports\get_dates_filter_hour_by_hour();
 		$label = $options[ $dates['range'] ] . ( $hbh ? ' (' . edd_get_timezone_abbr() . ')' : '' );
@@ -561,7 +568,7 @@ function edd_register_downloads_report( $reports ) {
 				'charts' => $charts,
 				'tables' => $tables,
 			),
-			'filters'   => array( 'dates', 'products', 'taxes', 'currencies' ),
+			'filters'   => array( 'dates', 'products', 'taxes' ),
 		) );
 
 		$reports->register_endpoint( 'most_valuable_download', array(
@@ -572,7 +579,8 @@ function edd_register_downloads_report( $reports ) {
 						$stats = new EDD\Stats();
 						$d     = $stats->get_most_valuable_order_items( array(
 							'range'    => $dates['range'],
-							'currency' => $currency
+							'currency' => $currency,
+							'function' => 'SUM'
 						) );
 
 						if ( ! empty( $d ) && isset( $d[0] ) ) {
@@ -635,8 +643,12 @@ function edd_register_downloads_report( $reports ) {
 							'output'     => 'formatted',
 						) );
 
-						$earnings = $stats->get_order_item_earnings();
-						$sales    = $stats->get_order_item_count();
+						$earnings = $stats->get_order_item_earnings( array(
+							'function' => 'SUM'
+						) );
+						$sales    = $stats->get_order_item_count( array(
+							'function' => 'COUNT'
+						) );
 
 						return apply_filters( 'edd_reports_downloads_sales_earnings', esc_html( $sales . ' / ' . $earnings ) );
 					},
@@ -777,7 +789,6 @@ function edd_register_downloads_report( $reports ) {
 			'views' => array(
 				'chart' => array(
 					'data_callback' => function () use ( $download_data, $currency ) {
-						// @todo currency
 						global $wpdb;
 
 						$dates        = Reports\get_dates_filter( 'objects' );
@@ -809,7 +820,7 @@ function edd_register_downloads_report( $reports ) {
 							: '';
 
 						$results = $wpdb->get_results( $wpdb->prepare(
-							"SELECT COUNT(total) AS sales, SUM(total) AS earnings, {$sql_clauses['select']}
+							"SELECT COUNT(total) AS sales, SUM(total / rate) AS earnings, {$sql_clauses['select']}
 							FROM {$wpdb->edd_order_items} edd_oi
 							WHERE product_id = %d {$price_id} AND date_created >= %s AND date_created <= %s AND status = 'complete'
 							GROUP BY {$sql_clauses['groupby']}
@@ -1433,7 +1444,6 @@ function edd_register_payment_gateways_report( $reports ) {
 			'views' => array(
 				'chart' => array(
 					'data_callback' => function () use ( $dates, $exclude_taxes, $currency ) {
-						// @todo currency
 						global $wpdb;
 
 						$dates        = Reports\get_dates_filter( 'objects' );
@@ -1460,15 +1470,23 @@ function edd_register_payment_gateways_report( $reports ) {
 							);
 						}
 
-            $gateway = Reports\get_filter_value( 'gateways' );
-            $column  = $exclude_taxes
-              ? 'total - tax'
-              : 'total';
+						$gateway = Reports\get_filter_value( 'gateways' );
+						$column  = $exclude_taxes
+							? '( total - tax ) / rate'
+							: 'total / rate';
+
+						$currency_sql = '';
+						if ( ! empty( $currency ) && array_key_exists( strtoupper( $currency ), edd_get_currencies() ) ) {
+							$currency_sql = $wpdb->prepare(
+								" AND currency = %s ",
+								strtoupper( $currency )
+							);
+						}
 
 						$results = $wpdb->get_results( $wpdb->prepare(
 							"SELECT COUNT({$column}) AS sales, SUM({$column}) AS earnings, {$sql_clauses['select']}
 							FROM {$wpdb->edd_orders} o
-							WHERE gateway = %s AND status IN ('complete', 'revoked') AND date_created >= %s AND date_created <= %s
+							WHERE gateway = %s AND status IN ('complete', 'revoked') {$currency_sql} AND date_created >= %s AND date_created <= %s
 							GROUP BY {$sql_clauses['groupby']}
 							ORDER BY {$sql_clauses['orderby']} ASC",
 							esc_sql( $gateway ), $dates['start']->copy()->format( 'mysql' ), $dates['end']->copy()->format( 'mysql' ) ) );
