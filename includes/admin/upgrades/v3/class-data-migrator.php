@@ -511,15 +511,6 @@ class Data_Migrator {
 				}
 			}
 
-			// Cart details cannot be retrieved.
-		} else {
-
-			// We lose the discount amount at this point... it remains 0.
-
-			// Calculate the subtotal if we have a total and tax amount.
-			if ( false !== $meta_tax && false !== $meta_total ) {
-				$subtotal = $order_total - $order_tax;
-			}
 		}
 
 		// Account for a situation where the post_date_gmt is set to 0000-00-00 00:00:00
