@@ -139,7 +139,7 @@ class Stats {
 	 * @type array  $accepted_function Accepted functions for this query.
 	 *                    }
 	 *
-	 * @return string Example: `SUM( total * rate )`
+	 * @return string Example: `SUM( total / rate )`
 	 * @throws \InvalidArgumentException
 	 */
 	private function get_amount_column_and_function( $args = array() ) {

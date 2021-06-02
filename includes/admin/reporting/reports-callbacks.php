@@ -30,7 +30,7 @@ function edd_overview_sales_earnings_chart() {
 	$currency     = Reports\get_filter_value( 'currencies' );
 
 	if ( empty( $currency ) || 'convert' === $currency ) {
-		$column .= ' * rate';
+		$column .= ' / rate';
 	}
 
 	$sql_clauses = array(
@@ -147,7 +147,7 @@ function edd_overview_refunds_chart() {
 	$currency     = Reports\get_filter_value( 'currencies' );
 
 	if ( empty( $currency ) || 'convert' === $currency ) {
-		$column = sprintf( '(%s) * rate', $column );
+		$column = sprintf( '(%s) / rate', $column );
 	}
 
 	$sql_clauses = array(
