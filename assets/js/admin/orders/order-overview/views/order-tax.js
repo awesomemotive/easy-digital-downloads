@@ -82,7 +82,7 @@ export const OrderTax = wp.Backbone.View.extend( {
 			},
 
 			tax,
-			taxCurrency: currency.format( number.absint( tax ) ),
+			taxCurrency: currency.format( tax ),
 
 			hasTaxableItems: taxableItems.length > 0,
 		};

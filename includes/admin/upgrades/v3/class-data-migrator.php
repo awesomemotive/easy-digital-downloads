@@ -752,12 +752,16 @@ class Data_Migrator {
 		}
 
 		// Transaction IDs are no longer meta, and have their own table and data set, so we need to add the transactions.
-		// @TODO: Add support for multiple transaction IDs (from things like Stripe).
-		if ( isset( $meta['_edd_payment_transaction_id'] ) && ! empty( $meta['_edd_payment_transaction_id'][0] ) ) {
+		$transaction_id = ! empty( $meta['_edd_payment_transaction_id'][0] ) ? $meta['_edd_payment_transaction_id'][0] : false;
+		// If we have no transaction ID & the gateway was PayPal, let's check in old payment notes.
+		if ( empty( $transaction_id ) && false !== strpos( $gateway, 'paypal' ) ) {
+			$transaction_id = self::find_transaction_id_from_notes( $order_id );
+		}
+		if ( ! empty( $transaction_id ) ) {
 			edd_add_order_transaction( array(
 				'object_id'      => $order_id,
 				'object_type'    => 'order',
-				'transaction_id' => $meta['_edd_payment_transaction_id'][0],
+				'transaction_id' => $transaction_id,
 				'gateway'        => $gateway,
 				'status'         => 'complete',
 				'total'          => $total,
@@ -904,10 +908,6 @@ class Data_Migrator {
 					unset( $cart_item['item_number']['options']['quantity'] );
 
 					foreach ( $cart_item['item_number']['options'] as $option_key => $value ) {
-						if ( is_array( $value ) ) {
-							$value = maybe_serialize( $value );
-						}
-
 						$option_key = '_option_' . sanitize_key( $option_key );
 
 						edd_add_order_item_meta( $order_item_id, $option_key, $value );
@@ -947,10 +947,6 @@ class Data_Migrator {
 						unset( $cart_item['item_number']['options']['quantity'] );
 
 						foreach ( $cart_item['item_number']['options'] as $option_key => $value ) {
-							if ( is_array( $value ) ) {
-								$value = maybe_serialize( $value );
-							}
-
 							$option_key = '_option_' . sanitize_key( $option_key );
 
 							edd_add_order_item_meta( $refund_order_item_id, $option_key, $value );
@@ -1186,6 +1182,7 @@ class Data_Migrator {
 			'_edd_completed_date',
 			'_edd_payment_unlimited_downloads',
 			'_edd_payment_number',
+			'_edd_payment_transaction_id',
 		);
 
 		// Determine what main payment meta keys were from core and what were custom...
@@ -1207,6 +1204,36 @@ class Data_Migrator {
 		 * @param array $meta         All post meta associated with the payment.
 		 */
 		do_action( 'edd_30_migrate_order', $order_id, $payment_meta, $meta );
+	}
+
+	/**
+	 * Attempts to locate a PayPal transaction ID from legacy payment notes.
+	 *
+	 * @since 3.0
+	 *
+	 * @param int $payment_id
+	 *
+	 * @return string|false Transaction ID on success, false if not found.
+	 */
+	private static function find_transaction_id_from_notes( $payment_id ) {
+		global $wpdb;
+
+		$payment_notes = $wpdb->get_col( $wpdb->prepare(
+			"SELECT comment_content FROM {$wpdb->comments} WHERE comment_post_ID = %d",
+			$payment_id
+		) );
+
+		if ( empty( $payment_notes ) || ! is_array( $payment_notes ) ) {
+			return false;
+		}
+
+		foreach ( $payment_notes as $note ) {
+			if ( preg_match( '/^PayPal Transaction ID: ([^\s]+)/', $note, $match ) ) {
+				return $match[1];
+			}
+		}
+
+		return false;
 	}
 
 	/**

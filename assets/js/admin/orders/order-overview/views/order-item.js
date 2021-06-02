@@ -69,10 +69,10 @@ export const OrderItem = Base.extend( {
 			...Base.prototype.prepare.apply( this, arguments ),
 
 			discount: discountAmount,
-			amountCurrency: currency.format( number.absint( model.get( 'amount' ) ) ),
-			subtotalCurrency: currency.format( number.absint( model.get( 'subtotal' ) ) ),
+			amountCurrency: currency.format( model.get( 'amount' ) ),
+			subtotalCurrency: currency.format( model.get( 'subtotal' ) ),
 			tax,
-			taxCurrency: currency.format( number.absint( tax ) ),
+			taxCurrency: currency.format( tax ),
 			total: model.getTotal(),
 
 			config: {

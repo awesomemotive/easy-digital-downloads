@@ -135,7 +135,8 @@ class Orders extends Schema {
 		array(
 			'name'       => 'currency',
 			'type'       => 'varchar',
-			'length'     => '20'
+			'length'     => '20',
+			'validate'   => 'strtoupper',
 		),
 
 		// payment_key

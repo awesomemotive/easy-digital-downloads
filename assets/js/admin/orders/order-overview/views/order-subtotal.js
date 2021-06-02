@@ -62,7 +62,7 @@ export const OrderSubtotal = wp.Backbone.View.extend( {
 			},
 
 			subtotal,
-			subtotalCurrency: currency.format( number.absint( subtotal ) ),
+			subtotalCurrency: currency.format( subtotal ),
 		};
 	},
 } );

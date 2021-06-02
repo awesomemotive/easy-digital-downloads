@@ -98,7 +98,7 @@ export const OrderItem = Backbone.Model.extend( {
 		const state = this.get( 'state' );
 		const { number } = state.get( 'formatters' );
 
-		return +number.format( this.get( 'tax' ) );
+		return number.unformat( number.format( this.get( 'tax' ) ) );
 	},
 
 	/**
