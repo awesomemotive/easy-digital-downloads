@@ -1129,6 +1129,13 @@ function edd_pagination( $args = array() ) {
 
 	$args = wp_parse_args( $args, $defaults );
 	
+	/**
+	 * Filter pagination args.
+	 *
+	 * @since 1.0
+	 *
+	 * @param array $args Pagination arguments.
+	 */
 	$args = apply_filters( 'edd_pagination_args', $args );
 
 	$type  = $args['type'];
