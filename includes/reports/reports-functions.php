@@ -398,8 +398,12 @@ function get_filter_value( $filter ) {
 			} else {
 				$value = array(
 					'range' => sanitize_text_field( $_GET[ 'range' ] ),
-					'from'  => sanitize_text_field( $_GET[ 'filter_from'] ),
-					'to'    => sanitize_text_field( $_GET[ 'filter_to'] ),
+					'from'  => isset( $_GET['filter_from'] )
+						? sanitize_text_field( $_GET[ 'filter_from'] )
+						: '',
+					'to'    => isset( $_GET['filter_to'] )
+						? sanitize_text_field( $_GET[ 'filter_to'] )
+						: ''
 				);
 			}
 
