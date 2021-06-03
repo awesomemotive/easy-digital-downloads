@@ -46,6 +46,10 @@ class License_Upgrade_Notice extends Notice {
 	 * @return bool
 	 */
 	protected function _should_display() {
+		if ( ! current_user_can( 'manage_shop_settings' ) ) {
+			return false;
+		}
+
 		// Someone with no license keys entered always sees a notice.
 		if ( 0 === $this->number_license_keys ) {
 			return true;
