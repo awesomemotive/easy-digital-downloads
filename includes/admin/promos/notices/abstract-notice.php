@@ -26,7 +26,7 @@ abstract class Notice {
 	/**
 	 * Whether or not the notice can be dismissed.
 	 */
-	const DISMISSABLE = true;
+	const DISMISSIBLE = true;
 
 	/**
 	 * Duration (in seconds) that the notice is dismissed for.
@@ -97,7 +97,7 @@ abstract class Notice {
 		>
 			<?php $this->_display(); ?>
 
-			<?php if ( static::DISMISSABLE ) : ?>
+			<?php if ( static::DISMISSIBLE ) : ?>
 				<button class="button-link edd-promo-notice-dismiss">
 					&times;
 				</button>
