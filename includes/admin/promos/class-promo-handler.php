@@ -70,7 +70,7 @@ class PromoHandler {
 	/**
 	 * Determines whether or not a notice has been dismissed.
 	 *
-	 * @since 2.10.5
+	 * @since 2.10.6
 	 *
 	 * @param string $id ID of the notice to check.
 	 *
@@ -87,7 +87,7 @@ class PromoHandler {
 	/**
 	 * Dismisses a notice.
 	 *
-	 * @since 2.10.5
+	 * @since 2.10.6
 	 *
 	 * @param string $id               ID of the notice to dismiss.
 	 * @param int    $dismissal_length Number of seconds to dismiss the notice for, or `0` for forever.
@@ -102,7 +102,7 @@ class PromoHandler {
 	/**
 	 * AJAX callback for dismissing a notice.
 	 *
-	 * @since 2.10.5
+	 * @since 2.10.6
 	 */
 	public function dismiss_notice() {
 		if ( ! current_user_can( 'manage_options' ) ) {
