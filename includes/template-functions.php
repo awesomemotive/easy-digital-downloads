@@ -1132,7 +1132,7 @@ function edd_pagination( $args = array() ) {
 	/**
 	 * Filter pagination args.
 	 *
-	 * @since 1.0
+	 * @since 3.0
 	 *
 	 * @param array $args Pagination arguments.
 	 */
