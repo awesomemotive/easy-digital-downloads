@@ -19,7 +19,8 @@ class License_Upgrade_Notice extends Notice {
 
 	/**
 	 * Number of EDD license keys that have been entered.
-	 * Note validated to make sure they're actually active.
+	 * Not validated to make sure they're actually active; this is
+	 * just an indicator if any licenses exist at all.
 	 *
 	 * @var array
 	 */
