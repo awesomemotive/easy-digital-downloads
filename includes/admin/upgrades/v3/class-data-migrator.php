@@ -1239,8 +1239,9 @@ class Data_Migrator {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param array $cart_details Cart details.
-	 * @return array
+	 * @param array|string $cart_details Cart details. No action is performed if a string
+	 *                                   (array cannot be unserialized) is provided.
+	 * @return array|string
 	 */
 	private static function normalize_cart_details( $cart_details ) {
 		if ( ! is_array( $cart_details ) ) {
