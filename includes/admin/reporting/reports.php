@@ -70,10 +70,26 @@ function edd_reports_sections() {
 	$sections->use_js          = false;
 	$sections->current_section = Reports\get_current_report();
 	$sections->item            = null;
-	$sections->base_url = edd_get_admin_url( array(
-		'page'             => 'edd-reports',
-		'settings-updated' => false
-	) );
+
+	// Find persisted filters to append to the base URL.
+	$persisted_filters     = Reports\get_persisted_filters();
+	$persisted_filter_args = array();
+
+	foreach ( $persisted_filters as $filter ) {
+		if ( isset( $_GET[ $filter ] ) ) {
+			$persisted_filter_args[ $filter ] = sanitize_text_field( $_GET[ $filter ] );
+		}
+	}
+
+	// Build the section base URL.
+	$sections->base_url = edd_get_admin_url(
+		array_merge(
+			array(
+				'page'  => 'edd-reports',
+			),
+			$persisted_filter_args
+		)
+	);
 
 	// Get all registered tabs & views
 	$tabs = Reports\get_reports();
