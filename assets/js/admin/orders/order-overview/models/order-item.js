@@ -56,6 +56,32 @@ export const OrderItem = Backbone.Model.extend( {
 	},
 
 	/**
+	 * Returns the `OrderItem` subtotal amount.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param {bool} includeTax If taxes should be included when retrieving the subtotal.
+	 *                          This is needed in some scenarios with inclusive taxes.
+	 * @return {number} Subtotal amount.
+	 */
+	getSubtotal( includeTax = false ) {
+		const state = this.get( 'state' );
+		const subtotal = this.get( 'subtotal' );
+
+		// Use stored value if the record has already been created.
+		if ( false === state.get( 'isAdding' ) ) {
+			return subtotal;
+		}
+
+		// Calculate subtotal.
+		if ( true === state.hasInclusiveTax() && false === includeTax ) {
+			return subtotal - this.getTax();
+		}
+
+		return subtotal;
+	},
+
+	/**
 	 * Returns the Discount amount.
 	 *
 	 * If an Order is being added the amount is calculated based
@@ -96,9 +122,17 @@ export const OrderItem = Backbone.Model.extend( {
 	 */
 	getTax() {
 		const state = this.get( 'state' );
+		const tax = this.get( 'tax' );
+
+		// Use stored value if the record has already been created.
+		if ( false === state.get( 'isAdding' ) ) {
+			return tax;
+		}
+
+		// Calculate tax.
 		const { number } = state.get( 'formatters' );
 
-		return number.unformat( number.format( this.get( 'tax' ) ) );
+		return number.unformat( number.format( tax ) );
 	},
 
 	/**
@@ -109,6 +143,18 @@ export const OrderItem = Backbone.Model.extend( {
 	 * @return {number} Total amount.
 	 */
 	getTotal() {
+		const state = this.get( 'state' );
+
+		// Use stored value if the record has already been created.
+		if ( false === state.get( 'isAdding' ) ) {
+			return this.get( 'total' );
+		}
+
+		// Calculate total.
+		if ( true === state.hasInclusiveTax() ) {
+			return this.get( 'subtotal' ) - this.getDiscountAmount();
+		}
+
 		return ( this.get( 'subtotal' ) - this.getDiscountAmount() ) + this.getTax();
 	},
 
