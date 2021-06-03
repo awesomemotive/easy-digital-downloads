@@ -425,14 +425,14 @@ class EDD_Discount extends Adjustment {
 	 * Handle method dispatch dynamically.
 	 *
 	 * @param string $method Method name.
-	 * @param array $args Arguments to be passed to method.
+	 * @param array  $args   Arguments to be passed to method.
 	 *
 	 * @return mixed
 	 */
 	public function __call( $method, $args ) {
-		$property = str_replace( 'setup_', '', $method );
+		$property = strtolower( str_replace( array( 'setup_', 'get_' ), '', $method ) );
 		if ( ! method_exists( $this, $method ) && property_exists( $this, $property ) ) {
-			return $this->{$property( $args )};
+			return $this->{$property};
 		}
 	}
 
