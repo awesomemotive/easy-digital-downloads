@@ -38,14 +38,14 @@ class PromoHandler {
 	/**
 	 * Loads and displays all registered promotional notices.
 	 *
-	 * @since 2.10.5
+	 * @since 2.10.6
 	 */
 	private function load_notices() {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/promos/notices/abstract-notice.php';
 
-		foreach ( $this->notices as $notice ) {
-			if ( ! class_exists( $notice ) ) {
-				$file_name = strtolower( str_replace( '_', '-', basename( str_replace( '\\', '/', $notice ) ) ) );
+		foreach ( $this->notices as $notice_class_name ) {
+			if ( ! class_exists( $notice_class_name ) ) {
+				$file_name = strtolower( str_replace( '_', '-', basename( str_replace( '\\', '/', $notice_class_name ) ) ) );
 				$file_path = EDD_PLUGIN_DIR . 'includes/admin/promos/notices/class-' . $file_name . '.php';
 
 				if ( file_exists( $file_path ) ) {
@@ -53,15 +53,15 @@ class PromoHandler {
 				}
 			}
 
-			if ( ! class_exists( $notice ) ) {
+			if ( ! class_exists( $notice_class_name ) ) {
 				continue;
 			}
 
-			add_action( $notice::DISPLAY_HOOK, function () use ( $notice ) {
-				/** @var Notice $notice_object */
-				$notice_object = new $notice;
-				if ( $notice_object->should_display() ) {
-					$notice_object->display();
+			add_action( $notice_class_name::DISPLAY_HOOK, function () use ( $notice_class_name ) {
+				/** @var Notice $notice */
+				$notice = new $notice_class_name;
+				if ( $notice->should_display() ) {
+					$notice->display();
 				}
 			} );
 		}
