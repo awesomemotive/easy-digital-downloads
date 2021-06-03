@@ -436,6 +436,33 @@ function get_filter_value( $filter ) {
 }
 
 /**
+ * Returns a list of registered report filters that should be persisted across views.
+ *
+ * @since 3.0
+ *
+ * @return array
+ */
+function get_persisted_filters() {
+	$filters = array(
+		'range',
+		'filter_from',
+		'filter_to',
+		'exclude_taxes',
+	);
+
+	/**
+	 * Filters registered report filters that should be persisted across views.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $filters List of registered filters to persist.
+	 */
+	$filters = apply_filters( 'edd_reports_get_persisted_filters', $filters );
+
+	return $filters;
+}
+
+/**
  * Retrieves key/label pairs of date filter options for use in a drop-down.
  *
  * @since 3.0
@@ -1189,12 +1216,16 @@ function display_country_filter() {
  * @param Data\Report $report Report object.
  */
 function display_filters( $report ) {
+	$action = edd_get_admin_url( array(
+		'page' => 'edd-reports',
+	) );
+	?>
 
-	// Output the filter bar
-	?><form method="get"><?php
-		edd_admin_filter_bar( 'reports', $report );
-	?></form><?php
+	<form action="<?php echo esc_url( $action ); ?>" method="GET">
+		<?php edd_admin_filter_bar( 'reports', $report ); ?>
+	</form>
 
+	<?php
 }
 
 /**
