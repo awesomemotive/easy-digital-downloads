@@ -5,6 +5,7 @@
  * @package   easy-digital-downloads
  * @copyright Copyright (c) 2021, Sandhills Development, LLC
  * @license   GPL2+
+ * @since     2.10.6
  */
 
 namespace EDD\Admin\Promos\Notices;
