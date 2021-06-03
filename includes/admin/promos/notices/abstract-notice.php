@@ -46,7 +46,7 @@ abstract class Notice {
 	 * Generates a unique ID for this notice.
 	 * It's the class name (without the namespace) and with underscores converted to hyphens.
 	 *
-	 * @since 2.10.5
+	 * @since 2.10.6
 	 *
 	 * @return string
 	 */
@@ -60,7 +60,7 @@ abstract class Notice {
 	 * a dismissal check and custom display logic (`_should_display()`). Custom logic
 	 * should go in `_should_display()`.
 	 *
-	 * @since 2.10.5
+	 * @since 2.10.6
 	 *
 	 * @return bool
 	 */
@@ -71,7 +71,7 @@ abstract class Notice {
 	/**
 	 * Individual notices can override this method to control display logic.
 	 *
-	 * @since 2.10.5
+	 * @since 2.10.6
 	 *
 	 * @return bool
 	 */
@@ -84,7 +84,7 @@ abstract class Notice {
 	 * Individual notices typically should not override this method, as it contains
 	 * all the notice wrapper logic. Instead, notices should override `_display()`
 	 *
-	 * @since 2.10.5
+	 * @since 2.10.6
 	 * @return void
 	 */
 	public function display() {
