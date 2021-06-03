@@ -1324,6 +1324,12 @@ function edd_render_stats_meta_box() {
 		'page'       => 'edd-payment-history',
 		'product-id' => urlencode( $post_id )
 	), edd_get_admin_base_url() );
+
+	$earnings_report_url = edd_get_admin_url( array(
+		'page'     => 'edd-reports',
+		'view'     => 'downloads',
+		'products' => $post_id,
+	) );
 	?>
 
 	<p class="product-sales-stats">
@@ -1333,7 +1339,7 @@ function edd_render_stats_meta_box() {
 
 	<p class="product-earnings-stats">
 		<span class="label"><?php esc_html_e( 'Gross Revenue:', 'easy-digital-downloads' ); ?></span>
-		<span><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-reports&view=downloads&download-id=' . $post_id ); ?>"><?php echo edd_currency_filter( edd_format_amount( $earnings ) ); ?></a></span>
+		<span><a href="<?php echo esc_url( $earnings_report_url ); ?>"><?php echo edd_currency_filter( edd_format_amount( $earnings ) ); ?></a></span>
 	</p>
 
 	<hr />
