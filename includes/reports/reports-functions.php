@@ -384,25 +384,52 @@ function get_filter_value( $filter ) {
 		return $value;
 	}
 
-	// Look for filter in transients
-	$filter_key   = get_filter_key( $filter );
-	$filter_value = get_transient( $filter_key );
+	switch ( $filter ) {
+		// Handle dates.
+		case 'dates':
+			if ( ! isset( $_GET['range'] ) ) {
+				$default = 'last_30_days';
+				$dates   = parse_dates_for_range( $default );
+				$value   = array(
+					'range' => $default,
+					'from'  => $dates['start']->format( 'Y-m-d' ),
+					'to'    => $dates['end']->format( 'Y-m-d' ),
+				);
+			} else {
+				$value = array(
+					'range' => sanitize_text_field( $_GET[ 'range' ] ),
+					'from'  => sanitize_text_field( $_GET[ 'filter_from'] ),
+					'to'    => sanitize_text_field( $_GET[ 'filter_to'] ),
+				);
+			}
 
-	// Maybe use transient value
-	if ( false !== $filter_value ) {
-		$value = $filter_value;
+			break;
 
-		// Maybe use dates defaults
-	} elseif ( 'dates' === $filter ) {
+		// Handle taxes.
+		case 'taxes':
+			$value = array();
 
-		// Default to last 30 days for filter value.
-		$default = 'last_30_days';
-		$dates   = parse_dates_for_range( $default );
-		$value   = array(
-			'from'  => $dates['start']->format( 'Y-m-d' ),
-			'to'    => $dates['end']->format( 'Y-m-d' ),
-			'range' => $default,
-		);
+			if ( isset( $_GET['exclude_taxes'] ) ) {
+				$value['exclude_taxes'] = true;
+			}
+
+			break;
+
+		// Handle default (direct from URL).
+		default:
+			$value = isset( $_GET[ $filter ] )
+				? sanitize_text_field( $_GET[ $filter ] )
+				: '';
+
+			/**
+			 * Filters the value of a report filter.
+			 *
+			 * @since 3.0
+			 *
+			 * @param string $value Report filter value.
+			 * @param string $filter Report filter.
+			 */
+			$value = apply_filters( 'edd_reports_get_filter_value', $value, $filter );
 	}
 
 	return $value;
