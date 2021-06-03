@@ -1232,12 +1232,10 @@ function filter_items( $report = false ) {
 		return;
 	}
 
-	// Get form actions
-	$action = admin_url( add_query_arg( array(
-		'post_type' => 'download',
-		'page'      => 'edd-reports',
-		'view'      => get_current_report(),
-	), 'edit.php' ) );
+	$redirect_url = edd_get_admin_url( array(
+		'page' => 'edd-reports',
+		'view' => $report_id,
+	) );
 
 	// Bail if no filters
 	$filters  = $report->get_filters();
@@ -1287,9 +1285,8 @@ function filter_items( $report = false ) {
 
 	<span class="edd-graph-filter-submit graph-option-section">
 		<input type="submit" class="button button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
-		<input type="hidden" name="edd_action" value="filter_reports" />
-		<input type="hidden" name="edd_redirect" value="<?php echo esc_url( $action ); ?>">
-		<input type="hidden" name="report_id" value="<?php echo esc_attr( $report_id ); ?>">
+		<input type="hidden" name="edd_action" value="filter_reports">
+		<input type="hidden" name="edd_redirect" value="<?php echo esc_attr( $redirect_url ); ?>">
 	</span>
 
 	<?php
