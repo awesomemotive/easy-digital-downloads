@@ -7,6 +7,7 @@
  * @package   easy-digital-downloads
  * @copyright Copyright (c) 2021, Sandhills Development, LLC
  * @license   GPL2+
+ * @since     2.10.6
  */
 
 namespace EDD\Admin\Promos;
@@ -22,7 +23,7 @@ class PromoHandler {
 	 * @var string[]
 	 */
 	private $notices = array(
-		'\\EDD\\Admin\\Promos\\Notices\\Sample_Upgrade_Notice'
+		'\\EDD\\Admin\\Promos\\Notices\\License_Upgrade_Notice'
 	);
 
 	/**
