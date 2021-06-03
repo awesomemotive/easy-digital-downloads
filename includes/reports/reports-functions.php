@@ -409,51 +409,6 @@ function get_filter_value( $filter ) {
 }
 
 /**
- * Sets the value of a given report filter.
- *
- * The filter will only be set if the filter is valid.
- *
- * @since 3.0
- *
- * @param string $filter Filter name.
- * @param mixed  $value  Filter value.
- */
-function set_filter_value( $filter, $value ) {
-	if ( validate_filter( $filter ) ) {
-		$filter_key = get_filter_key( $filter );
-
-		set_transient( $filter_key, $value );
-	}
-}
-
-/**
- * Builds the transient key used for a given reports filter.
- *
- * @since 3.0
- *
- * @param string $filter Filter key to retrieve the value for.
- * @return string Transient key for the filter.
- */
-function get_filter_key( $filter ) {
-	$site = get_current_blog_id();
-	$user = get_current_user_id();
-
-	return "reports:filter-{$filter}:site-{$site}:user-{$user}";
-}
-
-/**
- * Clears the value of a filter.
- *
- * @since 3.0
- *
- * @param string $filter Filter key to clear.
- * @return bool true if successful, false otherwise.
- */
-function clear_filter( $filter ) {
-	return delete_transient( get_filter_key( $filter ) );
-}
-
-/**
  * Retrieves key/label pairs of date filter options for use in a drop-down.
  *
  * @since 3.0
