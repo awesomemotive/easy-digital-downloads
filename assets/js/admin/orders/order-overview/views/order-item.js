@@ -58,11 +58,11 @@ export const OrderItem = Base.extend( {
 		const { model, options } = this;
 		const { state } = options;
 
-		const { currency, number } = state.get( 'formatters' );
+		const { currency } = state.get( 'formatters' );
 
+		const subtotal = model.getSubtotal();
 		const discountAmount = model.getDiscountAmount();
 		const isAdjustingManually = model.get( '_isAdjustingManually' );
-
 		const tax = model.getTax();
 
 		return {
@@ -70,7 +70,8 @@ export const OrderItem = Base.extend( {
 
 			discount: discountAmount,
 			amountCurrency: currency.format( model.get( 'amount' ) ),
-			subtotalCurrency: currency.format( model.get( 'subtotal' ) ),
+			subtotal,
+			subtotalCurrency: currency.format( subtotal ),
 			tax,
 			taxCurrency: currency.format( tax ),
 			total: model.getTotal(),
