@@ -146,21 +146,25 @@ function edd_overview_refunds_chart() {
 	$column       = Reports\get_taxes_excluded_filter() ? 'total - tax' : 'total';
 	$currency     = Reports\get_filter_value( 'currencies' );
 
-	if ( empty( $currency ) || 'convert' === $currency ) {
-		$column = sprintf( '(%s) / rate', $column );
-	}
-
 	$sql_clauses = array(
 		'select'  => 'date_created AS date',
 		'groupby' => 'DATE(date_created)',
 		'orderby' => 'DATE(date_created)',
+		'where'   => ''
 	);
+
+	if ( empty( $currency ) || 'convert' === $currency ) {
+		$column = sprintf( '(%s) / rate', $column );
+	} else {
+		$sql_clauses['where'] = $wpdb->prepare( " AND currency = %s ", strtoupper( $currency ) );
+	}
 
 	$results = $wpdb->get_results(
 		$wpdb->prepare(
 			"SELECT COUNT(id) AS number, SUM({$column}) AS amount, {$sql_clauses['select']}
  				 FROM {$wpdb->edd_orders} edd_o
  				 WHERE status IN (%s, %s) AND date_created >= %s AND date_created <= %s AND type = 'refund'
+				{$sql_clauses['where']}
 				 GROUP BY {$sql_clauses['groupby']}
 				 ORDER BY {$sql_clauses['orderby']} ASC",
 			esc_sql( 'complete' ),

@@ -2089,18 +2089,17 @@ function edd_register_discounts_report( $reports ) {
 				'tables' => $tables,
 				'charts' => $charts,
 			),
-			'filters'   => array( 'dates', 'discounts', 'currencies' ),
+			'filters'   => array( 'dates', 'discounts' ),
 		) );
 
 		$reports->register_endpoint( 'number_of_discounts_used', array(
 			'label' => __( 'Number of Discounts Used', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter, $currency ) {
+					'data_callback' => function () use ( $filter ) {
 						$stats = new EDD\Stats();
 						return apply_filters( 'edd_reports_discounts_number_of_discounts_used', $stats->get_discount_usage_count( array(
 							'range'    => $filter['range'],
-							'currency' => $currency
 						) ) );
 					},
 					'display_args'  => array(
@@ -2114,11 +2113,10 @@ function edd_register_discounts_report( $reports ) {
 			'label' => __( 'Discount Ratio', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter, $currency ) {
+					'data_callback' => function () use ( $filter ) {
 						$stats = new EDD\Stats();
 						return apply_filters( 'edd_reports_discounts_ratio_of_discounted_orders', $stats->get_ratio_of_discounted_orders( array(
 							'range'    => $filter['range'],
-							'currency' => $currency
 						) ) );
 					},
 					'display_args'  => array(
@@ -2133,7 +2131,7 @@ function edd_register_discounts_report( $reports ) {
 			'label' => __( 'Customer Savings', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter, $d, $currency ) {
+					'data_callback' => function () use ( $filter, $d ) {
 						$stats = new EDD\Stats();
 						return apply_filters( 'edd_reports_discounts_customer_savings', $stats->get_discount_savings( array(
 							'range'         => $filter['range'],
@@ -2141,7 +2139,6 @@ function edd_register_discounts_report( $reports ) {
 							'discount_code' => isset( $d->code )
 								? $d->code
 								: '',
-							'currency'      => $currency
 						) ) );
 					},
 					'display_args'  => array(
@@ -2155,12 +2152,11 @@ function edd_register_discounts_report( $reports ) {
 			'label' => __( 'Average Discount Amount', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter, $currency ) {
+					'data_callback' => function () use ( $filter ) {
 						$stats = new EDD\Stats();
 						return apply_filters( 'edd_reports_discounts_average_discount_amount', $stats->get_average_discount_amount( array(
 							'range'    => $filter['range'],
 							'output'   => 'formatted',
-							'currency' => $currency
 						) ) );
 					},
 					'display_args'  => array(
@@ -2174,13 +2170,12 @@ function edd_register_discounts_report( $reports ) {
 			'label' => __( 'Most Popular Discount', 'easy-digital-downloads' ),
 			'views' => array(
 				'tile' => array(
-					'data_callback' => function () use ( $filter, $currency ) {
+					'data_callback' => function () use ( $filter ) {
 						$stats = new EDD\Stats();
 
 						$r = apply_filters( 'edd_reports_discounts_most_popular_discount', $stats->get_most_popular_discounts( array(
 							'range'    => $filter['range'],
 							'number'   => 1,
-							'currency' => $currency
 						) ) );
 
 						if ( ! empty( $r ) ) {
