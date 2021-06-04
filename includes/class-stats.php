@@ -145,7 +145,8 @@ class Stats {
 	private function get_amount_column_and_function( $args = array() ) {
 		$args = wp_parse_args( $args, array(
 			'column_prefix'      => '',
-			'accepted_functions' => array()
+			'accepted_functions' => array(),
+			'rate'               => true
 		) );
 
 		$column = $this->query_vars['column'];
@@ -179,6 +180,7 @@ class Stats {
 
 		// Multiply by rate if currency conversion is enabled.
 		if (
+			! empty( $args['rate'] ) &&
 			in_array( $function, array( 'SUM', 'AVG' ), true ) &&
 			( empty( $this->query_vars['currency'] ) || 'convert' === $this->query_vars['currency'] ) &&
 			( false !== strpos( $column, 'total' ) || false !== strpos( $column, 'tax' ) )
@@ -1245,7 +1247,7 @@ class Stats {
 	 *     @type string $output        The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
-	 * @return string Most popular discount with usage count.
+	 * @return array Most popular discounts with usage count.
 	 */
 	public function get_most_popular_discounts( $query = array() ) {
 
@@ -1332,7 +1334,10 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$function      = str_replace( "'", '', $this->get_db()->prepare( 'SUM(%s)', $this->query_vars['column'] ) );
+		$function = $this->get_amount_column_and_function( array(
+			'allowed_functions' => array( 'SUM' )
+		) );
+
 		$discount_code = ! empty( $this->query_vars['discount_code'] )
 			? $this->get_db()->prepare( 'AND type = %s AND description = %s', 'discount', sanitize_text_field( $this->query_vars['discount_code'] ) )
 			: $this->get_db()->prepare( 'AND type = %s', 'discount' );
@@ -1391,7 +1396,10 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$function      = str_replace( "'", '', $this->get_db()->prepare( 'AVG(%s)', $this->query_vars['column'] ) );
+		$function = $this->get_amount_column_and_function( array(
+			'allowed_functions' => array( 'AVG' )
+		) );
+
 		$type_discount = $this->get_db()->prepare( 'AND type = %s', 'discount' );
 
 		$sql = "SELECT {$function}
@@ -2100,13 +2108,18 @@ class Stats {
 					) o
 					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		} else {
-			$column = true === $this->query_vars['exclude_taxes']
-				? 'total - tax'
-				: 'total';
+			$function = $this->get_amount_column_and_function( array(
+				'accepted_functions' => array( 'SUM', 'AVG' ),
+				'rate'               => false
+			) );
+
+			$inner_function = $this->get_amount_column_and_function( array(
+				'accepted_functions' => array( 'SUM' )
+			) );
 
 			$sql = "SELECT {$function} AS total
 					FROM (
-						SELECT SUM({$column}) AS total
+						SELECT {$inner_function} AS total
 						FROM {$this->query_vars['table']}
 						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$user} {$customer} {$email} {$this->query_vars['date_query_sql']}
 					    GROUP BY customer_id
@@ -2183,12 +2196,9 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		// Only `COUNT` and `AVG` are accepted by this method.
-		$accepted_functions = array( 'COUNT', 'AVG' );
-
-		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-			? strtoupper( $this->query_vars['function'] )
-			: '';
+		$function = $this->get_amount_column_and_function( array(
+			'accepted_functions' => array( 'COUNT', 'AVG' )
+		) );
 
 		$user = isset( $this->query_vars['user_id'] )
 			? $this->get_db()->prepare( 'AND user_id = %d', absint( $this->query_vars['user_id'] ) )
