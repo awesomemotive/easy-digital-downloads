@@ -179,7 +179,7 @@ class Stats {
 
 		// Multiply by rate if currency conversion is enabled.
 		if (
-			in_array( $function, array( 'SUM', 'SVG' ), true ) &&
+			in_array( $function, array( 'SUM', 'AVG' ), true ) &&
 			( empty( $this->query_vars['currency'] ) || 'convert' === $this->query_vars['currency'] ) &&
 			( false !== strpos( $column, 'total' ) || false !== strpos( $column, 'tax' ) )
 		) {
