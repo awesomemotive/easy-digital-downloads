@@ -592,7 +592,7 @@ function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
  * @param int $hour Hour
  * @return int $earnings Earnings
  */
-function edd_get_earnings_by_date( $day = null, $month_num, $year = null, $hour = null, $include_taxes = true ) {
+function edd_get_earnings_by_date( $day = null, $month_num = null, $year = null, $hour = null, $include_taxes = true ) {
 	$backtrace = debug_backtrace();
 
 	_edd_deprecated_function( __FUNCTION__, '2.7', 'EDD_Payment_Stats()->get_earnings()', $backtrace );
