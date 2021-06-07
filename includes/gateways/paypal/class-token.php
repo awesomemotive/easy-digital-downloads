@@ -67,7 +67,10 @@ class Token {
 	 * @return bool
 	 */
 	public function is_expired() {
-		return time() > $this->token_object->created + $this->token_object->expires_in;
+		// Regenerate tokens 10 minutes early, just in case.
+		$expires_in = $this->token_object->expires_in - ( 10 * MINUTE_IN_SECONDS );
+
+		return time() > $this->token_object->created + $expires_in;
 	}
 
 	/**
