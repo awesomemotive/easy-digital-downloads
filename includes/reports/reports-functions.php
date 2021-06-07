@@ -440,7 +440,10 @@ function get_filter_value( $filter ) {
 }
 
 /**
- * Returns a list of registered report filters that should be persisted across views.
+ * Returns a list of registered report filters shuold be persisted across reports.
+ *
+ * Keyed by the filter name and includes a list of querystring arguments that
+ * are required to derive a value.
  *
  * @since 3.0
  *
@@ -448,10 +451,14 @@ function get_filter_value( $filter ) {
  */
 function get_persisted_filters() {
 	$filters = array(
-		'range',
-		'filter_from',
-		'filter_to',
-		'exclude_taxes',
+		'dates' => array(
+			'range',
+			'filter_from',
+			'filter_to',
+		),
+		'taxes' => array(
+			'exclude_taxes',
+		),
 	);
 
 	/**
@@ -1292,6 +1299,8 @@ function filter_items( $report = false ) {
 		return;
 	}
 
+	$persisted_filters = get_persisted_filters();
+
 	// Start an output buffer
 	ob_start();
 
@@ -1304,6 +1313,20 @@ function filter_items( $report = false ) {
 		<input type="submit" class="button button-secondary" value="<?php esc_html_e( 'Filter', 'easy-digital-downloads' ); ?>"/>
 		<input type="hidden" name="edd_action" value="filter_reports">
 		<input type="hidden" name="edd_redirect" value="<?php echo esc_attr( $redirect_url ); ?>">
+		<?php
+		// Persist querystring arguments for filters that are not present in this report.
+		foreach ( $persisted_filters as $filter => $filter_query_vars ) :
+			if ( true === array_search( $filter, $report->get_filters(), true ) ) :
+				continue;
+			endif;
+
+			foreach ( $filter_query_vars as $filter_query_var ) :
+				$value = isset( $_GET[ $filter_query_var ] )
+					? sanitize_text_field( $_GET[ $filter_query_var ] )
+					: '';
+		?>
+		<input type="hidden" name="<?php echo esc_attr( $filter_query_var ); ?>" value="<?php echo esc_attr( $value ); ?>" />
+		<?php endforeach; endforeach; ?>
 	</span>
 
 	<?php
