@@ -75,12 +75,9 @@ function edd_reports_sections() {
 	$persisted_filters     = Reports\get_persisted_filters();
 	$persisted_filter_args = array();
 
-	foreach ( $persisted_filters as $filter_query_vars ) {
-		foreach ( $filter_query_vars as $filter_query_var ) {
-			if ( isset( $_GET[ $filter_query_var ] ) ) {
-				$persisted_filter_args[ $filter_query_var ] =
-					sanitize_text_field( $_GET[ $filter_query_var ] );
-			}
+	foreach ( $persisted_filters as $filter ) {
+		if ( isset( $_GET[ $filter ] ) ) {
+			$persisted_filter_args[ $filter ] = sanitize_text_field( $_GET[ $filter ] );
 		}
 	}
 
