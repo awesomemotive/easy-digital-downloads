@@ -154,3 +154,45 @@ function remove_ver_query_arg( $url ) {
 }
 
 add_filter( 'script_loader_src', __NAMESPACE__ . '\remove_ver_query_arg', 100 );
+
+/**
+ * Adds data attributes to the PayPal JS SDK <script> tag.
+ *
+ * @link  https://developer.paypal.com/docs/checkout/reference/customize-sdk/#script-parameters
+ *
+ * @since 2.11
+ *
+ * @param string $script_tag HTML <script> tag.
+ * @param string $handle     Registered handle.
+ * @param string $src        Script SRC value.
+ *
+ * @return string
+ */
+function add_data_attributes( $script_tag, $handle, $src ) {
+	if ( 'sandhills-paypal-js-sdk' !== $handle ) {
+		return $script_tag;
+	}
+
+	/**
+	 * Filters the data attributes to add to the <script> tag.
+	 *
+	 * @since 2.11
+	 *
+	 * @param array $data_attributes
+	 */
+	$data_attributes = apply_filters( 'edd_paypal_js_sdk_data_attributes', array(
+		'partner-attribution-id' => EDD_PAYPAL_PARTNER_ATTRIBUTION_ID
+	) );
+
+	if ( empty( $data_attributes ) || ! is_array( $data_attributes ) ) {
+		return $script_tag;
+	}
+
+	$formatted_attributes = array_map( function ( $key, $value ) {
+		return sprintf( 'data-%s="%s"', sanitize_html_class( $key ), esc_attr( $value ) );
+	}, array_keys( $data_attributes ), $data_attributes );
+
+	return str_replace( ' src', ' ' . implode( ' ', $formatted_attributes ) . ' src', $script_tag );
+}
+
+add_filter( 'script_loader_tag', __NAMESPACE__ . '\add_data_attributes', 10, 3 );
