@@ -1581,7 +1581,7 @@ class EDD_API {
 				$discount_list['discounts'][$count]['product_requirements']  = edd_get_discount_product_reqs( $discount->ID );
 				$discount_list['discounts'][$count]['requirement_condition'] = edd_get_discount_product_condition( $discount->ID );
 				$discount_list['discounts'][$count]['global_discount']       = edd_is_discount_not_global( $discount->ID );
-				$discount_list['discounts'][$count]['excluded_products']  	= edd_get_discount_excluded_products( $discount->ID );
+				$discount_list['discounts'][$count]['excluded_products']     = edd_get_discount_excluded_products( $discount->ID );
 				$discount_list['discounts'][$count]['single_use']            = edd_discount_is_single_use( $discount->ID );
 
 				$count++;
@@ -1605,7 +1605,7 @@ class EDD_API {
 				$discount_list['discounts'][0]['product_requirements']       = edd_get_discount_product_reqs( $discount );
 				$discount_list['discounts'][0]['requirement_condition']      = edd_get_discount_product_condition( $discount );
 				$discount_list['discounts'][0]['global_discount']            = edd_is_discount_not_global( $discount );
-				$discount_list['discounts'][0]['excluded_products'] 	     = edd_get_discount_excluded_products( $discount->ID );
+				$discount_list['discounts'][0]['excluded_products']          = edd_get_discount_excluded_products( $discount->ID );
 				$discount_list['discounts'][0]['single_use']                 = edd_discount_is_single_use( $discount );
 
 			} else {
