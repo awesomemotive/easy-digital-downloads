@@ -485,12 +485,19 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 				}
 
 			}
-
-
 		}
 
-		if( $email && $email != $customer->email ) {
-			$customer->add_email( $email );
+		if ( $email ) {
+			if ( $email !== $customer->email ) {
+				$customer->add_email( $email );
+			}
+
+			if ( empty( $customer->user_id ) ) {
+				$user = get_user_by( 'email', $email );
+				if ( $user ) {
+					$customer->update( array( 'user_id' => $user->ID ) );
+				}
+			}
 		}
 
 		return $customer->id;
