@@ -96,7 +96,7 @@ class Pass_Manager extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * If you have a pass entered, but it was last verified more than 2 weeks ago (1 month ago
+	 * If you have a pass entered, but it was last verified more than 2 months ago (1 year ago
 	 * in this case), then it should not be accepted as a valid pass.
 	 *
 	 * @covers \EDD\Admin\Pass_Manager::get_highest_pass_id
@@ -105,7 +105,7 @@ class Pass_Manager extends \EDD_UnitTestCase {
 		$passes = array(
 			'license_1' => array(
 				'pass_id'      => \EDD\Admin\Pass_Manager::PERSONAL_PASS_ID,
-				'time_checked' => strtotime( '-1 month' )
+				'time_checked' => strtotime( '-1 year' )
 			)
 		);
 
