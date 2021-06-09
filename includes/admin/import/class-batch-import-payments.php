@@ -60,6 +60,8 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 			'zip'               => '',
 			'country'           => '',
 		);
+
+		remove_action( 'edd_customer_post_attach_payment', 'edd_connect_guest_customer_to_existing_user', 10, 4 );
 	}
 
 	/**
