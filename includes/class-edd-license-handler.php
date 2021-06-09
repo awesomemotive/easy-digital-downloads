@@ -357,7 +357,7 @@ class EDD_License {
 		// Decode license data
 		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
-		$this->maybe_set_pass_flag( $this->license, $response );
+		$this->maybe_set_pass_flag( $this->license, $license_data );
 
 		update_option( $this->item_shortname . '_license_active', $license_data );
 
@@ -473,7 +473,7 @@ class EDD_License {
 
 		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
-		$this->maybe_set_pass_flag( $this->license, $response );
+		$this->maybe_set_pass_flag( $this->license, $license_data );
 
 		update_option( $this->item_shortname . '_license_active', $license_data );
 
