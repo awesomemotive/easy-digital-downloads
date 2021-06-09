@@ -87,11 +87,11 @@ class Pass_Manager {
 	 * @return int|null Pass ID if one is found, null if one was not found.
 	 */
 	private function get_highest_pass_id() {
-		if ( ! $this->has_pass_data || ! is_array( $this->pass_data ) ) {
-			return null;
-		}
-
 		$highest_pass_id = null;
+
+		if ( ! $this->has_pass_data || ! is_array( $this->pass_data ) ) {
+			return $highest_pass_id;
+		}
 
 		foreach ( $this->pass_data as $pass_data ) {
 			/*
