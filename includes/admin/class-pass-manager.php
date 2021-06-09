@@ -48,7 +48,7 @@ class Pass_Manager {
 	 *
 	 * @var bool
 	 */
-	public $has_pass_data;
+	public $has_pass_data = false;
 
 	/**
 	 * Hierarchy of passes. This helps us determine if one pass
@@ -71,9 +71,7 @@ class Pass_Manager {
 	 */
 	public function __construct() {
 		$pass_data = get_option( 'edd_pass_licenses' );
-		if ( false === $pass_data ) {
-			$this->has_pass_data = false;
-		} else {
+		if ( false !== $pass_data ) {
 			$this->pass_data     = json_decode( $pass_data, true );
 			$this->has_pass_data = true;
 		}
