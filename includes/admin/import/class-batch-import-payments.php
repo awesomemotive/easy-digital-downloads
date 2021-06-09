@@ -393,7 +393,8 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 		global $wpdb;
 
-		if( ! empty( $this->field_mapping['email'] ) && ! empty( $row[ $this->field_mapping['email'] ] ) ) {
+		$email = false;
+		if ( ! empty( $this->field_mapping['email'] ) && ! empty( $row[ $this->field_mapping['email'] ] ) ) {
 
 			$email = sanitize_text_field( $row[ $this->field_mapping['email'] ] );
 
@@ -407,13 +408,16 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 		}
 
+		$customer = false;
 		if( ! empty( $mapped_id ) ) {
 
 			$customer = new EDD_Customer( $mapped_id );
 
 		}
 
-		if( empty( $mapped_id ) || ! $customer->id > 0 ) {
+		$customer_by_id    = false;
+		$customer_by_email = false;
+		if ( empty( $mapped_id ) || ! $customer->id > 0 ) {
 
 			// Look for a customer based on provided ID, if any
 
@@ -434,26 +438,24 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 			}
 
 			// Now compare customer records. If they don't match, customer_id will be stored in meta and we will use the customer that matches the email
-
-			if( ( empty( $customer_by_id ) || $customer_by_id->id !== $customer_by_email->id ) && ! empty( $customer_by_email ) )  {
+			if ( ! empty( $customer_by_email ) && ( empty( $customer_by_id ) || ( $customer_by_id->id !== $customer_by_email->id ) ) ) {
 
 				$customer = $customer_by_email;
 
-			} else if ( ! empty( $customer_by_id ) ) {
+			} elseif ( ! empty( $customer_by_id ) ) {
 
 				$customer = $customer_by_id;
 
-				if( ! empty( $email ) ) {
+				if ( $customer && ! empty( $email ) ) {
 					$customer->add_email( $email );
 				}
-
 			}
 
 			// Make sure we found a customer. Create one if not.
-			if( empty( $customer->id ) ) {
+			if ( empty( $customer->id ) ) {
 
 				if ( ! $customer instanceof EDD_Customer ) {
-					$customer = new EDD_Customer;
+					$customer = new EDD_Customer();
 				}
 
 				$first_name = '';
