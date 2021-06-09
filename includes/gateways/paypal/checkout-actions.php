@@ -43,6 +43,12 @@ function override_purchase_button( $button ) {
 				<span class="edd-loading-ajax edd-loading"></span>
 			</div>
 			<?php
+			/**
+			 * Triggers right below the button container.
+			 *
+			 * @since 2.11
+			 */
+			do_action( 'edd_paypal_after_button_container' );
 		} else {
 			$error_message = current_user_can( 'manage_options' )
 				? __( 'Please connect your PayPal account in the gateway settings.', 'easy-digital-downloads' )
