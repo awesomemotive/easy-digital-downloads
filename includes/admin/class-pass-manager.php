@@ -97,13 +97,13 @@ class Pass_Manager {
 
 		foreach ( $this->pass_data as $pass_data ) {
 			/*
-			 * If this pass was last verified more than 2 weeks ago, we're not using it.
+			 * If this pass was last verified more than 2 months ago, we're not using it.
 			 * This ensures we never deal with a "stale" record for a pass that's no longer
 			 * actually activated, but still exists in our DB array for some reason.
 			 *
 			 * Our cron job should always be updating with active data once per week.
 			 */
-			if ( empty( $pass_data['time_checked'] ) || strtotime( '-2 weeks' ) > $pass_data['time_checked'] ) {
+			if ( empty( $pass_data['time_checked'] ) || strtotime( '-2 months' ) > $pass_data['time_checked'] ) {
 				continue;
 			}
 
