@@ -227,6 +227,8 @@ function create_order( $purchase_data ) {
 
 			edd_debug_log( sprintf( '-- Successful PayPal response. PayPal order ID: %s; EDD order ID: %d', esc_html( $response->id ), $payment_id ) );
 
+			edd_update_payment_meta( $payment_id, 'paypal_order_id', sanitize_text_field( $response->id ) );
+
 			/*
 			 * Send successfully created order ID back.
 			 * We also send back a new nonce, for verification in the next step: `capture_order()`.
