@@ -103,7 +103,7 @@ class License_Upgrade_Notice extends Notice {
 				printf(
 				/* Translators: %s link URL */
 					__( 'You are using the free version of Easy Digital Downloads. <a href="%s" target="_blank">Purchase a pass</a> to get email marketing tools and recurring payments.', 'easy-digital-downloads' ),
-					'https://easydigitaldownloads.com/pricing/'
+					add_query_arg( $this->query_args( 'core' ), 'https://easydigitaldownloads.com/pricing/' )
 				);
 
 			} elseif ( ! $this->pass_manager->highest_pass_id ) {
@@ -112,7 +112,7 @@ class License_Upgrade_Notice extends Notice {
 				printf(
 				/* Translators: %s link URL */
 					__( 'For access to additional extensions to grow your store, consider <a href="%s" target="_blank">purchasing a pass</a>.', 'easy-digital-downloads' ),
-					'https://easydigitaldownloads.com/pricing/'
+					add_query_arg( $this->query_args( 'extension-license' ), 'https://easydigitaldownloads.com/pricing/' )
 				);
 
 			} elseif ( Pass_Manager::pass_compare( $this->pass_manager->highest_pass_id, Pass_Manager::PERSONAL_PASS_ID, '=' ) ) {
@@ -121,7 +121,7 @@ class License_Upgrade_Notice extends Notice {
 				printf(
 				/* Translators: %s link URL */
 					__( 'You are using Easy Digital Downloads with a Personal pass. Consider <a href="%s" target="_blank">upgrading</a> to get recurring payments and more.', 'easy-digital-downloads' ),
-					'https://easydigitaldownloads.com/your-account/license-keys/'
+					add_query_arg( $this->query_args( 'personal-pass' ), 'https://easydigitaldownloads.com/your-account/license-keys/' )
 				);
 
 			} elseif ( Pass_Manager::pass_compare( $this->pass_manager->highest_pass_id, Pass_Manager::EXTENDED_PASS_ID, '>=' ) ) {
@@ -130,11 +130,29 @@ class License_Upgrade_Notice extends Notice {
 				printf(
 				/* Translators: %s link URL */
 					__( 'Grow your business and make more money with affiliate marketing. <a href="%s" target="_blank">Get AffiliateWP.</a>', 'easy-digital-downloads' ),
-					'http://affiliatewp.com/?ref=743'
+					add_query_arg( $this->query_args( 'extended-pass' ), 'https://affiliatewp.com/?ref=743' )
 				);
 			}
 		} catch ( \Exception $e ) {
 			// If we're in here, that means we have an invalid pass ID... what should we do? :thinking:
 		}
+	}
+
+	/**
+	 * Builds the UTM parameters for the URLs.
+	 *
+	 * @since 2.10.6
+	 *
+	 * @param string $upgrade_from
+	 *
+	 * @return string[]
+	 */
+	private function query_args( $upgrade_from ) {
+		return array(
+			'utm_source'   => 'settings',
+			'utm_medium'   => 'upgrade-from-' . urlencode( $upgrade_from ),
+			'utm_campaign' => 'admin',
+			'utm_content'  => 'top-promo'
+		);
 	}
 }
