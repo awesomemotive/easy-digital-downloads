@@ -15,7 +15,7 @@ use EDD\Admin\Pass_Manager;
 class License_Upgrade_Notice extends Notice {
 
 	const DISPLAY_HOOK = 'edd_settings_before_wrap';
-	const DISMISS_DURATION = MINUTE_IN_SECONDS; // @todo
+	const DISMISS_DURATION = MINUTE_IN_SECONDS; // @todo 90 days
 
 	/**
 	 * Number of EDD license keys that have been entered.
@@ -47,7 +47,7 @@ class License_Upgrade_Notice extends Notice {
 	 * @return bool
 	 */
 	protected function _should_display() {
-		if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
 			return false;
 		}
 
