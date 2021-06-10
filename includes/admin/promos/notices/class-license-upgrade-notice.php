@@ -111,7 +111,7 @@ class License_Upgrade_Notice extends Notice {
 				// Individual product license active, but no pass.
 				printf(
 				/* Translators: %s link URL */
-					__( 'For access to additional extensions to grow your store, consider <a href="%s" target="_blank">purchasing a pass</a>.', 'easy-digital-downloads' ),
+					__( 'For access to additional Easy Digital Downloads extensions to grow your store, consider <a href="%s" target="_blank">purchasing a pass</a>.', 'easy-digital-downloads' ),
 					add_query_arg( $this->query_args( 'extension-license' ), 'https://easydigitaldownloads.com/pricing/' )
 				);
 
@@ -120,7 +120,7 @@ class License_Upgrade_Notice extends Notice {
 				// Personal pass active.
 				printf(
 				/* Translators: %s link URL */
-					__( 'You are using Easy Digital Downloads with a Personal pass. Consider <a href="%s" target="_blank">upgrading</a> to get recurring payments and more.', 'easy-digital-downloads' ),
+					__( 'You are using Easy Digital Downloads with a Personal Pass. Consider <a href="%s" target="_blank">upgrading</a> to get recurring payments and more.', 'easy-digital-downloads' ),
 					add_query_arg( $this->query_args( 'personal-pass' ), 'https://easydigitaldownloads.com/your-account/license-keys/' )
 				);
 
