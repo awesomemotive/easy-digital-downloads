@@ -458,10 +458,10 @@ class Data_Migrator {
 			return;
 		}
 
-		$subtotal    = 0;
-		$order_tax   = 0;
-		$discount    = 0;
-		$order_total = 0;
+		$order_subtotal = 0;
+		$order_tax      = 0;
+		$order_discount = 0;
+		$order_total    = 0;
 
 		// Track the total value of added fees in case the Order was initially migrated
 		// without _edd_payment_total or _edd_payment_tax and manual calculation was needed.
@@ -494,14 +494,14 @@ class Data_Migrator {
 
 			// Loop through the items in the purchase to build the totals.
 			foreach ( $cart_details as $cart_item ) {
-				$subtotal += $cart_item['subtotal'];
+				$order_subtotal += $cart_item['subtotal'];
 
 				// Add the cart line item tax amount if a total is not available on the order.
 				if ( false === $meta_tax ) {
 					$order_tax += $cart_item['tax'];
 				}
 
-				$discount += $cart_item['discount'];
+				$order_discount += $cart_item['discount'];
 
 				// Add the cart line item price amount (includes tax, order item fee, _but not order item fee tax_)
 				// if a total is not available on the order.
@@ -666,9 +666,9 @@ class Data_Migrator {
 			'currency'       => ! empty( $payment_meta['currency'] ) ? $payment_meta['currency'] : edd_get_currency(),
 			'payment_key'    => $purchase_key,
 			'tax_rate_id'    => $tax_rate_id,
-			'subtotal'       => $subtotal,
+			'subtotal'       => $order_subtotal,
 			'tax'            => $order_tax,
-			'discount'       => $discount,
+			'discount'       => $order_discount,
 			'total'          => $order_total,
 		);
 
@@ -697,9 +697,9 @@ class Data_Migrator {
 			$refund_data['status']       = 'complete';
 
 			// Negate the amounts
-			$refund_data['subtotal'] = edd_negate_amount( $subtotal );
+			$refund_data['subtotal'] = edd_negate_amount( $order_subtotal );
 			$refund_data['tax']      = edd_negate_amount( $order_tax );
-			$refund_data['discount'] = edd_negate_amount( $discount );
+			$refund_data['discount'] = edd_negate_amount( $order_discount );
 			$refund_data['total']    = edd_negate_amount( $order_total );
 
 
