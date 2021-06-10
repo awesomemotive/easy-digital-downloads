@@ -107,7 +107,7 @@ class Tests_License_Upgrade_Notice extends \EDD_UnitTestCase {
 
 		$notice = new License_Upgrade_Notice();
 		$this->assertTrue( $notice->should_display() );
-		$this->assertNoticeContains( 'For access to additional extensions to grow your store', $notice );
+		$this->assertNoticeContains( 'For access to additional Easy Digital Downloads extensions to grow your store', $notice );
 	}
 
 	/**
