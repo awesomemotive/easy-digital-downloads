@@ -1083,28 +1083,51 @@ class Data_Migrator {
 		}
 
 		if ( ! empty( $discounts ) && ( 'none' !== $discounts[0] ) ) {
-			foreach ( $discounts as $discount ) {
+			if ( 1 === count( $discounts ) ) {
+				$discount_code = reset( $discounts );
 
-				/** @var \EDD_Discount $discount */
-				$discount = edd_get_discount_by( 'code', $discount );
+				/** @var \EDD_Discount $discount_object */
+				$discount_object = edd_get_discount_by( 'code', $discount_code );
 
-				if ( false === $discount ) {
-					continue;
+				if ( $discount_object instanceof \EDD_Discount ) {
+					edd_add_order_adjustment(
+						array(
+							'object_id'     => $order_id,
+							'object_type'   => 'order',
+							'type_id'       => $discount_object->id,
+							'type'          => 'discount',
+							'description'   => $discount_object->code,
+							'subtotal'      => $order_discount,
+							'total'         => $order_discount,
+							'date_created'  => $date_created_gmt,
+							'date_modified' => $data->post_modified_gmt,
+						)
+					);
 				}
+			} else {
+				foreach ( $discounts as $discount_code ) {
 
-				edd_add_order_adjustment(
-					array(
-						'object_id'     => $order_id,
-						'object_type'   => 'order',
-						'type_id'       => $discount->id,
-						'type'          => 'discount',
-						'description'   => $discount->code,
-						'subtotal'      => $subtotal - $discount->get_discounted_amount( $subtotal ),
-						'total'         => $subtotal - $discount->get_discounted_amount( $subtotal ),
-						'date_created'  => $date_created_gmt,
-						'date_modified' => $data->post_modified_gmt,
-					)
-				);
+					/** @var \EDD_Discount $discount_object */
+					$discount_object = edd_get_discount_by( 'code', $discount_code );
+
+					if ( false === $discount_object ) {
+						continue;
+					}
+
+					edd_add_order_adjustment(
+						array(
+							'object_id'     => $order_id,
+							'object_type'   => 'order',
+							'type_id'       => $discount_object->id,
+							'type'          => 'discount',
+							'description'   => $discount_object->code,
+							'subtotal'      => $order_subtotal - $discount_object->get_discounted_amount( $order_subtotal ),
+							'total'         => $order_subtotal - $discount_object->get_discounted_amount( $order_subtotal ),
+							'date_created'  => $date_created_gmt,
+							'date_modified' => $data->post_modified_gmt,
+						)
+					);
+				}
 			}
 		}
 
