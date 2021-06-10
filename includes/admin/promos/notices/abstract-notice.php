@@ -101,6 +101,7 @@ abstract class Notice {
 			<?php if ( static::DISMISSIBLE ) : ?>
 				<button class="button-link edd-promo-notice-dismiss">
 					&times;
+					<span class="screen-reader-text"><?php esc_html_e( 'Dismiss notice', 'easy-digital-downloads' ); ?></span>
 				</button>
 			<?php endif; ?>
 		</div>
