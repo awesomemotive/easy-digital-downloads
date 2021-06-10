@@ -85,6 +85,8 @@ var EDD_PayPal = {
 		EDD_PayPal.isMounted = true;
 
 		paypal.Buttons( EDD_PayPal.getButtonArgs( container, context ) ).render( container );
+
+		document.dispatchEvent( new CustomEvent( 'edd_paypal_buttons_mounted' ) );
 	},
 
 	/**

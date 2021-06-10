@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 2.10.5\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2021-06-02 10:35:26+00:00\n"
+"POT-Creation-Date: 2021-06-10 10:31:44+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -7136,48 +7136,48 @@ msgid ""
 "target=\"_blank\">SSL setup article</a>."
 msgstr ""
 
-#: includes/gateways/paypal/checkout-actions.php:48
-#: includes/gateways/paypal/checkout-actions.php:113
+#: includes/gateways/paypal/checkout-actions.php:54
+#: includes/gateways/paypal/checkout-actions.php:119
 msgid "Please connect your PayPal account in the gateway settings."
 msgstr ""
 
-#: includes/gateways/paypal/checkout-actions.php:49
-#: includes/gateways/paypal/checkout-actions.php:114
+#: includes/gateways/paypal/checkout-actions.php:55
+#: includes/gateways/paypal/checkout-actions.php:120
 msgid "Unexpected authentication error. Please contact a site administrator."
 msgstr ""
 
-#: includes/gateways/paypal/checkout-actions.php:108
+#: includes/gateways/paypal/checkout-actions.php:114
 #: includes/gateways/paypal/exceptions/class-gateway-exception.php:48
 msgid "PayPal Gateway Error"
 msgstr ""
 
-#: includes/gateways/paypal/checkout-actions.php:109
+#: includes/gateways/paypal/checkout-actions.php:115
 msgid "Missing PayPal Commerce credentials."
 msgstr ""
 
-#: includes/gateways/paypal/checkout-actions.php:140
-#: includes/gateways/paypal/checkout-actions.php:281
+#: includes/gateways/paypal/checkout-actions.php:146
+#: includes/gateways/paypal/checkout-actions.php:289
 #: includes/gateways/paypal/scripts.php:115
 msgid "An unexpected error occurred. Please try again."
 msgstr ""
 
-#: includes/gateways/paypal/checkout-actions.php:213
-#: includes/gateways/paypal/checkout-actions.php:238
-#: includes/gateways/paypal/checkout-actions.php:356
+#: includes/gateways/paypal/checkout-actions.php:219
+#: includes/gateways/paypal/checkout-actions.php:246
+#: includes/gateways/paypal/checkout-actions.php:364
 msgid "An error occurred while communicating with PayPal. Please try again."
 msgstr ""
 
-#: includes/gateways/paypal/checkout-actions.php:236
-#: includes/gateways/paypal/checkout-actions.php:354
+#: includes/gateways/paypal/checkout-actions.php:244
+#: includes/gateways/paypal/checkout-actions.php:362
 msgid "An authentication error occurred. Please try again."
 msgstr ""
 
-#: includes/gateways/paypal/checkout-actions.php:265
 #: includes/gateways/paypal/checkout-actions.php:273
+#: includes/gateways/paypal/checkout-actions.php:281
 msgid "A validation error occurred. Please try again."
 msgstr ""
 
-#: includes/gateways/paypal/checkout-actions.php:344
+#: includes/gateways/paypal/checkout-actions.php:352
 #: includes/gateways/paypal-standard.php:671
 #: tests/helpers/class-helper-payment.php:131
 #: tests/helpers/class-helper-payment.php:234
