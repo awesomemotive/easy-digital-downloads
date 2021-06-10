@@ -101,36 +101,40 @@ class License_Upgrade_Notice extends Notice {
 
 				// No license keys active at all.
 				printf(
-				/* Translators: %s link URL */
-					__( 'You are using the free version of Easy Digital Downloads. <a href="%s" target="_blank">Purchase a pass</a> to get email marketing tools and recurring payments.', 'easy-digital-downloads' ),
-					add_query_arg( $this->query_args( 'core' ), 'https://easydigitaldownloads.com/pricing/' )
+				/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
+					__( 'You are using the free version of Easy Digital Downloads. %1$sPurchase a pass%2$s to get email marketing tools and recurring payments.', 'easy-digital-downloads' ),
+					'<a href="' . esc_url( add_query_arg( $this->query_args( 'core' ), 'https://easydigitaldownloads.com/pricing/' ) ) . '" target="_blank">',
+					'</a>'
 				);
 
 			} elseif ( ! $this->pass_manager->highest_pass_id ) {
 
 				// Individual product license active, but no pass.
 				printf(
-				/* Translators: %s link URL */
-					__( 'For access to additional Easy Digital Downloads extensions to grow your store, consider <a href="%s" target="_blank">purchasing a pass</a>.', 'easy-digital-downloads' ),
-					add_query_arg( $this->query_args( 'extension-license' ), 'https://easydigitaldownloads.com/pricing/' )
+				/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
+					__( 'For access to additional Easy Digital Downloads extensions to grow your store, consider %1$spurchasing a pass%2$s.', 'easy-digital-downloads' ),
+					'<a href="' . esc_url( add_query_arg( $this->query_args( 'extension-license' ), 'https://easydigitaldownloads.com/pricing/' ) ) . '" target="_blank">',
+					'</a>'
 				);
 
 			} elseif ( Pass_Manager::pass_compare( $this->pass_manager->highest_pass_id, Pass_Manager::PERSONAL_PASS_ID, '=' ) ) {
 
 				// Personal pass active.
 				printf(
-				/* Translators: %s link URL */
-					__( 'You are using Easy Digital Downloads with a Personal Pass. Consider <a href="%s" target="_blank">upgrading</a> to get recurring payments and more.', 'easy-digital-downloads' ),
-					add_query_arg( $this->query_args( 'personal-pass' ), 'https://easydigitaldownloads.com/your-account/license-keys/' )
+				/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
+					__( 'You are using Easy Digital Downloads with a Personal Pass. Consider %1$supgrading%2$s to get recurring payments and more.', 'easy-digital-downloads' ),
+					'<a href="' . esc_url( add_query_arg( $this->query_args( 'personal-pass' ), 'https://easydigitaldownloads.com/your-account/license-keys/' ) ) . '" target="_blank">',
+					'</a>'
 				);
 
 			} elseif ( Pass_Manager::pass_compare( $this->pass_manager->highest_pass_id, Pass_Manager::EXTENDED_PASS_ID, '>=' ) ) {
 
 				// Extended pass or higher.
 				printf(
-				/* Translators: %s link URL */
-					__( 'Grow your business and make more money with affiliate marketing. <a href="%s" target="_blank">Get AffiliateWP.</a>', 'easy-digital-downloads' ),
-					add_query_arg( $this->query_args( 'extended-pass' ), 'https://affiliatewp.com/?ref=743' )
+				/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
+					__( 'Grow your business and make more money with affiliate marketing. %1$sGet AffiliateWP.%2$s', 'easy-digital-downloads' ),
+					'<a href="' . esc_url( add_query_arg( $this->query_args( 'extended-pass' ), 'https://affiliatewp.com/?ref=743' ) ) . '" target="_blank">',
+					'</a>'
 				);
 			}
 		} catch ( \Exception $e ) {
