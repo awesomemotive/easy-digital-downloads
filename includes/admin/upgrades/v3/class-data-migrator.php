@@ -1090,7 +1090,7 @@ class Data_Migrator {
 				$discount_object = edd_get_discount_by( 'code', $discount_code );
 
 				if ( $discount_object instanceof \EDD_Discount ) {
-					edd_add_order_adjustment(
+					$new_discount_id = edd_add_order_adjustment(
 						array(
 							'object_id'     => $order_id,
 							'object_type'   => 'order',
@@ -1103,6 +1103,14 @@ class Data_Migrator {
 							'date_modified' => $data->post_modified_gmt,
 						)
 					);
+					if ( $order_discount <= 0 ) {
+						edd_add_order_adjustment_meta(
+							$new_discount_id,
+							'migrated_order_discount_unknown',
+							(int) $order_id,
+							true
+						);
+					}
 				}
 			} else {
 				foreach ( $discounts as $discount_code ) {
@@ -1114,19 +1122,28 @@ class Data_Migrator {
 						continue;
 					}
 
-					edd_add_order_adjustment(
+					$calculated_discount = $order_subtotal - $discount_object->get_discounted_amount( $order_subtotal );
+					$new_discount_id     = edd_add_order_adjustment(
 						array(
 							'object_id'     => $order_id,
 							'object_type'   => 'order',
 							'type_id'       => $discount_object->id,
 							'type'          => 'discount',
 							'description'   => $discount_object->code,
-							'subtotal'      => $order_subtotal - $discount_object->get_discounted_amount( $order_subtotal ),
-							'total'         => $order_subtotal - $discount_object->get_discounted_amount( $order_subtotal ),
+							'subtotal'      => $calculated_discount,
+							'total'         => $calculated_discount,
 							'date_created'  => $date_created_gmt,
 							'date_modified' => $data->post_modified_gmt,
 						)
 					);
+					if ( $calculated_discount <= 0 ) {
+						edd_add_order_adjustment_meta(
+							$new_discount_id,
+							'migrated_order_discount_unknown',
+							(int) $order_id,
+							true
+						);
+					}
 				}
 			}
 		}
