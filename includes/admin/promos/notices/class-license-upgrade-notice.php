@@ -110,6 +110,24 @@ class License_Upgrade_Notice extends Notice {
 	 * @inheritDoc
 	 */
 	protected function _display() {
+		$screen = get_current_screen();
+		$source = 'settings';
+		if ( $screen instanceof \WP_Screen ) {
+			switch ( $screen->base ) {
+				case 'edit' :
+					$source = 'list-downloads';
+					break;
+				case 'post' :
+					$source = sprintf(
+						'%s-download',
+						'add' === $screen->action ? 'add' : 'edit'
+					);
+					break;
+				default :
+					$source = str_replace( 'download_page_edd-', '', $screen->base );
+			}
+		}
+
 		try {
 			if ( 0 === $this->number_license_keys ) {
 
@@ -117,7 +135,7 @@ class License_Upgrade_Notice extends Notice {
 				printf(
 				/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
 					__( 'You are using the free version of Easy Digital Downloads. %1$sPurchase a pass%2$s to get email marketing tools and recurring payments.', 'easy-digital-downloads' ),
-					'<a href="' . esc_url( add_query_arg( $this->query_args( 'core' ), 'https://easydigitaldownloads.com/pricing/' ) ) . '" target="_blank">',
+					'<a href="' . esc_url( add_query_arg( $this->query_args( 'core', $source ), 'https://easydigitaldownloads.com/pricing/' ) ) . '" target="_blank">',
 					'</a>'
 				);
 
@@ -127,7 +145,7 @@ class License_Upgrade_Notice extends Notice {
 				printf(
 				/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
 					__( 'For access to additional Easy Digital Downloads extensions to grow your store, consider %1$spurchasing a pass%2$s.', 'easy-digital-downloads' ),
-					'<a href="' . esc_url( add_query_arg( $this->query_args( 'extension-license' ), 'https://easydigitaldownloads.com/pricing/' ) ) . '" target="_blank">',
+					'<a href="' . esc_url( add_query_arg( $this->query_args( 'extension-license', $source ), 'https://easydigitaldownloads.com/pricing/' ) ) . '" target="_blank">',
 					'</a>'
 				);
 
@@ -137,7 +155,7 @@ class License_Upgrade_Notice extends Notice {
 				printf(
 				/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
 					__( 'You are using Easy Digital Downloads with a Personal Pass. Consider %1$supgrading%2$s to get recurring payments and more.', 'easy-digital-downloads' ),
-					'<a href="' . esc_url( add_query_arg( $this->query_args( 'personal-pass' ), 'https://easydigitaldownloads.com/your-account/license-keys/' ) ) . '" target="_blank">',
+					'<a href="' . esc_url( add_query_arg( $this->query_args( 'personal-pass', $source ), 'https://easydigitaldownloads.com/your-account/license-keys/' ) ) . '" target="_blank">',
 					'</a>'
 				);
 
@@ -147,7 +165,7 @@ class License_Upgrade_Notice extends Notice {
 				printf(
 				/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
 					__( 'Grow your business and make more money with affiliate marketing. %1$sGet AffiliateWP%2$s', 'easy-digital-downloads' ),
-					'<a href="' . esc_url( add_query_arg( $this->query_args( 'extended-pass' ), 'https://affiliatewp.com/?ref=743' ) ) . '" target="_blank">',
+					'<a href="' . esc_url( add_query_arg( $this->query_args( 'extended-pass', $source ), 'https://affiliatewp.com/?ref=743' ) ) . '" target="_blank">',
 					'</a>'
 				);
 			}
@@ -161,13 +179,14 @@ class License_Upgrade_Notice extends Notice {
 	 *
 	 * @since 2.10.6
 	 *
-	 * @param string $upgrade_from
+	 * @param string $upgrade_from License type upgraded from.
+	 * @param string $source       Current page.
 	 *
 	 * @return string[]
 	 */
-	private function query_args( $upgrade_from ) {
+	private function query_args( $upgrade_from, $source = 'settings' ) {
 		return array(
-			'utm_source'   => 'settings',
+			'utm_source'   => urlencode( $source ),
 			'utm_medium'   => 'upgrade-from-' . urlencode( $upgrade_from ),
 			'utm_campaign' => 'admin',
 			'utm_content'  => 'top-promo'
