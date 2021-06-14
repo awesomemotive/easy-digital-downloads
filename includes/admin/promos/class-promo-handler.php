@@ -78,7 +78,7 @@ class PromoHandler {
 	 */
 	public static function is_dismissed( $id ) {
 		$is_dismissed = (bool) Persistent_Dismissible::get( array(
-			'id' => $id
+			'id' => 'edd-' . $id
 		) );
 
 		return true === $is_dismissed;
@@ -94,7 +94,7 @@ class PromoHandler {
 	 */
 	public static function dismiss( $id, $dismissal_length = 0 ) {
 		Persistent_Dismissible::set( array(
-			'id'   => $id,
+			'id'   => 'edd-' . $id,
 			'life' => $dismissal_length
 		) );
 	}
