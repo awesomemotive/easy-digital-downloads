@@ -127,8 +127,14 @@ var EDD_PayPal = {
 						// Hide spinner.
 						spinner.style.display = 'none';
 
-						var errorHtml = eddPayPalVars.defaultError;
+						var errorHtml = responseData.data.message ? responseData.data.message : eddPayPalVars.defaultError;
+
 						EDD_PayPal.setErrorHtml( container, context, errorHtml );
+
+						// @link https://developer.paypal.com/docs/checkout/integration-features/funding-failure/
+						if ( responseData.data.retry ) {
+							return actions.restart();
+						}
 					}
 				} );
 			},

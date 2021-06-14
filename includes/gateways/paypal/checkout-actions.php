@@ -170,8 +170,8 @@ function create_order( $purchase_data ) {
 		}
 
 		$order_data = array(
-			'intent'              => 'CAPTURE',
-			'purchase_units'      => array(
+			'intent'               => 'CAPTURE',
+			'purchase_units'       => array(
 				array(
 					// @todo We could put the breakdown here (tax, discount, etc.)
 					'reference_id' => $payment_args['purchase_key'],
@@ -179,12 +179,15 @@ function create_order( $purchase_data ) {
 					'custom_id'    => $payment_id
 				)
 			),
-			'application_context' => array(
+			'application_context'  => array(
 				//'locale'              => get_locale(), // PayPal doesn't like this. Might be able to replace `_` with `-`
 				'shipping_preference' => 'NO_SHIPPING',
 				'user_action'         => 'PAY_NOW',
 				'return_url'          => edd_get_checkout_uri(),
 				'cancel_url'          => edd_get_failed_transaction_uri( '?payment-id=' . urlencode( $payment_id ) )
+			),
+			'payment_instructions' => array(
+				'disbursement_mode' => 'INSTANT'
 			)
 		);
 
@@ -294,9 +297,34 @@ function capture_order() {
 
 		try {
 			$api      = new API();
-			$response = $api->make_request( 'v2/checkout/orders/' . urlencode( $_POST['paypal_order_id'] ) . '/capture' );
+			$response = $api->make_request( 'v2/checkout/orders/' . urlencode( $_POST['paypal_order_id'] ) . '/capture', array(), array(
+				'PayPal-Mock-Response' => json_encode( array( 'mock_application_codes' => 'INSTRUMENT_DECLINED' ) )
+			) );
 
 			edd_debug_log( sprintf( '-- PayPal Response code: %d; order ID: %s', $api->last_response_code, esc_html( $_POST['paypal_order_id'] ) ) );
+
+			if ( ! in_array( $api->last_response_code, array( 200, 201 ) ) ) {
+				$message = ! empty( $response->message ) ? $response->message : __( 'Failed to process payment. Please try again.', 'easy-digital-downloads' );
+
+				/*
+				 * If capture failed due to funding source, we want to send a `restart` back to PayPal.
+				 * @link https://developer.paypal.com/docs/checkout/integration-features/funding-failure/
+				 */
+				if ( ! empty( $response->details ) && is_array( $response->details ) ) {
+					foreach ( $response->details as $detail ) {
+						if ( isset( $detail->issue ) && 'INSTRUMENT_DECLINED' === $detail->issue ) {
+							$retry = true;
+							break;
+						}
+					}
+				}
+
+				throw new Gateway_Exception(
+					$message,
+					400,
+					sprintf( 'Order capture failure. PayPal response: %s', json_encode( $response ) )
+				);
+			}
 
 			$payment = $transaction_id = false;
 			if ( isset( $response->purchase_units ) && is_array( $response->purchase_units ) ) {
@@ -370,7 +398,12 @@ function capture_order() {
 
 		$e->record_gateway_error( $payment_id );
 
-		wp_send_json_error( $e->getMessage() );
+		wp_send_json_error( array(
+			'message' => edd_build_errors_html( array(
+				'paypal_capture_failure' => $e->getMessage()
+			) ),
+			'retry'   => isset( $retry ) ? $retry : false
+		) );
 	}
 }
 
