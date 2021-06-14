@@ -30,12 +30,6 @@ abstract class Notice {
 	const DISMISSIBLE = true;
 
 	/**
-	 * Duration (in seconds) that the notice is dismissed for.
-	 * `0` means it's dismissed permanently.
-	 */
-	const DISMISS_DURATION = 0;
-
-	/**
 	 * Displays the notice content.
 	 *
 	 * @return void
@@ -69,6 +63,16 @@ abstract class Notice {
 	}
 
 	/**
+	 * Duration (in seconds) that the notice is dismissed for.
+	 * `0` means it's dismissed permanently.
+	 *
+	 * @return int
+	 */
+	public static function dismiss_duration() {
+		return 0;
+	}
+
+	/**
 	 * Individual notices can override this method to control display logic.
 	 *
 	 * @since 2.10.6
@@ -94,7 +98,7 @@ abstract class Notice {
 			class="edd-admin-notice-<?php echo esc_attr( sanitize_html_class( static::TYPE ) ); ?> edd-promo-notice"
 			data-nonce="<?php echo esc_attr( wp_create_nonce( 'edd-dismiss-notice-' . $this->get_id() ) ); ?>"
 			data-id="<?php echo esc_attr( $this->get_id() ); ?>"
-			data-lifespan="<?php echo esc_attr( static::DISMISS_DURATION ); ?>"
+			data-lifespan="<?php echo esc_attr( static::dismiss_duration() ); ?>"
 		>
 			<?php $this->_display(); ?>
 

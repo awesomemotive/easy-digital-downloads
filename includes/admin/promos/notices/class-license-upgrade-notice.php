@@ -15,7 +15,6 @@ use EDD\Admin\Pass_Manager;
 class License_Upgrade_Notice extends Notice {
 
 	const DISPLAY_HOOK = 'admin_notices';
-	const DISMISS_DURATION = MINUTE_IN_SECONDS; // @todo 90 days
 
 	/**
 	 * Number of EDD license keys that have been entered.
@@ -39,6 +38,15 @@ class License_Upgrade_Notice extends Notice {
 
 		$this->number_license_keys = is_array( $edd_licensed_products ) ? count( $edd_licensed_products ) : 0;
 		$this->pass_manager        = new Pass_Manager();
+	}
+
+	/**
+	 * This notice lasts 90 days.
+	 *
+	 * @return int
+	 */
+	public static function dismiss_duration() {
+		return 3 * MONTH_IN_SECONDS;
 	}
 
 	/**
