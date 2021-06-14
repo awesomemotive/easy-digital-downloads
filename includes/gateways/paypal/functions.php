@@ -76,3 +76,30 @@ function get_partner_merchant_id( $mode ) {
 		return EDD_PAYPAL_SANDBOX_MERCHANT_ID;
 	}
 }
+
+/**
+ * Returns the styles used for the PayPal buttons.
+ *
+ * @return array
+ */
+function get_button_styles() {
+	$styles = array(
+		'layout' => 'vertical',
+		'size'   => 'responsive',
+		'shape'  => 'rect',
+		'color'  => 'gold',
+		'label'  => 'paypal'
+	);
+
+	if ( ! edd_is_checkout() ) {
+		$styles['layout'] = 'horizontal';
+		$styles['label']  = 'buynow';
+	}
+
+	/**
+	 * Filters the button styles.
+	 *
+	 * @since 2.11
+	 */
+	return apply_filters( 'edd_paypal_smart_button_style', $styles );
+}
