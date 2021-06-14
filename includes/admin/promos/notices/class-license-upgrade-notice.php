@@ -14,7 +14,7 @@ use EDD\Admin\Pass_Manager;
 
 class License_Upgrade_Notice extends Notice {
 
-	const DISPLAY_HOOK = 'edd_settings_before_wrap';
+	const DISPLAY_HOOK = 'admin_notices';
 	const DISMISS_DURATION = MINUTE_IN_SECONDS; // @todo 90 days
 
 	/**
@@ -48,6 +48,12 @@ class License_Upgrade_Notice extends Notice {
 	 */
 	protected function _should_display() {
 		if ( ! current_user_can( 'manage_options' ) ) {
+			return false;
+		}
+
+		$screen = get_current_screen();
+
+		if ( ! $screen instanceof \WP_Screen || 'dashboard' === $screen->id || ! edd_is_admin_page() ) {
 			return false;
 		}
 
