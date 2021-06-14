@@ -73,13 +73,6 @@ function edd_options_page() {
 	}
 
 	ob_start();
-
-	/**
-	 * Triggers before the wrapper.
-	 *
-	 * @since 2.10.6
-	 */
-	do_action( 'edd_settings_before_wrap' );
 	?>
 	<div class="wrap <?php echo 'wrap-' . $active_tab; ?>">
 		<h2><?php _e( 'Easy Digital Downloads Settings', 'easy-digital-downloads' ); ?></h2>
