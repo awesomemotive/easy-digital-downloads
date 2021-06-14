@@ -230,3 +230,38 @@ function get_webhook_details( $mode = '' ) {
 
 	return $response;
 }
+
+/**
+ * Deletes the webhook.
+ *
+ * @since 2.11
+ *
+ * @param string $mode
+ *
+ * @throws API_Exception
+ * @throws Authentication_Exception
+ */
+function delete_webhook( $mode = '' ) {
+	if ( empty( $mode ) ) {
+		$mode = edd_is_test_mode() ? API::MODE_SANDBOX : API::MODE_LIVE;
+	}
+
+	$webhook_id = get_option( sanitize_key( 'edd_paypal_commerce_webhook_id_' . $mode ) );
+
+	// Bail if webhook was never set.
+	if ( ! $webhook_id ) {
+		return;
+	}
+
+	$api = new API( $mode );
+
+	$api->make_request( 'v1/notifications/webhooks/' . urlencode( $webhook_id ), array(), array(), 'DELETE' );
+
+	if ( 204 !== $api->last_response_code ) {
+		throw new API_Exception( sprintf(
+		/* Translators: %d - HTTP response code. */
+			__( 'Invalid response code %d while deleting webhook.', 'easy-digital-downloads' ),
+			$api->last_response_code
+		) );
+	}
+}

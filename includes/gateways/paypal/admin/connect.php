@@ -406,7 +406,7 @@ function process_disconnect() {
 		wp_die( esc_html__( 'You do not have permission to perform this action.', 'easy-digital-downloads' ), esc_html__( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	$mode = edd_is_test_mode() ? 'sandbox' : 'live';
+	$mode = edd_is_test_mode() ? PayPal\API::MODE_SANDBOX : PayPal\API::MODE_LIVE;
 
 	$options_to_delete = array(
 		'paypal_' . $mode . '_client_id',
@@ -417,6 +417,9 @@ function process_disconnect() {
 		// Also delete the token cache key, to ensure we fetch a fresh one if they connect to a different account later.
 		$api                 = new PayPal\API();
 		$options_to_delete[] = $api->token_cache_key;
+
+		// Disconnect the webhook.
+		PayPal\Webhooks\delete_webhook( $mode );
 	} catch ( \Exception $e ) {
 
 	}
