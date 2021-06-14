@@ -297,9 +297,7 @@ function capture_order() {
 
 		try {
 			$api      = new API();
-			$response = $api->make_request( 'v2/checkout/orders/' . urlencode( $_POST['paypal_order_id'] ) . '/capture', array(), array(
-				'PayPal-Mock-Response' => json_encode( array( 'mock_application_codes' => 'INSTRUMENT_DECLINED' ) )
-			) );
+			$response = $api->make_request( 'v2/checkout/orders/' . urlencode( $_POST['paypal_order_id'] ) . '/capture' );
 
 			edd_debug_log( sprintf( '-- PayPal Response code: %d; order ID: %s', $api->last_response_code, esc_html( $_POST['paypal_order_id'] ) ) );
 
