@@ -132,7 +132,7 @@ class License_Upgrade_Notice extends Notice {
 				// Extended pass or higher.
 				printf(
 				/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
-					__( 'Grow your business and make more money with affiliate marketing. %1$sGet AffiliateWP.%2$s', 'easy-digital-downloads' ),
+					__( 'Grow your business and make more money with affiliate marketing. %1$sGet AffiliateWP%2$s', 'easy-digital-downloads' ),
 					'<a href="' . esc_url( add_query_arg( $this->query_args( 'extended-pass' ), 'https://affiliatewp.com/?ref=743' ) ) . '" target="_blank">',
 					'</a>'
 				);
