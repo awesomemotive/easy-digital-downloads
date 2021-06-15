@@ -11,6 +11,7 @@
 namespace EDD\Gateways\PayPal\Admin;
 
 use EDD\Gateways\PayPal;
+use EDD\Gateways\PayPal\API;
 
 if ( ! defined( 'EDD_PAYPAL_PARTNER_CONNECT_URL' ) ) {
 	define( 'EDD_PAYPAL_PARTNER_CONNECT_URL', 'https://easydigitaldownloads.com/wp-json/paypal-connect/v1/' );
@@ -89,7 +90,7 @@ function process_connect() {
 		),
 		'body'    => json_encode( array(
 			'mode'       => edd_is_test_mode() ? 'sandbox' : 'live',
-			'return_url' => admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways&section=paypal_commerce' )
+			'return_url' => get_settings_url()
 		) )
 	) );
 
@@ -428,7 +429,7 @@ function process_disconnect() {
 		edd_delete_option( $option_name );
 	}
 
-	wp_safe_redirect( esc_url_raw( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways&section=paypal_commerce' ) ) );
+	wp_safe_redirect( esc_url_raw( get_settings_url() ) );
 	exit;
 }
 
@@ -479,3 +480,101 @@ function update_webhook() {
 }
 
 add_action( 'wp_ajax_edd_paypal_commerce_update_webhook', __NAMESPACE__ . '\update_webhook' );
+
+/**
+ * PayPal Redirect Callback
+ *
+ * This processes after the merchant is redirected from PayPal. We immediately
+ * check their seller status via partner connect, save any errors, and save
+ * their merchant status if available. The user is then redirected back to
+ * the settings page.
+ *
+ * @since 2.11
+ */
+add_action( 'admin_init', function () {
+	if ( ! isset( $_GET['merchantIdInPayPal'] ) || ! edd_is_admin_page( 'settings' ) ) {
+		return;
+	}
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+	}
+
+	delete_connection_errors();
+
+	$response = wp_remote_post( EDD_PAYPAL_PARTNER_CONNECT_URL . 'status', array(
+		'headers' => array(
+			'Content-Type' => 'application/json',
+		),
+		'body'    => json_encode( array(
+			'mode'        => edd_is_test_mode() ? 'sandbox' : 'live',
+			'merchant_id' => sanitize_text_field( urldecode( $_GET['merchantIdInPayPal'] ) )
+		) )
+	) );
+
+	try {
+		if ( is_wp_error( $response ) ) {
+			throw new \Exception( $response->get_error_message() );
+		}
+
+		$code = wp_remote_retrieve_response_code( $response );
+		$body = json_decode( wp_remote_retrieve_body( $response ), true );
+
+		if ( 200 !== intval( $code ) ) {
+			$error_message = ! empty( $body->message ) ? $body->message : sprintf(
+			/* Translators: %d - HTTP response code; %s - Response from the API */
+				__( 'Unexpected response code: %d. Error: %s', 'easy-digital-downloads' ),
+				$code,
+				json_encode( $body )
+			);
+
+			throw new \Exception( $error_message );
+		}
+
+		$merchant_account = new PayPal\MerchantAccount( $body );
+		$merchant_account->save();
+	} catch ( \Exception $e ) {
+		save_connection_errors( array( $e->getMessage() ) );
+	}
+
+	wp_safe_redirect( esc_url_raw( get_settings_url() ) );
+	exit;
+} );
+
+/**
+ * Retrieves connection errors.
+ *
+ * @since 2.11
+ *
+ * @return array
+ */
+function get_connection_errors() {
+	return get_option( sprintf(
+		'edd_paypal_connect_errors_%s',
+		edd_is_test_mode() ? API::MODE_SANDBOX : API::MODE_LIVE
+	), array() );
+}
+
+/**
+ * Saves new connection errors.
+ *
+ * @since 2.11
+ *
+ * @param string[] $errors
+ */
+function save_connection_errors( $errors ) {
+	update_option( sprintf(
+		'edd_paypal_connect_errors_%s',
+		edd_is_test_mode() ? API::MODE_SANDBOX : API::MODE_LIVE
+	), $errors );
+}
+
+/**
+ * Deletes connection errors.
+ */
+function delete_connection_errors() {
+	delete_option( sprintf(
+		'edd_paypal_connect_errors_%s',
+		edd_is_test_mode() ? API::MODE_SANDBOX : API::MODE_LIVE
+	) );
+}

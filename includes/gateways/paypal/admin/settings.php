@@ -11,6 +11,17 @@
 namespace EDD\Gateways\PayPal\Admin;
 
 /**
+ * Returns the URL to the PayPal Commerce settings page.
+ *
+ * @since 2.11
+ *
+ * @return string
+ */
+function get_settings_url() {
+	return admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways&section=paypal_commerce' );
+}
+
+/**
  * Register the PayPal Standard gateway subsection
  *
  * @param array $gateway_sections Current Gateway Tab subsections

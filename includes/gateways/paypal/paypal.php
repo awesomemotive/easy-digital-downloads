@@ -50,6 +50,7 @@ require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/exceptions/class-authent
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/exceptions/class-gateway-exception.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/buy-now.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/checkout-actions.php';
+require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/class-merchant-account.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/class-paypal-api.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/class-token.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/functions.php';
