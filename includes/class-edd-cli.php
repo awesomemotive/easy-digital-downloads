@@ -1271,6 +1271,9 @@ class EDD_CLI extends WP_CLI_Command {
 		}
 
 		WP_CLI::line( __( 'Migration complete: Tax Rates', 'easy-digital-downloads' ) );
+		$new_count = edd_count_adjustments( array( 'type' => 'tax_rate' ) );
+		WP_CLI::line( __( 'Old Records: ', 'easy-digital-downloads' ) . count( $tax_rates ) );
+		WP_CLI::line( __( 'New Records: ', 'easy-digital-downloads' ) . $new_count );
 
 		edd_update_db_version();
 		edd_set_upgrade_complete( 'migrate_tax_rates' );
