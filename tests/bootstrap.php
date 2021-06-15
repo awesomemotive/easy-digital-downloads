@@ -6,6 +6,7 @@ $PHP_SELF = $GLOBALS['PHP_SELF'] = $_SERVER['PHP_SELF'] = '/index.php';
 
 define( 'EDD_USE_PHP_SESSIONS', false );
 define( 'WP_USE_THEMES', false );
+define( 'EDD_DOING_TESTS', true );
 
 $_tests_dir = getenv('WP_TESTS_DIR');
 if ( !$_tests_dir ) $_tests_dir = '/tmp/wordpress-tests-lib';

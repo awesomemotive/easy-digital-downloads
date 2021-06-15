@@ -50,6 +50,25 @@ class License_Upgrade_Notice extends Notice {
 	}
 
 	/**
+	 * Determines if the current page is an EDD admin page.
+	 *
+	 * @return bool
+	 */
+	private function is_edd_admin_page() {
+		if ( defined( 'EDD_DOING_TESTS' ) && EDD_DOING_TESTS ) {
+			return true;
+		}
+
+		$screen = get_current_screen();
+
+		if ( ! $screen instanceof \WP_Screen || 'dashboard' === $screen->id || ! edd_is_admin_page() ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * @inheritDoc
 	 *
 	 * @return bool
@@ -59,9 +78,7 @@ class License_Upgrade_Notice extends Notice {
 			return false;
 		}
 
-		$screen = get_current_screen();
-
-		if ( ! $screen instanceof \WP_Screen || 'dashboard' === $screen->id || ! edd_is_admin_page() ) {
+		if ( ! $this->is_edd_admin_page() ) {
 			return false;
 		}
 
