@@ -409,15 +409,19 @@ function process_disconnect() {
 
 	$mode = edd_is_test_mode() ? PayPal\API::MODE_SANDBOX : PayPal\API::MODE_LIVE;
 
-	$options_to_delete = array(
+	$edd_settings_to_delete = array(
 		'paypal_' . $mode . '_client_id',
 		'paypal_' . $mode . '_client_secret'
 	);
 
+	delete_option( 'edd_paypal_' . $mode . '_merchant_details' );
+
+	delete_connection_errors();
+
 	try {
 		// Also delete the token cache key, to ensure we fetch a fresh one if they connect to a different account later.
 		$api                 = new PayPal\API();
-		$options_to_delete[] = $api->token_cache_key;
+		$edd_settings_to_delete[] = $api->token_cache_key;
 
 		// Disconnect the webhook.
 		PayPal\Webhooks\delete_webhook( $mode );
@@ -425,7 +429,7 @@ function process_disconnect() {
 
 	}
 
-	foreach ( $options_to_delete as $option_name ) {
+	foreach ( $edd_settings_to_delete as $option_name ) {
 		edd_delete_option( $option_name );
 	}
 
