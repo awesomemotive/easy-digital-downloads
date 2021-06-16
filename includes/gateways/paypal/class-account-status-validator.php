@@ -154,16 +154,16 @@ class AccountStatusValidator {
 	 */
 	public function check_webhook() {
 		try {
-			$webhook = Webhooks\get_webhook_details( $this->mode );
-			if ( empty( $webhook->id ) ) {
+			$this->webhook = Webhooks\get_webhook_details( $this->mode );
+			if ( empty( $this->webhook->id ) ) {
 				throw new \Exception( __( 'Webhook not configured. Some actions may not work properly.', 'easy-digital-downloads' ) );
 			}
 
 			// Now compare the events to make sure we have them all.
 			$expected_events = array_keys( Webhooks\get_webhook_events( $this->mode ) );
 
-			if ( ! empty( $webhook->event_types ) && is_array( $webhook->event_types ) ) {
-				foreach ( $webhook->event_types as $event_type ) {
+			if ( ! empty( $this->webhook->event_types ) && is_array( $this->webhook->event_types ) ) {
+				foreach ( $this->webhook->event_types as $event_type ) {
 					if ( ! empty( $event_type->name ) && ! empty( $event_type->status ) && 'ENABLED' === strtoupper( $event_type->status ) ) {
 						$this->enabled_webhook_events[] = $event_type->name;
 					}
