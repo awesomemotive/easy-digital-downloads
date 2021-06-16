@@ -504,6 +504,8 @@ add_action( 'admin_init', function () {
 		wp_die( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
+	edd_debug_log( 'PayPal Connect - Checking merchant status.' );
+
 	delete_connection_errors();
 
 	$response = wp_remote_post( EDD_PAYPAL_PARTNER_CONNECT_URL . 'status', array(
@@ -538,6 +540,12 @@ add_action( 'admin_init', function () {
 		$merchant_account = new PayPal\MerchantAccount( $body );
 		$merchant_account->save();
 	} catch ( \Exception $e ) {
+		edd_debug_log( sprintf(
+			'PayPal Connect - Exception while checking account status. Response Code: %d; Message: %s',
+			isset( $code ) ? $code : 0,
+			$e->getMessage()
+		) );
+
 		save_connection_errors( array( $e->getMessage() ) );
 	}
 
