@@ -329,7 +329,7 @@ function get_account_info() {
 			$status           = ( 'success' === $status ) ? 'warning' : $status;
 			$webhook_message  .= $validator->errors_for_webhook->get_error_message();
 
-			if ( array_key_exists( 'webhook_missing', $validator->errors_for_webhook->get_error_codes() ) ) {
+			if ( in_array( 'webhook_missing', $validator->errors_for_webhook->get_error_codes() ) ) {
 				$actions = array(
 					'<button type="button" class="button edd-paypal-connect-action" data-nonce="' . esc_attr( wp_create_nonce( 'edd_create_paypal_webhook' ) ) . '" data-action="edd_paypal_commerce_create_webhook">' . esc_html__( 'Create Webhook', 'easy-digital-downloads' ) . '</button>'
 				);

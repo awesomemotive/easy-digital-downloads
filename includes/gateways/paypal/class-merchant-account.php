@@ -138,7 +138,7 @@ class MerchantAccount {
 		if ( ! $this->primary_email_confirmed ) {
 			$this->errors->add(
 				'primary_email_confirmed',
-				__( 'Your PayPal email needs to be confirmed before you can accept payments.', 'easy-digital-downloads' )
+				__( 'Your PayPal email address needs to be confirmed.', 'easy-digital-downloads' )
 			);
 		}
 
