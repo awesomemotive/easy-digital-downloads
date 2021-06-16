@@ -12,6 +12,9 @@
 
 namespace EDD\Gateways\PayPal;
 
+use EDD\Gateways\PayPal\Exceptions\InvalidMerchantDetails;
+use EDD\Gateways\PayPal\Exceptions\MissingMerchantDetails;
+
 class MerchantAccount {
 
 	/**
@@ -44,14 +47,13 @@ class MerchantAccount {
 	 *
 	 * @param array $details
 	 *
-	 * @throws \InvalidArgumentException
+	 * @throws MissingMerchantDetails
+	 * @throws InvalidMerchantDetails
 	 */
 	public function __construct( $details ) {
 		$this->errors = new \WP_Error();
 
-		if ( ! $this->is_valid( $details ) ) {
-			throw new \InvalidArgumentException( __( 'Invalid merchant details.', 'easy-digital-downloads' ) );
-		}
+		$this->validate( $details );
 
 		foreach ( $details as $key => $value ) {
 			$this->{$key} = $value;
@@ -66,10 +68,16 @@ class MerchantAccount {
 	 * @param string $json
 	 *
 	 * @return MerchantAccount
-	 * @throws \InvalidArgumentException
+	 * @throws MissingMerchantDetails
+	 * @throws InvalidMerchantDetails
 	 */
 	public static function from_json( $json ) {
-		return new MerchantAccount( json_decode( $json, true ) );
+		$merchant_details = json_decode( $json, true );
+		if ( empty( $merchant_details ) || ! is_array( $merchant_details ) ) {
+			$merchant_details = array();
+		}
+
+		return new MerchantAccount( $merchant_details );
 	}
 
 	/**
@@ -90,9 +98,14 @@ class MerchantAccount {
 	 *
 	 * @param array $details
 	 *
-	 * @return bool
+	 * @throws MissingMerchantDetails
+	 * @throws InvalidMerchantDetails
 	 */
-	private function is_valid( $details ) {
+	private function validate( $details ) {
+		if ( empty( $details ) || ! is_array( $details ) ) {
+			throw new MissingMerchantDetails();
+		}
+
 		$required_properties = array(
 			'merchant_id',
 			'payments_receivable',
@@ -100,7 +113,14 @@ class MerchantAccount {
 			'products',
 		);
 
-		return ! array_diff( $required_properties, array_keys( $details ) );
+		$difference = array_diff( $required_properties, array_keys( $details ) );
+
+		if ( $difference ) {
+			throw new InvalidMerchantDetails( sprintf(
+				'Missing required merchant properties: %s',
+				json_encode( $difference )
+			) );
+		}
 	}
 
 	/**
@@ -112,7 +132,7 @@ class MerchantAccount {
 	 */
 	public function is_account_ready() {
 		if ( ! $this->payments_receivable ) {
-			$this->errors->add( 'payments_receivable', __( 'Account is unable to receive payments.', 'easy-digital-downloads' ) );
+			$this->errors->add( 'payments_receivable', __( 'Your account is unable to receive payments. Please contact PayPal customer support.', 'easy-digital-downloads' ) );
 		}
 
 		if ( ! $this->primary_email_confirmed ) {

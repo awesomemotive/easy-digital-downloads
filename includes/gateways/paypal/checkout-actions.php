@@ -34,7 +34,7 @@ add_action( 'edd_paypal_commerce_cc_form', '__return_false' );
 function override_purchase_button( $button ) {
 	if ( 'paypal_commerce' === edd_get_chosen_gateway() && edd_get_cart_total() ) {
 		ob_start();
-		if ( has_rest_api_connection() ) {
+		if ( ready_to_accept_payments() ) {
 			wp_nonce_field( 'edd_process_paypal', 'edd_process_paypal_nonce' );
 			?>
 			<div id="edd-paypal-errors-wrap"></div>
@@ -109,10 +109,10 @@ add_action( 'edd_checkout_user_error_checks', __NAMESPACE__ . '\send_ajax_errors
 function create_order( $purchase_data ) {
 	edd_debug_log( 'PayPal - create_order()' );
 
-	if ( ! has_rest_api_connection() ) {
+	if ( ! ready_to_accept_payments() ) {
 		edd_record_gateway_error(
 			__( 'PayPal Gateway Error', 'easy-digital-downloads' ),
-			__( 'Missing PayPal Commerce credentials.', 'easy-digital-downloads' )
+			__( 'Account not ready to accept payments.', 'easy-digital-downloads' )
 		);
 
 		$error_message = current_user_can( 'manage_options' )

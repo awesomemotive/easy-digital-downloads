@@ -57,6 +57,10 @@ function register_js( $force_load = false ) {
 		return;
 	}
 
+	if ( ! ready_to_accept_payments() ) {
+		return;
+	}
+
 	try {
 		$api = new API();
 	} catch ( Authentication_Exception $e ) {

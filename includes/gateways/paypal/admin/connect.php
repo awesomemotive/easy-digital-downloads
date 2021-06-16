@@ -11,6 +11,7 @@
 namespace EDD\Gateways\PayPal\Admin;
 
 use EDD\Gateways\PayPal;
+use EDD\Gateways\PayPal\AccountStatusValidator;
 use EDD\Gateways\PayPal\API;
 
 if ( ! defined( 'EDD_PAYPAL_PARTNER_CONNECT_URL' ) ) {
@@ -253,122 +254,130 @@ function get_account_info() {
 		wp_send_json_error( wpautop( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ) ) );
 	}
 
-	$mode = edd_is_test_mode() ? PayPal\API::MODE_SANDBOX : PayPal\API::MODE_LIVE;
-
 	try {
-		/**
-		 * First get account information.
-		 */
-		$api      = new PayPal\API();
-		$response = $api->make_request( 'v1/identity/oauth2/userinfo?schema=paypalv1.1', array(), array(), 'GET' );
+		$status         = 'success';
+		$account_status = '';
+		$actions        = array();
 
-		if ( empty( $response->user_id ) ) {
-			wp_send_json_error( wpautop( __( 'Unable to retrieve account information from PayPal. You may wish to try reconnecting.', 'easy-digital-downloads' ) ) );
+		$validator = new AccountStatusValidator();
+		$validator->check();
+
+		/*
+		 * 1. Check REST API credentials
+		 */
+		$rest_api_message = '<strong>' . __( 'API:', 'easy-digital-downloads' ) . '</strong>' . ' ';
+		if ( $validator->errors_for_credentials->errors ) {
+			$rest_api_dashicon = 'no';
+			$status            = 'error';
+			$rest_api_message  .= $validator->errors_for_credentials->get_error_message();
+		} else {
+			$rest_api_dashicon = 'yes';
+			$mode_string       = edd_is_test_mode() ? __( 'sandbox', 'easy-digital-downloads' ) : __( 'live', 'easy-digital-downloads' );
+
+			/* Translators: %s - the connected mode, either `sandbox` or `live` */
+			$rest_api_message .= sprintf( __( 'Your PayPal account is successfully connected in %s mode.', 'easy-digital-downloads' ), $mode_string );
 		}
 
-		$status = 'success';
+		ob_start();
+		?>
+		<li>
+			<span class="dashicons dashicons-<?php echo esc_attr( $rest_api_dashicon ); ?>"></span>
+			<span><?php echo wp_kses( $rest_api_message, array( 'strong' => array() ) ); ?></span>
+		</li>
+		<?php
+		$account_status .= ob_get_clean();
 
-		/**
-		 * Note: Despite the docs saying you'll get a full profile back, including name, email, etc.
-		 * we're only actually getting the `user_id` back, which isn't super helpful. So although this
-		 * is coded to *potentially* support showing the email address of the account, in most (if not
-		 * all) cases it will just say "yes you're connected".
-		 *
-		 * @link https://developer.paypal.com/docs/api/identity/v1/#userinfo
+		/*
+		 * 2. Check merchant account
 		 */
+		$merchant_account_message = '<strong>' . __( 'Payment Status:', 'easy-digital-downloads' ) . '</strong>' . ' ';
+		if ( $validator->errors_for_merchant_account->errors ) {
+			$merchant_dashicon        = 'no';
+			$status                   = 'error';
+			$merchant_account_message .= __( 'You need to address the following issues before you can start receiving payments:', 'easy-digital-downloads' );
+		} else {
+			$merchant_dashicon        = 'yes';
+			$merchant_account_message .= __( 'Ready to accept payments.', 'easy-digital-downloads' );
 
-		/* Translators: %s - the connected mode, either `sandbox` or `live` */
-		$mode_string    = edd_is_test_mode() ? __( 'sandbox', 'easy-digital-downloads' ) : __( 'live', 'easy-digital-downloads' );
-		$account_status = sprintf( __( 'Your PayPal account is successfully connected in %s mode.', 'easy-digital-downloads' ), $mode_string );
+			$actions = array(
+				'<button type="button" class="button edd-paypal-connect-action" data-nonce="' . esc_attr( wp_create_nonce( 'edd_update_paypal_webhook' ) ) . '" data-action="edd_paypal_commerce_update_webhook">' . esc_html__( 'Sync Webhook', 'easy-digital-downloads' ) . '</button>'
+			);
+		}
 
-		if ( ! empty( $response->emails ) && is_array( $response->emails ) ) {
-			foreach ( $response->emails as $email ) {
-				if ( ! empty( $email->value ) && ! empty( $email->primary ) ) {
-					$account_status = sprintf(
-					/* Translators: %1$s - PayPal account email; %2$s - the connected mode, either `sandbox` or `live` */
-						__( 'You are successfully connected to the account <strong>%1$s</strong> in %2$s mode.', 'easy-digital-downloads' ),
-						esc_html( $email->value ),
-						$mode_string
-					);
-				}
+		ob_start();
+		?>
+		<li>
+			<span class="dashicons dashicons-<?php echo esc_attr( $merchant_dashicon ); ?>"></span>
+			<span><?php echo wp_kses_post( $merchant_account_message ); ?></span>
+			<?php if ( $validator->errors_for_merchant_account->errors ) : ?>
+				<ul>
+					<?php foreach ( $validator->errors_for_merchant_account->get_error_codes() as $code ) : ?>
+						<li><?php echo wp_kses( $validator->errors_for_merchant_account->get_error_message( $code ), array( 'strong' => array() ) ); ?></li>
+					<?php endforeach; ?>
+				</ul>
+			<?php endif; ?>
+		</li>
+		<?php
+		$account_status .= ob_get_clean();
+
+		/*
+		 * 3. Webhooks
+		 */
+		$webhook_message = '<strong>' . __( 'Webhook:', 'easy-digital-downloads' ) . '</strong>' . ' ';
+		if ( $validator->errors_for_webhook->errors ) {
+			$webhook_dashicon = 'no';
+			$status           = ( 'success' === $status ) ? 'warning' : $status;
+			$webhook_message  .= $validator->errors_for_webhook->get_error_message();
+
+			if ( array_key_exists( 'webhook_missing', $validator->errors_for_webhook->get_error_codes() ) ) {
+				$actions = array(
+					'<button type="button" class="button edd-paypal-connect-action" data-nonce="' . esc_attr( wp_create_nonce( 'edd_create_paypal_webhook' ) ) . '" data-action="edd_paypal_commerce_create_webhook">' . esc_html__( 'Create Webhook', 'easy-digital-downloads' ) . '</button>'
+				);
 			}
+		} else {
+			$webhook_dashicon = 'yes';
+			$webhook_message  .= __( 'Webhook successfully configured for the following events:', 'easy-digital-downloads' );
 		}
+
+		ob_start();
+		?>
+		<li>
+			<span class="dashicons dashicons-<?php echo esc_attr( $webhook_dashicon ); ?>"></span>
+			<span><?php echo wp_kses( $webhook_message, array( 'strong' => array() ) ); ?></span>
+			<?php if ( $validator->webhook ) : ?>
+				<ul class="edd-paypal-webhook-events">
+					<?php foreach ( array_keys( PayPal\Webhooks\get_webhook_events() ) as $event_name ) : ?>
+						<li>
+							<span class="dashicons dashicons-<?php echo in_array( $event_name, $validator->enabled_webhook_events ) ? 'yes' : 'no'; ?>"></span>
+							<span class="edd-paypal-webhook-event-name"><?php echo esc_html( $event_name ); ?></span>
+						</li>
+					<?php endforeach; ?>
+				</ul>
+			<?php endif; ?>
+		</li>
+		<?php
+		$account_status .= ob_get_clean();
 
 		if ( ! edd_is_gateway_active( 'paypal_commerce' ) ) {
 			$account_status .= ' ' . sprintf(
 				/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
-				__( 'To start using PayPal, be sure to %1$senable it%2$s in the general gateway settings.', 'easy-digital-downloads' ),
-				'<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways&section=main' ) ) . '">',
-				'</a>'
-			);
-		}
-
-		/**
-		 * Now check the webhook connection.
-		 */
-		$webhook_status = wpautop( esc_html__( 'Webhook successfully configured for the following events:', 'easy-digital-downloads' ) );
-		$actions        = array(
-			'<button type="button" class="button edd-paypal-connect-action" data-nonce="' . esc_attr( wp_create_nonce( 'edd_update_paypal_webhook' ) ) . '" data-action="edd_paypal_commerce_update_webhook">' . esc_html__( 'Sync Webhook', 'easy-digital-downloads' ) . '</button>'
-		);
-		try {
-			$webhook = PayPal\Webhooks\get_webhook_details( $mode );
-			if ( empty( $webhook->id ) ) {
-				throw new \Exception();
-			}
-
-			// Now compare the events to make sure we have them all.
-			$expected_events = array_keys( PayPal\Webhooks\get_webhook_events( $mode ) );
-			$actual_events   = array();
-
-			if ( ! empty( $webhook->event_types ) && is_array( $webhook->event_types ) ) {
-				foreach ( $webhook->event_types as $event_type ) {
-					if ( ! empty( $event_type->name ) && ! empty( $event_type->status ) && 'ENABLED' === strtoupper( $event_type->status ) ) {
-						$actual_events[] = $event_type->name;
-					}
-				}
-			}
-
-			$missing_events = array_diff( $expected_events, $actual_events );
-			$number_missing = count( $missing_events );
-			if ( $number_missing ) {
-				$status         = 'warning';
-				$webhook_status = wpautop( _n(
-					'<strong>Warning:</strong> Webhook is configured but is missing an event. Click "Sync Webhook" to correct this.',
-					'<strong>Warning:</strong> Webhook is configured but is missing events. Click "Sync Webhook" to correct this.',
-					$number_missing,
-					'easy-digital-downloads'
-				) );
-			}
-
-			ob_start();
-			?>
-			<ul class="edd-paypal-webhook-events">
-				<?php foreach ( $expected_events as $event_name ) : ?>
-					<li>
-						<span class="dashicons dashicons-<?php echo in_array( $event_name, $actual_events ) ? 'yes' : 'no'; ?>"></span>
-						<span class="edd-paypal-webhook-event-name"><?php echo esc_html( $event_name ); ?></span>
-					</li>
-				<?php endforeach; ?>
-			</ul>
-			<?php
-			$webhook_status .= ob_get_clean();
-		} catch ( \Exception $e ) {
-			$status         = 'warning';
-			$webhook_status = wpautop( __( '<strong>Warning:</strong> Webhook not configured. Some actions may not be working properly.', 'easy-digital-downloads' ) );
-			$actions        = array(
-				'<button type="button" class="button edd-paypal-connect-action" data-nonce="' . esc_attr( wp_create_nonce( 'edd_create_paypal_webhook' ) ) . '" data-action="edd_paypal_commerce_create_webhook">' . esc_html__( 'Create Webhook', 'easy-digital-downloads' ) . '</button>'
-			);
+					__( 'To start using PayPal, be sure to %1$senable it%2$s in the general gateway settings.', 'easy-digital-downloads' ),
+					'<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=gateways&section=main' ) ) . '">',
+					'</a>'
+				);
 		}
 
 		wp_send_json_success( array(
 			'status'         => $status,
-			'account_status' => wpautop( $account_status ),
-			'webhook_status' => $webhook_status,
-			'webhook_object' => isset( $webhook ) ? $webhook : null,
+			'account_status' => '<ul class="edd-paypal-account-status">' . $account_status . '</ul>',
+			'webhook_object' => isset( $validator ) ? $validator->webhook : null,
 			'actions'        => $actions
 		) );
 	} catch ( \Exception $e ) {
-		wp_send_json_error( wpautop( $e->getMessage() ) );
+		wp_send_json_error( array(
+			'status'  => isset( $status ) ? $status : 'error',
+			'message' => wpautop( $e->getMessage() )
+		) );
 	}
 }
 
@@ -539,6 +548,8 @@ add_action( 'admin_init', function () {
 
 		$merchant_account = new PayPal\MerchantAccount( $body );
 		$merchant_account->save();
+
+		edd_debug_log( 'PayPal Connect - Successfully saved merchant details.' );
 	} catch ( \Exception $e ) {
 		edd_debug_log( sprintf(
 			'PayPal Connect - Exception while checking account status. Response Code: %d; Message: %s',
