@@ -325,6 +325,7 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-footer.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-notices.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/class-pass-manager.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/dashboard-widgets.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/thickbox.php';
@@ -357,6 +358,9 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-heartbeat.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/tools/tools-actions.php';
+
+			require_once EDD_PLUGIN_DIR . 'includes/libraries/class-persistent-dismissible.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/promos/class-promo-handler.php';
 		} else {
 			require_once EDD_PLUGIN_DIR . 'includes/process-download.php';
 			require_once EDD_PLUGIN_DIR . 'includes/theme-compatibility.php';
