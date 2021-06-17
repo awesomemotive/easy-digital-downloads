@@ -251,7 +251,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 * New: Added license upgrade notices to EDD admin pages.
 * Improvement: The discount API endpoint now includes `excluded_products`.
 * Improvement: The Hummingbird cache plugin is now detected in `edd_is_caching_plugin_active()`.
-* Fix: Currency symbol is prefixed with minus sign in PHP 8 on some interfaces.
+* Fix: Currency symbol was prefixed with minus sign in PHP 8 on some interfaces.
 * Fix: Prevent multi purchase mode from reporting as enabled if a product does not have variable pricing turned on.
 * Fix: Deprecation notices in PHP 8.
 
