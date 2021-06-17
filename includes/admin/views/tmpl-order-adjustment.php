@@ -53,7 +53,7 @@ $view_url = edd_get_admin_url(
 </td>
 
 <td class="column-right" data-colname="<?php esc_html_e( 'Amount', 'easy-digital-downloads' ); ?>">
-	<# if ( 'fee' !== data.type ) { #>&ndash;<# } #>{{ data.subtotalCurrency }}
+	<# if ( 'fee' !== data.type || data.subtotal < 0 ) { #>&ndash;<# } #>{{ data.subtotalCurrency }}
 </td>
 
 <input type="hidden" value="{{ data.objectId }}" name="adjustments[{{ data.id }}][object_id]" />
