@@ -5,9 +5,9 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: ecommerce, sell, checkout, payments, stripe
 Requires at least: 4.4
-Tested up to: 5.7.1
+Tested up to: 5.7.2
 Requires PHP: 5.3
-Stable Tag: 2.10.5
+Stable Tag: 2.10.6
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products the simple way. Easily build an online store complete with a cart system, checkout forms, reports, coupons, and more!
@@ -247,6 +247,14 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 11. Google Pay checkout
 
 == Changelog ==
+= 2.10.6, June 22, 2021 =
+* New: Added license upgrade notices to EDD admin pages.
+* Improvement: The discount API endpoint now includes `excluded_products`.
+* Improvement: The Hummingbird cache plugin is now detected in `edd_is_caching_plugin_active()`.
+* Fix: Currency symbol is prefixed with minus sign in PHP 8 on some interfaces.
+* Fix: Prevent multi purchase mode from reporting as enabled if a product does not have variable pricing turned on.
+* Fix: Deprecation notices in PHP 8.
+
 = 2.10.5, May 20, 2021 =
 * Fix: Unexpected checkout fields may become required when they weren't before, after a discount code is applied.
 * Fix: Deprecation notices in PHP 8.
