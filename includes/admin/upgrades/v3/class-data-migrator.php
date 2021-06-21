@@ -792,7 +792,7 @@ class Data_Migrator {
 			'tax',
 			'amount',
 			'user_id',
-		);
+		) );
 
 		// Remove core keys from `user_info`.
 		$remaining_user_info = false;
