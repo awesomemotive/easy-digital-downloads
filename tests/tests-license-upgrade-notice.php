@@ -19,7 +19,7 @@ class Tests_License_Upgrade_Notice extends \EDD_UnitTestCase {
 	 * Runs once before any tests are executed.
 	 */
 	public static function wpSetUpBeforeClass() {
-		parent::wpSetUpBeforeClass();
+		parent::setUpBeforeClass();
 
 		// These are admin files, so we need to include them manually.
 		require_once EDD_PLUGIN_DIR . 'includes/admin/class-pass-manager.php';
