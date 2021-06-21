@@ -2038,6 +2038,48 @@ jQuery(document).ready(function ($) {
 	};
 	EDD_Customer.init();
 
+	var EDD_Promo_Notices = {
+		init: function() {
+			EDD_Promo_Notices.displayNotices();
+			EDD_Promo_Notices.dismissNotices();
+		},
+
+		displayNotices: function() {
+			var topOfPageNotice = $( '.edd-admin-notice-top-of-page' );
+			if ( topOfPageNotice ) {
+				var topOfPageNoticeEl = topOfPageNotice.detach();
+
+				$( '#wpbody-content' ).prepend( topOfPageNoticeEl );
+				topOfPageNotice.delay( 1000 ).slideDown();
+			}
+		},
+
+		dismissNotices: function() {
+			$( '.edd-promo-notice' ).each( function() {
+				var notice = $( this );
+
+				notice.on( 'click', '.edd-promo-notice-dismiss', function( e ) {
+					e.preventDefault();
+
+					$.ajax( {
+						type: 'POST',
+						data: {
+							action: 'edd_dismiss_promo_notice',
+							notice_id: notice.data( 'id' ),
+							nonce: notice.data( 'nonce' ),
+							lifespan: notice.data( 'lifespan' )
+						},
+						url: ajaxurl,
+						success: function( response ) {
+							notice.slideUp();
+						}
+					} );
+				} );
+			} );
+		}
+	};
+	EDD_Promo_Notices.init();
+
 	// AJAX user search
 	$('.edd-ajax-user-search').keyup(function() {
 		var user_search = $(this).val();
