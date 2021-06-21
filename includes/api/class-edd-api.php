@@ -1623,7 +1623,6 @@ class EDD_API {
 		} else {
 			$discount_object = edd_get_discount( $discount );
 			if ( is_numeric( $discount ) && $discount_object ) {
-				error_log( print_r( $discount_object, true ) );
 				$discount_list['discounts'][0]['ID']                    = $discount_object->id;
 				$discount_list['discounts'][0]['name']                  = $discount_object->name;
 				$discount_list['discounts'][0]['code']                  = $discount_object->code;
