@@ -18,7 +18,7 @@ class Tests_License_Upgrade_Notice extends \EDD_UnitTestCase {
 	/**
 	 * Runs once before any tests are executed.
 	 */
-	public static function wpSetUpBeforeClass() {
+	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
 
 		// These are admin files, so we need to include them manually.
