@@ -315,7 +315,7 @@ class EDD_Download {
 	 * @return bool True if download is in single price mode, false otherwise
 	 */
 	public function is_single_price_mode() {
-		$ret = get_post_meta( $this->ID, '_edd_price_options_mode', true );
+		$ret = $this->has_variable_prices() && get_post_meta( $this->ID, '_edd_price_options_mode', true );
 
 		/**
 		 * Override the price mode for a download when checking if is in single price mode.
