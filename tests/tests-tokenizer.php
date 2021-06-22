@@ -58,4 +58,21 @@ class TestsTokenizer extends \EDD_UnitTestCase {
 		$this->assertFalse( Tokenizer::is_token_valid( $token, strtotime( '-1 day' ) ) );
 	}
 
+	/**
+	 * If the signing key is regenerated, previously generated tokens should be invalidated.
+	 *
+	 * @covers \EDD\Utils\Tokenizer::is_token_valid
+	 */
+	public function test_regenerating_key_invalidates_token() {
+		$timestamp = time();
+		$token     = Tokenizer::tokenize( $timestamp );
+
+		// This should be valid.
+		$this->assertTrue( Tokenizer::is_token_valid( $token, $timestamp ) );
+
+		// But if we delete the signing key, a new one will be generated, which should then invalidate the above token.
+		delete_option( 'edd_tokenizer_signing_key' );
+		$this->assertFalse( Tokenizer::is_token_valid( $token, $timestamp ) );
+	}
+
 }
