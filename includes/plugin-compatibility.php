@@ -51,7 +51,7 @@ add_action( 'template_redirect', 'edd_disable_jetpack_og_on_checkout' );
  * @return bool $caching True if caching plugin is enabled, false otherwise
  */
 function edd_is_caching_plugin_active() {
-	$caching = ( function_exists( 'wpsupercache_site_admin' ) || defined( 'W3TC' ) || function_exists( 'rocket_init' ) );
+	$caching = ( function_exists( 'wpsupercache_site_admin' ) || defined( 'W3TC' ) || function_exists( 'rocket_init' ) ) || defined( 'WPHB_VERSION' );
 	return apply_filters( 'edd_is_caching_plugin_active', $caching );
 }
 
