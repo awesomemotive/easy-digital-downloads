@@ -1,0 +1,50 @@
+.edd-admin-notice-top-of-page {
+	font-size: 15px;
+	line-height: 1.4;
+	color: #fff;
+	margin-left: -20px;
+	padding: 12px 32px 12px 20px;
+	background: #2d6ca2;
+	display: none;
+
+	@media screen and ( min-width: 783px ) {
+		padding: 10px 46px 10px 22px;
+	}
+
+	@media screen and ( min-width: 961px ) {
+		text-align: center;
+	}
+
+	a {
+		color: #fff;
+
+		&:hover {
+			text-decoration: none;
+		}
+	}
+
+	.button-link {
+		position: absolute;
+		top: 48px;
+		right: -1px;
+		font-size: 20px;
+		color: #fff;
+		font-weight: bold;
+		text-decoration: none;
+		margin-left: 5px;
+		padding: 6px 10px;
+
+		&:hover, &:active, &:focus {
+			color: #fff;
+			text-decoration: none;
+		}
+
+		@media screen and ( min-width: 601px ) {
+			top: 1px;
+		}
+
+		@media screen and ( min-width: 783px ) {
+			right: 9px;
+		}
+	}
+}
