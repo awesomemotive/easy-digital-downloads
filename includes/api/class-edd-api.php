@@ -1590,7 +1590,7 @@ class EDD_API {
 			$per_page  = $this->per_page();
 			$discounts = edd_get_discounts( array(
 				'number' => $per_page,
-				'offset' => $paged * $per_page,
+				'offset' => ( absint( $paged ) - 1 ) * $per_page,
 			) );
 
 			if ( empty( $discounts ) ) {
