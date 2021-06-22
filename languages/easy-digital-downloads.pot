@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.10.5\n"
+"Project-Id-Version: Easy Digital Downloads 2.10.6\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2021-05-20 12:35:45+00:00\n"
+"POT-Creation-Date: 2021-06-17 13:17:58+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -88,17 +88,17 @@ msgstr ""
 #: includes/admin/upgrades/upgrade-functions.php:901
 #: includes/admin/upgrades/upgrade-functions.php:1029
 #: includes/admin/upgrades/upgrade-functions.php:1114
-#: includes/api/class-edd-api.php:1974 includes/api/class-edd-api.php:1979
-#: includes/api/class-edd-api.php:1991 includes/api/class-edd-api.php:1993
+#: includes/api/class-edd-api.php:1976 includes/api/class-edd-api.php:1981
+#: includes/api/class-edd-api.php:1993 includes/api/class-edd-api.php:1995
 #: includes/cart/class-edd-cart.php:1433 includes/cart/class-edd-cart.php:1447
-#: includes/class-edd-license-handler.php:315
+#: includes/class-edd-license-handler.php:382
 #: includes/deprecated-functions.php:517 includes/deprecated-functions.php:532
 #: includes/deprecated-functions.php:542 includes/download-functions.php:1277
 #: includes/emails/actions.php:53 includes/emails/template.php:243
 #: includes/error-tracking.php:40 includes/gateways/functions.php:232
 #: includes/gateways/manual.php:33 includes/gateways/paypal-standard.php:168
 #: includes/gateways/stripe/includes/admin/upgrade-functions.php:57
-#: includes/gateways/stripe/includes/payment-actions.php:1401
+#: includes/gateways/stripe/includes/payment-actions.php:1403
 #: includes/process-download.php:303 includes/process-download.php:894
 #: includes/query-filters.php:48 includes/user-functions.php:895
 #: includes/user-functions.php:920 includes/user-functions.php:973
@@ -615,8 +615,8 @@ msgstr ""
 #: includes/admin/import/import-functions.php:31
 #: includes/admin/import/import-functions.php:113
 #: includes/admin/reporting/export/export-actions.php:23
-#: includes/api/class-edd-api.php:1974
-#: includes/class-edd-license-handler.php:315
+#: includes/api/class-edd-api.php:1976
+#: includes/class-edd-license-handler.php:382
 msgid "Nonce verification failed"
 msgstr ""
 
@@ -2542,6 +2542,47 @@ msgstr ""
 
 #: includes/admin/plugins.php:27
 msgid "General Settings"
+msgstr ""
+
+#: includes/admin/promos/class-promo-handler.php:109
+#: includes/admin/promos/class-promo-handler.php:117
+msgid "You do not have permission to perform this action."
+msgstr ""
+
+#: includes/admin/promos/class-promo-handler.php:113
+msgid "Missing notice ID."
+msgstr ""
+
+#: includes/admin/promos/notices/abstract-notice.php:108
+msgid "Dismiss notice"
+msgstr ""
+
+#: includes/admin/promos/notices/class-license-upgrade-notice.php:154
+#. Translators: %1$s opening anchor tag; %2$s closing anchor tag
+msgid ""
+"You are using the free version of Easy Digital Downloads. %1$sPurchase a "
+"pass%2$s to get email marketing tools and recurring payments."
+msgstr ""
+
+#: includes/admin/promos/notices/class-license-upgrade-notice.php:164
+#. Translators: %1$s opening anchor tag; %2$s closing anchor tag
+msgid ""
+"For access to additional Easy Digital Downloads extensions to grow your "
+"store, consider %1$spurchasing a pass%2$s."
+msgstr ""
+
+#: includes/admin/promos/notices/class-license-upgrade-notice.php:174
+#. Translators: %1$s opening anchor tag; %2$s closing anchor tag
+msgid ""
+"You are using Easy Digital Downloads with a Personal Pass. Consider "
+"%1$supgrading%2$s to get recurring payments and more."
+msgstr ""
+
+#: includes/admin/promos/notices/class-license-upgrade-notice.php:184
+#. Translators: %1$s opening anchor tag; %2$s closing anchor tag
+msgid ""
+"Grow your business and make more money with affiliate marketing. %1$sGet "
+"AffiliateWP%2$s"
 msgstr ""
 
 #: includes/admin/reporting/class-api-requests-logs-list-table.php:87
@@ -5376,43 +5417,43 @@ msgstr ""
 msgid "No discounts found!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1611
+#: includes/api/class-edd-api.php:1613
 msgid "Discount %s not found!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1683
+#: includes/api/class-edd-api.php:1685
 msgid "No download logs found!"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1939 includes/user-functions.php:1072
+#: includes/api/class-edd-api.php:1941 includes/user-functions.php:1072
 msgid "Easy Digital Downloads API Keys"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1948 includes/user-functions.php:1077
+#: includes/api/class-edd-api.php:1950 includes/user-functions.php:1077
 msgid "Generate API Key"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1950 includes/user-functions.php:1079
+#: includes/api/class-edd-api.php:1952 includes/user-functions.php:1079
 msgid "Public key:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1951 includes/user-functions.php:1080
+#: includes/api/class-edd-api.php:1953 includes/user-functions.php:1080
 msgid "Secret key:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1952 includes/user-functions.php:1081
+#: includes/api/class-edd-api.php:1954 includes/user-functions.php:1081
 msgid "Token:"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1954 includes/user-functions.php:1083
+#: includes/api/class-edd-api.php:1956 includes/user-functions.php:1083
 msgid "Revoke API Keys"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1979
+#: includes/api/class-edd-api.php:1981
 msgid "User ID Required"
 msgstr ""
 
-#: includes/api/class-edd-api.php:1991 includes/api/class-edd-api.php:1993
+#: includes/api/class-edd-api.php:1993 includes/api/class-edd-api.php:1995
 msgid "You do not have permission to %s API keys for this user"
 msgstr ""
 
@@ -6135,24 +6176,24 @@ msgstr ""
 msgid "Enter username"
 msgstr ""
 
-#: includes/class-edd-license-handler.php:173
+#: includes/class-edd-license-handler.php:190
 msgid "%1$s"
 msgstr ""
 
-#: includes/class-edd-license-handler.php:205
+#: includes/class-edd-license-handler.php:222
 msgid ""
 "Enter your extension license keys here to receive updates for purchased "
 "extensions. If your license key has expired, please <a href=\"%s\" "
 "target=\"_blank\">renew your license</a>."
 msgstr ""
 
-#: includes/class-edd-license-handler.php:438
+#: includes/class-edd-license-handler.php:509
 msgid ""
 "You have invalid or expired license keys for Easy Digital Downloads. Please "
 "go to the <a href=\"%s\">Licenses page</a> to correct this issue."
 msgstr ""
 
-#: includes/class-edd-license-handler.php:476
+#: includes/class-edd-license-handler.php:547
 msgid "Enter valid license key for automatic updates."
 msgstr ""
 
@@ -7767,11 +7808,11 @@ msgid ""
 "be completed. Please click the link below to take finalize your purchase"
 msgstr ""
 
-#: includes/gateways/stripe/includes/functions.php:571
+#: includes/gateways/stripe/includes/functions.php:577
 msgid "Invalid order ID."
 msgstr ""
 
-#: includes/gateways/stripe/includes/functions.php:639
+#: includes/gateways/stripe/includes/functions.php:645
 #. translators: %1$s the amount refunded; %2$s Stripe Refund ID
 msgid "%1$s refunded in Stripe. Refund ID %2$s"
 msgstr ""
@@ -7908,8 +7949,8 @@ msgstr ""
 #: includes/gateways/stripe/includes/payment-actions.php:537
 #: includes/gateways/stripe/includes/payment-actions.php:625
 #: includes/gateways/stripe/includes/payment-actions.php:712
-#: includes/gateways/stripe/includes/payment-actions.php:921
-#: includes/gateways/stripe/includes/payment-actions.php:1064
+#: includes/gateways/stripe/includes/payment-actions.php:923
+#: includes/gateways/stripe/includes/payment-actions.php:1066
 msgid "Stripe Error"
 msgstr ""
 
@@ -7931,26 +7972,26 @@ msgstr ""
 #: includes/gateways/stripe/includes/payment-actions.php:776
 #: includes/gateways/stripe/includes/payment-actions.php:788
 #: includes/gateways/stripe/includes/payment-actions.php:805
-#: includes/gateways/stripe/includes/payment-actions.php:840
-#: includes/gateways/stripe/includes/payment-actions.php:955
-#: includes/gateways/stripe/includes/payment-actions.php:972
-#: includes/gateways/stripe/includes/payment-actions.php:982
-#: includes/gateways/stripe/includes/payment-actions.php:1001
-#: includes/gateways/stripe/includes/payment-actions.php:1049
-#: includes/gateways/stripe/includes/payment-actions.php:1095
-#: includes/gateways/stripe/includes/payment-actions.php:1111
-#: includes/gateways/stripe/includes/payment-actions.php:1124
-#: includes/gateways/stripe/includes/payment-actions.php:1158
+#: includes/gateways/stripe/includes/payment-actions.php:836
+#: includes/gateways/stripe/includes/payment-actions.php:957
+#: includes/gateways/stripe/includes/payment-actions.php:974
+#: includes/gateways/stripe/includes/payment-actions.php:984
+#: includes/gateways/stripe/includes/payment-actions.php:1003
+#: includes/gateways/stripe/includes/payment-actions.php:1051
+#: includes/gateways/stripe/includes/payment-actions.php:1097
+#: includes/gateways/stripe/includes/payment-actions.php:1113
+#: includes/gateways/stripe/includes/payment-actions.php:1126
+#: includes/gateways/stripe/includes/payment-actions.php:1160
 msgid ""
 "An error occurred, but your payment may have gone through. Please contact "
 "the site administrator."
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-actions.php:906
+#: includes/gateways/stripe/includes/payment-actions.php:908
 msgid "Unable to create payment."
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-actions.php:1443
+#: includes/gateways/stripe/includes/payment-actions.php:1445
 msgid "Charge not refunded in Stripe, as checkbox was not selected."
 msgstr ""
 
@@ -9627,7 +9668,7 @@ msgstr ""
 msgid "Number of items in cart"
 msgstr ""
 
-#: tests/bootstrap.php:39
+#: tests/bootstrap.php:40
 msgid "HTTP Requests disabled for unit tests"
 msgstr ""
 
