@@ -29,6 +29,7 @@ function edd_add_discount( $data = array() ) {
 	$product_requirements = isset( $data['product_reqs'] )      ? $data['product_reqs']      : null;
 	$excluded_products    = isset( $data['excluded_products'] ) ? $data['excluded_products'] : null;
 	$product_condition    = isset( $data['product_condition'] ) ? $data['product_condition'] : null;
+	$pre_convert_args     = $data;
 	unset( $data['product_reqs'], $data['excluded_products'], $data['product_condition'] );
 
 	if ( isset( $data['expiration'] ) ) {
@@ -81,6 +82,18 @@ function edd_add_discount( $data = array() ) {
 		}
 
 	}
+
+	/**
+	 * Fires after the discount code is inserted. This hook exists for
+	 * backwards compatibility purposes. It uses the $pre_convert_args variable
+	 * to ensure the arguments maintain backwards compatible array keys.
+	 *
+	 * @since 2.7
+	 *
+	 * @param array $pre_convert_args Discount args.
+	 * @param int   $return Discount  ID.
+	 */
+	do_action( 'edd_post_insert_discount', $pre_convert_args, $discount_id );
 
 	// Return the new discount ID.
 	return $discount_id;
