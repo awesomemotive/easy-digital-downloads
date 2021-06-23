@@ -770,8 +770,16 @@ class Data_Migrator {
 			) );
 		}
 
-		// By default, this is what is stored in payment meta.
-		$core_meta_keys = array(
+		/**
+		 * By default, this is what is stored in payment meta. These array keys are part of the core payment meta in 2.x
+		 * but are not needed as part of the order meta and will not be migrated.
+		 * Extensions can add their keys to this filter if they use the payment meta array to store data and have
+		 * established a migration process to keep the data intact with the new order tables.
+		 *
+		 * @since 3.0
+		 * @param array The array of payment meta keys.
+		 */
+		$core_meta_keys = apply_filters( 'edd_30_payment_meta_keys_not_migrated', array(
 			'fees',
 			'key',
 			'email',
@@ -784,7 +792,7 @@ class Data_Migrator {
 			'tax',
 			'amount',
 			'user_id',
-		);
+		) );
 
 		// Remove core keys from `user_info`.
 		$remaining_user_info = false;
