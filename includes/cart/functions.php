@@ -20,6 +20,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 function edd_get_cart_contents() {
 	$cart = EDD()->session->get( 'edd_cart' );
+	if (!is_array($cart)) {
+	    $cart = [];
+    }
 	$cart = ! empty( $cart ) ? array_values( $cart ) : array();
 
 	return apply_filters( 'edd_cart_contents', $cart );
@@ -477,11 +480,11 @@ function edd_get_cart_item_price( $download_id = 0, $options = array(), $remove_
 		// Get the standard Download price if not using variable prices
 		$price = edd_get_download_price( $download_id );
 	}
-	
+
 	if ( $remove_tax_from_inclusive && edd_prices_include_tax() ) {
 
 		$price -= edd_get_cart_item_tax( $download_id, $options, $price );
-	}	
+	}
 
 	return apply_filters( 'edd_cart_item_price', $price, $download_id, $options );
 }
