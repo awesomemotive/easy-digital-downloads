@@ -427,8 +427,6 @@ function process_disconnect() {
 
 	delete_option( 'edd_paypal_' . $mode . '_merchant_details' );
 
-	delete_connection_errors();
-
 	try {
 		// Also delete the token cache key, to ensure we fetch a fresh one if they connect to a different account later.
 		$api                 = new PayPal\API();
@@ -548,8 +546,6 @@ add_action( 'admin_init', function () {
 
 	edd_debug_log( 'PayPal Connect - Checking merchant status.' );
 
-	delete_connection_errors();
-
 	$merchant_id = urldecode( $_GET['merchantIdInPayPal'] );
 
 	try {
@@ -600,42 +596,4 @@ function get_merchant_status( $merchant_id ) {
 
 	// `make_request()` returns an object, but we need an array.
 	return json_decode( json_encode( $response ), true );
-}
-
-/**
- * Retrieves connection errors.
- *
- * @since 2.11
- *
- * @return array
- */
-function get_connection_errors() {
-	return get_option( sprintf(
-		'edd_paypal_connect_errors_%s',
-		edd_is_test_mode() ? API::MODE_SANDBOX : API::MODE_LIVE
-	), array() );
-}
-
-/**
- * Saves new connection errors.
- *
- * @since 2.11
- *
- * @param string[] $errors
- */
-function save_connection_errors( $errors ) {
-	update_option( sprintf(
-		'edd_paypal_connect_errors_%s',
-		edd_is_test_mode() ? API::MODE_SANDBOX : API::MODE_LIVE
-	), $errors );
-}
-
-/**
- * Deletes connection errors.
- */
-function delete_connection_errors() {
-	delete_option( sprintf(
-		'edd_paypal_connect_errors_%s',
-		edd_is_test_mode() ? API::MODE_SANDBOX : API::MODE_LIVE
-	) );
 }
