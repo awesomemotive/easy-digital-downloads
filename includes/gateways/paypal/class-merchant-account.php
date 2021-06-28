@@ -104,12 +104,12 @@ class MerchantAccount {
 			'products',
 		);
 
-		$difference = array_diff( $required_properties, array_keys( get_object_vars( $this ) ) );
+		$difference = array_diff( $required_properties, array_keys( array_filter( get_object_vars( $this ) ) ) );
 
 		if ( $difference ) {
 			throw new InvalidMerchantDetails( sprintf(
 				'Missing required merchant properties: %s',
-				json_encode( $difference )
+				json_encode( array_values( $difference ) )
 			) );
 		}
 	}
