@@ -181,6 +181,10 @@ function sync_webhook( $mode = '' ) {
 
 	$api      = new API( $mode );
 	$response = $api->make_request( 'v1/notifications/webhooks/' . urlencode( $webhook_id ), $new_data, array(), 'PATCH' );
+	if ( 400 === $api->last_response_code && isset( $response->name ) && 'WEBHOOK_PATCH_REQUEST_NO_CHANGE' === $response->name ) {
+		return true;
+	}
+
 	if ( 200 !== $api->last_response_code ) {
 		throw new API_Exception( sprintf(
 		/* Translators: %d - HTTP response code; %s - Full response from the API. */
