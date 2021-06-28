@@ -125,6 +125,7 @@ class AccountStatusValidator {
 	public function check_merchant_account() {
 		try {
 			$this->merchant_details = MerchantAccount::retrieve();
+			$this->merchant_details->validate();
 
 			if ( ! $this->merchant_details->is_account_ready() ) {
 				foreach ( $this->merchant_details->get_errors()->get_error_codes() as $code ) {

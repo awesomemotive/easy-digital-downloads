@@ -50,7 +50,7 @@ jQuery( document ).ready( function ( $ ) {
 					newHtml = response.data.account_status;
 
 					if ( response.data.actions && response.data.actions.length ) {
-						newHtml += '<p class="edd-paypal-connect-actions">' + response.data.actions.join() + '</p>';
+						newHtml += '<p class="edd-paypal-connect-actions">' + response.data.actions.join( ' ' ) + '</p>';
 					}
 				} else if ( response.data && response.data.message ) {
 					newHtml = response.data.message;

@@ -93,12 +93,16 @@ function paypal_standard_enabled( $mode = '' ) {
 /**
  * Returns the partner merchant ID for a given mode.
  *
- * @param string $mode
+ * @param string $mode If omitted, current site mode is used.
  *
  * @since 2.11
  * @return string
  */
-function get_partner_merchant_id( $mode ) {
+function get_partner_merchant_id( $mode = '' ) {
+	if ( empty( $mode ) ) {
+		$mode = edd_is_test_mode() ? API::MODE_SANDBOX : API::MODE_LIVE;
+	}
+
 	if ( API::MODE_LIVE === $mode ) {
 		return EDD_PAYPAL_MERCHANT_ID;
 	} else {

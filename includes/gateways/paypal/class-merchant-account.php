@@ -46,14 +46,9 @@ class MerchantAccount {
 	 * MerchantAccount constructor.
 	 *
 	 * @param array $details
-	 *
-	 * @throws MissingMerchantDetails
-	 * @throws InvalidMerchantDetails
 	 */
 	public function __construct( $details ) {
 		$this->errors = new \WP_Error();
-
-		$this->validate( $details );
 
 		foreach ( $details as $key => $value ) {
 			$this->{$key} = $value;
@@ -68,8 +63,6 @@ class MerchantAccount {
 	 * @param string $json
 	 *
 	 * @return MerchantAccount
-	 * @throws MissingMerchantDetails
-	 * @throws InvalidMerchantDetails
 	 */
 	public static function from_json( $json ) {
 		$merchant_details = json_decode( $json, true );
@@ -96,13 +89,11 @@ class MerchantAccount {
 	 * Note: This does NOT determine actual "ready to accept payments" status, it just
 	 * verifies that we have all the information we need to determine that.
 	 *
-	 * @param array $details
-	 *
 	 * @throws MissingMerchantDetails
 	 * @throws InvalidMerchantDetails
 	 */
-	private function validate( $details ) {
-		if ( empty( $details ) || ! is_array( $details ) ) {
+	public function validate() {
+		if ( empty( $this->merchant_id ) ) {
 			throw new MissingMerchantDetails();
 		}
 
@@ -113,7 +104,7 @@ class MerchantAccount {
 			'products',
 		);
 
-		$difference = array_diff( $required_properties, array_keys( $details ) );
+		$difference = array_diff( $required_properties, array_keys( get_object_vars( $this ) ) );
 
 		if ( $difference ) {
 			throw new InvalidMerchantDetails( sprintf(
