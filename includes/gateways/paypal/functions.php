@@ -41,6 +41,8 @@ function has_rest_api_connection( $mode = '' ) {
  * @see API::set_credentials()
  * @see AccountStatusValidator::check_merchant_account()
  *
+ * @since 2.11
+ *
  * @param string $mode
  *
  * @return bool

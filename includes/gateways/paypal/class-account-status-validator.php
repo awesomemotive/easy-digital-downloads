@@ -103,7 +103,7 @@ class AccountStatusValidator {
 			$response = $api->make_request( 'v1/identity/oauth2/userinfo?schema=paypalv1.1', array(), array(), 'GET' );
 
 			if ( empty( $response->user_id ) ) {
-				throw new \Exception( __( 'Unable to retrieve account information from PayPal. Please try reconnecting.', 'easy-digital-downloads' ) );
+				throw new \Exception( __( 'Unable to retrieve account information from PayPal. If the issue persists, try reconnecting.', 'easy-digital-downloads' ) );
 			}
 
 			$this->has_rest_credentials = true;
@@ -116,7 +116,7 @@ class AccountStatusValidator {
 
 	/**
 	 * Determines if the merchant account is ready to accept payments.
-	 * It's possible (I think) to have valid API credentials (@see AccountStatusValidator::check_rest())
+	 * It's possible (I think) to have valid API credentials ( @see AccountStatusValidator::check_rest() )
 	 * but still be unable to start taking payments, such as because your account
 	 * email hasn't been confirmed yet.
 	 *
@@ -137,15 +137,6 @@ class AccountStatusValidator {
 		} catch ( Exceptions\InvalidMerchantDetails $e ) {
 			$this->errors_for_merchant_account->add( 'invalid_merchant_details', $e->getMessage() );
 		}
-
-		/**
-		 * Allows other plugins to add their own error messages regarding merchant account readiness.
-		 *
-		 * @since 2.11
-		 *
-		 * @param AccountStatusValidator $this
-		 */
-		do_action( 'edd_paypal_account_validator_check_merchant_account', $this );
 	}
 
 	/**
