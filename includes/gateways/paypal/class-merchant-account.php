@@ -40,7 +40,7 @@ class MerchantAccount {
 	/**
 	 * @var \WP_Error
 	 */
-	private $errors;
+	private $wp_error;
 
 	/**
 	 * MerchantAccount constructor.
@@ -48,7 +48,7 @@ class MerchantAccount {
 	 * @param array $details
 	 */
 	public function __construct( $details ) {
-		$this->errors = new \WP_Error();
+		$this->wp_error = new \WP_Error();
 
 		foreach ( $details as $key => $value ) {
 			$this->{$key} = $value;
@@ -104,7 +104,14 @@ class MerchantAccount {
 			'products',
 		);
 
-		$difference = array_diff( $required_properties, array_keys( array_filter( get_object_vars( $this ) ) ) );
+		$valid_properties = array();
+		foreach( $required_properties as $property ) {
+			if ( property_exists( $this, $property ) && ! is_null( $this->{$property} ) ) {
+				$valid_properties[] = $property;
+			}
+		}
+
+		$difference = array_diff( $required_properties, $valid_properties );
 
 		if ( $difference ) {
 			throw new InvalidMerchantDetails( sprintf(
@@ -123,17 +130,17 @@ class MerchantAccount {
 	 */
 	public function is_account_ready() {
 		if ( ! $this->payments_receivable ) {
-			$this->errors->add( 'payments_receivable', __( 'Your account is unable to receive payments. Please contact PayPal customer support.', 'easy-digital-downloads' ) );
+			$this->wp_error->add( 'payments_receivable', __( 'Your account is unable to receive payments. Please contact PayPal customer support.', 'easy-digital-downloads' ) );
 		}
 
 		if ( ! $this->primary_email_confirmed ) {
-			$this->errors->add(
+			$this->wp_error->add(
 				'primary_email_confirmed',
 				__( 'Your PayPal email address needs to be confirmed.', 'easy-digital-downloads' )
 			);
 		}
 
-		return empty( $this->errors->errors );
+		return empty( $this->wp_error->errors );
 	}
 
 	/**
@@ -146,7 +153,7 @@ class MerchantAccount {
 	 * @return \WP_Error
 	 */
 	public function get_errors() {
-		return $this->errors;
+		return $this->wp_error;
 	}
 
 	/**
