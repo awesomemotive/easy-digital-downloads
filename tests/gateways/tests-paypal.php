@@ -328,20 +328,34 @@ class Tests_PayPal extends EDD_UnitTestCase {
 
 	/**
 	 * @covers \EDD\Gateways\PayPal\MerchantAccount::__construct()
-	 * @expectedException \InvalidArgumentException
+	 * @expectedException \EDD\Gateways\PayPal\Exceptions\MissingMerchantDetails
 	 */
-	public function test_merchant_account_missing_required_fields_throws_exception() {
+	public function test_merchant_account_missing_merchant_id_throws_exception() {
 		$merchant = new MerchantAccount( array(
 			'random_field'
 		) );
 
 		if ( method_exists( $this, 'expectException' ) ) {
-			$this->expectException( 'InvalidArgumentException' );
+			$this->expectException( '\EDD\Gateways\PayPal\Exceptions\MissingMerchantDetails' );
 		}
 
-		if ( method_exists( $this, 'expectExceptionMessage' ) ) {
-			$this->expectExceptionMessage( 'Invalid merchant details.' );
+		$merchant->validate();
+	}
+
+	/**
+	 * @covers \EDD\Gateways\PayPal\MerchantAccount::__construct()
+	 * @expectedException \EDD\Gateways\PayPal\Exceptions\InvalidMerchantDetails
+	 */
+	public function test_merchant_account_missing_required_fields_throws_exception() {
+		$merchant = new MerchantAccount( array(
+			'merchant_id' => 'merchant-123'
+		) );
+
+		if ( method_exists( $this, 'expectException' ) ) {
+			$this->expectException( '\EDD\Gateways\PayPal\Exceptions\InvalidMerchantDetails' );
 		}
+
+		$merchant->validate();
 	}
 
 	/**
