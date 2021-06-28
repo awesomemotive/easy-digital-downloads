@@ -529,9 +529,8 @@ add_action( 'wp_ajax_edd_paypal_commerce_update_webhook', __NAMESPACE__ . '\upda
  * PayPal Redirect Callback
  *
  * This processes after the merchant is redirected from PayPal. We immediately
- * check their seller status via partner connect, save any errors, and save
- * their merchant status if available. The user is then redirected back to
- * the settings page.
+ * check their seller status via partner connect and save their merchant status.
+ * The user is then redirected back to the settings page.
  *
  * @since 2.11
  */
