@@ -174,6 +174,8 @@ jQuery(document).ready(function ($) {
 			price_ids : item_price_ids,
 			post_data: $(form).serialize(),
 			nonce: nonce,
+			timestamp: $this.data( 'timestamp' ),
+			token: $this.data( 'token' )
 		};
 
 		$.ajax({
