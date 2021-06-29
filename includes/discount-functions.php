@@ -401,7 +401,7 @@ function edd_has_active_discounts() {
  * @param int   $discount_id Discount ID.
  * @return mixed bool|int The discount ID of the discount code, or false on failure.
  */
-function edd_store_discount( $details, $discount_id = 0 ) {
+function edd_store_discount( $details, $discount_id = null ) {
 
 	// Set default return value to false.
 	$return = false;
@@ -443,7 +443,7 @@ function edd_store_discount( $details, $discount_id = 0 ) {
 	// Convert legacy arguments to new ones accepted by `edd_add_discount()`.
 	$details = EDD_Discount::convert_legacy_args( $details );
 
-	if ( 0 === $discount_id ) {
+	if ( null === $discount_id ) {
 		$return = (int) edd_add_discount( $details );
 	} else {
 		edd_update_discount( $discount_id, $details );
