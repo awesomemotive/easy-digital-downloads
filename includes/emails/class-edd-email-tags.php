@@ -474,14 +474,15 @@ function edd_email_tag_download_list( $payment_id ) {
 				}
 			}
 
-
 			if ( ! array_key_exists( $item['id'], $needs_notes ) ) {
-				$needs_notes[ $item['id'] ] = array(
-					'item_name'  => get_the_title( $item['id'] ),
-					'item_notes' => edd_get_product_notes( $item['id'] ),
-				);
+				$item_notes = edd_get_product_notes( $item['id'] );
+				if ( $item_notes ) {
+					$needs_notes[ $item['id'] ] = array(
+						'item_name'  => get_the_title( $item['id'] ),
+						'item_notes' => $item_notes,
+					);
+				}
 			}
-
 
 			if ( $show_names ) {
 				$download_list .= '</li>';
