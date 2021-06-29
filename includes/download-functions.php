@@ -991,7 +991,7 @@ function edd_get_average_monthly_download_earnings( $download_id = 0 ) {
  * @param int $download_id Download ID.
  * @return float $sales Average monthly sales.
  */
-function edd_get_average_monthly_download_sales( $download_id = 0, $currency = '' ) {
+function edd_get_average_monthly_download_sales( $download_id = 0 ) {
 	$sales        = edd_get_download_sales_stats( $download_id );
 	$release_date = get_post_field( 'post_date', $download_id );
 
