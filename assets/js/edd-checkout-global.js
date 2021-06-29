@@ -378,7 +378,9 @@ function recalculate_taxes(state) {
 			// Avoids bug with form autocomplete firing multiple ajax calls at the same time and not
 			// being able to predict the call response order.
 			if (current_ajax_count === ajax_tax_count) {
-				jQuery('#edd_checkout_cart_form').replaceWith(tax_response.html);
+				if ( tax_response.html ) {
+					jQuery( '#edd_checkout_cart_form' ).replaceWith( tax_response.html );
+				}
 				jQuery('.edd_cart_amount').html(tax_response.total);
 				var tax_data = new Object();
 				tax_data.postdata = postData;
