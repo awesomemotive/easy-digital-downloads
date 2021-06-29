@@ -154,7 +154,7 @@ function edd_checkout_cart_columns() {
 
 	if ( ! empty( $wp_filter['edd_checkout_table_header_last'] ) ) {
 		$header_last_count = 0;
-		$callbacks         = $wp_filter['edd_checkout_table_header_first']->callbacks;
+		$callbacks         = $wp_filter['edd_checkout_table_header_last']->callbacks;
 
 		foreach ( $callbacks as $callback ) {
 			$header_last_count += count( $callback );
