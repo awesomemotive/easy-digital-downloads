@@ -10,6 +10,7 @@
 
 namespace EDD\Tests\Gateways;
 
+use EDD\Gateways\PayPal\MerchantAccount;
 use EDD\Gateways\PayPal\Webhooks\Events\Payment_Capture_Completed;
 use EDD\Gateways\PayPal\Webhooks\Events\Payment_Capture_Denied;
 use EDD\Gateways\PayPal\Webhooks\Events\Webhook_Event;
@@ -323,6 +324,84 @@ class Tests_PayPal extends EDD_UnitTestCase {
 		// Refresh payment object.
 		$payment = edd_get_payment( $this->payment->ID );
 		$this->assertEquals( 'failed', $payment->status );
+	}
+
+	/**
+	 * @covers \EDD\Gateways\PayPal\MerchantAccount::__construct()
+	 * @expectedException \EDD\Gateways\PayPal\Exceptions\MissingMerchantDetails
+	 */
+	public function test_merchant_account_missing_merchant_id_throws_exception() {
+		$merchant = new MerchantAccount( array(
+			'random_field'
+		) );
+
+		if ( method_exists( $this, 'expectException' ) ) {
+			$this->expectException( '\EDD\Gateways\PayPal\Exceptions\MissingMerchantDetails' );
+		}
+
+		$merchant->validate();
+	}
+
+	/**
+	 * @covers \EDD\Gateways\PayPal\MerchantAccount::__construct()
+	 * @expectedException \EDD\Gateways\PayPal\Exceptions\InvalidMerchantDetails
+	 */
+	public function test_merchant_account_missing_required_fields_throws_exception() {
+		$merchant = new MerchantAccount( array(
+			'merchant_id' => 'merchant-123'
+		) );
+
+		if ( method_exists( $this, 'expectException' ) ) {
+			$this->expectException( '\EDD\Gateways\PayPal\Exceptions\InvalidMerchantDetails' );
+		}
+
+		$merchant->validate();
+	}
+
+	/**
+	 * @covers \EDD\Gateways\PayPal\MerchantAccount::is_account_ready
+	 */
+	public function test_merchant_account_not_ready_email_not_confirmed() {
+		$merchant = new MerchantAccount( array(
+			'merchant_id'             => 123,
+			'payments_receivable'     => true,
+			'primary_email_confirmed' => false,
+			'products'                => array()
+		) );
+
+		$this->assertFalse( $merchant->is_account_ready() );
+
+		$this->assertTrue( in_array( 'primary_email_confirmed', $merchant->get_errors()->get_error_codes() ) );
+	}
+
+	/**
+	 * @covers \EDD\Gateways\PayPal\MerchantAccount::is_account_ready
+	 */
+	public function test_merchant_account_not_ready_payments_not_receivable() {
+		$merchant = new MerchantAccount( array(
+			'merchant_id'             => 123,
+			'payments_receivable'     => false,
+			'primary_email_confirmed' => true,
+			'products'                => array()
+		) );
+
+		$this->assertFalse( $merchant->is_account_ready() );
+
+		$this->assertTrue( in_array( 'payments_receivable', $merchant->get_errors()->get_error_codes() ) );
+	}
+
+	/**
+	 * @covers \EDD\Gateways\PayPal\MerchantAccount::is_account_ready
+	 */
+	public function test_merchant_account_is_ready() {
+		$merchant = new MerchantAccount( array(
+			'merchant_id'             => 123,
+			'payments_receivable'     => true,
+			'primary_email_confirmed' => true,
+			'products'                => array()
+		) );
+
+		$this->assertTrue( $merchant->is_account_ready() );
 	}
 
 }

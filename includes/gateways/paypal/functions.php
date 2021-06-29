@@ -32,6 +32,37 @@ function has_rest_api_connection( $mode = '' ) {
 }
 
 /**
+ * Determines whether or not the account is ready to accept payments.
+ * Requirements:
+ *
+ *      - API keys must be set.
+ *      - Merchant account must be ready to accept payments.
+ *
+ * @see API::set_credentials()
+ * @see AccountStatusValidator::check_merchant_account()
+ *
+ * @since 2.11
+ *
+ * @param string $mode
+ *
+ * @return bool
+ */
+function ready_to_accept_payments( $mode = '' ) {
+	if ( empty( $mode ) ) {
+		$mode = edd_is_test_mode() ? API::MODE_SANDBOX : API::MODE_LIVE;
+	}
+
+	if ( ! has_rest_api_connection( $mode ) ) {
+		return false;
+	}
+
+	$validator = new AccountStatusValidator( $mode );
+	$validator->check_merchant_account();
+
+	return empty( $validator->errors_for_merchant_account->errors );
+}
+
+/**
  * Determines whether or not PayPal Standard should be enabled.
  * This returns true if the store owner previously had a PayPal Standard connection but has not yet
  * connected to the new REST API implementation.
@@ -64,12 +95,16 @@ function paypal_standard_enabled( $mode = '' ) {
 /**
  * Returns the partner merchant ID for a given mode.
  *
- * @param string $mode
+ * @param string $mode If omitted, current site mode is used.
  *
  * @since 2.11
  * @return string
  */
-function get_partner_merchant_id( $mode ) {
+function get_partner_merchant_id( $mode = '' ) {
+	if ( empty( $mode ) ) {
+		$mode = edd_is_test_mode() ? API::MODE_SANDBOX : API::MODE_LIVE;
+	}
+
 	if ( API::MODE_LIVE === $mode ) {
 		return EDD_PAYPAL_MERCHANT_ID;
 	} else {

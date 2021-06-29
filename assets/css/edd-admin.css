@@ -2049,7 +2049,6 @@ td.edd_order_price {
 	width: 150px;
 }
 
-
 /* Promo Notices
 -------------------------------------------------------------- */
 .edd-admin-notice-top-of-page {
@@ -2103,4 +2102,26 @@ td.edd_order_price {
 	.edd-admin-notice-top-of-page .button-link {
 		right: 9px;
 	}
+}
+
+/* PayPal Connect
+-------------------------------------------------------------- */
+.edd-paypal-account-status ul {
+	margin-left: 25px;
+}
+.edd-paypal-account-status > li {
+	margin-bottom: 1em;
+}
+.edd-paypal-account-status ul:not(.edd-paypal-webhook-events) {
+	list-style: disc;
+	list-style-position: inside;
+}
+.edd-paypal-account-status ul:not(.edd-paypal-webhook-events) li {
+	margin: .25em 0;
+}
+.edd-paypal-account-status .dashicons-yes {
+	color: #008a20;
+}
+.edd-paypal-account-status .dashicons-no {
+	color: #d63638;
 }
