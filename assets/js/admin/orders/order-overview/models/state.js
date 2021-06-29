@@ -68,53 +68,23 @@ export const State = Backbone.Model.extend(
 		 *
 		 * @since 3.0
 		 *
+		 * @param {bool} includeTax If taxes should be included when retrieving the subtotal.
+		 *                          This is needed in some scenarios with inclusive taxes.
 		 * @return {number} Order subtotal.
 		 */
-		getSubtotal() {
-			const { models: items } = this.get( 'items' );
-
+		getSubtotal( includeTax = false ) {
 			// Use stored value if the record has already been created.
 			if ( false === this.get( 'isAdding' ) ) {
-				// Use the `discount` column for each OrderItem. OrderAdjustments do
-				// not store the per-item discount amount.
-				//
-				// Used when viewing a Refund to find the actual amount refunded per item.
-				//
-				// A $50.00 OrderItem that has a $12.50 discount applied by splitting two
-				// flat rate discounts of $5 and $10 would incorrectly try to apply $15.00
-				// discount if the attached OrderAdjustments were summed.
-				return items.reduce(
-					( amount, item ) => {
-						return amount += ( item.get( 'subtotal' ) - item.get( 'discount' ) );
-					},
-					0
-				);
+				return this.get( 'order' ).subtotal;
 			}
 
-			// Add all subtotals.
-			const subtotal = items.reduce(
+			const { models: items } = this.get( 'items' );
+
+			return items.reduce(
 				( amount, item ) => {
-					return amount += +item.get( 'subtotal' );
+					return amount += +item.getSubtotal( includeTax );
 				},
 				0
-			);
-
-			const { models: adjustments } = this.get( 'adjustments' );
-
-			// Add or substract all adjustment subtotals.
-			return adjustments.reduce(
-				( amount, adjustment ) => {
-					if (
-						[ 'discount', 'credit' ].includes(
-							adjustment.get( 'type' )
-						)
-					) {
-						return amount -= +adjustment.getAmount();
-					} else {
-						return amount += +adjustment.getAmount();
-					}
-				},
-				subtotal
 			);
 		},
 
@@ -155,10 +125,34 @@ export const State = Backbone.Model.extend(
 			}
 
 			const items = this.get( 'items' ).models;
+			const feesTax = this.getFeesTax();
 
 			return items.reduce(
 				( amount, item ) => {
-					return amount += +item.get( 'tax' );
+					return amount += +item.getTax();
+				},
+				feesTax
+			);
+		},
+
+		/**
+		 * Retrieves the Order tax amount for fees.
+		 *
+		 * @since 3.0
+		 *
+		 * @return {number} Order tax amount for fees.
+		 */
+		getFeesTax() {
+			// Use stored value if the record has already been created.
+			if ( false === this.get( 'isAdding' ) ) {
+				return this.get( 'order' ).tax;
+			}
+
+			const adjustments = this.get( 'adjustments' ).getByType( 'fee' );
+
+			return adjustments.reduce(
+				( amount, item ) => {
+					return amount += +item.getTax();
 				},
 				0
 			);
@@ -177,7 +171,33 @@ export const State = Backbone.Model.extend(
 				return this.get( 'order' ).total;
 			}
 
-			return this.getSubtotal() + this.getTax();
+			// Calculate all adjustments that affect the total.
+			const { models: adjustments } = this.get( 'adjustments' );
+			const includeTaxInSubtotal = true;
+
+			const adjustedSubtotal = adjustments.reduce(
+				( amount, adjustment ) => {
+					if (
+						[ 'discount', 'credit' ].includes(
+							adjustment.get( 'type' )
+						)
+					) {
+						return amount -= +adjustment.getAmount();
+					} else {
+						return amount += +adjustment.get( 'subtotal' );
+					}
+				},
+				this.getSubtotal( includeTaxInSubtotal )
+			);
+
+			if ( true === this.hasInclusiveTax() ) {
+				// Fees always have tax added exclusively.
+				// @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/2445#issuecomment-53215087
+				// @link https://github.com/easydigitaldownloads/easy-digital-downloads/blob/f97f4f6f5454921a2014dc1fa8f4caa5f550108c/includes/cart/class-edd-cart.php#L1306-L1311
+				return adjustedSubtotal + this.getFeesTax();
+			}
+
+			return adjustedSubtotal + this.getTax();
 		},
 
 		/**
@@ -198,5 +218,16 @@ export const State = Backbone.Model.extend(
 
 			return ! _.isEqual( hasTax, prevHasTax );
 		},
+
+		/**
+		 * Determines if the state has prices entered inclusive of tax.
+		 *
+		 * @since 3.0
+		 *
+		 * @returns {bool} True if prices are entered inclusive of tax.
+		 */
+		hasInclusiveTax() {
+			return this.get( 'hasTax' ).inclusive;
+		}
 	}
 );

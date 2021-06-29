@@ -28,6 +28,7 @@ export const OrderItem = Backbone.Model.extend( {
 		cartIndex: 0,
 		type: 'download',
 		status: '',
+		statusLabel: '',
 		quantity: 1,
 		amount: 0,
 		subtotal: 0,
@@ -52,6 +53,32 @@ export const OrderItem = Backbone.Model.extend( {
 		// fragmented with certain extensions creating Adjustments at the
 		// `Order` level, some at a duplicate `OrderItem` level, and some both.
 		adjustments: new OrderAdjustments(),
+	},
+
+	/**
+	 * Returns the `OrderItem` subtotal amount.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param {bool} includeTax If taxes should be included when retrieving the subtotal.
+	 *                          This is needed in some scenarios with inclusive taxes.
+	 * @return {number} Subtotal amount.
+	 */
+	getSubtotal( includeTax = false ) {
+		const state = this.get( 'state' );
+		const subtotal = this.get( 'subtotal' );
+
+		// Use stored value if the record has already been created.
+		if ( false === state.get( 'isAdding' ) ) {
+			return subtotal;
+		}
+
+		// Calculate subtotal.
+		if ( true === state.hasInclusiveTax() && false === includeTax ) {
+			return subtotal - this.getTax();
+		}
+
+		return subtotal;
 	},
 
 	/**
@@ -85,6 +112,30 @@ export const OrderItem = Backbone.Model.extend( {
 	},
 
 	/**
+	 * Retrieves the rounded Tax for the order item.
+	 *
+	 * Rounded to match storefront checkout.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return {number} Total amount.
+	 */
+	getTax() {
+		const state = this.get( 'state' );
+		const tax = this.get( 'tax' );
+
+		// Use stored value if the record has already been created.
+		if ( false === state.get( 'isAdding' ) ) {
+			return tax;
+		}
+
+		// Calculate tax.
+		const { number } = state.get( 'formatters' );
+
+		return number.unformat( number.format( tax ) );
+	},
+
+	/**
 	 * Retrieves the Total for the order item.
 	 *
 	 * @since 3.0.0
@@ -92,7 +143,19 @@ export const OrderItem = Backbone.Model.extend( {
 	 * @return {number} Total amount.
 	 */
 	getTotal() {
-		return ( this.get( 'subtotal' ) - this.getDiscountAmount() ) + this.get( 'tax' );
+		const state = this.get( 'state' );
+
+		// Use stored value if the record has already been created.
+		if ( false === state.get( 'isAdding' ) ) {
+			return this.get( 'total' );
+		}
+
+		// Calculate total.
+		if ( true === state.hasInclusiveTax() ) {
+			return this.get( 'subtotal' ) - this.getDiscountAmount();
+		}
+
+		return ( this.get( 'subtotal' ) - this.getDiscountAmount() ) + this.getTax();
 	},
 
 	/**

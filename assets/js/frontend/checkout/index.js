@@ -140,9 +140,9 @@ window.EDD_Checkout = ( function( $ ) {
 	function apply_discount( event ) {
 		event.preventDefault();
 
-		const $this = $( this ),
-			discount_code = $( '#edd-discount' ).val(),
-			edd_discount_loader = $( '#edd-discount-loader' );
+		const discount_code = $( '#edd-discount' ).val(),
+			edd_discount_loader = $( '#edd-discount-loader' ),
+			required_inputs = $( '#edd_cc_address .edd-input, #edd_cc_address .edd-select' ).filter( '[required]' );
 
 		if ( discount_code == '' || discount_code == edd_global_vars.enter_discount ) {
 			return false;
@@ -182,16 +182,12 @@ window.EDD_Checkout = ( function( $ ) {
 
 						recalculateTaxes();
 
-						const inputs = $( '#edd_cc_fields .edd-input, #edd_cc_fields .edd-select,#edd_cc_address .edd-input, #edd_cc_address .edd-select,#edd_payment_mode_select .edd-input, #edd_payment_mode_select .edd-select' );
-
 						if ( '0.00' == discount_response.total_plain ) {
 							$( '#edd_cc_fields,#edd_cc_address,#edd_payment_mode_select' ).slideUp();
-							inputs.removeAttr( 'required' );
+							required_inputs.prop( 'required', false );
 							$( 'input[name="edd-gateway"]' ).val( 'manual' );
 						} else {
-							if ( ! inputs.is( '.card-address-2' ) ) {
-								inputs.attr( 'required', 'required' );
-							}
+							required_inputs.prop( 'required', true );
 							$( '#edd_cc_fields,#edd_cc_address' ).slideDown();
 						}
 

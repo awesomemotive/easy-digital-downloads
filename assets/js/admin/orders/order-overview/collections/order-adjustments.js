@@ -16,16 +16,9 @@ import { OrderAdjustmentDiscount } from './../models/order-adjustment-discount.j
  */
 export const OrderAdjustments = Backbone.Collection.extend( {
 	/**
-	 * Ensures Discount `OrderAdjustment` types are first.
-	 *
 	 * @since 3.0
-	 *
-	 * @param {OrderAdjustment} model Check type and put Discounts first.
-	 * @return {number} -1 If a Discount, and should be at the top of the list.
 	 */
-	comparator( model ) {
-		return 'discount' === model.get( 'type' ) ? -1 : 1;
-	},
+	comparator: 'type',
 
 	/**
 	 * Initializes the `OrderAdjustments` collection.

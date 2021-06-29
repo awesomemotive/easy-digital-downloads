@@ -1589,8 +1589,8 @@ class EDD_API {
 			$paged     = $this->get_paged();
 			$per_page  = $this->per_page();
 			$discounts = edd_get_discounts( array(
-				'posts_per_page' => $per_page,
-				'paged'          => $paged,
+				'number' => $per_page,
+				'offset' => ( absint( $paged ) - 1 ) * $per_page,
 			) );
 
 			if ( empty( $discounts ) ) {
@@ -1600,42 +1600,45 @@ class EDD_API {
 			}
 
 			foreach ( $discounts as $discount ) {
-				$discount_list['discounts'][ $count ]['ID']                    = $discount->ID;
-				$discount_list['discounts'][ $count ]['name']                  = $discount->post_title;
-				$discount_list['discounts'][ $count ]['code']                  = edd_get_discount_code( $discount->ID );
-				$discount_list['discounts'][ $count ]['amount']                = edd_get_discount_amount( $discount->ID );
-				$discount_list['discounts'][ $count ]['min_price']             = edd_get_discount_min_price( $discount->ID );
-				$discount_list['discounts'][ $count ]['type']                  = edd_get_discount_type( $discount->ID );
-				$discount_list['discounts'][ $count ]['uses']                  = edd_get_discount_uses( $discount->ID );
-				$discount_list['discounts'][ $count ]['max_uses']              = edd_get_discount_max_uses( $discount->ID );
-				$discount_list['discounts'][ $count ]['start_date']            = edd_get_discount_start_date( $discount->ID );
-				$discount_list['discounts'][ $count ]['exp_date']              = edd_get_discount_expiration( $discount->ID );
-				$discount_list['discounts'][ $count ]['status']                = $discount->post_status;
-				$discount_list['discounts'][ $count ]['product_requirements']  = edd_get_discount_product_reqs( $discount->ID );
-				$discount_list['discounts'][ $count ]['requirement_condition'] = edd_get_discount_product_condition( $discount->ID );
-				$discount_list['discounts'][ $count ]['global_discount']       = 'global' === edd_get_discount_scope($discount->ID);
-				$discount_list['discounts'][ $count ]['single_use']            = edd_discount_is_single_use( $discount->ID );
+				$discount_list['discounts'][ $count ]['ID']                    = $discount->id;
+				$discount_list['discounts'][ $count ]['name']                  = $discount->name;
+				$discount_list['discounts'][ $count ]['code']                  = $discount->code;
+				$discount_list['discounts'][ $count ]['amount']                = $discount->amount;
+				$discount_list['discounts'][ $count ]['min_price']             = $discount->min_charge_amount;
+				$discount_list['discounts'][ $count ]['type']                  = $discount->amount_type;
+				$discount_list['discounts'][ $count ]['uses']                  = $discount->use_count;
+				$discount_list['discounts'][ $count ]['max_uses']              = $discount->max_uses;
+				$discount_list['discounts'][ $count ]['start_date']            = $discount->start_date;
+				$discount_list['discounts'][ $count ]['exp_date']              = $discount->end_date;
+				$discount_list['discounts'][ $count ]['status']                = $discount->status;
+				$discount_list['discounts'][ $count ]['product_requirements']  = $discount->product_reqs;
+				$discount_list['discounts'][ $count ]['requirement_condition'] = $discount->product_condition;
+				$discount_list['discounts'][ $count ]['global_discount']       = 'global' === $discount->scope;
+				$discount_list['discounts'][ $count ]['excluded_products']     = $discount->excluded_products;
+				$discount_list['discounts'][ $count ]['single_use']            = $discount->once_per_customer;
 
 				$count ++;
 			}
 
 		} else {
-			if ( is_numeric( $discount ) && get_post( $discount ) ) {
-				$discount_list['discounts'][0]['ID']                    = $discount;
-				$discount_list['discounts'][0]['name']                  = get_post_field( 'post_title', $discount );
-				$discount_list['discounts'][0]['code']                  = edd_get_discount_code( $discount );
-				$discount_list['discounts'][0]['amount']                = edd_get_discount_amount( $discount );
-				$discount_list['discounts'][0]['min_price']             = edd_get_discount_min_price( $discount );
-				$discount_list['discounts'][0]['type']                  = edd_get_discount_type( $discount );
-				$discount_list['discounts'][0]['uses']                  = edd_get_discount_uses( $discount );
-				$discount_list['discounts'][0]['max_uses']              = edd_get_discount_max_uses( $discount );
-				$discount_list['discounts'][0]['start_date']            = edd_get_discount_start_date( $discount );
-				$discount_list['discounts'][0]['exp_date']              = edd_get_discount_expiration( $discount );
-				$discount_list['discounts'][0]['status']                = get_post_field( 'post_status', $discount );
-				$discount_list['discounts'][0]['product_requirements']  = edd_get_discount_product_reqs( $discount );
-				$discount_list['discounts'][0]['requirement_condition'] = edd_get_discount_product_condition( $discount );
-				$discount_list['discounts'][0]['global_discount']       = 'global' === edd_get_discount_scope($discount);
-				$discount_list['discounts'][0]['single_use']            = edd_discount_is_single_use( $discount );
+			$discount_object = edd_get_discount( $discount );
+			if ( is_numeric( $discount ) && $discount_object ) {
+				$discount_list['discounts'][0]['ID']                    = $discount_object->id;
+				$discount_list['discounts'][0]['name']                  = $discount_object->name;
+				$discount_list['discounts'][0]['code']                  = $discount_object->code;
+				$discount_list['discounts'][0]['amount']                = $discount_object->amount;
+				$discount_list['discounts'][0]['min_price']             = $discount_object->min_charge_amount;
+				$discount_list['discounts'][0]['type']                  = $discount_object->amount_type;
+				$discount_list['discounts'][0]['uses']                  = $discount_object->use_count;
+				$discount_list['discounts'][0]['max_uses']              = $discount_object->max_uses;
+				$discount_list['discounts'][0]['start_date']            = $discount_object->start_date;
+				$discount_list['discounts'][0]['exp_date']              = $discount_object->end_date;
+				$discount_list['discounts'][0]['status']                = $discount_object->status;
+				$discount_list['discounts'][0]['product_requirements']  = $discount_object->product_reqs;
+				$discount_list['discounts'][0]['requirement_condition'] = $discount_object->product_condition;
+				$discount_list['discounts'][0]['global_discount']       = 'global' === $discount_object->scope;
+				$discount_list['discounts'][0]['excluded_products']     = $discount_object->excluded_products;
+				$discount_list['discounts'][0]['single_use']            = $discount_object->once_per_customer;
 			} else {
 				$error['error'] = sprintf( __( 'Discount %s not found!', 'easy-digital-downloads' ), $discount );
 

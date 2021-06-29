@@ -48,8 +48,6 @@ final class Logs_Api_Requests extends Table {
 	 * @var array
 	 */
 	protected $upgrades = array(
-		'201807272' => 201807272,
-		'201807273' => 201807273,
 		'202002141' => 202002141,
 	);
 
@@ -76,54 +74,6 @@ final class Logs_Api_Requests extends Table {
 		PRIMARY KEY (id),
 		KEY user_id (user_id),
 		KEY date_created (date_created)";
-	}
-
-	/**
-	 * Upgrade to version 201807273
-	 * - Add the `date_modified` varchar column
-	 *
-	 * @since 3.0
-	 *
-	 * @return boolean
-	 */
-	protected function __201807272() {
-
-		// Look for column
-		$result = $this->column_exists( 'date_modified' );
-
-		// Maybe add column
-		if ( false === $result ) {
-			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `date_modified` datetime NOT NULL default '0000-00-00 00:00:00' AFTER `date_created`;
-			" );
-		}
-
-		// Return success/fail
-		return $this->is_success( $result );
-	}
-
-	/**
-	 * Upgrade to version 201807272
-	 * - Add the `uuid` varchar column
-	 *
-	 * @since 3.0
-	 *
-	 * @return boolean
-	 */
-	protected function __201807273() {
-
-		// Look for column
-		$result = $this->column_exists( 'uuid' );
-
-		// Maybe add column
-		if ( false === $result ) {
-			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_modified`;
-			" );
-		}
-
-		// Return success/fail
-		return $this->is_success( $result );
 	}
 
 	/**

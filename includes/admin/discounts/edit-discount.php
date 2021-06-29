@@ -123,7 +123,6 @@ $minutes              = edd_get_minute_values();
 							'selected'    => $product_requirements,
 							'multiple'    => true,
 							'chosen'      => true,
-							'variations'  => true,
 							'placeholder' => sprintf( __( 'Select %s', 'easy-digital-downloads' ), edd_get_label_plural() )
 						) ); ?>
 						<div id="edd-discount-product-conditions"<?php echo $condition_display; ?>>
@@ -161,7 +160,6 @@ $minutes              = edd_get_minute_values();
 							'selected'    => $excluded_products,
 							'multiple'    => true,
 							'chosen'      => true,
-							'variations'  => true,
 							'placeholder' => sprintf( __( 'Select %s', 'easy-digital-downloads' ), edd_get_label_plural() )
 						) ); ?>
 						<p class="description"><?php printf( __( '%s this discount cannot be applied to. Leave blank for none.', 'easy-digital-downloads' ), edd_get_label_plural() ); ?></p>
@@ -225,7 +223,7 @@ $minutes              = edd_get_minute_values();
 						<label for="edd-min-cart-amount"><?php _e( 'Minimum Amount', 'easy-digital-downloads' ); ?></label>
 					</th>
 					<td>
-						<input type="text" id="edd-min-cart-amount" name="min_cart_price" value="<?php echo esc_attr( edd_format_amount( $discount->min_cart_price ) ); ?>" placeholder="<?php esc_html_e( 'No minimum', 'easy-digital-downloads' ); ?>" />
+						<input type="text" id="edd-min-cart-amount" name="min_charge_amount" value="<?php echo esc_attr( edd_format_amount( $discount->min_charge_amount ) ); ?>" placeholder="<?php esc_html_e( 'No minimum', 'easy-digital-downloads' ); ?>" />
 						<p class="description"><?php _e( 'The minimum subtotal of item prices in a cart before this discount may be applied.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>

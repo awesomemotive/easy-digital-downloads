@@ -1175,7 +1175,8 @@ function edd_set_upload_dir( $upload ) {
 /**
  * Determines the receipt visibility status
  *
- * @return bool Whether the receipt is visible or not.
+ * @param  string $payment_key The payment key.
+ * @return bool                Whether the receipt is visible or not.
  */
 function edd_can_view_receipt( $payment_key = '' ) {
 
@@ -1187,26 +1188,26 @@ function edd_can_view_receipt( $payment_key = '' ) {
 
 	global $edd_receipt_args;
 
-	$edd_receipt_args['id'] = edd_get_purchase_id_by_key( $payment_key );
-
-	$user_id = (int) edd_get_payment_user_id( $edd_receipt_args['id'] );
-
-	$payment_meta = edd_get_payment_meta( $edd_receipt_args['id'] );
+	$order = edd_get_order_by( 'payment_key', $payment_key );
+	if ( empty( $order->id ) ) {
+		return $return;
+	}
+	$edd_receipt_args['id'] = $order->id;
 
 	if ( is_user_logged_in() ) {
-		if ( $user_id === (int) get_current_user_id() ) {
+		if ( (int) get_current_user_id() === (int) $order->user_id ) {
 			$return = true;
-		} elseif ( wp_get_current_user()->user_email === edd_get_payment_user_email( $edd_receipt_args['id'] ) ) {
+		} elseif ( wp_get_current_user()->user_email === $order->email ) {
 			$return = true;
 		} elseif ( current_user_can( 'view_shop_sensitive_data' ) ) {
 			$return = true;
 		}
-	}
-
-	$session = edd_get_purchase_session();
-	if ( ! empty( $session ) && ! is_user_logged_in() ) {
-		if ( $session['purchase_key'] === $payment_meta['key'] ) {
-			$return = true;
+	} else {
+		$session = edd_get_purchase_session();
+		if ( ! empty( $session ) ) {
+			if ( $session['purchase_key'] === $order->payment_key ) {
+				$return = true;
+			}
 		}
 	}
 
@@ -1243,12 +1244,8 @@ function edd_payment_get_ip_address_url( $order_id ) {
  */
 function edd_doing_cron() {
 
-	// Bail if not doing WordPress cron (>4.8.0)
-	if ( function_exists( 'wp_doing_cron' ) && wp_doing_cron() ) {
-		return true;
-
-	// Bail if not doing WordPress cron (<4.8.0)
-	} elseif ( defined( 'DOING_CRON' ) && ( true === DOING_CRON ) ) {
+	// Bail if doing WordPress cron.
+	if ( wp_doing_cron() ) {
 		return true;
 	}
 
@@ -1268,12 +1265,8 @@ function edd_doing_cron() {
  */
 function edd_doing_ajax() {
 
-	// Bail if not doing WordPress AJAX (>4.8.0)
-	if ( function_exists( 'wp_doing_ajax' ) && wp_doing_ajax() ) {
-		return true;
-
-	// Bail if not doing WordPress AJAX (<4.8.0)
-	} elseif ( defined( 'DOING_AJAX' ) && ( true === DOING_AJAX ) ) {
+	// Bail if doing WordPress AJAX.
+	if ( wp_doing_ajax() ) {
 		return true;
 	}
 
@@ -1293,12 +1286,8 @@ function edd_doing_ajax() {
  */
 function edd_doing_autosave() {
 
-	// Bail if not doing WordPress autosave
-	if ( function_exists( 'wp_doing_autosave' ) && wp_doing_autosave() ) {
-		return true;
-
-	// Bail if not doing WordPress autosave
-	} elseif ( defined( 'DOING_AUTOSAVE' ) && ( true === DOING_AUTOSAVE ) ) {
+	// Bail if doing WordPress autosave.
+	if ( defined( 'DOING_AUTOSAVE' ) && ( true === DOING_AUTOSAVE ) ) {
 		return true;
 	}
 
@@ -1527,21 +1516,17 @@ function edd_negate_int( $value = 0 ) {
  * @return string Label for the status
  */
 function edd_get_status_label( $status = '' ) {
-	static $labels = null;
 
-	// Array of status labels
-	if ( null === $labels ) {
+	// Set a default.
+	$status_label = str_replace( '_', ' ', $status );
+	$status_label = ucwords( $status_label );
+
+	// If this is a payment label, fetch from `edd_get_payment_status_label()`.
+	if ( array_key_exists( $status, edd_get_payment_statuses() ) ) {
+		$status_label = edd_get_payment_status_label( $status );
+	} else {
+		// Otherwise, fetch from generic array. This covers all other non-payment statuses.
 		$labels = array(
-
-			// Payments
-			'processing'         => __( 'Processing', 'easy-digital-downloads' ),
-			'complete'           => __( 'Completed', 'easy-digital-downloads' ),
-			'refunded'           => __( 'Refunded', 'easy-digital-downloads' ),
-			'partially_refunded' => __( 'Partially Refunded', 'easy-digital-downloads' ),
-			'revoked'            => __( 'Revoked', 'easy-digital-downloads' ),
-			'failed'             => __( 'Failed', 'easy-digital-downloads' ),
-			'abandoned'          => __( 'Abandoned', 'easy-digital-downloads' ),
-
 			// Discounts
 			'active'             => __( 'Active', 'easy-digital-downloads' ),
 			'inactive'           => __( 'Inactive', 'easy-digital-downloads' ),
@@ -1554,15 +1539,22 @@ function edd_get_status_label( $status = '' ) {
 			'deleted'            => __( 'Deleted', 'easy-digital-downloads' ),
 			'cancelled'          => __( 'Cancelled', 'easy-digital-downloads' ),
 		);
+
+		// Return the label if set, or uppercase the first letter if not
+		if ( isset( $labels[ $status ] ) ) {
+			$status_label = $labels[ $status ];
+		}
 	}
 
-	// Return the label if set, or uppercase the first letter if not
-	$retval = isset( $labels[ $status ] )
-		? $labels[ $status ]
-		: ucwords( $status );
-
-	// Filter & return
-	return apply_filters( 'edd_get_status_label', $retval, $status );
+	/**
+	 * Filters the label for the provided status.
+	 *
+	 * @since 3.0
+	 *
+	 * @param string $status_label Status label.
+	 * @param string $status       Provided status key.
+	 */
+	return apply_filters( 'edd_get_status_label', $status_label, $status );
 }
 
 /**

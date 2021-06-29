@@ -82,7 +82,6 @@ defined( 'ABSPATH' ) || exit;
 							'selected'    => array(),
 							'multiple'    => true,
 							'chosen'      => true,
-							'variations'  => true,
 							'placeholder' => sprintf( esc_html__( 'Select %s', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) ),
 						) ); // WPCS: XSS ok. ?>
 						<div id="edd-discount-product-conditions" style="display:none;">
@@ -120,7 +119,6 @@ defined( 'ABSPATH' ) || exit;
 							'selected'    => array(),
 							'multiple'    => true,
 							'chosen'      => true,
-							'variations'  => true,
 							'placeholder' => sprintf( esc_html__( 'Select %s', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) ),
 						) ); // WPCS: XSS ok. ?>
 						<p class="description"><?php printf( esc_html__( '%s this discount cannot be applied to. Leave blank for none.', 'easy-digital-downloads' ), esc_html( edd_get_label_plural() ) ); ?></p>
@@ -184,7 +182,7 @@ defined( 'ABSPATH' ) || exit;
 						<label for="edd-min-cart-amount"><?php esc_html_e( 'Minimum Amount', 'easy-digital-downloads' ); ?></label>
 					</th>
 					<td>
-						<input type="text" id="edd-min-cart-amount" name="min_cart_price" value="" placeholder="<?php esc_html_e( 'No minimum', 'easy-digital-downloads' ); ?>" />
+						<input type="text" id="edd-min-cart-amount" name="min_charge_amount" value="" placeholder="<?php esc_html_e( 'No minimum', 'easy-digital-downloads' ); ?>" />
 						<p class="description"><?php esc_html_e( 'The minimum subtotal of item prices in a cart before this discount may be applied.', 'easy-digital-downloads' ); ?></p>
 					</td>
 				</tr>

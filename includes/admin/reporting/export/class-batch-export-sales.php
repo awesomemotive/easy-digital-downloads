@@ -71,13 +71,7 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
-			$args['date_query'] = array(
-				array(
-					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
-					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
-					'inclusive' => true,
-				),
-			);
+			$args['date_query'] = $this->get_date_query();
 		}
 
 		if ( 0 !== $this->download_id ) {
@@ -140,13 +134,7 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 		);
 
 		if ( ! empty( $this->start ) || ! empty( $this->end ) ) {
-			$args['date_query'] = array(
-				array(
-					'after'     => date( 'Y-n-d H:i:s', strtotime( $this->start ) ),
-					'before'    => date( 'Y-n-d H:i:s', strtotime( $this->end ) ),
-					'inclusive' => true
-				)
-			);
+			$args['date_query'] = $this->get_date_query();
 		}
 
 		if ( 0 !== $this->download_id ) {
@@ -168,8 +156,8 @@ class EDD_Batch_Sales_Export extends EDD_Batch_Export {
 	}
 
 	public function set_properties( $request ) {
-		$this->start       = isset( $request['start'] ) ? sanitize_text_field( $request['start'] ) : '';
-		$this->end         = isset( $request['end'] )   ? sanitize_text_field( $request['end'] ) . ' 23:59:59'  : '';
-		$this->download_id = isset( $request['download_id'] )   ? absint( $request['download_id'] )        : 0;
+		$this->start       = isset( $request['orders-export-start'] ) ? sanitize_text_field( $request['orders-export-start'] ) : '';
+		$this->end         = isset( $request['orders-export-end'] ) ? sanitize_text_field( $request['orders-export-end'] ) . ' 23:59:59' : '';
+		$this->download_id = isset( $request['download_id'] ) ? absint( $request['download_id'] ) : 0;
 	}
 }

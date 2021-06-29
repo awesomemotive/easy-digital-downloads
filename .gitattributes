@@ -12,6 +12,6 @@ package.json export-ignore
 phpunit.xml export-ignore
 readme.txt export-ignore
 /tests/ export-ignore
-docker-compose.phpunit.yml export-ignore
-docker-compose.yml export-ignore
-Dockerfile export-ignore
+docker-compose-phpunit.yml export-ignore
+/.buildkite/ export-ignore
+/.github/ export-ignore

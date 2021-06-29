@@ -42,6 +42,16 @@ class Order_Items extends Schema {
 			'sortable'   => true
 		),
 
+		// parent
+		array(
+			'name'       => 'parent',
+			'type'       => 'bigint',
+			'length'     => '20',
+			'unsigned'   => true,
+			'default'    => '0',
+			'sortable'   => true
+		),
+
 		// order_id
 		array(
 			'name'       => 'order_id',
@@ -88,7 +98,8 @@ class Order_Items extends Schema {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true
 		),
 
 		// type
@@ -106,7 +117,7 @@ class Order_Items extends Schema {
 			'name'       => 'status',
 			'type'       => 'varchar',
 			'length'     => '20',
-			'default'    => 'inherit',
+			'default'    => 'pending',
 			'sortable'   => true,
 			'transition' => true
 		),
@@ -117,7 +128,8 @@ class Order_Items extends Schema {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true
 		),
 
 		// amount
@@ -125,7 +137,9 @@ class Order_Items extends Schema {
 			'name'       => 'amount',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true,
+			'validate'   => 'edd_sanitize_amount'
 		),
 
 		// subtotal
@@ -133,7 +147,9 @@ class Order_Items extends Schema {
 			'name'       => 'subtotal',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true,
+			'validate'   => 'edd_sanitize_amount'
 		),
 
 		// discount
@@ -141,7 +157,9 @@ class Order_Items extends Schema {
 			'name'       => 'discount',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true,
+			'validate'   => 'edd_sanitize_amount'
 		),
 
 		// tax
@@ -149,7 +167,9 @@ class Order_Items extends Schema {
 			'name'       => 'tax',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true,
+			'validate'   => 'edd_sanitize_amount'
 		),
 
 		// total
@@ -157,7 +177,9 @@ class Order_Items extends Schema {
 			'name'       => 'total',
 			'type'       => 'decimal',
 			'length'     => '18,9',
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true,
+			'validate'   => 'edd_sanitize_amount'
 		),
 
 		// date_created

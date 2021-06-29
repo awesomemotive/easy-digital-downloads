@@ -288,10 +288,13 @@ function edd_install_pages() {
 	$pages_to_check = array_intersect_key( $current_options, $pages );
 
 	// Query for any existing pages
-	$posts = new WP_Query( array(
-		'include'   => array_values( $pages_to_check ),
-		'post_type' => 'page'
-	) );
+	$posts = new WP_Query(
+		array(
+			'include'   => array_values( $pages_to_check ),
+			'post_type' => 'page',
+			'fields'    => 'ids',
+		)
+	);
 
 	// Default value for checkout page
 	$checkout = 0;
@@ -302,16 +305,15 @@ function edd_install_pages() {
 	// Loop through all pages, fix or create any missing ones
 	foreach ( array_flip( $pages ) as $page ) {
 
+		$page_id = ! empty( $pages_to_check[ $page ] ) ? $pages_to_check[ $page ] : false;
+
 		// Checks if the page option exists
-		$page_object = empty( $missing_pages[ $page ] ) && ! empty( $posts->posts ) && ! empty( $pages_to_check[ $page ] )
-			? wp_filter_object_list( $posts->posts, array( 'ID' => $pages_to_check[ $page ] ) )
+		$page_object = ! array_key_exists( $page, $missing_pages ) && ! empty( $posts->posts ) && ! empty( $page_id )
+			? get_post( $page_id )
 			: array();
 
 		// Skip if page exists
 		if ( ! empty( $page_object ) ) {
-
-			// Get the first item in the array
-			$page_object = reset( $page_object );
 
 			// Set the checkout page
 			if ( 'purchase_page' === $page ) {
@@ -326,54 +328,56 @@ function edd_install_pages() {
 		switch ( $page ) {
 
 			// Checkout
-			case 'purchase_page' :
+			case 'purchase_page':
 				$page_attributes = array(
 					'post_title'     => __( 'Checkout', 'easy-digital-downloads' ),
-					'post_content'   => '[download_checkout]',
+					'post_content'   => "<!-- wp:shortcode -->[download_checkout]<!-- /wp:shortcode -->",
 					'post_status'    => 'publish',
 					'post_author'    => 1,
 					'post_parent'    => 0,
 					'post_type'      => 'page',
-					'comment_status' => 'closed'
+					'comment_status' => 'closed',
 				);
 				break;
 
 			// Success
-			case 'success_page' :
+			case 'success_page':
+				$text            = __( 'Thank you for your purchase!', 'easy-digital-downloads' );
 				$page_attributes = array(
 					'post_title'     => __( 'Purchase Confirmation', 'easy-digital-downloads' ),
-					'post_content'   => __( 'Thank you for your purchase! [edd_receipt]', 'easy-digital-downloads' ),
+					'post_content'   => "<!-- wp:paragraph --><p>{$text}</p><!-- /wp:paragraph --><!-- wp:shortcode -->[edd_receipt]<!-- /wp:shortcode -->",
 					'post_status'    => 'publish',
 					'post_author'    => 1,
 					'post_parent'    => $checkout,
 					'post_type'      => 'page',
-					'comment_status' => 'closed'
+					'comment_status' => 'closed',
 				);
 				break;
 
 			// Failure
-			case 'failure_page' :
+			case 'failure_page':
+				$text            = __( 'Your transaction failed, please try again or contact site support.', 'easy-digital-downloads' );
 				$page_attributes = array(
 					'post_title'     => __( 'Transaction Failed', 'easy-digital-downloads' ),
-					'post_content'   => __( 'Your transaction failed, please try again or contact site support.', 'easy-digital-downloads' ),
+					'post_content'   => "<!-- wp:paragraph --><p>{$text}</p><!-- /wp:paragraph -->",
 					'post_status'    => 'publish',
 					'post_author'    => 1,
 					'post_type'      => 'page',
 					'post_parent'    => $checkout,
-					'comment_status' => 'closed'
+					'comment_status' => 'closed',
 				);
 				break;
 
 			// Purchase History
-			case 'purchase_history_page' :
+			case 'purchase_history_page':
 				$page_attributes = array(
 					'post_title'     => __( 'Purchase History', 'easy-digital-downloads' ),
-					'post_content'   => '[purchase_history]',
+					'post_content'   => "<!-- wp:shortcode -->[purchase_history]<!-- /wp:shortcode -->",
 					'post_status'    => 'publish',
 					'post_author'    => 1,
 					'post_type'      => 'page',
 					'post_parent'    => $checkout,
-					'comment_status' => 'closed'
+					'comment_status' => 'closed',
 				);
 				break;
 		}

@@ -146,6 +146,12 @@ class EDD_Logging {
 			'log_type'     => false,
 		) );
 
+		/**
+		 * Triggers just before a log is inserted.
+		 *
+		 * @param array $args     Log entry data.
+		 * @param array $log_meta Log meta data.
+		 */
 		do_action( 'edd_pre_insert_log', $args, $log_meta );
 
 		// Used to dynamically dispatch the method call to insert() to the correct class.
@@ -160,6 +166,11 @@ class EDD_Logging {
 			'object_type' => isset( $args['log_type'] )
 				? $args['log_type']
 				: null,
+			/*
+			 * Fallback user ID is the current user, due to it previously being set to that by WordPress
+			 * core when setting post_author on the CPT.
+			 */
+			'user_id'     => ! empty( $log_meta['user'] ) ? $log_meta['user'] : get_current_user_id()
 		);
 
 		$type = $args['log_type'];
@@ -171,20 +182,24 @@ class EDD_Logging {
 			$data['title'] = $args['post_title'];
 		}
 
+		$meta_to_unset = array( 'user' );
+
 		// Override $data and $insert_method based on the log type.
 		if ( 'api_request' === $args['log_type'] ) {
 			$insert_method = 'edd_add_api_request_log';
 
 			$data = array(
-				'user_id' => $log_meta['user'],
-				'api_key' => $log_meta['key'],
-				'token'   => null === $log_meta['token'] ? 'public' : $log_meta['token'],
-				'version' => $log_meta['version'],
-				'request' => $args['post_excerpt'],
-				'error'   => $args['post_content'],
-				'ip'      => $log_meta['request_ip'],
-				'time'    => $log_meta['time'],
+				'user_id' => ! empty( $log_meta['user'] ) ? $log_meta['user'] : 0,
+				'api_key' => ! empty( $log_meta['key'] ) ? $log_meta['key'] : 'public',
+				'token'   => ! empty( $log_meta['token'] ) ? $log_meta['token'] : 'public',
+				'version' => ! empty( $log_meta['version'] ) ? $log_meta['version'] : '',
+				'request' => ! empty( $args['post_excerpt'] ) ? $args['post_excerpt'] : '',
+				'error'   => ! empty( $args['post_content'] ) ? $args['post_content'] : '',
+				'ip'      => ! empty( $log_meta['request_ip'] ) ? $log_meta['request_ip'] : '',
+				'time'    => ! empty( $log_meta['time'] ) ? $log_meta['time'] : '',
 			);
+
+			$meta_to_unset = array( 'user', 'key', 'token', 'version', 'request_ip', 'time' );
 		} elseif ( 'file_download' === $args['log_type'] ) {
 			$insert_method = 'edd_add_file_download_log';
 
@@ -198,13 +213,20 @@ class EDD_Logging {
 
 			$data = array(
 				'product_id'  => $args['post_parent'],
-				'file_id'     => $log_meta['file_id'],
-				'order_id'    => $log_meta['order_id'],
-				'price_id'    => $log_meta['price_id'],
-				'customer_id' => $log_meta['customer_id'],
-				'ip'          => $log_meta['ip'],
+				'file_id'     => ! empty( $log_meta['file_id'] ) ? $log_meta['file_id'] : 0,
+				'order_id'    => ! empty( $log_meta['payment_id'] ) ? $log_meta['payment_id'] : 0,
+				'price_id'    => ! empty( $log_meta['price_id'] ) ? $log_meta['price_id'] : 0,
+				'customer_id' => ! empty( $log_meta['customer_id'] ) ? $log_meta['customer_id'] : 0,
+				'ip'          => ! empty( $log_meta['ip'] ) ? $log_meta['ip'] : '',
 				'user_agent'  => $user_agent,
 			);
+
+			$meta_to_unset = array( 'file_id', 'payment_id', 'price_id', 'customer_id', 'ip', 'user_id' );
+		}
+
+		// Now unset the meta we've used up in the main data array.
+		foreach ( $meta_to_unset as $meta_key ) {
+			unset( $log_meta[ $meta_key ] );
 		}
 
 		// Get the log ID if method is callable
@@ -217,18 +239,27 @@ class EDD_Logging {
 
 			// Use the right log fetching function based on the type of log this is.
 			if ( 'edd_add_api_request_log' === $insert_method ) {
-				$log = edd_get_file_download_log( $log_id );
+				$add_meta_function = 'edd_add_api_request_log_meta';
 			} elseif ( 'edd_add_file_download_log' === $insert_method ) {
-				$log = edd_get_file_download_log( $log_id );
+				$add_meta_function = 'edd_add_file_download_log_meta';
 			} else {
-				$log = edd_get_log( $log_id );
+				$add_meta_function = 'edd_add_log_meta';
 			}
 
-			foreach ( (array) $log_meta as $key => $meta ) {
-				$log->add_meta( sanitize_key( $key ), $meta );
+			if ( is_callable( $add_meta_function ) ) {
+				foreach ( (array) $log_meta as $key => $meta ) {
+					$add_meta_function( $log_id, sanitize_key( $key ), $meta );
+				}
 			}
 		}
 
+		/**
+		 * Triggers after a log has been inserted.
+		 *
+		 * @param int   $log_id   ID of the new log.
+		 * @param array $args     Log data.
+		 * @param array $log_meta Log meta data.
+		 */
 		do_action( 'edd_post_insert_log', $log_id, $args, $log_meta );
 
 		return $log_id;
@@ -268,7 +299,8 @@ class EDD_Logging {
 		}
 
 		// Used to dynamically dispatch the method call to insert() to the correct class.
-		$update_method = 'edd_update_log';
+		$update_method        = 'edd_update_log';
+		$update_meta_function = 'edd_update_log_meta';
 
 		$type = $args['log_type'];
 		if ( ! empty( $type ) ) {
@@ -283,7 +315,8 @@ class EDD_Logging {
 		);
 
 		if ( 'api_request' === $data['type'] ) {
-			$legacy = array(
+			$update_meta_function = 'edd_update_api_request_log_meta';
+			$legacy               = array(
 				'user'         => 'user_id',
 				'key'          => 'api_key',
 				'token'        => 'token',
@@ -302,7 +335,8 @@ class EDD_Logging {
 				}
 			}
 		} elseif ( 'file_download' === $data['type'] ) {
-			$legacy = array(
+			$update_meta_function = 'edd_update_file_download_log_meta';
+			$legacy               = array(
 				'file_id'    => 'file_id',
 				'payment_id' => 'payment_id',
 				'price_id'   => 'price_id',
@@ -333,11 +367,11 @@ class EDD_Logging {
 		call_user_func( $update_method, $data );
 
 		// Set log meta, if any
-		if ( 'edd_update_log' === $update_method && ! empty( $log_meta ) ) {
-			$log = edd_get_log( $log_id );
-
-			foreach ( (array) $log_meta as $key => $meta ) {
-				$log->update_meta( sanitize_key( $key ), $meta );
+		if ( is_callable( $update_meta_function ) ) {
+			if ( 'edd_update_log' === $update_method && ! empty( $log_meta ) ) {
+				foreach ( (array) $log_meta as $key => $meta ) {
+					$update_meta_function( $log_id, sanitize_key( $key ), $meta );
+				}
 			}
 		}
 
@@ -517,9 +551,13 @@ class EDD_Logging {
 			$r['type'] = $r['log_type'];
 		}
 
-		// Back-compat for post_parent
+		// Back-compat for post_parent.
 		if ( ! empty( $r['post_parent'] ) ) {
-			$r['object_id'] = $r['post_parent'];
+			if ( ! empty( $r['log_type'] && 'file_download' === $r['log_type'] ) ) {
+				$r['product_id'] = $r['post_parent'];
+			} else {
+				$r['object_id'] = $r['post_parent'];
+			}
 		}
 
 		// Back compat for posts_per_page
@@ -535,8 +573,8 @@ class EDD_Logging {
 		);
 
 		if ( ! isset( $r['offset'] ) ) {
-			$r['offset'] = get_query_var( 'paged' ) > 1
-				? ( ( get_query_var( 'paged' ) - 1 ) * $r['number'] )
+			$r['offset'] = $r['paged'] > 1
+				? ( ( $r['paged'] - 1 ) * $r['number'] )
 				: 0;
 			unset( $r['paged'] );
 		}

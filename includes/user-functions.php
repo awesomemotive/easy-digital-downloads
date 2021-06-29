@@ -318,7 +318,7 @@ function edd_count_purchases_of_customer( $user = null ) {
 function edd_purchase_total_of_user( $user = null ) {
 	$stats = edd_get_purchase_stats_by_user( $user );
 
-	return $stats['total_spent'];
+	return isset( $stats['total_spent'] ) ? $stats['total_spent'] : 0.00;
 }
 
 /**
@@ -326,47 +326,44 @@ function edd_purchase_total_of_user( $user = null ) {
  * given) has downloaded
  *
  * @since       1.3
+ * @since       3.0 Updated to use edd_count_file_download_logs.
  * @param       mixed $user - ID or email
  * @return      int - The total number of files the user has downloaded
  */
 function edd_count_file_downloads_of_user( $user ) {
-	$edd_logs = EDD()->debug_log;
 
 	// If we got an email, look up the customer ID and call the direct query
 	// for customer download counts.
 	if ( is_email( $user ) ) {
 		return edd_count_file_downloads_of_customer( $user );
-
-	} else {
-		$meta_query = array(
-			array(
-				'key'     => '_edd_log_user_id',
-				'value'   => $user
-			)
-		);
 	}
 
-	return $edd_logs->get_log_count( null, 'file_download', $meta_query );
+	$customer = edd_get_customer_by( 'user_id', $user );
+
+	return ! empty( $customer->id ) ? edd_count_file_download_logs(
+		array(
+			'customer_id' => $customer->id,
+		)
+	) : 0;
 }
 
 /**
  * Counts the total number of files a customer has downloaded.
  *
+ * @since unknown
+ * @since 3.0     Updated to use edd_count_file_download_logs.
  * @param string|int $customer_id_or_email The email address or id of the customer.
  *
  * @return int The total number of files the customer has downloaded.
  */
 function edd_count_file_downloads_of_customer( $customer_id_or_email = '' ) {
-	$edd_logs   = EDD()->debug_log;
-	$customer   = new EDD_Customer( $customer_id_or_email );
-	$meta_query = array(
+	$customer = new EDD_Customer( $customer_id_or_email );
+
+	return edd_count_file_download_logs(
 		array(
-			'key'   => '_edd_log_customer_id',
-			'value' => $customer->id,
+			'customer_id' => $customer->id,
 		)
 	);
-
-	return $edd_logs->get_log_count( null, 'file_download', $meta_query );
 }
 
 /**

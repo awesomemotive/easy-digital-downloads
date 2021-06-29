@@ -1,0 +1,129 @@
+
+#edd-filters {
+	padding: 10px;
+	margin: 0;
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 8px;
+
+	.filter-items {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 6px;
+		float: none;
+		flex-grow: 1;
+
+		.edd-date-range-options {
+			display: inline-block;
+			margin: 10px 0;
+		}
+	}
+
+	> p {
+		color: $gray-700;
+	}
+
+	input[type="text"].edd_datepicker,
+	input[type="number"] {
+		max-width: 105px;
+	}
+
+
+	input[type="number"],
+	.button-secondary {
+		margin-bottom: 0;
+	}
+
+	.search-form {
+		margin: 0;
+	}
+
+	@media screen and ( max-width: 480px ) {
+		span {
+			margin: 2px 0;
+		}
+	}
+}
+
+#edd-advanced-filters {
+	position: relative;
+
+	.inside {
+		z-index: 99;
+		position: absolute;
+		top: 29px;
+		right: 0;
+		border: 1px solid $gray-200;
+		padding: 0;
+		background: $white;
+		box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+		min-width: 285px;
+		opacity: 0;
+		visibility: hidden;
+	}
+
+	fieldset {
+		display: block;
+		padding: 10px 15px 15px;
+		margin: 10px 0;
+
+		&:not(:last-of-type) {
+			border-bottom: 1px solid $gray-200;
+		}
+
+		&:last-of-type {
+			padding-bottom: 5px;
+		}
+
+		&.edd-add-on-filters {
+			label,
+			span,
+			p,
+			div {
+				display: block;
+				margin-bottom: 2px;
+			}
+		}
+	}
+
+	div.edd-select-chosen:not(:last-child) {
+		margin-bottom: 10px;
+	}
+
+	&.open {
+		.edd-advanced-filters-button {
+			background: $gray-200;
+			border-color: $gray-600;
+			box-shadow: inset 0 2px 5px -3px rgba( 0, 0, 0, 0.5 );
+			-webkit-transform: translateY(1px);
+			transform: translateY(1px);
+		}
+
+		.inside {
+			visibility: visible;
+			opacity: 1;
+			-webkit-transition: opacity 0.2s ease-in;
+			-moz-transition: opacity 0.2s ease-in;
+				-o-transition: opacity 0.2s ease-in;
+					transition: opacity 0.2s ease-in;
+		}
+	}
+}
+
+.download_page_edd-reports {
+	#edd-filters {
+		margin-bottom: -1px;
+		box-shadow: none;
+
+		@media screen and ( max-width: 782px ) {
+			gap: 0;
+		}
+	}
+}
+
+.edd-old-log-filters {
+	margin-top: -30px;
+	margin-left: 2px;
+}

@@ -395,7 +395,7 @@ add_action( 'edd_meta_box_price_fields', 'edd_render_price_field', 10 );
  * @param array $args
  * @param       $post_id
  */
-function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
+function edd_render_price_row( $key, $args, $post_id, $index ) {
 	global $wp_filter;
 
 	$defaults = array(
@@ -412,11 +412,20 @@ function edd_render_price_row( $key, $args = array(), $post_id, $index ) {
 	// Run our advanced settings now, so we know if we need to display the settings.
 	// Output buffer so that the headers run, so we can log them and use them later
 	ob_start();
-	do_action( 'edd_download_price_table_head', $post_id );
+	if ( has_action( 'edd_download_price_table_head' ) ) {
+		do_action_deprecated( 'edd_download_price_table_head', array( $post_id ), '2.10', 'edd_download_price_option_row' );
+	}
 	ob_end_clean();
 
 	ob_start();
-	do_action( 'edd_download_price_table_row', $post_id, $key, $args );
+	$found_fields = isset( $wp_filter['edd_download_price_table_row'] ) ? $wp_filter['edd_download_price_table_row'] : false;
+	if ( ! empty( $found_fields->callbacks ) ) {
+		if ( 1 !== count( $found_fields->callbacks ) ) {
+			do_action_deprecated( 'edd_download_price_table_row', array( $post_id, $key, $args ), '2.10', 'edd_download_price_option_row' );
+		} else {
+			do_action( 'edd_download_price_table_row', $post_id, $key, $args );
+		}
+	}
 	$show_advanced = ob_get_clean();
 ?>
 	<div class="edd-repeatable-row-header edd-draghandle-anchor">
@@ -815,7 +824,7 @@ add_action( 'edd_meta_box_files_fields', 'edd_render_files_field', 20 );
  * @param int $post_id Download (Post) ID
  * @return void
  */
-function edd_render_file_row( $key = '', $args = array(), $post_id, $index ) {
+function edd_render_file_row( $key, $args, $post_id, $index ) {
 
 	$args = wp_parse_args( $args, array(
 		'name'           => null,
@@ -1309,15 +1318,21 @@ function edd_render_stats_meta_box() {
 	}
 
 	$earnings = edd_get_download_earnings_stats( $post_id );
-	$sales    = edd_get_download_sales_stats( $post_id ); ?>
+	$sales    = edd_get_download_sales_stats( $post_id );
+
+	$sales_url = add_query_arg( array(
+		'page'       => 'edd-payment-history',
+		'product-id' => urlencode( $post_id )
+	), edd_get_admin_base_url() );
+	?>
 
 	<p class="product-sales-stats">
 		<span class="label"><?php _e( 'Sales:', 'easy-digital-downloads' ); ?></span>
-		<span><a href="<?php echo admin_url( '/edit.php?page=edd-tools&view=sales&post_type=download&tab=logs&download=' . $post_id ); ?>"><?php echo $sales; ?></a></span>
+		<span><a href="<?php echo esc_url( $sales_url ); ?>"><?php echo esc_html( $sales ); ?></a></span>
 	</p>
 
 	<p class="product-earnings-stats">
-		<span class="label"><?php _e( 'Earnings:', 'easy-digital-downloads' ); ?></span>
+		<span class="label"><?php esc_html_e( 'Gross Revenue:', 'easy-digital-downloads' ); ?></span>
 		<span><a href="<?php echo admin_url( 'edit.php?post_type=download&page=edd-reports&view=downloads&download-id=' . $post_id ); ?>"><?php echo edd_currency_filter( edd_format_amount( $earnings ) ); ?></a></span>
 	</p>
 

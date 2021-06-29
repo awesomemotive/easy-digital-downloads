@@ -94,7 +94,15 @@ function edd_send_test_email( $data ) {
 	// Send a test email
 	edd_email_test_purchase_receipt();
 
-	// Remove the test email query arg
-	edd_redirect( remove_query_arg( 'edd_action' ) );
+	$url = add_query_arg(
+		array(
+			'page'        => 'edd-settings',
+			'tab'         => 'emails',
+			'section'     => 'purchase_receipts',
+			'edd-message' => 'test-purchase-email-sent',
+		),
+		edd_get_admin_base_url()
+	);
+	edd_redirect( $url );
 }
 add_action( 'edd_send_test_email', 'edd_send_test_email' );

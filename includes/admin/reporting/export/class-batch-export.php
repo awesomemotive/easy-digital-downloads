@@ -22,6 +22,13 @@ defined( 'ABSPATH' ) || exit;
 class EDD_Batch_Export extends EDD_Export {
 
 	/**
+	 * Whether or not we're done processing.
+	 *
+	 * @var bool
+	 */
+	public $done;
+
+	/**
 	 * The file the data is stored in
 	 *
 	 * @since 2.4
@@ -142,7 +149,9 @@ class EDD_Batch_Export extends EDD_Export {
 		if( $this->step < 2 ) {
 
 			// Make sure we start with a fresh file on step 1
-			@unlink( $this->file );
+			if ( file_exists( $this->file ) ) {
+				unlink( $this->file );
+			}
 			$this->print_csv_cols();
 		}
 
@@ -311,5 +320,21 @@ class EDD_Batch_Export extends EDD_Export {
 	 * @return void
 	 */
 	public function pre_fetch() {}
+
+	/**
+	 * Gets the date query.
+	 *
+	 * @since 3.0
+	 * @return array
+	 */
+	protected function get_date_query() {
+		return array(
+			array(
+				'after'     => $this->start ? date( 'Y-m-d 00:00:00', strtotime( $this->start ) ) : '',
+				'before'    => $this->end ? date( 'Y-m-d 23:59:59', strtotime( $this->end ) ) : '',
+				'inclusive' => true,
+			),
+		);
+	}
 
 }

@@ -67,7 +67,8 @@ class Notes extends Schema {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0'
+			'default'    => '0',
+			'sortable'   => true
 		),
 
 		// content
