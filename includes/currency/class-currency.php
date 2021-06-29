@@ -13,22 +13,38 @@ namespace EDD\Currency;
 class Currency {
 
 	/**
-	 * @var string
+	 * @var string Currency code.
 	 */
 	public $code;
 
+	/**
+	 * @var string Symbol/text to display before amounts.
+	 */
 	public $prefix;
 
+	/**
+	 * @var string Symbol/text to display after amounts.
+	 */
 	public $suffix;
 
+	/**
+	 * @var string Symbol to use in the prefix/suffix.
+	 */
 	public $symbol;
 
+	/**
+	 * @var string Decimal separator.
+	 */
 	public $decimal_separator = '.';
 
+	/**
+	 * @var string Thousands separator.
+	 */
 	public $thousands_separator = ',';
 
-	public $is_zero_decimal = false;
-
+	/**
+	 * @var int Number of decimals.
+	 */
 	public $number_decimals = 2;
 
 	/**
@@ -57,6 +73,8 @@ class Currency {
 
 	/**
 	 * Sets up properties.
+	 *
+	 * @since 3.0
 	 */
 	private function setup() {
 		$this->symbol              = $this->get_symbol();
@@ -90,10 +108,36 @@ class Currency {
 			$this->suffix = $separator . $this->symbol;
 		}
 
-		$this->is_zero_decimal  = $this->_is_zero_decimal();
-		$this->number_decimals  = $this->is_zero_decimal ? 0 : 2;
+		/**
+		 * Filters the currency prefix.
+		 *
+		 * @param string $prefix
+		 * @param string $code
+		 *
+		 * @since 3.0
+		 */
+		$this->prefix = apply_filters( 'edd_currency_prefix', $this->prefix, $this->code );
+
+		/**
+		 * Filters the currency suffix.
+		 *
+		 * @param string $prefix
+		 * @param string $code
+		 *
+		 * @since 3.0
+		 */
+		$this->suffix = apply_filters( 'edd_currency_suffix', $this->suffix, $this->code );
+
+		$this->number_decimals = $this->_is_zero_decimal() ? 0 : 2;
 	}
 
+	/**
+	 * Whether or not this currency has a space between the symbol and the amount.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool
+	 */
 	private function _has_space_around_symbol() {
 		return ! in_array( $this->code, array(
 			'GBP',
