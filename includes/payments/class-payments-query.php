@@ -199,7 +199,7 @@ class EDD_Payments_Query extends EDD_Stats {
 			return intval( $this->items );
 		}
 
-		if ( $should_output_order_objects ) {
+		if ( $should_output_order_objects || ! empty( $this->args['fields'] ) ) {
 			return $this->items;
 		}
 
@@ -221,10 +221,6 @@ class EDD_Payments_Query extends EDD_Stats {
 			}
 
 			return $posts;
-		}
-
-		if ( $should_output_order_objects ) {
-			return $this->items;
 		}
 
 		foreach ( $this->items as $order ) {
@@ -573,7 +569,9 @@ class EDD_Payments_Query extends EDD_Stats {
 		}
 
 		// Meta key and value
-		if ( isset( $this->initial_args['meta_key'] ) ) {
+		if ( isset( $this->initial_args['meta_query'] ) ) {
+			$arguments['meta_query'] = $this->initial_args['meta_query'];
+		} elseif ( isset( $this->initial_args['meta_key'] ) ) {
 			$meta_query = array(
 				'key' => $this->initial_args['meta_key']
 			);
@@ -609,7 +607,7 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		if ( $this->args['end_date'] ) {
 			if ( is_numeric( $this->end_date ) ) {
-				$this->end_date = \Carbon\Carbon::createFromTimestamp( $this->start_date )->toDateTimeString();
+				$this->end_date = \Carbon\Carbon::createFromTimestamp( $this->end_date )->toDateTimeString();
 			}
 
 			$this->end_date = \Carbon\Carbon::parse( $this->end_date, edd_get_timezone_id() )->setTimezone( 'UTC' )->timestamp;
@@ -748,24 +746,33 @@ class EDD_Payments_Query extends EDD_Stats {
 			$arguments['status'] = edd_get_payment_status_keys();
 		}
 
-		if ( isset( $this->args['meta_query'] ) && is_array( $this->args['meta_query'] ) ) {
-			foreach ( $this->args['meta_query'] as $meta ) {
+		if ( isset( $arguments['meta_query'] ) && is_array( $arguments['meta_query'] ) ) {
+			foreach ( $arguments['meta_query'] as $meta_index => $meta ) {
 				if ( ! empty( $meta['key'] ) ) {
 					switch ( $meta['key'] ) {
 						case '_edd_payment_customer_id':
 							$arguments['customer_id'] = absint( $meta['value'] );
+							unset( $arguments['meta_query'][ $meta_index ] );
 							break;
 
 						case '_edd_payment_user_id':
 							$arguments['user_id'] = absint( $meta['value'] );
+							unset( $arguments['meta_query'][ $meta_index ] );
 							break;
 
 						case '_edd_payment_user_email':
 							$arguments['email'] = sanitize_email( $meta['value'] );
+							unset( $arguments['meta_query'][ $meta_index ] );
 							break;
 
 						case '_edd_payment_gateway':
 							$arguments['gateway'] = sanitize_text_field( $meta['value'] );
+							unset( $arguments['meta_query'][ $meta_index ] );
+							break;
+
+						case '_edd_payment_purchase_key' :
+							$arguments['payment_key'] = sanitize_text_field( $meta['value'] );
+							unset( $arguments['meta_query'][ $meta_index ] );
 							break;
 					}
 				}
@@ -848,6 +855,11 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		if ( isset( $this->args['date_refundable_query'] ) ) {
 			$arguments['date_refundable_query'] = $this->args['date_refundable_query'];
+		}
+
+		// Make sure `fields` is honored if set (eg. 'ids').
+		if ( ! empty( $this->args['fields'] ) ) {
+			$arguments['fields'] = $this->args['fields'];
 		}
 
 		$this->args = $arguments;

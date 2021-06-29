@@ -15,7 +15,10 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Add a discount.
  *
- * @since 3.0
+ * @since 1.0
+ * @since 3.0 This function has been repurposed. Previously it was an internal admin callback for adding
+ *        a discount via the UI. It's now used as a public function for inserting a new discount
+ *        into the database.
  *
  * @param array $data Discount data.
  * @return int Discount ID.
@@ -26,6 +29,7 @@ function edd_add_discount( $data = array() ) {
 	$product_requirements = isset( $data['product_reqs'] )      ? $data['product_reqs']      : null;
 	$excluded_products    = isset( $data['excluded_products'] ) ? $data['excluded_products'] : null;
 	$product_condition    = isset( $data['product_condition'] ) ? $data['product_condition'] : null;
+	$pre_convert_args     = $data;
 	unset( $data['product_reqs'], $data['excluded_products'], $data['product_condition'] );
 
 	if ( isset( $data['expiration'] ) ) {
@@ -78,6 +82,18 @@ function edd_add_discount( $data = array() ) {
 		}
 
 	}
+
+	/**
+	 * Fires after the discount code is inserted. This hook exists for
+	 * backwards compatibility purposes. It uses the $pre_convert_args variable
+	 * to ensure the arguments maintain backwards compatible array keys.
+	 *
+	 * @since 2.7
+	 *
+	 * @param array $pre_convert_args Discount args.
+	 * @param int   $return Discount  ID.
+	 */
+	do_action( 'edd_post_insert_discount', $pre_convert_args, $discount_id );
 
 	// Return the new discount ID.
 	return $discount_id;
@@ -424,9 +440,6 @@ function edd_store_discount( $details, $discount_id = 0 ) {
 	 */
 	do_action( 'edd_pre_insert_discount', $details );
 
-	// Necessary for edd_post_insert_discount action.
-	$pre_convert_args = $details;
-
 	// Convert legacy arguments to new ones accepted by `edd_add_discount()`.
 	$details = EDD_Discount::convert_legacy_args( $details );
 
@@ -436,18 +449,6 @@ function edd_store_discount( $details, $discount_id = 0 ) {
 		edd_update_discount( $discount_id, $details );
 		$return = $discount_id;
 	}
-
-	/**
-	 * Fires after the discount code is inserted. This hook exists for
-	 * backwards compatibility purposes. It uses the $pre_convert_args variable
-	 * to ensure the arguments maintain backwards compatible array keys
-	 *
-	 * @since 2.7
-	 *
-	 * @param array $pre_convert_args Discount args.
-	 * @param int   $return           Discount ID.
-	 */
-	do_action( 'edd_post_insert_discount', $pre_convert_args, $return );
 
 	return $return;
 }
@@ -623,7 +624,7 @@ function edd_get_discount_uses( $discount_id = 0 ) {
  * @return float $min_price Minimum purchase amount.
  */
 function edd_get_discount_min_price( $discount_id = 0 ) {
-	return edd_format_amount( edd_get_discount_field( $discount_id, 'min_cart_price' ) );
+	return edd_format_amount( edd_get_discount_field( $discount_id, 'min_charge_amount' ) );
 }
 
 /**
@@ -1027,6 +1028,13 @@ function edd_get_item_discount_amount( $item, $items, $discounts ) {
 
 	if ( ! isset( $item['options'] ) ) {
 		$item['options'] = array();
+
+		/*
+		 * Support for variable pricing when the `item_number` key is set (cart details).
+		 */
+		if ( isset( $item['item_number']['options'] ) ) {
+			$item['options'] = $item['item_number']['options'];
+		}
 	}
 
 	// Validate and normalize Discounts.

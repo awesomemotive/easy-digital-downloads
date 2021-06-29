@@ -97,6 +97,57 @@
 			</span>
 		</p>
 
+		<# if ( 'none' !== data.state.hasTax && 'fee' === data.type ) { #>
+		<p>
+			<label
+				class="edd-toggle"
+				for="no-tax"
+			>
+				<input
+					type="checkbox"
+					id="no-tax"
+					<# if ( true === data.isTaxed ) { #>
+						checked
+					<# } #>
+				/>
+				<span class="label">
+					<?php esc_html_e( 'Apply tax to fee', 'easy-digital-downloads' ); ?>
+					<# if ( 'none' !== data.state.hasTax && '' !== data.state.hasTax.country ) { #>
+					<br />
+					<small>
+						<?php
+						printf(
+							esc_html__( 'Tax Rate: %s', 'easy-digital-downloads' ),
+							'{{ data.state.hasTax.country}}<# if ( \'\' !== data.state.hasTax.region ) { #>: {{ data.state.hasTax.region }}<# } #> &ndash; {{ data.state.hasTax.rate }}%'
+						); // WPCS: XSS okay.
+						?>
+					</small>
+					<# } #>
+				</span>
+			</label>
+		</p>
+		<# } #>
+
+		<#
+		if (
+			'fee' === data.type &&
+			'none' !== data.state.hasTax &&
+			'' === data.state.hasTax.country
+		) {
+		#>
+			<div class="notice notice-warning">
+				<p>
+					<strong><?php esc_html_e( 'No tax rate has been set.', 'easy-digital-downloads' ); ?></strong><br />
+					<?php esc_html_e( 'Tax rates are defined by the customer\'s billing address.', 'easy-digital-downloads' ); ?>
+				</p>
+				<p>
+					<button class="button button-secondary" id="set-address">
+						<?php esc_html_e( 'Set an address', 'easy-digital-downloads' ); ?>
+					</button>
+				</p>
+			</div>
+		<# } #>
+
 		<p>
 			<label for="description">
 				<?php esc_html_e( 'Description', 'easy-digital-downloads' ); ?>

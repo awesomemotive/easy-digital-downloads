@@ -23,6 +23,9 @@ defined( 'ABSPATH' ) || exit;
  *     The `date_created` and `date_modified` parameters do not need to be passed.
  *     They will be automatically populated if empty.
  *
+ *     @type int    $parent         Parent ID. Only used when creating refunds to link
+ *                                  a refund order item to the original order item.
+ *                                  Default 0.
  *     @type int    $order_id       Order ID. Default 0.
  *     @type int    $product_id     Product ID of the order item purchased. ID
  *                                  refers to the download in the `wp_posts` table.
@@ -32,7 +35,7 @@ defined( 'ABSPATH' ) || exit;
  *     @type int    $cart_index     Position of the order item in the cart.
  *                                  Default 0.
  *     @type string $type           Order item type. Default `download`.
- *     @type string $status         Status of the order item. Default `inherit`.
+ *     @type string $status         Status of the order item. Default `pending`.
  *     @type int    $quantity       Quantity purchased of the order item. Default 0.
  *     @type float  $amount         Amount for the order item. Default 0.
  *     @type float  $subtotal       Subtotal of the order item. Default 0.

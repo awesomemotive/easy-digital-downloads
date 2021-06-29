@@ -36,7 +36,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string $end_date
  * @property int $use_count
  * @property int $max_uses
- * @property float $min_cart_price
+ * @property float $min_charge_amount
  * @property bool $once_per_customer
  */
 class EDD_Discount extends Adjustment {
@@ -213,7 +213,7 @@ class EDD_Discount extends Adjustment {
 	 * @access protected
 	 * @var mixed int|float
 	 */
-	protected $min_cart_price = null;
+	protected $min_charge_amount = null;
 
 	/**
 	 * Is Single Use per customer?
@@ -340,7 +340,7 @@ class EDD_Discount extends Adjustment {
 					return $this->start_date;
 
 				case 'min_price':
-					return $this->min_cart_price;
+					return $this->min_charge_amount;
 
 				case 'use_once':
 				case 'is_single_use':
@@ -350,6 +350,7 @@ class EDD_Discount extends Adjustment {
 				case 'uses':
 					return $this->use_count;
 
+				case 'not_global':
 				case 'is_not_global':
 					return 'global' === $this->scope ? false : true;
 			}
@@ -401,7 +402,7 @@ class EDD_Discount extends Adjustment {
 					$this->start_date = $value;
 					break;
 				case 'min_price':
-					$this->min_cart_price = $value;
+					$this->min_charge_amount = $value;
 					break;
 				case 'use_once':
 				case 'is_single_use':
@@ -410,6 +411,7 @@ class EDD_Discount extends Adjustment {
 				case 'uses':
 					$this->use_count = $value;
 					break;
+				case 'not_global':
 				case 'is_not_global':
 					$this->scope = $value ? 'not_global' : 'global';
 					break;
@@ -423,14 +425,14 @@ class EDD_Discount extends Adjustment {
 	 * Handle method dispatch dynamically.
 	 *
 	 * @param string $method Method name.
-	 * @param array $args Arguments to be passed to method.
+	 * @param array  $args   Arguments to be passed to method.
 	 *
 	 * @return mixed
 	 */
 	public function __call( $method, $args ) {
-		$property = str_replace( 'setup_', '', $method );
+		$property = strtolower( str_replace( array( 'setup_', 'get_' ), '', $method ) );
 		if ( ! method_exists( $this, $method ) && property_exists( $this, $property ) ) {
-			return $this->{$property( $args )};
+			return $this->{$property};
 		}
 	}
 
@@ -531,7 +533,7 @@ class EDD_Discount extends Adjustment {
 					$this->{$key} = (int) $value;
 					break;
 				case 'min_charge_amount':
-					$this->min_cart_price = $value;
+					$this->min_charge_amount = $value;
 					break;
 				default:
 					if ( is_string( $value ) ) {
@@ -569,6 +571,46 @@ class EDD_Discount extends Adjustment {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Helper method to retrieve meta data associated with the discount.
+	 *
+	 * @since 2.7
+	 *
+	 * @param string $key    Meta key.
+	 * @param bool   $single Return single item or array.
+	 *
+	 * @return mixed
+	 */
+	public function get_meta( $key = '', $single = true ) {
+		return edd_get_adjustment_meta( $this->id, $key, $single );
+	}
+
+	/**
+	 * Helper method to update meta data associated with the discount.
+	 *
+	 * @since 2.7
+	 *
+	 * @param string $key        Meta key to update.
+	 * @param string $value      New meta value to set.
+	 * @param string $prev_value Optional. Previous meta value.
+	 *
+	 * @return int|bool Meta ID if the key didn't exist, true on successful update, false on failure.
+	 */
+	public function update_meta( $key, $value = '', $prev_value = '' ) {
+		$filter_key = '_edd_discount_' . $key;
+
+		/**
+		 * Filters the meta value being updated.
+		 * The key is prefixed with `_edd_discount_` for 2.9 backwards compatibility.
+		 *
+		 * @param mixed $value Value being set.
+		 * @param int   $id    Discount ID.
+		 */
+		$value = apply_filters( 'edd_update_discount_meta_' . $filter_key, $value, $this->id );
+
+		return edd_update_adjustment_meta( $this->id, $key, $value, $prev_value );
 	}
 
 	/**
@@ -868,7 +910,7 @@ class EDD_Discount extends Adjustment {
 		 * @param float $min_price Minimum price.
 		 * @param int   $ID        Discount ID.
 		 */
-		return (float) apply_filters( 'edd_get_discount_min_price', $this->min_cart_price, $this->id );
+		return (float) apply_filters( 'edd_get_discount_min_price', $this->min_charge_amount, $this->id );
 	}
 
 	/**
@@ -1123,32 +1165,26 @@ class EDD_Discount extends Adjustment {
 		}
 
 		if ( isset( $args['excluded_products'] ) ) {
+			// Reset meta
+			edd_delete_adjustment_meta( $this->id, 'excluded_product' );
+
 			if ( is_array( $args['excluded_products'] ) ) {
-
-				// Reset meta
-				$this->delete_meta( 'excluded_product' );
-
 				// Now add each newly excluded product
 				foreach ( $args['excluded_products'] as $product ) {
-					$this->add_meta( 'excluded_product', absint( $product ) );
+					edd_add_adjustment_meta( $this->id, 'excluded_product', absint( $product ) );
 				}
-			} else {
-				$this->delete_meta( 'excluded_product' );
 			}
 		}
 
 		if ( isset( $args['product_reqs'] ) ) {
+			// Reset meta
+			edd_delete_adjustment_meta( $this->id, 'product_requirement' );
+
 			if ( is_array( $args['product_reqs'] ) ) {
-
-				// Reset meta
-				$this->delete_meta( 'product_requirement' );
-
 				// Now add each newly required product
 				foreach ( $args['product_reqs'] as $product ) {
-					$this->add_meta( 'product_requirement', absint( $product ) );
+					edd_add_adjustment_meta( $this->id, 'product_requirement', absint( $product ) );
 				}
-			} else {
-				$this->delete_meta( 'product_requirement' );
 			}
 		}
 
@@ -1341,10 +1377,10 @@ class EDD_Discount extends Adjustment {
 
 		$cart_amount = edd_get_cart_discountable_subtotal( $this->id );
 
-		if ( (float) $cart_amount >= (float) $this->min_cart_price ) {
+		if ( (float) $cart_amount >= (float) $this->min_charge_amount ) {
 			$return = true;
 		} elseif ( $set_error ) {
-			edd_set_error( 'edd-discount-error', sprintf( __( 'Minimum order of %s not met.', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( $this->min_cart_price ) ) ) );
+			edd_set_error( 'edd-discount-error', sprintf( __( 'Minimum order of %s not met.', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( $this->min_charge_amount ) ) ) );
 		}
 
 		/**
@@ -1667,18 +1703,17 @@ class EDD_Discount extends Adjustment {
 	 * @return float $discounted_price Amount after discount.
 	 */
 	public function get_discounted_amount( $base_price ) {
-		// Start off setting the amount as the base price.
-		$amount = $base_price;
+		$base_price = floatval( $base_price );
 
 		if ( 'flat' === $this->amount_type ) {
-			$amount = $base_price - $this->amount;
+			$amount = $base_price - floatval( $this->amount );
 
 			if ( $amount < 0 ) {
 				$amount = 0;
 			}
 		} else {
 			// Percentage discount
-			$amount = $base_price - ( $base_price * ( $this->amount / 100 ) );
+			$amount = $base_price - ( $base_price * ( floatval( $this->amount ) / 100 ) );
 		}
 
 		/**
@@ -1862,25 +1897,22 @@ class EDD_Discount extends Adjustment {
 			'max'               => 'max_uses',
 			'start'             => 'start_date',
 			'expiration'        => 'end_date',
-			'min_price'         => 'min_cart_price',
+			'min_price'         => 'min_charge_amount',
+			'products'          => 'product_reqs',
 			'excluded-products' => 'excluded_products',
-			'is_not_global'     => 'scope',
-			'is_single_use'     => 'once_per_customer',
-			'min_cart_price'    => 'min_charge_amount',
+			'not_global'        => 'scope',
+			'use_once'          => 'once_per_customer',
 		);
 
 		foreach ( $old as $old_key => $new_key ) {
-			if ( isset( $args[ $old_key ] ) ) {
-				if ( 'is_not_global' === $old_key ) {
-					$args[ $new_key ] = $args[ $old_key ]
-						? 'not_global'
-						: 'global';
-				} else {
-					$args[ $new_key ] = $args[ $old_key ];
-				}
-
-				unset( $args[ $old_key ] );
+			if ( 'not_global' === $old_key ) {
+				$args[ $new_key ] = ! empty( $args[ $old_key ] )
+					? 'not_global'
+					: 'global';
+			} elseif ( isset( $args[ $old_key ] ) ) {
+				$args[ $new_key ] = $args[ $old_key ];
 			}
+			unset( $args[ $old_key ] );
 		}
 
 		// Default status needs to be active for regression purposes.

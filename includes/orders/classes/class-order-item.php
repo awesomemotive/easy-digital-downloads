@@ -10,6 +10,8 @@
  */
 namespace EDD\Orders;
 
+use EDD\Refundable_Item;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -19,6 +21,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 3.0
  *
  * @property int    $id
+ * @property int    $parent
  * @property int    $order_id
  * @property int    $product_id
  * @property string $product_name
@@ -38,6 +41,8 @@ defined( 'ABSPATH' ) || exit;
  */
 class Order_Item extends \EDD\Database\Rows\Order_Item {
 
+	use Refundable_Item;
+
 	/**
 	 * Order Item ID.
 	 *
@@ -45,6 +50,15 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	 * @var   int
 	 */
 	protected $id;
+
+	/**
+	 * Parent ID. This is only used for order items attached to refunds. The ID references the
+	 * original order item that was refunded.
+	 *
+	 * @since 3.0
+	 * @var   int
+	 */
+	protected $parent;
 
 	/**
 	 * Order ID.
@@ -177,6 +191,7 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	 * @since 3.0
 	 *
 	 * @param string $key
+	 *
 	 * @return mixed
 	 */
 	public function __get( $key = '' ) {
@@ -209,30 +224,6 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	}
 
 	/**
-	 * Retrieve the tax rate for the order.
-	 *
-	 * @since 3.0
-	 *
-	 * @return float Tax rate.
-	 */
-	public function get_tax_rate() {
-		$rate = edd_get_order_adjustments( array(
-			'number'      => 1,
-			'object_id'   => $this->id,
-			'object_type' => 'order_item',
-			'type'        => 'tax_rate',
-		) );
-
-		if ( $rate ) {
-			$rate = $rate[0];
-
-			return $rate->amount * 100;
-		}
-
-		return 0.00;
-	}
-
-	/**
 	 * Get an order item name, including any price ID name appended to the end.
 	 *
 	 * @since 3.0
@@ -241,5 +232,22 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	 */
 	public function get_order_item_name() {
 		return $this->product_name;
+	}
+
+	/**
+	 * Retrieves order item records that were refunded from this original order item.
+	 *
+	 * @since 3.0
+	 *
+	 * @return Order_Item[]|false
+	 */
+	public function get_refunded_items() {
+		if ( null !== $this->refunded_items ) {
+			return $this->refunded_items;
+		}
+
+		return edd_get_order_items( array(
+			'parent' => $this->id
+		) );
 	}
 }

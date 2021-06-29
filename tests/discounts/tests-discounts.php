@@ -197,7 +197,7 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	 * @covers ::get_min_price()
 	 */
 	public function test_get_discount_min_price_by_property() {
-		$this->assertEquals( 128, self::$discount->min_cart_price );
+		$this->assertEquals( 128, self::$discount->min_charge_amount );
 	}
 
 	/**

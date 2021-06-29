@@ -8,7 +8,7 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       3.0
  */
-namespace EDD\Api_Request_Logs\Api_Request_Log;
+namespace EDD\Logs;
 
 use EDD\Base_Object;
 

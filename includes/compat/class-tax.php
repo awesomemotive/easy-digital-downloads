@@ -98,6 +98,7 @@ class Tax extends Base {
 			// Check if the tax rate exists.
 			} else {
 				$rate = edd_get_adjustments( array(
+					'type'        => 'tax_rate',
 					'fields'      => 'ids',
 					'name'        => $tax_rate['country'],
 					'description' => $region,

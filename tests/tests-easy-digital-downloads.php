@@ -59,6 +59,7 @@ class Tests_EDD extends EDD_UnitTestCase {
 			array( EDD_PLUGIN_DIR . 'includes/install.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/actions.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/deprecated-functions.php' ),
+			array( EDD_PLUGIN_DIR . 'includes/deprecated-hooks.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/ajax-functions.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/template-functions.php' ),
 			array( EDD_PLUGIN_DIR . 'includes/checkout/template.php' ),

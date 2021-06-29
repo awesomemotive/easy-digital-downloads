@@ -1291,7 +1291,9 @@ class Query extends Base {
 				}
 
 				// Remove " AND " from meta_query query where clause
-				$where['meta_query'] = preg_replace( $and, '', $clauses['where'] );
+				if ( ! empty( $clauses['where'] ) ) {
+					$where['meta_query'] = preg_replace( $and, '', $clauses['where'] );
+				}
 			}
 		}
 
@@ -1353,7 +1355,7 @@ class Query extends Base {
 		if ( empty( $fields ) && ! empty( $this->query_vars['count'] ) ) {
 
 			// Possible fields to group by
-			$groupby_names = $this->parse_groupby( $this->query_vars['groupby'], false );
+			$groupby_names = $this->parse_groupby( $this->query_vars['groupby'], $alias );
 			$groupby_names = ! empty( $groupby_names )
 				? "{$groupby_names}"
 				: '';

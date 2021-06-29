@@ -5,7 +5,7 @@
  * This class should simplify the process of adding license information
  * to new EDD extensions.
  *
- * @version 3.0
+ * @version 1.1
  */
 
 // Exit if accessed directly
@@ -68,6 +68,24 @@ class EDD_License {
 		// Setup hooks
 		$this->includes();
 		$this->hooks();
+
+		/**
+		 * Maintain an array of active, licensed plugins that have a license key entered.
+		 * This is to help us more easily determine if the site has a license key entered
+		 * at all. Initializing it this way helps us limit the data to activated plugins only.
+		 * If we relied on the options table (`edd_%_license_active`) then we could accidentally
+		 * be picking up plugins that have since been deactivated.
+		 *
+		 * @see \EDD\Admin\Promos\Notices\License_Upgrade_Notice::__construct()
+		 */
+		if ( ! empty( $this->license ) ) {
+			global $edd_licensed_products;
+			if ( ! is_array( $edd_licensed_products ) ) {
+				$edd_licensed_products = array();
+			}
+			$edd_licensed_products[] = $this->item_shortname;
+		}
+
 	}
 
 	/**
@@ -111,7 +129,7 @@ class EDD_License {
 		//add_action( 'admin_init', array( $this, 'weekly_license_check' ) );
 
 		// Updater
-		add_action( 'admin_init', array( $this, 'auto_updater' ), 0 );
+		add_action( 'init', array( $this, 'auto_updater' ) );
 
 		// Display notices to admins
 		add_action( 'admin_notices', array( $this, 'notices' ) );
@@ -129,7 +147,11 @@ class EDD_License {
 	 * @return  void
 	 */
 	public function auto_updater() {
-		edd_get_option( 'enabled_betas', array() );
+
+		$doing_cron = defined( 'DOING_CRON' ) && DOING_CRON;
+		if ( ! current_user_can( 'manage_options' ) && ! $doing_cron ) {
+			return;
+		}
 
 		$args = array(
 			'version'   => $this->version,
@@ -195,6 +217,55 @@ class EDD_License {
 		) . '</p>';
 
 		$has_ran = true;
+	}
+
+	/**
+	 * If the supplied license key is for a pass, updates the `edd_pass_licenses` option with
+	 * the pass ID and the date it was checked.
+	 *
+	 * Note: It's intentional that the `edd_pass_licenses` option is always updated, even if
+	 * the provided license data is not for a pass. This is so we have a clearer idea
+	 * of when the checks started coming through. If the option doesn't exist in the DB
+	 * at all, then we haven't checked any licenses.
+	 *
+	 * @since 2.10.6
+	 *
+	 * @param string $license
+	 * @param object $api_data
+	 */
+	private function maybe_set_pass_flag( $license, $api_data ) {
+		$passes = get_option( 'edd_pass_licenses' );
+		$passes = ! empty( $passes ) ? json_decode( $passes, true ) : array();
+
+		if ( ! empty( $api_data->pass_id ) && ! empty( $api_data->license ) && 'valid' === $api_data->license ) {
+			$passes[ $license ] = array(
+				'pass_id'      => intval( $api_data->pass_id ),
+				'time_checked' => time()
+			);
+		} else if ( array_key_exists( $license, $passes ) ) {
+			unset( $passes[ $license ] );
+		}
+
+		update_option( 'edd_pass_licenses', json_encode( $passes ) );
+	}
+
+	/**
+	 * Removes the pass flag for the supplied license. This happens when a license
+	 * is deactivated.
+	 *
+	 * @since 2.10.6
+	 *
+	 * @param string $license
+	 */
+	private function maybe_remove_pass_flag( $license ) {
+		$passes = get_option( 'edd_pass_licenses' );
+		$passes = ! empty( $passes ) ? json_decode( $passes, true ) : array();
+
+		if ( array_key_exists( $license, $passes ) ) {
+			unset( $passes[ $license ] );
+		}
+
+		update_option( 'edd_pass_licenses', json_encode( $passes ) );
 	}
 
 	/**
@@ -273,6 +344,8 @@ class EDD_License {
 		// Decode license data
 		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
+		$this->maybe_set_pass_flag( $this->license, $license_data );
+
 		update_option( $this->item_shortname . '_license_active', $license_data );
 	}
 
@@ -329,6 +402,8 @@ class EDD_License {
 				return;
 			}
 
+			$this->maybe_remove_pass_flag( $this->license );
+
 			delete_option( $this->item_shortname . '_license_active' );
 		}
 	}
@@ -377,6 +452,8 @@ class EDD_License {
 		}
 
 		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
+
+		$this->maybe_set_pass_flag( $this->license, $license_data );
 
 		update_option( $this->item_shortname . '_license_active', $license_data );
 	}

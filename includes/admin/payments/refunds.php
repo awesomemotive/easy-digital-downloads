@@ -4,10 +4,12 @@
  *
  * @package    EDD
  * @subpackage Admin/Orders
- * @copyright  Copyright (c) 2020, Sandhills Development, LLC
+ * @copyright  Copyright (c) 2021, Sandhills Development, LLC
  * @license    http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since      3.0
  */
+
+use EDD\Orders\Order;
 
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
@@ -19,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  *
- * @param \EDD\Orders\Order $refund Current Refund.
+ * @param Order $refund Current Refund.
  */
 function edd_refund_details_notice( $refund ) {
 	$order_url = edd_get_admin_url(
@@ -58,16 +60,52 @@ function edd_refund_details_notice( $refund ) {
  *
  * @since 3.0
  *
- * @param EDD\Orders\Order $refund Current Refund.
+ * @param Order $refund Current Refund.
  */
 function edd_refund_details_items( $refund ) {
-	$_items = array();
+	$_items       = array();
+	$_adjustments = array();
+
 	$items  = edd_get_order_items( array(
 		'order_id' => $refund->id,
 		'number'   => 999,
 	) );
 
 	foreach ( $items as $item ) {
+		$item_adjustments = array();
+
+		$adjustments = edd_get_order_adjustments( array(
+			'object_id'   => $item->id,
+			'number'      => 999,
+			'object_type' => 'order_item',
+			'type'        => array(
+				'discount',
+				'credit',
+				'fee',
+			),
+		) );
+
+		foreach ( $adjustments as $adjustment ) {
+			// @todo edd_get_order_adjustment_to_json()?
+			$adjustment_args = array(
+				'id'           => esc_html( $adjustment->id ),
+				'objectId'     => esc_html( $adjustment->object_id ),
+				'objectType'   => esc_html( $adjustment->object_type ),
+				'typeId'       => esc_html( $adjustment->type_id ),
+				'type'         => esc_html( $adjustment->type ),
+				'description'  => esc_html( $adjustment->description ),
+				'subtotal'     => esc_html( $adjustment->subtotal ),
+				'tax'          => esc_html( $adjustment->tax ),
+				'total'        => esc_html( $adjustment->total ),
+				'dateCreated'  => esc_html( $adjustment->date_created ),
+				'dateModified' => esc_html( $adjustment->date_modified ),
+				'uuid'         => esc_html( $adjustment->uuid ),
+			);
+
+			$item_adjustments[] = $adjustment_args;
+			$_adjustments[]     = $adjustment_args;
+		}
+
 		// @todo edd_get_order_item_to_json()?
 		$_items[] = array(
 			'id'           => esc_html( $item->id ),
@@ -90,7 +128,6 @@ function edd_refund_details_items( $refund ) {
 		);
 	}
 
-	$_adjustments = array();
 	$adjustments  = edd_get_order_adjustments( array(
 		'object_id'   => $refund->id,
 		'number'      => 999,
@@ -120,6 +157,25 @@ function edd_refund_details_items( $refund ) {
 		);
 	}
 
+	$has_tax  = 'none';
+	$tax_rate = $refund->id ? $refund->get_tax_rate() : false;
+	$location = array(
+		'rate'    => $tax_rate,
+		'country' => '',
+		'region'  => '',
+	);
+	if ( $tax_rate ) {
+		$has_tax         = $location;
+		$has_tax['rate'] = $tax_rate;
+		if ( $refund->tax_rate_id ) {
+			$tax_rate_object = $refund->get_tax_rate_object();
+			if ( $tax_rate_object ) {
+				$has_tax['country'] = $tax_rate_object->name;
+				$has_tax['region']  = $tax_rate_object->description;
+			}
+		}
+	}
+
 	wp_localize_script(
 		'edd-admin-orders',
 		'eddAdminOrderOverview',
@@ -129,13 +185,8 @@ function edd_refund_details_items( $refund ) {
 			'refunds'      => array(),
 			'isAdding'     => false,
 			'isRefund'     => true,
-			'hasTax'       => true === edd_use_taxes()
-				? array(
-					'rate'    => 0,
-					'country' => '',
-					'region'  => '',
-				)
-				: 0,
+			'hasQuantity'  => true === edd_item_quantities_enabled(),
+			'hasTax'       => $has_tax,
 			'order'        => array(
 				'currency'       => $refund->currency,
 				'currencySymbol' => html_entity_decode( edd_currency_symbol( $refund->currency ) ),
@@ -148,7 +199,10 @@ function edd_refund_details_items( $refund ) {
 	);
 
 	$templates = array(
-		'totals',
+		'no-items',
+		'subtotal',
+		'tax',
+		'total',
 		'item',
 		'adjustment',
 		'adjustment-discount',
@@ -182,7 +236,7 @@ function edd_refund_details_items( $refund ) {
  *
  * @since 3.0
  *
- * @param \EDD\Orders\Order $refund Current Refund.
+ * @param Order $refund Current Refund.
  */
 function edd_refund_details_notes( $refund ) {
 ?>
@@ -205,7 +259,7 @@ function edd_refund_details_notes( $refund ) {
  *
  * @since 3.0
  *
- * @param \EDD\Orders\Order $refund Current Refund.
+ * @param Order $refund Current Refund.
  */
 function edd_refund_details_attributes( $refund ) {
 	$refund_date = edd_get_edd_timezone_equivalent_date_from_utc( EDD()->utils->date( $refund->date_created, 'utc', true ) );
@@ -268,7 +322,7 @@ function edd_refund_details_attributes( $refund ) {
  *
  * @since 3.0
  *
- * @param \EDD\Orders\Order $refund
+ * @param Order $refund
  */
 function edd_refund_details_related_refunds( $refund ) {
 	$refunds = array_filter(

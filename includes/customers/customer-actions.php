@@ -40,3 +40,48 @@ function edd_demote_customer_primary_addresses( $old_value, $new_value, $item_id
 	}
 }
 add_action( 'edd_transition_customer_address_is_primary', 'edd_demote_customer_primary_addresses', 10, 3 );
+
+/**
+ * Updates the email address of a customer record when the email on a user is updated.
+ *
+ * @since 2.4.0
+ *
+ * @param int     $user_id       User ID.
+ * @param WP_User $old_user_data Object containing user's data prior to update.
+ *
+ * @return void
+ */
+function edd_update_customer_email_on_user_update( $user_id, $old_user_data ) {
+	$user = get_userdata( $user_id );
+
+	// Bail if the email address didn't actually change just now.
+	if ( empty( $user ) || $user->user_email === $old_user_data->user_email ) {
+		return;
+	}
+
+	$customer = edd_get_customer_by( 'user_id', $user_id );
+
+	if ( empty( $customer ) || $user->user_email === $customer->email ) {
+		return;
+	}
+
+	// Bail if we have another customer with this email address already.
+	if ( edd_get_customer_by( 'email', $user->user_email ) ) {
+		return;
+	}
+
+	$success = edd_update_customer( $customer->id, array( 'email' => $user->user_email ) );
+
+	if ( ! $success ) {
+		return;
+	}
+
+	/**
+	 * Triggers after the customer has been successfully updated.
+	 *
+	 * @param WP_User      $user
+	 * @param EDD_Customer $customer
+	 */
+	do_action( 'edd_update_customer_email_on_user_update', $user, $customer );
+}
+add_action( 'profile_update', 'edd_update_customer_email_on_user_update', 10, 2 );

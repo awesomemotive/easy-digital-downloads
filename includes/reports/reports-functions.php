@@ -311,44 +311,49 @@ function parse_endpoint_views( $views ) {
  * @return array List of supported endpoint filters.
  */
 function get_filters() {
-	static $filters = null;
-
-	if ( is_array( $filters ) ) {
-		return $filters;
-	}
-
 	$filters = array(
-		'dates'     => array(
+		'dates'              => array(
 			'label'            => __( 'Date', 'easy-digital-downloads' ),
 			'display_callback' => __NAMESPACE__ . '\\display_dates_filter'
 		),
-		'products'  => array(
+		'products'           => array(
 			'label'            => __( 'Products', 'easy-digital-downloads' ),
 			'display_callback' => __NAMESPACE__ . '\\display_products_filter'
 		),
-		'taxes'     => array(
+		'product_categories' => array(
+			'label'            => __( 'Product Categories', 'easy-digital-downloads' ),
+			'display_callback' => __NAMESPACE__ . '\\display_product_categories_filter'
+		),
+		'taxes'              => array(
 			'label'            => __( 'Exclude Taxes', 'easy-digital-downloads' ),
 			'display_callback' => __NAMESPACE__ . '\\display_taxes_filter'
 		),
-		'gateways'  => array(
+		'gateways'           => array(
 			'label'            => __( 'Gateways', 'easy-digital-downloads' ),
 			'display_callback' => __NAMESPACE__ . '\\display_gateways_filter'
 		),
-		'discounts' => array(
+		'discounts'          => array(
 			'label'            => __( 'Discounts', 'easy-digital-downloads' ),
 			'display_callback' => __NAMESPACE__ . '\\display_discounts_filter'
 		),
-		'regions'   => array(
+		'regions'            => array(
 			'label'            => __( 'Regions', 'easy-digital-downloads' ),
 			'display_callback' => __NAMESPACE__ . '\\display_region_filter'
 		),
-		'countries' => array(
+		'countries'          => array(
 			'label'            => __( 'Countries', 'easy-digital-downloads' ),
 			'display_callback' => __NAMESPACE__ . '\\display_country_filter'
 		)
 	);
 
-	return $filters;
+	/**
+	 * Filters the list of available report filters.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array[] $filters
+	 */
+	return apply_filters( 'edd_report_filters', $filters );
 }
 
 /**
@@ -1030,6 +1035,19 @@ function display_products_filter() {
 }
 
 /**
+ * Handles display of the 'Products Dropdown' filter for reports.
+ *
+ * @since 3.0
+ */
+function display_product_categories_filter() {
+	?>
+	<span class="edd-graph-filter-options graph-option-selection">
+		<?php echo EDD()->html->category_dropdown( 'product_categories', get_filter_value( 'product_categories' ) ); ?>
+	</span>
+	<?php
+}
+
+/**
  * Handles display of the 'Exclude Taxes' filter for reports.
  *
  * @since 3.0
@@ -1120,6 +1138,13 @@ function display_region_filter() {
 	$region  = get_filter_value( 'regions' );
 	$country = get_filter_value( 'countries' );
 
+	if ( empty( $region ) ) {
+		$region = '';
+	}
+	if ( empty( $country ) ) {
+		$country = '';
+	}
+
 	$regions = edd_get_shop_states( $country );
 
 	// Remove empty values.
@@ -1149,6 +1174,9 @@ function display_region_filter() {
  */
 function display_country_filter() {
 	$country = get_filter_value( 'countries' );
+	if ( empty( $country ) ) {
+		$country = '';
+	}
 
 	$countries = edd_get_country_list();
 
@@ -1270,6 +1298,23 @@ function filter_items( $report = false ) {
 	echo ob_get_clean();
 }
 add_action( 'edd_admin_filter_bar_reports', 'EDD\Reports\filter_items' );
+
+/**
+ * Renders the mobile link at the bottom of the payment history page
+ *
+ * @since 1.8.4
+ * @since 3.0 Updated filter to display link next to the reports filters.
+*/
+function mobile_link() {
+	?>
+	<span class="edd-mobile-link">
+		<a href="https://easydigitaldownloads.com/downloads/ios-app/?utm_source=payments&utm_medium=mobile-link&utm_campaign=admin" target="_blank">
+			<?php esc_html_e( 'Try the Sales/Earnings iOS App!', 'easy-digital-downloads' ); ?>
+		</a>
+	</span>
+	<?php
+}
+add_action( 'edd_after_admin_filter_bar_reports', 'EDD\Reports\mobile_link', 100 );
 
 /** Compat ********************************************************************/
 

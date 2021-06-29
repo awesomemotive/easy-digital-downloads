@@ -284,7 +284,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '3.0.0-beta-1.0012' );
+			define( 'EDD_VERSION', '3.0-beta2' );
 		}
 
 		// Plugin Root File.
@@ -367,7 +367,7 @@ final class Easy_Digital_Downloads {
 	 * @since 3.0
 	 */
 	private function setup_application() {
-		edd_setup_components();
+		add_action( 'plugins_loaded', 'edd_setup_components', 100 );
 
 		$GLOBALS['edd_options'] = edd_get_settings();
 
@@ -553,6 +553,7 @@ final class Easy_Digital_Downloads {
 		if ( file_exists( EDD_PLUGIN_DIR . 'includes/deprecated-functions.php' ) ) {
 			require_once EDD_PLUGIN_DIR . 'includes/deprecated-functions.php';
 		}
+		require_once EDD_PLUGIN_DIR . 'includes/deprecated-hooks.php';
 	}
 
 	/**
@@ -566,6 +567,9 @@ final class Easy_Digital_Downloads {
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			require_once EDD_PLUGIN_DIR . 'includes/class-edd-cli.php';
 		}
+
+		// Traits
+		require_once EDD_PLUGIN_DIR . 'includes/traits/trait-refundable-item.php';
 
 		// Adjustments
 		require_once EDD_PLUGIN_DIR . 'includes/adjustments/class-adjustment.php';
@@ -596,6 +600,12 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal-standard.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/manual.php';
 
+		$stripe = EDD_PLUGIN_DIR . 'includes/gateways/stripe/edd-stripe.php';
+
+		if ( file_exists( $stripe ) ) {
+			require_once( $stripe );
+		}
+
 		// Logs
 		require_once EDD_PLUGIN_DIR . 'includes/logs/api-request-log/class-api-request-log.php';
 		require_once EDD_PLUGIN_DIR . 'includes/logs/api-request-log/functions.php';
@@ -620,14 +630,13 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order-adjustment.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order-item.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-order-transaction.php';
+		require_once EDD_PLUGIN_DIR . 'includes/orders/classes/class-refund-validator.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/types.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/orders.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/items.php';
-		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/credits.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/refunds.php';
-		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/discounts.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/addresses.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/adjustments.php';
 		require_once EDD_PLUGIN_DIR . 'includes/orders/functions/transactions.php';
@@ -705,6 +714,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/admin-footer.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-notices.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/class-pass-manager.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-heartbeat.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/class-list-table.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/class-sections.php';
@@ -749,6 +759,9 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/upgrade-actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/tools/tools-actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/admin-deprecated-functions.php';
+
+		require_once EDD_PLUGIN_DIR . 'includes/libraries/class-persistent-dismissible.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/promos/class-promo-handler.php';
 	}
 
 	/**

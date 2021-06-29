@@ -267,7 +267,8 @@ var EDD_Download_Configuration = {
 			// Create the media frame.
 			file_frame = wp.media.frames.file_frame = wp.media( {
 				title: button.data( 'uploader-title' ),
-				library: { type: 'image' },
+				frame: 'post',
+				state: 'insert',
 				button: { text: button.data( 'uploader-button-text' ) },
 				multiple: $( this ).data( 'multiple' ) === '0' ? false : true, // Set to true to allow multiple files to be selected
 			} );
@@ -287,7 +288,7 @@ var EDD_Download_Configuration = {
 			} );
 
 			// When an image is selected, run a callback.
-			file_frame.on( 'select', function() {
+			file_frame.on( 'insert', function() {
 				const selection = file_frame.state().get( 'selection' );
 				selection.each( function( attachment, index ) {
 					attachment = attachment.toJSON();

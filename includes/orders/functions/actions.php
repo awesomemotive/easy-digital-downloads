@@ -10,6 +10,8 @@
  */
 
 // Exit if accessed directly
+use EDD\Adjustments\Adjustment;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -152,6 +154,25 @@ function edd_add_manual_order( $args = array() ) {
 	$order_discount = floatval( $data['discount'] );
 	$order_total    = floatval( $data['total'] );
 
+	$tax_rate  = false;
+	// If taxes are enabled, get the tax rate for the order location.
+	if ( edd_use_taxes() ) {
+		$country = ! empty( $data['edd_order_address']['country'] )
+			? $data['edd_order_address']['country']
+			: false;
+
+		$region = ! empty( $data['edd_order_address']['region'] )
+			? $data['edd_order_address']['region']
+			: false;
+
+		$tax_rate = edd_get_tax_rate_by_location(
+			array(
+				'country' => $country,
+				'region'  => $region,
+			)
+		);
+	}
+
 	// Add the order ID
 	$order_id = edd_add_order(
 		array(
@@ -164,6 +185,7 @@ function edd_add_manual_order( $args = array() ) {
 			'mode'         => $mode,
 			'currency'     => edd_get_currency(),
 			'payment_key'  => $data['payment_key'] ? sanitize_text_field( $data['payment_key'] ) : edd_generate_order_payment_key( $email ),
+			'tax_rate_id'  => ! empty( $tax_rate->id ) ? $tax_rate->id : null,
 			'subtotal'     => $order_subtotal,
 			'tax'          => $order_tax,
 			'discount'     => $order_discount,
@@ -175,6 +197,18 @@ function edd_add_manual_order( $args = array() ) {
 	// Attach order to the customer record.
 	if ( ! empty( $customer ) ) {
 		$customer->attach_payment( $order_id, false );
+	}
+
+	// If we have tax, but no tax rate, manually save the percentage.
+	if ( empty( $tax_rate->id ) && $order_tax > 0 ) {
+		$tax_rate_percentage = $data['tax_rate'];
+		if ( ! empty( $tax_rate_percentage ) ) {
+			if ( $tax_rate_percentage > 0 && $tax_rate_percentage < 1 ) {
+				$tax_rate_percentage = $tax_rate_percentage * 100;
+			}
+
+			edd_update_order_meta( $order_id, 'tax_rate', $tax_rate_percentage );
+		}
 	}
 
 	/** Insert order address **************************************************/
@@ -212,30 +246,21 @@ function edd_add_manual_order( $args = array() ) {
 
 	/** Insert order items ****************************************************/
 
+	// Any adjustments specific to an order item need to be added to the item.
+	foreach ( $data['adjustments'] as $key => $adjustment ) {
+		if ( 'order_item' === $adjustment['object_type'] ) {
+			$data['downloads'][ $adjustment['object_id'] ]['adjustments'][] = $adjustment;
+
+			unset( $data['adjustments'][ $key ] );
+		}
+	}
+
 	if ( ! empty( $data['downloads'] ) ) {
 
 		// Re-index downloads.
 		$data['downloads'] = array_values( $data['downloads'] );
 
 		$downloads = array_reverse( $data['downloads'] );
-		$tax_rate  = false;
-		// If taxes are enabled, get the tax rate for the order location.
-		if ( edd_use_taxes() ) {
-			$country = ! empty( $data['edd_order_address']['country'] )
-				? $data['edd_order_address']['country']
-				: false;
-
-			$region = ! empty( $data['edd_order_address']['region'] )
-				? $data['edd_order_address']['region']
-				: false;
-
-			$tax_rate = edd_get_tax_rate_by_location(
-				array(
-					'country' => $country,
-					'region'  => $region,
-				)
-			);
-		}
 
 		foreach ( $downloads as $cart_key => $download ) {
 			$d = edd_get_download( absint( $download['id'] ) );
@@ -297,44 +322,32 @@ function edd_add_manual_order( $args = array() ) {
 				if ( isset( $download['adjustments'] ) ) {
 					$order_item_adjustments = array_reverse( $download['adjustments'] );
 
-					foreach ( $order_item_adjustments as $order_item_adjustment ) {
+					foreach ( $order_item_adjustments as $index => $order_item_adjustment ) {
 
 						// Discounts are not tracked at the Order Item level.
 						if ( 'discount' === $order_item_adjustment['type'] ) {
 							continue;
 						}
 
+						$type_key = ! empty( $order_item_adjustment['description'] )
+							? sanitize_text_field( strtolower( sanitize_title( $order_item_adjustment['description'] ) ) )
+							: $index;
+
+							$order_item_adjustment_subtotal = floatval( $order_item_adjustment['subtotal'] );
+							$order_item_adjustment_tax      = floatval( $order_item_adjustment['tax'] );
+							$order_item_adjustment_total    = floatval( $order_item_adjustment['total'] );
+
 						edd_add_order_adjustment( array(
 							'object_id'   => $order_item_id,
-							'object_type' => sanitize_text_field( $order_item_adjustment['object_type'] ),
+							'object_type' => 'order_item',
 							'type'        => sanitize_text_field( $order_item_adjustment['type'] ),
+							'type_key'    => $type_key,
 							'description' => sanitize_text_field( $order_item_adjustment['description'] ),
-							'subtotal'    => floatval( $order_item_adjustment['subtotal'] ),
-							'total'       => floatval( $order_item_adjustment['total'] ),
+							'subtotal'    => $order_item_adjustment_subtotal,
+							'tax'         => $order_item_adjustment_tax,
+							'total'       => $order_item_adjustment_total,
 						) );
 					}
-				}
-
-				// Maybe store order tax.
-				if ( $tax_rate ) {
-					// Set the description to the tax rate country.
-					$description = $tax_rate->name;
-
-					// If the tax rate region is set, use that instead of the country.
-					if ( ! empty( $tax_rate->description ) ) {
-						$description = $tax_rate->description;
-					}
-					// Always store tax rate, even if empty.
-					edd_add_order_adjustment(
-						array(
-							'object_id'   => $order_item_id,
-							'object_type' => 'order_item',
-							'type'        => 'tax_rate',
-							'total'       => $tax_rate->amount,
-							'type_id'     => $tax_rate->id,
-							'description' => $description,
-						)
-					);
 				}
 
 				// Increase the earnings for this download.
@@ -346,20 +359,32 @@ function edd_add_manual_order( $args = array() ) {
 
 	/** Insert adjustments ****************************************************/
 
-	$adjustments = array();
-
 	// Adjustments.
 	if ( isset( $data['adjustments'] ) ) {
 		$adjustments = array_reverse( $data['adjustments'] );
 
-		foreach ( $adjustments as $adjustment ) {
+		foreach ( $adjustments as $index => $adjustment ) {
+			if ( 'order_item' === $adjustment['object_type'] ) {
+				continue;
+			}
+
+			$type_key = ! empty( $adjustment['description'] )
+				? sanitize_text_field( strtolower( sanitize_title( $adjustment['description'] ) ) )
+				: $index;
+
+			$adjustment_subtotal = floatval( $adjustment['subtotal'] );
+			$adjustment_tax      = floatval( $adjustment['tax'] );
+			$adjustment_total    = floatval( $adjustment['total'] );
+
 			edd_add_order_adjustment( array(
 				'object_id'   => $order_id,
 				'object_type' => 'order',
 				'type'        => sanitize_text_field( $adjustment['type'] ),
+				'type_key'    => $type_key,
 				'description' => sanitize_text_field( $adjustment['description'] ),
-				'subtotal'    => floatval( $adjustment['subtotal'] ),
-				'total'       => floatval( $adjustment['total'] ),
+				'subtotal'    => $adjustment_subtotal,
+				'tax'         => $adjustment_tax,
+				'total'       => $adjustment_total,
 			) );
 		}
 	}
@@ -375,6 +400,9 @@ function edd_add_manual_order( $args = array() ) {
 				continue;
 			}
 
+			$discount_subtotal = floatval( $discount['subtotal'] );
+			$discount_total    = floatval( $discount['total'] );
+
 			// Store discount.
 			edd_add_order_adjustment( array(
 				'object_id'   => $order_id,
@@ -382,8 +410,8 @@ function edd_add_manual_order( $args = array() ) {
 				'type_id'     => intval( $discount['type_id'] ),
 				'type'        => 'discount',
 				'description' => sanitize_text_field( $discount['code'] ),
-				'subtotal'    => floatval( $discount['subtotal'] ),
-				'total'       => floatval( $discount['total'] ),
+				'subtotal'    => $discount_subtotal,
+				'total'       => $discount_total,
 			) );
 
 			// Increase discount usage.

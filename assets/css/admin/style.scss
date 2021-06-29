@@ -21,6 +21,12 @@
 
 @import "upgrades/v3";
 
+@import "reports/style";
+
+@import "orders/style";
+
+@import "promos/style";
+
 /**
  * Notes:
  *
@@ -35,7 +41,8 @@
 	display: table;
 	clear: both;
 }
-.edd-wrap a {
+.edd-wrap a,
+.edd-notice .notice-dismiss {
 	text-decoration: none;
 }
 
@@ -238,11 +245,6 @@ a.edd-delete:hover {
 	z-index: 9999 !important;
 }
 
-@media screen and (max-width: 782px) {
-	#edd-filters .filter-items {
-		margin: 6px 6px 6px 0;
-	}
-}
 /* =Payment Icon Styling
 -------------------------------------------------------------- */
 
@@ -615,10 +617,6 @@ table.edd-order-overview-summary--refund {
 	}
 }
 
-.edd-order-overview-summary th.column-name {
-	width: 42%;
-}
-
 @media screen and (max-width: 782px) {
 
 	.edd-order-overview-summary .row-actions > *,
@@ -631,10 +629,8 @@ table.edd-order-overview-summary--refund {
 	}
 }
 
-.edd-order-overview-summary th.column-quantity,
-.edd-order-overview-summary th.column-amount,
-.edd-order-overview-summary th.column-subtotal {
-	width: 16%;
+.edd-order-overview-summary th:not(.column-primary) {
+	width: 100px;
 }
 
 .edd-order-overview-summary .row-actions > *:not(:first-child):before {
@@ -675,24 +671,30 @@ table.edd-order-overview-summary--refund {
 }
 
 /** Totals */
-.edd-order-overview-summary__totals .column-primary {
+.edd-order-overview-summary__subtotal .column-primary,
+.edd-order-overview-summary__tax tr:first-of-type .column-primary,
+.edd-order-overview-summary__total .column-primary {
 	font-weight: 600;
 }
 
-.edd-order-overview-summary__totals-total td {
+.edd-order-overview-summary__subtotal td,
+.edd-order-overview-summary__adjustments td,
+.edd-order-overview-summary__tax td,
+.edd-order-overview-summary__total td {
 	vertical-align: middle;
 }
 
-.edd-order-overview-summary__totals td small {
+.edd-order-overview-summary__tax td small,
+.edd-order-overview-summary__total td small {
 	font-weight: normal;
 }
 
-.edd-order-overview-summary__totals .total {
+.edd-order-overview-summary__total .total {
 	color: #017d5c;
 	display: inline-block;
 }
 
-.edd-order-overview-summary__totals .total.is-negative {
+.edd-order-overview-summary__total .total.is-negative {
 	color: #a00;
 }
 
@@ -702,23 +704,23 @@ table.edd-order-overview-summary--refund {
 		margin-left: -50px;
 	}
 
-	.edd-order-overview-summary__totals .total {
+	.edd-order-overview-summary__total .total {
 		font-size: 150%;
 		padding-top: 5px;
 		padding-bottom: 5px;
 	}
 }
 
-.edd-order-overview-summary__totals tr:last-child th,
-.edd-order-overview-summary__totals tr:last-child td:not(:first-of-type) {
+.edd-order-overview-summary__total tr:last-child th,
+.edd-order-overview-summary__total tr:last-child td:not(:first-of-type) {
 	border-top: 1px solid #e5e5e5;
 }
 
-.edd-order-overview-summary__totals .notice {
+.edd-order-overview-summary__total .notice {
 	margin: -1px;
 }
 
-.edd-order-overview-summary__totals .notice p {
+.edd-order-overview-summary__total .notice p {
 	font-weight: normal;
 	margin: 0.5em 0;
 }
@@ -854,6 +856,7 @@ table.edd-order-overview-summary--refund {
 	opacity: 0.75;
 }
 
+.edd-order-overview-add-adjustment .notice,
 .edd-order-overview-add-item .notice {
 	margin: 0 0 1rem;
 }
@@ -877,11 +880,6 @@ table.edd-order-overview-summary--refund {
 /** Columns */
 .wp-list-table.orders .column-number .row-title {
 	display:  block;
-}
-
-.wp-list-table.orders .column-status,
-.wp-list-table.orders .column-date {
-	width: 15%;
 }
 
 /** Status labels */
@@ -1095,106 +1093,14 @@ textarea[name="edd-note"] {
 /* List Tables
 -------------------------------------------------------------- */
 
-.wp-list-table.customers .column-id,
-.wp-list-table.downloads .column-primary {
-	width: 5%;
-}
-
-.wp-list-table.posts .column-sales,
-.wp-list-table.customers .column-order_count,
-.wp-list-table.discounts .column-use_count {
-	width: 10%;
-}
-
-.wp-list-table.customers .column-spent,
-.wp-list-table.customers .column-status,
-.wp-list-table.downloads .column-amount,
-.wp-list-table.downloads .column-status,
-.wp-list-table.discounts .column-amount,
-.wp-list-table.discounts .column-status,
-.wp-list-table.addresses .column-type,
-.wp-list-table.posts .column-earnings {
-	width: 11%;
-}
-
-.wp-list-table.addresses .column-region,
-.wp-list-table.addresses .column-country {
-	width: 10%;
-}
-
-.wp-list-table.addresses .column-type,
-.wp-list-table.posts .column-download_category,
-.wp-list-table.posts .column-download_tag,
-.wp-list-table.posts .column-price {
-	width: 13%
-}
-
-.wp-list-table.customers .column-date_created,
-.wp-list-table.discounts .column-code,
-.wp-list-table.discounts .column-start_date,
-.wp-list-table.discounts .column-end_date,
-.wp-list-table.downloads .column-date,
-.wp-list-table.downloads .column-customer,
-.wp-list-table.addresses .column-date_created,
-.wp-list-table.emails .column-date_created {
-	width: 14%;
-}
-
-.wp-list-table.orderadjustments .column-amount,
-.wp-list-table.orderitems .column-status,
-.wp-list-table.orderitems .column-quantity,
-.wp-list-table.orderitems .column-amount,
-.wp-list-table.orderitems .column-discount,
-.wp-list-table.orderitems .column-tax,
-.wp-list-table.orderitems .column-total,
-.wp-list-table.orderitems .column-subtotal,
-.wp-list-table.refunditems .column-status,
-.wp-list-table.refunditems .column-quantity,
-.wp-list-table.refunditems .column-amount,
-.wp-list-table.refunditems .column-discount,
-.wp-list-table.refunditems .column-tax,
-.wp-list-table.refunditems .column-total,
-.wp-list-table.refunditems .column-subtotal {
-	width: 17%;
-}
-
-.wp-list-table.orders .column-gateway,
-.wp-list-table.orders .column-customer {
-	width: 18%;
-}
-
-.wp-list-table.orders .column-number,
-.wp-list-table.addresses .column-customer,
-.wp-list-table.emails .column-customer,
-.wp-list-table.customers .column-email {
-	width: 20%;
-}
-
-.wp-list-table.apikeys .column-key,
-.wp-list-table.apikeys .column-token,
-.wp-list-table.apikeys .column-secret {
-	width: 25%;
-}
-
-.wp-list-table.orderadjustments .column-desc {
-	width: 34%;
-}
-
 .wp-list-table.customers .column-primary strong,
 .wp-list-table.emails .column-primary strong,
 .wp-list-table.addresses .column-primary strong,
 .wp-list-table.discounts .column-primary strong,
 .wp-list-table.orders .column-primary strong,
 .wp-list-table.orderitems .column-primary strong,
-.wp-list-table.refunditems .column-primary strong,
 .wp-list-table.orderadjustments .column-primary strong {
 	font-size: 14px;
-}
-
-.wp-list-table.orderadjustments .column-desc,
-.wp-list-table.orderitems .column-name,
-.wp-list-table.refunditems .column-name {
-	width: 30%;
 }
 
 .wp-list-table.emails .column-customer .avatar,
@@ -1224,110 +1130,6 @@ textarea[name="edd-note"] {
 
 .wp-list-table .type-download .row-actions {
 	color: #999;
-}
-
-/* Filter Bar Styles
--------------------------------------------------------------- */
-
-#edd-filters {
-	padding: 0 10px;
-	margin: 0;
-}
-
-.download_page_edd-reports #edd-filters {
-	margin-top: 8px;
-	padding-bottom: 0;
-}
-
-#edd-filters .filter-items {
-	margin: 10px 0;
-	display: flex;
-	align-items: center;
-	flex-wrap: wrap;
-	gap: 6px;
-}
-#edd-filters > p {
-	color: #777;
-}
-
-.edd-old-log-filters {
-	margin-top: -30px;
-	margin-left: 2px;
-}
-
-#edd-filters input[type="text"].edd_datepicker,
-#edd-filters input[type="number"] {
-	max-width: 105px;
-}
-
-#edd-filters input[type="number"],
-#edd-filters .button-secondary {
-	vertical-align: middle;
-}
-
-#edd-filters #edd-advanced-filters {
-	position: relative;
-}
-
-#edd-filters #edd-advanced-filters .inside {
-	z-index: 99;
-	position: absolute;
-	top: 29px;
-	right: 0;
-	border: 1px solid #e5e5e5;
-	padding: 0;
-	background: #fafafa;
-	box-shadow: 0 3px 5px rgba(0,0,0,0.2);
-	min-width: 285px;
-	opacity: 0;
-	visibility: hidden;
-}
-
-#edd-filters #edd-advanced-filters fieldset {
-	display: block;
-	padding: 10px 15px 15px;
-	margin: 10px 0;
-}
-
-#edd-filters #edd-advanced-filters fieldset:not(:last-of-type) {
-	border-bottom: 1px solid #e5e5e5;
-}
-
-#edd-filters #edd-advanced-filters fieldset:last-of-type {
-	padding-bottom: 5px;
-}
-
-#edd-filters #edd-advanced-filters fieldset.edd-add-on-filters label,
-#edd-filters #edd-advanced-filters fieldset.edd-add-on-filters span,
-#edd-filters #edd-advanced-filters fieldset.edd-add-on-filters p,
-#edd-filters #edd-advanced-filters fieldset.edd-add-on-filters div {
-	display: block;
-	margin-bottom: 2px;
-}
-
-#edd-filters #edd-advanced-filters div.edd-select-chosen:not(:last-child) {
-	margin-bottom: 10px;
-}
-
-#edd-filters #edd-advanced-filters.open .edd-advanced-filters-button {
-	background: #eee;
-	border-color: #999;
-	box-shadow: inset 0 2px 5px -3px rgba( 0, 0, 0, 0.5 );
-	-webkit-transform: translateY(1px);
-	transform: translateY(1px);
-}
-
-#edd-filters #edd-advanced-filters.open .inside {
-	visibility: visible;
-	opacity: 1;
-    -webkit-transition: opacity 0.2s ease-in;
-       -moz-transition: opacity 0.2s ease-in;
-         -o-transition: opacity 0.2s ease-in;
-		    transition: opacity 0.2s ease-in;
-}
-
-#edd-filters .search-form {
-	margin: 9px 0;
 }
 
 /* Nav Tab Styles
@@ -1399,31 +1201,6 @@ tr.status-refunded td {
 marquee {
 	padding: 0;
 	margin: 0;
-}
-.edd-mobile-link {
-	float: right;
-	line-height: 32px;
-	padding: 8px 0;
-}
-.edd-mobile-link a {
-	text-decoration: none;
-}
-.edd-mobile-link a:before,
-.edd-mobile-link a:after {
-	display: inline-block;
-	-webkit-font-smoothing: antialiased;
-	font: normal 20px/30px "dashicons";
-	vertical-align: top;
-	margin: 1px 0 0 0;
-	padding: 0;
-}
-.edd-mobile-link a:before {
-	content: "\f470";
-	color: #656a6f;
-	margin-right: -3px;
-}
-.edd-mobile-link a:after {
-	content: "\f504";
 }
 
 @media handheld, only screen and (max-width: 640px) {
@@ -1808,32 +1585,7 @@ input[class*="edd-price-field"] {
 #edd-order-refunds-list {
 	padding-left: 25px;
 }
-#edd-refund-submit-button-wrapper .spinner {
-	float: none;
-	vertical-align: top;
-}
-#edd-submit-refund-status {
-	text-align: center;
-	font-size: 1.2em;
-	vertical-align: middle;
-}
-#edd-submit-refund-status .edd-submit-refund-message::before{
-	font-family: dashicons;
-	font-size: 1.5em;
-	vertical-align: middle;
-	color: #fff;
-	border-radius: 16px;
-	margin: 5px;
-}
-#edd-submit-refund-status .edd-submit-refund-message.success::before{
-	content: "\f147";
-	background-color: #339933;
-	padding-right: 1px;
-}
-#edd-submit-refund-status .edd-submit-refund-message.fail::before{
-	content: "\f335";
-	background-color: #993333;
-}
+
 #poststuff .edd-order-data .inside {
 	margin: 0;
 	padding: 0;
@@ -1853,18 +1605,7 @@ input[class*="edd-price-field"] {
 	font-style: italic;
 	padding: 5px;
 }
-#edd-refund-order-dialog #edd-refund-submit-subtotal td {
-	border-top: 2px solid #9c9c9c;
-}
-#edd-refund-submit-button-wrapper,
-#edd-refund-order-dialog .edd-refund-submit-line-total td:first-child {
-	text-align: right;
-}
-#edd-refund-order-dialog .edd-order-item__label {
-	font-size: 14px;
-	font-weight: 600;
-	vertical-align: baseline;
-}
+
 #edd_general_logs p {
 	margin: 0;
 	padding: 0;
@@ -2093,45 +1834,6 @@ input[class*="edd-price-field"] {
 		padding: 6px 10px;
 	}
 
-	.refunditems tr {
-		display: flex;
-	}
-
-	.refunditems tr.refunditem {
-		flex-wrap: wrap;
-	}
-
-	.refunditems td {
-		flex: 1 0 2.5em;
-	}
-
-	.refunditems tr.refunditem td:not(.check-column) {
-		flex-basis: calc(100% - 60px);
-	}
-
-	.refunditems tr.refunditem td:not(.check-column):not(.column-name) {
-		flex-basis: 100px;
-		display: inline-flex;
-		justify-content: flex-start;
-	}
-
-	.refunditems th:not(.column-name),
-	.refunditems tr.refunditem td.column-name:before {
-		display: none !important;
-	}
-
-	.refunditems tr.refunditem td:not(.check-column):not(.column-name):before {
-		position: relative;
-		display: inline-block;
-		margin-right: 10px;
-		left: unset;
-		width: unset;
-	}
-
-	.wp-list-table.refunditems .column-name {
-		width: 100%;
-	}
-
 	.edd-refund-submit-line-total td:last-of-type {
 		flex: 0 0 120px;
 	}
@@ -2322,25 +2024,6 @@ body.download_page_edd-reports {
 	margin-bottom: 16px;
 }
 
-.download_page_edd-reports #edd-filters {
-	margin-bottom: -1px;
-	box-shadow: none;
-	justify-content: space-between;
-	display: flex;
-	flex-wrap: wrap;
-}
-
-.download_page_edd-reports #edd-filters .filter-items {
-	flex: 1 1 75%;
-}
-
-@media screen and ( max-width: 782px ) {
-
-	.download_page_edd-reports #edd-filters .filter-items {
-		flex-basis: 100%;
-	}
-}
-
 .download_page_edd-reports #edd-item-wrapper {
 	margin: 0;
 }
@@ -2348,11 +2031,6 @@ body.download_page_edd-reports {
 #edd-dashboard-widgets-wrap .postbox h2,
 #edd-dashboard-widgets-wrap .postbox h3 {
 	cursor: default;
-}
-
-#edd-filters .filter-items .edd-date-range-options {
-	display: inline-block;
-	margin: 10px 0;
 }
 
 .edd-date-range-options .edd_datepicker {
@@ -2576,35 +2254,35 @@ span.edd-to-and-from--separator {
 }
 
 [id*="edd-sendwp-"].button,
-[id*="edd-jilt-"].button {
+[id*="edd-recapture-"].button {
 	font-size: 16px;
 	height: auto;
 	padding: 8px 14px;
 	margin: 6px 0 0;
 }
 [id*="edd-sendwp-"].button .dashicons,
-[id*="edd-jilt-"].button .dashicons {
+[id*="edd-recapture-"].button .dashicons {
 	line-height: 29px;
 	margin-right: 8px;
 }
 [id*="edd-sendwp-"].button .edd-loading,
 [id*="edd-sendwp-"].button .edd-loading:after,
-[id*="edd-jilt-"].button .edd-loading,
-[id*="edd-jilt-"].button .edd-loading:after {
+[id*="edd-recapture-"].button .edd-loading,
+[id*="edd-recapture-"].button .edd-loading:after {
 	border-radius: 50%;
 	display: inline-block;
 	width: 14px;
 	height: 14px;
 }
 [id*="edd-sendwp-"].button .edd-loading,
-[id*="edd-jilt-"].button .edd-loading {
+[id*="edd-recapture-"].button .edd-loading {
 	position: relative;
 	top: 3px;
 	margin-left: 4px;
 	box-shadow: 0 0 2px rgba(0,0,0,.2);
 }
 [id*="edd-sendwp-"].button .edd-loading,
-[id*="edd-jilt-"].button .edd-loading {
+[id*="edd-recapture-"].button .edd-loading {
 	-webkit-animation: edd-spinning 1.1s infinite linear;
 	animation: edd-spinning 1.1s infinite linear;
 	border-top: 2px solid rgba(255, 255, 255, 0.5);
@@ -2617,14 +2295,14 @@ span.edd-to-and-from--separator {
 	transform: translateZ(0);
 }
 #edd-sendwp-disconnect.button .edd-loading.dark,
-#edd-jilt-disconnect.button .edd-loading.dark {
+#edd-recapture-disconnect.button .edd-loading.dark {
 	border-top-color: rgba(0, 0, 0, 0.2);
 	border-right-color: rgba(0, 0, 0, 0.2);
 	border-bottom-color: rgba(0, 0, 0, 0.2);
 	border-left-color: #666;
 	box-shadow: none;
 }
-.jilt-notice {
+.recapture-notice {
 	position: relative;
 }
 @-webkit-keyframes edd-spinning {
@@ -3097,7 +2775,7 @@ span.edd-to-and-from--separator {
 
 #edd-item-wrapper {
 	background: #fff;
-	border: 1px solid #e5e5e5;
+	border: 1px solid $wp-border;
 	-webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
 	box-shadow: 0 1px 1px rgba(0,0,0,0.04);
 	position: relative;
@@ -3458,10 +3136,6 @@ span.edd-to-and-from--separator {
 	}
 	.edd-bundled-product-row .edd-bundled-product-item-reorder .edd-product-file-reorder {
 		padding: 0;
-	}
-
-	#edd-filters span {
-		margin: 2px 0;
 	}
 
 	.download_page_edd-reports .button {

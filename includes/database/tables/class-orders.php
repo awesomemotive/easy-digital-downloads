@@ -38,7 +38,7 @@ final class Orders extends Table {
 	 * @since  3.0
 	 * @var    int
 	 */
-	protected $version = 202002141;
+	protected $version = 202103261;
 
 	/**
 	 * Array of upgrade versions and methods.
@@ -48,12 +48,11 @@ final class Orders extends Table {
 	 * @var    array
 	 */
 	protected $upgrades = array(
-		'201806111' => 201806111,
-		'201807273' => 201807273,
-		'201808141' => 201808141,
-		'201808151' => 201808151,
 		'201901111' => 201901111,
 		'202002141' => 202002141,
+		'202012041' => 202012041,
+		'202102161' => 202102161,
+		'202103261' => 202103261,
 	);
 
 	/**
@@ -73,10 +72,11 @@ final class Orders extends Table {
 			customer_id bigint(20) unsigned NOT NULL default '0',
 			email varchar(100) NOT NULL default '',
 			ip varchar(60) NOT NULL default '',
-			gateway varchar(20) NOT NULL default '',
+			gateway varchar(100) NOT NULL default '',
 			mode varchar(20) NOT NULL default '',
 			currency varchar(20) NOT NULL default '',
 			payment_key varchar(64) NOT NULL default '',
+			tax_rate_id bigint(20) DEFAULT NULL,
 			subtotal decimal(18,9) NOT NULL default '0',
 			discount decimal(18,9) NOT NULL default '0',
 			tax decimal(18,9) NOT NULL default '0',
@@ -88,7 +88,7 @@ final class Orders extends Table {
 			uuid varchar(100) NOT NULL default '',
 			PRIMARY KEY (id),
 			KEY order_number (order_number({$max_index_length})),
-			KEY status (status(20)),
+			KEY status_type (status, type),
 			KEY user_id (user_id),
 			KEY customer_id (customer_id),
 			KEY email (email(100)),
@@ -121,101 +121,6 @@ final class Orders extends Table {
 
 		return $created;
 
-	}
-
-	/**
-	 * Upgrade to version 201806111
-	 * - Add the `date_refundable` datetime column.
-	 *
-	 * @since 3.0
-	 *
-	 * @return boolean
-	 */
-	protected function __201806111() {
-
-		// Look for column
-		$result = $this->get_db()->query( "SHOW COLUMNS FROM {$this->table_name} LIKE 'date_refundable'" );
-
-		// Maybe add column
-		if ( ! $this->is_success( $result ) ) {
-			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `date_refundable` datetime DEFAULT '0000-00-00 00:00:00' AFTER `date_completed`;
-			" );
-		}
-
-		// Return success/fail
-		return $this->is_success( $result );
-	}
-
-	/**
-	 * Upgrade to version 201807271
-	 * - Add the `uuid` varchar column
-	 *
-	 * @since 3.0
-	 *
-	 * @return boolean
-	 */
-	protected function __201807273() {
-
-		// Look for column
-		$result = $this->column_exists( 'uuid' );
-
-		// Maybe add column
-		if ( false === $result ) {
-			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `uuid` varchar(100) default '' AFTER `date_refundable`;
-			" );
-		}
-
-		// Return success/fail.
-		return $this->is_success( $result );
-	}
-
-	/**
-	 * Upgrade to version 201808141
-	 * - Add the `type` column.
-	 *
-	 * @since 3.0
-	 *
-	 * @return boolean
-	 */
-	protected function __201808141() {
-
-		// Look for column
-		$result = $this->column_exists( 'type' );
-
-		// Maybe add column
-		if ( false === $result ) {
-			$result = $this->get_db()->query( "
-				ALTER TABLE {$this->table_name} ADD COLUMN `type` varchar(20) NOT NULL default 'sale' AFTER status;
-			" );
-		}
-
-		// Return success/fail.
-		return $this->is_success( $result );
-	}
-
-	/**
-	 * Upgrade to version 201808151
-	 * - Change the default value of the `type` column to `sale`.
-	 *
-	 * @since 3.0
-	 *
-	 * @return boolean
-	 */
-	protected function __201808151() {
-
-		// Alter the database
-		$this->get_db()->query( "
-			ALTER TABLE {$this->table_name} MODIFY COLUMN `type` varchar(20) NOT NULL default 'sale';
-		" );
-
-		$this->get_db()->query( "
-			UPDATE {$this->table_name} SET `type` = 'sale';
-		" );
-
-		// Return success/fail.
-		return $this->is_success( true );
 	}
 
 	/**
@@ -274,5 +179,62 @@ final class Orders extends Table {
 
 		return $this->is_success( $result );
 
+	}
+
+	/**
+	 * Upgrade to version 202012041
+	 * 	- Add column `tax_rate_id`
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	protected function __202012041() {
+		// Look for column
+		$result = $this->column_exists( 'tax_rate_id' );
+
+		// Maybe add column
+		if ( false === $result ) {
+			$result = $this->get_db()->query( "
+				ALTER TABLE {$this->table_name} ADD COLUMN tax_rate_id bigint(20) DEFAULT NULL AFTER payment_key;
+			" );
+		}
+
+		// Return success/fail.
+		return $this->is_success( $result );
+	}
+
+	/**
+	 * Upgrade to version 202102161
+	 * 	- Drop `status` index
+	 * 	- Create new `status_type` index
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	protected function __202102161() {
+		if ( $this->index_exists( 'status' ) ) {
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} DROP INDEX status" );
+		}
+
+		if ( ! $this->index_exists( 'status_type' ) ) {
+			$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX status_type (status, type)" );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Upgrade to version 202103261
+	 *  - Change length of `gateway` column to `100`.
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	protected function __202103261() {
+		$result = $this->get_db()->query( "
+			ALTER TABLE {$this->table_name} MODIFY COLUMN `gateway` varchar(100) NOT NULL default '';
+		" );
+
+		return $this->is_success( $result );
 	}
 }

@@ -193,20 +193,8 @@ function edd_update_payment_details( $data = array() ) {
 	// Address
 	$address = $data['edd_order_address'];
 
-	// Setup first and last name from input values.
-	$name       = $customer->name;
-	$names      = explode( ' ', $name );
-	$first_name = ! empty( $names[0] ) ? $names[0] : '';
-	$last_name  = '';
-
-	if ( ! empty( $names[1] ) ) {
-		unset( $names[0] );
-		$last_name = implode( ' ', $names );
-	}
-
 	edd_update_order_address( absint( $address['address_id'] ), array(
-		'first_name'  => $first_name,
-		'last_name'   => $last_name,
+		'name'        => $customer->name,
 		'address'     => $address['address'],
 		'address2'    => $address['address2'],
 		'city'        => $address['city'],
@@ -251,47 +239,33 @@ function edd_update_payment_details( $data = array() ) {
 add_action( 'edd_update_payment_details', 'edd_update_payment_details' );
 
 /**
- * Trigger a Purchase Deletion
- *
- * @since 1.3.4
- * @param array $data Arguments passed
- * @return void
- */
-function edd_trigger_purchase_delete( $data ) {
-	if ( wp_verify_nonce( $data['_wpnonce'], 'edd_payment_nonce' ) ) {
-
-		$payment_id = absint( $data['purchase_id'] );
-
-		if ( ! current_user_can( 'delete_shop_payments', $payment_id ) ) {
-			wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
-		}
-
-		edd_delete_purchase( $payment_id );
-
-		edd_redirect( admin_url( '/edit.php?post_type=download&page=edd-payment-history&edd-message=payment_deleted' ) );
-	}
-}
-add_action( 'edd_delete_payment', 'edd_trigger_purchase_delete' );
-
-/**
- * New in 3.0, destroys an order, and all it's data, and related data.
+ * New in 3.0, permanently destroys an order, and all its data, and related data.
  *
  * @since 3.0
  *
- * @param $data
+ * @param array $data Arguments passed.
  */
 function edd_trigger_destroy_order( $data ) {
+
 	if ( wp_verify_nonce( $data['_wpnonce'], 'edd_payment_nonce' ) ) {
 
 		$payment_id = absint( $data['purchase_id'] );
 
 		if ( ! current_user_can( 'delete_shop_payments', $payment_id ) ) {
-			wp_die( __( 'You do not have permission to edit this payment record', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+			wp_die( esc_html__( 'You do not have permission to edit this order.', 'easy-digital-downloads' ), esc_html__( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 		}
 
 		edd_destroy_order( $payment_id );
 
-		edd_redirect( admin_url( '/edit.php?post_type=download&page=edd-payment-history&edd-message=payment_deleted' ) );
+		$redirect_link = add_query_arg(
+			array(
+				'page'        => 'edd-payment-history',
+				'edd-message' => 'payment_deleted',
+				'status'      => 'trash',
+			),
+			edd_get_admin_base_url()
+		);
+		edd_redirect( $redirect_link );
 	}
 }
 add_action( 'edd_delete_order', 'edd_trigger_destroy_order' );
@@ -481,17 +455,18 @@ function edd_ajax_generate_refund_form() {
 		<span class="edd-submit-refund-message"></span>
 		<a class="edd-submit-refund-url" href=""><?php _e( 'View Refund', 'easy-digital-downloads' ); ?></a>
 	</div>
-	<?php
-	// Load list table if not already loaded
-	if ( ! class_exists( '\\EDD\\Admin\\Refund_Items_Table' ) ) {
-		require_once 'class-refund-items-table.php';
-	}
+	<form id="edd-submit-refund-form" method="POST">
+		<?php
+		// Load list table if not already loaded
+		if ( ! class_exists( '\\EDD\\Admin\\Refund_Items_Table' ) ) {
+			require_once 'class-refund-items-table.php';
+		}
 
-	$refund_items = new EDD\Admin\Refund_Items_Table();
-	$refund_items->prepare_items();
-	$refund_items->display();
-	?>
-	</table>
+		$refund_items = new EDD\Admin\Refund_Items_Table();
+		$refund_items->prepare_items();
+		$refund_items->display();
+		?>
+	</form>
 	<?php
 	$html = trim( ob_get_clean() );
 
@@ -515,60 +490,83 @@ function edd_ajax_process_refund_form() {
 
 	// Verify we have a logged user.
 	if ( ! is_user_logged_in() ) {
-		$return = array(
-			'success' => false,
-			'message' => __( 'You must be logged in to perform this action.', 'easy-digital-downloads' ),
-		);
-
-		wp_send_json( $return, 401 );
+		wp_send_json_error( __( 'You must be logged in to perform this action.', 'easy-digital-downloads' ), 401 );
 	}
 
 	// Verify the logged in user has permission to edit shop payments.
 	if ( ! current_user_can( 'edit_shop_payments' ) ) {
-		$return = array(
-			'success' => false,
-			'message' => __( 'Your account does not have permission to perform this action', 'easy-digital-downloads' ),
-		);
-
-		wp_send_json( $return, 401 );
+		wp_send_json_error( __( 'Your account does not have permission to perform this action.', 'easy-digital-downloads' ), 401 );
 	}
+
+	if ( empty( $_POST['data'] ) || empty( $_POST['order_id'] ) ) {
+		wp_send_json_error( __( 'Missing form data or order ID.', 'easy-digital-downloads' ), 400 );
+	}
+
+	// Get our data out of the serialized string.
+	parse_str( $_POST['data'], $form_data );
 
 	// Verify the nonce.
-	$nonce = ! empty( $_POST['nonce'] ) ? sanitize_text_field( $_POST['nonce'] ) : false;
+	$nonce = ! empty( $form_data['edd_process_refund'] ) ? sanitize_text_field( $form_data['edd_process_refund'] ) : false;
 	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'edd_process_refund' ) ) {
-		$return = array(
-			'success' => false,
-			'message' => __( 'Nonce validation failed when submitting refund.', 'easy-digital-downloads' ),
-		);
-
-		wp_send_json( $return, 401 );
+		wp_send_json_error( __( 'Nonce validation failed when submitting refund.', 'easy-digital-downloads' ), 401 );
 	}
 
-	$order_id = absint( $_POST['order_id'] );
-	$item_ids = array_map( 'absint', $_POST['item_ids'] );
-	$refund_id = edd_refund_order( $order_id, $item_ids );
+	// Collect selected order items.
+	$order_items = array();
+	if ( ! empty( $form_data['refund_order_item'] ) && is_array( $form_data['refund_order_item'] ) ) {
+		foreach( $form_data['refund_order_item'] as $order_item_id => $order_item ) {
+			// If there's no quantity or subtotal - bail.
+			if ( empty( $order_item['quantity'] ) || empty( $order_item['subtotal'] ) ) {
+				continue;
+			}
 
-	if ( ! empty( $refund_id ) ) {
+			$order_items[] = array(
+				'order_item_id' => absint( $order_item_id ),
+				'quantity'      => intval( $order_item['quantity'] ),
+				'subtotal'      => edd_sanitize_amount( $order_item['subtotal'] ),
+				'tax'           => ! empty( $order_item['tax'] ) ? edd_sanitize_amount( $order_item['tax'] ) : 0.00
+			);
+		}
+	}
+
+	// Collect selected adjustments.
+	$adjustments = array();
+	if ( ! empty( $form_data['refund_order_adjustment'] ) && is_array( $form_data['refund_order_adjustment'] ) ) {
+		foreach( $form_data['refund_order_adjustment'] as $adjustment_id => $adjustment ) {
+			// If there's no quantity or subtotal - bail.
+			if ( empty( $adjustment['quantity'] ) || empty( $adjustment['subtotal'] ) ) {
+				continue;
+			}
+
+			$adjustments[] = array(
+				'adjustment_id' => absint( $adjustment_id ),
+				'quantity'      => intval( $adjustment['quantity'] ),
+				'subtotal'      => floatval( edd_sanitize_amount( $adjustment['subtotal'] ) ),
+				'tax'           => ! empty( $adjustment['tax'] ) ? floatval( edd_sanitize_amount( $adjustment['tax'] ) ) : 0.00
+			);
+		}
+	}
+
+	$order_id  = absint( $_POST['order_id'] );
+	$refund_id = edd_refund_order( $order_id, $order_items, $adjustments );
+
+	if ( is_wp_error( $refund_id ) ) {
+		wp_send_json_error( $refund_id->get_error_message() );
+	} elseif ( ! empty( $refund_id ) ) {
 		$return = array(
-			'success'    => true,
 			'refund_id'  => $refund_id,
 			'message'    => sprintf( __( 'Refund successfully processed.', 'easy-digital-downloads' ) ),
 			'refund_url' => edd_get_admin_url(
 				array(
 					'page'      => 'edd-payment-history',
 					'view'      => 'view-refund-details',
-					'id'        => $refund_id,
+					'id'        => urlencode( $refund_id ),
 				)
 			)
 		);
-		wp_send_json( $return, 200 );
+		wp_send_json_success( $return, 200 );
 	} else {
-		$return = array(
-			'success'    => false,
-			'message'    => sprintf( __( 'Unable to process refund.', 'easy-digital-downloads' ) ),
-		);
-
-		wp_send_json( $return, 200 );
+		wp_send_json_error( __( 'Unable to process refund.', 'easy-digital-downloads' ), 401 );
 	}
 }
 add_action( 'wp_ajax_edd_process_refund_form', 'edd_ajax_process_refund_form' );

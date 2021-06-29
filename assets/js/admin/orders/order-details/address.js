@@ -84,6 +84,7 @@ jQueryReady( () => {
 					rate = rate * 100;
 
 					overviewState.set( 'hasTax', {
+						...overviewState.get( 'hasTax' ),
 						country,
 						region,
 						rate,
@@ -95,7 +96,7 @@ jQueryReady( () => {
 				 * @since 3.0
 				 */
 				error() {
-					overviewState.set( 'hasTax', false );
+					overviewState.set( 'hasTax', 'none' );
 				},
 			} );
 		}

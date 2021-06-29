@@ -577,6 +577,12 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 
 		$this->assertEquals( 2, $this->payment->cart_details[0]['tax'] );
 		$this->assertEquals( 2, $this->payment->tax );
+
+		$this->payment->modify_cart_item( 0, array( 'tax' => 0 ) );
+		$this->payment->save();
+
+		$this->assertEquals( 0, $this->payment->cart_details[0]['tax']  );
+		$this->assertEquals( 0, $this->payment->tax );
 	}
 
 	public function test_modify_cart_item_discount() {
@@ -862,6 +868,76 @@ class EDD_Payment_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( 0, $payment->cart_details[2]['item_number']['options']['price_id'] );
 		$this->assertEquals( 10, $payment->cart_details[2]['item_price'] );
 
+	}
+
+	/**
+	 * Ensures that setting a dynamic tax rate to a payment saves that in order meta and can be retrieved.
+	 *
+	 * This is testing backwards compatibility, when in 2.x you could set a tax rate without a referencing
+	 * ID. We need to ensure this is accessible in 3.x when using an order object.
+	 */
+	public function test_setting_dynamic_tax_rate_saves_rate_in_order_meta() {
+		$payment = $this->payment;
+		$payment->tax_rate = 0.2;
+
+		$tax_amount = $payment->total * 0.2;
+		$payment->increase_tax( $tax_amount );
+		$payment->save();
+
+		// Now fetch the order equivalent.
+		$order = edd_get_order( $payment->ID );
+
+		$this->assertEquals( 20, $order->get_tax_rate() );
+		$this->assertEquals( $tax_amount, $order->tax );
+
+		$this->assertEquals( 20, edd_get_order_meta( $payment->ID, 'tax_rate', true ) );
+	}
+
+	/**
+	 * In 2.x, tax rates are stored as decimals. In 3.x they are stored as percentages. When using
+	 * EDD_Payment you should always get a decimal back.
+	 */
+	public function test_get_tax_rate_returns_decimal() {
+		$payment = new \EDD_Payment();
+		$payment->tax_rate = 0.2;
+		$payment->total    = 10;
+
+		$tax_amount = $payment->total * 0.2;
+		$payment->increase_tax( $tax_amount );
+		$payment->save();
+
+		// Fetch a new payment object.
+		$payment = edd_get_payment( $payment->ID );
+		$this->assertEquals( 0.2, $payment->tax_rate );
+	}
+
+	/**
+	 * This tests backwards compatibility in `edd_receipt_show_download_files()` when passing
+	 * an array as the third parameter instead of the new `Order_Item` object. This test
+	 * ensures that the function successfully converts that array to an order item object
+	 * to be passed through to the filter `edd_order_receipt_show_download_files`.
+	 *
+	 * @covers \edd_receipt_show_download_files()
+	 */
+	public function test_receipt_show_download_files_converts_array_to_order_item() {
+		$payment      = $this->payment;
+		$receipt_args = array(
+			'id' => $payment->ID,
+		);
+		$cart         = edd_get_payment_meta_cart_details( $payment->ID, true );
+		$cart_item    = reset( $cart );
+		$download_id  = $cart_item['id'];
+
+		// Test sending a payment item array to the filter, which will convert it to an \EDD\Orders\Order_Item object.
+		add_filter( 'edd_order_receipt_show_download_files', function( $ret, $item_id, $order_receipt_args, $order_item_object ) use ( $cart_item ) {
+			$this->assertInstanceOf( '\\EDD\\Orders\\Order_Item', $order_item_object );
+			$this->assertTrue( $order_item_object->id === $cart_item['order_item_id'] );
+			$this->assertTrue( $order_item_object->product_id === $cart_item['id'] );
+			$this->assertTrue( (int) $order_item_object->product_id === (int) $item_id );
+
+			return $ret;
+		}, 10, 4 );
+		$this->assertTrue( edd_receipt_show_download_files( $download_id, $receipt_args, $cart_item ) );
 	}
 
 	/* Helpers ***************************************************************/

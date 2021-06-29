@@ -130,6 +130,7 @@ class EDD_Payment_History_Table extends List_Table {
 		$order_total_filter_amount = isset( $_GET['order-amount-filter-value'] ) ? sanitize_text_field( $_GET['order-amount-filter-value'] ) : '';
 		$country                   = isset( $_GET['order-country-filter-value'] ) ? sanitize_text_field( $_GET['order-country-filter-value'] ) : '';
 		$region                    = isset( $_GET['order-region-filter-value'] ) ? sanitize_text_field( $_GET['order-region-filter-value'] ) : '';
+		$product_id                = ! empty( $_GET['product-id'] ) ? sanitize_text_field( $_GET['product-id'] ) : false;
 
 		$status     = $this->get_status();
 		$clear_url  = $this->base_url;
@@ -137,10 +138,6 @@ class EDD_Payment_History_Table extends List_Table {
 		// Filters
 		$all_modes    = edd_get_payment_modes();
 		$all_gateways = edd_get_payment_gateways();
-
-		// Advanced filters
-		$advanced_filters_applied = (bool) ! empty( $order_total_filter_amount ) || ! empty( $country ) || ! empty( $region );
-		$advanced_filters_applied = apply_filters( 'edd_orders_table_advanced_filters_applied', $advanced_filters_applied );
 
 		// No modes
 		if ( empty( $all_modes ) ) {
@@ -245,6 +242,19 @@ class EDD_Payment_History_Table extends List_Table {
 					?>
 
 					<input type="number" name="order-amount-filter-value" min="0" step="0.01" value="<?php echo esc_attr( $order_total_filter_amount ); ?>"/>
+				</fieldset>
+
+				<fieldset>
+					<legend><?php esc_html_e( 'Product', 'easy-digital-downloads' ); ?></legend>
+					<?php
+					echo EDD()->html->product_dropdown( array(
+						'id'         => 'orders-filter-product-id',
+						'name'       => 'product-id',
+						'chosen'     => true,
+						'selected'   => $product_id,
+						'variations' => true
+					) );
+					?>
 				</fieldset>
 
 				<fieldset>
@@ -803,7 +813,7 @@ class EDD_Payment_History_Table extends List_Table {
 		}
 
 		$args = array_filter( array(
-			'user'        => $user,
+			'user_id'     => $user,
 			'customer_id' => $customer,
 			'status'      => $status,
 			'gateway'     => $gateway,
@@ -867,6 +877,17 @@ class EDD_Payment_History_Table extends List_Table {
 						'compare' => $filter_type,
 					),
 				);
+			}
+		}
+
+		// Maybe filter by product.
+		if ( ! empty( $_GET['product-id'] ) ) {
+			if ( false !== strpos( $_GET['product-id'], '_' ) ) {
+				$product_pieces           = explode( '_', $_GET['product-id'] );
+				$args['product_id']       = absint( $product_pieces[0] );
+				$args['product_price_id'] = absint( $product_pieces[1] );
+			} else {
+				$args['product_id'] = absint( $_GET['product-id'] );
 			}
 		}
 

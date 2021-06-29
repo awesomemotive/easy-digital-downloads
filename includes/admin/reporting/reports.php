@@ -488,6 +488,7 @@ function edd_register_downloads_report( $reports ) {
 		$download_label = '';
 		if ( $download_data ) {
 			$download = edd_get_download( $download_data['download_id'] );
+			$prices   = $download->get_prices();
 			if ( $download_data['price_id'] ) {
 				$args       = array( 'price_id' => $download_data['price_id'] );
 				$price_name = edd_get_price_name( $download->ID, $args );
@@ -549,7 +550,7 @@ function edd_register_downloads_report( $reports ) {
 				'charts' => $charts,
 				'tables' => $tables,
 			),
-			'filters'   => array( 'products', 'taxes' ),
+			'filters'   => array( 'dates', 'products', 'taxes' ),
 		) );
 
 		$reports->register_endpoint( 'most_valuable_download', array(
@@ -660,15 +661,13 @@ function edd_register_downloads_report( $reports ) {
 			'label' => __( 'Sales by Variation', 'easy-digital-downloads' ) . $download_label,
 			'views' => array(
 				'chart' => array(
-					'data_callback' => function() use ( $download_data, $download, $dates ) {
+					'data_callback' => function() use ( $download_data, $download, $dates, $prices ) {
 						$stats = new EDD\Stats();
 						$sales = $stats->get_order_item_count( array(
 							'product_id' => absint( $download_data['download_id'] ),
 							'range'      => $dates['range'],
 							'grouped'    => true,
 						) );
-
-						$prices = $download->get_prices();
 
 						// Set all values to 0.
 						foreach ( $prices as $key => $price ) {
@@ -741,6 +740,7 @@ function edd_register_downloads_report( $reports ) {
 						'datasets'         => array(
 							'earnings' => array(
 								'label'           => __( 'Earnings', 'easy-digital-downloads' ),
+								'type'            => 'currency',
 								'backgroundColor' => array(
 									'rgb(133,175,91)',
 									'rgb(9,149,199)',
@@ -935,7 +935,6 @@ function edd_register_refunds_report( $reports ) {
 					'refunds_chart',
 				),
 			),
-			'filters'   => array( 'taxes' ),
 		) );
 
 		$reports->register_endpoint( 'refund_count', array(
@@ -1169,7 +1168,7 @@ function edd_register_payment_gateways_report( $reports ) {
 				'tables' => $tables,
 				'charts' => $charts,
 			),
-			'filters'   => array( 'gateways', 'taxes' ),
+			'filters'   => array( 'dates', 'gateways', 'taxes' ),
 		) );
 
 		$reports->register_endpoint( 'sales_per_gateway', array(
@@ -1593,7 +1592,7 @@ function edd_register_taxes_report( $reports ) {
 				'tiles'  => $tiles,
 				'tables' => $tables,
 			),
-			'filters'   => array( 'products', 'countries', 'regions' ),
+			'filters'   => array( 'dates', 'products', 'countries', 'regions' ),
 		) );
 
 		$reports->register_endpoint( 'total_tax_collected', array(
@@ -1747,7 +1746,7 @@ function edd_register_file_downloads_report( $reports ) {
 				'tables' => $tables,
 				'charts' => $charts,
 			),
-			'filters'   => array( 'products' ),
+			'filters'   => array( 'dates', 'products' ),
 		) );
 
 		$reports->register_endpoint( 'number_of_file_downloads', array(
@@ -2031,7 +2030,7 @@ function edd_register_discounts_report( $reports ) {
 				'tables' => $tables,
 				'charts' => $charts,
 			),
-			'filters'   => array( 'discounts' ),
+			'filters'   => array( 'dates', 'discounts' ),
 		) );
 
 		$reports->register_endpoint( 'number_of_discounts_used', array(
@@ -2319,7 +2318,6 @@ function edd_register_customer_report( $reports ) {
 					'new_customers',
 				),
 			),
-			'filters'   => array( 'dates', 'taxes' ),
 		) );
 
 		$reports->register_endpoint( 'lifetime_value_of_customer', array(
@@ -2522,17 +2520,18 @@ add_action( 'edd_reports_init', 'edd_register_customer_report' );
  * @param \EDD\Reports\Data\Report_Registry $reports Report registry.
  */
 function edd_register_export_report( $reports ) {
-    try {
-	    $reports->add_report( 'export', array(
-		    'label'            => __( 'Export', 'easy-digital-downloads' ),
-		    'icon'             => 'migrate',
-		    'priority'         => 1000,
-		    'capability'       => 'export_shop_reports',
-		    'display_callback' => 'display_export_report',
-	    ) );
-    } catch ( \EDD_Exception $exception ) {
-	    edd_debug_log_exception( $exception );
-    }
+	try {
+		$reports->add_report( 'export', array(
+			'label'            => __( 'Export', 'easy-digital-downloads' ),
+			'icon'             => 'migrate',
+			'priority'         => 1000,
+			'capability'       => 'export_shop_reports',
+			'display_callback' => 'display_export_report',
+			'filters'          => false,
+		) );
+	} catch ( \EDD_Exception $exception ) {
+		edd_debug_log_exception( $exception );
+	}
 }
 add_action( 'edd_reports_init', 'edd_register_export_report' );
 /**
@@ -2881,9 +2880,13 @@ function display_export_report() {
 				</div>
 
 				<div class="postbox edd-export-downloads">
-					<h2 class="hndle"><span><?php esc_html_e( sprintf( __( 'Export %s', 'easy-digital-downloads' ), edd_get_label_plural() ) ); ?></span></h2>
+					<h2 class="hndle"><span><?php esc_html_e(
+						/* translators: the singular post type label */
+						sprintf( __( 'Export %s Products', 'easy-digital-downloads' ), edd_get_label_singular() ) ); ?></span></h2>
 					<div class="inside">
-						<p><?php esc_html_e( sprintf( __( 'Download a CSV of %1$s.', 'easy-digital-downloads' ), edd_get_label_plural( true ) ) ); ?></p>
+						<p><?php esc_html_e(
+							/* translators: the plural post type label */
+							sprintf( __( 'Download a CSV of product %1$s.', 'easy-digital-downloads' ), edd_get_label_plural( true ) ) ); ?></p>
 						<form id="edd-export-downloads" class="edd-export-form edd-import-export-form" method="post">
 						<label for="edd_download_export_download" class="screen-reader-text"><?php esc_html_e( 'Select Download', 'easy-digital-downloads' ); ?></label>
 							<?php echo EDD()->html->product_dropdown(

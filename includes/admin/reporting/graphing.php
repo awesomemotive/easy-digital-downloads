@@ -633,13 +633,9 @@ function edd_parse_report_dates( $form_data ) {
 	// Load the Reports API dependencies.
 	Reports\Init::bootstrap();
 
-	$site    = get_current_blog_id();
-	$user    = get_current_user_id();
-	$dates   = Reports\get_dates_filter();
 	$filters = Reports\get_filters();
 
 	foreach ( $filters as $filter => $attributes ) {
-		$session_data = array();
 
 		switch ( $filter ) {
 
@@ -651,6 +647,21 @@ function edd_parse_report_dates( $form_data ) {
 				}
 
 				if ( 'other' === $range ) {
+					try {
+						/*
+						 * This validates the input dates before saving. If they're not valid, an exception
+						 * will be thrown.
+						 */
+						EDD()->utils->date( $form_data['filter_from'] );
+						EDD()->utils->date( $form_data['filter_to'] );
+					} catch ( \Exception $e ) {
+						wp_die(
+							esc_html__( 'Invalid date format. Please enter a date in the format: YYYY-mm-dd.', 'easy-digital-downloads' ),
+							esc_html__( 'Invalid Date Error', 'easy-digital-downloads' ),
+							array( 'response' => 400, 'back_link' => true )
+						);
+					}
+
 					$session_data = array(
 						'from'  => empty( $form_data['filter_from'] ) ? '' : sanitize_text_field( $form_data['filter_from'] ),
 						'to'    => empty( $form_data['filter_to'] ) ? '' : sanitize_text_field( $form_data['filter_to'] ),
@@ -659,7 +670,6 @@ function edd_parse_report_dates( $form_data ) {
 
 				} else {
 
-					$date  = EDD()->utils->date( 'now', edd_get_timezone_id(), false );
 					$dates = Reports\parse_dates_for_range( $range );
 					$session_data = array(
 						'from'  => $dates['start']->format( 'date-mysql' ),
