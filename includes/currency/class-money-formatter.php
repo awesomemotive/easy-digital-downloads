@@ -41,6 +41,34 @@ class Money_Formatter {
 	}
 
 	/**
+	 * Un-formats an amount.
+	 * This ensures the amount is put into a state where we can perform mathematical
+	 * operations on it --- that means using `.` as the decimal separator and no
+	 * thousands separator.
+	 *
+	 * @return float|int
+	 */
+	private function unformat() {
+		$amount = $this->amount;
+
+		$sep_found = strpos( $amount, $this->currency->decimal_separator );
+		if ( ',' === $this->currency->decimal_separator && false !== $sep_found ) {
+			$whole  = substr( $amount, 0, $sep_found );
+			$part   = substr( $amount, $sep_found + 1, ( strlen( $amount ) - 1 ) );
+			$amount = $whole . '.' . $part;
+		}
+
+		// Strip "," and " " from the amount (if set as the thousands separator).
+		foreach ( array( ',', ' ' ) as $thousands_separator ) {
+			if ( $thousands_separator === $this->currency->thousands_separator && false !== strpos( $amount, $this->currency->thousands_separator ) ) {
+				$amount = str_replace( $thousands_separator, '', $amount );
+			}
+		}
+
+		return $amount;
+	}
+
+	/**
 	 * Formats the amount for display.
 	 * Does not apply the currency code.
 	 *
@@ -48,23 +76,7 @@ class Money_Formatter {
 	 * @return Money_Formatter
 	 */
 	public function format_for_display( $decimals = true ) {
-		$amount = $this->amount;
-
-		if ( ',' === $this->currency->decimal_separator && false !== ( $sep_found = strpos( $amount, $this->currency->decimal_separator ) ) ) {
-			$whole  = substr( $amount, 0, $sep_found );
-			$part   = substr( $amount, $sep_found + 1, ( strlen( $amount ) - 1 ) );
-			$amount = $whole . '.' . $part;
-		}
-
-		// Strip "," from the amount (if set as the thousands separator).
-		if ( ',' === $this->currency->thousands_separator && false !== strpos( $amount, $this->currency->thousands_separator ) ) {
-			$amount = str_replace( ',', '', $amount );
-		}
-
-		// Strip " " from the amount (if set as the thousands separator).
-		if ( ' ' === $this->currency->thousands_separator && false !== strpos( $amount, $this->currency->thousands_separator ) ) {
-			$amount = str_replace( ' ', '', $amount );
-		}
+		$amount = $this->unformat();
 
 		if ( empty( $amount ) ) {
 			$amount = 0;
