@@ -42,7 +42,7 @@ add_action( 'admin_notices', function () {
 
 	?>
 	<div class="notice notice-info">
-		<h2><?php esc_html_e( 'Enable the new PayPal gateway for Easy Digital Downloads' ); ?></h2>
+		<h2><?php esc_html_e( 'Enable the new PayPal gateway for Easy Digital Downloads', 'easy-digital-downloads' ); ?></h2>
 		<p>
 			<?php
 			echo wp_kses( sprintf(
