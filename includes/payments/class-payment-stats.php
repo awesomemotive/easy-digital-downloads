@@ -180,6 +180,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 			if ( ! isset( $cached[ $key ] ) ) {
 				$orders = edd_get_orders( array(
+					'type'          => 'sale',
 					'status__in'    => $args['post_status'],
 					'date_query'    => array(
 						array(
