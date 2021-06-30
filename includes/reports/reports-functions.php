@@ -1222,6 +1222,10 @@ function display_currency_filter() {
 			"SELECT distinct currency FROM {$wpdb->edd_orders}"
 		);
 
+		if ( is_array( $order_currencies ) ) {
+			$order_currencies = array_filter( $order_currencies );
+		}
+
 		set_transient( 'edd_distinct_order_currencies', $order_currencies, 3 * HOUR_IN_SECONDS );
 	}
 
