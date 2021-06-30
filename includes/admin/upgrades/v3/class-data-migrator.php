@@ -52,10 +52,10 @@ class Data_Migrator {
 			'country' => '',
 		) );
 
-		$address = array_filter( $address );
+		$address_to_check = array_filter( $address );
 
 		// Do not migrate empty addresses.
-		if ( empty( $address ) ) {
+		if ( empty( $address_to_check ) ) {
 			return;
 		}
 
