@@ -55,10 +55,10 @@ function get_webhook_id( $mode = '' ) {
  */
 function get_webhook_events( $mode = '' ) {
 	$events = array(
-		'PAYMENT.CAPTURE.COMPLETED' => '\\EDD\\PayPal\\Webhooks\\Events\\Payment_Capture_Completed',
-		'PAYMENT.CAPTURE.DENIED'    => '\\EDD\\PayPal\\Webhooks\\Events\\Payment_Capture_Denied',
-		'PAYMENT.CAPTURE.REFUNDED'  => '\\EDD\\PayPal\\Webhooks\\Events\\Payment_Capture_Refunded',
-		'PAYMENT.CAPTURE.REVERSED'  => '\\EDD\\PayPal\\Webhooks\\Events\\Payment_Capture_Refunded',
+		'PAYMENT.CAPTURE.COMPLETED' => '\\EDD\\Gateways\\PayPal\\Webhooks\\Events\\Payment_Capture_Completed',
+		'PAYMENT.CAPTURE.DENIED'    => '\\EDD\\Gateways\\PayPal\\Webhooks\\Events\\Payment_Capture_Denied',
+		'PAYMENT.CAPTURE.REFUNDED'  => '\\EDD\\Gateways\\PayPal\\Webhooks\\Events\\Payment_Capture_Refunded',
+		'PAYMENT.CAPTURE.REVERSED'  => '\\EDD\\Gateways\\PayPal\\Webhooks\\Events\\Payment_Capture_Refunded',
 	);
 
 	/**
