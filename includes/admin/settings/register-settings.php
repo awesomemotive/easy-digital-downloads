@@ -710,7 +710,7 @@ function edd_get_registered_settings() {
 					'purchase_receipt' => array(
 						'id'   => 'purchase_receipt',
 						'name' => __( 'Purchase Receipt', 'easy-digital-downloads' ),
-						'desc' => __( 'Text to email customers after completing a purchase. Personalize with HTML and <code>{tag}</code> markers.', 'easy-digital-downloads' ),
+						'desc' => __( 'Text to email customers after completing a purchase. Personalize with HTML and <code>{tag}</code> markers.', 'easy-digital-downloads' ) . '<br/><br/>' . edd_get_emails_tags_list(),
 						'type' => 'rich_editor',
 						'std'  => __( "Dear", "easy-digital-downloads" ) . " {name},\n\n" . __( "Thank you for your purchase. Please click on the link(s) below to download your files.", "easy-digital-downloads" ) . "\n\n{download_list}\n\n{sitename}",
 					),
@@ -733,7 +733,7 @@ function edd_get_registered_settings() {
 					'sale_notification' => array(
 						'id'   => 'sale_notification',
 						'name' => __( 'Sale Notification', 'easy-digital-downloads' ),
-						'desc' => __( 'Text to email as a notification for every completed purchase. Personalize with HTML and <code>{tag}</code> markers.', 'easy-digital-downloads' ),
+						'desc' => __( 'Text to email as a notification for every completed purchase. Personalize with HTML and <code>{tag}</code> markers.', 'easy-digital-downloads' ) . '<br/><br/>' . edd_get_emails_tags_list(),
 						'type' => 'rich_editor',
 						'std'  => edd_get_default_sale_notification_email(),
 					),
@@ -2499,19 +2499,18 @@ function edd_rich_editor_callback( $args ) {
 	$rows = isset( $args['size'] ) ? $args['size'] : 20;
 
 	$class = edd_sanitize_html_class( $args['field_class'] );
-	$desc  = wp_kses_post( $args['desc'] );
 
 	ob_start();
-
-	if ( ! empty( $desc ) ) {
-		echo '<p class="edd-rich-editor-desc">' . $desc . '</p>';
-	}
 
 	wp_editor( stripslashes( $value ), 'edd_settings_' . esc_attr( $args['id'] ), array(
 		'textarea_name' => 'edd_settings[' . esc_attr( $args['id'] ) . ']',
 		'textarea_rows' => absint( $rows ),
 		'editor_class'  => $class,
 	) );
+
+	if ( ! empty( $args['desc'] ) ) {
+		echo '<p class="edd-rich-editor-desc">' . wp_kses_post( $args['desc'] ) . '</p>';
+	}
 
 	$html = ob_get_clean();
 
