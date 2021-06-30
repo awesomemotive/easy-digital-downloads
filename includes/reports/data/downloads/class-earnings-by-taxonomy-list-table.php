@@ -222,10 +222,10 @@ class Earnings_By_Taxonomy_List_Table extends List_Table {
 	 * @since 3.0
 	 *
 	 * @param \stdClass $taxonomy Taxonomy object.
-	 * @return string Data shown in the Average Sales column.
+	 * @return int Data shown in the Average Sales column.
 	 */
 	public function column_average_sales( $taxonomy ) {
-		return intval( $taxonomy->average_sales );
+		return (int) round( $taxonomy->average_sales );
 	}
 
 	/**
