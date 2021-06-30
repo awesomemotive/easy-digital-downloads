@@ -55,13 +55,13 @@ class EDD_Payment_Stats extends EDD_Stats {
 		}
 
 		if ( empty( $download_id ) ) {
-			if ( is_array( $status ) ) {
-				$count = 0;
-				foreach ( $status as $payment_status ) {
-					$count += edd_count_payments()->$payment_status;
+			$count        = 0;
+			$total_counts = edd_count_payments();
+
+			foreach ( (array) $status as $payment_status ) {
+				if ( isset( $total_counts->$payment_status ) ) {
+					$count += absint( $total_counts->$payment_status );
 				}
-			} else {
-				$count = edd_count_payments()->$status;
 			}
 		} else {
 			$this->timestamp = false;
