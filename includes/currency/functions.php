@@ -84,7 +84,7 @@ function edd_get_currency() {
 
 /**
  * Given a currency determine the symbol to use. If no currency given, site default is used.
- * If no symbol is determine, the currency string is returned.
+ * If no symbol is determined, the currency string is returned.
  *
  * @since  2.2
  *
@@ -116,5 +116,4 @@ function edd_get_currency_name( $code = 'USD' ) {
 	$name       = isset( $currencies[ $code ] ) ? $currencies[ $code ] : $code;
 	return apply_filters( 'edd_currency_name', $name );
 }
-
 
