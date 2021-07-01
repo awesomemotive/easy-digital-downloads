@@ -406,7 +406,7 @@ class Data_Migrator {
 		}
 
 		/**
-		 * Last change to filter payment meta before we use it!
+		 * Last chance to filter payment meta before we use it!
 		 * Note: If modifying `cart_details`, then it's recommended that you first run
 		 * `EDD\Admin\Upgrades\v3\Data_Migrator::fix_possible_serialization()`
 		 * before making adjustments.
