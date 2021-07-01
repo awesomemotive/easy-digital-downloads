@@ -55,6 +55,9 @@ class EDD_Payment_Stats extends EDD_Stats {
 		}
 
 		if ( empty( $download_id ) ) {
+			// Global sale stats
+			add_filter( 'edd_count_payments_where', array( $this, 'count_where' ) );
+
 			$count        = 0;
 			$total_counts = edd_count_payments();
 
@@ -63,6 +66,8 @@ class EDD_Payment_Stats extends EDD_Stats {
 					$count += absint( $total_counts->$payment_status );
 				}
 			}
+
+			remove_filter( 'edd_count_payments_where', array( $this, 'count_where' ) );
 		} else {
 			$this->timestamp = false;
 
@@ -146,8 +151,6 @@ class EDD_Payment_Stats extends EDD_Stats {
 		}
 
 		if ( empty( $download_id ) ) {
-			$statuses = array( 'complete', 'publish', 'revoked', 'refunded', 'partially_refunded' );
-
 			/**
 			 * Filters Order statuses that should be included when calculating stats.
 			 *
@@ -155,7 +158,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 			 *
 			 * @param array $statuses Order statuses to include when generating stats.
 			 */
-			$statuses = apply_filters( 'edd_payment_stats_post_statuses', $statuses );
+			$statuses = apply_filters( 'edd_payment_stats_post_statuses', edd_get_gross_order_statuses() );
 
 			// Global earning stats
 			$args = array(
@@ -177,6 +180,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 			if ( ! isset( $cached[ $key ] ) ) {
 				$orders = edd_get_orders( array(
+					'type'          => 'sale',
 					'status__in'    => $args['post_status'],
 					'date_query'    => array(
 						array(
