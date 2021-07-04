@@ -1127,7 +1127,17 @@ function edd_get_item_discount_amount( $item, $items, $discounts ) {
 		}
 	}
 
-	return $discount_amount;
+	/**
+	 * Filters the calculated discount amount.
+	 *
+	 * @since 3.0
+	 *
+	 * @param float    $discounted_amount Amount to be discounted from the cart item amount.
+	 * @param array    $item              Cart item.
+	 * @param float    $items        	  Cart items.
+ 	 * @param string[] $discounts         Discount codes applied to the Cart.
+	 */
+	return apply_filters( 'edd_get_item_discount_amount', $discount_amount, $item, $items, $discounts );
 }
 
 /** Cart **********************************************************************/
