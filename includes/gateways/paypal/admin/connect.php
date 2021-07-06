@@ -85,13 +85,17 @@ function process_connect() {
 		wp_send_json_error( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ) );
 	}
 
+	$mode = edd_is_test_mode() ? API::MODE_SANDBOX : API::MODE_LIVE;
+
 	$response = wp_remote_post( EDD_PAYPAL_PARTNER_CONNECT_URL . 'signup-link', array(
 		'headers' => array(
 			'Content-Type' => 'application/json',
 		),
 		'body'    => json_encode( array(
-			'mode'       => edd_is_test_mode() ? 'sandbox' : 'live',
-			'return_url' => get_settings_url()
+			'mode'          => $mode,
+			'country_code'  => edd_get_shop_country(),
+			'currency_code' => edd_get_currency(),
+			'return_url'    => get_settings_url()
 		) )
 	) );
 
@@ -120,7 +124,7 @@ function process_connect() {
 	 *
 	 * @see get_access_token()
 	 */
-	update_option( 'edd_paypal_commerce_connect_details', json_encode( $body ) );
+	update_option( 'edd_paypal_commerce_connect_details_' . $mode, json_encode( $body ) );
 
 	wp_send_json_success( $body );
 }
@@ -146,12 +150,13 @@ function get_and_save_credentials() {
 		wp_send_json_error( __( 'Missing PayPal authentication information. Please try again.', 'easy-digital-downloads' ) );
 	}
 
-	$partner_details = json_decode( get_option( 'edd_paypal_commerce_connect_details' ) );
+	$mode = edd_is_test_mode() ? PayPal\API::MODE_SANDBOX : PayPal\API::MODE_LIVE;
+
+	$partner_details = json_decode( get_option( 'edd_paypal_commerce_connect_details_' . $mode ) );
 	if ( empty( $partner_details->nonce ) ) {
 		wp_send_json_error( __( 'Missing nonce. Please refresh the page and try again.', 'easy-digital-downloads' ) );
 	}
 
-	$mode             = edd_is_test_mode() ? PayPal\API::MODE_SANDBOX : PayPal\API::MODE_LIVE;
 	$paypal_subdomain = edd_is_test_mode() ? '.sandbox' : '';
 	$api_url          = 'https://api-m' . $paypal_subdomain . '.paypal.com/';
 
@@ -215,9 +220,6 @@ function get_and_save_credentials() {
 
 	edd_update_option( 'paypal_' . $mode . '_client_id', sanitize_text_field( $body->client_id ) );
 	edd_update_option( 'paypal_' . $mode . '_client_secret', sanitize_text_field( $body->client_secret ) );
-
-	// We don't need the nonce anymore so we can delete that.
-	delete_option( 'edd_paypal_commerce_connect_details' );
 
 	$message = esc_html__( 'Successfully connected.', 'easy-digital-downloads' );
 
