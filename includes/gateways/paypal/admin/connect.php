@@ -422,12 +422,17 @@ function process_disconnect() {
 
 	$mode = edd_is_test_mode() ? PayPal\API::MODE_SANDBOX : PayPal\API::MODE_LIVE;
 
+	// Delete API credentials.
 	$edd_settings_to_delete = array(
 		'paypal_' . $mode . '_client_id',
 		'paypal_' . $mode . '_client_secret'
 	);
 
+	// Delete merchant information.
 	delete_option( 'edd_paypal_' . $mode . '_merchant_details' );
+
+	// Delete partner connect information.
+	delete_option( 'edd_paypal_commerce_connect_details_' . $mode );
 
 	try {
 		// Also delete the token cache key, to ensure we fetch a fresh one if they connect to a different account later.
