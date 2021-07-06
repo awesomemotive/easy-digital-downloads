@@ -98,19 +98,16 @@ class AccountStatusValidator {
 	 * @since 2.11
 	 */
 	public function check_rest() {
-		try {
-			$api      = new API( $this->mode );
-			$response = $api->make_request( 'v1/identity/oauth2/userinfo?schema=paypalv1.1', array(), array(), 'GET' );
+		$credentials = array(
+			'client_id'     => edd_get_option( 'paypal_' . $this->mode . '_client_id' ),
+			'client_secret' => edd_get_option( 'paypal_' . $this->mode . '_client_secret' ),
+		);
 
-			if ( empty( $response->user_id ) ) {
-				throw new \Exception( __( 'Unable to retrieve account information from PayPal. If the issue persists, try reconnecting.', 'easy-digital-downloads' ) );
+		foreach ( $credentials as $credential ) {
+			if ( empty( $credential ) ) {
+				$this->errors_for_credentials->add( 'no_credentials', __( 'Not connected.', 'easy-digital-downloads' ) );
+				break;
 			}
-
-			$this->has_rest_credentials = true;
-		} catch ( Exceptions\Authentication_Exception $e ) {
-			$this->errors_for_credentials->add( 'no_credentials', __( 'Not connected.', 'easy-digital-downloads' ) );
-		} catch ( \Exception $e ) {
-			$this->errors_for_credentials->add( 'credentials_error', $e->getMessage() );
 		}
 	}
 
