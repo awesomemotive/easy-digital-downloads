@@ -311,6 +311,7 @@ function capture_order() {
 				if ( ! empty( $response->details ) && is_array( $response->details ) ) {
 					foreach ( $response->details as $detail ) {
 						if ( isset( $detail->issue ) && 'INSTRUMENT_DECLINED' === $detail->issue ) {
+							$message = __( 'Unable to complete your order with your chosen payment method. Please choose a new funding source.', 'easy-digital-downloads' );
 							$retry = true;
 							break;
 						}
