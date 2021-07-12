@@ -211,11 +211,13 @@ defined( 'ABSPATH' ) || exit;
 					</td>
 				</tr>
 				
+				<?php
 				/**
 				 * Action after "Use Once Per Customer" checkbox.
 				 *
 				 * @since 3.0
 				 */
+				?>
 				<?php do_action( 'edd_add_discount_form_after_use_once' ); ?>
 				
 			</tbody>
