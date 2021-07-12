@@ -11,14 +11,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class EDD_SL_Plugin_Updater {
 
-	private $api_url     = '';
-	private $api_data    = array();
-	private $name        = '';
-	private $slug        = '';
-	private $version     = '';
-	private $wp_override = false;
-	private $cache_key   = '';
-
+	private $api_url              = '';
+	private $api_data             = array();
+	private $name                 = '';
+	private $slug                 = '';
+	private $version              = '';
+	private $wp_override          = false;
+	private $cache_key            = '';
+	private $beta                 = false;
 	private $health_check_timeout = 5;
 
 	/**
@@ -364,6 +364,9 @@ class EDD_SL_Plugin_Updater {
 	 * @return array
 	 */
 	private function convert_object_to_array( $data ) {
+		if ( ! is_array( $data ) && ! is_object( $data ) ) {
+			return array();
+		}
 		$new_data = array();
 		foreach ( $data as $key => $value ) {
 			$new_data[ $key ] = is_object( $value ) ? $this->convert_object_to_array( $value ) : $value;
@@ -439,15 +442,17 @@ class EDD_SL_Plugin_Updater {
 		}
 
 		$api_params = array(
-			'edd_action' => 'get_version',
-			'license'    => ! empty( $data['license'] ) ? $data['license'] : '',
-			'item_name'  => isset( $data['item_name'] ) ? $data['item_name'] : false,
-			'item_id'    => isset( $data['item_id'] ) ? $data['item_id'] : false,
-			'version'    => isset( $data['version'] ) ? $data['version'] : false,
-			'slug'       => $data['slug'],
-			'author'     => $data['author'],
-			'url'        => home_url(),
-			'beta'       => ! empty( $data['beta'] ),
+			'edd_action'  => 'get_version',
+			'license'     => ! empty( $data['license'] ) ? $data['license'] : '',
+			'item_name'   => isset( $data['item_name'] ) ? $data['item_name'] : false,
+			'item_id'     => isset( $data['item_id'] ) ? $data['item_id'] : false,
+			'version'     => $this->version,
+			'slug'        => $data['slug'],
+			'author'      => $data['author'],
+			'url'         => home_url(),
+			'beta'        => ! empty( $data['beta'] ),
+			'php_version' => phpversion(),
+			'wp_version'  => get_bloginfo( 'version' ),
 		);
 
 		$request    = wp_remote_post( $this->api_url, array( 'timeout' => 15, 'sslverify' => $verify_ssl, 'body' => $api_params ) );
@@ -508,13 +513,16 @@ class EDD_SL_Plugin_Updater {
 		if( false === $version_info ) {
 
 			$api_params = array(
-				'edd_action' => 'get_version',
-				'item_name'  => isset( $data['item_name'] ) ? $data['item_name'] : false,
-				'item_id'    => isset( $data['item_id'] ) ? $data['item_id'] : false,
-				'slug'       => $_REQUEST['slug'],
-				'author'     => $data['author'],
-				'url'        => home_url(),
-				'beta'       => ! empty( $data['beta'] )
+				'edd_action'  => 'get_version',
+				'item_name'   => isset( $data['item_name'] ) ? $data['item_name'] : false,
+				'item_id'     => isset( $data['item_id'] ) ? $data['item_id'] : false,
+				'version'     => $this->version,
+				'slug'        => $_REQUEST['slug'],
+				'author'      => $data['author'],
+				'url'         => home_url(),
+				'beta'        => ! empty( $data['beta'] ),
+				'php_version' => phpversion(),
+				'wp_version'  => get_bloginfo( 'version' ),
 			);
 
 			$verify_ssl = $this->verify_ssl();
