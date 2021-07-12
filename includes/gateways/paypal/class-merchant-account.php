@@ -48,11 +48,11 @@ class MerchantAccount {
 	 * @param array $details
 	 */
 	public function __construct( $details ) {
-		$this->wp_error = new \WP_Error();
-
 		foreach ( $details as $key => $value ) {
 			$this->{$key} = $value;
 		}
+
+		$this->wp_error = new \WP_Error();
 	}
 
 	/**
