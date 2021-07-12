@@ -585,21 +585,32 @@ add_action( 'admin_init', function () {
  * @throws PayPal\Exceptions\API_Exception
  */
 function get_merchant_status( $merchant_id ) {
-	$api      = new API();
-	$response = $api->make_request( sprintf(
-		'v1/customer/partners/%s/merchant-integrations/%s',
-		urlencode( PayPal\get_partner_merchant_id() ),
-		urlencode( $merchant_id )
-	), array(), array(), 'GET' );
+	$response = wp_remote_post( EDD_PAYPAL_PARTNER_CONNECT_URL . 'merchant-status', array(
+		'headers' => array(
+			'Content-Type' => 'application/json',
+		),
+		'body'    => json_encode( array(
+			'mode'        => edd_is_test_mode() ? API::MODE_SANDBOX : API::MODE_LIVE,
+			'merchant_id' => $merchant_id,
+		) )
+	) );
 
-	if ( 200 !== $api->last_response_code ) {
-		throw new PayPal\Exceptions\API_Exception( sprintf(
-			'Invalid HTTP response code: %d. Response: %s',
-			$api->last_response_code,
-			json_encode( $response )
-		) );
+	$response_code = wp_remote_retrieve_response_code( $response );
+	$response_body = json_decode( wp_remote_retrieve_body( $response ), true );
+
+	if ( 200 !== (int) $response_code ) {
+		if ( ! empty( $response_body['error'] ) ) {
+			$error_message = $response_body['error'];
+		} else {
+			$error_message = sprintf(
+				'Invalid HTTP response code: %d. Response: %s',
+				$response_code,
+				wp_remote_retrieve_body( $response )
+			);
+		}
+
+		throw new PayPal\Exceptions\API_Exception( $error_message, $response_code );
 	}
 
-	// `make_request()` returns an object, but we need an array.
-	return json_decode( json_encode( $response ), true );
+	return $response_body;
 }
