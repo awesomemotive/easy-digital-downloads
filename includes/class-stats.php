@@ -277,7 +277,7 @@ class Stats {
 		 * This may be overridden in $query parameters that get passed through.
 		 */
 		$this->query_vars['type']   = 'sale';
-		$this->query_vars['status'] = array( 'complete', 'revoked', 'refunded', 'partially_refunded' );
+		$this->query_vars['status'] = edd_get_gross_order_statuses();
 
 		/**
 		 * Filters Order statuses that should be included when calculating stats.
@@ -1427,6 +1427,11 @@ class Stats {
 	 * @return mixed array|int|float Either a list of payment gateways and counts or just a single value.
 	 */
 	private function get_gateway_data( $query = array() ) {
+		$query = wp_parse_args( $query, array(
+			'type'   => 'sale',
+			'status' => edd_get_gross_order_statuses(),
+		) );
+
 		$this->parse_query( $query );
 
 		// Set up default values.

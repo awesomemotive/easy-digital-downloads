@@ -73,11 +73,11 @@ class Gateway_Stats extends List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'label'          => __( 'Gateway',                'easy-digital-downloads' ),
-			'complete_sales' => __( 'Complete Sales',         'easy-digital-downloads' ),
+			'label'          => __( 'Gateway', 'easy-digital-downloads' ),
+			'complete_sales' => __( 'Complete Sales', 'easy-digital-downloads' ),
 			'pending_sales'  => __( 'Pending / Failed Sales', 'easy-digital-downloads' ),
-			'refunded_sales' => __( 'Refunded Sales', 'easy-digital-downloads' ),
-			'total_sales'    => __( 'Total Sales',            'easy-digital-downloads' ),
+			'refunded_sales' => __( 'Refunds Issued', 'easy-digital-downloads' ),
+			'total_sales'    => __( 'Total Sales', 'easy-digital-downloads' ),
 		);
 	}
 
