@@ -1700,9 +1700,11 @@ class EDD_Discount extends Adjustment {
 	 * @since 2.7
 	 *
 	 * @param string|int $base_price Price before discount.
+	 * @param object|null $discount The EDD discount object.
+	 *
 	 * @return float $discounted_price Amount after discount.
 	 */
-	public function get_discounted_amount( $base_price ) {
+	public function get_discounted_amount( $base_price, $discount = null ) {
 		$base_price = floatval( $base_price );
 
 		if ( 'flat' === $this->amount_type ) {
@@ -1723,8 +1725,9 @@ class EDD_Discount extends Adjustment {
 		 * @access public
 		 *
 		 * @param float $amount Calculated discounted amount.
+		 * @param object $discount The discount being applied.
 		 */
-		return apply_filters( 'edd_discounted_amount', $amount );
+		return apply_filters( 'edd_discounted_amount', $amount, $discount );
 	}
 
 	/**
