@@ -932,7 +932,7 @@ function edd_get_discounted_amount( $code = '', $base_price = 0 ) {
 	$discount = edd_get_discount_by_code( $code );
 
 	return ! empty( $discount->id )
-		? $discount->get_discounted_amount( $base_price )
+		? $discount->get_discounted_amount( $base_price, $discount )
 		: $base_price;
 }
 
@@ -1081,7 +1081,7 @@ function edd_get_item_discount_amount( $item, $items, $discounts ) {
 			// This is a product(s) specific discount.
 			foreach ( $reqs as $download_id ) {
 				if ( $download_id == $item['id'] && ! in_array( $item['id'], $excluded_products ) ) {
-					$discount_amount += ( $item_amount - $discount->get_discounted_amount( $item_amount ) );
+					$discount_amount += ( $item_amount - $discount->get_discounted_amount( $item_amount, $discount ) );
 				}
 			}
 		} else {
@@ -1121,7 +1121,7 @@ function edd_get_item_discount_amount( $item, $items, $discounts ) {
 						$discount_amount = $item_amount;
 					}
 				} else {
-					$discount_amount += ( $item_amount - $discount->get_discounted_amount( $item_amount ) );
+					$discount_amount += ( $item_amount - $discount->get_discounted_amount( $item_amount, $discount ) );
 				}
 			}
 		}
