@@ -1228,8 +1228,8 @@ function edd_tools_sysinfo_get() {
 		$front_page_id = get_option( 'page_on_front' );
 		$blog_page_id = get_option( 'page_for_posts' );
 
-		$return .= 'Page On Front:            ' . ( $front_page_id != 0 ? get_the_title( $front_page_id ) . ' (#' . $front_page_id . ')' : 'Unset' ) . "\n";
-		$return .= 'Page For Posts:           ' . ( $blog_page_id != 0 ? get_the_title( $blog_page_id ) . ' (#' . $blog_page_id . ')' : 'Unset' ) . "\n";
+		$return .= 'Page On Front:            ' . ( $front_page_id != 0 ? '#' . $front_page_id : 'Unset' ) . "\n";
+		$return .= 'Page For Posts:           ' . ( $blog_page_id != 0 ? '#' . $blog_page_id : 'Unset' ) . "\n";
 	}
 
 	$return .= 'ABSPATH:                  ' . ABSPATH . "\n";
