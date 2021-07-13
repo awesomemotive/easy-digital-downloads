@@ -5,7 +5,7 @@
  * Description: The easiest way to sell digital products with WordPress.
  * Author: Sandhills Development, LLC
  * Author URI: https://sandhillsdev.com
- * Version: 3.0-beta2
+ * Version: 3.0-beta3
  * Text Domain: easy-digital-downloads
  * Domain Path: languages
  * Requires PHP: 5.6
