@@ -1234,7 +1234,8 @@ function edd_register_payment_gateways_report( $reports ) {
 							'range'   => $dates['range'],
 							'gateway' => $gateway,
 							'output'  => 'formatted',
-							'status'  => array( 'refunded' ),
+							'type'    => 'refund',
+							'status'  => array( 'complete' ),
 						) );
 					},
 					'display_args'  => array(
