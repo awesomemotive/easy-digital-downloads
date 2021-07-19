@@ -1295,8 +1295,9 @@ class EDD_Discount extends Adjustment {
 		 *
 		 * @param bool $return Has the discount started or not.
 		 * @param int  $ID     Discount ID.
+		 * @param bool $set_error Whether an error message be set in session.
 		 */
-		return apply_filters( 'edd_is_discount_started', $return, $this->id );
+		return apply_filters( 'edd_is_discount_started', $return, $this->id, $set_error );
 	}
 
 	/**
@@ -1360,8 +1361,9 @@ class EDD_Discount extends Adjustment {
 		 *
 		 * @param bool $return Is the discount maxed out or not.
 		 * @param int  $ID     Discount ID.
+		 * @param bool $set_error Whether an error message be set in session.
 		 */
-		return apply_filters( 'edd_is_discount_maxed_out', $return, $this->id );
+		return apply_filters( 'edd_is_discount_maxed_out', $return, $this->id, $set_error );
 	}
 
 	/**
@@ -1390,8 +1392,9 @@ class EDD_Discount extends Adjustment {
 		 *
 		 * @param bool $return Is the minimum cart amount met or not.
 		 * @param int  $ID     Discount ID.
+		 * @param bool $set_error Whether an error message be set in session.
 		 */
-		return apply_filters( 'edd_is_discount_min_met', $return, $this->id );
+		return apply_filters( 'edd_is_discount_min_met', $return, $this->id, $set_error );
 	}
 
 	/**
@@ -1513,8 +1516,9 @@ class EDD_Discount extends Adjustment {
 		 * @param bool   $return            Are the product requirements met or not.
 		 * @param int    $ID                Discount ID.
 		 * @param string $product_condition Product condition.
+		 * @param bool $set_error Whether an error message be set in session.
 		 */
-		return (bool) apply_filters( 'edd_is_discount_products_req_met', $return, $this->id, $this->product_condition );
+		return (bool) apply_filters( 'edd_is_discount_products_req_met', $return, $this->id, $this->product_condition, $set_error );
 	}
 
 	/**
@@ -1613,8 +1617,9 @@ class EDD_Discount extends Adjustment {
 		 * @param bool   $return If the discount is used or not.
 		 * @param int    $ID     Discount ID.
 		 * @param string $user   User info.
+		 * @param bool $set_error Whether an error message be set in session.
 		 */
-		return apply_filters( 'edd_is_discount_used', $return, $this->id, $user );
+		return apply_filters( 'edd_is_discount_used', $return, $this->id, $user, $set_error );
 	}
 
 	/**
@@ -1654,8 +1659,9 @@ class EDD_Discount extends Adjustment {
 		 * @param int    $ID     Discount ID.
 		 * @param string $code   Discount code.
 		 * @param string $user   User info.
+		 * @param bool $set_error Whether an error message be set in session.
 		 */
-		return apply_filters( 'edd_is_discount_valid', $return, $this->id, $this->code, $user );
+		return apply_filters( 'edd_is_discount_valid', $return, $this->id, $this->code, $user, $set_error );
 	}
 
 	/**
@@ -1690,8 +1696,9 @@ class EDD_Discount extends Adjustment {
 		 *
 		 * @param bool $return Is the discount active or not.
 		 * @param int  $ID     Discount ID.
+		 * @param bool $set_error Whether an error message be set in session.
 		 */
-		return apply_filters( 'edd_is_discount_active', $return, $this->id );
+		return apply_filters( 'edd_is_discount_active', $return, $this->id, $set_error );
 	}
 
 	/**
@@ -1723,8 +1730,9 @@ class EDD_Discount extends Adjustment {
 		 * @access public
 		 *
 		 * @param float $amount Calculated discounted amount.
+		 * @param EDD_Discount $this Discount object.
 		 */
-		return apply_filters( 'edd_discounted_amount', $amount );
+		return apply_filters( 'edd_discounted_amount', $amount, $this );
 	}
 
 	/**
