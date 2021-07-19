@@ -55,16 +55,13 @@ The internet has made it possible for anyone to sell their products to a world-w
 Payment gateways supported in the free Easy Digital Downloads plugin:
 
 * Stripe **[new]**
-* PayPal Standard
+* PayPal
 * Amazon Payments
 
 Payment gateways supported through free or premium extensions:
 
 * Stripe Pro (reduced fees and preapproved payments functionality)
-* PayPal Pro
-* PayPal Express
-* PayPal Payments Advanced
-* PayPal Adaptive Payments
+* PayPal Commerce Pro (unbranded card payments and additional payment methods)
 * Braintree
 * Authorize.net
 * 2Checkout
