@@ -168,6 +168,11 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 					'_edd_log_price_id'   => $log->price_id,
 				);
 
+				// Values need to be arrays for backwards compatibility.
+				$meta = array_map( function( $value ) {
+					return (array) $value;
+				}, $meta );
+
 				/**
 				 * Filters the array of all files linked to the product.
 				 *
