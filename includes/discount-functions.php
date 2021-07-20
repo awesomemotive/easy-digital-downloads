@@ -1316,7 +1316,7 @@ function edd_get_cart_discounts_html( $discounts = false ) {
 			$discount_html .= "<span class=\"edd_discount_rate\">($rate)</span>\n";
 		}
 		$discount_html .= sprintf(
-			'<a href="%s" data-code="%s" class="edd_discount_remove"><span class="screen-reader-text"%s</span></a>',
+			'<a href="%s" data-code="%s" class="edd_discount_remove"><span class="screen-reader-text">%s</span></a>',
 			esc_url( $remove_url ),
 			esc_attr( $discount ),
 			esc_attr__( 'Remove discount', 'easy-digital-downloads' )
