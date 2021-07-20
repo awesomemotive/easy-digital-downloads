@@ -67,7 +67,7 @@ class EDD_Discount_Codes_Table extends List_Table {
 	 * @return array $columns Array of all the list table columns
 	 */
 	public function get_columns() {
-		return array(
+		return apply_filters( 'edd_discounts_table_columns', array(
 			'cb'         => '<input type="checkbox" />',
 			'name'       => __( 'Name',       'easy-digital-downloads' ),
 			'code'       => __( 'Code',       'easy-digital-downloads' ),
@@ -75,7 +75,7 @@ class EDD_Discount_Codes_Table extends List_Table {
 			'use_count'  => __( 'Uses',       'easy-digital-downloads' ),
 			'start_date' => __( 'Start Date', 'easy-digital-downloads' ),
 			'end_date'   => __( 'End Date',   'easy-digital-downloads' )
-		);
+		) );
 	}
 
 	/**
@@ -86,13 +86,13 @@ class EDD_Discount_Codes_Table extends List_Table {
 	 * @return array Array of all the sortable columns
 	 */
 	public function get_sortable_columns() {
-		return array(
+		return apply_filters( 'edd_discounts_table_sortable_columns', array(
 			'name'       => array( 'name',       false ),
 			'code'       => array( 'code',       false ),
 			'use_count'  => array( 'use_count',  false ),
 			'start_date' => array( 'start_date', false ),
 			'end_date'   => array( 'end_date',   false )
-		);
+		) );
 	}
 
 	/**
@@ -118,7 +118,9 @@ class EDD_Discount_Codes_Table extends List_Table {
 	 * @return string Column Name
 	 */
 	public function column_default( $discount, $column_name ) {
-		return property_exists( $discount, $column_name ) ? $discount->$column_name : '';
+		$value = property_exists( $discount, $column_name ) ? $discount->$column_name : '';
+
+		return apply_filters( 'edd_discounts_table_column', $value, $discount, $column_name );
 	}
 
 	/**
