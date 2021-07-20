@@ -369,7 +369,7 @@ function edd_has_active_discounts() {
 
 	// Query for active discounts.
 	$discounts = edd_get_discounts( array(
-		'number' => 1,
+		'number' => 10,
 		'status' => 'active'
 	) );
 
