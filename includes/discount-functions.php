@@ -540,6 +540,10 @@ function edd_discount_exists( $discount_id ) {
 function edd_is_discount_active( $discount_id = 0, $update = true, $set_error = true ) {
 	$discount = edd_get_discount( $discount_id );
 
+	if ( ! $discount instanceof EDD_Discount ) {
+		return false;
+	}
+
 	return $discount->is_active( $update, $set_error );
 }
 
