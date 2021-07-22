@@ -1377,7 +1377,8 @@ function edd_tools_sysinfo_get() {
 			continue;
 
 		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[$plugin_path]->update->new_version . ')' : '';
-		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
+		$plugin_url = isset( $plugin['PluginURI'] ) && ! empty( $plugin['PluginURI'] ) ? $plugin['PluginURI'] : $plugin['AuthorURI'];
+		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . ' - ' . $plugin_url . "\n";
 	}
 
 	$return  = apply_filters( 'edd_sysinfo_after_wordpress_plugins', $return );
@@ -1390,7 +1391,8 @@ function edd_tools_sysinfo_get() {
 			continue;
 
 		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[$plugin_path]->update->new_version . ')' : '';
-		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
+		$plugin_url = isset( $plugin['PluginURI'] ) && ! empty( $plugin['PluginURI'] ) ? $plugin['PluginURI'] : $plugin['AuthorURI'];
+		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . ' - ' . $plugin_url . "\n";
 	}
 
 	$return  = apply_filters( 'edd_sysinfo_after_wordpress_plugins_inactive', $return );
@@ -1410,7 +1412,8 @@ function edd_tools_sysinfo_get() {
 
 			$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[$plugin_path]->update->new_version . ')' : '';
 			$plugin  = get_plugin_data( $plugin_path );
-			$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
+			$plugin_url = isset( $plugin['PluginURI'] ) && ! empty( $plugin['PluginURI'] ) ? $plugin['PluginURI'] : $plugin['AuthorURI'];
+			$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . ' - ' . $plugin_url . "\n";
 		}
 
 		$return  = apply_filters( 'edd_sysinfo_after_wordpress_ms_plugins', $return );
