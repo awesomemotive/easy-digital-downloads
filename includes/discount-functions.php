@@ -81,6 +81,8 @@ function edd_add_discount( $data = array() ) {
 			edd_add_adjustment_meta( $discount_id, 'product_condition', $product_condition );
 		}
 
+		// If the end date has passed, mark the discount as expired.
+		edd_is_discount_expired( $discount_id );
 	}
 
 	/**
@@ -367,7 +369,7 @@ function edd_has_active_discounts() {
 
 	// Query for active discounts.
 	$discounts = edd_get_discounts( array(
-		'number' => 1,
+		'number' => 10,
 		'status' => 'active'
 	) );
 
