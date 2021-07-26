@@ -1382,6 +1382,8 @@ function edd_tools_sysinfo_get() {
 			$plugin_url = $plugin['PluginURI'];
 		} elseif ( ! empty( $plugin['AuthorURI'] ) ) {
 			$plugin_url = $plugin['AuthorURI'];
+		} elseif ( ! empty( $plugin['Author'] ) ) {
+			$plugin_url = $plugin['Author'];
 		}
 		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . ' - ' . $plugin_url . "\n";
 	}
@@ -1401,6 +1403,8 @@ function edd_tools_sysinfo_get() {
 			$plugin_url = $plugin['PluginURI'];
 		} elseif ( ! empty( $plugin['AuthorURI'] ) ) {
 			$plugin_url = $plugin['AuthorURI'];
+		} elseif ( ! empty( $plugin['Author'] ) ) {
+			$plugin_url = $plugin['Author'];
 		}
 		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . ' - ' . $plugin_url . "\n";
 	}
@@ -1427,6 +1431,8 @@ function edd_tools_sysinfo_get() {
 				$plugin_url = $plugin['PluginURI'];
 			} elseif ( ! empty( $plugin['AuthorURI'] ) ) {
 				$plugin_url = $plugin['AuthorURI'];
+			} elseif ( ! empty( $plugin['Author'] ) ) {
+				$plugin_url = $plugin['Author'];
 			}
 			$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . ' - ' . $plugin_url . "\n";
 		}
