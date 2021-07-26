@@ -246,6 +246,7 @@ final class EDD_Requirements_Check {
 	 * @since 3.0
 	 */
 	public function plugin_row_notice() {
+		// wp_is_auto_update_enabled_for_type was introduced in WordPress 5.5.
 		$colspan = function_exists( 'wp_is_auto_update_enabled_for_type' ) && wp_is_auto_update_enabled_for_type( 'plugin' ) ? 2 : 1;
 		?>
 		<tr class="active <?php echo esc_attr( $this->unmet_requirements_name() ); ?>-row">
