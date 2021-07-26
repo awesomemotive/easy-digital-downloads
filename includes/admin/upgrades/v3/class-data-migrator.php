@@ -479,13 +479,13 @@ class Data_Migrator {
 			$order_tax = (float) $meta_tax[0];
 		}
 
+		$meta_total = false;
 		// Retrieve the total amount from metadata if available.
-		$meta_total = isset( $meta['_edd_payment_total'] )
-			? $meta['_edd_payment_total']
-			: false;
-
-		if ( false !== $meta_total ) {
-			$meta_total  = maybe_unserialize( $meta_total );
+		if ( isset( $meta['_edd_payment_total'] ) ) {
+			$meta_total  = maybe_unserialize( $meta['_edd_payment_total'] );
+			$order_total = (float) $meta_total[0];
+		} elseif ( isset( $payment_meta['amount'] ) ) {
+			$meta_total  = maybe_unserialize( $payment_meta['amount'] );
 			$order_total = (float) $meta_total[0];
 		}
 
