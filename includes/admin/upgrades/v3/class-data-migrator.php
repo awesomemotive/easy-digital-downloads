@@ -486,7 +486,7 @@ class Data_Migrator {
 			$order_total = (float) $meta_total[0];
 		} elseif ( isset( $payment_meta['amount'] ) ) {
 			$meta_total  = maybe_unserialize( $payment_meta['amount'] );
-			$order_total = (float) $meta_total[0];
+			$order_total = (float) $meta_total;
 		}
 
 		// In some cases (very few) there is no cart details...so we have to just avoid this part.
