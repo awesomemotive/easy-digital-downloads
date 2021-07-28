@@ -37,7 +37,7 @@ if ( $purchases ) :
 						<?php
 						$price_id       = edd_get_cart_item_price_id( $download );
 						// Get price ID of product with variable prices included in Bundle
-						if ( $download['in_bundle'] && edd_has_variable_prices( $download['id'] ) ) {
+						if ( ! empty( $download['in_bundle'] ) && edd_has_variable_prices( $download['id'] ) ) {
 							$price_id = edd_get_bundle_item_price_id( $download['id'] );
 						}
 						$download_files = edd_get_download_files( $download['id'], $price_id );
