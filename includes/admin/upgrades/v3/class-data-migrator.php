@@ -235,7 +235,11 @@ class Data_Migrator {
 
 			$log_data = array(
 				'product_id'    => $data->post_parent,
-				'file_id'       => $post_meta['_edd_log_file_id'],
+				/*
+				 * Custom Deliverables was overriding the file ID to be a string instead of an integer. The preg_replace
+				 * allows us to try to salvage the file ID from that string.
+				 */
+				'file_id'       => isset( $post_meta['_edd_log_file_id'] ) ? preg_replace( '/[^0-9]/', '', $post_meta['_edd_log_file_id'] ) : 0,
 				'order_id'      => isset( $post_meta['_edd_log_payment_id'] )  ? $post_meta['_edd_log_payment_id']  : 0,
 				'price_id'      => isset( $post_meta['_edd_log_price_id'] )    ? $post_meta['_edd_log_price_id']    : 0,
 				'customer_id'   => isset( $post_meta['_edd_log_customer_id'] ) ? $post_meta['_edd_log_customer_id'] : 0,
