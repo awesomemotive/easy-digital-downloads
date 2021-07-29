@@ -1382,10 +1382,13 @@ function edd_tools_sysinfo_get() {
 			$plugin_url = $plugin['PluginURI'];
 		} elseif ( ! empty( $plugin['AuthorURI'] ) ) {
 			$plugin_url = $plugin['AuthorURI'];
-		} elseif ( ! empty( $plugin['Author'] ) ) {
+		} else {
 			$plugin_url = $plugin['Author'];
 		}
-		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . ' - ' . $plugin_url . "\n";
+		if ( $plugin_url ) {
+			$plugin_url = ' &mdash; ' . $plugin_url;
+		}
+		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . $plugin_url . "\n";
 	}
 
 	$return  = apply_filters( 'edd_sysinfo_after_wordpress_plugins', $return );
@@ -1403,10 +1406,13 @@ function edd_tools_sysinfo_get() {
 			$plugin_url = $plugin['PluginURI'];
 		} elseif ( ! empty( $plugin['AuthorURI'] ) ) {
 			$plugin_url = $plugin['AuthorURI'];
-		} elseif ( ! empty( $plugin['Author'] ) ) {
+		} else {
 			$plugin_url = $plugin['Author'];
 		}
-		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . ' - ' . $plugin_url . "\n";
+		if ( $plugin_url ) {
+			$plugin_url = ' &mdash; ' . $plugin_url;
+		}
+		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . $plugin_url . "\n";
 	}
 
 	$return  = apply_filters( 'edd_sysinfo_after_wordpress_plugins_inactive', $return );
@@ -1431,10 +1437,13 @@ function edd_tools_sysinfo_get() {
 				$plugin_url = $plugin['PluginURI'];
 			} elseif ( ! empty( $plugin['AuthorURI'] ) ) {
 				$plugin_url = $plugin['AuthorURI'];
-			} elseif ( ! empty( $plugin['Author'] ) ) {
+			} else {
 				$plugin_url = $plugin['Author'];
 			}
-			$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . ' - ' . $plugin_url . "\n";
+			if ( $plugin_url ) {
+				$plugin_url = ' &mdash; ' . $plugin_url;
+			}
+			$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . $plugin_url . "\n";
 		}
 
 		$return  = apply_filters( 'edd_sysinfo_after_wordpress_ms_plugins', $return );
