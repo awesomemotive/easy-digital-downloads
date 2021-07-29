@@ -1382,7 +1382,7 @@ function edd_tools_sysinfo_get() {
 			$plugin_url = $plugin['PluginURI'];
 		} elseif ( ! empty( $plugin['AuthorURI'] ) ) {
 			$plugin_url = $plugin['AuthorURI'];
-		} else {
+		} elseif {
 			$plugin_url = $plugin['Author'];
 		}
 		if ( $plugin_url ) {
@@ -1406,7 +1406,7 @@ function edd_tools_sysinfo_get() {
 			$plugin_url = $plugin['PluginURI'];
 		} elseif ( ! empty( $plugin['AuthorURI'] ) ) {
 			$plugin_url = $plugin['AuthorURI'];
-		} else {
+		} elseif {
 			$plugin_url = $plugin['Author'];
 		}
 		if ( $plugin_url ) {
@@ -1437,7 +1437,7 @@ function edd_tools_sysinfo_get() {
 				$plugin_url = $plugin['PluginURI'];
 			} elseif ( ! empty( $plugin['AuthorURI'] ) ) {
 				$plugin_url = $plugin['AuthorURI'];
-			} else {
+			} elseif {
 				$plugin_url = $plugin['Author'];
 			}
 			if ( $plugin_url ) {
