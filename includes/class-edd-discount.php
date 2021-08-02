@@ -1075,7 +1075,6 @@ class EDD_Discount {
 		}
 
 		if ( ! empty( $discount_data['expiration'] ) ) {
-			$discount_data['expiration'] = date( 'm/d/Y H:i:s', strtotime( date( 'm/d/Y', strtotime( $discount_data['expiration'] ) ) . ' 23:59:59' ) );
 			$end_timestamp = strtotime( $discount_data['expiration'] );
 
 			if ( ! empty( $discount_data['start'] ) && $start_timestamp > $end_timestamp ) {
@@ -1362,7 +1361,6 @@ class EDD_Discount {
 		}
 
 		if ( ! empty( $meta['expiration'] ) ) {
-			$meta['expiration'] = date( 'm/d/Y H:i:s', strtotime( date( 'm/d/Y', strtotime( $meta['expiration'] ) ) . ' 23:59:59' ) );
 			$end_timestamp      = strtotime( $meta['expiration'] );
 
 			if ( ! empty( $meta['start'] ) && $start_timestamp > $end_timestamp ) {
