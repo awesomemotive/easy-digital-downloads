@@ -1098,9 +1098,9 @@ add_filter( 'edd_get_payment_transaction_id-paypal', 'edd_paypal_get_payment_tra
  */
 function edd_paypal_link_transaction_id( $transaction_id, $payment_id ) {
 
-	$payment = new EDD_Payment( $payment_id );
-	$sandbox = 'test' == $payment->mode ? 'sandbox.' : '';
-	$paypal_base_url = 'https://www.' . $sandbox . 'paypal.com/webscr?cmd=_history-details-from-hub&id=';
+	$payment         = new EDD_Payment( $payment_id );
+	$sandbox         = 'test' === $payment->mode ? 'sandbox.' : '';
+	$paypal_base_url = 'https://www.' . $sandbox . 'paypal.com/activity/payment/';
 	$transaction_url = '<a href="' . esc_url( $paypal_base_url . $transaction_id ) . '" target="_blank">' . $transaction_id . '</a>';
 
 	return apply_filters( 'edd_paypal_link_payment_details_transaction_id', $transaction_url );
