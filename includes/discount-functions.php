@@ -81,6 +81,8 @@ function edd_add_discount( $data = array() ) {
 			edd_add_adjustment_meta( $discount_id, 'product_condition', $product_condition );
 		}
 
+		// If the end date has passed, mark the discount as expired.
+		edd_is_discount_expired( $discount_id );
 	}
 
 	/**
@@ -367,7 +369,7 @@ function edd_has_active_discounts() {
 
 	// Query for active discounts.
 	$discounts = edd_get_discounts( array(
-		'number' => 1,
+		'number' => 10,
 		'status' => 'active'
 	) );
 
@@ -539,6 +541,10 @@ function edd_discount_exists( $discount_id ) {
  */
 function edd_is_discount_active( $discount_id = 0, $update = true, $set_error = true ) {
 	$discount = edd_get_discount( $discount_id );
+
+	if ( ! $discount instanceof EDD_Discount ) {
+		return false;
+	}
 
 	return $discount->is_active( $update, $set_error );
 }
@@ -1316,7 +1322,7 @@ function edd_get_cart_discounts_html( $discounts = false ) {
 			$discount_html .= "<span class=\"edd_discount_rate\">($rate)</span>\n";
 		}
 		$discount_html .= sprintf(
-			'<a href="%s" data-code="%s" class="edd_discount_remove"><span class="screen-reader-text"%s</span></a>',
+			'<a href="%s" data-code="%s" class="edd_discount_remove"><span class="screen-reader-text">%s</span></a>',
 			esc_url( $remove_url ),
 			esc_attr( $discount ),
 			esc_attr__( 'Remove discount', 'easy-digital-downloads' )

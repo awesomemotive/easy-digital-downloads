@@ -907,7 +907,7 @@ function edd_is_uploads_url_protected() {
 		if ( wp_is_writable( $upload_path ) ) {
 
 			// Get the file path
-			$file_name = wp_unique_filename( $upload_path, 'edd-temp.jpg' );
+			$file_name = wp_unique_filename( $upload_path, 'edd-temp.zip' );
 			$file_path = trailingslashit( $upload_path ) . $file_name;
 
 			// Save a temporary file - we will try to access it
