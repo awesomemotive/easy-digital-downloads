@@ -1100,7 +1100,7 @@ function edd_register_refunds_report( $reports ) {
 						return $stats->get_refund_rate( array(
 							'range'    => $dates['range'],
 							'output'   => 'formatted',
-							'status'   => array( 'complete', 'revoked', 'refunded', 'partially_refunded' ),
+							'status'   => edd_get_gross_order_statuses(),
 							'currency' => $currency
 						) );
 					},
