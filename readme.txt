@@ -242,6 +242,8 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 9. Apple Pay purchase buttons
 10. Checkout screen
 11. Google Pay checkout
+12. PayPal button on checkout page
+13. Pay with PayPal modal
 
 == Changelog ==
 = 2.10.6, June 22, 2021 =
