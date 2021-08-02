@@ -70,6 +70,9 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 
 		if( $offset > $this->total ) {
 			$this->done = true;
+
+			// Delete the uploaded CSV file.
+			unlink( $this->file );
 		}
 
 		if( ! $this->done && $this->csv->data ) {
@@ -405,7 +408,7 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 			} else {
 
 				// Now look through year/month sub folders of upload directory for files with our image's same extension
-				$files = glob( $upload_dir['basedir'] . '/*/*/*{' . $ext . '}', GLOB_BRACE );
+				$files = glob( $upload_dir['basedir'] . '/*/*/*' . $ext );
 				foreach( $files as $file ) {
 
 					if( basename( $file ) == $image ) {

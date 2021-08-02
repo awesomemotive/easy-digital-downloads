@@ -131,7 +131,6 @@ class Tests_Scripts extends EDD_UnitTestCase {
 
 		$this->assertTrue( wp_style_is( 'jquery-chosen', 'enqueued' ) );
 		$this->assertTrue( wp_style_is( 'wp-color-picker', 'enqueued' ) );
-		$this->assertTrue( wp_style_is( 'colorbox', 'enqueued' ) );
 		$this->assertTrue( wp_style_is( 'jquery-ui-css', 'enqueued' ) );
 		$this->assertTrue( wp_style_is( 'thickbox', 'enqueued' ) );
 		$this->assertTrue( wp_style_is( 'edd-admin', 'enqueued' ) );
@@ -139,7 +138,6 @@ class Tests_Scripts extends EDD_UnitTestCase {
 		$this->assertTrue( wp_script_is( 'jquery-chosen', 'enqueued' ) );
 		$this->assertTrue( wp_script_is( 'edd-admin-scripts', 'enqueued' ) );
 // 		$this->assertTrue( wp_script_is( 'wp-color-picker', 'enqueued' ) );
-		$this->assertTrue( wp_script_is( 'colorbox', 'enqueued' ) );
 		$this->assertTrue( wp_script_is( 'jquery-ui-datepicker', 'enqueued' ) );
 		$this->assertTrue( wp_script_is( 'jquery-ui-dialog', 'enqueued' ) );
 		$this->assertTrue( wp_script_is( 'jquery-flot', 'enqueued' ) );

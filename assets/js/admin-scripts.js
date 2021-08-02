@@ -1204,18 +1204,6 @@ jQuery(document).ready(function ($) {
 
 		emails : function() {
 
-			// Show the email template previews
-			var email_preview_wrap = $('#email-preview-wrap');
-			if( email_preview_wrap.length ) {
-				var emailPreview = $('#email-preview');
-				email_preview_wrap.colorbox({
-					inline: true,
-					href: emailPreview,
-					width: '80%',
-					height: 'auto'
-				});
-			}
-
 			$('#edd-sendwp-connect').on('click', function(e) {
 
 				e.preventDefault();
@@ -1233,20 +1221,13 @@ jQuery(document).ready(function ($) {
 
 			});
 
-			$('#edd-jilt-connect').on('click', function(e) {
+			$('#edd-recapture-connect').on('click', function(e) {
 
 				e.preventDefault();
 				$(this).html( edd_vars.wait + ' <span class="edd-loading"></span>' );
 				document.body.style.cursor = 'wait';
-				easy_digital_downloads_jilt_remote_install();
-			});
+				easy_digital_downloads_recapture_remote_install();
 
-			$('#edd-jilt-disconnect').on('click', function(e) {
-
-				e.preventDefault();
-				$(this).html( edd_vars.wait + ' <span class="edd-loading dark"></span>' );
-				document.body.style.cursor = 'wait';
-				easy_digital_downloads_jilt_disconnect();
 			});
 
 		},
@@ -2057,6 +2038,48 @@ jQuery(document).ready(function ($) {
 	};
 	EDD_Customer.init();
 
+	var EDD_Promo_Notices = {
+		init: function() {
+			EDD_Promo_Notices.displayNotices();
+			EDD_Promo_Notices.dismissNotices();
+		},
+
+		displayNotices: function() {
+			var topOfPageNotice = $( '.edd-admin-notice-top-of-page' );
+			if ( topOfPageNotice ) {
+				var topOfPageNoticeEl = topOfPageNotice.detach();
+
+				$( '#wpbody-content' ).prepend( topOfPageNoticeEl );
+				topOfPageNotice.delay( 1000 ).slideDown();
+			}
+		},
+
+		dismissNotices: function() {
+			$( '.edd-promo-notice' ).each( function() {
+				var notice = $( this );
+
+				notice.on( 'click', '.edd-promo-notice-dismiss', function( e ) {
+					e.preventDefault();
+
+					$.ajax( {
+						type: 'POST',
+						data: {
+							action: 'edd_dismiss_promo_notice',
+							notice_id: notice.data( 'id' ),
+							nonce: notice.data( 'nonce' ),
+							lifespan: notice.data( 'lifespan' )
+						},
+						url: ajaxurl,
+						success: function( response ) {
+							notice.slideUp();
+						}
+					} );
+				} );
+			} );
+		}
+	};
+	EDD_Promo_Notices.init();
+
 	// AJAX user search
 	$('.edd-ajax-user-search').keyup(function() {
 		var user_search = $(this).val();
@@ -2251,62 +2274,22 @@ function easy_digital_downloads_sendwp_register_client(register_url, client_name
 	form.submit();
 }
 
-function easy_digital_downloads_jilt_remote_install() {
-
+function easy_digital_downloads_recapture_remote_install() {
 	var data = {
-		'action': 'edd_jilt_remote_install',
+		'action': 'edd_recapture_remote_install',
 	};
 
-	jQuery.post( ajaxurl, data, function( response ) {
+	// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
+	jQuery.post(ajaxurl, data, function( response ) {
 
-		if( ! response.success ) {
+		if ( false == response.success ) {
 
-			if( confirm( response.data.error ) ) {
+			if ( confirm( response.data.error ) ) {
 				location.reload();
 				return;
 			}
 		}
 
-		easy_digital_downloads_jilt_connect();
-	});
-}
-
-function easy_digital_downloads_jilt_connect() {
-
-	var data = {
-		'action': 'edd_jilt_connect',
-	};
-
-	jQuery.post( ajaxurl, data, function( response ) {
-
-		if( ! response.success ) {
-
-			if( confirm( response.data.error ) ) {
-				location.reload();
-				return;
-			}
-		}
-
-		if ( response.data.connect_url !== '' ) {
-
-			location.assign( response.data.connect_url );
-			return;
-		}
-	});
-}
-
-function easy_digital_downloads_jilt_disconnect() {
-
-	var data = {
-		'action': 'edd_jilt_disconnect',
-	};
-
-	jQuery.post( ajaxurl, data, function( response ) {
-
-		if ( ! response.success ) {
-			confirm( response.data.error );
-		}
-
-		location.reload();
+		window.location.href = 'https://recapture.io/register';
 	});
 }

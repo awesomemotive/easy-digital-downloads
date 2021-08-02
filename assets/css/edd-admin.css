@@ -17,7 +17,8 @@
 	text-indent: -9999px;
 	visibility: hidden;
 }
-.edd-wrap a {
+.edd-wrap a,
+.edd-notice .notice-dismiss {
 	text-decoration: none;
 }
 a.edd-delete {
@@ -469,7 +470,7 @@ label.edd_prices_shipping { /* remove once Simple Shipping markup is improved */
 	right: 7px;
 }
 .edd_upload_field {
-	padding-right: 8em;
+	padding-right: 8em !important;
 }
 textarea#edd-payment-note {
 	width: 100%;
@@ -1081,35 +1082,35 @@ td.edd_order_price {
 -------------------------------------------------------------- */
 
 [id*="edd-sendwp-"].button,
-[id*="edd-jilt-"].button {
+[id*="edd-recapture-"].button {
 	font-size: 16px;
 	height: auto;
 	padding: 8px 14px;
 	margin: 6px 0 0;
 }
 [id*="edd-sendwp-"].button .dashicons,
-[id*="edd-jilt-"].button .dashicons {
+[id*="edd-recapture-"].button .dashicons {
 	line-height: 29px;
 	margin-right: 8px;
 }
 [id*="edd-sendwp-"].button .edd-loading,
 [id*="edd-sendwp-"].button .edd-loading:after,
-[id*="edd-jilt-"].button .edd-loading,
-[id*="edd-jilt-"].button .edd-loading:after {
+[id*="edd-recapture-"].button .edd-loading,
+[id*="edd-recapture-"].button .edd-loading:after {
 	border-radius: 50%;
 	display: inline-block;
 	width: 14px;
 	height: 14px;
 }
 [id*="edd-sendwp-"].button .edd-loading,
-[id*="edd-jilt-"].button .edd-loading {
+[id*="edd-recapture-"].button .edd-loading {
 	position: relative;
 	top: 3px;
 	margin-left: 4px;
 	box-shadow: 0 0 2px rgba(0,0,0,.2);
 }
 [id*="edd-sendwp-"].button .edd-loading,
-[id*="edd-jilt-"].button .edd-loading {
+[id*="edd-recapture-"].button .edd-loading {
 	-webkit-animation: edd-spinning 1.1s infinite linear;
 	animation: edd-spinning 1.1s infinite linear;
 	border-top: 2px solid rgba(255, 255, 255, 0.5);
@@ -1122,14 +1123,14 @@ td.edd_order_price {
 	transform: translateZ(0);
 }
 #edd-sendwp-disconnect.button .edd-loading.dark,
-#edd-jilt-disconnect.button .edd-loading.dark {
+#edd-recapture-disconnect.button .edd-loading.dark {
 	border-top-color: rgba(0, 0, 0, 0.2);
 	border-right-color: rgba(0, 0, 0, 0.2);
 	border-bottom-color: rgba(0, 0, 0, 0.2);
 	border-left-color: #666;
 	box-shadow: none;
 }
-.jilt-notice {
+.recapture-notice {
 	position: relative;
 }
 @-webkit-keyframes edd-spinning {
@@ -2046,4 +2047,60 @@ td.edd_order_price {
 	text-align: right;
 	font-style: italic;
 	width: 150px;
+}
+
+
+/* Promo Notices
+-------------------------------------------------------------- */
+.edd-admin-notice-top-of-page {
+	font-size: 15px;
+	line-height: 1.4;
+	color: #fff;
+	margin-left: -20px;
+	padding: 12px 32px 12px 20px;
+	background: #2d6ca2;
+	display: none;
+}
+@media screen and ( min-width: 783px ) {
+	.edd-admin-notice-top-of-page {
+		padding: 10px 46px 10px 22px;
+	}
+}
+@media screen and ( min-width: 961px ) {
+	.edd-admin-notice-top-of-page {
+		text-align: center;
+	}
+}
+.edd-admin-notice-top-of-page a {
+	color: #fff;
+}
+.edd-admin-notice-top-of-page a:hover {
+	text-decoration: none;
+}
+.edd-admin-notice-top-of-page .button-link {
+	position: absolute;
+	top: 48px;
+	right: -1px;
+	font-size: 20px;
+	color: #fff;
+	font-weight: bold;
+	text-decoration: none;
+	margin-left: 5px;
+	padding: 6px 10px;
+}
+.edd-admin-notice-top-of-page .button-link:hover,
+.edd-admin-notice-top-of-page .button-link:active,
+.edd-admin-notice-top-of-page .button-link:focus {
+	color: #fff;
+	text-decoration: none;
+}
+@media screen and ( min-width: 601px ) {
+	.edd-admin-notice-top-of-page .button-link {
+		top: 1px;
+	}
+}
+@media screen and ( min-width: 783px ) {
+	.edd-admin-notice-top-of-page .button-link {
+		right: 9px;
+	}
 }
