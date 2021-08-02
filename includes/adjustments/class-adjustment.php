@@ -96,7 +96,7 @@ class Adjustment extends Base_Object {
 	 *
 	 * @since  3.0
 	 * @access protected
-	 * @var    bool
+	 * @var    string
 	 */
 	protected $scope;
 
