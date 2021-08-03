@@ -54,7 +54,7 @@ The internet has made it possible for anyone to sell their products to a world-w
 
 Payment gateways supported in the free Easy Digital Downloads plugin:
 
-* Stripe **[new]**
+* Stripe
 * PayPal
 * Amazon Payments
 
