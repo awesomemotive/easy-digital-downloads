@@ -724,7 +724,7 @@ class Stats {
 		$sql = "SELECT AVG( TIMESTAMPDIFF( SECOND, {$this->query_vars['table']}.{$this->query_vars['column']}, o2.date_created ) ) AS time_to_refund
 				FROM {$this->query_vars['table']}
 				INNER JOIN {$this->query_vars['table']} o2 ON {$this->query_vars['table']}.id = o2.parent
-				WHERE 1=1 {$type_sql} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+				WHERE 1=1 {$type_sql} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 
 		$result = $this->get_db()->get_var( $sql );
 
