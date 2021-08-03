@@ -54,17 +54,14 @@ The internet has made it possible for anyone to sell their products to a world-w
 
 Payment gateways supported in the free Easy Digital Downloads plugin:
 
-* Stripe **[new]**
-* PayPal Standard
+* Stripe
+* PayPal
 * Amazon Payments
 
 Payment gateways supported through free or premium extensions:
 
 * Stripe Pro (reduced fees and preapproved payments functionality)
-* PayPal Pro
-* PayPal Express
-* PayPal Payments Advanced
-* PayPal Adaptive Payments
+* PayPal Commerce Pro (unbranded card payments and additional payment methods)
 * Braintree
 * Authorize.net
 * 2Checkout
@@ -245,6 +242,8 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 9. Apple Pay purchase buttons
 10. Checkout screen
 11. Google Pay checkout
+12. PayPal button on checkout page
+13. Pay with PayPal modal
 
 == Changelog ==
 = 2.10.6, June 22, 2021 =
