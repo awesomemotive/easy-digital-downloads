@@ -38,7 +38,7 @@ final class Orders extends Table {
 	 * @since  3.0
 	 * @var    int
 	 */
-	protected $version = 202103261;
+	protected $version = 202108040;
 
 	/**
 	 * Array of upgrade versions and methods.
@@ -53,6 +53,7 @@ final class Orders extends Table {
 		'202012041' => 202012041,
 		'202102161' => 202102161,
 		'202103261' => 202103261,
+		'202108040' => 202108040,
 	);
 
 	/**
@@ -236,5 +237,21 @@ final class Orders extends Table {
 		" );
 
 		return $this->is_success( $result );
+	}
+
+	/**
+	 * Upgrade to version 202108040
+	 * - Set any empty gateway items to 'manual'.
+	 *
+	 * @since 3.0
+	 *
+	 * @return boolean
+	 */
+	protected function __202108040() {
+		$this->get_db()->query( "
+			UPDATE {$this->table_name} set `gateway` = 'manual' WHERE `gateway` = '';
+		" );
+
+		return $this->is_success( true );
 	}
 }
