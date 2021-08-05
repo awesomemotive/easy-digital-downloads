@@ -125,7 +125,13 @@ function edd_format_amount( $amount = 0, $decimals = true ) {
  * Formats the currency display
  *
  * @since 1.0
- * @param string $price Price. This should already be formatted.
+ *
+ * @param string $price    Price. This should already be formatted.
+ * @param string $currency Currency code. When this function is used on an order's amount, the order's currency
+ *                         should always be provided here. If omitted, the store currency is used instead.
+ *                         But to ensure immutability with orders, the currency should always be explicitly provided
+ *                         if known and tied to an existing order.
+ *
  * @return string $currency Currencies displayed correctly
  */
 function edd_currency_filter( $price = '', $currency = '' ) {
