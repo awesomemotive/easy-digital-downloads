@@ -73,7 +73,7 @@ final class Orders extends Table {
 			customer_id bigint(20) unsigned NOT NULL default '0',
 			email varchar(100) NOT NULL default '',
 			ip varchar(60) NOT NULL default '',
-			gateway varchar(100) NOT NULL default '',
+			gateway varchar(100) NOT NULL default 'manual',
 			mode varchar(20) NOT NULL default '',
 			currency varchar(20) NOT NULL default '',
 			payment_key varchar(64) NOT NULL default '',
