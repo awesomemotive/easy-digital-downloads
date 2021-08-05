@@ -122,6 +122,7 @@ class Orders extends Schema {
 			'type'       => 'varchar',
 			'length'     => '100',
 			'sortable'   => true,
+			'default'    => 'manual',
 		),
 
 		// mode
