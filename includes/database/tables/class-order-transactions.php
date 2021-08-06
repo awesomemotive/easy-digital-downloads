@@ -38,7 +38,7 @@ final class Order_Transactions extends Table {
 	 * @since 3.0
 	 * @var int
 	 */
-	protected $version = 202005261;
+	protected $version = 202105291;
 
 	/**
 	 * Array of upgrade versions and methods
@@ -50,6 +50,7 @@ final class Order_Transactions extends Table {
 	protected $upgrades = array(
 		'202002141' => 202002141,
 		'202005261' => 202005261,
+		'202105291' => 202105291,
 	);
 
 	/**
@@ -67,6 +68,7 @@ final class Order_Transactions extends Table {
 			gateway varchar(20) NOT NULL default '',
 			status varchar(20) NOT NULL default '',
 			total decimal(18,9) NOT NULL default '0',
+			rate decimal(10,5) NOT NULL DEFAULT 1.00000,
 			date_created datetime NOT NULL default CURRENT_TIMESTAMP,
 			date_modified datetime NOT NULL default CURRENT_TIMESTAMP,
 			uuid varchar(100) NOT NULL default '',
@@ -116,6 +118,25 @@ final class Order_Transactions extends Table {
 		" );
 
 		return $this->is_success( $result );
+	}
+
+	/**
+	 * Upgrade to version 202105291
+	 * 	- Add `rate` column.
+	 *
+	 * @since 3.0
+	 * @return bool
+	 */
+	protected function __202105291() {
+		if ( ! $this->column_exists( 'rate' ) ) {
+			return $this->is_success(
+				$this->get_db()->query(
+					"ALTER TABLE {$this->table_name} ADD COLUMN rate decimal(10,5) NOT NULL DEFAULT 1.00000 AFTER total"
+				)
+			);
+		}
+
+		return true;
 	}
 
 }
