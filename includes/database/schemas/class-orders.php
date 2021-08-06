@@ -198,6 +198,14 @@ class Orders extends Schema {
 			'validate'   => 'edd_sanitize_amount'
 		),
 
+		// rate
+		array(
+			'name'       => 'rate',
+			'type'       => 'decimal',
+			'length'     => '10,5',
+			'default'    => '1.00000',
+		),
+
 		// date_created
 		array(
 			'name'       => 'date_created',
