@@ -58,7 +58,7 @@ class Remove_Legacy_Data extends Base {
 				$this->get_db()->query( "ALTER TABLE {$this->get_db()->edd_customers} DROP `payment_ids`" );
 			}
 
-			// Delete unneede meta.
+			// Delete unneeded meta.
 			$this->get_db()->query( $this->get_db()->prepare( "DELETE FROM {$this->get_db()->edd_customermeta} WHERE meta_key = %s", esc_sql( 'additional_email' ) ) );
 			$this->get_db()->query( $this->get_db()->prepare( "DELETE FROM {$this->get_db()->usermeta} WHERE meta_key = %s", esc_sql( '_edd_user_address' ) ) );
 		}
