@@ -52,7 +52,7 @@ class Remove_Legacy_Data extends Base {
 	public function get_data() {
 		// Perform some database operations on the first step.
 		if ( 1 === $this->step ) {
-			// Drop custoemr `payment_ids` column. It's no longer needed.
+			// Drop customer `payment_ids` column. It's no longer needed.
 			$customer_table = edd_get_component_interface( 'customer', 'table' );
 			if ( $customer_table instanceof \EDD\Database\Tables\Customers && $customer_table->column_exists( 'payment_ids' ) ) {
 				$this->get_db()->query( "ALTER TABLE {$this->get_db()->edd_customers} DROP `payment_ids`" );
