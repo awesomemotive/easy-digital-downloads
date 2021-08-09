@@ -1442,6 +1442,16 @@ class EDD_CLI extends WP_CLI_Command {
 		}
 
 		/**
+		 * Customers
+		 *
+		 * @var \EDD\Database\Tables\Customers|false $customer_table
+		 */
+		$customer_table = edd_get_component_interface( 'customer', 'table' );
+		if ( $customer_table instanceof \EDD\Database\Tables\Customers && $customer_table->column_exists( 'payment_ids' ) ) {
+			$wpdb->query( "ALTER TABLE {$wpdb->edd_customers} DROP `payment_ids`" );
+		}
+
+		/**
 		 * Customer emails
 		 */
 		if ( ! $force && edd_has_upgrade_completed( 'remove_legacy_customer_emails' ) ) {
