@@ -50,7 +50,7 @@ function register_gateway_settings( $gateway_settings ) {
 	$paypal_settings = array(
 		'paypal_settings'              => array(
 			'id'   => 'paypal_settings',
-			'name' => '<strong>' . __( 'PayPal Settings', 'easy-digital-downloads' ) . '</strong>',
+			'name' => '<h3>' . __( 'PayPal Settings', 'easy-digital-downloads' ) . '</h3>',
 			'type' => 'header',
 		),
 		'paypal_documentation'         => array(
