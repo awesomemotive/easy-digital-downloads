@@ -561,7 +561,7 @@ function edd_get_payment_status( $order, $return_label = false ) {
 	} else {
 		$keys      = edd_get_payment_status_keys();
 		$found_key = array_search( strtolower( $status ), $keys );
-		$status    = array_key_exists( $found_key, $keys ) ? $keys[ $found_key ] : false;
+		$status    = $found_key && array_key_exists( $found_key, $keys ) ? $keys[ $found_key ] : false;
 	}
 
 	return ! empty( $status ) ? $status : false;
@@ -576,7 +576,8 @@ function edd_get_payment_status( $order, $return_label = false ) {
  * @return bool|mixed
  */
 function edd_get_payment_status_label( $status = '' ) {
-	$default  = ucwords( $status );
+	$default  = str_replace( '_', ' ', $status );
+	$default  = ucwords( $default );
 	$statuses = edd_get_payment_statuses();
 
 	if ( ! is_array( $statuses ) || empty( $statuses ) ) {
@@ -637,15 +638,17 @@ function edd_get_payment_status_keys() {
 function edd_is_payment_complete( $order_id = 0 ) {
 	$order = edd_get_order( $order_id );
 
-	$ret = false;
+	$ret    = false;
+	$status = null;
 
 	if ( $order ) {
+		$status = $order->status;
 		if ( (int) $order_id === (int) $order->id && $order->is_complete() ) {
 			$ret = true;
 		}
 	}
 
-	return apply_filters( 'edd_is_payment_complete', $ret, $order_id, $order->status );
+	return apply_filters( 'edd_is_payment_complete', $ret, $order_id, $status );
 }
 
 /**
@@ -878,23 +881,24 @@ function edd_get_payment_meta_cart_details( $payment_id, $include_bundle_files =
 
 				foreach ( $products as $product_id ) {
 					$cart_details[] = array(
-						'id'          => $product_id,
-						'name'        => get_the_title( $product_id ),
-						'item_number' => array(
+						'id'            => $product_id,
+						'name'          => get_the_title( $product_id ),
+						'item_number'   => array(
 							'id'      => $product_id,
 							'options' => array(),
 						),
-						'price'       => 0,
-						'subtotal'    => 0,
-						'quantity'    => 1,
-						'tax'         => 0,
-						'in_bundle'   => 1,
-						'parent'      => array(
+						'price'         => 0,
+						'subtotal'      => 0,
+						'quantity'      => 1,
+						'tax'           => 0,
+						'in_bundle'     => 1,
+						'parent'        => array(
 							'id'      => $cart_item['id'],
 							'options' => isset( $cart_item['item_number']['options'] )
 								? $cart_item['item_number']['options']
 								: array(),
 						),
+						'order_item_id' => $cart_item['order_item_id'],
 					);
 				}
 			}
@@ -1294,9 +1298,7 @@ function edd_remove_payment_prefix_postfix( $number ) {
  * @return string $amount Fully formatted payment amount
  */
 function edd_payment_amount( $order_id = 0 ) {
-	$amount = edd_get_payment_amount( $order_id );
-
-	return edd_currency_filter( edd_format_amount( $amount ), edd_get_payment_currency_code( $order_id ) );
+	return edd_display_amount( edd_get_payment_amount( $order_id ), edd_get_payment_currency_code( $order_id ) );
 }
 
 /**

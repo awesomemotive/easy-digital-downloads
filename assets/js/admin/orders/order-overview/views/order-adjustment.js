@@ -79,14 +79,8 @@ export const OrderAdjustment = Base.extend( {
 			} ) );
 		}
 
-		// Always show Discounts and Fees as negative values.
-		let total = number.absint( model.getAmount() );
-		let subtotal = number.absint( model.get( 'subtotal' ) );
-
-		if ( 'fee' !== model.get( 'type' ) ) {
-			total = total * -1;
-			subtotal = subtotal * -1;
-		}
+		const subtotal = model.getAmount();
+		const total = model.getTotal();
 
 		return {
 			...Base.prototype.prepare.apply( this, arguments ),
@@ -95,8 +89,8 @@ export const OrderAdjustment = Base.extend( {
 				colspan,
 			},
 
-			total: model.getAmount(),
-			subtotal: model.get( 'subtotal' ),
+			total,
+			subtotal,
 			orderItem: orderItem ? orderItem.toJSON() : false,
 			totalCurrency: currency.format( total ),
 			subtotalCurrency: currency.format( subtotal )

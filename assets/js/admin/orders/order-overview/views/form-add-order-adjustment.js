@@ -9,9 +9,6 @@ import uuid from 'uuid-random';
 import { Base } from './base.js';
 import { Dialog } from './dialog.js';
 import { OrderAdjustment } from './../models/order-adjustment.js';
-import { NumberFormat } from '@easy-digital-downloads/currency';
-
-const number = new NumberFormat();
 
 /**
  * FormAddOrderAdjustment
@@ -47,7 +44,11 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 		this.addEvents( {
 			'change #object_type': 'onChangeObjectType',
 			'change [name="type"]': 'onChangeType',
+
 			'keyup #amount': 'onChangeAmount',
+			'change #no-tax': 'onHasTaxToggle',
+			'click #set-address': 'onSetAddress',
+
 			'keyup #description': 'onChangeDescription',
 
 			'submit form': 'onAdd',
@@ -63,6 +64,7 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 			objectType: 'order',
 			type: 'fee',
 			amountManual: '',
+			isTaxed: true,
 
 			state,
 		} );
@@ -140,18 +142,14 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 	 * @param {Object} e Change event
 	 */
 	onChangeType( e ) {
-		this.model.set( 'type', e.target.value );
-	},
+		const type = e.target.value;
 
-	/**
-	 * Updates the `OrderAdjustment` when the Description changes.
-	 *
-	 * @since 3.0
-	 *
-	 * @param {Object} e Change event
-	 */
-	onChangeDescription( e ) {
-		this.model.set( 'description', e.target.value );
+		this.model.set( 'type', type );
+
+		if ( 'credit' === type ) {
+			this.model.set( 'objectId', 0 );
+			this.model.set( 'objectType', 'order' );
+		}
 	},
 
 	/**
@@ -166,14 +164,89 @@ export const FormAddOrderAdjustment = Dialog.extend( {
 
 		e.preventDefault();
 
+		const { state } = this.options;
+		const { number } = state.get( 'formatters' );
+
 		const amountManual = target.value;
 		const amountNumber = number.unformat( amountManual );
+
+		let taxNumber = 0;
+
+		const hasTax = state.get( 'hasTax' );
+
+		if (
+			true === this.model.get( 'isTaxed' ) &&
+			'fee' === this.model.get( 'type' ) &&
+			'none' !== hasTax &&
+			'' !== hasTax.country &&
+			'' !== hasTax.rate
+		) {
+			taxNumber = amountNumber * ( hasTax.rate / 100 );
+		}
 
 		this.model.set( {
 			amountManual,
 			subtotal: amountNumber,
 			total: amountNumber,
+			tax: number.unformat( number.format( taxNumber ) ),
 		} );
+	},
+
+	/**
+	 * Toggles if the fee should be taxed.
+	 *
+	 * @since 3.0
+	 *
+	 * @param {Object} e Change event.
+	 */
+	onHasTaxToggle( e ) {
+		e.preventDefault();
+
+		const checked = e.target.checked;
+		const args = {
+			isTaxed: checked,
+		}
+
+		// Reset tax amount if it should not be taxed.
+		if ( false === checked ) {
+			args.tax = 0;
+		}
+
+		this.model.set( args );
+	},
+
+	/**
+	 * Closes dialog and opens "Order Details - Address" section.
+	 *
+	 * @since 3.0
+	 *
+	 * @param {Object} e Click event.
+	 */
+	onSetAddress( e ) {
+		e.preventDefault();
+
+		this.closeDialog();
+
+		const button = $( '[href="#edd_general_address"]' );
+
+		if ( ! button ) {
+			return;
+		}
+
+		button.trigger( 'click' );
+
+		$( '#edd_order_address_country' ).trigger( 'focus' );
+	},
+
+	/**
+	 * Updates the `OrderAdjustment` when the Description changes.
+	 *
+	 * @since 3.0
+	 *
+	 * @param {Object} e Change event
+	 */
+	onChangeDescription( e ) {
+		this.model.set( 'description', e.target.value );
 	},
 
 	/**

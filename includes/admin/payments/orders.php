@@ -622,6 +622,7 @@ function edd_order_details_overview( $order ) {
 				'cartIndex'    => esc_html( $item->cart_index ),
 				'type'         => esc_html( $item->type ),
 				'status'       => esc_html( $item->status ),
+				'statusLabel'  => esc_html( edd_get_status_label( $item->status ) ),
 				'quantity'     => esc_html( $item->quantity ),
 				'amount'       => esc_html( $item->amount ),
 				'subtotal'     => esc_html( $item->subtotal ),
@@ -681,18 +682,23 @@ function edd_order_details_overview( $order ) {
 
 	$has_tax  = 'none';
 	$tax_rate = $order->id ? $order->get_tax_rate() : false;
+
 	$location = array(
-		'rate'    => $tax_rate,
-		'country' => '',
-		'region'  => '',
+		'rate'      => $tax_rate,
+		'country'   => '',
+		'region'    => '',
+		'inclusive' => edd_prices_include_tax(),
 	);
+
 	if ( edd_is_add_order_page() && edd_use_taxes() ) {
 		$has_tax = $location;
 	} elseif ( $tax_rate ) {
 		$has_tax         = $location;
 		$has_tax['rate'] = $tax_rate;
+
 		if ( $order->tax_rate_id ) {
 			$tax_rate_object = $order->get_tax_rate_object();
+
 			if ( $tax_rate_object ) {
 				$has_tax['country'] = $tax_rate_object->name;
 				$has_tax['region']  = $tax_rate_object->description;
@@ -731,7 +737,9 @@ function edd_order_details_overview( $order ) {
 
 	$templates = array(
 		'actions',
-		'totals',
+		'subtotal',
+		'tax',
+		'total',
 		'item',
 		'adjustment',
 		'adjustment-discount',
@@ -860,7 +868,7 @@ function edd_order_details_extras( $order = false ) {
 										'class'            => 'edd-form-group__input',
 										'id'               => 'edd_gateway_select',
 										'options'          => $gateways,
-										'selected'         => edd_get_default_gateway(),
+										'selected'         => 'manual',
 										'show_option_none' => false,
 										'show_option_all'  => false,
 									)

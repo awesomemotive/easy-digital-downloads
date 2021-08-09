@@ -1942,7 +1942,7 @@ class EDD_Payment {
 			unset( $update_fields['ID'] );
 
 			/**
-			 * As per the new refund API introduce in 3.0, the order is only
+			 * As per the new refund API introduced in 3.0, the order is only
 			 * marked as refunded when `EDD_Payment::process_refund()` has called
 			 * `edd_refund_order()` and a new order has been generated with a
 			 * type of `refund`.
@@ -1992,10 +1992,6 @@ class EDD_Payment {
 
 			if ( 'complete' === $old_status ) {
 				// Trigger the action again to account for add-ons listening for status changes from "publish".
-
-				if ( apply_filters( 'edd_show_deprecated_notices', ( defined( 'WP_DEBUG' ) && WP_DEBUG ) ) ) {
-					_edd_generic_deprecated( 'edd_update_payment_status', '3.0', __( 'The "publish" payment status has been replaced with "complete". Please check for both when listening for status changes.', 'easy-digital-downloads' ) );
-				}
 
 				do_action( 'edd_update_payment_status', $this->ID, $status, 'publish' );
 			}
@@ -2643,15 +2639,7 @@ class EDD_Payment {
 	 * @return bool
 	 */
 	public function is_recoverable() {
-		$recoverable = false;
-
-		$recoverable_statuses = apply_filters( 'edd_recoverable_payment_statuses', array( 'pending', 'abandoned', 'failed' ) );
-
-		if ( in_array( $this->status, $recoverable_statuses, true ) && empty( $this->transaction_id ) ) {
-			$recoverable = true;
-		}
-
-		return $recoverable;
+		return $this->order->is_recoverable();
 	}
 
 	/**
@@ -2662,16 +2650,7 @@ class EDD_Payment {
 	 * @return bool|string
 	 */
 	public function get_recovery_url() {
-		if ( ! $this->is_recoverable() ) {
-			return false;
-		}
-
-		$recovery_url = add_query_arg( array(
-			'edd_action' => 'recover_payment',
-			'payment_id' => $this->ID,
-		), edd_get_checkout_uri() );
-
-		return apply_filters( 'edd_payment_recovery_url', $recovery_url, $this );
+		return $this->order->get_recovery_url();
 	}
 
 	/**
@@ -3266,23 +3245,23 @@ class EDD_Payment {
 			}
 
 			$cart_details[ $item->cart_index ] = array(
-				'name'        => $item->product_name,
-				'id'          => $item->product_id,
-				'item_number' => array(
-					'id'         => $item->product_id,
-					'quantity'   => $item->quantity,
-					'options'    => $item_options,
+				'name'          => $item->product_name,
+				'id'            => $item->product_id,
+				'item_number'   => array(
+					'id'       => $item->product_id,
+					'quantity' => $item->quantity,
+					'options'  => $item_options,
 				),
-				'item_price' => $item->amount,
-				'quantity'   => $item->quantity,
-				'discount'   => $item->discount,
-				'subtotal'   => $item->subtotal,
-				'tax'        => $item->tax,
-				'fees'       => $item_fees,
-				'price'      => $item->total,
+				'item_price'    => $item->amount,
+				'quantity'      => $item->quantity,
+				'discount'      => $item->discount,
+				'subtotal'      => $item->subtotal,
+				'tax'           => $item->tax,
+				'fees'          => $item_fees,
+				'price'         => $item->total,
+				'order_item_id' => $item->id,
 			);
 		}
-
 
 		return $cart_details;
 	}

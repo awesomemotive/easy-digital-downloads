@@ -49,7 +49,7 @@ function edd_view_refund_page_content() {
 	 *
 	 * @since 3.0
 	 *
-	 * @param $refund_id ID of the current Refund.
+	 * @param int $refund_id ID of the current Refund.
 	 */
 	do_action( 'edd_view_refund_details_before', $refund->id );
 	?>
@@ -96,7 +96,7 @@ function edd_view_refund_page_content() {
 						 *
 						 * @since 3.0
 						 *
-						 * @param $refund_id ID of the current Refund.
+						 * @param int $refund_id ID of the current Refund.
 						 */
 						do_action( 'edd_view_refund_details_sidebar_before', $refund->id );
 
@@ -111,7 +111,7 @@ function edd_view_refund_page_content() {
 						 *
 						 * @since 3.0
 						 *
-						 * @param $refund_id ID of the current Refund.
+						 * @param int $refund_id ID of the current Refund.
 						 */
 						do_action( 'edd_view_refund_details_sidebar_after', $refund->id );
 						?>

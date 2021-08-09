@@ -199,6 +199,18 @@ function edd_add_manual_order( $args = array() ) {
 		$customer->attach_payment( $order_id, false );
 	}
 
+	// If we have tax, but no tax rate, manually save the percentage.
+	if ( empty( $tax_rate->id ) && $order_tax > 0 ) {
+		$tax_rate_percentage = $data['tax_rate'];
+		if ( ! empty( $tax_rate_percentage ) ) {
+			if ( $tax_rate_percentage > 0 && $tax_rate_percentage < 1 ) {
+				$tax_rate_percentage = $tax_rate_percentage * 100;
+			}
+
+			edd_update_order_meta( $order_id, 'tax_rate', $tax_rate_percentage );
+		}
+	}
+
 	/** Insert order address **************************************************/
 
 	if ( isset( $data['edd_order_address'] ) ) {
@@ -321,14 +333,19 @@ function edd_add_manual_order( $args = array() ) {
 							? sanitize_text_field( strtolower( sanitize_title( $order_item_adjustment['description'] ) ) )
 							: $index;
 
+							$order_item_adjustment_subtotal = floatval( $order_item_adjustment['subtotal'] );
+							$order_item_adjustment_tax      = floatval( $order_item_adjustment['tax'] );
+							$order_item_adjustment_total    = floatval( $order_item_adjustment['total'] );
+
 						edd_add_order_adjustment( array(
 							'object_id'   => $order_item_id,
 							'object_type' => 'order_item',
 							'type'        => sanitize_text_field( $order_item_adjustment['type'] ),
 							'type_key'    => $type_key,
 							'description' => sanitize_text_field( $order_item_adjustment['description'] ),
-							'subtotal'    => floatval( $order_item_adjustment['subtotal'] ),
-							'total'       => floatval( $order_item_adjustment['total'] ),
+							'subtotal'    => $order_item_adjustment_subtotal,
+							'tax'         => $order_item_adjustment_tax,
+							'total'       => $order_item_adjustment_total,
 						) );
 					}
 				}
@@ -355,14 +372,19 @@ function edd_add_manual_order( $args = array() ) {
 				? sanitize_text_field( strtolower( sanitize_title( $adjustment['description'] ) ) )
 				: $index;
 
+			$adjustment_subtotal = floatval( $adjustment['subtotal'] );
+			$adjustment_tax      = floatval( $adjustment['tax'] );
+			$adjustment_total    = floatval( $adjustment['total'] );
+
 			edd_add_order_adjustment( array(
 				'object_id'   => $order_id,
 				'object_type' => 'order',
 				'type'        => sanitize_text_field( $adjustment['type'] ),
 				'type_key'    => $type_key,
 				'description' => sanitize_text_field( $adjustment['description'] ),
-				'subtotal'    => floatval( $adjustment['subtotal'] ),
-				'total'       => floatval( $adjustment['total'] ),
+				'subtotal'    => $adjustment_subtotal,
+				'tax'         => $adjustment_tax,
+				'total'       => $adjustment_total,
 			) );
 		}
 	}
@@ -378,6 +400,9 @@ function edd_add_manual_order( $args = array() ) {
 				continue;
 			}
 
+			$discount_subtotal = floatval( $discount['subtotal'] );
+			$discount_total    = floatval( $discount['total'] );
+
 			// Store discount.
 			edd_add_order_adjustment( array(
 				'object_id'   => $order_id,
@@ -385,8 +410,8 @@ function edd_add_manual_order( $args = array() ) {
 				'type_id'     => intval( $discount['type_id'] ),
 				'type'        => 'discount',
 				'description' => sanitize_text_field( $discount['code'] ),
-				'subtotal'    => floatval( $discount['subtotal'] ),
-				'total'       => floatval( $discount['total'] ),
+				'subtotal'    => $discount_subtotal,
+				'total'       => $discount_total,
 			) );
 
 			// Increase discount usage.

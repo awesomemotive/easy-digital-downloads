@@ -524,7 +524,7 @@ function edd_is_order_recoverable( $order_id = 0 ) {
 		return false;
 	}
 
-	$recoverable_statuses = apply_filters( 'edd_recoverable_payment_statuses', array( 'pending', 'abandoned', 'failed' ) );
+	$recoverable_statuses = edd_recoverable_order_statuses();
 
 	$transaction_id = $order->get_transaction_id();
 
@@ -624,7 +624,7 @@ function edd_build_order( $order_data = array() ) {
 		$order = edd_get_order( $existing_order );
 
 		if ( $order ) {
-			$recoverable_statuses = apply_filters( 'edd_recoverable_payment_statuses', array( 'pending', 'abandoned', 'failed' ) );
+			$recoverable_statuses = edd_recoverable_order_statuses();
 
 			$transaction_id = $order->get_transaction_id();
 
@@ -958,10 +958,6 @@ function edd_build_order( $order_data = array() ) {
 				unset( $item['item_number']['options']['quantity'] );
 
 				foreach ( $item['item_number']['options'] as $option_key => $value ) {
-					if ( is_array( $value ) ) {
-						$value = maybe_serialize( $value );
-					}
-
 					$option_key = '_option_' . sanitize_key( $option_key );
 
 					edd_add_order_item_meta( $order_item_id, $option_key, $value );
@@ -972,17 +968,19 @@ function edd_build_order( $order_data = array() ) {
 			if ( isset( $item['fees'] ) && ! empty( $item['fees'] ) ) {
 				foreach ( $item['fees'] as $fee_id => $fee ) {
 
-					$tax_rate_amount = empty( $tax_rate->amount ) ? false : $tax_rate->amount;
-					$tax             = EDD()->fees->get_calculated_tax( $fee, $tax_rate_amount );
-					$adjustment_data = array(
+					$adjustment_subtotal = floatval( $fee['amount'] );
+					$tax_rate_amount     = empty( $tax_rate->amount ) ? false : $tax_rate->amount;
+					$tax                 = EDD()->fees->get_calculated_tax( $fee, $tax_rate_amount );
+					$adjustment_total    = floatval( $fee['amount'] ) + $tax;
+					$adjustment_data     = array(
 						'object_id'   => $order_item_id,
 						'object_type' => 'order_item',
 						'type_key'    => $fee_id,
 						'type'        => 'fee',
 						'description' => $fee['label'],
-						'subtotal'    => floatval( $fee['amount'] ),
+						'subtotal'    => $adjustment_subtotal,
 						'tax'         => $tax,
-						'total'       => floatval( $fee['amount'] ) + $tax,
+						'total'       => $adjustment_total,
 					);
 
 					// Add the adjustment.
@@ -1018,8 +1016,10 @@ function edd_build_order( $order_data = array() ) {
 
 			add_filter( 'edd_prices_include_tax', '__return_false' );
 
+			$fee_subtotal    = floatval( $fee['amount'] );
 			$tax_rate_amount = empty( $tax_rate->amount ) ? false : $tax_rate->amount;
 			$tax             = EDD()->fees->get_calculated_tax( $fee, $tax_rate_amount );
+			$fee_total       = floatval( $fee['amount'] ) + $tax;
 
 			remove_filter( 'edd_prices_include_tax', '__return_false' );
 
@@ -1029,9 +1029,9 @@ function edd_build_order( $order_data = array() ) {
 				'type_key'    => $fee_id,
 				'type'        => 'fee',
 				'description' => $fee['label'],
-				'subtotal'    => floatval( $fee['amount'] ),
+				'subtotal'    => $fee_subtotal,
 				'tax'         => $tax,
-				'total'       => floatval( $fee['amount'] ) + $tax,
+				'total'       => $fee_total,
 			);
 
 			// Add the adjustment.
@@ -1372,6 +1372,25 @@ function edd_get_net_order_statuses() {
 	 *
 	 */
 	return apply_filters( 'edd_net_order_statuses', $statuses );
+}
+
+/**
+ * Get the order status array keys which are considered recoverable.
+ *
+ * @since 3.0
+ * @return array An array of order status keys which are considered recoverable.
+ */
+function edd_recoverable_order_statuses() {
+	$statuses = array( 'pending', 'abandoned', 'failed' );
+
+	/**
+	 * Order statuses which are considered recoverable.
+	 *
+	 * @param $statuses {
+	 *        An array of order status array keys.
+	 * }
+	 */
+	return apply_filters( 'edd_recoverable_payment_statuses', $statuses );
 }
 
 /**

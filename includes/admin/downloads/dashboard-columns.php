@@ -28,13 +28,13 @@ function edd_download_columns( $download_columns ) {
 
 	return apply_filters( 'edd_download_columns', array(
 		'cb'                => '<input type="checkbox"/>',
-		'title'             => __( 'Name',     'easy-digital-downloads' ),
+		'title'             => __( 'Name', 'easy-digital-downloads' ),
 		'download_category' => $category_labels['menu_name'],
 		'download_tag'      => $tag_labels['menu_name'],
-		'price'             => __( 'Price',    'easy-digital-downloads' ),
-		'sales'             => __( 'Sales',    'easy-digital-downloads' ),
-		'earnings'          => __( 'Earnings', 'easy-digital-downloads' ),
-		'date'              => __( 'Date',     'easy-digital-downloads' )
+		'price'             => __( 'Price', 'easy-digital-downloads' ),
+		'sales'             => __( 'Sales', 'easy-digital-downloads' ),
+		'earnings'          => __( 'Gross Revenue', 'easy-digital-downloads' ),
+		'date'              => __( 'Date', 'easy-digital-downloads' )
 	) );
 }
 add_filter( 'manage_edit-download_columns', 'edd_download_columns' );
@@ -77,7 +77,12 @@ function edd_render_download_columns( $column_name, $post_id ) {
 			break;
 		case 'sales':
 			if ( current_user_can( 'view_product_stats', $post_id ) ) {
-				echo '<a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-tools&tab=logs&view=sales&download=' . $post_id ) ) . '">';
+				$sales_url = add_query_arg( array(
+					'page'       => 'edd-payment-history',
+					'product-id' => urlencode( $post_id )
+				), edd_get_admin_base_url() );
+
+				echo '<a href="' . esc_url( $sales_url ) . '">';
 					echo edd_get_download_sales_stats( $post_id );
 				echo '</a>';
 			} else {

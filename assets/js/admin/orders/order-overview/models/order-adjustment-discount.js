@@ -56,10 +56,21 @@ export const OrderAdjustmentDiscount = OrderAdjustment.extend( {
 			} );
 
 			if ( undefined !== discount ) {
-				amount += +number.format( discount.get( 'subtotal' ) );
+				amount += number.unformat(
+					number.format( discount.get( 'subtotal' ) )
+				);
 			}
 		} );
 
 		return amount;
+	},
+
+	/**
+	 * Returns the `OrderAdjustment` total.
+	 *
+	 * @since 3.0
+	 */
+	getTotal() {
+		return this.getAmount();
 	},
 } );

@@ -451,13 +451,21 @@ add_action( 'admin_enqueue_scripts', 'edd_enqueue_admin_styles' );
  * @since 3.0
  */
 function edd_localize_admin_scripts() {
+	// Customize the currency on the reports page.
+	$currency = edd_get_currency();
+	if ( function_exists( 'edd_is_admin_page' ) && edd_is_admin_page( 'reports' ) ) {
+		$currency_filter = \EDD\Reports\get_filter_value( 'currencies' );
+		if ( ! empty( $currency_filter ) && array_key_exists( strtoupper( $currency_filter ), edd_get_currencies() ) ) {
+			$currency = strtoupper( $currency_filter );
+		}
+	}
 
 	// Admin scripts
 	wp_localize_script( 'edd-admin-scripts', 'edd_vars', array(
 		'post_id'                 => get_the_ID(),
 		'edd_version'             => edd_admin_get_script_version(),
-		'currency'                => edd_get_currency(),
-		'currency_sign'           => edd_currency_filter( '' ),
+		'currency'                => $currency,
+		'currency_sign'           => edd_currency_filter( '', $currency ),
 		'currency_pos'            => edd_get_option( 'currency_position', 'before' ),
 		'currency_decimals'       => edd_currency_decimal_filter(),
 		'decimal_separator'       => edd_get_option( 'decimal_separator', '.' ),

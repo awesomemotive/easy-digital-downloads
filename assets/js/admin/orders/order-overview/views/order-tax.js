@@ -1,12 +1,12 @@
 /**
- * Order totals
+ * Order tax
  *
  * @since 3.0
  *
- * @class Totals
+ * @class OrderTax
  * @augments wp.Backbone.View
  */
-export const Totals = wp.Backbone.View.extend( {
+export const OrderTax = wp.Backbone.View.extend( {
 	/**
 	 * @since 3.0
 	 */
@@ -15,12 +15,12 @@ export const Totals = wp.Backbone.View.extend( {
 	/**
 	 * @since 3.0
 	 */
-	className: 'edd-order-overview-summary__totals',
+	className: 'edd-order-overview-summary__tax',
 
 	/**
 	 * @since 3.0
 	 */
-	template: wp.template( 'edd-admin-order-totals' ),
+	template: wp.template( 'edd-admin-order-tax' ),
 
 	/**
 	 * @since 3.0
@@ -31,11 +31,11 @@ export const Totals = wp.Backbone.View.extend( {
 	},
 
 	/**
-	 * Order totals view.
+	 * Order total view.
 	 *
 	 * @since 3.0
 	 *
-	 * @constructs Totals
+	 * @constructs OrderTotal
 	 * @augments wp.Backbone.View
 	 */
 	initialize() {
@@ -59,40 +59,32 @@ export const Totals = wp.Backbone.View.extend( {
 	 */
 	prepare() {
 		const { state } = this.options;
-
 		const { currency, number } = state.get( 'formatters' );
 
 		// Determine column offset -- using cart quantities requires an extra column.
 		const colspan = true === state.get( 'hasQuantity' ) ? 2 : 1;
 
-		const subtotal = state.getSubtotal();
 		const tax = state.getTax();
-		const total = state.getTotal();
-		const discount = state.getDiscount();
 		const hasNewTaxRate = state.hasNewTaxRate();
-		const hasManualAdjustment = undefined !== state.get( 'items' ).findWhere( {
-			_isAdjustingManually: true,
-		} );
+
+		const taxableItems = [
+			...state.get( 'items' ).models,
+			...state.get( 'adjustments' ).getByType( 'fee' ),
+		];
 
 		return {
 			state: {
 				...state.toJSON(),
 				hasNewTaxRate,
-				hasManualAdjustment,
 			},
 			config: {
 				colspan,
 			},
 
-			subtotal,
 			tax,
-			total,
-			discount,
+			taxCurrency: currency.format( tax ),
 
-			subtotalCurrency: currency.format( number.absint( subtotal ) ),
-			discountCurrency: currency.format( number.absint( discount ) ),
-			taxCurrency: currency.format( number.absint( tax ) ),
-			totalCurrency: currency.format( number.absint( total ) ),
+			hasTaxableItems: taxableItems.length > 0,
 		};
 	},
 
@@ -121,9 +113,17 @@ export const Totals = wp.Backbone.View.extend( {
 
 		const { state } = this.options;
 
+		// Manually recalculate taxed fees.
+		state.get( 'adjustments' ).getByType( 'fee' ).forEach(
+			( fee ) => {
+				fee.updateTax();
+			}
+		);
+
+		// Request updated tax amounts for orders from the server.
 		state.get( 'items' )
 			.updateAmounts()
-			.done( ( response ) => {
+			.done( () => {
 				this.onDismissTaxRateChange();
 			} );
 	},

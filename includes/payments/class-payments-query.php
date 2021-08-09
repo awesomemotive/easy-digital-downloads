@@ -607,7 +607,7 @@ class EDD_Payments_Query extends EDD_Stats {
 
 		if ( $this->args['end_date'] ) {
 			if ( is_numeric( $this->end_date ) ) {
-				$this->end_date = \Carbon\Carbon::createFromTimestamp( $this->start_date )->toDateTimeString();
+				$this->end_date = \Carbon\Carbon::createFromTimestamp( $this->end_date )->toDateTimeString();
 			}
 
 			$this->end_date = \Carbon\Carbon::parse( $this->end_date, edd_get_timezone_id() )->setTimezone( 'UTC' )->timestamp;
@@ -715,7 +715,9 @@ class EDD_Payments_Query extends EDD_Stats {
 			$this->args['parent'] = $this->args['post_parent'];
 		}
 
-		if ( isset( $this->args['paged'] ) && isset( $this->args['posts_per_page'] ) ) {
+		if ( ! empty( $this->args['offset'] ) ) {
+			$arguments['offset'] = $this->args['offset'];
+		} elseif ( isset( $this->args['paged'] ) && isset( $this->args['posts_per_page'] ) ) {
 			$arguments['offset'] = ( $this->args['paged'] * $this->args['posts_per_page'] ) - $this->args['posts_per_page'];
 		}
 
@@ -746,24 +748,33 @@ class EDD_Payments_Query extends EDD_Stats {
 			$arguments['status'] = edd_get_payment_status_keys();
 		}
 
-		if ( isset( $this->args['meta_query'] ) && is_array( $this->args['meta_query'] ) ) {
-			foreach ( $this->args['meta_query'] as $meta ) {
+		if ( isset( $arguments['meta_query'] ) && is_array( $arguments['meta_query'] ) ) {
+			foreach ( $arguments['meta_query'] as $meta_index => $meta ) {
 				if ( ! empty( $meta['key'] ) ) {
 					switch ( $meta['key'] ) {
 						case '_edd_payment_customer_id':
 							$arguments['customer_id'] = absint( $meta['value'] );
+							unset( $arguments['meta_query'][ $meta_index ] );
 							break;
 
 						case '_edd_payment_user_id':
 							$arguments['user_id'] = absint( $meta['value'] );
+							unset( $arguments['meta_query'][ $meta_index ] );
 							break;
 
 						case '_edd_payment_user_email':
 							$arguments['email'] = sanitize_email( $meta['value'] );
+							unset( $arguments['meta_query'][ $meta_index ] );
 							break;
 
 						case '_edd_payment_gateway':
 							$arguments['gateway'] = sanitize_text_field( $meta['value'] );
+							unset( $arguments['meta_query'][ $meta_index ] );
+							break;
+
+						case '_edd_payment_purchase_key' :
+							$arguments['payment_key'] = sanitize_text_field( $meta['value'] );
+							unset( $arguments['meta_query'][ $meta_index ] );
 							break;
 					}
 				}

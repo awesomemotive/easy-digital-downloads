@@ -107,6 +107,9 @@ class Order_Adjustment extends Query {
 	 *     @type int          $id                   An order adjustment ID to only return that item. Default empty.
 	 *     @type array        $id__in               Array of order adjustment IDs to include. Default empty.
 	 *     @type array        $id__not_in           Array of order adjustment IDs to exclude. Default empty.
+	 *     @type int          $parent               A parent ID to only return items with that parent. Default empty.
+	 *     @type array        $parent__in           An array of parent IDs to include. Default empty.
+	 *     @type array        $parent__not_in       An array of parent IDs to exclude. Default empty.
 	 *     @type string       $object_id            An object ID to only return those objects. Default empty.
 	 *     @type array        $object_id__in        Array of object IDs to include. Default empty.
 	 *     @type array        $object_id__not_in    Array of IDs object to exclude. Default empty.

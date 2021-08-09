@@ -58,18 +58,22 @@ export const OrderItem = Base.extend( {
 		const { model, options } = this;
 		const { state } = options;
 
-		const { currency, number } = state.get( 'formatters' );
+		const { currency } = state.get( 'formatters' );
 
+		const subtotal = model.getSubtotal();
 		const discountAmount = model.getDiscountAmount();
 		const isAdjustingManually = model.get( '_isAdjustingManually' );
+		const tax = model.getTax();
 
 		return {
 			...Base.prototype.prepare.apply( this, arguments ),
 
 			discount: discountAmount,
-			amountCurrency: currency.format( number.absint( model.get( 'amount' ) ) ),
-			subtotalCurrency: currency.format( number.absint( model.get( 'subtotal' ) ) ),
-			taxCurrency: currency.format( number.absint( model.get( 'tax' ) ) ),
+			amountCurrency: currency.format( model.get( 'amount' ) ),
+			subtotal,
+			subtotalCurrency: currency.format( subtotal ),
+			tax,
+			taxCurrency: currency.format( tax ),
 			total: model.getTotal(),
 
 			config: {

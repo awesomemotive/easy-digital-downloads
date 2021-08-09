@@ -42,6 +42,16 @@ class Order_Adjustments extends Schema {
 			'sortable'   => true
 		),
 
+		// parent
+		array(
+			'name'       => 'parent',
+			'type'       => 'bigint',
+			'length'     => '20',
+			'unsigned'   => true,
+			'default'    => '0',
+			'sortable'   => true
+		),
+
 		// object_id
 		array(
 			'name'       => 'object_id',
@@ -108,7 +118,8 @@ class Order_Adjustments extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
-			'sortable'   => true
+			'sortable'   => true,
+			'validate'   => 'edd_sanitize_amount'
 		),
 
 		// tax
@@ -117,7 +128,8 @@ class Order_Adjustments extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
-			'sortable'   => true
+			'sortable'   => true,
+			'validate'   => 'edd_sanitize_amount'
 		),
 
 		// total
@@ -126,7 +138,16 @@ class Order_Adjustments extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
-			'sortable'   => true
+			'sortable'   => true,
+			'validate'   => 'edd_sanitize_amount'
+		),
+
+		// rate
+		array(
+			'name'       => 'rate',
+			'type'       => 'decimal',
+			'length'     => '10,5',
+			'default'    => '1.00000',
 		),
 
 		// date_created
