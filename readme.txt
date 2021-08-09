@@ -5,7 +5,7 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: ecommerce, sell, checkout, payments, stripe
 Requires at least: 4.9
-Tested up to: 5.7
+Tested up to: 5.7.1
 Requires PHP: 5.6
 Stable Tag: 3.0
 License: GNU Version 2 or Any Later Version
@@ -21,6 +21,7 @@ Easy Digital Downloads is a complete eCommerce solution for selling digital prod
 Whether it is [software](https://easydigitaldownloads.com/blog/selling-software/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description), [documents](https://easydigitaldownloads.com/blog/selling-documents/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description), [photos](https://easydigitaldownloads.com/blog/selling-photographs/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description), [ebooks](https://easydigitaldownloads.com/blog/selling-ebooks/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description), [songs](https://easydigitaldownloads.com/blog/selling-audio-and-music/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description), [graphics](https://easydigitaldownloads.com/blog/selling-graphics-and-digital-artwork/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description), [videos](https://easydigitaldownloads.com/blog/selling-videos/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description), or any other type of media file, Easy Digital Downloads provides a complete system for effortlessly selling your digital products.
 
 > Easy Digital Downloads is an invaluable tool that I use throughout my business and for my clients. I love its simplicity yet powerful features and library of useful extensions. EDD stands out as one of the only affordable options for scaling a business centered around providing digital ecommerce sites to its clients.
+
 > Mark Hunter - Mark of Approval
 
 = All the eCommerce features you need =
@@ -28,6 +29,7 @@ Whether it is [software](https://easydigitaldownloads.com/blog/selling-software/
 Do you prefer an eCommerce solution which is simple and intuitive or one which is rich in features? Too often that tradeoff is one online sellers need to make. Fortunately, Easy Digital Downloads manages to be easy enough for eCommerce beginners to configure without sacrificing any important functionality.
 
 > EDD gives me a solid platform out of the box, with the flexibility of being able to customize anything I want or need to. The best of both worlds!
+
 > Brian Hogg – SellingPlugins.com
 
 Here are some of the features supported out-of-the-box:
@@ -245,6 +247,50 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 11. Google Pay checkout
 
 == Changelog ==
+= 2.10.6, June 22, 2021 =
+* New: Added license upgrade notices to EDD admin pages.
+* Improvement: The discount API endpoint now includes `excluded_products`.
+* Improvement: The Hummingbird cache plugin is now detected in `edd_is_caching_plugin_active()`.
+* Fix: Currency symbol was prefixed with minus sign in PHP 8 on some interfaces.
+* Fix: Prevent multi purchase mode from reporting as enabled if a product does not have variable pricing turned on.
+* Fix: Deprecation notices in PHP 8.
+* Improvement: Stripe - When using the filter to adjust Stripe Element styles, we now merge those styles with the default generated ones.
+* Improvement: Stripe - The `edds_is_zero_decimal_currency()` function now accepts an optional `$currency` parameter, so you can check any currency instead of just the shop's selected currency.
+* Fix: Stripe - Fatal error when attempting to perform old database upgrades.
+* Fix: Stripe - Undefined index notice with Stripe Connect.
+
+= 2.10.5, May 20, 2021 =
+* Fix: Unexpected checkout fields may become required when they weren't before, after a discount code is applied.
+* Fix: Deprecation notices in PHP 8.
+* New: Stripe - Added UGX to zero decimal currency list.
+* Improvement: Stripe - The Express Checkout gateway option is now completely hidden until eligibility is confirmed, whereas before it was shown and then hidden if determined to be ineligible. This should remove the sudden "flash" of the gateway option disappearing.
+* Improvement: Stripe - Express Checkout settings are now disabled if taxes are enabled for the store.
+* Fix: Stripe - The "Buy Now" modal visible on the page if Buy Now is enabled but the Stripe gateway isn't active.
+* Fix: Stripe - Incorrect get_current_user() function usage.
+* Fix: Stripe - Express Checkout not using custom price (from the Custom Prices add-on).
+* Fix: Stripe - Undefined variable $purchase_data when making purchase that only contains fees.
+* Dev: Stripe - Update refund logic to use new refunds API in EDD 3.0.
+* Dev: Stripe - Remove composer/installer version lock.
+
+= 2.10.4, May 4, 2021 =
+* Security Fix: Reflected XSS.
+
+= 2.10.3, April 14, 2021 =
+* Security Fix: Fix nonce logic when disconnecting from Stripe Connect.
+* Fix: Not enough padding on file upload field.
+
+= 2.10.2, April 5, 2021 =
+* Fix: Stripe - Some Stripe errors were not localized.
+* Fix: Stripe - The pre-approval payment status was being registered when it was not supported.
+* Fix: Stripe - Use of the array_key_first function was only available in PHP 7.3+.
+* Fix: Registration form was not validating all fields.
+* Fix: Batch Download importer was using GLOB_BRACE which is not available on all containerized platforms.
+* Tweak: Re-Organized the gateway list in settings.
+* Tweak: Adjust SendWP setting description.
+* Tweak: Removed Jilt callout in Advanced Email settings.
+* New: Inform store owners of Recapture for abandoned cart recovery.
+* New: Add link to Termageddon for Terms of Agreement and Privacy Policy fields within Easy Digital Downloads settings.
+
 = 2.10.1, March 9, 2021 =
 * Fix: Removed incorrect inclusion of license key field for the Stripe integration when the Stripe Pro Payment Gateway extension is not active.
 

@@ -221,7 +221,7 @@ class EDD_Logging {
 				'user_agent'  => $user_agent,
 			);
 
-			$meta_to_unset = array( 'file_id', 'payment_id', 'price_id', 'customer_id', 'ip' );
+			$meta_to_unset = array( 'file_id', 'payment_id', 'price_id', 'customer_id', 'ip', 'user_id' );
 		}
 
 		// Now unset the meta we've used up in the main data array.

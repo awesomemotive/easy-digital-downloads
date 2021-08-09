@@ -23,6 +23,10 @@
 
 @import "reports/style";
 
+@import "orders/style";
+
+@import "promos/style";
+
 /**
  * Notes:
  *
@@ -626,7 +630,7 @@ table.edd-order-overview-summary--refund {
 }
 
 .edd-order-overview-summary th:not(.column-primary) {
-	width: 200px;
+	width: 100px;
 }
 
 .edd-order-overview-summary .row-actions > *:not(:first-child):before {
@@ -667,24 +671,30 @@ table.edd-order-overview-summary--refund {
 }
 
 /** Totals */
-.edd-order-overview-summary__totals .column-primary {
+.edd-order-overview-summary__subtotal .column-primary,
+.edd-order-overview-summary__tax tr:first-of-type .column-primary,
+.edd-order-overview-summary__total .column-primary {
 	font-weight: 600;
 }
 
-.edd-order-overview-summary__totals-total td {
+.edd-order-overview-summary__subtotal td,
+.edd-order-overview-summary__adjustments td,
+.edd-order-overview-summary__tax td,
+.edd-order-overview-summary__total td {
 	vertical-align: middle;
 }
 
-.edd-order-overview-summary__totals td small {
+.edd-order-overview-summary__tax td small,
+.edd-order-overview-summary__total td small {
 	font-weight: normal;
 }
 
-.edd-order-overview-summary__totals .total {
+.edd-order-overview-summary__total .total {
 	color: #017d5c;
 	display: inline-block;
 }
 
-.edd-order-overview-summary__totals .total.is-negative {
+.edd-order-overview-summary__total .total.is-negative {
 	color: #a00;
 }
 
@@ -694,23 +704,23 @@ table.edd-order-overview-summary--refund {
 		margin-left: -50px;
 	}
 
-	.edd-order-overview-summary__totals .total {
+	.edd-order-overview-summary__total .total {
 		font-size: 150%;
 		padding-top: 5px;
 		padding-bottom: 5px;
 	}
 }
 
-.edd-order-overview-summary__totals tr:last-child th,
-.edd-order-overview-summary__totals tr:last-child td:not(:first-of-type) {
+.edd-order-overview-summary__total tr:last-child th,
+.edd-order-overview-summary__total tr:last-child td:not(:first-of-type) {
 	border-top: 1px solid #e5e5e5;
 }
 
-.edd-order-overview-summary__totals .notice {
+.edd-order-overview-summary__total .notice {
 	margin: -1px;
 }
 
-.edd-order-overview-summary__totals .notice p {
+.edd-order-overview-summary__total .notice p {
 	font-weight: normal;
 	margin: 0.5em 0;
 }
@@ -846,6 +856,7 @@ table.edd-order-overview-summary--refund {
 	opacity: 0.75;
 }
 
+.edd-order-overview-add-adjustment .notice,
 .edd-order-overview-add-item .notice {
 	margin: 0 0 1rem;
 }
@@ -1088,7 +1099,6 @@ textarea[name="edd-note"] {
 .wp-list-table.discounts .column-primary strong,
 .wp-list-table.orders .column-primary strong,
 .wp-list-table.orderitems .column-primary strong,
-.wp-list-table.refunditems .column-primary strong,
 .wp-list-table.orderadjustments .column-primary strong {
 	font-size: 14px;
 }
@@ -1575,32 +1585,7 @@ input[class*="edd-price-field"] {
 #edd-order-refunds-list {
 	padding-left: 25px;
 }
-#edd-refund-submit-button-wrapper .spinner {
-	float: none;
-	vertical-align: top;
-}
-#edd-submit-refund-status {
-	text-align: center;
-	font-size: 1.2em;
-	vertical-align: middle;
-}
-#edd-submit-refund-status .edd-submit-refund-message::before{
-	font-family: dashicons;
-	font-size: 1.5em;
-	vertical-align: middle;
-	color: #fff;
-	border-radius: 16px;
-	margin: 5px;
-}
-#edd-submit-refund-status .edd-submit-refund-message.success::before{
-	content: "\f147";
-	background-color: #339933;
-	padding-right: 1px;
-}
-#edd-submit-refund-status .edd-submit-refund-message.fail::before{
-	content: "\f335";
-	background-color: #993333;
-}
+
 #poststuff .edd-order-data .inside {
 	margin: 0;
 	padding: 0;
@@ -1620,18 +1605,7 @@ input[class*="edd-price-field"] {
 	font-style: italic;
 	padding: 5px;
 }
-#edd-refund-order-dialog #edd-refund-submit-subtotal td {
-	border-top: 2px solid #9c9c9c;
-}
-#edd-refund-submit-button-wrapper,
-#edd-refund-order-dialog .edd-refund-submit-line-total td:first-child {
-	text-align: right;
-}
-#edd-refund-order-dialog .edd-order-item__label {
-	font-size: 14px;
-	font-weight: 600;
-	vertical-align: baseline;
-}
+
 #edd_general_logs p {
 	margin: 0;
 	padding: 0;
@@ -1858,45 +1832,6 @@ input[class*="edd-price-field"] {
 	}
 	.order-data-column input[type="email"] {
 		padding: 6px 10px;
-	}
-
-	.refunditems tr {
-		display: flex;
-	}
-
-	.refunditems tr.refunditem {
-		flex-wrap: wrap;
-	}
-
-	.refunditems td {
-		flex: 1 0 2.5em;
-	}
-
-	.refunditems tr.refunditem td:not(.check-column) {
-		flex-basis: calc(100% - 60px);
-	}
-
-	.refunditems tr.refunditem td:not(.check-column):not(.column-name) {
-		flex-basis: 100px;
-		display: inline-flex;
-		justify-content: flex-start;
-	}
-
-	.refunditems th:not(.column-name),
-	.refunditems tr.refunditem td.column-name:before {
-		display: none !important;
-	}
-
-	.refunditems tr.refunditem td:not(.check-column):not(.column-name):before {
-		position: relative;
-		display: inline-block;
-		margin-right: 10px;
-		left: unset;
-		width: unset;
-	}
-
-	.wp-list-table.refunditems .column-name {
-		width: 100%;
 	}
 
 	.edd-refund-submit-line-total td:last-of-type {
@@ -2319,35 +2254,35 @@ span.edd-to-and-from--separator {
 }
 
 [id*="edd-sendwp-"].button,
-[id*="edd-jilt-"].button {
+[id*="edd-recapture-"].button {
 	font-size: 16px;
 	height: auto;
 	padding: 8px 14px;
 	margin: 6px 0 0;
 }
 [id*="edd-sendwp-"].button .dashicons,
-[id*="edd-jilt-"].button .dashicons {
+[id*="edd-recapture-"].button .dashicons {
 	line-height: 29px;
 	margin-right: 8px;
 }
 [id*="edd-sendwp-"].button .edd-loading,
 [id*="edd-sendwp-"].button .edd-loading:after,
-[id*="edd-jilt-"].button .edd-loading,
-[id*="edd-jilt-"].button .edd-loading:after {
+[id*="edd-recapture-"].button .edd-loading,
+[id*="edd-recapture-"].button .edd-loading:after {
 	border-radius: 50%;
 	display: inline-block;
 	width: 14px;
 	height: 14px;
 }
 [id*="edd-sendwp-"].button .edd-loading,
-[id*="edd-jilt-"].button .edd-loading {
+[id*="edd-recapture-"].button .edd-loading {
 	position: relative;
 	top: 3px;
 	margin-left: 4px;
 	box-shadow: 0 0 2px rgba(0,0,0,.2);
 }
 [id*="edd-sendwp-"].button .edd-loading,
-[id*="edd-jilt-"].button .edd-loading {
+[id*="edd-recapture-"].button .edd-loading {
 	-webkit-animation: edd-spinning 1.1s infinite linear;
 	animation: edd-spinning 1.1s infinite linear;
 	border-top: 2px solid rgba(255, 255, 255, 0.5);
@@ -2360,14 +2295,14 @@ span.edd-to-and-from--separator {
 	transform: translateZ(0);
 }
 #edd-sendwp-disconnect.button .edd-loading.dark,
-#edd-jilt-disconnect.button .edd-loading.dark {
+#edd-recapture-disconnect.button .edd-loading.dark {
 	border-top-color: rgba(0, 0, 0, 0.2);
 	border-right-color: rgba(0, 0, 0, 0.2);
 	border-bottom-color: rgba(0, 0, 0, 0.2);
 	border-left-color: #666;
 	box-shadow: none;
 }
-.jilt-notice {
+.recapture-notice {
 	position: relative;
 }
 @-webkit-keyframes edd-spinning {

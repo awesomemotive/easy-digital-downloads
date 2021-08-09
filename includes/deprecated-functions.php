@@ -563,7 +563,7 @@ function edd_undo_purchase_on_refund( $payment_id, $new_status, $old_status ) {
  * @param int $hour Hour
  * @return int $earnings Earnings
  */
-function edd_get_earnings_by_date( $day, $month_num, $year = null, $hour = null, $include_taxes = true ) {
+function edd_get_earnings_by_date( $day, $month_num = null, $year = null, $hour = null, $include_taxes = true ) {
 	$backtrace = debug_backtrace();
 
 	_edd_deprecated_function( __FUNCTION__, '2.7', 'EDD_Payment_Stats()->get_earnings()', $backtrace );
@@ -1156,4 +1156,363 @@ function edd_record_status_change( $payment_id, $new_status, $old_status ) {
 	$status_change = sprintf( __( 'Status changed from %s to %s', 'easy-digital-downloads' ), $old_status, $new_status );
 
 	edd_insert_payment_note( $payment_id, $status_change );
+}
+
+/**
+ * Shows checkbox to automatically refund payments made in PayPal.
+ *
+ * @deprecated 3.0 In favour of `edd_paypal_refund_checkbox()`
+ * @see edd_paypal_refund_checkbox()
+ *
+ * @since  2.6.0
+ *
+ * @param int $payment_id The current payment ID.
+ * @return void
+ */
+function edd_paypal_refund_admin_js( $payment_id = 0 ) {
+
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '3.0', 'edd_paypal_refund_checkbox', $backtrace );
+
+	// If not the proper gateway, return early.
+	if ( 'paypal' !== edd_get_payment_gateway( $payment_id ) ) {
+		return;
+	}
+
+	// If our credentials are not set, return early.
+	$key       = edd_get_payment_meta( $payment_id, '_edd_payment_mode', true );
+	$username  = edd_get_option( 'paypal_' . $key . '_api_username' );
+	$password  = edd_get_option( 'paypal_' . $key . '_api_password' );
+	$signature = edd_get_option( 'paypal_' . $key . '_api_signature' );
+
+	if ( empty( $username ) || empty( $password ) || empty( $signature ) ) {
+		return;
+	}
+
+	// Localize the refund checkbox label.
+	$label = __( 'Refund Payment in PayPal', 'easy-digital-downloads' );
+
+	?>
+	<script type="text/javascript">
+		jQuery(document).ready(function($) {
+			$('select[name=edd-payment-status]').change(function() {
+				if ( 'refunded' === $(this).val() ) {
+					$(this).parent().parent().append('<input type="checkbox" id="edd-paypal-refund" name="edd-paypal-refund" value="1" style="margin-top:0">');
+					$(this).parent().parent().append('<label for="edd-paypal-refund"><?php echo $label; ?></label>');
+				} else {
+					$('#edd-paypal-refund').remove();
+					$('label[for="edd-paypal-refund"]').remove();
+				}
+			});
+		});
+	</script>
+	<?php
+}
+
+/**
+ * Possibly refunds a payment made with PayPal Standard or PayPal Express.
+ *
+ * @deprecated 3.0 In favour of `edd_paypal_maybe_refund_transaction()`
+ * @see edd_paypal_maybe_refund_transaction()
+ *
+ * @since  2.6.0
+ *
+ * @param object|EDD_Payment $payment The current payment ID.
+ * @return void
+ */
+function edd_maybe_refund_paypal_purchase( EDD_Payment $payment ) {
+	$backtrace = debug_backtrace();
+
+	_edd_deprecated_function( __FUNCTION__, '3.0', 'edd_paypal_maybe_refund_transaction', $backtrace );
+
+	if ( ! current_user_can( 'edit_shop_payments', $payment->ID ) ) {
+		return;
+	}
+
+	if ( empty( $_POST['edd-paypal-refund'] ) ) {
+		return;
+	}
+
+	$processed = $payment->get_meta( '_edd_paypal_refunded', true );
+
+	// If the status is not set to "refunded", return early.
+	if ( 'complete' !== $payment->old_status && 'revoked' !== $payment->old_status ) {
+		return;
+	}
+
+	// If not PayPal/PayPal Express, return early.
+	if ( 'paypal' !== $payment->gateway ) {
+		return;
+	}
+
+	// If the payment has already been refunded in the past, return early.
+	if ( $processed ) {
+		return;
+	}
+
+	// Process the refund in PayPal.
+	edd_refund_paypal_purchase( $payment );
+}
+
+/**
+ * Jilt Callback
+ *
+ * Renders Jilt Settings
+ *
+ * @deprecated 2.10.2
+ *
+ * @param array $args arguments passed by the setting.
+ * @return void
+ */
+function edd_jilt_callback( $args ) {
+
+	_edd_deprecated_function( __FUNCTION__, '2.10.2' );
+
+	$activated   = is_callable( 'edd_jilt' );
+	$connected   = $activated && edd_jilt()->get_integration()->is_jilt_connected();
+	$connect_url = $activated ? edd_jilt()->get_connect_url() : '';
+	$account_url = $connected ? edd_jilt()->get_integration()->get_jilt_app_url() : '';
+
+	echo wp_kses_post( $args['desc'] );
+
+	if ( $activated ) :
+		?>
+
+		<?php if ( $connected ) : ?>
+
+		<p>
+			<button id="edd-jilt-disconnect" class="button"><?php esc_html_e( 'Disconnect Jilt', 'easy-digital-downloads' ); ?></button>
+		</p>
+
+		<p>
+			<?php
+			wp_kses_post(
+				sprintf(
+				/* Translators: %1$s - <a> tag, %2$s - </a> tag */
+					__( '%1$sClick here%2$s to visit your Jilt dashboard', 'easy-digital-downloads' ),
+					'<a href="' . esc_url( $account_url ) . '" target="_blank">',
+					'</a>'
+				)
+			);
+			?>
+		</p>
+
+	<?php else : ?>
+
+		<p>
+			<a id="edd-jilt-connect" class="button button-primary" href="<?php echo esc_url( $connect_url ); ?>">
+				<?php esc_html_e( 'Connect to Jilt', 'easy-digital-downloads' ); ?>
+			</a>
+		</p>
+
+	<?php endif; ?>
+
+	<?php elseif( current_user_can( 'install_plugins' ) ) : ?>
+
+		<p>
+			<button id="edd-jilt-connect" class="button button-primary">
+				<?php esc_html_e( 'Install Jilt', 'easy-digital-downloads' ); ?>
+			</button>
+		</p>
+
+	<?php
+	endif;
+}
+
+/**
+ * Handle installation and activation for Jilt via AJAX
+ *
+ * @deprecated 2.10.2
+ * @since n.n.n
+ */
+function edd_jilt_remote_install_handler() {
+
+	_edd_deprecated_function( __FUNCTION__, '2.10.2' );
+
+	if ( ! current_user_can( 'manage_shop_settings' ) || ! current_user_can( 'install_plugins' ) ) {
+		wp_send_json_error(
+			array(
+				'error' => __( 'You do not have permission to do this.', 'easy-digital-downloads' ),
+			)
+		);
+	}
+
+	include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+	include_once ABSPATH . 'wp-admin/includes/file.php';
+	include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+
+	$plugins = get_plugins();
+
+	if ( ! array_key_exists( 'jilt-for-edd/jilt-for-edd.php', $plugins ) ) {
+		/*
+		* Use the WordPress Plugins API to get the plugin download link.
+		*/
+		$api = plugins_api(
+			'plugin_information',
+			array(
+				'slug' => 'jilt-for-edd',
+			)
+		);
+
+		if ( is_wp_error( $api ) ) {
+			wp_send_json_error(
+				array(
+					'error' => $api->get_error_message(),
+					'debug' => $api,
+				)
+			);
+		}
+
+		/*
+		* Use the AJAX Upgrader skin to quietly install the plugin.
+		*/
+		$upgrader = new Plugin_Upgrader( new WP_Ajax_Upgrader_Skin() );
+		$install  = $upgrader->install( $api->download_link );
+		if ( is_wp_error( $install ) ) {
+			wp_send_json_error(
+				array(
+					'error' => $install->get_error_message(),
+					'debug' => $api,
+				)
+			);
+		}
+
+		activate_plugin( $upgrader->plugin_info() );
+
+	} else {
+
+		activate_plugin( 'jilt-for-edd/jilt-for-edd.php' );
+	}
+
+	/*
+	* Final check to see if Jilt is available.
+	*/
+	if ( ! class_exists( 'EDD_Jilt_Loader' ) ) {
+		wp_send_json_error(
+			array(
+				'error' => __( 'Something went wrong. Jilt was not installed correctly.', 'easy-digital-downloads' ),
+			)
+		);
+	}
+
+	wp_send_json_success();
+}
+
+/**
+ * Handle connection for Jilt via AJAX
+ *
+ * @deprecated 2.10.2
+ * @since n.n.n
+ */
+function edd_jilt_connect_handler() {
+
+	_edd_deprecated_function( __FUNCTION__, '2.10.2' );
+
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		wp_send_json_error(
+			array(
+				'error' => __( 'You do not have permission to do this.', 'easy-digital-downloads' ),
+			)
+		);
+	}
+
+	if ( ! is_callable( 'edd_jilt' ) ) {
+		wp_send_json_error(
+			array(
+				'error' => __( 'Something went wrong. Jilt was not installed correctly.', 'easy-digital-downloads' ),
+			)
+		);
+	}
+
+	wp_send_json_success( array( 'connect_url' => edd_jilt()->get_connect_url() ) );
+}
+
+/**
+ * Handle disconnection and deactivation for Jilt via AJAX
+ *
+ * @deprecated 2.10.2
+ * @since n.n.n
+ */
+function edd_jilt_disconnect_handler() {
+
+	_edd_deprecated_function( __FUNCTION__, '2.10.2' );
+
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		wp_send_json_error(
+			array(
+				'error' => __( 'You do not have permission to do this.', 'easy-digital-downloads' ),
+			)
+		);
+	}
+
+	if ( is_callable( 'edd_jilt' ) ) {
+
+		edd_jilt()->get_integration()->unlink_shop();
+		edd_jilt()->get_integration()->revoke_authorization();
+		edd_jilt()->get_integration()->clear_connection_data();
+	}
+
+	deactivate_plugins( 'jilt-for-edd/jilt-for-edd.php' );
+
+	wp_send_json_success();
+}
+
+/**
+ * Maybe adds a notice to abandoned payments if Jilt isn't installed.
+ *
+ * @deprecated 2.10.2
+ * @since n.n.n
+ *
+ * @param int $payment_id The ID of the abandoned payment, for which a jilt notice is being thrown.
+ */
+function maybe_add_jilt_notice_to_abandoned_payment( $payment_id ) {
+
+	_edd_deprecated_function( __FUNCTION__, '2.10.2' );
+
+	if ( ! is_callable( 'edd_jilt' )
+		&& ! is_plugin_active( 'recapture-for-edd/recapture.php' )
+		&& 'abandoned' === edd_get_payment_status( $payment_id )
+		&& ! get_user_meta( get_current_user_id(), '_edd_try_jilt_dismissed', true )
+	) {
+		?>
+		<div class="notice notice-warning jilt-notice">
+			<p>
+				<?php
+				echo wp_kses_post(
+					sprintf(
+						/* Translators: %1$s - <strong> tag, %2$s - </strong> tag, %3$s - <a> tag, %4$s - </a> tag */
+						__( '%1$sRecover abandoned purchases like this one.%2$s %3$sTry Jilt for free%4$s.', 'easy-digital-downloads' ),
+						'<strong>',
+						'</strong>',
+						'<a href="https://easydigitaldownloads.com/downloads/jilt" target="_blank">',
+						'</a>'
+					)
+				);
+				?>
+			</p>
+			<?php
+			echo wp_kses_post(
+				sprintf(
+					/* Translators: %1$s - Opening anchor tag, %2$s - The url to dismiss the ajax notice, %3$s - Complete the opening of the anchor tag, %4$s - Open span tag, %4$s - Close span tag */
+					__( '%1$s %2$s %3$s %4$s Dismiss this notice. %5$s', 'easy-digital-downloads' ),
+					'<a href="',
+					esc_url(
+						add_query_arg(
+							array(
+								'edd_action' => 'dismiss_notices',
+								'edd_notice' => 'try_jilt',
+							)
+						)
+					),
+					'" type="button" class="notice-dismiss">',
+					'<span class="screen-reader-text">',
+					'</span>
+				</a>'
+				)
+			);
+			?>
+		</div>
+		<?php
+	}
 }

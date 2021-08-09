@@ -43,6 +43,7 @@ defined( 'ABSPATH' ) || exit;
  * @property float              $tax
  * @property float              $discount
  * @property float              $total
+ * @property float              $rate
  * @property Order_Item[]       $items
  * @property Order_Adjustment[] $adjustments
  * @property Order_Address      $address
@@ -384,11 +385,7 @@ class Order extends Rows\Order {
 	public function get_discounts() {
 		$discounts = array();
 
-		if ( empty( $this->adjustments ) ) {
-			return $discounts;
-		}
-
-		foreach ( $this->adjustments as $adjustment ) {
+		foreach ( $this->get_adjustments() as $adjustment ) {
 			/** @var Order_Adjustment $adjustment */
 
 			if ( 'discount' === $adjustment->type ) {
@@ -411,13 +408,8 @@ class Order extends Rows\Order {
 		// Default values
 		$fees = array();
 
-		// Ensure adjustments exist.
-		if ( null === $this->adjustments ) {
-			$this->adjustments = $this->get_adjustments();
-		}
-
 		// Fetch the fees that applied to the entire order.
-		foreach ( $this->adjustments as $adjustment ) {
+		foreach ( $this->get_adjustments() as $adjustment ) {
 			/** @var Order_Adjustment $adjustment */
 
 			if ( 'fee' === $adjustment->type ) {
@@ -442,6 +434,30 @@ class Order extends Rows\Order {
 		}
 
 		return $fees;
+	}
+
+	/**
+	 * Retrieve the credits applied to the order.
+	 * These exist only for manually added orders.
+	 *
+	 * @since 3.0
+	 *
+	 *@return Order_Adjustment[] Order credits.
+	 */
+	public function get_credits() {
+		// Default values
+		$credits = array();
+
+		// Fetch the fees that applied to the entire order.
+		foreach ( $this->get_adjustments() as $adjustment ) {
+			/** @var Order_Adjustment $adjustment */
+
+			if ( 'credit' === $adjustment->type ) {
+				$credits[] = $adjustment;
+			}
+		}
+
+		return $credits;
 	}
 
 	/**
@@ -520,7 +536,7 @@ class Order extends Rows\Order {
 		 * If we have a tax_amount, but no rate, check in order meta. This is where legacy rates are stored
 		 * if they cannot be resolved to an actual adjustment object.
 		 */
-		if ( empty( $rate ) && $this->tax > 0 ) {
+		if ( empty( $rate ) && abs( $this->tax ) > 0 ) {
 			$rate = edd_get_order_meta( $this->id, 'tax_rate', true );
 		}
 
@@ -594,5 +610,60 @@ class Order extends Rows\Order {
 	 */
 	public function is_complete() {
 		return ( 'complete' === $this->status );
+	}
+
+	/**
+	 * Determines if this order is able to be resumed by the user.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool
+	 */
+	public function is_recoverable() {
+		$recoverable_statuses = edd_recoverable_order_statuses();
+		if ( in_array( $this->status, $recoverable_statuses, true ) && empty( $this->get_transaction_id() ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Returns the URL that a customer can use to resume an order, or false if it's not recoverable.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool|string
+	 */
+	public function get_recovery_url() {
+		if ( ! $this->is_recoverable() ) {
+			return false;
+		}
+
+		$recovery_url = add_query_arg(
+			array(
+				'edd_action' => 'recover_payment',
+				'payment_id' => urlencode( $this->id ),
+			),
+			edd_get_checkout_uri()
+		);
+
+		/**
+		 * Legacy recovery URL filter.
+		 *
+		 * @param \EDD_Payment $payment The EDD payment object.
+		 */
+		if ( has_filter( 'edd_payment_recovery_url' ) ) {
+			$recovery_url = apply_filters( 'edd_payment_recovery_url', $recovery_url, edd_get_payment( $this->id ) );
+		}
+
+		/**
+		 * The order recovery URL.
+		 *
+		 * @since 3.0
+		 * @param string            $recovery_url The order recovery URL.
+		 * @param \EDD\Orders\Order $this         The order object.
+		 */
+		return apply_filters( 'edd_order_recovery_url', $recovery_url, $this );
 	}
 }

@@ -38,7 +38,7 @@ if ( true === edd_is_add_order_page() ) :
 	>
 		<?php echo esc_html( sprintf( __( 'Add %s', 'easy-digital-downloads' ), edd_get_label_singular() ) ); ?>
 	</button>
-<?php elseif ( 'refunded' !== $order->status ) : ?>
+<?php elseif ( 'refunded' !== $order->status && edd_get_order_total( $order->id ) > 0 ) : ?>
 	<div class="edd-order-overview-actions__locked">
 		<?php esc_html_e( 'Order items cannot be modified.', 'easy-digital-downloads' ); ?>
 		<span alt="f223" class="edd-help-tip dashicons dashicons-editor-help" title="<?php esc_attr_e( 'Issue a refund to adjust the net total for this order.', 'easy-digital-downloads' ); ?>"></span>

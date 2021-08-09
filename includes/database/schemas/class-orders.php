@@ -122,6 +122,7 @@ class Orders extends Schema {
 			'type'       => 'varchar',
 			'length'     => '100',
 			'sortable'   => true,
+			'default'    => 'manual',
 		),
 
 		// mode
@@ -135,7 +136,8 @@ class Orders extends Schema {
 		array(
 			'name'       => 'currency',
 			'type'       => 'varchar',
-			'length'     => '20'
+			'length'     => '20',
+			'validate'   => 'strtoupper',
 		),
 
 		// payment_key
@@ -162,7 +164,8 @@ class Orders extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
-			'sortable'   => true
+			'sortable'   => true,
+			'validate'   => 'edd_sanitize_amount'
 		),
 
 		// discount
@@ -171,7 +174,8 @@ class Orders extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
-			'sortable'   => true
+			'sortable'   => true,
+			'validate'   => 'edd_sanitize_amount'
 		),
 
 		// tax
@@ -180,7 +184,8 @@ class Orders extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
-			'sortable'   => true
+			'sortable'   => true,
+			'validate'   => 'edd_sanitize_amount'
 		),
 
 		// total
@@ -189,7 +194,16 @@ class Orders extends Schema {
 			'type'       => 'decimal',
 			'length'     => '18,9',
 			'default'    => '0',
-			'sortable'   => true
+			'sortable'   => true,
+			'validate'   => 'edd_sanitize_amount'
+		),
+
+		// rate
+		array(
+			'name'       => 'rate',
+			'type'       => 'decimal',
+			'length'     => '10,5',
+			'default'    => '1.00000',
 		),
 
 		// date_created

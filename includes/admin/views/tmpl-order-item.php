@@ -33,8 +33,10 @@ $view_url = add_query_arg(
 			>
 				{{{ data.productName }}}
 			</a>
-			<# if ( false === data.state.isRefund && 'refunded' === data.status ) { #>
-				&mdash; <?php esc_html_e( 'Refunded', 'easy-digital-downloads' ); ?>
+			<# if ( false === data.state.isRefund ) { #>
+				<# if ( [ 'refunded', 'partially_refunded' ].includes( data.status ) ) { #>
+					&mdash; {{{ data.statusLabel }}}
+				<# } #>
 			<# } #>
 
 			<div class="row-actions">
@@ -57,7 +59,7 @@ $view_url = add_query_arg(
 		</div>
 
 		<button type="button" class="toggle-row">
-			<span class="screen-reader-text">Show more details</span>
+			<span class="screen-reader-text"><?php esc_html_e( 'Show more details', 'easy-digital-downloads' ); ?></span>
 		</button>
 	</div>
 </td>

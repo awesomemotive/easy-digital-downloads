@@ -218,6 +218,7 @@ class Utilities {
 	 *                             date. Default false.
 	 *
 	 * @return \EDD\Utils\Date Date instance. Time is returned as UTC.
+	 * @throws \Exception
 	 */
 	public function date( $date_string = 'now', $timezone = null, $localize = false ) {
 

@@ -36,7 +36,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string $end_date
  * @property int $use_count
  * @property int $max_uses
- * @property float $min_cart_price
+ * @property float $min_charge_amount
  * @property bool $once_per_customer
  */
 class EDD_Discount extends Adjustment {
@@ -213,7 +213,7 @@ class EDD_Discount extends Adjustment {
 	 * @access protected
 	 * @var mixed int|float
 	 */
-	protected $min_cart_price = null;
+	protected $min_charge_amount = null;
 
 	/**
 	 * Is Single Use per customer?
@@ -340,7 +340,7 @@ class EDD_Discount extends Adjustment {
 					return $this->start_date;
 
 				case 'min_price':
-					return $this->min_cart_price;
+					return $this->min_charge_amount;
 
 				case 'use_once':
 				case 'is_single_use':
@@ -350,6 +350,7 @@ class EDD_Discount extends Adjustment {
 				case 'uses':
 					return $this->use_count;
 
+				case 'not_global':
 				case 'is_not_global':
 					return 'global' === $this->scope ? false : true;
 			}
@@ -401,7 +402,7 @@ class EDD_Discount extends Adjustment {
 					$this->start_date = $value;
 					break;
 				case 'min_price':
-					$this->min_cart_price = $value;
+					$this->min_charge_amount = $value;
 					break;
 				case 'use_once':
 				case 'is_single_use':
@@ -410,6 +411,7 @@ class EDD_Discount extends Adjustment {
 				case 'uses':
 					$this->use_count = $value;
 					break;
+				case 'not_global':
 				case 'is_not_global':
 					$this->scope = $value ? 'not_global' : 'global';
 					break;
@@ -423,14 +425,14 @@ class EDD_Discount extends Adjustment {
 	 * Handle method dispatch dynamically.
 	 *
 	 * @param string $method Method name.
-	 * @param array $args Arguments to be passed to method.
+	 * @param array  $args   Arguments to be passed to method.
 	 *
 	 * @return mixed
 	 */
 	public function __call( $method, $args ) {
-		$property = str_replace( 'setup_', '', $method );
+		$property = strtolower( str_replace( array( 'setup_', 'get_' ), '', $method ) );
 		if ( ! method_exists( $this, $method ) && property_exists( $this, $property ) ) {
-			return $this->{$property( $args )};
+			return $this->{$property};
 		}
 	}
 
@@ -531,7 +533,7 @@ class EDD_Discount extends Adjustment {
 					$this->{$key} = (int) $value;
 					break;
 				case 'min_charge_amount':
-					$this->min_cart_price = $value;
+					$this->min_charge_amount = $value;
 					break;
 				default:
 					if ( is_string( $value ) ) {
@@ -908,7 +910,7 @@ class EDD_Discount extends Adjustment {
 		 * @param float $min_price Minimum price.
 		 * @param int   $ID        Discount ID.
 		 */
-		return (float) apply_filters( 'edd_get_discount_min_price', $this->min_cart_price, $this->id );
+		return (float) apply_filters( 'edd_get_discount_min_price', $this->min_charge_amount, $this->id );
 	}
 
 	/**
@@ -1293,8 +1295,9 @@ class EDD_Discount extends Adjustment {
 		 *
 		 * @param bool $return Has the discount started or not.
 		 * @param int  $ID     Discount ID.
+		 * @param bool $set_error Whether an error message be set in session.
 		 */
-		return apply_filters( 'edd_is_discount_started', $return, $this->id );
+		return apply_filters( 'edd_is_discount_started', $return, $this->id, $set_error );
 	}
 
 	/**
@@ -1358,8 +1361,9 @@ class EDD_Discount extends Adjustment {
 		 *
 		 * @param bool $return Is the discount maxed out or not.
 		 * @param int  $ID     Discount ID.
+		 * @param bool $set_error Whether an error message be set in session.
 		 */
-		return apply_filters( 'edd_is_discount_maxed_out', $return, $this->id );
+		return apply_filters( 'edd_is_discount_maxed_out', $return, $this->id, $set_error );
 	}
 
 	/**
@@ -1375,10 +1379,10 @@ class EDD_Discount extends Adjustment {
 
 		$cart_amount = edd_get_cart_discountable_subtotal( $this->id );
 
-		if ( (float) $cart_amount >= (float) $this->min_cart_price ) {
+		if ( (float) $cart_amount >= (float) $this->min_charge_amount ) {
 			$return = true;
 		} elseif ( $set_error ) {
-			edd_set_error( 'edd-discount-error', sprintf( __( 'Minimum order of %s not met.', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( $this->min_cart_price ) ) ) );
+			edd_set_error( 'edd-discount-error', sprintf( __( 'Minimum order of %s not met.', 'easy-digital-downloads' ), edd_currency_filter( edd_format_amount( $this->min_charge_amount ) ) ) );
 		}
 
 		/**
@@ -1388,8 +1392,9 @@ class EDD_Discount extends Adjustment {
 		 *
 		 * @param bool $return Is the minimum cart amount met or not.
 		 * @param int  $ID     Discount ID.
+		 * @param bool $set_error Whether an error message be set in session.
 		 */
-		return apply_filters( 'edd_is_discount_min_met', $return, $this->id );
+		return apply_filters( 'edd_is_discount_min_met', $return, $this->id, $set_error );
 	}
 
 	/**
@@ -1511,8 +1516,9 @@ class EDD_Discount extends Adjustment {
 		 * @param bool   $return            Are the product requirements met or not.
 		 * @param int    $ID                Discount ID.
 		 * @param string $product_condition Product condition.
+		 * @param bool $set_error Whether an error message be set in session.
 		 */
-		return (bool) apply_filters( 'edd_is_discount_products_req_met', $return, $this->id, $this->product_condition );
+		return (bool) apply_filters( 'edd_is_discount_products_req_met', $return, $this->id, $this->product_condition, $set_error );
 	}
 
 	/**
@@ -1611,8 +1617,9 @@ class EDD_Discount extends Adjustment {
 		 * @param bool   $return If the discount is used or not.
 		 * @param int    $ID     Discount ID.
 		 * @param string $user   User info.
+		 * @param bool $set_error Whether an error message be set in session.
 		 */
-		return apply_filters( 'edd_is_discount_used', $return, $this->id, $user );
+		return apply_filters( 'edd_is_discount_used', $return, $this->id, $user, $set_error );
 	}
 
 	/**
@@ -1652,8 +1659,9 @@ class EDD_Discount extends Adjustment {
 		 * @param int    $ID     Discount ID.
 		 * @param string $code   Discount code.
 		 * @param string $user   User info.
+		 * @param bool $set_error Whether an error message be set in session.
 		 */
-		return apply_filters( 'edd_is_discount_valid', $return, $this->id, $this->code, $user );
+		return apply_filters( 'edd_is_discount_valid', $return, $this->id, $this->code, $user, $set_error );
 	}
 
 	/**
@@ -1688,8 +1696,9 @@ class EDD_Discount extends Adjustment {
 		 *
 		 * @param bool $return Is the discount active or not.
 		 * @param int  $ID     Discount ID.
+		 * @param bool $set_error Whether an error message be set in session.
 		 */
-		return apply_filters( 'edd_is_discount_active', $return, $this->id );
+		return apply_filters( 'edd_is_discount_active', $return, $this->id, $set_error );
 	}
 
 	/**
@@ -1721,8 +1730,9 @@ class EDD_Discount extends Adjustment {
 		 * @access public
 		 *
 		 * @param float $amount Calculated discounted amount.
+		 * @param EDD_Discount $this Discount object.
 		 */
-		return apply_filters( 'edd_discounted_amount', $amount );
+		return apply_filters( 'edd_discounted_amount', $amount, $this );
 	}
 
 	/**
@@ -1895,25 +1905,22 @@ class EDD_Discount extends Adjustment {
 			'max'               => 'max_uses',
 			'start'             => 'start_date',
 			'expiration'        => 'end_date',
-			'min_price'         => 'min_cart_price',
+			'min_price'         => 'min_charge_amount',
+			'products'          => 'product_reqs',
 			'excluded-products' => 'excluded_products',
-			'is_not_global'     => 'scope',
-			'is_single_use'     => 'once_per_customer',
-			'min_cart_price'    => 'min_charge_amount',
+			'not_global'        => 'scope',
+			'use_once'          => 'once_per_customer',
 		);
 
 		foreach ( $old as $old_key => $new_key ) {
-			if ( isset( $args[ $old_key ] ) ) {
-				if ( 'is_not_global' === $old_key ) {
-					$args[ $new_key ] = $args[ $old_key ]
-						? 'not_global'
-						: 'global';
-				} else {
-					$args[ $new_key ] = $args[ $old_key ];
-				}
-
-				unset( $args[ $old_key ] );
+			if ( 'not_global' === $old_key ) {
+				$args[ $new_key ] = ! empty( $args[ $old_key ] )
+					? 'not_global'
+					: 'global';
+			} elseif ( isset( $args[ $old_key ] ) ) {
+				$args[ $new_key ] = $args[ $old_key ];
 			}
+			unset( $args[ $old_key ] );
 		}
 
 		// Default status needs to be active for regression purposes.
