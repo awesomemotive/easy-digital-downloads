@@ -1448,6 +1448,8 @@ class EDD_CLI extends WP_CLI_Command {
 		 */
 		$customer_table = edd_get_component_interface( 'customer', 'table' );
 		if ( $customer_table instanceof \EDD\Database\Tables\Customers && $customer_table->column_exists( 'payment_ids' ) ) {
+			WP_CLI::line( __( 'Updating customers database table.', 'easy-digital-downloads' ) );
+
 			$wpdb->query( "ALTER TABLE {$wpdb->edd_customers} DROP `payment_ids`" );
 		}
 
