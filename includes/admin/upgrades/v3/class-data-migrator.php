@@ -577,7 +577,7 @@ class Data_Migrator {
 		// Find the parent payment, if there is one.
 		$parent = 0;
 		if ( ! empty( $data->post_parent ) ) {
-			$parent = $wpdb->get_var( $wpdb->prepare( "SELECT edd_order_id FROM {$wpdb->edd_ordermeta} WHERE meta_key = %s AND meta_value = %d", esc_sql( 'legacy_order_id' ), $data->ID ) );
+			$parent = $data->post_parent;
 		}
 
 		if ( 'manual_purchases' === $gateway && isset( $meta['_edd_payment_total'][0] ) ) {
