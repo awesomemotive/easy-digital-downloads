@@ -114,10 +114,9 @@ class MerchantAccount {
 		$difference = array_diff( $required_properties, $valid_properties );
 
 		if ( $difference ) {
-			throw new InvalidMerchantDetails( sprintf(
-				'Missing required merchant properties: %s',
-				json_encode( array_values( $difference ) )
-			) );
+			throw new InvalidMerchantDetails(
+				'Please click "Re-Check Payment Status" below to confirm your payment status.'
+			);
 		}
 	}
 
