@@ -574,12 +574,6 @@ class Data_Migrator {
 
 		}
 
-		// Find the parent payment, if there is one.
-		$parent = 0;
-		if ( ! empty( $data->post_parent ) ) {
-			$parent = $data->post_parent;
-		}
-
 		if ( 'manual_purchases' === $gateway && isset( $meta['_edd_payment_total'][0] ) ) {
 			$gateway     = 'manual';
 			$order_total = $meta['_edd_payment_total'][0];
@@ -664,7 +658,7 @@ class Data_Migrator {
 		// Build the order data before inserting.
 		$order_data = array(
 			'id'             => $data->ID,
-			'parent'         => ! empty( $parent ) ? $parent : 0,
+			'parent'         => $data->post_parent,
 			'order_number'   => $order_number,
 			'status'         => $order_status,
 			'type'           => 'sale',
