@@ -399,7 +399,10 @@ jQuery(document).ready(function ($) {
 
 		e.preventDefault();
 
+		var submitButton = document.getElementById( $( this ).attr( 'id' ) );
+
 		var complete_purchase_val = $(this).val();
+		submitButton.setAttribute( 'data-original-value', complete_purchase_val );
 
 		$(this).val(edd_global_vars.purchase_loading);
 

@@ -383,10 +383,11 @@ function edd_ajax_remove_discount() {
 		$total = edd_get_cart_total();
 
 		$return = array(
-			'total'     => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
-			'code'      => sanitize_text_field( $_POST['code'] ),
-			'discounts' => edd_get_cart_discounts(),
-			'html'      => edd_get_cart_discounts_html()
+			'total_plain' => $total,
+			'total'       => html_entity_decode( edd_currency_filter( edd_format_amount( $total ) ), ENT_COMPAT, 'UTF-8' ),
+			'code'        => sanitize_text_field( $_POST['code'] ),
+			'discounts'   => edd_get_cart_discounts(),
+			'html'        => edd_get_cart_discounts_html()
 		);
 
 		wp_send_json( $return );
