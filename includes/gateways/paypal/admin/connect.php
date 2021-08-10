@@ -474,7 +474,11 @@ function refresh_merchant_status() {
 			throw new \Exception( __( 'No merchant ID saved. Please reconnect to PayPal.', 'easy-digital-downloads' ) );
 		}
 
-		$new_details      = get_merchant_status( $merchant_details->merchant_id );
+		$mode            = edd_is_test_mode() ? PayPal\API::MODE_SANDBOX : PayPal\API::MODE_LIVE;
+		$partner_details = json_decode( get_option( 'edd_paypal_commerce_connect_details_' . $mode ) );
+		$nonce           = isset( $partner_details->nonce ) ? $partner_details->nonce : null;
+
+		$new_details      = get_merchant_status( $merchant_details->merchant_id, $nonce );
 		$merchant_account = new PayPal\MerchantAccount( $new_details );
 		$merchant_account->save();
 
@@ -580,11 +584,12 @@ add_action( 'admin_init', function () {
  * Retrieves the merchant's status in PayPal.
  *
  * @param string $merchant_id
+ * @param string $nonce
  *
  * @return array
  * @throws PayPal\Exceptions\API_Exception
  */
-function get_merchant_status( $merchant_id ) {
+function get_merchant_status( $merchant_id, $nonce = '' ) {
 	$response = wp_remote_post( EDD_PAYPAL_PARTNER_CONNECT_URL . 'merchant-status', array(
 		'headers' => array(
 			'Content-Type' => 'application/json',
@@ -592,6 +597,7 @@ function get_merchant_status( $merchant_id ) {
 		'body'    => json_encode( array(
 			'mode'        => edd_is_test_mode() ? API::MODE_SANDBOX : API::MODE_LIVE,
 			'merchant_id' => $merchant_id,
+			'nonce'       => $nonce
 		) )
 	) );
 

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 2.10.6\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2021-07-12 09:19:10+00:00\n"
+"POT-Creation-Date: 2021-08-09 15:47:44+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -277,7 +277,7 @@ msgstr ""
 #: includes/admin/class-edd-notices.php:49
 #: includes/admin/class-edd-notices.php:70
 #: includes/admin/class-edd-notices.php:87
-#: includes/gateways/paypal/admin/notices.php:57
+#: includes/gateways/paypal/admin/notices.php:58
 msgid "Dismiss Notice"
 msgstr ""
 
@@ -7104,14 +7104,14 @@ msgid "Enable the new PayPal gateway for Easy Digital Downloads"
 msgstr ""
 
 #: includes/gateways/paypal/admin/notices.php:50
-#. Translators: %s documentation URL
+#. Translators: %1$s opening anchor tag; %2$s closing anchor tag
 msgid ""
 "A new, improved PayPal experience is now available in Easy Digital "
-"Downloads. You can learn more about the new integration in <a href=\"%s\" "
-"target=\"_blank\">our documentation</a>."
+"Downloads. You can learn more about the new integration in %1$sour "
+"documentation%2$s."
 msgstr ""
 
-#: includes/gateways/paypal/admin/notices.php:56
+#: includes/gateways/paypal/admin/notices.php:57
 msgid "Activate the New PayPal"
 msgstr ""
 
