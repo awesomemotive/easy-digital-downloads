@@ -80,6 +80,8 @@ add_action( 'edd_downgrade_v3', function () {
 
 	EDD()->customers->create_table();
 
+	delete_option( 'edd_v3_downgrade' );
+
 	wp_safe_redirect( remove_query_arg( array( '_wpnonce', 'edd_action' ) ) );
 	exit;
 } );
