@@ -35,7 +35,7 @@ if ( ! defined( 'EDD_PAYPAL_PARTNER_ATTRIBUTION_ID' ) ) {
  * Partner merchant ID
  */
 if ( ! defined( 'EDD_PAYPAL_MERCHANT_ID' ) ) {
-	define( 'EDD_PAYPAL_MERCHANT_ID', '8NYVREYC28TBQ' );
+	define( 'EDD_PAYPAL_MERCHANT_ID', 'GFJPUJ4SNZYJN' );
 }
 
 if ( ! defined( 'EDD_PAYPAL_SANDBOX_MERCHANT_ID' ) ) {
