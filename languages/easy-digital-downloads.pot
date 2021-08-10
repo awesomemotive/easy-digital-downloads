@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.10.6\n"
+"Project-Id-Version: Easy Digital Downloads 2.11-beta1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2021-08-09 15:47:44+00:00\n"
+"POT-Creation-Date: 2021-08-10 13:38:42+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -28,21 +28,30 @@ msgstr ""
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
-#: includes/EDD_SL_Plugin_Updater.php:250
-msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s."
+#: includes/EDD_SL_Plugin_Updater.php:222
+#. translators: the plugin name.
+msgid "There is a new version of %1$s available."
 msgstr ""
 
-#: includes/EDD_SL_Plugin_Updater.php:258
-msgid ""
-"There is a new version of %1$s available. %2$sView version %3$s details%4$s "
-"or %5$supdate now%6$s."
+#: includes/EDD_SL_Plugin_Updater.php:229
+#. translators: 1. opening anchor tag, do not translate 2. the new plugin
+#. version 3. closing anchor tag, do not translate.
+msgid " %1$sView version %2$s details%3$s."
 msgstr ""
 
-#: includes/EDD_SL_Plugin_Updater.php:502
+#: includes/EDD_SL_Plugin_Updater.php:236
+msgid " %1$sView version %2$s details%3$s or %4$supdate now%5$s."
+msgstr ""
+
+#: includes/EDD_SL_Plugin_Updater.php:247
+msgid "Update now."
+msgstr ""
+
+#: includes/EDD_SL_Plugin_Updater.php:463
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: includes/EDD_SL_Plugin_Updater.php:502
+#: includes/EDD_SL_Plugin_Updater.php:463
 #: includes/admin/customers/customer-actions.php:301
 #: includes/admin/customers/customer-actions.php:345
 #: includes/admin/customers/customer-actions.php:603
@@ -91,7 +100,7 @@ msgstr ""
 #: includes/api/class-edd-api.php:1976 includes/api/class-edd-api.php:1981
 #: includes/api/class-edd-api.php:1993 includes/api/class-edd-api.php:1995
 #: includes/cart/class-edd-cart.php:1433 includes/cart/class-edd-cart.php:1447
-#: includes/class-edd-license-handler.php:382
+#: includes/class-edd-license-handler.php:385
 #: includes/deprecated-functions.php:517 includes/deprecated-functions.php:532
 #: includes/deprecated-functions.php:542 includes/download-functions.php:1277
 #: includes/emails/actions.php:53 includes/emails/template.php:243
@@ -99,7 +108,7 @@ msgstr ""
 #: includes/gateways/manual.php:33
 #: includes/gateways/paypal/admin/connect.php:416
 #: includes/gateways/paypal/admin/connect.php:420
-#: includes/gateways/paypal/admin/connect.php:550
+#: includes/gateways/paypal/admin/connect.php:554
 #: includes/gateways/paypal-standard.php:172
 #: includes/gateways/stripe/includes/admin/upgrade-functions.php:57
 #: includes/gateways/stripe/includes/payment-actions.php:1403
@@ -621,7 +630,7 @@ msgstr ""
 #: includes/admin/import/import-functions.php:113
 #: includes/admin/reporting/export/export-actions.php:23
 #: includes/api/class-edd-api.php:1976
-#: includes/class-edd-license-handler.php:382
+#: includes/class-edd-license-handler.php:385
 msgid "Nonce verification failed"
 msgstr ""
 
@@ -2557,9 +2566,9 @@ msgstr ""
 #: includes/gateways/paypal/admin/connect.php:416
 #: includes/gateways/paypal/admin/connect.php:420
 #: includes/gateways/paypal/admin/connect.php:467
-#: includes/gateways/paypal/admin/connect.php:498
-#: includes/gateways/paypal/admin/connect.php:521
-#: includes/gateways/paypal/admin/connect.php:550
+#: includes/gateways/paypal/admin/connect.php:502
+#: includes/gateways/paypal/admin/connect.php:525
+#: includes/gateways/paypal/admin/connect.php:554
 msgid "You do not have permission to perform this action."
 msgstr ""
 
@@ -2996,8 +3005,8 @@ msgid "Featured Image"
 msgstr ""
 
 #: includes/admin/reporting/export/class-batch-export-downloads.php:55
-#: includes/emails/class-edd-email-tags.php:411
-#: includes/emails/class-edd-email-tags.php:533
+#: includes/emails/class-edd-email-tags.php:412
+#: includes/emails/class-edd-email-tags.php:551
 #: templates/shortcode-receipt.php:125
 msgid "SKU"
 msgstr ""
@@ -5339,7 +5348,7 @@ msgid ""
 "ajax-requests-in-easy-digital-downloads-2-9-4"
 msgstr ""
 
-#: includes/ajax-functions.php:190
+#: includes/ajax-functions.php:202
 msgid ""
 "Missing nonce when adding an item to the cart. Please read the following "
 "for more information: "
@@ -5347,7 +5356,7 @@ msgid ""
 "ajax-requests-in-easy-digital-downloads-2-9-4"
 msgstr ""
 
-#: includes/ajax-functions.php:472
+#: includes/ajax-functions.php:474
 msgid ""
 "Missing nonce when recalculating taxes. Please read the following for more "
 "information: "
@@ -5355,7 +5364,7 @@ msgid ""
 "ajax-requests-in-easy-digital-downloads-2-9-4"
 msgstr ""
 
-#: includes/ajax-functions.php:522
+#: includes/ajax-functions.php:524
 msgid ""
 "Missing nonce when retrieving state list. Please read the following for "
 "more information: "
@@ -5363,16 +5372,16 @@ msgid ""
 "ajax-requests-in-easy-digital-downloads-2-9-4"
 msgstr ""
 
-#: includes/ajax-functions.php:652 includes/ajax-functions.php:704
+#: includes/ajax-functions.php:654 includes/ajax-functions.php:706
 msgid "No results found"
 msgstr ""
 
-#: includes/ajax-functions.php:753 includes/ajax-functions.php:845
+#: includes/ajax-functions.php:755 includes/ajax-functions.php:847
 #: includes/class-edd-html-elements.php:339
 msgid "No users found"
 msgstr ""
 
-#: includes/ajax-functions.php:795
+#: includes/ajax-functions.php:797
 msgid "All Prices"
 msgstr ""
 
@@ -6185,24 +6194,24 @@ msgstr ""
 msgid "Enter username"
 msgstr ""
 
-#: includes/class-edd-license-handler.php:190
+#: includes/class-edd-license-handler.php:193
 msgid "%1$s"
 msgstr ""
 
-#: includes/class-edd-license-handler.php:222
+#: includes/class-edd-license-handler.php:225
 msgid ""
 "Enter your extension license keys here to receive updates for purchased "
 "extensions. If your license key has expired, please <a href=\"%s\" "
 "target=\"_blank\">renew your license</a>."
 msgstr ""
 
-#: includes/class-edd-license-handler.php:509
+#: includes/class-edd-license-handler.php:512
 msgid ""
 "You have invalid or expired license keys for Easy Digital Downloads. Please "
 "go to the <a href=\"%s\">Licenses page</a> to correct this issue."
 msgstr ""
 
-#: includes/class-edd-license-handler.php:547
+#: includes/class-edd-license-handler.php:550
 msgid "Enter valid license key for automatic updates."
 msgstr ""
 
@@ -6680,18 +6689,22 @@ msgstr ""
 msgid "The buyer's IP Address"
 msgstr ""
 
-#: includes/emails/class-edd-email-tags.php:407
-#: includes/emails/class-edd-email-tags.php:529
+#: includes/emails/class-edd-email-tags.php:408
+#: includes/emails/class-edd-email-tags.php:547
 #: templates/shortcode-receipt.php:128
 msgid "Quantity"
 msgstr ""
 
-#: includes/emails/class-edd-email-tags.php:466
+#: includes/emails/class-edd-email-tags.php:467
 #: templates/history-downloads.php:74 templates/shortcode-receipt.php:207
 msgid "No downloadable files found."
 msgstr ""
 
-#: includes/emails/class-edd-email-tags.php:857
+#: includes/emails/class-edd-email-tags.php:497
+msgid "Additional information about your purchase:"
+msgstr ""
+
+#: includes/emails/class-edd-email-tags.php:875
 msgid "%1$sView it in your browser %2$s"
 msgstr ""
 
@@ -7265,13 +7278,13 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/gateways/paypal/class-merchant-account.php:133
+#: includes/gateways/paypal/class-merchant-account.php:132
 msgid ""
 "Your account is unable to receive payments. Please contact PayPal customer "
 "support."
 msgstr ""
 
-#: includes/gateways/paypal/class-merchant-account.php:139
+#: includes/gateways/paypal/class-merchant-account.php:138
 msgid "Your PayPal email address needs to be confirmed."
 msgstr ""
 
