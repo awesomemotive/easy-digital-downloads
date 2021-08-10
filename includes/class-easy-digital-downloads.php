@@ -284,7 +284,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '3.0-beta3' );
+			define( 'EDD_VERSION', '3.0-rc1' );
 		}
 
 		// Plugin Root File.
@@ -592,6 +592,11 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/cart/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
+
+		// Currency
+		require_once EDD_PLUGIN_DIR . 'includes/currency/class-currency.php';
+		require_once EDD_PLUGIN_DIR . 'includes/currency/class-money-formatter.php';
+		require_once EDD_PLUGIN_DIR . 'includes/currency/functions.php';
 
 		// Gateways
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/actions.php';
