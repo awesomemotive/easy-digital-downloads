@@ -294,7 +294,7 @@ add_action( 'edd_transition_order_status', function( $old_status, $new_status, $
 	do_action( 'edd_update_payment_status', $order_id, $new_status, $old_status );
 	if ( 'complete' === $old_status ) {
 		// Trigger the action again to account for add-ons listening for status changes from "publish".
-		do_action( 'edd_update_payment_status', $order_id, $status, 'publish' );
+		do_action( 'edd_update_payment_status', $order_id, $new_status, 'publish' );
 	}
 }, 10, 3 );
 
