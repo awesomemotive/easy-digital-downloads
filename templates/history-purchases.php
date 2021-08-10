@@ -49,7 +49,7 @@ if ( $orders ) :
 				<td class="edd_purchase_id">#<?php echo esc_html( $order->get_number() ); ?></td>
 				<td class="edd_purchase_date"><?php echo esc_html( edd_date_i18n( EDD()->utils->date( $order->date_created, null, true )->toDateTimeString() ) ); ?></td>
 				<td class="edd_purchase_amount">
-					<span class="edd_purchase_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( $order->total ) ) ); ?></span>
+					<span class="edd_purchase_amount"><?php echo esc_html( edd_currency_filter( edd_format_amount( $order->total ), $order->currency ) ); ?></span>
 				</td>
 				<td class="edd_purchase_details">
 					<?php

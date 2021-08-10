@@ -50,8 +50,15 @@ class Remove_Legacy_Data extends Base {
 	 * @return bool True if data was migrated, false otherwise.
 	 */
 	public function get_data() {
-		// Delete meta on first step.
+		// Perform some database operations on the first step.
 		if ( 1 === $this->step ) {
+			// Drop customer `payment_ids` column. It's no longer needed.
+			$customer_table = edd_get_component_interface( 'customer', 'table' );
+			if ( $customer_table instanceof \EDD\Database\Tables\Customers && $customer_table->column_exists( 'payment_ids' ) ) {
+				$this->get_db()->query( "ALTER TABLE {$this->get_db()->edd_customers} DROP `payment_ids`" );
+			}
+
+			// Delete unneeded meta.
 			$this->get_db()->query( $this->get_db()->prepare( "DELETE FROM {$this->get_db()->edd_customermeta} WHERE meta_key = %s", esc_sql( 'additional_email' ) ) );
 			$this->get_db()->query( $this->get_db()->prepare( "DELETE FROM {$this->get_db()->usermeta} WHERE meta_key = %s", esc_sql( '_edd_user_address' ) ) );
 		}
