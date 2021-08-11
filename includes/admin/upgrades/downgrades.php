@@ -13,8 +13,9 @@
  * and updates the version number.
  *
  * @since 2.11
+ * @return bool Whether or not a downgrade was performed.
  */
-add_action( 'admin_init', function() {
+function edd_do_downgrade() {
 	$did_downgrade   = false;
 	$edd_version     = preg_replace( '/[^0-9.].*/', '', get_option( 'edd_version' ) );
 	$downgraded_from = get_option( 'edd_version_downgraded_from' );
@@ -40,7 +41,10 @@ add_action( 'admin_init', function() {
 		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 		delete_option( 'edd_version_downgraded_from' );
 	}
-} );
+
+	return $did_downgrade;
+}
+add_action( 'admin_init', 'edd_do_downgrade' );
 
 /**
  * Display downgrade notices.

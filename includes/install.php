@@ -73,8 +73,10 @@ function edd_run_install() {
 
 	// Add Upgraded/Downgraded From Option
 	$current_version = get_option( 'edd_version' );
+	$downgraded      = false;
 	if ( $current_version ) {
 		if ( version_compare( $current_version, EDD_VERSION, '>' ) ) {
+			$downgraded = true;
 			update_option( 'edd_version_downgraded_from', $current_version );
 		}
 
@@ -200,9 +202,14 @@ function edd_run_install() {
 	$api = new EDD_API;
 	update_option( 'edd_default_api_version', 'v' . $api->get_version() );
 
-	// Create the customer databases
-	@EDD()->customers->create_table();
-	@EDD()->customer_meta->create_table();
+	if ( ! $downgraded || ! edd_do_downgrade() ) {
+		/*
+		 * Create the customer databases.
+		 * This should only run if a downgrade _wasn't_ performed.
+		 */
+		@EDD()->customers->create_table();
+		@EDD()->customer_meta->create_table();
+	}
 
 	// Check for PHP Session support, and enable if available
 	EDD()->session->use_php_sessions();
