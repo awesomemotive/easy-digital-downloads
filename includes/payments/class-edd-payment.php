@@ -1979,6 +1979,7 @@ class EDD_Payment {
 			switch ( $status ) {
 				case 'refunded':
 					$this->process_refund();
+					do_action( 'edd_update_payment_status', $this->ID, $status, $old_status );
 					break;
 				case 'failed':
 					$this->process_failure();
