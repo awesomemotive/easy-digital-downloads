@@ -17,7 +17,7 @@
 add_action( 'admin_init', function() {
 	$did_downgrade   = false;
 	$edd_version     = preg_replace( '/[^0-9.].*/', '', get_option( 'edd_version' ) );
-	$downgraded_from = get_option( 'edd_version_upgraded_from' );
+	$downgraded_from = get_option( 'edd_version_downgraded_from' );
 
 	/**
 	 * Check for downgrade from 3.0 to 2.11.
@@ -32,15 +32,13 @@ add_action( 'admin_init', function() {
 			 * @see edd_show_downgrade_notices()
 			 */
 			update_option( 'edd_v3_downgrade', time() );
+			$did_downgrade = true;
 		}
-	}
-
-	if ( version_compare( $downgraded_from, $edd_version, '>' ) ) {
-		$did_downgrade = true;
 	}
 
 	if ( $did_downgrade ) {
 		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+		delete_option( 'edd_version_downgraded_from' );
 	}
 } );
 

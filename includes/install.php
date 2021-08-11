@@ -71,9 +71,13 @@ function edd_run_install() {
 	// Clear the permalinks
 	flush_rewrite_rules( false );
 
-	// Add Upgraded From Option
+	// Add Upgraded/Downgraded From Option
 	$current_version = get_option( 'edd_version' );
 	if ( $current_version ) {
+		if ( version_compare( $current_version, EDD_VERSION, '>' ) ) {
+			update_option( 'edd_version_downgraded_from', $current_version );
+		}
+
 		update_option( 'edd_version_upgraded_from', $current_version );
 	}
 
