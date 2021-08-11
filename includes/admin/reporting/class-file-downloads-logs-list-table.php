@@ -216,12 +216,13 @@ class EDD_File_Downloads_Log_Table extends EDD_Base_Log_List_Table {
 
 		// These meta keys no longer exist, but we need to create them for use in the filter.
 		$backwards_compat_meta = array(
-			'_edd_log_user_info'  => $user_info,
-			'_edd_log_user_id'    => ! empty( $customer->user_id ) ? $customer->user_id : false,
-			'_edd_log_file_id'    => $log->file_id,
-			'_edd_log_ip'         => $log->ip,
-			'_edd_log_payment_id' => $log->order_id,
-			'_edd_log_price_id'   => $log->price_id,
+			'_edd_log_user_info'   => $user_info,
+			'_edd_log_user_id'     => ! empty( $customer->user_id ) ? $customer->user_id : false,
+			'_edd_log_customer_id' => $customer_id,
+			'_edd_log_file_id'     => $log->file_id,
+			'_edd_log_ip'          => $log->ip,
+			'_edd_log_payment_id'  => $log->order_id,
+			'_edd_log_price_id'    => $log->price_id,
 		);
 
 		foreach( $backwards_compat_meta as $meta_key => $meta_value ) {
