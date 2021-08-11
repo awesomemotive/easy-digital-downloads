@@ -21,16 +21,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 */
 function edd_do_automatic_upgrades() {
 
-	$did_upgrade = $did_downgrade = false;
+	$did_upgrade = false;
 	$edd_version = preg_replace( '/[^0-9.].*/', '', get_option( 'edd_version' ) );
 
 	if ( version_compare( $edd_version, '2.6', '<' ) ) {
 		edd_v26_upgrades();
-	}
-	if ( version_compare( $edd_version, '3.0-beta1', '>=' ) && version_compare( EDD_VERSION, '3.0-beta1', '<' ) ) {
-		// This site probably just downgraded from EDD 3.0. Let's store a flag so we can give them the option to properly roll back.
-		update_option( 'edd_v3_downgrade', time() );
-		$did_downgrade = true;
 	}
 
 	if( version_compare( $edd_version, EDD_VERSION, '<' ) ) {
@@ -40,7 +35,7 @@ function edd_do_automatic_upgrades() {
 
 	}
 
-	if ( $did_upgrade || $did_downgrade ) {
+	if ( $did_upgrade ) {
 
 		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 

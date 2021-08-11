@@ -9,6 +9,42 @@
  */
 
 /**
+ * Checks if the current site has downgraded, and if so, sets any necessary flags
+ * and updates the version number.
+ *
+ * @since 2.11
+ */
+add_action( 'admin_init', function() {
+	$did_downgrade   = false;
+	$edd_version     = preg_replace( '/[^0-9.].*/', '', get_option( 'edd_version' ) );
+	$downgraded_from = get_option( 'edd_version_upgraded_from' );
+
+	/**
+	 * Check for downgrade from 3.0 to 2.11.
+	 */
+	if ( version_compare( EDD_VERSION, '3.0-beta1', '<' ) ) {
+		if (
+			version_compare( $edd_version, '3.0-beta1', '>=' ) ||
+			( $downgraded_from && version_compare( $downgraded_from, '3.0-beta1', '>=' ) )
+		) {
+			/*
+			 * This site probably just downgraded from EDD 3.0. Let's store a flag so we can give them the option to properly roll back.
+			 * @see edd_show_downgrade_notices()
+			 */
+			update_option( 'edd_v3_downgrade', time() );
+		}
+	}
+
+	if ( version_compare( $downgraded_from, $edd_version, '>' ) ) {
+		$did_downgrade = true;
+	}
+
+	if ( $did_downgrade ) {
+		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
+	}
+} );
+
+/**
  * Display downgrade notices.
  *
  * @since 2.11
