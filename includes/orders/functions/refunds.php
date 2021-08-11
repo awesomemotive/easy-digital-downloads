@@ -342,8 +342,6 @@ function edd_refund_order( $order_id, $order_items = 'all', $adjustments = 'all'
 		if ( ! empty( $order_item['parent'] ) && ! empty( $order_item['original_item_status'] ) ) {
 			edd_update_order_item( $order_item['parent'], array( 'status' => $order_item['original_item_status'] ) );
 		}
-		edd_decrease_earnings( $order_item['product_id'], $order_item['amount'] );
-		edd_decrease_purchase_count( $order_item['product_id'], $order_item['quantity'] );
 	}
 
 	/** Insert order adjustments **********************************************/
