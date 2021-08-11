@@ -107,7 +107,7 @@ add_action( 'edd_downgrade_v3', function () {
 
 	global $wpdb;
 	$customer_meta_table = EDD()->customer_meta->table_name;
-	$wpdb->query( "ALTER TABLE {$customer_meta_table} CHANGE `edd_customer_id` `edd_customer` bigint(20) unsigned NOT NULL default '0'" );
+	$wpdb->query( "ALTER TABLE {$customer_meta_table} CHANGE `edd_customer_id` `customer_id` bigint(20) unsigned NOT NULL default '0'" );
 	$wpdb->query( "ALTER TABLE {$customer_meta_table} DROP INDEX edd_customer_id" );
 	$wpdb->query( "ALTER TABLE {$customer_meta_table} ADD INDEX customer_id (customer_id)" );
 	EDD()->customer_meta->create_table(); // This re-adds the version number for us.
