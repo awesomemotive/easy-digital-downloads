@@ -69,7 +69,7 @@ function edd_show_downgrade_notices() {
 				<?php _e( 'We\'ve detected that your site may have just downgraded from Easy Digital Downloads version 3.0. If that is correct, please click the "Complete Downgrade" button below to complete this process.', 'easy-digital-downloads' ); ?>
 			</p>
 			<p>
-				<?php _e( 'If you believe this message to be in error, please click "Dismiss Notice" instead, which will remove this notice with no further action.', 'easy-digital-downloads' ); ?>
+				<?php esc_html_e( 'If you believe this message to be in error, please click "Dismiss Notice" instead, which will remove this notice with no further action.', 'easy-digital-downloads' ); ?>
 			</p>
 			<p>
 				<a href="<?php echo esc_url( $downgrade_url ); ?>" class="button button-primary"><?php esc_html_e( 'Complete Downgrade', 'easy-digital-downloads' ); ?></a>
