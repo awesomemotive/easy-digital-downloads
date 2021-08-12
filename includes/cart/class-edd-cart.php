@@ -512,6 +512,10 @@ class EDD_Cart {
 		$this->contents = $cart;
 		$this->update_cart();
 
+		if ( $this->is_empty() && ! $this->has_discounts() ) {
+			EDD()->session->close_session();
+		}
+
 		do_action( 'edd_post_remove_from_cart', $key, $item_id );
 
 		edd_clear_errors();
@@ -584,6 +588,9 @@ class EDD_Cart {
 		// Remove any active discounts
 		$this->remove_all_discounts();
 		$this->contents = array();
+
+		// Close session.
+		EDD()->session->close_session();
 
 		do_action( 'edd_empty_cart' );
 	}

@@ -192,6 +192,10 @@ class EDD_Session {
 	 * @return mixed Session variable
 	 */
 	public function set( $key, $value ) {
+		if ( ! empty( $value ) ) {
+			$this->force_start_session();
+		}
+
 		$key = sanitize_key( $key );
 
 		if ( is_array( $value ) ) {
@@ -228,6 +232,17 @@ class EDD_Session {
 		} elseif ( isset( $_COOKIE['edd_items_in_cart'] ) ) {
 			@setcookie( 'edd_items_in_cart', '', time() - 3600, COOKIEPATH, COOKIE_DOMAIN, false );
 		}
+	}
+
+	/**
+	 * Determines whether or not there's at least one item in the cart.
+	 *
+	 * @since 3.x
+	 *
+	 * @return bool
+	 */
+	public function has_items_in_cart() {
+		return isset( $_COOKIE['edd_items_in_cart'] );
 	}
 
 	/**
@@ -330,8 +345,8 @@ class EDD_Session {
 	 */
 	public function should_start_session() {
 
-		// Set default return value to true.
-		$start_session = true;
+		// Set default return value to whether or not items are in the cart.
+		$start_session = $this->has_items_in_cart();
 
 		if ( ! empty( $_SERVER['REQUEST_URI'] ) ) {
 			$blacklist = $this->get_blacklist();
@@ -395,13 +410,17 @@ class EDD_Session {
 	/**
 	 * Starts a new session if one hasn't started yet.
 	 *
+	 * @param bool $force Whether or not to bypass the `should_start_session()` check.
+	 *
 	 * @since 2.1.3
 	 */
-	public function maybe_start_session() {
+	public function maybe_start_session( $force = false ) {
 
-		// Bail if should not start session.
-		if ( ! $this->should_start_session() ) {
-			return;
+		if ( ! $force ) {
+			// Bail if should not start session.
+			if ( ! $this->should_start_session() ) {
+				return;
+			}
 		}
 
 		// Bail if headers already sent.
@@ -409,13 +428,50 @@ class EDD_Session {
 			return;
 		}
 
-		// Start if old version of PHP & no session ID exists.
-		if ( version_compare( PHP_VERSION, '5.4', '<' ) && ! session_id() ) {
+		if ( defined( 'PHP_SESSION_ACTIVE' ) && ( session_status() !== PHP_SESSION_ACTIVE ) ) {
 			session_start();
+		}
+	}
 
-		// Start if modern PHP and session-status is not active.
-		} elseif ( defined( 'PHP_SESSION_ACTIVE' ) && ( session_status() !== PHP_SESSION_ACTIVE ) ) {
-			session_start();
+	/**
+	 * Forcibly starts a session.
+	 *
+	 * This sets the cart flag cookie, to indicate that a session should be started. Then immediately
+	 * triggers `maybe_start_session()` with `$force` set to `true` to bypass the
+	 * `should_start_session()` checks.
+	 *
+	 * @since 3.x
+	 */
+	public function force_start_session() {
+		$this->set_cart_cookie();
+		$this->maybe_start_session( true );
+	}
+
+	/**
+	 * Closes the session.
+	 *
+	 * This deletes the cart flag cookie and closes the session.
+	 *
+	 * @since 3.x
+	 */
+	public function close_session() {
+		if ( headers_sent() ) {
+			return;
+		}
+
+		$this->set_cart_cookie( false );
+
+		/**
+		 * Destroys the session (deletes cookie and all data) if opted in to do so.
+		 *
+		 * @since 3.x
+		 */
+		if ( apply_filters( 'edd_destroy_session_on_close', false ) ) {
+			$params = session_get_cookie_params();
+			if ( ! empty( $params ) ) {
+				setcookie( session_name(), '', time() - HOUR_IN_SECONDS, $params['path'], $params['domain'], $params['secure'], $params['httponly'] );
+			}
+			session_destroy();
 		}
 	}
 }
