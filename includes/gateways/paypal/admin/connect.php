@@ -46,7 +46,14 @@ function connect_settings_field() {
 			?>
 			<div class="notice notice-error inline">
 				<p>
-					<?php esc_html_e( 'Connection failure. Please ensure browser popups are enabled then click the button below to connect again. If you continue to experience this error, please contact support.', 'easy-digital-downloads' ); ?>
+					<?php
+					echo wp_kses( sprintf(
+						/* Translators: %1$s opening <strong> tag; %2$s closing </strong> tag */
+						__( '%1$sConnection failure:%2$s Please ensure browser popups are enabled then click the button below to connect again. If you continue to experience this error, please contact support.', 'easy-digital-downloads' ),
+						'<strong>',
+						'</strong>'
+					), array( 'strong' => array() ) );
+					?>
 				</p>
 			</div>
 			<?php
