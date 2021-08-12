@@ -37,6 +37,27 @@ function connect_settings_field() {
 		/**
 		 * Show Connect
 		 */
+
+		/*
+		 * If we have Partner details but no REST credentials then that most likely means
+		 * PayPal wasn't opened in the modal. We'll show an error message about popups.
+		 */
+		if ( get_partner_details() ) {
+			?>
+			<div class="notice notice-error inline">
+				<p>
+					<?php
+					echo wp_kses( sprintf(
+						/* Translators: %1$s opening <strong> tag; %2$s closing </strong> tag */
+						__( '%1$sConnection failure:%2$s Please ensure browser popups are enabled then click the button below to connect again. If you continue to experience this error, please contact support.', 'easy-digital-downloads' ),
+						'<strong>',
+						'</strong>'
+					), array( 'strong' => array() ) );
+					?>
+				</p>
+			</div>
+			<?php
+		}
 		?>
 		<button type="button" id="edd-paypal-commerce-connect" class="button" data-nonce="<?php echo esc_attr( wp_create_nonce( 'edd_process_paypal_connect' ) ); ?>">
 			<?php
@@ -132,6 +153,21 @@ function process_connect() {
 add_action( 'wp_ajax_edd_paypal_commerce_connect', __NAMESPACE__ . '\process_connect' );
 
 /**
+ * Retrieves partner Connect details for the given mode.
+ *
+ * @param string $mode Store mode. If omitted, current mode is used.
+ *
+ * @return array|null
+ */
+function get_partner_details( $mode = '' ) {
+	if ( ! $mode ) {
+		$mode = edd_is_test_mode() ? API::MODE_SANDBOX : API::MODE_LIVE;
+	}
+
+	return json_decode( get_option( 'edd_paypal_commerce_connect_details_' . $mode ) );
+}
+
+/**
  * AJAX handler for retrieving a one-time access token, then used to retrieve
  * the seller's API credentials.
  *
@@ -152,7 +188,7 @@ function get_and_save_credentials() {
 
 	$mode = edd_is_test_mode() ? PayPal\API::MODE_SANDBOX : PayPal\API::MODE_LIVE;
 
-	$partner_details = json_decode( get_option( 'edd_paypal_commerce_connect_details_' . $mode ) );
+	$partner_details = get_partner_details( $mode );
 	if ( empty( $partner_details->nonce ) ) {
 		wp_send_json_error( __( 'Missing nonce. Please refresh the page and try again.', 'easy-digital-downloads' ) );
 	}
@@ -474,8 +510,7 @@ function refresh_merchant_status() {
 			throw new \Exception( __( 'No merchant ID saved. Please reconnect to PayPal.', 'easy-digital-downloads' ) );
 		}
 
-		$mode            = edd_is_test_mode() ? PayPal\API::MODE_SANDBOX : PayPal\API::MODE_LIVE;
-		$partner_details = json_decode( get_option( 'edd_paypal_commerce_connect_details_' . $mode ) );
+		$partner_details = get_partner_details();
 		$nonce           = isset( $partner_details->nonce ) ? $partner_details->nonce : null;
 
 		$new_details      = get_merchant_status( $merchant_details->merchant_id, $nonce );
