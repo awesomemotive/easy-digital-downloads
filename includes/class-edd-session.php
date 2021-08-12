@@ -235,17 +235,6 @@ class EDD_Session {
 	}
 
 	/**
-	 * Determines whether or not there's at least one item in the cart.
-	 *
-	 * @since 3.x
-	 *
-	 * @return bool
-	 */
-	public function has_items_in_cart() {
-		return isset( $_COOKIE['edd_items_in_cart'] );
-	}
-
-	/**
 	 * Force the cookie expiration variant time to 23 hours.
 	 *
 	 * @since 2.0
@@ -346,7 +335,7 @@ class EDD_Session {
 	public function should_start_session() {
 
 		// Set default return value to whether or not items are in the cart.
-		$start_session = $this->has_items_in_cart();
+		$start_session = isset( $_COOKIE['edd_items_in_cart'] );
 
 		if ( ! empty( $_SERVER['REQUEST_URI'] ) ) {
 			$blacklist = $this->get_blacklist();
