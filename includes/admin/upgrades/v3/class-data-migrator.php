@@ -534,25 +534,31 @@ class Data_Migrator {
 			$modified_time     = new \DateTime( $data->post_modified );
 			$modified_time_gmt = new \DateTime( $data->post_modified_gmt );
 
-			$diff = $modified_time_gmt->diff( $modified_time );
+			if ( $modified_time != $modified_time_gmt ) {
+				$diff = $modified_time_gmt->diff( $modified_time );
 
-			$time_diff = 'PT';
+				$time_diff = 'PT';
 
-			// Add hours to the offset string.
-			if ( ! empty( $diff->h ) ) {
-				$time_diff .= $diff->h . 'H';
-			}
+				// Add hours to the offset string.
+				if ( ! empty( $diff->h ) ) {
+					$time_diff .= $diff->h . 'H';
+				}
 
-			// Add minutes to the offset string.
-			if ( ! empty( $diff->i ) ) {
-				$time_diff .= $diff->i . 'M';
-			}
+				// Add minutes to the offset string.
+				if ( ! empty( $diff->i ) ) {
+					$time_diff .= $diff->i . 'M';
+				}
 
-			// Account for -/+ GMT offsets.
-			if ( 1 === $diff->invert ) {
-				$date_created_gmt->add( new \DateInterval( $time_diff ) );
-			} else {
-				$date_created_gmt->sub( new \DateInterval( $time_diff ) );
+				// Account for -/+ GMT offsets.
+				try {
+					if ( 1 === $diff->invert ) {
+						$date_created_gmt->add( new \DateInterval( $time_diff ) );
+					} else {
+						$date_created_gmt->sub( new \DateInterval( $time_diff ) );
+					}
+				} catch ( \Exception $e ) {
+
+				}
 			}
 
 			$date_created_gmt = $date_created_gmt->format('Y-m-d H:i:s');
