@@ -1298,9 +1298,7 @@ function edd_remove_payment_prefix_postfix( $number ) {
  * @return string $amount Fully formatted payment amount
  */
 function edd_payment_amount( $order_id = 0 ) {
-	$amount = edd_get_payment_amount( $order_id );
-
-	return edd_currency_filter( edd_format_amount( $amount ), edd_get_payment_currency_code( $order_id ) );
+	return edd_display_amount( edd_get_payment_amount( $order_id ), edd_get_payment_currency_code( $order_id ) );
 }
 
 /**
