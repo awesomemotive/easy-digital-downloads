@@ -70,5 +70,7 @@ function edd_maybe_downgrade_from_v3() {
 	EDD()->customer_meta->create_table();
 	EDD()->customers->create_table();
 
+	edd_debug_log( 'Completed downgrade from EDD 3.0.', true );
+
 	return true;
 }
