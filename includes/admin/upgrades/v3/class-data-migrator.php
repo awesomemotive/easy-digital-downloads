@@ -235,7 +235,11 @@ class Data_Migrator {
 
 			$log_data = array(
 				'product_id'    => $data->post_parent,
-				'file_id'       => $post_meta['_edd_log_file_id'],
+				/*
+				 * Custom Deliverables was overriding the file ID to be a string instead of an integer. The preg_replace
+				 * allows us to try to salvage the file ID from that string.
+				 */
+				'file_id'       => isset( $post_meta['_edd_log_file_id'] ) ? preg_replace( '/[^0-9]/', '', $post_meta['_edd_log_file_id'] ) : 0,
 				'order_id'      => isset( $post_meta['_edd_log_payment_id'] )  ? $post_meta['_edd_log_payment_id']  : 0,
 				'price_id'      => isset( $post_meta['_edd_log_price_id'] )    ? $post_meta['_edd_log_price_id']    : 0,
 				'customer_id'   => isset( $post_meta['_edd_log_customer_id'] ) ? $post_meta['_edd_log_customer_id'] : 0,
@@ -259,6 +263,17 @@ class Data_Migrator {
 			$meta_to_migrate   = $post_meta;
 			$new_log_id        = edd_add_file_download_log( $log_data );
 			$add_meta_function = 'edd_add_file_download_log_meta';
+
+			/**
+			 * Triggers after a file download log has been migrated.
+			 *
+			 * @since 3.0
+			 *
+			 * @param int    $new_log_id ID of the newly created log.
+			 * @param object $data       Data from the posts table. (Essentially a `WP_Post`, without being that object.)
+			 * @param array  $post_meta  All meta associated with this log.
+			 */
+			do_action( 'edd_30_migrate_file_download_log', $new_log_id, $data, $post_meta );
 		} elseif ( 'api_request' === $data->slug ) {
 			$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d", absint( $data->ID ) ) );
 
