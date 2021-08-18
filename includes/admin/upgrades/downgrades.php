@@ -9,8 +9,7 @@
  */
 
 /**
- * Checks if the current site has downgraded, and if so, sets any necessary flags
- * and updates the version number.
+ * Checks if the current site has downgraded, and if so, performs any necessary actions.
  *
  * @since 2.11
  * @return bool Whether or not a downgrade was performed.
