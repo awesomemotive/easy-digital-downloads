@@ -5,7 +5,7 @@
  * Description: The easiest way to sell digital products with WordPress.
  * Author: Sandhills Development, LLC
  * Author URI: https://sandhillsdev.com
- * Version: 2.10.6
+ * Version: 2.11
  * Text Domain: easy-digital-downloads
  * Domain Path: languages
  *
@@ -25,7 +25,7 @@
  * @package EDD
  * @category Core
  * @author Pippin Williamson
- * @version 2.10.6
+ * @version 2.11
  */
 
 // Exit if accessed directly.
@@ -206,7 +206,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '2.10.6' );
+			define( 'EDD_VERSION', '2.11' );
 		}
 
 		// Plugin Folder Path.
@@ -287,6 +287,7 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/gateways/amazon-payments.php';
 		}
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal-standard.php';
+		require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/paypal.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/manual.php';
 
 		$stripe = EDD_PLUGIN_DIR . 'includes/gateways/stripe/edd-stripe.php';
@@ -319,6 +320,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/shortcodes.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/tracking.php'; // Must be loaded on frontend to ensure cron runs
 		require_once EDD_PLUGIN_DIR . 'includes/privacy-functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/utils/class-tokenizer.php';
 
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/add-ons.php';
@@ -354,6 +356,7 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/contextual-help.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/tools.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/plugins.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/downgrades.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-heartbeat.php';

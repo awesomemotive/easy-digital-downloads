@@ -21,6 +21,17 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_get_payment_gateways() {
 	// Default, built-in gateways
 	$gateways = array(
+		'paypal_commerce' => array(
+			'admin_label'    => __( 'PayPal', 'easy-digital-downloads' ),
+			'checkout_label' => __( 'PayPal', 'easy-digital-downloads' ),
+			'supports'       => array( 'buy_now' )
+		),
+		/**
+		 * PayPal Standard is available only if it was used prior to 2.11 and the store owner hasn't
+		 * yet been onboarded to PayPal Commerce.
+		 *
+		 * @see \EDD\Gateways\PayPal\maybe_remove_paypal_standard()
+		 */
 		'paypal' => array(
 			'admin_label'    => __( 'PayPal Standard', 'easy-digital-downloads' ),
 			'checkout_label' => __( 'PayPal', 'easy-digital-downloads' ),
@@ -294,7 +305,7 @@ function edd_build_straight_to_gateway_data( $download_id = 0, $options = array(
 		'user_info'    => $user_info,
 		'post_data'    => array(),
 		'cart_details' => $cart_details,
-		'gateway'      => 'paypal',
+		'gateway'      => \EDD\Gateways\PayPal\paypal_standard_enabled() ? 'paypal' : 'paypal_commerce',
 		'buy_now'      => true,
 		'card_info'    => array()
 	);

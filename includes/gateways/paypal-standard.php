@@ -30,7 +30,9 @@ add_action( 'edd_paypal_cc_form', '__return_false' );
  * @return array                    Gateway subsections with PayPal Standard
  */
 function edd_register_paypal_gateway_section( $gateway_sections ) {
-	$gateway_sections['paypal'] = __( 'PayPal Standard', 'easy-digital-downloads' );
+	if ( \EDD\Gateways\PayPal\paypal_standard_enabled() ) {
+		$gateway_sections['paypal'] = __( 'PayPal Standard', 'easy-digital-downloads' );
+	}
 
 	return $gateway_sections;
 }
@@ -44,117 +46,119 @@ add_filter( 'edd_settings_sections_gateways', 'edd_register_paypal_gateway_secti
  * @return array                    Gateway tab settings with the PayPal Standard settings
  */
 function edd_register_paypal_gateway_settings( $gateway_settings ) {
-
-		$paypal_settings = array (
-			'paypal_settings' => array(
-				'id'   => 'paypal_settings',
-				'name' => '<strong>' . __( 'PayPal Standard Settings', 'easy-digital-downloads' ) . '</strong>',
-				'type' => 'header',
-			),
-			'paypal_email' => array(
-				'id'   => 'paypal_email',
-				'name' => __( 'PayPal Email', 'easy-digital-downloads' ),
-				'desc' => __( 'Enter your PayPal account\'s email', 'easy-digital-downloads' ),
-				'type' => 'text',
-				'size' => 'regular',
-			),
-			'paypal_image_url' => array(
-				'id'   => 'paypal_image_url',
-				'name' => __( 'PayPal Image URL', 'easy-digital-downloads' ),
-				'desc' => __( 'Upload an image to display on the PayPal checkout page.', 'easy-digital-downloads' ),
-				'type' => 'upload',
-				'size' => 'regular',
-			),
-		);
-
-		$pdt_desc = sprintf(
-			__( 'Enter your PayPal Identity Token in order to enable Payment Data Transfer (PDT). This allows payments to be verified without relying on the PayPal IPN. See our <a href="%s" target="_blank">documentation</a> for further information.', 'easy-digital-downloads' ),
-			'http://docs.easydigitaldownloads.com/article/918-paypal-standard'
-		);
-
-		$paypal_settings['paypal_identify_token'] = array(
-			'id'   => 'paypal_identity_token',
-			'name' => __( 'PayPal Identity Token', 'easy-digital-downloads' ),
-			'type' => 'text',
-			'desc' => $pdt_desc,
-			'size' => 'regular',
-		);
-
-		$disable_ipn_desc = sprintf(
-			__( 'If you are unable to use Payment Data Transfer and payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases. See our <a href="%s" target="_blank">FAQ</a> for further information.', 'easy-digital-downloads' ),
-			'http://docs.easydigitaldownloads.com/article/190-payments-not-marked-as-complete'
-		);
-
-		$paypal_settings['disable_paypal_verification'] = array(
-			'id'   => 'disable_paypal_verification',
-			'name' => __( 'Disable PayPal IPN Verification', 'easy-digital-downloads' ),
-			'desc' => $disable_ipn_desc,
-			'type' => 'checkbox',
-		);
-
-		$api_key_settings = array(
-			'paypal_api_keys_desc' => array(
-				'id'   => 'paypal_api_keys_desc',
-				'name' => __( 'API Credentials', 'easy-digital-downloads' ),
-				'type' => 'descriptive_text',
-				'desc' => sprintf(
-					__( 'API credentials are necessary to process PayPal refunds from inside WordPress. These can be obtained from <a href="%s" target="_blank">your PayPal account</a>.', 'easy-digital-downloads' ),
-					'https://developer.paypal.com/docs/classic/api/apiCredentials/#creating-an-api-signature'
-				)
-			),
-			'paypal_live_api_username' => array(
-				'id'   => 'paypal_live_api_username',
-				'name' => __( 'Live API Username', 'easy-digital-downloads' ),
-				'desc' => __( 'Your PayPal live API username. ', 'easy-digital-downloads' ),
-				'type' => 'text',
-				'size' => 'regular'
-			),
-			'paypal_live_api_password' => array(
-				'id'   => 'paypal_live_api_password',
-				'name' => __( 'Live API Password', 'easy-digital-downloads' ),
-				'desc' => __( 'Your PayPal live API password.', 'easy-digital-downloads' ),
-				'type' => 'text',
-				'size' => 'regular'
-			),
-			'paypal_live_api_signature' => array(
-				'id'   => 'paypal_live_api_signature',
-				'name' => __( 'Live API Signature', 'easy-digital-downloads' ),
-				'desc' => __( 'Your PayPal live API signature.', 'easy-digital-downloads' ),
-				'type' => 'text',
-				'size' => 'regular'
-			),
-			'paypal_test_api_username' => array(
-				'id'   => 'paypal_test_api_username',
-				'name' => __( 'Test API Username', 'easy-digital-downloads' ),
-				'desc' => __( 'Your PayPal test API username.', 'easy-digital-downloads' ),
-				'type' => 'text',
-				'size' => 'regular'
-			),
-			'paypal_test_api_password' => array(
-				'id'   => 'paypal_test_api_password',
-				'name' => __( 'Test API Password', 'easy-digital-downloads' ),
-				'desc' => __( 'Your PayPal test API password.', 'easy-digital-downloads' ),
-				'type' => 'text',
-				'size' => 'regular'
-			),
-			'paypal_test_api_signature' => array(
-				'id'   => 'paypal_test_api_signature',
-				'name' => __( 'Test API Signature', 'easy-digital-downloads' ),
-				'desc' => __( 'Your PayPal test API signature.', 'easy-digital-downloads' ),
-				'type' => 'text',
-				'size' => 'regular'
-			)
-		);
-
-		$paypal_settings = array_merge( $paypal_settings, $api_key_settings );
-
-		$paypal_settings            = apply_filters( 'edd_paypal_settings', $paypal_settings );
-		$gateway_settings['paypal'] = $paypal_settings;
-
+	if ( ! \EDD\Gateways\PayPal\paypal_standard_enabled() ) {
 		return $gateway_settings;
+	}
+
+	$paypal_settings = array (
+		'paypal_settings' => array(
+			'id'   => 'paypal_settings',
+			'name' => '<strong>' . __( 'PayPal Standard Settings', 'easy-digital-downloads' ) . '</strong>',
+			'type' => 'header',
+		),
+		'paypal_email' => array(
+			'id'   => 'paypal_email',
+			'name' => __( 'PayPal Email', 'easy-digital-downloads' ),
+			'desc' => __( 'Enter your PayPal account\'s email', 'easy-digital-downloads' ),
+			'type' => 'text',
+			'size' => 'regular',
+		),
+		'paypal_image_url' => array(
+			'id'   => 'paypal_image_url',
+			'name' => __( 'PayPal Image URL', 'easy-digital-downloads' ),
+			'desc' => __( 'Upload an image to display on the PayPal checkout page.', 'easy-digital-downloads' ),
+			'type' => 'upload',
+			'size' => 'regular',
+		),
+	);
+
+	$pdt_desc = sprintf(
+		__( 'Enter your PayPal Identity Token in order to enable Payment Data Transfer (PDT). This allows payments to be verified without relying on the PayPal IPN. See our <a href="%s" target="_blank">documentation</a> for further information.', 'easy-digital-downloads' ),
+		'https://docs.easydigitaldownloads.com/article/918-paypal-standard'
+	);
+
+	$paypal_settings['paypal_identify_token'] = array(
+		'id'   => 'paypal_identity_token',
+		'name' => __( 'PayPal Identity Token', 'easy-digital-downloads' ),
+		'type' => 'text',
+		'desc' => $pdt_desc,
+		'size' => 'regular',
+	);
+
+	$disable_ipn_desc = sprintf(
+		__( 'If you are unable to use Payment Data Transfer and payments are not getting marked as complete, then check this box. This forces the site to use a slightly less secure method of verifying purchases. See our <a href="%s" target="_blank">FAQ</a> for further information.', 'easy-digital-downloads' ),
+		'https://docs.easydigitaldownloads.com/article/190-payments-not-marked-as-complete'
+	);
+
+	$paypal_settings['disable_paypal_verification'] = array(
+		'id'   => 'disable_paypal_verification',
+		'name' => __( 'Disable PayPal IPN Verification', 'easy-digital-downloads' ),
+		'desc' => $disable_ipn_desc,
+		'type' => 'checkbox',
+	);
+
+	$api_key_settings = array(
+		'paypal_api_keys_desc' => array(
+			'id'   => 'paypal_api_keys_desc',
+			'name' => __( 'API Credentials', 'easy-digital-downloads' ),
+			'type' => 'descriptive_text',
+			'desc' => sprintf(
+				__( 'API credentials are necessary to process PayPal refunds from inside WordPress. These can be obtained from <a href="%s" target="_blank">your PayPal account</a>.', 'easy-digital-downloads' ),
+				'https://developer.paypal.com/docs/classic/api/apiCredentials/#creating-an-api-signature'
+			)
+		),
+		'paypal_live_api_username' => array(
+			'id'   => 'paypal_live_api_username',
+			'name' => __( 'Live API Username', 'easy-digital-downloads' ),
+			'desc' => __( 'Your PayPal live API username. ', 'easy-digital-downloads' ),
+			'type' => 'text',
+			'size' => 'regular'
+		),
+		'paypal_live_api_password' => array(
+			'id'   => 'paypal_live_api_password',
+			'name' => __( 'Live API Password', 'easy-digital-downloads' ),
+			'desc' => __( 'Your PayPal live API password.', 'easy-digital-downloads' ),
+			'type' => 'text',
+			'size' => 'regular'
+		),
+		'paypal_live_api_signature' => array(
+			'id'   => 'paypal_live_api_signature',
+			'name' => __( 'Live API Signature', 'easy-digital-downloads' ),
+			'desc' => __( 'Your PayPal live API signature.', 'easy-digital-downloads' ),
+			'type' => 'text',
+			'size' => 'regular'
+		),
+		'paypal_test_api_username' => array(
+			'id'   => 'paypal_test_api_username',
+			'name' => __( 'Test API Username', 'easy-digital-downloads' ),
+			'desc' => __( 'Your PayPal test API username.', 'easy-digital-downloads' ),
+			'type' => 'text',
+			'size' => 'regular'
+		),
+		'paypal_test_api_password' => array(
+			'id'   => 'paypal_test_api_password',
+			'name' => __( 'Test API Password', 'easy-digital-downloads' ),
+			'desc' => __( 'Your PayPal test API password.', 'easy-digital-downloads' ),
+			'type' => 'text',
+			'size' => 'regular'
+		),
+		'paypal_test_api_signature' => array(
+			'id'   => 'paypal_test_api_signature',
+			'name' => __( 'Test API Signature', 'easy-digital-downloads' ),
+			'desc' => __( 'Your PayPal test API signature.', 'easy-digital-downloads' ),
+			'type' => 'text',
+			'size' => 'regular'
+		)
+	);
+
+	$paypal_settings = array_merge( $paypal_settings, $api_key_settings );
+
+	$paypal_settings            = apply_filters( 'edd_paypal_settings', $paypal_settings );
+	$gateway_settings['paypal'] = $paypal_settings;
+
+	return $gateway_settings;
 }
 add_filter( 'edd_settings_gateways', 'edd_register_paypal_gateway_settings', 1, 1 );
-
 
 /**
  * Process PayPal Purchase
@@ -1098,9 +1102,9 @@ add_filter( 'edd_get_payment_transaction_id-paypal', 'edd_paypal_get_payment_tra
  */
 function edd_paypal_link_transaction_id( $transaction_id, $payment_id ) {
 
-	$payment = new EDD_Payment( $payment_id );
-	$sandbox = 'test' == $payment->mode ? 'sandbox.' : '';
-	$paypal_base_url = 'https://www.' . $sandbox . 'paypal.com/webscr?cmd=_history-details-from-hub&id=';
+	$payment         = new EDD_Payment( $payment_id );
+	$sandbox         = 'test' === $payment->mode ? 'sandbox.' : '';
+	$paypal_base_url = 'https://www.' . $sandbox . 'paypal.com/activity/payment/';
 	$transaction_url = '<a href="' . esc_url( $paypal_base_url . $transaction_id ) . '" target="_blank">' . $transaction_id . '</a>';
 
 	return apply_filters( 'edd_paypal_link_payment_details_transaction_id', $transaction_url );
@@ -1221,9 +1225,9 @@ function edd_refund_paypal_purchase( $payment ) {
 	$credentials = apply_filters( 'edd_paypal_refund_api_credentials', $credentials, $payment );
 
 	$body = array(
-		'USER' 			=> $credentials['api_username'],
-		'PWD'  			=> $credentials['api_password'],
-		'SIGNATURE' 	=> $credentials['api_signature'],
+		'USER'          => $credentials['api_username'],
+		'PWD'           => $credentials['api_password'],
+		'SIGNATURE'     => $credentials['api_signature'],
 		'VERSION'       => '124',
 		'METHOD'        => 'RefundTransaction',
 		'TRANSACTIONID' => $payment->transaction_id,
