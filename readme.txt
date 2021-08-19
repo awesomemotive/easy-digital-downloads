@@ -246,6 +246,18 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 13. Pay with PayPal modal
 
 == Changelog ==
+= 2.11, August 19, 2021 =
+* New: Introducing the new PayPal Commerce gateway integration.
+* New: System info page now shows Plugin Author or Update URI
+* New: Improved support for caching pages that contain add to cart buttons by using a custom token verification instead of nonces.
+* Improved: The extension updater class has been updated to version 1.9.0.
+* Fix: Download Notes could be duplicated in the email receipt.
+* Fix: The Paypal transaction ID links were using an older format.
+* Fix: The edd_items_in_cart cookie wasn't setting the correct attributes on sites with SSLs.
+* Fix: Some bundled images hadn't been optimized.
+* Fix: The discounts API endpoint could not filter a discount by ID.
+* Fix: When making an EDD Wallet deposit, the cart HTML would be removed when taxes were enabled.
+
 = 2.10.6, June 22, 2021 =
 * New: Added license upgrade notices to EDD admin pages.
 * Improvement: The discount API endpoint now includes `excluded_products`.
