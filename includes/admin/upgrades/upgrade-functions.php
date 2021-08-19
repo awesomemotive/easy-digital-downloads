@@ -24,10 +24,8 @@ function edd_do_automatic_upgrades() {
 	$did_upgrade = false;
 	$edd_version = preg_replace( '/[^0-9.].*/', '', get_option( 'edd_version' ) );
 
-	if( version_compare( $edd_version, '2.6', '<' ) ) {
-
+	if ( version_compare( $edd_version, '2.6', '<' ) ) {
 		edd_v26_upgrades();
-
 	}
 
 	if( version_compare( $edd_version, EDD_VERSION, '<' ) ) {
@@ -37,7 +35,7 @@ function edd_do_automatic_upgrades() {
 
 	}
 
-	if( $did_upgrade ) {
+	if ( $did_upgrade ) {
 
 		update_option( 'edd_version', preg_replace( '/[^0-9.].*/', '', EDD_VERSION ) );
 
