@@ -1429,7 +1429,6 @@ function edd_get_registered_settings_sections() {
 		) ),
 		'gateways'   => apply_filters( 'edd_settings_sections_gateways', array(
 			'main'               => __( 'General', 'easy-digital-downloads' ),
-			'paypal'             => __( 'PayPal Standard', 'easy-digital-downloads' ),
 		) ),
 		'emails'     => apply_filters( 'edd_settings_sections_emails', array(
 			'main'               => __( 'General', 'easy-digital-downloads' ),

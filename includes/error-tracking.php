@@ -28,21 +28,7 @@ function edd_print_errors() {
 	$errors = edd_get_errors();
 	if ( $errors ) {
 
-		$classes = apply_filters( 'edd_error_class', array(
-			'edd_errors', 'edd-alert', 'edd-alert-error'
-		) );
-
-		if ( ! empty( $errors ) ) {
-			echo '<div class="' . implode( ' ', $classes ) . '">';
-				// Loop error codes and display errors
-				foreach ( $errors as $error_id => $error ) {
-
-					echo '<p class="edd_error" id="edd_error_' . $error_id . '"><strong>' . __( 'Error', 'easy-digital-downloads' ) . '</strong>: ' . $error . '</p>';
-
-				}
-
-			echo '</div>';
-		}
+		echo edd_build_errors_html( $errors );
 
 		edd_clear_errors();
 
@@ -51,6 +37,34 @@ function edd_print_errors() {
 add_action( 'edd_purchase_form_before_submit', 'edd_print_errors' );
 add_action( 'edd_ajax_checkout_errors', 'edd_print_errors' );
 add_action( 'edd_print_errors', 'edd_print_errors' );
+
+/**
+ * Formats error messages and returns an HTML string.
+ *
+ * @param array $errors
+ *
+ * @since 2.11
+ * @return string
+ */
+function edd_build_errors_html( $errors ) {
+	$error_html = '';
+
+	$classes = apply_filters( 'edd_error_class', array(
+		'edd_errors', 'edd-alert', 'edd-alert-error'
+	) );
+
+	if ( ! empty( $errors ) && is_array( $errors ) ) {
+		$error_html .= '<div class="' . implode( ' ', $classes ) . '">';
+		// Loop error codes and display errors
+		foreach ( $errors as $error_id => $error ) {
+			$error_html .= '<p class="edd_error" id="edd_error_' . $error_id . '"><strong>' . __( 'Error', 'easy-digital-downloads' ) . '</strong>: ' . $error . '</p>';
+
+		}
+		$error_html .= '</div>';
+	}
+
+	return $error_html;
+}
 
 /**
  * Get Errors
