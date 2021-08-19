@@ -3,7 +3,7 @@ Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze, littlerchicken, lisacee
 Donate link: https://easydigitaldownloads.com/donate/
-Tags: ecommerce, sell, checkout, payments, stripe
+Tags: ecommerce, sell, checkout, digital store, stripe
 Requires at least: 4.4
 Tested up to: 5.8
 Requires PHP: 5.3
