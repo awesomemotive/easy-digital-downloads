@@ -180,8 +180,8 @@ class EDD_SL_Plugin_Updater {
 			$update_cache->response[ $this->name ] = $this->get_repo_api_data();
 		}
 
-		// Return early if this plugin isn't in the transient->response or if the site is running a newer version of the plugin.
-		if ( empty( $update_cache->response[ $this->name ] ) || version_compare( $this->version, $update_cache->response[ $this->name ]->new_version, '>' ) ) {
+		// Return early if this plugin isn't in the transient->response or if the site is running the current or newer version of the plugin.
+		if ( empty( $update_cache->response[ $this->name ] ) || version_compare( $this->version, $update_cache->response[ $this->name ]->new_version, '>=' ) ) {
 			return;
 		}
 
