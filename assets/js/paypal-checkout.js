@@ -99,6 +99,7 @@ var EDD_PayPal = {
 		var form = ( 'checkout' === context ) ? document.getElementById( 'edd_purchase_form' ) : container.closest( '.edd_download_purchase_form' );
 		var errorWrapper = ( 'checkout' === context ) ? form.querySelector( '#edd-paypal-errors-wrap' ) : form.querySelector( '.edd-paypal-checkout-buy-now-error-wrapper' );
 		var spinner = ( 'checkout' === context ) ? document.getElementById( 'edd-paypal-spinner' ) : form.querySelector( '.edd-paypal-spinner' );
+		var nonceEl = form.querySelector( 'input[name="edd_process_paypal_nonce"]' );
 		var tokenEl = form.querySelector( 'input[name="edd-process-paypal-token"]' );
 		var createFunc = ( 'subscription' === eddPayPalVars.intent ) ? 'createSubscription' : 'createOrder';
 
@@ -106,6 +107,7 @@ var EDD_PayPal = {
 			onApprove: function( data, actions ) {
 				var formData = new FormData();
 				formData.append( 'action', eddPayPalVars.approvalAction );
+				formData.append( 'edd_process_paypal_nonce', nonceEl.value );
 				formData.append( 'token', tokenEl.getAttribute('data-token') );
 				formData.append( 'timestamp', tokenEl.getAttribute('data-timestamp' ) );
 
@@ -182,6 +184,12 @@ var EDD_PayPal = {
 				return response.json();
 			} ).then( function( orderData ) {
 				if ( orderData.data && orderData.data.paypal_order_id ) {
+
+					// Add the nonce to the form so we can validate it later.
+					if ( orderData.data.nonce ) {
+						nonceEl.value = orderData.data.nonce;
+					}
+
 					// Add the token to the form so we can validate it later.
 					if ( orderData.data.token ) {
 						jQuery(tokenEl).attr( 'data-token', orderData.data.token );

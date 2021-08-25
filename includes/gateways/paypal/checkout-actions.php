@@ -35,6 +35,7 @@ function override_purchase_button( $button ) {
 	if ( 'paypal_commerce' === edd_get_chosen_gateway() && edd_get_cart_total() ) {
 		ob_start();
 		if ( ready_to_accept_payments() ) {
+			wp_nonce_field( 'edd_process_paypal', 'edd_process_paypal_nonce' );
 			$timestamp = time();
 			?>
 			<input type="hidden" name="edd-process-paypal-token" data-timestamp="<?php echo esc_attr( $timestamp ); ?>" data-token="<?php echo esc_attr( \EDD\Utils\Tokenizer::tokenize( $timestamp ) ); ?>" />
@@ -243,6 +244,7 @@ function create_order( $purchase_data ) {
 			wp_send_json_success( array(
 				'paypal_order_id' => $response->id,
 				'edd_order_id'    => $payment_id,
+				'nonce'           => wp_create_nonce( 'edd_process_paypal' ),
 				'timestamp'       => $timestamp,
 				'token'           =>  \EDD\Utils\Tokenizer::tokenize( $timestamp ),
 			) );
@@ -278,19 +280,27 @@ function capture_order() {
 		$token     = isset( $_POST['token'] )     ? sanitize_text_field( $_POST['token'] )     : '';
 		$timestamp = isset( $_POST['timestamp'] ) ? sanitize_text_field( $_POST['timestamp'] ) : '';
 
-		if ( empty( $timestamp ) && empty( $token ) ) {
-			throw new Gateway_Exception(
-				__( 'A validation error occurred. Please try again.', 'easy-digital-downloads' ),
-				400,
-				'Missing approval token.'
-			);
-		}
-
-		if ( ! \EDD\Utils\Tokenizer::is_token_valid( $token, $timestamp ) ) {
+		if ( ! empty( $timestamp ) && ! empty( $token ) ) {
+			if ( !\EDD\Utils\Tokenizer::is_token_valid( $token, $timestamp ) ) {
+				throw new Gateway_Exception(
+					__('A validation error occurred. Please try again.', 'easy-digital-downloads'),
+					403,
+					'Token validation failed.'
+				);
+			}
+		} elseif ( empty( $token ) && ! empty( $_POST['edd_process_paypal_nonce'] ) ) {
+			if ( ! wp_verify_nonce( $_POST['edd_process_paypal_nonce'], 'edd_process_paypal' ) ) {
+				throw new Gateway_Exception(
+					__( 'A validation error occurred. Please try again.', 'easy-digital-downloads' ),
+					403,
+					'Nonce validation failed.'
+				);
+			}
+		} else {
 			throw new Gateway_Exception(
 				__( 'A validation error occurred. Please try again.', 'easy-digital-downloads' ),
 				403,
-				'Token validation failed.'
+				'Missing validation fields.'
 			);
 		}
 
