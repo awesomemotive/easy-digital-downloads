@@ -36,9 +36,8 @@ function override_purchase_button( $button ) {
 		ob_start();
 		if ( ready_to_accept_payments() ) {
 			$timestamp = time();
-			echo '<input type="hidden" id="edd-process-paypal-token" name="edd-process-paypal-token" data-timestamp="' . esc_attr( $timestamp ) . '" data-token="' . esc_attr( \EDD\Utils\Tokenizer::tokenize( $timestamp ) ) . '" />';
-
 			?>
+			<input type="hidden" name="edd-process-paypal-token" data-timestamp="<?php echo esc_attr( $timestamp ); ?>" data-token="<?php echo esc_attr( \EDD\Utils\Tokenizer::tokenize( $timestamp ) ); ?>" />
 			<div id="edd-paypal-errors-wrap"></div>
 			<div id="edd-paypal-container"></div>
 			<div id="edd-paypal-spinner" style="display: none;">
