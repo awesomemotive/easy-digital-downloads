@@ -281,17 +281,17 @@ function capture_order() {
 
 		if ( empty( $timestamp ) && empty( $token ) ) {
 			throw new Gateway_Exception(
-					__( 'A validation error occurred. Please try again.', 'easy-digital-downloads' ),
-					400,
-					'Missing approval token.'
+				__( 'A validation error occurred. Please try again.', 'easy-digital-downloads' ),
+				400,
+				'Missing approval token.'
 			);
 		}
 
 		if ( ! \EDD\Utils\Tokenizer::is_token_valid( $token, $timestamp ) ) {
 			throw new Gateway_Exception(
-					__( 'A validation error occurred. Please try again.', 'easy-digital-downloads' ),
-					403,
-					'Token validation failed.'
+				__( 'A validation error occurred. Please try again.', 'easy-digital-downloads' ),
+				403,
+				'Token validation failed.'
 			);
 		}
 
