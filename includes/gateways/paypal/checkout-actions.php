@@ -35,7 +35,9 @@ function override_purchase_button( $button ) {
 	if ( 'paypal_commerce' === edd_get_chosen_gateway() && edd_get_cart_total() ) {
 		ob_start();
 		if ( ready_to_accept_payments() ) {
-			wp_nonce_field( 'edd_process_paypal', 'edd_process_paypal_nonce' );
+			$timestamp = time();
+			echo '<input type="hidden" id="edd-process-paypal-token" name="edd-process-paypal-token" data-timestamp="' . esc_attr( $timestamp ) . '" data-token="' . esc_attr( \EDD\Utils\Tokenizer::tokenize( $timestamp ) ) . '" />';
+
 			?>
 			<div id="edd-paypal-errors-wrap"></div>
 			<div id="edd-paypal-container"></div>
@@ -238,10 +240,12 @@ function create_order( $purchase_data ) {
 			 * If the user was just logged into a new account, the previously sent nonce may have
 			 * become invalid.
 			 */
+			$timestamp = time();
 			wp_send_json_success( array(
 				'paypal_order_id' => $response->id,
 				'edd_order_id'    => $payment_id,
-				'nonce'           => wp_create_nonce( 'edd_process_paypal' )
+				'timestamp'       => $timestamp,
+				'token'           =>  \EDD\Utils\Tokenizer::tokenize( $timestamp ),
 			) );
 		} catch ( Authentication_Exception $e ) {
 			throw new Gateway_Exception( __( 'An authentication error occurred. Please try again.', 'easy-digital-downloads' ), $e->getCode(), $e->getMessage() );
@@ -271,19 +275,23 @@ add_action( 'edd_gateway_paypal_commerce', __NAMESPACE__ . '\create_order', 9 );
 function capture_order() {
 	edd_debug_log( 'PayPal - capture_order()' );
 	try {
-		if ( empty( $_POST['edd_process_paypal_nonce'] ) ) {
+
+		$token     = isset( $_POST['token'] )     ? sanitize_text_field( $_POST['token'] )     : '';
+		$timestamp = isset( $_POST['timestamp'] ) ? sanitize_text_field( $_POST['timestamp'] ) : '';
+
+		if ( empty( $timestamp ) && empty( $token ) ) {
 			throw new Gateway_Exception(
-				__( 'A validation error occurred. Please try again.', 'easy-digital-downloads' ),
-				400,
-				'Missing approval nonce.'
+					__( 'A validation error occurred. Please try again.', 'easy-digital-downloads' ),
+					400,
+					'Missing approval token.'
 			);
 		}
 
-		if ( ! wp_verify_nonce( $_POST['edd_process_paypal_nonce'], 'edd_process_paypal' ) ) {
+		if ( ! \EDD\Utils\Tokenizer::is_token_valid( $token, $timestamp ) ) {
 			throw new Gateway_Exception(
-				__( 'A validation error occurred. Please try again.', 'easy-digital-downloads' ),
-				403,
-				'Nonce validation failed.'
+					__( 'A validation error occurred. Please try again.', 'easy-digital-downloads' ),
+					403,
+					'Token validation failed.'
 			);
 		}
 
