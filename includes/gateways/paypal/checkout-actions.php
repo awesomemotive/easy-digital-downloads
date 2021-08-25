@@ -299,7 +299,7 @@ function capture_order() {
 		} else {
 			throw new Gateway_Exception(
 				__( 'A validation error occurred. Please try again.', 'easy-digital-downloads' ),
-				403,
+				400,
 				'Missing validation fields.'
 			);
 		}
