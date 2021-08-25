@@ -94,8 +94,10 @@ add_filter( 'edd_purchase_link_args', __NAMESPACE__ . '\maybe_add_purchase_link_
 function maybe_enable_buy_now_js( $download_id, $args ) {
 	if ( ! empty( $args['direct'] ) && is_buy_now_enabled() ) {
 		register_js( true );
+		$timestamp = time();
 		?>
 		<input type="hidden" name="edd_process_paypal_nonce" value="<?php echo esc_attr( wp_create_nonce( 'edd_process_paypal' ) ); ?>">
+		<input type="hidden" name="edd-process-paypal-token" data-timestamp="<?php echo esc_attr( $timestamp ); ?>" data-token="<?php echo esc_attr( \EDD\Utils\Tokenizer::tokenize( $timestamp ) ); ?>" />
 		<?php
 	}
 }
