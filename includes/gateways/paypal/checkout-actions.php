@@ -155,6 +155,7 @@ function create_order( $purchase_data ) {
 			);
 		}
 
+		$order_subtotal = $purchase_data['subtotal'];
 		// Create an array of items for the order.
 		$items = array();
 		$i     = 0;
@@ -169,10 +170,13 @@ function create_order( $purchase_data ) {
 					'name'        => stripslashes_deep( html_entity_decode( edd_get_cart_item_name( $item ), ENT_COMPAT, 'UTF-8' ) ),
 					'unit_amount' => array(
 						'currency_code' => $currency,
-						'value'         => $item_amount,
+						'value'         => edd_sanitize_amount( $item_amount ),
 					),
 					'quantity'    => $item['quantity'],
 				);
+				if ( (float) $item['discount'] > 0 ) {
+					$order_subtotal -= ( $item['discount'] * $item['quantity'] );
+				}
 				if ( edd_use_skus() ) {
 					$items[ $i ] = edd_get_download_sku( $item['id'] );
 				}
@@ -180,8 +184,7 @@ function create_order( $purchase_data ) {
 			}
 		}
 
-		$order_subtotal = $purchase_data['subtotal'];
-		$discount       = 0;
+		$discount = 0;
 		// Fees which are not item specific need to be added to the PayPal data as order items.
 		if ( ! empty( $purchase_data['fees'] ) ) {
 			foreach ( $purchase_data['fees'] as $fee ) {
