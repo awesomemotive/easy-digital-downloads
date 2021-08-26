@@ -157,14 +157,15 @@ function create_order( $purchase_data ) {
 
 		// Create an array of items for the order.
 		$items = array();
+		$i     = 0;
 		if ( is_array( $purchase_data['cart_details'] ) && ! empty( $purchase_data['cart_details'] ) ) {
-			foreach ( $purchase_data['cart_details'] as $key => $item ) {
+			foreach ( $purchase_data['cart_details'] as $item ) {
 				$item_amount = round( ( $item['subtotal'] / $item['quantity'] ) - ( $item['discount'] / $item['quantity'] ), 2 );
 
 				if ( $item_amount <= 0 ) {
 					$item_amount = 0;
 				}
-				$items[ $key ] = array(
+				$items[ $i ] = array(
 					'name'        => stripslashes_deep( html_entity_decode( edd_get_cart_item_name( $item ), ENT_COMPAT, 'UTF-8' ) ),
 					'unit_amount' => array(
 						'currency_code' => $currency,
@@ -173,7 +174,25 @@ function create_order( $purchase_data ) {
 					'quantity'    => $item['quantity'],
 				);
 				if ( edd_use_skus() ) {
-					$items[ $key ] = edd_get_download_sku( $item['id'] );
+					$items[ $i ] = edd_get_download_sku( $item['id'] );
+				}
+				$i++;
+			}
+		}
+
+		// Fees which are not item specific need to be added to the PayPal data as order items.
+		if ( ! empty( $purchase_data['fees'] ) ) {
+			foreach ( $purchase_data['fees'] as $fee ) {
+				if ( empty( $fee['download_id'] ) && floatval( $fee['amount'] ) > 0 ) {
+					$items[ $i ] = array(
+						'name'        => stripslashes_deep( html_entity_decode( wp_strip_all_tags( $fee['label'] ), ENT_COMPAT, 'UTF-8' ) ),
+						'unit_amount' => array(
+							'currency_code' => $currency,
+							'value'         => edd_sanitize_amount( $fee['amount'] ),
+						),
+						'quantity'    => 1,
+					);
+					$i++;
 				}
 			}
 		}
