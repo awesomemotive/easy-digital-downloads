@@ -198,6 +198,7 @@ function create_order( $purchase_data ) {
 						),
 						'quantity'    => 1,
 					);
+					$order_subtotal += abs( $fee['amount'] );
 					$i++;
 				} else {
 					// This is a negative fee (discount) not assigned to a specific Download
