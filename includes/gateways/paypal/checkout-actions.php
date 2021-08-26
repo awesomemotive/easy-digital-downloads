@@ -128,12 +128,13 @@ function create_order( $purchase_data ) {
 
 	try {
 		// Create pending payment in EDD.
+		$currency     = edd_get_currency();
 		$payment_args = array(
 			'price'        => $purchase_data['price'],
 			'date'         => $purchase_data['date'],
 			'user_email'   => $purchase_data['user_email'],
 			'purchase_key' => $purchase_data['purchase_key'],
-			'currency'     => edd_get_currency(),
+			'currency'     => $currency,
 			'downloads'    => $purchase_data['downloads'],
 			'cart_details' => $purchase_data['cart_details'],
 			'user_info'    => $purchase_data['user_info'],
@@ -154,18 +155,45 @@ function create_order( $purchase_data ) {
 			);
 		}
 
+		// Create an array of items for the order.
+		$items = array();
+		foreach ( $purchase_data['cart_details'] as $key => $item ) {
+			$item_amount = round( ( $item['subtotal'] / $item['quantity'] ) - ( $item['discount'] / $item['quantity'] ), 2 );
+
+			if ( $item_amount <= 0 ) {
+				$item_amount = 0;
+			}
+			$items[ $key ] = array(
+				'name'        => $item['name'],
+				'unit_amount' => array(
+					'currency_code' => $currency,
+					'value'         => $item_amount,
+				),
+				'quantity'    => $item['quantity'],
+			);
+			if ( edd_use_skus() ) {
+				$items[ $key ] = edd_get_download_sku( $item['id'] );
+			}
+		}
+
 		$order_amount = array(
-			'currency_code' => edd_get_currency(),
-			'value'         => (string) $purchase_data['price']
+			'currency_code' => $currency,
+			'value'         => (string) $purchase_data['price'],
+			'breakdown'     => array(
+				'item_total' => array(
+					'currency_code' => $currency,
+					'value'         => (string) $purchase_data['price'],
+				),
+			),
 		);
 		if ( (float) $purchase_data['tax'] > 0 ) {
 			$order_amount['breakdown'] = array(
 				'item_total' => array(
-					'currency_code' => edd_get_currency(),
+					'currency_code' => $currency,
 					'value'         => (string) ( $purchase_data['price'] - $purchase_data['tax'] )
 				),
 				'tax_total'  => array(
-					'currency_code' => edd_get_currency(),
+					'currency_code' => $currency,
 					'value'         => (string) $purchase_data['tax']
 				)
 			);
@@ -178,8 +206,9 @@ function create_order( $purchase_data ) {
 					// @todo We could put the breakdown here (tax, discount, etc.)
 					'reference_id' => $payment_args['purchase_key'],
 					'amount'       => $order_amount,
-					'custom_id'    => $payment_id
-				)
+					'custom_id'    => $payment_id,
+					'items'        => $items,
+				),
 			),
 			'application_context'  => array(
 				//'locale'              => get_locale(), // PayPal doesn't like this. Might be able to replace `_` with `-`
