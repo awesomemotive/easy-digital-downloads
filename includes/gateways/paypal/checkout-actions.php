@@ -157,22 +157,24 @@ function create_order( $purchase_data ) {
 
 		// Create an array of items for the order.
 		$items = array();
-		foreach ( $purchase_data['cart_details'] as $key => $item ) {
-			$item_amount = round( ( $item['subtotal'] / $item['quantity'] ) - ( $item['discount'] / $item['quantity'] ), 2 );
+		if ( is_array( $purchase_data['cart_details'] ) && ! empty( $purchase_data['cart_details'] ) ) {
+			foreach ( $purchase_data['cart_details'] as $key => $item ) {
+				$item_amount = round( ( $item['subtotal'] / $item['quantity'] ) - ( $item['discount'] / $item['quantity'] ), 2 );
 
-			if ( $item_amount <= 0 ) {
-				$item_amount = 0;
-			}
-			$items[ $key ] = array(
-				'name'        => $item['name'],
-				'unit_amount' => array(
-					'currency_code' => $currency,
-					'value'         => $item_amount,
-				),
-				'quantity'    => $item['quantity'],
-			);
-			if ( edd_use_skus() ) {
-				$items[ $key ] = edd_get_download_sku( $item['id'] );
+				if ( $item_amount <= 0 ) {
+					$item_amount = 0;
+				}
+				$items[ $key ] = array(
+					'name'        => $item['name'],
+					'unit_amount' => array(
+						'currency_code' => $currency,
+						'value'         => $item_amount,
+					),
+					'quantity'    => $item['quantity'],
+				);
+				if ( edd_use_skus() ) {
+					$items[ $key ] = edd_get_download_sku( $item['id'] );
+				}
 			}
 		}
 
