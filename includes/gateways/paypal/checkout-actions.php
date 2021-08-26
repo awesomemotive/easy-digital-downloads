@@ -180,8 +180,8 @@ function create_order( $purchase_data ) {
 			}
 		}
 
-		$order_total = $purchase_data['price'];
-		$discount    = 0;
+		$order_subtotal = $purchase_data['subtotal'];
+		$discount       = 0;
 		// Fees which are not item specific need to be added to the PayPal data as order items.
 		if ( ! empty( $purchase_data['fees'] ) ) {
 			foreach ( $purchase_data['fees'] as $fee ) {
@@ -202,9 +202,6 @@ function create_order( $purchase_data ) {
 				} else {
 					// This is a negative fee (discount) not assigned to a specific Download
 					$discount += abs( $fee['amount'] );
-
-					// Reset the order total to the subtotal.
-					$order_total = $purchase_data['subtotal'];
 				}
 			}
 		}
@@ -212,11 +209,11 @@ function create_order( $purchase_data ) {
 		$tax          = (float) $purchase_data['tax'] > 0 ? $purchase_data['tax'] : 0;
 		$order_amount = array(
 			'currency_code' => $currency,
-			'value'         => (string) ( $order_total + $tax - $discount ),
+			'value'         => (string) ( $order_subtotal + $tax - $discount ),
 			'breakdown'     => array(
 				'item_total' => array(
 					'currency_code' => $currency,
-					'value'         => (string) $order_total,
+					'value'         => (string) $order_subtotal,
 				),
 			),
 		);
