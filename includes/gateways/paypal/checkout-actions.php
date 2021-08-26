@@ -165,7 +165,7 @@ function create_order( $purchase_data ) {
 					$item_amount = 0;
 				}
 				$items[ $key ] = array(
-					'name'        => $item['name'],
+					'name'        => stripslashes_deep( html_entity_decode( edd_get_cart_item_name( $item ), ENT_COMPAT, 'UTF-8' ) ),
 					'unit_amount' => array(
 						'currency_code' => $currency,
 						'value'         => $item_amount,
