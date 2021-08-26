@@ -180,10 +180,16 @@ function create_order( $purchase_data ) {
 			}
 		}
 
+		$order_total = $purchase_data['price'];
+		$discount    = 0;
 		// Fees which are not item specific need to be added to the PayPal data as order items.
 		if ( ! empty( $purchase_data['fees'] ) ) {
 			foreach ( $purchase_data['fees'] as $fee ) {
-				if ( empty( $fee['download_id'] ) && floatval( $fee['amount'] ) > 0 ) {
+				if ( ! empty( $fee['download_id'] ) ) {
+					continue;
+				}
+				// Positive fees.
+				if ( floatval( $fee['amount'] ) > 0 ) {
 					$items[ $i ] = array(
 						'name'        => stripslashes_deep( html_entity_decode( wp_strip_all_tags( $fee['label'] ), ENT_COMPAT, 'UTF-8' ) ),
 						'unit_amount' => array(
@@ -193,30 +199,39 @@ function create_order( $purchase_data ) {
 						'quantity'    => 1,
 					);
 					$i++;
+				} else {
+					// This is a negative fee (discount) not assigned to a specific Download
+					$discount += abs( $fee['amount'] );
+
+					// Reset the order total to the subtotal.
+					$order_total = $purchase_data['subtotal'];
 				}
 			}
 		}
 
+		$tax          = (float) $purchase_data['tax'] > 0 ? $purchase_data['tax'] : 0;
 		$order_amount = array(
 			'currency_code' => $currency,
-			'value'         => (string) $purchase_data['price'],
+			'value'         => (string) ( $order_total + $tax - $discount ),
 			'breakdown'     => array(
 				'item_total' => array(
 					'currency_code' => $currency,
-					'value'         => (string) $purchase_data['price'],
+					'value'         => (string) $order_total,
 				),
 			),
 		);
-		if ( (float) $purchase_data['tax'] > 0 ) {
-			$order_amount['breakdown'] = array(
-				'item_total' => array(
-					'currency_code' => $currency,
-					'value'         => (string) ( $purchase_data['price'] - $purchase_data['tax'] )
-				),
-				'tax_total'  => array(
-					'currency_code' => $currency,
-					'value'         => (string) $purchase_data['tax']
-				)
+		if ( $tax > 0 ) {
+			$order_amount['breakdown']['tax_total'] = array(
+				'currency_code' => $currency,
+				'value'         => (string) $tax,
+			);
+		}
+
+		// This is only added by negative global fees.
+		if ( $discount > 0 ) {
+			$order_amount['breakdown']['discount'] = array(
+				'currency_code' => $currency,
+				'value'         => (string) $discount,
 			);
 		}
 
