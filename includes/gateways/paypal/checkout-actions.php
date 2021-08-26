@@ -168,11 +168,11 @@ function create_order( $purchase_data ) {
 				}
 				$items[ $i ] = array(
 					'name'        => stripslashes_deep( html_entity_decode( edd_get_cart_item_name( $item ), ENT_COMPAT, 'UTF-8' ) ),
+					'quantity'    => $item['quantity'],
 					'unit_amount' => array(
 						'currency_code' => $currency,
 						'value'         => edd_sanitize_amount( $item_amount ),
 					),
-					'quantity'    => $item['quantity'],
 				);
 				if ( (float) $item['discount'] > 0 ) {
 					$order_subtotal -= ( $item['discount'] * $item['quantity'] );
