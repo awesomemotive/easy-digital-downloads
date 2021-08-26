@@ -178,7 +178,7 @@ function create_order( $purchase_data ) {
 					$order_subtotal -= ( $item['discount'] * $item['quantity'] );
 				}
 				if ( edd_use_skus() ) {
-					$items[ $i ] = edd_get_download_sku( $item['id'] );
+					$items[ $i ]['sku'] = edd_get_download_sku( $item['id'] );
 				}
 				$i++;
 			}
