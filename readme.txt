@@ -247,7 +247,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 
 == Changelog ==
 = 2.11.1, August 30, 2021 =
-* Improved: Better compatility with caching when using PayPal Commerce.
+* Improved: Better compatibility with caching when using PayPal Commerce.
 * Improved: Made it more clear when PayPal Commerce is successfully connected, but not set as an active gaetway.
 * Fix: PayPal Commerce - Rely on end-user locale when loading the PayPal Javascript SDK.
 * Fix: The download history shortcode was not aware of bundles with variable prices.
