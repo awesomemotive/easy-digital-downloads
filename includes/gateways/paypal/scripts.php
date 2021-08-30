@@ -79,7 +79,6 @@ function register_js( $force_load = false ) {
 	 */
 	$sdk_query_args = apply_filters( 'edd_paypal_js_sdk_query_args', array(
 		'client-id'       => urlencode( $api->client_id ),
-		'locale'          => urlencode( get_locale() ),
 		'currency'        => urlencode( strtoupper( edd_get_currency() ) ),
 		'intent'          => 'capture',
 		'disable-funding' => 'card,credit,bancontact,blik,eps,giropay,ideal,mercadopago,mybank,p24,sepa,sofort,venmo'
