@@ -369,12 +369,12 @@ class EDD_Payment {
 
 		if ( $by_txn ) {
 			$payment_id = edd_get_order_id_from_transaction_id( $payment_or_txn_id );
+
+			if ( empty( $payment_id ) ) {
+				return false;
+			}
 		} else {
 			$payment_id = absint( $payment_or_txn_id );
-		}
-
-		if ( empty( $payment_id ) ) {
-			return false;
 		}
 
 		$this->setup_payment( $payment_id );
