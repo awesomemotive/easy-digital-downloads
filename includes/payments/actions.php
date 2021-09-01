@@ -39,6 +39,10 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 
 	$order = edd_get_order( $order_id );
 
+	if ( ! $order ) {
+		return;
+	}
+
 	$completed_date = empty( $order->date_completed )
 		? null
 		: $order->date_completed;

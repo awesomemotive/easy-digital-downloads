@@ -369,12 +369,12 @@ class EDD_Payment {
 
 		if ( $by_txn ) {
 			$payment_id = edd_get_order_id_from_transaction_id( $payment_or_txn_id );
-
-			if ( empty( $payment_id ) ) {
-				return false;
-			}
 		} else {
 			$payment_id = absint( $payment_or_txn_id );
+		}
+
+		if ( empty( $payment_id ) ) {
+			return false;
 		}
 
 		$this->setup_payment( $payment_id );
@@ -1898,6 +1898,10 @@ class EDD_Payment {
 	 */
 	public function update_status( $status = '' ) {
 
+		if ( ! $this->order ) {
+			return;
+		}
+
 		// Bail if an empty status is passed.
 		if ( empty( $status ) || ! $status ) {
 			return false;
@@ -2155,7 +2159,7 @@ class EDD_Payment {
 	 * @return int|bool Meta ID if the key didn't exist, true on successful update, false on failure.
 	 */
 	public function update_meta( $meta_key = '', $meta_value = '', $prev_value = '' ) {
-		if ( empty( $meta_key ) ) {
+		if ( empty( $meta_key ) || empty( $this->ID ) ) {
 			return false;
 		}
 
