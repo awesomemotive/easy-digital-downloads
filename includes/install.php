@@ -196,6 +196,11 @@ function edd_run_install( $site_id = false ) {
 
 	// Maybe save the previous version, only if different than current
 	if ( ! empty( $current_version ) && ( edd_format_db_version( EDD_VERSION ) !== $current_version ) ) {
+		if ( version_compare( $current_version, edd_format_db_version( EDD_VERSION ), '>' ) ) {
+			$downgraded = true;
+			update_option( 'edd_version_downgraded_from', $current_version );
+		}
+
 		update_option( 'edd_version_upgraded_from', $current_version );
 	}
 
