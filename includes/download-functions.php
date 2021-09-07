@@ -1250,27 +1250,26 @@ function edd_validate_url_token( $url = '' ) {
 		wp_parse_str( $parts['query'], $query_args );
 
 		// These are the only URL parameters that are allowed to affect the token validation
-		$allowed = apply_filters( 'edd_url_token_allowed_params', array(
-			'eddfile',
-			'file',
-			'ttl',
-			'token'
-		) );
+		$allowed = apply_filters(
+			'edd_url_token_allowed_params',
+			array(
+				'eddfile',
+				'file',
+				'ttl',
+				'token',
+			)
+		);
 
-		// Parameters that will be removed from the URL before testing the token
-		$remove = array();
+		// Collect the allowed tags in proper order, remove all tags, and re-add only the allowed ones.
+		$allowed_args = array();
 
-		foreach( $query_args as $key => $value ) {
-			if( false === in_array( $key, $allowed ) ) {
-				$remove[] = $key;
+		foreach ( $query_args as $key => $value ) {
+			if ( true === in_array( $key, $allowed, true ) ) {
+				$allowed_args[ $key ] = $value;
 			}
 		}
 
-		if( ! empty( $remove ) ) {
-
-			$url = remove_query_arg( $remove, $url );
-
-		}
+		$url = add_query_arg( $allowed_args, strtok( $url, '?'  ));
 
 		if ( isset( $query_args['ttl'] ) && current_time( 'timestamp' ) > $query_args['ttl'] ) {
 
