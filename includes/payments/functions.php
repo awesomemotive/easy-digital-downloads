@@ -1545,10 +1545,8 @@ function edd_set_payment_transaction_id( $order_id = 0, $transaction_id = '', $a
 			'order'       => 'ASC',
 		) ) );
 
-		if ( $transaction_ids ) {
-			$transaction_id = $transaction_ids[0];
-
-			return edd_update_order_transaction( $transaction_id, array(
+		if ( $transaction_ids && isset( $transaction_ids[0] ) ) {
+			return edd_update_order_transaction( $transaction_ids[0], array(
 				'transaction_id' => $transaction_id,
 				'gateway'        => $order->gateway,
 				'total'          => $amount,
