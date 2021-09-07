@@ -159,9 +159,13 @@ function create_order( $purchase_data ) {
 		$items          = get_order_items( $purchase_data );
 		// Adjust the order subtotal if any items are discounted.
 		foreach ( $items as $item ) {
-			if ( (float) $item['discount'] > 0 ) {
+			// A discount can be negative, so cast it to an absolute value for comparison.
+			if ( (float) abs( $item['discount'] ) > 0 ) {
 				$order_subtotal -= ( $item['discount'] * $item['quantity'] );
 			}
+
+			// The discount amount is not passed to PayPal as part of the $item.
+			unset( $item['discount'] );
 		}
 
 		$discount = 0;
