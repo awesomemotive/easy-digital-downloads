@@ -1254,8 +1254,8 @@ function edd_validate_url_token( $url = '' ) {
 			'edd_url_token_allowed_params',
 			array(
 				'eddfile',
-				'file',
 				'ttl',
+				'file',
 				'token',
 			)
 		);
@@ -1263,13 +1263,14 @@ function edd_validate_url_token( $url = '' ) {
 		// Collect the allowed tags in proper order, remove all tags, and re-add only the allowed ones.
 		$allowed_args = array();
 
-		foreach ( $query_args as $key => $value ) {
-			if ( true === in_array( $key, $allowed, true ) ) {
-				$allowed_args[ $key ] = $value;
+		foreach ( $allowed as $key ) {
+			if ( true === array_key_exists( $key, $query_args ) ) {
+				$allowed_args[ $key ] = $query_args[ $key ];
 			}
 		}
 
-		$url = add_query_arg( $allowed_args, strtok( $url, '?'  ));
+		// strtok allows a quick clearing of existing query string parameters, so we can re-add the allowed ones.
+		$url = add_query_arg( $allowed_args, strtok( $url, '?' ) );
 
 		if ( isset( $query_args['ttl'] ) && current_time( 'timestamp' ) > $query_args['ttl'] ) {
 
