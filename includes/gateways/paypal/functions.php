@@ -166,6 +166,7 @@ function get_order_items( $purchase_data ) {
 				'currency_code' => edd_get_currency(),
 				'value'         => edd_sanitize_amount( $item_amount ),
 			),
+			'discount'    => $item['discount'],
 		);
 		if ( edd_use_skus() ) {
 			$sku = edd_get_download_sku( $item['id'] );
