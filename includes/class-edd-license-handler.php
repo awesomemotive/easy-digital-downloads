@@ -138,6 +138,9 @@ class EDD_License {
 
 		// Register plugins for beta support
 		add_filter( 'edd_beta_enabled_extensions', array( $this, 'register_beta_support' ) );
+
+		// Add the EDD version to the API parameters.
+		add_filter( 'edd_sl_plugin_updater_api_params', array( $this, 'filter_sl_api_params' ), 10, 3 );
 	}
 
 	/**
@@ -528,6 +531,24 @@ class EDD_License {
 		$products[ $this->item_shortname ] = $this->item_name;
 
 		return $products;
+	}
+
+	/**
+	 * Adds the EDD version to the API parameters.
+	 *
+	 * @since 2.11
+	 * @param array  $api_params  The array of parameters sent in the API request.
+	 * @param array  $api_data    The array of API data defined when instantiating the class.
+	 * @param string $plugin_file The path to the plugin file.
+	 * @return array
+	 */
+	public function filter_sl_api_params( $api_params, $api_data, $plugin_file ) {
+
+		if ( $this->file === $plugin_file ) {
+			$api_params['easy-digital-downloads_version'] = defined( 'EDD_VERSION' ) ? EDD_VERSION : '';
+		}
+
+		return $api_params;
 	}
 }
 

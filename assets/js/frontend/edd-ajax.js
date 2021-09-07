@@ -21,6 +21,8 @@ jQuery( document ).ready( function( $ ) {
 				action: action,
 				cart_item: item,
 				nonce: nonce,
+				timestamp: $this.data( 'timestamp' ),
+				token: $this.data( 'token' )
 			};
 
 		 $.ajax( {
@@ -306,7 +308,11 @@ jQuery( document ).ready( function( $ ) {
 	$( document ).on( 'click', '#edd_purchase_form #edd_login_fields input[type=submit]', function( e ) {
 		e.preventDefault();
 
+		const submitButton = document.getElementById( $( this ).attr( 'id' ) );
+
 		const complete_purchase_val = $( this ).val();
+
+		submitButton.setAttribute( 'data-original-value', complete_purchase_val );
 
 		$( this ).val( edd_global_vars.purchase_loading );
 
