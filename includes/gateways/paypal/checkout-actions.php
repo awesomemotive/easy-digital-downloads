@@ -156,34 +156,11 @@ function create_order( $purchase_data ) {
 		}
 
 		$order_subtotal = $purchase_data['subtotal'];
-		// Create an array of items for the order.
-		$items = array();
-		$i     = 0;
-		if ( is_array( $purchase_data['cart_details'] ) && ! empty( $purchase_data['cart_details'] ) ) {
-			foreach ( $purchase_data['cart_details'] as $item ) {
-				$item_amount = round( ( $item['subtotal'] / $item['quantity'] ) - ( $item['discount'] / $item['quantity'] ), 2 );
-
-				if ( $item_amount <= 0 ) {
-					$item_amount = 0;
-				}
-				$items[ $i ] = array(
-					'name'        => stripslashes_deep( html_entity_decode( edd_get_cart_item_name( $item ), ENT_COMPAT, 'UTF-8' ) ),
-					'quantity'    => $item['quantity'],
-					'unit_amount' => array(
-						'currency_code' => $currency,
-						'value'         => edd_sanitize_amount( $item_amount ),
-					),
-				);
-				if ( (float) $item['discount'] > 0 ) {
-					$order_subtotal -= ( $item['discount'] * $item['quantity'] );
-				}
-				if ( edd_use_skus() ) {
-					$sku = edd_get_download_sku( $item['id'] );
-					if ( ! empty( $sku ) && '-' !== $sku ) {
-						$items[ $i ]['sku'] = $sku;
-					}
-				}
-				$i++;
+		$items          = get_order_items( $purchase_data );
+		// Adjust the order subtotal if any items are discounted.
+		foreach ( $items as $item ) {
+			if ( (float) $item['discount'] > 0 ) {
+				$order_subtotal -= ( $item['discount'] * $item['quantity'] );
 			}
 		}
 
@@ -196,7 +173,7 @@ function create_order( $purchase_data ) {
 				}
 				// Positive fees.
 				if ( floatval( $fee['amount'] ) > 0 ) {
-					$items[ $i ] = array(
+					$items[]         = array(
 						'name'        => stripslashes_deep( html_entity_decode( wp_strip_all_tags( $fee['label'] ), ENT_COMPAT, 'UTF-8' ) ),
 						'unit_amount' => array(
 							'currency_code' => $currency,
@@ -205,7 +182,6 @@ function create_order( $purchase_data ) {
 						'quantity'    => 1,
 					);
 					$order_subtotal += abs( $fee['amount'] );
-					$i++;
 				} else {
 					// This is a negative fee (discount) not assigned to a specific Download
 					$discount += abs( $fee['amount'] );
@@ -243,7 +219,6 @@ function create_order( $purchase_data ) {
 			'intent'               => 'CAPTURE',
 			'purchase_units'       => array(
 				array(
-					// @todo We could put the breakdown here (tax, discount, etc.)
 					'reference_id' => $payment_args['purchase_key'],
 					'amount'       => $order_amount,
 					'custom_id'    => $payment_id,

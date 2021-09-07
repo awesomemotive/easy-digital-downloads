@@ -138,3 +138,43 @@ function get_button_styles() {
 	 */
 	return apply_filters( 'edd_paypal_smart_button_style', $styles );
 }
+
+/**
+ * Gets an array of order items, formatted for PayPal, from the $purchase_data.
+ *
+ * @since 2.11.2
+ * @param array $purchase_data
+ * @return array
+ */
+function get_order_items( $purchase_data ) {
+	// Create an array of items for the order.
+	$items = array();
+	if ( ! is_array( $purchase_data['cart_details'] ) || empty( $purchase_data['cart_details'] ) ) {
+		return $items;
+	}
+	$i = 0;
+	foreach ( $purchase_data['cart_details'] as $item ) {
+		$item_amount = ( $item['subtotal'] / $item['quantity'] ) - ( $item['discount'] / $item['quantity'] );
+
+		if ( $item_amount <= 0 ) {
+			$item_amount = 0;
+		}
+		$items[ $i ] = array(
+			'name'        => stripslashes_deep( html_entity_decode( edd_get_cart_item_name( $item ), ENT_COMPAT, 'UTF-8' ) ),
+			'quantity'    => $item['quantity'],
+			'unit_amount' => array(
+				'currency_code' => edd_get_currency(),
+				'value'         => edd_sanitize_amount( $item_amount ),
+			),
+		);
+		if ( edd_use_skus() ) {
+			$sku = edd_get_download_sku( $item['id'] );
+			if ( ! empty( $sku ) && '-' !== $sku ) {
+				$items[ $i ]['sku'] = $sku;
+			}
+		}
+		$i++;
+	}
+
+	return $items;
+}
