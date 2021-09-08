@@ -196,7 +196,7 @@ function create_order( $purchase_data ) {
 		$tax          = (float) $purchase_data['tax'] > 0 ? $purchase_data['tax'] : 0;
 		$order_amount = array(
 			'currency_code' => $currency,
-			'value'         => (string) ( $order_subtotal + $tax - $discount ),
+			'value'         => (string) $purchase_data['price'],
 			'breakdown'     => array(
 				'item_total' => array(
 					'currency_code' => $currency,
