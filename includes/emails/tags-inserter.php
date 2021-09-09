@@ -125,16 +125,10 @@ function edd_email_tags_inserter_thickbox_content() {
 		</div>
 
 		<ul class="edd-email-tags-list">
-			<?php
-			foreach ( $tags as $tag ) :
-				$label = $tag['label'];
-				if ( empty( $label ) ) {
-					$label = ucwords( str_replace( '_', ' ', $tag['tag'] ) );
-				}
-				?>
+			<?php foreach ( $tags as $tag ) : ?>
 			<li id="<?php echo esc_attr( $tag['tag'] ); ?>" data-tag="<?php echo esc_attr( $tag['tag'] ); ?>" class="edd-email-tags-list-item">
 				<button class="edd-email-tags-list-button" data-to_insert="{<?php echo esc_attr( $tag['tag'] ); ?>}">
-					<strong><?php echo esc_html( $label ); ?></strong><code><?php echo '{' . esc_html( $tag['tag'] ) . '}'; ?></code>
+					<strong><?php echo esc_html( $tag['label'] ); ?></strong><code><?php echo '{' . esc_html( $tag['tag'] ) . '}'; ?></code>
 					<span><?php echo esc_html( $tag['description'] ); ?></span>
 				</button>
 			</li>
