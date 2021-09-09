@@ -1249,34 +1249,35 @@ function edd_validate_url_token( $url = '' ) {
 
 		wp_parse_str( $parts['query'], $query_args );
 
-		// These are the only URL parameters that are allowed to affect the token validation
-		$allowed = apply_filters( 'edd_url_token_allowed_params', array(
-			'eddfile',
-			'file',
-			'ttl',
-			'token'
-		) );
-
-		// Parameters that will be removed from the URL before testing the token
-		$remove = array();
-
-		foreach( $query_args as $key => $value ) {
-			if( false === in_array( $key, $allowed ) ) {
-				$remove[] = $key;
-			}
-		}
-
-		if( ! empty( $remove ) ) {
-
-			$url = remove_query_arg( $remove, $url );
-
-		}
-
+		// If the TTL is in the past, die out before we go any further.
 		if ( isset( $query_args['ttl'] ) && current_time( 'timestamp' ) > $query_args['ttl'] ) {
 
 			wp_die( apply_filters( 'edd_download_link_expired_text', __( 'Sorry but your download link has expired.', 'easy-digital-downloads' ) ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 
 		}
+
+		// These are the only URL parameters that are allowed to affect the token validation.
+		$allowed = apply_filters(
+			'edd_url_token_allowed_params',
+			array(
+				'eddfile',
+				'ttl',
+				'file',
+				'token',
+			)
+		);
+
+		// Collect the allowed tags in proper order, remove all tags, and re-add only the allowed ones.
+		$allowed_args = array();
+
+		foreach ( $allowed as $key ) {
+			if ( true === array_key_exists( $key, $query_args ) ) {
+				$allowed_args[ $key ] = $query_args[ $key ];
+			}
+		}
+
+		// strtok allows a quick clearing of existing query string parameters, so we can re-add the allowed ones.
+		$url = add_query_arg( $allowed_args, strtok( $url, '?' ) );
 
 		if ( isset( $query_args['token'] ) && hash_equals( $query_args['token'], edd_get_download_token( $url ) ) ) {
 
