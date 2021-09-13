@@ -128,13 +128,12 @@ function create_order( $purchase_data ) {
 
 	try {
 		// Create pending payment in EDD.
-		$currency     = edd_get_currency();
 		$payment_args = array(
 			'price'        => $purchase_data['price'],
 			'date'         => $purchase_data['date'],
 			'user_email'   => $purchase_data['user_email'],
 			'purchase_key' => $purchase_data['purchase_key'],
-			'currency'     => $currency,
+			'currency'     => edd_get_currency(),
 			'downloads'    => $purchase_data['downloads'],
 			'cart_details' => $purchase_data['cart_details'],
 			'user_info'    => $purchase_data['user_info'],
@@ -155,80 +154,9 @@ function create_order( $purchase_data ) {
 			);
 		}
 
-		$order_subtotal = $purchase_data['subtotal'];
-		$items          = get_order_items( $purchase_data );
-		// Adjust the order subtotal if any items are discounted.
-		foreach ( $items as $item ) {
-			// A discount can be negative, so cast it to an absolute value for comparison.
-			if ( (float) abs( $item['discount'] ) > 0 ) {
-				$order_subtotal -= ( $item['discount'] * $item['quantity'] );
-			}
-
-			// The discount amount is not passed to PayPal as part of the $item.
-			unset( $item['discount'] );
-		}
-
-		$discount = 0;
-		// Fees which are not item specific need to be added to the PayPal data as order items.
-		if ( ! empty( $purchase_data['fees'] ) ) {
-			foreach ( $purchase_data['fees'] as $fee ) {
-				if ( ! empty( $fee['download_id'] ) ) {
-					continue;
-				}
-				// Positive fees.
-				if ( floatval( $fee['amount'] ) > 0 ) {
-					$items[]         = array(
-						'name'        => stripslashes_deep( html_entity_decode( wp_strip_all_tags( $fee['label'] ), ENT_COMPAT, 'UTF-8' ) ),
-						'unit_amount' => array(
-							'currency_code' => $currency,
-							'value'         => edd_sanitize_amount( $fee['amount'] ),
-						),
-						'quantity'    => 1,
-					);
-					$order_subtotal += abs( $fee['amount'] );
-				} else {
-					// This is a negative fee (discount) not assigned to a specific Download
-					$discount += abs( $fee['amount'] );
-				}
-			}
-		}
-
-		$tax          = (float) $purchase_data['tax'] > 0 ? $purchase_data['tax'] : 0;
-		$order_amount = array(
-			'currency_code' => $currency,
-			'value'         => (string) $purchase_data['price'],
-			'breakdown'     => array(
-				'item_total' => array(
-					'currency_code' => $currency,
-					'value'         => (string) $order_subtotal,
-				),
-			),
-		);
-		if ( $tax > 0 ) {
-			$order_amount['breakdown']['tax_total'] = array(
-				'currency_code' => $currency,
-				'value'         => (string) $tax,
-			);
-		}
-
-		// This is only added by negative global fees.
-		if ( $discount > 0 ) {
-			$order_amount['breakdown']['discount'] = array(
-				'currency_code' => $currency,
-				'value'         => (string) $discount,
-			);
-		}
-
 		$order_data = array(
 			'intent'               => 'CAPTURE',
-			'purchase_units'       => array(
-				array(
-					'reference_id' => $payment_args['purchase_key'],
-					'amount'       => $order_amount,
-					'custom_id'    => $payment_id,
-					'items'        => $items,
-				),
-			),
+			'purchase_units'       => get_order_purchase_units( $payment_id, $purchase_data, $payment_args ),
 			'application_context'  => array(
 				//'locale'              => get_locale(), // PayPal doesn't like this. Might be able to replace `_` with `-`
 				'shipping_preference' => 'NO_SHIPPING',
