@@ -1899,7 +1899,7 @@ class EDD_Payment {
 	public function update_status( $status = '' ) {
 
 		if ( ! $this->order ) {
-			return;
+			return false;
 		}
 
 		// Bail if an empty status is passed.
