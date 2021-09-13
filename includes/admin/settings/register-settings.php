@@ -2173,7 +2173,7 @@ function edd_sendwp_callback($args) {
 
 	// Connection status partial label based on the state of the SendWP email sending setting (Tools -> SendWP)
 	$connected    = sprintf(
-		__( '<a href="https://sendwp.com/account/" target="_blank" rel="noopener noreferrer">Access your SendWP account</a>.', 'easy-digital-downloads' )
+		__( '<a href="https://app.sendwp.com/dashboard" target="_blank" rel="noopener noreferrer">Access your SendWP account</a>.', 'easy-digital-downloads' )
 	);
 	$disconnected = sprintf(
 		__( '<em><strong>Note:</strong> Email sending is currently disabled. <a href="' . admin_url( '/tools.php?page=sendwp' ) . '">Click here</a> to enable it.</em>', 'easy-digital-downloads' )
