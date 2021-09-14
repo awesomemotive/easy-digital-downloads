@@ -154,10 +154,10 @@ function get_order_purchase_units( $payment_id, $purchase_data, $payment_args ) 
 	$order_subtotal = $purchase_data['subtotal'];
 	$items          = get_order_items( $purchase_data );
 	// Adjust the order subtotal if any items are discounted.
-	foreach ( $items as $item ) {
+	foreach ( $items as &$item ) {
 		// A discount can be negative, so cast it to an absolute value for comparison.
 		if ( (float) abs( $item['discount'] ) > 0 ) {
-			$order_subtotal -= ( $item['discount'] * $item['quantity'] );
+			$order_subtotal -= $item['discount'];
 		}
 
 		// The discount amount is not passed to PayPal as part of the $item.
