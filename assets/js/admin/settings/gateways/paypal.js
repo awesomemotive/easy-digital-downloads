@@ -103,7 +103,7 @@ jQuery( document ).ready( function ( $ ) {
 	} );
 } );
 
-function eddPayPalOnboardingCallback( authCode, shareId ) {
+window.eddPayPalOnboardingCallback = function eddPayPalOnboardingCallback( authCode, shareId ) {
 	var connectButton = document.getElementById( 'edd-paypal-commerce-connect' );
 	var errorContainer = document.getElementById( 'edd-paypal-commerce-errors' );
 
