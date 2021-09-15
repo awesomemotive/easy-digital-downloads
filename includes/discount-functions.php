@@ -523,7 +523,7 @@ function edd_update_discount_status( $discount_id = 0, $new_status = 'active' ) 
 function edd_discount_exists( $discount_id ) {
 	$discount = edd_get_discount( $discount_id );
 
-	return $discount->exists();
+	return $discount instanceof EDD_Discount && $discount->exists();
 }
 
 /**
@@ -673,7 +673,8 @@ function edd_get_discount_type( $discount_id = 0 ) {
  */
 function edd_get_discount_excluded_products( $discount_id = 0 ) {
 	$discount = edd_get_discount( $discount_id );
-	return $discount->excluded_products;
+
+	return $discount instanceof EDD_Discount ? $discount->excluded_products : array();
 }
 
 /**
@@ -688,7 +689,8 @@ function edd_get_discount_excluded_products( $discount_id = 0 ) {
  */
 function edd_get_discount_product_reqs( $discount_id = 0 ) {
 	$discount = edd_get_discount( $discount_id );
-	return $discount->product_reqs;
+
+	return $discount instanceof EDD_Discount ? $discount->product_reqs : array();
 }
 
 /**
@@ -704,7 +706,8 @@ function edd_get_discount_product_reqs( $discount_id = 0 ) {
  */
 function edd_get_discount_product_condition( $discount_id = 0 ) {
 	$discount = edd_get_discount( $discount_id );
-	return $discount->product_condition;
+
+	return $discount instanceof EDD_Discount ? $discount->product_condition : '';
 }
 
 /**
@@ -718,7 +721,7 @@ function edd_get_discount_product_condition( $discount_id = 0 ) {
 function edd_get_discount_status_label( $discount_id = null ) {
 	$discount = edd_get_discount( $discount_id );
 
-	return $discount->get_status_label();
+	return $discount instanceof EDD_Discount ? $discount->get_status_label() : '';
 }
 
 /**
@@ -856,7 +859,8 @@ function edd_discount_is_single_use( $discount_id = 0 ) {
  */
 function edd_discount_product_reqs_met( $discount_id = 0, $set_error = true ) {
 	$discount = edd_get_discount( $discount_id );
-	return $discount->is_product_requirements_met( $set_error );
+
+	return $discount instanceof EDD_Discount && $discount->is_product_requirements_met( $set_error );
 }
 
 /**
@@ -879,7 +883,7 @@ function edd_is_discount_used( $code = null, $user = '', $discount_id = 0, $set_
 		? edd_get_discount( $discount_id )
 		: edd_get_discount_by_code( $code );
 
-	return $discount->is_used( $user, $set_error );
+	return $discount instanceof EDD_Discount && $discount->is_used( $user, $set_error );
 }
 
 /**
