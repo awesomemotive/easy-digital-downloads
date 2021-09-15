@@ -248,7 +248,7 @@ class Tests_PayPal extends EDD_UnitTestCase {
 
 		// Refresh payment object.
 		$payment = edd_get_payment( $this->payment->ID );
-		$this->assertEquals( 'publish', $payment->status );
+		$this->assertEquals( 'complete', $payment->status );
 	}
 
 	/**
