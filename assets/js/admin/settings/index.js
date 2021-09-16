@@ -1,5 +1,6 @@
 import { sendwpRemoteInstall, sendwpDisconnect } from './sendwp';
 import { recaptureRemoteInstall } from './recapture';
+import './gateways/paypal';
 
 /**
  * Settings screen JS

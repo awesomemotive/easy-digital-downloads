@@ -1312,8 +1312,8 @@ function edd_tools_sysinfo_get() {
 		$front_page_id = get_option( 'page_on_front' );
 		$blog_page_id  = get_option( 'page_for_posts' );
 
-		$return .= 'Page On Front:            ' . ( $front_page_id != 0 ? get_the_title( $front_page_id ) . ' (#' . $front_page_id . ')' : 'Unset' ) . "\n";
-		$return .= 'Page For Posts:           ' . ( $blog_page_id != 0 ? get_the_title( $blog_page_id ) . ' (#' . $blog_page_id . ')' : 'Unset' ) . "\n";
+		$return .= 'Page On Front:            ' . ( $front_page_id != 0 ? '#' . $front_page_id : 'Unset' ) . "\n";
+		$return .= 'Page For Posts:           ' . ( $blog_page_id != 0 ? '#' . $blog_page_id : 'Unset' ) . "\n";
 	}
 
 	$return .= 'ABSPATH:                  ' . ABSPATH . "\n";
@@ -1502,7 +1502,18 @@ function edd_tools_sysinfo_get() {
 		}
 
 		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
-		$return .= str_pad( $plugin['Name'] . ': ', 26, ' ' ) . $plugin['Version'] . $update . "\n";
+		$plugin_url = '';
+		if ( ! empty( $plugin['PluginURI'] ) ) {
+			$plugin_url = $plugin['PluginURI'];
+		} elseif ( ! empty( $plugin['AuthorURI'] ) ) {
+			$plugin_url = $plugin['AuthorURI'];
+		} elseif ( ! empty( $plugin['Author'] ) ) {
+			$plugin_url = $plugin['Author'];
+		}
+		if ( $plugin_url ) {
+			$plugin_url = ' &mdash; ' . $plugin_url;
+		}
+		$return .= str_pad( $plugin['Name'] . ': ', 26, ' ' ) . $plugin['Version'] . $update . $plugin_url . "\n";
 	}
 
 	$return = apply_filters( 'edd_sysinfo_after_wordpress_plugins', $return );
@@ -1516,7 +1527,18 @@ function edd_tools_sysinfo_get() {
 		}
 
 		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
-		$return .= str_pad( $plugin['Name'] . ': ', 26, ' ' ) . $plugin['Version'] . $update . "\n";
+		$plugin_url = '';
+		if ( ! empty( $plugin['PluginURI'] ) ) {
+			$plugin_url = $plugin['PluginURI'];
+		} elseif ( ! empty( $plugin['AuthorURI'] ) ) {
+			$plugin_url = $plugin['AuthorURI'];
+		} elseif ( ! empty( $plugin['Author'] ) ) {
+			$plugin_url = $plugin['Author'];
+		}
+		if ( $plugin_url ) {
+			$plugin_url = ' &mdash; ' . $plugin_url;
+		}
+		$return .= str_pad( $plugin['Name'] . ': ', 26, ' ' ) . $plugin['Version'] . $update . $plugin_url . "\n";
 	}
 
 	$return = apply_filters( 'edd_sysinfo_after_wordpress_plugins_inactive', $return );
@@ -1537,7 +1559,18 @@ function edd_tools_sysinfo_get() {
 
 			$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
 			$plugin = get_plugin_data( $plugin_path );
-			$return .= str_pad( $plugin['Name'] . ': ', 26, ' ' ) . $plugin['Version'] . $update . "\n";
+			$plugin_url = '';
+			if ( ! empty( $plugin['PluginURI'] ) ) {
+				$plugin_url = $plugin['PluginURI'];
+			} elseif ( ! empty( $plugin['AuthorURI'] ) ) {
+				$plugin_url = $plugin['AuthorURI'];
+			} elseif ( ! empty( $plugin['Author'] ) ) {
+				$plugin_url = $plugin['Author'];
+			}
+			if ( $plugin_url ) {
+				$plugin_url = ' &mdash; ' . $plugin_url;
+			}
+			$return .= str_pad( $plugin['Name'] . ': ', 26, ' ' ) . $plugin['Version'] . $update . $plugin_url . "\n";
 		}
 
 		$return = apply_filters( 'edd_sysinfo_after_wordpress_ms_plugins', $return );
