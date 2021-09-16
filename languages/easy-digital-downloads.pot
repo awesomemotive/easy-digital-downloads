@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 2.11.1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2021-08-30 22:31:21+00:00\n"
+"POT-Creation-Date: 2021-09-16 09:56:59+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -102,7 +102,7 @@ msgstr ""
 #: includes/cart/class-edd-cart.php:1433 includes/cart/class-edd-cart.php:1447
 #: includes/class-edd-license-handler.php:385
 #: includes/deprecated-functions.php:517 includes/deprecated-functions.php:532
-#: includes/deprecated-functions.php:542 includes/download-functions.php:1277
+#: includes/deprecated-functions.php:542 includes/download-functions.php:1255
 #: includes/emails/actions.php:53 includes/emails/template.php:243
 #: includes/error-tracking.php:60 includes/gateways/functions.php:243
 #: includes/gateways/manual.php:33
@@ -719,7 +719,7 @@ msgid "City"
 msgstr ""
 
 #: includes/admin/customers/customers.php:269
-#: includes/admin/settings/register-settings.php:2297
+#: includes/admin/settings/register-settings.php:2298
 #: includes/admin/tools.php:695 includes/checkout/template.php:435
 #: templates/shortcode-profile-editor.php:171
 msgid "State / Province"
@@ -827,7 +827,7 @@ msgstr ""
 #: includes/admin/downloads/metabox.php:714
 #: includes/admin/downloads/metabox.php:839
 #: includes/admin/payments/view-order-details.php:523
-#: includes/admin/settings/register-settings.php:2300 includes/scripts.php:227
+#: includes/admin/settings/register-settings.php:2301 includes/scripts.php:227
 #: templates/checkout_cart.php:57 templates/checkout_cart.php:75
 #: templates/shortcode-profile-editor.php:123
 msgid "Remove"
@@ -2775,7 +2775,7 @@ msgstr ""
 
 #: includes/admin/reporting/class-export-payments.php:68
 #: includes/admin/reporting/export/class-batch-export-payments.php:49
-#: includes/admin/settings/register-settings.php:2296
+#: includes/admin/settings/register-settings.php:2297
 #: includes/admin/tools.php:713
 #: includes/gateways/stripe/includes/template-functions.php:510
 #: includes/gateways/stripe/includes/template-functions.php:519
@@ -4544,172 +4544,170 @@ msgid "Upload File"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:2176
-msgid ""
-"<a href=\"https://sendwp.com/account/\" target=\"_blank\" rel=\"noopener "
-"noreferrer\">Access your SendWP account</a>."
+msgid "Access your SendWP account"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2196
+#: includes/admin/settings/register-settings.php:2197
 msgid "SendWP plugin activated."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2199
+#: includes/admin/settings/register-settings.php:2200
 msgid "Disconnect SendWP"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2206
+#: includes/admin/settings/register-settings.php:2207
 msgid ""
 "We recommend SendWP to ensure quick and reliable delivery of all emails "
 "sent from your store, such as purchase receipts, subscription renewal "
 "reminders, password resets, and more."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2206
+#: includes/admin/settings/register-settings.php:2207
 msgid "%sLearn more%s"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2209
+#: includes/admin/settings/register-settings.php:2210
 msgid "Connect with SendWP"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2245
+#: includes/admin/settings/register-settings.php:2246
 msgid "Recapture plugin activated."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2246
+#: includes/admin/settings/register-settings.php:2247
 msgid "%sAccess your Recapture account%s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2251
+#: includes/admin/settings/register-settings.php:2252
 msgid "Disconnect Recapture"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2255
+#: includes/admin/settings/register-settings.php:2256
 msgid "%sComplete your connection to Recapture%s"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2263
+#: includes/admin/settings/register-settings.php:2264
 msgid ""
 "We recommend Recapture for recovering lost revenue by automatically sending "
 "effective, targeted emails to customers who abandon their shopping cart."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2263
+#: includes/admin/settings/register-settings.php:2264
 msgid "%sLearn more%s (Free trial available)"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2267
+#: includes/admin/settings/register-settings.php:2268
 msgid "Connect with Recapture"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2298
+#: includes/admin/settings/register-settings.php:2299
 msgid "Country Wide"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2299
+#: includes/admin/settings/register-settings.php:2300
 msgid "Rate"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2299
+#: includes/admin/settings/register-settings.php:2300
 msgid ""
 "<strong>Regional tax rates: </strong>When a customer enters an address on "
 "checkout that matches the specified region for this tax rate, the cart tax "
 "will adjust automatically. Enter a percentage, such as 6.5 for 6.5%."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2316
-#: includes/admin/settings/register-settings.php:2364
+#: includes/admin/settings/register-settings.php:2317
+#: includes/admin/settings/register-settings.php:2365
 msgid "Choose a country"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2334
+#: includes/admin/settings/register-settings.php:2335
 msgid "Choose a state"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2346
-#: includes/admin/settings/register-settings.php:2377
+#: includes/admin/settings/register-settings.php:2347
+#: includes/admin/settings/register-settings.php:2378
 msgid "Apply to whole country"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2349
-#: includes/admin/settings/register-settings.php:2380
+#: includes/admin/settings/register-settings.php:2350
+#: includes/admin/settings/register-settings.php:2381
 msgid "Remove Rate"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2385
+#: includes/admin/settings/register-settings.php:2386
 msgid "Add Tax Rate"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2438
+#: includes/admin/settings/register-settings.php:2439
 msgid ""
 "Your license key expired on %s. Please <a href=\"%s\" "
 "target=\"_blank\">renew your license key</a>."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2451
+#: includes/admin/settings/register-settings.php:2452
 msgid ""
 "Your license key has been disabled. Please <a href=\"%s\" "
 "target=\"_blank\">contact support</a> for more information."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2463
+#: includes/admin/settings/register-settings.php:2464
 msgid ""
 "Invalid license. Please <a href=\"%s\" target=\"_blank\">visit your account "
 "page</a> and verify it."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2476
+#: includes/admin/settings/register-settings.php:2477
 msgid ""
 "Your %s is not active for this URL. Please <a href=\"%s\" "
 "target=\"_blank\">visit your account page</a> to manage your license key "
 "URLs."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2488
+#: includes/admin/settings/register-settings.php:2489
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2497
+#: includes/admin/settings/register-settings.php:2498
 msgid ""
 "Your license key has reached its activation limit. <a href=\"%s\">View "
 "possible upgrades</a> now."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2506
+#: includes/admin/settings/register-settings.php:2507
 msgid ""
 "The key you entered belongs to a bundle, please use the product specific "
 "license key."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2514
+#: includes/admin/settings/register-settings.php:2515
 msgid "unknown_error"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2515
+#: includes/admin/settings/register-settings.php:2516
 msgid ""
 "There was an error with this license key: %s. Please <a href=\"%s\">contact "
 "our support team</a>."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2535
+#: includes/admin/settings/register-settings.php:2536
 msgid "License key never expires."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2542
+#: includes/admin/settings/register-settings.php:2543
 msgid ""
 "Your license key expires soon! It expires on %s. <a href=\"%s\" "
 "target=\"_blank\">Renew your license key</a>."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2552
+#: includes/admin/settings/register-settings.php:2553
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2570
+#: includes/admin/settings/register-settings.php:2571
 msgid "To receive updates, please enter your valid %s license key."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2583
+#: includes/admin/settings/register-settings.php:2584
 msgid "Deactivate License"
 msgstr ""
 
@@ -6627,7 +6625,7 @@ msgstr ""
 msgid "Sorry but you have hit your download limit for this file."
 msgstr ""
 
-#: includes/deprecated-functions.php:532 includes/download-functions.php:1277
+#: includes/deprecated-functions.php:532 includes/download-functions.php:1255
 msgid "Sorry but your download link has expired."
 msgstr ""
 
