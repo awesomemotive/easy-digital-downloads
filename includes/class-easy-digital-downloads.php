@@ -233,9 +233,10 @@ final class Easy_Digital_Downloads {
 	public function __get( $key = '' ) {
 		switch ( $key ) {
 			case 'customers' :
+				return new EDD\Compat\Customer();
 			case 'customermeta' :
 			case 'customer_meta' :
-				return new EDD\Compat\Customer();
+				return new EDD\Compat\CustomerMeta();
 
 			default :
 				return isset( $this->{$key} )
@@ -523,6 +524,7 @@ final class Easy_Digital_Downloads {
 		// Backwards Compatibility
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-base.php';
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-customer.php';
+		require_once EDD_PLUGIN_DIR . 'includes/compat/class-customermeta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-discount.php';
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-discount-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-log.php';
