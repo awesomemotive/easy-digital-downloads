@@ -201,6 +201,9 @@ function create_order( $purchase_data ) {
 					get_order_purchase_units_without_breakdown( $payment_id, $purchase_data, $payment_args )
 				);
 
+				// Re-apply the filter.
+				$order_data = apply_filters( 'edd_paypal_order_arguments', $order_data, $purchase_data, $payment_id );
+
 				$response = $api->make_request( 'v2/checkout/orders', $order_data );
 			}
 
