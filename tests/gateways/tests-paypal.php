@@ -479,7 +479,7 @@ class Tests_PayPal extends EDD_UnitTestCase {
 
 		$actual = \EDD\Gateways\PayPal\get_order_purchase_units( 1, $purchase_data, $payment_args );
 
-		$this->assertEqualsCanonicalizing( $expected, $actual[0] );
+		$this->assertEqualSetsWithIndex( $expected, $actual[0] );
 	}
 
 }
