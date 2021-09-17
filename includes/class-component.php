@@ -10,6 +10,8 @@
  */
 namespace EDD;
 
+use EDD\Database;
+
 /**
  * Component Class.
  *
@@ -31,7 +33,7 @@ class Component extends Base_Object {
 	 *
 	 * @since 3.0
 	 *
-	 * @var object
+	 * @var Database\Schema
 	 */
 	public $schema = false;
 
@@ -40,7 +42,7 @@ class Component extends Base_Object {
 	 *
 	 * @since 3.0
 	 *
-	 * @var object
+	 * @var Database\Table
 	 */
 	public $table = false;
 
@@ -49,7 +51,7 @@ class Component extends Base_Object {
 	 *
 	 * @since 3.0
 	 *
-	 * @var object
+	 * @var Database\Table
 	 */
 	public $meta = false;
 
@@ -58,7 +60,7 @@ class Component extends Base_Object {
 	 *
 	 * @since 3.0
 	 *
-	 * @var object
+	 * @var Database\Query
 	 */
 	public $query = false;
 
@@ -67,7 +69,7 @@ class Component extends Base_Object {
 	 *
 	 * @since 3.0
 	 *
-	 * @var object
+	 * @var Database\Row|object
 	 */
 	public $object = false;
 
