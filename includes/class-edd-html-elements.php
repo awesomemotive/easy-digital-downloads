@@ -47,6 +47,7 @@ class EDD_HTML_Elements {
 				'search-type'        => 'download',
 				'search-placeholder' => sprintf( __( 'Search %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
 			),
+			'required'             => false,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -232,6 +233,7 @@ class EDD_HTML_Elements {
 			'show_option_all'  => isset( $args['show_option_all'] ) ? $args['show_option_all'] : false,
 			'show_option_none' => false,
 			'data'             => $args['data'],
+			'required'         => $args['required'],
 		) );
 
 		return $output;
@@ -261,6 +263,7 @@ class EDD_HTML_Elements {
 				'search-placeholder' => __( 'Search Customers', 'easy-digital-downloads' ),
 			),
 			'none_selected' => __( 'No customer attached', 'easy-digital-downloads' ),
+			'required'      => false,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -304,6 +307,7 @@ class EDD_HTML_Elements {
 			'show_option_all'  => false,
 			'show_option_none' => false,
 			'data'             => $args['data'],
+			'required'         => $args['required'],
 		) );
 
 		return $output;
@@ -332,6 +336,7 @@ class EDD_HTML_Elements {
 				'search-type'        => 'user',
 				'search-placeholder' => __( 'Search Users', 'easy-digital-downloads' ),
 			),
+			'required'    => false,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -379,6 +384,7 @@ class EDD_HTML_Elements {
 			'show_option_all'  => false,
 			'show_option_none' => false,
 			'data'             => $args['data'],
+			'required'         => $args['required'],
 		) );
 
 		return $output;
@@ -411,6 +417,7 @@ class EDD_HTML_Elements {
 				'search-type'        => 'discount',
 				'search-placeholder' => __( 'Search Discounts', 'easy-digital-downloads' ),
 			),
+			'required'        => false,
 		);
 
 		$args = func_get_args();
@@ -455,6 +462,7 @@ class EDD_HTML_Elements {
 			'chosen'           => $args['chosen'],
 			'show_option_all'  => $args['show_option_all'],
 			'show_option_none' => false,
+			'required'         => $args['required'],
 		) );
 
 		return $output;
@@ -587,6 +595,7 @@ class EDD_HTML_Elements {
 				'data'             => array(
 					'nonce' => wp_create_nonce( 'edd-country-field-nonce' ),
 				),
+				'required'         => false,
 			)
 		);
 
@@ -621,6 +630,7 @@ class EDD_HTML_Elements {
 				'show_option_none' => false,
 				'placeholder'      => __( 'Choose a Region', 'easy-digital-downloads' ),
 				'show_option_all'  => __( 'All Regions', 'easy-digital-downloads' ),
+				'required'         => false,
 			)
 		);
 
@@ -656,6 +666,7 @@ class EDD_HTML_Elements {
 			'data'             => array(),
 			'readonly'         => false,
 			'disabled'         => false,
+			'required'         => false,
 		) );
 
 		$data_elements = '';
@@ -694,8 +705,13 @@ class EDD_HTML_Elements {
 			$disabled = '';
 		}
 
+		$required = '';
+		if ( ! empty( $args['required'] ) ) {
+			$required = ' required';
+		}
+
 		$class  = implode( ' ', array_map( 'esc_attr', explode( ' ', $args['class'] ) ) );
-		$output = '<select' . $disabled . $readonly . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( str_replace( '-', '_', $args['id'] ) ) . '" class="edd-select ' . $class . '"' . $multiple . ' data-placeholder="' . $placeholder . '"' . $data_elements . '>';
+		$output = '<select' . $disabled . $readonly . $required . ' name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( str_replace( '-', '_', $args['id'] ) ) . '" class="edd-select ' . $class . '"' . $multiple . ' data-placeholder="' . $placeholder . '"' . $data_elements . '>';
 
 		if ( ! isset( $args['selected'] ) || ( is_array( $args['selected'] ) && empty( $args['selected'] ) ) || ! $args['selected'] ) {
 			$selected = "";
@@ -813,6 +829,7 @@ class EDD_HTML_Elements {
 			'disabled'     => false,
 			'autocomplete' => '',
 			'data'         => false,
+			'required'     => false,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -821,6 +838,11 @@ class EDD_HTML_Elements {
 		$disabled = '';
 		if ( $args['disabled'] ) {
 			$disabled = ' disabled="disabled"';
+		}
+
+		$required = '';
+		if ( ! empty( $args['required'] ) ) {
+			$required = ' required';
 		}
 
 		$data = '';
@@ -839,7 +861,7 @@ class EDD_HTML_Elements {
 			$output .= '<span class="edd-description">' . esc_html( $args['desc'] ) . '</span>';
 		}
 
-		$output .= '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" autocomplete="' . esc_attr( $args['autocomplete'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="' . $class . '" ' . $data . '' . $disabled . '/>';
+		$output .= '<input type="text" name="' . esc_attr( $args['name'] ) . '" id="' . esc_attr( $args['id'] ) . '" autocomplete="' . esc_attr( $args['autocomplete'] ) . '" value="' . esc_attr( $args['value'] ) . '" placeholder="' . esc_attr( $args['placeholder'] ) . '" class="' . $class . '" ' . $data . $disabled . $required . '/>';
 
 		$output .= '</span>';
 
