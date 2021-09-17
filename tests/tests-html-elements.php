@@ -198,6 +198,9 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 		$this->assertContains( '<option value="12"', $out );
 	}
 
+	/**
+	 * @covers EDD_HTML_Elements::select
+	 */
 	public function test_select_is_required() {
 		$select = EDD()->html->select(
 			array(
@@ -213,6 +216,9 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 		$this->assertContains( 'required', $select );
 	}
 
+	/**
+	 * @covers EDD_HTML_Elements::select
+	 */
 	public function test_select_is_not_required() {
 		$select = EDD()->html->select(
 			array(
@@ -227,10 +233,16 @@ class Test_HTML_Elements extends EDD_UnitTestCase {
 		$this->assertNotContains( 'required', $select );
 	}
 
+	/**
+	 * @covers EDD_HTML_Elements::text
+	 */
 	public function test_text_is_required() {
 		$this->assertContains( 'required', EDD()->html->text( array( 'required' => true ) ) );
 	}
 
+	/**
+	 * @covers EDD_HTML_Elements::text
+	 */
 	public function test_text_is_not_required() {
 		$this->assertNotContains( 'required', EDD()->html->text() );
 	}
