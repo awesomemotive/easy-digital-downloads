@@ -404,4 +404,82 @@ class Tests_PayPal extends EDD_UnitTestCase {
 		$this->assertTrue( $merchant->is_account_ready() );
 	}
 
+	/**
+	 * @covers ::\EDD\Gateways\PayPal\_is_item_total_mismatch()
+	 */
+	public function test_item_total_mismatch_detected() {
+		$api_response = '{"name":"UNPROCESSABLE_ENTITY","details":[{"field":"\/purchase_units\/@reference_id==\'f4b51d81164ab4338fb9aa0911c94701\'\/amount\/breakdown\/item_total\/value","value":"0","issue":"ITEM_TOTAL_MISMATCH","description":"Should equal sum of (unit_amount * quantity) across all items for a given purchase_unit"}],"message":"The requested action could not be performed, semantically incorrect, or failed business validation.","debug_id":"123456789","links":[{"href":"https:\/\/developer.paypal.com\/docs\/api\/orders\/v2\/#error-ITEM_TOTAL_MISMATCH","rel":"information_link","method":"GET"}]}';
+
+		$this->assertTrue( \EDD\Gateways\PayPal\_is_item_total_mismatch( json_decode( $api_response ) ) );
+	}
+
+	/**
+	 * @covers ::\EDD\Gateways\PayPal\_is_item_total_mismatch()
+	 */
+	public function test_item_total_mismatch_not_detected_on_success() {
+		$api_response = '{"id":"5GY4996685035442T","status":"CREATED","links":[{"href":"https:\/\/api.sandbox.paypal.com\/v2\/checkout\/orders\/5GY4996685035442T","rel":"self","method":"GET"},{"href":"https:\/\/www.sandbox.paypal.com\/checkoutnow?token=5GY4996685035442T","rel":"approve","method":"GET"},{"href":"https:\/\/api.sandbox.paypal.com\/v2\/checkout\/orders\/5GY4996685035442T","rel":"update","method":"PATCH"},{"href":"https:\/\/api.sandbox.paypal.com\/v2\/checkout\/orders\/5GY4996685035442T\/capture","rel":"capture","method":"POST"}]}';
+
+		$this->assertFalse( \EDD\Gateways\PayPal\_is_item_total_mismatch( json_decode( $api_response ) ) );
+	}
+
+	/**
+	 * Product costs $10.
+	 * Two added to cart (quantity: 2)
+	 * 50% discount applied.
+	 *
+	 * @covers ::\EDD\Gateways\PayPal\get_order_purchase_units()
+	 */
+	public function test_purchase_units_with_quantities_and_discount() {
+		$purchase_data = array(
+			'subtotal'     => 20.00,
+			'discount'     => 10.00,
+			'tax'          => 0.00,
+			'price'        => 10.00,
+			'cart_details' => array(
+				array(
+					'id'         => 1,
+					'item_price' => 10.00,
+					'quantity'   => 2, // Quantity 2
+					'discount'   => 10.00, // With 50% discount
+					'subtotal'   => 20.00,
+					'tax'        => 0.00,
+					'price'      => 10.00
+				)
+			)
+		);
+
+		$payment_args = array(
+			'purchase_key' => '123'
+		);
+
+		$expected = array(
+			'reference_id' => '123',
+			'amount'       => array(
+				'currency_code' => 'USD',
+				'value'         => '10',
+				'breakdown'     => array(
+					'item_total' => array(
+						'currency_code' => 'USD',
+						'value'         => '10',
+					)
+				),
+			),
+			'custom_id'    => 1,
+			'items'        => array(
+				array(
+					'name'        => '1',
+					'quantity'    => 2,
+					'unit_amount' => array(
+						'currency_code' => 'USD',
+						'value'         => '5.00'
+					)
+				)
+			)
+		);
+
+		$actual = \EDD\Gateways\PayPal\get_order_purchase_units( 1, $purchase_data, $payment_args );
+
+		$this->assertEqualsCanonicalizing( $expected, $actual[0] );
+	}
+
 }
