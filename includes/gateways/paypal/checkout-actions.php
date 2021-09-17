@@ -195,6 +195,15 @@ function create_order( $purchase_data ) {
 			$api      = new API();
 			$response = $api->make_request( 'v2/checkout/orders', $order_data );
 
+			if ( ! isset( $response->id ) && _is_item_total_mismatch( $response ) ) {
+				// Try again without the item breakdown. That way if we have an error in our totals the whole API request won't fail.
+				$order_data['purchase_units'] = array(
+					get_order_purchase_units_without_breakdown( $payment_id, $purchase_data, $payment_args )
+				);
+
+				$response = $api->make_request( 'v2/checkout/orders', $order_data );
+			}
+
 			if ( ! isset( $response->id ) ) {
 				throw new Gateway_Exception(
 					__( 'An error occurred while communicating with PayPal. Please try again.', 'easy-digital-downloads' ),

@@ -140,6 +140,42 @@ function get_button_styles() {
 }
 
 /**
+ * Gets the PayPal purchase units without the individual item breakdown.
+ *
+ * @since 2.11.2
+ *
+ * @param int   $payment_id    The payment/order ID.
+ * @param array $purchase_data The array of purchase data.
+ * @param array $payment_args  The array created to insert the payment into the database.
+ *
+ * @return array
+ */
+function get_order_purchase_units_without_breakdown( $payment_id, $purchase_data, $payment_args ) {
+	$order_amount = array(
+		'currency_code' => edd_get_currency(),
+		'value'         => (string) $purchase_data['price']
+	);
+	if ( (float) $purchase_data['tax'] > 0 ) {
+		$order_amount['breakdown'] = array(
+			'item_total' => array(
+				'currency_code' => edd_get_currency(),
+				'value'         => (string) ( $purchase_data['price'] - $purchase_data['tax'] )
+			),
+			'tax_total'  => array(
+				'currency_code' => edd_get_currency(),
+				'value'         => (string) $purchase_data['tax']
+			)
+		);
+	}
+
+	return array(
+		'reference_id' => $payment_args['purchase_key'],
+		'amount'       => $order_amount,
+		'custom_id'    => $payment_id
+	);
+}
+
+/**
  * Gets the PayPal purchase units. The order breakdown includes the order items, tax, and discount.
  *
  * @since 2.11.2
@@ -217,12 +253,10 @@ function get_order_purchase_units( $payment_id, $purchase_data, $payment_args ) 
 	}
 
 	return array(
-		array(
-			'reference_id' => $payment_args['purchase_key'],
-			'amount'       => $order_amount,
-			'custom_id'    => $payment_id,
-			'items'        => $items,
-		),
+		wp_parse_args( array(
+			'amount' => $order_amount,
+			'items'  => $items
+		), get_order_purchase_units_without_breakdown( $payment_id, $purchase_data, $payment_args ) )
 	);
 }
 
@@ -265,4 +299,31 @@ function get_order_items( $purchase_data ) {
 	}
 
 	return $items;
+}
+
+/**
+ * Attempts to detect if there's an item total mismatch. This means the individual item breakdowns don't
+ * add up to our proposed totals.
+ *
+ * @link https://github.com/easydigitaldownloads/easy-digital-downloads/pull/8835#issuecomment-921759101
+ * @internal Not intended for public use.
+ *
+ * @since 2.11.2
+ *
+ * @param object $response
+ *
+ * @return bool
+ */
+function _is_item_total_mismatch( $response ) {
+	if ( ! isset( $response->details ) || ! is_array( $response->details ) ) {
+		return false;
+	}
+
+	foreach( $response->details as $detail ) {
+		if ( ! empty( $detail->issue ) && 'ITEM_TOTAL_MISMATCH' === strtoupper( $detail->issue ) ) {
+			return true;
+		}
+	}
+
+	return false;
 }
