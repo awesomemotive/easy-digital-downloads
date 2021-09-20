@@ -56,6 +56,7 @@ require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/class-account-status-val
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/class-merchant-account.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/class-paypal-api.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/class-token.php';
+require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/deprecated.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/functions.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/gateway-filters.php';
 require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/refunds.php';
