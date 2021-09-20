@@ -61,8 +61,11 @@ const config = {
 		'edd-admin': './assets/js/admin',
 		'edd-admin-tax-rates': './assets/js/admin/settings/tax-rates',
 		'edd-admin-email-tags': './assets/js/admin/settings/email-tags',
+
+		// Front-end JavaScript.
 		'edd-ajax': './assets/js/frontend/edd-ajax.js',
 		'edd-checkout-global': './assets/js/frontend/checkout',
+		'paypal-checkout': './assets/js/frontend/gateways/paypal.js',
 
 		// Admin styles.
 		'edd-admin-style': './assets/css/admin/style.scss',

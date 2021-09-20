@@ -233,9 +233,10 @@ final class Easy_Digital_Downloads {
 	public function __get( $key = '' ) {
 		switch ( $key ) {
 			case 'customers' :
+				return new EDD\Compat\Customer();
 			case 'customermeta' :
 			case 'customer_meta' :
-				return new EDD\Compat\Customer();
+				return new EDD\Compat\CustomerMeta();
 
 			default :
 				return isset( $this->{$key} )
@@ -284,7 +285,7 @@ final class Easy_Digital_Downloads {
 
 		// Plugin version.
 		if ( ! defined( 'EDD_VERSION' ) ) {
-			define( 'EDD_VERSION', '3.0-beta2' );
+			define( 'EDD_VERSION', '3.0-rc1' );
 		}
 
 		// Plugin Root File.
@@ -523,6 +524,7 @@ final class Easy_Digital_Downloads {
 		// Backwards Compatibility
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-base.php';
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-customer.php';
+		require_once EDD_PLUGIN_DIR . 'includes/compat/class-customermeta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-discount.php';
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-discount-query.php';
 		require_once EDD_PLUGIN_DIR . 'includes/compat/class-log.php';
@@ -593,11 +595,17 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/cart/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
 
+		// Currency
+		require_once EDD_PLUGIN_DIR . 'includes/currency/class-currency.php';
+		require_once EDD_PLUGIN_DIR . 'includes/currency/class-money-formatter.php';
+		require_once EDD_PLUGIN_DIR . 'includes/currency/functions.php';
+
 		// Gateways
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/amazon-payments.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal-standard.php';
+		require_once EDD_PLUGIN_DIR . 'includes/gateways/paypal/paypal.php';
 		require_once EDD_PLUGIN_DIR . 'includes/gateways/manual.php';
 
 		$stripe = EDD_PLUGIN_DIR . 'includes/gateways/stripe/edd-stripe.php';
@@ -690,6 +698,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/customer-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/customers/customer-actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/privacy-functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/utils/class-tokenizer.php';
 		require_once EDD_PLUGIN_DIR . 'includes/user-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/query-filters.php';
 		require_once EDD_PLUGIN_DIR . 'includes/tax-functions.php';
@@ -754,6 +763,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/settings/display-settings.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/tools.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/plugins.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/downgrades.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrade-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/upgrades.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upgrades/v3/upgrade-actions.php';
