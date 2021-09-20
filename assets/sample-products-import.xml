@@ -27,13 +27,13 @@
 
 <channel>
 	<title>Easy Digital Downloads Demo</title>
-	<link>http://easydigitaldownloads.com/demo</link>
+	<link>https://easydigitaldownloads.com/demo</link>
 	<description>A demo site for Easy Digital Downloads</description>
 	<pubDate>Fri, 25 Jan 2013 17:58:10 +0000</pubDate>
 	<language>en-US</language>
 	<wp:wxr_version>1.2</wp:wxr_version>
-	<wp:base_site_url>http://easydigitaldownloads.com/</wp:base_site_url>
-	<wp:base_blog_url>http://easydigitaldownloads.com/demo</wp:base_blog_url>
+	<wp:base_site_url>https://easydigitaldownloads.com/</wp:base_site_url>
+	<wp:base_blog_url>https://easydigitaldownloads.com/demo</wp:base_blog_url>
 
 	<wp:author><wp:author_id>1</wp:author_id><wp:author_login>pippin</wp:author_login><wp:author_email>pippin@pippinsplugins.com</wp:author_email><wp:author_display_name><![CDATA[Pippin Williamson]]></wp:author_display_name><wp:author_first_name><![CDATA[Pippin]]></wp:author_first_name><wp:author_last_name><![CDATA[Williamson]]></wp:author_last_name></wp:author>
 
@@ -50,10 +50,10 @@
 
 	<item>
 		<title>A Sample Digital Download</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/a-sample-digital-download/</link>
+		<link>https://easydigitaldownloads.com/demo/downloads/a-sample-digital-download/</link>
 		<pubDate>Mon, 21 May 2012 16:20:08 +0000</pubDate>
 		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?post_type=download&#038;p=8</guid>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/?post_type=download&#038;p=8</guid>
 		<description></description>
 		<content:encoded><![CDATA[Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturient urna ac, ac amet! Non integer nec, mid, enim lorem scelerisque ultricies tristique aliquet sagittis? Augue ridiculus non! Nec magnis, tortor sit, scelerisque lacus augue integer magna, hac et vel, mauris turpis urna tincidunt nascetur in, platea est, amet, rhoncus a nisi augue rhoncus hac! Tristique ridiculus phasellus pulvinar sed diam rhoncus dolor a tincidunt mus! Mauris pid, enim nec. Ac platea sociis pulvinar enim ridiculus, porta turpis? Hac lectus scelerisque montes? Elementum augue dignissim turpis, habitasse sociis odio mattis ut in egestas ac a quis! Mattis? Hac! Nunc magna. Pid dignissim pulvinar! Nunc placerat tortor, ultrices nisi elit, amet vut tortor mattis auctor a lundium cum in.]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
@@ -86,7 +86,7 @@
 		</wp:postmeta>
 		<wp:postmeta>
 			<wp:meta_key>edd_download_files</wp:meta_key>
-			<wp:meta_value><![CDATA[a:1:{i:0;a:2:{s:4:"name";s:14:"Download Files";s:4:"file";s:70:"http://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png";}}]]></wp:meta_value>
+			<wp:meta_value><![CDATA[a:1:{i:0;a:2:{s:4:"name";s:14:"Download Files";s:4:"file";s:70:"https://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png";}}]]></wp:meta_value>
 		</wp:postmeta>
 		<wp:postmeta>
 			<wp:meta_key>_edd_purchase_text</wp:meta_key>
@@ -103,10 +103,10 @@
 	</item>
 	<item>
 		<title>wpmini-grey</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/a-sample-digital-download/wpmini-grey/</link>
+		<link>https://easydigitaldownloads.com/demo/downloads/a-sample-digital-download/wpmini-grey/</link>
 		<pubDate>Mon, 21 May 2012 16:19:32 +0000</pubDate>
 		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png</guid>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png</guid>
 		<description></description>
 		<content:encoded><![CDATA[]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
@@ -122,7 +122,7 @@
 		<wp:post_type>attachment</wp:post_type>
 		<wp:post_password></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-		<wp:attachment_url>http://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png</wp:attachment_url>
+		<wp:attachment_url>https://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png</wp:attachment_url>
 		<wp:postmeta>
 			<wp:meta_key>_wp_attached_file</wp:meta_key>
 			<wp:meta_value><![CDATA[edd/2012/05/wpmini-grey.png]]></wp:meta_value>
@@ -134,10 +134,10 @@
 	</item>
 	<item>
 		<title>Sample Product</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/sample-product/</link>
+		<link>https://easydigitaldownloads.com/demo/downloads/sample-product/</link>
 		<pubDate>Mon, 21 May 2012 16:26:47 +0000</pubDate>
 		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?post_type=download&#038;p=16</guid>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/?post_type=download&#038;p=16</guid>
 		<description></description>
 		<content:encoded><![CDATA[Lundium, montes augue tristique augue? Ac! Vel mattis, nisi pulvinar? Ultrices rhoncus integer, scelerisque phasellus egestas. Sit aenean est nisi nisi aenean pid elit, mid duis? Lectus, lundium duis pulvinar nunc urna rhoncus pid in nisi. Magna? Lectus, nisi ultricies nascetur urna in phasellus cras, urna a massa rhoncus sed facilisis habitasse! Duis? Dapibus vel vel, risus? Cras amet ac, aliquet scelerisque habitasse tempor integer natoque egestas? Urna, lacus nunc? Ultrices cum, scelerisque eros eros urna! Cras cursus dolor etiam tincidunt ac magna porta ut augue, magna eu integer et, magna et duis sit? Dolor, augue pulvinar aliquet magna facilisis. Nisi odio, tincidunt eu, nec pulvinar scelerisque dis penatibus mus turpis, lundium elementum tristique montes mus etiam dolor, hac. Phasellus.]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
@@ -172,7 +172,7 @@
 		</wp:postmeta>
 		<wp:postmeta>
 			<wp:meta_key>edd_download_files</wp:meta_key>
-			<wp:meta_value><![CDATA[a:1:{i:0;a:3:{s:4:"name";s:5:"Files";s:4:"file";s:70:"http://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png";s:9:"condition";s:3:"all";}}]]></wp:meta_value>
+			<wp:meta_value><![CDATA[a:1:{i:0;a:3:{s:4:"name";s:5:"Files";s:4:"file";s:70:"https://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png";s:9:"condition";s:3:"all";}}]]></wp:meta_value>
 		</wp:postmeta>
 		<wp:postmeta>
 			<wp:meta_key>_thumbnail_id</wp:meta_key>
@@ -201,10 +201,10 @@
 	</item>
 	<item>
 		<title>cars_pixar</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/sample-product/cars_pixar/</link>
+		<link>https://easydigitaldownloads.com/demo/downloads/sample-product/cars_pixar/</link>
 		<pubDate>Fri, 15 Jun 2012 15:17:24 +0000</pubDate>
 		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/edd/2012/05/cars_pixar.jpg</guid>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2012/05/cars_pixar.jpg</guid>
 		<description></description>
 		<content:encoded><![CDATA[]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
@@ -220,7 +220,7 @@
 		<wp:post_type>attachment</wp:post_type>
 		<wp:post_password></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-		<wp:attachment_url>http://easydigitaldownloads.com/demo/files/edd/2012/05/cars_pixar.jpg</wp:attachment_url>
+		<wp:attachment_url>https://easydigitaldownloads.com/demo/files/edd/2012/05/cars_pixar.jpg</wp:attachment_url>
 		<wp:postmeta>
 			<wp:meta_key>_wp_attached_file</wp:meta_key>
 			<wp:meta_value><![CDATA[edd/2012/05/cars_pixar.jpg]]></wp:meta_value>
@@ -232,10 +232,10 @@
 	</item>
 	<item>
 		<title>cars_pixar</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/sample-product/cars_pixar-2/</link>
+		<link>https://easydigitaldownloads.com/demo/downloads/sample-product/cars_pixar-2/</link>
 		<pubDate>Fri, 15 Jun 2012 15:20:50 +0000</pubDate>
 		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/edd/2012/05/cars_pixar1.jpg</guid>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2012/05/cars_pixar1.jpg</guid>
 		<description></description>
 		<content:encoded><![CDATA[]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
@@ -251,7 +251,7 @@
 		<wp:post_type>attachment</wp:post_type>
 		<wp:post_password></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-		<wp:attachment_url>http://easydigitaldownloads.com/demo/files/edd/2012/05/cars_pixar1.jpg</wp:attachment_url>
+		<wp:attachment_url>https://easydigitaldownloads.com/demo/files/edd/2012/05/cars_pixar1.jpg</wp:attachment_url>
 		<wp:postmeta>
 			<wp:meta_key>_wp_attached_file</wp:meta_key>
 			<wp:meta_value><![CDATA[edd/2012/05/cars_pixar1.jpg]]></wp:meta_value>
@@ -263,10 +263,10 @@
 	</item>
 	<item>
 		<title>Disney and Pixar?s RATATOUILLE movie image</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/sample-product/disney-and-pixars-ratatouille-movie-image/</link>
+		<link>https://easydigitaldownloads.com/demo/downloads/sample-product/disney-and-pixars-ratatouille-movie-image/</link>
 		<pubDate>Fri, 15 Jun 2012 15:21:13 +0000</pubDate>
 		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/edd/2012/05/disney_and_pixar_s_ratatouille_movie_image.jpg</guid>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2012/05/disney_and_pixar_s_ratatouille_movie_image.jpg</guid>
 		<description></description>
 		<content:encoded><![CDATA[]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
@@ -282,7 +282,7 @@
 		<wp:post_type>attachment</wp:post_type>
 		<wp:post_password></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-		<wp:attachment_url>http://easydigitaldownloads.com/demo/files/edd/2012/05/disney_and_pixar_s_ratatouille_movie_image.jpg</wp:attachment_url>
+		<wp:attachment_url>https://easydigitaldownloads.com/demo/files/edd/2012/05/disney_and_pixar_s_ratatouille_movie_image.jpg</wp:attachment_url>
 		<wp:postmeta>
 			<wp:meta_key>_wp_attached_file</wp:meta_key>
 			<wp:meta_value><![CDATA[edd/2012/05/disney_and_pixar_s_ratatouille_movie_image.jpg]]></wp:meta_value>
@@ -294,10 +294,10 @@
 	</item>
 	<item>
 		<title>Another Sample Product</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/another-sample-product/</link>
+		<link>https://easydigitaldownloads.com/demo/downloads/another-sample-product/</link>
 		<pubDate>Fri, 15 Jun 2012 15:21:40 +0000</pubDate>
 		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?post_type=download&#038;p=67</guid>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/?post_type=download&#038;p=67</guid>
 		<description></description>
 		<content:encoded><![CDATA[Lundium, montes augue tristique augue? Ac! Vel mattis, nisi pulvinar? Ultrices rhoncus integer, scelerisque phasellus egestas. Sit aenean est nisi nisi aenean pid elit, mid duis? Lectus, lundium duis pulvinar nunc urna rhoncus pid in nisi. Magna? Lectus, nisi ultricies nascetur urna in phasellus cras, urna a massa rhoncus sed facilisis habitasse! Duis? Dapibus vel vel, risus? Cras amet ac, aliquet scelerisque habitasse tempor integer natoque egestas? Urna, lacus nunc? Ultrices cum, scelerisque eros eros urna! Cras cursus dolor etiam tincidunt ac magna porta ut augue, magna eu integer et, magna et duis sit? Dolor, augue pulvinar aliquet magna facilisis. Nisi odio, tincidunt eu, nec pulvinar scelerisque dis penatibus mus turpis, lundium elementum tristique montes mus etiam dolor, hac. Phasellus.]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
@@ -332,7 +332,7 @@
 		</wp:postmeta>
 		<wp:postmeta>
 			<wp:meta_key>edd_download_files</wp:meta_key>
-			<wp:meta_value><![CDATA[a:1:{i:0;a:3:{s:4:"name";s:5:"Files";s:4:"file";s:70:"http://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png";s:9:"condition";s:3:"all";}}]]></wp:meta_value>
+			<wp:meta_value><![CDATA[a:1:{i:0;a:3:{s:4:"name";s:5:"Files";s:4:"file";s:70:"https://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png";s:9:"condition";s:3:"all";}}]]></wp:meta_value>
 		</wp:postmeta>
 		<wp:postmeta>
 			<wp:meta_key>edd_price</wp:meta_key>
@@ -353,10 +353,10 @@
 	</item>
 	<item>
 		<title>One More Sample Product</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/one-more-sample-product/</link>
+		<link>https://easydigitaldownloads.com/demo/downloads/one-more-sample-product/</link>
 		<pubDate>Fri, 15 Jun 2012 15:22:01 +0000</pubDate>
 		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?post_type=download&#038;p=68</guid>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/?post_type=download&#038;p=68</guid>
 		<description></description>
 		<content:encoded><![CDATA[Lundium, montes augue tristique augue? Ac! Vel mattis, nisi pulvinar? Ultrices rhoncus integer, scelerisque phasellus egestas. Sit aenean est nisi nisi aenean pid elit, mid duis? Lectus, lundium duis pulvinar nunc urna rhoncus pid in nisi. Magna? Lectus, nisi ultricies nascetur urna in phasellus cras, urna a massa rhoncus sed facilisis habitasse! Duis? Dapibus vel vel, risus? Cras amet ac, aliquet scelerisque habitasse tempor integer natoque egestas? Urna, lacus nunc? Ultrices cum, scelerisque eros eros urna! Cras cursus dolor etiam tincidunt ac magna porta ut augue, magna eu integer et, magna et duis sit? Dolor, augue pulvinar aliquet magna facilisis. Nisi odio, tincidunt eu, nec pulvinar scelerisque dis penatibus mus turpis, lundium elementum tristique montes mus etiam dolor, hac. Phasellus.]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
@@ -386,7 +386,7 @@
 		</wp:postmeta>
 		<wp:postmeta>
 			<wp:meta_key>edd_download_files</wp:meta_key>
-			<wp:meta_value><![CDATA[a:1:{i:0;a:3:{s:4:"name";s:5:"Files";s:4:"file";s:70:"http://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png";s:9:"condition";s:3:"all";}}]]></wp:meta_value>
+			<wp:meta_value><![CDATA[a:1:{i:0;a:3:{s:4:"name";s:5:"Files";s:4:"file";s:70:"https://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png";s:9:"condition";s:3:"all";}}]]></wp:meta_value>
 		</wp:postmeta>
 		<wp:postmeta>
 			<wp:meta_key>edd_price</wp:meta_key>
@@ -399,10 +399,10 @@
 	</item>
 	<item>
 		<title>top-ten-pixar-monster (1)</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/one-more-sample-product/top-ten-pixar-monster-1/</link>
+		<link>https://easydigitaldownloads.com/demo/downloads/one-more-sample-product/top-ten-pixar-monster-1/</link>
 		<pubDate>Fri, 15 Jun 2012 15:24:08 +0000</pubDate>
 		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/edd/2012/06/top-ten-pixar-monster-1.jpg</guid>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2012/06/top-ten-pixar-monster-1.jpg</guid>
 		<description></description>
 		<content:encoded><![CDATA[]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
@@ -418,7 +418,7 @@
 		<wp:post_type>attachment</wp:post_type>
 		<wp:post_password></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-		<wp:attachment_url>http://easydigitaldownloads.com/demo/files/edd/2012/06/top-ten-pixar-monster-1.jpg</wp:attachment_url>
+		<wp:attachment_url>https://easydigitaldownloads.com/demo/files/edd/2012/06/top-ten-pixar-monster-1.jpg</wp:attachment_url>
 		<wp:postmeta>
 			<wp:meta_key>_wp_attached_file</wp:meta_key>
 			<wp:meta_value><![CDATA[edd/2012/06/top-ten-pixar-monster-1.jpg]]></wp:meta_value>
@@ -430,10 +430,10 @@
 	</item>
 	<item>
 		<title>Sample FREE Product</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/sample-free-product/</link>
+		<link>https://easydigitaldownloads.com/demo/downloads/sample-free-product/</link>
 		<pubDate>Tue, 27 Nov 2012 23:57:34 +0000</pubDate>
 		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?post_type=download&#038;p=476</guid>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/?post_type=download&#038;p=476</guid>
 		<description></description>
 		<content:encoded><![CDATA[Lundium, montes augue tristique augue? Ac! Vel mattis, nisi pulvinar? Ultrices rhoncus integer, scelerisque phasellus egestas. Sit aenean est nisi nisi aenean pid elit, mid duis? Lectus, lundium duis pulvinar nunc urna rhoncus pid in nisi. Magna? Lectus, nisi ultricies nascetur urna in phasellus cras, urna a massa rhoncus sed facilisis habitasse! Duis? Dapibus vel vel, risus? Cras amet ac, aliquet scelerisque habitasse tempor integer natoque egestas? Urna, lacus nunc? Ultrices cum, scelerisque eros eros urna! Cras cursus dolor etiam tincidunt ac magna porta ut augue, magna eu integer et, magna et duis sit? Dolor, augue pulvinar aliquet magna facilisis. Nisi odio, tincidunt eu, nec pulvinar scelerisque dis penatibus mus turpis, lundium elementum tristique montes mus etiam dolor, hac. Phasellus.]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
@@ -460,7 +460,7 @@
 		</wp:postmeta>
 		<wp:postmeta>
 			<wp:meta_key>edd_download_files</wp:meta_key>
-			<wp:meta_value><![CDATA[a:1:{i:0;a:3:{s:4:"name";s:10:"Free Image";s:4:"file";s:63:"http://easydigitaldownloads.com/demo/files/edd/2012/11/free.jpg";s:9:"condition";s:3:"all";}}]]></wp:meta_value>
+			<wp:meta_value><![CDATA[a:1:{i:0;a:3:{s:4:"name";s:10:"Free Image";s:4:"file";s:63:"https://easydigitaldownloads.com/demo/files/edd/2012/11/free.jpg";s:9:"condition";s:3:"all";}}]]></wp:meta_value>
 		</wp:postmeta>
 		<wp:postmeta>
 			<wp:meta_key>_edd_download_limit</wp:meta_key>
@@ -477,10 +477,10 @@
 	</item>
 	<item>
 		<title>Free</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/sample-free-product/free/</link>
+		<link>https://easydigitaldownloads.com/demo/downloads/sample-free-product/free/</link>
 		<pubDate>Tue, 27 Nov 2012 23:57:04 +0000</pubDate>
 		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/edd/2012/11/free.jpg</guid>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2012/11/free.jpg</guid>
 		<description></description>
 		<content:encoded><![CDATA[]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
@@ -496,7 +496,7 @@
 		<wp:post_type>attachment</wp:post_type>
 		<wp:post_password></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-		<wp:attachment_url>http://easydigitaldownloads.com/demo/files/edd/2012/11/free.jpg</wp:attachment_url>
+		<wp:attachment_url>https://easydigitaldownloads.com/demo/files/edd/2012/11/free.jpg</wp:attachment_url>
 		<wp:postmeta>
 			<wp:meta_key>_wp_attached_file</wp:meta_key>
 			<wp:meta_value><![CDATA[edd/2012/11/free.jpg]]></wp:meta_value>
@@ -508,10 +508,10 @@
 	</item>
 	<item>
 		<title>A Music Album</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/a-music-album/</link>
+		<link>https://easydigitaldownloads.com/demo/downloads/a-music-album/</link>
 		<pubDate>Wed, 05 Dec 2012 17:13:21 +0000</pubDate>
 		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?post_type=download&#038;p=514</guid>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/?post_type=download&#038;p=514</guid>
 		<description></description>
 		<content:encoded><![CDATA[This is a sample product that showcases an album configuration.
 
@@ -562,10 +562,10 @@ You can easily setup price options to purchase individual songs or the entire al
 	</item>
 	<item>
 		<title>02156_orangedays_1024x1024</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/a-music-album/02156_orangedays_1024x1024/</link>
+		<link>https://easydigitaldownloads.com/demo/downloads/a-music-album/02156_orangedays_1024x1024/</link>
 		<pubDate>Fri, 25 Jan 2013 17:40:51 +0000</pubDate>
 		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/edd/2012/12/02156_orangedays_1024x1024.jpg</guid>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2012/12/02156_orangedays_1024x1024.jpg</guid>
 		<description></description>
 		<content:encoded><![CDATA[]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
@@ -581,7 +581,7 @@ You can easily setup price options to purchase individual songs or the entire al
 		<wp:post_type>attachment</wp:post_type>
 		<wp:post_password></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-		<wp:attachment_url>http://easydigitaldownloads.com/demo/files/edd/2012/12/02156_orangedays_1024x1024.jpg</wp:attachment_url>
+		<wp:attachment_url>https://easydigitaldownloads.com/demo/files/edd/2012/12/02156_orangedays_1024x1024.jpg</wp:attachment_url>
 		<wp:postmeta>
 			<wp:meta_key>_wp_attached_file</wp:meta_key>
 			<wp:meta_value><![CDATA[edd/2012/12/02156_orangedays_1024x1024.jpg]]></wp:meta_value>
@@ -593,10 +593,10 @@ You can easily setup price options to purchase individual songs or the entire al
 	</item>
 	<item>
 		<title>01689_beautifulmorning_1280x1024</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/sample-free-product/01689_beautifulmorning_1280x1024/</link>
+		<link>https://easydigitaldownloads.com/demo/downloads/sample-free-product/01689_beautifulmorning_1280x1024/</link>
 		<pubDate>Fri, 25 Jan 2013 17:41:34 +0000</pubDate>
 		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/edd/2012/11/01689_beautifulmorning_1280x1024.jpg</guid>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2012/11/01689_beautifulmorning_1280x1024.jpg</guid>
 		<description></description>
 		<content:encoded><![CDATA[]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
@@ -612,7 +612,7 @@ You can easily setup price options to purchase individual songs or the entire al
 		<wp:post_type>attachment</wp:post_type>
 		<wp:post_password></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-		<wp:attachment_url>http://easydigitaldownloads.com/demo/files/edd/2012/11/01689_beautifulmorning_1280x1024.jpg</wp:attachment_url>
+		<wp:attachment_url>https://easydigitaldownloads.com/demo/files/edd/2012/11/01689_beautifulmorning_1280x1024.jpg</wp:attachment_url>
 		<wp:postmeta>
 			<wp:meta_key>_wp_attached_file</wp:meta_key>
 			<wp:meta_value><![CDATA[edd/2012/11/01689_beautifulmorning_1280x1024.jpg]]></wp:meta_value>
@@ -624,10 +624,10 @@ You can easily setup price options to purchase individual songs or the entire al
 	</item>
 	<item>
 		<title>01643_goodmorning_1280x1024</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/another-sample-product/01643_goodmorning_1280x1024/</link>
+		<link>https://easydigitaldownloads.com/demo/downloads/another-sample-product/01643_goodmorning_1280x1024/</link>
 		<pubDate>Fri, 25 Jan 2013 17:42:12 +0000</pubDate>
 		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/edd/2012/06/01643_goodmorning_1280x1024.jpg</guid>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2012/06/01643_goodmorning_1280x1024.jpg</guid>
 		<description></description>
 		<content:encoded><![CDATA[]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
@@ -643,7 +643,7 @@ You can easily setup price options to purchase individual songs or the entire al
 		<wp:post_type>attachment</wp:post_type>
 		<wp:post_password></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-		<wp:attachment_url>http://easydigitaldownloads.com/demo/files/edd/2012/06/01643_goodmorning_1280x1024.jpg</wp:attachment_url>
+		<wp:attachment_url>https://easydigitaldownloads.com/demo/files/edd/2012/06/01643_goodmorning_1280x1024.jpg</wp:attachment_url>
 		<wp:postmeta>
 			<wp:meta_key>_wp_attached_file</wp:meta_key>
 			<wp:meta_value><![CDATA[edd/2012/06/01643_goodmorning_1280x1024.jpg]]></wp:meta_value>
@@ -655,10 +655,10 @@ You can easily setup price options to purchase individual songs or the entire al
 	</item>
 	<item>
 		<title>Stitched Panorama</title>
-		<link>http://easydigitaldownloads.com/demo/downloads/sample-product/stitched-panorama/</link>
+		<link>https://easydigitaldownloads.com/demo/downloads/sample-product/stitched-panorama/</link>
 		<pubDate>Fri, 25 Jan 2013 17:42:29 +0000</pubDate>
 		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/edd/2012/05/02348_caltonhilledinburgh_1280x1024.jpg</guid>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2012/05/02348_caltonhilledinburgh_1280x1024.jpg</guid>
 		<description></description>
 		<content:encoded><![CDATA[]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
@@ -674,7 +674,7 @@ You can easily setup price options to purchase individual songs or the entire al
 		<wp:post_type>attachment</wp:post_type>
 		<wp:post_password></wp:post_password>
 		<wp:is_sticky>0</wp:is_sticky>
-		<wp:attachment_url>http://easydigitaldownloads.com/demo/files/edd/2012/05/02348_caltonhilledinburgh_1280x1024.jpg</wp:attachment_url>
+		<wp:attachment_url>https://easydigitaldownloads.com/demo/files/edd/2012/05/02348_caltonhilledinburgh_1280x1024.jpg</wp:attachment_url>
 		<wp:postmeta>
 			<wp:meta_key>_wp_attached_file</wp:meta_key>
 			<wp:meta_value><![CDATA[edd/2012/05/02348_caltonhilledinburgh_1280x1024.jpg]]></wp:meta_value>
