@@ -104,6 +104,8 @@ class Stats {
 				'end'               => '',
 				'range'             => '',
 				'exclude_taxes'     => false,
+				'currency'          => false,
+				'currency_sql'      => '',
 				'status'            => array( 'complete', 'revoked' ),
 				'status_sql'        => '',
 				'type'              => array(),
@@ -124,6 +126,69 @@ class Stats {
 			);
 		}
 
+	}
+
+	/**
+	 * Builds a fully qualified amount column and function, given the currency settings,
+	 * tax settings, and accepted functions.
+	 *
+	 * @param array $args              {
+	 *                                 Optional arguments.
+	 *
+	 * @type string $column_prefix     Column prefix (table alias or name).
+	 * @type array  $accepted_function Accepted functions for this query.
+	 *                    }
+	 *
+	 * @return string Example: `SUM( total / rate )`
+	 * @throws \InvalidArgumentException
+	 */
+	private function get_amount_column_and_function( $args = array() ) {
+		$args = wp_parse_args( $args, array(
+			'column_prefix'      => '',
+			'accepted_functions' => array(),
+			'rate'               => true
+		) );
+
+		$column = $this->query_vars['column'];
+		$column_prefix = '';
+
+		if ( ! empty( $args['column_prefix'] ) ) {
+			$column_prefix = $args['column_prefix'] . '.';
+		}
+
+		if ( empty( $column ) ) {
+			$column = true === $this->query_vars['exclude_taxes'] ?  "{$column_prefix}total - {$column_prefix}tax" : $column_prefix . 'total';
+		} else {
+			$column = $column_prefix . $column;
+		}
+
+		$default_function = is_array( $args['accepted_functions'] ) && isset( $args['accepted_functions'][0] ) ? $args['accepted_functions'][0] : false;
+		$function = ! empty( $this->query_vars['function'] ) ? $this->query_vars['function'] : $default_function;
+		if ( empty( $function ) ) {
+			throw new \InvalidArgumentException( 'Missing select function.' );
+		}
+
+		if ( ! empty( $args['accepted_functions'] ) && ! in_array( strtoupper( $this->query_vars['function'] ), $args['accepted_functions'], true ) ) {
+			if ( ! empty( $default_function ) ) {
+				$function = $default_function;
+			} else {
+				throw new \InvalidArgumentException( sprintf( 'Invalid function "%s". Must be one of: %s', $this->query_vars['function'], json_encode( $args['accepted_functions'] ) ) );
+			}
+		}
+
+		$function = $this->query_vars['function'] = strtoupper( $function );
+
+		// Multiply by rate if currency conversion is enabled.
+		if (
+			! empty( $args['rate'] ) &&
+			in_array( $function, array( 'SUM', 'AVG' ), true ) &&
+			( empty( $this->query_vars['currency'] ) || 'convert' === $this->query_vars['currency'] ) &&
+			( false !== strpos( $column, 'total' ) || false !== strpos( $column, 'tax' ) )
+		) {
+			$column = sprintf( '(%s) / %s', $column, $column_prefix . 'rate' );
+		}
+
+		return sprintf( '%s(%s)', $function, $column );
 	}
 
 	/** Calculation Methods ***************************************************/
@@ -161,8 +226,11 @@ class Stats {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_orders;
-		$this->query_vars['column']            = true === $this->query_vars['exclude_taxes'] ? 'total - tax' : 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
+
+		if ( empty( $this->query_vars['function'] ) ) {
+			$this->query_vars['function'] = 'SUM';
+		}
 
 		/*
 		 * By default we're checking sales only and excluding refunds. This gives us gross order earnings.
@@ -183,12 +251,9 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		// Only `COUNT` and `AVG` are accepted by this method.
-		$accepted_functions = array( 'SUM', 'AVG' );
-
-		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-			? $this->query_vars['function'] . "({$this->query_vars['column']})"
-			: "SUM({$this->query_vars['column']})";
+		$function = $this->get_amount_column_and_function( array(
+			'accepted_functions' => array( 'SUM', 'AVG' )
+		) );
 
 		if ( true === $this->query_vars['relative'] ) {
 			$relative_date_query_sql = $this->generate_relative_date_query_sql();
@@ -198,13 +263,13 @@ class Stats {
 					CROSS JOIN (
 						SELECT IFNULL({$function}, 0) AS relative
 						FROM {$this->query_vars['table']}
-						WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
+						WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
 					) o
-					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		} else {
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['date_query_sql']}";
 		}
 
 		$result = $this->get_db()->get_row( $sql );
@@ -221,8 +286,8 @@ class Stats {
 				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
 			} elseif ( floatval( 0 ) === $relative ) {
 				$total = 0 < $total
-					? '<span class="dashicons dashicons-arrow-up"></span> ' . edd_currency_filter( edd_format_amount( $total ) )
-					: '<span class="dashicons dashicons-arrow-down"></span> ' . edd_currency_filter( edd_format_amount( $total ) );
+					? '<span class="dashicons dashicons-arrow-up"></span> ' . $this->maybe_format( $total )
+					: '<span class="dashicons dashicons-arrow-down"></span> ' . $this->maybe_format( $total );
 			} else {
 				$percentage_change = ( $total - $relative ) / $relative * 100;
 
@@ -277,7 +342,7 @@ class Stats {
 		 * This may be overridden in $query parameters that get passed through.
 		 */
 		$this->query_vars['type']   = 'sale';
-		$this->query_vars['status'] = array( 'complete', 'revoked', 'refunded', 'partially_refunded' );
+		$this->query_vars['status'] = edd_get_gross_order_statuses();
 
 		/**
 		 * Filters Order statuses that should be included when calculating stats.
@@ -291,12 +356,9 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		// Only `COUNT` and `AVG` are accepted by this method.
-		$accepted_functions = array( 'COUNT', 'AVG' );
-
-		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-			? $this->query_vars['function'] . "({$this->query_vars['column']})"
-			: 'COUNT(id)';
+		$function = $this->get_amount_column_and_function( array(
+			'accepted_functions' => array( 'COUNT', 'AVG' )
+		) );
 
 		if ( true === $this->query_vars['relative'] ) {
 			$relative_date_query_sql = $this->generate_relative_date_query_sql();
@@ -306,13 +368,13 @@ class Stats {
 					CROSS JOIN (
 						SELECT IFNULL(COUNT(id), 0) AS relative
 						FROM {$this->query_vars['table']}
-						WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
+						WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
 					) o
-					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		} else {
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		}
 
 		$result = $this->get_db()->get_row( $sql );
@@ -383,7 +445,7 @@ class Stats {
 
 		$sql = "SELECT DAYOFWEEK(date_created) AS day, COUNT({$this->query_vars['column']}) as total
 				FROM {$this->query_vars['table']}
-				WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+				WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				GROUP BY day
 				ORDER BY total DESC
 				LIMIT 1";
@@ -485,6 +547,10 @@ class Stats {
 		$this->query_vars['column']            = 'id';
 		$this->query_vars['date_query_column'] = 'date_created';
 
+		if ( empty( $this->query_vars['function'] ) ) {
+			$this->query_vars['function'] = 'COUNT';
+		}
+
 		// Base value for status.
 		$query['status'] = isset( $query['status'] )
 			? $query['status']
@@ -499,12 +565,10 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		// Only `COUNT` and `AVG` are accepted by this method.
-		$accepted_functions = array( 'COUNT', 'AVG' );
-
-		$function = ! empty( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-			? $this->query_vars['function'] . "({$this->query_vars['table']}.{$this->query_vars['column']})"
-			: "COUNT({$this->query_vars['table']}.id)";
+		$function = $this->get_amount_column_and_function( array(
+			'column_prefix'      => $this->query_vars['table'],
+			'accepted_functions' => array( 'COUNT', 'AVG' )
+		) );
 
 		$product_id = ! empty( $this->query_vars['product_id'] )
 			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['product_id'] ) )
@@ -514,6 +578,8 @@ class Stats {
 			? $this->get_db()->prepare( 'AND price_id = %d', absint( $this->query_vars['price_id'] ) )
 			: '';
 
+		$currency_sql = str_replace( $this->get_db()->edd_order_items, $this->get_db()->edd_orders, $this->query_vars['currency_sql'] );
+
 		// Calculating an average requires a subquery.
 		if ( 'AVG' === $this->query_vars['function'] ) {
 			$sql = "SELECT AVG(id) AS total
@@ -521,21 +587,21 @@ class Stats {
 						SELECT COUNT({$this->query_vars['table']}.id) AS id
 						FROM {$this->query_vars['table']}
 						INNER JOIN {$this->get_db()->edd_orders} ON( {$this->get_db()->edd_orders}.id = {$this->query_vars['table']}.order_id )
-						WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+						WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$currency_sql} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 						GROUP BY order_id
 					) AS counts";
 		} elseif ( true === $this->query_vars['grouped'] ) {
 			$sql = "SELECT {$this->query_vars['table']}.product_id, {$this->query_vars['table']}.price_id, {$function} AS total
 					FROM {$this->query_vars['table']}
 					INNER JOIN {$this->get_db()->edd_orders} ON( {$this->get_db()->edd_orders}.id = {$this->query_vars['table']}.order_id )
-					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$currency_sql} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 					GROUP BY product_id, price_id
 					ORDER BY total DESC";
 		} else {
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']}
 					INNER JOIN {$this->get_db()->edd_orders} ON( {$this->get_db()->edd_orders}.id = {$this->query_vars['table']}.order_id )
-					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$currency_sql} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		}
 
 		$result = $this->get_db()->get_results( $sql );
@@ -609,6 +675,9 @@ class Stats {
 		// Restore original format.
 		$this->query_vars['output'] = $original_output;
 
+		// Restore currency for formatting.
+		$this->query_vars['currency'] = isset( $query['currency'] ) ? $query['currency'] : false;
+
 		// Format & return.
 		return $this->maybe_format( abs( $retval ) );
 	}
@@ -655,7 +724,7 @@ class Stats {
 		$sql = "SELECT AVG( TIMESTAMPDIFF( SECOND, {$this->query_vars['table']}.{$this->query_vars['column']}, o2.date_created ) ) AS time_to_refund
 				FROM {$this->query_vars['table']}
 				INNER JOIN {$this->query_vars['table']} o2 ON {$this->query_vars['table']}.id = o2.parent
-				WHERE 1=1 {$type_sql} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+				WHERE 1=1 {$type_sql} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 
 		$result = $this->get_db()->get_var( $sql );
 
@@ -762,9 +831,9 @@ class Stats {
 				CROSS JOIN (
 					SELECT COUNT(id) AS number_orders
 					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$this->query_vars['status_sql']} {$ignore_free} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$ignore_free} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				) o
-				WHERE 1=1 {$status_sql} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+				WHERE 1=1 {$status_sql} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 
 		$result = $this->get_db()->get_var( $sql );
 
@@ -824,9 +893,10 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$function = ! empty( $this->query_vars['function'] )
-			? $this->query_vars['function'] . "({$this->query_vars['column']})"
-			: "SUM({$this->query_vars['column']})";
+		$function = $this->get_amount_column_and_function( array(
+			'column_prefix'     => $this->query_vars['table'],
+			'allowed_functions' => array( 'SUM', 'AVG' )
+		) );
 
 		$product_id = ! empty( $this->query_vars['product_id'] )
 			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['product_id'] ) )
@@ -844,22 +914,27 @@ class Stats {
 			? $this->get_db()->prepare( 'AND edd_oa.country = %s', esc_sql( $this->query_vars['country'] ) )
 			: '';
 
-		$join = ! empty( $country ) || ! empty( $region )
-			? "INNER JOIN {$this->get_db()->edd_order_addresses} edd_oa ON {$this->query_vars['table']}.order_id = edd_oa.order_id"
-			: '';
+		$join = $currency = '';
+		if ( ! empty( $country ) || ! empty( $region ) ) {
+			$join .= " INNER JOIN {$this->get_db()->edd_order_addresses} edd_oa ON {$this->query_vars['table']}.order_id = edd_oa.order_id ";
+		}
+		if ( ! empty( $this->query_vars['currency'] ) && array_key_exists( strtoupper( $this->query_vars['currency'] ), edd_get_currencies() ) ) {
+			$join     .= " INNER JOIN {$this->get_db()->edd_orders} edd_o ON ({$this->query_vars['table']}.order_id = edd_o.id) ";
+			$currency = $this->get_db()->prepare( "AND edd_o.currency = %s", strtoupper( $this->query_vars['currency'] ) );
+		}
 
 		if ( true === $this->query_vars['grouped'] ) {
 			$sql = "SELECT product_id, price_id, {$function} AS total
 					FROM {$this->query_vars['table']}
 					{$join}
-					WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+					WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$currency} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 					GROUP BY product_id, price_id
 					ORDER BY total DESC";
 		} else {
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']}
 					{$join}
-					WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$currency} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		}
 
 		$result = $this->get_db()->get_results( $sql );
@@ -925,12 +1000,10 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		// Only `COUNT` and `AVG` are accepted by this method.
-		$accepted_functions = array( 'COUNT', 'AVG' );
-
-		$function = ! empty( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-			? $this->query_vars['function'] . "({$this->query_vars['table']}.{$this->query_vars['column']})"
-			: "COUNT({$this->query_vars['table']}.id)";
+		$function = $this->get_amount_column_and_function( array(
+			'column_prefix'      => $this->query_vars['table'],
+			'accepted_functions' => array( 'COUNT', 'AVG' )
+		) );
 
 		$product_id = ! empty( $this->query_vars['product_id'] )
 			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['product_id'] ) )
@@ -948,32 +1021,37 @@ class Stats {
 			? $this->get_db()->prepare( 'AND edd_oa.country = %s', esc_sql( $this->query_vars['country'] ) )
 			: '';
 
-		$join = ! empty( $country ) || ! empty( $region )
-			? "INNER JOIN {$this->get_db()->edd_order_addresses} edd_oa ON {$this->query_vars['table']}.order_id = edd_oa.order_id"
-			: '';
+		$join = $currency = '';
+		if ( ! empty( $country ) || ! empty( $region ) ) {
+			$join .= " INNER JOIN {$this->get_db()->edd_order_addresses} edd_oa ON {$this->query_vars['table']}.order_id = edd_oa.order_id ";
+		}
+		if ( ! empty( $this->query_vars['currency'] ) && array_key_exists( strtoupper( $this->query_vars['currency'] ), edd_get_currencies() ) ) {
+			$join     .= " INNER JOIN {$this->get_db()->edd_orders} edd_o ON ({$this->query_vars['table']}.order_id = edd_o.id) ";
+			$currency = $this->get_db()->prepare( "AND edd_o.currency = %s", strtoupper( $this->query_vars['currency'] ) );
+		}
 
 		// Calculating an average requires a subquery.
 		if ( 'AVG' === $this->query_vars['function'] ) {
 			$sql = "SELECT AVG(id) AS total
 					FROM (
-						SELECT COUNT(id) AS id
+						SELECT COUNT({$this->query_vars['table']}.id) AS id
 						FROM {$this->query_vars['table']}
 						{$join}
-						WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+						WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$currency} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 						GROUP BY order_id
 					) AS counts";
 		} elseif ( true === $this->query_vars['grouped'] ) {
 			$sql = "SELECT product_id, price_id, {$function} AS total
 					FROM {$this->query_vars['table']}
 					{$join}
-					WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+					WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$currency} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 					GROUP BY product_id, price_id
 					ORDER BY total DESC";
 		} else {
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']}
 					{$join}
-					WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$product_id} {$price_id} {$region} {$country} {$currency} {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		}
 
 		$result = $this->get_db()->get_results( $sql );
@@ -1033,7 +1111,7 @@ class Stats {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_order_items;
-		$this->query_vars['column']            = 'id';
+		$this->query_vars['column']            = 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
 
 		// Run pre-query checks and maybe generate SQL.
@@ -1044,9 +1122,25 @@ class Stats {
 			? absint( $this->query_vars['number'] )
 			: 1;
 
-		$sql = "SELECT product_id, price_id, COUNT(total) AS sales, SUM(total) AS total
+		$function = $this->get_amount_column_and_function( array(
+			'column_prefix'      => $this->query_vars['table'],
+			'accepted_functions' => array( 'SUM' )
+		) );
+
+		$join = '';
+		$where = '';
+		if ( ! empty( $this->query_vars['currency'] ) && array_key_exists( strtoupper( $this->query_vars['currency'] ), edd_get_currencies() ) ) {
+			$join = " INNER JOIN {$this->get_db()->edd_orders} ON({$this->get_db()->edd_orders}.id = {$this->query_vars['table']}.order_id) ";
+			$where = $this->get_db()->prepare(
+				" AND {$this->get_db()->edd_orders}.currency = %s ",
+				strtoupper( $this->query_vars['currency'] )
+			);
+		}
+
+		$sql = "SELECT product_id, price_id, COUNT({$this->query_vars['table']}.id) AS sales, {$function} AS total
 				FROM {$this->query_vars['table']}
-				WHERE 1=1 {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+				{$join}
+				WHERE 1=1 {$where} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				GROUP BY product_id, price_id
 				ORDER BY total DESC
 				LIMIT {$number}";
@@ -1153,7 +1247,7 @@ class Stats {
 	 *     @type string $output        The output format of the calculation. Accepts `raw` and `formatted`. Default `raw`.
 	 * }
 	 *
-	 * @return string Most popular discount with usage count.
+	 * @return array Most popular discounts with usage count.
 	 */
 	public function get_most_popular_discounts( $query = array() ) {
 
@@ -1240,7 +1334,10 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$function      = str_replace( "'", '', $this->get_db()->prepare( 'SUM(%s)', $this->query_vars['column'] ) );
+		$function = $this->get_amount_column_and_function( array(
+			'allowed_functions' => array( 'SUM' )
+		) );
+
 		$discount_code = ! empty( $this->query_vars['discount_code'] )
 			? $this->get_db()->prepare( 'AND type = %s AND description = %s', 'discount', sanitize_text_field( $this->query_vars['discount_code'] ) )
 			: $this->get_db()->prepare( 'AND type = %s', 'discount' );
@@ -1299,7 +1396,10 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		$function      = str_replace( "'", '', $this->get_db()->prepare( 'AVG(%s)', $this->query_vars['column'] ) );
+		$function = $this->get_amount_column_and_function( array(
+			'allowed_functions' => array( 'AVG' )
+		) );
+
 		$type_discount = $this->get_db()->prepare( 'AND type = %s', 'discount' );
 
 		$sql = "SELECT {$function}
@@ -1427,6 +1527,11 @@ class Stats {
 	 * @return mixed array|int|float Either a list of payment gateways and counts or just a single value.
 	 */
 	private function get_gateway_data( $query = array() ) {
+		$query = wp_parse_args( $query, array(
+			'type'   => 'sale',
+			'status' => edd_get_gross_order_statuses(),
+		) );
+
 		$this->parse_query( $query );
 
 		// Set up default values.
@@ -1444,19 +1549,14 @@ class Stats {
 
 		// Add table and column name to query_vars to assist with date query generation.
 		$this->query_vars['table']             = $this->get_db()->edd_orders;
-		$this->query_vars['column']            = true === $this->query_vars['exclude_taxes'] ? 'total - tax' : 'total';
 		$this->query_vars['date_query_column'] = 'date_created';
-		$this->query_vars['function']          = 'COUNT';
 
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		// Only `COUNT`, `AVG` and `SUM` are accepted by this method.
-		$accepted_functions = array( 'COUNT', 'AVG', 'SUM' );
-
-		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-			? $this->query_vars['function'] . "({$this->query_vars['column']})"
-			: 'COUNT(id)';
+		$function = $this->get_amount_column_and_function( array(
+			'accepted_functions' => array( 'COUNT', 'AVG', 'SUM' )
+		) );
 
 		$gateway = ! empty( $this->query_vars['gateway'] )
 			? $this->get_db()->prepare( 'AND gateway = %s', sanitize_text_field( $this->query_vars['gateway'] ) )
@@ -1464,7 +1564,7 @@ class Stats {
 
 		$sql = "SELECT gateway, {$function} AS total
 			FROM {$this->query_vars['table']}
-			WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$gateway} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
+			WHERE 1=1 {$this->query_vars['type_sql']} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$gateway} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 			GROUP BY gateway";
 
 		$result = $this->get_db()->get_results( $sql );
@@ -1541,6 +1641,9 @@ class Stats {
 	 *               passed as a query parameter.
 	 */
 	public function get_gateway_sales( $query = array() ) {
+
+		$query['column']   = 'id';
+		$query['function'] = 'COUNT';
 
 		// Dispatch to \EDD\Stats::get_gateway_data().
 		return $this->get_gateway_data( $query );
@@ -1684,12 +1787,9 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		// Only `COUNT` and `AVG` are accepted by this method.
-		$accepted_functions = array( 'SUM', 'AVG' );
-
-		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-			? $this->query_vars['function'] . "({$this->query_vars['column']})"
-			: "SUM({$this->query_vars['column']})";
+		$function = $this->get_amount_column_and_function( array(
+			'accepted_functions' => array( 'SUM', 'AVG' )
+		) );
 
 		$product_id = ! empty( $this->query_vars['download_id'] )
 			? $this->get_db()->prepare( 'AND product_id = %d', absint( $this->query_vars['download_id'] ) )
@@ -1707,9 +1807,9 @@ class Stats {
 					CROSS JOIN (
 						SELECT IFNULL({$function}, 0) AS relative
 						FROM {$this->query_vars['table']}
-						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
+						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
 					) o
-					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		} elseif ( ! empty( $product_id ) || ! empty( $price_id ) ) {
 
 			// Regenerate SQL clauses due to alias.
@@ -1718,20 +1818,21 @@ class Stats {
 			$this->pre_query( $query );
 			$this->query_vars['table'] = $table;
 
-			$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-				? $this->query_vars['function'] . "(oi.{$this->query_vars['column']})"
-				: "SUM(oi.{$this->query_vars['column']})";
+			$function = $this->get_amount_column_and_function( array(
+				'column_prefix'      => 'oi',
+				'accepted_functions' => array( 'SUM', 'AVG' )
+			) );
 
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']} o
 					INNER JOIN {$this->get_db()->edd_order_items} oi ON o.id = oi.order_id
-					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$product_id} {$price_id} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['date_query_sql']}";
 
 			$this->pre_query( $query );
 		} else {
 			$sql = "SELECT {$function} AS total
 					FROM {$this->query_vars['table']}
-					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['date_query_sql']}";
 		}
 
 		$result = $this->get_db()->get_row( $sql );
@@ -1804,12 +1905,10 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		// Only `COUNT` and `AVG` are accepted by this method.
-		$accepted_functions = array( 'SUM', 'AVG' );
-
-		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-			? $this->query_vars['function'] . "({$this->query_vars['table']}.{$this->query_vars['column']})"
-			: "SUM({$this->query_vars['table']}.{$this->query_vars['column']})";
+		$function = $this->get_amount_column_and_function( array(
+			'column_prefix'      => $this->query_vars['table'],
+			'accepted_functions' => array( 'SUM', 'AVG' )
+		) );
 
 		$region = ! empty( $this->query_vars['region'] )
 			? $this->get_db()->prepare( 'AND oa.region = %s', esc_sql( $this->query_vars['region'] ) )
@@ -1833,16 +1932,17 @@ class Stats {
 
 		// Re-parse function to fetch tax from the order items table.
 		if ( ! empty( $product_id ) && 'tax' === $this->query_vars['column'] ) {
-			$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-				? $this->query_vars['function'] . "(oi.{$this->query_vars['column']})"
-				: "SUM(oi.{$this->query_vars['column']})";
+			$function = $this->get_amount_column_and_function( array(
+				'column_prefix'      => 'oi',
+				'accepted_functions' => array( 'SUM', 'AVG' )
+			) );
 		}
 
 		$sql = "SELECT {$function} AS total
 				FROM {$this->query_vars['table']}
 				INNER JOIN {$this->get_db()->edd_order_addresses} oa ON {$this->query_vars['table']}.id = oa.order_id
 				{$join}
-				WHERE 1=1 {$region} {$country} {$product_id} {$price_id} {$this->query_vars['status_sql']} {$this->query_vars['date_query_sql']}";
+				WHERE 1=1 {$region} {$country} {$product_id} {$price_id} {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['date_query_sql']}";
 
 		$result = $this->get_db()->get_row( $sql );
 
@@ -1985,12 +2085,9 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		// Only `AVG` and `SUM` are accepted by this method.
-		$accepted_functions = array( 'AVG', 'SUM' );
-
-		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-			? $this->query_vars['function'] . "({$this->query_vars['column']})"
-			: "SUM({$this->query_vars['column']})";
+		$function = $this->get_amount_column_and_function( array(
+			'accepted_functions' => array( 'SUM', 'AVG' )
+		) );
 
 		$user = isset( $this->query_vars['user_id'] )
 			? $this->get_db()->prepare( 'AND user_id = %d', absint( $this->query_vars['user_id'] ) )
@@ -2012,19 +2109,24 @@ class Stats {
 					CROSS JOIN (
 						SELECT IFNULL({$function} / COUNT(DISTINCT customer_id), 0) AS relative
 						FROM {$this->query_vars['table']}
-						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
+						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$relative_date_query_sql}
 					) o
-					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
+					WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}";
 		} else {
-			$column = true === $this->query_vars['exclude_taxes']
-				? 'total - tax'
-				: 'total';
+			$function = $this->get_amount_column_and_function( array(
+				'accepted_functions' => array( 'SUM', 'AVG' ),
+				'rate'               => false
+			) );
+
+			$inner_function = $this->get_amount_column_and_function( array(
+				'accepted_functions' => array( 'SUM' )
+			) );
 
 			$sql = "SELECT {$function} AS total
 					FROM (
-						SELECT SUM({$column}) AS total
+						SELECT {$inner_function} AS total
 						FROM {$this->query_vars['table']}
-						WHERE 1=1 {$this->query_vars['status_sql']} {$user} {$customer} {$email} {$this->query_vars['date_query_sql']}
+						WHERE 1=1 {$this->query_vars['status_sql']} {$this->query_vars['currency_sql']} {$user} {$customer} {$email} {$this->query_vars['date_query_sql']}
 					    GROUP BY customer_id
 					) o";
 		}
@@ -2043,8 +2145,8 @@ class Stats {
 				$total = esc_html__( 'No Change', 'easy-digital-downloads' );
 			} elseif ( floatval( 0 ) === $relative ) {
 				$total = 0 < $total
-					? '<span class="dashicons dashicons-arrow-up"></span> ' . edd_currency_filter( edd_format_amount( $total ) )
-					: '<span class="dashicons dashicons-arrow-down"></span> ' . edd_currency_filter( edd_format_amount( $total ) );
+					? '<span class="dashicons dashicons-arrow-up"></span> ' . $this->maybe_format( $total )
+					: '<span class="dashicons dashicons-arrow-down"></span> ' . $this->maybe_format( $total );
 			} else {
 				$percentage_change = ( $total - $relative ) / $relative * 100;
 
@@ -2099,12 +2201,9 @@ class Stats {
 		// Run pre-query checks and maybe generate SQL.
 		$this->pre_query( $query );
 
-		// Only `COUNT` and `AVG` are accepted by this method.
-		$accepted_functions = array( 'COUNT', 'AVG' );
-
-		$function = isset( $this->query_vars['function'] ) && in_array( strtoupper( $this->query_vars['function'] ), $accepted_functions, true )
-			? strtoupper( $this->query_vars['function'] )
-			: '';
+		$function = $this->get_amount_column_and_function( array(
+			'accepted_functions' => array( 'COUNT', 'AVG' )
+		) );
 
 		$user = isset( $this->query_vars['user_id'] )
 			? $this->get_db()->prepare( 'AND user_id = %d', absint( $this->query_vars['user_id'] ) )
@@ -2515,6 +2614,8 @@ class Stats {
 			'end'               => '',
 			'range'             => '',
 			'exclude_taxes'     => false,
+			'currency'          => false,
+			'currency_sql'      => '',
 			'status'            => array( 'complete', 'revoked' ),
 			'status_sql'        => '',
 			'type'              => array(),
@@ -2562,6 +2663,15 @@ class Stats {
 			if ( ! empty( $this->relative_date_ranges[ $this->query_vars['range'] ]['end'] ) ) {
 				$this->query_vars['relative_end'] = $this->relative_date_ranges[ $this->query_vars['range'] ]['end']->format( 'mysql' );
 			}
+		}
+
+		// Validate currency.
+		if ( empty( $this->query_vars['currency'] ) ) {
+			$this->query_vars['currency'] = false;
+		} elseif ( array_key_exists( strtoupper( $this->query_vars['currency'] ), edd_get_currencies() ) ) {
+			$this->query_vars['currency'] = strtoupper( $this->query_vars['currency'] );
+		} else {
+			$this->query_vars['currency'] = 'convert';
 		}
 
 		// Correctly format functions and column names.
@@ -2697,6 +2807,10 @@ class Stats {
 
 			$this->query_vars['type_sql'] = $this->get_db()->prepare( "AND {$this->query_vars['table']}.type IN ({$placeholders})", $this->query_vars['type'] );
 		}
+
+		if ( ! empty( $this->query_vars['currency'] ) && 'convert' !== strtolower( $this->query_vars['currency'] ) ) {
+			$this->query_vars['currency_sql'] = $this->get_db()->prepare( "AND {$this->query_vars['table']}.currency = %s", $this->query_vars['currency'] );
+		}
 	}
 
 	/**
@@ -2738,21 +2852,26 @@ class Stats {
 			return $data;
 		}
 
+		$currency = $this->query_vars['currency'];
+		if ( empty( $currency ) || 'convert' === strtolower( $currency ) ) {
+			$currency = edd_get_currency();
+		}
+
 		if ( is_object( $data ) ) {
 			foreach ( array_keys( get_object_vars( $data ) ) as $field ) {
 				if ( is_numeric( $data->{$field} ) ) {
-					$data->{$field} = edd_currency_filter( edd_format_amount( $data->{$field} ) );
+					$data->{$field} = edd_currency_filter( edd_format_amount( $data->{$field} ), $currency );
 				}
 			}
 		} elseif ( is_array( $data ) ) {
 			foreach ( array_keys( $data ) as $field ) {
 				if ( is_numeric( $data[ $field ] ) ) {
-					$data[ $field ] = edd_currency_filter( edd_format_amount( $data[ $field ] ) );
+					$data[ $field ] = edd_currency_filter( edd_format_amount( $data[ $field ] ), $currency );
 				}
 			}
 		} else {
 			if ( is_numeric( $data ) ) {
-				$data = edd_currency_filter( edd_format_amount( $data ) );
+				$data = edd_currency_filter( edd_format_amount( $data ), $currency );
 			}
 		}
 
