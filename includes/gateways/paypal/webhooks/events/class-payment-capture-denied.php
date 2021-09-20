@@ -21,10 +21,14 @@ class Payment_Capture_Denied extends Webhook_Event {
 	 * @throws \Exception
 	 */
 	protected function process_event() {
-		$payment = $this->get_payment_from_capture();
+		$order = $this->get_order_from_capture();
 
-		edd_update_payment_status( $payment->ID, 'failed' );
+		edd_update_order_status( $order->id, 'failed' );
 
-		$payment->add_note( __( 'PayPal transaction denied.', 'easy-digital-downloads' ) );
+		edd_add_note( array(
+			'object_type' => 'order',
+			'object_id'   => $order->id,
+			'content'     => __( 'PayPal transaction denied.', 'easy-digital-downloads' ),
+		) );
 	}
 }
