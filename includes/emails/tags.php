@@ -292,6 +292,7 @@ function edd_email_tag_download_list( $payment_id ) {
 	$download_list = '<ul>';
 	$cart_items    = $payment->cart_details;
 	$email         = $payment->email;
+	$needs_notes   = array();
 
 	if ( $order->get_items() ) {
 		$show_names = apply_filters( 'edd_email_show_names', true );
@@ -377,11 +378,15 @@ function edd_email_tag_download_list( $payment_id ) {
 				}
 			}
 
-
-			if ( '' != edd_get_product_notes( $item->product_id ) ) {
-				$download_list .= ' &mdash; <small>' . edd_get_product_notes( $item->product_id ) . '</small>';
+			if ( ! array_key_exists( $item->product_id, $needs_notes ) ) {
+				$item_notes = edd_get_product_notes( $item->product_id );
+				if ( $item_notes ) {
+					$needs_notes[ $item->product_id ] = array(
+						'item_name'  => get_the_title( $item->product_id ),
+						'item_notes' => $item_notes,
+					);
+				}
 			}
-
 
 			if ( $show_names ) {
 				$download_list .= '</li>';
@@ -389,6 +394,18 @@ function edd_email_tag_download_list( $payment_id ) {
 		}
 	}
 	$download_list .= '</ul>';
+
+	// Remove any empty values.
+	$needs_notes = array_filter( $needs_notes );
+	if ( ! empty( $needs_notes ) ) {
+		$download_list .= __( 'Additional information about your purchase:', 'easy-digital-downloads' );
+
+		$download_list .= '<ul>';
+		foreach ( $needs_notes as $note ) {
+			$download_list .= '<li>' . $note['item_name'] . "\n" . '<small>' . $note['item_notes'] . '</small></li>';
+		}
+		$download_list .= '</ul>';
+	}
 
 	return $download_list;
 }

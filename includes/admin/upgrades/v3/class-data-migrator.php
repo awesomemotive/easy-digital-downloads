@@ -235,7 +235,11 @@ class Data_Migrator {
 
 			$log_data = array(
 				'product_id'    => $data->post_parent,
-				'file_id'       => $post_meta['_edd_log_file_id'],
+				/*
+				 * Custom Deliverables was overriding the file ID to be a string instead of an integer. The preg_replace
+				 * allows us to try to salvage the file ID from that string.
+				 */
+				'file_id'       => isset( $post_meta['_edd_log_file_id'] ) ? preg_replace( '/[^0-9]/', '', $post_meta['_edd_log_file_id'] ) : 0,
 				'order_id'      => isset( $post_meta['_edd_log_payment_id'] )  ? $post_meta['_edd_log_payment_id']  : 0,
 				'price_id'      => isset( $post_meta['_edd_log_price_id'] )    ? $post_meta['_edd_log_price_id']    : 0,
 				'customer_id'   => isset( $post_meta['_edd_log_customer_id'] ) ? $post_meta['_edd_log_customer_id'] : 0,
@@ -259,6 +263,17 @@ class Data_Migrator {
 			$meta_to_migrate   = $post_meta;
 			$new_log_id        = edd_add_file_download_log( $log_data );
 			$add_meta_function = 'edd_add_file_download_log_meta';
+
+			/**
+			 * Triggers after a file download log has been migrated.
+			 *
+			 * @since 3.0
+			 *
+			 * @param int    $new_log_id ID of the newly created log.
+			 * @param object $data       Data from the posts table. (Essentially a `WP_Post`, without being that object.)
+			 * @param array  $post_meta  All meta associated with this log.
+			 */
+			do_action( 'edd_30_migrate_file_download_log', $new_log_id, $data, $post_meta );
 		} elseif ( 'api_request' === $data->slug ) {
 			$meta = $wpdb->get_results( $wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->postmeta} WHERE post_id = %d", absint( $data->ID ) ) );
 
@@ -534,25 +549,31 @@ class Data_Migrator {
 			$modified_time     = new \DateTime( $data->post_modified );
 			$modified_time_gmt = new \DateTime( $data->post_modified_gmt );
 
-			$diff = $modified_time_gmt->diff( $modified_time );
+			if ( $modified_time != $modified_time_gmt ) {
+				$diff = $modified_time_gmt->diff( $modified_time );
 
-			$time_diff = 'PT';
+				$time_diff = 'PT';
 
-			// Add hours to the offset string.
-			if ( ! empty( $diff->h ) ) {
-				$time_diff .= $diff->h . 'H';
-			}
+				// Add hours to the offset string.
+				if ( ! empty( $diff->h ) ) {
+					$time_diff .= $diff->h . 'H';
+				}
 
-			// Add minutes to the offset string.
-			if ( ! empty( $diff->i ) ) {
-				$time_diff .= $diff->i . 'M';
-			}
+				// Add minutes to the offset string.
+				if ( ! empty( $diff->i ) ) {
+					$time_diff .= $diff->i . 'M';
+				}
 
-			// Account for -/+ GMT offsets.
-			if ( 1 === $diff->invert ) {
-				$date_created_gmt->add( new \DateInterval( $time_diff ) );
-			} else {
-				$date_created_gmt->sub( new \DateInterval( $time_diff ) );
+				// Account for -/+ GMT offsets.
+				try {
+					if ( 1 === $diff->invert ) {
+						$date_created_gmt->add( new \DateInterval( $time_diff ) );
+					} else {
+						$date_created_gmt->sub( new \DateInterval( $time_diff ) );
+					}
+				} catch ( \Exception $e ) {
+
+				}
 			}
 
 			$date_created_gmt = $date_created_gmt->format('Y-m-d H:i:s');
@@ -572,12 +593,6 @@ class Data_Migrator {
 				$date_completed = $date_created_gmt;
 			}
 
-		}
-
-		// Find the parent payment, if there is one.
-		$parent = 0;
-		if ( ! empty( $data->post_parent ) ) {
-			$parent = $wpdb->get_var( $wpdb->prepare( "SELECT edd_order_id FROM {$wpdb->edd_ordermeta} WHERE meta_key = %s AND meta_value = %d", esc_sql( 'legacy_order_id' ), $data->ID ) );
 		}
 
 		if ( 'manual_purchases' === $gateway && isset( $meta['_edd_payment_total'][0] ) ) {
@@ -664,7 +679,7 @@ class Data_Migrator {
 		// Build the order data before inserting.
 		$order_data = array(
 			'id'             => $data->ID,
-			'parent'         => ! empty( $parent ) ? $parent : 0,
+			'parent'         => $data->post_parent,
 			'order_number'   => $order_number,
 			'status'         => $order_status,
 			'type'           => 'sale',
