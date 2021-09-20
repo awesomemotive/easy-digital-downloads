@@ -24,10 +24,18 @@ class Payment_Capture_Refunded extends Webhook_Event {
 	 *
 	 * @throws API_Exception
 	 * @throws Authentication_Exception
+	 * @throws \Exception
 	 *
 	 * @since 2.11
 	 */
 	protected function process_event() {
+		// Bail if this refund transaction already exists.
+		if ( $this->refund_transaction_exists() ) {
+			edd_debug_log( 'PayPal Commerce - Exiting webhook, as refund transaction already exists.' );
+
+			return;
+		}
+
 		$order = $this->get_order_from_refund();
 
 		if ( 'refunded' === $order->status ) {
@@ -55,6 +63,7 @@ class Payment_Capture_Refunded extends Webhook_Event {
 				'object_id'   => $order->id,
 				'content'     => __( 'Partial refund processed in PayPal.', 'easy-digital-downloads' ) . ' ' . $payment_note,
 			) );
+			edd_update_order_status( $order->id, 'partially_refunded' );
 		} else {
 			// Full refund.
 			edd_add_note( array(
@@ -64,5 +73,23 @@ class Payment_Capture_Refunded extends Webhook_Event {
 			) );
 			edd_update_order_status( $order->id, 'refunded' );
 		}
+	}
+
+	/**
+	 * Determines whether a transaction record exists for this refund.
+	 *
+	 * @since 3.0
+	 *
+	 * @return bool
+	 * @throws \Exception
+	 */
+	private function refund_transaction_exists() {
+		if ( ! isset( $this->event->resource->id ) ) {
+			throw new \Exception( 'No resource ID found.', 200 );
+		}
+
+		$transaction = edd_get_order_transaction_by( 'transaction_id', $this->event->resource->id );
+
+		return ! empty( $transaction );
 	}
 }
