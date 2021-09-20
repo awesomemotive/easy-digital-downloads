@@ -40,9 +40,6 @@
 	<wp:category><wp:term_id>1</wp:term_id><wp:category_nicename>uncategorized</wp:category_nicename><wp:category_parent></wp:category_parent><wp:cat_name><![CDATA[Uncategorized]]></wp:cat_name></wp:category>
 	<wp:term><wp:term_id>3</wp:term_id><wp:term_taxonomy>download_category</wp:term_taxonomy><wp:term_slug>category-1</wp:term_slug><wp:term_parent></wp:term_parent><wp:term_name><![CDATA[Category 1]]></wp:term_name></wp:term>
 	<wp:term><wp:term_id>7</wp:term_id><wp:term_taxonomy>download_category</wp:term_taxonomy><wp:term_slug>category-ii</wp:term_slug><wp:term_parent></wp:term_parent><wp:term_name><![CDATA[Category II]]></wp:term_name></wp:term>
-	<wp:term><wp:term_id>11</wp:term_id><wp:term_taxonomy>edd_log_type</wp:term_taxonomy><wp:term_slug>file_download</wp:term_slug><wp:term_parent></wp:term_parent><wp:term_name><![CDATA[file_download]]></wp:term_name></wp:term>
-	<wp:term><wp:term_id>12</wp:term_id><wp:term_taxonomy>edd_log_type</wp:term_taxonomy><wp:term_slug>gateway_error</wp:term_slug><wp:term_parent></wp:term_parent><wp:term_name><![CDATA[gateway_error]]></wp:term_name></wp:term>
-	<wp:term><wp:term_id>10</wp:term_id><wp:term_taxonomy>edd_log_type</wp:term_taxonomy><wp:term_slug>sale</wp:term_slug><wp:term_parent></wp:term_parent><wp:term_name><![CDATA[sale]]></wp:term_name></wp:term>
 	<wp:term><wp:term_id>4</wp:term_id><wp:term_taxonomy>download_tag</wp:term_taxonomy><wp:term_slug>tag1</wp:term_slug><wp:term_parent></wp:term_parent><wp:term_name><![CDATA[Tag1]]></wp:term_name></wp:term>
 	<wp:term><wp:term_id>5</wp:term_id><wp:term_taxonomy>download_tag</wp:term_taxonomy><wp:term_slug>tag2</wp:term_slug><wp:term_parent></wp:term_parent><wp:term_name><![CDATA[Tag2]]></wp:term_name></wp:term>
 	<wp:term><wp:term_id>9</wp:term_id><wp:term_taxonomy>download_tag</wp:term_taxonomy><wp:term_slug>tag3</wp:term_slug><wp:term_parent></wp:term_parent><wp:term_name><![CDATA[Tag3]]></wp:term_name></wp:term>
