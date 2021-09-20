@@ -226,12 +226,16 @@ function edd_get_email_names( $user_info, $payment = false ) {
 
 	if ( $payment instanceof EDD_Payment ) {
 
+		$email_names['name']     = $payment->email;
+		$email_names['username'] = $payment->email;
 		if ( $payment->user_id > 0 ) {
 
-			$user_data = get_userdata( $payment->user_id );
-			$email_names['name']      = $payment->first_name;
-			$email_names['fullname']  = trim( $payment->first_name . ' ' . $payment->last_name );
-			$email_names['username']  = $user_data->user_login;
+			$user_data               = get_userdata( $payment->user_id );
+			$email_names['name']     = $payment->first_name;
+			$email_names['fullname'] = trim( $payment->first_name . ' ' . $payment->last_name );
+			if ( ! empty( $user_data->user_login ) ) {
+				$email_names['username'] = $user_data->user_login;
+			}
 
 		} elseif ( ! empty( $payment->first_name ) ) {
 
@@ -239,13 +243,7 @@ function edd_get_email_names( $user_info, $payment = false ) {
 			$email_names['fullname'] = trim( $payment->first_name . ' ' . $payment->last_name );
 			$email_names['username'] = $payment->first_name;
 
-		} else {
-
-			$email_names['name']     = $payment->email;
-			$email_names['username'] = $payment->email;
-
 		}
-
 	} else {
 
 		if ( is_serialized( $user_info ) ) {

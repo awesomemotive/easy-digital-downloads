@@ -101,9 +101,6 @@ final class Customers extends Table {
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `purchase_count` bigint(20) unsigned NOT NULL default '0'" );
 			$this->get_db()->query( "ALTER TABLE {$this->table_name} MODIFY `date_created` datetime NOT NULL default CURRENT_TIMESTAMP" );
 
-			// Remove unneeded columns.
-			$this->get_db()->query( "ALTER TABLE {$this->table_name} DROP `payment_ids`" );
-
 			if ( ! $this->column_exists( 'status' ) ) {
 				$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD COLUMN `status` varchar(20) NOT NULL default 'active' AFTER `name`;" );
 				$this->get_db()->query( "ALTER TABLE {$this->table_name} ADD INDEX status (status(20))" );

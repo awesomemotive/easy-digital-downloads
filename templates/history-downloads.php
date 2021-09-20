@@ -59,7 +59,11 @@ if ( $orders ) :
 				<tr class="edd_download_history_row">
 					<?php
 					$price_id       = $item->price_id;
-					$download_files = edd_get_download_files( $item->product_id, $price_id );
+					// Get price ID of product with variable prices included in Bundle
+						if ( ! empty( $download['in_bundle'] ) && edd_has_variable_prices( $download['id'] ) ) {
+							$price_id = edd_get_bundle_item_price_id( $download['id'] );
+						}
+						$download_files = edd_get_download_files( $item->product_id, $price_id );
 					$name           = $item->product_name;
 
 					do_action( 'edd_download_history_row_start', $order->id, $item->product_id );
