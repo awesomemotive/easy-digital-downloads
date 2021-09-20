@@ -685,78 +685,11 @@ You can easily setup price options to purchase individual songs or the entire al
 		</wp:postmeta>
 	</item>
 	<item>
-		<title>Checkout</title>
-		<link>http://easydigitaldownloads.com/demo/checkout/</link>
-		<pubDate>Mon, 21 May 2012 15:59:39 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/checkout/</guid>
-		<description></description>
-		<content:encoded><![CDATA[[download_checkout]]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>4</wp:post_id>
-		<wp:post_date>2012-05-21 15:59:39</wp:post_date>
-		<wp:post_date_gmt>2012-05-21 15:59:39</wp:post_date_gmt>
-		<wp:comment_status>open</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>checkout</wp:post_name>
-		<wp:status>publish</wp:status>
-		<wp:post_parent>0</wp:post_parent>
-		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>page</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-	</item>
-	<item>
-		<title>Purchase Confirmation</title>
-		<link>http://easydigitaldownloads.com/demo/purchase-confirmation/</link>
-		<pubDate>Mon, 21 May 2012 15:59:39 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/purchase-confirmation/</guid>
-		<description></description>
-		<content:encoded><![CDATA[Thank you for your purchase!
-[edd_receipt]]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>5</wp:post_id>
-		<wp:post_date>2012-05-21 15:59:39</wp:post_date>
-		<wp:post_date_gmt>2012-05-21 15:59:39</wp:post_date_gmt>
-		<wp:comment_status>open</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>purchase-confirmation</wp:post_name>
-		<wp:status>publish</wp:status>
-		<wp:post_parent>0</wp:post_parent>
-		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>page</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-	</item>
-	<item>
-		<title>Purchase History</title>
-		<link>http://easydigitaldownloads.com/demo/purchase-history/</link>
-		<pubDate>Mon, 21 May 2012 15:59:39 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/purchase-history/</guid>
-		<description></description>
-		<content:encoded><![CDATA[[purchase_history]]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>6</wp:post_id>
-		<wp:post_date>2012-05-21 15:59:39</wp:post_date>
-		<wp:post_date_gmt>2012-05-21 15:59:39</wp:post_date_gmt>
-		<wp:comment_status>open</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>purchase-history</wp:post_name>
-		<wp:status>publish</wp:status>
-		<wp:post_parent>0</wp:post_parent>
-		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>page</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-	</item>
-	<item>
 		<title>Product Grid</title>
-		<link>http://easydigitaldownloads.com/demo/product-grid/</link>
+		<link>https://easydigitaldownloads.com/demo/product-grid/</link>
 		<pubDate>Wed, 05 Dec 2012 17:06:25 +0000</pubDate>
 		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?page_id=509</guid>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/?page_id=509</guid>
 		<description></description>
 		<content:encoded><![CDATA[[downloads columns=2 number=4]]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
@@ -786,37 +719,11 @@ You can easily setup price options to purchase individual songs or the entire al
 		</wp:postmeta>
 	</item>
 	<item>
-		<title>Transaction Failed</title>
-		<link>http://easydigitaldownloads.com/demo/checkout/transaction-failed/</link>
-		<pubDate>Wed, 05 Dec 2012 17:06:32 +0000</pubDate>
-		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/checkout/transaction-failed/</guid>
-		<description></description>
-		<content:encoded><![CDATA[Your transaction failed, please try again or contact site support.]]></content:encoded>
-		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
-		<wp:post_id>510</wp:post_id>
-		<wp:post_date>2012-12-05 17:06:32</wp:post_date>
-		<wp:post_date_gmt>2012-12-05 17:06:32</wp:post_date_gmt>
-		<wp:comment_status>closed</wp:comment_status>
-		<wp:ping_status>open</wp:ping_status>
-		<wp:post_name>transaction-failed</wp:post_name>
-		<wp:status>publish</wp:status>
-		<wp:post_parent>4</wp:post_parent>
-		<wp:menu_order>0</wp:menu_order>
-		<wp:post_type>page</wp:post_type>
-		<wp:post_password></wp:post_password>
-		<wp:is_sticky>0</wp:is_sticky>
-		<wp:postmeta>
-			<wp:meta_key>_wpas_done_all</wp:meta_key>
-			<wp:meta_value><![CDATA[1]]></wp:meta_value>
-		</wp:postmeta>
-	</item>
-	<item>
 		<title>Product List</title>
-		<link>http://easydigitaldownloads.com/demo/product-list/</link>
+		<link>https://easydigitaldownloads.com/demo/product-list/</link>
 		<pubDate>Wed, 05 Dec 2012 17:08:28 +0000</pubDate>
 		<dc:creator>pippin</dc:creator>
-		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?page_id=512</guid>
+		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/?page_id=512</guid>
 		<description></description>
 		<content:encoded><![CDATA[[downloads columns=1 number=3]]]></content:encoded>
 		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
