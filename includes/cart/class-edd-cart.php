@@ -167,6 +167,17 @@ class EDD_Cart {
 	}
 
 	/**
+	 * Sets the tax rate.
+	 *
+	 * @param float $tax_rate
+	 *
+	 * @since 3.0
+	 */
+	public function set_tax_rate( $tax_rate ) {
+		$this->tax_rate = $tax_rate;
+	}
+
+	/**
 	 * Populate the cart with the data stored in the session
 	 *
 	 * @since 2.7
