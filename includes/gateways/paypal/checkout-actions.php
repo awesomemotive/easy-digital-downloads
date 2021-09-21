@@ -198,7 +198,7 @@ function create_order( $purchase_data ) {
 			if ( ! isset( $response->id ) && _is_item_total_mismatch( $response ) ) {
 
 				edd_record_gateway_error(
-					__( 'PayPal Gateway Error', 'easy-digital-downloads' ),
+					__( 'PayPal Gateway Warning', 'easy-digital-downloads' ),
 					sprintf(
 						/* Translators: %s - Original order data sent to PayPal. */
 						__( 'PayPal could not complete the transaction with the itemized breakdown. Original order data sent: %s', 'easy-digital-downloads' ),
