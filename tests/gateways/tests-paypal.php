@@ -621,4 +621,68 @@ class Tests_PayPal extends EDD_UnitTestCase {
 		$this->assertEqualSetsWithIndex( $expected, $actual[0] );
 	}
 
+	/**
+	 * Product costs $10.
+	 * 10% tax rate applied to the order.
+	 *
+	 * @covers ::\EDD\Gateways\PayPal\get_order_purchase_units()
+	 */
+	public function test_purchase_units_with_tax() {
+		$purchase_data = array(
+			'subtotal'     => 10.00,
+			'discount'     => 0,
+			'tax'          => 1.00,
+			'tax_rate'     => 0.1,
+			'price'        => 11.00,
+			'cart_details' => array(
+				array(
+					'id'         => 1,
+					'item_price' => 10.00,
+					'quantity'   => 1,
+					'discount'   => 0.00,
+					'subtotal'   => 10.00,
+					'tax'        => 1.00,
+					'price'      => 11.00,
+				),
+			),
+		);
+
+		$payment_args = array(
+			'purchase_key' => '123',
+		);
+
+		$expected = array(
+			'reference_id' => '123',
+			'amount'       => array(
+				'currency_code' => 'USD',
+				'value'         => '11',
+				'breakdown'     => array(
+					'item_total' => array(
+						'currency_code' => 'USD',
+						'value'         => '10',
+					),
+					'tax_total'  => array(
+						'currency_code' => 'USD',
+						'value'         => '1',
+					),
+				),
+			),
+			'custom_id'    => 1,
+			'items'        => array(
+				array(
+					'name'        => '1',
+					'quantity'    => 1,
+					'unit_amount' => array(
+						'currency_code' => 'USD',
+						'value'         => '10.00',
+					),
+				),
+			),
+		);
+
+		$actual = \EDD\Gateways\PayPal\get_order_purchase_units( 1, $purchase_data, $payment_args );
+
+		$this->assertEqualSetsWithIndex( $expected, $actual[0] );
+	}
+
 }
