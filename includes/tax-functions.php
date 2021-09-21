@@ -159,15 +159,6 @@ function edd_active_tax_rates_query_clauses( $clauses ) {
  */
 function edd_get_tax_rate( $country = '', $region = '', $fallback = true ) {
 
-	// This global is used to avoid excessive DB lookups per request.
-	global $edd_determined_tax_rates;
-
-	// First we only check for non-fallback options, because fallback logic happens later on.
-	$tax_rate_key = sanitize_key( strtolower( $country . '_' . $region ) );
-	if ( is_array( $edd_determined_tax_rates ) && ! $fallback && array_key_exists( $tax_rate_key, $edd_determined_tax_rates ) ) {
-		return $edd_determined_tax_rates[ $tax_rate_key ];
-	}
-
 	// Default rate
 	$rate = (float) edd_get_option( 'tax_rate', 0 );
 
@@ -218,12 +209,6 @@ function edd_get_tax_rate( $country = '', $region = '', $fallback = true ) {
 			: $region;
 	}
 
-	// Check global variable again. This is after the fallback logic has run.
-	$tax_rate_key = sanitize_key( strtolower( $country . '_' . $region ) );
-	if ( is_array( $edd_determined_tax_rates ) && array_key_exists( $tax_rate_key, $edd_determined_tax_rates ) ) {
-		return $edd_determined_tax_rates[ $tax_rate_key ];
-	}
-
 	$tax_rate = edd_get_tax_rate_by_location(
 		array(
 			'country' => $country,
@@ -251,12 +236,7 @@ function edd_get_tax_rate( $country = '', $region = '', $fallback = true ) {
 	 * @param string $city           City.
 	 * @param string $zip            ZIP code.
 	 */
-	$rate = apply_filters( 'edd_tax_rate', $rate, $country, $region, $address_line_1, $address_line_2, $city, $zip );
-
-	// Update global variable so we'll bypass all this logic if this gets run again in the same request.
-	$edd_determined_tax_rates[ $tax_rate_key ] = $rate;
-
-	return $rate;
+	return apply_filters( 'edd_tax_rate', $rate, $country, $region, $address_line_1, $address_line_2, $city, $zip );
 }
 
 /**
