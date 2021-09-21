@@ -550,4 +550,75 @@ class Tests_PayPal extends EDD_UnitTestCase {
 		$this->assertEqualSetsWithIndex( $expected, $actual[0] );
 	}
 
+	/**
+	 * Product costs $10.
+	 * $5 negative "fee" applied to the order.
+	 *
+	 * @covers ::\EDD\Gateways\PayPal\get_order_purchase_units()
+	 */
+	public function test_purchase_units_with_negative_fee() {
+		$purchase_data = array(
+			'subtotal'     => 10.00,
+			'discount'     => 0,
+			'tax'          => 0.00,
+			'price'        => 5.00,
+			'cart_details' => array(
+				array(
+					'id'         => 1,
+					'item_price' => 10.00,
+					'quantity'   => 1,
+					'discount'   => 0.00,
+					'subtotal'   => 10.00,
+					'tax'        => 0.00,
+					'price'      => 10.00,
+				),
+			),
+			'fees'       => array(
+				'discount_fee' => array(
+					'amount' => -5.00,
+					'label'  => 'Discount',
+					'no_tax' => 0,
+					'type'   => 'fee',
+				),
+			),
+		);
+
+		$payment_args = array(
+			'purchase_key' => '123',
+		);
+
+		$expected = array(
+			'reference_id' => '123',
+			'amount'       => array(
+				'currency_code' => 'USD',
+				'value'         => '5',
+				'breakdown'     => array(
+					'item_total' => array(
+						'currency_code' => 'USD',
+						'value'         => '10',
+					),
+					'discount'   => array(
+						'currency_code' => 'USD',
+						'value'         => '5',
+					),
+				),
+			),
+			'custom_id'    => 1,
+			'items'        => array(
+				array(
+					'name'        => '1',
+					'quantity'    => 1,
+					'unit_amount' => array(
+						'currency_code' => 'USD',
+						'value'         => '10.00',
+					),
+				),
+			),
+		);
+
+		$actual = \EDD\Gateways\PayPal\get_order_purchase_units( 1, $purchase_data, $payment_args );
+
+		$this->assertEqualSetsWithIndex( $expected, $actual[0] );
+	}
+
 }
