@@ -227,7 +227,7 @@ function get_order_purchase_units( $payment_id, $purchase_data, $payment_args ) 
 
 	$order_amount = array(
 		'currency_code' => $currency,
-		'value'         => (string) $purchase_data['price'],
+		'value'         => (string) edd_sanitize_amount( $purchase_data['price'] ),
 		'breakdown'     => array(
 			'item_total' => array(
 				'currency_code' => $currency,
