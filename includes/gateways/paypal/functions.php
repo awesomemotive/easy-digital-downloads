@@ -287,7 +287,7 @@ function get_order_items( $purchase_data ) {
 				'currency_code' => edd_get_currency(),
 				'value'         => (string) edd_sanitize_amount( $item_amount ),
 			),
-			'discount'    => (string) edd_sanitize_amount( $item['discount'] ),
+			'discount'    => $item['discount'], // This is unset later and never sent to PayPal.
 		);
 		if ( edd_use_skus() ) {
 			$sku = edd_get_download_sku( $item['id'] );
