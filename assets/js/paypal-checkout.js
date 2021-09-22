@@ -207,7 +207,7 @@ var EDD_PayPal = {
 					}
 
 					return new Promise( function( resolve, reject ) {
-						reject( new Error( errorHtml ) );
+						reject( errorHtml );
 					} );
 				}
 			} );
