@@ -153,17 +153,17 @@ function get_button_styles() {
 function get_order_purchase_units_without_breakdown( $payment_id, $purchase_data, $payment_args ) {
 	$order_amount = array(
 		'currency_code' => edd_get_currency(),
-		'value'         => (string) $purchase_data['price']
+		'value'         => (string) edd_sanitize_amount( $purchase_data['price'] ),
 	);
 	if ( (float) $purchase_data['tax'] > 0 ) {
 		$order_amount['breakdown'] = array(
 			'item_total' => array(
 				'currency_code' => edd_get_currency(),
-				'value'         => (string) ( $purchase_data['price'] - $purchase_data['tax'] )
+				'value'         => (string) edd_sanitize_amount( $purchase_data['price'] - $purchase_data['tax'] )
 			),
 			'tax_total'  => array(
 				'currency_code' => edd_get_currency(),
-				'value'         => (string) $purchase_data['tax']
+				'value'         => (string) edd_sanitize_amount( $purchase_data['tax'] ),
 			)
 		);
 	}
@@ -231,7 +231,7 @@ function get_order_purchase_units( $payment_id, $purchase_data, $payment_args ) 
 		'breakdown'     => array(
 			'item_total' => array(
 				'currency_code' => $currency,
-				'value'         => (string) $order_subtotal,
+				'value'         => (string) edd_sanitize_amount( $order_subtotal ),
 			),
 		),
 	);
@@ -240,7 +240,7 @@ function get_order_purchase_units( $payment_id, $purchase_data, $payment_args ) 
 	if ( $tax > 0 ) {
 		$order_amount['breakdown']['tax_total'] = array(
 			'currency_code' => $currency,
-			'value'         => (string) $tax,
+			'value'         => (string) edd_sanitize_amount( $tax ),
 		);
 	}
 
@@ -248,7 +248,7 @@ function get_order_purchase_units( $payment_id, $purchase_data, $payment_args ) 
 	if ( $discount > 0 ) {
 		$order_amount['breakdown']['discount'] = array(
 			'currency_code' => $currency,
-			'value'         => (string) $discount,
+			'value'         => (string) edd_sanitize_amount( $discount ),
 		);
 	}
 
@@ -287,7 +287,7 @@ function get_order_items( $purchase_data ) {
 				'currency_code' => edd_get_currency(),
 				'value'         => (string) edd_sanitize_amount( $item_amount ),
 			),
-			'discount'    => $item['discount'],
+			'discount'    => (string) edd_sanitize_amount( $item['discount'] ),
 		);
 		if ( edd_use_skus() ) {
 			$sku = edd_get_download_sku( $item['id'] );
