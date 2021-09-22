@@ -138,3 +138,192 @@ function get_button_styles() {
 	 */
 	return apply_filters( 'edd_paypal_smart_button_style', $styles );
 }
+
+/**
+ * Gets the PayPal purchase units without the individual item breakdown.
+ *
+ * @since 2.11.2
+ *
+ * @param int   $payment_id    The payment/order ID.
+ * @param array $purchase_data The array of purchase data.
+ * @param array $payment_args  The array created to insert the payment into the database.
+ *
+ * @return array
+ */
+function get_order_purchase_units_without_breakdown( $payment_id, $purchase_data, $payment_args ) {
+	$order_amount = array(
+		'currency_code' => edd_get_currency(),
+		'value'         => (string) $purchase_data['price']
+	);
+	if ( (float) $purchase_data['tax'] > 0 ) {
+		$order_amount['breakdown'] = array(
+			'item_total' => array(
+				'currency_code' => edd_get_currency(),
+				'value'         => (string) ( $purchase_data['price'] - $purchase_data['tax'] )
+			),
+			'tax_total'  => array(
+				'currency_code' => edd_get_currency(),
+				'value'         => (string) $purchase_data['tax']
+			)
+		);
+	}
+
+	return array(
+		'reference_id' => $payment_args['purchase_key'],
+		'amount'       => $order_amount,
+		'custom_id'    => $payment_id
+	);
+}
+
+/**
+ * Gets the PayPal purchase units. The order breakdown includes the order items, tax, and discount.
+ *
+ * @since 2.11.2
+ * @param int   $payment_id    The payment/order ID.
+ * @param array $purchase_data The array of purchase data.
+ * @param array $payment_args  The array created to insert the payment into the database.
+ * @return array
+ */
+function get_order_purchase_units( $payment_id, $purchase_data, $payment_args ) {
+
+	$currency       = edd_get_currency();
+	$order_subtotal = $purchase_data['subtotal'];
+	$items          = get_order_items( $purchase_data );
+	// Adjust the order subtotal if any items are discounted.
+	foreach ( $items as &$item ) {
+		// A discount can be negative, so cast it to an absolute value for comparison.
+		if ( (float) abs( $item['discount'] ) > 0 ) {
+			$order_subtotal -= $item['discount'];
+		}
+
+		// The discount amount is not passed to PayPal as part of the $item.
+		unset( $item['discount'] );
+	}
+
+	$discount = 0;
+	// Fees which are not item specific need to be added to the PayPal data as order items.
+	if ( ! empty( $purchase_data['fees'] ) ) {
+		foreach ( $purchase_data['fees'] as $fee ) {
+			if ( ! empty( $fee['download_id'] ) ) {
+				continue;
+			}
+			// Positive fees.
+			if ( floatval( $fee['amount'] ) > 0 ) {
+				$items[]         = array(
+					'name'        => stripslashes_deep( html_entity_decode( wp_strip_all_tags( $fee['label'] ), ENT_COMPAT, 'UTF-8' ) ),
+					'unit_amount' => array(
+						'currency_code' => $currency,
+						'value'         => (string) edd_sanitize_amount( $fee['amount'] ),
+					),
+					'quantity'    => 1,
+				);
+				$order_subtotal += abs( $fee['amount'] );
+			} else {
+				// This is a negative fee (discount) not assigned to a specific Download
+				$discount += abs( $fee['amount'] );
+			}
+		}
+	}
+
+	$order_amount = array(
+		'currency_code' => $currency,
+		'value'         => (string) $purchase_data['price'],
+		'breakdown'     => array(
+			'item_total' => array(
+				'currency_code' => $currency,
+				'value'         => (string) $order_subtotal,
+			),
+		),
+	);
+
+	$tax = (float) $purchase_data['tax'] > 0 ? $purchase_data['tax'] : 0;
+	if ( $tax > 0 ) {
+		$order_amount['breakdown']['tax_total'] = array(
+			'currency_code' => $currency,
+			'value'         => (string) $tax,
+		);
+	}
+
+	// This is only added by negative global fees.
+	if ( $discount > 0 ) {
+		$order_amount['breakdown']['discount'] = array(
+			'currency_code' => $currency,
+			'value'         => (string) $discount,
+		);
+	}
+
+	return array(
+		wp_parse_args( array(
+			'amount' => $order_amount,
+			'items'  => $items
+		), get_order_purchase_units_without_breakdown( $payment_id, $purchase_data, $payment_args ) )
+	);
+}
+
+/**
+ * Gets an array of order items, formatted for PayPal, from the $purchase_data.
+ *
+ * @since 2.11.2
+ * @param array $purchase_data
+ * @return array
+ */
+function get_order_items( $purchase_data ) {
+	// Create an array of items for the order.
+	$items = array();
+	if ( ! is_array( $purchase_data['cart_details'] ) || empty( $purchase_data['cart_details'] ) ) {
+		return $items;
+	}
+	$i = 0;
+	foreach ( $purchase_data['cart_details'] as $item ) {
+		$item_amount = ( $item['subtotal'] / $item['quantity'] ) - ( $item['discount'] / $item['quantity'] );
+
+		if ( $item_amount <= 0 ) {
+			$item_amount = 0;
+		}
+		$items[ $i ] = array(
+			'name'        => stripslashes_deep( html_entity_decode( edd_get_cart_item_name( $item ), ENT_COMPAT, 'UTF-8' ) ),
+			'quantity'    => $item['quantity'],
+			'unit_amount' => array(
+				'currency_code' => edd_get_currency(),
+				'value'         => (string) edd_sanitize_amount( $item_amount ),
+			),
+			'discount'    => $item['discount'],
+		);
+		if ( edd_use_skus() ) {
+			$sku = edd_get_download_sku( $item['id'] );
+			if ( ! empty( $sku ) && '-' !== $sku ) {
+				$items[ $i ]['sku'] = $sku;
+			}
+		}
+		$i++;
+	}
+
+	return $items;
+}
+
+/**
+ * Attempts to detect if there's an item total mismatch. This means the individual item breakdowns don't
+ * add up to our proposed totals.
+ *
+ * @link https://github.com/easydigitaldownloads/easy-digital-downloads/pull/8835#issuecomment-921759101
+ * @internal Not intended for public use.
+ *
+ * @since 2.11.2
+ *
+ * @param object $response
+ *
+ * @return bool
+ */
+function _is_item_total_mismatch( $response ) {
+	if ( ! isset( $response->details ) || ! is_array( $response->details ) ) {
+		return false;
+	}
+
+	foreach( $response->details as $detail ) {
+		if ( ! empty( $detail->issue ) && 'ITEM_TOTAL_MISMATCH' === strtoupper( $detail->issue ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
