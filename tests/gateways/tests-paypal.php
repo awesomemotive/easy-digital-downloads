@@ -13,29 +13,28 @@ namespace EDD\Tests\Gateways;
 use EDD\Gateways\PayPal\MerchantAccount;
 use EDD\Gateways\PayPal\Webhooks\Events\Payment_Capture_Completed;
 use EDD\Gateways\PayPal\Webhooks\Events\Payment_Capture_Denied;
-use EDD\Gateways\PayPal\Webhooks\Events\Webhook_Event;
 use EDD\Gateways\PayPal\Webhooks\Webhook_Handler;
+use EDD\Orders\Order;
 use EDD_UnitTestCase;
-use EDD_Payment;
 
 class Tests_PayPal extends EDD_UnitTestCase {
 
 	const TRANSACTION_ID = '27M47624FP291604U';
 
 	/**
-	 * @var EDD_Payment
+	 * @var Order
 	 */
-	protected $payment;
+	protected $order;
 
 	public function setUp() {
 		parent::setUp();
 
-		$payment_id = \EDD_Helper_Payment::create_simple_payment();
-		edd_set_payment_transaction_id( $payment_id, self::TRANSACTION_ID );
+		$order_id = \EDD_Helper_Payment::create_simple_payment();
+		edd_set_payment_transaction_id( $order_id, self::TRANSACTION_ID );
 
 		wp_cache_flush();
 
-		$this->payment = edd_get_payment( $payment_id );
+		$this->order = edd_get_order( $order_id );
 	}
 
 	/**
@@ -71,7 +70,7 @@ class Tests_PayPal extends EDD_UnitTestCase {
 			'amount'         => 120.00,
 			'currency_code'  => 'USD',
 			'transaction_id' => self::TRANSACTION_ID,
-			'custom_id'      => $this->payment->ID
+			'custom_id'      => $this->order->id
 		) );
 
 		$args['amount'] = (float) $args['amount'];
@@ -238,7 +237,7 @@ class Tests_PayPal extends EDD_UnitTestCase {
 	 */
 	public function test_payment_capture_completed_marks_payment_complete() {
 		// Status should be pending at first.
-		$this->assertEquals( 'pending', $this->payment->status );
+		$this->assertEquals( 'pending', $this->order->status );
 
 		$event = new Payment_Capture_Completed( $this->build_rest_request( $this->get_payment_capture_completed_payload( array(
 			'amount'        => 120,
@@ -246,9 +245,9 @@ class Tests_PayPal extends EDD_UnitTestCase {
 		) ) ) );
 		$event->handle();
 
-		// Refresh payment object.
-		$payment = edd_get_payment( $this->payment->ID );
-		$this->assertEquals( 'complete', $payment->status );
+		// Refresh order object.
+		$order = edd_get_order( $this->order->id );
+		$this->assertEquals( 'complete', $order->status );
 	}
 
 	/**
@@ -303,7 +302,7 @@ class Tests_PayPal extends EDD_UnitTestCase {
 			$this->expectException( 'Exception' );
 		}
 		if ( method_exists( $this, 'expectExceptionMessage' ) ) {
-			$this->expectExceptionMessage( 'get_payment_from_capture_object() - Transaction ID mismatch.' );
+			$this->expectExceptionMessage( 'get_order_from_capture_object() - Transaction ID mismatch.' );
 		}
 
 		$event->handle();
@@ -314,16 +313,16 @@ class Tests_PayPal extends EDD_UnitTestCase {
 	 * @throws \Exception
 	 */
 	public function test_payment_capture_denied_marks_payment_failed() {
-		$this->assertNotEquals( 'failed', $this->payment->status );
+		$this->assertNotEquals( 'failed', $this->order->status );
 
 		$payload = $this->get_payment_capture_denied_payload();
 
 		$event = new Payment_Capture_Denied( $this->build_rest_request( $payload ) );
 		$event->handle();
 
-		// Refresh payment object.
-		$payment = edd_get_payment( $this->payment->ID );
-		$this->assertEquals( 'failed', $payment->status );
+		// Refresh order object.
+		$order = edd_get_order( $this->order->id );
+		$this->assertEquals( 'failed', $order->status );
 	}
 
 	/**
