@@ -26,9 +26,9 @@ defined( 'ABSPATH' ) || exit;
 function edd_add_discount( $data = array() ) {
 
 	// Juggle requirements and products.
-	$product_requirements = isset( $data['product_reqs'] )      ? $data['product_reqs']      : null;
-	$excluded_products    = isset( $data['excluded_products'] ) ? $data['excluded_products'] : null;
-	$product_condition    = isset( $data['product_condition'] ) ? $data['product_condition'] : null;
+	$product_requirements = ! empty( $data['product_reqs'] ) ? $data['product_reqs'] : null;
+	$excluded_products    = ! empty( $data['excluded_products'] ) ? $data['excluded_products'] : null;
+	$product_condition    = ! empty( $data['product_condition'] ) ? $data['product_condition'] : null;
 	$pre_convert_args     = $data;
 	unset( $data['product_reqs'], $data['excluded_products'], $data['product_condition'] );
 
