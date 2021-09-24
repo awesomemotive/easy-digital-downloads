@@ -73,3 +73,16 @@ function edd_trigger_purchase_delete( $data ) {
 	}
 }
 add_action( 'edd_delete_payment', 'edd_trigger_purchase_delete' );
+
+/**
+ * Loads the earnings report batch process if needed
+ *
+ * @deprecated 3.1
+ *
+ * @since  2.7
+ * @param  string $class The class being requested to run for the batch export
+ * @return void
+ */
+function edd_include_earnings_report_batch_processor( $class ) {
+	_edd_deprecated_function( __FUNCTION__, '3.1' );
+}

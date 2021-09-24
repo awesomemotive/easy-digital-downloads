@@ -770,6 +770,10 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/tools/tools-actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/admin-deprecated-functions.php';
 
+		// Tools
+		require_once EDD_PLUGIN_DIR . 'includes/admin/export/exporters.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/export/ExportLoader.php';
+
 		require_once EDD_PLUGIN_DIR . 'includes/libraries/class-persistent-dismissible.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/promos/class-promo-handler.php';
 	}

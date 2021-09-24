@@ -24,11 +24,30 @@ function edd_process_batch_export_download() {
 		wp_die( esc_html__( 'Nonce verification failed', 'easy-digital-downloads' ), esc_html__( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
 	}
 
-	require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export.php';
-	do_action( 'edd_batch_export_class_include', $_REQUEST['class'] );
+	\EDD\Admin\Export\ExportLoader::bootstrap();
 
-	if ( class_exists( $_REQUEST['class'] ) && 'EDD_Batch_Export' === get_parent_class( $_REQUEST['class'] ) ) {
-		$export = new $_REQUEST['class']();
+	try {
+		if ( ! empty( $_REQUEST['exporter_id'] ) ) {
+			$exporter = \EDD\Admin\Export\ExportRegistry::instance()->get_item( $_REQUEST['exporter_id'] );
+
+			if ( ! empty( $exporter['class_path'] ) ) {
+				require_once $exporter['class_path'];
+			}
+
+			$class = $exporter['class'];
+		} else {
+			$class = $_REQUEST['class'];
+
+			_doing_it_wrong( __FUNCTION__, sprintf( 'Register your %s exporter using ExportRegistry.', $class ), '3.1' );
+
+			do_action( 'edd_batch_export_class_include', $class );
+		}
+	} catch ( \Exception $e ) {
+		wp_die( $e->getMessage(), esc_html__( 'Error', 'easy-digital-downloads' ), array( 'response' => 500 ) );
+	}
+
+	if ( class_exists( $class ) && EDD_Batch_Export::class === get_parent_class( $class ) ) {
+		$export = new $class();
 		$export->export();
 	}
 }
@@ -202,19 +221,6 @@ function edd_register_earnings_report_batch_export() {
 	add_action( 'edd_batch_export_class_include', 'edd_include_earnings_report_batch_processor', 10, 1 );
 }
 add_action( 'edd_register_batch_exporter', 'edd_register_earnings_report_batch_export', 10 );
-
-/**
- * Loads the earnings report batch process if needed
- *
- * @since  2.7
- * @param  string $class The class being requested to run for the batch export
- * @return void
- */
-function edd_include_earnings_report_batch_processor( $class ) {
-	if ( 'EDD_Batch_Earnings_Report_Export' === $class ) {
-		require_once EDD_PLUGIN_DIR . 'includes/admin/reporting/export/class-batch-export-earnings-report.php';
-	}
-}
 
 /**
  * Register the API requests batch exporter

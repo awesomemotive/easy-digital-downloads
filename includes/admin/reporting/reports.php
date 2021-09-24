@@ -2602,6 +2602,8 @@ add_action( 'edd_reports_init', 'edd_register_export_report' );
 function display_export_report() {
 	global $wpdb;
 
+	\EDD\Admin\Export\ExportLoader::bootstrap();
+
 	wp_enqueue_script( 'edd-admin-tools-export' );
 	?>
 	<div id="edd-dashboard-widgets-wrap">
@@ -2611,38 +2613,36 @@ function display_export_report() {
 
 				<?php do_action( 'edd_reports_tab_export_content_top' ); ?>
 
-				<div class="postbox edd-export-earnings-report">
-					<h2 class="hndle"><span><?php esc_html_e( 'Export Earnings Report', 'easy-digital-downloads' ); ?></span></h2>
-					<div class="inside">
-						<p><?php esc_html_e( 'Download a CSV giving a detailed look into earnings over time.', 'easy-digital-downloads' ); ?></p>
-						<form id="edd-export-earnings-report" class="edd-export-form edd-import-export-form" method="post">
-							<fieldset class="edd-to-and-from-container">
-							<legend class="screen-reader-text">
-								<?php esc_html_e( 'Export Earnings Start', 'easy-digital-downloads' ); ?>
-							</legend>
-								<label for="edd_export_earnings_start_month" class="screen-reader-text"><?php esc_html_e( 'Select start month', 'easy-digital-downloads' ); ?></label>
-									<?php echo EDD()->html->month_dropdown( 'start_month', 0, 'edd_export_earnings', true ); ?>
-								<label for="edd_export_earnings_start_year" class="screen-reader-text"><?php esc_html_e( 'Select start year', 'easy-digital-downloads' ); ?></label>
-									<?php echo EDD()->html->year_dropdown( 'start_year', 0, 5, 0, 'edd_export_earnings' ); ?>
-							</fieldset>
+				<?php foreach ( \EDD\Admin\Export\ExportRegistry::instance()->get_items_by_priority() as $exporter_id => $exporter ) : ?>
+					<div class="postbox edd-export-<?php echo esc_attr( sanitize_html_class( $exporter_id ) ); ?>">
+						<?php /* Translators: %s name of the exporter tool */ ?>
+						<h2 class="hndle">
+							<span><?php echo esc_html( sprintf( __( 'Export %s', 'easy-digital-downloads' ), $exporter['label'] ) ); ?></span>
+						</h2>
+						<div class="inside">
+							<?php if ( ! empty( $exporter['description'] ) ) : ?>
+								<p><?php echo esc_html( $exporter['description'] ); ?></p>
+							<?php endif; ?>
 
-							<span class="edd-to-and-from--separator"><?php echo _x( '&mdash; to &mdash;', 'Date one to date two', 'easy-digital-downloads' ); ?></span>
+							<form id="edd-export-<?php echo esc_attr( sanitize_html_class( $exporter_id ) ); ?>" class="edd-export-form edd-import-export-form" method="POST">
+								<?php
+								/**
+								 * Used to add custom form fields to an exporter.
+								 *
+								 * @since 3.0
+								 *
+								 * @param string $exporter_id ID of the exporter being rendered.
+								 */
+								do_action( 'edd_export_form', $exporter_id );
+								?>
 
-							<fieldset class="edd-to-and-from-container">
-							<legend class="screen-reader-text">
-								<?php esc_html_e( 'Export Earnings End', 'easy-digital-downloads' ); ?>
-							</legend>
-								<label for="edd_export_earnings_end_month" class="screen-reader-text"><?php esc_html_e( 'Select end month', 'easy-digital-downloads' ); ?></label>
-									<?php echo EDD()->html->month_dropdown( 'end_month', 0, 'edd_export_earnings', true ); ?>
-								<label for="edd_export_earnings_end_year" class="screen-reader-text"><?php esc_html_e( 'Select end year', 'easy-digital-downloads' ); ?></label>
-									<?php echo EDD()->html->year_dropdown( 'end_year', 0, 5, 0, 'edd_export_earnings' ); ?>
-							</fieldset>
-							<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
-							<input type="hidden" name="edd-export-class" value="EDD_Batch_Earnings_Report_Export"/>
-							<button type="submit" class="button button-secondary"><?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?></button>
-						</form>
+								<?php wp_nonce_field( 'edd_ajax_export', 'edd_ajax_export' ); ?>
+								<input type="hidden" name="exporter_id" value="<?php echo esc_attr( $exporter_id ); ?>" />
+								<button type="submit" class="button button-secondary"><?php esc_html_e( 'Generate CSV', 'easy-digital-downloads' ); ?></button>
+							</form>
+						</div>
 					</div>
-				</div>
+				<?php endforeach; ?>
 
 				<div class="postbox edd-export-sales-earnings">
 					<h2 class="hndle"><span><?php esc_html_e( 'Export Sales and Earnings', 'easy-digital-downloads' ); ?></span></h2>

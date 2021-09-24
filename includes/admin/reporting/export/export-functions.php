@@ -33,10 +33,36 @@ function edd_do_ajax_export() {
 		die( '-2' );
 	}
 
-	do_action( 'edd_batch_export_class_include', $form['edd-export-class'] );
+	\EDD\Admin\Export\ExportLoader::bootstrap();
+
+	try {
+		if ( ! empty( $form['exporter_id'] ) ) {
+			$exporter = \EDD\Admin\Export\ExportRegistry::instance()->get_item( $form['exporter_id'] );
+
+			if ( ! empty( $exporter['class_path'] ) ) {
+				require_once $exporter['class_path'];
+			}
+
+			$class = $exporter['class'];
+		} else {
+			$class = $form['edd-export-class'];
+
+			_doing_it_wrong( __FUNCTION__, sprintf( 'Register your %s exporter using ExportRegistry.', $class ), '3.1' );
+
+			do_action( 'edd_batch_export_class_include', $class );
+		}
+
+		if ( ! class_exists( $class ) ) {
+			throw new \Exception( __( 'Exporter not available.', 'easy-digital-downloads' ) );
+		}
+	} catch ( \Exception $e ) {
+		wp_send_json( array(
+			'error'   => true,
+			'message' => $e->getMessage(),
+		), 500 );
+	}
 
 	$step  = absint( $_POST['step'] );
-	$class = sanitize_text_field( $form['edd-export-class'] );
 
 	/** @var \EDD_Batch_Export $export */
 	$export = new $class( $step );
@@ -46,12 +72,10 @@ function edd_do_ajax_export() {
 	}
 
 	if ( ! $export->is_writable ) {
-		echo wp_json_encode( array(
+		wp_send_json( array(
 			'error'   => true,
 			'message' => __( 'Export location or file not writable', 'easy-digital-downloads' ),
 		));
-
-		exit;
 	}
 
 	$export->set_properties( $_REQUEST );
@@ -66,31 +90,25 @@ function edd_do_ajax_export() {
 	if ( $ret ) {
 		$step++;
 
-		echo wp_json_encode( array(
+		wp_send_json( array(
 			'step'       => $step,
 			'percentage' => $percentage,
 		) );
-
-		exit;
 	} elseif ( true === $export->is_empty ) {
-		echo wp_json_encode( array(
+		wp_send_json( array(
 			'error'   => true,
 			'message' => __( 'No data found for export parameters', 'easy-digital-downloads' ),
 		) );
-
-		exit;
 	} elseif ( true === $export->done && true === $export->is_void ) {
 		$message = ! empty( $export->message )
 			? $export->message
 			: __( 'Batch Processing Complete', 'easy-digital-downloads' );
 
-		echo wp_json_encode( array(
+		wp_send_json( array(
 			'success' => true,
 			'message' => $message,
 			'data'    => $export->result_data,
 		) );
-
-		exit;
 	} else {
 		$args = array_merge( $_REQUEST, array(
 			'step'       => $step,
@@ -101,12 +119,10 @@ function edd_do_ajax_export() {
 
 		$download_url = add_query_arg( $args, admin_url() );
 
-		echo wp_json_encode( array(
+		wp_send_json( array(
 			'step' => 'done',
 			'url'  => $download_url,
 		) );
-
-		exit;
 	}
 }
 add_action( 'wp_ajax_edd_do_ajax_export', 'edd_do_ajax_export' );

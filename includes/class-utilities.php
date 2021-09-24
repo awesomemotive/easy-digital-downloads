@@ -77,6 +77,9 @@ class Utilities {
 		require_once $utils_dir . 'interface-static-registry.php';
 		require_once $utils_dir . 'interface-error-logger.php';
 
+		// Traits
+		require_once $utils_dir . 'traits/PrioritySortable.php';
+
 		// Exceptions.
 		require_once $utils_dir . 'class-edd-exception.php';
 		require_once $utils_dir . 'exceptions/class-attribute-not-found.php';
@@ -88,6 +91,9 @@ class Utilities {
 
 		// Registry.
 		require_once $utils_dir . 'class-registry.php';
+
+		// Export
+		require_once EDD_PLUGIN_DIR . 'includes/admin/export/ExportRegistry.php';
 	}
 
 	/**
