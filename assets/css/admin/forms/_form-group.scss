@@ -1,7 +1,85 @@
+/**
+ * Form Group
+ *
+ * <div class="edd-form-group">
+ *   <label class="edd-form-group__label">Label</label>
+ *   <div class="edd-form-group__control">
+ *   	<input type="text" class="edd-form-group__input" />
+ *   </div>
+ *   <p class="edd-form-group__help">Help</p>
+ * </div>
+ *
+ *
+ * <fieldset class="edd-form-group">
+ *   <legend class="edd-form-group__label">Label</label>
+ *
+ *   <div class="edd-form-group__control">
+ *   	<input type="radio" class="edd-form-group__input" />
+ *   	<label>Radio 1</label>
+ *   </div>
+ *
+ *   <div class="edd-form-group__control">
+ *   	<input type="radio" class="edd-form-group__input" />
+ *   	<label>Radio 2</label>
+ *   </div>
+ * </fieldset>
+ *
+ */
+.edd-form-group {
+	margin-bottom: 16px;
+
+	&:last-of-type {
+		margin-bottom: 0;
+	}
+}
+
+.edd-form-group__label {
+	display: block;
+	font-weight: 600;
+	margin-bottom: 8px;
+	padding: 0;
+}
+
 .edd-form-group__control {
+	margin-bottom: 8px;
+	max-width: 100%;
+
+	&.is-radio,
+	&.is-check {
+		margin-top: 4px;
+	}
+
+	&:last-of-type {
+		margin-bottom: 0;
+	}
 
 	&--is-inline {
 		display: inline-flex;
 		align-items: flex-end;
 	}
+}
+
+.edd-form-group__input {
+	max-width: 100%;
+
+	&[type="checkbox"],
+	&[type="radio"] {
+		margin-top: 0;
+
+		+label {
+			display: unset;
+		}
+	}
+}
+
+select.edd-form-group__input {
+	max-width: 100%;
+}
+
+.edd-form-group__help {
+	color: $wp-gray-50;
+	font-size: 13px;
+	font-style: italic;
+	line-height: initial;
+	margin: 8px 0 0;
 }
