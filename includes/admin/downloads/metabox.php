@@ -1044,11 +1044,18 @@ function edd_render_meta_box_shortcode() {
 		return;
 	}
 
-	$purchase_text = edd_get_option( 'add_to_cart_text', __( 'Purchase', 'easy-digital-downloads' ) );
+	$behavior      = get_post_meta( $post->ID, '_edd_button_behavior', true );
+	if ( 'direct' == $behavior ) {
+		$purchase_text = edd_get_option( 'buy_now_text', __( 'Buy Now', 'easy-digital-downloads' ) );
+		$behavior      = ' direct=true';
+	} else {
+		$purchase_text = edd_get_option( 'add_to_cart_text', __( 'Purchase', 'easy-digital-downloads' ) );
+		$behavior      = '';
+	}
 	$style         = edd_get_option( 'button_style', 'button' );
 	$color         = edd_get_option( 'checkout_color', 'blue' );
 	$color         = ( $color == 'inherit' ) ? '' : $color;
-	$shortcode     = '[purchase_link id="' . absint( $post->ID ) . '" text="' . esc_html( $purchase_text ) . '" style="' . $style . '" color="' . esc_attr( $color ) . '"]';
+	$shortcode     = '[purchase_link id="' . absint( $post->ID ) . '" text="' . esc_html( $purchase_text ) . '" style="' . $style . '" color="' . esc_attr( $color ) . $behavior . '"]';
 ?>
 	<p>
 		<strong><?php _e( 'Purchase Shortcode:', 'easy-digital-downloads' ); ?></strong>
