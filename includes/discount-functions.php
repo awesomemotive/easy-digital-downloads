@@ -52,7 +52,7 @@ function edd_add_discount( $data = array() ) {
 	if ( ! empty( $discount_id ) ) {
 
 		// Product requirements.
-		if ( ! is_null( $product_requirements ) ) {
+		if ( ! empty( $product_requirements ) ) {
 			if ( is_string( $product_requirements ) ) {
 				$product_requirements = maybe_unserialize( $product_requirements );
 			}
@@ -65,7 +65,7 @@ function edd_add_discount( $data = array() ) {
 		}
 
 		// Excluded products.
-		if ( ! is_null( $excluded_products ) ) {
+		if ( ! empty( $excluded_products ) ) {
 			if ( is_string( $excluded_products ) ) {
 				$excluded_products = maybe_unserialize( $excluded_products );
 			}
@@ -77,7 +77,7 @@ function edd_add_discount( $data = array() ) {
 			}
 		}
 
-		if ( ! is_null( $product_condition ) ) {
+		if ( ! empty( $product_condition ) ) {
 			edd_add_adjustment_meta( $discount_id, 'product_condition', $product_condition );
 		}
 
