@@ -477,3 +477,16 @@ function edd_get_tax_rate_by_location( $args ) {
 
 	return $rate;
 }
+
+/**
+ * Clears the tax rate cache prior to displaying the cart.
+ * This fixes potential issues with custom tax rates / rate filtering from after we added
+ * tax rate caching logic.
+ *
+ * @link https://github.com/easydigitaldownloads/easy-digital-downloads/pull/8509#issuecomment-926576698
+ *
+ * @since 3.0
+ */
+add_action( 'edd_before_checkout_cart', function () {
+	EDD()->cart->set_tax_rate( null );
+} );
