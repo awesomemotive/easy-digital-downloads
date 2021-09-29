@@ -207,7 +207,7 @@ var EDD_PayPal = {
 					}
 
 					return new Promise( function( resolve, reject ) {
-						reject( new Error( errorHtml ) );
+						reject( errorHtml );
 					} );
 				}
 			} );
@@ -237,12 +237,12 @@ jQuery( document ).ready( function( $ ) {
 		var element = buyButtons[ i ];
 		// Skip if "Free Downloads" is enabled for this download.
 		if ( element.classList.contains( 'edd-free-download' ) ) {
-			return;
+			continue;
 		}
 
 		var wrapper = element.closest( '.edd_purchase_submit_wrapper' );
 		if ( ! wrapper ) {
-			return;
+			continue;
 		}
 
 		// Clear contents of the wrapper.

@@ -5,9 +5,9 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: ecommerce, sell, checkout, digital store, stripe
 Requires at least: 4.4
-Tested up to: 5.8
+Tested up to: 5.8.1
 Requires PHP: 5.3
-Stable Tag: 2.11.1
+Stable Tag: 2.11.2
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products the simple way. Easily build an online store complete with a cart system, checkout forms, reports, coupons, and more!
@@ -246,6 +246,20 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 13. Pay with PayPal modal
 
 == Changelog ==
+= 2.11.2, September 29, 2021 =
+* Improvement: PayPal - Product names now appear in PayPal.
+* Improvement: File download token validation has been reworked to be more compatible with caching.
+* Fix: PayPal - Ensure all numbers are rounded when sending price data to PayPal. This prevents errors due to rounding issues.
+* Fix: PayPal - Excessive error text when triggering a validation error on a mobile device.
+* Fix: PayPal - Multiple "Buy Now" buttons not working on the same page.
+* Fix: JavaScript error if the checkout button has been customized to not have an `id` attribute.
+* Fix: WP-CLI - `price_id` parameter not working with `wp edd payments create` command.
+* Fix: Stripe - Transaction link not working if the payment is pre-approved.
+* Fix: Stripe - Connect not working with certain countries.
+* Fix: Stripe - Numeric product name causes error.
+* Fix: Stripe - Payments able to be marked for preapproval when they shouldn't be.
+* Refactor: SendWP - Update link to account area.
+
 = 2.11.1, August 30, 2021 =
 * Improved: Better compatibility with caching when using PayPal Commerce.
 * Improved: Made it more clear when PayPal Commerce is successfully connected, but not set as an active gaetway.
