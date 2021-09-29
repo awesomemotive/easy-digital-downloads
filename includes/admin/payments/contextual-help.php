@@ -30,7 +30,7 @@ function edd_payments_contextual_help() {
 		'<p>' . sprintf( __( 'Visit the <a href="%s">documentation</a> on the Easy Digital Downloads website.', 'easy-digital-downloads' ), esc_url( 'http://docs.easydigitaldownloads.com/' ) ) ) . '</p>' .
 		'<p>' . sprintf(
 			__( 'Need more from your Easy Digital Downloads store? <a href="%s">Upgrade Now</a>!', 'easy-digital-downloads' ),
-			esc_url( 'https://easydigitaldownloads.com/pricnig/?utm_source=plugin-settings-page&utm_medium=contextual-help-sidebar&utm_term=pricing&utm_campaign=ContextualHelp' ),
+			esc_url( 'https://easydigitaldownloads.com/pricing/?utm_source=plugin-settings-page&utm_medium=contextual-help-sidebar&utm_term=pricing&utm_campaign=ContextualHelp' ),
 		) . '</p>'
 	);
 
