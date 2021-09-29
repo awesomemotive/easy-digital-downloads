@@ -51,7 +51,7 @@ add_action( 'admin_menu', 'edd_add_options_link', 10 );
  *
  * Only works after the `wp_loaded` hook, & most effective
  * starting on `admin_menu` hook. Failure to pass in $passed_view will match all views of $passed_page.
- * Failure to pass in $main_page will return true if on any EDD page
+ * Failure to pass in $passed_page will return true if on any EDD page
  *
  * @since 1.9.6
  * @since 2.11.3
