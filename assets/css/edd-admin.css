@@ -30,11 +30,12 @@ a.edd-delete:hover {
 
 /* General Settings Styles
 -------------------------------------------------------------- */
-#contextual-help-link-wrap, #screen-options-link-wrap {
+body.post-type-download #contextual-help-link-wrap,
+body.post-type-download #screen-options-link-wrap {
 	top: 5px !important;
 }
 
-#screen-meta {
+body.post-type-download #screen-meta {
 	margin: 0px 0px -1px -20px;
 }
 
