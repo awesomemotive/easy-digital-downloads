@@ -56,7 +56,7 @@ add_action( 'admin_menu', 'edd_add_options_link', 10 );
  * @since 1.9.6
  * @since 2.11.3
  *
- * @param string $page Optional. Main page's slug
+ * @param string $passed_page Optional. Main page's slug
  * @param string $view Optional. Page view ( ex: `edit` or `delete` )
  * @param boolean $inculde_dashboard Optional. If we should consider the main dashboard in this case.
  * @return bool True if EDD admin page we're looking for or an EDD page or if $page is empty, any EDD page
