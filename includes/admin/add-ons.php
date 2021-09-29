@@ -29,12 +29,12 @@ function edd_add_ons_page() {
 
 	ob_start(); ?>
 	<div class="wrap" id="edd-add-ons">
-		<h2>
+		<h1>
 			<?php _e( 'Apps and Integrations for Easy Digital Downloads', 'easy-digital-downloads' ); ?>
 			<span>
 				&nbsp;&nbsp;<a href="https://easydigitaldownloads.com/downloads/?utm_source=plugin-addons-page&utm_medium=plugin&utm_campaign=<?php echo $campaign; ?>&utm_content=All%20Extensions" class="button-primary" target="_blank"><?php _e( 'Browse All Integrations', 'easy-digital-downloads' ); ?></a>
 			</span>
-		</h2>
+		</h1>
 		<p><?php _e( 'These <em><strong>add functionality</strong></em> to your Easy Digital Downloads powered store.', 'easy-digital-downloads' ); ?></p>
 		<div class="edd-add-ons-view-wrapper">
 			<ul class="subsubsub">
