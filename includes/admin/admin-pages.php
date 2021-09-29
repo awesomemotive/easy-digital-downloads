@@ -50,7 +50,7 @@ add_action( 'admin_menu', 'edd_add_options_link', 10 );
  * Determines whether the current admin page is a specific EDD admin page.
  *
  * Only works after the `wp_loaded` hook, & most effective
- * starting on `admin_menu` hook. Failure to pass in $view will match all views of $main_page.
+ * starting on `admin_menu` hook. Failure to pass in $passed_view will match all views of $passed_page.
  * Failure to pass in $main_page will return true if on any EDD page
  *
  * @since 1.9.6
