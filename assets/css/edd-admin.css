@@ -121,6 +121,11 @@ a.edd-delete:hover {
 	border-bottom-color: #4f6d59;
 }
 
+/* Modern */
+.admin-color-modern .edd-settings-sub-nav a.current {
+	border-bottom-color: #3858e9;
+}
+
 .download_page_edd-settings .form-table label {
 	color: #666;
 	font-size: 14px;
