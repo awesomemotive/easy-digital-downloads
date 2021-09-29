@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.11.1\n"
+"Project-Id-Version: Easy Digital Downloads 2.11.2\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2021-08-30 22:31:21+00:00\n"
+"POT-Creation-Date: 2021-09-22 14:40:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -102,7 +102,7 @@ msgstr ""
 #: includes/cart/class-edd-cart.php:1433 includes/cart/class-edd-cart.php:1447
 #: includes/class-edd-license-handler.php:385
 #: includes/deprecated-functions.php:517 includes/deprecated-functions.php:532
-#: includes/deprecated-functions.php:542 includes/download-functions.php:1277
+#: includes/deprecated-functions.php:542 includes/download-functions.php:1255
 #: includes/emails/actions.php:53 includes/emails/template.php:243
 #: includes/error-tracking.php:60 includes/gateways/functions.php:243
 #: includes/gateways/manual.php:33
@@ -111,7 +111,7 @@ msgstr ""
 #: includes/gateways/paypal/admin/connect.php:592
 #: includes/gateways/paypal-standard.php:172
 #: includes/gateways/stripe/includes/admin/upgrade-functions.php:57
-#: includes/gateways/stripe/includes/payment-actions.php:1403
+#: includes/gateways/stripe/includes/payment-actions.php:1408
 #: includes/process-download.php:303 includes/process-download.php:894
 #: includes/query-filters.php:48 includes/user-functions.php:895
 #: includes/user-functions.php:920 includes/user-functions.php:973
@@ -719,7 +719,7 @@ msgid "City"
 msgstr ""
 
 #: includes/admin/customers/customers.php:269
-#: includes/admin/settings/register-settings.php:2297
+#: includes/admin/settings/register-settings.php:2298
 #: includes/admin/tools.php:695 includes/checkout/template.php:435
 #: templates/shortcode-profile-editor.php:171
 msgid "State / Province"
@@ -766,7 +766,7 @@ msgstr ""
 #: includes/admin/payments/view-order-details.php:684
 #: includes/admin/payments/view-order-details.php:704
 #: includes/admin/thickbox.php:136 includes/class-edd-html-elements.php:796
-#: includes/gateways/stripe/includes/admin/admin-filters.php:87
+#: includes/gateways/stripe/includes/admin/admin-filters.php:96
 #: includes/gateways/stripe/includes/template-functions.php:597
 #: includes/gateways/stripe/includes/template-functions.php:637
 msgid "Cancel"
@@ -827,7 +827,7 @@ msgstr ""
 #: includes/admin/downloads/metabox.php:714
 #: includes/admin/downloads/metabox.php:839
 #: includes/admin/payments/view-order-details.php:523
-#: includes/admin/settings/register-settings.php:2300 includes/scripts.php:227
+#: includes/admin/settings/register-settings.php:2301 includes/scripts.php:227
 #: templates/checkout_cart.php:57 templates/checkout_cart.php:75
 #: templates/shortcode-profile-editor.php:123
 msgid "Remove"
@@ -2775,7 +2775,7 @@ msgstr ""
 
 #: includes/admin/reporting/class-export-payments.php:68
 #: includes/admin/reporting/export/class-batch-export-payments.php:49
-#: includes/admin/settings/register-settings.php:2296
+#: includes/admin/settings/register-settings.php:2297
 #: includes/admin/tools.php:713
 #: includes/gateways/stripe/includes/template-functions.php:510
 #: includes/gateways/stripe/includes/template-functions.php:519
@@ -4544,172 +4544,170 @@ msgid "Upload File"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:2176
-msgid ""
-"<a href=\"https://sendwp.com/account/\" target=\"_blank\" rel=\"noopener "
-"noreferrer\">Access your SendWP account</a>."
+msgid "Access your SendWP account"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2196
+#: includes/admin/settings/register-settings.php:2197
 msgid "SendWP plugin activated."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2199
+#: includes/admin/settings/register-settings.php:2200
 msgid "Disconnect SendWP"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2206
+#: includes/admin/settings/register-settings.php:2207
 msgid ""
 "We recommend SendWP to ensure quick and reliable delivery of all emails "
 "sent from your store, such as purchase receipts, subscription renewal "
 "reminders, password resets, and more."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2206
+#: includes/admin/settings/register-settings.php:2207
 msgid "%sLearn more%s"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2209
+#: includes/admin/settings/register-settings.php:2210
 msgid "Connect with SendWP"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2245
+#: includes/admin/settings/register-settings.php:2246
 msgid "Recapture plugin activated."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2246
+#: includes/admin/settings/register-settings.php:2247
 msgid "%sAccess your Recapture account%s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2251
+#: includes/admin/settings/register-settings.php:2252
 msgid "Disconnect Recapture"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2255
+#: includes/admin/settings/register-settings.php:2256
 msgid "%sComplete your connection to Recapture%s"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2263
+#: includes/admin/settings/register-settings.php:2264
 msgid ""
 "We recommend Recapture for recovering lost revenue by automatically sending "
 "effective, targeted emails to customers who abandon their shopping cart."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2263
+#: includes/admin/settings/register-settings.php:2264
 msgid "%sLearn more%s (Free trial available)"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2267
+#: includes/admin/settings/register-settings.php:2268
 msgid "Connect with Recapture"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2298
+#: includes/admin/settings/register-settings.php:2299
 msgid "Country Wide"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2299
+#: includes/admin/settings/register-settings.php:2300
 msgid "Rate"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2299
+#: includes/admin/settings/register-settings.php:2300
 msgid ""
 "<strong>Regional tax rates: </strong>When a customer enters an address on "
 "checkout that matches the specified region for this tax rate, the cart tax "
 "will adjust automatically. Enter a percentage, such as 6.5 for 6.5%."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2316
-#: includes/admin/settings/register-settings.php:2364
+#: includes/admin/settings/register-settings.php:2317
+#: includes/admin/settings/register-settings.php:2365
 msgid "Choose a country"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2334
+#: includes/admin/settings/register-settings.php:2335
 msgid "Choose a state"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2346
-#: includes/admin/settings/register-settings.php:2377
+#: includes/admin/settings/register-settings.php:2347
+#: includes/admin/settings/register-settings.php:2378
 msgid "Apply to whole country"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2349
-#: includes/admin/settings/register-settings.php:2380
+#: includes/admin/settings/register-settings.php:2350
+#: includes/admin/settings/register-settings.php:2381
 msgid "Remove Rate"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2385
+#: includes/admin/settings/register-settings.php:2386
 msgid "Add Tax Rate"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2438
+#: includes/admin/settings/register-settings.php:2439
 msgid ""
 "Your license key expired on %s. Please <a href=\"%s\" "
 "target=\"_blank\">renew your license key</a>."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2451
+#: includes/admin/settings/register-settings.php:2452
 msgid ""
 "Your license key has been disabled. Please <a href=\"%s\" "
 "target=\"_blank\">contact support</a> for more information."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2463
+#: includes/admin/settings/register-settings.php:2464
 msgid ""
 "Invalid license. Please <a href=\"%s\" target=\"_blank\">visit your account "
 "page</a> and verify it."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2476
+#: includes/admin/settings/register-settings.php:2477
 msgid ""
 "Your %s is not active for this URL. Please <a href=\"%s\" "
 "target=\"_blank\">visit your account page</a> to manage your license key "
 "URLs."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2488
+#: includes/admin/settings/register-settings.php:2489
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2497
+#: includes/admin/settings/register-settings.php:2498
 msgid ""
 "Your license key has reached its activation limit. <a href=\"%s\">View "
 "possible upgrades</a> now."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2506
+#: includes/admin/settings/register-settings.php:2507
 msgid ""
 "The key you entered belongs to a bundle, please use the product specific "
 "license key."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2514
+#: includes/admin/settings/register-settings.php:2515
 msgid "unknown_error"
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2515
+#: includes/admin/settings/register-settings.php:2516
 msgid ""
 "There was an error with this license key: %s. Please <a href=\"%s\">contact "
 "our support team</a>."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2535
+#: includes/admin/settings/register-settings.php:2536
 msgid "License key never expires."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2542
+#: includes/admin/settings/register-settings.php:2543
 msgid ""
 "Your license key expires soon! It expires on %s. <a href=\"%s\" "
 "target=\"_blank\">Renew your license key</a>."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2552
+#: includes/admin/settings/register-settings.php:2553
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2570
+#: includes/admin/settings/register-settings.php:2571
 msgid "To receive updates, please enter your valid %s license key."
 msgstr ""
 
-#: includes/admin/settings/register-settings.php:2583
+#: includes/admin/settings/register-settings.php:2584
 msgid "Deactivate License"
 msgstr ""
 
@@ -6627,7 +6625,7 @@ msgstr ""
 msgid "Sorry but you have hit your download limit for this file."
 msgstr ""
 
-#: includes/deprecated-functions.php:532 includes/download-functions.php:1277
+#: includes/deprecated-functions.php:532 includes/download-functions.php:1255
 msgid "Sorry but your download link has expired."
 msgstr ""
 
@@ -7019,7 +7017,7 @@ msgid "Sign up for PayPal"
 msgstr ""
 
 #: includes/gateways/paypal/admin/connect.php:80
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:249
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:350
 msgid "Retrieving account information..."
 msgstr ""
 
@@ -7220,39 +7218,50 @@ msgid "Account not ready to accept payments."
 msgstr ""
 
 #: includes/gateways/paypal/checkout-actions.php:148
-#: includes/gateways/paypal/checkout-actions.php:309
+#: includes/gateways/paypal/checkout-actions.php:308
 #: includes/gateways/paypal/scripts.php:118
 msgid "An unexpected error occurred. Please try again."
 msgstr ""
 
-#: includes/gateways/paypal/checkout-actions.php:224
-#: includes/gateways/paypal/checkout-actions.php:254
-#: includes/gateways/paypal/checkout-actions.php:408
+#: includes/gateways/paypal/checkout-actions.php:201
+msgid "PayPal Gateway Warning"
+msgstr ""
+
+#: includes/gateways/paypal/checkout-actions.php:204
+#. Translators: %s - Original order data sent to PayPal.
+msgid ""
+"PayPal could not complete the transaction with the itemized breakdown. "
+"Original order data sent: %s"
+msgstr ""
+
+#: includes/gateways/paypal/checkout-actions.php:223
+#: includes/gateways/paypal/checkout-actions.php:253
+#: includes/gateways/paypal/checkout-actions.php:407
 msgid "An error occurred while communicating with PayPal. Please try again."
 msgstr ""
 
-#: includes/gateways/paypal/checkout-actions.php:252
-#: includes/gateways/paypal/checkout-actions.php:406
+#: includes/gateways/paypal/checkout-actions.php:251
+#: includes/gateways/paypal/checkout-actions.php:405
 msgid "An authentication error occurred. Please try again."
 msgstr ""
 
-#: includes/gateways/paypal/checkout-actions.php:286
-#: includes/gateways/paypal/checkout-actions.php:294
-#: includes/gateways/paypal/checkout-actions.php:301
+#: includes/gateways/paypal/checkout-actions.php:285
+#: includes/gateways/paypal/checkout-actions.php:293
+#: includes/gateways/paypal/checkout-actions.php:300
 msgid "A validation error occurred. Please try again."
 msgstr ""
 
-#: includes/gateways/paypal/checkout-actions.php:322
+#: includes/gateways/paypal/checkout-actions.php:321
 msgid "Failed to process payment. Please try again."
 msgstr ""
 
-#: includes/gateways/paypal/checkout-actions.php:331
+#: includes/gateways/paypal/checkout-actions.php:330
 msgid ""
 "Unable to complete your order with your chosen payment method. Please "
 "choose a new funding source."
 msgstr ""
 
-#: includes/gateways/paypal/checkout-actions.php:396
+#: includes/gateways/paypal/checkout-actions.php:395
 #: includes/gateways/paypal-standard.php:671
 #: tests/helpers/class-helper-payment.php:131
 #: tests/helpers/class-helper-payment.php:234
@@ -7693,7 +7702,7 @@ msgstr ""
 msgid "Refund Charge in Stripe"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/admin-filters.php:84
+#: includes/gateways/stripe/includes/admin/admin-filters.php:93
 msgid "Process"
 msgstr ""
 
@@ -7789,7 +7798,7 @@ msgid ""
 msgstr ""
 
 #: includes/gateways/stripe/includes/admin/notices.php:39
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:539
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:640
 #: includes/gateways/stripe/includes/payment-methods/payment-request/apple-pay.php:22
 msgid "Unable to locate registry"
 msgstr ""
@@ -7798,33 +7807,41 @@ msgstr ""
 msgid "Stripe-specific reports have been removed."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:202
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:483
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:545
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:117
+#. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor
+#. tag, do not translate.
+msgid ""
+"There was an error getting your Stripe credentials. Please %1$stry "
+"again%2$s. If you continue to have this problem, please contact support."
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:303
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:584
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:646
 msgid "Connect with Stripe"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:212
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:313
 msgid ""
 "Connect with Stripe for pay as you go pricing: 2% per-transaction fee + "
 "Stripe fees."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:223
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:324
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor
 #. tag, do not translate.
 msgid "Have questions about connecting with Stripe? See the %1$sdocumentation%2$s."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:262
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:363
 msgid "Manage API keys manually"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:272
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:373
 msgid "Hide API keys"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:278
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:379
 msgid ""
 "Although you can add your API keys manually, we recommend using Stripe "
 "Connect: an easier and more secure way of connecting your Stripe account to "
@@ -7834,11 +7851,11 @@ msgid ""
 "just a few clicks."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:296
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:397
 msgid "Unable to retrieve account information."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:321
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:422
 #. translators: %1$s Stripe payment mode. %2$s Opening anchor tag for
 #. reconnecting to Stripe, do not translate. %3$s Opening anchor tag for
 #. disconnecting Stripe, do not translate. %4$s Closing anchor tag, do not
@@ -7848,56 +7865,56 @@ msgid ""
 "mode%4$s, or %3$sdisconnect this account%4$s."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:353
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:454
 #. translators: %1$s Opening bold tag, do not translate. %2$s Closing bold tag,
 #. do not translate.
 msgid "Webhooks cannot be configured for recurring purchases with this account."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:371
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:472
 #. translators: %1$s Opening anchor tag for disconnecting Stripe, do not
 #. translate. %2$s Closing anchor tag, do not translate.
 msgid "%1$sDisconnect this account%2$s."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:437
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:538
 msgid "Pay as you go pricing: 2% per-transaction fee + Stripe fees."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:449
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:550
 msgid "Administrator (Owner)"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:460
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:561
 msgid ""
 "The API keys provided do not match the Stripe Connect account associated "
 "with this installation. If you have manually modified these values after "
 "connecting your account, please reconnect below or update your API keys."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:486
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:587
 msgid ""
 "It is highly recommended to Connect with Stripe for easier setup and "
 "improved security."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:499
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:600
 #. translators: %1$s Stripe payment mode.
 msgid "Your manually managed %1$s mode API keys are valid."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:515
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:616
 #. translators: %1$s Stripe payment mode.
 msgid "Your manually managed %1$s mode API keys are invalid."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:555
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:656
 msgid ""
 "Start accepting payments with Stripe by connecting your account. Stripe "
 "Connect helps ensure easier setup and improved security."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:576
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:677
 #. translators: %s Test mode status. Enabled or disabled.
 msgid "\"Test Mode\" has been %s. Please verify your Stripe connection status."
 msgstr ""
@@ -7995,6 +8012,7 @@ msgid "No address fields"
 msgstr ""
 
 #: includes/gateways/stripe/includes/admin/settings.php:121
+#: includes/gateways/stripe/includes/gateway-actions.php:53
 msgid "Statement Descriptor"
 msgstr ""
 
@@ -8098,14 +8116,6 @@ msgid ""
 "version of PHP through their control panel, or may even be able to do it "
 "for you. If you need to change hosts, please see %1$sour hosting "
 "recommendations%2$s."
-msgstr ""
-
-#: includes/gateways/stripe/includes/admin/settings.php:431
-#. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor
-#. tag, do not translate.
-msgid ""
-"There was an error getting your Stripe credentials. Please %1$stry "
-"again%2$s. If you continue to have this problem, please contact support."
 msgstr ""
 
 #: includes/gateways/stripe/includes/admin/upgrade-functions.php:32
@@ -8241,11 +8251,11 @@ msgid ""
 "be completed. Please click the link below to take finalize your purchase"
 msgstr ""
 
-#: includes/gateways/stripe/includes/functions.php:577
+#: includes/gateways/stripe/includes/functions.php:611
 msgid "Invalid order ID."
 msgstr ""
 
-#: includes/gateways/stripe/includes/functions.php:645
+#: includes/gateways/stripe/includes/functions.php:679
 #. translators: %1$s the amount refunded; %2$s Stripe Refund ID
 msgid "%1$s refunded in Stripe. Refund ID %2$s"
 msgstr ""
@@ -8260,7 +8270,7 @@ msgid_plural "Active <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/gateways/stripe/includes/gateway-actions.php:49
+#: includes/gateways/stripe/includes/gateway-actions.php:51
 msgid ""
 "Outputs a line stating what charges will appear as on customer's credit "
 "card statements."
@@ -8375,56 +8385,56 @@ msgid ""
 "for more information: https://easydigitaldownloads.com/development/"
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-actions.php:341
-#: includes/gateways/stripe/includes/payment-actions.php:361
-#: includes/gateways/stripe/includes/payment-actions.php:379
-#: includes/gateways/stripe/includes/payment-actions.php:455
-#: includes/gateways/stripe/includes/payment-actions.php:537
-#: includes/gateways/stripe/includes/payment-actions.php:625
-#: includes/gateways/stripe/includes/payment-actions.php:712
-#: includes/gateways/stripe/includes/payment-actions.php:923
-#: includes/gateways/stripe/includes/payment-actions.php:1066
+#: includes/gateways/stripe/includes/payment-actions.php:346
+#: includes/gateways/stripe/includes/payment-actions.php:366
+#: includes/gateways/stripe/includes/payment-actions.php:384
+#: includes/gateways/stripe/includes/payment-actions.php:460
+#: includes/gateways/stripe/includes/payment-actions.php:542
+#: includes/gateways/stripe/includes/payment-actions.php:630
+#: includes/gateways/stripe/includes/payment-actions.php:717
+#: includes/gateways/stripe/includes/payment-actions.php:928
+#: includes/gateways/stripe/includes/payment-actions.php:1071
 msgid "Stripe Error"
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-actions.php:343
-#: includes/gateways/stripe/includes/payment-actions.php:363
+#: includes/gateways/stripe/includes/payment-actions.php:348
+#: includes/gateways/stripe/includes/payment-actions.php:368
 msgid "There was an error while processing a Stripe payment. Payment data: %s"
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-actions.php:421
-#: includes/gateways/stripe/includes/payment-actions.php:431
-#: includes/gateways/stripe/includes/payment-actions.php:490
-#: includes/gateways/stripe/includes/payment-actions.php:500
-#: includes/gateways/stripe/includes/payment-actions.php:571
-#: includes/gateways/stripe/includes/payment-actions.php:588
-#: includes/gateways/stripe/includes/payment-actions.php:659
-#: includes/gateways/stripe/includes/payment-actions.php:669
-#: includes/gateways/stripe/includes/payment-actions.php:747
-#: includes/gateways/stripe/includes/payment-actions.php:764
-#: includes/gateways/stripe/includes/payment-actions.php:776
-#: includes/gateways/stripe/includes/payment-actions.php:788
-#: includes/gateways/stripe/includes/payment-actions.php:805
-#: includes/gateways/stripe/includes/payment-actions.php:836
-#: includes/gateways/stripe/includes/payment-actions.php:957
-#: includes/gateways/stripe/includes/payment-actions.php:974
-#: includes/gateways/stripe/includes/payment-actions.php:984
-#: includes/gateways/stripe/includes/payment-actions.php:1003
-#: includes/gateways/stripe/includes/payment-actions.php:1051
-#: includes/gateways/stripe/includes/payment-actions.php:1097
-#: includes/gateways/stripe/includes/payment-actions.php:1113
-#: includes/gateways/stripe/includes/payment-actions.php:1126
-#: includes/gateways/stripe/includes/payment-actions.php:1160
+#: includes/gateways/stripe/includes/payment-actions.php:426
+#: includes/gateways/stripe/includes/payment-actions.php:436
+#: includes/gateways/stripe/includes/payment-actions.php:495
+#: includes/gateways/stripe/includes/payment-actions.php:505
+#: includes/gateways/stripe/includes/payment-actions.php:576
+#: includes/gateways/stripe/includes/payment-actions.php:593
+#: includes/gateways/stripe/includes/payment-actions.php:664
+#: includes/gateways/stripe/includes/payment-actions.php:674
+#: includes/gateways/stripe/includes/payment-actions.php:752
+#: includes/gateways/stripe/includes/payment-actions.php:769
+#: includes/gateways/stripe/includes/payment-actions.php:781
+#: includes/gateways/stripe/includes/payment-actions.php:793
+#: includes/gateways/stripe/includes/payment-actions.php:810
+#: includes/gateways/stripe/includes/payment-actions.php:841
+#: includes/gateways/stripe/includes/payment-actions.php:962
+#: includes/gateways/stripe/includes/payment-actions.php:979
+#: includes/gateways/stripe/includes/payment-actions.php:989
+#: includes/gateways/stripe/includes/payment-actions.php:1008
+#: includes/gateways/stripe/includes/payment-actions.php:1056
+#: includes/gateways/stripe/includes/payment-actions.php:1102
+#: includes/gateways/stripe/includes/payment-actions.php:1118
+#: includes/gateways/stripe/includes/payment-actions.php:1131
+#: includes/gateways/stripe/includes/payment-actions.php:1165
 msgid ""
 "An error occurred, but your payment may have gone through. Please contact "
 "the site administrator."
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-actions.php:908
+#: includes/gateways/stripe/includes/payment-actions.php:913
 msgid "Unable to create payment."
 msgstr ""
 
-#: includes/gateways/stripe/includes/payment-actions.php:1445
+#: includes/gateways/stripe/includes/payment-actions.php:1450
 msgid "Charge not refunded in Stripe, as checkbox was not selected."
 msgstr ""
 
@@ -10272,22 +10282,22 @@ msgctxt "no dropdown items"
 msgid "None"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:314
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:415
 msgctxt "Stripe Connect mode"
 msgid "test"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:315
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:416
 msgctxt "Stripe Connect mode"
 msgid "live"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:566
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:667
 msgctxt "gateway test mode status"
 msgid "enabled"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:567
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:668
 msgctxt "gateway test mode status"
 msgid "disabled"
 msgstr ""
