@@ -5,7 +5,7 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: ecommerce, sell, checkout, digital store, stripe
 Requires at least: 4.4
-Tested up to: 5.8
+Tested up to: 5.8.1
 Requires PHP: 5.3
 Stable Tag: 2.11.2
 License: GNU Version 2 or Any Later Version
@@ -246,7 +246,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 13. Pay with PayPal modal
 
 == Changelog ==
-= 2.11.2 =
+= 2.11.2, September 29, 2021 =
 * Improvement: PayPal - Product names now appear in PayPal.
 * Improvement: File download token validation has been reworked to be more compatible with caching.
 * Fix: PayPal - Ensure all numbers are rounded when sending price data to PayPal. This prevents errors due to rounding issues.
