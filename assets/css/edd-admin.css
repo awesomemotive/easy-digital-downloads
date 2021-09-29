@@ -40,8 +40,10 @@ a.edd-delete:hover {
 
 #edd-header {
 	border-top: 5px solid #0c5d95;
-	padding-top: 22px;
+	border-bottom: 1px solid #c3c4c7;
+	padding: 22px 0px;
 	margin-left: -20px;
+	background: #fff;
 }
 
 #edd-header img {
