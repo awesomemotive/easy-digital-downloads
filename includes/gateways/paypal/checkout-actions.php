@@ -424,3 +424,33 @@ function capture_order() {
 
 add_action( 'wp_ajax_nopriv_edd_capture_paypal_order', __NAMESPACE__ . '\capture_order' );
 add_action( 'wp_ajax_edd_capture_paypal_order', __NAMESPACE__ . '\capture_order' );
+
+/**
+ * Gets a fresh set of gateway options when a PayPal order is cancelled.
+ *
+ * @since 2.11.3
+ * @return void
+ */
+function cancel_order() {
+	$output        .= '';
+	$gateways       = edd_get_enabled_payment_gateways( true );
+	$chosen_gateway = edd_get_chosen_gateway();
+	foreach ( $gateways as $gateway_id => $gateway ) {
+		$label         = apply_filters( 'edd_gateway_checkout_label_' . $gateway_id, $gateway['checkout_label'] );
+		$checked       = checked( $gateway_id, $chosen_gateway, false );
+		$checked_class = $checked ? ' edd-gateway-option-selected' : '';
+		$nonce         = ' data-' . esc_attr( $gateway_id ) . '-nonce="' . wp_create_nonce( 'edd-gateway-selected-' . esc_attr( $gateway_id ) ) .'"';
+
+		$output .= '<label for="edd-gateway-' . esc_attr( $gateway_id ) . '" class="edd-gateway-option' . $checked_class . '" id="edd-gateway-option-' . esc_attr( $gateway_id ) . '">';
+		$output .= '<input type="radio" name="payment-mode" class="edd-gateway" id="edd-gateway-' . esc_attr( $gateway_id ) . '" value="' . esc_attr( $gateway_id ) . '"' . $checked . $nonce . '>' . esc_html( $label );
+		$output .= '</label>';
+	}
+
+	wp_send_json_success(
+		array(
+			'select' => $output,
+		)
+	);
+}
+add_action( 'wp_ajax_nopriv_edd_cancel_paypal_order', __NAMESPACE__ . '\cancel_order' );
+add_action( 'wp_ajax_edd_cancel_paypal_order', __NAMESPACE__ . '\cancel_order' );
