@@ -28,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return void
  */
 function edd_add_options_link() {
-	global $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_add_ons_page, $edd_settings_export, $edd_upgrades_screen, $edd_tools_page, $edd_customers_page;
+	global $submenu, $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_add_ons_page, $edd_settings_export, $edd_upgrades_screen, $edd_tools_page, $edd_customers_page;
 
 	$edd_payment            = get_post_type_object( 'edd_payment' );
 
@@ -42,6 +42,13 @@ function edd_add_options_link() {
 	$edd_tools_page         = add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Downloads Info and Tools', 'easy-digital-downloads' ), __( 'Tools', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-tools', 'edd_tools_page' );
 	$edd_add_ons_page       = add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Downloads Extensions', 'easy-digital-downloads' ), __( 'Extensions', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-addons', 'edd_add_ons_page' );
 	$edd_upgrades_screen    = add_submenu_page( null, __( 'EDD Upgrades', 'easy-digital-downloads' ), __( 'EDD Upgrades', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-upgrades', 'edd_upgrades_screen' );
+
+	// Add our reports link in the main Dashboard menu.
+	$submenu['index.php'][] = array(
+		__( 'Reports', 'easy-digital-downloads' ),
+		'view_shop_reports',
+		'edit.php?post_type=download&page=edd-reports',
+	);
 
 }
 add_action( 'admin_menu', 'edd_add_options_link', 10 );
