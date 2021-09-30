@@ -447,6 +447,83 @@ function edd_get_registered_settings() {
 						),
 					),
 				),
+				'accounting'     => array(
+					'enable_skus' => array(
+						'id'   => 'enable_skus',
+						'name' => __( 'Enable SKU Entry', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this box to allow entry of product SKUs. SKUs will be shown on purchase receipt and exported purchase histories.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+					'enable_sequential' => array(
+						'id'   => 'enable_sequential',
+						'name' => __( 'Sequential Order Numbers', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this box to enable sequential order numbers.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+					'sequential_start' => array(
+						'id'   => 'sequential_start',
+						'name' => __( 'Sequential Starting Number', 'easy-digital-downloads' ),
+						'desc' => __( 'The number at which the sequence should begin.', 'easy-digital-downloads' ),
+						'type' => 'number',
+						'size' => 'small',
+						'std'  => '1',
+					),
+					'sequential_prefix' => array(
+						'id'   => 'sequential_prefix',
+						'name' => __( 'Sequential Number Prefix', 'easy-digital-downloads' ),
+						'desc' => __( 'A prefix to prepend to all sequential order numbers.', 'easy-digital-downloads' ),
+						'type' => 'text',
+					),
+					'sequential_postfix' => array(
+						'id'   => 'sequential_postfix',
+						'name' => __( 'Sequential Number Postfix', 'easy-digital-downloads' ),
+						'desc' => __( 'A postfix to append to all sequential order numbers.', 'easy-digital-downloads' ),
+						'type' => 'text',
+					),
+				),
+				'checkout' => array(
+					'enforce_ssl' => array(
+						'id'   => 'enforce_ssl',
+						'name' => __( 'Enforce SSL on Checkout', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this to force users to be redirected to the secure checkout page. You must have an SSL certificate installed to use this option.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+					'logged_in_only' => array(
+						'id'   => 'logged_in_only',
+						'name' => __( 'Require Login', 'easy-digital-downloads' ),
+						'desc' => __( 'Require that users be logged-in to purchase files.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+						'tooltip_title' => __( 'Require Login', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'You can require that customers create and login to user accounts prior to purchasing from your store by enabling this option. When unchecked, users can purchase without being logged in by using their name and email address.', 'easy-digital-downloads' ),
+					),
+					'show_register_form' => array(
+						'id'      => 'show_register_form',
+						'name'    => __( 'Show Register / Login Form?', 'easy-digital-downloads' ),
+						'desc'    => __( 'Display the registration and login forms on the checkout page for non-logged-in users.', 'easy-digital-downloads' ),
+						'type'    => 'select',
+						'std'     => 'none',
+						'options' => array(
+							'both'         => __( 'Registration and Login Forms', 'easy-digital-downloads' ),
+							'registration' => __( 'Registration Form Only', 'easy-digital-downloads' ),
+							'login'        => __( 'Login Form Only', 'easy-digital-downloads' ),
+							'none'         => __( 'None', 'easy-digital-downloads' ),
+						),
+					),
+					'allow_multiple_discounts' => array(
+						'id'   => 'allow_multiple_discounts',
+						'name' => __('Multiple Discounts','easy-digital-downloads' ),
+						'desc' => __('Allow customers to use multiple discounts on the same purchase?','easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+					'enable_cart_saving' => array(
+						'id'   => 'enable_cart_saving',
+						'name' => __( 'Enable Cart Saving', 'easy-digital-downloads' ),
+						'desc' => __( 'Check this to enable cart saving on the checkout.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+						'tooltip_title' => __( 'Cart Saving', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'Cart saving allows shoppers to create a temporary link to their current shopping cart so they can come back to it later, or share it with someone.', 'easy-digital-downloads' ),
+					),
+				),
 			)
 		),
 		/** Emails Settings */
@@ -722,49 +799,6 @@ function edd_get_registered_settings() {
 						'type' => 'checkbox',
 					),
 				),
-				'checkout' => array(
-					'enforce_ssl' => array(
-						'id'   => 'enforce_ssl',
-						'name' => __( 'Enforce SSL on Checkout', 'easy-digital-downloads' ),
-						'desc' => __( 'Check this to force users to be redirected to the secure checkout page. You must have an SSL certificate installed to use this option.', 'easy-digital-downloads' ),
-						'type' => 'checkbox',
-					),
-					'logged_in_only' => array(
-						'id'   => 'logged_in_only',
-						'name' => __( 'Require Login', 'easy-digital-downloads' ),
-						'desc' => __( 'Require that users be logged-in to purchase files.', 'easy-digital-downloads' ),
-						'type' => 'checkbox',
-						'tooltip_title' => __( 'Require Login', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'You can require that customers create and login to user accounts prior to purchasing from your store by enabling this option. When unchecked, users can purchase without being logged in by using their name and email address.', 'easy-digital-downloads' ),
-					),
-					'show_register_form' => array(
-						'id'      => 'show_register_form',
-						'name'    => __( 'Show Register / Login Form?', 'easy-digital-downloads' ),
-						'desc'    => __( 'Display the registration and login forms on the checkout page for non-logged-in users.', 'easy-digital-downloads' ),
-						'type'    => 'select',
-						'std'     => 'none',
-						'options' => array(
-							'both'         => __( 'Registration and Login Forms', 'easy-digital-downloads' ),
-							'registration' => __( 'Registration Form Only', 'easy-digital-downloads' ),
-							'login'        => __( 'Login Form Only', 'easy-digital-downloads' ),
-							'none'         => __( 'None', 'easy-digital-downloads' ),
-						),
-					),
-					'allow_multiple_discounts' => array(
-						'id'   => 'allow_multiple_discounts',
-						'name' => __('Multiple Discounts','easy-digital-downloads' ),
-						'desc' => __('Allow customers to use multiple discounts on the same purchase?','easy-digital-downloads' ),
-						'type' => 'checkbox',
-					),
-					'enable_cart_saving' => array(
-						'id'   => 'enable_cart_saving',
-						'name' => __( 'Enable Cart Saving', 'easy-digital-downloads' ),
-						'desc' => __( 'Check this to enable cart saving on the checkout.', 'easy-digital-downloads' ),
-						'type' => 'checkbox',
-						'tooltip_title' => __( 'Cart Saving', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'Cart saving allows shoppers to create a temporary link to their current shopping cart so they can come back to it later, or share it with someone.', 'easy-digital-downloads' ),
-					),
-				),
 				'button_text' => array(
 					'checkout_label' => array(
 						'id'   => 'checkout_label',
@@ -846,40 +880,6 @@ function edd_get_registered_settings() {
 						'name' => __( 'Disable Redownload?', 'easy-digital-downloads' ),
 						'desc' => __( 'Check this if you do not want to allow users to redownload items from their purchase history.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
-					),
-				),
-				'accounting'     => array(
-					'enable_skus' => array(
-						'id'   => 'enable_skus',
-						'name' => __( 'Enable SKU Entry', 'easy-digital-downloads' ),
-						'desc' => __( 'Check this box to allow entry of product SKUs. SKUs will be shown on purchase receipt and exported purchase histories.', 'easy-digital-downloads' ),
-						'type' => 'checkbox',
-					),
-					'enable_sequential' => array(
-						'id'   => 'enable_sequential',
-						'name' => __( 'Sequential Order Numbers', 'easy-digital-downloads' ),
-						'desc' => __( 'Check this box to enable sequential order numbers.', 'easy-digital-downloads' ),
-						'type' => 'checkbox',
-					),
-					'sequential_start' => array(
-						'id'   => 'sequential_start',
-						'name' => __( 'Sequential Starting Number', 'easy-digital-downloads' ),
-						'desc' => __( 'The number at which the sequence should begin.', 'easy-digital-downloads' ),
-						'type' => 'number',
-						'size' => 'small',
-						'std'  => '1',
-					),
-					'sequential_prefix' => array(
-						'id'   => 'sequential_prefix',
-						'name' => __( 'Sequential Number Prefix', 'easy-digital-downloads' ),
-						'desc' => __( 'A prefix to prepend to all sequential order numbers.', 'easy-digital-downloads' ),
-						'type' => 'text',
-					),
-					'sequential_postfix' => array(
-						'id'   => 'sequential_postfix',
-						'name' => __( 'Sequential Number Postfix', 'easy-digital-downloads' ),
-						'desc' => __( 'A postfix to append to all sequential order numbers.', 'easy-digital-downloads' ),
-						'type' => 'text',
 					),
 				),
 				'site_terms'     => array(
@@ -1368,7 +1368,7 @@ function edd_get_settings_tabs() {
 
 	$tabs             = array();
 	$tabs['general']  = __( 'General', 'easy-digital-downloads' );
-	$tabs['gateways'] = __( 'Payment Gateways', 'easy-digital-downloads' );
+	$tabs['gateways'] = __( 'Payments', 'easy-digital-downloads' );
 	$tabs['emails']   = __( 'Emails', 'easy-digital-downloads' );
 	$tabs['styles']   = __( 'Styles', 'easy-digital-downloads' );
 	$tabs['taxes']    = __( 'Taxes', 'easy-digital-downloads' );
@@ -1428,7 +1428,9 @@ function edd_get_registered_settings_sections() {
 			'api'                => __( 'API', 'easy-digital-downloads' ),
 		) ),
 		'gateways'   => apply_filters( 'edd_settings_sections_gateways', array(
-			'main'               => __( 'General', 'easy-digital-downloads' ),
+			'main'               => __( 'Gateways', 'easy-digital-downloads' ),
+			'checkout'           => __( 'Checkout', 'easy-digital-downloads' ),
+			'accounting'         => __( 'Accounting', 'easy-digital-downloads' ),
 		) ),
 		'emails'     => apply_filters( 'edd_settings_sections_emails', array(
 			'main'               => __( 'General', 'easy-digital-downloads' ),
@@ -1447,10 +1449,8 @@ function edd_get_registered_settings_sections() {
 		'licenses'   => apply_filters( 'edd_settings_sections_licenses', array() ),
 		'misc'       => apply_filters( 'edd_settings_sections_misc', array(
 			'main'               => __( 'Miscellaneous', 'easy-digital-downloads' ),
-			'checkout'           => __( 'Checkout', 'easy-digital-downloads' ),
 			'button_text'        => __( 'Button Text', 'easy-digital-downloads' ),
 			'file_downloads'     => __( 'File Downloads', 'easy-digital-downloads' ),
-			'accounting'         => __( 'Accounting', 'easy-digital-downloads' ),
 			'site_terms'         => __( 'Terms of Agreement', 'easy-digital-downloads' ),
 		) ),
 		'privacy'    => apply_filters( 'edd_settings_section_privacy', array(
