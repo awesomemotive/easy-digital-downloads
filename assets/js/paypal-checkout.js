@@ -151,6 +151,23 @@ var EDD_PayPal = {
 			onCancel: function( data ) {
 				// Hide spinner.
 				spinner.style.display = 'none';
+				var formData = new FormData();
+				formData.append( 'action', 'edd_cancel_paypal_order' );
+				return fetch( edd_scripts.ajaxurl, {
+					method: 'POST',
+					body: formData
+				} ).then( function ( response ) {
+					return response.json();
+				} ).then( function ( responseData ) {
+					if ( responseData.success ) {
+						var payment_selector = document.getElementById( 'edd-payment-mode-wrap' );
+						var new_selector = document.createElement( 'div' );
+						new_selector.id = 'edd-payment-mode-wrap';
+						new_selector.innerHTML = responseData.data.select;
+
+						payment_selector.replaceWith( new_selector );
+					}
+				} );
 			}
 		};
 
