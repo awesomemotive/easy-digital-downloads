@@ -58,7 +58,7 @@ add_action( 'admin_menu', 'edd_add_options_link', 10 );
  *
  * @param string $passed_page Optional. Main page's slug
  * @param string $passed_view Optional. Page view ( ex: `edit` or `delete` )
- * @param boolean $inculde_dashboard Optional. If we should consider the main dashboard in this case.
+ * @param bool $include_dashboard Optional. If we should consider the main dashboard in this case.
  * @return bool True if EDD admin page we're looking for or an EDD page or if $page is empty, any EDD page
  */
 function edd_is_admin_page( $passed_page = '', $passed_view = '', $include_dashboard = true ) {
