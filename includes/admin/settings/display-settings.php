@@ -12,6 +12,11 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+/**
+ * Adds the EDD branded header to the EDD settings pages.
+ *
+ * @since 2.11.3
+ */
 function edd_admin_header() {
 	if ( ! edd_is_admin_page( '', '', false ) ) {
 		return;
