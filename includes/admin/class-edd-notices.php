@@ -247,7 +247,7 @@ class EDD_Notices {
 		}
 
 		// Bail if user cannot manage options
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'manage_shop_settings' ) ) {
 			return;
 		}
 
@@ -258,14 +258,15 @@ class EDD_Notices {
 
 		// Get the upload directory
 		$upload_directory   = edd_get_upload_dir();
-		$dismiss_notice_url = wp_nonce_url( add_query_arg( array(
-			'edd_action' => 'dismiss_notices',
-			'edd_notice' => 'dismissed_notice_uploads'
-		) ), 'edd_notice_nonce' );
 
 		// Running NGINX
 		$show_nginx_notice = apply_filters( 'edd_show_nginx_redirect_notice', true );
-		if ( $show_nginx_notice && ! empty( $GLOBALS['is_nginx'] ) ) {
+		if ( $show_nginx_notice && ! empty( $GLOBALS['is_nginx'] ) && ! get_user_meta( get_current_user_id(), '_edd_nginx_redirect_dismissed', true ) ) {
+			$dismiss_notice_url = wp_nonce_url( add_query_arg( array(
+				'edd_action' => 'dismiss_notices',
+				'edd_notice' => 'nginx_redirect'
+			) ), 'edd_notice_nonce' );
+
 			$this->add_notice( array(
 				'id'             => 'edd-nginx',
 				'class'          => 'error',
@@ -279,7 +280,12 @@ class EDD_Notices {
 		}
 
 		// Running Apache
-		if ( ! empty( $GLOBALS['is_apache'] ) && ! edd_htaccess_exists() ) {
+		if ( ! empty( $GLOBALS['is_apache'] ) && ! edd_htaccess_exists() && ! get_user_meta( get_current_user_id(), '_edd_htaccess_missing_dismissed', true ) ) {
+			$dismiss_notice_url = wp_nonce_url( add_query_arg( array(
+				'edd_action' => 'dismiss_notices',
+				'edd_notice' => 'htaccess_missing'
+			) ), 'edd_notice_nonce' );
+
 			$this->add_notice( array(
 				'id'             => 'edd-apache',
 				'class'          => 'error',
