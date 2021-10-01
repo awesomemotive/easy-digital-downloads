@@ -72,7 +72,11 @@ class Tests_Discounts extends EDD_UnitTestCase {
 	}
 
 	public function test_discount_status_update() {
+		$this->assertTrue( edd_update_discount_status( $this->_post_id, 'inactive' ) );
+		$this->assertEquals( 'inactive', get_post_meta( $this->_post_id, 'status' ) );
+
 		$this->assertTrue( edd_update_discount_status( $this->_post_id, 'active' ) );
+		$this->assertEquals( 'active', get_post_meta( $this->_post_id, 'status' ) );
 	}
 
 	public function test_discount_status_update_fail() {
