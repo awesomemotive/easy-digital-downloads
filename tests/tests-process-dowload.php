@@ -202,4 +202,49 @@ class Tests_Process_Download extends EDD_UnitTestCase {
 			'product_id' => 1
 		) ) );
 	}
+
+	public function test_file_download_token() {
+		$eddfile = '1:2:3:4';
+		$ttl     = current_time( 'timestamp' ) + HOUR_IN_SECONDS;
+		$file    = 4;
+
+		$args = array(
+			'eddfile' => $eddfile,
+			'ttl'     => $ttl,
+			'file'    => $file,
+		);
+
+		$token         = edd_get_download_token( add_query_arg( $args, site_url() ) );
+		$args['token'] = $token;
+
+		$url = add_query_arg( $args, site_url() );
+
+		$this->assertTrue( edd_validate_url_token( $url ) );
+	}
+
+	public function test_file_download_token_out_of_order() {
+		$eddfile = '1:2:3:4';
+		$ttl     = current_time( 'timestamp' ) + HOUR_IN_SECONDS;
+		$file    = 4;
+
+		$args = array(
+			'eddfile' => $eddfile,
+			'ttl'     => $ttl,
+			'file'    => $file,
+		);
+
+		$token         = edd_get_download_token( add_query_arg( $args, site_url() ) );
+
+		// Re-order the arguments to verify for #8851.
+		$new_args = array(
+			'file'    => $file,
+			'ttl'     => $ttl,
+			'token'   => $token,
+			'eddfile' => $eddfile,
+		);
+
+		$url = add_query_arg( $new_args, site_url() );
+
+		$this->assertTrue( edd_validate_url_token( $url ) );
+	}
 }
