@@ -605,7 +605,6 @@ function _edd_deprected_argument( $argument, $function, $version, $replacement =
 
 			if ( ! empty( $backtrace ) ) {
 				trigger_error( print_r( $backtrace, 1 ) );// Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
-
 			}
 			// Alternatively we could dump this to a file.
 		}
