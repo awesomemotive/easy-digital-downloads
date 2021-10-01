@@ -45,7 +45,7 @@ function edd_add_options_link() {
 
 	// Add our reports link in the main Dashboard menu.
 	$submenu['index.php'][] = array(
-		__( 'Reports', 'easy-digital-downloads' ),
+		__( 'Store Reports', 'easy-digital-downloads' ),
 		'view_shop_reports',
 		'edit.php?post_type=download&page=edd-reports',
 	);
