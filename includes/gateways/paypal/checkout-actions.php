@@ -154,33 +154,9 @@ function create_order( $purchase_data ) {
 			);
 		}
 
-		$order_amount = array(
-			'currency_code' => edd_get_currency(),
-			'value'         => (string) $purchase_data['price']
-		);
-		if ( (float) $purchase_data['tax'] > 0 ) {
-			$order_amount['breakdown'] = array(
-				'item_total' => array(
-					'currency_code' => edd_get_currency(),
-					'value'         => (string) ( $purchase_data['price'] - $purchase_data['tax'] )
-				),
-				'tax_total'  => array(
-					'currency_code' => edd_get_currency(),
-					'value'         => (string) $purchase_data['tax']
-				)
-			);
-		}
-
 		$order_data = array(
 			'intent'               => 'CAPTURE',
-			'purchase_units'       => array(
-				array(
-					// @todo We could put the breakdown here (tax, discount, etc.)
-					'reference_id' => $payment_args['purchase_key'],
-					'amount'       => $order_amount,
-					'custom_id'    => $payment_id
-				)
-			),
+			'purchase_units'       => get_order_purchase_units( $payment_id, $purchase_data, $payment_args ),
 			'application_context'  => array(
 				//'locale'              => get_locale(), // PayPal doesn't like this. Might be able to replace `_` with `-`
 				'shipping_preference' => 'NO_SHIPPING',
@@ -218,6 +194,29 @@ function create_order( $purchase_data ) {
 		try {
 			$api      = new API();
 			$response = $api->make_request( 'v2/checkout/orders', $order_data );
+
+			if ( ! isset( $response->id ) && _is_item_total_mismatch( $response ) ) {
+
+				edd_record_gateway_error(
+					__( 'PayPal Gateway Warning', 'easy-digital-downloads' ),
+					sprintf(
+						/* Translators: %s - Original order data sent to PayPal. */
+						__( 'PayPal could not complete the transaction with the itemized breakdown. Original order data sent: %s', 'easy-digital-downloads' ),
+						json_encode( $order_data )
+					),
+					$payment_id
+				);
+
+				// Try again without the item breakdown. That way if we have an error in our totals the whole API request won't fail.
+				$order_data['purchase_units'] = array(
+					get_order_purchase_units_without_breakdown( $payment_id, $purchase_data, $payment_args )
+				);
+
+				// Re-apply the filter.
+				$order_data = apply_filters( 'edd_paypal_order_arguments', $order_data, $purchase_data, $payment_id );
+
+				$response = $api->make_request( 'v2/checkout/orders', $order_data );
+			}
 
 			if ( ! isset( $response->id ) ) {
 				throw new Gateway_Exception(
