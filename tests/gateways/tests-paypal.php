@@ -455,11 +455,11 @@ class Tests_PayPal extends EDD_UnitTestCase {
 			'reference_id' => '123',
 			'amount'       => array(
 				'currency_code' => 'USD',
-				'value'         => '10',
+				'value'         => '10.00',
 				'breakdown'     => array(
 					'item_total' => array(
 						'currency_code' => 'USD',
-						'value'         => '10',
+						'value'         => '10.00',
 					)
 				),
 			),
@@ -523,11 +523,11 @@ class Tests_PayPal extends EDD_UnitTestCase {
 			'reference_id' => '123',
 			'amount'       => array(
 				'currency_code' => 'USD',
-				'value'         => '15',
+				'value'         => '15.00',
 				'breakdown'     => array(
 					'item_total' => array(
 						'currency_code' => 'USD',
-						'value'         => '15',
+						'value'         => '15.00',
 					),
 				),
 			),
@@ -590,15 +590,15 @@ class Tests_PayPal extends EDD_UnitTestCase {
 			'reference_id' => '123',
 			'amount'       => array(
 				'currency_code' => 'USD',
-				'value'         => '5',
+				'value'         => '5.00',
 				'breakdown'     => array(
 					'item_total' => array(
 						'currency_code' => 'USD',
-						'value'         => '10',
+						'value'         => '10.00',
 					),
 					'discount'   => array(
 						'currency_code' => 'USD',
-						'value'         => '5',
+						'value'         => '5.00',
 					),
 				),
 			),
@@ -654,15 +654,15 @@ class Tests_PayPal extends EDD_UnitTestCase {
 			'reference_id' => '123',
 			'amount'       => array(
 				'currency_code' => 'USD',
-				'value'         => '11',
+				'value'         => '11.00',
 				'breakdown'     => array(
 					'item_total' => array(
 						'currency_code' => 'USD',
-						'value'         => '10',
+						'value'         => '10.00',
 					),
 					'tax_total'  => array(
 						'currency_code' => 'USD',
-						'value'         => '1',
+						'value'         => '1.00',
 					),
 				),
 			),
