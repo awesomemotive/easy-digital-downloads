@@ -23,7 +23,7 @@ function edd_admin_header() {
 	}
 	?>
 	<div id="edd-header" class="edd-header">
-		<img class="edd-header-logo" alt="" src="<?php echo EDD_PLUGIN_URL . '/assets/images/logo-edd-dark.svg'; ?>" />
+		<img class="edd-header-logo" alt="" src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/logo-edd-dark.svg' ); ?>" />
 	</div>
 	<?php
 }
