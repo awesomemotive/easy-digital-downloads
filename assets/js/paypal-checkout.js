@@ -160,12 +160,10 @@ var EDD_PayPal = {
 					return response.json();
 				} ).then( function ( responseData ) {
 					if ( responseData.success ) {
-						var payment_selector = document.getElementById( 'edd-payment-mode-wrap' );
-						var new_selector = document.createElement( 'div' );
-						new_selector.id = 'edd-payment-mode-wrap';
-						new_selector.innerHTML = responseData.data.select;
-
-						payment_selector.replaceWith( new_selector );
+						var nonces = responseData.data.nonces;
+						Object.keys( nonces ).forEach( function ( key ) {
+							document.getElementById( 'edd-gateway-' + key ).setAttribute( 'data-' + key + '-nonce', nonces[ key ] );
+						} );
 					}
 				} );
 			}
