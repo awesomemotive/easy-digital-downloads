@@ -25,7 +25,7 @@ function edd_reports_page() {
 	$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'reports';
 	?>
 	<div class="wrap">
-		<h2><?php _e( 'Easy Digital Downloads Reports', 'easy-digital-downloads' ); ?></h2>
+		<h1><?php esc_html_e( 'Reports', 'easy-digital-downloads' ); ?></h1>
 		<h2 class="nav-tab-wrapper">
 			<a href="<?php echo add_query_arg( array( 'tab' => 'reports', 'settings-updated' => false ), $current_page ); ?>" class="nav-tab <?php echo $active_tab == 'reports' ? 'nav-tab-active' : ''; ?>"><?php _e( 'Reports', 'easy-digital-downloads' ); ?></a>
 			<?php if ( current_user_can( 'export_shop_reports' ) ) { ?>
