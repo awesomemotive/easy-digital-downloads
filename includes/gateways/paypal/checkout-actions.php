@@ -432,9 +432,8 @@ add_action( 'wp_ajax_edd_capture_paypal_order', __NAMESPACE__ . '\capture_order'
  * @return void
  */
 function cancel_order() {
-	$nonces         = array() ;
-	$gateways       = edd_get_enabled_payment_gateways( true );
-	$chosen_gateway = edd_get_chosen_gateway();
+	$nonces   = array() ;
+	$gateways = edd_get_enabled_payment_gateways( true );
 	foreach ( $gateways as $gateway_id => $gateway ) {
 		$nonces[ $gateway_id ] = wp_create_nonce( 'edd-gateway-selected-' . esc_attr( $gateway_id ) );
 	}
