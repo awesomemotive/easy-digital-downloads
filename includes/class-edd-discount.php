@@ -1421,6 +1421,7 @@ class EDD_Discount {
 		do_action( 'edd_post_update_discount_status', $this->ID, $new_status, $this->post_status );
 
 		if ( $id == $this->ID ) {
+			$this->update_meta( 'status', $new_status );
 			return true;
 		}
 

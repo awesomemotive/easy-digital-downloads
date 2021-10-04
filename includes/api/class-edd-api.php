@@ -1917,7 +1917,11 @@ class EDD_API {
 
 		do_action( 'edd_api_output_after', $this->data, $this, $format );
 
-		die();
+		if ( defined( 'EDD_DOING_TESTS' ) && EDD_DOING_TESTS ) {
+			edd_die();
+		} else {
+			die();
+		}
 	}
 
 	/**
