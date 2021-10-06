@@ -427,6 +427,7 @@ add_action( 'wp_ajax_edd_capture_paypal_order', __NAMESPACE__ . '\capture_order'
 
 /**
  * Gets a fresh set of gateway options when a PayPal order is cancelled.
+ * @link https://github.com/awesomemotive/easy-digital-downloads/issues/8883
  *
  * @since 2.11.3
  * @return void
