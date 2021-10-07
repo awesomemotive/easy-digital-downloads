@@ -80,9 +80,17 @@ function edd_is_debug_mode() {
  *
  * @since 3.0
  *
- * @return bool $retval True if dev, false if not.
+ * @return bool|string $retval False if not a development environment, otherwise string matching environment, port, or domain.
  */
 function edd_is_dev_environment() {
+
+	// wp_get_environment_type was added in WordPress 5.5.
+	if ( function_exists( 'wp_get_environment_type' ) ) {
+		$environment = wp_get_environment_type();
+		if ( in_array( $environment, array( 'local', 'development' ), true ) ) {
+			return apply_filters( 'edd_is_dev_environment', $environment );
+		}
+	}
 
 	// Assume not a development environment
 	$retval = false;
