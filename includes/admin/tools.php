@@ -1386,9 +1386,9 @@ function edd_tools_sysinfo_get() {
 			$plugin_url = $plugin['Author'];
 		}
 		if ( $plugin_url ) {
-			$plugin_url = ' &mdash; ' . $plugin_url;
+			$plugin_url = "\n" . $plugin_url;
 		}
-		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . $plugin_url . "\n";
+		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . $plugin_url . "\n\n";
 	}
 
 	$return  = apply_filters( 'edd_sysinfo_after_wordpress_plugins', $return );
@@ -1410,9 +1410,9 @@ function edd_tools_sysinfo_get() {
 			$plugin_url = $plugin['Author'];
 		}
 		if ( $plugin_url ) {
-			$plugin_url = ' &mdash; ' . $plugin_url;
+			$plugin_url = "\n" . $plugin_url;
 		}
-		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . $plugin_url . "\n";
+		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . $plugin_url . "\n\n";
 	}
 
 	$return  = apply_filters( 'edd_sysinfo_after_wordpress_plugins_inactive', $return );
@@ -1441,9 +1441,9 @@ function edd_tools_sysinfo_get() {
 				$plugin_url = $plugin['Author'];
 			}
 			if ( $plugin_url ) {
-				$plugin_url = ' &mdash; ' . $plugin_url;
+				$plugin_url = "\n" . $plugin_url;
 			}
-			$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . $plugin_url . "\n";
+			$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . $plugin_url . "\n\n";
 		}
 
 		$return  = apply_filters( 'edd_sysinfo_after_wordpress_ms_plugins', $return );
