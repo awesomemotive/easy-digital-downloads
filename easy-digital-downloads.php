@@ -123,6 +123,8 @@ final class EDD_Requirements_Check {
 	 */
 	private function load() {
 
+		require_once __DIR__ . '/vendor/autoload.php';
+
 		// Maybe include the bundled bootstrapper
 		if ( ! class_exists( 'Easy_Digital_Downloads' ) ) {
 			require_once dirname( $this->file ) . '/includes/class-easy-digital-downloads.php';
