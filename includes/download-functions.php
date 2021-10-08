@@ -1289,18 +1289,25 @@ function edd_validate_url_token( $url = '' ) {
 			}
 		}
 
+		$original_url = $url;
+
 		// strtok allows a quick clearing of existing query string parameters, so we can re-add the allowed ones.
 		$url = add_query_arg( $allowed_args, strtok( $url, '?' ) );
 
 		if ( isset( $query_args['token'] ) && hash_equals( $query_args['token'], edd_get_download_token( $url ) ) ) {
-
 			$ret = true;
-
 		}
-
 	}
 
-	return apply_filters( 'edd_validate_url_token', $ret, $url, $query_args );
+	/**
+	 * Filters the URL token validation.
+	 *
+	 * @param bool   $ret          Whether the URL has validated or not.
+	 * @param string $url          The URL used for validation.
+	 * @param array  $query_args   The array of query parameters.
+	 * @param string $original_url The original URL (added 2.11.3).
+	 */
+	return apply_filters( 'edd_validate_url_token', $ret, $url, $query_args, $original_url );
 }
 
 /**
