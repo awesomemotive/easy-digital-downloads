@@ -7,14 +7,10 @@
  * @license   GPL2+
  */
 
-namespace EDD\Checekout;
+namespace EDD\Checkout;
 
-use EDD\Checkout\Config;
 use EDD\Checkout\Errors\ErrorCollection;
-use EDD\Checkout\Errors\FormError;
 use EDD\Checkout\Exceptions\ValidationException;
-use EDD\Checkout\Order;
-use EDD\Checkout\Validator;
 
 class CheckoutProcessor {
 
@@ -36,20 +32,21 @@ class CheckoutProcessor {
 	/**
 	 * @var ErrorCollection
 	 */
-	private $errors;
+	private $errorCollection;
 
-	public function __construct( Config $config, $data ) {
-		$this->config    = $config;
-		$this->data      = $data;
-		$this->validator = new Validator( $this->config, $this->data );
-		$this->errors    = new ErrorCollection();
+	public function __construct( Validator $validator, ErrorCollection $errorCollection ) {
+		$this->validator       = $validator;
+		$this->errorCollection = $errorCollection;
 	}
 
 	/**
 	 * @throws ValidationException
 	 */
-	public function process() {
-		$this->validator->validate();
+	public function process( Config $config, $data ) {
+		$this->config = $config;
+		$this->data   = $data;
+
+		$this->validator->validate( $this->config, $this->data );
 
 		if ( isset( $this->data['edd_login_submit'] ) ) {
 			// process login
