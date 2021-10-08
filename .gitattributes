@@ -15,3 +15,4 @@ readme.txt export-ignore
 docker-compose-phpunit.yml export-ignore
 /.buildkite/ export-ignore
 /.github/ export-ignore
+.phpstorm.meta.php export-ignore
