@@ -1033,10 +1033,14 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
 
 	if ( ! empty( $payment->ID ) ) {
 
+		// Get the array of parameters in the same order in which they will be validated.
+		$parameters = edd_get_url_token_parameters();
+		foreach ( $parameters as $parameter ) {
+			$args[ $parameter ] = '';
+		}
+
 		// Simply the URL by concatenating required data using a colon as a delimiter.
-		$args = array(
-			'eddfile' => rawurlencode( sprintf( '%d:%d:%d:%d', $payment->ID, $params['download_id'], $params['file'], $price_id ) )
-		);
+		$args['eddfile'] = rawurlencode( sprintf( '%d:%d:%d:%d', $payment->ID, $params['download_id'], $params['file'], $price_id ) );
 
 		if ( isset( $params['expire'] ) ) {
 			$args['ttl'] = $params['expire'];
@@ -1051,9 +1055,26 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
 		$args['token'] = edd_get_download_token( add_query_arg( $args, untrailingslashit( site_url() ) ) );
 	}
 
-	$download_url = add_query_arg( $args, site_url( 'index.php' ) );
+	return add_query_arg( $args, site_url( 'index.php' ) );
+}
 
-	return $download_url;
+/**
+ * Gets the array of parameters to be used for the URL token generation and validation.
+ * Used by `edd_get_download_file_url` and `edd_validate_url_token` so that their parameters are ordered the same.
+ *
+ * @since 2.11.3
+ * @return array
+ */
+function edd_get_url_token_parameters() {
+	return apply_filters(
+		'edd_url_token_allowed_params',
+		array(
+			'eddfile',
+			'ttl',
+			'file',
+			'token',
+		)
+	);
 }
 
 /**
@@ -1257,15 +1278,7 @@ function edd_validate_url_token( $url = '' ) {
 		}
 
 		// These are the only URL parameters that are allowed to affect the token validation.
-		$allowed = apply_filters(
-			'edd_url_token_allowed_params',
-			array(
-				'eddfile',
-				'ttl',
-				'file',
-				'token',
-			)
-		);
+		$allowed = edd_get_url_token_parameters();
 
 		// Collect the allowed tags in proper order, remove all tags, and re-add only the allowed ones.
 		$allowed_args = array();
