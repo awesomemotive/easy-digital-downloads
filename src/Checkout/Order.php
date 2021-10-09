@@ -9,6 +9,8 @@
 
 namespace EDD\Checkout;
 
+use EDD\ValueObjects\Address;
+
 class Order {
 
 	/**
@@ -51,18 +53,18 @@ class Order {
 	 *
 	 * @return Order
 	 */
-	public static function getFromSession( $userAddress = [] ) {
+	public static function getFromSession( Address $address = null ) {
 		$order                 = new self();
 		$order->subtotal       = edd_get_cart_subtotal();
 		$order->discountAmount = edd_get_cart_discounted_amount();
 		$order->taxAmount      = edd_get_cart_tax();
 		$order->total          = edd_get_cart_total();
 
-		if ( ! empty( $userAddress['country'] ) && edd_use_taxes() ) {
+		if ( $address instanceof Address && edd_use_taxes() ) {
 			$order->taxRate = edd_get_cart_tax_rate(
-				$userAddress['country'],
-				! empty( $userAddress['state'] ) ? $userAddress['state'] : '',
-				! empty( $userAddress['zip'] ) ? $userAddress['zip'] : ''
+				$address->country,
+				$address->region,
+				$address->postal_code
 			);
 		}
 

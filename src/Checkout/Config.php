@@ -11,8 +11,13 @@ namespace EDD\Checkout;
 
 class Config {
 
-	public $requireLogin = false;
+	/**
+	 * @var bool
+	 */
+	public $allowGuestCheckout;
 
-	public $allowGuestCheckout = true;
+	public function __construct() {
+		$this->allowGuestCheckout = ! edd_no_guest_checkout();
+	}
 
 }

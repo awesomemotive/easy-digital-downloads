@@ -11,8 +11,12 @@ namespace EDD\Checkout;
 
 use EDD\Checkout\Errors\ErrorCollection;
 use EDD\Checkout\Exceptions\ValidationException;
+use EDD\Checkout\Traits\CollectsAccountInformation;
+use EDD\ValueObjects\Address;
 
 class CheckoutProcessor {
+
+	use CollectsAccountInformation;
 
 	/**
 	 * @var Config
@@ -48,14 +52,10 @@ class CheckoutProcessor {
 
 		$this->validator->validate( $this->config, $this->data );
 
-		if ( isset( $this->data['edd_login_submit'] ) ) {
-			// process login
-		}
+		$user    = $this->getOrCreateUser();
+		$address = $this->getUserAddress();
 
-		$user            = $this->getOrCreateUser();
-		$user['address'] = $this->getUserAddress();
-
-		$order = Order::getFromSession( $user['address'] );
+		$order = Order::getFromSession( $address );
 	}
 
 	private function getOrCreateUser() {
@@ -70,18 +70,21 @@ class CheckoutProcessor {
 		return $user;
 	}
 
+	/**
+	 * @return Address
+	 */
 	private function getUserAddress() {
 		/*
 		 * This is a map of the final key we want (e.g. `line1`) to the array key
 		 * it's saved under in the form data (e.g. `card_address`).
 		 */
 		$map = [
-			'line1'   => 'card_address',
-			'line2'   => 'card_address_2',
-			'city'    => 'card_city',
-			'state'   => 'card_state',
-			'country' => 'billing_country',
-			'zip'     => 'card_zip',
+			'line1'       => 'card_address',
+			'line2'       => 'card_address_2',
+			'city'        => 'card_city',
+			'region'      => 'card_state',
+			'postal_code' => 'card_zip',
+			'country'     => 'billing_country',
 		];
 
 		$address = [];
@@ -90,7 +93,7 @@ class CheckoutProcessor {
 			$address[ $param ] = ! empty( $this->data[ $dataField ] ) ? sanitize_text_field( $this->data[ $dataField ] ) : '';
 		}
 
-		return $address;
+		return Address::fromArray( $address );
 	}
 
 }
