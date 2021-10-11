@@ -1034,10 +1034,7 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
 	if ( ! empty( $payment->ID ) ) {
 
 		// Get the array of parameters in the same order in which they will be validated.
-		$parameters = edd_get_url_token_parameters();
-		foreach ( $parameters as $parameter ) {
-			$args[ $parameter ] = '';
-		}
+		$args = array_fill_keys( edd_get_url_token_parameters(), '' );
 
 		// Simply the URL by concatenating required data using a colon as a delimiter.
 		$args['eddfile'] = rawurlencode( sprintf( '%d:%d:%d:%d', $payment->ID, $params['download_id'], $params['file'], $price_id ) );
