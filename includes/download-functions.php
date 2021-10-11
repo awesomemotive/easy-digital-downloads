@@ -1275,21 +1275,22 @@ function edd_validate_url_token( $url = '' ) {
 		}
 
 		// These are the only URL parameters that are allowed to affect the token validation.
-		$allowed = edd_get_url_token_parameters();
+		$allowed_args = edd_get_url_token_parameters();
 
 		// Collect the allowed tags in proper order, remove all tags, and re-add only the allowed ones.
-		$allowed_args = array();
+		$validated_query_args = array();
 
-		foreach ( $allowed as $key ) {
+		foreach ( $allowed_args as $key ) {
 			if ( true === array_key_exists( $key, $query_args ) ) {
-				$allowed_args[ $key ] = $query_args[ $key ];
+				$validated_query_args[ $key ] = $query_args[ $key ];
 			}
 		}
 
+		// Save the original URL for the filter.
 		$original_url = $url;
 
 		// strtok allows a quick clearing of existing query string parameters, so we can re-add the allowed ones.
-		$url = add_query_arg( $allowed_args, strtok( $url, '?' ) );
+		$url = add_query_arg( $validated_query_args, strtok( $url, '?' ) );
 
 		if ( isset( $query_args['token'] ) && hash_equals( $query_args['token'], edd_get_download_token( $url ) ) ) {
 			$ret = true;
