@@ -881,9 +881,9 @@ class Data_Migrator {
 					: '';
 
 				// Get price ID.
-				$price_id = isset( $cart_item['item_number']['options']['price_id'] )
+				$price_id = isset( $cart_item['item_number']['options']['price_id'] ) && is_numeric( $cart_item['item_number']['options']['price_id'] )
 					? absint( $cart_item['item_number']['options']['price_id'] )
-					: 0;
+					: null;
 
 				if ( ! empty( $product_name ) ) {
 					$option_name = edd_get_price_option_name( $cart_item['id'], $price_id );
@@ -1043,7 +1043,7 @@ class Data_Migrator {
 					'order_id'      => $order_id,
 					'product_id'    => $download_id,
 					'product_name'  => $download->post_name,
-					'price_id'      => 0,
+					'price_id'      => null,
 					'cart_index'    => $cart_index,
 					'type'          => 'download',
 					'quantity'      => 1,

@@ -839,9 +839,9 @@ function edd_build_order( $order_data = array() ) {
 			}
 
 			// Get price ID.
-			$price_id = isset( $item['item_number']['options']['price_id'] )
+			$price_id = isset( $item['item_number']['options']['price_id'] ) && is_numeric( $item['item_number']['options']['price_id'] )
 				? absint( $item['item_number']['options']['price_id'] )
-				: 0;
+				: null;
 
 			// Build a base array of information for each order item.
 			$item['discount'] = isset( $item['discount'] )
@@ -889,7 +889,7 @@ function edd_build_order( $order_data = array() ) {
 			$order_item_args = apply_filters( 'edd_payment_add_download_args', $order_item_args, $download->ID );
 			$order_item_args = wp_parse_args( $order_item_args, array(
 				'quantity'   => 1,
-				'price_id'   => false,
+				'price_id'   => null,
 				'amount'     => false,
 				'item_price' => false,
 				'discount'   => 0.00,
