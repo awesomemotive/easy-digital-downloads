@@ -88,8 +88,9 @@ class Order_Items extends Schema {
 			'type'       => 'bigint',
 			'length'     => '20',
 			'unsigned'   => true,
-			'default'    => '0',
-			'sortable'   => true
+			'default'    => null,
+			'sortable'   => true,
+			'allow_null' => true,
 		),
 
 		// cart_index
