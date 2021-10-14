@@ -23,31 +23,31 @@ defined( 'ABSPATH' ) || exit;
  *     The `date_created` and `date_modified` parameters do not need to be passed.
  *     They will be automatically populated if empty.
  *
- *     @type int    $parent         Parent ID. Only used when creating refunds to link
- *                                  a refund order item to the original order item.
- *                                  Default 0.
- *     @type int    $order_id       Order ID. Default 0.
- *     @type int    $product_id     Product ID of the order item purchased. ID
- *                                  refers to the download in the `wp_posts` table.
- *                                  Default 0.
- *     @type string $product_name   Name of the order item. Default empty.
- *     @type int    $price_id       ID of the price option purchased. Default 0.
- *     @type int    $cart_index     Position of the order item in the cart.
- *                                  Default 0.
- *     @type string $type           Order item type. Default `download`.
- *     @type string $status         Status of the order item. Default `pending`.
- *     @type int    $quantity       Quantity purchased of the order item. Default 0.
- *     @type float  $amount         Amount for the order item. Default 0.
- *     @type float  $subtotal       Subtotal of the order item. Default 0.
- *     @type float  $discount       Discount applied to the order item. Default 0.
- *     @type float  $tax            Tax applied to the order item. Default 0.
- *     @type float  $total          Item total. Default 0.
- *     @type string $date_created   Optional. Automatically calculated on add/edit.
- *                                  The date & time the order item was inserted.
- *                                  Format: YYYY-MM-DD HH:MM:SS. Default empty.
- *     @type string $date_modified  Optional. Automatically calculated on add/edit.
- *                                  The date & time the order item was last modified.
- *                                  Format: YYYY-MM-DD HH:MM:SS. Default empty.
+ *     @type int      $parent        Parent ID. Only used when creating refunds to link
+ *                                   a refund order item to the original order item.
+ *                                   Default 0.
+ *     @type int      $order_id      Order ID. Default 0.
+ *     @type int      $product_id    Product ID of the order item purchased. ID
+ *                                   refers to the download in the `wp_posts` table.
+ *                                   Default 0.
+ *     @type string   $product_name  Name of the order item. Default empty.
+ *     @type int|null $price_id      ID of the price option purchased. Default null (no price ID).
+ *     @type int      $cart_index    Position of the order item in the cart.
+ *                                   Default 0.
+ *     @type string   $type          Order item type. Default `download`.
+ *     @type string   $status        Status of the order item. Default `pending`.
+ *     @type int      $quantity      Quantity purchased of the order item. Default 0.
+ *     @type float    $amount        Amount for the order item. Default 0.
+ *     @type float    $subtotal      Subtotal of the order item. Default 0.
+ *     @type float    $discount      Discount applied to the order item. Default 0.
+ *     @type float    $tax           Tax applied to the order item. Default 0.
+ *     @type float    $total         Item total. Default 0.
+ *     @type string   $date_created  Optional. Automatically calculated on add/edit.
+ *                                   The date & time the order item was inserted.
+ *                                   Format: YYYY-MM-DD HH:MM:SS. Default empty.
+ *     @type string   $date_modified Optional. Automatically calculated on add/edit.
+ *                                   The date & time the order item was last modified.
+ *                                   Format: YYYY-MM-DD HH:MM:SS. Default empty.
  * }
  * @return int|false ID of newly created order, false on error.
  */
