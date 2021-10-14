@@ -288,6 +288,42 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers \EDD\Database\Queries\Order::query_by_product
+	 */
+	public function test_get_orders_with_product_price_id_0_should_return_1() {
+		$items = edd_get_order_items( array( 'order_id' => self::$orders[0] ) );
+		foreach( $items as $item ) {
+			edd_update_order_item( $item->id, array(
+				'price_id' => 0
+			) );
+		}
+
+		$orders = edd_get_orders( array(
+			'product_price_id' => 0
+		) );
+
+		$this->assertCount( 1, $orders );
+	}
+
+	/**
+	 * @covers \EDD\Database\Queries\Order::query_by_product
+	 */
+	public function get_get_orders_with_no_product_price_id_should_return_5() {
+		$items = edd_get_order_items( array( 'order_id__in' => self::$orders ) );
+		foreach( $items as $item ) {
+			edd_update_order_item( $item->id, array(
+				'price_id' => null
+			) );
+		}
+
+		$orders = edd_get_orders( array(
+			'product_price_id' => null
+		) );
+
+		$this->assertCount( 5, $orders );
+	}
+
+	/**
 	 * @covers ::edd_get_orders
 	 */
 	public function test_get_orders_with_invalid_id_should_return_0() {
