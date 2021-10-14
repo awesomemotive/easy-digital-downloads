@@ -211,7 +211,7 @@ class Order extends Query {
 			add_filter( 'edd_orders_query_clauses', array( $this, 'query_by_country' ) );
 		}
 
-		if ( ! empty( $query['product_id'] ) || ! empty( $query['product_price_id'] ) ) {
+		if ( ! empty( $query['product_id'] ) || ( isset( $query['product_price_id'] ) && is_numeric( $query['product_price_id'] ) ) ) {
 			add_filter( 'edd_orders_query_clauses', array( $this, 'query_by_product' ) );
 		}
 
@@ -221,7 +221,7 @@ class Order extends Query {
 			remove_filter( 'edd_orders_query_clauses', array( $this, 'query_by_country' ) );
 		}
 
-		if ( ! empty( $query['product_id'] ) || ! empty( $query['product_price_id'] ) ) {
+		if ( ! empty( $query['product_id'] ) || ( isset( $query['product_price_id'] ) && is_numeric( $query['product_price_id'] ) ) ) {
 			remove_filter( 'edd_orders_query_clauses', array( $this, 'query_by_product' ) );
 		}
 
@@ -287,7 +287,10 @@ class Order extends Query {
 	 * @param string|array $clauses The clauses which will generate the final SQL query.
 	 */
 	public function query_by_product( $clauses ) {
-		if ( empty( $this->query_vars['product_id'] ) && empty( $this->query_vars['product_price_id'] ) ) {
+		if (
+			empty( $this->query_vars['product_id'] ) &&
+			( ! isset( $this->query_vars['product_price_id'] ) || ! is_numeric( $this->query_vars['product_price_id'] ) )
+		) {
 			return $clauses;
 		}
 
@@ -299,7 +302,7 @@ class Order extends Query {
 		// Build up our conditions.
 		$conditions = array();
 		foreach ( array( 'product_id' => 'product_id', 'product_price_id' => 'price_id' ) as $query_var => $db_col ) {
-			if ( ! empty( $this->query_vars[ $query_var ] ) ) {
+			if ( isset( $this->query_vars[ $query_var ] ) && is_numeric( $this->query_vars[ $query_var ] ) ) {
 				$conditions[] = $wpdb->prepare(
 					"AND {$order_items_query->table_alias}.{$db_col} = %d",
 					absint( $this->query_vars[ $query_var ] )

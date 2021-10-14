@@ -14,7 +14,7 @@ class Orders_Tests extends \EDD_UnitTestCase {
 	/**
 	 * Orders fixture.
 	 *
-	 * @var array
+	 * @var int[]
 	 * @static
 	 */
 	protected static $orders = array();
@@ -285,6 +285,24 @@ class Orders_Tests extends \EDD_UnitTestCase {
 		) );
 
 		$this->assertCount( 5, $orders );
+	}
+
+	/**
+	 * @covers \EDD\Database\Queries\Order::query_by_product
+	 */
+	public function test_get_orders_with_product_price_id_should_return_1() {
+		$items = edd_get_order_items( array( 'order_id' => self::$orders[0] ) );
+		foreach( $items as $item ) {
+			edd_update_order_item( $item->id, array(
+				'price_id' => 2
+			) );
+		}
+
+		$orders = edd_get_orders( array(
+			'product_price_id' => 2
+		) );
+
+		$this->assertCount( 1, $orders );
 	}
 
 	/**
