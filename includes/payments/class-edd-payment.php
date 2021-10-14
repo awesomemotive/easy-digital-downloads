@@ -1066,7 +1066,9 @@ class EDD_Payment {
 							'order_id'     => $this->ID,
 							'product_id'   => $item['id'],
 							'product_name' => $item['name'],
-							'price_id'     => isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : 0,
+							'price_id'     => isset( $item['item_number']['options']['price_id'] ) && is_numeric( $item['item_number']['options']['price_id'] )
+								? $item['item_number']['options']['price_id']
+								: null,
 							'cart_index'   => $key,
 							'quantity'     => $item['quantity'],
 							'amount'       => $item['item_price'],
@@ -2417,9 +2419,9 @@ class EDD_Payment {
 							'product_name' => $item['name'],
 						) );
 
-						$item['item_number']['options']['price_id'] = isset( $item['item_number']['options']['price_id'] )
+						$item['item_number']['options']['price_id'] = isset( $item['item_number']['options']['price_id'] ) && is_numeric( $item['item_number']['options']['price_id'] )
 							? $item['item_number']['options']['price_id']
-							: 0;
+							: null;
 
 						if ( is_array( $order_item_id ) && ! empty( $order_item_id ) ) {
 							$order_item_id = $order_item_id[0];
