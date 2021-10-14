@@ -1423,7 +1423,7 @@ function edd_get_registered_settings_sections() {
 
 	$sections = array(
 		'general'    => apply_filters( 'edd_settings_sections_general', array(
-			'main'               => __( 'General', 'easy-digital-downloads' ),
+			'main'               => __( 'Store', 'easy-digital-downloads' ),
 			'currency'           => __( 'Currency', 'easy-digital-downloads' ),
 			'api'                => __( 'API', 'easy-digital-downloads' ),
 		) ),
@@ -2578,7 +2578,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 		$class .= ' ' . edd_sanitize_html_class( $args['field_class'] );
 
 		$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-		$html = '<input type="text" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="' . esc_attr( $value ) . '"/>';
+		$html = '<input type="password" autocomplete="off" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="' . esc_attr( $value ) . '"/>';
 
 		if ( ( is_object( $license ) && 'valid' == $license->license ) || 'valid' == $license ) {
 			$html .= '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License',  'easy-digital-downloads' ) . '"/>';
