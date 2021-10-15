@@ -58,6 +58,13 @@ class Validator {
 		}
 	}
 
+	/**
+	 * @return ErrorCollection
+	 */
+	public function getErrors() {
+		return $this->errorCollection;
+	}
+
 	public function validateFormFields() {
 		// Terms agreement.
 		if (
@@ -170,7 +177,7 @@ class Validator {
 
 		// Guests don't need any further validation.
 		if ( $this->isGuestCheckout( $this->data ) ) {
-			if ( $this->config->allowGuestCheckout ) {
+			if ( ! $this->config->allowGuestCheckout ) {
 				$this->errorCollection->add( new FormError(
 					__( 'You must register or login to complete your purchase', 'easy-digital-downloads' ),
 					'registration_required'

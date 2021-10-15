@@ -11,6 +11,9 @@ namespace EDD\Checkout\Errors;
 
 class ErrorCollection {
 
+	/**
+	 * @var FormError[]
+	 */
 	private $errors = [];
 
 	/**
@@ -36,6 +39,23 @@ class ErrorCollection {
 	 */
 	public function getErrors() {
 		return $this->errors;
+	}
+
+	/**
+	 * Whether the given error code is set.
+	 *
+	 * @param string $code
+	 *
+	 * @return bool
+	 */
+	public function hasErrorCode( $code ) {
+		foreach ( $this->getErrors() as $error ) {
+			if ( $error->error_code === $code ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 }
