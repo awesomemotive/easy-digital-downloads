@@ -61,14 +61,17 @@ add_action( 'admin_menu', 'edd_add_options_link', 10 );
  * Failure to pass in $passed_page will return true if on any EDD page
  *
  * @since 1.9.6
- * @since 2.11.3
+ * @since 2.11.3 Added `$include_non_exclusive` parameter.
  *
- * @param string $passed_page Optional. Main page's slug
- * @param string $passed_view Optional. Page view ( ex: `edit` or `delete` )
- * @param bool $include_dashboard Optional. If we should consider the main dashboard in this case.
+ * @param string $passed_page           Optional. Main page's slug
+ * @param string $passed_view           Optional. Page view ( ex: `edit` or `delete` )
+ * @param bool   $include_non_exclusive Optional. If we should consider pages not exclusive to EDD.
+ *                                      Includes the main dashboard page and custom post types that
+ *                                      support the "Insert Download" button via the TinyMCE editor.
+ *
  * @return bool True if EDD admin page we're looking for or an EDD page or if $page is empty, any EDD page
  */
-function edd_is_admin_page( $passed_page = '', $passed_view = '', $include_dashboard = true ) {
+function edd_is_admin_page( $passed_page = '', $passed_view = '', $include_non_exclusive = true ) {
 
 	global $pagenow, $typenow;
 
@@ -349,7 +352,7 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '', $include_dashb
 		default:
 			global $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_settings_export, $edd_upgrades_screen, $edd_customers_page, $edd_reports_page;
 			$admin_pages = apply_filters( 'edd_admin_pages', array( $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_settings_export, $edd_customers_page, $edd_reports_page ) );
-			if ( 'download' == $typenow || ( $include_dashboard && 'index.php' == $pagenow ) || 'post-new.php' == $pagenow || 'post.php' == $pagenow ) {
+			if ( 'download' == $typenow || ( $include_non_exclusive && in_array( $pagenow, array( 'index.php', 'post-new.php', 'post.php' ), true ) ) ) {
 				$found = true;
 				if( 'edd-upgrades' === $page ) {
 					$found = false;
