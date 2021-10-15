@@ -298,11 +298,11 @@ class Orders_Tests extends \EDD_UnitTestCase {
 			) );
 		}
 
-		$orders = edd_get_orders( array(
+		$orders = edd_count_orders( array(
 			'product_price_id' => 2
 		) );
 
-		$this->assertCount( 1, $orders );
+		$this->assertSame( 1, $orders );
 	}
 
 	/**
