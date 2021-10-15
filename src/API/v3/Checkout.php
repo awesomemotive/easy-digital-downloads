@@ -94,12 +94,12 @@ class Checkout extends Endpoint {
 	}
 
 	protected function getCheckoutState( \WP_REST_Request $request ) {
-		return new \WP_REST_Request(
+		return new \WP_REST_Response(
 			$this->checkoutProcessor->setData( $request->get_params() )->getOrderFromSession()->toArray()
 		);
 	}
 
 	protected function processCheckout( \WP_REST_Request $request ) {
-		return new \WP_REST_Request();
+		return new \WP_REST_Response();
 	}
 }
