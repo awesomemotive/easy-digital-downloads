@@ -602,17 +602,19 @@ function edd_count_payments( $args = array() ) {
 		$day        = ! empty( $date_parts[1] ) && is_numeric( $date_parts[1] ) ? $date_parts[1] : 0;
 		$year       = ! empty( $date_parts[2] ) && is_numeric( $date_parts[2] ) ? $date_parts[2] : 0;
 
-		$is_date    = checkdate( $month, $day, $year );
-		if ( false !== $is_date ) {
+		if ( is_numeric( $month ) && is_numeric( $day ) && is_numeric( $year ) ) {
+			$is_date    = checkdate( $month, $day, $year );
+			if ( false !== $is_date ) {
 
-			$date   = new DateTime( $args['start-date'] );
-			$where .= $wpdb->prepare( " AND p.post_date >= '%s'", $date->format( 'Y-m-d' ) );
+				$date   = new DateTime( $args['start-date'] );
+				$where .= $wpdb->prepare( " AND p.post_date >= '%s'", $date->format( 'Y-m-d' ) );
 
-		}
+			}
 
-		// Fixes an issue with the payments list table counts when no end date is specified (partly with stats class)
-		if ( empty( $args['end-date'] ) ) {
-			$args['end-date'] = $args['start-date'];
+			// Fixes an issue with the payments list table counts when no end date is specified (partly with stats class)
+			if ( empty( $args['end-date'] ) ) {
+				$args['end-date'] = $args['start-date'];
+			}
 		}
 
 	}
@@ -625,11 +627,14 @@ function edd_count_payments( $args = array() ) {
 		$day        = ! empty( $date_parts[1] ) ? $date_parts[1] : 0;
 		$year       = ! empty( $date_parts[2] ) ? $date_parts[2] : 0;
 
-		$is_date    = checkdate( $month, $day, $year );
-		if ( false !== $is_date ) {
-			$date = date( 'Y-m-d', strtotime( '+1 day', mktime( 0, 0, 0, $month, $day, $year ) ) );
+		if ( is_numeric( $month ) && is_numeric( $day ) && is_numeric( $year ) ) {
+			$is_date    = checkdate( $month, $day, $year );
+			if ( false !== $is_date ) {
 
-			$where .= $wpdb->prepare( " AND p.post_date < '%s'", $date );
+				$date = date( 'Y-m-d', strtotime( '+1 day', mktime( 0, 0, 0, $month, $day, $year ) ) );
+				$where .= $wpdb->prepare( " AND p.post_date < '%s'", $date );
+
+			}
 		}
 
 	}
