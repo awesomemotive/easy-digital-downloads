@@ -407,6 +407,11 @@ final class Easy_Digital_Downloads {
 
 		// Load cache helper.
 		new EDD_Cache_Helper();
+
+		// @todo put this somewhere better
+		add_action( 'rest_api_init', function () {
+			EDD( \EDD\API\v3\Checkout::class )->register();
+		} );
 	}
 
 	/** Includes **************************************************************/

@@ -9,9 +9,12 @@
 
 namespace EDD\Checkout;
 
+use EDD\Traits\Serializable;
 use EDD\ValueObjects\Address;
 
 class Order {
+
+	use Serializable;
 
 	/**
 	 * @var array Products being purchased.

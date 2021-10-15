@@ -9,7 +9,11 @@
 
 namespace EDD\Checkout\Errors;
 
+use EDD\Traits\Serializable;
+
 class ErrorCollection {
+
+	use Serializable;
 
 	/**
 	 * @var FormError[]
@@ -56,6 +60,10 @@ class ErrorCollection {
 		}
 
 		return false;
+	}
+
+	public function toArray() {
+		return $this->errors;
 	}
 
 }

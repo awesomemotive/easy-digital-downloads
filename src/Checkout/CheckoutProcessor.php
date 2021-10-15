@@ -26,7 +26,7 @@ class CheckoutProcessor {
 	/**
 	 * @var array
 	 */
-	private $data;
+	private $data = [];
 
 	/**
 	 * @var Validator
@@ -44,18 +44,34 @@ class CheckoutProcessor {
 	}
 
 	/**
+	 * Sets the form data.
+	 *
+	 * @param array $data
+	 *
+	 * @return $this
+	 */
+	public function setData( $data ) {
+		$this->data = $data;
+
+		return $this;
+	}
+
+	/**
 	 * @throws ValidationException
 	 */
-	public function process( Config $config, $data ) {
+	public function process( Config $config ) {
 		$this->config = $config;
-		$this->data   = $data;
 
 		$this->validator->validate( $this->config, $this->data );
 
 		$user    = $this->getOrCreateUser();
 		$address = $this->getUserAddress();
 
-		$order = Order::getFromSession( $address );
+		$order = $this->getOrderFromSession();
+	}
+
+	public function getOrderFromSession() {
+		return Order::getFromSession( $this->getUserAddress() );
 	}
 
 	private function getOrCreateUser() {

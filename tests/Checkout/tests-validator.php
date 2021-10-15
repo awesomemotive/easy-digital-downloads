@@ -137,4 +137,33 @@ class ValidatorTests extends \EDD_UnitTestCase {
 		}
 	}
 
+	/**
+	 * @covers \EDD\Checkout\Validator::validateGuestUser
+	 * @throws \Exception
+	 */
+	public function test_mismatched_passwords_throws_exception() {
+		try {
+			$this->validator->validate(
+				new Config(),
+				[
+					'edd_email'             => 'janedoe@example.com',
+					'edd_first'             => 'Jane',
+					'edd_last'              => 'Doe',
+					'edd_user_login'        => 'janedoe',
+					'edd_user_pass'         => 'mypass123',
+					'edd_user_pass_confirm' => 'mypass1234',
+				]
+			);
+
+			/*
+			 * Throwing a new exception here, which will not be caught. We do not
+			 * actually expect to end up here, and if we do, this uncaught exception
+			 * will fail the test.
+			 */
+			throw new \Exception( 'Validator unexpectedly passed.' );
+		} catch ( ValidationException $e ) {
+			$this->assertTrue( $e->getErrorCollection()->hasErrorCode( 'password_mismatch' ) );
+		}
+	}
+
 }
