@@ -246,6 +246,9 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 13. Pay with PayPal modal
 
 == Changelog ==
+= 2.11.2.1, October 18, 2021 =
+* Security: Fix authenticated reflected XSS on payment history list table.
+
 = 2.11.2, September 29, 2021 =
 * Improvement: PayPal - Product names now appear in PayPal.
 * Improvement: File download token validation has been reworked to be more compatible with caching.
