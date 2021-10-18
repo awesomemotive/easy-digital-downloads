@@ -7,7 +7,7 @@ Tags: ecommerce, sell, checkout, digital store, stripe
 Requires at least: 4.4
 Tested up to: 5.8.1
 Requires PHP: 5.3
-Stable Tag: 2.11.2
+Stable Tag: 2.11.2.1
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products the simple way. Easily build an online store complete with a cart system, checkout forms, reports, coupons, and more!
