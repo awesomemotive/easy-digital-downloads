@@ -7,7 +7,7 @@ Tags: ecommerce, sell, checkout, digital store, stripe
 Requires at least: 4.4
 Tested up to: 5.8.1
 Requires PHP: 5.3
-Stable Tag: 2.11.2
+Stable Tag: 2.11.2.1
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products the simple way. Easily build an online store complete with a cart system, checkout forms, reports, coupons, and more!
@@ -246,6 +246,9 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 13. Pay with PayPal modal
 
 == Changelog ==
+= 2.11.2.1, October 18, 2021 =
+* Security: Fix authenticated reflected XSS on payment history list table.
+
 = 2.11.2, September 29, 2021 =
 * Improvement: PayPal - Product names now appear in PayPal.
 * Improvement: File download token validation has been reworked to be more compatible with caching.
