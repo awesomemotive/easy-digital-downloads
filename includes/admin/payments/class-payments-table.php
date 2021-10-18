@@ -157,11 +157,11 @@ class EDD_Payment_History_Table extends WP_List_Table {
 			<span id="edd-payment-date-filters">
 				<span>
 					<label for="start-date"><?php _e( 'Start Date:', 'easy-digital-downloads' ); ?></label>
-					<input type="text" id="start-date" name="start-date" class="edd_datepicker" value="<?php echo $start_date; ?>" placeholder="mm/dd/yyyy"/>
+					<input type="text" id="start-date" name="start-date" class="edd_datepicker" value="<?php echo esc_attr( $start_date ); ?>" placeholder="mm/dd/yyyy"/>
 				</span>
 				<span>
 					<label for="end-date"><?php _e( 'End Date:', 'easy-digital-downloads' ); ?></label>
-					<input type="text" id="end-date" name="end-date" class="edd_datepicker" value="<?php echo $end_date; ?>" placeholder="mm/dd/yyyy"/>
+					<input type="text" id="end-date" name="end-date" class="edd_datepicker" value="<?php echo esc_attr( $end_date ); ?>" placeholder="mm/dd/yyyy"/>
 				</span>
 			</span>
 			<span id="edd-payment-gateway-filter">
