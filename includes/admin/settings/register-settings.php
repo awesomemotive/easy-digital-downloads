@@ -2650,7 +2650,7 @@ function _edd_settings_compatibility() {
 	 * Ensures compatibility with EDD 2.11.3 and Recurring payments prior to Recurring being released to move
 	 * settings for 'checkout' from 'misc' to 'payments'.
 	 */
-	if ( class_exists( 'EDD_Recurring' ) ) {
+	if ( function_exists( 'edd_recurring_guest_checkout_description' ) && false !== has_filter( 'edd_settings_misc', 'edd_recurring_guest_checkout_description' ) ) {
 		remove_filter( 'edd_settings_misc', 'edd_recurring_guest_checkout_description', 10 );
 		add_filter( 'edd_settings_gateways', 'edd_recurring_guest_checkout_description', 10 );
 	}
