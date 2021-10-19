@@ -2636,3 +2636,24 @@ function edd_add_setting_tooltip( $html, $args ) {
 	return $html;
 }
 add_filter( 'edd_after_setting_output', 'edd_add_setting_tooltip', 10, 2 );
+
+
+/**
+ * Gives us an area to ensure known compatibility issues with our settings organization by giving us a hook to manage
+ * and alter hooks and filters that are being run against our primary settings array.
+ *
+ * @since 2.11.3
+ */
+function _edd_settings_compatibility() {
+
+	/**
+	 * Ensures compatibility with EDD 2.11.3 and Recurring payments prior to Recurring being released to move
+	 * settings for 'checkout' from 'misc' to 'payments'.
+	 */
+	if ( class_exists( 'EDD_Recurring' ) ) {
+		remove_filter( 'edd_settings_misc', 'edd_recurring_guest_checkout_description', 10 );
+		add_filter( 'edd_settings_gateways', 'edd_recurring_guest_checkout_description', 10 );
+	}
+
+}
+add_action( 'plugins_loaded', '_edd_settings_compatibility', 99 );
