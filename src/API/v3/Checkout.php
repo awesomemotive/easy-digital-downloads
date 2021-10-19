@@ -53,9 +53,19 @@ class Checkout extends Endpoint {
 
 		register_rest_route(
 			self::$namespace,
-			'checkout',
+			'checkout/cart',
 			[
 				'methods'             => [ \WP_REST_Server::CREATABLE, \WP_REST_Server::READABLE ],
+				'callback'            => [ $this, 'handleCheckoutCart' ],
+				'permission_callback' => '__return_true',
+			]
+		);
+
+		register_rest_route(
+			self::$namespace,
+			'checkout',
+			[
+				'methods'             => \WP_REST_Server::CREATABLE,
 				'callback'            => [ $this, 'handleCheckout' ],
 				'permission_callback' => '__return_true',
 			]
@@ -85,21 +95,28 @@ class Checkout extends Endpoint {
 		}
 	}
 
-	public function handleCheckout( \WP_REST_Request $request ) {
-		if ( 'GET' === $request->get_method() ) {
-			return $this->getCheckoutState( $request );
-		} else {
-			return $this->processCheckout( $request );
-		}
-	}
-
-	protected function getCheckoutState( \WP_REST_Request $request ) {
+	/**
+	 * Retrieves the current cart information for this checkout session.
+	 * Includes line items and order totals.
+	 *
+	 * @param \WP_REST_Request $request
+	 *
+	 * @return \WP_REST_Response
+	 */
+	public function handleCheckoutCart( \WP_REST_Request $request ) {
 		return new \WP_REST_Response(
 			$this->checkoutProcessor->setData( $request->get_params() )->getOrderFromSession()->toArray()
 		);
 	}
 
-	protected function processCheckout( \WP_REST_Request $request ) {
+	/**
+	 * Processes the checkout. Includes creating the user account / customer, if applicable.
+	 *
+	 * @param \WP_REST_Request $request
+	 *
+	 * @return \WP_REST_Response
+	 */
+	public function handleCheckout( \WP_REST_Request $request ) {
 		return new \WP_REST_Response();
 	}
 }

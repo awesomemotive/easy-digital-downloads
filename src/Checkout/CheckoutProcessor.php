@@ -21,22 +21,22 @@ class CheckoutProcessor {
 	/**
 	 * @var Config
 	 */
-	private $config;
+	protected $config;
 
 	/**
 	 * @var array
 	 */
-	private $data = [];
+	protected $data = [];
 
 	/**
 	 * @var Validator
 	 */
-	private $validator;
+	protected $validator;
 
 	/**
 	 * @var ErrorCollection
 	 */
-	private $errorCollection;
+	protected $errorCollection;
 
 	public function __construct( Validator $validator, ErrorCollection $errorCollection ) {
 		$this->validator       = $validator;

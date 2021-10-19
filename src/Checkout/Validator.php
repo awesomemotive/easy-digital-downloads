@@ -22,17 +22,17 @@ class Validator {
 	/**
 	 * @var Config
 	 */
-	private $config;
+	protected $config;
 
 	/**
 	 * @var array
 	 */
-	private $data;
+	protected $data;
 
 	/**
 	 * @var ErrorCollection
 	 */
-	private $errorCollection;
+	protected $errorCollection;
 
 	/**
 	 * @param array $data Checkout form data.
@@ -50,8 +50,11 @@ class Validator {
 		$this->config = $config;
 		$this->data   = $data;
 
+		$this->validateCartHasContents();
 		$this->validateFormFields();
 		$this->validateUserData();
+
+		$this->checkErrorsFromLegacy();
 
 		if ( $this->errorCollection->hasErrors() ) {
 			throw new ValidationException( $this->errorCollection );
@@ -65,7 +68,16 @@ class Validator {
 		return $this->errorCollection;
 	}
 
-	public function validateFormFields() {
+	protected function validateCartHasContents() {
+		if ( ! edd_get_cart_contents() && ! edd_cart_has_fees() ) {
+			$this->errorCollection->add( new FormError(
+				__( 'Your cart is empty.', 'easy-digital-downloads' ),
+				'empty_cart'
+			) );
+		}
+	}
+
+	protected function validateFormFields() {
 		// Terms agreement.
 		if (
 			'1' === edd_get_option( 'show_agree_to_terms', false ) &&
@@ -113,7 +125,7 @@ class Validator {
 	/**
 	 * @see edd_purchase_form_validate_logged_in_user()
 	 */
-	private function validateLoggedInUser() {
+	protected function validateLoggedInUser() {
 		$user = wp_get_current_user();
 		if ( ! $user->ID ) {
 			$this->errorCollection->add( new FormError(
@@ -140,8 +152,8 @@ class Validator {
 	 * This includes both customers checking out as a guest, and those
 	 * creating a new account during registration.
 	 */
-	private function validateGuestUser() {
-		$accountInfo     = $this->getNewAccountInformation( $this->data );
+	protected function validateGuestUser() {
+		$accountInfo = $this->getNewAccountInformation( $this->data );
 
 		/*
 		 * Validate email address.
@@ -168,11 +180,7 @@ class Validator {
 				) );
 			}
 		} else {
-			$this->errorCollection->add( new FormError(
-				__( 'Enter an email.', 'easy-digital-downloads' ),
-				'email_empty',
-				'edd_email'
-			) );
+			// Note: email is always required and that's already validated via `validateFormFields()`
 		}
 
 		// Guests don't need any further validation.
@@ -228,6 +236,31 @@ class Validator {
 				__( 'Passwords do not match.', 'easy-digital-downloads' ),
 				'password_mismatch',
 				'edd_user_pass'
+			) );
+		}
+	}
+
+	protected function checkErrorsFromLegacy() {
+		$preHookErrors = edd_get_errors();
+
+		// @todo re-map `$valid_data` array
+		do_action( 'edd_checkout_error_checks', [], $this->data );
+
+		// @todo re-map `$valid_data` and `$user`
+		do_action( 'edd_checkout_user_error_checks', [], [], $this->data );
+
+		$postHookErrors = edd_get_errors();
+
+		if ( empty( $postHookErrors ) ) {
+			return;
+		}
+
+		$newErrors = array_diff_assoc( $postHookErrors, $preHookErrors );
+
+		foreach ( $newErrors as $error_id => $errrorMessage ) {
+			$this->errorCollection->add( new FormError(
+				$errrorMessage,
+				$error_id
 			) );
 		}
 	}
