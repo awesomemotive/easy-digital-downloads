@@ -238,6 +238,9 @@ class EDD_Discount_Codes_Table extends List_Table {
 			'edd-action' => 'edit_discount',
 			'discount'   => $discount->id,
 		), $base ) . '">' . stripslashes( $discount->name ) . '</a>' . esc_html( $state ) . '</strong>';
+		
+		// Filter the discount row title
+		$discount_title = apply_filters( 'edd_discount_row_title', $discount_title, $discount, $base, $state );
 
 		// Return discount title & row actions
 		return $discount_title . $this->row_actions( $row_actions );
