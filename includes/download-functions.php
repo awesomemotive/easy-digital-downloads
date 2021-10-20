@@ -1260,8 +1260,10 @@ function edd_get_download_token( $url = '' ) {
  */
 function edd_validate_url_token( $url = '' ) {
 
-	$ret   = false;
-	$parts = parse_url( $url );
+	$ret          = false;
+	$parts        = parse_url( $url );
+	$query_args   = array();
+	$original_url = $url;
 
 	if ( isset( $parts['query'] ) ) {
 
@@ -1285,9 +1287,6 @@ function edd_validate_url_token( $url = '' ) {
 				$validated_query_args[ $key ] = $query_args[ $key ];
 			}
 		}
-
-		// Save the original URL for the filter.
-		$original_url = $url;
 
 		// strtok allows a quick clearing of existing query string parameters, so we can re-add the allowed ones.
 		$url = add_query_arg( $validated_query_args, strtok( $url, '?' ) );
