@@ -713,6 +713,9 @@ class Data_Migrator {
 		 */
 		$order_data = apply_filters( 'edd_30_migration_order_creation_data', $order_data, $payment_meta, $cart_details, $meta );
 
+		// Remove all order status transition actions.
+		remove_all_actions( 'edd_transition_order_status' );
+
 		$order_id = edd_add_order( $order_data );
 
 		// Save an un-matched tax rate in order meta.
