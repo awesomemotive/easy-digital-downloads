@@ -74,7 +74,7 @@ class License_Upgrade_Notice extends Notice {
 	 * @return bool
 	 */
 	protected function _should_display() {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( static::CAPABILITY ) ) {
 			return false;
 		}
 
