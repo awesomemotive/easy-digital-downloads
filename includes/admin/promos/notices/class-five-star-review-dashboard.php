@@ -126,14 +126,17 @@ class Five_Star_Review_Dashboard extends Notice {
 		if ( ! current_user_can( static::CAPABILITY ) ) {
 			return false;
 		}
+		// @todo Remove this before finalizing
+		return true;
+
 		$activated = get_option( 'edd_activation', false );
 		if ( $activated ) {
 			if ( ( $activated + ( DAY_IN_SECONDS * 30 ) ) > time() ) {
-				// return false;
+				return false;
 			}
 		} else {
-			// update_option( 'edd_activation', time() );
-			// return false;
+			update_option( 'edd_activation', time() );
+			return false;
 		}
 		$payments = edd_count_payments();
 		if ( $payments && 50 > $payments->publish ) {
