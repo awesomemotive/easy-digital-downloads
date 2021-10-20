@@ -476,9 +476,6 @@ function process_disconnect() {
 	// Delete the access token.
 	delete_option( 'edd_paypal_commerce_access_token_' . $mode );
 
-	// Delete the webhook ID.
-	delete_option( 'edd_paypal_commerce_webhook_id_' . $mode );
-
 	try {
 		// Also delete the token cache key, to ensure we fetch a fresh one if they connect to a different account later.
 		$api                 = new PayPal\API();
