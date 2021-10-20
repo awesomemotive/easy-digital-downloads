@@ -84,7 +84,9 @@ class Tests_Process_Download extends EDD_UnitTestCase {
 			return $args;
 		} );
 
-		$url = edd_get_download_file_url( $payment->key, $payment->email, '', $download->ID );
+		$parts = parse_url( add_query_arg( array(), edd_get_download_file_url( $payment->key, $payment->email, '', $download->ID ) ) );
+		wp_parse_str( $parts['query'], $query_args );
+		$url = add_query_arg( $query_args, site_url() );
 
 		$this->assertTrue( edd_validate_url_token( $url ) );
 	}
