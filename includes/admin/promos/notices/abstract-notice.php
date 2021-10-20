@@ -30,6 +30,11 @@ abstract class Notice {
 	const DISMISSIBLE = true;
 
 	/**
+	 * The capability required to view/dismiss the notice.
+	 */
+	const CAPABILITY = 'manage_options';
+
+	/**
 	 * Displays the notice content.
 	 *
 	 * @return void
@@ -44,7 +49,7 @@ abstract class Notice {
 	 *
 	 * @return string
 	 */
-	protected function get_id() {
+	public function get_id() {
 		return strtolower( str_replace( '_', '-', basename( str_replace( '\\', '/', get_class( $this ) ) ) ) );
 	}
 
