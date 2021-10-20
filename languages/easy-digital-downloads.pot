@@ -1,10 +1,10 @@
-# Copyright (C) 2021 Sandhills Development, LLC
+# Copyright (C) 2021 Easy Digital Downloads
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.11.2\n"
+"Project-Id-Version: Easy Digital Downloads 2.11.2.1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2021-09-22 14:40:53+00:00\n"
+"POT-Creation-Date: 2021-10-18 18:23:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -511,7 +511,7 @@ msgstr ""
 #: includes/admin/payments/class-payments-table.php:435
 #: includes/admin/settings/register-settings.php:967
 #: includes/gateways/stripe/includes/template-functions.php:441
-#: includes/payments/functions.php:1616
+#: includes/payments/functions.php:1600
 msgid "Delete"
 msgstr ""
 
@@ -2070,32 +2070,32 @@ msgid "Completed"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:249
-#: includes/payments/functions.php:769
+#: includes/payments/functions.php:753
 msgid "Pending"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:250
-#: includes/payments/functions.php:775
+#: includes/payments/functions.php:759
 msgid "Processing"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:251
-#: includes/payments/functions.php:771
+#: includes/payments/functions.php:755
 msgid "Refunded"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:252
-#: includes/payments/functions.php:774
+#: includes/payments/functions.php:758
 msgid "Revoked"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:253
-#: includes/payments/functions.php:772
+#: includes/payments/functions.php:756
 msgid "Failed"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:254
-#: includes/payments/functions.php:773
+#: includes/payments/functions.php:757
 msgid "Abandoned"
 msgstr ""
 
@@ -8880,11 +8880,11 @@ msgstr ""
 msgid "Payment recovery processed"
 msgstr ""
 
-#: includes/payments/functions.php:770
+#: includes/payments/functions.php:754
 msgid "Complete"
 msgstr ""
 
-#: includes/payments/functions.php:1601
+#: includes/payments/functions.php:1585
 msgid "EDD Bot"
 msgstr ""
 
