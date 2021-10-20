@@ -461,18 +461,6 @@ function process_disconnect() {
 
 	$mode = edd_is_test_mode() ? PayPal\API::MODE_SANDBOX : PayPal\API::MODE_LIVE;
 
-	// Delete API credentials.
-	$edd_settings_to_delete = array(
-		'paypal_' . $mode . '_client_id',
-		'paypal_' . $mode . '_client_secret'
-	);
-
-	// Delete merchant information.
-	delete_option( 'edd_paypal_' . $mode . '_merchant_details' );
-
-	// Delete partner connect information.
-	delete_option( 'edd_paypal_commerce_connect_details_' . $mode );
-
 	try {
 		$api = new PayPal\API();
 
@@ -484,6 +472,18 @@ function process_disconnect() {
 	} catch ( \Exception $e ) {
 
 	}
+
+	// Delete API credentials.
+	$edd_settings_to_delete = array(
+		'paypal_' . $mode . '_client_id',
+		'paypal_' . $mode . '_client_secret',
+	);
+
+	// Delete merchant information.
+	delete_option( 'edd_paypal_' . $mode . '_merchant_details' );
+
+	// Delete partner connect information.
+	delete_option( 'edd_paypal_commerce_connect_details_' . $mode );
 
 	foreach ( $edd_settings_to_delete as $option_name ) {
 		edd_delete_option( $option_name );
