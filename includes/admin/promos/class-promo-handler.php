@@ -25,6 +25,7 @@ class PromoHandler {
 	private $notices = array(
 		'\\EDD\\Admin\\Promos\\Notices\\License_Upgrade_Notice',
 		'\\EDD\\Admin\\Promos\\Notices\\Five_Star_Review_Dashboard',
+		'\\EDD\\Admin\\Promos\\Notices\\Five_Star_Review_Settings',
 	);
 
 	/**

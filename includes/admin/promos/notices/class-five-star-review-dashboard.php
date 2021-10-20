@@ -28,6 +28,13 @@ class Five_Star_Review_Dashboard extends Notice {
 	const CAPABILITY = 'manage_shop_settings';
 
 	/**
+	 * The current screen.
+	 *
+	 * @var string
+	 */
+	private $screen = 'dashboard';
+
+	/**
 	 * The ID of the notice. Defined specifically here as we intend to use it twice.
 	 *
 	 * @since 2.11.x
