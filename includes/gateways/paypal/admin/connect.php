@@ -473,16 +473,14 @@ function process_disconnect() {
 	// Delete partner connect information.
 	delete_option( 'edd_paypal_commerce_connect_details_' . $mode );
 
-	// Delete the access token.
-	delete_option( 'edd_paypal_commerce_access_token_' . $mode );
-
 	try {
-		// Also delete the token cache key, to ensure we fetch a fresh one if they connect to a different account later.
-		$api                 = new PayPal\API();
-		$edd_settings_to_delete[] = $api->token_cache_key;
+		$api = new PayPal\API();
 
 		// Disconnect the webhook.
 		PayPal\Webhooks\delete_webhook( $mode );
+
+		// Also delete the token cache key, to ensure we fetch a fresh one if they connect to a different account later.
+		delete_option( $api->token_cache_key );
 	} catch ( \Exception $e ) {
 
 	}
