@@ -464,8 +464,13 @@ function process_disconnect() {
 	try {
 		$api = new PayPal\API();
 
-		// Disconnect the webhook.
-		PayPal\Webhooks\delete_webhook( $mode );
+		try {
+			// Disconnect the webhook.
+			// This is in another try/catch because we want to delete the token cache (below) even if this fails.
+			PayPal\Webhooks\delete_webhook( $mode );
+		} catch ( \Exception $e ) {
+
+		}
 
 		// Also delete the token cache key, to ensure we fetch a fresh one if they connect to a different account later.
 		delete_option( $api->token_cache_key );
