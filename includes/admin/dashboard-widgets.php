@@ -37,8 +37,9 @@ add_action('wp_dashboard_setup', 'edd_register_dashboard_widgets', 10 );
  * @since 1.2.2
  * @return void
  */
-function edd_dashboard_sales_widget( ) {
-	echo '<p><img src=" ' . esc_attr( set_url_scheme( EDD_PLUGIN_URL . 'assets/images/loading.gif', 'relative' ) ) . '"/></p>';
+function edd_dashboard_sales_widget() {
+	do_action( 'edd_dashboard_sales_widget' );
+	echo '<p class="edd-loading"><img src=" ' . esc_attr( set_url_scheme( EDD_PLUGIN_URL . 'assets/images/loading.gif', 'relative' ) ) . '"/></p>';
 }
 
 /**
