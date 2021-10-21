@@ -209,6 +209,7 @@ function edd_run_install() {
 		 */
 		@EDD()->customers->create_table();
 		@EDD()->customer_meta->create_table();
+		EDD()->notifications->create_table();
 	}
 
 	// Check for PHP Session support, and enable if available
@@ -319,6 +320,10 @@ function edd_after_install() {
 			@EDD()->customer_meta->create_table();
 
 			do_action( 'edd_after_install', $edd_options );
+		}
+
+		if ( ! EDD()->notifications->installed() ) {
+			EDD()->notifications->create_table();
 		}
 
 		update_option( '_edd_table_check', ( current_time( 'timestamp' ) + WEEK_IN_SECONDS ) );
