@@ -1052,6 +1052,17 @@ function edd_is_promo_active() {
 }
 
 /**
+ * Gets the date that this EDD install was activated (for new installs).
+ * For existing installs, this option is added as part of checking whether a promo notice can be displayed.
+ *
+ * @since 2.11.x
+ * @return string The timestamp when EDD was activated.
+ */
+function edd_get_activation_date() {
+	return get_option( 'edd_activation_date', '' );
+}
+
+/**
  * Polyfills for is_countable and is_iterable
  *
  * This helps with plugin compatibility going forward. Many extensions have issues with more modern PHP versions,
