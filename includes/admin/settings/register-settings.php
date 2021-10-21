@@ -2665,6 +2665,13 @@ add_action(
 			add_filter( 'edd_settings_gateways', 'edd_recurring_guest_checkout_description', 10 );
 		}
 
+		if ( function_exists( 'edd_recurring_settings_section' ) && false !== has_filter( 'edd_settings_sections_extensions', 'edd_recurring_settings_section' ) ) {
+			remove_filter( 'edd_settings_sections_extensions', 'edd_recurring_settings_section' );
+			add_filter( 'edd_settings_sections_gateways', 'edd_recurring_settings_section' );
+			remove_filter( 'edd_settings_extensions', 'edd_recurring_settings' );
+			add_filter( 'edd_settings_gateways', 'edd_recurring_settings' );
+		}
+
 		/**
 		 * Ensures compatibility with EDD 2.11.x and Reviews' settings being in the extensions section.
 		 */
