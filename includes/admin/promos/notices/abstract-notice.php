@@ -64,7 +64,7 @@ abstract class Notice {
 	 * @return bool
 	 */
 	public function should_display() {
-		return ! PromoHandler::is_dismissed( $this->get_id() ) && $this->_should_display();
+		return current_user_can( static::CAPABILITY ) && ! PromoHandler::is_dismissed( $this->get_id() ) && $this->_should_display();
 	}
 
 	/**
