@@ -93,7 +93,7 @@ class Five_Star_Review_Dashboard extends Notice {
 			<p><strong><?php echo wp_kses( __( '~ Chris Klosowski<br>President of Easy Digital Downloads', 'easy-digital-downloads' ), array( 'br' => array() ) ); ?></strong></p>
 			<p>
 				<a href="https://wordpress.org/support/plugin/easy-digital-downloads/reviews/?filter=5#new-post" class="edd-promo-notice-dismiss" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Ok, you deserve it', 'easy-digital-downloads' ); ?></a><br>
-				<a class="button-link edd-promo-notice-dismiss"><?php esc_html_e( 'Nope, maybe later', 'easy-digital-downloads' ); ?></a>
+				<a class="button-link edd-promo-notice-dismiss"><?php esc_html_e( 'No, I already did', 'easy-digital-downloads' ); ?></a>
 			</p>
 		</div>
 		<script type="text/javascript">
