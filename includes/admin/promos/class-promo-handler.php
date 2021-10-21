@@ -112,6 +112,37 @@ class PromoHandler {
 			wp_send_json_error( __( 'Missing notice ID.', 'easy-digital-downloads' ), 400 );
 		}
 
+		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'edd-dismiss-notice-' . sanitize_key( $_POST['notice_id'] ) ) ) {
+			wp_send_json_error( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ), 403 );
+		}
+
+		$notice_class_name = $this->get_notice_class_name( $notice_id );
+
+		// No matching notice class was found.
+		if ( ! $notice_class_name ) {
+			wp_send_json_error( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ), 403 );
+		}
+
+		// Check whether the current user can dismiss the notice.
+		if ( ! current_user_can( $notice_class_name::CAPABILITY ) ) {
+			wp_send_json_error( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ), 403 );
+		}
+
+		$dismissal_length = ! empty( $_POST['lifespan'] ) ? absint( $_POST['lifespan'] ) : 0;
+
+		self::dismiss( sanitize_key( $_POST['notice_id'] ), $dismissal_length );
+
+		wp_send_json_success();
+	}
+
+	/**
+	 * Gets the notice class name for a given notice ID.
+	 *
+	 * @since 2.11.x
+	 * @param string $notice_id The notice ID to match.
+	 * @return bool|string The class name or false if no matching class was found.
+	 */
+	private function get_notice_class_name( $notice_id ) {
 		$notice_class_name = false;
 		// Look through the registered notice classes for the one being dismissed.
 		foreach ( $this->notices as $notice_class_to_check ) {
@@ -130,30 +161,12 @@ class PromoHandler {
 			$notice = new $notice_class_to_check();
 			if ( $notice->get_id() === $notice_id ) {
 				$notice_class_name = $notice_class_to_check;
+				break;
 			}
 		}
 
-		// No matching notice class was found.
-		if ( ! $notice_class_name ) {
-			wp_send_json_error( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ), 403 );
-		}
-
-		// Check whether the current user can dismiss the notice.
-		if ( ! current_user_can( $notice_class_name::CAPABILITY ) ) {
-			wp_send_json_error( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ), 403 );
-		}
-
-		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'edd-dismiss-notice-' . sanitize_key( $_POST['notice_id'] ) ) ) {
-			wp_send_json_error( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ), 403 );
-		}
-
-		$dismissal_length = ! empty( $_POST['lifespan'] ) ? absint( $_POST['lifespan'] ) : 0;
-
-		self::dismiss( sanitize_key( $_POST['notice_id'] ), $dismissal_length );
-
-		wp_send_json_success();
+		return $notice_class_name;
 	}
-
 }
 
 new PromoHandler();
