@@ -18,7 +18,9 @@ class NotificationImporter {
 		try {
 			$notifications = $this->fetchNotifications();
 		} catch ( \Exception $e ) {
-			$notifications = array();
+			edd_debug_log( sprintf( 'Notification fetch exception: %s', $e->getMessage() ) );
+
+			return;
 		}
 
 		foreach ( $notifications as $notification ) {
@@ -32,7 +34,7 @@ class NotificationImporter {
 					$this->insertNewNotification( $notification );
 				}
 			} catch ( \Exception $e ) {
-				edd_debug_log( sprintf( 'Notification failure: %s', $e->getMessage() ) );
+				edd_debug_log( sprintf( 'Notification processing failure: %s', $e->getMessage() ) );
 			}
 		}
 	}
