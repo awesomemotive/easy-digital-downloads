@@ -129,13 +129,13 @@ class Five_Star_Review_Dashboard extends Notice {
 		// @todo Remove this before finalizing
 		return true;
 
-		$activated = get_option( 'edd_activation', false );
+		$activated = get_option( 'edd_activation_date', false );
 		if ( $activated ) {
 			if ( ( $activated + ( DAY_IN_SECONDS * 30 ) ) > time() ) {
 				return false;
 			}
 		} else {
-			update_option( 'edd_activation', time() );
+			update_option( 'edd_activation_date', time() );
 			return false;
 		}
 		$payments = edd_count_payments();
