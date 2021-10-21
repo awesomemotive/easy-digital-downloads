@@ -9,6 +9,7 @@
 
 namespace EDD\Database;
 
+use EDD\Models\Notification;
 use EDD\Utils\NotificationImporter;
 
 class Notifications extends \EDD_DB {
@@ -65,7 +66,30 @@ class Notifications extends \EDD_DB {
 	}
 
 	public function getActiveNotifications() {
+		global $wpdb;
 
+		$notifications = $wpdb->get_results( $wpdb->prepare(
+			"SELECT * FROM {$this->table_name}
+			WHERE dismissed = 0
+			AND (start <= %s OR start IS NULL)
+			AND (end >= %s OR end IS NULL)
+			ORDER BY start DESC, id DESC",
+			gmdate( 'Y-m-d H:i:s' ),
+			gmdate( 'Y-m-d H:i:s' )
+		) );
+
+		if ( empty( $notifications ) ) {
+			return $notifications;
+		}
+
+		$models = array();
+		foreach($notifications as $notification) {
+			$models[] = new Notification( (array) $notification );
+		}
+
+		unset( $notifications );
+
+		return $models;
 	}
 
 	/**
