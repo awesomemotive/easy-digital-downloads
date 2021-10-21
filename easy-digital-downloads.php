@@ -122,6 +122,11 @@ final class Easy_Digital_Downloads {
 	public $customer_meta;
 
 	/**
+	 * @var \EDD\Database\Notifications
+	 */
+	public $notifications;
+
+	/**
 	 * EDD Cart Object
 	 *
 	 * @var object|EDD_Cart
@@ -161,6 +166,7 @@ final class Easy_Digital_Downloads {
 			self::$instance->email_tags    = new EDD_Email_Template_Tags();
 			self::$instance->customers     = new EDD_DB_Customers();
 			self::$instance->customer_meta = new EDD_DB_Customer_Meta();
+			self::$instance->notifications = new \EDD\Database\Notifications();
 			self::$instance->payment_stats = new EDD_Payment_Stats();
 			self::$instance->cart          = new EDD_Cart();
 		}
@@ -258,6 +264,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/cart/template.php';
 		require_once EDD_PLUGIN_DIR . 'includes/cart/actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db.php';
+		require_once EDD_PLUGIN_DIR . 'includes/database/Notifications.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-customers.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-db-customer-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-customer-query.php';
@@ -321,6 +328,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/tracking.php'; // Must be loaded on frontend to ensure cron runs
 		require_once EDD_PLUGIN_DIR . 'includes/privacy-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/utils/class-tokenizer.php';
+		require_once EDD_PLUGIN_DIR . 'includes/utils/NotificationImporter.php';
 
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/add-ons.php';
