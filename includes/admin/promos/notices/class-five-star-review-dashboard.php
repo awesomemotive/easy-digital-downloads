@@ -123,9 +123,6 @@ class Five_Star_Review_Dashboard extends Notice {
 	 * @return bool
 	 */
 	protected function _should_display() {
-		if ( ! current_user_can( static::CAPABILITY ) ) {
-			return false;
-		}
 		// @todo Remove this before finalizing
 		return true;
 
