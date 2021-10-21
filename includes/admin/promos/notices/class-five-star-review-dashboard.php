@@ -77,15 +77,15 @@ class Five_Star_Review_Dashboard extends Notice {
 		<div class="edd-review-step edd-review-step-1">
 			<p><?php esc_html_e( 'Hey, I noticed you\'ve made quite a few sales with Easy Digital Downloads! Are you enjoying Easy Digital Downloads?', 'easy-digital-downloads' ); ?></p>
 			<p>
-				<a class="edd-review-switch-step" data-step="3"><?php esc_html_e( 'Yes', 'easy-digital-downloads' ); ?></a><br />
-				<a class="edd-review-switch-step" data-step="2"><?php esc_html_e( 'Not Really', 'easy-digital-downloads' ); ?></a>
+				<button class="button-link edd-review-switch-step" data-step="3"><?php esc_html_e( 'Yes', 'easy-digital-downloads' ); ?></button><br />
+				<button class="button-link edd-review-switch-step" data-step="2"><?php esc_html_e( 'Not Really', 'easy-digital-downloads' ); ?></button>
 			</p>
 		</div>
 		<div class="edd-review-step edd-review-step-2" style="display:none;">
 			<p><?php esc_html_e( 'We\'re sorry to hear you aren\'t enjoying Easy Digital Downloads. We would love a chance to improve. Could you take a minute and let us know what we can do better?', 'easy-digital-downloads' ); ?></p>
 			<p>
 				<a href="<?php echo esc_url( $this->url() ); ?>" class="edd-promo-notice-dismiss"><?php esc_html_e( 'Give Feedback', 'easy-digital-downloads' ); ?></a><br>
-				<a class="edd-promo-notice-dismiss"><?php esc_html_e( 'No thanks', 'easy-digital-downloads' ); ?></a>
+				<button class="button-link edd-promo-notice-dismiss"><?php esc_html_e( 'No thanks', 'easy-digital-downloads' ); ?></button>
 			</p>
 		</div>
 		<div class="edd-review-step edd-review-step-3" style="display:none;">
@@ -93,7 +93,7 @@ class Five_Star_Review_Dashboard extends Notice {
 			<p><strong><?php echo wp_kses( __( '~ Chris Klosowski<br>President of Easy Digital Downloads', 'easy-digital-downloads' ), array( 'br' => array() ) ); ?></strong></p>
 			<p>
 				<a href="https://wordpress.org/support/plugin/easy-digital-downloads/reviews/?filter=5#new-post" class="edd-promo-notice-dismiss" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Ok, you deserve it', 'easy-digital-downloads' ); ?></a><br>
-				<a class="button-link edd-promo-notice-dismiss"><?php esc_html_e( 'No, I already did', 'easy-digital-downloads' ); ?></a>
+				<button class="button-link edd-promo-notice-dismiss"><?php esc_html_e( 'No, I already did', 'easy-digital-downloads' ); ?></button>
 			</p>
 		</div>
 		<script type="text/javascript">
