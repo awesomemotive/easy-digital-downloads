@@ -141,4 +141,46 @@ class NotificationImporterTests extends \EDD_UnitTestCase {
 		$this->assertSame( 'This is an exciting new EDD feature with updated content.', $notifications[0]->content );
 	}
 
+	/**
+	 * @expectedException \Exception
+	 * @expectedExceptionMessage Notification has expired.
+	 * @throws \Exception
+	 */
+	public function test_ended_notification_doesnt_validate() {
+		$importer = new NotificationImporter();
+
+		if ( method_exists( $this, 'setExpectedException' ) ) {
+			$this->setExpectedException( 'Exception', 'Notification has expired.' );
+		}
+
+		$notification                    = new \stdClass();
+		$notification->title             = 'Announcing New EDD Feature';
+		$notification->content           = 'This is an exciting new EDD feature.';
+		$notification->id                = 90;
+		$notification->end               = date( 'Y-m-d H:i:s', strtotime( '-2 days' ) );
+		$notification->notification_type = 'success';
+
+		$importer->validateNotification( $notification );
+	}
+
+	/**
+	 * @expectedException \Exception
+	 * @throws \Exception
+	 */
+	public function test_notification_missing_properties_doesnt_validate() {
+		$importer = new NotificationImporter();
+
+		if ( method_exists( $this, 'setExpectedException' ) ) {
+			$this->setExpectedException( 'Exception', 'Missing required properties: ["title"]' );
+		}
+
+		$notification                    = new \stdClass();
+		$notification->content           = 'This is an exciting new EDD feature.';
+		$notification->id                = 90;
+		$notification->end               = date( 'Y-m-d H:i:s', strtotime( '-2 days' ) );
+		$notification->notification_type = 'success';
+
+		$importer->validateNotification( $notification );
+	}
+
 }

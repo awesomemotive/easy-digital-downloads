@@ -78,7 +78,7 @@ class NotificationImporter {
 	 *
 	 * @throws \Exception
 	 */
-	protected function validateNotification( $notification ) {
+	public function validateNotification( $notification ) {
 		// Make sure we have all the required data.
 		$requiredProperties = array(
 			'id',
@@ -89,7 +89,7 @@ class NotificationImporter {
 
 		$missing = array_diff( $requiredProperties, array_keys( get_object_vars( $notification ) ) );
 		if ( $missing ) {
-			throw new \Exception( sprintf( 'Missing required properties: %s', json_encode( $missing ) ) );
+			throw new \Exception( sprintf( 'Missing required properties: %s', json_encode( array_values( $missing ) ) ) );
 		}
 
 		// Don't save the notification if it has expired.
