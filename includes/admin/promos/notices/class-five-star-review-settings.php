@@ -40,7 +40,7 @@ class Five_Star_Review_Settings extends Five_Star_Review_Dashboard {
 		?>
 		<div
 			id="edd-admin-notice-<?php echo esc_attr( $this->get_id() ); ?>"
-			class="notice notice-success edd-admin-notice-<?php echo esc_attr( sanitize_html_class( static::TYPE ) ); ?> edd-promo-notice"
+			class="notice notice-info edd-admin-notice-<?php echo esc_attr( sanitize_html_class( static::TYPE ) ); ?> edd-promo-notice"
 			data-nonce="<?php echo esc_attr( wp_create_nonce( 'edd-dismiss-notice-' . $this->get_id() ) ); ?>"
 			data-id="<?php echo esc_attr( $this->get_id() ); ?>"
 			data-lifespan="<?php echo esc_attr( static::dismiss_duration() ); ?>"
