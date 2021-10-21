@@ -461,32 +461,37 @@ function process_disconnect() {
 
 	$mode = edd_is_test_mode() ? PayPal\API::MODE_SANDBOX : PayPal\API::MODE_LIVE;
 
+	try {
+		$api = new PayPal\API();
+
+		try {
+			// Disconnect the webhook.
+			// This is in another try/catch because we want to delete the token cache (below) even if this fails.
+			PayPal\Webhooks\delete_webhook( $mode );
+		} catch ( \Exception $e ) {
+
+		}
+
+		// Also delete the token cache key, to ensure we fetch a fresh one if they connect to a different account later.
+		delete_option( $api->token_cache_key );
+	} catch ( \Exception $e ) {
+
+	}
+
 	// Delete API credentials.
 	$edd_settings_to_delete = array(
 		'paypal_' . $mode . '_client_id',
-		'paypal_' . $mode . '_client_secret'
+		'paypal_' . $mode . '_client_secret',
 	);
+	foreach ( $edd_settings_to_delete as $option_name ) {
+		edd_delete_option( $option_name );
+	}
 
 	// Delete merchant information.
 	delete_option( 'edd_paypal_' . $mode . '_merchant_details' );
 
 	// Delete partner connect information.
 	delete_option( 'edd_paypal_commerce_connect_details_' . $mode );
-
-	try {
-		// Also delete the token cache key, to ensure we fetch a fresh one if they connect to a different account later.
-		$api                 = new PayPal\API();
-		$edd_settings_to_delete[] = $api->token_cache_key;
-
-		// Disconnect the webhook.
-		PayPal\Webhooks\delete_webhook( $mode );
-	} catch ( \Exception $e ) {
-
-	}
-
-	foreach ( $edd_settings_to_delete as $option_name ) {
-		edd_delete_option( $option_name );
-	}
 
 	wp_safe_redirect( esc_url_raw( get_settings_url() ) );
 	exit;
