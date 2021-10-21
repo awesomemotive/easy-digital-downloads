@@ -509,12 +509,6 @@ function edd_get_registered_settings() {
 							'none'         => __( 'None', 'easy-digital-downloads' ),
 						),
 					),
-					'allow_multiple_discounts' => array(
-						'id'   => 'allow_multiple_discounts',
-						'name' => __('Multiple Discounts','easy-digital-downloads' ),
-						'desc' => __('Allow customers to use multiple discounts on the same purchase?','easy-digital-downloads' ),
-						'type' => 'checkbox',
-					),
 					'enable_cart_saving' => array(
 						'id'   => 'enable_cart_saving',
 						'name' => __( 'Enable Cart Saving', 'easy-digital-downloads' ),
@@ -579,17 +573,6 @@ function edd_get_registered_settings() {
 						'desc' => '',
 						'type' => 'sendwp',
 					),
-					'recapture_header' => array(
-						'id'   => 'recapture_header',
-						'name' => '<strong>' . __( 'Recapture', 'easy-digital-downloads' ) . '</strong>',
-						'type' => 'header',
-					),
-					'recapture'        => array(
-						'id'   => 'recapture',
-						'name' => __( 'Abandoned cart recovery', 'easy-digital-downloads' ),
-						'desc' => '',
-						'type' => 'recapture',
-					),
 				),
 				'purchase_receipts' => array(
 					'purchase_receipt_email_settings' => array(
@@ -653,6 +636,25 @@ function edd_get_registered_settings() {
 						'id'   => 'disable_admin_notices',
 						'name' => __( 'Disable Admin Notifications', 'easy-digital-downloads' ),
 						'desc' => __( 'Check this box if you do not want to receive sales notification emails.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+				),
+			)
+		),
+		'marketing'  => apply_filters(
+			'edd_settings_marketing',
+			array(
+				'main' => array(
+					'recapture'                => array(
+						'id'   => 'recapture',
+						'name' => __( 'Abandoned Cart Recovery', 'easy-digital-downloads' ),
+						'desc' => '',
+						'type' => 'recapture',
+					),
+					'allow_multiple_discounts' => array(
+						'id'   => 'allow_multiple_discounts',
+						'name' => __( 'Multiple Discounts', 'easy-digital-downloads' ),
+						'desc' => __( 'Allow customers to use multiple discounts on the same purchase?', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
 					),
 				),
@@ -1366,13 +1368,15 @@ function edd_get_settings_tabs() {
 
 	$settings = edd_get_registered_settings();
 
-	$tabs             = array();
-	$tabs['general']  = __( 'General', 'easy-digital-downloads' );
-	$tabs['gateways'] = __( 'Payments', 'easy-digital-downloads' );
-	$tabs['emails']   = __( 'Emails', 'easy-digital-downloads' );
-	$tabs['styles']   = __( 'Styles', 'easy-digital-downloads' );
-	$tabs['taxes']    = __( 'Taxes', 'easy-digital-downloads' );
-	$tabs['privacy']  = __( 'Privacy', 'easy-digital-downloads' );
+	$tabs = array(
+		'general'   => __( 'General', 'easy-digital-downloads' ),
+		'gateways'  => __( 'Payments', 'easy-digital-downloads' ),
+		'emails'    => __( 'Emails', 'easy-digital-downloads' ),
+		'marketing' => __( 'Marketing', 'easy-digital-downloads' ),
+		'styles'    => __( 'Styles', 'easy-digital-downloads' ),
+		'taxes'     => __( 'Taxes', 'easy-digital-downloads' ),
+		'privacy'   => __( 'Privacy', 'easy-digital-downloads' ),
+	);
 
 	if( ! empty( $settings['extensions'] ) ) {
 		$tabs['extensions'] = __( 'Extensions', 'easy-digital-downloads' );
@@ -1436,6 +1440,9 @@ function edd_get_registered_settings_sections() {
 			'main'               => __( 'General', 'easy-digital-downloads' ),
 			'purchase_receipts'  => __( 'Purchase Receipts', 'easy-digital-downloads' ),
 			'sale_notifications' => __( 'New Sale Notifications', 'easy-digital-downloads' ),
+		) ),
+		'marketing'  => apply_filters( 'edd_settings_sections_marketing', array(
+			'main' => __( 'General', 'easy-digital-downloads' ),
 		) ),
 		'styles'     => apply_filters( 'edd_settings_sections_styles', array(
 			'main'               => __( 'General', 'easy-digital-downloads' ),
