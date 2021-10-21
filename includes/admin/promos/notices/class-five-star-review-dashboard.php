@@ -137,7 +137,7 @@ class Five_Star_Review_Dashboard extends Notice {
 		}
 		// @todo Change this to edd_count_orders in 3.0
 		$payments = edd_count_payments();
-		if ( $payments && 50 > $payments->publish ) {
+		if ( $payments && 15 > $payments->publish ) {
 			return false;
 		}
 
