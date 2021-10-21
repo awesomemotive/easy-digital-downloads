@@ -29,13 +29,6 @@ class PromoHandler {
 	);
 
 	/**
-	 * The capabilities required to view/dismiss notice.
-	 *
-	 * @var array
-	 */
-	private $capabilities = array();
-
-	/**
 	 * Notices constructor.
 	 */
 	public function __construct() {
@@ -66,16 +59,13 @@ class PromoHandler {
 				continue;
 			}
 
-			/** @var Notice $notice */
-			$notice = new $notice_class_name();
-
-			add_action( $notice_class_name::DISPLAY_HOOK, function () use ( $notice ) {
+			add_action( $notice_class_name::DISPLAY_HOOK, function () use ( $notice_class_name ) {
+				/** @var Notice $notice */
+				$notice = new $notice_class_name();
 				if ( $notice->should_display() ) {
 					$notice->display();
 				}
 			} );
-
-			$this->capabilities[ $notice->get_id() ] = $notice_class_name::CAPABILITY;
 		}
 	}
 
@@ -122,7 +112,34 @@ class PromoHandler {
 			wp_send_json_error( __( 'Missing notice ID.', 'easy-digital-downloads' ), 400 );
 		}
 
-		if ( ! current_user_can( $this->capabilities[ $notice_id ] ) ) {
+		$notice_class_name = false;
+		// Look through the registered notice classes for the one being dismissed.
+		foreach ( $this->notices as $notice_class_to_check ) {
+			if ( ! class_exists( $notice_class_to_check ) ) {
+				$file_name = strtolower( str_replace( '_', '-', basename( str_replace( '\\', '/', $notice_class_to_check ) ) ) );
+				$file_path = EDD_PLUGIN_DIR . 'includes/admin/promos/notices/class-' . $file_name . '.php';
+
+				if ( file_exists( $file_path ) ) {
+					require_once $file_path;
+				}
+			}
+
+			if ( ! class_exists( $notice_class_to_check ) ) {
+				continue;
+			}
+			$notice = new $notice_class_to_check();
+			if ( $notice->get_id() === $notice_id ) {
+				$notice_class_name = $notice_class_to_check;
+			}
+		}
+
+		// No matching notice class was found.
+		if ( ! $notice_class_name ) {
+			wp_send_json_error( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ), 403 );
+		}
+
+		// Check whether the current user can dismiss the notice.
+		if ( ! current_user_can( $notice_class_name::CAPABILITY ) ) {
 			wp_send_json_error( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ), 403 );
 		}
 
