@@ -124,7 +124,7 @@ class PromoHandler {
 		}
 
 		// Check whether the current user can dismiss the notice.
-		if ( ! current_user_can( $notice_class_name::CAPABILITY ) ) {
+		if ( ! defined( $notice_class_name . '::CAPABILITY' ) || ! current_user_can( $notice_class_name::CAPABILITY ) ) {
 			wp_send_json_error( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ), 403 );
 		}
 
