@@ -1,57 +1,52 @@
-/* global eddNotifications */
+/* global eddNotificationsVars */
 
-document.addEventListener( 'DOMContentLoaded', function() {
-	var notifications = document.querySelectorAll( '.edd-notification' );
-	if ( ! notifications ) {
-		return;
-	}
+document.addEventListener( 'alpine:init', () => {
+	Alpine.store( 'eddNotifications', {
+		isPanelOpen: false,
+		notificationsLoaded: false,
+		activeNotifications: [],
+		inactiveNotifications: [],
 
-	notifications.forEach( function( notification ) {
-		var dismissButton = notification.querySelector( '.edd-notification--dismiss' );
-		if ( ! dismissButton ) {
-			return;
-		}
-
-		dismissButton.addEventListener( 'click', function( e ) {
-			e.preventDefault();
-
-			var notificationId = dismissButton.getAttribute( 'data-id' );
-			if ( ! notificationId ) {
+		openPanel: function() {
+			console.log('opening');
+			if ( this.notificationsLoaded ) {
+				this.isPanelOpen = true;
 				return;
 			}
 
-			console.log( 'Dismissing', notificationId );
+			this.isPanelOpen = true;
 
-			dismissNotification( notificationId )
-				.then( function() {
-					notification.remove();
-				} )
-				.catch( function( error ) {
-					console.log( 'Dismiss error', error );
+			this.getNotifications()
+				.catch( error => {
+					console.log( 'Notification error', error );
 				} );
-		} );
+		},
+
+		closePanel: function() {
+			if ( this.isPanelOpen ) {
+				this.isPanelOpen = false;
+			}
+		},
+
+		getNotifications: function() {
+			return fetch( eddNotificationsVars.restBase + '/notifications', {
+				method: 'GET',
+				credentials: 'same-origin',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-WP-Nonce': eddNotificationsVars.restNonce
+				}
+			} ).then( response => {
+				if ( ! response.ok ) {
+					return Promise.reject( response );
+				}
+
+				return response.json();
+			} ).then( data => {
+				this.activeNotifications = data.active;
+				this.inactiveNotifications = data.dismissed;
+				this.notificationsLoaded = true;
+			} );
+		}
 	} );
-
-	/**
-	 * Dismisses a notification.
-	 *
-	 * @param {integer} id
-	 * @returns {Promise<Response>}
-	 */
-	function dismissNotification( id ) {
-		return fetch( eddNotifications.restBase + '/notifications/' + id, {
-			method: 'DELETE',
-			credentials: 'same-origin',
-			headers: {
-				'Content-Type': 'application/json',
-				'X-WP-Nonce': eddNotifications.restNonce
-			}
-		} ).then( function( response ) {
-			if ( ! response.ok ) {
-				return Promise.reject( response );
-			}
-
-			return response.json();
-		} );
-	}
 } );
