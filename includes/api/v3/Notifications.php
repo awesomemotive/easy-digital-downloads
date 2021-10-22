@@ -71,13 +71,14 @@ class Notifications extends Endpoint {
 			return $notification->toArray();
 		}, EDD()->notifications->getActiveNotifications() );
 
-		$dismissed = array_map( function ( Notification $notification ) {
+		// @todo At a later date we may want to receive dismissed notifications too.
+		/*$dismissed = array_map( function ( Notification $notification ) {
 			return $notification->toArray();
-		}, EDD()->notifications->getDismissedNotifications() );
+		}, EDD()->notifications->getDismissedNotifications() );*/
 
 		return new \WP_REST_Response( array(
 			'active'    => $active,
-			'dismissed' => $dismissed,
+			//'dismissed' => $dismissed,
 		) );
 	}
 
