@@ -993,3 +993,161 @@ function maybe_add_jilt_notice_to_abandoned_payment( $payment_id ) {
 		<?php
 	}
 }
+
+/**
+ * SendWP Callback
+ *
+ * Renders SendWP Settings
+ *
+ * @since 2.9.15
+ * @param array $args Arguments passed by the setting
+ * @return void
+ */
+function edd_sendwp_callback( $args ) {
+
+	_edd_deprecated_function( __FUNCTION__, '2.11.x' );
+
+	// Connection status partial label based on the state of the SendWP email sending setting (Tools -> SendWP)
+	$connected  = '<a href="https://app.sendwp.com/dashboard" target="_blank" rel="noopener noreferrer">';
+	$connected .= __( 'Access your SendWP account', 'easy-digital-downloads' );
+	$connected .= '</a>.';
+
+	$disconnected = sprintf(
+		__( '<em><strong>Note:</strong> Email sending is currently disabled. <a href="' . admin_url( '/tools.php?page=sendwp' ) . '">Click here</a> to enable it.</em>', 'easy-digital-downloads' )
+	);
+
+	// Checks if SendWP is connected
+	$client_connected = function_exists( 'sendwp_client_connected' ) && sendwp_client_connected() ? true : false;
+
+	// Checks if email sending is enabled in SendWP
+	$forwarding_enabled = function_exists( 'sendwp_forwarding_enabled' ) && sendwp_forwarding_enabled() ? true : false;
+
+	ob_start();
+
+	echo $args['desc'];
+
+	// Output the appropriate button and label based on connection status
+	if( $client_connected ) :
+		?>
+		<div class="inline notice notice-success">
+			<p><?php _e( 'SendWP plugin activated.', 'easy-digital-downloads' ); ?> <?php echo $forwarding_enabled ? $connected : $disconnected ; ?></p>
+
+			<p>
+				<button id="edd-sendwp-disconnect" class="button"><?php _e( 'Disconnect SendWP', 'easy-digital-downloads' ); ?></button>
+			</p>
+		</div>
+		<?php
+	else :
+		?>
+		<p>
+			<?php _e( 'We recommend SendWP to ensure quick and reliable delivery of all emails sent from your store, such as purchase receipts, subscription renewal reminders, password resets, and more.', 'easy-digital-downloads' ); ?> <?php printf( __( '%sLearn more%s', 'easy-digital-downloads' ), '<a href="https://sendwp.com/" target="_blank" rel="noopener noreferrer">', '</a>' ); ?>
+		</p>
+		<p>
+			<button type="button" id="edd-sendwp-connect" class="button button-primary"><?php esc_html_e( 'Connect with SendWP', 'easy-digital-downloads' ); ?>
+			</button>
+		</p>
+
+		<?php
+	endif;
+
+	echo ob_get_clean();
+}
+
+/**
+ * Handle installation and connection for SendWP via ajax
+ *
+ * @since 2.9.15
+ */
+function edd_sendwp_remote_install_handler () {
+
+	_edd_deprecated_function( __FUNCTION__, '2.11.x' );
+
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		wp_send_json_error( array(
+			'error' => __( 'You do not have permission to do this.', 'easy-digital-downloads' )
+		) );
+	}
+
+	include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+	include_once ABSPATH . 'wp-admin/includes/file.php';
+	include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+
+	$plugins = get_plugins();
+
+	if( ! array_key_exists( 'sendwp/sendwp.php', $plugins ) ) {
+
+		/*
+		* Use the WordPress Plugins API to get the plugin download link.
+		*/
+		$api = plugins_api( 'plugin_information', array(
+			'slug' => 'sendwp',
+		) );
+
+		if ( is_wp_error( $api ) ) {
+			wp_send_json_error( array(
+				'error' => $api->get_error_message(),
+				'debug' => $api
+			) );
+		}
+
+		/*
+		* Use the AJAX Upgrader skin to quietly install the plugin.
+		*/
+		$upgrader = new Plugin_Upgrader( new WP_Ajax_Upgrader_Skin() );
+		$install = $upgrader->install( $api->download_link );
+		if ( is_wp_error( $install ) ) {
+			wp_send_json_error( array(
+				'error' => $install->get_error_message(),
+				'debug' => $api
+			) );
+		}
+
+		$activated = activate_plugin( $upgrader->plugin_info() );
+
+	} else {
+
+		$activated = activate_plugin( 'sendwp/sendwp.php' );
+
+	}
+
+	/*
+	* Final check to see if SendWP is available.
+	*/
+	if( ! function_exists('sendwp_get_server_url') ) {
+		wp_send_json_error( array(
+			'error' => __( 'Something went wrong. SendWP was not installed correctly.', 'easy-digital-downloads' )
+		) );
+	}
+
+	wp_send_json_success( array(
+		'partner_id'      => 81,
+		'register_url'    => sendwp_get_server_url() . '_/signup',
+		'client_name'     => sendwp_get_client_name(),
+		'client_secret'   => sendwp_get_client_secret(),
+		'client_redirect' => admin_url( '/edit.php?post_type=download&page=edd-settings&tab=emails&edd-message=sendwp-connected' ),
+	) );
+}
+add_action( 'wp_ajax_edd_sendwp_remote_install', 'edd_sendwp_remote_install_handler' );
+
+/**
+ * Handle deactivation of SendWP via ajax
+ *
+ * @since 2.9.15
+ */
+function edd_sendwp_disconnect () {
+
+	_edd_deprecated_function( __FUNCTION__, '2.11.x' );
+
+	if ( ! current_user_can( 'manage_shop_settings' ) ) {
+		wp_send_json_error( array(
+			'error' => __( 'You do not have permission to do this.', 'easy-digital-downloads' )
+		) );
+	}
+
+	sendwp_disconnect_client();
+
+	deactivate_plugins( 'sendwp/sendwp.php' );
+
+	wp_send_json_success();
+}
+add_action( 'wp_ajax_edd_sendwp_disconnect', 'edd_sendwp_disconnect' );
