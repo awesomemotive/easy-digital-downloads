@@ -169,6 +169,8 @@ final class Easy_Digital_Downloads {
 			self::$instance->notifications = new \EDD\Database\Notifications();
 			self::$instance->payment_stats = new EDD_Payment_Stats();
 			self::$instance->cart          = new EDD_Cart();
+
+			self::$instance->registerApiEndpoints();
 		}
 
 		return self::$instance;
@@ -255,6 +257,7 @@ final class Easy_Digital_Downloads {
 		}
 		require_once EDD_PLUGIN_DIR . 'includes/ajax-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/api/class-edd-api.php';
+		require_once EDD_PLUGIN_DIR . 'includes/api/v3/Endpoint.php';
 		require_once EDD_PLUGIN_DIR . 'includes/template-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/template-actions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/checkout/template.php';
@@ -380,6 +383,29 @@ final class Easy_Digital_Downloads {
 
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-register-meta.php';
 		require_once EDD_PLUGIN_DIR . 'includes/install.php';
+	}
+
+	/**
+	 * @todo move this somewhere better
+	 */
+	private function registerApiEndpoints() {
+		add_action( 'rest_api_init', function() {
+			$endpoints = array(
+				'\\EDD\\API\\v3\\Notifications',
+			);
+
+			foreach( $endpoints as $endpointClassName ) {
+				$endpointNamePieces = explode( '\\', $endpointClassName );
+				$endpointName = end( $endpointNamePieces );
+
+				require_once EDD_PLUGIN_DIR . 'includes/api/v3/' . $endpointName . '.php';
+
+				if ( class_exists( $endpointClassName ) ) {
+					$endpoint = new $endpointClassName();
+					$endpoint->register();
+				}
+			}
+		} );
 	}
 
 	/**

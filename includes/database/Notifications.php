@@ -65,6 +65,11 @@ class Notifications extends \EDD_DB {
 		return array();
 	}
 
+	/**
+	 * Returns all notifications that have not been dismissed.
+	 *
+	 * @return Notification[]
+	 */
 	public function getActiveNotifications() {
 		global $wpdb;
 
@@ -78,13 +83,11 @@ class Notifications extends \EDD_DB {
 			gmdate( 'Y-m-d H:i:s' )
 		) );
 
-		if ( empty( $notifications ) ) {
-			return $notifications;
-		}
-
 		$models = array();
-		foreach($notifications as $notification) {
-			$models[] = new Notification( (array) $notification );
+		if ( is_array( $notifications ) ) {
+			foreach ( $notifications as $notification ) {
+				$models[] = new Notification( (array) $notification );
+			}
 		}
 
 		unset( $notifications );

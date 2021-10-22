@@ -237,6 +237,13 @@ function edd_load_admin_scripts( $hook ) {
 		'wait'                        => __( 'Please wait &hellip;', 'easy-digital-downloads' ),
 	));
 
+	wp_register_script( 'edd-admin-notifications', $js_dir . 'admin-notifications.js', array(), EDD_VERSION, true );
+	wp_enqueue_script( 'edd-admin-notifications' );
+	wp_localize_script( 'edd-admin-notifications', 'eddNotifications', array(
+		'restBase'  => rest_url( \EDD\API\v3\Endpoint::$namespace ),
+		'restNonce' => wp_create_nonce( 'wp_rest' ),
+	) );
+
 	/*
 	 * This bit of JavaScript is to facilitate #2704, in order to not break backwards compatibility with the old Variable Price Rows
 	 * while we transition to an entire new markup. They should not be relied on for long-term usage.
