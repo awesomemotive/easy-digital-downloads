@@ -2059,7 +2059,10 @@ jQuery(document).ready(function ($) {
 				var notice = $( this );
 
 				notice.on( 'click', '.edd-promo-notice-dismiss', function( e ) {
-					e.preventDefault();
+					// Only prevent default behavior for buttons, not links.
+					if ( !$( this ).attr( 'href' ) ) {
+						e.preventDefault();
+					}
 
 					$.ajax( {
 						type: 'POST',
