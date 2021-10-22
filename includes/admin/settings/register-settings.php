@@ -2685,6 +2685,16 @@ add_action(
 			}
 		}
 
+		/**
+		 * Move the Free Downloads settings to the Marketing section.
+		 */
+		if ( false !== has_filter( 'edd_settings_sections_extensions', 'edd_free_downloads_add_settings_section' ) ) {
+			remove_filter( 'edd_settings_sections_extensions', 'edd_free_downloads_add_settings_section' );
+			add_filter( 'edd_settings_sections_marketing', 'edd_free_downloads_add_settings_section' );
+			remove_filter( 'edd_settings_extensions', 'edd_free_downloads_add_settings' );
+			add_filter( 'edd_settings_marketing', 'edd_free_downloads_add_settings' );
+		}
+
 	},
 	99
 );
