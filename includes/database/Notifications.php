@@ -69,7 +69,6 @@ class Notifications extends \EDD_DB {
 	public function insert( $data, $type = 'notification' ) {
 		$result = parent::insert( $data, $type );
 
-		wp_cache_delete( 'edd_unread_notification_count', 'edd_notifications' );
 		wp_cache_delete( 'edd_active_notification_count', 'edd_notifications' );
 
 		return $result;
@@ -138,32 +137,11 @@ class Notifications extends \EDD_DB {
 		return $numberActive;
 	}
 
-	/**
-	 * Counts the number of unread notifications.
-	 *
-	 * @return int
-	 */
-	public function countUnreadNotifications() {
-		global $wpdb;
-
-		$numberUnread = wp_cache_get( 'edd_unread_notification_count', 'edd_notifications' );
-		if ( false === $numberUnread ) {
-			$numberUnread = (int) $wpdb->get_var(
-				"SELECT COUNT(*) FROM {$this->table_name}
-				WHERE viewed = 0"
-			);
-
-			wp_cache_set( 'edd_unread_notification_count', $numberUnread, 'edd_notifications' );
-		}
-
-		return $numberUnread;
-	}
-
 	public function getDismissedNotifications() {
 		global $wpdb;
 
 		$notifications = $wpdb->get_results(
-			"SELECT * FROM {$this->table_name}WHERE dismissed = 1 ORDER BY date_updated DESC"
+			"SELECT * FROM {$this->table_name} WHERE dismissed = 1 ORDER BY date_updated DESC"
 		);
 
 		$models = array();

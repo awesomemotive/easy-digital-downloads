@@ -101,6 +101,8 @@ class Notifications extends Endpoint {
 			), 500 );
 		}
 
+		wp_cache_delete( 'edd_active_notification_count', 'edd_notifications' );
+
 		return new \WP_REST_Response( null, 204 );
 	}
 }
