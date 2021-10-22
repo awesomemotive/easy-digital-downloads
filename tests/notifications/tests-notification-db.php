@@ -7,12 +7,13 @@
  * @license   GPL2+
  */
 
-namespace EDD\Tests;
+namespace EDD\Tests\Notifications;
 
 use EDD\Models\Notification;
 
 /**
  * @coversDefaultClass \EDD\Database\Notifications
+ * @group edd_notifications
  */
 class NotificationDBTests extends \EDD_UnitTestCase {
 

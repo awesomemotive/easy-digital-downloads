@@ -7,12 +7,13 @@
  * @license   GPL2+
  */
 
-namespace EDD\Tests;
+namespace EDD\Tests\Notifications;
 
 use EDD\Utils\NotificationImporter;
 
 /**
  * @coversDefaultClass \EDD\Utils\NotificationImporter
+ * @group edd_notifications
  */
 class NotificationImporterTests extends \EDD_UnitTestCase {
 
