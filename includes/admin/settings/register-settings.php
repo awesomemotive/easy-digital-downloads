@@ -562,17 +562,6 @@ function edd_get_registered_settings() {
 						'desc' => '',
 						'type' => 'hook',
 					),
-					'sendwp_header'    => array(
-						'id'   => 'sendwp_header',
-						'name' => '<strong>' . __( 'SendWP', 'easy-digital-downloads' ) . '</strong>',
-						'type' => 'header',
-					),
-					'sendwp'           => array(
-						'id'   => 'sendwp',
-						'name' => __( 'Deliverability settings', 'easy-digital-downloads' ),
-						'desc' => '',
-						'type' => 'sendwp',
-					),
 				),
 				'purchase_receipts' => array(
 					'purchase_receipt_email_settings' => array(
@@ -2165,63 +2154,6 @@ function edd_shop_states_callback($args) {
 	$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> '  . wp_kses_post( $args['desc'] ) . '</label>';
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
-}
-
-/**
- * SendWP Callback
- *
- * Renders SendWP Settings
- *
- * @since 2.9.15
- * @param array $args Arguments passed by the setting
- * @return void
- */
-function edd_sendwp_callback($args) {
-
-	// Connection status partial label based on the state of the SendWP email sending setting (Tools -> SendWP)
-	$connected  = '<a href="https://app.sendwp.com/dashboard" target="_blank" rel="noopener noreferrer">';
-	$connected .= __( 'Access your SendWP account', 'easy-digital-downloads' );
-	$connected .= '</a>.';
-
-	$disconnected = sprintf(
-		__( '<em><strong>Note:</strong> Email sending is currently disabled. <a href="' . admin_url( '/tools.php?page=sendwp' ) . '">Click here</a> to enable it.</em>', 'easy-digital-downloads' )
-	);
-
-	// Checks if SendWP is connected
-	$client_connected = function_exists( 'sendwp_client_connected' ) && sendwp_client_connected() ? true : false;
-
-	// Checks if email sending is enabled in SendWP
-	$forwarding_enabled = function_exists( 'sendwp_forwarding_enabled' ) && sendwp_forwarding_enabled() ? true : false;
-
-	ob_start();
-
-	echo $args['desc'];
-
-	// Output the appropriate button and label based on connection status
-	if( $client_connected ) :
-		?>
-		<div class="inline notice notice-success">
-			<p><?php _e( 'SendWP plugin activated.', 'easy-digital-downloads' ); ?> <?php echo $forwarding_enabled ? $connected : $disconnected ; ?></p>
-
-			<p>
-				<button id="edd-sendwp-disconnect" class="button"><?php _e( 'Disconnect SendWP', 'easy-digital-downloads' ); ?></button>
-			</p>
-		</div>
-		<?php
-	else :
-		?>
-		<p>
-			<?php _e( 'We recommend SendWP to ensure quick and reliable delivery of all emails sent from your store, such as purchase receipts, subscription renewal reminders, password resets, and more.', 'easy-digital-downloads' ); ?> <?php printf( __( '%sLearn more%s', 'easy-digital-downloads' ), '<a href="https://sendwp.com/" target="_blank" rel="noopener noreferrer">', '</a>' ); ?>
-		</p>
-		<p>
-			<button type="button" id="edd-sendwp-connect" class="button button-primary"><?php esc_html_e( 'Connect with SendWP', 'easy-digital-downloads' ); ?>
-			</button>
-		</p>
-
-		<?php
-	endif;
-
-	echo ob_get_clean();
 }
 
 /**

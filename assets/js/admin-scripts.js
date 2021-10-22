@@ -1204,23 +1204,6 @@ jQuery(document).ready(function ($) {
 
 		emails : function() {
 
-			$('#edd-sendwp-connect').on('click', function(e) {
-
-				e.preventDefault();
-				$(this).html( edd_vars.wait + ' <span class="edd-loading"></span>' );
-				document.body.style.cursor = 'wait';
-				easy_digital_downloads_sendwp_remote_install();
-
-			});
-
-			$('#edd-sendwp-disconnect').on('click', function(e) {
-				e.preventDefault();
-				$(this).html( edd_vars.wait + ' <span class="edd-loading dark"></span>' );
-				document.body.style.cursor = 'wait';
-				easy_digital_downloads_sendwp_disconnect();
-
-			});
-
 			$('#edd-recapture-connect').on('click', function(e) {
 
 				e.preventDefault();
@@ -2213,65 +2196,6 @@ function edd_attach_tooltips( selector ) {
 			duration: 200
 		}
 	});
-}
-
-function easy_digital_downloads_sendwp_remote_install() {
-	var data = {
-		'action': 'edd_sendwp_remote_install',
-	};
-
-	// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
-	jQuery.post(ajaxurl, data, function( response ) {
-
-		if( ! response.success ) {
-
-			if( confirm( response.data.error ) ) {
-				location.reload();
-				return;
-			}
-		}
-
-		easy_digital_downloads_sendwp_register_client(
-			response.data.register_url,
-			response.data.client_name,
-			response.data.client_secret,
-			response.data.client_redirect,
-			response.data.partner_id
-		);
-	});
-}
-
-function easy_digital_downloads_sendwp_disconnect() {
-	var data = {
-		'action': 'edd_sendwp_disconnect',
-	};
-
-	jQuery.post(ajaxurl, data, function( response ) {
-		location.reload();
-	});
-}
-
-function easy_digital_downloads_sendwp_register_client(register_url, client_name, client_secret, client_redirect, partner_id) {
-
-	var form = document.createElement("form");
-	form.setAttribute("method", 'POST');
-	form.setAttribute("action", register_url);
-
-	function easy_digital_downloads_sendwp_append_form_input(name, value) {
-		var input = document.createElement("input");
-		input.setAttribute("type", "hidden");
-		input.setAttribute("name", name);
-		input.setAttribute("value", value);
-		form.appendChild(input);
-	}
-
-	easy_digital_downloads_sendwp_append_form_input('client_name', client_name);
-	easy_digital_downloads_sendwp_append_form_input('client_secret', client_secret);
-	easy_digital_downloads_sendwp_append_form_input('client_redirect', client_redirect);
-	easy_digital_downloads_sendwp_append_form_input('partner_id', partner_id);
-
-	document.body.appendChild(form);
-	form.submit();
 }
 
 function easy_digital_downloads_recapture_remote_install() {
