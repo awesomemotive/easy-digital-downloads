@@ -47,11 +47,55 @@ body.post-type-download #screen-meta {
 	background: #fff;
 }
 
+#edd-header-wrapper {
+	display: flex;
+	justify-content: space-between;
+}
+
 #edd-header img {
 	display: block;
 	margin: 0;
 	max-width: 300px;
 	margin-left: 20px;
+}
+
+#edd-header .edd-round {
+	position: relative;
+	background-color: #f3f4f5;
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-left: 10px;
+	cursor: pointer;
+	transition: background-color .2s ease;
+}
+
+button.edd-round {
+	border: none;
+}
+
+#edd-header .edd-number {
+	position: absolute;
+	background-color: #df2a4a;
+	width: 16px;
+	height: 16px;
+	font-weight: 600;
+	font-size: 10px;
+	color: #fff;
+	top: -8px;
+	left: 50%;
+	transform: translateX(-50%);
+	margin: 0;
+	-webkit-animation: bounce 2s 5;
+	animation: bounce 2s 5;
+}
+
+#edd-header .edd-round svg {
+	width: 20px;
+	height: 20px;
 }
 
 .edd-settings-sub-nav {
@@ -2205,4 +2249,64 @@ td.edd_order_price {
 }
 .edd-paypal-account-status .dashicons-no {
 	color: #d63638;
+}
+
+/* Notifications
+-------------------------------------------------------------- */
+.edd-overlay {
+	position: fixed;
+	z-index: 1052;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 160px;
+	background-color: #141b38;
+	opacity: .5;
+	transition: .5s;
+}
+
+.edd-slide-in {
+	transform: translateX(100%) !important;
+	-webkit-transform: translateX(100%) !important;
+}
+
+#edd-notifications-panel {
+	background-color: white;
+	height: 100%;
+	width: 100%;
+	max-width: 570px;
+	position: fixed;
+	z-index: 1053;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	overflow-x: hidden;
+	transition: .5s;
+
+	transform: translateX(0%);
+	-webkit-transform: translateX(0%);
+}
+body.admin-bar #edd-notifications-panel {
+	top: 32px;
+}
+
+#edd-notifications-header {
+	display: flex;
+	align-items: center;
+	padding: 0 30px;
+	color: #fff;
+	background-color: #005ae0; /* @todo */
+}
+#edd-notifications-header h3 {
+	color: #fff;
+}
+#edd-notifications-header .edd-close {
+	background: none;
+	border: none;
+	color: #fff;
+	cursor: pointer;
+}
+
+#edd-notifications-body {
+	padding: 30px;
 }

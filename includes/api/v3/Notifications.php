@@ -9,12 +9,26 @@
 
 namespace EDD\API\v3;
 
+use EDD\Models\Notification;
+
 class Notifications extends Endpoint {
 
 	/**
 	 * Registers the endpoints.
 	 */
 	public function register() {
+		register_rest_route(
+			self::$namespace,
+			'notifications',
+			array(
+				array(
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'listNotifications' ),
+					'permission_callback' => array( $this, 'canViewNotification' ),
+				)
+			)
+		);
+
 		register_rest_route(
 			self::$namespace,
 			'notifications/(?P<id>\d+)',
@@ -52,6 +66,21 @@ class Notifications extends Endpoint {
 		return current_user_can( 'manage_shop_settings' );
 	}
 
+	public function listNotifications( \WP_REST_Request $request ) {
+		$active = array_map( function ( Notification $notification ) {
+			return $notification->toArray();
+		}, EDD()->notifications->getActiveNotifications() );
+
+		$dismissed = array_map( function ( Notification $notification ) {
+			return $notification->toArray();
+		}, EDD()->notifications->getDismissedNotifications() );
+
+		return new \WP_REST_Response( array(
+			'active'    => $active,
+			'dismissed' => $dismissed,
+		) );
+	}
+
 	/**
 	 * Dismisses a single notification.
 	 *
@@ -66,9 +95,11 @@ class Notifications extends Endpoint {
 		);
 
 		if ( ! $result ) {
-			return new \WP_REST_Response( array(), 500 );
+			return new \WP_REST_Response( array(
+				'error' => __( 'Failed to update notification.', 'easy-digital-downloads' ),
+			), 500 );
 		}
 
-		return new \WP_REST_Response( array(), 200 );
+		return new \WP_REST_Response( null, 204 );
 	}
 }

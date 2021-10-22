@@ -129,7 +129,7 @@ class NotificationImporter {
 	 * @param object $notification
 	 */
 	protected function insertNewNotification( $notification ) {
-		EDD()->notifications->insert( $this->getNotificationData( $notification ), 'notification' );
+		EDD()->notifications->insert( $this->getNotificationData( $notification ) );
 	}
 
 	/**

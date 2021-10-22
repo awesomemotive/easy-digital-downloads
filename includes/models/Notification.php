@@ -25,7 +25,12 @@ class Notification {
 
 	public $end = null;
 
-	public $dismissed = 0;
+	/**
+	 * @var bool Whether the notification has been seen by the user.
+	 */
+	public $viewed = false;
+
+	public $dismissed = false;
 
 	public $date_created;
 
@@ -103,6 +108,16 @@ class Notification {
 			default :
 				return 'yes-alt';
 		}
+	}
+
+	/**
+	 * @todo There should be a trait for this.
+	 */
+	public function toArray() {
+		$data              = get_object_vars( $this );
+		$data['icon_name'] = $this->getIcon();
+
+		return $data;
 	}
 
 }

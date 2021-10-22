@@ -50,6 +50,7 @@ class Notifications extends \EDD_DB {
 			'type'         => '%s',
 			'start'        => '%s',
 			'end'          => '%s',
+			'viewed'       => '%d',
 			'dismissed'    => '%d',
 			'date_created' => '%s',
 			'date_updated' => '%s',
@@ -65,6 +66,15 @@ class Notifications extends \EDD_DB {
 		return array();
 	}
 
+	public function insert( $data, $type = 'notification' ) {
+		$result = parent::insert( $data, $type );
+
+		wp_cache_delete( 'edd_unread_notification_count', 'edd_notifications' );
+		wp_cache_delete( 'edd_active_notification_count', 'edd_notifications' );
+
+		return $result;
+	}
+
 	/**
 	 * Returns all notifications that have not been dismissed.
 	 *
@@ -73,15 +83,88 @@ class Notifications extends \EDD_DB {
 	public function getActiveNotifications() {
 		global $wpdb;
 
-		$notifications = $wpdb->get_results( $wpdb->prepare(
-			"SELECT * FROM {$this->table_name}
+		$notifications = $wpdb->get_results( $this->getActiveQuery() );
+
+		$models = array();
+		if ( is_array( $notifications ) ) {
+			foreach ( $notifications as $notification ) {
+				$models[] = new Notification( (array) $notification );
+			}
+		}
+
+		unset( $notifications );
+
+		return $models;
+	}
+
+	/**
+	 * Builds the query for selecting or counting active notifications.
+	 *
+	 * @param bool $count
+	 *
+	 * @return string
+	 */
+	private function getActiveQuery( $count = false ) {
+		global $wpdb;
+
+		$select = $count ? 'COUNT(*)' : '*';
+
+		return $wpdb->prepare(
+			"SELECT {$select} FROM {$this->table_name}
 			WHERE dismissed = 0
 			AND (start <= %s OR start IS NULL)
 			AND (end >= %s OR end IS NULL)
 			ORDER BY start DESC, id DESC",
 			gmdate( 'Y-m-d H:i:s' ),
 			gmdate( 'Y-m-d H:i:s' )
-		) );
+		);
+	}
+
+	/**
+	 * Counts the number of active notifications.
+	 *
+	 * @return int
+	 */
+	public function countActiveNotifications() {
+		global $wpdb;
+
+		$numberActive = wp_cache_get( 'edd_active_notification_count', 'edd_notifications' );
+		if ( false === $numberActive ) {
+			$numberActive = (int) $wpdb->get_var( $this->getActiveQuery( true ) );
+
+			wp_cache_set( 'edd_active_notification_count', $numberActive, 'edd_notifications' );
+		}
+
+		return $numberActive;
+	}
+
+	/**
+	 * Counts the number of unread notifications.
+	 *
+	 * @return int
+	 */
+	public function countUnreadNotifications() {
+		global $wpdb;
+
+		$numberUnread = wp_cache_get( 'edd_unread_notification_count', 'edd_notifications' );
+		if ( false === $numberUnread ) {
+			$numberUnread = (int) $wpdb->get_var(
+				"SELECT COUNT(*) FROM {$this->table_name}
+				WHERE viewed = 0"
+			);
+
+			wp_cache_set( 'edd_unread_notification_count', $numberUnread, 'edd_notifications' );
+		}
+
+		return $numberUnread;
+	}
+
+	public function getDismissedNotifications() {
+		global $wpdb;
+
+		$notifications = $wpdb->get_results(
+			"SELECT * FROM {$this->table_name}WHERE dismissed = 1 ORDER BY date_updated DESC"
+		);
 
 		$models = array();
 		if ( is_array( $notifications ) ) {
@@ -109,11 +192,13 @@ class Notifications extends \EDD_DB {
 	    type varchar(64) NOT NULL,
 	    start datetime DEFAULT NULL,
 	    end datetime DEFAULT NULL,
+	    viewed tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
 	    dismissed tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
 	    date_created datetime NOT NULL DEFAULT CURRENT_TIMESTAMP(),
 	    date_updated datetime NOT NULL DEFAULT CURRENT_TIMESTAMP(),
 	    PRIMARY KEY (id),
-	    KEY start_end_dismissed (start, end, dismissed)
+	    KEY start_end_dismissed (start, end, dismissed),
+	    KEY viewed (viewed)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;" );
 
 		update_option( $this->table_name . '_db_version', $this->version );

@@ -237,9 +237,10 @@ function edd_load_admin_scripts( $hook ) {
 		'wait'                        => __( 'Please wait &hellip;', 'easy-digital-downloads' ),
 	));
 
-	wp_register_script( 'edd-admin-notifications', $js_dir . 'admin-notifications.js', array(), EDD_VERSION, true );
+	wp_register_script( 'alpinejs', $js_dir . 'alpine.min.js', array(), '3.4.2', false );
+	wp_register_script( 'edd-admin-notifications', $js_dir . 'admin-notifications.js', array( 'alpinejs' ), EDD_VERSION, false );
 	wp_enqueue_script( 'edd-admin-notifications' );
-	wp_localize_script( 'edd-admin-notifications', 'eddNotifications', array(
+	wp_localize_script( 'edd-admin-notifications', 'eddNotificationsVars', array(
 		'restBase'  => rest_url( \EDD\API\v3\Endpoint::$namespace ),
 		'restNonce' => wp_create_nonce( 'wp_rest' ),
 	) );
@@ -283,6 +284,17 @@ function edd_load_admin_scripts( $hook ) {
 	wp_enqueue_style( 'edd-admin' );
 }
 add_action( 'admin_enqueue_scripts', 'edd_load_admin_scripts', 100 );
+
+/**
+ * Add `defer` to the AlpineJS script tag.
+ */
+add_filter( 'script_loader_tag', function( $url ) {
+	if ( false !== strpos( $url, EDD_PLUGIN_URL . 'assets/js/alpine.min.js' ) ) {
+		$url = str_replace( ' src', ' defer src', $url );
+	}
+
+	return $url;
+} );
 
 /**
  * Admin Downloads Icon
