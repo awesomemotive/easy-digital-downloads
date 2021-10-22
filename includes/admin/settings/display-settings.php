@@ -139,6 +139,7 @@ function edd_options_page() {
 
 		// Find out if we're displaying a sidebar.
 		$is_promo_active = edd_is_promo_active();
+		$is_promo_active = true;
 		$wrapper_class   = ( true === $is_promo_active )
 			? array( ' edd-has-sidebar' )
 			: array();
@@ -198,6 +199,9 @@ function edd_options_page() {
  * @return string
  */
 function edd_options_sidebar() {
+	$notifications = EDD()->notifications->getActiveNotifications();
+	require_once EDD_PLUGIN_DIR . '/includes/admin/views/notifications.php';
+	return;
 
 	// Get settings tab and section info
 	$active_tab     = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : 'general';
