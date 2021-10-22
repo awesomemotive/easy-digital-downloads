@@ -8,7 +8,6 @@ document.addEventListener( 'alpine:init', () => {
 		inactiveNotifications: [],
 
 		openPanel: function() {
-			console.log('opening');
 			if ( this.notificationsLoaded ) {
 				this.isPanelOpen = true;
 				return;
@@ -47,6 +46,10 @@ document.addEventListener( 'alpine:init', () => {
 				this.inactiveNotifications = data.dismissed;
 				this.notificationsLoaded = true;
 			} );
+		},
+
+		dismiss: function( id ) {
+			console.log( 'Dismissing', id );
 		}
 	} );
 } );

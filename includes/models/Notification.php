@@ -114,8 +114,11 @@ class Notification {
 	 * @todo There should be a trait for this.
 	 */
 	public function toArray() {
-		$data              = get_object_vars( $this );
-		$data['icon_name'] = $this->getIcon();
+		$data                  = get_object_vars( $this );
+		$data['icon_name']     = $this->getIcon();
+
+		/* Translators: %s - a length of time (e.g. "1 second") */
+		$data['relative_date'] = sprintf( __( '%s ago', 'easy-digital-downloads' ), human_time_diff( strtotime( $this->date_created ) ) );
 
 		return $data;
 	}
