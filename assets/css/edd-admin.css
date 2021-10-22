@@ -2206,3 +2206,25 @@ td.edd_order_price {
 .edd-paypal-account-status .dashicons-no {
 	color: #d63638;
 }
+
+/* Five Star Review Request
+------------------------------------------------------------- */
+#edd-admin-notice-five-star-review {
+	position: relative;
+}
+
+#edd_dashboard_sales .edd-promo-notice {
+	border-bottom: 1px solid #c3c4c7;
+}
+
+.edd-review-actions {
+	display: flex;
+	gap: 6px;
+	margin: 0 100px 16px 0;
+}
+
+.edd-promo-notice .edd-peeking {
+	position: absolute;
+	bottom: 0;
+	right: 16px;
+}
