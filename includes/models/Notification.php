@@ -86,4 +86,23 @@ class Notification {
 		}
 	}
 
+	/**
+	 * Returns the icon name to use for this notification type.
+	 *
+	 * @return string
+	 */
+	public function getIcon() {
+		switch ( $this->type ) {
+			case 'warning' :
+				return 'warning';
+			case 'error' :
+				return 'dismiss';
+			case 'info' :
+				return 'admin-generic';
+			case 'success' :
+			default :
+				return 'yes-alt';
+		}
+	}
+
 }
