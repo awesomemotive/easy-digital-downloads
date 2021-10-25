@@ -132,9 +132,6 @@ class Five_Star_Review_Dashboard extends Notice {
 			if ( ( $activated + ( DAY_IN_SECONDS * 30 ) ) > time() ) {
 				return false;
 			}
-		} else {
-			update_option( 'edd_activation_date', time() );
-			return false;
 		}
 		// @todo Change this to edd_count_orders in 3.0
 		$payments = edd_count_payments();
