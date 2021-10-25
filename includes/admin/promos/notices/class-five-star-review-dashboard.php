@@ -32,7 +32,7 @@ class Five_Star_Review_Dashboard extends Notice {
 	 *
 	 * @var string
 	 */
-	private $screen = 'dashboard';
+	protected $screen = 'dashboard';
 
 	/**
 	 * The ID of the notice. Defined specifically here as we intend to use it twice.
