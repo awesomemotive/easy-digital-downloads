@@ -235,6 +235,10 @@ function edd_load_admin_scripts( $hook ) {
 		'hide_advanced_settings'      => __( 'Hide advanced settings', 'easy-digital-downloads' ),
 		'no_downloads_error'          => __( 'There are no downloads attached to this payment', 'easy-digital-downloads' ),
 		'wait'                        => __( 'Please wait &hellip;', 'easy-digital-downloads' ),
+		'activating'                  => __( 'Activating', 'easy-digital-downloads' ),
+		'installing'                  => __( 'Installing', 'easy-digital-downloads' ),
+		'ajaxurl'                     => edd_get_ajax_url(),
+		'extension_manager_nonce'     => wp_create_nonce( 'edd_extensionmanager' ),
 	));
 
 	/*
