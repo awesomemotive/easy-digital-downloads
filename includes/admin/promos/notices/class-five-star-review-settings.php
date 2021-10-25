@@ -27,7 +27,7 @@ class Five_Star_Review_Settings extends Five_Star_Review_Dashboard {
 	 *
 	 * @var string
 	 */
-	private $screen = 'settings';
+	protected $screen = 'settings';
 
 	/**
 	 * Display the notice.
