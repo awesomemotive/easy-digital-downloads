@@ -2227,6 +2227,7 @@ td.edd_order_price {
 	align-self: flex-end;
 	justify-self: flex-end;
 	margin-right: 16px;
+	margin-bottom: -1px;
 }
 
 .edd-review-step,
