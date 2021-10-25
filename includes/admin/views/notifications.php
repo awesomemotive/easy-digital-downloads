@@ -53,7 +53,7 @@
 
 		<div id="edd-notifications-body">
 			<template x-if="$store.eddNotifications.notificationsLoaded && $store.eddNotifications.activeNotifications.length">
-				<template x-for="(notification, index) in $store.eddNotifications.activeNotifications">
+				<template x-for="(notification, index) in $store.eddNotifications.activeNotifications" :key="notification.id">
 					<div class="edd-notification">
 						<div class="edd-notification--icon" :class="'edd-notification--icon-' + notification.type">
 							<span class="dashicons" :class="'dashicons-' + notification.icon_name"></span>
