@@ -38,7 +38,7 @@ class Five_Star_Review_Dashboard extends Notice {
 	 * The ID of the notice. Defined specifically here as we intend to use it twice.
 	 *
 	 * @since 2.11.x
-	 * @return void
+	 * @return string
 	 */
 	public function get_id() {
 		return 'five-star-review';
