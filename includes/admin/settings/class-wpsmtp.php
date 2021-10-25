@@ -51,18 +51,8 @@ class WP_SMTP {
 		esc_html_e( 'WP Mail SMTP allows you to easily set up WordPress to use a trusted provider to reliably send emails, including sales notifications.', 'easy-digital-downloads' );
 		echo '</p>';
 
-		$button = $this->get_button_parameters();
-		?>
-		<p>
-			<button
-				class="<?php echo esc_attr( $button['button_class'] ); ?>"
-				data-plugin="<?php echo esc_url( $button['data-plugin'] ); ?>"
-				data-action="<?php echo esc_attr( $button['data-action'] ); ?>"
-			>
-				<?php echo esc_html( $button['button_text'] ); ?>
-			</button>
-		</p>
-		<?php
+		$manager = new \EDD\Admin\Extension_Manager();
+		$manager->button( $this->get_button_parameters() );
 	}
 
 	/**
@@ -80,11 +70,11 @@ class WP_SMTP {
 		);
 		if ( ! $this->data['plugin_installed'] && ! $this->data['pro_plugin_installed'] ) {
 			$button['data-plugin'] = $this->config['lite_download_url'];
-			$button['data=action'] = 'install';
+			$button['data-action'] = 'install';
 			$button['button_text'] = __( 'Install WP Mail SMTP', 'easy-digital-downloads' );
 		} elseif ( ! $this->is_smtp_activated() ) {
 			$button['data-plugin'] = $this->config['lite_plugin'];
-			$button['data=action'] = 'activate';
+			$button['data-action'] = 'activate';
 			$button['button_text'] = __( 'Activate WP Mail SMTP', 'easy-digital-downloads' );
 		}
 

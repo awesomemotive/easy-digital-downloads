@@ -10,29 +10,48 @@ class Extension_Manager {
 	}
 
 	/**
+	 * Output the button to activate/insall a plugin/extension.
+	 *
+	 * @since 2.11.x
+	 * @param array $button The array of parameters for the button.
+	 * @return void
+	 */
+	public function button( $button ) {
+		?>
+		<p>
+			<button
+				class="<?php echo esc_attr( $button['button_class'] ); ?> edd-extension-manager"
+				data-plugin="<?php echo wp_http_validate_url( $button['data-plugin'] ) ? esc_url( $button['data-plugin'] ) : esc_attr( $button['data-plugin'] ); ?>"
+				data-action="<?php echo esc_attr( $button['data-action'] ); ?>"
+			>
+				<?php echo esc_html( $button['button_text'] ); ?>
+			</button>
+		</p>
+		<?php
+	}
+
+	/**
 	 * Activate extension.
 	 *
 	 * @since 2.11.x
 	 */
 	public function activate() {
 
-		// Run a security check.
-		check_ajax_referer( 'edd-admin', 'nonce' );
-
 		// Check for permissions.
-		if ( ! current_user_can( 'activate_plugins' ) ) {
+		if ( ! check_ajax_referer( 'edd_extensionmanager', 'nonce', false ) || ! current_user_can( 'activate_plugins' ) ) {
 			wp_send_json_error( esc_html__( 'Plugin activation is disabled for you on this site.', 'easy-digital-downloads' ) );
 		}
 
-		$type = 'extension';
+		$plugin = filter_input( INPUT_POST, 'plugin', FILTER_SANITIZE_STRING );
+		$type   = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
 
-		if ( isset( $_POST['plugin'] ) ) {
+		if ( $plugin ) {
 
-			if ( ! empty( $_POST['type'] ) ) {
-				$type = sanitize_key( $_POST['type'] );
+			if ( empty( $type ) ) {
+				$type = 'extension';
 			}
 
-			$plugin   = sanitize_text_field( wp_unslash( $_POST['plugin'] ) );
+			$plugin   = sanitize_text_field( wp_unslash( $plugin ) );
 			$activate = activate_plugins( $plugin );
 
 			/**
@@ -48,7 +67,7 @@ class Extension_Manager {
 				if ( 'plugin' === $type ) {
 					wp_send_json_success( esc_html__( 'Plugin activated.', 'easy-digital-downloads' ) );
 				} else {
-					wp_send_json_success( esc_html__( 'Addon activated.', 'easy-digital-downloads' ) );
+					wp_send_json_success( esc_html__( 'Extension activated.', 'easy-digital-downloads' ) );
 				}
 			}
 		}
@@ -68,13 +87,13 @@ class Extension_Manager {
 	public function install() {
 
 		// Run a security check.
-		check_ajax_referer( 'edd-admin', 'nonce' );
+		check_ajax_referer( 'edd_extensionmanager', 'nonce', true );
 
 		$generic_error = esc_html__( 'There was an error while performing your request.', 'easy-digital-downloads' );
 		$type          = ! empty( $_POST['type'] ) ? sanitize_key( $_POST['type'] ) : 'extension';
 
 		// Check if new installations are allowed.
-		if ( ! edd_can_install( $type ) ) {
+		if ( ! $this->can_install( $type ) ) {
 			wp_send_json_error( $generic_error );
 		}
 
@@ -179,4 +198,42 @@ class Extension_Manager {
 		// Fallback error just in case.
 		wp_send_json_error( $result );
 	}
+
+	/**
+	 * Determine if the plugin/addon installations are allowed.
+	 *
+	 * @since 2.11.x
+	 *
+	 * @param string $type Should be `plugin` or `addon`.
+	 *
+	 * @return bool
+	 */
+	public function can_install( $type ) {
+
+		if ( ! in_array( $type, array( 'plugin', 'addon' ), true ) ) {
+			return false;
+		}
+
+		if ( ! current_user_can( 'install_plugins' ) ) {
+			return false;
+		}
+
+		// // Determine whether file modifications are allowed.
+		// if ( ! wp_is_file_mod_allowed( 'wpforms_can_install' ) ) {
+		// 	return false;
+		// }
+
+		// All plugin checks are done.
+		if ( 'plugin' === $type ) {
+			return true;
+		}
+
+		// Addons require additional license checks.
+		$pass_data = get_option( 'edd_pass_licenses' );
+
+		// Allow addons installation if license is not expired, enabled and valid.
+		return empty( $license['is_expired'] ) && empty( $license['is_disabled'] ) && empty( $license['is_invalid'] );
+	}
 }
+
+new Extension_Manager();
