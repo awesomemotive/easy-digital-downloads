@@ -1059,7 +1059,13 @@ function edd_is_promo_active() {
  * @return string The timestamp when EDD was activated.
  */
 function edd_get_activation_date() {
-	return get_option( 'edd_activation_date', '' );
+	$activation_date = get_option( 'edd_activation_date', '' );
+	if ( ! $activation_date ) {
+		update_option( 'edd_activation_date', time() );
+		$activation_date = get_option( 'edd_activation_date', '' );
+	}
+
+	return $activation_date;
 }
 
 /**
