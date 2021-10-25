@@ -50,7 +50,6 @@ class Notifications extends \EDD_DB {
 			'type'         => '%s',
 			'start'        => '%s',
 			'end'          => '%s',
-			'viewed'       => '%d',
 			'dismissed'    => '%d',
 			'date_created' => '%s',
 			'date_updated' => '%s',
@@ -170,13 +169,11 @@ class Notifications extends \EDD_DB {
 	    type varchar(64) NOT NULL,
 	    start datetime DEFAULT NULL,
 	    end datetime DEFAULT NULL,
-	    viewed tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
 	    dismissed tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
 	    date_created datetime NOT NULL DEFAULT CURRENT_TIMESTAMP(),
 	    date_updated datetime NOT NULL DEFAULT CURRENT_TIMESTAMP(),
 	    PRIMARY KEY (id),
-	    KEY dismissed_start_end_dismissed (dismissed, start, end),
-	    KEY viewed (viewed)
+	    KEY dismissed_start_end_dismissed (dismissed, start, end)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;" );
 
 		update_option( $this->table_name . '_db_version', $this->version );
