@@ -150,7 +150,7 @@ class Five_Star_Review_Dashboard extends Notice {
 	 *
 	 * @since 2.11.x
 	 *
-	 * @return string[]
+	 * @return string
 	 */
 	private function url() {
 		$args = array(
