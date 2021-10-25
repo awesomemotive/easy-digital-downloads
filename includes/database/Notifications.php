@@ -65,6 +65,14 @@ class Notifications extends \EDD_DB {
 		return array();
 	}
 
+	/**
+	 * Inserts a new notification.
+	 *
+	 * @param array  $data
+	 * @param string $type
+	 *
+	 * @return int
+	 */
 	public function insert( $data, $type = 'notification' ) {
 		$result = parent::insert( $data, $type );
 
@@ -134,25 +142,6 @@ class Notifications extends \EDD_DB {
 		}
 
 		return $numberActive;
-	}
-
-	public function getDismissedNotifications() {
-		global $wpdb;
-
-		$notifications = $wpdb->get_results(
-			"SELECT * FROM {$this->table_name} WHERE dismissed = 1 ORDER BY date_updated DESC"
-		);
-
-		$models = array();
-		if ( is_array( $notifications ) ) {
-			foreach ( $notifications as $notification ) {
-				$models[] = new Notification( (array) $notification );
-			}
-		}
-
-		unset( $notifications );
-
-		return $models;
 	}
 
 	/**

@@ -66,6 +66,13 @@ class Notifications extends Endpoint {
 		return current_user_can( 'manage_shop_settings' );
 	}
 
+	/**
+	 * Returns a list of notifications.
+	 *
+	 * @param \WP_REST_Request $request
+	 *
+	 * @return \WP_REST_Response
+	 */
 	public function listNotifications( \WP_REST_Request $request ) {
 		$active = array_map( function ( Notification $notification ) {
 			return $notification->toArray();

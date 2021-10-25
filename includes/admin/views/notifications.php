@@ -5,8 +5,6 @@
  * @package   easy-digital-downloads
  * @copyright Copyright (c) 2021, Easy Digital Downloads
  * @license   GPL2+
- *
- * @var \EDD\Models\Notification[] $notifications
  */
 ?>
 <div

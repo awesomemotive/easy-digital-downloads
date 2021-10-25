@@ -11,26 +11,60 @@ namespace EDD\Models;
 
 class Notification {
 
+	/**
+	 * @var int Unique internal ID.
+	 */
 	public $id;
 
+	/**
+	 * @var null|int ID from the remote feed. If `null` then this notification was added internally
+	 *               and not via the remote import.
+	 */
 	public $remote_id = null;
 
+	/**
+	 * @var string Title of the notification.
+	 */
 	public $title;
 
+	/**
+	 * @var string Notification content.
+	 */
 	public $content;
 
+	/**
+	 * @var string Notification type, including: `warning`, `error`, `info`, or `success`.
+	 */
 	public $type;
 
+	/**
+	 * @var null|string Date to start displaying the notification.
+	 */
 	public $start = null;
 
+	/**
+	 * @var null|string Date to stop displaying the notification.
+	 */
 	public $end = null;
 
+	/**
+	 * @var bool Whether this notification has been dismissed by the user.
+	 */
 	public $dismissed = false;
 
+	/**
+	 * @var string Date the notification was added to the database.
+	 */
 	public $date_created;
 
+	/**
+	 * @var string Date the notification was last updated in the database.
+	 */
 	public $date_updated;
 
+	/**
+	 * @var string[] 
+	 */
 	protected $casts = array(
 		'id'        => 'int',
 		'remote_id' => 'int',
