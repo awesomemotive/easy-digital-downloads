@@ -1280,8 +1280,9 @@ jQuery(document).ready(function ($) {
 				};
 				$.post( edd_vars.ajaxurl, data )
 					.done( function ( res ) {
+						console.log( res );
 						if ( res.success ) {
-							$btn.html( res.data );
+							$btn.html( res.data.msg );
 						}
 						// app.stepInstallDone( res, $btn, action );
 					} )

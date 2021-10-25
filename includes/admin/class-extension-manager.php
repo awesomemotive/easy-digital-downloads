@@ -57,7 +57,7 @@ class Extension_Manager {
 			/**
 			 * Fire after plugin activating via the EDD installer.
 			 *
-			 * @since 1.6.3.1
+			 * @since 2.11.x
 			 *
 			 * @param string $plugin Path to the plugin file relative to the plugins directory.
 			 */
@@ -65,9 +65,17 @@ class Extension_Manager {
 
 			if ( ! is_wp_error( $activate ) ) {
 				if ( 'plugin' === $type ) {
-					wp_send_json_success( esc_html__( 'Plugin activated.', 'easy-digital-downloads' ) );
+					wp_send_json_success(
+						array(
+							'msg' =>esc_html__( 'Plugin activated.', 'easy-digital-downloads' ),
+						)
+					);
 				} else {
-					wp_send_json_success( esc_html__( 'Extension activated.', 'easy-digital-downloads' ) );
+					wp_send_json_success(
+						array(
+							'msg' => esc_html__( 'Extension activated.', 'easy-digital-downloads' ),
+						)
+					);
 				}
 			}
 		}
@@ -90,7 +98,10 @@ class Extension_Manager {
 		check_ajax_referer( 'edd_extensionmanager', 'nonce', true );
 
 		$generic_error = esc_html__( 'There was an error while performing your request.', 'easy-digital-downloads' );
-		$type          = ! empty( $_POST['type'] ) ? sanitize_key( $_POST['type'] ) : 'extension';
+		$type          = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+		if ( ! $type ) {
+			$type = 'extension';
+		}
 
 		// Check if new installations are allowed.
 		if ( ! $this->can_install( $type ) ) {
@@ -101,7 +112,8 @@ class Extension_Manager {
 			? esc_html__( 'Could not install the plugin. Please download and install it manually.', 'easy-digital-downloads' )
 			: esc_html__( 'Could not install the extension. Please download it from edd.com and install it manually.', 'easy-digital-downloads' );
 
-		if ( empty( $_POST['plugin'] ) ) {
+		$plugin = filter_input( INPUT_POST, 'plugin', FILTER_SANITIZE_STRING );
+		if ( empty( $plugin ) ) {
 			wp_send_json_error( $error );
 		}
 
@@ -137,7 +149,8 @@ class Extension_Manager {
 		/*
 		 * We do not need any extra credentials if we have gotten this far, so let's install the plugin.
 		 */
-
+		require_once EDD_PLUGIN_DIR . 'includes/admin/class-plugin-silent-upgrader.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/class-plugin-silent-upgrader-skin.php';
 		require_once EDD_PLUGIN_DIR . 'includes/admin/class-install-skin.php';
 
 		// Do not allow WordPress to search/download translations, as this will break JS output.
@@ -146,12 +159,14 @@ class Extension_Manager {
 		// Create the plugin upgrader with our custom skin.
 		$installer = new \EDD\Admin\PluginSilentUpgrader( new \EDD\Admin\Install_Skin() );
 
+		rgc_error_log( 'line 161' );
+		rgc_error_log( method_exists( $installer, 'install' ) );
 		// Error check.
-		if ( ! method_exists( $installer, 'install' ) || empty( $_POST['plugin'] ) ) {
+		if ( ! method_exists( $installer, 'install' ) || empty( $plugin ) ) {
 			wp_send_json_error( $error );
 		}
 
-		$installer->install( $_POST['plugin'] ); // phpcs:ignore
+		$installer->install( $plugin ); // phpcs:ignore
 
 		// Flush the cache and return the newly installed plugin basename.
 		wp_cache_flush();
@@ -200,17 +215,17 @@ class Extension_Manager {
 	}
 
 	/**
-	 * Determine if the plugin/addon installations are allowed.
+	 * Determine if the plugin/extension installations are allowed.
 	 *
 	 * @since 2.11.x
 	 *
-	 * @param string $type Should be `plugin` or `addon`.
+	 * @param string $type Should be `plugin` or `extension`.
 	 *
 	 * @return bool
 	 */
 	public function can_install( $type ) {
 
-		if ( ! in_array( $type, array( 'plugin', 'addon' ), true ) ) {
+		if ( ! in_array( $type, array( 'plugin', 'extension' ), true ) ) {
 			return false;
 		}
 
