@@ -81,14 +81,14 @@ class Five_Star_Review_Dashboard extends Notice {
 				<button class="button-link edd-review-switch-step" data-step="2"><?php esc_html_e( 'Not Really', 'easy-digital-downloads' ); ?></button>
 			</div>
 		</div>
-		<div class="edd-review-step edd-review-step-2" style="display:none;">
+		<div class="edd-review-step edd-review-step-2 edd-fadeout">
 			<p><?php esc_html_e( 'We\'re sorry to hear you aren\'t enjoying Easy Digital Downloads. We would love a chance to improve. Could you take a minute and let us know what we can do better?', 'easy-digital-downloads' ); ?></p>
 			<div class="edd-review-actions">
 				<a href="<?php echo esc_url( $this->url() ); ?>" class="button button-secondary edd-promo-notice-dismiss" target="_blank"><?php esc_html_e( 'Give Feedback', 'easy-digital-downloads' ); ?></a><br>
 				<button class="button-link edd-promo-notice-dismiss"><?php esc_html_e( 'No thanks', 'easy-digital-downloads' ); ?></button>
 			</div>
 		</div>
-		<div class="edd-review-step edd-review-step-3" style="display:none;">
+		<div class="edd-review-step edd-review-step-3 edd-fadeout">
 			<p><?php esc_html_e( 'That\'s awesome! Could you please do me a BIG favor and give it a 5-star rating on WordPress to help us spread the word and boost our motivation?', 'easy-digital-downloads' ); ?></p>
 			<p><strong><?php echo wp_kses( __( '~ Chris Klosowski<br>President of Easy Digital Downloads', 'easy-digital-downloads' ), array( 'br' => array() ) ); ?></strong></p>
 			<div class="edd-review-actions">
@@ -98,20 +98,24 @@ class Five_Star_Review_Dashboard extends Notice {
 		</div>
 		<img alt="" class="edd-peeking" src="<?php echo esc_url( EDD_PLUGIN_URL . 'assets/images/edd-peeking.png' ); ?>" />
 		<script type="text/javascript">
-			jQuery( document ).ready( function ( $ ) {
-				$( document ).on( 'click', '.edd-review-switch-step', function ( e ) {
-					e.preventDefault();
-					var target = $( this ).attr( 'data-step' );
-					if ( target ) {
-						var notice = $( this ).closest( '.edd-promo-notice' );
-						var review_step = notice.find( '.edd-review-step-' + target );
-						if ( review_step.length > 0 ) {
-							notice.find( '.edd-review-step:visible' ).fadeOut( function () {
-								review_step.fadeIn();
-							} );
+			document.addEventListener( 'DOMContentLoaded', function() {
+				var steps = document.querySelectorAll( '.edd-review-switch-step' );
+				steps.forEach( function(step) {
+					step.addEventListener( 'click', function ( e ) {
+						e.preventDefault();
+						var target = this.getAttribute( 'data-step' );
+						if ( target ) {
+							var notice = this.closest( '.edd-promo-notice' );
+							var thisStep = this.closest( '.edd-review-step' );
+							var review_step = notice.querySelector( '.edd-review-step-' + target );
+							if ( review_step ) {
+								thisStep.classList.add( 'edd-fadeout' );
+								review_step.classList.remove( 'edd-fadeout' );
+								review_step.classList.add( 'edd-fadein' );
+							}
 						}
-					}
-				})
+					} )
+				} )
 			} );
 		</script>
 		<?php
