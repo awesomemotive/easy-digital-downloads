@@ -25,11 +25,6 @@ class Notification {
 
 	public $end = null;
 
-	/**
-	 * @var bool Whether the notification has been seen by the user.
-	 */
-	public $viewed = false;
-
 	public $dismissed = false;
 
 	public $date_created;
