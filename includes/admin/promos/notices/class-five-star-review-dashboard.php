@@ -84,7 +84,7 @@ class Five_Star_Review_Dashboard extends Notice {
 		<div class="edd-review-step edd-review-step-2" style="display:none;">
 			<p><?php esc_html_e( 'We\'re sorry to hear you aren\'t enjoying Easy Digital Downloads. We would love a chance to improve. Could you take a minute and let us know what we can do better?', 'easy-digital-downloads' ); ?></p>
 			<div class="edd-review-actions">
-				<a href="<?php echo esc_url( $this->url() ); ?>" class="button button-secondary edd-promo-notice-dismiss"><?php esc_html_e( 'Give Feedback', 'easy-digital-downloads' ); ?></a><br>
+				<a href="<?php echo esc_url( $this->url() ); ?>" class="button button-secondary edd-promo-notice-dismiss" target="_blank"><?php esc_html_e( 'Give Feedback', 'easy-digital-downloads' ); ?></a><br>
 				<button class="button-link edd-promo-notice-dismiss"><?php esc_html_e( 'No thanks', 'easy-digital-downloads' ); ?></button>
 			</div>
 		</div>
