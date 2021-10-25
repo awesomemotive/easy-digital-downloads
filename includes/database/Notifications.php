@@ -175,7 +175,7 @@ class Notifications extends \EDD_DB {
 	    date_created datetime NOT NULL DEFAULT CURRENT_TIMESTAMP(),
 	    date_updated datetime NOT NULL DEFAULT CURRENT_TIMESTAMP(),
 	    PRIMARY KEY (id),
-	    KEY start_end_dismissed (start, end, dismissed),
+	    KEY dismissed_start_end_dismissed (dismissed, start, end),
 	    KEY viewed (viewed)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;" );
 
