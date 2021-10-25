@@ -2289,6 +2289,11 @@ td.edd_order_price {
 body.admin-bar #edd-notifications-panel {
 	top: 32px;
 }
+@media screen and (max-width: 600px) {
+	body.admin-bar #edd-notifications-panel {
+		top: 46px;
+	}
+}
 
 #edd-notifications-header {
 	display: flex;
