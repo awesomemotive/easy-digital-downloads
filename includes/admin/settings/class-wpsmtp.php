@@ -51,20 +51,44 @@ class WP_SMTP {
 		esc_html_e( 'WP Mail SMTP allows you to easily set up WordPress to use a trusted provider to reliably send emails, including sales notifications.', 'easy-digital-downloads' );
 		echo '</p>';
 
-		$data = $this->get_data();
-		if ( ! $this->data['plugin_installed'] && ! $this->data['pro_plugin_installed'] ) {
-			?>
+		$button = $this->get_button_parameters();
+		?>
+		<p>
 			<button
-				class="button button-primary"
-				data-plugin="<?php echo esc_url( $this->config['lite_download_url'] ); ?>"
-				data-action="install"
+				class="<?php echo esc_attr( $button['button_class'] ); ?>"
+				data-plugin="<?php echo esc_url( $button['data-plugin'] ); ?>"
+				data-action="<?php echo esc_attr( $button['data-action'] ); ?>"
 			>
-				<?php esc_html_e( 'Install WP Mail SMTP', 'easy-digital-downloads' ); ?>
+				<?php echo esc_html( $button['button_text'] ); ?>
 			</button>
-			<?php
+		</p>
+		<?php
+	}
+
+	/**
+	 * Gets the button parameters.
+	 *
+	 * @return void
+	 */
+	private function get_button_parameters() {
+		$data   = $this->get_data();
+		$button = array(
+			'button_class' => 'button button-primary',
+			'data-plugin'  => '',
+			'data-action'  => '',
+			'button_text'  => '',
+		);
+		if ( ! $this->data['plugin_installed'] && ! $this->data['pro_plugin_installed'] ) {
+			$button['data-plugin'] = $this->config['lite_download_url'];
+			$button['data=action'] = 'install';
+			$button['button_text'] = __( 'Install WP Mail SMTP', 'easy-digital-downloads' );
 		} elseif ( ! $this->is_smtp_activated() ) {
-			echo 'the plugin is not active';
+			$button['data-plugin'] = $this->config['lite_plugin'];
+			$button['data=action'] = 'activate';
+			$button['button_text'] = __( 'Activate WP Mail SMTP', 'easy-digital-downloads' );
 		}
+
+		return $button;
 	}
 
 	/**
@@ -114,7 +138,6 @@ class WP_SMTP {
 	 * @return bool True if SMTP plugin is active.
 	 */
 	protected function is_smtp_activated() {
-
 		return function_exists( 'wp_mail_smtp' ) && ( is_plugin_active( $this->config['lite_plugin'] ) || is_plugin_active( $this->config['pro_plugin'] ) );
 	}
 
