@@ -4,6 +4,7 @@ document.addEventListener( 'alpine:init', () => {
 	Alpine.store( 'eddNotifications', {
 		isPanelOpen: false,
 		notificationsLoaded: false,
+		numberActiveNotifications: 0,
 		activeNotifications: [],
 		inactiveNotifications: [],
 
@@ -15,21 +16,24 @@ document.addEventListener( 'alpine:init', () => {
 
 			this.isPanelOpen = true;
 
-			this.getNotifications()
+			this.apiRequest( '/notifications', 'GET' )
+				.then( data => {
+					this.activeNotifications = data.active;
+					this.inactiveNotifications = data.dismissed;
+					this.notificationsLoaded = true;
+				} )
 				.catch( error => {
 					console.log( 'Notification error', error );
 				} );
 		},
 
 		closePanel: function() {
-			if ( this.isPanelOpen ) {
-				this.isPanelOpen = false;
-			}
+			this.isPanelOpen = false;
 		},
 
-		getNotifications: function() {
-			return fetch( eddNotificationsVars.restBase + '/notifications', {
-				method: 'GET',
+		apiRequest: function( endpoint, method ) {
+			return fetch( eddNotificationsVars.restBase + endpoint, {
+				method: method,
 				credentials: 'same-origin',
 				headers: {
 					'Content-Type': 'application/json',
@@ -40,16 +44,34 @@ document.addEventListener( 'alpine:init', () => {
 					return Promise.reject( response );
 				}
 
-				return response.json();
+				/*
+				 * Returning response.text() instead of response.json() because dismissing
+				 * a notification doesn't return a JSON response, so response.json() will break.
+				 */
+				return response.text();
+				//return response.json();
 			} ).then( data => {
-				this.activeNotifications = data.active;
-				this.inactiveNotifications = data.dismissed;
-				this.notificationsLoaded = true;
+				return data ? JSON.parse( data ) : null;
 			} );
-		},
+		} ,
 
-		dismiss: function( id ) {
-			console.log( 'Dismissing', id );
+		dismiss: function( event, index ) {
+			if ( 'undefined' === typeof this.activeNotifications[ index ] ) {
+				return;
+			}
+
+			event.target.disabled = true;
+
+			const notification = this.activeNotifications[ index ];
+
+			this.apiRequest( '/notifications/' + notification.id, 'DELETE' )
+				.then( response => {
+					this.activeNotifications.splice( index, 1 );
+					this.numberActiveNotifications = this.activeNotifications.length;
+				} )
+				.catch( error => {
+					console.log( 'Dismiss error', error );
+				} );
 		}
 	} );
 } );
