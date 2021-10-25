@@ -15,17 +15,31 @@
 	x-data
 	x-init="function() { $el.classList.remove( 'edd-hidden' ) }"
 >
-	<div class="edd-overlay" x-show="$store.eddNotifications.isPanelOpen"></div>
+	<div
+		class="edd-overlay"
+		x-show="$store.eddNotifications.isPanelOpen"
+		x-on:click="$store.eddNotifications.closePanel()"
+	></div>
 
 	<div
 		id="edd-notifications-panel"
 		x-show="$store.eddNotifications.isPanelOpen"
 		x-transition:enter-start="edd-slide-in"
 		x-transition:leave-end="edd-slide-in"
-		x-on:click.outside="$store.eddNotifications.closePanel()"
 	>
 		<div id="edd-notifications-header">
-			<h3><?php esc_html_e( 'Notifications', 'easy-digital-downloads' ); ?></h3>
+			<h3>
+				<?php
+				echo wp_kses(
+					sprintf(
+					/* Translators: %s - number of notifications */
+						__( '(%s) New Notifications', 'easy-digital-downloads' ),
+						'<span x-text="$store.eddNotifications.numberActiveNotifications"></span>'
+					),
+					array( 'span' => array( 'x-text' => true ) )
+				);
+				?>
+			</h3>
 
 			<button
 				type="button"
@@ -38,11 +52,11 @@
 		</div>
 
 		<div id="edd-notifications-body">
-			<template x-if="$store.eddNotifications.notificationsLoaded">
-				<template x-for="notification in $store.eddNotifications.activeNotifications">
+			<template x-if="$store.eddNotifications.notificationsLoaded && $store.eddNotifications.activeNotifications.length">
+				<template x-for="(notification, index) in $store.eddNotifications.activeNotifications">
 					<div class="edd-notification">
 						<div class="edd-notification--icon" :class="'edd-notification--icon-' + notification.type">
-
+							<span class="dashicons" :class="'dashicons-' + notification.icon_name"></span>
 						</div>
 
 						<div class="edd-notification--body">
@@ -58,7 +72,7 @@
 								<button
 									type="button"
 									class="button edd-notification--dismiss"
-									x-on:click="$store.eddNotifications.dismiss( notification.id )"
+									x-on:click="$store.eddNotifications.dismiss( $event, index )"
 								>
 									<?php esc_html_e( 'Dismiss', 'easy-digital-downloads' ); ?>
 								</button>
@@ -68,9 +82,15 @@
 				</template>
 			</template>
 
+			<template x-if="$store.eddNotifications.notificationsLoaded && ! $store.eddNotifications.activeNotifications.length">
+				<div id="edd-notifications-none">
+					<?php esc_html_e( 'You have no new notifications.', 'easy-digital-downloads' ); ?>
+				</div>
+			</template>
+
 			<template x-if="! $store.eddNotifications.notificationsLoaded">
 				<div>
-					<?php esc_html_e( 'Loading...', 'easy-digital-downloads' ); ?>
+					<?php esc_html_e( 'Loading notifications...', 'easy-digital-downloads' ); ?>
 				</div>
 			</template>
 		</div>

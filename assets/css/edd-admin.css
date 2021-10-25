@@ -2299,6 +2299,7 @@ body.admin-bar #edd-notifications-panel {
 }
 #edd-notifications-header h3 {
 	color: #fff;
+	flex: 1;
 }
 #edd-notifications-header .edd-close {
 	background: none;
@@ -2309,4 +2310,48 @@ body.admin-bar #edd-notifications-panel {
 
 #edd-notifications-body {
 	padding: 30px;
+}
+
+.edd-notification {
+	display: flex;
+	margin-bottom: 20px;
+}
+.edd-notification--icon {
+	color: #00aa63;
+	margin-right: 20px;
+}
+.edd-notification--icon.edd-notification--icon-info {
+	color: #005ae0;
+}
+.edd-notification--icon.edd-notification--icon-warning {
+	color: #f18200;
+}
+.edd-notification--icon.edd-notification--icon-error {
+	color: #df2a4a;
+}
+.edd-notification--body {
+	flex: 1;
+}
+.edd-notification--header {
+	align-items: center;
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 7px;
+}
+.edd-notification--title {
+	color: #141b38;
+	flex: 1;
+	font-size: 16px;
+	font-weight: 600;
+	margin: 0 5px 0 0;
+}
+.edd-notification--date {
+	color: #8c8f9a;
+	font-size: 12px;
+}
+.edd-notification--actions {
+	flex-wrap: wrap;
+	display: flex;
+	align-items: center;
+	margin-top: 10px;
 }
