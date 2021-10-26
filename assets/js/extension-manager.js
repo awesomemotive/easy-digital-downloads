@@ -38,7 +38,7 @@
 			action: ajaxAction,
 			nonce: EDDExtensionManager.extension_manager_nonce,
 			plugin: plugin,
-			type: 'plugin',
+			type: $btn.attr( 'data-type' ),
 		};
 
 		$.post( EDDExtensionManager.ajaxurl, data )
