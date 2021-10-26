@@ -264,10 +264,10 @@ class Extension_Manager {
 			return false;
 		}
 
-		// // Determine whether file modifications are allowed.
-		// if ( ! wp_is_file_mod_allowed( 'wpforms_can_install' ) ) {
-		// 	return false;
-		// }
+		// Determine whether file modifications are allowed.
+		if ( ! wp_is_file_mod_allowed( 'edd_can_install' ) ) {
+			return false;
+		}
 
 		// All plugin checks are done.
 		if ( 'plugin' === $type ) {
