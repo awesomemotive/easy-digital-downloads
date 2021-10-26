@@ -7,6 +7,28 @@ class Extension_Manager {
 	public function __construct() {
 		add_action( 'wp_ajax_edd_activate_extension', array( $this, 'activate' ) );
 		add_action( 'wp_ajax_edd_install_extension', array( $this, 'install' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'scripts' ) );
+	}
+
+	/**
+	 * Enqueues the extension manager script.
+	 *
+	 * @since 2.11.x
+	 * @return void
+	 */
+	public function scripts() {
+		$minify = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		\wp_register_script( 'edd-extension-manager', EDD_PLUGIN_URL . "assets/js/extension-manager{$minify}.js", array( 'jquery' ), EDD_VERSION, true );
+		\wp_localize_script(
+			'edd-extension-manager',
+			'EDDExtensionManager',
+			array(
+				'activating'              => __( 'Activating', 'easy-digital-downloads' ),
+				'installing'              => __( 'Installing', 'easy-digital-downloads' ),
+				'ajaxurl'                 => edd_get_ajax_url(),
+				'extension_manager_nonce' => wp_create_nonce( 'edd_extensionmanager' ),
+			)
+		);
 	}
 
 	/**
@@ -28,6 +50,7 @@ class Extension_Manager {
 			</button>
 		</p>
 		<?php
+		\wp_print_scripts( 'edd-extension-manager' );
 	}
 
 	/**
@@ -67,7 +90,7 @@ class Extension_Manager {
 				if ( 'plugin' === $type ) {
 					wp_send_json_success(
 						array(
-							'msg' =>esc_html__( 'Plugin activated.', 'easy-digital-downloads' ),
+							'msg' => esc_html__( 'Plugin activated.', 'easy-digital-downloads' ),
 						)
 					);
 				} else {
@@ -159,8 +182,6 @@ class Extension_Manager {
 		// Create the plugin upgrader with our custom skin.
 		$installer = new \EDD\Admin\PluginSilentUpgrader( new \EDD\Admin\Install_Skin() );
 
-		rgc_error_log( 'line 161' );
-		rgc_error_log( method_exists( $installer, 'install' ) );
 		// Error check.
 		if ( ! method_exists( $installer, 'install' ) || empty( $plugin ) ) {
 			wp_send_json_error( $error );
@@ -250,5 +271,3 @@ class Extension_Manager {
 		return empty( $license['is_expired'] ) && empty( $license['is_disabled'] ) && empty( $license['is_invalid'] );
 	}
 }
-
-new Extension_Manager();
