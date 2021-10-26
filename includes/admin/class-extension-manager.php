@@ -2,6 +2,7 @@
 
 namespace EDD\Admin;
 
+use \EDD\Admin\Pass_Manager;
 class Extension_Manager {
 
 	public function __construct() {
@@ -44,8 +45,9 @@ class Extension_Manager {
 			'data-plugin'  => '',
 			'data-action'  => '',
 			'button_text'  => '',
+			'type'         => 'plugin',
 		);
-		$button = wp_parse_args( $button, $defaults );
+		$button   = wp_parse_args( $button, $defaults );
 		if ( empty( $button['button_text'] ) ) {
 			return;
 		}
@@ -55,6 +57,7 @@ class Extension_Manager {
 				class="<?php echo esc_attr( $button['button_class'] ); ?> edd-extension-manager"
 				data-plugin="<?php echo wp_http_validate_url( $button['data-plugin'] ) ? esc_url( $button['data-plugin'] ) : esc_attr( $button['data-plugin'] ); ?>"
 				data-action="<?php echo esc_attr( $button['data-action'] ); ?>"
+				data-type="<?php echo esc_attr( $button['type'] ); ?>"
 			>
 				<?php echo esc_html( $button['button_text'] ); ?>
 			</button>
