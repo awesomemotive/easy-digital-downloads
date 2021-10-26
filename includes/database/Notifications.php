@@ -62,7 +62,10 @@ class Notifications extends \EDD_DB {
 	 * @return array
 	 */
 	public function get_column_defaults() {
-		return array();
+		return array(
+			'date_created' => gmdate( 'Y-m-d H:i:s' ),
+			'date_updated' => gmdate( 'Y-m-d H:i:s' ),
+		);
 	}
 
 	/**
@@ -162,7 +165,7 @@ class Notifications extends \EDD_DB {
 	    date_created datetime NOT NULL DEFAULT CURRENT_TIMESTAMP(),
 	    date_updated datetime NOT NULL DEFAULT CURRENT_TIMESTAMP(),
 	    PRIMARY KEY (id),
-	    KEY dismissed_start_end_dismissed (dismissed, start, end)
+	    KEY dismissed_start_end (dismissed, start, end)
 		) CHARACTER SET utf8 COLLATE utf8_general_ci;" );
 
 		update_option( $this->table_name . '_db_version', $this->version );
