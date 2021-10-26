@@ -4,6 +4,11 @@ namespace EDD\Admin;
 
 class WP_SMTP {
 
+	/**
+	 * Array of configuration data for WP Mail SMPT.
+	 *
+	 * @var array
+	 */
 	private $config = array(
 		'lite_plugin'       => 'wp-mail-smtp/wp_mail_smtp.php',
 		'lite_wporg_url'    => 'https://wordpress.org/plugins/wp-mail-smtp/',
@@ -13,11 +18,25 @@ class WP_SMTP {
 		'smtp_wizard'       => 'admin.php?page=wp-mail-smtp-setup-wizard',
 	);
 
+	/**
+	 * Array of information about the plugins installed/active on the site.
+	 *
+	 * @var array
+	 */
 	private $data = array();
+
+	/**
+	 * The Extension Manager
+	 *
+	 * @var \EDD\Admin\Extension_Manager
+	 */
+	private $manager;
 
 	public function __construct() {
 		add_filter( 'edd_settings_emails', array( $this, 'register_setting' ) );
 		add_action( 'edd_wpsmtp', array( $this, 'settings_field' ) );
+
+		$this->manager = new \EDD\Admin\Extension_Manager();
 	}
 
 	/**
@@ -51,8 +70,7 @@ class WP_SMTP {
 		esc_html_e( 'WP Mail SMTP allows you to easily set up WordPress to use a trusted provider to reliably send emails, including sales notifications.', 'easy-digital-downloads' );
 		echo '</p>';
 
-		$manager = new \EDD\Admin\Extension_Manager();
-		$manager->button( $this->get_button_parameters() );
+		$this->manager->button( $this->get_button_parameters() );
 	}
 
 	/**
