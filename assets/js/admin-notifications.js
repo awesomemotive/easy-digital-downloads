@@ -8,6 +8,16 @@ document.addEventListener( 'alpine:init', () => {
 		activeNotifications: [],
 		inactiveNotifications: [],
 
+		init: function() {
+			const eddNotifications = this;
+
+			document.addEventListener( 'keydown', function( e ) {
+				if ( e.key === 'Escape' ) {
+					eddNotifications.closePanel();
+				}
+			} );
+		},
+
 		openPanel: function() {
 			if ( this.notificationsLoaded ) {
 				this.isPanelOpen = true;
