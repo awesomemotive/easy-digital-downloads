@@ -2234,16 +2234,3 @@ td.edd_order_price {
 .edd-promo-notice .edd-peeking {
 	grid-area: 1/-1;
 }
-
-.edd-fadeout {
-	opacity: 0;
-	transition: all 2s;
-	position: relative;
-	z-index: -1;
-	height: 0;
-}
-
-.edd-fadein {
-	opacity: 100%;
-	transition: all 2s;
-}

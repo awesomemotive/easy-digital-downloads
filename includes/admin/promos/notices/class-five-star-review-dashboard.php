@@ -81,14 +81,14 @@ class Five_Star_Review_Dashboard extends Notice {
 				<button class="button-link edd-review-switch-step" data-step="2"><?php esc_html_e( 'Not Really', 'easy-digital-downloads' ); ?></button>
 			</div>
 		</div>
-		<div class="edd-review-step edd-review-step-2 edd-fadeout">
+		<div class="edd-review-step edd-review-step-2" style="display:none;">
 			<p><?php esc_html_e( 'We\'re sorry to hear you aren\'t enjoying Easy Digital Downloads. We would love a chance to improve. Could you take a minute and let us know what we can do better?', 'easy-digital-downloads' ); ?></p>
 			<div class="edd-review-actions">
 				<a href="<?php echo esc_url( $this->url() ); ?>" class="button button-secondary edd-promo-notice-dismiss" target="_blank"><?php esc_html_e( 'Give Feedback', 'easy-digital-downloads' ); ?></a><br>
 				<button class="button-link edd-promo-notice-dismiss"><?php esc_html_e( 'No thanks', 'easy-digital-downloads' ); ?></button>
 			</div>
 		</div>
-		<div class="edd-review-step edd-review-step-3 edd-fadeout">
+		<div class="edd-review-step edd-review-step-3" style="display:none;">
 			<p><?php esc_html_e( 'That\'s awesome! Could you please do me a BIG favor and give it a 5-star rating on WordPress to help us spread the word and boost our motivation?', 'easy-digital-downloads' ); ?></p>
 			<p><strong><?php echo wp_kses( __( '~ Chris Klosowski<br>President of Easy Digital Downloads', 'easy-digital-downloads' ), array( 'br' => array() ) ); ?></strong></p>
 			<div class="edd-review-actions">
@@ -106,16 +106,42 @@ class Five_Star_Review_Dashboard extends Notice {
 						var target = this.getAttribute( 'data-step' );
 						if ( target ) {
 							var notice = this.closest( '.edd-promo-notice' );
-							var thisStep = this.closest( '.edd-review-step' );
 							var review_step = notice.querySelector( '.edd-review-step-' + target );
 							if ( review_step ) {
-								thisStep.classList.add( 'edd-fadeout' );
-								review_step.classList.remove( 'edd-fadeout' );
-								review_step.classList.add( 'edd-fadein' );
+								var thisStep = this.closest( '.edd-review-step' );
+								eddFadeOut( thisStep );
+								eddFadeIn( review_step );
 							}
 						}
 					} )
 				} )
+
+				function eddFadeIn( element ) {
+					var op = 0;
+					element.style.opacity = op;
+					element.style.display = 'block';
+					var timer = setInterval( function () {
+						if ( op >= 1 ) {
+							clearInterval( timer );
+						}
+						element.style.opacity = op;
+						element.style.filter = 'alpha(opacity=' + op * 100 + ')';
+						op = op + 0.1;
+					}, 80 );
+				}
+
+				function eddFadeOut( element ) {
+					var op = 1;
+					var timer = setInterval( function () {
+						if ( op <= 0 ) {
+							element.style.display = 'none';
+							clearInterval( timer );
+						}
+						element.style.opacity = op;
+						element.style.filter = 'alpha(opacity=' + op * 100 + ')';
+						op = op - 0.1;
+					}, 80 );
+				}
 			} );
 		</script>
 		<?php
