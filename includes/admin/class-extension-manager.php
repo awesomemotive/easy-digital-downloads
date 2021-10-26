@@ -32,13 +32,23 @@ class Extension_Manager {
 	}
 
 	/**
-	 * Output the button to activate/insall a plugin/extension.
+	 * Output the button to activate/install a plugin/extension.
 	 *
 	 * @since 2.11.x
 	 * @param array $button The array of parameters for the button.
 	 * @return void
 	 */
 	public function button( $button ) {
+		$defaults = array(
+			'button_class' => '',
+			'data-plugin'  => '',
+			'data-action'  => '',
+			'button_text'  => '',
+		);
+		$button = wp_parse_args( $button, $defaults );
+		if ( empty( $button['button_text'] ) ) {
+			return;
+		}
 		?>
 		<p>
 			<button

@@ -89,7 +89,7 @@ class WP_SMTP {
 		if ( ! $this->data['plugin_installed'] && ! $this->data['pro_plugin_installed'] ) {
 			$button['data-plugin'] = $this->config['lite_download_url'];
 			$button['data-action'] = 'install';
-			$button['button_text'] = __( 'Install WP Mail SMTP', 'easy-digital-downloads' );
+			$button['button_text'] = __( 'Install & Activate WP Mail SMTP', 'easy-digital-downloads' );
 		} elseif ( ! $this->is_smtp_activated() ) {
 			$button['data-plugin'] = $this->config['lite_plugin'];
 			$button['data-action'] = 'activate';
