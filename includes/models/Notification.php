@@ -63,7 +63,7 @@ class Notification {
 	public $date_updated;
 
 	/**
-	 * @var string[] 
+	 * @var string[]
 	 */
 	protected $casts = array(
 		'id'        => 'int',
