@@ -172,9 +172,9 @@ class Extension_Manager {
 		/*
 		 * We do not need any extra credentials if we have gotten this far, so let's install the plugin.
 		 */
-		require_once EDD_PLUGIN_DIR . 'includes/admin/class-plugin-silent-upgrader.php';
-		require_once EDD_PLUGIN_DIR . 'includes/admin/class-plugin-silent-upgrader-skin.php';
-		require_once EDD_PLUGIN_DIR . 'includes/admin/class-install-skin.php';
+		require_once EDD_PLUGIN_DIR . 'includes/libraries/class-plugin-silent-upgrader.php';
+		require_once EDD_PLUGIN_DIR . 'includes/libraries/class-plugin-silent-upgrader-skin.php';
+		require_once EDD_PLUGIN_DIR . 'includes/libraries/class-install-skin.php';
 
 		// Do not allow WordPress to search/download translations, as this will break JS output.
 		remove_action( 'upgrader_process_complete', array( 'Language_Pack_Upgrader', 'async_upgrade' ), 20 );
