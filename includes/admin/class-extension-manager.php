@@ -75,7 +75,7 @@ class Extension_Manager {
 
 		// Check for permissions.
 		if ( ! check_ajax_referer( 'edd_extensionmanager', 'nonce', false ) || ! current_user_can( 'activate_plugins' ) ) {
-			wp_send_json_error( esc_html__( 'Plugin activation is disabled for you on this site.', 'easy-digital-downloads' ) );
+			wp_send_json_error( esc_html__( 'Plugin activation is not available for you on this site.', 'easy-digital-downloads' ) );
 		}
 
 		$plugin = filter_input( INPUT_POST, 'plugin', FILTER_SANITIZE_STRING );
