@@ -17,16 +17,16 @@ class Extension_Manager {
 	public function __construct() {
 		add_action( 'wp_ajax_edd_activate_extension', array( $this, 'activate' ) );
 		add_action( 'wp_ajax_edd_install_extension', array( $this, 'install' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'scripts' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'register_scripts' ) );
 	}
 
 	/**
-	 * Enqueues the extension manager script.
+	 * Registers the extension manager script.
 	 *
 	 * @since 2.11.x
 	 * @return void
 	 */
-	public function scripts() {
+	public function register_scripts() {
 		$minify = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 		wp_register_script( 'edd-extension-manager', EDD_PLUGIN_URL . "assets/js/extension-manager{$minify}.js", array( 'jquery' ), EDD_VERSION, true );
 		wp_localize_script(
@@ -35,7 +35,6 @@ class Extension_Manager {
 			array(
 				'activating'              => __( 'Activating', 'easy-digital-downloads' ),
 				'installing'              => __( 'Installing', 'easy-digital-downloads' ),
-				'ajaxurl'                 => edd_get_ajax_url(),
 				'extension_manager_nonce' => wp_create_nonce( 'edd_extensionmanager' ),
 			)
 		);
