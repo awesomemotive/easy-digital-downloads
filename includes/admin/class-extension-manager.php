@@ -227,7 +227,7 @@ class Extension_Manager {
 		remove_action( 'upgrader_process_complete', array( 'Language_Pack_Upgrader', 'async_upgrade' ), 20 );
 
 		// Create the plugin upgrader with our custom skin.
-		$installer = new \EDD\Admin\PluginSilentUpgrader( new \EDD\Admin\Install_Skin() );
+		$installer = new \EDD\Admin\Installers\PluginSilentUpgrader( new \EDD\Admin\Installers\Install_Skin() );
 
 		// Error check.
 		if ( ! method_exists( $installer, 'install' ) || empty( $plugin ) ) {

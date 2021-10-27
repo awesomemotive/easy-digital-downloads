@@ -1,6 +1,6 @@
 <?php
 
-namespace EDD\Admin;
+namespace EDD\Admin\Installers;
 
 /** \WP_Upgrader_Skin class */
 require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader-skin.php';

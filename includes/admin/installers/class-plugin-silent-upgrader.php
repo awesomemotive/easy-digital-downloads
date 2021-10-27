@@ -1,6 +1,6 @@
 <?php
 
-namespace EDD\Admin;
+namespace EDD\Admin\Installers;
 
 use WP_Error;
 use WP_Upgrader;
