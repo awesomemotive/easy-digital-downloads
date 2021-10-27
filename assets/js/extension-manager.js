@@ -1,3 +1,5 @@
+/* global EDDExtensionManager */
+
 ; ( function ( document, $ ) {
 	'use strict';
 
