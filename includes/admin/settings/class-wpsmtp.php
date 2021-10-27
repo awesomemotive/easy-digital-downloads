@@ -126,7 +126,7 @@ class WP_SMTP {
 	 */
 	protected function is_smtp_configured() {
 
-		if ( ! $this->is_smtp_activated() ) {
+		if ( ! $this->is_smtp_activated() || ! class_exists( '\\WPMailSMTP\\Options' ) ) {
 			return false;
 		}
 
