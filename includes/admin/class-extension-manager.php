@@ -34,37 +34,69 @@ class Extension_Manager {
 	}
 
 	/**
-	 * Output the button to activate/install a plugin/extension.
+	 * Outputs the button to activate/install a plugin/extension.
+	 * If a link is passed in the args, create a button style link instead (@uses $this->link()).
 	 *
 	 * @since 2.11.x
-	 * @param array $button The array of parameters for the button.
+	 * @param array $args The array of parameters for the button.
 	 * @return void
 	 */
-	public function button( $button ) {
+	public function button( $args ) {
+		if ( ! empty( $args['href'] ) ) {
+			$this->link( $args );
+			return;
+		}
 		$defaults = array(
-			'button_class' => '',
+			'button_class' => 'button-primary',
 			'data-plugin'  => '',
 			'data-action'  => '',
 			'button_text'  => '',
 			'type'         => 'plugin',
 		);
-		$button   = wp_parse_args( $button, $defaults );
-		if ( empty( $button['button_text'] ) ) {
+		$args     = wp_parse_args( $args, $defaults );
+		if ( empty( $args['button_text'] ) ) {
 			return;
 		}
 		?>
 		<p>
 			<button
-				class="<?php echo esc_attr( $button['button_class'] ); ?> edd-extension-manager"
-				data-plugin="<?php echo wp_http_validate_url( $button['data-plugin'] ) ? esc_url( $button['data-plugin'] ) : esc_attr( $button['data-plugin'] ); ?>"
-				data-action="<?php echo esc_attr( $button['data-action'] ); ?>"
-				data-type="<?php echo esc_attr( $button['type'] ); ?>"
+				class="button <?php echo esc_attr( $args['button_class'] ); ?> edd-extension-manager"
+				data-plugin="<?php echo esc_attr( $args['data-plugin'] ); ?>"
+				data-action="<?php echo esc_attr( $args['data-action'] ); ?>"
+				data-type="<?php echo esc_attr( $args['type'] ); ?>"
 			>
-				<?php echo esc_html( $button['button_text'] ); ?>
+				<?php echo esc_html( $args['button_text'] ); ?>
 			</button>
 		</p>
 		<?php
 		wp_print_scripts( 'edd-extension-manager' );
+	}
+
+	/**
+	 * Outputs the link, if it should be a link.
+	 *
+	 * @param array $args
+	 * @return void
+	 */
+	private function link( $args ) {
+		$defaults = array(
+			'button_class' => 'button-primary',
+			'button_text'  => '',
+		);
+		$args     = wp_parse_args( $args, $defaults );
+		if ( empty( $args['button_text'] ) ) {
+			return;
+		}
+		?>
+		<p>
+			<a
+				class="button <?php echo esc_attr( $args['button_class'] ); ?>"
+				href="<?php echo esc_url( $args['href'] ); ?>"
+			>
+				<?php echo esc_html( $args['button_text'] ); ?>
+			</a>
+		</p>
+		<?php
 	}
 
 	/**
