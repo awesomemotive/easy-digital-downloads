@@ -48,8 +48,10 @@
 					var thisStep = $btn.closest( '.edd-extension-manager__step' ),
 						nextStep = thisStep.next();
 
-					thisStep.fadeOut();
-					nextStep.fadeIn();
+					if ( nextStep.length ) {
+						thisStep.fadeOut();
+						nextStep.fadeIn();
+					}
 				}
 			} )
 			.always( function () {
