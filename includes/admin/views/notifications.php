@@ -25,7 +25,7 @@
 		x-transition:enter-start="edd-slide-in"
 		x-transition:leave-end="edd-slide-in"
 	>
-		<div id="edd-notifications-header">
+		<div id="edd-notifications-header" tabindex="-1">
 			<h3>
 				<?php
 				echo wp_kses(

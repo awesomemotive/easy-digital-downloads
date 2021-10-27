@@ -19,8 +19,14 @@ document.addEventListener( 'alpine:init', () => {
 		},
 
 		openPanel: function() {
+			const panelHeader = document.getElementById( 'edd-notifications-header' );
+
 			if ( this.notificationsLoaded ) {
 				this.isPanelOpen = true;
+				if ( panelHeader ) {
+					panelHeader.focus();
+				}
+
 				return;
 			}
 
@@ -31,6 +37,10 @@ document.addEventListener( 'alpine:init', () => {
 					this.activeNotifications = data.active;
 					this.inactiveNotifications = data.dismissed;
 					this.notificationsLoaded = true;
+
+					if ( panelHeader ) {
+						panelHeader.focus();
+					}
 				} )
 				.catch( error => {
 					console.log( 'Notification error', error );
