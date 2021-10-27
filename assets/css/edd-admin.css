@@ -76,6 +76,12 @@ body.post-type-download #screen-meta {
 button.edd-round {
 	border: none;
 }
+#edd-header button.edd-round:hover {
+	background-color: #e5e5e5;
+}
+button.edd-round:focus, button.edd-round:active {
+	outline: 2px solid #0c5d95;
+}
 
 #edd-header .edd-number {
 	position: absolute;
