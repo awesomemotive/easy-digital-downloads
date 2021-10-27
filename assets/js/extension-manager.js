@@ -43,7 +43,7 @@
 			type: $btn.attr( 'data-type' ),
 		};
 
-		$.post( EDDExtensionManager.ajaxurl, data )
+		$.post( ajaxurl, data )
 			.done( function ( res ) {
 				console.log( res );
 				if ( res.success ) {
