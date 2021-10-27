@@ -46,7 +46,7 @@ class WP_SMTP {
 	 * @return array
 	 */
 	public function register_setting( $settings ) {
-		if ( $this->is_smtp_activated() ) {
+		if ( $this->is_smtp_configured() ) {
 			return $settings;
 		}
 		$settings['main']['wpsmtp'] = array(
@@ -80,12 +80,7 @@ class WP_SMTP {
 	 */
 	private function get_button_parameters() {
 		$data   = $this->get_data();
-		$button = array(
-			'button_class' => 'button button-primary',
-			'data-plugin'  => '',
-			'data-action'  => '',
-			'button_text'  => '',
-		);
+		$button = array();
 		if ( ! $this->data['plugin_installed'] && ! $this->data['pro_plugin_installed'] ) {
 			$button['data-plugin'] = $this->config['lite_download_url'];
 			$button['data-action'] = 'install';
@@ -94,6 +89,9 @@ class WP_SMTP {
 			$button['data-plugin'] = $this->config['lite_plugin'];
 			$button['data-action'] = 'activate';
 			$button['button_text'] = __( 'Activate WP Mail SMTP', 'easy-digital-downloads' );
+		} elseif ( ! $this->is_smtp_configured() ) {
+			$button['button_text'] = __( 'Configure WP Mail SMTP', 'easy-digital-downloads' );
+			$button['href']        = admin_url( $this->config['smtp_wizard'] );
 		}
 
 		return $button;
