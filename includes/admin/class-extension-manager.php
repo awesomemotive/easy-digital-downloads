@@ -14,6 +14,13 @@ class Extension_Manager {
 	 */
 	public $all_plugins;
 
+	/**
+	 * The types of installations which are allowed.
+	 *
+	 * @var array
+	 */
+	private $types = array( 'plugin', 'extension' );
+
 	public function __construct() {
 		add_action( 'wp_ajax_edd_activate_extension', array( $this, 'activate' ) );
 		add_action( 'wp_ajax_edd_install_extension', array( $this, 'install' ) );
@@ -124,7 +131,7 @@ class Extension_Manager {
 		}
 
 		$type = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
-		if ( ! in_array( $type, array( 'plugin', 'extension' ), true ) ) {
+		if ( ! in_array( $type, $this->types, true ) ) {
 			wp_send_json_error( esc_html__( 'The plugin to install was not defined.', 'easy-digital-downloads' ) );
 		}
 
@@ -292,7 +299,7 @@ class Extension_Manager {
 	 */
 	public function can_install( $type ) {
 
-		if ( ! in_array( $type, array( 'plugin', 'extension' ), true ) ) {
+		if ( ! in_array( $type, $this->types, true ) ) {
 			return false;
 		}
 
