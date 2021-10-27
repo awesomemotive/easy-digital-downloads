@@ -48,7 +48,16 @@ document.addEventListener( 'alpine:init', () => {
 		},
 
 		closePanel: function() {
+			if ( ! this.isPanelOpen ) {
+				return;
+			}
+
 			this.isPanelOpen = false;
+
+			const notificationButton = document.getElementById( 'edd-notification-button' );
+			if ( notificationButton ) {
+				notificationButton.focus();
+			}
 		},
 
 		apiRequest: function( endpoint, method ) {
