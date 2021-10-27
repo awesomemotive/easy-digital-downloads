@@ -19,13 +19,6 @@ class WP_SMTP {
 	);
 
 	/**
-	 * Array of information about the plugins installed/active on the site.
-	 *
-	 * @var array
-	 */
-	private $data = array();
-
-	/**
 	 * The Extension Manager
 	 *
 	 * @var \EDD\Admin\Extension_Manager
@@ -79,40 +72,25 @@ class WP_SMTP {
 	 * @return array
 	 */
 	private function get_button_parameters() {
-		$data   = $this->get_data();
 		$button = array();
-		if ( ! $this->data['plugin_installed'] && ! $this->data['pro_plugin_installed'] ) {
+		// If neither the lite nor pro plugin is installed, the button will prompt to install and activate the lite plugin.
+		if ( ! $this->manager->is_plugin_installed( $this->config['lite_plugin'] ) && ! $this->manager->is_plugin_installed( $this->config['pro_plugin'] ) ) {
 			$button['data-plugin'] = $this->config['lite_download_url'];
 			$button['data-action'] = 'install';
 			$button['button_text'] = __( 'Install & Activate WP Mail SMTP', 'easy-digital-downloads' );
 		} elseif ( ! $this->is_smtp_activated() ) {
+			// If one of the SMTP plugins is installed, but not activated, the button will prompt to activate it.
 			$button['data-plugin'] = $this->config['lite_plugin'];
 			$button['data-action'] = 'activate';
 			$button['button_text'] = __( 'Activate WP Mail SMTP', 'easy-digital-downloads' );
 		} elseif ( ! $this->is_smtp_configured() ) {
+			// If the plugin is active, but not configured, the button will send them to the setup wizard.
+			// @todo maybe this should go to the settings page instead.
 			$button['button_text'] = __( 'Configure WP Mail SMTP', 'easy-digital-downloads' );
 			$button['href']        = admin_url( $this->config['smtp_wizard'] );
 		}
 
 		return $button;
-	}
-
-	/**
-	 * Get the data needed to manage plugin installation.
-	 *
-	 * @return array
-	 */
-	private function get_data() {
-		$this->data                         = array(
-			'all_plugins'      => \get_plugins(),
-			'plugin_activated' => false,
-			'plugin_setup'     => false,
-		);
-		$this->data['plugin_installed']     = array_key_exists( $this->config['lite_plugin'], $this->data['all_plugins'] );
-		$this->data['pro_plugin_installed'] = array_key_exists( $this->config['pro_plugin'], $this->data['all_plugins'] );
-		$this->data['plugin_activated']     = $this->is_smtp_activated();
-
-		return $this->data;
 	}
 
 	/**
