@@ -19,8 +19,8 @@ class Extension_Manager {
 	 */
 	public function scripts() {
 		$minify = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-		\wp_register_script( 'edd-extension-manager', EDD_PLUGIN_URL . "assets/js/extension-manager{$minify}.js", array( 'jquery' ), EDD_VERSION, true );
-		\wp_localize_script(
+		wp_register_script( 'edd-extension-manager', EDD_PLUGIN_URL . "assets/js/extension-manager{$minify}.js", array( 'jquery' ), EDD_VERSION, true );
+		wp_localize_script(
 			'edd-extension-manager',
 			'EDDExtensionManager',
 			array(
@@ -63,7 +63,7 @@ class Extension_Manager {
 			</button>
 		</p>
 		<?php
-		\wp_print_scripts( 'edd-extension-manager' );
+		wp_print_scripts( 'edd-extension-manager' );
 	}
 
 	/**
