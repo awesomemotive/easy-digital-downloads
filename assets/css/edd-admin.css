@@ -2319,11 +2319,11 @@ body.admin-bar #edd-notifications-panel {
 
 .edd-notification {
 	display: flex;
+	gap: 20px;
 	margin-bottom: 20px;
 }
 .edd-notification--icon {
 	color: #00aa63;
-	margin-right: 20px;
 }
 .edd-notification--icon.edd-notification--icon-info {
 	color: #005ae0;
@@ -2341,6 +2341,7 @@ body.admin-bar #edd-notifications-panel {
 	align-items: center;
 	display: flex;
 	justify-content: space-between;
+	gap: 5px;
 	margin-bottom: 7px;
 }
 .edd-notification--title {
@@ -2348,7 +2349,7 @@ body.admin-bar #edd-notifications-panel {
 	flex: 1;
 	font-size: 16px;
 	font-weight: 600;
-	margin: 0 5px 0 0;
+	margin: 0;
 }
 .edd-notification--date {
 	color: #8c8f9a;
