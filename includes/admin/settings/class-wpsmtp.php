@@ -76,7 +76,7 @@ class WP_SMTP {
 	/**
 	 * Gets the button parameters.
 	 *
-	 * @return void
+	 * @return array
 	 */
 	private function get_button_parameters() {
 		$data   = $this->get_data();
