@@ -2198,3 +2198,14 @@ td.edd_order_price {
 .edd-paypal-account-status .dashicons-no {
 	color: #d63638;
 }
+
+/* Extension Manager
+------------------------------------------------------------- */
+.edd-extension-manager__group {
+	display: grid;
+}
+
+.edd-extension-manager__step {
+	grid-area: 1/-1;
+	margin: 16px 0;
+}
