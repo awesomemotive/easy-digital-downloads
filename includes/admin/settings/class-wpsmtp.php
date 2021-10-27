@@ -1,6 +1,6 @@
 <?php
 
-namespace EDD\Admin;
+namespace EDD\Admin\Settings;
 
 class WP_SMTP {
 
