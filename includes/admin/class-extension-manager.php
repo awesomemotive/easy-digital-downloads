@@ -145,7 +145,7 @@ class Extension_Manager {
 		}
 
 		$error = 'plugin' === $type
-			? esc_html__( 'Could not install the plugin. Please download and install it manually.', 'easy-digital-downloads' )
+			? esc_html__( 'Could not install the plugin. Please download and install it manually via Plugins > Add New.', 'easy-digital-downloads' )
 			: esc_html__( 'Could not install the extension. Please download it from edd.com and install it manually.', 'easy-digital-downloads' );
 
 		$plugin = filter_input( INPUT_POST, 'plugin', FILTER_SANITIZE_STRING );
