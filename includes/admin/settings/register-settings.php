@@ -488,6 +488,14 @@ function edd_get_registered_settings() {
 						'desc' => __( 'Check this to force users to be redirected to the secure checkout page. You must have an SSL certificate installed to use this option.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
 					),
+					'redirect_on_add'    => array(
+						'id'            => 'redirect_on_add',
+						'name'          => __( 'Redirect to Checkout', 'easy-digital-downloads' ),
+						'desc'          => __( 'Immediately redirect to checkout after adding an item to the cart?', 'easy-digital-downloads' ),
+						'type'          => 'checkbox',
+						'tooltip_title' => __( 'Redirect to Checkout', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'When enabled, once an item has been added to the cart, the customer will be redirected directly to your checkout page. This is useful for stores that sell single items.', 'easy-digital-downloads' ),
+					),
 					'logged_in_only' => array(
 						'id'   => 'logged_in_only',
 						'name' => __( 'Require Login', 'easy-digital-downloads' ),
@@ -763,14 +771,6 @@ function edd_get_registered_settings() {
 		'misc' => apply_filters('edd_settings_misc',
 			array(
 				'main' => array(
-					'redirect_on_add' => array(
-						'id'   => 'redirect_on_add',
-						'name' => __( 'Redirect to Checkout', 'easy-digital-downloads' ),
-						'desc' => __( 'Immediately redirect to checkout after adding an item to the cart?', 'easy-digital-downloads' ),
-						'type' => 'checkbox',
-						'tooltip_title' => __( 'Redirect to Checkout', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'When enabled, once an item has been added to the cart, the customer will be redirected directly to your checkout page. This is useful for stores that sell single items.', 'easy-digital-downloads' ),
-					),
 					'item_quantities' => array(
 						'id'   => 'item_quantities',
 						'name' => __('Cart Item Quantities','easy-digital-downloads' ),
