@@ -95,12 +95,24 @@ class WP_SMTP {
 			$button['button_text'] = __( 'Activate WP Mail SMTP', 'easy-digital-downloads' );
 		} elseif ( ! $this->is_smtp_configured() ) {
 			// If the plugin is active, but not configured, the button will send them to the setup wizard.
-			// @todo maybe this should go to the settings page instead.
-			$button['button_text'] = __( 'Configure WP Mail SMTP', 'easy-digital-downloads' );
-			$button['href']        = admin_url( $this->config['smtp_wizard'] );
+			$button = $this->get_link_parameters();
 		}
 
 		return $button;
+	}
+
+	/**
+	 * Gets the array of parameters for the link to configure WP Mail SMTP.
+	 * @todo maybe this should go to the settings page instead.
+	 *
+	 * @since 2.11.x
+	 * @return array
+	 */
+	private function get_link_parameters() {
+		return array(
+			'button_text' => __( 'Configure WP Mail SMTP', 'easy-digital-downloads' ),
+			'href'        => admin_url( $this->config['smtp_wizard'] ),
+		);
 	}
 
 	/**

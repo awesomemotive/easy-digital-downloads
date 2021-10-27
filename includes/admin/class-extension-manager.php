@@ -92,7 +92,7 @@ class Extension_Manager {
 	 * @param array $args
 	 * @return void
 	 */
-	private function link( $args ) {
+	public function link( $args ) {
 		$defaults = array(
 			'button_class' => 'button-primary',
 			'button_text'  => '',
