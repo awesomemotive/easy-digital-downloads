@@ -1,11 +1,21 @@
 <?php
-
+/**
+ * WP Mail SMTP
+ *
+ * Manages automatic installation/activation for WP Mail SMTP.
+ *
+ * @package     EDD
+ * @subpackage  WP_SMTP
+ * @copyright   Copyright (c) 2021, Easy Digital Downloads
+ * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @since       2.11.x
+ */
 namespace EDD\Admin\Settings;
 
 class WP_SMTP {
 
 	/**
-	 * Array of configuration data for WP Mail SMPT.
+	 * Array of configuration data for WP Mail SMTP.
 	 *
 	 * @var array
 	 */
