@@ -3,7 +3,7 @@
 ; ( function ( document, $ ) {
 	'use strict';
 
-	$( '.edd-extension-manager' ).on( 'click', function ( e ) {
+	$( '.edd-extension-manager__action' ).on( 'click', function ( e ) {
 		e.preventDefault();
 
 		var $btn = $( this ),
@@ -26,10 +26,6 @@
 				$btn.text( EDDExtensionManager.installing );
 				break;
 
-			case 'goto-url':
-				window.location.href = $btn.attr( 'data-url' );
-				return;
-
 			default:
 				return;
 		}
@@ -48,11 +44,15 @@
 				console.log( res );
 				if ( res.success ) {
 					$btn.html( res.data.msg );
+
+					var thisStep = $btn.closest( '.edd-extension-manager__step' ),
+						nextStep = thisStep.next();
+
+					thisStep.fadeOut();
+					nextStep.fadeIn();
 				}
-				// app.stepInstallDone( res, $btn, action );
 			} )
 			.always( function () {
-				$btn.attr( 'disabled', false );
 			} );
 	} );
 } )( document, jQuery );

@@ -74,7 +74,7 @@ class Extension_Manager {
 		?>
 		<p>
 			<button
-				class="button <?php echo esc_attr( $args['button_class'] ); ?> edd-extension-manager"
+				class="button <?php echo esc_attr( $args['button_class'] ); ?> edd-extension-manager__action"
 				data-plugin="<?php echo esc_attr( $args['data-plugin'] ); ?>"
 				data-action="<?php echo esc_attr( $args['data-action'] ); ?>"
 				data-type="<?php echo esc_attr( $args['type'] ); ?>"
