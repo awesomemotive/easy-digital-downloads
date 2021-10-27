@@ -24,7 +24,9 @@ document.addEventListener( 'alpine:init', () => {
 			if ( this.notificationsLoaded ) {
 				this.isPanelOpen = true;
 				if ( panelHeader ) {
-					panelHeader.focus();
+					setTimeout( function() {
+						panelHeader.focus();
+					} );
 				}
 
 				return;
