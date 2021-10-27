@@ -6,6 +6,14 @@ use \EDD\Admin\Pass_Manager;
 
 class Extension_Manager {
 
+	/**
+	 * All of the installed plugins on the site.
+	 *
+	 * @since 2.11.x
+	 * @var array
+	 */
+	public $all_plugins;
+
 	public function __construct() {
 		add_action( 'wp_ajax_edd_activate_extension', array( $this, 'activate' ) );
 		add_action( 'wp_ajax_edd_install_extension', array( $this, 'install' ) );
@@ -308,5 +316,32 @@ class Extension_Manager {
 
 		// Allow addons installation if license is not expired, enabled and valid.
 		return empty( $license['is_expired'] ) && empty( $license['is_disabled'] ) && empty( $license['is_invalid'] );
+	}
+
+	/**
+	 * Get all installed plugins.
+	 *
+	 * @since 2.11.x
+	 * @return array
+	 */
+	public function get_plugins() {
+		if ( $this->all_plugins ) {
+			return $this->all_plugins;
+		}
+
+		$this->all_plugins = get_plugins();
+
+		return $this->all_plugins;
+	}
+
+	/**
+	 * Check if a plugin is installed.
+	 *
+	 * @since 2.11.x
+	 * @param  string $plugin The path to the main plugin file, eg 'my-plugin/my-plugin.php'.
+	 * @return boolean
+	 */
+	public function is_plugin_installed( $plugin ) {
+		return array_key_exists( $plugin, $this->get_plugins() );
 	}
 }
