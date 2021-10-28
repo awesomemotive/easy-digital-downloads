@@ -2,7 +2,10 @@
 
 namespace EDD\Admin;
 
+require_once EDD_PLUGIN_DIR . 'includes/admin/installers/class-extensions.php';
+
 use \EDD\Admin\Pass_Manager;
+use \EDD\Admin\Installers\Extensions;
 
 class Extension_Manager {
 
@@ -76,6 +79,9 @@ class Extension_Manager {
 		if ( empty( $args['button_text'] ) ) {
 			return;
 		}
+		if ( 'extension' === $args['type'] ) {
+			$args['data-plugin'] = $this->get_extension_download_url( $args['data-plugin'] );
+		}
 		?>
 		<p>
 			<button
@@ -111,11 +117,18 @@ class Extension_Manager {
 			<a
 				class="button <?php echo esc_attr( $args['button_class'] ); ?>"
 				href="<?php echo esc_url( $args['href'] ); ?>"
+				<?php echo ! empty( $args['new_tab'] ) ? ' target="_blank"' : ''; ?>
 			>
 				<?php echo esc_html( $args['button_text'] ); ?>
 			</a>
 		</p>
 		<?php
+	}
+
+	private function get_extension_download_url( $slug ) {
+		$extensions = new Extensions();
+
+		return $extensions->get_url( $slug );
 	}
 
 	/**
