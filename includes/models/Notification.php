@@ -33,6 +33,11 @@ class Notification {
 	public $content;
 
 	/**
+	 * @var array|null Button information, if set.
+	 */
+	public $buttons;
+
+	/**
 	 * @var string Notification type, including: `warning`, `error`, `info`, or `success`.
 	 */
 	public $type;
@@ -68,6 +73,7 @@ class Notification {
 	protected $casts = array(
 		'id'        => 'int',
 		'remote_id' => 'int',
+		'buttons'   => 'array',
 		'dismissed' => 'bool',
 	);
 
@@ -143,8 +149,21 @@ class Notification {
 	 * @todo There should be a trait for this.
 	 */
 	public function toArray() {
-		$data                  = get_object_vars( $this );
-		$data['icon_name']     = $this->getIcon();
+		$data = array();
+
+		/*
+		 * get_object_vars() returns non-public properties when used within the class
+		 * so we're using a ReflectionClass to get the public properties only.
+		 */
+		$object = new \ReflectionClass( $this );
+
+		foreach ( $object->getProperties( \ReflectionProperty::IS_PUBLIC ) as $property ) {
+			if ( $property instanceof \ReflectionProperty && isset( $this->{$property->name} ) ) {
+				$data[ $property->name ] = $this->{$property->name};
+			}
+		}
+
+		$data['icon_name'] = $this->getIcon();
 
 		/* Translators: %s - a length of time (e.g. "1 second") */
 		$data['relative_date'] = sprintf( __( '%s ago', 'easy-digital-downloads' ), human_time_diff( strtotime( $this->date_created ) ) );
