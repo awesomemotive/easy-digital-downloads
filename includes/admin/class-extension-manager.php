@@ -21,7 +21,12 @@ class Extension_Manager {
 	 */
 	private $types = array( 'plugin', 'extension' );
 
-	public function __construct() {
+	private $pass_id;
+
+	public function __construct( $pass_id = null ) {
+		if ( $pass_id ) {
+			$this->pass_id = $pass_id;
+		}
 		add_action( 'wp_ajax_edd_activate_extension', array( $this, 'activate' ) );
 		add_action( 'wp_ajax_edd_install_extension', array( $this, 'install' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_scripts' ) );
@@ -317,11 +322,20 @@ class Extension_Manager {
 			return true;
 		}
 
-		// Addons require additional license checks.
-		$pass_data = get_option( 'edd_pass_licenses' );
+		return $this->pass_can_download();
+	}
 
-		// Allow addons installation if license is not expired, enabled and valid.
-		return empty( $license['is_expired'] ) && empty( $license['is_disabled'] ) && empty( $license['is_invalid'] );
+	/**
+	 * Checks if a user's pass (license) can download an extension.
+	 *
+	 * @since 2.11.x
+	 * @return bool Returns true if the current site has an active pass (license) and it is greater than or equal to the extension's minimum pass.
+	 */
+	public function pass_can_download() {
+		$pass_manager    = new Pass_Manager();
+		$highest_pass_id = $pass_manager->highest_pass_id;
+
+		return ! empty( $highest_pass_id ) && $pass_manager->pass_compare( $highest_pass_id, $this->pass_id, '>=' );
 	}
 
 	/**
