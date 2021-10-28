@@ -5,6 +5,7 @@
  * @package   easy-digital-downloads
  * @copyright Copyright (c) 2021, Easy Digital Downloads
  * @license   GPL2+
+ * @since     2.11.x
  */
 
 namespace EDD\Utils;
@@ -117,10 +118,40 @@ class NotificationImporter {
 			'remote_id' => $notification->id,
 			'title'     => $notification->title,
 			'content'   => $notification->content,
+			'buttons'   => $this->parseButtons( $notification ),
 			'type'      => $notification->notification_type,
 			'start'     => ! empty( $notification->start ) ? $notification->start : null,
 			'end'       => ! empty( $notification->end ) ? $notification->end : null,
 		);
+	}
+
+	/**
+	 * Parses and formats buttons from the remote notification object.
+	 *
+	 * @param object $notification
+	 *
+	 * @return array|null
+	 */
+	protected function parseButtons( $notification ) {
+		if ( empty( $notification->btns ) || ! is_array( $notification->btns ) ) {
+			return null;
+		}
+
+		$buttons = array();
+
+		foreach ( $notification->btns as $buttonType => $buttonInfo ) {
+			if ( empty( $buttonInfo->url ) || empty( $buttonInfo->text ) ) {
+				continue;
+			}
+
+			$buttons[] = array(
+				'type' => ( 'main' === $buttonType ) ? 'primary' : 'secondary',
+				'url'  => $buttonInfo->url,
+				'text' => $buttonInfo->text,
+			);
+		}
+
+		return ! empty( $buttons ) ? $buttons : null;
 	}
 
 	/**

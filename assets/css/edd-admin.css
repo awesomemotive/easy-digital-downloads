@@ -2365,5 +2365,6 @@ body.admin-bar #edd-notifications-panel {
 	flex-wrap: wrap;
 	display: flex;
 	align-items: center;
+	gap: 5px;
 	margin-top: 10px;
 }

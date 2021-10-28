@@ -22,9 +22,9 @@ class Notifications extends \EDD_DB {
 
 		$this->table_name  = $wpdb->prefix . 'edd_notifications';
 		$this->primary_key = 'id';
-		$this->version     = '1.0';
+		$this->version     = '0.1'; // @todo update to 1.0 pre-release
 
-		add_action( 'edd_daily_scheduled_events', static function() {
+		add_action( 'edd_daily_scheduled_events', static function () {
 			$importer = new NotificationImporter();
 			$importer->run();
 		} );
@@ -47,6 +47,7 @@ class Notifications extends \EDD_DB {
 			'remote_id'    => '%d',
 			'title'        => '%s',
 			'content'      => '%s',
+			'buttons'      => '%s',
 			'type'         => '%s',
 			'start'        => '%s',
 			'end'          => '%s',
@@ -77,11 +78,32 @@ class Notifications extends \EDD_DB {
 	 * @return int
 	 */
 	public function insert( $data, $type = 'notification' ) {
+		if ( ! empty( $data['buttons'] ) && is_array( $data['buttons'] ) ) {
+			$data['buttons'] = json_encode( $data['buttons'] );
+		}
+
 		$result = parent::insert( $data, $type );
 
 		wp_cache_delete( 'edd_active_notification_count', 'edd_notifications' );
 
 		return $result;
+	}
+
+	/**
+	 * Updates an existing notification.
+	 *
+	 * @param int    $row_id
+	 * @param array  $data
+	 * @param string $where
+	 *
+	 * @return bool
+	 */
+	public function update( $row_id, $data = array(), $where = '' ) {
+		if ( ! empty( $data['buttons'] ) && is_array( $data['buttons'] ) ) {
+			$data['buttons'] = json_encode( $data['buttons'] );
+		}
+
+		return parent::update( $row_id, $data, $where );
 	}
 
 	/**
@@ -158,6 +180,7 @@ class Notifications extends \EDD_DB {
 	    remote_id bigint(20) UNSIGNED DEFAULT NULL,
 	    title text NOT NULL,
 	    content longtext NOT NULL,
+	    buttons longtext DEFAULT NULL,
 	    type varchar(64) NOT NULL,
 	    start datetime DEFAULT NULL,
 	    end datetime DEFAULT NULL,

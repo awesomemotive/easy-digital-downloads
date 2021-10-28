@@ -67,6 +67,15 @@
 							<div class="edd-notification--content" x-html="notification.content"></div>
 
 							<div class="edd-notification--actions">
+								<template x-for="button in notification.buttons">
+									<a
+										:href="button.url"
+										:class="button.type === 'primary' ? 'button-primary' : 'button'"
+										target="_blank"
+										x-text="button.text"
+									></a>
+								</template>
+
 								<button
 									type="button"
 									class="button edd-notification--dismiss"

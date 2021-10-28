@@ -55,4 +55,45 @@ class NotificationModelTests extends \EDD_UnitTestCase {
 		$this->assertTrue( is_int( $notification->id ) );
 	}
 
+	/**
+	 * The `buttons` property should be cast to an array if not empty.
+	 *
+	 * @covers \EDD\Models\Notification::castAttribute
+	 */
+	public function test_non_empty_buttons_is_array() {
+		$notification = $this->insertAndGetNotification( array(
+			'title'     => 'Notification',
+			'content'   => 'Notification',
+			'buttons'   => array(
+				array(
+					'type' => 'primary',
+					'url'  => 'https://easydigitaldownloads.com',
+					'text' => 'Learn More',
+				)
+			),
+			'type'      => 'success',
+			'dismissed' => 0,
+		) );
+
+		$this->assertTrue( is_array( $notification->buttons ) );
+		$this->assertSame( 'Learn More', $notification->buttons[0]['text'] );
+	}
+
+	/**
+	 * The `buttons` property should be null if no data.
+	 *
+	 * @covers \EDD\Models\Notification::castAttribute
+	 */
+	public function test_empty_buttons_is_null() {
+		$notification = $this->insertAndGetNotification( array(
+			'title'     => 'Notification',
+			'content'   => 'Notification',
+			'buttons'   => null,
+			'type'      => 'success',
+			'dismissed' => 0,
+		) );
+
+		$this->assertTrue( is_null( $notification->buttons ) );
+	}
+
 }
