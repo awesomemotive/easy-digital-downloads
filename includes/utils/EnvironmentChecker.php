@@ -88,11 +88,17 @@ class EnvironmentChecker {
 	 * @since 2.11.4
 	 *
 	 * @param array $conditions
+	 *
+	 * @return bool
 	 */
-	public function checkConditions( $conditions ) {
+	public function meetsConditions( $conditions ) {
 		foreach ( $conditions as $condition ) {
-			$this->meetsCondition( $condition );
+			if ( ! $this->meetsCondition( $condition ) ) {
+				return false;
+			}
 		}
+
+		return true;
 	}
 
 	/**
