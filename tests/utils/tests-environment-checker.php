@@ -31,8 +31,16 @@ class EnvironmentCheckerTests extends \EDD_UnitTestCase {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/class-pass-manager.php';
 	}
 
+	/**
+	 * Runs once before each test.
+	 */
 	public function setUp() {
 		$this->environmentChecker = new EnvironmentChecker();
+
+		// Reset pass data so it can be set explicitly for each test.
+		delete_option( 'edd_pass_licenses' );
+		global $edd_licensed_products;
+		$edd_licensed_products = null;
 	}
 
 	/**
@@ -84,7 +92,5 @@ class EnvironmentCheckerTests extends \EDD_UnitTestCase {
 		$this->assertTrue( $this->environmentChecker->versionNumbersMatch( '2.11.3', '2.11.3' ) );
 		$this->assertTrue( $this->environmentChecker->versionNumbersMatch( '2.11.3', '2-11-3' ) );
 	}
-
-
 
 }
