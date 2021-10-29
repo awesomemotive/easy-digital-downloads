@@ -48,6 +48,7 @@ class EnvironmentChecker {
 		'pass-extended',
 		'pass-professional',
 		'pass-all-access',
+		'pass-any',
 	);
 
 	/**
