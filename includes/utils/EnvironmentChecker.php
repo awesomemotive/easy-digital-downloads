@@ -11,7 +11,7 @@
  * @package   easy-digital-downloads
  * @copyright Copyright (c) 2021, Easy Digital Downloads
  * @license   GPL2+
- * @since     2.11.x
+ * @since     2.11.4
  */
 
 namespace EDD\Utils;
@@ -28,12 +28,16 @@ class EnvironmentChecker {
 	/**
 	 * Number of EDD license keys entered.
 	 *
+	 * @since 2.11.4
+	 *
 	 * @var int
 	 */
 	protected $numberLicenseKeys;
 
 	/**
 	 * Types of license/pass conditions that we support.
+	 *
+	 * @since 2.11.4
 	 *
 	 * @var string[]
 	 */
@@ -60,6 +64,8 @@ class EnvironmentChecker {
 	/**
 	 * Checks to see if this environment meets the specified condition.
 	 *
+	 * @since 2.11.4
+	 *
 	 * @param string $condition Condition to check. Can either be a type of license/pass or a version number.
 	 *
 	 * @return bool
@@ -79,6 +85,8 @@ class EnvironmentChecker {
 	 * Checks to see if this environment meets all the specified conditions. If any one condition
 	 * is not met then this returns false.
 	 *
+	 * @since 2.11.4
+	 *
 	 * @param array $conditions
 	 */
 	public function checkConditions( $conditions ) {
@@ -90,7 +98,9 @@ class EnvironmentChecker {
 	/**
 	 * Determines if the site has the specified pass condition.
 	 *
-	 * @see EnvironmentChecker::$validLicenseConditions
+	 * @see   EnvironmentChecker::$validLicenseConditions
+	 *
+	 * @since 2.11.4
 	 *
 	 * @param string $passLevel License type that we're checking to see if the system has.
 	 *
@@ -102,6 +112,8 @@ class EnvironmentChecker {
 
 	/**
 	 * Determines if the provided condition is a version number.
+	 *
+	 * @since 2.11.4
 	 *
 	 * @param string $condition
 	 *
@@ -120,6 +132,8 @@ class EnvironmentChecker {
 	/**
 	 * Determines if two version numbers match, or if the `$currentVersion` falls within the wildcard
 	 * range specified by `$compareVersion`.
+	 *
+	 * @since 2.11.4
 	 *
 	 * @param string $currentVersion Version number currently in use. This must be a full, exact version number.
 	 * @param string $compareVersion Version to compare with. This can either be an exact version number or a

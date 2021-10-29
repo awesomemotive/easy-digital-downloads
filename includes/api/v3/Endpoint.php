@@ -1,10 +1,11 @@
 <?php
 /**
- * Endpoint.php
+ * Endpoint for API v3
  *
  * @package   easy-digital-downloads
  * @copyright Copyright (c) 2021, Easy Digital Downloads
  * @license   GPL2+
+ * @since     2.11.4
  */
 
 namespace EDD\API\v3;
@@ -16,7 +17,7 @@ abstract class Endpoint {
 	/**
 	 * Registers the endpoint(s).
 	 *
-	 * @since 3.x
+	 * @since 2.11.4
 	 *
 	 * @return void
 	 */

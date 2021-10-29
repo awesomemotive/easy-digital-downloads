@@ -5,6 +5,7 @@
  * @package   easy-digital-downloads
  * @copyright Copyright (c) 2021, Easy Digital Downloads
  * @license   GPL2+
+ * @since     2.11.4
  */
 
 namespace EDD\Models;
@@ -93,7 +94,9 @@ class Notification {
 	/**
 	 * Casts a property to its designated type.
 	 *
-	 * @todo Move to trait or base class.
+	 * @todo  Move to trait or base class.
+	 *
+	 * @since 2.11.4
 	 *
 	 * @param string $propertyName
 	 * @param mixed  $value
@@ -129,6 +132,8 @@ class Notification {
 	/**
 	 * Returns the icon name to use for this notification type.
 	 *
+	 * @since 2.11.4
+	 *
 	 * @return string
 	 */
 	public function getIcon() {
@@ -146,7 +151,13 @@ class Notification {
 	}
 
 	/**
-	 * @todo There should be a trait for this.
+	 * Converts this model to an array.
+	 *
+	 * @todo  Move to trait.
+	 *
+	 * @since 2.11.4
+	 *
+	 * @return array
 	 */
 	public function toArray() {
 		$data = array();

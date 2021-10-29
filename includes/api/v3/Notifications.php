@@ -1,10 +1,11 @@
 <?php
 /**
- * Notifications.php
+ * Notifications API Endpoint
  *
  * @package   easy-digital-downloads
  * @copyright Copyright (c) 2021, Easy Digital Downloads
  * @license   GPL2+
+ * @since     2.11.4
  */
 
 namespace EDD\API\v3;
@@ -15,6 +16,8 @@ class Notifications extends Endpoint {
 
 	/**
 	 * Registers the endpoints.
+	 *
+	 * @since 2.11.4
 	 */
 	public function register() {
 		register_rest_route(
@@ -60,6 +63,8 @@ class Notifications extends Endpoint {
 	/**
 	 * Whether the current user can view (and dismiss) notifications.
 	 *
+	 * @since 2.11.4
+	 *
 	 * @return bool
 	 */
 	public function canViewNotification() {
@@ -68,6 +73,8 @@ class Notifications extends Endpoint {
 
 	/**
 	 * Returns a list of notifications.
+	 *
+	 * @since 2.11.4
 	 *
 	 * @param \WP_REST_Request $request
 	 *
@@ -91,6 +98,8 @@ class Notifications extends Endpoint {
 
 	/**
 	 * Dismisses a single notification.
+	 *
+	 * @since 2.11.4
 	 *
 	 * @param \WP_REST_Request $request
 	 *

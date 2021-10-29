@@ -5,7 +5,7 @@
  * @package   easy-digital-downloads
  * @copyright Copyright (c) 2021, Easy Digital Downloads
  * @license   GPL2+
- * @since     2.11.x
+ * @since     2.11.4
  */
 
 namespace EDD\Utils;
@@ -14,6 +14,8 @@ class NotificationImporter {
 
 	/**
 	 * Fetches notifications from the API and imports them locally.
+	 *
+	 * @since 2.11.4
 	 */
 	public function run() {
 		try {
@@ -43,6 +45,8 @@ class NotificationImporter {
 	/**
 	 * Returns the API endpoint to query.
 	 *
+	 * @since 2.11.4
+	 *
 	 * @return string
 	 */
 	protected function getApiEndpoint() {
@@ -55,6 +59,8 @@ class NotificationImporter {
 
 	/**
 	 * Retrieves notifications from the remote API endpoint.
+	 *
+	 * @since 2.11.4
 	 *
 	 * @return array
 	 * @throws \Exception
@@ -74,6 +80,8 @@ class NotificationImporter {
 	/**
 	 * Validates the notification from the remote API to make sure we actually
 	 * want to save it.
+	 *
+	 * @since 2.11.4
 	 *
 	 * @param object $notification
 	 *
@@ -109,6 +117,8 @@ class NotificationImporter {
 	 * Retrieves the array of notification data to insert into the database.
 	 * Use in both inserts and updates.
 	 *
+	 * @since 2.11.4
+	 *
 	 * @param object $notification
 	 *
 	 * @return array
@@ -127,6 +137,8 @@ class NotificationImporter {
 
 	/**
 	 * Parses and formats buttons from the remote notification object.
+	 *
+	 * @since 2.11.4
 	 *
 	 * @param object $notification
 	 *
@@ -157,6 +169,8 @@ class NotificationImporter {
 	/**
 	 * Inserts a new notification into the database.
 	 *
+	 * @since 2.11.4
+	 *
 	 * @param object $notification
 	 */
 	protected function insertNewNotification( $notification ) {
@@ -165,6 +179,8 @@ class NotificationImporter {
 
 	/**
 	 * Updates an existing notification.
+	 *
+	 * @since 2.11.4
 	 *
 	 * @param int    $existingId
 	 * @param object $notification

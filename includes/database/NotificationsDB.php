@@ -1,10 +1,11 @@
 <?php
 /**
- * Notifications.php
+ * Notifications Database
  *
  * @package   easy-digital-downloads
  * @copyright Copyright (c) 2021, Easy Digital Downloads
  * @license   GPL2+
+ * @since     2.11.4
  */
 
 namespace EDD\Database;
@@ -12,7 +13,7 @@ namespace EDD\Database;
 use EDD\Models\Notification;
 use EDD\Utils\NotificationImporter;
 
-class Notifications extends \EDD_DB {
+class NotificationsDB extends \EDD_DB {
 
 	/**
 	 * Constructor
@@ -39,6 +40,8 @@ class Notifications extends \EDD_DB {
 	/**
 	 * Columns and their formats.
 	 *
+	 * @since 2.11.4
+	 *
 	 * @return string[]
 	 */
 	public function get_columns() {
@@ -58,7 +61,10 @@ class Notifications extends \EDD_DB {
 	}
 
 	/**
-	 * Let MySQL handle the defaults.
+	 * Let MySQL handle most of the defaults.
+	 * We just set the dates here to ensure they get saved in UTC.
+	 *
+	 * @since 2.11.4
 	 *
 	 * @return array
 	 */
@@ -71,6 +77,8 @@ class Notifications extends \EDD_DB {
 
 	/**
 	 * Inserts a new notification.
+	 *
+	 * @since 2.11.4
 	 *
 	 * @param array  $data
 	 * @param string $type
@@ -92,6 +100,8 @@ class Notifications extends \EDD_DB {
 	/**
 	 * Updates an existing notification.
 	 *
+	 * @since 2.11.4
+	 *
 	 * @param int    $row_id
 	 * @param array  $data
 	 * @param string $where
@@ -107,7 +117,10 @@ class Notifications extends \EDD_DB {
 	}
 
 	/**
-	 * Returns all notifications that have not been dismissed.
+	 * Returns all notifications that have not been dismissed and should be
+	 * displayed on this site.
+	 *
+	 * @since 2.11.4
 	 *
 	 * @return Notification[]
 	 */
@@ -130,6 +143,8 @@ class Notifications extends \EDD_DB {
 
 	/**
 	 * Builds the query for selecting or counting active notifications.
+	 *
+	 * @since 2.11.4
 	 *
 	 * @param bool $count
 	 *
@@ -154,6 +169,8 @@ class Notifications extends \EDD_DB {
 	/**
 	 * Counts the number of active notifications.
 	 *
+	 * @since 2.11.4
+	 *
 	 * @return int
 	 */
 	public function countActiveNotifications() {
@@ -171,6 +188,8 @@ class Notifications extends \EDD_DB {
 
 	/**
 	 * Creates the table.
+	 *
+	 * @since 2.11.4
 	 */
 	public function create_table() {
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
