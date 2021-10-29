@@ -347,16 +347,20 @@ function capture_order() {
 					if ( ! empty( $purchase_unit->reference_id ) ) {
 						$payment        = edd_get_payment_by( 'key', $purchase_unit->reference_id );
 						$transaction_id = isset( $purchase_unit->payments->captures[0]->id ) ? $purchase_unit->payments->captures[0]->id : false;
+
+						if ( ! empty( $payment ) && isset( $purchase_unit->payments->captures[0]->status ) ) {
+							if ( 'COMPLETED' === strtoupper( $purchase_unit->payments->captures[0]->status ) ) {
+								$payment->status = 'complete';
+							} elseif( 'DECLINED' === strtoupper( $purchase_unit->payments->captures[0]->status ) ) {
+								$payment->status = 'failed';
+							}
+						}
 						break;
 					}
 				}
 			}
 
 			if ( ! empty( $payment ) ) {
-				if ( ! empty( $response->status ) && 'COMPLETED' === strtoupper( $response->status ) ) {
-					$payment->status = 'complete';
-				}
-
 				/**
 				 * Buy Now Button
 				 *
@@ -398,6 +402,15 @@ function capture_order() {
 				}
 
 				$payment->save();
+
+				if ( 'failed' === $payment->status ) {
+					$retry = true;
+					throw new Gateway_Exception(
+						__( 'Your payment was declined. Please try a new payment method.', 'easy-digital-downloads' ),
+						400,
+						sprintf( 'Order capture failure. PayPal response: %s', json_encode( $response ) )
+					);
+				}
 			}
 
 			wp_send_json_success( array( 'redirect_url' => edd_get_success_page_uri() ) );
