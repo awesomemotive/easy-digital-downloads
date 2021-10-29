@@ -50,13 +50,13 @@ body.post-type-download #screen-meta {
 #edd-header-wrapper {
 	display: flex;
 	justify-content: space-between;
+	padding: 0 20px;
 }
 
 #edd-header img {
 	display: block;
 	margin: 0;
 	max-width: 300px;
-	margin-left: 20px;
 }
 
 #edd-header .edd-round {
