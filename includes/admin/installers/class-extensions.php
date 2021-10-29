@@ -4,8 +4,6 @@ namespace EDD\Admin\Installers;
 
 class Extensions {
 
-	private $api_url = 'https://easydigitaldownloads.local/edd-sl-api';
-
 	private $transient = 'edd_extensions_urls';
 
 	private $license;
@@ -72,7 +70,7 @@ class Extensions {
 	protected function get_remote_urls() {
 
 		$extensions = wp_remote_post(
-			$this->api_url,
+			$this->get_api_url(),
 			array(
 				'timeout'   => 15,
 				'sslverify' => true,
@@ -105,5 +103,19 @@ class Extensions {
 		set_transient( $this->transient, $urls, DAY_IN_SECONDS );
 
 		return $urls;
+	}
+
+	/**
+	 * Gets the URL for our API request.
+	 *
+	 * @since 2.11.x
+	 * @return string
+	 */
+	protected function get_api_url() {
+		if ( defined( 'EDD_SL_API_URL' ) ) {
+			return EDD_SL_API_URL;
+		}
+
+		return 'https://easydigitaldownloads.com/edd-sl-api';
 	}
 }
