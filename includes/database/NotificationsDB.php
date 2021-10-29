@@ -23,7 +23,7 @@ class NotificationsDB extends \EDD_DB {
 
 		$this->table_name  = $wpdb->prefix . 'edd_notifications';
 		$this->primary_key = 'id';
-		$this->version     = '0.1'; // @todo update to 1.0 pre-release
+		$this->version     = '0.2'; // @todo update to 1.0 pre-release
 
 		add_action( 'edd_daily_scheduled_events', static function () {
 			$importer = new NotificationImporter();
@@ -52,6 +52,7 @@ class NotificationsDB extends \EDD_DB {
 			'content'      => '%s',
 			'buttons'      => '%s',
 			'type'         => '%s',
+			'conditions'   => '%s',
 			'start'        => '%s',
 			'end'          => '%s',
 			'dismissed'    => '%d',
@@ -76,6 +77,27 @@ class NotificationsDB extends \EDD_DB {
 	}
 
 	/**
+	 * JSON-encodes any relevant columns.
+	 *
+	 * @since 2.11.4
+	 *
+	 * @param array $data
+	 *
+	 * @return array
+	 */
+	protected function maybeJsonEncode( $data ) {
+		$jsonColumns = array( 'buttons', 'conditions' );
+
+		foreach ( $jsonColumns as $column ) {
+			if ( ! empty( $data[ $column ] ) && is_array( $data[ $column ] ) ) {
+				$data[ $column ] = json_encode( $data[ $column ] );
+			}
+		}
+
+		return $data;
+	}
+
+	/**
 	 * Inserts a new notification.
 	 *
 	 * @since 2.11.4
@@ -86,11 +108,7 @@ class NotificationsDB extends \EDD_DB {
 	 * @return int
 	 */
 	public function insert( $data, $type = 'notification' ) {
-		if ( ! empty( $data['buttons'] ) && is_array( $data['buttons'] ) ) {
-			$data['buttons'] = json_encode( $data['buttons'] );
-		}
-
-		$result = parent::insert( $data, $type );
+		$result = parent::insert( $this->maybeJsonEncode( $data ), $type );
 
 		wp_cache_delete( 'edd_active_notification_count', 'edd_notifications' );
 
@@ -109,11 +127,7 @@ class NotificationsDB extends \EDD_DB {
 	 * @return bool
 	 */
 	public function update( $row_id, $data = array(), $where = '' ) {
-		if ( ! empty( $data['buttons'] ) && is_array( $data['buttons'] ) ) {
-			$data['buttons'] = json_encode( $data['buttons'] );
-		}
-
-		return parent::update( $row_id, $data, $where );
+		return parent::update( $row_id, $this->maybeJsonEncode( $data ), $where );
 	}
 
 	/**
@@ -201,6 +215,7 @@ class NotificationsDB extends \EDD_DB {
 	    content longtext NOT NULL,
 	    buttons longtext DEFAULT NULL,
 	    type varchar(64) NOT NULL,
+	    conditions longtext DEFAULT NULL,
 	    start datetime DEFAULT NULL,
 	    end datetime DEFAULT NULL,
 	    dismissed tinyint(1) UNSIGNED NOT NULL DEFAULT 0,

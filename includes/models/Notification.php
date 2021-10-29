@@ -44,6 +44,12 @@ class Notification {
 	public $type;
 
 	/**
+	 * @var array|null Conditions that must be met to display this notification. If `null`
+	 *                 then there are no conditions.
+	 */
+	public $conditions = null;
+
+	/**
 	 * @var null|string Date to start displaying the notification.
 	 */
 	public $start = null;
@@ -72,10 +78,11 @@ class Notification {
 	 * @var string[]
 	 */
 	protected $casts = array(
-		'id'        => 'int',
-		'remote_id' => 'int',
-		'buttons'   => 'array',
-		'dismissed' => 'bool',
+		'id'         => 'int',
+		'remote_id'  => 'int',
+		'buttons'    => 'array',
+		'conditions' => 'array',
+		'dismissed'  => 'bool',
 	);
 
 	/**

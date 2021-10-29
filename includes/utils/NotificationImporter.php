@@ -13,6 +13,18 @@ namespace EDD\Utils;
 class NotificationImporter {
 
 	/**
+	 * @var EnvironmentChecker
+	 */
+	protected $environmentChecker;
+
+	/**
+	 * Constructor
+	 */
+	public function __construct() {
+		$this->environmentChecker = new EnvironmentChecker();
+	}
+
+	/**
 	 * Fetches notifications from the API and imports them locally.
 	 *
 	 * @since 2.11.4
@@ -111,6 +123,14 @@ class NotificationImporter {
 		if ( ! empty( $notification->start ) && $dateActivated > strtotime( $notification->start ) ) {
 			throw new \Exception( 'Notification created prior to EDD activation.' );
 		}
+
+		if (
+			! empty( $notification->type ) &&
+			is_array( $notification->type ) &&
+			! $this->environmentChecker->meetsConditions( $notification->type )
+		) {
+			throw new \Exception( 'Condition(s) not met.' );
+		}
 	}
 
 	/**
@@ -125,13 +145,14 @@ class NotificationImporter {
 	 */
 	protected function getNotificationData( $notification ) {
 		return array(
-			'remote_id' => $notification->id,
-			'title'     => $notification->title,
-			'content'   => $notification->content,
-			'buttons'   => $this->parseButtons( $notification ),
-			'type'      => $notification->notification_type,
-			'start'     => ! empty( $notification->start ) ? $notification->start : null,
-			'end'       => ! empty( $notification->end ) ? $notification->end : null,
+			'remote_id'  => $notification->id,
+			'title'      => $notification->title,
+			'content'    => $notification->content,
+			'buttons'    => $this->parseButtons( $notification ),
+			'type'       => $notification->notification_type,
+			'conditions' => $notification->type,
+			'start'      => ! empty( $notification->start ) ? $notification->start : null,
+			'end'        => ! empty( $notification->end ) ? $notification->end : null,
 		);
 	}
 
