@@ -12,13 +12,13 @@ namespace EDD\Tests\Notifications;
 use EDD\Models\Notification;
 
 /**
- * @coversDefaultClass \EDD\Database\Notifications
+ * @coversDefaultClass \EDD\Database\NotificationsDB
  * @group edd_notifications
  */
 class NotificationDBTests extends \EDD_UnitTestCase {
 
 	/**
-	 * @covers \EDD\Database\Notifications::getActiveNotifications
+	 * @covers \EDD\Database\NotificationsDB::getActiveNotifications
 	 */
 	public function test_notification_included_in_active() {
 		EDD()->notifications->insert( array(
@@ -36,7 +36,7 @@ class NotificationDBTests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Database\Notifications::getActiveNotifications
+	 * @covers \EDD\Database\NotificationsDB::getActiveNotifications
 	 */
 	public function test_dismissed_notification_not_included_in_active() {
 		EDD()->notifications->insert( array(
@@ -50,7 +50,7 @@ class NotificationDBTests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Database\Notifications::getActiveNotifications
+	 * @covers \EDD\Database\NotificationsDB::getActiveNotifications
 	 */
 	public function test_start_date_in_future_not_included_in_active() {
 		EDD()->notifications->insert( array(
@@ -64,7 +64,7 @@ class NotificationDBTests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Database\Notifications::getActiveNotifications
+	 * @covers \EDD\Database\NotificationsDB::getActiveNotifications
 	 */
 	public function test_end_date_in_past_not_included_in_active() {
 		EDD()->notifications->insert( array(
@@ -78,7 +78,7 @@ class NotificationDBTests extends \EDD_UnitTestCase {
 	}
 
 	/**
-	 * @covers \EDD\Database\Notifications::getActiveNotifications
+	 * @covers \EDD\Database\NotificationsDB::getActiveNotifications
 	 */
 	public function test_end_date_in_future_included_in_active() {
 		// Ends in 1 week - still valid.
