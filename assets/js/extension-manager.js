@@ -37,6 +37,7 @@
 			nonce: EDDExtensionManager.extension_manager_nonce,
 			plugin: plugin,
 			type: $btn.attr( 'data-type' ),
+			pass: $btn.attr( 'data-pass' ),
 		};
 
 		$.post( ajaxurl, data )

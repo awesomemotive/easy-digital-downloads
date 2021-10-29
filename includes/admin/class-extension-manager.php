@@ -22,13 +22,17 @@ class Extension_Manager {
 	 */
 	private $types = array( 'plugin', 'extension' );
 
-	private $pass_id;
+	private $required_pass_id;
 
-	public function __construct( $pass_id = null ) {
+	protected $pass_manager;
+
+	public function __construct( $required_pass_id = null ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/installers/class-extensions.php';
-		if ( $pass_id ) {
-			$this->pass_id = $pass_id;
+		if ( $required_pass_id ) {
+			$this->required_pass_id = $required_pass_id;
 		}
+		$this->pass_manager = new Pass_Manager();
+
 		add_action( 'wp_ajax_edd_activate_extension', array( $this, 'activate' ) );
 		add_action( 'wp_ajax_edd_install_extension', array( $this, 'install' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_scripts' ) );
@@ -88,6 +92,7 @@ class Extension_Manager {
 				data-plugin="<?php echo esc_attr( $args['data-plugin'] ); ?>"
 				data-action="<?php echo esc_attr( $args['data-action'] ); ?>"
 				data-type="<?php echo esc_attr( $args['type'] ); ?>"
+				data-pass="<?php echo esc_attr( $this->required_pass_id ); ?>"
 			>
 				<?php echo esc_html( $args['button_text'] ); ?>
 			</button>
@@ -124,10 +129,10 @@ class Extension_Manager {
 		<?php
 	}
 
-	private function get_extension_download_url( $slug ) {
+	private function get_extension_download_url( $id ) {
 		$extensions = new Extensions();
 
-		return $extensions->get_url( $slug );
+		return $extensions->get_url( $id, $this->get_license_key() );
 	}
 
 	/**
@@ -192,12 +197,13 @@ class Extension_Manager {
 
 		$generic_error = esc_html__( 'There was an error while performing your request.', 'easy-digital-downloads' );
 		$type          = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+		$required_pass = filter_input( INPUT_POST, 'pass', FILTER_SANITIZE_STRING );
 		if ( ! $type ) {
 			$type = 'extension';
 		}
 
 		// Check if new installations are allowed.
-		if ( ! $this->can_install( $type ) ) {
+		if ( ! $this->can_install( $type, $required_pass ) ) {
 			wp_send_json_error( $generic_error );
 		}
 
@@ -314,7 +320,7 @@ class Extension_Manager {
 	 *
 	 * @return bool
 	 */
-	public function can_install( $type ) {
+	public function can_install( $type, $required_pass_id = false ) {
 
 		if ( ! in_array( $type, $this->types, true ) ) {
 			return false;
@@ -334,20 +340,40 @@ class Extension_Manager {
 			return true;
 		}
 
-		return $this->pass_can_download();
+		return $this->pass_can_download( $required_pass_id );
 	}
 
 	/**
-	 * Checks if a user's pass (license) can download an extension.
+	 * Checks if a user's pass can download an extension.
 	 *
 	 * @since 2.11.x
-	 * @return bool Returns true if the current site has an active pass (license) and it is greater than or equal to the extension's minimum pass.
+	 * @return bool Returns true if the current site has an active pass and it is greater than or equal to the extension's minimum pass.
 	 */
-	public function pass_can_download() {
-		$pass_manager    = new Pass_Manager();
-		$highest_pass_id = $pass_manager->highest_pass_id;
+	public function pass_can_download( $required_pass_id = false ) {
+		$highest_pass_id = $this->get_highest_pass_id();
+		if ( ! $required_pass_id ) {
+			$required_pass_id = $this->required_pass_id;
+		}
 
-		return ! empty( $highest_pass_id ) && $pass_manager->pass_compare( $highest_pass_id, $this->pass_id, '>=' );
+		return ! empty( $highest_pass_id ) && ! empty( $required_pass_id ) && $this->pass_manager->pass_compare( $highest_pass_id, $required_pass_id, '>=' );
+	}
+
+	/**
+	 * Gets the highest active pass ID.
+	 *
+	 * @return null|int
+	 */
+	private function get_highest_pass_id() {
+		return $this->pass_manager->highest_pass_id;
+	}
+
+	/**
+	 * Gets the license key associated with the pass.
+	 *
+	 * @return null|string
+	 */
+	private function get_license_key() {
+		return $this->pass_manager->highest_license_key;
 	}
 
 	/**
