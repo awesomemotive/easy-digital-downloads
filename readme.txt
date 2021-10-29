@@ -262,6 +262,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 * Fix: Unable to use discount deactivate/activate hover actions.
 * Fix: `_edd_deprecated_function()` - only trigger error with backtrace if there is a backtrace provided.
 * Fix: API requests have unexpected output when using Query Monitor.
+* Dev: Updated `EDD_SL_Plugin_Updater` to version 1.9.1.
 
 = 2.11.2.1, October 18, 2021 =
 * Security: Fix authenticated reflected XSS on payment history list table.
