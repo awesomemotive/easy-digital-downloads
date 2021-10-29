@@ -332,6 +332,7 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/privacy-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/utils/class-tokenizer.php';
 		require_once EDD_PLUGIN_DIR . 'includes/models/Notification.php';
+		require_once EDD_PLUGIN_DIR . 'includes/utils/EnvironmentChecker.php';
 		require_once EDD_PLUGIN_DIR . 'includes/utils/NotificationImporter.php';
 
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
