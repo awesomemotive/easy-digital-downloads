@@ -2,8 +2,6 @@
 
 namespace EDD\Admin;
 
-require_once EDD_PLUGIN_DIR . 'includes/admin/installers/class-extensions.php';
-
 use \EDD\Admin\Pass_Manager;
 use \EDD\Admin\Installers\Extensions;
 
@@ -27,6 +25,7 @@ class Extension_Manager {
 	private $pass_id;
 
 	public function __construct( $pass_id = null ) {
+		require_once EDD_PLUGIN_DIR . 'includes/admin/installers/class-extensions.php';
 		if ( $pass_id ) {
 			$this->pass_id = $pass_id;
 		}
