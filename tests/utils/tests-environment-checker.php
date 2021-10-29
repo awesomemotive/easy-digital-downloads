@@ -85,4 +85,6 @@ class EnvironmentCheckerTests extends \EDD_UnitTestCase {
 		$this->assertTrue( $this->environmentChecker->versionNumbersMatch( '2.11.3', '2-11-3' ) );
 	}
 
+
+
 }

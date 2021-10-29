@@ -11,6 +11,7 @@
 namespace EDD\Database;
 
 use EDD\Models\Notification;
+use EDD\Utils\EnvironmentChecker;
 use EDD\Utils\NotificationImporter;
 
 class NotificationsDB extends \EDD_DB {
@@ -136,17 +137,32 @@ class NotificationsDB extends \EDD_DB {
 	 *
 	 * @since 2.11.4
 	 *
+	 * @param bool $conditionsOnly If set to true, then only the `conditions` column is retrieved
+	 *                             for each notification.
+	 *
 	 * @return Notification[]
 	 */
-	public function getActiveNotifications() {
+	public function getActiveNotifications( $conditionsOnly = false ) {
 		global $wpdb;
 
-		$notifications = $wpdb->get_results( $this->getActiveQuery() );
+		$environmentChecker = new EnvironmentChecker();
+		$notifications      = $wpdb->get_results( $this->getActiveQuery( $conditionsOnly ) );
 
 		$models = array();
 		if ( is_array( $notifications ) ) {
 			foreach ( $notifications as $notification ) {
-				$models[] = new Notification( (array) $notification );
+				$model = new Notification( (array) $notification );
+
+				try {
+					if (
+						! $model->conditions ||
+						( is_array( $model->conditions ) && $environmentChecker->meetsConditions( $model->conditions ) )
+					) {
+						$models[] = $model;
+					}
+				} catch ( \Exception $e ) {
+
+				}
 			}
 		}
 
@@ -160,14 +176,19 @@ class NotificationsDB extends \EDD_DB {
 	 *
 	 * @since 2.11.4
 	 *
-	 * @param bool $count
+	 * @param bool $conditionsOnly
 	 *
 	 * @return string
 	 */
-	private function getActiveQuery( $count = false ) {
+	private function getActiveQuery( $conditionsOnly = false ) {
 		global $wpdb;
 
-		$select = $count ? 'COUNT(*)' : '*';
+		/*
+		 * When counting, we don't actually do a `COUNT(*)` because we want to
+		 * double-check the conditions. So instead we select all the conditions
+		 * so we can check them, then count them later.
+		 */
+		$select = $conditionsOnly ? 'conditions' : '*';
 
 		return $wpdb->prepare(
 			"SELECT {$select} FROM {$this->table_name}
@@ -188,11 +209,9 @@ class NotificationsDB extends \EDD_DB {
 	 * @return int
 	 */
 	public function countActiveNotifications() {
-		global $wpdb;
-
 		$numberActive = wp_cache_get( 'edd_active_notification_count', 'edd_notifications' );
 		if ( false === $numberActive ) {
-			$numberActive = (int) $wpdb->get_var( $this->getActiveQuery( true ) );
+			$numberActive = count( $this->getActiveNotifications( true ) );
 
 			wp_cache_set( 'edd_active_notification_count', $numberActive, 'edd_notifications' );
 		}
