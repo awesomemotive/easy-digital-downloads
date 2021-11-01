@@ -1178,7 +1178,7 @@ add_filter( 'edd_settings_misc-file_downloads_sanitize', 'edd_settings_sanitize_
  *
  * @since 2.5
  * @param array $input The value inputted in the field
- * @return string $input Sanitized value
+ * @return array $input Sanitized value
  */
 function edd_settings_sanitize_misc_accounting( $input ) {
 
@@ -1189,13 +1189,13 @@ function edd_settings_sanitize_misc_accounting( $input ) {
 	if( ! empty( $input['enable_sequential'] ) && ! edd_get_option( 'enable_sequential' ) ) {
 
 		// Shows an admin notice about upgrading previous order numbers
-		EDD()->session->set( 'upgrade_sequential', '1' );
+		update_option( 'edd_upgrade_sequential', time() );
 
 	}
 
 	return $input;
 }
-add_filter( 'edd_settings_misc-accounting_sanitize', 'edd_settings_sanitize_misc_accounting' );
+add_filter( 'edd_settings_gateways-accounting_sanitize', 'edd_settings_sanitize_misc_accounting' );
 
 /**
  * Taxes Settings Sanitization
