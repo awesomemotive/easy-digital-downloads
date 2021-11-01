@@ -190,7 +190,9 @@ function edd_run_install() {
 
 	update_option( 'edd_settings', $merged_options );
 	update_option( 'edd_version', EDD_VERSION );
-	update_option( 'edd_activation_date', time() );
+
+	// Set the activation date.
+	edd_get_activation_date();
 
 	// Create wp-content/uploads/edd/ folder and the .htaccess file
 	edd_create_protection_files( true );
