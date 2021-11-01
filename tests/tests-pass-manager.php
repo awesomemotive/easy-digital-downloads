@@ -115,4 +115,41 @@ class Pass_Manager extends \EDD_UnitTestCase {
 		$this->assertFalse( $manager->has_pass() );
 	}
 
+	/**
+	 * @covers \EDD\Admin\Pass_Manager::isFree
+	 */
+	public function test_site_with_no_licenses() {
+		$passManger = new \EDD\Admin\Pass_Manager();
+
+		$this->assertTrue( $passManger->isFree() );
+		$this->assertFalse( $passManger->hasPersonalPass() );
+		$this->assertFalse( $passManger->hasExtendedPass() );
+		$this->assertFalse( $passManger->hasProfessionalPass() );
+		$this->assertFalse( $passManger->hasAllAccessPass() );
+		$this->assertFalse( $passManger->has_pass() );
+	}
+
+	/**
+	 * @covers \EDD\Admin\Pass_Manager::hasPersonalPass
+	 */
+	public function test_site_with_personal_pass() {
+		$passes = array(
+			'license_1' => array(
+				'pass_id'      => \EDD\Admin\Pass_Manager::PERSONAL_PASS_ID,
+				'time_checked' => time()
+			),
+		);
+
+		update_option( 'edd_pass_licenses', json_encode( $passes ) );
+
+		global $edd_licensed_products;
+		$edd_licensed_products[] = 'product';
+
+		$passManger = new \EDD\Admin\Pass_Manager();
+
+		$this->assertFalse( $passManger->isFree() );
+		$this->assertTrue( $passManger->hasPersonalPass() );
+		$this->assertTrue( $passManger->has_pass() );
+	}
+
 }
