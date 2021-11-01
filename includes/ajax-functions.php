@@ -394,6 +394,9 @@ function edd_ajax_remove_discount() {
 			'html'        => edd_get_cart_discounts_html()
 		);
 
+		// Allow for custom remove discount code handling
+		$return = apply_filters( 'edd_ajax_remove_discount_response', $return );
+
 		wp_send_json( $return );
 	}
 	edd_die();
