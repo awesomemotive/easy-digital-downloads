@@ -34,7 +34,7 @@ add_action( 'admin_init', 'edd_process_actions' );
  * When the Download list table loads, call the function to view our tabs.
  *
  * @since 2.8.9
- * @since 2.3.11 Unhooked this to revert to standard admin H1 tags.
+ * @since 2.11.3 Unhooked this to revert to standard admin H1 tags.
  * @param $views
  *
  * @return mixed
