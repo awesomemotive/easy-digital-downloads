@@ -93,4 +93,21 @@ class EnvironmentCheckerTests extends \EDD_UnitTestCase {
 		$this->assertTrue( $this->environmentChecker->versionNumbersMatch( '2.11.3', '2-11-3' ) );
 	}
 
+	public function test_site_with_no_licenses() {
+		$this->assertTrue( $this->environmentChecker->meetsCondition( 'free' ) );
+
+		$conditionsThatShouldFail = array(
+			'ala-carte',
+			'pass-personal',
+			'pass-extended',
+			'pass-professional',
+			'pass-all-access',
+			'pass-any',
+		);
+
+		foreach( $conditionsThatShouldFail as $condition ) {
+			$this->assertFalse( $this->environmentChecker->meetsCondition( $condition ) );
+		}
+	}
+
 }
