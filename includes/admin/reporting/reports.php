@@ -156,7 +156,7 @@ function edd_reports_page() {
 	?>
 
     <div class="wrap">
-        <h1><?php _e( 'Reports', 'easy-digital-downloads' ); ?></h1>
+		<h1><?php esc_html_e( 'Reports', 'easy-digital-downloads' ); ?></h1>
 
 		<?php Reports\display_filters( EDD()->report ); ?>
 
