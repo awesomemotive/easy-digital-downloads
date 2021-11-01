@@ -64,6 +64,44 @@ class Extension_Manager {
 	}
 
 	/**
+	 * Outputs a standard extension card.
+	 *
+	 * @since 2.11.x
+	 * @param int   $item_id           The product ID.
+	 * @param array $button_parameters The array of information needed to build the button.
+	 * @param array $link_parameters   The array of information needed to build the link.
+	 * @return void
+	 */
+	public function do_extension_field( $item_id, $button_parameters, $link_parameters ) {
+		$product = $this->get_product_data( $item_id );
+		if ( ! $product ) {
+			return;
+		}
+		?>
+		<div class="edd-extension-manager__card">
+			<h3 class="edd-extension-manager__title">
+				<?php
+				/* translators: the name of the extension */
+				printf( esc_html__( 'Get %s Today!', 'easy-digital-downloads' ), esc_html( $product->info->title ) );
+				?>
+			</h3>
+			<?php if ( ! empty( $product->info->thumbnail ) ) : ?>
+				<img class="edd-extension-manager__image" src="<?php echo esc_url( $product->info->thumbnail ); ?>" />
+			<?php endif; ?>
+			<p class="edd-extension-manager__description"><?php echo wp_kses_post( $product->info->excerpt ); ?></p>
+			<div class="edd-extension-manager__group">
+				<div class="edd-extension-manager__step">
+					<?php $this->button( $button_parameters ); ?>
+				</div>
+				<div class="edd-extension-manager__step"style="display:none;">
+					<?php $this->link( $link_parameters ); ?>
+				</div>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
 	 * Outputs the button to activate/install a plugin/extension.
 	 * If a link is passed in the args, create a button style link instead (@uses $this->link()).
 	 *
@@ -132,6 +170,12 @@ class Extension_Manager {
 			</a>
 		</p>
 		<?php
+	}
+
+	public function get_product_data( $id ) {
+		$extensions = new Extensions();
+
+		return $extensions->get_product_data( $id );
 	}
 
 	private function get_extension_download_url( $id ) {

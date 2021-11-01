@@ -76,26 +76,12 @@ class Recurring {
 	 * @return void
 	 */
 	public function settings_field( $args ) {
-		?>
-		<p>
-			<?php esc_html_e( 'Recurring Payments allows you to easily sell subscriptions with Easy Digital Downloads.', 'easy-digital-downloads' ); ?>
-		</p>
-
-		<div class="edd-extension-manager__group">
-			<div class="edd-extension-manager__step">
-				<?php $this->manager->button( $this->get_button_parameters() ); ?>
-			</div>
-
-			<?php
-			if ( $this->is_activated() ) {
-				return;
-			}
-			?>
-			<div class="edd-extension-manager__step"style="display:none;">
-				<?php $this->manager->link( $this->get_link_parameters() ); ?>
-			</div>
-		</div>
-		<?php
+		$this->manager->do_extension_field(
+			$this->config['item_id'],
+			$this->get_button_parameters(),
+			$this->get_link_parameters(),
+			$this->is_activated()
+		);
 	}
 
 	/**
