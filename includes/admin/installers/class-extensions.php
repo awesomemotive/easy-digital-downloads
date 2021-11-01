@@ -4,7 +4,47 @@ namespace EDD\Admin\Installers;
 
 class Extensions {
 
-	private $transient = 'edd_extensions_urls';
+	/**
+	 * Gets the product data from the EDD Products API.
+	 *
+	 * @since 2.11.x
+	 * @param int $item_id The product ID.
+	 * @return object
+	 */
+	public function get_product_data( $item_id ) {
+		$option_name = "edd_extension_{$item_id}_data";
+		$option      = $this->get_stored_extension_data( $option_name );
+		if ( $option ) {
+			return $option['product'];
+		}
+
+		$request = wp_remote_get(
+			$this->get_products_api_url(),
+			array(
+				'timeout'   => 15,
+				'sslverify' => true,
+				'body'      => array(
+					'product' => $item_id,
+				),
+			)
+		);
+
+		if ( ! $request || $request instanceof WP_Error ) {
+			return false;
+		}
+
+		$response = json_decode( wp_remote_retrieve_body( $request ) );
+		$product  = reset( $response->products );
+		update_option(
+			"edd_extension_{$item_id}_data",
+			array(
+				'product' => $product,
+				'timeout' => strtotime( '+1 day', time() ),
+			)
+		);
+
+		return $product;
+	}
 
 	/**
 	 * Returns the download URL for an extension.
@@ -16,31 +56,7 @@ class Extensions {
 	 * @return string
 	 */
 	public function get_url( $id, $license_key ) {
-		return $this->get_url_from_database_or_remote( $id, $license_key );
-	}
-
-	/**
-	 * Retrieve extension URLs from the stored transient or remote server.
-	 *
-	 * @since 2.11.x
-	 *
-	 * @param bool $force Whether to force the extensions retrieval or re-use option cache.
-	 *
-	 * @return array|bool
-	 */
-	protected function get_url_from_database_or_remote( $item_id, $license_key ) {
-
-		if ( empty( $item_id ) || empty( $license_key ) ) {
-			return false;
-		}
-
-		$extension_data = get_option( "edd_extension_{$item_id}" );
-
-		if ( ! empty( $extension_data['url'] ) && ! empty( $extension_data['timeout'] ) && time() <= $extension_data['timeout'] ) {
-			return $extension_data['url'];
-		}
-
-		return $this->get_download_url( $item_id, $license_key );
+		return $this->get_download_url( $id, $license_key );
 	}
 
 	/**
@@ -55,10 +71,11 @@ class Extensions {
 			return false;
 		}
 
-		// $stored_urls = $this->get_stored_urls();
-		// if ( $stored_urls ) {
-		// 	return $stored_urls;
-		// }
+		$option_name = "edd_extension_{$item_id}";
+		$option      = $this->get_stored_extension_data( $option_name );
+		if ( $option ) {
+			return $option['url'];
+		}
 
 		$request = wp_remote_post(
 			$this->get_api_url(),
@@ -77,8 +94,6 @@ class Extensions {
 
 		// If there was an API error, set transient for only 10 minutes.
 		if ( ! $request || $request instanceof WP_Error ) {
-			// update_option( $this->transient, strtotime( '+10 minutes' ) );
-
 			return false;
 		}
 
@@ -100,7 +115,39 @@ class Extensions {
 	}
 
 	/**
-	 * Gets the URL for our API request.
+	 * Gets the stored extension data from the database.
+	 * If it doesn't exist, or has expired, deletes the option and returns false.
+	 *
+	 * @since 2.11.x
+	 * @param string $option_name The option name to look for in the database.
+	 * @return array|bool         Returns the option data if not expired, or false if expired or doesn't exist yet.
+	 */
+	private function get_stored_extension_data( $option_name ) {
+		$option = get_option( $option_name );
+		if ( ! empty( $option['timeout'] ) && time() <= $option['timeout'] ) {
+			return $option;
+		};
+
+		delete_option( $option_name );
+		return false;
+	}
+
+	/**
+	 * Gets the EDD REST API URL for products.
+	 *
+	 * @since 2.11.x
+	 * @return string
+	 */
+	private function get_products_api_url() {
+		if ( defined( 'EDD_PRODUCTS_API_URL' ) ) {
+			return EDD_PRODUCTS_API_URL;
+		}
+
+		return 'https://easydigitaldownloads.com/edd-api/v2/products/';
+	}
+
+	/**
+	 * Gets the URL for our Software Licensing API request.
 	 *
 	 * @since 2.11.x
 	 * @return string
@@ -111,33 +158,5 @@ class Extensions {
 		}
 
 		return 'https://easydigitaldownloads.com/edd-sl-api';
-	}
-
-	private function get_stored_urls() {
-
-		$stored_urls = get_option( $this->transient );
-
-		// Request has never failed.
-		if ( empty( $stored_urls ) ) {
-			return false;
-		}
-
-		/*
-		 * Request previously failed, but the timeout has expired.
-		 * This means we're allowed to try again.
-		 */
-		if ( is_numeric( $stored_urls ) && time() > $stored_urls ) {
-			delete_option( $this->transient );
-
-			return false;
-		}
-
-		if ( empty( $stored_urls['timeout'] ) || time() > $stored_urls['timeout'] ) {
-			delete_option( $this->transient );
-
-			return false;
-		}
-
-		return $stored_urls;
 	}
 }
