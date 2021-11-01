@@ -226,6 +226,8 @@ class NotificationsDB extends \EDD_DB {
 	public function create_table() {
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
+		global $wpdb;
+
 		dbDelta( "CREATE TABLE {$this->table_name} (
 	    id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 	    remote_id bigint(20) UNSIGNED DEFAULT NULL,
@@ -241,7 +243,7 @@ class NotificationsDB extends \EDD_DB {
 	    date_updated datetime NOT NULL DEFAULT CURRENT_TIMESTAMP(),
 	    PRIMARY KEY (id),
 	    KEY dismissed_start_end (dismissed, start, end)
-		) CHARACTER SET utf8 COLLATE utf8_general_ci;" );
+		) DEFAULT CHARACTER SET {$wpdb->charset} COLLATE {$wpdb->collate};" );
 
 		update_option( $this->table_name . '_db_version', $this->version );
 	}
