@@ -13,6 +13,23 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
+ * Adds the EDD branded header to the EDD settings pages.
+ *
+ * @since 2.11.3
+ */
+function edd_admin_header() {
+	if ( ! edd_is_admin_page( '', '', false ) ) {
+		return;
+	}
+	?>
+	<div id="edd-header" class="edd-header">
+		<img class="edd-header-logo" alt="" src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/logo-edd-dark.svg' ); ?>" />
+	</div>
+	<?php
+}
+add_action( 'admin_notices', 'edd_admin_header', 1 );
+
+/**
  * Options Page
  *
  * Renders the options page contents.
@@ -75,7 +92,7 @@ function edd_options_page() {
 	ob_start();
 	?>
 	<div class="wrap <?php echo 'wrap-' . $active_tab; ?>">
-		<h2><?php _e( 'Easy Digital Downloads Settings', 'easy-digital-downloads' ); ?></h2>
+		<h1><?php esc_html_e( 'Settings', 'easy-digital-downloads' ); ?></h1>
 		<h2 class="nav-tab-wrapper">
 			<?php
 			foreach ( edd_get_settings_tabs() as $tab_id => $tab_name ) {
@@ -100,7 +117,7 @@ function edd_options_page() {
 		$number_of_sections = count( $sections );
 		$number = 0;
 		if ( $number_of_sections > 1 ) {
-			echo '<div class="wp-clearfix"><ul class="subsubsub">';
+			echo '<div class="wp-clearfix"><ul class="subsubsub edd-settings-sub-nav">';
 			foreach( $sections as $section_id => $section_name ) {
 				echo '<li>';
 				$number++;
@@ -115,9 +132,6 @@ function edd_options_page() {
 				}
 				echo '<a class="' . $class . '" href="' . esc_url( $tab_url ) . '">' . $section_name . '</a>';
 
-				if ( $number != $number_of_sections ) {
-					echo ' | ';
-				}
 				echo '</li>';
 			}
 			echo '</ul></div>';
