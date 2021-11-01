@@ -30,6 +30,8 @@ class NotificationImporter {
 	 * @since 2.11.4
 	 */
 	public function run() {
+		edd_debug_log( 'Fetching notifications.' );
+
 		try {
 			$notifications = $this->fetchNotifications();
 		} catch ( \Exception $e ) {
@@ -39,17 +41,25 @@ class NotificationImporter {
 		}
 
 		foreach ( $notifications as $notification ) {
+			$notificationId = isset( $notification->id ) ? $notification->id : 'unknown';
+
+			edd_debug_log( sprintf( 'Processing notification ID %s', $notificationId ) );
+
 			try {
 				$this->validateNotification( $notification );
 
 				$existingId = EDD()->notifications->get_column_by( 'id', 'remote_id', $notification->id );
 				if ( $existingId ) {
+					edd_debug_log( '-- Updating existing notification.' );
+
 					$this->updateExistingNotification( $existingId, $notification );
 				} else {
+					edd_debug_log( '-- Inserting new notification.' );
+
 					$this->insertNewNotification( $notification );
 				}
 			} catch ( \Exception $e ) {
-				edd_debug_log( sprintf( 'Notification processing failure: %s', $e->getMessage() ) );
+				edd_debug_log( sprintf( '-- Notification processing failure for ID %s: %s', $notificationId, $e->getMessage() ) );
 			}
 		}
 	}
@@ -192,9 +202,14 @@ class NotificationImporter {
 	 * @since 2.11.4
 	 *
 	 * @param object $notification
+	 * @throws \Exception
 	 */
 	protected function insertNewNotification( $notification ) {
-		EDD()->notifications->insert( $this->getNotificationData( $notification ) );
+		$result = EDD()->notifications->insert( $this->getNotificationData( $notification ) );
+
+		if ( ! $result ) {
+			throw new \Exception( 'Failed to insert into database.' );
+		}
 	}
 
 	/**
