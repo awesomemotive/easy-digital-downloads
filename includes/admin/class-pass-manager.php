@@ -51,6 +51,13 @@ class Pass_Manager {
 	public $has_pass_data = false;
 
 	/**
+	 * Number of license keys entered on this site.
+	 *
+	 * @var int
+	 */
+	public $number_license_keys;
+
+	/**
 	 * Hierarchy of passes. This helps us determine if one pass
 	 * is "higher" than another.
 	 *
@@ -77,6 +84,10 @@ class Pass_Manager {
 		}
 
 		$this->highest_pass_id = $this->get_highest_pass_id();
+
+		global $edd_licensed_products;
+
+		$this->number_license_keys = is_array( $edd_licensed_products ) ? count( $edd_licensed_products ) : 0;
 	}
 
 	/**
@@ -134,6 +145,73 @@ class Pass_Manager {
 	 */
 	public function has_pass() {
 		return ! empty( $this->highest_pass_id );
+	}
+
+	/**
+	 * If this is a "free install". That means there are no à la carte or pass licenses activated.
+	 *
+	 * @since 2.11.4
+	 *
+	 * @return bool
+	 */
+	public function isFree() {
+		return 0 === $this->number_license_keys;
+	}
+
+	/**
+	 * If this site has an individual product license active (à la carte), but no pass active.
+	 *
+	 * @since 2.11.4
+	 *
+	 * @return bool
+	 */
+	public function hasIndividualLicense() {
+		return ! $this->isFree() && ! $this->has_pass();
+	}
+
+	/**
+	 * If this site has a Personal Pass active.
+	 *
+	 * @since 2.11.4
+	 *
+	 * @return bool
+	 */
+	public function hasPersonalPass() {
+		return self::pass_compare( $this->highest_pass_id, self::PERSONAL_PASS_ID, '=' );
+	}
+
+	/**
+	 * If this site has an Extended Pass active.
+	 *
+	 * @since 2.11.4
+	 *
+	 * @return bool
+	 */
+	public function hasExtendedPass() {
+		return self::pass_compare( $this->highest_pass_id, self::EXTENDED_PASS_ID, '=' );
+	}
+
+	/**
+	 * If this site has a Professional Pass active.
+	 *
+	 * @since 2.11.4
+	 *
+	 * @return bool
+	 */
+	public function hasProfessionalPass() {
+		return self::pass_compare( $this->highest_pass_id, self::PROFESSIONAL_PASS_ID, '=' );
+	}
+
+	/**
+	 * If this site has an All Access Pass active.
+	 * Note: This uses >= to account for both All Access and lifetime All Access.
+	 *
+	 * @since 2.11.4
+	 *
+	 * @return bool
+	 */
+	public function hasAllAccessPass() {
+		return self::pass_compare( $this->highest_pass_id, self::ALL_ACCESS_PASS_ID, '>=' );
 	}
 
 	/**
