@@ -26,7 +26,7 @@ function edd_settings_contextual_help() {
 		return;
 
 	$screen->set_help_sidebar(
-		'<p><strong>' . sprintf( __( 'For more information:', 'easy-digital-downloads' ) ) . '</strong></p>' .
+		'<p><strong>' . __( 'For more information:', 'easy-digital-downloads' ) . '</strong></p>' .
 		'<p>' . sprintf( __( 'Visit the <a href="%s">documentation</a> on the Easy Digital Downloads website.', 'easy-digital-downloads' ), esc_url( 'http://docs.easydigitaldownloads.com/' ) ) . '</p>' .
 		'<p>' . sprintf(
 			__( 'Need more from your Easy Digital Downloads store? <a href="%s">Upgrade Now!</a>.', 'easy-digital-downloads' ),
