@@ -460,6 +460,19 @@ class Tests_Discounts extends \EDD_UnitTestCase {
 	/**
 	 * @covers \edd_update_discount_status()
 	 */
+	public function test_discount_status_update_inactive() {
+		$this->assertTrue( edd_update_discount_status( self::$discount_id, 'inactive' ) );
+		$discount = edd_get_discount( self::$discount_id );
+		$this->assertEquals( 'inactive', $discount->status );
+
+		$this->assertTrue( edd_update_discount_status( self::$discount_id, 'active' ) );
+		$discount = edd_get_discount( self::$discount_id );
+		$this->assertEquals( 'active', $discount->status );
+	}
+
+	/**
+	 * @covers \edd_update_discount_status()
+	 */
 	public function test_discount_status_update() {
 		$this->assertTrue( edd_update_discount_status( self::$discount_id, 'active' ) );
 	}

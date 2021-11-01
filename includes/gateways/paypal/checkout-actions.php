@@ -347,16 +347,20 @@ function capture_order() {
 					if ( ! empty( $purchase_unit->reference_id ) ) {
 						$payment        = edd_get_payment_by( 'key', $purchase_unit->reference_id );
 						$transaction_id = isset( $purchase_unit->payments->captures[0]->id ) ? $purchase_unit->payments->captures[0]->id : false;
+
+						if ( ! empty( $payment ) && isset( $purchase_unit->payments->captures[0]->status ) ) {
+							if ( 'COMPLETED' === strtoupper( $purchase_unit->payments->captures[0]->status ) ) {
+								$payment->status = 'complete';
+							} elseif( 'DECLINED' === strtoupper( $purchase_unit->payments->captures[0]->status ) ) {
+								$payment->status = 'failed';
+							}
+						}
 						break;
 					}
 				}
 			}
 
 			if ( ! empty( $payment ) ) {
-				if ( ! empty( $response->status ) && 'COMPLETED' === strtoupper( $response->status ) ) {
-					$payment->status = 'complete';
-				}
-
 				/**
 				 * Buy Now Button
 				 *
@@ -398,6 +402,15 @@ function capture_order() {
 				}
 
 				$payment->save();
+
+				if ( 'failed' === $payment->status ) {
+					$retry = true;
+					throw new Gateway_Exception(
+						__( 'Your payment was declined. Please try a new payment method.', 'easy-digital-downloads' ),
+						400,
+						sprintf( 'Order capture failure. PayPal response: %s', json_encode( $response ) )
+					);
+				}
 			}
 
 			wp_send_json_success( array( 'redirect_url' => edd_get_success_page_uri() ) );
@@ -424,3 +437,26 @@ function capture_order() {
 
 add_action( 'wp_ajax_nopriv_edd_capture_paypal_order', __NAMESPACE__ . '\capture_order' );
 add_action( 'wp_ajax_edd_capture_paypal_order', __NAMESPACE__ . '\capture_order' );
+
+/**
+ * Gets a fresh set of gateway options when a PayPal order is cancelled.
+ * @link https://github.com/awesomemotive/easy-digital-downloads/issues/8883
+ *
+ * @since 2.11.3
+ * @return void
+ */
+function cancel_order() {
+	$nonces   = array();
+	$gateways = edd_get_enabled_payment_gateways( true );
+	foreach ( $gateways as $gateway_id => $gateway ) {
+		$nonces[ $gateway_id ] = wp_create_nonce( 'edd-gateway-selected-' . esc_attr( $gateway_id ) );
+	}
+
+	wp_send_json_success(
+		array(
+			'nonces' => $nonces,
+		)
+	);
+}
+add_action( 'wp_ajax_nopriv_edd_cancel_paypal_order', __NAMESPACE__ . '\cancel_order' );
+add_action( 'wp_ajax_edd_cancel_paypal_order', __NAMESPACE__ . '\cancel_order' );
