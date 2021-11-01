@@ -36,19 +36,21 @@ class EnvironmentChecker {
 
 	/**
 	 * Types of license/pass conditions that we support.
+	 * The key is the condition slug and the value is the corresponding
+	 * method to call in the `Pass_Manager` class to check the condition.
 	 *
 	 * @since 2.11.4
 	 *
 	 * @var string[]
 	 */
 	protected $validLicenseConditions = array(
-		'free',
-		'ala-carte',
-		'pass-personal',
-		'pass-extended',
-		'pass-professional',
-		'pass-all-access',
-		'pass-any',
+		'free'              => 'isFree',
+		'ala-carte'         => 'hasIndividualLicense',
+		'pass-personal'     => 'hasPersonalPass',
+		'pass-extended'     => 'hasExtendedPass',
+		'pass-professional' => 'hasProfessionalPass',
+		'pass-all-access'   => 'hasAllAccessPass',
+		'pass-any'          => 'has_pass',
 	);
 
 	/**
@@ -73,7 +75,7 @@ class EnvironmentChecker {
 	 * @throws \InvalidArgumentException
 	 */
 	public function meetsCondition( $condition ) {
-		if ( in_array( $condition, $this->validLicenseConditions ) ) {
+		if ( array_key_exists( $condition, $this->validLicenseConditions ) ) {
 			return $this->hasLicenseType( $condition );
 		} elseif ( $this->isVersionNumber( $condition ) ) {
 			return $this->versionNumbersMatch( EDD_VERSION, $condition );
@@ -112,9 +114,18 @@ class EnvironmentChecker {
 	 * @param string $passLevel License type that we're checking to see if the system has.
 	 *
 	 * @return bool
+	 * @throws \InvalidArgumentException
 	 */
 	protected function hasLicenseType( $passLevel ) {
+		$method = isset( $this->validLicenseConditions[ $passLevel ] )
+			? $this->validLicenseConditions[ $passLevel ]
+			: false;
 
+		if ( ! $method || ! method_exists( $this->passManager, $method ) ) {
+			throw new \InvalidArgumentException( sprintf( 'Method %s not found in Pass_Manager.', $method ) );
+		}
+
+		return call_user_func( array( $this->passManager, $method ) );
 	}
 
 	/**
