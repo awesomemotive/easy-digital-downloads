@@ -24,6 +24,11 @@ class Extension_Manager {
 
 	private $required_pass_id;
 
+	/**
+	 * Pass Manager class
+	 *
+	 * @var \EDD\Admin\Pass_Manager
+	 */
 	protected $pass_manager;
 
 	public function __construct( $required_pass_id = null ) {
@@ -132,7 +137,7 @@ class Extension_Manager {
 	private function get_extension_download_url( $id ) {
 		$extensions = new Extensions();
 
-		return $extensions->get_url( $id, $this->get_license_key() );
+		return $extensions->get_url( $id, $this->pass_manager->highest_license_key );
 	}
 
 	/**
@@ -350,21 +355,12 @@ class Extension_Manager {
 	 * @return bool Returns true if the current site has an active pass and it is greater than or equal to the extension's minimum pass.
 	 */
 	public function pass_can_download( $required_pass_id = false ) {
-		$highest_pass_id = $this->get_highest_pass_id();
+		$highest_pass_id = $this->pass_manager->highest_pass_id;
 		if ( ! $required_pass_id ) {
 			$required_pass_id = $this->required_pass_id;
 		}
 
 		return ! empty( $highest_pass_id ) && ! empty( $required_pass_id ) && $this->pass_manager->pass_compare( $highest_pass_id, $required_pass_id, '>=' );
-	}
-
-	/**
-	 * Gets the highest active pass ID.
-	 *
-	 * @return null|int
-	 */
-	private function get_highest_pass_id() {
-		return $this->pass_manager->highest_pass_id;
 	}
 
 	/**
