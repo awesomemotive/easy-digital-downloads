@@ -1056,7 +1056,7 @@ function edd_is_promo_active() {
  * For existing installs, this option is added whenever the function is first used.
  *
  * @since 2.11.4
- * @return string The timestamp when EDD was activated.
+ * @return int The timestamp when EDD was activated.
  */
 function edd_get_activation_date() {
 	$activation_date = get_option( 'edd_activation_date', '' );
