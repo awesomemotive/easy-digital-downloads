@@ -7,7 +7,7 @@ Tags: ecommerce, sell, checkout, digital store, stripe
 Requires at least: 4.4
 Tested up to: 5.8.1
 Requires PHP: 5.3
-Stable Tag: 2.11.3
+Stable Tag: 2.11.3.1
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products the simple way. Easily build an online store complete with a cart system, checkout forms, reports, coupons, and more!
@@ -246,6 +246,9 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 13. Pay with PayPal modal
 
 == Changelog ==
+= 2.11.3.1, November 1, 2021 =
+* Fix: Fatal error in PHP versions lower than 7.3.
+
 = 2.11.3, November 1, 2021 =
 * New: Add contextual EDD header to relevant pages.
 * New: Add quick link to EDD reports in the Dashboard menu.
