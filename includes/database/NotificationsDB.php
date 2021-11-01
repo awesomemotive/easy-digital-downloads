@@ -203,6 +203,9 @@ class NotificationsDB extends \EDD_DB {
 
 	/**
 	 * Counts the number of active notifications.
+	 * Note: We can't actually do a real `COUNT(*)` on the database, because we want
+	 * to double-check the conditions are met before displaying. That's why we use
+	 * `getActiveNotifications()` which runs the conditions through the EnvironmentChecker.
 	 *
 	 * @since 2.11.4
 	 *
