@@ -119,8 +119,7 @@ class NotificationImporter {
 		}
 
 		// Ignore if notification was created before EDD was installed.
-		$dateActivated = date( 'Y-m-d H:i:s', strtotime( '-1 week' ) ); // @todo real value
-		if ( ! empty( $notification->start ) && $dateActivated > strtotime( $notification->start ) ) {
+		if ( ! empty( $notification->start ) && edd_get_activation_date() > strtotime( $notification->start ) ) {
 			throw new \Exception( 'Notification created prior to EDD activation.' );
 		}
 
