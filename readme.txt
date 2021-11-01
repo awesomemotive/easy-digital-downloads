@@ -246,7 +246,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 13. Pay with PayPal modal
 
 == Changelog ==
-= 2.11.3 =
+= 2.11.3, November 1, 2021 =
 * New: Add contextual EDD header to relevant pages.
 * New: Add quick link to EDD reports in the Dashboard menu.
 * Improvement: Update styling for settings tabs.
