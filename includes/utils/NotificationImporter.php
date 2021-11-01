@@ -150,7 +150,7 @@ class NotificationImporter {
 			'content'    => $notification->content,
 			'buttons'    => $this->parseButtons( $notification ),
 			'type'       => $notification->notification_type,
-			'conditions' => $notification->type,
+			'conditions' => ! empty( $notification->type ) ? $notification->type : null,
 			'start'      => ! empty( $notification->start ) ? $notification->start : null,
 			'end'        => ! empty( $notification->end ) ? $notification->end : null,
 		);
