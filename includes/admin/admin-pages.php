@@ -28,7 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @return void
  */
 function edd_add_options_link() {
-	global $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_add_ons_page, $edd_settings_export, $edd_upgrades_screen, $edd_tools_page, $edd_customers_page;
+	global $submenu, $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_add_ons_page, $edd_settings_export, $edd_upgrades_screen, $edd_tools_page, $edd_customers_page;
 
 	$edd_payment            = get_post_type_object( 'edd_payment' );
 
@@ -43,23 +43,35 @@ function edd_add_options_link() {
 	$edd_add_ons_page       = add_submenu_page( 'edit.php?post_type=download', __( 'Easy Digital Downloads Extensions', 'easy-digital-downloads' ), __( 'Extensions', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-addons', 'edd_add_ons_page' );
 	$edd_upgrades_screen    = add_submenu_page( null, __( 'EDD Upgrades', 'easy-digital-downloads' ), __( 'EDD Upgrades', 'easy-digital-downloads' ), 'manage_shop_settings', 'edd-upgrades', 'edd_upgrades_screen' );
 
+	// Add our reports link in the main Dashboard menu.
+	$submenu['index.php'][] = array(
+		__( 'Store Reports', 'easy-digital-downloads' ),
+		'view_shop_reports',
+		'edit.php?post_type=download&page=edd-reports',
+	);
+
 }
 add_action( 'admin_menu', 'edd_add_options_link', 10 );
 
 /**
- *  Determines whether the current admin page is a specific EDD admin page.
+ * Determines whether the current admin page is a specific EDD admin page.
  *
- *  Only works after the `wp_loaded` hook, & most effective
- *  starting on `admin_menu` hook. Failure to pass in $view will match all views of $main_page.
- *  Failure to pass in $main_page will return true if on any EDD page
+ * Only works after the `wp_loaded` hook, & most effective
+ * starting on `admin_menu` hook. Failure to pass in $passed_view will match all views of $passed_page.
+ * Failure to pass in $passed_page will return true if on any EDD page
  *
- *  @since 1.9.6
+ * @since 1.9.6
+ * @since 2.11.3 Added `$include_non_exclusive` parameter.
  *
- *  @param string $page Optional. Main page's slug
- *  @param string $view Optional. Page view ( ex: `edit` or `delete` )
- *  @return bool True if EDD admin page we're looking for or an EDD page or if $page is empty, any EDD page
+ * @param string $passed_page           Optional. Main page's slug
+ * @param string $passed_view           Optional. Page view ( ex: `edit` or `delete` )
+ * @param bool   $include_non_exclusive Optional. If we should consider pages not exclusive to EDD.
+ *                                      Includes the main dashboard page and custom post types that
+ *                                      support the "Insert Download" button via the TinyMCE editor.
+ *
+ * @return bool True if EDD admin page we're looking for or an EDD page or if $page is empty, any EDD page
  */
-function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
+function edd_is_admin_page( $passed_page = '', $passed_view = '', $include_non_exclusive = true ) {
 
 	global $pagenow, $typenow;
 
@@ -340,7 +352,7 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '' ) {
 		default:
 			global $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_settings_export, $edd_upgrades_screen, $edd_customers_page, $edd_reports_page;
 			$admin_pages = apply_filters( 'edd_admin_pages', array( $edd_discounts_page, $edd_payments_page, $edd_settings_page, $edd_reports_page, $edd_system_info_page, $edd_add_ons_page, $edd_settings_export, $edd_customers_page, $edd_reports_page ) );
-			if ( 'download' == $typenow || 'index.php' == $pagenow || 'post-new.php' == $pagenow || 'post.php' == $pagenow ) {
+			if ( 'download' == $typenow || ( $include_non_exclusive && in_array( $pagenow, array( 'index.php', 'post-new.php', 'post.php' ), true ) ) ) {
 				$found = true;
 				if( 'edd-upgrades' === $page ) {
 					$found = false;

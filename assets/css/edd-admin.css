@@ -30,6 +30,102 @@ a.edd-delete:hover {
 
 /* General Settings Styles
 -------------------------------------------------------------- */
+body.post-type-download #contextual-help-link-wrap,
+body.post-type-download #screen-options-link-wrap {
+	top: 5px !important;
+}
+
+body.post-type-download #screen-meta {
+	margin: 0px 0px -1px -20px;
+}
+
+#edd-header {
+	border-top: 5px solid #0c5d95;
+	border-bottom: 1px solid #c3c4c7;
+	padding: 22px 0px;
+	margin-left: -20px;
+	background: #fff;
+}
+
+#edd-header img {
+	display: block;
+	margin: 0;
+	max-width: 300px;
+	margin-left: 20px;
+}
+
+.edd-settings-sub-nav {
+	margin: 0 0px 10px 0;
+	width: 100%;
+	border-bottom: 1px solid #ccc;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.edd-settings-sub-nav a {
+	padding: 13px;
+	display: block;
+}
+
+.edd-settings-sub-nav a.current {
+	border-bottom: 4px solid #000;
+	padding-bottom: 9px;
+}
+
+.admin-color-fresh .edd-settings-sub-nav a.current {
+	border-bottom-color: #00a0d2;
+}
+
+/* Blue */
+.admin-color-blue .edd-settings-sub-nav a.current {
+	border-bottom-color: #096484;
+}
+
+/* Coffee */
+.admin-color-coffee .edd-settings-sub-nav a.current {
+	border-bottom-color: #c7a589;
+}
+
+/* Ectoplasm */
+.admin-color-ectoplasm .edd-settings-sub-nav a.current {
+	border-bottom-color: #a3b745;
+}
+
+/* Midnight */
+.admin-color-midnight .edd-settings-sub-nav a.current {
+	border-bottom-color: #e14d43;
+}
+
+/* Ocean */
+.admin-color-ocean .edd-settings-sub-nav a.current {
+	border-bottom-color: #627c83;
+}
+
+/* Sunrise */
+.admin-color-sunrise .edd-settings-sub-nav a.current {
+	border-bottom-color: #be3631;
+}
+
+/* Light */
+.admin-color-light .edd-settings-sub-nav a.current {
+	border-bottom-color: #888;
+}
+
+/* bbPress Color Schemes */
+
+/* Evergreen */
+.admin-color-evergreen .edd-settings-sub-nav a.current {
+	border-bottom-color: #36533f;
+}
+
+/* Mint */
+.admin-color-mint .edd-settings-sub-nav a.current {
+	border-bottom-color: #4f6d59;
+}
+
+/* Modern */
+.admin-color-modern .edd-settings-sub-nav a.current {
+	border-bottom-color: #3858e9;
+}
 
 .download_page_edd-settings .form-table label {
 	color: #666;
@@ -157,21 +253,6 @@ a.edd-delete:hover {
 
 /* Payment History Styles
 -------------------------------------------------------------- */
-.edit-php.post-type-download .wrap .wp-heading-inline,
-.download_page_edd-addons .wrap .wp-heading-inline {
-	display: none;
-}
-
-.edit-php.post-type-download .wrap > .page-title-action,
-.download_page_edd-addons .wrap > .page-title-action {
-	display: none;
-}
-
-.edit-php.post-type-download .wrap .nav-tab-wrapper .page-title-action,
-.download_page_edd-addons .wrap .nav-tab-wrapper .page-title-action {
-	top: 7px;
-	margin-left: 5px;
-}
 
 #edd-payment-filters {
 	background: #f5f5f5;
