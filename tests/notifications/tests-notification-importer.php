@@ -143,6 +143,8 @@ class NotificationImporterTests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * Notification has an end date of 2 days ago, so it should not be imported.
+	 *
 	 * @expectedException \Exception
 	 * @expectedExceptionMessage Notification has expired.
 	 * @throws \Exception
@@ -159,6 +161,33 @@ class NotificationImporterTests extends \EDD_UnitTestCase {
 		$notification->content           = 'This is an exciting new EDD feature.';
 		$notification->id                = 90;
 		$notification->end               = date( 'Y-m-d H:i:s', strtotime( '-2 days' ) );
+		$notification->notification_type = 'success';
+
+		$importer->validateNotification( $notification );
+	}
+
+	/**
+	 * EDD was installed today, but notification was created 2 days ago. It should not
+	 * validate because we only accept notifications created _after_ EDD was installed.
+	 *
+	 * @covers \EDD\Utils\NotificationImporter::validateNotification
+	 *
+	 * @expectedException \Exception
+	 * @expectedExceptionMessage Notification created prior to EDD activation.
+	 * @throws \Exception
+	 */
+	public function test_notification_started_before_installation_date_doesnt_validate() {
+		$importer = new NotificationImporter();
+
+		if ( method_exists( $this, 'setExpectedException' ) ) {
+			$this->setExpectedException( 'Exception', 'Notification created prior to EDD activation.' );
+		}
+
+		$notification                    = new \stdClass();
+		$notification->title             = 'Announcing New EDD Feature';
+		$notification->content           = 'This is an exciting new EDD feature.';
+		$notification->id                = 90;
+		$notification->start               = date( 'Y-m-d H:i:s', strtotime( '-2 days' ) );
 		$notification->notification_type = 'success';
 
 		$importer->validateNotification( $notification );
