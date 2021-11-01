@@ -13,6 +13,23 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Adds the EDD branded header to the EDD settings pages.
+ *
+ * @since 2.11.3
+ */
+function edd_admin_header() {
+	if ( ! edd_is_admin_page( '', '', false ) ) {
+		return;
+	}
+	?>
+	<div id="edd-header" class="edd-header">
+		<img class="edd-header-logo" alt="" src="<?php echo esc_url( EDD_PLUGIN_URL . '/assets/images/logo-edd-dark.svg' ); ?>" />
+	</div>
+	<?php
+}
+add_action( 'admin_notices', 'edd_admin_header', 1 );
+
+/**
  * Output the primary options page navigation
  *
  * @since 3.0
@@ -285,8 +302,9 @@ function edd_options_page() {
 	ob_start(); ?>
 
 	<div class="wrap <?php echo 'wrap-' . esc_attr( $active_tab ); ?>">
-		<h1><?php _e( 'Settings', 'easy-digital-downloads' ); ?></h1><?php
-
+		<h1><?php esc_html_e( 'Settings', 'easy-digital-downloads' ); ?></h1>
+		
+		<?php
 		// Primary nav
 		edd_options_page_primary_nav( $active_tab );
 

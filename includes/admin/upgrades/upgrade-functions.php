@@ -132,9 +132,9 @@ function edd_show_upgrade_notices() {
 		// Include all 'Stepped' upgrade process notices in this else statement,
 		// to avoid having a pending, and new upgrade suggested at the same time
 
-		if ( EDD()->session->get( 'upgrade_sequential' ) && edd_get_payments() ) {
+		if ( get_option( 'edd_upgrade_sequential' ) && edd_get_payments( array( 'fields' => 'ids' ) ) ) {
 			printf(
-				'<div class="notice notice-warning"><p>' . __( 'Easy Digital Downloads needs to upgrade past order numbers to make them sequential, click <a href="%s">here</a> to start the upgrade.', 'easy-digital-downloads' ) . '</p></div>',
+				'<div class="notice notice-warning"><p>' . __( 'Easy Digital Downloads needs to upgrade past orders to make them sequential. <a href="%s">Start the order numbers upgrade</a>.', 'easy-digital-downloads' ) . '</p></div>',
 				admin_url( 'index.php?page=edd-upgrades&edd-upgrade=upgrade_sequential_payment_numbers' )
 			);
 		}
@@ -684,7 +684,7 @@ function edd_v20_upgrade_sequential_payment_numbers() {
 
 	// No more payments found, finish up
 	} else {
-		EDD()->session->set( 'upgrade_sequential', null );
+		delete_option( 'edd_upgrade_sequential' );
 		delete_option( 'edd_doing_upgrade' );
 
 		edd_redirect( admin_url() );
