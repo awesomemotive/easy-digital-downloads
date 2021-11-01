@@ -25,14 +25,14 @@ class Pass_Manager {
 	 *
 	 * @var int|null
 	 */
-	public $highest_pass_id;
+	public $highest_pass_id = null;
 
 	/**
 	 * License key of the highest tier pass that's activated.
 	 *
 	 * @var string|null
 	 */
-	public $highest_license_key;
+	public $highest_license_key = null;
 
 	/**
 	 * Pass data from the database. This will be an array with
@@ -90,8 +90,8 @@ class Pass_Manager {
 			$this->has_pass_data = true;
 		}
 
-		$this->highest_license_key = $this->get_highest_license_key();
-		$this->highest_pass_id     = $this->get_highest_pass_id();
+		// Set up the highest pass data.
+		$this->set_highest_pass_data();
 
 		global $edd_licensed_products;
 
@@ -99,16 +99,19 @@ class Pass_Manager {
 	}
 
 	/**
-	 * Gets the highest license key related to a pass.
+	 * Gets the highest pass and defines its data.
 	 *
-	 * @return string|bool
+	 * @since 2.11.x
+	 * @return void
 	 */
-	private function get_highest_license_key() {
-		$highest_license_key = false;
+	private function set_highest_pass_data() {
 
 		if ( ! $this->has_pass_data || ! is_array( $this->pass_data ) ) {
-			return $highest_pass_id;
+			return;
 		}
+
+		$highest_license_key = false;
+		$highest_pass_id     = false;
 
 		foreach ( $this->pass_data as $license_key => $pass_data ) {
 			/*
@@ -130,37 +133,19 @@ class Pass_Manager {
 			// If we don't yet have a "highest pass", then this one is it automatically.
 			if ( empty( $highest_pass_id ) ) {
 				$highest_license_key = $license_key;
+				$highest_pass_id     = $pass_data['pass_id'];
 				continue;
 			}
 
 			// Otherwise, this pass only takes over the highest pass if it's actually higher.
 			if ( self::pass_compare( (int) $pass_data['pass_id'], $highest_pass_id, '>' ) ) {
 				$highest_license_key = $license_key;
+				$highest_pass_id     = $pass_data['pass_id'];
 			}
 		}
 
-		return $highest_license_key;
-	}
-
-	/**
-	 * Returns the ID of the highest tier pass that's activated.
-	 *
-	 * @since 2.10.6
-	 *
-	 * @return int|null Pass ID if one is found, null if one was not found.
-	 */
-	private function get_highest_pass_id() {
-		$highest_pass_id = null;
-
-		if ( ! $this->has_pass_data || ! is_array( $this->pass_data ) ) {
-			return $highest_pass_id;
-		}
-
-		if ( ! $this->highest_license_key ) {
-			return $highest_pass_id;
-		}
-
-		return $this->pass_data[ $this->highest_license_key ]['pass_id'];
+		$this->highest_license_key = $highest_license_key;
+		$this->highest_pass_id     = $highest_pass_id;
 	}
 
 	/**
