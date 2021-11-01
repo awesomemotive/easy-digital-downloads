@@ -165,6 +165,8 @@ class NotificationImporterTests extends \EDD_UnitTestCase {
 	}
 
 	/**
+	 * @covers \EDD\Utils\NotificationImporter::validateNotification
+	 *
 	 * @expectedException \Exception
 	 * @throws \Exception
 	 */
@@ -178,8 +180,55 @@ class NotificationImporterTests extends \EDD_UnitTestCase {
 		$notification                    = new \stdClass();
 		$notification->content           = 'This is an exciting new EDD feature.';
 		$notification->id                = 90;
-		$notification->end               = date( 'Y-m-d H:i:s', strtotime( '-2 days' ) );
 		$notification->notification_type = 'success';
+
+		$importer->validateNotification( $notification );
+	}
+
+	/**
+	 * @covers \EDD\Utils\NotificationImporter::validateNotification
+	 *
+	 * @expectedException \Exception
+	 * @expectedExceptionMessage Condition(s) not met.
+	 * @throws \Exception
+	 */
+	public function test_notification_for_pass_holders_not_validated_for_free_install() {
+		$importer = new NotificationImporter();
+
+		if ( method_exists( $this, 'setExpectedException' ) ) {
+			$this->setExpectedException( 'Exception', 'Condition(s) not met.' );
+		}
+
+		$notification                    = new \stdClass();
+		$notification->title             = 'Announcing New EDD Feature for Pass Holders';
+		$notification->content           = 'This is an exciting new EDD feature.';
+		$notification->id                = 90;
+		$notification->notification_type = 'success';
+		$notification->type              = array( 'pass-any' );
+
+		$importer->validateNotification( $notification );
+	}
+
+	/**
+	 * @covers \EDD\Utils\NotificationImporter::validateNotification
+	 *
+	 * @expectedException \Exception
+	 * @expectedExceptionMessage Condition(s) not met.
+	 * @throws \Exception
+	 */
+	public function test_notification_for_version_1x_not_validated() {
+		$importer = new NotificationImporter();
+
+		if ( method_exists( $this, 'setExpectedException' ) ) {
+			$this->setExpectedException( 'Exception', 'Condition(s) not met.' );
+		}
+
+		$notification                    = new \stdClass();
+		$notification->title             = 'Announcing New EDD Feature for Pass Holders';
+		$notification->content           = 'This is an exciting new EDD feature.';
+		$notification->id                = 90;
+		$notification->notification_type = 'success';
+		$notification->type              = array( '1-x' );
 
 		$importer->validateNotification( $notification );
 	}
