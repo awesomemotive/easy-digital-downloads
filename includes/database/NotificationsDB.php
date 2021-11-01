@@ -154,6 +154,7 @@ class NotificationsDB extends \EDD_DB {
 				$model = new Notification( (array) $notification );
 
 				try {
+					// Only add to the array if all conditions are met or if the notification has no conditions.
 					if (
 						! $model->conditions ||
 						( is_array( $model->conditions ) && $environmentChecker->meetsConditions( $model->conditions ) )
@@ -183,11 +184,6 @@ class NotificationsDB extends \EDD_DB {
 	private function getActiveQuery( $conditionsOnly = false ) {
 		global $wpdb;
 
-		/*
-		 * When counting, we don't actually do a `COUNT(*)` because we want to
-		 * double-check the conditions. So instead we select all the conditions
-		 * so we can check them, then count them later.
-		 */
 		$select = $conditionsOnly ? 'conditions' : '*';
 
 		return $wpdb->prepare(
