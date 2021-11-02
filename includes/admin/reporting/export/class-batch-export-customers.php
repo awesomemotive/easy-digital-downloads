@@ -44,7 +44,7 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 			'email'        => __( 'Email', 'easy-digital-downloads' ),
 			'purchases'    => __( 'Number of Purchases', 'easy-digital-downloads' ),
 			'amount'       => __( 'Customer Value', 'easy-digital-downloads' ),
-			'payment_ids'  => __( 'Payments', 'easy-digital-downloads' ),
+			'payment_ids'  => __( 'Payment IDs', 'easy-digital-downloads' ),
 			'date_created' => __( 'Date Created', 'easy-digital-downloads' ),
 		);
 	}
