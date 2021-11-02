@@ -175,13 +175,13 @@ class NotificationImporter {
 	 * @return array|null
 	 */
 	protected function parseButtons( $notification ) {
-		if ( empty( $notification->btns ) || ! is_array( $notification->btns ) ) {
+		if ( empty( $notification->btns ) ) {
 			return null;
 		}
 
 		$buttons = array();
 
-		foreach ( $notification->btns as $buttonType => $buttonInfo ) {
+		foreach ( (array) $notification->btns as $buttonType => $buttonInfo ) {
 			if ( empty( $buttonInfo->url ) || empty( $buttonInfo->text ) ) {
 				continue;
 			}
