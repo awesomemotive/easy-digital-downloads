@@ -31,12 +31,20 @@ class Extension_Manager {
 	 */
 	protected $pass_manager;
 
+	/**
+	 * The Extensions class.
+	 *
+	 * @var \EDD\Admin\Installers\Extensions
+	 */
+	private $extensions;
+
 	public function __construct( $required_pass_id = null ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/installers/class-extensions.php';
 		if ( $required_pass_id ) {
 			$this->required_pass_id = $required_pass_id;
 		}
 		$this->pass_manager = new Pass_Manager();
+		$this->extensions   = new Extensions();
 
 		add_action( 'wp_ajax_edd_activate_extension', array( $this, 'activate' ) );
 		add_action( 'wp_ajax_edd_install_extension', array( $this, 'install' ) );
@@ -93,7 +101,7 @@ class Extension_Manager {
 				<div class="edd-extension-manager__step">
 					<?php $this->button( $button_parameters ); ?>
 				</div>
-				<div class="edd-extension-manager__step"style="display:none;">
+				<div class="edd-extension-manager__step" style="display:none;">
 					<?php $this->link( $link_parameters ); ?>
 				</div>
 			</div>
@@ -125,9 +133,6 @@ class Extension_Manager {
 		if ( empty( $args['button_text'] ) ) {
 			return;
 		}
-		if ( 'extension' === $args['type'] ) {
-			$args['data-plugin'] = $this->get_extension_download_url( $args['data-plugin'] );
-		}
 		?>
 		<button
 			class="button <?php echo esc_attr( $args['button_class'] ); ?> edd-extension-manager__action"
@@ -140,6 +145,23 @@ class Extension_Manager {
 		</button>
 		<?php
 		wp_print_scripts( 'edd-extension-manager' );
+	}
+
+	/**
+	 * Gets the download URL.
+	 *
+	 * @param string|int $url_or_item_id  Either the download URL (for a plugin) or the item ID (for an extension).
+	 * @param string     $type            Plugin or extension.
+	 * @return string|false Returns the download URL if possible, or false if not.
+	 */
+	public function get_download_url( $url_or_item_id, $type = 'plugin' ) {
+		if ( 'extension' !== $type ) {
+			return $url_or_item_id;
+		}
+
+		$download_url = $this->extensions->get_url( $url_or_item_id, $this->pass_manager->highest_license_key );
+
+		return $download_url ? $download_url : false;
 	}
 
 	/**
@@ -168,16 +190,14 @@ class Extension_Manager {
 		<?php
 	}
 
+	/**
+	 * Gets the product data from the EDD Products API.
+	 *
+	 * @param int $id
+	 * @return object
+	 */
 	public function get_product_data( $id ) {
-		$extensions = new Extensions();
-
-		return $extensions->get_product_data( $id );
-	}
-
-	private function get_extension_download_url( $id ) {
-		$extensions = new Extensions();
-
-		return $extensions->get_url( $id, $this->pass_manager->highest_license_key );
+		return $this->extensions->get_product_data( $id );
 	}
 
 	/**
