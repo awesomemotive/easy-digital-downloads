@@ -15,19 +15,12 @@ namespace EDD\Admin\Settings;
 class Recurring extends Extension {
 
 	/**
-	 * The product ID on the EDD site.
-	 *
-	 * @var integer
-	 */
-	protected $item_id = 28530;
-
-	/**
 	 * The pass level required to automatically download this extension.
 	 */
 	const PASS_LEVEL = \EDD\Admin\Pass_Manager::EXTENDED_PASS_ID;
 
 	public function __construct() {
-		add_filter( 'edd_settings_sections_gateways', array( $this, 'add_recurring_section' ) );
+		add_filter( 'edd_settings_sections_gateways', array( $this, 'add_section' ) );
 		add_filter( 'edd_settings_gateways', array( $this, 'setting' ) );
 		add_action( 'edd_recurring_install', array( $this, 'settings_field' ) );
 
@@ -39,8 +32,10 @@ class Recurring extends Extension {
 	 *
 	 * @return array
 	 */
-	protected function get_configuration() {
+	protected function get_configuration( $item_id = false ) {
 		return array(
+			'item_id'      => 28530,
+			'name'         => __( 'Recurring Payments', 'easy-digital-downloads' ),
 			'pro_plugin'   => 'edd-recurring/edd-recurring.php',
 			'settings_url' => add_query_arg(
 				array(
@@ -51,21 +46,31 @@ class Recurring extends Extension {
 				),
 				admin_url( 'edit.php' )
 			),
-			'upgrade_url'  => 'https://easydigitaldownloads.com/pricing',
-			'name'         => __( 'Recurring Payments', 'easy-digital-downloads' ),
 		);
 	}
 
-	public function add_recurring_section( $sections ) {
+	/**
+	 * Adds the Recurring Payments section to the settings.
+	 *
+	 * @param array $sections
+	 * @return array
+	 */
+	public function add_section( $sections ) {
 		if ( $this->is_activated() ) {
 			return $sections;
 		}
 
-		$sections['recurring'] = $this->config['name'];
+		$sections['recurring'] = __( 'Recurring Payments', 'easy-digital-downloads' );
 
 		return $sections;
 	}
 
+	/**
+	 * Registers the setting/hook to display the extension card.
+	 *
+	 * @param array $settings
+	 * @return array
+	 */
 	public function setting( $settings ) {
 		if ( $this->is_activated() ) {
 			return $settings;
@@ -88,7 +93,9 @@ class Recurring extends Extension {
 	 * @return bool True if Recurring is active.
 	 */
 	protected function is_activated() {
-		return class_exists( 'EDD_Recurring' ) && is_plugin_active( $this->config['pro_plugin'] );
+		$config = $this->get_configuration();
+
+		return class_exists( 'EDD_Recurring' ) && is_plugin_active( $config['pro_plugin'] );
 	}
 }
 

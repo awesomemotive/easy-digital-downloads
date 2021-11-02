@@ -80,7 +80,7 @@ class Extension_Manager {
 	 * @param array $link_parameters   The array of information needed to build the link.
 	 * @return void
 	 */
-	public function do_extension_field( $item_id, $button_parameters, $link_parameters ) {
+	public function do_extension_card( $item_id, $button_parameters, $link_parameters ) {
 		$product = $this->get_product_data( $item_id );
 		if ( ! $product ) {
 			return;
@@ -96,7 +96,9 @@ class Extension_Manager {
 			<?php if ( ! empty( $product->info->thumbnail ) ) : ?>
 				<img class="edd-extension-manager__image" src="<?php echo esc_url( $product->info->thumbnail ); ?>" />
 			<?php endif; ?>
-			<p class="edd-extension-manager__description"><?php echo wp_kses_post( $product->info->excerpt ); ?></p>
+			<?php if ( ! empty( $product->info->excerpt ) ) : ?>
+				<p class="edd-extension-manager__description"><?php echo wp_kses_post( $product->info->excerpt ); ?></p>
+			<?php endif; ?>
 			<div class="edd-extension-manager__group">
 				<div class="edd-extension-manager__step">
 					<?php $this->button( $button_parameters ); ?>
