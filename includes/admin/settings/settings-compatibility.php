@@ -70,6 +70,19 @@ add_action(
 			add_filter( 'edd_settings_marketing', 'edd_free_downloads_add_settings' );
 		}
 
+		/**
+		 * Move the ActiveCampaign settings to the Marketing section (EDD 2.11.x).
+		 */
+		if ( function_exists( 'edd_activecampaign' ) ) {
+			$activecampaign = edd_activecampaign();
+			if ( false !== has_filter( 'edd_settings_sections_extensions', array( $activecampaign, 'settings_section' ) ) ) {
+				remove_filter( 'edd_settings_sections_extensions', array( $activecampaign, 'settings_section' ) );
+				add_filter( 'edd_settings_sections_marketing', array( $activecampaign, 'settings_section' ) );
+				remove_filter( 'edd_settings_extensions', array( $activecampaign, 'register_settings' ) );
+				add_filter( 'edd_settings_marketing', array( $activecampaign, 'register_settings' ) );
+			}
+		}
+
 	},
 	99
 );
