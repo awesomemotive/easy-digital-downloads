@@ -1,0 +1,80 @@
+<?php
+/**
+ * Licensing Functions
+ *
+ * Functions used for saving and/or retrieving information about EDD licensed products
+ * running on the site.
+ *
+ * @package   easy-digital-downloads
+ * @copyright Copyright (c) 2021, Easy Digital Downloads
+ * @license   GPL2+
+ * @since     2.11.4
+ */
+
+namespace EDD\Licensing;
+
+/**
+ * Saves an option in the database with the information from the `$edd_licensed_products`
+ * global. This only runs in the context of WP-Admin, because that's the only place we
+ * can be certain that the information is accurate.
+ *
+ * @link https://github.com/awesomemotive/easy-digital-downloads/issues/8969
+ *
+ * @global $edd_licensed_products
+ */
+add_action( 'admin_init', function () {
+	if ( ! is_admin() ) {
+		return;
+	}
+
+	$savedOption = get_option( 'edd_licensed_products', array() );
+
+	/*
+	 * We only want to update this option once per day. If the timeout has expired
+	 * then update it with product information.
+	 *
+	 * Note: We always save this option, even if `$edd_licensed_products` is empty.
+	 * This is to help designate that the information has been checked and saved,
+	 * even if there are no licensed products.
+	 */
+	if ( empty( $savedOption['timeout'] ) || $savedOption['timeout'] < time() ) {
+		global $edd_licensed_products;
+
+		update_option( 'edd_licensed_products', json_encode( array(
+			'timeout'  => strtotime( '+1 day' ),
+			'products' => $edd_licensed_products,
+		) ) );
+	}
+}, 200 );
+
+/**
+ * Returns licensed EDD products that are active on this site.
+ * Array values are the `$item_shortname` from `\EDD_License`
+ *
+ * @see \EDD_License::$item_shortname
+ *
+ * @since 2.11.4
+ * @return array
+ */
+function get_licensed_products() {
+	$products = get_option( 'edd_licensed_products' );
+
+	/*
+	 * If this isn't set for some reason, fall back to trying the global. There are
+	 * probably a very limited number of cases where the option would be empty when
+	 * the global is not, but worth a shot.
+	 */
+	if ( empty( $products ) ) {
+		global $edd_licensed_products;
+
+		return ! empty( $edd_licensed_products ) && is_array( $edd_licensed_products )
+			? $edd_licensed_products
+			: array();
+	}
+
+	$products = json_decode( $products, true );
+
+	return isset( $products['products'] ) && is_array( $products['products'] )
+		? $products['products']
+		: array();
+}
