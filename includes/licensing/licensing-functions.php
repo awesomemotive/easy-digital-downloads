@@ -27,7 +27,7 @@ add_action( 'admin_init', function () {
 		return;
 	}
 
-	$savedOption = get_option( 'edd_licensed_products', array() );
+	$saved_products = get_option( 'edd_licensed_products', array() );
 
 	/*
 	 * We only want to update this option once per day. If the timeout has expired
@@ -37,7 +37,7 @@ add_action( 'admin_init', function () {
 	 * This is to help designate that the information has been checked and saved,
 	 * even if there are no licensed products.
 	 */
-	if ( empty( $savedOption['timeout'] ) || $savedOption['timeout'] < time() ) {
+	if ( empty( $saved_products['timeout'] ) || $saved_products['timeout'] < time() ) {
 		global $edd_licensed_products;
 
 		update_option( 'edd_licensed_products', json_encode( array(
