@@ -78,3 +78,20 @@ function get_licensed_extension_slugs() {
 		? $products['products']
 		: array();
 }
+
+/**
+ * Triggers our hook for registering licenses.
+ * This needs to run after all plugins have definitely been loaded.
+ *
+ * @since 2.11.4
+ */
+add_action( 'plugins_loaded', function() {
+	/**
+	 * Extensions should hook in here to register their `EDD_License` object.
+	 *
+	 * @since 2.11.4
+	 *
+	 * @param \EDD\Licensing\LicenseRegistry
+	 */
+	do_action( 'edd_extension_license_init', EDD()->licenseRegistry );
+}, PHP_INT_MAX );
