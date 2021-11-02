@@ -20,7 +20,7 @@ class Five_Star_Review_Dashboard extends Notice {
 	/**
 	 * Type of promotional notice.
 	 */
-	const TYPE = 'dashboard-widget';
+	const TYPE = 'dashboard';
 
 	/**
 	 * Capability required to view or dismiss the notice.
@@ -182,9 +182,9 @@ class Five_Star_Review_Dashboard extends Notice {
 	private function url() {
 		$args = array(
 			'utm_source'   => urlencode( $this->screen ),
-			'utm_medium'   => 'review-request',
-			'utm_campaign' => 'admin',
-			'utm_content'  => 'top-promo',
+			'utm_medium'   => urlencode( static::TYPE ),
+			'utm_campaign' => 'Feedback',
+			'utm_content'  => 'give-feedback',
 		);
 
 		return add_query_arg(
