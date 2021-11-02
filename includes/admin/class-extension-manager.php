@@ -129,17 +129,15 @@ class Extension_Manager {
 			$args['data-plugin'] = $this->get_extension_download_url( $args['data-plugin'] );
 		}
 		?>
-		<p>
-			<button
-				class="button <?php echo esc_attr( $args['button_class'] ); ?> edd-extension-manager__action"
-				data-plugin="<?php echo esc_attr( $args['data-plugin'] ); ?>"
-				data-action="<?php echo esc_attr( $args['data-action'] ); ?>"
-				data-type="<?php echo esc_attr( $args['type'] ); ?>"
-				data-pass="<?php echo esc_attr( $this->required_pass_id ); ?>"
-			>
-				<?php echo esc_html( $args['button_text'] ); ?>
-			</button>
-		</p>
+		<button
+			class="button <?php echo esc_attr( $args['button_class'] ); ?> edd-extension-manager__action"
+			data-plugin="<?php echo esc_attr( $args['data-plugin'] ); ?>"
+			data-action="<?php echo esc_attr( $args['data-action'] ); ?>"
+			data-type="<?php echo esc_attr( $args['type'] ); ?>"
+			data-pass="<?php echo esc_attr( $this->required_pass_id ); ?>"
+		>
+			<?php echo esc_html( $args['button_text'] ); ?>
+		</button>
 		<?php
 		wp_print_scripts( 'edd-extension-manager' );
 	}
@@ -160,15 +158,13 @@ class Extension_Manager {
 			return;
 		}
 		?>
-		<p>
-			<a
-				class="button <?php echo esc_attr( $args['button_class'] ); ?>"
-				href="<?php echo esc_url( $args['href'] ); ?>"
-				<?php echo ! empty( $args['new_tab'] ) ? ' target="_blank"' : ''; ?>
-			>
-				<?php echo esc_html( $args['button_text'] ); ?>
-			</a>
-		</p>
+		<a
+			class="button <?php echo esc_attr( $args['button_class'] ); ?>"
+			href="<?php echo esc_url( $args['href'] ); ?>"
+			<?php echo ! empty( $args['new_tab'] ) ? ' target="_blank"' : ''; ?>
+		>
+			<?php echo esc_html( $args['button_text'] ); ?>
+		</a>
 		<?php
 	}
 
