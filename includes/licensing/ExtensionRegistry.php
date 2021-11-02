@@ -1,6 +1,6 @@
 <?php
 /**
- * License Registry
+ * Extension Registry
  *
  * Responsible for holding all the `EDD_License` objects instantiated by extensions.
  * This allows EDD core to be aware of all the premium extensions that are activated
@@ -14,17 +14,17 @@
 
 namespace EDD\Licensing;
 
-class LicenseRegistry extends \ArrayObject {
+class ExtensionRegistry extends \ArrayObject {
 
 	/**
 	 * Adds a license to the registry.
 	 *
 	 * @since 2.11.4
 	 *
-	 * @param int          $extensionId The extension's unique product ID.
-	 * @param \EDD_License $license     License object for this extension.
+	 * @param int               $extensionId The extension's unique product ID.
+	 * @param LicensedExtension $license     License object for this extension.
 	 */
-	public function addLicense( $extensionId, \EDD_License $license ) {
+	public function addLicense( $extensionId, LicensedExtension $license ) {
 		if ( $this->offsetExists( $extensionId ) ) {
 			throw new \InvalidArgumentException( sprintf(
 				'The extension %d is already registered.',
@@ -42,7 +42,7 @@ class LicenseRegistry extends \ArrayObject {
 	 *
 	 * @param int $extensionId The extension's unique product ID.
 	 *
-	 * @return \EDD_License
+	 * @return LicensedExtension
 	 * @throws \Exception
 	 */
 	public function getLicense( $extensionId ) {
@@ -57,13 +57,13 @@ class LicenseRegistry extends \ArrayObject {
 	}
 
 	/**
-	 * Returns all registered licenses.
+	 * Returns all registered extensions.
 	 *
 	 * @since 2.11.4
 	 *
 	 * @return array
 	 */
-	public function getLicenses() {
+	public function getRegisteredProducts() {
 		return $this->getArrayCopy();
 	}
 
