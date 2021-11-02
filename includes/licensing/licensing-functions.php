@@ -48,7 +48,7 @@ add_action( 'admin_init', function () {
 }, 200 );
 
 /**
- * Returns licensed EDD products that are active on this site.
+ * Returns licensed EDD extensions that are active on this site.
  * Array values are the `$item_shortname` from `\EDD_License`
  *
  * @see \EDD_License::$item_shortname
@@ -56,7 +56,7 @@ add_action( 'admin_init', function () {
  * @since 2.11.4
  * @return array
  */
-function get_licensed_products() {
+function get_licensed_extension_slugs() {
 	$products = get_option( 'edd_licensed_products' );
 
 	/*
