@@ -2368,3 +2368,15 @@ body.admin-bar #edd-notifications-panel {
 	gap: 5px;
 	margin-top: 10px;
 }
+.edd-notification--dismiss {
+	background: none !important;
+	border: none !important;
+	box-shadow: none !important;
+	color: #8c8f9a !important;
+	cursor: pointer;
+	padding: 0 10px;
+	text-decoration: underline;
+}
+.edd-notification--dismiss:hover {
+	text-decoration: none;
+}

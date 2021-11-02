@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 2.11.3.1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2021-11-01 12:45:59+00:00\n"
+"POT-Creation-Date: 2021-11-02 12:32:58+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,7 +24,7 @@ msgstr ""
 "X-Textdomain-Support: yes\n"
 "X-Generator: grunt-wp-i18n 1.0.3\n"
 
-#: easy-digital-downloads.php:183 easy-digital-downloads.php:195
+#: easy-digital-downloads.php:191 easy-digital-downloads.php:203
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
@@ -213,7 +213,7 @@ msgid "Easy Digital Downloads Settings"
 msgstr ""
 
 #: includes/admin/admin-pages.php:41
-#: includes/admin/settings/display-settings.php:95
+#: includes/admin/settings/display-settings.php:127
 msgid "Settings"
 msgstr ""
 
@@ -231,7 +231,7 @@ msgid "Easy Digital Downloads Extensions"
 msgstr ""
 
 #: includes/admin/admin-pages.php:43 includes/admin/plugins.php:57
-#: includes/admin/settings/contextual-help.php:84
+#: includes/admin/settings/contextual-help.php:88
 #: includes/admin/settings/register-settings.php:1378
 msgid "Extensions"
 msgstr ""
@@ -1323,7 +1323,7 @@ msgstr ""
 #: includes/admin/downloads/contextual-help.php:28
 #: includes/admin/payments/contextual-help.php:29
 #: includes/admin/reporting/contextual-help.php:29
-#: includes/admin/settings/contextual-help.php:29
+#: includes/admin/settings/contextual-help.php:32
 msgid "For more information:"
 msgstr ""
 
@@ -1331,7 +1331,7 @@ msgstr ""
 #: includes/admin/downloads/contextual-help.php:29
 #: includes/admin/payments/contextual-help.php:30
 #: includes/admin/reporting/contextual-help.php:30
-#: includes/admin/settings/contextual-help.php:30
+#: includes/admin/settings/contextual-help.php:33
 msgid ""
 "Visit the <a href=\"%s\">documentation</a> on the Easy Digital Downloads "
 "website."
@@ -1347,7 +1347,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/discounts/contextual-help.php:35
-#: includes/admin/settings/contextual-help.php:39
+#: includes/admin/settings/contextual-help.php:42
 #: includes/admin/settings/register-settings.php:1370
 #: includes/admin/settings/register-settings.php:1436
 #: includes/admin/settings/register-settings.php:1441
@@ -3209,7 +3209,7 @@ msgid "Payment Methods"
 msgstr ""
 
 #: includes/admin/reporting/reports.php:59
-#: includes/admin/settings/contextual-help.php:68
+#: includes/admin/settings/contextual-help.php:72
 #: includes/admin/settings/register-settings.php:1374
 msgid "Taxes"
 msgstr ""
@@ -3348,61 +3348,68 @@ msgstr ""
 msgid "Download a CSV of all sales."
 msgstr ""
 
-#: includes/admin/settings/contextual-help.php:32
+#: includes/admin/settings/contextual-help.php:35
 msgid ""
 "Need more from your Easy Digital Downloads store? <a href=\"%s\">Upgrade "
 "Now!</a>."
 msgstr ""
 
-#: includes/admin/settings/contextual-help.php:40
+#: includes/admin/settings/contextual-help.php:43
 msgid ""
 "This screen provides the most basic settings for configuring your store. "
-"You can set the currency, page templates, and turn <em>Test Mode</em> on "
-"and off."
-msgstr ""
-
-#: includes/admin/settings/contextual-help.php:45
-#: includes/admin/settings/register-settings.php:423
-msgid "Payment Gateways"
-msgstr ""
-
-#: includes/admin/settings/contextual-help.php:47
-msgid ""
-"This screen provides ways to toggle payment gateways on or off, as well as "
-"configure gateway-specific settings. Any extra payment gateway extensions "
-"you have installed will appear on this page, and can be configured to suit "
-"your needs."
+"You can set the currency, page templates, and general store settings."
 msgstr ""
 
 #: includes/admin/settings/contextual-help.php:48
+#: includes/admin/settings/register-settings.php:1371
+msgid "Payments"
+msgstr ""
+
+#: includes/admin/settings/contextual-help.php:50
+msgid ""
+"This screen provides ways to enable Test Mode, toggle payment gateways on "
+"or off, manage accounting settings, and configure gateway-specific "
+"settings. Any extra payment gateway extensions you have installed will "
+"appear on this page, and can be configured to suit your needs."
+msgstr ""
+
+#: includes/admin/settings/contextual-help.php:51
 msgid ""
 "<strong>Test Payment</strong> - This included gateway is great for testing "
 "your store, as it requires no payment, and leads straight to product "
 "downloads. However, please remember to turn it off once your site is live!"
 msgstr ""
 
-#: includes/admin/settings/contextual-help.php:49
+#: includes/admin/settings/contextual-help.php:52
 msgid ""
 "<strong>PayPal</strong> - A PayPal payment gateway is included as standard "
 "with Easy Digital Downloads. To test the PayPal gateway, you need a Sandbox "
 "account for PayPal and the site must be placed in Test Mode from the "
-"General settings tab. Please remember to enter your PayPal account email "
+"Payments > Gateways tab. Please remember to enter your PayPal account email "
 "address in order for payments to get processed."
 msgstr ""
 
-#: includes/admin/settings/contextual-help.php:54
+#: includes/admin/settings/contextual-help.php:53
+msgid ""
+"<strong>Stripe</strong> - The Stripe payment gateway is also included with "
+"Easy Digital Downloads. To test the Stripe gateway, you must \"Connect with "
+"Stripe\" and the site must be placed in Test Mode from the Payments > "
+"Gateways tab."
+msgstr ""
+
+#: includes/admin/settings/contextual-help.php:58
 #: includes/admin/settings/register-settings.php:1372
 msgid "Emails"
 msgstr ""
 
-#: includes/admin/settings/contextual-help.php:56
+#: includes/admin/settings/contextual-help.php:60
 msgid ""
 "This screen allows you to customize how emails act throughout your store. "
 "You can choose a premade template, set the sender's name, email address, "
 "and subject."
 msgstr ""
 
-#: includes/admin/settings/contextual-help.php:57
+#: includes/admin/settings/contextual-help.php:61
 msgid ""
 "A set of email tags has also been provided to allow the creation of "
 "personalized emails. A tag consists of a keyword surrounded by curly "
@@ -3410,48 +3417,48 @@ msgid ""
 "below the editor."
 msgstr ""
 
-#: includes/admin/settings/contextual-help.php:62
+#: includes/admin/settings/contextual-help.php:66
 #: includes/admin/settings/register-settings.php:1373
 msgid "Styles"
 msgstr ""
 
-#: includes/admin/settings/contextual-help.php:63
+#: includes/admin/settings/contextual-help.php:67
 msgid ""
 "This screen allows customization of your store's styles. For complete "
 "control, you can completely disable all styles generated by the plugin."
 msgstr ""
 
-#: includes/admin/settings/contextual-help.php:70
+#: includes/admin/settings/contextual-help.php:74
 msgid "This screen allows you to configure the tax rules for your store."
 msgstr ""
 
-#: includes/admin/settings/contextual-help.php:71
+#: includes/admin/settings/contextual-help.php:75
 msgid ""
 "If you do not wish to charge any tax on purchase, simply leave the Enable "
 "Taxes option unchecked."
 msgstr ""
 
-#: includes/admin/settings/contextual-help.php:72
+#: includes/admin/settings/contextual-help.php:76
 msgid ""
 "<strong>Default Tax Rate</strong>: The default tax rate is the tax rate "
 "charged to customers located in your base country / state or province."
 msgstr ""
 
-#: includes/admin/settings/contextual-help.php:73
+#: includes/admin/settings/contextual-help.php:77
 msgid ""
 "<strong>Base Country</strong>: This determines the country that is loaded "
 "by default on the checkout screen for customers that do not have an address "
 "stored in their account."
 msgstr ""
 
-#: includes/admin/settings/contextual-help.php:74
+#: includes/admin/settings/contextual-help.php:78
 msgid ""
 "<strong>Base State / Province</strong>: This determines the state / "
 "province that is loaded by default on the checkout screen for customers "
 "that do not have an address stored in their account."
 msgstr ""
 
-#: includes/admin/settings/contextual-help.php:75
+#: includes/admin/settings/contextual-help.php:79
 msgid ""
 "<strong>Prices Entered with Tax</strong>: if enabled, this means that the "
 "price entered on the product edit screens is the total amount the customer "
@@ -3460,20 +3467,20 @@ msgid ""
 "will be calculated automatically."
 msgstr ""
 
-#: includes/admin/settings/contextual-help.php:76
+#: includes/admin/settings/contextual-help.php:80
 msgid ""
 "<strong>Display Tax Rate on Prices</strong>: when enabled, the amount the "
 "customer is expected to pay in tax will be displayed below purchase buttons."
 msgstr ""
 
-#: includes/admin/settings/contextual-help.php:77
+#: includes/admin/settings/contextual-help.php:81
 msgid ""
 "<strong>Display During Checkout</strong>: This determines whether prices "
 "are shown with taxes or without taxes on checkout. If set to Including Tax, "
 "a $10 product with a 10% tax will be shown as $11."
 msgstr ""
 
-#: includes/admin/settings/contextual-help.php:78
+#: includes/admin/settings/contextual-help.php:82
 msgid ""
 "<strong>Calculate Tax After Discounts</strong>: If enabled, this option "
 "will make it so that tax is calculated on the after-discount amount. If a "
@@ -3481,51 +3488,53 @@ msgid ""
 "calculated off of $16 instead of $20."
 msgstr ""
 
-#: includes/admin/settings/contextual-help.php:79
+#: includes/admin/settings/contextual-help.php:83
 msgid ""
 "<strong>Additional Tax Rates</strong>: This section lets you add tax rates "
 "for specific countries and/or states/provinces in those countries."
 msgstr ""
 
-#: includes/admin/settings/contextual-help.php:85
+#: includes/admin/settings/contextual-help.php:89
 msgid ""
 "This screen provides access to settings added by most Easy Digital "
 "Downloads extensions."
 msgstr ""
 
-#: includes/admin/settings/contextual-help.php:90
+#: includes/admin/settings/contextual-help.php:94
 #: includes/admin/settings/register-settings.php:1451
 msgid "Miscellaneous"
 msgstr ""
 
-#: includes/admin/settings/contextual-help.php:92
+#: includes/admin/settings/contextual-help.php:96
 msgid ""
-"This screen provides other miscellaneous options such as disabling jQuery, "
-"allowing guest checkout, and configuring your terms of service."
+"This screen provides other miscellaneous options such as configuring your "
+"store buttons, file download functionality, and terms of service."
 msgstr ""
 
-#: includes/admin/settings/contextual-help.php:93
-msgid "A description of all the options are provided beside their input boxes."
+#: includes/admin/settings/display-settings.php:45
+#. Translators: %1$s number of notifications; %2$s opening span tag; %3$s
+#. closing span tag
+msgid "%1$s %2$sunread notifications%3$s"
 msgstr ""
 
-#: includes/admin/settings/display-settings.php:226
+#: includes/admin/settings/display-settings.php:257
 msgid ""
 "Save 25% on all Easy Digital Downloads purchases <strong>this "
 "week</strong>, including renewals and upgrades!"
 msgstr ""
 
-#: includes/admin/settings/display-settings.php:229
+#: includes/admin/settings/display-settings.php:260
 msgid "Use code at checkout:"
 msgstr ""
 
-#: includes/admin/settings/display-settings.php:231
+#: includes/admin/settings/display-settings.php:262
 msgid ""
 "Sale ends 23:59 PM December 6th CST. Save 25% on <a "
 "href=\"https://sandhillsdev.com/projects/\" target=\"_blank\">our other "
 "plugins</a>."
 msgstr ""
 
-#: includes/admin/settings/display-settings.php:234
+#: includes/admin/settings/display-settings.php:265
 msgid "Shop Now!"
 msgstr ""
 
@@ -3732,6 +3741,10 @@ msgid ""
 "While in test mode no live transactions are processed. To fully use test "
 "mode, you must have a sandbox (test) account for the payment gateway you "
 "are testing."
+msgstr ""
+
+#: includes/admin/settings/register-settings.php:423
+msgid "Payment Gateways"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:424
@@ -4488,10 +4501,6 @@ msgstr ""
 
 #: includes/admin/settings/register-settings.php:1276
 msgid "%s could not be set as the default gateway. It must first be enabled."
-msgstr ""
-
-#: includes/admin/settings/register-settings.php:1371
-msgid "Payments"
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:1375
@@ -5354,6 +5363,27 @@ msgstr ""
 msgid "Step %d of approximately %d running"
 msgstr ""
 
+#: includes/admin/views/notifications.php:35
+#. Translators: %s - number of notifications
+msgid "(%s) New Notifications"
+msgstr ""
+
+#: includes/admin/views/notifications.php:49
+msgid "Close panel"
+msgstr ""
+
+#: includes/admin/views/notifications.php:85
+msgid "Dismiss"
+msgstr ""
+
+#: includes/admin/views/notifications.php:95
+msgid "You have no new notifications."
+msgstr ""
+
+#: includes/admin/views/notifications.php:101
+msgid "Loading notifications..."
+msgstr ""
+
 #: includes/ajax-functions.php:143 includes/cart/actions.php:112
 msgid ""
 "Missing nonce when removing an item from the cart. Please read the "
@@ -5487,6 +5517,14 @@ msgstr ""
 
 #: includes/api/class-edd-api.php:1997 includes/api/class-edd-api.php:1999
 msgid "You do not have permission to %s API keys for this user"
+msgstr ""
+
+#: includes/api/v3/Notifications.php:41
+msgid "ID of the notification."
+msgstr ""
+
+#: includes/api/v3/Notifications.php:116
+msgid "Failed to update notification."
 msgstr ""
 
 #: includes/cart/class-edd-cart.php:897
@@ -8868,6 +8906,11 @@ msgid ""
 "Downloads version %3$s with no alternative available."
 msgstr ""
 
+#: includes/models/Notification.php:187
+#. Translators: %s - a length of time (e.g. "1 second")
+msgid "%s ago"
+msgstr ""
+
 #: includes/payments/actions.php:187
 msgid "After payment actions processed."
 msgstr ""
@@ -9685,19 +9728,19 @@ msgstr ""
 msgid "Please wait &hellip;"
 msgstr ""
 
-#: includes/scripts.php:248
+#: includes/scripts.php:256
 msgid "Purchase Limit Settings"
 msgstr ""
 
-#: includes/scripts.php:249
+#: includes/scripts.php:257
 msgid "Simple Shipping Settings"
 msgstr ""
 
-#: includes/scripts.php:250
+#: includes/scripts.php:258
 msgid "Software Licensing Settings"
 msgstr ""
 
-#: includes/scripts.php:251
+#: includes/scripts.php:259
 msgid "Recurring Payments Settings"
 msgstr ""
 
