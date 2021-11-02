@@ -146,7 +146,11 @@ class Extension_Manager {
 			<?php echo esc_html( $args['button_text'] ); ?>
 		</button>
 		<?php
-		wp_print_scripts( 'edd-extension-manager' );
+		add_action( 'admin_print_footer_scripts', function() {
+			if ( ! wp_script_is( 'edd-extension-manager', 'enqueued' ) ) {
+				wp_print_scripts( 'edd-extension-manager' );
+			}
+		} );
 	}
 
 	/**
