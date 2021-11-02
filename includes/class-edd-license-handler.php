@@ -364,7 +364,7 @@ class EDD_License {
 
 		// Clear the option for licensed extensions to force regeneration.
 		if ( ! empty( $api_data->license ) && 'valid' === $api_data->license ) {
-			delete_option( 'edd_licensed_products' );
+			delete_option( 'edd_licensed_extensions' );
 		}
 
 		update_option( $this->item_shortname . '_license_active', $license_data );
