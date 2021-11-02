@@ -2203,9 +2203,14 @@ td.edd_order_price {
 ------------------------------------------------------------- */
 .edd-extension-manager__card {
 	background-color: #fff;
-	padding: 20px;
+	padding: 2em;
 	width: 100%;
 	max-width: 400px;
+	margin: 24px 0;
+	}
+
+	.edd-extension-manager__title {
+		margin: 0 0 1.5em 0;
 }
 
 .edd-extension-manager__group {
@@ -2213,11 +2218,11 @@ td.edd_order_price {
 }
 
 .edd-extension-manager__image {
-	margin: 0 auto 16px;
+	margin: 0 auto 1em;
 	width: 100%;
 }
 
 .edd-extension-manager__step {
 	grid-area: 1/-1;
-	margin: 16px 0;
+	margin: 1em 0 0 0;
 }
