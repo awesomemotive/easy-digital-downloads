@@ -79,7 +79,7 @@
 
 								<button
 									type="button"
-									class="button edd-notification--dismiss"
+									class="edd-notification--dismiss"
 									x-on:click="$store.eddNotifications.dismiss( $event, index )"
 								>
 									<?php esc_html_e( 'Dismiss', 'easy-digital-downloads' ); ?>
