@@ -34,18 +34,11 @@ class Recurring extends Extension {
 	 */
 	protected function get_configuration( $item_id = false ) {
 		return array(
-			'item_id'      => 28530,
-			'name'         => __( 'Recurring Payments', 'easy-digital-downloads' ),
-			'pro_plugin'   => 'edd-recurring/edd-recurring.php',
-			'settings_url' => add_query_arg(
-				array(
-					'post_type' => 'download',
-					'page'      => 'edd-settings',
-					'tab'       => 'gateways',
-					'section'   => 'recurring',
-				),
-				admin_url( 'edit.php' )
-			),
+			'item_id'    => 28530,
+			'name'       => __( 'Recurring Payments', 'easy-digital-downloads' ),
+			'pro_plugin' => 'edd-recurring/edd-recurring.php',
+			'tab'        => 'gateways',
+			'section'    => 'recurring',
 		);
 	}
 
