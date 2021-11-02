@@ -83,11 +83,8 @@ class Pass_Manager {
 			$this->has_pass_data = true;
 		}
 
-		$this->highest_pass_id = $this->get_highest_pass_id();
-
-		global $edd_licensed_products;
-
-		$this->number_license_keys = is_array( $edd_licensed_products ) ? count( $edd_licensed_products ) : 0;
+		$this->highest_pass_id     = $this->get_highest_pass_id();
+		$this->number_license_keys = count( \EDD\Licensing\get_licensed_products() );
 	}
 
 	/**
