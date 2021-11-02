@@ -13,35 +13,6 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Registers the dashboard widgets
- *
- * @author Sunny Ratilal
- * @since 1.2.2
- * @return void
- */
-function edd_register_dashboard_widgets() {
-	if ( current_user_can( apply_filters( 'edd_dashboard_stats_cap', 'view_shop_reports' ) ) ) {
-		wp_add_dashboard_widget( 'edd_dashboard_sales', __('Sales Summary','easy-digital-downloads' ), 'edd_dashboard_sales_widget' );
-	}
-}
-add_action('wp_dashboard_setup', 'edd_register_dashboard_widgets', 10 );
-
-/**
- * Sales Summary Dashboard Widget
- *
- * Builds and renders the Sales Summary dashboard widget. This widget displays
- * the current month's sales and earnings, total sales and earnings best selling
- * downloads as well as recent purchases made on your EDD Store.
- *
- * @author Sunny Ratilal
- * @since 1.2.2
- * @return void
- */
-function edd_dashboard_sales_widget( ) {
-	echo '<p><img src=" ' . esc_attr( set_url_scheme( EDD_PLUGIN_URL . 'assets/images/loading.gif', 'relative' ) ) . '"/></p>';
-}
-
-/**
  * Loads the dashboard sales widget via ajax
  *
  * @since 2.1
