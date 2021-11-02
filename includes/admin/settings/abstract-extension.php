@@ -122,7 +122,15 @@ abstract class Extension {
 		return array(
 			/* translators: The extension name. */
 			'button_text' => sprintf( __( 'Configure %s', 'easy-digital-downloads' ), $config['name'] ),
-			'href'        => admin_url( $config['settings_url'] ),
+			'href'        => add_query_arg(
+				array(
+					'post_type' => 'download',
+					'page'      => 'edd-settings',
+					'tab'       => $config['tab'],
+					'section'   => $config['section'],
+				),
+				admin_url( 'edit.php' )
+			),
 		);
 	}
 }
