@@ -2201,16 +2201,21 @@ td.edd_order_price {
 
 /* Extension Manager
 ------------------------------------------------------------- */
+.edd-extension-manager__card-group {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+	gap: 1em;
+}
+
 .edd-extension-manager__card {
 	background-color: #fff;
 	padding: 2em;
-	width: 100%;
 	max-width: 400px;
 	margin: 24px 0;
-	}
+}
 
-	.edd-extension-manager__title {
-		margin: 0 0 1.5em 0;
+.edd-extension-manager__title {
+	margin: 0 0 1em 0;
 }
 
 .edd-extension-manager__group {
