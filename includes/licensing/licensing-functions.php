@@ -27,7 +27,7 @@ add_action( 'admin_init', function () {
 		return;
 	}
 
-	$saved_products = get_option( 'edd_licensed_products', array() );
+	$saved_products = get_option( 'edd_licensed_extensions', array() );
 
 	/*
 	 * We only want to update this option once per day. If the timeout has expired
@@ -40,7 +40,7 @@ add_action( 'admin_init', function () {
 	if ( empty( $saved_products['timeout'] ) || $saved_products['timeout'] < time() ) {
 		global $edd_licensed_products;
 
-		update_option( 'edd_licensed_products', json_encode( array(
+		update_option( 'edd_licensed_extensions', json_encode( array(
 			'timeout'  => strtotime( '+1 day' ),
 			'products' => $edd_licensed_products,
 		) ) );
@@ -57,7 +57,7 @@ add_action( 'admin_init', function () {
  * @return array
  */
 function get_licensed_extension_slugs() {
-	$products = get_option( 'edd_licensed_products' );
+	$products = get_option( 'edd_licensed_extensions' );
 
 	/*
 	 * If this isn't set for some reason, fall back to trying the global. There are
