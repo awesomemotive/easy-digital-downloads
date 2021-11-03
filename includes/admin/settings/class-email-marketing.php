@@ -14,11 +14,6 @@ namespace EDD\Admin\Settings;
 
 class EmailMarketing extends Extension {
 
-	/**
-	 * The pass level required to automatically download this extension.
-	 */
-	const PASS_LEVEL = \EDD\Admin\Pass_Manager::PERSONAL_PASS_ID;
-
 	public function __construct() {
 		add_filter( 'edd_settings_sections_marketing', array( $this, 'add_section' ) );
 		add_action( 'edd_settings_tab_top_marketing_email_marketing', array( $this, 'field' ) );
@@ -27,8 +22,9 @@ class EmailMarketing extends Extension {
 	}
 
 	/**
-	 * Gets the configuration for Recurring.
+	 * Gets the configuration for the newsletter extensions.
 	 *
+	 * @since 2.11.x
 	 * @return array
 	 */
 	protected function get_configuration( $item_id = false ) {
@@ -40,6 +36,7 @@ class EmailMarketing extends Extension {
 	/**
 	 * Adds an email marketing section to the Marketing tab.
 	 *
+	 * @since 2.11.x
 	 * @param array $sections
 	 * @return array
 	 */
@@ -56,6 +53,7 @@ class EmailMarketing extends Extension {
 	/**
 	 * Adds the email marketing extensions as cards.
 	 *
+	 * @since 2.11.x
 	 * @return void
 	 */
 	public function field() {
@@ -70,6 +68,18 @@ class EmailMarketing extends Extension {
 		</div>
 		<style>p.submit{display:none;}</style>
 		<?php
+	}
+
+	/**
+	 * Overrides the body array sent to the Products API.
+	 *
+	 * @since 2.11.x
+	 * @return array
+	 */
+	protected function get_api_body() {
+		return array(
+			'tag' => 1578,
+		);
 	}
 
 	/**
