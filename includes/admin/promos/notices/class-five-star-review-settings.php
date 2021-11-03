@@ -5,7 +5,7 @@
  * @package   easy-digital-downloads
  * @copyright Copyright (c) 2021, Easy Digital Downloads
  * @license   GPL2+
- * @since     2.11.x
+ * @since     2.11.4
  */
 
 namespace EDD\Admin\Promos\Notices;
@@ -33,7 +33,7 @@ class Five_Star_Review_Settings extends Five_Star_Review_Dashboard {
 	 * Display the notice.
 	 * This extends the parent method because the container classes are different.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @return void
 	 */
 	public function display() {
@@ -56,7 +56,7 @@ class Five_Star_Review_Settings extends Five_Star_Review_Dashboard {
 	 * Whether the notice should display.
 	 * This extends the general method as this notice should only display on EDD settings screens.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @return bool
 	 */
 	protected function _should_display() {

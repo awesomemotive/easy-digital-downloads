@@ -138,7 +138,7 @@ class PromoHandler {
 	/**
 	 * Gets the notice class name for a given notice ID.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @param string $notice_id The notice ID to match.
 	 * @return bool|string The class name or false if no matching class was found.
 	 */
