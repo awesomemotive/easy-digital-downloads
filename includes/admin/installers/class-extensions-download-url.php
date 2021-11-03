@@ -2,49 +2,7 @@
 
 namespace EDD\Admin\Installers;
 
-class Extensions {
-
-	/**
-	 * Gets the product data from the EDD Products API.
-	 *
-	 * @since 2.11.x
-	 * @param int $item_id The product ID.
-	 * @return object
-	 */
-	public function get_product_data( $item_id ) {
-		$option_name = "edd_extension_{$item_id}_data";
-		$option      = $this->get_stored_extension_data( $option_name );
-		if ( $option ) {
-			return $option['product'];
-		}
-
-		$request = wp_remote_get(
-			$this->get_products_api_url(),
-			array(
-				'timeout'   => 15,
-				'sslverify' => true,
-				'body'      => array(
-					'product' => $item_id,
-				),
-			)
-		);
-
-		if ( ! $request || $request instanceof WP_Error ) {
-			return false;
-		}
-
-		$response = json_decode( wp_remote_retrieve_body( $request ) );
-		$product  = reset( $response->products );
-		update_option(
-			"edd_extension_{$item_id}_data",
-			array(
-				'product' => $product,
-				'timeout' => strtotime( '+1 day', time() ),
-			)
-		);
-
-		return $product;
-	}
+class ExtensionsDownloadURL {
 
 	/**
 	 * Returns the download URL for an extension.
@@ -105,7 +63,8 @@ class Extensions {
 				array(
 					'url'     => $response->download_link,
 					'timeout' => strtotime( '+1 day', time() ),
-				)
+				),
+				false
 			);
 
 			return $response->download_link;
@@ -130,20 +89,6 @@ class Extensions {
 
 		delete_option( $option_name );
 		return false;
-	}
-
-	/**
-	 * Gets the EDD REST API URL for products.
-	 *
-	 * @since 2.11.x
-	 * @return string
-	 */
-	private function get_products_api_url() {
-		if ( defined( 'EDD_PRODUCTS_API_URL' ) ) {
-			return EDD_PRODUCTS_API_URL;
-		}
-
-		return 'https://easydigitaldownloads.com/edd-api/v2/products/';
 	}
 
 	/**

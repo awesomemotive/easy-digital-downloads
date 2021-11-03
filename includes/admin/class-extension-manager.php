@@ -3,7 +3,7 @@
 namespace EDD\Admin;
 
 use \EDD\Admin\Pass_Manager;
-use \EDD\Admin\Installers\Extensions;
+use \EDD\Admin\Installers\ExtensionsDownloadURL;
 
 class Extension_Manager {
 
@@ -31,20 +31,12 @@ class Extension_Manager {
 	 */
 	protected $pass_manager;
 
-	/**
-	 * The Extensions class.
-	 *
-	 * @var \EDD\Admin\Installers\Extensions
-	 */
-	private $extensions;
-
 	public function __construct( $required_pass_id = null ) {
-		require_once EDD_PLUGIN_DIR . 'includes/admin/installers/class-extensions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/installers/class-extensions-download-url.php';
 		if ( $required_pass_id ) {
 			$this->required_pass_id = $required_pass_id;
 		}
 		$this->pass_manager = new Pass_Manager();
-		$this->extensions   = new Extensions();
 
 		add_action( 'wp_ajax_edd_activate_extension', array( $this, 'activate' ) );
 		add_action( 'wp_ajax_edd_install_extension', array( $this, 'install' ) );
@@ -75,13 +67,12 @@ class Extension_Manager {
 	 * Outputs a standard extension card.
 	 *
 	 * @since 2.11.x
-	 * @param int   $item_id           The product ID.
-	 * @param array $button_parameters The array of information needed to build the button.
-	 * @param array $link_parameters   The array of information needed to build the link.
+	 * @param object $item_id           The extension information retrieved from the Products API.
+	 * @param array  $button_parameters The array of information needed to build the button.
+	 * @param array  $link_parameters   The array of information needed to build the link.
 	 * @return void
 	 */
-	public function do_extension_card( $item_id, $button_parameters, $link_parameters ) {
-		$product = $this->get_product_data( $item_id );
+	public function do_extension_card( $product, $button_parameters, $link_parameters ) {
 		if ( ! $product ) {
 			return;
 		}
@@ -164,8 +155,9 @@ class Extension_Manager {
 		if ( 'extension' !== $type ) {
 			return $url_or_item_id;
 		}
-
-		$download_url = $this->extensions->get_url( $url_or_item_id, $this->pass_manager->highest_license_key );
+		require_once EDD_PLUGIN_DIR . 'includes/admin/installers/class-extensions-download-url.php';
+		$extensions   = new ExtensionsDownloadURL();
+		$download_url = $extensions->get_url( $url_or_item_id, $this->pass_manager->highest_license_key );
 
 		return $download_url ? $download_url : false;
 	}
@@ -194,16 +186,6 @@ class Extension_Manager {
 			<?php echo esc_html( $args['button_text'] ); ?>
 		</a>
 		<?php
-	}
-
-	/**
-	 * Gets the product data from the EDD Products API.
-	 *
-	 * @param int $id
-	 * @return object
-	 */
-	public function get_product_data( $id ) {
-		return $this->extensions->get_product_data( $id );
 	}
 
 	/**
