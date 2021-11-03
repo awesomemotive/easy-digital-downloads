@@ -83,6 +83,23 @@ add_action(
 			}
 		}
 
+		/**
+		 * Move the Mailchimp settings to the Marketing section (EDD 2.11.x).
+		 */
+		if ( class_exists( 'EDD_MailChimp' ) && class_exists( 'EDD_MailChimp_Settings' ) ) {
+			$mailchimp = new EDD_MailChimp();
+			if ( false !== has_filter( 'edd_settings_sections_extensions', array( $mailchimp::$settings, 'subsection' ) ) ) {
+				remove_filter( 'edd_settings_sections_extensions', array( $mailchimp::$settings, 'subsection' ), 10, 1 );
+				add_filter( 'edd_settings_sections_marketing', array( $mailchimp::$settings, 'subsection' ), 10, 1 );
+				remove_filter( 'edd_settings_extensions', array( $mailchimp::$settings, 'settings' ) );
+				add_filter( 'edd_settings_marketing', array( $mailchimp::$settings, 'settings' ) );
+				remove_filter( 'edd_settings_extensions_sanitize', array( $mailchimp::$settings, 'save_settings' ) );
+				add_filter( 'edd_settings_marketing_sanitize', array( $mailchimp::$settings, 'save_settings' ) );
+
+				remove_action( 'edd_settings_tab_bottom_extensions_mailchimp', array( $mailchimp::$settings, 'connected_lists' ) );
+				add_action( 'edd_settings_tab_bottom_marketing_mailchimp', array( $mailchimp::$settings, 'connected_lists' ) );
+			}
+		}
 	},
 	99
 );

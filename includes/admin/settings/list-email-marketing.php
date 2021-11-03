@@ -2,7 +2,7 @@
 
 return array(
 	746    => array(
-		'basename' => 'edd-mail-chimp/edd-mail-chimp.php',
+		'basename' => 'edd-mail-chimp/edd-mailchimp.php',
 		'tab'      => 'marketing',
 		'section'  => 'mailchimp',
 	),
