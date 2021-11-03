@@ -15,6 +15,13 @@ namespace EDD\Admin\Settings;
 class Recurring extends Extension {
 
 	/**
+	 * The product ID on EDD.
+	 *
+	 * @var integer
+	 */
+	protected $item_id = 28530;
+
+	/**
 	 * The pass level required to automatically download this extension.
 	 */
 	const PASS_LEVEL = \EDD\Admin\Pass_Manager::EXTENDED_PASS_ID;
@@ -34,7 +41,7 @@ class Recurring extends Extension {
 	 */
 	protected function get_configuration( $item_id = false ) {
 		return array(
-			'item_id'    => 28530,
+			'item_id'    => $this->item_id,
 			'name'       => __( 'Recurring Payments', 'easy-digital-downloads' ),
 			'pro_plugin' => 'edd-recurring/edd-recurring.php',
 			'tab'        => 'gateways',
