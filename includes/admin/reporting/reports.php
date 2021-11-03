@@ -156,7 +156,7 @@ function edd_reports_page() {
 	?>
 
     <div class="wrap">
-        <h1><?php _e( 'Reports', 'easy-digital-downloads' ); ?></h1>
+		<h1><?php esc_html_e( 'Reports', 'easy-digital-downloads' ); ?></h1>
 
 		<?php Reports\display_filters( EDD()->report ); ?>
 
@@ -2241,17 +2241,17 @@ function edd_register_discounts_report( $reports ) {
 								'orderby' => 'YEAR(edd_oa.date_created), MONTH(edd_oa.date_created), DAY(edd_oa.date_created)',
 							);
 
-							if ( ! $day_by_day ) {
-								$sql_clauses = array(
-									'select'  => 'YEAR(edd_oa.date_created) AS year, MONTH(edd_oa.date_created) AS month',
-									'groupby' => 'YEAR(edd_oa.date_created), MONTH(edd_oa.date_created)',
-									'orderby' => 'YEAR(edd_oa.date_created), MONTH(edd_oa.date_created)',
-								);
-							} elseif ( $hour_by_hour ) {
+							if ( $hour_by_hour ) {
 								$sql_clauses = array(
 									'select'  => 'YEAR(edd_oa.date_created) AS year, MONTH(edd_oa.date_created) AS month, DAY(edd_oa.date_created) AS day, HOUR(edd_oa.date_created) AS hour',
 									'groupby' => 'YEAR(edd_oa.date_created), MONTH(edd_oa.date_created), DAY(edd_oa.date_created), HOUR(edd_oa.date_created)',
 									'orderby' => 'YEAR(edd_oa.date_created), MONTH(edd_oa.date_created), DAY(edd_oa.date_created), HOUR(edd_oa.date_created)',
+								);
+							} elseif ( ! $day_by_day ) {
+								$sql_clauses = array(
+									'select'  => 'YEAR(edd_oa.date_created) AS year, MONTH(edd_oa.date_created) AS month',
+									'groupby' => 'YEAR(edd_oa.date_created), MONTH(edd_oa.date_created)',
+									'orderby' => 'YEAR(edd_oa.date_created), MONTH(edd_oa.date_created)',
 								);
 							}
 
@@ -2310,7 +2310,9 @@ function edd_register_discounts_report( $reports ) {
 									$timestamp = \Carbon\Carbon::create( $result->year, $result->month, $day, 0, 0, 0, 'UTC' )->setTimezone( edd_get_timezone_id() )->timestamp;
 								}
 
-								$discount_usage[ $timestamp ][1] += $result->total;
+								if ( array_key_exists( $timestamp, $discount_usage ) ) {
+									$discount_usage[ $timestamp ][1] += $result->total;
+								}
 							}
 
 							$discount_usage = array_values( $discount_usage );

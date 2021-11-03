@@ -246,6 +246,30 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 13. Pay with PayPal modal
 
 == Changelog ==
+= 2.11.3.1, November 1, 2021 =
+* Fix: Fatal error in PHP versions lower than 7.3.
+
+= 2.11.3, November 1, 2021 =
+* New: Add contextual EDD header to relevant pages.
+* New: Add quick link to EDD reports in the Dashboard menu.
+* Improvement: Update styling for settings tabs.
+* Improvement: Rename and reorganize some settings menu items.
+* Improvement: Adjust formatting of plugins list in system info file.
+* Improvement: License key fields now use a password input.
+* Fix: Undefined index: post_data error.
+* Fix: Upgrade notice not appearing after enabling sequential order numbers.
+* Fix: PayPal - Disconnecting PayPal account not working.
+* Fix: PayPal - Improve check for declined payments.
+* Fix: PayPal - Unable to switch payment gateway after opening then closing PayPal modal.
+* Fix: PayPal - Purchase can't be completed when you have a long product title.
+* Fix: Unable to use discount deactivate/activate hover actions.
+* Fix: `_edd_deprecated_function()` - only trigger error with backtrace if there is a backtrace provided.
+* Fix: API requests have unexpected output when using Query Monitor.
+* Dev: Updated `EDD_SL_Plugin_Updater` to version 1.9.1.
+
+= 2.11.2.1, October 18, 2021 =
+* Security: Fix authenticated reflected XSS on payment history list table.
+
 = 2.11.2, September 29, 2021 =
 * Improvement: PayPal - Product names now appear in PayPal.
 * Improvement: File download token validation has been reworked to be more compatible with caching.
