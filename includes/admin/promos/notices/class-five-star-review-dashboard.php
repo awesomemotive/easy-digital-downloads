@@ -5,7 +5,7 @@
  * @package   easy-digital-downloads
  * @copyright Copyright (c) 2021, Easy Digital Downloads
  * @license   GPL2+
- * @since     2.11.x
+ * @since     2.11.4
  */
 
 namespace EDD\Admin\Promos\Notices;
@@ -37,7 +37,7 @@ class Five_Star_Review_Dashboard extends Notice {
 	/**
 	 * The ID of the notice. Defined specifically here as we intend to use it twice.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @return string
 	 */
 	public function get_id() {
@@ -47,7 +47,7 @@ class Five_Star_Review_Dashboard extends Notice {
 	/**
 	 * Display the notice.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @return void
 	 */
 	public function display() {
@@ -69,7 +69,7 @@ class Five_Star_Review_Dashboard extends Notice {
 	/**
 	 * The promo notice content.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @return void
 	 */
 	public function _display() {
@@ -150,7 +150,7 @@ class Five_Star_Review_Dashboard extends Notice {
 	/**
 	 * Whether the notice should display.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @return bool
 	 */
 	protected function _should_display() {
@@ -173,7 +173,7 @@ class Five_Star_Review_Dashboard extends Notice {
 	/**
 	 * Builds the UTM parameters for the URLs.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 *
 	 * @return string
 	 */
