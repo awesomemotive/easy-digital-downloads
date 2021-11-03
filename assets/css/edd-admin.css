@@ -2205,6 +2205,7 @@ td.edd_order_price {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
 	gap: 1em;
+	margin-top: 24px;
 }
 
 .edd-extension-manager__card {
@@ -2212,6 +2213,10 @@ td.edd_order_price {
 	padding: 2em;
 	max-width: 400px;
 	margin: 24px 0;
+}
+
+.edd-extension-manager__card-group .edd-extension-manager__card {
+	margin: 0;
 }
 
 .edd-extension-manager__title {
