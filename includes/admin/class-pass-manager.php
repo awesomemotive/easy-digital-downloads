@@ -174,7 +174,11 @@ class Pass_Manager {
 	 * @return bool
 	 */
 	public function hasPersonalPass() {
-		return self::pass_compare( $this->highest_pass_id, self::PERSONAL_PASS_ID, '=' );
+		try {
+			return self::pass_compare( $this->highest_pass_id, self::PERSONAL_PASS_ID, '=' );
+		} catch ( \Exception $e ) {
+			return false;
+		}
 	}
 
 	/**
@@ -185,7 +189,11 @@ class Pass_Manager {
 	 * @return bool
 	 */
 	public function hasExtendedPass() {
-		return self::pass_compare( $this->highest_pass_id, self::EXTENDED_PASS_ID, '=' );
+		try {
+			return self::pass_compare( $this->highest_pass_id, self::EXTENDED_PASS_ID, '=' );
+		} catch ( \Exception $e ) {
+			return false;
+		}
 	}
 
 	/**
@@ -196,7 +204,11 @@ class Pass_Manager {
 	 * @return bool
 	 */
 	public function hasProfessionalPass() {
-		return self::pass_compare( $this->highest_pass_id, self::PROFESSIONAL_PASS_ID, '=' );
+		try {
+			return self::pass_compare( $this->highest_pass_id, self::PROFESSIONAL_PASS_ID, '=' );
+		} catch( \Exception $e ) {
+			return false;
+		}
 	}
 
 	/**
@@ -208,7 +220,11 @@ class Pass_Manager {
 	 * @return bool
 	 */
 	public function hasAllAccessPass() {
-		return self::pass_compare( $this->highest_pass_id, self::ALL_ACCESS_PASS_ID, '>=' );
+		try {
+			return self::pass_compare( $this->highest_pass_id, self::ALL_ACCESS_PASS_ID, '>=' );
+		} catch( \Exception $e ) {
+			return false;
+		}
 	}
 
 	/**
