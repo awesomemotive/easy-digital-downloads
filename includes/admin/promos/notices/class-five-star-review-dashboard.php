@@ -154,8 +154,6 @@ class Five_Star_Review_Dashboard extends Notice {
 	 * @return bool
 	 */
 	protected function _should_display() {
-		// @todo Remove this before finalizing
-		return true;
 
 		$activated = edd_get_activation_date();
 		if ( $activated ) {
