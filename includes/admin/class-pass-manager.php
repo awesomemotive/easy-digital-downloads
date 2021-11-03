@@ -93,9 +93,7 @@ class Pass_Manager {
 		// Set up the highest pass data.
 		$this->set_highest_pass_data();
 
-		global $edd_licensed_products;
-
-		$this->number_license_keys = is_array( $edd_licensed_products ) ? count( $edd_licensed_products ) : 0;
+		$this->number_license_keys = count( \EDD\Licensing\get_licensed_extension_slugs() );
 	}
 
 	/**
@@ -189,7 +187,11 @@ class Pass_Manager {
 	 * @return bool
 	 */
 	public function hasPersonalPass() {
-		return self::pass_compare( $this->highest_pass_id, self::PERSONAL_PASS_ID, '=' );
+		try {
+			return self::pass_compare( $this->highest_pass_id, self::PERSONAL_PASS_ID, '=' );
+		} catch ( \Exception $e ) {
+			return false;
+		}
 	}
 
 	/**
@@ -200,7 +202,11 @@ class Pass_Manager {
 	 * @return bool
 	 */
 	public function hasExtendedPass() {
-		return self::pass_compare( $this->highest_pass_id, self::EXTENDED_PASS_ID, '=' );
+		try {
+			return self::pass_compare( $this->highest_pass_id, self::EXTENDED_PASS_ID, '=' );
+		} catch ( \Exception $e ) {
+			return false;
+		}
 	}
 
 	/**
@@ -211,7 +217,11 @@ class Pass_Manager {
 	 * @return bool
 	 */
 	public function hasProfessionalPass() {
-		return self::pass_compare( $this->highest_pass_id, self::PROFESSIONAL_PASS_ID, '=' );
+		try {
+			return self::pass_compare( $this->highest_pass_id, self::PROFESSIONAL_PASS_ID, '=' );
+		} catch( \Exception $e ) {
+			return false;
+		}
 	}
 
 	/**
@@ -223,7 +233,11 @@ class Pass_Manager {
 	 * @return bool
 	 */
 	public function hasAllAccessPass() {
-		return self::pass_compare( $this->highest_pass_id, self::ALL_ACCESS_PASS_ID, '>=' );
+		try {
+			return self::pass_compare( $this->highest_pass_id, self::ALL_ACCESS_PASS_ID, '>=' );
+		} catch( \Exception $e ) {
+			return false;
+		}
 	}
 
 	/**

@@ -61,7 +61,7 @@ class License_Upgrade_Notice extends Notice {
 
 		$screen = get_current_screen();
 
-		if ( ! $screen instanceof \WP_Screen || 'dashboard' === $screen->id || ! edd_is_admin_page() ) {
+		if ( ! $screen instanceof \WP_Screen || 'dashboard' === $screen->id || ! edd_is_admin_page( '', '', false ) ) {
 			return false;
 		}
 
