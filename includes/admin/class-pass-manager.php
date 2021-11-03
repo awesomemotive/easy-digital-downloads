@@ -110,8 +110,8 @@ class Pass_Manager {
 			return;
 		}
 
-		$highest_license_key = false;
-		$highest_pass_id     = false;
+		$highest_license_key = null;
+		$highest_pass_id     = null;
 
 		foreach ( $this->pass_data as $license_key => $pass_data ) {
 			/*
