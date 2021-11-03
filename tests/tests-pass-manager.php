@@ -34,6 +34,9 @@ class Pass_Manager extends \EDD_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
+		global $edd_licensed_products;
+		$edd_licensed_products = array();
+
 		delete_option( 'edd_pass_licenses' );
 	}
 
