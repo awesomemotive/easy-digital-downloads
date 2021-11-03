@@ -156,10 +156,9 @@ class Five_Star_Review_Dashboard extends Notice {
 	protected function _should_display() {
 
 		$activated = edd_get_activation_date();
-		if ( $activated ) {
-			if ( ( $activated + ( DAY_IN_SECONDS * 30 ) ) > time() ) {
-				return false;
-			}
+		// Do not show if EDD was activated less than 30 days ago.
+		if ( ! is_numeric( $activated ) || ( $activated + ( DAY_IN_SECONDS * 30 ) ) > time() ) {
+			return false;
 		}
 		// @todo Change this to edd_count_orders in 3.0
 		$payments = edd_count_payments();
