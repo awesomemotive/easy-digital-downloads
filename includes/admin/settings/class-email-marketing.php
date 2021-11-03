@@ -92,7 +92,7 @@ class EmailMarketing extends Extension {
 	protected function is_activated() {
 		$config = $this->get_configuration();
 		foreach ( $config as $extension ) {
-			if ( is_plugin_active( $extension['pro_plugin'] ) ) {
+			if ( is_plugin_active( $extension['basename'] ) ) {
 				return true;
 			}
 		}
