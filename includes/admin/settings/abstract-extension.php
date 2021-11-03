@@ -55,9 +55,6 @@ abstract class Extension {
 			return;
 		}
 		$this->do_single_extension_card();
-		?>
-		<style>.submit{display:none;}</style>
-		<?php
 	}
 
 	/**
@@ -123,7 +120,7 @@ abstract class Extension {
 		$button  = array();
 		$item_id = ! empty( $product_data->info->id ) ? $product_data->info->id : $this->item_id;
 		// If the extension is not installed, the button will prompt to install and activate it.
-		if ( ! $this->manager->is_plugin_installed( $config['pro_plugin'] ) ) {
+		if ( ! $this->manager->is_plugin_installed( $config['basename'] ) ) {
 			$download_url = $this->manager->get_download_url( $item_id, 'extension' );
 			if ( $this->manager->pass_can_download() && $download_url ) {
 				$button['data-plugin'] = $download_url;
@@ -141,7 +138,7 @@ abstract class Extension {
 			}
 		} elseif ( ! $this->is_activated() ) {
 			// If the extension is installed, but not activated, the button will prompt to activate it.
-			$button['data-plugin'] = $config['pro_plugin'];
+			$button['data-plugin'] = $config['basename'];
 			$button['data-action'] = 'activate';
 			/* translators: The extension name. */
 			$button['button_text'] = sprintf( __( 'Activate %s', 'easy-digital-downloads' ), $product_data->info->title );
