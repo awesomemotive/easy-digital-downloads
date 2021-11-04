@@ -12,6 +12,8 @@
  */
 namespace EDD\Admin\Settings;
 
+use \EDD\Admin\Extensions\Extension;
+
 class EmailMarketing extends Extension {
 
 	public function __construct() {

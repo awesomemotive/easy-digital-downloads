@@ -31,7 +31,7 @@ class WP_SMTP {
 	/**
 	 * The Extension Manager
 	 *
-	 * @var \EDD\Admin\Extension_Manager
+	 * @var \EDD\Admin\Extensions\Extension_Manager
 	 */
 	private $manager;
 
@@ -39,7 +39,7 @@ class WP_SMTP {
 		add_filter( 'edd_settings_emails', array( $this, 'register_setting' ) );
 		add_action( 'edd_wpsmtp', array( $this, 'settings_field' ) );
 
-		$this->manager = new \EDD\Admin\Extension_Manager();
+		$this->manager = new \EDD\Admin\Extensions\Extension_Manager();
 	}
 
 	/**

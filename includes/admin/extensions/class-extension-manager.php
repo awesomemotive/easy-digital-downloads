@@ -1,9 +1,9 @@
 <?php
 
-namespace EDD\Admin;
+namespace EDD\Admin\Extensions;
 
 use \EDD\Admin\Pass_Manager;
-use \EDD\Admin\Installers\ExtensionsDownloadURL;
+use \EDD\Admin\Extensions\ExtensionsDownloadURL;
 
 class Extension_Manager {
 
@@ -32,7 +32,7 @@ class Extension_Manager {
 	protected $pass_manager;
 
 	public function __construct( $required_pass_id = null ) {
-		require_once EDD_PLUGIN_DIR . 'includes/admin/installers/class-extensions-download-url.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/class-extensions-download-url.php';
 		if ( $required_pass_id ) {
 			$this->required_pass_id = $required_pass_id;
 		}
@@ -155,7 +155,7 @@ class Extension_Manager {
 		if ( 'extension' !== $type ) {
 			return $url_or_item_id;
 		}
-		require_once EDD_PLUGIN_DIR . 'includes/admin/installers/class-extensions-download-url.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/class-extensions-download-url.php';
 		$extensions   = new ExtensionsDownloadURL();
 		$download_url = $extensions->get_url( $url_or_item_id, $this->pass_manager->highest_license_key );
 

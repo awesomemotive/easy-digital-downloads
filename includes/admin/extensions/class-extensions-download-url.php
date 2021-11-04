@@ -1,6 +1,6 @@
 <?php
 
-namespace EDD\Admin\Installers;
+namespace EDD\Admin\Extensions;
 
 class ExtensionsDownloadURL {
 

@@ -1,9 +1,10 @@
 <?php
 
-namespace EDD\Admin\Settings;
+namespace EDD\Admin\Extensions;
 
 use \EDD\Admin\Pass_Manager;
-use \EDD\Admin\Installers\ExtensionsAPI;
+use \EDD\Admin\Extensions\ExtensionsAPI;
+
 abstract class Extension {
 
 	/**
@@ -21,12 +22,12 @@ abstract class Extension {
 	/**
 	 * The Extension Manager
 	 *
-	 * @var \EDD\Admin\Extension_Manager
+	 * @var \EDD\Admin\Extensions\Extension_Manager
 	 */
 	protected $manager;
 
 	public function __construct() {
-		$this->manager = new \EDD\Admin\Extension_Manager( static::PASS_LEVEL );
+		$this->manager = new \EDD\Admin\Extensions\Extension_Manager( static::PASS_LEVEL );
 	}
 
 	/**
@@ -86,7 +87,7 @@ abstract class Extension {
 		if ( empty( $body ) ) {
 			return false;
 		}
-		require_once EDD_PLUGIN_DIR . 'includes/admin/installers/class-extensions-api.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/class-extensions-api.php';
 		$api          = new ExtensionsAPI();
 		$product_data = $api->get_product_data( $body, $this->item_id );
 		if ( ! $product_data ) {
