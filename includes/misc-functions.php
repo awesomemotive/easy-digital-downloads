@@ -1067,10 +1067,11 @@ function edd_get_activation_date( $use_first_order = false ) {
 			// Gets the first order placed in the store (any status).
 			$payments = edd_get_payments(
 				array(
-					'output'  => 'posts',
-					'number'  => 1,
-					'orderby' => 'ID',
-					'order'   => 'ASC',
+					'output'        => 'posts',
+					'number'        => 1,
+					'orderby'       => 'ID',
+					'order'         => 'ASC',
+					'no_found_rows' => true,
 				)
 			);
 			if ( $payments ) {
