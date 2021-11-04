@@ -91,7 +91,7 @@ add_action( 'plugins_loaded', function() {
 	 *
 	 * @since 2.11.4
 	 *
-	 * @param \EDD\Licensing\ExtensionRegistry
+	 * @param \EDD\Licensing\LicenseRegistry
 	 */
-	do_action( 'edd_extension_license_init', EDD()->extensionRegistry );
+	do_action( 'edd_extension_license_init', EDD()->licenseRegistry );
 }, PHP_INT_MAX );
