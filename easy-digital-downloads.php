@@ -130,6 +130,14 @@ final class Easy_Digital_Downloads {
 	public $cart;
 
 	/**
+	 * EDD Payment Stats Object
+	 *
+	 * @var object|EDD_Payment_Stats
+	 * @since 1.8
+	 */
+	public $payment_stats;
+
+	/**
 	 * Main Easy_Digital_Downloads Instance.
 	 *
 	 * Insures that only one instance of Easy_Digital_Downloads exists in memory at any one
