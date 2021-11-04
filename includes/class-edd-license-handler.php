@@ -112,7 +112,7 @@ class EDD_License {
 		add_filter( 'edd_settings_licenses', array( $this, 'settings' ), 1 );
 
 		// Display help text at the top of the Licenses tab
-		//add_action( 'edd_settings_tab_top', array( $this, 'license_help_text' ) );
+		add_action( 'edd_settings_tab_top', array( $this, 'license_help_text' ) );
 
 		// Activate license key on settings save
 		add_action( 'admin_init', array( $this, 'activate_license' ) );
