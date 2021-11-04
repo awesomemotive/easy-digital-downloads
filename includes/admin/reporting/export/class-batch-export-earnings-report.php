@@ -121,8 +121,8 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 	public function print_csv_cols() {
 		$cols     = $this->get_csv_cols();
 		$col_data = '';
-
-		for ( $i = 0; $i < count( $cols ); $i++ ) {
+		$count    = count( $cols );
+		for ( $i = 0; $i < $count; $i++ ) {
 			$col_data .= $cols[ $i ];
 
 			// We don't need an extra space after the first column
@@ -131,7 +131,7 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 				continue;
 			}
 
-			if ( $i == ( count( $cols ) - 1 ) ) {
+			if ( $i == ( $count - 1 ) ) {
 				$col_data .= "\r\n";
 			} else {
 				$col_data .= ",,";
