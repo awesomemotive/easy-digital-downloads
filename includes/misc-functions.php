@@ -1067,7 +1067,7 @@ function edd_get_activation_date( $use_first_order = false ) {
 			// Gets the first order placed in the store (any status).
 			$payments = edd_get_payments(
 				array(
-					'output'  => 'payments',
+					'output'  => 'posts',
 					'number'  => 1,
 					'orderby' => 'ID',
 					'order'   => 'ASC',
@@ -1075,9 +1075,9 @@ function edd_get_activation_date( $use_first_order = false ) {
 			);
 			if ( $payments ) {
 				$first_payment = reset( $payments );
-				// Use just the payment date, rather than completed date (first payment may not be complete).
-				if ( ! empty( $first_payment->date ) ) {
-					$activation_date = strtotime( $first_payment->date );
+				// Use just the post date, rather than looking for the completed date (first payment may not be complete).
+				if ( ! empty( $first_payment->post_date_gmt ) ) {
+					$activation_date = strtotime( $first_payment->post_date_gmt );
 				}
 			}
 		}
