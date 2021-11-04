@@ -18,7 +18,7 @@ if ( ! class_exists( 'EDD_License' ) ) :
  */
 class EDD_License {
 	private $file;
-	private $license;
+	public $license;
 	private $item_name;
 	private $item_id;
 	private $item_shortname;
