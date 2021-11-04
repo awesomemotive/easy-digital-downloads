@@ -1056,12 +1056,31 @@ function edd_is_promo_active() {
  * For existing installs, this option is added whenever the function is first used.
  *
  * @since 2.11.4
+ * @param bool $use_first_order Optional flag to use the first existing order date.
  * @return int The timestamp when EDD was activated.
  */
-function edd_get_activation_date() {
+function edd_get_activation_date( $use_first_order = false ) {
 	$activation_date = get_option( 'edd_activation_date', '' );
 	if ( ! $activation_date ) {
 		$activation_date = time();
+		if ( $use_first_order ) {
+			// Gets the first order placed in the store (any status).
+			$payments = edd_get_payments(
+				array(
+					'output'  => 'payments',
+					'number'  => 1,
+					'orderby' => 'ID',
+					'order'   => 'ASC',
+				)
+			);
+			if ( $payments ) {
+				$first_payment = reset( $payments );
+				// Use just the payment date, rather than completed date (first payment may not be complete).
+				if ( ! empty( $first_payment->date ) ) {
+					$activation_date = strtotime( $first_payment->date );
+				}
+			}
+		}
 		update_option( 'edd_activation_date', $activation_date );
 	}
 
