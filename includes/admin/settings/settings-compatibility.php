@@ -100,6 +100,23 @@ add_action(
 				add_action( 'edd_settings_tab_bottom_marketing_mailchimp', array( $mailchimp::$settings, 'connected_lists' ) );
 			}
 		}
+
+		/**
+		 * Move the GetResponse settings to the Marketing section (EDD 2.11.x).
+		 */
+		if ( function_exists( 'edd_getresponse_add_settings_section' ) ) {
+			if ( false !== has_filter( 'edd_settings_sections_extensions', 'edd_getresponse_add_settings_section' ) ) {
+				$getresponse = new EDD_GetResponse_Newsletter();
+				remove_filter( 'edd_settings_sections_extensions', 'edd_getresponse_add_settings_section' );
+				add_filter( 'edd_settings_sections_marketing', 'edd_getresponse_add_settings_section' );
+				remove_filter( 'edd_settings_extensions', 'edd_getresponse_add_settings' );
+				add_filter( 'edd_settings_marketing', 'edd_getresponse_add_settings' );
+				remove_filter( 'edd_settings_extensions_sanitize', array( $getresponse, 'save_settings' ) );
+				add_filter( 'edd_settings_marketing_sanitize', array( $getresponse, 'save_settings' ) );
+				remove_filter( 'edd_settings_extensions-getresponse_sanitize', array( $getresponse, 'save_settings' ) );
+				add_filter( 'edd_settings_marketing-getresponse_sanitize', array( $getresponse, 'save_settings' ) );
+			}
+		}
 	},
 	99
 );
