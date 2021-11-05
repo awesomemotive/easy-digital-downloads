@@ -13,12 +13,12 @@ return array(
 	),
 	648002 => array(
 		'basename' => 'edd-convertkit/edd-convertkit.php',
-		'tab'      => 'marketing',
+		'tab'      => 'extensions', // Convertkit settings cannot currently be moved.
 		'section'  => 'convertkit',
 	),
 	18200  => array(
 		'basename' => 'edd-mailpoet/edd-mailpoet.php',
-		'tab'      => 'marketing',
+		'tab'      => 'extensions', // MailPoet settings cannot currently be moved.
 		'section'  => 'mailpoet',
 	),
 	33826  => array(
