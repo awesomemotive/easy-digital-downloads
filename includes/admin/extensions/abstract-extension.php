@@ -110,6 +110,27 @@ abstract class Extension {
 	}
 
 	/**
+	 * Gets the type for the button data-type attribute.
+	 * This is intended to sync with the Products API request.
+	 * Default is product.
+	 *
+	 * Really a shim for array_key_first.
+	 *
+	 * @param array $array
+	 * @return void
+	 */
+	private function get_type( array $array ) {
+		if ( function_exists( 'array_key_first' ) ) {
+			return array_key_first( $array );
+		}
+		foreach ( $array as $key => $unused ) {
+			return $key;
+		}
+
+		return 'product';
+	}
+
+	/**
 	 * Gets the button parameters.
 	 * Classes should not need to replace this method.
 	 *
@@ -118,29 +139,36 @@ abstract class Extension {
 	 * @return array
 	 */
 	protected function get_button_parameters( $config, $product_data ) {
-		$button  = array();
 		$item_id = ! empty( $product_data->info->id ) ? $product_data->info->id : $this->item_id;
+		$body    = $this->get_api_body();
+		$type    = $this->get_type( $body );
+		$id      = $body[ $type ];
+		$button  = array(
+			'type'    => $type,
+			'id'      => $id,
+			'product' => $item_id,
+		);
 		// If the extension is not installed, the button will prompt to install and activate it.
 		if ( ! $this->manager->is_plugin_installed( $config['basename'] ) ) {
 			$download_url = $this->manager->get_download_url( $item_id, 'extension' );
 			if ( $this->manager->pass_can_download() && $download_url ) {
-				$button['data-plugin'] = $download_url;
-				$button['data-action'] = 'install';
-				$button['type']        = 'extension';
+				$button['plugin'] = $download_url;
+				$button['action'] = 'install';
 				/* translators: The extension name. */
 				$button['button_text'] = sprintf( __( 'Install & Activate %s', 'easy-digital-downloads' ), $product_data->info->title );
 			} else {
 				$button = array(
 					/* translators: The extension name. */
-					'button_text' => sprintf( __( 'Get %s Today!', 'easy-digital-downloads' ), $product_data->info->title ),
+					'button_text' => sprintf( __( 'Upgrade Today to Access %s!', 'easy-digital-downloads' ), $product_data->info->title ),
 					'href'        => ! empty( $config['upgrade_url'] ) ? $config['upgrade_url'] : 'https://easydigitaldownloads.com/pricing',
 					'new_tab'     => true,
+					'type'        => $type,
 				);
 			}
 		} elseif ( ! $this->is_activated() ) {
 			// If the extension is installed, but not activated, the button will prompt to activate it.
-			$button['data-plugin'] = $config['basename'];
-			$button['data-action'] = 'activate';
+			$button['plugin'] = $config['basename'];
+			$button['action'] = 'activate';
 			/* translators: The extension name. */
 			$button['button_text'] = sprintf( __( 'Activate %s', 'easy-digital-downloads' ), $product_data->info->title );
 		}

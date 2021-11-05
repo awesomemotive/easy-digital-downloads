@@ -100,13 +100,13 @@ class WP_SMTP {
 		$button = array();
 		// If neither the lite nor pro plugin is installed, the button will prompt to install and activate the lite plugin.
 		if ( ! $this->manager->is_plugin_installed( $this->config['lite_plugin'] ) && ! $this->manager->is_plugin_installed( $this->config['pro_plugin'] ) ) {
-			$button['data-plugin'] = $this->config['lite_download_url'];
-			$button['data-action'] = 'install';
+			$button['plugin']      = $this->config['lite_download_url'];
+			$button['action']      = 'install';
 			$button['button_text'] = __( 'Install & Activate WP Mail SMTP', 'easy-digital-downloads' );
 		} elseif ( ! $this->is_smtp_activated() ) {
 			// If one of the SMTP plugins is installed, but not activated, the button will prompt to activate it.
-			$button['data-plugin'] = $this->config['lite_plugin'];
-			$button['data-action'] = 'activate';
+			$button['plugin']      = $this->config['lite_plugin'];
+			$button['action']      = 'activate';
 			$button['button_text'] = __( 'Activate WP Mail SMTP', 'easy-digital-downloads' );
 		} elseif ( ! $this->is_smtp_configured() ) {
 			// If the plugin is active, but not configured, the button will send them to the setup wizard.
