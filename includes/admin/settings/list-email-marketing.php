@@ -7,8 +7,8 @@ return array(
 		'section'  => 'mailchimp',
 	),
 	2925   => array(
-		'basename' => 'edd-aweber/edd-aweber',
-		'tab'      => 'marketing',
+		'basename' => 'edd-aweber/edd-aweber.php',
+		'tab'      => 'extensions', // AWeber settings cannot currently be moved.
 		'section'  => 'aweber',
 	),
 	648002 => array(
