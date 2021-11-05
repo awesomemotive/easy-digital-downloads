@@ -11,7 +11,7 @@
  * @since     2.11.4
  */
 
-namespace EDD\Licensing;
+namespace EDD\Extensions;
 
 /**
  * Saves an option in the database with the information from the `$edd_licensed_products`
@@ -78,3 +78,20 @@ function get_licensed_extension_slugs() {
 		? $products['products']
 		: array();
 }
+
+/**
+ * Triggers our hook for registering extensions.
+ * This needs to run after all plugins have definitely been loaded.
+ *
+ * @since 2.11.4
+ */
+add_action( 'plugins_loaded', function() {
+	/**
+	 * Extensions should hook in here to register themselves.
+	 *
+	 * @since 2.11.4
+	 *
+	 * @param ExtensionRegistry
+	 */
+	do_action( 'edd_extension_license_init', EDD()->extensionRegistry );
+}, PHP_INT_MAX );
