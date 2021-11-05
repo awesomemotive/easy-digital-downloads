@@ -16,12 +16,11 @@ class Extension_Manager {
 	public $all_plugins;
 
 	/**
-	 * The types of installations which are allowed.
+	 * The minimum pass ID required to install the extension.
 	 *
-	 * @var array
+	 * @since 2.11.x
+	 * @var int
 	 */
-	private $types = array( 'plugin', 'extension' );
-
 	private $required_pass_id;
 
 	/**
@@ -123,10 +122,13 @@ class Extension_Manager {
 		}
 		$defaults = array(
 			'button_class' => 'button-primary',
-			'data-plugin'  => '',
-			'data-action'  => '',
+			'plugin'       => '',
+			'action'       => '',
 			'button_text'  => '',
 			'type'         => 'plugin',
+			'id'           => '',
+			'product'      => '',
+			'pass'         => $this->required_pass_id,
 		);
 		$args     = wp_parse_args( $args, $defaults );
 		if ( empty( $args['button_text'] ) ) {
@@ -135,10 +137,18 @@ class Extension_Manager {
 		?>
 		<button
 			class="button <?php echo esc_attr( $args['button_class'] ); ?> edd-extension-manager__action"
-			data-plugin="<?php echo esc_attr( $args['data-plugin'] ); ?>"
-			data-action="<?php echo esc_attr( $args['data-action'] ); ?>"
-			data-type="<?php echo esc_attr( $args['type'] ); ?>"
-			data-pass="<?php echo esc_attr( $this->required_pass_id ); ?>"
+			<?php
+			foreach ( $args as $key => $attribute ) {
+				if ( empty( $attribute ) || in_array( $key, array( 'button_class', 'button_text' ), true ) ) {
+					continue;
+				}
+				printf(
+					' data-%s="%s"',
+					esc_attr( $key ),
+					esc_attr( $attribute )
+				);
+			}
+			?>
 		>
 			<?php echo esc_html( $args['button_text'] ); ?>
 		</button>
@@ -158,7 +168,7 @@ class Extension_Manager {
 	 * @return string|false Returns the download URL if possible, or false if not.
 	 */
 	public function get_download_url( $url_or_item_id, $type = 'plugin' ) {
-		if ( 'extension' !== $type ) {
+		if ( 'plugin' === $type ) {
 			return $url_or_item_id;
 		}
 		require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/class-extensions-download-url.php';
@@ -212,7 +222,7 @@ class Extension_Manager {
 		}
 
 		$type = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
-		if ( ! in_array( $type, $this->types, true ) ) {
+		if ( ! $type ) {
 			wp_send_json_error( esc_html__( 'The plugin to install was not defined.', 'easy-digital-downloads' ) );
 		}
 
@@ -230,7 +240,9 @@ class Extension_Manager {
 
 		if ( ! is_wp_error( $activate ) ) {
 			$message = esc_html__( 'Plugin activated.', 'easy-digital-downloads' );
-			if ( 'extension' === $type ) {
+			if ( 'plugin' !== $type ) {
+				// Rename $type to 'extension'.
+				$type    = 'extension';
 				$message = esc_html__( 'Extension activated.', 'easy-digital-downloads' );
 			}
 			wp_send_json_success(
@@ -258,7 +270,7 @@ class Extension_Manager {
 		$type          = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
 		$required_pass = filter_input( INPUT_POST, 'pass', FILTER_SANITIZE_STRING );
 		if ( ! $type ) {
-			$type = 'extension';
+			wp_send_json_error( $generic_error );
 		}
 
 		// Check if new installations are allowed.

@@ -38,6 +38,8 @@
 			plugin: plugin,
 			type: $btn.attr( 'data-type' ),
 			pass: $btn.attr( 'data-pass' ),
+			id: $btn.attr( 'data-id' ),
+			product: $btn.attr( 'data-product' ),
 		};
 
 		$.post( ajaxurl, data )
