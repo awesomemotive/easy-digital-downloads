@@ -84,18 +84,24 @@ class Extension_Manager {
 				printf( esc_html__( 'Get %s Today!', 'easy-digital-downloads' ), esc_html( $product->info->title ) );
 				?>
 			</h3>
-			<?php if ( ! empty( $product->info->thumbnail ) ) : ?>
-				<img class="edd-extension-manager__image" src="<?php echo esc_url( $product->info->thumbnail ); ?>" />
-			<?php endif; ?>
-			<?php if ( ! empty( $product->info->excerpt ) ) : ?>
-				<p class="edd-extension-manager__description"><?php echo wp_kses_post( $product->info->excerpt ); ?></p>
-			<?php endif; ?>
-			<div class="edd-extension-manager__group">
-				<div class="edd-extension-manager__step">
-					<?php $this->button( $button_parameters ); ?>
-				</div>
-				<div class="edd-extension-manager__step" style="display:none;">
-					<?php $this->link( $link_parameters ); ?>
+			<div class="edd-extension-manager__body">
+				<?php if ( ! empty( $product->info->thumbnail ) ) : ?>
+					<div class="edd-extension-manager__image">
+						<img src="<?php echo esc_url( $product->info->thumbnail ); ?>" />
+					</div>
+				<?php endif; ?>
+				<div class="edd-extension-manager__content">
+					<?php if ( ! empty( $product->info->excerpt ) ) : ?>
+						<p class="edd-extension-manager__description"><?php echo wp_kses_post( $product->info->excerpt ); ?></p>
+					<?php endif; ?>
+					<div class="edd-extension-manager__group">
+						<div class="edd-extension-manager__step">
+							<?php $this->button( $button_parameters ); ?>
+						</div>
+						<div class="edd-extension-manager__step" style="display:none;">
+							<?php $this->link( $link_parameters ); ?>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
