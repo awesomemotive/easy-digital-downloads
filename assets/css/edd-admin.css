@@ -2227,9 +2227,29 @@ td.edd_order_price {
 	display: grid;
 }
 
+.edd-extension-manager__body {
+	display: flex;
+	gap: 1.5em;
+	align-items: center;
+}
+
 .edd-extension-manager__image {
-	margin: 0 auto 1em;
+	flex-basis: 300px;
+}
+
+.edd-extension-manager__image img {
+	display: block;
+	margin: 0 auto;
 	width: 100%;
+}
+
+.edd-extension-manager__card-group .edd-extension-manager__body {
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+.edd-extension-manager__card-group .edd-extension-manager__image {
+	flex-basis: unset;
 }
 
 .edd-extension-manager__step {
