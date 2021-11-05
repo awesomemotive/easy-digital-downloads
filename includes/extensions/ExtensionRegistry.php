@@ -10,7 +10,7 @@
  * @since     2.11.4
  */
 
-namespace EDD\Licensing;
+namespace EDD\Extensions;
 
 class ExtensionRegistry extends \ArrayObject {
 

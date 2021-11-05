@@ -84,7 +84,7 @@ class Pass_Manager {
 		}
 
 		$this->highest_pass_id     = $this->get_highest_pass_id();
-		$this->number_license_keys = count( \EDD\Licensing\get_licensed_extension_slugs() );
+		$this->number_license_keys = count( \EDD\Extensions\get_licensed_extension_slugs() );
 	}
 
 	/**
