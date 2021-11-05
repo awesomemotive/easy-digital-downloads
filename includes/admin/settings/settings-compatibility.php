@@ -127,6 +127,21 @@ add_action(
 			remove_filter( 'edd_settings_extensions', 'eddcp_add_settings' );
 			add_filter( 'edd_settings_marketing', 'eddcp_add_settings' );
 		}
+
+		/**
+		 * Move the ConvertKit settings to the Marketing section (EDD 2.11.x).
+		 */
+		if ( class_exists( 'EDD_ConvertKit' ) && method_exists( 'EDD_ConvertKit', 'instance' ) ) {
+			$convertkit = EDD_ConvertKit::instance();
+			if ( false !== has_filter( 'edd_settings_sections_extensions', array( $convertkit, 'subsection' ) ) ) {
+				remove_filter( 'edd_settings_sections_extensions', array( $convertkit, 'subsection' ) );
+				add_filter( 'edd_settings_sections_marketing', array( $convertkit, 'subsection' ) );
+				remove_filter( 'edd_settings_extensions_sanitize', array( $convertkit, 'save_settings' ) );
+				add_filter( 'edd_settings_marketing_sanitize', array( $convertkit, 'save_settings' ) );
+				remove_filter( 'edd_settings_extensions', array( $convertkit, 'settings' ) );
+				add_filter( 'edd_settings_marketing', array( $convertkit, 'settings' ) );
+			}
+		}
 	},
 	99
 );
