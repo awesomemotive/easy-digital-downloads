@@ -8,8 +8,10 @@ use \EDD\Admin\Extensions\ExtensionsAPI;
 abstract class Extension {
 
 	/**
-	 * The product ID.
+	 * The product ID. This only needs to be set if the extending class is
+	 * for a single product.
 	 *
+	 * @since 2.11.x
 	 * @var int
 	 */
 	protected $item_id;
@@ -33,6 +35,7 @@ abstract class Extension {
 	/**
 	 * Gets the configuration for the extension.
 	 *
+	 * @since 2.11.x
 	 * @param bool|int $item_id
 	 * @return array
 	 */
@@ -41,6 +44,7 @@ abstract class Extension {
 	/**
 	 * Whether the extension is activated.
 	 *
+	 * @since 2.11.x
 	 * @return bool
 	 */
 	abstract protected function is_activated();
@@ -61,6 +65,8 @@ abstract class Extension {
 	/**
 	 * Outputs a single extension card.
 	 *
+	 * @since 2.11.x
+	 * @param bool|int $item_id Optional: the individual extension product ID.
 	 * @return void
 	 */
 	public function do_single_extension_card( $item_id = false ) {
@@ -71,6 +77,7 @@ abstract class Extension {
 		}
 		$this->manager->do_extension_card(
 			$product_data,
+			$config,
 			$this->get_button_parameters( $config, $product_data ),
 			$this->get_link_parameters( $config, $product_data->info->title )
 		);
