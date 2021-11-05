@@ -43,8 +43,6 @@ class Recurring extends Extension {
 	 */
 	protected function get_configuration( $item_id = false ) {
 		return array(
-			'item_id'  => $this->item_id,
-			'name'     => __( 'Recurring Payments', 'easy-digital-downloads' ),
 			'basename' => 'edd-recurring/edd-recurring.php',
 			'tab'      => 'gateways',
 			'section'  => 'recurring',
