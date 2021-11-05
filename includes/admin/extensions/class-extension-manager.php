@@ -229,16 +229,16 @@ class Extension_Manager {
 		$plugin   = sanitize_text_field( wp_unslash( $plugin ) );
 		$activate = activate_plugins( $plugin );
 
-		/**
-		 * Fire after plugin activating via the EDD installer.
-		 *
-		 * @since 2.11.x
-		 *
-		 * @param string $plugin Path to the plugin file relative to the plugins directory.
-		 */
-		do_action( 'edd_plugin_activated', $plugin );
-
 		if ( ! is_wp_error( $activate ) ) {
+			/**
+			 * Fire after plugin activating via the EDD installer.
+			 *
+			 * @since 2.11.x
+			 *
+			 * @param string $plugin Path to the plugin file relative to the plugins directory.
+			 */
+			do_action( 'edd_plugin_activated', $plugin );
+
 			$message = esc_html__( 'Plugin activated.', 'easy-digital-downloads' );
 			if ( 'plugin' !== $type ) {
 				// Rename $type to 'extension'.
