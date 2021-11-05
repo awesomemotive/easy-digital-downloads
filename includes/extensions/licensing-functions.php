@@ -11,7 +11,7 @@
  * @since     2.11.4
  */
 
-namespace EDD\Licensing;
+namespace EDD\Extensions;
 
 /**
  * Saves an option in the database with the information from the `$edd_licensed_products`
@@ -91,7 +91,7 @@ add_action( 'plugins_loaded', function() {
 	 *
 	 * @since 2.11.4
 	 *
-	 * @param \EDD\Licensing\ExtensionRegistry
+	 * @param ExtensionRegistry
 	 */
 	do_action( 'edd_extension_license_init', EDD()->extensionRegistry );
 }, PHP_INT_MAX );

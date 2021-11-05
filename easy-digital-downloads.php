@@ -132,7 +132,7 @@ final class Easy_Digital_Downloads {
 	/**
 	 * Holds registered premium EDD extensions.
 	 *
-	 * @var \EDD\Licensing\ExtensionRegistry
+	 * @var \EDD\Extensions\ExtensionRegistry
 	 * @since 2.11.4
 	 */
 	public $extensionRegistry;
@@ -171,7 +171,7 @@ final class Easy_Digital_Downloads {
 			self::$instance->customer_meta     = new EDD_DB_Customer_Meta();
 			self::$instance->payment_stats     = new EDD_Payment_Stats();
 			self::$instance->cart              = new EDD_Cart();
-			self::$instance->extensionRegistry = new \EDD\Licensing\ExtensionRegistry();
+			self::$instance->extensionRegistry = new \EDD\Extensions\ExtensionRegistry();
 		}
 
 		return self::$instance;
@@ -286,9 +286,9 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-stats.php';
 		require_once EDD_PLUGIN_DIR . 'includes/class-edd-roles.php';
 		require_once EDD_PLUGIN_DIR . 'includes/country-functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/extensions/licensing-functions.php';
+		require_once EDD_PLUGIN_DIR . 'includes/extensions/ExtensionRegistry.php';
 		require_once EDD_PLUGIN_DIR . 'includes/formatting.php';
-		require_once EDD_PLUGIN_DIR . 'includes/licensing/licensing-functions.php';
-		require_once EDD_PLUGIN_DIR . 'includes/licensing/ExtensionRegistry.php';
 		require_once EDD_PLUGIN_DIR . 'includes/widgets.php';
 		require_once EDD_PLUGIN_DIR . 'includes/misc-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/mime-types.php';
