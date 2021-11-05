@@ -39,7 +39,7 @@ class ExtensionsAPI {
 
 		$response = json_decode( wp_remote_retrieve_body( $request ) );
 		$value    = array(
-			'timeout' => strtotime( '+1 day', time() ),
+			'timeout' => strtotime( '+1 week', time() ),
 		);
 		foreach ( $response->products as $product ) {
 			$value[ $product->info->id ] = $product;
