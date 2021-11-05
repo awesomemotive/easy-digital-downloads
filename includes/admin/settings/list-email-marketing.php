@@ -32,7 +32,7 @@ return array(
 		'section'  => 'activecampaign',
 	),
 	974    => array(
-		'basename' => 'edd-campaignmonitor/edd-campaignmonitor.php',
+		'basename' => 'edd-campaign-monitor/edd-campaign-monitor.php',
 		'tab'      => 'marketing',
 		'section'  => 'campaignmonitor',
 	),
