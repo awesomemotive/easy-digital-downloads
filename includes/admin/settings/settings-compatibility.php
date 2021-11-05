@@ -142,6 +142,23 @@ add_action(
 				add_filter( 'edd_settings_marketing', array( $convertkit, 'settings' ) );
 			}
 		}
+
+		/**
+		 * Move the Mad Mimi settings to the Marketing section (EDD 2.11.x).
+		 */
+		if ( false !== has_filter( 'edd_settings_misc', 'eddmm_add_settings' ) ) {
+			remove_filter( 'edd_settings_misc', 'eddmm_add_settings' );
+			add_filter( 'edd_settings_sections_marketing', function( $sections ) {
+				$sections['madmimi'] = __( 'Mad Mimi', 'easy-digital-downloads' );
+
+				return $sections;
+			} );
+			add_filter( 'edd_settings_marketing', function( $settings ) {
+				$settings['madmimi'] = eddmm_add_settings( array() );
+
+				return $settings;
+			} );
+		}
 	},
 	99
 );
