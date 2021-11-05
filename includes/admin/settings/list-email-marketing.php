@@ -39,6 +39,6 @@ return array(
 	3318   => array(
 		'basename' => 'edd-madmimi/edd-madmimi.php',
 		'tab'      => 'marketing',
-		'section'  => 'mad-mimi',
+		'section'  => 'madmimi',
 	),
 );
