@@ -76,7 +76,7 @@ class NotificationImporter {
 			return EDD_NOTIFICATIONS_API_URL;
 		}
 
-		return ''; // @todo
+		return 'https://plugin.easydigitaldownloads.com/wp-content/notifications.json';
 	}
 
 	/**
