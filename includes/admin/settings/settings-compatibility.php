@@ -117,6 +117,16 @@ add_action(
 				add_filter( 'edd_settings_marketing-getresponse_sanitize', array( $getresponse, 'save_settings' ) );
 			}
 		}
+
+		/**
+		 * Move the Campaign Monitor settings to the Marketing section (EDD 2.11.x).
+		 */
+		if ( function_exists( 'eddcp_settings_section' ) && false !== has_filter( 'edd_settings_sections_extensions', 'eddcp_settings_section' ) ) {
+			remove_filter( 'edd_settings_sections_extensions', 'eddcp_settings_section' );
+			add_filter( 'edd_settings_sections_marketing', 'eddcp_settings_section' );
+			remove_filter( 'edd_settings_extensions', 'eddcp_add_settings' );
+			add_filter( 'edd_settings_marketing', 'eddcp_add_settings' );
+		}
 	},
 	99
 );
