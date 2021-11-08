@@ -113,7 +113,7 @@ class Notifications extends Endpoint {
 
 		if ( ! $result ) {
 			return new \WP_REST_Response( array(
-				'error' => __( 'Failed to update notification.', 'easy-digital-downloads' ),
+				'error' => __( 'Failed to dismiss notification.', 'easy-digital-downloads' ),
 			), 500 );
 		}
 
