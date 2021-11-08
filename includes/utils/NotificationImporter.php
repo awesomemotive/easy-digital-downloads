@@ -30,7 +30,7 @@ class NotificationImporter {
 	 * @since 2.11.4
 	 */
 	public function run() {
-		edd_debug_log( 'Fetching notifications.' );
+		edd_debug_log( 'Fetching notifications via ' . $this->getApiEndpoint() );
 
 		try {
 			$notifications = $this->fetchNotifications();
