@@ -8,10 +8,9 @@
     "support": {
         "issues": "https://easydigitaldownloads.com/support"
     },
-    "options": {
-      "ssl": {
-        "verify_peer": "false"
-      }
+    "config": {
+        "disable-tls": true,
+        "secure-http": false
     },
     "require": {
         "php": ">=5.3.0",
