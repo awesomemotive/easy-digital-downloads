@@ -26,15 +26,6 @@ class EnvironmentChecker {
 	protected $passManager;
 
 	/**
-	 * Number of EDD license keys entered.
-	 *
-	 * @since 2.11.4
-	 *
-	 * @var int
-	 */
-	protected $numberLicenseKeys;
-
-	/**
 	 * Types of license/pass conditions that we support.
 	 * The key is the condition slug and the value is the corresponding
 	 * method to call in the `Pass_Manager` class to check the condition.
@@ -58,10 +49,6 @@ class EnvironmentChecker {
 	 */
 	public function __construct() {
 		$this->passManager = new Pass_Manager();
-
-		global $edd_licensed_products;
-
-		$this->numberLicenseKeys = is_array( $edd_licensed_products ) ? count( $edd_licensed_products ) : 0;
 	}
 
 	/**
