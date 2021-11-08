@@ -18,7 +18,7 @@ if ( ! class_exists( 'EDD_License' ) ) :
  */
 class EDD_License {
 	private $file;
-	private $license;
+	public $license;
 	private $item_name;
 	private $item_id;
 	private $item_shortname;
@@ -361,6 +361,11 @@ class EDD_License {
 		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
 		$this->maybe_set_pass_flag( $license, $license_data );
+
+		// Clear the option for licensed extensions to force regeneration.
+		if ( ! empty( $api_data->license ) && 'valid' === $api_data->license ) {
+			delete_option( 'edd_licensed_extensions' );
+		}
 
 		update_option( $this->item_shortname . '_license_active', $license_data );
 
