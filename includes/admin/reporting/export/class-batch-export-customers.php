@@ -37,15 +37,16 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 	 */
 	public function csv_cols() {
 
-		$cols = array(
-			'id'        => __( 'ID',   'easy-digital-downloads' ),
-			'name'      => __( 'Name',   'easy-digital-downloads' ),
-			'email'     => __( 'Email', 'easy-digital-downloads' ),
-			'purchases' => __( 'Number of Purchases', 'easy-digital-downloads' ),
-			'amount'    => __( 'Customer Value', 'easy-digital-downloads' )
+		return array(
+			'id'           => __( 'ID', 'easy-digital-downloads' ),
+			'user_id'      => __( 'User ID', 'easy-digital-downloads' ),
+			'name'         => __( 'Name', 'easy-digital-downloads' ),
+			'email'        => __( 'Email', 'easy-digital-downloads' ),
+			'purchases'    => __( 'Number of Purchases', 'easy-digital-downloads' ),
+			'amount'       => __( 'Customer Value', 'easy-digital-downloads' ),
+			'payment_ids'  => __( 'Payment IDs', 'easy-digital-downloads' ),
+			'date_created' => __( 'Date Created', 'easy-digital-downloads' ),
 		);
-
-		return $cols;
 	}
 
 	/**
@@ -91,11 +92,14 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 					$customer    = new EDD_Customer( $customer_id );
 
 					$data[] = array(
-						'id'        => $customer->id,
-						'name'      => $customer->name,
-						'email'     => $customer->email,
-						'purchases' => $customer->purchase_count,
-						'amount'    => edd_format_amount( $customer->purchase_value ),
+						'id'           => $customer->id,
+						'user_id'      => $customer->user_id,
+						'name'         => $customer->name,
+						'email'        => $customer->email,
+						'purchases'    => $customer->purchase_count,
+						'amount'       => edd_format_amount( $customer->purchase_value ),
+						'payment_ids'  => $customer->payment_ids,
+						'date_created' => $customer->date_created,
 					);
 				}
 			}
@@ -110,11 +114,16 @@ class EDD_Batch_Customers_Export extends EDD_Batch_Export {
 
 			foreach ( $customers as $customer ) {
 
-				$data[$i]['id']        = $customer->id;
-				$data[$i]['name']      = $customer->name;
-				$data[$i]['email']     = $customer->email;
-				$data[$i]['purchases'] = $customer->purchase_count;
-				$data[$i]['amount']    = edd_format_amount( $customer->purchase_value );
+				$data[ $i ] = array(
+					'id'           => $customer->id,
+					'user_id'      => $customer->user_id,
+					'name'         => $customer->name,
+					'email'        => $customer->email,
+					'purchases'    => $customer->purchase_count,
+					'amount'       => edd_format_amount( $customer->purchase_value ),
+					'payment_ids'  => $customer->payment_ids,
+					'date_created' => $customer->date_created,
+				);
 
 				$i++;
 			}
