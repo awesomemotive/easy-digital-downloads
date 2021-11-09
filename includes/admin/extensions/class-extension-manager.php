@@ -87,9 +87,9 @@ class Extension_Manager {
 				?>
 			</h3>
 			<div class="edd-extension-manager__body">
-				<?php if ( ! empty( $$data['image'] ) ) : ?>
+				<?php if ( ! empty( $data['image'] ) ) : ?>
 					<div class="edd-extension-manager__image">
-						<img src="<?php echo esc_url( $$data['image'] ); ?>" />
+						<img src="<?php echo esc_url( $data['image'] ); ?>" />
 					</div>
 				<?php endif; ?>
 				<div class="edd-extension-manager__content">
