@@ -124,7 +124,7 @@ class Extension_Manager {
 		$data = array(
 			'title'      => '',
 			'image'      => '',
-			'desription' => '',
+			'description' => '',
 		);
 		if ( ! empty( $config['title'] ) ) {
 			$data['title'] = $config['title'];
@@ -136,9 +136,9 @@ class Extension_Manager {
 		} elseif ( ! empty( $product->info->thumbnail ) ) {
 			$data['image'] = $product->info->thumbnail;
 		}
-		if ( ! empty( $config['desription'] ) ) {
-			$data['desription'] = $config['desription'];
-		} elseif ( ! empty( $$product->info->excerpt ) ) {
+		if ( ! empty( $config['description'] ) ) {
+			$data['description'] = $config['description'];
+		} elseif ( ! empty( $product->info->excerpt ) ) {
 			$data['description'] = $product->info->excerpt;
 		}
 
