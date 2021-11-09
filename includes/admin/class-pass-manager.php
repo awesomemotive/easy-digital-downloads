@@ -93,7 +93,7 @@ class Pass_Manager {
 		// Set up the highest pass data.
 		$this->set_highest_pass_data();
 
-		$this->number_license_keys = count( \EDD\Licensing\get_licensed_extension_slugs() );
+		$this->number_license_keys = count( \EDD\Extensions\get_licensed_extension_slugs() );
 	}
 
 	/**
