@@ -25,8 +25,10 @@ class EmailMarketing extends Extension {
 
 	/**
 	 * Gets the configuration for the newsletter extensions.
+	 * Returns data for all email marketing extensions or just the one matching the item ID.
 	 *
 	 * @since 2.11.x
+	 * @param int $item_id Optional. The product ID.
 	 * @return array
 	 */
 	protected function get_configuration( $item_id = false ) {
