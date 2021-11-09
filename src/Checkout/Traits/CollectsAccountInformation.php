@@ -11,7 +11,14 @@ namespace EDD\Checkout\Traits;
 
 trait CollectsAccountInformation {
 
-	protected function getNewAccountInformation( $data ) {
+	/**
+	 * Retrieves account information from an array.
+	 *
+	 * @param array $data
+	 *
+	 * @return array
+	 */
+	protected function getNewAccountInformation( array $data ) {
 		return [
 			'user_login'   => isset( $data['edd_user_login'] )
 				? preg_replace( '/\s+/', '', sanitize_user( $data['edd_user_login'], false ) )
@@ -31,7 +38,7 @@ trait CollectsAccountInformation {
 	 *
 	 * @return bool
 	 */
-	protected function isGuestCheckout( $data ) {
+	protected function isGuestCheckout( array $data ) {
 		return empty( $data['edd_user_login'] );
 	}
 

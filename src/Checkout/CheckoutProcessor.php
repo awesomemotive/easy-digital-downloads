@@ -12,11 +12,12 @@ namespace EDD\Checkout;
 use EDD\Checkout\Errors\ErrorCollection;
 use EDD\Checkout\Exceptions\ValidationException;
 use EDD\Checkout\Traits\CollectsAccountInformation;
+use EDD\Checkout\Traits\CollectsAddressInformation;
 use EDD\ValueObjects\Address;
 
 class CheckoutProcessor {
 
-	use CollectsAccountInformation;
+	use CollectsAccountInformation, CollectsAddressInformation;
 
 	/**
 	 * @var Config
@@ -65,13 +66,13 @@ class CheckoutProcessor {
 		$this->validator->validate( $this->config, $this->data );
 
 		$user    = $this->getOrCreateUser();
-		$address = $this->getUserAddress();
+		$address = $this->getUserAddress( $this->data );
 
 		$order = $this->getOrderFromSession();
 	}
 
 	public function getOrderFromSession() {
-		return Order::getFromSession( $this->getUserAddress() );
+		return Order::getFromSession( $this->getUserAddress( $this->data ) );
 	}
 
 	private function getOrCreateUser() {
@@ -84,32 +85,6 @@ class CheckoutProcessor {
 		// @todo create new user slash guest checkout
 
 		return $user;
-	}
-
-	/**
-	 * @return Address
-	 */
-	private function getUserAddress() {
-		/*
-		 * This is a map of the final key we want (e.g. `line1`) to the array key
-		 * it's saved under in the form data (e.g. `card_address`).
-		 */
-		$map = [
-			'line1'       => 'card_address',
-			'line2'       => 'card_address_2',
-			'city'        => 'card_city',
-			'region'      => 'card_state',
-			'postal_code' => 'card_zip',
-			'country'     => 'billing_country',
-		];
-
-		$address = [];
-
-		foreach ( $map as $param => $dataField ) {
-			$address[ $param ] = ! empty( $this->data[ $dataField ] ) ? sanitize_text_field( $this->data[ $dataField ] ) : '';
-		}
-
-		return Address::fromArray( $address );
 	}
 
 }

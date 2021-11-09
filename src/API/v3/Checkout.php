@@ -53,16 +53,6 @@ class Checkout extends Endpoint {
 
 		register_rest_route(
 			self::$namespace,
-			'checkout/cart',
-			[
-				'methods'             => [ \WP_REST_Server::CREATABLE, \WP_REST_Server::READABLE ],
-				'callback'            => [ $this, 'handleCheckoutCart' ],
-				'permission_callback' => '__return_true',
-			]
-		);
-
-		register_rest_route(
-			self::$namespace,
 			'checkout',
 			[
 				'methods'             => \WP_REST_Server::CREATABLE,
@@ -83,7 +73,12 @@ class Checkout extends Endpoint {
 		try {
 			$this->validator->validate( $this->config, $request->get_params() );
 
-			return new \WP_REST_Response( [], 200 );
+			return new \WP_REST_Response(
+				[
+					'order' => $this->checkoutProcessor->setData( $request->get_params() )->getOrderFromSession()->toArray(),
+				],
+				200
+			);
 		} catch ( ValidationException $e ) {
 			return new \WP_REST_Response(
 				[
@@ -93,20 +88,6 @@ class Checkout extends Endpoint {
 				$e->getCode()
 			);
 		}
-	}
-
-	/**
-	 * Retrieves the current cart information for this checkout session.
-	 * Includes line items and order totals.
-	 *
-	 * @param \WP_REST_Request $request
-	 *
-	 * @return \WP_REST_Response
-	 */
-	public function handleCheckoutCart( \WP_REST_Request $request ) {
-		return new \WP_REST_Response(
-			$this->checkoutProcessor->setData( $request->get_params() )->getOrderFromSession()->toArray()
-		);
 	}
 
 	/**
