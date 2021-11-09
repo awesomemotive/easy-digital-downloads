@@ -156,9 +156,7 @@ abstract class Extension {
 		);
 		// If the extension is not installed, the button will prompt to install and activate it.
 		if ( ! $this->manager->is_plugin_installed( $config['basename'] ) ) {
-			$download_url = $this->manager->get_download_url( $item_id, 'extension' );
-			if ( $this->manager->pass_can_download() && $download_url ) {
-				$button['plugin'] = $download_url;
+			if ( $this->manager->pass_can_download() ) {
 				$button['action'] = 'install';
 				/* translators: The extension name. */
 				$button['button_text'] = sprintf( __( 'Install & Activate %s', 'easy-digital-downloads' ), $product_data->info->title );
