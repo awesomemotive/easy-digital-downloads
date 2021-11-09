@@ -3,7 +3,6 @@
 namespace EDD\Admin\Extensions;
 
 use \EDD\Admin\Pass_Manager;
-use \EDD\Admin\Extensions\ExtensionsAPI;
 
 abstract class Extension {
 
