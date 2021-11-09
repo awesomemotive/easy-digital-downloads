@@ -122,8 +122,8 @@ class Extension_Manager {
 	 */
 	private function get_card_data( $product, $config ) {
 		$data = array(
-			'title'      => '',
-			'image'      => '',
+			'title'       => '',
+			'image'       => '',
 			'description' => '',
 		);
 		if ( ! empty( $config['title'] ) ) {
@@ -321,6 +321,10 @@ class Extension_Manager {
 			: esc_html__( 'Could not install the extension. Please download it from edd.com and install it manually.', 'easy-digital-downloads' );
 
 		$plugin = filter_input( INPUT_POST, 'plugin', FILTER_SANITIZE_STRING );
+		if ( empty( $plugin ) ) {
+			$product = filter_input( INPUT_POST, 'product', FILTER_SANITIZE_NUMBER_INT );
+			$plugin  = $this->get_download_url( $product, $type );
+		}
 		if ( empty( $plugin ) ) {
 			wp_send_json_error( $error );
 		}
