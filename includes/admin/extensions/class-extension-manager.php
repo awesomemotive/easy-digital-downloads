@@ -249,49 +249,27 @@ class Extension_Manager {
 	 */
 	public function activate() {
 
+		$result = array(
+			'msg'          => __( 'There was an error while performing your request.', 'easy-digital-downloads' ),
+			'is_activated' => false,
+		);
+
 		// Check for permissions.
 		if ( ! check_ajax_referer( 'edd_extensionmanager', 'nonce', false ) || ! current_user_can( 'activate_plugins' ) ) {
-			wp_send_json_error( esc_html__( 'Plugin activation is not available for you on this site.', 'easy-digital-downloads' ) );
+			$result['msg'] = __( 'Plugin activation is not available for you on this site.', 'easy-digital-downloads' );
+			wp_send_json_error( $result );
 		}
 
 		$plugin = filter_input( INPUT_POST, 'plugin', FILTER_SANITIZE_STRING );
-		if ( ! $plugin ) {
-			wp_send_json_error( esc_html__( 'The plugin to install was not defined.', 'easy-digital-downloads' ) );
+		$type   = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+		if ( ! $plugin || ! $type ) {
+			$result ['msg'] = __( 'The plugin to install was not defined.', 'easy-digital-downloads' );
+			wp_send_json_error( $result );
 		}
 
-		$type = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
-		if ( ! $type ) {
-			wp_send_json_error( esc_html__( 'The plugin to install was not defined.', 'easy-digital-downloads' ) );
-		}
+		$plugin = sanitize_text_field( wp_unslash( $plugin ) );
 
-		$plugin   = sanitize_text_field( wp_unslash( $plugin ) );
-		$activate = activate_plugins( $plugin );
-
-		if ( ! is_wp_error( $activate ) ) {
-			/**
-			 * Fire after plugin activating via the EDD installer.
-			 *
-			 * @since 2.11.x
-			 *
-			 * @param string $plugin Path to the plugin file relative to the plugins directory.
-			 */
-			do_action( 'edd_plugin_activated', $plugin );
-
-			$message = esc_html__( 'Plugin activated.', 'easy-digital-downloads' );
-			if ( 'plugin' !== $type ) {
-				// Rename $type to 'extension'.
-				$type    = 'extension';
-				$message = esc_html__( 'Extension activated.', 'easy-digital-downloads' );
-			}
-			wp_send_json_success(
-				array(
-					'msg' => $message,
-				)
-			);
-		}
-
-		/* translators: "extension" or "plugin" as defined by $type */
-		wp_send_json_error( sprintf( esc_html__( 'Could not activate the %s. Please activate it on the Plugins page.', 'easy-digital-downloads' ), $type ) );
+		$this->activate_plugin( $plugin, $type );
 	}
 
 	/**
@@ -307,16 +285,20 @@ class Extension_Manager {
 		$generic_error = esc_html__( 'There was an error while performing your request.', 'easy-digital-downloads' );
 		$type          = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
 		$required_pass = filter_input( INPUT_POST, 'pass', FILTER_SANITIZE_STRING );
+		$result        = array(
+			'msg'          => $generic_error,
+			'is_activated' => false,
+		);
 		if ( ! $type ) {
-			wp_send_json_error( $generic_error );
+			wp_send_json_error( $result );
 		}
 
 		// Check if new installations are allowed.
 		if ( ! $this->can_install( $type, $required_pass ) ) {
-			wp_send_json_error( $generic_error );
+			wp_send_json_error( $result );
 		}
 
-		$error = 'plugin' === $type
+		$result['msg'] = 'plugin' === $type
 			? esc_html__( 'Could not install the plugin. Please download and install it manually via Plugins > Add New.', 'easy-digital-downloads' )
 			: esc_html__( 'Could not install the extension. Please download it from edd.com and install it manually.', 'easy-digital-downloads' );
 
@@ -326,7 +308,7 @@ class Extension_Manager {
 			$plugin  = $this->get_download_url( $product, $type );
 		}
 		if ( empty( $plugin ) ) {
-			wp_send_json_error( $error );
+			wp_send_json_error( $result );
 		}
 
 		// Set the current screen to avoid undefined notices.
@@ -351,11 +333,11 @@ class Extension_Manager {
 
 		// Check for file system permissions.
 		if ( ! $creds ) {
-			wp_send_json_error( $error );
+			wp_send_json_error( $result );
 		}
 
 		if ( ! WP_Filesystem( $creds ) ) {
-			wp_send_json_error( $error );
+			wp_send_json_error( $result );
 		}
 
 		/*
@@ -373,7 +355,7 @@ class Extension_Manager {
 
 		// Error check.
 		if ( ! method_exists( $installer, 'install' ) || empty( $plugin ) ) {
-			wp_send_json_error( $error );
+			wp_send_json_error( $result );
 		}
 
 		$installer->install( $plugin ); // phpcs:ignore
@@ -383,21 +365,38 @@ class Extension_Manager {
 
 		$plugin_basename = $installer->plugin_info();
 
+		$this->activate_plugin( $plugin_basename, $type );
+	}
+
+	/**
+	 * This function actually activates the plugin.
+	 * Used by both install and activate.
+	 *
+	 * @since 2.11.x
+	 * @param string $plugin_basename The plugin basename.
+	 * @param string $type            The "type" will be plugin or something specific to an extension.
+	 * @return void
+	 */
+	private function activate_plugin( $plugin_basename, $type = 'plugin' ) {
+		if ( 'plugin' !== $type ) {
+			$type = 'extension';
+		}
+		$result = array(
+			/* translators: "extension" or "plugin" as defined by $type */
+			'msg'          => sprintf( __( 'Could not activate the %s.', 'easy-digital-downloads' ), $type ),
+			'is_activated' => false,
+		);
 		if ( empty( $plugin_basename ) ) {
-			wp_send_json_error( $error );
+			wp_send_json_error( $result );
 		}
 
-		$result = array(
-			'msg'          => $generic_error,
-			'is_activated' => false,
-			'basename'     => $plugin_basename,
-		);
+		$result['basename'] = $plugin_basename;
 
 		// Check for permissions.
 		if ( ! current_user_can( 'activate_plugins' ) ) {
 			$result['msg'] = 'plugin' === $type ? esc_html__( 'Plugin installed.', 'easy-digital-downloads' ) : esc_html__( 'Extension installed.', 'easy-digital-downloads' );
 
-			wp_send_json_success( $result );
+			wp_send_json_error( $result );
 		}
 
 		// Activate the plugin silently.
