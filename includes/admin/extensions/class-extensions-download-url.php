@@ -51,7 +51,7 @@ class ExtensionsDownloadURL {
 		);
 
 		// If there was an API error, set transient for only 10 minutes.
-		if ( ! $request || $request instanceof WP_Error ) {
+		if ( ! $request || $request instanceof \WP_Error ) {
 			return false;
 		}
 
