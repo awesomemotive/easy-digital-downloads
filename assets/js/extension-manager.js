@@ -30,7 +30,7 @@
 				return;
 		}
 
-		$btn.attr( 'disabled', true );
+		$btn.removeClass( 'button-primary' ).attr( 'disabled', true ).addClass( 'updating-message' );
 
 		var data = {
 			action: ajaxAction,
@@ -44,20 +44,17 @@
 
 		$.post( ajaxurl, data )
 			.done( function ( res ) {
-				console.log( res );
+				var thisStep = $btn.closest( '.edd-extension-manager__step' );
 				if ( res.success ) {
-					$btn.html( res.data.msg );
-
-					var thisStep = $btn.closest( '.edd-extension-manager__step' ),
-						nextStep = thisStep.next();
-
+					var nextStep = thisStep.next();
 					if ( nextStep.length ) {
 						thisStep.fadeOut();
 						nextStep.fadeIn();
 					}
+				} else {
+					thisStep.fadeOut();
+					thisStep.after( '<p>' + res.data.msg + '</p>' );
 				}
-			} )
-			.always( function () {
 			} );
 	} );
 } )( document, jQuery );
