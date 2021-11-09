@@ -59,6 +59,10 @@ body.post-type-download #screen-meta {
 	max-width: 300px;
 }
 
+.no-js #edd-header-actions {
+	display: none;
+}
+
 #edd-header .edd-round {
 	position: relative;
 	background-color: #f3f4f5;
