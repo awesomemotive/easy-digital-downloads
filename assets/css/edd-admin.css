@@ -2358,7 +2358,7 @@ body.admin-bar #edd-notifications-panel {
 	margin: 0;
 }
 .edd-notification--date {
-	color: #8c8f9a;
+	color: #71747e;
 	font-size: 12px;
 }
 .edd-notification--actions {
@@ -2372,7 +2372,7 @@ body.admin-bar #edd-notifications-panel {
 	background: none !important;
 	border: none !important;
 	box-shadow: none !important;
-	color: #8c8f9a !important;
+	color: #71747e !important;
 	cursor: pointer;
 	padding: 0 10px;
 	text-decoration: underline;
