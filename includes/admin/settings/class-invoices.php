@@ -77,7 +77,11 @@ class Invoices extends Extension {
 	protected function is_activated() {
 		$config = $this->get_configuration();
 
-		return class_exists( 'EDDInvoices' ) && is_plugin_active( $config['basename'] );
+		if ( is_plugin_active( $config['basename'] ) ) {
+			return true;
+		}
+
+		return class_exists( 'EDDInvoices' );
 	}
 }
 
