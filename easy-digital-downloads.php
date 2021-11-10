@@ -137,7 +137,7 @@ final class Easy_Digital_Downloads {
 	 */
 	public $payment_stats;
 
-  /**
+	/**
 	 * Holds registered premium EDD extensions.
 	 *
 	 * @var \EDD\Extensions\ExtensionRegistry
