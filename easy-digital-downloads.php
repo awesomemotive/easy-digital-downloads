@@ -377,6 +377,7 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/class-wpsmtp.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/class-recurring.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/class-email-marketing.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/class-invoices.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/settings-compatibility.php';
 
 			require_once EDD_PLUGIN_DIR . 'includes/libraries/class-persistent-dismissible.php';
