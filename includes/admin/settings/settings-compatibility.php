@@ -159,6 +159,16 @@ add_action(
 				return $settings;
 			} );
 		}
+
+		/**
+		 * Move the Invoices settings to the Payments section (EDD 2.11.x).
+		 */
+		if ( false !== has_filter( 'edd_settings_sections_extensions', 'edd_invoices_register_settings_section' ) ) {
+			remove_filter( 'edd_settings_sections_extensions', 'edd_invoices_register_settings_section' );
+			add_filter( 'edd_settings_sections_gateways', 'edd_invoices_register_settings_section', 10 );
+			remove_filter( 'edd_settings_extensions', 'edd_invoices_register_settings', 1 );
+			add_filter( 'edd_settings_gateways', 'edd_invoices_register_settings', 1 );
+		}
 	},
 	99
 );
