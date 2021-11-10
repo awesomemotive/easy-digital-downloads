@@ -160,9 +160,8 @@ class EDD_License {
 		// Fall back to the highest license key if one is not saved for this extension.
 		if ( empty( $license ) ) {
 			$pass_manager = new \EDD\Admin\Pass_Manager();
-			$highest_key  = $pass_manager->highest_license_key;
-			if ( $highest_key ) {
-				$license = $highest_key;
+			if ( $pass_manager->highest_license_key ) {
+				$license = $pass_manager->highest_license_key;
 			}
 		}
 		$betas = edd_get_option( 'enabled_betas', array() );
