@@ -203,4 +203,16 @@ abstract class Extension {
 			),
 		);
 	}
+
+	/**
+	 * Optionally hides the submit button on screens where it's not needed.
+	 *
+	 * @since 2.11.x
+	 * @return void
+	 */
+	public function hide_submit_button() {
+		?>
+		<style>p.submit{display:none;}</style>
+		<?php
+	}
 }

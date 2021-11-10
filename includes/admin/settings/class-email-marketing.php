@@ -70,8 +70,8 @@ class EmailMarketing extends Extension {
 			}
 			?>
 		</div>
-		<style>p.submit{display:none;}</style>
 		<?php
+		$this->hide_submit_button();
 	}
 
 	/**
