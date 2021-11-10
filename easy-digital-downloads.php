@@ -132,7 +132,7 @@ final class Easy_Digital_Downloads {
 	/**
 	 * EDD Payment Stats Object
 	 *
-	 * @var object|EDD_Payment_Stats
+	 * @var EDD_Payment_Stats
 	 * @since 1.8
 	 */
 	public $payment_stats;
