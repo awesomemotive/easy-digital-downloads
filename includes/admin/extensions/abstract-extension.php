@@ -164,7 +164,7 @@ abstract class Extension {
 				$button = array(
 					/* translators: The extension name. */
 					'button_text' => sprintf( __( 'Upgrade Today to Access %s!', 'easy-digital-downloads' ), $product_data->info->title ),
-					'href'        => ! empty( $config['upgrade_url'] ) ? $config['upgrade_url'] : 'https://easydigitaldownloads.com/pricing',
+					'href'        => $this->get_upgrade_url( $config, $item_id ),
 					'new_tab'     => true,
 					'type'        => $type,
 				);
@@ -178,6 +178,28 @@ abstract class Extension {
 		}
 
 		return $button;
+	}
+
+	/**
+	 * Gets the upgrade URL for the button.
+	 *
+	 * @todo add UTM parameters
+	 * @since 2.11.x
+	 * @param array $config  The array of provided data about the extension.
+	 * @param int   $item_id The item/product ID.
+	 * @return string
+	 */
+	private function get_upgrade_url( $config, $item_id ) {
+		if ( ! empty( $config['upgrade_url'] ) ) {
+			return $config['upgrade_url'];
+		}
+
+		return add_query_arg(
+			array(
+				'p' => $item_id,
+			),
+			'https://easydigitaldownloads.com'
+		);
 	}
 
 	/**
