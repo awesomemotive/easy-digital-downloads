@@ -45,10 +45,6 @@ class EmailMarketing extends Extension {
 	 * @return array
 	 */
 	public function add_section( $sections ) {
-		if ( $this->is_activated() ) {
-			return $sections;
-		}
-
 		$sections['email_marketing'] = __( 'Email Marketing', 'easy-digital-downloads' );
 
 		return $sections;
@@ -61,6 +57,9 @@ class EmailMarketing extends Extension {
 	 * @return void
 	 */
 	public function field() {
+		if ( $this->is_activated() ) {
+			printf( '<p>%s</p>', __( 'Looks like you have an email marketing extension installed, but we support more providers!', 'easy-digital-downloads' ) );
+		}
 		$config = $this->get_configuration();
 		?>
 		<div class="edd-extension-manager__card-group">
