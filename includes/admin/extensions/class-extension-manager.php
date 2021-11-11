@@ -64,6 +64,17 @@ class Extension_Manager {
 	}
 
 	/**
+	 * Whether a given plugin is active or not
+	 *
+	 * @since 2.11.x
+	 * @param string $basename The plugin basename.
+	 * @return boolean
+	 */
+	public function is_active( $basename ) {
+		return is_plugin_active( $basename );
+	}
+
+	/**
 	 * Outputs a standard extension card.
 	 *
 	 * @since 2.11.x
