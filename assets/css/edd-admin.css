@@ -2220,7 +2220,7 @@ td.edd_order_price {
 .edd-review-actions {
 	display: flex;
 	gap: 6px;
-	margin: 0 100px 16px 0;
+	margin: 0 0 16px 0;
 }
 
 .edd-promo-notice .edd-peeking {
@@ -2228,6 +2228,20 @@ td.edd_order_price {
 	justify-self: flex-end;
 	margin-right: 16px;
 	margin-bottom: -1px;
+}
+
+@media screen and (max-width: 782px) {
+	#edd-admin-notice-five-star-review.notice .edd-peeking {
+		margin-bottom: -6px;
+	}
+}
+
+@media screen and (min-width: 400px) {
+	.edd-promo-notice .edd-peeking {
+		justify-self: flex-start;
+		margin-right: 0;
+		margin-left: 200px;
+	}
 }
 
 .edd-review-step,
