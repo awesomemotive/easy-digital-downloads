@@ -44,6 +44,7 @@
 
 		$.post( ajaxurl, data )
 			.done( function ( res ) {
+				console.log( res );
 				var thisStep = $btn.closest( '.edd-extension-manager__step' );
 				if ( res.success ) {
 					var nextStep = thisStep.next();
@@ -53,7 +54,11 @@
 					}
 				} else {
 					thisStep.fadeOut();
-					thisStep.after( '<p>' + res.data.msg + '</p>' );
+					var message = res.data.message;
+					if ( res.data[ 0 ][ 'message' ] ) {
+						message = res.data[ 0 ][ 'message' ];
+					}
+					thisStep.after( '<p>' + message + '</p>' );
 				}
 			} );
 	} );
