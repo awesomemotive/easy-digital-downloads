@@ -86,6 +86,10 @@ jQuery(document).ready(function ($) {
 				$( this ).val( parseInt( key ) ).removeAttr('checked');
 			});
 
+			clone.find( '.edd_repeatable_index' ).each( function () {
+				$( this ).val( parseInt( key ) );
+			} );
+
 			clone.find( '.edd_repeatable_condition_field' ).each ( function() {
 				$( this ).find( 'option:eq(0)' ).prop( 'selected', 'selected' );
 			});
