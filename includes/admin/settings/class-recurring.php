@@ -30,8 +30,8 @@ class Recurring extends Extension {
 
 	public function __construct() {
 		add_filter( 'edd_settings_sections_gateways', array( $this, 'add_section' ) );
-		add_filter( 'edd_settings_gateways', array( $this, 'setting' ) );
-		add_action( 'edd_recurring_install', array( $this, 'settings_field' ) );
+		add_action( 'edd_settings_tab_top_gateways_recurring', array( $this, 'settings_field' ) );
+		add_action( 'edd_settings_tab_top_gateways_recurring', array( $this, 'hide_submit_button' ) );
 
 		parent::__construct();
 	}
