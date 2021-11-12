@@ -74,9 +74,6 @@ class License_Upgrade_Notice extends Notice {
 	 * @return bool
 	 */
 	protected function _should_display() {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			return false;
-		}
 
 		if ( ! $this->is_edd_admin_page() ) {
 			return false;
