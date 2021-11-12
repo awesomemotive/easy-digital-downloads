@@ -92,10 +92,16 @@ class Extension_Manager {
 						<p class="edd-extension-manager__description"><?php echo wp_kses_post( $data['description'] ); ?></p>
 					<?php endif; ?>
 					<div class="edd-extension-manager__group">
+						<?php
+						if ( ! $this->is_plugin_active( $config['basename'] ) ) {
+							?>
+							<div class="edd-extension-manager__step">
+								<?php $this->button( $button_parameters ); ?>
+							</div>
+							<?php
+						}
+						?>
 						<div class="edd-extension-manager__step">
-							<?php $this->button( $button_parameters ); ?>
-						</div>
-						<div class="edd-extension-manager__step" style="display:none;">
 							<?php $this->link( $link_parameters ); ?>
 						</div>
 					</div>
