@@ -2233,6 +2233,10 @@ td.edd_order_price {
 	margin: 0;
 }
 
+.edd-extension-manager__step:not(:first-of-type) {
+	display: none;
+}
+
 .edd-extension-manager__body {
 	display: grid;
 	gap: 1.5em;
