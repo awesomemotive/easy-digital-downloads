@@ -144,6 +144,19 @@ add_action(
 		}
 
 		/**
+		 * Move the MailPoet settings to the Marketing section (EDD 2.11.x).
+		 */
+		if ( class_exists( 'EDD_MailPoet' ) && method_exists( 'EDD_MailPoet', 'instance' ) ) {
+			$mailpoet = EDD_MailPoet::instance();
+			if ( false !== has_filter( 'edd_settings_sections_extensions', array( $mailpoet, 'subsection' ) ) ) {
+				remove_filter( 'edd_settings_sections_extensions', array( $mailpoet, 'subsection' ) );
+				add_filter( 'edd_settings_sections_marketing', array( $mailpoet, 'subsection' ) );
+				remove_filter( 'edd_settings_extensions', array( $mailpoet, 'settings' ) );
+				add_filter( 'edd_settings_marketing', array( $mailpoet, 'settings' ) );
+			}
+		}
+
+		/**
 		 * Move the Mad Mimi settings to the Marketing section (EDD 2.11.x).
 		 */
 		if ( false !== has_filter( 'edd_settings_misc', 'eddmm_add_settings' ) ) {
