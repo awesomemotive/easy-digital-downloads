@@ -169,7 +169,7 @@ abstract class Extension {
 					'type'        => $type,
 				);
 			}
-		} elseif ( ! $this->is_activated() ) {
+		} elseif ( ! $this->manager->is_plugin_active( $config['basename'] ) ) {
 			// If the extension is installed, but not activated, the button will prompt to activate it.
 			$button['plugin'] = $config['basename'];
 			$button['action'] = 'activate';

@@ -77,7 +77,7 @@ class Invoices extends Extension {
 	protected function is_activated() {
 		$config = $this->get_configuration();
 
-		if ( $this->manager->is_active( $config['basename'] ) ) {
+		if ( $this->manager->is_plugin_active( $config['basename'] ) ) {
 			return true;
 		}
 

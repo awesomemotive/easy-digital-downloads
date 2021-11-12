@@ -64,17 +64,6 @@ class Extension_Manager {
 	}
 
 	/**
-	 * Whether a given plugin is active or not
-	 *
-	 * @since 2.11.x
-	 * @param string $basename The plugin basename.
-	 * @return boolean
-	 */
-	public function is_active( $basename ) {
-		return is_plugin_active( $basename );
-	}
-
-	/**
 	 * Outputs a standard extension card.
 	 *
 	 * @since 2.11.x
@@ -527,5 +516,16 @@ class Extension_Manager {
 	 */
 	public function is_plugin_installed( $plugin ) {
 		return array_key_exists( $plugin, $this->get_plugins() );
+	}
+
+	/**
+	 * Whether a given plugin is active or not.
+	 *
+	 * @since 2.11.x
+	 * @param string $basename The path to the main plugin file, eg 'my-plugin/my-plugin.php'.
+	 * @return boolean
+	 */
+	public function is_plugin_active( $basename ) {
+		return is_plugin_active( $basename );
 	}
 }
