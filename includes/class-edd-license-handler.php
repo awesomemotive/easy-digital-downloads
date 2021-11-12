@@ -156,11 +156,19 @@ class EDD_License {
 			return;
 		}
 
+		$license = $this->license;
+		// Fall back to the highest license key if one is not saved for this extension.
+		if ( empty( $license ) ) {
+			$pass_manager = new \EDD\Admin\Pass_Manager();
+			if ( $pass_manager->highest_license_key ) {
+				$license = $pass_manager->highest_license_key;
+			}
+		}
 		$betas = edd_get_option( 'enabled_betas', array() );
 
 		$args = array(
 			'version'   => $this->version,
-			'license'   => $this->license,
+			'license'   => $license,
 			'author'    => $this->author,
 			'beta'      => function_exists( 'edd_extension_has_beta_support' ) && edd_extension_has_beta_support( $this->item_shortname ),
 		);
