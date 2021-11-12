@@ -332,13 +332,13 @@ final class Easy_Digital_Downloads {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/tracking.php'; // Must be loaded on frontend to ensure cron runs
 		require_once EDD_PLUGIN_DIR . 'includes/privacy-functions.php';
 		require_once EDD_PLUGIN_DIR . 'includes/utils/class-tokenizer.php';
+		require_once EDD_PLUGIN_DIR . 'includes/admin/class-pass-manager.php'; // Must be loaded on front end for cron
 
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/add-ons.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-footer.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-actions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/class-edd-notices.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/class-pass-manager.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/admin-pages.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/dashboard-widgets.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/thickbox.php';
