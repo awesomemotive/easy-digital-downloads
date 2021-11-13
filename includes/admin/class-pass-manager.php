@@ -131,14 +131,14 @@ class Pass_Manager {
 			// If we don't yet have a "highest pass", then this one is it automatically.
 			if ( empty( $highest_pass_id ) ) {
 				$highest_license_key = $license_key;
-				$highest_pass_id     = $pass_data['pass_id'];
+				$highest_pass_id     = intval( $pass_data['pass_id'] );
 				continue;
 			}
 
 			// Otherwise, this pass only takes over the highest pass if it's actually higher.
 			if ( self::pass_compare( (int) $pass_data['pass_id'], $highest_pass_id, '>' ) ) {
 				$highest_license_key = $license_key;
-				$highest_pass_id     = $pass_data['pass_id'];
+				$highest_pass_id     = intval( $pass_data['pass_id'] );
 			}
 		}
 
