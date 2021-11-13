@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @param bool         $admin_notice Whether to send the admin email notification or not (default: true)
  * @param EDD_Payment  $payment      Payment object for payment ID.
  * @param EDD_Customer $customer     Customer object for associated payment.
- * @return void
+ * @return bool Whether the email was sent successfully.
  */
 function edd_email_purchase_receipt( $payment_id, $admin_notice = true, $to_email = '', $payment = null, $customer = null ) {
 	if ( is_null( $payment ) ) {
@@ -63,11 +63,13 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true, $to_emai
 	$headers = apply_filters( 'edd_receipt_headers', $emails->get_headers(), $payment_id, $payment_data );
 	$emails->__set( 'headers', $headers );
 
-	$emails->send( $to_email, $subject, $message, $attachments );
+	$sent = $emails->send( $to_email, $subject, $message, $attachments );
 
 	if ( $admin_notice && ! edd_admin_notices_disabled( $payment_id ) ) {
 		do_action( 'edd_admin_sale_notice', $payment_id, $payment_data );
 	}
+
+	return $sent;
 }
 
 /**

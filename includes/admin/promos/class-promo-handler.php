@@ -23,7 +23,9 @@ class PromoHandler {
 	 * @var string[]
 	 */
 	private $notices = array(
-		'\\EDD\\Admin\\Promos\\Notices\\License_Upgrade_Notice'
+		'\\EDD\\Admin\\Promos\\Notices\\License_Upgrade_Notice',
+		'\\EDD\\Admin\\Promos\\Notices\\Five_Star_Review_Dashboard',
+		'\\EDD\\Admin\\Promos\\Notices\\Five_Star_Review_Settings',
 	);
 
 	/**
@@ -59,7 +61,7 @@ class PromoHandler {
 
 			add_action( $notice_class_name::DISPLAY_HOOK, function () use ( $notice_class_name ) {
 				/** @var Notice $notice */
-				$notice = new $notice_class_name;
+				$notice = new $notice_class_name();
 				if ( $notice->should_display() ) {
 					$notice->display();
 				}
@@ -105,15 +107,24 @@ class PromoHandler {
 	 * @since 2.10.6
 	 */
 	public function dismiss_notice() {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ), 403 );
-		}
-
-		if ( empty( $_POST['notice_id'] ) ) {
+		$notice_id = filter_input( INPUT_POST, 'notice_id', FILTER_SANITIZE_STRING );
+		if ( empty( $notice_id ) ) {
 			wp_send_json_error( __( 'Missing notice ID.', 'easy-digital-downloads' ), 400 );
 		}
 
 		if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'edd-dismiss-notice-' . sanitize_key( $_POST['notice_id'] ) ) ) {
+			wp_send_json_error( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ), 403 );
+		}
+
+		$notice_class_name = $this->get_notice_class_name( $notice_id );
+
+		// No matching notice class was found.
+		if ( ! $notice_class_name ) {
+			wp_send_json_error( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ), 403 );
+		}
+
+		// Check whether the current user can dismiss the notice.
+		if ( ! defined( $notice_class_name . '::CAPABILITY' ) || ! current_user_can( $notice_class_name::CAPABILITY ) ) {
 			wp_send_json_error( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ), 403 );
 		}
 
@@ -124,6 +135,38 @@ class PromoHandler {
 		wp_send_json_success();
 	}
 
+	/**
+	 * Gets the notice class name for a given notice ID.
+	 *
+	 * @since 2.11.4
+	 * @param string $notice_id The notice ID to match.
+	 * @return bool|string The class name or false if no matching class was found.
+	 */
+	private function get_notice_class_name( $notice_id ) {
+		$notice_class_name = false;
+		// Look through the registered notice classes for the one being dismissed.
+		foreach ( $this->notices as $notice_class_to_check ) {
+			if ( ! class_exists( $notice_class_to_check ) ) {
+				$file_name = strtolower( str_replace( '_', '-', basename( str_replace( '\\', '/', $notice_class_to_check ) ) ) );
+				$file_path = EDD_PLUGIN_DIR . 'includes/admin/promos/notices/class-' . $file_name . '.php';
+
+				if ( file_exists( $file_path ) ) {
+					require_once $file_path;
+				}
+			}
+
+			if ( ! class_exists( $notice_class_to_check ) ) {
+				continue;
+			}
+			$notice = new $notice_class_to_check();
+			if ( $notice->get_id() === $notice_id ) {
+				$notice_class_name = $notice_class_to_check;
+				break;
+			}
+		}
+
+		return $notice_class_name;
+	}
 }
 
 new PromoHandler();

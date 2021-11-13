@@ -221,6 +221,9 @@ class EDD_Notices {
 					case 'email_sent' :
 						$notices['updated']['edd-payment-sent'] = __( 'The purchase receipt has been resent.', 'easy-digital-downloads' );
 						break;
+					case 'email_send_failed':
+						$notices['error']['edd-payment-sent'] = __( 'Failed to send purchase receipt.', 'easy-digital-downloads' );
+						break;
 					case 'refreshed-reports' :
 						$notices['updated']['edd-refreshed-reports'] = __( 'The reports have been refreshed.', 'easy-digital-downloads' );
 						break;
