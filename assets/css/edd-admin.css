@@ -2261,6 +2261,48 @@ td.edd_order_price {
 	color: #d63638;
 }
 
+/* Five Star Review Request
+------------------------------------------------------------- */
+#edd-admin-notice-five-star-review {
+	display: grid;
+}
+
+#edd_dashboard_sales .edd-promo-notice {
+	border-bottom: 1px solid #c3c4c7;
+}
+
+.edd-review-actions {
+	display: flex;
+	gap: 6px;
+	margin: 0 0 16px 0;
+}
+
+.edd-promo-notice .edd-peeking {
+	align-self: flex-end;
+	justify-self: flex-end;
+	margin-right: 16px;
+	margin-bottom: -1px;
+}
+
+@media screen and (max-width: 782px) {
+	#edd-admin-notice-five-star-review.notice .edd-peeking {
+		margin-bottom: -6px;
+	}
+}
+
+@media screen and (min-width: 400px) {
+	.edd-promo-notice .edd-peeking {
+		justify-self: flex-start;
+		margin-right: 0;
+		margin-left: 200px;
+	}
+}
+
+.edd-review-step,
+.edd-promo-notice .edd-peeking {
+	grid-area: 1/-1;
+}
+
 /* Notifications
 -------------------------------------------------------------- */
 .edd-overlay {

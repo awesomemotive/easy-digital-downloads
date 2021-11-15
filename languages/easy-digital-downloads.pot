@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 2.11.3.1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2021-11-02 12:32:58+00:00\n"
+"POT-Creation-Date: 2021-11-15 11:15:46+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,7 +24,7 @@ msgstr ""
 "X-Textdomain-Support: yes\n"
 "X-Generator: grunt-wp-i18n 1.0.3\n"
 
-#: easy-digital-downloads.php:191 easy-digital-downloads.php:203
+#: easy-digital-downloads.php:208 easy-digital-downloads.php:220
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
@@ -104,7 +104,7 @@ msgstr ""
 #: includes/api/class-edd-api.php:1980 includes/api/class-edd-api.php:1985
 #: includes/api/class-edd-api.php:1997 includes/api/class-edd-api.php:1999
 #: includes/cart/class-edd-cart.php:1433 includes/cart/class-edd-cart.php:1447
-#: includes/class-edd-license-handler.php:385
+#: includes/class-edd-license-handler.php:398
 #: includes/deprecated-functions.php:517 includes/deprecated-functions.php:532
 #: includes/deprecated-functions.php:542 includes/download-functions.php:1255
 #: includes/emails/actions.php:53 includes/emails/template.php:243
@@ -114,7 +114,7 @@ msgstr ""
 #: includes/gateways/paypal/admin/connect.php:459
 #: includes/gateways/paypal/admin/connect.php:597
 #: includes/gateways/paypal-standard.php:172
-#: includes/gateways/stripe/includes/admin/upgrade-functions.php:57
+#: includes/gateways/stripe/includes/admin/upgrade-functions.php:80
 #: includes/gateways/stripe/includes/payment-actions.php:1408
 #: includes/process-download.php:303 includes/process-download.php:894
 #: includes/query-filters.php:48 includes/user-functions.php:895
@@ -428,70 +428,74 @@ msgid "The purchase receipt has been resent."
 msgstr ""
 
 #: includes/admin/class-edd-notices.php:225
-msgid "The reports have been refreshed."
+msgid "Failed to send purchase receipt."
 msgstr ""
 
 #: includes/admin/class-edd-notices.php:228
+msgid "The reports have been refreshed."
+msgstr ""
+
+#: includes/admin/class-edd-notices.php:231
 msgid "The payment note has been deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:237
+#: includes/admin/class-edd-notices.php:240
 msgid "The settings have been imported."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:240
+#: includes/admin/class-edd-notices.php:243
 msgid "API keys successfully generated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:243
+#: includes/admin/class-edd-notices.php:246
 msgid "The specified user already has API keys."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:246
+#: includes/admin/class-edd-notices.php:249
 msgid "API keys successfully regenerated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:249
+#: includes/admin/class-edd-notices.php:252
 msgid "API keys successfully revoked."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:252
+#: includes/admin/class-edd-notices.php:255
 msgid "SendWP has been successfully connected!"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:261
+#: includes/admin/class-edd-notices.php:264
 msgid "The payment note has been added successfully."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:264
+#: includes/admin/class-edd-notices.php:267
 msgid "The payment has been successfully updated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:273
+#: includes/admin/class-edd-notices.php:276
 msgid "Customer successfully deleted"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:276
+#: includes/admin/class-edd-notices.php:279
 msgid "User successfully verified"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:279
+#: includes/admin/class-edd-notices.php:282
 msgid "Customer email added"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:282
+#: includes/admin/class-edd-notices.php:285
 msgid "Customer email removed"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:285
+#: includes/admin/class-edd-notices.php:288
 msgid "Failed to remove customer email"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:288
+#: includes/admin/class-edd-notices.php:291
 msgid "Primary email updated for customer"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:291
+#: includes/admin/class-edd-notices.php:294
 msgid "Failed to set primary email"
 msgstr ""
 
@@ -536,7 +540,7 @@ msgstr ""
 #: includes/admin/downloads/dashboard-columns.php:31
 #: includes/admin/payments/view-order-details.php:693
 #: includes/admin/reporting/class-export-customers.php:74
-#: includes/admin/reporting/export/class-batch-export-customers.php:42
+#: includes/admin/reporting/export/class-batch-export-customers.php:43
 #: includes/admin/reporting/export/class-batch-export-downloads.php:43
 #: includes/privacy-functions.php:589 templates/shortcode-receipt.php:123
 msgid "Name"
@@ -556,6 +560,7 @@ msgid "Total Spent"
 msgstr ""
 
 #: includes/admin/customers/class-customer-table.php:180
+#: includes/admin/reporting/export/class-batch-export-customers.php:48
 #: includes/admin/reporting/export/class-batch-export-downloads.php:44
 #: includes/privacy-functions.php:593
 msgid "Date Created"
@@ -640,7 +645,7 @@ msgstr ""
 #: includes/admin/import/import-functions.php:113
 #: includes/admin/reporting/export/export-actions.php:23
 #: includes/api/class-edd-api.php:1980
-#: includes/class-edd-license-handler.php:385
+#: includes/class-edd-license-handler.php:398
 msgid "Nonce verification failed"
 msgstr ""
 
@@ -753,6 +758,7 @@ msgid "Customer since %s"
 msgstr ""
 
 #: includes/admin/customers/customers.php:313
+#: includes/admin/reporting/export/class-batch-export-customers.php:42
 #: includes/privacy-functions.php:867
 msgid "User ID"
 msgstr ""
@@ -776,7 +782,7 @@ msgstr ""
 #: includes/admin/payments/view-order-details.php:684
 #: includes/admin/payments/view-order-details.php:704
 #: includes/admin/thickbox.php:136 includes/class-edd-html-elements.php:796
-#: includes/gateways/stripe/includes/admin/admin-filters.php:96
+#: includes/gateways/stripe/includes/admin/admin-filters.php:109
 #: includes/gateways/stripe/includes/template-functions.php:597
 #: includes/gateways/stripe/includes/template-functions.php:637
 msgid "Cancel"
@@ -808,7 +814,7 @@ msgstr ""
 #: includes/admin/reporting/class-export-customers.php:66
 #: includes/admin/reporting/class-export-customers.php:77
 #: includes/admin/reporting/class-export-payments.php:61
-#: includes/admin/reporting/export/class-batch-export-customers.php:43
+#: includes/admin/reporting/export/class-batch-export-customers.php:44
 #: includes/admin/reporting/export/class-batch-export-payments.php:41
 #: includes/admin/reporting/export/class-batch-export-sales.php:42
 #: includes/admin/tools.php:497 templates/shortcode-register.php:25
@@ -1024,13 +1030,13 @@ msgstr ""
 msgid "Easy Digital Downloads Sales Summary"
 msgstr ""
 
-#: includes/admin/dashboard-widgets.php:62
+#: includes/admin/dashboard-widgets.php:72
 msgid "Current Month"
 msgstr ""
 
-#: includes/admin/dashboard-widgets.php:67
-#: includes/admin/dashboard-widgets.php:85
-#: includes/admin/dashboard-widgets.php:111
+#: includes/admin/dashboard-widgets.php:77
+#: includes/admin/dashboard-widgets.php:95
+#: includes/admin/dashboard-widgets.php:121
 #: includes/admin/downloads/dashboard-columns.php:36
 #: includes/admin/reporting/class-download-reports-table.php:110
 #: includes/admin/reporting/export/class-batch-export-downloads.php:58
@@ -1040,24 +1046,24 @@ msgstr ""
 msgid "Earnings"
 msgstr ""
 
-#: includes/admin/dashboard-widgets.php:72
-#: includes/admin/dashboard-widgets.php:91
+#: includes/admin/dashboard-widgets.php:82
+#: includes/admin/dashboard-widgets.php:101
 msgid "Sale"
 msgid_plural "Sales"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/admin/dashboard-widgets.php:80
+#: includes/admin/dashboard-widgets.php:90
 #: includes/admin/reporting/graphing.php:676 includes/class-edd-stats.php:84
 msgid "Last Month"
 msgstr ""
 
-#: includes/admin/dashboard-widgets.php:105
+#: includes/admin/dashboard-widgets.php:115
 #: includes/admin/reporting/graphing.php:670 includes/class-edd-stats.php:79
 msgid "Today"
 msgstr ""
 
-#: includes/admin/dashboard-widgets.php:119
+#: includes/admin/dashboard-widgets.php:129
 #: includes/admin/downloads/dashboard-columns.php:35
 #: includes/admin/reporting/class-download-reports-table.php:109
 #: includes/admin/reporting/export/class-batch-export-downloads.php:57
@@ -1067,27 +1073,27 @@ msgstr ""
 msgid "Sales"
 msgstr ""
 
-#: includes/admin/dashboard-widgets.php:133
+#: includes/admin/dashboard-widgets.php:143
 msgid "Totals"
 msgstr ""
 
-#: includes/admin/dashboard-widgets.php:138
+#: includes/admin/dashboard-widgets.php:148
 #: includes/admin/reporting/class-categories-reports-table.php:83
 #: includes/admin/tools.php:914
 msgid "Total Earnings"
 msgstr ""
 
-#: includes/admin/dashboard-widgets.php:142
+#: includes/admin/dashboard-widgets.php:152
 #: includes/admin/reporting/class-categories-reports-table.php:82
 #: includes/admin/reporting/class-gateways-reports-table.php:91
 msgid "Total Sales"
 msgstr ""
 
-#: includes/admin/dashboard-widgets.php:164
+#: includes/admin/dashboard-widgets.php:174
 msgid "Recent Purchases"
 msgstr ""
 
-#: includes/admin/dashboard-widgets.php:165
+#: includes/admin/dashboard-widgets.php:175
 msgid "View All"
 msgstr ""
 
@@ -2565,8 +2571,13 @@ msgstr ""
 msgid "General Settings"
 msgstr ""
 
-#: includes/admin/promos/class-promo-handler.php:109
-#: includes/admin/promos/class-promo-handler.php:117
+#: includes/admin/promos/class-promo-handler.php:112
+msgid "Missing notice ID."
+msgstr ""
+
+#: includes/admin/promos/class-promo-handler.php:116
+#: includes/admin/promos/class-promo-handler.php:123
+#: includes/admin/promos/class-promo-handler.php:128
 #: includes/gateways/paypal/admin/connect.php:106
 #: includes/gateways/paypal/admin/connect.php:182
 #: includes/gateways/paypal/admin/connect.php:292
@@ -2579,36 +2590,77 @@ msgstr ""
 msgid "You do not have permission to perform this action."
 msgstr ""
 
-#: includes/admin/promos/class-promo-handler.php:113
-msgid "Missing notice ID."
-msgstr ""
-
-#: includes/admin/promos/notices/abstract-notice.php:108
+#: includes/admin/promos/notices/abstract-notice.php:113
 msgid "Dismiss notice"
 msgstr ""
 
-#: includes/admin/promos/notices/class-license-upgrade-notice.php:154
+#: includes/admin/promos/notices/class-five-star-review-dashboard.php:78
+msgid ""
+"Hey, I noticed you've made quite a few sales with Easy Digital Downloads! "
+"Are you enjoying Easy Digital Downloads?"
+msgstr ""
+
+#: includes/admin/promos/notices/class-five-star-review-dashboard.php:80
+#: includes/gateways/stripe/includes/admin/admin-actions.php:146
+msgid "Yes"
+msgstr ""
+
+#: includes/admin/promos/notices/class-five-star-review-dashboard.php:81
+msgid "Not Really"
+msgstr ""
+
+#: includes/admin/promos/notices/class-five-star-review-dashboard.php:85
+msgid ""
+"We're sorry to hear you aren't enjoying Easy Digital Downloads. We would "
+"love a chance to improve. Could you take a minute and let us know what we "
+"can do better?"
+msgstr ""
+
+#: includes/admin/promos/notices/class-five-star-review-dashboard.php:87
+msgid "Give Feedback"
+msgstr ""
+
+#: includes/admin/promos/notices/class-five-star-review-dashboard.php:88
+#: includes/admin/promos/notices/class-five-star-review-dashboard.php:96
+msgid "No thanks"
+msgstr ""
+
+#: includes/admin/promos/notices/class-five-star-review-dashboard.php:92
+msgid ""
+"That's awesome! Could you please do me a BIG favor and give it a 5-star "
+"rating on WordPress to help us spread the word and boost our motivation?"
+msgstr ""
+
+#: includes/admin/promos/notices/class-five-star-review-dashboard.php:93
+msgid "~ Chris Klosowski<br>President of Easy Digital Downloads"
+msgstr ""
+
+#: includes/admin/promos/notices/class-five-star-review-dashboard.php:95
+msgid "Ok, you deserve it!"
+msgstr ""
+
+#: includes/admin/promos/notices/class-license-upgrade-notice.php:151
 #. Translators: %1$s opening anchor tag; %2$s closing anchor tag
 msgid ""
 "You are using the free version of Easy Digital Downloads. %1$sPurchase a "
 "pass%2$s to get email marketing tools and recurring payments."
 msgstr ""
 
-#: includes/admin/promos/notices/class-license-upgrade-notice.php:164
+#: includes/admin/promos/notices/class-license-upgrade-notice.php:161
 #. Translators: %1$s opening anchor tag; %2$s closing anchor tag
 msgid ""
 "For access to additional Easy Digital Downloads extensions to grow your "
 "store, consider %1$spurchasing a pass%2$s."
 msgstr ""
 
-#: includes/admin/promos/notices/class-license-upgrade-notice.php:174
+#: includes/admin/promos/notices/class-license-upgrade-notice.php:171
 #. Translators: %1$s opening anchor tag; %2$s closing anchor tag
 msgid ""
 "You are using Easy Digital Downloads with a Personal Pass. Consider "
 "%1$supgrading%2$s to get recurring payments and more."
 msgstr ""
 
-#: includes/admin/promos/notices/class-license-upgrade-notice.php:184
+#: includes/admin/promos/notices/class-license-upgrade-notice.php:181
 #. Translators: %1$s opening anchor tag; %2$s closing anchor tag
 msgid ""
 "Grow your business and make more money with affiliate marketing. %1$sGet "
@@ -2962,12 +3014,16 @@ msgstr ""
 msgid "API User"
 msgstr ""
 
-#: includes/admin/reporting/export/class-batch-export-customers.php:44
+#: includes/admin/reporting/export/class-batch-export-customers.php:45
 msgid "Number of Purchases"
 msgstr ""
 
-#: includes/admin/reporting/export/class-batch-export-customers.php:45
+#: includes/admin/reporting/export/class-batch-export-customers.php:46
 msgid "Customer Value"
+msgstr ""
+
+#: includes/admin/reporting/export/class-batch-export-customers.php:47
+msgid "Payment IDs"
 msgstr ""
 
 #: includes/admin/reporting/export/class-batch-export-downloads.php:42
@@ -3961,7 +4017,7 @@ msgstr ""
 #: includes/admin/settings/register-settings.php:613
 #: includes/admin/settings/register-settings.php:617
 #: includes/emails/functions.php:45 includes/emails/functions.php:49
-#: includes/emails/functions.php:87 includes/emails/functions.php:91
+#: includes/emails/functions.php:89 includes/emails/functions.php:93
 #: includes/emails/template.php:141
 msgid "Purchase Receipt"
 msgstr ""
@@ -4010,7 +4066,7 @@ msgid "Enter the heading for the sale notification email."
 msgstr ""
 
 #: includes/admin/settings/register-settings.php:636
-#: includes/emails/functions.php:140
+#: includes/emails/functions.php:142
 msgid "New Sale!"
 msgstr ""
 
@@ -5294,7 +5350,7 @@ msgstr ""
 #: includes/admin/upgrades/upgrade-functions.php:899
 #: includes/admin/upgrades/upgrade-functions.php:1027
 #: includes/admin/upgrades/upgrade-functions.php:1112
-#: includes/gateways/stripe/includes/admin/upgrade-functions.php:57
+#: includes/gateways/stripe/includes/admin/upgrade-functions.php:80
 msgid "You do not have permission to do shop upgrades"
 msgstr ""
 
@@ -5524,7 +5580,7 @@ msgid "ID of the notification."
 msgstr ""
 
 #: includes/api/v3/Notifications.php:116
-msgid "Failed to update notification."
+msgid "Failed to dismiss notification."
 msgstr ""
 
 #: includes/cart/class-edd-cart.php:897
@@ -6148,23 +6204,23 @@ msgstr ""
 msgid "Single Use: %s"
 msgstr ""
 
-#: includes/class-edd-cli.php:506 includes/class-edd-cli.php:764
+#: includes/class-edd-cli.php:506 includes/class-edd-cli.php:765
 msgid "No action specified, did you mean"
 msgstr ""
 
-#: includes/class-edd-cli.php:508 includes/class-edd-cli.php:766
+#: includes/class-edd-cli.php:508 includes/class-edd-cli.php:767
 msgid "Invalid action specified, did you mean"
 msgstr ""
 
-#: includes/class-edd-cli.php:569
+#: includes/class-edd-cli.php:570
 msgid "Invalid status '%s', defaulting to 'complete'"
 msgstr ""
 
-#: includes/class-edd-cli.php:607
+#: includes/class-edd-cli.php:608
 msgid "Specified ID is not a product"
 msgstr ""
 
-#: includes/class-edd-cli.php:742
+#: includes/class-edd-cli.php:743
 msgid "Created %s payments"
 msgstr ""
 
@@ -6246,24 +6302,24 @@ msgstr ""
 msgid "Enter username"
 msgstr ""
 
-#: includes/class-edd-license-handler.php:193
+#: includes/class-edd-license-handler.php:201
 msgid "%1$s"
 msgstr ""
 
-#: includes/class-edd-license-handler.php:225
+#: includes/class-edd-license-handler.php:233
 msgid ""
 "Enter your extension license keys here to receive updates for purchased "
 "extensions. If your license key has expired, please <a href=\"%s\" "
 "target=\"_blank\">renew your license</a>."
 msgstr ""
 
-#: includes/class-edd-license-handler.php:512
+#: includes/class-edd-license-handler.php:525
 msgid ""
 "You have invalid or expired license keys for Easy Digital Downloads. Please "
 "go to the <a href=\"%s\">Licenses page</a> to correct this issue."
 msgstr ""
 
-#: includes/class-edd-license-handler.php:550
+#: includes/class-edd-license-handler.php:563
 msgid "Enter valid license key for automatic updates."
 msgstr ""
 
@@ -6705,8 +6761,8 @@ msgid "Install Jilt"
 msgstr ""
 
 #: includes/deprecated-functions.php:813 includes/deprecated-functions.php:892
-#: includes/deprecated-functions.php:921 includes/emails/functions.php:294
-#: includes/emails/functions.php:368 includes/emails/functions.php:389
+#: includes/deprecated-functions.php:921 includes/emails/functions.php:296
+#: includes/emails/functions.php:370 includes/emails/functions.php:391
 msgid "You do not have permission to do this."
 msgstr ""
 
@@ -6722,7 +6778,7 @@ msgid ""
 "free%4$s."
 msgstr ""
 
-#: includes/deprecated-functions.php:975 includes/emails/functions.php:481
+#: includes/deprecated-functions.php:975 includes/emails/functions.php:483
 #. Translators: %1$s - Opening anchor tag, %2$s - The url to dismiss the ajax
 #. notice, %3$s - Complete the opening of the anchor tag, %4$s - Open span tag,
 #. %4$s - Close span tag
@@ -6768,11 +6824,11 @@ msgstr ""
 msgid "No template, plain text only"
 msgstr ""
 
-#: includes/emails/class-edd-emails.php:291
+#: includes/emails/class-edd-emails.php:293
 msgid "You cannot send email with EDD_Emails until init/admin_init has been reached"
 msgstr ""
 
-#: includes/emails/class-edd-emails.php:318
+#: includes/emails/class-edd-emails.php:320
 msgid ""
 "Email from Easy Digital Downloads failed to send.\n"
 "Send time: %s\n"
@@ -6781,47 +6837,47 @@ msgid ""
 "\n"
 msgstr ""
 
-#: includes/emails/functions.php:136
+#: includes/emails/functions.php:138
 msgid "New download purchase - Order #%1$s"
 msgstr ""
 
-#: includes/emails/functions.php:200 includes/emails/template.php:212
+#: includes/emails/functions.php:202 includes/emails/template.php:212
 msgid "Hello"
 msgstr ""
 
-#: includes/emails/functions.php:200 includes/emails/template.php:212
+#: includes/emails/functions.php:202 includes/emails/template.php:212
 msgid "A %s purchase has been made"
 msgstr ""
 
-#: includes/emails/functions.php:201 includes/emails/template.php:213
+#: includes/emails/functions.php:203 includes/emails/template.php:213
 msgid "%s sold:"
 msgstr ""
 
-#: includes/emails/functions.php:203 includes/emails/template.php:215
+#: includes/emails/functions.php:205 includes/emails/template.php:215
 msgid "Purchased by: "
 msgstr ""
 
-#: includes/emails/functions.php:204 includes/emails/template.php:216
+#: includes/emails/functions.php:206 includes/emails/template.php:216
 msgid "Amount: "
 msgstr ""
 
-#: includes/emails/functions.php:205 includes/emails/template.php:217
+#: includes/emails/functions.php:207 includes/emails/template.php:217
 msgid "Payment Method: "
 msgstr ""
 
-#: includes/emails/functions.php:206 includes/emails/template.php:218
+#: includes/emails/functions.php:208 includes/emails/template.php:218
 msgid "Thank you"
 msgstr ""
 
-#: includes/emails/functions.php:345
+#: includes/emails/functions.php:347
 msgid "Something went wrong. SendWP was not installed correctly."
 msgstr ""
 
-#: includes/emails/functions.php:440
+#: includes/emails/functions.php:442
 msgid "Something went wrong. Recapture for EDD was not installed correctly."
 msgstr ""
 
-#: includes/emails/functions.php:468
+#: includes/emails/functions.php:470
 #. Translators: %1$s - <strong> tag, %2$s - </strong> tag, %3$s - <a> tag, %4$s
 #. - </a> tag
 msgid ""
@@ -7071,7 +7127,7 @@ msgid "Sign up for PayPal"
 msgstr ""
 
 #: includes/gateways/paypal/admin/connect.php:80
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:350
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:342
 msgid "Retrieving account information..."
 msgstr ""
 
@@ -7726,41 +7782,41 @@ msgstr ""
 msgid "Preapproval cancelled"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/admin-actions.php:80
+#: includes/gateways/stripe/includes/admin/admin-actions.php:84
+msgid "Are you sure you want to cancel this order?"
+msgstr ""
+
+#: includes/gateways/stripe/includes/admin/admin-actions.php:103
 msgid "The preapproved payment was successfully charged."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/admin-actions.php:83
+#: includes/gateways/stripe/includes/admin/admin-actions.php:106
 msgid ""
 "The preapproved payment failed to be charged. View order details for "
 "further details."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/admin-actions.php:86
+#: includes/gateways/stripe/includes/admin/admin-actions.php:109
 msgid "The preapproved payment was successfully cancelled."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/admin-actions.php:91
+#: includes/gateways/stripe/includes/admin/admin-actions.php:114
 #. translators: %1$s Stripe Connect error message. %2$s Retry URL.
 msgid ""
 "There was an error connecting your Stripe account. Message: %1$s. Please <a "
 "href=\"%2$s\">try again</a>."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/admin-actions.php:122
+#: includes/gateways/stripe/includes/admin/admin-actions.php:145
 msgid "Used Existing Card:"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/admin-actions.php:123
-msgid "Yes"
-msgstr ""
-
-#: includes/gateways/stripe/includes/admin/admin-actions.php:187
+#: includes/gateways/stripe/includes/admin/admin-actions.php:210
 #: includes/gateways/stripe/includes/scripts.php:149
 msgid "Refund Charge in Stripe"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/admin-filters.php:93
+#: includes/gateways/stripe/includes/admin/admin-filters.php:99
 msgid "Process"
 msgstr ""
 
@@ -7856,7 +7912,7 @@ msgid ""
 msgstr ""
 
 #: includes/gateways/stripe/includes/admin/notices.php:39
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:640
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:632
 #: includes/gateways/stripe/includes/payment-methods/payment-request/apple-pay.php:22
 msgid "Unable to locate registry"
 msgstr ""
@@ -7865,7 +7921,7 @@ msgstr ""
 msgid "Stripe-specific reports have been removed."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:117
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:109
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor
 #. tag, do not translate.
 msgid ""
@@ -7873,33 +7929,33 @@ msgid ""
 "again%2$s. If you continue to have this problem, please contact support."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:303
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:584
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:646
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:295
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:576
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:638
 msgid "Connect with Stripe"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:313
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:305
 msgid ""
 "Connect with Stripe for pay as you go pricing: 2% per-transaction fee + "
 "Stripe fees."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:324
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:316
 #. translators: %1$s Opening anchor tag, do not translate. %2$s Closing anchor
 #. tag, do not translate.
 msgid "Have questions about connecting with Stripe? See the %1$sdocumentation%2$s."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:363
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:355
 msgid "Manage API keys manually"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:373
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:365
 msgid "Hide API keys"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:379
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:371
 msgid ""
 "Although you can add your API keys manually, we recommend using Stripe "
 "Connect: an easier and more secure way of connecting your Stripe account to "
@@ -7909,11 +7965,11 @@ msgid ""
 "just a few clicks."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:397
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:389
 msgid "Unable to retrieve account information."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:422
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:414
 #. translators: %1$s Stripe payment mode. %2$s Opening anchor tag for
 #. reconnecting to Stripe, do not translate. %3$s Opening anchor tag for
 #. disconnecting Stripe, do not translate. %4$s Closing anchor tag, do not
@@ -7923,56 +7979,56 @@ msgid ""
 "mode%4$s, or %3$sdisconnect this account%4$s."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:454
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:446
 #. translators: %1$s Opening bold tag, do not translate. %2$s Closing bold tag,
 #. do not translate.
 msgid "Webhooks cannot be configured for recurring purchases with this account."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:472
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:464
 #. translators: %1$s Opening anchor tag for disconnecting Stripe, do not
 #. translate. %2$s Closing anchor tag, do not translate.
 msgid "%1$sDisconnect this account%2$s."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:538
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:530
 msgid "Pay as you go pricing: 2% per-transaction fee + Stripe fees."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:550
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:542
 msgid "Administrator (Owner)"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:561
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:553
 msgid ""
 "The API keys provided do not match the Stripe Connect account associated "
 "with this installation. If you have manually modified these values after "
 "connecting your account, please reconnect below or update your API keys."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:587
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:579
 msgid ""
 "It is highly recommended to Connect with Stripe for easier setup and "
 "improved security."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:600
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:592
 #. translators: %1$s Stripe payment mode.
 msgid "Your manually managed %1$s mode API keys are valid."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:616
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:608
 #. translators: %1$s Stripe payment mode.
 msgid "Your manually managed %1$s mode API keys are invalid."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:656
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:648
 msgid ""
 "Start accepting payments with Stripe by connecting your account. Stripe "
 "Connect helps ensure easier setup and improved security."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:677
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:669
 #. translators: %s Test mode status. Enabled or disabled.
 msgid "\"Test Mode\" has been %s. Please verify your Stripe connection status."
 msgstr ""
@@ -8176,7 +8232,7 @@ msgid ""
 "recommendations%2$s."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/upgrade-functions.php:32
+#: includes/gateways/stripe/includes/admin/upgrade-functions.php:55
 #. translators: %s Upgrade link.
 msgid ""
 "Easy Digital Downloads - Stripe Gateway needs to upgrade the customers "
@@ -8185,7 +8241,7 @@ msgid ""
 "this upgrade</a>"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/upgrade-functions.php:35
+#: includes/gateways/stripe/includes/admin/upgrade-functions.php:58
 msgid ""
 "<strong>About this upgrade:</strong><br />This upgrade will improve the "
 "reliability of associating purchase records with your existing customer "
@@ -8193,7 +8249,7 @@ msgid ""
 "locally on their EDD customer record, instead of their user record."
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/upgrade-functions.php:37
+#: includes/gateways/stripe/includes/admin/upgrade-functions.php:60
 msgid ""
 "<strong>Advanced User?</strong><br />This upgrade can also be run via WPCLI "
 "with the following command:<br /><code>wp edd-stripe "
@@ -8256,7 +8312,7 @@ msgstr ""
 msgid "Card successfully added."
 msgstr ""
 
-#: includes/gateways/stripe/includes/class-edd-stripe.php:240
+#: includes/gateways/stripe/includes/class-edd-stripe.php:252
 #: includes/gateways/stripe/includes/template-functions.php:125
 msgid "Credit Card"
 msgstr ""
@@ -10345,22 +10401,22 @@ msgctxt "no dropdown items"
 msgid "None"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:415
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:407
 msgctxt "Stripe Connect mode"
 msgid "test"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:416
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:408
 msgctxt "Stripe Connect mode"
 msgid "live"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:667
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:659
 msgctxt "gateway test mode status"
 msgid "enabled"
 msgstr ""
 
-#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:668
+#: includes/gateways/stripe/includes/admin/settings/stripe-connect.php:660
 msgctxt "gateway test mode status"
 msgid "disabled"
 msgstr ""

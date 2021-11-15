@@ -135,6 +135,14 @@ final class Easy_Digital_Downloads {
 	public $cart;
 
 	/**
+	 * EDD Payment Stats Object
+	 *
+	 * @var EDD_Payment_Stats
+	 * @since 1.8
+	 */
+	public $payment_stats;
+
+	/**
 	 * Holds registered premium EDD extensions.
 	 *
 	 * @var \EDD\Extensions\ExtensionRegistry
