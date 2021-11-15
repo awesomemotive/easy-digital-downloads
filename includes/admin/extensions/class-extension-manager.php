@@ -349,6 +349,13 @@ class Extension_Manager {
 
 		$plugin_basename = $installer->plugin_info();
 
+		// Check for permissions.
+		if ( ! current_user_can( 'activate_plugins' ) ) {
+			$result['message'] = 'plugin' === $type ? esc_html__( 'Plugin installed.', 'easy-digital-downloads' ) : esc_html__( 'Extension installed.', 'easy-digital-downloads' );
+
+			wp_send_json_error( $result );
+		}
+
 		$this->activate( $plugin_basename );
 	}
 
@@ -390,13 +397,6 @@ class Extension_Manager {
 		}
 
 		$result['basename'] = $plugin_basename;
-
-		// Check for permissions.
-		if ( ! current_user_can( 'activate_plugins' ) ) {
-			$result['message'] = 'plugin' === $type ? esc_html__( 'Plugin installed.', 'easy-digital-downloads' ) : esc_html__( 'Extension installed.', 'easy-digital-downloads' );
-
-			wp_send_json_error( $result );
-		}
 
 		// Activate the plugin silently.
 		$activated = activate_plugin( $plugin_basename );
