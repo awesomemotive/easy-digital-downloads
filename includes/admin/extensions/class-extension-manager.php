@@ -56,9 +56,16 @@ class Extension_Manager {
 			'edd-extension-manager',
 			'EDDExtensionManager',
 			array(
-				'activating'              => __( 'Activating', 'easy-digital-downloads' ),
-				'installing'              => __( 'Installing', 'easy-digital-downloads' ),
-				'extension_manager_nonce' => wp_create_nonce( 'edd_extensionmanager' ),
+				'activating'               => __( 'Activating', 'easy-digital-downloads' ),
+				'installing'               => __( 'Installing', 'easy-digital-downloads' ),
+				'plugin_install_failed'    => __( 'Could not install the plugin. Please download and install it manually via Plugins > Add New.', 'easy-digital-downloads' ),
+				'extension_install_failed' => sprintf(
+					/* translators: 1. opening anchor tag, do not translate; 2. closing anchor tag, do not translate */
+					__( 'Could not install the extension. Please %1$sdownload it from your account%2$s and install it manually.', 'easy-digital-downloads' ),
+					'<a href="https://easydigitaldownloads.com/your-account/" target="_blank" rel="noopener noreferrer">',
+					'</a>'
+				),
+				'extension_manager_nonce'  => wp_create_nonce( 'edd_extensionmanager' ),
 			)
 		);
 	}
@@ -237,7 +244,7 @@ class Extension_Manager {
 		<a
 			class="button <?php echo esc_attr( $args['button_class'] ); ?>"
 			href="<?php echo esc_url( $args['href'] ); ?>"
-			<?php echo ! empty( $args['new_tab'] ) ? ' target="_blank"' : ''; ?>
+			<?php echo ! empty( $args['new_tab'] ) ? ' target="_blank" rel="noopener noreferrer"' : ''; ?>
 		>
 			<?php echo esc_html( $args['button_text'] ); ?>
 		</a>
@@ -271,8 +278,13 @@ class Extension_Manager {
 		}
 
 		$result['message'] = 'plugin' === $type
-			? esc_html__( 'Could not install the plugin. Please download and install it manually via Plugins > Add New.', 'easy-digital-downloads' )
-			: esc_html__( 'Could not install the extension. Please download it from edd.com and install it manually.', 'easy-digital-downloads' );
+			? __( 'Could not install the plugin. Please download and install it manually via Plugins > Add New.', 'easy-digital-downloads' )
+			: sprintf(
+				/* translators: 1. opening anchor tag, do not translate; 2. closing anchor tag, do not translate */
+				__( 'Could not install the extension. Please %1$sdownload it from your account%2$s and install it manually.', 'easy-digital-downloads' ),
+				'<a href="https://easydigitaldownloads.com/your-account/" target="_blank" rel="noopener noreferrer">',
+				'</a>'
+			);
 
 		$plugin = filter_input( INPUT_POST, 'plugin', FILTER_SANITIZE_STRING );
 		if ( empty( $plugin ) ) {

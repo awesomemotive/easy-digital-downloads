@@ -9,6 +9,7 @@
 		var $btn = $( this ),
 			action = $btn.attr( 'data-action' ),
 			plugin = $btn.attr( 'data-plugin' ),
+			type = $btn.attr( 'data-type' ),
 			ajaxAction = '';
 
 		if ( $btn.attr( 'disabled' ) ) {
@@ -36,7 +37,7 @@
 			action: ajaxAction,
 			nonce: EDDExtensionManager.extension_manager_nonce,
 			plugin: plugin,
-			type: $btn.attr( 'data-type' ),
+			type: type,
 			pass: $btn.attr( 'data-pass' ),
 			id: $btn.attr( 'data-id' ),
 			product: $btn.attr( 'data-product' ),
@@ -50,13 +51,18 @@
 					var nextStep = thisStep.next();
 					if ( nextStep.length ) {
 						thisStep.fadeOut();
+						nextStep.prepend( '<p>' + res.data.message + '</p>' );
 						nextStep.fadeIn();
 					}
 				} else {
 					thisStep.fadeOut();
 					var message = res.data.message;
-					if ( res.data[ 0 ][ 'message' ] ) {
-						message = res.data[ 0 ][ 'message' ];
+					if ( !message ) {
+						if ( 'plugin' !== type ) {
+							message = EDDExtensionManager.extension_install_failed;
+						} else {
+							message = EDDExtensionManager.plugin_install_failed;
+						}
 					}
 					thisStep.after( '<p>' + message + '</p>' );
 				}
