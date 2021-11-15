@@ -65,7 +65,7 @@ class EnvironmentChecker {
 		if ( array_key_exists( $condition, $this->validLicenseConditions ) ) {
 			return $this->hasLicenseType( $condition );
 		} elseif ( $this->isPaymentGateway( $condition ) ) {
-			return $this->paymentGatewayMatch( array_keys( edd_get_enabled_payment_gateways()() ), $condition );
+			return $this->paymentGatewayMatch( array_keys( edd_get_enabled_payment_gateways() ), $condition );
 		} elseif ( $this->isVersionNumber( $condition ) ) {
 			return $this->versionNumbersMatch( EDD_VERSION, $condition );
 		}
