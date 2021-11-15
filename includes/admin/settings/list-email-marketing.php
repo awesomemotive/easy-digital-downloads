@@ -8,7 +8,7 @@ return array(
 	),
 	2925   => array(
 		'basename' => 'edd-aweber/edd-aweber.php',
-		'tab'      => 'extensions', // AWeber settings cannot currently be moved.
+		'tab'      => 'marketing',
 		'section'  => 'aweber',
 	),
 	648002 => array(

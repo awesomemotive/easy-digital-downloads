@@ -144,6 +144,19 @@ add_action(
 		}
 
 		/**
+		 * Move the AWeber settings to the Marketing section (EDD 2.11.x).
+		 */
+		if ( class_exists( 'EDD_Aweber' ) && method_exists( 'EDD_Aweber', 'instance' ) ) {
+			$aweber = EDD_Aweber::instance();
+			if ( false !== has_filter( 'edd_settings_sections_extensions', array( $aweber, 'subsection' ) ) ) {
+				remove_filter( 'edd_settings_sections_extensions', array( $aweber, 'subsection' ) );
+				add_filter( 'edd_settings_sections_marketing', array( $aweber, 'subsection' ) );
+				remove_filter( 'edd_settings_extensions', array( $aweber, 'settings' ) );
+				add_filter( 'edd_settings_marketing', array( $aweber, 'settings' ) );
+			}
+		}
+
+		/**
 		 * Move the MailPoet settings to the Marketing section (EDD 2.11.x).
 		 */
 		if ( class_exists( 'EDD_MailPoet' ) && method_exists( 'EDD_MailPoet', 'instance' ) ) {
