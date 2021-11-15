@@ -46,6 +46,7 @@ class Invoices extends Extension {
 			'basename'    => 'edd-invoices/edd-invoices.php',
 			'tab'         => 'gateways',
 			'section'     => 'edd-invoices',
+			'card'        => 'horizontal',
 			'title'       => __( 'Impress Your Customers with Custom Invoices', 'easy-digital-downloads' ),
 			'description' => __( 'Allow your customers to download beautiful, professional invoices with one click!', 'easy-digital-downloads' ),
 		);

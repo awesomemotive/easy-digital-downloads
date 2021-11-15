@@ -70,22 +70,24 @@ class WP_SMTP {
 	 */
 	public function settings_field( $args ) {
 		?>
-		<p>
-			<?php esc_html_e( 'WP Mail SMTP allows you to easily set up WordPress to use a trusted provider to reliably send emails, including sales notifications.', 'easy-digital-downloads' ); ?>
-		</p>
+		<div class="edd-extension-manager__body">
+			<p class="edd-extension-manager__description">
+				<?php esc_html_e( 'WP Mail SMTP allows you to easily set up WordPress to use a trusted provider to reliably send emails, including sales notifications.', 'easy-digital-downloads' ); ?>
+			</p>
 
-		<div class="edd-extension-manager__group">
-			<div class="edd-extension-manager__step">
-				<?php $this->manager->button( $this->get_button_parameters() ); ?>
-			</div>
+			<div class="edd-extension-manager__group">
+				<div class="edd-extension-manager__step">
+					<?php $this->manager->button( $this->get_button_parameters() ); ?>
+				</div>
 
-			<?php
-			if ( $this->is_smtp_activated() ) {
-				return;
-			}
-			?>
-			<div class="edd-extension-manager__step"style="display:none;">
-				<?php $this->manager->link( $this->get_link_parameters() ); ?>
+				<?php
+				if ( $this->is_smtp_activated() ) {
+					return;
+				}
+				?>
+				<div class="edd-extension-manager__step" style="display:none;">
+					<?php $this->manager->link( $this->get_link_parameters() ); ?>
+				</div>
 			</div>
 		</div>
 		<?php
