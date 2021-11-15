@@ -245,36 +245,6 @@ class Extension_Manager {
 	}
 
 	/**
-	 * Activates an existing extension.
-	 *
-	 * @since 2.11.x
-	 */
-	public function activate() {
-
-		$result = array(
-			'message'      => __( 'There was an error while performing your request.', 'easy-digital-downloads' ),
-			'is_activated' => false,
-		);
-
-		// Check for permissions.
-		if ( ! check_ajax_referer( 'edd_extensionmanager', 'nonce', false ) || ! current_user_can( 'activate_plugins' ) ) {
-			$result['message'] = __( 'Plugin activation is not available for you on this site.', 'easy-digital-downloads' );
-			wp_send_json_error( $result );
-		}
-
-		$plugin = filter_input( INPUT_POST, 'plugin', FILTER_SANITIZE_STRING );
-		$type   = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
-		if ( ! $plugin || ! $type ) {
-			$result ['message'] = __( 'The plugin to install was not defined.', 'easy-digital-downloads' );
-			wp_send_json_error( $result );
-		}
-
-		$plugin = sanitize_text_field( wp_unslash( $plugin ) );
-
-		$this->activate_plugin( $plugin, $type );
-	}
-
-	/**
 	 * Installs and maybe activates a plugin or extension.
 	 *
 	 * @since 2.11.x
@@ -367,19 +337,34 @@ class Extension_Manager {
 
 		$plugin_basename = $installer->plugin_info();
 
-		$this->activate_plugin( $plugin_basename, $type );
+		$this->activate( $plugin_basename );
 	}
 
 	/**
-	 * This function actually activates the plugin.
-	 * Used by both install and activate.
+	 * Activates an existing extension.
 	 *
 	 * @since 2.11.x
-	 * @param string $plugin_basename The plugin basename.
-	 * @param string $type            The "type" will be plugin or something specific to an extension.
-	 * @return void
+	 * @param string $plugin_basename Optional: the plugin basename.
 	 */
-	private function activate_plugin( $plugin_basename, $type = 'plugin' ) {
+	public function activate( $plugin_basename = '' ) {
+
+		$result = array(
+			'message'      => __( 'There was an error while performing your request.', 'easy-digital-downloads' ),
+			'is_activated' => false,
+		);
+
+		// Check for permissions.
+		if ( ! check_ajax_referer( 'edd_extensionmanager', 'nonce', false ) || ! current_user_can( 'activate_plugins' ) ) {
+			$result['message'] = __( 'Plugin activation is not available for you on this site.', 'easy-digital-downloads' );
+			wp_send_json_error( $result );
+		}
+
+		if ( empty( $plugin_basename ) ) {
+			$plugin_basename = filter_input( INPUT_POST, 'plugin', FILTER_SANITIZE_STRING );
+		}
+
+		$plugin_basename = sanitize_text_field( wp_unslash( $plugin_basename ) );
+		$type            = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
 		if ( 'plugin' !== $type ) {
 			$type = 'extension';
 		}
@@ -388,7 +373,7 @@ class Extension_Manager {
 			'message'      => sprintf( __( 'Could not activate the %s.', 'easy-digital-downloads' ), $type ),
 			'is_activated' => false,
 		);
-		if ( empty( $plugin_basename ) ) {
+		if ( empty( $plugin_basename ) || empty( $type ) ) {
 			wp_send_json_error( $result );
 		}
 
@@ -416,7 +401,7 @@ class Extension_Manager {
 			do_action( 'edd_plugin_activated', $plugin_basename );
 
 			$result['is_activated'] = true;
-			$result['message']      = 'plugin' === $type ? esc_html__( 'Plugin installed & activated.', 'easy-digital-downloads' ) : esc_html__( 'Addon installed & activated.', 'easy-digital-downloads' );
+			$result['message']      = 'plugin' === $type ? esc_html__( 'Plugin installed & activated.', 'easy-digital-downloads' ) : esc_html__( 'Extension installed & activated.', 'easy-digital-downloads' );
 
 			wp_send_json_success( $result );
 		}
