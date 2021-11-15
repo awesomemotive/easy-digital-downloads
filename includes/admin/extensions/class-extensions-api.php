@@ -33,7 +33,18 @@ class ExtensionsAPI {
 			)
 		);
 
-		if ( ! $request || $request instanceof WP_Error ) {
+		// If there was an API error, set timeout for 1 hour and the product data to false.
+		if ( is_wp_error( $request ) || ( 200 !== wp_remote_retrieve_response_code( $request ) ) ) {
+			$array_key = ! empty( $item_id ) ? $item_id : $body[ $key ];
+			update_option(
+				$option_name,
+				array(
+					$array_key => false,
+					'timeout'  => strtotime( '+1 hour', time() ),
+				),
+				false
+			);
+
 			return false;
 		}
 
@@ -81,6 +92,14 @@ class ExtensionsAPI {
 		return 'https://easydigitaldownloads.com/edd-api/v2/products/';
 	}
 
+	/**
+	 * Gets the first key of an array.
+	 * (Shims array_key_first for PHP < 7.3)
+	 *
+	 * @since 2.11.x
+	 * @param array $array
+	 * @return string|null
+	 */
 	private function array_key_first( array $array ) {
 		if ( function_exists( 'array_key_first' ) ) {
 			return array_key_first( $array );

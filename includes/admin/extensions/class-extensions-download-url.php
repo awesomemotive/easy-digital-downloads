@@ -51,8 +51,17 @@ class ExtensionsDownloadURL {
 			)
 		);
 
-		// If there was an API error, set transient for only 10 minutes.
-		if ( ! $request || $request instanceof \WP_Error ) {
+		// If there was an API error, set timeout for 1 hour and the URL to false.
+		if ( is_wp_error( $request ) || ( 200 !== wp_remote_retrieve_response_code( $request ) ) ) {
+			update_option(
+				"edd_extension_{$item_id}",
+				array(
+					'url'     => false,
+					'timeout' => strtotime( '+1 hour', time() ),
+				),
+				false
+			);
+
 			return false;
 		}
 
