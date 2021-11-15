@@ -51,12 +51,16 @@
 					var nextStep = thisStep.next();
 					if ( nextStep.length ) {
 						thisStep.fadeOut();
-						nextStep.prepend( '<p>' + res.data.message + '</p>' );
+						nextStep.prepend( '<div class="notice inline-notice notice-success"><p>' + res.data.message + '</p></div>' );
 						nextStep.fadeIn();
 					}
 				} else {
 					thisStep.fadeOut();
 					var message = res.data.message;
+					/**
+					 * The install class returns an array of error messages, and res.data.message will be undefined.
+					 * In that case, we'll use the standard failure messages.
+					 */
 					if ( !message ) {
 						if ( 'plugin' !== type ) {
 							message = EDDExtensionManager.extension_install_failed;
@@ -64,7 +68,7 @@
 							message = EDDExtensionManager.plugin_install_failed;
 						}
 					}
-					thisStep.after( '<p>' + message + '</p>' );
+					thisStep.after( '<div class="notice inline-notice notice-warning"><p>' + message + '</p></div>' );
 				}
 			} );
 	} );

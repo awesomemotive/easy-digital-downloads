@@ -2606,6 +2606,10 @@ only screen and (max-width: 1000px) {
 	gap: 1em;
 }
 
+.edd-extension-manager__body .notice {
+	max-width: 320px;
+}
+
 .edd-extension-manager__card--horizontal {
 	margin: 24px 0;
 }
