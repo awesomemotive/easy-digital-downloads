@@ -135,6 +135,8 @@ class EnvironmentChecker {
 	 * Will return `true` if the condition is the slug of a payment gateway (potentially with a `gateway-` prefix)
 	 * that's enabled on this site.
 	 *
+	 * @since 2.11.4
+	 *
 	 * @param array  $enabledGateways Gateways that are enabled on this site.
 	 * @param string $condition       Gateway we're checking to see if it's enabled.
 	 *
