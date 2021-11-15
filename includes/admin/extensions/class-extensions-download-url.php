@@ -41,11 +41,12 @@ class ExtensionsDownloadURL {
 				'timeout'   => 15,
 				'sslverify' => true,
 				'body'      => array(
-					'edd_action'  => 'get_version',
-					'license'     => $license,
-					'item_id'     => $item_id,
-					'php_version' => phpversion(),
-					'wp_version'  => get_bloginfo( 'version' ),
+					'edd_action'                     => 'get_version',
+					'license'                        => $license,
+					'item_id'                        => $item_id,
+					'php_version'                    => phpversion(),
+					'wp_version'                     => get_bloginfo( 'version' ),
+					'easy-digital-downloads_version' => EDD_VERSION,
 				),
 			)
 		);
