@@ -84,9 +84,13 @@ class Extension_Manager {
 		if ( ! $product ) {
 			return;
 		}
-		$data = $this->get_card_data( $product, $config );
+		$data       = $this->get_card_data( $product, $config );
+		$card_class = 'edd-extension-manager__card';
+		if ( ! empty( $config['card'] ) ) {
+			$card_class .= " {$card_class}--{$config['card']}";
+		}
 		?>
-		<div class="edd-extension-manager__card">
+		<div class="<?php echo esc_attr( $card_class ); ?>">
 			<h3 class="edd-extension-manager__title"><?php echo esc_html( $data['title'] ); ?></h3>
 			<div class="edd-extension-manager__body">
 				<?php if ( ! empty( $data['image'] ) ) : ?>

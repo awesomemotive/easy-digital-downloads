@@ -2565,10 +2565,8 @@ only screen and (max-width: 1000px) {
 	background-color: #fff;
 	padding: 2em;
 	max-width: 600px;
-	margin: 24px 0;
+	margin: 0;
 }
-
-.edd-extension-manager__card-group .edd-extension-manager__card,
 .edd-extension-manager__description {
 	margin: 0;
 }
@@ -2594,7 +2592,7 @@ only screen and (max-width: 1000px) {
 	display: grid;
 	gap: 1.5em;
 	align-items: center;
-	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	grid-template-columns: auto;
 }
 
 .edd-extension-manager__image img {
@@ -2602,15 +2600,18 @@ only screen and (max-width: 1000px) {
 	margin: 0 auto;
 	width: 100%;
 }
-
-.edd-extension-manager__card-group .edd-extension-manager__body {
-	grid-template-columns: auto;
-}
-
 .edd-extension-manager__content {
 	display: flex;
 	flex-direction: column;
 	gap: 1em;
+}
+
+.edd-extension-manager__card--horizontal {
+	margin: 24px 0;
+}
+
+.edd-extension-manager__card--horizontal .edd-extension-manager__body {
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 }
 
 /* Five Star Review Request

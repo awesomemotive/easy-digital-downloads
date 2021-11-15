@@ -46,6 +46,7 @@ class Recurring extends Extension {
 			'basename' => 'edd-recurring/edd-recurring.php',
 			'tab'      => 'gateways',
 			'section'  => 'recurring',
+			'card'     => 'horizontal',
 		);
 	}
 
