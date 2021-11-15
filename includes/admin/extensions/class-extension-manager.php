@@ -284,7 +284,7 @@ class Extension_Manager {
 		}
 
 		// Set the current screen to avoid undefined notices.
-		set_current_screen( 'edd_page_edd-settings' );
+		set_current_screen( 'download_page_edd-settings' );
 
 		// Prepare variables.
 		$url = esc_url_raw(
