@@ -100,7 +100,15 @@ abstract class Extension {
 			return false;
 		}
 
-		return $this->item_id ? $product_data : $product_data[ $item_id ];
+		if ( $this->item_id ) {
+			return $product_data;
+		}
+
+		if ( ! empty( $product_data[ $item_id ] ) ) {
+			return $product_data[ $item_id ];
+		}
+
+		return false;
 	}
 
 	/**
