@@ -78,7 +78,7 @@ class Pass_Manager extends \EDD_UnitTestCase {
 	/**
 	 * If you have both a Personal and Professional pass activated, the Professional should be highest.
 	 *
-	 * @covers \EDD\Admin\Pass_Manager::get_highest_pass_id
+	 * @covers \EDD\Admin\Pass_Manager::set_highest_pass_data()
 	 */
 	public function test_professional_is_highest_pass() {
 		$passes = array(
@@ -102,7 +102,7 @@ class Pass_Manager extends \EDD_UnitTestCase {
 	 * If you have a pass entered, but it was last verified more than 2 months ago (1 year ago
 	 * in this case), then it should not be accepted as a valid pass.
 	 *
-	 * @covers \EDD\Admin\Pass_Manager::get_highest_pass_id
+	 * @covers \EDD\Admin\Pass_Manager::set_highest_pass_data()
 	 */
 	public function test_no_pass_id_if_pass_outside_check_window() {
 		$passes = array(
