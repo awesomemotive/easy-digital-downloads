@@ -378,8 +378,10 @@ class Extension_Manager {
 			wp_send_json_error( $result );
 		}
 
+		$already_installed = false;
 		if ( empty( $plugin_basename ) ) {
-			$plugin_basename = filter_input( INPUT_POST, 'plugin', FILTER_SANITIZE_STRING );
+			$plugin_basename   = filter_input( INPUT_POST, 'plugin', FILTER_SANITIZE_STRING );
+			$already_installed = true;
 		}
 
 		$plugin_basename = sanitize_text_field( wp_unslash( $plugin_basename ) );
@@ -412,8 +414,13 @@ class Extension_Manager {
 			 */
 			do_action( 'edd_plugin_activated', $plugin_basename );
 
+			if ( $already_installed ) {
+				$message = 'plugin' === $type ? esc_html__( 'Plugin activated.', 'easy-digital-downloads' ) : esc_html__( 'Extension activated.', 'easy-digital-downloads' );
+			} else {
+				$message = 'plugin' === $type ? esc_html__( 'Plugin installed & activated.', 'easy-digital-downloads' ) : esc_html__( 'Extension installed & activated.', 'easy-digital-downloads' );
+			}
 			$result['is_activated'] = true;
-			$result['message']      = 'plugin' === $type ? esc_html__( 'Plugin installed & activated.', 'easy-digital-downloads' ) : esc_html__( 'Extension installed & activated.', 'easy-digital-downloads' );
+			$result['message']      = $message;
 
 			wp_send_json_success( $result );
 		}
