@@ -93,6 +93,9 @@ class EnvironmentCheckerTests extends \EDD_UnitTestCase {
 		$this->assertTrue( $this->environmentChecker->versionNumbersMatch( '2.11.3', '2-11-3' ) );
 	}
 
+	/**
+	 * @covers \EDD\Utils\EnvironmentChecker::hasLicenseType
+	 */
 	public function test_site_with_no_licenses() {
 		$this->assertTrue( $this->environmentChecker->meetsCondition( 'free' ) );
 
@@ -108,6 +111,45 @@ class EnvironmentCheckerTests extends \EDD_UnitTestCase {
 		foreach( $conditionsThatShouldFail as $condition ) {
 			$this->assertFalse( $this->environmentChecker->meetsCondition( $condition ) );
 		}
+	}
+
+	/**
+	 * @covers \EDD\Utils\EnvironmentChecker::paymentGatewayMatch
+	 */
+	public function test_stripe_gateway_matches_if_stripe_gateway_enabled() {
+		$this->assertTrue( $this->environmentChecker->paymentGatewayMatch( array( 'stripe', 'paypal_commerce' ), 'gateway-stripe' ) );
+	}
+
+	/**
+	 * @covers @covers \EDD\Utils\EnvironmentChecker::paymentGatewayMatch
+	 */
+	public function test_stripe_gateway_doesnt_match_if_stripe_gateway_not_enabled() {
+		$this->assertFalse( $this->environmentChecker->paymentGatewayMatch( array( 'paypal_commerce' ), 'gateway-stripe' ) );
+	}
+
+	/**
+	 * @covers \EDD\Utils\EnvironmentChecker::meetsCondition
+	 * @covers \EDD\Utils\EnvironmentChecker::paymentGatewayMatch
+	 */
+	public function test_stripe_condition_met_if_stripe_gateway_enabled() {
+		$callback = static function ( $gateways ) {
+			return array(
+				'stripe' => array(
+					'admin_label'    => 'Stripe',
+					'checkout_label' => 'Stripe',
+					'supports'       => array(
+						'buy_now'
+					),
+				),
+			);
+		};
+
+		add_filter( 'edd_enabled_payment_gateways', $callback );
+
+		$this->assertTrue( $this->environmentChecker->meetsCondition( 'gateway-stripe' ) );
+		$this->assertFalse( $this->environmentChecker->meetsCondition( 'gateway-paypal_commerce' ) );
+
+		remove_filter( 'edd_enabled_payment_gateways', $callback );
 	}
 
 }
