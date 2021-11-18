@@ -151,8 +151,8 @@ class Extension_Manager {
 		}
 		if ( ! empty( $config['description'] ) ) {
 			$data['description'] = $config['description'];
-		} elseif ( ! empty( $product['excerpt'] ) ) {
-			$data['description'] = $product['excerpt'];
+		} elseif ( ! empty( $product['description'] ) ) {
+			$data['description'] = $product['description'];
 		}
 
 		return $data;
