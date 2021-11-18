@@ -53,7 +53,11 @@ class ExtensionsAPI {
 			'timeout' => strtotime( '+1 week', time() ),
 		);
 		foreach ( $response->products as $product ) {
-			$value[ $product->info->id ] = $product;
+			$value[ $product->info->id ] = array(
+				'title'       => $product->info->title,
+				'image'       => $product->info->thumbnail,
+				'description' => $product->info->excerpt,
+			);
 		}
 		update_option( $option_name, $value, false );
 
