@@ -74,13 +74,13 @@ class Extension_Manager {
 	 * Outputs a standard extension card.
 	 *
 	 * @since 2.11.x
-	 * @param object $product           The extension information retrieved from the Products API.
-	 * @param array  $config            The array of custom extension information.
-	 * @param array  $button_parameters The array of information needed to build the button.
-	 * @param array  $link_parameters   The array of information needed to build the link.
+	 * @param object $product             The extension information retrieved from the Products API.
+	 * @param array  $config              The array of custom extension information.
+	 * @param array  $inactive_parameters The array of information to build the button for an inactive/not installed plugin.
+	 * @param array  $active_parameters   The array of information needed to build the link to configure an active plugin.
 	 * @return void
 	 */
-	public function do_extension_card( $product, $config, $button_parameters, $link_parameters ) {
+	public function do_extension_card( $product, $config, $inactive_parameters, $active_parameters ) {
 		if ( ! $product ) {
 			return;
 		}
@@ -107,13 +107,13 @@ class Extension_Manager {
 						if ( ! $this->is_plugin_active( $config['basename'] ) ) {
 							?>
 							<div class="edd-extension-manager__step">
-								<?php $this->button( $button_parameters ); ?>
+								<?php $this->button( $inactive_parameters ); ?>
 							</div>
 							<?php
 						}
 						?>
 						<div class="edd-extension-manager__step">
-							<?php $this->link( $link_parameters ); ?>
+							<?php $this->link( $active_parameters ); ?>
 						</div>
 					</div>
 				</div>
