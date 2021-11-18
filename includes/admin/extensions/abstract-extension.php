@@ -77,8 +77,8 @@ abstract class Extension {
 		$this->manager->do_extension_card(
 			$product_data,
 			$config,
-			$this->get_button_parameters( $config, $product_data ),
-			$this->get_link_parameters( $config, $product_data->info->title )
+			$this->get_button_parameters( $config, $product_data, $item_id ),
+			$this->get_link_parameters( $config, $product_data['title'] )
 		);
 	}
 
@@ -150,14 +150,17 @@ abstract class Extension {
 	 *
 	 * @param array  $config       The array of provided data about the extension.
 	 * @param object $product_data The extension data returned from the Products API.
+	 * @param int    $item_id      Optional: the item ID.
 	 * @return array
 	 */
-	protected function get_button_parameters( $config, $product_data ) {
-		$item_id = ! empty( $product_data->info->id ) ? $product_data->info->id : $this->item_id;
-		$body    = $this->get_api_body();
-		$type    = $this->get_type( $body );
-		$id      = $body[ $type ];
-		$button  = array(
+	protected function get_button_parameters( $config, $product_data, $item_id = false ) {
+		if ( empty( $item_id ) ) {
+			$item_id = $this->item_id;
+		}
+		$body   = $this->get_api_body();
+		$type   = $this->get_type( $body );
+		$id     = $body[ $type ];
+		$button = array(
 			'type'    => $type,
 			'id'      => $id,
 			'product' => $item_id,
@@ -167,11 +170,11 @@ abstract class Extension {
 			if ( $this->manager->pass_can_download() ) {
 				$button['action'] = 'install';
 				/* translators: The extension name. */
-				$button['button_text'] = sprintf( __( 'Install & Activate %s', 'easy-digital-downloads' ), $product_data->info->title );
+				$button['button_text'] = sprintf( __( 'Install & Activate %s', 'easy-digital-downloads' ), $product_data['title'] );
 			} else {
 				$button = array(
 					/* translators: The extension name. */
-					'button_text' => sprintf( __( 'Upgrade Today to Access %s!', 'easy-digital-downloads' ), $product_data->info->title ),
+					'button_text' => sprintf( __( 'Upgrade Today to Access %s!', 'easy-digital-downloads' ), $product_data['title'] ),
 					'href'        => $this->get_upgrade_url( $config, $item_id ),
 					'new_tab'     => true,
 					'type'        => $type,
@@ -182,7 +185,7 @@ abstract class Extension {
 			$button['plugin'] = $config['basename'];
 			$button['action'] = 'activate';
 			/* translators: The extension name. */
-			$button['button_text'] = sprintf( __( 'Activate %s', 'easy-digital-downloads' ), $product_data->info->title );
+			$button['button_text'] = sprintf( __( 'Activate %s', 'easy-digital-downloads' ), $product_data['title'] );
 		}
 
 		return $button;

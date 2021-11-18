@@ -140,19 +140,19 @@ class Extension_Manager {
 		);
 		if ( ! empty( $config['title'] ) ) {
 			$data['title'] = $config['title'];
-		} elseif ( ! empty( $product->info->title ) ) {
+		} elseif ( ! empty( $product['title'] ) ) {
 			/* translators: the name of the extension */
-			$data['title'] = sprintf( __( 'Get %s Today!', 'easy-digital-downloads' ), $product->info->title );
+			$data['title'] = sprintf( __( 'Get %s Today!', 'easy-digital-downloads' ), $product['title'] );
 		}
 		if ( ! empty( $config['image'] ) ) {
 			$data['image'] = $config['image'];
-		} elseif ( ! empty( $product->info->thumbnail ) ) {
-			$data['image'] = $product->info->thumbnail;
+		} elseif ( ! empty( $product['image'] ) ) {
+			$data['image'] = $product['image'];
 		}
 		if ( ! empty( $config['description'] ) ) {
 			$data['description'] = $config['description'];
-		} elseif ( ! empty( $product->info->excerpt ) ) {
-			$data['description'] = $product->info->excerpt;
+		} elseif ( ! empty( $product['excerpt'] ) ) {
+			$data['description'] = $product['excerpt'];
 		}
 
 		return $data;
