@@ -1,4 +1,4 @@
-/* global EDDExtensionManager */
+/* global EDDExtensionManager, ajaxurl */
 
 ; ( function ( document, $ ) {
 	'use strict';
