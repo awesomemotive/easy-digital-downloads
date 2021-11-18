@@ -61,7 +61,7 @@
 					 * The install class returns an array of error messages, and res.data.message will be undefined.
 					 * In that case, we'll use the standard failure messages.
 					 */
-					if ( !message ) {
+					if ( ! message ) {
 						if ( 'plugin' !== type ) {
 							message = EDDExtensionManager.extension_install_failed;
 						} else {
