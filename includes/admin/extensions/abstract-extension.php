@@ -89,12 +89,9 @@ abstract class Extension {
 	 * @return bool|object False if there is no data; API object if there is.
 	 */
 	public function get_product_data( $item_id = false ) {
-		$body = $this->get_api_body();
-		if ( empty( $body ) ) {
-			return false;
-		}
 		require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/class-extensions-api.php';
 		$api          = new ExtensionsAPI();
+		$body         = $this->get_api_body();
 		$product_data = $api->get_product_data( $body, $this->item_id );
 		if ( ! $product_data ) {
 			return false;
@@ -118,9 +115,7 @@ abstract class Extension {
 	 * @return array
 	 */
 	protected function get_api_body() {
-		return array(
-			'product' => $this->item_id,
-		);
+		return array();
 	}
 
 	/**
@@ -134,6 +129,10 @@ abstract class Extension {
 	 * @return void
 	 */
 	private function get_type( array $array ) {
+		$type = 'product';
+		if ( empty( $array ) ) {
+			return $type;
+		}
 		if ( function_exists( 'array_key_first' ) ) {
 			return array_key_first( $array );
 		}
@@ -141,7 +140,7 @@ abstract class Extension {
 			return $key;
 		}
 
-		return 'product';
+		return $type;
 	}
 
 	/**
@@ -159,7 +158,7 @@ abstract class Extension {
 		}
 		$body   = $this->get_api_body();
 		$type   = $this->get_type( $body );
-		$id     = $body[ $type ];
+		$id     = ! empty( $body[ $type ] ) ? $body[ $type ] : $this->item_id;
 		$button = array(
 			'type'    => $type,
 			'id'      => $id,
