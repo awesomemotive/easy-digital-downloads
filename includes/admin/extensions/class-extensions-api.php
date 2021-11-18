@@ -12,7 +12,13 @@ class ExtensionsAPI {
 	 * @param int   $item_id The product ID, if querying a single product.
 	 * @return object
 	 */
-	public function get_product_data( $body, $item_id = false ) {
+	public function get_product_data( $body = array(), $item_id = false ) {
+		if ( empty( $body ) ) {
+			if ( empty( $item_id ) ) {
+				return false;
+			}
+			$body = $this->get_api_body( $item_id );
+		}
 		$key         = $this->array_key_first( $body );
 		$option_name = "edd_extension_{$key}_{$body[ $key ]}_data";
 		$option      = $this->get_stored_extension_data( $option_name );
@@ -94,6 +100,20 @@ class ExtensionsAPI {
 		}
 
 		return 'https://easydigitaldownloads.com/edd-api/v2/products/';
+	}
+
+	/**
+	 * Gets the default array for the body of the API request.
+	 * A class may override this by setting an array to query a tag or category.
+	 *
+	 * @since 2.11.x
+	 * @param int $item_id The product ID.
+	 * @return array
+	 */
+	private function get_api_body( $item_id ) {
+		return array(
+			'product' => $item_id,
+		);
 	}
 
 	/**
