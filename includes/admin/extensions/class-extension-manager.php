@@ -74,7 +74,7 @@ class Extension_Manager {
 	 * Outputs a standard extension card.
 	 *
 	 * @since 2.11.x
-	 * @param object $item_id           The extension information retrieved from the Products API.
+	 * @param object $product           The extension information retrieved from the Products API.
 	 * @param array  $config            The array of custom extension information.
 	 * @param array  $button_parameters The array of information needed to build the button.
 	 * @param array  $link_parameters   The array of information needed to build the link.
