@@ -167,9 +167,13 @@ abstract class Extension {
 		// If the extension is not installed, the button will prompt to install and activate it.
 		if ( ! $this->manager->is_plugin_installed( $config['basename'] ) ) {
 			if ( $this->manager->pass_can_download() ) {
-				$button['action'] = 'install';
-				/* translators: The extension name. */
-				$button['button_text'] = sprintf( __( 'Install & Activate %s', 'easy-digital-downloads' ), $product_data['title'] );
+				$button = array(
+					/* translators: The extension name. */
+					'button_text' => sprintf( __( 'Log In to Your Account to Download %s', 'easy-digital-downloads' ), $product_data['title'] ),
+					'href'        => $this->get_upgrade_url( $config, $item_id, true ),
+					'new_tab'     => true,
+					'type'        => $type,
+				);
 			} else {
 				$button = array(
 					/* translators: The extension name. */
@@ -195,15 +199,22 @@ abstract class Extension {
 	 *
 	 * @todo add UTM parameters
 	 * @since 2.11.x
-	 * @param array $config  The array of provided data about the extension.
-	 * @param int   $item_id The item/product ID.
+	 * @param array $config     The array of provided data about the extension.
+	 * @param int   $item_id    The item/product ID.
+	 * @param bool  $has_access Whether the user already has access to the extension (based on pass level).
 	 * @return string
 	 */
-	private function get_upgrade_url( $config, $item_id ) {
+	private function get_upgrade_url( $config, $item_id, $has_access = false ) {
 		if ( ! empty( $config['upgrade_url'] ) ) {
 			return $config['upgrade_url'];
 		}
 
+		// todo: Add UTM parameters
+		if ( $has_access ) {
+			return 'https://easydigitaldownloads.com/your-account/your-downloads/';
+		}
+
+		// todo: Add UTM parameters
 		return add_query_arg(
 			array(
 				'p' => $item_id,
