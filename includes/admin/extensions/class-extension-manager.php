@@ -31,7 +31,6 @@ class Extension_Manager {
 	protected $pass_manager;
 
 	public function __construct( $required_pass_id = null ) {
-		require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/class-extensions-download-url.php';
 		if ( $required_pass_id ) {
 			$this->required_pass_id = $required_pass_id;
 		}
@@ -219,14 +218,8 @@ class Extension_Manager {
 	 * @return string|false Returns the download URL if possible, or false if not.
 	 */
 	public function get_download_url( $url_or_item_id, $type = 'plugin' ) {
-		if ( 'plugin' === $type ) {
-			return $url_or_item_id;
-		}
-		require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/class-extensions-download-url.php';
-		$extensions   = new ExtensionsDownloadURL();
-		$download_url = $extensions->get_url( $url_or_item_id, $this->pass_manager->highest_license_key );
 
-		return $download_url ? $download_url : false;
+		return 'plugin' === $type ? $url_or_item_id : false;
 	}
 
 	/**
