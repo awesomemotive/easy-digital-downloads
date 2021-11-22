@@ -997,7 +997,7 @@ function maybe_add_jilt_notice_to_abandoned_payment( $payment_id ) {
 /**
  * Reverts to the original download URL validation.
  *
- * @since 2.11.3
+ * @since 2.11.4
  * @todo  Remove this function in 3.0.
  *
  * @param bool   $ret
