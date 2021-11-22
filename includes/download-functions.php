@@ -1059,7 +1059,7 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
  * Gets the array of parameters to be used for the URL token generation and validation.
  * Used by `edd_get_download_file_url` and `edd_validate_url_token` so that their parameters are ordered the same.
  *
- * @since 2.11.3
+ * @since 2.11.4
  * @return array
  */
 function edd_get_url_token_parameters() {
