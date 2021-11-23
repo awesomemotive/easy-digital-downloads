@@ -37,18 +37,16 @@ class Invoices extends Extension {
 	}
 
 	/**
-	 * Gets the configuration for Invoices.
+	 * Gets the custom configuration for Invoices.
 	 *
+	 * @since 2.11.x
 	 * @return array
 	 */
-	protected function get_configuration( $item_id = false ) {
+	protected function get_configuration() {
 		return array(
-			'basename'    => 'edd-invoices/edd-invoices.php',
-			'tab'         => 'gateways',
-			'section'     => 'edd-invoices',
-			'card'        => 'horizontal',
-			'title'       => __( 'Impress Your Customers with Custom Invoices', 'easy-digital-downloads' ),
-			'description' => __( 'Allow your customers to download beautiful, professional invoices with one click!', 'easy-digital-downloads' ),
+			'card'               => 'horizontal',
+			'custom_title'       => __( 'Impress Your Customers with Custom Invoices', 'easy-digital-downloads' ),
+			'custom_description' => __( 'Allow your customers to download beautiful, professional invoices with one click!', 'easy-digital-downloads' ),
 		);
 	}
 
@@ -76,9 +74,9 @@ class Invoices extends Extension {
 	 * @return bool True if Invoices is active.
 	 */
 	protected function is_activated() {
-		$config = $this->get_configuration();
+		$product_data = $this->get_product_data();
 
-		if ( $this->manager->is_plugin_active( $config['basename'] ) ) {
+		if ( $this->manager->is_plugin_active( $product_data['basename'] ) ) {
 			return true;
 		}
 
