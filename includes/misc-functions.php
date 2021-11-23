@@ -80,12 +80,19 @@ function edd_is_debug_mode() {
  *
  * @since 3.0
  *
- * @return bool $retval True if dev, false if not.
+ * @return bool $is_dev_environment True if development environment; otherwise false.
  */
 function edd_is_dev_environment() {
 
+	// wp_get_environment_type was added in WordPress 5.5.
+	if ( function_exists( 'wp_get_environment_type' ) ) {
+		$environment = wp_get_environment_type();
+
+		return apply_filters( 'edd_is_dev_environment', in_array( $environment, array( 'local', 'development' ), true ) );
+	}
+
 	// Assume not a development environment
-	$retval = false;
+	$is_dev_environment = false;
 
 	// Get this one time and use it below
 	$network_url = network_site_url( '/' );
@@ -115,13 +122,13 @@ function edd_is_dev_environment() {
 	// Loop through all strings
 	foreach ( $strings as $string ) {
 		if ( stristr( $network_url, $string ) ) {
-			$retval = $string;
+			$is_dev_environment = true;
 			break;
 		}
 	}
 
 	// Filter & return
-	return apply_filters( 'edd_is_dev_environment', $retval );
+	return apply_filters( 'edd_is_dev_environment', $is_dev_environment );
 }
 
 /**
