@@ -30,12 +30,17 @@ class ExtensionsAPI {
 			return $option;
 		}
 
+		$url     = add_query_arg(
+			array(
+				'edd_action' => 'extension_data',
+			),
+			$this->get_products_api_url()
+		);
 		$request = wp_remote_get(
-			$this->get_products_api_url(),
+			$url,
 			array(
 				'timeout'   => 15,
 				'sslverify' => true,
-				'body'      => $body,
 			)
 		);
 
@@ -58,16 +63,42 @@ class ExtensionsAPI {
 		$value    = array(
 			'timeout' => strtotime( '+1 week', time() ),
 		);
-		foreach ( $response->products as $product ) {
-			$value[ $product->info->id ] = array(
-				'title'       => $product->info->title,
-				'image'       => $product->info->thumbnail,
-				'description' => $product->info->excerpt,
-			);
+		if ( $item_id && ! empty( $response->$item_id ) ) {
+			$item              = $response->$item_id;
+			$value[ $item_id ] = $this->get_item_data( $item );
+		} elseif ( in_array( $key, array( 'category', 'tag' ), true ) ) {
+			$term_id = $body[ $key ];
+			foreach ( $response as $item_id => $item ) {
+				if ( 'category' === $key && ! empty( $item->categories ) && ! in_array( $term_id, $item->categories, true ) ) {
+					continue;
+				} elseif ( 'tag' === $key && ! empty( $item->tags ) && ! in_array( $term_id, $item->tags, true ) ) {
+					continue;
+				}
+				$value[ $item_id ] = $this->get_item_data( $item );
+			}
 		}
+
 		update_option( $option_name, $value, false );
 
-		return $item_id ? $value[ $item_id ] : $value;
+		return $item_id && ! empty( $value[ $item_id ] ) ? $value[ $item_id ] : $value;
+	}
+
+	/**
+	 * Gets the product data as needed for the extension manager.
+	 *
+	 * @since 2.11.x
+	 * @param object $item
+	 * @return array
+	 */
+	private function get_item_data( $item ) {
+		return array(
+			'title'       => ! empty( $item->title ) ? $item->title : '',
+			'image'       => ! empty( $item->image ) ? $item->image : '',
+			'description' => ! empty( $item->description ) ? $item->description : '',
+			'basename'    => ! empty( $item->custom_meta['basename'] ) ? $item->custom_meta['basename'] : '',
+			'tab'         => ! empty( $item->custom_meta['settings_tab'] ) ? $item->custom_meta['settings_tab'] : '',
+			'section'     => ! empty( $item->custom_meta['settings_section'] ) ? $item->custom_meta['settings_section'] : '',
+		);
 	}
 
 	/**
@@ -99,7 +130,7 @@ class ExtensionsAPI {
 			return EDD_PRODUCTS_API_URL;
 		}
 
-		return 'https://easydigitaldownloads.com/edd-api/v2/products/';
+		return 'https://easydigitaldownloads.com/wp-content/uploads/cache/products/products.json';
 	}
 
 	/**
