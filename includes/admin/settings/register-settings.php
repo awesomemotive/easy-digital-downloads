@@ -2540,9 +2540,8 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 						} elseif( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
 
 							$messages[] = sprintf(
-								__( 'Your license key expires soon! It expires on %s. <a href="%s" target="_blank">Renew your license key</a>.', 'easy-digital-downloads' ),
-								date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
-								'https://easydigitaldownloads.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
+								__( 'Your license key expires soon! It expires on %s.', 'easy-digital-downloads' ),
+								date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) )
 							);
 
 							$license_status = 'license-expires-soon-notice';
