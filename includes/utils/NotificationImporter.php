@@ -115,7 +115,6 @@ class NotificationImporter {
 			'id',
 			'title',
 			'content',
-			'notification_type',
 		);
 
 		$missing = array_diff( $requiredProperties, array_keys( get_object_vars( $notification ) ) );
@@ -158,7 +157,7 @@ class NotificationImporter {
 			'title'      => $notification->title,
 			'content'    => $notification->content,
 			'buttons'    => $this->parseButtons( $notification ),
-			'type'       => $notification->notification_type,
+			'type'       => ! empty( $notification->notification_type ) ? $notification->notification_type : 'success',
 			'conditions' => ! empty( $notification->type ) ? $notification->type : null,
 			'start'      => ! empty( $notification->start ) ? $notification->start : null,
 			'end'        => ! empty( $notification->end ) ? $notification->end : null,
