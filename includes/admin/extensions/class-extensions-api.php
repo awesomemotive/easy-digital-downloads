@@ -69,9 +69,9 @@ class ExtensionsAPI {
 		} elseif ( in_array( $key, array( 'category', 'tag' ), true ) ) {
 			$term_id = $body[ $key ];
 			foreach ( $response as $item_id => $item ) {
-				if ( 'category' === $key && ! empty( $item->categories ) && ! in_array( $term_id, $item->categories, true ) ) {
+				if ( 'category' === $key && ( empty( $item->categories ) || ! in_array( $term_id, $item->categories, true ) ) ) {
 					continue;
-				} elseif ( 'tag' === $key && ! empty( $item->tags ) && ! in_array( $term_id, $item->tags, true ) ) {
+				} elseif ( 'tag' === $key && ( empty( $item->tags ) || ! in_array( $term_id, $item->tags, true ) ) ) {
 					continue;
 				}
 				$value[ $item_id ] = $this->get_item_data( $item );
