@@ -32,15 +32,6 @@ abstract class Extension {
 	}
 
 	/**
-	 * Gets the configuration for the extension.
-	 *
-	 * @since 2.11.x
-	 * @param bool|int $item_id
-	 * @return array
-	 */
-	abstract protected function get_configuration( $item_id = false );
-
-	/**
 	 * Whether the extension is activated.
 	 *
 	 * @since 2.11.x
@@ -69,16 +60,14 @@ abstract class Extension {
 	 * @return void
 	 */
 	public function do_single_extension_card( $item_id = false ) {
-		$config       = $this->get_configuration( $item_id );
 		$product_data = $this->get_product_data( $item_id );
 		if ( ! $product_data ) {
 			return;
 		}
 		$this->manager->do_extension_card(
 			$product_data,
-			$config,
-			$this->get_button_parameters( $config, $product_data, $item_id ),
-			$this->get_link_parameters( $config, $product_data['title'] )
+			$this->get_button_parameters( $product_data, $item_id ),
+			$this->get_link_parameters( $product_data )
 		);
 	}
 
@@ -97,15 +86,26 @@ abstract class Extension {
 			return false;
 		}
 
+		$config = $this->get_configuration( $item_id );
 		if ( $this->item_id ) {
-			return $product_data;
+			return array_merge( $product_data, $config );
 		}
 
-		if ( ! empty( $product_data[ $item_id ] ) ) {
-			return $product_data[ $item_id ];
+		if ( $item_id && ! empty( $product_data[ $item_id ] ) ) {
+			return array_merge( $product_data[ $item_id ], $config );
 		}
 
-		return false;
+		return $product_data;
+	}
+
+	/**
+	 * Gets the custom configuration for the extension.
+	 *
+	 * @since 2.11.x
+	 * @return array
+	 */
+	protected function get_configuration() {
+		return array();
 	}
 
 	/**
@@ -147,12 +147,11 @@ abstract class Extension {
 	 * Gets the button parameters.
 	 * Classes should not need to replace this method.
 	 *
-	 * @param array  $config       The array of provided data about the extension.
 	 * @param object $product_data The extension data returned from the Products API.
 	 * @param int    $item_id      Optional: the item ID.
 	 * @return array
 	 */
-	protected function get_button_parameters( $config, $product_data, $item_id = false ) {
+	protected function get_button_parameters( $product_data, $item_id = false ) {
 		if ( empty( $item_id ) ) {
 			$item_id = $this->item_id;
 		}
@@ -165,12 +164,12 @@ abstract class Extension {
 			'product' => $item_id,
 		);
 		// If the extension is not installed, the button will prompt to install and activate it.
-		if ( ! $this->manager->is_plugin_installed( $config['basename'] ) ) {
+		if ( ! $this->manager->is_plugin_installed( $product_data['basename'] ) ) {
 			if ( $this->manager->pass_can_download() ) {
 				$button = array(
 					/* translators: The extension name. */
 					'button_text' => sprintf( __( 'Log In to Your Account to Download %s', 'easy-digital-downloads' ), $product_data['title'] ),
-					'href'        => $this->get_upgrade_url( $config, $item_id, true ),
+					'href'        => $this->get_upgrade_url( $product_data, $item_id, true ),
 					'new_tab'     => true,
 					'type'        => $type,
 				);
@@ -178,14 +177,14 @@ abstract class Extension {
 				$button = array(
 					/* translators: The extension name. */
 					'button_text' => sprintf( __( 'Upgrade Today to Access %s!', 'easy-digital-downloads' ), $product_data['title'] ),
-					'href'        => $this->get_upgrade_url( $config, $item_id ),
+					'href'        => $this->get_upgrade_url( $product_data, $item_id ),
 					'new_tab'     => true,
 					'type'        => $type,
 				);
 			}
-		} elseif ( ! $this->manager->is_plugin_active( $config['basename'] ) ) {
+		} elseif ( ! $this->manager->is_plugin_active( $product_data['basename'] ) ) {
 			// If the extension is installed, but not activated, the button will prompt to activate it.
-			$button['plugin'] = $config['basename'];
+			$button['plugin'] = $product_data['basename'];
 			$button['action'] = 'activate';
 			/* translators: The extension name. */
 			$button['button_text'] = sprintf( __( 'Activate %s', 'easy-digital-downloads' ), $product_data['title'] );
@@ -227,20 +226,19 @@ abstract class Extension {
 	 * Gets the array of parameters for the link to configure the extension.
 	 *
 	 * @since 2.11.x
-	 * @param array  $config  The array of provided data about the extension.
-	 * @param object $title   The extension name.
+	 * @param array  $product_data  The array of provided data about the extension.
 	 * @return array
 	 */
-	protected function get_link_parameters( $config, $title ) {
+	protected function get_link_parameters( $product_data ) {
 		return array(
 			/* translators: The extension name. */
-			'button_text' => sprintf( __( 'Configure %s', 'easy-digital-downloads' ), $title ),
+			'button_text' => sprintf( __( 'Configure %s', 'easy-digital-downloads' ), $product_data['title'] ),
 			'href'        => add_query_arg(
 				array(
 					'post_type' => 'download',
 					'page'      => 'edd-settings',
-					'tab'       => $config['tab'],
-					'section'   => $config['section'],
+					'tab'       => $product_data['tab'],
+					'section'   => $product_data['section'],
 				),
 				admin_url( 'edit.php' )
 			),
