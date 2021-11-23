@@ -65,26 +65,6 @@ class Recurring extends Extension {
 	}
 
 	/**
-	 * Registers the setting/hook to display the extension card.
-	 *
-	 * @param array $settings
-	 * @return array
-	 */
-	public function setting( $settings ) {
-		if ( $this->is_activated() ) {
-			return $settings;
-		}
-		$settings['recurring']['recurring'] = array(
-			'id'   => 'recurring_install',
-			'name' => __( 'Get Recurring Payments', 'easy-digital-downloads' ),
-			'desc' => '',
-			'type' => 'hook',
-		);
-
-		return $settings;
-	}
-
-	/**
 	 * Whether EDD Recurring active or not.
 	 *
 	 * @since 2.11.x
