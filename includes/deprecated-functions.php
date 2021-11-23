@@ -1151,3 +1151,34 @@ function edd_sendwp_disconnect () {
 	wp_send_json_success();
 }
 add_action( 'wp_ajax_edd_sendwp_disconnect', 'edd_sendwp_disconnect' );
+
+/**
+ * Reverts to the original download URL validation.
+ *
+ * @since 2.11.4
+ * @todo  Remove this function in 3.0.
+ *
+ * @param bool   $ret
+ * @param string $url
+ * @param array  $query_args
+ * @param string $original_url
+ */
+add_filter( 'edd_validate_url_token', function( $ret, $url, $query_args, $original_url ) {
+	// If the URL is already validated, we don't need to validate it again.
+	if ( $ret ) {
+		return $ret;
+	}
+	$allowed = edd_get_url_token_parameters();
+	$remove  = array();
+	foreach ( $query_args as $key => $value ) {
+		if ( ! in_array( $key, $allowed, true ) ) {
+			$remove[] = $key;
+		}
+	}
+
+	if ( ! empty( $remove ) ) {
+		$original_url = remove_query_arg( $remove, $original_url );
+	}
+
+	return isset( $query_args['token'] ) && hash_equals( $query_args['token'], edd_get_download_token( $original_url ) );
+}, 10, 4 );
