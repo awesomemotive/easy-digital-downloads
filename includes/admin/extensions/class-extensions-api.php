@@ -94,10 +94,10 @@ class ExtensionsAPI {
 		return array(
 			'title'       => ! empty( $item->title ) ? $item->title : '',
 			'image'       => ! empty( $item->image ) ? $item->image : '',
-			'description' => ! empty( $item->description ) ? $item->description : '',
-			'basename'    => ! empty( $item->custom_meta['basename'] ) ? $item->custom_meta['basename'] : '',
-			'tab'         => ! empty( $item->custom_meta['settings_tab'] ) ? $item->custom_meta['settings_tab'] : '',
-			'section'     => ! empty( $item->custom_meta['settings_section'] ) ? $item->custom_meta['settings_section'] : '',
+			'description' => ! empty( $item->excerpt ) ? $item->excerpt : '',
+			'basename'    => ! empty( $item->custom_meta->basename ) ? $item->custom_meta->basename : '',
+			'tab'         => ! empty( $item->custom_meta->settings_tab ) ? $item->custom_meta->settings_tab : '',
+			'section'     => ! empty( $item->custom_meta->settings_section ) ? $item->custom_meta->settings_section : '',
 		);
 	}
 
