@@ -37,16 +37,14 @@ class Recurring extends Extension {
 	}
 
 	/**
-	 * Gets the configuration for Recurring.
+	 * Gets the custom configuration for Recurring.
 	 *
+	 * @since 2.11.x
 	 * @return array
 	 */
-	protected function get_configuration( $item_id = false ) {
+	protected function get_configuration() {
 		return array(
-			'basename' => 'edd-recurring/edd-recurring.php',
-			'tab'      => 'gateways',
-			'section'  => 'recurring',
-			'card'     => 'horizontal',
+			'card' => 'horizontal',
 		);
 	}
 
@@ -94,9 +92,9 @@ class Recurring extends Extension {
 	 * @return bool True if Recurring is active.
 	 */
 	protected function is_activated() {
-		$config = $this->get_configuration();
+		$product_data = $this->get_product_data();
 
-		if ( $this->manager->is_plugin_active( $config['basename'] ) ) {
+		if ( $this->manager->is_plugin_active( $product_data['basename'] ) ) {
 			return true;
 		}
 
