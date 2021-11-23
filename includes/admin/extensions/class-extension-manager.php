@@ -74,36 +74,35 @@ class Extension_Manager {
 	 *
 	 * @since 2.11.x
 	 * @param object $product             The extension information retrieved from the Products API.
-	 * @param array  $config              The array of custom extension information.
 	 * @param array  $inactive_parameters The array of information to build the button for an inactive/not installed plugin.
 	 * @param array  $active_parameters   The array of information needed to build the link to configure an active plugin.
 	 * @return void
 	 */
-	public function do_extension_card( $product, $config, $inactive_parameters, $active_parameters ) {
+	public function do_extension_card( $product, $inactive_parameters, $active_parameters ) {
 		if ( ! $product ) {
 			return;
 		}
-		$data       = $this->get_card_data( $product, $config );
+		$product    = $this->get_card_data( $product );
 		$card_class = 'edd-extension-manager__card';
-		if ( ! empty( $config['card'] ) ) {
-			$card_class .= " {$card_class}--{$config['card']}";
+		if ( ! empty( $product['card'] ) ) {
+			$card_class .= " {$card_class}--{$product['card']}";
 		}
 		?>
 		<div class="<?php echo esc_attr( $card_class ); ?>">
-			<h3 class="edd-extension-manager__title"><?php echo esc_html( $data['title'] ); ?></h3>
+			<h3 class="edd-extension-manager__title"><?php echo esc_html( $product['title'] ); ?></h3>
 			<div class="edd-extension-manager__body">
-				<?php if ( ! empty( $data['image'] ) ) : ?>
+				<?php if ( ! empty( $product['image'] ) ) : ?>
 					<div class="edd-extension-manager__image">
-						<img alt="" src="<?php echo esc_url( $data['image'] ); ?>" />
+						<img alt="" src="<?php echo esc_url( $product['image'] ); ?>" />
 					</div>
 				<?php endif; ?>
 				<div class="edd-extension-manager__content">
-					<?php if ( ! empty( $data['description'] ) ) : ?>
-						<p class="edd-extension-manager__description"><?php echo wp_kses_post( $data['description'] ); ?></p>
+					<?php if ( ! empty( $product['description'] ) ) : ?>
+						<p class="edd-extension-manager__description"><?php echo wp_kses_post( $product['description'] ); ?></p>
 					<?php endif; ?>
 					<div class="edd-extension-manager__group">
 						<?php
-						if ( ! $this->is_plugin_active( $config['basename'] ) ) {
+						if ( ! $this->is_plugin_active( $product['basename'] ) ) {
 							?>
 							<div class="edd-extension-manager__step">
 								<?php $this->button( $inactive_parameters ); ?>
@@ -128,33 +127,21 @@ class Extension_Manager {
 	 *
 	 * @since 2.11.x
 	 * @param object $product The extension data from the Products API.
-	 * @param array  $config  The configuration array for the specific extension.
 	 * @return array
 	 */
-	private function get_card_data( $product, $config ) {
-		$data = array(
-			'title'       => '',
-			'image'       => '',
-			'description' => '',
-		);
-		if ( ! empty( $config['title'] ) ) {
-			$data['title'] = $config['title'];
+	private function get_card_data( $product ) {
+		$data = array();
+		if ( ! empty( $product['custom_title'] ) ) {
+			$data['title'] = $product['custom_title'];
 		} elseif ( ! empty( $product['title'] ) ) {
 			/* translators: the name of the extension */
 			$data['title'] = sprintf( __( 'Get %s Today!', 'easy-digital-downloads' ), $product['title'] );
 		}
-		if ( ! empty( $config['image'] ) ) {
-			$data['image'] = $config['image'];
-		} elseif ( ! empty( $product['image'] ) ) {
-			$data['image'] = $product['image'];
-		}
-		if ( ! empty( $config['description'] ) ) {
-			$data['description'] = $config['description'];
-		} elseif ( ! empty( $product['description'] ) ) {
-			$data['description'] = $product['description'];
+		if ( ! empty( $product['custom_description'] ) ) {
+			$data['description'] = $product['custom_description'];
 		}
 
-		return $data;
+		return array_merge( $product, $data );
 	}
 
 	/**
@@ -533,6 +520,6 @@ class Extension_Manager {
 	 * @return boolean
 	 */
 	public function is_plugin_active( $basename ) {
-		return is_plugin_active( $basename );
+		return ! empty( $basename ) && is_plugin_active( $basename );
 	}
 }
