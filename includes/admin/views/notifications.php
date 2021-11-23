@@ -71,7 +71,7 @@
 								<template x-for="button in notification.buttons">
 									<a
 										:href="button.url"
-										:class="button.type === 'primary' ? 'button-primary' : 'button'"
+										:class="button.type === 'primary' ? 'button button-primary' : 'button button-secondary'"
 										target="_blank"
 										x-text="button.text"
 									></a>
