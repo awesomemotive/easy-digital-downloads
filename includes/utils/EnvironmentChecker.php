@@ -64,6 +64,8 @@ class EnvironmentChecker {
 	public function meetsCondition( $condition ) {
 		if ( array_key_exists( $condition, $this->validLicenseConditions ) ) {
 			return $this->hasLicenseType( $condition );
+		} elseif ( $this->isPaymentGateway( $condition ) ) {
+			return $this->paymentGatewayMatch( array_keys( edd_get_enabled_payment_gateways() ), $condition );
 		} elseif ( $this->isVersionNumber( $condition ) ) {
 			return $this->versionNumbersMatch( EDD_VERSION, $condition );
 		}
@@ -113,6 +115,37 @@ class EnvironmentChecker {
 		}
 
 		return call_user_func( array( $this->passManager, $method ) );
+	}
+
+	/**
+	 * Determines if the provided condition is a payment gateway.
+	 *
+	 * @since 2.11.4
+	 *
+	 * @param string $condition
+	 *
+	 * @return bool
+	 */
+	protected function isPaymentGateway( $condition ) {
+		return 'gateway-' === substr( $condition, 0, 8 );
+	}
+
+	/**
+	 * Determines if the supplied gateway condition is applicable to this site.
+	 * Will return `true` if the condition is the slug of a payment gateway (potentially with a `gateway-` prefix)
+	 * that's enabled on this site.
+	 *
+	 * @since 2.11.4
+	 *
+	 * @param array  $enabledGateways Gateways that are enabled on this site.
+	 * @param string $condition       Gateway we're checking to see if it's enabled.
+	 *
+	 * @return bool True if the gateway is enabled, false if not.
+	 */
+	public function paymentGatewayMatch( $enabledGateways, $condition ) {
+		$gatewayToCheck = str_replace( 'gateway-', '', $condition );
+
+		return in_array( $gatewayToCheck, $enabledGateways, true );
 	}
 
 	/**
