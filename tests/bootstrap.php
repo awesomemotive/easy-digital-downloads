@@ -8,6 +8,8 @@ define( 'EDD_USE_PHP_SESSIONS', false );
 define( 'WP_USE_THEMES', false );
 define( 'EDD_DOING_TESTS', true );
 
+require_once dirname( dirname( __FILE__ ) ) . '/vendor/autoload.php';
+
 $_tests_dir = getenv('WP_TESTS_DIR');
 if ( !$_tests_dir ) $_tests_dir = '/tmp/wordpress-tests-lib';
 
