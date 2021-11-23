@@ -249,21 +249,12 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 		$data = array();
 
 		$start_date = date( 'Y-m-d 00:00:00', strtotime( $this->start ) );
-
-		if ( $this->count() == 0 ) {
-			$end_date = date( 'Y-m-d 23:59:59', strtotime( $this->end ) );
-		} else {
-			$end_date = date( 'Y-m-d 23:59:59', strtotime( 'first day of +1 month', strtotime( $start_date ) ) );
-		}
+		$end_date   = date( 'Y-m-t 23:59:59', strtotime( $this->start ) );
 
 		if ( $this->step > 1 ) {
-			$start_date = date( 'Y-m-d 00:00:00', strtotime( 'first day of +' . ( $this->step - 1 ) . ' month', strtotime( $start_date ) ) );
-
-			if ( date( 'Y-m', strtotime( $start_date ) ) == date( 'Y-m', strtotime( $this->end ) ) ) {
-				$end_date = date( 'Y-m-d 23:59:59', strtotime( $this->end ) );
-			} else {
-				$end_date = date( 'Y-m-d 23:59:59', strtotime( 'first day of +1 month', strtotime( $start_date ) ) );
-			}
+			$start_timestamp = strtotime( 'first day of +' . ( $this->step - 1 ) . ' month', strtotime( $start_date ) );
+			$start_date      = date( 'Y-m-d 00:00:00', $start_timestamp );
+			$end_date        = date( 'Y-m-t 23:59:59', $start_timestamp );
 		}
 
 		if ( strtotime( $start_date ) > strtotime( $this->end ) ) {
@@ -278,7 +269,7 @@ class EDD_Batch_Earnings_Report_Export extends EDD_Batch_Export {
 			 WHERE posts.post_type IN ('edd_payment')
 			 AND {$wpdb->postmeta}.meta_key = '_edd_payment_total'
 			 AND posts.post_date >= %s
-			 AND posts.post_date < %s
+			 AND posts.post_date <= %s
 			 GROUP BY YEAR(posts.post_date), MONTH(posts.post_date), posts.post_status
 			 ORDER by posts.post_date ASC", $start_date, $end_date ), ARRAY_A );
 
