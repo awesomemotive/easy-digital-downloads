@@ -24,20 +24,6 @@ class EmailMarketing extends Extension {
 	}
 
 	/**
-	 * Gets the configuration for the newsletter extensions.
-	 * Returns data for all email marketing extensions or just the one matching the item ID.
-	 *
-	 * @since 2.11.x
-	 * @param int $item_id Optional. The product ID.
-	 * @return array
-	 */
-	protected function get_configuration( $item_id = false ) {
-		$extensions = include 'list-email-marketing.php';
-
-		return $item_id ? $extensions[ $item_id ] : $extensions;
-	}
-
-	/**
 	 * Adds an email marketing section to the Marketing tab.
 	 *
 	 * @since 2.11.x
@@ -58,13 +44,13 @@ class EmailMarketing extends Extension {
 	 */
 	public function field() {
 		if ( $this->is_activated() ) {
-			printf( '<p>%s</p>', __( 'Looks like you have an email marketing extension installed, but we support more providers!', 'easy-digital-downloads' ) );
+			printf( '<p>%s</p>', esc_html__( 'Looks like you have an email marketing extension installed, but we support more providers!', 'easy-digital-downloads' ) );
 		}
-		$config = $this->get_configuration();
+		$extensions = $this->get_product_data();
 		?>
 		<div class="edd-extension-manager__card-group">
 			<?php
-			foreach ( $config as $item_id => $extension ) {
+			foreach ( $extensions as $item_id => $extension ) {
 				$this->do_single_extension_card( $item_id );
 			}
 			?>
@@ -93,9 +79,9 @@ class EmailMarketing extends Extension {
 	 * @return bool True if any email marketing extension is active.
 	 */
 	protected function is_activated() {
-		$config = $this->get_configuration();
-		foreach ( $config as $extension ) {
-			if ( $this->manager->is_plugin_active( $extension['basename'] ) ) {
+		$product_data = $this->get_product_data();
+		foreach ( $product_data as $extension ) {
+			if ( ! empty( $extension['basename'] ) && $this->manager->is_plugin_active( $extension['basename'] ) ) {
 				return true;
 			}
 		}
