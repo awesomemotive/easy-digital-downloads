@@ -50,11 +50,17 @@ function edd_options_page() {
 		$key = key( $sections );
 	}
 
-	$registered_sections = edd_get_settings_tab_sections( $active_tab );
-	$section             = isset( $_GET['section'] ) && ! empty( $registered_sections ) && array_key_exists( $_GET['section'], $registered_sections ) ? sanitize_text_field( $_GET['section'] ) : $key;
+	$section = isset( $_GET['section'] ) && ! empty( $sections ) && array_key_exists( $_GET['section'], $sections ) ? sanitize_text_field( $_GET['section'] ) : $key;
 
-	// Unset 'main' if it's empty and default to the first non-empty if it's the chosen section
 	$all_settings = edd_get_registered_settings();
+
+	// Remove tabs that don't have settings fields.
+	$tabs_with_settings = array_keys( $all_settings );
+	foreach ( $tabs_with_settings as $tab_with_settings ) {
+		if ( empty( $all_settings[ $tab_with_settings ] ) ) {
+			unset( $settings_tabs[ $tab_with_settings ] );
+		}
+	}
 
 	// Let's verify we have a 'main' section to show
 	$has_main_settings = true;
@@ -75,6 +81,7 @@ function edd_options_page() {
 	}
 
 	$override = false;
+	// Unset 'main' if it's empty and default to the first non-empty if it's the chosen section
 	if ( false === $has_main_settings ) {
 		unset( $sections['main'] );
 
@@ -95,7 +102,7 @@ function edd_options_page() {
 		<h1><?php esc_html_e( 'Settings', 'easy-digital-downloads' ); ?></h1>
 		<h2 class="nav-tab-wrapper">
 			<?php
-			foreach ( edd_get_settings_tabs() as $tab_id => $tab_name ) {
+			foreach ( $settings_tabs as $tab_id => $tab_name ) {
 				$tab_url = add_query_arg( array(
 					'settings-updated' => false,
 					'tab'              => $tab_id,
