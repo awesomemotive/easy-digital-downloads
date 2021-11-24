@@ -1364,26 +1364,17 @@ function edd_sanitize_html_class( $class = '' ) {
  */
 function edd_get_settings_tabs() {
 
-	$settings = edd_get_registered_settings();
-
-	$tabs             = array();
-	$tabs['general']  = __( 'General', 'easy-digital-downloads' );
-	$tabs['gateways'] = __( 'Payments', 'easy-digital-downloads' );
-	$tabs['emails']   = __( 'Emails', 'easy-digital-downloads' );
-	$tabs['styles']   = __( 'Styles', 'easy-digital-downloads' );
-	$tabs['taxes']    = __( 'Taxes', 'easy-digital-downloads' );
-	$tabs['privacy']  = __( 'Privacy', 'easy-digital-downloads' );
-
-	if( ! empty( $settings['extensions'] ) ) {
-		$tabs['extensions'] = __( 'Extensions', 'easy-digital-downloads' );
-	}
-	if( ! empty( $settings['licenses'] ) ) {
-		$tabs['licenses'] = __( 'Licenses', 'easy-digital-downloads' );
-	}
-
-	$tabs['misc']      = __( 'Misc', 'easy-digital-downloads' );
-
-	return apply_filters( 'edd_settings_tabs', $tabs );
+	return apply_filters( 'edd_settings_tabs', array(
+		'general'    => __( 'General', 'easy-digital-downloads' ),
+		'gateways'   => __( 'Payments', 'easy-digital-downloads' ),
+		'emails'     => __( 'Emails', 'easy-digital-downloads' ),
+		'styles'     => __( 'Styles', 'easy-digital-downloads' ),
+		'taxes'      => __( 'Taxes', 'easy-digital-downloads' ),
+		'privacy'    => __( 'Privacy', 'easy-digital-downloads' ),
+		'extensions' => __( 'Extensions', 'easy-digital-downloads' ),
+		'licenses'   => __( 'Licenses', 'easy-digital-downloads' ),
+		'misc'       => __( 'Misc', 'easy-digital-downloads' ),
+	) );
 }
 
 /**
