@@ -24,7 +24,7 @@ class Invoices extends Extension {
 	protected $item_id = 375153;
 
 	/**
-	 * The pass level required to automatically download this extension.
+	 * The pass level required to access this extension.
 	 */
 	const PASS_LEVEL = \EDD\Admin\Pass_Manager::EXTENDED_PASS_ID;
 
