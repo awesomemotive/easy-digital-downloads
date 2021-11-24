@@ -5,7 +5,7 @@
  * Manages automatic activation for Reviews.
  *
  * @package     EDD
- * @subpackage  WP_SMTP
+ * @subpackage  Reviews
  * @copyright   Copyright (c) 2021, Easy Digital Downloads
  * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.11.x
@@ -24,7 +24,7 @@ class Reviews extends Extension {
 	protected $item_id = 37976;
 
 	/**
-	 * The pass level required to automatically download this extension.
+	 * The pass level required to access this extension.
 	 */
 	const PASS_LEVEL = \EDD\Admin\Pass_Manager::EXTENDED_PASS_ID;
 

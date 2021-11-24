@@ -2,10 +2,10 @@
 /**
  * Recurring Payments
  *
- * Manages automatic installation/activation for Recurring Payments.
+ * Manages automatic activation for Recurring Payments.
  *
  * @package     EDD
- * @subpackage  WP_SMTP
+ * @subpackage  Recurring
  * @copyright   Copyright (c) 2021, Easy Digital Downloads
  * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       2.11.x
@@ -24,7 +24,7 @@ class Recurring extends Extension {
 	protected $item_id = 28530;
 
 	/**
-	 * The pass level required to automatically download this extension.
+	 * The pass level required to access this extension.
 	 */
 	const PASS_LEVEL = \EDD\Admin\Pass_Manager::EXTENDED_PASS_ID;
 
