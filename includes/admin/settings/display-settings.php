@@ -55,10 +55,9 @@ function edd_options_page() {
 	$all_settings = edd_get_registered_settings();
 
 	// Remove tabs that don't have settings fields.
-	$tabs_with_settings = array_keys( $all_settings );
-	foreach ( $tabs_with_settings as $tab_with_settings ) {
-		if ( empty( $all_settings[ $tab_with_settings ] ) ) {
-			unset( $settings_tabs[ $tab_with_settings ] );
+	foreach ( array_keys( $settings_tabs ) as $settings_tab ) {
+		if ( empty( $all_settings[ $settings_tab ] ) ) {
+			unset( $settings_tabs[ $settings_tab ] );
 		}
 	}
 
