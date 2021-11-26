@@ -43,10 +43,14 @@ class EmailMarketing extends Extension {
 	 * @return void
 	 */
 	public function field() {
+		$extensions = $this->get_product_data();
+		if ( ! $extensions ) {
+			printf( '<p>%s</p>', esc_html__( 'Unable to retrieve the product data.', 'easy-digital-downloads' ) );
+			return;
+		}
 		if ( $this->is_activated() ) {
 			printf( '<p>%s</p>', esc_html__( 'Looks like you have an email marketing extension installed, but we support more providers!', 'easy-digital-downloads' ) );
 		}
-		$extensions = $this->get_product_data();
 		?>
 		<div class="edd-extension-manager__card-group">
 			<?php
@@ -80,6 +84,9 @@ class EmailMarketing extends Extension {
 	 */
 	protected function is_activated() {
 		$product_data = $this->get_product_data();
+		if ( ! $product_data ) {
+			return false;
+		}
 		foreach ( $product_data as $extension ) {
 			if ( ! empty( $extension['basename'] ) && $this->manager->is_plugin_active( $extension['basename'] ) ) {
 				return true;
