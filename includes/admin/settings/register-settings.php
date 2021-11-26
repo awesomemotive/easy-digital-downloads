@@ -1360,6 +1360,7 @@ function edd_sanitize_html_class( $class = '' ) {
  * Retrieve settings tabs
  *
  * @since 1.8
+ * @since 2.11.4 Any tabs with no registered settings are filtered out in `edd_options_page`.
  * @return array $tabs
  */
 function edd_get_settings_tabs() {
