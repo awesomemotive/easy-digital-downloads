@@ -242,6 +242,8 @@ function edd_process_register_form( $data ) {
 		return;
 	}
 
+	$is_ajax = isset( $_POST['edd_ajax'] );
+
 	do_action( 'edd_pre_process_register_form' );
 
 	if ( empty( $data['edd_user_login'] ) ) {
@@ -298,6 +300,12 @@ function edd_process_register_form( $data ) {
 				'role'            => get_option( 'default_role' ),
 			)
 		);
+
+		if ( $is_ajax ) {
+			return wp_send_json_success( array(
+				'redirect' => $redirect,
+			) );
+		}
 
 		wp_redirect( $redirect );
 		edd_die();
