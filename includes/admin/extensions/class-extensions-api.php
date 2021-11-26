@@ -93,6 +93,7 @@ class ExtensionsAPI {
 	private function get_item_data( $item ) {
 		return array(
 			'title'       => ! empty( $item->title ) ? $item->title : '',
+			'slug'        => ! empty( $item->slug ) ? $item->slug : '',
 			'image'       => ! empty( $item->image ) ? $item->image : '',
 			'description' => ! empty( $item->excerpt ) ? $item->excerpt : '',
 			'basename'    => ! empty( $item->custom_meta->basename ) ? $item->custom_meta->basename : '',
