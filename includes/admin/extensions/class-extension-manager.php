@@ -205,7 +205,6 @@ class Extension_Manager {
 	 * @return string|false Returns the download URL if possible, or false if not.
 	 */
 	public function get_download_url( $url_or_item_id, $type = 'plugin' ) {
-
 		return 'plugin' === $type ? $url_or_item_id : false;
 	}
 
