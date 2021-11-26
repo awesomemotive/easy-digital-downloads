@@ -198,27 +198,33 @@ abstract class Extension {
 	 *
 	 * @todo add UTM parameters
 	 * @since 2.11.x
-	 * @param array $config     The array of provided data about the extension.
-	 * @param int   $item_id    The item/product ID.
-	 * @param bool  $has_access Whether the user already has access to the extension (based on pass level).
+	 * @param array $product_data The array of provided data about the extension.
+	 * @param int   $item_id      The item/product ID.
+	 * @param bool  $has_access   Whether the user already has access to the extension (based on pass level).
 	 * @return string
 	 */
-	private function get_upgrade_url( $config, $item_id, $has_access = false ) {
-		if ( ! empty( $config['upgrade_url'] ) ) {
-			return $config['upgrade_url'];
-		}
+	private function get_upgrade_url( $product_data, $item_id, $has_access = false ) {
+		$url            = 'https://easydigitaldownloads.com';
+		$tab            = ! empty( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : '';
+		$utm_parameters = array(
+			'p'            => urlencode( $item_id ),
+			'utm_source'   => 'settings',
+			'utm_medium'   => urlencode( $tab ),
+			'utm_campaign' => 'admin',
+			'utm_term'     => urlencode( $product_data['slug'] ),
+		);
 
-		// todo: Add UTM parameters
 		if ( $has_access ) {
-			return 'https://easydigitaldownloads.com/your-account/your-downloads/';
+			$url = 'https://easydigitaldownloads.com/your-account/your-downloads/';
+			unset( $utm_parameters['p'] );
+		} elseif ( ! empty( $product_data['upgrade_url'] ) ) {
+			$url = esc_url( $product_data['upgrade_url'] );
+			unset( $utm_parameters['p'] );
 		}
 
-		// todo: Add UTM parameters
 		return add_query_arg(
-			array(
-				'p' => $item_id,
-			),
-			'https://easydigitaldownloads.com'
+			$utm_parameters,
+			$url
 		);
 	}
 
