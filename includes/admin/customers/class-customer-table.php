@@ -191,12 +191,14 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @return array Array of all the sortable columns
 	 */
 	public function get_sortable_columns() {
-		return array(
+		$columns = array(
 			'date_created'  => array( 'date_created', true ),
 			'name'          => array( 'name', true ),
 			'num_purchases' => array( 'purchase_count', false ),
 			'amount_spent'  => array( 'purchase_value', false ),
 		);
+
+		return apply_filters( 'edd_report_customer_sortable_columns', $columns );
 	}
 
 	/**
