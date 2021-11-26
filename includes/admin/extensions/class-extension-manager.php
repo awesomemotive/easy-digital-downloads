@@ -73,7 +73,7 @@ class Extension_Manager {
 	 * Outputs a standard extension card.
 	 *
 	 * @since 2.11.x
-	 * @param object $product             The extension information retrieved from the Products API.
+	 * @param array $product             The extension information retrieved from the Products API.
 	 * @param array  $inactive_parameters The array of information to build the button for an inactive/not installed plugin.
 	 * @param array  $active_parameters   The array of information needed to build the link to configure an active plugin.
 	 * @return void
@@ -126,7 +126,7 @@ class Extension_Manager {
 	 * but extending classes can override that in the configuration array.
 	 *
 	 * @since 2.11.x
-	 * @param object $product The extension data from the Products API.
+	 * @param array $product The extension data from the Products API.
 	 * @return array
 	 */
 	private function get_card_data( $product ) {
