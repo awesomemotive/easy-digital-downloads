@@ -60,8 +60,11 @@ abstract class Extension {
 	 * @return void
 	 */
 	public function do_single_extension_card( $item_id = false ) {
+		if ( empty( $item_id ) && empty( $this->item_id ) ) {
+			return;
+		}
 		$product_data = $this->get_product_data( $item_id );
-		if ( ! $product_data ) {
+		if ( ! $product_data || empty( $product_data['title'] ) ) {
 			return;
 		}
 		$this->manager->do_extension_card(
