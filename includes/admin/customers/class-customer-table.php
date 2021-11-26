@@ -87,7 +87,9 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function search_box( $text, $input_id ) {
-		$input_id = $input_id . '-search-input';
+		$search_input_id = $input_id . '-search-input';
+		
+		do_action( 'edd_report_customer_search_box_before', $input_id );
 
 		if ( ! empty( $_REQUEST['orderby'] ) )
 			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
@@ -95,11 +97,13 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
 		?>
 		<p class="search-box">
-			<label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
-			<input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>" />
+			<label class="screen-reader-text" for="<?php echo $search_input_id ?>"><?php echo $text; ?>:</label>
+			<input type="search" id="<?php echo $search_input_id ?>" name="s" value="<?php _admin_search_query(); ?>" />
 			<?php submit_button( $text, 'button', false, false, array('ID' => 'search-submit') ); ?>
 		</p>
 		<?php
+		
+		do_action( 'edd_report_customer_search_box_after', $input_id );
 	}
 
 	/**
@@ -206,7 +210,7 @@ class EDD_Customer_Reports_Table extends WP_List_Table {
 	 * @return void
 	 */
 	public function bulk_actions( $which = '' ) {
-		// These aren't really bulk actions but this outputs the markup in the right place
+		do_action( 'edd_report_customer_bulk_actions', $which );
 	}
 
 	/**
