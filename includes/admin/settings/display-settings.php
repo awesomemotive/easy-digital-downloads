@@ -50,7 +50,7 @@ function edd_options_page() {
 		$key = key( $sections );
 	}
 
-	$section = isset( $_GET['section'] ) && ! empty( $sections ) && array_key_exists( $_GET['section'], $sections ) ? sanitize_text_field( $_GET['section'] ) : $key;
+	$section = ! empty( $_GET['section'] ) && ! empty( $sections[ $_GET['section'] ] ) ? sanitize_text_field( $_GET['section'] ) : $key;
 
 	$all_settings = edd_get_registered_settings();
 
