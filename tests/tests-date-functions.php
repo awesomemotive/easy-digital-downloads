@@ -133,9 +133,9 @@ class Date_Functions_Tests extends EDD_UnitTestCase {
 		$this->assertEquals( 1, $dates['day'] );
 		$this->assertEquals( date( 'n' ), $dates['m_start'] );
 		$this->assertEquals( date( 'Y' ), $dates['year'] );
-		$this->assertEquals( 1, $dates['day_end'] );
-		$this->assertEquals( date( 'n', strtotime( '+1 month' ) ), $dates['m_end'] );
-		$this->assertEquals( date( 'Y', strtotime( '+1 month' ) ), $dates['year_end'] );
+		$this->assertEquals( date( 't' ), $dates['day_end'] );
+		$this->assertEquals( date( 'n' ), $dates['m_end'] );
+		$this->assertEquals( date( 'Y' ), $dates['year_end'] );
 	}
 
 	/**
