@@ -35,6 +35,7 @@ add_action( 'admin_init', 'edd_process_actions' );
  *
  * @since 2.8.9
  * @since 2.11.3 Unhooked this to revert to standard admin H1 tags.
+ * @since 3.0    Added back as download categories/tags have been removed from the admin menu.
  * @param $views
  *
  * @return mixed
