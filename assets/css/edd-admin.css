@@ -2564,7 +2564,6 @@ only screen and (max-width: 1000px) {
 .edd-extension-manager__card {
 	background-color: #fff;
 	padding: 2em;
-	max-width: 600px;
 	margin: 0;
 }
 .edd-extension-manager__description {
