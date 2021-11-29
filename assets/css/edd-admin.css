@@ -2565,6 +2565,9 @@ only screen and (max-width: 1000px) {
 	background-color: #fff;
 	padding: 2em;
 	margin: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 }
 .edd-extension-manager__description {
 	margin: 0;
@@ -2587,11 +2590,18 @@ only screen and (max-width: 1000px) {
 	display: none;
 }
 
+.edd-extension-manager__step .button {
+	display: table;
+	margin: 0 auto;
+	text-align: center;
+	white-space: normal;
+}
+
 .edd-extension-manager__body {
 	display: grid;
 	gap: 1.5em;
 	align-items: center;
-	grid-template-columns: auto;
+	grid-template-columns: minmax(0, 1fr);
 }
 
 .edd-extension-manager__image img {
