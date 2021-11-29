@@ -131,7 +131,7 @@ class ExtensionsAPI {
 			return EDD_PRODUCTS_API_URL;
 		}
 
-		return 'https://easydigitaldownloads.com/wp-content/uploads/cache/products/products.json';
+		return 'https://easydigitaldownloads.com/';
 	}
 
 	/**
