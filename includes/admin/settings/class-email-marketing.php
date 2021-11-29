@@ -43,6 +43,7 @@ class EmailMarketing extends Extension {
 	 * @return void
 	 */
 	public function field() {
+		$this->hide_submit_button();
 		$extensions = $this->get_product_data();
 		if ( ! $extensions ) {
 			printf( '<p>%s</p>', esc_html__( 'Unable to retrieve the product data.', 'easy-digital-downloads' ) );
@@ -60,7 +61,6 @@ class EmailMarketing extends Extension {
 			?>
 		</div>
 		<?php
-		$this->hide_submit_button();
 	}
 
 	/**
