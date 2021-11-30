@@ -32,6 +32,7 @@ class Reviews extends Extension {
 		add_filter( 'edd_settings_sections_marketing', array( $this, 'add_section' ) );
 		add_action( 'edd_settings_tab_top_marketing_reviews', array( $this, 'settings_field' ) );
 		add_action( 'edd_settings_tab_top_marketing_reviews', array( $this, 'hide_submit_button' ) );
+		add_action( 'admin_init', array( $this, 'maybe_do_metabox' ) );
 
 		parent::__construct();
 	}
@@ -62,6 +63,26 @@ class Reviews extends Extension {
 		$sections['reviews'] = __( 'Reviews', 'easy-digital-downloads' );
 
 		return $sections;
+	}
+
+	/**
+	 * If Reviews is not active, registers a metabox on individual download edit screen.
+	 *
+	 * @since 2.11.x
+	 * @return void
+	 */
+	public function maybe_do_metabox() {
+		if ( $this->is_activated() ) {
+			return;
+		}
+		\add_meta_box(
+			'edd-reviews-status',
+			__( 'Product Reviews', 'easy-digital-downloads' ),
+			array( $this, 'settings_field' ),
+			'download',
+			'side',
+			'low'
+		);
 	}
 
 	/**
