@@ -141,28 +141,14 @@ function edd_get_file_extension( $str ) {
  * Checks if the string (filename) provided is an image URL
  *
  * @since 1.0
- * @param string  $str Filename
+ * @param string  $filename Filename
  * @return bool Whether or not the filename is an image
  */
-function edd_string_is_image_url( $str ) {
-	$ext = edd_get_file_extension( $str );
+function edd_string_is_image_url( $filename ) {
+	$ext    = edd_get_file_extension( $filename );
+	$images = array( 'jpg', 'jpeg', 'png', 'gif', 'webp' );
 
-	switch ( strtolower( $ext ) ) {
-		case 'jpg';
-			$return = true;
-			break;
-		case 'png';
-			$return = true;
-			break;
-		case 'gif';
-			$return = true;
-			break;
-		default:
-			$return = false;
-			break;
-	}
-
-	return (bool) apply_filters( 'edd_string_is_image', $return, $str );
+	return (bool) apply_filters( 'edd_string_is_image', in_array( $ext, $images, true ), $filename );
 }
 
 /**
