@@ -107,7 +107,7 @@ class PromoHandler {
 	 * @since 2.10.6
 	 */
 	public function dismiss_notice() {
-		$notice_id = filter_input( INPUT_POST, 'notice_id', FILTER_SANITIZE_STRING );
+		$notice_id = ! empty( $_POST['notice_id'] ) ? sanitize_text_field( $_POST['notice_id'] ) : false;
 		if ( empty( $notice_id ) ) {
 			wp_send_json_error( __( 'Missing notice ID.', 'easy-digital-downloads' ), 400 );
 		}
