@@ -1182,3 +1182,98 @@ add_filter( 'edd_validate_url_token', function( $ret, $url, $query_args, $origin
 
 	return isset( $query_args['token'] ) && hash_equals( $query_args['token'], edd_get_download_token( $original_url ) );
 }, 10, 4 );
+
+/**
+ * Get the path of the Product Reviews plugin
+ *
+ * @since 2.9.20
+ *
+ * @return mixed|string
+ */
+function edd_reviews_location() {
+
+	_edd_deprecated_function( __FUNCTION__, '2.11.x' );
+
+	$possible_locations = array( 'edd-reviews/edd-reviews.php', 'EDD-Reviews/edd-reviews.php' );
+	$reviews_location   = '';
+
+	foreach ( $possible_locations as $location ) {
+
+		if ( 0 !== validate_plugin( $location ) ) {
+			continue;
+		}
+		$reviews_location = $location;
+	}
+
+	return $reviews_location;
+}
+
+/**
+ * Outputs a metabox for the Product Reviews extension to show or activate it.
+ *
+ * @since 2.8
+ * @return void
+ */
+function edd_render_review_status_metabox() {
+
+	_edd_deprecated_function( __FUNCTION__, '2.11.x' );
+
+	$reviews_location = edd_reviews_location();
+	$is_promo_active  = edd_is_promo_active();
+
+	ob_start();
+
+	if ( ! empty( $reviews_location ) ) {
+		$review_path  = '';
+		$base_url     = wp_nonce_url( admin_url( 'plugins.php' ), 'activate-plugin_' . $reviews_location );
+		$args         = array(
+			'action'        => 'activate',
+			'plugin'        => sanitize_text_field( $reviews_location ),
+			'plugin_status' => 'all',
+		);
+		$activate_url = add_query_arg( $args, $base_url );
+		?><p style="text-align: center;"><a href="<?php echo esc_url( $activate_url ); ?>" class="button-secondary"><?php _e( 'Activate Reviews', 'easy-digital-downloads' ); ?></a></p><?php
+
+	} else {
+
+		// Adjust UTM params based on state of promotion.
+		if ( true === $is_promo_active ) {
+			$args = array(
+				'utm_source'   => 'download-metabox',
+				'utm_medium'   => 'wp-admin',
+				'utm_campaign' => 'bfcm2019',
+				'utm_content'  => 'product-reviews-metabox-bfcm',
+			);
+		} else {
+			$args = array(
+				'utm_source'   => 'edit-download',
+				'utm_medium'   => 'enable-reviews',
+				'utm_campaign' => 'admin',
+			);
+		}
+
+		$base_url = 'https://easydigitaldownloads.com/downloads/product-reviews';
+		$url      = add_query_arg( $args, $base_url );
+		?>
+		<p>
+			<?php
+			// Translators: The %s represents the link to the Product Reviews extension.
+			echo wp_kses_post( sprintf( __( 'Would you like to enable reviews for this product? Check out our <a target="_blank" href="%s">Product Reviews</a> extension.', 'easy-digital-downloads' ), esc_url( $url ) ) );
+			?>
+		</p>
+		<?php
+		// Add an additional note if a promotion is active.
+		if ( true === $is_promo_active ) {
+			?>
+			<p>
+				<?php echo wp_kses_post( __( 'Act now and <strong>SAVE 25%</strong> on your purchase. Sale ends <em>23:59 PM December 6th CST</em>. Use code <code>BFCM2019</code> at checkout.', 'easy-digital-downloads' ) ); ?>
+			</p>
+			<?php
+		}
+	}
+
+	$rendered = ob_get_contents();
+	ob_end_clean();
+
+	echo wp_kses_post( $rendered );
+}
