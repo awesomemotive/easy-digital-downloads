@@ -2601,6 +2601,10 @@ only screen and (max-width: 1000px) {
 	white-space: normal;
 }
 
+td .edd-extension-manager__step .button {
+	display: inline-block;
+}
+
 .edd-extension-manager__body {
 	display: grid;
 	gap: 1.5em;
