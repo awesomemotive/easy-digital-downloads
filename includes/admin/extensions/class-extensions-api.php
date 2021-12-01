@@ -10,7 +10,7 @@ class ExtensionsAPI {
 	 * @since 2.11.x
 	 * @param array $body    The body for the API request.
 	 * @param int   $item_id The product ID, if querying a single product.
-	 * @return object
+	 * @return array|false
 	 */
 	public function get_product_data( $body = array(), $item_id = false ) {
 		if ( empty( $body ) ) {
