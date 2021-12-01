@@ -47,12 +47,10 @@ class ExtensionsAPI {
 
 		// If there was an API error, set timeout for 1 hour and the product data to false.
 		if ( is_wp_error( $request ) || ( 200 !== wp_remote_retrieve_response_code( $request ) ) ) {
-			$array_key = ! empty( $item_id ) ? $item_id : $body[ $key ];
 			update_option(
 				$option_name,
 				array(
-					$array_key => false,
-					'timeout'  => strtotime( '+1 hour', time() ),
+					'timeout' => strtotime( '+1 hour', time() ),
 				),
 				false
 			);
