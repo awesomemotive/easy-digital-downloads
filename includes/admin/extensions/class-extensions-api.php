@@ -35,7 +35,7 @@ class ExtensionsAPI {
 			array(
 				'edd_action' => 'extension_data',
 			),
-			$this->get_products_api_url()
+			$this->get_products_url()
 		);
 		$request = wp_remote_get(
 			$url,
@@ -122,14 +122,14 @@ class ExtensionsAPI {
 	}
 
 	/**
-	 * Gets the EDD REST API URL for products.
+	 * Gets the base url for the products remote request.
 	 *
 	 * @since 2.11.x
 	 * @return string
 	 */
-	private function get_products_api_url() {
-		if ( defined( 'EDD_PRODUCTS_API_URL' ) ) {
-			return EDD_PRODUCTS_API_URL;
+	private function get_products_url() {
+		if ( defined( 'EDD_PRODUCTS_URL' ) ) {
+			return EDD_PRODUCTS_URL;
 		}
 
 		return 'https://easydigitaldownloads.com/';
