@@ -19,7 +19,8 @@ class ExtensionsAPI {
 			}
 			$body = $this->get_api_body( $item_id );
 		}
-		$key         = $this->array_key_first( $body );
+		$key = $this->array_key_first( $body );
+		// The option name is created from the first key/value pair of the API "body".
 		$option_name = "edd_extension_{$key}_{$body[ $key ]}_data";
 		$option      = $this->get_stored_extension_data( $option_name );
 		if ( $item_id && ! empty( $option[ $item_id ] ) ) {
@@ -137,6 +138,7 @@ class ExtensionsAPI {
 	/**
 	 * Gets the default array for the body of the API request.
 	 * A class may override this by setting an array to query a tag or category.
+	 * Note that the first array key/value pair are used to create the option name.
 	 *
 	 * @since 2.11.x
 	 * @param int $item_id The product ID.

@@ -114,6 +114,7 @@ abstract class Extension {
 	/**
 	 * Gets the array for the body of the API request.
 	 * Classes may need to override this (for example, to query a specific tag).
+	 * Note that the first array key/value pair are used to create the option name.
 	 *
 	 * @return array
 	 */
