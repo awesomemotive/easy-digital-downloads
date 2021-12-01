@@ -198,17 +198,6 @@ class Extension_Manager {
 	}
 
 	/**
-	 * Gets the download URL.
-	 *
-	 * @param string|int $url_or_item_id  Either the download URL (for a plugin) or the item ID (for an extension).
-	 * @param string     $type            Plugin or extension.
-	 * @return string|false Returns the download URL if possible, or false if not.
-	 */
-	public function get_download_url( $url_or_item_id, $type = 'plugin' ) {
-		return 'plugin' === $type ? $url_or_item_id : false;
-	}
-
-	/**
 	 * Outputs the link, if it should be a link.
 	 *
 	 * @param array $args
@@ -270,10 +259,6 @@ class Extension_Manager {
 			);
 
 		$plugin = ! empty( $_POST['plugin'] ) ? sanitize_text_field( $_POST['plugin'] ) : '';
-		if ( empty( $plugin ) ) {
-			$product = filter_input( INPUT_POST, 'product', FILTER_SANITIZE_NUMBER_INT );
-			$plugin  = $this->get_download_url( $product, $type );
-		}
 		if ( empty( $plugin ) ) {
 			wp_send_json_error( $result );
 		}
