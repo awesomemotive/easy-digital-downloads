@@ -151,7 +151,7 @@ abstract class Extension {
 	 * Gets the button parameters.
 	 * Classes should not need to replace this method.
 	 *
-	 * @param object $product_data The extension data returned from the Products API.
+	 * @param array $product_data The extension data returned from the Products API.
 	 * @param int    $item_id      Optional: the item ID.
 	 * @return array
 	 */
