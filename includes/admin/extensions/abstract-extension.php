@@ -261,8 +261,8 @@ abstract class Extension {
 				array(
 					'post_type' => 'download',
 					'page'      => 'edd-settings',
-					'tab'       => $product_data['tab'],
-					'section'   => $product_data['section'],
+					'tab'       => urlencode( $product_data['tab'] ),
+					'section'   => urlencode( $product_data['section'] ),
 				),
 				admin_url( 'edit.php' )
 			),
