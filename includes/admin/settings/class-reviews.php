@@ -75,7 +75,7 @@ class Reviews extends Extension {
 		if ( $this->is_activated() ) {
 			return;
 		}
-		\add_meta_box(
+		add_meta_box(
 			'edd-reviews-status',
 			__( 'Product Reviews', 'easy-digital-downloads' ),
 			array( $this, 'settings_field' ),
