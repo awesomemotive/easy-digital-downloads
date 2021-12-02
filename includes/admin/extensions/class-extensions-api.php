@@ -21,7 +21,7 @@ class ExtensionsAPI {
 		}
 		$key = $this->array_key_first( $body );
 		// The option name is created from the first key/value pair of the API "body".
-		$option_name = "edd_extension_{$key}_{$body[ $key ]}_data";
+		$option_name = sanitize_key( "edd_extension_{$key}_{$body[ $key ]}_data" );
 		$option      = $this->get_stored_extension_data( $option_name );
 		if ( $item_id && ! empty( $option[ $item_id ] ) ) {
 			return $option[ $item_id ];
