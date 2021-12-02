@@ -37,7 +37,7 @@ function edd_admin_header() {
 					@click="$store.eddNotifications.openPanel()"
 				>
 					<span
-						class="edd-round edd-number"
+						class="edd-round edd-number edd-hidden"
 						x-show="$store.eddNotifications.numberActiveNotifications > 0"
 					>
 						<?php echo wp_kses( sprintf(

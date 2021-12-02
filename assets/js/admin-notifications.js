@@ -11,6 +11,16 @@ document.addEventListener( 'alpine:init', () => {
 		init: function() {
 			const eddNotifications = this;
 
+			/*
+			 * The bubble starts out hidden until AlpineJS is initialized. Once it is, we remove
+			 * the hidden class. This prevents a flash of the bubble's visibility in the event that there
+			 * are no notifications.
+			 */
+			const notificationCountBubble = document.querySelector( '#edd-notification-button .edd-number' );
+			if ( notificationCountBubble ) {
+				notificationCountBubble.classList.remove( 'edd-hidden' );
+			}
+
 			document.addEventListener( 'keydown', function( e ) {
 				if ( e.key === 'Escape' ) {
 					eddNotifications.closePanel();

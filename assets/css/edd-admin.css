@@ -103,6 +103,10 @@ button.edd-round:focus, button.edd-round:active {
 	animation: bounce 2s 5;
 }
 
+#edd-header .edd-number.edd-hidden {
+	display: none !important;
+}
+
 #edd-header .edd-round svg {
 	width: 20px;
 	height: 20px;
