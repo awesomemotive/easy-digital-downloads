@@ -210,19 +210,20 @@ abstract class Extension {
 	private function get_upgrade_url( $product_data, $item_id, $has_access = false ) {
 		$url            = 'https://easydigitaldownloads.com';
 		$tab            = ! empty( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : '';
+		$slug           = ! empty( $product_data['slug'] ) ? $product_data['slug'] : '';
 		$utm_parameters = array(
 			'p'            => urlencode( $item_id ),
 			'utm_source'   => 'settings',
 			'utm_medium'   => urlencode( $tab ),
 			'utm_campaign' => 'admin',
-			'utm_term'     => urlencode( $product_data['slug'] ),
+			'utm_term'     => urlencode( $slug ),
 		);
 
 		if ( $has_access ) {
 			$url = 'https://easydigitaldownloads.com/your-account/your-downloads/';
 			unset( $utm_parameters['p'] );
 		} elseif ( ! empty( $product_data['upgrade_url'] ) ) {
-			$url = esc_url( $product_data['upgrade_url'] );
+			$url = esc_url_raw( $product_data['upgrade_url'] );
 			unset( $utm_parameters['p'] );
 		}
 
