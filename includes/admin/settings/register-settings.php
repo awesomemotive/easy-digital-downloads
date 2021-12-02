@@ -1360,30 +1360,22 @@ function edd_sanitize_html_class( $class = '' ) {
  * Retrieve settings tabs
  *
  * @since 1.8
+ * @since 2.11.4 Any tabs with no registered settings are filtered out in `edd_options_page`.
  * @return array $tabs
  */
 function edd_get_settings_tabs() {
 
-	$settings = edd_get_registered_settings();
-
-	$tabs             = array();
-	$tabs['general']  = __( 'General', 'easy-digital-downloads' );
-	$tabs['gateways'] = __( 'Payments', 'easy-digital-downloads' );
-	$tabs['emails']   = __( 'Emails', 'easy-digital-downloads' );
-	$tabs['styles']   = __( 'Styles', 'easy-digital-downloads' );
-	$tabs['taxes']    = __( 'Taxes', 'easy-digital-downloads' );
-	$tabs['privacy']  = __( 'Privacy', 'easy-digital-downloads' );
-
-	if( ! empty( $settings['extensions'] ) ) {
-		$tabs['extensions'] = __( 'Extensions', 'easy-digital-downloads' );
-	}
-	if( ! empty( $settings['licenses'] ) ) {
-		$tabs['licenses'] = __( 'Licenses', 'easy-digital-downloads' );
-	}
-
-	$tabs['misc']      = __( 'Misc', 'easy-digital-downloads' );
-
-	return apply_filters( 'edd_settings_tabs', $tabs );
+	return apply_filters( 'edd_settings_tabs', array(
+		'general'    => __( 'General', 'easy-digital-downloads' ),
+		'gateways'   => __( 'Payments', 'easy-digital-downloads' ),
+		'emails'     => __( 'Emails', 'easy-digital-downloads' ),
+		'styles'     => __( 'Styles', 'easy-digital-downloads' ),
+		'taxes'      => __( 'Taxes', 'easy-digital-downloads' ),
+		'privacy'    => __( 'Privacy', 'easy-digital-downloads' ),
+		'extensions' => __( 'Extensions', 'easy-digital-downloads' ),
+		'licenses'   => __( 'Licenses', 'easy-digital-downloads' ),
+		'misc'       => __( 'Misc', 'easy-digital-downloads' ),
+	) );
 }
 
 /**
@@ -2540,9 +2532,8 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 						} elseif( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
 
 							$messages[] = sprintf(
-								__( 'Your license key expires soon! It expires on %s. <a href="%s" target="_blank">Renew your license key</a>.', 'easy-digital-downloads' ),
-								date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
-								'https://easydigitaldownloads.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
+								__( 'Your license key expires soon! It expires on %s.', 'easy-digital-downloads' ),
+								date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) )
 							);
 
 							$license_status = 'license-expires-soon-notice';
