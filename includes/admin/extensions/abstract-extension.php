@@ -241,6 +241,19 @@ abstract class Extension {
 	 * @return array
 	 */
 	protected function get_link_parameters( $product_data ) {
+
+		if ( empty( $product_data['tab'] ) && empty( $product_data['section'] ) ) {
+			return array(
+				/* translators: the plural Downloads label. */
+				'button_text' => sprintf( __( 'View %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
+				'href'        => add_query_arg(
+					array(
+						'post_type' => 'download',
+					),
+					admin_url( 'edit.php' )
+				),
+			);
+		}
 		return array(
 			/* translators: The extension name. */
 			'button_text' => sprintf( __( 'Configure %s', 'easy-digital-downloads' ), $product_data['title'] ),
