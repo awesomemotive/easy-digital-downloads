@@ -325,7 +325,7 @@ class EDD_License {
 
 		$details = get_option( $this->item_shortname . '_license_active' );
 
-		if ( is_object( $details ) && 'valid' === $details->license ) {
+		if ( is_object( $details ) && ! empty( $details->license ) && 'valid' === $details->license ) {
 			return;
 		}
 
@@ -517,7 +517,7 @@ class EDD_License {
 
 		$license = get_option( $this->item_shortname . '_license_active' );
 
-		if( is_object( $license ) && 'valid' !== $license->license && empty( $showed_invalid_message ) ) {
+		if( is_object( $license ) && ( empty( $license->license ) || 'valid' !== $license->license ) && empty( $showed_invalid_message ) ) {
 
 			if( empty( $_GET['tab'] ) || 'licenses' !== $_GET['tab'] ) {
 
@@ -558,7 +558,7 @@ class EDD_License {
 
 		$license = get_option( $this->item_shortname . '_license_active' );
 
-		if( ( ! is_object( $license ) || 'valid' !== $license->license ) && empty( $showed_imissing_key_message[ $this->item_shortname ] ) ) {
+		if ( ( ! is_object( $license ) || empty( $license->license ) || 'valid' !== $license->license ) && empty( $showed_imissing_key_message[ $this->item_shortname ] ) ) {
 
 			echo '&nbsp;<strong><a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=licenses' ) ) . '">' . __( 'Enter valid license key for automatic updates.', 'easy-digital-downloads' ) . '</a></strong>';
 			$showed_imissing_key_message[ $this->item_shortname ] = true;
