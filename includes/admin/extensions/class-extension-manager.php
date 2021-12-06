@@ -73,7 +73,7 @@ class Extension_Manager {
 	 * Outputs a standard extension card.
 	 *
 	 * @since 2.11.x
-	 * @param array $product             The extension information retrieved from the Products API.
+	 * @param array  $product             The extension information retrieved from the Products API.
 	 * @param array  $inactive_parameters The array of information to build the button for an inactive/not installed plugin.
 	 * @param array  $active_parameters   The array of information needed to build the link to configure an active plugin.
 	 * @return void
@@ -118,30 +118,6 @@ class Extension_Manager {
 			</div>
 		</div>
 		<?php
-	}
-
-	/**
-	 * Gets the extension card data.
-	 * Generally, the data from the products API will be used,
-	 * but extending classes can override that in the configuration array.
-	 *
-	 * @since 2.11.x
-	 * @param array $product The extension data from the Products API.
-	 * @return array
-	 */
-	private function get_card_data( $product ) {
-		$data = array();
-		if ( ! empty( $product['custom_title'] ) ) {
-			$data['title'] = $product['custom_title'];
-		} elseif ( ! empty( $product['title'] ) ) {
-			/* translators: the name of the extension */
-			$data['title'] = sprintf( __( 'Get %s Today!', 'easy-digital-downloads' ), $product['title'] );
-		}
-		if ( ! empty( $product['custom_description'] ) ) {
-			$data['description'] = $product['custom_description'];
-		}
-
-		return array_merge( $product, $data );
 	}
 
 	/**
