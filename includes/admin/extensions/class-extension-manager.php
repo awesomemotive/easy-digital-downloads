@@ -82,7 +82,6 @@ class Extension_Manager {
 		if ( ! $product ) {
 			return;
 		}
-		$product    = $this->get_card_data( $product );
 		$card_class = 'edd-extension-manager__card';
 		if ( ! empty( $product['card'] ) ) {
 			$card_class .= " {$card_class}--{$product['card']}";
@@ -98,7 +97,7 @@ class Extension_Manager {
 				<?php endif; ?>
 				<div class="edd-extension-manager__content">
 					<?php if ( ! empty( $product['description'] ) ) : ?>
-						<p class="edd-extension-manager__description"><?php echo wp_kses_post( $product['description'] ); ?></p>
+						<div class="edd-extension-manager__description"><?php echo wp_kses_post( wpautop( $product['description'] ) ); ?></div>
 					<?php endif; ?>
 					<div class="edd-extension-manager__group">
 						<?php
