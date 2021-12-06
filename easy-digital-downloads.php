@@ -382,11 +382,11 @@ final class Easy_Digital_Downloads {
 			require_once EDD_PLUGIN_DIR . 'includes/admin/tools/tools-actions.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/class-extension-manager.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/abstract-extension.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/class-wpsmtp.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/class-recurring.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/class-reviews.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/class-email-marketing.php';
-			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/class-invoices.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/product-education/class-wpsmtp.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/product-education/class-recurring.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/product-education/class-reviews.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/product-education/class-email-marketing.php';
+			require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/product-education/class-invoices.php';
 			require_once EDD_PLUGIN_DIR . 'includes/admin/settings/settings-compatibility.php';
 
 			require_once EDD_PLUGIN_DIR . 'includes/libraries/class-persistent-dismissible.php';
