@@ -95,6 +95,9 @@ abstract class Extension {
 		}
 
 		if ( $item_id && ! empty( $product_data[ $item_id ] ) ) {
+			if ( ! empty( $config[ $item_id ] ) ) {
+				$config = $config[ $item_id ];
+			}
 			return array_merge( $product_data[ $item_id ], $config );
 		}
 
