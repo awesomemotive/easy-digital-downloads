@@ -44,8 +44,31 @@ class Recurring extends Extension {
 	 */
 	protected function get_configuration() {
 		return array(
-			'card' => 'horizontal',
+			'title'       => __( 'Increase Revenue By Selling Subscriptions!', 'easy-digital-downloads' ),
+			'description' => $this->get_custom_description(),
 		);
+	}
+
+	/**
+	 * Gets a custom description for the Recurring extension card.
+	 *
+	 * @since 2.11.x
+	 * @return string
+	 */
+	private function get_custom_description() {
+		$description  = sprintf( '<p>%s</p>', __( 'You are already selling one-time digital products to your customers. But do you also have products that you can sell on a recurring basis?', 'easy-digital-downloads' ) );
+		$description .= sprintf( '<p>%s</p>', __( 'Recurring revenue provides more predictable income and allows you to make better forecasts and decisions for your business.', 'easy-digital-downloads' ) );
+		$description .= '<ul>';
+		$description .= sprintf( '<li><span class="dashicons dashicons-yes"></span>%s</li>', __( 'Flexible Recurring Payments', 'easy-digital-downloads' ) );
+		$description .= sprintf( '<li><span class="dashicons dashicons-yes"></span>%s</li>', __( 'Custom Reminder Emails', 'easy-digital-downloads' ) );
+		$description .= sprintf( '<li><span class="dashicons dashicons-yes"></span>%s</li>', __( 'Free Trial Support', 'easy-digital-downloads' ) );
+		$description .= sprintf( '<li><span class="dashicons dashicons-yes"></span>%s</li>', __( 'Signup Fees', 'easy-digital-downloads' ) );
+		$description .= sprintf( '<li><span class="dashicons dashicons-yes"></span>%s</li>', __( 'Recurring Revenue Reports', 'easy-digital-downloads' ) );
+		$description .= sprintf( '<li><span class="dashicons dashicons-yes"></span>%s</li>', __( 'Integrates with Software Licensing', 'easy-digital-downloads' ) );
+		$description .= sprintf( '<li><span class="dashicons dashicons-yes"></span>%s</li>', __( 'Integrates with All Access', 'easy-digital-downloads' ) );
+		$description .= '</ul>';
+
+		return $description;
 	}
 
 	/**

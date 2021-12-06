@@ -2565,6 +2565,7 @@ only screen and (max-width: 1000px) {
 	background-color: #fff;
 	padding: 2em;
 	margin: 0;
+	max-width: 700px;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
@@ -2615,12 +2616,22 @@ td .edd-extension-manager__step .button {
 .edd-extension-manager__image img {
 	display: block;
 	margin: 0 auto;
+	max-width: 500px;
 	width: 100%;
 }
 .edd-extension-manager__content {
 	display: flex;
 	flex-direction: column;
 	gap: 1em;
+}
+
+.edd-extension-manager__description ul {
+	margin-left: 24px;
+}
+
+.edd-extension-manager__description .dashicons-yes {
+	color: #008a20;
+	margin-right: .25em;
 }
 
 .edd-extension-manager__body .notice {
