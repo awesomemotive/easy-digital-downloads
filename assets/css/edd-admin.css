@@ -2570,6 +2570,15 @@ only screen and (max-width: 1000px) {
 	flex-direction: column;
 	justify-content: space-between;
 }
+.edd-extension-manager__card--detailed {
+	background-color: transparent;
+}
+
+.edd-extension-manager__card--detailed .edd-extension-manager__title {
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 1em;
+}
+
 .inside .edd-extension-manager__card {
 	padding: 0;
 }
@@ -2626,7 +2635,8 @@ td .edd-extension-manager__step .button {
 }
 
 .edd-extension-manager__description ul {
-	margin-left: 24px;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 }
 
 .edd-extension-manager__description .dashicons-yes {
@@ -2643,7 +2653,7 @@ td .edd-extension-manager__step .button {
 }
 
 .edd-extension-manager__card--horizontal .edd-extension-manager__body {
-	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
 }
 
 /* Five Star Review Request

@@ -82,12 +82,17 @@ class Extension_Manager {
 		if ( ! $product ) {
 			return;
 		}
-		$card_class = 'edd-extension-manager__card';
+		$base_class   = 'edd-extension-manager__card';
+		$card_classes = array(
+			$base_class,
+		);
+		$variation    = 'stacked';
 		if ( ! empty( $product['card'] ) ) {
-			$card_class .= " {$card_class}--{$product['card']}";
+			$variation = $product['card'];
 		}
+		$card_classes[] = "{$base_class}--{$variation}";
 		?>
-		<div class="<?php echo esc_attr( $card_class ); ?>">
+		<div class="<?php echo esc_attr( implode( ' ', $card_classes ) ); ?>">
 			<h3 class="edd-extension-manager__title"><?php echo esc_html( $product['title'] ); ?></h3>
 			<div class="edd-extension-manager__body">
 				<?php if ( ! empty( $product['image'] ) ) : ?>

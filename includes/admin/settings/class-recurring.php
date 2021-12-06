@@ -44,6 +44,7 @@ class Recurring extends Extension {
 	 */
 	protected function get_configuration() {
 		return array(
+			'card'        => 'detailed',
 			'title'       => __( 'Increase Revenue By Selling Subscriptions!', 'easy-digital-downloads' ),
 			'description' => $this->get_custom_description(),
 		);
