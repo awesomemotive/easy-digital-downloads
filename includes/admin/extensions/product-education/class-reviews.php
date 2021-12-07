@@ -41,9 +41,10 @@ class Reviews extends Extension {
 	 * Gets the custom configuration for Reviews.
 	 *
 	 * @since 2.11.x
+	 * @param array $product_data The array of product data from the API.
 	 * @return array
 	 */
-	protected function get_configuration() {
+	protected function get_configuration( $product_data = array() ) {
 		return array(
 			'card' => 'horizontal',
 		);
