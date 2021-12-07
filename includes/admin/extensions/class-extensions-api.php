@@ -22,15 +22,21 @@ class ExtensionsAPI {
 		$key = $this->array_key_first( $body );
 		// The option name is created from the first key/value pair of the API "body".
 		$option_name = sanitize_key( "edd_extension_{$key}_{$body[ $key ]}_data" );
-		$option      = $this->get_stored_extension_data( $option_name );
-		if ( $item_id && ! empty( $option[ $item_id ] ) ) {
-			return $option[ $item_id ];
-		} elseif ( ! empty( $option['timeout'] ) ) {
-			unset( $option['timeout'] );
+		$option      = get_option( $option_name );
+		$is_stale    = ! empty( $option['timeout'] ) && time() > $option['timeout'];
 
-			return $option;
+		// If the data is "fresh" and what we want exists, return it.
+		if ( ! $is_stale ) {
+			if ( $item_id && ! empty( $option[ $item_id ] ) ) {
+				return $option[ $item_id ];
+			} elseif ( ! empty( $option['timeout'] ) ) {
+				unset( $option['timeout'] );
+
+				return $option;
+			}
 		}
 
+		// The data either does not exist or is expired, so query the API.
 		$url     = add_query_arg(
 			array(
 				'edd_action' => 'extension_data',
@@ -45,18 +51,29 @@ class ExtensionsAPI {
 			)
 		);
 
-		// If there was an API error, set timeout for 1 hour and the product data to false.
+		// If there was an API error, set timeout for 1 hour and return stale product data if it exists.
 		if ( is_wp_error( $request ) || ( 200 !== wp_remote_retrieve_response_code( $request ) ) ) {
+			$data = array(
+				'timeout' => strtotime( '+1 hour', time() ),
+			);
+			if ( $option && $is_stale ) {
+				$data = array_merge( $option, array( 'timeout' => strtotime( '+1 hour', $data['timeout'] ) ) );
+			}
 			update_option(
 				$option_name,
-				array(
-					'timeout' => strtotime( '+1 hour', time() ),
-				),
+				$data,
 				false
 			);
 
-			return false;
+			if ( $item_id && ! empty( $option[ $item_id ] ) ) {
+				return $option[ $item_id ];
+			}
+
+			return $option;
 		}
+
+		// Fresh data has been retrieved, so remove the option and populate with fresh data.
+		delete_option( $option_name );
 
 		$response = json_decode( wp_remote_retrieve_body( $request ) );
 		$value    = array(
@@ -99,24 +116,6 @@ class ExtensionsAPI {
 			'tab'         => ! empty( $item->custom_meta->settings_tab ) ? $item->custom_meta->settings_tab : '',
 			'section'     => ! empty( $item->custom_meta->settings_section ) ? $item->custom_meta->settings_section : '',
 		);
-	}
-
-	/**
-	 * Gets the stored extension data from the database.
-	 * If it doesn't exist, or has expired, deletes the option and returns false.
-	 *
-	 * @since 2.11.x
-	 * @param string $option_name The option name to look for in the database.
-	 * @return array|bool         Returns the option data if not expired, or false if expired or doesn't exist yet.
-	 */
-	private function get_stored_extension_data( $option_name ) {
-		$option = get_option( $option_name );
-		if ( ! empty( $option['timeout'] ) && time() <= $option['timeout'] ) {
-			return $option;
-		};
-
-		delete_option( $option_name );
-		return false;
 	}
 
 	/**
