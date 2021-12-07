@@ -2636,12 +2636,12 @@ td .edd-extension-manager__step .button {
 	gap: 1em;
 }
 
-.edd-extension-manager__description ul {
+.edd-extension-manager__features ul {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 }
 
-.edd-extension-manager__description .dashicons-yes {
+.edd-extension-manager__features .dashicons-yes {
 	color: #008a20;
 	margin-right: .25em;
 }

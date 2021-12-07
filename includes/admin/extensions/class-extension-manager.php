@@ -106,6 +106,15 @@ class Extension_Manager {
 					<?php if ( ! empty( $product['description'] ) ) : ?>
 						<div class="edd-extension-manager__description"><?php echo wp_kses_post( wpautop( $product['description'] ) ); ?></div>
 					<?php endif; ?>
+					<?php if ( ! empty( $product['features'] ) && is_array( $product['features'] ) ) : ?>
+						<div class="edd-extension-manager__features">
+							<ul>
+							<?php foreach ( $product['features'] as $feature ) : ?>
+								<li><span class="dashicons dashicons-yes"></span><?php echo esc_html( $feature ); ?></li>
+							<?php endforeach; ?>
+							</ul>
+						</div>
+					<?php endif; ?>
 					<div class="edd-extension-manager__group">
 						<?php
 						if ( ! $this->is_plugin_active( $product['basename'] ) ) {
