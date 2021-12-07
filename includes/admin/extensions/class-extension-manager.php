@@ -92,7 +92,7 @@ class Extension_Manager {
 		}
 		$card_classes[] = "{$base_class}--{$variation}";
 		?>
-		<div class="<?php echo esc_attr( implode( ' ', $card_classes ) ); ?>">
+		<div class="<?php echo esc_attr( implode( ' ', array_map( 'sanitize_html_class', $card_classes ) ) ); ?>">
 			<h3 class="edd-extension-manager__title"><?php echo esc_html( $product['title'] ); ?></h3>
 			<div class="edd-extension-manager__body">
 				<?php if ( ! empty( $product['image'] ) ) : ?>
