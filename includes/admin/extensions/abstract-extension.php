@@ -133,7 +133,7 @@ abstract class Extension {
 	 * Really a shim for array_key_first.
 	 *
 	 * @param array $array
-	 * @return void
+	 * @return string
 	 */
 	private function get_type( array $array ) {
 		$type = 'product';
