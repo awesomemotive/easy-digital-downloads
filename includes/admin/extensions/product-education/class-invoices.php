@@ -45,7 +45,7 @@ class Invoices extends Extension {
 	 */
 	protected function get_configuration( $product_data = array() ) {
 		return array(
-			'card'        => 'horizontal',
+			'style'       => 'horizontal',
 			'title'       => __( 'Impress Your Customers with Custom Invoices', 'easy-digital-downloads' ),
 			'description' => __( 'Allow your customers to download beautiful, professional invoices with one click!', 'easy-digital-downloads' ),
 		);
