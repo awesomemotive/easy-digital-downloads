@@ -40,9 +40,10 @@ class Invoices extends Extension {
 	 * Gets the custom configuration for Invoices.
 	 *
 	 * @since 2.11.x
+	 * @param array $product_data The array of product data from the API.
 	 * @return array
 	 */
-	protected function get_configuration() {
+	protected function get_configuration( $product_data = array() ) {
 		return array(
 			'card'        => 'horizontal',
 			'title'       => __( 'Impress Your Customers with Custom Invoices', 'easy-digital-downloads' ),

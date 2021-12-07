@@ -75,11 +75,15 @@ class Extension_Manager {
 	 * @param array  $product             The extension information retrieved from the Products API.
 	 * @param array  $inactive_parameters The array of information to build the button for an inactive/not installed plugin.
 	 * @param array  $active_parameters   The array of information needed to build the link to configure an active plugin.
+	 * @param array  $configuration       The optional array of data to override the product data retrieved from the API.
 	 * @return void
 	 */
-	public function do_extension_card( $product, $inactive_parameters, $active_parameters ) {
+	public function do_extension_card( $product, $inactive_parameters, $active_parameters, $configuration = array() ) {
 		if ( ! $product ) {
 			return;
+		}
+		if ( ! empty( $configuration ) ) {
+			$product = array_merge( $product, $configuration );
 		}
 		$base_class   = 'edd-extension-manager__card';
 		$card_classes = array(

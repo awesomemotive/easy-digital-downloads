@@ -70,7 +70,8 @@ abstract class Extension {
 		$this->manager->do_extension_card(
 			$product_data,
 			$this->get_button_parameters( $product_data, $item_id ),
-			$this->get_link_parameters( $product_data )
+			$this->get_link_parameters( $product_data ),
+			$this->get_configuration( $product_data )
 		);
 	}
 
@@ -89,16 +90,12 @@ abstract class Extension {
 			return false;
 		}
 
-		$config = $this->get_configuration();
 		if ( $this->item_id ) {
-			return array_merge( $product_data, $config );
+			return $product_data;
 		}
 
 		if ( $item_id && ! empty( $product_data[ $item_id ] ) && is_array( $product_data[ $item_id ] ) ) {
-			if ( ! empty( $config[ $item_id ] ) ) {
-				$config = $config[ $item_id ];
-			}
-			return array_merge( $product_data[ $item_id ], $config );
+			return $product_data[ $item_id ];
 		}
 
 		return $product_data;
@@ -108,9 +105,10 @@ abstract class Extension {
 	 * Gets the custom configuration for the extension.
 	 *
 	 * @since 2.11.x
+	 * @param array $product_data Optionally allows the product data to be parsed inthe configuration.
 	 * @return array
 	 */
-	protected function get_configuration() {
+	protected function get_configuration( $product_data = array() ) {
 		return array();
 	}
 

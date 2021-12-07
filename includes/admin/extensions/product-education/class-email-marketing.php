@@ -37,6 +37,22 @@ class EmailMarketing extends Extension {
 	}
 
 	/**
+	 * Gets the customized configuration for the extension card.
+	 *
+	 * @since 2.11.x
+	 * @param array $product_data The array of product data from the API.
+	 * @return array
+	 */
+	protected function get_configuration( $product_data = array() ) {
+		$configuration = array();
+		if ( ! empty( $product_data['title'] ) ) {
+			$configuration['title'] = sprintf( __( 'Get %s Today!', 'easy-digital-downloads' ), $product_data['title'] );
+		}
+
+		return $configuration;
+	}
+
+	/**
 	 * Adds the email marketing extensions as cards.
 	 *
 	 * @since 2.11.x
