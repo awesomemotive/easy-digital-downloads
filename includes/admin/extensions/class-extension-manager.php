@@ -435,15 +435,6 @@ class Extension_Manager {
 	}
 
 	/**
-	 * Gets the license key associated with the pass.
-	 *
-	 * @return null|string
-	 */
-	private function get_license_key() {
-		return $this->pass_manager->highest_license_key;
-	}
-
-	/**
 	 * Get all installed plugins.
 	 *
 	 * @since 2.11.x
