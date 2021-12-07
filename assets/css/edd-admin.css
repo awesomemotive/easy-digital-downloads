@@ -2672,12 +2672,7 @@ td .edd-extension-manager__step .button {
 @media screen and (min-width: 783px) {
 	.edd-extension-manager__card--detailed-2col .edd-extension-manager__body {
 		grid-template-columns: 1fr 1fr;
-		grid-template-rows: 1fr auto;
 		grid-auto-flow: column;
-	}
-
-	.edd-extension-manager__card--detailed-2col .edd-extension-manager__image {
-		grid-row: 1 / 2;
 	}
 }
 
