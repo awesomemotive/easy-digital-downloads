@@ -2570,17 +2570,6 @@ only screen and (max-width: 1000px) {
 	justify-content: space-between;
 }
 
-.edd-extension-manager__card--detailed,
-.edd-extension-manager__card--detailed-2col {
-	background-color: transparent;
-	max-width: 900px;
-}
-
-.edd-extension-manager__card--detailed .edd-extension-manager__title {
-	border-bottom: 1px solid #ccc;
-	padding-bottom: 1em;
-}
-
 .inside .edd-extension-manager__card {
 	padding: 0;
 }
@@ -2641,9 +2630,27 @@ td .edd-extension-manager__step .button {
 	max-width: 320px;
 }
 
+/* Extension Manager Style Variations
+--------------------------------------- */
 .edd-extension-manager__card--horizontal {
 	margin: 24px 0;
 	max-width: 700px;
+}
+
+.edd-extension-manager__card--detailed {
+	background-color: transparent;
+	max-width: 700px;
+}
+
+.edd-extension-manager__card--detailed-2col {
+	background-color: transparent;
+	max-width: 900px;
+}
+
+.edd-extension-manager__card--detailed .edd-extension-manager__title,
+.edd-extension-manager__card--detailed-2col .edd-extension-manager__title {
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 1em;
 }
 
 @media screen and (min-width: 601px) {
