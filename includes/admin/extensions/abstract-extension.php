@@ -89,7 +89,7 @@ abstract class Extension {
 			return false;
 		}
 
-		$config = $this->get_configuration( $item_id );
+		$config = $this->get_configuration();
 		if ( $this->item_id ) {
 			return array_merge( $product_data, $config );
 		}
