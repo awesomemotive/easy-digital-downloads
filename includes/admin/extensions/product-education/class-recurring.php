@@ -48,6 +48,15 @@ class Recurring extends Extension {
 			'card'        => 'detailed',
 			'title'       => __( 'Increase Revenue By Selling Subscriptions!', 'easy-digital-downloads' ),
 			'description' => $this->get_custom_description(),
+			'features'    => array(
+				__( 'Flexible Recurring Payments', 'easy-digital-downloads' ),
+				__( 'Custom Reminder Emails', 'easy-digital-downloads' ),
+				__( 'Free Trial Support', 'easy-digital-downloads' ),
+				__( 'Signup Fees', 'easy-digital-downloads' ),
+				__( 'Recurring Revenue Reports', 'easy-digital-downloads' ),
+				__( 'Integrates with Software Licensing', 'easy-digital-downloads' ),
+				__( 'Integrates with All Access', 'easy-digital-downloads' ),
+			),
 		);
 	}
 
@@ -60,15 +69,6 @@ class Recurring extends Extension {
 	private function get_custom_description() {
 		$description  = sprintf( '<p>%s</p>', __( 'You are already selling one-time digital products to your customers. But do you also have products that you can sell on a recurring basis?', 'easy-digital-downloads' ) );
 		$description .= sprintf( '<p>%s</p>', __( 'Recurring revenue provides more predictable income and allows you to make better forecasts and decisions for your business.', 'easy-digital-downloads' ) );
-		$description .= '<ul>';
-		$description .= sprintf( '<li><span class="dashicons dashicons-yes"></span>%s</li>', __( 'Flexible Recurring Payments', 'easy-digital-downloads' ) );
-		$description .= sprintf( '<li><span class="dashicons dashicons-yes"></span>%s</li>', __( 'Custom Reminder Emails', 'easy-digital-downloads' ) );
-		$description .= sprintf( '<li><span class="dashicons dashicons-yes"></span>%s</li>', __( 'Free Trial Support', 'easy-digital-downloads' ) );
-		$description .= sprintf( '<li><span class="dashicons dashicons-yes"></span>%s</li>', __( 'Signup Fees', 'easy-digital-downloads' ) );
-		$description .= sprintf( '<li><span class="dashicons dashicons-yes"></span>%s</li>', __( 'Recurring Revenue Reports', 'easy-digital-downloads' ) );
-		$description .= sprintf( '<li><span class="dashicons dashicons-yes"></span>%s</li>', __( 'Integrates with Software Licensing', 'easy-digital-downloads' ) );
-		$description .= sprintf( '<li><span class="dashicons dashicons-yes"></span>%s</li>', __( 'Integrates with All Access', 'easy-digital-downloads' ) );
-		$description .= '</ul>';
 
 		return $description;
 	}
