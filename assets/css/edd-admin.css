@@ -2584,6 +2584,7 @@ only screen and (max-width: 1000px) {
 }
 
 .edd-extension-manager__description {
+	flex-grow: 1;
 	margin: 0;
 }
 
@@ -2618,8 +2619,8 @@ td .edd-extension-manager__step .button {
 .edd-extension-manager__body {
 	display: grid;
 	gap: 1.5em;
-	align-items: center;
-	grid-template-columns: minmax(0, 1fr);
+	grid-template-rows: auto 1fr;
+	flex-grow: 1;
 }
 
 .edd-extension-manager__image img {
@@ -2628,6 +2629,7 @@ td .edd-extension-manager__step .button {
 	max-width: 500px;
 	width: 100%;
 }
+
 .edd-extension-manager__content {
 	display: flex;
 	flex-direction: column;
@@ -2654,6 +2656,16 @@ td .edd-extension-manager__step .button {
 
 .edd-extension-manager__card--horizontal .edd-extension-manager__body {
 	grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+	grid-template-rows: unset;
+}
+
+.edd-extension-manager__card--horizontal .edd-extension-manager__content {
+	align-items: center;
+	justify-content: center;
+}
+
+.edd-extension-manager__card--horizontal .edd-extension-manager__description {
+	flex-grow: 0;
 }
 
 /* Five Star Review Request
