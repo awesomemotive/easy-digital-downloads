@@ -46,7 +46,7 @@ class Reviews extends Extension {
 	 */
 	protected function get_configuration( $product_data = array() ) {
 		return array(
-			'card' => 'horizontal',
+			'style' => 'horizontal',
 		);
 	}
 

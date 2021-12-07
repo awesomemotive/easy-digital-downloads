@@ -2556,7 +2556,7 @@ only screen and (max-width: 1000px) {
 ------------------------------------------------------------- */
 .edd-extension-manager__card-group {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
 	gap: 1em;
 	margin-top: 24px;
 }
@@ -2565,13 +2565,15 @@ only screen and (max-width: 1000px) {
 	background-color: #fff;
 	padding: 2em;
 	margin: 0;
-	max-width: 700px;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 }
-.edd-extension-manager__card--detailed {
+
+.edd-extension-manager__card--detailed,
+.edd-extension-manager__card--detailed-2col {
 	background-color: transparent;
+	max-width: 900px;
 }
 
 .edd-extension-manager__card--detailed .edd-extension-manager__title {
@@ -2581,11 +2583,6 @@ only screen and (max-width: 1000px) {
 
 .inside .edd-extension-manager__card {
 	padding: 0;
-}
-
-.edd-extension-manager__description {
-	flex-grow: 1;
-	margin: 0;
 }
 
 .edd-extension-manager__title {
@@ -2630,12 +2627,6 @@ td .edd-extension-manager__step .button {
 	width: 100%;
 }
 
-.edd-extension-manager__content {
-	display: flex;
-	flex-direction: column;
-	gap: 1em;
-}
-
 .edd-extension-manager__features ul {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -2652,20 +2643,35 @@ td .edd-extension-manager__step .button {
 
 .edd-extension-manager__card--horizontal {
 	margin: 24px 0;
+	max-width: 700px;
 }
 
-.edd-extension-manager__card--horizontal .edd-extension-manager__body {
-	grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-	grid-template-rows: unset;
+@media screen and (min-width: 601px) {
+	.edd-extension-manager__card--horizontal .edd-extension-manager__body {
+		grid-template-columns: minmax(0, 300px) 1fr;
+		grid-template-rows: 1fr auto;
+		grid-auto-flow: column;
+	}
+
+	.edd-extension-manager__card--horizontal .edd-extension-manager__image {
+		grid-row: 1 / 4;
+	}
+
+	.edd-extension-manager__card--horizontal .edd-extension-manager__description {
+		align-self: center;
+	}
 }
 
-.edd-extension-manager__card--horizontal .edd-extension-manager__content {
-	align-items: center;
-	justify-content: center;
-}
+@media screen and (min-width: 783px) {
+	.edd-extension-manager__card--detailed-2col .edd-extension-manager__body {
+		grid-template-columns: 1fr 1fr;
+		grid-template-rows: 1fr auto;
+		grid-auto-flow: column;
+	}
 
-.edd-extension-manager__card--horizontal .edd-extension-manager__description {
-	flex-grow: 0;
+	.edd-extension-manager__card--detailed-2col .edd-extension-manager__image {
+		grid-row: 1 / 2;
+	}
 }
 
 /* Five Star Review Request

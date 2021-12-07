@@ -89,8 +89,8 @@ class Extension_Manager {
 			$base_class,
 		);
 		$variation    = 'stacked';
-		if ( ! empty( $product['card'] ) ) {
-			$variation = $product['card'];
+		if ( ! empty( $product['style'] ) ) {
+			$variation = $product['style'];
 		}
 		$card_classes[] = "{$base_class}--{$variation}";
 		?>
@@ -102,32 +102,30 @@ class Extension_Manager {
 						<img alt="" src="<?php echo esc_url( $product['image'] ); ?>" />
 					</div>
 				<?php endif; ?>
-				<div class="edd-extension-manager__content">
-					<?php if ( ! empty( $product['description'] ) ) : ?>
-						<div class="edd-extension-manager__description"><?php echo wp_kses_post( wpautop( $product['description'] ) ); ?></div>
-					<?php endif; ?>
-					<?php if ( ! empty( $product['features'] ) && is_array( $product['features'] ) ) : ?>
-						<div class="edd-extension-manager__features">
-							<ul>
-							<?php foreach ( $product['features'] as $feature ) : ?>
-								<li><span class="dashicons dashicons-yes"></span><?php echo esc_html( $feature ); ?></li>
-							<?php endforeach; ?>
-							</ul>
-						</div>
-					<?php endif; ?>
-					<div class="edd-extension-manager__group">
-						<?php
-						if ( ! $this->is_plugin_active( $product['basename'] ) ) {
-							?>
-							<div class="edd-extension-manager__step">
-								<?php $this->button( $inactive_parameters ); ?>
-							</div>
-							<?php
-						}
+				<?php if ( ! empty( $product['description'] ) ) : ?>
+					<div class="edd-extension-manager__description"><?php echo wp_kses_post( wpautop( $product['description'] ) ); ?></div>
+				<?php endif; ?>
+				<?php if ( ! empty( $product['features'] ) && is_array( $product['features'] ) ) : ?>
+					<div class="edd-extension-manager__features">
+						<ul>
+						<?php foreach ( $product['features'] as $feature ) : ?>
+							<li><span class="dashicons dashicons-yes"></span><?php echo esc_html( $feature ); ?></li>
+						<?php endforeach; ?>
+						</ul>
+					</div>
+				<?php endif; ?>
+				<div class="edd-extension-manager__group">
+					<?php
+					if ( ! $this->is_plugin_active( $product['basename'] ) ) {
 						?>
 						<div class="edd-extension-manager__step">
-							<?php $this->link( $active_parameters ); ?>
+							<?php $this->button( $inactive_parameters ); ?>
 						</div>
+						<?php
+					}
+					?>
+					<div class="edd-extension-manager__step">
+						<?php $this->link( $active_parameters ); ?>
 					</div>
 				</div>
 			</div>
