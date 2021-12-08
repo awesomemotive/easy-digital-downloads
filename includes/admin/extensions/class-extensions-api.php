@@ -57,7 +57,7 @@ class ExtensionsAPI {
 				'timeout' => strtotime( '+1 hour', time() ),
 			);
 			if ( $option && $is_stale ) {
-				$data = array_merge( $option, array( 'timeout' => strtotime( '+1 hour', $data['timeout'] ) ) );
+				$data = array_merge( $option, $data );
 			}
 			update_option(
 				$option_name,
