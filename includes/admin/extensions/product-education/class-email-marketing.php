@@ -98,11 +98,7 @@ class EmailMarketing extends Extension {
 	 * @return bool True if any email marketing extension is active.
 	 */
 	protected function is_activated() {
-		$product_data = $this->get_product_data();
-		if ( ! $product_data ) {
-			return false;
-		}
-		foreach ( $product_data as $extension ) {
+		foreach ( $this->product_data as $extension ) {
 			if ( ! empty( $extension['basename'] ) && $this->manager->is_plugin_active( $extension['basename'] ) ) {
 				return true;
 			}
