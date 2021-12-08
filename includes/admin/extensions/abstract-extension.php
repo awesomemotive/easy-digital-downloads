@@ -119,6 +119,18 @@ abstract class Extension {
 	}
 
 	/**
+	 * Whether the current screen is an EDD setings screen.
+	 *
+	 * @since 2.11.x
+	 * @return bool
+	 */
+	protected function is_edd_settings_screen() {
+		$screen = get_current_screen();
+
+		return $screen instanceof \WP_Screen && 'download_page_edd-settings' === $screen->id;
+	}
+
+	/**
 	 * Gets the array for the body of the API request.
 	 * Classes may need to override this (for example, to query a specific tag).
 	 * Note that the first array key/value pair are used to create the option name.

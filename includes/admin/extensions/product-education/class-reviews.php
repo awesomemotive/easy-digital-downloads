@@ -49,9 +49,10 @@ class Reviews extends Extension {
 	 * @return array
 	 */
 	protected function get_configuration( $product_data = array() ) {
-		return array(
-			'style' => 'horizontal',
-		);
+
+		return $this->is_edd_settings_screen() ? array(
+			'style' => 'detailed',
+		) : array();
 	}
 
 	/**
