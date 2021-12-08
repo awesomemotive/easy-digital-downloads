@@ -16,6 +16,13 @@ abstract class Extension {
 	protected $item_id;
 
 	/**
+	 * The product data.
+	 *
+	 * @var boolean
+	 */
+	private $product_data = false;
+
+	/**
 	 * The required AA pass level.
 	 */
 	const PASS_LEVEL = Pass_Manager::PERSONAL_PASS_ID;

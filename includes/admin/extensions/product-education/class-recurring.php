@@ -29,6 +29,10 @@ class Recurring extends Extension {
 	const PASS_LEVEL = \EDD\Admin\Pass_Manager::EXTENDED_PASS_ID;
 
 	public function __construct() {
+		$this->product_data = $this->get_product_data();
+		if ( ! $this->product_data ) {
+			return;
+		}
 		add_filter( 'edd_settings_sections_gateways', array( $this, 'add_section' ) );
 		add_action( 'edd_settings_tab_top_gateways_recurring', array( $this, 'settings_field' ) );
 		add_action( 'edd_settings_tab_top_gateways_recurring', array( $this, 'hide_submit_button' ) );

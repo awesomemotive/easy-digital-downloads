@@ -17,6 +17,10 @@ use \EDD\Admin\Extensions\Extension;
 class EmailMarketing extends Extension {
 
 	public function __construct() {
+		$this->product_data = $this->get_product_data();
+		if ( ! $this->product_data ) {
+			return;
+		}
 		add_filter( 'edd_settings_sections_marketing', array( $this, 'add_section' ) );
 		add_action( 'edd_settings_tab_top_marketing_email_marketing', array( $this, 'field' ) );
 
@@ -60,18 +64,13 @@ class EmailMarketing extends Extension {
 	 */
 	public function field() {
 		$this->hide_submit_button();
-		$extensions = $this->get_product_data();
-		if ( ! $extensions ) {
-			printf( '<p>%s</p>', esc_html__( 'Unable to retrieve the product data.', 'easy-digital-downloads' ) );
-			return;
-		}
 		if ( $this->is_activated() ) {
 			printf( '<p>%s</p>', esc_html__( 'Looks like you have an email marketing extension installed, but we support more providers!', 'easy-digital-downloads' ) );
 		}
 		?>
 		<div class="edd-extension-manager__card-group">
 			<?php
-			foreach ( $extensions as $item_id => $extension ) {
+			foreach ( $this->product_data as $item_id => $extension ) {
 				$this->do_single_extension_card( $item_id );
 			}
 			?>
