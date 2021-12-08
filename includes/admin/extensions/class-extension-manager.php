@@ -37,17 +37,21 @@ class Extension_Manager {
 
 		add_action( 'wp_ajax_edd_activate_extension', array( $this, 'activate' ) );
 		add_action( 'wp_ajax_edd_install_extension', array( $this, 'install' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'register_scripts' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'register_assets' ) );
 	}
 
 	/**
-	 * Registers the extension manager script.
+	 * Registers the extension manager script and style.
 	 *
 	 * @since 2.11.x
 	 * @return void
 	 */
-	public function register_scripts() {
+	public function register_assets() {
+		if ( wp_script_is( 'edd-extension-manager', 'registered' ) ) {
+			return;
+		}
 		$minify = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		wp_register_style( 'edd-extension-manager', EDD_PLUGIN_URL . "assets/css/extension-manager{$minify}.css", array(), EDD_VERSION );
 		wp_register_script( 'edd-extension-manager', EDD_PLUGIN_URL . "assets/js/extension-manager{$minify}.js", array( 'jquery' ), EDD_VERSION, true );
 		wp_localize_script(
 			'edd-extension-manager',
@@ -81,6 +85,8 @@ class Extension_Manager {
 		if ( ! $product ) {
 			return;
 		}
+		wp_enqueue_style( 'edd-extension-manager' );
+		wp_enqueue_script( 'edd-extension-manager' );
 		if ( ! empty( $configuration ) ) {
 			$product = array_merge( $product, $configuration );
 		}
@@ -179,11 +185,6 @@ class Extension_Manager {
 			<?php echo esc_html( $args['button_text'] ); ?>
 		</button>
 		<?php
-		add_action( 'admin_print_footer_scripts', function() {
-			if ( ! wp_script_is( 'edd-extension-manager', 'enqueued' ) ) {
-				wp_print_scripts( 'edd-extension-manager' );
-			}
-		} );
 	}
 
 	/**
