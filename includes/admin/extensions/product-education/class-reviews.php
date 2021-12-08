@@ -98,9 +98,7 @@ class Reviews extends Extension {
 	 * @return bool True if Reviews is active.
 	 */
 	protected function is_activated() {
-		$product_data = $this->get_product_data();
-
-		if ( $this->manager->is_plugin_active( $product_data['basename'] ) ) {
+		if ( $this->manager->is_plugin_active( $this->product_data ) ) {
 			return true;
 		}
 

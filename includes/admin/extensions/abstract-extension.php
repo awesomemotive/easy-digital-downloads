@@ -193,7 +193,7 @@ abstract class Extension {
 					'type'        => $type,
 				);
 			}
-		} elseif ( ! $this->manager->is_plugin_active( $product_data['basename'] ) ) {
+		} elseif ( ! empty( $product_data['basename'] ) && ! $this->manager->is_plugin_active( $product_data['basename'] ) ) {
 			// If the extension is installed, but not activated, the button will prompt to activate it.
 			$button['plugin'] = $product_data['basename'];
 			$button['action'] = 'activate';

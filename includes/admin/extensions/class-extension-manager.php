@@ -116,7 +116,7 @@ class Extension_Manager {
 				<?php endif; ?>
 				<div class="edd-extension-manager__group">
 					<?php
-					if ( ! $this->is_plugin_active( $product['basename'] ) ) {
+					if ( ! empty( $product['basename'] ) && ! $this->is_plugin_active( $product['basename'] ) ) {
 						?>
 						<div class="edd-extension-manager__step">
 							<?php $this->button( $inactive_parameters ); ?>
@@ -460,10 +460,12 @@ class Extension_Manager {
 	 * Whether a given plugin is active or not.
 	 *
 	 * @since 2.11.x
-	 * @param string $basename The path to the main plugin file, eg 'my-plugin/my-plugin.php'.
+	 * @param false|string|array $basename_or_data The path to the main plugin file, eg 'my-plugin/my-plugin.php', or the array of product data.
 	 * @return boolean
 	 */
-	public function is_plugin_active( $basename ) {
+	public function is_plugin_active( $basename_or_data ) {
+		$basename = ! empty( $basename_or_data['basename'] ) ? $basename_or_data['basename'] : $basename_or_data;
+
 		return ! empty( $basename ) && is_plugin_active( $basename );
 	}
 }
