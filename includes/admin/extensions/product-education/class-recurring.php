@@ -50,16 +50,16 @@ class Recurring extends Extension {
 	protected function get_configuration( $product_data = array() ) {
 		return array(
 			'style'       => 'detailed-2col',
-			'title'       => __( 'Increase Revenue By Selling Subscriptions!', 'easy-digital-downloads' ),
+			'title'       => 'Increase Revenue By Selling Subscriptions!',
 			'description' => $this->get_custom_description(),
 			'features'    => array(
-				__( 'Flexible Recurring Payments', 'easy-digital-downloads' ),
-				__( 'Custom Reminder Emails', 'easy-digital-downloads' ),
-				__( 'Free Trial Support', 'easy-digital-downloads' ),
-				__( 'Signup Fees', 'easy-digital-downloads' ),
-				__( 'Recurring Revenue Reports', 'easy-digital-downloads' ),
-				__( 'Integrates with Software Licensing', 'easy-digital-downloads' ),
-				__( 'Integrates with All Access', 'easy-digital-downloads' ),
+				'Flexible Recurring Payments',
+				'Custom Reminder Emails',
+				'Free Trial Support',
+				'Signup Fees',
+				'Recurring Revenue Reports',
+				'Integrates with Software Licensing',
+				'Integrates with All Access',
 			),
 		);
 	}
@@ -71,8 +71,8 @@ class Recurring extends Extension {
 	 * @return string
 	 */
 	private function get_custom_description() {
-		$description  = sprintf( '<p>%s</p>', __( 'You are already selling one-time digital products to your customers. But do you also have products that you can sell on a recurring basis?', 'easy-digital-downloads' ) );
-		$description .= sprintf( '<p>%s</p>', __( 'Recurring revenue provides more predictable income and allows you to make better forecasts and decisions for your business.', 'easy-digital-downloads' ) );
+		$description  = sprintf( '<p>%s</p>', 'You are already selling one-time digital products to your customers. But do you also have products that you can sell on a recurring basis?' );
+		$description .= sprintf( '<p>%s</p>', 'Recurring revenue provides more predictable income and allows you to make better forecasts and decisions for your business.' );
 
 		return $description;
 	}
