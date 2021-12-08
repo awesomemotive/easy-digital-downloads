@@ -72,9 +72,7 @@ class ExtensionsAPI {
 			return $option;
 		}
 
-		// Fresh data has been retrieved, so remove the option and populate with fresh data.
-		delete_option( $option_name );
-
+		// Fresh data has been retrieved, so populate with fresh data.
 		$response = json_decode( wp_remote_retrieve_body( $request ) );
 		$value    = array(
 			'timeout' => strtotime( '+1 week', time() ),
