@@ -42,7 +42,6 @@ abstract class Extension {
 	/**
 	 * Output the settings field (installation helper).
 	 *
-	 * @param array $args
 	 * @return void
 	 */
 	public function settings_field() {
@@ -56,7 +55,7 @@ abstract class Extension {
 	 * Outputs a single extension card.
 	 *
 	 * @since 2.11.x
-	 * @param bool|int $item_id Optional: the individual extension product ID.
+	 * @param false|int $item_id Optional: the individual extension product ID.
 	 * @return void
 	 */
 	public function do_single_extension_card( $item_id = false ) {
@@ -78,7 +77,7 @@ abstract class Extension {
 	/**
 	 * Gets the product data for a specific extension.
 	 *
-	 * @param boolean $item_id
+	 * @param false|int $item_id
 	 * @return bool|array False if there is no data; product data array if there is.
 	 */
 	public function get_product_data( $item_id = false ) {
@@ -152,8 +151,8 @@ abstract class Extension {
 	 * Gets the button parameters.
 	 * Classes should not need to replace this method.
 	 *
-	 * @param array $product_data The extension data returned from the Products API.
-	 * @param int    $item_id      Optional: the item ID.
+	 * @param array     $product_data The extension data returned from the Products API.
+	 * @param int|false $item_id      Optional: the item ID.
 	 * @return array
 	 */
 	protected function get_button_parameters( $product_data, $item_id = false ) {
