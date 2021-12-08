@@ -90,17 +90,8 @@ class Extension_Manager {
 		if ( ! empty( $configuration ) ) {
 			$product = array_merge( $product, $configuration );
 		}
-		$base_class   = 'edd-extension-manager__card';
-		$card_classes = array(
-			$base_class,
-		);
-		$variation    = 'stacked';
-		if ( ! empty( $product['style'] ) ) {
-			$variation = $product['style'];
-		}
-		$card_classes[] = "{$base_class}--{$variation}";
 		?>
-		<div class="<?php echo esc_attr( implode( ' ', array_map( 'sanitize_html_class', $card_classes ) ) ); ?>">
+		<div class="<?php echo esc_attr( implode( ' ', array_map( 'sanitize_html_class', $this->get_card_classes( $product ) ) ) ); ?>">
 			<h3 class="edd-extension-manager__title"><?php echo esc_html( $product['title'] ); ?></h3>
 			<div class="edd-extension-manager__body">
 				<?php if ( ! empty( $product['image'] ) ) : ?>
@@ -137,6 +128,30 @@ class Extension_Manager {
 			</div>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Gets the CSS classes for the single extension card.
+	 *
+	 * @since 2.11.x
+	 * @param array $product The array of product data.
+	 * @return array The array of CSS classes.
+	 */
+	private function get_card_classes( $product ) {
+		$base_class   = 'edd-extension-manager__card';
+		$card_classes = array(
+			$base_class,
+		);
+		$variation    = 'stacked';
+		if ( ! empty( $product['style'] ) ) {
+			$variation = $product['style'];
+		}
+		if ( 'detailed-2col' === $variation && ( empty( $product['features'] ) || ! is_array( $product['features'] ) ) ) {
+			$variation = 'detailed';
+		}
+		$card_classes[] = "{$base_class}--{$variation}";
+
+		return $card_classes;
 	}
 
 	/**
