@@ -36,23 +36,11 @@ class ExtensionsAPI {
 			}
 		}
 
-		// The data either does not exist or is expired, so query the API.
-		$url     = add_query_arg(
-			array(
-				'edd_action' => 'extension_data',
-			),
-			$this->get_products_url()
-		);
-		$request = wp_remote_get(
-			$url,
-			array(
-				'timeout'   => 15,
-				'sslverify' => true,
-			)
-		);
+		// Get all of the product data.
+		$all_product_data = $this->get_all_product_data();
 
-		// If there was an API error, set timeout for 1 hour and return stale product data if it exists.
-		if ( is_wp_error( $request ) || ( 200 !== wp_remote_retrieve_response_code( $request ) ) ) {
+		// If no product data was retrieved, let the option sit for an hour.
+		if ( ! $all_product_data ) {
 			$data = array(
 				'timeout' => strtotime( '+1 hour', time() ),
 			);
@@ -72,17 +60,15 @@ class ExtensionsAPI {
 			return $option;
 		}
 
-		// Fresh data has been retrieved, so populate with fresh data.
-		$response = json_decode( wp_remote_retrieve_body( $request ) );
-		$value    = array(
+		$value = array(
 			'timeout' => strtotime( '+1 week', time() ),
 		);
-		if ( $item_id && ! empty( $response->$item_id ) ) {
-			$item              = $response->$item_id;
+		if ( $item_id && ! empty( $all_product_data->$item_id ) ) {
+			$item              = $all_product_data->$item_id;
 			$value[ $item_id ] = $this->get_item_data( $item );
 		} elseif ( in_array( $key, array( 'category', 'tag' ), true ) ) {
 			$term_id = $body[ $key ];
-			foreach ( $response as $item_id => $item ) {
+			foreach ( $all_product_data as $item_id => $item ) {
 				if ( 'category' === $key && ( empty( $item->categories ) || ! in_array( $term_id, $item->categories, true ) ) ) {
 					continue;
 				} elseif ( 'tag' === $key && ( empty( $item->tags ) || ! in_array( $term_id, $item->tags, true ) ) ) {
@@ -95,6 +81,48 @@ class ExtensionsAPI {
 		update_option( $option_name, $value, false );
 
 		return $item_id && ! empty( $value[ $item_id ] ) ? $value[ $item_id ] : $value;
+	}
+
+	/**
+	 * Gets all of the product data, either from a tranient or an API request.
+	 *
+	 * @since 2.11.x
+	 * @return object|false
+	 */
+	private function get_all_product_data() {
+		// Possibly all product data is in a transient. If it is, return it.
+		$all_product_data = get_transient( 'edd_all_extension_data' );
+		if ( $all_product_data ) {
+			return $all_product_data;
+		}
+
+		// Otherwise, query the API.
+		$url     = add_query_arg(
+			array(
+				'edd_action' => 'extension_data',
+			),
+			$this->get_products_url()
+		);
+		$request = wp_remote_get(
+			$url,
+			array(
+				'timeout'   => 15,
+				'sslverify' => true,
+			)
+		);
+
+		// If there was an API error, set timeout for 1 hour and return false.
+		if ( is_wp_error( $request ) || ( 200 !== wp_remote_retrieve_response_code( $request ) ) ) {
+			return false;
+		}
+
+		// Fresh data has been retrieved, so populate with fresh data.
+		$all_product_data = json_decode( wp_remote_retrieve_body( $request ) );
+
+		// Store all of the product data for one hour.
+		set_transient( 'edd_all_extension_data', $all_product_data, HOUR_IN_SECONDS );
+
+		return $all_product_data;
 	}
 
 	/**
