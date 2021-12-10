@@ -76,10 +76,10 @@ class ProductData {
 	 * @return ProductData
 	 */
 	public function fromArray( $array ) {
-		$expected_keys = array( 'title', 'slug', 'description', 'basename' );
-		$array         = array_intersect_key( $array, array_flip( $expected_keys ) );
+		$expected_keys  = array( 'title', 'slug', 'description', 'basename' );
+		$array_to_check = array_intersect_key( $array, array_flip( $expected_keys ) );
 
-		if ( empty( $array ) ) {
+		if ( empty( $array_to_check ) ) {
 			throw new \Exception(
 				'Invalid ProductData object, must have the exact following keys: ' . implode( ', ', $expected_keys )
 			);
