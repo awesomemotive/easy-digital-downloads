@@ -86,7 +86,7 @@ abstract class Extension {
 	 * Gets the product data for a specific extension.
 	 *
 	 * @param false|int $item_id
-	 * @return bool|\ProductData False if there is no data; product data object if there is.
+	 * @return bool|\ProductData|array False if there is no data; product data object if there is, or possibly an array of arrays.
 	 */
 	public function get_product_data( $item_id = false ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/class-extensions-api.php';

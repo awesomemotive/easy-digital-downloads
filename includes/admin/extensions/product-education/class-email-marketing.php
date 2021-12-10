@@ -107,7 +107,8 @@ class EmailMarketing extends Extension {
 	 */
 	protected function is_activated() {
 		foreach ( $this->get_product_data() as $extension ) {
-			if ( ! empty( $extension->basename ) && $this->manager->is_plugin_active( $extension->basename ) ) {
+			// The data is stored in the database as an array--at this point it has not been converted to an object.
+			if ( ! empty( $extension['basename'] ) && $this->manager->is_plugin_active( $extension['basename'] ) ) {
 				return true;
 			}
 		}
