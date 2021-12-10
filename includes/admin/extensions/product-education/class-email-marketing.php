@@ -51,13 +51,14 @@ class EmailMarketing extends Extension {
 	 * Gets the customized configuration for the extension card.
 	 *
 	 * @since 2.11.x
-	 * @param array $product_data The array of product data from the API.
+	 * @param \EDD\Admin\Extensions\ProductData $product_data The product data object.
 	 * @return array
 	 */
-	protected function get_configuration( $product_data = array() ) {
+	protected function get_configuration( \EDD\Admin\Extensions\ProductData $product_data ) {
 		$configuration = array();
-		if ( ! empty( $product_data['title'] ) ) {
-			$configuration['title'] = sprintf( __( 'Get %s Today!', 'easy-digital-downloads' ), $product_data['title'] );
+		if ( ! empty( $product_data->title ) ) {
+			/* translators: the product name */
+			$configuration['title'] = sprintf( __( 'Get %s Today!', 'easy-digital-downloads' ), $product_data->title );
 		}
 
 		return $configuration;
@@ -106,7 +107,7 @@ class EmailMarketing extends Extension {
 	 */
 	protected function is_activated() {
 		foreach ( $this->get_product_data() as $extension ) {
-			if ( ! empty( $extension['basename'] ) && $this->manager->is_plugin_active( $extension['basename'] ) ) {
+			if ( ! empty( $extension->basename ) && $this->manager->is_plugin_active( $extension->basename ) ) {
 				return true;
 			}
 		}

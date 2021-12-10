@@ -48,10 +48,10 @@ class Recurring extends Extension {
 	 * Gets the custom configuration for Recurring.
 	 *
 	 * @since 2.11.x
-	 * @param array $product_data The array of product data from the API.
+	 * @param \EDD\Admin\Extensions\ProductData $product_data The product data object.
 	 * @return array
 	 */
-	protected function get_configuration( $product_data = array() ) {
+	protected function get_configuration( \EDD\Admin\Extensions\ProductData $product_data ) {
 		return array(
 			'style'       => 'detailed-2col',
 			'title'       => 'Increase Revenue By Selling Subscriptions!',
