@@ -16,11 +16,15 @@ use \EDD\Admin\Extensions\Extension;
 
 class EmailMarketing extends Extension {
 
+	/**
+	 * The EDD settings tab where this extension should show.
+	 *
+	 * @since 2.11.4
+	 * @var string
+	 */
+	protected $settings_tab = 'marketing';
+
 	public function __construct() {
-		$this->product_data = $this->get_product_data();
-		if ( ! $this->product_data ) {
-			return;
-		}
 		add_filter( 'edd_settings_sections_marketing', array( $this, 'add_section' ) );
 		add_action( 'edd_settings_tab_top_marketing_email_marketing', array( $this, 'field' ) );
 
@@ -35,6 +39,9 @@ class EmailMarketing extends Extension {
 	 * @return array
 	 */
 	public function add_section( $sections ) {
+		if ( ! $this->is_edd_settings_screen() ) {
+			return $sections;
+		}
 		$sections['email_marketing'] = __( 'Email Marketing', 'easy-digital-downloads' );
 
 		return $sections;
@@ -70,7 +77,7 @@ class EmailMarketing extends Extension {
 		?>
 		<div class="edd-extension-manager__card-group">
 			<?php
-			foreach ( $this->product_data as $item_id => $extension ) {
+			foreach ( $this->get_product_data() as $item_id => $extension ) {
 				$this->do_single_extension_card( $item_id );
 			}
 			?>
@@ -98,7 +105,7 @@ class EmailMarketing extends Extension {
 	 * @return bool True if any email marketing extension is active.
 	 */
 	protected function is_activated() {
-		foreach ( $this->product_data as $extension ) {
+		foreach ( $this->get_product_data() as $extension ) {
 			if ( ! empty( $extension['basename'] ) && $this->manager->is_plugin_active( $extension['basename'] ) ) {
 				return true;
 			}

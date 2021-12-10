@@ -24,15 +24,19 @@ class Invoices extends Extension {
 	protected $item_id = 375153;
 
 	/**
+	 * The EDD settings tab where this extension should show.
+	 *
+	 * @since 2.11.4
+	 * @var string
+	 */
+	protected $settings_tab = 'gateways';
+
+	/**
 	 * The pass level required to access this extension.
 	 */
 	const PASS_LEVEL = \EDD\Admin\Pass_Manager::EXTENDED_PASS_ID;
 
 	public function __construct() {
-		$this->product_data = $this->get_product_data();
-		if ( ! $this->product_data ) {
-			return;
-		}
 		add_filter( 'edd_settings_sections_gateways', array( $this, 'add_section' ) );
 		add_action( 'edd_settings_tab_top_gateways_invoices', array( $this, 'settings_field' ) );
 		add_action( 'edd_settings_tab_top_gateways_invoices', array( $this, 'hide_submit_button' ) );
@@ -62,6 +66,9 @@ class Invoices extends Extension {
 	 * @return array
 	 */
 	public function add_section( $sections ) {
+		if ( ! $this->is_edd_settings_screen() ) {
+			return $sections;
+		}
 		if ( $this->is_activated() ) {
 			return $sections;
 		}
@@ -79,7 +86,7 @@ class Invoices extends Extension {
 	 * @return bool True if Invoices is active.
 	 */
 	protected function is_activated() {
-		if ( $this->manager->is_plugin_active( $this->product_data ) ) {
+		if ( $this->manager->is_plugin_active( $this->get_product_data() ) ) {
 			return true;
 		}
 
