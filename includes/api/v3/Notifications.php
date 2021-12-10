@@ -36,25 +36,25 @@ class Notifications extends Endpoint {
 			self::$namespace,
 			'notifications/(?P<id>\d+)',
 			array(
-				'args' => array(
-					'id' => array(
-						'description'       => __( 'ID of the notification.', 'easy-digital-downloads' ),
-						'type'              => 'integer',
-						'required'          => true,
-						'validate_callback' => function ( $param, $request, $key ) {
-							$notification = EDD()->notifications->get( intval( $param ) );
-
-							return ! empty( $notification );
-						},
-						'sanitize_callback' => function ( $param, $request, $key ) {
-							return intval( $param );
-						}
-					)
-				),
 				array(
 					'methods'             => \WP_REST_Server::DELETABLE,
 					'callback'            => array( $this, 'dismissNotification' ),
 					'permission_callback' => array( $this, 'canViewNotification' ),
+					'args'                => array(
+						'id' => array(
+							'description'       => __( 'ID of the notification.', 'easy-digital-downloads' ),
+							'type'              => 'integer',
+							'required'          => true,
+							'validate_callback' => function ( $param, $request, $key ) {
+								$notification = EDD()->notifications->get( intval( $param ) );
+
+								return ! empty( $notification );
+							},
+							'sanitize_callback' => function ( $param, $request, $key ) {
+								return intval( $param );
+							}
+						)
+					),
 				)
 			)
 		);
