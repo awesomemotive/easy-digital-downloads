@@ -76,7 +76,7 @@ class ProductData {
 	 * @return ProductData
 	 */
 	public function fromArray( $array ) {
-		$expected_keys = array( 'title', 'slug', 'image', 'description', 'basename', 'tab', 'section' );
+		$expected_keys = array( 'title', 'slug', 'description', 'basename' );
 		$array         = array_intersect_key( $array, array_flip( $expected_keys ) );
 
 		if ( empty( $array ) ) {
