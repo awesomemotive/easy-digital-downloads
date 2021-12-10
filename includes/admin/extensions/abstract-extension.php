@@ -16,11 +16,12 @@ abstract class Extension {
 	protected $item_id;
 
 	/**
-	 * The product data.
+	 * The settings tab where this item will show.
 	 *
-	 * @var boolean
+	 * @since 2.11.x
+	 * @var string
 	 */
-	private $product_data = false;
+	protected $settings_tab = '';
 
 	/**
 	 * The required AA pass level.
@@ -125,9 +126,17 @@ abstract class Extension {
 	 * @return bool
 	 */
 	protected function is_edd_settings_screen() {
-		$screen = get_current_screen();
+		return edd_is_admin_page( 'settings', $this->settings_tab );
+	}
 
-		return $screen instanceof \WP_Screen && 'download_page_edd-settings' === $screen->id;
+	/**
+	 * Whether the current screen is a download new/edit screen.
+	 *
+	 * @since 2.11.x
+	 * @return bool
+	 */
+	protected function is_download_edit_screen() {
+		return edd_is_admin_page( 'download', 'edit' ) || edd_is_admin_page( 'download', 'new' );
 	}
 
 	/**
