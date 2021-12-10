@@ -48,10 +48,10 @@ class Invoices extends Extension {
 	 * Gets the custom configuration for Invoices.
 	 *
 	 * @since 2.11.x
-	 * @param array $product_data The array of product data from the API.
+	 * @param \EDD\Admin\Extensions\ProductData $product_data The product data object.
 	 * @return array
 	 */
-	protected function get_configuration( $product_data = array() ) {
+	protected function get_configuration( \EDD\Admin\Extensions\ProductData $product_data ) {
 		return array(
 			'style'       => 'horizontal',
 			'title'       => __( 'Impress Your Customers with Custom Invoices', 'easy-digital-downloads' ),

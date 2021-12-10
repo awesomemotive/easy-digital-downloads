@@ -2,7 +2,20 @@
 
 namespace EDD\Admin\Extensions;
 
+use \EDD\Admin\Extensions\ProductData;
+
 class ExtensionsAPI {
+
+	/**
+	 * The ProductData class.
+	 *
+	 * @var \EDD\Admin\Extensions\ProductData
+	 */
+	private $product_data;
+
+	public function __construct() {
+		$this->product_data = new ProductData();
+	}
 
 	/**
 	 * Gets the product data from the EDD Products API.
@@ -10,7 +23,7 @@ class ExtensionsAPI {
 	 * @since 2.11.x
 	 * @param array $body    The body for the API request.
 	 * @param int   $item_id The product ID, if querying a single product.
-	 * @return array|false
+	 * @return false|array|\ProductData
 	 */
 	public function get_product_data( $body = array(), $item_id = false ) {
 		if ( empty( $body ) ) {
@@ -28,7 +41,7 @@ class ExtensionsAPI {
 		// If the data is "fresh" and what we want exists, return it.
 		if ( ! $is_stale ) {
 			if ( $item_id && ! empty( $option[ $item_id ] ) ) {
-				return $option[ $item_id ];
+				return is_array( $option[ $item_id ] ) ? $this->product_data->fromArray( $option[ $item_id ] ) : $option[ $item_id ];
 			} elseif ( ! empty( $option['timeout'] ) ) {
 				unset( $option['timeout'] );
 
@@ -54,7 +67,7 @@ class ExtensionsAPI {
 			);
 
 			if ( $item_id && ! empty( $option[ $item_id ] ) ) {
-				return $option[ $item_id ];
+				return is_array( $option[ $item_id ] ) ? $this->product_data->fromArray( $option[ $item_id ] ) : $option[ $item_id ];
 			}
 
 			return $option;
@@ -130,10 +143,10 @@ class ExtensionsAPI {
 	 *
 	 * @since 2.11.x
 	 * @param object $item
-	 * @return array
+	 * @return ProductData
 	 */
 	private function get_item_data( $item ) {
-		return array(
+		return $this->product_data->fromArray( array(
 			'title'       => ! empty( $item->title ) ? $item->title : '',
 			'slug'        => ! empty( $item->slug ) ? $item->slug : '',
 			'image'       => ! empty( $item->image ) ? $item->image : '',
@@ -141,7 +154,7 @@ class ExtensionsAPI {
 			'basename'    => ! empty( $item->custom_meta->basename ) ? $item->custom_meta->basename : '',
 			'tab'         => ! empty( $item->custom_meta->settings_tab ) ? $item->custom_meta->settings_tab : '',
 			'section'     => ! empty( $item->custom_meta->settings_section ) ? $item->custom_meta->settings_section : '',
-		);
+		) );
 	}
 
 	/**

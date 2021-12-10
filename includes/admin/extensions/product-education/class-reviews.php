@@ -49,10 +49,10 @@ class Reviews extends Extension {
 	 * Gets the custom configuration for Reviews.
 	 *
 	 * @since 2.11.x
-	 * @param array $product_data The array of product data from the API.
+	 * @param \EDD\Admin\Extensions\ProductData $product_data The product data object.
 	 * @return array
 	 */
-	protected function get_configuration( $product_data = array() ) {
+	protected function get_configuration( \EDD\Admin\Extensions\ProductData $product_data ) {
 
 		return $this->is_edd_settings_screen() ? array(
 			'style' => 'detailed',

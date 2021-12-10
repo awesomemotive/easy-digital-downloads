@@ -71,7 +71,7 @@ abstract class Extension {
 			return;
 		}
 		$product_data = $this->get_product_data( $item_id );
-		if ( ! $product_data || empty( $product_data['title'] ) ) {
+		if ( ! $product_data || empty( $product_data->title ) ) {
 			return;
 		}
 		$this->manager->do_extension_card(
@@ -86,22 +86,23 @@ abstract class Extension {
 	 * Gets the product data for a specific extension.
 	 *
 	 * @param false|int $item_id
-	 * @return bool|array False if there is no data; product data array if there is.
+	 * @return bool|\ProductData False if there is no data; product data object if there is.
 	 */
 	public function get_product_data( $item_id = false ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/class-extensions-api.php';
 		$api          = new ExtensionsAPI();
 		$body         = $this->get_api_body();
-		$product_data = $api->get_product_data( $body, $this->item_id );
+		$api_item_id  = $item_id ? $item_id : $this->item_id;
+		$product_data = $api->get_product_data( $body, $api_item_id );
 		if ( ! $product_data ) {
 			return false;
 		}
 
-		if ( $this->item_id ) {
+		if ( $api_item_id ) {
 			return $product_data;
 		}
 
-		if ( $item_id && ! empty( $product_data[ $item_id ] ) && is_array( $product_data[ $item_id ] ) ) {
+		if ( $item_id && ! empty( $product_data[ $item_id ] ) ) {
 			return $product_data[ $item_id ];
 		}
 
@@ -112,10 +113,10 @@ abstract class Extension {
 	 * Gets the custom configuration for the extension.
 	 *
 	 * @since 2.11.x
-	 * @param array $product_data Optionally allows the product data to be parsed inthe configuration.
+	 * @param \EDD\Admin\Extensions\ProductData $product_data Optionally allows the product data to be parsed inthe configuration.
 	 * @return array
 	 */
-	protected function get_configuration( $product_data = array() ) {
+	protected function get_configuration( \EDD\Admin\Extensions\ProductData $product_data ) {
 		return array();
 	}
 
@@ -179,8 +180,8 @@ abstract class Extension {
 	 * Gets the button parameters.
 	 * Classes should not need to replace this method.
 	 *
-	 * @param array     $product_data The extension data returned from the Products API.
-	 * @param int|false $item_id      Optional: the item ID.
+	 * @param \EDD\Admin\Extensions\ProductData $product_data The extension data returned from the Products API.
+	 * @param int|false                         $item_id      Optional: the item ID.
 	 * @return array
 	 */
 	protected function get_button_parameters( $product_data, $item_id = false ) {
@@ -196,11 +197,11 @@ abstract class Extension {
 			'product' => $item_id,
 		);
 		// If the extension is not installed, the button will prompt to install and activate it.
-		if ( ! $this->manager->is_plugin_installed( $product_data['basename'] ) ) {
+		if ( ! $this->manager->is_plugin_installed( $product_data->basename ) ) {
 			if ( $this->manager->pass_can_download() ) {
 				$button = array(
 					/* translators: The extension name. */
-					'button_text' => sprintf( __( 'Log In to Your Account to Download %s', 'easy-digital-downloads' ), $product_data['title'] ),
+					'button_text' => sprintf( __( 'Log In to Your Account to Download %s', 'easy-digital-downloads' ), $product_data->title ),
 					'href'        => $this->get_upgrade_url( $product_data, $item_id, true ),
 					'new_tab'     => true,
 					'type'        => $type,
@@ -208,18 +209,18 @@ abstract class Extension {
 			} else {
 				$button = array(
 					/* translators: The extension name. */
-					'button_text' => sprintf( __( 'Upgrade Today to Access %s!', 'easy-digital-downloads' ), $product_data['title'] ),
+					'button_text' => sprintf( __( 'Upgrade Today to Access %s!', 'easy-digital-downloads' ), $product_data->title ),
 					'href'        => $this->get_upgrade_url( $product_data, $item_id ),
 					'new_tab'     => true,
 					'type'        => $type,
 				);
 			}
-		} elseif ( ! empty( $product_data['basename'] ) && ! $this->manager->is_plugin_active( $product_data['basename'] ) ) {
+		} elseif ( ! empty( $product_data->basename ) && ! $this->manager->is_plugin_active( $product_data->basename ) ) {
 			// If the extension is installed, but not activated, the button will prompt to activate it.
-			$button['plugin'] = $product_data['basename'];
+			$button['plugin'] = $product_data->basename;
 			$button['action'] = 'activate';
 			/* translators: The extension name. */
-			$button['button_text'] = sprintf( __( 'Activate %s', 'easy-digital-downloads' ), $product_data['title'] );
+			$button['button_text'] = sprintf( __( 'Activate %s', 'easy-digital-downloads' ), $product_data->title );
 		}
 
 		return $button;
@@ -230,15 +231,15 @@ abstract class Extension {
 	 *
 	 * @todo add UTM parameters
 	 * @since 2.11.x
-	 * @param array $product_data The array of provided data about the extension.
-	 * @param int   $item_id      The item/product ID.
-	 * @param bool  $has_access   Whether the user already has access to the extension (based on pass level).
+	 * @param \EDD\Admin\Extensions\ProductData $product_data The product data object.
+	 * @param int                               $item_id      The item/product ID.
+	 * @param bool                              $has_access   Whether the user already has access to the extension (based on pass level).
 	 * @return string
 	 */
 	private function get_upgrade_url( $product_data, $item_id, $has_access = false ) {
 		$url            = 'https://easydigitaldownloads.com';
 		$tab            = ! empty( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : '';
-		$slug           = ! empty( $product_data['slug'] ) ? $product_data['slug'] : '';
+		$slug           = ! empty( $product_data->slug ) ? $product_data->slug : '';
 		$utm_parameters = array(
 			'p'            => urlencode( $item_id ),
 			'utm_source'   => 'settings',
@@ -250,8 +251,8 @@ abstract class Extension {
 		if ( $has_access ) {
 			$url = 'https://easydigitaldownloads.com/your-account/your-downloads/';
 			unset( $utm_parameters['p'] );
-		} elseif ( ! empty( $product_data['upgrade_url'] ) ) {
-			$url = esc_url_raw( $product_data['upgrade_url'] );
+		} elseif ( ! empty( $product_data->upgrade_url ) ) {
+			$url = esc_url_raw( $product_data->upgrade_url );
 			unset( $utm_parameters['p'] );
 		}
 
@@ -265,11 +266,11 @@ abstract class Extension {
 	 * Gets the array of parameters for the link to configure the extension.
 	 *
 	 * @since 2.11.x
-	 * @param array  $product_data  The array of provided data about the extension.
+	 * @param \EDD\Admin\Extensions\ProductData  $product_data  The product data object.
 	 * @return array
 	 */
 	protected function get_link_parameters( $product_data ) {
-		if ( empty( $product_data['tab'] ) && empty( $product_data['section'] ) ) {
+		if ( empty( $product_data->tab ) && empty( $product_data->section ) ) {
 			return array(
 				/* translators: the plural Downloads label. */
 				'button_text' => sprintf( __( 'View %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
@@ -284,13 +285,13 @@ abstract class Extension {
 
 		return array(
 			/* translators: The extension name. */
-			'button_text' => sprintf( __( 'Configure %s', 'easy-digital-downloads' ), $product_data['title'] ),
+			'button_text' => sprintf( __( 'Configure %s', 'easy-digital-downloads' ), $product_data->title ),
 			'href'        => add_query_arg(
 				array(
 					'post_type' => 'download',
 					'page'      => 'edd-settings',
-					'tab'       => urlencode( $product_data['tab'] ),
-					'section'   => urlencode( $product_data['section'] ),
+					'tab'       => urlencode( $product_data->tab ),
+					'section'   => urlencode( $product_data->section ),
 				),
 				admin_url( 'edit.php' )
 			),

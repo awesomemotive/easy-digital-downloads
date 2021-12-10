@@ -3,6 +3,7 @@
 namespace EDD\Admin\Extensions;
 
 use \EDD\Admin\Pass_Manager;
+use \EDD\Admin\Extensions\ProductData;
 
 class Extension_Manager {
 
@@ -75,10 +76,10 @@ class Extension_Manager {
 	 * Outputs a standard extension card.
 	 *
 	 * @since 2.11.x
-	 * @param array  $product             The extension information retrieved from the Products API.
-	 * @param array  $inactive_parameters The array of information to build the button for an inactive/not installed plugin.
-	 * @param array  $active_parameters   The array of information needed to build the link to configure an active plugin.
-	 * @param array  $configuration       The optional array of data to override the product data retrieved from the API.
+	 * @param \ProductData $product             The product data object.
+	 * @param array        $inactive_parameters The array of information to build the button for an inactive/not installed plugin.
+	 * @param array        $active_parameters   The array of information needed to build the link to configure an active plugin.
+	 * @param array        $configuration       The optional array of data to override the product data retrieved from the API.
 	 * @return void
 	 */
 	public function do_extension_card( $product, $inactive_parameters, $active_parameters, $configuration = array() ) {
@@ -88,24 +89,25 @@ class Extension_Manager {
 		wp_enqueue_style( 'edd-extension-manager' );
 		wp_enqueue_script( 'edd-extension-manager' );
 		if ( ! empty( $configuration ) ) {
-			$product = array_merge( $product, $configuration );
+			$ProductData = new ProductData();
+			$product     = $ProductData->mergeConfig( $product, $configuration );
 		}
 		?>
 		<div class="<?php echo esc_attr( implode( ' ', array_map( 'sanitize_html_class', $this->get_card_classes( $product ) ) ) ); ?>">
-			<h3 class="edd-extension-manager__title"><?php echo esc_html( $product['title'] ); ?></h3>
+			<h3 class="edd-extension-manager__title"><?php echo esc_html( $product->title ); ?></h3>
 			<div class="edd-extension-manager__body">
-				<?php if ( ! empty( $product['image'] ) ) : ?>
+				<?php if ( ! empty( $product->image ) ) : ?>
 					<div class="edd-extension-manager__image">
-						<img alt="" src="<?php echo esc_url( $product['image'] ); ?>" />
+						<img alt="" src="<?php echo esc_url( $product->image ); ?>" />
 					</div>
 				<?php endif; ?>
-				<?php if ( ! empty( $product['description'] ) ) : ?>
-					<div class="edd-extension-manager__description"><?php echo wp_kses_post( wpautop( $product['description'] ) ); ?></div>
+				<?php if ( ! empty( $product->description ) ) : ?>
+					<div class="edd-extension-manager__description"><?php echo wp_kses_post( wpautop( $product->description ) ); ?></div>
 				<?php endif; ?>
-				<?php if ( ! empty( $product['features'] ) && is_array( $product['features'] ) ) : ?>
+				<?php if ( ! empty( $product->features ) && is_array( $product->features ) ) : ?>
 					<div class="edd-extension-manager__features">
 						<ul>
-						<?php foreach ( $product['features'] as $feature ) : ?>
+						<?php foreach ( $product->features as $feature ) : ?>
 							<li><span class="dashicons dashicons-yes"></span><?php echo esc_html( $feature ); ?></li>
 						<?php endforeach; ?>
 						</ul>
@@ -113,7 +115,7 @@ class Extension_Manager {
 				<?php endif; ?>
 				<div class="edd-extension-manager__group">
 					<?php
-					if ( ! empty( $product['basename'] ) && ! $this->is_plugin_active( $product['basename'] ) ) {
+					if ( ! empty( $product->basename ) && ! $this->is_plugin_active( $product->basename ) ) {
 						?>
 						<div class="edd-extension-manager__step">
 							<?php $this->button( $inactive_parameters ); ?>
@@ -134,7 +136,7 @@ class Extension_Manager {
 	 * Gets the CSS classes for the single extension card.
 	 *
 	 * @since 2.11.x
-	 * @param array $product The array of product data.
+	 * @param \ProductData $product The product data object.
 	 * @return array The array of CSS classes.
 	 */
 	private function get_card_classes( $product ) {
@@ -143,10 +145,10 @@ class Extension_Manager {
 			$base_class,
 		);
 		$variation    = 'stacked';
-		if ( ! empty( $product['style'] ) ) {
-			$variation = $product['style'];
+		if ( ! empty( $product->style ) ) {
+			$variation = $product->style;
 		}
-		if ( 'detailed-2col' === $variation && ( empty( $product['features'] ) || ! is_array( $product['features'] ) ) ) {
+		if ( 'detailed-2col' === $variation && ( empty( $product->features ) || ! is_array( $product->features ) ) ) {
 			$variation = 'detailed';
 		}
 		$card_classes[] = "{$base_class}--{$variation}";
@@ -476,11 +478,11 @@ class Extension_Manager {
 	 * Whether a given plugin is active or not.
 	 *
 	 * @since 2.11.x
-	 * @param false|string|array $basename_or_data The path to the main plugin file, eg 'my-plugin/my-plugin.php', or the array of product data.
+	 * @param false|string|The product data object. $basename_or_data The path to the main plugin file, eg 'my-plugin/my-plugin.php', or the product data object.
 	 * @return boolean
 	 */
 	public function is_plugin_active( $basename_or_data ) {
-		$basename = ! empty( $basename_or_data['basename'] ) ? $basename_or_data['basename'] : $basename_or_data;
+		$basename = ! empty( $basename_or_data->basename ) ? $basename_or_data->basename : $basename_or_data;
 
 		return ! empty( $basename ) && is_plugin_active( $basename );
 	}
