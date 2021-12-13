@@ -73,6 +73,17 @@ class Extension_Manager {
 	}
 
 	/**
+	 * Enqueues the extension manager script/style.
+	 *
+	 * @since 2.11.x
+	 * @return void
+	 */
+	protected function enqueue() {
+		wp_enqueue_style( 'edd-extension-manager' );
+		wp_enqueue_script( 'edd-extension-manager' );
+	}
+
+	/**
 	 * Outputs a standard extension card.
 	 *
 	 * @since 2.11.x
@@ -83,8 +94,7 @@ class Extension_Manager {
 	 * @return void
 	 */
 	public function do_extension_card( ProductData $product, $inactive_parameters, $active_parameters, $configuration = array() ) {
-		wp_enqueue_style( 'edd-extension-manager' );
-		wp_enqueue_script( 'edd-extension-manager' );
+		$this->enqueue();
 		if ( ! empty( $configuration ) ) {
 			$product = $product->mergeConfig( $configuration );
 		}
