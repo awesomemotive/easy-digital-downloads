@@ -51,11 +51,69 @@ body.post-type-download #screen-meta {
 	background: #fff;
 }
 
+#edd-header-wrapper {
+	display: flex;
+	justify-content: space-between;
+	padding: 0 20px;
+}
+
 #edd-header img {
 	display: block;
 	margin: 0;
 	max-width: 300px;
-	margin-left: 20px;
+}
+
+.no-js #edd-header-actions {
+	display: none;
+}
+
+#edd-header .edd-round {
+	position: relative;
+	background-color: #f3f4f5;
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-left: 10px;
+	cursor: pointer;
+	transition: background-color .2s ease;
+}
+
+button.edd-round {
+	border: none;
+}
+#edd-header button.edd-round:hover {
+	background-color: #e5e5e5;
+}
+button.edd-round:focus, button.edd-round:active {
+	outline: 2px solid #0c5d95;
+}
+
+#edd-header .edd-number {
+	position: absolute;
+	background-color: #df2a4a;
+	width: 16px;
+	height: 16px;
+	font-weight: 600;
+	font-size: 10px;
+	color: #fff;
+	top: -8px;
+	left: 50%;
+	transform: translateX(-50%);
+	margin: 0;
+	-webkit-animation: bounce 2s 5;
+	animation: bounce 2s 5;
+}
+
+#edd-header .edd-number.edd-hidden {
+	display: none !important;
+}
+
+#edd-header .edd-round svg {
+	width: 20px;
+	height: 20px;
 }
 
 .edd-settings-sub-nav {
@@ -2591,4 +2649,128 @@ only screen and (max-width: 1000px) {
 .edd-review-step,
 .edd-promo-notice .edd-peeking {
 	grid-area: 1/-1;
+}
+
+/* Notifications
+-------------------------------------------------------------- */
+.edd-overlay {
+	position: fixed;
+	z-index: 1052;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 160px;
+	background-color: #141b38;
+	opacity: .5;
+	transition: .5s;
+}
+
+.edd-slide-in {
+	transform: translateX(100%) !important;
+	-webkit-transform: translateX(100%) !important;
+}
+
+#edd-notifications-panel {
+	background-color: white;
+	height: 100%;
+	width: 100%;
+	max-width: 570px;
+	position: fixed;
+	z-index: 1053;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	overflow-x: hidden;
+	transition: .5s;
+
+	transform: translateX(0%);
+	-webkit-transform: translateX(0%);
+}
+body.admin-bar #edd-notifications-panel {
+	top: 32px;
+}
+@media screen and (max-width: 600px) {
+	body.admin-bar #edd-notifications-panel {
+		top: 46px;
+	}
+}
+
+#edd-notifications-header {
+	display: flex;
+	align-items: center;
+	padding: 0 30px;
+	color: #fff;
+	background-color: #0c5d95;
+}
+#edd-notifications-header h3 {
+	color: #fff;
+	flex: 1;
+}
+#edd-notifications-header .edd-close {
+	background: none;
+	border: none;
+	color: #fff;
+	cursor: pointer;
+}
+
+#edd-notifications-body {
+	padding: 30px;
+}
+
+.edd-notification {
+	display: flex;
+	gap: 20px;
+	margin-bottom: 20px;
+}
+.edd-notification--icon {
+	color: #00aa63;
+}
+.edd-notification--icon.edd-notification--icon-info {
+	color: #005ae0;
+}
+.edd-notification--icon.edd-notification--icon-warning {
+	color: #f18200;
+}
+.edd-notification--icon.edd-notification--icon-error {
+	color: #df2a4a;
+}
+.edd-notification--body {
+	flex: 1;
+}
+.edd-notification--header {
+	align-items: center;
+	display: flex;
+	justify-content: space-between;
+	gap: 5px;
+	margin-bottom: 7px;
+}
+.edd-notification--title {
+	color: #141b38;
+	flex: 1;
+	font-size: 16px;
+	font-weight: 600;
+	margin: 0;
+}
+.edd-notification--date {
+	color: #71747e;
+	font-size: 12px;
+}
+.edd-notification--actions {
+	flex-wrap: wrap;
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	margin-top: 10px;
+}
+.edd-notification--dismiss {
+	background: none !important;
+	border: none !important;
+	box-shadow: none !important;
+	color: #71747e !important;
+	cursor: pointer;
+	padding: 0 10px;
+	text-decoration: underline;
+}
+.edd-notification--dismiss:hover {
+	text-decoration: none;
 }
