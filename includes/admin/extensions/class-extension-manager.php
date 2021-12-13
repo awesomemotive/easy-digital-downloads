@@ -82,7 +82,7 @@ class Extension_Manager {
 	 * @param array        $configuration       The optional array of data to override the product data retrieved from the API.
 	 * @return void
 	 */
-	public function do_extension_card( $product, $inactive_parameters, $active_parameters, $configuration = array() ) {
+	public function do_extension_card( ProductData $product, $inactive_parameters, $active_parameters, $configuration = array() ) {
 		if ( ! $product ) {
 			return;
 		}

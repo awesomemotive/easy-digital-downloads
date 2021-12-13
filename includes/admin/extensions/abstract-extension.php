@@ -184,7 +184,7 @@ abstract class Extension {
 	 * @param int|false                         $item_id      Optional: the item ID.
 	 * @return array
 	 */
-	protected function get_button_parameters( $product_data, $item_id = false ) {
+	protected function get_button_parameters( ProductData $product_data, $item_id = false ) {
 		if ( empty( $item_id ) ) {
 			$item_id = $this->item_id;
 		}
@@ -236,7 +236,7 @@ abstract class Extension {
 	 * @param bool                              $has_access   Whether the user already has access to the extension (based on pass level).
 	 * @return string
 	 */
-	private function get_upgrade_url( $product_data, $item_id, $has_access = false ) {
+	private function get_upgrade_url( ProductData $product_data, $item_id, $has_access = false ) {
 		$url            = 'https://easydigitaldownloads.com';
 		$tab            = ! empty( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : '';
 		$slug           = ! empty( $product_data->slug ) ? $product_data->slug : '';
@@ -269,7 +269,7 @@ abstract class Extension {
 	 * @param ProductData  $product_data  The product data object.
 	 * @return array
 	 */
-	protected function get_link_parameters( $product_data ) {
+	protected function get_link_parameters( ProductData $product_data ) {
 		if ( empty( $product_data->tab ) && empty( $product_data->section ) ) {
 			return array(
 				/* translators: the plural Downloads label. */
