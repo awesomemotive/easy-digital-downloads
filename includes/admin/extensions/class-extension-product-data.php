@@ -74,13 +74,14 @@ class ProductData {
 	 * @since 2.11.x
 	 * @param array $array
 	 * @return ProductData
+	 * @throws \InvalidArgumentException
 	 */
 	public function fromArray( $array ) {
 		$expected_keys  = array( 'title', 'slug', 'description', 'basename' );
 		$array_to_check = array_intersect_key( $array, array_flip( $expected_keys ) );
 
 		if ( empty( $array_to_check ) ) {
-			throw new \Exception(
+			throw new \InvalidArgumentException(
 				'Invalid ProductData object, must have the exact following keys: ' . implode( ', ', $expected_keys )
 			);
 		}
