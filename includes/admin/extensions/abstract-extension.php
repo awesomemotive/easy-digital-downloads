@@ -121,6 +121,17 @@ abstract class Extension {
 	}
 
 	/**
+	 * Formats a custom description array by running wpautop and converting it to a string.
+	 *
+	 * @since 2.11.x
+	 * @param array $description The custom product description.
+	 * @return string
+	 */
+	protected function format_description( array $description ) {
+		return implode( '', array_map( 'wpautop', $description ) );
+	}
+
+	/**
 	 * Whether the current screen is an EDD setings screen.
 	 *
 	 * @since 2.11.x
