@@ -12,7 +12,7 @@ class ExtensionsAPI {
 	 * @since 2.11.x
 	 * @param array $body    The body for the API request.
 	 * @param int   $item_id The product ID, if querying a single product.
-	 * @return false|array|\ProductData
+	 * @return false|array|ProductData
 	 */
 	public function get_product_data( $body = array(), $item_id = false ) {
 		if ( empty( $body ) ) {
@@ -135,7 +135,7 @@ class ExtensionsAPI {
 	 *
 	 * @since 2.11.x
 	 * @param object $item
-	 * @return ProductData
+	 * @return array
 	 */
 	private function get_item_data( $item ) {
 		return array(
