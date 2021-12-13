@@ -92,7 +92,7 @@ abstract class Extension {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/extensions/class-extensions-api.php';
 		$api          = new ExtensionsAPI();
 		$body         = $this->get_api_body();
-		$api_item_id  = $item_id ? $item_id : $this->item_id;
+		$api_item_id  = $item_id ?: $this->item_id;
 		$product_data = $api->get_product_data( $body, $api_item_id );
 		if ( ! $product_data ) {
 			return false;
