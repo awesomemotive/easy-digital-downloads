@@ -66,6 +66,9 @@ class ExtensionsAPI {
 			return $option;
 		}
 
+		// Delete the stale option.
+		delete_option( $option_name );
+
 		$value = array(
 			'timeout' => strtotime( '+1 week', time() ),
 		);
