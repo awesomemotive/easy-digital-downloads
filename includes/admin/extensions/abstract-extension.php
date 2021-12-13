@@ -239,13 +239,12 @@ abstract class Extension {
 	private function get_upgrade_url( ProductData $product_data, $item_id, $has_access = false ) {
 		$url            = 'https://easydigitaldownloads.com';
 		$tab            = ! empty( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : '';
-		$slug           = ! empty( $product_data->slug ) ? $product_data->slug : '';
 		$utm_parameters = array(
 			'p'            => urlencode( $item_id ),
 			'utm_source'   => 'settings',
 			'utm_medium'   => urlencode( $tab ),
 			'utm_campaign' => 'admin',
-			'utm_term'     => urlencode( $slug ),
+			'utm_term'     => urlencode( $product_data->slug ),
 		);
 
 		if ( $has_access ) {

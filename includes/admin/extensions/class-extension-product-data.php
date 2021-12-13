@@ -18,7 +18,7 @@ class ProductData {
 	 * @since 2.11.x
 	 * @var string
 	 */
-	public $slug;
+	public $slug = '';
 
 	/**
 	 * The URL for the product featured image.
