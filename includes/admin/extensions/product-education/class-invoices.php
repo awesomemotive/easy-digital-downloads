@@ -60,7 +60,7 @@ class Invoices extends Extension {
 				'Generate Attractive Invoices',
 				'Build Customer Confidence',
 				'PDF Download Support',
-				'Attach to Purchase Emails',
+				'Include in Purchase Emails',
 				'Customizable Templates',
 			),
 		);
