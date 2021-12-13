@@ -53,7 +53,6 @@ class Reviews extends Extension {
 	 * @return array
 	 */
 	protected function get_configuration( \EDD\Admin\Extensions\ProductData $product_data ) {
-
 		return $this->is_edd_settings_screen() ? array(
 			'style' => 'detailed',
 		) : array();
