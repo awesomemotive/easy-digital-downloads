@@ -40,7 +40,7 @@ class Reviews extends Extension {
 		add_filter( 'edd_settings_sections_marketing', array( $this, 'add_section' ) );
 		add_action( 'edd_settings_tab_top_marketing_reviews', array( $this, 'settings_field' ) );
 		add_action( 'edd_settings_tab_top_marketing_reviews', array( $this, 'hide_submit_button' ) );
-		add_action( 'admin_init', array( $this, 'maybe_do_metabox' ) );
+		add_action( 'add_meta_boxes', array( $this, 'maybe_do_metabox' ) );
 
 		parent::__construct();
 	}
