@@ -62,8 +62,6 @@ class Recurring extends Extension {
 				'Free Trial Support',
 				'Signup Fees',
 				'Recurring Revenue Reports',
-				'Integrates with Software Licensing',
-				'Integrates with All Access',
 			),
 		);
 	}
@@ -75,10 +73,12 @@ class Recurring extends Extension {
 	 * @return string
 	 */
 	private function get_custom_description() {
-		$description  = sprintf( '<p>%s</p>', 'You are already selling one-time digital products to your customers. But do you also have products that you can sell on a recurring basis?' );
-		$description .= sprintf( '<p>%s</p>', 'Recurring revenue provides more predictable income and allows you to make better forecasts and decisions for your business.' );
+		$description = array(
+			'Grow stable income by selling subscriptions and make renewals hassle free for your customers.',
+			'When your customers are automatically billed, you reduce the risk of missed payments and retain more customers.',
+		);
 
-		return $description;
+		return $this->format_description( $description );
 	}
 
 	/**

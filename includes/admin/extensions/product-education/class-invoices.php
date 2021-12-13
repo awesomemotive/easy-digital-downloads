@@ -53,10 +53,32 @@ class Invoices extends Extension {
 	 */
 	protected function get_configuration( \EDD\Admin\Extensions\ProductData $product_data ) {
 		return array(
-			'style'       => 'horizontal',
-			'title'       => __( 'Impress Your Customers with Custom Invoices', 'easy-digital-downloads' ),
-			'description' => __( 'Allow your customers to download beautiful, professional invoices with one click!', 'easy-digital-downloads' ),
+			'style'       => 'detailed-2col',
+			'title'       => 'Attractive Invoices For Your Customers',
+			'description' => $this->get_custom_description(),
+			'features'    => array(
+				'Generate Attractive Invoices',
+				'Build Customer Confidence',
+				'PDF Download Support',
+				'Attach to Purchase Emails',
+				'Customizable Templates',
+			),
 		);
+	}
+
+	/**
+	 * Gets a custom description for the Invoices extension card.
+	 *
+	 * @since 2.11.x
+	 * @return string
+	 */
+	private function get_custom_description() {
+		$description = array(
+			'Impress customers and build customer loyalty with attractive invoices. Making it easy to locate, save, and print purchase history builds trust with customers.',
+			'Provide a professional experience with customizable templates and one-click PDF downloads. ',
+		);
+
+		return $this->format_description( $description );
 	}
 
 	/**
