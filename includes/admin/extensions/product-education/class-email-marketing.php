@@ -42,6 +42,10 @@ class EmailMarketing extends Extension {
 		if ( ! $this->is_edd_settings_screen() ) {
 			return $sections;
 		}
+		$product_data = $this->get_product_data();
+		if ( ! $product_data || ! is_array( $product_data ) ) {
+			return $sections;
+		}
 		$sections['email_marketing'] = __( 'Email Marketing', 'easy-digital-downloads' );
 
 		return $sections;
