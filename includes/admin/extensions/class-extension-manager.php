@@ -83,14 +83,10 @@ class Extension_Manager {
 	 * @return void
 	 */
 	public function do_extension_card( ProductData $product, $inactive_parameters, $active_parameters, $configuration = array() ) {
-		if ( ! $product ) {
-			return;
-		}
 		wp_enqueue_style( 'edd-extension-manager' );
 		wp_enqueue_script( 'edd-extension-manager' );
 		if ( ! empty( $configuration ) ) {
-			$ProductData = new ProductData();
-			$product     = $ProductData->mergeConfig( $product, $configuration );
+			$product = $product->mergeConfig( $configuration );
 		}
 		?>
 		<div class="<?php echo esc_attr( implode( ' ', array_map( 'sanitize_html_class', $this->get_card_classes( $product ) ) ) ); ?>">

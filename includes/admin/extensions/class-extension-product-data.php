@@ -98,15 +98,14 @@ class ProductData {
 	 * Merge an array of data into an object.
 	 *
 	 * @since 2.11.x
-	 * @param  ProductData $product       The original product data object.
 	 * @param  array       $configuration The custom configuration data.
 	 * @return ProductData
 	 */
-	public function mergeConfig( ProductData $product, array $configuration ) {
+	public function mergeConfig( array $configuration ) {
 		foreach ( $configuration as $key => $value ) {
-			$product->{$key} = $value;
+			$this->{$key} = $value;
 		}
 
-		return $product;
+		return $this;
 	}
 }
