@@ -53,9 +53,37 @@ class Reviews extends Extension {
 	 * @return array
 	 */
 	protected function get_configuration( \EDD\Admin\Extensions\ProductData $product_data ) {
-		return $this->is_edd_settings_screen() ? array(
-			'style' => 'detailed',
-		) : array();
+		$configuration          = array(
+			'title' => 'Build Trust With Real Customer Reviews',
+		);
+		$settings_configuration = array(
+			'style'       => 'detailed-2col',
+			'description' => $this->get_custom_description(),
+			'features'    => array(
+				'Request Reviews',
+				'Incentivize Reviewers',
+				'Full Schema.org Support',
+				'Embed Reviews Via Blocks',
+				'Limit Reviews to Customers',
+				'Vendor Reviews (with Frontend Submissions)',
+			),
+		);
+		return $this->is_edd_settings_screen() ? array_merge( $configuration, $settings_configuration ) : $configuration;
+	}
+
+	/**
+	 * Gets a custom description for the Reviews extension card.
+	 *
+	 * @since 2.11.x
+	 * @return string
+	 */
+	private function get_custom_description() {
+		$description = array(
+			'Increase sales on your site with social proof. 70% of online shoppers don\'t purchase before reading reviews.',
+			'Easily collect, manage, and beautifully display reviews all from your WordPress dashboard.',
+		);
+
+		return $this->format_description( $description );
 	}
 
 	/**
