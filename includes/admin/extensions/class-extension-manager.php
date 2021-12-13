@@ -26,7 +26,7 @@ class Extension_Manager {
 	/**
 	 * Pass Manager class
 	 *
-	 * @var \EDD\Admin\Pass_Manager
+	 * @var Pass_Manager
 	 */
 	protected $pass_manager;
 
@@ -76,7 +76,7 @@ class Extension_Manager {
 	 * Outputs a standard extension card.
 	 *
 	 * @since 2.11.x
-	 * @param \ProductData $product             The product data object.
+	 * @param ProductData $product             The product data object.
 	 * @param array        $inactive_parameters The array of information to build the button for an inactive/not installed plugin.
 	 * @param array        $active_parameters   The array of information needed to build the link to configure an active plugin.
 	 * @param array        $configuration       The optional array of data to override the product data retrieved from the API.
@@ -136,7 +136,7 @@ class Extension_Manager {
 	 * Gets the CSS classes for the single extension card.
 	 *
 	 * @since 2.11.x
-	 * @param \ProductData $product The product data object.
+	 * @param ProductData $product The product data object.
 	 * @return array The array of CSS classes.
 	 */
 	private function get_card_classes( $product ) {
@@ -478,7 +478,7 @@ class Extension_Manager {
 	 * Whether a given plugin is active or not.
 	 *
 	 * @since 2.11.x
-	 * @param false|string|The product data object. $basename_or_data The path to the main plugin file, eg 'my-plugin/my-plugin.php', or the product data object.
+	 * @param string|ProductData $basename_or_data The path to the main plugin file, eg 'my-plugin/my-plugin.php', or the product data object.
 	 * @return boolean
 	 */
 	public function is_plugin_active( $basename_or_data ) {

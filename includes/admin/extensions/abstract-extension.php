@@ -113,10 +113,10 @@ abstract class Extension {
 	 * Gets the custom configuration for the extension.
 	 *
 	 * @since 2.11.x
-	 * @param \EDD\Admin\Extensions\ProductData $product_data Optionally allows the product data to be parsed inthe configuration.
+	 * @param ProductData $product_data Optionally allows the product data to be parsed in the configuration.
 	 * @return array
 	 */
-	protected function get_configuration( \EDD\Admin\Extensions\ProductData $product_data ) {
+	protected function get_configuration( ProductData $product_data ) {
 		return array();
 	}
 
@@ -180,7 +180,7 @@ abstract class Extension {
 	 * Gets the button parameters.
 	 * Classes should not need to replace this method.
 	 *
-	 * @param \EDD\Admin\Extensions\ProductData $product_data The extension data returned from the Products API.
+	 * @param ProductData $product_data The extension data returned from the Products API.
 	 * @param int|false                         $item_id      Optional: the item ID.
 	 * @return array
 	 */
@@ -231,7 +231,7 @@ abstract class Extension {
 	 *
 	 * @todo add UTM parameters
 	 * @since 2.11.x
-	 * @param \EDD\Admin\Extensions\ProductData $product_data The product data object.
+	 * @param ProductData $product_data The product data object.
 	 * @param int                               $item_id      The item/product ID.
 	 * @param bool                              $has_access   Whether the user already has access to the extension (based on pass level).
 	 * @return string
@@ -266,7 +266,7 @@ abstract class Extension {
 	 * Gets the array of parameters for the link to configure the extension.
 	 *
 	 * @since 2.11.x
-	 * @param \EDD\Admin\Extensions\ProductData  $product_data  The product data object.
+	 * @param ProductData  $product_data  The product data object.
 	 * @return array
 	 */
 	protected function get_link_parameters( $product_data ) {
