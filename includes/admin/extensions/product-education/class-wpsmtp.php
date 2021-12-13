@@ -69,6 +69,7 @@ class WP_SMTP {
 	 * @return void
 	 */
 	public function settings_field( $args ) {
+		$this->manager->enqueue();
 		?>
 		<div class="edd-extension-manager__body">
 			<p class="edd-extension-manager__description">
