@@ -61,6 +61,7 @@ class ExtensionsAPI {
 			if ( $item_id && ! empty( $option[ $item_id ] ) ) {
 				return $product_data->fromArray( $option[ $item_id ] );
 			}
+			unset( $option['timeout'] );
 
 			return $option;
 		}
@@ -84,8 +85,9 @@ class ExtensionsAPI {
 		}
 
 		update_option( $option_name, $value, false );
+		unset( $value['timeout'] );
 
-		return $item_id && ! empty( $value[ $item_id ] ) ? $value[ $item_id ] : $value;
+		return $item_id && ! empty( $value[ $item_id ] ) ? $product_data->fromArray( $value[ $item_id ] ) : $value;
 	}
 
 	/**
