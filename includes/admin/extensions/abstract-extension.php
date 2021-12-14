@@ -240,7 +240,6 @@ abstract class Extension {
 	/**
 	 * Gets the upgrade URL for the button.
 	 *
-	 * @todo add UTM parameters
 	 * @since 2.11.x
 	 * @param ProductData $product_data The product data object.
 	 * @param int                               $item_id      The item/product ID.
