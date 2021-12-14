@@ -78,7 +78,7 @@ class Extension_Manager {
 	 * @since 2.11.x
 	 * @return void
 	 */
-	protected function enqueue() {
+	public function enqueue() {
 		wp_enqueue_style( 'edd-extension-manager' );
 		wp_enqueue_script( 'edd-extension-manager' );
 	}
