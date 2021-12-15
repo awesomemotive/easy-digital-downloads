@@ -279,7 +279,10 @@ abstract class Extension {
 	 * @return array
 	 */
 	protected function get_link_parameters( ProductData $product_data ) {
-		if ( empty( $product_data->tab ) && empty( $product_data->section ) ) {
+		$configuration = $this->get_configuration( $product_data );
+		$tab           = ! empty( $configuration['tab'] ) ? $configuration['tab'] : $product_data->tab;
+		$section       = ! empty( $configuration['section'] ) ? $configuration['section'] : $product_data->section;
+		if ( empty( $tab ) && empty( $section ) ) {
 			return array(
 				/* translators: the plural Downloads label. */
 				'button_text' => sprintf( __( 'View %s', 'easy-digital-downloads' ), edd_get_label_plural() ),
@@ -299,8 +302,8 @@ abstract class Extension {
 				array(
 					'post_type' => 'download',
 					'page'      => 'edd-settings',
-					'tab'       => urlencode( $product_data->tab ),
-					'section'   => urlencode( $product_data->section ),
+					'tab'       => urlencode( $tab ),
+					'section'   => urlencode( $section ),
 				),
 				admin_url( 'edit.php' )
 			),
