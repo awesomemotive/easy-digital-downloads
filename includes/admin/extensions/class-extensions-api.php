@@ -23,7 +23,7 @@ class ExtensionsAPI {
 		// The option name is created from the first key/value pair of the API "body".
 		$option_name = sanitize_key( "edd_extension_{$key}_{$body[ $key ]}_data" );
 		$option      = get_option( $option_name );
-		$is_stale    = ! empty( $option['timeout'] ) && time() > $option['timeout'];
+		$is_stale    = $this->option_has_expired( $option );
 
 		// The ProductData class.
 		$product_data = new ProductData();
@@ -89,18 +89,17 @@ class ExtensionsAPI {
 	}
 
 	/**
-	 * Gets all of the product data, either from a transient or an API request.
-	 * If the transient exists and has data, it will be an object.
-	 * If it exists but the API request failed, it will be an empty array.
+	 * Gets all of the product data, either from an option or an API request.
+	 * If the option exists and has data, it will be an object.
 	 *
 	 * @since 2.11.4
-	 * @return object|array|false
+	 * @return object|false
 	 */
 	private function get_all_product_data() {
-		// Possibly all product data is in a transient. If it is, return it.
-		$all_product_data = get_transient( 'edd_all_extension_data' );
-		if ( false !== $all_product_data ) {
-			return $all_product_data;
+		// Possibly all product data is in an option. If it is, return it.
+		$all_product_data = get_option( 'edd_all_extension_data' );
+		if ( ! empty( $all_product_data['products'] ) && ! $this->option_has_expired( $all_product_data ) ) {
+			return $all_product_data['products'];
 		}
 
 		// Otherwise, query the API.
@@ -118,18 +117,25 @@ class ExtensionsAPI {
 			)
 		);
 
-		// If there was an API error, set transient to an empty array and return false.
+		$data = array(
+			'timeout' => strtotime( '+1 hour', time() ),
+		);
+
+		// If there was an API error, set option and return false.
 		if ( is_wp_error( $request ) || ( 200 !== wp_remote_retrieve_response_code( $request ) ) ) {
-			set_transient( 'edd_all_extension_data', array(), HOUR_IN_SECONDS );
+			update_option( 'edd_all_extension_data', $data, false );
 
 			return false;
 		}
 
-		// Fresh data has been retrieved, so populate with fresh data.
+		// Fresh data has been retrieved, so update the option with a four hour timeout.
 		$all_product_data = json_decode( wp_remote_retrieve_body( $request ) );
+		$data             = array(
+			'timeout'  => strtotime( '+4 hours', time() ),
+			'products' => $all_product_data,
+		);
 
-		// Store all of the product data for one hour.
-		set_transient( 'edd_all_extension_data', $all_product_data, HOUR_IN_SECONDS );
+		update_option( 'edd_all_extension_data', $data, false );
 
 		return $all_product_data;
 	}
@@ -199,5 +205,16 @@ class ExtensionsAPI {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Checks whether a given option has "expired".
+	 *
+	 * @since 2.11.4
+	 * @param array|false $option
+	 * @return bool
+	 */
+	private function option_has_expired( $option ) {
+		return ! empty( $option['timeout'] ) && time() > $option['timeout'];
 	}
 }
