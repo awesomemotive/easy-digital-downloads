@@ -45,7 +45,7 @@ class ExtensionsAPI {
 		$all_product_data = $this->get_all_product_data();
 
 		// If no product data was retrieved, let the option sit for an hour.
-		if ( ! $all_product_data ) {
+		if ( empty( $all_product_data ) ) {
 			$data = array(
 				'timeout' => strtotime( '+1 hour', time() ),
 			);
@@ -91,15 +91,17 @@ class ExtensionsAPI {
 	}
 
 	/**
-	 * Gets all of the product data, either from a tranient or an API request.
+	 * Gets all of the product data, either from a transient or an API request.
+	 * If the transient exists and has data, it will be an object.
+	 * If it exists but the API request failed, it will be an empty array.
 	 *
 	 * @since 2.11.x
-	 * @return object|false
+	 * @return object|array|false
 	 */
 	private function get_all_product_data() {
 		// Possibly all product data is in a transient. If it is, return it.
 		$all_product_data = get_transient( 'edd_all_extension_data' );
-		if ( $all_product_data ) {
+		if ( false !== $all_product_data ) {
 			return $all_product_data;
 		}
 
@@ -118,8 +120,10 @@ class ExtensionsAPI {
 			)
 		);
 
-		// If there was an API error, set timeout for 1 hour and return false.
+		// If there was an API error, set transient to an empty array and return false.
 		if ( is_wp_error( $request ) || ( 200 !== wp_remote_retrieve_response_code( $request ) ) ) {
+			set_transient( 'edd_all_extension_data', array(), HOUR_IN_SECONDS );
+
 			return false;
 		}
 
