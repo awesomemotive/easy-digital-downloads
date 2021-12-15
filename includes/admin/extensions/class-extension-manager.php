@@ -386,15 +386,6 @@ class Extension_Manager {
 
 		if ( ! is_wp_error( $activated ) ) {
 
-			/**
-			 * Fire after plugin activating via the EDD installer.
-			 *
-			 * @since 2.11.x
-			 *
-			 * @param string $plugin_basename Path to the plugin file relative to the plugins directory.
-			 */
-			do_action( 'edd_plugin_activated', $plugin_basename );
-
 			if ( $already_installed ) {
 				$message = 'plugin' === $type ? esc_html__( 'Plugin activated.', 'easy-digital-downloads' ) : esc_html__( 'Extension activated.', 'easy-digital-downloads' );
 			} else {
