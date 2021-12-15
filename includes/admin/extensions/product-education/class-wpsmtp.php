@@ -121,14 +121,18 @@ class WP_SMTP {
 
 	/**
 	 * Gets the array of parameters for the link to configure WP Mail SMTP.
-	 * @todo maybe this should go to the settings page instead.
 	 *
 	 * @since 2.11.x
 	 * @return array
 	 */
 	private function get_link_parameters() {
-		return array(
+		return $this->is_smtp_configured() ?
+		array(
 			'button_text' => __( 'Configure WP Mail SMTP', 'easy-digital-downloads' ),
+			'href'        => admin_url( $this->config['smtp_settings'] ),
+		) :
+		array(
+			'button_text' => __( 'Run the WP Mail SMTP Setup Wizard', 'easy-digital-downloads' ),
 			'href'        => admin_url( $this->config['smtp_wizard'] ),
 		);
 	}
