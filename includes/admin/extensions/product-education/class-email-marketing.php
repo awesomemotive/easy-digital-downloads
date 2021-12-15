@@ -64,6 +64,9 @@ class EmailMarketing extends Extension {
 			/* translators: the product name */
 			$configuration['title'] = sprintf( __( 'Get %s Today!', 'easy-digital-downloads' ), $product_data->title );
 		}
+		if ( 'mailchimp' === $product_data->slug && ! ( defined( 'EDD_MAILCHIMP_VERSION' ) && version_compare( EDD_MAILCHIMP_VERSION, '3.0.16', '>=' ) ) ) {
+			$configuration['tab'] = 'extensions';
+		}
 
 		return $configuration;
 	}
