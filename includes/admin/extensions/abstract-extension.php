@@ -10,7 +10,7 @@ abstract class Extension {
 	 * The product ID. This only needs to be set if the extending class is
 	 * for a single product.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @var int
 	 */
 	protected $item_id;
@@ -18,7 +18,7 @@ abstract class Extension {
 	/**
 	 * The settings tab where this item will show.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @var string
 	 */
 	protected $settings_tab = '';
@@ -42,7 +42,7 @@ abstract class Extension {
 	/**
 	 * Whether the extension is activated.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @return bool
 	 */
 	abstract protected function is_activated();
@@ -62,7 +62,7 @@ abstract class Extension {
 	/**
 	 * Outputs a single extension card.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @param false|int $item_id Optional: the individual extension product ID.
 	 * @return void
 	 */
@@ -112,7 +112,7 @@ abstract class Extension {
 	/**
 	 * Gets the custom configuration for the extension.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @param ProductData $product_data Optionally allows the product data to be parsed in the configuration.
 	 * @return array
 	 */
@@ -123,7 +123,7 @@ abstract class Extension {
 	/**
 	 * Formats a custom description array by running wpautop and converting it to a string.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @param array $description The custom product description.
 	 * @return string
 	 */
@@ -134,7 +134,7 @@ abstract class Extension {
 	/**
 	 * Whether the current screen is an EDD setings screen.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @return bool
 	 */
 	protected function is_edd_settings_screen() {
@@ -144,7 +144,7 @@ abstract class Extension {
 	/**
 	 * Whether the current screen is a download new/edit screen.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @return bool
 	 */
 	protected function is_download_edit_screen() {
@@ -240,7 +240,7 @@ abstract class Extension {
 	/**
 	 * Gets the upgrade URL for the button.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @param ProductData $product_data The product data object.
 	 * @param int                               $item_id      The item/product ID.
 	 * @param bool                              $has_access   Whether the user already has access to the extension (based on pass level).
@@ -274,7 +274,7 @@ abstract class Extension {
 	/**
 	 * Gets the array of parameters for the link to configure the extension.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @param ProductData  $product_data  The product data object.
 	 * @return array
 	 */
@@ -313,7 +313,7 @@ abstract class Extension {
 	/**
 	 * Optionally hides the submit button on screens where it's not needed.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @return void
 	 */
 	public function hide_submit_button() {

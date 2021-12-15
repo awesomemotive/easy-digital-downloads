@@ -10,7 +10,7 @@ class Extension_Manager {
 	/**
 	 * All of the installed plugins on the site.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @var array
 	 */
 	public $all_plugins;
@@ -18,7 +18,7 @@ class Extension_Manager {
 	/**
 	 * The minimum pass ID required to install the extension.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @var int
 	 */
 	private $required_pass_id;
@@ -44,7 +44,7 @@ class Extension_Manager {
 	/**
 	 * Registers the extension manager script and style.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @return void
 	 */
 	public function register_assets() {
@@ -75,7 +75,7 @@ class Extension_Manager {
 	/**
 	 * Enqueues the extension manager script/style.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @return void
 	 */
 	public function enqueue() {
@@ -86,7 +86,7 @@ class Extension_Manager {
 	/**
 	 * Outputs a standard extension card.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @param ProductData $product             The product data object.
 	 * @param array        $inactive_parameters The array of information to build the button for an inactive/not installed plugin.
 	 * @param array        $active_parameters   The array of information needed to build the link to configure an active plugin.
@@ -141,7 +141,7 @@ class Extension_Manager {
 	/**
 	 * Gets the CSS classes for the single extension card.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @param ProductData $product The product data object.
 	 * @return array The array of CSS classes.
 	 */
@@ -166,7 +166,7 @@ class Extension_Manager {
 	 * Outputs the button to activate/install a plugin/extension.
 	 * If a link is passed in the args, create a button style link instead (@uses $this->link()).
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @param array $args The array of parameters for the button.
 	 * @return void
 	 */
@@ -239,7 +239,7 @@ class Extension_Manager {
 	/**
 	 * Installs and maybe activates a plugin or extension.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 */
 	public function install() {
 
@@ -343,7 +343,7 @@ class Extension_Manager {
 	/**
 	 * Activates an existing extension.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @param string $plugin_basename Optional: the plugin basename.
 	 */
 	public function activate( $plugin_basename = '' ) {
@@ -404,7 +404,7 @@ class Extension_Manager {
 	/**
 	 * Determine if the plugin/extension installations are allowed.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 *
 	 * @param string $type Should be `plugin` or `extension`.
 	 *
@@ -432,7 +432,7 @@ class Extension_Manager {
 	/**
 	 * Checks if a user's pass can download an extension.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @return bool Returns true if the current site has an active pass and it is greater than or equal to the extension's minimum pass.
 	 */
 	public function pass_can_download( $required_pass_id = false ) {
@@ -447,7 +447,7 @@ class Extension_Manager {
 	/**
 	 * Get all installed plugins.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @return array
 	 */
 	public function get_plugins() {
@@ -463,7 +463,7 @@ class Extension_Manager {
 	/**
 	 * Check if a plugin is installed.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @param  string $plugin The path to the main plugin file, eg 'my-plugin/my-plugin.php'.
 	 * @return boolean
 	 */
@@ -474,7 +474,7 @@ class Extension_Manager {
 	/**
 	 * Whether a given plugin is active or not.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @param string|ProductData $basename_or_data The path to the main plugin file, eg 'my-plugin/my-plugin.php', or the product data object.
 	 * @return boolean
 	 */
