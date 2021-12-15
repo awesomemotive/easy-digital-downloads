@@ -153,7 +153,7 @@ class WP_SMTP {
 		$phpmailer = $this->get_phpmailer();
 
 		$mailer             = \WPMailSMTP\Options::init()->get( 'mail', 'mailer' );
-		$is_mailer_complete = empty( $mailer ) ? false : wp_mail_smtp()->get_providers()->get_mailer( $mailer, $phpmailer )->is_mailer_complete();
+		$is_mailer_complete = ! empty( $mailer ) && wp_mail_smtp()->get_providers()->get_mailer( $mailer, $phpmailer )->is_mailer_complete();
 
 		return 'mail' !== $mailer && $is_mailer_complete;
 	}
