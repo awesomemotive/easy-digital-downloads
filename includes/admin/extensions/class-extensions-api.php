@@ -2,8 +2,6 @@
 
 namespace EDD\Admin\Extensions;
 
-use \EDD\Admin\Extensions\ProductData;
-
 class ExtensionsAPI {
 
 	/**
