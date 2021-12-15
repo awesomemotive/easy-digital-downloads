@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Settings Compatibility Functions
  *
