@@ -7,7 +7,7 @@ class ProductData {
 	/**
 	 * The product name.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @var string
 	 */
 	public $title;
@@ -15,7 +15,7 @@ class ProductData {
 	/**
 	 * The product slug.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @var string
 	 */
 	public $slug = '';
@@ -23,7 +23,7 @@ class ProductData {
 	/**
 	 * The URL for the product featured image.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @var string
 	 */
 	public $image;
@@ -31,7 +31,7 @@ class ProductData {
 	/**
 	 * The product description.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @var string
 	 */
 	public $description;
@@ -39,7 +39,7 @@ class ProductData {
 	/**
 	 * The extension basename.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @var string
 	 */
 	public $basename;
@@ -47,7 +47,7 @@ class ProductData {
 	/**
 	 * The settings tab where the extension settings will show.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @var string
 	 */
 	public $tab;
@@ -55,7 +55,7 @@ class ProductData {
 	/**
 	 * The settings section for the extension.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @var string
 	 */
 	public $section;
@@ -63,7 +63,7 @@ class ProductData {
 	/**
 	 * The product features.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @var array
 	 */
 	public $features = array();
@@ -71,7 +71,7 @@ class ProductData {
 	/**
 	 * Take array and return object.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @param array $array
 	 * @return ProductData
 	 * @throws \InvalidArgumentException
@@ -97,7 +97,7 @@ class ProductData {
 	/**
 	 * Merge an array of data into an object.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @param  array       $configuration The custom configuration data.
 	 * @return ProductData
 	 */

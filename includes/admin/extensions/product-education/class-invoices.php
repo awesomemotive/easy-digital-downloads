@@ -8,7 +8,7 @@
  * @subpackage  Invoices
  * @copyright   Copyright (c) 2021, Easy Digital Downloads
  * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       2.11.x
+ * @since       2.11.4
  */
 namespace EDD\Admin\Settings;
 
@@ -47,7 +47,7 @@ class Invoices extends Extension {
 	/**
 	 * Gets the custom configuration for Invoices.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @param \EDD\Admin\Extensions\ProductData $product_data The product data object.
 	 * @return array
 	 */
@@ -69,7 +69,7 @@ class Invoices extends Extension {
 	/**
 	 * Gets a custom description for the Invoices extension card.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @return string
 	 */
 	private function get_custom_description() {
@@ -103,7 +103,7 @@ class Invoices extends Extension {
 	/**
 	 * Whether EDD Invoices active or not.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 *
 	 * @return bool True if Invoices is active.
 	 */

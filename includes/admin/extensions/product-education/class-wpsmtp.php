@@ -8,7 +8,7 @@
  * @subpackage  WP_SMTP
  * @copyright   Copyright (c) 2021, Easy Digital Downloads
  * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       2.11.x
+ * @since       2.11.4
  */
 namespace EDD\Admin\Settings;
 
@@ -122,7 +122,7 @@ class WP_SMTP {
 	/**
 	 * Gets the array of parameters for the link to configure WP Mail SMTP.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @return array
 	 */
 	private function get_link_parameters() {
@@ -140,7 +140,7 @@ class WP_SMTP {
 	/**
 	 * Whether WP Mail SMTP plugin configured or not.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 *
 	 * @return bool True if some mailer is selected and configured properly.
 	 */
@@ -161,7 +161,7 @@ class WP_SMTP {
 	/**
 	 * Whether WP Mail SMTP plugin active or not.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 *
 	 * @return bool True if SMTP plugin is active.
 	 */
@@ -172,7 +172,7 @@ class WP_SMTP {
 	/**
 	 * Get $phpmailer instance.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 *
 	 * @return \PHPMailer|\PHPMailer\PHPMailer\PHPMailer Instance of PHPMailer.
 	 */
@@ -190,7 +190,7 @@ class WP_SMTP {
 	/**
 	 * Get $phpmailer v5 instance.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 *
 	 * @return \PHPMailer Instance of PHPMailer.
 	 */
@@ -210,7 +210,7 @@ class WP_SMTP {
 	/**
 	 * Get $phpmailer v6 instance.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 *
 	 * @return \PHPMailer\PHPMailer\PHPMailer Instance of PHPMailer.
 	 */

@@ -8,7 +8,7 @@
  * @subpackage  Reviews
  * @copyright   Copyright (c) 2021, Easy Digital Downloads
  * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       2.11.x
+ * @since       2.11.4
  */
 namespace EDD\Admin\Settings;
 
@@ -48,7 +48,7 @@ class Reviews extends Extension {
 	/**
 	 * Gets the custom configuration for Reviews.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @param \EDD\Admin\Extensions\ProductData $product_data The product data object.
 	 * @return array
 	 */
@@ -74,7 +74,7 @@ class Reviews extends Extension {
 	/**
 	 * Gets a custom description for the Reviews extension card.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @return string
 	 */
 	private function get_custom_description() {
@@ -108,7 +108,7 @@ class Reviews extends Extension {
 	/**
 	 * If Reviews is not active, registers a metabox on individual download edit screen.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @return void
 	 */
 	public function maybe_do_metabox() {
@@ -131,7 +131,7 @@ class Reviews extends Extension {
 	/**
 	 * Whether EDD Reviews active or not.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 *
 	 * @return bool True if Reviews is active.
 	 */

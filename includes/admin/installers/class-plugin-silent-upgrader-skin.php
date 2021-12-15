@@ -10,7 +10,7 @@ require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader-skin.php';
  *
  * @internal Please do not use this class outside of core WPForms development. May be removed at any time.
  *
- * @since 2.11.x
+ * @since 2.11.4
  */
 class PluginSilentUpgraderSkin extends \WP_Upgrader_Skin {
 
@@ -18,7 +18,7 @@ class PluginSilentUpgraderSkin extends \WP_Upgrader_Skin {
 	 * Empty out the header of its HTML content and only check to see if it has
 	 * been performed or not.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 */
 	public function header() {
 	}
@@ -26,7 +26,7 @@ class PluginSilentUpgraderSkin extends \WP_Upgrader_Skin {
 	/**
 	 * Empty out the footer of its HTML contents.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 */
 	public function footer() {
 	}
@@ -35,7 +35,7 @@ class PluginSilentUpgraderSkin extends \WP_Upgrader_Skin {
 	 * Instead of outputting HTML for errors, just return them.
 	 * Ajax request will just ignore it.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 *
 	 * @param array $errors Array of errors with the install process.
 	 *
@@ -48,7 +48,7 @@ class PluginSilentUpgraderSkin extends \WP_Upgrader_Skin {
 	/**
 	 * Empty out JavaScript output that calls function to decrement the update counts.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 *
 	 * @param string $type Type of update count to decrement.
 	 */

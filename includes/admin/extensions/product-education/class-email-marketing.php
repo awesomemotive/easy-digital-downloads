@@ -8,7 +8,7 @@
  * @subpackage  EmailMarketing
  * @copyright   Copyright (c) 2021, Easy Digital Downloads
  * @license     https://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       2.11.x
+ * @since       2.11.4
  */
 namespace EDD\Admin\Settings;
 
@@ -34,7 +34,7 @@ class EmailMarketing extends Extension {
 	/**
 	 * Adds an email marketing section to the Marketing tab.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @param array $sections
 	 * @return array
 	 */
@@ -54,7 +54,7 @@ class EmailMarketing extends Extension {
 	/**
 	 * Gets the customized configuration for the extension card.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @param \EDD\Admin\Extensions\ProductData $product_data The product data object.
 	 * @return array
 	 */
@@ -74,7 +74,7 @@ class EmailMarketing extends Extension {
 	/**
 	 * Adds the email marketing extensions as cards.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @return void
 	 */
 	public function field() {
@@ -96,7 +96,7 @@ class EmailMarketing extends Extension {
 	/**
 	 * Overrides the body array sent to the Products API.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @return array
 	 */
 	protected function get_api_body() {
@@ -108,7 +108,7 @@ class EmailMarketing extends Extension {
 	/**
 	 * Whether any email marketing extension is active.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 *
 	 * @return bool True if any email marketing extension is active.
 	 */

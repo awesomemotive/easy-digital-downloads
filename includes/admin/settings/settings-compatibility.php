@@ -37,7 +37,7 @@ add_action(
 		}
 
 		/**
-		 * Ensures compatibility with EDD 2.11.x and Recurring payments prior to Recurring being released to move
+		 * Ensures compatibility with EDD 2.11.4 and Recurring payments prior to Recurring being released to move
 		 * settings for all extension settings to 'payments'.
 		 */
 		if ( function_exists( 'edd_recurring_settings_section' ) && false !== has_filter( 'edd_settings_sections_extensions', 'edd_recurring_settings_section' ) ) {
@@ -48,7 +48,7 @@ add_action(
 		}
 
 		/**
-		 * Ensures compatibility with EDD 2.11.x and Reviews' settings being in the extensions section.
+		 * Ensures compatibility with EDD 2.11.4 and Reviews' settings being in the extensions section.
 		 */
 		if ( function_exists( 'edd_reviews' ) ) {
 			$reviews = edd_reviews();
@@ -61,7 +61,7 @@ add_action(
 		}
 
 		/**
-		 * Move the Free Downloads settings to the Marketing section (EDD 2.11.x).
+		 * Move the Free Downloads settings to the Marketing section (EDD 2.11.4).
 		 */
 		if ( false !== has_filter( 'edd_settings_sections_extensions', 'edd_free_downloads_add_settings_section' ) ) {
 			remove_filter( 'edd_settings_sections_extensions', 'edd_free_downloads_add_settings_section' );
@@ -71,7 +71,7 @@ add_action(
 		}
 
 		/**
-		 * Move the ActiveCampaign settings to the Marketing section (EDD 2.11.x).
+		 * Move the ActiveCampaign settings to the Marketing section (EDD 2.11.4).
 		 */
 		if ( function_exists( 'edd_activecampaign' ) ) {
 			$activecampaign = edd_activecampaign();
@@ -84,7 +84,7 @@ add_action(
 		}
 
 		/**
-		 * Move the GetResponse settings to the Marketing section (EDD 2.11.x).
+		 * Move the GetResponse settings to the Marketing section (EDD 2.11.4).
 		 */
 		if ( function_exists( 'edd_getresponse_add_settings_section' ) ) {
 			if ( false !== has_filter( 'edd_settings_sections_extensions', 'edd_getresponse_add_settings_section' ) ) {
@@ -101,7 +101,7 @@ add_action(
 		}
 
 		/**
-		 * Move the Campaign Monitor settings to the Marketing section (EDD 2.11.x).
+		 * Move the Campaign Monitor settings to the Marketing section (EDD 2.11.4).
 		 */
 		if ( function_exists( 'eddcp_settings_section' ) && false !== has_filter( 'edd_settings_sections_extensions', 'eddcp_settings_section' ) ) {
 			remove_filter( 'edd_settings_sections_extensions', 'eddcp_settings_section' );
@@ -111,7 +111,7 @@ add_action(
 		}
 
 		/**
-		 * Move the ConvertKit settings to the Marketing section (EDD 2.11.x).
+		 * Move the ConvertKit settings to the Marketing section (EDD 2.11.4).
 		 */
 		if ( class_exists( 'EDD_ConvertKit' ) && method_exists( 'EDD_ConvertKit', 'instance' ) ) {
 			$convertkit = EDD_ConvertKit::instance();
@@ -126,7 +126,7 @@ add_action(
 		}
 
 		/**
-		 * Move the AWeber settings to the Marketing section (EDD 2.11.x).
+		 * Move the AWeber settings to the Marketing section (EDD 2.11.4).
 		 */
 		if ( class_exists( 'EDD_Aweber' ) && method_exists( 'EDD_Aweber', 'instance' ) ) {
 			$aweber = EDD_Aweber::instance();
@@ -139,7 +139,7 @@ add_action(
 		}
 
 		/**
-		 * Move the MailPoet settings to the Marketing section (EDD 2.11.x).
+		 * Move the MailPoet settings to the Marketing section (EDD 2.11.4).
 		 */
 		if ( class_exists( 'EDD_MailPoet' ) && method_exists( 'EDD_MailPoet', 'instance' ) ) {
 			$mailpoet = EDD_MailPoet::instance();
@@ -152,7 +152,7 @@ add_action(
 		}
 
 		/**
-		 * Move the Invoices settings to the Payments section (EDD 2.11.x).
+		 * Move the Invoices settings to the Payments section (EDD 2.11.4).
 		 */
 		if ( false !== has_filter( 'edd_settings_sections_extensions', 'edd_invoices_register_settings_section' ) ) {
 			remove_filter( 'edd_settings_sections_extensions', 'edd_invoices_register_settings_section' );

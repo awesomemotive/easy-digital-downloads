@@ -9,7 +9,7 @@ class ExtensionsAPI {
 	/**
 	 * Gets the product data from the EDD Products API.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @param array $body    The body for the API request.
 	 * @param int   $item_id The product ID, if querying a single product.
 	 * @return false|array|ProductData
@@ -95,7 +95,7 @@ class ExtensionsAPI {
 	 * If the transient exists and has data, it will be an object.
 	 * If it exists but the API request failed, it will be an empty array.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @return object|array|false
 	 */
 	private function get_all_product_data() {
@@ -139,7 +139,7 @@ class ExtensionsAPI {
 	/**
 	 * Gets the product data as needed for the extension manager.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @param object $item
 	 * @return array
 	 */
@@ -158,7 +158,7 @@ class ExtensionsAPI {
 	/**
 	 * Gets the base url for the products remote request.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @return string
 	 */
 	private function get_products_url() {
@@ -174,7 +174,7 @@ class ExtensionsAPI {
 	 * A class may override this by setting an array to query a tag or category.
 	 * Note that the first array key/value pair are used to create the option name.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @param int $item_id The product ID.
 	 * @return array
 	 */
@@ -188,7 +188,7 @@ class ExtensionsAPI {
 	 * Gets the first key of an array.
 	 * (Shims array_key_first for PHP < 7.3)
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @param array $array
 	 * @return string|null
 	 */

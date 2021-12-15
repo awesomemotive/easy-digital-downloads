@@ -1005,7 +1005,7 @@ function maybe_add_jilt_notice_to_abandoned_payment( $payment_id ) {
  */
 function edd_sendwp_callback( $args ) {
 
-	_edd_deprecated_function( __FUNCTION__, '2.11.x' );
+	_edd_deprecated_function( __FUNCTION__, '2.11.4' );
 
 	// Connection status partial label based on the state of the SendWP email sending setting (Tools -> SendWP)
 	$connected  = '<a href="https://app.sendwp.com/dashboard" target="_blank" rel="noopener noreferrer">';
@@ -1060,7 +1060,7 @@ function edd_sendwp_callback( $args ) {
  */
 function edd_sendwp_remote_install_handler () {
 
-	_edd_deprecated_function( __FUNCTION__, '2.11.x' );
+	_edd_deprecated_function( __FUNCTION__, '2.11.4' );
 
 	if ( ! current_user_can( 'manage_shop_settings' ) ) {
 		wp_send_json_error( array(
@@ -1136,7 +1136,7 @@ add_action( 'wp_ajax_edd_sendwp_remote_install', 'edd_sendwp_remote_install_hand
  */
 function edd_sendwp_disconnect () {
 
-	_edd_deprecated_function( __FUNCTION__, '2.11.x' );
+	_edd_deprecated_function( __FUNCTION__, '2.11.4' );
 
 	if ( ! current_user_can( 'manage_shop_settings' ) ) {
 		wp_send_json_error( array(
@@ -1192,7 +1192,7 @@ add_filter( 'edd_validate_url_token', function( $ret, $url, $query_args, $origin
  */
 function edd_reviews_location() {
 
-	_edd_deprecated_function( __FUNCTION__, '2.11.x' );
+	_edd_deprecated_function( __FUNCTION__, '2.11.4' );
 
 	$possible_locations = array( 'edd-reviews/edd-reviews.php', 'EDD-Reviews/edd-reviews.php' );
 	$reviews_location   = '';
@@ -1216,7 +1216,7 @@ function edd_reviews_location() {
  */
 function edd_render_review_status_metabox() {
 
-	_edd_deprecated_function( __FUNCTION__, '2.11.x' );
+	_edd_deprecated_function( __FUNCTION__, '2.11.4' );
 
 	$reviews_location = edd_reviews_location();
 	$is_promo_active  = edd_is_promo_active();
