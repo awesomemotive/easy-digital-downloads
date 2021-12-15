@@ -9,7 +9,7 @@
  * @subpackage  Settings Compatibility
  * @copyright   Copyright (c) 2021, Easy Digital Downloads
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       2.11.3
+ * @since       2.11.4
  */
 
 // Exit if accessed directly
