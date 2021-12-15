@@ -98,8 +98,8 @@ class ExtensionsAPI {
 	private function get_all_product_data() {
 		// Possibly all product data is in an option. If it is, return it.
 		$all_product_data = get_option( 'edd_all_extension_data' );
-		if ( ! empty( $all_product_data['products'] ) && ! $this->option_has_expired( $all_product_data ) ) {
-			return $all_product_data['products'];
+		if ( ! $this->option_has_expired( $all_product_data ) ) {
+			return ! empty( $all_product_data['products'] ) ? $all_product_data['products'] : false;
 		}
 
 		// Otherwise, query the API.
@@ -117,13 +117,15 @@ class ExtensionsAPI {
 			)
 		);
 
-		$data = array(
-			'timeout' => strtotime( '+1 hour', time() ),
-		);
-
 		// If there was an API error, set option and return false.
 		if ( is_wp_error( $request ) || ( 200 !== wp_remote_retrieve_response_code( $request ) ) ) {
-			update_option( 'edd_all_extension_data', $data, false );
+			update_option(
+				'edd_all_extension_data',
+				array(
+					'timeout' => strtotime( '+1 hour', time() ),
+				),
+				false
+			);
 
 			return false;
 		}
