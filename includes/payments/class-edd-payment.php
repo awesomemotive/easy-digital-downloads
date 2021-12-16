@@ -1067,7 +1067,7 @@ class EDD_Payment {
 							'product_id'   => $item['id'],
 							'product_name' => $item['name'],
 							'price_id'     => isset( $item['item_number']['options']['price_id'] ) && is_numeric( $item['item_number']['options']['price_id'] )
-								? $item['item_number']['options']['price_id']
+								? absint( $item['item_number']['options']['price_id'] )
 								: null,
 							'cart_index'   => $key,
 							'quantity'     => $item['quantity'],
