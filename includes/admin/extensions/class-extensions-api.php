@@ -217,6 +217,6 @@ class ExtensionsAPI {
 	 * @return bool
 	 */
 	private function option_has_expired( $option ) {
-		return ! empty( $option['timeout'] ) && time() > $option['timeout'];
+		return empty( $option['timeout'] ) || time() > $option['timeout'];
 	}
 }
