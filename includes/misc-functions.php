@@ -80,12 +80,19 @@ function edd_is_debug_mode() {
  *
  * @since 3.0
  *
- * @return bool $retval True if dev, false if not.
+ * @return bool $is_dev_environment True if development environment; otherwise false.
  */
 function edd_is_dev_environment() {
 
+	// wp_get_environment_type was added in WordPress 5.5.
+	if ( function_exists( 'wp_get_environment_type' ) ) {
+		$environment = wp_get_environment_type();
+
+		return apply_filters( 'edd_is_dev_environment', in_array( $environment, array( 'local', 'development' ), true ) );
+	}
+
 	// Assume not a development environment
-	$retval = false;
+	$is_dev_environment = false;
 
 	// Get this one time and use it below
 	$network_url = network_site_url( '/' );
@@ -115,13 +122,13 @@ function edd_is_dev_environment() {
 	// Loop through all strings
 	foreach ( $strings as $string ) {
 		if ( stristr( $network_url, $string ) ) {
-			$retval = $string;
+			$is_dev_environment = true;
 			break;
 		}
 	}
 
 	// Filter & return
-	return apply_filters( 'edd_is_dev_environment', $retval );
+	return apply_filters( 'edd_is_dev_environment', $is_dev_environment );
 }
 
 /**
@@ -529,11 +536,19 @@ function _edd_deprecated_function( $function, $version, $replacement = null, $ba
 	if ( WP_DEBUG && apply_filters( 'edd_deprecated_function_trigger_error', $show_errors ) ) {
 		if ( ! is_null( $replacement ) ) {
 			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s! Use %3$s instead.', 'easy-digital-downloads' ), $function, $version, $replacement ) );
-			trigger_error(  print_r( $backtrace, 1 ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+
+			if ( ! empty( $backtrace ) ) {
+				trigger_error(  print_r( $backtrace, 1 ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+			}
+
 			// Alternatively we could dump this to a file.
 		} else {
 			trigger_error( sprintf( __( '%1$s is <strong>deprecated</strong> since Easy Digital Downloads version %2$s with no alternative available.', 'easy-digital-downloads' ), $function, $version ) );
-			trigger_error( print_r( $backtrace, 1 ) );// Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+
+			if ( ! empty( $backtrace ) ) {
+				trigger_error( print_r( $backtrace, 1 ) );// Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+			}
+
 			// Alternatively we could dump this to a file.
 		}
 	}
@@ -570,11 +585,18 @@ function _edd_deprected_argument( $argument, $function, $version, $replacement =
 	if ( WP_DEBUG && apply_filters( 'edd_deprecated_argument_trigger_error', $show_errors ) ) {
 		if ( ! is_null( $replacement ) ) {
 			trigger_error( sprintf( __( 'The %1$s argument of %2$s is <strong>deprecated</strong> since Easy Digital Downloads version %3$s! Please use %4$s instead.', 'easy-digital-downloads' ), $argument, $function, $version, $replacement ) );
-			trigger_error(  print_r( $backtrace, 1 ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+
+			if ( ! empty( $backtrace ) ) {
+				trigger_error(  print_r( $backtrace, 1 ) ); // Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+			}
+
 			// Alternatively we could dump this to a file.
 		} else {
 			trigger_error( sprintf( __( 'The %1$s argument of %2$s is <strong>deprecated</strong> since Easy Digital Downloads version %3$s with no alternative available.', 'easy-digital-downloads' ), $argument, $function, $version ) );
-			trigger_error( print_r( $backtrace, 1 ) );// Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+
+			if ( ! empty( $backtrace ) ) {
+				trigger_error( print_r( $backtrace, 1 ) );// Limited to previous 1028 characters, but since we only need to move back 1 in stack that should be fine.
+			}
 			// Alternatively we could dump this to a file.
 		}
 	}

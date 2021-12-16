@@ -64,6 +64,28 @@ a.edd-delete:hover {
 
 /* General Settings Styles
 -------------------------------------------------------------- */
+body.post-type-download #contextual-help-link-wrap,
+body.post-type-download #screen-options-link-wrap {
+	top: 5px !important;
+}
+
+body.post-type-download #screen-meta {
+	margin: 0px 0px -1px -20px;
+}
+
+#edd-header {
+	border-top: 5px solid #0c5d95;
+	border-bottom: 1px solid #c3c4c7;
+	padding: 22px 0px;
+	margin-left: -20px;
+	background: #fff;
+}
+
+#edd-header img {
+	display: block;
+	max-width: 300px;
+	margin: 0 0 0 20px;
+}
 
 .edd_datepicker {
 	height: 29px;
@@ -1151,7 +1173,6 @@ textarea[name="edd-note"] {
 }
 
 .edit-tags-php.post-type-download .wrap .nav-tab-wrapper .page-title-action,
-.edit-php.post-type-download .wrap .nav-tab-wrapper .page-title-action,
 .download_page_edd-customers .wrap .nav-tab-wrapper .page-title-action,
 .download_page_edd-discounts .wrap .nav-tab-wrapper .page-title-action,
 .download_page_edd-payment-history .wrap .nav-tab-wrapper .page-title-action {
