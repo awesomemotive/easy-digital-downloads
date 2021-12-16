@@ -152,6 +152,26 @@ abstract class Extension {
 	}
 
 	/**
+	 * Whether the section for an individual product can be registered/shown.
+	 *
+	 * @since 2.11.4
+	 * @return bool
+	 */
+	protected function can_show_product_section() {
+		if ( ! $this->is_edd_settings_screen() ) {
+			return false;
+		}
+		if ( $this->is_activated() ) {
+			return false;
+		}
+		if ( ! $this->get_product_data() ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Gets the array for the body of the API request.
 	 * Classes may need to override this (for example, to query a specific tag).
 	 * Note that the first array key/value pair are used to create the option name.

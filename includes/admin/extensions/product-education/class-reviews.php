@@ -93,13 +93,7 @@ class Reviews extends Extension {
 	 * @return array
 	 */
 	public function add_section( $sections ) {
-		if ( ! $this->is_edd_settings_screen() ) {
-			return $sections;
-		}
-		if ( $this->is_activated() ) {
-			return $sections;
-		}
-		if ( ! $this->get_product_data() ) {
+		if ( ! $this->can_show_product_section() ) {
 			return $sections;
 		}
 
