@@ -99,6 +99,9 @@ class Reviews extends Extension {
 		if ( $this->is_activated() ) {
 			return $sections;
 		}
+		if ( ! $this->get_product_data() ) {
+			return $sections;
+		}
 
 		$sections['reviews'] = __( 'Reviews', 'easy-digital-downloads' );
 

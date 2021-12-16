@@ -94,6 +94,9 @@ class Invoices extends Extension {
 		if ( $this->is_activated() ) {
 			return $sections;
 		}
+		if ( ! $this->get_product_data() ) {
+			return $sections;
+		}
 
 		$sections['invoices'] = __( 'Invoices', 'easy-digital-downloads' );
 
