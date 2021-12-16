@@ -281,7 +281,7 @@ function get_order_items( $purchase_data ) {
 			$item_amount = 0;
 		}
 		$items[ $i ] = array(
-			'name'        => stripslashes_deep( html_entity_decode( edd_get_cart_item_name( $item ), ENT_COMPAT, 'UTF-8' ) ),
+			'name'        => stripslashes_deep( html_entity_decode( substr( edd_get_cart_item_name( $item ), 0, 127 ), ENT_COMPAT, 'UTF-8' ) ),
 			'quantity'    => $item['quantity'],
 			'unit_amount' => array(
 				'currency_code' => edd_get_currency(),

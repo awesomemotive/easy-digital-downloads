@@ -243,7 +243,7 @@ class Data_Migrator {
 				'order_id'      => isset( $post_meta['_edd_log_payment_id'] )  ? $post_meta['_edd_log_payment_id']  : 0,
 				'price_id'      => isset( $post_meta['_edd_log_price_id'] )    ? $post_meta['_edd_log_price_id']    : 0,
 				'customer_id'   => isset( $post_meta['_edd_log_customer_id'] ) ? $post_meta['_edd_log_customer_id'] : 0,
-				'ip'            => $post_meta['_edd_log_ip'],
+				'ip'            => isset( $post_meta['_edd_log_ip'] ) ? $post_meta['_edd_log_ip'] : '',
 				'date_created'  => $data->post_date_gmt,
 				'date_modified' => $data->post_modified_gmt,
 			);
@@ -712,6 +712,9 @@ class Data_Migrator {
 		 * @param array $meta         All payment meta.
 		 */
 		$order_data = apply_filters( 'edd_30_migration_order_creation_data', $order_data, $payment_meta, $cart_details, $meta );
+
+		// Remove all order status transition actions.
+		remove_all_actions( 'edd_transition_order_status' );
 
 		$order_id = edd_add_order( $order_data );
 

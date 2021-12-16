@@ -151,6 +151,22 @@ var EDD_PayPal = {
 			onCancel: function( data ) {
 				// Hide spinner.
 				spinner.style.display = 'none';
+
+				const formData = new FormData();
+				formData.append( 'action', 'edd_cancel_paypal_order' );
+				return fetch( edd_scripts.ajaxurl, {
+					method: 'POST',
+					body: formData
+				} ).then( function ( response ) {
+					return response.json();
+				} ).then( function ( responseData ) {
+					if ( responseData.success ) {
+						const nonces = responseData.data.nonces;
+						Object.keys( nonces ).forEach( function ( key ) {
+							document.getElementById( 'edd-gateway-' + key ).setAttribute( 'data-' + key + '-nonce', nonces[ key ] );
+						} );
+					}
+				} );
 			}
 		};
 
