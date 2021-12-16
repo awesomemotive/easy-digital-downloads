@@ -29,7 +29,7 @@ class ExtensionsAPI {
 		$product_data = new ProductData();
 
 		// If the data is "fresh" and what we want exists, return it.
-		if ( ! $is_stale ) {
+		if ( $option && ! $is_stale ) {
 			if ( $item_id && ! empty( $option[ $item_id ] ) ) {
 				return $product_data->fromArray( $option[ $item_id ] );
 			} elseif ( ! empty( $option['timeout'] ) ) {
@@ -98,7 +98,7 @@ class ExtensionsAPI {
 	private function get_all_product_data() {
 		// Possibly all product data is in an option. If it is, return it.
 		$all_product_data = get_option( 'edd_all_extension_data' );
-		if ( ! $this->option_has_expired( $all_product_data ) ) {
+		if ( $all_product_data && ! $this->option_has_expired( $all_product_data ) ) {
 			return ! empty( $all_product_data['products'] ) ? $all_product_data['products'] : false;
 		}
 
