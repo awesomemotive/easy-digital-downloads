@@ -344,11 +344,8 @@ class Orders_Tests extends \EDD_UnitTestCase {
 		}
 
 		// There should be 4 records at `null`, and 1 at `1`.
-		$orders = edd_get_orders( array(
-			'product_price_id' => null
-		) );
-
-		$this->assertCount( 4, $orders );
+		$this->assertSame( 4, edd_count_orders( array( 'product_price_id' => null ) ) );
+		$this->assertSame( 1, edd_count_orders( array( 'product_price_id' => 1 ) ) );
 	}
 
 	/**
