@@ -19,7 +19,7 @@
 @supports(grid-area: auto) {
 	.edd-extension-manager__card-group {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+		grid-template-columns: auto;
 		gap: 1em;
 		margin-top: 24px;
 	}
@@ -115,6 +115,10 @@ td .edd-extension-manager__step .button {
 }
 
 @media screen and (min-width: 601px) {
+	.edd-extension-manager__card-group {
+		grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+	}
+
 	.edd-extension-manager__card--horizontal .edd-extension-manager__body {
 		grid-template-columns: minmax(0, 300px) 1fr;
 		grid-template-rows: 1fr auto;
