@@ -2420,7 +2420,7 @@ class EDD_Payment {
 						) );
 
 						$item['item_number']['options']['price_id'] = isset( $item['item_number']['options']['price_id'] ) && is_numeric( $item['item_number']['options']['price_id'] )
-							? $item['item_number']['options']['price_id']
+							? absint( $item['item_number']['options']['price_id'] )
 							: null;
 
 						if ( is_array( $order_item_id ) && ! empty( $order_item_id ) ) {
