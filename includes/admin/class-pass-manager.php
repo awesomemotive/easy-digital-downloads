@@ -99,7 +99,7 @@ class Pass_Manager {
 	/**
 	 * Gets the highest pass and defines its data.
 	 *
-	 * @since 2.11.x
+	 * @since 2.11.4
 	 * @return void
 	 */
 	private function set_highest_pass_data() {
