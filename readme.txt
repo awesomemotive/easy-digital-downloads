@@ -3,7 +3,7 @@ Author URI: https://easydigitaldownloads.com
 Plugin URI: https://easydigitaldownloads.com
 Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214, sumobi, sdavis2702, cklosows, mindctrl, sksmatt, SpencerFinnell, johnstonphilip, brashrebel, drewapicture, johnjamesjacoby, nosegraze, littlerchicken, lisacee
 Donate link: https://easydigitaldownloads.com/donate/
-Tags: ecommerce, sell, checkout, digital store, stripe
+Tags: ecommerce, e-commerce, sell, digital store, stripe
 Requires at least: 4.4
 Tested up to: 5.8.1
 Requires PHP: 5.3
@@ -50,7 +50,7 @@ Easy Digital Downloads has been translated into more than two dozen languages an
 
 = Support for many payment gateways, including Stripe and PayPal =
 
-The internet has made it possible for anyone to sell their products to a world-wide audience. No matter where you live, Easy Digital Downloads can be your eCommerce solution. We offer integrations for the most common merchant processors and, through 3rd party extensions, support for many, many more as well.
+The internet has made it possible for anyone to sell their products to a world-wide audience. No matter where you live, Easy Digital Downloads can be your e-Commerce solution. We offer integrations for the most common merchant processors and, through 3rd party extensions, support for many, many more as well.
 
 Payment gateways supported in the free Easy Digital Downloads plugin:
 
@@ -107,7 +107,7 @@ The Easy Digital Downloads API makes it possible for developers to make customiz
 
 - Modifying the checkout form
 - Overriding default plugin behavior
-- Generating custom ecommerce reports
+- Generating custom e-Commerce reports
 - Extending native features
 - Creating new product page templates
 - Integrating with other plugins and web applications
@@ -122,10 +122,6 @@ The Easy Digital Downloads API makes it possible for developers to make customiz
 
 Easy Digital Downloads is backed by top-notch technical support from our globally distributed full-time support team. We also have an [extensive documentation site available](https://docs.easydigitaldownloads.com/?utm_medium=readme&utm_source=wporg&utm_campaign=lite-plugin&utm_content=docs&utm_term=description). If you’re looking for faster support via email, we encourage you to [purchase an Easy Digital Downloads pass](https://easydigitaldownloads.com/pricing/?utm_medium=readme&utm_source=wporg&utm_campaign=lite-plugin&utm_content=upgrade&utm_term=description) or premium extension.
 
-= Meet the team =
-
-Easy Digital Downloads is built by [Sandhills Development](https://sandhillsdev.com/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=sandhills&utm_term=description). We make [popular WordPress plugins](https://sandhillsdev.com/projects/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=popular&utm_term=description) used by hundreds of thousands of people just like you. [Get to know us here](https://sandhillsdev.com/about/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=about&utm_term=description)!
-
 > EDD has been a long standing, rock-solid e-commerce solution for WordPress. The team lives and breathes WordPress, understands the platform, and is embedded in the community.
 
 > Joe Casabona - Creator Courses
@@ -135,7 +131,7 @@ Easy Digital Downloads is built by [Sandhills Development](https://sandhillsdev.
 Check out some of our popular posts for actionable advice for running your business and selling digital files on the web.
 
 - [The 12 Most Popular Digital Products You Can Sell Online](https://easydigitaldownloads.com/blog/the-12-most-popular-digital-products-you-can-sell-online/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_term=description)
-- [The Reality of Refunds for Digital Products](https://easydigitaldownloads.com/blog/the-reality-of-refunds-for-digital-products/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=refunds&utm_term=description)
+- [How to Add Lead Magnets in WordPress to Grow Your Email List](https://easydigitaldownloads.com/blog/how-to-add-lead-magnets-in-wordpress-to-grow-your-email-list/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=lead-magnets&utm_term=description)
 - [How to Successfully Launch Your Digital Product](https://easydigitaldownloads.com/blog/how-to-successfully-launch-your-digital-product/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=launch&utm_term=description)
 - [Protecting Your Digital Products](https://easydigitaldownloads.com/blog/protecting-your-digital-products/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=protecting&utm_term=description)
 - [The Top Ten Benefits of Selling Digital Products](https://easydigitaldownloads.com/blog/top-10-benefits-selling-digital-products/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=benefits&utm_term=description)
@@ -221,9 +217,9 @@ Yes! EDD integrates directly with several affiliate platforms that provide compl
 [Check out AffiliateWP](https://affiliatewp.com?utm_source=edd_readme&utm_medium=faq_tab&utm_content=home&utm_campaign=readme)
 
 = Can I give my customers downloadable PDF Invoices? =
-Yes, EDD has an extension that allows for downloadable invoices to be generated for each payment.
+Yes, with the Invoices extension, you can provide beautiful and downloadable invoices to your customers.
 
-[PDF Invoices](https://easydigitaldownloads.com/downloads/pdf-invoices/?utm_source=pdf-invoices&utm_medium=faq_tab&utm_content=pdf-invoices&utm_campaign=readme)
+[Invoices](https://easydigitaldownloads.com/downloads/edd-invoices/?utm_source=edd-invoices&utm_medium=faq_tab&utm_content=pdf-invoices&utm_campaign=readme)
 
 = Are recurring payments supported? =
 
