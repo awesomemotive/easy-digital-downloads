@@ -252,7 +252,6 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 * Improvement: If a license key has not been entered for a specific product, but it's covered by an existing pass key, use the pass key for updates.
 * Improvement: Remove a confusing link for licenses near expiration date.
 * Fix: In some cases, download links were unexpectedly not allowing users to download files.
-* Dev: CLI - Prevent PHP error when a malformed payments command is used.
 * Fix: EDD Pass Manager was not saving the license key to the pass data during activation.
 * Fix: Purchase receipt emails were always assumed to be successfully sent, even if they weren't.
 * Fix: Variable prices were missing the index when a product was first saved.
@@ -261,6 +260,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 * Fix: PayPal Standard - Transaction links were not directing to the transation.
 * Fix: The Arabic translation file caused a fatal error; it has been removed in deference to the repository translation.
 * Fix: Improve earnings export performance.
+* Dev: CLI - Prevent PHP error when a malformed payments command is used.
 * Dev: Add helper methods the to the Pass Manager class.
 * Dev: Create an option for the store activation date.
 * Dev: Introduce the EDD extension registry for managing licensed extensions.
