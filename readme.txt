@@ -245,8 +245,8 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 
 = 2.11.4, December 27, 2021 =
 * New: Add EDD notifications to EDD screens.
-* New: Add product education to EDD settings screens.
-* New: Add dismissible review request to dashboard, EDD settings screens.
+* New: Reorganize some settings locations to make them more predictable for users.
+* New: Improve user opportunities to give feedback to the EDD team.
 * New: Add support for webp images.
 * Improvement: Add the `edd_ajax_remove_discount_response` filter inside the AJAX remove discount function.
 * Improvement: If a license key has not been entered for a specific product, but it's covered by an existing pass key, use the pass key for updates.
