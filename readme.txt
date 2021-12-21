@@ -5,9 +5,9 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: ecommerce, e-commerce, sell, digital store, stripe
 Requires at least: 4.4
-Tested up to: 5.8.1
+Tested up to: 5.8
 Requires PHP: 5.3
-Stable Tag: 2.11.3.1
+Stable Tag: 2.11.4
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products the simple way. Easily build an online store complete with a cart system, checkout forms, reports, coupons, and more!
@@ -242,6 +242,33 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 13. Pay with PayPal modal
 
 == Changelog ==
+
+= 2.11.4, December 27, 2021 =
+* New: Add notifications to EDD screens.
+* New: Reorganize some settings locations to make them more predictable for users.
+* New: Improve user opportunities to give feedback to the EDD team.
+* New: Add support for webp images.
+* Improvement: Add the `edd_ajax_remove_discount_response` filter inside the AJAX remove discount function.
+* Improvement: If a license key has not been entered for a specific product, but it's covered by an existing pass key, use the pass key for updates.
+* Improvement: Remove a confusing link for licenses near expiration date.
+* Fix: In some cases, download links were unexpectedly not allowing users to download files.
+* Fix: EDD Pass Manager was not saving the license key to the pass data during activation.
+* Fix: Purchase receipt emails were always assumed to be successfully sent, even if they weren't.
+* Fix: Variable prices were missing the index when a product was first saved.
+* Fix: Exporting earnings results with an incorrect date range generated invalid data.
+* Fix: A PHP notice was generated when an invalid license key was entered.
+* Fix: PayPal Standard - Transaction links were not directing to the transation.
+* Fix: The Arabic translation file caused a fatal error; it has been removed in deference to the repository translation.
+* Fix: Improve earnings export performance.
+* Dev: CLI - Prevent PHP error when a malformed payments command is used.
+* Dev: Add helper methods the to the Pass Manager class.
+* Dev: Create an option for the store activation date.
+* Dev: Introduce the EDD extension registry for managing licensed extensions.
+* Dev: Save EDD licensed products to options for improved reliability.
+* Dev: Explicitly declare the `payment_stats` property for `EDD_Payment_Stats`.
+* Dev: Improve performance of `edd_get_settings_tabs`.
+* Dev: FILTER_SANITIZE_STRING is deprecated in PHP 8.1.
+
 = 2.11.3.1, November 1, 2021 =
 * Fix: Fatal error in PHP versions lower than 7.3.
 
