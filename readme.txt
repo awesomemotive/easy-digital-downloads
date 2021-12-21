@@ -244,7 +244,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 == Changelog ==
 
 = 2.11.4, December 27, 2021 =
-* New: Add EDD notifications to EDD screens.
+* New: Add notifications to EDD screens.
 * New: Reorganize some settings locations to make them more predictable for users.
 * New: Improve user opportunities to give feedback to the EDD team.
 * New: Add support for webp images.
