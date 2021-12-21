@@ -25,7 +25,7 @@ $template_container = '
 	background-color: #ffffff;
 	border: 1px solid #e9e9e9;
 	border-radius:10px !important;
-	padding: 20px 80px 60px;
+	padding: 20px 20px 60px;
 ';
 $template_header = '
 	color: #00000;
@@ -86,7 +86,7 @@ $heading = EDD()->emails->get_heading();
                     <img src="<?= $logo_img_src ?>" alt="" style="<?= $logo_img ?>">
                 <?php endif; ?>
 
-                <table border="0" cellpadding="0" cellspacing="0" width="480" id="template_container"
+                <table border="0" cellpadding="0" cellspacing="0" width="600" id="template_container"
                        style="<?php echo $template_container; ?>">
                     <?php if (!empty ($heading)) : ?>
                         <tr>
