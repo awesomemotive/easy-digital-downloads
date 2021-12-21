@@ -26,6 +26,7 @@ $template_container = '
 	border: 1px solid #e9e9e9;
 	border-radius:10px !important;
 	padding: 20px 20px 60px;
+	margin: 0 15px;
 ';
 $template_header = '
 	color: #00000;
@@ -47,6 +48,7 @@ $body_content_inner = "
 	font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
 	line-height:150%;
 	text-align:left;
+	padding: 20px 0;
 ";
 $header_content_h1 = "
 	color: #333333;
@@ -111,7 +113,7 @@ $heading = EDD()->emails->get_heading();
                                 <tr>
                                     <td valign="top" style="<?php echo $body_content; ?>">
                                         <!-- Content -->
-                                        <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                             <tr>
                                                 <td valign="top">
                                                     <div style="<?php echo $body_content_inner; ?>">
