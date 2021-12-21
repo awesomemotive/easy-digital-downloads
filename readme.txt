@@ -260,7 +260,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 * Fix: A PHP notice was generated when an invalid license key was entered.
 * Fix: PayPal Standard - Transaction links were not directing to the transation.
 * Fix: The Arabic translation file caused a fatal error; it has been removed in deference to the repository translation.
-* Dev: Improve earnings export performance.
+* Fix: Improve earnings export performance.
 * Dev: Add helper methods the to the Pass Manager class.
 * Dev: Create an option for the store activation date.
 * Dev: Introduce the EDD extension registry for managing licensed extensions.
