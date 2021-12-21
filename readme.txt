@@ -252,7 +252,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 * Improvement: If a license key has not been entered for a specific product, but it's covered by an existing pass key, use the pass key for updates.
 * Improvement: Remove a confusing link for licenses near expiration date.
 * Fix: In some cases, download links were unexpectedly not allowing users to download files.
-* Fix: CLI - Prevent PHP error when a malformed payments command is used.
+* Dev: CLI - Prevent PHP error when a malformed payments command is used.
 * Fix: EDD Pass Manager was not saving the license key to the pass data during activation.
 * Fix: Purchase receipt emails were always assumed to be successfully sent, even if they weren't.
 * Fix: Variable prices were missing the index when a product was first saved.
