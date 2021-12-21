@@ -20,7 +20,6 @@ class Tests_Languages extends EDD_UnitTestCase {
 
 		$this->assertTrue( file_exists( EDD_PLUGIN_DIR . '/languages/easy-digital-downloads-af.mo') );
 		$this->assertTrue( file_exists( EDD_PLUGIN_DIR . '/languages/easy-digital-downloads-an.mo') );
-		$this->assertTrue( file_exists( EDD_PLUGIN_DIR . '/languages/easy-digital-downloads-ar.mo') );
 		$this->assertTrue( file_exists( EDD_PLUGIN_DIR . '/languages/easy-digital-downloads-az.mo') );
 		$this->assertTrue( file_exists( EDD_PLUGIN_DIR . '/languages/easy-digital-downloads-be.mo') );
 		$this->assertTrue( file_exists( EDD_PLUGIN_DIR . '/languages/easy-digital-downloads-bg_BG.mo') );
