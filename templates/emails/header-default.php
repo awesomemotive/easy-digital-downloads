@@ -69,7 +69,7 @@ $logo_img = '
     margin-bottom: 40px;
     display: block;
 ';
-$logo_img_src = function_exists('WPI') ? WPI()->templates->get_platform_logo_url() : null;
+$logo_img_src = apply_filters('email_logo_url', null);
 
 $heading = EDD()->emails->get_heading();
 ?>
