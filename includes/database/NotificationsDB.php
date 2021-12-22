@@ -24,7 +24,7 @@ class NotificationsDB extends \EDD_DB {
 
 		$this->table_name  = $wpdb->prefix . 'edd_notifications';
 		$this->primary_key = 'id';
-		$this->version     = '0.2'; // @todo update to 1.0 pre-release
+		$this->version     = '1.0';
 
 		add_action( 'edd_daily_scheduled_events', static function () {
 			$importer = new NotificationImporter();
