@@ -116,7 +116,11 @@ class NotificationApiTests extends \EDD_UnitTestCase {
 
 		$this->assertEquals( 200, $response->get_status() );
 		$this->assertCount( 5, $response_data['active'] );
-		$this->assertEqualsCanonicalizing( self::$notificationIds, wp_list_pluck( $response_data['active'], 'id' ) );
+		if ( method_exists( $this, 'assertEqualsCanonicalizing' ) ) {
+			$this->assertEqualsCanonicalizing( self::$notificationIds, wp_list_pluck( $response_data['active'], 'id' ) );
+		} else {
+			$this->assertEquals( self::$notificationIds, wp_list_pluck( $response_data['active'], 'id' ), '', 0, 1, true, true );
+		}
 	}
 
 	/**
