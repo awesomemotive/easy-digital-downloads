@@ -6,7 +6,7 @@ Donate link: https://easydigitaldownloads.com/donate/
 Tags: ecommerce, e-commerce, sell, digital store, stripe
 Requires at least: 4.4
 Tested up to: 5.8
-Requires PHP: 5.3
+Requires PHP: 5.4
 Stable Tag: 2.11.4
 License: GNU Version 2 or Any Later Version
 
