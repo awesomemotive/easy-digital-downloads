@@ -26,16 +26,23 @@ class NotificationsDB extends \EDD_DB {
 		$this->primary_key = 'id';
 		$this->version     = '1.0';
 
-		add_action( 'edd_daily_scheduled_events', static function () {
-			$importer = new NotificationImporter();
-			$importer->run();
-		} );
+		add_action( 'edd_daily_scheduled_events', array( $this, 'schedule_daily_notification_checks' ) );
 
 		$db_version = get_option( "{$this->table_name}_db_version" );
 		if ( version_compare( $db_version, $this->version, '>=' ) ) {
 			return;
 		}
 		$this->create_table();
+	}
+
+	/**
+	 * Add a cron event to check for new notifications.
+	 *
+	 * @since 2.11.4
+	 */
+	public static function schedule_daily_notification_checks() {
+		$importer = new NotificationImporter();
+		$importer->run();
 	}
 
 	/**
