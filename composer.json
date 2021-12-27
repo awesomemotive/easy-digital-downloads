@@ -10,7 +10,10 @@
     },
     "config": {
         "disable-tls": true,
-        "secure-http": false
+        "secure-http": false,
+        "allow-plugins": {
+          "composer/installers": true
+        }
     },
     "require": {
         "php": ">=5.3.0",
