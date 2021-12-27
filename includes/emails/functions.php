@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @param bool         $admin_notice Whether to send the admin email notification or not (default: true)
  * @param EDD_Payment  $payment      Payment object for payment ID.
  * @param EDD_Customer $customer     Customer object for associated payment.
- * @return void
+ * @return bool Whether the email was sent successfully.
  */
 function edd_email_purchase_receipt( $payment_id, $admin_notice = true, $to_email = '', $payment = null, $customer = null ) {
 	if ( is_null( $payment ) ) {
@@ -63,11 +63,13 @@ function edd_email_purchase_receipt( $payment_id, $admin_notice = true, $to_emai
 	$headers = apply_filters( 'edd_receipt_headers', $emails->get_headers(), $payment_id, $payment_data );
 	$emails->__set( 'headers', $headers );
 
-	$emails->send( $to_email, $subject, $message, $attachments );
+	$sent = $emails->send( $to_email, $subject, $message, $attachments );
 
 	if ( $admin_notice && ! edd_admin_notices_disabled( $payment_id ) ) {
 		do_action( 'edd_admin_sale_notice', $payment_id, $payment_data );
 	}
+
+	return $sent;
 }
 
 /**
@@ -281,101 +283,6 @@ function edd_get_email_names( $user_info, $payment = false ) {
 
 	return $email_names;
 }
-
-/**
- * Handle installation and connection for SendWP via ajax
- *
- * @since 2.9.15
- */
-function edd_sendwp_remote_install_handler () {
-
-	if ( ! current_user_can( 'manage_shop_settings' ) ) {
-		wp_send_json_error( array(
-			'error' => __( 'You do not have permission to do this.', 'easy-digital-downloads' )
-		) );
-	}
-
-	include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
-	include_once ABSPATH . 'wp-admin/includes/file.php';
-	include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
-
-	$plugins = get_plugins();
-
-	if( ! array_key_exists( 'sendwp/sendwp.php', $plugins ) ) {
-
-		/*
-		* Use the WordPress Plugins API to get the plugin download link.
-		*/
-		$api = plugins_api( 'plugin_information', array(
-			'slug' => 'sendwp',
-		) );
-
-		if ( is_wp_error( $api ) ) {
-			wp_send_json_error( array(
-				'error' => $api->get_error_message(),
-				'debug' => $api
-			) );
-		}
-
-		/*
-		* Use the AJAX Upgrader skin to quietly install the plugin.
-		*/
-		$upgrader = new Plugin_Upgrader( new WP_Ajax_Upgrader_Skin() );
-		$install = $upgrader->install( $api->download_link );
-		if ( is_wp_error( $install ) ) {
-			wp_send_json_error( array(
-				'error' => $install->get_error_message(),
-				'debug' => $api
-			) );
-		}
-
-		$activated = activate_plugin( $upgrader->plugin_info() );
-
-	} else {
-
-		$activated = activate_plugin( 'sendwp/sendwp.php' );
-
-	}
-
-	/*
-	* Final check to see if SendWP is available.
-	*/
-	if( ! function_exists('sendwp_get_server_url') ) {
-		wp_send_json_error( array(
-			'error' => __( 'Something went wrong. SendWP was not installed correctly.', 'easy-digital-downloads' )
-		) );
-	}
-
-	wp_send_json_success( array(
-		'partner_id'      => 81,
-		'register_url'    => sendwp_get_server_url() . '_/signup',
-		'client_name'     => sendwp_get_client_name(),
-		'client_secret'   => sendwp_get_client_secret(),
-		'client_redirect' => admin_url( '/edit.php?post_type=download&page=edd-settings&tab=emails&edd-message=sendwp-connected' ),
-	) );
-}
-add_action( 'wp_ajax_edd_sendwp_remote_install', 'edd_sendwp_remote_install_handler' );
-
-/**
- * Handle deactivation of SendWP via ajax
- *
- * @since 2.9.15
- */
-function edd_sendwp_disconnect () {
-
-	if ( ! current_user_can( 'manage_shop_settings' ) ) {
-		wp_send_json_error( array(
-			'error' => __( 'You do not have permission to do this.', 'easy-digital-downloads' )
-		) );
-	}
-
-	sendwp_disconnect_client();
-
-	deactivate_plugins( 'sendwp/sendwp.php' );
-
-	wp_send_json_success();
-}
-add_action( 'wp_ajax_edd_sendwp_disconnect', 'edd_sendwp_disconnect' );
 
 /**
  * Handle installation and connection for Recapture via ajax

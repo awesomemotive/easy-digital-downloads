@@ -141,28 +141,14 @@ function edd_get_file_extension( $str ) {
  * Checks if the string (filename) provided is an image URL
  *
  * @since 1.0
- * @param string  $str Filename
+ * @param string  $filename Filename
  * @return bool Whether or not the filename is an image
  */
-function edd_string_is_image_url( $str ) {
-	$ext = edd_get_file_extension( $str );
+function edd_string_is_image_url( $filename ) {
+	$ext    = edd_get_file_extension( $filename );
+	$images = array( 'jpg', 'jpeg', 'png', 'gif', 'webp' );
 
-	switch ( strtolower( $ext ) ) {
-		case 'jpg';
-			$return = true;
-			break;
-		case 'png';
-			$return = true;
-			break;
-		case 'gif';
-			$return = true;
-			break;
-		default:
-			$return = false;
-			break;
-	}
-
-	return (bool) apply_filters( 'edd_string_is_image', $return, $str );
+	return (bool) apply_filters( 'edd_string_is_image', in_array( $ext, $images, true ), $filename );
 }
 
 /**
@@ -1049,6 +1035,40 @@ function edd_is_promo_active() {
 	}
 
 	return false;
+}
+
+/**
+ * Gets the date that this EDD install was activated (for new installs).
+ * For existing installs, this option is added whenever the function is first used.
+ *
+ * @since 2.11.4
+ * @return int The timestamp when EDD was marked as activated.
+ */
+function edd_get_activation_date() {
+	$activation_date = get_option( 'edd_activation_date', '' );
+	if ( ! $activation_date ) {
+		$activation_date = time();
+		// Gets the first order placed in the store (any status).
+		$payments = edd_get_payments(
+			array(
+				'output'        => 'posts',
+				'number'        => 1,
+				'orderby'       => 'ID',
+				'order'         => 'ASC',
+				'no_found_rows' => true,
+			)
+		);
+		if ( $payments ) {
+			$first_payment = reset( $payments );
+			// Use just the post date, rather than looking for the completed date (first payment may not be complete).
+			if ( ! empty( $first_payment->post_date_gmt ) ) {
+				$activation_date = strtotime( $first_payment->post_date_gmt );
+			}
+		}
+		update_option( 'edd_activation_date', $activation_date );
+	}
+
+	return $activation_date;
 }
 
 /**

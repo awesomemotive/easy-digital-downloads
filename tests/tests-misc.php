@@ -45,6 +45,7 @@ class Test_Misc extends EDD_UnitTestCase {
 
 	public function test_string_is_image_url() {
 		$this->assertTrue( edd_string_is_image_url( 'jpg' ) );
+		$this->assertTrue( edd_string_is_image_url( 'webp' ) );
 		$this->assertFalse( edd_string_is_image_url( 'php' ) );
 	}
 

@@ -508,8 +508,9 @@ class EDD_CLI extends WP_CLI_Command {
 			$error = __( 'Invalid action specified, did you mean', 'easy-digital-downloads' );
 		}
 
-		if( $error ) {
-			foreach( $assoc_args as $key => $value ) {
+		if ( $error ) {
+			$query = '';
+			foreach ( $assoc_args as $key => $value ) {
 				$query .= ' --' . $key . '=' . $value;
 			}
 

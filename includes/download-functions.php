@@ -1033,10 +1033,11 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
 
 	if ( ! empty( $payment->ID ) ) {
 
+		// Get the array of parameters in the same order in which they will be validated.
+		$args = array_fill_keys( edd_get_url_token_parameters(), '' );
+
 		// Simply the URL by concatenating required data using a colon as a delimiter.
-		$args = array(
-			'eddfile' => rawurlencode( sprintf( '%d:%d:%d:%d', $payment->ID, $params['download_id'], $params['file'], $price_id ) )
-		);
+		$args['eddfile'] = rawurlencode( sprintf( '%d:%d:%d:%d', $payment->ID, $params['download_id'], $params['file'], $price_id ) );
 
 		if ( isset( $params['expire'] ) ) {
 			$args['ttl'] = $params['expire'];
@@ -1048,12 +1049,29 @@ function edd_get_download_file_url( $key, $email, $filekey, $download_id = 0, $p
 		$args = apply_filters( 'edd_get_download_file_url_args', $args, $payment->ID, $params );
 
 		$args['file']  = $params['file'];
-		$args['token'] = edd_get_download_token( add_query_arg( $args, untrailingslashit( site_url() ) ) );
+		$args['token'] = edd_get_download_token( add_query_arg( array_filter( $args ), untrailingslashit( site_url() ) ) );
 	}
 
-	$download_url = add_query_arg( $args, site_url( 'index.php' ) );
+	return add_query_arg( array_filter( $args ), site_url( 'index.php' ) );
+}
 
-	return $download_url;
+/**
+ * Gets the array of parameters to be used for the URL token generation and validation.
+ * Used by `edd_get_download_file_url` and `edd_validate_url_token` so that their parameters are ordered the same.
+ *
+ * @since 2.11.4
+ * @return array
+ */
+function edd_get_url_token_parameters() {
+	return apply_filters(
+		'edd_url_token_allowed_params',
+		array(
+			'eddfile',
+			'ttl',
+			'file',
+			'token',
+		)
+	);
 }
 
 /**
@@ -1242,8 +1260,10 @@ function edd_get_download_token( $url = '' ) {
  */
 function edd_validate_url_token( $url = '' ) {
 
-	$ret   = false;
-	$parts = parse_url( $url );
+	$ret          = false;
+	$parts        = parse_url( $url );
+	$query_args   = array();
+	$original_url = $url;
 
 	if ( isset( $parts['query'] ) ) {
 
@@ -1257,37 +1277,34 @@ function edd_validate_url_token( $url = '' ) {
 		}
 
 		// These are the only URL parameters that are allowed to affect the token validation.
-		$allowed = apply_filters(
-			'edd_url_token_allowed_params',
-			array(
-				'eddfile',
-				'ttl',
-				'file',
-				'token',
-			)
-		);
+		$allowed_args = edd_get_url_token_parameters();
 
 		// Collect the allowed tags in proper order, remove all tags, and re-add only the allowed ones.
-		$allowed_args = array();
+		$validated_query_args = array();
 
-		foreach ( $allowed as $key ) {
+		foreach ( $allowed_args as $key ) {
 			if ( true === array_key_exists( $key, $query_args ) ) {
-				$allowed_args[ $key ] = $query_args[ $key ];
+				$validated_query_args[ $key ] = $query_args[ $key ];
 			}
 		}
 
 		// strtok allows a quick clearing of existing query string parameters, so we can re-add the allowed ones.
-		$url = add_query_arg( $allowed_args, strtok( $url, '?' ) );
+		$url = add_query_arg( $validated_query_args, strtok( $url, '?' ) );
 
 		if ( isset( $query_args['token'] ) && hash_equals( $query_args['token'], edd_get_download_token( $url ) ) ) {
-
 			$ret = true;
-
 		}
-
 	}
 
-	return apply_filters( 'edd_validate_url_token', $ret, $url, $query_args );
+	/**
+	 * Filters the URL token validation.
+	 *
+	 * @param bool   $ret          Whether the URL has validated or not.
+	 * @param string $url          The URL used for validation.
+	 * @param array  $query_args   The array of query parameters.
+	 * @param string $original_url The original URL (added 2.11.3).
+	 */
+	return apply_filters( 'edd_validate_url_token', $ret, $url, $query_args, $original_url );
 }
 
 /**

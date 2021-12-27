@@ -1,9 +1,4 @@
 steps:
-  - label: "Pull PHP 5.3"
-    command: "docker pull public.ecr.aws/q7y6e9n2/unit-test-images/php:5.3"
-    retry:
-      automatic: true
-
   - label: "Pull PHP 5.4"
     command: "docker pull public.ecr.aws/q7y6e9n2/unit-test-images/php:5.4"
     retry:
