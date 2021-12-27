@@ -221,6 +221,9 @@ class EDD_Notices {
 					case 'email_sent' :
 						$notices['updated']['edd-payment-sent'] = __( 'The purchase receipt has been resent.', 'easy-digital-downloads' );
 						break;
+					case 'email_send_failed':
+						$notices['error']['edd-payment-sent'] = __( 'Failed to send purchase receipt.', 'easy-digital-downloads' );
+						break;
 					case 'refreshed-reports' :
 						$notices['updated']['edd-refreshed-reports'] = __( 'The reports have been refreshed.', 'easy-digital-downloads' );
 						break;
@@ -247,9 +250,6 @@ class EDD_Notices {
 						break;
 					case 'api-key-revoked' :
 						$notices['updated']['edd-api-key-revoked'] = __( 'API keys successfully revoked.', 'easy-digital-downloads' );
-						break;
-					case 'sendwp-connected' :
-						$notices['updated']['edd-sendwp-connected'] = __( 'SendWP has been successfully connected!', 'easy-digital-downloads' );
 						break;
 				}
 			}

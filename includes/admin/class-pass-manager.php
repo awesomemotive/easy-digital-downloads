@@ -25,7 +25,14 @@ class Pass_Manager {
 	 *
 	 * @var int|null
 	 */
-	public $highest_pass_id;
+	public $highest_pass_id = null;
+
+	/**
+	 * License key of the highest tier pass that's activated.
+	 *
+	 * @var string|null
+	 */
+	public $highest_license_key = null;
 
 	/**
 	 * Pass data from the database. This will be an array with
@@ -49,6 +56,13 @@ class Pass_Manager {
 	 * @var bool
 	 */
 	public $has_pass_data = false;
+
+	/**
+	 * Number of license keys entered on this site.
+	 *
+	 * @var int
+	 */
+	public $number_license_keys;
 
 	/**
 	 * Hierarchy of passes. This helps us determine if one pass
@@ -76,24 +90,28 @@ class Pass_Manager {
 			$this->has_pass_data = true;
 		}
 
-		$this->highest_pass_id = $this->get_highest_pass_id();
+		// Set up the highest pass data.
+		$this->set_highest_pass_data();
+
+		$this->number_license_keys = count( \EDD\Extensions\get_licensed_extension_slugs() );
 	}
 
 	/**
-	 * Returns the ID of the highest tier pass that's activated.
+	 * Gets the highest pass and defines its data.
 	 *
-	 * @since 2.10.6
-	 *
-	 * @return int|null Pass ID if one is found, null if one was not found.
+	 * @since 2.11.4
+	 * @return void
 	 */
-	private function get_highest_pass_id() {
-		$highest_pass_id = null;
+	private function set_highest_pass_data() {
 
 		if ( ! $this->has_pass_data || ! is_array( $this->pass_data ) ) {
-			return $highest_pass_id;
+			return;
 		}
 
-		foreach ( $this->pass_data as $pass_data ) {
+		$highest_license_key = null;
+		$highest_pass_id     = null;
+
+		foreach ( $this->pass_data as $license_key => $pass_data ) {
 			/*
 			 * If this pass was last verified more than 2 months ago, we're not using it.
 			 * This ensures we never deal with a "stale" record for a pass that's no longer
@@ -112,17 +130,20 @@ class Pass_Manager {
 
 			// If we don't yet have a "highest pass", then this one is it automatically.
 			if ( empty( $highest_pass_id ) ) {
-				$highest_pass_id = intval( $pass_data['pass_id'] );
+				$highest_license_key = $license_key;
+				$highest_pass_id     = intval( $pass_data['pass_id'] );
 				continue;
 			}
 
 			// Otherwise, this pass only takes over the highest pass if it's actually higher.
 			if ( self::pass_compare( (int) $pass_data['pass_id'], $highest_pass_id, '>' ) ) {
-				$highest_pass_id = intval( $pass_data['pass_id'] );
+				$highest_license_key = $license_key;
+				$highest_pass_id     = intval( $pass_data['pass_id'] );
 			}
 		}
 
-		return $highest_pass_id;
+		$this->highest_license_key = $highest_license_key;
+		$this->highest_pass_id     = $highest_pass_id;
 	}
 
 	/**
@@ -134,6 +155,89 @@ class Pass_Manager {
 	 */
 	public function has_pass() {
 		return ! empty( $this->highest_pass_id );
+	}
+
+	/**
+	 * If this is a "free install". That means there are no à la carte or pass licenses activated.
+	 *
+	 * @since 2.11.4
+	 *
+	 * @return bool
+	 */
+	public function isFree() {
+		return 0 === $this->number_license_keys;
+	}
+
+	/**
+	 * If this site has an individual product license active (à la carte), but no pass active.
+	 *
+	 * @since 2.11.4
+	 *
+	 * @return bool
+	 */
+	public function hasIndividualLicense() {
+		return ! $this->isFree() && ! $this->has_pass();
+	}
+
+	/**
+	 * If this site has a Personal Pass active.
+	 *
+	 * @since 2.11.4
+	 *
+	 * @return bool
+	 */
+	public function hasPersonalPass() {
+		try {
+			return self::pass_compare( $this->highest_pass_id, self::PERSONAL_PASS_ID, '=' );
+		} catch ( \Exception $e ) {
+			return false;
+		}
+	}
+
+	/**
+	 * If this site has an Extended Pass active.
+	 *
+	 * @since 2.11.4
+	 *
+	 * @return bool
+	 */
+	public function hasExtendedPass() {
+		try {
+			return self::pass_compare( $this->highest_pass_id, self::EXTENDED_PASS_ID, '=' );
+		} catch ( \Exception $e ) {
+			return false;
+		}
+	}
+
+	/**
+	 * If this site has a Professional Pass active.
+	 *
+	 * @since 2.11.4
+	 *
+	 * @return bool
+	 */
+	public function hasProfessionalPass() {
+		try {
+			return self::pass_compare( $this->highest_pass_id, self::PROFESSIONAL_PASS_ID, '=' );
+		} catch( \Exception $e ) {
+			return false;
+		}
+	}
+
+	/**
+	 * If this site has an All Access Pass active.
+	 * Note: This uses >= to account for both All Access and lifetime All Access.
+	 *
+	 * @since 2.11.4
+	 *
+	 * @return bool
+	 */
+	public function hasAllAccessPass() {
+		try {
+			return self::pass_compare( $this->highest_pass_id, self::ALL_ACCESS_PASS_ID, '>=' );
+		} catch( \Exception $e ) {
+			return false;
+		}
 	}
 
 	/**

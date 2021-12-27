@@ -488,6 +488,14 @@ function edd_get_registered_settings() {
 						'desc' => __( 'Check this to force users to be redirected to the secure checkout page. You must have an SSL certificate installed to use this option.', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
 					),
+					'redirect_on_add'    => array(
+						'id'            => 'redirect_on_add',
+						'name'          => __( 'Redirect to Checkout', 'easy-digital-downloads' ),
+						'desc'          => __( 'Immediately redirect to checkout after adding an item to the cart?', 'easy-digital-downloads' ),
+						'type'          => 'checkbox',
+						'tooltip_title' => __( 'Redirect to Checkout', 'easy-digital-downloads' ),
+						'tooltip_desc'  => __( 'When enabled, once an item has been added to the cart, the customer will be redirected directly to your checkout page. This is useful for stores that sell single items.', 'easy-digital-downloads' ),
+					),
 					'logged_in_only' => array(
 						'id'   => 'logged_in_only',
 						'name' => __( 'Require Login', 'easy-digital-downloads' ),
@@ -508,12 +516,6 @@ function edd_get_registered_settings() {
 							'login'        => __( 'Login Form Only', 'easy-digital-downloads' ),
 							'none'         => __( 'None', 'easy-digital-downloads' ),
 						),
-					),
-					'allow_multiple_discounts' => array(
-						'id'   => 'allow_multiple_discounts',
-						'name' => __('Multiple Discounts','easy-digital-downloads' ),
-						'desc' => __('Allow customers to use multiple discounts on the same purchase?','easy-digital-downloads' ),
-						'type' => 'checkbox',
 					),
 					'enable_cart_saving' => array(
 						'id'   => 'enable_cart_saving',
@@ -567,28 +569,6 @@ function edd_get_registered_settings() {
 						'name' => '',
 						'desc' => '',
 						'type' => 'hook',
-					),
-					'sendwp_header'    => array(
-						'id'   => 'sendwp_header',
-						'name' => '<strong>' . __( 'SendWP', 'easy-digital-downloads' ) . '</strong>',
-						'type' => 'header',
-					),
-					'sendwp'           => array(
-						'id'   => 'sendwp',
-						'name' => __( 'Deliverability settings', 'easy-digital-downloads' ),
-						'desc' => '',
-						'type' => 'sendwp',
-					),
-					'recapture_header' => array(
-						'id'   => 'recapture_header',
-						'name' => '<strong>' . __( 'Recapture', 'easy-digital-downloads' ) . '</strong>',
-						'type' => 'header',
-					),
-					'recapture'        => array(
-						'id'   => 'recapture',
-						'name' => __( 'Abandoned cart recovery', 'easy-digital-downloads' ),
-						'desc' => '',
-						'type' => 'recapture',
 					),
 				),
 				'purchase_receipts' => array(
@@ -653,6 +633,25 @@ function edd_get_registered_settings() {
 						'id'   => 'disable_admin_notices',
 						'name' => __( 'Disable Admin Notifications', 'easy-digital-downloads' ),
 						'desc' => __( 'Check this box if you do not want to receive sales notification emails.', 'easy-digital-downloads' ),
+						'type' => 'checkbox',
+					),
+				),
+			)
+		),
+		'marketing'  => apply_filters(
+			'edd_settings_marketing',
+			array(
+				'main' => array(
+					'recapture'                => array(
+						'id'   => 'recapture',
+						'name' => __( 'Abandoned Cart Recovery', 'easy-digital-downloads' ),
+						'desc' => '',
+						'type' => 'recapture',
+					),
+					'allow_multiple_discounts' => array(
+						'id'   => 'allow_multiple_discounts',
+						'name' => __( 'Multiple Discounts', 'easy-digital-downloads' ),
+						'desc' => __( 'Allow customers to use multiple discounts on the same purchase?', 'easy-digital-downloads' ),
 						'type' => 'checkbox',
 					),
 				),
@@ -772,14 +771,6 @@ function edd_get_registered_settings() {
 		'misc' => apply_filters('edd_settings_misc',
 			array(
 				'main' => array(
-					'redirect_on_add' => array(
-						'id'   => 'redirect_on_add',
-						'name' => __( 'Redirect to Checkout', 'easy-digital-downloads' ),
-						'desc' => __( 'Immediately redirect to checkout after adding an item to the cart?', 'easy-digital-downloads' ),
-						'type' => 'checkbox',
-						'tooltip_title' => __( 'Redirect to Checkout', 'easy-digital-downloads' ),
-						'tooltip_desc'  => __( 'When enabled, once an item has been added to the cart, the customer will be redirected directly to your checkout page. This is useful for stores that sell single items.', 'easy-digital-downloads' ),
-					),
 					'item_quantities' => array(
 						'id'   => 'item_quantities',
 						'name' => __('Cart Item Quantities','easy-digital-downloads' ),
@@ -1360,30 +1351,23 @@ function edd_sanitize_html_class( $class = '' ) {
  * Retrieve settings tabs
  *
  * @since 1.8
+ * @since 2.11.4 Any tabs with no registered settings are filtered out in `edd_options_page`.
  * @return array $tabs
  */
 function edd_get_settings_tabs() {
 
-	$settings = edd_get_registered_settings();
-
-	$tabs             = array();
-	$tabs['general']  = __( 'General', 'easy-digital-downloads' );
-	$tabs['gateways'] = __( 'Payments', 'easy-digital-downloads' );
-	$tabs['emails']   = __( 'Emails', 'easy-digital-downloads' );
-	$tabs['styles']   = __( 'Styles', 'easy-digital-downloads' );
-	$tabs['taxes']    = __( 'Taxes', 'easy-digital-downloads' );
-	$tabs['privacy']  = __( 'Privacy', 'easy-digital-downloads' );
-
-	if( ! empty( $settings['extensions'] ) ) {
-		$tabs['extensions'] = __( 'Extensions', 'easy-digital-downloads' );
-	}
-	if( ! empty( $settings['licenses'] ) ) {
-		$tabs['licenses'] = __( 'Licenses', 'easy-digital-downloads' );
-	}
-
-	$tabs['misc']      = __( 'Misc', 'easy-digital-downloads' );
-
-	return apply_filters( 'edd_settings_tabs', $tabs );
+	return apply_filters( 'edd_settings_tabs', array(
+		'general'    => __( 'General', 'easy-digital-downloads' ),
+		'gateways'   => __( 'Payments', 'easy-digital-downloads' ),
+		'emails'     => __( 'Emails', 'easy-digital-downloads' ),
+		'marketing'  => __( 'Marketing', 'easy-digital-downloads' ),
+		'styles'     => __( 'Styles', 'easy-digital-downloads' ),
+		'taxes'      => __( 'Taxes', 'easy-digital-downloads' ),
+		'privacy'    => __( 'Privacy', 'easy-digital-downloads' ),
+		'extensions' => __( 'Extensions', 'easy-digital-downloads' ),
+		'licenses'   => __( 'Licenses', 'easy-digital-downloads' ),
+		'misc'       => __( 'Misc', 'easy-digital-downloads' ),
+	) );
 }
 
 /**
@@ -1436,6 +1420,9 @@ function edd_get_registered_settings_sections() {
 			'main'               => __( 'General', 'easy-digital-downloads' ),
 			'purchase_receipts'  => __( 'Purchase Receipts', 'easy-digital-downloads' ),
 			'sale_notifications' => __( 'New Sale Notifications', 'easy-digital-downloads' ),
+		) ),
+		'marketing'  => apply_filters( 'edd_settings_sections_marketing', array(
+			'main' => __( 'General', 'easy-digital-downloads' ),
 		) ),
 		'styles'     => apply_filters( 'edd_settings_sections_styles', array(
 			'main'               => __( 'General', 'easy-digital-downloads' ),
@@ -2161,63 +2148,6 @@ function edd_shop_states_callback($args) {
 }
 
 /**
- * SendWP Callback
- *
- * Renders SendWP Settings
- *
- * @since 2.9.15
- * @param array $args Arguments passed by the setting
- * @return void
- */
-function edd_sendwp_callback($args) {
-
-	// Connection status partial label based on the state of the SendWP email sending setting (Tools -> SendWP)
-	$connected  = '<a href="https://app.sendwp.com/dashboard" target="_blank" rel="noopener noreferrer">';
-	$connected .= __( 'Access your SendWP account', 'easy-digital-downloads' );
-	$connected .= '</a>.';
-
-	$disconnected = sprintf(
-		__( '<em><strong>Note:</strong> Email sending is currently disabled. <a href="' . admin_url( '/tools.php?page=sendwp' ) . '">Click here</a> to enable it.</em>', 'easy-digital-downloads' )
-	);
-
-	// Checks if SendWP is connected
-	$client_connected = function_exists( 'sendwp_client_connected' ) && sendwp_client_connected() ? true : false;
-
-	// Checks if email sending is enabled in SendWP
-	$forwarding_enabled = function_exists( 'sendwp_forwarding_enabled' ) && sendwp_forwarding_enabled() ? true : false;
-
-	ob_start();
-
-	echo $args['desc'];
-
-	// Output the appropriate button and label based on connection status
-	if( $client_connected ) :
-		?>
-		<div class="inline notice notice-success">
-			<p><?php _e( 'SendWP plugin activated.', 'easy-digital-downloads' ); ?> <?php echo $forwarding_enabled ? $connected : $disconnected ; ?></p>
-
-			<p>
-				<button id="edd-sendwp-disconnect" class="button"><?php _e( 'Disconnect SendWP', 'easy-digital-downloads' ); ?></button>
-			</p>
-		</div>
-		<?php
-	else :
-		?>
-		<p>
-			<?php _e( 'We recommend SendWP to ensure quick and reliable delivery of all emails sent from your store, such as purchase receipts, subscription renewal reminders, password resets, and more.', 'easy-digital-downloads' ); ?> <?php printf( __( '%sLearn more%s', 'easy-digital-downloads' ), '<a href="https://sendwp.com/" target="_blank" rel="noopener noreferrer">', '</a>' ); ?>
-		</p>
-		<p>
-			<button type="button" id="edd-sendwp-connect" class="button button-primary"><?php esc_html_e( 'Connect with SendWP', 'easy-digital-downloads' ); ?>
-			</button>
-		</p>
-
-		<?php
-	endif;
-
-	echo ob_get_clean();
-}
-
-/**
  * Recapture Callback
  *
  * Renders Recapture Settings
@@ -2540,9 +2470,8 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 						} elseif( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
 
 							$messages[] = sprintf(
-								__( 'Your license key expires soon! It expires on %s. <a href="%s" target="_blank">Renew your license key</a>.', 'easy-digital-downloads' ),
-								date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
-								'https://easydigitaldownloads.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
+								__( 'Your license key expires soon! It expires on %s.', 'easy-digital-downloads' ),
+								date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) )
 							);
 
 							$license_status = 'license-expires-soon-notice';
@@ -2580,7 +2509,7 @@ if ( ! function_exists( 'edd_license_key_callback' ) ) {
 		$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
 		$html = '<input type="password" autocomplete="off" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="' . esc_attr( $value ) . '"/>';
 
-		if ( ( is_object( $license ) && 'valid' == $license->license ) || 'valid' == $license ) {
+		if ( ( is_object( $license ) && ! empty( $license->license ) && 'valid' == $license->license ) || 'valid' == $license ) {
 			$html .= '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License',  'easy-digital-downloads' ) . '"/>';
 		}
 
@@ -2636,28 +2565,3 @@ function edd_add_setting_tooltip( $html, $args ) {
 	return $html;
 }
 add_filter( 'edd_after_setting_output', 'edd_add_setting_tooltip', 10, 2 );
-
-
-/**
- * Gives us an area to ensure known compatibility issues with our settings organization by giving us a hook to manage
- * and alter hooks and filters that are being run against our primary settings array.
- *
- * @since 2.11.3
- */
-
-add_action(
-	'plugins_loaded',
-	function() {
-
-		/**
-		 * Ensures compatibility with EDD 2.11.3 and Recurring payments prior to Recurring being released to move
-		 * settings for 'checkout' from 'misc' to 'payments'.
-		 */
-		if ( function_exists( 'edd_recurring_guest_checkout_description' ) && false !== has_filter( 'edd_settings_misc', 'edd_recurring_guest_checkout_description' ) ) {
-			remove_filter( 'edd_settings_misc', 'edd_recurring_guest_checkout_description', 10 );
-			add_filter( 'edd_settings_gateways', 'edd_recurring_guest_checkout_description', 10 );
-		}
-
-	},
-	99
-);

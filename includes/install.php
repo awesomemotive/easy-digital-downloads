@@ -191,6 +191,9 @@ function edd_run_install() {
 	update_option( 'edd_settings', $merged_options );
 	update_option( 'edd_version', EDD_VERSION );
 
+	// Set the activation date.
+	edd_get_activation_date();
+
 	// Create wp-content/uploads/edd/ folder and the .htaccess file
 	edd_create_protection_files( true );
 
@@ -209,6 +212,7 @@ function edd_run_install() {
 		 */
 		@EDD()->customers->create_table();
 		@EDD()->customer_meta->create_table();
+		EDD()->notifications->create_table();
 	}
 
 	// Check for PHP Session support, and enable if available
@@ -319,6 +323,10 @@ function edd_after_install() {
 			@EDD()->customer_meta->create_table();
 
 			do_action( 'edd_after_install', $edd_options );
+		}
+
+		if ( ! EDD()->notifications->installed() ) {
+			EDD()->notifications->create_table();
 		}
 
 		update_option( '_edd_table_check', ( current_time( 'timestamp' ) + WEEK_IN_SECONDS ) );

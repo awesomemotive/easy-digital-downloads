@@ -10,7 +10,9 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Settings contextual help.
@@ -22,8 +24,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 function edd_settings_contextual_help() {
 	$screen = get_current_screen();
 
-	if ( $screen->id != 'download_page_edd-settings' )
+	if ( 'download_page_edd-settings' !== $screen->id ) {
 		return;
+	}
 
 	$screen->set_help_sidebar(
 		'<p><strong>' . __( 'For more information:', 'easy-digital-downloads' ) . '</strong></p>' .
@@ -35,18 +38,19 @@ function edd_settings_contextual_help() {
 	);
 
 	$screen->add_help_tab( array(
-		'id'	    => 'edd-settings-general',
-		'title'	    => __( 'General', 'easy-digital-downloads' ),
-		'content'	=> '<p>' . __( 'This screen provides the most basic settings for configuring your store. You can set the currency, page templates, and turn <em>Test Mode</em> on and off.', 'easy-digital-downloads' ) . '</p>'
+		'id'      => 'edd-settings-general',
+		'title'   => __( 'General', 'easy-digital-downloads' ),
+		'content' => '<p>' . __( 'This screen provides the most basic settings for configuring your store. You can set the currency, page templates, and general store settings.', 'easy-digital-downloads' ) . '</p>',
 	) );
 
 	$screen->add_help_tab( array(
-		'id'	    => 'edd-settings-payment-gateways',
-		'title'	    => __( 'Payment Gateways', 'easy-digital-downloads' ),
-		'content'	=>
-			'<p>' . __( 'This screen provides ways to toggle payment gateways on or off, as well as configure gateway-specific settings. Any extra payment gateway extensions you have installed will appear on this page, and can be configured to suit your needs.', 'easy-digital-downloads' ) . '</p>' .
+		'id'      => 'edd-settings-payment-gateways',
+		'title'   => __( 'Payments', 'easy-digital-downloads' ),
+		'content' =>
+			'<p>' . __( 'This screen provides ways to enable Test Mode, toggle payment gateways on or off, manage accounting settings, and configure gateway-specific settings. Any extra payment gateway extensions you have installed will appear on this page, and can be configured to suit your needs.', 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( '<strong>Test Payment</strong> - This included gateway is great for testing your store, as it requires no payment, and leads straight to product downloads. However, please remember to turn it off once your site is live!', 'easy-digital-downloads' ) . '</p>' .
-			'<p>' . __( '<strong>PayPal</strong> - A PayPal payment gateway is included as standard with Easy Digital Downloads. To test the PayPal gateway, you need a Sandbox account for PayPal and the site must be placed in Test Mode from the General settings tab. Please remember to enter your PayPal account email address in order for payments to get processed.', 'easy-digital-downloads' ) . '</p>'
+			'<p>' . __( '<strong>PayPal</strong> - A PayPal payment gateway is included as standard with Easy Digital Downloads. To test the PayPal gateway, you need a Sandbox account for PayPal and the site must be placed in Test Mode from the Payments > Gateways tab. Please remember to enter your PayPal account email address in order for payments to get processed.', 'easy-digital-downloads' ) . '</p>' .
+			'<p>' . __( '<strong>Stripe</strong> - The Stripe payment gateway is also included with Easy Digital Downloads. To test the Stripe gateway, you must "Connect with Stripe" and the site must be placed in Test Mode from the Payments > Gateways tab.', 'easy-digital-downloads' ) . '</p>',
 	) );
 
 	$screen->add_help_tab( array(
@@ -55,6 +59,14 @@ function edd_settings_contextual_help() {
 		'content'	=>
 			'<p>' . __( "This screen allows you to customize how emails act throughout your store. You can choose a premade template, set the sender's name, email address, and subject.", 'easy-digital-downloads' ) . '</p>' .
 			'<p>' . __( 'A set of email tags has also been provided to allow the creation of personalized emails. A tag consists of a keyword surrounded by curly braces: <code>{tag}</code>. A description of each of these tags appears below the editor.', 'easy-digital-downloads' ) . '</p>'
+	) );
+
+	$screen->add_help_tab( array(
+		'id'      => 'edd-settings-marketing',
+		'title'   => __( 'Marketing', 'easy-digital-downloads' ),
+		'content' =>
+			'<p>' . __( 'Marketing settings will help you connect with your customers.', 'easy-digital-downloads' ) . '</p>' .
+			'<p>' . __( 'Marketing specific extensions will add their settings here as well.', 'easy-digital-downloads' ) . '</p>',
 	) );
 
 	$screen->add_help_tab( array(
@@ -86,11 +98,10 @@ function edd_settings_contextual_help() {
 	) );
 
 	$screen->add_help_tab( array(
-		'id'	    => 'edd-settings-misc',
-		'title'	    => __( 'Miscellaneous', 'easy-digital-downloads' ),
-		'content'	=>
-			'<p>' . __( 'This screen provides other miscellaneous options such as disabling jQuery, allowing guest checkout, and configuring your terms of service.', 'easy-digital-downloads' ) . '</p>' .
-			'<p>' . __( 'A description of all the options are provided beside their input boxes.', 'easy-digital-downloads' ) . '</p>'
+		'id'      => 'edd-settings-misc',
+		'title'   => __( 'Miscellaneous', 'easy-digital-downloads' ),
+		'content' =>
+			'<p>' . __( 'This screen provides other miscellaneous options such as configuring your store buttons, file download functionality, and terms of service.', 'easy-digital-downloads' ) . '</p>',
 	) );
 
 	do_action( 'edd_settings_contextual_help', $screen );
