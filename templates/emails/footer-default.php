@@ -24,6 +24,11 @@ $credit = "
 	line-height:125%;
 	text-align:center;
 ";
+
+$credit_link = '
+	text-decoration: none;
+	color: #6D6D6D;
+';
 ?>
 															</div>
 														</td>
@@ -36,26 +41,24 @@ $credit = "
                                     <!-- End Body -->
                                 </td>
                             </tr>
+                        </table>
+
+                        <!-- Footer -->
+                        <table border='0' cellpadding='10' cellspacing='0' width='600' id='template_footer'
+                               style="<?php echo $template_footer; ?>">
                             <tr>
-                                <td align="center" valign="top">
-                                    <!-- Footer -->
-                                    <table border="0" cellpadding="10" cellspacing="0" width="600" id="template_footer" style="<?php echo $template_footer; ?>">
+                                <td valign='top'>
+                                    <table border='0' cellpadding='10' cellspacing='0' width='100%'>
                                         <tr>
-                                            <td valign="top">
-                                                <table border="0" cellpadding="10" cellspacing="0" width="100%">
-                                                    <tr>
-                                                        <td colspan="2" valign="middle" id="credit" style="<?php echo $credit; ?>">
-                                                           <?php echo wpautop( wp_kses_post( wptexturize( apply_filters( 'edd_email_footer_text', '<a href="' . esc_url( home_url() ) . '">' . get_bloginfo( 'name' ) . '</a>' ) ) ) ); ?>
-                                                        </td>
-                                                    </tr>
-                                                </table>
+                                            <td colspan='2' valign='middle' id='credit' style="<?php echo $credit; ?>">
+                                                <?php echo wpautop(wp_kses_post(wptexturize(apply_filters('edd_email_footer_text', '<a href="' . esc_url(home_url()) . '" style="' . $credit_link . '">' . get_bloginfo('name') . '</a>')))); ?>
                                             </td>
                                         </tr>
                                     </table>
-                                    <!-- End Footer -->
                                 </td>
                             </tr>
                         </table>
+                        <!-- End Footer -->
                     </td>
                 </tr>
             </table>
