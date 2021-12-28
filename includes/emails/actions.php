@@ -28,6 +28,9 @@ function edd_trigger_purchase_receipt( $payment_id = 0, $payment = null, $custom
 	if ( isset( $_POST['edd-action'] ) && 'edit_payment' == $_POST['edd-action'] ) {
 		return;
 	}
+	if ( 'refund' === $payment->order->type ) {
+		return;
+	}
 
 	// Send email with secure download link
 	edd_email_purchase_receipt( $payment_id, true, '', $payment, $customer );
