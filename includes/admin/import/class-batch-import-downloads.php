@@ -75,11 +75,11 @@ class EDD_Batch_Downloads_Import extends EDD_Batch_Import {
 			unlink( $this->file );
 		}
 
-		if( ! $this->done && $this->csv->data ) {
+		if( ! $this->done && $this->csv ) {
 
 			$more = true;
 
-			foreach( $this->csv->data as $key => $row ) {
+			foreach( $this->csv as $key => $row ) {
 
 				// Skip all rows until we pass our offset
 				if( $key + 1 <= $offset ) {
