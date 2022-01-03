@@ -59,7 +59,18 @@ function edd_dashboard_sales_widget() {
 		}
 	}
 	wp_enqueue_script( 'edd-admin-dashboard' );
-	echo '<p><img src=" ' . esc_attr( set_url_scheme( EDD_PLUGIN_URL . 'assets/images/loading.gif', 'relative' ) ) . '"/></p>';
+
+	/**
+	 * Action hook to add content to the dashboard widget.
+	 * This content will not be replaced by the AJAX function:
+	 * only the "edd-loading" content will.
+	 *
+	 * @since 2.11.4
+	 */
+	do_action( 'edd_dashboard_sales_widget' );
+	?>
+	<p class="edd-loading"><img src="<?php echo esc_url( EDD_PLUGIN_URL . 'assets/images/loading.gif' ); ?>"></p>
+	<?php
 }
 
 /**

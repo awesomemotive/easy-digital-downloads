@@ -565,12 +565,6 @@ class EDD_Notices {
 						'message' => __( 'API keys successfully revoked.', 'easy-digital-downloads' )
 					) );
 					break;
-				case 'sendwp-connected' :
-					$this->add_notice( array(
-						'id'      => 'edd-sendwp-connected',
-						'message' => __( 'SendWP has been successfully connected!', 'easy-digital-downloads' )
-					) );
-
 				case 'test-purchase-email-sent':
 					$this->add_notice(
 						array(
@@ -625,6 +619,12 @@ class EDD_Notices {
 					$this->add_notice( array(
 						'id'      => 'edd-payment-sent',
 						'message' => __( 'The purchase receipt has been resent.', 'easy-digital-downloads' )
+					) );
+					break;
+				case 'email_send_failed':
+					$this->add_notice( array(
+						'id'      => 'edd-payment-sent',
+						'message' => __( 'Failed to send purchase receipt.', 'easy-digital-downloads' )
 					) );
 					break;
 				case 'payment-note-deleted' :

@@ -207,6 +207,9 @@ function edd_run_install( $site_id = false ) {
 	// Install the default settings
 	edd_install_settings();
 
+	// Set the activation date.
+	edd_get_activation_date();
+
 	// Create wp-content/uploads/edd/ folder and the .htaccess file
 	if ( ! function_exists( 'edd_create_protection_files' ) ) {
 		require_once EDD_PLUGIN_DIR . 'includes/admin/upload-functions.php';
@@ -214,6 +217,9 @@ function edd_run_install( $site_id = false ) {
 	if ( function_exists( 'edd_create_protection_files' ) ) {
 		edd_create_protection_files( true );
 	}
+
+	// Create custom tables. (@todo move to BerlinDB)
+	EDD()->notifications->create_table();
 
 	// Create EDD shop roles
 	$roles = new EDD_Roles;
