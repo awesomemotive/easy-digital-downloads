@@ -31,7 +31,7 @@ function edd_trigger_purchase_receipt( $payment_id = 0, $payment = null, $custom
 	if ( null === $payment ) {
 		$payment = new EDD_Payment( $payment_id );
 	}
-	if ( 'refund' === $payment->order->type ) {
+	if ( $payment->order instanceof \EDD\Orders\Order && 'refund' === $payment->order->type ) {
 		return;
 	}
 
