@@ -546,7 +546,10 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 			foreach( $downloads as $key => $download ) {
 
-				$d   = (array) explode( '|', $download );
+				$d = (array) explode( '|', $download );
+				if ( ! array_key_exists( 1, $d ) ) {
+					continue;
+				}
 				preg_match_all( '/\{(\d|(\d+(\.\d+|\d+)))\}/', $d[1], $matches );
 
 				if( false !== strpos( $d[1], '{' ) ) {
