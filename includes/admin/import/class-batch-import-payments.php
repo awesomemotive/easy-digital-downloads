@@ -558,7 +558,8 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 					$price = trim( $d[1] );
 				}
 
-				$tax   = isset( $matches[1][0] ) ? trim( $matches[1][0] ) : 0;
+				$price    = floatval( $price );
+				$tax      = isset( $matches[1][0] ) ? floatval( trim( $matches[1][0] ) ) : 0;
 				$price_id = isset( $matches[1][1] ) ? trim( $matches[1][1] ) : false;
 
 				$d_array[] = array(
