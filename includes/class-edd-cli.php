@@ -489,6 +489,7 @@ class EDD_CLI extends WP_CLI_Command {
 		}
 
 		if ( $error ) {
+			$query = '';
 			foreach ( $assoc_args as $key => $value ) {
 				$query .= ' --' . $key . '=' . $value;
 			}

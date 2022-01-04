@@ -283,6 +283,8 @@ class EDD_Emails {
 	 * @param  string  $subject          The subject line of the email to send.
 	 * @param  string  $message          The body of the email to send.
 	 * @param  string|array $attachments Attachments to the email in a format supported by wp_mail()
+	 *
+	 * @return bool Whether the email was sent successfully.
 	 * @since 2.1
 	 */
 	public function send( $to, $subject, $message, $attachments = '' ) {
