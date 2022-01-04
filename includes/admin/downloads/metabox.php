@@ -628,7 +628,9 @@ function edd_render_products_field( $post_id ) {
 											}
 
 											$price_assignments = edd_get_bundle_pricing_variations( $post_id );
-											$price_assignments = $price_assignments[0];
+											if ( ! empty( $price_assignments[0] ) ) {
+												$price_assignments = $price_assignments[0];
+											}
 
 											$selected = isset( $price_assignments[ $index ] ) ? $price_assignments[ $index ] : null;
 
