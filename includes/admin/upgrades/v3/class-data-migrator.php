@@ -1333,7 +1333,7 @@ class Data_Migrator {
 			return null;
 		}
 
-		$variable_price_ids = array_map( 'intval', wp_list_pluck( $variable_prices, 'index' ) );
+		$variable_price_ids = array_map( 'intval', array_column( $variable_prices, 'index' ) );
 
 		return in_array( $price_id, $variable_price_ids, true ) ? $price_id : edd_get_default_variable_price( $cart_item['id'] );
 	}
