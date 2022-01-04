@@ -182,10 +182,11 @@ function edd_sanitize_bundled_products_save( $products = array() ) {
 
 	global $post;
 
-	$self = array_search( $post->ID, $products );
-
-	if( $self !== false )
-		unset( $products[ $self ] );
+	foreach ( $products as $key => $product_id ) {
+		if ( in_array( $product_id, array( 0, $post->ID ) ) ) {
+			unset( $products[ $key ] );
+		}
+	}
 
 	return array_values( array_unique( $products ) );
 }
