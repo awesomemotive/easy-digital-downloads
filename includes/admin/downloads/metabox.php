@@ -146,14 +146,16 @@ function edd_download_meta_box_save( $post_id, $post ) {
 
 		} else {
 
+			$new = false;
 			if ( ! empty( $_POST[ $field ] ) ) {
 				$new = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
+			}
+			if ( ! empty( $new ) ) {
 				update_post_meta( $post_id, $field, $new );
 			} else {
 				delete_post_meta( $post_id, $field );
 			}
 		}
-
 	}
 
 	if ( edd_has_variable_prices( $post_id ) ) {
