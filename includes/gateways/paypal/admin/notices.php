@@ -32,7 +32,11 @@ add_action( 'admin_notices', function () {
 		return;
 	}
 
-	$dismiss_url = add_query_arg( array( 'edd_action' => 'dismiss_notices', 'edd_notice' => 'paypal_commerce' ) );
+	$dismiss_url = wp_nonce_url( add_query_arg( array(
+		'edd_action' => 'dismiss_notices',
+		'edd_notice' => 'paypal_commerce'
+	) ), 'edd_notice_nonce' );
+
 	$setup_url = add_query_arg( array(
 		'post_type' => 'download',
 		'page'      => 'edd-settings',
