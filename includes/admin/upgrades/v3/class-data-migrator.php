@@ -1322,17 +1322,17 @@ class Data_Migrator {
 			return null;
 		}
 
+		$variable_prices = edd_get_variable_prices( $cart_item['id'] );
+		if ( ! is_array( $variable_prices ) || empty( $variable_prices ) ) {
+			return null;
+		}
+
 		// Get the price ID that's set to the cart item right now.
 		$price_id = isset( $cart_item['item_number']['options']['price_id'] ) && is_numeric( $cart_item['item_number']['options']['price_id'] )
 			? absint( $cart_item['item_number']['options']['price_id'] )
 			: null;
 
 		// Now let's confirm it's actually a valid price ID.
-		$variable_prices = edd_get_variable_prices( $cart_item['id'] );
-		if ( ! is_array( $variable_prices ) || empty( $variable_prices ) ) {
-			return null;
-		}
-
 		$variable_price_ids = array_map( 'intval', array_column( $variable_prices, 'index' ) );
 
 		return in_array( $price_id, $variable_price_ids, true ) ? $price_id : edd_get_default_variable_price( $cart_item['id'] );
