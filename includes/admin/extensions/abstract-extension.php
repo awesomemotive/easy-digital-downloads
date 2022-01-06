@@ -337,6 +337,9 @@ abstract class Extension {
 	 * @return void
 	 */
 	public function hide_submit_button() {
+		if ( ! $this->can_show_product_section() ) {
+			return;
+		}
 		?>
 		<style>p.submit{display:none;}</style>
 		<?php
