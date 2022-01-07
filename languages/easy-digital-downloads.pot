@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 3.0-rc1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2022-01-05 13:00:43+00:00\n"
+"POT-Creation-Date: 2022-01-07 14:55:41+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -135,7 +135,7 @@ msgstr ""
 #: includes/class-edd-license-handler.php:385
 #: includes/deprecated-functions.php:488 includes/deprecated-functions.php:505
 #: includes/deprecated-functions.php:513 includes/deprecated-functions.php:915
-#: includes/download-functions.php:1638 includes/emails/actions.php:53
+#: includes/download-functions.php:1638 includes/emails/actions.php:59
 #: includes/emails/template.php:239 includes/error-tracking.php:59
 #: includes/gateways/functions.php:310 includes/gateways/manual.php:33
 #: includes/gateways/paypal/admin/connect.php:455
@@ -216,7 +216,7 @@ msgstr ""
 #: includes/admin/admin-actions.php:210
 #: includes/admin/customers/customers.php:29
 #: includes/admin/payments/payments-history.php:27
-#: includes/admin/settings/display-settings.php:75 includes/admin/tools.php:42
+#: includes/admin/settings/display-settings.php:74 includes/admin/tools.php:42
 msgid "Secondary menu"
 msgstr ""
 
@@ -261,7 +261,7 @@ msgstr ""
 #: includes/admin/payments/actions.php:72
 #: includes/admin/payments/actions.php:77
 #: includes/admin/payments/actions.php:287
-#: includes/admin/payments/actions.php:317 includes/emails/actions.php:53
+#: includes/admin/payments/actions.php:317 includes/emails/actions.php:59
 msgid "You do not have permission to edit this payment record"
 msgstr ""
 
@@ -299,7 +299,7 @@ msgid "EDD Settings"
 msgstr ""
 
 #: includes/admin/admin-pages.php:90 includes/admin/plugins.php:32
-#: includes/admin/settings/display-settings.php:342
+#: includes/admin/settings/display-settings.php:338
 msgid "Settings"
 msgstr ""
 
@@ -615,7 +615,7 @@ msgstr ""
 #: includes/admin/class-sections.php:100
 #: includes/admin/discounts/contextual-help.php:35
 #: includes/admin/settings/contextual-help.php:40
-#: includes/admin/settings/display-settings.php:123
+#: includes/admin/settings/display-settings.php:119
 #: includes/admin/settings/register-settings.php:1630
 #: includes/admin/settings/register-settings.php:1684
 #: includes/admin/settings/register-settings.php:1689
@@ -4597,28 +4597,28 @@ msgstr ""
 msgid "%1$s %2$sunread notifications%3$s"
 msgstr ""
 
-#: includes/admin/settings/display-settings.php:261
+#: includes/admin/settings/display-settings.php:257
 msgid ""
 "Save 25% on all Easy Digital Downloads purchases <strong>this "
 "week</strong>, including renewals and upgrades!"
 msgstr ""
 
-#: includes/admin/settings/display-settings.php:264
+#: includes/admin/settings/display-settings.php:260
 msgid "Use code at checkout:"
 msgstr ""
 
-#: includes/admin/settings/display-settings.php:266
+#: includes/admin/settings/display-settings.php:262
 msgid ""
 "Sale ends 23:59 PM December 6th CST. Save 25% on <a "
 "href=\"https://sandhillsdev.com/projects/\" target=\"_blank\">our other "
 "plugins</a>."
 msgstr ""
 
-#: includes/admin/settings/display-settings.php:269
+#: includes/admin/settings/display-settings.php:265
 msgid "Shop Now!"
 msgstr ""
 
-#: includes/admin/settings/display-settings.php:375
+#: includes/admin/settings/display-settings.php:371
 msgid ""
 "Taxes are currently disabled. Rates listed below will not be applied to "
 "purchases until taxes are enabled."
@@ -9430,11 +9430,11 @@ msgstr ""
 msgid "No merchant ID saved. Please reconnect to PayPal."
 msgstr ""
 
-#: includes/gateways/paypal/admin/notices.php:45
+#: includes/gateways/paypal/admin/notices.php:49
 msgid "Enable the new PayPal gateway for Easy Digital Downloads"
 msgstr ""
 
-#: includes/gateways/paypal/admin/notices.php:50
+#: includes/gateways/paypal/admin/notices.php:54
 #. Translators: %1$s opening anchor tag; %2$s closing anchor tag
 msgid ""
 "A new, improved PayPal experience is now available in Easy Digital "
@@ -9442,11 +9442,11 @@ msgid ""
 "documentation%2$s."
 msgstr ""
 
-#: includes/gateways/paypal/admin/notices.php:57
+#: includes/gateways/paypal/admin/notices.php:61
 msgid "Activate the New PayPal"
 msgstr ""
 
-#: includes/gateways/paypal/admin/notices.php:58
+#: includes/gateways/paypal/admin/notices.php:62
 msgid "Dismiss Notice"
 msgstr ""
 
