@@ -65,13 +65,12 @@ add_action( 'admin_notices', 'edd_admin_header', 1 );
  * Output the primary options page navigation
  *
  * @since 3.0
- * @param string $active_tab
+ *
+ * @param array  $tabs       All available tabs.
+ * @param string $active_tab Current active tab.
  */
-function edd_options_page_primary_nav( $active_tab = '' ) {
-	$tabs = edd_get_settings_tabs();
-
-	ob_start();?>
-
+function edd_options_page_primary_nav( $tabs, $active_tab = '' ) {
+	?>
 	<nav class="nav-tab-wrapper edd-nav-tab-wrapper edd-settings-nav" aria-label="<?php esc_attr_e( 'Secondary menu', 'easy-digital-downloads' ); ?>">
 		<?php
 
@@ -99,10 +98,7 @@ function edd_options_page_primary_nav( $active_tab = '' ) {
 		}
 		?>
 	</nav>
-
 	<?php
-
-	echo ob_get_clean();
 }
 
 /**
@@ -288,7 +284,7 @@ function edd_options_page() {
 	$settings_tabs  = edd_get_settings_tabs();
 	$settings_tabs  = empty( $settings_tabs ) ? array() : $settings_tabs;
 	$active_tab     = isset( $_GET['tab']   ) ? sanitize_text_field( $_GET['tab'] ) : 'general';
-	$active_tab     = array_key_exists( $active_tab, $settings_tabs ) ? $active_tab : 'general';
+	$active_tab     = array_key_exists( $active_tab, $settings_tabs ) && array_key_exists( $active_tab, $all_settings ) ? $active_tab : 'general';
 	$sections       = edd_get_settings_tab_sections( $active_tab );
 	$section        = ! empty( $_GET['section'] ) && ! empty( $sections[ $_GET['section'] ] ) ? sanitize_text_field( $_GET['section'] ) : 'main';
 
@@ -343,7 +339,7 @@ function edd_options_page() {
 
 		<?php
 		// Primary nav
-		edd_options_page_primary_nav( $active_tab );
+		edd_options_page_primary_nav( $settings_tabs, $active_tab );
 
 		// Secondary nav
 		edd_options_page_secondary_nav( $active_tab, $section, $sections );
