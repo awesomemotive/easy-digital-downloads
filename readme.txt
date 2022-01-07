@@ -243,7 +243,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 
 == Changelog ==
 
-= 2.11.4.1, January 11, 2021 =
+= 2.11.4.1, January 7, 2021 =
 * Fix: "Submit" buttons missing from Reviews and Recurring Payments settings pages.
 
 = 2.11.4, December 27, 2021 =
