@@ -235,7 +235,7 @@ class Refund_Items_Table extends List_Table {
 
 		$amount = false !== $amount_override ? $amount_override : $item->{$column_name};
 
-		$formatted_amount .= '<span data-' . $column_name . '="' . edd_sanitize_amount( $amount ) . '">' . edd_format_amount( $amount, $this->get_order_currency_decimals( $item->order_id ) ) . '</span>';
+		$formatted_amount .= '<span data-' . $column_name . '="' . edd_sanitize_amount( $amount ) . '">' . edd_format_amount( $amount, true, $this->get_order_currency_decimals( $item->order_id ) ) . '</span>';
 
 		if ( 'after' === $currency_pos ) {
 			$formatted_amount .= $symbol;
@@ -301,8 +301,8 @@ class Refund_Items_Table extends List_Table {
 						id="edd-order-item-<?php echo esc_attr( $item_id ); ?>-refund-<?php echo esc_attr( $column_name ); ?>"
 						class="edd-order-item-refund-<?php echo esc_attr( $column_name ); ?> edd-order-item-refund-input"
 						name="refund_<?php echo esc_attr( $object_type ); ?>[<?php echo esc_attr( $item->id ); ?>][<?php echo esc_attr( $column_name ); ?>]"
-						value="<?php echo esc_attr( edd_format_amount( $amount_remaining, $this->get_order_currency_decimals( $item->order_id ) ) ); ?>"
-						placeholder="<?php echo esc_attr( edd_format_amount( 0, $this->get_order_currency_decimals( $item->order_id ) ) ); ?>"
+						value="<?php echo esc_attr( edd_format_amount( $amount_remaining, true, $this->get_order_currency_decimals( $item->order_id ) ) ); ?>"
+						placeholder="<?php echo esc_attr( edd_format_amount( 0, true, $this->get_order_currency_decimals( $item->order_id ) ) ); ?>"
 						data-original="<?php echo esc_attr( $original_amount ); ?>"
 						data-max="<?php echo esc_attr( $amount_remaining ); ?>"
 						disabled
@@ -673,7 +673,7 @@ class Refund_Items_Table extends List_Table {
 				$currency_symbol_output = sprintf( '<span>%s</span>', $currency_symbol );
 				$before                 = 'before' === $currency_position ? $currency_symbol_output : '';
 				$after                  = 'after' === $currency_position ? $currency_symbol_output : '';
-				$amount                 = edd_format_amount( 0.00, $this->get_order_currency_decimals( $order_id ) );
+				$amount                 = edd_format_amount( 0.00, true, $this->get_order_currency_decimals( $order_id ) );
 				printf(
 					'<span class="edd-refund-submit-line-total-amount">%1$s<span id="edd-refund-submit-subtotal-amount">%2$s</span>%3$s</span>',
 					$before, // phpcs:ignore
