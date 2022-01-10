@@ -146,14 +146,16 @@ function edd_download_meta_box_save( $post_id, $post ) {
 
 		} else {
 
+			$new = false;
 			if ( ! empty( $_POST[ $field ] ) ) {
 				$new = apply_filters( 'edd_metabox_save_' . $field, $_POST[ $field ] );
+			}
+			if ( ! empty( $new ) ) {
 				update_post_meta( $post_id, $field, $new );
 			} else {
 				delete_post_meta( $post_id, $field );
 			}
 		}
-
 	}
 
 	if ( edd_has_variable_prices( $post_id ) ) {
@@ -180,10 +182,11 @@ function edd_sanitize_bundled_products_save( $products = array() ) {
 
 	global $post;
 
-	$self = array_search( $post->ID, $products );
-
-	if( $self !== false )
-		unset( $products[ $self ] );
+	foreach ( $products as $key => $product_id ) {
+		if ( in_array( $product_id, array( 0, $post->ID ) ) ) {
+			unset( $products[ $key ] );
+		}
+	}
 
 	return array_values( array_unique( $products ) );
 }
@@ -628,7 +631,9 @@ function edd_render_products_field( $post_id ) {
 											}
 
 											$price_assignments = edd_get_bundle_pricing_variations( $post_id );
-											$price_assignments = $price_assignments[0];
+											if ( ! empty( $price_assignments[0] ) ) {
+												$price_assignments = $price_assignments[0];
+											}
 
 											$selected = isset( $price_assignments[ $index ] ) ? $price_assignments[ $index ] : null;
 
