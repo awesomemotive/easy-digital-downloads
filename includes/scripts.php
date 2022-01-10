@@ -464,9 +464,9 @@ function edd_localize_admin_scripts() {
 			if ( ! empty( $currency_filter ) && array_key_exists( strtoupper( $currency_filter ), edd_get_currencies() ) ) {
 				$currency = strtoupper( $currency_filter );
 			}
-		} elseif ( edd_is_admin_page( 'payments', 'edit' ) && ! empty( $_GET['id'] ) ) {
+		} elseif ( edd_is_admin_page( 'payments' ) && ! empty( $_GET['id'] ) ) {
 			/*
-			 * For orders, use the currency of the current order.
+			 * For orders & refunds, use the currency of the current order.
 			 */
 			$order = edd_get_order( absint( $_GET['id'] ) );
 			if ( $order instanceof \EDD\Orders\Order ) {
