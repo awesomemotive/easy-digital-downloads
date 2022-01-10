@@ -324,7 +324,7 @@ if ( empty( $order_items ) ) {
 					<td><?php echo esc_html( $item->quantity ); ?></td>
 				<?php } ?>
 				<td>
-					<?php echo esc_html( edd_currency_filter( edd_format_amount( $item->total ), $order->currency ) ); ?>
+					<?php echo esc_html( edd_display_amount( $item->total, $order->currency ) ); ?>
 				</td>
 			</tr>
 		<?php endforeach; ?>

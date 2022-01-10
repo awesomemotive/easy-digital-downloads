@@ -179,7 +179,7 @@ function edd_currency_decimal_filter( $decimals = 2, $currency = '' ) {
 	return apply_filters( 'edd_currency_decimal_count', $decimals, $currency );
 }
 add_filter( 'edd_sanitize_amount_decimals', 'edd_currency_decimal_filter' );
-add_filter( 'edd_format_amount_decimals',   'edd_currency_decimal_filter' );
+add_filter( 'edd_format_amount_decimals',   'edd_currency_decimal_filter', 10, 2 );
 
 /**
  * Sanitizes a string key for EDD Settings
