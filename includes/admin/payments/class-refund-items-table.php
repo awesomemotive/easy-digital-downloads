@@ -367,6 +367,8 @@ class Refund_Items_Table extends List_Table {
 
 			if ( $order ) {
 				$currency_decimals = edd_currency_decimal_filter( 2, $order->currency );
+			} else {
+				$currency_decimals = 2;
 			}
 		}
 
