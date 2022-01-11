@@ -35,6 +35,14 @@ abstract class Extension {
 	 */
 	protected $manager;
 
+	/**
+	 * The settings section for this item.
+	 *
+	 * @since 2.11.5
+	 * @var string
+	 */
+	protected $settings_section = 'general';
+
 	public function __construct() {
 		$this->manager = new \EDD\Admin\Extensions\Extension_Manager( static::PASS_LEVEL );
 	}
@@ -267,12 +275,11 @@ abstract class Extension {
 	 * @return string
 	 */
 	private function get_upgrade_url( ProductData $product_data, $item_id, $has_access = false ) {
-		$url            = 'https://easydigitaldownloads.com';
-		$tab            = ! empty( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : '';
+		$url            = 'https://easydigitaldownloads.com/pricing';
 		$utm_parameters = array(
 			'p'            => urlencode( $item_id ),
 			'utm_source'   => 'settings',
-			'utm_medium'   => urlencode( $tab ),
+			'utm_medium'   => urlencode( $this->settings_section ),
 			'utm_campaign' => 'admin',
 			'utm_term'     => urlencode( $product_data->slug ),
 		);
