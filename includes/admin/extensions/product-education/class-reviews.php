@@ -32,6 +32,14 @@ class Reviews extends Extension {
 	protected $settings_tab = 'marketing';
 
 	/**
+	 * The settings section for this item.
+	 *
+	 * @since 2.11.5
+	 * @var string
+	 */
+	protected $settings_section = 'reviews';
+
+	/**
 	 * The pass level required to access this extension.
 	 */
 	const PASS_LEVEL = \EDD\Admin\Pass_Manager::EXTENDED_PASS_ID;
@@ -97,7 +105,7 @@ class Reviews extends Extension {
 			return $sections;
 		}
 
-		$sections['reviews'] = __( 'Reviews', 'easy-digital-downloads' );
+		$sections[ $this->settings_section ] = __( 'Reviews', 'easy-digital-downloads' );
 
 		return $sections;
 	}

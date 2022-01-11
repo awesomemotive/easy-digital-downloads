@@ -24,6 +24,14 @@ class EmailMarketing extends Extension {
 	 */
 	protected $settings_tab = 'marketing';
 
+	/**
+	 * The settings section for this item.
+	 *
+	 * @since 2.11.5
+	 * @var string
+	 */
+	protected $settings_section = 'email_marketing';
+
 	public function __construct() {
 		add_filter( 'edd_settings_sections_marketing', array( $this, 'add_section' ) );
 		add_action( 'edd_settings_tab_top_marketing_email_marketing', array( $this, 'field' ) );
@@ -46,7 +54,7 @@ class EmailMarketing extends Extension {
 		if ( ! $product_data || ! is_array( $product_data ) ) {
 			return $sections;
 		}
-		$sections['email_marketing'] = __( 'Email Marketing', 'easy-digital-downloads' );
+		$sections[ $this->settings_section ] = __( 'Email Marketing', 'easy-digital-downloads' );
 
 		return $sections;
 	}
