@@ -235,7 +235,7 @@ class Refund_Items_Table extends List_Table {
 
 		$amount = false !== $amount_override ? $amount_override : $item->{$column_name};
 
-		$formatted_amount .= '<span data-' . $column_name . '="' . edd_sanitize_amount( $amount ) . '">' . edd_format_amount( $amount ) . '</span>';
+		$formatted_amount .= '<span data-' . $column_name . '="' . edd_sanitize_amount( $amount ) . '">' . edd_format_amount( $amount, true, $this->get_order_currency_decimals( $item->order_id ) ) . '</span>';
 
 		if ( 'after' === $currency_pos ) {
 			$formatted_amount .= $symbol;
@@ -295,7 +295,19 @@ class Refund_Items_Table extends List_Table {
 					echo '</span>';
 				}
 				?>
-				<span class="edd-amount-control__input"><input type="text" id="edd-order-item-<?php echo esc_attr( $item_id ); ?>-refund-<?php echo esc_attr( $column_name ); ?>" class="edd-order-item-refund-<?php echo esc_attr( $column_name ); ?> edd-order-item-refund-input" name="refund_<?php echo esc_attr( $object_type ); ?>[<?php echo esc_attr( $item->id ); ?>][<?php echo esc_attr( $column_name ); ?>]" value="<?php echo esc_attr( edd_format_amount( $amount_remaining ) ); ?>" placeholder="<?php echo esc_attr( edd_format_amount( 0 ) ); ?>" data-original="<?php echo esc_attr( $original_amount ); ?>" data-max="<?php echo esc_attr( $amount_remaining ); ?>" disabled /></span>
+				<span class="edd-amount-control__input">
+					<input
+						type="text"
+						id="edd-order-item-<?php echo esc_attr( $item_id ); ?>-refund-<?php echo esc_attr( $column_name ); ?>"
+						class="edd-order-item-refund-<?php echo esc_attr( $column_name ); ?> edd-order-item-refund-input"
+						name="refund_<?php echo esc_attr( $object_type ); ?>[<?php echo esc_attr( $item->id ); ?>][<?php echo esc_attr( $column_name ); ?>]"
+						value="<?php echo esc_attr( edd_format_amount( $amount_remaining, true, $this->get_order_currency_decimals( $item->order_id ) ) ); ?>"
+						placeholder="<?php echo esc_attr( edd_format_amount( 0, true, $this->get_order_currency_decimals( $item->order_id ) ) ); ?>"
+						data-original="<?php echo esc_attr( $original_amount ); ?>"
+						data-max="<?php echo esc_attr( $amount_remaining ); ?>"
+						disabled
+					/>
+				</span>
 				<?php
 				if ( 'after' === $currency_pos ) {
 					echo '<span class="edd-amount-control__currency is-after">';
@@ -337,6 +349,30 @@ class Refund_Items_Table extends List_Table {
 		<input type="number" id="edd-order-item-quantity-<?php echo esc_attr( $item_id ); ?>" class="edd-order-item-refund-quantity edd-order-item-refund-input" name="refund_<?php echo esc_attr( $object_type ); ?>[<?php echo esc_attr( $item->id ); ?>][quantity]" value="<?php echo esc_attr( $item_quantity ); ?>" placeholder="0" min="0" max="<?php echo esc_attr( $item_quantity ); ?>" step="1" disabled />
 		<?php
 		return ob_get_clean();
+	}
+
+	/**
+	 * Retrieves the number of decimals for a given order.
+	 *
+	 * @param int $order_id
+	 *
+	 * @since 3.0
+	 * @return int|null
+	 */
+	private function get_order_currency_decimals( $order_id ) {
+		static $currency_decimals = null;
+
+		if ( is_null( $currency_decimals ) ) {
+			$order = edd_get_order( $order_id );
+
+			if ( $order ) {
+				$currency_decimals = edd_currency_decimal_filter( 2, $order->currency );
+			} else {
+				$currency_decimals = 2;
+			}
+		}
+
+		return $currency_decimals;
 	}
 
 	/**
@@ -637,7 +673,7 @@ class Refund_Items_Table extends List_Table {
 				$currency_symbol_output = sprintf( '<span>%s</span>', $currency_symbol );
 				$before                 = 'before' === $currency_position ? $currency_symbol_output : '';
 				$after                  = 'after' === $currency_position ? $currency_symbol_output : '';
-				$amount                 = edd_format_amount( 0.00 );
+				$amount                 = edd_format_amount( 0.00, true, $this->get_order_currency_decimals( $order_id ) );
 				printf(
 					'<span class="edd-refund-submit-line-total-amount">%1$s<span id="edd-refund-submit-subtotal-amount">%2$s</span>%3$s</span>',
 					$before, // phpcs:ignore
