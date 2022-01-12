@@ -422,9 +422,7 @@ class EDD_Logging {
 	 * @return void
 	 */
 	protected function write_to_log( $message = '' ) {
-		$file = $this->get_file();
-		$file .= $message;
-		@file_put_contents( $this->file, $file );
+		file_put_contents( $this->file, $message, FILE_APPEND );
 	}
 
 	/**
@@ -528,9 +526,9 @@ function edd_debug_log( $message = '', $force = false ) {
 		if( function_exists( 'mb_convert_encoding' ) ) {
 
 			$message = mb_convert_encoding( $message, 'UTF-8' );
-	
+
 		}
-	
+
 		$edd_logs->log_to_file( $message );
 
 	}
