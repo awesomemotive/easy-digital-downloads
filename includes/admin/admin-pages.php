@@ -279,6 +279,11 @@ function edd_is_admin_page( $passed_page = '', $passed_view = '', $include_non_e
 						$found = true;
 					}
 					break;
+				case 'marketing':
+					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-settings' === $page && 'marketing' === $tab ) {
+						$found = true;
+					}
+					break;
 				default:
 					if ( ( 'download' == $typenow || 'download' === $post_type ) && $pagenow == 'edit.php' && 'edd-settings' === $page ) {
 						$found = true;

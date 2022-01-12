@@ -95,11 +95,11 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 			unlink( $this->file );
 		}
 
-		if( ! $this->done && $this->csv->data ) {
+		if( ! $this->done && $this->csv ) {
 
 			$more = true;
 
-			foreach( $this->csv->data as $key => $row ) {
+			foreach( $this->csv as $key => $row ) {
 
 				// Skip all rows until we pass our offset
 				if( $key + 1 <= $offset ) {
@@ -393,6 +393,9 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 		global $wpdb;
 
+		$customer = false;
+		$email    = '';
+
 		if( ! empty( $this->field_mapping['email'] ) && ! empty( $row[ $this->field_mapping['email'] ] ) ) {
 
 			$email = sanitize_text_field( $row[ $this->field_mapping['email'] ] );
@@ -435,7 +438,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 			// Now compare customer records. If they don't match, customer_id will be stored in meta and we will use the customer that matches the email
 
-			if( ( empty( $customer_by_id ) || $customer_by_id->id !== $customer_by_email->id ) && ! empty( $customer_by_email ) )  {
+			if ( ! empty( $customer_by_email ) && ( empty( $customer_by_id ) || $customer_by_id->id !== $customer_by_email->id ) )  {
 
 				$customer = $customer_by_email;
 
@@ -543,7 +546,10 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 
 			foreach( $downloads as $key => $download ) {
 
-				$d   = (array) explode( '|', $download );
+				$d = (array) explode( '|', $download );
+				if ( ! array_key_exists( 1, $d ) ) {
+					continue;
+				}
 				preg_match_all( '/\{(\d|(\d+(\.\d+|\d+)))\}/', $d[1], $matches );
 
 				if( false !== strpos( $d[1], '{' ) ) {
@@ -555,7 +561,8 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 					$price = trim( $d[1] );
 				}
 
-				$tax   = isset( $matches[1][0] ) ? trim( $matches[1][0] ) : 0;
+				$price    = floatval( $price );
+				$tax      = isset( $matches[1][0] ) ? floatval( trim( $matches[1][0] ) ) : 0;
 				$price_id = isset( $matches[1][1] ) ? trim( $matches[1][1] ) : false;
 
 				$d_array[] = array(
@@ -581,7 +588,7 @@ class EDD_Batch_Payments_Import extends EDD_Batch_Import {
 	 */
 	public function get_percentage_complete() {
 
-		$total = count( $this->csv->data );
+		$total = count( $this->csv );
 
 		if( $total > 0 ) {
 			$percentage = ( $this->step * $this->per_step / $total ) * 100;
