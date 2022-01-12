@@ -32,6 +32,14 @@ class Invoices extends Extension {
 	protected $settings_tab = 'gateways';
 
 	/**
+	 * The settings section for this item.
+	 *
+	 * @since 2.11.5
+	 * @var string
+	 */
+	protected $settings_section = 'invoices';
+
+	/**
 	 * The pass level required to access this extension.
 	 */
 	const PASS_LEVEL = \EDD\Admin\Pass_Manager::EXTENDED_PASS_ID;
@@ -92,7 +100,7 @@ class Invoices extends Extension {
 			return $sections;
 		}
 
-		$sections['invoices'] = __( 'Invoices', 'easy-digital-downloads' );
+		$sections[ $this->settings_section ] = __( 'Invoices', 'easy-digital-downloads' );
 
 		return $sections;
 	}
