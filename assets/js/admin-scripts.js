@@ -2138,6 +2138,25 @@ jQuery(document).ready(function ($) {
 		}
 	});
 
+	/**
+	 * Deletes the debug log file and disables logging.
+	 */
+	$( document.body ).on( 'click', '#edd-disable-debug-log', function ( e ) {
+		e.preventDefault();
+		var button = $( this );
+		button.attr( 'disabled', true );
+		$.ajax( {
+			type: "GET",
+			data: {
+				action: 'edd_disable_debugging'
+			},
+			url: ajaxurl,
+			success: function ( response ) {
+				button.replaceWith( response.data );
+			}
+		} );
+	} );
+
 });
 
 // Graphing Helper Functions

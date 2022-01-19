@@ -27,6 +27,7 @@ class EDD_Notices {
 	public function __construct() {
 		add_action( 'admin_notices', array( $this, 'show_notices' ) );
 		add_action( 'edd_dismiss_notices', array( $this, 'dismiss_notices' ) );
+		add_action( 'wp_ajax_edd_disable_debugging', array( $this, 'edd_disable_debugging' ) );
 	}
 
 	/**
@@ -171,6 +172,8 @@ class EDD_Notices {
 			echo '</div>';
 		}
 
+		$this->show_debugging_notice();
+
 		/* Commented out per https://github.com/easydigitaldownloads/Easy-Digital-Downloads/issues/3475
 		if( ! edd_test_ajax_works() && ! get_user_meta( get_current_user_id(), '_edd_admin_ajax_inaccessible_dismissed', true ) && current_user_can( 'manage_shop_settings' ) ) {
 			echo '<div class="error">';
@@ -308,6 +311,52 @@ class EDD_Notices {
 		}
 
 		settings_errors( 'edd-notices' );
+	}
+
+	/**
+	 * Show a notice if debugging is enabled in the EDD settings.
+	 * Does not show if only the `EDD_DEBUG_MODE` constant is defined.
+	 *
+	 * @since 2.11.5
+	 * @return void
+	 */
+	private function show_debugging_notice() {
+		if ( ! current_user_can( 'manage_shop_settings' ) ) {
+			return;
+		}
+		if ( ! edd_get_option( 'debug_mode', false ) ) {
+			return;
+		}
+		$view_url = add_query_arg(
+			array(
+				'post_type' => 'download',
+				'page'      => 'edd-tools',
+				'tab'       => 'debug_log',
+			),
+			admin_url( 'edit.php' )
+		);
+		?>
+		<div class="notice notice-warning">
+			<p>
+				<?php esc_html_e( 'Easy Digital Downloads debug logging is enabled. Please only leave it enabled for as long as it is needed for troubleshooting.', 'easy-digital-downloads' ); ?>
+				<a class="button button-link" href="<?php echo esc_url( $view_url ); ?>"><?php esc_html_e( 'View Debug Log', 'easy-digital-downloads' ); ?></a>
+				<button class="button button-link" id="edd-disable-debug-log"><?php esc_html_e( 'Delete Log File and Disable Logging', 'easy-digital-downloads' ); ?></button>
+			</p>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Disables the debug log setting and deletes the existing log file.
+	 *
+	 * @since 2.11.5
+	 * @return void
+	 */
+	public function edd_disable_debugging() {
+		edd_update_option( 'debug_mode', false );
+		global $edd_logs;
+		$edd_logs->clear_log_file();
+		wp_send_json_success( __( 'Logging has been disabled.', 'easy-digital-downloads' ) );
 	}
 
 	/**
