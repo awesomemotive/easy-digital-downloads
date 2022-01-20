@@ -346,6 +346,7 @@ class EDD_Notices {
 			<p>
 				<a class="button button-secondary" href="<?php echo esc_url( $view_url ); ?>"><?php esc_html_e( 'View Debug Log', 'easy-digital-downloads' ); ?></a>
 				<button class="button button-primary" id="edd-disable-debug-log"><?php esc_html_e( 'Delete Log File and Disable Logging', 'easy-digital-downloads' ); ?></button>
+				<?php wp_nonce_field( 'edd_debug_log_delete', 'edd_debug_log_delete' ); ?>
 			</p>
 		</div>
 		<?php
@@ -358,6 +359,10 @@ class EDD_Notices {
 	 * @return void
 	 */
 	public function edd_disable_debugging() {
+		$validate_nonce = ! empty( $_GET['nonce'] ) && wp_verify_nonce( $_GET['nonce'], 'edd_debug_log_delete' );
+		if ( ! current_user_can( 'manage_shop_settings' ) || ! $validate_nonce ) {
+			wp_send_json_error( wpautop( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ) ), 403 );
+		}
 		edd_update_option( 'debug_mode', false );
 		global $edd_logs;
 		$edd_logs->clear_log_file();
