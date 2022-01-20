@@ -321,6 +321,9 @@ class EDD_Notices {
 	 * @return void
 	 */
 	private function show_debugging_notice() {
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			return;
+		}
 		if ( ! current_user_can( 'manage_shop_settings' ) ) {
 			return;
 		}
