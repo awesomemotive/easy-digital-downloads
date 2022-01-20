@@ -2144,19 +2144,22 @@ jQuery(document).ready(function ($) {
 	$( document.body ).on( 'click', '#edd-disable-debug-log', function ( e ) {
 		e.preventDefault();
 		$( this ).attr( 'disabled', true );
+		var notice = $( '#edd-debug-log-notice' );
 		$.ajax( {
 			type: "GET",
 			data: {
-				action: 'edd_disable_debugging'
+				action: 'edd_disable_debugging',
+				nonce: $( '#edd_debug_log_delete' ).val(),
 			},
 			url: ajaxurl,
 			success: function ( response ) {
-				var notice = $( '#edd-debug-log-notice' );
 				notice.empty().append( response.data );
 				setTimeout( function () {
 					notice.slideUp();
 				}, 3000 );
 			}
+		} ).fail( function ( response ) {
+			notice.empty().append( response.responseJSON.data );
 		} );
 	} );
 
