@@ -2143,8 +2143,7 @@ jQuery(document).ready(function ($) {
 	 */
 	$( document.body ).on( 'click', '#edd-disable-debug-log', function ( e ) {
 		e.preventDefault();
-		var button = $( this );
-		button.attr( 'disabled', true );
+		$( this ).attr( 'disabled', true );
 		$.ajax( {
 			type: "GET",
 			data: {
@@ -2152,7 +2151,11 @@ jQuery(document).ready(function ($) {
 			},
 			url: ajaxurl,
 			success: function ( response ) {
-				button.replaceWith( response.data );
+				var notice = $( '#edd-debug-log-notice' );
+				notice.empty().append( response.data );
+				setTimeout( function () {
+					notice.slideUp();
+				}, 3000 );
 			}
 		} );
 	} );
