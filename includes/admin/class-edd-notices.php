@@ -339,11 +339,13 @@ class EDD_Notices {
 			admin_url( 'edit.php' )
 		);
 		?>
-		<div class="notice notice-warning">
+		<div id="edd-debug-log-notice" class="notice notice-warning">
 			<p>
 				<?php esc_html_e( 'Easy Digital Downloads debug logging is enabled. Please only leave it enabled for as long as it is needed for troubleshooting.', 'easy-digital-downloads' ); ?>
+			</p>
+			<p>
 				<a class="button button-secondary" href="<?php echo esc_url( $view_url ); ?>"><?php esc_html_e( 'View Debug Log', 'easy-digital-downloads' ); ?></a>
-				<button class="button button-link" id="edd-disable-debug-log"><?php esc_html_e( 'Delete Log File and Disable Logging', 'easy-digital-downloads' ); ?></button>
+				<button class="button button-primary" id="edd-disable-debug-log"><?php esc_html_e( 'Delete Log File and Disable Logging', 'easy-digital-downloads' ); ?></button>
 			</p>
 		</div>
 		<?php
@@ -359,7 +361,7 @@ class EDD_Notices {
 		edd_update_option( 'debug_mode', false );
 		global $edd_logs;
 		$edd_logs->clear_log_file();
-		wp_send_json_success( __( 'Logging has been disabled.', 'easy-digital-downloads' ) );
+		wp_send_json_success( wpautop( __( 'Logging has been disabled.', 'easy-digital-downloads' ) ) );
 	}
 
 	/**
