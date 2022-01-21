@@ -366,7 +366,7 @@ class EDD_Notices {
 		edd_update_option( 'debug_mode', false );
 		global $edd_logs;
 		$edd_logs->clear_log_file();
-		wp_send_json_success( wpautop( __( 'Logging has been disabled.', 'easy-digital-downloads' ) ) );
+		wp_send_json_success( wpautop( __( 'The debug log has been cleared and logging has been disabled.', 'easy-digital-downloads' ) ) );
 	}
 
 	/**
