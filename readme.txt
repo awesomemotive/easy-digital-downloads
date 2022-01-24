@@ -249,6 +249,9 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 * Fix: Change how data is added to the debug log to prevent errors due to size.
 * Fix: Bundled product metadata is no longer saved to the download for non-bundle products.
 * Fix: A PHP notice was thrown when a payment had an unregistered status.
+* Fix: Stripe - JavaScript error when viewing a preapproved payment record.
+* Fix: Stripe - EDD 3.0: Incorrect tax amount being charged when customer uses a different country from the store's base country.
+
 
 = 2.11.4.1, January 7, 2021 =
 * Fix: "Submit" buttons missing from Reviews and Recurring Payments settings pages.
