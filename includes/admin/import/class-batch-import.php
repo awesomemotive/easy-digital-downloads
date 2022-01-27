@@ -85,16 +85,11 @@ class EDD_Batch_Import {
 	 */
 	public function __construct( $_file = '', $_step = 1 ) {
 
-		if( ! class_exists( 'parseCSV' ) ) {
-			require_once EDD_PLUGIN_DIR . 'includes/libraries/parsecsv.lib.php';
-		}
-
 		$this->step  = $_step;
 		$this->file  = $_file;
 		$this->done  = false;
-		$this->csv   = new parseCSV();
-		$this->csv->auto( $this->file );
-		$this->total = count( $this->csv->data );
+		$this->csv   = $this->get_csv_file( $this->file );
+		$this->total = count( $this->csv );
 		$this->init();
 
 	}
@@ -118,6 +113,34 @@ class EDD_Batch_Import {
 	}
 
 	/**
+	 * Parses the CSV from the file and returns the data as an array.
+	 *
+	 * @since 2.11.5
+	 * @param string $file
+	 *
+	 * @return array
+	 */
+	public function get_csv_file( $file ) {
+		$csv = array_map( 'str_getcsv', file( $this->file ) );
+		array_walk(
+			$csv,
+			function ( &$a ) use ( $csv ) {
+				/*
+				* Make sure the two arrays have the same lengths.
+				* If not, we trim the larger array to match the smaller one.
+				*/
+				$min     = min( count( $csv[0] ), count( $a ) );
+				$headers = array_slice( $csv[0], 0, $min );
+				$values  = array_slice( $a, 0, $min );
+				$a       = array_combine( $headers, $values );
+			}
+		);
+		array_shift( $csv );
+
+		return $csv;
+	}
+
+	/**
 	 * Get the CSV columns
 	 *
 	 * @since 2.6
@@ -125,7 +148,13 @@ class EDD_Batch_Import {
 	 */
 	public function get_columns() {
 
-		return $this->csv->titles;
+		$columns = array();
+
+		if ( isset( $this->csv[0] ) && is_array( $this->csv[0] ) ) {
+			$columns = array_keys( $this->csv[0] );
+		}
+
+		return $columns;
 	}
 
 	/**
@@ -138,8 +167,11 @@ class EDD_Batch_Import {
 	 */
 	public function get_first_row() {
 
-		return array_map( array( $this, 'trim_preview' ), current( $this->csv->data ) );
+		if ( ! is_array( $this->csv ) ) {
+			return array();
+		}
 
+		return array_map( array( $this, 'trim_preview' ), current( $this->csv ) );
 	}
 
 	/**
@@ -177,9 +209,8 @@ class EDD_Batch_Import {
 	 */
 	public function map_fields( $import_fields = array() ) {
 
-		// Probably add some sanitization here later
+		$this->field_mapping = array_map( 'sanitize_text_field', $import_fields );
 
-		$this->field_mapping = $import_fields;
 	}
 
 	/**

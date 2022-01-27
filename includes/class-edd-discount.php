@@ -16,6 +16,25 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * EDD_Discount Class
  *
  * @since 2.7
+ *
+ * @property int    $ID
+ * @property string $name
+ * @property string $code
+ * @property string $status
+ * @property string $type
+ * @property float  $amount
+ * @property array  $product_reqs
+ * @property array  $excluded_products
+ * @property string $product_condition
+ * @property string $start
+ * @property string $expiration
+ * @property int    $uses
+ * @property int    $max_uses
+ * @property float  $min_price
+ * @property bool   $is_single_use
+ * @property bool   $is_not_global
+ * @property string $post_date
+ * @property string $post_modified
  */
 class EDD_Discount {
 	/**
