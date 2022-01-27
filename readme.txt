@@ -243,7 +243,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 
 == Changelog ==
 
-= 2.11.5, January 26, 2021 =
+= 2.11.5, January 27, 2021 =
 * New: Add an admin notice when the EDD Debug Log is enabled.
 * Fix: Importer has been updated to work with PHP 8.
 * Fix: Change how data is added to the debug log to prevent errors due to size.
