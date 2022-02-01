@@ -174,7 +174,7 @@ function edd_sanitize_bundled_products_save( $products = array() ) {
 			$product_id = $value;
 		}
 
-		if ( $product_id === get_the_ID() ) {
+		if ( in_array( $product_id, array( 0, get_the_ID() ) ) ) {
 			unset( $products[ $key ] );
 		}
 	}
