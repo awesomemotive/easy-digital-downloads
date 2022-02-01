@@ -1,10 +1,10 @@
-# Copyright (C) 2022 Sandhills Development, LLC
+# Copyright (C) 2022 Easy Digital Downloads
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 3.0-rc1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2022-01-07 14:55:41+00:00\n"
+"POT-Creation-Date: 2022-02-01 14:14:42+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,23 +24,23 @@ msgstr ""
 "X-Textdomain-Support: yes\n"
 "X-Generator: grunt-wp-i18n 1.0.3\n"
 
-#: easy-digital-downloads.php:188
+#: easy-digital-downloads.php:190
 msgid "This plugin is not fully active."
 msgstr ""
 
-#: easy-digital-downloads.php:198
+#: easy-digital-downloads.php:200
 msgid "Requires %s (%s), but (%s) is installed."
 msgstr ""
 
-#: easy-digital-downloads.php:208
+#: easy-digital-downloads.php:210
 msgid "Requires %s (%s), but it appears to be missing."
 msgstr ""
 
-#: easy-digital-downloads.php:218
+#: easy-digital-downloads.php:220
 msgid "Requirements"
 msgstr ""
 
-#: easy-digital-downloads.php:228
+#: easy-digital-downloads.php:230
 msgid "Easy Digital Download Requirements"
 msgstr ""
 
@@ -373,243 +373,280 @@ msgstr ""
 msgid "Generate New API Keys"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:221
+#: includes/admin/class-edd-notices.php:222
 msgid "No checkout page is configured. Set one in <a href=\"%s\">Settings</a>."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:275
+#: includes/admin/class-edd-notices.php:276
 msgid "The files in %s are not currently protected."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:276
+#: includes/admin/class-edd-notices.php:277
 msgid ""
 "To protect them, you must add this <a "
 "href=\"http://docs.easydigitaldownloads.com/article/682-protected-download-"
 "files-on-nginx\">NGINX redirect rule</a>."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:277
-#: includes/admin/class-edd-notices.php:296
+#: includes/admin/class-edd-notices.php:278
+#: includes/admin/class-edd-notices.php:297
 msgid ""
 "If you have already done this, or it does not apply to your site, you may "
 "permenently %s."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:277
-#: includes/admin/class-edd-notices.php:296
+#: includes/admin/class-edd-notices.php:278
+#: includes/admin/class-edd-notices.php:297
 msgid "dismiss this notice"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:294
+#: includes/admin/class-edd-notices.php:295
 msgid "The .htaccess file is missing from: %s"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:295
+#: includes/admin/class-edd-notices.php:296
 msgid ""
 "First, please resave the Misc settings tab a few times. If this warning "
 "continues to appear, create a file called \".htaccess\" in the %s "
 "directory, and copy the following into it:"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:316
+#: includes/admin/class-edd-notices.php:318
 msgid ""
 "Easy Digital Downloads 2.5 contains a <a href=\"%s\">built in recount "
 "tool</a>. Please <a href=\"%s\">deactivate the Easy Digital Downloads - "
 "Recount Earnings plugin</a>"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:346
+#: includes/admin/class-edd-notices.php:348
 msgid "Review Tax Rates"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:353
+#: includes/admin/class-edd-notices.php:355
 #. translators: Link to review existing tax rates.
 msgid "A default tax rate was detected."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:353
+#: includes/admin/class-edd-notices.php:355
 msgid ""
 "This setting is no longer used in this version of Easy Digital Downloads. "
 "Please confirm your regional tax rates are properly configured and update "
 "tax settings to remove this notice."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:372
+#: includes/admin/class-edd-notices.php:376
 msgid "Settings updated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:387
+#: includes/admin/class-edd-notices.php:391
 msgid "Fix this"
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:393
+#: includes/admin/class-edd-notices.php:397
 msgid "No payment gateways are enabled. %s."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:423
+#: includes/admin/class-edd-notices.php:427
 msgid "Discount code added."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:429
+#: includes/admin/class-edd-notices.php:433
 msgid "There was a problem adding that discount code, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:436
+#: includes/admin/class-edd-notices.php:440
 msgid "A discount with that code already exists, please use a different code."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:443
+#: includes/admin/class-edd-notices.php:447
 msgid "Discount code updated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:449
+#: includes/admin/class-edd-notices.php:453
 msgid "No changes were made to that discount code."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:455
+#: includes/admin/class-edd-notices.php:459
 msgid "There was a problem updating that discount code, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:462
+#: includes/admin/class-edd-notices.php:466
 msgid ""
 "The discount code could not be added because one or more of the required "
 "fields was empty, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:469
+#: includes/admin/class-edd-notices.php:473
 msgid ""
 "The discount code entered is invalid; only alphanumeric characters are "
 "allowed, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:476
+#: includes/admin/class-edd-notices.php:480
 msgid ""
 "The discount amount must be a valid percentage or numeric flat amount. "
 "Please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:483
+#: includes/admin/class-edd-notices.php:487
 msgid "Discount code deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:489
+#: includes/admin/class-edd-notices.php:493
 msgid "There was a problem deleting that discount code, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:496
+#: includes/admin/class-edd-notices.php:500
 msgid "Discount code activated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:502
+#: includes/admin/class-edd-notices.php:506
 msgid "There was a problem activating that discount code, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:509
+#: includes/admin/class-edd-notices.php:513
 msgid "Discount code deactivated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:515
+#: includes/admin/class-edd-notices.php:519
 msgid "There was a problem deactivating that discount code, please try again."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:528
+#: includes/admin/class-edd-notices.php:532
 msgid "The reports have been refreshed."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:540
+#: includes/admin/class-edd-notices.php:544
 msgid "The settings have been imported."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:546
+#: includes/admin/class-edd-notices.php:550
 msgid "API keys successfully generated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:552
+#: includes/admin/class-edd-notices.php:556
 msgid "The specified user already has API keys."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:559
+#: includes/admin/class-edd-notices.php:563
 msgid "API keys successfully regenerated."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:565
+#: includes/admin/class-edd-notices.php:569
 msgid "API keys successfully revoked."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:572
+#: includes/admin/class-edd-notices.php:576
 msgid "The test email was sent successfully."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:585
+#: includes/admin/class-edd-notices.php:589
 msgid "The note has been added successfully."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:591
+#: includes/admin/class-edd-notices.php:595
 msgid "The order has been updated successfully."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:597
+#: includes/admin/class-edd-notices.php:601
 msgid "Order successfully created."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:603
+#: includes/admin/class-edd-notices.php:607
 msgid "The order has been moved to the trash."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:609
+#: includes/admin/class-edd-notices.php:613
 msgid "The order has been restored."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:615
+#: includes/admin/class-edd-notices.php:619
 msgid "The order has been deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:621
+#: includes/admin/class-edd-notices.php:625
 msgid "The purchase receipt has been resent."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:627
+#: includes/admin/class-edd-notices.php:631
 msgid "Failed to send purchase receipt."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:633
+#: includes/admin/class-edd-notices.php:637
 msgid "The order note has been deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:645
+#: includes/admin/class-edd-notices.php:649
 msgid "Customer successfully deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:651
+#: includes/admin/class-edd-notices.php:655
 msgid "User successfully verified."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:657
+#: includes/admin/class-edd-notices.php:661
 msgid "Customer email added."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:663
+#: includes/admin/class-edd-notices.php:667
 msgid "Customer email deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:669
+#: includes/admin/class-edd-notices.php:673
 msgid "Failed to delete customer email."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:676
+#: includes/admin/class-edd-notices.php:680
 msgid "Primary email updated for customer."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:682
+#: includes/admin/class-edd-notices.php:686
 msgid "Failed to set primary email."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:689
+#: includes/admin/class-edd-notices.php:693
 msgid "Customer address deleted."
 msgstr ""
 
-#: includes/admin/class-edd-notices.php:695
+#: includes/admin/class-edd-notices.php:699
 msgid "Failed to delete customer address."
+msgstr ""
+
+#: includes/admin/class-edd-notices.php:737
+msgid ""
+"Easy Digital Downloads debug logging is enabled. Please only leave it "
+"enabled for as long as it is needed for troubleshooting."
+msgstr ""
+
+#: includes/admin/class-edd-notices.php:738
+msgid "View Debug Log"
+msgstr ""
+
+#: includes/admin/class-edd-notices.php:739
+msgid "Delete Log File and Disable Logging"
+msgstr ""
+
+#: includes/admin/class-edd-notices.php:755
+#: includes/admin/customers/customer-actions.php:554
+#: includes/admin/promos/class-promo-handler.php:116
+#: includes/admin/promos/class-promo-handler.php:123
+#: includes/admin/promos/class-promo-handler.php:128
+#: includes/admin/tools/class-edd-tools-recount-all-stats.php:61
+#: includes/admin/tools/class-edd-tools-recount-download-stats.php:149
+#: includes/gateways/paypal/admin/connect.php:106
+#: includes/gateways/paypal/admin/connect.php:182
+#: includes/gateways/paypal/admin/connect.php:292
+#: includes/gateways/paypal/admin/connect.php:455
+#: includes/gateways/paypal/admin/connect.php:459
+#: includes/gateways/paypal/admin/connect.php:511
+#: includes/gateways/paypal/admin/connect.php:545
+#: includes/gateways/paypal/admin/connect.php:568
+#: includes/gateways/paypal/admin/connect.php:597
+msgid "You do not have permission to perform this action."
+msgstr ""
+
+#: includes/admin/class-edd-notices.php:760
+msgid "The debug log has been cleared and logging has been disabled."
 msgstr ""
 
 #: includes/admin/class-sections.php:100
@@ -693,7 +730,7 @@ msgstr ""
 #: includes/admin/discounts/edit-discount.php:126
 #: includes/admin/discounts/edit-discount.php:163
 #: includes/admin/payments/class-payments-table.php:495
-#: includes/admin/payments/class-refund-items-table.php:393
+#: includes/admin/payments/class-refund-items-table.php:429
 #. translators: customer name or address id
 #. translators: customer email
 #. translators: customer name or email
@@ -949,24 +986,6 @@ msgstr ""
 
 #: includes/admin/customers/customer-actions.php:481
 msgid "Failed to disconnect user from customer"
-msgstr ""
-
-#: includes/admin/customers/customer-actions.php:554
-#: includes/admin/promos/class-promo-handler.php:116
-#: includes/admin/promos/class-promo-handler.php:123
-#: includes/admin/promos/class-promo-handler.php:128
-#: includes/admin/tools/class-edd-tools-recount-all-stats.php:61
-#: includes/admin/tools/class-edd-tools-recount-download-stats.php:149
-#: includes/gateways/paypal/admin/connect.php:106
-#: includes/gateways/paypal/admin/connect.php:182
-#: includes/gateways/paypal/admin/connect.php:292
-#: includes/gateways/paypal/admin/connect.php:455
-#: includes/gateways/paypal/admin/connect.php:459
-#: includes/gateways/paypal/admin/connect.php:511
-#: includes/gateways/paypal/admin/connect.php:545
-#: includes/gateways/paypal/admin/connect.php:568
-#: includes/gateways/paypal/admin/connect.php:597
-msgid "You do not have permission to perform this action."
 msgstr ""
 
 #: includes/admin/customers/customer-functions.php:105
@@ -1888,7 +1907,7 @@ msgid ""
 msgstr ""
 
 #: includes/admin/downloads/contextual-help.php:78
-#: includes/admin/downloads/metabox.php:1148
+#: includes/admin/downloads/metabox.php:1154
 msgid "Purchase Shortcode"
 msgstr ""
 
@@ -1930,8 +1949,8 @@ msgstr ""
 
 #: includes/admin/downloads/dashboard-columns.php:34
 #: includes/admin/downloads/dashboard-columns.php:302
-#: includes/admin/downloads/metabox.php:300
-#: includes/admin/downloads/metabox.php:452
+#: includes/admin/downloads/metabox.php:304
+#: includes/admin/downloads/metabox.php:456
 #: includes/admin/reporting/export/class-batch-export-downloads.php:51
 #: includes/emails/tags.php:215
 #: includes/reports/data/downloads/class-top-selling-downloads-list-table.php:56
@@ -2007,167 +2026,167 @@ msgstr ""
 msgid "%1$s Stats"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:287
+#: includes/admin/downloads/metabox.php:291
 msgid "Pricing Options:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:294
+#: includes/admin/downloads/metabox.php:298
 msgid "Enable variable pricing"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:333
+#: includes/admin/downloads/metabox.php:337
 msgid ""
 "Enable multi-option purchase mode. Allows multiple price options to be "
 "added to your cart at once"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:364
+#: includes/admin/downloads/metabox.php:368
 msgid "Add New Price"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:419
+#: includes/admin/downloads/metabox.php:423
 msgid "Click and drag to re-order price options"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:420
+#: includes/admin/downloads/metabox.php:424
 msgid "Price ID: %s"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:426 includes/scripts.php:504
+#: includes/admin/downloads/metabox.php:430 includes/scripts.php:518
 msgid "Show advanced settings"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:429
-#: includes/admin/downloads/metabox.php:658
-#: includes/admin/downloads/metabox.php:720
-#: includes/admin/downloads/metabox.php:836
+#: includes/admin/downloads/metabox.php:433
+#: includes/admin/downloads/metabox.php:664
+#: includes/admin/downloads/metabox.php:726
+#: includes/admin/downloads/metabox.php:842
 #: includes/admin/views/tmpl-tax-rates-table-row.php:40
-#: includes/scripts.php:499 templates/checkout_cart.php:57
+#: includes/scripts.php:513 templates/checkout_cart.php:57
 #: templates/checkout_cart.php:75 templates/shortcode-profile-editor.php:123
 msgid "Remove"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:429
+#: includes/admin/downloads/metabox.php:433
 msgid "Remove price option %s"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:439
-#: includes/admin/downloads/metabox.php:445
+#: includes/admin/downloads/metabox.php:443
+#: includes/admin/downloads/metabox.php:449
 msgid "Option Name"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:482 includes/download-functions.php:669
+#: includes/admin/downloads/metabox.php:486 includes/download-functions.php:669
 #: includes/gateways/stripe/includes/template-functions.php:404
 msgid "Default"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:484
+#: includes/admin/downloads/metabox.php:488
 msgid "Set ID %s as default price"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:549
+#: includes/admin/downloads/metabox.php:553
 msgid "Product Type Options:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:563
+#: includes/admin/downloads/metabox.php:567
 msgid "Select a product type"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:564
+#: includes/admin/downloads/metabox.php:568
 msgid ""
 "<strong>Product Type</strong>: Sell this item as a single product, or use "
 "the Bundle type to sell a collection of products."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:598
+#: includes/admin/downloads/metabox.php:602
 msgid "Bundled %s"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:606
-#: includes/admin/downloads/metabox.php:675
+#: includes/admin/downloads/metabox.php:610
+#: includes/admin/downloads/metabox.php:681
 msgid "Click and drag to re-order bundled %s"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:610
-#: includes/admin/downloads/metabox.php:679
+#: includes/admin/downloads/metabox.php:614
+#: includes/admin/downloads/metabox.php:685
 msgid "Select %s:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:630
-#: includes/admin/downloads/metabox.php:695
+#: includes/admin/downloads/metabox.php:634
+#: includes/admin/downloads/metabox.php:701
 msgid "Price assignment:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:658
+#: includes/admin/downloads/metabox.php:664
 msgid "Remove bundle option %s"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:669
+#: includes/admin/downloads/metabox.php:675
 msgid "Bundled %s:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:720
+#: includes/admin/downloads/metabox.php:726
 msgid "Remove bundle option 1"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:731
-#: includes/admin/downloads/metabox.php:792
+#: includes/admin/downloads/metabox.php:737
+#: includes/admin/downloads/metabox.php:798
 msgid "Add New File"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:830
+#: includes/admin/downloads/metabox.php:836
 msgid "Click and drag to re-order files"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:831
+#: includes/admin/downloads/metabox.php:837
 msgid "%1$s file ID: %2$s"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:836
+#: includes/admin/downloads/metabox.php:842
 msgid "Remove file %s"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:843
+#: includes/admin/downloads/metabox.php:849
 msgid "File Name"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:851
+#: includes/admin/downloads/metabox.php:857
 msgid "My Neat File"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:858
+#: includes/admin/downloads/metabox.php:864
 msgid "File URL"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:864
+#: includes/admin/downloads/metabox.php:870
 msgid "Enter, upload, choose from Media Library"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:869
-#: includes/admin/downloads/metabox.php:871
+#: includes/admin/downloads/metabox.php:875
+#: includes/admin/downloads/metabox.php:877
 msgid "Select Files"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:869
+#: includes/admin/downloads/metabox.php:875
 msgid "Select"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:879
+#: includes/admin/downloads/metabox.php:885
 msgid "Price Assignment"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:879
+#: includes/admin/downloads/metabox.php:885
 msgid ""
 "<strong>Price Assignment</strong>: With variable pricing enabled, you can "
 "choose to allow certain price variations access to specific files, or allow "
 "all price variations to access a file."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:926
+#: includes/admin/downloads/metabox.php:932
 msgid "Insert into %s"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:957
+#: includes/admin/downloads/metabox.php:963
 #: includes/admin/reporting/reports.php:303
 #: includes/admin/reporting/reports.php:950
 #: includes/admin/reporting/reports.php:1115
@@ -2179,7 +2198,7 @@ msgstr ""
 msgid "Refunds"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:958
+#: includes/admin/downloads/metabox.php:964
 msgid ""
 "<strong>Refundable</strong>: Allow or disallow refunds for this specific "
 "product. When allowed, the refund window will be used on all future "
@@ -2187,62 +2206,62 @@ msgid ""
 "this product can be refunded after purchasing."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:963
+#: includes/admin/downloads/metabox.php:969
 msgid "Refund Status"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:989
+#: includes/admin/downloads/metabox.php:995
 #: includes/admin/settings/register-settings.php:528
 msgid "Refund Window"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:995
-#: includes/admin/downloads/metabox.php:1028
+#: includes/admin/downloads/metabox.php:1001
+#: includes/admin/downloads/metabox.php:1034
 msgid "Leave blank to use global setting. Enter <code>0</code> for unlimited"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1023
+#: includes/admin/downloads/metabox.php:1029
 #: includes/admin/reporting/export/class-batch-export-downloads.php:53
 #: includes/admin/settings/register-settings.php:1008
 #: includes/admin/tools.php:936
 msgid "File Download Limit"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1023
+#: includes/admin/downloads/metabox.php:1029
 msgid ""
 "<strong>File Download Limit</strong>: Limit the number of times a customer "
 "who purchased this product can access their download links."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1068
+#: includes/admin/downloads/metabox.php:1074
 msgid "Taxability"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1068
+#: includes/admin/downloads/metabox.php:1074
 msgid ""
 "<strong>Taxability</strong>: When taxes are enabled, all products are "
 "taxable by default. Check this box to mark this product as non-taxable."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1079
+#: includes/admin/downloads/metabox.php:1085
 msgid "This product is non-taxable"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1104
+#: includes/admin/downloads/metabox.php:1110
 msgid "Item Quantities"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1104
+#: includes/admin/downloads/metabox.php:1110
 msgid ""
 "<strong>Item Quantities</strong>: if disabled, customers will not be "
 "provided an option to change the number they wish to purchase."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1117
+#: includes/admin/downloads/metabox.php:1123
 msgid "Disable quantity input for this product"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1139
+#: includes/admin/downloads/metabox.php:1145
 #: includes/admin/settings/register-settings.php:956
 #: includes/admin/thickbox.php:76 includes/checkout/template.php:1021
 #: includes/gateways/stripe/includes/payment-methods/buy-now/template.php:214
@@ -2250,27 +2269,27 @@ msgstr ""
 msgid "Purchase"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1148
+#: includes/admin/downloads/metabox.php:1154
 msgid ""
 "<strong>Purchase Shortcode</strong>: Use this shortcode to output a "
 "purchase link for this product in the location of your choosing."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1172
+#: includes/admin/downloads/metabox.php:1178
 msgid "Accounting Options"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1172
+#: includes/admin/downloads/metabox.php:1178
 msgid ""
 "<strong>SKU</strong>: If an SKU is entered for this product, it will be "
 "shown on the purchase receipt and exported purchase histories."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1175
+#: includes/admin/downloads/metabox.php:1181
 msgid "Enter an SKU for this product."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1204
+#: includes/admin/downloads/metabox.php:1210
 msgid ""
 "<strong>Purchase button behavior</strong>: Add to Cart buttons follow a "
 "traditional eCommerce flow. A Buy Now button bypasses most of the process, "
@@ -2278,18 +2297,18 @@ msgid ""
 "up the process of buying the product."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1205
+#: includes/admin/downloads/metabox.php:1211
 msgid ""
 "<strong>Purchase button behavior</strong>: Add to Cart buttons follow a "
 "traditional eCommerce flow. Buy Now buttons are only available for stores "
 "that have a single supported gateway active and that do not use taxes."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1209
+#: includes/admin/downloads/metabox.php:1215
 msgid "Button Options"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1209
+#: includes/admin/downloads/metabox.php:1215
 msgid ""
 "<strong>Hide purchase button</strong>: By default, the purchase buttons "
 "will be displayed at the bottom of the download, when disabled you will "
@@ -2297,50 +2316,50 @@ msgid ""
 "the product where you prefer."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1221
+#: includes/admin/downloads/metabox.php:1227
 msgid "Hide purchase button"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1227
+#: includes/admin/downloads/metabox.php:1233
 msgid "Purchase button behavior"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1235
+#: includes/admin/downloads/metabox.php:1241
 #: includes/admin/settings/register-settings.php:970
 #: includes/admin/thickbox.php:125
 msgid "Add to Cart"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1236
+#: includes/admin/downloads/metabox.php:1242
 #: includes/admin/settings/register-settings.php:984
 #: includes/gateways/stripe/includes/payment-methods/buy-now/template.php:47
 #: includes/shortcodes.php:47 includes/template-functions.php:78
 msgid "Buy Now"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1282
+#: includes/admin/downloads/metabox.php:1288
 msgid "Download Instructions"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1285
+#: includes/admin/downloads/metabox.php:1291
 msgid ""
 "Special instructions for this %s. These will be added to the purchase "
 "receipt, and may be used by some extensions or themes."
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1317
+#: includes/admin/downloads/metabox.php:1323
 msgid "Sales:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1322
+#: includes/admin/downloads/metabox.php:1328
 msgid "Gross Revenue:"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1329
+#: includes/admin/downloads/metabox.php:1335
 msgid "View File Download Log"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:1356
+#: includes/admin/downloads/metabox.php:1362
 #. Translators: The %s represents the link to the pricing page on the Easy
 #. Digital Downloads website.
 msgid ""
@@ -2349,27 +2368,27 @@ msgid ""
 "6th CST. <a target=\"_blank\" href=\"%s\">Don't miss out</a>!"
 msgstr ""
 
-#: includes/admin/extensions/abstract-extension.php:235
+#: includes/admin/extensions/abstract-extension.php:243
 #. translators: The extension name.
 msgid "Log In to Your Account to Download %s"
 msgstr ""
 
-#: includes/admin/extensions/abstract-extension.php:243
+#: includes/admin/extensions/abstract-extension.php:251
 #. translators: The extension name.
 msgid "Upgrade Today to Access %s!"
 msgstr ""
 
-#: includes/admin/extensions/abstract-extension.php:254
+#: includes/admin/extensions/abstract-extension.php:262
 #. translators: The extension name.
 msgid "Activate %s"
 msgstr ""
 
-#: includes/admin/extensions/abstract-extension.php:308
+#: includes/admin/extensions/abstract-extension.php:315
 #. translators: the plural Downloads label.
 msgid "View %s"
 msgstr ""
 
-#: includes/admin/extensions/abstract-extension.php:320
+#: includes/admin/extensions/abstract-extension.php:327
 #. translators: The extension name.
 msgid "Configure %s"
 msgstr ""
@@ -2436,35 +2455,35 @@ msgstr ""
 msgid "Extension installed & activated."
 msgstr ""
 
-#: includes/admin/extensions/product-education/class-email-marketing.php:49
+#: includes/admin/extensions/product-education/class-email-marketing.php:57
 msgid "Email Marketing"
 msgstr ""
 
-#: includes/admin/extensions/product-education/class-email-marketing.php:65
+#: includes/admin/extensions/product-education/class-email-marketing.php:73
 #. translators: the product name
 msgid "Get %s Today!"
 msgstr ""
 
-#: includes/admin/extensions/product-education/class-email-marketing.php:83
+#: includes/admin/extensions/product-education/class-email-marketing.php:91
 msgid ""
 "Looks like you have an email marketing extension installed, but we support "
 "more providers!"
 msgstr ""
 
-#: includes/admin/extensions/product-education/class-invoices.php:95
+#: includes/admin/extensions/product-education/class-invoices.php:103
 #: includes/orders/functions/types.php:102
 msgid "Invoices"
 msgstr ""
 
-#: includes/admin/extensions/product-education/class-recurring.php:95
+#: includes/admin/extensions/product-education/class-recurring.php:103
 msgid "Recurring Payments"
 msgstr ""
 
-#: includes/admin/extensions/product-education/class-reviews.php:100
+#: includes/admin/extensions/product-education/class-reviews.php:108
 msgid "Reviews"
 msgstr ""
 
-#: includes/admin/extensions/product-education/class-reviews.php:120
+#: includes/admin/extensions/product-education/class-reviews.php:128
 msgid "Product Reviews"
 msgstr ""
 
@@ -2506,7 +2525,7 @@ msgstr ""
 msgid "Products (Raw)"
 msgstr ""
 
-#: includes/admin/import/class-batch-import-payments.php:627
+#: includes/admin/import/class-batch-import-payments.php:634
 msgid "payments"
 msgstr ""
 
@@ -2849,28 +2868,28 @@ msgstr ""
 msgid "Amount of tax to refund"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:335
+#: includes/admin/payments/class-refund-items-table.php:347
 msgid "Quantity to refund"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:427
+#: includes/admin/payments/class-refund-items-table.php:463
 msgid "No items found."
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:602
+#: includes/admin/payments/class-refund-items-table.php:638
 #: includes/admin/payments/view-order-details.php:130
 msgid "Submit Refund"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:634
+#: includes/admin/payments/class-refund-items-table.php:670
 msgid "Refund Subtotal:"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:657
+#: includes/admin/payments/class-refund-items-table.php:693
 msgid "Refund Tax Total:"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:673
+#: includes/admin/payments/class-refund-items-table.php:709
 msgid "Refund Total:"
 msgstr ""
 
@@ -6687,7 +6706,7 @@ msgstr ""
 msgid "Upgrade Easy Digital Downloads"
 msgstr ""
 
-#: includes/admin/upgrades/upgrade-functions.php:1545 includes/scripts.php:520
+#: includes/admin/upgrades/upgrade-functions.php:1545 includes/scripts.php:534
 msgid "Migration complete"
 msgstr ""
 
@@ -7179,7 +7198,7 @@ msgid "Cart restored successfully."
 msgstr ""
 
 #: includes/cart/template.php:120
-#: includes/gateways/stripe/includes/compat.php:216
+#: includes/gateways/stripe/includes/compat.php:224
 msgid "Your cart is empty."
 msgstr ""
 
@@ -8032,7 +8051,7 @@ msgstr ""
 msgid "New Download Product"
 msgstr ""
 
-#: includes/class-edd-html-elements.php:45 includes/scripts.php:490
+#: includes/class-edd-html-elements.php:45 includes/scripts.php:504
 msgid "Choose a %s"
 msgstr ""
 
@@ -9121,7 +9140,7 @@ msgstr ""
 msgid "Receipt"
 msgstr ""
 
-#: includes/formatting.php:311
+#: includes/formatting.php:318
 msgid "Billing"
 msgstr ""
 
@@ -10555,7 +10574,7 @@ msgstr ""
 msgid "The user information is invalid"
 msgstr ""
 
-#: includes/gateways/stripe/includes/compat.php:220
+#: includes/gateways/stripe/includes/compat.php:228
 #: includes/process-purchase.php:44
 msgid ""
 "Missing nonce when processing checkout. Please read the following for more "
@@ -10564,7 +10583,7 @@ msgid ""
 "ajax-requests-in-easy-digital-downloads-2-9-4"
 msgstr ""
 
-#: includes/gateways/stripe/includes/compat.php:227
+#: includes/gateways/stripe/includes/compat.php:235
 #: includes/process-purchase.php:51
 msgid "Error processing purchase. Please reload the page and try again."
 msgstr ""
@@ -11560,19 +11579,19 @@ msgstr[1] ""
 
 #: includes/privacy-functions.php:27
 msgid ""
-"\n"
+"\r\n"
 "We collect information about you during the checkout process on our store. "
 "This information may include, but is not limited to, your name, billing "
 "address, shipping address, email address, phone number, credit card/payment "
 "details and any other details that might be requested from you for the "
-"purpose of processing your orders.\n"
-"Handling this data also allows us to:\n"
-"- Send you important account/order/service information.\n"
-"- Respond to your queries, refund requests, or complaints.\n"
+"purpose of processing your orders.\r\n"
+"Handling this data also allows us to:\r\n"
+"- Send you important account/order/service information.\r\n"
+"- Respond to your queries, refund requests, or complaints.\r\n"
 "- Process payments and to prevent fraudulent transactions. We do this on "
-"the basis of our legitimate business interests.\n"
+"the basis of our legitimate business interests.\r\n"
 "- Set up and administer your account, provide technical and/or customer "
-"support, and to verify your identity.\n"
+"support, and to verify your identity.\r\n"
 msgstr ""
 
 #: includes/privacy-functions.php:39
@@ -12035,129 +12054,129 @@ msgstr ""
 msgid "Loading"
 msgstr ""
 
-#: includes/scripts.php:475
+#: includes/scripts.php:489
 msgid "Add New Download"
 msgstr ""
 
-#: includes/scripts.php:476
+#: includes/scripts.php:490
 msgid "Use This File"
 msgstr ""
 
-#: includes/scripts.php:477
+#: includes/scripts.php:491
 msgid "Sorry, not available for variable priced products."
 msgstr ""
 
-#: includes/scripts.php:478
+#: includes/scripts.php:492
 msgid "Are you sure you want to delete this order?"
 msgstr ""
 
-#: includes/scripts.php:479
+#: includes/scripts.php:493
 msgid "Are you sure you want to delete this item?"
 msgstr ""
 
-#: includes/scripts.php:480
+#: includes/scripts.php:494
 msgid "Are you sure you want to delete this adjustment?"
 msgstr ""
 
-#: includes/scripts.php:481
+#: includes/scripts.php:495
 msgid "Are you sure you want to delete this note?"
 msgstr ""
 
-#: includes/scripts.php:482
+#: includes/scripts.php:496
 msgid "Are you sure you want to delete this tax rate?"
 msgstr ""
 
-#: includes/scripts.php:483
+#: includes/scripts.php:497
 msgid "Are you sure you want to revoke this API key?"
 msgstr ""
 
-#: includes/scripts.php:484
+#: includes/scripts.php:498
 msgid "Are you sure you want to regenerate this API key?"
 msgstr ""
 
-#: includes/scripts.php:485
+#: includes/scripts.php:499
 msgid "Are you sure you want to resend the purchase receipt?"
 msgstr ""
 
-#: includes/scripts.php:486
+#: includes/scripts.php:500
 msgid ""
 "Are you sure you want to disconnect the WordPress user from this customer "
 "record?"
 msgstr ""
 
-#: includes/scripts.php:487
+#: includes/scripts.php:501
 msgid "Copy these links to your clipboard and give them to your customer"
 msgstr ""
 
-#: includes/scripts.php:488
+#: includes/scripts.php:502
 msgid "Are you sure you want to delete this %s?"
 msgstr ""
 
-#: includes/scripts.php:489
+#: includes/scripts.php:503
 msgid "Type to search %s"
 msgstr ""
 
-#: includes/scripts.php:491
+#: includes/scripts.php:505
 msgid "Choose one or more %s"
 msgstr ""
 
-#: includes/scripts.php:492
+#: includes/scripts.php:506
 msgid "You must have at least one price"
 msgstr ""
 
-#: includes/scripts.php:493
+#: includes/scripts.php:507
 msgid "You must have at least one field"
 msgstr ""
 
-#: includes/scripts.php:494
+#: includes/scripts.php:508
 msgid "Payments must contain at least one item"
 msgstr ""
 
-#: includes/scripts.php:495
+#: includes/scripts.php:509
 msgid "No match for:"
 msgstr ""
 
-#: includes/scripts.php:496
+#: includes/scripts.php:510
 msgid "Item price must be numeric"
 msgstr ""
 
-#: includes/scripts.php:497
+#: includes/scripts.php:511
 msgid "Item tax must be numeric"
 msgstr ""
 
-#: includes/scripts.php:498
+#: includes/scripts.php:512
 msgid "Quantity must be numeric"
 msgstr ""
 
-#: includes/scripts.php:500
+#: includes/scripts.php:514
 msgid "You must choose a method."
 msgstr ""
 
-#: includes/scripts.php:501
+#: includes/scripts.php:515
 msgid "Required fields not completed."
 msgstr ""
 
-#: includes/scripts.php:502
+#: includes/scripts.php:516
 msgid ""
 "Are you sure you want to reset your store? This process is <strong><em>not "
 "reversible</em></strong>. Please be sure you have a recent backup."
 msgstr ""
 
-#: includes/scripts.php:503
+#: includes/scripts.php:517
 msgid ""
 "We are sorry but your browser is not compatible with this kind of file "
 "upload. Please upgrade your browser."
 msgstr ""
 
-#: includes/scripts.php:505
+#: includes/scripts.php:519
 msgid "Hide advanced settings"
 msgstr ""
 
-#: includes/scripts.php:506
+#: includes/scripts.php:520
 msgid "There are no downloads attached to this payment"
 msgstr ""
 
-#: includes/scripts.php:507
+#: includes/scripts.php:521
 msgid "Please wait &hellip;"
 msgstr ""
 
@@ -12635,13 +12654,13 @@ msgctxt "Delete Customer tab title"
 msgid "Delete"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:974
+#: includes/admin/downloads/metabox.php:980
 #. translators: Default refund status
 msgctxt "Download refund status"
 msgid "Default (%1$s)"
 msgstr ""
 
-#: includes/admin/downloads/metabox.php:992
+#: includes/admin/downloads/metabox.php:998
 msgctxt "refund window interval"
 msgid "Days"
 msgstr ""
@@ -12677,7 +12696,7 @@ msgctxt "date filter"
 msgid "To"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:309
+#: includes/admin/payments/class-refund-items-table.php:321
 msgctxt "Maximum input amount"
 msgid "Max:"
 msgstr ""
