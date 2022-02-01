@@ -183,6 +183,8 @@ class EDD_Notices {
 	 */
 	public function display_notices() {
 
+		$this->show_debugging_notice();
+
 		// Bail if no notices
 		if ( empty( $this->notices ) || ! is_array( $this->notices ) ) {
 			return;
@@ -362,8 +364,6 @@ class EDD_Notices {
 	 * @since 3.0
 	 */
 	private function add_settings_notices() {
-
-		$this->show_debugging_notice();
 
 		// Settings area
 		if ( ! empty( $_GET['page'] ) && ( 'edd-settings' === $_GET['page'] ) ) {
@@ -727,9 +727,7 @@ class EDD_Notices {
 		 *
 		 * @since 3.0
 		 */
-		add_action( 'admin_enqueue_scripts', function() {
-			wp_enqueue_script( 'edd-admin-notices', EDD_PLUGIN_URL . 'assets/js/edd-admin-notices.js', array( 'jquery' ), EDD_VERSION, true );
-		} );
+		wp_enqueue_script( 'edd-admin-notices', EDD_PLUGIN_URL . 'assets/js/edd-admin-notices.js', array( 'jquery' ), EDD_VERSION, true );
 		$view_url = add_query_arg(
 			array(
 				'post_type' => 'download',
