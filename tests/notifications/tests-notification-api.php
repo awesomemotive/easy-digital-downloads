@@ -32,8 +32,8 @@ class NotificationApiTests extends \EDD_UnitTestCase {
 	 *
 	 * @return void
 	 */
-	public static function wpSetUpBeforeClass() {
-		parent::wpSetUpBeforeClass();
+	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
 
 		// Set up the REST API.
 		global $wp_rest_server;
