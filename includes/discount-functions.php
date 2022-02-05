@@ -500,7 +500,7 @@ function edd_update_discount_status( $discount_id = 0, $new_status = 'active' ) 
 
 	// Try to update status.
 	if ( ! empty( $discount->id ) ) {
-		$updated = edd_update_discount( $discount->id, array(
+		$updated = (bool) edd_update_discount( $discount->id, array(
 			'status' => $new_status
 		) );
 	}
