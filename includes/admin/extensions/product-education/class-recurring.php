@@ -36,6 +36,14 @@ class Recurring extends Extension {
 	 */
 	const PASS_LEVEL = \EDD\Admin\Pass_Manager::EXTENDED_PASS_ID;
 
+	/**
+	 * The settings section for this item.
+	 *
+	 * @since 2.11.5
+	 * @var string
+	 */
+	protected $settings_section = 'recurring';
+
 	public function __construct() {
 		add_filter( 'edd_settings_sections_gateways', array( $this, 'add_section' ) );
 		add_action( 'edd_settings_tab_top_gateways_recurring', array( $this, 'settings_field' ) );
@@ -92,7 +100,7 @@ class Recurring extends Extension {
 			return $sections;
 		}
 
-		$sections['recurring'] = __( 'Recurring Payments', 'easy-digital-downloads' );
+		$sections[ $this->settings_section ] = __( 'Recurring Payments', 'easy-digital-downloads' );
 
 		return $sections;
 	}
