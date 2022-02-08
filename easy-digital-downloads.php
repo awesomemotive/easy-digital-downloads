@@ -3,8 +3,8 @@
  * Plugin Name: Easy Digital Downloads
  * Plugin URI: https://easydigitaldownloads.com
  * Description: The easiest way to sell digital products with WordPress.
- * Author: Sandhills Development, LLC
- * Author URI: https://sandhillsdev.com
+ * Author: Easy Digital Downloads
+ * Author URI: https://easydigitaldownloads.com
  * Version: 3.0-rc1
  * Text Domain: easy-digital-downloads
  * Domain Path: languages
@@ -25,6 +25,8 @@
  *
  * @package EDD
  * @category Core
+ * @author Easy Digital Downloads
+ * @version 3.0-rc1
  */
 
 // Exit if accessed directly.

@@ -62,6 +62,7 @@ const config = {
 		'edd-admin-tax-rates': './assets/js/admin/settings/tax-rates',
 		'edd-admin-email-tags': './assets/js/admin/settings/email-tags',
 		'edd-admin-extension-manager': './assets/js/admin/settings/extension-manager',
+		'edd-admin-notices': './assets/js/admin/notices',
 
 		// Front-end JavaScript.
 		'edd-ajax': './assets/js/frontend/edd-ajax.js',

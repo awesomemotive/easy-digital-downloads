@@ -705,9 +705,7 @@ class EDD_Logging {
 	 * @since 2.8.7
 	 */
 	protected function write_to_log( $message = '' ) {
-		$file  = $this->get_file();
-		$file .= $message;
-		$this->get_fs()->put_contents( $this->file, $file );
+		file_put_contents( $this->file, $message, FILE_APPEND );
 	}
 
 	/**

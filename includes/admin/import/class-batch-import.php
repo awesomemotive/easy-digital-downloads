@@ -115,7 +115,7 @@ class EDD_Batch_Import {
 	/**
 	 * Parses the CSV from the file and returns the data as an array.
 	 *
-	 * @since 3.0
+	 * @since 2.11.5
 	 * @param string $file
 	 *
 	 * @return array

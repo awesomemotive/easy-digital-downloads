@@ -33,6 +33,7 @@ class EDD_Notices {
 		add_action( 'edd_dismiss_notices', array( $this, 'dismiss_notices' )     );
 		add_action( 'admin_init',          array( $this, 'add_notices'     ), 20 );
 		add_action( 'admin_notices',       array( $this, 'display_notices' ), 30 );
+		add_action( 'wp_ajax_edd_disable_debugging', array( $this, 'edd_disable_debugging' ) );
 	}
 
 	/**
@@ -181,6 +182,8 @@ class EDD_Notices {
 	 * @since 2.6.0 bbPress (r6771)
 	 */
 	public function display_notices() {
+
+		$this->show_debugging_notice();
 
 		// Bail if no notices
 		if ( empty( $this->notices ) || ! is_array( $this->notices ) ) {
@@ -698,6 +701,70 @@ class EDD_Notices {
 					break;
 			}
 		}
+	}
+
+	/**
+	 * Show a notice if debugging is enabled in the EDD settings.
+	 * Does not show if only the `EDD_DEBUG_MODE` constant is defined.
+	 *
+	 * @since 2.11.5
+	 * @return void
+	 */
+	private function show_debugging_notice() {
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			return;
+		}
+		if ( ! current_user_can( 'manage_shop_settings' ) ) {
+			return;
+		}
+		if ( ! edd_get_option( 'debug_mode', false ) ) {
+			return;
+		}
+
+		/**
+		 * The notices JS needs to be output wherever the notice is displayed, not just EDD screens.
+		 * If more notices add to the script then this enqueue will need to be moved.
+		 *
+		 * @since 3.0
+		 */
+		wp_enqueue_script( 'edd-admin-notices', EDD_PLUGIN_URL . 'assets/js/edd-admin-notices.js', array( 'jquery' ), EDD_VERSION, true );
+		$view_url = add_query_arg(
+			array(
+				'post_type' => 'download',
+				'page'      => 'edd-tools',
+				'tab'       => 'debug_log',
+			),
+			admin_url( 'edit.php' )
+		);
+		?>
+		<div id="edd-debug-log-notice" class="notice notice-warning">
+			<p>
+				<?php esc_html_e( 'Easy Digital Downloads debug logging is enabled. Please only leave it enabled for as long as it is needed for troubleshooting.', 'easy-digital-downloads' ); ?>
+			</p>
+			<p>
+				<a class="button button-secondary" href="<?php echo esc_url( $view_url ); ?>"><?php esc_html_e( 'View Debug Log', 'easy-digital-downloads' ); ?></a>
+				<button class="button button-primary" id="edd-disable-debug-log"><?php esc_html_e( 'Delete Log File and Disable Logging', 'easy-digital-downloads' ); ?></button>
+				<?php wp_nonce_field( 'edd_debug_log_delete', 'edd_debug_log_delete' ); ?>
+			</p>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Disables the debug log setting and deletes the existing log file.
+	 *
+	 * @since 2.11.5
+	 * @return void
+	 */
+	public function edd_disable_debugging() {
+		$validate_nonce = ! empty( $_GET['nonce'] ) && wp_verify_nonce( $_GET['nonce'], 'edd_debug_log_delete' );
+		if ( ! current_user_can( 'manage_shop_settings' ) || ! $validate_nonce ) {
+			wp_send_json_error( wpautop( __( 'You do not have permission to perform this action.', 'easy-digital-downloads' ) ), 403 );
+		}
+		edd_update_option( 'debug_mode', false );
+		global $edd_logs;
+		$edd_logs->clear_log_file();
+		wp_send_json_success( wpautop( __( 'The debug log has been cleared and logging has been disabled.', 'easy-digital-downloads' ) ) );
 	}
 
 	/**
