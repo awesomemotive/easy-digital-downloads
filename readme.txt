@@ -30,7 +30,7 @@ Do you prefer an eCommerce solution which is simple and intuitive or one which i
 
 > EDD gives me a solid platform out of the box, with the flexibility of being able to customize anything I want or need to. The best of both worlds!
 
-> Brian Hogg - SellingPlugins.com
+> Brian Hogg – SellingPlugins.com
 
 Here are some of the features supported out-of-the-box:
 
@@ -146,9 +146,9 @@ Development for this plugin happens in a public GitHub repository to better faci
 
 If Easy Digital Downloads doesn't quite fit your needs, take a look at some of our other projects.
 
-- [WP Simple Pay](https://wpsimplepay.com/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) - A lightweight Stripe payments plugin
-- [AffiliateWP](https://affiliatewp.com/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) - A full-featured affiliate marketing solution
-- [Sugar Calendar](https://sugarcalendar.com?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) - WordPress event management made simple
+- [WP Simple Pay](https://wpsimplepay.com/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) – A lightweight Stripe payments plugin
+- [AffiliateWP](https://affiliatewp.com/?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) – A full-featured affiliate marketing solution
+- [Sugar Calendar](https://sugarcalendar.com?utm_medium=readme&utm_source=wporg&utm_campaign=edd-plugin&utm_content=something-else&utm_term=description) – WordPress event management made simple
 
 == Installation ==
 
@@ -221,7 +221,7 @@ Yes, with the Invoices extension, you can provide beautiful and downloadable inv
 
 [Invoices](https://easydigitaldownloads.com/downloads/edd-invoices/?utm_source=edd-invoices&utm_medium=faq_tab&utm_content=pdf-invoices&utm_campaign=readme)
 
-= Are recurring payments/subscriptions supported? =
+= Are recurring payments (subscriptions) supported? =
 
 Yes, through the use of our commercial addon called [Recurring Payments](https://easydigitaldownloads.com/downloads/recurring-payments/?utm_source=docs&utm_medium=faq_tab&utm_term=recurring_addon&utm_content=faqs&utm_campaign=readme). [Full documentation here](http://docs.easydigitaldownloads.com/article/1142-recurring-payments---overview?utm_source=docs&utm_medium=faq_tab&utm_term=recurring_addon&utm_content=faqs&utm_campaign=readme). The Recurring Payments extension allows you to create subscriptions so that customers continue paying you over time. This is great for selling memberships, courses, all access passes, software licenses, and other products which require an ongoing payment.
 
