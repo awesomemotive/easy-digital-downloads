@@ -276,7 +276,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 				$statuses = apply_filters( 'edd_payment_stats_post_statuses', $statuses );
 				$statuses = "'" . implode( "', '", $statuses ) . "'";
 
-				$result = $wpdb->get_row( $wpdb->prepare(
+				$results = $wpdb->get_results( $wpdb->prepare(
 					"SELECT edd_oi.tax, edd_oi.total
 					 FROM {$wpdb->edd_order_items} edd_oi
 					 INNER JOIN {$wpdb->edd_orders} edd_o ON edd_oi.order_id = edd_o.id
@@ -285,11 +285,13 @@ class EDD_Payment_Stats extends EDD_Stats {
 
 				$earnings = 0;
 
-				if ( $result ) {
-					$earnings += floatval( $result->total );
+				if ( $results ) {
+					foreach ( $results as $result ) {
+						$earnings += floatval( $result->total );
 
-					if ( ! $include_taxes ) {
-						$earnings -= floatval( $result->tax );
+						if ( ! $include_taxes ) {
+							$earnings -= floatval( $result->tax );
+						}
 					}
 
 					$earnings = apply_filters_deprecated( 'edd_payment_stats_item_earnings', array( $earnings ), 'EDD 3.0' );
