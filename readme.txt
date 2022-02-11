@@ -250,7 +250,7 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 * Fix: Stripe - JavaScript error when viewing a preapproved payment record.
 * Fix: Stripe - EDD 3.0: Incorrect tax amount being charged when customer uses a different country from the store's base country.
 
-= 2.11.4.1, January 7, 2021 =
+= 2.11.4.1, January 7, 2022 =
 * Fix: "Submit" buttons missing from Reviews and Recurring Payments settings pages.
 
 = 2.11.4, December 27, 2021 =
