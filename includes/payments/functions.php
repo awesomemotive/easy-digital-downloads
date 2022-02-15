@@ -857,7 +857,7 @@ function edd_get_total_earnings() {
             $args = apply_filters( 'edd_get_total_earnings_args', array(
                 'offset' => 0,
                 'number' => -1,
-                'status' => array( 'publish', 'revoked' ),
+                'status' => array( 'publish' ),
                 'fields' => 'ids'
             ) );
 
