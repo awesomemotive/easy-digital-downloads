@@ -11,6 +11,9 @@ import { searchItems } from './utils.js';
 function setupEmailTags() {
 	// Find all of the buttons.
 	const insertButtons = document.querySelectorAll( '.edd-email-tags-list-button' );
+	if ( ! insertButtons ) {
+		return;
+	}
 
 	/**
 	 * Listen for clicks on tag buttons.
@@ -37,6 +40,10 @@ function filterEmailTags() {
 	const filterInput = document.querySelector( '.edd-email-tags-filter-search' );
 	const tagItems = document.querySelectorAll( '.edd-email-tags-list-item' );
 
+	if ( ! filterInput ) {
+		return;
+	}
+
 	filterInput.addEventListener( 'keyup', function( event ) {
 		const searchTerm = event.target.value;
 		const foundTags = searchItems( eddEmailTagsInserter.items, searchTerm );
@@ -55,6 +62,10 @@ function filterEmailTags() {
 document.addEventListener( 'DOMContentLoaded', function() {
 	// Resize Thickbox when media button is clicked.
 	const mediaButton = document.querySelector( '.edd-email-tags-inserter' );
+	if ( ! mediaButton ) {
+		return;
+	}
+
 	mediaButton.addEventListener( 'click', tb_position );
 
 	// Clickable tags.
