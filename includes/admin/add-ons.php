@@ -92,15 +92,15 @@ function edd_add_ons_page() {
 	ob_start(); ?>
 
 	<div class="wrap" id="edd-add-ons">
-		<h1 class="wp-heading-inline"><?php esc_html_e( 'Extensions', 'easy-digital-downloads' ); ?></h1>
-		<hr class="wp-header-end">
+		<h1>
+			<?php _e( 'Apps and Integrations for Easy Digital Downloads', 'easy-digital-downloads' ); ?>
+			<span>
+				&nbsp;&nbsp;<a href="https://easydigitaldownloads.com/downloads/?utm_source=plugin-addons-page&utm_medium=plugin&utm_campaign=<?php echo $campaign; ?>&utm_content=All%20Extensions" class="button-primary" target="_blank"><?php _e( 'Browse All Integrations', 'easy-digital-downloads' ); ?></a>
+			</span>
+		</h1>
+		<p><?php _e( 'These <em><strong>add functionality</strong></em> to your Easy Digital Downloads powered store.', 'easy-digital-downloads' ); ?></p>
 
 		<ul class="subsubsub"><?php echo implode( ' | ', $tabs ); ?></ul>
-
-		<p class="search-box">
-			<span><?php _e( 'Add <em><strong>awesome</strong></em> new functionality to your Easy Digital Downloads powered store.', 'easy-digital-downloads' ); ?></span>
-			<a href="https://easydigitaldownloads.com/downloads/?utm_source=plugin-addons-page&utm_medium=plugin&utm_campaign=<?php echo $campaign; ?>&utm_content=All%20Extensions" class="button button-secondary" target="_blank"><?php _e( 'Browse All Integrations', 'easy-digital-downloads' ); ?><span class="dashicons dashicons-external"></span></a>
-		</p>
 
 		<div class="edd-add-ons-container">
 			<?php

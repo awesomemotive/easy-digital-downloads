@@ -206,13 +206,17 @@ function edd_ajax_add_to_cart() {
 
 	$items = '';
 
+	if ( isset( $_POST['post_data'] ) ) {
+		parse_str( $_POST['post_data'], $post_data );
+	} else {
+		$post_data = array();
+	}
+
 	foreach ( $to_add as $options ) {
 
 		if ( $_POST['download_id'] == $options['price_id'] ) {
 			$options = array();
 		}
-
-		parse_str( $_POST['post_data'], $post_data );
 
 		if ( isset( $options['price_id'] ) && isset( $post_data['edd_download_quantity_' . $options['price_id'] ] ) ) {
 
@@ -379,6 +383,13 @@ function edd_ajax_remove_discount() {
 			'discounts'   => edd_get_cart_discounts(),
 			'html'        => edd_get_cart_discounts_html()
 		);
+
+		/**
+		 * Allow for custom remove discount code handling.
+		 * 
+		 * @since 2.11.4
+		 */
+		$return = apply_filters( 'edd_ajax_remove_discount_response', $return );
 
 		wp_send_json( $return );
 	}
