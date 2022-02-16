@@ -1229,7 +1229,7 @@ function display_currency_filter() {
 		set_transient( 'edd_distinct_order_currencies', $order_currencies, 3 * HOUR_IN_SECONDS );
 	}
 
-	if ( ! is_array( $order_currencies ) || 1 === count( $order_currencies ) ) {
+	if ( ! is_array( $order_currencies ) || count( $order_currencies ) <= 1 ) {
 		return;
 	}
 
