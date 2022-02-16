@@ -22,30 +22,23 @@
 #adminmenu ul > li:not(:last-child) a[href^="post-new.php?post_type=download"]:after,
 #adminmenu ul > li:not(:last-child) a[href^="edit.php?post_type=download&page=edd-discount"]:after,
 #adminmenu ul > li:not(:last-child) a[href^="edit.php?post_type=download&page=edd-reports"]:after,
-#adminmenu #menu-posts-download ul > li:nth-last-child(2):after {
+#adminmenu #menu-posts-download ul>li:nth-last-child(2) a:after {
 	border-bottom: 1px solid rgba(255,255,255,0.2);
 	display: block;
-	float: left;
-	margin: 13px -15px 8px;
-	content: '';
-	width: calc(100% + 30px);
+	margin: 16px -15px 4px;
+	content: ' ';
+	width: calc(100% + 26px);
+
+	@media only screen and (max-width: 960px) {
+		margin: 16px -10px 4px;
+	}
 
 	@media screen and (max-width: 782px) {
-		margin: 20px -20px 8px -20px;
-		width: calc(100% + 40px);
+		margin: 20px -16px 8px;
 	}
 }
 
 #adminmenu #menu-posts-download {
-	ul > li:nth-last-child(2):after {
-		margin-left: 0;
-	}
-
-	/* WordPress 5.7 fix for left-shadow on hover */
-	ul.wp-submenu-wrap li {
-		clear: both;
-	}
-
 	a.wp-has-current-submenu:after {
 		display: none;
 	}
