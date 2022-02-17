@@ -308,11 +308,9 @@ jQuery( document ).ready( function( $ ) {
 	$( document ).on( 'click', '#edd_purchase_form #edd_login_fields input[type=submit]', function( e ) {
 		e.preventDefault();
 
-		const submitButton = document.getElementById( $( this ).attr( 'id' ) );
-
 		const complete_purchase_val = $( this ).val();
 
-		submitButton.setAttribute( 'data-original-value', complete_purchase_val );
+		$( this ).attr( 'data-original-value', complete_purchase_val );
 
 		$( this ).val( edd_global_vars.purchase_loading );
 
@@ -498,7 +496,7 @@ function edd_load_gateway( payment_mode ) {
 	jQuery( '.edd-cart-ajax' ).show();
 	jQuery( '#edd_purchase_form_wrap' ).html( '<span class="edd-loading-ajax edd-loading"></span>' );
 
-	const nonce = jQuery( '#edd-gateway-' + payment_mode ).data( payment_mode + '-nonce' );
+	const nonce = document.getElementById( 'edd-gateway-' + payment_mode ).getAttribute( 'data-' + payment_mode + '-nonce' );
 	let url = edd_scripts.ajaxurl;
 
 	if ( url.indexOf( '?' ) > 0 ) {

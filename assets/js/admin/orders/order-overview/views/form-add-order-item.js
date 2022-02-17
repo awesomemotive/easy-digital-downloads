@@ -144,7 +144,7 @@ export const FormAddOrderItem = Dialog.extend( {
 
 		// Set ID and Price ID.
 		let productId = selected.value;
-		let priceId = 0;
+		let priceId = null;
 
 		const parts = productId.split( '_' );
 
@@ -186,7 +186,7 @@ export const FormAddOrderItem = Dialog.extend( {
 				model.set( {
 					error,
 					productId: 0,
-					priceId: 0,
+					priceId: null,
 					productName: '',
 				} );
 			} )
