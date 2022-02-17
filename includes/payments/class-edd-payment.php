@@ -20,19 +20,19 @@ defined( 'ABSPATH' ) || exit;
  * @since 2.5
  * @since 3.0 Updated to work with new custom tables.
  *
- * @property int $ID
- * @property int $_ID
- * @property bool $new
+ * @property int    $ID
+ * @property int    $_ID
+ * @property bool   $new
  * @property string $number
  * @property string $mode
  * @property string $key
- * @property float $total
- * @property float $subtotal
- * @property float $tax
- * @property float $discounted_amount
- * @property float $tax_rate
- * @property array $fees
- * @property float $fees_total
+ * @property float  $total
+ * @property float  $subtotal
+ * @property float  $tax
+ * @property float  $discounted_amount
+ * @property float  $tax_rate
+ * @property array  $fees
+ * @property float  $fees_total
  * @property string $discounts
  * @property string $date
  * @property string $completed_date
@@ -40,22 +40,22 @@ defined( 'ABSPATH' ) || exit;
  * @property string $post_status
  * @property string $old_status
  * @property string $status_nicename
- * @property int $customer_id
- * @property int $user_id
+ * @property int    $customer_id
+ * @property int    $user_id
  * @property string $first_name
  * @property string $last_name
  * @property string $email
- * @property array $user_info
- * @property array $payment_meta
- * @property array $address
+ * @property array  $user_info
+ * @property array  $payment_meta
+ * @property array  $address
  * @property string $transaction_id
- * @property array $downloads
+ * @property array  $downloads
  * @property string $ip
  * @property string $gateway
  * @property string $currency
- * @property array $cart_details
- * @property bool $has_unlimited_downloads
- * @property int $parent_payment
+ * @property array  $cart_details
+ * @property bool   $has_unlimited_downloads
+ * @property int    $parent_payment
  */
 class EDD_Payment {
 
@@ -1066,7 +1066,9 @@ class EDD_Payment {
 							'order_id'     => $this->ID,
 							'product_id'   => $item['id'],
 							'product_name' => $item['name'],
-							'price_id'     => isset( $item['item_number']['options']['price_id'] ) ? $item['item_number']['options']['price_id'] : 0,
+							'price_id'     => isset( $item['item_number']['options']['price_id'] ) && is_numeric( $item['item_number']['options']['price_id'] )
+								? absint( $item['item_number']['options']['price_id'] )
+								: null,
 							'cart_index'   => $key,
 							'quantity'     => $item['quantity'],
 							'amount'       => $item['item_price'],
@@ -2417,9 +2419,9 @@ class EDD_Payment {
 							'product_name' => $item['name'],
 						) );
 
-						$item['item_number']['options']['price_id'] = isset( $item['item_number']['options']['price_id'] )
-							? $item['item_number']['options']['price_id']
-							: 0;
+						$item['item_number']['options']['price_id'] = isset( $item['item_number']['options']['price_id'] ) && is_numeric( $item['item_number']['options']['price_id'] )
+							? absint( $item['item_number']['options']['price_id'] )
+							: null;
 
 						if ( is_array( $order_item_id ) && ! empty( $order_item_id ) ) {
 							$order_item_id = $order_item_id[0];

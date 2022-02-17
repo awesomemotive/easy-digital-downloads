@@ -11,23 +11,26 @@
 
 namespace EDD\Gateways\PayPal\Webhooks\Events;
 
+use EDD\Gateways\PayPal\Exceptions\API_Exception;
+use EDD\Gateways\PayPal\Exceptions\Authentication_Exception;
+
 class Payment_Capture_Completed extends Webhook_Event {
 
 	/**
 	 * Processes the event.
 	 *
-	 * @throws \EDD\Gateways\PayPal\Exceptions\API_Exception
-	 * @throws \EDD\Gateways\PayPal\Exceptions\Authentication_Exception
+	 * @throws API_Exception
+	 * @throws Authentication_Exception
 	 * @throws \Exception
 	 *
 	 * @since 2.11
 	 */
 	protected function process_event() {
-		$payment = $this->get_payment_from_capture();
+		$order = $this->get_order_from_capture();
 
 		// Bail if the payment has already been completed.
-		if ( in_array( $payment->status, array( 'publish', 'complete' ) ) ) {
-			edd_debug_log( 'PayPal Commerce - Exiting webhook, as payment is already complete.' );
+		if ( 'complete' === $order->status ) {
+			edd_debug_log( 'PayPal Commerce - Exiting webhook, as order is already complete.' );
 
 			return;
 		}
@@ -40,14 +43,14 @@ class Payment_Capture_Completed extends Webhook_Event {
 			throw new \Exception( 'Missing amount value.', 200 );
 		}
 
-		if ( ! isset( $this->event->resource->amount->currency_code ) || strtoupper( $this->event->resource->amount->currency_code ) !== strtoupper( $payment->currency ) ) {
-			throw new \Exception( sprintf( 'Missing or invalid currency code. Expected: %s; PayPal: %s', $payment->currency, esc_html( $this->event->resource->amount->currency_code ) ), 200 );
+		if ( ! isset( $this->event->resource->amount->currency_code ) || strtoupper( $this->event->resource->amount->currency_code ) !== strtoupper( $order->currency ) ) {
+			throw new \Exception( sprintf( 'Missing or invalid currency code. Expected: %s; PayPal: %s', $order->currency, esc_html( $this->event->resource->amount->currency_code ) ), 200 );
 		}
 
-		$paypal_amount  = (float) $this->event->resource->amount->value;
-		$payment_amount = edd_get_payment_amount( $payment->ID );
+		$paypal_amount = (float) $this->event->resource->amount->value;
+		$order_amount  = edd_get_payment_amount( $order->id );
 
-		if ( $paypal_amount < $payment_amount ) {
+		if ( $paypal_amount < $order_amount ) {
 			edd_record_gateway_error(
 				__( 'Webhook Error', 'easy-digital-downloads' ),
 				sprintf(
@@ -57,16 +60,20 @@ class Payment_Capture_Completed extends Webhook_Event {
 				)
 			);
 
-			edd_update_payment_status( $payment->ID, 'failed' );
-			edd_insert_payment_note( $payment->ID, sprintf(
-				__( 'Payment failed due to invalid amount in PayPal webhook. Expected amount: %s; PayPal amount: %s.', 'easy-digital-downloads' ),
-				$payment_amount,
-				esc_html( $paypal_amount )
+			edd_update_order_status( $order->id, 'failed' );
+			edd_add_note( array(
+				'object_type' => 'order',
+				'object_id'   => $order->id,
+				'content'     => sprintf(
+					__( 'Payment failed due to invalid amount in PayPal webhook. Expected amount: %s; PayPal amount: %s.', 'easy-digital-downloads' ),
+					$order_amount,
+					esc_html( $paypal_amount )
+				)
 			) );
 
-			throw new \Exception( sprintf( 'Webhook amount (%s) doesn\'t match payment amount (%s).', esc_html( $paypal_amount ), esc_html( $payment_amount ) ), 200 );
+			throw new \Exception( sprintf( 'Webhook amount (%s) doesn\'t match payment amount (%s).', esc_html( $paypal_amount ), esc_html( $order_amount ) ), 200 );
 		}
 
-		edd_update_payment_status( $payment->ID, 'complete' );
+		edd_update_order_status( $order->id, 'complete' );
 	}
 }

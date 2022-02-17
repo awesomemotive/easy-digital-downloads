@@ -67,9 +67,6 @@ function register_js( $force_load = false ) {
 		return;
 	}
 
-	// Use minified libraries if SCRIPT_DEBUG is turned off
-	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-
 	/**
 	 * Filters the query arguments added to the SDK URL.
 	 *
@@ -91,7 +88,7 @@ function register_js( $force_load = false ) {
 
 	wp_register_script(
 		'edd-paypal',
-		EDD_PLUGIN_URL . 'assets/js/paypal-checkout' . $suffix . '.js',
+		EDD_PLUGIN_URL . 'assets/js/paypal-checkout.js',
 		array(
 			'sandhills-paypal-js-sdk',
 			'jquery',

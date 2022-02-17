@@ -250,7 +250,8 @@ function delete_webhook( $mode = '' ) {
 		$mode = edd_is_test_mode() ? API::MODE_SANDBOX : API::MODE_LIVE;
 	}
 
-	$webhook_id = get_option( sanitize_key( 'edd_paypal_commerce_webhook_id_' . $mode ) );
+	$webhook_name = sanitize_key( 'edd_paypal_commerce_webhook_id_' . $mode );
+	$webhook_id   = get_option( $webhook_name );
 
 	// Bail if webhook was never set.
 	if ( ! $webhook_id ) {
@@ -260,6 +261,9 @@ function delete_webhook( $mode = '' ) {
 	$api = new API( $mode );
 
 	$api->make_request( 'v1/notifications/webhooks/' . urlencode( $webhook_id ), array(), array(), 'DELETE' );
+
+	// Delete the webhook ID.
+	delete_option( $webhook_name );
 
 	if ( 204 !== $api->last_response_code ) {
 		throw new API_Exception( sprintf(

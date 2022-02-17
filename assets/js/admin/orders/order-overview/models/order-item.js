@@ -24,7 +24,7 @@ export const OrderItem = Backbone.Model.extend( {
 		orderId: 0,
 		productId: 0,
 		productName: '',
-		priceId: 0,
+		priceId: null,
 		cartIndex: 0,
 		type: 'download',
 		status: '',

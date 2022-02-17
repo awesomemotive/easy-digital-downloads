@@ -276,9 +276,9 @@ function edd_add_manual_order( $args = array() ) {
 				: 1;
 
 			// Price ID.
-			$price_id = isset( $download['price_id'] )
+			$price_id = isset( $download['price_id'] ) && is_numeric( $download['price_id'] )
 				? absint( $download['price_id'] )
-				: false;
+				: null;
 
 			// Amounts.
 			$amount = isset( $download[ 'amount' ] )
@@ -306,7 +306,7 @@ function edd_add_manual_order( $args = array() ) {
 				'order_id'     => $order_id,
 				'product_id'   => absint( $download['id'] ),
 				'product_name' => edd_get_download_name( $download['id'], absint( $price_id ) ),
-				'price_id'     => absint( $price_id ),
+				'price_id'     => $price_id,
 				'cart_index'   => $cart_key,
 				'type'         => 'download',
 				'status'       => 'complete',
