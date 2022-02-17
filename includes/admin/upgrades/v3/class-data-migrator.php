@@ -243,7 +243,7 @@ class Data_Migrator {
 				'order_id'      => isset( $post_meta['_edd_log_payment_id'] )  ? $post_meta['_edd_log_payment_id']  : 0,
 				'price_id'      => isset( $post_meta['_edd_log_price_id'] )    ? $post_meta['_edd_log_price_id']    : 0,
 				'customer_id'   => isset( $post_meta['_edd_log_customer_id'] ) ? $post_meta['_edd_log_customer_id'] : 0,
-				'ip'            => $post_meta['_edd_log_ip'],
+				'ip'            => isset( $post_meta['_edd_log_ip'] ) ? $post_meta['_edd_log_ip'] : '',
 				'date_created'  => $data->post_date_gmt,
 				'date_modified' => $data->post_modified_gmt,
 			);
@@ -713,6 +713,9 @@ class Data_Migrator {
 		 */
 		$order_data = apply_filters( 'edd_30_migration_order_creation_data', $order_data, $payment_meta, $cart_details, $meta );
 
+		// Remove all order status transition actions.
+		remove_all_actions( 'edd_transition_order_status' );
+
 		$order_id = edd_add_order( $order_data );
 
 		// Save an un-matched tax rate in order meta.
@@ -881,9 +884,7 @@ class Data_Migrator {
 					: '';
 
 				// Get price ID.
-				$price_id = isset( $cart_item['item_number']['options']['price_id'] )
-					? absint( $cart_item['item_number']['options']['price_id'] )
-					: 0;
+				$price_id = self::get_valid_price_id_for_cart_item( $cart_item );
 
 				if ( ! empty( $product_name ) ) {
 					$option_name = edd_get_price_option_name( $cart_item['id'], $price_id );
@@ -1043,7 +1044,7 @@ class Data_Migrator {
 					'order_id'      => $order_id,
 					'product_id'    => $download_id,
 					'product_name'  => $download->post_name,
-					'price_id'      => 0,
+					'price_id'      => null,
 					'cart_index'    => $cart_index,
 					'type'          => 'download',
 					'quantity'      => 1,
@@ -1301,6 +1302,40 @@ class Data_Migrator {
 		 * @param array $meta         All post meta associated with the payment.
 		 */
 		do_action( 'edd_30_migrate_order', $order_id, $payment_meta, $meta );
+	}
+
+	/**
+	 * Retrieves a valid price ID for a given cart item.
+	 * If the product does not have variable prices, then `null` is always returned.
+	 * If the supplied price ID does not match a price ID that actually exists, then the default
+	 * variable price is returned instead of the supplied one.
+	 *
+	 * @since 3.0
+	 *
+	 * @param array $cart_item Array of cart item details.
+	 *
+	 * @return int|null
+	 */
+	protected static function get_valid_price_id_for_cart_item( $cart_item ) {
+		// If the product doesn't have variable prices, just return `null`.
+		if ( ! edd_has_variable_prices( $cart_item['id'] ) ) {
+			return null;
+		}
+
+		$variable_prices = edd_get_variable_prices( $cart_item['id'] );
+		if ( ! is_array( $variable_prices ) || empty( $variable_prices ) ) {
+			return null;
+		}
+
+		// Get the price ID that's set to the cart item right now.
+		$price_id = isset( $cart_item['item_number']['options']['price_id'] ) && is_numeric( $cart_item['item_number']['options']['price_id'] )
+			? absint( $cart_item['item_number']['options']['price_id'] )
+			: null;
+
+		// Now let's confirm it's actually a valid price ID.
+		$variable_price_ids = array_map( 'intval', array_column( $variable_prices, 'index' ) );
+
+		return in_array( $price_id, $variable_price_ids, true ) ? $price_id : edd_get_default_variable_price( $cart_item['id'] );
 	}
 
 	/**

@@ -154,33 +154,9 @@ function create_order( $purchase_data ) {
 			);
 		}
 
-		$order_amount = array(
-			'currency_code' => edd_get_currency(),
-			'value'         => (string) $purchase_data['price']
-		);
-		if ( (float) $purchase_data['tax'] > 0 ) {
-			$order_amount['breakdown'] = array(
-				'item_total' => array(
-					'currency_code' => edd_get_currency(),
-					'value'         => (string) ( $purchase_data['price'] - $purchase_data['tax'] )
-				),
-				'tax_total'  => array(
-					'currency_code' => edd_get_currency(),
-					'value'         => (string) $purchase_data['tax']
-				)
-			);
-		}
-
 		$order_data = array(
 			'intent'               => 'CAPTURE',
-			'purchase_units'       => array(
-				array(
-					// @todo We could put the breakdown here (tax, discount, etc.)
-					'reference_id' => $payment_args['purchase_key'],
-					'amount'       => $order_amount,
-					'custom_id'    => $payment_id
-				)
-			),
+			'purchase_units'       => get_order_purchase_units( $payment_id, $purchase_data, $payment_args ),
 			'application_context'  => array(
 				//'locale'              => get_locale(), // PayPal doesn't like this. Might be able to replace `_` with `-`
 				'shipping_preference' => 'NO_SHIPPING',
@@ -218,6 +194,29 @@ function create_order( $purchase_data ) {
 		try {
 			$api      = new API();
 			$response = $api->make_request( 'v2/checkout/orders', $order_data );
+
+			if ( ! isset( $response->id ) && _is_item_total_mismatch( $response ) ) {
+
+				edd_record_gateway_error(
+					__( 'PayPal Gateway Warning', 'easy-digital-downloads' ),
+					sprintf(
+						/* Translators: %s - Original order data sent to PayPal. */
+						__( 'PayPal could not complete the transaction with the itemized breakdown. Original order data sent: %s', 'easy-digital-downloads' ),
+						json_encode( $order_data )
+					),
+					$payment_id
+				);
+
+				// Try again without the item breakdown. That way if we have an error in our totals the whole API request won't fail.
+				$order_data['purchase_units'] = array(
+					get_order_purchase_units_without_breakdown( $payment_id, $purchase_data, $payment_args )
+				);
+
+				// Re-apply the filter.
+				$order_data = apply_filters( 'edd_paypal_order_arguments', $order_data, $purchase_data, $payment_id );
+
+				$response = $api->make_request( 'v2/checkout/orders', $order_data );
+			}
 
 			if ( ! isset( $response->id ) ) {
 				throw new Gateway_Exception(
@@ -348,16 +347,20 @@ function capture_order() {
 					if ( ! empty( $purchase_unit->reference_id ) ) {
 						$payment        = edd_get_payment_by( 'key', $purchase_unit->reference_id );
 						$transaction_id = isset( $purchase_unit->payments->captures[0]->id ) ? $purchase_unit->payments->captures[0]->id : false;
+
+						if ( ! empty( $payment ) && isset( $purchase_unit->payments->captures[0]->status ) ) {
+							if ( 'COMPLETED' === strtoupper( $purchase_unit->payments->captures[0]->status ) ) {
+								$payment->status = 'complete';
+							} elseif( 'DECLINED' === strtoupper( $purchase_unit->payments->captures[0]->status ) ) {
+								$payment->status = 'failed';
+							}
+						}
 						break;
 					}
 				}
 			}
 
 			if ( ! empty( $payment ) ) {
-				if ( ! empty( $response->status ) && 'COMPLETED' === strtoupper( $response->status ) ) {
-					$payment->status = 'complete';
-				}
-
 				/**
 				 * Buy Now Button
 				 *
@@ -399,6 +402,15 @@ function capture_order() {
 				}
 
 				$payment->save();
+
+				if ( 'failed' === $payment->status ) {
+					$retry = true;
+					throw new Gateway_Exception(
+						__( 'Your payment was declined. Please try a new payment method.', 'easy-digital-downloads' ),
+						400,
+						sprintf( 'Order capture failure. PayPal response: %s', json_encode( $response ) )
+					);
+				}
 			}
 
 			wp_send_json_success( array( 'redirect_url' => edd_get_success_page_uri() ) );
@@ -425,3 +437,26 @@ function capture_order() {
 
 add_action( 'wp_ajax_nopriv_edd_capture_paypal_order', __NAMESPACE__ . '\capture_order' );
 add_action( 'wp_ajax_edd_capture_paypal_order', __NAMESPACE__ . '\capture_order' );
+
+/**
+ * Gets a fresh set of gateway options when a PayPal order is cancelled.
+ * @link https://github.com/awesomemotive/easy-digital-downloads/issues/8883
+ *
+ * @since 2.11.3
+ * @return void
+ */
+function cancel_order() {
+	$nonces   = array();
+	$gateways = edd_get_enabled_payment_gateways( true );
+	foreach ( $gateways as $gateway_id => $gateway ) {
+		$nonces[ $gateway_id ] = wp_create_nonce( 'edd-gateway-selected-' . esc_attr( $gateway_id ) );
+	}
+
+	wp_send_json_success(
+		array(
+			'nonces' => $nonces,
+		)
+	);
+}
+add_action( 'wp_ajax_nopriv_edd_cancel_paypal_order', __NAMESPACE__ . '\cancel_order' );
+add_action( 'wp_ajax_edd_cancel_paypal_order', __NAMESPACE__ . '\cancel_order' );

@@ -109,14 +109,21 @@ function edd_sanitize_amount( $amount = 0 ) {
  * value for output to the page.)
  *
  * @since 1.0
+ * @since 3.0 Added `$currency` parameter.
  *
  * @param mixed  $amount   Default 0. Numeric amount to format.
  * @param string $decimals Default true. Whether or not to use decimals. Useful when set to false for non-currency numbers.
+ * @param string $currency Currency code to format the amount for. This determines how many decimals are used.
+ *                         If omitted, site-wide currency is used.
  *
  * @return string $amount Newly formatted amount or Price Not Available
  */
-function edd_format_amount( $amount = 0, $decimals = true ) {
-	$formatter = new \EDD\Currency\Money_Formatter( $amount, new \EDD\Currency\Currency( edd_get_currency() ) );
+function edd_format_amount( $amount = 0, $decimals = true, $currency = '' ) {
+	if ( empty( $currency ) ) {
+		$currency = edd_get_currency();
+	}
+
+	$formatter = new \EDD\Currency\Money_Formatter( $amount, new \EDD\Currency\Currency( $currency ) );
 
 	return $formatter->format_for_display( $decimals )->amount;
 }
@@ -179,7 +186,7 @@ function edd_currency_decimal_filter( $decimals = 2, $currency = '' ) {
 	return apply_filters( 'edd_currency_decimal_count', $decimals, $currency );
 }
 add_filter( 'edd_sanitize_amount_decimals', 'edd_currency_decimal_filter' );
-add_filter( 'edd_format_amount_decimals',   'edd_currency_decimal_filter' );
+add_filter( 'edd_format_amount_decimals',   'edd_currency_decimal_filter', 10, 2 );
 
 /**
  * Sanitizes a string key for EDD Settings

@@ -1349,7 +1349,7 @@ function edd_get_payment_amount( $order_id = 0 ) {
 function edd_payment_subtotal( $order_id = 0 ) {
 	$subtotal = edd_get_payment_subtotal( $order_id );
 
-	return edd_currency_filter( edd_format_amount( $subtotal ), edd_get_payment_currency_code( $order_id ) );
+	return edd_display_amount( $subtotal, edd_get_payment_currency_code( $order_id ) );
 }
 
 /**
@@ -1391,7 +1391,7 @@ function edd_get_payment_subtotal( $order_id = 0 ) {
 function edd_payment_tax( $order_id = 0, $payment_meta = null ) {
 	$tax = edd_get_payment_tax( $order_id, false );
 
-	return edd_currency_filter( edd_format_amount( $tax ), edd_get_payment_currency_code( $order_id ) );
+	return edd_display_amount( $tax, edd_get_payment_currency_code( $order_id ) );
 }
 
 /**
