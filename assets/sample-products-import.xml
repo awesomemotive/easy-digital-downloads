@@ -35,7 +35,7 @@
 	<wp:base_site_url>https://easydigitaldownloads.com/</wp:base_site_url>
 	<wp:base_blog_url>https://easydigitaldownloads.com/demo</wp:base_blog_url>
 
-		<wp:author><wp:author_id>1</wp:author_id><wp:author_login><![CDATA[pippin]]></wp:author_login><wp:author_email><![CDATA[pippin@pippinsplugins.com]]></wp:author_email><wp:author_display_name><![CDATA[Pippin Williamson]]></wp:author_display_name><wp:author_first_name><![CDATA[Pippin]]></wp:author_first_name><wp:author_last_name><![CDATA[Williamson]]></wp:author_last_name></wp:author>
+		<wp:author><wp:author_id>1</wp:author_id><wp:author_login><![CDATA[edd]]></wp:author_login><wp:author_email><![CDATA[support@easydigitaldownloads.com]]></wp:author_email><wp:author_display_name><![CDATA[Edd]]></wp:author_display_name><wp:author_first_name><![CDATA[Edd]]></wp:author_first_name></wp:author>
 
 
 	<generator>https://wordpress.org/?v=5.7.4</generator>
@@ -43,7 +43,7 @@
 		<title><![CDATA[A Sample Digital Download]]></title>
 		<link>https://easydigitaldownloads.com/demo/downloads/a-sample-digital-download/</link>
 		<pubDate>Mon, 21 May 2012 16:20:08 +0000</pubDate>
-		<dc:creator><![CDATA[pippin]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?post_type=download&#038;p=8</guid>
 		<description></description>
 		<content:encoded><![CDATA[This product shows an example of the <a href="https://easydigitaldownloads.com/downloads/edd-upload-file/">EDD Upload File extension</a>. Click purchase below and go to checkout see a demonstration.
@@ -85,7 +85,7 @@ Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturien
 		</wp:postmeta>
 							<wp:postmeta>
 		<wp:meta_key><![CDATA[_edd_sales_log]]></wp:meta_key>
-		<wp:meta_value><![CDATA[a:1:{i:0;a:3:{s:10:"payment_id";s:2:"19";s:9:"user_info";a:5:{s:2:"id";s:1:"1";s:5:"email";s:25:"pippin@pippinsplugins.com";s:10:"first_name";s:6:"Pippin";s:9:"last_name";s:10:"Williamson";s:8:"discount";s:4:"none";}s:4:"date";s:19:"2012-05-21 16:27:42";}}]]></wp:meta_value>
+		<wp:meta_value><![CDATA[a:1:{i:0;a:3:{s:10:"payment_id";s:2:"19";s:9:"user_info";a:5:{s:2:"id";s:1:"1";s:5:"email";s:25:"support@easydigitaldownloads.com";s:10:"first_name";s:6:"Edd";s:9:"last_name";s:10:"Mastoc";s:8:"discount";s:4:"none";}s:4:"date";s:19:"2012-05-21 16:27:42";}}]]></wp:meta_value>
 		</wp:postmeta>
 							<wp:postmeta>
 		<wp:meta_key><![CDATA[_edd_bundled_products]]></wp:meta_key>
@@ -124,7 +124,7 @@ Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturien
 		<title><![CDATA[Sample Product]]></title>
 		<link>https://easydigitaldownloads.com/demo/downloads/sample-product/</link>
 		<pubDate>Mon, 21 May 2012 16:26:47 +0000</pubDate>
-		<dc:creator><![CDATA[pippin]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?post_type=download&#038;p=16</guid>
 		<description></description>
 		<content:encoded><![CDATA[Lundium, montes augue tristique augue? Ac! Vel mattis, nisi pulvinar? Ultrices rhoncus integer, scelerisque phasellus egestas. Sit aenean est nisi nisi aenean pid elit, mid duis? Lectus, lundium duis pulvinar nunc urna rhoncus pid in nisi. Magna? Lectus, nisi ultricies nascetur urna in phasellus cras, urna a massa rhoncus sed facilisis habitasse! Duis? Dapibus vel vel, risus? Cras amet ac, aliquet scelerisque habitasse tempor integer natoque egestas? Urna, lacus nunc? Ultrices cum, scelerisque eros eros urna! Cras cursus dolor etiam tincidunt ac magna porta ut augue, magna eu integer et, magna et duis sit? Dolor, augue pulvinar aliquet magna facilisis. Nisi odio, tincidunt eu, nec pulvinar scelerisque dis penatibus mus turpis, lundium elementum tristique montes mus etiam dolor, hac. Phasellus.]]></content:encoded>
@@ -197,7 +197,7 @@ Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturien
 		<title><![CDATA[Another Sample Product]]></title>
 		<link>https://easydigitaldownloads.com/demo/downloads/another-sample-product/</link>
 		<pubDate>Fri, 15 Jun 2012 15:21:40 +0000</pubDate>
-		<dc:creator><![CDATA[pippin]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?post_type=download&#038;p=67</guid>
 		<description></description>
 		<content:encoded><![CDATA[Lundium, montes augue tristique augue? Ac! Vel mattis, nisi pulvinar? Ultrices rhoncus integer, scelerisque phasellus egestas. Sit aenean est nisi nisi aenean pid elit, mid duis? Lectus, lundium duis pulvinar nunc urna rhoncus pid in nisi. Magna? Lectus, nisi ultricies nascetur urna in phasellus cras, urna a massa rhoncus sed facilisis habitasse! Duis? Dapibus vel vel, risus? Cras amet ac, aliquet scelerisque habitasse tempor integer natoque egestas? Urna, lacus nunc? Ultrices cum, scelerisque eros eros urna! Cras cursus dolor etiam tincidunt ac magna porta ut augue, magna eu integer et, magna et duis sit? Dolor, augue pulvinar aliquet magna facilisis. Nisi odio, tincidunt eu, nec pulvinar scelerisque dis penatibus mus turpis, lundium elementum tristique montes mus etiam dolor, hac. Phasellus.]]></content:encoded>
@@ -270,7 +270,7 @@ Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturien
 		<title><![CDATA[One More Sample Product]]></title>
 		<link>https://easydigitaldownloads.com/demo/downloads/one-more-sample-product/</link>
 		<pubDate>Fri, 15 Jun 2012 15:22:01 +0000</pubDate>
-		<dc:creator><![CDATA[pippin]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?post_type=download&#038;p=68</guid>
 		<description></description>
 		<content:encoded><![CDATA[Lundium, montes augue tristique augue? Ac! Vel mattis, nisi pulvinar? Ultrices rhoncus integer, scelerisque phasellus egestas. Sit aenean est nisi nisi aenean pid elit, mid duis? Lectus, lundium duis pulvinar nunc urna rhoncus pid in nisi. Magna? Lectus, nisi ultricies nascetur urna in phasellus cras, urna a massa rhoncus sed facilisis habitasse! Duis? Dapibus vel vel, risus? Cras amet ac, aliquet scelerisque habitasse tempor integer natoque egestas? Urna, lacus nunc? Ultrices cum, scelerisque eros eros urna! Cras cursus dolor etiam tincidunt ac magna porta ut augue, magna eu integer et, magna et duis sit? Dolor, augue pulvinar aliquet magna facilisis. Nisi odio, tincidunt eu, nec pulvinar scelerisque dis penatibus mus turpis, lundium elementum tristique montes mus etiam dolor, hac. Phasellus.]]></content:encoded>
@@ -403,7 +403,7 @@ Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturien
 		<title><![CDATA[A Music Album]]></title>
 		<link>https://easydigitaldownloads.com/demo/downloads/a-music-album/</link>
 		<pubDate>Wed, 05 Dec 2012 17:13:21 +0000</pubDate>
-		<dc:creator><![CDATA[pippin]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?post_type=download&#038;p=514</guid>
 		<description></description>
 		<content:encoded><![CDATA[This is a sample product that show cases an album configuration. You can easily setup price options to purchase individual songs or the entire album.]]></content:encoded>
@@ -485,7 +485,7 @@ Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturien
 		<title><![CDATA[Product Grid]]></title>
 		<link>https://easydigitaldownloads.com/demo/product-grid/</link>
 		<pubDate>Wed, 05 Dec 2012 17:06:25 +0000</pubDate>
-		<dc:creator><![CDATA[pippin]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?page_id=509</guid>
 		<description></description>
 		<content:encoded><![CDATA[[downloads columns=3]]]></content:encoded>
@@ -517,7 +517,7 @@ Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturien
 		<title><![CDATA[Product List]]></title>
 		<link>https://easydigitaldownloads.com/demo/product-list/</link>
 		<pubDate>Wed, 05 Dec 2012 17:08:28 +0000</pubDate>
-		<dc:creator><![CDATA[pippin]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?page_id=512</guid>
 		<description></description>
 		<content:encoded><![CDATA[[downloads columns=1 number=3]]]></content:encoded>
@@ -549,7 +549,7 @@ Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturien
 		<title><![CDATA[logo_03]]></title>
 		<link>https://easydigitaldownloads.com/demo/logo_03/</link>
 		<pubDate>Fri, 05 Sep 2014 14:44:53 +0000</pubDate>
-		<dc:creator><![CDATA[pippin]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/2014/09/logo_03.png</guid>
 		<description></description>
 		<content:encoded><![CDATA[]]></content:encoded>
