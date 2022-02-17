@@ -61,6 +61,7 @@ function edd_setup_edd_post_types() {
 		'query_var'          => true,
 		'menu_icon'          => 'dashicons-download',
 		'rewrite'            => $rewrite,
+		'show_in_rest' 		 => true,
 		'capability_type'    => 'product',
 		'map_meta_cap'       => true,
 		'has_archive'        => $archives,
