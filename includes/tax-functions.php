@@ -155,7 +155,7 @@ function edd_active_tax_rates_query_clauses( $clauses ) {
  *                          address information, then your store's Business Country setting.
  *                          Default true.
  *
- * @return mixed|void
+ * @return float
  */
 function edd_get_tax_rate( $country = '', $region = '', $fallback = true ) {
 
@@ -261,18 +261,21 @@ function edd_get_formatted_tax_rate( $country = false, $state = false ) {
  * @since 1.3.3
  * @since 3.0 Renamed $state parameter to $region.
  *            Added $fallback parameter.
+ *            Added `$tax_rate` parameter.
  *
- * @param float  $amount  Amount.
- * @param string $country Country. Default base country.
- * @param string $region  Region. Default base region.
- * @param boolean $fallback Fall back to (in order): server $_POST data, the current Customer's
- *                          address information, then your store's Business Country setting.
- *                          Default true.
+ * @param float      $amount   Amount.
+ * @param string     $country  Country. Default base country.
+ * @param string     $region   Region. Default base region.
+ * @param boolean    $fallback Fall back to (in order): server $_POST data, the current Customer's
+ *                             address information, then your store's Business Country setting.
+ *                             Default true.
+ * @param null|float $tax_rate Tax rate to use for the calculataion. If `null`, the rate is retrieved using
+ *                             `edd_get_tax_rate()`.
  *
  * @return float $tax Taxed amount.
  */
-function edd_calculate_tax( $amount = 0.00, $country = '', $region = '', $fallback = true ) {
-	$rate = edd_get_tax_rate( $country, $region, $fallback );
+function edd_calculate_tax( $amount = 0.00, $country = '', $region = '', $fallback = true, $tax_rate = null ) {
+	$rate = ( null === $tax_rate ) ? edd_get_tax_rate( $country, $region, $fallback ) : $tax_rate;
 	$tax  = 0.00;
 
 	if ( edd_use_taxes() && $amount > 0 ) {
@@ -474,3 +477,16 @@ function edd_get_tax_rate_by_location( $args ) {
 
 	return $rate;
 }
+
+/**
+ * Clears the tax rate cache prior to displaying the cart.
+ * This fixes potential issues with custom tax rates / rate filtering from after we added
+ * tax rate caching logic.
+ *
+ * @link https://github.com/easydigitaldownloads/easy-digital-downloads/pull/8509#issuecomment-926576698
+ *
+ * @since 3.0
+ */
+add_action( 'edd_before_checkout_cart', function () {
+	EDD()->cart->set_tax_rate( null );
+} );

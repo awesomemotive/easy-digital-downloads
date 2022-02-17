@@ -320,6 +320,7 @@ class Test_Cart extends EDD_UnitTestCase {
 
 		// Now turn on taxes and do it again
 		add_filter( 'edd_use_taxes', '__return_true' );
+		EDD()->cart->set_tax_rate( null ); // Clears the tax rate cache.
 		add_filter( 'edd_tax_rate', function () {
 			return 0.20;
 		} );
@@ -697,8 +698,10 @@ class Test_Cart extends EDD_UnitTestCase {
 
 	public function test_negative_fees_cart_tax() {
 		edd_update_option( 'enable_taxes', true );
-		edd_update_option( 'tax_rate', '10' );
-
+		EDD()->cart->set_tax_rate( null ); // Clears the tax rate cache.
+		add_filter( 'edd_tax_rate', function () {
+			return 0.10;
+		} );
 
 		$options = array(
 			'price_id' => 0,

@@ -18,7 +18,7 @@ if ( ! class_exists( 'EDD_License' ) ) :
  */
 class EDD_License {
 	private $file;
-	private $license;
+	public $license;
 	private $item_name;
 	private $item_id;
 	private $item_shortname;
@@ -156,9 +156,18 @@ class EDD_License {
 			return;
 		}
 
+		$license = $this->license;
+		// Fall back to the highest license key if one is not saved for this extension.
+		if ( empty( $license ) ) {
+			$pass_manager = new \EDD\Admin\Pass_Manager();
+			if ( $pass_manager->highest_license_key ) {
+				$license = $pass_manager->highest_license_key;
+			}
+		}
+
 		$args = array(
 			'version'   => $this->version,
-			'license'   => $this->license,
+			'license'   => $license,
 			'author'    => $this->author,
 			'beta'      => function_exists( 'edd_extension_has_beta_support' ) && edd_extension_has_beta_support( $this->item_shortname ),
 		);
@@ -304,7 +313,7 @@ class EDD_License {
 
 		$details = get_option( $this->item_shortname . '_license_active' );
 
-		if ( is_object( $details ) && 'valid' === $details->license ) {
+		if ( is_object( $details ) && ! empty( $details->license ) && 'valid' === $details->license ) {
 			return;
 		}
 
@@ -347,7 +356,12 @@ class EDD_License {
 		// Decode license data
 		$license_data = json_decode( wp_remote_retrieve_body( $response ) );
 
-		$this->maybe_set_pass_flag( $this->license, $license_data );
+		$this->maybe_set_pass_flag( $license, $license_data );
+
+		// Clear the option for licensed extensions to force regeneration.
+		if ( ! empty( $api_data->license ) && 'valid' === $api_data->license ) {
+			delete_option( 'edd_licensed_extensions' );
+		}
 
 		update_option( $this->item_shortname . '_license_active', $license_data );
 	}
@@ -481,7 +495,7 @@ class EDD_License {
 
 		$license = get_option( $this->item_shortname . '_license_active' );
 
-		if ( is_object( $license ) && 'valid' !== $license->license && empty( $showed_invalid_message ) ) {
+		if ( is_object( $license ) && ( empty( $license->license ) || 'valid' !== $license->license ) && empty( $showed_invalid_message ) ) {
 			if ( empty( $_GET['tab'] ) || 'licenses' !== $_GET['tab'] ) {
 
 				$messages[] = sprintf(
@@ -513,7 +527,7 @@ class EDD_License {
 
 		$license = get_option( $this->item_shortname . '_license_active' );
 
-		if ( ( ! is_object( $license ) || 'valid' !== $license->license ) && empty( $showed_imissing_key_message[ $this->item_shortname ] ) ) {
+		if ( ( ! is_object( $license ) || empty( $license->license ) || 'valid' !== $license->license ) && empty( $showed_imissing_key_message[ $this->item_shortname ] ) ) {
 			echo '&nbsp;<strong><a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=licenses' ) ) . '">' . __( 'Enter valid license key for automatic updates.', 'easy-digital-downloads' ) . '</a></strong>';
 			$showed_imissing_key_message[ $this->item_shortname ] = true;
 		}

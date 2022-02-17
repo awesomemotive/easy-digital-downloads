@@ -20,24 +20,24 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.0
  *
- * @property int    $id
- * @property int    $parent
- * @property int    $order_id
- * @property int    $product_id
- * @property string $product_name
- * @property int    $price_id
- * @property int    $cart_index
- * @property string $type
- * @property string $status
- * @property int    $quantity
- * @property int    $amount
- * @property float  $subtotal
- * @property float  $tax
- * @property float  $discount
- * @property float  $total
- * @property float  $rate
- * @property string $date_created
- * @property string $date_modified
+ * @property int                $id
+ * @property int                $parent
+ * @property int                $order_id
+ * @property int                $product_id
+ * @property string             $product_name
+ * @property int|null           $price_id
+ * @property int                $cart_index
+ * @property string             $type
+ * @property string             $status
+ * @property int                $quantity
+ * @property int                $amount
+ * @property float              $subtotal
+ * @property float              $tax
+ * @property float              $discount
+ * @property float              $total
+ * @property float              $rate
+ * @property string             $date_created
+ * @property string             $date_modified
  * @property Order_Adjustment[] $adjustments
  */
 class Order_Item extends \EDD\Database\Rows\Order_Item {
@@ -89,7 +89,7 @@ class Order_Item extends \EDD\Database\Rows\Order_Item {
 	 * Price ID.
 	 *
 	 * @since 3.0
-	 * @var   int
+	 * @var   int|null
 	 */
 	protected $price_id;
 

@@ -75,6 +75,15 @@ class EDD_Cart {
 	public $tax = 0.00;
 
 	/**
+	 * Determined tax rate, based on the customer's address.
+	 * This will be `null` until it is set for the first time.
+	 *
+	 * @var float|null
+	 * @since 3.0
+	 */
+	private $tax_rate = null;
+
+	/**
 	 * Purchase Session
 	 *
 	 * @var array
@@ -137,6 +146,35 @@ class EDD_Cart {
 		$this->get_all_fees();
 		$this->get_discounts_from_session();
 		$this->get_quantity();
+	}
+
+	/**
+	 * Retrieves the tax rate.
+	 *
+	 * This sets up the tax rate once so we don't have to recaculate it each time we need it.
+	 *
+	 * @link https://github.com/easydigitaldownloads/easy-digital-downloads/issues/8455
+	 *
+	 * @since 3.0
+	 * @return float
+	 */
+	private function get_tax_rate() {
+		if ( null === $this->tax_rate ) {
+			$this->tax_rate = edd_get_tax_rate();
+		}
+
+		return $this->tax_rate;
+	}
+
+	/**
+	 * Sets the tax rate.
+	 *
+	 * @param float $tax_rate
+	 *
+	 * @since 3.0
+	 */
+	public function set_tax_rate( $tax_rate ) {
+		$this->tax_rate = $tax_rate;
 	}
 
 	/**
@@ -947,7 +985,7 @@ class EDD_Cart {
 			$country = ! empty( $_POST['billing_country'] ) ? $_POST['billing_country'] : false;
 			$state   = ! empty( $_POST['card_state'] )      ? $_POST['card_state']      : false;
 
-			$tax = edd_calculate_tax( $subtotal, $country, $state );
+			$tax = edd_calculate_tax( $subtotal, $country, $state, true, $this->get_tax_rate() );
 		}
 
 		$tax = max( $tax, 0 );
@@ -1274,7 +1312,7 @@ class EDD_Cart {
 				 * Fees (at this time) must be exclusive of tax
 				 */
 				add_filter( 'edd_prices_include_tax', '__return_false' );
-				$tax += edd_calculate_tax( $fee['amount'] );
+				$tax += edd_calculate_tax( $fee['amount'], '', '', true, $this->get_tax_rate() );
 				remove_filter( 'edd_prices_include_tax', '__return_false' );
 			}
 		}

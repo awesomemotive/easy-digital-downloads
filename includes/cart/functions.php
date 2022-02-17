@@ -385,6 +385,17 @@ function edd_get_cart_fee_tax() {
 }
 
 /**
+ * is the cart empty?
+ *
+ * @since 3.0
+ * @uses EDD()->fees->is_empty()
+ * @return bool Is the cart empty?
+ */
+function edd_is_cart_empty() {
+	return EDD()->cart->is_empty();
+}
+
+/**
  * Get Purchase Summary
  *
  * Retrieves the purchase summary.

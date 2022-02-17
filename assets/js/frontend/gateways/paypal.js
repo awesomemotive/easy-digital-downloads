@@ -151,6 +151,22 @@ var EDD_PayPal = {
 			onCancel: function( data ) {
 				// Hide spinner.
 				spinner.style.display = 'none';
+
+				const formData = new FormData();
+				formData.append( 'action', 'edd_cancel_paypal_order' );
+				return fetch( edd_scripts.ajaxurl, {
+					method: 'POST',
+					body: formData
+				} ).then( function ( response ) {
+					return response.json();
+				} ).then( function ( responseData ) {
+					if ( responseData.success ) {
+						const nonces = responseData.data.nonces;
+						Object.keys( nonces ).forEach( function ( key ) {
+							document.getElementById( 'edd-gateway-' + key ).setAttribute( 'data-' + key + '-nonce', nonces[ key ] );
+						} );
+					}
+				} );
 			}
 		};
 
@@ -207,7 +223,7 @@ var EDD_PayPal = {
 					}
 
 					return new Promise( function( resolve, reject ) {
-						reject( new Error( errorHtml ) );
+						reject( errorHtml );
 					} );
 				}
 			} );
@@ -237,12 +253,12 @@ jQuery( document ).ready( function( $ ) {
 		var element = buyButtons[ i ];
 		// Skip if "Free Downloads" is enabled for this download.
 		if ( element.classList.contains( 'edd-free-download' ) ) {
-			return;
+			continue;
 		}
 
 		var wrapper = element.closest( '.edd_purchase_submit_wrapper' );
 		if ( ! wrapper ) {
-			return;
+			continue;
 		}
 
 		// Clear contents of the wrapper.
