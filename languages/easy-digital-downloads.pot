@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 3.0-rc1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2022-02-18 15:40:42+00:00\n"
+"POT-Creation-Date: 2022-02-18 16:04:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -801,7 +801,7 @@ msgstr ""
 #: includes/admin/customers/customers.php:949
 #: includes/admin/downloads/dashboard-columns.php:37
 #: includes/admin/payments/class-payments-table.php:388
-#: includes/admin/payments/orders.php:1034
+#: includes/admin/payments/orders.php:1036
 #: includes/admin/reporting/class-api-requests-logs-list-table.php:53
 #: includes/admin/reporting/class-export-download-history.php:59
 #: includes/admin/reporting/class-export-payments.php:76
@@ -1233,8 +1233,8 @@ msgstr ""
 #: includes/admin/customers/customers.php:904
 #: includes/admin/customers/customers.php:947
 #: includes/admin/payments/class-payments-table.php:386
-#: includes/admin/payments/orders.php:859
-#: includes/admin/payments/orders.php:865
+#: includes/admin/payments/orders.php:861
+#: includes/admin/payments/orders.php:867
 #: includes/admin/reporting/class-gateway-error-logs-list-table.php:111
 #: includes/admin/reporting/class-gateways-reports-table.php:74
 #: includes/admin/reporting/export/class-batch-export-taxed-orders.php:59
@@ -1436,7 +1436,7 @@ msgstr ""
 #: includes/admin/discounts/add-discount.php:57
 #: includes/admin/discounts/class-discount-codes-table.php:74
 #: includes/admin/discounts/edit-discount.php:98
-#: includes/admin/payments/orders.php:773
+#: includes/admin/payments/orders.php:775
 #: includes/admin/payments/refunds.php:225
 #: includes/admin/reporting/class-export-payments.php:70
 #: includes/admin/reporting/export/class-batch-export-payments.php:56
@@ -1810,7 +1810,7 @@ msgstr ""
 
 #: includes/admin/discounts/edit-discount.php:259
 #: includes/admin/payments/class-payments-table.php:389
-#: includes/admin/payments/orders.php:976
+#: includes/admin/payments/orders.php:978
 #: includes/admin/reporting/class-export-payments.php:78
 #: includes/admin/reporting/export/class-batch-export-downloads.php:48
 #: includes/admin/reporting/export/class-batch-export-payments.php:66
@@ -2807,7 +2807,7 @@ msgid "Resend Receipts"
 msgstr ""
 
 #: includes/admin/payments/class-payments-table.php:668
-#: includes/admin/payments/orders.php:1012
+#: includes/admin/payments/orders.php:1014
 #: includes/admin/payments/refunds.php:301
 msgid "Move to Trash"
 msgstr ""
@@ -2821,7 +2821,7 @@ msgid "Unit Price"
 msgstr ""
 
 #: includes/admin/payments/class-refund-items-table.php:79
-#: includes/admin/payments/orders.php:772
+#: includes/admin/payments/orders.php:773
 #: includes/admin/payments/refunds.php:224
 #: includes/admin/reporting/export/class-batch-export-sales.php:46
 #: includes/admin/views/tmpl-order-form-add-order-item.php:110
@@ -3191,25 +3191,25 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: includes/admin/payments/orders.php:801
+#: includes/admin/payments/orders.php:803
 msgid "Order Details"
 msgstr ""
 
-#: includes/admin/payments/orders.php:849
+#: includes/admin/payments/orders.php:851
 msgid "Order Extras"
 msgstr ""
 
-#: includes/admin/payments/orders.php:887
+#: includes/admin/payments/orders.php:889
 msgid "Key"
 msgstr ""
 
-#: includes/admin/payments/orders.php:897
-#: includes/admin/payments/orders.php:905
+#: includes/admin/payments/orders.php:899
+#: includes/admin/payments/orders.php:907
 msgid "IP"
 msgstr ""
 
-#: includes/admin/payments/orders.php:912
-#: includes/admin/payments/orders.php:920
+#: includes/admin/payments/orders.php:914
+#: includes/admin/payments/orders.php:922
 #: includes/admin/reporting/class-export-payments.php:74
 #: includes/admin/reporting/export/class-batch-export-payments.php:60
 #: includes/admin/reporting/export/class-batch-export-taxed-orders.php:60
@@ -3217,76 +3217,76 @@ msgstr ""
 msgid "Transaction ID"
 msgstr ""
 
-#: includes/admin/payments/orders.php:934
+#: includes/admin/payments/orders.php:936
 msgid "Unlimited Downloads"
 msgstr ""
 
-#: includes/admin/payments/orders.php:935
+#: includes/admin/payments/orders.php:937
 msgid ""
 "Checking this box will override all other file download limits for this "
 "purchase, granting the customer unlimited downloads of all files included "
 "on the purchase."
 msgstr ""
 
-#: includes/admin/payments/orders.php:967
+#: includes/admin/payments/orders.php:969
 msgid "Order Attributes"
 msgstr ""
 
-#: includes/admin/payments/orders.php:979
+#: includes/admin/payments/orders.php:981
 msgid ""
 "<strong>Pending</strong>: order is still processing or was abandoned by "
 "customer. Successful orders will be marked as Complete automatically once "
 "processing is finalized."
 msgstr ""
 
-#: includes/admin/payments/orders.php:980
+#: includes/admin/payments/orders.php:982
 msgid "<strong>Complete</strong>: all processing is completed for this purchase."
 msgstr ""
 
-#: includes/admin/payments/orders.php:981
+#: includes/admin/payments/orders.php:983
 msgid ""
 "<strong>Revoked</strong>: access to purchased items is disabled, perhaps "
 "due to policy violation or fraud."
 msgstr ""
 
-#: includes/admin/payments/orders.php:982
+#: includes/admin/payments/orders.php:984
 msgid ""
 "<strong>Refunded</strong>: the purchase amount is returned to the customer "
 "and access to items is disabled."
 msgstr ""
 
-#: includes/admin/payments/orders.php:983
+#: includes/admin/payments/orders.php:985
 msgid ""
 "<strong>Abandoned</strong>: the purchase attempt was not completed by the "
 "customer."
 msgstr ""
 
-#: includes/admin/payments/orders.php:984
+#: includes/admin/payments/orders.php:986
 msgid ""
 "<strong>Failed</strong>: customer clicked Cancel before completing the "
 "purchase."
 msgstr ""
 
-#: includes/admin/payments/orders.php:1022
+#: includes/admin/payments/orders.php:1024
 msgid "Recover"
 msgstr ""
 
-#: includes/admin/payments/orders.php:1023
+#: includes/admin/payments/orders.php:1025
 msgid ""
 "Pending and abandoned payments can be resumed by the customer, using this "
 "custom URL. Payments can be resumed only when they do not have a "
 "transaction ID from the gateway."
 msgstr ""
 
-#: includes/admin/payments/orders.php:1045
+#: includes/admin/payments/orders.php:1047
 msgid "Time"
 msgstr ""
 
-#: includes/admin/payments/orders.php:1050
+#: includes/admin/payments/orders.php:1052
 msgid "Hour"
 msgstr ""
 
-#: includes/admin/payments/orders.php:1056
+#: includes/admin/payments/orders.php:1058
 msgid "Minute"
 msgstr ""
 

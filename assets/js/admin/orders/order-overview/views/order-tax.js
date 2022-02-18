@@ -61,8 +61,8 @@ export const OrderTax = wp.Backbone.View.extend( {
 		const { state } = this.options;
 		const { currency, number } = state.get( 'formatters' );
 
-		// Determine column offset.
-		const colspan = 2;
+		// Determine column offset -- using cart quantities requires an extra column.
+		const colspan = true === state.get( 'hasQuantity' ) ? 2 : 1;
 
 		const tax = state.getTax();
 		const hasNewTaxRate = state.hasNewTaxRate();
