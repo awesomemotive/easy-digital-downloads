@@ -84,10 +84,6 @@ Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturien
 		<wp:meta_value><![CDATA[a:1:{i:0;a:6:{s:5:"index";s:1:"0";s:13:"attachment_id";s:1:"0";s:14:"thumbnail_size";s:0:"";s:4:"name";s:14:"Download Files";s:4:"file";s:70:"http://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png";s:9:"condition";s:3:"all";}}]]></wp:meta_value>
 		</wp:postmeta>
 							<wp:postmeta>
-		<wp:meta_key><![CDATA[_edd_sales_log]]></wp:meta_key>
-		<wp:meta_value><![CDATA[a:1:{i:0;a:3:{s:10:"payment_id";s:2:"19";s:9:"user_info";a:5:{s:2:"id";s:1:"1";s:5:"email";s:25:"support@easydigitaldownloads.com";s:10:"first_name";s:6:"Edd";s:9:"last_name";s:10:"Mastoc";s:8:"discount";s:4:"none";}s:4:"date";s:19:"2012-05-21 16:27:42";}}]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
 		<wp:meta_key><![CDATA[_edd_bundled_products]]></wp:meta_key>
 		<wp:meta_value><![CDATA[a:1:{i:0;s:1:"0";}]]></wp:meta_value>
 		</wp:postmeta>
