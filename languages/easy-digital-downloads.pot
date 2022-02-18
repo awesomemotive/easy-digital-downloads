@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 3.0-rc1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2022-02-17 23:27:32+00:00\n"
+"POT-Creation-Date: 2022-02-18 13:38:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -730,7 +730,7 @@ msgstr ""
 #: includes/admin/discounts/edit-discount.php:126
 #: includes/admin/discounts/edit-discount.php:163
 #: includes/admin/payments/class-payments-table.php:495
-#: includes/admin/payments/class-refund-items-table.php:429
+#: includes/admin/payments/class-refund-items-table.php:423
 #. translators: customer name or address id
 #. translators: customer email
 #. translators: customer name or email
@@ -1245,7 +1245,7 @@ msgstr ""
 #: includes/admin/customers/customers.php:905
 #: includes/admin/customers/customers.php:948
 #: includes/admin/payments/class-payments-table.php:387
-#: includes/admin/payments/class-refund-items-table.php:96
+#: includes/admin/payments/class-refund-items-table.php:90
 #: includes/admin/tools.php:662 includes/admin/views/tmpl-order-refund.php:39
 #: includes/admin/views/tmpl-order-total.php:16
 #: includes/gateways/stripe/includes/payment-methods/payment-request/functions.php:146
@@ -2820,7 +2820,7 @@ msgstr ""
 msgid "Unit Price"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:83
+#: includes/admin/payments/class-refund-items-table.php:79
 #: includes/admin/payments/orders.php:772
 #: includes/admin/payments/refunds.php:224
 #: includes/admin/reporting/export/class-batch-export-sales.php:46
@@ -2830,14 +2830,14 @@ msgstr ""
 msgid "Quantity"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:87
+#: includes/admin/payments/class-refund-items-table.php:80
 #: includes/admin/tools.php:644 includes/admin/views/tmpl-order-subtotal.php:16
 #: includes/emails/tags.php:203 templates/checkout_cart.php:102
 #: templates/shortcode-receipt.php:76
 msgid "Subtotal"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:92
+#: includes/admin/payments/class-refund-items-table.php:86
 #: includes/admin/reporting/class-export-payments.php:71
 #: includes/admin/reporting/export/class-batch-export-payments.php:57
 #: includes/admin/reporting/export/class-batch-export-taxed-orders.php:57
@@ -2849,47 +2849,47 @@ msgstr ""
 msgid "Tax"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:163
+#: includes/admin/payments/class-refund-items-table.php:157
 #: includes/admin/views/tmpl-order-adjustment.php:46
 msgid "Order Fee"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:165
+#: includes/admin/payments/class-refund-items-table.php:159
 #: includes/admin/views/tmpl-order-adjustment.php:44
 #: includes/ajax-functions.php:1156
 msgid "Order Credit"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:284
+#: includes/admin/payments/class-refund-items-table.php:278
 msgid "Amount to refund, excluding tax"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:286
+#: includes/admin/payments/class-refund-items-table.php:280
 msgid "Amount of tax to refund"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:347
+#: includes/admin/payments/class-refund-items-table.php:341
 msgid "Quantity to refund"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:463
+#: includes/admin/payments/class-refund-items-table.php:457
 msgid "No items found."
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:638
+#: includes/admin/payments/class-refund-items-table.php:632
 #: includes/admin/payments/view-order-details.php:130
 msgid "Submit Refund"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:670
+#: includes/admin/payments/class-refund-items-table.php:664
 msgid "Refund Subtotal:"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:693
+#: includes/admin/payments/class-refund-items-table.php:687
 msgid "Refund Tax Total:"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:709
+#: includes/admin/payments/class-refund-items-table.php:703
 msgid "Refund Total:"
 msgstr ""
 
@@ -11170,29 +11170,29 @@ msgstr ""
 msgid "%s ago"
 msgstr ""
 
-#: includes/orders/classes/class-refund-validator.php:260
+#: includes/orders/classes/class-refund-validator.php:261
 #. Translators: %s - 0.00 formatted in store currency
 msgid "The refund amount must be greater than %s."
 msgstr ""
 
-#: includes/orders/classes/class-refund-validator.php:270
+#: includes/orders/classes/class-refund-validator.php:271
 #. Translators: %s - maximum refund amount as formatted currency
 msgid "The maximum refund amount is %s."
 msgstr ""
 
-#: includes/orders/classes/class-refund-validator.php:342
+#: includes/orders/classes/class-refund-validator.php:343
 #. Translators: %s is the type of amount being refunded (e.g. "subtotal" or
 #. "tax"). Not translatable at this time.
 msgid "An unexpected error occurred while validating the maximum %s amount."
 msgstr ""
 
-#: includes/orders/classes/class-refund-validator.php:370
+#: includes/orders/classes/class-refund-validator.php:371
 #. Translators: %1$s - type of amount being refunded (subtotal, tax, or total);
 #. %1$s - product name; %3$s - maximum amount allowed for refund
 msgid "The maximum refund %1$s for the product \"%2$s\" is %3$s."
 msgstr ""
 
-#: includes/orders/classes/class-refund-validator.php:383
+#: includes/orders/classes/class-refund-validator.php:384
 #. Translators: %1$s - type of amount being refunded (subtotal, tax, or total);
 #. %1$s - adjustment description; %3$s - maximum amount allowed for refund
 msgid "The maximum refund %s for the adjustment \"%s\" is %s."
@@ -11579,19 +11579,19 @@ msgstr[1] ""
 
 #: includes/privacy-functions.php:27
 msgid ""
-"\n"
+"\r\n"
 "We collect information about you during the checkout process on our store. "
 "This information may include, but is not limited to, your name, billing "
 "address, shipping address, email address, phone number, credit card/payment "
 "details and any other details that might be requested from you for the "
-"purpose of processing your orders.\n"
-"Handling this data also allows us to:\n"
-"- Send you important account/order/service information.\n"
-"- Respond to your queries, refund requests, or complaints.\n"
+"purpose of processing your orders.\r\n"
+"Handling this data also allows us to:\r\n"
+"- Send you important account/order/service information.\r\n"
+"- Respond to your queries, refund requests, or complaints.\r\n"
 "- Process payments and to prevent fraudulent transactions. We do this on "
-"the basis of our legitimate business interests.\n"
+"the basis of our legitimate business interests.\r\n"
 "- Set up and administer your account, provide technical and/or customer "
-"support, and to verify your identity.\n"
+"support, and to verify your identity.\r\n"
 msgstr ""
 
 #: includes/privacy-functions.php:39
@@ -12696,7 +12696,7 @@ msgctxt "date filter"
 msgid "To"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:321
+#: includes/admin/payments/class-refund-items-table.php:315
 msgctxt "Maximum input amount"
 msgid "Max:"
 msgstr ""
