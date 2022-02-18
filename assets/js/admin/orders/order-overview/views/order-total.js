@@ -53,8 +53,8 @@ export const OrderTotal = wp.Backbone.View.extend( {
 		const { state } = this.options;
 		const { currency, number } = state.get( 'formatters' );
 
-		// Determine column offset -- using cart quantities requires an extra column.
-		const colspan = true === state.get( 'hasQuantity' ) ? 2 : 1;
+		// Set column offset.
+		const colspan = 2;
 
 		const total = state.getTotal();
 		const discount = state.getDiscount();
