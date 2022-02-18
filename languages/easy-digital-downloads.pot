@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Easy Digital Downloads 3.0-rc1\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2022-02-18 16:04:18+00:00\n"
+"POT-Creation-Date: 2022-02-18 21:07:20+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -730,7 +730,7 @@ msgstr ""
 #: includes/admin/discounts/edit-discount.php:126
 #: includes/admin/discounts/edit-discount.php:163
 #: includes/admin/payments/class-payments-table.php:495
-#: includes/admin/payments/class-refund-items-table.php:423
+#: includes/admin/payments/class-refund-items-table.php:426
 #. translators: customer name or address id
 #. translators: customer email
 #. translators: customer name or email
@@ -1446,7 +1446,7 @@ msgstr ""
 #: includes/admin/views/tmpl-order-adjustment.php:55
 #: includes/admin/views/tmpl-order-form-add-order-adjustment.php:80
 #: includes/admin/views/tmpl-order-form-add-order-item.php:225
-#: includes/admin/views/tmpl-order-item.php:76
+#: includes/admin/views/tmpl-order-item.php:78
 #: includes/admin/views/tmpl-order-subtotal.php:18
 #: includes/admin/views/tmpl-order-tax.php:29
 #: includes/admin/views/tmpl-order-total.php:23
@@ -2825,7 +2825,7 @@ msgstr ""
 #: includes/admin/payments/refunds.php:224
 #: includes/admin/reporting/export/class-batch-export-sales.php:46
 #: includes/admin/views/tmpl-order-form-add-order-item.php:110
-#: includes/admin/views/tmpl-order-item.php:72 includes/emails/tags.php:316
+#: includes/admin/views/tmpl-order-item.php:73 includes/emails/tags.php:316
 #: includes/emails/tags.php:450 templates/shortcode-receipt.php:209
 msgid "Quantity"
 msgstr ""
@@ -2872,24 +2872,24 @@ msgstr ""
 msgid "Quantity to refund"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:457
+#: includes/admin/payments/class-refund-items-table.php:460
 msgid "No items found."
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:632
+#: includes/admin/payments/class-refund-items-table.php:635
 #: includes/admin/payments/view-order-details.php:130
 msgid "Submit Refund"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:664
+#: includes/admin/payments/class-refund-items-table.php:667
 msgid "Refund Subtotal:"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:687
+#: includes/admin/payments/class-refund-items-table.php:690
 msgid "Refund Tax Total:"
 msgstr ""
 
-#: includes/admin/payments/class-refund-items-table.php:703
+#: includes/admin/payments/class-refund-items-table.php:706
 msgid "Refund Total:"
 msgstr ""
 
@@ -11583,19 +11583,19 @@ msgstr[1] ""
 
 #: includes/privacy-functions.php:27
 msgid ""
-"\r\n"
+"\n"
 "We collect information about you during the checkout process on our store. "
 "This information may include, but is not limited to, your name, billing "
 "address, shipping address, email address, phone number, credit card/payment "
 "details and any other details that might be requested from you for the "
-"purpose of processing your orders.\r\n"
-"Handling this data also allows us to:\r\n"
-"- Send you important account/order/service information.\r\n"
-"- Respond to your queries, refund requests, or complaints.\r\n"
+"purpose of processing your orders.\n"
+"Handling this data also allows us to:\n"
+"- Send you important account/order/service information.\n"
+"- Respond to your queries, refund requests, or complaints.\n"
 "- Process payments and to prevent fraudulent transactions. We do this on "
-"the basis of our legitimate business interests.\r\n"
+"the basis of our legitimate business interests.\n"
 "- Set up and administer your account, provide technical and/or customer "
-"support, and to verify your identity.\r\n"
+"support, and to verify your identity.\n"
 msgstr ""
 
 #: includes/privacy-functions.php:39
