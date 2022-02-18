@@ -23,11 +23,19 @@ class Tests_Stats extends EDD_UnitTestCase {
 	protected static $order;
 
 	/**
+	 * Second Order fixture.
+	 *
+	 * @var EDD\Orders\Order
+	 */
+	protected static $order2;
+
+	/**
 	 * Set up fixtures once.
 	 */
 	public static function wpSetUpBeforeClass() {
-		self::$stats = new EDD_Payment_Stats();
-		self::$order = parent::edd()->order->create_and_get();
+		self::$stats  = new EDD_Payment_Stats();
+		self::$order  = parent::edd()->order->create_and_get();
+		self::$order2 = parent::edd()->order->create_and_get();
 	}
 
 	public function test_predefined_date_rages() {
@@ -86,44 +94,44 @@ class Tests_Stats extends EDD_UnitTestCase {
 		$this->assertInstanceOf( 'WP_Error', self::$stats->end_date );
 	}
 
-	public function test_get_earnings_for_this_month_should_be_120() {
+	public function test_get_earnings_for_this_month_should_be_240() {
 		$earnings = self::$stats->get_earnings( 0, 'this_month' );
 
-		$this->assertSame( 120.0, $earnings );
+		$this->assertSame( 240.0, $earnings );
 	}
 
-	public function test_get_earnings_for_this_month_excluding_taxes_should_be_95() {
+	public function test_get_earnings_for_this_month_excluding_taxes_should_be_190() {
 		$earnings = self::$stats->get_earnings( 0, 'this_month', false, false );
 
-		$this->assertSame( 95.0, $earnings );
+		$this->assertSame( 190.0, $earnings );
 	}
 
-	public function test_get_earnings_for_this_month_for_download_should_return_120() {
+	public function test_get_earnings_for_this_month_for_download_should_return_240() {
 		$earnings = self::$stats->get_earnings( 1, 'this_month' );
-		$this->assertEquals( 120.0, $earnings );
+		$this->assertEquals( 240.0, $earnings );
 	}
 
-	public function test_get_earnings_for_this_month_for_download_excluding_taxes_should_return_95() {
+	public function test_get_earnings_for_this_month_for_download_excluding_taxes_should_return_190() {
 		$earnings = self::$stats->get_earnings( 1, 'this_month', false, false );
-		$this->assertEquals( 95.0, $earnings );
+		$this->assertEquals( 190.0, $earnings );
 	}
 
-	public function test_get_sales_for_this_month_should_be_1() {
+	public function test_get_sales_for_this_month_should_be_2() {
 		$sales = self::$stats->get_sales( 0, 'this_month' );
 
-		$this->assertSame( 1, $sales );
+		$this->assertSame( 2, $sales );
 	}
 
-	public function test_get_sales_for_this_month_for_download_should_return_1() {
+	public function test_get_sales_for_this_month_for_download_should_return_2() {
 		$earnings = self::$stats->get_sales( 1, 'this_month' );
-		$this->assertEquals( 1, $earnings );
+		$this->assertEquals( 2, $earnings );
 	}
 
 	public function test_get_sales_by_range_for_today() {
 		$sales = self::$stats->get_sales_by_range( 'today' );
 
 		$this->assertNotEmpty( $sales );
-		$this->assertEquals( 1, $sales[0]['count'] );
+		$this->assertEquals( 2, $sales[0]['count'] );
 		$this->assertEquals( date( 'Y' ), $sales[0]['y'] );
 	}
 }
