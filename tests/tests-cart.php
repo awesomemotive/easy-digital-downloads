@@ -212,7 +212,6 @@ class Test_Cart extends EDD_UnitTestCase {
 
 		$this->assertInternalType( 'array', $cart_contents );
 		$this->assertEmpty( $cart_contents );
-		$this->assertTrue( edd_is_cart_empty() );
 	}
 
 	public function test_add_to_cart_multiple_price_ids_array() {
@@ -263,7 +262,6 @@ class Test_Cart extends EDD_UnitTestCase {
 		);
 
 		$this->assertEquals( $expected, edd_get_cart_contents() );
-		$this->assertFalse( edd_is_cart_empty() );
 	}
 
 	public function test_get_cart_content_details() {
@@ -597,7 +595,6 @@ class Test_Cart extends EDD_UnitTestCase {
 		edd_update_option( 'enable_cart_saving', '1' );
 		$this->assertTrue( edd_restore_cart() );
 		$this->assertEquals( edd_get_cart_contents(), $saved_cart );
-		$this->assertFalse( edd_is_cart_empty() );
 	}
 
 	public function test_generate_cart_token() {
@@ -726,10 +723,12 @@ class Test_Cart extends EDD_UnitTestCase {
 	}
 
 	public function test_cart_is_empty() {
-		edd_add_to_cart( self::$download->ID, array( 'price_id' => 0 ) );
-		$this->assertFalse( edd_is_cart_empty() );
-
 		edd_empty_cart();
 		$this->assertTrue( edd_is_cart_empty() );
+	}
+
+	public function test_cart_is_not_empty() {
+		edd_add_to_cart( self::$download->ID, array( 'price_id' => 0 ) );
+		$this->assertFalse( edd_is_cart_empty() );
 	}
 }
