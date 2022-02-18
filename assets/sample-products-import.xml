@@ -35,7 +35,7 @@
 	<wp:base_site_url>https://easydigitaldownloads.com/</wp:base_site_url>
 	<wp:base_blog_url>https://easydigitaldownloads.com/demo</wp:base_blog_url>
 
-		<wp:author><wp:author_id>1</wp:author_id><wp:author_login><![CDATA[pippin]]></wp:author_login><wp:author_email><![CDATA[pippin@pippinsplugins.com]]></wp:author_email><wp:author_display_name><![CDATA[Pippin Williamson]]></wp:author_display_name><wp:author_first_name><![CDATA[Pippin]]></wp:author_first_name><wp:author_last_name><![CDATA[Williamson]]></wp:author_last_name></wp:author>
+		<wp:author><wp:author_id>1</wp:author_id><wp:author_login><![CDATA[edd]]></wp:author_login><wp:author_email><![CDATA[support@easydigitaldownloads.com]]></wp:author_email><wp:author_display_name><![CDATA[Edd]]></wp:author_display_name><wp:author_first_name><![CDATA[Edd]]></wp:author_first_name></wp:author>
 
 
 	<generator>https://wordpress.org/?v=5.7.4</generator>
@@ -43,7 +43,7 @@
 		<title><![CDATA[A Sample Digital Download]]></title>
 		<link>https://easydigitaldownloads.com/demo/downloads/a-sample-digital-download/</link>
 		<pubDate>Mon, 21 May 2012 16:20:08 +0000</pubDate>
-		<dc:creator><![CDATA[pippin]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?post_type=download&#038;p=8</guid>
 		<description></description>
 		<content:encoded><![CDATA[This product shows an example of the <a href="https://easydigitaldownloads.com/downloads/edd-upload-file/">EDD Upload File extension</a>. Click purchase below and go to checkout see a demonstration.
@@ -84,10 +84,6 @@ Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturien
 		<wp:meta_value><![CDATA[a:1:{i:0;a:6:{s:5:"index";s:1:"0";s:13:"attachment_id";s:1:"0";s:14:"thumbnail_size";s:0:"";s:4:"name";s:14:"Download Files";s:4:"file";s:70:"http://easydigitaldownloads.com/demo/files/edd/2012/05/wpmini-grey.png";s:9:"condition";s:3:"all";}}]]></wp:meta_value>
 		</wp:postmeta>
 							<wp:postmeta>
-		<wp:meta_key><![CDATA[_edd_sales_log]]></wp:meta_key>
-		<wp:meta_value><![CDATA[a:1:{i:0;a:3:{s:10:"payment_id";s:2:"19";s:9:"user_info";a:5:{s:2:"id";s:1:"1";s:5:"email";s:25:"pippin@pippinsplugins.com";s:10:"first_name";s:6:"Pippin";s:9:"last_name";s:10:"Williamson";s:8:"discount";s:4:"none";}s:4:"date";s:19:"2012-05-21 16:27:42";}}]]></wp:meta_value>
-		</wp:postmeta>
-							<wp:postmeta>
 		<wp:meta_key><![CDATA[_edd_bundled_products]]></wp:meta_key>
 		<wp:meta_value><![CDATA[a:1:{i:0;s:1:"0";}]]></wp:meta_value>
 		</wp:postmeta>
@@ -124,7 +120,7 @@ Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturien
 		<title><![CDATA[Sample Product]]></title>
 		<link>https://easydigitaldownloads.com/demo/downloads/sample-product/</link>
 		<pubDate>Mon, 21 May 2012 16:26:47 +0000</pubDate>
-		<dc:creator><![CDATA[pippin]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?post_type=download&#038;p=16</guid>
 		<description></description>
 		<content:encoded><![CDATA[Lundium, montes augue tristique augue? Ac! Vel mattis, nisi pulvinar? Ultrices rhoncus integer, scelerisque phasellus egestas. Sit aenean est nisi nisi aenean pid elit, mid duis? Lectus, lundium duis pulvinar nunc urna rhoncus pid in nisi. Magna? Lectus, nisi ultricies nascetur urna in phasellus cras, urna a massa rhoncus sed facilisis habitasse! Duis? Dapibus vel vel, risus? Cras amet ac, aliquet scelerisque habitasse tempor integer natoque egestas? Urna, lacus nunc? Ultrices cum, scelerisque eros eros urna! Cras cursus dolor etiam tincidunt ac magna porta ut augue, magna eu integer et, magna et duis sit? Dolor, augue pulvinar aliquet magna facilisis. Nisi odio, tincidunt eu, nec pulvinar scelerisque dis penatibus mus turpis, lundium elementum tristique montes mus etiam dolor, hac. Phasellus.]]></content:encoded>
@@ -197,7 +193,7 @@ Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturien
 		<title><![CDATA[Another Sample Product]]></title>
 		<link>https://easydigitaldownloads.com/demo/downloads/another-sample-product/</link>
 		<pubDate>Fri, 15 Jun 2012 15:21:40 +0000</pubDate>
-		<dc:creator><![CDATA[pippin]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?post_type=download&#038;p=67</guid>
 		<description></description>
 		<content:encoded><![CDATA[Lundium, montes augue tristique augue? Ac! Vel mattis, nisi pulvinar? Ultrices rhoncus integer, scelerisque phasellus egestas. Sit aenean est nisi nisi aenean pid elit, mid duis? Lectus, lundium duis pulvinar nunc urna rhoncus pid in nisi. Magna? Lectus, nisi ultricies nascetur urna in phasellus cras, urna a massa rhoncus sed facilisis habitasse! Duis? Dapibus vel vel, risus? Cras amet ac, aliquet scelerisque habitasse tempor integer natoque egestas? Urna, lacus nunc? Ultrices cum, scelerisque eros eros urna! Cras cursus dolor etiam tincidunt ac magna porta ut augue, magna eu integer et, magna et duis sit? Dolor, augue pulvinar aliquet magna facilisis. Nisi odio, tincidunt eu, nec pulvinar scelerisque dis penatibus mus turpis, lundium elementum tristique montes mus etiam dolor, hac. Phasellus.]]></content:encoded>
@@ -270,7 +266,7 @@ Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturien
 		<title><![CDATA[One More Sample Product]]></title>
 		<link>https://easydigitaldownloads.com/demo/downloads/one-more-sample-product/</link>
 		<pubDate>Fri, 15 Jun 2012 15:22:01 +0000</pubDate>
-		<dc:creator><![CDATA[pippin]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?post_type=download&#038;p=68</guid>
 		<description></description>
 		<content:encoded><![CDATA[Lundium, montes augue tristique augue? Ac! Vel mattis, nisi pulvinar? Ultrices rhoncus integer, scelerisque phasellus egestas. Sit aenean est nisi nisi aenean pid elit, mid duis? Lectus, lundium duis pulvinar nunc urna rhoncus pid in nisi. Magna? Lectus, nisi ultricies nascetur urna in phasellus cras, urna a massa rhoncus sed facilisis habitasse! Duis? Dapibus vel vel, risus? Cras amet ac, aliquet scelerisque habitasse tempor integer natoque egestas? Urna, lacus nunc? Ultrices cum, scelerisque eros eros urna! Cras cursus dolor etiam tincidunt ac magna porta ut augue, magna eu integer et, magna et duis sit? Dolor, augue pulvinar aliquet magna facilisis. Nisi odio, tincidunt eu, nec pulvinar scelerisque dis penatibus mus turpis, lundium elementum tristique montes mus etiam dolor, hac. Phasellus.]]></content:encoded>
@@ -338,7 +334,7 @@ Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturien
 		<title><![CDATA[Sample FREE Product]]></title>
 		<link>https://easydigitaldownloads.com/demo/downloads/sample-free-product/</link>
 		<pubDate>Tue, 27 Nov 2012 23:57:34 +0000</pubDate>
-		<dc:creator><![CDATA[lamininit]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?post_type=download&#038;p=476</guid>
 		<description></description>
 		<content:encoded><![CDATA[Lundium, montes augue tristique augue? Ac! Vel mattis, nisi pulvinar? Ultrices rhoncus integer, scelerisque phasellus egestas. Sit aenean est nisi nisi aenean pid elit, mid duis? Lectus, lundium duis pulvinar nunc urna rhoncus pid in nisi. Magna? Lectus, nisi ultricies nascetur urna in phasellus cras, urna a massa rhoncus sed facilisis habitasse! Duis? Dapibus vel vel, risus? Cras amet ac, aliquet scelerisque habitasse tempor integer natoque egestas? Urna, lacus nunc? Ultrices cum, scelerisque eros eros urna! Cras cursus dolor etiam tincidunt ac magna porta ut augue, magna eu integer et, magna et duis sit? Dolor, augue pulvinar aliquet magna facilisis. Nisi odio, tincidunt eu, nec pulvinar scelerisque dis penatibus mus turpis, lundium elementum tristique montes mus etiam dolor, hac. Phasellus.]]></content:encoded>
@@ -403,7 +399,7 @@ Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturien
 		<title><![CDATA[A Music Album]]></title>
 		<link>https://easydigitaldownloads.com/demo/downloads/a-music-album/</link>
 		<pubDate>Wed, 05 Dec 2012 17:13:21 +0000</pubDate>
-		<dc:creator><![CDATA[pippin]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?post_type=download&#038;p=514</guid>
 		<description></description>
 		<content:encoded><![CDATA[This is a sample product that show cases an album configuration. You can easily setup price options to purchase individual songs or the entire album.]]></content:encoded>
@@ -485,7 +481,7 @@ Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturien
 		<title><![CDATA[Product Grid]]></title>
 		<link>https://easydigitaldownloads.com/demo/product-grid/</link>
 		<pubDate>Wed, 05 Dec 2012 17:06:25 +0000</pubDate>
-		<dc:creator><![CDATA[pippin]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?page_id=509</guid>
 		<description></description>
 		<content:encoded><![CDATA[[downloads columns=3]]]></content:encoded>
@@ -517,7 +513,7 @@ Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturien
 		<title><![CDATA[Product List]]></title>
 		<link>https://easydigitaldownloads.com/demo/product-list/</link>
 		<pubDate>Wed, 05 Dec 2012 17:08:28 +0000</pubDate>
-		<dc:creator><![CDATA[pippin]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/?page_id=512</guid>
 		<description></description>
 		<content:encoded><![CDATA[[downloads columns=1 number=3]]]></content:encoded>
@@ -549,7 +545,7 @@ Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturien
 		<title><![CDATA[logo_03]]></title>
 		<link>https://easydigitaldownloads.com/demo/logo_03/</link>
 		<pubDate>Fri, 05 Sep 2014 14:44:53 +0000</pubDate>
-		<dc:creator><![CDATA[pippin]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">http://easydigitaldownloads.com/demo/files/2014/09/logo_03.png</guid>
 		<description></description>
 		<content:encoded><![CDATA[]]></content:encoded>
@@ -582,7 +578,7 @@ Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturien
 		<title><![CDATA[download-item]]></title>
 		<link>https://easydigitaldownloads.com/demo/downloads/a-music-album/download-item/</link>
 		<pubDate>Sat, 16 Dec 2017 18:58:54 +0000</pubDate>
-		<dc:creator><![CDATA[sdavis2702]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2017/12/download-item.zip</guid>
 		<description></description>
 		<content:encoded><![CDATA[]]></content:encoded>
@@ -611,7 +607,7 @@ Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturien
 		<title><![CDATA[edd-relevant-icons]]></title>
 		<link>https://easydigitaldownloads.com/demo/edd-relevant-icons/</link>
 		<pubDate>Mon, 20 Aug 2018 19:55:02 +0000</pubDate>
-		<dc:creator><![CDATA[sdavis2702]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/2018/08/edd-relevant-icons.png</guid>
 		<description></description>
 		<content:encoded><![CDATA[]]></content:encoded>
@@ -644,7 +640,7 @@ Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturien
 		<title><![CDATA[cropped-edd-relevant-icons.png]]></title>
 		<link>https://easydigitaldownloads.com/demo/cropped-edd-relevant-icons-png/</link>
 		<pubDate>Mon, 20 Aug 2018 19:55:12 +0000</pubDate>
-		<dc:creator><![CDATA[sdavis2702]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/2018/08/cropped-edd-relevant-icons.png</guid>
 		<description></description>
 		<content:encoded><![CDATA[]]></content:encoded>
@@ -681,7 +677,7 @@ Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturien
 		<title><![CDATA[product-image-4]]></title>
 		<link>https://easydigitaldownloads.com/demo/downloads/a-music-album/product-image-4/</link>
 		<pubDate>Tue, 21 Aug 2018 21:03:23 +0000</pubDate>
-		<dc:creator><![CDATA[sdavis2702]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2018/08/product-image-4.png</guid>
 		<description></description>
 		<content:encoded><![CDATA[]]></content:encoded>
@@ -714,7 +710,7 @@ Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturien
 		<title><![CDATA[pexels-photo-27449-large-722x361]]></title>
 		<link>https://easydigitaldownloads.com/demo/downloads/a-sample-digital-download/pexels-photo-27449-large-722x361/</link>
 		<pubDate>Tue, 21 Aug 2018 21:05:41 +0000</pubDate>
-		<dc:creator><![CDATA[sdavis2702]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2018/08/pexels-photo-27449-large-722x361.jpg</guid>
 		<description></description>
 		<content:encoded><![CDATA[]]></content:encoded>
@@ -747,7 +743,7 @@ Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturien
 		<title><![CDATA[pexels-photo-109479-large-722x361]]></title>
 		<link>https://easydigitaldownloads.com/demo/downloads/one-more-sample-product/pexels-photo-109479-large-722x361/</link>
 		<pubDate>Tue, 21 Aug 2018 21:06:05 +0000</pubDate>
-		<dc:creator><![CDATA[sdavis2702]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2018/08/pexels-photo-109479-large-722x361.jpeg</guid>
 		<description></description>
 		<content:encoded><![CDATA[]]></content:encoded>
@@ -780,7 +776,7 @@ Et turpis lorem vel rhoncus eu ac porttitor ultricies tempor tincidunt parturien
 		<title><![CDATA[I Love Her - She Loves Me]]></title>
 		<link>https://easydigitaldownloads.com/demo/downloads/a-music-album/i-love-her-she-loves-me/</link>
 		<pubDate>Thu, 14 Oct 2021 03:12:52 +0000</pubDate>
-		<dc:creator><![CDATA[cklosowski]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2021/10/Atlantic-City-Orchestra-I-Love-Her-She-Loves-Me.mp3</guid>
 		<description></description>
 		<content:encoded><![CDATA["I Love Her - She Loves Me" from Antique Phonograph Music Program 12/02/2008 by Atlantic City Orchestra. Released: 1922. Genre: Old-Time / Historic.]]></content:encoded>
@@ -816,7 +812,7 @@ Copyright: Public Domain: http://creativecommons.org/choose/publicdomain-2";s:4:
 		<title><![CDATA[Drinking Scene]]></title>
 		<link>https://easydigitaldownloads.com/demo/downloads/a-music-album/drinking-scene/</link>
 		<pubDate>Thu, 14 Oct 2021 03:13:00 +0000</pubDate>
-		<dc:creator><![CDATA[cklosowski]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2021/10/Weber-and-Fields-Drinking-Scene.mp3</guid>
 		<description></description>
 		<content:encoded><![CDATA["Drinking Scene" from Antique Phonograph Music Program 12/30/2008 by Weber and Fields. Released: 1912. Genre: Old-Time / Historic.]]></content:encoded>
@@ -852,7 +848,7 @@ Copyright: Public Domain: http://creativecommons.org/choose/publicdomain-2";s:4:
 		<title><![CDATA[ghetto blaster - chuck estes]]></title>
 		<link>https://easydigitaldownloads.com/demo/downloads/a-music-album/ghetto-blaster-chuck-estes/</link>
 		<pubDate>Thu, 14 Oct 2021 03:13:08 +0000</pubDate>
-		<dc:creator><![CDATA[cklosowski]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2021/10/Lloyd-Rodgers-ghetto-blaster-chuck-estes.mp3</guid>
 		<description></description>
 		<content:encoded><![CDATA["ghetto blaster - chuck estes" from Cartesian Reunion Memorial Orchestra by Lloyd Rodgers. Released: 2012. Track 10. Genre: Unknown.]]></content:encoded>
@@ -894,7 +890,7 @@ n00110706Filenameb00220bFilename1e0046ID3FrameID12100ID3FrameID272aStatistics01d
 		<title><![CDATA[bowling]]></title>
 		<link>https://easydigitaldownloads.com/demo/downloads/a-music-album/bowling/</link>
 		<pubDate>Thu, 14 Oct 2021 03:23:17 +0000</pubDate>
-		<dc:creator><![CDATA[cklosowski]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2021/10/bowling.jpg</guid>
 		<description></description>
 		<content:encoded><![CDATA[]]></content:encoded>
@@ -927,7 +923,7 @@ n00110706Filenameb00220bFilename1e0046ID3FrameID12100ID3FrameID272aStatistics01d
 		<title><![CDATA[all-songs]]></title>
 		<link>https://easydigitaldownloads.com/demo/downloads/a-music-album/all-songs/</link>
 		<pubDate>Thu, 14 Oct 2021 03:26:11 +0000</pubDate>
-		<dc:creator><![CDATA[cklosowski]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2021/10/all-songs.zip</guid>
 		<description></description>
 		<content:encoded><![CDATA[]]></content:encoded>
@@ -956,7 +952,7 @@ n00110706Filenameb00220bFilename1e0046ID3FrameID12100ID3FrameID272aStatistics01d
 		<title><![CDATA[saad-chaudhry-cYpqYxGeqts-unsplash]]></title>
 		<link>https://easydigitaldownloads.com/demo/downloads/sample-free-product/saad-chaudhry-cypqyxgeqts-unsplash/</link>
 		<pubDate>Thu, 14 Oct 2021 03:30:48 +0000</pubDate>
-		<dc:creator><![CDATA[cklosowski]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2021/10/saad-chaudhry-cYpqYxGeqts-unsplash.jpg</guid>
 		<description></description>
 		<content:encoded><![CDATA[]]></content:encoded>
@@ -989,7 +985,7 @@ n00110706Filenameb00220bFilename1e0046ID3FrameID12100ID3FrameID272aStatistics01d
 		<title><![CDATA[galina-n-miziNqvJx5M-unsplash]]></title>
 		<link>https://easydigitaldownloads.com/demo/downloads/one-more-sample-product/galina-n-mizinqvjx5m-unsplash/</link>
 		<pubDate>Thu, 14 Oct 2021 03:31:49 +0000</pubDate>
-		<dc:creator><![CDATA[cklosowski]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2021/10/galina-n-miziNqvJx5M-unsplash.jpg</guid>
 		<description></description>
 		<content:encoded><![CDATA[]]></content:encoded>
@@ -1022,7 +1018,7 @@ n00110706Filenameb00220bFilename1e0046ID3FrameID12100ID3FrameID272aStatistics01d
 		<title><![CDATA[charles-deluvio-1-nx1QR5dTE-unsplash]]></title>
 		<link>https://easydigitaldownloads.com/demo/downloads/a-sample-digital-download/charles-deluvio-1-nx1qr5dte-unsplash/</link>
 		<pubDate>Thu, 14 Oct 2021 03:32:25 +0000</pubDate>
-		<dc:creator><![CDATA[cklosowski]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2021/10/charles-deluvio-1-nx1QR5dTE-unsplash.jpg</guid>
 		<description></description>
 		<content:encoded><![CDATA[]]></content:encoded>
@@ -1055,7 +1051,7 @@ n00110706Filenameb00220bFilename1e0046ID3FrameID12100ID3FrameID272aStatistics01d
 		<title><![CDATA[cristina-matos-albers-Ltv7a5m8i4c-unsplash]]></title>
 		<link>https://easydigitaldownloads.com/demo/downloads/sample-product/cristina-matos-albers-ltv7a5m8i4c-unsplash/</link>
 		<pubDate>Thu, 14 Oct 2021 03:33:08 +0000</pubDate>
-		<dc:creator><![CDATA[cklosowski]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2021/10/cristina-matos-albers-Ltv7a5m8i4c-unsplash.jpg</guid>
 		<description></description>
 		<content:encoded><![CDATA[]]></content:encoded>
@@ -1088,7 +1084,7 @@ n00110706Filenameb00220bFilename1e0046ID3FrameID12100ID3FrameID272aStatistics01d
 		<title><![CDATA[rodion-kutsaev-6W8H4puOJB0-unsplash]]></title>
 		<link>https://easydigitaldownloads.com/demo/downloads/another-sample-product/rodion-kutsaev-6w8h4puojb0-unsplash/</link>
 		<pubDate>Thu, 14 Oct 2021 03:33:41 +0000</pubDate>
-		<dc:creator><![CDATA[cklosowski]]></dc:creator>
+		<dc:creator><![CDATA[edd]]></dc:creator>
 		<guid isPermaLink="false">https://easydigitaldownloads.com/demo/files/edd/2021/10/rodion-kutsaev-6W8H4puOJB0-unsplash.jpg</guid>
 		<description></description>
 		<content:encoded><![CDATA[]]></content:encoded>
