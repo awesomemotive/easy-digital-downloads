@@ -185,7 +185,7 @@ function edd_refund_details_items( $refund ) {
 			'refunds'      => array(),
 			'isAdding'     => false,
 			'isRefund'     => true,
-			'hasQuantity'  => true === edd_item_quantities_enabled(),
+			'hasQuantity'  => true,
 			'hasTax'       => $has_tax,
 			'order'        => array(
 				'currency'       => $refund->currency,
