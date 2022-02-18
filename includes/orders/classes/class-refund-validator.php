@@ -256,7 +256,7 @@ class Refund_Validator {
 		// Some items or adjustments have to be selected to refund.
 		if ( empty( $this->order_items_to_refund ) && empty( $this->adjustments_to_refund ) ) {
 			throw new Exception(
-				__( 'No items have been selected to refund.', 'easy-digital-downloads' ),
+				__( 'No items have been selected to refund.', 'easy-digital-downloads' )
 			);
 		}
 
