@@ -51,7 +51,7 @@ export const OrderSubtotal = wp.Backbone.View.extend( {
 	prepare() {
 		const { state } = this.options;
 		const { currency, number } = state.get( 'formatters' );
-		const colspan = 2;
+		const colspan = true === state.get( 'hasQuantity' ) ? 2 : 1;
 
 		const subtotal = state.getSubtotal();
 
