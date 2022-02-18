@@ -277,7 +277,7 @@ class EDD_Payment_Stats extends EDD_Stats {
 				$statuses = "'" . implode( "', '", $statuses ) . "'";
 
 				$result = $wpdb->get_row( $wpdb->prepare(
-					"SELECT edd_oi.tax, edd_oi.total
+					"SELECT SUM(edd_oi.tax) as tax, SUM(edd_oi.total) as total
 					 FROM {$wpdb->edd_order_items} edd_oi
 					 INNER JOIN {$wpdb->edd_orders} edd_o ON edd_oi.order_id = edd_o.id
 					 WHERE edd_o.status IN ($statuses) AND edd_oi.product_id = %d {$date_query_sql}",
