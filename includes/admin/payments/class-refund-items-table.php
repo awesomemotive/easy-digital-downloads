@@ -73,18 +73,12 @@ class Refund_Items_Table extends List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'cb'     => '<input type="checkbox" />',
-			'name'   => __( 'Product', 'easy-digital-downloads' ),
-			'amount' => __( 'Unit Price', 'easy-digital-downloads' ),
+			'cb'       => '<input type="checkbox" />',
+			'name'     => __( 'Product', 'easy-digital-downloads' ),
+			'amount'   => __( 'Unit Price', 'easy-digital-downloads' ),
+			'quantity' => __( 'Quantity', 'easy-digital-downloads' ),
+			'subtotal' => __( 'Subtotal', 'easy-digital-downloads' ),
 		);
-
-		// Maybe add quantity column.
-		if ( edd_item_quantities_enabled() ) {
-			$columns['quantity'] = __( 'Quantity', 'easy-digital-downloads' );
-		}
-
-		// Add subtotal after quantity.
-		$columns['subtotal'] = __( 'Subtotal', 'easy-digital-downloads' );
 
 		// Maybe add tax column.
 		$order = $this->get_order();
