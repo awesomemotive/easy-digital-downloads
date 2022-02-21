@@ -385,10 +385,10 @@ function edd_get_cart_fee_tax() {
 }
 
 /**
- * is the cart empty?
+ * Is the cart empty?
  *
  * @since 3.0
- * @uses EDD()->fees->is_empty()
+ * @uses EDD()->cart->is_empty()
  * @return bool Is the cart empty?
  */
 function edd_is_cart_empty() {

@@ -721,4 +721,14 @@ class Test_Cart extends EDD_UnitTestCase {
 
 		edd_update_option( 'enable_taxes', false );
 	}
+
+	public function test_cart_is_empty() {
+		edd_empty_cart();
+		$this->assertTrue( edd_is_cart_empty() );
+	}
+
+	public function test_cart_is_not_empty() {
+		edd_add_to_cart( self::$download->ID, array( 'price_id' => 0 ) );
+		$this->assertFalse( edd_is_cart_empty() );
+	}
 }
