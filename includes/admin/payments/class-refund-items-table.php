@@ -334,35 +334,43 @@ class Refund_Items_Table extends List_Table {
 	 * @return string
 	 */
 	private function get_quantity_column( $item, $column_name, $item_id, $object_type ) {
-		$item_quantity = $item instanceof Order_item ? intval( $item->quantity ) : 1;
+		$refundable_amounts = $item->get_refundable_amounts();
+		$item_quantity      = 'order_item' === $object_type ? $refundable_amounts['quantity'] : 1;
 		ob_start();
 		?>
-		<label for="edd-order-item-quantity-<?php echo esc_attr( $item_id ); ?>" class="screen-reader-text">
-			<?php esc_html_e( 'Quantity to refund', 'easy-digital-downloads' ); ?>
-		</label>
-		<?php if ( 1 === $item_quantity ) : ?>
-			<input type="number" data-original="<?php echo $item_quantity; ?>" id="edd-order-item-quantity-<?php echo esc_attr( $item_id ); ?>" class="edd-order-item-refund-quantity edd-order-item-refund-input readonly" name="refund_<?php echo esc_attr( $object_type ); ?>[<?php echo esc_attr( $item->id ); ?>][quantity]" value="<?php echo esc_attr( $item_quantity ); ?>" placeholder="0" min="0" max="<?php echo esc_attr( $item_quantity ); ?>" step="1" disabled />
-		<?php else: ?>
-			<?php
-			$options = range( 1, $item_quantity );
-			array_unshift( $options, '' );
-			unset( $options[0] );
-			$args = array(
-				'options'          => $options,
-				'name'             => 'refund_' . esc_attr( $object_type ) . '[' . esc_attr( $item->id ) . '][quantity]',
-				'id'               => 'edd-order-item-quantity-' . esc_attr( $item_id ),
-				'class'            => 'edd-order-item-refund-quantity edd-order-item-refund-input',
-				'disabled'         => true,
-				'show_option_all'  => false,
-				'show_option_none' => false,
-				'chosen'           => 1,
-				'data'             => array(
-					'original' => $item_quantity,
-				),
-			);
-			?>
-			<?php echo EDD()->html->select( $args ); ?>
-		<?php endif;
+		<div class="edd-form-group">
+			<label for="edd_order_item_quantity_<?php echo esc_attr( $item_id ); ?>" class="screen-reader-text">
+				<?php esc_html_e( 'Quantity to refund', 'easy-digital-downloads' ); ?>
+			</label>
+			<div class="edd-form-group__control">
+				<?php if ( 'order_item' !== $object_type ) : ?>
+					<input type="hidden" data-original="<?php echo esc_attr( $item_quantity ); ?>" id="edd_order_item_quantity_<?php echo esc_attr( $item_id ); ?>" class="edd-order-item-refund-quantity edd-order-item-refund-input readonly" name="refund_<?php echo esc_attr( $object_type ); ?>[<?php echo esc_attr( $item->id ); ?>][quantity]" value="<?php echo esc_attr( $item_quantity ); ?>" disabled />
+				<?php else : ?>
+					<?php
+					$options = range( 1, $item_quantity );
+					array_unshift( $options, '' );
+					unset( $options[0] );
+					$args = array(
+						'options'          => $options,
+						'name'             => 'refund_' . esc_attr( $object_type ) . '[' . esc_attr( $item->id ) . '][quantity]',
+						'id'               => 'edd-order-item-quantity-' . esc_attr( $item_id ),
+						'class'            => 'edd-order-item-refund-quantity edd-order-item-refund-input',
+						'disabled'         => true,
+						'show_option_all'  => false,
+						'show_option_none' => false,
+						'chosen'           => false,
+						'selected'         => $item_quantity,
+						'data'             => array(
+							'original' => $item_quantity,
+						),
+					);
+					?>
+					<?php echo EDD()->html->select( $args ); ?>
+				<?php endif; ?>
+			</div>
+		</div>
+		<?php
+
 		return ob_get_clean();
 	}
 
