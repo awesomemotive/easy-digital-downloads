@@ -328,8 +328,8 @@ function edd_refund_order( $order_id, $order_items = 'all', $adjustments = 'all'
 
 	// Maintain a mapping of old order item IDs => new for easier lookup when we do fees.
 	$order_item_id_map = array();
-
-	foreach ( $validator->get_refunded_order_items() as $order_item ) {
+	$refunded_items    = $validator->get_refunded_order_items();
+	foreach ( $refunded_items as $order_item ) {
 		$order_item['order_id'] = $refund_id;
 
 		$new_item_id = edd_add_order_item( $order_item );
@@ -384,7 +384,7 @@ function edd_refund_order( $order_id, $order_items = 'all', $adjustments = 'all'
 
 	// Update order status to `refunded` once refund is complete and if all items are marked as refunded.
 	$all_refunded = true;
-	if ( edd_get_order_total( $order_id ) > 0 ) {
+	if ( edd_get_order_total( $order_id ) > 0 || edd_count_order_items( array( 'order_id' => $order_id ) > count( $refunded_items ) ) ) {
 		$all_refunded = false;
 	}
 
