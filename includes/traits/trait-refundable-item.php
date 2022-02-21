@@ -61,7 +61,10 @@ trait Refundable_Item {
 				$maximums['subtotal'] += $refunded_item->subtotal;
 				$maximums['tax']      += $refunded_item->tax;
 				$maximums['total']    += $refunded_item->total;
-				$maximums['quantity'] += $refunded_item->quantity;
+				// If a partial refund was spread across all order items, just use the original quantity.
+				if ( abs( $refunded_item->quantity ) < abs( $this->quantity ) ) {
+					$maximums['quantity'] += $refunded_item->quantity;
+				}
 			}
 		}
 
