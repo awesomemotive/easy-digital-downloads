@@ -517,7 +517,7 @@ class EDD_Register_Meta {
 			}
 
 			if( ! empty( $files[ $id ]['name'] ) ) {
-				$files[ $id ]['name'] = trim( $file['name'] );
+				$files[ $id ]['name'] = sanitize_text_field( $file['name'] );
 			}
 		}
 
