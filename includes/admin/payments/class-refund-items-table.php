@@ -361,7 +361,8 @@ class Refund_Items_Table extends List_Table {
 						'chosen'           => false,
 						'selected'         => $item_quantity,
 						'data'             => array(
-							'original' => $item_quantity,
+							'max'      => intval( $item_quantity ),
+							'original' => intval( $item->quantity ),
 						),
 					);
 					?>
