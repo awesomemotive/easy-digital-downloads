@@ -1127,11 +1127,9 @@ class Stats {
 			'accepted_functions' => array( 'SUM' )
 		) );
 
-		$join = '';
-		$where = '';
+		$where = "AND {$this->get_db()->edd_orders}.type = 'sale' ";
 		if ( ! empty( $this->query_vars['currency'] ) && array_key_exists( strtoupper( $this->query_vars['currency'] ), edd_get_currencies() ) ) {
-			$join = " INNER JOIN {$this->get_db()->edd_orders} ON({$this->get_db()->edd_orders}.id = {$this->query_vars['table']}.order_id) ";
-			$where = $this->get_db()->prepare(
+			$where .= $this->get_db()->prepare(
 				" AND {$this->get_db()->edd_orders}.currency = %s ",
 				strtoupper( $this->query_vars['currency'] )
 			);
@@ -1139,7 +1137,7 @@ class Stats {
 
 		$sql = "SELECT product_id, price_id, COUNT({$this->query_vars['table']}.id) AS sales, {$function} AS total
 				FROM {$this->query_vars['table']}
-				{$join}
+				INNER JOIN {$this->get_db()->edd_orders} ON({$this->get_db()->edd_orders}.id = {$this->query_vars['table']}.order_id)
 				WHERE 1=1 {$where} {$this->query_vars['where_sql']} {$this->query_vars['date_query_sql']}
 				GROUP BY product_id, price_id
 				ORDER BY total DESC
