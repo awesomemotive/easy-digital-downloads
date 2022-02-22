@@ -28,11 +28,11 @@
 	float: left;
 	margin: 13px -15px 8px;
 	content: '';
-	width: calc(100% + 30px);
+	width: calc(100% + 26px);
 
 	@media screen and (max-width: 782px) {
 		margin: 20px -20px 8px -20px;
-		width: calc(100% + 40px);
+		width: calc(100% + 30px);
 	}
 }
 
