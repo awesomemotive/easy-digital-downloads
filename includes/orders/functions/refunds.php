@@ -394,6 +394,7 @@ function edd_refund_order( $order_id, $order_items = 'all', $adjustments = 'all'
 
 	edd_update_order( $order_id, array( 'status' => $order_status ) );
 
+	edd_update_order( $refund_id, array( 'date_completed' => date( 'Y-m-d H:i:s' ) ) );
 	/**
 	 * Fires when an order has been refunded.
 	 * This hook will trigger the legacy `edd_pre_refund_payment` and `edd_post_refund_payment`
