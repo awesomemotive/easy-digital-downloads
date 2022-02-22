@@ -13,6 +13,12 @@ $is_refundable    = edd_is_order_refundable( $order->id );
 $is_override      = edd_is_order_refundable_by_override( $order->id );
 $is_window_passed = edd_is_order_refund_window_passed( $order->id );
 
+// EDD does not support initializing refunds through the Amazon gateway.
+if ( 'amazon' === $order->gateway ) {
+	$is_refundable = false;
+	$is_override   = false;
+}
+
 if ( true === edd_is_add_order_page() ) :
 ?>
 	<button
@@ -49,6 +55,8 @@ if ( true === edd_is_add_order_page() ) :
 			<span class="edd-help-tip dashicons dashicons-unlock" title="<?php esc_attr_e( 'The refund window for this Order has passed; however, you have the ability to override this.', 'easy-digital-downloads' ); ?>"></span>
 		<?php elseif ( false === $is_refundable && true === $is_window_passed ) : ?>
 			<span class="edd-help-tip dashicons dashicons-lock" title="<?php esc_attr_e( 'The refund window for this Order has passed.', 'easy-digital-downloads' ); ?>"></span>
+		<?php elseif ( 'amazon' === $order->gateway ) : ?>
+			<span class="edd-help-tip dashicons dashicons-lock" title="<?php esc_attr_e( 'Orders placed through the Amazon gateway must be refunded through Amazon.', 'easy-digital-downloads' ); ?>"></span>
 		<?php endif; ?>
 
 		<button
