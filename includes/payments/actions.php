@@ -133,8 +133,9 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 			}
 
 			// Increase the earnings for this download ID
-			edd_increase_earnings( $item->product_id, $item->total );
-			edd_increase_purchase_count( $item->product_id, $item->quantity );
+			$download = new EDD_Download( $item->product_id );
+			$download->recalculate_net_sales_earnings();
+			$download->recalculate_gross_sales_earnings();
 		}
 
 		// Clear the total earnings cache

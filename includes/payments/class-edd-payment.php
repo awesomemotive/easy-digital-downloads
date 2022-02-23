@@ -706,94 +706,14 @@ class EDD_Payment {
 
 		// If we have something pending, let's save it
 		if ( ! empty( $this->pending ) ) {
-			$total_increase = 0;
-			$total_decrease = 0;
-
 			foreach ( $this->pending as $key => $value ) {
 				switch ( $key ) {
 					case 'downloads':
 						// Update totals for pending downloads
 						foreach ( $this->pending[ $key ] as $cart_index => $item ) {
-							switch ( $item['action'] ) {
-								case 'add':
-									$price = $item['price'];
-
-									if ( 'publish' === $this->status || 'complete' === $this->status || 'revoked' === $this->status ) {
-										$increase_earnings = $price;
-
-										if ( ! empty( $item['fees'] ) ) {
-											foreach ( $item['fees'] as $fee ) {
-
-												// Only let negative fees affect the earnings
-												if ( $fee['amount'] > 0 ) {
-													continue;
-												}
-
-												$increase_earnings += (float) $fee['amount'];
-											}
-										}
-
-										$download = new EDD_Download( $item['id'] );
-										$download->increase_sales( $item['quantity'] );
-										$download->increase_earnings( $increase_earnings );
-
-										$total_increase += $price;
-									}
-									break;
-
-								case 'remove':
-									if ( 'publish' === $this->status || 'complete' === $this->status || 'revoked' === $this->status ) {
-										$download = new EDD_Download( $item['id'] );
-										$download->decrease_sales( $item['quantity'] );
-
-										$decrease_amount = $item['amount'];
-										if ( ! empty( $item['fees'] ) ) {
-											foreach ( $item['fees'] as $fee ) {
-												// Only let negative fees affect the earnings
-												if ( $fee['amount'] > 0 ) {
-													continue;
-												}
-												$decrease_amount += $fee['amount'];
-											}
-										}
-										$download->decrease_earnings( $decrease_amount );
-
-										$total_decrease += $item['amount'];
-									}
-									break;
-
-								case 'modify':
-									if ( 'publish' === $this->status || 'complete' === $this->status || 'revoked' === $this->status ) {
-										$quantity_difference = 0;
-
-										if ( $item['previous_data']['quantity'] !== $item['quantity'] ) {
-											$quantity_difference = $item['previous_data']['quantity'] - $item['quantity'];
-										}
-
-										$download = new EDD_Download( $item['id'] );
-
-										// Change the number of sales for the download.
-										if ( $quantity_difference > 0 ) {
-											$download->decrease_sales( $quantity_difference );
-										} elseif ( $quantity_difference < 0 ) {
-											$quantity_difference = absint( $quantity_difference );
-											$download->increase_sales( $quantity_difference );
-										}
-
-										// Change the earnings for the product.
-										$price_change = $item['previous_data']['price'] - $item['price'];
-
-										if ( $price_change > 0 ) {
-											$download->decrease_earnings( $price_change );
-											$total_increase -= $price_change;
-										} elseif ( $price_change < 0 ) {
-											$price_change = - ( $price_change );
-											$download->increase_earnings( $price_change );
-											$total_decrease += $price_change;
-										}
-									}
-									break;
-							}
+							$download = new EDD_Download( $item['id'] );
+							$download->recalculate_net_sales_earnings();
+							$download->recalculate_gross_sales_earnings();
 						}
 						break;
 
@@ -804,17 +724,6 @@ class EDD_Payment {
 
 						if ( empty( $this->pending[ $key ] ) ) {
 							break;
-						}
-
-						foreach ( $this->pending[ $key ] as $fee ) {
-							switch ( $fee['action'] ) {
-								case 'add':
-									$total_increase += $fee['amount'];
-									break;
-								case 'remove':
-									$total_decrease += $fee['amount'];
-									break;
-							}
 						}
 						break;
 
