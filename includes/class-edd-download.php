@@ -666,6 +666,8 @@ class EDD_Download {
 	 */
 	public function increase_sales( $quantity = 1 ) {
 
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Download::recalculate_net_sales_earnings()' );
+
 		$quantity    = absint( $quantity );
 		$total_sales = $this->get_sales() + $quantity;
 
@@ -689,6 +691,8 @@ class EDD_Download {
 	 * @return int New number of total sales
 	 */
 	public function decrease_sales( $quantity = 1 ) {
+
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Download::recalculate_net_sales_earnings()' );
 
 		// Only decrease if not already zero
 		if ( $this->get_sales() > 0 ) {
@@ -738,6 +742,9 @@ class EDD_Download {
 	 * @return float New number of total earnings
 	 */
 	public function increase_earnings( $amount = 0 ) {
+
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Download::recalculate_net_sales_earnings()' );
+
 		$current_earnings = $this->get_earnings();
 		$new_amount       = apply_filters( 'edd_download_increase_earnings_amount', $current_earnings + (float) $amount, $current_earnings, $amount, $this );
 
@@ -761,6 +768,8 @@ class EDD_Download {
 	 */
 	public function decrease_earnings( $amount ) {
 
+		_edd_deprecated_function( __METHOD__, '3.0', 'EDD_Download::recalculate_net_sales_earnings()' );
+
 		// Only decrease if greater than zero
 		if ( $this->get_earnings() > 0 ) {
 			$current_earnings = $this->get_earnings();
@@ -777,6 +786,77 @@ class EDD_Download {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Recalculates the gross sales and earnings for a download.
+	 *
+	 * @since 3.0
+	 * @return void
+	 */
+	public function recalculate_gross_sales_earnings() {
+		$sales_earnings = $this->recalculate_sales_earnings( edd_get_gross_order_statuses() );
+
+		// This currently uses the post meta functions as we do not yet guarantee that the meta exists.
+		update_post_meta( $this->ID, '_edd_download_gross_sales', $sales_earnings['sales'] );
+		update_post_meta( $this->ID, '_edd_download_gross_earnings', floatval( $sales_earnings['earnings'] ) );
+	}
+
+	/**
+	 * Recalculates the net sales and earnings for a download.
+	 *
+	 * @since 3.0
+	 * @return void
+	 */
+	public function recalculate_net_sales_earnings() {
+		$sales_earnings = $this->recalculate_sales_earnings( edd_get_net_order_statuses() );
+
+		$this->update_meta( '_edd_download_sales', $sales_earnings['sales'] );
+		$this->update_meta( '_edd_download_earnings', floatval( $sales_earnings['earnings'] ) );
+	}
+
+	/**
+	 * Recalculates and returns the sales and earnings for an array of order statuses.
+	 *
+	 * @since 3.0
+	 * @param array $statuses
+	 * @return array Returns an array of the sales and earnings for the download.
+	 */
+	public function recalculate_sales_earnings( $statuses = array() ) {
+		global $wpdb;
+
+		/*
+		 * Build up our WHERE clauses.
+		 */
+		$conditions = array(
+			$wpdb->prepare(
+				"oi.product_id = %d",
+				$this->ID
+			),
+		);
+
+		if ( ! empty( $statuses ) && is_array( $statuses ) ) {
+			$placeholder_string = implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
+			$conditions[]       = $wpdb->prepare(
+				"oi.status IN({$placeholder_string})",
+				$statuses
+			);
+		}
+
+		$conditions = ' AND ' . implode( ' AND ', $conditions );
+
+		$results = $wpdb->get_row(
+			"SELECT SUM(oi.total / oi.rate) AS revenue, SUM(oi.quantity) AS sales
+				FROM {$wpdb->edd_order_items} oi
+				INNER JOIN {$wpdb->edd_orders} o ON(o.id = oi.order_id)
+				WHERE o.type = 'sale'
+				{$conditions}"
+		);
+
+		return array(
+			'sales'    => ! empty( $results->sales ) ? intval( $results->sales ) : 0,
+			'earnings' => ! empty( $results->revenue ) ? edd_sanitize_amount( $results->revenue ) : 0.00,
+		);
 	}
 
 	/**
