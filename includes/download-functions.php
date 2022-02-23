@@ -841,6 +841,22 @@ function edd_remove_download_logs_on_delete( $download_id = 0 ) {
 add_action( 'delete_post', 'edd_remove_download_logs_on_delete' );
 
 /**
+ * Recalculates both the net and gross sales and earnings for a download.
+ *
+ * @since 3.0
+ * @param int $download_id
+ * @return void
+ */
+function edd_recalculate_download_sales_earnings( $download_id ) {
+	$download = edd_get_download( $download_id );
+	if ( ! $download instanceof \EDD_Download ) {
+		return;
+	}
+	$download->recalculate_net_sales_earnings();
+	$download->recalculate_gross_sales_earnings();
+}
+
+/**
  * Retrieves the average monthly earnings for a specific download.
  *
  * @since 1.3

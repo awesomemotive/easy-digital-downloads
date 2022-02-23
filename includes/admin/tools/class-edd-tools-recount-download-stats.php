@@ -78,9 +78,7 @@ class EDD_Tools_Recount_Download_Stats extends EDD_Batch_Export {
 		), '3.0' );
 
 		if ( ! empty( $this->download_id ) && is_numeric( $this->download_id ) ) {
-			$download = new EDD_Download( $this->download_id );
-			$download->recalculate_net_sales_earnings();
-			$download->recalculate_gross_sales_earnings();
+			edd_recalculate_download_sales_earnings( $this->download_id );
 
 			return false;
 		}
