@@ -268,9 +268,7 @@ function edd_undo_purchase( $download_id = 0, $order_id = 0 ) {
 			$maybe_decrease_earnings = apply_filters( 'edd_decrease_earnings_on_undo', true, $payment, $item['id'] );
 			$maybe_decrease_sales    = apply_filters( 'edd_decrease_sales_on_undo', true, $payment, $item['id'] );
 			if ( true === $maybe_decrease_earnings || true === $maybe_decrease_sales ) {
-				$download = new EDD_Download( $item['id'] );
-				$download->recalculate_net_sales_earnings();
-				$download->recalculate_gross_sales_earnings();
+				edd_recalculate_download_sales_earnings( $item['id'] );
 			}
 		}
 	}

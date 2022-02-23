@@ -82,9 +82,7 @@ class EDD_Tools_Recount_All_Stats extends EDD_Batch_Export {
 
 		if ( ! empty( $download_ids ) && is_array( $download_ids ) ) {
 			foreach ( $this->get_download_ids() as $download_id ) {
-				$download = new EDD_Download( $download_id );
-				$download->recalculate_net_sales_earnings();
-				$download->recalculate_gross_sales_earnings();
+				edd_recalculate_download_sales_earnings( $download_id );
 			}
 		}
 

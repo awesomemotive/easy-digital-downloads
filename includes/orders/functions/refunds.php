@@ -399,6 +399,11 @@ function edd_refund_order( $order_id, $order_items = 'all', $adjustments = 'all'
 
 	edd_update_order( $order_id, array( 'status' => $order_status ) );
 
+	$refund_items = edd_get_order_items( array( 'order_id' => $refund_id, 'number' => 999 ) );
+	foreach ( $refund_items as $refund_order_item ) {
+		edd_recalculate_download_sales_earnings( $refund_order_item->product_id );
+	}
+
 	/**
 	 * Fires when an order has been refunded.
 	 * This hook will trigger the legacy `edd_pre_refund_payment` and `edd_post_refund_payment`

@@ -711,9 +711,7 @@ class EDD_Payment {
 					case 'downloads':
 						// Update totals for pending downloads
 						foreach ( $this->pending[ $key ] as $cart_index => $item ) {
-							$download = new EDD_Download( $item['id'] );
-							$download->recalculate_net_sales_earnings();
-							$download->recalculate_gross_sales_earnings();
+							edd_recalculate_download_sales_earnings( $item['id'] );
 						}
 						break;
 
