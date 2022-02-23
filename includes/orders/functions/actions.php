@@ -349,10 +349,6 @@ function edd_add_manual_order( $args = array() ) {
 						) );
 					}
 				}
-
-				// Increase the earnings for this download.
-				edd_increase_earnings( absint( $download['id'] ), $total );
-				edd_increase_purchase_count( absint( $download['id'] ), $quantity );
 			}
 		}
 	}
@@ -413,9 +409,6 @@ function edd_add_manual_order( $args = array() ) {
 				'subtotal'    => $discount_subtotal,
 				'total'       => $discount_total,
 			) );
-
-			// Increase discount usage.
-			$d->increase_usage();
 		}
 	}
 
@@ -435,12 +428,6 @@ function edd_add_manual_order( $args = array() ) {
 	if ( isset( $data['edd-unlimited-downloads'] ) && 1 === (int) $data['edd-unlimited-downloads'] ) {
 		edd_update_order_meta( $order_id, 'unlimited_downloads', 1 );
 	}
-
-	if ( ! empty( $customer ) ) {
-		$customer->recalculate_stats();
-	}
-
-	edd_increase_total_earnings( $order_total );
 
 	// Setup order number.
 	$order_number = '';
