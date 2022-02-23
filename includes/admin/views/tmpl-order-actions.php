@@ -56,7 +56,7 @@ if ( true === edd_is_add_order_page() ) :
 		<?php elseif ( false === $is_refundable && true === $is_window_passed ) : ?>
 			<span class="edd-help-tip dashicons dashicons-lock" title="<?php esc_attr_e( 'The refund window for this Order has passed.', 'easy-digital-downloads' ); ?>"></span>
 		<?php elseif ( 'amazon' === $order->gateway ) : ?>
-			<span class="edd-help-tip dashicons dashicons-lock" title="<?php esc_attr_e( 'Orders placed through the Amazon gateway must be refunded through Amazon.', 'easy-digital-downloads' ); ?>"></span>
+			<span class="dashicons dashicons-lock"></span>
 		<?php endif; ?>
 
 		<button
@@ -69,4 +69,9 @@ if ( true === edd_is_add_order_page() ) :
 			<?php esc_html_e( 'Initialize Refund', 'easy-digital-downloads' ); ?>
 		</button>
 	</div>
+	<?php if ( 'amazon' === $order->gateway ) : ?>
+		<div class="edd-order-overview-actions__notice">
+			<p><?php esc_attr_e( 'Orders placed through the Amazon gateway must be refunded through Amazon. The order status can then be updated manually.', 'easy-digital-downloads' ); ?></p>
+		</div>
+	<?php endif; ?>
 <?php endif; ?>
