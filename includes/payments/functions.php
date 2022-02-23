@@ -265,56 +265,12 @@ function edd_undo_purchase( $download_id = 0, $order_id = 0 ) {
 
 		// Loop through each cart item.
 		foreach ( $cart_details as $item ) {
-
-			// Get the item's price.
-			$amount = isset( $item['price'] )
-				? $item['price']
-				: false;
-
-			// Decrease earnings/sales and fire action once per quantity number.
-			for ( $i = 0; $i < $item['quantity']; $i++ ) {
-
-				// Handle variable priced downloads.
-				if ( false === $amount && edd_has_variable_prices( $item['id'] ) ) {
-					$price_id = isset( $item['item_number']['options']['price_id'] )
-						? $item['item_number']['options']['price_id']
-						: null;
-
-					$amount = ! isset( $item['price'] ) && 0 !== $item['price']
-						? edd_get_price_option_amount( $item['id'], $price_id )
-						: $item['price'];
-				}
-
-				if ( ! $amount ) {
-					// This function is only used on payments with near 1.0 cart data structure.
-					$amount = edd_get_download_final_price( $item['id'], $user_info, $amount );
-				}
-			}
-
-			if ( ! empty( $item['fees'] ) ) {
-				foreach ( $item['fees'] as $fee ) {
-
-					// Only let negative fees affect the earnings.
-					if ( $fee['amount'] > 0 ) {
-						continue;
-					}
-
-					$amount += $fee['amount'];
-				}
-			}
-
 			$maybe_decrease_earnings = apply_filters( 'edd_decrease_earnings_on_undo', true, $payment, $item['id'] );
-			if ( true === $maybe_decrease_earnings ) {
-
-				// Decrease earnings.
-				edd_decrease_earnings( $item['id'], $amount );
-			}
-
-			$maybe_decrease_sales = apply_filters( 'edd_decrease_sales_on_undo', true, $payment, $item['id'] );
-			if ( true === $maybe_decrease_sales ) {
-
-				// Decrease purchase count.
-				edd_decrease_purchase_count( $item['id'], $item['quantity'] );
+			$maybe_decrease_sales    = apply_filters( 'edd_decrease_sales_on_undo', true, $payment, $item['id'] );
+			if ( true === $maybe_decrease_earnings || true === $maybe_decrease_sales ) {
+				$download = new EDD_Download( $item['id'] );
+				$download->recalculate_net_sales_earnings();
+				$download->recalculate_gross_sales_earnings();
 			}
 		}
 	}
