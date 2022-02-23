@@ -809,10 +809,20 @@ class EDD_Download {
 	 * @return void
 	 */
 	public function recalculate_net_sales_earnings() {
+
+		global $wpdb;
+
+		$earnings = $wpdb->get_var(
+			"SELECT SUM(total / rate)
+			FROM {$wpdb->edd_order_items}
+			WHERE product_id = {$this->ID}"
+		);
+		$earnings = ! empty( $earnings ) ? edd_sanitize_amount( $earnings ) : 0.00;
+
 		$sales_earnings = $this->recalculate_sales_earnings( edd_get_net_order_statuses() );
 
 		$this->update_meta( '_edd_download_sales', $sales_earnings['sales'] );
-		$this->update_meta( '_edd_download_earnings', floatval( $sales_earnings['earnings'] ) );
+		$this->update_meta( '_edd_download_earnings', floatval( $earnings ) );
 	}
 
 	/**
