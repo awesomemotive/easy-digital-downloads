@@ -211,6 +211,42 @@ class Refunds_Tests extends \EDD_UnitTestCase {
 		$this->assertEquals( -60.0, floatval( $r->total ) );
 	}
 
+	public function test_partial_refund_with_free_download_remaining() {
+		$order_id = self::$orders[2];
+		$oid      = edd_add_order_item( array(
+			'order_id'     => $order_id,
+			'product_id'   => 17,
+			'product_name' => 'Free Download',
+			'status'       => 'inherit',
+			'amount'       => 0,
+			'subtotal'     => 0,
+			'discount'     => 0,
+			'tax'          => 0,
+			'total'        => 0,
+			'quantity'     => 1,
+		) );
+
+		$to_refund = array();
+		$order     = edd_get_order( $order_id );
+		foreach ( $order->items as $order_item ) {
+			if ( $order_item->total > 0 ) {
+				$to_refund[] = array(
+					'order_item_id' => $order_item->id,
+					'subtotal'      => ( $order_item->subtotal - $order_item->discount ),
+					'tax'           => $order_item->tax,
+					'total'         => $order_item->total,
+				);
+			}
+		}
+
+		$refund_id = edd_refund_order( $order->id, $to_refund );
+
+		// Fetch original order.
+		$o = edd_get_order( $order->id );
+
+		$this->assertSame( 'partially_refunded', $o->status );
+	}
+
 	/**
 	 * @covers ::edd_get_refundability_types
 	 */
