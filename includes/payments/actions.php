@@ -131,9 +131,6 @@ function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 					do_action( 'edd_complete_download_purchase', $item->product_id, $order_id, $download_type, $cart_details, $item->cart_index );
 				}
 			}
-
-			// Increase the earnings for this download ID
-			edd_recalculate_download_sales_earnings( $item->product_id );
 		}
 
 		// Clear the total earnings cache
@@ -299,6 +296,22 @@ add_action( 'edd_transition_order_status', function( $old_status, $new_status, $
 		// Trigger the action again to account for add-ons listening for status changes from "publish".
 		do_action( 'edd_update_payment_status', $order_id, $new_status, 'publish' );
 	}
+}, 10, 3 );
+
+/**
+ * When an order item changes status, we need to recalculate the related download's sales and earnings.
+ *
+ * @since 3.0
+ * @param string $old_status The old status.
+ * @param string $new_status The new status.
+ * @param int $order_item_id The order item ID.
+ */
+add_action( 'edd_transition_order_item_status', function( $old_status, $new_status, $order_item_id ) {
+	if ( $old_status === $new_status ) {
+		return;
+	}
+	$order_item = edd_get_order_item( $order_item_id );
+	edd_recalculate_download_sales_earnings( $order_item->product_id );
 }, 10, 3 );
 
 /**
