@@ -615,7 +615,7 @@ function edd_customer_notes_view( $customer ) {
 				<input type="hidden" id="customer-id" name="customer_id" value="<?php echo $customer->id; ?>" />
 				<input type="hidden" name="edd_action" value="add-customer-note" />
 				<?php wp_nonce_field( 'add-customer-note', 'add_customer_note_nonce', true, true ); ?>
-				<input id="add-customer-note" class="right button-primary" type="submit" value="Add Note" />
+				<input id="add-customer-note" class="right button-primary" type="submit" value="<?php esc_attr_e( 'Add Note', 'easy-digital-downloads' ); ?>" />
 			</form>
 		</div>
 		<?php endif; ?>
