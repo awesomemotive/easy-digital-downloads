@@ -253,27 +253,8 @@ function edd_undo_purchase( $download_id = 0, $order_id = 0 ) {
 		return false;
 	}
 
-	$payment = edd_get_payment( $order_id );
-
-	$cart_details = $payment->cart_details;
-	$user_info    = $payment->user_info;
-
 	// Refund the order.
-	$new_order_id = edd_refund_order( $order_id );
-
-	if ( is_array( $cart_details ) ) {
-
-		// Loop through each cart item.
-		foreach ( $cart_details as $item ) {
-			$maybe_decrease_earnings = apply_filters( 'edd_decrease_earnings_on_undo', true, $payment, $item['id'] );
-			$maybe_decrease_sales    = apply_filters( 'edd_decrease_sales_on_undo', true, $payment, $item['id'] );
-			if ( true === $maybe_decrease_earnings || true === $maybe_decrease_sales ) {
-				edd_recalculate_download_sales_earnings( $item['id'] );
-			}
-		}
-	}
-
-	return $new_order_id;
+	return edd_refund_order( $order_id );
 }
 
 /**
