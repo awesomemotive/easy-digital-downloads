@@ -117,6 +117,9 @@ function register_js( $force_load = false ) {
 			'defaultError'   => edd_build_errors_html( array(
 				'paypal-error' => esc_html__( 'An unexpected error occurred. Please try again.', 'easy-digital-downloads' )
 			) ),
+			'requiredError'  => edd_build_errors_html( array(
+				'required-error' => esc_html__( 'Please fill out all required fields.', 'easy-digital-downloads' ),
+			) ),
 			'intent'         => ! empty( $sdk_query_args['intent'] ) ? $sdk_query_args['intent'] : 'capture',
 			'style'          => get_button_styles()
 		);
