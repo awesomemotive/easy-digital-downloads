@@ -103,34 +103,25 @@ var EDD_PayPal = {
 		var tokenEl = form.querySelector( 'input[name="edd-process-paypal-token"]' );
 		var createFunc = ( 'subscription' === eddPayPalVars.intent ) ? 'createSubscription' : 'createOrder';
 		var requiredInputs = document.getElementById( 'edd_purchase_form' ).querySelectorAll( '[required]' );
-		var inputsFilled = 0;
+		var canEnable = false;
 
 		var buttonArgs = {
 			onInit: function ( data, actions ) {
-				actions.disable();
+				canEnable = EDD_PayPal.maybeEnableButtons( requiredInputs, actions );
 				requiredInputs.forEach( function ( element ) {
-					if ( element.value ) {
-						inputsFilled++;
-					}
 					element.addEventListener( 'change', function ( e ) {
 						if ( element.value ) {
-							inputsFilled++;
-						} else {
-							inputsFilled--;
-						}
-						if ( inputsFilled < requiredInputs.length ) {
-							actions.disable();
-						} else {
-							if ( errorWrapper ) {
+							canEnable = EDD_PayPal.maybeEnableButtons( requiredInputs, actions );
+
+							if ( canEnable && errorWrapper ) {
 								errorWrapper.innerHTML = '';
 							}
-							actions.enable();
 						}
-					} )
+					} );
 				} );
 			},
 			onClick: function () {
-				if ( inputsFilled < requiredInputs.length && errorWrapper ) {
+				if ( !canEnable && errorWrapper ) {
 					errorWrapper.innerHTML = eddPayPalVars.requiredError;
 				}
 			},
@@ -259,6 +250,28 @@ var EDD_PayPal = {
 		};
 
 		return buttonArgs;
+	},
+
+	/**
+	 * Loops through the required fields. If any are empty, the PayPal buttons are disabled and the function returns false.
+	 * Otherwise, the buttons are enabled and this returns true.
+	 *
+	 * @param {array}  requiredInputs An array of inputs marked as required on the checkout form.
+	 * @param {object} actions        The actions which can modify the PayPal buttons (enable/disable).
+	 * @returns {boolean}
+	 */
+	maybeEnableButtons: function ( requiredInputs, actions ) {
+		for ( let input of requiredInputs ) {
+			if ( !input.value ) {
+				canEnable = false;
+				actions.disable();
+				break;
+			}
+			canEnable = true;
+			actions.enable();
+		}
+
+		return canEnable;
 	}
 };
 
