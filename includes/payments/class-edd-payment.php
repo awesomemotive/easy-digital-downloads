@@ -1013,6 +1013,14 @@ class EDD_Payment {
 		$customer = new EDD_Customer( $this->customer_id );
 		$customer->recalculate_stats();
 
+		$order_items = edd_get_order_items( array(
+			'order_id' => $this->ID,
+			'fields'   => 'product_id',
+		) );
+		foreach ( $order_items as $item_id ) {
+			edd_recalculate_download_sales_earnings( $item_id );
+		}
+
 		/**
 		 * Update the payment in the object cache
 		 */
