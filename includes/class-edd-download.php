@@ -797,8 +797,7 @@ class EDD_Download {
 	public function recalculate_gross_sales_earnings() {
 		global $wpdb;
 
-		$conditions = ' AND ' . implode( ' AND ', $conditions );
-		$results    = $wpdb->get_row(
+		$results = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT SUM(oi.total / oi.rate) AS revenue, SUM(oi.quantity) AS sales
 				FROM {$wpdb->edd_order_items} oi
