@@ -795,11 +795,27 @@ class EDD_Download {
 	 * @return void
 	 */
 	public function recalculate_gross_sales_earnings() {
-		$sales_earnings = $this->recalculate_sales_earnings( edd_get_gross_order_statuses() );
+		global $wpdb;
+
+		$conditions = ' AND ' . implode( ' AND ', $conditions );
+		$results    = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT SUM(oi.total / oi.rate) AS revenue, SUM(oi.quantity) AS sales
+				FROM {$wpdb->edd_order_items} oi
+				INNER JOIN {$wpdb->edd_orders} o ON(o.id = oi.order_id)
+				WHERE oi.product_id = %d
+				AND o.type IN('sale')
+				AND o.status IN('complete','partially_refunded','revoked')",
+				$this->ID
+			)
+		);
+
+		$sales    = ! empty( $results->sales ) ? intval( $results->sales ) : 0;
+		$earnings = ! empty( $results->revenue ) ? floatval( edd_sanitize_amount( $results->revenue ) ) : 0.00;
 
 		// This currently uses the post meta functions as we do not yet guarantee that the meta exists.
-		update_post_meta( $this->ID, '_edd_download_gross_sales', $sales_earnings['sales'] );
-		update_post_meta( $this->ID, '_edd_download_gross_earnings', floatval( $sales_earnings['earnings'] ) );
+		update_post_meta( $this->ID, '_edd_download_gross_sales', $sales );
+		update_post_meta( $this->ID, '_edd_download_gross_earnings', floatval( $earnings ) );
 	}
 
 	/**
@@ -812,61 +828,44 @@ class EDD_Download {
 
 		global $wpdb;
 
-		$earnings = $wpdb->get_var(
-			"SELECT SUM(total / rate)
-			FROM {$wpdb->edd_order_items}
-			WHERE product_id = {$this->ID}"
-		);
-		$earnings = ! empty( $earnings ) ? edd_sanitize_amount( $earnings ) : 0.00;
-
-		$sales_earnings = $this->recalculate_sales_earnings( edd_get_net_order_statuses() );
-
-		$this->update_meta( '_edd_download_sales', $sales_earnings['sales'] );
-		$this->update_meta( '_edd_download_earnings', floatval( $earnings ) );
-	}
-
-	/**
-	 * Recalculates and returns the sales and earnings for an array of order statuses.
-	 *
-	 * @since 3.0
-	 * @param array $statuses
-	 * @return array Returns an array of the sales and earnings for the download.
-	 */
-	public function recalculate_sales_earnings( $statuses = array() ) {
-		global $wpdb;
-
-		/*
-		 * Build up our WHERE clauses.
-		 */
-		$conditions = array(
+		$complete_sales = $wpdb->get_row(
 			$wpdb->prepare(
-				"oi.product_id = %d",
-				$this->ID
-			),
-		);
-
-		if ( ! empty( $statuses ) && is_array( $statuses ) ) {
-			$placeholder_string = implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
-			$conditions[]       = $wpdb->prepare(
-				"oi.status IN({$placeholder_string})",
-				$statuses
-			);
-		}
-
-		$conditions = ' AND ' . implode( ' AND ', $conditions );
-
-		$results = $wpdb->get_row(
-			"SELECT SUM(oi.total / oi.rate) AS revenue, SUM(oi.quantity) AS sales
+				"SELECT SUM((oi.total - oi.tax)/ oi.rate) AS revenue, SUM(oi.quantity) AS sales
 				FROM {$wpdb->edd_order_items} oi
 				INNER JOIN {$wpdb->edd_orders} o ON(o.id = oi.order_id)
-				WHERE o.type = 'sale'
-				{$conditions}"
+				WHERE oi.product_id = %d
+				AND oi.status = 'complete'
+				AND o.type = 'sale'
+				AND o.status IN('complete','revoked')",
+				$this->ID
+			)
 		);
 
-		return array(
-			'sales'    => ! empty( $results->sales ) ? intval( $results->sales ) : 0,
-			'earnings' => ! empty( $results->revenue ) ? edd_sanitize_amount( $results->revenue ) : 0.00,
+		$partially_refunded = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT SUM((oi.total - oi.tax + refund.total - refund.tax)/ oi.rate) AS revenue, SUM(oi.quantity) AS sales
+				FROM {$wpdb->edd_order_items} AS oi
+				LEFT JOIN {$wpdb->edd_order_items} AS refund
+				ON refund.parent = oi.id
+				WHERE oi.product_id = %d
+				AND oi.status = 'partially_refunded'
+				AND refund.total != - oi.total",
+				$this->ID
+			)
 		);
+
+		$sales = ! empty( $complete_sales->sales ) ? intval( $complete_sales->sales ) : 0;
+		if ( ! empty( $partially_refunded->sales ) ) {
+			$sales += $partially_refunded->sales;
+		}
+
+		$revenue = ! empty( $complete_sales->revenue ) ? floatval( $complete_sales->revenue ) : 0.00;
+		if ( ! empty( $partially_refunded->revenue ) ) {
+			$revenue += $partially_refunded->revenue;
+		}
+
+		$this->update_meta( '_edd_download_sales', intval( $sales ) );
+		$this->update_meta( '_edd_download_earnings', floatval( $revenue ) );
 	}
 
 	/**
