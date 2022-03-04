@@ -85,7 +85,7 @@ function edd_get_purchase_link( $args = array() ) {
 	$args = wp_parse_args( $args, $defaults );
 
 	// Override the straight_to_gateway if the shop doesn't support it
-	if ( ! edd_shop_supports_buy_now() ) {
+	if ( ! edd_shop_supports_buy_now() || edd_single_price_option_mode( $args['download_id'] ) ) {
 		$args['direct'] = false;
 	}
 
