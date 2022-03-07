@@ -1823,9 +1823,6 @@ function edd_checkbox_description_callback( $args ) {
 		$name = 'edd_settings[' . edd_sanitize_key( $args['id'] ) . ']';
 	}
 
-	$class   = edd_sanitize_html_class( $args['field_class'] );
-	$checked = ! empty( $edd_option ) ? checked( 1, $edd_option, false ) : '';
-
 	$args['name']    = $name;
 	$args['class']   = edd_sanitize_html_class( $args['field_class'] );
 	$args['current'] = ! empty( $edd_option ) ? $edd_option : '';
