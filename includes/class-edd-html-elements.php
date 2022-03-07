@@ -772,6 +772,7 @@ class EDD_HTML_Elements {
 				'readonly' => false,
 			),
 			'label'   => '',
+			'value'   => null,
 		);
 
 		$args = wp_parse_args( $args, $defaults );
@@ -782,6 +783,10 @@ class EDD_HTML_Elements {
 			$options .= ' disabled="disabled"';
 		} elseif ( ! empty( $args['options']['readonly'] ) ) {
 			$options .= ' readonly';
+		}
+
+		if ( ! empty( $args['value'] ) ) {
+			$options .= ' value="' . $args['value'] . '"';
 		}
 
 		// Checked could mean 'on' or 1 or true, so sanitize it for checked()
