@@ -1820,17 +1820,26 @@ function edd_checkbox_description_callback( $args ) {
 	if ( isset( $args['faux'] ) && true === $args['faux'] ) {
 		$name = '';
 	} else {
-		$name = 'name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"';
+		$name = 'edd_settings[' . edd_sanitize_key( $args['id'] ) . ']';
 	}
 
 	$class   = edd_sanitize_html_class( $args['field_class'] );
 	$checked = ! empty( $edd_option ) ? checked( 1, $edd_option, false ) : '';
-	$html    = '<input type="hidden"' . $name . ' value="-1" />';
-	$html   .= '<div class="edd-check-wrapper">';
-	$html   .= '<input type="checkbox" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"' . $name . ' value="1" ' . $checked . ' class="' . $class . '"/>';
-	$html   .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['check'] ) . '</label>';
-	$html   .= '</div>';
-	$html   .= '<p class="description">' . wp_kses_post( $args['desc'] ) . '</p>';
+
+	$args['name']    = $name;
+	$args['class']   = edd_sanitize_html_class( $args['field_class'] );
+	$args['current'] = ! empty( $edd_option ) ? $edd_option : '';
+	$args['label']   = false;
+	$args['value']   = 1;
+
+	$html  = '<input type="hidden" name="' . esc_attr( $name ) . '" value="-1" />';
+	$html .= '<div class="edd-check-wrapper">';
+	$html .= EDD()->html->checkbox( $args );
+	$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['check'] ) . '</label>';
+	$html .= '</div>';
+	if ( ! empty( $args['desc'] ) ) {
+		$html .= '<p class="description">' . wp_kses_post( $args['desc'] ) . '</p>';
+	}
 
 	echo apply_filters( 'edd_after_setting_output', $html, $args );
 }
