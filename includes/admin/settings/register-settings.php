@@ -1793,6 +1793,7 @@ function edd_checkbox_callback( $args ) {
 		? $edd_option
 		: '';
 	$args['label']   = wp_kses_post( $args['desc'] );
+	$args['value']   = 1;
 
 	$html    = '<input type="hidden" name="' . $name . '" value="-1" />';
 	$html   .= '<div class="edd-check-wrapper">';
