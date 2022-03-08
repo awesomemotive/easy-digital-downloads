@@ -91,6 +91,10 @@ button.edd-round:focus, button.edd-round:active {
 	outline: 2px solid #0c5d95;
 }
 
+#edd-header .edd-round.edd-hidden {
+	display: none;
+}
+
 #edd-header .edd-number {
 	position: absolute;
 	background-color: #df2a4a;
