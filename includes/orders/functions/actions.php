@@ -461,8 +461,9 @@ function edd_add_manual_order( $args = array() ) {
 	 * @since 3.0
 	 * @param int   $order_id   The new order ID.
 	 * @param array $order_data The array of order data.
+	 * @param array $args       The original form data.
 	 */
-	do_action( 'edd_post_add_manual_order', $order_id, $order_data );
+	do_action( 'edd_post_add_manual_order', $order_id, $order_data, $args );
 
 	// Redirect to `Edit Order` page.
 	edd_redirect( edd_get_admin_url( array(
