@@ -1489,8 +1489,6 @@ add_action( 'init', 'edd_apply_preset_discount', 999 );
 /**
  * Validate discount code.
  *
- * This is a 'fork' of the original validate_discount function but fixes the incorrect logic.
- *
  * @param int   $discount_id  Discount ID.
  * @param array $download_ids Array of download IDs.
  *
