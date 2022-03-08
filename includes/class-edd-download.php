@@ -791,6 +791,7 @@ class EDD_Download {
 
 		global $wpdb;
 
+		// Get just order items marked as complete.
 		$complete_sales = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT SUM((oi.total - oi.tax)/ oi.rate) AS revenue, SUM(oi.quantity) AS sales
@@ -803,10 +804,12 @@ class EDD_Download {
 				$this->ID
 			)
 		);
+		$sales          = ! empty( $complete_sales->sales ) ? intval( $complete_sales->sales ) : 0;
+		$revenue        = ! empty( $complete_sales->revenue ) ? floatval( $complete_sales->revenue ) : 0.00;
 
 		$partially_refunded = $wpdb->get_row(
 			$wpdb->prepare(
-				"SELECT SUM((oi.total - oi.tax + refund.total - refund.tax)/ oi.rate) AS revenue, SUM(oi.quantity) AS sales
+				"SELECT SUM((oi.total - oi.tax + refund.total - refund.tax)/ oi.rate) AS revenue, SUM(oi.quantity + refund.quantity) AS sales
 				FROM {$wpdb->edd_order_items} AS oi
 				LEFT JOIN {$wpdb->edd_order_items} AS refund
 				ON refund.parent = oi.id
@@ -816,13 +819,9 @@ class EDD_Download {
 				$this->ID
 			)
 		);
-
-		$sales = ! empty( $complete_sales->sales ) ? intval( $complete_sales->sales ) : 0;
 		if ( ! empty( $partially_refunded->sales ) ) {
 			$sales += $partially_refunded->sales;
 		}
-
-		$revenue = ! empty( $complete_sales->revenue ) ? floatval( $complete_sales->revenue ) : 0.00;
 		if ( ! empty( $partially_refunded->revenue ) ) {
 			$revenue += $partially_refunded->revenue;
 		}
