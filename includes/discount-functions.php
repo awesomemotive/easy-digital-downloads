@@ -1487,7 +1487,9 @@ function edd_apply_preset_discount() {
 add_action( 'init', 'edd_apply_preset_discount', 999 );
 
 /**
- * Validate discount code.
+ * Validate discount code, optionally against an array of download IDs.
+ * Note: this function does not evaluate whether a current user can use the discount,
+ * or check the discount minimum cart requirement.
  *
  * @param int   $discount_id  Discount ID.
  * @param array $download_ids Array of download IDs.
