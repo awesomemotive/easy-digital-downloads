@@ -1496,70 +1496,69 @@ add_action( 'init', 'edd_apply_preset_discount', 999 );
  */
 function edd_validate_discount( $discount_id = 0, $download_ids = array() ) {
 
-  // Bail if discount ID not passed.
-  if ( empty( $discount_id ) ) {
-    return false;
-  }
+	// Bail if discount ID not passed.
+	if ( empty( $discount_id ) ) {
+		return false;
+	}
 
-  // Set discount to be invalid initially.
-  $is_valid = false;
+	// Set discount to be invalid initially.
+	$is_valid = false;
 
-  $discount = edd_get_discount( $discount_id );
+	$discount = edd_get_discount( $discount_id );
 
-  // Bail if discount not found.
-  if ( ! $discount ) {
-    return false;
-  }
+	// Bail if discount not found.
+	if ( ! $discount ) {
+		return false;
+	}
 
-  // Check if discount is active, started, and not maxed out.
-  if ( ! $discount->is_active( true, false ) || ! $discount->is_started( false ) || $discount->is_maxed_out( false ) ) {
-    return false;
-  }
+	// Check if discount is active, started, and not maxed out.
+	if ( ! $discount->is_active( true, false ) || ! $discount->is_started( false ) || $discount->is_maxed_out( false ) ) {
+		return false;
+	}
 
-  $product_requirements = $discount->get_product_reqs();
-  $excluded_products    = $discount->get_excluded_products();
+	$product_requirements = $discount->get_product_reqs();
+	$excluded_products    = $discount->get_excluded_products();
 
-  // Return true if there are no requirements/excluded products set.
-  if ( empty( $product_requirements ) && empty( $excluded_products ) ) {
-    return true;
-  }
+	// Return true if there are no requirements/excluded products set.
+	if ( empty( $product_requirements ) && empty( $excluded_products ) ) {
+		return true;
+	}
 
-  $product_requirements = array_map( 'absint', $product_requirements );
-  asort( $product_requirements );
-  $product_requirements = array_filter( array_values( $product_requirements ) );
+	$product_requirements = array_map( 'absint', $product_requirements );
+	asort( $product_requirements );
+	$product_requirements = array_filter( array_values( $product_requirements ) );
 
-  $excluded_products = array_map( 'absint', $excluded_products );
-  asort( $excluded_products );
-  $excluded_products = array_filter( array_values( $excluded_products ) );
+	$excluded_products = array_map( 'absint', $excluded_products );
+	asort( $excluded_products );
+	$excluded_products = array_filter( array_values( $excluded_products ) );
 
-  if ( ! empty( $product_requirements ) ) {
+	if ( ! empty( $product_requirements ) ) {
 
-    $matches = array_intersect( $product_requirements, $download_ids );
+		$matches = array_intersect( $product_requirements, $download_ids );
 
-    switch ( $discount->get_product_condition() ) {
-      case 'all':
-        $is_valid = count( $matches ) === count( $product_requirements );
-        break;
-      default:
-        $is_valid = 0 < count( $matches );
-    }
+		switch ( $discount->get_product_condition() ) {
+			case 'all':
+				$is_valid = count( $matches ) === count( $product_requirements );
+				break;
+			default:
+				$is_valid = 0 < count( $matches );
+		}
+	} else {
+		$is_valid = true;
+	}
 
-  } else {
-    $is_valid = true;
-  }
+	if ( ! empty( $excluded_products ) ) {
+		$is_valid = false === (bool) array_intersect( $excluded_products, $download_ids );
+	}
 
-  if ( ! empty( $excluded_products ) ) {
-    $is_valid = false === (bool) array_intersect( $excluded_products, $download_ids );
-  }
-
-  /**
-   * Filters the validity of a discount.
-   *
-   * @since 3.0
-   *
-   * @param bool          $is_valid     True if valid, false otherwise.
-   * @param \EDD_Discount $discount     Discount object.
-   * @param array         $download_ids Download IDs to check against.
-   */
-  return apply_filters( 'edd_validate_discount', $is_valid, $discount, $download_ids );
+	/**
+	 * Filters the validity of a discount.
+	 *
+	 * @since 3.0
+	 *
+	 * @param bool          $is_valid     True if valid, false otherwise.
+	 * @param \EDD_Discount $discount     Discount object.
+	 * @param array         $download_ids Download IDs to check against.
+	 */
+	return apply_filters( 'edd_validate_discount', $is_valid, $discount, $download_ids );
 }
