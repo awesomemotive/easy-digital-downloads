@@ -1501,9 +1501,6 @@ function edd_validate_discount( $discount_id = 0, $download_ids = array() ) {
 		return false;
 	}
 
-	// Set discount to be invalid initially.
-	$is_valid = false;
-
 	$discount = edd_get_discount( $discount_id );
 
 	// Bail if discount not found.
@@ -1524,13 +1521,12 @@ function edd_validate_discount( $discount_id = 0, $download_ids = array() ) {
 		return true;
 	}
 
+	// At this point, we assume the discount is valid.
+	$is_valid = true;
+
 	$product_requirements = array_map( 'absint', $product_requirements );
 	asort( $product_requirements );
 	$product_requirements = array_filter( array_values( $product_requirements ) );
-
-	$excluded_products = array_map( 'absint', $excluded_products );
-	asort( $excluded_products );
-	$excluded_products = array_filter( array_values( $excluded_products ) );
 
 	if ( ! empty( $product_requirements ) ) {
 
@@ -1543,9 +1539,11 @@ function edd_validate_discount( $discount_id = 0, $download_ids = array() ) {
 			default:
 				$is_valid = 0 < count( $matches );
 		}
-	} else {
-		$is_valid = true;
 	}
+
+	$excluded_products = array_map( 'absint', $excluded_products );
+	asort( $excluded_products );
+	$excluded_products = array_filter( array_values( $excluded_products ) );
 
 	if ( ! empty( $excluded_products ) ) {
 		$is_valid = false === (bool) array_intersect( $excluded_products, $download_ids );
