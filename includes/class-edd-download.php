@@ -791,36 +791,37 @@ class EDD_Download {
 
 		global $wpdb;
 
-		$net_revenue = $wpdb->get_row(
+		/**
+		 * Note on the select statements:
+		 * 1. This gets the net sum for revenue and sales for all orders with net statuses.
+		 * 2. Because a partial refund with an identical quantity as the original order will
+		 *    negate the original, we also sum partially refunded sales where the quantity
+		 *    matches the partial refund quantity.
+		 */
+		$results = $wpdb->get_row(
 			$wpdb->prepare(
-				"SELECT SUM((oi.total - oi.tax)/ oi.rate) AS revenue, SUM(oi.quantity) AS sales
+				"SELECT SUM(revenue) AS revenue, SUM(sales) AS sales FROM
+				(SELECT SUM((oi.total - oi.tax)/ oi.rate) as revenue, SUM(oi.quantity) as sales
 				FROM {$wpdb->edd_order_items} oi
 				INNER JOIN {$wpdb->edd_orders} o ON(o.id = oi.order_id)
 				WHERE oi.product_id = %d
 				AND oi.status IN('complete','partially_refunded')
-				AND o.status IN('complete','revoked','partially_refunded')",
-				$this->ID
-			)
-		);
-		$revenue     = ! empty( $net_revenue->revenue ) ? floatval( $net_revenue->revenue ) : 0.00;
-		$sales       = ! empty( $net_revenue->sales ) ? intval( $net_revenue->sales ) : 0;
-
-		// Identical quantities essentially cancel each other out with partial refunds, so add the original quantities back in.
-		$partial_sales = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT SUM(oi.quantity) AS sales
+				AND o.status IN('complete','revoked','partially_refunded')
+				UNION
+				SELECT NULL, SUM(oi.quantity) as sales
 				FROM {$wpdb->edd_order_items} oi
-				LEFT JOIN {$wpdb->edd_order_items} refund
-				ON refund.parent = oi.id
+				LEFT JOIN {$wpdb->edd_order_items} ri
+				ON ri.parent = oi.id
 				WHERE oi.product_id = %d
 				AND oi.status = 'partially_refunded'
-				AND oi.quantity = - refund.quantity",
+				AND oi.quantity = - ri.quantity)a",
+				$this->ID,
 				$this->ID
 			)
 		);
-		if ( ! empty( $partial_sales->sales ) ) {
-			$sales += $partial_sales->sales;
-		}
+
+		$revenue = ! empty( $results->revenue ) ? $results->revenue : 0.00;
+		$sales   = ! empty( $results->sales ) ? $results->sales : 0;
 
 		$this->update_meta( '_edd_download_sales', intval( $sales ) );
 		$this->update_meta( '_edd_download_earnings', floatval( $revenue ) );
