@@ -791,39 +791,35 @@ class EDD_Download {
 
 		global $wpdb;
 
-		// Get just order items marked as complete.
-		$complete_sales = $wpdb->get_row(
+		$net_revenue = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT SUM((oi.total - oi.tax)/ oi.rate) AS revenue, SUM(oi.quantity) AS sales
 				FROM {$wpdb->edd_order_items} oi
 				INNER JOIN {$wpdb->edd_orders} o ON(o.id = oi.order_id)
 				WHERE oi.product_id = %d
-				AND oi.status = 'complete'
-				AND o.type = 'sale'
-				AND o.status IN('complete','revoked')",
+				AND oi.status IN('complete','partially_refunded')
+				AND o.status IN('complete','revoked','partially_refunded')",
 				$this->ID
 			)
 		);
-		$sales          = ! empty( $complete_sales->sales ) ? intval( $complete_sales->sales ) : 0;
-		$revenue        = ! empty( $complete_sales->revenue ) ? floatval( $complete_sales->revenue ) : 0.00;
+		$revenue     = ! empty( $net_revenue->revenue ) ? floatval( $net_revenue->revenue ) : 0.00;
+		$sales       = ! empty( $net_revenue->sales ) ? intval( $net_revenue->sales ) : 0;
 
-		$partially_refunded = $wpdb->get_row(
+		// Identical quantities essentially cancel each other out with partial refunds, so add the original quantities back in.
+		$partial_sales = $wpdb->get_row(
 			$wpdb->prepare(
-				"SELECT SUM((oi.total - oi.tax + refund.total - refund.tax)/ oi.rate) AS revenue, SUM(oi.quantity + refund.quantity) AS sales
-				FROM {$wpdb->edd_order_items} AS oi
-				LEFT JOIN {$wpdb->edd_order_items} AS refund
+				"SELECT SUM(oi.quantity) AS sales
+				FROM {$wpdb->edd_order_items} oi
+				LEFT JOIN {$wpdb->edd_order_items} refund
 				ON refund.parent = oi.id
 				WHERE oi.product_id = %d
 				AND oi.status = 'partially_refunded'
-				AND refund.total != - oi.total",
+				AND oi.quantity = - refund.quantity",
 				$this->ID
 			)
 		);
-		if ( ! empty( $partially_refunded->sales ) ) {
-			$sales += $partially_refunded->sales;
-		}
-		if ( ! empty( $partially_refunded->revenue ) ) {
-			$revenue += $partially_refunded->revenue;
+		if ( ! empty( $partial_sales->sales ) ) {
+			$sales += $partial_sales->sales;
 		}
 
 		$this->update_meta( '_edd_download_sales', intval( $sales ) );
