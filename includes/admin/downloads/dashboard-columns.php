@@ -32,8 +32,8 @@ function edd_download_columns( $download_columns ) {
 		'download_category' => $category_labels['menu_name'],
 		'download_tag'      => $tag_labels['menu_name'],
 		'price'             => __( 'Price', 'easy-digital-downloads' ),
-		'sales'             => __( 'Sales', 'easy-digital-downloads' ),
-		'earnings'          => __( 'Gross Revenue', 'easy-digital-downloads' ),
+		'sales'             => __( 'Net Sales', 'easy-digital-downloads' ),
+		'earnings'          => __( 'Net Revenue', 'easy-digital-downloads' ),
 		'date'              => __( 'Date', 'easy-digital-downloads' )
 	) );
 }
