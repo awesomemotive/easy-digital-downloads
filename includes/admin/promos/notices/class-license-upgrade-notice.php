@@ -134,12 +134,7 @@ class License_Upgrade_Notice extends Notice {
 		}
 
 		$mi_license = \MonsterInsights::$instance->license->get_license_key();
-
-		if ( empty( $mi_license ) ) {
-			return false;
-		}
-
-		return true;
+		return ! empty( $mi_license );
 	}
 
 	/**
