@@ -211,7 +211,7 @@ class License_Upgrade_Notice extends Notice {
 					printf(
 					/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
 						__( 'Gain access to powerful insights to grow your traffic and revenue. %1$sGet MonsterInsights%2$s', 'easy-digital-downloads' ),
-						'<a href="' . esc_url( 'https://www.monsterinsights.com?utm_campaign=xsell&utm_source=eddplugin&utm_content=top-promo' ) . '" target="_blank">',
+						'<a href="' . esc_url( 'https://monsterinsights.com?utm_campaign=xsell&utm_source=eddplugin&utm_content=top-promo' ) . '" target="_blank">',
 						'</a>'
 					);
 				}
