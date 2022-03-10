@@ -94,7 +94,8 @@ class License_Upgrade_Notice extends Notice {
 			if (
 				$this->pass_manager->has_pass() &&
 				Pass_Manager::pass_compare( $this->pass_manager->highest_pass_id, Pass_Manager::EXTENDED_PASS_ID, '>=' ) &&
-				$this->has_affiliate_wp_license()
+				$this->has_affiliate_wp_license() &&
+				$this->has_mi_license()
 			) {
 				return false;
 			}
@@ -118,6 +119,27 @@ class License_Upgrade_Notice extends Notice {
 		}
 
 		return (bool) affiliate_wp()->settings->get( 'license_key' );
+	}
+
+	/**
+	 * Determines whether or not MonsterInsights is installed and has a license key.
+	 *
+	 * @since 2.11.6
+	 *
+	 * @return bool
+	 */
+	private function has_mi_license() {
+		if ( ! class_exists( 'MonsterInsights' ) ) {
+			return false;
+		}
+
+		$mi_license = \MonsterInsights::$instance->license->get_license_key();
+
+		if ( empty( $mi_license ) ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -148,8 +170,10 @@ class License_Upgrade_Notice extends Notice {
 				// No license keys active at all.
 				printf(
 				/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
-					__( 'You are using the free version of Easy Digital Downloads. %1$sPurchase a pass%2$s to get email marketing tools and recurring payments.', 'easy-digital-downloads' ),
+					__( 'You are using the free version of Easy Digital Downloads. %1$sPurchase a pass%2$s to get email marketing tools and recurring payments. %3$sAlready have a Pass?%4$s', 'easy-digital-downloads' ),
 					'<a href="' . esc_url( add_query_arg( $this->query_args( 'core', $source ), 'https://easydigitaldownloads.com/pricing/' ) ) . '" target="_blank">',
+					'</a>',
+					'<a href="' . esc_url( add_query_arg( $this->query_args( 'core', $source ), 'https://easydigitaldownloads.com/what-is-an-edd-pass' ) ) . '" target="_blank">',
 					'</a>'
 				);
 
@@ -175,13 +199,22 @@ class License_Upgrade_Notice extends Notice {
 
 			} elseif ( Pass_Manager::pass_compare( $this->pass_manager->highest_pass_id, Pass_Manager::EXTENDED_PASS_ID, '>=' ) ) {
 
+				if ( ! $this->has_affiliate_wp_license() ) {
 				// Extended pass or higher.
-				printf(
-				/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
-					__( 'Grow your business and make more money with affiliate marketing. %1$sGet AffiliateWP%2$s', 'easy-digital-downloads' ),
-					'<a href="' . esc_url( add_query_arg( $this->query_args( 'extended-pass', $source ), 'https://affiliatewp.com/?ref=743' ) ) . '" target="_blank">',
-					'</a>'
-				);
+					printf(
+					/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
+						__( 'Grow your business and make more money with affiliate marketing. %1$sGet AffiliateWP%2$s', 'easy-digital-downloads' ),
+						'<a href="' . esc_url( add_query_arg( $this->query_args( 'extended-pass', $source ), 'https://affiliatewp.com/?ref=743' ) ) . '" target="_blank">',
+						'</a>'
+					);
+				} elseif( ! $this->has_mi_license() ) {
+					printf(
+					/* Translators: %1$s opening anchor tag; %2$s closing anchor tag */
+						__( 'Gain access to powerful insights to grow your traffic and revenue. %1$sGet MonsterInsights%2$s', 'easy-digital-downloads' ),
+						'<a href="' . esc_url( 'https://www.monsterinsights.com?utm_campaign=xsell&utm_source=eddplugin&utm_content=top-promo' ) . '" target="_blank">',
+						'</a>'
+					);
+				}
 			}
 		} catch ( \Exception $e ) {
 			// If we're in here, that means we have an invalid pass ID... what should we do? :thinking:
