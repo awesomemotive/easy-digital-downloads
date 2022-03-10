@@ -555,7 +555,10 @@ function edd_process_paypal_web_accept_and_cart( $data, $payment_id ) {
 	$payment = new EDD_Payment( $payment_id );
 
 	// Collect payment details
-	$purchase_key   = isset( $data['invoice'] ) ? $data['invoice'] : $data['item_number'];
+	$purchase_key = isset( $data['invoice'] ) ? $data['invoice'] : false;
+	if ( ! $purchase_key && ! empty( $data['item_number'] ) ) {
+		$purchase_key = $data['item_number'];
+	}
 	$paypal_amount  = $data['mc_gross'];
 	$payment_status = strtolower( $data['payment_status'] );
 	$currency_code  = strtolower( $data['mc_currency'] );
