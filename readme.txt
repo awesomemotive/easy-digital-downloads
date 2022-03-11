@@ -64,7 +64,6 @@ Payment gateways supported through free or paid extensions:
 * PayPal Commerce Pro (unbranded card payments and additional payment methods)
 * Braintree
 * Authorize.net
-* 2Checkout
 * SOFORT Banking
 
 > What can I say? Stripe is my go-to payment processor and without this [integration] I don't know what I would do. Connect EDD to your Stripe account in seconds and you're done! Having a simple test mode toggle is also a valuable development tool.
