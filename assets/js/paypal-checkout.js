@@ -162,7 +162,10 @@ var EDD_PayPal = {
 					if ( responseData.success ) {
 						var nonces = responseData.data.nonces;
 						Object.keys( nonces ).forEach( function ( key ) {
-							document.getElementById( 'edd-gateway-' + key ).setAttribute( 'data-' + key + '-nonce', nonces[ key ] );
+							var gatewaySelector = document.getElementById( 'edd-gateway-' + key );
+							if ( gatewaySelector ) {
+								gatewaySelector.setAttribute( 'data-' + key + '-nonce', nonces[ key ] );
+							}
 						} );
 					}
 				} );
