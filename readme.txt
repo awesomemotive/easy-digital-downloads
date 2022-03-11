@@ -5,9 +5,9 @@ Contributors: easydigitaldownloads, mordauk, sunnyratilal, chriscct7, section214
 Donate link: https://easydigitaldownloads.com/donate/
 Tags: ecommerce, e-commerce, sell, digital store, stripe
 Requires at least: 4.4
-Tested up to: 5.9
+Tested up to: 5.9.2
 Requires PHP: 5.4
-Stable Tag: 2.11.5
+Stable Tag: 2.11.6
 License: GNU Version 2 or Any Later Version
 
 Sell your digital products with the ecommerce plugin written for digital creators, by digital creators.
@@ -240,6 +240,13 @@ Yes, through the use of our commercial addon called [Recurring Payments](https:/
 13. Pay with PayPal modal
 
 == Changelog ==
+
+= 2.11.6, March 11, 2022 =
+* Fix: Improved reliablity of PayPal Commerce modal while on checkout page.
+* Fix: PayPal Standard could throw an undefined variable notice when listening to the IPN.
+* Improvement: The link to configure Mailchimp could be wrong depending on the version of the extension.
+* Improvement: There was a hard coded string that wasn't able to be translated.
+* Improvement: Add a link to documentation about how to activate a Pass license key.
 
 = 2.11.5, January 27, 2022 =
 * New: Add an admin notice when the EDD Debug Log is enabled.
