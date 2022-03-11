@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Easy Digital Downloads package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads 2.11.5\n"
+"Project-Id-Version: Easy Digital Downloads 2.11.6\n"
 "Report-Msgid-Bugs-To: https://easydigitaldownloads.com/\n"
-"POT-Creation-Date: 2022-01-25 13:02:07+00:00\n"
+"POT-Creation-Date: 2022-03-11 17:38:30+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1018,6 +1018,11 @@ msgstr ""
 #: includes/admin/customers/customers.php:608
 #: includes/admin/reporting/export/class-batch-export-downloads.php:56
 msgid "Notes"
+msgstr ""
+
+#: includes/admin/customers/customers.php:618
+#: includes/admin/payments/view-order-details.php:832
+msgid "Add Note"
 msgstr ""
 
 #: includes/admin/customers/customers.php:646
@@ -2084,7 +2089,7 @@ msgstr ""
 msgid "Get %s Today!"
 msgstr ""
 
-#: includes/admin/extensions/product-education/class-email-marketing.php:91
+#: includes/admin/extensions/product-education/class-email-marketing.php:88
 msgid ""
 "Looks like you have an email marketing extension installed, but we support "
 "more providers!"
@@ -2710,10 +2715,6 @@ msgstr ""
 msgid "No payment notes"
 msgstr ""
 
-#: includes/admin/payments/view-order-details.php:832
-msgid "Add Note"
-msgstr ""
-
 #: includes/admin/plugins.php:27
 msgid "General Settings"
 msgstr ""
@@ -2771,32 +2772,40 @@ msgstr ""
 msgid "Ok, you deserve it!"
 msgstr ""
 
-#: includes/admin/promos/notices/class-license-upgrade-notice.php:151
+#: includes/admin/promos/notices/class-license-upgrade-notice.php:168
 #. Translators: %1$s opening anchor tag; %2$s closing anchor tag
 msgid ""
 "You are using the free version of Easy Digital Downloads. %1$sPurchase a "
-"pass%2$s to get email marketing tools and recurring payments."
+"pass%2$s to get email marketing tools and recurring payments. %3$sAlready "
+"have a Pass?%4$s"
 msgstr ""
 
-#: includes/admin/promos/notices/class-license-upgrade-notice.php:161
+#: includes/admin/promos/notices/class-license-upgrade-notice.php:180
 #. Translators: %1$s opening anchor tag; %2$s closing anchor tag
 msgid ""
 "For access to additional Easy Digital Downloads extensions to grow your "
 "store, consider %1$spurchasing a pass%2$s."
 msgstr ""
 
-#: includes/admin/promos/notices/class-license-upgrade-notice.php:171
+#: includes/admin/promos/notices/class-license-upgrade-notice.php:190
 #. Translators: %1$s opening anchor tag; %2$s closing anchor tag
 msgid ""
 "You are using Easy Digital Downloads with a Personal Pass. Consider "
 "%1$supgrading%2$s to get recurring payments and more."
 msgstr ""
 
-#: includes/admin/promos/notices/class-license-upgrade-notice.php:181
+#: includes/admin/promos/notices/class-license-upgrade-notice.php:201
 #. Translators: %1$s opening anchor tag; %2$s closing anchor tag
 msgid ""
 "Grow your business and make more money with affiliate marketing. %1$sGet "
 "AffiliateWP%2$s"
+msgstr ""
+
+#: includes/admin/promos/notices/class-license-upgrade-notice.php:208
+#. Translators: %1$s opening anchor tag; %2$s closing anchor tag
+msgid ""
+"Gain access to powerful insights to grow your traffic and revenue. %1$sGet "
+"MonsterInsights%2$s"
 msgstr ""
 
 #: includes/admin/reporting/class-api-requests-logs-list-table.php:87
@@ -7187,10 +7196,10 @@ msgstr ""
 #: includes/gateways/amazon-payments.php:1148
 #: includes/gateways/paypal-standard.php:475
 #: includes/gateways/paypal-standard.php:482
-#: includes/gateways/paypal-standard.php:571
-#: includes/gateways/paypal-standard.php:581
-#: includes/gateways/paypal-standard.php:654
-#: includes/gateways/paypal-standard.php:663
+#: includes/gateways/paypal-standard.php:574
+#: includes/gateways/paypal-standard.php:584
+#: includes/gateways/paypal-standard.php:657
+#: includes/gateways/paypal-standard.php:666
 msgid "IPN Error"
 msgstr ""
 
@@ -7520,7 +7529,7 @@ msgid ""
 msgstr ""
 
 #: includes/gateways/paypal/checkout-actions.php:399
-#: includes/gateways/paypal-standard.php:671
+#: includes/gateways/paypal-standard.php:674
 #: tests/helpers/class-helper-payment.php:131
 #: tests/helpers/class-helper-payment.php:234
 #: tests/helpers/class-helper-payment.php:342
@@ -7798,131 +7807,131 @@ msgstr ""
 msgid "Invalid IPN verification response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:571
+#: includes/gateways/paypal-standard.php:574
 msgid "Invalid business email in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:574
+#: includes/gateways/paypal-standard.php:577
 msgid "Payment failed due to invalid PayPal business email."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:581
+#: includes/gateways/paypal-standard.php:584
 msgid "Invalid currency in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:584
+#: includes/gateways/paypal-standard.php:587
 msgid "Payment failed due to invalid currency in PayPal IPN."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:654
+#: includes/gateways/paypal-standard.php:657
 msgid "Invalid payment amount in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:657
+#: includes/gateways/paypal-standard.php:660
 msgid "Payment failed due to invalid amount in PayPal IPN."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:663
+#: includes/gateways/paypal-standard.php:666
 msgid "Invalid purchase key in IPN response. IPN data: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:665
+#: includes/gateways/paypal-standard.php:668
 msgid "Payment failed due to invalid purchase key in PayPal IPN."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:685
+#: includes/gateways/paypal-standard.php:688
 msgid "Payment made via eCheck and will clear automatically in 5-8 days"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:692
+#: includes/gateways/paypal-standard.php:695
 msgid ""
 "Payment requires a confirmed customer address and must be accepted manually "
 "through PayPal"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:698
+#: includes/gateways/paypal-standard.php:701
 msgid ""
 "Payment must be accepted manually through PayPal due to international "
 "account regulations"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:704
+#: includes/gateways/paypal-standard.php:707
 msgid ""
 "Payment received in non-shop currency and must be accepted manually through "
 "PayPal"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:711
+#: includes/gateways/paypal-standard.php:714
 msgid ""
 "Payment is being reviewed by PayPal staff as high-risk or in possible "
 "violation of government regulations"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:717
+#: includes/gateways/paypal-standard.php:720
 msgid "Payment was sent to non-confirmed or non-registered email address."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:723
+#: includes/gateways/paypal-standard.php:726
 msgid "PayPal account must be upgraded before this payment can be accepted"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:729
+#: includes/gateways/paypal-standard.php:732
 msgid ""
 "PayPal account is not verified. Verify account in order to accept this "
 "payment"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:735
+#: includes/gateways/paypal-standard.php:738
 msgid ""
 "Payment is pending for unknown reasons. Contact PayPal support for "
 "assistance"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:788
+#: includes/gateways/paypal-standard.php:791
 msgid "Partial PayPal refund processed: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:793
+#: includes/gateways/paypal-standard.php:796
 msgid "PayPal Payment #%s Refunded for reason: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:794
+#: includes/gateways/paypal-standard.php:797
 msgid "PayPal Refund Transaction ID: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:1008
+#: includes/gateways/paypal-standard.php:1011
 msgid ""
 "Payment could not be verified while validating PayPal PDT. Missing payment "
 "total fields."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:1019
+#: includes/gateways/paypal-standard.php:1022
 msgid ""
 "Payment failed while validating PayPal PDT. Amount expected: %f. Amount "
 "Received: %f"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:1049
+#: includes/gateways/paypal-standard.php:1052
 msgid "Payment failed while validating PayPal PDT."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:1056
+#: includes/gateways/paypal-standard.php:1059
 msgid "PayPal PDT encountered an unexpected result, payment set to pending"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:1141
+#: includes/gateways/paypal-standard.php:1144
 msgid "Refund Payment in PayPal"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:1288
+#: includes/gateways/paypal-standard.php:1291
 msgid "PayPal refund failed for unknown reason."
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:1298
+#: includes/gateways/paypal-standard.php:1301
 msgid "PayPal refund transaction ID: %s"
 msgstr ""
 
-#: includes/gateways/paypal-standard.php:1302
+#: includes/gateways/paypal-standard.php:1305
 msgid "PayPal refund failed: %s"
 msgstr ""
 
