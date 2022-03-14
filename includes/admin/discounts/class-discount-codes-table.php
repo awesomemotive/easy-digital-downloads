@@ -239,11 +239,11 @@ class EDD_Discount_Codes_Table extends List_Table {
 			'discount'   => $discount->id,
 		), $base ) . '">' . stripslashes( $discount->name ) . '</a>' . esc_html( $state ) . '</strong>';
 		
-		// Filter the discount row title
-		$discount_title = apply_filters( 'edd_discount_row_title', $discount_title, $discount, $base, $state );
+		// Filter to additional content after the discount title
+		$additional_content = apply_filters( 'edd_discount_row_after_title', '', $discount, $base, $state );
 
 		// Return discount title & row actions
-		return $discount_title . $this->row_actions( $row_actions );
+		return $discount_title . $additional_content . $this->row_actions( $row_actions );
 	}
 
 	/**
