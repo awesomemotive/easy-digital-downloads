@@ -27,19 +27,20 @@ if ( !defined( 'ABSPATH' ) ) exit;
 */
 function edd_complete_purchase( $order_id, $new_status, $old_status ) {
 
+	$completed_statuses = array( 'publish', 'complete', 'completed' );
 	// Make sure that payments are only completed once.
-	if ( 'publish' === $old_status || 'complete' === $old_status || 'completed' === $old_status ) {
+	if ( in_array( $old_status, $completed_statuses, true ) ) {
 		return;
 	}
 
 	// Make sure the payment completion is only processed when new status is complete.
-	if ( 'publish' !== $new_status && 'complete' !== $new_status && 'completed' !== $new_status ) {
+	if ( ! in_array( $new_status, $completed_statuses, true ) ) {
 		return;
 	}
 
 	$order = edd_get_order( $order_id );
 
-	if ( ! $order ) {
+	if ( ! $order || 'sale' !== $order->type ) {
 		return;
 	}
 
