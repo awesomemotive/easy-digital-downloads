@@ -342,4 +342,41 @@ class Test_Download_Sales_Earnings extends \EDD_UnitTestCase {
 		edd_delete_order( $order_id );
 		edd_delete_order( $refund_id );
 	}
+
+	public function test_download_sales_gross_less_net_equals_discount() {
+		$order_id = edd_add_order(
+			array(
+				'status'          => 'complete',
+				'type'            => 'sale',
+				'date_completed'  => EDD()->utils->date( 'now' )->toDateTimeString(),
+				'date_refundable' => EDD()->utils->date( 'now' )->addDays( 30 )->toDateTimeString(),
+				'ip'              => '10.1.1.1',
+				'gateway'         => 'manual',
+				'mode'            => 'live',
+				'currency'        => 'USD',
+				'payment_key'     => md5( 'edd' ),
+				'subtotal'        => 20,
+				'total'           => 15,
+			)
+		);
+
+		$order_item_id = edd_add_order_item(
+			array(
+				'order_id'     => $order_id,
+				'product_id'   => $this->simple_download->ID,
+				'product_name' => 'Simple Download',
+				'status'       => 'complete',
+				'amount'       => 20,
+				'subtotal'     => 20,
+				'total'        => 15,
+				'quantity'     => 1,
+				'discount'     => 5,
+			)
+		);
+
+		$download = edd_get_download( $this->simple_download->ID );
+		$this->assertEquals( 5, get_post_meta( $download->ID, '_edd_download_gross_earnings', true ) - $download->earnings );
+
+		edd_delete_order( $order_id );
+	}
 }
