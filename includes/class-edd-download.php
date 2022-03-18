@@ -761,15 +761,18 @@ class EDD_Download {
 	public function recalculate_gross_sales_earnings() {
 		global $wpdb;
 
-		$results = $wpdb->get_row(
+		$statuses      = edd_get_gross_order_statuses();
+		$status_string = implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
+		$results       = $wpdb->get_row(
 			$wpdb->prepare(
-				"SELECT SUM(oi.total / oi.rate) AS revenue, SUM(oi.quantity) AS sales
+				"SELECT SUM(oi.subtotal / oi.rate) AS revenue, SUM(oi.quantity) AS sales
 				FROM {$wpdb->edd_order_items} oi
 				INNER JOIN {$wpdb->edd_orders} o ON(o.id = oi.order_id)
 				WHERE oi.product_id = %d
-				AND o.type IN('sale')
-				AND o.status IN('complete','partially_refunded','revoked')",
-				$this->ID
+				AND o.type = 'sale'
+				AND o.status IN({$status_string})",
+				$this->ID,
+				...$statuses
 			)
 		);
 
@@ -791,6 +794,9 @@ class EDD_Download {
 
 		global $wpdb;
 
+		$statuses      = edd_get_net_order_statuses();
+		$status_string = implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
+
 		/**
 		 * Note on the select statements:
 		 * 1. This gets the net sum for revenue and sales for all orders with net statuses.
@@ -798,27 +804,27 @@ class EDD_Download {
 		 *    negate the original, we also sum partially refunded sales where the quantity
 		 *    matches the partial refund quantity.
 		 */
-		$results = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT SUM(revenue) AS revenue, SUM(sales) AS sales FROM
-				(SELECT SUM((oi.total - oi.tax)/ oi.rate) as revenue, SUM(oi.quantity) as sales
-				FROM {$wpdb->edd_order_items} oi
-				INNER JOIN {$wpdb->edd_orders} o ON(o.id = oi.order_id)
-				WHERE oi.product_id = %d
-				AND oi.status IN('complete','partially_refunded')
-				AND o.status IN('complete','revoked','partially_refunded')
-				UNION
-				SELECT NULL, SUM(oi.quantity) as sales
-				FROM {$wpdb->edd_order_items} oi
-				LEFT JOIN {$wpdb->edd_order_items} ri
-				ON ri.parent = oi.id
-				WHERE oi.product_id = %d
-				AND oi.status = 'partially_refunded'
-				AND oi.quantity = - ri.quantity)a",
-				$this->ID,
-				$this->ID
-			)
+		$complete_orders = $wpdb->prepare(
+			"SELECT SUM((oi.total - oi.tax)/ oi.rate) as revenue, SUM(oi.quantity) as sales
+			FROM {$wpdb->edd_order_items} oi
+			INNER JOIN {$wpdb->edd_orders} o ON(o.id = oi.order_id)
+			WHERE oi.product_id = %d
+			AND oi.status IN('complete','partially_refunded')
+			AND o.status IN({$status_string})",
+			$this->ID,
+			...$statuses
 		);
+		$partial_orders = $wpdb->prepare(
+			"SELECT NULL, SUM(oi.quantity) as sales
+			FROM {$wpdb->edd_order_items} oi
+			LEFT JOIN {$wpdb->edd_order_items} ri
+			ON ri.parent = oi.id
+			WHERE oi.product_id = %d
+			AND oi.status = 'partially_refunded'
+			AND oi.quantity = - ri.quantity",
+			$this->ID
+		);
+		$results = $wpdb->get_row( "SELECT SUM(revenue) AS revenue, SUM(sales) AS sales FROM ({$complete_orders} UNION {$partial_orders})a" );
 
 		$revenue = ! empty( $results->revenue ) ? $results->revenue : 0.00;
 		$sales   = ! empty( $results->sales ) ? $results->sales : 0;

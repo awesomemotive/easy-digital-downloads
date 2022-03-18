@@ -283,7 +283,6 @@ class Test_Download_Sales_Earnings extends \EDD_UnitTestCase {
 		$refund_id = edd_refund_order( $order->id, $to_refund );
 
 		$download = edd_get_download( $this->simple_download->ID );
-		$this->assertEquals( 1, $download->get_sales() );
 		$this->assertEquals( $download->sales, get_post_meta( $download->ID, '_edd_download_gross_sales', true ) );
 
 		edd_delete_order( $order_id );
